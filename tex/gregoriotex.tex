@@ -1,0 +1,733 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the font dimensions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of text
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \textlower is the height of the separation between the bottom line (which is invisible : for the notes which are very low) and the bottom of the text
+\newdimen\textlower \textlower=5pt
+
+%% macro that sets \temp to the width of its argument
+
+\newbox\Tempwidth
+\newdimen\tempwidth
+
+\def\widthof#1{%
+\setbox\Tempwidth=\hbox{#1}%
+\tempwidth=\wd\Tempwidth%
+}
+
+
+%% macro that typesets the text of the syllable, and sets \textaligncenter to the middle of the middle letters, it is needed because we align the note (often the middle of the note) with the middle of the middle letters
+%% warning : textaligncenter is the width from the beginning of the letters to the middle of the middle letters
+
+\newdimen\textaligncenter
+
+\def\findtextaligncenter#1#2#3{%
+\widthof{\textfont #1#2}%
+\textaligncenter=\the\tempwidth %
+\widthof{\textfont #2}%
+\divide\tempwidth by 2 %
+\advance\textaligncenter by -\the\tempwidth%
+}
+
+% definition of the dash that we will use after the text if necessary
+\def\gregoriotextdash{-}
+\newdimen\gregoriotextdashwidth
+\widthof{\gregoriotextdash}
+\gregoriotextdashwidth=\tempwidth
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of the initial
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% box containing the initial, and dimen containing its width
+\newbox\Initial
+\newdimen\initialwidth
+
+\def\initial#1{%
+\setbox\Initial=\hbox{\fontofinitial #1}%
+%\setbox\Initial=\hbox{#1}%
+\initialwidth=\the\wd\Initial%
+\lower\textlower\copy\Initial%
+\drawlines%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of the lines
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% factor is the factor with which you open you font (the number after the at)
+\newcount\factor
+\factor=2
+
+% \stafflineheight is the height of a staff line
+%\newdimen\stafflineheight \stafflineheight=0.015\the\factor em
+\newdimen\stafflineheight \stafflineheight=0.015 em
+\multiply \stafflineheight by \the\factor 
+% \interstafflinespace is the space between two lines of staff
+%\newdimen\interstafflinespace \interstafflinespace=0.315\the\factor em
+\newdimen\interstafflinespace \interstafflinespace=0.3 em
+\multiply \interstafflinespace by \the\factor 
+% \interstafflinespace is the width of a line
+\newdimen\linewidth \linewidth=\hsize
+% \stafflinewidth is the width of a line of staff, this can vary, for example at the first line
+\newdimen\stafflinewidth \stafflinewidth=\linewidth
+% \staffheight is the total height of the staff : that is to say the four written lines plus two invisible lines plus the space to type one note above the top line and one note beneath the bottom line
+\newdimen\staffheight \staffheight=6\stafflineheight
+\advance\staffheight by 7\interstafflinespace
+
+%% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
+\def\drawfirstlines{%
+\advance\stafflinewidth by -\initialwidth%
+\initialwidth=0pt%
+\hbox to0pt{%
+\vbox{%
+\kern\the\interstafflinespace%
+\kern\the\stafflineheight%
+\kern\the\interstafflinespace%
+\hrule height \stafflineheight width \stafflinewidth%
+\kern\the\interstafflinespace%
+\hrule height \stafflineheight width \stafflinewidth%
+\kern\the\interstafflinespace%
+\hrule height \stafflineheight width \stafflinewidth%
+\kern\the\interstafflinespace%
+\hrule height \stafflineheight width \stafflinewidth%
+\kern\the\interstafflinespace%
+\kern\the\stafflineheight%
+\kern\the\interstafflinespace%
+}%
+\hss%
+}%
+\stafflinewidth=\linewidth%
+}
+
+%% box containing the stafflines for other lines than the first
+\newbox\Lines
+\setbox\Lines=\hbox to0pt{%
+\vbox{%
+\kern \the\interstafflinespace%
+\kern\the\stafflineheight%
+\kern \the\interstafflinespace%
+\hrule height \stafflineheight width \stafflinewidth%
+\kern\the\interstafflinespace%
+\hrule height \stafflineheight width \stafflinewidth%
+\kern\the\interstafflinespace%
+\hrule height \stafflineheight width \stafflinewidth%
+\kern\the\interstafflinespace%
+\hrule height \stafflineheight width \stafflinewidth%
+\kern \the\interstafflinespace%
+\kern\the\stafflineheight%
+\kern \the\interstafflinespace%
+}%
+\hss%
+}
+
+%% macro that draws the lines : starts by the first and then draws the lines of every line.
+%% has to be called before drawing the key, after drawing the initial
+\def\drawlines{%
+\drawfirstlines %
+%%localeleftbox is a primitive of omega, it draws the same box at the beginning of new lines (here after the first)
+\localleftbox{%
+\copy\Lines %
+}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of the clefs of the beginning of lines and custos
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% marcro to define the clef that will appear at the beginning of the lines
+% the first argument is the type : f or c, and the second is the height
+
+\def\setlinesclef#1#2{%
+\localleftbox{%
+\copy\Lines% draws the lines
+\typekey{#1}{#2}%
+}%
+}
+
+% macro that typesets the key
+% arguments are : 
+%% #1: the type of the key : c or f
+%% #2: the line of the key (1 is the lowest)
+\def\typekey#1#2{%
+\ifcase#2%
+\or%
+\calculateglyphraisevalue{4}%
+\or%
+\calculateglyphraisevalue{6}%
+\or%
+\calculateglyphraisevalue{8}%
+\or%
+\calculateglyphraisevalue{10}%
+\fi%
+\ifx c#1% we check if it is a c key
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03e9}
+\else % we consider that it is a f key
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03ea}
+\fi%
+}
+
+% macro that writes the initial key, and sets the next keys to the same value
+
+\def\setinitialclef#1#2{%
+\typekey{#1}{#2}%
+\setlinesclef{#1}{#2}%
+\hskip\spaceafterlineclef%
+}
+
+% macro called when the key changes
+
+\def\changeclef#1#2{%
+\clefchangespace=0.165em plus 0.0165em minus 0.0165em%
+\multiply\clefchangespace by \factor %
+\hskip\clefchangespace %
+\typekey{#1}{#2}%
+\hskip\clefchangespace %
+\setlinesclef{#1}{#2}%
+}
+
+% macro called when the key changes inside a syllable
+
+\def\inchangeclef#1#2{%
+\clefchangespace=0.165em plus 0.0165em minus 0.0165em%
+\multiply\clefchangespace by \factor %
+\hskip\clefchangespace %
+\typekey{#1}{#2}%
+\hskip\clefchangespace %
+\setlinesclef{#1}{#2}%
+}
+
+% the argument is the height
+
+\def\setcusto#1{%
+\calculateglyphraisevalue{#1}%
+\localrightbox{%
+\raise \glyphraisevalue%
+\hbox{%
+% we type a hskip and the we type the custo
+\hskip\spacebeforecusto %
+\gregoria %
+\ifcase#1%
+\or%
+^^^^0405%
+\or%
+^^^^03eb%
+\or%
+^^^^0405%
+\or%
+^^^^03eb%
+\or%
+^^^^0405%
+\or%
+^^^^03eb%
+\or%
+^^^^0405%
+\or%
+^^^^03eb%
+\or%
+^^^^0405%
+\or%
+^^^^03ec%
+\or%
+^^^^0406%
+\or%
+^^^^03ec%
+\or%
+^^^^0406%
+\fi%
+}%
+}%
+}
+
+\def\removecusto{%
+\localrightbox{}%
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of the different glyphs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \glyphraisevalue is the value of which we must raise one glyph (that will vary with every glyph)
+\newdimen\glyphraisevalue 
+
+% a temporary count
+\newcount\tempcount
+
+% a very useful macro : it determines the good height of a glyph : the argument is the "number" where the glyph should be : 4 for the first line, 6 for the second, etc.
+\def\calculateglyphraisevalue#1{%
+\tempcount=#1%
+\advance\tempcount by -8%
+\glyphraisevalue=0.159 em %
+\multiply \glyphraisevalue by \tempcount %
+\advance\glyphraisevalue by 1.024 em % where the 0 must be
+\multiply\glyphraisevalue by \the\factor%
+}
+
+
+% count that tells us if the current glyph is the first glyph or not. It it is the case, we determine
+\newcount\firstglyph
+
+% macro to typeset the glyph. attributes are :
+% #1: character : the character that it must call
+% #2: height : the height it must be raised : can be negative (must be calculated by a preprocessor)
+% #3: height of the next note : we define the custo with that
+% #4: type : the type of glyph, to determine the aligncenter; can be :
+%%%%% 0 : one-note glyph or more than two notes glyph except porrectus : here we must put the aligncenter in the middle of the first note
+%%%%% 1 : two notes glyph (podatus is considered as a one-note glyph : here we put the aligncenter in the middle of the glyph
+%%%%% 2 : porrectus : has a special align center
+%%%%% 3 : initio-debilis : same as 1 but the first note is much smaller
+\def\glyph#1#2#3#4{%
+\calculateglyphraisevalue{#2}%
+\setbox\Tempwidth=\hbox{\gregoria #1}%
+\tempwidth=\wd\Tempwidth%
+\raise \glyphraisevalue%
+\copy\Tempwidth%
+\setcusto{#3}%
+\ifnum\the\firstglyph=1% we check if it is the first glyph
+\findnotesaligncenter{#4}%
+\global\firstglyph=0%
+\fi%
+}
+
+\newdimen\notesaligncenter
+
+% we define the different alignments possible, of course they depend on the font
+\def\findnotesaligncenter#1{%
+\ifcase#1%
+\global\notesaligncenter=0.168 em %\global\multiply\notesaligncenter by \factor %
+\or%
+\divide\tempwidth by 2 \global\notesaligncenter=\the\tempwidth %
+\or%
+\global\notesaligncenter=0.25 em %\global\multiply\notesaligncenter by \factor %
+\or%
+\global\notesaligncenter=0.1005 em %\global\multiply\notesaligncenter by \factor %
+\fi%
+}
+
+
+% box that we will use to determine the width of the notes, to determine wether we typeset a - or not after the letters
+\newbox\Syllablenotes
+\def\syllablenotes#1{%
+\setbox\Syllablenotes=\hbox{#1}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of glyphs and notes together
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% a dimen that will contain the difference between the end of the text and the end of the notes for the previous syllable (if we are in the same word) : positive if notes go further than text. We will use it for space adjustment between syllables of the same word
+
+\newdimen\enddifference 
+
+% a dimen that will contain the enddifference of the previous glyph
+
+\newdimen\previousenddifference 
+
+% \begindifference is the difference between the begginning of the text and the beginning of the notes. Warning : it can be negative.
+
+\newdimen\begindifference
+
+\newdimen\temp
+
+% box that will contain the text of the syllable
+
+\newbox\Syllabletext
+
+% count that will be 0 if in the last text there was no dash (or if it is the beginning of a word, and 1 if there was
+\newcount\previousdash
+
+
+%% general macro : it will typeset the syllable : arguments are :
+% #1 : the first letters of the syllable, that don't count for the alignment
+% #2 : the middle letters of the syllable, we must align in the middle of them
+% #3 : the end letters, they don't count
+% #4 : end of word : if it is 0 it means it is not an end of word, if it is 1 it is
+% (not used anymore) #5 : beggining of word : if it is 0 it means it is not a beginning of word, if it is 1 it is
+% #5 : glyphs : all the notes
+
+\def\syllable#1#2#3#4#5{%
+\firstglyph=1%
+\findtextaligncenter{#1}{#2}{#3}% we first get the width between the alignment point and the end of the syllable
+\syllablenotes{#5}% we put the notes in a box, so that we have the width of it
+\setbox\Syllabletext=\hbox{\textfont #1#2#3}%
+\ifcase#4 %
+% we enter here if the end of word is 0, so we must determine if we need to type the gragorio dash here
+% we determine if \wd\Syllablenotes > tempwidth (width of text without dash) + \gregoriotextdashwidth - textaligncenter + notesaligncenter
+\temp=\wd\Syllabletext %
+\advance\temp by \gregoriotextdashwidth %
+\advance\temp by -\textaligncenter %
+\advance\temp by \notesaligncenter %
+\ifdim\wd\Syllablenotes>\temp %
+\setbox\Syllabletext=\hbox{\textfont #1#2#3\gregoriotextdash}%
+\global\previousdash=1 %
+\else%
+\setbox\Syllabletext=\hbox{\textfont #1#2#3}%
+\global\previousdash=0 %
+\fi%
+\fi%
+% then we must typeset the two boxes, but we must begin by the one that will go the less far, so we calculate the \enddifference, and we see if it is positive or not. Settenddifferents also sets \previousenddifference to the good value
+\setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}%
+% now we calculate the begin difference, that is to say \notesaligncenter - \textaligncenter
+\begindifference=\notesaligncenter %
+\advance\begindifference by -\textaligncenter %
+%% complicated things with the enddifference of the previous glyph, but only if it is not a begginning of word, but we don't use them anymore
+%\ifcase#5 %
+%\the\begindifference %
+%\setsyllableshift{\begindifference}%
+%\fi%
+% then we reuse temp, we assign to it the \begindifference, but only if it is positive, else it is 0
+\temp=\begindifference %
+\ifdim\temp <0pt %
+\temp=0pt%
+\fi%
+\kern \temp %
+\lower\textlower \copy\Syllabletext %
+%\-%
+\kern -\wd\Syllabletext %
+\kern -\begindifference %
+#5% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
+\ifdim\the\enddifference <0pt%
+%% important, else we are not really at the end of the syllable
+\kern -\enddifference %
+\fi%
+%% then we call end of syllable or end of word
+%\-%
+\ifcase#4 %
+\endofsyllable %
+\or%
+\endofword %
+\fi%
+}
+
+% macro to set \enddifference (defined above) to \wd\Syllablenotes - (\wd\Syllabletext - \textaligncenter) - \notesaligncenter
+% arguments are :
+% #1: \wd\Syllablenotes : the total width of the syllables
+% #2: \wd\Syllabletext : the total width of the text
+% #3: \textaligncenter (defined above)
+% #4: \notesaligncenter (defined above too)
+\def\setenddifference#1#2#3#4{%
+\global\previousenddifference=\enddifference
+\global\enddifference=#1%
+\global\advance\enddifference by -#2%
+\global\advance\enddifference by #3%
+\global\advance\enddifference by -#4%
+}
+
+%% Finally we don't use it, because syllables never cross, I keep it, just in case...
+% macro that will calculate the shift that we apply at the beginning, to combine two syllables of the same note
+% arguments are :
+% #1: \begindifferrence, defined above
+% but the macro also uses \previousenddifference, \previousdash (not yet)
+%\def\setsyllableshift#1{%
+%\the\previousenddifference %
+%\ifdim\previousenddifference >0pt %
+%\hskip\intersyllablenotesspace %
+%\ifdim-#1<\previousenddifference %
+%\kern #1%
+%test1 %
+%\else%
+%\kern -\previousenddifference %
+%test2%
+%\fi%
+%\else%
+% we test if begin > end - intersyllablespace
+%\temp=\previousenddifference %
+%\advance\temp by \intersyllablenotesspace %
+%\ifdim#1 >\temp %
+%\kern #1 %
+%test3%
+%\else%
+%\kern\temp%
+%test4%
+%\fi%
+%\fi%
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of bars
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% we define two types of macro for each four bar : when it is inside a syllable, and when it is not
+
+\def\invirgula{%
+\barspace=0.165em plus 0.0165em minus 0.0165em%
+\multiply\barspace by \factor%
+\hskip\barspace %
+\calculateglyphraisevalue{8}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03f0}%
+\hskip\barspace %
+\penalty 0% test
+}
+
+\def\virgula{%
+\barspace=0.165em plus 0.0165em minus 0.0165em%
+\multiply\barspace by \factor%
+\hskip\barspace %
+\calculateglyphraisevalue{8}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03f0}%
+\hskip\barspace %
+}
+
+\def\indivisiominima{%
+\barspace=0.165em plus 0.0165em minus 0.0165em%
+\multiply\barspace by \factor%
+\hskip\barspace %
+\calculateglyphraisevalue{8}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03f1}%
+\hskip\barspace %
+}
+
+\def\divisiominima{%
+\barspace=0.165em plus 0.0165em minus 0.0165em%
+\multiply\barspace by \factor%
+\hskip\barspace %
+\calculateglyphraisevalue{8}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03f1}%
+\hskip\barspace %
+}
+
+\def\indivisiominor{%
+\barspace=0.165em plus 0.0165em minus 0.0165em%
+\multiply\barspace by \factor%
+\hskip\barspace %
+\calculateglyphraisevalue{8}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03f2}%
+\hskip\barspace %
+}
+
+\def\divisiominor{%
+\barspace=0.165em plus 0.0165em minus 0.0165em%
+\multiply\barspace by \factor%
+\hskip\barspace %
+\calculateglyphraisevalue{8}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03f2}%
+\hskip\barspace %
+}
+
+\def\indivisiomaior{%
+\barspace=0.165em plus 0.0165em minus 0.0165em%
+\multiply\barspace by \factor%
+\hskip\barspace %
+\calculateglyphraisevalue{8}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03f3}%
+\hskip\barspace %
+}
+
+\def\divisiomaior{%
+\barspace=0.165em plus 0.0165em minus 0.0165em%
+\multiply\barspace by \factor%
+\hskip\barspace %
+\calculateglyphraisevalue{8}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03f3}%
+\hskip\barspace %
+}
+
+\newdimen\temptwo
+
+\def\indivisiofinalis{%
+\barspace=0.165em plus 0.0165em minus 0.0165em%
+\multiply\barspace by \factor%
+\hskip\barspace %
+\calculateglyphraisevalue{8}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03f3}%
+\temptwo=0.064em%
+\multiply\temptwo by \the\factor%
+\kern \temptwo%
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03f3}%
+\hskip\barspace %
+}
+
+\def\divisiofinalis{%
+\barspace=0.165em plus 0.0165em minus 0.0165em%
+\multiply\barspace by \factor%
+\hskip\barspace %
+\calculateglyphraisevalue{8}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03f3}%
+\temptwo=0.064em%
+\multiply\temptwo by \the\factor%
+\kern \temptwo%
+\raise\glyphraisevalue\hbox{\gregoria ^^^^03f3}%
+\hskip\barspace %
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for typesetting alterations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\flat#1{%
+\endofglyph{2}%
+}
+
+\def\natural#1{%
+\endofglyph{2}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% other macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%macro called at the beginning of a score
+\def\begingregorioscore{%
+\noindent%
+}
+
+%macro called at the beginning of a score
+\def\endgregorioscore{%
+\localleftbox{}%
+\localrightbox{}%
+\par%
+}
+
+% macro called at each end of word
+\def\endofword{%
+\ifdim\enddifference >0pt %
+\hskip\interwordspacenotes %
+\else%
+\hskip\interwordspacetext %
+\fi
+\penalty -1000%
+\enddifference=0pt%
+}
+
+% macro called at each end of syllable which is not an end of word
+\def\endofsyllable{%
+\penalty -500%
+}
+
+% macro to end elements, argument is the type of space, it can be : 
+%% 0 : default space 
+%% 1 : larger space
+%% 2 : glyph space
+
+\def\endofelement#1{%
+\ifcase#1%
+\hskip\interelementspace%
+\or%
+\hskip\largerspace%
+\or%
+\hskip\glyphspace%
+\fi%
+\penalty -100%
+}
+
+% macro to end a glyph without ending the element, argument is the type of space, it can be : 
+%% 0: default space 
+%% 1: zero width space
+%% 2: space between flat or natural and a note
+%% 3: shift when there is a punctum_inclinatum after
+%% 4: space between bivirga or bistropha
+%% 5: space between tristropha or trivirga
+
+\def\endofglyph#1{%
+\ifcase#1%
+\hskip\interglyphspace %
+\or%
+\hskip\zerowidthspace %
+\or%
+\hskip\alterationspace %
+\or%
+\hskip\punctuminclinatumshift %
+\or%
+\hskip\bispace %
+\or%
+\hskip\trispace %
+\fi%
+\penalty 10001%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of spaces
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% null space
+\newskip\zerowidthspace
+\zerowidthspace=0pt plus 0pt minus 0pt
+
+% space between glyphs in the same element
+\newskip\interglyphspace
+\interglyphspace=0.082em plus 0.0082em minus 0.0082em
+\multiply\interglyphspace by \factor
+
+% space between an alteration (flat or natural) and the next glyph
+\newskip\alterationspace
+\alterationspace=0.082em plus 0.0082em minus 0.0082em
+\multiply\alterationspace by \factor
+
+% space between elements
+\newskip\interelementspace
+\interelementspace=0.082em plus 0.0082em minus 0.0082em
+\multiply\interelementspace by \factor
+
+% larger space between elements
+\newskip\largerspace
+\largerspace=0.082em plus 0.0082em minus 0.0082em
+\multiply\largerspace by \factor
+
+% space between elements which has the size of a note
+\newskip\glyphspace
+\glyphspace=0.165em plus 0.0165em minus 0.0165em
+\multiply\glyphspace by \factor
+
+% space before custo
+\newskip\spacebeforecusto
+\spacebeforecusto=0.165em plus 0.0165em minus 0.0165em
+\multiply\spacebeforecusto by \factor
+
+% space after a clef at the beginning of a line
+\newskip\spaceafterlineclef
+\spaceafterlineclef=0.165em plus 0.0165em minus 0.0165em
+\multiply\spaceafterlineclef by \factor
+
+% space after at the end of a word when the last written symbol is a note
+\newskip\interwordspacenotes
+\interwordspacenotes=0.21em plus 0.021em minus 0.021em
+\multiply\interwordspacenotes by \factor
+
+% space after at the end of a word when the last written symbol is text
+\newskip\interwordspacetext
+\interwordspacetext=0.21em plus 0.021em minus 0.021em
+\multiply\interwordspacetext by \factor
+
+% space between notes of a bistropha and bivirga
+\newskip\bispace
+\bispace=0.165em plus 0.0165em minus 0.0165em
+\multiply\bispace by \factor
+
+% space between notes of a tristropha and trivirga
+\newskip\trispace
+\trispace=0.165em plus 0.0165em minus 0.0165em
+\multiply\trispace by \factor
+
+% space when there is a 
+\newskip\punctuminclinatumshift
+\punctuminclinatumshift=-0.040em plus 0.004em minus 0.004em
+\multiply\punctuminclinatumshift by \factor
+
+
+% space between notes of different syllables in the same word, but seem to be useless
+%\newskip\intersyllablenotesspace
+%\intersyllablenotesspace=0.165em plus 0.0165em minus 0.0165em
+%\multiply\intersyllablenotesspace by \factor
+
+% space for the bars
+\newskip\barspace
+
+% space for the clef changes
+\newskip\clefchangespace
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% tests
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% we open the font gregoria at \factor pt, we must know \factor because it will determine the line heigth, etc.
+\font\gregoria=gregoria at \the\factor em
+
+\font\textfont=pncr at 12pt
+\font\fontofinitial=pncr at 40pt

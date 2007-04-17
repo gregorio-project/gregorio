@@ -1,0 +1,844 @@
+%{
+/*
+Gregorio notes determination in gabc input.
+Copyright (C) 2006 Elie Roux
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
+
+#include <stdio.h>
+#include <ctype.h> /*for tolower*/
+#include <libintl.h>
+#include "struct.h"
+#include "messages.h"
+#include "gabc.h"
+
+#define lex_add_note(i,shape,signs,liquescentia,h_episemus)\
+	libgregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]), shape, signs, liquescentia,h_episemus)
+
+gregorio_note *current_note;
+char *error;
+
+%}
+
+%option nounput
+%option noyywrap
+%option noyy_push_state 
+%option noyy_pop_state
+%option noyy_top_state
+%option noyyset_extra
+%option noyyget_leng
+%option noyyget_in
+%option noyyset_in
+%option noyyget_out
+%option noyyset_out
+%option noyyset_lval
+%option noyyget_lval
+%option noyyget_lloc
+%option noyyset_lloc
+%option noyyget_debug
+%option noyyset_debug
+%option full
+%option align
+
+
+
+
+%%
+[\t\n]+      /* ignore ends of line and tabs */;
+z {
+	libgregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, USELESS_VALUE);
+	}
+(c|f)[1-4] {
+	if (gabc_notes_determination_text[0]=='c') {
+	libgregorio_add_special_as_note (&current_note, GRE_C_KEY_CHANGE, gabc_notes_determination_text[1]);
+	}
+	else {
+	libgregorio_add_special_as_note (&current_note, GRE_F_KEY_CHANGE, gabc_notes_determination_text[1]);
+	}
+	}
+`       {
+	libgregorio_add_special_as_note (&current_note, GRE_BAR, B_VIRGULA);
+	}
+,       {
+	libgregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINIMA);
+	}
+;       {
+	libgregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR);
+	}
+:       {
+	libgregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MAIOR);
+	}
+::      {
+	libgregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_FINALIS);
+	}
+x[a-mA-M]       {
+	libgregorio_add_special_as_note (&current_note, GRE_FLAT, gabc_notes_determination_text[1]);
+	}
+y[a-mA-M]       {
+	libgregorio_add_special_as_note (&current_note, GRE_NATURAL, gabc_notes_determination_text[1]);
+	}
+!       {
+	libgregorio_add_special_as_note (&current_note, GRE_SPACE, SP_ZERO_WIDTH);
+	}
+\/      {
+	libgregorio_add_special_as_note (&current_note, GRE_SPACE, SP_NEUMATIC_CUT);
+	}
+\/\/    {
+	libgregorio_add_special_as_note (&current_note, GRE_SPACE, SP_LARGER_SPACE);
+	}
+\       {
+	libgregorio_add_special_as_note (&current_note, GRE_SPACE, SP_GLYPH_SPACE);
+	}
+[a-mA-M]vv   {
+	lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]vvv {
+	lex_add_note(0, S_TRIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]ss {
+	lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]ss(\<|\>) {
+	lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_AUCTA,H_NO_EPISEMUS);
+		}
+[a-mA-M]sss {
+	lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]sss(\<|\>) {
+	lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTA,H_NO_EPISEMUS);
+		}
+_ 	{
+	libgregorio_activate_isolated_h_episemus (current_note, 1);
+	}
+__ 	{
+	libgregorio_activate_isolated_h_episemus (current_note, 2);
+	}
+___ 	{
+	libgregorio_activate_isolated_h_episemus (current_note, 3);
+	}
+____ 	{
+	libgregorio_activate_isolated_h_episemus (current_note, 4);
+	}
+[a-mA-M]        {
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]'       {
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]\.\.    {
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]\.      {
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.'|'\.)  {
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.\.'|'\.\.) {
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]_       {
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](\.\._|_\.\.) {
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](\._|_\.) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M]('_|_') { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](_\.'|_'\.|\._'|'_\.|\.'_|'\._)  { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](_\.\.'|_'\.\.|\.\._'|'_\.\.|\.\.'_|'\.\._) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M]~         { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]),_NO_SIGN, L_DEMINUTUS,H_NO_EPISEMUS);
+		}
+[a-mA-M]('~|~') { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_DEMINUTUS,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.\.~|~\.\.) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_DEMINUTUS,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.~|~\.) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_DEMINUTUS,H_NO_EPISEMUS);
+		}
+[a-mA-M](~\.'|~'\.|\.~'|'~\.|\.'~|'\.~) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_DEMINUTUS,H_NO_EPISEMUS);
+		}
+[a-mA-M](~\.\.'|~'\.\.|\.\.~'|'~\.\.|\.\.'~|'\.\.~) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_DEMINUTUS,H_NO_EPISEMUS);
+		}
+[a-mA-M]_~         { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_DEMINUTUS,H_ONE);
+		}
+[a-mA-M](~'_|~_'|'~_|_~'|'_~|_'~) {
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_DEMINUTUS,H_ONE);
+		}
+[a-mA-M](~\.\._|~_\.\.|\.\.~_|_~\.\.|\.\._~|_\.\.~) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_DEMINUTUS,H_ONE);
+		}
+[a-mA-M](~\._|~_\.|\.~_|_~\.|\._~|_\.~) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_DEMINUTUS,H_ONE);
+		}
+[a-mA-M](~_\.'|~_'\.|~\._'|~'_\.|~\.'_|~'\._|_~\.'|_~'\.|\.~_'|'~_\.|\.~'_|'~\._|_\.~'|_'~\.|\._~'|'_~\.|\.'~_|'\.~_|_\.'~|_'\.~|\._'~|'_\.~|\.'_~|'\._~)  { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]),_V_EPISEMUS_PUNCTUM_MORA, L_DEMINUTUS,H_ONE);
+		}
+[a-mA-M](~_\.\.'|~_'\.\.|~\.\._'|~'_\.\.|~\.\.'_|~'\.\._|_~\.\.'|_~'\.\.|\.\.~_'|'~_\.\.|\.\.~'_|'~\.\._|_\.\.~'|_'~\.\.|\.\._~'|'_~\.\.|\.\.'~_|'\.\.~_|_\.\.'~|_'\.\.~|\.\._'~|'_\.\.~|\.\.'_~|'\.\._~) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_DEMINUTUS,H_ONE);
+		}
+[a-mA-M]\>         { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
+		}
+[a-mA-M]('\>|\>') { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]),_V_EPISEMUS, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.\.\>|\>\.\.) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.\>|\>\.) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
+		}
+[a-mA-M](\>\.'|\>'\.|\.\>'|'\>\.|\.'\>|'\.\>) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]),_V_EPISEMUS_PUNCTUM_MORA, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
+		}
+[a-mA-M](\>\.\.'|\>'\.\.|\.\.\>'|'\>\.\.|\.\.'\>|'\.\.\>) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]),_V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
+		}
+[a-mA-M](_\>|\>_)         { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_AUCTUS_DESCENDENS,H_ONE);
+		}
+[a-mA-M](\>'_|\>_'|'\>_|_\>'|'_\>|_'\>) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_AUCTUS_DESCENDENS,H_ONE);
+		}
+[a-mA-M](\>\.\._|\>_\.\.|\.\.\>_|_\>\.\.|\.\._\>|_\.\.\>) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_AUCTUS_DESCENDENS,H_ONE);
+		}
+[a-mA-M](\>\._|\>_\.|\.\>_|_\>\.|\._\>|_\.\>) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_AUCTUS_DESCENDENS,H_ONE);
+		}
+[a-mA-M](\>_\.'|\>_'\.|\>\._'|\>'_\.|\>\.'_|\>'\._|_\>\.'|_\>'\.|\.\>_'|'\>_\.|\.\>'_|'\>\._|_\.\>'|_'\>\.|\._\>'|'_\>\.|\.'\>_|'\.\>_|_\.'\>|_'\.\>|\._'\>|'_\.\>|\.'_\>|'\._\>)  { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_AUCTUS_DESCENDENS,H_ONE);
+		}
+[a-mA-M](\>_\.\.'|\>_'\.\.|\>\.\._'|\>'_\.\.|\>\.\.'_|\>'\.\._|_\>\.\.'|_\>'\.\.|\.\.\>_'|'\>_\.\.|\.\.\>'_|'\>\.\._|_\.\.\>'|_'\>\.\.|\.\._\>'|'_\>\.\.|\.\.'\>_|'\.\.\>_|_\.\.'\>|_'\.\.\>|\.\._'\>|'_\.\.\>|\.\.'_\>|'\.\._\>) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTUS_DESCENDENS,H_ONE);
+		}
+[a-mA-M]\< { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
+		}
+[a-mA-M]('\<|\<') { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.\.\<|\<\.\.) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.\<|\<\.) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
+		}
+[a-mA-M](\<\.'|\<'\.|\.\<'|'\<\.|\.'\<|'\.\<) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
+		}
+[a-mA-M](\<\.\.'|\<'\.\.|\.\.\<'|'\<\.\.|\.\.'\<|'\.\.\<) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
+		}
+[a-mA-M](_\<|\<_) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_AUCTUS_ASCENDENS,H_ONE);
+		}
+[a-mA-M](\<\.\._|\<_\.\.|\.\.\<_|_\<\.\.|\.\._\<|_\.\.\<) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_AUCTUS_ASCENDENS,H_ONE);
+		}
+[a-mA-M](\<'_|\<_'|'\<_|_\<'|'_\<|_'\<) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_AUCTUS_ASCENDENS,H_ONE);
+		}
+[a-mA-M](\<\._|\<_\.|\.\<_|_\<\.|\._\<|_\.\<) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_AUCTUS_ASCENDENS,H_ONE);
+		}
+[a-mA-M](\<_\.'|\<_'\.|\<\._'|\<'_\.|\<\.'_|\<'\._|_\<\.'|_\<'\.|\.\<_'|'\<_\.|\.\<'_|'\<\._|_\.\<'|_'\<\.|\._\<'|'_\<\.|\.'\<_|'\.\<_|_\.'\<|_'\.\<|\._'\<|'_\.\<|\.'_\<|'\._\<)  { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_AUCTUS_ASCENDENS,H_ONE);
+		}
+[a-mA-M](\<_\.\.'|\<_'\.\.|\<\.\._'|\<'_\.\.|\<\.\.'_|\<'\.\._|_\<\.\.'|_\<'\.\.|\.\.\<_'|'\<_\.\.|\.\.\<'_|'\<\.\._|_\.\.\<'|_'\<\.\.|\.\._\<'|'_\<\.\.|\.\.'\<_|'\.\.\<_|_\.\.'\<|_'\.\.\<|\.\._'\<|'_\.\.\<|\.\.'_\<|'\.\._\<) { 
+	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTUS_ASCENDENS,H_ONE);
+		}
+-[a-mA-M] { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _NO_SIGN, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+		}
+-[a-mA-M]' { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+		}
+-[a-mA-M]\.\. { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+		}
+-[a-mA-M]\. { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _PUNCTUM_MORA, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.'|'\.) { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_PUNCTUM_MORA, L_INITIO_DEBILIS,H_NO_EPISEMUS);;
+		}
+-[a-mA-M](\.\.'|'\.\.) { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+		}
+-[a-mA-M]_ { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _NO_SIGN, L_INITIO_DEBILIS,H_ONE);
+		}
+-[a-mA-M]('_|_') { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]),_V_EPISEMUS, L_INITIO_DEBILIS,H_ONE);
+		}
+-[a-mA-M](\.\._|_\.\.) { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]),_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_ONE);
+		}
+-[a-mA-M](\._|_\.) { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _PUNCTUM_MORA, L_INITIO_DEBILIS,H_ONE);
+		}
+-[a-mA-M](_\.'|_'\.|\._'|'_\.|\.'_|'\._) { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_PUNCTUM_MORA, L_INITIO_DEBILIS,H_ONE);
+		}
+-[a-mA-M](_\.\.'|_'\.\.|\.\._'|'_\.\.|\.\.'_|'\.\._) { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_ONE);
+		}
+[a-mA-M]q         { 
+	lex_add_note(0, S_QUADRATUM, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]('q|q') { 
+	lex_add_note(0, S_QUADRATUM, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.\.q|q\.\.) { 
+	lex_add_note(0, S_QUADRATUM, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.q|q\.) { 
+	lex_add_note(0, S_QUADRATUM, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](q\.'|q'\.|\.q'|'q\.|\.'q|'\.q) { 
+	lex_add_note(0, S_QUADRATUM, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](q\.\.'|q'\.\.|\.\.q'|'q\.\.|\.\.'q|'\.\.q) { 
+	lex_add_note(0, S_QUADRATUM, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](_q|q_)      { 
+	lex_add_note(0, S_QUADRATUM, _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](q'_|q_'|'q_|_q'|'_q|_'q) { 
+	lex_add_note(0, S_QUADRATUM, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](q\.\._|q_\.\.|\.\.q_|_q\.\.|\.\._q|_\.\.q) { 
+	lex_add_note(0, S_QUADRATUM, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](q\._|q_\.|\.q_|_q\.|\._q|_\.q) { 
+	lex_add_note(0, S_QUADRATUM, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](q_\.'|q_'\.|q\._'|q'_\.|q\.'_|q'\._|_q\.'|_q'\.|\.q_'|'q_\.|\.q'_|'q\._|_\.q'|_'q\.|\._q'|'_q\.|\.'q_|'\.q_|_\.'q|_'\.q|\._'q|'_\.q|\.'_q|'\._q)  { 
+	lex_add_note(0, S_QUADRATUM, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](q_\.\.'|q_'\.\.|q\.\._'|q'_\.\.|q\.\.'_|q'\.\._|_q\.\.'|_q'\.\.|\.\.q_'|'q_\.\.|\.\.q'_|'q\.\._|_\.\.q'|_'q\.\.|\.\._q'|'_q\.\.|\.\.'q_|'\.\.q_|_\.\.'q|_'\.\.q|\.\._'q|'_\.\.q|\.\.'_q|'\.\._q) { 
+	lex_add_note(0, S_QUADRATUM, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M]q         { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _NO_SIGN, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+		}
+-[a-mA-M]('q|q') {
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.\.q|q\.\.) {
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.q|q\.) {
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _PUNCTUM_MORA, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+		}
+-[a-mA-M](q\.'|q'\.|\.q'|'q\.|\.'q|'\.q) {
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_PUNCTUM_MORA, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+		}
+-[a-mA-M](q\.\.'|q'\.\.|\.\.q'|'q\.\.|\.\.'q|'\.\.q) {
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+		}
+-[a-mA-M](_q|q_)         { 
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _NO_SIGN, L_INITIO_DEBILIS,H_ONE);
+		}
+-[a-mA-M](q'_|q_'|'q_|_q'|'_q|_'q) {
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS, L_INITIO_DEBILIS,H_ONE);
+		}
+-[a-mA-M](q\.\._|q_\.\.|\.\.q_|_q\.\.|\.\._q|_\.\.q) {
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_ONE);
+		}
+-[a-mA-M](q\._|q_\.|\.q_|_q\.|\._q|_\.q) {
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _PUNCTUM_MORA, L_INITIO_DEBILIS,H_ONE);
+		}
+-[a-mA-M](q_\.'|q_'\.|q\._'|q'_\.|q\.'_|q'\._|_q\.'|_q'\.|\.q_'|'q_\.|\.q'_|'q\._|_\.q'|_'q\.|\._q'|'_q\.|\.'q_|'\.q_|_\.'q|_'\.q|\._'q|'_\.q|\.'_q|'\._q)  {
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_PUNCTUM_MORA, L_INITIO_DEBILIS,H_ONE);
+		}
+-[a-mA-M](q_\.\.'|q_'\.\.|q\.\._'|q'_\.\.|q\.\.'_|q'\.\._|_q\.\.'|_q'\.\.|\.\.q_'|'q_\.\.|\.\.q'_|'q\.\._|_\.\.q'|_'q\.\.|\.\._q'|'_q\.\.|\.\.'q_|'\.\.q_|_\.\.'q|_'\.\.q|\.\._'q|'_\.\.q|\.\.'_q|'\.\._q) {
+	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_ONE);
+		}
+[a-mA-M]o         {
+	lex_add_note(0, S_ORISCUS, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]('o|o') {
+	lex_add_note(0, S_ORISCUS, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.\.o|o\.\.) {
+	lex_add_note(0, S_ORISCUS, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.o|o\.) {
+	lex_add_note(0, S_ORISCUS, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](o\.'|o'\.|\.o'|'o\.|\.'o|'\.o) {
+	lex_add_note(0, S_ORISCUS, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](o\.\.'|o'\.\.|\.\.o'|'o\.\.|\.\.'o|'\.\.o) {
+	lex_add_note(0, S_ORISCUS, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](_o|o_)         {
+	lex_add_note(0, S_ORISCUS, _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](o'_|o_'|'o_|_o'|'_o|_'o) {
+	lex_add_note(0, S_ORISCUS, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](o\.\._|o_\.\.|\.\.o_|_o\.\.|\.\._o|_\.\.o) {
+	lex_add_note(0, S_ORISCUS, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](o\._|o_\.|\.o_|_o\.|\._o|_\.o) {
+	lex_add_note(0, S_ORISCUS, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](o_\.'|o_'\.|o\._'|o'_\.|o\.'_|o'\._|_o\.'|_o'\.|\.o_'|'o_\.|\.o'_|'o\._|_\.o'|_'o\.|\._o'|'_o\.|\.'o_|'\.o_|_\.'o|_'\.o|\._'o|'_\.o|\.'_o|'\._o)  {
+	lex_add_note(0, S_ORISCUS, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](o_\.\.'|o_'\.\.|o\.\._'|o'_\.\.|o\.\.'_|o'\.\._|_o\.\.'|_o'\.\.|\.\.o_'|'o_\.\.|\.\.o'_|'o\.\._|_\.\.o'|_'o\.\.|\.\._o'|'_o\.\.|\.\.'o_|'\.\.o_|_\.\.'o|_'\.\.o|\.\._'o|'_\.\.o|\.\.'_o|'\.\._o) {
+	lex_add_note(0, S_ORISCUS, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M]o         {
+	lex_add_note(1, S_ORISCUS, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M]('o|o') {
+	lex_add_note(1, S_ORISCUS, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.\.o|o\.\.) {
+	lex_add_note(1, S_ORISCUS, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.o|o\.) {
+	lex_add_note(1, S_ORISCUS, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](o\.'|o'\.|\.o'|'o\.|\.'o|'\.o) {
+	lex_add_note(1, S_ORISCUS, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](o\.\.'|o'\.\.|\.\.o'|'o\.\.|\.\.'o|'\.\.o) {
+	lex_add_note(1, S_ORISCUS, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](_o|o_)         {
+	lex_add_note(1, S_ORISCUS, _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](o'_|o_'|'o_|_o'|'_o|_'o) {
+	lex_add_note(1, S_ORISCUS, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](o\.\._|o_\.\.|\.\.o_|_o\.\.|\.\._o|_\.\.o) {
+	lex_add_note(1, S_ORISCUS, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](o\._|o_\.|\.o_|_o\.|\._o|_\.o) {
+	lex_add_note(1, S_ORISCUS, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](o_\.'|o_'\.|o\._'|o'_\.|o\.'_|o'\._|_o\.'|_o'\.|\.o_'|'o_\.|\.o'_|'o\._|_\.o'|_'o\.|\._o'|'_o\.|\.'o_|'\.o_|_\.'o|_'\.o|\._'o|'_\.o|\.'_o|'\._o)  {
+	lex_add_note(1, S_ORISCUS, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](o_\.\.'|o_'\.\.|o\.\._'|o'_\.\.|o\.\.'_|o'\.\._|_o\.\.'|_o'\.\.|\.\.o_'|'o_\.\.|\.\.o'_|'o\.\._|_\.\.o'|_'o\.\.|\.\._o'|'_o\.\.|\.\.'o_|'\.\.o_|_\.\.'o|_'\.\.o|\.\._'o|'_\.\.o|\.\.'_o|'\.\._o) {
+	lex_add_note(1, S_ORISCUS, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M]((\<|\>)o|o(\<|\>))        {
+	lex_add_note(0, S_ORISCUS_AUCTUS, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](o'(\<|\>)|o(\<|\>)'|'o(\<|\>)|(\<|\>)o'|'(\<|\>)o|(\<|\>)'o) {
+	lex_add_note(0, S_ORISCUS_AUCTUS, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](o\.\.(\<|\>)|o(\<|\>)\.\.|\.\.o(\<|\>)|(\<|\>)o\.\.|\.\.(\<|\>)o|(\<|\>)\.\.o) {
+	lex_add_note(0, S_ORISCUS_AUCTUS, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](o\.(\<|\>)|o(\<|\>)\.|\.o(\<|\>)|(\<|\>)o\.|\.(\<|\>)o|(\<|\>)\.o) {
+	lex_add_note(0, S_ORISCUS_AUCTUS, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](o(\<|\>)\.'|o(\<|\>)'\.|o\.(\<|\>)'|o'(\<|\>)\.|o\.'(\<|\>)|o'\.(\<|\>)|(\<|\>)o\.'|(\<|\>)o'\.|\.o(\<|\>)'|'o(\<|\>)\.|\.o'(\<|\>)|'o\.(\<|\>)|(\<|\>)\.o'|(\<|\>)'o\.|\.(\<|\>)o'|'(\<|\>)o\.|\.'o(\<|\>)|'\.o(\<|\>)|(\<|\>)\.'o|(\<|\>)'\.o|\.(\<|\>)'o|'(\<|\>)\.o|\.'(\<|\>)o|'\.(\<|\>)o) {
+	lex_add_note(0, S_ORISCUS_AUCTUS,_V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](o(\<|\>)\.\.'|o(\<|\>)'\.\.|o\.\.(\<|\>)'|o'(\<|\>)\.\.|o\.\.'(\<|\>)|o'\.\.(\<|\>)|(\<|\>)o\.\.'|(\<|\>)o'\.\.|\.\.o(\<|\>)'|'o(\<|\>)\.\.|\.\.o'(\<|\>)|'o\.\.(\<|\>)|(\<|\>)\.\.o'|(\<|\>)'o\.\.|\.\.(\<|\>)o'|'(\<|\>)o\.\.|\.\.'o(\<|\>)|'\.\.o(\<|\>)|(\<|\>)\.\.'o|(\<|\>)'\.\.o|\.\.(\<|\>)'o|'(\<|\>)\.\.o|\.\.'(\<|\>)o|'\.\.(\<|\>)o) {
+	lex_add_note(0, S_ORISCUS_AUCTUS, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](o_(\<|\>)|o(\<|\>)_|_o(\<|\>)|(\<|\>)o_|_(\<|\>)o|(\<|\>)_o)        {
+	lex_add_note(0, S_ORISCUS_AUCTUS, _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](o(\<|\>)_'|o(\<|\>)'_|o_(\<|\>)'|o'(\<|\>)_|o_'(\<|\>)|o'_(\<|\>)|(\<|\>)o_'|(\<|\>)o'_|_o(\<|\>)'|'o(\<|\>)_|_o'(\<|\>)|'o_(\<|\>)|(\<|\>)_o'|(\<|\>)'o_|_(\<|\>)o'|'(\<|\>)o_|_'o(\<|\>)|'_o(\<|\>)|(\<|\>)_'o|(\<|\>)'_o|_(\<|\>)'o|'(\<|\>)_o|_'(\<|\>)o|'_(\<|\>)o) {
+	lex_add_note(0, S_ORISCUS_AUCTUS,_V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](o(\<|\>)\.\._|o(\<|\>)_\.\.|o\.\.(\<|\>)_|o_(\<|\>)\.\.|o\.\._(\<|\>)|o_\.\.(\<|\>)|(\<|\>)o\.\._|(\<|\>)o_\.\.|\.\.o(\<|\>)_|_o(\<|\>)\.\.|\.\.o_(\<|\>)|_o\.\.(\<|\>)|(\<|\>)\.\.o_|(\<|\>)_o\.\.|\.\.(\<|\>)o_|_(\<|\>)o\.\.|\.\._o(\<|\>)|_\.\.o(\<|\>)|(\<|\>)\.\._o|(\<|\>)_\.\.o|\.\.(\<|\>)_o|_(\<|\>)\.\.o|\.\._(\<|\>)o|_\.\.(\<|\>)o) {
+	lex_add_note(0, S_ORISCUS_AUCTUS, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](o(\<|\>)\._|o(\<|\>)_\.|o\.(\<|\>)_|o_(\<|\>)\.|o\._(\<|\>)|o_\.(\<|\>)|(\<|\>)o\._|(\<|\>)o_\.|\.o(\<|\>)_|_o(\<|\>)\.|\.o_(\<|\>)|_o\.(\<|\>)|(\<|\>)\.o_|(\<|\>)_o\.|\.(\<|\>)o_|_(\<|\>)o\.|\._o(\<|\>)|_\.o(\<|\>)|(\<|\>)\._o|(\<|\>)_\.o|\.(\<|\>)_o|_(\<|\>)\.o|\._(\<|\>)o|_\.(\<|\>)o) {
+	lex_add_note(0, S_ORISCUS_AUCTUS, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](o(\<|\>)_\.'|o(\<|\>)_'\.|o(\<|\>)\._'|o(\<|\>)'_\.|o(\<|\>)\.'_|o(\<|\>)'\._|o_(\<|\>)\.'|o_(\<|\>)'\.|o\.(\<|\>)_'|o'(\<|\>)_\.|o\.(\<|\>)'_|o'(\<|\>)\._|o_\.(\<|\>)'|o_'(\<|\>)\.|o\._(\<|\>)'|o'_(\<|\>)\.|o\.'(\<|\>)_|o'\.(\<|\>)_|o_\.'(\<|\>)|o_'\.(\<|\>)|o\._'(\<|\>)|o'_\.(\<|\>)|o\.'_(\<|\>)|o'\._(\<|\>)|(\<|\>)o_\.'|(\<|\>)o_'\.|(\<|\>)o\._'|(\<|\>)o'_\.|(\<|\>)o\.'_|(\<|\>)o'\._|_o(\<|\>)\.'|_o(\<|\>)'\.|\.o(\<|\>)_'|'o(\<|\>)_\.|\.o(\<|\>)'_|'o(\<|\>)\._|_o\.(\<|\>)'|_'o(\<|\>)\.|\._o(\<|\>)'|'_o(\<|\>)\.|\.'o(\<|\>)_|'\.o(\<|\>)_|_\.o'(\<|\>)|_'o\.(\<|\>)|\._o'(\<|\>)|'_o\.(\<|\>)|\.'o_(\<|\>)|'\.o_(\<|\>)|(\<|\>)_\.o'|(\<|\>)_o'\.|(\<|\>)\.o_'|(\<|\>)'o_\.|(\<|\>)\.o'_|(\<|\>)'o\._|_(\<|\>)o\.'|_(\<|\>)o'\.|\.(\<|\>)o_'|'(\<|\>)o_\.|\.(\<|\>)o'_|'(\<|\>)o\._|_\.o(\<|\>)'|_'o(\<|\>)\.|\._o(\<|\>)'|'_o(\<|\>)\.|\.'o(\<|\>)_|'\.o(\<|\>)_|_\.o'(\<|\>)|_'o\.(\<|\>)|\._o'(\<|\>)|'_o\.(\<|\>)|\.'o_(\<|\>)|'\.o_(\<|\>)|(\<|\>)_\.o'|(\<|\>)_'o\.|(\<|\>)\._o'|(\<|\>)'_o\.|(\<|\>)\.'o_|(\<|\>)'\.o_|_(\<|\>)\.o'|_(\<|\>)'o\.|\.(\<|\>)_o'|'(\<|\>)_o\.|\.(\<|\>)'o_|'(\<|\>)\.o_|_\.(\<|\>)o'|_'(\<|\>)o\.|\._(\<|\>)o'|'_(\<|\>)o\.|\.'(\<|\>)o_|'\.(\<|\>)o_|_\.'o(\<|\>)|_'\.o(\<|\>)|\._'o(\<|\>)|'_\.o(\<|\>)|\.'_o(\<|\>)|'\._o(\<|\>)|(\<|\>)_\.'o|(\<|\>)_'\.o|(\<|\>)\._'o|(\<|\>)'_\.o|(\<|\>)\.'_o|(\<|\>)'\._o|_(\<|\>)\.'o|_(\<|\>)'\.o|\.(\<|\>)_'o|'(\<|\>)_\.o|\.(\<|\>)'_o|'(\<|\>)\._o|_\.(\<|\>)'o|_'(\<|\>)\.o|\._(\<|\>)'o|'_(\<|\>)\.o|\.'(\<|\>)_o|'\.(\<|\>)_o|_\.'(\<|\>)o|_'\.(\<|\>)o|\._'(\<|\>)o|'_\.(\<|\>)o|\.'_(\<|\>)o|'\._(\<|\>)o)  {
+	lex_add_note(0, S_ORISCUS_AUCTUS, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](o(\<|\>)_\.\.'|o(\<|\>)_'\.\.|o(\<|\>)\.\._'|o(\<|\>)'_\.\.|o(\<|\>)\.\.'_|o(\<|\>)'\.\._|o_(\<|\>)\.\.'|o_(\<|\>)'\.\.|o\.\.(\<|\>)_'|o'(\<|\>)_\.\.|o\.\.(\<|\>)'_|o'(\<|\>)\.\._|o_\.\.(\<|\>)'|o_'(\<|\>)\.\.|o\.\._(\<|\>)'|o'_(\<|\>)\.\.|o\.\.'(\<|\>)_|o'\.\.(\<|\>)_|o_\.\.'(\<|\>)|o_'\.\.(\<|\>)|o\.\._'(\<|\>)|o'_\.\.(\<|\>)|o\.\.'_(\<|\>)|o'\.\._(\<|\>)|(\<|\>)o_\.\.'|(\<|\>)o_'\.\.|(\<|\>)o\.\._'|(\<|\>)o'_\.\.|(\<|\>)o\.\.'_|(\<|\>)o'\.\._|_o(\<|\>)\.\.'|_o(\<|\>)'\.\.|\.\.o(\<|\>)_'|'o(\<|\>)_\.\.|\.\.o(\<|\>)'_|'o(\<|\>)\.\._|_o\.\.(\<|\>)'|_'o(\<|\>)\.\.|\.\._o(\<|\>)'|'_o(\<|\>)\.\.|\.\.'o(\<|\>)_|'\.\.o(\<|\>)_|_\.\.o'(\<|\>)|_'o\.\.(\<|\>)|\.\._o'(\<|\>)|'_o\.\.(\<|\>)|\.\.'o_(\<|\>)|'\.\.o_(\<|\>)|(\<|\>)_\.\.o'|(\<|\>)_o'\.\.|(\<|\>)\.\.o_'|(\<|\>)'o_\.\.|(\<|\>)\.\.o'_|(\<|\>)'o\.\._|_(\<|\>)o\.\.'|_(\<|\>)o'\.\.|\.\.(\<|\>)o_'|'(\<|\>)o_\.\.|\.\.(\<|\>)o'_|'(\<|\>)o\.\._|_\.\.o(\<|\>)'|_'o(\<|\>)\.\.|\.\._o(\<|\>)'|'_o(\<|\>)\.\.|\.\.'o(\<|\>)_|'\.\.o(\<|\>)_|_\.\.o'(\<|\>)|_'o\.\.(\<|\>)|\.\._o'(\<|\>)|'_o\.\.(\<|\>)|\.\.'o_(\<|\>)|'\.\.o_(\<|\>)|(\<|\>)_\.\.o'|(\<|\>)_'o\.\.|(\<|\>)\.\._o'|(\<|\>)'_o\.\.|(\<|\>)\.\.'o_|(\<|\>)'\.\.o_|_(\<|\>)\.\.o'|_(\<|\>)'o\.\.|\.\.(\<|\>)_o'|'(\<|\>)_o\.\.|\.\.(\<|\>)'o_|'(\<|\>)\.\.o_|_\.\.(\<|\>)o'|_'(\<|\>)o\.\.|\.\._(\<|\>)o'|'_(\<|\>)o\.\.|\.\.'(\<|\>)o_|'\.\.(\<|\>)o_|_\.\.'o(\<|\>)|_'\.\.o(\<|\>)|\.\._'o(\<|\>)|'_\.\.o(\<|\>)|\.\.'_o(\<|\>)|'\.\._o(\<|\>)|(\<|\>)_\.\.'o|(\<|\>)_'\.\.o|(\<|\>)\.\._'o|(\<|\>)'_\.\.o|(\<|\>)\.\.'_o|(\<|\>)'\.\._o|_(\<|\>)\.\.'o|_(\<|\>)'\.\.o|\.\.(\<|\>)_'o|'(\<|\>)_\.\.o|\.\.(\<|\>)'_o|'(\<|\>)\.\._o|_\.\.(\<|\>)'o|_'(\<|\>)\.\.o|\.\._(\<|\>)'o|'_(\<|\>)\.\.o|\.\.'(\<|\>)_o|'\.\.(\<|\>)_o|_\.\.'(\<|\>)o|_'\.\.(\<|\>)o|\.\._'(\<|\>)o|'_\.\.(\<|\>)o|\.\.'_(\<|\>)o|'\.\._(\<|\>)o) {
+	lex_add_note(0, S_ORISCUS_AUCTUS, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M]w         {
+	lex_add_note(0, S_QUILISMA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]('w|w') {
+	lex_add_note(0, S_QUILISMA, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.\.w|w\.\.) {
+	lex_add_note(0, S_QUILISMA, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.w|w\.) {
+	lex_add_note(0, S_QUILISMA, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](w\.'|w'\.|\.w'|'w\.|\.'w|'\.w) {
+	lex_add_note(0, S_QUILISMA, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](w\.\.'|w'\.\.|\.\.w'|'w\.\.|\.\.'w|'\.\.w) {
+	lex_add_note(0, S_QUILISMA, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](_w|w_)         {
+	lex_add_note(0, S_QUILISMA, _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](w'_|w_'|'w_|_w'|'_w|_'w) {
+	lex_add_note(0, S_QUILISMA, _V_EPISEMUS , L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](w\.\._|w_\.\.|\.\.w_|_w\.\.|\.\._w|_\.\.w) {
+	lex_add_note(0, S_QUILISMA, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](w\._|w_\.|\.w_|_w\.|\._w|_\.w) {
+	lex_add_note(0, S_QUILISMA, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](w_\.'|w_'\.|w\._'|w'_\.|w\.'_|w'\._|_w\.'|_w'\.|\.w_'|'w_\.|\.w'_|'w\._|_\.w'|_'w\.|\._w'|'_w\.|\.'w_|'\.w_|_\.'w|_'\.w|\._'w|'_\.w|\.'_w|'\._w)  {
+	lex_add_note(0, S_QUILISMA, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](w_\.\.'|w_'\.\.|w\.\._'|w'_\.\.|w\.\.'_|w'\.\._|_w\.\.'|_w'\.\.|\.\.w_'|'w_\.\.|\.\.w'_|'w\.\._|_\.\.w'|_'w\.\.|\.\._w'|'_w\.\.|\.\.'w_|'\.\.w_|_\.\.'w|_'\.\.w|\.\._'w|'_\.\.w|\.\.'_w|'\.\._w) {
+	lex_add_note(0, S_QUILISMA, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M]w         {
+	lex_add_note(1, S_QUILISMA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M]('w|w') {
+	lex_add_note(1, S_QUILISMA, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.\.w|w\.\.) {
+	lex_add_note(1, S_QUILISMA, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.w|w\.) {
+	lex_add_note(1, S_QUILISMA, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](w\.'|w'\.|\.w'|'w\.|\.'w|'\.w) {
+	lex_add_note(1, S_QUILISMA, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](w\.\.'|w'\.\.|\.\.w'|'w\.\.|\.\.'w|'\.\.w) {
+	lex_add_note(1, S_QUILISMA,_V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](_w|w_)         {
+	lex_add_note(1, S_QUILISMA, _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](w'_|w_'|'w_|_w'|'_w|_'w) {
+	lex_add_note(1, S_QUILISMA, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](w\.\._|w_\.\.|\.\.w_|_w\.\.|\.\._w|_\.\.w) {
+	lex_add_note(1, S_QUILISMA, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](w\._|w_\.|\.w_|_w\.|\._w|_\.w) {
+	lex_add_note(1, S_QUILISMA, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](w_\.'|w_'\.|w\._'|w'_\.|w\.'_|w'\._|_w\.'|_w'\.|\.w_'|'w_\.|\.w'_|'w\._|_\.w'|_'w\.|\._w'|'_w\.|\.'w_|'\.w_|_\.'w|_'\.w|\._'w|'_\.w|\.'_w|'\._w)  {
+	lex_add_note(1, S_QUILISMA, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](w_\.\.'|w_'\.\.|w\.\._'|w'_\.\.|w\.\.'_|w'\.\._|_w\.\.'|_w'\.\.|\.\.w_'|'w_\.\.|\.\.w'_|'w\.\._|_\.\.w'|_'w\.\.|\.\._w'|'_w\.\.|\.\.'w_|'\.\.w_|_\.\.'w|_'\.\.w|\.\._'w|'_\.\.w|\.\.'_w|'\.\._w) {
+	lex_add_note(1, S_QUILISMA, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M]W         {
+	lex_add_note(0, S_QUILISMA_QUADRATUM, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]('W|W') {
+	lex_add_note(0, S_QUILISMA_QUADRATUM, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.\.W|W\.\.) {
+	lex_add_note(0, S_QUILISMA_QUADRATUM, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.W|W\.) {
+	lex_add_note(0, S_QUILISMA_QUADRATUM, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](W\.'|W'\.|\.W'|'W\.|\.'W|'\.W) {
+	lex_add_note(0, S_QUILISMA_QUADRATUM, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](W\.\.'|W'\.\.|\.\.W'|'W\.\.|\.\.'W|'\.\.W) {
+	lex_add_note(0, S_QUILISMA_QUADRATUM, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](_W|W_)         {
+	lex_add_note(0, S_QUILISMA_QUADRATUM, _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](W'_|W_'|'W_|_W'|'_W|_'W) {
+	lex_add_note(0, S_QUILISMA_QUADRATUM, _V_EPISEMUS , L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](W\.\._|W_\.\.|\.\.W_|_W\.\.|\.\._W|_\.\.W) {
+	lex_add_note(0, S_QUILISMA_QUADRATUM, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](W\._|W_\.|\.W_|_W\.|\._W|_\.W) {
+	lex_add_note(0, S_QUILISMA_QUADRATUM, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](W_\.'|W_'\.|W\._'|W'_\.|W\.'_|W'\._|_W\.'|_W'\.|\.W_'|'W_\.|\.W'_|'W\._|_\.W'|_'W\.|\._W'|'_W\.|\.'W_|'\.W_|_\.'W|_'\.W|\._'W|'_\.W|\.'_W|'\._W)  {
+	lex_add_note(0, S_QUILISMA_QUADRATUM, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](W_\.\.'|W_'\.\.|W\.\._'|W'_\.\.|W\.\.'_|W'\.\._|_W\.\.'|_W'\.\.|\.\.W_'|'W_\.\.|\.\.W'_|'W\.\._|_\.\.W'|_'W\.\.|\.\._W'|'_W\.\.|\.\.'W_|'\.\.W_|_\.\.'W|_'\.\.W|\.\._'W|'_\.\.W|\.\.'_W|'\.\._W) {
+	lex_add_note(0, S_QUILISMA_QUADRATUM, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M]W         {
+	lex_add_note(1, S_QUILISMA_QUADRATUM, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M]('W|W') {
+	lex_add_note(1, S_QUILISMA_QUADRATUM, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.\.W|W\.\.) {
+	lex_add_note(1, S_QUILISMA_QUADRATUM, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.W|W\.) {
+	lex_add_note(1, S_QUILISMA_QUADRATUM, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](W\.'|W'\.|\.W'|'W\.|\.'W|'\.W) {
+	lex_add_note(1, S_QUILISMA_QUADRATUM, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](W\.\.'|W'\.\.|\.\.W'|'W\.\.|\.\.'W|'\.\.W) {
+	lex_add_note(1, S_QUILISMA_QUADRATUM,_V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](_W|W_)         {
+	lex_add_note(1, S_QUILISMA_QUADRATUM, _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](W'_|W_'|'W_|_W'|'_W|_'W) {
+	lex_add_note(1, S_QUILISMA_QUADRATUM, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](W\.\._|W_\.\.|\.\.W_|_W\.\.|\.\._W|_\.\.W) {
+	lex_add_note(1, S_QUILISMA_QUADRATUM, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](W\._|W_\.|\.W_|_W\.|\._W|_\.W) {
+	lex_add_note(1, S_QUILISMA_QUADRATUM, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](W_\.'|W_'\.|W\._'|W'_\.|W\.'_|W'\._|_W\.'|_W'\.|\.W_'|'W_\.|\.W'_|'W\._|_\.W'|_'W\.|\._W'|'_W\.|\.'W_|'\.W_|_\.'W|_'\.W|\._'W|'_\.W|\.'_W|'\._W)  {
+	lex_add_note(1, S_QUILISMA_QUADRATUM, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](W_\.\.'|W_'\.\.|W\.\._'|W'_\.\.|W\.\.'_|W'\.\._|_W\.\.'|_W'\.\.|\.\.W_'|'W_\.\.|\.\.W'_|'W\.\._|_\.\.W'|_'W\.\.|\.\._W'|'_W\.\.|\.\.'W_|'\.\.W_|_\.\.'W|_'\.\.W|\.\._'W|'_\.\.W|\.\.'_W|'\.\._W) {
+	lex_add_note(1, S_QUILISMA_QUADRATUM, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](V|v)         {
+	lex_add_note(0, S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]('(V|v)|(V|v)') {
+	lex_add_note(0, S_VIRGA, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.\.(V|v)|(V|v)\.\.) {
+	lex_add_note(0, S_VIRGA, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.(V|v)|(V|v)\.) {
+	lex_add_note(0, S_VIRGA, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]((V|v)\.'|(V|v)'\.|\.(V|v)'|'(V|v)\.|\.'(V|v)|'\.(V|v)) {
+	lex_add_note(0, S_VIRGA, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]((V|v)\.\.'|(V|v)'\.\.|\.\.(V|v)'|'(V|v)\.\.|\.\.'(V|v)|'\.\.(V|v)) {
+	lex_add_note(0, S_VIRGA, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](_(V|v)|(V|v)_)         {
+	lex_add_note(0, S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M]((V|v)'_|(V|v)_'|'(V|v)_|_(V|v)'|'_(V|v)|_'(V|v)) {
+	lex_add_note(0, S_VIRGA, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M]((V|v)\.\._|(V|v)_\.\.|\.\.(V|v)_|_(V|v)\.\.|\.\._(V|v)|_\.\.(V|v)) {
+	lex_add_note(0, S_VIRGA, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M]((V|v)\._|(V|v)_\.|\.(V|v)_|_(V|v)\.|\._(V|v)|_\.(V|v)) {
+	lex_add_note(0, S_VIRGA,_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M]((V|v)_\.'|(V|v)_'\.|(V|v)\._'|(V|v)'_\.|(V|v)\.'_|(V|v)'\._|_(V|v)\.'|_(V|v)'\.|\.(V|v)_'|'(V|v)_\.|\.(V|v)'_|'(V|v)\._|_\.(V|v)'|_'(V|v)\.|\._(V|v)'|'_(V|v)\.|\.'(V|v)_|'\.(V|v)_|_\.'(V|v)|_'\.(V|v)|\._'(V|v)|'_\.(V|v)|\.'_(V|v)|'\._(V|v))  {
+	lex_add_note(0, S_VIRGA, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M]((V|v)_\.\.'|(V|v)_'\.\.|(V|v)\.\._'|(V|v)'_\.\.|(V|v)\.\.'_|(V|v)'\.\._|_(V|v)\.\.'|_(V|v)'\.\.|\.\.(V|v)_'|'(V|v)_\.\.|\.\.(V|v)'_|'(V|v)\.\._|_\.\.(V|v)'|_'(V|v)\.\.|\.\._(V|v)'|'_(V|v)\.\.|\.\.'(V|v)_|'\.\.(V|v)_|_\.\.'(V|v)|_'\.\.(V|v)|\.\._'(V|v)|'_\.\.(V|v)|\.\.'_(V|v)|'\.\._(V|v)) {
+	lex_add_note(0, S_VIRGA, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](V|v)         {
+	lex_add_note(1, S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M]('(V|v)|(V|v)') {
+	lex_add_note(1, S_VIRGA, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.\.(V|v)|(V|v)\.\.) {
+	lex_add_note(1, S_VIRGA, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.(V|v)|(V|v)\.) {
+	lex_add_note(1, S_VIRGA, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M]((V|v)\.'|(V|v)'\.|\.(V|v)'|'(V|v)\.|\.'(V|v)|'\.(V|v)) {
+	lex_add_note(1, S_VIRGA, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M]((V|v)\.\.'|(V|v)'\.\.|\.\.(V|v)'|'(V|v)\.\.|\.\.'(V|v)|'\.\.(V|v)) {
+	lex_add_note(1, S_VIRGA, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](_(V|v)|(V|v)_)         {
+	lex_add_note(1, S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M]((V|v)'_|(V|v)_'|'(V|v)_|_(V|v)'|'_(V|v)|_'(V|v)) {
+	lex_add_note(1, S_VIRGA, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M]((V|v)\.\._|(V|v)_\.\.|\.\.(V|v)_|_(V|v)\.\.|\.\._(V|v)|_\.\.(V|v)) {
+	lex_add_note(1, S_VIRGA, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M]((V|v)\._|(V|v)_\.|\.(V|v)_|_(V|v)\.|\._(V|v)|_\.(V|v)) {
+	lex_add_note(1, S_VIRGA, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M]((V|v)_\.'|(V|v)_'\.|(V|v)\._'|(V|v)'_\.|(V|v)\.'_|(V|v)'\._|_(V|v)\.'|_(V|v)'\.|\.(V|v)_'|'(V|v)_\.|\.(V|v)'_|'(V|v)\._|_\.(V|v)'|_'(V|v)\.|\._(V|v)'|'_(V|v)\.|\.'(V|v)_|'\.(V|v)_|_\.'(V|v)|_'\.(V|v)|\._'(V|v)|'_\.(V|v)|\.'_(V|v)|'\._(V|v))  {
+	lex_add_note(1, S_VIRGA, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M]((V|v)_\.\.'|(V|v)_'\.\.|(V|v)\.\._'|(V|v)'_\.\.|(V|v)\.\.'_|(V|v)'\.\._|_(V|v)\.\.'|_(V|v)'\.\.|\.\.(V|v)_'|'(V|v)_\.\.|\.\.(V|v)'_|'(V|v)\.\._|_\.\.(V|v)'|_'(V|v)\.\.|\.\._(V|v)'|'_(V|v)\.\.|\.\.'(V|v)_|'\.\.(V|v)_|_\.\.'(V|v)|_'\.\.(V|v)|\.\._'(V|v)|'_\.\.(V|v)|\.\.'_(V|v)|'\.\._(V|v)) {
+	lex_add_note(1, S_VIRGA, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M]s         {
+	lex_add_note(0, S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M]('s|s') {
+	lex_add_note(0, S_STROPHA, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.\.s|s\.\.) {
+	lex_add_note(0, S_STROPHA, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](\.s|s\.) {
+	lex_add_note(0, S_STROPHA, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](s\.'|s'\.|\.s'|'s\.|\.'s|'\.s) {
+	lex_add_note(0, S_STROPHA, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](s\.\.'|s'\.\.|\.\.s'|'s\.\.|\.\.'s|'\.\.s) {
+	lex_add_note(0, S_STROPHA, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+[a-mA-M](_s|s_)         {
+	lex_add_note(0, S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](s'_|s_'|'s_|_s'|'_s|_'s) {
+	lex_add_note(0, S_STROPHA, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](s\.\._|s_\.\.|\.\.s_|_s\.\.|\.\._s|_\.\.s) {
+	lex_add_note(0, S_STROPHA, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](s\._|s_\.|\.s_|_s\.|\._s|_\.s) {
+	lex_add_note(0, S_STROPHA, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](s_\.'|s_'\.|s\._'|s'_\.|s\.'_|s'\._|_s\.'|_s'\.|\.s_'|'s_\.|\.s'_|'s\._|_\.s'|_'s\.|\._s'|'_s\.|\.'s_|'\.s_|_\.'s|_'\.s|\._'s|'_\.s|\.'_s|'\._s)  {
+	lex_add_note(0, S_STROPHA, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M](s_\.\.'|s_'\.\.|s\.\._'|s'_\.\.|s\.\.'_|s'\.\._|_s\.\.'|_s'\.\.|\.\.s_'|'s_\.\.|\.\.s'_|'s\.\._|_\.\.s'|_'s\.\.|\.\._s'|'_s\.\.|\.\.'s_|'\.\.s_|_\.\.'s|_'\.\.s|\.\._'s|'_\.\.s|\.\.'_s|'\.\._s) {
+	lex_add_note(0, S_STROPHA, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M]s         {
+	lex_add_note(1, S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M]('s|s') {
+	lex_add_note(1, S_STROPHA, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.\.s|s\.\.) {
+	lex_add_note(1, S_STROPHA, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](\.s|s\.) {
+	lex_add_note(1, S_STROPHA, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](s\.'|s'\.|\.s'|'s\.|\.'s|'\.s) {
+	lex_add_note(1, S_STROPHA, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](s\.\.'|s'\.\.|\.\.s'|'s\.\.|\.\.'s|'\.\.s) {
+	lex_add_note(1, S_STROPHA, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+		}
+-[a-mA-M](_s|s_)         {
+	lex_add_note(1, S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](s'_|s_'|'s_|_s'|'_s|_'s) {
+	lex_add_note(1, S_STROPHA, _V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](s\.\._|s_\.\.|\.\.s_|_s\.\.|\.\._s|_\.\.s) {
+	lex_add_note(1, S_STROPHA, _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](s\._|s_\.|\.s_|_s\.|\._s|_\.s) {
+	lex_add_note(1, S_STROPHA, _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](s_\.'|s_'\.|s\._'|s'_\.|s\.'_|s'\._|_s\.'|_s'\.|\.s_'|'s_\.|\.s'_|'s\._|_\.s'|_'s\.|\._s'|'_s\.|\.'s_|'\.s_|_\.'s|_'\.s|\._'s|'_\.s|\.'_s|'\._s)  {
+	lex_add_note(1, S_STROPHA, _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+		}
+-[a-mA-M](s_\.\.'|s_'\.\.|s\.\._'|s'_\.\.|s\.\.'_|s'\.\._|_s\.\.'|_s'\.\.|\.\.s_'|'s_\.\.|\.\.s'_|'s\.\._|_\.\.s'|_'s\.\.|\.\._s'|'_s\.\.|\.\.'s_|'\.\.s_|_\.\.'s|_'\.\.s|\.\._'s|'_\.\.s|\.\.'_s|'\.\._s) {
+	lex_add_note(1, S_STROPHA, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+		}
+[a-mA-M]((\<|\>)s|s(\<|\>))        {
+	lex_add_note(0, S_STROPHA, _NO_SIGN, L_AUCTA,H_NO_EPISEMUS);
+		}
+[a-mA-M](s'(\<|\>)|s(\<|\>)'|'s(\<|\>)|(\<|\>)s'|'(\<|\>)s|(\<|\>)'s) {
+	lex_add_note(0, S_STROPHA, _V_EPISEMUS, L_AUCTA,H_NO_EPISEMUS);
+		}
+[a-mA-M](s\.\.(\<|\>)|s(\<|\>)\.\.|\.\.s(\<|\>)|(\<|\>)s\.\.|\.\.(\<|\>)s|(\<|\>)\.\.s) {
+	lex_add_note(0, S_STROPHA, _AUCTUM_DUPLEX, L_AUCTA,H_NO_EPISEMUS);
+		}
+[a-mA-M](s\.(\<|\>)|s(\<|\>)\.|\.s(\<|\>)|(\<|\>)s\.|\.(\<|\>)s|(\<|\>)\.s) {
+	lex_add_note(0, S_STROPHA, _PUNCTUM_MORA, L_AUCTA,H_NO_EPISEMUS);
+		}
+[a-mA-M](s(\<|\>)\.'|s(\<|\>)'\.|s\.(\<|\>)'|s'(\<|\>)\.|s\.'(\<|\>)|s'\.(\<|\>)|(\<|\>)s\.'|(\<|\>)s'\.|\.s(\<|\>)'|'s(\<|\>)\.|\.s'(\<|\>)|'s\.(\<|\>)|(\<|\>)\.s'|(\<|\>)'s\.|\.(\<|\>)s'|'(\<|\>)s\.|\.'s(\<|\>)|'\.s(\<|\>)|(\<|\>)\.'s|(\<|\>)'\.s|\.(\<|\>)'s|'(\<|\>)\.s|\.'(\<|\>)s|'\.(\<|\>)s) {
+	lex_add_note(0, S_STROPHA, _V_EPISEMUS_PUNCTUM_MORA, L_AUCTA,H_NO_EPISEMUS);
+		}
+[a-mA-M](s(\<|\>)\.\.'|s(\<|\>)'\.\.|s\.\.(\<|\>)'|s'(\<|\>)\.\.|s\.\.'(\<|\>)|s'\.\.(\<|\>)|(\<|\>)s\.\.'|(\<|\>)s'\.\.|\.\.s(\<|\>)'|'s(\<|\>)\.\.|\.\.s'(\<|\>)|'s\.\.(\<|\>)|(\<|\>)\.\.s'|(\<|\>)'s\.\.|\.\.(\<|\>)s'|'(\<|\>)s\.\.|\.\.'s(\<|\>)|'\.\.s(\<|\>)|(\<|\>)\.\.'s|(\<|\>)'\.\.s|\.\.(\<|\>)'s|'(\<|\>)\.\.s|\.\.'(\<|\>)s|'\.\.(\<|\>)s) {
+	lex_add_note(0, S_STROPHA, _V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTA,H_NO_EPISEMUS);
+		}
+[a-mA-M](s_(\<|\>)|s(\<|\>)_|_s(\<|\>)|(\<|\>)s_|_(\<|\>)s|(\<|\>)_s)        {
+	lex_add_note(0, S_STROPHA, _NO_SIGN, L_AUCTA,H_ONE);
+		}
+[a-mA-M](s(\<|\>)_'|s(\<|\>)'_|s_(\<|\>)'|s'(\<|\>)_|s_'(\<|\>)|s'_(\<|\>)|(\<|\>)s_'|(\<|\>)s'_|_s(\<|\>)'|'s(\<|\>)_|_s'(\<|\>)|'s_(\<|\>)|(\<|\>)_s'|(\<|\>)'s_|_(\<|\>)s'|'(\<|\>)s_|_'s(\<|\>)|'_s(\<|\>)|(\<|\>)_'s|(\<|\>)'_s|_(\<|\>)'s|'(\<|\>)_s|_'(\<|\>)s|'_(\<|\>)s) {
+	lex_add_note(0, S_STROPHA, _V_EPISEMUS, L_AUCTA,H_ONE);
+		}
+[a-mA-M](s(\<|\>)\.\._|s(\<|\>)_\.\.|s\.\.(\<|\>)_|s_(\<|\>)\.\.|s\.\._(\<|\>)|s_\.\.(\<|\>)|(\<|\>)s\.\._|(\<|\>)s_\.\.|\.\.s(\<|\>)_|_s(\<|\>)\.\.|\.\.s_(\<|\>)|_s\.\.(\<|\>)|(\<|\>)\.\.s_|(\<|\>)_s\.\.|\.\.(\<|\>)s_|_(\<|\>)s\.\.|\.\._s(\<|\>)|_\.\.s(\<|\>)|(\<|\>)\.\._s|(\<|\>)_\.\.s|\.\.(\<|\>)_s|_(\<|\>)\.\.s|\.\._(\<|\>)s|_\.\.(\<|\>)s) {
+	lex_add_note(0, S_STROPHA, _AUCTUM_DUPLEX, L_AUCTA,H_ONE);
+		}
+[a-mA-M](s(\<|\>)\._|s(\<|\>)_\.|s\.(\<|\>)_|s_(\<|\>)\.|s\._(\<|\>)|s_\.(\<|\>)|(\<|\>)s\._|(\<|\>)s_\.|\.s(\<|\>)_|_s(\<|\>)\.|\.s_(\<|\>)|_s\.(\<|\>)|(\<|\>)\.s_|(\<|\>)_s\.|\.(\<|\>)s_|_(\<|\>)s\.|\._s(\<|\>)|_\.s(\<|\>)|(\<|\>)\._s|(\<|\>)_\.s|\.(\<|\>)_s|_(\<|\>)\.s|\._(\<|\>)s|_\.(\<|\>)s) {
+	lex_add_note(0, S_STROPHA, _PUNCTUM_MORA, L_AUCTA,H_ONE);
+		}
+[a-mA-M](s(\<|\>)_\.'|s(\<|\>)_'\.|s(\<|\>)\._'|s(\<|\>)'_\.|s(\<|\>)\.'_|s(\<|\>)'\._|s_(\<|\>)\.'|s_(\<|\>)'\.|s\.(\<|\>)_'|s'(\<|\>)_\.|s\.(\<|\>)'_|s'(\<|\>)\._|s_\.(\<|\>)'|s_'(\<|\>)\.|s\._(\<|\>)'|s'_(\<|\>)\.|s\.'(\<|\>)_|s'\.(\<|\>)_|s_\.'(\<|\>)|s_'\.(\<|\>)|s\._'(\<|\>)|s'_\.(\<|\>)|s\.'_(\<|\>)|s'\._(\<|\>)|(\<|\>)s_\.'|(\<|\>)s_'\.|(\<|\>)s\._'|(\<|\>)s'_\.|(\<|\>)s\.'_|(\<|\>)s'\._|_s(\<|\>)\.'|_s(\<|\>)'\.|\.s(\<|\>)_'|'s(\<|\>)_\.|\.s(\<|\>)'_|'s(\<|\>)\._|_s\.(\<|\>)'|_'s(\<|\>)\.|\._s(\<|\>)'|'_s(\<|\>)\.|\.'s(\<|\>)_|'\.s(\<|\>)_|_\.s'(\<|\>)|_'s\.(\<|\>)|\._s'(\<|\>)|'_s\.(\<|\>)|\.'s_(\<|\>)|'\.s_(\<|\>)|(\<|\>)_\.s'|(\<|\>)_s'\.|(\<|\>)\.s_'|(\<|\>)'s_\.|(\<|\>)\.s'_|(\<|\>)'s\._|_(\<|\>)s\.'|_(\<|\>)s'\.|\.(\<|\>)s_'|'(\<|\>)s_\.|\.(\<|\>)s'_|'(\<|\>)s\._|_\.s(\<|\>)'|_'s(\<|\>)\.|\._s(\<|\>)'|'_s(\<|\>)\.|\.'s(\<|\>)_|'\.s(\<|\>)_|_\.s'(\<|\>)|_'s\.(\<|\>)|\._s'(\<|\>)|'_s\.(\<|\>)|\.'s_(\<|\>)|'\.s_(\<|\>)|(\<|\>)_\.s'|(\<|\>)_'s\.|(\<|\>)\._s'|(\<|\>)'_s\.|(\<|\>)\.'s_|(\<|\>)'\.s_|_(\<|\>)\.s'|_(\<|\>)'s\.|\.(\<|\>)_s'|'(\<|\>)_s\.|\.(\<|\>)'s_|'(\<|\>)\.s_|_\.(\<|\>)s'|_'(\<|\>)s\.|\._(\<|\>)s'|'_(\<|\>)s\.|\.'(\<|\>)s_|'\.(\<|\>)s_|_\.'s(\<|\>)|_'\.s(\<|\>)|\._'s(\<|\>)|'_\.s(\<|\>)|\.'_s(\<|\>)|'\._s(\<|\>)|(\<|\>)_\.'s|(\<|\>)_'\.s|(\<|\>)\._'s|(\<|\>)'_\.s|(\<|\>)\.'_s|(\<|\>)'\._s|_(\<|\>)\.'s|_(\<|\>)'\.s|\.(\<|\>)_'s|'(\<|\>)_\.s|\.(\<|\>)'_s|'(\<|\>)\._s|_\.(\<|\>)'s|_'(\<|\>)\.s|\._(\<|\>)'s|'_(\<|\>)\.s|\.'(\<|\>)_s|'\.(\<|\>)_s|_\.'(\<|\>)s|_'\.(\<|\>)s|\._'(\<|\>)s|'_\.(\<|\>)s|\.'_(\<|\>)s|'\._(\<|\>)s)  {
+	lex_add_note(0, S_STROPHA, _V_EPISEMUS_PUNCTUM_MORA, L_AUCTA,H_ONE);
+		}
+[a-mA-M](s(\<|\>)_\.\.'|s(\<|\>)_'\.\.|s(\<|\>)\.\._'|s(\<|\>)'_\.\.|s(\<|\>)\.\.'_|s(\<|\>)'\.\._|s_(\<|\>)\.\.'|s_(\<|\>)'\.\.|s\.\.(\<|\>)_'|s'(\<|\>)_\.\.|s\.\.(\<|\>)'_|s'(\<|\>)\.\._|s_\.\.(\<|\>)'|s_'(\<|\>)\.\.|s\.\._(\<|\>)'|s'_(\<|\>)\.\.|s\.\.'(\<|\>)_|s'\.\.(\<|\>)_|s_\.\.'(\<|\>)|s_'\.\.(\<|\>)|s\.\._'(\<|\>)|s'_\.\.(\<|\>)|s\.\.'_(\<|\>)|s'\.\._(\<|\>)|(\<|\>)s_\.\.'|(\<|\>)s_'\.\.|(\<|\>)s\.\._'|(\<|\>)s'_\.\.|(\<|\>)s\.\.'_|(\<|\>)s'\.\._|_s(\<|\>)\.\.'|_s(\<|\>)'\.\.|\.\.s(\<|\>)_'|'s(\<|\>)_\.\.|\.\.s(\<|\>)'_|'s(\<|\>)\.\._|_s\.\.(\<|\>)'|_'s(\<|\>)\.\.|\.\._s(\<|\>)'|'_s(\<|\>)\.\.|\.\.'s(\<|\>)_|'\.\.s(\<|\>)_|_\.\.s'(\<|\>)|_'s\.\.(\<|\>)|\.\._s'(\<|\>)|'_s\.\.(\<|\>)|\.\.'s_(\<|\>)|'\.\.s_(\<|\>)|(\<|\>)_\.\.s'|(\<|\>)_s'\.\.|(\<|\>)\.\.s_'|(\<|\>)'s_\.\.|(\<|\>)\.\.s'_|(\<|\>)'s\.\._|_(\<|\>)s\.\.'|_(\<|\>)s'\.\.|\.\.(\<|\>)s_'|'(\<|\>)s_\.\.|\.\.(\<|\>)s'_|'(\<|\>)s\.\._|_\.\.s(\<|\>)'|_'s(\<|\>)\.\.|\.\._s(\<|\>)'|'_s(\<|\>)\.\.|\.\.'s(\<|\>)_|'\.\.s(\<|\>)_|_\.\.s'(\<|\>)|_'s\.\.(\<|\>)|\.\._s'(\<|\>)|'_s\.\.(\<|\>)|\.\.'s_(\<|\>)|'\.\.s_(\<|\>)|(\<|\>)_\.\.s'|(\<|\>)_'s\.\.|(\<|\>)\.\._s'|(\<|\>)'_s\.\.|(\<|\>)\.\.'s_|(\<|\>)'\.\.s_|_(\<|\>)\.\.s'|_(\<|\>)'s\.\.|\.\.(\<|\>)_s'|'(\<|\>)_s\.\.|\.\.(\<|\>)'s_|'(\<|\>)\.\.s_|_\.\.(\<|\>)s'|_'(\<|\>)s\.\.|\.\._(\<|\>)s'|'_(\<|\>)s\.\.|\.\.'(\<|\>)s_|'\.\.(\<|\>)s_|_\.\.'s(\<|\>)|_'\.\.s(\<|\>)|\.\._'s(\<|\>)|'_\.\.s(\<|\>)|\.\.'_s(\<|\>)|'\.\._s(\<|\>)|(\<|\>)_\.\.'s|(\<|\>)_'\.\.s|(\<|\>)\.\._'s|(\<|\>)'_\.\.s|(\<|\>)\.\.'_s|(\<|\>)'\.\._s|_(\<|\>)\.\.'s|_(\<|\>)'\.\.s|\.\.(\<|\>)_'s|'(\<|\>)_\.\.s|\.\.(\<|\>)'_s|'(\<|\>)\.\._s|_\.\.(\<|\>)'s|_'(\<|\>)\.\.s|\.\._(\<|\>)'s|'_(\<|\>)\.\.s|\.\.'(\<|\>)_s|'\.\.(\<|\>)_s|_\.\.'(\<|\>)s|_'\.\.(\<|\>)s|\.\._'(\<|\>)s|'_\.\.(\<|\>)s|\.\.'_(\<|\>)s|'\.\._(\<|\>)s) {
+	lex_add_note(0, S_STROPHA, _V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTA,H_ONE);
+		}
+.       {	
+	snprintf(error,70,gettext("unrecognized character: %c"),gabc_notes_determination_text[0]);
+	libgregorio_message (error,
+		      "libgregorio_det_notes_from_string", ERROR, 0);
+	}
+
+%%
+
+void gabc_notes_determination_error(const char *str)
+{
+	snprintf(error,150,str);
+      libgregorio_message (error,
+		      "libgregorio_det_notes_from_string", ERROR, 0);
+}
+
+
+gregorio_note *libgregorio_gabc_det_notes_from_string (char *str) {
+current_note=NULL;
+YY_BUFFER_STATE buf;
+buf=yy_scan_string(str);
+yylex();
+yy_flush_buffer(buf);
+yy_delete_buffer(buf);
+libgregorio_go_to_first_note (&current_note);
+return current_note;
+}

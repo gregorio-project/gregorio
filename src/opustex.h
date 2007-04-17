@@ -1,0 +1,62 @@
+/* 
+Gregorio OpusTeX headers.
+Copyright (C) 2007 Olivier Berten.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
+
+void libgregorio_opustex_write_score (FILE * f, gregorio_score * score);
+
+void libgregorio_opustex_write_syllable (FILE * f,
+					 gregorio_syllable * syllable,
+					 char first_syllable);
+
+void libgregorio_opustex_write_text (FILE * f, char *syllable,
+				     char nextposition, char first_syllable);
+
+void libgregorio_opustex_write_element (FILE * f,
+					gregorio_syllable * syllable,
+					gregorio_element * element);
+
+void libgregorio_opustex_write_barline (FILE * f, char type);
+
+void libgregorio_opustex_write_finis (FILE * f, char type);
+
+void libgregorio_opustex_write_glyph (FILE * f, gregorio_syllable * syllable,
+				      gregorio_element * element,
+				      gregorio_glyph * glyph);
+
+int libgregorio_opustex_first_letter (gregorio_score * score);
+
+char libgregorio_opustex_is_vowel (int c);
+
+char is_even (int c);
+
+void libgregorio_opustex_print_char (FILE * f, int c);
+
+void libgregorio_opustex_print_note (FILE * f, char pitch);
+
+void libgregorio_opustex_print_episem (FILE * f, char pitch, char length);
+
+void libgregorio_opustex_print_episem_under (FILE * f, char pitch, char length);
+
+char *libgregorio_opustex_glyph_type_to_str (char name);
+
+void
+libgregorio_opustex_print_liquescentia (FILE * f, char liquescentia, char glyph);
+
+void
+libgregorio_opustex_print_augmentum_note (FILE * f, char pitch);
+
