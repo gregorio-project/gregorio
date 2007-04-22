@@ -28,7 +28,7 @@ flex:
 	$(LEX) -o src/gabc-score-determination-l.c -C --header-file="src/gabc-score-determination-l.h" --prefix="gabc_score_determination_" src/gabc-score-determination.l
 
 c:
-	$(CC) $(CCFLAGS) $(FILES) -o gregorio-utils
+	$(CC) $(CCFLAGS) $(FILES) -o gregorio
 	chmod +x gregorio-utils
 
 bison:
