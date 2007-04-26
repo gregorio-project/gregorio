@@ -1,1 +1,1 @@
-SUBDIRS=src include
+SUBDIRS=src include examples fonts tex
