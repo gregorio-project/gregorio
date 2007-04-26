@@ -31,8 +31,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <getopt.h>
 #include <libgen.h>		/* for basename */
 #include <string.h>		/* for strcmp */
+#include "config.h"
 
-#define PACKAGE "gregorio_utils"
 #define LOCALEDIR "/home/elie/pougne/po/"
 #include <locale.h>
 #include <libintl.h>
@@ -62,7 +62,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 		}
 
 
-char *version = "0.0.4";
 char *copyright = "copyright 2006 Elie Roux <elie.roux@enst-bretagne.fr>";
 
 void
@@ -288,7 +287,7 @@ main (int argc, char **argv)
 	  exit (0);
 	  break;
 	case 'V':
-	  printf ("%s version %s\n%s\n", argv[0], version, copyright);
+	  printf ("%s version %s\n%s\n", argv[0], VERSION, copyright);
 	  exit (0);
 	  break;
 	case 'v':
