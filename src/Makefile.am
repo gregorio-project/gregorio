@@ -1,3 +1,5 @@
+AM_CPPFLAGS=-I$(top_srcdir)/include
+
 bin_PROGRAMS=gregorio
 gregorio_SOURCES=dump.c gabc-score-determination-l.c \
 	gregorio-utils.c struct-utils.c xml-write.c \
