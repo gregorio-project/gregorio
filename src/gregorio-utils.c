@@ -23,7 +23,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "gabc.h"
 #include "messages.h"
 #include <unistd.h>
-#include <locale.h>
 #include <stdlib.h>
 #include "gregoriotex.h"
 #include "opustex.h"
@@ -33,9 +32,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <string.h>		/* for strcmp */
 #include "config.h"
 
-#define LOCALEDIR "/home/elie/pougne/po/"
 #include <locale.h>
-#include <libintl.h>
+#include "gettext.h"
 #define _(str) gettext(str)
 #define N_(str) str
 
@@ -62,7 +60,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 		}
 
 
-char *copyright = "copyright 2006 Elie Roux <elie.roux@enst-bretagne.fr>";
+char *copyright = "Copyright (C) 2006 Elie Roux <elie.roux@enst-bretagne.fr>";
 
 void
 print_licence ()

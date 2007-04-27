@@ -1,4 +1,4 @@
-AM_CPPFLAGS=-I$(top_srcdir)/include
+AM_CPPFLAGS=-I$(top_srcdir)/include -DLOCALEDIR=\"$(localedir)\"
 
 bin_PROGRAMS=gregorio
 gregorio_SOURCES=dump.c gregorio-utils.c struct-utils.c xml-write.c \
@@ -7,7 +7,7 @@ gregorio_SOURCES=dump.c gregorio-utils.c struct-utils.c xml-write.c \
 	opustex-write.c xml-utils.c
 nodist_gregorio_SOURCES=gabc-score-determination-l.c \
 	gabc-notes-determination-l.c gabc-score-determination-y.c
-gregorio_LDADD=@LEXLIB@
+gregorio_LDADD=@LEXLIB@ $(LIBINTL)
 
 EXTRA_DIST=gabc-score-determination.l gabc-score-determination.y \
 	gabc-notes-determination.l

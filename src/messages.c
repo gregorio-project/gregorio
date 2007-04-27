@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 #include <stdio.h>
-#include <libintl.h>
+#include "gettext.h"
 #include "messages.h"
 #define _(str) gettext(str)
 #define N_(str) str
@@ -46,10 +46,10 @@ libgregorio_set_verbosity_mode (char new_mode)
   verbosity_mode = new_mode;
 }
 
-char *
+const char *
 verbosity_to_str (char verbosity)
 {
-  char *str;
+  const char *str;
   switch (verbosity)
     {
     case WARNING:
@@ -69,7 +69,7 @@ verbosity_to_str (char verbosity)
 }
 
 void
-libgregorio_message (char *string, char *function_name, char verbosity,
+libgregorio_message (const char *string, char *function_name, char verbosity,
 		int line_number)
 {
   if (!error_out)
@@ -90,8 +90,7 @@ libgregorio_message (char *string, char *function_name, char verbosity,
     {
       return;
     }
-  char *verbosity_str;
-  verbosity_str = verbosity_to_str (verbosity);
+  const char *verbosity_str = verbosity_to_str (verbosity);
   if (line_number)
     {
       if (function_name)

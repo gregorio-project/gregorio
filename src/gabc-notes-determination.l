@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <stdio.h>
 #include <ctype.h> /*for tolower*/
-#include <libintl.h>
+#include "gettext.h"
 #include "struct.h"
 #include "messages.h"
 #include "gabc.h"

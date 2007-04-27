@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <libxml/parser.h>
 #include "struct.h"
 #include "xml.h"
-#include <libintl.h>
+#include "gettext.h"
 #define _(str) gettext(str)
 #define N_(str) str
 #include "messages.h"

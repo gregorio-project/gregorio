@@ -21,6 +21,7 @@ AC_CONFIG_SRCDIR([src/gregorio-utils.c])
 AC_CONFIG_AUX_DIR([build-aux])
 
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_GNU_GETTEXT([external])
 
 AC_PROG_CC
 AC_PROG_CPP
@@ -47,5 +48,6 @@ AC_CONFIG_FILES([
     examples/Makefile
     fonts/Makefile
     tex/Makefile
+    po/Makefile.in
 ])
 AC_OUTPUT

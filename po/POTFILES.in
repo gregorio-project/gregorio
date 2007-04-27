@@ -1,0 +1,16 @@
+# List of source files which contain translatable strings.
+src/dump.c
+src/gabc-elements-determination.c
+src/gabc-glyphs-determination.c
+src/gregorio-utils.c
+src/gabc-notes-determination.l
+src/gabc-score-determination.l
+src/gabc-score-determination.y
+src/gabc-write.c
+src/gregoriotex-write.c
+src/messages.c
+src/opustex-write.c
+src/struct-utils.c
+src/xml-read.c
+src/xml-utils.c
+src/xml-write.c

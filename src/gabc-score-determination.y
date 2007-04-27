@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "struct.h"
 #include "gabc.h"
 #include "gabc-score-determination-l.h"
-#include <libintl.h>
+#include "gettext.h"
 #define _(str) gettext(str)
 #define N_(str) str
 
