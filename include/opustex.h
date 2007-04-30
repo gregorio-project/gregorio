@@ -60,3 +60,8 @@ libgregorio_opustex_print_liquescentia (FILE * f, char liquescentia, char glyph)
 void
 libgregorio_opustex_print_augmentum_note (FILE * f, char pitch);
 
+char
+libgregorio_find_next_note (gregorio_element * current_element, gregorio_syllable * current_syllable);
+
+char
+libgregorio_opustex_is_out_of_neume (gregorio_syllable * syllable);
