@@ -838,13 +838,13 @@ libgregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
   tmp = tmp->previous_note;
   if (!tmp)
     {
-      // case of h___
+      // case of b___
       libgregorio_message (_
 			   ("found more horizontal episemus than notes able to be under"),
 			   "activate_h_isolated_episemus", WARNING, 0);
       return;
     }
-  for (i = 1; i < n; i++)
+  for (i = 0; i < n; i++)
     {
       top_note = max (top_note, tmp->pitch);
       if (tmp->previous_note && tmp->previous_note->type == GRE_NOTE)

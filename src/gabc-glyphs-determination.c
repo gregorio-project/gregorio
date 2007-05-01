@@ -434,7 +434,7 @@ libgregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
 	case G_PORRECTUS:
 	  if (current_pitch > last_pitch)
 	    {
-	      *end_of_glyph = DET_END_OF_CURRENT;
+	      *end_of_glyph = DET_END_OF_PREVIOUS;
 	      next_glyph_type = G_PUNCTUM;
 	    }
 	  else

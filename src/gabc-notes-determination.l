@@ -16,6 +16,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+This file is quite huge but quite simple: it is just all the expressions you can find in gabc and the call to the right function. Lines are often enormous simply because we enable the user to put the signs in any order, for example av.'_ or a.v_', etc. for a virga with punctum mora, horizontal and vertical episemus.
 */
 
 #include <stdio.h>
