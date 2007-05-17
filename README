@@ -1,0 +1,44 @@
+    Gregorio release 0.2 <http://home.gna.org/gregorio>
+
+These are the release notes for Gregorio version 0.2.
+
+WHAT IS GREGORIO?
+
+Gregorio is a project which goal is to provide tools for gregorian
+chant composition. The tools are for example:
+
+ * GABC: a fast notation for representing gregorian chant
+ * GregorioXML: a XML representation of gregorian chant
+ * GregorioTeX: a TeX (Omega) style for typesetting gregorian chant
+scores
+ * The gregorio software, a command-line interface to convert
+different types of files into others (convert a gabc file into
+GregorioTeX or OpusTeX for example)
+
+INSTALLATION of the gregorio software:
+
+gregorio depends on the libxml2, you must have it installed. If you
+want to compile from the sources, you must have the header files of
+the libxml2 and flex and bison (of course you will need gcc and make
+too).
+
+If you downloaded the tarball from
+<http://download.gna.org/gregorio/releases/>, simply do
+
+ $ ./configure
+ $ make
+ # make install
+
+If you downloaded the sources from the svn repository
+(<svn://svn.gna.org/svn/gregorio/trunk>), you must before run
+
+USING the gregorio software:
+
+gregorio can handle several file types. To use the software for
+converting a gabc file into a OpusTeX file, simply do
+
+ $ gregorio -F otex myfile.gabc -o myfile.tex
+
+To see all the possible gregorio options, try
+
+ $ gregorio -h

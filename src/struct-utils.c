@@ -255,8 +255,8 @@ libgregorio_free_glyphs (gregorio_glyph ** glyph)
 
 
 void
-libgregorio_add_element (gregorio_element ** current_element, char type,
-			 gregorio_glyph * first_glyph, char liquescentia)
+libgregorio_add_element (gregorio_element ** current_element,
+			 gregorio_glyph * first_glyph)
 {
   gregorio_element *next = malloc (sizeof (gregorio_element));
   if (!next)
@@ -266,8 +266,7 @@ libgregorio_add_element (gregorio_element ** current_element, char type,
       return;
     }
   next->type = GRE_ELEMENT;
-  next->element_type = type;
-  next->liquescentia = liquescentia;
+  //next->element_type = 0;
   next->first_glyph = first_glyph;
   next->next_element = NULL;
   if (*current_element)
@@ -291,7 +290,6 @@ libgregorio_add_special_as_element (gregorio_element ** current_element,
     }
   special->type = type;
   special->element_type = pitch;
-  special->liquescentia = 0;
   special->first_glyph = NULL;
   special->next_element = NULL;
   if (*current_element)

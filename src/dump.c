@@ -161,11 +161,6 @@ libgregorio_dump_score (FILE * f, gregorio_score * score)
                 fprintf (f, "     element_type            %d (f%d)\n", element->element_type,
                          element->element_type - 48);
             }
-            if (element->liquescentia)
-            {
-                fprintf (f, "     liquescentia            %d (%s)\n", element->liquescentia,
-                         libgregorio_dump_liquescentia (element->liquescentia));
-            }
             gregorio_glyph *glyph = element->first_glyph;
             while (glyph)
             {

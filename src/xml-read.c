@@ -740,8 +740,7 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "element"))
     {
-      libgregorio_add_element (current_element, GRE_ELEMENT, NULL,
-			       L_NO_LIQUESCENTIA);
+      libgregorio_add_element (current_element, GRE_ELEMENT, NULL);
       libgregorio_xml_read_glyphs (current_node->xmlChildrenNode, doc,
 				   (*current_element), alterations, *key);
       return;

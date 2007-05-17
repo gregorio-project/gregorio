@@ -23,6 +23,11 @@
 # See http://fontforge.sourceforge.net/python.html for documentation
 # on the fontforge python scripts
 
+ - définir les hauteurs des lignes et l'espace entre
+ - définir la hauteur d'un punctum, ses points d'ancrage
+ - pareil avec les barres des porrectus
+
+
 import fontforge                                 #Load the module
 amb=fontforge.open("gregorio-base.sfd")               #Open a font
 

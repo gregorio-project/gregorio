@@ -22,26 +22,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "gabc.h"
 #include "messages.h"
 
+/*
 
+two macros that will be useful in the future: they are the tests to put in a if statement to determine if a glyph type is puncta incliata ascendens or descendens
+
+*/
 
 #define is_puncta_ascendens(glyph) glyph==G_2_PUNCTA_INCLINATA_ASCENDENS||glyph==G_3_PUNCTA_INCLINATA_ASCENDENS||glyph==G_4_PUNCTA_INCLINATA_ASCENDENS||glyph==G_5_PUNCTA_INCLINATA_ASCENDENS||glyph==G_PUNCTUM_INCLINATUM
 
 #define is_puncta_descendens(glyph) glyph==G_2_PUNCTA_INCLINATA_DESCENDENS||glyph==G_3_PUNCTA_INCLINATA_DESCENDENS||glyph==G_4_PUNCTA_INCLINATA_DESCENDENS||glyph==G_5_PUNCTA_INCLINATA_DESCENDENS||glyph==G_PUNCTUM_INCLINATUM
 
 
-//works only with the good values in the header file
-#define mix_element_types(current_element,added_element) \
-current_element+added_element
+/*
 
-char
-add_glyph_to_an_element (char element_type, char current_glyph_type,
-			 char last_glyph_type, char last_pitch,
-			 char next_pitch, char *end_of_element);
+Two "hat" functions, they permit to have a good API. They amost don't do anything except calling the det_elements_from_glyphs.
 
-void
-close_element (gregorio_element ** current_element, char element_type,
-	       gregorio_glyph ** first_glyph, gregorio_glyph * current_glyph,
-	       char liquescentia);
+*/
 
 gregorio_element *
 libgregorio_gabc_det_elements_from_string (char *str)
@@ -62,20 +58,21 @@ libgregorio_gabc_det_elements_from_notes (gregorio_note * current_note)
   return final;
 }
 
-/****************************
- * attention, commentaires qui tuent à placer ici...
- * 
- * 
- * 
-****************************/
+
+/*
+
+A function that will be called several times: it adds an element to the current element
+current_element: the current_element in the determination, it will be updated to the element that we will add
+first_glyph: the first_glyph of the element that we will add
+current_glyph: the glyph after the last_glyph that will be in the element
+
+*/
 
 void
-close_element (gregorio_element ** current_element, char element_type,
-	       gregorio_glyph ** first_glyph, gregorio_glyph * current_glyph,
-	       char liquescentia)
+close_element (gregorio_element ** current_element,
+	       gregorio_glyph ** first_glyph, gregorio_glyph * current_glyph)
 {
-  libgregorio_add_element (current_element, element_type, *first_glyph,
-			   liquescentia);
+  libgregorio_add_element (current_element, *first_glyph);
   if (current_glyph->next_glyph)
     {
       current_glyph->next_glyph->previous_glyph = NULL;
@@ -84,13 +81,31 @@ close_element (gregorio_element ** current_element, char element_type,
     }
 }
 
-/****************************
- * attention, commentaires qui tuent à placer ici...
- * 
- * a bit diffucult to understant, I admit...
- * bien expliquer que le glyphe en cours est déjà incorporé à l'élément, pas comme dans glyph_determination
- * 
-****************************/
+/*
+si don't cut à 1, on passe et on le met à 0
+si current_glyph->type est puncta descendens, on coupe pas avant
+si ascendens, on coupe avant et don't cut à 1
+si stropha ou punctum inclinatum, on coupe pas avant si previous_glyph_type==le même et first-pitch==previous_glyph_last_pitch, sinon on coupe avant. On update last_glyph_pitch
+si spécial: on coupe avant
+si ! on coupe pas avant et don't cut à 1
+défault:on coupe avant
+*/
+
+/*
+
+a macro that do automatically two or three things
+
+*/
+
+#define cut_before() close_element(&current_element,first_glyph, current_glyph->previous_glyph);\
+first_glyph =current_glyph;\
+previous_glyph=current_glyph
+
+/*
+
+The big function of the file, but rather simple I think.
+
+*/
 
 gregorio_element *
 libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
@@ -98,22 +113,22 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 
   if (!current_glyph)
     {
-//TODO warning
       return NULL;
     }
+// first we go to the first glyph in the chained list of glyphs (maybe to suppress ?)
   libgregorio_go_to_first_glyph (&current_glyph);
+// the last element we have successfully added to the list of elements
   gregorio_element *current_element = NULL;
-  gregorio_note *tmp_note;
+// the first element, that we will return at the end. We have to consider it because the gregorio_element struct does not have previous_element element.
   gregorio_element *first_element = NULL;
+// the first_glyph of the element that we are currently determining
   gregorio_glyph *first_glyph = current_glyph;
-  gregorio_glyph *next_glyph = NULL;
-  char current_element_type = ELT_NO_ELEMENT;
-  char liquescentia = L_NO_LIQUESCENTIA;
-  char previous_glyph_type = G_UNDETERMINED;
-  char next_element_type = ELT_NO_ELEMENT;
-  char end_of_element;
-  char last_pitch;
-  char next_pitch;
+// the last real (GRE_GLYPH) that we have processed, often the same as first_glyph
+  gregorio_glyph *previous_glyph = current_glyph;
+// a char that is necessary to determine some cases
+  char do_not_cut = 0;
+// a char that is necesarry to determine the type of the current_glyph
+  char current_glyph_type;
 
   while (current_glyph)
     {
@@ -125,29 +140,27 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	  if (current_glyph->type == GRE_NATURAL
 	      || current_glyph->type == GRE_FLAT)
 	    {
-	      current_glyph = next_glyph;
+	      current_glyph = current_glyph->next_glyph;
 	      continue;
 	    }
-	  //we pass zero-width-spaces, they will be treated later (in this function)
+	  //we must not cut after a zero_width_space
 	  if (current_glyph->type == GRE_SPACE
 	      && current_glyph->glyph_type == SP_ZERO_WIDTH)
 	    {
-	      current_glyph = next_glyph;
+	      current_glyph = current_glyph->next_glyph;
+	      do_not_cut = 1;
 	      continue;
 	    }
 	  if (current_element_type != ELT_NO_ELEMENT)
-	// clef change or space or end of line
+	    // clef change or space or end of line
 	    {
 	      close_element (&current_element, current_element_type,
-			     &first_glyph,
-			     current_glyph->previous_glyph, liquescentia);
-	      current_element_type = ELT_NO_ELEMENT;
-	      liquescentia = L_NO_LIQUESCENTIA;
+			     &first_glyph, current_glyph->previous_glyph);
 	    }
 	  //if statement to make neumatic cuts not appear in elements, as there is always one between elements  
 	  if (current_glyph->type != GRE_SPACE
 	      || current_glyph->type != SP_NEUMATIC_CUT)
-	//clef change or space other thant neumatic cut
+	    //clef change or space other thant neumatic cut
 	    {
 	      if (!first_element)
 		{
@@ -157,142 +170,79 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 						  current_glyph->type,
 						  current_glyph->glyph_type);
 	    }
-	  /*if (current_glyph->type == GRE_SPACE && current_glyph->glyph_type == SP_NEUMATIC_CUT)
-	{
-	  close_element (&current_element, current_element_type,
-			 &first_glyph, current_glyph->previous_glyph,
-			 current_glyph->liquescentia);
-	  current_element_type = next_element_type;
-	  liquescentia = L_NO_LIQUESCENTIA;
-	}*/
 	  libgregorio_free_one_glyph (&current_glyph);
-	  first_glyph = next_glyph;
-	  current_glyph = next_glyph;
+	  first_glyph = current_glyph;
+	  previous_glyph = current_glyph;
+	  current_glyph = current_glyph->next_glyph;
 	  continue;
 	}
 
-/* we must determine the last pitch and the next pitch, because
- * the nature of the element depends on it : for example
- * cvba is a climacus
- * avba is something weird
-*/
-      if (current_element_type
-	  && current_glyph->previous_glyph->type == GRE_GLYPH)
+      if (is_puncta_ascendens (current_glyph->type))
 	{
-	  tmp_note = current_glyph->previous_glyph->first_note;
-	  while (tmp_note->next_note)
-	    {
-	      tmp_note = tmp_note->next_note;
-	    }
-	  last_pitch = tmp_note->pitch;
+	  current_glyph_type = G_PUNCTA_ASCENDENS;
 	}
       else
 	{
-	  last_pitch = 0;
-	}
-      next_pitch = current_glyph->first_note->pitch;
-
-      /* first we do what we must about initio debilis */
-      if (is_initio_debilis (current_glyph->liquescentia))
-	{			/* meaning that the note is an initio debilis, maybe more */
-	  if (current_element_type != ELT_NO_ELEMENT)
+	  if (is_pucta_descendens (current_glyph->type))
 	    {
-	      close_element (&current_element, current_element_type,
-			     &first_glyph,
-			     current_glyph->previous_glyph, liquescentia);
-	      current_element_type = ELT_NO_ELEMENT;
+	      current_glyph_type = G_PUNCTA_DESCENDENS;
 	    }
-	  liquescentia = L_INITIO_DEBILIS;
-	}
-      if (current_element_type != ELT_NO_ELEMENT)
-	{
-	  previous_glyph_type = current_glyph->previous_glyph->glyph_type;
-	}
-      else
-	{
-	  previous_glyph_type = G_NO_GLYPH;
-	}
-      next_element_type =
-	add_glyph_to_an_element (current_element_type,
-				 current_glyph->glyph_type,
-				 previous_glyph_type, last_pitch,
-				 next_pitch, &end_of_element);
-
-/* now we take care of zero-width spaces, we can't cut an element on it */
-      if (current_glyph->previous_glyph
-	  && current_glyph->previous_glyph->type == GRE_SPACE)
-	// if it is GRE_SPACE, it is SP_ZERO_WIDTH, as other types of spaces are now in gregorio_elements
-	{
-	  if (end_of_element == DET_END_OF_BOTH)
+	  else
 	    {
-	      end_of_element = DET_END_OF_CURRENT;
-	    }
-	  if (end_of_element == DET_END_OF_PREVIOUS)
-	    {
-	      end_of_element = DET_NO_END;
+	      current_glyph_type = current_glyph->type;
 	    }
 	}
-      if (current_glyph->next_glyph
-	  && current_glyph->next_glyph->type == GRE_SPACE
-	  && current_glyph->next_glyph->glyph_type == SP_ZERO_WIDTH)
+      switch (current_glyph_type)
 	{
-	  if (end_of_element == DET_END_OF_BOTH)
+	case G_PUNCTA_ASCENDENS:
+	  if (!do_not_cut)
 	    {
-	      end_of_element = DET_END_OF_PREVIOUS;
+	      cut_before ();
+	      do_not_cut = 1;
 	    }
-	  if (end_of_element == DET_END_OF_CURRENT)
+	  else
 	    {
-	      end_of_element = DET_NO_END;
-	    }
-	}
-
-
-      switch (end_of_element)
-	{
-	case DET_NO_END:
-	  current_element_type = next_element_type;
-	  if (is_liquescentia (current_glyph->liquescentia))
-	    {
-	      liquescentia += current_glyph->liquescentia;	/* once again, only works with the good values in the header file */
-	      close_element (&current_element, current_element_type,
-			     &first_glyph, current_glyph, liquescentia);
-	      current_element_type = ELT_NO_ELEMENT;
-	      liquescentia = L_NO_LIQUESCENTIA;
+	      previous_glyph = current_glyph;
 	    }
 	  break;
-	case DET_END_OF_PREVIOUS:
-	  close_element (&current_element, current_element_type,
-			 &first_glyph, current_glyph->previous_glyph,
-			 current_glyph->liquescentia);
-	  current_element_type = next_element_type;
-	  liquescentia = L_NO_LIQUESCENTIA;
-	  if (is_liquescentia (current_glyph->liquescentia))
-//not an initio debilis, because we considered it in the first part...
+	case G_PUNCTA_DESCENDENS:
+// we don't cut before, so we don't do anything
+	  if (do_not_cut)
 	    {
-	      close_element (&current_element, current_element_type,
-			     &first_glyph, current_glyph,
-			     current_glyph->liquescentia);
-	      current_element_type = ELT_NO_ELEMENT;
+	      do_not_cut = 0;
 	    }
 	  break;
-	case DET_END_OF_CURRENT:
-	  liquescentia += current_glyph->liquescentia;
-	  close_element (&current_element, next_element_type,
-			 &first_glyph, current_glyph, liquescentia);
-	  current_element_type = ELT_NO_ELEMENT;
-	  liquescentia = L_NO_LIQUESCENTIA;
-	  break;
-	default:		//case DET_END_OF_BOTH:
-	  liquescentia += current_glyph->liquescentia;
-	  close_element (&current_element, current_element_type,
-			 &first_glyph, current_glyph, liquescentia);
-	  liquescentia = L_NO_LIQUESCENTIA;
-	  close_element (&current_element, next_element_type,
-			 &first_glyph, current_glyph, liquescentia);
-	  current_element_type = ELT_NO_ELEMENT;
-	  break;
+	case G_ONE_NOTE:
+	  if (current_glyph->first_note
+	      && (current_glyph->first_note->shape == S_STROPHA
+		  || current_glyph->shape == S_VIRGA))
+	    {
+// we determine the last pitch
+	      char last_pitch;
+	      gregorio_note *tmp_note;
+	      tmp_note = previous_glyph->first_note;
+	      while (tmp_note->next_note)
+		{
+		  tmp_note = tmp_note->next_note;
+		}
+	      last_pitch = tmp_note->pitch;
+	      if (current_glyph->first_note->pitch == last_pitch)
+		{
+		  previous_glyph = current_glyph;
+		  break;
+		}
+	    }
+//else we fall in the default case
+	default:
+	  if (do_not_cut)
+	    {
+	      do_not_cut = 0;
+	    }
+	  else
+	    {
+	      cut_before ();
+	    }
 	}
-
 
 /* we must determine the first element, that we will return */
       if (!first_element && current_element)
@@ -303,10 +253,10 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
       if (!next_glyph && current_element_type != ELT_NO_ELEMENT)
 	{
 	  close_element (&current_element, current_element_type,
-			 &first_glyph, current_glyph, liquescentia);
+			 &first_glyph, current_glyph);
 	}
 
-      current_glyph = next_glyph;
+      current_glyph = current_glyph->next_glyph;
     }				//end of while
 
 /* we must determine the first element, that we will return */
@@ -315,138 +265,4 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
       first_element = current_element;
     }
   return first_element;
-}
-
-/****************************
- * attention, commentaires qui tuent à placer ici...
- * 
- * TODO : a lot of thing can be better... and more understandable
- * 
-****************************/
-
-char
-add_glyph_to_an_element (char element_type, char current_glyph_type,
-			 char last_glyph_type, char last_pitch,
-			 char next_pitch, char *end_of_element)
-{
-
-
-
-  if (element_type == ELT_NO_ELEMENT || last_glyph_type == G_NO_GLYPH)
-    {
-      if (is_puncta_descendens (current_glyph_type)
-	  || current_glyph_type == G_PUNCTA_INCLINATA)
-	{
-	  *end_of_element = DET_END_OF_CURRENT;
-	}
-      else
-	{
-	  *end_of_element = DET_NO_END;
-	}
-      if (is_puncta_ascendens (current_glyph_type))
-	{
-	  return ELT_PRAEPUNCTA;
-	}
-      else
-	{
-	  return ELT_ONE_GLYPH;
-	}
-    }
-
-  if (is_puncta_ascendens (current_glyph_type))
-    {
-      *end_of_element = DET_END_OF_PREVIOUS;
-      return ELT_PRAEPUNCTA;
-    }
-
-
-
-  if (is_puncta_descendens (current_glyph_type))
-    {
-      if (last_pitch <= next_pitch)
-	{
-	  *end_of_element = DET_END_OF_BOTH;
-	  return ELT_SUBPUNCTA;
-	}
-      else
-	{
-	  *end_of_element = DET_END_OF_CURRENT;
-	  element_type = mix_element_types (element_type, ELT_SUBPUNCTA);
-	  return element_type;
-	}
-    }
-
-
-
-  if (is_puncta_inclinata (current_glyph_type))
-    {				// other cases of puncta_inclinata
-      *end_of_element = DET_END_OF_BOTH;
-      return ELT_SUBPUNCTA;
-    }
-
-  if (has_two_glyphs (element_type))
-    {
-      *end_of_element = DET_END_OF_CURRENT;
-      return ELT_ONE_GLYPH;
-    }
-
-//We describe next every case where we put a second glyph. In this part, last_glyph is not a puncta inclinata glyph
-
-  if (current_glyph_type == G_PUNCTUM && last_pitch == next_pitch)
-    {
-      *end_of_element = DET_NO_END;
-      element_type = mix_element_types (element_type, ELT_ONE_GLYPH);
-      return element_type;
-    }
-
-
-  //case of punctum preceding another glyph (quite often encoutered)
-  if (last_glyph_type == G_PUNCTUM && last_pitch == next_pitch)
-    {
-      *end_of_element = DET_NO_END;
-      element_type = mix_element_types (element_type, ELT_ONE_GLYPH);
-      return element_type;
-    }
-
-  if (last_glyph_type == G_PUNCTUM)
-    {
-//TODO : we should chech here current_glyph_type, because it does not work for all of them
-      *end_of_element = DET_NO_END;
-      element_type = mix_element_types (element_type, ELT_ONE_GLYPH);
-      return element_type;
-    }
-
-
-  if (last_glyph_type == G_PODATUS && current_glyph_type == G_PODATUS
-      && last_pitch <= next_pitch)
-    {
-//TODO : we should chech here current_glyph_type, because it does not work for all of them
-      *end_of_element = DET_NO_END;
-      element_type = mix_element_types (element_type, ELT_ONE_GLYPH);
-      return element_type;
-    }
-
-  if (last_glyph_type == G_PODATUS && current_glyph_type == G_FLEXA
-      && last_pitch <= next_pitch)
-    {
-      *end_of_element = DET_NO_END;
-      element_type = mix_element_types (element_type, ELT_ONE_GLYPH);
-      return element_type;
-    }
-
-
-  else
-    {				//"normal" types of glyphs, here we could make the behaviour better
-      if (element_type == ELT_PRAEPUNCTA)
-	{
-
-	  *end_of_element = DET_NO_END;
-	  return ELT_PRAEPUNCTA_ONE_GLYPH;
-	}
-
-
-    }
-  //default behaviour
-  *end_of_element = DET_END_OF_PREVIOUS;
-  return ELT_ONE_GLYPH;
 }

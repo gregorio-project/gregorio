@@ -41,7 +41,7 @@ typedef struct gregorio_glyph {
 typedef struct gregorio_element {
   char type;
   char element_type;
-  char liquescentia;
+  //char liquescentia;
   struct gregorio_glyph *first_glyph;
   struct gregorio_element *next_element;
   //struct gregorio_element *previous_element;
@@ -317,6 +317,9 @@ h_episemus>H_ALONE
 #define G_PES_QUADRATUM_FIRST_PART 31
 #define G_SCANDICUS 32
 #define G_PES_QUILISMA_QUADRATUM_FIRST_PART 33
+
+#define G_PUNCTA_ASCENDENS 34
+#define G_PUNCTA_DESCENDENS 35
 
 #define is_puncta_inclinata(glyph) glyph<=G_5_PUNCTA_INCLINATA_ASCENDENS
 
