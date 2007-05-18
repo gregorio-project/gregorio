@@ -96,7 +96,7 @@ libgregorio_determine_h_episemus_type (gregorio_note * note);
 
 void libgregorio_add_note(gregorio_note **current_note, char pitch, char shape, char signs, char liquescentia,char h_episemus);
 void libgregorio_add_glyph (gregorio_glyph **current_glyph, char type, gregorio_note *first_note, char liquescentia);
-void libgregorio_add_element (gregorio_element **current_element, char type, gregorio_glyph *first_glyph, char liquescentia);
+void libgregorio_add_element (gregorio_element **current_element, gregorio_glyph *first_glyph);
 void libgregorio_add_syllable (gregorio_syllable ** current_syllable, int number_of_voices, gregorio_element * elements[], char *syllable, char position);
 
 void libgregorio_add_voice_info (gregorio_voice_info **current_voice_info);
@@ -269,19 +269,6 @@ h_episemus>H_ALONE
 
 #define has_two_glyphs(type) type==ELT_TWO_GLYPH || type==ELT_PRAEPUNCTA_TWO_GLYPH ||type==ELT_TWO_GLYPH_SUBPUNCTA ||type==ELT_PRAEPUNCTA_TWO_GLYPH_SUBPUNCTA
 
-#define ELT_NO_ELEMENT 0
-#define ELT_PRAEPUNCTA 1
-#define ELT_ONE_GLYPH 2
-#define ELT_PRAEPUNCTA_ONE_GLYPH 3
-#define ELT_TWO_GLYPH 4
-#define ELT_PRAEPUNCTA_TWO_GLYPH 5
-#define ELT_SUBPUNCTA ELT_ONE_GLYPH_SUBPUNCTA
-#define ELT_ONE_GLYPH_SUBPUNCTA 6
-#define ELT_PRAEPUNCTA_ONE_GLYPH_SUBPUNCTA 7
-#define ELT_TWO_GLYPH_SUBPUNCTA 8
-#define ELT_PRAEPUNCTA_TWO_GLYPH_SUBPUNCTA 9
-
-
 #define G_PUNCTUM_INCLINATUM 1
 #define G_2_PUNCTA_INCLINATA_DESCENDENS 2
 #define G_3_PUNCTA_INCLINATA_DESCENDENS 3
@@ -317,6 +304,7 @@ h_episemus>H_ALONE
 #define G_PES_QUADRATUM_FIRST_PART 31
 #define G_SCANDICUS 32
 #define G_PES_QUILISMA_QUADRATUM_FIRST_PART 33
+#define G_ONE_NOTE 55
 
 #define G_PUNCTA_ASCENDENS 34
 #define G_PUNCTA_DESCENDENS 35

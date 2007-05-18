@@ -32,6 +32,10 @@ If you downloaded the tarball from
 If you downloaded the sources from the svn repository
 (<svn://svn.gna.org/svn/gregorio/trunk>), you must before run
 
+ $ autoreconf --install 
+
+before doing the three previous steps.
+
 USING the gregorio software:
 
 gregorio can handle several file types. To use the software for

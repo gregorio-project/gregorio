@@ -64,32 +64,21 @@ libgregorio_gabc_det_elements_from_notes (gregorio_note * current_note)
 A function that will be called several times: it adds an element to the current element
 current_element: the current_element in the determination, it will be updated to the element that we will add
 first_glyph: the first_glyph of the element that we will add
-current_glyph: the glyph after the last_glyph that will be in the element
-
+current_glyph: the last glyph that will be in the element
+ 
 */
 
 void
 close_element (gregorio_element ** current_element,
-	       gregorio_glyph ** first_glyph, gregorio_glyph * current_glyph)
+	       gregorio_glyph * first_glyph, gregorio_glyph * current_glyph)
 {
-  libgregorio_add_element (current_element, *first_glyph);
-  if (current_glyph->next_glyph)
+  libgregorio_add_element (current_element, first_glyph);
+  if (first_glyph && first_glyph->previous_glyph)
     {
-      current_glyph->next_glyph->previous_glyph = NULL;
-      *first_glyph = current_glyph->next_glyph;
-      current_glyph->next_glyph = NULL;
+      first_glyph->previous_glyph->next_glyph = NULL;
+      first_glyph->previous_glyph = NULL;
     }
 }
-
-/*
-si don't cut à 1, on passe et on le met à 0
-si current_glyph->type est puncta descendens, on coupe pas avant
-si ascendens, on coupe avant et don't cut à 1
-si stropha ou punctum inclinatum, on coupe pas avant si previous_glyph_type==le même et first-pitch==previous_glyph_last_pitch, sinon on coupe avant. On update last_glyph_pitch
-si spécial: on coupe avant
-si ! on coupe pas avant et don't cut à 1
-défault:on coupe avant
-*/
 
 /*
 
@@ -97,9 +86,11 @@ a macro that do automatically two or three things
 
 */
 
-#define cut_before() close_element(&current_element,first_glyph, current_glyph->previous_glyph);\
+#define cut_before() if (first_glyph!=current_glyph) {\
+close_element(&current_element,first_glyph, current_glyph);\
 first_glyph =current_glyph;\
-previous_glyph=current_glyph
+previous_glyph=current_glyph;\
+}
 
 /*
 
@@ -132,8 +123,6 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 
   while (current_glyph)
     {
-      next_glyph = current_glyph->next_glyph;
-
       if (current_glyph->type != GRE_GLYPH)
 	{
 	  //we ignore flats and naturals
@@ -151,12 +140,8 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	      do_not_cut = 1;
 	      continue;
 	    }
-	  if (current_element_type != ELT_NO_ELEMENT)
 	    // clef change or space or end of line
-	    {
-	      close_element (&current_element, current_element_type,
-			     &first_glyph, current_glyph->previous_glyph);
-	    }
+	      cut_before();
 	  //if statement to make neumatic cuts not appear in elements, as there is always one between elements  
 	  if (current_glyph->type != GRE_SPACE
 	      || current_glyph->type != SP_NEUMATIC_CUT)
@@ -170,20 +155,22 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 						  current_glyph->type,
 						  current_glyph->glyph_type);
 	    }
+	  else {
+	
+	}
+	  first_glyph = current_glyph->next_glyph;
+	  previous_glyph = current_glyph->next_glyph;
 	  libgregorio_free_one_glyph (&current_glyph);
-	  first_glyph = current_glyph;
-	  previous_glyph = current_glyph;
-	  current_glyph = current_glyph->next_glyph;
 	  continue;
 	}
 
-      if (is_puncta_ascendens (current_glyph->type))
+      if (is_puncta_ascendens(current_glyph->type))
 	{
 	  current_glyph_type = G_PUNCTA_ASCENDENS;
 	}
       else
 	{
-	  if (is_pucta_descendens (current_glyph->type))
+	  if (is_puncta_descendens(current_glyph->type))
 	    {
 	      current_glyph_type = G_PUNCTA_DESCENDENS;
 	    }
@@ -197,7 +184,7 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	case G_PUNCTA_ASCENDENS:
 	  if (!do_not_cut)
 	    {
-	      cut_before ();
+	      cut_before ()
 	      do_not_cut = 1;
 	    }
 	  else
@@ -215,7 +202,7 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	case G_ONE_NOTE:
 	  if (current_glyph->first_note
 	      && (current_glyph->first_note->shape == S_STROPHA
-		  || current_glyph->shape == S_VIRGA))
+		  || current_glyph->first_note->shape == S_VIRGA))
 	    {
 // we determine the last pitch
 	      char last_pitch;
@@ -240,7 +227,7 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	    }
 	  else
 	    {
-	      cut_before ();
+	      cut_before ()
 	    }
 	}
 
@@ -249,13 +236,10 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	{
 	  first_element = current_element;
 	}
-
-      if (!next_glyph && current_element_type != ELT_NO_ELEMENT)
+      if (!current_glyph->next_glyph)
 	{
-	  close_element (&current_element, current_element_type,
-			 &first_glyph, current_glyph);
+	  close_element (&current_element, first_glyph, current_glyph);
 	}
-
       current_glyph = current_glyph->next_glyph;
     }				//end of while
 
