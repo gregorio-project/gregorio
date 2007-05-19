@@ -144,7 +144,7 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	      cut_before();
 	  //if statement to make neumatic cuts not appear in elements, as there is always one between elements  
 	  if (current_glyph->type != GRE_SPACE
-	      || current_glyph->type != SP_NEUMATIC_CUT)
+	      || current_glyph->glyph_type != SP_NEUMATIC_CUT)
 	    //clef change or space other thant neumatic cut
 	    {
 	      if (!first_element)

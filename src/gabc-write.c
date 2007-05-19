@@ -197,7 +197,7 @@ libgregorio_gabc_write_gregorio_elements (FILE * f,
     {
       libgregorio_gabc_write_gregorio_element (f, element);
       // we don't want a bar after an end of line
-      if (element->type != GRE_END_OF_LINE && element->next_element && element->next_element->type == GRE_ELEMENT)
+      if (element->type != GRE_END_OF_LINE && (element->type !=GRE_SPACE || (element->type==GRE_SPACE && element->element_type ==SP_NEUMATIC_CUT)) && element->next_element && element->next_element->type == GRE_ELEMENT)
 	{
 	  fprintf (f, "/");
 	}
