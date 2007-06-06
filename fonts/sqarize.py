@@ -116,10 +116,13 @@ length2=120
 #global BASE_QUEUE_HEIGHT=12
 #global BASE_INTERLINE=12
 
-base_height=78.75
+count=125
+
+#base_height=78.75
+base_height=165.5
 
 def headers():
-    print """#!/usr/bin/fontfgorge
+    print """#!/usr/bin/fontforge
 
 Open("gregorio-tests.sfd");"""
 
@@ -133,24 +136,34 @@ def torculus():
 	    write_torculus(i+1,j+1)
 
 def write_torculus(i,j):
+    glyphname=name(16, 0, i, j)
+    begin_glyph(glyphname)
     global length1
     global height1
     glyphname=name(16, 0, i, j)
-    simple_paste("basic5", glyphname)
+    simple_paste("base5", glyphname)
     if (i!=1):
 	linename= "line%d" % i 
-	paste_and_move(linename, glyphname, length1, base_height)
-    paste_and_move("basic3", glyphname, length1, i*base_height)
+	paste_and_move(linename, length1, base_height)
+    paste_and_move("base3", glyphname, length1, i*base_height)
     if (j!=1):
 	linename = "line%d" % j
-	paste_and_move(linename, glyphname, length1, base_height)
-    paste_and_move("basic7", glyphname, 2*length1, (i-j)*base_height)
-    print "on essaie de coller ensemble les points qui \_o<cident"
+	paste_and_move(linename, length1, base_height)
+    paste_and_move("base7", glyphname,  2*length1, (i-j)*base_height)
     set_width(2*length1+base_length)
-    #on calcule la width et on la met
+    end_glyph(glyphname)
+
+def end_glyph(glyphname):
+    print "RemoveOverlap();"
+
+def begin_glyph(glyphname):
+    global count
+    print "Select(\"NameMe.%i\");" % count
+    print "SetGlyphName(\"%s\");" % glyphname
+    count=count+1
 
 def set_width(width):
-    print "SetWidth(\"%d\");" % width
+    print "SetWidth(%d);" % width
 
 def name(glyphnum, i, j, k):
     return "%i%i%i%i" % (glyphnum, i, j, k)
@@ -159,15 +172,13 @@ def simple_paste(src, dst):
     print "Select(\"%s\");" % src
     print "Copy();"
     print "Select(\"%s\");" % dst
-    print "PasteInto();"
-    print "SelectNone();" 
+    print "PasteInto();" 
 
 def paste_and_move(src, dst, horiz, vert):
     print "Select(\"%s\");" % src
     print "Copy();"
     print "Select(\"%s\");" % dst
     print "PasteWithOffset(%d, %d);" % (horiz, vert)
-    print "SelectNone();" 
 
 def main():
     headers()
