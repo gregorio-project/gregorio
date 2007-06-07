@@ -119,12 +119,12 @@ length2=120
 count=125
 
 #base_height=78.75
-base_height=165.5
+base_height=157.5
 
 def headers():
-    print """#!/usr/bin/fontforge
+    print """#!/usr/local/bin/fontforge
 
-Open("gregorio-tests.sfd");"""
+Open("gregorio-test.sfd");"""
 
 def footers():
     print """Save("gregorio-final.sfd");
@@ -137,6 +137,7 @@ def torculus():
 
 def write_torculus(i,j):
     glyphname=name(16, 0, i, j)
+    print base_height
     begin_glyph(glyphname)
     global length1
     global height1
@@ -144,17 +145,19 @@ def write_torculus(i,j):
     simple_paste("base5", glyphname)
     if (i!=1):
 	linename= "line%d" % i 
-	paste_and_move(linename, length1, base_height)
+	paste_and_move(linename, glyphname, length1, base_height)
     paste_and_move("base3", glyphname, length1, i*base_height)
     if (j!=1):
 	linename = "line%d" % j
-	paste_and_move(linename, length1, base_height)
+	paste_and_move(linename, glyphname, 2*length1, base_height)
     paste_and_move("base7", glyphname,  2*length1, (i-j)*base_height)
     set_width(2*length1+base_length)
     end_glyph(glyphname)
 
 def end_glyph(glyphname):
+    print "Simplify();"
     print "RemoveOverlap();"
+    print "Simplify();"
 
 def begin_glyph(glyphname):
     global count
@@ -178,11 +181,11 @@ def paste_and_move(src, dst, horiz, vert):
     print "Select(\"%s\");" % src
     print "Copy();"
     print "Select(\"%s\");" % dst
-    print "PasteWithOffset(%d, %d);" % (horiz, vert)
+    print "PasteWithOffset(%.2f, %.2f);" % (horiz, vert)
 
 def main():
     headers()
-    write_torculus(1,1)
+    write_torculus(2,2)
     footers()
 
 main()
