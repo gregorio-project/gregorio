@@ -105,16 +105,7 @@
 base_length=164
 length1=142
 length2=120
-
-#porrectus_lengths=[PORRECTUS_LENGTH_3-2*LINE_HEIGHT, PORRECTUS_LENGTH_2-2*LINE_HEIGHT, PORRECTUS_LENGTH_3-2*LINE_HEIGHT, PORRECTUS_LENGTH_4-2*LINE_HEIGHT, PORRECTUS_LENGTH_5-2*LINE_HEIGHT]
-
-#mieux en fait : les glyphes s'emboitent bien, et on ajout n*le glyphe de queue. Haha mais attention ! il faut que l'intervalle soit celui de entre deux notes separees d'une demi-ligne !
-
-#height symbols. Height symbols are more complicated we have a basic height, it is the height of a punctum.
-
-#global BASE_HEIGHT=12 #height of a truc with truc
-#global BASE_QUEUE_HEIGHT=12
-#global BASE_INTERLINE=12
+length_debilis=31
 
 count=125
 
@@ -130,31 +121,95 @@ def footers():
     print """Save("gregorio-final.sfd");
 Quit(0);"""
 
-def torculus():
+def pes():
     for i in range(5):
-	for j in range(5):
-	    write_torculus(i+1,j+1)
+	write_pes(i+1, "pbase", 1)
+    for i in range(5):
+	write_pes(i+1, "qbase", 2)
 
-def write_torculus(i,j):
-    glyphname=name(16, 0, i, j)
-    print base_height
+def write_pes(i, first_glyph, glyph_number):
+    glyphname=name(glyph_number, 0, 0, i)
     begin_glyph(glyphname)
     global length1
     global height1
-    glyphname=name(16, 0, i, j)
-    simple_paste("base5", glyphname)
+    simple_paste(first_glyph, glyphname)
     if (i!=1):
 	linename= "line%d" % i 
 	paste_and_move(linename, glyphname, length1, base_height)
-    paste_and_move("base3", glyphname, length1, i*base_height)
+    paste_and_move("base2", glyphname, 0, i*base_height)
+    set_width(base_length)
+    end_glyph(glyphname)    
+
+def pes_quadratum():
+    for i in range(5):
+	write_pes_quadratum(i+1, "base5", 3)
+    for i in range(5):
+	write_pes_quadratum(i+1, "obase", 4)
+
+def write_pes_quadratum(i, first_glyph, glyph_number):
+    glyphname=name(glyph_number, 0, 0, i)
+    begin_glyph(glyphname)
+    global length1
+    global height1
+    simple_paste(first_glyph, glyphname)
+    if (i!=1):
+	linename= "line%d" % i 
+	paste_and_move(linename, glyphname, length1, base_height)
+    paste_and_move("vbase", glyphname, length1, i*base_height)
+    set_width(base_length)
+    end_glyph(glyphname)    
+
+def flexus():
+    for i in range(5):
+	write_flexus(i+1, "base2", 17)
+    for i in range(5):
+	write_flexus(i+1, "vsbase", 18)
+    for i in range(5):
+	write_flexus(i+1, "vlbase", 19)
+
+def write_flexus(i, first_glyph, glyph_number):
+    glyphname=name(glyph_number, 0, 0, i)
+    begin_glyph(glyphname)
+    global length1
+    global height1
+    simple_paste(first_glyph, glyphname)
+    if (i!=1):
+	linename= "line%d" % i 
+	paste_and_move(linename, glyphname, length1, (1-i)*base_height)
+    paste_and_move("base5", glyphname, length1, (-i)*base_height)
+    set_width(length1+base_length)
+    end_glyph(glyphname)
+
+def torculus():
+    for i in range(5):
+	for j in range(5):
+	    write_torculus(i+1,j+1, "base5", "base7", 16)
+    for i in range(5):
+	for j in range(5):
+	    write_torculus(i+1,j+1, "idebilis", "base7", 16)
+
+def write_torculus(i,j, first_glyph, last_glyph, glyph_number):
+    glyphname=name(glyph_number, 0, i, j)
+    begin_glyph(glyphname)
+    global length1
+    global height1
+    length=length1
+    if (first_glyph=="idebilis"):
+	length=length_debilis
+    simple_paste(first_glyph, glyphname)
+    if (i!=1):
+	linename= "line%d" % i 
+	paste_and_move(linename, glyphname, length, base_height)
+    paste_and_move("base3", glyphname, length, i*base_height)
     if (j!=1):
 	linename = "line%d" % j
-	paste_and_move(linename, glyphname, 2*length1, base_height)
-    paste_and_move("base7", glyphname,  2*length1, (i-j)*base_height)
-    set_width(2*length1+base_length)
+	paste_and_move(linename, glyphname, length+length1, (i-j+1)*base_height)
+    paste_and_move(last_glyph, glyphname,  length+length1, (i-j)*base_height)
+    set_width(length+length1+base_length)
     end_glyph(glyphname)
 
 def end_glyph(glyphname):
+    print "Simplify();"
     print "Simplify();"
     print "RemoveOverlap();"
     print "Simplify();"
@@ -185,7 +240,7 @@ def paste_and_move(src, dst, horiz, vert):
 
 def main():
     headers()
-    write_torculus(2,2)
+    torculus()
     footers()
 
 main()
