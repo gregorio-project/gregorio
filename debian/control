@@ -2,7 +2,7 @@ Source: gregorio
 Section: x11
 Priority: optional
 Maintainer: Elie Roux <elie.roux@enst-bretagne.fr>
-Build-Depends: debhelper (>> 3.0.0), libxml2-dev, flex, bison
+Build-Depends: debhelper (>> 3.0.0), libxml2-dev, flex, bison, docbook-to-man, xsltproc
 Standards-Version: 3.6.2
 
 Package: gregorio
