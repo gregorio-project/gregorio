@@ -105,7 +105,7 @@
 base_length=164
 length1=142
 length2=120
-length_debilis=31
+length_debilis=88
 
 count=125
 
