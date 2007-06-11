@@ -2,23 +2,23 @@ Source: gregorio
 Section: x11
 Priority: optional
 Maintainer: Elie Roux <elie.roux@enst-bretagne.fr>
-Build-Depends: debhelper (>> 3.0.0), libxml2-dev, flex, bison, docbook-to-man, xsltproc
+Build-Depends: debhelper (>> 3.0.0), libxml2-dev, flex, bison, docbook-to-man, xsltproc, autotools-dev
 Standards-Version: 3.6.2
 
 Package: gregorio
 Architecture: any
 Depends: libxml2
 Recommends: texlive
-Description: A command-line tool to typeset gregorian chant
-Gregorio is a project with a lot of functionalities. The main interest is gabc,
-a very simple and fast language to describe a gregorian chant score.
-The project is for now a command-line tool to convert gabc files into real
-score, like for example OpusTeX. But it also handles a XML format: GregorioXML.
-You can use the tool to read or write gabc and GregorioXML, and to write
-OpusTeX.
-.
-In the future, a TeX style (GregorioTeX) will be added. It will permit to have
-professional result. It will come with a free gregorian chant font (called
-gregorio).
-.
-For further details see http://home.gna.org/gregorio
+Description: a command-line tool to typeset gregorian chant
+ Gregorio is a project with a lot of functionalities. The main interest is gabc,
+ a very simple and fast language to describe a gregorian chant score.
+ The project is for now a command-line tool to convert gabc files into real
+ score, like for example OpusTeX. But it also handles a XML format: GregorioXML.
+ You can use the tool to read or write gabc and GregorioXML, and to write
+ OpusTeX.
+ .
+ In the future, a TeX style (GregorioTeX) will be added. It will permit to have
+ professional result. It will come with a free gregorian chant font (called
+ gregorio).
+ .
+ For further details see http://home.gna.org/gregorio

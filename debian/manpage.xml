@@ -5,17 +5,17 @@
 <!--
 
 Process this file with an XSLT processor: `xsltproc \
--''-nonet /usr/share/sgml/docbook/stylesheet/xsl/nwalsh/\
-manpages/docbook.xsl manpage.dbk'.  A manual page
+-''-nonet /usr/share/apps/ksgmltools2/docbook/xsl/manpages/\
+docbook.xsl manpage.xml'.  A manual page
 <package>.<section> will be generated.  You may view the
 manual page with: nroff -man <package>.<section> | less'.  A
 typical entry in a Makefile or Makefile.am is:
 
-DB2MAN=/usr/share/sgml/docbook/stylesheet/xsl/nwalsh/\
-manpages/docbook.xsl
+DB2MAN=/usr/share/apps/ksgmltools2/docbook/xsl/manpages/\
+docbook.xsl
 XP=xsltproc -''-nonet
 
-manpage.1: manpage.dbk
+manpage.1: manpage.xml
         $(XP) $(DB2MAN) $<
     
 The xsltproc binary is found in the xsltproc package.  The

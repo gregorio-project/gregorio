@@ -37,8 +37,7 @@ build-stamp:  config.status
 
 	# Add here commands to compile the package.
 	$(MAKE)
-	#docbook-to-man debian/gregorio.sgml > gregorio.1
-
+	xsltproc -''-nonet /usr/share/apps/ksgmltools2/docbook/xsl/manpages/docbook.xsl debian/manpage.xml
 	touch $@
 
 clean:
