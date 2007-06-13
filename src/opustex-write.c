@@ -309,7 +309,7 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
     }
     else
     {
-        int nextposition=WORD_END;
+        int nextposition=0;
         if (syllable->next_syllable)
         {
             nextposition = syllable->next_syllable->position;
