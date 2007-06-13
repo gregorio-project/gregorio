@@ -57,7 +57,7 @@ libgregorio_opustex_write_score (FILE * f, gregorio_score * score)
         libgregorio_det_step_and_line_from_key (score->first_voice_info->
                                                 initial_key, &clef_letter,
                                                 &clef_line);
-        if ((strcmp (&clef_letter, "f")) == 0)
+        if (clef_letter=='f')
         {
             fprintf (f, "\\setclefsymbol1\\gregorianFclef\n\\setclef1%d\n",
                      clef_line + 2);
@@ -309,7 +309,7 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
     }
     else
     {
-        int nextposition;
+        int nextposition=WORD_END;
         if (syllable->next_syllable)
         {
             nextposition = syllable->next_syllable->position;
@@ -468,7 +468,7 @@ libgregorio_opustex_write_text (FILE * f, char *syllable, char nextposition,
   char vowels = 0;
   for (i = first_syllable; i < len; i++)
     {
-      int c;
+      int c=0;
       if (syllable[i] > 31)
 	{
 	  c = syllable[i];
@@ -519,7 +519,7 @@ libgregorio_opustex_write_text (FILE * f, char *syllable, char nextposition,
   fprintf (f, "{");
   for (i = first_syllable; i < len; i++)
     {
-        int c;
+        int c=0;
         if (syllable[i] > 31)
         {
             c = syllable[i];
@@ -1070,7 +1070,7 @@ libgregorio_opustex_print_augmentum_note (FILE * f, char pitch)
 char *
 libgregorio_opustex_glyph_type_to_str (char name)
 {
-    char *str;
+    char *str="";
     switch (name)
     {
         case G_PUNCTUM_INCLINATUM:
@@ -1132,7 +1132,6 @@ libgregorio_opustex_glyph_type_to_str (char name)
             str = "scandicus";
         break;
         default:
-            str = "";
         break;
     }
     return str;
