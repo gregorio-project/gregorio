@@ -15,58 +15,235 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+The file starts by the definition of all the structures used in
+gregorio. As it is certainly the most important file for
+understanding, read it carefully.
+
+*/
+
+/*
+
+We start with the most precise structure, the note structure. The note
+is always a real note (we'll see that glyphs and elements can be other
+things.
+
 */
 
 typedef struct gregorio_note {
+// we have seen that notes are always real notes, that is to say
+// GRE_NOTE. the type is always that in the final structure. But there
+// is however this field in the structure because of the temporary
+// states that can appear in the determination, where notes can be
+// other things. This is the case for example in gabc reading.
   char type;
+// the pitch is the height of the note on the score, that is to say
+// the letter it is represented by in gabc.
   char pitch;
+// shape is the shape of the note... if you want to know the different
+// possible shapes, see below.
   char shape;
+// signs is the signs on the notes, see below for all possible values
   char signs;
+// liquescentia is the liquescence on the note, it is not really used
+// in the final score, but it is, like type, used in the determination
+// of glyphs.
   char liquescentia;
+// h_episemus_type is the type of horizontal episemus, possible values
+// are H_ALONE for an isolated horizontal episemus, H_MULTI_BEGINNING
+// if the note is the first note of an episemus on several notes,
+// H_MULTI_MIDDLE if it is inside an episemus on several notes. I let
+// you guess what could be the use of H_MULTI_END. Other values are
+// temporary values used in determination, they must not appear in the
+// final structure.
   char h_episemus_type;
+// h_episemus_top_note is the highest pitch of the notes that are
+// under the same horizontal episemus of the note. If the note is not
+// under an episemus, it is 0.
   char h_episemus_top_note;
+// then two pointer to other notes, to make a chained list.
   struct gregorio_note *previous_note;
   struct gregorio_note *next_note;
 } gregorio_note;
 
+/*
+
+gregorio_glyph can be other things as GRE_GLYPH: it can be GRE_FLAT,
+GRE_NATURAL or GRE_SPACE
+
+*/
+
 typedef struct gregorio_glyph {
+// type can have the values explained in the comment juste above.
   char type;
+// in the case of a GRE_GLYPH, glyph_type is the type of the glyph
+// (porrectus, pes, etc.), they are all listed below. If it is a
+// GRE_FLAT or a GRE_NATURAL, it is the height of the flat or natural
+// that will be represented. If it is GRE_SPACE, it is the kind of
+// space it is (they are listed below). As a matter of fact, a
+// GRE_SPACE in a gregorio_glyph can have only one value:
+// SP_ZERO_WIDTH, as other spaces would break the glyphs into
+// different elements.
   char glyph_type;
+// liquescentia is really used, because that will determine the shape
+// we will have to use.
   char liquescentia;
+// a pointer to a (chained list of) gregorio_notes, the first of the
+// glyph.
   struct gregorio_note *first_note;
+// two pointer to make a chained list
   struct gregorio_glyph *next_glyph;
   struct gregorio_glyph *previous_glyph;
 } gregorio_glyph;
 
 typedef struct gregorio_element {
+// type can have the values GRE_ELEMENT, GRE_BAR, GRE_C_KEY_CHANGE,
+// GRE_F_KEY_CHANGE, GRE_END_OF_LINE or GRE_SPACE.
   char type;
+// in the case of a GRE_ELEMENT, element_type is the kind of element
+// it is (but it is very blur.. don't watch this value). In the case
+// of a GRE_BAR it is the type of bar (listed below). If it is
+// GRE_*_KEY_CHANGE, it is 0. If it is GRE_SPACE, it is the kind of
+// space (it can't be SP_ZERO_WIDTH).
   char element_type;
-  //char liquescentia;
+// a pointer to the first glyph of the element.
   struct gregorio_glyph *first_glyph;
+// a pointer to the next element. We did not find useful to include a
+// pointer to the previous element.
   struct gregorio_element *next_element;
   //struct gregorio_element *previous_element;
 } gregorio_element;
 
+/*
+
+The we define the characters. First we define the different styles. You can notice that center is just a style like the others
+
+*/
+
+
+
+#define ST_NO_STYLE 0
+#define ST_ITALIC 1
+#define ST_CENTER 6
+#define ST_BOLD 2
+#define ST_TT 3
+#define ST_SMALL_CAPS 7
+#define ST_SPECIAL_CHAR 4
+#define ST_VERBATIM 5
+
+/*
+
+Then the different types of styles. See the next comments for further readings.
+
+*/
+
+#define ST_T_NOTHING 0
+#define ST_T_BEGIN 1
+#define ST_T_END 2
+
+/*
+
+gregorio_characters are a bit specials. As there can be styles in the text, I had to find a structure mode adapted that just wchar_t *. So basically a gregorio_character is a double-chained list of things that can be wchar_t or gregorio_styles. For example if you type (in gabc) p<i>o</i>t, the corresponding gregorio_character list will be P->style(type: beginning, style italic) -> o -> style(type:end, style: italic). But for this list to be coherent, it is mandatory that it is xml-compliant, that is to say that a<b>c<i>d</b>e</i> will be interpreted as a<b>c<i>d</i></b><i>e</i>. This MUST be done when reading a file, so that the structure in memory is coherent. It makes input modules more comple, but output modules muche more simpler. The last particularity is that center must also be determined in the input modules, so that it is already defined in memory. But it is a bit more complex, because for TeX-like output modules, we need to close all styles before the center style: if the user types <i>pot</i> it must be represented as <i>p</i>{<i>o</i>}<i>t</i>.
+
+Here is the declaration of the gregorio_style struct. It is simply two chars, one telling the type of style character it is (beginning for a character that marks the beginning of a style, and end for a character marking the end of a style). The other char simply is the style represented by the character (italic, etc.)
+
+*/
+
+typedef struct gregorio_style {
+  unsigned char style;
+  unsigned char type;
+} gregorio_style;
+
+/*
+
+This union is quite ugly... but necessary for a gregorio_character to be able to be a wchar_t or gregorio_style.
+
+*/
+typedef union character_or_style {
+  wchar_t character;
+  struct gregorio_style s;
+} character_or_style;
+
+/*
+
+Finally the gregorio_character structure in itself, It is first a char determining the type (character or gregorio_style).
+This char is 0 when it is a style and something else when it is a character.
+Then the two pointers to build the double chained list, and finally the union. So when you want to access to the style of a gregorio_character (when you know it is a character of style), you must access to mygregoriochar.cos.s.style, and for the character mygregoriochar.cos.character .
+
+*/
+
+typedef struct gregorio_character {
+  unsigned char is_character;
+  struct gregorio_character *next_character;
+  struct gregorio_character *previous_character;
+  union character_or_style cos;
+} gregorio_character;
+
 typedef struct gregorio_syllable {
+// a syllable can be a GRE_SYLLABLE, a GRE_*_KEY_CHANGE or a
+// GRE_BAR. It is useful when there is only that in a syllable.
   char type;
+// position is WORD_BEGINNING for the beginning of a multi-syllable
+// word, WORD_ONE_SYLLABLE for syllable that are alone in their word,
+// and i let you gess what are WORD_MIDDLE and WORD_END.
   char position;
-  char *syllable;
+// pointer to a gregorio_text structure corresponding to the text.
+  struct gregorio_character *text;
+// pointer to the next syllable. Here again we did not find useful to
+// include a pointer to the previous syllable.
   struct gregorio_syllable *next_syllable;
+// and finally a pointer to the elements of the structure. Here we see
+// that we point to an array of elements. In fact it is the array of
+// the first elements of the different voices of the syllable, for the
+// case of polyphonic score. In most scores (monophonic), the array
+// has only one element.
   struct gregorio_element ** elements;
 } gregorio_syllable;
 
+
+
+/*
+
+Score is the top structure, the structure in which we will convert
+everything, and from which we will construct XML
+
+*/
+
 typedef struct gregorio_score {
+// the structure starts by a pointer to the first syllable of the
+// score.
   struct gregorio_syllable *first_syllable;
+// the number of voices is very important. In monophony it is one. If
+// there are more voices thant number_of_voices, the additional voices
+// won't be taken into consideration.
   int number_of_voices;
+// then start some metadata:
   char *name;
   char *office_part;
+// these preambles will be added (in the future) as preamble in case
+// of OpusTeX, MusiXTeX or Lilypond output.
   char *lilypond_preamble;
   char *opustex_preamble;
   char *musixtex_preamble;
+// then, as there are some metadata that are voice-specific, we add a
+// pointer to the first voice_info. (see comments below)
   struct gregorio_voice_info *first_voice_info;
 } gregorio_score;
 
+/*
+
+gregorio_voice info contains everything that is voice_specific, for
+example the key, etc. that can be different from one voice to
+another. The order of the voice_info (it is a chained list) is the
+same as the order of the voices (from top to bottom in their
+representation on the score).
+
+*/
+
 typedef struct gregorio_voice_info {
+// the only thing that is worth a comment here is the key. We have a
+// special representation for the key. See comments on
+// src/struct-utils.c for further reading.
   int initial_key;
   char *anotation;
   char *author;
@@ -97,7 +274,9 @@ libgregorio_determine_h_episemus_type (gregorio_note * note);
 void libgregorio_add_note(gregorio_note **current_note, char pitch, char shape, char signs, char liquescentia,char h_episemus);
 void libgregorio_add_glyph (gregorio_glyph **current_glyph, char type, gregorio_note *first_note, char liquescentia);
 void libgregorio_add_element (gregorio_element **current_element, gregorio_glyph *first_glyph);
-void libgregorio_add_syllable (gregorio_syllable ** current_syllable, int number_of_voices, gregorio_element * elements[], char *syllable, char position);
+void libgregorio_add_syllable (gregorio_syllable ** current_syllable,
+			  int number_of_voices, gregorio_element * elements[],
+			  gregorio_character * first_character, char position);
 
 void libgregorio_add_voice_info (gregorio_voice_info **current_voice_info);
 
@@ -180,6 +359,8 @@ void
 libgregorio_set_octave_and_step_from_pitch (char *step,
 					  int *octave, char pitch, int clef);
 
+// the maximum number of voices, more than this is total nonsense in
+// gregorian chant.
 #define MAX_NUMBER_OF_VOICES 10
 
 #define max(a, b) (a > b ? a : b)
@@ -187,6 +368,8 @@ libgregorio_set_octave_and_step_from_pitch (char *step,
 #define is_alteration(type) type==GRE_FLAT||type==GRE_NATURAL
 
 #define MAX_TEXT_LENGTH 200
+
+// all the different types of things a gregorio_* can be
 
 #define GRE_NOTE 1
 #define GRE_GLYPH 2
@@ -199,6 +382,7 @@ libgregorio_set_octave_and_step_from_pitch (char *step,
 #define GRE_END_OF_LINE 8
 #define GRE_SPACE 9
 #define GRE_BAR 10
+
 
 #define C_KEY 'c'
 #define F_KEY 'f'
@@ -221,6 +405,11 @@ libgregorio_set_octave_and_step_from_pitch (char *step,
 
 #define USELESS_VALUE 0
 
+// definition of the signs. You can notice that the values are made so
+// that if you wan to add a vertical episemus to a note, you juste
+// make note->signs+=_V_EPISEMUS, so please don't change the value as
+// this tricky is used.
+
 #define _NO_SIGN 0
 #define _PUNCTUM_MORA 1
 #define _AUCTUM_DUPLEX 2
@@ -240,12 +429,16 @@ h_episemus>H_ALONE
 #define H_MULTI_END 6
 #define H_UNDETERMINED 7
 
+// the different kind of bars
+
 #define B_NO_BAR 0
 #define B_VIRGULA 1
 #define B_DIVISIO_MINIMA 2
 #define B_DIVISIO_MINOR 3
 #define B_DIVISIO_MAIOR 4
 #define B_DIVISIO_FINALIS 5
+
+// the different shapes, only for notes
 
 #define S_UNDETERMINED 0
 #define S_PUNCTUM 1
@@ -263,11 +456,14 @@ h_episemus>H_ALONE
 #define S_DISTROPHA_AUCTA 13
 #define S_TRISTROPHA 14
 #define S_TRISTROPHA_AUCTA 15
-// special shapes that must not appear in the final form of the score : quadratum is the shape of the first note of a punctum quadratum and quilisma quadratum is the shape of the first note of a pes quislisma quadratum
+// special shapes that must not appear in the final form of the score
+// : quadratum is the shape of the first note of a punctum quadratum
+// and quilisma quadratum is the shape of the first note of a pes
+// quislisma quadratum
 #define S_QUADRATUM 16
 #define S_QUILISMA_QUADRATUM 17
 
-#define has_two_glyphs(type) type==ELT_TWO_GLYPH || type==ELT_PRAEPUNCTA_TWO_GLYPH ||type==ELT_TWO_GLYPH_SUBPUNCTA ||type==ELT_PRAEPUNCTA_TWO_GLYPH_SUBPUNCTA
+// The different types of glyph
 
 #define G_PUNCTUM_INCLINATUM 1
 #define G_2_PUNCTA_INCLINATA_DESCENDENS 2
@@ -304,12 +500,14 @@ h_episemus>H_ALONE
 #define G_PES_QUADRATUM_FIRST_PART 31
 #define G_SCANDICUS 32
 #define G_PES_QUILISMA_QUADRATUM_FIRST_PART 33
-#define G_ONE_NOTE 55
 
+#define G_ONE_NOTE 55
 #define G_PUNCTA_ASCENDENS 34
 #define G_PUNCTA_DESCENDENS 35
 
 #define is_puncta_inclinata(glyph) glyph<=G_5_PUNCTA_INCLINATA_ASCENDENS
+
+// the different spaces
 
 #define SP_DEFAULT '1'
 #define SP_NO_SPACE '2'
@@ -321,6 +519,11 @@ h_episemus>H_ALONE
 #define is_liquescentia(liquescentia) liquescentia==L_DEMINUTUS||liquescentia==L_AUCTUS_ASCENDENS||liquescentia==L_AUCTUS_DESCENDENS||liquescentia==L_AUCTA
 
 #define is_initio_debilis(liquescentia) liquescentia>=L_INITIO_DEBILIS
+
+// the different liquescences, like for the signs, have special
+// values: to say that something is initio_debilis, just do
+// glyph->liquescentia+=L_INITIO_DEBILIS. So don't change the value,
+// the tricky is much used
 
 #define L_NO_LIQUESCENTIA 0
 #define L_DEMINUTUS 1
@@ -336,3 +539,27 @@ h_episemus>H_ALONE
 #define IS_INITIO_DEBILIS 5
 #define NO_INITIO_DEBILIS 0
 
+#define SKIP_FIRST_LETTER 1
+
+void libgregorio_add_character (gregorio_character **current_character, wchar_t wcharacter);
+void libgregorio_begin_style (gregorio_character **current_character, unsigned char style);
+void libgregorio_end_style (gregorio_character **current_character, unsigned char style);
+
+int libgregorio_is_vowel (wchar_t letter);
+
+void libgregorio_write_text (char type, gregorio_character * text, FILE *f, void (*printverb)(FILE *, wchar_t *), void (*printchar)(FILE *, wchar_t), void (*begin)(FILE *, unsigned char), void (*end)(FILE *, unsigned char), void (*printspchar)(FILE *, wchar_t *)); 
+
+void libgregorio_write_first_letter (gregorio_character * current_character, FILE * f, void (*printverb) (FILE *, wchar_t *), void (*printchar) (FILE *, wchar_t), void (*begin) (FILE *, unsigned char), void (*end) (FILE *, unsigned char), void (*printspchar) (FILE *, wchar_t *));
+
+void libgregorio_free_characters (gregorio_character * current_character);
+void libgregorio_free_one_character (gregorio_character * current_character);
+void libgregorio_suppress_one_character (gregorio_character * current_character);
+
+void libgregorio_insert_character (gregorio_character * current_character, wchar_t wcharacter, unsigned int style, unsigned int type);
+
+wchar_t libgregorio_first_letter (gregorio_score *score);
+
+void libgregorio_add_text (char *mbcharacters, gregorio_character **current_character);
+
+void libgregorio_go_to_first_character (gregorio_character ** character);
+gregorio_character * libgregorio_first_text (gregorio_score * score);

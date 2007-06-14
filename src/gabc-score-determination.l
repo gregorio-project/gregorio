@@ -30,6 +30,7 @@ char *error;
 %x attribute
 %x score
 %x notes
+%x verb
 
 
 %option nounput
@@ -128,9 +129,57 @@ char *error;
 	libgregorio_message (error,
 		      "libgregorio_det_score", ERROR, 0);
 	}
-<score>[^\(\ \t\n]* {
+<score>[^\{\}\(\ \t\n<]+ {
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);
-	return SYLLABLE;
+	return CHARACTERS;
+	}
+<score><i> {
+	return I_BEGINNING;
+	}
+<score><\/i> {
+	return I_END;
+	}
+<score><tt> {
+	return TT_BEGINNING;
+	}
+<score><\/tt> {
+	return TT_END;
+	}
+<score><b> {
+	return B_BEGINNING;
+	}
+<score><\/b> {
+	return B_END;
+	}
+<score><sc> {
+	return SC_BEGINNING;
+	}
+<score><\/sc> {
+	return SC_END;
+	}
+<score><sp> {
+	return SP_BEGINNING;
+	}
+<score><\/sp> {
+	return SP_END;
+	}
+<score><v> {
+	BEGIN(verb);
+	return VERB_BEGINNING;
+	}
+<verb>[^"<\/v>"]+ {
+	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	return CHARACTERS;
+	}
+<verb><\/v> {
+	BEGIN(score);
+	return VERB_END;
+	}
+<score>\{  {
+	return CENTER_BEGINNING;
+	}
+<score>\}  {
+	return CENTER_END;
 	}
 <score>(\ |\t|\n)+ { 
 	return SPACE;

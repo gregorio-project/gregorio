@@ -15,6 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+This is a simple and easyly understandable output module. If you want to write a module, you can consider it as a model.
+
 */
 
 #include <ctype.h>
@@ -25,21 +28,28 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "messages.h"
 #include "struct.h"
 #include "gabc.h"
+#include <wchar.h>
 
+/*
+
+This is the top function, the one called when we want to write a gregorio_score in gabc.
+
+*/
 
 void
 libgregorio_gabc_write_score (FILE * f, gregorio_score * score)
 {
-if (score->name)
+  if (score->name)
     {
-  fprintf (f, "name: %s;\n", score->name);
+      fprintf (f, "name: %s;\n", score->name);
 
     }
- else {
-  fprintf (f, "name: unknown;\n");
+  else
+    {
+      fprintf (f, "name: unknown;\n");
       libgregorio_message (_("name is mandatory"),
 			   "libgregorio_gabc_write_score", ERROR, 0);
-}
+    }
   if (score->office_part)
     {
       fprintf (f, "office-part: %s;\n", score->office_part);
@@ -84,6 +94,7 @@ if (score->name)
 	}
     }
   gregorio_syllable *syllable = score->first_syllable;
+  // the we write every syllable
   while (syllable)
     {
       libgregorio_gabc_write_gregorio_syllable (f, syllable,
@@ -93,14 +104,21 @@ if (score->name)
   fprintf (f, "\n");
 }
 
+/*
+
+This function write a gregorio_voice_info. Still very simple.
+
+*/
+
 void
 libgregorio_gabc_write_voice_info (FILE * f, gregorio_voice_info * voice_info)
 {
-  if (!voice_info) {
+  if (!voice_info)
+    {
       libgregorio_message (_("no voice info"),
 			   "libgregorio_gabc_write_voice_info", WARNING, 0);
-return;
-}
+      return;
+    }
   if (voice_info->anotation)
     {
       fprintf (f, "anotation: %s;\n", voice_info->anotation);
@@ -148,6 +166,112 @@ return;
   fprintf (f, "initial-key: %c%d;\n", step, line);
 }
 
+/*
+
+Then we start the functions made to write the text of the syllable. See comments on struct.h and struct-utils.c to understand more deeply.
+
+This first function will be called each time we will encounter a gregorio_character which is the beginning of a style.
+
+*/
+
+void
+libgregorio_gabc_write_begin (FILE * f, unsigned char style)
+{
+  switch (style)
+    {
+    case ST_ITALIC:
+      fprintf (f, "<i>");
+      break;
+    case ST_SMALL_CAPS:
+      fprintf (f, "<sc>");
+      break;
+    case ST_BOLD:
+      fprintf (f, "<b>");
+      break;
+    case ST_CENTER:
+      fprintf (f, "{");
+      break;
+    case ST_TT:
+      fprintf (f, "<tt>");
+      break;
+    default:
+      break;
+    }
+}
+
+/*
+
+This function is about the same but for ends of styles.
+
+*/
+
+void
+libgregorio_gabc_write_end (FILE * f, unsigned char style)
+{
+  switch (style)
+    {
+    case ST_ITALIC:
+      fprintf (f, "</i>");
+      break;
+    case ST_SMALL_CAPS:
+      fprintf (f, "</sc>");
+      break;
+    case ST_BOLD:
+      fprintf (f, "</b>");
+      break;
+    case ST_CENTER:
+      fprintf (f, "}");
+      break;
+    case ST_TT:
+      fprintf (f, "</tt>");
+      break;
+    default:
+      break;
+    }
+}
+
+/*
+
+This function writes the special chars. As the specials chars are represented simply in gabc, this function is very simple, but for TeX output modules, this may be.. a little more difficult.
+
+*/
+
+void
+libgregorio_gabc_write_special_char (FILE * f, wchar_t * special_char)
+{
+  fprintf (f, "<sp>%ls</sp>", special_char);
+}
+
+/*
+
+This functions writes verbatim output... but as the previous one it is very simple.
+
+*/
+
+void
+libgregorio_gabc_write_verb (FILE * f, wchar_t * verb_str)
+{
+  fprintf (f, "<v>%ls</v>", verb_str);
+}
+
+/*
+
+The function called when we will encounter a character. There may be other representations of the character (for example for Omega), so it is necessary to have such a function defined in each module.
+
+*/
+
+void
+libgregorio_gabc_print_char (FILE * f, wchar_t to_print)
+{
+  fprintf (f, "%lc", to_print);
+}
+
+/*
+
+Here it goes, we are writing a gregorio_syllable.
+
+*/
+
 void
 libgregorio_gabc_write_gregorio_syllable (FILE * f,
 					  gregorio_syllable * syllable,
@@ -157,16 +281,23 @@ libgregorio_gabc_write_gregorio_syllable (FILE * f,
     {
       libgregorio_message (_("call with NULL argument"),
 			   "libgregorio_gabc_write_syllable", ERROR, 0);
-return;
+      return;
     }
   int voice = 0;
-  if (!syllable->syllable)
+  if (!syllable->text)
     {
       fprintf (f, "(");
     }
   else
     {
-      fprintf (f, "%s(", syllable->syllable);
+      // we call the magic function (defined in struct_utils.c), that will write our text.
+      libgregorio_write_text (0, syllable->text, f,
+			      (&libgregorio_gabc_write_verb),
+			      (&libgregorio_gabc_print_char),
+			      (&libgregorio_gabc_write_begin),
+			      (&libgregorio_gabc_write_end),
+			      (&libgregorio_gabc_write_special_char));
+      fprintf (f, "(");
     }
   while (voice < number_of_voices - 1)
     {
@@ -175,8 +306,8 @@ return;
       fprintf (f, "&");
       voice++;
     }
+  // we write all the elements of the syllable.
   libgregorio_gabc_write_gregorio_elements (f, syllable->elements[voice]);
-
   if (syllable->position == WORD_END
       || libgregorio_is_only_special (syllable->elements[0]))
     // we assume here that if the first voice is only special, all will be only specials too
@@ -189,9 +320,15 @@ return;
     }
 }
 
+/*
+
+Here is defined the function that will write the list of gregorio_elements. It is very simple: it makes a loop in which it calls a function that writes one element.
+
+*/
+
 void
-libgregorio_gabc_write_gregorio_elements (FILE * f,
-					  gregorio_element * element)
+libgregorio_gabc_write_gregorio_elements (FILE *
+					  f, gregorio_element * element)
 {
   while (element)
     {
@@ -205,14 +342,20 @@ libgregorio_gabc_write_gregorio_elements (FILE * f,
     }
 }
 
+/*
+
+To write an element, first we check the type of the element (if it is a bar, etc.), and if it is really an element, we make a loop on the list of glyphs inside the neume, and for each of them we call the function that will write one glyph.
+
+*/
+
 void
 libgregorio_gabc_write_gregorio_element (FILE * f, gregorio_element * element)
 {
   if (!element)
     {
       libgregorio_message (_("call with NULL argument"),
-			   "libgregorio_gabc_write_gregorio_element", ERROR,
-			   0);
+			   "libgregorio_gabc_write_gregorio_element",
+			   ERROR, 0);
       return;
     }
   gregorio_glyph *current_glyph = element->first_glyph;
@@ -240,16 +383,22 @@ libgregorio_gabc_write_gregorio_element (FILE * f, gregorio_element * element)
 					 element->element_type - 48);
       break;
     case GRE_END_OF_LINE:
-      fprintf(f,"z");
+      fprintf (f, "z");
       break;
     default:
-      libgregorio_message (_("call with an argument which type is unknown"),
-			   "libgregorio_gabc_write_gregorio_element", ERROR,
-			   0);
+      libgregorio_message (_
+			   ("call with an argument which type is unknown"),
+			   "libgregorio_gabc_write_gregorio_element",
+			   ERROR, 0);
       break;
     }
 }
 
+/*
+
+The function that writes one glyph. If it is really a glyph (meaning not a space or an alteration), we just do like always, a loop on the notes and a call to the function that writes one note on each of them.
+
+*/
 
 void
 libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
@@ -268,15 +417,18 @@ libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
     case GRE_NATURAL:
       fprintf (f, "y%c", glyph->glyph_type);
       break;
-	case GRE_SPACE:
-	if (glyph->glyph_type==SP_ZERO_WIDTH && glyph->next_glyph) {
-	fprintf(f,"!");
+    case GRE_SPACE:
+      if (glyph->glyph_type == SP_ZERO_WIDTH && glyph->next_glyph)
+	{
+	  fprintf (f, "!");
 	}
-	else {
-	      libgregorio_message (_("bad space"),
-			   "libgregorio_gabc_write_gregorio_glyph", ERROR, 0);
+      else
+	{
+	  libgregorio_message (_("bad space"),
+			       "libgregorio_gabc_write_gregorio_glyph",
+			       ERROR, 0);
 	}
-	break;
+      break;
     case GRE_GLYPH:
       if (is_initio_debilis (glyph->liquescentia))
 	{
@@ -286,7 +438,8 @@ libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
       gregorio_note *current_note = glyph->first_note;
       while (current_note)
 	{
-	  libgregorio_gabc_write_gregorio_note (f, current_note,
+	  libgregorio_gabc_write_gregorio_note (f,
+						current_note,
 						glyph->glyph_type);
 //third argument necessary for the special shape pes quadratum
 	  current_note = current_note->next_note;
@@ -295,11 +448,18 @@ libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
       break;
     default:
 
-      libgregorio_message (_("call with an argument which type is unknown"),
+      libgregorio_message (_
+			   ("call with an argument which type is unknown"),
 			   "libgregorio_gabc_write_gregorio_glyph", ERROR, 0);
       break;
     }
 }
+
+/*
+
+Quite important: the function that writes the liquescentia. It is called at the end of the function that writes one glyph.
+
+*/
 
 void
 libgregorio_gabc_write_end_liquescentia (FILE * f, char liquescentia)
@@ -329,11 +489,23 @@ libgregorio_gabc_write_end_liquescentia (FILE * f, char liquescentia)
     }
 }
 
+/*
+
+The function that writes a key change... quite simple.
+
+*/
+
 void
 libgregorio_gabc_write_key_change (FILE * f, char step, int line)
 {
   fprintf (f, "%c%d", step, line);
 }
+
+/*
+
+The function that writes spaces, called when we encounter one.
+
+*/
 
 void
 libgregorio_gabc_write_space (FILE * f, char type)
@@ -356,6 +528,12 @@ libgregorio_gabc_write_space (FILE * f, char type)
     }
 }
 
+/*
+
+A function to write a bar.
+
+*/
+
 void
 libgregorio_gabc_write_bar (FILE * f, char type)
 {
@@ -377,15 +555,22 @@ libgregorio_gabc_write_bar (FILE * f, char type)
       fprintf (f, "::");
       break;
     default:
-      libgregorio_message (_("unknown bar type, nothing will be done"),
+      libgregorio_message (_
+			   ("unknown bar type, nothing will be done"),
 			   "libgregorio_gabc_bar_to_str", ERROR, 0);
       break;
     }
 }
 
+/*
+
+The function that writes one gregorio_note.
+
+*/
+
 void
-libgregorio_gabc_write_gregorio_note (FILE * f, gregorio_note * note,
-				      char glyph_type)
+libgregorio_gabc_write_gregorio_note (FILE * f,
+				      gregorio_note * note, char glyph_type)
 {
   if (!note)
     {
@@ -412,6 +597,7 @@ libgregorio_gabc_write_gregorio_note (FILE * f, gregorio_note * note,
   note->pitch = tolower (note->pitch);
   switch (shape)
     {
+    // first we write the letters that determine the shapes
     case S_PUNCTUM:
       fprintf (f, "%c", note->pitch);
       break;
@@ -435,6 +621,9 @@ libgregorio_gabc_write_gregorio_note (FILE * f, gregorio_note * note,
       break;
     case S_QUILISMA:
       fprintf (f, "%cw", note->pitch);
+      break;
+    case S_QUILISMA_QUADRATUM:
+      fprintf (f, "%cW", note->pitch);
       break;
     case S_STROPHA:
       fprintf (f, "%cs", note->pitch);
@@ -486,3 +675,5 @@ libgregorio_gabc_write_gregorio_note (FILE * f, gregorio_note * note,
       fprintf (f, "_");
     }
 }
+
+//And that's it... not really hard isn't it?

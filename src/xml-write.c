@@ -223,8 +223,103 @@ libgregorio_xml_write_key_change_in_polyphony (FILE * f, char step, int line,
 	   voice, step, line);
 }
 
+char in_text=0;
+
 void
-libgregorio_xml_print_text (FILE * f, char *syllable, char position)
+libgregorio_xml_write_begin (FILE * f, unsigned char style)
+{
+  if (in_text) 
+    {
+	fprintf(f, "</str>");
+	in_text=0;
+    }
+  switch (style)
+    {
+    case ST_ITALIC:
+      fprintf (f, "<italic>");
+      break;
+    case ST_SMALL_CAPS:
+      fprintf (f, "<small-caps>");
+      break;
+    case ST_BOLD:
+      fprintf (f, "<bold>");
+      break;
+    case ST_CENTER:
+      fprintf (f, "<center>");
+      break;
+    case ST_TT:
+      fprintf (f, "<tt>");
+      break;
+    default:
+      break;
+    }
+}
+
+void
+libgregorio_xml_write_end (FILE * f, unsigned char style)
+{
+  if (in_text) 
+    {
+	fprintf(f, "</str>");
+	in_text=0;
+    }
+  switch (style)
+    {
+    case ST_ITALIC:
+      fprintf (f, "</italic>");
+      break;
+    case ST_SMALL_CAPS:
+      fprintf (f, "</small-caps>");
+      break;
+    case ST_BOLD:
+      fprintf (f, "</bold>");
+      break;
+    case ST_CENTER:
+      fprintf (f, "</center>");
+      break;
+    case ST_TT:
+      fprintf (f, "</tt>");
+      break;
+    default:
+      break;
+    }
+}
+
+void
+libgregorio_xml_write_special_char (FILE * f, wchar_t * special_char)
+{
+  if (in_text) 
+    {
+	fprintf(f, "</str>");
+	in_text=0;
+    }
+  fprintf (f, "<secial-char>%ls</special-char>", special_char);
+}
+
+void
+libgregorio_xml_write_verb (FILE * f, wchar_t * verb_str)
+{
+  if (in_text) 
+    {
+	fprintf(f, "</str>");
+	in_text=0;
+    }
+  fprintf (f, "<verbatim>%ls</verbatim>", verb_str);
+}
+
+void
+libgregorio_xml_print_char (FILE * f, wchar_t to_print)
+{
+  if (!in_text) 
+    {
+	fprintf(f, "<str>");
+	in_text=1;
+    }
+  fprintf (f, "%lc", to_print);
+}
+
+void
+libgregorio_xml_print_text (FILE * f, gregorio_character *text, char position)
 {
   char *position_str;
   switch (position)
@@ -238,12 +333,30 @@ libgregorio_xml_print_text (FILE * f, char *syllable, char position)
     case (WORD_END):
       position_str = "end";
       break;
+    case (WORD_ONE_SYLLABLE):
+      position_str = "one-syllable";
+      break;
     default:
       position_str = "";
       break;
     }
-
-  fprintf (f, "<text position=\"%s\">%s</text>", position_str, syllable);
+  if (!text) 
+    {
+	return;
+    }
+  fprintf (f, "<text position=\"%s\">", position_str);
+      libgregorio_write_text (0, text, f,
+			      (&libgregorio_xml_write_verb),
+			      (&libgregorio_xml_print_char),
+			      (&libgregorio_xml_write_begin),
+			      (&libgregorio_xml_write_end),
+			      (&libgregorio_xml_write_special_char));
+  if (in_text) 
+    {
+	fprintf(f, "</str>");
+	in_text=0;
+    }
+  fprintf(f, "</text>");
 }
 
 
@@ -271,9 +384,9 @@ libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
       voice = 1;
     }
   fprintf (f, "<syllable>");
-  if (syllable->syllable)
+  if (syllable->text)
     {
-      libgregorio_xml_print_text (f, syllable->syllable, syllable->position);
+      libgregorio_xml_print_text (f, syllable->text, syllable->position);
     }
   for (i = 0; i < number_of_voices; i++)
   {

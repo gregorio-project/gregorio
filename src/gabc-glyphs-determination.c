@@ -138,7 +138,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 
   // type of the glyph we are currently determining 
   char current_glyph_type = G_UNDETERMINED;
-  char next_glyph_type;
+  char next_glyph_type = G_UNDETERMINED;
   char last_pitch = USELESS_VALUE;
   gregorio_note *next_note = NULL;
 

@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define N_(str) str
 #include "struct.h"
 #include "dump.h"
+#include <wchar.h>
 
 void
 libgregorio_dump_score (FILE * f, gregorio_score * score)
@@ -123,9 +124,24 @@ libgregorio_dump_score (FILE * f, gregorio_score * score)
             fprintf (f, "   position                  %d (%s)\n", syllable->position,
                      libgregorio_dump_syllable_position (syllable->position));
         }
-        if (syllable->syllable)
+        if (syllable->text)
         {
-            fprintf (f, "   syllable                  %s\n", syllable->syllable);
+	  gregorio_character *current_character=syllable->text;
+	  while (current_character) {
+		fprintf (f, "---------------------------------------------------------------------\n");
+         if (current_character->is_character) {
+		                  fprintf (f, "     character                 %lc\n", current_character->cos.character);
+		}
+	 	else {
+		  if (current_character->cos.s.type==ST_T_BEGIN) {
+		    		                  fprintf (f, "     beginning of style        %d\n", current_character->cos.s.style);
+		  }
+		  else {
+		    		                  fprintf (f, "     end of style              %d\n", current_character->cos.s.style);
+		  }
+		}
+	  current_character=current_character->next_character;
+	  }
         }
         gregorio_element *element = syllable->elements[0];
         while (element)

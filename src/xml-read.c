@@ -546,8 +546,35 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
     }
 }
 
+char
+libgregorio_xml_read_position (char *position)
+{
+  if (!strcmp (position, "beginning"))
+    {
+      return WORD_BEGINNING;
+    }
+  if (!strcmp (position, "one-syllable"))
+    {
+      return WORD_ONE_SYLLABLE;
+    }
+  if (!strcmp (position, "middle"))
+    {
+      return WORD_MIDDLE;
+    }
+  if (!strcmp (position, "end"))
+    {
+      return WORD_END;
+    }
+  else
+    {
+      libgregorio_message (_
+			   ("text position unrecognized"),
+			   "libgregorio_xml_read_text", WARNING, 0);
+      return WORD_ONE_SYLLABLE;
+    }
+}
 
-
+void libgregorio_xml_read_styled_text(xmlNodePtr current_node, xmlDocPtr doc, gregorio_character **current_character);
 
 void
 libgregorio_xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
@@ -555,61 +582,96 @@ libgregorio_xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
 {
 
   char *temp;
-  temp = (char *) xmlNodeListGetString
-    (doc, current_node->xmlChildrenNode, 1);
-  if (temp)
-    {
-      syllable->syllable = temp;
-    }
-  else
-    {
-      syllable->syllable = NULL;
-return;
-    }
   temp = (char *) xmlGetProp (current_node, (const xmlChar *) "position");
   if (!temp)
     {
       libgregorio_message (_
 			   ("position attribute missing, assuming beginning"),
 			   "libgregorio_xml_read_syllable", WARNING, 0);
-      syllable->position = WORD_BEGINNING;	//TODO: better gestion of word position
+      syllable->position = WORD_ONE_SYLLABLE;	//TODO: better gestion of word position
       return;
     }
-
-  if (!strcmp (temp, "beginning"))
-    {
-      syllable->position = WORD_BEGINNING;
-	free(temp);
-      return;
-    }
-  if (!strcmp (temp, "one-syllable"))
-    {
-      syllable->position = WORD_ONE_SYLLABLE;
-	free(temp);
-      return;
-    }
-  if (!strcmp (temp, "middle"))
-    {
-      syllable->position = WORD_MIDDLE;
-	free(temp);
-      return;
-    }
-  if (!strcmp (temp, "end"))
-    {
-      syllable->position = WORD_END;
-	free(temp);
-      return;
-    }
-  else
-    {
-      libgregorio_message (_
-			   ("text position unrecognized"),
-			   "libgregorio_xml_read_syllable", WARNING, 0);
-	free(temp);
-      return;
-
-    }
+  syllable->position=libgregorio_xml_read_position (temp);
+  free(temp);
+  gregorio_character *current_character=NULL;
+  libgregorio_xml_read_styled_text(current_node->xmlChildrenNode, doc, &current_character);
+  libgregorio_go_to_first_character(&current_character);
+  syllable->text=current_character;
 }
+
+void
+libgregorio_xml_read_styled_text(xmlNodePtr current_node, xmlDocPtr doc, gregorio_character **current_character) {
+while(current_node) {
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "str"))
+	{
+	libgregorio_add_text((char *)xmlNodeListGetString
+		  (doc, current_node->xmlChildrenNode, 1), current_character);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "center"))
+	{
+	libgregorio_begin_style(current_character, ST_CENTER);
+	libgregorio_xml_read_styled_text(current_node->xmlChildrenNode, doc, current_character);
+	libgregorio_end_style(current_character, ST_CENTER);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "italic"))
+	{
+	libgregorio_begin_style(current_character, ST_ITALIC);
+	libgregorio_xml_read_styled_text(current_node->xmlChildrenNode, doc, current_character);
+	libgregorio_end_style(current_character, ST_ITALIC);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "bold"))
+	{
+	libgregorio_begin_style(current_character, ST_BOLD);
+	libgregorio_xml_read_styled_text(current_node->xmlChildrenNode, doc, current_character);
+	libgregorio_end_style(current_character, ST_BOLD);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "tt"))
+	{
+	libgregorio_begin_style(current_character, ST_TT);
+	libgregorio_xml_read_styled_text(current_node->xmlChildrenNode, doc, current_character);
+	libgregorio_end_style(current_character, ST_TT);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "small-capitals"))
+	{
+	libgregorio_begin_style(current_character, ST_SMALL_CAPS);
+	libgregorio_xml_read_styled_text(current_node->xmlChildrenNode, doc, current_character);
+	libgregorio_end_style(current_character, ST_SMALL_CAPS);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "special-character"))
+	{
+	libgregorio_begin_style(current_character, ST_SPECIAL_CHAR);
+	libgregorio_xml_read_styled_text(current_node->xmlChildrenNode, doc, current_character);
+	libgregorio_end_style(current_character, ST_SPECIAL_CHAR);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "verbatim"))
+	{
+	libgregorio_begin_style(current_character, ST_VERBATIM);
+	libgregorio_xml_read_styled_text(current_node->xmlChildrenNode, doc, current_character);
+	libgregorio_end_style(current_character, ST_VERBATIM);
+	  current_node = current_node->next;
+	  continue;
+	}
+      else 
+	{
+	  current_node=current_node->next;
+	}
+}
+}
+
 
 void
 libgregorio_xml_read_mono_neumes (xmlNodePtr current_node, xmlDocPtr doc,

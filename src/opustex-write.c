@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define N_(str) str
 #include "messages.h"
 #include "struct.h"
+#include <wchar.h>
 #include <string.h>
 #include "opustex.h"
 
@@ -74,21 +75,20 @@ libgregorio_opustex_write_score (FILE * f, gregorio_score * score)
     // a char that will contain 1 if it is the first syllable and 0 if not. It is for the initial.
     fprintf (f,
              "\\musicindent10mm\n\\raisesong3\\Internote\n\\initiumgregorianum\n");
-    int first_letter = libgregorio_opustex_first_letter (score);
-    if (first_letter)
+	gregorio_character *first_text=libgregorio_first_text (score);
+    if (first_text)
     {
         fprintf (f, "\\musicinitial{}{");
-        libgregorio_opustex_print_char (f, first_letter);
+        libgregorio_write_first_letter (first_text, f,
+			      (&libgregorio_otex_write_verb),
+			      (&libgregorio_otex_print_char),
+			      (&libgregorio_otex_write_begin),
+			      (&libgregorio_otex_write_end),
+			      (&libgregorio_otex_write_special_char));
         fprintf (f, "}%%\n");
-        if (first_letter < 128)
-        {
-            first_syllable = 1;
-        }
-        else
-        {
-            first_syllable = 2;
-        }
+        first_syllable=SKIP_FIRST_LETTER;
     }
+
     clef = score->first_voice_info->initial_key;
     gregorio_syllable *current_syllable = score->first_syllable;
     while (current_syllable)
@@ -101,41 +101,11 @@ libgregorio_opustex_write_score (FILE * f, gregorio_score * score)
     fprintf (f, "\\bye\n");
 }
 
-int
-libgregorio_opustex_first_letter (gregorio_score * score)
-{
-    if (!score || !score->first_syllable || !score->first_syllable->syllable)
-    {
-        libgregorio_message (_("unable to find the first letter of the score"),
-                             "libgregorio_opustex_first_letter", ERROR, 0);
-        return 0;
-    }
-    if (score->first_syllable->syllable[0] > 0)
-    {
-        return score->first_syllable->syllable[0];
-    }
-    else
-    {
-        if (score->first_syllable->syllable[0] > -63
-            && score->first_syllable->syllable[0] < -32)
-        {
-            return score->first_syllable->syllable[1] +
-                (score->first_syllable->syllable[0] + 66) * 64;
-        }
-        else
-        {
-            libgregorio_message (_
-                                 ("unable to find the first letter of the score"),
-                                 "libgregorio_opustex_first_letter", ERROR, 0);
-            return 0;
-        }
-    }
-}
 
 char
 libgregorio_opustex_is_out_of_neume (gregorio_syllable * syllable)
 {
-  if (!(syllable->syllable) && !(syllable->elements[1]) && syllable->elements[0]-> type != GRE_ELEMENT)
+  if (!(syllable->text) && !(syllable->elements[1]) && syllable->elements[0]-> type != GRE_ELEMENT)
     {
       return 1;
     }
@@ -315,8 +285,7 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
             nextposition = syllable->next_syllable->position;
         }
         fprintf (f, "\\sgn ");
-        libgregorio_opustex_write_text (f, syllable->syllable, nextposition,
-                                        first_syllable);
+        libgregorio_opustex_write_text (f, syllable->text, first_syllable);
         while (current_element)
         {
             if (current_element->type == GRE_SPACE)
@@ -420,221 +389,146 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
     }
 }
 
-char
-libgregorio_opustex_is_vowel (int c)
+
+void
+libgregorio_otex_write_begin (FILE * f, unsigned char style)
 {
-    if (c == 65 || c == 69 || c == 73 || c == 79 || c == 85 || c == 89
-        || c == 97 || c == 101 || c == 105 || c == 111 || c == 117 || c == 121
-        || c == 192 || c == 193 || c == 194 || c == 195 || c == 196 || c == 197
-        || c == 198 || c == 200 || c == 201 || c == 202 || c == 203 || c == 204
-        || c == 205 || c == 206 || c == 207 || c == 210 || c == 211 || c == 212
-        || c == 213 || c == 214 || c == 216 || c == 217 || c == 218 || c == 219
-        || c == 220 || c == 221 || c == 224 || c == 225 || c == 226 || c == 227
-        || c == 228 || c == 229 || c == 230 || c == 232 || c == 233 || c == 234
-        || c == 235 || c == 236 || c == 237 || c == 238 || c == 239 || c == 242
-        || c == 243 || c == 244 || c == 245 || c == 246 || c == 248 || c == 249
-        || c == 250 || c == 251 || c == 252 || c == 253 || c == 255 || c == 256
-        || c == 257 || c == 258 || c == 259 || c == 274 || c == 275 || c == 276
-        || c == 277 || c == 278 || c == 279 || c == 280 || c == 281 || c == 282
-        || c == 283 || c == 305 || c == 461 || c == 462 || c == 463 || c == 464
-        || c == 465 || c == 466 || c == 467 || c == 468)
+  switch (style)
     {
-        return 1;
-    }
-    else
-    {
-        return 0;
+    case ST_ITALIC:
+      fprintf (f, "{\\it ");
+      break;
+    case ST_SMALL_CAPS:
+      fprintf (f, "{\\sc ");
+      break;
+    case ST_BOLD:
+      fprintf (f, "{\\bf ");
+      break;
+    case ST_CENTER:
+      fprintf (f, "}{");
+      break;
+    case ST_TT:
+      fprintf (f, "{\\tt ");
+      break;
+    default:
+      break;
     }
 }
 
 void
-libgregorio_opustex_write_text (FILE * f, char *syllable, char nextposition,
-                                char first_syllable)
+libgregorio_otex_write_end (FILE * f, unsigned char style)
 {
-    size_t len = 0;
-    if (syllable)
+  switch (style)
     {
-        len = strlen (syllable);
+    case ST_CENTER:
+      fprintf (f, "}{");
+      break;
+    default:
+      fprintf (f, "}");
+      break;
     }
-  char vowel = 0;
-  char middle = 0;
-  char centered_start = 0;
-  char centered_stop = 0;
-  char italic_start = 0;
-  char italic_stop = 0;
-  char special_char = 0;
-  char mute_ending = 0;
-  char gq = 0;
-  char vowels = 0;
-  for (i = first_syllable; i < len; i++)
+}
+
+void
+libgregorio_otex_write_special_char (FILE * f, wchar_t * special_char)
+{
+  if (!wcscmp(special_char, L"'æ"))
     {
-      int c=0;
-      if (syllable[i] > 31)
-	{
-	  c = syllable[i];
-	}
-      if (syllable[i] > -63 && syllable[i] < -32)
-	{
-	  int subchar = syllable[i];
-	  i++;
-	  c = syllable[i] + (subchar + 66) * 64;
-	}
-      if (c == '{')
-	{
-	  centered_start++;
-	}
-      if (c == '}')
-	{
-	  centered_stop++;
-	}
-      if (c == '<')
-	{
-	  italic_start++;
-	}
-      if (c == '>')
-	{
-	  italic_stop++;
-	}
-      if (c == '\\')
-	{
-	  special_char++;
-	}
-      if (libgregorio_opustex_is_vowel (c) != 0)
-	{
-	  vowels++;
-	}
+	fprintf(f, "\\'ae");
+	return;
     }
-  if (centered_start == 1 && centered_stop == 1)
+  if (!wcscmp(special_char, L"'œ"))
     {
-      centered = 1;
+	fprintf(f, "\\'oe");
+	return;
     }
-  if (italic_start == italic_stop)
+  if (!wcscmp(special_char, L"ae"))
     {
-      italic = 1;
+	fprintf(f, "\\ae");
+	return;
     }
-  if (vowels == 0)
+  if (!wcscmp(special_char, L"R/"))
     {
-      fprintf (f, "{}");
+	fprintf(f, "\\s R");
+	return;
+    }
+  if (!wcscmp(special_char, L"A/"))
+    {
+	fprintf(f, "\\s A");
+	return;
+    }
+  if (!wcscmp(special_char, L"V/"))
+    {
+	fprintf(f, "\\s V");
+	return;
+    }
+}
+
+void
+libgregorio_otex_write_verb (FILE * f, wchar_t * verb_str)
+{
+  fprintf (f, "%ls", verb_str);
+}
+
+void
+libgregorio_otex_print_char (FILE * f, wchar_t to_print)
+{
+  switch (to_print) {
+  case L'œ':
+    fprintf (f, "\\oe ");
+  break;
+  case L'æ':
+    fprintf (f, "\\ae ");
+  break;
+  case L'é':
+    fprintf (f, "\\'e ");
+  break;
+  case L'è':
+    fprintf (f, "\\`e ");
+  break;
+  case L'à':
+    fprintf (f, "\\`a ");
+  break;
+  case L'ô':
+    fprintf (f, "\\^o ");
+  break;
+  case L'î':
+    fprintf (f, "\\^i ");
+  break;
+  case L'û':
+    fprintf (f, "\\^u ");
+  break;
+  case L'ê':
+    fprintf (f, "\\^e ");
+  break;
+  case L'ó':
+    fprintf (f, "\\'o ");
+  break;
+  default:
+  fprintf (f, "%lc", to_print);
+  break;
+}
+}
+
+void
+libgregorio_opustex_write_text (FILE * f, gregorio_character * text, char first_syllable)
+{
+  if (text == NULL)
+    {
+      fprintf (f, "{}{}{}");
+      return;
     }
   fprintf (f, "{");
-  for (i = first_syllable; i < len; i++)
-    {
-        int c=0;
-        if (syllable[i] > 31)
-        {
-            c = syllable[i];
-        }
-        if (syllable[i] > -63 && syllable[i] < -32)
-        {
-            int subchar = syllable[i];
-            i++;
-            c = syllable[i] + (subchar + 66) * 64;
-        }
-        if (centered == 1)
-        {
-            libgregorio_opustex_print_char (f, c);
-            continue;
-        }
-        if (libgregorio_opustex_is_vowel (c) == 0)
-        {
-            if (vowel == 0 || middle == 1)
-            {
-                libgregorio_opustex_print_char (f, c);
-            }
-            else
-            {
-                if (italic == 2)
-                {
-                    fprintf (f, "}}{\\it{");
-                }
-                else
-                {
-                    fprintf (f, "}{");
-                }
-                libgregorio_opustex_print_char (f, c);
-                vowel = 0;
-                middle = 1;
-            }
-            if (c == 'g' || c == 'q' || c == 'G' || c == 'Q')
-            {
-                gq = 1;
-            }
-            else
-            {
-                gq = 0;
-            }
-        }
-        else
-        {
-            if (vowel == 0)
-            {
-                if (c == 'u' && gq == 1)
-                {
-                    libgregorio_opustex_print_char (f, c);
-                }
-                else
-                {
-                    if (middle == 0)
-                    {
-                        if (italic == 2)
-                        {
-                            fprintf (f, "}}{\\it{");
-                        }
-                        else
-                        {
-                            fprintf (f, "}{");
-                        }
-                        libgregorio_opustex_print_char (f, c);
-                        vowel = 1;
-                    }
-                    else
-                    {
-                        if (italic != 2)
-                        {
-                            fprintf (f, "\\it{");
-                        }
-                        libgregorio_opustex_print_char (f, c);
-                        vowel = 1;
-                        if (italic != 2)
-                        {
-                            mute_ending = 1;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                libgregorio_opustex_print_char (f, c);
-                vowel = 1;
-            }
-            gq = 0;
-        }
-    }
-    if (vowel == 1 && middle == 0)
-    {
-        fprintf (f, "}{");
-    }
-    if (mute_ending == 1)
-    {
-        fprintf (f, "}");
-    }
-    /*  if (nextposition
-    && ((nextposition == WORD_BEGINNING)
-    || (nextposition == WORD_ONE_SYLLABLE)))
-    {
-    }
-    else
-    {
-    fprintf (f, "-");
-    }*/
-    fprintf (f, "}");
-  if (vowels == 0)
-    {
-        fprintf (f, "{}");
-    }
-    centered = 0;
-    italic = 0;
+      libgregorio_write_text (first_syllable, text, f,
+			      (&libgregorio_otex_write_verb),
+			      (&libgregorio_otex_print_char),
+			      (&libgregorio_otex_write_begin),
+			      (&libgregorio_otex_write_end),
+			      (&libgregorio_otex_write_special_char));
+  first_syllable=0;
+  fprintf (f, "}");
 }
+
 
 void
 libgregorio_opustex_write_element (FILE * f, gregorio_syllable * syllable,

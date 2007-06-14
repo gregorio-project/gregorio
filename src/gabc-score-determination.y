@@ -18,8 +18,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+/* 
+
+This file is certainly not the most easy to understand, it is a bison file. See the bison manual on gnu.org for further details.
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
 #include "messages.h"
 #include "struct.h"
 #include "gabc.h"
@@ -28,25 +35,75 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define _(str) gettext(str)
 #define N_(str) str
 
+/*
 
+we declare the type of gabc_score_determination_lval (in the flex file) to be char *.
+
+*/
 
 #define YYSTYPE char *
 #define YYSTYPE_IS_DECLARED 1
 
-void free_variables();
-extern char *error;
-gregorio_score *score;
-gregorio_element **elements;
-int gabc_score_determination_parse ();
-void initialize_variables ();
-int check_score_integrity (gregorio_score * score);
+// uncomment it if you want to have an interactive shell to understand the details on  how bison works for a certain input
+//int gabc_score_determination_debug=1;
 
+/*
+
+We will need some variables and functions through the entire file, we declare them there:
+
+*/
+
+/* to understand the det_style, you need to read the comments about text, where all is explained.
+ */
+
+typedef struct det_style
+{
+  unsigned char style;
+  struct det_style *previous_style;
+  struct det_style *next_style;
+} det_style;
+
+
+// the two functions to initialize and free the file variables
+void initialize_variables ();
+void free_variables ();
+// the error string
+extern char *error;
+// the score that we will determine and return
+gregorio_score *score;
+// an array of elements that we will use for each syllable
+gregorio_element **elements;
+// declaration of some functions, the first is the one initializing the flex/bison process
+int gabc_score_determination_parse ();
+int check_score_integrity (gregorio_score * score);
+// other variables that we will have to use
+gregorio_character *current_character;
+gregorio_voice_info *current_voice_info;
+int number_of_voices;
+int voice;
+int clef;
+det_style *first_style;
+// a char that will take some useful values see comments on text to understand it
+char center_is_determined;
+
+#define FIRST_LETTER 1
+#define SECOND_LETTER 2
+#define THIRD_LETTER 3
+char first_letter;
+
+/* simple function that builds an error message
+ */
 void
 gabc_score_determination_error (const char *str)
 {
-  char *str2=strdup(str);
+  char *str2 = strdup (str);
   libgregorio_message (str2, "libgregorio_det_score", ERROR, 0);
 }
+
+/* The "main" function. It is the function that is called when we have to read a gabc file. 
+ * It takes a file descriptor, that is to say a file that is aleady open. 
+ * It returns a valid gregorio_score
+ */
 
 gregorio_score *
 libgregorio_gabc_read_file (FILE * f_in)
@@ -54,36 +111,49 @@ libgregorio_gabc_read_file (FILE * f_in)
   if (!f_in)
     {
       libgregorio_message (_
-		      ("can't read stream from argument, returning NULL pointer"),
-		      "libgregorio_det_score", ERROR, 0);
+			   ("can't read stream from argument, returning NULL pointer"),
+			   "libgregorio_det_score", ERROR, 0);
       return NULL;
     }
+  // we initialize a file descriptor to /dev/null (see three lines below)
   FILE *f_out = fopen ("/dev/null", "w");
   initialize_variables ();
+  // the input file that flex will parse
   gabc_score_determination_in = f_in;
+  // the output file flex will write in (here /dev/null). We do not have to write in some file, we just have to build a score. Warnings and errors of flex are not written in this file, so they will appear anyway.
   gabc_score_determination_out = f_out;
+  // the flex/bison main call, it will build the score (that we have initialized)
   gabc_score_determination_parse ();
   fclose (f_out);
-  free_variables();
-  libgregorio_fix_initial_keys (score,DEFAULT_KEY);
+  free_variables ();
+  // the we check the validity and integrity of the score we have built.
+  libgregorio_fix_initial_keys (score, DEFAULT_KEY);
   if (!check_score_integrity (score))
     {
       libgregorio_free_score (score);
       score = NULL;
       libgregorio_message (_("unable to determine a valid score from file"),
-		      "libgregorio_det_score", FATAL_ERROR, 0);
+			   "libgregorio_det_score", FATAL_ERROR, 0);
     }
   return score;
 }
 
-int check_score_integrity (gregorio_score *score) 
+/* A function that checks to score integrity. For now it is... quite ridiculous... but it might be improved in the future.
+ */
+
+int
+check_score_integrity (gregorio_score * score)
 {
   if (!score)
     {
       return 0;
     }
-return 1;
+  return 1;
 }
+
+/* 
+ * Another function to be improved: this one checks the validity of the voice_infos.
+ */
 
 int
 check_infos_integrity (gregorio_score * score)
@@ -91,39 +161,54 @@ check_infos_integrity (gregorio_score * score)
   if (!score->name)
     {
       libgregorio_message (_
-		      ("no name specified, put `name:...;' at the beginning of the file, can be dangerous with some output formats"),
-		      "libgregorio_det_score", WARNING, 0);
+			   ("no name specified, put `name:...;' at the beginning of the file, can be dangerous with some output formats"),
+			   "libgregorio_det_score", WARNING, 0);
     }
   return 1;
 }
 
-//int gabc_score_determination_debug=1;
-
-gregorio_voice_info *current_voice_info;
-int number_of_voices;
-int voice;
-int clef;
-
+/* The function that will initialize the variables.
+ */
 
 void
 initialize_variables ()
 {
+  // build a brand new empty score
   score = libgregorio_new_score ();
+  // initialization of the first voice info to an empty voice info
   current_voice_info = NULL;
   libgregorio_add_voice_info (&current_voice_info);
   score->first_voice_info = current_voice_info;
+  // other initializations
   number_of_voices = 0;
   voice = 1;
-error=malloc(300 * sizeof(char));
+  error = malloc (300 * sizeof (char));
+  current_character = NULL;
+  first_style = NULL;
+  center_is_determined=0;
+  first_letter=FIRST_LETTER;
 }
 
-void free_variables() {
+
+/* function that frees the variables that need it, for when we have finished to determine the score
+ */
+
+void free_styles ();
+
+void
+free_variables ()
+{
   free (elements);
-  free(error);
+  free (error);
+  free_styles();
 }
 
+// a macro to put inside a if to see if a voice_info is empty
 #define voice_info_is_not_empty(voice_info)   voice_info->initial_key!=5 || voice_info->anotation || voice_info->author || voice_info->date || voice_info->manuscript || voice_info->reference || voice_info->storage_place || voice_info->translator || voice_info->translation_date || voice_info->style || voice_info->virgula_position
 
+
+/* a function called when we see "--\n" that end the infos for a certain voice
+ */
 void
 next_voice_info ()
 {
@@ -135,39 +220,44 @@ next_voice_info ()
     }
 }
 
-
+/* Function that updates the clef variable, intepreting the char *str argument
+ */
 void
 set_clef (char *str)
 {
   if (!str || !str[0] || !str[1])
     {
       libgregorio_message (_
-		      ("unknown clef format in initial-key definition : format is `(c|f)[1-4]'"), "libgregorio_det_score",
-		      ERROR,0);
+			   ("unknown clef format in initial-key definition : format is `(c|f)[1-4]'"),
+			   "libgregorio_det_score", ERROR, 0);
     }
   if (str[0] != 'c' && str[0] != 'f')
     {
       libgregorio_message (_
-		      ("unknown clef format in initial-key definition : format is `(c|f)[1-4]'"), "libgregorio_det_score",
-		      ERROR,0);
+			   ("unknown clef format in initial-key definition : format is `(c|f)[1-4]'"),
+			   "libgregorio_det_score", ERROR, 0);
       return;
     }
 //here is something than could be changed : the format of the inital_key attribute
   if (str[1] != '1' && str[1] != '2' && str[1] != '3' && str[1] != '4')
     {
       libgregorio_message (_
-		      ("unknown clef format in initial-key definition : format is `(c|f)[1-4]'"), "libgregorio_det_score",
-		      ERROR,0);
+			   ("unknown clef format in initial-key definition : format is `(c|f)[1-4]'"),
+			   "libgregorio_det_score", ERROR, 0);
       return;
     }
 
-  clef = libgregorio_calculate_new_key (str[0], str[1]-48);
-  if (str[2]) {
+  clef = libgregorio_calculate_new_key (str[0], str[1] - 48);
+  if (str[2])
+    {
       libgregorio_message (_
-		      ("in initial_key definition, only two characters are needed : format is`(c|f)[1-4]'"), "libgregorio_det_score",
-		      WARNING,0);
-  }
+			   ("in initial_key definition, only two characters are needed : format is`(c|f)[1-4]'"),
+			   "libgregorio_det_score", WARNING, 0);
+    }
 }
+
+/* Function that frees the voice_infos for voices > final_count. Useful if there are too many voice_infos
+ */
 
 void
 reajust_voice_infos (gregorio_voice_info * voice_info, int final_count)
@@ -180,13 +270,16 @@ reajust_voice_infos (gregorio_voice_info * voice_info, int final_count)
   libgregorio_free_voice_infos (voice_info);
 }
 
+/* Function called when we have reached the end of the definitions, it tries to make the voice_infos coherent.
+ */
 void
 end_definitions ()
 {
-  if (!check_infos_integrity(score)) {
+  if (!check_infos_integrity (score))
+    {
       libgregorio_message (_("can't determine valid infos on the score"),
-		      "libgregorio_det_score", ERROR, 0);
-  }
+			   "libgregorio_det_score", ERROR, 0);
+    }
   if (!number_of_voices)
     {
       if (voice > MAX_NUMBER_OF_VOICES)
@@ -201,8 +294,12 @@ end_definitions ()
     {
       if (number_of_voices > voice)
 	{
-	snprintf(error, 62, ngettext("not enough voice infos found: %d found, %d waited, %d assumed","not enough voice infos found: %d found, %d waited, %d assumed",voice), voice, number_of_voices, voice);
-	libgregorio_message(error,"libgregorio_det_score",WARNING,0);
+	  snprintf (error, 62,
+		    ngettext
+		    ("not enough voice infos found: %d found, %d waited, %d assumed",
+		     "not enough voice infos found: %d found, %d waited, %d assumed",
+		     voice), voice, number_of_voices, voice);
+	  libgregorio_message (error, "libgregorio_det_score", WARNING, 0);
 	  score->number_of_voices = voice;
 	  number_of_voices = voice;
 	}
@@ -210,14 +307,21 @@ end_definitions ()
 	{
 	  if (number_of_voices < voice)
 	    {
-	snprintf(error, 62, ngettext("too many voice infos found: %d found, %d waited, %d assumed","not enough voice infos found: %d found, %d waited, %d assumed",number_of_voices), voice, number_of_voices, number_of_voices);
-	libgregorio_message(error,"libgregorio_det_score",WARNING,0);
+	      snprintf (error, 62,
+			ngettext
+			("too many voice infos found: %d found, %d waited, %d assumed",
+			 "not enough voice infos found: %d found, %d waited, %d assumed",
+			 number_of_voices), voice, number_of_voices,
+			number_of_voices);
+	      libgregorio_message (error, "libgregorio_det_score", WARNING,
+				   0);
 	    }
 	}
     }
   voice = 0;			// voice is now voice-1, so that it can be the index of elements 
   elements =
-    (gregorio_element **) malloc (number_of_voices * sizeof (gregorio_element *));
+    (gregorio_element **) malloc (number_of_voices *
+				  sizeof (gregorio_element *));
   int i;
   for (i = 0; i < number_of_voices; i++)
     {
@@ -225,11 +329,15 @@ end_definitions ()
     }
 }
 
-//////////// here starts the code about the notes
+/* Here starts the code for the determinations of the notes. The notes are not precisely determined here, we separate the text describing the notes of each voice, and we call determine_elements_from_string to really determine them.
+ */
 char *current_text = "";
 char position = WORD_BEGINNING;
 gregorio_syllable *current_syllable = NULL;
 
+
+/* Function called when we see a ")", it completes the gregorio_element array of the syllable with NULL pointers. Usefull in the cases where for example you have two voices, but a voice that is silent on a certain syllable.
+ */
 void
 complete_with_nulls (int voice)
 {
@@ -240,8 +348,8 @@ complete_with_nulls (int voice)
     }
 }
 
-
-//function called each time we find a space
+/* Function called each time we find a space, it updates the current position.
+ */
 void
 update_position_with_space ()
 {
@@ -253,34 +361,574 @@ update_position_with_space ()
     {
       current_syllable->position = WORD_END;
     }
+  if (current_syllable && current_syllable->position == WORD_BEGINNING)
+    {
+      current_syllable->position = WORD_ONE_SYLLABLE;
+    }
 }
+
+void end_style_determination ();
+
+void suppress_useless_styles ();
+
+/* Function to close a syllable and update the position.
+ */
 
 void
 close_syllable ()
 {
-
-  libgregorio_add_syllable (&current_syllable, number_of_voices, elements, current_text,
-		position);
+  end_style_determination ();
+  libgregorio_go_to_first_character(&current_character);
+  libgregorio_add_syllable (&current_syllable, number_of_voices, elements,
+			    current_character, position);
   if (!score->first_syllable)
     {
       score->first_syllable = current_syllable;
     }
-//we update the position
+  //we update the position
   if (position == WORD_BEGINNING)
     {
       position = WORD_MIDDLE;
     }
+  center_is_determined=0;
+  current_character = NULL;
+  //TODO : decide wether it will be freed all time or just at the end...
+  free_styles();
 }
 
-void test () {
+void
+test ()
+{
 
 }
+
+/* Here starts the code of the interpretation of text and styles.
+
+This part is not the easiest, in fact is is the most complicated. The reason is that I want to make something coherent in memory (easy to interprete), and to let the user type whatever he wants. 
+
+Functionalities: For example if the user types tt<i>ttt<b>ttt</i>tt I want it to be represented as tt<i>ttt<b>ttt</b></i><b>tt</b>. The fabulous thing is that it is xml-compliant. This part also determines the middle, for example pot will be interpreted as p{o}t. When I did that I also thought about TeX styles that needed things like {p}{o}{t}, so when the user types <i>pot</i>, it is interpreted as <i>p</i>{<i>o</i>}<i>t</i>.
+
+Internal structure: To do so we have a structure, det_style, that will help us : it is a stack (double chained list) of the styles that we have seen until now. When we encounter a <i>, we push the i style on the stack. If we encounter a </i> we suppress the i style from the stack. Let's take a more complex example: if we encounter <i><b></i>, the stack will be first null, then i then bi, and there we want to end i, but it is not the first style of the stack, so we close all the styles that we encounter before we encounter i (remember, this is for xml-compliance), so we insert a </b> before the </i>. But that's not all, we also write a <b> after the </i>, so that the b style continues. There our stack is just b. For center, we just close all the styles in the stack, insert a { and reopen all the styles in the stack.
+
+The structure used for character, styles, etc. is described in include/struct.h
+
+The functionment in this file is quite simple : we add all the characters that we see, even if they are incoherent, in the gregorio_character list, and then we call a very complex function that will build a stack of the style, determine the middle, make all xml-compliant, mow the lawn, etc.
+
+*/
+
+/*
+The push function pushes a style in the stack, and updates first_style to this element.
+*/
+
+void
+push (unsigned char style)
+{
+  det_style *element = (det_style *) malloc (sizeof (det_style));
+  element->style = style;
+  element->previous_style = NULL;
+  element->next_style = first_style;
+  if (first_style)
+    {
+      first_style->previous_style = element;
+    }
+  first_style = element;
+}
+
+/*
+Pop deletes an style in the stack (the style to delete is the parameter)
+*/
+
+void
+pop (det_style * element)
+{
+  if (!element)
+    {
+      return;
+    }
+  if (element->previous_style)
+    {
+      element->previous_style->next_style = element->next_style;
+    }
+  else
+    {
+      if (element->next_style)
+	{
+	  element->next_style->previous_style = element->previous_style;
+	  first_style=element->next_style;
+	}
+      else
+	{
+	  first_style = NULL;
+	}
+    }
+  free (element);
+}
+
+/*
+free_styles just free the stack. You may notice that it will never be used in a normal functionment. But we never know...
+*/
+
+void
+free_styles () {
+  det_style *current_style=first_style;
+  while (current_style) 
+    {
+      current_style=current_style->next_style;
+      free(first_style);
+      first_style=current_style;
+    }
+}
+
+/*
+
+add_text is the function called when lex returns a char *. In this function we convert it into wchar_t *, and then we add the corresponding gregorio_characters in the list of gregorio_characters.
+
+*/
+
+void
+add_text (char *mbcharacters)
+{
+  if (mbcharacters == NULL)
+    {
+      return;
+    }
+  size_t len = strlen (mbcharacters);	//to get the length of the syllable in ASCII
+  wchar_t *wtext = (wchar_t *) malloc ((len + 1) * sizeof (wchar_t));
+  mbstowcs (wtext, mbcharacters, (sizeof (wchar_t) * (len + 1)));	//converting into wchar_t
+  // then we get the real length of the syllable, in letters
+  len = wcslen (wtext);
+  wtext[len] = L'\0';
+  int i = 0;
+  // we add the corresponding characters in the list of gregorio_characters
+  while (wtext[i])
+    {
+      libgregorio_add_character (&current_character, wtext[i]);
+      i++;
+    }
+  free (wtext);
+}
+
+/*
+
+The two functions called when lex returns a style, we simply add it. All the complex things will be done by the function after...
+
+*/
+
+void add_style(unsigned char style) {
+libgregorio_begin_style(&current_character, style);
+}
+
+void end_style(unsigned char style) {
+libgregorio_end_style(&current_character, style);
+}
+
+/*
+
+The three next defines are the possible values of center_is_determined.
+
+HALF_DETERMINED means that lex has encountered a { but no }, and we will try to determine a middle starting after the {.
+FULLY_DETERMINED means that lex has encountered a { and a }, so we won't determine the middle, it is considered done.
+DETERMINING_MIDDLE is used internally in the big function to know where we are in the middle determination.
+
+*/
+
+#define HALF_DETERMINED 1
+#define FULLY_DETERMINED 2
+#define DETERMINING_MIDDLE 3
+
+/*
+
+Then start the macros for the big function. the first one is the macro we call when we close a style. The magic thing is that is will prevent things like a<i></i>{<i>b</b>: when the user types a<i>b</i>, if the middle is between a and b (...), it will interpret it as a{<i>b</i>.
+
+*/
+
+#define close_style() if (!current_character->previous_character->is_character && current_character->previous_character->cos.s.style==current_style->style) {\
+/* we suppose that there is a previous_character, because there is a current_style*/\
+suppress_this_character(current_character->previous_character);\
+}\
+else {\
+insert_style_before(ST_T_END, current_style->style);\
+}
+
+/*
+
+next the macro called when we have determined that we must end the center here : it closes all styles, adds a } and then reopens all styles.
+
+*/
+
+#define end_center() while (current_style)\
+	    {\
+	      close_style ()\
+	if (current_style->next_style) {\
+	      current_style = current_style->next_style;\
+	}\
+	else {\
+	break;\
+	}\
+	    }\
+	  insert_style_before (ST_T_END, ST_CENTER);\
+	  while (current_style)\
+	    {\
+	      insert_style_before (ST_T_BEGIN, current_style->style);\
+	if (current_style->previous_style) {\
+		current_style=current_style->previous_style;\
+	}\
+	else {\
+	break;\
+	}\
+	    }
+
+/*
+about the same, but adding a {
+*/
+
+#define begin_center() while (current_style)\
+	    {\
+	      close_style ()\
+	if (current_style->next_style) {\
+	      current_style = current_style->next_style;\
+	}\
+	else {\
+	break;\
+	}\
+	    }\
+	  insert_style_before (ST_T_BEGIN, ST_CENTER);\
+	  while (current_style)\
+	    {\
+	      insert_style_before (ST_T_BEGIN, current_style->style);\
+	if (current_style->previous_style) {\
+		current_style=current_style->previous_style;\
+	}\
+	else {\
+	break;\
+	}\
+	    }
+
+
+/*
+
+the macro called when we have ended the determination of the current character. It makes current_character point to the last character, not to null at the end of the determination.
+
+*/
+
+#define end_c()	if (current_character->next_character) {\
+	  current_character=current_character->next_character;\
+	  continue;\
+	}\
+	else {\
+	  break;\
+	}
+
+/*
+
+basically the same except that we suppress the current_character
+
+*/
+
+#define suppress_char_and_end_c() 	if (current_character->next_character) {\
+	current_character=current_character->next_character;\
+	suppress_this_character (current_character->previous_character);\
+	  continue;\
+	}\
+	else {\
+	if (current_character->previous_character) {\
+	current_character=current_character->previous_character;\
+	suppress_this_character (current_character->next_character);\
+	}\
+	else {\
+	suppress_this_character(current_character);\
+	current_character=NULL;\
+	}\
+	  break;\
+	}
+
+/*
+
+This is the macro that will determine the center, etc. for the first
+
+*/
+
+#define first_syllable()	  switch (first_letter) {\
+case FIRST_LETTER:\
+first_letter=SECOND_LETTER;\
+end_c ()\
+break;\
+case SECOND_LETTER:\
+begin_center ()\
+center_is_determined = DETERMINING_MIDDLE;\
+first_letter=THIRD_LETTER;\
+end_c ()\
+break;\
+case THIRD_LETTER:\
+end_center ()\
+first_letter=0;\
+center_is_determined = FULLY_DETERMINED;\
+end_c ()\
+break;\
+default:\
+break;\
+}
+
+/*
+
+This function inserts a style before current_character, updating the double chained list.
+
+*/
+
+void insert_style_before (unsigned char type, unsigned char style) {
+  gregorio_character *element =
+    (gregorio_character *) malloc (sizeof (gregorio_character));
+  element->is_character=0;
+  element->cos.s.type=type;
+  element->cos.s.style=style;
+  element->next_character=current_character;
+  if (current_character->previous_character) 
+    {
+      current_character->previous_character->next_character=element;
+    }
+  element->previous_character=current_character->previous_character;
+  current_character->previous_character=element;
+}
+
+/*
+
+This function puts a style after current_character, and updates current_character to the gregorio_character it created. It updates the double chained list. It does not touche to the det_styles list.
+
+*/
+
+
+void insert_style_after (unsigned char type, unsigned char style) {
+  gregorio_character *element =
+    (gregorio_character *) malloc (sizeof (gregorio_character));
+  element->is_character=0;
+  element->cos.s.type=type;
+  element->cos.s.style=style;
+  element->next_character=current_character->next_character;
+  if (current_character->next_character) 
+    {
+      current_character->next_character->previous_character=element;
+    }
+  element->previous_character=current_character;
+  current_character->next_character=element;
+  current_character=element;
+}
+
+/*
+
+This function suppresses the corresponding character, updates the double chained list, but does not touch to current_character.
+
+*/
+
+void suppress_this_character (gregorio_character *to_suppress) {
+  if (to_suppress->previous_character) 
+    {
+        to_suppress->previous_character->next_character=to_suppress->next_character;
+    }
+  if (current_character->next_character) 
+    {
+	to_suppress->next_character->previous_character=to_suppress->previous_character;
+    }
+  free(to_suppress);
+}
+
+
+/*
+
+THE big function. Very long, using a lot of long macros, etc. I hope you really want to understand it, 'cause it won't be easy.
+
+*/
+
+void
+end_style_determination ()
+{
+  // a det_style, to walk through the list
+  det_style *current_style = NULL;
+  // a char that we will use in a very particular case
+  unsigned char this_style;
+  // a char that will be useful for the determination of iota and digamma
+  unsigned char false_middle = 0;
+  // so, here we start: we go to the first_character
+  libgregorio_go_to_first_character(&current_character);
+  // we loop until there isn't any character
+  while (current_character)
+    {
+      // the first part of the function deals with real characters (not styles)
+      if (current_character->is_character)
+	{
+      // the first case is when the user hasn't put { nor } (center_is_determined is 0), so we have to determine the center, and moreover it is the first_syllables. We call the good macro (see above).
+	  if (!center_is_determined && first_letter) 
+	    {
+	      first_syllable()
+	    }
+      // then, the second case is if the user has'nt determined the middle, and we have only seen vowels so far (else center_is_determined would be DETERMINING_MIDDLE). The current_character is the first vowel, so we start the center here.
+	  if (!center_is_determined
+	      && libgregorio_is_vowel (current_character->cos.character))
+	    {
+	      if (current_character->cos.character == L'i'
+		  || current_character->cos.character == L'u')
+		{
+      // did you really think it would be that easy?... we have to deal with iota and digamma, that are not aligned the same way... So if the current character is i or u, we check if the next character is also a vowel or not. If it is the case we just pass, else we start the center there.
+		  gregorio_character *temp = current_character->next_character;
+		  while (temp)
+		    {
+		      if (temp->is_character)
+			{
+			 if (libgregorio_is_vowel (temp->cos.character))
+			  {
+			    false_middle = 1;
+			    break;
+			  }
+			 else 
+			  {
+			    break;
+			  }
+			}
+		      temp = temp->next_character;
+		    }
+		}
+	      if (false_middle)
+		{
+	// the case of the iota or digamma
+		  false_middle = 0;
+		  // remember? this macro has a continue; in it
+		  end_c ()
+		}
+	      begin_center ()
+	      center_is_determined = DETERMINING_MIDDLE;
+	      end_c ()
+	    }
+          // the case where the user has not determined the middle and we are in the middle section of the syllable, but there we encounter something that is not a vowel, so the center ends there.
+	  if (center_is_determined == DETERMINING_MIDDLE
+	      && !libgregorio_is_vowel (current_character->cos.character))
+	    {
+	      end_center ()
+	      center_is_determined = FULLY_DETERMINED;
+	    }
+	  // in the case where it is just a normal character... we simply pass.
+	  end_c ()
+	}
+
+// there starts the second part of the function that deals with the styles characters
+
+      if (current_character->cos.s.type == ST_T_BEGIN
+	  && current_character->cos.s.style != ST_CENTER)
+	{
+      // first, if it it the beginning of a style, which is not center. We check if the style is not already in the stack. If it is the case, we suppress the character and pass (with the good macro)
+	  while (current_style
+		 && current_style->style != current_character->cos.s.style)
+	    {
+	      current_style = current_style->next_style;
+	    }
+	  if (current_style)
+	    {
+	      current_style=first_style;
+	      suppress_char_and_end_c ()
+	    }
+       // if it is something to add then we just push the style in the stack and continue.
+	  push (current_character->cos.s.style);
+	  current_style=first_style;
+	  end_c ()
+	}
+      // if it is a beginning of a center, we call the good macro and end.
+      if (current_character->cos.s.type == ST_T_BEGIN
+	  && current_character->cos.s.style == ST_CENTER)
+	{
+	  if (center_is_determined)
+	    {
+	      end_c ()
+	    }
+	  //center_is_determined = DETERMINING_MIDDLE; // TODO: not really sure, but shouldn't be there
+	  begin_center ()
+	  end_c ()
+	}
+      if (current_character->cos.s.type == ST_T_END
+	  && current_character->cos.s.style != ST_CENTER)
+	{
+	  // the case of the end of a style (the most complex). First, we have to see if the style is in the stack. If there is no stack, we just suppress and continue.
+	  if (!current_style)
+	    {
+	      suppress_char_and_end_c ()
+	    }
+	  // so, we look if it is in the stack. If it is we put current_style to the style just before the style corresponding to the character that we are trating (still there ?)
+	  if (current_style->style != current_character->cos.s.style)
+	    {
+	      while (current_style->next_style
+		     && current_style->next_style->style !=
+		     current_character->cos.s.style)
+		{
+		  current_style = current_style->next_style;
+		}
+	      if (current_style->next_style)
+		{
+		  current_style=first_style;
+		  while (current_style)
+		    {
+		// if there are styles before in the stack, we close them
+		      insert_style_before (ST_T_END, current_style->style);
+		      current_style = current_style->previous_style;
+		    }
+		  current_style = first_style;
+		  this_style = current_character->cos.s.style;
+		// and then we reopen them
+		  while (current_style && current_style->style != this_style)
+		    {
+		      insert_style_after (ST_T_BEGIN, current_style->style);
+		      current_style = current_style->next_style;
+		    }
+		//we delete the style in the stack
+		  pop(current_style);
+		  current_style=first_style;
+		}
+	      else
+		{
+		  suppress_char_and_end_c ()
+		}
+	    }
+	else {
+	  pop (current_style);
+	  current_style=first_style;
+	  end_c ()
+	}
+	}
+      else
+	{// ST_T_END && ST_CENTER
+	// a quite simple case, we just call the good macro.
+	  if (!center_is_determined)
+	    {
+	      suppress_char_and_end_c ()
+	    }
+	}
+      end_c ()
+    }
+  if (!current_character)
+    {
+      return;
+    }
+// we terminate all the styles that are still in the stack
+  while (current_style)
+    {
+      insert_style_after (ST_T_END, current_style->style);
+      current_style = current_style->next_style;
+    }
+//current_character is at the end of the list now, so if we havn't closed the center, we do it at the end.
+  if (center_is_determined != FULLY_DETERMINED)
+    {
+      insert_style_after (ST_T_END, ST_CENTER);
+    }
+// these last lines are for the case where the user didn't tell anything about the middle and there aren't any vowel in the syllable, so we begin the center before the first character (you can notice that there is no problem of style).
+  if (!center_is_determined)
+    {
+      libgregorio_go_to_first_character (&current_character);
+      insert_style_before (ST_T_BEGIN, ST_CENTER);
+    }
+// well.. you're quite brave if you reach this comment.
+}
+
+
 
 %}
 
-
-
-%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANOTATION AUTHOR DATE MANUSCRIPT REFERENCE STORAGE_PLACE TRANSLATOR TRANSLATION_DATE STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE SOFTWARE_USED NAME SYLLABLE OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES INITIAL_KEY VOICE_CHANGE END_OF_DEFINITIONS SPACE
+%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANOTATION AUTHOR DATE MANUSCRIPT REFERENCE STORAGE_PLACE TRANSLATOR TRANSLATION_DATE STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE SOFTWARE_USED NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES INITIAL_KEY VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END
 
 %%
 
@@ -562,17 +1210,94 @@ note:
 	}
 	}
 	;
+
+style_beginning:
+	I_BEGINNING {
+	add_style(ST_ITALIC);
+	}
+	|
+	TT_BEGINNING {
+	add_style(ST_TT);
+	}
+	|
+	B_BEGINNING {
+	add_style(ST_BOLD);
+	}
+	|
+	SC_BEGINNING {
+	add_style(ST_SMALL_CAPS);
+	}
+	|
+	VERB_BEGINNING {
+	add_style(ST_VERBATIM);
+	}
+	|
+	SP_BEGINNING {
+	add_style(ST_SPECIAL_CHAR);
+	}
+	|
+	CENTER_BEGINNING {if (!center_is_determined) {
+	add_style(ST_CENTER);
+	center_is_determined=HALF_DETERMINED;
+	}
+	}
+	;
 	
+style_end:
+	I_END {
+	end_style(ST_ITALIC);
+	}
+	|
+	TT_END {
+	end_style(ST_TT);
+	}
+	|
+	B_END {
+	end_style(ST_BOLD);
+	}
+	|
+	SC_END {
+	end_style(ST_SMALL_CAPS);
+	}
+	|
+	VERB_END {
+	end_style(ST_VERBATIM);
+	}
+	|
+	SP_END {
+	end_style(ST_SPECIAL_CHAR);
+	}
+	|
+	CENTER_END {
+	if (center_is_determined==HALF_DETERMINED) {
+	  end_style(ST_CENTER);
+	  center_is_determined=FULLY_DETERMINED;
+	}
+	}
+	;
+
+character:
+	CHARACTERS {
+	libgregorio_add_text($1, &current_character);
+	}
+	|
+	style_beginning
+	|
+	style_end
+	;
+	
+text:
+	|text character
+	;
+
 syllable_with_notes:
-	SYLLABLE OPENING_BRACKET notes {
-	current_text=$1;
+	text OPENING_BRACKET notes {
 	close_syllable();
 	}
 	;
 
 notes_without_word:
 	OPENING_BRACKET notes {
-	current_text=NULL;
 	close_syllable();
 	}
 	;

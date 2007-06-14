@@ -35,6 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 #include <stdio.h>
+#include <wchar.h>
 #include <stdlib.h>
 #include "messages.h"
 #include "struct.h"
@@ -331,11 +332,143 @@ libgregorio_free_elements (gregorio_element ** element)
     }
 }
 
+void
+libgregorio_add_text (char *mbcharacters,
+		      gregorio_character ** current_character)
+{
+  if (mbcharacters == NULL)
+    {
+      return;
+    }
+  size_t len = strlen (mbcharacters);	//to get the length of the syllable in ASCII
+  wchar_t *wtext = (wchar_t *) malloc ((len + 1) * sizeof (wchar_t));
+  mbstowcs (wtext, mbcharacters, (sizeof (wchar_t) * (len + 1)));	//converting into wchar_t
+  // then we get the real length of the syllable, in letters
+  len = wcslen (wtext);
+  wtext[len] = L'\0';
+  int i = 0;
+  // we add the corresponding characters in the list of gregorio_characters
+  while (wtext[i])
+    {
+      libgregorio_add_character (current_character, wtext[i]);
+      i++;
+    }
+  free (wtext);
+}
+
+void
+libgregorio_add_character (gregorio_character ** current_character,
+			   wchar_t wcharacter)
+{
+  gregorio_character *element =
+    (gregorio_character *) malloc (sizeof (gregorio_character));
+  if (!element)
+    {
+      libgregorio_message (_("error in memory allocation"),
+			   "libgregorio_add_character", FATAL_ERROR, 0);
+      return;
+    }
+  element->is_character = 1;
+  element->cos.character = wcharacter;
+  element->next_character = NULL;
+  element->previous_character = *current_character;
+  if (*current_character)
+    {
+      (*current_character)->next_character = element;
+    }
+  *current_character = element;
+}
+
+
+void
+libgregorio_free_one_character (gregorio_character * current_character)
+{
+  free (current_character);
+}
+
+void
+libgregorio_free_characters (gregorio_character * current_character)
+{
+  if (!current_character)
+    {
+      return;
+    }
+  gregorio_character *next_character;
+  while (current_character)
+    {
+      next_character = current_character->next_character;
+      libgregorio_free_one_character (current_character);
+      current_character = next_character;
+    }
+}
+
+void
+libgregorio_go_to_first_character (gregorio_character ** character)
+{
+  if (!character || !*character)
+    {
+      return;
+    }
+  gregorio_character *tmp = *character;
+  while (tmp->previous_character)
+    {
+      tmp = tmp->previous_character;
+    }
+  *character = tmp;
+}
+
+void
+libgregorio_begin_style (gregorio_character ** current_character,
+			 unsigned char style)
+{
+  gregorio_character *element =
+    (gregorio_character *) malloc (sizeof (gregorio_character));
+  if (!element)
+    {
+      libgregorio_message (_("error in memory allocation"),
+			   "add_note", FATAL_ERROR, 0);
+      return;
+    }
+  element->is_character = 0;
+  element->cos.s.type = ST_T_BEGIN;
+  element->cos.s.style = style;
+  element->previous_character = *current_character;
+  element->next_character = NULL;
+  if (*current_character)
+    {
+      (*current_character)->next_character = element;
+    }
+  *current_character = element;
+}
+
+void
+libgregorio_end_style (gregorio_character ** current_character,
+		       unsigned char style)
+{
+  gregorio_character *element =
+    (gregorio_character *) malloc (sizeof (gregorio_character));
+  if (!element)
+    {
+      libgregorio_message (_("error in memory allocation"),
+			   "add_note", FATAL_ERROR, 0);
+      return;
+    }
+  element->is_character = 0;
+  element->cos.s.type = ST_T_END;
+  element->cos.s.style = style;
+  element->next_character = NULL;
+  element->previous_character = *current_character;
+  if (*current_character)
+    {
+      (*current_character)->next_character = element;
+    }
+  *current_character = element;
+}
 
 void
 libgregorio_add_syllable (gregorio_syllable ** current_syllable,
 			  int number_of_voices, gregorio_element * elements[],
-			  char *syllable, char position)
+			  gregorio_character * first_character, char position)
 {
   if (number_of_voices > MAX_NUMBER_OF_VOICES)
     {
@@ -352,7 +485,7 @@ libgregorio_add_syllable (gregorio_syllable ** current_syllable,
     }
   next->type = GRE_SYLLABLE;
   next->position = position;
-  next->syllable = syllable;
+  next->text = first_character;
   next->next_syllable = NULL;
   gregorio_element **tab =
     (gregorio_element **) malloc (number_of_voices *
@@ -397,9 +530,9 @@ libgregorio_free_one_syllable (gregorio_syllable ** syllable,
       libgregorio_free_elements ((struct gregorio_element **)
 				 &((*syllable)->elements[i]));
     }
-  if ((*syllable)->syllable)
+  if ((*syllable)->text)
     {
-      free ((*syllable)->syllable);
+      libgregorio_free_characters ((*syllable)->text);
     }
   gregorio_syllable *next = (*syllable)->next_syllable;
   free ((*syllable)->elements);
@@ -1417,4 +1550,255 @@ libgregorio_is_only_special (gregorio_element * element)
       element = element->next_element;
     }
   return 1;
+}
+
+
+/**********************************
+ * 
+ * Here are functions that deal with characters and styles.
+ * 
+ *********************************/
+
+/* Here is a function that tests if a letter is a vowel or not */
+
+int
+libgregorio_is_vowel (wchar_t letter)
+{
+  wchar_t vowels[] = { L'a', L'e', L'i', L'o', L'u', L'y', L'A', L'E',
+    L'I', 'O', 'U', 'Y', L'œ', L'Œ', L'æ', L'Æ', L'ó', L'À', L'È',
+    L'É', L'Ì', L'Í', L'Ý', L'Ò', L'Ó', L'è', L'é', L'ò', L'ú',
+    L'ù', L'ý', L'á', L'à', L'ǽ', L'Ǽ'
+  };
+  int i;
+  for (i = 0; i < 35; i++)
+    {
+      if (letter == vowels[i])
+	{
+	  return 1;
+	}
+    }
+  return 0;
+}
+
+// a macro that will be used for verbatim and special-characters in the next function, it calls function with a wchar_t * which is the verbatim or special-character. It places current_character to the character next to the end of the verbatim or special_char charachters.
+
+#define verb_or_sp(ST_TYPE, function) \
+		  i = 0;\
+		  j = 0;\
+		  current_character = current_character->next_character;\
+		  begin_character = current_character;\
+		  while (current_character)\
+		    {\
+		      if (current_character->cos.s.type == ST_T_END\
+			  && current_character->cos.s.style == ST_TYPE)\
+			{\
+			  break;\
+			}\
+		      else\
+			{\
+			  if (current_character->is_character)\
+			    {\
+			      i++;\
+			    }\
+			  current_character =\
+			    current_character->next_character;\
+			}\
+		    }\
+		  if (i == 0)\
+		    {\
+		      break;\
+		    }\
+		  text = (wchar_t *) malloc ((i + 1) * sizeof (wchar_t));\
+		  current_character = begin_character;\
+		  while (j < i)\
+		    {\
+		      if (current_character->is_character)\
+			{\
+			  text[j] = current_character->cos.character;\
+			  current_character =\
+			    current_character->next_character;\
+			  j++;\
+			}\
+		      else\
+			{\
+			  current_character =\
+			    current_character->next_character;\
+			}\
+		    }\
+		  text[i] = L'\0';\
+		  function (f, text);\
+		  free (text);
+
+
+
+/*
+
+This function is made to simplify the output modules : they just have to declare some simple functions (what to do when meeting a beginning of style, a character, etc.) and to call this function with pointer to these functions, and that will automatically write the good ouput. This function does not test at all the gregorio_character list, if it is wrong, then the ouput will be wrong. It is very simple to understand, even if it is a bit long.
+
+type may be 0, or SKIP_FIRST_SYLLABLE
+
+*/
+
+void
+libgregorio_write_text (char type, gregorio_character * current_character,
+			FILE * f, void (*printverb) (FILE *, wchar_t *),
+			void (*printchar) (FILE *, wchar_t),
+			void (*begin) (FILE *, unsigned char),
+			void (*end) (FILE *, unsigned char),
+			void (*printspchar) (FILE *, wchar_t *))
+{
+  if (current_character == NULL)
+    {
+      return;
+    }
+  wchar_t *text;
+  int i;
+  int j;
+  gregorio_character *begin_character;
+  if (type == SKIP_FIRST_LETTER)
+    {
+      while (current_character)
+	{
+	  if (!current_character->is_character
+	      && current_character->cos.s.style == ST_CENTER)
+	    {
+	      break;
+	    }
+	  current_character = current_character->next_character;
+	}
+    }
+  while (current_character)
+    {
+      if (current_character->is_character)
+	{
+	  printchar (f, current_character->cos.character);
+	}
+      else
+	{
+	  if (current_character->cos.s.type == ST_T_BEGIN)
+	    {
+	      switch (current_character->cos.s.style)
+		{
+		case ST_VERBATIM:
+		  verb_or_sp (ST_VERBATIM, printverb) break;
+		case ST_SPECIAL_CHAR:
+		  verb_or_sp (ST_SPECIAL_CHAR, printspchar) break;
+		default:
+		  begin (f, current_character->cos.s.style);
+		  break;
+		}
+	    }
+	  else
+	    {			// ST_T_END
+	      end (f, current_character->cos.s.style);
+	    }
+	}
+
+      current_character = current_character->next_character;
+    }
+}
+
+void
+libgregorio_write_first_letter (gregorio_character * current_character,
+				FILE * f, void (*printverb) (FILE *,
+							     wchar_t *),
+				void (*printchar) (FILE *, wchar_t),
+				void (*begin) (FILE *, unsigned char),
+				void (*end) (FILE *, unsigned char),
+				void (*printspchar) (FILE *, wchar_t *))
+{
+  int i, j;
+  wchar_t *text;
+  gregorio_character *begin_character;
+  while (current_character)
+    {
+      if (current_character->is_character)
+	{
+	  printchar (f, current_character->cos.character);
+	}
+      else
+	{
+	  if (current_character->cos.s.type == ST_T_BEGIN)
+	    {
+	      switch (current_character->cos.s.style)
+		{
+		case ST_CENTER:
+		  return;
+		  break;
+		case ST_VERBATIM:
+		  verb_or_sp (ST_VERBATIM, printverb) break;
+		case ST_SPECIAL_CHAR:
+		  verb_or_sp (ST_SPECIAL_CHAR, printspchar) break;
+		default:
+		  begin (f, current_character->cos.s.style);
+		  break;
+		}
+	    }
+	  else
+	    {			// ST_T_END
+	      end (f, current_character->cos.s.style);
+	    }
+	}
+
+      current_character = current_character->next_character;
+    }
+}
+
+/*
+
+A very simple function that returns the first text of a score, or the null character if there is no such thing.
+
+*/
+
+gregorio_character *
+libgregorio_first_text (gregorio_score * score)
+{
+  if (!score || !score->first_syllable)
+    {
+      libgregorio_message (_("unable to find the first letter of the score"),
+			   "libgregorio_first_text", ERROR, 0);
+      return NULL;
+    }
+  gregorio_syllable *current_syllable = score->first_syllable;
+  while (current_syllable)
+    {
+      if (current_syllable->text)
+	{
+	  return current_syllable->text;
+	}
+      current_syllable = current_syllable->next_syllable;
+    }
+
+  libgregorio_message (_("unable to find the first letter of the score"),
+		       "libgregorio_first_text", ERROR, 0);
+  return NULL;
+}
+
+wchar_t
+libgregorio_first_letter (gregorio_score * score)
+{
+  if (!score || !score->first_syllable)
+    {
+      libgregorio_message (_("unable to find the first letter of the score"),
+			   "libgregorio_first_letter", ERROR, 0);
+      return L'\0';
+    }
+  gregorio_syllable *current_syllable = score->first_syllable;
+  gregorio_character *current_character = score->first_syllable->text;
+  while (current_syllable)
+    {
+      while (current_character)
+	{
+	  if (current_character->is_character)
+	    {
+	      return current_character->cos.character;
+	    }
+	  current_character = current_character->next_character;
+	}
+      current_syllable = current_syllable->next_syllable;
+    }
+
+  libgregorio_message (_("unable to find the first letter of the score"),
+		       "libgregorio_first_letter", ERROR, 0);
+  return L'\0';
 }

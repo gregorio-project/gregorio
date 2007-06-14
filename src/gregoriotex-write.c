@@ -41,7 +41,7 @@ libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score)
 
   fprintf (f, "\\input gregoriotex.tex\n\n\\begingregorioscore%%\n");
 // first we draw the initial (first letter) and the initial key
-  wchar_t first_letter = libgregorio_gregoriotex_first_letter (score);
+  wchar_t first_letter = libgregorio_first_letter (score);
   if (first_letter)
     {
 // we encode the characters like this to make Omega really understand, cause the unicode input depend on the versions
@@ -74,24 +74,7 @@ libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score)
   fprintf (f, "\\endgregorioscore%%\n\\bye\n");
 }
 
-wchar_t
-libgregorio_gregoriotex_first_letter (gregorio_score * score)
-{
-  if (!score || !score->first_syllable || !score->first_syllable->syllable)
-    {
-      libgregorio_message (_("unable to find the first letter of the score"),
-			   "libgregorio_gregoriotex_first_letter", ERROR, 0);
-      return 0;
-    }
 
-  size_t len = strlen (score->first_syllable->syllable);	//to get the length of the syllable in ASCII
-
-  wchar_t *wsyllable = (wchar_t *) malloc ((len) * sizeof (wchar_t) + 1);
-  mbstowcs (wsyllable, score->first_syllable->syllable, (sizeof (wchar_t) * len));	//converting into wchar_t
-  wchar_t first_letter = wsyllable[0];
-  free (wsyllable);
-  return first_letter;
-}
 
 void
 libgregorio_gregoriotex_write_voice_info (FILE * f,
@@ -105,9 +88,9 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 					char first_syllable)
 {
   fprintf (f, "\\syllable");
-  libgregorio_gregoriotex_write_text (f, syllable->syllable, first_syllable);
+  libgregorio_gregoriotex_write_text (f, syllable->text, first_syllable);
   if (syllable->position == WORD_END
-      || syllable->position == WORD_ONE_SYLLABLE || !syllable->syllable)
+      || syllable->position == WORD_ONE_SYLLABLE || !syllable->text)
     {
       fprintf (f, "{1}{%%\n");
     }
@@ -154,8 +137,8 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	}
       if (current_element->type == GRE_END_OF_LINE)
 	{
-	// for the moment, end_of_lines are treated separately, in the TeX structure
-        fprintf(f,"%%gregorio::end_of_line\n");
+	  // for the moment, end_of_lines are treated separately, in the TeX structure
+	  fprintf (f, "%%gregorio::end_of_line\n");
 	  current_element = current_element->next_element;
 	  continue;
 	}
@@ -170,28 +153,6 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
     }
   fprintf (f, "}%%\n");
 }
-
-/* Here is a function that tests if a letter is a vowel or not */
-
-int
-is_vowel (wchar_t letter)
-{
-  wchar_t vowels[] = { L'a', L'e', L'i', L'o', L'u', L'y', L'A', L'E',
-    L'I', 'O', 'U', 'Y', L'œ', L'Œ', L'æ', L'Æ', L'ó', L'À', L'È',
-    L'É', L'Ì', L'Í', L'Ý', L'Ò', L'Ó', L'è', L'é', L'ò', L'ú',
-    L'ù', L'ý', L'á', L'à', L'ǽ', L'Ǽ'
-  };
-  int i;
-  for (i = 0; i < 35; i++)
-    {
-      if (letter == vowels[i])
-	{
-	  return 1;
-	}
-    }
-  return 0;
-}
-
 
 // a function that takes a wchar_t * and write it in omega style : every character is reprensented by ^^^^x where x is its hexadecimal representation on 4 letters (completed with 0)
 void
@@ -213,99 +174,109 @@ libgregorio_print_unicode_letters (FILE * f, wchar_t * wstr)
 // we will need type for one thing for the moment : type=first_syllable=1 when it is the first syllable (for the initial).
 
 void
-libgregorio_gregoriotex_write_text (FILE * f, char *syllable, char type)
+libgregorio_gtex_write_begin (FILE * f, unsigned char style)
 {
-  if (syllable == NULL)
+  switch (style)
+    {
+    case ST_SMALL_CAPS:
+      fprintf (f, "{\\sc");
+      break;
+    case ST_BOLD:
+      fprintf (f, "{\\bf");
+      break;
+    case ST_CENTER:
+      fprintf (f, "}{");
+      break;
+    case ST_TT:
+      fprintf (f, "{\\tt");
+      break;
+    default:
+      break;
+    }
+}
+
+void
+libgregorio_gtex_write_end (FILE * f, unsigned char style)
+{
+  switch (style)
+    {
+    case ST_CENTER:
+      fprintf (f, "}{");
+      break;
+    default:
+      fprintf (f, "}");
+      break;
+    }
+}
+
+void
+libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char)
+{
+  if (!wcscmp(special_char, L"'æ"))
+    {
+	fprintf(f, "\\'æ");
+	return;
+    }
+  if (!wcscmp(special_char, L"'œ"))
+    {
+	fprintf(f, "\\'œ");
+	return;
+    }
+  if (!wcscmp(special_char, L"ae"))
+    {
+	fprintf(f, "\\ae");
+	return;
+    }
+  if (!wcscmp(special_char, L"'æ"))
+    {
+	fprintf(f, "\\'æ");
+	return;
+    }
+  if (!wcscmp(special_char, L"'æ"))
+    {
+	fprintf(f, "\\'æ");
+	return;
+    }
+  if (!wcscmp(special_char, L"'æ"))
+    {
+	fprintf(f, "\\'æ");
+	return;
+    }
+  if (!wcscmp(special_char, L"'æ"))
+    {
+	fprintf(f, "\\'æ");
+	return;
+    }
+}
+
+void
+libgregorio_gtex_write_verb (FILE * f, wchar_t * verb_str)
+{
+  fprintf (f, "%ls", verb_str);
+}
+
+void
+libgregorio_gtex_print_char (FILE * f, wchar_t to_print)
+{
+  fprintf (f, "%04x", to_print);
+}
+
+void
+libgregorio_gregoriotex_write_text (FILE * f, gregorio_character * text, char type)
+{
+  if (text == NULL)
     {
       fprintf (f, "{}{}{}");
       return;
     }
-
-  size_t len = strlen (syllable);	//to get the length of the syllable in ASCII
-
-  wchar_t *wsyllable = (wchar_t *) malloc ((len) * sizeof (wchar_t) + 1);
-  mbstowcs (wsyllable, syllable, (sizeof (wchar_t) * len));	//converting into wchar_t
-// then we get the real length of the syllable, in letters
-  len = wcslen (wsyllable);
-
-// we do what needed in the case of the initial : the initial is already written, and we center the text on the second letter.
-
-  if (type && wsyllable[1])
-    {
-// as said before, we encode the characters like this to make Omega really understand, cause the unicode input depend on the versions
-      fprintf (f, "{}{^^^^%04x}{", wsyllable[1]);
-      libgregorio_print_unicode_letters (f, wsyllable + 2);
-      fprintf (f, "}");
-      return;
-    }
-  int i = 0;
-  int k = 0;
-  int l = 0;
-  int m = 0;
-  wchar_t *firstletters;
-  wchar_t *middleletters;
-  wchar_t *endletters;
-
-  //firstletters
-  while (is_vowel (wsyllable[k]) == 0 && k <= len)
-    {
-      k++;
-    }
-
-  firstletters = (wchar_t *) malloc ((k + 1) * sizeof (wchar_t));
-  for (i = 0; i < k; i++)
-    {
-      firstletters[i] = wsyllable[i];
-    }
-
-// we add L'\0' at the end of firstletters, middleletters and endletters, to be able ton print them
-  firstletters[k] = L'\0';
-  //middleletters
-  l = k;
-  while (is_vowel (wsyllable[l]) == 1 && l <= len)
-    {
-      l++;
-    }
-
-  if (l == k)
-    {
-// means that we have nothing to center on, it is the case of signs like * for example
-      fprintf (f, "{}{");
-      libgregorio_print_unicode_letters (f, firstletters);
-      fprintf (f, "}{}");
-      free (firstletters);
-      free (wsyllable);
-      return;
-    }
-
-  middleletters = (wchar_t *) malloc ((l - k + 1) * sizeof (wchar_t));
-  for (i = 0; i < l - k; i++)
-    {
-      middleletters[i] = wsyllable[i + k];
-    }
-  middleletters[l - k] = L'\0';
-  //endletters
-  m = ((int) len) - l;
-  endletters = (wchar_t *) malloc ((m + 1) * sizeof (wchar_t));
-  for (i = 0; i < m; i++)
-    {
-      endletters[i] = wsyllable[i + l];
-    }
-
-  endletters[m] = L'\0';
-
   fprintf (f, "{");
-  libgregorio_print_unicode_letters (f, firstletters);
-  fprintf (f, "}{");
-  libgregorio_print_unicode_letters (f, middleletters);
-  fprintf (f, "}{");
-  libgregorio_print_unicode_letters (f, endletters);
+      libgregorio_write_text (0, text, f,
+			      (&libgregorio_gtex_write_verb),
+			      (&libgregorio_gtex_print_char),
+			      (&libgregorio_gtex_write_begin),
+			      (&libgregorio_gtex_write_end),
+			      (&libgregorio_gtex_write_special_char));
   fprintf (f, "}");
-  free (firstletters);
-  free (middleletters);
-  free (endletters);
-  free (wsyllable);
-
 }
 
 // here we absolutely need to pass the syllable as an argument, because we will need the next note, that may be contained in the next syllable
@@ -700,7 +671,7 @@ there is no short bar porrectus in gregoria for the moment, so we comment this p
 	  temp = (unsigned int) temp + (unsigned int) glyph->liquescentia;
 	}
       *type = T_PORRECTUS;
-	break;
+      break;
     case G_PORRECTUS_FLEXUS:
       if (!glyph->first_note)
 	{

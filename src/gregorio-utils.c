@@ -417,6 +417,8 @@ main (int argc, char **argv)
 
   gregorio_score *score = NULL;
 
+  setlocale(LC_CTYPE, ""); //to work with an utf-8 encoding
+
   switch (input_format)
     {
     case GABC:
@@ -439,8 +441,6 @@ main (int argc, char **argv)
     }
 
   libgregorio_fix_initial_keys (score, DEFAULT_KEY);
-
-	setlocale(LC_CTYPE, ""); //to work with an utf-8 encoding
 
   switch (output_format)
     {

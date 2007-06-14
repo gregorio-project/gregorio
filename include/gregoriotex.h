@@ -45,7 +45,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 					gregorio_syllable * syllable, char first_syllable);
 
 void
-libgregorio_gregoriotex_write_text (FILE * f, char *syllable, char type);
+libgregorio_gregoriotex_write_text (FILE * f, gregorio_character *first_character, char type);
 
 void
 libgregorio_gregoriotex_write_element (FILE * f, gregorio_syllable * syllable,
@@ -80,6 +80,5 @@ char
 libgregorio_gregoriotex_syllable_first_note (gregorio_syllable * syllable);
 
 
-wchar_t libgregorio_gregoriotex_first_letter (gregorio_score *score);
 
 void libgregorio_print_unicode_letters (FILE *f, wchar_t *wstr);

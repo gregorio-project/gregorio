@@ -23,8 +23,8 @@ void libgregorio_opustex_write_syllable (FILE * f,
 					 gregorio_syllable * syllable,
 					 char first_syllable);
 
-void libgregorio_opustex_write_text (FILE * f, char *syllable,
-				     char nextposition, char first_syllable);
+void libgregorio_opustex_write_text (FILE * f, gregorio_character *first_character,
+				     char first_syllable);
 
 void libgregorio_opustex_write_element (FILE * f,
 					gregorio_syllable * syllable,
@@ -65,3 +65,9 @@ libgregorio_find_next_note (gregorio_element * current_element, gregorio_syllabl
 
 char
 libgregorio_opustex_is_out_of_neume (gregorio_syllable * syllable);
+
+void libgregorio_otex_write_begin (FILE * f, unsigned char style);
+void libgregorio_otex_write_end (FILE * f, unsigned char style);
+void libgregorio_otex_write_special_char (FILE * f, wchar_t * special_char);
+void libgregorio_otex_write_verb (FILE * f, wchar_t * verb_str);
+void libgregorio_otex_print_char (FILE * f, wchar_t to_print);

@@ -35,7 +35,7 @@ libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
 			  int number_of_voices, int clef[],
 			  char alterations[][13]);
 void
-libgregorio_xml_print_text (FILE * f, char *syllable, char position);
+libgregorio_xml_print_text (FILE * f, gregorio_character *text, char position);
 void
 libgregorio_xml_write_key_change_in_polyphony (FILE * f, char step, int line,
 					 int voice);
