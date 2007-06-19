@@ -46,7 +46,6 @@ AC_CONFIG_FILES([
     src/Makefile
     include/Makefile
     examples/Makefile
-    fonts/Makefile
     tex/Makefile
     po/Makefile.in
 ])

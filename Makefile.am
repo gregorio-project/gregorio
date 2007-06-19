@@ -1,4 +1,4 @@
-SUBDIRS= po src include examples fonts tex
+SUBDIRS= po src include examples tex
 
 ACLOCAL_AMFLAGS = -I m4
 
