@@ -25,17 +25,12 @@
 #it is not yet implemented.
 
 
-#global OUTPUT=sys.stdout
 #here we define the basic shapes, that is to say shapes that we will combine to build all the glyphs, they are seven plus the special shapes for the porrectus
-
-#global QUEUE=1
 
 # 
 # | |   = 1
 # |_|
 #
-
-#global B_R=2 # for bottom right (the place of the hole(s))
 
 #  ______
 # |      |
@@ -43,15 +38,12 @@
 # |____  |
 #
 
-#global B_RL=3
-
 #  ______
 # |      |
 # |      |   = 3
 # |  __  |
 #
 
-#global B_L=4
 
 #  ______
 # |      |
@@ -59,7 +51,6 @@
 # |  ____|
 #
 
-#global T_R=R
 
 #  ____
 # |      |
@@ -67,15 +58,12 @@
 # |______|
 #
 
-#global T_RL=6
 
 #    __
 # |      |
 # |      |   = 6
 # |______|
 #
-
-#global T_L=7
 
 #    ____
 # |      |
@@ -84,30 +72,13 @@
 #
 
 
-#global ORISCUS=8
-#global PORR=9
-#global PORR_1=10
-#global PORR_2=11
-#global PORR_3=12
-#global PORR_4=13
-#global PORR_5=14
-
-#length symbols
-#global LINE_LENGTH 22
-#global BASE_LENGTH=164
-#global PORRECTUS_LENGTH_1=x
-#global PORRECTUS_LENGTH_2=y
-#global PORRECTUS_LENGTH_3=z
-#global PORRECTUS_LENGTH_4=a
-#global PORRECTUS_LENGTH_5=b
-
-
+line_length=22
 base_length=164
 length1=142
 length2=120
 length_debilis=88
 
-count=125
+count=140
 
 #base_height=78.75
 base_height=157.5
@@ -122,10 +93,10 @@ def footers():
 Quit(0);"""
 
 def pes():
-    for i in range(5):
-	write_pes(i+1, "pbase", 1)
-    for i in range(5):
-	write_pes(i+1, "qbase", 2)
+    for i in range(1,6):
+	write_pes(i, "pbase", 1)
+    for i in range(1,6):
+	write_pes(i, "qbase", 2)
 
 def write_pes(i, first_glyph, glyph_number):
     glyphname=name(glyph_number, 0, 0, i)
@@ -141,10 +112,10 @@ def write_pes(i, first_glyph, glyph_number):
     end_glyph(glyphname)    
 
 def pes_quadratum():
-    for i in range(5):
-	write_pes_quadratum(i+1, "base5", 3)
-    for i in range(5):
-	write_pes_quadratum(i+1, "obase", 4)
+    for i in range(1,6):
+	write_pes_quadratum(i, "base5", 3)
+    for i in range(1,6):
+	write_pes_quadratum(i, "obase", 4)
 
 def write_pes_quadratum(i, first_glyph, glyph_number):
     glyphname=name(glyph_number, 0, 0, i)
@@ -160,12 +131,12 @@ def write_pes_quadratum(i, first_glyph, glyph_number):
     end_glyph(glyphname)    
 
 def flexus():
-    for i in range(5):
-	write_flexus(i+1, "base2", 17)
-    for i in range(5):
-	write_flexus(i+1, "vsbase", 18)
-    for i in range(5):
-	write_flexus(i+1, "vlbase", 19)
+    for i in range(1,6):
+	write_flexus(i, "base2", 17)
+    for i in range(1,6):
+	write_flexus(i, "vsbase", 18)
+    for i in range(1,6):
+	write_flexus(i, "vlbase", 19)
 
 def write_flexus(i, first_glyph, glyph_number):
     glyphname=name(glyph_number, 0, 0, i)
@@ -180,13 +151,35 @@ def write_flexus(i, first_glyph, glyph_number):
     set_width(length1+base_length)
     end_glyph(glyphname)
 
+def porrectus():
+    for i in range(1,6):
+	for j in range(1,6):
+	   write_porrectus(i,j)
+
+porrectuslengths=(490,575,650,740,813)
+
+def write_porrectus(i,j):
+    glyphname=name(25, 0, i, j)
+    begin_glyph(glyphname)
+    global porrectuslengths
+    global line_length
+    length=porrectuslengths[i-1]
+    first_glyph="porrectus%d" % i
+    simple_paste(first_glyph, glyphname)
+    if (j>1):
+	linename= "line%d" % j 
+	paste_and_move(linename, glyphname, length-line_length, (-j+1)*base_height)
+    paste_and_move("base2", glyphname, (length-base_length), (j-i)*base_height)
+    set_width(length)
+    end_glyph(glyphname)
+
 def torculus():
-    for i in range(5):
-	for j in range(5):
-	    write_torculus(i+1,j+1, "base5", "base7", 16)
-    for i in range(5):
-	for j in range(5):
-	    write_torculus(i+1,j+1, "idebilis", "base7", 16)
+    for i in range(1,6):
+	for j in range(1,6):
+	    write_torculus(i,j, "base5", "base7", 16)
+    for i in range(1,6):
+	for j in range(1,6):
+	    write_torculus(i,j, "idebilis", "base7", 16)
 
 def write_torculus(i,j, first_glyph, last_glyph, glyph_number):
     glyphname=name(glyph_number, 0, i, j)
@@ -240,7 +233,7 @@ def paste_and_move(src, dst, horiz, vert):
 
 def main():
     headers()
-    torculus()
+    porrectus()
     footers()
 
 main()
