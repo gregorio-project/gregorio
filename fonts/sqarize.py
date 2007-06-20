@@ -77,6 +77,7 @@ base_length=164
 length1=142
 length2=120
 length_debilis=88
+length_deminutus=88
 
 count=140
 
@@ -97,12 +98,12 @@ def pes():
 	write_pes(i, "pbase", 1)
     for i in range(1,6):
 	write_pes(i, "qbase", 2)
+    for i in range(1,6):
+	write_pes_debilis(i, "pesdebilis", 89)
 
 def write_pes(i, first_glyph, glyph_number):
     glyphname=name(glyph_number, 0, 0, i)
     begin_glyph(glyphname)
-    global length1
-    global height1
     simple_paste(first_glyph, glyphname)
     if (i!=1):
 	linename= "line%d" % i 
@@ -111,23 +112,46 @@ def write_pes(i, first_glyph, glyph_number):
     set_width(base_length)
     end_glyph(glyphname)    
 
-def pes_quadratum():
-    for i in range(1,6):
-	write_pes_quadratum(i, "base5", 3)
-    for i in range(1,6):
-	write_pes_quadratum(i, "obase", 4)
-
-def write_pes_quadratum(i, first_glyph, glyph_number):
+def write_pes_debilis(i, first_glyph, glyph_number):
     glyphname=name(glyph_number, 0, 0, i)
     begin_glyph(glyphname)
-    global length1
-    global height1
     simple_paste(first_glyph, glyphname)
     if (i!=1):
 	linename= "line%d" % i 
 	paste_and_move(linename, glyphname, length1, base_height)
-    paste_and_move("vbase", glyphname, length1, i*base_height)
+    paste_and_move("rdeminutus", glyphname, length1-length_deminutus, i*base_height)
     set_width(base_length)
+    end_glyph(glyphname)
+
+def pes_quadratum():
+    for i in range(1,6):
+	write_pes_quadratum(i, "base5", "vbase", 3)
+    for i in range(1,6):
+	write_pes_quadratum(i, "obase", "vbase", 4)
+    for i in range(1,6):
+	write_pes_quadratum(i, "qbase", "vbase", 78)
+    for i in range(1,6):
+	write_pes_quadratum(i, "base5", "auctusa2", 79)
+    for i in range(1,6):
+	write_pes_quadratum(i, "obase", "auctusa2", 80)
+    for i in range(1,6):
+	write_pes_quadratum(i, "qbase", "auctusa2", 81)
+    for i in range(1,6):
+	write_pes_quadratum(i, "base5", "auctusd2", 82)
+    for i in range(1,6):
+	write_pes_quadratum(i, "obase", "auctusd2", 83)
+    for i in range(1,6):
+	write_pes_quadratum(i, "qbase", "auctusd2", 83)
+
+def write_pes_quadratum(i, first_glyph, last_glyph, glyph_number):
+    glyphname=name(glyph_number, 0, 0, i)
+    begin_glyph(glyphname)
+    simple_paste(first_glyph, glyphname)
+    if (i!=1):
+	linename= "line%d" % i 
+	paste_and_move(linename, glyphname, length1, base_height)
+    paste_and_move(last_glyph, glyphname, length1, i*base_height)
+    set_width(base_length+length1)
     end_glyph(glyphname)    
 
 def flexus():
@@ -141,8 +165,6 @@ def flexus():
 def write_flexus(i, first_glyph, glyph_number):
     glyphname=name(glyph_number, 0, 0, i)
     begin_glyph(glyphname)
-    global length1
-    global height1
     simple_paste(first_glyph, glyphname)
     if (i!=1):
 	linename= "line%d" % i 
@@ -161,8 +183,6 @@ porrectuslengths=(490,575,650,740,813)
 def write_porrectus(i,j):
     glyphname=name(25, 0, i, j)
     begin_glyph(glyphname)
-    global porrectuslengths
-    global line_length
     length=porrectuslengths[i-1]
     first_glyph="porrectus%d" % i
     simple_paste(first_glyph, glyphname)
@@ -179,13 +199,29 @@ def torculus():
 	    write_torculus(i,j, "base5", "base7", 16)
     for i in range(1,6):
 	for j in range(1,6):
-	    write_torculus(i,j, "idebilis", "base7", 16)
+	    write_torculus(i,j, "idebilis", "base7", 58)
+    for i in range(1,6):
+	for j in range(1,6):
+	    write_torculus(i,j, "base5", "auctusd1", 59)
+    for i in range(1,6):
+	for j in range(1,6):
+	    write_torculus(i,j, "idebilis", "auctusd1", 60)
+    for i in range(1,6):
+	for j in range(1,6):
+	    write_torculus(i,j, "base5", "auctusa1", 60)
+    for i in range(1,6):
+	for j in range(1,6):
+	    write_torculus(i,j, "idebilis", "auctusa1", 62)
+    for i in range(1,6):
+	for j in range(1,6):
+	    write_torculus(i,j, "base5", "deminutus", 63)
+    for i in range(1,6):
+	for j in range(1,6):
+	    write_torculus(i,j, "idebilis", "deminutus", 64)
 
 def write_torculus(i,j, first_glyph, last_glyph, glyph_number):
     glyphname=name(glyph_number, 0, i, j)
     begin_glyph(glyphname)
-    global length1
-    global height1
     length=length1
     if (first_glyph=="idebilis"):
 	length=length_debilis
@@ -197,8 +233,13 @@ def write_torculus(i,j, first_glyph, last_glyph, glyph_number):
     if (j!=1):
 	linename = "line%d" % j
 	paste_and_move(linename, glyphname, length+length1, (i-j+1)*base_height)
-    paste_and_move(last_glyph, glyphname,  length+length1, (i-j)*base_height)
-    set_width(length+length1+base_length)
+    if (last_glyph=="deminutus"):
+	last_length=line_length
+	paste_and_move(last_glyph, glyphname,  length+length1-length_deminutus, (i-j)*base_height)
+    else:
+	last_length=base_length
+	paste_and_move(last_glyph, glyphname,  length+length1, (i-j)*base_height)
+    set_width(length+length1+last_length)
     end_glyph(glyphname)
 
 def end_glyph(glyphname):
@@ -233,7 +274,7 @@ def paste_and_move(src, dst, horiz, vert):
 
 def main():
     headers()
-    porrectus()
+    pes()
     footers()
 
 main()
