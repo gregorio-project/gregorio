@@ -391,6 +391,7 @@ close_syllable ()
       position = WORD_MIDDLE;
     }
   center_is_determined=0;
+  first_letter=0;
   current_character = NULL;
   //TODO : decide wether it will be freed all time or just at the end...
   free_styles();
@@ -651,21 +652,19 @@ This is the macro that will determine the center, etc. for the first
 #define first_syllable()	  switch (first_letter) {\
 case FIRST_LETTER:\
 first_letter=SECOND_LETTER;\
-end_c ()\
 break;\
 case SECOND_LETTER:\
 begin_center ()\
 center_is_determined = DETERMINING_MIDDLE;\
 first_letter=THIRD_LETTER;\
-end_c ()\
 break;\
 case THIRD_LETTER:\
 end_center ()\
 first_letter=0;\
 center_is_determined = FULLY_DETERMINED;\
-end_c ()\
 break;\
 default:\
+first_letter=0;\
 break;\
 }
 
@@ -756,9 +755,10 @@ end_style_determination ()
       if (current_character->is_character)
 	{
       // the first case is when the user hasn't put { nor } (center_is_determined is 0), so we have to determine the center, and moreover it is the first_syllables. We call the good macro (see above).
-	  if (!center_is_determined && first_letter) 
+	  if (center_is_determined!=FULLY_DETERMINED && center_is_determined!=HALF_DETERMINED && first_letter) 
 	    {
 	      first_syllable()
+	      end_c ()
 	    }
       // then, the second case is if the user has'nt determined the middle, and we have only seen vowels so far (else center_is_determined would be DETERMINING_MIDDLE). The current_character is the first vowel, so we start the center here.
 	  if (!center_is_determined
@@ -909,6 +909,13 @@ end_style_determination ()
     {
       insert_style_after (ST_T_END, current_style->style);
       current_style = current_style->next_style;
+    }
+// case where the syllable is composed of only one letter
+  if (first_letter==SECOND_LETTER)
+    {
+      insert_style_after (ST_T_BEGIN, ST_CENTER);
+      insert_style_after (ST_T_END, ST_CENTER);
+      return;
     }
 //current_character is at the end of the list now, so if we havn't closed the center, we do it at the end.
   if (center_is_determined != FULLY_DETERMINED)
