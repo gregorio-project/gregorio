@@ -17,7 +17,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1182366067
+ModificationTime: 1182407649
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -344,8 +344,8 @@ TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -10.1777 m 1
- 0 156.5 l 17
- 3.33301 142.491 23 123.157 31.1973 117.771 c 0
+ 0 149.998 l 1
+ 8 136 23 123.157 31.1973 117.771 c 0
  50.8242 104.875 80.6316 105.482 99 109.5 c 0
  115 113 135 134.5 142 144.375 c 1
  142 176.727 142.004 156.001 142 176.672 c 1
@@ -556,14 +556,14 @@ Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-0 -21.5 m 29
- 0 146 l 21
- 20 154 49.417 162 82 162 c 28
- 114.583 162 144 157 164 146 c 5
- 164 -10 l 5
- 149 0.65625 117.5 5.5 88 5.5 c 4
- 52 5.5 26.5 -9.5 22 -21.5 c 4
- 22 -21.5 8.58008 -21.5 0 -21.5 c 29
+0 -21.5 m 25
+ 0 146 l 17
+ 20 154 49.417 162 82 162 c 24
+ 114.583 162 144 157 164 146 c 1
+ 164 -10 l 1
+ 149 0.65625 117.5 5.5 88 5.5 c 0
+ 52 5.5 26.5 -9.5 22 -21.5 c 0
+ 22 -21.5 8.58008 -21.5 0 -21.5 c 25
 EndSplineSet
 EndChar
 StartChar: base7
@@ -873,7 +873,7 @@ Fore
  151.333 157.5 147.333 157.333 164 157.331 c 9
 EndSplineSet
 EndChar
-StartChar: NameMe.129
+StartChar: torculusresupinus3
 Encoding: 129 -1 46
 Width: 586
 Flags: HW
@@ -891,7 +891,7 @@ Fore
  282 -428 86 -170 0 -16 c 1
 EndSplineSet
 EndChar
-StartChar: NameMe.130
+StartChar: torculusresupinus4
 Encoding: 130 -1 47
 Width: 670
 Flags: HW
@@ -909,7 +909,7 @@ Fore
  305 -522 98 -214 0 -16 c 1
 EndSplineSet
 EndChar
-StartChar: NameMe.131
+StartChar: torculusresupinus5
 Encoding: 131 -1 48
 Width: 931
 Flags: HW
@@ -1441,18 +1441,18 @@ EndChar
 StartChar: pbase
 Encoding: 109 -1 122
 Width: 164
-Flags: HW
+Flags: HWO
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-163.993 151.674 m 1
+163.993 148.674 m 1
  163.993 -10.0078 l 1
- 149 -5.5 116.5 -3 81.5 -3 c 0
- 45.5 -3 12.5 -4.5 -0.00683594 -10.0078 c 1
- 0 146 l 17
- 11.5 148.5 50.417 155.492 83 155.5 c 0
- 113.66 155.508 134 153 141.992 151.668 c 0
- 163.993 151.674 l 1
+ 144.5 -17.5 131.5 -22.5 96.5 -22.5 c 0
+ 60.5 -22.5 16 -16.5 -0.00683594 -10.0078 c 1
+ 0 143 l 17
+ 15 138.5 51 129 95 133.5 c 0
+ 120.543 136.112 134 142.5 141.992 148.668 c 0
+ 163.993 148.674 l 1
 EndSplineSet
 EndChar
 StartChar: idebilis
@@ -1532,11 +1532,11 @@ EndChar
 StartChar: auctusa2
 Encoding: 114 -1 127
 Width: 164
-Flags: W
+Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-0.00683594 151.674 m 1
+0.00683594 151.674 m 5
  0.00683594 151.674 33.3398 138.008 64 138 c 0
  82.8027 137.995 117.585 160.223 133 177 c 0
  143.667 188.61 159 232 164 251 c 9
@@ -1546,7 +1546,7 @@ Fore
  50.0889 -13.0303 33.999 -10.8184 21.999 -6.81836 c 1
  22.0215 -19.1533 22 -11.1667 22 -23 c 1
  3.33333 -23 21.8333 -23 0 -22.9932 c 1
- 0.00683594 151.674 l 1
+ 0.00683594 151.674 l 5
 EndSplineSet
 EndChar
 StartChar: porrectus1
