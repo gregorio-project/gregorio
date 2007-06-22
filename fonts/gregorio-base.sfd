@@ -17,7 +17,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1182437712
+ModificationTime: 1182494386
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -39,7 +39,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 0 12 7
+WinInfo: 0 13 8
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
 BeginChars: 1256 1182
 StartChar: L
@@ -194,11 +194,11 @@ Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-0 -125 m 9
- 0 32.5 l 25
- 22 32.5 l 25
- 22 -117 l 17
- 17.5924 -122.778 8.15704 -123.209 0 -125 c 9
+0 -165.5 m 9
+ 0 -5 l 29
+ 22 -5 l 29
+ 22 -157.5 l 17
+ 17.5928 -163.278 8.15723 -163.709 0 -165.5 c 9
 EndSplineSet
 EndChar
 StartChar: inclinatumdebilis
@@ -912,7 +912,7 @@ EndChar
 StartChar: torculusresupinus5
 Encoding: 131 -1 48
 Width: 931
-Flags: HWO
+Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore

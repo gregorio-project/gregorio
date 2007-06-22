@@ -174,12 +174,18 @@ def write_flexus(i, first_glyph, glyph_number):
     end_glyph(glyphname)
 
 def porrectus():
+#    for i in range(1,6):
+#	for j in range(1,6):
+#	   write_porrectus(i,j, 105, "base2", 0)
+#    for i in range(1,6):
+#	for j in range(1,6):
+#	   write_porrectus(i,j, 106, "rdeminutus", 0)
     for i in range(1,6):
 	for j in range(1,6):
-	   write_porrectus(i,j, 105, "base2", 0)
-    for i in range(1,6):
-	for j in range(1,6):
-	   write_porrectus(i,j, 106, "rdeminutus", 0)
+	   write_porrectus(i,j, 107, "base2", 1)
+#    for i in range(1,6):
+#	for j in range(1,6):
+#	   write_porrectus(i,j, 108, "rdeminutus", 1)
 
 porrectuslengths=(490,575,650,740,931)
 
@@ -187,6 +193,11 @@ def write_porrectus(i,j, glyphnumber, last_glyph, with_bar=0):
     glyphname=name(glyphnumber, 0, i, j)
     begin_glyph(glyphname)
     length=porrectuslengths[i-1]
+    if (with_bar):
+	paste_and_move("queue", glyphname, 0, (-i+1)*base_height)
+	if (i>1):
+	    linename= "line%d" % i
+	    paste_and_move(linename, glyphname, 0, (-i+1)*base_height)
     first_glyph="porrectus%d" % i
     simple_paste(first_glyph, glyphname)
     if (j>1):
@@ -203,7 +214,7 @@ def torculusresupinus():
     for i in range(1,6):
 	for j in range(1,6):
 	    for k in range(1,6):
-		write_torculusresupinus(i,j,k, 107, "base2", 0)
+		write_torculusresupinus(i,j,k, 120, "base2", 0)
 
 torculusresupinuslengths=(340,428,586,670,931)
 
@@ -311,7 +322,7 @@ def paste_and_move(src, dst, horiz, vert):
 
 def main():
     headers()
-    torculusresupinus()
+    porrectus()
     footers()
 
 main()
