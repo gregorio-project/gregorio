@@ -78,6 +78,7 @@ length1=142
 length2=120
 length_debilis=88
 length_deminutus=88
+length_bfdeminutus=197
 
 count=140
 
@@ -87,7 +88,7 @@ base_height=157.5
 def headers():
     print """#!/usr/local/bin/fontforge
 
-Open("gregorio-test.sfd");"""
+Open("gregorio-base.sfd");"""
 
 def footers():
     print """Save("gregorio-final.sfd");
@@ -161,17 +162,38 @@ def flexus():
 	write_flexus(i, "vsbase", 18)
     for i in range(1,6):
 	write_flexus(i, "vlbase", 19)
+    for i in range(1,6):
+	write_flexus(i, "mdeminutus", 520)
 
 def write_flexus(i, first_glyph, glyph_number):
     glyphname=name(glyph_number, 0, 0, i)
     begin_glyph(glyphname)
-    simple_paste(first_glyph, glyphname)
-    if (i!=1):
-	linename= "line%d" % i 
-	paste_and_move(linename, glyphname, length1, (1-i)*base_height)
-    paste_and_move("base5", glyphname, length1, (-i)*base_height)
-    set_width(length1+base_length)
+    # we add a queue if it is a deminutus
+    if (first_glyph=="mdeminutus"):
+        paste_and_move("queue", glyphname, 0, (-i+1)*base_height)
+        if (i>1):
+	    linename= "line%d" % i
+	    paste_and_move(linename, glyphname, 0, (-i+1)*base_height)
+	write_deminutus(0, i, glyphname, 0)
+	length=length_bfdeminutus
+    else:
+	simple_paste(first_glyph, glyphname)
+	length=length1
+	if (i!=1):
+	    linename= "line%d" % i 
+	    paste_and_move(linename, glyphname, length, (1-i)*base_height)
+	paste_and_move("base7", glyphname, length, (-i)*base_height)
+	length=length1+base_length
+    set_width(length)
     end_glyph(glyphname)
+
+def write_deminutus(i, j, glyphname, length=0):
+    paste_and_move("mdeminutus", glyphname, length, i*base_height)
+    if (j>1):
+	linename= "line%d" % j 
+	paste_and_move(linename, glyphname, length+length_bfdeminutus-line_length, (i-j+1)*base_height)
+    paste_and_move("deminutus", glyphname, length+length_bfdeminutus-length_deminutus-line_length, (i-j)*base_height)
+    
 
 def porrectus():
 #    for i in range(1,6):
@@ -322,7 +344,7 @@ def paste_and_move(src, dst, horiz, vert):
 
 def main():
     headers()
-    porrectus()
+    flexus()
     footers()
 
 main()
