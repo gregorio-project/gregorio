@@ -97,7 +97,8 @@ Quit(0);"""
 def pes():
     for i in range(1,6):
 	write_pes(i, "pbase", 1)
-    for i in range(1,6):
+#   with our glyphs, the quilisma pes with notes with only one ton of ambitus is ugly, we must draw it by hand
+    for i in range(2,6):
 	write_pes(i, "qbase", 2)
     for i in range(1,6):
 	write_pes_debilis(i, "pesdebilis", 89)
@@ -170,11 +171,8 @@ def write_flexus(i, first_glyph, glyph_number):
     begin_glyph(glyphname)
     # we add a queue if it is a deminutus
     if (first_glyph=="mdeminutus"):
-        paste_and_move("queue", glyphname, 0, (-i+1)*base_height)
-        if (i>1):
-	    linename= "line%d" % i
-	    paste_and_move(linename, glyphname, 0, (-i+1)*base_height)
-	write_deminutus(0, i, glyphname, 0)
+	write_first_bar(i, glyphname)
+	write_deminutus(0, i, glyphname, length=0, tosimplify=1)
 	length=length_bfdeminutus
     else:
 	simple_paste(first_glyph, glyphname)
@@ -187,11 +185,13 @@ def write_flexus(i, first_glyph, glyph_number):
     set_width(length)
     end_glyph(glyphname)
 
-def write_deminutus(i, j, glyphname, length=0):
+def write_deminutus(i, j, glyphname, length=0, tosimplify=0):
     paste_and_move("mdeminutus", glyphname, length, i*base_height)
     if (j>1):
 	linename= "line%d" % j 
 	paste_and_move(linename, glyphname, length+length_bfdeminutus-line_length, (i-j+1)*base_height)
+    if (tosimplify):
+	simplify()
     paste_and_move("deminutus", glyphname, length+length_bfdeminutus-length_deminutus-line_length, (i-j)*base_height)
     
 
@@ -211,20 +211,30 @@ def porrectus():
 
 porrectuslengths=(490,575,650,740,931)
 
+def write_first_bar(i, glyphname):
+    paste_and_move("queue", glyphname, 0, (-i+1)*base_height)
+    if (i>1):
+	linename= "line%d" % i
+	paste_and_move(linename, glyphname, 0, (-i+1)*base_height)
+
+def simplify():
+    print "Simplify();"
+    print "RemoveOverlap();"
+    print "Simplify();"
+
 def write_porrectus(i,j, glyphnumber, last_glyph, with_bar=0):
     glyphname=name(glyphnumber, 0, i, j)
     begin_glyph(glyphname)
     length=porrectuslengths[i-1]
     if (with_bar):
-	paste_and_move("queue", glyphname, 0, (-i+1)*base_height)
-	if (i>1):
-	    linename= "line%d" % i
-	    paste_and_move(linename, glyphname, 0, (-i+1)*base_height)
+	write_first_bar(i, glyphname)
     first_glyph="porrectus%d" % i
     simple_paste(first_glyph, glyphname)
     if (j>1):
 	linename= "line%d" % j 
 	paste_and_move(linename, glyphname, length-line_length, (-i+1)*base_height)
+    if (with_bar):
+	simplify()
     if (last_glyph=="rdeminutus"):
 	paste_and_move(last_glyph, glyphname, (length-length_deminutus-line_length), (j-i)*base_height)
     else:
@@ -233,10 +243,38 @@ def write_porrectus(i,j, glyphnumber, last_glyph, with_bar=0):
     end_glyph(glyphname)
 
 def torculusresupinus():
+#    for i in range(1,6):
+#	for j in range(1,6):
+#	    for k in range(1,6):
+#		write_torculusresupinus(i,j,k, 120, "base2", 0)
+#    for i in range(1,6):
+#	for j in range(1,6):
+#	    for k in range(1,6):
+#		write_torculusresupinus(i,j,k, 120, "auctusd1", 0)
+#    for i in range(1,6):
+#	for j in range(1,6):
+#	    for k in range(1,6):
+#		write_torculusresupinus(i,j,k, 120, "auctusa1", 0)
+#    for i in range(1,6):
+#	for j in range(1,6):
+#	    for k in range(1,6):
+#		write_torculusresupinus(i,j,k, 120, "deminutus", 0)
+#    for i in range(1,6):
+#	for j in range(1,6):
+#	    for k in range(1,6):
+#		write_torculusresupinus(i,j,k, 120, "base2", 1)
+#    for i in range(1,6):
+#	for j in range(1,6):
+#	    for k in range(1,6):
+#		write_torculusresupinus(i,j,k, 120, "auctusd1", 1)
     for i in range(1,6):
 	for j in range(1,6):
 	    for k in range(1,6):
-		write_torculusresupinus(i,j,k, 120, "base2", 0)
+		write_torculusresupinus(i,j,k, 120, "auctusa1", 1)
+#    for i in range(1,6):
+#	for j in range(1,6):
+#	    for k in range(1,6):
+#		write_torculusresupinus(i,j,k, 120, "deminutus", 1)
 
 torculusresupinuslengths=(340,428,586,670,931)
 
@@ -245,22 +283,24 @@ def write_torculusresupinus(i,j,k, glyphnumber, last_glyph, with_bar=0):
     begin_glyph(glyphname)
     length=torculusresupinuslengths[i-1]
     first_glyph="torculusresupinus%d" % i
+    if (with_bar):
+	write_first_bar(i, glyphname)
     simple_paste(first_glyph, glyphname)
     if (j>1):
 	linename= "line%d" % j 
 	paste_and_move(linename, glyphname, length-line_length, (-i+1)*base_height)
-    if (last_glyph=="rdeminutus"):
-	paste_and_move(last_glyph, glyphname, (length-line_length), (j-i)*base_height)
+    if (last_glyph=="deminutus"):
+	write_deminutus(j-i,k,glyphname, length-line_length,with_bar)
+	length=length+length_bfdeminutus-line_length
     else:
+	simplify()
 	paste_and_move("base3", glyphname, (length-line_length), (j-i)*base_height)
-    if (k>1):
-	linename= "line%d" % k
-	paste_and_move(linename, glyphname, (length+length2), (j-k-i+1)*base_height)
-    if (last_glyph=="rdeminutus"):
-	print "toto"
-    else:
-	paste_and_move("base7", glyphname, (length+length2), (j-i-k)*base_height)
-    set_width(length+length2+base_length)
+        if (k>1):
+	    linename= "line%d" % k 
+	    paste_and_move(linename, glyphname, length+length2, (j-i-k+1)*base_height)
+	paste_and_move(last_glyph, glyphname, (length+length2), (j-i-k)*base_height)
+	length=length+length2+base_length
+    set_width(length)
     end_glyph(glyphname)
 
 def torculus():
@@ -299,17 +339,18 @@ def write_torculus(i,j, first_glyph, last_glyph, glyph_number):
     if (i!=1):
 	linename= "line%d" % i 
 	paste_and_move(linename, glyphname, length, base_height)
-    paste_and_move("base3", glyphname, length, i*base_height)
-    if (j!=1):
-	linename = "line%d" % j
-	paste_and_move(linename, glyphname, length+length1, (i-j+1)*base_height)
     if (last_glyph=="deminutus"):
-	last_length=line_length
-	paste_and_move(last_glyph, glyphname,  length+length1-length_deminutus, (i-j)*base_height)
+	write_deminutus(i,j,glyphname, length)
+	length=length+length_bfdeminutus
     else:
-	last_length=base_length
-	paste_and_move(last_glyph, glyphname,  length+length1, (i-j)*base_height)
-    set_width(length+length1+last_length)
+        paste_and_move("base3", glyphname, length, i*base_height)
+	length=length+length1
+        if (j!=1):
+	    linename = "line%d" % j
+	    paste_and_move(linename, glyphname, length, (i-j+1)*base_height)
+	paste_and_move(last_glyph, glyphname,  length, (i-j)*base_height)
+        length=length+base_length
+    set_width(length)
     end_glyph(glyphname)
 
 def end_glyph(glyphname):
@@ -344,7 +385,7 @@ def paste_and_move(src, dst, horiz, vert):
 
 def main():
     headers()
-    flexus()
+    torculusresupinus()
     footers()
 
 main()
