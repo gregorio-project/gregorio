@@ -749,7 +749,7 @@ Fore
  315 -712 70 -240 0 -16 c 1
 EndSplineSet
 EndChar
-StartChar: torculusresupinus1
+StartChar: porrectusflexus1
 Encoding: 127 -1 40
 Width: 340
 Flags: HW
@@ -767,7 +767,7 @@ Fore
  187.5 -144.125 136.5 -110 0 -16 c 1
 EndSplineSet
 EndChar
-StartChar: torculusresupinus2
+StartChar: porrectusflexus2
 Encoding: 128 -1 41
 Width: 428
 Flags: HW
@@ -873,7 +873,7 @@ Fore
  151.333 157.5 147.333 157.333 164 157.331 c 9
 EndSplineSet
 EndChar
-StartChar: torculusresupinus3
+StartChar: porrectusflexus3
 Encoding: 129 -1 46
 Width: 586
 Flags: HW
@@ -891,7 +891,7 @@ Fore
  282 -428 86 -170 0 -16 c 1
 EndSplineSet
 EndChar
-StartChar: torculusresupinus4
+StartChar: porrectusflexus4
 Encoding: 130 -1 47
 Width: 670
 Flags: HW
@@ -909,7 +909,7 @@ Fore
  305 -522 98 -214 0 -16 c 1
 EndSplineSet
 EndChar
-StartChar: torculusresupinus5
+StartChar: porrectusflexus5
 Encoding: 131 -1 48
 Width: 931
 Flags: HW
