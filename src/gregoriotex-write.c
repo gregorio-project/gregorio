@@ -873,6 +873,8 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 * 28: oriscus auctus
 * 29: custo for bass notes (oriented to the top) with short bar
 * 30: custo for high notes (oriented to the bottom) with short bar
+* 31: punctum inclinatum auctum
+* 32: punctum inclinatum deminutus
 */
 
 void
