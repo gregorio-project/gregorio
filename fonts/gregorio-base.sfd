@@ -17,7 +17,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1182527443
+ModificationTime: 1182686722
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -42,7 +42,7 @@ FitToEm: 1
 WinInfo: 0 12 7
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
 BeginChars: 1256 1182
-StartChar: L
+StartChar: _1008
 Encoding: 76 76 0
 Width: 152
 Flags: HW
@@ -57,7 +57,7 @@ Fore
  67 439 152.337 497.678 152.337 553.333 c 1
 EndSplineSet
 EndChar
-StartChar: B
+StartChar: _1017
 Encoding: 66 66 1
 Width: 164
 Flags: HW
@@ -73,7 +73,7 @@ Fore
  144 158 114.583 166 82 166 c 28
 EndSplineSet
 EndChar
-StartChar: C
+StartChar: _1019
 Encoding: 67 67 2
 Width: 164
 Flags: W
@@ -87,23 +87,23 @@ Fore
  6.66699 103.833 62.873 177.667 77.5 192 c 5
 EndSplineSet
 EndChar
-StartChar: D
+StartChar: _1020
 Encoding: 68 68 3
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-58.5 219.5 m 1
- 110.666 179.333 152.283 137.33 164 117.996 c 1
- 154.5 68.9961 111 25.666 96.0059 8.66992 c 1
- 92.5059 4.66992 73 -11.5 84 12 c 1
- 90.6667 33.3333 77.334 46.002 67.333 57.334 c 0
- 55.8369 70.3594 26.666 96.6689 0 112.667 c 1
- 5.66699 124.501 51.333 202.333 58.5 219.5 c 1
+58.5 163.504 m 1
+ 110.666 123.337 152.283 81.334 164 62 c 1
+ 154.5 13 111 -30.3301 96.0059 -47.3262 c 1
+ 92.5059 -51.3262 73 -67.4961 84 -43.9961 c 1
+ 90.667 -22.6631 77.334 -9.99414 67.333 1.33789 c 0
+ 55.8369 14.3633 26.666 40.6729 0 56.6709 c 1
+ 5.66699 68.5049 51.333 146.337 58.5 163.504 c 1
 EndSplineSet
 EndChar
-StartChar: E
+StartChar: _1026
 Encoding: 69 69 4
 Width: 164
 Flags: HW
@@ -127,7 +127,7 @@ Fore
  10.6667 100 15.8232 146.667 0.155273 154.667 c 1
 EndSplineSet
 EndChar
-StartChar: F
+StartChar: _1028
 Encoding: 70 70 5
 Width: 164
 Flags: HW
@@ -147,7 +147,7 @@ Fore
  0 191 l 17
 EndSplineSet
 EndChar
-StartChar: G
+StartChar: _1027
 Encoding: 71 71 6
 Width: 164
 Flags: HW
@@ -167,7 +167,7 @@ Fore
  164 191 l 17
 EndSplineSet
 EndChar
-StartChar: H
+StartChar: _1006
 Encoding: 72 72 7
 Width: 164
 Flags: HW
@@ -201,7 +201,7 @@ Fore
  17.5928 -163.278 8.15723 -163.709 0 -165.5 c 9
 EndSplineSet
 EndChar
-StartChar: inclinatumdebilis
+StartChar: _1032
 Encoding: 74 74 9
 Width: 82
 Flags: HW
@@ -215,7 +215,7 @@ Fore
  3.33398 91.917 31.4365 128.833 38.75 136 c 1
 EndSplineSet
 EndChar
-StartChar: K
+StartChar: _1011
 Encoding: 75 75 10
 Width: 19
 Flags: HW
@@ -229,7 +229,7 @@ Fore
  0 550.999 l 25
 EndSplineSet
 EndChar
-StartChar: M
+StartChar: _1001
 Encoding: 77 77 11
 Width: 140
 Flags: HW
@@ -251,7 +251,7 @@ Fore
  24 433.5 0 400.667 0 380.5 c 9
 EndSplineSet
 EndChar
-StartChar: N
+StartChar: _1023
 Encoding: 78 78 12
 Width: 164
 Flags: HW
@@ -270,7 +270,7 @@ Fore
  141.996 -26.668 l 1
 EndSplineSet
 EndChar
-StartChar: O
+StartChar: _1025
 Encoding: 79 79 13
 Width: 164
 Flags: W
@@ -289,7 +289,7 @@ Fore
  22.0039 -26.668 l 1
 EndSplineSet
 EndChar
-StartChar: I
+StartChar: _1009
 Encoding: 80 73 14
 AltUni: 80
 Width: 19
@@ -304,7 +304,7 @@ Fore
  6.04348 352.565 2.43478 355.609 0 359.128 c 9
 EndSplineSet
 EndChar
-StartChar: Q
+StartChar: _1010
 Encoding: 81 81 15
 Width: 19
 Flags: HW
@@ -317,7 +317,7 @@ Fore
  14.875 -293.5 5 -293.375 0 -296.375 c 9
 EndSplineSet
 EndChar
-StartChar: S
+StartChar: _1024
 Encoding: 83 83 16
 Width: 164
 Flags: HW
@@ -331,8 +331,8 @@ Fore
  144 161 114.583 166 82 166 c 24
  49.417 166 20 158 0 150 c 9
  0 87.5996 0 -10 0 -10 c 0
- 0 -17.333 0 -361.666 0 -365 c 1
- 18.667 -364.999 22.0049 -356.286 22.0049 -356.286 c 29
+ 0 -17.333 0 -361.666 0 -365 c 5
+ 18.667 -364.999 22.0049 -356.286 22.0049 -356.286 c 25
  22.0039 -26.668 l 1
 EndSplineSet
 EndChar
@@ -396,7 +396,7 @@ Fore
  50.0889 -13.0303 12 -14 0 -10 c 1
 EndSplineSet
 EndChar
-StartChar: X
+StartChar: _1007
 Encoding: 88 88 20
 Width: 201
 Flags: HW
@@ -436,7 +436,7 @@ Fore
  106.499 154.164 167.02 124.329 197 90.001 c 13
 EndSplineSet
 EndChar
-StartChar: Y
+StartChar: _1002
 Encoding: 89 89 22
 Width: 321
 Flags: HW
@@ -468,7 +468,7 @@ Fore
  215.718 432.9 181 409.173 181 389.006 c 9
 EndSplineSet
 EndChar
-StartChar: Z
+StartChar: _1004
 Encoding: 90 90 23
 Width: 85
 Flags: HW
@@ -484,23 +484,23 @@ Fore
  85 -20 63 -27 63 -27 c 5
 EndSplineSet
 EndChar
-StartChar: backslash
+StartChar: _1003
 Encoding: 92 92 24
 Width: 85
 Flags: HW
 TeX: 0 0 0 0
 HStem: 854.5 15 539.5 15 224.5 15 -90.5 15
 Fore
-63 799.5 m 5
- 63 461 l 5
- 59 450.5 25 481.5 3 491.5 c 5
- 0 481.5 0.279297 341.5 0 331.5 c 5
- -0.329102 312.925 78 268.5 85 285 c 5
- 85 787.5 l 6
- 85 792.5 63 799.5 63 799.5 c 5
+63 799.5 m 1
+ 63 461 l 1
+ 59 450.5 25 481.5 3 491.5 c 1
+ 0 481.5 0.279297 341.5 0 331.5 c 1
+ -0.329102 312.925 78 268.5 85 285 c 1
+ 85 787.5 l 2
+ 85 792.5 63 799.5 63 799.5 c 1
 EndSplineSet
 EndChar
-StartChar: bracketleft
+StartChar: _1030
 Encoding: 91 91 25
 Width: 85
 Flags: HW
@@ -516,7 +516,7 @@ Fore
  84.9746 85.0146 63 82 63 82 c 5
 EndSplineSet
 EndChar
-StartChar: bracketright
+StartChar: _1029
 Encoding: 93 93 26
 Width: 85
 Flags: HW
@@ -956,26 +956,58 @@ Fore
  134.849 113.609 145.541 139.116 140.496 158.67 c 0
 EndSplineSet
 EndChar
-StartChar: NameMe.133
+StartChar: _1021
 Encoding: 133 -1 50
-Width: 2048
-Flags: W
+Width: 164
+Flags: HWO
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+58.5 163.504 m 1
+ 110.666 123.337 151 86.3333 163.999 69.0176 c 5
+ 158.667 42.6667 117.333 0 90.0186 -22.6611 c 0
+ 78.4298 -32.2755 38.0059 -60.667 8.66699 -62.0029 c 1
+ -6.66113 -58.667 0.00585938 -55.334 9.33105 -49.335 c 1
+ 52.0059 -36.001 71.3311 -2.99414 70.6709 3.33008 c 1
+ 62.3311 15.3389 26.666 40.6729 0 56.6709 c 1
+ 5.66699 68.5049 51.333 146.337 58.5 163.504 c 1
+EndSplineSet
 EndChar
-StartChar: NameMe.134
+StartChar: _1031
 Encoding: 134 -1 51
-Width: 2048
-Flags: W
+Width: 164
+Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+77.5 192 m 1
+ 90.333 178.167 148 106 164 87 c 1
+ 142.8 49.6 127.217 15.1973 91.6094 -20.3965 c 1
+ 77.2168 -37.6035 28.8 -49.6 9.99512 -48.666 c 1
+ 3.34201 -48.503 -3.69077 -48.4444 5.19531 -43.999 c 1
+ 25.9062 -32.6585 52.7103 -24.447 59.5815 -6 c 1
+ 35.0878 20.9024 7.55616 58.5906 0 80 c 1
+ 6.66699 103.833 62.873 177.667 77.5 192 c 1
+EndSplineSet
 EndChar
-StartChar: NameMe.135
+StartChar: _1022
 Encoding: 135 -1 52
-Width: 2048
-Flags: W
+Width: 164
+Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+141.996 -26.668 m 1
+ 142 -4 112.667 8.66667 82.001 9.33301 c 1
+ 47.001 9.33301 15 0.65625 0 -10 c 1
+ 0 32 0 150 0 150 c 0
+ 20 161 49.417 166 82 166 c 24
+ 114.583 166 144 158 164 150 c 9
+ 164 87.5996 164 -10 164 -10 c 0
+ 164 -17.3333 164.009 -362.003 164.009 -365.337 c 1
+ 145.342 -365.336 142.005 -356.962 142.005 -356.962 c 25
+ 141.996 -26.668 l 1
+EndSplineSet
 EndChar
 StartChar: NameMe.136
 Encoding: 136 -1 53
