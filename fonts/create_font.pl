@@ -31,7 +31,7 @@ my $static="(VTITLE gregorio)
 (CHECKSUM O 30643311733)
 (SEVENBITSAFEFLAG TRUE)
 (MAPFONT D 0
-   (FONTNAME gregorio-0)
+   (FONTNAME gregorio)
    (FONTAT R 1.0)
    (FONTDSIZE R 10.0)
    )";
@@ -51,10 +51,12 @@ my %namex;
 # order is a variable that will contain the number of glyphs that we have already treated
 my $order=0;
 
+# number_of_font is the number of 255 character fonts that will be used
+my $number_of_font=6;
 
 # first we read the afm files and we fill position, font, name and namex with the values
 my $i;
-for ($i=0;$i<1;$i++) {
+for ($i=0;$i<$number_of_font;$i++) {
 open IN,"<gregorio-$i.afm";
 while (<IN>) {
 if (m/C ([0-9]+) ; WX [0-9-]+ ; N _([0-9-]+) ;/) {
@@ -72,7 +74,7 @@ my %height;
 my %depth;
 my $character;
 
-for ($i=0;$i<1;$i++) {
+for ($i=0;$i<$number_of_font;$i++) {
 open IN,"<gregorio-$i.pl";
 while (<IN>) {
   if (m/\(CHARACTER O ([0-7]+)/) { 
@@ -114,7 +116,7 @@ close IN;
 
 my $temp;
 
-open OUT, ">gregorio.ovp2";
+open OUT, ">gregorio.ovp";
 print OUT $static."\n";
 for ($i=0;$i<$order;$i++) { 
 $temp=sprintf("%X",$name[$i]);

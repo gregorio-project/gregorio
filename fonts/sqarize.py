@@ -119,7 +119,6 @@ def end_font():
     for glyph in toremove:
         print "Select(\"%s\");" % glyph
 	print "Clear();"
-    print "Save(\"test.sfd\");"
     if (current_font_number!=0):
 	for glyph in initial_glyphs:
             print "Select(\"%s\");" % glyph
@@ -129,7 +128,7 @@ def end_font():
 	for i in range(395-len(initial_glyphs),395):
 	    print "Select(\"NameMe.%d\");" % i
 	    print "Clear();"	
-    print "Save(\"gregorio-%d.sfd\");" % current_font_number
+    print "Generate(\"gregorio-%d.pfb\",\"\",66537);" % current_font_number
     print "Close();"
     print "Open(\"gregorio-base.sfd\");"
     current_glyph_number=0
