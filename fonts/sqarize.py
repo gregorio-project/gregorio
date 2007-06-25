@@ -27,6 +27,11 @@
 #
 #To build you own font, look at gregorio-base.sfd, and build you own glyphs from
 #it.
+#
+#Basic use :
+# ./sqarize.py > squarize.pe
+# chmod +x squarize.pe
+# ./squarize.pe
 
 
 # the base height is half the space between two lines plus half the heigth of a line
@@ -45,25 +50,39 @@ porrectuslengths=(490,575,650,740,931)
 
 # the list of the number of the glyphs
 
-numbers={'pes':2,
-'pesdeminutus':6,
-'pesauctusascendens':4,
-'pesauctusdescendens':5,
-'pesinitiodebilis':3,
-'pesinitiodebilisauctusascendens':7,
-'pesinitiodebilisauctusdescendens':8,
-'pesquadratum':10,
-'pesquassus':11,
-'pesquilisma':12,
-#'':,
+shapes={
+'pes':2,
+'pesquadratum':6,
+'pesquilisma':4,
+'pesquassus':5,
+'pesquilismaquadratum':3,
+'flexus':7,
+'porrectusflexus':8,
+'porrectusflexus_nobar':10,
+'porrectus':11,
+'porrectus_nobar':12,
+'flexus_nobar':13,
+'flexus_longqueue':15,
+'torculus':14,
+}
+
+liquescentiae={
+'nothing':0,
+'initiodebilis':1,
+'deminutus':2,
+'auctusascendens':3,
+'auctusdescendens':4,
+'initiodebilisdeminutus':5,
+'initiodebilisauctusascendens':6,
+'initiodebilisauctusdescendens':7,
 }
 
 # a list of temporary glyphs, that must be removed from the finame font
 
-toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdebilis', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase']
+toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase']
 
 # in the police, all the free glyphs have the name NameMexxxx where xxxx is a number starting from 140 and increasing by one. For example each new glyph will be basically NameMecount, the next NameMecount+1, etc.
-count=140
+count=150
 
 # a function called at the beginning of the script, that opens the font
 
@@ -104,8 +123,9 @@ def set_width(width):
 
 # function to get the name of the glyph, with the name of the general shape, and the name of the different ambitus
 
-def name(glyphnum, i, j, k):
-    return "%i%i%i%i" % (glyphnum, i, j, k)
+def name(i, j, k, shape, liquescentia):
+    glyphnumber=k+(5*j)+(25*i)+(256*shapes[shape])+(2048*liquescentiae[liquescentia])
+    return "_%i" % (glyphnumber)
 
 # function that simply pastes the src glyph into dst glyph, without moving it
 
@@ -132,7 +152,8 @@ def simplify():
 
 def main():
     headers()
-    pes()
+    porrectusflexus()
+    torculus()
     footers()
 
 # a function that writes a line in glyphname, with length and height offsets
@@ -159,17 +180,17 @@ def write_deminutus(i, j, glyphname, length=0, tosimplify=0):
 
 def pes():
     for i in range(1,6):
-	write_pes(i, "pbase", 1)
+	write_pes(i, "pbase", 'pes')
 #   with our glyphs, the quilisma pes with notes with only one ton of ambitus is ugly, we must draw it by hand
     for i in range(2,6):
-	write_pes(i, "qbase", 2)
+	write_pes(i, "qbase", 'pesquilisma')
     for i in range(1,6):
-	write_pes_deminutus(i, "pesdebilis", 89)
+	write_pes_deminutus(i, "pesdeminutus", 'pes', 'deminutus')
     for i in range(1,6):
-	write_pes_debilis(i, 89)
+	write_pes_debilis(i, 'pes', 'initiodebilis')
 
-def write_pes(i, first_glyph, glyph_number):
-    glyphname=name(glyph_number, 0, 0, i)
+def write_pes(i, first_glyph, shape, liquescentia='nothing'):
+    glyphname=name(0, 0, i, shape, liquescentia)
     begin_glyph(glyphname)
     simple_paste(first_glyph, glyphname)
     write_line(i, glyphname, length1, base_height)
@@ -177,8 +198,8 @@ def write_pes(i, first_glyph, glyph_number):
     set_width(base_length)
     end_glyph(glyphname)    
 
-def write_pes_debilis(i, glyph_number):
-    glyphname=name(glyph_number, 0, 0, i)
+def write_pes_debilis(i, shape, liquescentia='nothing'):
+    glyphname=name(0, 0, i, shape, liquescentia)
     begin_glyph(glyphname)
     # with a deminutus it is much more beautiful than with a idebilis
     paste_and_move("deminutus", glyphname, length1-length_debilis, 0)
@@ -188,8 +209,8 @@ def write_pes_debilis(i, glyph_number):
     set_width(base_length)
     end_glyph(glyphname) 
 
-def write_pes_deminutus(i, first_glyph, glyph_number):
-    glyphname=name(glyph_number, 0, 0, i)
+def write_pes_deminutus(i, first_glyph, shape, liquescentia='nothing'):
+    glyphname=name(0, 0, i, shape, liquescentia)
     begin_glyph(glyphname)
     simple_paste(first_glyph, glyphname)
     write_line(i, glyphname, length1, base_height)
@@ -199,26 +220,26 @@ def write_pes_deminutus(i, first_glyph, glyph_number):
 
 def pes_quadratum():
     for i in range(1,6):
-	write_pes_quadratum(i, "base5", "vbase", 3)
+	write_pes_quadratum(i, "base5", "vbase", 'pesquadratum')
     for i in range(1,6):
-	write_pes_quadratum(i, "obase", "vbase", 4)
+	write_pes_quadratum(i, "obase", "vbase", 'pesquassus')
     for i in range(1,6):
-	write_pes_quadratum(i, "qbase", "vbase", 78)
+	write_pes_quadratum(i, "qbase", "vbase", 'pesquilismaquadratum')
     for i in range(1,6):
-	write_pes_quadratum(i, "base5", "auctusa2", 79)
+	write_pes_quadratum(i, "base5", "auctusa2", 'pesquadratum', 'auctusascendens')
     for i in range(1,6):
-	write_pes_quadratum(i, "obase", "auctusa2", 80)
+	write_pes_quadratum(i, "obase", "auctusa2", 'pesquassus', 'auctusascendens')
     for i in range(1,6):
-	write_pes_quadratum(i, "qbase", "auctusa2", 81)
+	write_pes_quadratum(i, "qbase", "auctusa2", 'pesquilismaquadratum', 'auctusascendens')
     for i in range(1,6):
-	write_pes_quadratum(i, "base5", "auctusd2", 82)
+	write_pes_quadratum(i, "base5", "auctusd2", 'pesquadratum', 'auctusdescendens')
     for i in range(1,6):
-	write_pes_quadratum(i, "obase", "auctusd2", 83)
+	write_pes_quadratum(i, "obase", "auctusd2", 'pesquassus', 'auctusdescendens')
     for i in range(1,6):
-	write_pes_quadratum(i, "qbase", "auctusd2", 83)
+	write_pes_quadratum(i, "qbase", "auctusd2", 'pesquilismaquadratum', 'auctusdescendens')
 
-def write_pes_quadratum(i, first_glyph, last_glyph, glyph_number):
-    glyphname=name(glyph_number, 0, 0, i)
+def write_pes_quadratum(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
+    glyphname=name(0, 0, i, shape, liquescentia)
     begin_glyph(glyphname)
     simple_paste(first_glyph, glyphname)
     if (i!=1):
@@ -230,16 +251,28 @@ def write_pes_quadratum(i, first_glyph, last_glyph, glyph_number):
 
 def flexus():
     for i in range(1,6):
-	write_flexus(i, "base2", 17)
+	write_flexus(i, "base2", 'base7', 'flexus_nobar')
     for i in range(1,6):
-	write_flexus(i, "vsbase", 18)
+	write_flexus(i, "vsbase", 'base7', 'flexus')
     for i in range(1,6):
-	write_flexus(i, "vlbase", 19)
+	write_flexus(i, "vlbase", 'base7', 'flexus_longqueue')
     for i in range(1,6):
-	write_flexus(i, "mdeminutus", 520)
+	write_flexus(i, "mdeminutus", 'base7', 'flexus', 'deminutus')
+    for i in range(1,6):
+	write_flexus(i, "base2", 'auctusa1', 'flexus_nobar', 'auctusascendens')
+    for i in range(1,6):
+	write_flexus(i, "vsbase", 'auctusa1', 'flexus', 'auctusascendens')
+    for i in range(1,6):
+	write_flexus(i, "vlbase", 'auctusa1', 'flexus_longqueue', 'auctusascendens')
+    for i in range(1,6):
+	write_flexus(i, "base2", 'auctusd1', 'flexus_nobar', 'auctusdescendens')
+    for i in range(1,6):
+	write_flexus(i, "vsbase", 'auctusd1', 'flexus', 'auctusdescendens')
+    for i in range(1,6):
+	write_flexus(i, "vlbase", 'auctusd1', 'flexus_longqueue', 'auctusdescendens')
 
-def write_flexus(i, first_glyph, glyph_number):
-    glyphname=name(glyph_number, 0, 0, i)
+def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
+    glyphname=name(0, 0, i, shape, liquescentia)
     begin_glyph(glyphname)
     # we add a queue if it is a deminutus
     if (first_glyph=="mdeminutus"):
@@ -250,28 +283,28 @@ def write_flexus(i, first_glyph, glyph_number):
 	simple_paste(first_glyph, glyphname)
 	length=length1
 	write_line(i, glyphname, length, (1-i)*base_height)
-	paste_and_move("base7", glyphname, length, (-i)*base_height)
+	paste_and_move(last_glyph, glyphname, length, (-i)*base_height)
 	length=length1+base_length
     set_width(length)
     end_glyph(glyphname)
 
 def porrectus():
-#    for i in range(1,6):
-#	for j in range(1,6):
-#	   write_porrectus(i,j, 105, "base2", 0)
-#    for i in range(1,6):
-#	for j in range(1,6):
-#	   write_porrectus(i,j, 106, "rdeminutus", 0)
     for i in range(1,6):
 	for j in range(1,6):
-	   write_porrectus(i,j, 107, "base2", 1)
-#    for i in range(1,6):
-#	for j in range(1,6):
-#	   write_porrectus(i,j, 108, "rdeminutus", 1)
+	   write_porrectus(i,j, "base2", 0, 'porrectus')
+    for i in range(1,6):
+	for j in range(1,6):
+	   write_porrectus(i,j, "rdeminutus", 0, 'porrectus', 'deminutus')
+    for i in range(1,6):
+	for j in range(1,6):
+	   write_porrectus(i,j, "base2", 1, 'porrectus_nobar')
+    for i in range(1,6):
+	for j in range(1,6):
+	   write_porrectus(i,j, "rdeminutus", 1, 'porrectus_nobar', 'deminutus')
 
 
-def write_porrectus(i,j, glyphnumber, last_glyph, with_bar=0):
-    glyphname=name(glyphnumber, 0, i, j)
+def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):
+    glyphname=name(0, i, j, shape, liquescentia)
     begin_glyph(glyphname)
     length=porrectuslengths[i-1]
     if (with_bar):
@@ -289,41 +322,41 @@ def write_porrectus(i,j, glyphnumber, last_glyph, with_bar=0):
     end_glyph(glyphname)
 
 def porrectusflexus():
-#    for i in range(1,6):
-#	for j in range(1,6):
-#	    for k in range(1,6):
-#		write_porrectusflexus(i,j,k, 120, "base2", 0)
-#    for i in range(1,6):
-#	for j in range(1,6):
-#	    for k in range(1,6):
-#		write_porrectusflexus(i,j,k, 120, "auctusd1", 0)
-#    for i in range(1,6):
-#	for j in range(1,6):
-#	    for k in range(1,6):
-#		write_porrectusflexus(i,j,k, 120, "auctusa1", 0)
-#    for i in range(1,6):
-#	for j in range(1,6):
-#	    for k in range(1,6):
-#		write_porrectusflexus(i,j,k, 120, "deminutus", 0)
-#    for i in range(1,6):
-#	for j in range(1,6):
-#	    for k in range(1,6):
-#		write_porrectusflexus(i,j,k, 120, "base2", 1)
-#    for i in range(1,6):
-#	for j in range(1,6):
-#	    for k in range(1,6):
-#		write_porrectusflexus(i,j,k, 120, "auctusd1", 1)
     for i in range(1,6):
 	for j in range(1,6):
 	    for k in range(1,6):
-		write_porrectusflexus(i,j,k, 120, "auctusa1", 1)
-#    for i in range(1,6):
-#	for j in range(1,6):
-#	    for k in range(1,6):
-#		write_porrectusflexus(i,j,k, 120, "deminutus", 1)
+		write_porrectusflexus(i,j,k, "base2", 0, 'porrectusflexus_nobar')
+    for i in range(1,6):
+	for j in range(1,6):
+	    for k in range(1,6):
+		write_porrectusflexus(i,j,k, "auctusd1", 0, 'porrectusflexus_nobar', 'auctusdescendens')
+    for i in range(1,6):
+	for j in range(1,6):
+	    for k in range(1,6):
+		write_porrectusflexus(i,j,k, "auctusa1", 0, 'porrectusflexus_nobar', 'auctusascendens')
+    for i in range(1,6):
+	for j in range(1,6):
+	    for k in range(1,6):
+		write_porrectusflexus(i,j,k, "deminutus", 0, 'porrectusflexus_nobar', 'deminutus')
+    for i in range(1,6):
+	for j in range(1,6):
+	    for k in range(1,6):
+		write_porrectusflexus(i,j,k, "base2", 1, 'porrectusflexus')
+    for i in range(1,6):
+	for j in range(1,6):
+	    for k in range(1,6):
+		write_porrectusflexus(i,j,k, "auctusd1", 1, 'porrectusflexus_nobar', 'auctusdescendens')
+    for i in range(1,6):
+	for j in range(1,6):
+	    for k in range(1,6):
+		write_porrectusflexus(i,j,k, "auctusa1", 1, 'porrectusflexus', 'auctusascendens')
+    for i in range(1,6):
+	for j in range(1,6):
+	    for k in range(1,6):
+		write_porrectusflexus(i,j,k, "deminutus", 1, 'porrectusflexus', 'deminutus')
 
-def write_porrectusflexus(i,j,k, glyphnumber, last_glyph, with_bar=0):
-    glyphname=name(glyphnumber, 0, i, j)
+def write_porrectusflexus(i,j,k, last_glyph, with_bar, shape, liquescentia='nothing'):
+    glyphname=name(0, i, j, shape, liquescentia)
     begin_glyph(glyphname)
     length=torculusresupinuslengths[i-1]
     first_glyph="porrectusflexus%d" % i
@@ -346,31 +379,31 @@ def write_porrectusflexus(i,j,k, glyphnumber, last_glyph, with_bar=0):
 def torculus():
     for i in range(1,6):
 	for j in range(1,6):
-	    write_torculus(i,j, "base5", "base7", 16)
+	    write_torculus(i,j, "base5", "base7", 'torculus')
     for i in range(1,6):
 	for j in range(1,6):
-	    write_torculus(i,j, "idebilis", "base7", 58)
+	    write_torculus(i,j, "idebilis", "base7", 'torculus', 'initiodebilis')
     for i in range(1,6):
 	for j in range(1,6):
-	    write_torculus(i,j, "base5", "auctusd1", 59)
+	    write_torculus(i,j, "base5", "auctusd1", 'torculus', 'auctusdescendens')
     for i in range(1,6):
 	for j in range(1,6):
-	    write_torculus(i,j, "idebilis", "auctusd1", 60)
+	    write_torculus(i,j, "idebilis", "auctusd1", 'torculus', 'initiodebilisauctusdescendens')
     for i in range(1,6):
 	for j in range(1,6):
-	    write_torculus(i,j, "base5", "auctusa1", 60)
+	    write_torculus(i,j, "base5", "auctusa1", 'torculus', 'auctusascendens')
     for i in range(1,6):
 	for j in range(1,6):
-	    write_torculus(i,j, "idebilis", "auctusa1", 62)
+	    write_torculus(i,j, "idebilis", "auctusa1", 'torculus', 'initiodebilisauctusascendens')
     for i in range(1,6):
 	for j in range(1,6):
-	    write_torculus(i,j, "base5", "deminutus", 63)
+	    write_torculus(i,j, "base5", "deminutus", 'torculus', 'deminutus')
     for i in range(1,6):
 	for j in range(1,6):
-	    write_torculus(i,j, "idebilis", "deminutus", 64)
+	    write_torculus(i,j, "idebilis", "deminutus", 'torculus', 'initiodebilisdeminutus')
 
-def write_torculus(i,j, first_glyph, last_glyph, glyph_number):
-    glyphname=name(glyph_number, 0, i, j)
+def write_torculus(i,j, first_glyph, last_glyph, shape, liquescentia='nothing'):
+    glyphname=name(0, i, j, shape, liquescentia)
     begin_glyph(glyphname)
     length=length1
     if (first_glyph=="idebilis"):
