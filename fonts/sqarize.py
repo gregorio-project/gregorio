@@ -32,6 +32,7 @@
 # ./sqarize.py > squarize.pe
 # chmod +x squarize.pe
 # ./squarize.pe
+# the last step may take a few minutes
 
 
 # the base height is half the space between two lines plus half the heigth of a line
@@ -82,7 +83,20 @@ liquescentiae={
 toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase']
 
 # in the police, all the free glyphs have the name NameMexxxx where xxxx is a number starting from 140 and increasing by one. For example each new glyph will be basically NameMecount, the next NameMecount+1, etc.
-count=150
+count=139
+
+# initial glyphs are the names of the glyphs that are already in gregorio_base, mostly one-note glyphs.
+initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,30,3,29,21,31,22,14,15,33]
+for number in initial_glyphs:
+    toto="_00%02d" % int(number)
+    initial_glyphs.insert(0,toto)
+    initial_glyphs.remove(number)
+initial_glyphs.append("_1025")
+
+# we must cut the final font into small fonts of 255 characters, so each 255 characters we save the font into a new gregorio-x font, where x is an integer starting from 0
+current_font_number=0
+#current glyph will count the number of glyphs in the current small font. As the glyphs that are in gregorio-base will be kept only in gregorio-0, we initialize it with the number of these glyphs
+current_glyph_number=len(initial_glyphs)
 
 # a function called at the beginning of the script, that opens the font
 
@@ -94,19 +108,45 @@ Open("gregorio-base.sfd");"""
 # the function that deletes the temporary glyphs and saves the modified font, called at the end
 
 def footers():
+    print "Save(\"gregorio-%d.sfd\");" % current_font_number
+    print "Quit(0);"
+
+# function called when we are at the 255th glyph of a font, we start a new one.
+def end_font():
+    global current_glyph_number
+    global current_font_number
+    global count
     for glyph in toremove:
         print "Select(\"%s\");" % glyph
 	print "Clear();"
-    print """Save("gregorio-final.sfd");
-Quit(0);"""
+    print "Save(\"test.sfd\");"
+    if (current_font_number!=0):
+	for glyph in initial_glyphs:
+            print "Select(\"%s\");" % glyph
+	    print "Clear();"
+    else:
+	# we suppress empty glyphs
+	for i in range(395-len(initial_glyphs),395):
+	    print "Select(\"NameMe.%d\");" % i
+	    print "Clear();"	
+    print "Save(\"gregorio-%d.sfd\");" % current_font_number
+    print "Close();"
+    print "Open(\"gregorio-base.sfd\");"
+    current_glyph_number=0
+    current_font_number=current_font_number+1
+    count=139
 
 # function called at the end of the modification of a glyph, it simplifies it and removes the overlap, so at the end we have the glyph that we want.
 
 def end_glyph(glyphname):
+    global current_glyph_number
     print "Simplify();"
     print "Simplify();"
     print "RemoveOverlap();"
     print "Simplify();"
+    current_glyph_number=current_glyph_number+1
+    if (current_glyph_number==255):
+	end_font()
 
 # function called to initialize a glyph for modification
 
@@ -125,7 +165,7 @@ def set_width(width):
 
 def name(i, j, k, shape, liquescentia):
     glyphnumber=k+(5*j)+(25*i)+(256*shapes[shape])+(2048*liquescentiae[liquescentia])
-    return "_%i" % (glyphnumber)
+    return "_%04d" % (glyphnumber)
 
 # function that simply pastes the src glyph into dst glyph, without moving it
 
@@ -152,6 +192,10 @@ def simplify():
 
 def main():
     headers()
+    pes()
+    pes_quadratum()
+    porrectus()
+    flexus()
     porrectusflexus()
     torculus()
     footers()
