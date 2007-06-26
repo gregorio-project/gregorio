@@ -128,7 +128,9 @@ def end_font():
 	for i in range(395-len(initial_glyphs),395):
 	    print "Select(\"NameMe.%d\");" % i
 	    print "Clear();"	
-    print "Generate(\"gregorio-%d.pfb\",\"\",66537);" % current_font_number
+    # 66537 is for generating an afm and a tfm file
+    #print "Generate(\"gregorio-%d.pfb\",\"\",66537);" % current_font_number
+    print "Generate(\"gregorio-%d.sfd\");" % current_font_number
     print "Close();"
     print "Open(\"gregorio-base.sfd\");"
     current_glyph_number=0
@@ -143,9 +145,10 @@ def end_glyph(glyphname):
     print "Simplify();"
     print "RemoveOverlap();"
     print "Simplify();"
-    current_glyph_number=current_glyph_number+1
     if (current_glyph_number==255):
 	end_font()
+    else:
+	current_glyph_number=current_glyph_number+1
 
 # function called to initialize a glyph for modification
 
