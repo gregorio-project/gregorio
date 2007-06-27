@@ -130,7 +130,7 @@ def end_font():
 	    print "Clear();"	
     # 66537 is for generating an afm and a tfm file
     #print "Generate(\"gregorio-%d.pfb\",\"\",66537);" % current_font_number
-    print "Generate(\"gregorio-%d.sfd\");" % current_font_number
+    print "Save(\"gregorio-%d.sfd\");" % current_font_number
     print "Close();"
     print "Open(\"gregorio-base.sfd\");"
     current_glyph_number=0
@@ -145,6 +145,8 @@ def end_glyph(glyphname):
     print "Simplify();"
     print "RemoveOverlap();"
     print "Simplify();"
+    print "CanonicalContours();"
+    print "CanonicalStart();"
     if (current_glyph_number==255):
 	end_font()
     else:
@@ -166,8 +168,8 @@ def set_width(width):
 # function to get the name of the glyph, with the name of the general shape, and the name of the different ambitus
 
 def name(i, j, k, shape, liquescentia):
-    glyphnumber=k+(5*j)+(25*i)+(256*shapes[shape])+(2048*liquescentiae[liquescentia])
-    return "_%04d" % (glyphnumber)
+    glyphnumber=k+(5*j)+(25*i)+(256*liquescentiae[liquescentia])+(2048*shapes[shape])
+    return "_%d" % (glyphnumber)
 
 # function that simply pastes the src glyph into dst glyph, without moving it
 
@@ -371,7 +373,7 @@ def porrectusflexus():
     for i in range(1,6):
 	for j in range(1,6):
 	    for k in range(1,6):
-		write_porrectusflexus(i,j,k, "base2", 0, 'porrectusflexus_nobar')
+		write_porrectusflexus(i,j,k, "base7", 0, 'porrectusflexus_nobar')
     for i in range(1,6):
 	for j in range(1,6):
 	    for k in range(1,6):
@@ -387,7 +389,7 @@ def porrectusflexus():
     for i in range(1,6):
 	for j in range(1,6):
 	    for k in range(1,6):
-		write_porrectusflexus(i,j,k, "base2", 1, 'porrectusflexus')
+		write_porrectusflexus(i,j,k, "base7", 1, 'porrectusflexus')
     for i in range(1,6):
 	for j in range(1,6):
 	    for k in range(1,6):
@@ -402,7 +404,7 @@ def porrectusflexus():
 		write_porrectusflexus(i,j,k, "deminutus", 1, 'porrectusflexus', 'deminutus')
 
 def write_porrectusflexus(i,j,k, last_glyph, with_bar, shape, liquescentia='nothing'):
-    glyphname=name(0, i, j, shape, liquescentia)
+    glyphname=name(i, j, k, shape, liquescentia)
     begin_glyph(glyphname)
     length=torculusresupinuslengths[i-1]
     first_glyph="porrectusflexus%d" % i
