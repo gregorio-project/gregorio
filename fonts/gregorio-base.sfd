@@ -33,32 +33,16 @@ HheadDescent: 0
 HheadDOffset: 1
 OS2Vendor: 'PfEd'
 Encoding: Custom
-Compacted: 1
 UnicodeInterp: none
 NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 240 12 7
+WinInfo: 0 12 7
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 2182 321
-StartChar: _0008
-Encoding: 10 76 0
-Width: 152
-Flags: HW
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-Fore
-152.337 553.333 m 1
- 152.337 586.678 122.5 613.998 75 612.998 c 1
- 49 612.998 17 597.998 17 572.998 c 1
- 17 510.498 124.5 530.998 120 561.998 c 1
- 152.5 495.998 46 458 0 418.998 c 1
- 67 439 152.337 497.678 152.337 553.333 c 1
-EndSplineSet
-EndChar
+BeginChars: 321 321
 StartChar: _0017
-Encoding: 0 66 1
+Encoding: 0 66 0
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -74,7 +58,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0019
-Encoding: 1 67 2
+Encoding: 1 67 1
 Width: 164
 Flags: W
 TeX: 0 0 0 0
@@ -88,7 +72,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0020
-Encoding: 2 68 3
+Encoding: 2 68 2
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -104,7 +88,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0026
-Encoding: 3 69 4
+Encoding: 3 69 3
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -128,7 +112,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0028
-Encoding: 4 70 5
+Encoding: 4 70 4
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -148,7 +132,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0027
-Encoding: 5 71 6
+Encoding: 5 71 5
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -168,7 +152,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0006
-Encoding: 6 72 7
+Encoding: 6 72 6
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -188,7 +172,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: queue
-Encoding: 7 153 8
+Encoding: 7 153 7
 Width: 2048
 Flags: HW
 TeX: 0 0 0 0
@@ -202,7 +186,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0032
-Encoding: 8 74 9
+Encoding: 8 74 8
 Width: 82
 Flags: HW
 TeX: 0 0 0 0
@@ -216,7 +200,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0011
-Encoding: 9 75 10
+Encoding: 9 75 9
 Width: 19
 Flags: HW
 TeX: 0 0 0 0
@@ -227,6 +211,21 @@ Fore
  18.9912 -408.997 l 25
  -0.00292969 -409.002 l 25
  0 550.999 l 25
+EndSplineSet
+EndChar
+StartChar: _0008
+Encoding: 10 76 10
+Width: 152
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+152.337 553.333 m 1
+ 152.337 586.678 122.5 613.998 75 612.998 c 1
+ 49 612.998 17 597.998 17 572.998 c 1
+ 17 510.498 124.5 530.998 120 561.998 c 1
+ 152.5 495.998 46 458 0 418.998 c 1
+ 67 439 152.337 497.678 152.337 553.333 c 1
 EndSplineSet
 EndChar
 StartChar: _0001
@@ -396,8 +395,26 @@ Fore
  50.0889 -13.0303 12 -14 0 -10 c 1
 EndSplineSet
 EndChar
+StartChar: mdeminutus
+Encoding: 20 87 20
+Width: 197
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+197 90.001 m 13
+ 197 -69.999 l 29
+ 188.42 -69.999 175 -69.999 175 -69.999 c 4
+ 152.667 -22.001 88.0029 -6.33105 55.334 -5.33301 c 0
+ 46.6738 -5.06836 29 -8.5 21.9971 -21.5 c 0
+ 21.9971 -21.5 8.5791 -21.5 0 -21.5 c 25
+ 0 142.666 l 1
+ 11 147.666 16.1455 152.186 37.999 152.664 c 0
+ 106.499 154.164 167.02 124.329 197 90.001 c 13
+EndSplineSet
+EndChar
 StartChar: _0007
-Encoding: 21 88 20
+Encoding: 21 88 21
 Width: 201
 Flags: HW
 TeX: 0 0 0 0
@@ -416,24 +433,6 @@ Fore
  117 177 81 177 22 140 c 9
  22 393 l 17
  14.6667 390.185 7.33334 390.885 0 382 c 9
-EndSplineSet
-EndChar
-StartChar: mdeminutus
-Encoding: 20 87 21
-Width: 197
-Flags: HW
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-Fore
-197 90.001 m 13
- 197 -69.999 l 29
- 188.42 -69.999 175 -69.999 175 -69.999 c 4
- 152.667 -22.001 88.0029 -6.33105 55.334 -5.33301 c 0
- 46.6738 -5.06836 29 -8.5 21.9971 -21.5 c 0
- 21.9971 -21.5 8.5791 -21.5 0 -21.5 c 25
- 0 142.666 l 1
- 11 147.666 16.1455 152.186 37.999 152.664 c 0
- 106.499 154.164 167.02 124.329 197 90.001 c 13
 EndSplineSet
 EndChar
 StartChar: _0002
@@ -484,24 +483,8 @@ Fore
  85 -20 63 -27 63 -27 c 5
 EndSplineSet
 EndChar
-StartChar: _0003
-Encoding: 25 92 24
-Width: 85
-Flags: HW
-TeX: 0 0 0 0
-HStem: 854.5 15 539.5 15 224.5 15 -90.5 15
-Fore
-63 799.5 m 1
- 63 461 l 1
- 59 450.5 25 481.5 3 491.5 c 1
- 0 481.5 0.279297 341.5 0 331.5 c 1
- -0.329102 312.925 78 268.5 85 285 c 1
- 85 787.5 l 2
- 85 792.5 63 799.5 63 799.5 c 1
-EndSplineSet
-EndChar
 StartChar: _0030
-Encoding: 24 91 25
+Encoding: 24 91 24
 Width: 85
 Flags: HW
 TeX: 0 0 0 0
@@ -514,6 +497,22 @@ Fore
  -0.329102 453.575 78 498 85 481.5 c 5
  85 94 l 6
  84.9746 85.0146 63 82 63 82 c 5
+EndSplineSet
+EndChar
+StartChar: _0003
+Encoding: 25 92 25
+Width: 85
+Flags: HW
+TeX: 0 0 0 0
+HStem: 854.5 15 539.5 15 224.5 15 -90.5 15
+Fore
+63 799.5 m 1
+ 63 461 l 1
+ 59 450.5 25 481.5 3 491.5 c 1
+ 0 481.5 0.279297 341.5 0 331.5 c 1
+ -0.329102 312.925 78 268.5 85 285 c 1
+ 85 787.5 l 2
+ 85 792.5 63 799.5 63 799.5 c 1
 EndSplineSet
 EndChar
 StartChar: _0029
@@ -713,80 +712,8 @@ Fore
  51.333 8.66699 22 -4 22.0039 -26.668 c 1
 EndSplineSet
 EndChar
-StartChar: porrectus4
-Encoding: 51 -1 38
-Width: 740
-Flags: HW
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-Fore
-0 -25 m 1
- 0 172.5 l 2
- 0 177.239 5.27441 176.092 7 172.25 c 0
- 134 -110.5 367.502 -459.831 718.002 -536.331 c 5
- 718.002 -493.331 718 -492.875 718 -450 c 1
- 728.125 -450 735.281 -449.9 740 -450 c 1
- 740 -679 l 2
- 740 -681.229 739.615 -681.119 737.76 -680.591 c 0
- 270 -547.5 75 -217.5 0 -25 c 1
-EndSplineSet
-EndChar
-StartChar: porrectus5
-Encoding: 52 -1 39
-Width: 931
-Flags: HW
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-Fore
-0 -16 m 1
- 0 155 l 2
- 0 159.739 5.3553 158.627 7 154.75 c 0
- 122.5 -117.5 382.5 -591 909 -711 c 1
- 909 -668 909 -654.875 909 -612 c 1
- 919.125 -612 926.281 -611.9 931 -612 c 1
- 931 -841 l 2
- 931 -843.229 930.646 -842.992 928.76 -842.591 c 0
- 315 -712 70 -240 0 -16 c 1
-EndSplineSet
-EndChar
-StartChar: porrectusflexus1
-Encoding: 53 -1 40
-Width: 340
-Flags: HW
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-Fore
-0 -16 m 1
- 0 155 l 2
- 0 159.739 3.67916 157.34 7 154.75 c 0
- 143.49 48.2977 204 -6.125 318 -10 c 1
- 318 33 318 -33.875 318 9 c 1
- 328.125 9 335.281 9.09961 340 9 c 1
- 340 -147.125 l 2
- 340 -149.354 339.69 -148.775 337.76 -148.716 c 0
- 187.5 -144.125 136.5 -110 0 -16 c 1
-EndSplineSet
-EndChar
-StartChar: porrectusflexus2
-Encoding: 54 -1 41
-Width: 428
-Flags: HW
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-Fore
-0 -16 m 1
- 0 155 l 2
- 0 159.739 4.76959 158.322 7 154.75 c 0
- 98 9 278 -160.625 406 -166 c 1
- 406 -123 406 -188.375 406 -145.5 c 5
- 416.125 -145.5 423.281 -145.4 428 -145.5 c 5
- 428 -295.5 l 2
- 428 -297.729 427.688 -297.188 425.76 -297.091 c 0
- 265 -289 107 -166 0 -16 c 1
-EndSplineSet
-EndChar
 StartChar: vbase
-Encoding: 38 -1 42
+Encoding: 38 -1 38
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -807,7 +734,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: vlbase
-Encoding: 39 -1 43
+Encoding: 39 -1 39
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -828,7 +755,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: qbase
-Encoding: 40 -1 44
+Encoding: 40 -1 40
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -853,7 +780,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: obase
-Encoding: 41 -1 45
+Encoding: 41 -1 41
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -873,8 +800,245 @@ Fore
  151.333 157.5 147.333 157.333 164 157.331 c 9
 EndSplineSet
 EndChar
+StartChar: pbase
+Encoding: 42 -1 42
+Width: 164
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+163.993 148.674 m 1
+ 163.993 -10.0078 l 1
+ 144.5 -17.5 131.5 -22.5 96.5 -22.5 c 0
+ 60.5 -22.5 16 -16.5 -0.00683594 -10.0078 c 1
+ 0 143 l 17
+ 15 138.5 51 129 95 133.5 c 0
+ 120.543 136.112 134 142.5 141.992 148.668 c 0
+ 163.993 148.674 l 1
+EndSplineSet
+EndChar
+StartChar: idebilis
+Encoding: 43 -1 43
+Width: 110
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+110 147 m 1
+ 110 16 l 5
+ 100 24.3333 82.6665 27.9905 55.667 28.335 c 0
+ 29.6667 28.6667 7 24 0 16 c 1
+ 0 119 l 17
+ 10 124 30.6667 127 54.0039 127 c 0
+ 69.3333 127 85.667 125.337 88 124 c 0
+ 88.002 146.994 l 1
+ 110 147 l 1
+EndSplineSet
+EndChar
+StartChar: deminutus
+Encoding: 44 -1 44
+Width: 110
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+110 147 m 1
+ 110 16 l 1
+ 104.5 11.5 89 6 69 5 c 0
+ 43.0303 3.70117 14.5 7 0 16 c 1
+ 0 119 l 17
+ 23 111 47.5 109 63 109.5 c 0
+ 72.4951 109.807 86.5 119 88 124 c 0
+ 88.002 146.994 l 1
+ 110 147 l 1
+EndSplineSet
+EndChar
+StartChar: rdeminutus
+Encoding: 45 -1 45
+Width: 110
+Flags: HW
+TeX: 0 0 0 0
+HStem: 545.728 15 230.728 15 -84.2722 15 -399.272 15
+Fore
+110 -21 m 5
+ 88.002 -20.9941 l 5
+ 88 27.7275 l 0
+ 86.5 32.7275 72.4951 41.9209 63 42.2275 c 0
+ 47.5 42.7275 23 40.7275 0 32.7275 c 9
+ 0 135.728 l 1
+ 14.5 144.728 43.0303 148.026 69 146.728 c 0
+ 89 145.728 104.5 140.228 110 135.728 c 1
+ 110 -21 l 5
+EndSplineSet
+EndChar
+StartChar: auctusd2
+Encoding: 46 -1 46
+Width: 164
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+0 146.001 m 1
+ 17.2 154.4 55.9994 159.987 79.25 158 c 1
+ 100.746 156.818 123.293 142.362 140 124.791 c 0
+ 151.56 112.633 160.323 71.7822 164.007 60.0078 c 9
+ 164 -96 l 1
+ 159.353 -83.1748 147.147 -39.1311 132 -24.5741 c 0
+ 114.552 -7.80614 94.2002 1.92969 76 3 c 0
+ 53.6419 4.31543 36.5176 2.72168 22 -1.2002 c 1
+ 22 -18.0909 22 -1.27273 22.0078 -18.0049 c 1
+ 0 -18 22 -18 0 -18.0059 c 1
+ 0 146.001 l 1
+EndSplineSet
+EndChar
+StartChar: auctusa2
+Encoding: 47 -1 47
+Width: 164
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+0.00683594 151.674 m 5
+ 0.00683594 151.674 33.3398 138.008 64 138 c 0
+ 82.8027 137.995 117.585 160.223 133 177 c 0
+ 143.667 188.61 159 232 164 251 c 9
+ 164 79 l 1
+ 160.674 59.6748 149.336 34.3379 141 24 c 0
+ 127.283 6.99023 84.9521 -10.4482 64 -12 c 0
+ 50.0889 -13.0303 33.999 -10.8184 21.999 -6.81836 c 1
+ 22.0215 -19.1533 22 -11.1667 22 -23 c 1
+ 3.33333 -23 21.8333 -23 0 -22.9932 c 1
+ 0.00683594 151.674 l 5
+EndSplineSet
+EndChar
+StartChar: porrectus1
+Encoding: 48 -1 48
+Width: 490
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 3.67916 157.34 7 154.75 c 0
+ 143.49 48.2977 249.871 -40.1758 468 -51.875 c 1
+ 468 -8.875 468 -51.875 468 -9 c 1
+ 478.125 -9 485.281 -8.90039 490 -9 c 1
+ 490 -189 l 2
+ 490 -191.229 489.69 -190.612 487.76 -190.591 c 0
+ 254 -188 136.5 -110 0 -16 c 1
+EndSplineSet
+EndChar
+StartChar: porrectus2
+Encoding: 49 -1 49
+Width: 575
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 4.39911 158.063 7 154.75 c 0
+ 181.5 -67.5 330 -189 553 -219.875 c 5
+ 553 -176.875 553 -174.875 553 -132 c 5
+ 563.125 -132 570.281 -131.9 575 -132 c 5
+ 575 -357 l 6
+ 575 -359.229 574.68 -358.787 572.76 -358.591 c 4
+ 322.5 -333 154.5 -201 0 -16 c 1
+EndSplineSet
+EndChar
+StartChar: porrectus3
+Encoding: 50 -1 50
+Width: 650
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 5.08372 158.501 7 154.75 c 0
+ 130 -86 270 -314 628 -362 c 1
+ 628 -319 628 -292.875 628 -250 c 1
+ 638.125 -250 645.281 -249.9 650 -250 c 1
+ 650 -479 l 2
+ 650 -481.229 649.661 -480.926 647.76 -480.591 c 0
+ 202 -402 116 -240 0 -16 c 1
+EndSplineSet
+EndChar
+StartChar: porrectus4
+Encoding: 51 -1 51
+Width: 740
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+0 -25 m 1
+ 0 172.5 l 2
+ 0 177.239 5.27441 176.092 7 172.25 c 0
+ 134 -110.5 367.502 -459.831 718.002 -536.331 c 5
+ 718.002 -493.331 718 -492.875 718 -450 c 1
+ 728.125 -450 735.281 -449.9 740 -450 c 1
+ 740 -679 l 2
+ 740 -681.229 739.615 -681.119 737.76 -680.591 c 0
+ 270 -547.5 75 -217.5 0 -25 c 1
+EndSplineSet
+EndChar
+StartChar: porrectus5
+Encoding: 52 -1 52
+Width: 931
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 5.3553 158.627 7 154.75 c 0
+ 122.5 -117.5 382.5 -591 909 -711 c 1
+ 909 -668 909 -654.875 909 -612 c 1
+ 919.125 -612 926.281 -611.9 931 -612 c 1
+ 931 -841 l 2
+ 931 -843.229 930.646 -842.992 928.76 -842.591 c 0
+ 315 -712 70 -240 0 -16 c 1
+EndSplineSet
+EndChar
+StartChar: porrectusflexus1
+Encoding: 53 -1 53
+Width: 340
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 3.67916 157.34 7 154.75 c 0
+ 143.49 48.2977 204 -6.125 318 -10 c 1
+ 318 33 318 -33.875 318 9 c 1
+ 328.125 9 335.281 9.09961 340 9 c 1
+ 340 -147.125 l 2
+ 340 -149.354 339.69 -148.775 337.76 -148.716 c 0
+ 187.5 -144.125 136.5 -110 0 -16 c 1
+EndSplineSet
+EndChar
+StartChar: porrectusflexus2
+Encoding: 54 -1 54
+Width: 428
+Flags: HW
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+Fore
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 4.76959 158.322 7 154.75 c 0
+ 98 9 278 -160.625 406 -166 c 1
+ 406 -123 406 -188.375 406 -145.5 c 5
+ 416.125 -145.5 423.281 -145.4 428 -145.5 c 5
+ 428 -295.5 l 2
+ 428 -297.729 427.688 -297.188 425.76 -297.091 c 0
+ 265 -289 107 -166 0 -16 c 1
+EndSplineSet
+EndChar
 StartChar: porrectusflexus3
-Encoding: 55 -1 46
+Encoding: 55 -1 55
 Width: 586
 Flags: HW
 TeX: 0 0 0 0
@@ -892,7 +1056,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: porrectusflexus4
-Encoding: 56 -1 47
+Encoding: 56 -1 56
 Width: 670
 Flags: HW
 TeX: 0 0 0 0
@@ -910,7 +1074,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: porrectusflexus5
-Encoding: 57 -1 48
+Encoding: 57 -1 57
 Width: 931
 Flags: HW
 TeX: 0 0 0 0
@@ -928,7 +1092,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _1025
-Encoding: 58 -1 49
+Encoding: 58 -1 58
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -957,7 +1121,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0021
-Encoding: 59 -1 50
+Encoding: 59 -1 59
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -974,7 +1138,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0031
-Encoding: 60 -1 51
+Encoding: 60 -1 60
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -991,7 +1155,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0022
-Encoding: 61 -1 52
+Encoding: 61 -1 61
 Width: 164
 Flags: HW
 TeX: 0 0 0 0
@@ -1010,7 +1174,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0014
-Encoding: 62 -1 53
+Encoding: 62 -1 62
 Width: 61
 Flags: HW
 TeX: 0 0 0 0
@@ -1024,7 +1188,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0015
-Encoding: 63 -1 54
+Encoding: 63 -1 63
 Width: 61
 Flags: HW
 TeX: 0 0 0 0
@@ -1043,7 +1207,7 @@ Fore
 EndSplineSet
 EndChar
 StartChar: _0033
-Encoding: 64 -1 55
+Encoding: 64 -1 64
 Width: 50
 Flags: HW
 TeX: 0 0 0 0
@@ -1057,631 +1221,466 @@ Fore
 EndSplineSet
 EndChar
 StartChar: NameMe.139
-Encoding: 65 -1 56
+Encoding: 65 -1 65
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.140
-Encoding: 66 -1 57
+Encoding: 66 -1 66
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.141
-Encoding: 67 -1 58
+Encoding: 67 -1 67
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.142
-Encoding: 68 -1 59
+Encoding: 68 -1 68
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.143
-Encoding: 69 -1 60
+Encoding: 69 -1 69
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.144
-Encoding: 70 -1 61
+Encoding: 70 -1 70
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.145
-Encoding: 71 -1 62
+Encoding: 71 -1 71
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.146
-Encoding: 72 -1 63
+Encoding: 72 -1 72
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.147
-Encoding: 73 -1 64
+Encoding: 73 -1 73
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.148
-Encoding: 74 -1 65
+Encoding: 74 -1 74
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.149
-Encoding: 75 -1 66
+Encoding: 75 -1 75
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.150
-Encoding: 76 -1 67
+Encoding: 76 -1 76
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.151
-Encoding: 77 -1 68
+Encoding: 77 -1 77
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.152
-Encoding: 78 -1 69
+Encoding: 78 -1 78
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.153
-Encoding: 79 -1 70
+Encoding: 79 -1 79
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.154
-Encoding: 80 -1 71
+Encoding: 80 -1 80
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.155
-Encoding: 81 -1 72
+Encoding: 81 -1 81
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.156
-Encoding: 82 -1 73
+Encoding: 82 -1 82
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.157
-Encoding: 83 -1 74
+Encoding: 83 -1 83
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.158
-Encoding: 84 -1 75
+Encoding: 84 -1 84
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.159
-Encoding: 85 -1 76
+Encoding: 85 -1 85
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.160
-Encoding: 86 -1 77
+Encoding: 86 -1 86
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.161
-Encoding: 87 -1 78
+Encoding: 87 -1 87
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.162
-Encoding: 88 -1 79
+Encoding: 88 -1 88
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.163
-Encoding: 89 -1 80
+Encoding: 89 -1 89
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.164
-Encoding: 90 -1 81
+Encoding: 90 -1 90
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.165
-Encoding: 91 -1 82
+Encoding: 91 -1 91
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.166
-Encoding: 92 -1 83
+Encoding: 92 -1 92
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.167
-Encoding: 93 -1 84
+Encoding: 93 -1 93
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.168
-Encoding: 94 -1 85
+Encoding: 94 -1 94
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.169
-Encoding: 95 -1 86
+Encoding: 95 -1 95
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.170
-Encoding: 96 -1 87
+Encoding: 96 -1 96
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.171
-Encoding: 97 -1 88
+Encoding: 97 -1 97
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.172
-Encoding: 98 -1 89
+Encoding: 98 -1 98
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.173
-Encoding: 99 -1 90
+Encoding: 99 -1 99
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.174
-Encoding: 100 -1 91
+Encoding: 100 -1 100
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.175
-Encoding: 101 -1 92
+Encoding: 101 -1 101
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.176
-Encoding: 102 -1 93
+Encoding: 102 -1 102
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.177
-Encoding: 103 -1 94
+Encoding: 103 -1 103
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.178
-Encoding: 104 -1 95
+Encoding: 104 -1 104
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.179
-Encoding: 105 -1 96
+Encoding: 105 -1 105
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.180
-Encoding: 106 -1 97
+Encoding: 106 -1 106
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.181
-Encoding: 107 -1 98
+Encoding: 107 -1 107
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.182
-Encoding: 108 -1 99
+Encoding: 108 -1 108
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.183
-Encoding: 109 -1 100
+Encoding: 109 -1 109
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.184
-Encoding: 110 -1 101
+Encoding: 110 -1 110
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.185
-Encoding: 111 -1 102
+Encoding: 111 -1 111
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.186
-Encoding: 112 -1 103
+Encoding: 112 -1 112
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.187
-Encoding: 113 -1 104
+Encoding: 113 -1 113
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.188
-Encoding: 114 -1 105
+Encoding: 114 -1 114
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.189
-Encoding: 115 -1 106
+Encoding: 115 -1 115
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.190
-Encoding: 116 -1 107
+Encoding: 116 -1 116
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.191
-Encoding: 117 -1 108
+Encoding: 117 -1 117
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.192
-Encoding: 118 -1 109
+Encoding: 118 -1 118
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.193
-Encoding: 119 -1 110
-Width: 2048
-Flags: W
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-EndChar
-StartChar: NameMe.195
-Encoding: 121 -1 111
-Width: 2048
-Flags: W
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-EndChar
-StartChar: NameMe.196
-Encoding: 122 -1 112
-Width: 2048
-Flags: W
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-EndChar
-StartChar: NameMe.197
-Encoding: 123 -1 113
-Width: 2048
-Flags: W
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-EndChar
-StartChar: NameMe.198
-Encoding: 124 -1 114
-Width: 2048
-Flags: W
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-EndChar
-StartChar: NameMe.199
-Encoding: 125 -1 115
-Width: 2048
-Flags: W
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-EndChar
-StartChar: NameMe.200
-Encoding: 126 -1 116
-Width: 2048
-Flags: W
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-EndChar
-StartChar: NameMe.201
-Encoding: 127 -1 117
-Width: 2048
-Flags: W
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-EndChar
-StartChar: NameMe.202
-Encoding: 128 -1 118
-Width: 2048
-Flags: W
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-EndChar
-StartChar: NameMe.203
-Encoding: 129 -1 119
-Width: 2048
-Flags: W
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-EndChar
-StartChar: NameMe.204
-Encoding: 130 -1 120
+Encoding: 119 -1 119
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.194
-Encoding: 120 -1 121
+Encoding: 120 -1 120
 Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
-StartChar: pbase
-Encoding: 42 -1 122
-Width: 164
-Flags: HW
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-Fore
-163.993 148.674 m 1
- 163.993 -10.0078 l 1
- 144.5 -17.5 131.5 -22.5 96.5 -22.5 c 0
- 60.5 -22.5 16 -16.5 -0.00683594 -10.0078 c 1
- 0 143 l 17
- 15 138.5 51 129 95 133.5 c 0
- 120.543 136.112 134 142.5 141.992 148.668 c 0
- 163.993 148.674 l 1
-EndSplineSet
-EndChar
-StartChar: idebilis
-Encoding: 43 -1 123
-Width: 110
-Flags: HW
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-Fore
-110 147 m 1
- 110 16 l 5
- 100 24.3333 82.6665 27.9905 55.667 28.335 c 0
- 29.6667 28.6667 7 24 0 16 c 1
- 0 119 l 17
- 10 124 30.6667 127 54.0039 127 c 0
- 69.3333 127 85.667 125.337 88 124 c 0
- 88.002 146.994 l 1
- 110 147 l 1
-EndSplineSet
-EndChar
-StartChar: deminutus
-Encoding: 44 -1 124
-Width: 110
-Flags: HW
-TeX: 0 0 0 0
-HStem: -409 15 -94 15 221 15 536 15
-Fore
-110 147 m 1
- 110 16 l 1
- 104.5 11.5 89 6 69 5 c 0
- 43.0303 3.70117 14.5 7 0 16 c 1
- 0 119 l 17
- 23 111 47.5 109 63 109.5 c 0
- 72.4951 109.807 86.5 119 88 124 c 0
- 88.002 146.994 l 1
- 110 147 l 1
-EndSplineSet
-EndChar
-StartChar: rdeminutus
-Encoding: 45 -1 125
-Width: 110
-Flags: HW
-TeX: 0 0 0 0
-HStem: 545.728 15 230.728 15 -84.2722 15 -399.272 15
-Fore
-110 -21 m 5
- 88.002 -20.9941 l 5
- 88 27.7275 l 0
- 86.5 32.7275 72.4951 41.9209 63 42.2275 c 0
- 47.5 42.7275 23 40.7275 0 32.7275 c 9
- 0 135.728 l 1
- 14.5 144.728 43.0303 148.026 69 146.728 c 0
- 89 145.728 104.5 140.228 110 135.728 c 1
- 110 -21 l 5
-EndSplineSet
-EndChar
-StartChar: auctusd2
-Encoding: 46 -1 126
-Width: 164
+StartChar: NameMe.195
+Encoding: 121 -1 121
+Width: 2048
 Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
-Fore
-0 146.001 m 1
- 17.2 154.4 55.9994 159.987 79.25 158 c 1
- 100.746 156.818 123.293 142.362 140 124.791 c 0
- 151.56 112.633 160.323 71.7822 164.007 60.0078 c 9
- 164 -96 l 1
- 159.353 -83.1748 147.147 -39.1311 132 -24.5741 c 0
- 114.552 -7.80614 94.2002 1.92969 76 3 c 0
- 53.6419 4.31543 36.5176 2.72168 22 -1.2002 c 1
- 22 -18.0909 22 -1.27273 22.0078 -18.0049 c 1
- 0 -18 22 -18 0 -18.0059 c 1
- 0 146.001 l 1
-EndSplineSet
 EndChar
-StartChar: auctusa2
-Encoding: 47 -1 127
-Width: 164
-Flags: HW
+StartChar: NameMe.196
+Encoding: 122 -1 122
+Width: 2048
+Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
-Fore
-0.00683594 151.674 m 5
- 0.00683594 151.674 33.3398 138.008 64 138 c 0
- 82.8027 137.995 117.585 160.223 133 177 c 0
- 143.667 188.61 159 232 164 251 c 9
- 164 79 l 1
- 160.674 59.6748 149.336 34.3379 141 24 c 0
- 127.283 6.99023 84.9521 -10.4482 64 -12 c 0
- 50.0889 -13.0303 33.999 -10.8184 21.999 -6.81836 c 1
- 22.0215 -19.1533 22 -11.1667 22 -23 c 1
- 3.33333 -23 21.8333 -23 0 -22.9932 c 1
- 0.00683594 151.674 l 5
-EndSplineSet
 EndChar
-StartChar: porrectus1
-Encoding: 48 -1 128
-Width: 490
-Flags: HW
+StartChar: NameMe.197
+Encoding: 123 -1 123
+Width: 2048
+Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
-Fore
-0 -16 m 1
- 0 155 l 2
- 0 159.739 3.67916 157.34 7 154.75 c 0
- 143.49 48.2977 249.871 -40.1758 468 -51.875 c 1
- 468 -8.875 468 -51.875 468 -9 c 1
- 478.125 -9 485.281 -8.90039 490 -9 c 1
- 490 -189 l 2
- 490 -191.229 489.69 -190.612 487.76 -190.591 c 0
- 254 -188 136.5 -110 0 -16 c 1
-EndSplineSet
 EndChar
-StartChar: porrectus2
-Encoding: 49 -1 129
-Width: 575
-Flags: HW
+StartChar: NameMe.198
+Encoding: 124 -1 124
+Width: 2048
+Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
-Fore
-0 -16 m 1
- 0 155 l 2
- 0 159.739 4.39911 158.063 7 154.75 c 0
- 181.5 -67.5 330 -189 553 -219.875 c 5
- 553 -176.875 553 -174.875 553 -132 c 5
- 563.125 -132 570.281 -131.9 575 -132 c 5
- 575 -357 l 6
- 575 -359.229 574.68 -358.787 572.76 -358.591 c 4
- 322.5 -333 154.5 -201 0 -16 c 1
-EndSplineSet
 EndChar
-StartChar: porrectus3
-Encoding: 50 -1 130
-Width: 650
-Flags: HW
+StartChar: NameMe.199
+Encoding: 125 -1 125
+Width: 2048
+Flags: W
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
-Fore
-0 -16 m 1
- 0 155 l 2
- 0 159.739 5.08372 158.501 7 154.75 c 0
- 130 -86 270 -314 628 -362 c 1
- 628 -319 628 -292.875 628 -250 c 1
- 638.125 -250 645.281 -249.9 650 -250 c 1
- 650 -479 l 2
- 650 -481.229 649.661 -480.926 647.76 -480.591 c 0
- 202 -402 116 -240 0 -16 c 1
-EndSplineSet
+EndChar
+StartChar: NameMe.200
+Encoding: 126 -1 126
+Width: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.201
+Encoding: 127 -1 127
+Width: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.202
+Encoding: 128 -1 128
+Width: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.203
+Encoding: 129 -1 129
+Width: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.204
+Encoding: 130 -1 130
+Width: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.205
 Encoding: 131 -1 131

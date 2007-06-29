@@ -29,11 +29,13 @@
 #it.
 #
 #Basic use :
-# ./sqarize.py > squarize.pe
+# ./sqarize.py
 # chmod +x squarize.pe
 # ./squarize.pe
 # the last step may take a few minutes
 
+# the file we are going to write in
+fout=open("squarize.pe", 'w')
 
 # the base height is half the space between two lines plus half the heigth of a line
 base_height=157.5
@@ -87,29 +89,29 @@ count=139
 
 # initial glyphs are the names of the glyphs that are already in gregorio_base, mostly one-note glyphs.
 initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,30,3,29,21,31,22,14,15,33]
-for number in initial_glyphs:
-    toto="_00%02d" % int(number)
-    initial_glyphs.insert(0,toto)
-    initial_glyphs.remove(number)
-initial_glyphs.append("_1025")
+def initialize_glyphs():
+    global initial_glyphs
+    for number in initial_glyphs:
+	toto="_00%02d" % int(number)
+	initial_glyphs.insert(0,toto)
+	initial_glyphs.remove(number)
+    initial_glyphs.append("_1025")
 
 # we must cut the final font into small fonts of 255 characters, so each 255 characters we save the font into a new gregorio-x font, where x is an integer starting from 0
 current_font_number=0
-#current glyph will count the number of glyphs in the current small font. As the glyphs that are in gregorio-base will be kept only in gregorio-0, we initialize it with the number of these glyphs
-current_glyph_number=len(initial_glyphs)
+#current glyph will count the number of glyphs in the current small font. As the glyphs that are in gregorio-base will be kept only in gregorio-0, we initialize it with the number of these glyphs (in the main function)
+current_glyph_number=0
 
 # a function called at the beginning of the script, that opens the font
 
 def headers():
-    print """#!/usr/local/bin/fontforge
-
-Open("gregorio-base.sfd");"""
+    fout.write("#!/usr/local/bin/fontforge\n\nOpen(\"gregorio-base.sfd\");\n")
 
 # the function that deletes the temporary glyphs and saves the modified font, called at the end
 
 def footers():
-    print "Save(\"gregorio-%d.sfd\");" % current_font_number
-    print "Quit(0);"
+    fout.write("Save(\"gregorio-%d.sfd\");\n" % current_font_number)
+    fout.write("Quit(0);\n")
 
 # function called when we are at the 255th glyph of a font, we start a new one.
 def end_font():
@@ -117,22 +119,24 @@ def end_font():
     global current_font_number
     global count
     for glyph in toremove:
-        print "Select(\"%s\");" % glyph
-	print "Clear();"
+        fout.write("Select(\"%s\");\n" % glyph)
+	fout.write("Clear();\n")
     if (current_font_number!=0):
 	for glyph in initial_glyphs:
-            print "Select(\"%s\");" % glyph
-	    print "Clear();"
+            fout.write("Select(\"%s\");\n" % glyph)
+	    fout.write("Clear();\n")
     else:
 	# we suppress empty glyphs
 	for i in range(395-len(initial_glyphs),395):
-	    print "Select(\"NameMe.%d\");" % i
-	    print "Clear();"	
+	    fout.write("Select(\"NameMe.%d\");\n" % i)
+	    fout.write("Clear();\n")	
+    fout.write("Reencode(\"compacted\");\n")
+    fout.write("Reencode(\"original\",1);\n")
     # 66537 is for generating an afm and a tfm file
-    #print "Generate(\"gregorio-%d.pfb\",\"\",66537);" % current_font_number
-    print "Save(\"gregorio-%d.sfd\");" % current_font_number
-    print "Close();"
-    print "Open(\"gregorio-base.sfd\");"
+    fout.write("Generate(\"gregorio-%d.pfb\",\"\",66537);\n" % current_font_number)
+    #fout.write("Save(\"gregorio-%d.sfd\");\n" % current_font_number)
+    fout.write("Close();\n")
+    fout.write("Open(\"gregorio-base.sfd\");\n")
     current_glyph_number=0
     current_font_number=current_font_number+1
     count=139
@@ -141,12 +145,13 @@ def end_font():
 
 def end_glyph(glyphname):
     global current_glyph_number
-    print "Simplify();"
-    print "Simplify();"
-    print "RemoveOverlap();"
-    print "Simplify();"
-    print "CanonicalContours();"
-    print "CanonicalStart();"
+    fout.write("Simplify();\n")
+    fout.write("Simplify();\n")
+    fout.write("RemoveOverlap();\n")
+    fout.write("Simplify();\n")
+    fout.write("CanonicalContours();\n")
+    fout.write("CanonicalStart();\n")
+    fout.write("%i\n" % current_glyph_number)
     if (current_glyph_number==255):
 	end_font()
     else:
@@ -156,14 +161,14 @@ def end_glyph(glyphname):
 
 def begin_glyph(glyphname):
     global count
-    print "Select(\"NameMe.%i\");" % count
-    print "SetGlyphName(\"%s\");" % glyphname
+    fout.write("Select(\"NameMe.%i\");\n" % count)
+    fout.write("SetGlyphName(\"%s\");\n" % glyphname)
     count=count+1
 
 # function to set the width of a glyph
 
 def set_width(width):
-    print "SetWidth(%d);" % width
+    fout.write("SetWidth(%d);\n" % width)
 
 # function to get the name of the glyph, with the name of the general shape, and the name of the different ambitus
 
@@ -174,27 +179,31 @@ def name(i, j, k, shape, liquescentia):
 # function that simply pastes the src glyph into dst glyph, without moving it
 
 def simple_paste(src, dst):
-    print "Select(\"%s\");" % src
-    print "Copy();"
-    print "Select(\"%s\");" % dst
-    print "PasteInto();" 
+    fout.write("Select(\"%s\");\n" % src)
+    fout.write("Copy();\n")
+    fout.write("Select(\"%s\");\n" % dst)
+    fout.write("PasteInto();\n")
 
 # function that pastes the src glyph into dst, and moves it with horiz and vert offsets
 
 def paste_and_move(src, dst, horiz, vert):
-    print "Select(\"%s\");" % src
-    print "Copy();"
-    print "Select(\"%s\");" % dst
-    print "PasteWithOffset(%.2f, %.2f);" % (horiz, vert)
+    fout.write("Select(\"%s\");\n" % src)
+    fout.write("Copy();\n")
+    fout.write("Select(\"%s\");\n" % dst)
+    fout.write("PasteWithOffset(%.2f, %.2f);\n" % (horiz, vert))
 
 # the simplify function of fontforge is quite strange, and sometimes doesn't work well if we call it at the end of a glyph modification, so in some case we have to call this function in the middle of a determination.
 
 def simplify():
-    print "Simplify();"
-    print "RemoveOverlap();"
-    print "Simplify();"
+    fout.write("Simplify();\n")
+    fout.write("RemoveOverlap();\n")
+    fout.write("Simplify();\n")
 
 def main():
+    global fout
+    global current_glyph_number
+    initialize_glyphs()
+    current_glyph_number=len(initial_glyphs)
     headers()
     pes()
     pes_quadratum()
@@ -203,6 +212,7 @@ def main():
     porrectusflexus()
     torculus()
     footers()
+    fout.close()
 
 # a function that writes a line in glyphname, with length and height offsets
 
