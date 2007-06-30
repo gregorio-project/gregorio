@@ -52,7 +52,7 @@ my %namex;
 my $order=0;
 
 # number_of_font is the number of 255 character fonts that will be used
-my $number_of_font=1;
+my $number_of_font=6;
 
 # first we read the afm files and we fill position, font, name and namex with the values
 my $i;
@@ -76,8 +76,8 @@ my $character;
 
 for ($i=0;$i<$number_of_font;$i++) {
 # there you must have the .pl files, they are generated from tfm by tftopl (in the tetex or texlive distribution)
-#open IN,"tftopl gregorio-$i.tfm |";
-open IN,"<gregorio-$i.pl";
+open IN,"tftopl gregorio-$i.tfm |";
+#open IN,"<gregorio-$i.pl";
 while (<IN>) {
   if (m/\(CHARACTER O ([0-7]+)/) { 
     $character=oct($1);

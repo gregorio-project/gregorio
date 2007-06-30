@@ -110,7 +110,7 @@ def headers():
 # the function that deletes the temporary glyphs and saves the modified font, called at the end
 
 def footers():
-    fout.write("Save(\"gregorio-%d.sfd\");\n" % current_font_number)
+    fout.write("Close();\n")
     fout.write("Quit(0);\n")
 
 # function called when we are at the 255th glyph of a font, we start a new one.
@@ -125,16 +125,16 @@ def end_font():
 	for glyph in initial_glyphs:
             fout.write("Select(\"%s\");\n" % glyph)
 	    fout.write("Clear();\n")
-    else:
+    if (count != 394):
 	# we suppress empty glyphs
-	for i in range(395-len(initial_glyphs),395):
+	for i in range(count,395):
 	    fout.write("Select(\"NameMe.%d\");\n" % i)
 	    fout.write("Clear();\n")	
     fout.write("Reencode(\"compacted\");\n")
     fout.write("Reencode(\"original\",1);\n")
     # 66537 is for generating an afm and a tfm file
-    fout.write("Generate(\"gregorio-%d.pfb\",\"\",66537);\n" % current_font_number)
-    #fout.write("Save(\"gregorio-%d.sfd\");\n" % current_font_number)
+    #fout.write("Generate(\"gregorio-%d.pfb\",\"\",66537);\n" % current_font_number)
+    fout.write("Save(\"gregorio-%d.sfd\");\n" % current_font_number)
     fout.write("Close();\n")
     fout.write("Open(\"gregorio-base.sfd\");\n")
     current_glyph_number=0
@@ -211,6 +211,7 @@ def main():
     flexus()
     porrectusflexus()
     torculus()
+    end_font()
     footers()
     fout.close()
 
