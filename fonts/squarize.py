@@ -404,7 +404,7 @@ def porrectusflexus():
     for i in range(1,6):
 	for j in range(1,6):
 	    for k in range(1,6):
-		write_porrectusflexus(i,j,k, "auctusd1", 1, 'porrectusflexus_nobar', 'auctusdescendens')
+		write_porrectusflexus(i,j,k, "auctusd1", 1, 'porrectusflexus', 'auctusdescendens')
     for i in range(1,6):
 	for j in range(1,6):
 	    for k in range(1,6):
