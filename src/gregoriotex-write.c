@@ -41,11 +41,20 @@ libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score)
 
   fprintf (f, "\\input gregoriotex.tex\n\n\\begingregorioscore%%\n");
 // first we draw the initial (first letter) and the initial key
-  wchar_t first_letter = libgregorio_first_letter (score);
-  if (first_letter)
+    gregorio_character *first_text=libgregorio_first_text (score);
+  // a char that will contain 1 if it is the first syllable and 0 if not. It is for the initial.
+  char first_syllable = 0;
+    if (first_text)
     {
-// we encode the characters like this to make Omega really understand, cause the unicode input depend on the versions
-      fprintf (f, "\\initial{^^^^%04x}%%\n", first_letter);
+        fprintf (f, "\\initial{");
+        libgregorio_write_first_letter (first_text, f,
+			      (&libgregorio_gtex_write_verb),
+			      (&libgregorio_gtex_print_char),
+			      (&libgregorio_gtex_write_begin),
+			      (&libgregorio_gtex_write_end),
+			      (&libgregorio_gtex_write_special_char));
+        fprintf (f, "}%%\n");
+        first_syllable=SKIP_FIRST_LETTER;
     }
   char clef_letter;
   int clef_line;
@@ -61,15 +70,12 @@ libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score)
       clef_line = 3;
     }
   fprintf (f, "\\setinitialclef{%c}{%d}%%\n", clef_letter, clef_line);
-  // a char that will contain 1 if it is the first syllable and 0 if not. It is for the initial.
-  char first_syllable = 1;
   gregorio_syllable *current_syllable = score->first_syllable;
   while (current_syllable)
     {
       libgregorio_gregoriotex_write_syllable (f, current_syllable,
 					      first_syllable);
       current_syllable = current_syllable->next_syllable;
-      first_syllable = 0;
     }
   fprintf (f, "\\endgregorioscore%%\n\\bye\n");
 }
@@ -154,23 +160,6 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
   fprintf (f, "}%%\n");
 }
 
-// a function that takes a wchar_t * and write it in omega style : every character is reprensented by ^^^^x where x is its hexadecimal representation on 4 letters (completed with 0)
-void
-libgregorio_print_unicode_letters (FILE * f, wchar_t * wstr)
-{
-  if (!wstr)
-    {
-      return;
-    }
-  int i = 0;
-  while (wstr[i])
-    {
-      fprintf (f, "^^^^%04x", wstr[i]);
-      i++;
-    }
-  return;
-}
-
 // we will need type for one thing for the moment : type=first_syllable=1 when it is the first syllable (for the initial).
 
 void
@@ -227,26 +216,6 @@ libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char)
 	fprintf(f, "\\ae");
 	return;
     }
-  if (!wcscmp(special_char, L"'æ"))
-    {
-	fprintf(f, "\\'æ");
-	return;
-    }
-  if (!wcscmp(special_char, L"'æ"))
-    {
-	fprintf(f, "\\'æ");
-	return;
-    }
-  if (!wcscmp(special_char, L"'æ"))
-    {
-	fprintf(f, "\\'æ");
-	return;
-    }
-  if (!wcscmp(special_char, L"'æ"))
-    {
-	fprintf(f, "\\'æ");
-	return;
-    }
 }
 
 void
@@ -258,11 +227,38 @@ libgregorio_gtex_write_verb (FILE * f, wchar_t * verb_str)
 void
 libgregorio_gtex_print_char (FILE * f, wchar_t to_print)
 {
-  fprintf (f, "%04x", to_print);
+  switch (to_print) {
+  case L'œ':
+    fprintf (f, "\\oe ");
+  break;
+  case L'æ':
+    fprintf (f, "\\ae ");
+  break;
+  default:
+  fprintf (f, "^^^^%04x", to_print);
+  break;
+}
+}
+
+// a function that takes a wchar_t * and write it in omega style : every character is reprensented by ^^^^x where x is its hexadecimal representation on 4 letters (completed with 0)
+void
+libgregorio_print_unicode_letters (FILE * f, wchar_t * wstr)
+{
+  if (!wstr)
+    {
+      return;
+    }
+  int i = 0;
+  while (wstr[i])
+    {
+      libgregorio_gtex_print_char(f, wstr[i]);
+      i++;
+    }
+  return;
 }
 
 void
-libgregorio_gregoriotex_write_text (FILE * f, gregorio_character * text, char type)
+libgregorio_gregoriotex_write_text (FILE * f, gregorio_character * text, char first_syllable)
 {
   if (text == NULL)
     {
@@ -270,12 +266,15 @@ libgregorio_gregoriotex_write_text (FILE * f, gregorio_character * text, char ty
       return;
     }
   fprintf (f, "{");
-      libgregorio_write_text (0, text, f,
+      libgregorio_write_text (first_syllable, text, f,
 			      (&libgregorio_gtex_write_verb),
 			      (&libgregorio_gtex_print_char),
 			      (&libgregorio_gtex_write_begin),
 			      (&libgregorio_gtex_write_end),
 			      (&libgregorio_gtex_write_special_char));
+  if (first_syllable) {
+    first_syllable=0;
+  }
   fprintf (f, "}");
 }
 
@@ -875,6 +874,7 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 * 30: custo for high notes (oriented to the bottom) with short bar
 * 31: punctum inclinatum auctum
 * 32: punctum inclinatum deminutus
+* 33: vertical episemus
 */
 
 void

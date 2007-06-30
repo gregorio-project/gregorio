@@ -133,8 +133,8 @@ def end_font():
     fout.write("Reencode(\"compacted\");\n")
     fout.write("Reencode(\"original\",1);\n")
     # 66537 is for generating an afm and a tfm file
-    #fout.write("Generate(\"gregorio-%d.pfb\",\"\",66537);\n" % current_font_number)
-    fout.write("Save(\"gregorio-%d.sfd\");\n" % current_font_number)
+    fout.write("Generate(\"gregorio-%d.pfb\",\"\",66537);\n" % current_font_number)
+    #fout.write("Save(\"gregorio-%d.sfd\");\n" % current_font_number)
     fout.write("Close();\n")
     fout.write("Open(\"gregorio-base.sfd\");\n")
     current_glyph_number=0

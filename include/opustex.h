@@ -44,8 +44,6 @@ char libgregorio_opustex_is_vowel (int c);
 
 char is_even (int c);
 
-void libgregorio_opustex_print_char (FILE * f, int c);
-
 void libgregorio_opustex_print_note (FILE * f, char pitch);
 
 void libgregorio_opustex_print_episem (FILE * f, char pitch, char length);
