@@ -40,6 +40,31 @@ else
   LIBS="$LIBS `$XML2_CONFIG --libs | sed 's|-L/usr/lib||g'`"
 fi
 
+AC_CHECK_PROGS([PYTHON], [python], [:])
+if test "$PERL" = :; then
+  AC_MSG_ERROR([You need python to build this package.])
+fi
+
+AC_CHECK_PROGS([PERL], [perl], [:])
+if test "$PERL" = :; then
+  AC_MSG_ERROR([You need perl to build this package.])
+fi
+
+AC_CHECK_PROGS([FONTFORGE], [fontforge], [:])
+if test "$FONTFORGE" = :; then
+  AC_MSG_ERROR([You need fontforge to build this package.])
+fi
+
+AC_CHECK_PROGS([TFTOPL], [tftopl], [:])
+if test "$TFTOPL" = :; then
+  AC_MSG_ERROR([You need tftopl to build this package.])
+fi
+
+AC_CHECK_PROGS([OVP2OVF], [ovp2ovf], [:])
+if test "$TFTOPL" = :; then
+  AC_MSG_ERROR([You need ovp2ovf to build this package.])
+fi
+
 AC_CONFIG_HEADERS([include/config.h])
 AC_CONFIG_FILES([
     Makefile
@@ -47,6 +72,7 @@ AC_CONFIG_FILES([
     include/Makefile
     examples/Makefile
     tex/Makefile
+    fonts/Makefile
     po/Makefile.in
 ])
 AC_OUTPUT

@@ -1,13 +1,14 @@
-# Gregorio
-# Copyright (C) 2006 Elie Roux <elie.roux@enst-bretagne.fr>
-# This file is distributed under the same license as the gregorio package.
-# Elie Roux <elie.roux@enst-bretagne.fr>, 2006.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Elie Roux <elie.roux@enst-bretagne.fr>
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.2.1\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: gregorio-devel@gna.org\n"
-"POT-Creation-Date: 2007-04-27 15:14-0700\n"
+"POT-Creation-Date: 2007-07-02 21:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,179 +50,179 @@ msgstr ""
 msgid "can't determine current directory"
 msgstr ""
 
-#: src/gabc-notes-determination.l:820
+#: src/gabc-notes-determination.l:822
 #, c-format
 msgid "unrecognized character: %c"
 msgstr ""
 
-#: src/gabc-score-determination.l:127
+#: src/gabc-score-determination.l:128
 #, c-format
 msgid "unrecognized character: %c in definition part"
 msgstr ""
 
-#: src/gabc-score-determination.y:57
+#: src/gabc-score-determination.y:114
 msgid "can't read stream from argument, returning NULL pointer"
 msgstr ""
 
-#: src/gabc-score-determination.y:73
+#: src/gabc-score-determination.y:135
 msgid "unable to determine a valid score from file"
 msgstr ""
 
-#: src/gabc-score-determination.y:94
+#: src/gabc-score-determination.y:164
 msgid ""
 "no name specified, put `name:...;' at the beginning of the file, can be "
 "dangerous with some output formats"
 msgstr ""
 
-#: src/gabc-score-determination.y:145 src/gabc-score-determination.y:151
-#: src/gabc-score-determination.y:159
+#: src/gabc-score-determination.y:231 src/gabc-score-determination.y:237
+#: src/gabc-score-determination.y:245
 msgid "unknown clef format in initial-key definition : format is `(c|f)[1-4]'"
 msgstr ""
 
-#: src/gabc-score-determination.y:167
+#: src/gabc-score-determination.y:254
 msgid ""
 "in initial_key definition, only two characters are needed : format is`(c|f)"
 "[1-4]'"
 msgstr ""
 
-#: src/gabc-score-determination.y:187
+#: src/gabc-score-determination.y:280
 msgid "can't determine valid infos on the score"
 msgstr ""
 
-#: src/gabc-score-determination.y:204
+#: src/gabc-score-determination.y:299
 #, c-format
 msgid "not enough voice infos found: %d found, %d waited, %d assumed"
 msgid_plural "not enough voice infos found: %d found, %d waited, %d assumed"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gabc-score-determination.y:213
+#: src/gabc-score-determination.y:312
 #, c-format
 msgid "too many voice infos found: %d found, %d waited, %d assumed"
 msgid_plural "not enough voice infos found: %d found, %d waited, %d assumed"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gabc-score-determination.y:305
+#: src/gabc-score-determination.y:960
 #, c-format
 msgid "can't define %d voices, maximum is %d"
 msgstr ""
 
-#: src/gabc-score-determination.y:317
+#: src/gabc-score-determination.y:972
 msgid ""
 "several name definitions found, only the last will be taken into "
 "consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:326
+#: src/gabc-score-determination.y:981
 msgid ""
 "several lilypond preamble definitions found, only the last will be taken "
 "into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:335
+#: src/gabc-score-determination.y:990
 msgid ""
 "several OpusTeX preamble definitions found, only the last will be taken into "
 "consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:344
+#: src/gabc-score-determination.y:999
 msgid ""
 "several MusiXTeX preamble definitions found, only the last will be taken "
 "into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:353
+#: src/gabc-score-determination.y:1008
 msgid ""
 "several office part definitions found, only the last will be taken into "
 "consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:362
+#: src/gabc-score-determination.y:1017
 #, c-format
 msgid ""
 "several definitions of initial key found for voice %d, only the last will be "
 "taken into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:374
+#: src/gabc-score-determination.y:1029
 #, c-format
 msgid ""
 "several definitions of anotation found for voice %d, only the last will be "
 "taken into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:384
+#: src/gabc-score-determination.y:1039
 #, c-format
 msgid ""
 "several definitions of author found for voice %d, only the last will be "
 "taken into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:394
+#: src/gabc-score-determination.y:1049
 #, c-format
 msgid ""
 "several definitions of date found for voice %d, only the last will be taken "
 "into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:404
+#: src/gabc-score-determination.y:1059
 #, c-format
 msgid ""
 "several definitions of manuscript found for voice %d, only the last will be "
 "taken into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:414
+#: src/gabc-score-determination.y:1069
 #, c-format
 msgid ""
 "several definitions of reference found for voice %d, only the last will be "
 "taken into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:424
+#: src/gabc-score-determination.y:1079
 #, c-format
 msgid ""
 "several definitions of storage place found for voice %d, only the last will "
 "be taken into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:434
+#: src/gabc-score-determination.y:1089
 #, c-format
 msgid ""
 "several definitions of translator found for voice %d, only the last will be "
 "taken into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:445
+#: src/gabc-score-determination.y:1100
 #, c-format
 msgid ""
 "several definitions of translation date found for voice %d, only the last "
 "will be taken into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:455
+#: src/gabc-score-determination.y:1110
 #, c-format
 msgid ""
 "several definitions of style found for voice %d, only the last will be taken "
 "into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:465
+#: src/gabc-score-determination.y:1120
 #, c-format
 msgid ""
 "several definitions of virgula position found for voice %d, only the last "
 "will be taken into consideration"
 msgstr ""
 
-#: src/gabc-score-determination.y:542 src/gabc-score-determination.y:560
+#: src/gabc-score-determination.y:1197 src/gabc-score-determination.y:1215
 #, c-format
 msgid "too many voices in note : %d foud, %d expected"
 msgid_plural "too many voices in note : %d foud, %d expected"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gabc-score-determination.y:546
+#: src/gabc-score-determination.y:1201
 #, c-format
 msgid ""
 "not enough voices in note : %d foud, %d expected, completing with empty neume"
@@ -230,43 +231,43 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gabc-write.c:40
+#: src/gabc-write.c:50
 msgid "name is mandatory"
 msgstr ""
 
-#: src/gabc-write.c:61
+#: src/gabc-write.c:71
 msgid "gregorio_score seems to be empty"
 msgstr ""
 
-#: src/gabc-write.c:100
+#: src/gabc-write.c:118
 msgid "no voice info"
 msgstr ""
 
-#: src/gabc-write.c:158 src/gabc-write.c:213 src/gabc-write.c:259
-#: src/gabc-write.c:392 src/struct-utils.c:891 src/xml-write.c:36
-#: src/xml-write.c:89 src/xml-write.c:127 src/xml-write.c:256
-#: src/xml-write.c:393 src/xml-write.c:435
+#: src/gabc-write.c:282 src/gabc-write.c:356 src/gabc-write.c:408
+#: src/gabc-write.c:577 src/struct-utils.c:1022 src/xml-write.c:36
+#: src/xml-write.c:89 src/xml-write.c:127 src/xml-write.c:369
+#: src/xml-write.c:506 src/xml-write.c:548
 msgid "call with NULL argument"
 msgstr ""
 
-#: src/gabc-write.c:246 src/gabc-write.c:298 src/xml-write.c:105
+#: src/gabc-write.c:390 src/gabc-write.c:452 src/xml-write.c:105
 #: src/xml-write.c:172
 msgid "call with an argument which type is unknown"
 msgstr ""
 
-#: src/gabc-write.c:276
+#: src/gabc-write.c:427
 msgid "bad space"
 msgstr ""
 
-#: src/gabc-write.c:353 src/xml-write.c:192
+#: src/gabc-write.c:525 src/xml-write.c:192
 msgid "space type is unknown"
 msgstr ""
 
-#: src/gabc-write.c:380 src/xml-utils.c:319
+#: src/gabc-write.c:559 src/xml-utils.c:319
 msgid "unknown bar type, nothing will be done"
 msgstr ""
 
-#: src/gabc-write.c:399 src/xml-write.c:42
+#: src/gabc-write.c:584 src/xml-write.c:42
 msgid "call with argument which type is not GRE_NOTE, wrote nothing"
 msgstr ""
 
@@ -274,39 +275,35 @@ msgstr ""
 msgid "gregoriotex only works in monophony (for the moment)"
 msgstr ""
 
-#: src/gregoriotex-write.c:82 src/opustex-write.c:106 src/opustex-write.c:125
-msgid "unable to find the first letter of the score"
-msgstr ""
-
-#: src/gregoriotex-write.c:391 src/opustex-write.c:568 src/opustex-write.c:586
+#: src/gregoriotex-write.c:361 src/opustex-write.c:600
 msgid "unknown bar type"
 msgstr ""
 
-#: src/gregoriotex-write.c:405 src/gregoriotex-write.c:599
-#: src/gregoriotex-write.c:793 src/gregoriotex-write.c:915
-#: src/opustex-write.c:600
+#: src/gregoriotex-write.c:375 src/gregoriotex-write.c:569
+#: src/gregoriotex-write.c:763 src/gregoriotex-write.c:888
+#: src/opustex-write.c:628
 msgid "called with NULL pointer"
 msgstr ""
 
-#: src/gregoriotex-write.c:412 src/opustex-write.c:607
+#: src/gregoriotex-write.c:382 src/opustex-write.c:635
 msgid "called with glyph without note"
 msgstr ""
 
-#: src/gregoriotex-write.c:644 src/gregoriotex-write.c:677
-#: src/gregoriotex-write.c:708 src/gregoriotex-write.c:802
-#: src/gregoriotex-write.c:815
+#: src/gregoriotex-write.c:614 src/gregoriotex-write.c:647
+#: src/gregoriotex-write.c:678 src/gregoriotex-write.c:772
+#: src/gregoriotex-write.c:785
 msgid "called with a glyph that have no note"
 msgstr ""
 
-#: src/gregoriotex-write.c:765
+#: src/gregoriotex-write.c:735
 msgid "called with unknown glyph"
 msgstr ""
 
-#: src/gregoriotex-write.c:970
+#: src/gregoriotex-write.c:943
 msgid "called with unknown shape"
 msgstr ""
 
-#: src/gregoriotex-write.c:989 src/gregoriotex-write.c:1047
+#: src/gregoriotex-write.c:962 src/gregoriotex-write.c:1020
 msgid "called with a NULL argument"
 msgstr ""
 
@@ -333,76 +330,85 @@ msgid ""
 "warning: verbosity mode not set in libgregorio_messages, assumed warnings\n"
 msgstr ""
 
-#: src/opustex-write.c:41
+#: src/opustex-write.c:45
 msgid "opustex only works in monophony (for the moment)"
 msgstr ""
 
-#: src/opustex-write.c:959
+#: src/opustex-write.c:333
+msgid "clef change inside of a syllable doesn't work in OpusTeX"
+msgstr ""
+
+#: src/opustex-write.c:344
+msgid "line break cannot be placed before a divisio in OpusTeX"
+msgstr ""
+
+#: src/opustex-write.c:991
 msgid "pes quadratum doesn't exist in OpusTeX"
 msgstr ""
 
-#: src/opustex-write.c:973
+#: src/opustex-write.c:1005
 msgid "torculus_resupinus_flexus doesn't exist in OpusTeX"
 msgstr ""
 
-#: src/opustex-write.c:1027
+#: src/opustex-write.c:1058
 msgid "that glyph cannot be deminutus in OpusTeX"
 msgstr ""
 
-#: src/opustex-write.c:1040
+#: src/opustex-write.c:1071
 msgid "that glyph cannot be auctus ascendens in OpusTeX"
 msgstr ""
 
-#: src/opustex-write.c:1054
+#: src/opustex-write.c:1085
 msgid "that glyph cannot be auctus descendens in OpusTeX"
 msgstr ""
 
-#: src/opustex-write.c:1066
+#: src/opustex-write.c:1097
 msgid "that glyph cannot be auctus in OpusTeX"
 msgstr ""
 
-#: src/opustex-write.c:1079
+#: src/opustex-write.c:1110
 msgid "that glyph cannot have initio debilis in OpusTeX"
 msgstr ""
 
-#: src/opustex-write.c:1092
+#: src/opustex-write.c:1123
 msgid "that glyph cannot be deminutus initio debilis in OpusTeX"
 msgstr ""
 
-#: src/opustex-write.c:1099
+#: src/opustex-write.c:1130
 msgid "there's no auctus ascendens initio debilis in OpusTeX"
 msgstr ""
 
-#: src/opustex-write.c:1111
+#: src/opustex-write.c:1142
 msgid "that glyph cannot be auctus descendens initio debilis in OpusTeX"
 msgstr ""
 
-#: src/opustex-write.c:1117
+#: src/opustex-write.c:1148
 msgid "there's no aucta initio debilis in OpusTeX"
 msgstr ""
 
-#: src/struct-utils.c:55 src/struct-utils.c:82 src/struct-utils.c:157
-#: src/struct-utils.c:182 src/struct-utils.c:264 src/struct-utils.c:288
-#: src/struct-utils.c:351
+#: src/struct-utils.c:56 src/struct-utils.c:83 src/struct-utils.c:158
+#: src/struct-utils.c:183 src/struct-utils.c:265 src/struct-utils.c:288
+#: src/struct-utils.c:367 src/struct-utils.c:428 src/struct-utils.c:452
+#: src/struct-utils.c:482
 msgid "error in memory allocation"
 msgstr ""
 
-#: src/struct-utils.c:344
+#: src/struct-utils.c:475
 msgid "too many voices"
 msgstr ""
 
-#: src/struct-utils.c:392 src/struct-utils.c:419 src/struct-utils.c:450
-#: src/struct-utils.c:465 src/struct-utils.c:477 src/struct-utils.c:490
-#: src/struct-utils.c:504 src/struct-utils.c:518 src/struct-utils.c:532
-#: src/struct-utils.c:568 src/struct-utils.c:603 src/struct-utils.c:664
-#: src/struct-utils.c:679 src/struct-utils.c:691 src/struct-utils.c:703
-#: src/struct-utils.c:716 src/struct-utils.c:729 src/struct-utils.c:742
-#: src/struct-utils.c:755 src/struct-utils.c:768 src/struct-utils.c:781
-#: src/struct-utils.c:794 src/struct-utils.c:975
+#: src/struct-utils.c:523 src/struct-utils.c:550 src/struct-utils.c:581
+#: src/struct-utils.c:596 src/struct-utils.c:608 src/struct-utils.c:621
+#: src/struct-utils.c:635 src/struct-utils.c:649 src/struct-utils.c:663
+#: src/struct-utils.c:699 src/struct-utils.c:734 src/struct-utils.c:795
+#: src/struct-utils.c:810 src/struct-utils.c:822 src/struct-utils.c:834
+#: src/struct-utils.c:847 src/struct-utils.c:860 src/struct-utils.c:873
+#: src/struct-utils.c:886 src/struct-utils.c:899 src/struct-utils.c:912
+#: src/struct-utils.c:925 src/struct-utils.c:1106
 msgid "function called with NULL argument"
 msgstr ""
 
-#: src/struct-utils.c:820
+#: src/struct-utils.c:951
 msgid ""
 "isolated horizontal episemus at the beginning of a note sequence, ignored"
 msgid_plural ""
@@ -410,7 +416,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/struct-utils.c:828
+#: src/struct-utils.c:959
 msgid ""
 "isolated horizontal episemus after something that is not a note, ignored"
 msgid_plural ""
@@ -418,35 +424,40 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/struct-utils.c:843 src/struct-utils.c:857
+#: src/struct-utils.c:974 src/struct-utils.c:988
 msgid "found more horizontal episemus than notes able to be under"
 msgstr ""
 
-#: src/struct-utils.c:1094
+#: src/struct-utils.c:1225
 msgid "can't calculate key"
 msgstr ""
 
-#: src/struct-utils.c:1147
+#: src/struct-utils.c:1278
 msgid "can't determine step and line of the key"
 msgstr ""
 
-#: src/struct-utils.c:1186
+#: src/struct-utils.c:1317
 msgid "unknown octave"
 msgstr ""
 
-#: src/struct-utils.c:1306
+#: src/struct-utils.c:1437
 msgid "score is not available"
 msgstr ""
 
-#: src/struct-utils.c:1331 src/struct-utils.c:1347
+#: src/struct-utils.c:1462 src/struct-utils.c:1478
 #, c-format
 msgid ""
 "in voice %d the first element is a key definition, considered as initial key"
 msgstr ""
 
-#: src/struct-utils.c:1388
+#: src/struct-utils.c:1519
 #, c-format
 msgid "no initial key definition in voice %d, default key definition applied"
+msgstr ""
+
+#: src/struct-utils.c:1758 src/struct-utils.c:1772 src/struct-utils.c:1782
+#: src/struct-utils.c:1801
+msgid "unable to find the first letter of the score"
 msgstr ""
 
 #: src/xml-read.c:45
@@ -473,7 +484,7 @@ msgstr ""
 msgid "unknown markup, in attributes markup"
 msgstr ""
 
-#: src/xml-read.c:406 src/xml-read.c:896 src/xml-read.c:1157
+#: src/xml-read.c:406 src/xml-read.c:957 src/xml-read.c:1218
 msgid "too long step declaration"
 msgstr ""
 
@@ -485,7 +496,7 @@ msgstr ""
 msgid "step or line markup missing in key declaration"
 msgstr ""
 
-#: src/xml-read.c:519 src/xml-read.c:715
+#: src/xml-read.c:519 src/xml-read.c:777
 msgid "unknown clef-change"
 msgstr ""
 
@@ -493,68 +504,68 @@ msgstr ""
 msgid "unknown markup in syllable"
 msgstr ""
 
-#: src/xml-read.c:573
-msgid "position attribute missing, assuming beginning"
-msgstr ""
-
-#: src/xml-read.c:606
+#: src/xml-read.c:571
 msgid "text position unrecognized"
 msgstr ""
 
-#: src/xml-read.c:623 src/xml-read.c:641
+#: src/xml-read.c:589
+msgid "position attribute missing, assuming beginning"
+msgstr ""
+
+#: src/xml-read.c:685 src/xml-read.c:703
 msgid "unknown markup, expecting neume"
 msgstr ""
 
-#: src/xml-read.c:750 src/xml-read.c:801 src/xml-read.c:915
-#: src/xml-read.c:1182
+#: src/xml-read.c:811 src/xml-read.c:862 src/xml-read.c:976
+#: src/xml-read.c:1243
 msgid "unknown markup"
 msgstr ""
 
-#: src/xml-read.c:830
+#: src/xml-read.c:891
 msgid "type missing in glyph markup"
 msgstr ""
 
-#: src/xml-read.c:869
+#: src/xml-read.c:930
 msgid "unknown markup, expecting note"
 msgstr ""
 
-#: src/xml-read.c:922 src/xml-read.c:1189
+#: src/xml-read.c:983 src/xml-read.c:1250
 msgid "step or line markup missing in alteration declaration"
 msgstr ""
 
-#: src/xml-read.c:936
+#: src/xml-read.c:997
 msgid "empty glyph type markup"
 msgstr ""
 
-#: src/xml-read.c:1045
+#: src/xml-read.c:1106
 msgid "unknown glyph type"
 msgstr ""
 
-#: src/xml-read.c:1071
+#: src/xml-read.c:1132
 msgid "unknown liquescentia"
 msgstr ""
 
-#: src/xml-read.c:1121
+#: src/xml-read.c:1182
 msgid "unknown markup, ignored"
 msgstr ""
 
-#: src/xml-read.c:1128
+#: src/xml-read.c:1189
 msgid "missing pitch or shape in note"
 msgstr ""
 
-#: src/xml-read.c:1225
+#: src/xml-read.c:1286
 msgid "position attribute missing in multi-h-episemus"
 msgstr ""
 
-#: src/xml-read.c:1230
+#: src/xml-read.c:1291
 msgid "unknown position attribute in multi-h-episemus"
 msgstr ""
 
-#: src/xml-read.c:1268 src/xml-read.c:1326
+#: src/xml-read.c:1329 src/xml-read.c:1387
 msgid "unknown shape, punctum assumed"
 msgstr ""
 
-#: src/xml-read.c:1301
+#: src/xml-read.c:1362
 msgid "unknown right sign"
 msgstr ""
 
@@ -562,14 +573,14 @@ msgstr ""
 msgid "unknown shape, `punctum' assumed"
 msgstr ""
 
-#: src/xml-write.c:282
+#: src/xml-write.c:395
 msgid "not_enough voices in syllable"
 msgstr ""
 
-#: src/xml-write.c:406
+#: src/xml-write.c:519
 msgid "score has more voice infos than voices (attribute number of voices)"
 msgstr ""
 
-#: src/xml-write.c:445
+#: src/xml-write.c:558
 msgid "score has no name attribute, which is mandatory"
 msgstr ""

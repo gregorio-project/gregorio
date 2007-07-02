@@ -19,7 +19,6 @@
 
 use strict;
 
-
 # static contains the beginning of the ovp file
 my $static="(VTITLE gregorio)
 (FAMILY UNSPECIFIED)
@@ -76,8 +75,8 @@ my $character;
 
 for ($i=0;$i<$number_of_font;$i++) {
 # there you must have the .pl files, they are generated from tfm by tftopl (in the tetex or texlive distribution)
-open IN,"tftopl gregorio-$i.tfm |";
-#open IN,"<gregorio-$i.pl";
+#open IN,"tftopl gregorio-$i.tfm |";
+open IN,"<gregorio-$i.pl";
 while (<IN>) {
   if (m/\(CHARACTER O ([0-7]+)/) { 
     $character=oct($1);
