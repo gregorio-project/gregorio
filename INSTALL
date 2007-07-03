@@ -1,7 +1,9 @@
 Basic Installation
 ==================
 
-   These are generic installation instructions.
+   These are generic installation instructions for the gregorio
+program. For fonts and TeX installation, see README file in the fonts
+directory.
 
    The `configure' shell script attempts to guess correct values for
 various system-dependent variables used during compilation.  It uses
