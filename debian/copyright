@@ -3,12 +3,13 @@ Mon, 04 Jun 2007 21:55:03 +0200
 
 It was downloaded from: http://download.gna.org/gregorio/releases/
 
-Upstream Author: Elie Roux <elie.roux@enst-bretagne.fr>, Olivier Berten
-<olivier.berten@gmail.com>
+Upstream Author: Elie Roux <elie.roux@enst-bretagne.fr>
 
-This software is copyright (c) 2006-2007 by Elie Roux and Oliver Berten.
+This software is copyright (c) 2006-2007 by Elie Roux.
 
 You are free to distribute this software under the terms of
 the GNU General Public License.
 On Debian systems, the complete text of the GNU General Public
 License can be found in the file `/usr/share/common-licenses/GPL'.
+
+Some files have been written by Olivier Berten. They are also under GPL.
