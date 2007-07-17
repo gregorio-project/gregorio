@@ -15,8 +15,8 @@ dnl You should have received a copy of the GNU General Public License
 dnl along with this program; if not, write to the Free Software
 dnl Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-AC_INIT([gregorio], [0.2.2], [gregorio-devel@gna.org])
-AC_PREREQ([2.60])
+AC_INIT([gregorio],[0.2.2],[gregorio-devel@gna.org])
+AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR([src/gregorio-utils.c])
 AC_CONFIG_AUX_DIR([build-aux])
 
@@ -41,7 +41,7 @@ else
 fi
 
 AC_CHECK_PROGS([PYTHON], [python], [:])
-if test "$PERL" = :; then
+if test "$PYTHON" = :; then
   AC_MSG_ERROR([You need python to build this package.])
 fi
 
@@ -61,7 +61,7 @@ if test "$TFTOPL" = :; then
 fi
 
 AC_CHECK_PROGS([OVP2OVF], [ovp2ovf], [:])
-if test "$TFTOPL" = :; then
+if test "$OVP2OVF" = :; then
   AC_MSG_ERROR([You need ovp2ovf to build this package.])
 fi
 

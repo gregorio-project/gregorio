@@ -1,10 +1,18 @@
+fontdir=$(pkgdir)/fonts
+
+pfbdir=$(fontdir)/pfb
+tfmdir=$(fontdir)/tfm
+ovfdir=$(fontdir)/ovf
+ofmdir=$(fontdir)/ofm
+
 squarize.pe: squarize.py
 	$(PYTHON) squarize.py
 
-gregorio-0.tfm: squarize.pe
+$(TFM) $(PFB): squarize.pe
+	echo "Creating all square notation symbols, this may take several minutes."
 	$(FONTFORGE) squarize.pe
 
-gregorio-0.pl: gregorio-0.tfm
+$(PL): $(TFM)
 	$(TFTOPL) gregorio-0.tfm gregorio-0.pl
 	$(TFTOPL) gregorio-1.tfm gregorio-1.pl
 	$(TFTOPL) gregorio-2.tfm gregorio-2.pl
@@ -12,18 +20,50 @@ gregorio-0.pl: gregorio-0.tfm
 	$(TFTOPL) gregorio-4.tfm gregorio-4.pl
 	$(TFTOPL) gregorio-5.tfm gregorio-5.pl
 
-gregorio.ovp: create_font.pl gregorio-0.pl
+$(OVP): create_font.pl $(PL)
 	$(PERL) create_font.pl
 
-gregorio.ofm: gregorio.ovp
+$(OFM) $(OVF): gregorio.ovp
 	$(OVP2OVF) gregorio.ovp gregorio.ovf gregorio.ofm
 
-EXTRA_DIST=gregorio.ofm
+PFB= \
+        gregorio-0.pfb \
+        gregorio-1.pfb \
+        gregorio-2.pfb \
+        gregorio-3.pfb \
+        gregorio-4.pfb \
+        gregorio-5.pfb
+
+
+TFM= \
+	gregorio-0.tfm \
+	gregorio-1.tfm \
+	gregorio-2.tfm \
+	gregorio-3.tfm \
+	gregorio-4.tfm \
+	gregorio-5.tfm
+
+PL= \
+	gregorio-0.pl \
+	gregorio-1.pl \
+	gregorio-2.pl \
+	gregorio-3.pl \
+	gregorio-4.pl \
+	gregorio-5.pl
+
+OVF=gregorio.ovf
+
+OVP=gregorio.ovp
+
+OFM=gregorio.ofm
+
+FONTS=$(PFB) $(TFM) $(OVF) $(OFM)
+
+noinst_DATA = $(FONTS)
 
 CLEANFILES=gregorio-0.enc gregorio-1.enc \
 	gregorio-2.enc gregorio-3.enc gregorio-4.enc \
 	gregorio-5.enc gregorio-0.afm gregorio-1.afm \
 	gregorio-2.afm gregorio-3.afm gregorio-4.afm \
-	gregorio-5.afm gregorio-0.pl gregorio-1.pl \
-	gregorio-2.pl gregorio-3.pl gregorio-4.pl \
-	gregorio-5.pl gregorio.ovp
+	gregorio-5.afm $(PL) $(OVF) $(OFM) $(TFM) \
+	$(PFB) squaryze.pe
