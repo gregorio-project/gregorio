@@ -59,4 +59,4 @@ CLEANFILES=gregorio-0.enc gregorio-1.enc \
 	gregorio-2.enc gregorio-3.enc gregorio-4.enc \
 	gregorio-5.enc gregorio-0.afm gregorio-1.afm \
 	gregorio-2.afm gregorio-3.afm gregorio-4.afm \
-	gregorio-5.afm $(PL) $(FONTS) squaryze.pe
+	gregorio-5.afm $(PL) $(FONTS) squarize.pe
