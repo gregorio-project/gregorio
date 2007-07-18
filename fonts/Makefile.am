@@ -53,7 +53,7 @@ FONTS=$(PFB) $(TFM) $(OVF) $(OFM)
 
 noinst_DATA = $(FONTS)
 
-EXTRA_DIST = $(FONTS) squarize.py create-ovp.perl gregorio-base.sfd FONTLOG README
+EXTRA_DIST = squarize.py create-ovp.perl gregorio-base.sfd FONTLOG README
 
 CLEANFILES=gregorio-0.enc gregorio-1.enc \
 	gregorio-2.enc gregorio-3.enc gregorio-4.enc \
