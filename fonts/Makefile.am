@@ -12,8 +12,8 @@ $(PL): $(TFM)
 	$(TFTOPL) gregorio-4.tfm gregorio-4.pl
 	$(TFTOPL) gregorio-5.tfm gregorio-5.pl
 
-$(OVP): create_font.pl $(PL)
-	$(PERL) create_font.pl
+$(OVP): create-font.pl $(PL)
+	$(PERL) create-font.pl
 
 $(OFM) $(OVF): gregorio.ovp
 	$(OVP2OVF) gregorio.ovp gregorio.ovf gregorio.ofm
@@ -53,9 +53,10 @@ FONTS=$(PFB) $(TFM) $(OVF) $(OFM)
 
 noinst_DATA = $(FONTS)
 
+EXTRA_DIST = $(FONTS) squarize.py create-font.pl gregorio-base.sfd FONTLOG README
+
 CLEANFILES=gregorio-0.enc gregorio-1.enc \
 	gregorio-2.enc gregorio-3.enc gregorio-4.enc \
 	gregorio-5.enc gregorio-0.afm gregorio-1.afm \
 	gregorio-2.afm gregorio-3.afm gregorio-4.afm \
-	gregorio-5.afm $(PL) $(OVF) $(OFM) $(TFM) \
-	$(PFB) squaryze.pe
+	gregorio-5.afm $(PL) $(FONTS) squaryze.pe
