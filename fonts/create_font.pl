@@ -31,6 +31,7 @@ my $number_of_font=6;
 
 # static contains the beginning of the ovp file
 my $static="(VTITLE gregorio)
+(OFMLEVEL D 0)
 (FAMILY UNSPECIFIED)
 (FACE F MRR)
 (CODINGSCHEME UNSPECIFIED)
@@ -49,7 +50,8 @@ $fontmaps=$fontmaps."(MAPFONT D $i
    (FONTNAME $name-$i)
    (FONTAT R 1.0)
    (FONTDSIZE R 10.0)
-   )";
+   )
+";
 }
 
 # position will contain the names of the glyph as keys, and their position in their police as values
@@ -132,6 +134,7 @@ my $temp;
 
 open OUT, ">$name.ovp";
 print OUT $static."\n";
+print OUT $fontmaps;
 for ($i=0;$i<$order;$i++) { 
 $temp=sprintf("%X",$name[$i]);
 print OUT "(CHARACTER H ".$temp."
