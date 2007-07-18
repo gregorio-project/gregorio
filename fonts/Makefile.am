@@ -1,15 +1,7 @@
-fontdir=$(pkgdir)/fonts
-
-pfbdir=$(fontdir)/pfb
-tfmdir=$(fontdir)/tfm
-ovfdir=$(fontdir)/ovf
-ofmdir=$(fontdir)/ofm
-
 squarize.pe: squarize.py
 	$(PYTHON) squarize.py
 
 $(TFM) $(PFB): squarize.pe
-	echo "Creating all square notation symbols, this may take several minutes."
 	$(FONTFORGE) squarize.pe
 
 $(PL): $(TFM)

@@ -104,7 +104,7 @@ current_glyph_number=0
 # a function called at the beginning of the script, that opens the font
 
 def headers():
-    fout.write("#!/usr/local/bin/fontforge\n\nOpen(\"gregorio-base.sfd\");\n")
+    fout.write("#!/usr/local/bin/fontforge\n\nPrint(\"  Creating all square notation symbols for the gregorio font.\\n  This may take several minutes.....\");\nOpen(\"gregorio-base.sfd\");\n")
 
 # the function that deletes the temporary glyphs and saves the modified font, called at the end
 

@@ -15,8 +15,19 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#This program takes n 255 character fonts in afm and pl format, and build a ovp from it.
+#The glyphs in the fonts must be "_xxx" where xxx will be their number
+#in the ovp file.
+#The fonts must be named $name-0, ... $name-n
 
 use strict;
+
+# the name of the fonts
+my $name="gregorio";
+
+# number_of_font is the number of 255 character fonts that will be used
+my $number_of_font=6;
 
 # static contains the beginning of the ovp file
 my $static="(VTITLE gregorio)
@@ -27,35 +38,38 @@ my $static="(VTITLE gregorio)
 (COMMENT DESIGNSIZE IS IN POINTS)
 (COMMENT OTHER SIZES ARE MULTIPLES OF DESIGNSIZE)
 (CHECKSUM O 30643311733)
-(SEVENBITSAFEFLAG TRUE)
-(MAPFONT D 0
-   (FONTNAME gregorio)
+(SEVENBITSAFEFLAG TRUE)";
+
+# fontmaps will contain the MAPFONT definitions
+my $fontmaps="";
+
+my $i;
+for ($i=0;$i<$number_of_font;$i++) {
+$fontmaps=$fontmaps."(MAPFONT D $i
+   (FONTNAME $name-$i)
    (FONTAT R 1.0)
    (FONTDSIZE R 10.0)
    )";
+}
 
 # position will contain the names of the glyph as keys, and their position in their police as values
 my %position;
 
-# font will contain the name of the glyphs as key and the police he is in as a number (1 for gregorio-1.*, etc.)
+# font will contain the name of the glyphs as key and the police he is in as a number (1 for $name-1.*, etc.)
 my %font;
 
 # name will contain the true number of the glyph (1 if the first trated, etc.) as key, and the glyph name as value
 my @name;
 
-# namex will contain keys of the form "x-y", where x is the number of the police (1 for gregorio-1.*, etc.) and y the position in the police. the values of namex are the names of the glyphs.
+# namex will contain keys of the form "x-y", where x is the number of the police (1 for $name-1.*, etc.) and y the position in the police. the values of namex are the names of the glyphs.
 my %namex;
 
 # order is a variable that will contain the number of glyphs that we have already treated
 my $order=0;
 
-# number_of_font is the number of 255 character fonts that will be used
-my $number_of_font=6;
-
 # first we read the afm files and we fill position, font, name and namex with the values
-my $i;
 for ($i=0;$i<$number_of_font;$i++) {
-open IN,"<gregorio-$i.afm";
+open IN,"<$name-$i.afm";
 while (<IN>) {
 if (m/C ([0-9]+) ; WX [0-9-]+ ; N _([0-9-]+) ;/) {
 $position{$2}=$1; $font{$2}=$i; $namex{$i."-".$1}=$2; $name[$order]=$2; $order++;
@@ -74,8 +88,8 @@ my $character;
 
 for ($i=0;$i<$number_of_font;$i++) {
 # there you must have the .pl files, they are generated from tfm by tftopl (in the tetex or texlive distribution)
-#open IN,"tftopl gregorio-$i.tfm |";
-open IN,"<gregorio-$i.pl";
+#open IN,"tftopl $name-$i.tfm |";
+open IN,"<$name-$i.pl";
 while (<IN>) {
   if (m/\(CHARACTER O ([0-7]+)/) { 
     $character=oct($1);
@@ -116,7 +130,7 @@ close IN;
 
 my $temp;
 
-open OUT, ">gregorio.ovp";
+open OUT, ">$name.ovp";
 print OUT $static."\n";
 for ($i=0;$i<$order;$i++) { 
 $temp=sprintf("%X",$name[$i]);
