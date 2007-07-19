@@ -15,6 +15,8 @@
 DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
+deb:
+	dpkg-buildpackage -rfakeroot -i'/\.svn|/\.git'
 
 CFLAGS = -Wall -g
 
@@ -24,9 +26,9 @@ else
 	CFLAGS += -O2
 endif
 
-config.status: configure
+config.status:
 	dh_testdir
-	# Add here commands to configure the package.
+	autoreconf --install
 	./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
 
 
@@ -34,8 +36,6 @@ build: build-stamp
 
 build-stamp:  config.status
 	dh_testdir
-
-	# Add here commands to compile the package.
 	$(MAKE)
 	xsltproc -''-nonet /usr/share/apps/ksgmltools2/docbook/xsl/manpages/docbook.xsl debian/manpage.xml
 	touch $@
@@ -44,8 +44,6 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp 
-
-	# Add here commands to clean up after the build process.
 	-$(MAKE) distclean
 ifneq "$(wildcard /usr/share/misc/config.sub)" ""
 	cp -f /usr/share/misc/config.sub config.sub
@@ -54,8 +52,10 @@ ifneq "$(wildcard /usr/share/misc/config.guess)" ""
 	cp -f /usr/share/misc/config.guess config.guess
 endif
 
-
 	dh_clean 
+
+FONTDIR = $(CURDIR)/fonts
+GREGORIOTEXDIR = $(CURDIR)/debian/gregoriotex/usr/share/texmf
 
 install: build
 	dh_testdir
@@ -63,8 +63,15 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 
-	# Add here commands to install the package into debian/gregorio.
-	$(MAKE) DESTDIR=$(CURDIR)/debian/tmp install
+	$(MAKE) DESTDIR=$(CURDIR)/debian/gregorio install
+	cp $(FONTDIR)/*.pfb $(GREGORIOTEXDIR)/fonts/type1/gregoriotex
+	cp $(FONTDIR)/*.tfm $(GREGORIOTEXDIR)/fonts/tfm/gregoriotex
+	cp $(FONTDIR)/*.ovf $(GREGORIOTEXDIR)/fonts/ovf/gregoriotex
+	cp $(FONTDIR)/*.ofm $(GREGORIOTEXDIR)/fonts/ofm/gregoriotex
+	cp $(FONTDIR)/*.map $(GREGORIOTEXDIR)/fonts/map/dvips/gregoriotex
+	cp $(CURDIR)/tex/*.tex $(GREGORIOTEXDIR)/tex/gregoriotex
+	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/gregorio.map" > $(CURDIR)/debian/gregoriotex.maps
+	dh_installtex
 
 
 # Build architecture-independent files here.
@@ -78,24 +85,11 @@ binary-arch: build install
 	dh_installchangelogs 
 	dh_installdocs
 	dh_installexamples
-#	dh_install
-#	dh_installmenu
-#	dh_installdebconf	
-#	dh_installlogrotate
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
-#	dh_python
-#	dh_installinit
-#	dh_installcron
-#	dh_installinfo
 	dh_installman -a gregorio.1
 	dh_link
 	dh_strip
 	dh_compress
 	dh_fixperms
-#	dh_perl
-#	dh_makeshlibs
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
