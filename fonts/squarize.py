@@ -131,9 +131,11 @@ def end_font():
 	    fout.write("Clear();\n")	
     fout.write("Reencode(\"compacted\");\n")
     fout.write("Reencode(\"original\",1);\n")
+    fout.write("SetFontNames(\"gregorio-%d\");\n" % current_font_number)
     # 66537 is for generating an afm and a tfm file
-    fout.write("Generate(\"gregorio-%d.pfb\",\"\",66537);\n" % current_font_number)
-    #fout.write("Save(\"gregorio-%d.sfd\");\n" % current_font_number)
+    #fout.write("Generate(\"gregorio-%d.pfb\",\"\",66537);\n" % current_font_number)
+    # uncomment the next line if you want to generate sfd files (easier to debug)
+    fout.write("Save(\"gregorio-%d.sfd\");\n" % current_font_number)
     fout.write("Close();\n")
     fout.write("Open(\"gregorio-base.sfd\");\n")
     current_glyph_number=0
