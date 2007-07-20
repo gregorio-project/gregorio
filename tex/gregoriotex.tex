@@ -182,9 +182,9 @@
 \calculateglyphraisevalue{10}%
 \fi%
 \ifx c#1% we check if it is a c key
-\raise\glyphraisevalue\hbox{\gregoria ^^^^0001}
+\raise\glyphraisevalue\hbox{\gregoria \char 1}%
 \else % we consider that it is a f key
-\raise\glyphraisevalue\hbox{\gregoria ^^^^0002}
+\raise\glyphraisevalue\hbox{\gregoria \char 2}%
 \fi%
 }
 
@@ -230,31 +230,31 @@
 \gregoria %
 \ifcase#1%
 \or%
-^^^^001d%
+\char 29%
 \or%
-^^^^0003%
+\char 3%
 \or%
-^^^^001d%
+\char 29%
 \or%
-^^^^0003%
+\char 3%
 \or%
-^^^^001d%
+\char 29%
 \or%
-^^^^0003%
+\char 3%
 \or%
-^^^^001d%
+\char 29%
 \or%
-^^^^0003%
+\char 3%
 \or%
-^^^^001d%
+\char 29%
 \or%
-^^^^0004%
+\char 4%
 \or%
-^^^^001e%
+\char 30%
 \or%
-^^^^0004%
+\char 4%
 \or%
-^^^^001e%
+\char 29%
 \fi%
 }%
 }%
@@ -476,7 +476,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria ^^^^03f0}%
+\raise\glyphraisevalue\hbox{\gregoria \char 8}%
 \hskip\barspace %
 \penalty 0% test
 }
@@ -486,7 +486,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria ^^^^03f0}%
+\raise\glyphraisevalue\hbox{\gregoria \char 8}%
 \hskip\barspace %
 }
 
@@ -495,7 +495,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria ^^^^03f1}%
+\raise\glyphraisevalue\hbox{\gregoria \char 9}%
 \hskip\barspace %
 }
 
@@ -504,7 +504,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria ^^^^03f1}%
+\raise\glyphraisevalue\hbox{\gregoria \char 9}%
 \hskip\barspace %
 }
 
@@ -513,7 +513,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria ^^^^03f2}%
+\raise\glyphraisevalue\hbox{\gregoria \char 10}%
 \hskip\barspace %
 }
 
@@ -522,7 +522,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria ^^^^03f2}%
+\raise\glyphraisevalue\hbox{\gregoria \char 10}%
 \hskip\barspace %
 }
 
@@ -531,7 +531,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria ^^^^03f3}%
+\raise\glyphraisevalue\hbox{\gregoria \char 11}%
 \hskip\barspace %
 }
 
@@ -540,7 +540,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria ^^^^03f3}%
+\raise\glyphraisevalue\hbox{\gregoria \char 11}%
 \hskip\barspace %
 }
 
@@ -551,11 +551,11 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria ^^^^03f3}%
+\raise\glyphraisevalue\hbox{\gregoria \char 11}%
 \temptwo=0.064em%
 \multiply\temptwo by \the\factor%
 \kern \temptwo%
-\raise\glyphraisevalue\hbox{\gregoria ^^^^03f3}%
+\raise\glyphraisevalue\hbox{\gregoria \char 11}%
 \hskip\barspace %
 }
 
@@ -564,11 +564,11 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria ^^^^03f3}%
+\raise\glyphraisevalue\hbox{\gregoria \char 11}%
 \temptwo=0.064em%
 \multiply\temptwo by \the\factor%
 \kern \temptwo%
-\raise\glyphraisevalue\hbox{\gregoria ^^^^03f3}%
+\raise\glyphraisevalue\hbox{\gregoria \char 11}%
 \hskip\barspace %
 }
 

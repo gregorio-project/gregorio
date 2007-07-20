@@ -402,10 +402,10 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 			   "libgregorio_gregoriotex_write_glyph", ERROR, 0);
       return;
     }
-  unsigned int glyph_number;
+  unsigned int glyph_number=0;
 // glyph number is the number of the glyph in the fonte, it is discussed in later comments
 // type is the type of the glyph. Understand the type of the glyph for gregoriotex, for the alignement between text and notes.
-  int type;
+  int type=0;
   char next_note_pitch = 0;
   next_note_pitch =
     libgregorio_gregoriotex_determine_next_note (syllable, element, glyph);
@@ -442,7 +442,7 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 							 &glyph_number);
       glyph->glyph_type = G_TORCULUS_RESUPINUS;
 //TODO : fusion functions
-      fprintf (f, "\\glyph{%d}{%d}{%d}{%d}%%\n", glyph_number,
+      fprintf (f, "\\glyph{^^^^%04x}{%d}{%d}{%d}%%\n", glyph_number,
 	       glyph->first_note->pitch - 96, next_note_pitch - 96, type);
       return;
     }
@@ -455,7 +455,7 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 							 &glyph_number);
       glyph->glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
 //TODO : fusion functions
-      fprintf (f, "\\glyph{%d}{%d}{%d}{%d}%%\n", glyph_number,
+      fprintf (f, "\\glyph{^^^^%04x}{%d}{%d}{%d}%%\n", glyph_number,
 	       glyph->first_note->pitch - 96, next_note_pitch - 96, type);
       return;
     }
@@ -496,6 +496,7 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
     {
       libgregorio_gregoriotex_write_note (f, glyph->first_note,
 					  next_note_pitch);
+      return;
     }
   libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
 						     &glyph_number);
@@ -595,11 +596,11 @@ gregoriotex_determine_liquescentia_number (unsigned char type,
 	{
 	  liquescentia = L_AUCTUS_ASCENDENS_INITIO_DEBILIS;
 	}
-      return liquescentia;
       break;
     default:
       return 0;
     }
+  return LIQ_FACTOR * liquescentia;
 }
 
 // finaly the function that calculates the number of the glyph. It also calculates the type, used for determining the position of signs. Type is very basic, it is only the global dimensions : torculus, one_note, etc.
@@ -617,6 +618,14 @@ libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *
 			   ERROR, 0);
       return;
     }
+  if (!glyph->first_note)
+    {
+      libgregorio_message (_
+			   ("called with a glyph that have no note"),
+			   "libgregorio_gregorio_tex_determine_number_and_type",
+			   ERROR, 0);
+      return;
+    }
   unsigned int temp = 0;
   char pitch;
   char liquescentia = glyph->liquescentia;
@@ -629,14 +638,6 @@ libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *
      {
      glyph->liquescentia = L_AUCTUS_DESCENDENS_INITIO_DEBILIS;
      } */
-  if (!glyph->first_note)
-    {
-      libgregorio_message (_
-			   ("called with a glyph that have no note"),
-			   "libgregorio_gregorio_tex_determine_number_and_type",
-			   ERROR, 0);
-      return;
-    }
   switch (glyph->glyph_type)
     {
     case G_PODATUS:
@@ -756,7 +757,7 @@ libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *
   *glyph_number = temp + (*glyph_number);
   // we change to the original liquescentia
   glyph->liquescentia = liquescentia;
-// we fix *type with initio_debilis
+  // we fix *type with initio_debilis
   if (*type == T_ONE_NOTE)
     {
       if (is_initio_debilis (liquescentia))
