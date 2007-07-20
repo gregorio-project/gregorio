@@ -73,7 +73,7 @@ libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score)
   while (current_syllable)
     {
       libgregorio_gregoriotex_write_syllable (f, current_syllable,
-					      first_syllable);
+					      &first_syllable);
       current_syllable = current_syllable->next_syllable;
     }
   fprintf (f, "\\endgregorioscore%%\n\\bye\n");
@@ -90,7 +90,7 @@ libgregorio_gregoriotex_write_voice_info (FILE * f,
 void
 libgregorio_gregoriotex_write_syllable (FILE * f,
 					gregorio_syllable * syllable,
-					char first_syllable)
+					char *first_syllable)
 {
   if (!syllable)
     {
@@ -178,17 +178,20 @@ libgregorio_gtex_write_begin (FILE * f, unsigned char style)
 {
   switch (style)
     {
+    case ST_ITALIC:
+      fprintf (f, "{\\it ");
+      break;
     case ST_SMALL_CAPS:
-      fprintf (f, "{\\sc");
+      fprintf (f, "{\\sc ");
       break;
     case ST_BOLD:
-      fprintf (f, "{\\bf");
+      fprintf (f, "{\\bf ");
       break;
     case ST_CENTER:
       fprintf (f, "}{");
       break;
     case ST_TT:
-      fprintf (f, "{\\tt");
+      fprintf (f, "{\\tt ");
       break;
     default:
       break;
@@ -276,7 +279,7 @@ libgregorio_print_unicode_letters (FILE * f, wchar_t * wstr)
 
 void
 libgregorio_gregoriotex_write_text (FILE * f, gregorio_character * text,
-				    char first_syllable)
+				    char *first_syllable)
 {
   if (text == NULL)
     {
@@ -284,15 +287,15 @@ libgregorio_gregoriotex_write_text (FILE * f, gregorio_character * text,
       return;
     }
   fprintf (f, "{");
-  libgregorio_write_text (first_syllable, text, f,
+  libgregorio_write_text (*first_syllable, text, f,
 			  (&libgregorio_gtex_write_verb),
 			  (&libgregorio_gtex_print_char),
 			  (&libgregorio_gtex_write_begin),
 			  (&libgregorio_gtex_write_end),
 			  (&libgregorio_gtex_write_special_char));
-  if (first_syllable)
+  if (*first_syllable)
     {
-      first_syllable = 0;
+      *first_syllable = 0;
     }
   fprintf (f, "}");
 }

@@ -42,10 +42,10 @@ libgregorio_gregoriotex_write_voice_info (FILE * f,
 
 void
 libgregorio_gregoriotex_write_syllable (FILE * f,
-					gregorio_syllable * syllable, char first_syllable);
+					gregorio_syllable * syllable, char *first_syllable);
 
 void
-libgregorio_gregoriotex_write_text (FILE * f, gregorio_character *first_character, char first_syllable);
+libgregorio_gregoriotex_write_text (FILE * f, gregorio_character *first_character, char *first_syllable);
 
 void
 libgregorio_gregoriotex_write_element (FILE * f, gregorio_syllable * syllable,
