@@ -92,6 +92,16 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 					gregorio_syllable * syllable,
 					char first_syllable)
 {
+  if (!syllable) {
+     return;
+  }
+  /* first we check if the syllable is only a end of line.
+  If it is the case, we don't print anything but a comment (to be able to read it if we read GregorioTeX).
+  The end of lines are treated separately in GregorioTeX, it is buit inside the TeX structure. */
+  if ((syllable->elements)[0]->type==GRE_END_OF_LINE && !(syllable->elements)[0]->next_element) {
+   fprintf (f, "%%gregorio::end_of_line\n");
+   return;
+  }
   fprintf (f, "\\syllable");
   libgregorio_gregoriotex_write_text (f, syllable->text, first_syllable);
   if (syllable->position == WORD_END
@@ -142,7 +152,6 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	}
       if (current_element->type == GRE_END_OF_LINE)
 	{
-	  // for the moment, end_of_lines are treated separately, in the TeX structure
 	  fprintf (f, "%%gregorio::end_of_line\n");
 	  current_element = current_element->next_element;
 	  continue;
@@ -226,6 +235,10 @@ libgregorio_gtex_write_verb (FILE * f, wchar_t * verb_str)
 void
 libgregorio_gtex_print_char (FILE * f, wchar_t to_print)
 {
+  if (to_print < 128) {
+  fprintf (f, "%lc", to_print);
+  return;
+  }
   switch (to_print) {
   case L'œ':
     fprintf (f, "\\oe ");
