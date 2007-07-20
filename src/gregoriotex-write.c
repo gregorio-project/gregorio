@@ -40,20 +40,20 @@ libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score)
 
   fprintf (f, "\\input gregoriotex.tex\n\n\\begingregorioscore%%\n");
 // first we draw the initial (first letter) and the initial key
-    gregorio_character *first_text=libgregorio_first_text (score);
+  gregorio_character *first_text = libgregorio_first_text (score);
   // a char that will contain 1 if it is the first syllable and 0 if not. It is for the initial.
   char first_syllable = 0;
-    if (first_text)
+  if (first_text)
     {
-        fprintf (f, "\\initial{");
-        libgregorio_write_first_letter (first_text, f,
-			      (&libgregorio_gtex_write_verb),
-			      (&libgregorio_gtex_print_char),
-			      (&libgregorio_gtex_write_begin),
-			      (&libgregorio_gtex_write_end),
-			      (&libgregorio_gtex_write_special_char));
-        fprintf (f, "}%%\n");
-        first_syllable=SKIP_FIRST_LETTER;
+      fprintf (f, "\\initial{");
+      libgregorio_write_first_letter (first_text, f,
+				      (&libgregorio_gtex_write_verb),
+				      (&libgregorio_gtex_print_char),
+				      (&libgregorio_gtex_write_begin),
+				      (&libgregorio_gtex_write_end),
+				      (&libgregorio_gtex_write_special_char));
+      fprintf (f, "}%%\n");
+      first_syllable = SKIP_FIRST_LETTER;
     }
   char clef_letter;
   int clef_line;
@@ -92,16 +92,19 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 					gregorio_syllable * syllable,
 					char first_syllable)
 {
-  if (!syllable) {
-     return;
-  }
+  if (!syllable)
+    {
+      return;
+    }
   /* first we check if the syllable is only a end of line.
-  If it is the case, we don't print anything but a comment (to be able to read it if we read GregorioTeX).
-  The end of lines are treated separately in GregorioTeX, it is buit inside the TeX structure. */
-  if ((syllable->elements)[0]->type==GRE_END_OF_LINE && !(syllable->elements)[0]->next_element) {
-   fprintf (f, "%%gregorio::end_of_line\n");
-   return;
-  }
+     If it is the case, we don't print anything but a comment (to be able to read it if we read GregorioTeX).
+     The end of lines are treated separately in GregorioTeX, it is buit inside the TeX structure. */
+  if ((syllable->elements)[0]->type == GRE_END_OF_LINE
+      && !(syllable->elements)[0]->next_element)
+    {
+      fprintf (f, "%%gregorio::end_of_line\n");
+      return;
+    }
   fprintf (f, "\\syllable");
   libgregorio_gregoriotex_write_text (f, syllable->text, first_syllable);
   if (syllable->position == WORD_END
@@ -209,20 +212,20 @@ libgregorio_gtex_write_end (FILE * f, unsigned char style)
 void
 libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char)
 {
-  if (!wcscmp(special_char, L"'æ"))
+  if (!wcscmp (special_char, L"'æ"))
     {
-	fprintf(f, "\\'æ");
-	return;
+      fprintf (f, "\\'æ");
+      return;
     }
-  if (!wcscmp(special_char, L"'œ"))
+  if (!wcscmp (special_char, L"'œ"))
     {
-	fprintf(f, "\\'œ");
-	return;
+      fprintf (f, "\\'œ");
+      return;
     }
-  if (!wcscmp(special_char, L"ae"))
+  if (!wcscmp (special_char, L"ae"))
     {
-	fprintf(f, "\\ae");
-	return;
+      fprintf (f, "\\ae");
+      return;
     }
 }
 
@@ -235,21 +238,23 @@ libgregorio_gtex_write_verb (FILE * f, wchar_t * verb_str)
 void
 libgregorio_gtex_print_char (FILE * f, wchar_t to_print)
 {
-  if (to_print < 128) {
-  fprintf (f, "%lc", to_print);
-  return;
-  }
-  switch (to_print) {
-  case L'œ':
-    fprintf (f, "\\oe ");
-  break;
-  case L'æ':
-    fprintf (f, "\\ae ");
-  break;
-  default:
-  fprintf (f, "^^^^%04x", to_print);
-  break;
-}
+  if (to_print < 128)
+    {
+      fprintf (f, "%lc", to_print);
+      return;
+    }
+  switch (to_print)
+    {
+    case L'œ':
+      fprintf (f, "\\oe ");
+      break;
+    case L'æ':
+      fprintf (f, "\\ae ");
+      break;
+    default:
+      fprintf (f, "^^^^%04x", to_print);
+      break;
+    }
 }
 
 // a function that takes a wchar_t * and write it in omega style : every character is reprensented by ^^^^x where x is its hexadecimal representation on 4 letters (completed with 0)
@@ -263,14 +268,15 @@ libgregorio_print_unicode_letters (FILE * f, wchar_t * wstr)
   int i = 0;
   while (wstr[i])
     {
-      libgregorio_gtex_print_char(f, wstr[i]);
+      libgregorio_gtex_print_char (f, wstr[i]);
       i++;
     }
   return;
 }
 
 void
-libgregorio_gregoriotex_write_text (FILE * f, gregorio_character * text, char first_syllable)
+libgregorio_gregoriotex_write_text (FILE * f, gregorio_character * text,
+				    char first_syllable)
 {
   if (text == NULL)
     {
@@ -278,15 +284,16 @@ libgregorio_gregoriotex_write_text (FILE * f, gregorio_character * text, char fi
       return;
     }
   fprintf (f, "{");
-      libgregorio_write_text (first_syllable, text, f,
-			      (&libgregorio_gtex_write_verb),
-			      (&libgregorio_gtex_print_char),
-			      (&libgregorio_gtex_write_begin),
-			      (&libgregorio_gtex_write_end),
-			      (&libgregorio_gtex_write_special_char));
-  if (first_syllable) {
-    first_syllable=0;
-  }
+  libgregorio_write_text (first_syllable, text, f,
+			  (&libgregorio_gtex_write_verb),
+			  (&libgregorio_gtex_print_char),
+			  (&libgregorio_gtex_write_begin),
+			  (&libgregorio_gtex_write_end),
+			  (&libgregorio_gtex_write_special_char));
+  if (first_syllable)
+    {
+      first_syllable = 0;
+    }
   fprintf (f, "}");
 }
 
@@ -499,76 +506,103 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 
 
 
-/* here we determine the type... here are the different types : 
- * 1: symbols and one-note glyphs
- * 2: pes
- * 6: pes deminutus
- * 4: pes auctus ascendens
- * 5: pes auctus descendens
- * 3: pes initio debilis
- * 9: pes initio debilis deminutus
- * 7: pes initio debilisauctus ascendens
- * 8: pes initio debilisauctus descendens
- * 10: pes quadratus
- * 11: pes quassus
- * 12: pes quilisma
- * 13: flexa
- * 14: flexa deminutus
- * 15: flexa auctus ascendens
- * 16: flexa auctus descendens
- * small bar means that the first bar is shorter, it depends on the position of the first note
- * 17: flexa_short_bar
- * 18: flexa_short_bar deminutus
- * 19: flexa_short_bar auctus ascendens
- * 20: flexa_short_bar auctus descendens
- * 21: torculus
- * 22: torculus deminutus
- * 23: torculus auctus ascendens
- * 24: torculus auctus descendens
- * 25: torculus initio debilis
- * 26: torculus initio debilis deminutus 
- * 27: torculus auctus ascendens initio debilis
- * 28: torculus auctus descendens initio debilis 
- * 29: porrectus
- * 30: porrectus deminutus
- * 31: porrectus auctus ascendens
- * 32: porrectus auctus descendens
- * 33: porrectus flexus
- * 34: porrectus flexus deminutus
- * 35: porrectus flexus auctus ascendens
- * 36: porrectus flexus auctus descendens
- * 37: porrectus_short_bar
- * 38: porrectus_short_bar deminutus
- * 39: porrectus_short_bar auctus ascendens
- * 40: porrectus_short_bar auctus descendens
- * 41: porrectus_short_bar flexus
- * 42: porrectus_short_bar flexus deminutus
- * 43: porrectus_short_bar flexus auctus ascendens
- * 44: porrectus_short_bar flexus auctus descendens
- * 45: porrectus_no_bar
- * 46: porrectus_no_bar deminutus
- * 47: porrectus_no_bar auctus ascendens
- * 48: porrectus_no_bar auctus descendens
- * 49: porrectus_no_bar flexus
- * 50: porrectus_no_bar flexus deminutus
- * 51: porrectus_no_bar flexus auctus ascendens
- * 52: porrectus_no_bar flexus auctus descendens
- * 53: flexus
- * 54: flexus deminutus
- * 55: flexus auctus ascendens
- * 56: flexus auctus descendens
- * 57: scandicus deminutus
+/* 
 
-to obtain the glyph number, we multiply this type by 1000 and we add the differences between the notes with this algorith :
-if we call (1) the difference between the first and the second note (and so on)
-(1)+(2)*10+(3)*100
-thus we have a number between 1 and 999
-note that we assume we have no glyph of more than 4 notes
+Here we determine the type... here are the different types:
+'pes':2,
+'pesquadratum':6,
+'pesquilisma':4,
+'pesquassus':5,
+'pesquilismaquadratum':3,
+'flexus':7,
+'porrectusflexus':8,
+'porrectusflexus_nobar':10,
+'porrectus':11,
+'porrectus_nobar':12,
+'flexus_nobar':13,
+'flexus_longqueue':15,
+'torculus':14
+
+it are (and must be) the same as in squarize.py
+
+the different numbers of the liquescentiae are:
+'nothing':0,
+'initiodebilis':1,
+'deminutus':2,
+'auctusascendens':3,
+'auctusdescendens':4,
+'initiodebilisdeminutus':5,
+'initiodebilisauctusascendens':6,
+'initiodebilisauctusdescendens':7
+
+if it is an auctus, which may be ascendens or descendens, by default we consider it as an ascendens
+
+they also are and must be the same as in squarize.py.
+
+to obtain the glyph number, we just do 2048 * glyphtype + 256 * liquescentia + x
+
+where x is a number related to the differences between te heights of the notes:
+
+if i is the difference between the two first notes, j between the second and the third and k the difference betweend the third and the fourth, x = i + 5 * j + 25 * k
+
 */
 
 // macro that we will use to determine if we need a short bar or not
 
 #define is_short(pitch) pitch=='a'||pitch=='c'||pitch=='e'||pitch=='g'||pitch=='i'||pitch=='k'||pitch=='m'
+
+// Here we define a function that will determine the number of the liquescentia that we will add to the glyph number. There are several types as all glyphs can't have all liquescentiae. Let's first define the different types:
+
+#define L_ALL 0			/* for glyphs that accept all liquecentiae */
+#define L_NO_INITIO 1		/* for glyphs that don't accept initio debilis */
+#define L_UNDET_AUCTUS 2	/* for glyphs for which we don't know if the auctus is ascendens or descendens */
+#define L_NONE 3		/* for glyphs that don't accept liquescentia */
+#define L_NO_DEMINUTUS 4
+
+// the definitions of the type and liquescentia factors
+#define TYPE_FACTOR 2048
+#define LIQ_FACTOR 256
+
+unsigned int
+gregoriotex_determine_liquescentia_number (unsigned char type,
+					   char liquescentia)
+{
+  if (liquescentia == L_AUCTA)
+    {
+      liquescentia = L_AUCTUS_ASCENDENS;
+    }
+  if (liquescentia == L_AUCTA_INITIO_DEBILIS)
+    {
+      liquescentia = L_AUCTUS_ASCENDENS_INITIO_DEBILIS;
+    }
+  switch (type)
+    {
+    case L_ALL:
+      return LIQ_FACTOR * liquescentia;
+      break;
+    case L_NO_INITIO:
+      if (liquescentia >= L_INITIO_DEBILIS)
+	{
+	  liquescentia = liquescentia - L_INITIO_DEBILIS;
+	}
+      break;
+    case L_UNDET_AUCTUS:
+      if (liquescentia == L_AUCTUS_DESCENDENS)
+	{
+	  liquescentia = L_AUCTUS_ASCENDENS;
+	}
+      if (liquescentia == L_AUCTUS_DESCENDENS_INITIO_DEBILIS)
+	{
+	  liquescentia = L_AUCTUS_ASCENDENS_INITIO_DEBILIS;
+	}
+      return liquescentia;
+      break;
+    default:
+      return 0;
+    }
+}
+
+// finaly the function that calculates the number of the glyph. It also calculates the type, used for determining the position of signs. Type is very basic, it is only the global dimensions : torculus, one_note, etc.
 
 void
 libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *
@@ -585,157 +619,125 @@ libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *
     }
   unsigned int temp = 0;
   char pitch;
-  // for the moment there is no auctus ascendens in the police, so we replace them by auctus descendens
   char liquescentia = glyph->liquescentia;
-  if (liquescentia == L_AUCTUS_ASCENDENS)
+  /* commented, but must be there for the font gregoria (as there is no auctus descendens). TODO : having a variable telling the font
+     if (liquescentia == L_AUCTUS_ASCENDENS)
+     {
+     glyph->liquescentia = L_AUCTUS_DESCENDENS;
+     }
+     if (liquescentia == L_AUCTUS_ASCENDENS_INITIO_DEBILIS)
+     {
+     glyph->liquescentia = L_AUCTUS_DESCENDENS_INITIO_DEBILIS;
+     } */
+  if (!glyph->first_note)
     {
-      glyph->liquescentia = L_AUCTUS_DESCENDENS;
-    }
-  if (liquescentia == L_AUCTUS_ASCENDENS_INITIO_DEBILIS)
-    {
-      glyph->liquescentia = L_AUCTUS_DESCENDENS_INITIO_DEBILIS;
+      libgregorio_message (_
+			   ("called with a glyph that have no note"),
+			   "libgregorio_gregorio_tex_determine_number_and_type",
+			   ERROR, 0);
+      return;
     }
   switch (glyph->glyph_type)
     {
     case G_PODATUS:
-      if (glyph->first_note && glyph->first_note->shape == S_QUILISMA)
+      switch (glyph->first_note->shape)
 	{
-	  temp = 12;
-	}
-      else
-	{
-	  temp = 2 + (unsigned int) glyph->liquescentia;
+	case S_QUILISMA:
+	  temp =
+	    TYPE_FACTOR * 4 +
+	    gregoriotex_determine_liquescentia_number (L_ALL,
+						       glyph->liquescentia);
+	  break;
+	case S_ORISCUS:
+	  temp =
+	    TYPE_FACTOR * 5 +
+	    gregoriotex_determine_liquescentia_number (L_ALL,
+						       glyph->liquescentia);
+	  break;
+	default:
+	  temp =
+	    TYPE_FACTOR * 2 +
+	    gregoriotex_determine_liquescentia_number (L_ALL,
+						       glyph->liquescentia);
+	  break;
 	}
       *type = T_ONE_NOTE;
       break;
     case G_PES_QUADRATUM:
-      if (glyph->first_note && glyph->first_note->shape == S_ORISCUS)
+      switch (glyph->first_note->shape)
 	{
-	  temp = 11;
-	}
-      else
-	{
-	  temp = 10;
+	case S_QUILISMA:
+	  temp =
+	    TYPE_FACTOR * 4 +
+	    gregoriotex_determine_liquescentia_number (L_ALL,
+						       glyph->liquescentia);
+	  break;
+	case S_ORISCUS:
+	  temp =
+	    TYPE_FACTOR * 3 +
+	    gregoriotex_determine_liquescentia_number (L_ALL,
+						       glyph->liquescentia);
+	  break;
+	default:
+	  temp =
+	    TYPE_FACTOR * 6 +
+	    gregoriotex_determine_liquescentia_number (L_ALL,
+						       glyph->liquescentia);
+	  break;
 	}
       *type = T_ONE_NOTE;
       break;
     case G_FLEXA:
-      if (!glyph->first_note)
-	{
-	  libgregorio_message (_
-			       ("called with a glyph that have no note"),
-			       "libgregorio_gregorio_tex_determine_number_and_type",
-			       ERROR, 0);
-	  break;
-	}
       pitch = glyph->first_note->pitch;
       if (is_short (pitch))
 	{
-	  temp = 17;
+	  temp =
+	    TYPE_FACTOR * 7 +
+	    gregoriotex_determine_liquescentia_number (L_NO_INITIO,
+						       glyph->liquescentia);
 	}
       else
 	{
-	  temp = 13;
-	}
-      // we don't want initio_debilis
-      if (is_initio_debilis (glyph->liquescentia))
-	{
-	  temp = temp + (unsigned int) glyph->liquescentia - L_INITIO_DEBILIS;
-	}
-      else
-	{
-	  temp = (unsigned int) temp + (unsigned int) glyph->liquescentia;
+	  temp =
+	    TYPE_FACTOR * 15 +
+	    gregoriotex_determine_liquescentia_number (L_NO_INITIO,
+						       glyph->liquescentia);
 	}
       *type = T_TWO_NOTES;
       break;
     case G_TORCULUS:
-      temp = 21 + (unsigned int) glyph->liquescentia;
+      temp =
+	TYPE_FACTOR * 14 + gregoriotex_determine_liquescentia_number (L_ALL,
+								      glyph->
+								      liquescentia);
       *type = T_ONE_NOTE;
       break;
     case G_PORRECTUS:
-      if (!glyph->first_note)
-	{
-	  libgregorio_message (_
-			       ("called with a glyph that have no note"),
-			       "libgregorio_gregorio_tex_determine_number_and_type",
-			       ERROR, 0);
-	  break;
-	}
-      pitch = glyph->first_note->pitch;
-/*
-there is no short bar porrectus in gregoria for the moment, so we comment this part
-      if (is_short (pitch))
-	{
-	  temp = 37;
-	}
-      else
-	{*/
-      temp = 29;
-      //}
-      // we don't want initio_debilis
-      if (is_initio_debilis (glyph->liquescentia))
-	{
-	  temp = temp + (unsigned int) glyph->liquescentia - L_INITIO_DEBILIS;
-	}
-      else
-	{
-	  temp = (unsigned int) temp + (unsigned int) glyph->liquescentia;
-	}
+      temp =
+	TYPE_FACTOR * 11 +
+	gregoriotex_determine_liquescentia_number (L_NO_INITIO,
+						   glyph->liquescentia);
       *type = T_PORRECTUS;
       break;
     case G_PORRECTUS_FLEXUS:
-      if (!glyph->first_note)
-	{
-	  libgregorio_message (_
-			       ("called with a glyph that have no note"),
-			       "libgregorio_gregorio_tex_determine_number_and_type",
-			       ERROR, 0);
-	  break;
-	}
-      pitch = glyph->first_note->pitch;
-/*
-there is no short bar porrectus flexus in gregoria for the moment, so we comment this part
-      if (is_short (pitch))
-	{
-	  temp = 41;
-	}
-      else
-	{*/
-      temp = 33;
-      //}
-      // we don't want initio_debilis
-      if (is_initio_debilis (glyph->liquescentia))
-	{
-	  temp = temp + (unsigned int) glyph->liquescentia - L_INITIO_DEBILIS;
-	}
-      else
-	{
-	  temp = (unsigned int) temp + (unsigned int) glyph->liquescentia;
-	}
+      temp =
+	TYPE_FACTOR * 8 +
+	gregoriotex_determine_liquescentia_number (L_NO_INITIO,
+						   glyph->liquescentia);
       *type = T_PORRECTUS;
       break;
     case G_PORRECTUS_NO_BAR:
-      // we don't want initio_debilis
-      if (is_initio_debilis (glyph->liquescentia))
-	{
-	  temp = 45 + (unsigned int) glyph->liquescentia - L_INITIO_DEBILIS;
-	}
-      else
-	{
-	  temp = 45 + (unsigned int) glyph->liquescentia;
-	}
+      temp =
+	TYPE_FACTOR * 12 +
+	gregoriotex_determine_liquescentia_number (L_NO_INITIO,
+						   glyph->liquescentia);
       *type = T_PORRECTUS;
       break;
     case G_PORRECTUS_FLEXUS_NO_BAR:
-      // we don't want initio_debilis
-      if (is_initio_debilis (glyph->liquescentia))
-	{
-	  temp = 49 + (unsigned int) glyph->liquescentia - L_INITIO_DEBILIS;
-	}
-      else
-	{
-	  temp = 49 + (unsigned int) glyph->liquescentia;
-	}
+      temp =
+	TYPE_FACTOR * 10 +
+	gregoriotex_determine_liquescentia_number (L_NO_INITIO,
+						   glyph->liquescentia);
       *type = T_PORRECTUS;
       break;
     case G_SCANDICUS:
@@ -751,7 +753,7 @@ there is no short bar porrectus flexus in gregoria for the moment, so we comment
     }
 
   *glyph_number = libgregorio_gregoriotex_determine_interval (glyph);
-  *glyph_number = (1000 * temp) + (*glyph_number);
+  *glyph_number = temp + (*glyph_number);
   // we change to the original liquescentia
   glyph->liquescentia = liquescentia;
 // we fix *type with initio_debilis
@@ -828,11 +830,11 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
   second = current_note->next_note->pitch;
   if (first < second)
     {
-      current = 10 * (second - first) + current;
+      current = 5 * (second - first) + current;
     }
   else
     {
-      current = 10 * (first - second) + current;
+      current = 5 * (first - second) + current;
     }
   current_note = current_note->next_note;
   if (!current_note->next_note)
@@ -843,26 +845,25 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
   second = current_note->next_note->pitch;
   if (first < second)
     {
-      current = 100 * (second - first) + current;
+      current = 25 * (second - first) + current;
     }
   else
     {
-      current = 100 * (first - second) + current;
+      current = 25 * (first - second) + current;
     }
   return current;
 }
 
-/* function used when the glyph is only one note long, the type is 1. Like before, we multiply this number by 1000 and we add something. Here the thing that will be added is this one : 
-
-* 1: c clef
-* 2: f clef
-* 3: custo for bass notes (oriented to the top)
-* 4: custo for high notes (oriented to the bottom)
-* 5: flat (oriented to the top)
-* 6: flat (oriented to the bottom)
-* 7: natural
-* 8: virgula
-* 9: divisio minima
+/* function used when the glyph is only one note long, the glyph number are simply the following:
+* 01: c clef
+* 02: f clef
+* 03: custo for bass notes (oriented to the top)
+* 04: custo for high notes (oriented to the bottom)
+* 05: flat (oriented to the top)
+* 06: flat (oriented to the bottom)
+* 07: natural
+* 08: virgula
+* 09: divisio minima
 * 10: divisio minor
 * 11: divisio maior
 * 12: divisio finalis
@@ -957,7 +958,6 @@ libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note,
       return;
       break;
     }
-  glyph_number = glyph_number + 1000;
   fprintf (f, "\\glyph{^^^^%04x}{%d}{%d}{0}%%\n", glyph_number,
 	   note->pitch - 96, next_note_pitch - 96);
 }
