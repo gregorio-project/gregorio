@@ -182,9 +182,9 @@
 \calculateglyphraisevalue{10}%
 \fi%
 \ifx c#1% we check if it is a c key
-\raise\glyphraisevalue\hbox{\gregoria \char 1}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 1}%
 \else % we consider that it is a f key
-\raise\glyphraisevalue\hbox{\gregoria \char 2}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 2}%
 \fi%
 }
 
@@ -227,7 +227,7 @@
 \hbox{%
 % we type a hskip and the we type the custo
 \hskip\spacebeforecusto %
-\gregoria %
+\gregorianfont %
 \ifcase#1%
 \or%
 \char 29%
@@ -264,7 +264,6 @@
 \localrightbox{}%
 }
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the different glyphs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -300,7 +299,7 @@
 %%%%% 3 : initio-debilis : same as 1 but the first note is much smaller
 \def\glyph#1#2#3#4{%
 \calculateglyphraisevalue{#2}%
-\setbox\Tempwidth=\hbox{\gregoria #1}%
+\setbox\Tempwidth=\hbox{\gregorianfont #1}%
 \tempwidth=\wd\Tempwidth%
 \raise \glyphraisevalue%
 \copy\Tempwidth%
@@ -331,6 +330,25 @@
 \newbox\Syllablenotes
 \def\syllablenotes#1{%
 \setbox\Syllablenotes=\hbox{#1}%
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of the signs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\punctummora#1{%
+\calculateglyphraisevalue{#1}%
+\setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
+\raise \glyphraisevalue%
+\copy\Tempwidth%
+}
+
+\def\augmentumduplex#1{%
+\calculateglyphraisevalue{#1}%
+\setbox\Tempwidth=\hbox{\gregorianfont \char 15}%
+\raise \glyphraisevalue%
+\copy\Tempwidth%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -476,7 +494,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria \char 8}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
 \hskip\barspace %
 \penalty 0% test
 }
@@ -486,7 +504,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria \char 8}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
 \hskip\barspace %
 }
 
@@ -495,7 +513,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria \char 9}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
 \hskip\barspace %
 }
 
@@ -504,7 +522,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria \char 9}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
 \hskip\barspace %
 }
 
@@ -513,7 +531,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria \char 10}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
 \hskip\barspace %
 }
 
@@ -522,7 +540,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria \char 10}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
 \hskip\barspace %
 }
 
@@ -531,7 +549,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria \char 11}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 \hskip\barspace %
 }
 
@@ -540,7 +558,7 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria \char 11}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 \hskip\barspace %
 }
 
@@ -551,11 +569,11 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria \char 11}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 \temptwo=0.064em%
 \multiply\temptwo by \the\factor%
 \kern \temptwo%
-\raise\glyphraisevalue\hbox{\gregoria \char 11}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 \hskip\barspace %
 }
 
@@ -564,11 +582,11 @@
 \multiply\barspace by \factor%
 \hskip\barspace %
 \calculateglyphraisevalue{8}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregoria \char 11}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 \temptwo=0.064em%
 \multiply\temptwo by \the\factor%
 \kern \temptwo%
-\raise\glyphraisevalue\hbox{\gregoria \char 11}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 \hskip\barspace %
 }
 
@@ -742,8 +760,8 @@
 %% tests
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% we open the font gregoria at \factor pt, we must know \factor because it will determine the line heigth, etc.
-\font\gregoria=gregorio at \the\factor em
+% we open the font at \factor pt, we must know \factor because it will determine the line heigth, etc.
+\font\gregorianfont=gregorio at \the\factor em
 
 \font\textfont=pncr at 12pt
 \font\fontofinitial=pncr at 40pt
