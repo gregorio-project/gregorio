@@ -17,12 +17,13 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #This script takes a very simple .sfd file with a few symbols and builds a|
-#complete square notation font.
+#complete square notation font. See gregorio-base.sfd for naming conventions
+#of these symbols.
 #
 #This python script generates a fontforge native script (.pe). In the future, 
 #python will also work (better that .pe) to control fontforge with scripts, but
-#it is not yet implemented. the .pe script will build a new font, called 
-#gregorio-final.sfd which will have all the glyphs of a square notation.
+#it is not yet implemented. The .pe script will build foo-0.pfb (and also .tfm,
+#.afm and .enc) to foo-6.pfb.
 #
 #To build you own font, look at gregorio-base.sfd, and build you own glyphs from
 #it.
@@ -32,6 +33,11 @@
 # chmod +x squarize.pe
 # ./squarize.pe
 # the last step may take a few minutes
+
+#the name of the fonts that we're going to build. The convention is to call the
+#base font foo-base.sfd where foo is the name of the font.
+
+font_name="gregorio"
 
 # the file we are going to write in
 fout=open("squarize.pe", 'w')
@@ -104,7 +110,7 @@ current_glyph_number=0
 # a function called at the beginning of the script, that opens the font
 
 def headers():
-    fout.write("#!/usr/local/bin/fontforge\n\nPrint(\"Creating all square notation symbols for the gregorio font.\\nThis may take several minutes.....\");\nOpen(\"gregorio-base.sfd\");\n")
+    fout.write("#!/usr/local/bin/fontforge\n\nPrint(\"Creating all square notation symbols for the %s font.\\nThis may take several minutes.....\");\nOpen(\"%s-base.sfd\");\n" % (font_name, font_name))
 
 # the function that deletes the temporary glyphs and saves the modified font, called at the end
 
@@ -131,13 +137,13 @@ def end_font():
 	    fout.write("Clear();\n")	
     fout.write("Reencode(\"compacted\");\n")
     fout.write("Reencode(\"original\",1);\n")
-    fout.write("SetFontNames(\"gregorio-%d\");\n" % current_font_number)
+    fout.write("SetFontNames(\"%s-%d\");\n" % (font_name, current_font_number))
     # 66537 is for generating an afm and a tfm file
-    fout.write("Generate(\"gregorio-%d.pfb\",\"\",66537);\n" % current_font_number)
+    fout.write("Generate(\"%s-%d.pfb\",\"\",66537);\n" % (font_name,current_font_number))
     # uncomment the next line if you want to generate sfd files (easier to debug)
-    #fout.write("Save(\"gregorio-%d.sfd\");\n" % current_font_number)
+    #fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
     fout.write("Close();\n")
-    fout.write("Open(\"gregorio-base.sfd\");\n")
+    fout.write("Open(\"%s-base.sfd\");\n" % font_name)
     current_glyph_number=0
     current_font_number=current_font_number+1
     count=139
