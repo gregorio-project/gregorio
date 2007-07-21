@@ -65,6 +65,14 @@ libgregorio_gabc_write_score (FILE * f, gregorio_score * score)
     {
       fprintf (f, "musixtex-preamble: %s;\n", score->musixtex_preamble);
     }
+  if (score->gregoriotex_font)
+    {
+      fprintf (f, "gregoriotex_font: %s;\n", score->gregoriotex_font);
+    }
+  if (score->mode)
+    {
+      fprintf (f, "mode: %d;\n", score->mode);
+    }
   if (score->number_of_voices == 0)
     {
       libgregorio_message (_("gregorio_score seems to be empty"),

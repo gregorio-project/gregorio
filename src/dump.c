@@ -42,6 +42,10 @@ libgregorio_dump_score (FILE * f, gregorio_score * score)
     {
         fprintf (f, "   office_part               %s\n", score->office_part);
     }
+    if (score->mode)
+    {
+        fprintf (f, "   mode                      %d\n", score->mode);
+    }
     if (score->lilypond_preamble)
     {
         fprintf (f, "   lilypond_preamble         %s\n", score->lilypond_preamble);
@@ -53,6 +57,10 @@ libgregorio_dump_score (FILE * f, gregorio_score * score)
     if (score->musixtex_preamble)
     {
         fprintf (f, "   musixtex_preamble         %s\n", score->musixtex_preamble);
+    }
+    if (score->gregoriotex_font)
+    {
+        fprintf (f, "   gregoriotex_font          %s\n", score->gregoriotex_font);
     }
     fprintf (f,
              "\n\n=====================================================================\n VOICES INFOS\n=====================================================================\n");

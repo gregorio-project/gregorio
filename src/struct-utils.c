@@ -569,6 +569,8 @@ libgregorio_new_score ()
   new_score->opustex_preamble = NULL;
   new_score->musixtex_preamble = NULL;
   new_score->first_voice_info = NULL;
+  new_score->mode=0;
+  new_score->gregoriotex_font = NULL;
   return new_score;
 }
 

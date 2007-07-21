@@ -934,7 +934,7 @@ end_style_determination ()
 
 %}
 
-%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANOTATION AUTHOR DATE MANUSCRIPT REFERENCE STORAGE_PLACE TRANSLATOR TRANSLATION_DATE STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE SOFTWARE_USED NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES INITIAL_KEY VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END
+%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANOTATION AUTHOR DATE MANUSCRIPT REFERENCE STORAGE_PLACE TRANSLATOR TRANSLATION_DATE STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE MODE GREGORIOTEX_FONT SOFTWARE_USED NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES INITIAL_KEY VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END
 
 %%
 
@@ -1001,12 +1001,34 @@ musixtex_preamble_definition:
 	}
 	;
 
+gregoriotex_font_definition:
+	GREGORIOTEX_FONT attribute {
+	if (score->gregoriotex_font) {
+	libgregorio_message(_("several GregorioTeX font definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
+	}
+	score->gregoriotex_font=$2;
+	}
+	;
+
 office_part_definition:
 	OFFICE_PART attribute {
 	if (score->office_part) {
 	libgregorio_message(_("several office part definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
 	}
 	libgregorio_set_score_office_part (score, $2);
+	}
+	;
+
+mode_definition:
+	MODE attribute {
+	if (score->office_part) {
+	libgregorio_message(_("several mode definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
+	}
+	if ($2)
+	  {
+	    score->mode=atoi($2);
+	    free($2);
+	  }
 	}
 	;
 
@@ -1020,7 +1042,6 @@ initial_key_definition:
 	libgregorio_set_voice_initial_key (current_voice_info, clef);
 	}
 	;
-
 
 anotation_definition:
 	ANOTATION attribute {
@@ -1176,6 +1197,10 @@ definition:
 	anotation_definition
 	|
 	office_part_definition
+	|
+	mode_definition
+	|
+	gregoriotex_font_definition
 	|
 	VOICE_CHANGE {
 	next_voice_info ();

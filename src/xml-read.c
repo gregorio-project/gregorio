@@ -187,7 +187,22 @@ libgregorio_xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc,
 	  current_node = current_node->next;
 	  continue;
 	}
-
+      if (!xmlStrcmp
+	  (current_node->name, (const xmlChar *) "gregoriotex_font"))
+	{
+	  score->gregoriotex_font = (char *) xmlNodeListGetString
+		    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp
+	  (current_node->name, (const xmlChar *) "mode"))
+	{
+	  score->mode = atoi((char *) xmlNodeListGetString
+		    (doc, current_node->xmlChildrenNode, 1));
+	  current_node = current_node->next;
+	  continue;
+	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "voice-list"))
 	{
 	  libgregorio_xml_read_multi_voice_info (current_node->

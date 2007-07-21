@@ -565,6 +565,26 @@ libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
     {
       fprintf (f, "<office-part>%s</office-part>", score->office_part);
     }
+  if (score->mode)
+    {
+      fprintf (f, "<mode>%d</mode>", score->mode);
+    }
+  if (score->lilypond_preamble)
+    {
+      fprintf (f, "<lilypond-preamble>%s</lilypond-preamble>", score->lilypond_preamble);
+    }
+  if (score->opustex_preamble)
+    {
+      fprintf (f, "<opustex-preamble>%s</opustex-preamble>", score->opustex_preamble);
+    }
+  if (score->musixtex_preamble)
+    {
+      fprintf (f, "<musixtex-preamble>%s</musixtex-preamble>", score->musixtex_preamble);
+    }
+  if (score->gregoriotex_font)
+    {
+      fprintf (f, "<gregoriotex_font>%s</gregoriotex_font>", score->gregoriotex_font);
+    }
 
 //then we consider the voice_info
   int voice=MONOPHONY;

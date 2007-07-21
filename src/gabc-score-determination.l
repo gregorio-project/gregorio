@@ -74,6 +74,9 @@ char *error;
 <INITIAL>office-part {
          return OFFICE_PART;
       }
+<INITIAL>mode {
+         return MODE;
+      }
 <INITIAL>anotation {
          return ANOTATION;
       }
@@ -115,6 +118,9 @@ char *error;
       }
 <INITIAL>musixtex-preamble {
          return MUSIXTEX_PREAMBLE;
+      }
+<INITIAL>gregoriotex-font {
+         return GREGORIOTEX_FONT;
       }
 <INITIAL>--(.*) {
 	return VOICE_CHANGE;

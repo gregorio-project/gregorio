@@ -220,11 +220,17 @@ typedef struct gregorio_score {
 // then start some metadata:
   char *name;
   char *office_part;
+// the mode of a song is between 1 and 8
+  char mode;
 // these preambles will be added (in the future) as preamble in case
 // of OpusTeX, MusiXTeX or Lilypond output.
   char *lilypond_preamble;
   char *opustex_preamble;
   char *musixtex_preamble;
+// the font to use in gregoriotex
+  char *gregoriotex_font;
+// the determination method (maximal ambitus, etc.)
+  unsigned char det_method;
 // then, as there are some metadata that are voice-specific, we add a
 // pointer to the first voice_info. (see comments below)
   struct gregorio_voice_info *first_voice_info;
