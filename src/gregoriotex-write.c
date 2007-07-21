@@ -405,40 +405,36 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 			   "libgregorio_gregoriotex_write_glyph", ERROR, 0);
       return;
     }
-  unsigned int glyph_number=0;
+  unsigned int glyph_number = 0;
 // glyph number is the number of the glyph in the fonte, it is discussed in later comments
 // type is the type of the glyph. Understand the type of the glyph for gregoriotex, for the alignement between text and notes.
-  int type=0;
+  int type = 0;
   char next_note_pitch = 0;
   next_note_pitch =
     libgregorio_gregoriotex_determine_next_note (syllable, element, glyph);
-  gregorio_note *current_note = NULL;
+  gregorio_note *current_note = glyph->first_note;
 // first we check if it is really a unique glyph in gregoriotex... the glyphs that are not a unique glyph are : trigonus and pucta inclinata in general, and torculus resupinus and torculus resupinus flexus, so we first divide the glyph into real gregoriotex glyphs
-  if (is_puncta_inclinata (glyph->glyph_type)
-      || glyph->glyph_type == G_TRIGONUS
-      || glyph->glyph_type == G_PUNCTA_INCLINATA
-      || glyph->glyph_type == G_SCANDICUS)
+  switch (glyph->glyph_type)
     {
-      current_note = glyph->first_note;
+    case G_TRIGONUS:
+    case G_PUNCTA_INCLINATA:
+    case G_SCANDICUS:
+    case G_2_PUNCTA_INCLINATA_DESCENDENS:
+    case G_3_PUNCTA_INCLINATA_DESCENDENS:
+    case G_4_PUNCTA_INCLINATA_DESCENDENS:
+    case G_5_PUNCTA_INCLINATA_DESCENDENS:
+    case G_2_PUNCTA_INCLINATA_ASCENDENS:
+    case G_3_PUNCTA_INCLINATA_ASCENDENS:
+    case G_4_PUNCTA_INCLINATA_ASCENDENS:
+    case G_5_PUNCTA_INCLINATA_ASCENDENS:
       while (current_note)
 	{
 	  libgregorio_gregoriotex_write_note (f, current_note,
 					      next_note_pitch);
 	  current_note = current_note->next_note;
 	}
-      return;
-    }
-  if (glyph->glyph_type == G_VIRGA || glyph->glyph_type == G_STROPHA
-      || glyph->glyph_type == G_STROPHA_AUCTA
-      || glyph->glyph_type == G_PUNCTUM)
-    {
-      libgregorio_gregoriotex_write_note (f, glyph->first_note,
-					  next_note_pitch);
-      return;
-    }
-  if (glyph->glyph_type == G_TORCULUS_RESUPINUS)
-    {
-      current_note = glyph->first_note;
+      break;
+    case G_TORCULUS_RESUPINUS:
       libgregorio_gregoriotex_write_note (f, current_note, next_note_pitch);
       glyph->glyph_type = G_PORRECTUS_NO_BAR;
       libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
@@ -447,11 +443,8 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 //TODO : fusion functions
       fprintf (f, "\\glyph{^^^^%04x}{%d}{%d}{%d}%%\n", glyph_number,
 	       glyph->first_note->pitch - 96, next_note_pitch - 96, type);
-      return;
-    }
-  if (glyph->glyph_type == G_TORCULUS_RESUPINUS_FLEXUS)
-    {
-      current_note = glyph->first_note;
+      break;
+    case G_TORCULUS_RESUPINUS_FLEXUS:
       libgregorio_gregoriotex_write_note (f, current_note, next_note_pitch);
       glyph->glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
       libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
@@ -460,11 +453,9 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 //TODO : fusion functions
       fprintf (f, "\\glyph{^^^^%04x}{%d}{%d}{%d}%%\n", glyph_number,
 	       glyph->first_note->pitch - 96, next_note_pitch - 96, type);
-      return;
-    }
-  if (glyph->glyph_type == G_BIVIRGA || glyph->glyph_type == G_DISTROPHA)
-    {
-      current_note = glyph->first_note;
+      break;
+    case G_BIVIRGA:
+    case G_DISTROPHA:
       while (current_note)
 	{
 	  libgregorio_gregoriotex_write_note (f, current_note,
@@ -475,12 +466,9 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 	      fprintf (f, "\\endofglyph{4}%%\n");
 	    }
 	}
-      return;
-    }
-
-  if (glyph->glyph_type == G_TRIVIRGA || glyph->glyph_type == G_TRISTROPHA)
-    {
-      current_note = glyph->first_note;
+      break;
+    case G_TRIVIRGA:
+    case G_TRISTROPHA:
       while (current_note)
 	{
 	  libgregorio_gregoriotex_write_note (f, current_note,
@@ -491,20 +479,46 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 	      fprintf (f, "\\endofglyph{5}%%\n");
 	    }
 	}
-      return;
-    }
-  if (glyph->glyph_type == G_VIRGA
-      || glyph->glyph_type == G_STROPHA || glyph->glyph_type ==
-      G_STROPHA_AUCTA || glyph->glyph_type == G_PUNCTUM)
-    {
+      break;
+    case G_PUNCTUM_INCLINATUM:
+    case G_VIRGA:
+    case G_STROPHA:
+    case G_STROPHA_AUCTA:
+    case G_PUNCTUM:
       libgregorio_gregoriotex_write_note (f, glyph->first_note,
 					  next_note_pitch);
-      return;
+      break;
+    default:
+      libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
+							 &glyph_number);
+      fprintf (f, "\\glyph{^^^^%04x}{%d}{%d}{%d}%%\n", glyph_number,
+	       glyph->first_note->pitch - 96, next_note_pitch - 96, type);
+      break;
     }
-  libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
-						     &glyph_number);
-  fprintf (f, "\\glyph{^^^^%04x}{%d}{%d}{%d}%%\n", glyph_number,
-	   glyph->first_note->pitch - 96, next_note_pitch - 96, type);
+  // then we describe the signs
+  current_note = glyph->first_note;
+  while (current_note) {
+switch (current_note->signs) {
+case _PUNCTUM_MORA:
+fprintf(f, "\\punctummora{%d}%%\n", current_note->pitch-96);
+break;
+case _AUCTUM_DUPLEX:
+fprintf(f, "\\augmentumduplex{%d}%%\n", current_note->pitch-96);
+break;
+case _V_EPISEMUS:
+break;
+case _V_EPISEMUS_PUNCTUM_MORA:
+fprintf(f, "\\punctummora{%d}%%\n", current_note->pitch-96);
+break;
+case _V_EPISEMUS_AUCTUM_DUPLEX:
+fprintf(f, "\\augmentumduplex{%d}%%\n", current_note->pitch-96);
+break;
+default:
+break;
+}
+current_note=current_note->next_note;
+
+}
 
 }
 

@@ -1,7 +1,7 @@
 squarize.pe: squarize.py
 	$(PYTHON) squarize.py
 
-$(TFM) $(PFB): squarize.pe
+$(TFM) $(PFB): squarize.pe gregorio-base.sfd
 	$(FONTFORGE) squarize.pe
 
 $(PL): $(TFM)

@@ -338,6 +338,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\punctummora#1{%
+\hskip\spacebeforesigns%
 \calculateglyphraisevalue{#1}%
 \setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
 \raise \glyphraisevalue%
@@ -345,6 +346,7 @@
 }
 
 \def\augmentumduplex#1{%
+\hskip\spacebeforesigns%
 \calculateglyphraisevalue{#1}%
 \setbox\Tempwidth=\hbox{\gregorianfont \char 15}%
 \raise \glyphraisevalue%
@@ -713,6 +715,11 @@
 \newskip\spacebeforecusto
 \spacebeforecusto=0.165em plus 0.0165em minus 0.0165em
 \multiply\spacebeforecusto by \factor
+
+% space before punctum mora and augmentum duplex
+\newskip\spacebeforesigns
+\spacebeforesigns=0.05em plus 0.005em minus 0.005em
+\multiply\spacebeforesigns by \factor
 
 % space after a clef at the beginning of a line
 \newskip\spaceafterlineclef
