@@ -283,50 +283,7 @@
 \newdimen\glyphraisevalue 
 
 % a temporary count
-\newcount\tempcount\tempcount=0
-
-% a macro that sets tempcount to the corresponding height value (a => 1, b => 2...)
-\def\calculateheightnumber#1{%
-\ifx a#1%
-\global\tempcount=\number 1%
-\fi%
-\ifx b#1%
-\global\tempcount=\number 2%
-\fi%
-\ifx c#1%
-\global\tempcount=\number 3%
-\fi%
-\ifx d#1%
-\global\tempcount=\number 4%
-\fi%
-\ifx e#1%
-\global\tempcount=\number 5%
-\fi%
-\ifx f#1%
-\global\tempcount=\number 6%
-\fi%
-\ifx g#1%
-\global\tempcount=\number 7%
-\fi%
-\ifx h#1%
-\global\tempcount=\number 8%
-\fi%
-\ifx i#1%
-\global\tempcount=\number 9%
-\fi%
-\ifx j#1%
-\global\tempcount=\number 10%
-\fi%
-\ifx k#1%
-\global\tempcount=\number 11%
-\fi%
-\ifx l#1%
-\global\tempcount=\number 12%
-\fi%
-\ifx m#1%
-\global\tempcount=\number 13%
-\fi%
-}
+\newcount\tempcount
 
 % a very useful macro : it determines the good height of a glyph : the argument is the "number" where the glyph should be : 4 for the first line, 6 for the second, etc.
 % the second argument is for the cases of signs: for example if the note is on a line, the punctummora will be above, and the auctus duplex beneath. the possible values are:
@@ -334,17 +291,80 @@
 %% 1: puts the value on the interline just above if it is on a line
 %% 2: puts the value on the interline just beneath if it is on a line
 \def\calculateglyphraisevalue#1#2{%
-%\tempcount=2%
-\calculateheightnumber{#1}% sets tempcount to the good value
-%\tototo{\the\tempcount}%
-\ifodd\tempcount%
-\else%
+\ifx a#1%
+\global\tempcount=\number 1%
+\fi%
+\ifx b#1%
+\global\tempcount=\number 2%
 \ifcase#2 %
 \or%
 \advance\tempcount by 1%
 \or%
 \advance\tempcount by -1%
 \fi%
+\fi%
+\ifx c#1%
+\global\tempcount=\number 3%
+\fi%
+\ifx d#1%
+\global\tempcount=\number 4%
+\ifcase#2 %
+\or%
+\advance\tempcount by 1%
+\or%
+\advance\tempcount by -1%
+\fi%
+\fi%
+\ifx e#1%
+\global\tempcount=\number 5%
+\fi%
+\ifx f#1%
+\global\tempcount=\number 6%
+\ifcase#2 %
+\or%
+\advance\tempcount by 1%
+\or%
+\advance\tempcount by -1%
+\fi%
+\fi%
+\ifx g#1%
+\global\tempcount=\number 7%
+\fi%
+\ifx h#1%
+\global\tempcount=\number 8%
+\ifcase#2 %
+\or%
+\advance\tempcount by 1%
+\or%
+\advance\tempcount by -1%
+\fi%
+\fi%
+\ifx i#1%
+\global\tempcount=\number 9%
+\fi%
+\ifx j#1%
+\global\tempcount=\number 10%
+\ifcase#2 %
+\or%
+\advance\tempcount by 1%
+\or%
+\advance\tempcount by -1%
+\fi%
+\fi%
+\ifx k#1%
+\global\tempcount=\number 11%
+\fi%
+\ifx l#1%
+\global\tempcount=\number 12%
+\ifcase#2 %
+\or%
+\advance\tempcount by 1%
+\or%
+\advance\tempcount by -1%
+\fi%
+\fi%
+\ifx m#1%
+\global\tempcount=\number 13%
 \fi%
 \advance\tempcount by -7 %
 \glyphraisevalue=0.159 em %
@@ -354,9 +374,6 @@
 \global\tempcount=0
 }
 
-\def\tototo#1{%
-#1
-}
 % count that tells us if the current glyph is the first glyph or not. It it is the case, we determine
 \newcount\firstglyph
 
