@@ -441,8 +441,8 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 							 &glyph_number);
       glyph->glyph_type = G_TORCULUS_RESUPINUS;
 //TODO : fusion functions
-      fprintf (f, "\\glyph{^^^^%04x}{%d}{%d}{%d}%%\n", glyph_number,
-	       glyph->first_note->pitch - 96, next_note_pitch - 96, type);
+      fprintf (f, "\\glyph{^^^^%04x}{%c}{%c}{%d}%%\n", glyph_number,
+	       glyph->first_note->pitch, next_note_pitch, type);
       break;
     case G_TORCULUS_RESUPINUS_FLEXUS:
       libgregorio_gregoriotex_write_note (f, current_note, next_note_pitch);
@@ -451,8 +451,8 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 							 &glyph_number);
       glyph->glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
 //TODO : fusion functions
-      fprintf (f, "\\glyph{^^^^%04x}{%d}{%d}{%d}%%\n", glyph_number,
-	       glyph->first_note->pitch - 96, next_note_pitch - 96, type);
+      fprintf (f, "\\glyph{^^^^%04x}{%c}{%c}{%d}%%\n", glyph_number,
+	       glyph->first_note->pitch, next_note_pitch, type);
       break;
     case G_BIVIRGA:
     case G_DISTROPHA:
@@ -491,8 +491,8 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
     default:
       libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
 							 &glyph_number);
-      fprintf (f, "\\glyph{^^^^%04x}{%d}{%d}{%d}%%\n", glyph_number,
-	       glyph->first_note->pitch - 96, next_note_pitch - 96, type);
+      fprintf (f, "\\glyph{^^^^%04x}{%c}{%c}{%d}%%\n", glyph_number,
+	       glyph->first_note->pitch, next_note_pitch, type);
       break;
     }
   // then we describe the signs
@@ -500,18 +500,18 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
   while (current_note) {
 switch (current_note->signs) {
 case _PUNCTUM_MORA:
-fprintf(f, "\\punctummora{%d}%%\n", current_note->pitch-96);
+fprintf(f, "\\punctummora{%c}%%\n", current_note->pitch);
 break;
 case _AUCTUM_DUPLEX:
-fprintf(f, "\\augmentumduplex{%d}%%\n", current_note->pitch-96);
+fprintf(f, "\\augmentumduplex{%c}%%\n", current_note->pitch);
 break;
 case _V_EPISEMUS:
 break;
 case _V_EPISEMUS_PUNCTUM_MORA:
-fprintf(f, "\\punctummora{%d}%%\n", current_note->pitch-96);
+fprintf(f, "\\punctummora{%c}%%\n", current_note->pitch);
 break;
 case _V_EPISEMUS_AUCTUM_DUPLEX:
-fprintf(f, "\\augmentumduplex{%d}%%\n", current_note->pitch-96);
+fprintf(f, "\\augmentumduplex{%c}%%\n", current_note->pitch);
 break;
 default:
 break;
@@ -976,8 +976,8 @@ libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note,
       return;
       break;
     }
-  fprintf (f, "\\glyph{^^^^%04x}{%d}{%d}{0}%%\n", glyph_number,
-	   note->pitch - 96, next_note_pitch - 96);
+  fprintf (f, "\\glyph{^^^^%04x}{%c}{%c}{0}%%\n", glyph_number,
+	   note->pitch, next_note_pitch);
 }
 
 
