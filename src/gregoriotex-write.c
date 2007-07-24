@@ -436,6 +436,8 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
       break;
     case G_TORCULUS_RESUPINUS:
       libgregorio_gregoriotex_write_note (f, current_note, next_note_pitch);
+      // tricky to have the good position for these glyphs
+      glyph->first_note=current_note->next_note;
       glyph->glyph_type = G_PORRECTUS_NO_BAR;
       libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
 							 &glyph_number);
@@ -443,16 +445,20 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 //TODO : fusion functions
       fprintf (f, "\\glyph{^^^^%04x}{%c}{%c}{%d}%%\n", glyph_number,
 	       glyph->first_note->pitch, next_note_pitch, type);
+      glyph->first_note=current_note;
       break;
     case G_TORCULUS_RESUPINUS_FLEXUS:
       libgregorio_gregoriotex_write_note (f, current_note, next_note_pitch);
       glyph->glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
+      // tricky to have the good position for these glyphs
+      glyph->first_note=current_note->next_note;
       libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
 							 &glyph_number);
       glyph->glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
 //TODO : fusion functions
       fprintf (f, "\\glyph{^^^^%04x}{%c}{%c}{%d}%%\n", glyph_number,
 	       glyph->first_note->pitch, next_note_pitch, type);
+      glyph->first_note=current_note;
       break;
     case G_BIVIRGA:
     case G_DISTROPHA:
@@ -797,7 +803,6 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 			   ERROR, 0);
       return 0;
     }
-  gregorio_note *current_note;
   if (!glyph->first_note)
     {
       libgregorio_message (_
@@ -806,21 +811,7 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 			   ERROR, 0);
       return 0;
     }
-  current_note = glyph->first_note;
-  if (glyph->glyph_type == G_PORRECTUS_NO_BAR
-      || glyph->glyph_type == G_PORRECTUS_FLEXUS_NO_BAR)
-// if it is a no_bar glyph, we skip the first note, because it means that it is a torculus resupinus (flexus), and we split it into two : the first note and the second part. We've already taken care of the first note, so we skip it.
-    {
-      if (!current_note->next_note)
-	{
-	  libgregorio_message (_
-			       ("called with a glyph that have no note"),
-			       "libgregorio_gregoriotex_determine_interval",
-			       ERROR, 0);
-	  return 0;
-	}
-      current_note = current_note->next_note;
-    }
+  gregorio_note *current_note=glyph->first_note;
   unsigned int current;
 // then we start making our formula
   char first;

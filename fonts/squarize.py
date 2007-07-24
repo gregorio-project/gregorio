@@ -357,16 +357,16 @@ def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
 def porrectus():
     for i in range(1,6):
 	for j in range(1,6):
-	   write_porrectus(i,j, "base2", 0, 'porrectus')
+	   write_porrectus(i,j, "base2", 1, 'porrectus')
     for i in range(1,6):
 	for j in range(1,6):
-	   write_porrectus(i,j, "rdeminutus", 0, 'porrectus', 'deminutus')
+	   write_porrectus(i,j, "rdeminutus", 1, 'porrectus', 'deminutus')
     for i in range(1,6):
 	for j in range(1,6):
-	   write_porrectus(i,j, "base2", 1, 'porrectus_nobar')
+	   write_porrectus(i,j, "base2", 0, 'porrectus_nobar')
     for i in range(1,6):
 	for j in range(1,6):
-	   write_porrectus(i,j, "rdeminutus", 1, 'porrectus_nobar', 'deminutus')
+	   write_porrectus(i,j, "rdeminutus", 0, 'porrectus_nobar', 'deminutus')
 
 
 def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):

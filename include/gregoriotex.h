@@ -22,9 +22,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define FUSION 1
 
 
-#define G_PORRECTUS_NO_BAR 35
-#define G_PORRECTUS_FLEXUS_NO_BAR 36
-#define G_PES_QUILISMA 37
+#define G_PORRECTUS_NO_BAR 40
+#define G_PORRECTUS_FLEXUS_NO_BAR 41
+#define G_PES_QUILISMA 42
 
 // types for the beginning of the notes
 
