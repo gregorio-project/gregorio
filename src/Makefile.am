@@ -1,4 +1,4 @@
-AM_CPPFLAGS=-I$(top_srcdir)/include -DLOCALEDIR=\"$(localedir)\"
+AM_CFLAGS=-DLOCALEDIR=\"$(localedir)\" -Wall -Wunused -Wno-unused-parameter -Wdeclaration-after-statement -Wmissing-prototypes -Wmissing-declarations --std=c99 -W -Wshadow -Wcast-align -Wwrite-strings -Wsign-compare -Wundef -Wuninitialized -Winit-self -Wpointer-arith -Wredundant-decls -Wformat-nonliteral -Wno-format-zero-length -Wmissing-format-attribute
 
 bin_PROGRAMS=gregorio
 gregorio_SOURCES=dump.c gregorio-utils.c struct-utils.c xml-write.c \

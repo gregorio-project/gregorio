@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
 */
 
+#include "config.h"
 #include <stdio.h>
 #include <wchar.h>
 #include <stdlib.h>
@@ -101,11 +102,12 @@ libgregorio_add_special_as_note (gregorio_note ** current_note, char type,
 void
 libgregorio_go_to_first_note (gregorio_note ** note)
 {
+  gregorio_note *tmp;
   if (!*note)
     {
       return;
     }
-  gregorio_note *tmp = *note;
+  tmp = *note;
   while (tmp->previous_note)
     {
       tmp = tmp->previous_note;
@@ -116,11 +118,11 @@ libgregorio_go_to_first_note (gregorio_note ** note)
 void
 libgregorio_free_one_note (gregorio_note ** note)
 {
+  gregorio_note *next = NULL;
   if (!note || !*note)
     {
       return;
     }
-  gregorio_note *next = NULL;
   if ((*note)->next_note)
     {
       (*note)->next_note->previous_note = NULL;
@@ -200,11 +202,12 @@ libgregorio_add_special_as_glyph (gregorio_glyph ** current_glyph, char type,
 void
 libgregorio_go_to_first_glyph (gregorio_glyph ** glyph)
 {
+  gregorio_glyph *tmp;
   if (!*glyph)
     {
       return;
     }
-  gregorio_glyph *tmp = *glyph;
+  tmp = *glyph;
   while (tmp->previous_glyph)
     {
       tmp = tmp->previous_glyph;
@@ -216,11 +219,11 @@ libgregorio_go_to_first_glyph (gregorio_glyph ** glyph)
 void
 libgregorio_free_one_glyph (gregorio_glyph ** glyph)
 {
+  gregorio_glyph *next = NULL;
   if (!glyph || !*glyph)
     {
       return;
     }
-  gregorio_glyph *next = NULL;
   if ((*glyph)->next_glyph)
     {
       (*glyph)->next_glyph->previous_glyph = NULL;
@@ -239,11 +242,11 @@ libgregorio_free_one_glyph (gregorio_glyph ** glyph)
 void
 libgregorio_free_glyphs (gregorio_glyph ** glyph)
 {
+  gregorio_glyph *next_glyph;
   if (!glyph || !*glyph)
     {
       return;
     }
-  gregorio_glyph *next_glyph;
   while (*glyph)
     {
       next_glyph = (*glyph)->next_glyph;
@@ -303,11 +306,12 @@ libgregorio_add_special_as_element (gregorio_element ** current_element,
 void
 libgregorio_free_one_element (gregorio_element ** element)
 {
+  gregorio_element *next;
   if (!element || !*element)
     {
       return;
     }
-  gregorio_element *next = (*element)->next_element;
+  next = (*element)->next_element;
   libgregorio_free_glyphs (&(*element)->first_glyph);
   free (*element);
   *element = next;
@@ -317,11 +321,11 @@ libgregorio_free_one_element (gregorio_element ** element)
 void
 libgregorio_free_elements (gregorio_element ** element)
 {
+  gregorio_element *next;
   if (!element || !*element)
     {
       return;
     }
-  gregorio_element *next;
   while (*element)
     {
       next = (*element)->next_element;
@@ -335,17 +339,19 @@ void
 libgregorio_add_text (char *mbcharacters,
 		      gregorio_character ** current_character)
 {
+  size_t len;
+  wchar_t *wtext;
+  int i = 0;
   if (mbcharacters == NULL)
     {
       return;
     }
-  size_t len = strlen (mbcharacters);	//to get the length of the syllable in ASCII
-  wchar_t *wtext = (wchar_t *) malloc ((len + 1) * sizeof (wchar_t));
+  len = strlen (mbcharacters);	//to get the length of the syllable in ASCII
+  wtext = (wchar_t *) malloc ((len + 1) * sizeof (wchar_t));
   mbstowcs (wtext, mbcharacters, (sizeof (wchar_t) * (len + 1)));	//converting into wchar_t
   // then we get the real length of the syllable, in letters
   len = wcslen (wtext);
   wtext[len] = L'\0';
-  int i = 0;
   // we add the corresponding characters in the list of gregorio_characters
   while (wtext[i])
     {
@@ -388,11 +394,11 @@ libgregorio_free_one_character (gregorio_character * current_character)
 void
 libgregorio_free_characters (gregorio_character * current_character)
 {
+  gregorio_character *next_character;
   if (!current_character)
     {
       return;
     }
-  gregorio_character *next_character;
   while (current_character)
     {
       next_character = current_character->next_character;
@@ -404,11 +410,12 @@ libgregorio_free_characters (gregorio_character * current_character)
 void
 libgregorio_go_to_first_character (gregorio_character ** character)
 {
+  gregorio_character *tmp;
   if (!character || !*character)
     {
       return;
     }
-  gregorio_character *tmp = *character;
+  tmp = *character;
   while (tmp->previous_character)
     {
       tmp = tmp->previous_character;
@@ -469,13 +476,16 @@ libgregorio_add_syllable (gregorio_syllable ** current_syllable,
 			  int number_of_voices, gregorio_element * elements[],
 			  gregorio_character * first_character, char position)
 {
+  gregorio_syllable *next;
+  gregorio_element **tab;
+  int i;
   if (number_of_voices > MAX_NUMBER_OF_VOICES)
     {
       libgregorio_message (_("too many voices"),
 			   "add_syllable", FATAL_ERROR, 0);
       return;
     }
-  gregorio_syllable *next = malloc (sizeof (gregorio_syllable));
+  next = malloc (sizeof (gregorio_syllable));
   if (!next)
     {
       libgregorio_message (_("error in memory allocation"),
@@ -486,10 +496,8 @@ libgregorio_add_syllable (gregorio_syllable ** current_syllable,
   next->position = position;
   next->text = first_character;
   next->next_syllable = NULL;
-  gregorio_element **tab =
-    (gregorio_element **) malloc (number_of_voices *
+  tab = (gregorio_element **) malloc (number_of_voices *
 				  sizeof (gregorio_element *));
-  int i;
   if (elements)
     {
       for (i = 0; i < number_of_voices; i++)
@@ -517,13 +525,14 @@ void
 libgregorio_free_one_syllable (gregorio_syllable ** syllable,
 			       int number_of_voices)
 {
+  int i;
+  gregorio_syllable *next;
   if (!syllable || !*syllable)
     {
       libgregorio_message (_("function called with NULL argument"),
 			   "free_one_syllable", WARNING, 0);
       return;
     }
-  int i;
   for (i = 0; i < number_of_voices; i++)
     {
       libgregorio_free_elements ((struct gregorio_element **)
@@ -533,7 +542,7 @@ libgregorio_free_one_syllable (gregorio_syllable ** syllable,
     {
       libgregorio_free_characters ((*syllable)->text);
     }
-  gregorio_syllable *next = (*syllable)->next_syllable;
+  next = (*syllable)->next_syllable;
   free ((*syllable)->elements);
   free (*syllable);
   *syllable = next;
@@ -730,13 +739,13 @@ libgregorio_free_score_infos (gregorio_score * score)
 void
 libgregorio_free_voice_infos (gregorio_voice_info * voice_info)
 {
+  gregorio_voice_info *next;
   if (!voice_info)
     {
       libgregorio_message (_("function called with NULL argument"),
 			   "free_voice_info", WARNING, 0);
       return;
     }
-  gregorio_voice_info *next;
   while (voice_info)
     {
       if (voice_info->anotation)
@@ -945,7 +954,9 @@ libgregorio_set_voice_virgula_position (gregorio_voice_info * voice_info,
 void
 libgregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
 {
-
+  int i;
+  gregorio_note *tmp = current_note;
+  char top_note;
   if (!current_note)
     {
       libgregorio_message (ngettext
@@ -962,11 +973,8 @@ libgregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
 			    n), "activate_h_isolated_episemus", WARNING, 0);
       return;
     }
-
-  int i;
-  gregorio_note *tmp = current_note;
   /* we make the first iteration by hand,in the case where something would be in highest_pitch */
-  char top_note = current_note->pitch;
+  top_note = current_note->pitch;
   tmp = tmp->previous_note;
   if (!tmp)
     {
@@ -1017,6 +1025,8 @@ libgregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
 void
 libgregorio_determine_good_top_notes (gregorio_note * current_note)
 {
+  char top_note;
+  gregorio_note *prev_note;
   if (!current_note)
     {
       libgregorio_message (_
@@ -1024,8 +1034,7 @@ libgregorio_determine_good_top_notes (gregorio_note * current_note)
 			   "activate_h_isolated_episemus", ERROR, 0);
       return;
     }
-  char top_note;
-  gregorio_note *prev_note = current_note->previous_note;
+  prev_note = current_note->previous_note;
   if (!prev_note)
     {
       return;
@@ -1432,17 +1441,21 @@ libgregorio_fix_positions (gregorio_score * score)
 void
 libgregorio_fix_initial_keys (gregorio_score * score, int default_key)
 {
-  char *error = malloc (100 * sizeof (char));
+  char *error;
+  int clef = 0;
+  gregorio_element *element;
+  gregorio_voice_info *voice_info;
+  int i;
+  char to_delete = 1;
+
   if (!score || !score->first_syllable || !score->first_voice_info)
     {
       libgregorio_message (_("score is not available"),
 			   "libgregorio_fix_initial_keys", WARNING, 0);
       return;
     }
-  int clef = 0;
-  gregorio_element *element;
-  gregorio_voice_info *voice_info = score->first_voice_info;
-  int i;
+  error = malloc (100 * sizeof (char));
+  voice_info = score->first_voice_info;
   for (i = 0; i < score->number_of_voices; i++)
     {
       element = score->first_syllable->elements[i];
@@ -1485,8 +1498,6 @@ libgregorio_fix_initial_keys (gregorio_score * score, int default_key)
     }
 
 // then we suppress syllables that contain nothing anymore : case of (c2) at beginning of files
-
-  char to_delete = 1;
 
   for (i = 0; i < score->number_of_voices; i++)
     {
@@ -1648,14 +1659,14 @@ libgregorio_write_text (char type, gregorio_character * current_character,
 			void (*end) (FILE *, unsigned char),
 			void (*printspchar) (FILE *, wchar_t *))
 {
+  wchar_t *text;
+  int i, j;
+  gregorio_character *begin_character;
+
   if (current_character == NULL)
     {
       return;
     }
-  wchar_t *text;
-  int i;
-  int j;
-  gregorio_character *begin_character;
   if (type == SKIP_FIRST_LETTER)
     {
       while (current_character)
@@ -1754,13 +1765,14 @@ A very simple function that returns the first text of a score, or the null chara
 gregorio_character *
 libgregorio_first_text (gregorio_score * score)
 {
+  gregorio_syllable *current_syllable;
   if (!score || !score->first_syllable)
     {
       libgregorio_message (_("unable to find the first letter of the score"),
 			   "libgregorio_first_text", ERROR, 0);
       return NULL;
     }
-  gregorio_syllable *current_syllable = score->first_syllable;
+  current_syllable = score->first_syllable;
   while (current_syllable)
     {
       if (current_syllable->text)
@@ -1778,14 +1790,16 @@ libgregorio_first_text (gregorio_score * score)
 wchar_t
 libgregorio_first_letter (gregorio_score * score)
 {
+  gregorio_syllable *current_syllable;
+  gregorio_character *current_character;
   if (!score || !score->first_syllable)
     {
       libgregorio_message (_("unable to find the first letter of the score"),
 			   "libgregorio_first_letter", ERROR, 0);
       return L'\0';
     }
-  gregorio_syllable *current_syllable = score->first_syllable;
-  gregorio_character *current_character = score->first_syllable->text;
+  current_syllable = score->first_syllable;
+  current_character = score->first_syllable->text;
   while (current_syllable)
     {
       while (current_character)

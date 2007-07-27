@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config.h"
 #include <stdio.h>
 #include "struct.h"
 #include "xml.h"
@@ -29,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <getopt.h>
 #include <libgen.h>		/* for basename */
 #include <string.h>		/* for strcmp */
-#include "config.h"
 
 #include <locale.h>
 #include "gettext.h"
@@ -58,8 +58,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		snprintf(file_name,150,"%s/%s", current_directory, string);\
 		}
 
-
-char *copyright = "Copyright (C) 2006 Elie Roux <elie.roux@enst-bretagne.fr>";
+void print_licence ();
+void print_usage (char *name);
 
 void
 print_licence ()
@@ -112,15 +112,7 @@ int
 main (int argc, char **argv)
 {
 
-  if (argc == 1)
-    {
-      print_usage (argv[0]);
-      exit (0);
-    }
-
-  bindtextdomain (PACKAGE, LOCALEDIR);
-  bind_textdomain_codeset (PACKAGE, "UTF-8");
-  textdomain (PACKAGE);
+  const char *copyright = "Copyright (C) 2006 Elie Roux <elie.roux@enst-bretagne.fr>";
   int c;
 
   char *input_file_name = NULL;
@@ -133,15 +125,7 @@ main (int argc, char **argv)
   char output_format = 0;
   char verb_mode = 0;
   char *current_directory = malloc (150 * sizeof (char));
-  current_directory = getcwd (current_directory, 150);
   int number_of_options = 0;
-
-  if (current_directory == NULL)
-    {
-      fprintf (stderr, _("can't determine current directory"));
-      free (current_directory);
-      exit (-1);
-    }
   int option_index = 0;
   static struct option long_options[] = {
     {"output-file", 1, 0, 'o'},
@@ -156,6 +140,27 @@ main (int argc, char **argv)
     {"verbose", 0, 0, 'v'},
     {"all-warnings", 0, 0, 'W'}
   };
+  gregorio_score *score = NULL;
+
+  if (argc == 1)
+    {
+      print_usage (argv[0]);
+      exit (0);
+    }
+  
+  current_directory = getcwd (current_directory, 150);
+
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
+  textdomain (PACKAGE);
+
+  if (current_directory == NULL)
+    {
+      fprintf (stderr, _("can't determine current directory"));
+      free (current_directory);
+      exit (-1);
+    }
+
   while (1)
     {
       c = getopt_long (argc, argv, "o:SF:l:f:shLVvW",
@@ -413,8 +418,6 @@ main (int argc, char **argv)
     }
 
   libgregorio_set_verbosity_mode (verb_mode);
-
-  gregorio_score *score = NULL;
 
   setlocale(LC_CTYPE, ""); //to work with an utf-8 encoding
 

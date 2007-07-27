@@ -17,7 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-void libgregorio_message (const char *string, char *function_name, char verbosity, int line_number);
+#ifndef MESSAGES_H
+#define MESSAGES_H
+
+void libgregorio_message (const char *string, const char *function_name, char verbosity, int line_number);
 void libgregorio_set_verbosity_mode (char new_mode);
 void libgregorio_set_file_name (char *new_name);
 void libgregorio_set_error_out (FILE *f);
@@ -29,3 +32,5 @@ void libgregorio_set_error_out (FILE *f);
 #define WARNING VERB_WARNINGS
 #define ERROR VERB_ERRORS
 #define FATAL_ERROR 4
+
+#endif

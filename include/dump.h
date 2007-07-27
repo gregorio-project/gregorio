@@ -17,40 +17,43 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+#ifndef DUMP_H
+#define DUMP_H
 
 void
 libgregorio_dump_score (FILE * f, gregorio_score * score);
 
-char *
+const char *
 libgregorio_dump_key_to_char(int key);
 
-char *
+const char *
 libgregorio_dump_syllable_position (char pos);
 
-char *
+const char *
 libgregorio_dump_type (char type);
 
-char *
+const char *
 libgregorio_dump_bar_type (char element_type);
 
-char *
+const char *
 libgregorio_dump_space_type (char element_type);
 
-char *
+const char *
 libgregorio_dump_element_type (char element_type);
 
-char *
+const char *
 libgregorio_dump_liquescentia (char liquescentia);
 
-char *
+const char *
 libgregorio_dump_glyph_type (char glyph_type);
 
-char *
+const char *
 libgregorio_dump_shape (char shape);
 
-char *
+const char *
 libgregorio_dump_signs (char signs);
 
-char *
+const char *
 libgregorio_dump_h_episemus_type (char h_episemus_type);
 
+#endif

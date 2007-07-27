@@ -17,6 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+#ifndef GABC_H
+#define GABC_H
+
 // functions to read gabc
 gregorio_score * libgregorio_gabc_read_file (FILE * f);
 void libgregorio_activate_isolated_h_episemus (gregorio_note *current_note, int n);
@@ -52,3 +55,10 @@ void libgregorio_gabc_write_key_change (FILE * f, char step, int line);
 void libgregorio_gabc_write_space (FILE * f, char type);
 void libgregorio_gabc_write_bar (FILE * f, char type);
 void libgregorio_gabc_write_gregorio_note (FILE * f, gregorio_note * note, char glyph_type);
+void libgregorio_gabc_write_begin (FILE * f, unsigned char style);
+void libgregorio_gabc_write_end (FILE * f, unsigned char style);
+void libgregorio_gabc_write_special_char (FILE * f, wchar_t * special_char);
+void libgregorio_gabc_write_verb (FILE * f, wchar_t * verb_str);
+void libgregorio_gabc_print_char (FILE * f, wchar_t to_print);
+
+#endif

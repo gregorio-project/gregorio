@@ -19,6 +19,7 @@ This is a simple and easyly understandable output module. If you want to write a
 
 */
 
+#include "config.h"
 #include <ctype.h>
 #include <stdio.h>
 #include "gettext.h"
@@ -38,6 +39,8 @@ This is the top function, the one called when we want to write a gregorio_score 
 void
 libgregorio_gabc_write_score (FILE * f, gregorio_score * score)
 {
+  gregorio_syllable *syllable;
+
   if (score->name)
     {
       fprintf (f, "name: %s;\n", score->name);
@@ -100,7 +103,7 @@ libgregorio_gabc_write_score (FILE * f, gregorio_score * score)
 	    }
 	}
     }
-  gregorio_syllable *syllable = score->first_syllable;
+  syllable = score->first_syllable;
   // the we write every syllable
   while (syllable)
     {
@@ -120,6 +123,9 @@ This function write a gregorio_voice_info. Still very simple.
 void
 libgregorio_gabc_write_voice_info (FILE * f, gregorio_voice_info * voice_info)
 {
+  char step;
+  int line;
+
   if (!voice_info)
     {
       libgregorio_message (_("no voice info"),
@@ -166,8 +172,6 @@ libgregorio_gabc_write_voice_info (FILE * f, gregorio_voice_info * voice_info)
     {
       fprintf (f, "virgula-position: %s;\n", voice_info->virgula_position);
     }
-  char step;
-  int line;
   libgregorio_det_step_and_line_from_key (voice_info->initial_key, &step,
 					  &line);
   fprintf (f, "initial-key: %c%d;\n", step, line);
@@ -284,13 +288,13 @@ libgregorio_gabc_write_gregorio_syllable (FILE * f,
 					  gregorio_syllable * syllable,
 					  int number_of_voices)
 {
+  int voice = 0;
   if (!syllable)
     {
       libgregorio_message (_("call with NULL argument"),
 			   "libgregorio_gabc_write_syllable", ERROR, 0);
       return;
     }
-  int voice = 0;
   if (!syllable->text)
     {
       fprintf (f, "(");
@@ -358,6 +362,7 @@ To write an element, first we check the type of the element (if it is a bar, etc
 void
 libgregorio_gabc_write_gregorio_element (FILE * f, gregorio_element * element)
 {
+  gregorio_glyph *current_glyph;
   if (!element)
     {
       libgregorio_message (_("call with NULL argument"),
@@ -365,7 +370,7 @@ libgregorio_gabc_write_gregorio_element (FILE * f, gregorio_element * element)
 			   ERROR, 0);
       return;
     }
-  gregorio_glyph *current_glyph = element->first_glyph;
+  current_glyph = element->first_glyph;
   switch (element->type)
     {
     case GRE_ELEMENT:
@@ -410,6 +415,9 @@ The function that writes one glyph. If it is really a glyph (meaning not a space
 void
 libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
 {
+
+  gregorio_note *current_note;
+
   if (!glyph)
     {
       libgregorio_message (_("call with NULL argument"),
@@ -442,7 +450,7 @@ libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
 	  fprintf (f, "-");
 	}
 
-      gregorio_note *current_note = glyph->first_note;
+      current_note = glyph->first_note;
       while (current_note)
 	{
 	  libgregorio_gabc_write_gregorio_note (f,
@@ -579,6 +587,7 @@ void
 libgregorio_gabc_write_gregorio_note (FILE * f,
 				      gregorio_note * note, char glyph_type)
 {
+  char shape;
   if (!note)
     {
       libgregorio_message (_("call with NULL argument"),
@@ -592,7 +601,6 @@ libgregorio_gabc_write_gregorio_note (FILE * f,
 			   "libgregorio_gabc_write_gregorio_note", ERROR, 0);
       return;
     }
-  char shape;
   if (glyph_type == G_PES_QUADRATUM)
     {
       shape = S_QUADRATUM;

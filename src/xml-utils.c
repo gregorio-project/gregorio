@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config.h"
 #include <stdio.h>
 #include "gettext.h"
 #define _(str) gettext(str)
@@ -24,10 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "struct.h"
 #include "xml.h"
 
-char *
+const char *
 libgregorio_xml_shape_to_str (char shape)
 {
-  char *str;
+  const char *str;
+
   switch (shape)
     {
     case S_PUNCTUM:
@@ -60,10 +62,11 @@ libgregorio_xml_shape_to_str (char shape)
   return str;
 }
 
-char *
+const char *
 libgregorio_xml_signs_to_str (char signs)
 {
-  char *str;
+  const char *str;
+
   switch (signs)
     {
     case _PUNCTUM_MORA:
@@ -91,6 +94,8 @@ libgregorio_xml_signs_to_str (char signs)
 void
 libgregorio_xml_write_signs (FILE * f, char signs, char h_episemus_type)
 {
+  const char *str;
+
   if (signs != _NO_SIGN || h_episemus_type == H_ALONE)
     {
       fprintf (f, "<signs>");
@@ -100,7 +105,7 @@ libgregorio_xml_write_signs (FILE * f, char signs, char h_episemus_type)
 	}
       if (signs != _NO_SIGN)
 	{
-	  char *str = libgregorio_xml_signs_to_str (signs);
+	  str = libgregorio_xml_signs_to_str (signs);
 	  fprintf (f, "%s", str);
 	}
       fprintf (f, "</signs>");
@@ -125,6 +130,8 @@ libgregorio_xml_write_note (FILE * f, char signs, char step,
 		      int octave, char shape,
 		      char h_episemus_type, char alteration)
 {
+  const char *shape_str = libgregorio_xml_shape_to_str (shape);
+
   fprintf (f,
 	   "<note><pitch><step>%c</step><octave>%d</octave>",
 	   step, octave);
@@ -133,16 +140,16 @@ libgregorio_xml_write_note (FILE * f, char signs, char step,
       fprintf (f, "<flated />");
     }
   fprintf (f, "</pitch>");
-  char *shape_str = libgregorio_xml_shape_to_str (shape);
   fprintf (f, "<shape>%s</shape>", shape_str);
   libgregorio_xml_write_signs (f, signs, h_episemus_type);
   fprintf (f, "</note>");
 }
 
-char *
+const char *
 libgregorio_xml_glyph_type_to_str (char name)
 {
-  char *str;
+  const char *str;
+
   switch (name)
     {
     case G_PUNCTUM_INCLINATUM:
@@ -229,13 +236,11 @@ libgregorio_xml_glyph_type_to_str (char name)
   return str;
 }
 
-
-
 void
 libgregorio_xml_set_pitch_from_octave_and_step (char step,
 					  int octave, char *pitch, int clef)
 {
-*pitch=libgregorio_det_pitch(clef, step, octave);
+  *pitch=libgregorio_det_pitch(clef, step, octave);
 }
 
 void
@@ -275,6 +280,7 @@ libgregorio_xml_write_alteration (FILE * f, char type, char pitch, int clef, cha
 {
   char step;
   int octave;
+
   libgregorio_set_octave_and_step_from_pitch (&step, &octave, pitch, clef);
   switch (type)
     {
@@ -292,10 +298,11 @@ libgregorio_xml_write_alteration (FILE * f, char type, char pitch, int clef, cha
     }
 }
 
-char *
+const char *
 libgregorio_xml_bar_to_str (char type)
 {
-  char *str;
+  const char *str;
+
   switch (type)
     {
     case B_VIRGULA:
@@ -321,5 +328,3 @@ libgregorio_xml_bar_to_str (char type)
     }
   return str;
 }
-
-

@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "gettext.h"
@@ -28,6 +29,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 void
 libgregorio_dump_score (FILE * f, gregorio_score * score)
 {
+    gregorio_syllable *syllable = score->first_syllable;
+    gregorio_voice_info *voice_info = score->first_voice_info;
+    int i;
+    gregorio_character *current_character;
+    gregorio_element *element;
+    gregorio_glyph *glyph;
+    gregorio_note *note;
+
     fprintf (f,
              "=====================================================================\n SCORE INFOS\n=====================================================================\n");
     if (score->number_of_voices)
@@ -64,8 +73,6 @@ libgregorio_dump_score (FILE * f, gregorio_score * score)
     }
     fprintf (f,
              "\n\n=====================================================================\n VOICES INFOS\n=====================================================================\n");
-    gregorio_voice_info *voice_info = score->first_voice_info;
-    int i;
     for (i = 0; i < score->number_of_voices; i++)
     {
         fprintf (f, "  Voice %d\n", i + 1);
@@ -118,7 +125,6 @@ libgregorio_dump_score (FILE * f, gregorio_score * score)
     }
     fprintf (f,
              "\n\n=====================================================================\n SCORE\n=====================================================================\n");
-    gregorio_syllable *syllable = score->first_syllable;
     while(syllable)
     {
         if (syllable->type)
@@ -133,7 +139,7 @@ libgregorio_dump_score (FILE * f, gregorio_score * score)
         }
         if (syllable->text)
         {
-	  gregorio_character *current_character=syllable->text;
+	  current_character=syllable->text;
 	  while (current_character) {
 		fprintf (f, "---------------------------------------------------------------------\n");
          if (current_character->is_character) {
@@ -150,7 +156,7 @@ libgregorio_dump_score (FILE * f, gregorio_score * score)
 	  current_character=current_character->next_character;
 	  }
         }
-        gregorio_element *element = syllable->elements[0];
+        element = syllable->elements[0];
         while (element)
         {
             fprintf (f, "---------------------------------------------------------------------\n");
@@ -184,7 +190,7 @@ libgregorio_dump_score (FILE * f, gregorio_score * score)
                 fprintf (f, "     element_type            %d (f%d)\n", element->element_type,
                          element->element_type - 48);
             }
-            gregorio_glyph *glyph = element->first_glyph;
+            glyph = element->first_glyph;
             while (glyph)
             {
                 fprintf (f, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
@@ -220,7 +226,7 @@ libgregorio_dump_score (FILE * f, gregorio_score * score)
                     fprintf (f, "       liquescentia          %d (%s)\n", glyph->liquescentia,
                              libgregorio_dump_liquescentia (glyph->liquescentia));
                 }
-                gregorio_note *note = glyph->first_note;
+                note = glyph->first_note;
                 while (note)
                 {
                     fprintf (f, "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  \n");
@@ -268,10 +274,10 @@ libgregorio_dump_score (FILE * f, gregorio_score * score)
     }
 }
 
-char *
+const char *
 libgregorio_dump_key_to_char (int key)
 {
-    char *str;
+    const char *str;
     switch (key)
     {
         case -2:
@@ -306,10 +312,10 @@ libgregorio_dump_key_to_char (int key)
 }
 
 
-char *
+const char *
 libgregorio_dump_syllable_position (char pos)
 {
-    char *str;
+    const char *str;
     switch (pos)
     {
         case 1:
@@ -332,10 +338,10 @@ libgregorio_dump_syllable_position (char pos)
 }
 
 
-char *
+const char *
 libgregorio_dump_type (char type)
 {
-    char *str;
+    const char *str;
     switch (type)
     {
         case 1:
@@ -379,10 +385,10 @@ libgregorio_dump_type (char type)
 }
 
 
-char *
+const char *
 libgregorio_dump_bar_type (char element_type)
 {
-    char *str;
+    const char *str;
     switch (element_type)
     {
         case 0:
@@ -411,10 +417,10 @@ libgregorio_dump_bar_type (char element_type)
 }
 
 
-char *
+const char *
 libgregorio_dump_space_type (char element_type)
 {
-    char *str;
+    const char *str;
     switch (element_type)
     {
         case '1':
@@ -441,10 +447,11 @@ libgregorio_dump_space_type (char element_type)
     }
     return str;
 }
-char *
+
+const char *
 libgregorio_dump_element_type (char element_type)
 {
-    char *str;
+    const char *str;
     switch (element_type)
     {
         case 0:
@@ -483,10 +490,10 @@ libgregorio_dump_element_type (char element_type)
     }
     return str;
 }
-char *
+const char *
 libgregorio_dump_liquescentia (char liquescentia)
 {
-    char *str;
+    const char *str;
     switch (liquescentia)
     {
         case 0:
@@ -525,10 +532,10 @@ libgregorio_dump_liquescentia (char liquescentia)
     }
     return str;
 }
-char *
+const char *
 libgregorio_dump_glyph_type (char glyph_type)
 {
-    char *str;
+    const char *str;
     switch (glyph_type)
     {
         case 1:
@@ -634,10 +641,10 @@ libgregorio_dump_glyph_type (char glyph_type)
     return str;
 }
 
-char *
+const char *
 libgregorio_dump_shape (char shape)
 {
-    char *str;
+    const char *str;
     switch (shape)
     {
         case 0:
@@ -698,10 +705,10 @@ libgregorio_dump_shape (char shape)
     return str;
 }
 
-char *
+const char *
 libgregorio_dump_signs (char signs)
 {
-    char *str;
+    const char *str;
     switch (signs)
     {
         case 0:
@@ -729,10 +736,10 @@ libgregorio_dump_signs (char signs)
     return str;
 }
 
-char *
+const char *
 libgregorio_dump_h_episemus_type (char h_episemus_type)
 {
-    char *str;
+    const char *str;
     switch (h_episemus_type)
     {
         case 0:

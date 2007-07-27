@@ -65,6 +65,8 @@ if test "$OVP2OVF" = :; then
   AC_MSG_ERROR([You need ovp2ovf to build this package.])
 fi
 
+AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
+
 AC_CONFIG_HEADERS([include/config.h])
 AC_CONFIG_FILES([
     Makefile

@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config.h"
 #include <stdio.h>
 #include "gettext.h"
 #include "messages.h"
@@ -68,7 +69,7 @@ verbosity_to_str (char verbosity)
 }
 
 void
-libgregorio_message (const char *string, char *function_name, char verbosity,
+libgregorio_message (const char *string, const char *function_name, char verbosity,
 		int line_number)
 {
   if (!error_out)

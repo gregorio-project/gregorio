@@ -23,6 +23,7 @@ This file is certainly not the most easy to understand, it is a bison file. See 
 
 */
 
+#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <wchar.h>

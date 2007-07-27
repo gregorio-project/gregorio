@@ -19,6 +19,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 // Functions to write GregorioXML
 
+#ifndef XML_H
+#define XML_H
+
 void
 libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score);
 void
@@ -40,11 +43,11 @@ void
 libgregorio_xml_write_key_change_in_polyphony (FILE * f, char step, int line,
 					 int voice);
 
-char *libgregorio_xml_shape_to_str (char shape);
-char *libgregorio_xml_signs_to_str (char signs);
+const char *libgregorio_xml_shape_to_str (char shape);
+const char *libgregorio_xml_signs_to_str (char signs);
 void libgregorio_xml_write_signs (FILE *f, char signs, char multi_h_episemus_type);
 void libgregorio_xml_write_note (FILE *f, char signs, char step, int octave, char shape, char multi_h_episemus_type, char alteration);
-char *libgregorio_xml_glyph_type_to_str(char name);
+const char *libgregorio_xml_glyph_type_to_str(char name);
 
 void libgregorio_xml_write_liquescentia (FILE *f, char liquescentia);
 
@@ -60,18 +63,19 @@ void
 libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element, int *clef,
 			   char alterations[]);
 
-void
-libgregorio_reinitialize_one_voice_alterations (char alterations[13]);
-
-
-
-char * libgregorio_xml_bar_to_str(char type);
+const char * libgregorio_xml_bar_to_str(char type);
 void libgregorio_xml_write_neumatic_bar (FILE * f, char type);
 void libgregorio_xml_write_space (FILE * f, char type);
 
 void libgregorio_xml_write_key_change (FILE *f, char step, int line);
 
-void libgregorio_reinitialize_alterations(char alterations[][13], int number_of_voices);
+void libgregorio_xml_write_begin (FILE * f, unsigned char style);
+void libgregorio_xml_write_end (FILE * f, unsigned char style);
+void libgregorio_xml_write_special_char (FILE * f, wchar_t * special_char);
+void libgregorio_xml_write_verb (FILE * f, wchar_t * verb_str);
+void libgregorio_xml_print_char (FILE * f, wchar_t to_print);
+
+void libgregorio_xml_set_pitch_from_octave_and_step (char step, int octave, char *pitch, int clef);
 
 // Functions to read GregorioXML
 
@@ -107,8 +111,7 @@ char
 libgregorio_xml_read_shape (char *type);
 
 void
-libgregorio_xml_read_h_episemus (xmlNodePtr current_node, xmlDocPtr doc,
-				 char *h_episemus);
+libgregorio_xml_read_h_episemus (xmlNodePtr current_node, char *h_episemus);
 
 char
 libgregorio_xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key);
@@ -128,7 +131,7 @@ libgregorio_xml_read_alteration (xmlNodePtr current_node, xmlDocPtr doc,
 void
 libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
 			    gregorio_glyph ** current_glyph,
-			    char alterations[13], int key);
+			    int key);
 
 void
 libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
@@ -163,3 +166,8 @@ libgregorio_xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
 
 char
 libgregorio_xml_read_figura (char *liquescentia);
+
+char libgregorio_xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc);
+char libgregorio_xml_read_position (char *position);
+
+#endif

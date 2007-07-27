@@ -22,6 +22,9 @@ understanding, read it carefully.
 
 */
 
+#ifndef STRUCT_H
+#define STRUCT_H
+
 /*
 
 We start with the most precise structure, the note structure. The note
@@ -266,13 +269,6 @@ typedef struct gregorio_voice_info {
 
 gregorio_score * libgregorio_new_score ();
 
-void libgregorio_set_score_number_of_voices (gregorio_score *score, int number_of_voices);
-void libgregorio_set_score_office_part (gregorio_score *score, char *office_part);
-void libgregorio_set_score_lilypond_preamble (gregorio_score *score, char *lilypond_preamble);
-void libgregorio_set_score_opustex_preamble (gregorio_score *score, char *opustex_preamble);
-void libgregorio_set_score_musixtex_preamble (gregorio_score *score, char *musixtex_preamble);
-
-
 void
 libgregorio_determine_h_episemus_type (gregorio_note * note);
 
@@ -302,6 +298,12 @@ void libgregorio_free_score(gregorio_score *score);
 void libgregorio_add_special_as_glyph (gregorio_glyph **current_glyph, char type, char pitch);
 void libgregorio_add_special_as_note (gregorio_note **current_note, char type, char pitch);
 void libgregorio_add_special_as_element (gregorio_element **current_element, char type, char pitch);
+
+void libgregorio_determine_good_top_notes (gregorio_note * current_note);
+
+void libgregorio_reinitialize_alterations (char alterations[][13], int number_of_voices);
+
+void libgregorio_reinitialize_one_voice_alterations (char alterations[13]);
 
 void
 libgregorio_set_score_name (gregorio_score * score, char *name);
@@ -569,3 +571,5 @@ void libgregorio_add_text (char *mbcharacters, gregorio_character **current_char
 
 void libgregorio_go_to_first_character (gregorio_character ** character);
 gregorio_character * libgregorio_first_text (gregorio_score * score);
+
+#endif

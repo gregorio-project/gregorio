@@ -17,6 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+#ifndef OPUSTEX_H
+#define OPUSTEX_H
+
 void libgregorio_opustex_write_score (FILE * f, gregorio_score * score);
 
 void libgregorio_opustex_write_syllable (FILE * f,
@@ -69,3 +72,5 @@ void libgregorio_otex_write_end (FILE * f, unsigned char style);
 void libgregorio_otex_write_special_char (FILE * f, wchar_t * special_char);
 void libgregorio_otex_write_verb (FILE * f, wchar_t * verb_str);
 void libgregorio_otex_print_char (FILE * f, wchar_t to_print);
+
+#endif

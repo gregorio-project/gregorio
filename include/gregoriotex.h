@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+#ifndef GREGORIOTEX_H
+#define GREGORIOTEX_H
 
 #define NO_FUSION 0
 #define FUSION 1
@@ -89,3 +91,5 @@ void libgregorio_gtex_write_end (FILE * f, unsigned char style);
 void libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char);
 void libgregorio_gtex_write_verb (FILE * f, wchar_t * verb_str);
 void libgregorio_gtex_print_char (FILE * f, wchar_t to_print);
+
+#endif
