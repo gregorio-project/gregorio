@@ -34,6 +34,11 @@ This file is certainly not the most easy to understand, it is a bison file. See 
 #include "gettext.h"
 #define _(str) gettext(str)
 #define N_(str) str
+// request translation to the user native language for bison
+#define YYENABLE_NLS 1
+// don't know... to test..
+#define YYLTYPE_IS_TRIVIAL 0
+
 
 /*
 
@@ -74,8 +79,7 @@ gregorio_score *score;
 // an array of elements that we will use for each syllable
 gregorio_element **elements;
 // declaration of some functions, the first is the one initializing the flex/bison process
-int gabc_score_determination_parse ();
-int check_score_integrity (gregorio_score * score);
+//int gabc_score_determination_parse ();
 // other variables that we will have to use
 gregorio_character *current_character;
 gregorio_voice_info *current_voice_info;
@@ -90,6 +94,26 @@ char center_is_determined;
 #define SECOND_LETTER 2
 #define THIRD_LETTER 3
 char first_letter;
+
+void gabc_score_determination_error (const char *str);
+int check_score_integrity (gregorio_score * score);
+void free_styles();
+void next_voice_info ();
+void set_clef (char *str);
+void reajust_voice_infos (gregorio_voice_info * voice_info, int final_count);
+void end_definitions ();
+void suppress_useless_styles ();
+void close_syllable ();
+void push (unsigned char style);
+void pop (det_style * element);
+void add_text (char *mbcharacters);
+void add_style(unsigned char style);
+void end_style(unsigned char style);
+void insert_style_before (unsigned char type, unsigned char style);
+void insert_style_after (unsigned char type, unsigned char style);
+void suppress_this_character (gregorio_character *to_suppress);
+void end_style_determination ();
+void complete_with_nulls (int voice);
 
 /* simple function that builds an error message
  */
@@ -108,6 +132,13 @@ gabc_score_determination_error (const char *str)
 gregorio_score *
 libgregorio_gabc_read_file (FILE * f_in)
 {
+  // we initialize a file descriptor to /dev/null (see three lines below)
+  FILE *f_out = fopen ("/dev/null", "w");
+  // the input file that flex will parse
+  gabc_score_determination_in = f_in;
+  // the output file flex will write in (here /dev/null). We do not have to write in some file, we just have to build a score. Warnings and errors of flex are not written in this file, so they will appear anyway.
+  gabc_score_determination_out = f_out;
+
   if (!f_in)
     {
       libgregorio_message (_
@@ -115,13 +146,7 @@ libgregorio_gabc_read_file (FILE * f_in)
 			   "libgregorio_det_score", ERROR, 0);
       return NULL;
     }
-  // we initialize a file descriptor to /dev/null (see three lines below)
-  FILE *f_out = fopen ("/dev/null", "w");
   initialize_variables ();
-  // the input file that flex will parse
-  gabc_score_determination_in = f_in;
-  // the output file flex will write in (here /dev/null). We do not have to write in some file, we just have to build a score. Warnings and errors of flex are not written in this file, so they will appear anyway.
-  gabc_score_determination_out = f_out;
   // the flex/bison main call, it will build the score (that we have initialized)
   gabc_score_determination_parse ();
   fclose (f_out);
@@ -142,9 +167,9 @@ libgregorio_gabc_read_file (FILE * f_in)
  */
 
 int
-check_score_integrity (gregorio_score * score)
+check_score_integrity (gregorio_score * score_to_check)
 {
-  if (!score)
+  if (!score_to_check)
     {
       return 0;
     }
@@ -156,9 +181,9 @@ check_score_integrity (gregorio_score * score)
  */
 
 int
-check_infos_integrity (gregorio_score * score)
+check_infos_integrity (gregorio_score * score_to_check)
 {
-  if (!score->name)
+  if (!score_to_check->name)
     {
       libgregorio_message (_
 			   ("no name specified, put `name:...;' at the beginning of the file, can be dangerous with some output formats"),
@@ -192,8 +217,6 @@ initialize_variables ()
 
 /* function that frees the variables that need it, for when we have finished to determine the score
  */
-
-void free_styles ();
 
 void
 free_variables ()
@@ -275,6 +298,8 @@ reajust_voice_infos (gregorio_voice_info * voice_info, int final_count)
 void
 end_definitions ()
 {
+  int i;
+
   if (!check_infos_integrity (score))
     {
       libgregorio_message (_("can't determine valid infos on the score"),
@@ -322,7 +347,6 @@ end_definitions ()
   elements =
     (gregorio_element **) malloc (number_of_voices *
 				  sizeof (gregorio_element *));
-  int i;
   for (i = 0; i < number_of_voices; i++)
     {
       elements[i] = NULL;
@@ -331,7 +355,7 @@ end_definitions ()
 
 /* Here starts the code for the determinations of the notes. The notes are not precisely determined here, we separate the text describing the notes of each voice, and we call determine_elements_from_string to really determine them.
  */
-char *current_text = "";
+char *current_text = NULL; // TODO : not sure of the =NULL
 char position = WORD_BEGINNING;
 gregorio_syllable *current_syllable = NULL;
 
@@ -339,10 +363,10 @@ gregorio_syllable *current_syllable = NULL;
 /* Function called when we see a ")", it completes the gregorio_element array of the syllable with NULL pointers. Usefull in the cases where for example you have two voices, but a voice that is silent on a certain syllable.
  */
 void
-complete_with_nulls (int voice)
+complete_with_nulls (int last_voice)
 {
   int i;
-  for (i = voice + 1; i < number_of_voices; i++)
+  for (i = last_voice + 1; i < number_of_voices; i++)
     {
       elements[i] = NULL;
     }
@@ -366,10 +390,6 @@ update_position_with_space ()
       current_syllable->position = WORD_ONE_SYLLABLE;
     }
 }
-
-void end_style_determination ();
-
-void suppress_useless_styles ();
 
 /* Function to close a syllable and update the position.
  */
@@ -489,17 +509,19 @@ add_text is the function called when lex returns a char *. In this function we c
 void
 add_text (char *mbcharacters)
 {
+  int i = 0;
+  size_t len;
+  wchar_t *wtext;
   if (mbcharacters == NULL)
     {
       return;
     }
-  size_t len = strlen (mbcharacters);	//to get the length of the syllable in ASCII
-  wchar_t *wtext = (wchar_t *) malloc ((len + 1) * sizeof (wchar_t));
+  len = strlen (mbcharacters);	//to get the length of the syllable in ASCII
+  wtext = (wchar_t *) malloc ((len + 1) * sizeof (wchar_t));
   mbstowcs (wtext, mbcharacters, (sizeof (wchar_t) * (len + 1)));	//converting into wchar_t
   // then we get the real length of the syllable, in letters
   len = wcslen (wtext);
   wtext[len] = L'\0';
-  int i = 0;
   // we add the corresponding characters in the list of gregorio_characters
   while (wtext[i])
     {

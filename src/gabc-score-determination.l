@@ -24,7 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gabc.h"
 #include "gabc-score-determination-y.h"
 #include "gettext.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 char *error;
 %}
 
@@ -132,7 +134,7 @@ char *error;
 	return END_OF_DEFINITIONS;
 	 }
 <INITIAL>. {
-		snprintf(error,70,gettext("unrecognized character: %c in definition part"),gabc_score_determination_text[0]);
+	snprintf(error,70,gettext("unrecognized character: %c in definition part"),gabc_score_determination_text[0]);
 	libgregorio_message (error,
 		      "libgregorio_det_score", ERROR, 0);
 	}
@@ -196,7 +198,7 @@ char *error;
 	return OPENING_BRACKET;
 	}
 <notes>[^&\)]* {
-gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	gabc_score_determination_lval=strdup(gabc_score_determination_text);
 	return NOTES;
 	}
 <notes>& {

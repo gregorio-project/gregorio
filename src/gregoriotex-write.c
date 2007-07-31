@@ -31,19 +31,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 void
 libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score)
 {
+  gregorio_character *first_text;
+  // a char that will contain 1 if it is the first syllable and 0 if not. It is for the initial.
+  char first_syllable = 0;
+  char clef_letter;
+  int clef_line;
+  gregorio_syllable *current_syllable;
+
   if (score->number_of_voices != 1)
     {
       libgregorio_message (_
 			   ("gregoriotex only works in monophony (for the moment)"),
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
     }
-
-
   fprintf (f, "\\input gregoriotex.tex\n\n\\begingregorioscore%%\n");
 // first we draw the initial (first letter) and the initial key
-  gregorio_character *first_text = libgregorio_first_text (score);
-  // a char that will contain 1 if it is the first syllable and 0 if not. It is for the initial.
-  char first_syllable = 0;
+  first_text = libgregorio_first_text (score);
   if (first_text)
     {
       fprintf (f, "\\initial{");
@@ -56,8 +59,6 @@ libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score)
       fprintf (f, "}%%\n");
       first_syllable = SKIP_FIRST_LETTER;
     }
-  char clef_letter;
-  int clef_line;
   if (score->first_voice_info)
     {
       libgregorio_det_step_and_line_from_key (score->first_voice_info->
@@ -70,7 +71,7 @@ libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score)
       clef_line = 3;
     }
   fprintf (f, "\\setinitialclef{%c}{%d}%%\n", clef_letter, clef_line);
-  gregorio_syllable *current_syllable = score->first_syllable;
+  current_syllable = score->first_syllable;
   while (current_syllable)
     {
       libgregorio_gregoriotex_write_syllable (f, current_syllable,
@@ -93,6 +94,8 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 					gregorio_syllable * syllable,
 					char *first_syllable)
 {
+  gregorio_element *current_element;
+
   if (!syllable)
     {
       return;
@@ -117,7 +120,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
     {
       fprintf (f, "{0}{%%\n");
     }
-  gregorio_element *current_element = (syllable->elements)[0];
+  current_element = (syllable->elements)[0];
   while (current_element)
     {
       if (current_element->type == GRE_SPACE)
@@ -265,11 +268,12 @@ libgregorio_gtex_print_char (FILE * f, wchar_t to_print)
 void
 libgregorio_print_unicode_letters (FILE * f, wchar_t * wstr)
 {
+  int i = 0;
+
   if (!wstr)
     {
       return;
     }
-  int i = 0;
   while (wstr[i])
     {
       libgregorio_gtex_print_char (f, wstr[i]);
@@ -392,6 +396,13 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 				     gregorio_element * element,
 				     gregorio_glyph * glyph)
 {
+  unsigned int glyph_number = 0;
+// glyph number is the number of the glyph in the fonte, it is discussed in later comments
+// type is the type of the glyph. Understand the type of the glyph for gregoriotex, for the alignement between text and notes.
+  int type = 0;
+  char next_note_pitch = 0;
+  gregorio_note *current_note;
+
   if (!glyph)
     {
       libgregorio_message (_
@@ -406,14 +417,9 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 			   "libgregorio_gregoriotex_write_glyph", ERROR, 0);
       return;
     }
-  unsigned int glyph_number = 0;
-// glyph number is the number of the glyph in the fonte, it is discussed in later comments
-// type is the type of the glyph. Understand the type of the glyph for gregoriotex, for the alignement between text and notes.
-  int type = 0;
-  char next_note_pitch = 0;
   next_note_pitch =
     libgregorio_gregoriotex_determine_next_note (syllable, element, glyph);
-  gregorio_note *current_note = glyph->first_note;
+  current_note = glyph->first_note;
 // first we check if it is really a unique glyph in gregoriotex... the glyphs that are not a unique glyph are : trigonus and pucta inclinata in general, and torculus resupinus and torculus resupinus flexus, so we first divide the glyph into real gregoriotex glyphs
   switch (glyph->glyph_type)
     {
@@ -524,9 +530,7 @@ default:
 break;
 }
 current_note=current_note->next_note;
-
 }
-
 }
 
 
@@ -634,6 +638,10 @@ libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *
 						   glyph, int *type,
 						   unsigned int *glyph_number)
 {
+  unsigned int temp = 0;
+  char pitch;
+  char liquescentia;
+
   if (!glyph)
     {
       libgregorio_message (_
@@ -650,9 +658,7 @@ libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *
 			   ERROR, 0);
       return;
     }
-  unsigned int temp = 0;
-  char pitch;
-  char liquescentia = glyph->liquescentia;
+  liquescentia = glyph->liquescentia;
   /* commented, but must be there for the font gregoria (as there is no auctus descendens). TODO : having a variable telling the font
      if (liquescentia == L_AUCTUS_ASCENDENS)
      {
@@ -796,6 +802,12 @@ libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *
 unsigned int
 libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 {
+  gregorio_note *current_note;
+  unsigned int current;
+// then we start making our formula
+  char first;
+  char second;
+
   if (!glyph)
     {
       libgregorio_message (_
@@ -812,11 +824,7 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 			   ERROR, 0);
       return 0;
     }
-  gregorio_note *current_note=glyph->first_note;
-  unsigned int current;
-// then we start making our formula
-  char first;
-  char second;
+  current_note=glyph->first_note;
   if (!current_note->next_note)
     {
       return 0;
@@ -905,6 +913,8 @@ libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note,
 				    char next_note_pitch)
 {
   int glyph_number;
+  char temp;
+
   if (!note)
     {
       libgregorio_message (_
@@ -912,8 +922,6 @@ libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note,
 			   "libgregorio_gregoriotex_write_note", ERROR, 0);
       return;
     }
-
-  char temp;
   switch (note->shape)
     {
     case S_PUNCTUM_INCLINATUM:
@@ -978,6 +986,8 @@ libgregorio_gregoriotex_determine_next_note (gregorio_syllable * syllable,
 					     gregorio_element * element,
 					     gregorio_glyph * glyph)
 {
+  char temp;
+
   if (!glyph || !element || !syllable)
     {
       libgregorio_message (_
@@ -986,7 +996,6 @@ libgregorio_gregoriotex_determine_next_note (gregorio_syllable * syllable,
 			   ERROR, 0);
       return 'g';
     }
-  char temp;
 // we first explore the next glyphs to find a note
   glyph = glyph->next_glyph;
   while (glyph)
@@ -1036,6 +1045,9 @@ libgregorio_gregoriotex_determine_next_note (gregorio_syllable * syllable,
 char
 libgregorio_gregoriotex_syllable_first_note (gregorio_syllable * syllable)
 {
+  gregorio_glyph *glyph;
+  gregorio_element *element;
+
   if (!syllable)
     {
       libgregorio_message (_
@@ -1043,8 +1055,6 @@ libgregorio_gregoriotex_syllable_first_note (gregorio_syllable * syllable)
 			   "libgregorio_gregoriotex_determine_next_note",
 			   ERROR, 0);
     }
-  gregorio_glyph *glyph;
-  gregorio_element *element;
   element = syllable->elements[0];
   while (element)
     {

@@ -118,15 +118,6 @@ close_glyph (gregorio_glyph ** last_glyph, char glyph_type,
 gregorio_glyph *
 libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 {
-
-  if (current_note == NULL)
-    {
-      return NULL;
-    }
-
-  libgregorio_go_to_first_note (&current_note);
-  // de l'enlever, ça mange pas de pain...
-
   // the first note of the current glyph, to be able to close it well:
   // later we will cut the link (next_notes and previous_note) between
   // this note and the previous one
@@ -148,6 +139,13 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 
   // a char representing the liquescentia of the current glyph
   char liquescentia = L_NO_LIQUESCENTIA;
+
+  if (current_note == NULL)
+    {
+      return NULL;
+    }
+
+  libgregorio_go_to_first_note (&current_note);
 
   while (current_note)
     {

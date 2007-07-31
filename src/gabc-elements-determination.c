@@ -70,7 +70,7 @@ current_glyph: the last glyph that will be in the element
 
 void
 close_element (gregorio_element ** current_element,
-	       gregorio_glyph * first_glyph, gregorio_glyph * current_glyph)
+	       gregorio_glyph * first_glyph)
 {
   libgregorio_add_element (current_element, first_glyph);
   if (first_glyph && first_glyph->previous_glyph)
@@ -87,7 +87,7 @@ a macro that do automatically two or three things
 */
 
 #define cut_before() if (first_glyph!=current_glyph) {\
-close_element(&current_element,first_glyph, current_glyph);\
+close_element(&current_element,first_glyph);\
 first_glyph =current_glyph;\
 previous_glyph=current_glyph;\
 }
@@ -101,13 +101,6 @@ The big function of the file, but rather simple I think.
 gregorio_element *
 libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 {
-
-  if (!current_glyph)
-    {
-      return NULL;
-    }
-// first we go to the first glyph in the chained list of glyphs (maybe to suppress ?)
-  libgregorio_go_to_first_glyph (&current_glyph);
 // the last element we have successfully added to the list of elements
   gregorio_element *current_element = NULL;
 // the first element, that we will return at the end. We have to consider it because the gregorio_element struct does not have previous_element element.
@@ -120,6 +113,14 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
   char do_not_cut = 0;
 // a char that is necesarry to determine the type of the current_glyph
   char current_glyph_type;
+
+  if (!current_glyph)
+    {
+      return NULL;
+    }
+// first we go to the first glyph in the chained list of glyphs (maybe to suppress ?)
+  libgregorio_go_to_first_glyph (&current_glyph);
+
 
   while (current_glyph)
     {
@@ -238,7 +239,7 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	}
       if (!current_glyph->next_glyph)
 	{
-	  close_element (&current_element, first_glyph, current_glyph);
+	  close_element (&current_element, first_glyph);
 	}
       current_glyph = current_glyph->next_glyph;
     }				//end of while

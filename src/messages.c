@@ -72,6 +72,8 @@ void
 libgregorio_message (const char *string, const char *function_name, char verbosity,
 		int line_number)
 {
+  const char *verbosity_str;
+
   if (!error_out)
     {
       fprintf (stderr,
@@ -90,7 +92,7 @@ libgregorio_message (const char *string, const char *function_name, char verbosi
     {
       return;
     }
-  const char *verbosity_str = verbosity_to_str (verbosity);
+  verbosity_str = verbosity_to_str (verbosity);
   if (line_number)
     {
       if (function_name)

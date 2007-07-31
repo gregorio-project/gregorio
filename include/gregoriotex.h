@@ -78,18 +78,16 @@ libgregorio_gregoriotex_determine_next_note (gregorio_syllable * syllable,
 					     gregorio_element * element,
 					     gregorio_glyph * glyph);
 
-char
-libgregorio_gregoriotex_syllable_first_note (gregorio_syllable * syllable);
-
-
+char libgregorio_gregoriotex_syllable_first_note (gregorio_syllable * syllable);
 
 void libgregorio_print_unicode_letters (FILE *f, wchar_t *wstr);
-
 
 void libgregorio_gtex_write_begin (FILE * f, unsigned char style);
 void libgregorio_gtex_write_end (FILE * f, unsigned char style);
 void libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char);
 void libgregorio_gtex_write_verb (FILE * f, wchar_t * verb_str);
 void libgregorio_gtex_print_char (FILE * f, wchar_t to_print);
+
+unsigned int gregoriotex_determine_liquescentia_number (unsigned char type, char liquescentia);
 
 #endif

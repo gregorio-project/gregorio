@@ -504,16 +504,52 @@
 %% macros for the typesetting of the signs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% a function to typeset a punctum mora, the argument is the letter of the height of the punctum mora
+
 \def\punctummora#1{%
 \hskip\spacebeforesigns%
 \calculateglyphraisevalue{#1}{1}%
 \raise \glyphraisevalue \hbox{\gregorianfont \char 14}%
 }
 
+% a function to typeset a augmentum duplex, the argument is the letter of the height of the augmentum duplex
+
 \def\augmentumduplex#1{%
 \hskip\spacebeforesigns%
 \calculateglyphraisevalue{#1}{2}%
 \raise \glyphraisevalue \hbox{\gregorianfont \char 15}%
+}
+
+% a function to typeset a vertical episemus. The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are:
+%% 0: the episemus will be typeset in the middle of the last note, which is a standard punctum (works with pes)
+%% 1: the same, but the last note is a deminutus
+%% 2: the episemus is typeset in the middle of the note before the last note, which is a standard punctum
+%% 3: idem, but the note is the note preceding a deminutus
+%% 4: the note before the note before the last note (for torculus resupinus)
+%% 5: the first note, if it is a standard punctum
+%% 6: the first note, if it is an initio debilis
+%% 7: the first note, if it is a porrectus or a torculus resupinus
+
+\def\vepisemus#1#2{%
+\ifcase#2 %
+%case 0
+\or%
+%case 1
+\or%
+%case 2
+\or%
+%case 3
+\or%
+%case 4
+\or%
+%case 5
+\or%
+%case 6
+\or%
+%case 7
+\fi%
+\calculateglyphraisevalue{#1}{2}%
+\raise \glyphraisevalue \hbox{\gregorianfont \char 33}%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

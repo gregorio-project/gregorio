@@ -267,7 +267,7 @@ typedef struct gregorio_voice_info {
   struct gregorio_voice_info *next_voice_info;
 } gregorio_voice_info;
 
-gregorio_score * libgregorio_new_score ();
+gregorio_score *libgregorio_new_score();
 
 void
 libgregorio_determine_h_episemus_type (gregorio_note * note);

@@ -1,4 +1,25 @@
-AM_CFLAGS=-DLOCALEDIR=\"$(localedir)\" -Wall -Wunused -Wno-unused-parameter -Wdeclaration-after-statement -Wmissing-prototypes -Wmissing-declarations --std=c99 -W -Wshadow -Wcast-align -Wwrite-strings -Wsign-compare -Wundef -Wuninitialized -Winit-self -Wpointer-arith -Wredundant-decls -Wformat-nonliteral -Wno-format-zero-length -Wmissing-format-attribute
+AM_CFLAGS = -DLOCALEDIR=\"$(localedir)\"
+AM_CFLAGS += -Wall
+AM_CFLAGS += --std=c89
+AM_CFLAGS += -Wunused
+AM_CFLAGS += -Wno-unused-parameter
+AM_CFLAGS += -Wdeclaration-after-statement
+AM_CFLAGS += -Wmissing-prototypes
+AM_CFLAGS += -Wmissing-declarations
+AM_CFLAGS += -W
+AM_CFLAGS += -Wshadow
+AM_CFLAGS += -Wcast-align
+AM_CFLAGS += -Wsign-compare
+AM_CFLAGS += -Wundef
+AM_CFLAGS += -Wuninitialized
+AM_CFLAGS += -Winit-self
+AM_CFLAGS += -Wpointer-arith
+AM_CFLAGS += -Wredundant-decls
+## this warning complains with gettext
+##AM_CFLAGS += -Wformat-nonliteral
+AM_CFLAGS += -Wno-format-zero-length
+AM_CFLAGS += -Wmissing-format-attribute
+AM_CFLAGS += -Wdefined-but-not-used
 
 bin_PROGRAMS=gregorio
 gregorio_SOURCES=dump.c gregorio-utils.c struct-utils.c xml-write.c \

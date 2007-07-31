@@ -29,17 +29,13 @@ void libgregorio_opustex_write_syllable (FILE * f,
 void libgregorio_opustex_write_text (FILE * f, gregorio_character *first_character,
 				     char first_syllable);
 
-void libgregorio_opustex_write_element (FILE * f,
-					gregorio_syllable * syllable,
-					gregorio_element * element);
+void libgregorio_opustex_write_element (FILE * f, gregorio_element * element);
 
 void libgregorio_opustex_write_barline (FILE * f, char type);
 
 void libgregorio_opustex_write_finis (FILE * f, char type);
 
-void libgregorio_opustex_write_glyph (FILE * f, gregorio_syllable * syllable,
-				      gregorio_element * element,
-				      gregorio_glyph * glyph);
+void libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph);
 
 int libgregorio_opustex_first_letter (gregorio_score * score);
 
@@ -53,7 +49,7 @@ void libgregorio_opustex_print_episem (FILE * f, char pitch, char length);
 
 void libgregorio_opustex_print_episem_under (FILE * f, char pitch, char length);
 
-char *libgregorio_opustex_glyph_type_to_str (char name);
+const char *libgregorio_opustex_glyph_type_to_str (char name);
 
 void
 libgregorio_opustex_print_liquescentia (FILE * f, char liquescentia, char glyph);

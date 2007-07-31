@@ -565,7 +565,6 @@ libgregorio_free_syllables (gregorio_syllable ** syllable,
     }
 }
 
-
 gregorio_score *
 libgregorio_new_score ()
 {
