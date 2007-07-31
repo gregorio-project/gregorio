@@ -19,7 +19,6 @@ AM_CFLAGS += -Wredundant-decls
 ##AM_CFLAGS += -Wformat-nonliteral
 AM_CFLAGS += -Wno-format-zero-length
 AM_CFLAGS += -Wmissing-format-attribute
-AM_CFLAGS += -Wdefined-but-not-used
 
 bin_PROGRAMS=gregorio
 gregorio_SOURCES=dump.c gregorio-utils.c struct-utils.c xml-write.c \
