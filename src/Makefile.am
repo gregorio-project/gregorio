@@ -1,12 +1,12 @@
 AM_CFLAGS = -DLOCALEDIR=\"$(localedir)\"
 AM_CFLAGS += -Wall
-AM_CFLAGS += --std=c89
+AM_CFLAGS += --std=c99
 AM_CFLAGS += -Wunused
 AM_CFLAGS += -Wno-unused-parameter
 AM_CFLAGS += -Wdeclaration-after-statement
 AM_CFLAGS += -Wmissing-prototypes
 AM_CFLAGS += -Wmissing-declarations
-AM_CFLAGS += -W
+AM_CFLAGS += -Wextra
 AM_CFLAGS += -Wshadow
 AM_CFLAGS += -Wcast-align
 AM_CFLAGS += -Wsign-compare
