@@ -146,7 +146,7 @@ def end_font():
     fout.write("Open(\"%s-base.sfd\");\n" % font_name)
     current_glyph_number=0
     current_font_number=current_font_number+1
-    count=139
+    count=140
 
 # function called at the end of the modification of a glyph, it simplifies it and removes the overlap, so at the end we have the glyph that we want.
 
