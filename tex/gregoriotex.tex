@@ -520,6 +520,9 @@
 \raise \glyphraisevalue \hbox{\gregorianfont \char 15}%
 }
 
+\newbox\Tempsign
+\newdimen\tempsignwidth
+
 % a function to typeset a vertical episemus. The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are:
 %% 0: the episemus will be typeset in the middle of the last note, which is a standard punctum (works with pes)
 %% 1: the same, but the last note is a deminutus
@@ -530,9 +533,29 @@
 %% 6: the first note, if it is an initio debilis
 %% 7: the first note, if it is a porrectus or a torculus resupinus
 
+% remember, the width of the last glyph is in tempwidth
+
 \def\vepisemus#1#2{%
+\calculateglyphraisevalue{#1}{2}%
 \ifcase#2 %
 %case 0
+% in order to go to the good place, we first make a kern of - half a punctum
+\setbox\Tempsign=\hbox{\gregorianfont \char 17}%
+\tempwidth=\wd\Tempsign%
+% we set tempwidth to the middle of one note
+\divide\tempwidth by 2 %
+\kern -\tempwidth %
+% then we draw the sign, and go back to the beginning of the sign
+\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
+% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+\tempsignwidth=\wd\Tempsign %
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by -\tempsignwidth %
+\kern -\tempsignwidth%
+\raise \glyphraisevalue \copy\Tempsign %
+\kern -\tempsignwidth%
+% and finally we go back to the end of the glyph, where we were first
+\kern \tempwidth%
 \or%
 %case 1
 \or%
@@ -548,8 +571,6 @@
 \or%
 %case 7
 \fi%
-\calculateglyphraisevalue{#1}{2}%
-\raise \glyphraisevalue \hbox{\gregorianfont \char 33}%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

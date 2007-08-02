@@ -17,7 +17,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1185026179
+ModificationTime: 1186044877
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -180,15 +180,15 @@ EndSplineSet
 EndChar
 StartChar: queue
 Encoding: 7 153 7
-Width: 2048
+Width: 22
 VWidth: 2048
-Flags: HW
+Flags: HWO
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -165.5 m 9
- 0 -5 l 29
- 22 -5 l 29
+ 0 -5 l 25
+ 22 -5 l 25
  22 -157.5 l 17
  17.5928 -163.278 8.15723 -163.709 0 -165.5 c 9
 EndSplineSet
@@ -1272,17 +1272,17 @@ EndSplineSet
 EndChar
 StartChar: _0033
 Encoding: 64 -1 64
-Width: 50
+Width: 40
 VWidth: 2048
-Flags: HW
+Flags: HWO
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-0 143 m 25
- 50 143 l 25
- 50 -21 l 25
+0 116.625 m 29
+ 40 117 l 29
+ 40 -21 l 25
  0 -21 l 25
- 0 143 l 25
+ 0 116.625 l 29
 EndSplineSet
 EndChar
 StartChar: NameMe.139
