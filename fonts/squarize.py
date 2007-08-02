@@ -93,7 +93,7 @@ toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3'
 count=139
 
 # initial glyphs are the names of the glyphs that are already in gregorio_base, mostly one-note glyphs.
-initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,30,3,29,21,31,22,14,15,33]
+initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,30,3,29,21,31,22,14,15,33,13]
 def initialize_glyphs():
     global initial_glyphs
     for number in initial_glyphs:

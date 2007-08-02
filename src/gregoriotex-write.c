@@ -885,6 +885,7 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 * 10: divisio minor
 * 11: divisio maior
 * 12: divisio finalis
+* 13: punctum deminutum
 * 14: punctum mora
 * 15: auctum duplex
 * 16: circumflexus
