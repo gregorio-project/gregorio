@@ -533,8 +533,6 @@
 %% 6: the first note, if it is an initio debilis
 %% 7: the first note, if it is a porrectus or a torculus resupinus
 
-% remember, the width of the last glyph is in tempwidth
-
 \def\vepisemus#1#2{%
 \calculateglyphraisevalue{#1}{2}%
 \ifcase#2 %
@@ -544,32 +542,146 @@
 \tempwidth=\wd\Tempsign%
 % we set tempwidth to the middle of one note
 \divide\tempwidth by 2 %
-\kern -\tempwidth %
 % then we draw the sign, and go back to the beginning of the sign
 \setbox\Tempsign=\hbox{\gregorianfont \char 33}%
 % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
 \tempsignwidth=\wd\Tempsign %
 \divide\tempsignwidth by 2 %
-\advance\tempwidth by -\tempsignwidth %
-\kern -\tempsignwidth%
+\advance\tempwidth by \tempsignwidth %
+\kern -\tempwidth%
 \raise \glyphraisevalue \copy\Tempsign %
-\kern -\tempsignwidth%
 % and finally we go back to the end of the glyph, where we were first
+\advance\tempwidth by -2\tempsignwidth %
 \kern \tempwidth%
 \or%
 %case 1
+% in order to go to the good place, we first make a kern of - half a punctum deminutus
+\setbox\Tempsign=\hbox{\gregorianfont \char 13}%
+\tempwidth=\wd\Tempsign%
+% we set tempwidth to the middle of one note
+\divide\tempwidth by 2 %
+% then we draw the sign, and go back to the beginning of the sign
+\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
+% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+\tempsignwidth=\wd\Tempsign %
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by \tempsignwidth %
+\kern -\tempwidth%
+\raise \glyphraisevalue \copy\Tempsign %
+% and finally we go back to the end of the glyph, where we were first
+\advance\tempwidth by -2\tempsignwidth %
+\kern \tempwidth%
 \or%
 %case 2
+% ^^^^6801 is a kind of flexus, it has the good width
+\setbox\Tempsign=\hbox{\gregorianfont ^^^^6801}%
+\tempwidth=\wd\Tempsign %
+\setbox\Tempsign=\hbox{\gregorianfont \char 17}%
+\tempsignwidth=\wd\Tempsign%
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by -\tempsignwidth %
+% then we draw the sign, and go back to the beginning of the sign
+\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
+% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+\tempsignwidth=\wd\Tempsign %
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by \tempsignwidth %
+\kern -\tempwidth%
+\raise \glyphraisevalue \copy\Tempsign %
+% and finally we go back to the end of the glyph, where we were first
+\advance\tempwidth by -2\tempsignwidth %
+\kern \tempwidth%
 \or%
 %case 3
+% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say ^^^^3a01
+\setbox\Tempsign=\hbox{\gregorianfont ^^^^3a01}%
+\tempwidth=\wd\Tempsign%
+% we set tempwidth to the middle of one note
+\divide\tempwidth by 2 %
+% then we draw the sign, and go back to the beginning of the sign
+\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
+% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+\tempsignwidth=\wd\Tempsign %
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by \tempsignwidth %
+\kern -\tempwidth%
+\raise \glyphraisevalue \copy\Tempsign %
+% and finally we go back to the end of the glyph, where we were first
+\advance\tempwidth by -2\tempsignwidth %
+\kern \tempwidth%
 \or%
 %case 4
+% ^^^^7006 is a torculus, it has the good width
+\setbox\Tempsign=\hbox{\gregorianfont ^^^^7006}%
+\tempwidth=\wd\Tempsign %
+\setbox\Tempsign=\hbox{\gregorianfont \char 17}%
+\tempsignwidth=\wd\Tempsign%
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by -\tempsignwidth %
+% then we draw the sign, and go back to the beginning of the sign
+\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
+% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+\tempsignwidth=\wd\Tempsign %
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by \tempsignwidth %
+\kern -\tempwidth%
+\raise \glyphraisevalue \copy\Tempsign %
+% and finally we go back to the end of the glyph, where we were first
+\advance\tempwidth by -2\tempsignwidth %
+\kern \tempwidth%
 \or%
 %case 5
+%remember, \tempwidth has the value of the last glyph width (cool isn't it ?)
+\setbox\Tempsign=\hbox{\gregorianfont \char 17}%
+\tempsignwidth=\wd\Tempsign%
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by -\tempsignwidth %
+% then we draw the sign, and go back to the beginning of the sign
+\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
+% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+\tempsignwidth=\wd\Tempsign %
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by \tempsignwidth %
+\kern -\tempwidth%
+\raise \glyphraisevalue \copy\Tempsign %
+% and finally we go back to the end of the glyph, where we were first
+\advance\tempwidth by -2\tempsignwidth %
+\kern \tempwidth%
 \or%
 %case 6
+%we assume that the initio-debilis has the same width as a punctum deminutus
+\setbox\Tempsign=\hbox{\gregorianfont \char 13}%
+\tempsignwidth=\wd\Tempsign%
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by -\tempsignwidth %
+% then we draw the sign, and go back to the beginning of the sign
+\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
+% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+\tempsignwidth=\wd\Tempsign %
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by \tempsignwidth %
+\kern -\tempwidth%
+\raise \glyphraisevalue \copy\Tempsign %
+% and finally we go back to the end of the glyph, where we were first
+\advance\tempwidth by -2\tempsignwidth %
+\kern \tempwidth%
 \or%
-%case 7
+%case 7, in which we do (for now) the same as case 5
+\setbox\Tempsign=\hbox{\gregorianfont \char 17}%
+\tempsignwidth=\wd\Tempsign%
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by -\tempsignwidth %
+% then we draw the sign, and go back to the beginning of the sign
+\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
+% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+\tempsignwidth=\wd\Tempsign %
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by \tempsignwidth %
+\kern -\tempwidth%
+\raise \glyphraisevalue \copy\Tempsign %
+% and finally we go back to the end of the glyph, where we were first
+\advance\tempwidth by -2\tempsignwidth %
+\kern \tempwidth%
 \fi%
 }
 
