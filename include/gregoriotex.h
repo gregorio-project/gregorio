@@ -23,17 +23,44 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define NO_FUSION 0
 #define FUSION 1
 
+/*
+Here are the different types, they must be the same as in squarize.py
+*/
 
+#define T_PES 2
+#define T_PESQUADRATUM 6
+#define T_PESQUILISMA 4
+#define T_PESQUASSUS 5
+#define T_PESQUILISMAQUADRATUM 3
+#define T_FLEXUS 7
+#define T_PORRECTUSFLEXUS 8
+#define T_PORRECTUSFLEXUS_NOBAR 10
+#define T_PORRECTUS 11
+#define T_PORRECTUS_NOBAR 12
+#define T_FLEXUS_NOBAR 13
+#define T_FLEXUS_LONGQUEUE 15
+#define T_TORCULUS 14
+
+// macro that we will use to determine if we need a short bar or not
+
+#define is_short(pitch) pitch=='a'||pitch=='c'||pitch=='e'||pitch=='g'||pitch=='i'||pitch=='k'||pitch=='m'
+
+// Here we define a function that will determine the number of the liquescentia that we will add to the glyph number. There are several types as all glyphs can't have all liquescentiae. Let's first define the different types:
+
+#define L_ALL 0			/* for glyphs that accept all liquecentiae */
+#define L_NO_INITIO 1		/* for glyphs that don't accept initio debilis */
+#define L_UNDET_AUCTUS 2	/* for glyphs for which we don't know if the auctus is ascendens or descendens */
+#define L_NONE 3		/* for glyphs that don't accept liquescentia */
+#define L_NO_DEMINUTUS 4
+
+// the definitions of the type and liquescentia factors
+#define TYPE_FACTOR 2048
+#define LIQ_FACTOR 256
+
+// additional glyph types, necessary for determination
 #define G_PORRECTUS_NO_BAR 40
 #define G_PORRECTUS_FLEXUS_NO_BAR 41
 #define G_PES_QUILISMA 42
-
-// types for the beginning of the notes
-
-#define T_ONE_NOTE 0
-#define T_TWO_NOTES 1
-#define T_PORRECTUS 2
-#define T_INITIO_DEBILIS 3
 
 void
 libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score);
@@ -89,5 +116,7 @@ void libgregorio_gtex_write_verb (FILE * f, wchar_t * verb_str);
 void libgregorio_gtex_print_char (FILE * f, wchar_t to_print);
 
 unsigned int gregoriotex_determine_liquescentia_number (unsigned char type, char liquescentia);
+
+void libgregorio_gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
 
 #endif
