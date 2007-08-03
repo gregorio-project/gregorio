@@ -529,9 +529,10 @@
 %% 2: the episemus is typeset in the middle of the note before the last note, which is a standard punctum
 %% 3: idem, but the note is the note preceding a deminutus
 %% 4: the note before the note before the last note (for torculus resupinus)
-%% 5: the first note, if it is a standard punctum
-%% 6: the first note, if it is an initio debilis
-%% 7: the first note, if it is a porrectus or a torculus resupinus
+%% 5: idem, but when the two last notes are a deminutus
+%% 6: the first note, if it is a standard punctum
+%% 7: the first note, if it is an initio debilis
+%% 8: the first note, if it is a porrectus or a torculus resupinus
 
 \def\vepisemus#1#2{%
 \calculateglyphraisevalue{#1}{2}%
@@ -631,7 +632,9 @@
 \kern \tempwidth%
 \or%
 %case 5
-%remember, \tempwidth has the value of the last glyph width (cool isn't it ?)
+% ^^^^7206 is a torculus deminutus, it has the good width
+\setbox\Tempsign=\hbox{\gregorianfont ^^^^7206}%
+\tempwidth=\wd\Tempsign %
 \setbox\Tempsign=\hbox{\gregorianfont \char 17}%
 \tempsignwidth=\wd\Tempsign%
 \divide\tempsignwidth by 2 %
@@ -649,6 +652,24 @@
 \kern \tempwidth%
 \or%
 %case 6
+%remember, \tempwidth has the value of the last glyph width (cool isn't it ?)
+\setbox\Tempsign=\hbox{\gregorianfont \char 17}%
+\tempsignwidth=\wd\Tempsign%
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by -\tempsignwidth %
+% then we draw the sign, and go back to the beginning of the sign
+\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
+% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+\tempsignwidth=\wd\Tempsign %
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by \tempsignwidth %
+\kern -\tempwidth%
+\raise \glyphraisevalue \copy\Tempsign %
+% and finally we go back to the end of the glyph, where we were first
+\advance\tempwidth by -2\tempsignwidth %
+\kern \tempwidth%
+\or%
+%case 7
 %we assume that the initio-debilis has the same width as a punctum deminutus
 \setbox\Tempsign=\hbox{\gregorianfont \char 13}%
 \tempsignwidth=\wd\Tempsign%
@@ -666,7 +687,7 @@
 \advance\tempwidth by -2\tempsignwidth %
 \kern \tempwidth%
 \or%
-%case 7, in which we do (for now) the same as case 5
+%case 6, in which we do (for now) the same as case 5
 \setbox\Tempsign=\hbox{\gregorianfont \char 17}%
 \tempsignwidth=\wd\Tempsign%
 \divide\tempsignwidth by 2 %
