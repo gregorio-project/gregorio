@@ -5,19 +5,18 @@ FamilyName: gregorio
 Weight: Medium
 Copyright: gregorio font, created with FontForge.\nCopyright (C) 2007 Elie Roux <elie.roux@enst-bretagne.fr>\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.\n\nAs a special exception, if you create a document which uses this font, and embed this font or unaltered portions of this font into the document, this font does not by itself cause the resulting document to be covered by the GNU General Public License. This exception does not however invalidate any other reasons why the document might be covered by the GNU General Public License. If you modify this font, you may extend this exception to your version of the font, but you are not obligated to do so. If you do not wish to do so, delete this exception statement from your version.
 Comments: 2007-4-12: Created.
-Version: 001.000
+Version: 1.1
 ItalicAngle: 0
 UnderlinePosition: -204
 UnderlineWidth: 102
 Ascent: 800
 Descent: 200
-NeedsXUIDChange: 1
 XUID: [1021 341 828717519 16122349]
 OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1186047585
+ModificationTime: 1186326025
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -38,9 +37,9 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 240 12 7
+WinInfo: 0 12 7
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 322 322
+BeginChars: 324 324
 StartChar: _0017
 Encoding: 0 66 0
 Width: 164
@@ -1302,21 +1301,42 @@ Fore
  73.184 127 98.5 125.75 110 119 c 1
 EndSplineSet
 EndChar
-StartChar: NameMe.140
+StartChar: hepisemus_base
 Encoding: 66 -1 66
-Width: 2048
+Width: 1
 VWidth: 2048
-Flags: W
+Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+0 64 m 25
+ 0 74 l 25
+ 1 74 l 25
+ 1 64 l 25
+ 0 64 l 25
+EndSplineSet
 EndChar
-StartChar: NameMe.141
+StartChar: _4097
 Encoding: 67 -1 67
-Width: 2048
+Width: 164
 VWidth: 2048
-Flags: W
+Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+0 -10.0078 m 1
+ 0 126.332 l 1
+ 66.126 106.494 123.654 117.841 142 132 c 1
+ 142 149 l 1
+ 137.5 161 112 176 76 176 c 0
+ 46.5 176 15 171.156 0 160.5 c 1
+ 0 304 l 1
+ 20 315 49.417 320 82 320 c 0
+ 114.583 320 151 312 164 299 c 1
+ 164 -6 l 1
+ 153 -16 131.5 -22.5 96.5 -22.5 c 0
+ 60.5 -22.5 16.0068 -16.5 0 -10.0078 c 1
+EndSplineSet
 EndChar
 StartChar: NameMe.142
 Encoding: 68 -1 68
@@ -3344,6 +3364,22 @@ HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.395
 Encoding: 321 -1 321
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.396
+Encoding: 322 -1 322
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.397
+Encoding: 323 -1 323
 Width: 2048
 VWidth: 2048
 Flags: W

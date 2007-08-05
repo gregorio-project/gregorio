@@ -50,6 +50,13 @@ to do so, delete this exception statement from your version.
 ChangeLog
 =========
 
+5 Aug 2007 (Elie Roux) gregorio Version 1.1
+- adding a pes with only one ton between the two notes
+- adding the glyph hepisemus_base to draw the different horizontal episemus
+- adding the signs glyphs: punctum mora, auctus duplex and vertical episemus
+- adding the glyph punctum deminutum, it may never be drawn, but it may be 
+    useful to have measures, in GregorioTeX for example
+
 4 Jun 2007 (Elie Roux) gregorio Version 1.0
 - Initial release of font "gregorio"
 
