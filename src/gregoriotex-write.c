@@ -783,6 +783,11 @@ gregoriotex_determine_liquescentia_number (unsigned char type,
 	  liquescentia = liquescentia - L_INITIO_DEBILIS;
 	}
       break;
+    case L_ONLY_DEMINUTUS:
+      if (liquescentia != L_DEMINUTUS && liquescentia != L_INITIO_DEBILIS_DEMINUTUS) 
+	{
+	  liquescentia=L_NO_LIQUESCENTIA;
+	}
     case L_UNDET_AUCTUS:
       if (liquescentia == L_AUCTUS_DESCENDENS)
 	{
@@ -920,7 +925,7 @@ libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *
       *type = T_PORRECTUS;
       temp =
 	TYPE_FACTOR * T_PORRECTUS +
-	gregoriotex_determine_liquescentia_number (L_NO_INITIO,
+	gregoriotex_determine_liquescentia_number (L_ONLY_DEMINUTUS,
 						   glyph->liquescentia);
       break;
     case G_PORRECTUS_FLEXUS:
@@ -934,7 +939,7 @@ libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *
       *type = T_PORRECTUS_NOBAR;
       temp =
 	TYPE_FACTOR * T_PORRECTUS_NOBAR +
-	gregoriotex_determine_liquescentia_number (L_NO_INITIO,
+	gregoriotex_determine_liquescentia_number (L_ONLY_DEMINUTUS,
 						   glyph->liquescentia);
       break;
     case G_PORRECTUS_FLEXUS_NO_BAR:
@@ -1082,6 +1087,40 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 * 32: punctum inclinatum deminutus
 * 33: vertical episemus
 */
+
+// and the different types of horizontal episemus:
+// * 40: horizontal episemus, width of a punctum
+#define H_PUNCTUM 40
+//* 41: horizontal episemus, width of a flexus debilis
+#define H_FLEXUS 41
+//* 42: horizontal episemus, width of an initio debilis
+#define H_INITIO 42
+//* 43: horizontal episemus, width of a punctum inclinatum
+#define H_INCLINATUM 43
+//* 44: horizontal episemus, width of a punctum inclinatum deminutus
+#define H_INCLINATUM_DEMINUTUS 44
+//* 45: horizontal episemus, width of a stropha
+#define H_STROPHA 45
+//* 46: horizontal episemus, width of a porrectus with ambitus of 1
+#define H_PORRECTUS1 46 
+//* 47: horizontal episemus, width of a porrectus with ambitus of 2
+#define H_PORRECTUS2 47
+//* 48: horizontal episemus, width of a porrectus with ambitus of 3
+#define H_PORRECTUS3 48
+//* 49: horizontal episemus, width of a porrectus with ambitus of 4
+#define H_PORRECTUS4 49
+//* 50: horizontal episemus, width of a porrectus with ambitus of 5
+#define H_PORRECTUS5 50
+//* 51: horizontal episemus, width of a porrectus flexus with ambitus of 1
+#define H_PORRECTUS_FLEXUS1 51
+//* 52: horizontal episemus, width of a porrectus flexus with ambitus of 2
+#define H_PORRECTUS_FLEXUS2 52
+//* 53: horizontal episemus, width of a porrectus flexus with ambitus of 3
+#define H_PORRECTUS_FLEXUS3 53
+//* 54: horizontal episemus, width of a porrectus flexus with ambitus of 4
+#define H_PORRECTUS_FLEXUS4 54
+//* 55: horizontal episemus, width of a porrectus flexus with ambitus of 5
+#define H_PORRECTUS_FLEXUS5 55
 
 void
 libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note,

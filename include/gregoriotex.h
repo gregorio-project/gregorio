@@ -51,7 +51,8 @@ Here are the different types, they must be the same as in squarize.py
 #define L_NO_INITIO 1		/* for glyphs that don't accept initio debilis */
 #define L_UNDET_AUCTUS 2	/* for glyphs for which we don't know if the auctus is ascendens or descendens */
 #define L_NONE 3		/* for glyphs that don't accept liquescentia */
-#define L_NO_DEMINUTUS 4
+#define L_ONLY_DEMINUTUS 4
+#define L_NO_DEMINUTUS 5
 
 // the definitions of the type and liquescentia factors
 #define TYPE_FACTOR 2048
