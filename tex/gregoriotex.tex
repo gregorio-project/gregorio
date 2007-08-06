@@ -81,7 +81,6 @@
 \factor=2
 
 % \stafflineheight is the height of a staff line
-%\newdimen\stafflineheight \stafflineheight=0.015\the\factor em
 \newdimen\stafflineheight \stafflineheight=0.015 em
 \multiply \stafflineheight by \the\factor 
 % \interstafflinespace is the space between two lines of staff
@@ -146,7 +145,7 @@
 %% has to be called before drawing the key, after drawing the initial
 \def\drawlines{%
 \drawfirstlines %
-%%localeleftbox is a primitive of omega, it draws the same box at the beginning of new lines (here after the first)
+%%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
 \localleftbox{%
 \copy\Lines %
 }%
@@ -441,6 +440,7 @@
 \fi%
 }
 
+% not working yet, do not use
 \def\tor#1#2#3{%
 \notetonumber{#1}{1}%
 \notetonumber{#2}{2}%
@@ -454,6 +454,11 @@
 \advance\interval by 28672 %
 \glyph{^^^^\the\interval}{#1}{#3}{0}%
 }
+
+% the width of the last glyph, including the width of the text which is after
+%\newdimen\lastglyphwidth
+% the width of the text which is after the glyph
+%\newdimen\additionalwidth
 
 % macro to typeset the glyph. attributes are :
 % #1: character : the character that it must call
@@ -475,6 +480,7 @@
 \findnotesaligncenter{#4}%
 \global\firstglyph=0%
 \fi%
+%\lastglyphwidth=\tempwidth%
 }
 
 \newdimen\notesaligncenter
@@ -482,13 +488,25 @@
 % we define the different alignments possible, of course they depend on the font
 \def\findnotesaligncenter#1{%
 \ifcase#1%
-\global\notesaligncenter=0.168 em %\global\multiply\notesaligncenter by \factor %
+%case of punctum
+\setbox\Tempwidth=\hbox{\gregorianfont \char 17}%
+\global\notesaligncenter=\wd\Tempwidth%
+\global\divide\notesaligncenter by 2%
 \or%
-\divide\tempwidth by 2 \global\notesaligncenter=\the\tempwidth %
+%case of flexus and flexus deminutus
+\global\notesaligncenter=\tempwidth%
+\global\divide\notesaligncenter by 2%
 \or%
-\global\notesaligncenter=0.25 em %\global\multiply\notesaligncenter by \factor %
+%case of porrectus (we consider it to have the same alignment as punctum)
+\setbox\Tempwidth=\hbox{\gregorianfont \char 17}%
+\global\notesaligncenter=\wd\Tempwidth%
+\global\divide\notesaligncenter by 2%
 \or%
-\global\notesaligncenter=0.1005 em %\global\multiply\notesaligncenter by \factor %
+%case of a initio debilis
+\setbox\Tempwidth=\hbox{\gregorianfont \char 13}%
+\global\notesaligncenter=\wd\Tempwidth%
+\global\divide\notesaligncenter by 2%
+\or
 \fi%
 }
 
@@ -524,21 +542,19 @@
 \newdimen\tempsignwidth
 
 %3: si on revient au début ou pas : 0 on revient au début
-% a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. The first argument : if it is not 0 it is the width of which we will have to go back to typeset the episemus, and the second is the type of note it is. It is very hard to understand, sorry.
+% a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. If it is 2, it means that we must go back first of width #1, and then forward of #2. If it is 1, it means that we only need to go back of #2. It is very hard to understand, sorry.
 \def\vepisemusaux#1#2#3{%
 \setbox\Tempsign=\hbox{\gregorianfont #2}%
 \tempsignwidth=\wd\Tempsign%
 \divide\tempsignwidth by 2 %
-\ifnum#3=0%
+\ifcase#3%
 \advance\tempwidth by -\tempsignwidth %
-\else%
-\ifnum#1=0%
+\or%
 \tempwidth=\tempsignwidth %
-\else%
+\or%
 \setbox\Tempsign=\hbox{\gregorianfont #1}%
 \tempwidth=\wd\Tempsign %
 \advance\tempwidth by -\tempsignwidth %
-\fi%
 \fi%
 % then we draw the sign
 \setbox\Tempsign=\hbox{\gregorianfont \char 33}%
@@ -575,35 +591,35 @@
 \or%
 %case 2
 % ^^^^6801 is a kind of flexus, it has the good width
-\vepisemusaux{^^^^6801}{\char 17}{0}
+\vepisemusaux{^^^^6801}{\char 17}{1}
 \or%
 %case 3
 % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say ^^^^3a01
-\vepisemusaux{0}{^^^^3a01}{0}
+\vepisemusaux{0}{^^^^3a01}{1}
 \or%
 %case 4
 % ^^^^7006 is a torculus, it has the good width
-\vepisemusaux{^^^^7006}{\char 17}{0}
+\vepisemusaux{^^^^7006}{\char 17}{1}
 \or%
 %case 5
 % ^^^^7206 is a torculus deminutus, it has the good width
-\vepisemusaux{^^^^7206}{\char 17}{0}
+\vepisemusaux{^^^^7206}{\char 17}{1}
 \or%
 %case 6
-\vepisemusaux{0}{\char 17}{1}
+\vepisemusaux{0}{\char 17}{2}
 \or%
 %case 7
-\vepisemusaux{0}{\char 13}{1}
+\vepisemusaux{0}{\char 13}{2}
 \or%
 %case 8, in which we do (for now) the same as case 6
-\vepisemusaux{0}{\char 17}{1}
+\vepisemusaux{0}{\char 17}{2}
 \fi%
 }
 
 
-% a macro that will help in the typesetting of a horizontal episemus, the first argument is a glyph that have the same width as the width between the end of the glyph and the beginning of the episemus, and the second argument is the character of the episemus. If the first argument is 0, we go directly to the beginning of the glyph.
-\def\hepisemusaux#1#2{%
-\ifnum#1=0%
+% a macro that will help in the typesetting of a horizontal episemus, the first argument is a glyph that have the same width as the width between the end of the glyph and the beginning of the episemus, and the second argument is the character of the episemus. If the third argument is 0, we go directly to the beginning of the glyph, else we don't change anything
+\def\hepisemusaux#1#2#3{%
+\ifnum#3=0%
 %remember, \tempwidth has the value of the last glyph width (cool isn't it ?)
 \else%
 \setbox\Tempsign=\hbox{\gregorianfont #1}%
@@ -636,60 +652,60 @@
 \calculateglyphraisevalue{#1}{2}%
 \ifcase#2 %
 %case 0
-\hepisemusaux{\char 17}{40}%
+\hepisemusaux{\char 17}{40}{1}%
 \or%
 %case 1
-\hepisemusaux{\char 13}{42}%
+\hepisemusaux{\char 13}{42}{1}%
 \or%
 %case 2
 % ^^^^6801 is a kind of flexus, it has the good width
-\hepisemusaux{^^^^6801}{40}%
+\hepisemusaux{^^^^6801}{40}{1}%
 \or%
 %case 3
 % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say ^^^^3a01
-\hepisemusaux{^^^^3a01}{40}%
+\hepisemusaux{^^^^3a01}{40}{1}%
 \or%
 %case 4
 % ^^^^7006 is a torculus, it has the good width
-\hepisemusaux{^^^^7006}{40}%
+\hepisemusaux{^^^^7006}{40}{1}%
 \or%
 %case 5
 % ^^^^7206 is a torculus deminutus, it has the good width
-\hepisemusaux{^^^^7206}{40}%
+\hepisemusaux{^^^^7206}{40}{1}%
 \or%
 %case 6
-\hepisemusaux{0}{40}%
+\hepisemusaux{0}{40}{0}%
 \or%
 %case 7
 %we assume that the initio-debilis has the same width as a punctum deminutus
-\hepisemusaux{0}{41}%
+\hepisemusaux{0}{41}{0}%
 \or%
 %case 8
 \ifcase#3%
 \or%
-\hepisemusaux{0}{45}%
+\hepisemusaux{0}{45}{0}%
 \or%
-\hepisemusaux{0}{46}%
+\hepisemusaux{0}{46}{0}%
 \or%
-\hepisemusaux{0}{47}%
+\hepisemusaux{0}{47}{0}%
 \or%
-\hepisemusaux{0}{48}%
+\hepisemusaux{0}{48}{0}%
 \or%
-\hepisemusaux{0}{49}%
+\hepisemusaux{0}{49}{0}%
 \fi%
 \or%
 %case 9
 \ifcase#3%
 \or%
-\hepisemusaux{0}{50}%
+\hepisemusaux{0}{50}{0}%
 \or%
-\hepisemusaux{0}{51}%
+\hepisemusaux{0}{51}{0}%
 \or%
-\hepisemusaux{0}{52}%
+\hepisemusaux{0}{52}{0}%
 \or%
-\hepisemusaux{0}{53}%
+\hepisemusaux{0}{53}{0}%
 \or%
-\hepisemusaux{0}{54}%
+\hepisemusaux{0}{54}{0}%
 \fi%
 \fi%
 }
@@ -783,8 +799,9 @@
 }
 
 % macro to set \enddifference (defined above) to \wd\Syllablenotes - (\wd\Syllabletext - \textaligncenter) - \notesaligncenter
+% \enddifference will be positive if text go further than the notes, and negative in the other case
 % arguments are :
-% #1: \wd\Syllablenotes : the total width of the syllables
+% #1: \wd\Syllablenotes : the total width of the notes
 % #2: \wd\Syllabletext : the total width of the text
 % #3: \textaligncenter (defined above)
 % #4: \notesaligncenter (defined above too)
