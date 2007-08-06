@@ -523,6 +523,36 @@
 \newbox\Tempsign
 \newdimen\tempsignwidth
 
+%3: si on revient au début ou pas : 0 on revient au début
+% a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. The first argument : if it is not 0 it is the width of which we will have to go back to typeset the episemus, and the second is the type of note it is. It is very hard to understand, sorry.
+\def\vepisemusaux#1#2#3{%
+\setbox\Tempsign=\hbox{\gregorianfont #2}%
+\tempsignwidth=\wd\Tempsign%
+\divide\tempsignwidth by 2 %
+\ifnum#3=0%
+\advance\tempwidth by -\tempsignwidth %
+\else%
+\ifnum#1=0%
+\tempwidth=\tempsignwidth %
+\else%
+\setbox\Tempsign=\hbox{\gregorianfont #1}%
+\tempwidth=\wd\Tempsign %
+\advance\tempwidth by -\tempsignwidth %
+\fi%
+\fi%
+% then we draw the sign
+\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
+% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+\tempsignwidth=\wd\Tempsign %
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by \tempsignwidth %
+\kern -\tempwidth%
+\raise \glyphraisevalue \copy\Tempsign %
+% and finally we go back to the end of the glyph, where we were first
+\advance\tempwidth by -2\tempsignwidth %
+\kern \tempwidth%
+}
+
 % a function to typeset a vertical episemus. The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are:
 %% 0: the episemus will be typeset in the middle of the last note, which is a standard punctum (works with pes)
 %% 1: the same, but the last note is a deminutus
@@ -538,171 +568,129 @@
 \calculateglyphraisevalue{#1}{2}%
 \ifcase#2 %
 %case 0
-% in order to go to the good place, we first make a kern of - half a punctum
-\setbox\Tempsign=\hbox{\gregorianfont \char 17}%
-\tempwidth=\wd\Tempsign%
-% we set tempwidth to the middle of one note
-\divide\tempwidth by 2 %
-% then we draw the sign, and go back to the beginning of the sign
-\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
-% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
-\tempsignwidth=\wd\Tempsign %
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by \tempsignwidth %
-\kern -\tempwidth%
-\raise \glyphraisevalue \copy\Tempsign %
-% and finally we go back to the end of the glyph, where we were first
-\advance\tempwidth by -2\tempsignwidth %
-\kern \tempwidth%
+\vepisemusaux{0}{\char 17}{0}
 \or%
 %case 1
-% in order to go to the good place, we first make a kern of - half a punctum deminutus
-\setbox\Tempsign=\hbox{\gregorianfont \char 13}%
-\tempwidth=\wd\Tempsign%
-% we set tempwidth to the middle of one note
-\divide\tempwidth by 2 %
-% then we draw the sign, and go back to the beginning of the sign
-\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
-% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
-\tempsignwidth=\wd\Tempsign %
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by \tempsignwidth %
-\kern -\tempwidth%
-\raise \glyphraisevalue \copy\Tempsign %
-% and finally we go back to the end of the glyph, where we were first
-\advance\tempwidth by -2\tempsignwidth %
-\kern \tempwidth%
+\vepisemusaux{0}{\char 13}{0}
 \or%
 %case 2
 % ^^^^6801 is a kind of flexus, it has the good width
-\setbox\Tempsign=\hbox{\gregorianfont ^^^^6801}%
-\tempwidth=\wd\Tempsign %
-\setbox\Tempsign=\hbox{\gregorianfont \char 17}%
-\tempsignwidth=\wd\Tempsign%
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by -\tempsignwidth %
-% then we draw the sign, and go back to the beginning of the sign
-\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
-% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
-\tempsignwidth=\wd\Tempsign %
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by \tempsignwidth %
-\kern -\tempwidth%
-\raise \glyphraisevalue \copy\Tempsign %
-% and finally we go back to the end of the glyph, where we were first
-\advance\tempwidth by -2\tempsignwidth %
-\kern \tempwidth%
+\vepisemusaux{^^^^6801}{\char 17}{0}
 \or%
 %case 3
 % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say ^^^^3a01
-\setbox\Tempsign=\hbox{\gregorianfont ^^^^3a01}%
-\tempwidth=\wd\Tempsign%
-% we set tempwidth to the middle of one note
-\divide\tempwidth by 2 %
-% then we draw the sign, and go back to the beginning of the sign
-\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
-% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
-\tempsignwidth=\wd\Tempsign %
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by \tempsignwidth %
-\kern -\tempwidth%
-\raise \glyphraisevalue \copy\Tempsign %
-% and finally we go back to the end of the glyph, where we were first
-\advance\tempwidth by -2\tempsignwidth %
-\kern \tempwidth%
+\vepisemusaux{0}{^^^^3a01}{0}
 \or%
 %case 4
 % ^^^^7006 is a torculus, it has the good width
-\setbox\Tempsign=\hbox{\gregorianfont ^^^^7006}%
-\tempwidth=\wd\Tempsign %
-\setbox\Tempsign=\hbox{\gregorianfont \char 17}%
-\tempsignwidth=\wd\Tempsign%
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by -\tempsignwidth %
-% then we draw the sign, and go back to the beginning of the sign
-\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
-% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
-\tempsignwidth=\wd\Tempsign %
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by \tempsignwidth %
-\kern -\tempwidth%
-\raise \glyphraisevalue \copy\Tempsign %
-% and finally we go back to the end of the glyph, where we were first
-\advance\tempwidth by -2\tempsignwidth %
-\kern \tempwidth%
+\vepisemusaux{^^^^7006}{\char 17}{0}
 \or%
 %case 5
 % ^^^^7206 is a torculus deminutus, it has the good width
-\setbox\Tempsign=\hbox{\gregorianfont ^^^^7206}%
-\tempwidth=\wd\Tempsign %
-\setbox\Tempsign=\hbox{\gregorianfont \char 17}%
-\tempsignwidth=\wd\Tempsign%
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by -\tempsignwidth %
-% then we draw the sign, and go back to the beginning of the sign
-\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
-% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
-\tempsignwidth=\wd\Tempsign %
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by \tempsignwidth %
-\kern -\tempwidth%
-\raise \glyphraisevalue \copy\Tempsign %
-% and finally we go back to the end of the glyph, where we were first
-\advance\tempwidth by -2\tempsignwidth %
-\kern \tempwidth%
+\vepisemusaux{^^^^7206}{\char 17}{0}
 \or%
 %case 6
+\vepisemusaux{0}{\char 17}{1}
+\or%
+%case 7
+\vepisemusaux{0}{\char 13}{1}
+\or%
+%case 8, in which we do (for now) the same as case 6
+\vepisemusaux{0}{\char 17}{1}
+\fi%
+}
+
+
+% a macro that will help in the typesetting of a horizontal episemus, the first argument is a glyph that have the same width as the width between the end of the glyph and the beginning of the episemus, and the second argument is the character of the episemus. If the first argument is 0, we go directly to the beginning of the glyph.
+\def\hepisemusaux#1#2{%
+\ifnum#1=0%
 %remember, \tempwidth has the value of the last glyph width (cool isn't it ?)
-\setbox\Tempsign=\hbox{\gregorianfont \char 17}%
-\tempsignwidth=\wd\Tempsign%
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by -\tempsignwidth %
+\else%
+\setbox\Tempsign=\hbox{\gregorianfont #1}%
+\tempwidth=\wd\Tempsign%
+\fi%
 % then we draw the sign, and go back to the beginning of the sign
-\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
+\setbox\Tempsign=\hbox{\gregorianfont \char #2}%
 % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
 \tempsignwidth=\wd\Tempsign %
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by \tempsignwidth %
 \kern -\tempwidth%
 \raise \glyphraisevalue \copy\Tempsign %
 % and finally we go back to the end of the glyph, where we were first
-\advance\tempwidth by -2\tempsignwidth %
+\advance\tempwidth by -\tempsignwidth %
 \kern \tempwidth%
+}
+
+% a function to typeset a horizontal episemus. The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are:
+%% 0: the episemus will be typeset at the beginning of the last note, which is a standard punctum (works with pes)
+%% 1: the same, but the last note is a deminutus
+%% 2: the episemus is typeset at the beginning of the note before the last note, which is a standard punctum
+%% 3: idem, but the note is the note preceding a deminutus
+%% 4: the note before the note before the last note (for torculus resupinus)
+%% 5: idem, but when the two last notes are a deminutus
+%% 6: the first note, if it is a standard punctum
+%% 7: the first note, if it is an initio debilis
+%% 8: the two first notes, if it is a porrectus
+%% 9: the two first notes, if it is a porrectus flexus
+% the third argument is a bit particular, it is the ambitus of the porrectus or porrectus flexus if the second argument is 8 or 9, otherwise it is useless
+\def\hepisemus#1#2#3{%
+\calculateglyphraisevalue{#1}{2}%
+\ifcase#2 %
+%case 0
+\hepisemusaux{\char 17}{40}%
+\or%
+%case 1
+\hepisemusaux{\char 13}{42}%
+\or%
+%case 2
+% ^^^^6801 is a kind of flexus, it has the good width
+\hepisemusaux{^^^^6801}{40}%
+\or%
+%case 3
+% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say ^^^^3a01
+\hepisemusaux{^^^^3a01}{40}%
+\or%
+%case 4
+% ^^^^7006 is a torculus, it has the good width
+\hepisemusaux{^^^^7006}{40}%
+\or%
+%case 5
+% ^^^^7206 is a torculus deminutus, it has the good width
+\hepisemusaux{^^^^7206}{40}%
+\or%
+%case 6
+\hepisemusaux{0}{40}%
 \or%
 %case 7
 %we assume that the initio-debilis has the same width as a punctum deminutus
-\setbox\Tempsign=\hbox{\gregorianfont \char 13}%
-\tempsignwidth=\wd\Tempsign%
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by -\tempsignwidth %
-% then we draw the sign, and go back to the beginning of the sign
-\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
-% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
-\tempsignwidth=\wd\Tempsign %
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by \tempsignwidth %
-\kern -\tempwidth%
-\raise \glyphraisevalue \copy\Tempsign %
-% and finally we go back to the end of the glyph, where we were first
-\advance\tempwidth by -2\tempsignwidth %
-\kern \tempwidth%
+\hepisemusaux{0}{41}%
 \or%
-%case 6, in which we do (for now) the same as case 5
-\setbox\Tempsign=\hbox{\gregorianfont \char 17}%
-\tempsignwidth=\wd\Tempsign%
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by -\tempsignwidth %
-% then we draw the sign, and go back to the beginning of the sign
-\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
-% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
-\tempsignwidth=\wd\Tempsign %
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by \tempsignwidth %
-\kern -\tempwidth%
-\raise \glyphraisevalue \copy\Tempsign %
-% and finally we go back to the end of the glyph, where we were first
-\advance\tempwidth by -2\tempsignwidth %
-\kern \tempwidth%
+%case 8
+\ifcase#3%
+\or%
+\hepisemusaux{0}{45}%
+\or%
+\hepisemusaux{0}{46}%
+\or%
+\hepisemusaux{0}{47}%
+\or%
+\hepisemusaux{0}{48}%
+\or%
+\hepisemusaux{0}{49}%
+\fi%
+\or%
+%case 9
+\ifcase#3%
+\or%
+\hepisemusaux{0}{50}%
+\or%
+\hepisemusaux{0}{51}%
+\or%
+\hepisemusaux{0}{52}%
+\or%
+\hepisemusaux{0}{53}%
+\or%
+\hepisemusaux{0}{54}%
+\fi%
 \fi%
 }
 
