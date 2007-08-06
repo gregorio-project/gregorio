@@ -53,14 +53,19 @@ base_width=164
 # width1 and width2 are just width of combinations, like for example a flexus or a torculus
 width1=base_width-line_width
 width2=width1-line_width
-# the width of the first note of an initio debilis, and the one of the last note of a deminutus. Warning, in GregorioTeX they must be the same!
+# the width of the first note of an initio debilis, and the one of the last note of a deminutus. Warning, in GregorioTeX they must be the same! you must (almost always) add the width of a line to have the real width.
 width_debilis=88
 width_deminutus=88
+# the width of the punctum inclinatum deminutus (no need to add the width of a line)
+width_inclinatum_deminutus=82
 # the width of the note which is just before a deminutus, in some fonts it is not the same width as a punctum
 width_flexusdeminutus=197
 # the widths of the torculus resupinus, there are five, one per note difference between the two first notes (for example the first is the width of the first two notes of baba
 porrectusflexuswidths=(340,428,586,670,931)
 porrectuswidths=(490,575,650,740,931)
+
+# width that will be added to the standard width when we will build horizontal episemus. for example, if a punctum has the length 164, the episemus will have the width 244 and will be centered on the center of the punctum 
+hepisemus_additional_width=40
 
 #defines the maximal interval between two notes, the bigger this number is, the more glyphs you'll have to generate
 max_interval=5
@@ -159,7 +164,7 @@ def end_font():
     # 66537 is for generating an afm and a tfm file
     fout.write("Generate(\"%s-%d.pfb\",\"\",66537);\n" % (font_name,current_font_number))
     # uncomment the next line if you want to generate sfd files (easier to debug)
-    fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
+    #fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
     fout.write("Close();\n")
     fout.write("Open(\"%s-base.sfd\");\n" % font_name)
     current_glyph_number=0
@@ -223,12 +228,22 @@ def simplify():
     fout.write("RemoveOverlap();\n")
     fout.write("Simplify();\n")
 
+# a function that scales a glyph, horizontally by x and vertically by y
+def scale(x, y):
+    fout.write("Transform(%d00, 0, 0, %d00, 0, 0);\n" % (x,y))
+
+
+# a function that moves a glyph, horizontally by x and vertically by y
+def move(x, y):
+    fout.write("Move(%d,%d);\n" % (x,y))
+
 def main():
     global fout
     global current_glyph_number
     initialize_glyphs()
     current_glyph_number=len(initial_glyphs)
     headers()
+    hepisemus()
     pes()
     pes_quadratum()
     flexus()
@@ -261,12 +276,34 @@ def write_deminutus(i, j, glyphname, length=0, tosimplify=0):
 	simplify()
     paste_and_move("deminutus", glyphname, length+width_flexusdeminutus-width_deminutus-line_width, (i-j)*base_height)
 
+def hepisemus():
+    message("horizontal episemus")
+    write_hepisemus(base_width, "_0040")
+    write_hepisemus(width_flexusdeminutus, "_0041")          
+    write_hepisemus(width_debilis+line_width, "_0042")
+    write_hepisemus(base_width, "_0043")
+    write_hepisemus(width_inclinatum_deminutus, "_0044")
+    write_hepisemus(base_width, "_0045")
+    for i in range(max_interval):
+	write_hepisemus(porrectuswidths[i], "_00%02d" % int(46+i))
+    for i in range(max_interval):
+	write_hepisemus(porrectusflexuswidths[i], "_00%02d" % int(51+i))
+    
+def write_hepisemus(shape_width, glyphname):
+    begin_glyph(glyphname)
+    simple_paste("hepisemus_base", glyphname)
+    scale(shape_width + 2*hepisemus_additional_width, 1)
+    move(-hepisemus_additional_width, 0)
+    set_width(shape_width)
+    end_glyph(glyphname)
+
 def pes():
     message("pes")
     precise_message("pes")
+# we prefer drawing the pes with one ton of ambitus by hand, it is more beautiful
     for i in range(2,max_interval+1):
 	write_pes(i, "pbase", 'pes')
-#   with our glyphs, the quilisma pes with notes with only one ton of ambitus is ugly, we must draw it by hand
+# idem for the pes quilisma
     precise_message("pes quilisma")
     for i in range(2,max_interval+1):
 	write_pes(i, "qbase", 'pesquilisma')
@@ -335,7 +372,7 @@ def pes_quadratum():
 	write_pes_quadratum(i, "base5", "auctusa2", 'pesquadratum', 'auctusascendens')
     precise_message("pes initio debilis auctus ascendens")
     for i in range(1,max_interval+1):
-	write_pes_quadratum(i, "base5", "auctusa2", 'pesquadratum', 'initiodebilisauctusascendens')
+	write_pes_quadratum(i, "idebilis", "auctusa2", 'pesquadratum', 'initiodebilisauctusascendens')
     precise_message("pes quassus auctus ascendens")
     for i in range(1,max_interval+1):
 	write_pes_quadratum(i, "obase", "auctusa2", 'pesquassus', 'auctusascendens')
@@ -347,7 +384,7 @@ def pes_quadratum():
 	write_pes_quadratum(i, "base5", "auctusd2", 'pesquadratum', 'auctusdescendens')
     precise_message("pes initio debilis auctus descendens")
     for i in range(1,max_interval+1):
-	write_pes_quadratum(i, "base5", "auctusd2", 'pesquadratum', 'initiodebilisauctusdescendens')
+	write_pes_quadratum(i, "idebilis", "auctusd2", 'pesquadratum', 'initiodebilisauctusdescendens')
     precise_message("pes quassus auctus descendens")
     for i in range(1,max_interval+1):
 	write_pes_quadratum(i, "obase", "auctusd2", 'pesquassus', 'auctusdescendens')
@@ -359,8 +396,8 @@ def write_pes_quadratum(i, first_glyph, last_glyph, shape, liquescentia='nothing
     glyphname=name(0, 0, i, shape, liquescentia)
     begin_glyph(glyphname)
     simple_paste(first_glyph, glyphname)
-    if (first_glyph=="deminutus"):
-	first_width=width_deminutus-line_width
+    if (first_glyph=="idebilis"):
+	first_width=width_deminutus
     else:
 	first_width=width1
     if (i!=1):
