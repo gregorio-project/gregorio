@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Here are the different types, they must be the same as in squarize.py
 */
 
+#define T_ONE_NOTE 1
 #define T_PES 2
 #define T_PESQUADRATUM 6
 #define T_PESQUILISMA 4
@@ -119,5 +120,7 @@ void libgregorio_gtex_print_char (FILE * f, wchar_t to_print);
 unsigned int gregoriotex_determine_liquescentia_number (unsigned char type, char liquescentia);
 
 void libgregorio_gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
+
+void libgregorio_gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_note * current_note);
 
 #endif

@@ -401,7 +401,6 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 // type is the type of the glyph. Understand the type of the glyph for gregoriotex, for the alignement between text and notes.
   int type = 0;
   char next_note_pitch = 0;
-  int i = 1;
   gregorio_note *current_note;
 
   if (!glyph)
@@ -439,16 +438,19 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 	{
 	  libgregorio_gregoriotex_write_note (f, current_note,
 					      next_note_pitch);
+          libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph, current_note);
 	  current_note = current_note->next_note;
 	}
       break;
     case G_TORCULUS_RESUPINUS:
       libgregorio_gregoriotex_write_note (f, current_note, next_note_pitch);
+      libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph, glyph->first_note);
       // tricky to have the good position for these glyphs
       glyph->first_note = current_note->next_note;
       glyph->glyph_type = G_PORRECTUS_NO_BAR;
       libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
 							 &glyph_number);
+      libgregorio_gregoriotex_write_signs (f, type, glyph, glyph->first_note);
       glyph->glyph_type = G_TORCULUS_RESUPINUS;
 //TODO : fusion functions
       fprintf (f, "\\glyph{^^^^%04x}{%c}{%c}{%d}%%\n", glyph_number,
@@ -457,11 +459,13 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
       break;
     case G_TORCULUS_RESUPINUS_FLEXUS:
       libgregorio_gregoriotex_write_note (f, current_note, next_note_pitch);
+      libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph, glyph->first_note);
       glyph->glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
       // tricky to have the good position for these glyphs
       glyph->first_note = current_note->next_note;
       libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
 							 &glyph_number);
+      libgregorio_gregoriotex_write_signs (f, type, glyph, glyph->first_note);
       glyph->glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
 //TODO : fusion functions
       fprintf (f, "\\glyph{^^^^%04x}{%c}{%c}{%d}%%\n", glyph_number,
@@ -474,6 +478,7 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 	{
 	  libgregorio_gregoriotex_write_note (f, current_note,
 					      next_note_pitch);
+          libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph, current_note); 
 	  current_note = current_note->next_note;
 	  if (current_note)
 	    {
@@ -487,6 +492,7 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 	{
 	  libgregorio_gregoriotex_write_note (f, current_note,
 					      next_note_pitch);
+          libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph, current_note);
 	  current_note = current_note->next_note;
 	  if (current_note)
 	    {
@@ -501,16 +507,31 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
     case G_PUNCTUM:
       libgregorio_gregoriotex_write_note (f, glyph->first_note,
 					  next_note_pitch);
+      libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph, current_note);
       break;
     default:
       libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
 							 &glyph_number);
       fprintf (f, "\\glyph{^^^^%04x}{%c}{%c}{%d}%%\n", glyph_number,
 	       glyph->first_note->pitch, next_note_pitch, type);
+      libgregorio_gregoriotex_write_signs (f, type, glyph, glyph->first_note);
       break;
     }
-  // then we describe the signs
-  current_note = glyph->first_note;
+}
+
+/*
+
+A function that write the signs of a glyph, which has the type type (T_*, not G_*, which is in the glyph->glyph_type), and (important), we start only at the note current_note. It is due to the way we call it : if type is T_ONE_NOTE, we just do the signs on current_note, not all. This is the case for example for the first note of the torculus resupinus, or the G_*_PUNCTA_INCLINATA.
+
+*/
+
+void
+libgregorio_gregoriotex_write_signs (FILE * f, char type,
+					 gregorio_glyph * glyph,
+					 gregorio_note * current_note)
+{
+  // i is the number of the note for which we are typesetting the sign.
+  int i=1;
   while (current_note)
     {
       switch (current_note->signs)
@@ -538,10 +559,18 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 	default:
 	  break;
 	}
-      current_note = current_note->next_note;
+      // a bit dirty, depends on the way we call it
+      if (type==T_ONE_NOTE)
+	{
+	  return;
+	}
+      else
+	{
+	  current_note = current_note->next_note;
+	  i++;
+	}
     }
 }
-
 
 /*
 
