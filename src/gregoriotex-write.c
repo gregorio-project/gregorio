@@ -784,7 +784,7 @@ gregoriotex_determine_liquescentia_number (unsigned char type,
 	}
       break;
     case L_ONLY_DEMINUTUS:
-      if (liquescentia != L_DEMINUTUS && liquescentia != L_INITIO_DEBILIS_DEMINUTUS) 
+      if (liquescentia != L_DEMINUTUS && liquescentia != L_DEMINUTUS_INITIO_DEBILIS) 
 	{
 	  liquescentia=L_NO_LIQUESCENTIA;
 	}

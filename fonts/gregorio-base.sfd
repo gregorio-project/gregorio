@@ -11,12 +11,13 @@ UnderlinePosition: -204
 UnderlineWidth: 102
 Ascent: 800
 Descent: 200
+NeedsXUIDChange: 1
 XUID: [1021 341 828717519 16122349]
 OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1186326025
+ModificationTime: 1186471351
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -321,14 +322,15 @@ StartChar: _0010
 Encoding: 15 81 15
 Width: 19
 VWidth: 2048
-Flags: HW
+Flags: HWO
 TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
 Fore
-0 -296.375 m 9
- 0 383.125 l 17
- 3.87305 385.802 10.75 386.375 19 386.5 c 9
- 19 -293.375 l 17
- 14.875 -293.5 5 -293.375 0 -296.375 c 9
+0 -296.375 m 13
+ 0 383.125 l 21
+ 3.87305 385.802 10.75 386.375 19 386.5 c 13
+ 19 -293.375 l 21
+ 14.875 -293.5 5 -293.375 0 -296.375 c 13
 EndSplineSet
 EndChar
 StartChar: _0024
@@ -497,13 +499,13 @@ Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-63 -27 m 5
- 63 311.5 l 5
- 59 322 25 291 3 281 c 5
- 0 291 0.279297 431 0 441 c 5
- -0.329055 459.575 78 504 85 487.5 c 5
- 85 -15 l 6
- 85 -20 63 -27 63 -27 c 5
+63 -345.5 m 5
+ 63 -7 l 5
+ 59 3.5 25 -27.5 3 -37.5 c 5
+ 0 -27.5 0.279297 112.5 0 122.5 c 5
+ -0.329102 141.075 78 185.5 85 169 c 5
+ 85 -333.5 l 6
+ 85 -338.5 63 -345.5 63 -345.5 c 5
 EndSplineSet
 EndChar
 StartChar: _0030
@@ -514,13 +516,13 @@ Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-63 82 m 5
- 63 305.5 l 5
- 59 316 25 285 3 275 c 5
- 0 285 0.279297 425 0 435 c 5
- -0.329102 453.575 78 498 85 481.5 c 5
- 85 94 l 6
- 84.9746 85.0146 63 82 63 82 c 5
+63 -240.5 m 5
+ 63 -17 l 5
+ 59 -6.5 25 -37.5 3 -47.5 c 5
+ 0 -37.5 0.279297 102.5 0 112.5 c 5
+ -0.329102 131.075 78 175.5 85 159 c 5
+ 85 -228.5 l 6
+ 84.9746 -237.485 63 -240.5 63 -240.5 c 5
 EndSplineSet
 EndChar
 StartChar: _0003
@@ -531,13 +533,13 @@ Flags: HW
 TeX: 0 0 0 0
 HStem: 854.5 15 539.5 15 224.5 15 -90.5 15
 Fore
-63 799.5 m 1
- 63 461 l 1
- 59 450.5 25 481.5 3 491.5 c 1
- 0 481.5 0.279297 341.5 0 331.5 c 1
- -0.329102 312.925 78 268.5 85 285 c 1
- 85 787.5 l 2
- 85 792.5 63 799.5 63 799.5 c 1
+63 478.5 m 5
+ 63 140 l 5
+ 59 129.5 25 160.5 3 170.5 c 5
+ 0 160.5 0.279297 20.5 0 10.5 c 5
+ -0.329102 -8.0752 78 -52.5 85 -36 c 5
+ 85 466.5 l 6
+ 85 471.5 63 478.5 63 478.5 c 5
 EndSplineSet
 EndChar
 StartChar: _0029
@@ -548,13 +550,13 @@ Flags: HW
 TeX: 0 0 0 0
 HStem: 957.5 15 642.5 15 327.5 15 12.5 15
 Fore
-63 781.5 m 5
- 63 558 l 5
- 59 547.5 25 578.5 3 588.5 c 5
- 0 578.5 0.279297 438.5 0 428.5 c 5
- -0.329102 409.925 78 365.5 85 382 c 5
- 85 769.5 l 6
- 84.9746 778.485 63 781.5 63 781.5 c 5
+63 459.5 m 5
+ 63 236 l 5
+ 59 225.5 25 256.5 3 266.5 c 5
+ 0 256.5 0.279297 116.5 0 106.5 c 5
+ -0.329102 87.9248 78 43.5 85 60 c 5
+ 85 447.5 l 6
+ 84.9746 456.485 63 459.5 63 459.5 c 5
 EndSplineSet
 EndChar
 StartChar: base2
@@ -669,22 +671,22 @@ EndSplineSet
 EndChar
 StartChar: line2
 Encoding: 33 100 33
-Width: 2048
+Width: 22
 VWidth: 2048
 Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-0 -11.5 m 29
- 0 146 l 29
- 22 146 l 29
- 22 -11.5 l 29
- 0 -11.5 l 29
+0 -11.5 m 25
+ 0 146 l 25
+ 22 146 l 25
+ 22 -11.5 l 25
+ 0 -11.5 l 25
 EndSplineSet
 EndChar
 StartChar: line3
 Encoding: 34 101 34
-Width: 2048
+Width: 22
 VWidth: 2048
 Flags: HW
 TeX: 0 0 0 0
@@ -699,32 +701,32 @@ EndSplineSet
 EndChar
 StartChar: line4
 Encoding: 35 102 35
-Width: 2048
+Width: 22
 VWidth: 2048
 Flags: HW
 TeX: 0 0 0 0
 HStem: -420.5 15 -105.5 15 209.5 15 524.5 15
 Fore
-0 -11.5 m 29
- 0 453.5 l 29
- 22 453.5 l 29
- 22 -11.5 l 29
- 0 -11.5 l 29
+0 -11.5 m 25
+ 0 453.5 l 25
+ 22 453.5 l 25
+ 22 -11.5 l 25
+ 0 -11.5 l 25
 EndSplineSet
 EndChar
 StartChar: line5
 Encoding: 36 103 36
-Width: 2048
+Width: 22
 VWidth: 2048
 Flags: HW
 TeX: 0 0 0 0
 HStem: -420.5 15 -105.5 15 209.5 15 524.5 15
 Fore
-0 -11.5 m 29
- 0 619.5 l 29
- 22 619.5 l 29
- 22 -11.5 l 29
- 0 -11.5 l 29
+0 -11.5 m 25
+ 0 619.5 l 25
+ 22 619.5 l 25
+ 22 -11.5 l 25
+ 0 -11.5 l 25
 EndSplineSet
 EndChar
 StartChar: vsbase
@@ -1340,9 +1342,9 @@ EndSplineSet
 EndChar
 StartChar: NameMe.142
 Encoding: 68 -1 68
-Width: 2048
+Width: 19
 VWidth: 2048
-Flags: W
+Flags: HWO
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
