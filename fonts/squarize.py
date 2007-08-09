@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding=utf-8
 
 #Python fontforge script to build a square notation font.
 #Copyright (C) 2007 Elie Roux <elie.roux@enst-bretagne.fr>
