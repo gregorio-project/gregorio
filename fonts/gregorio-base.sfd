@@ -17,7 +17,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1186471351
+ModificationTime: 1187019651
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -322,7 +322,7 @@ StartChar: _0010
 Encoding: 15 81 15
 Width: 19
 VWidth: 2048
-Flags: HWO
+Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
@@ -1275,15 +1275,17 @@ StartChar: _0033
 Encoding: 64 -1 64
 Width: 40
 VWidth: 2048
-Flags: HW
+Flags: HWO
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-0 116.625 m 29
- 40 117 l 29
- 40 -21 l 25
- 0 -21 l 25
- 0 116.625 l 29
+0.125 116.375 m 17
+ 2.625 120.25 6.74512 123.625 20.125 123.625 c 0
+ 32.75 123.625 37.625 119.75 40.125 116.375 c 9
+ 40 -6 l 21
+ 36.875 -10.625 31.874 -13.249 20 -13.375 c 4
+ 8.25 -13.5 3.875 -11 0 -6 c 13
+ 0.125 116.375 l 17
 EndSplineSet
 EndChar
 StartChar: _0013
@@ -1307,13 +1309,13 @@ StartChar: hepisemus_base
 Encoding: 66 -1 66
 Width: 1
 VWidth: 2048
-Flags: HW
+Flags: HWO
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 64 m 25
- 0 74 l 25
- 1 74 l 25
+ 0 79 l 29
+ 1 79 l 25
  1 64 l 25
  0 64 l 25
 EndSplineSet
@@ -1344,7 +1346,7 @@ StartChar: NameMe.142
 Encoding: 68 -1 68
 Width: 19
 VWidth: 2048
-Flags: HWO
+Flags: HW
 TeX: 0 0 0 0
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
