@@ -63,12 +63,46 @@
 %% box containing the initial, and dimen containing its width
 \newbox\Initial
 \newdimen\initialwidth
+\initialwidth=0pt
 
 \def\initial#1{%
 \setbox\Initial=\hbox{\fontofinitial #1}%
-%\setbox\Initial=\hbox{#1}%
-\initialwidth=\the\wd\Initial%
+\global\initialwidth=\the\wd\Initial%
 \lower\textlower\copy\Initial%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting the things above the initial
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\writemode#1{%
+}
+
+\def\gregorianmode#1{%
+\ifcase#1%
+\or%
+\writemode{I.}%
+\or%
+\writemode{II.}%
+\or%
+\writemode{III.}%
+\or%
+\writemode{IV.}%
+\or%
+\writemode{V.}%
+\or%
+\writemode{VI.}%
+\or%
+\writemode{VII.}%
+\or%
+\writemode{VIII.}%
+\fi%
+}
+
+\def\scorereference#1{%
+}
+
+\def\beginscore{%
 \drawlines%
 }
 
@@ -579,40 +613,52 @@
 %% 6: the first note, if it is a standard punctum
 %% 7: the first note, if it is an initio debilis
 %% 8: the first note, if it is a porrectus or a torculus resupinus
+%% 9: the last note, if it is a punctum inclinatum
+%% 10: idem, if it is a punctum inclinatum debilis
+%% 11: idem, if it is a stropha
 
 \def\vepisemus#1#2{%
 \calculateglyphraisevalue{#1}{2}%
 \ifcase#2 %
 %case 0
-\vepisemusaux{0}{\char 17}{0}
+\vepisemusaux{0}{\char 17}{0}%
 \or%
 %case 1
-\vepisemusaux{0}{\char 13}{0}
+\vepisemusaux{0}{\char 13}{0}%
 \or%
 %case 2
 % ^^^^6801 is a kind of flexus, it has the good width
-\vepisemusaux{^^^^6801}{\char 17}{1}
+\vepisemusaux{^^^^6801}{\char 17}{1}%
 \or%
 %case 3
 % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say ^^^^3a01
-\vepisemusaux{0}{^^^^3a01}{1}
+\vepisemusaux{0}{^^^^3a01}{1}%
 \or%
 %case 4
 % ^^^^7006 is a torculus, it has the good width
-\vepisemusaux{^^^^7006}{\char 17}{1}
+\vepisemusaux{^^^^7006}{\char 17}{1}%
 \or%
 %case 5
 % ^^^^7206 is a torculus deminutus, it has the good width
-\vepisemusaux{^^^^7206}{\char 17}{1}
+\vepisemusaux{^^^^7206}{\char 17}{1}%
 \or%
 %case 6
-\vepisemusaux{0}{\char 17}{2}
+\vepisemusaux{0}{\char 17}{2}%
 \or%
 %case 7
-\vepisemusaux{0}{\char 13}{2}
+\vepisemusaux{0}{\char 13}{2}%
 \or%
 %case 8, in which we do (for now) the same as case 6
-\vepisemusaux{0}{\char 17}{2}
+\vepisemusaux{0}{\char 17}{2}%
+\or%
+%case 9
+\vepisemusaux{0}{\char 19}{0}%
+\or%
+%case 10
+\vepisemusaux{0}{\char 32}{0}%
+\or%
+%case 11
+\vepisemusaux{0}{\char 20}{0}%
 \fi%
 }
 
@@ -648,6 +694,9 @@
 %% 8: the two first notes, if it is a porrectus
 %% 9: the two first notes, if it is a porrectus flexus
 % the third argument is a bit particular, it is the ambitus of the porrectus or porrectus flexus if the second argument is 8 or 9, otherwise it is useless
+%% 10: the last note, if it is a punctum inclinatum
+%% 11: idem, if it is a punctum inclinatum debilis
+%% 12: idem, if it is a stropha
 \def\hepisemus#1#2#3{%
 \calculateglyphraisevalue{#1}{2}%
 \ifcase#2 %
@@ -707,6 +756,15 @@
 \or%
 \hepisemusaux{0}{54}{0}%
 \fi%
+\or%
+%case 10
+\hepisemusaux{\char 19}{43}{1}%
+\or%
+%case 11
+\hepisemusaux{\char 32}{44}{1}%
+\or%
+%case 12
+\hepisemusaux{\char 20}{45}{1}%
 \fi%
 }
 
@@ -1071,7 +1129,7 @@
 
 % space before custo
 \newskip\spacebeforecusto
-\spacebeforecusto=0.165em plus 0.0165em minus 0.0165em
+\spacebeforecusto=0.165em plus 1em minus 0.0165em
 \multiply\spacebeforecusto by \factor
 
 % space before punctum mora and augmentum duplex
