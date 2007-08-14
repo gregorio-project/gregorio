@@ -452,6 +452,9 @@ h_episemus>H_ALONE
 #define S_PUNCTUM 1
 #define S_PUNCTUM_END_OF_GLYPH 2
 #define S_PUNCTUM_INCLINATUM 3
+// the two following shapes are not used yet TODO: use them
+#define S_PUNCTUM_INCLINATUM_DEMINUTUS 20
+#define S_PUNCTUM_INCLINATUM_AUCTUS 21
 #define S_VIRGA 4
 #define S_BIVIRGA 5
 #define S_TRIVIRGA 6

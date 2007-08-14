@@ -64,6 +64,8 @@ Here are the different types, they must be the same as in squarize.py
 #define G_PORRECTUS_FLEXUS_NO_BAR 41
 #define G_PES_QUILISMA 42
 
+#define HEPISEMUS_FIRST_TWO 0
+
 void
 libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score);
 
@@ -120,6 +122,8 @@ void libgregorio_gtex_print_char (FILE * f, wchar_t to_print);
 unsigned int gregoriotex_determine_liquescentia_number (unsigned char type, char liquescentia);
 
 void libgregorio_gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
+
+void libgregorio_gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
 
 void libgregorio_gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_note * current_note);
 

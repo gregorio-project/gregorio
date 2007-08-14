@@ -59,6 +59,15 @@ libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score)
       fprintf (f, "}%%\n");
       first_syllable = SKIP_FIRST_LETTER;
     }
+  if (score->mode != 0)
+    {
+      fprintf (f, "\\gregorianmode{%d}%%\n", score->mode);
+    }
+  if (score->first_voice_info)
+    {
+      libgregorio_gregoriotex_write_voice_info (f, score->first_voice_info);
+    }
+  fprintf (f, "\\beginscore%%\n");
   if (score->first_voice_info)
     {
       libgregorio_det_step_and_line_from_key (score->first_voice_info->
@@ -87,6 +96,14 @@ void
 libgregorio_gregoriotex_write_voice_info (FILE * f,
 					  gregorio_voice_info * voice_info)
 {
+  if (!voice_info)
+    {
+      return;
+    }
+  if (voice_info->reference)
+    {
+      fprintf (f, "\\scorereference{%s}%%\n", voice_info->reference);
+    }
 }
 
 void
@@ -438,13 +455,15 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 	{
 	  libgregorio_gregoriotex_write_note (f, current_note,
 					      next_note_pitch);
-          libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph, current_note);
+	  libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+					       current_note);
 	  current_note = current_note->next_note;
 	}
       break;
     case G_TORCULUS_RESUPINUS:
       libgregorio_gregoriotex_write_note (f, current_note, next_note_pitch);
-      libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph, glyph->first_note);
+      libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+					   glyph->first_note);
       // tricky to have the good position for these glyphs
       glyph->first_note = current_note->next_note;
       glyph->glyph_type = G_PORRECTUS_NO_BAR;
@@ -459,7 +478,8 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
       break;
     case G_TORCULUS_RESUPINUS_FLEXUS:
       libgregorio_gregoriotex_write_note (f, current_note, next_note_pitch);
-      libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph, glyph->first_note);
+      libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+					   glyph->first_note);
       glyph->glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
       // tricky to have the good position for these glyphs
       glyph->first_note = current_note->next_note;
@@ -478,7 +498,8 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 	{
 	  libgregorio_gregoriotex_write_note (f, current_note,
 					      next_note_pitch);
-          libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph, current_note); 
+	  libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+					       current_note);
 	  current_note = current_note->next_note;
 	  if (current_note)
 	    {
@@ -492,7 +513,8 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
 	{
 	  libgregorio_gregoriotex_write_note (f, current_note,
 					      next_note_pitch);
-          libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph, current_note);
+	  libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+					       current_note);
 	  current_note = current_note->next_note;
 	  if (current_note)
 	    {
@@ -507,7 +529,8 @@ libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
     case G_PUNCTUM:
       libgregorio_gregoriotex_write_note (f, glyph->first_note,
 					  next_note_pitch);
-      libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph, current_note);
+      libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+					   current_note);
       break;
     default:
       libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
@@ -527,11 +550,11 @@ A function that write the signs of a glyph, which has the type type (T_*, not G_
 
 void
 libgregorio_gregoriotex_write_signs (FILE * f, char type,
-					 gregorio_glyph * glyph,
-					 gregorio_note * current_note)
+				     gregorio_glyph * glyph,
+				     gregorio_note * current_note)
 {
   // i is the number of the note for which we are typesetting the sign.
-  int i=1;
+  int i = 1;
   while (current_note)
     {
       switch (current_note->signs)
@@ -559,8 +582,29 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	default:
 	  break;
 	}
+      if (current_note->h_episemus_type != H_NO_EPISEMUS
+	  && current_note->h_episemus_top_note != 'm')
+	{
+// if it is a porrectus or a porrectus flexus, we check if the episemus is on the two first notes:
+	  if ((type == T_PORRECTUS || type == T_PORRECTUSFLEXUS
+	       || type == T_PORRECTUSFLEXUS_NOBAR
+	       || type == T_PORRECTUS_NOBAR) && current_note->next_note
+	      && current_note->next_note->h_episemus_type != H_NO_EPISEMUS)
+	    {
+	      libgregorio_gregoriotex_write_hepisemus (f, glyph,
+						       HEPISEMUS_FIRST_TWO,
+						       type, current_note);
+	      i++;
+	      current_note = current_note->next_note;
+	    }
+	  else
+	    {
+	      libgregorio_gregoriotex_write_hepisemus (f, glyph, i, type,
+						       current_note);
+	    }
+	}
       // a bit dirty, depends on the way we call it
-      if (type==T_ONE_NOTE)
+      if (type == T_ONE_NOTE)
 	{
 	  return;
 	}
@@ -572,6 +616,231 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
     }
 }
 
+// a function that writes the good \hepisemus un GregorioTeX. i is the position of the note in the glyph.
+
+#define hepisemus_note_before_last_note() \
+  if ((current_glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS || current_glyph->liquescentia == L_DEMINUTUS) && current_note->next_note)\
+    {\
+	  fprintf (f, "\\hepisemus{%c}{3}{O}%%\n", current_note->h_episemus_top_note+1);\
+    }\
+  else \
+    {\
+      fprintf (f, "\\hepisemus{%c}{2}{O}%%\n", current_note->h_episemus_top_note+1);\
+    }
+
+#define hepisemus_last_note() \
+  if (current_glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS || current_glyph->liquescentia == L_DEMINUTUS)\
+    {\
+      /* may seem strange, but it is unlogical to typeset a small horizontal episemus at the end of a flexus deminutus */\
+      fprintf (f, "\\hepisemus{%c}{3}{O}%%\n", current_note->h_episemus_top_note+1);\
+    }\
+  else \
+    {\
+      fprintf (f, "\\hepisemus{%c}{0}{O}%%\n", current_note->h_episemus_top_note+1);\
+    }
+
+void
+libgregorio_gregoriotex_write_hepisemus (FILE * f,
+					 gregorio_glyph * current_glyph,
+					 int i, char type,
+					 gregorio_note * current_note)
+{
+  if (!current_note || current_note->h_episemus_type == H_NO_EPISEMUS)
+    {
+      return;
+    }
+  switch (type)
+    {
+    case T_PES:
+    case T_PESQUILISMA:
+/* in the case of a pes, we put the episemus just under the bottom note */
+      if (i == 1)
+	{
+	  if (current_glyph->liquescentia >= L_INITIO_DEBILIS)
+	    {
+	      fprintf (f, "\\hepisemus{%c}{1}{0}%%\n",
+		       current_note->pitch - 2);
+	    }
+	  else
+	    {
+	      fprintf (f, "\\hepisemus{%c}{0}{0}%%\n",
+		       current_note->pitch - 2);
+	    }
+	}
+      else
+	{			/* i=2 */
+	  if (current_glyph->liquescentia >= L_INITIO_DEBILIS)
+	    {
+	      fprintf (f, "\\hepisemus{%c}{1}{0}%%\n",
+		       current_note->h_episemus_top_note + 1);
+	    }
+	  else
+	    {
+	      fprintf (f, "\\hepisemus{%c}{0}{0}%%\n",
+		       current_note->h_episemus_top_note + 1);
+	    }
+	}
+      break;
+    case T_PESQUADRATUM:
+    case T_PESQUASSUS:
+    case T_PESQUILISMAQUADRATUM:
+      if (i == 1)
+	{
+	  if (current_glyph->liquescentia >= L_INITIO_DEBILIS)
+	    {
+	      fprintf (f, "\\hepisemus{%c}{7}{0}%%\n",
+		       current_note->h_episemus_top_note + 1);
+	    }
+	  else
+	    {
+	      fprintf (f, "\\hepisemus{%c}{6}{0}%%\n",
+		       current_note->h_episemus_top_note + 1);
+	    }
+	}
+      else
+	{			/* i=2 */
+	  if (current_glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS
+	      || current_glyph->liquescentia == L_DEMINUTUS)
+	    {
+	      fprintf (f, "\\hepisemus{%c}{7}{0}%%\n",
+		       current_note->h_episemus_top_note + 1);
+	    }
+	  else
+	    {
+	      fprintf (f, "\\hepisemus{%c}{6}{0}%%\n",
+		       current_note->h_episemus_top_note + 1);
+	    }
+	}
+      break;
+    case T_FLEXUS:
+    case T_FLEXUS_LONGQUEUE:
+      switch (i)
+	{
+	case 1:
+	  hepisemus_note_before_last_note ();
+	  break;
+	default:		/* i=2 */
+	  hepisemus_last_note ();
+	  break;
+	}
+      break;
+    case T_PORRECTUSFLEXUS:
+    case T_PORRECTUSFLEXUS_NOBAR:
+      switch (i)
+	{
+	case HEPISEMUS_FIRST_TWO:
+	  // special case, called when the horizontal episemus is on the fist two notes of a glyph. We consider current_note to be the first note.
+	  if (!current_note->next_note)
+	    {
+	      return;
+	    }
+	  fprintf (f, "\\hepisemus{%c}{9}{%d}%%\n",
+		   current_note->h_episemus_top_note + 1,
+		   (current_note->pitch - current_note->next_note->pitch));
+	case 1:
+	  fprintf (f, "\\hepisemus{%c}{6}{0}%%\n",
+		   current_note->h_episemus_top_note + 1);
+	  break;
+	case 2:
+	  if (current_glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS
+	      || current_glyph->liquescentia == L_DEMINUTUS)
+	    {
+	      fprintf (f, "\\hepisemus{%c}{5}{0}%%\n",
+		       current_note->h_episemus_top_note + 1);
+	    }
+	  else
+	    {
+	      fprintf (f, "\\hepisemus{%c}{4}{0}%%\n",
+		       current_note->h_episemus_top_note + 1);
+	    }
+	  break;
+	case 3:
+	  hepisemus_note_before_last_note ();
+	  break;
+	default:
+	  hepisemus_last_note ();
+	  break;
+	}
+      break;
+    case T_PORRECTUS:
+    case T_PORRECTUS_NOBAR:
+      switch (i)
+	{
+	case HEPISEMUS_FIRST_TWO:
+	  // special case, called when the horizontal episemus is on the fist two notes of a glyph. We consider current_note to be the first note.
+	  if (!current_note->next_note)
+	    {
+	      return;
+	    }
+	  fprintf (f, "\\hepisemus{%c}{8}{%d}%%\n",
+		   current_note->h_episemus_top_note + 1,
+		   (current_note->pitch - current_note->next_note->pitch));
+	case 1:
+	  fprintf (f, "\\hepisemus{%c}{6}{0}%%\n",
+		   current_note->h_episemus_top_note + 1);
+	  break;
+	case 2:
+	  hepisemus_note_before_last_note ();
+	  break;
+	default:
+	  hepisemus_last_note ();
+	  break;
+	}
+      break;
+    case T_TORCULUS:
+      switch (i)
+	{
+	case 1:
+	  if (current_glyph->liquescentia >= L_INITIO_DEBILIS)
+	    {
+	      fprintf (f, "\\hepisemus{%c}{7}{0}%%\n",
+		       current_note->h_episemus_top_note + 1);
+	    }
+	  else
+	    {
+	      fprintf (f, "\\hepisemus{%c}{6}{0}%%\n",
+		       current_note->h_episemus_top_note + 1);
+	    }
+	  break;
+	case 2:
+	  hepisemus_note_before_last_note ();
+	  break;
+	default:
+	  hepisemus_last_note ();
+	  break;
+	}
+      break;
+    default:			/* case T_ONE_NOTE */
+      // we consider that oriscus and quilisma have the same width as punctum
+      switch (current_note->shape)
+	{
+	case S_PUNCTUM_INCLINATUM:
+	  if (current_glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS
+	      || current_glyph->liquescentia == L_DEMINUTUS)
+	    {
+	      fprintf (f, "\\hepisemus{%c}{11}{O}%%\n",
+		       current_note->h_episemus_top_note + 1);
+	    }
+	  else
+	    {
+	      fprintf (f, "\\hepisemus{%c}{10}{O}%%\n",
+		       current_note->h_episemus_top_note + 1);
+	    }
+	  break;
+	case S_STROPHA:
+	  fprintf (f, "\\hepisemus{%c}{12}{O}%%\n",
+		   current_note->h_episemus_top_note + 1);
+	  break;
+	default:
+	  fprintf (f, "\\hepisemus{%c}{0}{O}%%\n",
+		   current_note->h_episemus_top_note + 1);
+	  break;
+	}
+      break;
+    }
+
+}
+
 /*
 
 a function that writes the good value of \vepisemus in GregorioTeX. i is the position of the note in the glyph
@@ -580,7 +849,7 @@ a function that writes the good value of \vepisemus in GregorioTeX. i is the pos
 
 // two macros that write the final note and the note before the final note. In the cases where it is a flexus, it typesets the episemus before the two notes if there is enough place.
 
-#define note_before_last_note() \
+#define vepisemus_note_before_last_note() \
   if ((current_glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS || current_glyph->liquescentia == L_DEMINUTUS) && current_note->next_note)\
     {\
       if ((current_note->pitch - current_note->next_note->pitch) < 4) \
@@ -597,7 +866,7 @@ a function that writes the good value of \vepisemus in GregorioTeX. i is the pos
       fprintf (f, "\\vepisemus{%c}{2}%%\n", current_note->pitch-1);\
     }
 
-#define last_note() \
+#define vepisemus_last_note() \
   if (current_glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS || current_glyph->liquescentia == L_DEMINUTUS)\
     {\
       fprintf (f, "\\vepisemus{%c}{1}%%\n", current_note->pitch-1);\
@@ -608,7 +877,6 @@ a function that writes the good value of \vepisemus in GregorioTeX. i is the pos
     }
 
 
-
 void
 libgregorio_gregoriotex_write_vepisemus (FILE * f,
 					 gregorio_glyph * current_glyph,
@@ -617,8 +885,6 @@ libgregorio_gregoriotex_write_vepisemus (FILE * f,
 {
   if (current_note->pitch == 'a')
     {
-      current_note = current_note->next_note;
-      i++;
       return;
     }
   switch (type)
@@ -690,10 +956,10 @@ libgregorio_gregoriotex_write_vepisemus (FILE * f,
       switch (i)
 	{
 	case 1:
-	  note_before_last_note ();
+	  vepisemus_note_before_last_note ();
 	  break;
 	default:		/* i=2 */
-	  last_note ();
+	  vepisemus_last_note ();
 	  break;
 	}
       break;
@@ -716,10 +982,10 @@ libgregorio_gregoriotex_write_vepisemus (FILE * f,
 	    }
 	  break;
 	case 3:
-	  note_before_last_note ();
+	  vepisemus_note_before_last_note ();
 	  break;
 	default:
-	  last_note ();
+	  vepisemus_last_note ();
 	  break;
 	}
       break;
@@ -731,10 +997,10 @@ libgregorio_gregoriotex_write_vepisemus (FILE * f,
 	  fprintf (f, "\\vepisemus{%c}{8}%%\n", current_note->pitch - 1);
 	  break;
 	case 2:
-	  note_before_last_note ();
+	  vepisemus_note_before_last_note ();
 	  break;
 	default:
-	  last_note ();
+	  vepisemus_last_note ();
 	  break;
 	}
       break;
@@ -752,14 +1018,39 @@ libgregorio_gregoriotex_write_vepisemus (FILE * f,
 	    }
 	  break;
 	case 2:
-	  note_before_last_note ();
+	  vepisemus_note_before_last_note ();
 	  break;
 	default:
-	  last_note ();
+	  vepisemus_last_note ();
 	  break;
 	}
       break;
-    default:
+    default:			/* case T_ONE_NOTE */
+      // we consider that oriscus and quilisma have the same width as punctum
+      switch (current_note->shape)
+	{
+	case S_PUNCTUM_INCLINATUM:
+	  if (current_glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS
+	      || current_glyph->liquescentia == L_DEMINUTUS)
+	    {
+	      fprintf (f, "\\vepisemus{%c}{10}%%\n",
+		       current_note->pitch - 1);
+	    }
+	  else
+	    {
+	      fprintf (f, "\\vepisemus{%c}{9}%%\n",
+		       current_note->pitch - 1);
+	    }
+	  break;
+	case S_STROPHA:
+	  fprintf (f, "\\vepisemus{%c}{11}%%\n",
+		   current_note->pitch - 1);
+	  break;
+	default:
+	  fprintf (f, "\\vepisemus{%c}{0}%%\n",
+		   current_note->pitch - 1);
+	  break;
+	}
       break;
     }
 }
@@ -813,9 +1104,10 @@ gregoriotex_determine_liquescentia_number (unsigned char type,
 	}
       break;
     case L_ONLY_DEMINUTUS:
-      if (liquescentia != L_DEMINUTUS && liquescentia != L_DEMINUTUS_INITIO_DEBILIS) 
+      if (liquescentia != L_DEMINUTUS
+	  && liquescentia != L_DEMINUTUS_INITIO_DEBILIS)
 	{
-	  liquescentia=L_NO_LIQUESCENTIA;
+	  liquescentia = L_NO_LIQUESCENTIA;
 	}
     case L_UNDET_AUCTUS:
       if (liquescentia == L_AUCTUS_DESCENDENS)
@@ -1131,7 +1423,7 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 //* 45: horizontal episemus, width of a stropha
 #define H_STROPHA 45
 //* 46: horizontal episemus, width of a porrectus with ambitus of 1
-#define H_PORRECTUS1 46 
+#define H_PORRECTUS1 46
 //* 47: horizontal episemus, width of a porrectus with ambitus of 2
 #define H_PORRECTUS2 47
 //* 48: horizontal episemus, width of a porrectus with ambitus of 3
