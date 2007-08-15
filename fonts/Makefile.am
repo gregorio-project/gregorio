@@ -1,8 +1,8 @@
 squarize.pe: squarize.py
-	$(PYTHON) squarize.py
+	$(PYTHON) squarize.py gregorio
 
 $(TFM) $(PFB): squarize.pe gregorio-base.sfd
-	$(FONTFORGE) squarize.pe
+	$(FONTFORGE) squarize-gregorio.pe
 
 $(PL): $(TFM)
 	$(TFTOPL) gregorio-0.tfm gregorio-0.pl

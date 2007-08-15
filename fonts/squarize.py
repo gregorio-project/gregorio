@@ -35,38 +35,7 @@
 # ./squarize.pe
 # the last step may take a few minutes
 
-#the name of the fonts that we're going to build. The convention is to call the
-#base font foo-base.sfd where foo is the name of the font.
-
-font_name="gregorio"
-
-# the file we are going to write in
-fout=open("squarize.pe", 'w')
-
-# the base heigth is half the space between two lines plus half the heigth of a line
-base_height=157.5
-
-# some width, necessary to know where to draw lines, squares, etc.
-# first the width of the lines that link notes, like in a pes for example
-line_width=22
-# then the width of a punctum, we assume that it is the same width for oriscus, quilisma, punctum auctum descendens and punctum auctum ascendens 
-base_width=164
-# width1 and width2 are just width of combinations, like for example a flexus or a torculus
-width1=base_width-line_width
-width2=width1-line_width
-# the width of the first note of an initio debilis, and the one of the last note of a deminutus. Warning, in GregorioTeX they must be the same! you must (almost always) add the width of a line to have the real width.
-width_debilis=88
-width_deminutus=88
-# the width of the punctum inclinatum deminutus (no need to add the width of a line)
-width_inclinatum_deminutus=82
-# the width of the note which is just before a deminutus, in some fonts it is not the same width as a punctum
-width_flexusdeminutus=197
-# the widths of the torculus resupinus, there are five, one per note difference between the two first notes (for example the first is the width of the first two notes of baba
-porrectusflexuswidths=(340,428,586,670,931)
-porrectuswidths=(490,575,650,740,931)
-
-# width that will be added to the standard width when we will build horizontal episemus. for example, if a punctum has the length 164, the episemus will have the width 244 and will be centered on the center of the punctum 
-hepisemus_additional_width=40
+import getopt, sys
 
 #defines the maximal interval between two notes, the bigger this number is, the more glyphs you'll have to generate
 max_interval=5
@@ -104,28 +73,115 @@ liquescentiae={
 
 toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase', 'hepisemus_base']
 
-# in the police, all the free glyphs have the name NameMexxxx where xxxx is a number starting from 141 and increasing by one. For example each new glyph will be basically NameMecount, the next NameMecount+1, etc.
-initialcount=142
-count=initialcount
+# in the police, all the free glyphs have the name NameMexxxx where xxxx is a number starting from 141 and increasing by one. For example each new glyph will be basically NameMecount, the next NameMecount+1, etc. They are initiated in initalize_glyphs()
+initialcount=0
+count=0
 
-# initial glyphs are the names of the glyphs that are already in gregorio_base, mostly one-note glyphs.
+current_glyph_number=0
+current_font_number=0
+
+# initial glyphs are the names of the glyphs that are already in gregorio_base, mostly one-note glyphs. see initialize_glyphs() for more details
 initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,30,3,29,21,31,22,14,15,33,13]
+
+def usage():
+    print """
+Python script to convert a small set of glyphs into a complete
+gregorian square notation font. The initial glyphs have a name convention,
+see gregorio-base.sfd for this convention. Currently it only works with
+gregorio.
+
+Usage:
+	squarize.py fontname
+
+with fontame=gregorio for now. The script generates squarize-fontame.pe
+which is a fontforge script.
+"""
+
+def main():
+    global fout, font_name
+    global current_glyph_number
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "h", ["help"])
+    except getopt.GetoptError:
+        # print help information and exit:
+        usage()
+        sys.exit(2)
+    output = None
+    verbose = False
+    for o, a in opts:
+        if o in ("-h", "--help"):
+            usage()
+            sys.exit()
+    if len(args)==0:
+        usage()
+        sys.exit(2)
+    if args[0] == "gregorio":
+	font_name="gregorio"
+	# the file we are going to write in
+	fout=open("squarize-%s.pe" % font_name, 'w')
+    else:
+        usage()
+        sys.exit(2)
+    initialize_glyphs()
+    initialize_lengths()
+    current_glyph_number=len(initial_glyphs)
+    headers()
+    hepisemus()
+    pes()
+    pes_quadratum()
+    flexus()
+    torculus()
+    porrectus()
+    porrectusflexus()
+    end_font()
+    footers()
+    fout.close()
+
 def initialize_glyphs():
-    global initial_glyphs
+    global initial_glyphs, initialcount, count
     for number in initial_glyphs:
 	toto="_00%02d" % int(number)
 	initial_glyphs.insert(0,toto)
 	initial_glyphs.remove(number)
-    initial_glyphs.append("_1025")
-    initial_glyphs.append("_4097")
+    if font_name=="gregorio":
+	glyphs_to_append=("_1025", "_4097")
+    for glyphnumber in glyphs_to_append:
+	initial_glyphs.append(glyphnumber)
+    initialcount=140+len(glyphs_to_append)
+    count=initialcount
 
-# we must cut the final font into small fonts of 255 characters, so each 255 characters we save the font into a new gregorio-x font, where x is an integer starting from 0
-current_font_number=0
-#current glyph will count the number of glyphs in the current small font. As the glyphs that are in gregorio-base will be kept only in gregorio-0, we initialize it with the number of these glyphs (in the main function)
-current_glyph_number=0
+#function in which we initialize the lenghts, depending on the font
+def initialize_lengths():
+    global base_height, line_width, base_width, width1, width2, width_debilis, width_deminutus, width_inclinatum_deminutus, width_flexusdeminutus, porrectusflexuswidths, porrectuswidths, width_inlinatum, width_stropha, hepisemus_additional_width
+    if (font_name=="gregorio"):
+	# the base heigth is half the space between two lines plus half the heigth of a line
+	base_height=157.5
+	# some width, necessary to know where to draw lines, squares, etc.
+	# first the width of the lines that link notes, like in a pes for example
+	line_width=22
+	# then the width of a punctum, we assume that it is the same width for oriscus, quilisma, punctum auctum descendens and punctum auctum ascendens 
+	base_width=164
+	# width1 and width2 are just width of combinations, like for example a flexus or a torculus
+	width1=base_width-line_width
+	width2=width1-line_width
+	# the width of the first note of an initio debilis, and the one of the last note of a deminutus. Warning, in GregorioTeX they must be the same! you must (almost always) add the width of a line to have the real width.
+	width_debilis=88
+	width_deminutus=88
+	#width of a punctum inclinatum (we consider that the punctum inclinatum auctus has the same width
+	width_inlinatum=164
+	#width of a stropha (idem for the stropha aucta)
+	width_stropha=164
+	# the width of the punctum inclinatum deminutus (no need to add the width of a line)
+	width_inclinatum_deminutus=82
+	# the width of the note which is just before a deminutus, in some fonts it is not the same width as a punctum
+	width_flexusdeminutus=197
+	# the widths of the torculus resupinus, there are five, one per note difference between the two first notes (for example the first is the width of the first two notes of baba
+	porrectusflexuswidths=(340,428,586,670,931)
+	porrectuswidths=(490,575,650,740,931)
+	# width that will be added to the standard width when we will build horizontal episemus. for example, if a punctum has the length 164, the episemus will have the width 244 and will be centered on the center of the punctum 
+	hepisemus_additional_width=40
 
 # a function called at the beginning of the script, that opens the font
-
 def headers():
     fout.write("#!/usr/local/bin/fontforge\n\nPrint(\"Creating all square notation symbols for the %s font.\\nThis may take several minutes.\");\nOpen(\"%s-base.sfd\");\n" % (font_name, font_name))
 
@@ -146,7 +202,7 @@ def precise_message(glyph_name):
 def end_font():
     global current_glyph_number
     global current_font_number
-    global count
+    global count, initialcount
     for glyph in toremove:
         fout.write("Select(\"%s\");\n" % glyph)
 	fout.write("Clear();\n")
@@ -237,23 +293,6 @@ def scale(x, y):
 # a function that moves a glyph, horizontally by x and vertically by y
 def move(x, y):
     fout.write("Move(%d,%d);\n" % (x,y))
-
-def main():
-    global fout
-    global current_glyph_number
-    initialize_glyphs()
-    current_glyph_number=len(initial_glyphs)
-    headers()
-    hepisemus()
-    pes()
-    pes_quadratum()
-    flexus()
-    torculus()
-    porrectus()
-    porrectusflexus()
-    end_font()
-    footers()
-    fout.close()
 
 # a function that writes a line in glyphname, with length and height offsets
 
@@ -605,4 +644,5 @@ def write_torculus(i,j, first_glyph, last_glyph, shape, liquescentia='nothing'):
     set_width(length)
     end_glyph(glyphname)
 
-main()
+if __name__ == "__main__":
+    main()
