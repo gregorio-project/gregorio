@@ -23,11 +23,36 @@
 
 use strict;
 
+sub usage() {
+print "
+Perl script to create an ovp file from afm and pl files.
+
+Usage:
+	create-ovp.perl fontname
+
+For now, fontname can only be gregorio.
+";
+}
+
+if (!$ARGV[0]) {
+usage();
+exit(2);
+}
+
 # the name of the fonts
-my $name="gregorio";
+my $name;
 
 # number_of_font is the number of 255 character fonts that will be used
-my $number_of_font=6;
+my $number_of_font;
+
+if ($ARGV[0] eq "gregorio") {
+$name="gregorio";
+$number_of_font=6;
+}
+else {
+usage();
+exit(2);
+}
 
 # static contains the beginning of the ovp file
 my $static="(VTITLE gregorio)

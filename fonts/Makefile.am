@@ -13,7 +13,7 @@ $(PL): $(TFM)
 	$(TFTOPL) gregorio-5.tfm gregorio-5.pl
 
 $(OVP): create-ovp.perl $(PL)
-	$(PERL) create-ovp.perl
+	$(PERL) create-ovp.perl gregorio
 
 $(OFM) $(OVF): gregorio.ovp
 	$(OVP2OVF) gregorio.ovp gregorio.ovf gregorio.ofm

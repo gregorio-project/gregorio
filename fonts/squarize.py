@@ -101,7 +101,7 @@ def main():
     global fout, font_name
     global current_glyph_number
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h", ["help"])
+        opts, args = getopt.gnu_getopt(sys.argv[1:], "h", ["help"])
     except getopt.GetoptError:
         # print help information and exit:
         usage()
