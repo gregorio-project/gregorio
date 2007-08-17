@@ -12,6 +12,8 @@ So for now the basic use is:
 
 The second step may take several minutes, even on a recent machine.
 
+In the next steps, we create gregorio, but to create parmesan, just replace "gregorio" by "parmesan".
+
 Then we must generate an ovp (the readable format of omega virtual font). To do so, we use the script create_font.pl. But this script needs the pl files corresponding to the tfm files of the fonts. So we must generate them with tftopl (included in TeXlive) :
 
  tftopl gregorio-0.tfm

@@ -12,11 +12,18 @@ Basic Font Information
 The Gregorio project aims at providing fonts for gregorian chant, and a TeX
 file to use them easilly. Many fonts can be used and adapted to it.
 
-For now the only font distributed with Gregorio is a font named gregorio. It
-has been made by Elie Roux in 2007. See the README file if you want to
-contribute and build you own font. If you made a gregorian chant font (in
-square or ancient notation) under a free (GPL or OFL) license, mail
-gregorio-devel@gna.org, we will be happy to integrate it in the project!
+See the README file if you want to contribute and build you own font. If you
+made a gregorian chant font (in square or ancient notation) under a free (GPL
+or OFL) license, mail gregorio-devel@gna.org, we will be happy to integrate it
+in the project!
+
+The project has two fonts: 
+
+- gregorio, created by Elie Roux with fontforge in 2007
+
+- parmesan, created by Juergen Reuter in 2000 in metafont, and
+adapted to gregorio by Elie Roux in 2007
+
 
 Licence and copyright for the gregorio font
 ===========================================
@@ -47,8 +54,8 @@ version of the font, but you are not obligated to do so. If you do not wish
 to do so, delete this exception statement from your version.
 
 
-ChangeLog
-=========
+ChangeLog for the gregorio font
+===============================
 
 5 Aug 2007 (Elie Roux) gregorio Version 1.1
 - adding a pes with only one ton between the two notes
@@ -61,8 +68,8 @@ ChangeLog
 - Initial release of font "gregorio"
 
 
-Acknowledgements
-================
+Acknowledgements for the gregorio font
+======================================
 If you make modifications be sure to add your name (N), email (E),
 web-address (W) and description (D). This list is sorted by last name in 
 alphabetical order.
@@ -71,3 +78,54 @@ N: Elie Roux
 E: elie.roux@enst-bretagne.fr
 W: http://home.gna.org/gregorio
 D: Author
+
+Licence and copyright for the parmesan font
+===========================================
+
+Source file of LilyPond's pretty-but-neat music font.
+Copyright (C) 2002--2006 Juergen Reuter <reuter@ipd.uka.de>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+As a special exception, if you create a document which uses this font,
+and embed this font or unaltered portions of this font into the document,
+this font does not by itself cause the resulting document to be covered by
+the GNU General Public License. This exception does not however invalidate
+any other reasons why the document might be covered by the GNU General Public
+License. If you modify this font, you may extend this exception to your
+version of the font, but you are not obligated to do so. If you do not wish
+to do so, delete this exception statement from your version.
+
+ChangeLog for the parmesan font
+===============================
+
+14 Aug 2007 (Elie Roux) parmesan Version 1.0
+- Initial release of font "parmesan" for gregorio, based on the font "parmesan"
+  created by Juergen Reuter for Lilypond
+
+
+Acknowledgements for the parmesan font
+======================================
+If you make modifications be sure to add your name (N), email (E),
+web-address (W) and description (D). This list is sorted by last name in 
+alphabetical order.
+
+N: Juergen Reuter
+E: reuter@ipd.uka.de
+D: Author
+
+N: Elie Roux
+E: elie.roux@enst-bretagne.fr
+W: http://home.gna.org/gregorio
+D: Initial releaser for gregorio
