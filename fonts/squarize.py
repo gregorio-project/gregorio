@@ -152,7 +152,7 @@ def initialize_glyphs():
 
 #function in which we initialize the lenghts, depending on the font
 def initialize_lengths():
-    global base_height, line_width, base_width, width1, width2, width_debilis, width_deminutus, width_inclinatum_deminutus, width_flexusdeminutus, porrectusflexuswidths, porrectuswidths, width_inlinatum, width_stropha, hepisemus_additional_width
+    global base_height, line_width, width_punctum, width1, width2, width_debilis, width_deminutus, width_inclinatum_deminutus, width_flexusdeminutus, porrectusflexuswidths, porrectuswidths, width_inlinatum, width_stropha, hepisemus_additional_width, width_oriscus, width_quilisma
     if (font_name=="gregorio"):
 	# the base heigth is half the space between two lines plus half the heigth of a line
 	base_height=157.5
@@ -160,10 +160,10 @@ def initialize_lengths():
 	# first the width of the lines that link notes, like in a pes for example
 	line_width=22
 	# then the width of a punctum, we assume that it is the same width for oriscus, quilisma, punctum auctum descendens and punctum auctum ascendens 
-	base_width=164
-	# width1 and width2 are just width of combinations, like for example a flexus or a torculus
-	width1=base_width-line_width
-	width2=width1-line_width
+	width_punctum=164
+	# width_oriscus is the width of an oriscus, idem for quilisma
+	width_oriscus=164
+	width_quilisma=164
 	# the width of the first note of an initio debilis, and the one of the last note of a deminutus. Warning, in GregorioTeX they must be the same! you must (almost always) add the width of a line to have the real width.
 	width_debilis=88
 	width_deminutus=88
@@ -318,12 +318,12 @@ def write_deminutus(i, j, glyphname, length=0, tosimplify=0):
 
 def hepisemus():
     message("horizontal episemus")
-    write_hepisemus(base_width, "_0040")
+    write_hepisemus(width_punctum, "_0040")
     write_hepisemus(width_flexusdeminutus, "_0041")          
     write_hepisemus(width_debilis+line_width, "_0042")
-    write_hepisemus(base_width, "_0043")
+    write_hepisemus(width_punctum, "_0043")
     write_hepisemus(width_inclinatum_deminutus, "_0044")
-    write_hepisemus(base_width, "_0045")
+    write_hepisemus(width_punctum, "_0045")
     for i in range(max_interval):
 	write_hepisemus(porrectuswidths[i], "_00%02d" % int(46+i))
     for i in range(max_interval):
@@ -361,29 +361,37 @@ def write_pes(i, first_glyph, shape, liquescentia='nothing'):
     glyphname=name(0, 0, i, shape, liquescentia)
     begin_glyph(glyphname)
     simple_paste(first_glyph, glyphname)
+    if (first_glyph=="qbase"):
+	width1=width_quilisma-line_width
+    else:
+	width1=width_punctum-line_width
     write_line(i, glyphname, width1, base_height)
     paste_and_move("base2", glyphname, 0, i*base_height)
-    set_width(base_width)
+    set_width(width_punctum)
     end_glyph(glyphname)    
 
 def write_pes_debilis(i, shape, liquescentia='nothing'):
     glyphname=name(0, 0, i, shape, liquescentia)
     begin_glyph(glyphname)
     # with a deminutus it is much more beautiful than with a idebilis
-    paste_and_move("deminutus", glyphname, width1-width_debilis, 0)
-    write_line(i, glyphname, width1, base_height)
+    paste_and_move("deminutus", glyphname, width_punctum-line_width-width_debilis, 0)
+    write_line(i, glyphname, width_punctum-line_width, base_height)
     simplify()
     paste_and_move("base2", glyphname, 0, i*base_height)
-    set_width(base_width)
+    set_width(width_punctum)
     end_glyph(glyphname) 
 
 def write_pes_deminutus(i, first_glyph, shape, liquescentia='nothing'):
     glyphname=name(0, 0, i, shape, liquescentia)
     begin_glyph(glyphname)
     simple_paste(first_glyph, glyphname)
-    write_line(i, glyphname, width1, base_height)
-    paste_and_move("rdeminutus", glyphname, width1-width_deminutus, i*base_height)
-    set_width(base_width)
+    if (first_glyph=="qbase"):
+	width1=width_quilisma-line_width
+    else:
+	width1=width_punctum-line_width
+    write_line(i, glyphname, width_punctum-line_width, base_height)
+    paste_and_move("rdeminutus", glyphname, width_punctum-line_width-width_deminutus, i*base_height)
+    set_width(width_punctum)
     end_glyph(glyphname)
 
 def write_pes_debilis_deminutus(i, shape, liquescentia='nothing'):
@@ -438,13 +446,17 @@ def write_pes_quadratum(i, first_glyph, last_glyph, shape, liquescentia='nothing
     simple_paste(first_glyph, glyphname)
     if (first_glyph=="idebilis"):
 	first_width=width_deminutus
+    elif (first_glyph=="base5"):
+	first_width=width_punctum-line_width
+    elif(first_glyph=="obase"):
+	first_width=width_oriscus-line_width
     else:
-	first_width=width1
+	first_width=width_quilisma-line_width
     if (i!=1):
 	linename= "line%d" % i 
 	paste_and_move(linename, glyphname, first_width, base_height)
     paste_and_move(last_glyph, glyphname, first_width, i*base_height)
-    set_width(first_width+base_width)
+    set_width(first_width+width_punctum)
     end_glyph(glyphname)    
 
 def flexus():
@@ -486,10 +498,10 @@ def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
 	length=width_flexusdeminutus
     else:
 	simple_paste(first_glyph, glyphname)
-	length=width1
+	length=width_punctum-line_width
 	write_line(i, glyphname, length, (1-i)*base_height)
 	paste_and_move(last_glyph, glyphname, length, (-i)*base_height)
-	length=width1+base_width
+	length=2*width_punctum-line_width
     set_width(length)
     end_glyph(glyphname)
 
@@ -525,7 +537,7 @@ def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):
     if (last_glyph=="rdeminutus"):
 	paste_and_move(last_glyph, glyphname, (length-width_deminutus-line_width), (j-i)*base_height)
     else:
-	paste_and_move(last_glyph, glyphname, (length-base_width), (j-i)*base_height)
+	paste_and_move(last_glyph, glyphname, (length-width_punctum), (j-i)*base_height)
     set_width(length)
     end_glyph(glyphname)
 
@@ -583,9 +595,9 @@ def write_porrectusflexus(i,j,k, last_glyph, with_bar, shape, liquescentia='noth
     else:
 	simplify()
 	paste_and_move("base3", glyphname, (length-line_width), (j-i)*base_height)
-	write_line(k, glyphname, length+width2, (j-i-k+1)*base_height)
-	paste_and_move(last_glyph, glyphname, (length+width2), (j-i-k)*base_height)
-	length=length+width2+base_width
+	write_line(k, glyphname, length+width_punctum - 2*line_width, (j-i-k+1)*base_height)
+	paste_and_move(last_glyph, glyphname, (length+width_punctum - 2*line_width), (j-i-k)*base_height)
+	length=length+2*width_punctum - 2*line_width
     set_width(length)
     end_glyph(glyphname)
 
@@ -627,7 +639,7 @@ def torculus():
 def write_torculus(i,j, first_glyph, last_glyph, shape, liquescentia='nothing'):
     glyphname=name(0, i, j, shape, liquescentia)
     begin_glyph(glyphname)
-    length=width1
+    length=width_punctum-line_width
     if (first_glyph=="idebilis"):
 	length=width_debilis
     simple_paste(first_glyph, glyphname)
@@ -637,10 +649,10 @@ def write_torculus(i,j, first_glyph, last_glyph, shape, liquescentia='nothing'):
 	length=length+width_flexusdeminutus
     else:
         paste_and_move("base3", glyphname, length, i*base_height)
-	length=length+width1
+	length=length+width_punctum-line_width
 	write_line(j, glyphname, length, (i-j+1)*base_height)
 	paste_and_move(last_glyph, glyphname,  length, (i-j)*base_height)
-        length=length+base_width
+        length=length+width_punctum
     set_width(length)
     end_glyph(glyphname)
 
