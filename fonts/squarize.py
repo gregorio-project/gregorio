@@ -117,11 +117,13 @@ def main():
         sys.exit(2)
     if args[0] == "gregorio":
 	font_name="gregorio"
-	# the file we are going to write in
-	fout=open("squarize-%s.pe" % font_name, 'w')
+    if args[0] == "parmesan":
+	font_name="parmesan"
     else:
         usage()
         sys.exit(2)
+    # the file we are going to write in
+    fout=open("squarize-%s.pe" % font_name, 'w')
     initialize_glyphs()
     initialize_lengths()
     current_glyph_number=len(initial_glyphs)
@@ -145,6 +147,8 @@ def initialize_glyphs():
 	initial_glyphs.remove(number)
     if font_name=="gregorio":
 	glyphs_to_append=("_1025", "_4097")
+    if font_name=="parmesan":
+	glyphs_to_append=()
     for glyphnumber in glyphs_to_append:
 	initial_glyphs.append(glyphnumber)
     initialcount=140+len(glyphs_to_append)
@@ -179,6 +183,21 @@ def initialize_lengths():
 	porrectusflexuswidths=(340,428,586,670,931)
 	porrectuswidths=(490,575,650,740,931)
 	# width that will be added to the standard width when we will build horizontal episemus. for example, if a punctum has the length 164, the episemus will have the width 244 and will be centered on the center of the punctum 
+	hepisemus_additional_width=40
+    if (font_name=="parmesan"):
+	base_height=157.5
+	line_width=22
+	width_punctum=161
+	width_oriscus=192
+	width_quilisma=161
+	width_debilis=75
+	width_deminutus=75
+	width_inlinatum=178
+	width_stropha=169
+	width_inclinatum_deminutus=112
+	width_flexusdeminutus=161
+	porrectusflexuswidths=(340,428,586,670,931)
+	porrectuswidths=(490,575,650,740,931)
 	hepisemus_additional_width=40
 
 # a function called at the beginning of the script, that opens the font
@@ -340,13 +359,21 @@ def write_hepisemus(shape_width, glyphname):
 def pes():
     message("pes")
     precise_message("pes")
-# we prefer drawing the pes with one ton of ambitus by hand, it is more beautiful
-    for i in range(2,max_interval+1):
-	write_pes(i, "pbase", 'pes')
-# idem for the pes quilisma
+    if (font_name=="gregorio"):
+    # we prefer drawing the pes with one ton of ambitus by hand, it is more beautiful
+	for i in range(2,max_interval+1):
+	    write_pes(i, "pbase", 'pes')
+    else:
+	for i in range(1,max_interval+1):
+	    write_pes(i, "pbase", 'pes')
+    # idem for the pes quilisma
     precise_message("pes quilisma")
-    for i in range(2,max_interval+1):
-	write_pes(i, "qbase", 'pesquilisma')
+    if (font_name=="gregorio"):
+	for i in range(2,max_interval+1):
+	    write_pes(i, "qbase", 'pesquilisma')
+    else:
+	for i in range(1,max_interval+1):
+	    write_pes(i, "qbase", 'pesquilisma')
     precise_message("pes deminutus")
     for i in range(1,max_interval+1):
 	write_pes_deminutus(i, "pesdeminutus", 'pes', 'deminutus')
@@ -360,14 +387,30 @@ def pes():
 def write_pes(i, first_glyph, shape, liquescentia='nothing'):
     glyphname=name(0, 0, i, shape, liquescentia)
     begin_glyph(glyphname)
-    simple_paste(first_glyph, glyphname)
+    # the difference of width of the two shapes, that will change a thing or two...
+    if (first_glyph=="qbase"):
+	width_difference=width_quilisma-width_punctum
+    else:
+	width_difference=0
+    if (width_difference<0):
+	paste_and_move(first_glyph, glyphname, -width_difference, 0)
+    else:
+	simple_paste(first_glyph, glyphname)
     if (first_glyph=="qbase"):
 	width1=width_quilisma-line_width
     else:
 	width1=width_punctum-line_width
+    if (width_difference<0):
+	width1=width1-width_difference
     write_line(i, glyphname, width1, base_height)
-    paste_and_move("base2", glyphname, 0, i*base_height)
-    set_width(width_punctum)
+    if (width_difference>0):
+	paste_and_move("base2", glyphname, width_difference, 0)
+    else:
+	paste_and_move("base2", glyphname, 0, i*base_height)
+    if (width_difference<0):
+	set_width(width_punctum)
+    else:
+	set_width(width_quilisma)
     end_glyph(glyphname)    
 
 def write_pes_debilis(i, shape, liquescentia='nothing'):
