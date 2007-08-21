@@ -1376,8 +1376,6 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 /* function used when the glyph is only one note long, the glyph number are simply the following:
 * 01: c clef
 * 02: f clef
-* 03: custo for bass notes (oriented to the top)
-* 04: custo for high notes (oriented to the bottom)
 * 05: flat (oriented to the top)
 * 06: flat (oriented to the bottom)
 * 07: natural
@@ -1402,15 +1400,33 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 * 26: quilisma
 * 27: oriscus
 * 28: oriscus auctus
-* 29: custo for bass notes (oriented to the top) with short bar
-* 30: custo for high notes (oriented to the bottom) with short bar
 * 31: punctum inclinatum auctum
 * 32: punctum inclinatum deminutus
 * 33: vertical episemus
+* 34: punctum cavum
+* 35: linea punctum
+* 36: linea puctum cavum
+* 37: circulus
+* 38: semi-curculus
+* 39: accentus
+
+* 60: custo for bass notes (oriented to the top)
+* 61: custo for bass notes (oriented to the top) with short bar
+* 62: custo for bass notes (oriented to the top) with middle bar (for the lowest note)
+* 63: custo for high notes (oriented to the bottom)
+* 64: custo for high notes (oriented to the bottom) with short bar
+* 65: custo for high notes (oriented to the bottom) with short bar (for the highest note)
+* 66->71: idem for second type of custo
+* 71->76: idem for third type
+
+* 80: A with bar
+* 81: R with bar
+* 82: V with bar
+
 */
 
 // and the different types of horizontal episemus:
-// * 40: horizontal episemus, width of a punctum
+//* 40: horizontal episemus, width of a punctum
 #define H_PUNCTUM 40
 //* 41: horizontal episemus, width of a flexus debilis
 #define H_FLEXUS 41
@@ -1442,6 +1458,11 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 #define H_PORRECTUS_FLEXUS4 54
 //* 55: horizontal episemus, width of a porrectus flexus with ambitus of 5
 #define H_PORRECTUS_FLEXUS5 55
+// * 56: horizontal episemus, width of a quilisma
+#define H_QUILISMA 56
+// * 57: horizontal episemus, width of an oriscus
+#define H_ORISCUS 57
+
 
 void
 libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note,

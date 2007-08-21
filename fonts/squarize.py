@@ -148,7 +148,7 @@ def initialize_glyphs():
     if font_name=="gregorio":
 	glyphs_to_append=("_1025", "_4097")
     if font_name=="parmesan":
-	glyphs_to_append=()
+	glyphs_to_append=("_1025", "_4097")
     for glyphnumber in glyphs_to_append:
 	initial_glyphs.append(glyphnumber)
     initialcount=140+len(glyphs_to_append)
@@ -359,7 +359,7 @@ def write_hepisemus(shape_width, glyphname):
 def pes():
     message("pes")
     precise_message("pes")
-    if (font_name=="gregorio"):
+    if (font_name=="gregorio" or font_name=="parmesan"):
     # we prefer drawing the pes with one ton of ambitus by hand, it is more beautiful
 	for i in range(2,max_interval+1):
 	    write_pes(i, "pbase", 'pes')
@@ -368,7 +368,7 @@ def pes():
 	    write_pes(i, "pbase", 'pes')
     # idem for the pes quilisma
     precise_message("pes quilisma")
-    if (font_name=="gregorio"):
+    if (font_name=="gregorio" or font_name=="parmesan"):
 	for i in range(2,max_interval+1):
 	    write_pes(i, "qbase", 'pesquilisma')
     else:
