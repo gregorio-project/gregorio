@@ -87,13 +87,12 @@ def usage():
     print """
 Python script to convert a small set of glyphs into a complete
 gregorian square notation font. The initial glyphs have a name convention,
-see gregorio-base.sfd for this convention. Currently it only works with
-gregorio.
+see gregorio-base.sfd for this convention.
 
 Usage:
 	squarize.py fontname
 
-with fontame=gregorio for now. The script generates squarize-fontame.pe
+with fontame=gregorio or parmesan for now. The script generates squarize-fontame.pe
 which is a fontforge script.
 """
 
@@ -117,7 +116,7 @@ def main():
         sys.exit(2)
     if args[0] == "gregorio":
 	font_name="gregorio"
-    if args[0] == "parmesan":
+    elif args[0] == "parmesan":
 	font_name="parmesan"
     else:
         usage()
@@ -151,7 +150,7 @@ def initialize_glyphs():
 	glyphs_to_append=("_1025", "_4097")
     for glyphnumber in glyphs_to_append:
 	initial_glyphs.append(glyphnumber)
-    initialcount=140+len(glyphs_to_append)
+    initialcount=159
     count=initialcount
 
 #function in which we initialize the lenghts, depending on the font
@@ -240,7 +239,7 @@ def end_font():
     # 66537 is for generating an afm and a tfm file
     fout.write("Generate(\"%s-%d.pfb\",\"\",66537);\n" % (font_name,current_font_number))
     # uncomment the next line if you want to generate sfd files (easier to debug)
-    #fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
+    fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
     fout.write("Close();\n")
     fout.write("Open(\"%s-base.sfd\");\n" % font_name)
     current_glyph_number=0

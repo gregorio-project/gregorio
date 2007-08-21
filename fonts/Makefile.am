@@ -24,7 +24,13 @@ PFB= \
         gregorio-2.pfb \
         gregorio-3.pfb \
         gregorio-4.pfb \
-        gregorio-5.pfb
+        gregorio-5.pfb \
+        parmesan-0.pfb \
+        parmesan-1.pfb \
+        parmesan-2.pfb \
+        parmesan-3.pfb \
+        parmesan-4.pfb \
+        parmesan-5.pfb
 
 
 TFM= \
@@ -33,7 +39,13 @@ TFM= \
 	gregorio-2.tfm \
 	gregorio-3.tfm \
 	gregorio-4.tfm \
-	gregorio-5.tfm
+	gregorio-5.tfm \
+	parmesan-0.tfm \
+	parmesan-1.tfm \
+	parmesan-2.tfm \
+	parmesan-3.tfm \
+	parmesan-4.tfm \
+	parmesan-5.tfm
 
 PL= \
 	gregorio-0.pl \
@@ -55,8 +67,16 @@ noinst_DATA = $(FONTS)
 
 EXTRA_DIST = squarize.py create-ovp.perl gregorio-base.sfd FONTLOG README
 
-CLEANFILES=gregorio-0.enc gregorio-1.enc \
-	gregorio-2.enc gregorio-3.enc gregorio-4.enc \
-	gregorio-5.enc gregorio-0.afm gregorio-1.afm \
-	gregorio-2.afm gregorio-3.afm gregorio-4.afm \
-	gregorio-5.afm $(PL) $(FONTS) squarize.pe
+CLEANFILES=gregorio-0.enc \
+	gregorio-1.enc \
+	gregorio-2.enc \
+	gregorio-3.enc \
+	gregorio-4.enc \
+	gregorio-5.enc \
+	gregorio-0.afm \
+	gregorio-1.afm \
+	gregorio-2.afm \
+	gregorio-3.afm \
+	gregorio-4.afm \
+	gregorio-5.afm \
+	$(PL) $(FONTS) squarize.pe

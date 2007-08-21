@@ -1376,6 +1376,8 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 /* function used when the glyph is only one note long, the glyph number are simply the following:
 * 01: c clef
 * 02: f clef
+* 03: c clef for key changes
+* 04: f clef for key changes
 * 05: flat (oriented to the top)
 * 06: flat (oriented to the bottom)
 * 07: natural
@@ -1409,19 +1411,19 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 * 37: circulus
 * 38: semi-curculus
 * 39: accentus
+* 69: reversed accentus
+* 70: reversed semi-circulus
 
 * 60: custo for bass notes (oriented to the top)
 * 61: custo for bass notes (oriented to the top) with short bar
 * 62: custo for bass notes (oriented to the top) with middle bar (for the lowest note)
 * 63: custo for high notes (oriented to the bottom)
 * 64: custo for high notes (oriented to the bottom) with short bar
-* 65: custo for high notes (oriented to the bottom) with short bar (for the highest note)
-* 66->71: idem for second type of custo
-* 71->76: idem for third type
+* 65: custo for high notes (oriented to the bottom) with middle bar (for the highest note)
 
-* 80: A with bar
-* 81: R with bar
-* 82: V with bar
+* 66: A with bar
+* 67: R with bar
+* 68: V with bar
 
 */
 

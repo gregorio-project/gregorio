@@ -11,12 +11,13 @@ UnderlinePosition: -204
 UnderlineWidth: 102
 Ascent: 800
 Descent: 200
+NeedsXUIDChange: 1
 XUID: [1021 341 828717519 16122349]
 OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1187705014
+ModificationTime: 1187706960
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -37,9 +38,9 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 12 12 7
+WinInfo: 264 12 7
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 324 324
+BeginChars: 341 341
 StartChar: _0017
 Encoding: 0 66 0
 Width: 164
@@ -1640,7 +1641,7 @@ Fore
  72.0049 163 101.422 168 134.005 168 c 24
 EndSplineSet
 EndChar
-StartChar: NameMe.155
+StartChar: _0066
 Encoding: 81 -1 81
 Width: 706
 VWidth: 2048
@@ -1691,7 +1692,7 @@ Fore
  380.198 415.368 l 1
 EndSplineSet
 EndChar
-StartChar: NameMe.156
+StartChar: _0067
 Encoding: 82 -1 82
 Width: 659
 VWidth: 2048
@@ -1737,7 +1738,7 @@ Fore
  448.323 64.2877 l 1
 EndSplineSet
 EndChar
-StartChar: NameMe.157
+StartChar: _0068
 Encoding: 83 -1 83
 Width: 697
 VWidth: 2048
@@ -3706,6 +3707,142 @@ HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.397
 Encoding: 323 -1 323
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.398
+Encoding: 324 -1 324
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.399
+Encoding: 325 -1 325
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.400
+Encoding: 326 -1 326
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.401
+Encoding: 327 -1 327
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.402
+Encoding: 328 -1 328
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.403
+Encoding: 329 -1 329
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.404
+Encoding: 330 -1 330
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.405
+Encoding: 331 -1 331
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.406
+Encoding: 332 -1 332
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.407
+Encoding: 333 -1 333
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.408
+Encoding: 334 -1 334
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.409
+Encoding: 335 -1 335
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.410
+Encoding: 336 -1 336
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.411
+Encoding: 337 -1 337
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.412
+Encoding: 338 -1 338
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.413
+Encoding: 339 -1 339
+Width: 2048
+VWidth: 2048
+Flags: W
+TeX: 0 0 0 0
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+StartChar: NameMe.414
+Encoding: 340 -1 340
 Width: 2048
 VWidth: 2048
 Flags: W
