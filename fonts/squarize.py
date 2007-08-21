@@ -71,7 +71,7 @@ liquescentiae={
 
 # a list of temporary glyphs, that must be removed from the finame font
 
-toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase', 'hepisemus_base']
+toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase', 'hepisemus_base','letterbar']
 
 # in the police, all the free glyphs have the name NameMexxxx where xxxx is a number starting from 141 and increasing by one. For example each new glyph will be basically NameMecount, the next NameMecount+1, etc. They are initiated in initalize_glyphs()
 initialcount=0
@@ -81,7 +81,7 @@ current_glyph_number=0
 current_font_number=0
 
 # initial glyphs are the names of the glyphs that are already in gregorio_base, mostly one-note glyphs. see initialize_glyphs() for more details
-initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,30,3,29,21,31,22,14,15,33,13]
+initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,3,21,31,22,14,15,33,13,62,65,39,69,70,38,37,60,61,63,64,16,34,35,36,66,67,68]
 
 def usage():
     print """

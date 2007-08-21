@@ -5,6 +5,11 @@ This file provides detailed information on the Gregorio font software.
 This information should be distributed along with the Gregorio fonts and 
 any derivative works.
 
+All the fonts contain the upper case A, R and V from FreeSerif, a free font
+under GPLv2 or later (thus glyphs are distributed under GPLv3 like the
+others). For more informations on FreeSerif, see
+http://savannah.nongnu.org/projects/freefont/
+
 
 Basic Font Information
 ======================
@@ -56,6 +61,14 @@ to do so, delete this exception statement from your version.
 
 ChangeLog for the gregorio font
 ===============================
+
+21 Aug 2007 (Elie Roux) gregorio Version 1.2
+- adding the signs accentus, accentus reversus, semi-circulus, circulus,
+  semi-circulus reversus
+- adding the glyphs punctum cavum, linea punctum and linea punctum cavum
+- adding the c clef and f clef for changes
+- adding a third height of queue for custos
+- adding letterbar, barred A, R and V
 
 5 Aug 2007 (Elie Roux) gregorio Version 1.1
 - adding a pes with only one ton between the two notes
