@@ -75,7 +75,8 @@ install: build
 	cp $(FONTDIR)/parmesan*.ofm $(GREGORIOTEXDIR)/fonts/ofm/gregoriotex/parmesan
 	cp $(FONTDIR)/parmesan*.map $(GREGORIOTEXDIR)/fonts/map/dvips/gregoriotex/parmesan
 	cp $(CURDIR)/tex/*.tex $(GREGORIOTEXDIR)/tex/gregoriotex
-	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/gregorio/gregorio.map\nMixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/parmesan/parmesan.map" > $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/gregorio/gregorio.map" > $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/parmesan/parmesan.map" >> $(CURDIR)/debian/gregoriotex.maps
 	dh_installtex
 
 
