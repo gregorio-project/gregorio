@@ -122,7 +122,7 @@ def main():
         usage()
         sys.exit(2)
     # the file we are going to write in
-    fout=open("squarize-%s.pe" % font_name, 'w')
+    fout=open("%s.pe" % font_name, 'w')
     initialize_glyphs()
     initialize_lengths()
     current_glyph_number=len(initial_glyphs)

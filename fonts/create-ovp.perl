@@ -30,7 +30,7 @@ Perl script to create an ovp file from afm and pl files.
 Usage:
 	create-ovp.perl fontname
 
-For now, fontname can only be gregorio.
+For now, fontname can only be gregorio or parmesan.
 ";
 }
 
@@ -47,6 +47,10 @@ my $number_of_font;
 
 if ($ARGV[0] eq "gregorio") {
 $name="gregorio";
+$number_of_font=6;
+}
+elsif ($ARGV[0] eq "parmesan") {
+$name="parmesan";
 $number_of_font=6;
 }
 else {

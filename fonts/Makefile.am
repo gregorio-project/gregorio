@@ -1,10 +1,7 @@
-font_name=gregorio
+## common rules
 
-squarize-$(font_name).pe: squarize.py
-	$(PYTHON) squarize.py $(font_name)
-
-$(TFM) $(PFB): squarize-$(font_name).pe $(font_name)-base.sfd
-	$(FONTFORGE) squarize-$(font_name).pe
+%.pe: squarize.py
+	$(PYTHON) squarize.py $*
 
 %.pl: %.tfm
 	$(TFTOPL) $< $@
@@ -12,35 +9,72 @@ $(TFM) $(PFB): squarize-$(font_name).pe $(font_name)-base.sfd
 %.ovp: create-ovp.perl $(PL)
 	$(PERL) create-ovp.perl $*
 
-$(OFM) $(OVF): gregorio.ovp
-	$(OVP2OVF) gregorio.ovp gregorio.ovf gregorio.ofm
+%.ofm %.ovf: %.ovp
+	$(OVP2OVF) $< $*.ovf $@
 
-PFB= \
-        $(font_name)-0.pfb \
-        $(font_name)-1.pfb \
-        $(font_name)-2.pfb \
-        $(font_name)-3.pfb \
-        $(font_name)-4.pfb \
-        $(font_name)-5.pfb
+## rules specific to a font
 
+## gregorio rules
+$(gregorio_PFB): gregorio.pe gregorio-base.sfd
+	$(FONTFORGE) gregorio.pe
 
-TFM= $(PFB:.pfb=.tfm)
+$(gregorio_TFM): $(gregorio_PFB)
 
-PL= $(PFB:.pfb=.pl)
+gregorio_PFB= \
+        gregorio-0.pfb \
+        gregorio-1.pfb \
+        gregorio-2.pfb \
+        gregorio-3.pfb \
+        gregorio-4.pfb \
+        gregorio-5.pfb
 
-OVF=$(font_name).ovf
+gregorio_TFM= $(gregorio_PFB:.pfb=.tfm)
+gregorio_PL= $(gregorio_PFB:.pfb=.pl)
 
-OVP=$(font_name).ovp
+gregorio_OFM=gregorio.ofm
+gregorio_OVF=gregorio.ovf
 
-OFM=$(font_name).ofm
+## parmesan rules
+$(parmesan_PFB): parmesan.pe parmesan-base.sfd
+	$(FONTFORGE) parmesan.pe
 
-FONTS=$(PFB) $(TFM) $(OVF) $(OFM)
+$(parmesan_TFM): $(parmesan_PFB)
+
+parmesan_PFB= \
+        parmesan-0.pfb \
+        parmesan-1.pfb \
+        parmesan-2.pfb \
+        parmesan-3.pfb \
+        parmesan-4.pfb \
+        parmesan-5.pfb
+
+parmesan_TFM= $(parmesan_PFB:.pfb=.tfm)
+parmesan_PL= $(parmesan_PFB:.pfb=.pl)
+
+parmesan_OFM=parmesan.ofm
+parmesan_OVF=parmesan.ovf
+
+## rules tu put all this in common
+
+all_PFB= $(parmesan_PFB) $(gregorio_PFB)
+all_TFM= $(parmesan_TFM) $(gregorio_TFM)
+all_OVF= $(parmesan_OVF) $(gregorio_OVF)
+all_OFM= $(parmesan_OFM) $(gregorio_OFM)
+
+## build rules
+
+FONTS=$(all_PFB) $(all_TFM) $(all_OVF) $(all_OFM)
 
 noinst_DATA = $(FONTS)
 
-EXTRA_DIST = squarize.py create-ovp.perl $(font_name)-base.sfd FONTLOG README
+EXTRA_DIST = squarize.py create-ovp.perl parmesan-base.sfd gregorio-base.sfd FONTLOG README
+
+## rules for the files to clean
+
+PFB=$(parmesan_PFB) $(gregorio_PFB)
 
 ENC=$(PFB:.pfb=.enc)
 AFM=$(PFB:.pfb=.afm)
+PL=$(PFB:.pfb=.pl)
 
 CLEANFILES=$(ENC) $(AFM) $(PL) $(FONTS) squarize-*.pe
