@@ -45,6 +45,18 @@ libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score)
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
     }
   fprintf (f, "\\input gregoriotex.tex\n\n\\begingregorioscore%%\n");
+  // we select the good font
+  if (score->gregoriotex_font)
+    {
+      if (!strcmp (score->gregoriotex_font, "gregorio"))
+	{
+	  fprintf (f, "\\setgregorianfont{gregorio}%%\n");
+	}
+      if (!strcmp (score->gregoriotex_font, "parmesan"))
+	{
+	  fprintf (f, "\\setgregorianfont{parmesan}%%\n");
+	}
+    }
 // first we draw the initial (first letter) and the initial key
   first_text = libgregorio_first_text (score);
   if (first_text)
@@ -236,6 +248,21 @@ libgregorio_gtex_write_end (FILE * f, unsigned char style)
 void
 libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char)
 {
+  if (!wcscmp (special_char, L"A/"))
+    {
+      fprintf (f, "\\Abar");
+      return;
+    }
+  if (!wcscmp (special_char, L"R/"))
+    {
+      fprintf (f, "\\Rbar");
+      return;
+    }
+  if (!wcscmp (special_char, L"V/"))
+    {
+      fprintf (f, "\\Vbar");
+      return;
+    }
   if (!wcscmp (special_char, L"'æ"))
     {
       fprintf (f, "\\'æ");
@@ -840,8 +867,7 @@ libgregorio_gregoriotex_write_hepisemus (FILE * f,
 		   current_note->h_episemus_top_note + 1);
 	  break;
 	default:
-	  fprintf (f, "\\hepisemus{%c}{0}{O}%%\n",
-		   current_note->h_episemus_top_note + 1);
+	  hepisemus_last_note ();
 	  break;
 	}
       break;
@@ -1041,30 +1067,24 @@ libgregorio_gregoriotex_write_vepisemus (FILE * f,
 	  if (current_glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS
 	      || current_glyph->liquescentia == L_DEMINUTUS)
 	    {
-	      fprintf (f, "\\vepisemus{%c}{10}%%\n",
-		       current_note->pitch - 1);
+	      fprintf (f, "\\vepisemus{%c}{10}%%\n", current_note->pitch - 1);
 	    }
 	  else
 	    {
-	      fprintf (f, "\\vepisemus{%c}{9}%%\n",
-		       current_note->pitch - 1);
+	      fprintf (f, "\\vepisemus{%c}{9}%%\n", current_note->pitch - 1);
 	    }
 	  break;
 	case S_STROPHA:
-	  fprintf (f, "\\vepisemus{%c}{11}%%\n",
-		   current_note->pitch - 1);
+	  fprintf (f, "\\vepisemus{%c}{11}%%\n", current_note->pitch - 1);
 	  break;
 	case S_QUILISMA:
-	  fprintf (f, "\\vepisemus{%c}{12}%%\n",
-		   current_note->pitch - 1);
+	  fprintf (f, "\\vepisemus{%c}{12}%%\n", current_note->pitch - 1);
 	  break;
 	case S_ORISCUS:
-	  fprintf (f, "\\vepisemus{%c}{13}%%\n",
-		   current_note->pitch - 1);
+	  fprintf (f, "\\vepisemus{%c}{13}%%\n", current_note->pitch - 1);
 	  break;
 	default:
-	  fprintf (f, "\\vepisemus{%c}{0}%%\n",
-		   current_note->pitch - 1);
+	  vepisemus_last_note ();
 	  break;
 	}
       break;

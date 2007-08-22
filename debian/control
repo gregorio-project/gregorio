@@ -2,7 +2,7 @@ Source: gregorio
 Section: x11
 Priority: optional
 Maintainer: Elie Roux <elie.roux@enst-bretagne.fr>
-Build-Depends: debhelper (>> 3.0.0), libxml2-dev, flex, bison, docbook-to-man, xsltproc, autotools-dev, tex-common (>= 0.33), fontforge, texlive-omega, python, perl
+Build-Depends: debhelper (>> 3.0.0), libxml2-dev, flex, bison, docbook-to-man, xsltproc, autotools-dev, fontforge, texlive-omega, python, perl, texlive-font-utils
 Standards-Version: 3.6.2
 
 Package: gregorio
@@ -21,7 +21,7 @@ Description: a command-line tool to typeset gregorian chant
 
 Package: gregoriotex
 Architecture: any
-Depends: tex-common (>= 0.33), texlive-omega
+Depends: tex-common (>= 0.33), texlive-omega, texlive-fonts-recommended
 Recommends: gregorio
 Description: a omega style for gregorian chant scores
  GregorioTeX is a omega style for writing gregorian chant scores. For now it is

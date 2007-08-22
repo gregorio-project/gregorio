@@ -42,6 +42,12 @@ Here are the different types, they must be the same as in squarize.py
 #define T_FLEXUS_LONGQUEUE 15
 #define T_TORCULUS 14
 
+// the fonts
+
+#define F_GREGORIO 1
+#define F_PARMESAN 2
+#define F_GREGORIA 3
+
 // macro that we will use to determine if we need a short bar or not
 
 #define is_short(pitch) pitch=='a'||pitch=='c'||pitch=='e'||pitch=='g'||pitch=='i'||pitch=='k'||pitch=='m'
@@ -66,53 +72,21 @@ Here are the different types, they must be the same as in squarize.py
 
 #define HEPISEMUS_FIRST_TWO 0
 
-void
-libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score);
+void libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score);
+void libgregorio_gregoriotex_write_voice_info (FILE * f, gregorio_voice_info * voice_info);
+void libgregorio_gregoriotex_write_syllable (FILE * f, gregorio_syllable * syllable, char *first_syllable);
+void libgregorio_gregoriotex_write_text (FILE * f, gregorio_character *first_character, char *first_syllable);
+void libgregorio_gregoriotex_write_element (FILE * f, gregorio_syllable * syllable, gregorio_element * element);
+void libgregorio_gregoriotex_write_bar (FILE * f, char type);
+void libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable, gregorio_element * element, gregorio_glyph * glyph);
+void libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *glyph, int *type, unsigned int *glyph_number);
 
-void
-libgregorio_gregoriotex_write_voice_info (FILE * f,
-					  gregorio_voice_info * voice_info);
-
-void
-libgregorio_gregoriotex_write_syllable (FILE * f,
-					gregorio_syllable * syllable, char *first_syllable);
-
-void
-libgregorio_gregoriotex_write_text (FILE * f, gregorio_character *first_character, char *first_syllable);
-
-void
-libgregorio_gregoriotex_write_element (FILE * f, gregorio_syllable * syllable,
-				       gregorio_element * element);
-
-void
-libgregorio_gregoriotex_write_bar (FILE * f, char type);
-
-void
-libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable,
-				     gregorio_element * element,
-				     gregorio_glyph * glyph);
-void
-libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *
-						    glyph, int *type,
-						    unsigned int
-						    *glyph_number);
-
-unsigned int
-libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph);
-
-void
-libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note,
-				    char next_note_pitch);
-
-char
-libgregorio_gregoriotex_determine_next_note (gregorio_syllable * syllable,
-					     gregorio_element * element,
-					     gregorio_glyph * glyph);
+unsigned int libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph);
+void libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note, char next_note_pitch);
+char libgregorio_gregoriotex_determine_next_note (gregorio_syllable * syllable, gregorio_element * element, gregorio_glyph * glyph);
 
 char libgregorio_gregoriotex_syllable_first_note (gregorio_syllable * syllable);
-
 void libgregorio_print_unicode_letters (FILE *f, wchar_t *wstr);
-
 void libgregorio_gtex_write_begin (FILE * f, unsigned char style);
 void libgregorio_gtex_write_end (FILE * f, unsigned char style);
 void libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char);
@@ -120,11 +94,8 @@ void libgregorio_gtex_write_verb (FILE * f, wchar_t * verb_str);
 void libgregorio_gtex_print_char (FILE * f, wchar_t to_print);
 
 unsigned int gregoriotex_determine_liquescentia_number (unsigned char type, char liquescentia);
-
 void libgregorio_gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
-
 void libgregorio_gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
-
 void libgregorio_gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_note * current_note);
 
 #endif

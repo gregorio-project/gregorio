@@ -64,19 +64,18 @@ install: build
 	dh_installdirs
 
 	$(MAKE) DESTDIR=$(CURDIR)/debian/gregorio install
+	cp $(FONTDIR)/*.map $(GREGORIOTEXDIR)/fonts/map/dvips/gregoriotex/gregorio
+	cp $(CURDIR)/tex/*.tex $(GREGORIOTEXDIR)/tex/gregoriotex
 	cp $(FONTDIR)/gregorio*.pfb $(GREGORIOTEXDIR)/fonts/type1/gregoriotex/gregorio
 	cp $(FONTDIR)/gregorio*.tfm $(GREGORIOTEXDIR)/fonts/tfm/gregoriotex/gregorio
 	cp $(FONTDIR)/gregorio*.ovf $(GREGORIOTEXDIR)/fonts/ovf/gregoriotex/gregorio
 	cp $(FONTDIR)/gregorio*.ofm $(GREGORIOTEXDIR)/fonts/ofm/gregoriotex/gregorio
-	cp $(FONTDIR)/gregorio*.map $(GREGORIOTEXDIR)/fonts/map/dvips/gregoriotex/gregorio
 	cp $(FONTDIR)/parmesan*.pfb $(GREGORIOTEXDIR)/fonts/type1/gregoriotex/parmesan
 	cp $(FONTDIR)/parmesan*.tfm $(GREGORIOTEXDIR)/fonts/tfm/gregoriotex/parmesan
 	cp $(FONTDIR)/parmesan*.ovf $(GREGORIOTEXDIR)/fonts/ovf/gregoriotex/parmesan
 	cp $(FONTDIR)/parmesan*.ofm $(GREGORIOTEXDIR)/fonts/ofm/gregoriotex/parmesan
-	cp $(FONTDIR)/parmesan*.map $(GREGORIOTEXDIR)/fonts/map/dvips/gregoriotex/parmesan
-	cp $(CURDIR)/tex/*.tex $(GREGORIOTEXDIR)/tex/gregoriotex
-	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/gregorio/gregorio.map" > $(CURDIR)/debian/gregoriotex.maps
-	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/parmesan/parmesan.map" >> $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/gregorio.map" > $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/parmesan.map" >> $(CURDIR)/debian/gregoriotex.maps
 	dh_installtex
 
 

@@ -195,7 +195,7 @@
 \def\setlinesclef#1#2{%
 \localleftbox{%
 \copy\Lines% draws the lines
-\typekey{#1}{#2}%
+\typekey{#1}{#2}{0}%
 }%
 }
 
@@ -1204,12 +1204,32 @@
 % space for the clef changes
 \newskip\clefchangespace
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% tests
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%
+%% fonts
+%%%%%%%%
 
 % we open the font at \factor pt, we must know \factor because it will determine the line heigth, etc.
 \font\gregorianfont=gregorio at \the\factor em
 
+\font\gregoriantextfont=gregorio at \the\factor em
+
 \font\textfont=pncr at 12pt
 \font\fontofinitial=pncr at 40pt
+
+% the macros to typeset the A, R and V with bar
+\def\Abar{%
+{\gregoriantextfont \char 66}%
+}
+
+\def\Rbar{%
+{\gregoriantextfont \char 67}%
+}
+
+\def\Vbar{%
+{\gregoriantextfont \char 68}%
+}
+
+\def\setgregorianfont#1{%
+\global\gregorianfont=#1 at \the\factor em%
+\global\gregoriantextfont=#1 at \the\factor em%
+}
