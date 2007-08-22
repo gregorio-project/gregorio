@@ -831,6 +831,14 @@ libgregorio_gregoriotex_write_hepisemus (FILE * f,
 	  fprintf (f, "\\hepisemus{%c}{12}{O}%%\n",
 		   current_note->h_episemus_top_note + 1);
 	  break;
+	case S_QUILISMA:
+	  fprintf (f, "\\hepisemus{%c}{13}{O}%%\n",
+		   current_note->h_episemus_top_note + 1);
+	  break;
+	case S_ORISCUS:
+	  fprintf (f, "\\hepisemus{%c}{14}{O}%%\n",
+		   current_note->h_episemus_top_note + 1);
+	  break;
 	default:
 	  fprintf (f, "\\hepisemus{%c}{0}{O}%%\n",
 		   current_note->h_episemus_top_note + 1);
@@ -1044,6 +1052,14 @@ libgregorio_gregoriotex_write_vepisemus (FILE * f,
 	  break;
 	case S_STROPHA:
 	  fprintf (f, "\\vepisemus{%c}{11}%%\n",
+		   current_note->pitch - 1);
+	  break;
+	case S_QUILISMA:
+	  fprintf (f, "\\vepisemus{%c}{12}%%\n",
+		   current_note->pitch - 1);
+	  break;
+	case S_ORISCUS:
+	  fprintf (f, "\\vepisemus{%c}{13}%%\n",
 		   current_note->pitch - 1);
 	  break;
 	default:

@@ -155,7 +155,7 @@ def initialize_glyphs():
 
 #function in which we initialize the lenghts, depending on the font
 def initialize_lengths():
-    global base_height, line_width, width_punctum, width1, width2, width_debilis, width_deminutus, width_inclinatum_deminutus, width_flexusdeminutus, porrectusflexuswidths, porrectuswidths, width_inlinatum, width_stropha, hepisemus_additional_width, width_oriscus, width_quilisma
+    global base_height, line_width, width_punctum, width1, width2, width_debilis, width_deminutus, width_inclinatum_deminutus, width_flexusdeminutus, porrectusflexuswidths, porrectuswidths, width_inclinatum, width_stropha, hepisemus_additional_width, width_oriscus, width_quilisma
     if (font_name=="gregorio"):
 	# the base heigth is half the space between two lines plus half the heigth of a line
 	base_height=157.5
@@ -171,7 +171,7 @@ def initialize_lengths():
 	width_debilis=88
 	width_deminutus=88
 	#width of a punctum inclinatum (we consider that the punctum inclinatum auctus has the same width
-	width_inlinatum=164
+	width_inclinatum=164
 	#width of a stropha (idem for the stropha aucta)
 	width_stropha=164
 	# the width of the punctum inclinatum deminutus (no need to add the width of a line)
@@ -191,7 +191,7 @@ def initialize_lengths():
 	width_quilisma=161
 	width_debilis=75
 	width_deminutus=75
-	width_inlinatum=178
+	width_inclinatum=178
 	width_stropha=169
 	width_inclinatum_deminutus=112
 	width_flexusdeminutus=161
@@ -239,7 +239,7 @@ def end_font():
     # 66537 is for generating an afm and a tfm file
     fout.write("Generate(\"%s-%d.pfb\",\"\",66537);\n" % (font_name,current_font_number))
     # uncomment the next line if you want to generate sfd files (easier to debug)
-    fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
+    #fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
     fout.write("Close();\n")
     fout.write("Open(\"%s-base.sfd\");\n" % font_name)
     current_glyph_number=0
@@ -339,9 +339,11 @@ def hepisemus():
     write_hepisemus(width_punctum, "_0040")
     write_hepisemus(width_flexusdeminutus, "_0041")          
     write_hepisemus(width_debilis+line_width, "_0042")
-    write_hepisemus(width_punctum, "_0043")
+    write_hepisemus(width_inclinatum, "_0043")
     write_hepisemus(width_inclinatum_deminutus, "_0044")
-    write_hepisemus(width_punctum, "_0045")
+    write_hepisemus(width_stropha, "_0045")
+    write_hepisemus(width_quilisma, "_0056")
+    write_hepisemus(width_oriscus, "_0057")
     for i in range(max_interval):
 	write_hepisemus(porrectuswidths[i], "_00%02d" % int(46+i))
     for i in range(max_interval):

@@ -203,7 +203,8 @@
 % arguments are : 
 %% #1: the type of the key : c or f
 %% #2: the line of the key (1 is the lowest)
-\def\typekey#1#2{%
+%% #3: if we must use small key characters (inside a line) or not 0 if not inside, 1 if inside
+\def\typekey#1#2#3{%
 \ifcase#2 %
 \or%
 \calculateglyphraisevalue{c}{0}%
@@ -215,16 +216,24 @@
 \calculateglyphraisevalue{i}{0}%
 \fi%
 \ifx c#1% we check if it is a c key
+\ifcase#3%
 \raise\glyphraisevalue\hbox{\gregorianfont \char 1}%
+\or%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 3}%
+\fi%
 \else % we consider that it is a f key
+\ifcase#3%
 \raise\glyphraisevalue\hbox{\gregorianfont \char 2}%
+\or%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 4}%
+\fi%
 \fi%
 }
 
 % macro that writes the initial key, and sets the next keys to the same value
 
 \def\setinitialclef#1#2{%
-\typekey{#1}{#2}%
+\typekey{#1}{#2}{0}%
 \setlinesclef{#1}{#2}%
 \hskip\spaceafterlineclef%
 }
@@ -235,7 +244,7 @@
 \clefchangespace=0.165em plus 0.0165em minus 0.0165em%
 \multiply\clefchangespace by \factor %
 \hskip\clefchangespace %
-\typekey{#1}{#2}%
+\typekey{#1}{#2}{1}%
 \hskip\clefchangespace %
 \setlinesclef{#1}{#2}%
 }
@@ -246,7 +255,7 @@
 \clefchangespace=0.165em plus 0.0165em minus 0.0165em%
 \multiply\clefchangespace by \factor %
 \hskip\clefchangespace %
-\typekey{#1}{#2}%
+\typekey{#1}{#2}{1}%
 \hskip\clefchangespace %
 \setlinesclef{#1}{#2}%
 }
@@ -262,43 +271,43 @@
 \hskip\spacebeforecusto %
 \gregorianfont %
 \ifx a#1%
-\char 29%
+\char 65%
 \fi%
 \ifx b#1%
-\char 3%
+\char 63%
 \fi%
 \ifx c#1%
-\char 29%
+\char 64%
 \fi%
 \ifx d#1%
-\char 3%
+\char 63%
 \fi%
 \ifx e#1%
-\char 29%
+\char 64%
 \fi%
 \ifx f#1%
-\char 3%
+\char 63%
 \fi%
 \ifx g#1%
-\char 29%
+\char 64%
 \fi%
 \ifx h#1%
-\char 3%
+\char 63%
 \fi%
 \ifx i#1%
-\char 29%
+\char 64%
 \fi%
 \ifx j#1%
-\char 4%
+\char 60%
 \fi%
 \ifx k#1%
-\char 30%
+\char 61%
 \fi%
 \ifx l#1%
-\char 3%
+\char 60%
 \fi%
 \ifx m#1%
-\char 30%
+\char 62%
 \fi%
 }%
 }%
@@ -616,6 +625,8 @@
 %% 9: the last note, if it is a punctum inclinatum
 %% 10: idem, if it is a punctum inclinatum debilis
 %% 11: idem, if it is a stropha
+%% 12: idem, with a quilisma
+%% 13: idem, with an oriscus
 
 \def\vepisemus#1#2{%
 \calculateglyphraisevalue{#1}{2}%
@@ -659,6 +670,12 @@
 \or%
 %case 11
 \vepisemusaux{0}{\char 20}{0}%
+\or%
+%case 12
+\vepisemusaux{0}{\char 26}{0}%
+\or%
+%case 13
+\vepisemusaux{0}{\char 27}{0}%
 \fi%
 }
 
@@ -697,6 +714,8 @@
 %% 10: the last note, if it is a punctum inclinatum
 %% 11: idem, if it is a punctum inclinatum debilis
 %% 12: idem, if it is a stropha
+%% 13: idem, with a quilisma
+%% 14: idem, with an oriscus
 \def\hepisemus#1#2#3{%
 \calculateglyphraisevalue{#1}{2}%
 \ifcase#2 %
@@ -765,6 +784,12 @@
 \or%
 %case 12
 \hepisemusaux{\char 20}{45}{1}%
+\or%
+%case 13
+\hepisemusaux{\char 26}{56}{1}%
+\or%
+%case 14
+\hepisemusaux{\char 27}{47}{1}%
 \fi%
 }
 
