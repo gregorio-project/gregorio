@@ -64,7 +64,7 @@ install: build
 	dh_installdirs
 
 	$(MAKE) DESTDIR=$(CURDIR)/debian/gregorio install
-	cp $(FONTDIR)/*.map $(GREGORIOTEXDIR)/fonts/map/dvips/gregoriotex/gregorio
+	cp $(FONTDIR)/*.map $(GREGORIOTEXDIR)/fonts/map/dvips/gregoriotex
 	cp $(CURDIR)/tex/*.tex $(GREGORIOTEXDIR)/tex/gregoriotex
 	cp $(FONTDIR)/gregorio*.pfb $(GREGORIOTEXDIR)/fonts/type1/gregoriotex/gregorio
 	cp $(FONTDIR)/gregorio*.tfm $(GREGORIOTEXDIR)/fonts/tfm/gregoriotex/gregorio
