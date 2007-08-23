@@ -59,7 +59,7 @@ exit(2);
 }
 
 # static contains the beginning of the ovp file
-my $static="(VTITLE gregorio)
+my $static="(VTITLE $name)
 (OFMLEVEL D 0)
 (FAMILY UNSPECIFIED)
 (FACE F MRR)

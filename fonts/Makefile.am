@@ -10,7 +10,7 @@
 	$(PERL) create-ovp.perl $*
 
 %.ofm %.ovf: %.ovp
-	$(OVP2OVF) $< $*.ovf $@
+	$(OVP2OVF) $< $*.ovf $*.ofm
 
 ## rules specific to a font
 
