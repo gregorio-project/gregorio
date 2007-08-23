@@ -271,43 +271,43 @@
 \hskip\spacebeforecusto %
 \gregorianfont %
 \ifx a#1%
-\char 65%
+\char 62%
 \fi%
 \ifx b#1%
-\char 63%
+\char 60%
 \fi%
 \ifx c#1%
-\char 64%
-\fi%
-\ifx d#1%
-\char 63%
-\fi%
-\ifx e#1%
-\char 64%
-\fi%
-\ifx f#1%
-\char 63%
-\fi%
-\ifx g#1%
-\char 64%
-\fi%
-\ifx h#1%
-\char 63%
-\fi%
-\ifx i#1%
-\char 64%
-\fi%
-\ifx j#1%
-\char 60%
-\fi%
-\ifx k#1%
 \char 61%
 \fi%
-\ifx l#1%
+\ifx d#1%
 \char 60%
 \fi%
+\ifx e#1%
+\char 61%
+\fi%
+\ifx f#1%
+\char 60%
+\fi%
+\ifx g#1%
+\char 61%
+\fi%
+\ifx h#1%
+\char 60%
+\fi%
+\ifx i#1%
+\char 61%
+\fi%
+\ifx j#1%
+\char 63%
+\fi%
+\ifx k#1%
+\char 64%
+\fi%
+\ifx l#1%
+\char 63%
+\fi%
 \ifx m#1%
-\char 62%
+\char 65%
 \fi%
 }%
 }%
@@ -1211,7 +1211,7 @@
 % we open the font at \factor pt, we must know \factor because it will determine the line heigth, etc.
 \font\gregorianfont=gregorio at \the\factor em
 
-\font\gregoriantextfont=gregorio at \the\factor em
+\font\gregoriantextfont=gregorio at 12pt
 
 \font\textfont=pncr at 12pt
 \font\fontofinitial=pncr at 40pt
@@ -1230,6 +1230,6 @@
 }
 
 \def\setgregorianfont#1{%
-\global\gregorianfont=#1 at \the\factor em%
-\global\gregoriantextfont=#1 at \the\factor em%
+\global\font\gregorianfont=#1 at \the\factor em%
+\global\font\gregoriantextfont=#1 at 12pt%
 }
