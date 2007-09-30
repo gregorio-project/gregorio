@@ -239,7 +239,7 @@ def end_font():
     # 66537 is for generating an afm and a tfm file
     fout.write("Generate(\"%s-%d.pfb\",\"\",66537);\n" % (font_name,current_font_number))
     # uncomment the next line if you want to generate sfd files (easier to debug)
-    #fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
+    fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
     fout.write("Close();\n")
     fout.write("Open(\"%s-base.sfd\");\n" % font_name)
     current_glyph_number=0

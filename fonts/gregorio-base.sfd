@@ -17,7 +17,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1188282036
+ModificationTime: 1188369617
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -46,7 +46,7 @@ Encoding: 0 66 0
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 82 166 m 28
@@ -63,7 +63,7 @@ Encoding: 1 67 1
 Width: 164
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 77.5 192 m 5
@@ -78,7 +78,7 @@ Encoding: 2 68 2
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 58.5 163.504 m 1
@@ -95,25 +95,31 @@ Encoding: 3 69 3
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0.155273 154.667 m 1
- -14.7559 152.207 -8.11914 105.713 -6.39941 90.001 c 1
- 4.00293 -5.59961 l 1
- 7.6 -20.4 9.06836 -50.6641 28.4043 -53.998 c 1
- 51.6 -47.2 38.2695 10.332 55.5986 22 c 1
- 72.2695 8.66602 58.6667 -30 86.0068 -34.001 c 1
- 114 -30 100.995 32.9961 117.003 40.999 c 1
- 134.667 34 120.332 -1.00781 144.336 -5.66699 c 1
- 165.667 -1 164 17.6667 164.004 35.333 c 1
- 164 160.669 l 5
- 160.511 156.667 157.333 152 146.667 148 c 1
- 129.656 153 136.667 204 117.161 203.669 c 1
- 98 204 101.333 122.667 87.1562 114.5 c 1
- 75.3333 120 78 183.333 57.165 183.335 c 1
- 34.6667 183.333 44.5117 112.303 30.001 102.803 c 1
- 18.5117 112.303 16.7998 155.6 0.155273 154.667 c 1
+ 0.332489 154.677 0.508012 154.682 0.681873 154.682 c 0
+ 16.8374 154.682 18.634 112.202 30.001 102.803 c 1
+ 44.5117 112.303 34.6667 183.333 57.165 183.335 c 1
+ 78 183.333 75.3333 120 87.1562 114.5 c 1
+ 101.304 122.65 98.0135 203.67 117.045 203.67 c 0
+ 117.161 203.669 l 1
+ 117.349 203.671 l 0
+ 136.622 203.671 129.711 152.984 146.667 148 c 1
+ 157.333 152 160.511 156.667 164 160.669 c 1
+ 164.004 35.333 l 1
+ 164.004 35.269 l 0
+ 164.004 32.918 164.033 30.5496 164.033 28.1992 c 0
+ 164.033 12.9064 162.803 -1.62662 144.336 -5.66699 c 1
+ 120.332 -1.00781 134.667 34 117.003 40.999 c 1
+ 100.995 32.9961 114 -30 86.0068 -34.001 c 1
+ 58.6667 -30 72.2695 8.66602 55.5986 22 c 1
+ 38.2695 10.332 51.6 -47.2 28.4043 -53.998 c 1
+ 9.06836 -50.6641 7.6 -20.4 4.00293 -5.59961 c 1
+ -6.39941 90.001 l 1
+ -7.26139 97.8763 -9.3587 113.485 -9.3587 127.406 c 0
+ -9.3587 141.259 -7.28195 153.44 0.155273 154.667 c 1
 EndSplineSet
 EndChar
 StartChar: _0028
@@ -121,20 +127,23 @@ Encoding: 4 70 4
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-0 191 m 21
+0 191 m 17
  5.59004 172.99 2.76983 161.341 4.5 146.25 c 1
- 13.1685 126.102 29 126 45.5 128.75 c 1
+ 10.8533 131.483 21.0542 127.484 32.546 127.484 c 0
+ 36.7338 127.484 41.0931 128.016 45.5 128.75 c 1
  65.0611 133.274 80.75 159.75 112.25 160 c 1
  133.353 159.548 152 144 164 129.75 c 9
  164 -44.4199 l 17
  159.675 -31.7529 161.219 -18.3369 158.665 -5.66992 c 1
  152.665 7.08008 134.579 21.5244 111.665 23.3301 c 1
  79.2109 21.2725 74.165 -3.66992 45.915 -9.16992 c 1
- 23.915 -12.9199 -3.47363 2.11035 0 19.3301 c 9
- 0 191 l 21
+ 43.6121 -9.56246 41.2501 -9.74922 38.8707 -9.74922 c 0
+ 19.8437 -9.74922 -0.300029 2.19241 -0.300029 16.3455 c 0
+ -0.300029 17.3307 -0.20241 18.3267 0 19.3301 c 9
+ 0 191 l 17
 EndSplineSet
 EndChar
 StartChar: _0027
@@ -142,20 +151,23 @@ Encoding: 5 71 5
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-164 191 m 17
- 158.41 172.99 161.23 161.341 159.5 146.25 c 1
- 150.831 126.103 135 126 118.5 128.75 c 1
- 98.9385 133.274 83.25 159.75 51.75 160 c 1
- 30.6465 159.548 12 144 0 129.75 c 9
- 0 -41.5771 l 17
- 4.32519 -28.9102 2.69727 -15.4941 5.25098 -2.82715 c 1
- 11.251 9.92285 29.3369 24.3672 52.251 26.1729 c 1
- 84.7041 24.1152 89.751 -0.827148 118.001 -6.32715 c 1
- 140.001 -10.0771 167.474 4.95312 164 22.1729 c 13
- 164 191 l 17
+164 191 m 9
+ 164 22.1729 l 17
+ 164.202 21.1722 164.299 20.1788 164.299 19.1961 c 0
+ 164.299 5.03959 144.092 -6.90644 125.048 -6.90644 c 0
+ 122.667 -6.90644 120.304 -6.71969 118.001 -6.32715 c 1
+ 89.751 -0.827148 84.7041 24.1152 52.251 26.1729 c 1
+ 29.3369 24.3672 11.251 9.92285 5.25098 -2.82715 c 1
+ 2.69727 -15.4941 4.32519 -28.9102 0 -41.5771 c 9
+ 0 129.75 l 17
+ 12 144 30.6465 159.548 51.75 160 c 1
+ 83.25 159.75 98.9385 133.274 118.5 128.75 c 1
+ 122.907 128.016 127.265 127.485 131.453 127.485 c 0
+ 142.945 127.485 153.146 131.484 159.5 146.25 c 1
+ 161.23 161.341 158.41 172.99 164 191 c 9
 EndSplineSet
 EndChar
 StartChar: _0006
@@ -163,20 +175,21 @@ Encoding: 6 72 6
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-0 371 m 9
- 0 1 l 17
- 33 -39 101 -55 164 -63 c 9
- 164 109.667 l 21
- 164 130.333 108.253 173.332 32 169 c 9
- 31.5 94 l 17
- 87.9014 93.7178 108.845 73.7666 129 54 c 1
- 143.333 26.6667 142 20 142.5 -6 c 1
- 85.5 0 46.7373 15.5322 22 52 c 9
- 22.5 389.5 l 17
- 15 389.5 10.5 385.5 0 371 c 9
+0 371 m 17
+ 10.5 385.5 15 389.5 22.5 389.5 c 9
+ 22 52 l 17
+ 46.7373 15.5322 85.5 0 142.5 -6 c 1
+ 142 20 143.333 26.6667 129 54 c 1
+ 108.845 73.7666 87.9014 93.7178 31.5 94 c 9
+ 32 169 l 17
+ 35.6157 169.205 39.1853 169.304 42.7051 169.304 c 0
+ 113.414 169.304 164 129.353 164 109.667 c 9
+ 164 -63 l 17
+ 101 -55 33 -39 0 1 c 9
+ 0 371 l 17
 EndSplineSet
 EndChar
 StartChar: queue
@@ -184,7 +197,7 @@ Encoding: 7 153 7
 Width: 22
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -165.5 m 9
@@ -199,7 +212,7 @@ Encoding: 8 74 8
 Width: 82
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 38.75 136 m 1
@@ -214,7 +227,7 @@ Encoding: 9 75 9
 Width: 19
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 550.999 m 29
@@ -229,7 +242,7 @@ Encoding: 10 76 10
 Width: 152
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 41
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 152 553.333 m 1
@@ -245,7 +258,7 @@ Encoding: 11 77 11
 Width: 140
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 41
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 380.5 m 9
@@ -268,7 +281,7 @@ Encoding: 12 78 12
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 141.996 -26.668 m 2
@@ -287,18 +300,18 @@ Encoding: 13 79 13
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 22.0039 -26.668 m 2
- 22 -4 51.333 8.66699 81.999 9.33301 c 0
- 116.999 9.33301 149 0.65625 164 -10 c 1
- 164 150 l 1
- 144 161 114.583 166 82 166 c 24
- 49.417 166 20 158 0 150 c 9
- 0 -220.668 l 5
- 18.667 -220.667 22.0039 -212.293 22.0039 -212.293 c 25
- 22.0039 -26.668 l 2
+ 22.0039 -212.293 l 25
+ 22.0039 -212.293 18.667 -220.667 0 -220.668 c 1
+ 0 150 l 17
+ 20 158 49.417 166 82 166 c 24
+ 114.583 166 144 161 164 150 c 1
+ 164 -10 l 1
+ 149 0.65625 116.999 9.33301 81.999 9.33301 c 0
+ 51.333 8.66699 22 -4 22.0039 -26.668 c 2
 EndSplineSet
 EndChar
 StartChar: _0009
@@ -307,7 +320,7 @@ AltUni: 80
 Width: 19
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 359.128 m 9
@@ -322,7 +335,7 @@ Encoding: 15 81 15
 Width: 19
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -296.375 m 9
@@ -337,18 +350,18 @@ Encoding: 16 83 16
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 22.0039 -26.668 m 2
- 22 -4 51.333 8.66699 81.999 9.33301 c 0
- 116.999 9.33301 149 0.65625 164 -10 c 1
- 164 150 l 1
- 144 161 114.583 166 82 166 c 24
- 49.417 166 20 158 0 150 c 13
- 0 -365 l 1
- 18.667 -364.999 22.0049 -356.286 22.0049 -356.286 c 25
- 22.0039 -26.668 l 2
+ 22.0049 -356.286 l 25
+ 22.0049 -356.286 18.667 -364.999 0 -365 c 1
+ 0 150 l 17
+ 20 158 49.417 166 82 166 c 24
+ 114.583 166 144 161 164 150 c 1
+ 164 -10 l 1
+ 149 0.65625 116.999 9.33301 81.999 9.33301 c 0
+ 51.333 8.66699 22 -4 22.0039 -26.668 c 2
 EndSplineSet
 EndChar
 StartChar: pesdeminutus
@@ -356,7 +369,7 @@ Encoding: 17 84 17
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -10.1777 m 5
@@ -377,7 +390,7 @@ Encoding: 18 85 18
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 160.67 m 1
@@ -398,7 +411,7 @@ Encoding: 19 86 19
 Width: 164
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -10 m 1
@@ -419,7 +432,7 @@ Encoding: 20 87 20
 Width: 197
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 197 90.001 m 13
@@ -438,7 +451,7 @@ Encoding: 21 88 21
 Width: 201
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 9
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 382 m 9
@@ -461,7 +474,7 @@ Encoding: 22 89 22
 Width: 321
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 41
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 129.995 131.999 m 1
@@ -494,7 +507,7 @@ Encoding: 23 90 23
 Width: 85
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 63 -345.5 m 5
@@ -511,7 +524,7 @@ Encoding: 24 91 24
 Width: 85
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 63 -240.5 m 5
@@ -528,7 +541,7 @@ Encoding: 25 92 25
 Width: 85
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 41
 HStem: 854.5 15 539.5 15 224.5 15 -90.5 15
 Fore
 63 478.5 m 5
@@ -545,7 +558,7 @@ Encoding: 26 93 26
 Width: 85
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 41
 HStem: 957.5 15 642.5 15 327.5 15 12.5 15
 Fore
 63 370.5 m 5
@@ -562,7 +575,7 @@ Encoding: 27 94 27
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 164 -21.5 m 25
@@ -580,7 +593,7 @@ Encoding: 28 95 28
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -21.5 m 25
@@ -598,7 +611,7 @@ Encoding: 29 96 29
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 151.674 m 1
@@ -616,7 +629,7 @@ Encoding: 30 97 30
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 164 151.674 m 1
@@ -634,7 +647,7 @@ Encoding: 31 98 31
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 164 146 m 13
@@ -653,7 +666,7 @@ Encoding: 32 99 32
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 141.992 151.668 m 0
@@ -672,7 +685,7 @@ Encoding: 33 100 33
 Width: 22
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -11.5 m 25
@@ -687,7 +700,7 @@ Encoding: 34 101 34
 Width: 22
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -420.5 15 -105.5 15 209.5 15 524.5 15
 Fore
 0 -11.5 m 25
@@ -702,7 +715,7 @@ Encoding: 35 102 35
 Width: 22
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -420.5 15 -105.5 15 209.5 15 524.5 15
 Fore
 0 -11.5 m 25
@@ -717,7 +730,7 @@ Encoding: 36 103 36
 Width: 22
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -420.5 15 -105.5 15 209.5 15 524.5 15
 Fore
 0 -11.5 m 25
@@ -732,7 +745,7 @@ Encoding: 37 104 37
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 22.0039 -26.668 m 2
@@ -753,7 +766,7 @@ Encoding: 38 -1 38
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 141.996 -26.668 m 2
@@ -774,7 +787,7 @@ Encoding: 39 -1 39
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 22.0039 -26.668 m 2
@@ -795,7 +808,7 @@ Encoding: 40 -1 40
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 41
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0.155273 154.667 m 1
@@ -822,7 +835,7 @@ Encoding: 41 -1 41
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 164 157.331 m 9
@@ -844,7 +857,7 @@ Encoding: 42 -1 42
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 164 148.674 m 1
@@ -862,7 +875,7 @@ Encoding: 43 -1 43
 Width: 110
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 110 147 m 1
@@ -881,7 +894,7 @@ Encoding: 44 -1 44
 Width: 110
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 110 147 m 1
@@ -900,7 +913,7 @@ Encoding: 45 -1 45
 Width: 110
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: 545.728 15 230.728 15 -84.2722 15 -399.272 15
 Fore
 110 -21 m 1
@@ -919,7 +932,7 @@ Encoding: 46 -1 46
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 146.001 m 1
@@ -940,7 +953,7 @@ Encoding: 47 -1 47
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 151.674 m 1
@@ -961,7 +974,7 @@ Encoding: 48 -1 48
 Width: 490
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -16 m 1
@@ -980,7 +993,7 @@ Encoding: 49 -1 49
 Width: 575
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -16 m 1
@@ -999,7 +1012,7 @@ Encoding: 50 -1 50
 Width: 650
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -16 m 1
@@ -1018,7 +1031,7 @@ Encoding: 51 -1 51
 Width: 740
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -25 m 1
@@ -1037,7 +1050,7 @@ Encoding: 52 -1 52
 Width: 931
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -16 m 1
@@ -1056,7 +1069,7 @@ Encoding: 53 -1 53
 Width: 340
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -16 m 1
@@ -1075,7 +1088,7 @@ Encoding: 54 -1 54
 Width: 428
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -16 m 1
@@ -1094,7 +1107,7 @@ Encoding: 55 -1 55
 Width: 586
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -16 m 1
@@ -1113,7 +1126,7 @@ Encoding: 56 -1 56
 Width: 670
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -16 m 1
@@ -1132,7 +1145,7 @@ Encoding: 57 -1 57
 Width: 931
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -16 m 1
@@ -1151,7 +1164,7 @@ Encoding: 58 -1 58
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 140.496 158.67 m 0
@@ -1182,7 +1195,7 @@ Encoding: 59 -1 59
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 58.5 163.504 m 1
@@ -1200,7 +1213,7 @@ Encoding: 60 -1 60
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 77.5 192 m 1
@@ -1218,7 +1231,7 @@ Encoding: 61 -1 61
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 141.996 -26.668 m 2
@@ -1237,7 +1250,7 @@ Encoding: 62 -1 62
 Width: 61
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -219.133 9 -30.1332 9 158.867 9 347.867 9
 Fore
 0 63.5645 m 24
@@ -1252,7 +1265,7 @@ Encoding: 63 -1 63
 Width: 61
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 373 m 24
@@ -1272,7 +1285,7 @@ Encoding: 64 -1 64
 Width: 40
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0.125 116.375 m 17
@@ -1289,7 +1302,7 @@ Encoding: 65 -1 65
 Width: 110
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 110 119 m 1
@@ -1306,7 +1319,7 @@ Encoding: 66 -1 66
 Width: 1
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 64 m 25
@@ -1321,7 +1334,7 @@ Encoding: 67 -1 67
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -10.0078 m 1
@@ -1343,7 +1356,7 @@ Encoding: 68 -1 68
 Width: 85
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 41
 HStem: 854.5 15 539.5 15 224.5 15 -90.5 15
 Fore
 63 412.5 m 5
@@ -1360,7 +1373,7 @@ Encoding: 69 -1 69
 Width: 85
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 63 -270 m 5
@@ -1377,7 +1390,7 @@ Encoding: 70 -1 70
 Width: 99
 VWidth: 1594
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -652.764 23.94 -150.024 23.94 352.716 23.94 855.456 23.94
 Fore
 22.3555 -69.8779 m 4
@@ -1396,7 +1409,7 @@ Encoding: 71 -1 71
 Width: 99
 VWidth: 1594
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -652.764 23.94 -150.024 23.94 352.716 23.94 855.456 23.94
 Fore
 0.0595703 46.2236 m 4
@@ -1415,7 +1428,7 @@ Encoding: 72 -1 72
 Width: 125
 VWidth: 1583
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -664.386 23.94 -161.646 23.94 341.094 23.94 843.834 23.94
 Fore
 95.7607 -11.6357 m 1
@@ -1432,7 +1445,7 @@ Encoding: 73 -1 73
 Width: 124
 VWidth: 1606
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -641.142 23.94 -138.402 23.94 364.338 23.94 867.078 23.94
 Fore
 95.5166 11.623 m 1
@@ -1449,7 +1462,7 @@ Encoding: 74 -1 74
 Width: 124
 VWidth: 1594
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -652.764 23.94 -150.024 23.94 352.716 23.94 855.456 23.94
 Fore
 62 -33.5166 m 0
@@ -1468,23 +1481,26 @@ StartChar: _0003
 Encoding: 75 -1 75
 Width: 140
 VWidth: 2048
-Flags: W
-TeX: 0 0 0 0
+Flags: HWO
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-0 380.5 m 9
- 0 74.5 l 17
- 0 51.167 25 12.5 63.333 10.6699 c 0
- 105.336 8.66463 140 19.667 140 27.9941 c 9
- 140 27.9941 141.667 167.667 138.334 173 c 1
- 98.334 163.657 63.374 168.845 55.667 170.665 c 0
- 22.499 178.502 22 224.161 22 224.161 c 10
- 22 236.667 l 18
- 23 236.667 18.8457 279.427 55.333 289.834 c 0
- 62.333 291.831 99.334 294.679 138.334 286.333 c 1
- 141.667 296.667 140 378.667 140 424.5 c 1
- 131.333 431.333 101.415 447.478 60 440 c 0
- 24 433.5 0 400.667 0 380.5 c 9
+73.3856 10.4303 m 0
+ 12.4997 10.4303 0 62.7754 0 74.5 c 10
+ 0 380.5 l 18
+ 0 394.312 18.5673 441.934 81.3177 441.934 c 0
+ 111.557 441.934 132.903 430.095 140 424.5 c 1
+ 140 401.58 140.417 369.616 140.417 342.092 c 0
+ 140.417 314.577 140 291.499 138.334 286.333 c 1
+ 118.207 290.64 98.6118 291.966 83.3983 291.966 c 0
+ 69.1332 291.966 58.7204 290.8 55.333 289.834 c 0
+ 18.8457 279.427 23 236.667 22 236.667 c 9
+ 22 224.161 l 18
+ 22.6202 167.595 66.2553 167.582 90.2055 167.582 c 0
+ 103.99 167.582 120.671 168.874 138.334 173 c 1
+ 140 170.334 140.417 134.093 140.417 98.5133 c 0
+ 140.417 62.9229 140 27.9941 140 27.9941 c 2
+ 140 20.3418 110.727 10.4303 73.3856 10.4303 c 0
 EndSplineSet
 EndChar
 StartChar: _0004
@@ -1492,7 +1508,7 @@ Encoding: 76 -1 76
 Width: 321
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 41
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 129.995 131.999 m 1
@@ -1525,7 +1541,7 @@ Encoding: 77 -1 77
 Width: 108
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 -14 m 9
@@ -1546,7 +1562,7 @@ Encoding: 78 -1 78
 Width: 164
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: 517 15 202 15 -113 15 -428 15
 Fore
 25.5 22.5 m 5
@@ -1570,7 +1586,7 @@ Encoding: 79 -1 79
 Width: 266
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 266.006 -10.6602 m 6
@@ -1601,7 +1617,7 @@ Encoding: 80 -1 80
 Width: 266
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 266.006 -10.6602 m 2
@@ -1639,7 +1655,7 @@ Encoding: 81 -1 81
 Width: 706
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 206.925 -69.6523 m 0
@@ -1690,7 +1706,7 @@ Encoding: 82 -1 82
 Width: 659
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 204 343 m 1
@@ -1736,7 +1752,7 @@ Encoding: 83 -1 83
 Width: 697
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 106.675 -75.1523 m 0
@@ -1778,7 +1794,7 @@ Encoding: 84 -1 84
 Width: 388
 VWidth: 2048
 Flags: HW
-TeX: 0 0 0 0
+Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 20.6748 -70.1523 m 0
@@ -1799,7 +1815,7 @@ Encoding: 85 -1 85
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.160
@@ -1807,7 +1823,7 @@ Encoding: 86 -1 86
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.161
@@ -1815,7 +1831,7 @@ Encoding: 87 -1 87
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.162
@@ -1823,7 +1839,7 @@ Encoding: 88 -1 88
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.163
@@ -1831,7 +1847,7 @@ Encoding: 89 -1 89
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.164
@@ -1839,7 +1855,7 @@ Encoding: 90 -1 90
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.165
@@ -1847,7 +1863,7 @@ Encoding: 91 -1 91
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.166
@@ -1855,7 +1871,7 @@ Encoding: 92 -1 92
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.167
@@ -1863,7 +1879,7 @@ Encoding: 93 -1 93
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.168
@@ -1871,7 +1887,7 @@ Encoding: 94 -1 94
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.169
@@ -1879,7 +1895,7 @@ Encoding: 95 -1 95
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.170
@@ -1887,7 +1903,7 @@ Encoding: 96 -1 96
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.171
@@ -1895,7 +1911,7 @@ Encoding: 97 -1 97
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.172
@@ -1903,7 +1919,7 @@ Encoding: 98 -1 98
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.173
@@ -1911,7 +1927,7 @@ Encoding: 99 -1 99
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.174
@@ -1919,7 +1935,7 @@ Encoding: 100 -1 100
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.175
@@ -1927,7 +1943,7 @@ Encoding: 101 -1 101
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.176
@@ -1935,7 +1951,7 @@ Encoding: 102 -1 102
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.177
@@ -1943,7 +1959,7 @@ Encoding: 103 -1 103
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.178
@@ -1951,7 +1967,7 @@ Encoding: 104 -1 104
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.179
@@ -1959,7 +1975,7 @@ Encoding: 105 -1 105
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.180
@@ -1967,7 +1983,7 @@ Encoding: 106 -1 106
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.181
@@ -1975,7 +1991,7 @@ Encoding: 107 -1 107
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.182
@@ -1983,7 +1999,7 @@ Encoding: 108 -1 108
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.183
@@ -1991,7 +2007,7 @@ Encoding: 109 -1 109
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.184
@@ -1999,7 +2015,7 @@ Encoding: 110 -1 110
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.185
@@ -2007,7 +2023,7 @@ Encoding: 111 -1 111
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.186
@@ -2015,7 +2031,7 @@ Encoding: 112 -1 112
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.187
@@ -2023,7 +2039,7 @@ Encoding: 113 -1 113
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.188
@@ -2031,7 +2047,7 @@ Encoding: 114 -1 114
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.189
@@ -2039,7 +2055,7 @@ Encoding: 115 -1 115
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.190
@@ -2047,7 +2063,7 @@ Encoding: 116 -1 116
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.191
@@ -2055,7 +2071,7 @@ Encoding: 117 -1 117
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.192
@@ -2063,7 +2079,7 @@ Encoding: 118 -1 118
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.193
@@ -2071,7 +2087,7 @@ Encoding: 119 -1 119
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.194
@@ -2079,7 +2095,7 @@ Encoding: 120 -1 120
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.195
@@ -2087,7 +2103,7 @@ Encoding: 121 -1 121
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.196
@@ -2095,7 +2111,7 @@ Encoding: 122 -1 122
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.197
@@ -2103,7 +2119,7 @@ Encoding: 123 -1 123
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.198
@@ -2111,7 +2127,7 @@ Encoding: 124 -1 124
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.199
@@ -2119,7 +2135,7 @@ Encoding: 125 -1 125
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.200
@@ -2127,7 +2143,7 @@ Encoding: 126 -1 126
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.201
@@ -2135,7 +2151,7 @@ Encoding: 127 -1 127
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.202
@@ -2143,7 +2159,7 @@ Encoding: 128 -1 128
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.203
@@ -2151,7 +2167,7 @@ Encoding: 129 -1 129
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.204
@@ -2159,7 +2175,7 @@ Encoding: 130 -1 130
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.205
@@ -2167,7 +2183,7 @@ Encoding: 131 -1 131
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.206
@@ -2175,7 +2191,7 @@ Encoding: 132 -1 132
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.207
@@ -2183,7 +2199,7 @@ Encoding: 133 -1 133
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.208
@@ -2191,7 +2207,7 @@ Encoding: 134 -1 134
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.209
@@ -2199,7 +2215,7 @@ Encoding: 135 -1 135
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.210
@@ -2207,7 +2223,7 @@ Encoding: 136 -1 136
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.211
@@ -2215,7 +2231,7 @@ Encoding: 137 -1 137
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.212
@@ -2223,7 +2239,7 @@ Encoding: 138 -1 138
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.213
@@ -2231,7 +2247,7 @@ Encoding: 139 -1 139
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.214
@@ -2239,7 +2255,7 @@ Encoding: 140 -1 140
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.215
@@ -2247,7 +2263,7 @@ Encoding: 141 -1 141
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.216
@@ -2255,7 +2271,7 @@ Encoding: 142 -1 142
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.217
@@ -2263,7 +2279,7 @@ Encoding: 143 -1 143
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.218
@@ -2271,7 +2287,7 @@ Encoding: 144 -1 144
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.219
@@ -2279,7 +2295,7 @@ Encoding: 145 -1 145
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.220
@@ -2287,7 +2303,7 @@ Encoding: 146 -1 146
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.221
@@ -2295,7 +2311,7 @@ Encoding: 147 -1 147
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.222
@@ -2303,7 +2319,7 @@ Encoding: 148 -1 148
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.223
@@ -2311,7 +2327,7 @@ Encoding: 149 -1 149
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.224
@@ -2319,7 +2335,7 @@ Encoding: 150 -1 150
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.225
@@ -2327,7 +2343,7 @@ Encoding: 151 -1 151
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.226
@@ -2335,7 +2351,7 @@ Encoding: 152 -1 152
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.227
@@ -2343,7 +2359,7 @@ Encoding: 153 -1 153
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.228
@@ -2351,7 +2367,7 @@ Encoding: 154 -1 154
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.229
@@ -2359,7 +2375,7 @@ Encoding: 155 -1 155
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.230
@@ -2367,7 +2383,7 @@ Encoding: 156 -1 156
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.231
@@ -2375,7 +2391,7 @@ Encoding: 157 -1 157
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.232
@@ -2383,7 +2399,7 @@ Encoding: 158 -1 158
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.233
@@ -2391,7 +2407,7 @@ Encoding: 159 -1 159
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.234
@@ -2399,7 +2415,7 @@ Encoding: 160 -1 160
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.235
@@ -2407,7 +2423,7 @@ Encoding: 161 -1 161
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.236
@@ -2415,7 +2431,7 @@ Encoding: 162 -1 162
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.237
@@ -2423,7 +2439,7 @@ Encoding: 163 -1 163
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.238
@@ -2431,7 +2447,7 @@ Encoding: 164 -1 164
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.239
@@ -2439,7 +2455,7 @@ Encoding: 165 -1 165
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.240
@@ -2447,7 +2463,7 @@ Encoding: 166 -1 166
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.241
@@ -2455,7 +2471,7 @@ Encoding: 167 -1 167
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.242
@@ -2463,7 +2479,7 @@ Encoding: 168 -1 168
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.243
@@ -2471,7 +2487,7 @@ Encoding: 169 -1 169
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.244
@@ -2479,7 +2495,7 @@ Encoding: 170 -1 170
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.245
@@ -2487,7 +2503,7 @@ Encoding: 171 -1 171
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.246
@@ -2495,7 +2511,7 @@ Encoding: 172 -1 172
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.247
@@ -2503,7 +2519,7 @@ Encoding: 173 -1 173
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.248
@@ -2511,7 +2527,7 @@ Encoding: 174 -1 174
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.249
@@ -2519,7 +2535,7 @@ Encoding: 175 -1 175
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.250
@@ -2527,7 +2543,7 @@ Encoding: 176 -1 176
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.251
@@ -2535,7 +2551,7 @@ Encoding: 177 -1 177
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.252
@@ -2543,7 +2559,7 @@ Encoding: 178 -1 178
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.253
@@ -2551,7 +2567,7 @@ Encoding: 179 -1 179
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.254
@@ -2559,7 +2575,7 @@ Encoding: 180 -1 180
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.255
@@ -2567,7 +2583,7 @@ Encoding: 181 -1 181
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.256
@@ -2575,7 +2591,7 @@ Encoding: 182 -1 182
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.257
@@ -2583,7 +2599,7 @@ Encoding: 183 -1 183
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.258
@@ -2591,7 +2607,7 @@ Encoding: 184 -1 184
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.259
@@ -2599,7 +2615,7 @@ Encoding: 185 -1 185
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.260
@@ -2607,7 +2623,7 @@ Encoding: 186 -1 186
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.261
@@ -2615,7 +2631,7 @@ Encoding: 187 -1 187
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.262
@@ -2623,7 +2639,7 @@ Encoding: 188 -1 188
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.263
@@ -2631,7 +2647,7 @@ Encoding: 189 -1 189
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.264
@@ -2639,7 +2655,7 @@ Encoding: 190 -1 190
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.265
@@ -2647,7 +2663,7 @@ Encoding: 191 -1 191
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.266
@@ -2655,7 +2671,7 @@ Encoding: 192 -1 192
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.267
@@ -2663,7 +2679,7 @@ Encoding: 193 -1 193
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.268
@@ -2671,7 +2687,7 @@ Encoding: 194 -1 194
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.269
@@ -2679,7 +2695,7 @@ Encoding: 195 -1 195
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.270
@@ -2687,7 +2703,7 @@ Encoding: 196 -1 196
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.271
@@ -2695,7 +2711,7 @@ Encoding: 197 -1 197
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.272
@@ -2703,7 +2719,7 @@ Encoding: 198 -1 198
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.273
@@ -2711,7 +2727,7 @@ Encoding: 199 -1 199
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.274
@@ -2719,7 +2735,7 @@ Encoding: 200 -1 200
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.275
@@ -2727,7 +2743,7 @@ Encoding: 201 -1 201
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.276
@@ -2735,7 +2751,7 @@ Encoding: 202 -1 202
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.277
@@ -2743,7 +2759,7 @@ Encoding: 203 -1 203
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.278
@@ -2751,7 +2767,7 @@ Encoding: 204 -1 204
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.279
@@ -2759,7 +2775,7 @@ Encoding: 205 -1 205
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.280
@@ -2767,7 +2783,7 @@ Encoding: 206 -1 206
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.281
@@ -2775,7 +2791,7 @@ Encoding: 207 -1 207
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.282
@@ -2783,7 +2799,7 @@ Encoding: 208 -1 208
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.283
@@ -2791,7 +2807,7 @@ Encoding: 209 -1 209
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.284
@@ -2799,7 +2815,7 @@ Encoding: 210 -1 210
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.285
@@ -2807,7 +2823,7 @@ Encoding: 211 -1 211
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.286
@@ -2815,7 +2831,7 @@ Encoding: 212 -1 212
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.287
@@ -2823,7 +2839,7 @@ Encoding: 213 -1 213
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.288
@@ -2831,7 +2847,7 @@ Encoding: 214 -1 214
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.289
@@ -2839,7 +2855,7 @@ Encoding: 215 -1 215
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.290
@@ -2847,7 +2863,7 @@ Encoding: 216 -1 216
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.291
@@ -2855,7 +2871,7 @@ Encoding: 217 -1 217
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.292
@@ -2863,7 +2879,7 @@ Encoding: 218 -1 218
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.293
@@ -2871,7 +2887,7 @@ Encoding: 219 -1 219
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.294
@@ -2879,7 +2895,7 @@ Encoding: 220 -1 220
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.295
@@ -2887,7 +2903,7 @@ Encoding: 221 -1 221
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.296
@@ -2895,7 +2911,7 @@ Encoding: 222 -1 222
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.297
@@ -2903,7 +2919,7 @@ Encoding: 223 -1 223
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.298
@@ -2911,7 +2927,7 @@ Encoding: 224 -1 224
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.299
@@ -2919,7 +2935,7 @@ Encoding: 225 -1 225
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.300
@@ -2927,7 +2943,7 @@ Encoding: 226 -1 226
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.301
@@ -2935,7 +2951,7 @@ Encoding: 227 -1 227
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.302
@@ -2943,7 +2959,7 @@ Encoding: 228 -1 228
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.303
@@ -2951,7 +2967,7 @@ Encoding: 229 -1 229
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.304
@@ -2959,7 +2975,7 @@ Encoding: 230 -1 230
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.305
@@ -2967,7 +2983,7 @@ Encoding: 231 -1 231
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.306
@@ -2975,7 +2991,7 @@ Encoding: 232 -1 232
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.307
@@ -2983,7 +2999,7 @@ Encoding: 233 -1 233
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.308
@@ -2991,7 +3007,7 @@ Encoding: 234 -1 234
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.309
@@ -2999,7 +3015,7 @@ Encoding: 235 -1 235
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.310
@@ -3007,7 +3023,7 @@ Encoding: 236 -1 236
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.311
@@ -3015,7 +3031,7 @@ Encoding: 237 -1 237
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.312
@@ -3023,7 +3039,7 @@ Encoding: 238 -1 238
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.313
@@ -3031,7 +3047,7 @@ Encoding: 239 -1 239
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.314
@@ -3039,7 +3055,7 @@ Encoding: 240 -1 240
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.315
@@ -3047,7 +3063,7 @@ Encoding: 241 -1 241
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.316
@@ -3055,7 +3071,7 @@ Encoding: 242 -1 242
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.317
@@ -3063,7 +3079,7 @@ Encoding: 243 -1 243
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.318
@@ -3071,7 +3087,7 @@ Encoding: 244 -1 244
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.319
@@ -3079,7 +3095,7 @@ Encoding: 245 -1 245
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.320
@@ -3087,7 +3103,7 @@ Encoding: 246 -1 246
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.321
@@ -3095,7 +3111,7 @@ Encoding: 247 -1 247
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.322
@@ -3103,7 +3119,7 @@ Encoding: 248 -1 248
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.323
@@ -3111,7 +3127,7 @@ Encoding: 249 -1 249
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.324
@@ -3119,7 +3135,7 @@ Encoding: 250 -1 250
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.325
@@ -3127,7 +3143,7 @@ Encoding: 251 -1 251
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.326
@@ -3135,7 +3151,7 @@ Encoding: 252 -1 252
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.327
@@ -3143,7 +3159,7 @@ Encoding: 253 -1 253
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.328
@@ -3151,7 +3167,7 @@ Encoding: 254 -1 254
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.329
@@ -3159,7 +3175,7 @@ Encoding: 255 -1 255
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.330
@@ -3167,7 +3183,7 @@ Encoding: 256 -1 256
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.331
@@ -3175,7 +3191,7 @@ Encoding: 257 -1 257
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.332
@@ -3183,7 +3199,7 @@ Encoding: 258 -1 258
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.333
@@ -3191,7 +3207,7 @@ Encoding: 259 -1 259
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.334
@@ -3199,7 +3215,7 @@ Encoding: 260 -1 260
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.335
@@ -3207,7 +3223,7 @@ Encoding: 261 -1 261
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.336
@@ -3215,7 +3231,7 @@ Encoding: 262 -1 262
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.337
@@ -3223,7 +3239,7 @@ Encoding: 263 -1 263
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.338
@@ -3231,7 +3247,7 @@ Encoding: 264 -1 264
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.339
@@ -3239,7 +3255,7 @@ Encoding: 265 -1 265
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.340
@@ -3247,7 +3263,7 @@ Encoding: 266 -1 266
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.341
@@ -3255,7 +3271,7 @@ Encoding: 267 -1 267
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.342
@@ -3263,7 +3279,7 @@ Encoding: 268 -1 268
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.343
@@ -3271,7 +3287,7 @@ Encoding: 269 -1 269
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.344
@@ -3279,7 +3295,7 @@ Encoding: 270 -1 270
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.345
@@ -3287,7 +3303,7 @@ Encoding: 271 -1 271
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.346
@@ -3295,7 +3311,7 @@ Encoding: 272 -1 272
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.347
@@ -3303,7 +3319,7 @@ Encoding: 273 -1 273
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.348
@@ -3311,7 +3327,7 @@ Encoding: 274 -1 274
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.349
@@ -3319,7 +3335,7 @@ Encoding: 275 -1 275
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.350
@@ -3327,7 +3343,7 @@ Encoding: 276 -1 276
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.351
@@ -3335,7 +3351,7 @@ Encoding: 277 -1 277
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.352
@@ -3343,7 +3359,7 @@ Encoding: 278 -1 278
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.353
@@ -3351,7 +3367,7 @@ Encoding: 279 -1 279
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.354
@@ -3359,7 +3375,7 @@ Encoding: 280 -1 280
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.355
@@ -3367,7 +3383,7 @@ Encoding: 281 -1 281
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.356
@@ -3375,7 +3391,7 @@ Encoding: 282 -1 282
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.357
@@ -3383,7 +3399,7 @@ Encoding: 283 -1 283
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.358
@@ -3391,7 +3407,7 @@ Encoding: 284 -1 284
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.359
@@ -3399,7 +3415,7 @@ Encoding: 285 -1 285
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.360
@@ -3407,7 +3423,7 @@ Encoding: 286 -1 286
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.361
@@ -3415,7 +3431,7 @@ Encoding: 287 -1 287
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.362
@@ -3423,7 +3439,7 @@ Encoding: 288 -1 288
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.363
@@ -3431,7 +3447,7 @@ Encoding: 289 -1 289
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.364
@@ -3439,7 +3455,7 @@ Encoding: 290 -1 290
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.365
@@ -3447,7 +3463,7 @@ Encoding: 291 -1 291
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.366
@@ -3455,7 +3471,7 @@ Encoding: 292 -1 292
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.367
@@ -3463,7 +3479,7 @@ Encoding: 293 -1 293
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.368
@@ -3471,7 +3487,7 @@ Encoding: 294 -1 294
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.369
@@ -3479,7 +3495,7 @@ Encoding: 295 -1 295
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.370
@@ -3487,7 +3503,7 @@ Encoding: 296 -1 296
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.371
@@ -3495,7 +3511,7 @@ Encoding: 297 -1 297
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.372
@@ -3503,7 +3519,7 @@ Encoding: 298 -1 298
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.373
@@ -3511,7 +3527,7 @@ Encoding: 299 -1 299
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.374
@@ -3519,7 +3535,7 @@ Encoding: 300 -1 300
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.375
@@ -3527,7 +3543,7 @@ Encoding: 301 -1 301
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.376
@@ -3535,7 +3551,7 @@ Encoding: 302 -1 302
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.377
@@ -3543,7 +3559,7 @@ Encoding: 303 -1 303
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.378
@@ -3551,7 +3567,7 @@ Encoding: 304 -1 304
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.379
@@ -3559,7 +3575,7 @@ Encoding: 305 -1 305
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.380
@@ -3567,7 +3583,7 @@ Encoding: 306 -1 306
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.381
@@ -3575,7 +3591,7 @@ Encoding: 307 -1 307
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.382
@@ -3583,7 +3599,7 @@ Encoding: 308 -1 308
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.383
@@ -3591,7 +3607,7 @@ Encoding: 309 -1 309
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.384
@@ -3599,7 +3615,7 @@ Encoding: 310 -1 310
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.385
@@ -3607,7 +3623,7 @@ Encoding: 311 -1 311
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.386
@@ -3615,7 +3631,7 @@ Encoding: 312 -1 312
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.387
@@ -3623,7 +3639,7 @@ Encoding: 313 -1 313
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.388
@@ -3631,7 +3647,7 @@ Encoding: 314 -1 314
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.389
@@ -3639,7 +3655,7 @@ Encoding: 315 -1 315
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.390
@@ -3647,7 +3663,7 @@ Encoding: 316 -1 316
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.391
@@ -3655,7 +3671,7 @@ Encoding: 317 -1 317
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.392
@@ -3663,7 +3679,7 @@ Encoding: 318 -1 318
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.393
@@ -3671,7 +3687,7 @@ Encoding: 319 -1 319
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.394
@@ -3679,7 +3695,7 @@ Encoding: 320 -1 320
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.395
@@ -3687,7 +3703,7 @@ Encoding: 321 -1 321
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.396
@@ -3695,7 +3711,7 @@ Encoding: 322 -1 322
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.397
@@ -3703,7 +3719,7 @@ Encoding: 323 -1 323
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.398
@@ -3711,7 +3727,7 @@ Encoding: 324 -1 324
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.399
@@ -3719,7 +3735,7 @@ Encoding: 325 -1 325
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.400
@@ -3727,7 +3743,7 @@ Encoding: 326 -1 326
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.401
@@ -3735,7 +3751,7 @@ Encoding: 327 -1 327
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.402
@@ -3743,7 +3759,7 @@ Encoding: 328 -1 328
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.403
@@ -3751,7 +3767,7 @@ Encoding: 329 -1 329
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.404
@@ -3759,7 +3775,7 @@ Encoding: 330 -1 330
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.405
@@ -3767,7 +3783,7 @@ Encoding: 331 -1 331
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.406
@@ -3775,7 +3791,7 @@ Encoding: 332 -1 332
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.407
@@ -3783,7 +3799,7 @@ Encoding: 333 -1 333
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.408
@@ -3791,7 +3807,7 @@ Encoding: 334 -1 334
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.409
@@ -3799,7 +3815,7 @@ Encoding: 335 -1 335
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.410
@@ -3807,7 +3823,7 @@ Encoding: 336 -1 336
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.411
@@ -3815,7 +3831,7 @@ Encoding: 337 -1 337
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.412
@@ -3823,7 +3839,7 @@ Encoding: 338 -1 338
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.413
@@ -3831,7 +3847,7 @@ Encoding: 339 -1 339
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 StartChar: NameMe.414
@@ -3839,7 +3855,7 @@ Encoding: 340 -1 340
 Width: 2048
 VWidth: 2048
 Flags: W
-TeX: 0 0 0 0
+Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 EndChars

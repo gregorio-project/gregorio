@@ -22,6 +22,7 @@
 #The fonts must be named $name-0, ... $name-n
 
 use strict;
+use POSIX qw(ceil);
 
 sub usage() {
 print "
@@ -147,13 +148,14 @@ while (<IN>) {
     $depth{$namex{$i."-".$character}}="0.0";
   }
   elsif (m/\(CHARWD R ([0-9.-]+)/) {
-    $width{$namex{$i."-".$character}}=$1;
+    # "grouik" workaround of a fontforge (bug|feature) on 64 bit, before I bugreport
+    $width{$namex{$i."-".$character}}=ceil($1*1000)/1000;
   } 
   elsif (m/\(CHARHT R ([0-9.-]+)/) {
-    $height{$namex{$i."-".$character}}=$1;
+    $height{$namex{$i."-".$character}}=ceil($1*1000)/1000;
   } 
   elsif (m/\(CHARDP R ([0-9.-]+)/) {
-    $depth{$namex{$i."-".$character}}=$1;
+    $depth{$namex{$i."-".$character}}=ceil($1*10)/10;
   } 
   }
 close IN;

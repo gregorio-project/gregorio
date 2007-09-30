@@ -25,6 +25,8 @@ understanding, read it carefully.
 #ifndef STRUCT_H
 #define STRUCT_H
 
+#include <wchar.h>
+
 /*
 
 We start with the most precise structure, the note structure. The note

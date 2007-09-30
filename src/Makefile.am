@@ -33,14 +33,13 @@ EXTRA_DIST=gabc-score-determination.l gabc-score-determination.y \
 	gabc-notes-determination.l
 
 gabc-score-determination-l.c: gabc-score-determination.l gabc-score-determination-y.c
-	$(LEX) -o $@ -C --header-file="gabc-score-determination-l.h" \
-	     --prefix="gabc_score_determination_" $<
+	$(LEX) -C $<
 
 gabc-score-determination-y.c: gabc-score-determination.y
 	$(YACC) -d -p "gabc_score_determination_" -o $@ $<
 
 gabc-notes-determination-l.c: gabc-notes-determination.l
-	$(LEX) -o $@ --prefix="gabc_notes_determination_" $<
+	$(LEX) $<
 
 CLEANFILES=gabc-score-determination-l.c gabc-score-determination-y.c \
 	gabc-notes-determination-l.c gabc-score-determination-l.h \

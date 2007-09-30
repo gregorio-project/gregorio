@@ -35,23 +35,21 @@ char *error;
 %x notes
 %x verb
 
-
+%option stack
+%option pointer
 %option nounput
 %option noyywrap
 %option noyy_push_state 
 %option noyy_pop_state
 %option noyy_top_state
-%option noyyset_extra
-%option noyyget_leng
-%option noyyget_in
-%option noyyset_in
-%option noyyget_out
-%option noyyset_out
-%option noyyset_lval
-%option noyyget_lval
-%option noyyget_debug
-%option noyyset_debug
 %option align
+%option noread
+%option nomain
+%option noalways-interactive
+%option nonever-interactive
+%option prefix="gabc_score_determination_"
+%option outfile="gabc-score-determination-l.c"
+
 
 %%
 <INITIAL>: {

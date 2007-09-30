@@ -35,27 +35,20 @@ char *error;
 
 %}
 
+%option stack
+%option pointer
 %option nounput
 %option noyywrap
 %option noyy_push_state 
 %option noyy_pop_state
 %option noyy_top_state
-%option noyyset_extra
-%option noyyget_leng
-%option noyyget_in
-%option noyyset_in
-%option noyyget_out
-%option noyyset_out
-%option noyyset_lval
-%option noyyget_lval
-%option noyyget_lloc
-%option noyyset_lloc
-%option noyyget_debug
-%option noyyset_debug
 %option full
+%option noread
+%option nomain
 %option align
-
-
+%option noyylineno
+%option prefix="gabc_notes_determination_"
+%option outfile="gabc-notes-determination-l.c"
 
 
 %%
