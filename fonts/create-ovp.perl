@@ -149,13 +149,13 @@ while (<IN>) {
   }
   elsif (m/\(CHARWD R ([0-9.-]+)/) {
     # "grouik" workaround of a fontforge (bug|feature) on 64 bit, before I bugreport
-    $width{$namex{$i."-".$character}}=ceil($1*1000)/1000;
+    $width{$namex{$i."-".$character}}=$1;
   } 
   elsif (m/\(CHARHT R ([0-9.-]+)/) {
-    $height{$namex{$i."-".$character}}=ceil($1*1000)/1000;
+    $height{$namex{$i."-".$character}}=$1;
   } 
   elsif (m/\(CHARDP R ([0-9.-]+)/) {
-    $depth{$namex{$i."-".$character}}=ceil($1*10)/10;
+    $depth{$namex{$i."-".$character}}=$1;
   } 
   }
 close IN;
