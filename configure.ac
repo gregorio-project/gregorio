@@ -16,17 +16,17 @@ dnl along with this program; if not, write to the Free Software
 dnl Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 AC_INIT([gregorio],[0.2.2],[gregorio-devel@gna.org])
-AC_PREREQ(2.61)
+AC_PREREQ(2.53)
 AC_CONFIG_SRCDIR([src/gregorio-utils.c])
 AC_CONFIG_AUX_DIR([build-aux])
 
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_INIT_AUTOMAKE([foreign])
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.16.1])
+AM_GNU_GETTEXT_VERSION([0.14.5])
 
 AC_PROG_CC
 AC_PROG_CPP
-AC_PROG_LEX
+AM_PROG_LEX
 AC_PROG_YACC
 
 AC_HEADER_STDC
@@ -68,7 +68,7 @@ fi
 
 AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
 
-AC_CONFIG_HEADERS([include/config.h])
+AM_CONFIG_HEADER([include/config.h])
 AC_CONFIG_FILES([
     Makefile
     src/Makefile
