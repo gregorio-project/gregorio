@@ -38,7 +38,6 @@ char *error;
 %option stack
 %option pointer
 %option nounput
-%option noyywrap
 %option noyy_push_state 
 %option noyy_pop_state
 %option noyy_top_state
@@ -49,6 +48,7 @@ char *error;
 %option nonever-interactive
 %option prefix="gabc_score_determination_"
 %option outfile="gabc-score-determination-l.c"
+%option noyywrap
 
 
 %%
