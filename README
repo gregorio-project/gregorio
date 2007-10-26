@@ -17,10 +17,19 @@ GregorioTeX or OpusTeX for example)
 
 INSTALLATION of the gregorio software:
 
+First, before compiling gregorio, you need a recent fontforge version 
+(after 20070501), because fontforge changed their format after this release
+and the .sfd file is in this new format. Please visit
+http://sourceforge.net/project/showfiles.php?group_id=103338&package_id=114328
+to download a recent fontforge version.
+
 gregorio depends on the libxml2, you must have it installed. If you
 want to compile from the sources, you must have the header files of
 the libxml2 and flex and bison (of course you will need gcc and make
 too).
+
+gregorio also uses perl, python, ovp2ovf and tf2pl, be sure to have all
+these programs installed.
 
 If you downloaded the tarball from
 <http://download.gna.org/gregorio/releases/>, simply do
@@ -32,9 +41,10 @@ If you downloaded the tarball from
 If you downloaded the sources from the svn repository
 (<svn://svn.gna.org/svn/gregorio/trunk>), you must before run
 
- $ autoreconf --install 
+ $ autoreconf --install -f
 
-before doing the three previous steps.
+For all the details about the options of autotools, read the file named
+INSTALL.
 
 USING the gregorio software:
 
