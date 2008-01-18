@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define GABC_H
 
 // functions to read gabc
-gregorio_score * libgregorio_gabc_read_file (FILE * f);
+gregorio_score * read_score (FILE * f);
 void libgregorio_activate_isolated_h_episemus (gregorio_note *current_note, int n);
 void libgregorio_mix_h_episemus (gregorio_note *current_note, char type);
 char libgregorio_det_shape (char pitch);
@@ -46,7 +46,7 @@ gregorio_glyph *libgregorio_gabc_det_glyphs_from_notes (gregorio_note *current_n
 #define MAX_INTERVAL 4
 
 // functions to write gabc
-void libgregorio_gabc_write_score (FILE * f, gregorio_score * score);
+void write_score (FILE * f, gregorio_score * score);
 void libgregorio_gabc_write_voice_info (FILE * f, gregorio_voice_info * voice_info);
 void libgregorio_gabc_write_gregorio_syllable (FILE * f, gregorio_syllable * syllable, int number_of_voices);
 void libgregorio_gabc_write_gregorio_elements (FILE * f, gregorio_element * element);

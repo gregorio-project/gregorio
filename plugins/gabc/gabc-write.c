@@ -37,7 +37,7 @@ This is the top function, the one called when we want to write a gregorio_score 
 */
 
 void
-libgregorio_gabc_write_score (FILE * f, gregorio_score * score)
+write_score (FILE * f, gregorio_score * score)
 {
   gregorio_syllable *syllable;
 

@@ -72,7 +72,7 @@ Here are the different types, they must be the same as in squarize.py
 
 #define HEPISEMUS_FIRST_TWO 0
 
-void libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score);
+void write_score (FILE * f, gregorio_score * score);
 void libgregorio_gregoriotex_write_voice_info (FILE * f, gregorio_voice_info * voice_info);
 void libgregorio_gregoriotex_write_syllable (FILE * f, gregorio_syllable * syllable, char *first_syllable);
 void libgregorio_gregoriotex_write_text (FILE * f, gregorio_character *first_character, char *first_syllable);

@@ -474,6 +474,10 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 		       voice, str);
 	    }
 	}
+      if (element->type == GRE_END_OF_LINE)
+	{
+	      fprintf (f, "<end-of-line/>");
+	}
       if (element->type == GRE_C_KEY_CHANGE)
 	{
 	  if (voice == MONOPHONY)
@@ -521,7 +525,7 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 }
 
 void
-libgregorio_xml_write_score (FILE * f, gregorio_score * score)
+write_score (FILE * f, gregorio_score * score)
 {
   int i;
   gregorio_voice_info *voice_info;

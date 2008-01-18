@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 void
 libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score);
 void
-libgregorio_xml_write_score (FILE * f, gregorio_score * score);
+write_score (FILE * f, gregorio_score * score);
 void
 libgregorio_xml_write_specials_as_neumes (FILE * f, gregorio_element * element,
 				    int voice, int *clef);
@@ -82,7 +82,7 @@ void libgregorio_xml_set_pitch_from_octave_and_step (char step, int octave, char
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 
-gregorio_score * libgregorio_xml_read_file (char *filename);
+gregorio_score * read_file (char *filename);
 void libgregorio_xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc, gregorio_score * score);
 void libgregorio_xml_read_multi_voice_info (xmlNodePtr current_node, xmlDocPtr doc, gregorio_score * score);
 

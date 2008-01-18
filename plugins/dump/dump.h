@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define DUMP_H
 
 void
-libgregorio_dump_score (FILE * f, gregorio_score * score);
+write_score (FILE * f, gregorio_score * score);
 
 const char *
 libgregorio_dump_key_to_char(int key);

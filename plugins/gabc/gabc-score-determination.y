@@ -73,7 +73,7 @@ typedef struct det_style
 void initialize_variables ();
 void free_variables ();
 // the error string
-extern char *error;
+char error[200];
 // the score that we will determine and return
 gregorio_score *score;
 // an array of elements that we will use for each syllable
@@ -95,7 +95,6 @@ char center_is_determined;
 #define THIRD_LETTER 3
 char first_letter;
 
-void gabc_score_determination_error (const char *str);
 int check_score_integrity (gregorio_score * score);
 void free_styles();
 void next_voice_info ();
@@ -115,14 +114,6 @@ void suppress_this_character (gregorio_character *to_suppress);
 void end_style_determination ();
 void complete_with_nulls (int voice);
 
-/* simple function that builds an error message
- */
-void
-gabc_score_determination_error (const char *str)
-{
-  char *str2 = strdup (str);
-  libgregorio_message (str2, "libgregorio_det_score", ERROR, 0);
-}
 
 /* The "main" function. It is the function that is called when we have to read a gabc file. 
  * It takes a file descriptor, that is to say a file that is aleady open. 
@@ -130,7 +121,7 @@ gabc_score_determination_error (const char *str)
  */
 
 gregorio_score *
-libgregorio_gabc_read_file (FILE * f_in)
+read_score (FILE * f_in)
 {
   // we initialize a file descriptor to /dev/null (see three lines below)
   FILE *f_out = fopen ("/dev/null", "w");
@@ -207,7 +198,6 @@ initialize_variables ()
   // other initializations
   number_of_voices = 0;
   voice = 1;
-  error = malloc (300 * sizeof (char));
   current_character = NULL;
   first_style = NULL;
   center_is_determined=0;
@@ -222,7 +212,6 @@ void
 free_variables ()
 {
   free (elements);
-  free (error);
   free_styles();
 }
 

@@ -1,2 +1,1 @@
-noinst_HEADERS=dump.h gabc.h gregoriotex.h messages.h opustex.h struct.h \
-	xml.h gettext.h
+noinst_HEADERS=gettext.h config.h

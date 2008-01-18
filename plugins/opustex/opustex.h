@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef OPUSTEX_H
 #define OPUSTEX_H
 
-void libgregorio_opustex_write_score (FILE * f, gregorio_score * score);
+void write_score (FILE * f, gregorio_score * score);
 
 void libgregorio_opustex_write_syllable (FILE * f,
 					 gregorio_syllable * syllable,

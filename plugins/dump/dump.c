@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <wchar.h>
 
 void
-libgregorio_dump_score (FILE * f, gregorio_score * score)
+write_score (FILE * f, gregorio_score * score)
 {
     gregorio_syllable *syllable = score->first_syllable;
     gregorio_voice_info *voice_info = score->first_voice_info;

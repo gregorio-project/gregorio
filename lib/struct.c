@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include "messages.h"
 #include "struct.h"
-#include "gabc.h"
+#include "gabc/gabc.h"
 #include "gettext.h"
 #define _(str) gettext(str)
 #define N_(str) str

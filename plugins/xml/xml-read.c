@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 gregorio_score *
-libgregorio_xml_read_file (char *filename)
+read_score (FILE *f)
 {
 
   xmlDocPtr doc;
@@ -40,7 +40,8 @@ libgregorio_xml_read_file (char *filename)
   int i;
   gregorio_syllable *current_syllable = NULL;
 
-  doc = xmlParseFile (filename);
+  //doc = xmlParseFile (filename);
+  doc=xmlReadFd(fileno(f), (const char *)"", NULL, 0);
 
   if (doc == NULL)
     {

@@ -37,7 +37,7 @@ char key_change = 0;
 char new_line = 0;
 
 void
-libgregorio_opustex_write_score (FILE * f, gregorio_score * score)
+write_score (FILE * f, gregorio_score * score)
 {
   char first_syllable = 0;
   char clef_letter;

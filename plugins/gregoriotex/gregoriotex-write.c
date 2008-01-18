@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gregoriotex.h"
 
 void
-libgregorio_gregoriotex_write_score (FILE * f, gregorio_score * score)
+write_score (FILE * f, gregorio_score * score)
 {
   gregorio_character *first_text;
   // a char that will contain 1 if it is the first syllable and 0 if not. It is for the initial.
