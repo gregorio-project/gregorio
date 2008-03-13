@@ -37,7 +37,7 @@ This file is certainly not the most easy to understand, it is a bison file. See 
 // request translation to the user native language for bison
 #define YYENABLE_NLS 1
 // don't know... to test..
-#define YYLTYPE_IS_TRIVIAL 0
+//#define YYLTYPE_IS_TRIVIAL 0
 
 
 /*
@@ -113,6 +113,10 @@ void insert_style_after (unsigned char type, unsigned char style);
 void suppress_this_character (gregorio_character *to_suppress);
 void end_style_determination ();
 void complete_with_nulls (int voice);
+
+void gabc_score_determination_error(char *error_str) {
+libgregorio_message (error_str, (const char *)"gabc_score_determination_parse", ERROR, 0);
+}
 
 
 /* The "main" function. It is the function that is called when we have to read a gabc file. 

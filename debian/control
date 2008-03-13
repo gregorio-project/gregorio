@@ -2,7 +2,7 @@ Source: gregorio
 Section: x11
 Priority: optional
 Maintainer: Elie Roux <elie.roux@enst-bretagne.fr>
-Build-Depends: debhelper (>> 3.0.0), libxml2-dev, flex, bison, docbook-to-man, xsltproc, autotools-dev, fontforge, texlive-omega, python, perl, texlive-font-utils
+Build-Depends: debhelper (>> 3.0.0), libxml2-dev, flex, bison, docbook-to-man, xsltproc, autotools-dev, fontforge, texlive-omega, python, perl, texlive-font-utils, automake, libtool, libltdl3-dev
 Standards-Version: 3.6.2
 
 Package: gregorio
