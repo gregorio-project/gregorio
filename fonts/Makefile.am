@@ -33,6 +33,7 @@ gregorio_PL= $(gregorio_PFB:.pfb=.pl)
 
 gregorio_OFM=gregorio.ofm
 gregorio_OVF=gregorio.ovf
+gregorio_OVP=gregorio.ovp
 
 ## parmesan rules
 $(parmesan_PFB): parmesan.pe parmesan-base.sfd
@@ -53,17 +54,19 @@ parmesan_PL= $(parmesan_PFB:.pfb=.pl)
 
 parmesan_OFM=parmesan.ofm
 parmesan_OVF=parmesan.ovf
+parmesan_OVP=parmesan.ovp
 
 ## rules tu put all this in common
 
 all_PFB= $(parmesan_PFB) $(gregorio_PFB)
 all_TFM= $(parmesan_TFM) $(gregorio_TFM)
 all_OVF= $(parmesan_OVF) $(gregorio_OVF)
+all_OVP= $(parmesan_OVP) $(gregorio_OVP)
 all_OFM= $(parmesan_OFM) $(gregorio_OFM)
 
 ## build rules
 
-FONTS=$(all_PFB) $(all_TFM) $(all_OVF) $(all_OFM)
+FONTS=$(all_PFB) $(all_TFM) $(all_OVF) $(all_OFM) $(all_OVP)
 
 noinst_DATA = $(FONTS)
 
