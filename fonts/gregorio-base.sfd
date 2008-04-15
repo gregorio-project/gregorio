@@ -4,7 +4,7 @@ FullName: gregorio
 FamilyName: gregorio
 Weight: Medium
 Copyright: gregorio font, created with FontForge.\nCopyright (C) 2007 Elie Roux <elie.roux@enst-bretagne.fr>\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.\n\nAs a special exception, if you create a document which uses this font, and embed this font or unaltered portions of this font into the document, this font does not by itself cause the resulting document to be covered by the GNU General Public License. This exception does not however invalidate any other reasons why the document might be covered by the GNU General Public License. If you modify this font, you may extend this exception to your version of the font, but you are not obligated to do so. If you do not wish to do so, delete this exception statement from your version.
-Comments: 2007-4-12: Created.
+UComments: "2007-4-12: Created." 
 Version: 1.2
 ItalicAngle: 0
 UnderlinePosition: -204
@@ -17,7 +17,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1188369617
+ModificationTime: 1207391007
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -32,15 +32,17 @@ HheadAOffset: 1
 HheadDescent: 0
 HheadDOffset: 1
 OS2Vendor: 'PfEd'
+DEI: 0
 Encoding: Custom
 UnicodeInterp: none
 NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 0 13 8
+WinInfo: 0 12 6
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
 BeginChars: 341 341
+
 StartChar: _0017
 Encoding: 0 66 0
 Width: 164
@@ -58,6 +60,7 @@ Fore
  20 161 49.417 166 82 166 c 28
 EndSplineSet
 EndChar
+
 StartChar: _0019
 Encoding: 1 67 1
 Width: 164
@@ -73,6 +76,7 @@ Fore
  6.66699 103.833 62.873 177.667 77.5 192 c 5
 EndSplineSet
 EndChar
+
 StartChar: _0020
 Encoding: 2 68 2
 Width: 164
@@ -90,6 +94,7 @@ Fore
  5.66699 68.5049 51.333 146.337 58.5 163.504 c 1
 EndSplineSet
 EndChar
+
 StartChar: _0026
 Encoding: 3 69 3
 Width: 164
@@ -122,6 +127,7 @@ Fore
  -9.3587 141.259 -7.28195 153.44 0.155273 154.667 c 1
 EndSplineSet
 EndChar
+
 StartChar: _0028
 Encoding: 4 70 4
 Width: 164
@@ -146,6 +152,7 @@ Fore
  0 191 l 17
 EndSplineSet
 EndChar
+
 StartChar: _0027
 Encoding: 5 71 5
 Width: 164
@@ -170,6 +177,7 @@ Fore
  161.23 161.341 158.41 172.99 164 191 c 9
 EndSplineSet
 EndChar
+
 StartChar: _0006
 Encoding: 6 72 6
 Width: 164
@@ -192,6 +200,7 @@ Fore
  0 371 l 17
 EndSplineSet
 EndChar
+
 StartChar: queue
 Encoding: 7 153 7
 Width: 22
@@ -207,6 +216,7 @@ Fore
  17.5928 -163.278 8.15723 -163.709 0 -165.5 c 9
 EndSplineSet
 EndChar
+
 StartChar: _0032
 Encoding: 8 74 8
 Width: 82
@@ -222,6 +232,7 @@ Fore
  3.33398 91.917 31.4365 128.833 38.75 136 c 1
 EndSplineSet
 EndChar
+
 StartChar: _0011
 Encoding: 9 75 9
 Width: 19
@@ -237,6 +248,7 @@ Fore
  0 550.999 l 29
 EndSplineSet
 EndChar
+
 StartChar: _0008
 Encoding: 10 76 10
 Width: 152
@@ -253,6 +265,7 @@ Fore
  67 439 152 497.678 152 553.333 c 1
 EndSplineSet
 EndChar
+
 StartChar: _0001
 Encoding: 11 77 11
 Width: 140
@@ -276,6 +289,7 @@ Fore
  24 433.5 0 400.667 0 380.5 c 9
 EndSplineSet
 EndChar
+
 StartChar: _0023
 Encoding: 12 78 12
 Width: 164
@@ -295,6 +309,7 @@ Fore
  141.996 -26.668 l 2
 EndSplineSet
 EndChar
+
 StartChar: _0025
 Encoding: 13 79 13
 Width: 164
@@ -314,9 +329,10 @@ Fore
  51.333 8.66699 22 -4 22.0039 -26.668 c 2
 EndSplineSet
 EndChar
+
 StartChar: _0009
 Encoding: 14 73 14
-AltUni: 80
+AltUni2: 000050.ffffffff.0
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -330,6 +346,7 @@ Fore
  6.04348 352.565 2.43478 355.609 0 359.128 c 9
 EndSplineSet
 EndChar
+
 StartChar: _0010
 Encoding: 15 81 15
 Width: 19
@@ -345,6 +362,7 @@ Fore
  14.875 -293.5 5 -293.375 0 -296.375 c 9
 EndSplineSet
 EndChar
+
 StartChar: _0024
 Encoding: 16 83 16
 Width: 164
@@ -364,6 +382,7 @@ Fore
  51.333 8.66699 22 -4 22.0039 -26.668 c 2
 EndSplineSet
 EndChar
+
 StartChar: pesdeminutus
 Encoding: 17 84 17
 Width: 164
@@ -385,6 +404,7 @@ Fore
  22.418 -31.3359 3.33301 -19.5098 0 -10.1777 c 5
 EndSplineSet
 EndChar
+
 StartChar: auctusd1
 Encoding: 18 85 18
 Width: 164
@@ -406,6 +426,7 @@ Fore
  0 160.67 l 1
 EndSplineSet
 EndChar
+
 StartChar: auctusa1
 Encoding: 19 86 19
 Width: 164
@@ -427,6 +448,7 @@ Fore
  50.0889 -13.0303 12 -14 0 -10 c 1
 EndSplineSet
 EndChar
+
 StartChar: mdeminutus
 Encoding: 20 87 20
 Width: 197
@@ -446,6 +468,7 @@ Fore
  106.499 154.164 167.02 124.329 197 90.001 c 13
 EndSplineSet
 EndChar
+
 StartChar: _0007
 Encoding: 21 88 21
 Width: 201
@@ -469,6 +492,7 @@ Fore
  14.6667 390.185 7.33334 390.885 0 382 c 9
 EndSplineSet
 EndChar
+
 StartChar: _0002
 Encoding: 22 89 22
 Width: 321
@@ -502,6 +526,7 @@ Fore
  215.718 432.9 181 409.173 181 389.006 c 9
 EndSplineSet
 EndChar
+
 StartChar: _0063
 Encoding: 23 90 23
 Width: 85
@@ -519,6 +544,7 @@ Fore
  85 -338.5 63 -345.5 63 -345.5 c 5
 EndSplineSet
 EndChar
+
 StartChar: _0064
 Encoding: 24 91 24
 Width: 85
@@ -536,6 +562,7 @@ Fore
  84.9746 -237.485 63 -240.5 63 -240.5 c 5
 EndSplineSet
 EndChar
+
 StartChar: _0060
 Encoding: 25 92 25
 Width: 85
@@ -553,6 +580,7 @@ Fore
  85 471.5 63 478.5 63 478.5 c 5
 EndSplineSet
 EndChar
+
 StartChar: _0061
 Encoding: 26 93 26
 Width: 85
@@ -570,6 +598,7 @@ Fore
  84.9746 367.485 63 370.5 63 370.5 c 5
 EndSplineSet
 EndChar
+
 StartChar: base2
 Encoding: 27 94 27
 Width: 164
@@ -588,6 +617,7 @@ Fore
  164 -21.5 l 25
 EndSplineSet
 EndChar
+
 StartChar: base4
 Encoding: 28 95 28
 Width: 164
@@ -606,6 +636,7 @@ Fore
  22 -21.5 8.58008 -21.5 0 -21.5 c 25
 EndSplineSet
 EndChar
+
 StartChar: base7
 Encoding: 29 96 29
 Width: 164
@@ -624,6 +655,7 @@ Fore
  0 151.674 l 1
 EndSplineSet
 EndChar
+
 StartChar: base5
 Encoding: 30 97 30
 Width: 164
@@ -642,6 +674,7 @@ Fore
  164 151.674 l 1
 EndSplineSet
 EndChar
+
 StartChar: base3
 Encoding: 31 98 31
 Width: 164
@@ -661,6 +694,7 @@ Fore
  114.583 162 144 154 164 146 c 13
 EndSplineSet
 EndChar
+
 StartChar: base6
 Encoding: 32 99 32
 Width: 164
@@ -680,6 +714,7 @@ Fore
  114.576 162.068 134.326 155.008 141.992 151.668 c 0
 EndSplineSet
 EndChar
+
 StartChar: line2
 Encoding: 33 100 33
 Width: 22
@@ -695,6 +730,7 @@ Fore
  0 -11.5 l 25
 EndSplineSet
 EndChar
+
 StartChar: line3
 Encoding: 34 101 34
 Width: 22
@@ -710,6 +746,7 @@ Fore
  0 -11.5 l 25
 EndSplineSet
 EndChar
+
 StartChar: line4
 Encoding: 35 102 35
 Width: 22
@@ -725,6 +762,7 @@ Fore
  0 -11.5 l 25
 EndSplineSet
 EndChar
+
 StartChar: line5
 Encoding: 36 103 36
 Width: 22
@@ -740,6 +778,7 @@ Fore
  0 -11.5 l 25
 EndSplineSet
 EndChar
+
 StartChar: vsbase
 Encoding: 37 104 37
 Width: 164
@@ -761,6 +800,7 @@ Fore
  51.331 8.66695 22.0039 1.90735e-06 22.0039 -26.668 c 2
 EndSplineSet
 EndChar
+
 StartChar: vbase
 Encoding: 38 -1 38
 Width: 164
@@ -782,6 +822,7 @@ Fore
  141.996 -26.668 l 2
 EndSplineSet
 EndChar
+
 StartChar: vlbase
 Encoding: 39 -1 39
 Width: 164
@@ -803,6 +844,7 @@ Fore
  51.331 8.66695 22.0043 -4.49997 22.0039 -26.668 c 2
 EndSplineSet
 EndChar
+
 StartChar: qbase
 Encoding: 40 -1 40
 Width: 164
@@ -830,6 +872,7 @@ Fore
  18.5117 112.303 16.7998 155.6 0.155273 154.667 c 1
 EndSplineSet
 EndChar
+
 StartChar: obase
 Encoding: 41 -1 41
 Width: 164
@@ -852,6 +895,7 @@ Fore
  151.333 157.5 147.333 157.333 164 157.331 c 9
 EndSplineSet
 EndChar
+
 StartChar: pbase
 Encoding: 42 -1 42
 Width: 164
@@ -870,6 +914,7 @@ Fore
  164 148.674 l 1
 EndSplineSet
 EndChar
+
 StartChar: idebilis
 Encoding: 43 -1 43
 Width: 110
@@ -889,6 +934,7 @@ Fore
  110 147 l 1
 EndSplineSet
 EndChar
+
 StartChar: deminutus
 Encoding: 44 -1 44
 Width: 110
@@ -908,6 +954,7 @@ Fore
  110 147 l 1
 EndSplineSet
 EndChar
+
 StartChar: rdeminutus
 Encoding: 45 -1 45
 Width: 110
@@ -927,6 +974,7 @@ Fore
  110 -21 l 1
 EndSplineSet
 EndChar
+
 StartChar: auctusd2
 Encoding: 46 -1 46
 Width: 164
@@ -948,6 +996,7 @@ Fore
  0 146.001 l 1
 EndSplineSet
 EndChar
+
 StartChar: auctusa2
 Encoding: 47 -1 47
 Width: 164
@@ -969,6 +1018,7 @@ Fore
  0 151.674 l 1
 EndSplineSet
 EndChar
+
 StartChar: porrectus1
 Encoding: 48 -1 48
 Width: 490
@@ -988,6 +1038,7 @@ Fore
  254 -188 136.5 -110 0 -16 c 1
 EndSplineSet
 EndChar
+
 StartChar: porrectus2
 Encoding: 49 -1 49
 Width: 575
@@ -1007,6 +1058,7 @@ Fore
  322.5 -333 154.5 -201 0 -16 c 1
 EndSplineSet
 EndChar
+
 StartChar: porrectus3
 Encoding: 50 -1 50
 Width: 650
@@ -1026,6 +1078,7 @@ Fore
  202 -402 116 -240 0 -16 c 1
 EndSplineSet
 EndChar
+
 StartChar: porrectus4
 Encoding: 51 -1 51
 Width: 740
@@ -1045,6 +1098,7 @@ Fore
  270 -547.5 75 -217.5 0 -25 c 1
 EndSplineSet
 EndChar
+
 StartChar: porrectus5
 Encoding: 52 -1 52
 Width: 931
@@ -1064,6 +1118,7 @@ Fore
  315 -712 70 -240 0 -16 c 1
 EndSplineSet
 EndChar
+
 StartChar: porrectusflexus1
 Encoding: 53 -1 53
 Width: 340
@@ -1083,6 +1138,7 @@ Fore
  187.5 -144.125 136.5 -110 0 -16 c 1
 EndSplineSet
 EndChar
+
 StartChar: porrectusflexus2
 Encoding: 54 -1 54
 Width: 428
@@ -1102,6 +1158,7 @@ Fore
  265 -289 107 -166 0 -16 c 1
 EndSplineSet
 EndChar
+
 StartChar: porrectusflexus3
 Encoding: 55 -1 55
 Width: 586
@@ -1121,6 +1178,7 @@ Fore
  282 -428 86 -170 0 -16 c 1
 EndSplineSet
 EndChar
+
 StartChar: porrectusflexus4
 Encoding: 56 -1 56
 Width: 670
@@ -1140,6 +1198,7 @@ Fore
  305 -522 98 -214 0 -16 c 1
 EndSplineSet
 EndChar
+
 StartChar: porrectusflexus5
 Encoding: 57 -1 57
 Width: 931
@@ -1159,6 +1218,7 @@ Fore
  315 -646 70 -240 0 -16 c 1
 EndSplineSet
 EndChar
+
 StartChar: _1025
 Encoding: 58 -1 58
 Width: 164
@@ -1190,6 +1250,7 @@ Fore
  134.849 113.609 145.541 139.116 140.496 158.67 c 0
 EndSplineSet
 EndChar
+
 StartChar: _0021
 Encoding: 59 -1 59
 Width: 164
@@ -1208,6 +1269,7 @@ Fore
  5.66699 68.5049 51.333 146.337 58.5 163.504 c 1
 EndSplineSet
 EndChar
+
 StartChar: _0031
 Encoding: 60 -1 60
 Width: 164
@@ -1226,6 +1288,7 @@ Fore
  6.66699 103.833 62.873 177.667 77.5 192 c 1
 EndSplineSet
 EndChar
+
 StartChar: _0022
 Encoding: 61 -1 61
 Width: 164
@@ -1245,21 +1308,22 @@ Fore
  141.996 -26.668 l 2
 EndSplineSet
 EndChar
+
 StartChar: _0014
 Encoding: 62 -1 62
 Width: 61
 VWidth: 2048
 Flags: HW
-Validated: 33
 HStem: -219.133 9 -30.1332 9 158.867 9 347.867 9
 Fore
-0 63.5645 m 24
- -0.263672 80.792 13.4404 95.4268 30.6699 95.3623 c 24
- 47.8721 95.2979 60.7367 80.5361 61 63.3359 c 24
- 61.2646 46.0684 48.6699 30.1621 31.668 30.1631 c 0
- 12.8691 30.1631 0.274745 45.6162 0 63.5645 c 24
+0 87 m 24
+ 0 102.52 13.4805 115.058 29 115 c 24
+ 45.6367 114.938 61 103.637 61 87 c 28
+ 61 70.0166 47.502 57.999 30.5 58 c 0
+ 11.7012 58 0 70.9844 0 87 c 24
 EndSplineSet
 EndChar
+
 StartChar: _0015
 Encoding: 63 -1 63
 Width: 61
@@ -1280,23 +1344,24 @@ Fore
  12.8691 34.1631 0.274414 49.6162 0 67.5645 c 28
 EndSplineSet
 EndChar
+
 StartChar: _0033
 Encoding: 64 -1 64
 Width: 40
 VWidth: 2048
 Flags: HW
-Validated: 33
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-0.125 116.375 m 17
- 2.625 120.25 6.74512 123.625 20.125 123.625 c 0
- 32.75 123.625 37.625 119.75 40.125 116.375 c 9
- 40 -6 l 21
- 36.875 -10.625 31.874 -13.249 20 -13.375 c 4
- 8.25 -13.5 3.875 -11 0 -6 c 13
- 0.125 116.375 l 17
+0 96.75 m 17
+ 2.5 100.625 6.62012 104 20 104 c 4
+ 32.625 104 37.5 100.125 40 96.75 c 13
+ 40 -20.625 l 17
+ 36.875 -25.25 31.874 -27.874 20 -28 c 0
+ 8.25 -28.125 3.875 -25.625 0 -20.625 c 9
+ 0 96.75 l 17
 EndSplineSet
 EndChar
+
 StartChar: _0013
 Encoding: 65 -1 65
 Width: 110
@@ -1314,21 +1379,22 @@ Fore
  73.184 127 98.5 125.75 110 119 c 1
 EndSplineSet
 EndChar
+
 StartChar: hepisemus_base
 Encoding: 66 -1 66
 Width: 1
 VWidth: 2048
-Flags: HW
-Validated: 1
+Flags: HWO
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 64 m 25
- 0 79 l 29
- 1 79 l 25
+ 0 89.1807 l 29
+ 1 89.1807 l 29
  1 64 l 25
  0 64 l 25
 EndSplineSet
 EndChar
+
 StartChar: _4097
 Encoding: 67 -1 67
 Width: 164
@@ -1351,6 +1417,7 @@ Fore
  60.5 -22.5 16.0068 -16.5 0 -10.0078 c 1
 EndSplineSet
 EndChar
+
 StartChar: _0062
 Encoding: 68 -1 68
 Width: 85
@@ -1368,6 +1435,7 @@ Fore
  85 405.5 63 412.5 63 412.5 c 5
 EndSplineSet
 EndChar
+
 StartChar: _0065
 Encoding: 69 -1 69
 Width: 85
@@ -1385,6 +1453,7 @@ Fore
  85 -263 63 -270 63 -270 c 5
 EndSplineSet
 EndChar
+
 StartChar: _0039
 Encoding: 70 -1 70
 Width: 99
@@ -1404,6 +1473,7 @@ Fore
  39.9111 -65.0898 31.9316 -69.8779 22.3555 -69.8779 c 4
 EndSplineSet
 EndChar
+
 StartChar: _0069
 Encoding: 71 -1 71
 Width: 99
@@ -1423,6 +1493,7 @@ Fore
  0.0595703 38.2451 0.0595703 43.0332 0.0595703 46.2236 c 4
 EndSplineSet
 EndChar
+
 StartChar: _0070
 Encoding: 72 -1 72
 Width: 125
@@ -1440,6 +1511,7 @@ Fore
  95.7607 -11.6357 l 1
 EndSplineSet
 EndChar
+
 StartChar: _0038
 Encoding: 73 -1 73
 Width: 124
@@ -1457,6 +1529,7 @@ Fore
  81.1514 -21.8936 95.5166 -7.53027 95.5166 11.623 c 1
 EndSplineSet
 EndChar
+
 StartChar: _0037
 Encoding: 74 -1 74
 Width: 124
@@ -1477,11 +1550,12 @@ Fore
  -0.244141 33.5166 25.292 62.2441 62 62.2441 c 0
 EndSplineSet
 EndChar
+
 StartChar: _0003
 Encoding: 75 -1 75
 Width: 140
 VWidth: 2048
-Flags: HWO
+Flags: HW
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
@@ -1503,6 +1577,7 @@ Fore
  140 20.3418 110.727 10.4303 73.3856 10.4303 c 0
 EndSplineSet
 EndChar
+
 StartChar: _0004
 Encoding: 76 -1 76
 Width: 321
@@ -1536,6 +1611,7 @@ Fore
  215.718 432.9 181 409.173 181 389.006 c 9
 EndSplineSet
 EndChar
+
 StartChar: _0016
 Encoding: 77 -1 77
 Width: 108
@@ -1557,6 +1633,7 @@ Fore
  4.59668 -22.3252 0 -18.6667 0 -14 c 9
 EndSplineSet
 EndChar
+
 StartChar: _0034
 Encoding: 78 -1 78
 Width: 164
@@ -1581,6 +1658,7 @@ Fore
  20 161 49.417 166 82 166 c 24
 EndSplineSet
 EndChar
+
 StartChar: _0035
 Encoding: 79 -1 79
 Width: 266
@@ -1612,6 +1690,7 @@ Fore
  70.6709 165 100.088 170 132.671 170 c 24
 EndSplineSet
 EndChar
+
 StartChar: _0036
 Encoding: 80 -1 80
 Width: 266
@@ -1650,6 +1729,7 @@ Fore
  72.0049 163 101.422 168 134.005 168 c 24
 EndSplineSet
 EndChar
+
 StartChar: _0066
 Encoding: 81 -1 81
 Width: 706
@@ -1701,6 +1781,7 @@ Fore
  380.198 415.368 l 1
 EndSplineSet
 EndChar
+
 StartChar: _0067
 Encoding: 82 -1 82
 Width: 659
@@ -1747,6 +1828,7 @@ Fore
  448.323 64.2877 l 1
 EndSplineSet
 EndChar
+
 StartChar: _0068
 Encoding: 83 -1 83
 Width: 697
@@ -1789,6 +1871,7 @@ Fore
  193 -95.833 124.667 -81.833 106.675 -75.1523 c 0
 EndSplineSet
 EndChar
+
 StartChar: letterbar
 Encoding: 84 -1 84
 Width: 388
@@ -1810,6 +1893,7 @@ Fore
  107 -90.833 38.667 -76.833 20.6748 -70.1523 c 0
 EndSplineSet
 EndChar
+
 StartChar: NameMe.159
 Encoding: 85 -1 85
 Width: 2048
@@ -1818,6 +1902,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.160
 Encoding: 86 -1 86
 Width: 2048
@@ -1826,6 +1911,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.161
 Encoding: 87 -1 87
 Width: 2048
@@ -1834,6 +1920,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.162
 Encoding: 88 -1 88
 Width: 2048
@@ -1842,6 +1929,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.163
 Encoding: 89 -1 89
 Width: 2048
@@ -1850,6 +1938,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.164
 Encoding: 90 -1 90
 Width: 2048
@@ -1858,6 +1947,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.165
 Encoding: 91 -1 91
 Width: 2048
@@ -1866,6 +1956,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.166
 Encoding: 92 -1 92
 Width: 2048
@@ -1874,6 +1965,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.167
 Encoding: 93 -1 93
 Width: 2048
@@ -1882,6 +1974,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.168
 Encoding: 94 -1 94
 Width: 2048
@@ -1890,6 +1983,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.169
 Encoding: 95 -1 95
 Width: 2048
@@ -1898,6 +1992,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.170
 Encoding: 96 -1 96
 Width: 2048
@@ -1906,6 +2001,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.171
 Encoding: 97 -1 97
 Width: 2048
@@ -1914,6 +2010,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.172
 Encoding: 98 -1 98
 Width: 2048
@@ -1922,6 +2019,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.173
 Encoding: 99 -1 99
 Width: 2048
@@ -1930,6 +2028,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.174
 Encoding: 100 -1 100
 Width: 2048
@@ -1938,6 +2037,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.175
 Encoding: 101 -1 101
 Width: 2048
@@ -1946,6 +2046,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.176
 Encoding: 102 -1 102
 Width: 2048
@@ -1954,6 +2055,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.177
 Encoding: 103 -1 103
 Width: 2048
@@ -1962,6 +2064,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.178
 Encoding: 104 -1 104
 Width: 2048
@@ -1970,6 +2073,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.179
 Encoding: 105 -1 105
 Width: 2048
@@ -1978,6 +2082,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.180
 Encoding: 106 -1 106
 Width: 2048
@@ -1986,6 +2091,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.181
 Encoding: 107 -1 107
 Width: 2048
@@ -1994,6 +2100,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.182
 Encoding: 108 -1 108
 Width: 2048
@@ -2002,6 +2109,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.183
 Encoding: 109 -1 109
 Width: 2048
@@ -2010,6 +2118,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.184
 Encoding: 110 -1 110
 Width: 2048
@@ -2018,6 +2127,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.185
 Encoding: 111 -1 111
 Width: 2048
@@ -2026,6 +2136,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.186
 Encoding: 112 -1 112
 Width: 2048
@@ -2034,6 +2145,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.187
 Encoding: 113 -1 113
 Width: 2048
@@ -2042,6 +2154,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.188
 Encoding: 114 -1 114
 Width: 2048
@@ -2050,6 +2163,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.189
 Encoding: 115 -1 115
 Width: 2048
@@ -2058,6 +2172,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.190
 Encoding: 116 -1 116
 Width: 2048
@@ -2066,6 +2181,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.191
 Encoding: 117 -1 117
 Width: 2048
@@ -2074,6 +2190,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.192
 Encoding: 118 -1 118
 Width: 2048
@@ -2082,6 +2199,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.193
 Encoding: 119 -1 119
 Width: 2048
@@ -2090,6 +2208,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.194
 Encoding: 120 -1 120
 Width: 2048
@@ -2098,6 +2217,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.195
 Encoding: 121 -1 121
 Width: 2048
@@ -2106,6 +2226,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.196
 Encoding: 122 -1 122
 Width: 2048
@@ -2114,6 +2235,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.197
 Encoding: 123 -1 123
 Width: 2048
@@ -2122,6 +2244,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.198
 Encoding: 124 -1 124
 Width: 2048
@@ -2130,6 +2253,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.199
 Encoding: 125 -1 125
 Width: 2048
@@ -2138,6 +2262,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.200
 Encoding: 126 -1 126
 Width: 2048
@@ -2146,6 +2271,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.201
 Encoding: 127 -1 127
 Width: 2048
@@ -2154,6 +2280,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.202
 Encoding: 128 -1 128
 Width: 2048
@@ -2162,6 +2289,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.203
 Encoding: 129 -1 129
 Width: 2048
@@ -2170,6 +2298,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.204
 Encoding: 130 -1 130
 Width: 2048
@@ -2178,6 +2307,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.205
 Encoding: 131 -1 131
 Width: 2048
@@ -2186,6 +2316,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.206
 Encoding: 132 -1 132
 Width: 2048
@@ -2194,6 +2325,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.207
 Encoding: 133 -1 133
 Width: 2048
@@ -2202,6 +2334,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.208
 Encoding: 134 -1 134
 Width: 2048
@@ -2210,6 +2343,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.209
 Encoding: 135 -1 135
 Width: 2048
@@ -2218,6 +2352,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.210
 Encoding: 136 -1 136
 Width: 2048
@@ -2226,6 +2361,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.211
 Encoding: 137 -1 137
 Width: 2048
@@ -2234,6 +2370,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.212
 Encoding: 138 -1 138
 Width: 2048
@@ -2242,6 +2379,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.213
 Encoding: 139 -1 139
 Width: 2048
@@ -2250,6 +2388,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.214
 Encoding: 140 -1 140
 Width: 2048
@@ -2258,6 +2397,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.215
 Encoding: 141 -1 141
 Width: 2048
@@ -2266,6 +2406,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.216
 Encoding: 142 -1 142
 Width: 2048
@@ -2274,6 +2415,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.217
 Encoding: 143 -1 143
 Width: 2048
@@ -2282,6 +2424,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.218
 Encoding: 144 -1 144
 Width: 2048
@@ -2290,6 +2433,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.219
 Encoding: 145 -1 145
 Width: 2048
@@ -2298,6 +2442,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.220
 Encoding: 146 -1 146
 Width: 2048
@@ -2306,6 +2451,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.221
 Encoding: 147 -1 147
 Width: 2048
@@ -2314,6 +2460,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.222
 Encoding: 148 -1 148
 Width: 2048
@@ -2322,6 +2469,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.223
 Encoding: 149 -1 149
 Width: 2048
@@ -2330,6 +2478,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.224
 Encoding: 150 -1 150
 Width: 2048
@@ -2338,6 +2487,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.225
 Encoding: 151 -1 151
 Width: 2048
@@ -2346,6 +2496,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.226
 Encoding: 152 -1 152
 Width: 2048
@@ -2354,6 +2505,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.227
 Encoding: 153 -1 153
 Width: 2048
@@ -2362,6 +2514,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.228
 Encoding: 154 -1 154
 Width: 2048
@@ -2370,6 +2523,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.229
 Encoding: 155 -1 155
 Width: 2048
@@ -2378,6 +2532,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.230
 Encoding: 156 -1 156
 Width: 2048
@@ -2386,6 +2541,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.231
 Encoding: 157 -1 157
 Width: 2048
@@ -2394,6 +2550,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.232
 Encoding: 158 -1 158
 Width: 2048
@@ -2402,6 +2559,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.233
 Encoding: 159 -1 159
 Width: 2048
@@ -2410,6 +2568,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.234
 Encoding: 160 -1 160
 Width: 2048
@@ -2418,6 +2577,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.235
 Encoding: 161 -1 161
 Width: 2048
@@ -2426,6 +2586,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.236
 Encoding: 162 -1 162
 Width: 2048
@@ -2434,6 +2595,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.237
 Encoding: 163 -1 163
 Width: 2048
@@ -2442,6 +2604,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.238
 Encoding: 164 -1 164
 Width: 2048
@@ -2450,6 +2613,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.239
 Encoding: 165 -1 165
 Width: 2048
@@ -2458,6 +2622,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.240
 Encoding: 166 -1 166
 Width: 2048
@@ -2466,6 +2631,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.241
 Encoding: 167 -1 167
 Width: 2048
@@ -2474,6 +2640,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.242
 Encoding: 168 -1 168
 Width: 2048
@@ -2482,6 +2649,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.243
 Encoding: 169 -1 169
 Width: 2048
@@ -2490,6 +2658,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.244
 Encoding: 170 -1 170
 Width: 2048
@@ -2498,6 +2667,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.245
 Encoding: 171 -1 171
 Width: 2048
@@ -2506,6 +2676,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.246
 Encoding: 172 -1 172
 Width: 2048
@@ -2514,6 +2685,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.247
 Encoding: 173 -1 173
 Width: 2048
@@ -2522,6 +2694,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.248
 Encoding: 174 -1 174
 Width: 2048
@@ -2530,6 +2703,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.249
 Encoding: 175 -1 175
 Width: 2048
@@ -2538,6 +2712,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.250
 Encoding: 176 -1 176
 Width: 2048
@@ -2546,6 +2721,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.251
 Encoding: 177 -1 177
 Width: 2048
@@ -2554,6 +2730,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.252
 Encoding: 178 -1 178
 Width: 2048
@@ -2562,6 +2739,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.253
 Encoding: 179 -1 179
 Width: 2048
@@ -2570,6 +2748,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.254
 Encoding: 180 -1 180
 Width: 2048
@@ -2578,6 +2757,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.255
 Encoding: 181 -1 181
 Width: 2048
@@ -2586,6 +2766,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.256
 Encoding: 182 -1 182
 Width: 2048
@@ -2594,6 +2775,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.257
 Encoding: 183 -1 183
 Width: 2048
@@ -2602,6 +2784,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.258
 Encoding: 184 -1 184
 Width: 2048
@@ -2610,6 +2793,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.259
 Encoding: 185 -1 185
 Width: 2048
@@ -2618,6 +2802,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.260
 Encoding: 186 -1 186
 Width: 2048
@@ -2626,6 +2811,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.261
 Encoding: 187 -1 187
 Width: 2048
@@ -2634,6 +2820,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.262
 Encoding: 188 -1 188
 Width: 2048
@@ -2642,6 +2829,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.263
 Encoding: 189 -1 189
 Width: 2048
@@ -2650,6 +2838,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.264
 Encoding: 190 -1 190
 Width: 2048
@@ -2658,6 +2847,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.265
 Encoding: 191 -1 191
 Width: 2048
@@ -2666,6 +2856,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.266
 Encoding: 192 -1 192
 Width: 2048
@@ -2674,6 +2865,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.267
 Encoding: 193 -1 193
 Width: 2048
@@ -2682,6 +2874,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.268
 Encoding: 194 -1 194
 Width: 2048
@@ -2690,6 +2883,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.269
 Encoding: 195 -1 195
 Width: 2048
@@ -2698,6 +2892,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.270
 Encoding: 196 -1 196
 Width: 2048
@@ -2706,6 +2901,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.271
 Encoding: 197 -1 197
 Width: 2048
@@ -2714,6 +2910,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.272
 Encoding: 198 -1 198
 Width: 2048
@@ -2722,6 +2919,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.273
 Encoding: 199 -1 199
 Width: 2048
@@ -2730,6 +2928,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.274
 Encoding: 200 -1 200
 Width: 2048
@@ -2738,6 +2937,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.275
 Encoding: 201 -1 201
 Width: 2048
@@ -2746,6 +2946,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.276
 Encoding: 202 -1 202
 Width: 2048
@@ -2754,6 +2955,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.277
 Encoding: 203 -1 203
 Width: 2048
@@ -2762,6 +2964,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.278
 Encoding: 204 -1 204
 Width: 2048
@@ -2770,6 +2973,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.279
 Encoding: 205 -1 205
 Width: 2048
@@ -2778,6 +2982,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.280
 Encoding: 206 -1 206
 Width: 2048
@@ -2786,6 +2991,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.281
 Encoding: 207 -1 207
 Width: 2048
@@ -2794,6 +3000,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.282
 Encoding: 208 -1 208
 Width: 2048
@@ -2802,6 +3009,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.283
 Encoding: 209 -1 209
 Width: 2048
@@ -2810,6 +3018,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.284
 Encoding: 210 -1 210
 Width: 2048
@@ -2818,6 +3027,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.285
 Encoding: 211 -1 211
 Width: 2048
@@ -2826,6 +3036,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.286
 Encoding: 212 -1 212
 Width: 2048
@@ -2834,6 +3045,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.287
 Encoding: 213 -1 213
 Width: 2048
@@ -2842,6 +3054,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.288
 Encoding: 214 -1 214
 Width: 2048
@@ -2850,6 +3063,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.289
 Encoding: 215 -1 215
 Width: 2048
@@ -2858,6 +3072,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.290
 Encoding: 216 -1 216
 Width: 2048
@@ -2866,6 +3081,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.291
 Encoding: 217 -1 217
 Width: 2048
@@ -2874,6 +3090,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.292
 Encoding: 218 -1 218
 Width: 2048
@@ -2882,6 +3099,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.293
 Encoding: 219 -1 219
 Width: 2048
@@ -2890,6 +3108,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.294
 Encoding: 220 -1 220
 Width: 2048
@@ -2898,6 +3117,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.295
 Encoding: 221 -1 221
 Width: 2048
@@ -2906,6 +3126,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.296
 Encoding: 222 -1 222
 Width: 2048
@@ -2914,6 +3135,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.297
 Encoding: 223 -1 223
 Width: 2048
@@ -2922,6 +3144,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.298
 Encoding: 224 -1 224
 Width: 2048
@@ -2930,6 +3153,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.299
 Encoding: 225 -1 225
 Width: 2048
@@ -2938,6 +3162,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.300
 Encoding: 226 -1 226
 Width: 2048
@@ -2946,6 +3171,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.301
 Encoding: 227 -1 227
 Width: 2048
@@ -2954,6 +3180,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.302
 Encoding: 228 -1 228
 Width: 2048
@@ -2962,6 +3189,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.303
 Encoding: 229 -1 229
 Width: 2048
@@ -2970,6 +3198,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.304
 Encoding: 230 -1 230
 Width: 2048
@@ -2978,6 +3207,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.305
 Encoding: 231 -1 231
 Width: 2048
@@ -2986,6 +3216,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.306
 Encoding: 232 -1 232
 Width: 2048
@@ -2994,6 +3225,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.307
 Encoding: 233 -1 233
 Width: 2048
@@ -3002,6 +3234,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.308
 Encoding: 234 -1 234
 Width: 2048
@@ -3010,6 +3243,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.309
 Encoding: 235 -1 235
 Width: 2048
@@ -3018,6 +3252,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.310
 Encoding: 236 -1 236
 Width: 2048
@@ -3026,6 +3261,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.311
 Encoding: 237 -1 237
 Width: 2048
@@ -3034,6 +3270,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.312
 Encoding: 238 -1 238
 Width: 2048
@@ -3042,6 +3279,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.313
 Encoding: 239 -1 239
 Width: 2048
@@ -3050,6 +3288,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.314
 Encoding: 240 -1 240
 Width: 2048
@@ -3058,6 +3297,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.315
 Encoding: 241 -1 241
 Width: 2048
@@ -3066,6 +3306,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.316
 Encoding: 242 -1 242
 Width: 2048
@@ -3074,6 +3315,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.317
 Encoding: 243 -1 243
 Width: 2048
@@ -3082,6 +3324,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.318
 Encoding: 244 -1 244
 Width: 2048
@@ -3090,6 +3333,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.319
 Encoding: 245 -1 245
 Width: 2048
@@ -3098,6 +3342,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.320
 Encoding: 246 -1 246
 Width: 2048
@@ -3106,6 +3351,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.321
 Encoding: 247 -1 247
 Width: 2048
@@ -3114,6 +3360,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.322
 Encoding: 248 -1 248
 Width: 2048
@@ -3122,6 +3369,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.323
 Encoding: 249 -1 249
 Width: 2048
@@ -3130,6 +3378,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.324
 Encoding: 250 -1 250
 Width: 2048
@@ -3138,6 +3387,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.325
 Encoding: 251 -1 251
 Width: 2048
@@ -3146,6 +3396,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.326
 Encoding: 252 -1 252
 Width: 2048
@@ -3154,6 +3405,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.327
 Encoding: 253 -1 253
 Width: 2048
@@ -3162,6 +3414,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.328
 Encoding: 254 -1 254
 Width: 2048
@@ -3170,6 +3423,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.329
 Encoding: 255 -1 255
 Width: 2048
@@ -3178,6 +3432,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.330
 Encoding: 256 -1 256
 Width: 2048
@@ -3186,6 +3441,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.331
 Encoding: 257 -1 257
 Width: 2048
@@ -3194,6 +3450,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.332
 Encoding: 258 -1 258
 Width: 2048
@@ -3202,6 +3459,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.333
 Encoding: 259 -1 259
 Width: 2048
@@ -3210,6 +3468,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.334
 Encoding: 260 -1 260
 Width: 2048
@@ -3218,6 +3477,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.335
 Encoding: 261 -1 261
 Width: 2048
@@ -3226,6 +3486,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.336
 Encoding: 262 -1 262
 Width: 2048
@@ -3234,6 +3495,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.337
 Encoding: 263 -1 263
 Width: 2048
@@ -3242,6 +3504,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.338
 Encoding: 264 -1 264
 Width: 2048
@@ -3250,6 +3513,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.339
 Encoding: 265 -1 265
 Width: 2048
@@ -3258,6 +3522,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.340
 Encoding: 266 -1 266
 Width: 2048
@@ -3266,6 +3531,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.341
 Encoding: 267 -1 267
 Width: 2048
@@ -3274,6 +3540,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.342
 Encoding: 268 -1 268
 Width: 2048
@@ -3282,6 +3549,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.343
 Encoding: 269 -1 269
 Width: 2048
@@ -3290,6 +3558,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.344
 Encoding: 270 -1 270
 Width: 2048
@@ -3298,6 +3567,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.345
 Encoding: 271 -1 271
 Width: 2048
@@ -3306,6 +3576,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.346
 Encoding: 272 -1 272
 Width: 2048
@@ -3314,6 +3585,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.347
 Encoding: 273 -1 273
 Width: 2048
@@ -3322,6 +3594,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.348
 Encoding: 274 -1 274
 Width: 2048
@@ -3330,6 +3603,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.349
 Encoding: 275 -1 275
 Width: 2048
@@ -3338,6 +3612,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.350
 Encoding: 276 -1 276
 Width: 2048
@@ -3346,6 +3621,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.351
 Encoding: 277 -1 277
 Width: 2048
@@ -3354,6 +3630,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.352
 Encoding: 278 -1 278
 Width: 2048
@@ -3362,6 +3639,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.353
 Encoding: 279 -1 279
 Width: 2048
@@ -3370,6 +3648,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.354
 Encoding: 280 -1 280
 Width: 2048
@@ -3378,6 +3657,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.355
 Encoding: 281 -1 281
 Width: 2048
@@ -3386,6 +3666,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.356
 Encoding: 282 -1 282
 Width: 2048
@@ -3394,6 +3675,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.357
 Encoding: 283 -1 283
 Width: 2048
@@ -3402,6 +3684,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.358
 Encoding: 284 -1 284
 Width: 2048
@@ -3410,6 +3693,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.359
 Encoding: 285 -1 285
 Width: 2048
@@ -3418,6 +3702,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.360
 Encoding: 286 -1 286
 Width: 2048
@@ -3426,6 +3711,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.361
 Encoding: 287 -1 287
 Width: 2048
@@ -3434,6 +3720,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.362
 Encoding: 288 -1 288
 Width: 2048
@@ -3442,6 +3729,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.363
 Encoding: 289 -1 289
 Width: 2048
@@ -3450,6 +3738,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.364
 Encoding: 290 -1 290
 Width: 2048
@@ -3458,6 +3747,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.365
 Encoding: 291 -1 291
 Width: 2048
@@ -3466,6 +3756,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.366
 Encoding: 292 -1 292
 Width: 2048
@@ -3474,6 +3765,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.367
 Encoding: 293 -1 293
 Width: 2048
@@ -3482,6 +3774,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.368
 Encoding: 294 -1 294
 Width: 2048
@@ -3490,6 +3783,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.369
 Encoding: 295 -1 295
 Width: 2048
@@ -3498,6 +3792,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.370
 Encoding: 296 -1 296
 Width: 2048
@@ -3506,6 +3801,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.371
 Encoding: 297 -1 297
 Width: 2048
@@ -3514,6 +3810,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.372
 Encoding: 298 -1 298
 Width: 2048
@@ -3522,6 +3819,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.373
 Encoding: 299 -1 299
 Width: 2048
@@ -3530,6 +3828,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.374
 Encoding: 300 -1 300
 Width: 2048
@@ -3538,6 +3837,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.375
 Encoding: 301 -1 301
 Width: 2048
@@ -3546,6 +3846,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.376
 Encoding: 302 -1 302
 Width: 2048
@@ -3554,6 +3855,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.377
 Encoding: 303 -1 303
 Width: 2048
@@ -3562,6 +3864,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.378
 Encoding: 304 -1 304
 Width: 2048
@@ -3570,6 +3873,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.379
 Encoding: 305 -1 305
 Width: 2048
@@ -3578,6 +3882,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.380
 Encoding: 306 -1 306
 Width: 2048
@@ -3586,6 +3891,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.381
 Encoding: 307 -1 307
 Width: 2048
@@ -3594,6 +3900,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.382
 Encoding: 308 -1 308
 Width: 2048
@@ -3602,6 +3909,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.383
 Encoding: 309 -1 309
 Width: 2048
@@ -3610,6 +3918,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.384
 Encoding: 310 -1 310
 Width: 2048
@@ -3618,6 +3927,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.385
 Encoding: 311 -1 311
 Width: 2048
@@ -3626,6 +3936,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.386
 Encoding: 312 -1 312
 Width: 2048
@@ -3634,6 +3945,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.387
 Encoding: 313 -1 313
 Width: 2048
@@ -3642,6 +3954,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.388
 Encoding: 314 -1 314
 Width: 2048
@@ -3650,6 +3963,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.389
 Encoding: 315 -1 315
 Width: 2048
@@ -3658,6 +3972,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.390
 Encoding: 316 -1 316
 Width: 2048
@@ -3666,6 +3981,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.391
 Encoding: 317 -1 317
 Width: 2048
@@ -3674,6 +3990,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.392
 Encoding: 318 -1 318
 Width: 2048
@@ -3682,6 +3999,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.393
 Encoding: 319 -1 319
 Width: 2048
@@ -3690,6 +4008,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.394
 Encoding: 320 -1 320
 Width: 2048
@@ -3698,6 +4017,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.395
 Encoding: 321 -1 321
 Width: 2048
@@ -3706,6 +4026,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.396
 Encoding: 322 -1 322
 Width: 2048
@@ -3714,6 +4035,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.397
 Encoding: 323 -1 323
 Width: 2048
@@ -3722,6 +4044,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.398
 Encoding: 324 -1 324
 Width: 2048
@@ -3730,6 +4053,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.399
 Encoding: 325 -1 325
 Width: 2048
@@ -3738,6 +4062,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.400
 Encoding: 326 -1 326
 Width: 2048
@@ -3746,6 +4071,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.401
 Encoding: 327 -1 327
 Width: 2048
@@ -3754,6 +4080,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.402
 Encoding: 328 -1 328
 Width: 2048
@@ -3762,6 +4089,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.403
 Encoding: 329 -1 329
 Width: 2048
@@ -3770,6 +4098,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.404
 Encoding: 330 -1 330
 Width: 2048
@@ -3778,6 +4107,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.405
 Encoding: 331 -1 331
 Width: 2048
@@ -3786,6 +4116,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.406
 Encoding: 332 -1 332
 Width: 2048
@@ -3794,6 +4125,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.407
 Encoding: 333 -1 333
 Width: 2048
@@ -3802,6 +4134,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.408
 Encoding: 334 -1 334
 Width: 2048
@@ -3810,6 +4143,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.409
 Encoding: 335 -1 335
 Width: 2048
@@ -3818,6 +4152,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.410
 Encoding: 336 -1 336
 Width: 2048
@@ -3826,6 +4161,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.411
 Encoding: 337 -1 337
 Width: 2048
@@ -3834,6 +4170,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.412
 Encoding: 338 -1 338
 Width: 2048
@@ -3842,6 +4179,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.413
 Encoding: 339 -1 339
 Width: 2048
@@ -3850,6 +4188,7 @@ Flags: W
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
+
 StartChar: NameMe.414
 Encoding: 340 -1 340
 Width: 2048

@@ -69,6 +69,7 @@
 \setbox\Initial=\hbox{\fontofinitial #1}%
 \global\initialwidth=\the\wd\Initial%
 \lower\textlower\copy\Initial%
+\hskip\afterinitialshift %
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -195,6 +196,7 @@
 \def\setlinesclef#1#2{%
 \localleftbox{%
 \copy\Lines% draws the lines
+\unkern %
 \typekey{#1}{#2}{0}%
 }%
 }
@@ -217,15 +219,15 @@
 \fi%
 \ifx c#1% we check if it is a c key
 \ifcase#3%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 1}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 1\hskip\spaceafterlineclef}%
 \or%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 3}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 3\hskip\spaceafterlineclef}%
 \fi%
 \else % we consider that it is a f key
 \ifcase#3%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 2}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 2\hskip\spaceafterlineclef}%
 \or%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 4}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 4\hskip\spaceafterlineclef}%
 \fi%
 \fi%
 }
@@ -235,7 +237,6 @@
 \def\setinitialclef#1#2{%
 \typekey{#1}{#2}{0}%
 \setlinesclef{#1}{#2}%
-\hskip\spaceafterlineclef%
 }
 
 % macro called when the key changes
@@ -324,25 +325,42 @@
 % \glyphraisevalue is the value of which we must raise one glyph (that will vary with every glyph)
 \newdimen\glyphraisevalue 
 
+% \addedraisevalue is for the vertical episema and the puncta
+\newdimen\addedraisevalue
+
 % a temporary count
 \newcount\tempcount
+
+% a boolean : 0 if the note is not a line, else 1
+\newcount\isonaline
 
 % a very useful macro : it determines the good height of a glyph : the argument is the "number" where the glyph should be : 4 for the first line, 6 for the second, etc.
 % the second argument is for the cases of signs: for example if the note is on a line, the punctummora will be above, and the auctus duplex beneath. the possible values are:
 %% 0: no modification
 %% 1: puts the value on the interline just above if it is on a line
 %% 2: puts the value on the interline just beneath if it is on a line
+%% 3: case of the vertical episemus, which is not placed at the same place if the corresponding note is on a line or not
+%% 4: case of the punctum mora, for the same reason
 \def\calculateglyphraisevalue#1#2{%
+%\addedraisevalue=0 %
+\glyphraisevalue=0.159 em %
+\global\isonaline=\number 0%
 \ifx a#1%
 \global\tempcount=\number 1%
 \fi%
 \ifx b#1%
 \global\tempcount=\number 2%
 \ifcase#2 %
-\or%
+\or% 1
 \advance\tempcount by 1%
-\or%
+\or% 2
 \advance\tempcount by -1%
+\or% 3
+\advance\tempcount by -1%
+\addedraisevalue = 0.05 em %
+\or% 4
+\advance\tempcount by 1%
+\addedraisevalue = -0.04 em%
 \fi%
 \fi%
 \ifx c#1%
@@ -351,10 +369,16 @@
 \ifx d#1%
 \global\tempcount=\number 4%
 \ifcase#2 %
-\or%
+\or% 1
 \advance\tempcount by 1%
-\or%
+\or% 2
 \advance\tempcount by -1%
+\or% 3
+\advance\tempcount by -1%
+\addedraisevalue = 0.05 em %
+\or% 4
+\advance\tempcount by 1%
+\addedraisevalue = -0.04 em%
 \fi%
 \fi%
 \ifx e#1%
@@ -363,10 +387,16 @@
 \ifx f#1%
 \global\tempcount=\number 6%
 \ifcase#2 %
-\or%
+\or% 1
 \advance\tempcount by 1%
-\or%
+\or% 2
 \advance\tempcount by -1%
+\or% 3
+\advance\tempcount by -1%
+\addedraisevalue = 0.05 em %
+\or% 4
+\advance\tempcount by 1%
+\addedraisevalue = -0.04 em%
 \fi%
 \fi%
 \ifx g#1%
@@ -375,10 +405,16 @@
 \ifx h#1%
 \global\tempcount=\number 8%
 \ifcase#2 %
-\or%
+\or% 1
 \advance\tempcount by 1%
-\or%
+\or% 2
 \advance\tempcount by -1%
+\or% 3
+\advance\tempcount by -1%
+\addedraisevalue = 0.05 em %
+\or% 4
+\advance\tempcount by 1%
+\addedraisevalue = -0.04 em%
 \fi%
 \fi%
 \ifx i#1%
@@ -387,10 +423,16 @@
 \ifx j#1%
 \global\tempcount=\number 10%
 \ifcase#2 %
-\or%
+\or% 1
 \advance\tempcount by 1%
-\or%
+\or% 2
 \advance\tempcount by -1%
+\or% 3
+\advance\tempcount by -1%
+\addedraisevalue = 0.05 em %
+\or% 4
+\advance\tempcount by 1%
+\addedraisevalue = -0.04 em%
 \fi%
 \fi%
 \ifx k#1%
@@ -399,22 +441,34 @@
 \ifx l#1%
 \global\tempcount=\number 12%
 \ifcase#2 %
-\or%
+\or% 1
 \advance\tempcount by 1%
-\or%
+\or% 2
 \advance\tempcount by -1%
+\or% 3
+\advance\tempcount by -1%
+\addedraisevalue = 0.05 em %
+\or% 4
+\advance\tempcount by 1%
+\addedraisevalue = -0.04 em%
 \fi%
 \fi%
 \ifx m#1%
 \global\tempcount=\number 13%
 \fi%
+% if the note is on a line, we change its height
+%\isonaline %
+%\showthe\isonaline%
 \advance\tempcount by -7 %
-\glyphraisevalue=0.159 em %
 \multiply \glyphraisevalue by \the\tempcount %
+\advance\glyphraisevalue by \the\addedraisevalue %
 \advance\glyphraisevalue by 1.024 em % where the 0 must be
 \multiply\glyphraisevalue by \the\factor %
-\global\tempcount=0
+\global\tempcount=0%
+\global\isonaline=0 %
+\addedraisevalue=0 pt%
 }
+
 
 % count that tells us if the current glyph is the first glyph or not. It it is the case, we determine
 \newcount\firstglyph
@@ -495,7 +549,7 @@
 \advance\tempnote by -\thirdnote %
 \advance\interval by \tempnote %
 \advance\interval by 28672 %
-\glyph{^^^^\the\interval}{#1}{#3}{0}%
+\glyph{\char \the\interval}{#1}{#3}{0}%
 }
 
 % the width of the last glyph, including the width of the text which is after
@@ -569,7 +623,7 @@
 
 \def\punctummora#1{%
 \hskip\spacebeforesigns%
-\calculateglyphraisevalue{#1}{1}%
+\calculateglyphraisevalue{#1}{4}%
 \raise \glyphraisevalue \hbox{\gregorianfont \char 14}%
 }
 
@@ -629,7 +683,7 @@
 %% 13: idem, with an oriscus
 
 \def\vepisemus#1#2{%
-\calculateglyphraisevalue{#1}{2}%
+\calculateglyphraisevalue{#1}{3}%
 \ifcase#2 %
 %case 0
 \vepisemusaux{0}{\char 17}{0}%
@@ -638,20 +692,20 @@
 \vepisemusaux{0}{\char 13}{0}%
 \or%
 %case 2
-% ^^^^6801 is a kind of flexus, it has the good width
-\vepisemusaux{^^^^6801}{\char 17}{1}%
+% \char 6801 is a kind of flexus, it has the good width
+\vepisemusaux{\char 26625}{\char 17}{1}%
 \or%
 %case 3
-% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say ^^^^3a01
-\vepisemusaux{0}{^^^^3a01}{1}%
+% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say \char 3a01
+\vepisemusaux{0}{\char 14849}{1}%
 \or%
 %case 4
-% ^^^^7006 is a torculus, it has the good width
-\vepisemusaux{^^^^7006}{\char 17}{1}%
+% \char 7006 is a torculus, it has the good width
+\vepisemusaux{\char 28678}{\char 17}{1}%
 \or%
 %case 5
-% ^^^^7206 is a torculus deminutus, it has the good width
-\vepisemusaux{^^^^7206}{\char 17}{1}%
+% \char 7206 is a torculus deminutus, it has the good width
+\vepisemusaux{\char 29190}{\char 17}{1}%
 \or%
 %case 6
 \vepisemusaux{0}{\char 17}{2}%
@@ -717,7 +771,7 @@
 %% 13: idem, with a quilisma
 %% 14: idem, with an oriscus
 \def\hepisemus#1#2#3{%
-\calculateglyphraisevalue{#1}{2}%
+\calculateglyphraisevalue{#1}{1}%
 \ifcase#2 %
 %case 0
 \hepisemusaux{\char 17}{40}{1}%
@@ -726,20 +780,20 @@
 \hepisemusaux{\char 13}{42}{1}%
 \or%
 %case 2
-% ^^^^6801 is a kind of flexus, it has the good width
-\hepisemusaux{^^^^6801}{40}{1}%
+% \char 6801 is a kind of flexus, it has the good width
+\hepisemusaux{\char 26625}{40}{1}%
 \or%
 %case 3
-% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say ^^^^3a01
-\hepisemusaux{^^^^3a01}{40}{1}%
+% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say \char 3a01
+\hepisemusaux{\char 14849}{40}{1}%
 \or%
 %case 4
-% ^^^^7006 is a torculus, it has the good width
-\hepisemusaux{^^^^7006}{40}{1}%
+% \char 7006 is a torculus, it has the good width
+\hepisemusaux{\char 28678}{40}{1}%
 \or%
 %case 5
-% ^^^^7206 is a torculus deminutus, it has the good width
-\hepisemusaux{^^^^7206}{40}{1}%
+% \char 7206 is a torculus deminutus, it has the good width
+\hepisemusaux{\char 29190}{40}{1}%
 \or%
 %case 6
 \hepisemusaux{0}{40}{0}%
@@ -818,20 +872,36 @@
 % count that will be 0 if in the last text there was no dash (or if it is the beginning of a word, and 1 if there was
 \newcount\previousdash
 
+%\attributedef\potentialdash 1
+%\potentialdash=1
+%\attributedef {potentialdash} 16
+
+% \zerowidthdash is a special character that will be treated by lua after the linebreak algorithm, see lua part of the file for more details
+%\newbox\Zerowidthdash
+%\setbox\Zerowidthdash=\hbox to 0pt{\hbox to 1pt{}}
 
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : the first letters of the syllable, that don't count for the alignment
 % #2 : the middle letters of the syllable, we must align in the middle of them
 % #3 : the end letters, they don't count
-% #4 : end of word : if it is 0 it means it is not an end of word, if it is 1 it is
-% (not used anymore) #5 : beggining of word : if it is 0 it means it is not a beginning of word, if it is 1 it is
+% #4 : end of word : if it is 0 it means it is not an end of word, if it is 1 it is, 2 if it is the end of the score
+% TODO: find another system for the end syllable
+%% #5 (not used anymore) : beggining of word : if it is 0 it means it is not a beginning of word, if it is 1 it is
 % #5 : glyphs : all the notes
-
 \def\syllable#1#2#3#4#5{%
+\ifcase#4%
+\or\or%
+\localleftbox{}%
+\localrightbox{}%
+\fi%
 \firstglyph=1%
 \findtextaligncenter{#1}{#2}{#3}% we first get the width between the alignment point and the end of the syllable
 \syllablenotes{#5}% we put the notes in a box, so that we have the width of it
-\setbox\Syllabletext=\hbox{\textfont #1#2#3}%
+%\potentialdash=2 %
+\setbox\Syllabletext=\hbox{\textfont #1#2#3%
+%\hbox to 0pt{\hbox to 0pt{}}%
+}%
+%\potentialdash=1 %
 \ifcase#4 %
 % we enter here if the end of word is 0, so we must determine if we need to type the gragorio dash here
 % we determine if \wd\Syllablenotes > tempwidth (width of text without dash) + \gregoriotextdashwidth - textaligncenter + notesaligncenter
@@ -840,10 +910,20 @@
 \advance\temp by -\textaligncenter %
 \advance\temp by \notesaligncenter %
 \ifdim\wd\Syllablenotes>\temp %
-\setbox\Syllabletext=\hbox{\textfont #1#2#3\gregoriotextdash}%
+%\potentialdash=2 %
+\setbox\Syllabletext=\hbox{\textfont #1#2#3%
+\gregoriotextdash%
+%\hbox to 0pt{\hbox to 0pt{}}%
+}%
 \global\previousdash=1 %
+%\potentialdash=1 %
 \else%
-\setbox\Syllabletext=\hbox{\textfont #1#2#3}%
+%\potentialdash=3 %
+\setbox\Syllabletext=\hbox{\textfont #1#2#3%
+%\gregoriotextdash%
+%\hbox to 0pt{\hbox to 0pt{}}%
+}%
+%\potentialdash=1 %
 \global\previousdash=0 %
 \fi%
 \fi%
@@ -1053,6 +1133,48 @@
 %macro called at the beginning of a score
 \def\begingregorioscore{%
 \noindent%
+%\directlua0 {%
+%local hlist = node.id('hlist')
+%tempnode=node.new(node.id('glyph'), 0)
+%tempnode.font=65 % TODO : don't know why 65...
+%tempnode.char=tex.defaulthyphenchar
+%dashnode=node.hpack(tempnode)
+%dashnode.shift=393216 % TODO : a less static value
+%function addhyphen(h, groupcode, glyphes)
+%    local lastseennode=nil
+%    local attributeid=1
+%    local potentialdashvalue=3
+%    local nopotentialdashvalue=2
+%    local adddash=false
+%    % we explore the lines
+%    for a in node.traverse_id(hlist, h) do
+%        for b in node.traverse_id(hlist, a.list) do
+%            if adddash == false then
+%                if node.has_attribute(b, attributeid, potentialdashvalue) then
+%                    adddash=true
+%                    lastseennode=b
+%                    attr = b.attr.next
+%                    %texio.write_nl('ATTR number = ' .. attr.number .. ' value = ' .. attr.value)
+%                end
+%            else
+%                if node.has_attribute(b, attributeid, nopotentialdashvalue) then
+%                    adddash=false
+%                    attr = b.attr.next
+%                    %texio.write_nl('ATTR number = ' .. attr.number .. ' value = ' .. attr.value)
+%                end 
+%            end
+%        end
+%        if adddash==true then
+%            local temp= node.copy(dashnode)
+%            %TODO: remove the last glue in b first, and insert a glue of ancient glue - withdof(dashnode) after the dash
+%            node.insert_after(a.list, b, temp)
+%            addash=false
+%        end
+%    end
+%    return true
+%end 
+%callback.register('post_linebreak_filter', addhyphen)
+%}%
 }
 
 %macro called at the beginning of a score
@@ -1101,6 +1223,7 @@
 %% 3: shift when there is a punctum_inclinatum after
 %% 4: space between bivirga or bistropha
 %% 5: space between tristropha or trivirga
+%% 6: space after a punctum % TODO: use it
 
 \def\endofglyph#1{%
 \ifcase#1%
@@ -1115,6 +1238,8 @@
 \hskip\bispace %
 \or%
 \hskip\trispace %
+\or%
+\hskip\spaceaftersigns %
 \fi%
 \penalty 10001%
 }
@@ -1162,6 +1287,11 @@
 \spacebeforesigns=0.05em plus 0.005em minus 0.005em
 \multiply\spacebeforesigns by \factor
 
+% space after punctum mora and augmentum duplex
+\newskip\spaceaftersigns
+\spaceaftersigns=0.09em plus 0.009em minus 0.009em
+\multiply\spaceaftersigns by \factor
+
 % space after a clef at the beginning of a line
 \newskip\spaceafterlineclef
 \spaceafterlineclef=0.165em plus 0.0165em minus 0.0165em
@@ -1192,6 +1322,9 @@
 \punctuminclinatumshift=-0.040em plus 0.004em minus 0.004em
 \multiply\punctuminclinatumshift by \factor
 
+% space between the initial and the beginning of the score
+\newskip\afterinitialshift
+\afterinitialshift=0.6 em plus 0.1em minus 0.1em
 
 % space between notes of different syllables in the same word, but seem to be useless
 %\newskip\intersyllablenotesspace
@@ -1211,10 +1344,10 @@
 % we open the font at \factor pt, we must know \factor because it will determine the line heigth, etc.
 \font\gregorianfont=gregorio at \the\factor em
 
-\font\gregoriantextfont=gregorio at 12pt
+\font\gregoriantextfont=gregorio at 11pt
 
-\font\textfont=pncr at 12pt
-\font\fontofinitial=pncr at 40pt
+\font\textfont=pncr at 11pt
+\font\fontofinitial=pncr at 38pt
 
 % the macros to typeset the A, R and V with bar
 \def\Abar{%
@@ -1227,6 +1360,15 @@
 
 \def\Vbar{%
 {\gregoriantextfont \char 68}%
+}
+
+% the macro to write a cross
+\def\gcross{%
+}
+
+%the macro to write a star
+\def\gstar{%
+\raise -0.1em\hbox{*}%
 }
 
 \def\setgregorianfont#1{%
