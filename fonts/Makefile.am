@@ -21,12 +21,12 @@ $(gregorio_PFB): gregorio.pe gregorio-base.sfd
 $(gregorio_TFM): $(gregorio_PFB)
 
 gregorio_PFB= \
-        gregorio-0.pfb \
-        gregorio-1.pfb \
-        gregorio-2.pfb \
-        gregorio-3.pfb \
-        gregorio-4.pfb \
-        gregorio-5.pfb
+	gregorio-0.pfb \
+	gregorio-1.pfb \
+	gregorio-2.pfb \
+	gregorio-3.pfb \
+	gregorio-4.pfb \
+	gregorio-5.pfb
 
 gregorio_TFM= $(gregorio_PFB:.pfb=.tfm)
 gregorio_PL= $(gregorio_PFB:.pfb=.pl)
@@ -42,12 +42,12 @@ $(parmesan_PFB): parmesan.pe parmesan-base.sfd
 $(parmesan_TFM): $(parmesan_PFB)
 
 parmesan_PFB= \
-        parmesan-0.pfb \
-        parmesan-1.pfb \
-        parmesan-2.pfb \
-        parmesan-3.pfb \
-        parmesan-4.pfb \
-        parmesan-5.pfb
+	parmesan-0.pfb \
+	parmesan-1.pfb \
+	parmesan-2.pfb \
+	parmesan-3.pfb \
+	parmesan-4.pfb \
+	parmesan-5.pfb
 
 parmesan_TFM= $(parmesan_PFB:.pfb=.tfm)
 parmesan_PL= $(parmesan_PFB:.pfb=.pl)
@@ -63,12 +63,12 @@ $(greciliae_PFB): greciliae.pe greciliae-base.sfd
 $(greciliae_TFM): $(greciliae_PFB)
 
 greciliae_PFB= \
-        greciliae-0.pfb \
-        greciliae-1.pfb \
-        greciliae-2.pfb \
-        greciliae-3.pfb \
-        greciliae-4.pfb \
-        greciliae-5.pfb
+	greciliae-0.pfb \
+	greciliae-1.pfb \
+	greciliae-2.pfb \
+	greciliae-3.pfb \
+	greciliae-4.pfb \
+	greciliae-5.pfb
 
 greciliae_TFM= $(greciliae_PFB:.pfb=.tfm)
 greciliae_PL= $(greciliae_PFB:.pfb=.pl)
@@ -91,12 +91,15 @@ FONTS=$(all_PFB) $(all_TFM) $(all_OVF) $(all_OFM) $(all_OVP)
 
 noinst_DATA = $(FONTS)
 
-EXTRA_DIST = squarize.py create-ovp.perl greciliae-base.sfd parmesan-base.sfd gregorio-base.sfd FONTLOG README
+EXTRA_DIST = squarize.py create-ovp.perl parmesan-base.sfd greciliae-base.sfd gregorio-base.sfd FONTLOG README
 
 ## rules for the files to clean
 
-ENC=$(all_PFB:.pfb=.enc)
-AFM=$(all_PFB:.pfb=.afm)
-PL=$(all_PFB:.pfb=.pl)
+PFB=$(parmesan_PFB) $(gregorio_PFB) $(greciliae_PFB)
 
-CLEANFILES=$(ENC) $(AFM) $(PL) $(FONTS) *.pe
+ENC=$(PFB:.pfb=.enc)
+AFM=$(PFB:.pfb=.afm)
+PL=$(PFB:.pfb=.pl)
+
+CLEANFILES=$(ENC) $(AFM) $(PL) $(FONTS) squarize-*.pe
+
