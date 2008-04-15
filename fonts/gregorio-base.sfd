@@ -17,7 +17,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1207391007
+ModificationTime: 1208273226
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -39,9 +39,9 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 0 12 6
+WinInfo: 36 12 6
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 341 341
+BeginChars: 342 342
 
 StartChar: _0017
 Encoding: 0 66 0
@@ -607,14 +607,14 @@ Flags: HW
 Validated: 1
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-164 -21.5 m 25
- 155.42 -21.5 142 -21.5 142 -21.5 c 0
- 137.5 -9.5 112 5.5 76 5.5 c 0
+164 -21.5 m 29
+ 155.42 -21.5 142 -21.5 142 -21.5 c 4
+ 137.5 -9.5 112 5.5 76 5.5 c 4
  46.5 5.5 15 0.65625 0 -10 c 5
- 0 146 l 1
- 20 157 49.417 162 82 162 c 24
- 114.583 162 144 154 164 146 c 9
- 164 -21.5 l 25
+ 0 146 l 5
+ 20 157 49.417 162 82 162 c 28
+ 114.583 162 144 154 164 146 c 13
+ 164 -21.5 l 29
 EndSplineSet
 EndChar
 
@@ -1384,7 +1384,7 @@ StartChar: hepisemus_base
 Encoding: 66 -1 66
 Width: 1
 VWidth: 2048
-Flags: HWO
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 64 m 25
@@ -1894,13 +1894,22 @@ Fore
 EndSplineSet
 EndChar
 
-StartChar: NameMe.159
+StartChar: phigh
 Encoding: 85 -1 85
-Width: 2048
+Width: 154
 VWidth: 2048
-Flags: W
-Validated: 1
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+154 -26 m 29
+ 146 -26 133 -26 133 -26 c 4
+ 129 -14 105 2 71 2 c 4
+ 44 2 14 -3 0 -14 c 5
+ 0 142 l 5
+ 19 153 46 158 77 158 c 28
+ 108 158 135 150 154 142 c 13
+ 154 -26 l 29
+EndSplineSet
 EndChar
 
 StartChar: NameMe.160
@@ -4195,6 +4204,14 @@ Width: 2048
 VWidth: 2048
 Flags: W
 Validated: 1
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+
+StartChar: NameMe.415
+Encoding: 341 -1 341
+Width: 2048
+VWidth: 2048
+Flags: W
 HStem: -409 15 -94 15 221 15 536 15
 EndChar
 EndChars

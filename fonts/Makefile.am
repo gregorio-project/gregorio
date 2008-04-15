@@ -56,13 +56,34 @@ parmesan_OFM=parmesan.ofm
 parmesan_OVF=parmesan.ovf
 parmesan_OVP=parmesan.ovp
 
+## greciliae rules
+$(greciliae_PFB): greciliae.pe greciliae-base.sfd
+	$(FONTFORGE) greciliae.pe
+
+$(greciliae_TFM): $(greciliae_PFB)
+
+greciliae_PFB= \
+        greciliae-0.pfb \
+        greciliae-1.pfb \
+        greciliae-2.pfb \
+        greciliae-3.pfb \
+        greciliae-4.pfb \
+        greciliae-5.pfb
+
+greciliae_TFM= $(greciliae_PFB:.pfb=.tfm)
+greciliae_PL= $(greciliae_PFB:.pfb=.pl)
+
+greciliae_OFM=greciliae.ofm
+greciliae_OVF=greciliae.ovf
+greciliae_OVP=greciliae.ovp
+
 ## rules tu put all this in common
 
-all_PFB= $(parmesan_PFB) $(gregorio_PFB)
-all_TFM= $(parmesan_TFM) $(gregorio_TFM)
-all_OVF= $(parmesan_OVF) $(gregorio_OVF)
-all_OVP= $(parmesan_OVP) $(gregorio_OVP)
-all_OFM= $(parmesan_OFM) $(gregorio_OFM)
+all_PFB= $(parmesan_PFB) $(gregorio_PFB) $(greciliae_PFB)
+all_TFM= $(parmesan_TFM) $(gregorio_TFM) $(greciliae_TFM)
+all_OVF= $(parmesan_OVF) $(gregorio_OVF) $(greciliae_OVF)
+all_OVP= $(parmesan_OVP) $(gregorio_OVP) $(greciliae_OVP)
+all_OFM= $(parmesan_OFM) $(gregorio_OFM) $(greciliae_OFM)
 
 ## build rules
 
@@ -70,14 +91,12 @@ FONTS=$(all_PFB) $(all_TFM) $(all_OVF) $(all_OFM) $(all_OVP)
 
 noinst_DATA = $(FONTS)
 
-EXTRA_DIST = squarize.py create-ovp.perl parmesan-base.sfd gregorio-base.sfd FONTLOG README
+EXTRA_DIST = squarize.py create-ovp.perl greciliae-base.sfd parmesan-base.sfd gregorio-base.sfd FONTLOG README
 
 ## rules for the files to clean
 
-PFB=$(parmesan_PFB) $(gregorio_PFB)
+ENC=$(all_PFB:.pfb=.enc)
+AFM=$(all_PFB:.pfb=.afm)
+PL=$(all_PFB:.pfb=.pl)
 
-ENC=$(PFB:.pfb=.enc)
-AFM=$(PFB:.pfb=.afm)
-PL=$(PFB:.pfb=.pl)
-
-CLEANFILES=$(ENC) $(AFM) $(PL) $(FONTS) squarize-*.pe
+CLEANFILES=$(ENC) $(AFM) $(PL) $(FONTS) *.pe

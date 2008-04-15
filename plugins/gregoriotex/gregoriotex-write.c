@@ -56,6 +56,10 @@ write_score (FILE * f, gregorio_score * score)
 	{
 	  fprintf (f, "\\setgregorianfont{parmesan}%%\n");
 	}
+      if (!strcmp (score->gregoriotex_font, "greciliae"))
+	{
+	  fprintf (f, "\\setgregorianfont{greciliae}%%\n");
+	}
     }
 // first we draw the initial (first letter) and the initial key
   first_text = libgregorio_first_text (score);
