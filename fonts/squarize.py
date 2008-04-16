@@ -179,7 +179,7 @@ def initialize_lengths():
         #width of a stropha (idem for the stropha aucta)
         width_stropha=164
         #with of the second (highest) note of a pes
-        width_high_pes=164
+        width_high_pes=154
         # the width of the punctum inclinatum deminutus (no need to add the width of a line)
         width_inclinatum_deminutus=82
         # the width of the note which is just before a deminutus, in some fonts it is not the same width as a punctum
@@ -199,7 +199,7 @@ def initialize_lengths():
         width_deminutus=75
         width_inclinatum=178
         width_stropha=169
-        width_high_pes=161
+        width_high_pes=151
         width_inclinatum_deminutus=112
         width_flexusdeminutus=161
         porrectusflexuswidths=(340,428,586,670,931)
