@@ -24,10 +24,10 @@ void write_score (FILE * f, gregorio_score * score);
 
 void libgregorio_opustex_write_syllable (FILE * f,
 					 gregorio_syllable * syllable,
-					 char first_syllable);
+					 char *first_syllable);
 
 void libgregorio_opustex_write_text (FILE * f, gregorio_character *first_character,
-				     char first_syllable);
+				     char *first_syllable);
 
 void libgregorio_opustex_write_element (FILE * f, gregorio_element * element);
 

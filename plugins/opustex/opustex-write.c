@@ -97,7 +97,7 @@ write_score (FILE * f, gregorio_score * score)
   while (current_syllable)
     {
       libgregorio_opustex_write_syllable (f, current_syllable,
-					  first_syllable);
+					  &first_syllable);
       current_syllable = current_syllable->next_syllable;
     }
   fprintf (f, "\\bye\n");
@@ -130,7 +130,7 @@ is_even (int c)
 
 void
 libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
-				    char first_syllable)
+				    char *first_syllable)
 {
   char finis = 0;
   char next_note;
@@ -518,6 +518,9 @@ libgregorio_otex_print_char (FILE * f, wchar_t to_print)
     case L'î':
       fprintf (f, "\\^i ");
       break;
+    case L'í':
+      fprintf (f, "\\'i ");
+      break;
     case L'û':
       fprintf (f, "\\^u ");
       break;
@@ -535,7 +538,7 @@ libgregorio_otex_print_char (FILE * f, wchar_t to_print)
 
 void
 libgregorio_opustex_write_text (FILE * f, gregorio_character * text,
-				char first_syllable)
+				char *first_syllable)
 {
   if (text == NULL)
     {
@@ -543,15 +546,15 @@ libgregorio_opustex_write_text (FILE * f, gregorio_character * text,
       return;
     }
   fprintf (f, "{");
-  libgregorio_write_text (first_syllable, text, f,
+  libgregorio_write_text (*first_syllable, text, f,
 			  (&libgregorio_otex_write_verb),
 			  (&libgregorio_otex_print_char),
 			  (&libgregorio_otex_write_begin),
 			  (&libgregorio_otex_write_end),
 			  (&libgregorio_otex_write_special_char));
-  if (first_syllable)
+  if (*first_syllable)
     {
-      first_syllable = 0;
+      *first_syllable = 0;
     }
   fprintf (f, "}");
 }
