@@ -71,7 +71,7 @@ liquescentiae={
 
 # a list of temporary glyphs, that must be removed from the finame font
 
-toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase', 'hepisemus_base','letterbar', 'phigh']
+toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase', 'hepisemus_base','letterbar', 'phigh', 'hepisemusleft', 'hepisemusright']
 
 # in the police, all the free glyphs have the name NameMexxxx where xxxx is a number starting from 141 and increasing by one. For example each new glyph will be basically NameMecount, the next NameMecount+1, etc. They are initiated in initalize_glyphs()
 initialcount=0
@@ -154,7 +154,7 @@ def initialize_glyphs():
         glyphs_to_append=("_1025",)
     for glyphnumber in glyphs_to_append:
         initial_glyphs.append(glyphnumber)
-    initialcount=160
+    initialcount=162
     count=initialcount
 
 #function in which we initialize the lenghts, depending on the font
@@ -377,6 +377,8 @@ def write_hepisemus(shape_width, glyphname):
     simple_paste("hepisemus_base", glyphname)
     scale(shape_width + 2*hepisemus_additional_width, 1)
     move(-hepisemus_additional_width, 0)
+    paste_and_move("hepisemusleft", glyphname, -hepisemus_additional_width, 0)
+    paste_and_move("hepisemusright", glyphname, shape_width + hepisemus_additional_width, 0)
     set_width(shape_width)
     end_glyph(glyphname)
 

@@ -17,7 +17,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1208695711
+ModificationTime: 1208944006
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -41,7 +41,7 @@ AntiAlias: 1
 FitToEm: 1
 WinInfo: 36 12 6
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 342 342
+BeginChars: 344 344
 
 StartChar: _0017
 Encoding: 0 66 0
@@ -1396,12 +1396,12 @@ StartChar: hepisemus_base
 Encoding: 66 -1 66
 Width: 1
 VWidth: 2048
-Flags: HWO
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 Fore
 0 64 m 29
- 0 103.83 l 29
- 1 103.83 l 29
+ 0 96 l 29
+ 1 96 l 29
  1 64 l 29
  0 64 l 29
 EndSplineSet
@@ -1928,20 +1928,34 @@ Fore
 EndSplineSet
 EndChar
 
-StartChar: NameMe.160
+StartChar: hepisemusleft
 Encoding: 86 -1 86
-Width: 2048
+Width: 1
 VWidth: 2048
-Flags: W
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+-2 64 m 29
+ 0 91 l 29
+ 1 91 l 29
+ 1 64 l 29
+ -2 64 l 29
+EndSplineSet
 EndChar
 
-StartChar: NameMe.161
+StartChar: hepisemusright
 Encoding: 87 -1 87
-Width: 2048
+Width: 2
 VWidth: 2048
-Flags: W
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+0 64 m 29
+ -1 64 l 29
+ -1 91 l 29
+ 2 91 l 29
+ 0 64 l 29
+EndSplineSet
 EndChar
 
 StartChar: NameMe.162
@@ -3970,6 +3984,22 @@ EndChar
 
 StartChar: NameMe.415
 Encoding: 341 -1 341
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+
+StartChar: NameMe.416
+Encoding: 342 -1 342
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+
+StartChar: NameMe.417
+Encoding: 343 -1 343
 Width: 2048
 VWidth: 2048
 Flags: W
