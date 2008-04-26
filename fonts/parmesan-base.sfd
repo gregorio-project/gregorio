@@ -17,7 +17,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1209187994
+ModificationTime: 1209216601
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -39,9 +39,9 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 36 12 6
+WinInfo: 288 12 6
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 345 345
+BeginChars: 354 354
 
 StartChar: _0017
 Encoding: 0 66 0
@@ -438,18 +438,18 @@ Width: 161
 Flags: HW
 HStem: -473.75 17.1 -114.65 17.1 244.45 17.1 603.55 17.1
 Fore
-143.64 222.49 m 0x40
- 152.76 222.49 161 214.46 161 206.479 c 2x40
- 161 56 l 2
- 161 2.41992 129.96 -49.9707 79.7998 -49.9707 c 0
- 59.2803 -49.9707 13.6797 -44.2705 4.56055 -35.1504 c 0
- 2.28027 -31.7305 0 -27.1699 0 -23.75 c 2
- 0 152 l 1x80
- 18.3125 152 0.9375 152 22 152 c 1
- 22 141.812 22 148.875 22 141.792 c 1
- 32 135 49.4831 133.569 79.7998 133.569 c 0
- 111.72 133.569 127.68 170.05 127.68 206.529 c 0
- 127.68 214.51 134.521 222.49 143.64 222.49 c 0x40
+143.64 222.49 m 4x40
+ 152.76 222.49 161 214.46 161 206.479 c 6x40
+ 161 56 l 6
+ 161 2.41992 129.96 -49.9707 79.7998 -49.9707 c 4
+ 59.2803 -49.9707 13.6797 -44.2705 4.56055 -35.1504 c 4
+ 2.28027 -31.7305 0 -27.1699 0 -23.75 c 6
+ 0 152 l 5x80
+ 18.3125 152 0.9375 152 22 152 c 5
+ 22 141.812 22 148.875 22 141.792 c 5
+ 32 135 49.4831 133.569 79.7998 133.569 c 4
+ 111.72 133.569 127.68 170.05 127.68 206.529 c 4
+ 127.68 214.51 134.521 222.49 143.64 222.49 c 4x40
 EndSplineSet
 EndChar
 
@@ -1976,76 +1976,170 @@ Fore
 EndSplineSet
 EndChar
 
-StartChar: NameMe.164
+StartChar: _0072
 Encoding: 89 -1 89
-Width: 2048
-VWidth: 2048
-Flags: W
+Width: 161
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+17.0967 -4.60059 m 0x40
+ 7.97656 -4.60059 -0.00390625 2.23926 -0.00390625 11.3594 c 2
+ 0 171.672 l 5
+ 22 179.001 l 1
+ 44.7998 185.841 56.9961 188.06 79.7959 188.06 c 0
+ 129.956 188.06 161 136.18 161 82.5996 c 2x80
+ 161 -67.8799 l 2
+ 161 -75.8604 152.756 -84.4014 143.636 -84.4014 c 0
+ 134.517 -84.4014 127.676 -76.4209 127.676 -68.4404 c 0
+ 127.676 -31.9609 111.716 4.51953 79.7959 4.51953 c 0
+ 42.1758 4.51953 22.7959 -4.60059 17.0967 -4.60059 c 0x40
+EndSplineSet
 EndChar
 
-StartChar: NameMe.165
+StartChar: _0073
 Encoding: 90 -1 90
-Width: 2048
-VWidth: 2048
-Flags: W
+Width: 161
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+0 150.708 m 1x80
+ 0 -23.75 l 2
+ 0 -27.1699 2.28027 -31.7305 4.56055 -35.1504 c 0
+ 13.6797 -44.2705 59.2803 -49.9707 79.7998 -49.9707 c 0
+ 129.96 -49.9707 161 2.41992 161 56 c 2
+ 161 206.479 l 2x40
+ 161 214.46 152.76 222.49 143.64 222.49 c 0x40
+ 134.521 222.49 127.68 214.51 127.68 206.529 c 0
+ 127.68 170.05 111.72 133.569 79.7998 133.569 c 0
+ 49.4831 133.569 32.75 133.75 21.5 138.25 c 5
+ 17.5 139.25 6.5 145.208 0 150.708 c 1x80
+EndSplineSet
 EndChar
 
-StartChar: NameMe.166
+StartChar: mnbdeminutus
 Encoding: 91 -1 91
-Width: 2048
-VWidth: 2048
-Flags: W
+Width: 161
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+161 -21.5 m 5
+ 161 -21.5 140.645 -22.4869 139 -21.5 c 4
+ 129 -15.5 118.485 -5.80859 79.7246 -5.80859 c 4
+ 44.3848 -5.80859 23.8652 -21.7686 17.0254 -21.7686 c 5
+ 7.86523 -21.7686 0.384766 -13.7842 0 -4.66504 c 5
+ 0 130.972 l 5
+ 0 157.191 69.7402 163.997 80 163.997 c 4
+ 91.4004 163.997 161 157.157 161 130.938 c 6
+ 161 -21.5 l 5
+EndSplineSet
 EndChar
 
-StartChar: NameMe.167
+StartChar: mnbpdeminutus
 Encoding: 92 -1 92
-Width: 2048
-VWidth: 2048
-Flags: W
-HStem: -409 15 -94 15 221 15 536 15
+Width: 161
+Flags: HW
+HStem: 536.058 15 221.058 15 -93.9416 15 -408.942 15
+Fore
+161 163.559 m 5
+ 161 11.1201 l 6
+ 161 -15.0986 91.4004 -21.9385 80 -21.9385 c 4
+ 69.7402 -21.9385 0 -15.1328 0 11.0859 c 5
+ 0 146.724 l 5
+ 0.384766 155.843 7.86523 163.827 17.0254 163.827 c 5
+ 23.8652 163.827 44.3848 147.867 79.7246 147.867 c 4
+ 118.485 147.867 129 157.559 139 163.559 c 4
+ 140.645 164.545 161 163.559 161 163.559 c 5
+EndSplineSet
 EndChar
 
-StartChar: NameMe.168
+StartChar: porrectusflexusnb1
 Encoding: 93 -1 93
-Width: 2048
+Width: 340
 VWidth: 2048
-Flags: W
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+340 3.25 m 5
+ 340 -143.125 l 6
+ 340 -145.354 339.69 -144.775 337.76 -144.716 c 4
+ 187.5 -140.125 136.5 -110 0 -16 c 5
+ 0 155 l 6
+ 0 159.739 3.67916 157.34 7 154.75 c 4
+ 143.49 48.2977 204 -2.125 318 -6 c 5
+ 334.25 -3.75 336.5 -0.5 340 3.25 c 5
+EndSplineSet
 EndChar
 
-StartChar: NameMe.169
+StartChar: porrectusflexusnb2
 Encoding: 94 -1 94
-Width: 2048
+Width: 428
 VWidth: 2048
-Flags: W
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+428 -149 m 5
+ 428 -283.5 l 6
+ 428 -285.729 427.688 -285.188 425.76 -285.091 c 4
+ 265 -277 107 -166 0 -16 c 5
+ 0 155 l 6
+ 0 159.739 4.76959 158.322 7 154.75 c 4
+ 98 9 278 -148.625 406 -154 c 5
+ 422.75 -154.25 424.75 -152.5 428 -149 c 5
+EndSplineSet
 EndChar
 
-StartChar: NameMe.170
+StartChar: porrectusflexusnb3
 Encoding: 95 -1 95
-Width: 2048
+Width: 586
 VWidth: 2048
-Flags: W
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+586 -306.5 m 5
+ 586 -445 l 6
+ 586 -447.229 585.679 -446.792 583.76 -446.591 c 4
+ 282 -415 86 -170 0 -16 c 5
+ 0 155 l 6
+ 0 159.739 5.05344 158.485 7 154.75 c 4
+ 96 -16 328 -271 564 -315.5 c 5
+ 582 -317.75 584.25 -310.25 586 -306.5 c 5
+EndSplineSet
 EndChar
 
-StartChar: NameMe.171
+StartChar: porrectusflexusnb4
 Encoding: 96 -1 96
-Width: 2048
+Width: 670
 VWidth: 2048
-Flags: W
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+670 -434 m 5
+ 670 -570 l 6
+ 670 -572.229 669.666 -571.888 667.76 -571.591 c 4
+ 305 -515 98 -214 0 -16 c 5
+ 0 155 l 6
+ 0 159.739 5.13671 158.527 7 154.75 c 4
+ 109 -52 374 -395 648 -440.5 c 5
+ 661.75 -442.75 668 -437.75 670 -434 c 5
+EndSplineSet
 EndChar
 
-StartChar: NameMe.172
+StartChar: porrectusflexusnb5
 Encoding: 97 -1 97
-Width: 2048
+Width: 931
 VWidth: 2048
-Flags: W
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
+Fore
+931 -620.326 m 5
+ 931 -761 l 6
+ 931 -763.229 930.646 -762.992 928.76 -762.591 c 4
+ 315 -632 70 -240 0 -16 c 5
+ 0 155 l 6
+ 0 159.739 5.3553 158.627 7 154.75 c 4
+ 122.5 -117.5 382.5 -511 909 -631 c 5
+ 919 -633.333 929 -626.667 931 -620.326 c 5
+EndSplineSet
 EndChar
 
 StartChar: NameMe.173
@@ -4018,6 +4112,78 @@ EndChar
 
 StartChar: NameMe.419
 Encoding: 344 -1 344
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+
+StartChar: NameMe.420
+Encoding: 345 -1 345
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+
+StartChar: NameMe.421
+Encoding: 346 -1 346
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+
+StartChar: NameMe.422
+Encoding: 347 -1 347
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+
+StartChar: NameMe.423
+Encoding: 348 -1 348
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+
+StartChar: NameMe.424
+Encoding: 349 -1 349
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+
+StartChar: NameMe.425
+Encoding: 350 -1 350
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+
+StartChar: NameMe.426
+Encoding: 351 -1 351
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+
+StartChar: NameMe.427
+Encoding: 352 -1 352
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+EndChar
+
+StartChar: NameMe.428
+Encoding: 353 -1 353
 Width: 2048
 VWidth: 2048
 Flags: W

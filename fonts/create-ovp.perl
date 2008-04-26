@@ -48,15 +48,15 @@ my $number_of_font;
 
 if ($ARGV[0] eq "gregorio") {
 $name="gregorio";
-$number_of_font=6;
+$number_of_font=4;
 }
 elsif ($ARGV[0] eq "parmesan") {
 $name="parmesan";
-$number_of_font=6;
+$number_of_font=4;
 }
 elsif ($ARGV[0] eq "greciliae") {
 $name="greciliae";
-$number_of_font=6;
+$number_of_font=4;
 }
 else {
 usage();
