@@ -56,6 +56,7 @@ shapes={
 'flexus_nobar':13,
 'flexus_longqueue':15,
 'torculus':14,
+'alternateporrectusdeminutus':15,
 }
 
 liquescentiae={
@@ -71,7 +72,7 @@ liquescentiae={
 
 # a list of temporary glyphs, that must be removed from the finame font
 
-toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase', 'hepisemus_base','letterbar', 'phigh', 'hepisemusleft', 'hepisemusright']
+toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase', 'hepisemus_base','letterbar', 'phigh', 'hepisemusleft', 'hepisemusright', 'mpdeminutus']
 
 # in the police, all the free glyphs have the name NameMexxxx where xxxx is a number starting from 141 and increasing by one. For example each new glyph will be basically NameMecount, the next NameMecount+1, etc. They are initiated in initalize_glyphs()
 initialcount=0
@@ -154,7 +155,7 @@ def initialize_glyphs():
         glyphs_to_append=("_1025",)
     for glyphnumber in glyphs_to_append:
         initial_glyphs.append(glyphnumber)
-    initialcount=162
+    initialcount=164
     count=initialcount
 
 #function in which we initialize the lenghts, depending on the font
@@ -183,7 +184,7 @@ def initialize_lengths():
         # the width of the punctum inclinatum deminutus (no need to add the width of a line)
         width_inclinatum_deminutus=82
         # the width of the note which is just before a deminutus, in some fonts it is not the same width as a punctum
-        width_flexusdeminutus=197
+        width_flexusdeminutus=186
         # the widths of the torculus resupinus, there are five, one per note difference between the two first notes (for example the first is the width of the first two notes of baba
         porrectusflexuswidths=(340,428,586,670,931)
         porrectuswidths=(490,575,650,740,931)
@@ -217,7 +218,7 @@ def initialize_lengths():
         width_stropha=163
         width_high_pes=152
         width_inclinatum_deminutus=112
-        width_flexusdeminutus=197
+        width_flexusdeminutus=168
         porrectusflexuswidths=(503,629,628,628,931)
         porrectuswidths=(503,629,628,628,931)
         hepisemus_additional_width=40
@@ -338,7 +339,7 @@ def move(x, y):
 # a function that writes a line in glyphname, with length and height offsets
 
 def write_line(i, glyphname, length, height):
-    if (i!=1):
+    if (i>1):
         linename= "line%d" % i 
         paste_and_move(linename, glyphname, length, height)    
 
@@ -581,17 +582,21 @@ def porrectus():
     precise_message("porrectus")
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
-           write_porrectus(i,j, "phigh", 1, 'porrectus')
+            write_porrectus(i,j, "phigh", 1, 'porrectus')
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
-           write_porrectus(i,j, "phigh", 0, 'porrectus_nobar')
+            write_porrectus(i,j, "phigh", 0, 'porrectus_nobar')
     precise_message("porrectus deminutus")
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
-           write_porrectus(i,j, "rdeminutus", 1, 'porrectus', 'deminutus')
+            write_porrectus(i,j, "rdeminutus", 1, 'porrectus', 'deminutus')
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
-           write_porrectus(i,j, "rdeminutus", 0, 'porrectus_nobar', 'deminutus')
+            write_porrectus(i,j, "rdeminutus", 0, 'porrectus_nobar', 'deminutus')
+    precise_message("alternate porrectus deminutus")
+    for i in range(1, max_interval+1):
+        for j in range(1, max_interval+1):
+            write_alternate_porrectus_deminutus(i,j)
 
 
 def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):
@@ -611,6 +616,20 @@ def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):
         paste_and_move(last_glyph, glyphname, (length-width_high_pes), (j-i)*base_height)
     set_width(length)
     end_glyph(glyphname)
+
+def write_alternate_porrectus_deminutus(i,j):
+    glyphname=name(0, i, j, 'alternateporrectusdeminutus', 'deminutus')
+    begin_glyph(glyphname)
+    write_first_bar(i, glyphname)
+    simple_paste('base3', glyphname)
+    write_line(i, glyphname, width_punctum-line_width, (-i+1)*base_height)
+    simplify()
+    paste_and_move('mpdeminutus', glyphname, (width_punctum-line_width), (-i)*base_height)
+    write_line(j, glyphname, width_punctum+width_flexusdeminutus-2*line_width, (-i+1)*base_height)
+    paste_and_move('rdeminutus', glyphname, (width_punctum+width_flexusdeminutus-2*line_width-width_deminutus), (j-i)*base_height)
+    set_width(width_punctum+width_flexusdeminutus-line_width)
+    end_glyph(glyphname)
+
 
 def porrectusflexus():
     message("porrectus flexus")
