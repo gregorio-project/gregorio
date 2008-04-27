@@ -34,6 +34,7 @@
 \def\widthof#1{%
 \setbox\Tempwidth=\hbox{#1}%
 \tempwidth=\wd\Tempwidth%
+\relax%
 }
 
 
@@ -48,6 +49,7 @@
 \widthof{\textfont #2}%
 \divide\tempwidth by 2 %
 \advance\textaligncenter by -\the\tempwidth%
+\relax%
 }
 
 % definition of the dash that we will use after the text if necessary
@@ -60,7 +62,7 @@
 %% macros for the typesetting of the initial
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% box containing the initial, and dimen containing its width
+%% box containing the initial, and dimen containing its width (and the width of the space after)
 \newbox\Initial
 \newdimen\initialwidth
 \initialwidth=0pt
@@ -70,6 +72,8 @@
 \global\initialwidth=\the\wd\Initial%
 \lower\textlower\copy\Initial%
 \hskip\afterinitialshift %
+\advance\initialwidth by \afterinitialshift%
+\relax%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -77,6 +81,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\writemode#1{%
+\relax%
 }
 
 \def\gregorianmode#1{%
@@ -98,13 +103,16 @@
 \or%
 \writemode{VIII.}%
 \fi%
+\relax%
 }
 
 \def\scorereference#1{%
+\relax%
 }
 
 \def\beginscore{%
 \drawlines%
+\relax%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -113,21 +121,30 @@
 
 % factor is the factor with which you open you font (the number after the at)
 \newcount\factor
-\factor=2
+\factor=17
+
+% maybe a good idea, but hard to exploit...
+%\def\gscale#1{%
+%\global\multiply#1 by \the\factor %
+%\global\divide#1 by 10 %
+%\relax%
+%}
 
 % \stafflineheight is the height of a staff line
-\newdimen\stafflineheight \stafflineheight=0.015 em
-\multiply \stafflineheight by \the\factor 
+\newdimen\stafflineheight
+\stafflineheight=1500 sp 
+\multiply\stafflineheight by \the\factor 
 % \interstafflinespace is the space between two lines of staff
 %\newdimen\interstafflinespace \interstafflinespace=0.315\the\factor em
-\newdimen\interstafflinespace \interstafflinespace=0.3 em
-\multiply \interstafflinespace by \the\factor 
+\newdimen\interstafflinespace
+\interstafflinespace=30000 sp 
+\multiply\interstafflinespace by \the\factor 
 % \interstafflinespace is the width of a line
-\newdimen\linewidth \linewidth=\hsize
+\newdimen\linewidth \linewidth=\hsize 
 % \stafflinewidth is the width of a line of staff, this can vary, for example at the first line
-\newdimen\stafflinewidth \stafflinewidth=\linewidth
+\newdimen\stafflinewidth \stafflinewidth=\linewidth 
 % \staffheight is the total height of the staff : that is to say the four written lines plus two invisible lines plus the space to type one note above the top line and one note beneath the bottom line
-\newdimen\staffheight \staffheight=6\stafflineheight
+\newdimen\staffheight \staffheight=6\stafflineheight 
 \advance\staffheight by 7\interstafflinespace
 
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
@@ -136,44 +153,46 @@
 \initialwidth=0pt%
 \hbox to0pt{%
 \vbox{%
-\kern\the\interstafflinespace%
-\kern\the\stafflineheight%
-\kern\the\interstafflinespace%
-\hrule height \stafflineheight width \stafflinewidth%
-\kern\the\interstafflinespace%
-\hrule height \stafflineheight width \stafflinewidth%
-\kern\the\interstafflinespace%
-\hrule height \stafflineheight width \stafflinewidth%
-\kern\the\interstafflinespace%
-\hrule height \stafflineheight width \stafflinewidth%
-\kern\the\interstafflinespace%
-\kern\the\stafflineheight%
-\kern\the\interstafflinespace%
+\kern\the\interstafflinespace %
+\kern\the\stafflineheight %
+\kern\the\interstafflinespace %
+\hrule height \stafflineheight width \stafflinewidth %
+\kern\the\interstafflinespace %
+\hrule height \stafflineheight width \stafflinewidth %
+\kern\the\interstafflinespace %
+\hrule height \stafflineheight width \stafflinewidth %
+\kern\the\interstafflinespace %
+\hrule height \stafflineheight width \stafflinewidth %
+\kern\the\interstafflinespace %
+\kern\the\stafflineheight %
+\kern\the\interstafflinespace %
 }%
 \hss%
 }%
 \stafflinewidth=\linewidth%
+\relax%
 }
 
 %% box containing the stafflines for other lines than the first
 \newbox\Lines
 \setbox\Lines=\hbox to0pt{%
 \vbox{%
-\kern \the\interstafflinespace%
-\kern\the\stafflineheight%
-\kern \the\interstafflinespace%
-\hrule height \stafflineheight width \stafflinewidth%
-\kern\the\interstafflinespace%
-\hrule height \stafflineheight width \stafflinewidth%
-\kern\the\interstafflinespace%
-\hrule height \stafflineheight width \stafflinewidth%
-\kern\the\interstafflinespace%
-\hrule height \stafflineheight width \stafflinewidth%
-\kern \the\interstafflinespace%
-\kern\the\stafflineheight%
-\kern \the\interstafflinespace%
+\kern \the\interstafflinespace %
+\kern\the\stafflineheight %
+\kern \the\interstafflinespace %
+\hrule height \stafflineheight width \stafflinewidth %
+\kern\the\interstafflinespace %
+\hrule height \stafflineheight width \stafflinewidth %
+\kern\the\interstafflinespace %
+\hrule height \stafflineheight width \stafflinewidth %
+\kern\the\interstafflinespace %
+\hrule height \stafflineheight width \stafflinewidth %
+\kern \the\interstafflinespace %
+\kern\the\stafflineheight %
+\kern \the\interstafflinespace %
 }%
 \hss%
+\relax%
 }
 
 %% macro that draws the lines : starts by the first and then draws the lines of every line.
@@ -184,6 +203,7 @@
 \localleftbox{%
 \copy\Lines %
 }%
+\relax%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -199,6 +219,7 @@
 \unkern %
 \typekey{#1}{#2}{0}%
 }%
+\relax%
 }
 
 % macro that typesets the key
@@ -230,6 +251,7 @@
 \raise\glyphraisevalue\hbox{\gregorianfont \char 4\hskip\spaceafterlineclef}%
 \fi%
 \fi%
+\relax%
 }
 
 % macro that writes the initial key, and sets the next keys to the same value
@@ -237,28 +259,31 @@
 \def\setinitialclef#1#2{%
 \typekey{#1}{#2}{0}%
 \setlinesclef{#1}{#2}%
+\relax%
 }
 
 % macro called when the key changes
 
 \def\changeclef#1#2{%
-\clefchangespace=0.165em plus 0.0165em minus 0.0165em%
-\multiply\clefchangespace by \factor %
+\clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
+\multiply\clefchangespace by \the\factor %
 \hskip\clefchangespace %
 \typekey{#1}{#2}{1}%
 \hskip\clefchangespace %
 \setlinesclef{#1}{#2}%
+\relax%
 }
 
 % macro called when the key changes inside a syllable
 
 \def\inchangeclef#1#2{%
-\clefchangespace=0.165em plus 0.0165em minus 0.0165em%
+\clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
 \multiply\clefchangespace by \factor %
 \hskip\clefchangespace %
 \typekey{#1}{#2}{1}%
 \hskip\clefchangespace %
 \setlinesclef{#1}{#2}%
+\relax%
 }
 
 % the argument is the height
@@ -312,10 +337,12 @@
 \fi%
 }%
 }%
+\relax%
 }
 
 \def\removecusto{%
 \localrightbox{}%
+\relax%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -342,104 +369,55 @@
 %% 3: case of the vertical episemus, which is not placed at the same place if the corresponding note is on a line or not
 %% 4: case of the punctum mora, for the same reason
 \def\calculateglyphraisevalue#1#2{%
-%\addedraisevalue=0 %
-\glyphraisevalue=0.159 em %
 \global\isonaline=\number 0%
 \ifx a#1%
 \global\tempcount=\number 1%
 \fi%
 \ifx b#1%
 \global\tempcount=\number 2%
-\ifcase#2 %
-\or% 1
-\advance\tempcount by 1%
-\or% 2
-\advance\tempcount by -1%
-\or% 3
-\advance\tempcount by -1%
-\addedraisevalue = 0.05 em %
-\or% 4
-\advance\tempcount by 1%
-\addedraisevalue = -0.04 em%
-\fi%
+\global\isonaline=1 %
 \fi%
 \ifx c#1%
 \global\tempcount=\number 3%
 \fi%
 \ifx d#1%
 \global\tempcount=\number 4%
-\ifcase#2 %
-\or% 1
-\advance\tempcount by 1%
-\or% 2
-\advance\tempcount by -1%
-\or% 3
-\advance\tempcount by -1%
-\addedraisevalue = 0.05 em %
-\or% 4
-\advance\tempcount by 1%
-\addedraisevalue = -0.04 em%
-\fi%
+\global\isonaline=1 %
 \fi%
 \ifx e#1%
 \global\tempcount=\number 5%
 \fi%
 \ifx f#1%
 \global\tempcount=\number 6%
-\ifcase#2 %
-\or% 1
-\advance\tempcount by 1%
-\or% 2
-\advance\tempcount by -1%
-\or% 3
-\advance\tempcount by -1%
-\addedraisevalue = 0.05 em %
-\or% 4
-\advance\tempcount by 1%
-\addedraisevalue = -0.04 em%
-\fi%
+\global\isonaline=1 %
 \fi%
 \ifx g#1%
 \global\tempcount=\number 7%
 \fi%
 \ifx h#1%
-\global\tempcount=\number 8%
-\ifcase#2 %
-\or% 1
-\advance\tempcount by 1%
-\or% 2
-\advance\tempcount by -1%
-\or% 3
-\advance\tempcount by -1%
-\addedraisevalue = 0.05 em %
-\or% 4
-\advance\tempcount by 1%
-\addedraisevalue = -0.04 em%
-\fi%
+\global\tempcount=\number 8 %
+\global\isonaline=1 %
 \fi%
 \ifx i#1%
 \global\tempcount=\number 9%
 \fi%
 \ifx j#1%
 \global\tempcount=\number 10%
-\ifcase#2 %
-\or% 1
-\advance\tempcount by 1%
-\or% 2
-\advance\tempcount by -1%
-\or% 3
-\advance\tempcount by -1%
-\addedraisevalue = 0.05 em %
-\or% 4
-\advance\tempcount by 1%
-\addedraisevalue = -0.04 em%
-\fi%
+\global\isonaline=1 %
 \fi%
 \ifx k#1%
 \global\tempcount=\number 11%
 \fi%
 \ifx l#1%
 \global\tempcount=\number 12%
+\global\isonaline=1 %
+\fi%
+\ifx m#1%
+\global\tempcount=\number 13%
+\fi%
+% if the note is on a line, we change its height
+\ifcase\isonaline%
+\or%
 \ifcase#2 %
 \or% 1
 \advance\tempcount by 1%
@@ -447,28 +425,35 @@
 \advance\tempcount by -1%
 \or% 3
 \advance\tempcount by -1%
-\addedraisevalue = 0.05 em %
 \or% 4
 \advance\tempcount by 1%
-\addedraisevalue = -0.04 em%
 \fi%
 \fi%
-\ifx m#1%
-\global\tempcount=\number 13%
-\fi%
-% if the note is on a line, we change its height
-%\isonaline %
-%\showthe\isonaline%
 \advance\tempcount by -7 %
-\multiply \glyphraisevalue by \the\tempcount %
-\advance\glyphraisevalue by \the\addedraisevalue %
-\advance\glyphraisevalue by 1.024 em % where the 0 must be
+\glyphraisevalue = 15750 sp %
 \multiply\glyphraisevalue by \the\factor %
+\multiply\glyphraisevalue by \the\tempcount %
+\ifcase#2 % 
+\or\or\or%3: if it is a vertical episemus on a line, we shift it a bit higher, so that it's more beautiful
+\ifnum\isonaline=1%
+\addedraisevalue=5000 sp%
+\multiply\addedraisevalue by \the\factor %
+\advance\glyphraisevalue by \addedraisevalue %
+\fi
+\or% 4: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
+\ifnum\isonaline=1%
+\addedraisevalue=-4000 sp%
+\multiply\addedraisevalue by \the\factor %
+\advance\glyphraisevalue by \addedraisevalue %
+\fi%
+\fi%
+\addedraisevalue=102400 sp%
+\multiply\addedraisevalue by \the\factor %
+\advance\glyphraisevalue \addedraisevalue % where the 0 must be
 \global\tempcount=0%
-\global\isonaline=0 %
-\addedraisevalue=0 pt%
+\global\isonaline=0%
+\relax%
 }
-
 
 % count that tells us if the current glyph is the first glyph or not. It it is the case, we determine
 \newcount\firstglyph
@@ -493,6 +478,7 @@
 \or%
 \global\fourthnote=#2%
 \fi%
+\relax%
 }
 
 \def\notetonumber#1#2{%
@@ -535,6 +521,7 @@
 \ifx m#1%
 \assignnote{#2}{13}%
 \fi%
+\relax%
 }
 
 % not working yet, do not use
@@ -550,6 +537,7 @@
 \advance\interval by \tempnote %
 \advance\interval by 28672 %
 \glyph{\char \the\interval}{#1}{#3}{0}%
+\relax%
 }
 
 % the width of the last glyph, including the width of the text which is after
@@ -572,12 +560,15 @@
 \tempwidth=\wd\Tempwidth%
 \raise \glyphraisevalue%
 \copy\Tempwidth%
+\ifnum\the\endofscore=0 %
 \setcusto{#3}%
+\fi %
 \ifnum\the\firstglyph=1% we check if it is the first glyph
 \findnotesaligncenter{#4}%
 \global\firstglyph=0%
 \fi%
 %\lastglyphwidth=\tempwidth%
+\relax%
 }
 
 \newdimen\notesaligncenter
@@ -605,6 +596,7 @@
 \global\divide\notesaligncenter by 2%
 \or
 \fi%
+\relax%
 }
 
 
@@ -612,6 +604,7 @@
 \newbox\Syllablenotes
 \def\syllablenotes#1{%
 \setbox\Syllablenotes=\hbox{#1}%
+\relax%
 }
 
 
@@ -625,6 +618,7 @@
 \hskip\spacebeforesigns%
 \calculateglyphraisevalue{#1}{4}%
 \raise \glyphraisevalue \hbox{\gregorianfont \char 14}%
+\relax%
 }
 
 % a function to typeset a augmentum duplex, the argument is the letter of the height of the augmentum duplex
@@ -633,6 +627,7 @@
 \hskip\spacebeforesigns%
 \calculateglyphraisevalue{#1}{2}%
 \raise \glyphraisevalue \hbox{\gregorianfont \char 15}%
+\relax%
 }
 
 \newbox\Tempsign
@@ -664,6 +659,7 @@
 % and finally we go back to the end of the glyph, where we were first
 \advance\tempwidth by -2\tempsignwidth %
 \kern \tempwidth%
+\relax%
 }
 
 % a function to typeset a vertical episemus. The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are:
@@ -681,7 +677,7 @@
 %% 11: idem, if it is a stropha
 %% 12: idem, with a quilisma
 %% 13: idem, with an oriscus
-
+%% 14: idem of 2, but with ambitus of 1 between the two last notes (so no link between them) 
 \def\vepisemus#1#2{%
 \calculateglyphraisevalue{#1}{3}%
 \ifcase#2 %
@@ -692,19 +688,19 @@
 \vepisemusaux{0}{\char 13}{0}%
 \or%
 %case 2
-% \char 6801 is a kind of flexus, it has the good width
-\vepisemusaux{\char 26625}{\char 17}{1}%
+% \char 26626 is a kind of flexus, it has the good width
+\vepisemusaux{\char 26626}{\char 17}{1}%
 \or%
 %case 3
-% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say \char 3a01
+% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say \char 14849
 \vepisemusaux{0}{\char 14849}{1}%
 \or%
 %case 4
-% \char 7006 is a torculus, it has the good width
+% \char 28678 is a torculus, it has the good width
 \vepisemusaux{\char 28678}{\char 17}{1}%
 \or%
 %case 5
-% \char 7206 is a torculus deminutus, it has the good width
+% \char 29190 is a torculus deminutus, it has the good width
 \vepisemusaux{\char 29190}{\char 17}{1}%
 \or%
 %case 6
@@ -730,14 +726,18 @@
 \or%
 %case 13
 \vepisemusaux{0}{\char 27}{0}%
+\or%
+%case 14
+\vepisemusaux{\char 26625}{\char 17}{1}%
 \fi%
+\relax%
 }
 
 
 % a macro that will help in the typesetting of a horizontal episemus, the first argument is a glyph that have the same width as the width between the end of the glyph and the beginning of the episemus, and the second argument is the character of the episemus. If the third argument is 0, we go directly to the beginning of the glyph, else we don't change anything
 \def\hepisemusaux#1#2#3{%
 \ifnum#3=0%
-%remember, \tempwidth has the value of the last glyph width (cool isn't it ?)
+%remember, \tempwidth has the value of the last glyph width (cool isn't it?)
 \else%
 \setbox\Tempsign=\hbox{\gregorianfont #1}%
 \tempwidth=\wd\Tempsign%
@@ -751,6 +751,7 @@
 % and finally we go back to the end of the glyph, where we were first
 \advance\tempwidth by -\tempsignwidth %
 \kern \tempwidth%
+\relax%
 }
 
 % a function to typeset a horizontal episemus. The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are:
@@ -770,6 +771,8 @@
 %% 12: idem, if it is a stropha
 %% 13: idem, with a quilisma
 %% 14: idem, with an oriscus
+%%% cases for the special spaces between the notes (for ambitus of one)
+%% 15: same of 2
 \def\hepisemus#1#2#3{%
 \calculateglyphraisevalue{#1}{1}%
 \ifcase#2 %
@@ -780,19 +783,19 @@
 \hepisemusaux{\char 13}{42}{1}%
 \or%
 %case 2
-% \char 6801 is a kind of flexus, it has the good width
-\hepisemusaux{\char 26625}{40}{1}%
+% \char 26626 is a kind of flexus, it has the good width
+\hepisemusaux{\char 26626}{40}{1}%
 \or%
 %case 3
-% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say \char 3a01
+% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say \char 14849
 \hepisemusaux{\char 14849}{40}{1}%
 \or%
 %case 4
-% \char 7006 is a torculus, it has the good width
+% \char 28678 is a torculus, it has the good width
 \hepisemusaux{\char 28678}{40}{1}%
 \or%
 %case 5
-% \char 7206 is a torculus deminutus, it has the good width
+% \char 29190 is a torculus deminutus, it has the good width
 \hepisemusaux{\char 29190}{40}{1}%
 \or%
 %case 6
@@ -844,7 +847,11 @@
 \or%
 %case 14
 \hepisemusaux{\char 27}{47}{1}%
+\or%
+%case 15
+\hepisemusaux{\char 26625}{58}{1}%
 \fi%
+\relax%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -872,6 +879,9 @@
 % count that will be 0 if in the last text there was no dash (or if it is the beginning of a word, and 1 if there was
 \newcount\previousdash
 
+% a value that will allow us to have regular spaces between notes of difference syllables
+\newskip\intersyllableeffectivespace
+
 %\attributedef\potentialdash 1
 %\potentialdash=1
 %\attributedef {potentialdash} 16
@@ -880,22 +890,32 @@
 %\newbox\Zerowidthdash
 %\setbox\Zerowidthdash=\hbox to 0pt{\hbox to 1pt{}}
 
+% we specify if it is the last syllable of the score with that value
+\newcount\endofscore
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : the first letters of the syllable, that don't count for the alignment
 % #2 : the middle letters of the syllable, we must align in the middle of them
 % #3 : the end letters, they don't count
-% #4 : end of word : if it is 0 it means it is not an end of word, if it is 1 it is, 2 if it is the end of the score
+% #4 : end of word : if it is 0 it means it is not an end of word, if it is 1 it is
 % TODO: find another system for the end syllable
 %% #5 (not used anymore) : beggining of word : if it is 0 it means it is not a beginning of word, if it is 1 it is
 % #5 : glyphs : all the notes
 \def\syllable#1#2#3#4#5{%
-\ifcase#4%
-\or\or%
-\localleftbox{}%
-\localrightbox{}%
-\fi%
-\firstglyph=1%
+\firstglyph=1 %
 \findtextaligncenter{#1}{#2}{#3}% we first get the width between the alignment point and the end of the syllable
+% now we calculate the begin difference, that is to say \notesaligncenter - \textaligncenter
+\begindifference=\notesaligncenter %
+\advance\begindifference by -\textaligncenter %
+% then we do a kind of trick to separate more the notes of two different syllables : we put a space if we are in the same word (enddifference!=0) if necessary
+% it is necessary if previousenddifference - begindifference < intersyllablespace
+\temp=\previousenddifference %
+\advance\temp by -\begindifference
+\ifdim\temp<\intersyllablespace
+\intersyllableeffectivespace=\intersyllablespace %
+\advance\intersyllableeffectivespace by -\temp %
+\hskip\intersyllableeffectivespace %
+\fi% end \ifdim\temp<\intersyllablespace
 \syllablenotes{#5}% we put the notes in a box, so that we have the width of it
 %\potentialdash=2 %
 \setbox\Syllabletext=\hbox{\textfont #1#2#3%
@@ -929,9 +949,6 @@
 \fi%
 % then we must typeset the two boxes, but we must begin by the one that will go the less far, so we calculate the \enddifference, and we see if it is positive or not. Settenddifferents also sets \previousenddifference to the good value
 \setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}%
-% now we calculate the begin difference, that is to say \notesaligncenter - \textaligncenter
-\begindifference=\notesaligncenter %
-\advance\begindifference by -\textaligncenter %
 %% complicated things with the enddifference of the previous glyph, but only if it is not a begginning of word, but we don't use them anymore
 %\ifcase#5 %
 %\the\begindifference %
@@ -959,6 +976,7 @@
 \or%
 \endofword %
 \fi%
+\relax%
 }
 
 % macro to set \enddifference (defined above) to \wd\Syllablenotes - (\wd\Syllabletext - \textaligncenter) - \notesaligncenter
@@ -974,6 +992,7 @@
 \global\advance\enddifference by -#2%
 \global\advance\enddifference by #3%
 \global\advance\enddifference by -#4%
+\relax%
 }
 
 %% Finally we don't use it, because syllables never cross, I keep it, just in case...
@@ -1013,104 +1032,150 @@
 % we define two types of macro for each four bar : when it is inside a syllable, and when it is not
 
 \def\invirgula{%
-\barspace=0.165em plus 0.0165em minus 0.0165em%
-\multiply\barspace by \factor%
-\hskip\barspace %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
-\hskip\barspace %
-\penalty 0% test
+\writebar{0}{1}%
+\relax%
 }
 
 \def\virgula{%
-\barspace=0.165em plus 0.0165em minus 0.0165em%
-\multiply\barspace by \factor%
-\hskip\barspace %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
-\hskip\barspace %
+\writebar{0}{0}%
+\relax%
 }
 
 \def\indivisiominima{%
-\barspace=0.165em plus 0.0165em minus 0.0165em%
-\multiply\barspace by \factor%
-\hskip\barspace %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
-\hskip\barspace %
+\writebar{1}{1}%
+\relax%
 }
 
 \def\divisiominima{%
-\barspace=0.165em plus 0.0165em minus 0.0165em%
-\multiply\barspace by \factor%
-\hskip\barspace %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
-\hskip\barspace %
+\writebar{1}{0}%
+\relax%
 }
 
 \def\indivisiominor{%
-\barspace=0.165em plus 0.0165em minus 0.0165em%
-\multiply\barspace by \factor%
-\hskip\barspace %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
-\hskip\barspace %
+\writebar{2}{1}%
+\relax%
 }
 
 \def\divisiominor{%
-\barspace=0.165em plus 0.0165em minus 0.0165em%
-\multiply\barspace by \factor%
-\hskip\barspace %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
-\hskip\barspace %
+\writebar{2}{0}%
+\relax%
 }
 
 \def\indivisiomaior{%
-\barspace=0.165em plus 0.0165em minus 0.0165em%
-\multiply\barspace by \factor%
-\hskip\barspace %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\hskip\barspace %
+\writebar{3}{1}%
+\relax%
 }
 
 \def\divisiomaior{%
-\barspace=0.165em plus 0.0165em minus 0.0165em%
-\multiply\barspace by \factor%
-\hskip\barspace %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\hskip\barspace %
+\writebar{3}{0}%
+\relax%
 }
 
 \newdimen\temptwo
 
 \def\indivisiofinalis{%
-\barspace=0.165em plus 0.0165em minus 0.0165em%
-\multiply\barspace by \factor%
-\hskip\barspace %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\temptwo=0.064em%
-\multiply\temptwo by \the\factor%
-\kern \temptwo%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\hskip\barspace %
+\ifcase\endofscore %
+\writebar{4}{1}%
+\or %
+\writebar{5}{1}%
+\fi %
+\relax%
 }
 
 \def\divisiofinalis{%
-\barspace=0.165em plus 0.0165em minus 0.0165em%
-\multiply\barspace by \factor%
-\hskip\barspace %
+\ifcase\endofscore %
+\writebar{4}{0}%
+\or %
+\writebar{5}{0}%
+\fi %
+\relax%
+}
+
+%a macro to write a bar
+%% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis
+%% 2: is % for now we don't use it
+%%% 0 if it is outside a syllable
+%%% 1 if it is in a syllable
+\def\writebar#1#2{%
+\ifcase#1 % 0 : virgula
+\penalty 7000 %
+\hskip\spacebeforesmallbar %
+\penalty 7000 %
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
+\penalty -5000 %
+\hskip\spaceaftersmallbar %
+\or % 1 : minima
+\penalty 7000%
+\hskip\spacebeforesmallbar %
+\penalty 7000%
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
+\penalty -5000%
+\hskip\spaceaftersmallbar %
+\or % 2 : minor
+\penalty 7000 %
+\hskip\spacebeforeminor %
+\penalty 7000 %
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
+\penalty -5000 %
+\hskip\spaceafterminor %
+\or % 3 : maior
+\penalty 7000 %
+\hskip\spacebeforemaior %
+\penalty 7000 %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\temptwo=0.064em%
+\penalty -5000 %
+\hskip\spaceaftermaior %
+\or % 4 : finalis
+\penalty 7000 %
+\hskip\spacebeforefinalis %
+\penalty 7000 %
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+\penalty 7000 %
+\temptwo = 12000 sp%
+\multiply\temptwo by \the\factor%
+\kern \temptwo%
+\penalty 7000 %
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+\penalty -5000 %
+\hskip\spaceafterfinalis %
+\or % 5 : finalis
+\penalty 7000 %
+\hskip\spacebeforefinalfinalis %
+\penalty 7000 %
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+\temptwo = 12000 sp%
+\multiply\temptwo by \the\factor%
+\kern \temptwo%
+\penalty 10000 %
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+\penalty -5000 %
+\hskip\spaceafterfinalis %
+\fi %
+\relax%
+}
+
+%a count to tell if we have to keep the localrightbox until the end
+\newcount\keeprightbox
+
+%macro to end a line with a divisio finalis
+\def\enddivisiofinalis{
+\calculateglyphraisevalue{g}{0}
+\global\keeprightbox=1 %
+\localrightbox{%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+\temptwo = 12000 sp%
 \multiply\temptwo by \the\factor%
 \kern \temptwo%
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\hskip\barspace %
+\kern 0 sp%
+}%
+\relax%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1119,10 +1184,12 @@
 
 \def\flat#1{%
 \endofglyph{2}%
+\relax%
 }
 
 \def\natural#1{%
 \endofglyph{2}%
+\relax%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1175,13 +1242,43 @@
 %end 
 %callback.register('post_linebreak_filter', addhyphen)
 %}%
+\relax%
 }
 
 %macro called at the beginning of a score
 \def\endgregorioscore{%
 \localleftbox{}%
+\ifnum\keeprightbox=0 %
 \localrightbox{}%
+\fi %
+\hfil %
 \par%
+\ifnum\keeprightbox=1 %
+\localrightbox{}%
+\global\keeprightbox=0 %
+\fi%
+\relax%
+}
+
+%macro to call if you wan to go to the next line
+\def\gnewline{%
+\hfil%
+\penalty-10000 %
+\relax%
+}
+
+%macro to call when there is just a little thing that will go to the last line, when it is not necessary
+\def\gnolastline{%
+\ifdim\enddifference >0pt %
+\hskip-\interwordspacenotes %
+\else%
+\hskip-\interwordspacetext %
+\fi %
+\global\endofscore=1 %
+\localrightbox{}%
+\localleftbox{}%
+\penalty 1000 %
+\relax%
 }
 
 % macro called at each end of word
@@ -1190,14 +1287,16 @@
 \hskip\interwordspacenotes %
 \else%
 \hskip\interwordspacetext %
-\fi
+\fi %
 \penalty -1000%
-\enddifference=0pt%
+\global\enddifference=0pt %
+\relax%
 }
 
 % macro called at each end of syllable which is not an end of word
 \def\endofsyllable{%
 \penalty -500%
+\relax%
 }
 
 % macro to end elements, argument is the type of space, it can be : 
@@ -1214,6 +1313,7 @@
 \hskip\glyphspace%
 \fi%
 \penalty -100%
+\relax%
 }
 
 % macro to end a glyph without ending the element, argument is the type of space, it can be : 
@@ -1242,6 +1342,7 @@
 \hskip\spaceaftersigns %
 \fi%
 \penalty 10001%
+\relax%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1254,85 +1355,124 @@
 
 % space between glyphs in the same element
 \newskip\interglyphspace
-\interglyphspace=0.082em plus 0.0082em minus 0.0082em
+\interglyphspace = 8200 sp plus 820 sp minus 820 sp
 \multiply\interglyphspace by \factor
 
 % space between an alteration (flat or natural) and the next glyph
 \newskip\alterationspace
-\alterationspace=0.082em plus 0.0082em minus 0.0082em
+\alterationspace = 8200 sp plus 820 sp minus 820 sp
 \multiply\alterationspace by \factor
 
 % space between elements
 \newskip\interelementspace
-\interelementspace=0.082em plus 0.0082em minus 0.0082em
+\interelementspace = 8200 sp plus 820 sp minus 820 sp
 \multiply\interelementspace by \factor
 
 % larger space between elements
 \newskip\largerspace
-\largerspace=0.082em plus 0.0082em minus 0.0082em
+\largerspace = 8200 sp plus 820 sp minus 820 sp
 \multiply\largerspace by \factor
 
 % space between elements which has the size of a note
 \newskip\glyphspace
-\glyphspace=0.165em plus 0.0165em minus 0.0165em
+\glyphspace = 16500 sp plus 1650 sp minus 1650 sp
 \multiply\glyphspace by \factor
+
+% minimum space between two notes of different syllables
+\newskip\intersyllablespace
+\intersyllablespace=18000 sp plus 2000 sp minus 2000 sp
+\multiply\intersyllablespace by \factor
 
 % space before custo
 \newskip\spacebeforecusto
-\spacebeforecusto=0.165em plus 1em minus 0.0165em
+\spacebeforecusto = 16500 sp plus 16500 sp minus 8000 sp
 \multiply\spacebeforecusto by \factor
 
 % space before punctum mora and augmentum duplex
 \newskip\spacebeforesigns
-\spacebeforesigns=0.05em plus 0.005em minus 0.005em
+\spacebeforesigns=5000 sp plus 500 sp minus 500 sp
 \multiply\spacebeforesigns by \factor
 
 % space after punctum mora and augmentum duplex
 \newskip\spaceaftersigns
-\spaceaftersigns=0.09em plus 0.009em minus 0.009em
+\spaceaftersigns=9000 sp plus 900 sp minus 900 sp
 \multiply\spaceaftersigns by \factor
 
 % space after a clef at the beginning of a line
 \newskip\spaceafterlineclef
-\spaceafterlineclef=0.165em plus 0.0165em minus 0.0165em
+\spaceafterlineclef = 16500 sp plus 1650 sp minus 1650 sp
 \multiply\spaceafterlineclef by \factor
 
 % space after at the end of a word when the last written symbol is a note
 \newskip\interwordspacenotes
-\interwordspacenotes=0.21em plus 0.021em minus 0.021em
+\interwordspacenotes = 21000 sp plus 2100 sp minus 2100 sp
 \multiply\interwordspacenotes by \factor
 
 % space after at the end of a word when the last written symbol is text
 \newskip\interwordspacetext
-\interwordspacetext=0.21em plus 0.021em minus 0.021em
+\interwordspacetext = 21000 sp plus 2100 sp minus 2100 sp
 \multiply\interwordspacetext by \factor
 
 % space between notes of a bistropha and bivirga
 \newskip\bispace
-\bispace=0.165em plus 0.0165em minus 0.0165em
+\bispace = 16500 sp plus 1650 sp minus 1650 sp
 \multiply\bispace by \factor
 
 % space between notes of a tristropha and trivirga
 \newskip\trispace
-\trispace=0.165em plus 0.0165em minus 0.0165em
+\trispace = 16500 sp plus 1650 sp minus 1650 sp
 \multiply\trispace by \factor
 
 % space when there is a 
 \newskip\punctuminclinatumshift
-\punctuminclinatumshift=-0.040em plus 0.004em minus 0.004em
+\punctuminclinatumshift=-4000 sp plus 400 sp minus 400 sp
 \multiply\punctuminclinatumshift by \factor
 
 % space between the initial and the beginning of the score
 \newskip\afterinitialshift
-\afterinitialshift=0.6 em plus 0.1em minus 0.1em
-
-% space between notes of different syllables in the same word, but seem to be useless
-%\newskip\intersyllablenotesspace
-%\intersyllablenotesspace=0.165em plus 0.0165em minus 0.0165em
-%\multiply\intersyllablenotesspace by \factor
+\afterinitialshift=0.6 em plus 0em minus 0em
 
 % space for the bars
-\newskip\barspace
+%first for virgula and divisio minima
+\newskip\spacebeforesmallbar
+\spacebeforesmallbar = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spacebeforesmallbar by \factor
+
+\newskip\spaceaftersmallbar
+\spaceaftersmallbar = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spaceaftersmallbar by \factor
+
+%then divisio minor
+\newskip\spacebeforeminor
+\spacebeforeminor = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spacebeforeminor by \factor
+
+\newskip\spaceafterminor
+\spaceafterminor = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spaceafterminor by \factor
+
+%divisio major
+\newskip\spacebeforemaior
+\spacebeforemaior = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spacebeforemaior by \factor
+
+\newskip\spaceaftermaior
+\spaceaftermaior = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spaceaftermaior by \factor
+
+%divisio finalis
+\newskip\spacebeforefinalis
+\spacebeforefinalis = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spacebeforefinalis by \factor
+
+%a special space for finalis, for when it is the last glyph
+\newskip\spacebeforefinalfinalis
+\spacebeforefinalfinalis= 8000 sp plus 1000 sp minus 1000 sp
+\multiply\spacebeforefinalfinalis by \factor
+
+\newskip\spaceafterfinalis
+\spaceafterfinalis = 8500 sp plus 1650 sp minus 6000 sp
+\multiply\spaceafterfinalis by \factor
 
 % space for the clef changes
 \newskip\clefchangespace
@@ -1341,8 +1481,8 @@
 %% fonts
 %%%%%%%%
 
-% we open the font at \factor pt, we must know \factor because it will determine the line heigth, etc.
-\font\gregorianfont=gregorio at \the\factor em
+% we open the font at \factor pt, we must know \factor because it will determine the line heigth, etc. 
+\font\gregorianfont=gregorio at \the\factor sp
 
 \font\gregoriantextfont=gregorio at 11pt
 
@@ -1352,14 +1492,17 @@
 % the macros to typeset the A, R and V with bar
 \def\Abar{%
 {\gregoriantextfont \char 66}%
+\relax%
 }
 
 \def\Rbar{%
 {\gregoriantextfont \char 67}%
+\relax%
 }
 
 \def\Vbar{%
 {\gregoriantextfont \char 68}%
+\relax%
 }
 
 % the macro to write a cross
@@ -1369,9 +1512,20 @@
 %the macro to write a star
 \def\gstar{%
 \raise -0.1em\hbox{*}%
+\relax%
 }
 
 \def\setgregorianfont#1{%
-\global\font\gregorianfont=#1 at \the\factor em%
-\global\font\gregoriantextfont=#1 at 12pt%
+\newcount\tempfactor %
+\tempfactor = \the\factor %
+\multiply\tempfactor by 100000 %
+\global\font\gregorianfont=#1 at \the\tempfactor sp%
+\global\font\gregoriantextfont=#1 at 11pt%
+\relax%
+}
+
+\def\setfactor#1{%
+\global\factor=#1 %
+%\global\multiply\factor by 100000 %
+\relax %
 }
