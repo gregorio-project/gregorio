@@ -3,6 +3,8 @@ Fonts generation
 
 Gregorio works with Omega, but for TeX compatibility of the fonts, they are divided in 255 character fonts.
 
+If you are under debian or ubuntu, the best and most simple way to install the fonts is to build the package, with dpkg-buildpackage. You will need dpkg-dev. Just type dpkg-buildpackage in the root directory of the sources, it will tell you which packets to install, and will build you (in the parent directory) two .deb files: one containing the gregorio program (gregorio_x.y.z.deb) and the other containing the fonts (gregoriotex_x.y.z.deb). You'll just have to install the gregoriotex package to get the fonts installed and working. To install foo.deb, use dpkg -i foo.deb, with root privileges.
+
 You can notice if you watch gregorio-base.sfd (sfd is the native fontforge format), that there are only a few glyphs. First you must combine them to get all the glyphs (more than 1000). It is made by a quite dirty trick: a python script (squarize.py) generates a fontforge script (squarize.pe) that generates six 255 character fonts containing all the glyphs of gregorian chant. It generates the fonts in pfb, afm, enc and tfm.
 
 So for now the basic use is:
@@ -12,7 +14,7 @@ So for now the basic use is:
 
 The second step may take several minutes, even on a recent machine.
 
-In the next steps, we create gregorio, but to create parmesan, just replace "gregorio" by "parmesan".
+In the next steps, we create gregorio, but to create parmesan or greciliae, just replace "gregorio" by "parmesan" or "greciliae".
 
 Then we must generate an ovp (the readable format of omega virtual font). To do so, we use the script create_font.pl. But this script needs the pl files corresponding to the tfm files of the fonts. So we must generate them with tftopl (included in TeXlive) :
 
@@ -20,8 +22,6 @@ Then we must generate an ovp (the readable format of omega virtual font). To do 
  tftopl gregorio-1.tfm
  tftopl gregorio-2.tfm
  tftopl gregorio-3.tfm
- tftopl gregorio-4.tfm
- tftopl gregorio-5.tfm
 
 and then we execute the script:
 
@@ -38,29 +38,33 @@ The installation of the font depends on the system you have, that's why it is no
 
 First you need to copy the files at the good place. $(TEXMF) is almost all the time /usr/share/texmf
 
- mkdir $(TEXMF)/fonts/tfm/gregoriotex
+ mkdir $(TEXMF)/fonts/tfm/public/gregoriotex
  cp *.tfm $(TEXMF)/fonts/tfm/gregoriotex
- mkdir $(TEXMF)/fonts/type1/gregoriotex
+ mkdir $(TEXMF)/fonts/type1/public/gregoriotex
  cp *.pfb $(TEXMF)/fonts/type1/gregoriotex
- mkdir $(TEXMF)/fonts/ovf/gregoriotex
+ mkdir $(TEXMF)/fonts/ovf/public/gregoriotex
  cp gregorio.ovf $(TEXMF)/fonts/ovf/gregoriotex
- mkdir $(TEXMF)/fonts/ofm/gregoriotex
+ mkdir $(TEXMF)/fonts/ofm/public/gregoriotex
  cp gregorio.ofm $(TEXMF)/fonts/ofm/gregoriotex
+ mkdir $(TEXMF)/fonts/ovp/public/gregoriotex
+ cp gregorio.ovp $(TEXMF)/fonts/ovp/gregoriotex
  mkdir $(TEXMF)/tex/gregoriotex
  cp ../tex/gregorio.tex $(TEXMF)/tex/gregoriotex
 
 If the directories are not the same (which is quite rare, you must change gregorio.map). Things are more complex when you deal with the maps:
 
- cp gregorio.map /usr/share/texmf-texlive/fonts/map/dvips/gregorio
+ mkdir /usr/share/texmf/fonts/map/dvips/gregoriotex
+ cp gregorio.map /usr/share/texmf/fonts/map/dvips/gregoriotex
 
 To know where to copy it, try locate .map. Then you must build a reference to that map in the updmap configuration:
 
- echo "MixedMap /usr/share/texmf-texlive/fonts/map/dvips/gregorio/gregorio.map" >/etc/texmf/updmap.d/20gregoriotex.cfg
+ echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregorio/gregorio.map" >/etc/texmf/updmap.d/20gregoriotex.cfg
 
 Now we just have to run the programs to update tex (all must be executed with the root prvivileges):
 
  texhash
  update-updmap
  updmap-sys (or updmap)
+ mktexlsr
 
 Now you should be able to use gregoriotex.

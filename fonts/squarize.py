@@ -372,6 +372,7 @@ def hepisemus():
     write_hepisemus(width_stropha, "_0045")
     write_hepisemus(width_quilisma, "_0056")
     write_hepisemus(width_oriscus, "_0057")
+    write_hepisemus(2*width_punctum, "_0058")
     for i in range(max_interval):
         write_hepisemus(porrectuswidths[i], "_00%02d" % int(46+i))
     for i in range(max_interval):
