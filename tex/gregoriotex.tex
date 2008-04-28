@@ -879,8 +879,8 @@
 % count that will be 0 if in the last text there was no dash (or if it is the beginning of a word, and 1 if there was
 \newcount\previousdash
 
-% a value that will allow us to have regular spaces between notes of difference syllables
-\newskip\intersyllableeffectivespace
+\newcount\firstsyllableofword
+\firstsyllableofword=1
 
 %\attributedef\potentialdash 1
 %\potentialdash=1
@@ -908,14 +908,24 @@
 \begindifference=\notesaligncenter %
 \advance\begindifference by -\textaligncenter %
 % then we do a kind of trick to separate more the notes of two different syllables : we put a space if we are in the same word (enddifference!=0) if necessary
-% it is necessary if previousenddifference - begindifference < intersyllablespace
-\temp=\enddifference %
-\advance\temp by -\begindifference
-\ifdim\temp<\intersyllablespace
-\intersyllableeffectivespace=\intersyllablespace %
-\advance\intersyllableeffectivespace by -\temp %
-\hskip\intersyllableeffectivespace %
-\fi% end \ifdim\temp<\intersyllablespace
+% there are two cases according to the sign of enddifference
+% and we do it only if it is not the first syllable of a word
+\ifnum\firstsyllableofword=0 %
+\ifdim\enddifference>0pt%
+\temp=\intersyllablespace %
+\advance\temp by \begindifference %
+\ifdim\temp>0pt %
+\hskip\temp %
+\fi%
+\else %\enddifference<0
+\temp=\intersyllablespace %
+\advance\temp by \begindifference %
+\advance\temp by -\enddifference %
+\ifdim\temp>0pt %
+\hskip\temp %
+\fi %
+\fi %
+\fi %
 \syllablenotes{#5}% we put the notes in a box, so that we have the width of it
 %\potentialdash=2 %
 \setbox\Syllabletext=\hbox{\textfont #1#2#3%
@@ -973,8 +983,10 @@
 %\-%
 \ifcase#4 %
 \endofsyllable %
+\global\firstsyllableofword=0 %
 \or%
 \endofword %
+\global\firstsyllableofword=1 %
 \fi%
 \relax%
 }
