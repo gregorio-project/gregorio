@@ -909,7 +909,7 @@
 \advance\begindifference by -\textaligncenter %
 % then we do a kind of trick to separate more the notes of two different syllables : we put a space if we are in the same word (enddifference!=0) if necessary
 % it is necessary if previousenddifference - begindifference < intersyllablespace
-\temp=\previousenddifference %
+\temp=\enddifference %
 \advance\temp by -\begindifference
 \ifdim\temp<\intersyllablespace
 \intersyllableeffectivespace=\intersyllablespace %
@@ -1481,14 +1481,6 @@
 %% fonts
 %%%%%%%%
 
-% we open the font at \factor pt, we must know \factor because it will determine the line heigth, etc. 
-\font\gregorianfont=gregorio at \the\factor sp
-
-\font\gregoriantextfont=gregorio at 11pt
-
-\font\textfont=pncr at 11pt
-\font\fontofinitial=pncr at 38pt
-
 % the macros to typeset the A, R and V with bar
 \def\Abar{%
 {\gregoriantextfont \char 66}%
@@ -1515,14 +1507,26 @@
 \relax%
 }
 
-\def\setgregorianfont#1{%
+
 \newcount\tempfactor %
+
+\def\setgregorianfont#1{%
 \tempfactor = \the\factor %
 \multiply\tempfactor by 100000 %
 \global\font\gregorianfont=#1 at \the\tempfactor sp%
 \global\font\gregoriantextfont=#1 at 11pt%
 \relax%
 }
+
+\tempfactor = \the\factor %
+\multiply\tempfactor by 100000 %
+% we open the font at \factor pt, we must know \factor because it will determine the line heigth, etc. 
+\font\gregorianfont=greciliae at \the\tempfactor sp
+
+\font\gregoriantextfont=greciliae at 11pt
+
+\font\textfont=pncr at 11pt
+\font\fontofinitial=pncr at 38pt
 
 \def\setfactor#1{%
 \global\factor=#1 %
