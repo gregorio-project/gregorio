@@ -551,9 +551,13 @@
 % #3: height of the next note : we define the custo with that
 % #4: type : the type of glyph, to determine the aligncenter; can be :
 %%%%% 0 : one-note glyph or more than two notes glyph except porrectus : here we must put the aligncenter in the middle of the first note
-%%%%% 1 : two notes glyph (podatus is considered as a one-note glyph : here we put the aligncenter in the middle of the glyph
+%%%%% 1 : two notes glyph (podatus is considered as a one-note glyph) : here we put the aligncenter in the middle of the glyph
 %%%%% 2 : porrectus : has a special align center
 %%%%% 3 : initio-debilis : same as 1 but the first note is much smaller
+%%%%% 4 : case of a glyph starting with a quilisma
+%%%%% 5 : case of a glyph starting with an oriscus
+%%%%% 6 : case of a punctum inclinatum
+%%%%% 7 : case of a stropha
 \def\glyph#1#2#3#4{%
 \calculateglyphraisevalue{#2}{0}%
 \setbox\Tempwidth=\hbox{\gregorianfont #1}%
@@ -594,7 +598,26 @@
 \setbox\Tempwidth=\hbox{\gregorianfont \char 13}%
 \global\notesaligncenter=\wd\Tempwidth%
 \global\divide\notesaligncenter by 2%
-\or
+\or %
+%case of a quilisma
+\setbox\Tempwidth=\hbox{\gregorianfont \char 26}%
+\global\notesaligncenter=\wd\Tempwidth%
+\global\divide\notesaligncenter by 2%
+\or %
+%case of an oriscus
+\setbox\Tempwidth=\hbox{\gregorianfont \char 28}%
+\global\notesaligncenter=\wd\Tempwidth%
+\global\divide\notesaligncenter by 2%
+\or %
+%case of a punctum inclinatum
+\setbox\Tempwidth=\hbox{\gregorianfont \char 19}%
+\global\notesaligncenter=\wd\Tempwidth%
+\global\divide\notesaligncenter by 2%
+\or %
+%case of a stropha
+\setbox\Tempwidth=\hbox{\gregorianfont \char 20}%
+\global\notesaligncenter=\wd\Tempwidth%
+\global\divide\notesaligncenter by 2%
 \fi%
 \relax%
 }
@@ -688,20 +711,20 @@
 \vepisemusaux{0}{\char 13}{0}%
 \or%
 %case 2
-% \char 26626 is a kind of flexus, it has the good width
-\vepisemusaux{\char 26626}{\char 17}{1}%
+% a kind of flexus, it has the good width
+\vepisemusaux{\char 4098}{\char 17}{1}%
 \or%
 %case 3
-% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say \char 14849
-\vepisemusaux{0}{\char 14849}{1}%
+% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
+\vepisemusaux{0}{\char 4225}{1}%
 \or%
 %case 4
-% \char 28678 is a torculus, it has the good width
-\vepisemusaux{\char 28678}{\char 17}{1}%
+% is a torculus, it has the good width
+\vepisemusaux{\char 14434}{\char 17}{1}%
 \or%
 %case 5
-% \char 29190 is a torculus deminutus, it has the good width
-\vepisemusaux{\char 29190}{\char 17}{1}%
+% is a torculus deminutus, it has the good width
+\vepisemusaux{\char 14859}{\char 17}{1}%
 \or%
 %case 6
 \vepisemusaux{0}{\char 17}{2}%
@@ -728,7 +751,7 @@
 \vepisemusaux{0}{\char 27}{0}%
 \or%
 %case 14
-\vepisemusaux{\char 26625}{\char 17}{1}%
+\vepisemusaux{\char 4097}{\char 17}{1}%
 \fi%
 \relax%
 }
@@ -783,20 +806,20 @@
 \hepisemusaux{\char 13}{42}{1}%
 \or%
 %case 2
-% \char 26626 is a kind of flexus, it has the good width
-\hepisemusaux{\char 26626}{40}{1}%
+% a kind of flexus, it has the good width
+\hepisemusaux{\char 4098}{40}{1}%
 \or%
 %case 3
-% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus, that is to say \char 14849
-\hepisemusaux{\char 14849}{40}{1}%
+% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
+\hepisemusaux{\char 4225}{40}{1}%
 \or%
 %case 4
-% \char 28678 is a torculus, it has the good width
-\hepisemusaux{\char 28678}{40}{1}%
+% a torculus, it has the good width
+\hepisemusaux{\char 14343}{40}{1}%
 \or%
 %case 5
 % \char 29190 is a torculus deminutus, it has the good width
-\hepisemusaux{\char 29190}{40}{1}%
+\hepisemusaux{\char 14859}{40}{1}%
 \or%
 %case 6
 \hepisemusaux{0}{40}{0}%
@@ -849,7 +872,7 @@
 \hepisemusaux{\char 27}{47}{1}%
 \or%
 %case 15
-\hepisemusaux{\char 26625}{58}{1}%
+\hepisemusaux{\char 4097}{40}{1}%
 \fi%
 \relax%
 }
@@ -920,7 +943,7 @@
 \else %\enddifference<0
 \temp=\intersyllablespace %
 \advance\temp by \begindifference %
-\advance\temp by -\enddifference %
+\advance\temp by \enddifference %
 \ifdim\temp>0pt %
 \hskip\temp %
 \fi %
@@ -1185,7 +1208,7 @@
 \multiply\temptwo by \the\factor%
 \kern \temptwo%
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\kern 0 sp%
+%\kern 0 sp%
 }%
 \relax%
 }
@@ -1332,7 +1355,9 @@
 %% 0: default space 
 %% 1: zero width space
 %% 2: space between flat or natural and a note
-%% 3: shift when there is a punctum_inclinatum after
+%% 3: shift when there is a punctum inclinatum after
+%% 7: space between a punctum inclinatum and a punctum inclinatum and a punctum inclinatum deminutus
+%% 8: space between two puncta inclinata deminuti
 %% 4: space between bivirga or bistropha
 %% 5: space between tristropha or trivirga
 %% 6: space after a punctum % TODO: use it
@@ -1352,6 +1377,10 @@
 \hskip\trispace %
 \or%
 \hskip\spaceaftersigns %
+\or%
+\hskip\punctuminclinatumdebilisshift %
+\or%
+\hskip\punctuminclinatumdebilis2shift %
 \fi%
 \penalty 10001%
 \relax%
@@ -1392,7 +1421,7 @@
 
 % minimum space between two notes of different syllables
 \newskip\intersyllablespace
-\intersyllablespace=18000 sp plus 2000 sp minus 2000 sp
+\intersyllablespace=30000 sp plus 2000 sp minus 0 sp
 \multiply\intersyllablespace by \factor
 
 % space before custo
@@ -1417,12 +1446,22 @@
 
 % space after at the end of a word when the last written symbol is a note
 \newskip\interwordspacenotes
-\interwordspacenotes = 21000 sp plus 2100 sp minus 2100 sp
+\interwordspacenotes = 32000 sp plus 3200 sp minus 3200 sp
 \multiply\interwordspacenotes by \factor
+
+% space after at the end of a word when the last written symbol is a note and the first is text TODO : use it
+\newskip\interwordspacenotestext
+\interwordspacenotestext = 25000 sp plus 2500 sp minus 2500 sp
+\multiply\interwordspacenotestext by \factor
+
+% space after at the end of a word when the last written symbol is text and the first is a note TODO : use it
+\newskip\interwordspacetextnotes
+\interwordspacetextnotes = 30000 sp plus 3000 sp minus 3000 sp
+\multiply\interwordspacetextnotes by \factor
 
 % space after at the end of a word when the last written symbol is text
 \newskip\interwordspacetext
-\interwordspacetext = 21000 sp plus 2100 sp minus 2100 sp
+\interwordspacetext = 30000 sp plus 3000 sp minus 3000 sp
 \multiply\interwordspacetext by \factor
 
 % space between notes of a bistropha and bivirga
@@ -1435,10 +1474,20 @@
 \trispace = 16500 sp plus 1650 sp minus 1650 sp
 \multiply\trispace by \factor
 
-% space when there is a 
+% space between two punctum inclinatum
 \newskip\punctuminclinatumshift
 \punctuminclinatumshift=-4000 sp plus 400 sp minus 400 sp
 \multiply\punctuminclinatumshift by \factor
+
+% space between a punctum inclinatum and a punctum inclinatum deminutus
+\newskip\punctuminclinatumdebilisshift
+\punctuminclinatumdebilisshift=-2500 sp plus 250 sp minus 250 sp
+\multiply\punctuminclinatumdebilisshift by \factor
+
+% space between two punctum inclinatum deminutus
+\newskip\punctuminclinatumdebilisshift
+\punctuminclinatumdebilisshift=-2500 sp plus 250 sp minus 250 sp
+\multiply\punctuminclinatumdebilisshift by \factor
 
 % space between the initial and the beginning of the score
 \newskip\afterinitialshift
