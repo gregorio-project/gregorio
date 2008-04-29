@@ -318,16 +318,16 @@ libgregorio_dump_syllable_position (char pos)
     const char *str;
     switch (pos)
     {
-        case 1:
+        case WORD_BEGINNING:
             str = "WORD_BEGINNING";
         break;
-        case 2:
+        case WORD_MIDDLE:
             str = "WORD_MIDDLE";
         break;
-        case 3:
+        case WORD_END:
             str = "WORD_END";
         break;
-        case 4:
+        case WORD_ONE_SYLLABLE:
             str = "WORD_ONE_SYLLABLE";
         break;
         default:
@@ -344,37 +344,37 @@ libgregorio_dump_type (char type)
     const char *str;
     switch (type)
     {
-        case 1:
+        case GRE_NOTE:
             str = "GRE_NOTE";
         break;
-        case 2:
+        case GRE_GLYPH:
             str = "GRE_GLYPH";
         break;
-        case 3:
+        case GRE_ELEMENT:
             str = "GRE_ELEMENT";
         break;
-        case 4:
+        case GRE_FLAT:
             str = "GRE_FLAT";
         break;
-        case 5:
+        case GRE_NATURAL:
             str = "GRE_NATURAL";
         break;
-        case 6:
+        case GRE_C_KEY_CHANGE:
             str = "GRE_C_KEY_CHANGE";
         break;
-        case 7:
+        case GRE_F_KEY_CHANGE:
             str = "GRE_F_KEY_CHANGE";
         break;
-        case 8:
+        case GRE_END_OF_LINE:
             str = "GRE_END_OF_LINE";
         break;
-        case 9:
+        case GRE_SPACE:
             str = "GRE_SPACE";
         break;
-        case 10:
+        case GRE_BAR:
             str = "GRE_BAR";
         break;
-        case 11:
+        case GRE_SYLLABLE:
             str = "GRE_SYLLABLE";
         break;
         default:
@@ -391,22 +391,22 @@ libgregorio_dump_bar_type (char element_type)
     const char *str;
     switch (element_type)
     {
-        case 0:
+        case B_NO_BAR:
             str = "B_NO_BAR";
         break;
-        case 1:
+        case B_VIRGULA:
             str = "B_VIRGULA";
         break;
-        case 2:
+        case B_DIVISIO_MINIMA:
             str = "B_DIVISIO_MINIMA";
         break;
-        case 3:
+        case B_DIVISIO_MINOR:
             str = "B_DIVISIO_MINOR";
         break;
-        case 4:
+        case B_DIVISIO_MAIOR:
             str = "B_DIVISIO_MAIOR";
         break;
-        case 5:
+        case B_DIVISIO_FINALIS:
             str = "B_DIVISIO_FINALIS";
         break;
         default:
@@ -423,22 +423,22 @@ libgregorio_dump_space_type (char element_type)
     const char *str;
     switch (element_type)
     {
-        case '1':
+        case SP_DEFAULT:
             str = "SP_DEFAULT";
         break;
-        case '2':
+        case SP_NO_SPACE:
             str = "SP_NO_SPACE";
         break;
-        case '3':
+        case SP_ZERO_WIDTH:
             str = "SP_ZERO_WIDTH";
         break;
-        case '4':
+        case SP_NEUMATIC_CUT:
             str = "SP_NEUMATIC_CUT";
         break;
-        case '5':
+        case SP_LARGER_SPACE:
             str = "SP_LARGER_SPACE";
         break;
-        case '6':
+        case SP_GLYPH_SPACE:
             str = "SP_GLYPH_SPACE";
         break;
         default:
@@ -448,6 +448,8 @@ libgregorio_dump_space_type (char element_type)
     return str;
 }
 
+
+// not so sure it has still a meaning now...
 const char *
 libgregorio_dump_element_type (char element_type)
 {
@@ -490,40 +492,41 @@ libgregorio_dump_element_type (char element_type)
     }
     return str;
 }
+
 const char *
 libgregorio_dump_liquescentia (char liquescentia)
 {
     const char *str;
     switch (liquescentia)
     {
-        case 0:
+        case L_NO_LIQUESCENTIA:
             str = "L_NO_LIQUESCENTIA";
         break;
-        case 1:
+        case L_DEMINUTUS:
             str = "L_DEMINUTUS";
         break;
-        case 2:
+        case L_AUCTUS_ASCENDENS:
             str = "L_AUCTUS_ASCENDENS";
         break;
-        case 3:
+        case L_AUCTUS_DESCENDENS:
             str = "L_AUCTUS_DESCENDENS";
         break;
-        case 4:
+        case L_AUCTA:
             str = "L_AUCTA";
         break;
-        case 5:
+        case L_INITIO_DEBILIS:
             str = "L_INITIO_DEBILIS";
         break;
-        case 6:
+        case L_DEMINUTUS_INITIO_DEBILIS:
             str = "L_DEMINUTUS_INITIO_DEBILIS";
         break;
-        case 7:
+        case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
             str = "L_AUCTUS_ASCENDENS_INITIO_DEBILIS";
         break;
-        case 8:
+        case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
             str = "L_AUCTUS_DESCENDENS_INITIO_DEBILIS";
         break;
-        case 9:
+        case L_AUCTA_INITIO_DEBILIS:
             str = "L_AUCTA_INITIO_DEBILIS";
         break;
         default:
@@ -538,100 +541,100 @@ libgregorio_dump_glyph_type (char glyph_type)
     const char *str;
     switch (glyph_type)
     {
-        case 1:
+        case G_PUNCTUM_INCLINATUM:
             str = "G_PUNCTUM_INCLINATUM";
         break;
-        case 2:
+        case G_2_PUNCTA_INCLINATA_DESCENDENS:
             str = "G_2_PUNCTA_INCLINATA_DESCENDENS";
         break;
-        case 3:
+        case G_3_PUNCTA_INCLINATA_DESCENDENS:
             str = "G_3_PUNCTA_INCLINATA_DESCENDENS";
         break;
-        case 4:
+        case G_4_PUNCTA_INCLINATA_DESCENDENS:
             str = "G_4_PUNCTA_INCLINATA_DESCENDENS";
         break;
-        case 5:
+        case G_5_PUNCTA_INCLINATA_DESCENDENS:
             str = "G_5_PUNCTA_INCLINATA_DESCENDENS";
         break;
-        case 6:
+        case G_2_PUNCTA_INCLINATA_ASCENDENS:
             str = "G_2_PUNCTA_INCLINATA_ASCENDENS";
         break;
-        case 7:
+        case G_3_PUNCTA_INCLINATA_ASCENDENS:
             str = "G_3_PUNCTA_INCLINATA_ASCENDENS";
         break;
-        case 8:
+        case G_4_PUNCTA_INCLINATA_ASCENDENS:
             str = "G_4_PUNCTA_INCLINATA_ASCENDENS";
         break;
-        case 9:
+        case G_5_PUNCTA_INCLINATA_ASCENDENS:
             str = "G_5_PUNCTA_INCLINATA_ASCENDENS";
         break;
-        case 10:
+        case G_TRIGONUS:
             str = "G_TRIGONUS";
         break;
-        case 11:
+        case G_PUNCTA_INCLINATA:
             str = "G_PUNCTA_INCLINATA";
         break;
-        case 12:
+        case G_UNDETERMINED:
             str = "G_UNDETERMINED";
         break;
-        case 13:
+        case G_VIRGA:
             str = "G_VIRGA";
         break;
-        case 14:
+        case G_STROPHA:
             str = "G_STROPHA";
         break;
-        case 15:
+        case G_STROPHA_AUCTA:
             str = "G_STROPHA_AUCTA";
         break;
-        case 16:
+        case G_PUNCTUM:
             str = "G_PUNCTUM";
         break;
-        case 17:
+        case G_PODATUS:
             str = "G_PODATUS";
         break;
-        case 18:
+        case G_PES_QUADRATUM:
             str = "G_PES_QUADRATUM";
         break;
-        case 19:
+        case G_FLEXA:
             str = "G_FLEXA";
         break;
-        case 20:
+        case G_TORCULUS:
             str = "G_TORCULUS";
         break;
-        case 21:
+        case G_TORCULUS_RESUPINUS:
             str = "G_TORCULUS_RESUPINUS";
         break;
-        case 22:
+        case G_TORCULUS_RESUPINUS_FLEXUS:
             str = "G_TORCULUS_RESUPINUS_FLEXUS";
         break;
-        case 23:
+        case G_PORRECTUS:
             str = "G_PORRECTUS";
         break;
-        case 24:
+        case G_PORRECTUS_FLEXUS:
             str = "G_PORRECTUS_FLEXUS";
         break;
-        case 25:
+        case G_BIVIRGA:
             str = "G_BIVIRGA";
         break;
-        case 26:
+        case G_TRIVIRGA:
             str = "G_TRIVIRGA";
         break;
-        case 27:
+        case G_DISTROPHA:
             str = "G_DISTROPHA";
         break;
-        case 28:
+        case G_DISTROPHA_AUCTA:
             str = "G_DISTROPHA_AUCTA";
         break;
-        case 29:
+        case G_TRISTROPHA:
             str = "G_TRISTROPHA";
         break;
-        case 30:
+        case G_TRISTROPHA_AUCTA:
             str = "G_TRISTROPHA_AUCTA";
         break;
-        case 31:
+        case G_PES_QUADRATUM_FIRST_PART:
             str = "G_PES_QUADRATUM_FIRST_PART";
         break;
-        case 32:
+        case G_SCANDICUS:
             str = "G_SCANDICUS";
         break;
         default:
@@ -647,55 +650,61 @@ libgregorio_dump_shape (char shape)
     const char *str;
     switch (shape)
     {
-        case 0:
+        case S_UNDETERMINED:
             str = "S_UNDETERMINED";
         break;
-        case 1:
+        case S_PUNCTUM:
             str = "S_PUNCTUM";
         break;
-        case 2:
+        case S_PUNCTUM_END_OF_GLYPH:
             str = "S_PUNCTUM_END_OF_GLYPH";
         break;
-        case 3:
+        case S_PUNCTUM_INCLINATUM:
             str = "S_PUNCTUM_INCLINATUM";
         break;
-        case 4:
+        case S_PUNCTUM_INCLINATUM_DEMINUTUS:
+            str = "S_PUNCTUM_INCLINATUM_DEMINUTUS";
+        break;
+        case S_PUNCTUM_INCLINATUM_AUCTUS:
+            str = "S_PUNCTUM_INCLINATUM_AUCTUS";
+        break;
+        case S_VIRGA:
             str = "S_VIRGA";
         break;
-        case 5:
+        case S_BIVIRGA:
             str = "S_BIVIRGA";
         break;
-        case 6:
+        case S_TRIVIRGA:
             str = "S_TRIVIRGA";
         break;
-        case 7:
+        case S_ORISCUS:
             str = "S_ORISCUS";
         break;
-        case 8:
+        case S_ORISCUS_AUCTUS:
             str = "S_ORISCUS_AUCTUS";
         break;
-        case 9:
+        case S_QUILISMA:
             str = "S_QUILISMA";
         break;
-        case 10:
+        case S_STROPHA:
             str = "S_STROPHA";
         break;
-        case 11:
+        case S_STROPHA_AUCTA:
             str = "S_STROPHA_AUCTA";
         break;
-        case 12:
+        case S_DISTROPHA:
             str = "S_DISTROPHA";
         break;
-        case 13:
+        case S_DISTROPHA_AUCTA:
             str = "S_DISTROPHA_AUCTA";
         break;
-        case 14:
+        case S_TRISTROPHA:
             str = "S_TRISTROPHA";
         break;
-        case 15:
+        case S_TRISTROPHA_AUCTA:
             str = "S_TRISTROPHA_AUCTA";
         break;
-        case 16:
+        case S_QUADRATUM:
             str = "S_QUADRATUM";
         break;
         default:
@@ -711,22 +720,22 @@ libgregorio_dump_signs (char signs)
     const char *str;
     switch (signs)
     {
-        case 0:
+        case _NO_SIGN:
             str = "_NO_SIGN";
         break;
-        case 1:
+        case _PUNCTUM_MORA:
             str = "_PUNCTUM_MORA";
         break;
-        case 2:
+        case _AUCTUM_DUPLEX:
             str = "_AUCTUM_DUPLEX";
         break;
-        case 5:
+        case _V_EPISEMUS:
             str = "_V_EPISEMUS";
         break;
-        case 6:
+        case _V_EPISEMUS_PUNCTUM_MORA:
             str = "_V_EPISEMUS_PUNCTUM_MORA";
         break;
-        case 7:
+        case _V_EPISEMUS_AUCTUM_DUPLEX:
             str = "_V_EPISEMUS_AUCTUM_DUPLEX";
         break;
         default:
@@ -742,28 +751,28 @@ libgregorio_dump_h_episemus_type (char h_episemus_type)
     const char *str;
     switch (h_episemus_type)
     {
-        case 0:
+        case H_NO_EPISEMUS:
             str = "H_NO_EPISEMUS";
         break;
-        case 1:
+        case H_ONE:
             str = "H_ONE";
         break;
-        case 2:
+        case H_ALONE:
             str = "H_ALONE";
         break;
-        case 3:
+        case H_MULTI:
             str = "H_MULTI";
         break;
-        case 4:
+        case H_MULTI_BEGINNING:
             str = "H_MULTI_BEGINNING";
         break;
-        case 5:
+        case H_MULTI_MIDDLE:
             str = "H_MULTI_MIDDLE";
         break;
-        case 6:
+        case H_MULTI_END:
             str = "H_MULTI_END";
         break;
-        case 7:
+        case H_UNDETERMINED:
             str = "H_UNDETERMINED";
         break;
         default:
