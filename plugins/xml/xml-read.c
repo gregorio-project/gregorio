@@ -1345,6 +1345,14 @@ libgregorio_xml_read_shape (char *type)
     {
       return S_PUNCTUM_INCLINATUM;
     }
+  if (!strcmp (type, "punctum_inclinatum_deminutus"))
+    {
+      return S_PUNCTUM_INCLINATUM_DEMINUTUS;
+    }
+  if (!strcmp (type, "punctum_inclinatum_auctus"))
+    {
+      return S_PUNCTUM_INCLINATUM_AUCTUS;
+    }
   if (!strcmp (type, "virga"))
     {
       return S_VIRGA;

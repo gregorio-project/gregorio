@@ -38,6 +38,12 @@ libgregorio_xml_shape_to_str (char shape)
     case S_PUNCTUM_INCLINATUM:
       str = "punctum_inclinatum";
       break;
+    case S_PUNCTUM_INCLINATUM_DEMINUTUS:
+      str = "punctum_inclinatum_deminutus";
+      break;
+    case S_PUNCTUM_INCLINATUM_AUCTUS:
+      str = "punctum_inclinatum_auctus";
+      break;
     case S_VIRGA:
       str = "virga";
       break;
