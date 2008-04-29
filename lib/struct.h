@@ -454,7 +454,6 @@ h_episemus>H_ALONE
 #define S_PUNCTUM 1
 #define S_PUNCTUM_END_OF_GLYPH 2
 #define S_PUNCTUM_INCLINATUM 3
-// the two following shapes are not used yet TODO: use them
 #define S_PUNCTUM_INCLINATUM_DEMINUTUS 20
 #define S_PUNCTUM_INCLINATUM_AUCTUS 21
 #define S_VIRGA 4
@@ -474,7 +473,12 @@ h_episemus>H_ALONE
 // and quilisma quadratum is the shape of the first note of a pes
 // quislisma quadratum
 #define S_QUADRATUM 16
+// those shapes are for now used only in gregoriotex
 #define S_QUILISMA_QUADRATUM 17
+#define S_PUNCTUM_AUCTUS_ASCENDENS 25
+#define S_PUNCTUM_AUCTUS_DESCENDENS 26
+#define S_PUNCTUM_DEMINUTUS 27
+
 
 // The different types of glyph
 

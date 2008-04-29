@@ -44,19 +44,19 @@ max_interval=4
 
 shapes={
 'pes':2,
-'pesquadratum':6,
+'pesquadratum':3,
 'pesquilisma':4,
 'pesquassus':5,
-'pesquilismaquadratum':3,
+'pesquilismaquadratum':6,
 'flexus':7,
-'porrectusflexus':8,
-'porrectusflexus_nobar':10,
-'porrectus':11,
-'porrectus_nobar':12,
-'flexus_nobar':13,
-'flexus_longqueue':15,
-'torculus':14,
-'torculusresupinus':1,
+'flexus_nobar':8,
+'flexus_longqueue':9,
+'porrectusflexus':12,
+'porrectusflexus_nobar':16,
+'porrectus':20,
+'porrectus_nobar':24,
+'torculus':28,
+'torculusresupinus':32,
 }
 
 liquescentiae={
@@ -81,6 +81,9 @@ count=0
 current_glyph_number=0
 current_font_number=0
 
+# the numerotation of the glyphs are not the same between short and long types, here is the indicator
+shortglyphs=0
+
 # initial glyphs are the names of the glyphs that are already in gregorio_base, mostly one-note glyphs. see initialize_glyphs() for more details
 initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,3,21,31,22,14,15,33,13,62,65,39,69,70,38,37,60,61,63,64,16,34,35,36,66,67,68,72,73]
 
@@ -99,7 +102,7 @@ which is a fontforge script.
 
 def main():
     global fout, font_name
-    global current_glyph_number
+    global current_glyph_number, shortglyphs
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], "h", ["help"])
     except getopt.GetoptError:
@@ -131,9 +134,11 @@ def main():
     current_glyph_number=len(initial_glyphs)
     headers()
     hepisemus()
+    shortglyphs=1
     pes()
     pes_quadratum()
     flexus()
+    shortglyphs=0
     torculus()
     porrectus()
     porrectusflexus()
@@ -149,11 +154,11 @@ def initialize_glyphs():
         initial_glyphs.insert(0,toto)
         initial_glyphs.remove(number)
     if font_name=="gregorio":
-        glyphs_to_append=("_1025", "_4097")
+        glyphs_to_append=("_1025", "_2049")
     if font_name=="parmesan":
-        glyphs_to_append=("_1025", "_4097")
+        glyphs_to_append=("_1025", "_2049")
     if font_name=="greciliae":
-        glyphs_to_append=("_1025",)
+        glyphs_to_append=("_2049",)
     for glyphnumber in glyphs_to_append:
         initial_glyphs.append(glyphnumber)
     initialcount=173
@@ -302,8 +307,11 @@ def set_width(width):
 # function to get the name of the glyph, with the name of the general shape, and the name of the different ambitus
 
 def name(i, j, k, shape, liquescentia):
-    glyphnumber=k+(5*j)+(25*i)+(256*liquescentiae[liquescentia])+(2048*shapes[shape])
-    return "_%d" % (glyphnumber)
+    if shortglyphs==0:
+        glyphnumber=k+(5*j)+(25*i)+(256*liquescentiae[liquescentia])+(512*shapes[shape])
+    else :
+        glyphnumber=k+(5*j)+(25*i)+(64*liquescentiae[liquescentia])+(512*shapes[shape])
+    return "_%04d" % (glyphnumber)
 
 # function that simply pastes the src glyph into dst glyph, without moving it
 
@@ -372,7 +380,6 @@ def hepisemus():
     write_hepisemus(width_stropha, "_0045")
     write_hepisemus(width_quilisma, "_0056")
     write_hepisemus(width_oriscus, "_0057")
-    write_hepisemus(2*width_punctum, "_0058")
     for i in range(max_interval):
         write_hepisemus(porrectuswidths[i], "_00%02d" % int(46+i))
     for i in range(max_interval):
@@ -843,16 +850,27 @@ def torculusresupinus():
         for j in range(1,max_interval+1):
             for k in range(1,max_interval+1):
                 write_torculusresupinus(i,j,k, 'base5', "phigh", 'porrectus')
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            for k in range(1,max_interval+1):
+                write_torculusresupinus(i,j,k, 'idebilis', "phigh", 'porrectus', 'initiodebilis')
     precise_message("torculus resupinus deminutus")
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
             for k in range(1,max_interval+1):
                 write_torculusresupinusdeminutus(i,j,k, 'base5', 'porrectus', 'deminutus')
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            for k in range(1,max_interval+1):
+                write_torculusresupinusdeminutus(i,j,k, 'idebilis', 'porrectus', 'initiodebilisdeminutus')
+                
 
 def write_torculusresupinus(i,j,k, first_glyph, last_glyph, shape, liquescentia='nothing'):
     glyphname=name(i, j, k, shape, liquescentia)
     begin_glyph(glyphname)
-    if i==1:
+    if first_glyph=="idebilis":
+        length=width_debilis
+    elif i==1:
         if first_glyph=='base5':
             first_glyph='_0017'
             length=width_punctum

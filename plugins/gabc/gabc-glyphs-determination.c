@@ -62,11 +62,11 @@ close_glyph (gregorio_glyph ** last_glyph, char glyph_type,
 {
 
 // patch to have good glyph type in the case where a glyph ends by a note with shape S_QUADRATUM
-      if (glyph_type == G_PES_QUADRATUM_FIRST_PART
-	  || glyph_type == G_PES_QUILISMA_QUADRATUM_FIRST_PART)
-	{
-	      glyph_type = G_PUNCTUM;
-	}
+  if (glyph_type == G_PES_QUADRATUM_FIRST_PART
+      || glyph_type == G_PES_QUILISMA_QUADRATUM_FIRST_PART)
+    {
+      glyph_type = G_PUNCTUM;
+    }
 
   libgregorio_add_glyph (last_glyph, glyph_type, *first_note, liquescentia);
   if (current_note->next_note)
@@ -210,8 +210,33 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 	  /* we deal with liquescentia */
 	  if (is_liquescentia (current_note->liquescentia))
 	    {
+	      //special cases of the punctum inclinatum deminutus and auctus
+	      if (current_note->shape == S_PUNCTUM_INCLINATUM)
+		{
+		  if (current_note->liquescentia == L_DEMINUTUS)
+		    {
+		      current_note->shape = S_PUNCTUM_INCLINATUM_DEMINUTUS;
+		    }
+		  if (current_note->liquescentia == L_AUCTA
+		      || current_note->liquescentia == L_AUCTUS_DESCENDENS
+		      || current_note->liquescentia == L_AUCTUS_ASCENDENS)
+		    {
+		      current_note->shape = S_PUNCTUM_INCLINATUM_AUCTUS;
+		    }
+
+		  if (current_note->next_note
+		      && current_note->next_note->shape ==
+		      S_PUNCTUM_INCLINATUM
+		      && current_note->next_note->liquescentia ==
+		      L_DEMINUTUS)
+		    {
+		      last_pitch = current_note->pitch;
+		      current_note = next_note;
+		      continue;
+		    }
+		}
 	      liquescentia += current_note->liquescentia;
-	/* once again, only works with the good values in the header file */
+	      /* once again, only works with the good values in the header file */
 	      close_glyph (&last_glyph, current_glyph_type,
 			   &current_glyph_first_note, liquescentia,
 			   current_note);
@@ -227,9 +252,24 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 	  liquescentia = L_NO_LIQUESCENTIA;
 	  /* we deal with liquescentia */
 	  if (is_liquescentia (current_note->liquescentia))
-	//not an initio debilis, because we considered it in the first
-	//part...
+	    //not an initio debilis, because we considered it in the first
+	    //part...
 	    {
+	    	      //special cases of the punctum inclinatum deminutus and auctus
+	      if (current_note->shape == S_PUNCTUM_INCLINATUM)
+		{
+		  if (current_note->liquescentia == L_DEMINUTUS)
+		    {
+		      current_note->shape = S_PUNCTUM_INCLINATUM_DEMINUTUS;
+		    }
+		  if (current_note->liquescentia == L_AUCTA
+		      || current_note->liquescentia == L_AUCTUS_DESCENDENS
+		      || current_note->liquescentia == L_AUCTUS_ASCENDENS)
+		    {
+		      current_note->shape = S_PUNCTUM_INCLINATUM_AUCTUS;
+		    }
+
+		}
 	      close_glyph (&last_glyph, current_glyph_type,
 			   &current_glyph_first_note,
 			   current_note->liquescentia, current_note);
@@ -238,7 +278,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 	  break;
 	case DET_END_OF_CURRENT:
 	  liquescentia += current_note->liquescentia;
-	/* once again, only works with the good values in the header file */
+	  /* once again, only works with the good values in the header file */
 	  close_glyph (&last_glyph, next_glyph_type,
 		       &current_glyph_first_note, liquescentia, current_note);
 	  current_glyph_type = G_UNDETERMINED;
@@ -504,7 +544,7 @@ libgregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
 	/** Warning : this part of the code is specific to the
 	    declarations of the header file */
       if (current_glyph_type > G_PUNCTA_INCLINATA)
-	{			
+	{
 /* meaning that the previous glyph is not a combination of puncta
   inclinata, see header file for details */
 	  *end_of_glyph = DET_END_OF_PREVIOUS;
@@ -640,7 +680,7 @@ libgregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
   if (current_glyph_type == G_NO_GLYPH)
     {
       /* means that this is the first glyph or that the previous glyph
-	 has already been added */
+         has already been added */
       if (*end_of_glyph == DET_END_OF_PREVIOUS)
 	{
 	  *end_of_glyph = DET_NO_END;

@@ -619,6 +619,26 @@ libgregorio_gabc_write_gregorio_note (FILE * f,
     case S_PUNCTUM_INCLINATUM:
       fprintf (f, "%c", toupper (note->pitch));
       break;
+    case S_PUNCTUM_INCLINATUM_DEMINUTUS:
+        if (note->next_note)
+        {
+      fprintf (f, "%c~", toupper (note->pitch));
+      }
+      else 
+      {
+      fprintf (f, "%c", toupper (note->pitch));
+      }
+      break;
+    case S_PUNCTUM_INCLINATUM_AUCTUS:
+        if (note->next_note)
+        {
+      fprintf (f, "%c<", toupper (note->pitch));
+      }
+      else 
+      {
+      fprintf (f, "%c", toupper (note->pitch));
+      }
+      break;
     case S_VIRGA:
       fprintf (f, "%cv", note->pitch);
       break;

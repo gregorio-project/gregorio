@@ -1581,7 +1581,7 @@ libgregorio_is_vowel (wchar_t letter)
     L'ù', L'ý', L'á', L'à', L'ǽ', L'Ǽ', L'í'
   };
   int i;
-  for (i = 0; i < 35; i++)
+  for (i = 0; i < 36; i++)
     {
       if (letter == vowels[i])
 	{

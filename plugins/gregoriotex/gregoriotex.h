@@ -27,26 +27,39 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Here are the different types, they must be the same as in squarize.py
 */
 
+// the first are the short ones (see squarize.py)
 #define T_ONE_NOTE 1
 #define T_PES 2
-#define T_PESQUADRATUM 6
+#define T_PESQUADRATUM 3
 #define T_PESQUILISMA 4
 #define T_PESQUASSUS 5
-#define T_PESQUILISMAQUADRATUM 3
+#define T_PESQUILISMAQUADRATUM 6
 #define T_FLEXUS 7
-#define T_PORRECTUSFLEXUS 8
-#define T_PORRECTUSFLEXUS_NOBAR 10
-#define T_PORRECTUS 11
-#define T_PORRECTUS_NOBAR 12
-#define T_FLEXUS_NOBAR 13
-#define T_FLEXUS_LONGQUEUE 15
-#define T_TORCULUS 14
+#define T_FLEXUS_NOBAR 8
+#define T_FLEXUS_LONGQUEUE 9
+// the next are the long ones
+#define T_PORRECTUSFLEXUS 12
+#define T_PORRECTUSFLEXUS_NOBAR 16
+#define T_PORRECTUS 20
+#define T_PORRECTUS_NOBAR 24
+#define T_TORCULUS 28
+#define T_TORCULUS_RESUPINUS 32
+
+// the different types for the alignment of the notes in GregorioTeX
+#define AT_ONE_NOTE 0
+#define AT_FLEXUS 1
+#define AT_PORRECTUS 2
+#define AT_INITIO_DEBILIS 3
+#define AT_QUILISMA 4
+#define AT_ORISCUS 5
+#define AT_PUNCTUM_INCLINATUM 6
+#define AT_STROPHA 6
 
 // the fonts
-
 #define F_GREGORIO 1
 #define F_PARMESAN 2
 #define F_GREGORIA 3
+#define F_GRECILIAE 4
 
 // macro that we will use to determine if we need a short bar or not
 
@@ -62,8 +75,9 @@ Here are the different types, they must be the same as in squarize.py
 #define L_NO_DEMINUTUS 5
 
 // the definitions of the type and liquescentia factors
-#define TYPE_FACTOR 2048
-#define LIQ_FACTOR 256
+#define TYPE_FACTOR 512
+#define L_LIQ_FACTOR 256
+#define S_LIQ_FACTOR 64
 
 // additional glyph types, necessary for determination
 #define G_PORRECTUS_NO_BAR 40
@@ -79,7 +93,7 @@ void libgregorio_gregoriotex_write_text (FILE * f, gregorio_character *first_cha
 void libgregorio_gregoriotex_write_element (FILE * f, gregorio_syllable * syllable, gregorio_element * element);
 void libgregorio_gregoriotex_write_bar (FILE * f, char type);
 void libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable, gregorio_element * element, gregorio_glyph * glyph);
-void libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *glyph, int *type, unsigned int *glyph_number);
+void libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *glyph, int *type, char *gtype, unsigned int *glyph_number);
 
 unsigned int libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph);
 void libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note, char next_note_pitch);
@@ -93,7 +107,7 @@ void libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char);
 void libgregorio_gtex_write_verb (FILE * f, wchar_t * verb_str);
 void libgregorio_gtex_print_char (FILE * f, wchar_t to_print);
 
-unsigned int gregoriotex_determine_liquescentia_number (unsigned char type, char liquescentia);
+unsigned int gregoriotex_determine_liquescentia_number (unsigned int factor, unsigned char type, char liquescentia);
 void libgregorio_gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
 void libgregorio_gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
 void libgregorio_gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_note * current_note);
