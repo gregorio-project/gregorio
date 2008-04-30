@@ -953,6 +953,7 @@
 \def\syllable#1#2#3#4#5{%
 \firstglyph=1 %
 \findtextaligncenter{#1}{#2}{#3}% we first get the width between the alignment point and the end of the syllable
+\syllablenotes{#5}% we put the notes in a box, so that we have the width of it
 % now we calculate the begin difference, that is to say \notesaligncenter - \textaligncenter
 \begindifference=\notesaligncenter %
 \advance\begindifference by -\textaligncenter %
@@ -975,7 +976,6 @@
 \fi %
 \fi %
 \fi %
-\syllablenotes{#5}% we put the notes in a box, so that we have the width of it
 %\potentialdash=2 %
 \setbox\Syllabletext=\hbox{\textfont #1#2#3%
 %\hbox to 0pt{\hbox to 0pt{}}%
