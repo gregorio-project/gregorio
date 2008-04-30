@@ -14,17 +14,69 @@
 %You should have received a copy of the GNU General Public License
 %along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the font dimensions
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%
+%% basic start
+%%%%%%%%%%%%%%
 
+% factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
+\newcount\factor
+\factor=17
+
+%%%%%%%%%%%%%%%%%%
+%% vertical spaces
+%%%%%%%%%%%%%%%%%%
+
+% \stafflineheight is the height of a staff line
+\newdimen\stafflineheight
+\stafflineheight=1500 sp 
+\multiply\stafflineheight by \the\factor 
+% \interstafflinespace is the space between two lines of staff
+\newdimen\interstafflinespace
+\interstafflinespace=30000 sp 
+\multiply\interstafflinespace by \the\factor 
+% \interstafflinespace is the width of a line
+\newdimen\linewidth \linewidth=\hsize 
+% \stafflinewidth is the width of a line of staff, this can vary, for example at the first line
+\newdimen\stafflinewidth \stafflinewidth=\linewidth 
+% \staffheight is the total height of the staff : that is to say the four written lines
+\newdimen\staffheight \staffheight=4\stafflineheight 
+\advance\staffheight by 3\interstafflinespace
+
+% vertical spaces
+%the space above the lines
+\newskip\spaceabovelines
+%\spaceabovelines = 33000 sp plus 5000 sp minus 5000 sp
+\spaceabovelines = 25000 sp plus 0 sp minus 0 sp
+\multiply\spaceabovelines by \factor
+
+%the space between the lines and the bottom of the text
+\newskip\spacelinestext
+\spacelinestext = 59500 sp plus 0 sp minus 0 sp
+\multiply\spacelinestext by \factor
+
+%the space beneath the text
+\newskip\spacebeneathtext
+\spacebeneathtext = 18000 sp plus 0 sp minus 0 sp
+\multiply\spacebeneathtext by \factor
+
+%constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
+% to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at spacelinestext + spacebeneathtext + 2*interstafflinespace + 2*stafflineheight
+\newdimen\constantglyphraise
+\constantglyphraise = -22000 sp
+\multiply\constantglyphraise by \the\factor
+\advance\constantglyphraise\spacebeneathtext
+\advance\constantglyphraise by \spacelinestext
+\advance\constantglyphraise by \interstafflinespace
+\advance\constantglyphraise by \interstafflinespace
+\advance\constantglyphraise by \stafflineheight
+\advance\constantglyphraise by \stafflineheight
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of text
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % \textlower is the height of the separation between the bottom line (which is invisible : for the notes which are very low) and the bottom of the text
-\newdimen\textlower \textlower=6pt
+\newdimen\textlower \textlower=\spacebeneathtext
 
 %% macro that sets \temp to the width of its argument
 
@@ -70,7 +122,7 @@
 \def\initial#1{%
 \setbox\Initial=\hbox{\fontofinitial #1}%
 \global\initialwidth=\the\wd\Initial%
-\lower\textlower\copy\Initial%
+\raise\textlower\copy\Initial%
 \hskip\afterinitialshift %
 \advance\initialwidth by \afterinitialshift%
 \relax%
@@ -119,10 +171,6 @@
 %% macros for the typesetting of the lines
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% factor is the factor with which you open you font (the number after the at)
-\newcount\factor
-\factor=17
-
 % maybe a good idea, but hard to exploit...
 %\def\gscale#1{%
 %\global\multiply#1 by \the\factor %
@@ -130,32 +178,13 @@
 %\relax%
 %}
 
-% \stafflineheight is the height of a staff line
-\newdimen\stafflineheight
-\stafflineheight=1500 sp 
-\multiply\stafflineheight by \the\factor 
-% \interstafflinespace is the space between two lines of staff
-%\newdimen\interstafflinespace \interstafflinespace=0.315\the\factor em
-\newdimen\interstafflinespace
-\interstafflinespace=30000 sp 
-\multiply\interstafflinespace by \the\factor 
-% \interstafflinespace is the width of a line
-\newdimen\linewidth \linewidth=\hsize 
-% \stafflinewidth is the width of a line of staff, this can vary, for example at the first line
-\newdimen\stafflinewidth \stafflinewidth=\linewidth 
-% \staffheight is the total height of the staff : that is to say the four written lines plus two invisible lines plus the space to type one note above the top line and one note beneath the bottom line
-\newdimen\staffheight \staffheight=6\stafflineheight 
-\advance\staffheight by 7\interstafflinespace
-
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
 \def\drawfirstlines{%
 \advance\stafflinewidth by -\initialwidth%
 \initialwidth=0pt%
 \hbox to0pt{%
 \vbox{%
-\kern\the\interstafflinespace %
-\kern\the\stafflineheight %
-\kern\the\interstafflinespace %
+\vskip\spaceabovelines %
 \hrule height \stafflineheight width \stafflinewidth %
 \kern\the\interstafflinespace %
 \hrule height \stafflineheight width \stafflinewidth %
@@ -163,9 +192,8 @@
 \hrule height \stafflineheight width \stafflinewidth %
 \kern\the\interstafflinespace %
 \hrule height \stafflineheight width \stafflinewidth %
-\kern\the\interstafflinespace %
-\kern\the\stafflineheight %
-\kern\the\interstafflinespace %
+\vskip\spacelinestext %
+\vskip\spacebeneathtext %
 }%
 \hss%
 }%
@@ -177,9 +205,7 @@
 \newbox\Lines
 \setbox\Lines=\hbox to0pt{%
 \vbox{%
-\kern \the\interstafflinespace %
-\kern\the\stafflineheight %
-\kern \the\interstafflinespace %
+\vskip\spaceabovelines %
 \hrule height \stafflineheight width \stafflinewidth %
 \kern\the\interstafflinespace %
 \hrule height \stafflineheight width \stafflinewidth %
@@ -187,9 +213,8 @@
 \hrule height \stafflineheight width \stafflinewidth %
 \kern\the\interstafflinespace %
 \hrule height \stafflineheight width \stafflinewidth %
-\kern \the\interstafflinespace %
-\kern\the\stafflineheight %
-\kern \the\interstafflinespace %
+\vskip\spacelinestext %
+\vskip\spacebeneathtext %
 }%
 \hss%
 \relax%
@@ -433,23 +458,24 @@
 \glyphraisevalue = 15750 sp %
 \multiply\glyphraisevalue by \the\factor %
 \multiply\glyphraisevalue by \the\tempcount %
+\addedraisevalue= 0 sp
 \ifcase#2 % 
 \or\or\or%3: if it is a vertical episemus on a line, we shift it a bit higher, so that it's more beautiful
 \ifnum\isonaline=1%
-\addedraisevalue=5000 sp%
+\addedraisevalue=350 sp%
 \multiply\addedraisevalue by \the\factor %
 \advance\glyphraisevalue by \addedraisevalue %
 \fi
 \or% 4: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
 \ifnum\isonaline=1%
-\addedraisevalue=-4000 sp%
+\addedraisevalue=-400 sp%
 \multiply\addedraisevalue by \the\factor %
 \advance\glyphraisevalue by \addedraisevalue %
 \fi%
 \fi%
-\addedraisevalue=102400 sp%
 \multiply\addedraisevalue by \the\factor %
-\advance\glyphraisevalue \addedraisevalue % where the 0 must be
+\advance\glyphraisevalue by \addedraisevalue %
+\advance\glyphraisevalue by \constantglyphraise %
 \global\tempcount=0%
 \global\isonaline=0%
 \relax%
@@ -993,7 +1019,7 @@
 \temp=0pt%
 \fi%
 \kern \temp %
-\lower\textlower \copy\Syllabletext %
+\raise\textlower \copy\Syllabletext %
 %\-%
 \kern -\wd\Syllabletext %
 \kern -\begindifference %
@@ -1586,7 +1612,7 @@
 
 \font\gregoriantextfont=greciliae at 11pt
 
-\font\textfont=pncr at 11pt
+\font\textfont=pncr at 12pt
 \font\fontofinitial=pncr at 38pt
 
 \def\setfactor#1{%
