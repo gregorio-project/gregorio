@@ -1355,8 +1355,8 @@
 %% 0: default space 
 %% 1: zero width space
 %% 2: space between flat or natural and a note
-%% 3: shift when there is a punctum inclinatum after
-%% 7: space between a punctum inclinatum and a punctum inclinatum and a punctum inclinatum deminutus
+%% 3: space between two puncta inclinata
+%% 7: space between a punctum inclinatum and a punctum inclinatum deminutus
 %% 8: space between two puncta inclinata deminuti
 %% 4: space between bivirga or bistropha
 %% 5: space between tristropha or trivirga
@@ -1378,9 +1378,9 @@
 \or%
 \hskip\spaceaftersigns %
 \or%
-\hskip\punctuminclinatumdebilisshift %
+\hskip\punctuminclinatumanddebilisshift %
 \or%
-\hskip\punctuminclinatumdebilis2shift %
+\hskip\punctuminclinatumdebilisshift %
 \fi%
 \penalty 10001%
 \relax%
@@ -1476,17 +1476,17 @@
 
 % space between two punctum inclinatum
 \newskip\punctuminclinatumshift
-\punctuminclinatumshift=-4000 sp plus 400 sp minus 400 sp
+\punctuminclinatumshift=-5900 sp plus 200 sp minus 200 sp
 \multiply\punctuminclinatumshift by \factor
 
 % space between a punctum inclinatum and a punctum inclinatum deminutus
-\newskip\punctuminclinatumdebilisshift
-\punctuminclinatumdebilisshift=-2500 sp plus 250 sp minus 250 sp
-\multiply\punctuminclinatumdebilisshift by \factor
+\newskip\punctuminclinatumanddebilisshift
+\punctuminclinatumanddebilisshift=-4000 sp plus 100 sp minus 100 sp
+\multiply\punctuminclinatumanddebilisshift by \factor
 
 % space between two punctum inclinatum deminutus
 \newskip\punctuminclinatumdebilisshift
-\punctuminclinatumdebilisshift=-2500 sp plus 250 sp minus 250 sp
+\punctuminclinatumdebilisshift=-1300 sp plus 100 sp minus 100 sp
 \multiply\punctuminclinatumdebilisshift by \factor
 
 % space between the initial and the beginning of the score
