@@ -268,7 +268,16 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 		    {
 		      current_note->shape = S_PUNCTUM_INCLINATUM_AUCTUS;
 		    }
-
+		  if (current_note->next_note
+		      && current_note->next_note->shape ==
+		      S_PUNCTUM_INCLINATUM
+		      && current_note->next_note->liquescentia ==
+		      L_DEMINUTUS)
+		    {
+		      last_pitch = current_note->pitch;
+		      current_note = next_note;
+		      continue;
+		    }
 		}
 	      close_glyph (&last_glyph, current_glyph_type,
 			   &current_glyph_first_note,

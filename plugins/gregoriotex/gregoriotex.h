@@ -53,7 +53,9 @@ Here are the different types, they must be the same as in squarize.py
 #define AT_QUILISMA 4
 #define AT_ORISCUS 5
 #define AT_PUNCTUM_INCLINATUM 6
-#define AT_STROPHA 6
+#define AT_STROPHA 7
+#define AT_FLEXUS_1 8
+#define AT_FLEXUS_DEMINUTUS 9
 
 // the fonts
 #define F_GREGORIO 1
@@ -111,5 +113,13 @@ unsigned int gregoriotex_determine_liquescentia_number (unsigned int factor, uns
 void libgregorio_gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
 void libgregorio_gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
 void libgregorio_gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_note * current_note);
+
+void libgregorio_gregoriotex_write_next_first_text (FILE * f, gregorio_character *current_character);
+int libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable);
+gregorio_glyph * libgregorio_gregoriotex_first_glyph (gregorio_syllable * syllable);
+
+void libgregorio_gregoriotex_determine_note_number_and_type (gregorio_note * note, int *type, unsigned int *glyph_number);
+
+void libgregorio_gtex_write_end_for_two (FILE * f, unsigned char style);
 
 #endif

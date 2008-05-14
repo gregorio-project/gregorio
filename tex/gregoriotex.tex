@@ -95,12 +95,12 @@
 
 \newdimen\textaligncenter
 
-\def\findtextaligncenter#1#2#3{%
+\def\findtextaligncenter#1#2{%
 \widthof{\textfont #1#2}%
-\textaligncenter=\the\tempwidth %
+\global\textaligncenter=\the\tempwidth %
 \widthof{\textfont #2}%
 \divide\tempwidth by 2 %
-\advance\textaligncenter by -\the\tempwidth%
+\global\advance\textaligncenter by -\the\tempwidth%
 \relax%
 }
 
@@ -584,6 +584,8 @@
 %%%%% 5 : case of a glyph starting with an oriscus
 %%%%% 6 : case of a punctum inclinatum
 %%%%% 7 : case of a stropha
+%%%%% 8 : flexus with an ambitus of one
+%%%%% 9 : flexus deminutus
 \def\glyph#1#2#3#4{%
 \calculateglyphraisevalue{#2}{0}%
 \setbox\Tempwidth=\hbox{\gregorianfont #1}%
@@ -608,43 +610,37 @@
 \ifcase#1%
 %case of punctum
 \setbox\Tempwidth=\hbox{\gregorianfont \char 17}%
-\global\notesaligncenter=\wd\Tempwidth%
-\global\divide\notesaligncenter by 2%
 \or%
-%case of flexus and flexus deminutus
-\global\notesaligncenter=\tempwidth%
-\global\divide\notesaligncenter by 2%
+%case of flexus
+\setbox\Tempwidth=\hbox{\gregorianfont \char 4098}%
 \or%
 %case of porrectus (we consider it to have the same alignment as punctum)
 \setbox\Tempwidth=\hbox{\gregorianfont \char 17}%
-\global\notesaligncenter=\wd\Tempwidth%
-\global\divide\notesaligncenter by 2%
 \or%
 %case of a initio debilis
 \setbox\Tempwidth=\hbox{\gregorianfont \char 13}%
-\global\notesaligncenter=\wd\Tempwidth%
-\global\divide\notesaligncenter by 2%
 \or %
 %case of a quilisma
 \setbox\Tempwidth=\hbox{\gregorianfont \char 26}%
-\global\notesaligncenter=\wd\Tempwidth%
-\global\divide\notesaligncenter by 2%
 \or %
 %case of an oriscus
 \setbox\Tempwidth=\hbox{\gregorianfont \char 28}%
-\global\notesaligncenter=\wd\Tempwidth%
-\global\divide\notesaligncenter by 2%
 \or %
 %case of a punctum inclinatum
 \setbox\Tempwidth=\hbox{\gregorianfont \char 19}%
-\global\notesaligncenter=\wd\Tempwidth%
-\global\divide\notesaligncenter by 2%
 \or %
 %case of a stropha
 \setbox\Tempwidth=\hbox{\gregorianfont \char 20}%
+\or %
+% case of flexus with ambitus of one
+\setbox\Tempwidth=\hbox{\gregorianfont \char 4097}%
+\or %
+% case of flexus deminutus
+\setbox\Tempwidth=\hbox{\gregorianfont \char 4225}%
+\fi%
 \global\notesaligncenter=\wd\Tempwidth%
 \global\divide\notesaligncenter by 2%
-\fi%
+%\showthe\notesaligncenter %
 \relax%
 }
 
@@ -926,7 +922,7 @@
 \newbox\Syllabletext
 
 % count that will be 0 if in the last text there was no dash (or if it is the beginning of a word, and 1 if there was
-\newcount\previousdash
+%\newcount\previousdash
 
 \newcount\firstsyllableofword
 \firstsyllableofword=1
@@ -949,12 +945,17 @@
 % #4 : end of word : if it is 0 it means it is not an end of word, if it is 1 it is
 % TODO: find another system for the end syllable
 %% #5 (not used anymore) : beggining of word : if it is 0 it means it is not a beginning of word, if it is 1 it is
-% #5 : glyphs : all the notes
-\def\syllable#1#2#3#4#5{%
+% #8 : glyphs : all the notes
+% the three next parameters are to put an hyphen if necessary, they can be empty for end of words
+% #5 : first letters of the next syllable 
+% #6 : middle letters of the next syllabel
+% #7 : alignment type of the first next glyph
+\def\syllable#1#2#3#4#5#6#7#8{%
 \firstglyph=1 %
-\findtextaligncenter{#1}{#2}{#3}% we first get the width between the alignment point and the end of the syllable
-\syllablenotes{#5}% we put the notes in a box, so that we have the width of it
+\findtextaligncenter{#1}{#2}% we first get the width between the alignment point and the end of the syllable
+\syllablenotes{#8}% we put the notes in a box, so that we have the width of it
 % now we calculate the begin difference, that is to say \notesaligncenter - \textaligncenter
+%\showthe\notesaligncenter %
 \begindifference=\notesaligncenter %
 \advance\begindifference by -\textaligncenter %
 % then we do a kind of trick to separate more the notes of two different syllables : we put a space if we are in the same word (enddifference!=0) if necessary
@@ -964,55 +965,46 @@
 \ifdim\enddifference>0pt%
 \temp=\intersyllablespace %
 \advance\temp by \begindifference %
-\ifdim\temp>0pt %
-\hskip\temp %
-\fi%
 \else %\enddifference<0
 \temp=\intersyllablespace %
 \advance\temp by \begindifference %
 \advance\temp by \enddifference %
+\fi %
 \ifdim\temp>0pt %
 \hskip\temp %
 \fi %
 \fi %
-\fi %
 %\potentialdash=2 %
-\setbox\Syllabletext=\hbox{\textfont #1#2#3%
-%\hbox to 0pt{\hbox to 0pt{}}%
-}%
+\setnextbegindifference{#5}{#6}{#7}%
+\setbox\Syllabletext=\hbox{\textfont #1#2#3}%
+\setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}%
 %\potentialdash=1 %
 \ifcase#4 %
 % we enter here if the end of word is 0, so we must determine if we need to type the gragorio dash here
-% we determine if \wd\Syllablenotes > tempwidth (width of text without dash) + \gregoriotextdashwidth - textaligncenter + notesaligncenter
-\temp=\wd\Syllabletext %
-\advance\temp by \gregoriotextdashwidth %
-\advance\temp by -\textaligncenter %
-\advance\temp by \notesaligncenter %
-\ifdim\wd\Syllablenotes>\temp %
+%
+% we set temp to the additional space that will be needed before the next syllable
+\ifdim\enddifference>0pt%
+\temp=\intersyllablespace %
+\advance\temp by \nextbegindifference %
+\else %\enddifference<0
+\temp=\intersyllablespace %
+\advance\temp by \nextbegindifference %
+\advance\temp by \enddifference %
+\fi %
+%\temp=\intersyllablespace %
+%\advance\temp by -\nextbegindifference %
+%\advance\temp by \enddifference %
+%
+% then we compare it with \maximumspacewithoutdash, if it is larger, we add a dash
+%
+\ifdim\temp>\maximumspacewithoutdash %
 %\potentialdash=2 %
 \setbox\Syllabletext=\hbox{\textfont #1#2#3%
 \gregoriotextdash%
-%\hbox to 0pt{\hbox to 0pt{}}%
 }%
-\global\previousdash=1 %
-%\potentialdash=1 %
-\else%
-%\potentialdash=3 %
-\setbox\Syllabletext=\hbox{\textfont #1#2#3%
-%\gregoriotextdash%
-%\hbox to 0pt{\hbox to 0pt{}}%
-}%
-%\potentialdash=1 %
-\global\previousdash=0 %
-\fi%
-\fi%
-% then we must typeset the two boxes, but we must begin by the one that will go the less far, so we calculate the \enddifference, and we see if it is positive or not. Settenddifferents also sets \previousenddifference to the good value
 \setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}%
-%% complicated things with the enddifference of the previous glyph, but only if it is not a begginning of word, but we don't use them anymore
-%\ifcase#5 %
-%\the\begindifference %
-%\setsyllableshift{\begindifference}%
-%\fi%
+\fi%
+\fi%
 % then we reuse temp, we assign to it the \begindifference, but only if it is positive, else it is 0
 \temp=\begindifference %
 \ifdim\temp <0pt %
@@ -1020,16 +1012,14 @@
 \fi%
 \kern \temp %
 \raise\textlower \copy\Syllabletext %
-%\-%
 \kern -\wd\Syllabletext %
 \kern -\begindifference %
-#5% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
+#8% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
 \ifdim\the\enddifference <0pt%
 %% important, else we are not really at the end of the syllable
 \kern -\enddifference %
 \fi%
 %% then we call end of syllable or end of word
-%\-%
 \ifcase#4 %
 \endofsyllable %
 \global\firstsyllableofword=0 %
@@ -1038,6 +1028,27 @@
 \global\firstsyllableofword=1 %
 \fi%
 \relax%
+}
+
+%nextbegindifference is the begindifference of the next syllable
+\newskip\nextbegindifference
+\newskip\tempskip %TODO : couldn't we use another existing temp* ?
+
+% macro to set \nextbegindifference
+%% 1 : the first letters of the next syllable
+%% 2 : the middle letters of the next syllable
+%% 3 : the type of notes alignment
+\def\setnextbegindifference#1#2#3{%
+%to prevent the pollution of the normal values, we stock them into a temp value
+\tempskip=\textaligncenter %
+\findtextaligncenter{#1}{#2}%
+\global\nextbegindifference=-\textaligncenter %
+\global\textaligncenter=\the\tempskip %
+\tempskip=\notesaligncenter %
+\findnotesaligncenter{#3}% idem
+\global\advance\nextbegindifference by \the\notesaligncenter %
+\global\notesaligncenter=\tempskip %
+\relax %
 }
 
 % macro to set \enddifference (defined above) to \wd\Syllablenotes - (\wd\Syllabletext - \textaligncenter) - \notesaligncenter
@@ -1330,10 +1341,18 @@
 
 %macro to call when there is just a little thing that will go to the last line, when it is not necessary
 \def\gnolastline{%
-\ifdim\enddifference >0pt %
-\hskip-\interwordspacenotes %
-\else%
-\hskip-\interwordspacetext %
+\ifdim\enddifference > 0 pt %
+\ifdim\nextbegindifference > 0 pt %
+\hskip\interwordspacenotes %
+\else % (next begin difference >0pt)
+\hskip\interwordspacenotestext %
+\fi %
+\else%(enddifference < Opt)
+\ifdim\nextbegindifference < 0 pt %
+\hskip\interwordspacetext %
+\else %(next begin difference < 0 pt)
+\hskip\interwordspacetextnotes %
+\fi %
 \fi %
 \global\endofscore=1 %
 \localrightbox{}%
@@ -1344,10 +1363,18 @@
 
 % macro called at each end of word
 \def\endofword{%
-\ifdim\enddifference >0pt %
+\ifdim\enddifference > 0 pt %
+\ifdim\nextbegindifference > 0 pt %
 \hskip\interwordspacenotes %
-\else%
+\else % (next begin difference >0pt)
+\hskip\interwordspacenotestext %
+\fi %
+\else%(enddifference < Opt)
+\ifdim\nextbegindifference < 0 pt %
 \hskip\interwordspacetext %
+\else %(next begin difference < 0 pt)
+\hskip\interwordspacetextnotes %
+\fi %
 \fi %
 \penalty -1000%
 \global\enddifference=0pt %
@@ -1447,7 +1474,8 @@
 
 % minimum space between two notes of different syllables
 \newskip\intersyllablespace
-\intersyllablespace=30000 sp plus 2000 sp minus 0 sp
+\intersyllablespace=40000 sp plus 2000 sp minus 0 sp
+%\intersyllablespace=0 sp plus 0 sp minus 0 sp
 \multiply\intersyllablespace by \factor
 
 % space before custo
@@ -1470,22 +1498,22 @@
 \spaceafterlineclef = 16500 sp plus 1650 sp minus 1650 sp
 \multiply\spaceafterlineclef by \factor
 
-% space after at the end of a word when the last written symbol is a note
+% space after at the end of a word when the last written symbol is a note and the first is a note
 \newskip\interwordspacenotes
 \interwordspacenotes = 32000 sp plus 3200 sp minus 3200 sp
 \multiply\interwordspacenotes by \factor
 
-% space after at the end of a word when the last written symbol is a note and the first is text TODO : use it
+% space after at the end of a word when the last written symbol is a note and the first is text
 \newskip\interwordspacenotestext
-\interwordspacenotestext = 25000 sp plus 2500 sp minus 2500 sp
+\interwordspacenotestext = 35000 sp plus 2500 sp minus 2500 sp
 \multiply\interwordspacenotestext by \factor
 
-% space after at the end of a word when the last written symbol is text and the first is a note TODO : use it
+% space after at the end of a word when the last written symbol is text and the first is a note
 \newskip\interwordspacetextnotes
 \interwordspacetextnotes = 30000 sp plus 3000 sp minus 3000 sp
 \multiply\interwordspacetextnotes by \factor
 
-% space after at the end of a word when the last written symbol is text
+% space after at the end of a word when the last written symbol is text and the first is text
 \newskip\interwordspacetext
 \interwordspacetext = 30000 sp plus 3000 sp minus 3000 sp
 \multiply\interwordspacetext by \factor
@@ -1561,6 +1589,10 @@
 \spaceafterfinalis = 8500 sp plus 1650 sp minus 6000 sp
 \multiply\spaceafterfinalis by \factor
 
+\newdimen\maximumspacewithoutdash
+\maximumspacewithoutdash = 4000 sp
+\multiply\maximumspacewithoutdash by \factor
+
 % space for the clef changes
 \newskip\clefchangespace
 
@@ -1613,7 +1645,7 @@
 \font\gregoriantextfont=greciliae at 11pt
 
 \font\textfont=pncr at 12pt
-\font\fontofinitial=pncr at 38pt
+\font\fontofinitial=pncr at 40pt
 
 \def\setfactor#1{%
 \global\factor=#1 %
