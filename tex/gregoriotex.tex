@@ -1602,30 +1602,47 @@
 
 % the macros to typeset the A, R and V with bar
 \def\Abar{%
-{\gregoriantextfont \char 66}%
+{\gregoriansymbolfont \char 64}%
 \relax%
 }
 
 \def\Rbar{%
-{\gregoriantextfont \char 67}%
+{\gregoriansymbolfont \char 65}%
 \relax%
 }
 
 \def\Vbar{%
-{\gregoriantextfont \char 68}%
+{\gregoriansymbolfont \char 66}%
 \relax%
 }
 
-% the macro to write a cross
+% the macro to typeset a dagger
+\def\gdagger{%
+{\gregoriansymbolfont \char 68}%
+\relax%
+}
+
+% macro to typeset a (malt) cross
 \def\gcross{%
+{\gregoriansymbolfont \char 70}%
+\relax%
 }
 
 %the macro to write a star
 \def\gstar{%
-\raise -0.1em\hbox{*}%
+\gheightstar %
 \relax%
 }
 
+\def\gheightstar{%
+{\gregoriansymbolfont \char 69}%
+\relax %
+}
+
+\def\gsixstar{%
+{\gregoriansymbolfont \char 71}%
+\relax %
+}
 
 \newcount\tempfactor %
 
@@ -1642,7 +1659,7 @@
 % we open the font at \factor pt, we must know \factor because it will determine the line heigth, etc. 
 \font\gregorianfont=greciliae at \the\tempfactor sp
 
-\font\gregoriantextfont=greciliae at 11pt
+\font\gregoriansymbolfont=gresym at 12pt
 
 \font\textfont=pncr at 12pt
 \font\fontofinitial=pncr at 40pt

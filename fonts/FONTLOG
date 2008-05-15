@@ -5,11 +5,6 @@ This file provides detailed information on the Gregorio font software.
 This information should be distributed along with the Gregorio fonts and 
 any derivative works.
 
-All the fonts contain the upper case A, R and V from FreeSerif, a free font
-under GPLv2 or later (thus glyphs are distributed under GPLv3 like the
-others). For more informations on FreeSerif, see
-http://savannah.nongnu.org/projects/freefont/
-
 
 Basic Font Information
 ======================
@@ -31,6 +26,57 @@ The project has two fonts:
 
 - greciliae, created by Matthew Spencer in 2007 in otf, and
   adapted to gregorio by Elie Roux in 2008
+
+
+Licence and copyright for the gresym font
+===========================================
+
+gresym font, created with FontForge.
+Copyright (C) 2008 Elie Roux <elie.roux@telecom-bretagne.eu>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+As a special exception, if you create a document which uses this font,
+and embed this font or unaltered portions of this font into the document,
+this font does not by itself cause the resulting document to be covered by
+the GNU General Public License. This exception does not however invalidate
+any other reasons why the document might be covered by the GNU General Public
+License. If you modify this font, you may extend this exception to your
+version of the font, but you are not obligated to do so. If you do not wish
+to do so, delete this exception statement from your version.
+
+The Gresym fonts contain a modified version of the upper case A, R and V
+from FreeSerif, a free font under GPLv2 or later (thus glyphs are 
+distributed under GPLv3 like the others). For more informations on
+FreeSerif, see http://savannah.nongnu.org/projects/freefont/
+
+ChangeLog for the gregorio font
+===============================
+
+15 May 2008 (Elie Roux) gresym Version 1.0
+- Initial release of font "gresym"
+
+Acknowledgements for the gregorio font
+======================================
+If you make modifications be sure to add your name (N), email (E),
+web-address (W) and description (D). This list is sorted by last name in 
+alphabetical order.
+
+N: Elie Roux
+E: elie.roux@telecom-bretagne.eu
+W: http://home.gna.org/gregorio
+D: Author
 
 
 Licence and copyright for the gregorio font

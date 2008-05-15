@@ -7,14 +7,14 @@ If you are under debian or ubuntu, the best and most simple way to install the f
 
 You can notice if you watch gregorio-base.sfd (sfd is the native fontforge format), that there are only a few glyphs. First you must combine them to get all the glyphs (more than 1000). It is made by a quite dirty trick: a python script (squarize.py) generates a fontforge script (squarize.pe) that generates six 255 character fonts containing all the glyphs of gregorian chant. It generates the fonts in pfb, afm, enc and tfm.
 
+In the next steps, we create gregorio, but to create parmesan or greciliae, just replace "gregorio" by "parmesan" or "greciliae".
+
 So for now the basic use is:
 
  python squarize.py
- fontforge -script squarize.pe
+ fontforge -script gregorio.pe
 
 The second step may take several minutes, even on a recent machine.
-
-In the next steps, we create gregorio, but to create parmesan or greciliae, just replace "gregorio" by "parmesan" or "greciliae".
 
 Then we must generate an ovp (the readable format of omega virtual font). To do so, we use the script create_font.pl. But this script needs the pl files corresponding to the tfm files of the fonts. So we must generate them with tftopl (included in TeXlive) :
 
@@ -22,6 +22,7 @@ Then we must generate an ovp (the readable format of omega virtual font). To do 
  tftopl gregorio-1.tfm
  tftopl gregorio-2.tfm
  tftopl gregorio-3.tfm
+ tftopl gregorio-4.tfm
 
 and then we execute the script:
 
@@ -38,33 +39,51 @@ The installation of the font depends on the system you have, that's why it is no
 
 First you need to copy the files at the good place. $(TEXMF) is almost all the time /usr/share/texmf
 
+ # first we create global gregoriotex dirs:
  mkdir $(TEXMF)/fonts/tfm/public/gregoriotex
- cp *.tfm $(TEXMF)/fonts/tfm/gregoriotex
  mkdir $(TEXMF)/fonts/type1/public/gregoriotex
- cp *.pfb $(TEXMF)/fonts/type1/gregoriotex
  mkdir $(TEXMF)/fonts/ovf/public/gregoriotex
- cp gregorio.ovf $(TEXMF)/fonts/ovf/gregoriotex
  mkdir $(TEXMF)/fonts/ofm/public/gregoriotex
- cp gregorio.ofm $(TEXMF)/fonts/ofm/gregoriotex
  mkdir $(TEXMF)/fonts/ovp/public/gregoriotex
- cp gregorio.ovp $(TEXMF)/fonts/ovp/gregoriotex
+ # then we create the directories for the font gregorio
+ mkdir $(TEXMF)/fonts/tfm/public/gregoriotex/gregorio
+ cp gregorio*.tfm $(TEXMF)/fonts/tfm/gregoriotex/gregorio
+ mkdir $(TEXMF)/fonts/type1/public/gregoriotex/gregorio
+ cp gregorio*.pfb $(TEXMF)/fonts/type1/gregoriotex/gregorio
+ mkdir $(TEXMF)/fonts/ovf/public/gregoriotex/gregorio
+ cp gregorio.ovf $(TEXMF)/fonts/ovf/gregoriotex/gregorio
+ mkdir $(TEXMF)/fonts/ofm/public/gregoriotex/gregorio
+ cp gregorio.ofm $(TEXMF)/fonts/ofm/gregoriotex/gregorio
+ mkdir $(TEXMF)/fonts/ovp/public/gregoriotex/gregorio
+ cp gregorio.ovp $(TEXMF)/fonts/ovp/gregoriotex/gregorio
+ # done for the font gregorio, now we install gregoriotex and gresym
  mkdir $(TEXMF)/tex/gregoriotex
  cp ../tex/gregorio.tex $(TEXMF)/tex/gregoriotex
+ mkdir $(TEXMF)/fonts/tfm/public/gregoriotex/gresym
+ cp gresym.tfm $(TEXMF)/fonts/tfm/gregoriotex/gresym
+ mkdir $(TEXMF)/fonts/type1/public/gregoriotex/gresym
+ cp gresym.pfb $(TEXMF)/fonts/type1/gregoriotex/gresym
+ 
 
 If the directories are not the same (which is quite rare, you must change gregorio.map). Things are more complex when you deal with the maps:
 
  mkdir /usr/share/texmf/fonts/map/dvips/gregoriotex
  cp gregorio.map /usr/share/texmf/fonts/map/dvips/gregoriotex
+ cp gresym.map /usr/share/texmf/fonts/map/dvips/gregoriotex
 
 To know where to copy it, try locate .map. Then you must build a reference to that map in the updmap configuration:
 
- echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregorio/gregorio.map" >/etc/texmf/updmap.d/20gregoriotex.cfg
+ echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregorio/gregorio.map" >>/etc/texmf/updmap.d/20gregoriotex.cfg
+
+and another reference to gresym:
+ 
+ echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregorio/gresym.map" >>/etc/texmf/updmap.d/20gregoriotex.cfg
 
 Now we just have to run the programs to update tex (all must be executed with the root prvivileges):
 
  texhash
+ mktexlsr
  update-updmap
  updmap-sys (or updmap)
- mktexlsr
 
 Now you should be able to use gregoriotex.

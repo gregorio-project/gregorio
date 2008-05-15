@@ -81,9 +81,12 @@ install: build
 	cp $(FONTDIR)/greciliae*.ovf $(GREGORIOTEXDIR)/fonts/ovf/public/gregoriotex/greciliae
 	cp $(FONTDIR)/greciliae*.ovp $(GREGORIOTEXDIR)/fonts/ovp/public/gregoriotex/greciliae
 	cp $(FONTDIR)/greciliae*.ofm $(GREGORIOTEXDIR)/fonts/ofm/public/gregoriotex/greciliae
+	cp $(FONTDIR)/gresym.pfb $(GREGORIOTEXDIR)/fonts/type1/public/gregoriotex/gresym
+	cp $(FONTDIR)/gresym.tfm $(GREGORIOTEXDIR)/fonts/tfm/public/gregoriotex/gresym
 	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/gregorio.map" > $(CURDIR)/debian/gregoriotex.maps
 	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/parmesan.map" >> $(CURDIR)/debian/gregoriotex.maps
 	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/greciliae.map" >> $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/gresym.map" >> $(CURDIR)/debian/gregoriotex.maps
 	dh_installtex
 
 

@@ -1637,10 +1637,6 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 * 64: custo for high notes (oriented to the bottom) with short bar
 * 65: custo for high notes (oriented to the bottom) with middle bar (for the highest note)
 
-* 66: A with bar
-* 67: R with bar
-* 68: V with bar
-
 */
 
 // and the different types of horizontal episemus:

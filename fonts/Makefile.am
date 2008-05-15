@@ -73,8 +73,8 @@ greciliae_OVP=greciliae.ovp
 
 ## rules tu put all this in common
 
-all_PFB= $(parmesan_PFB) $(gregorio_PFB) $(greciliae_PFB)
-all_TFM= $(parmesan_TFM) $(gregorio_TFM) $(greciliae_TFM)
+all_PFB= $(parmesan_PFB) $(gregorio_PFB) $(greciliae_PFB) gresym.pfb
+all_TFM= $(parmesan_TFM) $(gregorio_TFM) $(greciliae_TFM) gresym.tfm
 all_OVF= $(parmesan_OVF) $(gregorio_OVF) $(greciliae_OVF)
 all_OVP= $(parmesan_OVP) $(gregorio_OVP) $(greciliae_OVP)
 all_OFM= $(parmesan_OFM) $(gregorio_OFM) $(greciliae_OFM)
@@ -85,7 +85,7 @@ FONTS=$(all_PFB) $(all_TFM) $(all_OVF) $(all_OFM) $(all_OVP)
 
 noinst_DATA = $(FONTS)
 
-EXTRA_DIST = squarize.py create-ovp.perl parmesan-base.sfd greciliae-base.sfd gregorio-base.sfd FONTLOG README
+EXTRA_DIST = squarize.py create-ovp.perl parmesan-base.sfd greciliae-base.sfd gregorio-base.sfd FONTLOG README gresym.sfd
 
 ## rules for the files to clean
 
@@ -95,5 +95,5 @@ ENC=$(PFB:.pfb=.enc)
 AFM=$(PFB:.pfb=.afm)
 PL=$(PFB:.pfb=.pl)
 
-CLEANFILES=$(ENC) $(AFM) $(PL) $(FONTS) squarize-*.pe
+CLEANFILES=$(ENC) $(AFM) $(PL) $(FONTS) *.pe
 
