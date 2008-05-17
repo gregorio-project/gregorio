@@ -458,14 +458,14 @@
 \glyphraisevalue = 15750 sp %
 \multiply\glyphraisevalue by \the\factor %
 \multiply\glyphraisevalue by \the\tempcount %
-\addedraisevalue= 0 sp
+\addedraisevalue= 0 sp%
 \ifcase#2 % 
 \or\or\or%3: if it is a vertical episemus on a line, we shift it a bit higher, so that it's more beautiful
 \ifnum\isonaline=1%
 \addedraisevalue=350 sp%
 \multiply\addedraisevalue by \the\factor %
 \advance\glyphraisevalue by \addedraisevalue %
-\fi
+\fi %
 \or% 4: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
 \ifnum\isonaline=1%
 \addedraisevalue=-400 sp%
@@ -606,6 +606,20 @@
 \newdimen\notesaligncenter
 
 % we define the different alignments possible, of course they depend on the font
+% the first 10 (0-9) possible values are the same as in glyph
+%%%%% 0 : one-note glyph or more than two notes glyph except porrectus : here we must put the aligncenter in the middle of the first note
+%%%%% 1 : two notes glyph (podatus is considered as a one-note glyph) : here we put the aligncenter in the middle of the glyph
+%%%%% 2 : porrectus : has a special align center
+%%%%% 3 : initio-debilis : same as 1 but the first note is much smaller
+%%%%% 4 : case of a glyph starting with a quilisma
+%%%%% 5 : case of a glyph starting with an oriscus
+%%%%% 6 : case of a punctum inclinatum
+%%%%% 7 : case of a stropha
+%%%%% 8 : flexus with an ambitus of one
+%%%%% 9 : flexus deminutus
+%%%%% 10 : virgula
+%%%%% 11 : divisio minima, minor and maior
+%%%%% 12 : divisio finalis
 \def\findnotesaligncenter#1{%
 \ifcase#1%
 %case of punctum
@@ -637,10 +651,18 @@
 \or %
 % case of flexus deminutus
 \setbox\Tempwidth=\hbox{\gregorianfont \char 4225}%
+\or %
+% case of virgula
+\setbox\Tempwidth=\hbox{\gregorianfont \char 9}%
+\or %
+% case of divisio minima, minor, maior
+\setbox\Tempwidth=\hbox{\gregorianfont \char 13}%
+\or %
+% case of divisiofinalis
+\setbox\Tempwidth=\hbox{\divisiofinalissymbol}%
 \fi%
 \global\notesaligncenter=\wd\Tempwidth%
 \global\divide\notesaligncenter by 2%
-%\showthe\notesaligncenter %
 \relax%
 }
 
@@ -950,12 +972,12 @@
 % #5 : first letters of the next syllable 
 % #6 : middle letters of the next syllabel
 % #7 : alignment type of the first next glyph
+%% with a special option for #7 : if it is a bar, we don't put a space at the end
 \def\syllable#1#2#3#4#5#6#7#8{%
 \firstglyph=1 %
 \findtextaligncenter{#1}{#2}% we first get the width between the alignment point and the end of the syllable
 \syllablenotes{#8}% we put the notes in a box, so that we have the width of it
 % now we calculate the begin difference, that is to say \notesaligncenter - \textaligncenter
-%\showthe\notesaligncenter %
 \begindifference=\notesaligncenter %
 \advance\begindifference by -\textaligncenter %
 % then we do a kind of trick to separate more the notes of two different syllables : we put a space if we are in the same word (enddifference!=0) if necessary
@@ -976,8 +998,8 @@
 \fi %
 %\potentialdash=2 %
 \setnextbegindifference{#5}{#6}{#7}%
-\setbox\Syllabletext=\hbox{\textfont #1#2#3}%
-\setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}%
+\setbox\Syllabletext=\hbox{\textfont#1#2#3}%
+\setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{1}%
 %\potentialdash=1 %
 \ifcase#4 %
 % we enter here if the end of word is 0, so we must determine if we need to type the gragorio dash here
@@ -1002,15 +1024,13 @@
 \setbox\Syllabletext=\hbox{\textfont #1#2#3%
 \gregoriotextdash%
 }%
-\setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}%
+\setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{0}%
 \fi%
 \fi%
 % then we reuse temp, we assign to it the \begindifference, but only if it is positive, else it is 0
-\temp=\begindifference %
-\ifdim\temp <0pt %
-\temp=0pt%
+\ifdim\begindifference > 0 pt%
+\kern \begindifference %
 \fi%
-\kern \temp %
 \raise\textlower \copy\Syllabletext %
 \kern -\wd\Syllabletext %
 \kern -\begindifference %
@@ -1019,13 +1039,132 @@
 %% important, else we are not really at the end of the syllable
 \kern -\enddifference %
 \fi%
-%% then we call end of syllable or end of word
+%\glyph{\char 17}{e}{e}{0}%
+%% then we call end of syllable or end of word, but only if the next syllable is not a bar
+\ifnum#7>9\relax % case where the next thing is a bar
+\endbeforebar %
+\else %
+% in very special cases we don't put a space after the syllable
+\ifnum\lastoflinecount=1\relax %
+\global\lastoflinecount=0\relax %
+\gnewline %
+\else %
 \ifcase#4 %
 \endofsyllable %
 \global\firstsyllableofword=0 %
 \or%
 \endofword %
 \global\firstsyllableofword=1 %
+\fi%
+\fi%
+\fi%
+\relax%
+}
+
+%skip needed for the barsyllable macro
+\newskip\skipone
+
+%a macro to typeset a syllable with only a bar inside
+\def\barsyllable#1#2#3#4#5#6#7#8{%
+% the algorithm of this function is *extremely* complex, and has been much painful to write... good luck to understand.
+% the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the prefious syllable and the first note of the next syllable. But there are limits : a bar cant go very far above text. For example if there is nuncncncncn with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
+% there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
+% first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
+\setbox\Syllabletext=\hbox{\textfont #1#2#3}%
+\findtextaligncenter{#1}{#2}%
+\syllablenotes{#8}%
+\notesaligncenter=\wd\Syllablenotes%
+\divide\notesaligncenter by 2\relax %
+\begindifference=\notesaligncenter %
+\advance\begindifference by -\textaligncenter %
+\setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{1}%
+\setnextbegindifference{#5}{#6}{#7}%
+% then we check if there is something to write
+\ifdim\wd\Syllabletext = 0 pt\relax %
+% the most difficult case : when there is nothing to write
+% first we need to determine the real space that there will be between the notes. Here again it is not so simple... let's consider these two kinds of spaces : 
+%% 1/ the minimal space between a note and the bar + the width of the bar + the minimal space between the bar and the note (that's the global idea, in fact there are nuances) : we assign skipone to it
+%% 2/ enddifference + begindifference + space between notes and word : we assign temp to it
+\skipone=\notebarspace %
+\ifdim\previousenddifference<0 pt\relax %
+\advance\skipone by -\previousenddifference %
+\fi %
+\advance\skipone by \notebarspace %
+\ifdim\nextbegindifference < 0 pt\relax %
+\advance\skipone by -\nextbegindifference %
+\fi %
+\advance\skipone by \wd\Syllablenotes %
+\ifdim\nextbegindifference < 0 pt%
+\temp=-\nextbegindifference %
+\else %
+\temp=0 pt%
+\fi %
+\ifdim\previousenddifference < 0 pt%
+\advance\temp by -\previousenddifference %
+\advance\temp by \interwordspacetext % in fact it is the max between interwordspacetext and interwordspacetextnotes
+\else %
+\advance\temp by \interwordspacenotestext % in fact it is the max between interwordspacenotestext and interwordspacenotes
+\fi%
+% we take the max of it, then we divide it by two and we substract half of the width of the bar
+\ifdim\skipone <\temp %
+\skipone=\temp %
+\fi %
+\divide\skipone by 2\relax %
+\temp=\wd\Syllablenotes %
+\divide\temp by 2\relax %
+\advance\skipone by -\temp %
+% now we have our skipone
+\temp=\skipone %
+\ifdim\previousenddifference < 0 pt%
+\advance\temp by \previousenddifference %
+\fi %
+\ifdim\temp > -\wd\Syllablenotes %
+\kern\temp %
+\else %
+\kern -\wd\Syllablenotes %
+\fi %
+#8%
+\ifdim\temp < -\wd\Syllablenotes %
+\ifdim\nextbegindifference > 0 pt%
+\hskip\interwordspacetextnotes %
+\else % \ifdim\nextbegindifference > 0 pt
+\hskip\interwordspacetext %
+\fi %
+\else % \ifdim\temp < -\wd\Syllablenotes
+%\temp=\wd\Syllablenotes %
+%\divide\temp by 2\relax %
+%\kern -\temp %
+\temp=\skipone %
+\ifdim\nextbegindifference < 0 pt%
+\advance\temp by \nextbegindifference %
+\fi %
+\ifdim\temp > -\wd\Syllablenotes %
+\kern\temp %
+\else % \ifdim\temp > -\wd\Syllablenotes %
+\hskip -\wd\Syllablenotes %
+\fi %
+\fi %
+% then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
+\else %ifdim\wd\hbox{#1#2#3}=0
+% I'm a little lazy for now, I won't make the usual mountain of ifs... TODO: use different spaces
+\hskip\textbartextspace %
+% same code as in syllable
+\temp=\begindifference %
+\ifdim\temp <0pt %
+\temp=0pt%
+\fi%
+\kern \temp %
+\raise\textlower \copy\Syllabletext %
+\kern -\wd\Syllabletext %
+\kern -\begindifference %
+#8% 
+\ifdim\the\enddifference <0pt%
+%% important, else we are not really at the end of the syllable
+\kern -\enddifference %
+\fi%
+% end of same code as syllable
+\hskip\textbartextspace % same as above, we should make some if to determine the exact space...
+%and that's it !!
 \fi%
 \relax%
 }
@@ -1058,8 +1197,11 @@
 % #2: \wd\Syllabletext : the total width of the text
 % #3: \textaligncenter (defined above)
 % #4: \notesaligncenter (defined above too)
-\def\setenddifference#1#2#3#4{%
-\global\previousenddifference=\enddifference
+% #5: if we have to set previousenddifference or not
+\def\setenddifference#1#2#3#4#5{%
+\ifcase#5\or %
+\global\previousenddifference=\the\enddifference %
+\fi %
 \global\enddifference=#1%
 \global\advance\enddifference by -#2%
 \global\advance\enddifference by #3%
@@ -1171,81 +1313,97 @@
 \def\writebar#1#2{%
 \ifcase#1 % 0 : virgula
 \penalty 7000 %
+\ifnum#2=1\relax %
 \hskip\spacebeforesmallbar %
 \penalty 7000 %
+\fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
 \penalty -5000 %
+\ifnum#2=1\relax %
 \hskip\spaceaftersmallbar %
+\fi %
 \or % 1 : minima
 \penalty 7000%
+\ifnum#2=1\relax %
 \hskip\spacebeforesmallbar %
 \penalty 7000%
+\fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
 \penalty -5000%
+\ifnum#2=1\relax %
 \hskip\spaceaftersmallbar %
+\fi %
 \or % 2 : minor
 \penalty 7000 %
+\ifnum#2=1\relax %
 \hskip\spacebeforeminor %
 \penalty 7000 %
+\fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
 \penalty -5000 %
+\ifnum#2=1\relax %
 \hskip\spaceafterminor %
+\fi %
 \or % 3 : maior
 \penalty 7000 %
+\ifnum#2=1\relax %
 \hskip\spacebeforemaior %
 \penalty 7000 %
+\fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 \penalty -5000 %
+\ifnum#2=1\relax %
 \hskip\spaceaftermaior %
+\fi %
 \or % 4 : finalis
 \penalty 7000 %
+\ifnum#2=1\relax %
 \hskip\spacebeforefinalis %
 \penalty 7000 %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\penalty 7000 %
-\temptwo = 12000 sp%
-\multiply\temptwo by \the\factor%
-\kern \temptwo%
-\penalty 7000 %
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+\fi %
+\divisiofinalissymbol%
 \penalty -5000 %
-\hskip\spaceafterfinalis %
-\or % 5 : finalis
-\penalty 7000 %
-\hskip\spacebeforefinalfinalis %
-\penalty 7000 %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\temptwo = 12000 sp%
-\multiply\temptwo by \the\factor%
-\kern \temptwo%
-\penalty 10000 %
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\penalty -5000 %
+\ifnum#2=1\relax %
 \hskip\spaceafterfinalis %
 \fi %
+\or % 5 : finalis
+\penalty 7000 %
+\ifnum#2=1\relax %
+\hskip\spacebeforefinalfinalis %
+\penalty 7000 %
+\fi %
+\divisiofinalissymbol%
+\penalty -5000 %
+\ifnum#2=1\relax %
+\hskip\spaceafterfinalis %
+\fi %
+\fi %
 \relax%
+}
+
+\def\divisiofinalissymbol{%
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+\temptwo = 12000 sp%
+\multiply\temptwo by \the\factor%
+\kern \temptwo%
+\penalty 10000%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 }
 
 %a count to tell if we have to keep the localrightbox until the end
 \newcount\keeprightbox
 
 %macro to end a line with a divisio finalis
-\def\enddivisiofinalis{
-\calculateglyphraisevalue{g}{0}
+\def\finaldivisiofinalis{%
+\hskip\spacebeforefinalfinalis %
 \global\keeprightbox=1 %
 \localrightbox{%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\temptwo = 12000 sp%
-\multiply\temptwo by \the\factor%
-\kern \temptwo%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-%\kern 0 sp%
+\divisiofinalissymbol %
 }%
 \relax%
 }
@@ -1378,6 +1536,19 @@
 \fi %
 \penalty -1000%
 \global\enddifference=0pt %
+\relax%
+}
+
+% macro called at the end of a word or syllable when the next thing is a bar
+\def\endbeforebar{%
+%
+}
+
+\newcount\lastoflinecount
+
+% macro to tell gregorioTeX no to put a space after the current syllable (otherwise it may cause annoying black boxes in the pdf)
+\def\lastofline{%
+\global\lastoflinecount=1\relax%
 \relax%
 }
 
@@ -1582,12 +1753,22 @@
 
 %a special space for finalis, for when it is the last glyph
 \newskip\spacebeforefinalfinalis
-\spacebeforefinalfinalis= 8000 sp plus 1000 sp minus 1000 sp
+\spacebeforefinalfinalis= 16000 sp plus 2000 sp minus 8000 sp
 \multiply\spacebeforefinalfinalis by \factor
 
 \newskip\spaceafterfinalis
 \spaceafterfinalis = 8500 sp plus 1650 sp minus 6000 sp
 \multiply\spaceafterfinalis by \factor
+
+% space between the text and the text of the bar
+\newskip\textbartextspace
+\textbartextspace = 13000 sp plus 1300 sp minus 1300 sp
+\multiply\textbartextspace by \factor
+
+% minimal space between a note and a bar
+\newskip\notebarspace
+\notebarspace = 9000 sp plus 900 sp minus 900 sp
+\multiply\notebarspace by \factor
 
 \newdimen\maximumspacewithoutdash
 \maximumspacewithoutdash = 4000 sp

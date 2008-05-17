@@ -136,13 +136,34 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
   /* first we check if the syllable is only a end of line.
      If it is the case, we don't print anything but a comment (to be able to read it if we read GregorioTeX).
      The end of lines are treated separately in GregorioTeX, it is buit inside the TeX structure. */
-  if ((syllable->elements)[0]->type == GRE_END_OF_LINE
-      && !(syllable->elements)[0]->next_element)
+  if ((syllable->elements) && (syllable->elements)[0])
     {
-      fprintf (f, "\\gnewline %%\n");
-      return;
+
+      if ((syllable->elements)[0]->type == GRE_END_OF_LINE
+	  && !(syllable->elements)[0]->next_element)
+	{
+	  fprintf (f, "\\gnewline %%\n");
+	  return;
+	}
+      if ((syllable->elements)[0]->type == GRE_BAR)
+	{
+	  if (!syllable->next_syllable && (syllable->elements)[0]->element_type == B_DIVISIO_FINALIS) {
+	  fprintf (f, "\\finaldivisiofinalis %%\n");
+	  return;
+	  }
+	  else {
+	  fprintf (f, "\\barsyllable");
+	  }
+	}
+      else
+	{
+	  fprintf (f, "\\syllable");
+	}
     }
-  fprintf (f, "\\syllable");
+  else
+    {
+      fprintf (f, "\\syllable");
+    }
   libgregorio_gregoriotex_write_text (f, syllable->text, first_syllable);
   if (syllable->position == WORD_END
       || syllable->position == WORD_ONE_SYLLABLE || !syllable->text)
@@ -221,6 +242,11 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
       current_element = current_element->next_element;
     }
   fprintf (f, "}%%\n");
+  if (syllable->position == WORD_END
+      || syllable->position == WORD_ONE_SYLLABLE || !syllable->text)
+    {
+      fprintf (f, "%%\n");
+    }
 }
 
 // we will need type for one thing for the moment : type=first_syllable=1 when it is the first syllable (for the initial).
@@ -307,6 +333,11 @@ libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char)
   if (!wcscmp (special_char, L"*"))
     {
       fprintf (f, "\\gstar ");
+      return;
+    }
+  if (!wcscmp (special_char, L"+"))
+    {
+      fprintf (f, "\\gdagger ");
       return;
     }
 }
@@ -1682,7 +1713,7 @@ void
 libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note,
 				    char next_note_pitch)
 {
-  int glyph_number;
+  unsigned int glyph_number;
   char temp;
   // type in the sense of GregorioTeX alignment type
   int type = AT_ONE_NOTE;
@@ -1763,8 +1794,8 @@ libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note,
 }
 
 void
-libgregorio_gregoriotex_determine_note_number_and_type (gregorio_note * note,
-							int *type,
+libgregorio_gregoriotex_determine_note_number_and_type (gregorio_note *
+							note, int *type,
 							unsigned int
 							*glyph_number)
 {
@@ -1901,6 +1932,8 @@ libgregorio_gregoriotex_determine_next_note (gregorio_syllable * syllable,
   return 'g';
 }
 
+// the second argument says if we want to also look for a sign element or not
+
 gregorio_glyph *
 libgregorio_gregoriotex_first_glyph (gregorio_syllable * syllable)
 {
@@ -1953,46 +1986,82 @@ libgregorio_gregoriotex_syllable_first_note (gregorio_syllable * syllable)
 int
 libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable)
 {
-  gregorio_glyph *glyph;
   int type = 0;
   char gtype = 0;
   unsigned int number = 0;
+  gregorio_glyph *glyph;
+  gregorio_element *element;
 
-  glyph = libgregorio_gregoriotex_first_glyph (syllable);
-  if (glyph == NULL)
+  if (!syllable)
     {
-      return 0;
+      libgregorio_message (_
+			   ("called with a NULL argument"),
+			   "libgregorio_gregoriotex_determine_next_note",
+			   ERROR, 0);
     }
-  else
+  element = syllable->elements[0];
+  while (element)
     {
-      switch (glyph->glyph_type)
+      if (element->type == GRE_BAR)
 	{
-	case G_TRIGONUS:
-	case G_PUNCTA_INCLINATA:
-	case G_SCANDICUS:
-	case G_2_PUNCTA_INCLINATA_DESCENDENS:
-	case G_3_PUNCTA_INCLINATA_DESCENDENS:
-	case G_4_PUNCTA_INCLINATA_DESCENDENS:
-	case G_5_PUNCTA_INCLINATA_DESCENDENS:
-	case G_2_PUNCTA_INCLINATA_ASCENDENS:
-	case G_3_PUNCTA_INCLINATA_ASCENDENS:
-	case G_4_PUNCTA_INCLINATA_ASCENDENS:
-	case G_5_PUNCTA_INCLINATA_ASCENDENS:
-	case G_PUNCTUM:
-	case G_STROPHA:
-	case G_VIRGA:
-	case G_STROPHA_AUCTA:
-	  libgregorio_gregoriotex_determine_note_number_and_type (glyph->
-								  first_note,
-								  &type,
-								  &number);
-	  break;
-	default:
-	  libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
-							     &gtype, &number);
-	  break;
+	  switch (element->element_type)
+	    {
+	    case B_NO_BAR:
+	    case B_VIRGULA:
+	      type = 10;
+	      break;
+	    case B_DIVISIO_MINIMA:
+	    case B_DIVISIO_MINOR:
+	    case B_DIVISIO_MAIOR:
+	      type = 11;
+	      break;
+	    case B_DIVISIO_FINALIS:
+	      type = 12;
+	      break;
+	    default:
+	      type = 0;
+	      break;
+	    }
+	  return type;
 	}
-      return type;
+      if (element->type == GRE_ELEMENT && element->first_glyph)
+	{
+	  glyph = element->first_glyph;
+	  while (glyph)
+	    {
+	      if (glyph->type == GRE_GLYPH && glyph->first_note)
+		{
+		  switch (glyph->glyph_type)
+		    {
+		    case G_TRIGONUS:
+		    case G_PUNCTA_INCLINATA:
+		    case G_SCANDICUS:
+		    case G_2_PUNCTA_INCLINATA_DESCENDENS:
+		    case G_3_PUNCTA_INCLINATA_DESCENDENS:
+		    case G_4_PUNCTA_INCLINATA_DESCENDENS:
+		    case G_5_PUNCTA_INCLINATA_DESCENDENS:
+		    case G_2_PUNCTA_INCLINATA_ASCENDENS:
+		    case G_3_PUNCTA_INCLINATA_ASCENDENS:
+		    case G_4_PUNCTA_INCLINATA_ASCENDENS:
+		    case G_5_PUNCTA_INCLINATA_ASCENDENS:
+		    case G_PUNCTUM:
+		    case G_STROPHA:
+		    case G_VIRGA:
+		    case G_STROPHA_AUCTA:
+		      libgregorio_gregoriotex_determine_note_number_and_type
+			(glyph->first_note, &type, &number);
+		      break;
+		    default:
+		      libgregorio_gregoriotex_determine_number_and_type
+			(glyph, &type, &gtype, &number);
+		      break;
+		    }
+		}
+	      return type;
+	    }
+	  glyph = glyph->next_glyph;
+	}
+      element = element->next_element;
     }
-
+  return 0;
 }
