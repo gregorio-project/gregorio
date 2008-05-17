@@ -983,6 +983,7 @@
 % then we do a kind of trick to separate more the notes of two different syllables : we put a space if we are in the same word (enddifference!=0) if necessary
 % there are two cases according to the sign of enddifference
 % and we do it only if it is not the first syllable of a word
+% but we must not do it when there is a bar before... so when there is a bar enddifference = 0
 \ifnum\firstsyllableofword=0 %
 \ifdim\enddifference>0pt%
 \temp=\intersyllablespace %
@@ -1005,14 +1006,15 @@
 % we enter here if the end of word is 0, so we must determine if we need to type the gragorio dash here
 %
 % we set temp to the additional space that will be needed before the next syllable
-\ifdim\enddifference>0pt%
-\temp=\intersyllablespace %
+%\ifdim\enddifference>0pt%
+\temp=\enddifference %
+\advance\temp by \intersyllablespace %
 \advance\temp by \nextbegindifference %
-\else %\enddifference<0
-\temp=\intersyllablespace %
-\advance\temp by \nextbegindifference %
-\advance\temp by \enddifference %
-\fi %
+%\else %\enddifference<0
+%\temp=\intersyllablespace %
+%\advance\temp by \nextbegindifference %
+%\advance\temp by \enddifference %
+%\fi %
 %\temp=\intersyllablespace %
 %\advance\temp by -\nextbegindifference %
 %\advance\temp by \enddifference %
@@ -1043,12 +1045,18 @@
 %% then we call end of syllable or end of word, but only if the next syllable is not a bar
 \ifnum#7>9\relax % case where the next thing is a bar
 \endbeforebar %
+\global\firstsyllableofword=1 %
 \else %
 % in very special cases we don't put a space after the syllable
 \ifnum\lastoflinecount=1\relax %
 \global\lastoflinecount=0\relax %
 \gnewline %
-\else %
+\ifcase#4 %
+\global\firstsyllableofword=0 %
+\or%
+\global\firstsyllableofword=1 %
+\fi%
+\else %\ifnum\lastoflinecount=1\relax %
 \ifcase#4 %
 \endofsyllable %
 \global\firstsyllableofword=0 %
@@ -1166,6 +1174,11 @@
 \hskip\textbartextspace % same as above, we should make some if to determine the exact space...
 %and that's it !!
 \fi%
+\firstsyllableofword=1 %
+\ifnum\lastoflinecount=1\relax %
+\global\lastoflinecount=0\relax %
+\gnewline %
+\fi %
 \relax%
 }
 
@@ -1645,7 +1658,7 @@
 
 % minimum space between two notes of different syllables
 \newskip\intersyllablespace
-\intersyllablespace=40000 sp plus 2000 sp minus 0 sp
+\intersyllablespace=32000 sp plus 2000 sp minus 0 sp
 %\intersyllablespace=0 sp plus 0 sp minus 0 sp
 \multiply\intersyllablespace by \factor
 
@@ -1686,7 +1699,7 @@
 
 % space after at the end of a word when the last written symbol is text and the first is text
 \newskip\interwordspacetext
-\interwordspacetext = 30000 sp plus 3000 sp minus 3000 sp
+\interwordspacetext = 25000 sp plus 2500 sp minus 2500 sp
 \multiply\interwordspacetext by \factor
 
 % space between notes of a bistropha and bivirga
@@ -1767,7 +1780,7 @@
 
 % minimal space between a note and a bar
 \newskip\notebarspace
-\notebarspace = 9000 sp plus 900 sp minus 900 sp
+\notebarspace = 14000 sp plus 1400 sp minus 1400 sp
 \multiply\notebarspace by \factor
 
 \newdimen\maximumspacewithoutdash
