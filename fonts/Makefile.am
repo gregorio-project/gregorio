@@ -92,8 +92,9 @@ EXTRA_DIST = squarize.py create-ovp.perl parmesan-base.sfd greciliae-base.sfd gr
 PFB=$(parmesan_PFB) $(gregorio_PFB) $(greciliae_PFB)
 
 ENC=$(PFB:.pfb=.enc)
+TFM=$(PFB:.pfb=.tfm)
 AFM=$(PFB:.pfb=.afm)
 PL=$(PFB:.pfb=.pl)
 
-CLEANFILES=$(ENC) $(AFM) $(PL) $(FONTS) *.pe
+CLEANFILES=$(ENC) $(AFM) $(PL) $(PFB) $(TFM) $(all_OVF) $(all_OVP) $(all_OFM) *.pe
 

@@ -1780,7 +1780,7 @@
 
 % minimal space between a note and a bar
 \newskip\notebarspace
-\notebarspace = 14000 sp plus 1400 sp minus 1400 sp
+\notebarspace = 21000 sp plus 2100 sp minus 2100 sp
 \multiply\notebarspace by \factor
 
 \newdimen\maximumspacewithoutdash
@@ -1807,6 +1807,12 @@
 
 \def\Vbar{%
 {\gregoriansymbolfont \char 66}%
+\relax%
+}
+
+% a V with bar more adapted to small text
+\def\Vbarsmall{%
+{\gregoriansymbolfont \char 72}%
 \relax%
 }
 
