@@ -17,7 +17,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1210777583
+ModificationTime: 1211018617
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -1680,19 +1680,19 @@ EndChar
 
 StartChar: phigh
 Encoding: 84 -1 80
-Width: 152
+Width: 155
 VWidth: 2537
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 Fore
-134 -33.8008 m 5
- 134 -6 116.521 20.7998 75.3994 20.7998 c 4
- 45.0674 20.7998 19.9326 13.8672 0 0 c 5
- 0 126.1 l 6
- 0 159.032 25.1328 175.5 75.3994 175.5 c 4
- 108.55 175.5 152 165.619 152 126.1 c 6
- 152 -33.8008 l 5
- 134 -33.8008 l 5
+137 -33.8008 m 1
+ 137 -6 119.521 20.7998 78.3994 20.7998 c 0
+ 48.0674 20.7998 19.9326 13.8672 0 0 c 1
+ 0 129.1 l 6
+ 0 162.032 28.1328 178.5 78.3994 178.5 c 4
+ 111.55 178.5 155 168.619 155 129.1 c 6
+ 155 -33.8008 l 1
+ 137 -33.8008 l 1
 EndSplineSet
 EndChar
 

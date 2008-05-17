@@ -222,7 +222,7 @@ def initialize_lengths():
         width_deminutus=65
         width_inclinatum=166
         width_stropha=163
-        width_high_pes=152
+        width_high_pes=155
         width_inclinatum_deminutus=112
         width_flexusdeminutus=168
         porrectusflexuswidths=(503,629,628,628,931)
