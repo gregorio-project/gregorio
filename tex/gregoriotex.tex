@@ -89,7 +89,6 @@
 \relax%
 }
 
-
 %% macro that typesets the text of the syllable, and sets \textaligncenter to the middle of the middle letters, it is needed because we align the note (often the middle of the note) with the middle of the middle letters
 %% warning : textaligncenter is the width from the beginning of the letters to the middle of the middle letters
 
@@ -166,6 +165,14 @@
 \drawlines%
 \relax%
 }
+
+\def\commentary#1{%
+\vbox{\hfill\hbox{#1}}%
+\relax %
+}
+
+%\def\firstlineaboveinitial{%
+%\hbox
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the lines
@@ -1766,7 +1773,7 @@
 
 %a special space for finalis, for when it is the last glyph
 \newskip\spacebeforefinalfinalis
-\spacebeforefinalfinalis= 16000 sp plus 2000 sp minus 8000 sp
+\spacebeforefinalfinalis= 32000 sp plus 3000 sp minus 16000 sp
 \multiply\spacebeforefinalfinalis by \factor
 
 \newskip\spaceafterfinalis
@@ -1830,7 +1837,7 @@
 
 %the macro to write a star
 \def\gstar{%
-\gheightstar %
+\gsixstar %
 \relax%
 }
 

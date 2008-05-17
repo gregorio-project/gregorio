@@ -849,20 +849,20 @@ def torculusresupinus():
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
             for k in range(1,max_interval+1):
-                write_torculusresupinus(i,j,k, 'base5', "phigh", 'porrectus')
+                write_torculusresupinus(i,j,k, 'base5', "phigh", 'torculusresupinus')
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
             for k in range(1,max_interval+1):
-                write_torculusresupinus(i,j,k, 'idebilis', "phigh", 'porrectus', 'initiodebilis')
+                write_torculusresupinus(i,j,k, 'idebilis', "phigh", 'torculusresupinus', 'initiodebilis')
     precise_message("torculus resupinus deminutus")
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
             for k in range(1,max_interval+1):
-                write_torculusresupinusdeminutus(i,j,k, 'base5', 'porrectus', 'deminutus')
+                write_torculusresupinusdeminutus(i,j,k, 'base5', 'torculusresupinus', 'deminutus')
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
             for k in range(1,max_interval+1):
-                write_torculusresupinusdeminutus(i,j,k, 'idebilis', 'porrectus', 'initiodebilisdeminutus')
+                write_torculusresupinusdeminutus(i,j,k, 'idebilis', 'torculusresupinus', 'initiodebilisdeminutus')
                 
 
 def write_torculusresupinus(i,j,k, first_glyph, last_glyph, shape, liquescentia='nothing'):
