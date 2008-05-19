@@ -142,18 +142,21 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
       if ((syllable->elements)[0]->type == GRE_END_OF_LINE
 	  && !(syllable->elements)[0]->next_element)
 	{
-	  fprintf (f, "\\gnewline %%\n");
+	  fprintf (f, "%%\n%%\n\\gnewline %%\n%%\n%%\n");
 	  return;
 	}
       if ((syllable->elements)[0]->type == GRE_BAR)
 	{
-	  if (!syllable->next_syllable && (syllable->elements)[0]->element_type == B_DIVISIO_FINALIS) {
-	  fprintf (f, "\\finaldivisiofinalis %%\n");
-	  return;
-	  }
-	  else {
-	  fprintf (f, "\\barsyllable");
-	  }
+	  if (!syllable->next_syllable
+	      && (syllable->elements)[0]->element_type == B_DIVISIO_FINALIS)
+	    {
+	      fprintf (f, "\\finaldivisiofinalis %%\n");
+	      return;
+	    }
+	  else
+	    {
+	      fprintf (f, "\\barsyllable");
+	    }
 	}
       else
 	{
@@ -228,7 +231,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	}
       if (current_element->type == GRE_END_OF_LINE)
 	{
-	  fprintf (f, "\\gnewline %%\n");
+	  fprintf (f, "\\grenewline %%\n");
 	  current_element = current_element->next_element;
 	  continue;
 	}
@@ -257,19 +260,19 @@ libgregorio_gtex_write_begin (FILE * f, unsigned char style)
   switch (style)
     {
     case ST_ITALIC:
-      fprintf (f, "{\\it ");
+      fprintf (f, "\\greitalic{");
       break;
     case ST_SMALL_CAPS:
-      fprintf (f, "{\\sc ");
+      fprintf (f, "\\gresmallcaps{");
       break;
     case ST_BOLD:
-      fprintf (f, "{\\bf ");
+      fprintf (f, "\\greboldfont{");
       break;
     case ST_CENTER:
       fprintf (f, "}{");
       break;
     case ST_TT:
-      fprintf (f, "{\\tt ");
+      fprintf (f, "\\grett{");
       break;
     default:
       break;
@@ -332,12 +335,12 @@ libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char)
     }
   if (!wcscmp (special_char, L"*"))
     {
-      fprintf (f, "\\gstar ");
+      fprintf (f, "\\grestar ");
       return;
     }
   if (!wcscmp (special_char, L"+"))
     {
-      fprintf (f, "\\gdagger ");
+      fprintf (f, "\\gredagger ");
       return;
     }
 }
@@ -351,6 +354,12 @@ libgregorio_gtex_write_verb (FILE * f, wchar_t * verb_str)
 void
 libgregorio_gtex_print_char (FILE * f, wchar_t to_print)
 {
+// special case for the star, as it is < 128
+  if (to_print == L'*')
+    {
+      fprintf (f, "\\grestar ");
+      return;
+    }
   if (to_print < 128)
     {
       fprintf (f, "%lc", to_print);
@@ -363,9 +372,6 @@ libgregorio_gtex_print_char (FILE * f, wchar_t to_print)
       break;
     case L'æ':
       fprintf (f, "\\ae ");
-      break;
-    case L'*':
-      fprintf (f, "\\gstar ");
       break;
     default:
       fprintf (f, "\\char %d", to_print);
@@ -724,7 +730,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
       switch (current_note->signs)
 	{
 	case _PUNCTUM_MORA:
-	  fprintf (f, "\\punctummora{%c}%%\n", current_note->pitch);
+	  libgregorio_gregoriotex_write_punctum_mora (f, glyph, current_note);
 	  break;
 	case _AUCTUM_DUPLEX:
 	  fprintf (f, "\\augmentumduplex{%c}%%\n", current_note->pitch);
@@ -736,7 +742,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	case _V_EPISEMUS_PUNCTUM_MORA:
 	  libgregorio_gregoriotex_write_vepisemus (f, glyph, i, type,
 						   current_note);
-	  fprintf (f, "\\punctummora{%c}%%\n", current_note->pitch);
+	  libgregorio_gregoriotex_write_punctum_mora (f, glyph, current_note);
 	  break;
 	case _V_EPISEMUS_AUCTUM_DUPLEX:
 	  libgregorio_gregoriotex_write_vepisemus (f, glyph, i, type,
@@ -777,6 +783,31 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	  current_note = current_note->next_note;
 	  i++;
 	}
+    }
+}
+
+void
+libgregorio_gregoriotex_write_punctum_mora (FILE * f,
+					    gregorio_glyph * glyph,
+					    gregorio_note * current_note)
+{
+// there is a case in which we do something special : if the next glyph is a ZERO_WIDTH_SPACE, and the current glyph is a PES, and the punctum mora is on the first note, and the glyph after is a pes and the first note of the next pes is at least two (or three depending on something) pitchs higher than the current note. You'll all have understood, this case is quite rare... but when it appears, we pass 1 as a second argument of \punctummora so that it removes the space introduced by the punctummora.
+
+  if (glyph->glyph_type == G_PODATUS && glyph->next_glyph
+      && glyph->next_glyph->type == GRE_SPACE
+      && glyph->next_glyph->glyph_type == SP_ZERO_WIDTH
+      && current_note->next_note && glyph->next_glyph->next_glyph
+      && glyph->next_glyph->next_glyph->type == GRE_GLYPH
+      && glyph->next_glyph->next_glyph->glyph_type == G_PODATUS
+      && glyph->next_glyph->next_glyph->first_note
+      && (glyph->next_glyph->next_glyph->first_note->pitch - current_note->pitch >
+	  1))
+    {
+      fprintf (f, "\\punctummora{%c}{1}%%\n", current_note->pitch);
+    }
+  else
+    {
+      fprintf (f, "\\punctummora{%c}{0}%%\n", current_note->pitch);
     }
 }
 

@@ -45,6 +45,10 @@ Here are the different types, they must be the same as in squarize.py
 #define T_TORCULUS 28
 #define T_TORCULUS_RESUPINUS 32
 
+// temporary types, used just once
+#define TT_PUNCTUM_MORA 0
+#define TT_AUGMENTUM_DUPLEX 1
+
 // the different types for the alignment of the notes in GregorioTeX
 #define AT_ONE_NOTE 0
 #define AT_FLEXUS 1
@@ -121,5 +125,7 @@ gregorio_glyph * libgregorio_gregoriotex_first_glyph (gregorio_syllable * syllab
 void libgregorio_gregoriotex_determine_note_number_and_type (gregorio_note * note, int *type, unsigned int *glyph_number);
 
 void libgregorio_gtex_write_end_for_two (FILE * f, unsigned char style);
+
+void libgregorio_gregoriotex_write_punctum_mora (FILE * f, gregorio_glyph * glyph, gregorio_note * current_note);
 
 #endif

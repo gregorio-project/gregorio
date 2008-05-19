@@ -119,12 +119,42 @@
 \initialwidth=0pt
 
 \def\initial#1{%
+% we print the initial always at the same place, and the we print the Aboveinitialbox centered
+% first we print the initial
 \setbox\Initial=\hbox{\fontofinitial #1}%
 \global\initialwidth=\the\wd\Initial%
+\hskip\beforeinitialshift %
 \raise\textlower\copy\Initial%
 \hskip\afterinitialshift %
-\advance\initialwidth by \afterinitialshift%
+\global\advance\initialwidth by \afterinitialshift%
+\global\advance\initialwidth by \beforeinitialshift %
+% then we center the box above the initial, if there is one
+\ifdim\wd\Aboveinitialbox=0 pt\relax %
+\else %
+\temp=\initialwidth %
+\advance\temp by -\wd\Aboveinitialbox %
+\divide\temp by 2 %
+\hskip -\initialwidth %
+\kern\temp %
+\raise\aboveinitialraise\copy\Aboveinitialbox %
+\kern\temp %
+\setbox\Aboveinitialbox=\hbox{}%
+\fi %
 \relax%
+}
+
+\newbox\Aboveinitialbox %
+\newdimen\aboveinitialraise %
+
+\def\setfirstlineaboveinitial#1#2{%
+\global\aboveinitialraise=\staffheight %
+\global\advance\aboveinitialraise by \spacebeneathtext %
+\global\advance\aboveinitialraise by \spacelinestext %
+% we align the top of the box with the top of the line
+\setbox\Aboveinitialbox=\hbox{#2}%
+\global\advance\aboveinitialraise by -\ht\Aboveinitialbox %
+\global\setbox\Aboveinitialbox=\hbox{#1}%
+\relax %
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -687,16 +717,26 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % a function to typeset a punctum mora, the argument is the letter of the height of the punctum mora
-
-\def\punctummora#1{%
+% if the second argument is one, we the go back to the end of the punctum
+\def\punctummora#1#2{%
+\ifnum#2=1\relax %
+\kern\spacebeforesigns %
+\else %
 \hskip\spacebeforesigns%
+\fi %
 \calculateglyphraisevalue{#1}{4}%
 \raise \glyphraisevalue \hbox{\gregorianfont \char 14}%
+\ifnum#2=1\relax %
+\setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
+\temp=\wd\Tempwidth %
+\advance\temp by \spacebeforesigns %
+\kern -\temp %
+\fi %
 \relax%
 }
 
 % a function to typeset a augmentum duplex, the argument is the letter of the height of the augmentum duplex
-
+% the second argument is the same as for punctummora
 \def\augmentumduplex#1{%
 \hskip\spacebeforesigns%
 \calculateglyphraisevalue{#1}{2}%
@@ -1085,9 +1125,9 @@
 % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the prefious syllable and the first note of the next syllable. But there are limits : a bar cant go very far above text. For example if there is nuncncncncn with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
 % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
 % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
-\setbox\Syllabletext=\hbox{\textfont #1#2#3}%
 % here we consider that #1 is : (or other stuff) that goes between the last syllable and *, so we don't center on it
 \findtextaligncenter{}{#2}%
+\setbox\Syllabletext=\hbox{\textfont #1#2#3}%
 \syllablenotes{#8}%
 \notesaligncenter=\wd\Syllablenotes%
 \divide\notesaligncenter by 2\relax %
@@ -1102,14 +1142,9 @@
 %% 1/ the minimal space between a note and the bar + the width of the bar + the minimal space between the bar and the note (that's the global idea, in fact there are nuances) : we assign skipone to it
 %% 2/ enddifference + begindifference + space between notes and word : we assign temp to it
 \skipone=\notebarspace %
-\ifdim\previousenddifference<0 pt\relax %
-\advance\skipone by -\previousenddifference %
-\fi %
 \advance\skipone by \notebarspace %
-\ifdim\nextbegindifference < 0 pt\relax %
-\advance\skipone by -\nextbegindifference %
-\fi %
 \advance\skipone by \wd\Syllablenotes %
+% now let's get temp
 \ifdim\nextbegindifference < 0 pt%
 \temp=-\nextbegindifference %
 \else %
@@ -1174,14 +1209,13 @@
 \setbox\Syllabletext=\hbox{#1}%
 % if #1 is not nul, we put #1 in the middle of the last space
 \ifdim\wd\Syllabletext= 0 pt%
-\else %
-% TODO : mettre au milieu des textes ou pas en fait... c'est un peu compliqué...
+\else %\ifdim\wd\Syllabletext= 0 pt
 \divide\skipone by 2 %
-\kern -\skipone %
+\hskip -\skipone %
 \raise\textlower \copy\Syllabletext %
-\kern\skipone %
-\setbox\Syllabletext=\hbox{#2#3}%
+\hskip\skipone %
 \fi %
+\setbox\Syllabletext=\hbox{#2#3} %
 \raise\textlower \copy\Syllabletext %
 \kern -\wd\Syllabletext %
 \kern -\begindifference %
@@ -1747,10 +1781,6 @@
 \punctuminclinatumdebilisshift=-1300 sp plus 100 sp minus 100 sp
 \multiply\punctuminclinatumdebilisshift by \factor
 
-% space between the initial and the beginning of the score
-\newskip\afterinitialshift
-\afterinitialshift=0.6 em plus 0em minus 0em
-
 % space for the bars
 %first for virgula and divisio minima
 \newskip\spacebeforesmallbar
@@ -1806,6 +1836,24 @@
 \newdimen\maximumspacewithoutdash
 \maximumspacewithoutdash = 4000 sp
 \multiply\maximumspacewithoutdash by \factor
+
+% space between the initial and the beginning of the score
+\newskip\afterinitialshift
+\afterinitialshift=0.6 em plus 0em minus 0em
+
+% space before the initial and the beginning of the score
+\newskip\beforeinitialshift
+\afterinitialshift=0.6 em plus 0em minus 0em
+
+\def\setspaceafterinitial#1{%
+\afterinitialshift=#1 %
+\relax %
+}
+
+\def\setspacebeforeinitial#1{%
+\beforeinitialshift=#1 %
+\relax %
+}
 
 % space for the clef changes
 \newskip\clefchangespace
