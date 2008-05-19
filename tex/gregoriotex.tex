@@ -736,7 +736,6 @@
 }
 
 % a function to typeset a augmentum duplex, the argument is the letter of the height of the augmentum duplex
-% the second argument is the same as for punctummora
 \def\augmentumduplex#1{%
 \hskip\spacebeforesigns%
 \calculateglyphraisevalue{#1}{2}%
@@ -1200,12 +1199,12 @@
 % I'm a little lazy for now, I won't make the usual mountain of ifs... TODO: use different spaces
 \skipone=\textbartextspace %
 % same code as in syllable
-\temp=\begindifference %
-\ifdim\temp > 0 pt %
-\advance\skipone by \temp %
-\fi%
+%\temp=\begindifference %
+%%%\ifdim\temp > 0 pt %
+%%%\advance\skipone by \temp %
+%%%\fi%
 \kern \skipone %
-% we add the widht of #1 to the space because, remember, #1 has a special alignment with bars
+% we add the width of #1 to the space because, remember, #1 has a special alignment with bars
 \setbox\Syllabletext=\hbox{#1}%
 % if #1 is not nul, we put #1 in the middle of the last space
 \ifdim\wd\Syllabletext= 0 pt%
@@ -1215,7 +1214,7 @@
 \raise\textlower \copy\Syllabletext %
 \hskip\skipone %
 \fi %
-\setbox\Syllabletext=\hbox{#2#3} %
+\setbox\Syllabletext=\hbox{#2#3}%
 \raise\textlower \copy\Syllabletext %
 \kern -\wd\Syllabletext %
 \kern -\begindifference %
