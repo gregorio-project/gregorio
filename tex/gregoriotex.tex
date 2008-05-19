@@ -1057,7 +1057,7 @@
 % in very special cases we don't put a space after the syllable
 \ifnum\lastoflinecount=1\relax %
 \global\lastoflinecount=0\relax %
-\gnewline %
+\grenewline %
 \ifcase#4 %
 \global\firstsyllableofword=0 %
 \or%
@@ -1086,7 +1086,8 @@
 % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
 % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
 \setbox\Syllabletext=\hbox{\textfont #1#2#3}%
-\findtextaligncenter{#1}{#2}%
+% here we consider that #1 is : (or other stuff) that goes between the last syllable and *, so we don't center on it
+\findtextaligncenter{}{#2}%
 \syllablenotes{#8}%
 \notesaligncenter=\wd\Syllablenotes%
 \divide\notesaligncenter by 2\relax %
@@ -1162,13 +1163,25 @@
 % then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
 \else %ifdim\wd\hbox{#1#2#3}=0
 % I'm a little lazy for now, I won't make the usual mountain of ifs... TODO: use different spaces
-\hskip\textbartextspace %
+\skipone=\textbartextspace %
 % same code as in syllable
 \temp=\begindifference %
-\ifdim\temp <0pt %
-\temp=0pt%
+\ifdim\temp > 0 pt %
+\advance\skipone by \temp %
 \fi%
-\kern \temp %
+\kern \skipone %
+% we add the widht of #1 to the space because, remember, #1 has a special alignment with bars
+\setbox\Syllabletext=\hbox{#1}%
+% if #1 is not nul, we put #1 in the middle of the last space
+\ifdim\wd\Syllabletext= 0 pt%
+\else %
+% TODO : mettre au milieu des textes ou pas en fait... c'est un peu compliqué...
+\divide\skipone by 2 %
+\kern -\skipone %
+\raise\textlower \copy\Syllabletext %
+\kern\skipone %
+\setbox\Syllabletext=\hbox{#2#3}%
+\fi %
 \raise\textlower \copy\Syllabletext %
 \kern -\wd\Syllabletext %
 \kern -\begindifference %
@@ -1184,7 +1197,7 @@
 \firstsyllableofword=1 %
 \ifnum\lastoflinecount=1\relax %
 \global\lastoflinecount=0\relax %
-\gnewline %
+\grenewline %
 \fi %
 \relax%
 }
@@ -1511,7 +1524,7 @@
 }
 
 %macro to call if you wan to go to the next line
-\def\gnewline{%
+\def\grenewline{%
 \hfil%
 \penalty-10000 %
 \relax%
@@ -1837,7 +1850,7 @@
 
 %the macro to write a star
 \def\grestar{%
-\gsixstar %
+\gresixstar %
 \relax%
 }
 
@@ -1848,6 +1861,26 @@
 
 \def\gresixstar{%
 {\gregoriansymbolfont \char 71}%
+\relax %
+}
+
+\def\greitalic#1{%
+{\it #1}%
+\relax %
+}
+
+\def\gresmallcaps#1{%
+{\sc #1}%
+\relax %
+}
+
+\def\greboldfont#1{%
+{\bf #1}%
+\relax %
+}
+
+\def\grett#1{%
+{\tt #1}%
 \relax %
 }
 
