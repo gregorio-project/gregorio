@@ -504,16 +504,15 @@ libgregorio_gregoriotex_write_element (FILE * f,
       if (current_glyph->next_glyph
 	  && current_glyph->next_glyph->type == GRE_GLYPH)
 	{
-	  /* if (is_puncta_inclinata (current_glyph->next_glyph->glyph_type)
-	     || current_glyph->next_glyph->glyph_type == G_TRIGONUS
+	  if (is_puncta_inclinata (current_glyph->next_glyph->glyph_type)
 	     || current_glyph->next_glyph->glyph_type == G_PUNCTA_INCLINATA)
 	     {
-	     fprintf (f, "\\endofglyph{3}%%\n");
+	     fprintf (f, "\\endofglyph{9}%%\n");
 	     }
 	     else
-	     { */
+	     {
 	  fprintf (f, "\\endofglyph{0}%%\n");
-	  //}
+	  }
 	}
       current_glyph = current_glyph->next_glyph;
     }

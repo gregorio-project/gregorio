@@ -1650,27 +1650,31 @@
 %% 8: space between two puncta inclinata deminuti
 %% 4: space between bivirga or bistropha
 %% 5: space between tristropha or trivirga
-%% 6: space after a punctum % TODO: use it
-
+%% 6: space after a punctum mora XXX: not used yet, not so sure it is a good idea...
+%% 7: space between a punctum inclinatum and a punctum inclinatum debilis
+%% 8: space between two puncta inclinata debilis
+%% 9: space before a punctum (or something else) and a punctum inclinatum
 \def\endofglyph#1{%
 \ifcase#1%
 \hskip\interglyphspace %
-\or%
+\or% case 1
 \hskip\zerowidthspace %
-\or%
+\or% case 2
 \hskip\alterationspace %
-\or%
+\or% case 3
 \hskip\punctuminclinatumshift %
-\or%
+\or% case 4
 \hskip\bispace %
-\or%
+\or% case 5
 \hskip\trispace %
-\or%
+\or% case 6
 \hskip\spaceaftersigns %
-\or%
+\or% case 7
 \hskip\punctuminclinatumanddebilisshift %
-\or%
+\or% case 8
 \hskip\punctuminclinatumdebilisshift %
+\or% case 9
+\hskip\beforepunctainclinatashift %
 \fi%
 \penalty 10001%
 \relax%
@@ -1767,8 +1771,13 @@
 
 % space between two punctum inclinatum
 \newskip\punctuminclinatumshift
-\punctuminclinatumshift=-4700 sp plus 200 sp minus 200 sp
+\punctuminclinatumshift=-4850 sp plus 100 sp minus 100 sp
 \multiply\punctuminclinatumshift by \factor
+
+% space before puncta inclinata
+\newskip\beforepunctainclinatashift
+\beforepunctainclinatashift=5800 sp plus 580 sp minus 500 sp
+\multiply\beforepunctainclinatashift by \factor
 
 % space between a punctum inclinatum and a punctum inclinatum deminutus
 \newskip\punctuminclinatumanddebilisshift
