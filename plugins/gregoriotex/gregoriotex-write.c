@@ -486,7 +486,7 @@ libgregorio_gregoriotex_write_element (FILE * f,
 	}
       if (current_glyph->type == GRE_NATURAL)
 	{
-	  fprintf (f, "\\natural{%c}%%\n ", current_glyph->glyph_type);	//TODO : change
+	  fprintf (f, "\\natural{%c}%%\n ", current_glyph->glyph_type);
 	  current_glyph = current_glyph->next_glyph;
 	  continue;
 	}
@@ -2096,10 +2096,10 @@ libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable)
 			(glyph, &type, &gtype, &number);
 		      break;
 		    }
+		  return type + alteration;
 		}
-	      return type + alteration;
+	      glyph = glyph->next_glyph;
 	    }
-	  glyph = glyph->next_glyph;
 	}
       element = element->next_element;
     }
