@@ -480,13 +480,13 @@ libgregorio_gregoriotex_write_element (FILE * f,
 	}
       if (current_glyph->type == GRE_FLAT)
 	{
-	  fprintf (f, "\\flat{a}%%\n");	//TODO : change
+	  fprintf (f, "\\flat{%c}%%\n", current_glyph->glyph_type);
 	  current_glyph = current_glyph->next_glyph;
 	  continue;
 	}
       if (current_glyph->type == GRE_NATURAL)
 	{
-	  fprintf (f, "\\natural{a}%%\n ");	//TODO : change
+	  fprintf (f, "\\natural{%c}%%\n ", current_glyph->glyph_type);	//TODO : change
 	  current_glyph = current_glyph->next_glyph;
 	  continue;
 	}
@@ -505,14 +505,14 @@ libgregorio_gregoriotex_write_element (FILE * f,
 	  && current_glyph->next_glyph->type == GRE_GLYPH)
 	{
 	  if (is_puncta_inclinata (current_glyph->next_glyph->glyph_type)
-	     || current_glyph->next_glyph->glyph_type == G_PUNCTA_INCLINATA)
-	     {
-	     fprintf (f, "\\endofglyph{9}%%\n");
-	     }
-	     else
-	     {
-	  fprintf (f, "\\endofglyph{0}%%\n");
-	  }
+	      || current_glyph->next_glyph->glyph_type == G_PUNCTA_INCLINATA)
+	    {
+	      fprintf (f, "\\endofglyph{9}%%\n");
+	    }
+	  else
+	    {
+	      fprintf (f, "\\endofglyph{0}%%\n");
+	    }
 	}
       current_glyph = current_glyph->next_glyph;
     }
@@ -799,8 +799,8 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
       && glyph->next_glyph->next_glyph->type == GRE_GLYPH
       && glyph->next_glyph->next_glyph->glyph_type == G_PODATUS
       && glyph->next_glyph->next_glyph->first_note
-      && (glyph->next_glyph->next_glyph->first_note->pitch - current_note->pitch >
-	  1))
+      && (glyph->next_glyph->next_glyph->first_note->pitch -
+	  current_note->pitch > 1))
     {
       fprintf (f, "\\punctummora{%c}{1}%%\n", current_note->pitch);
     }
@@ -2019,6 +2019,8 @@ libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable)
   int type = 0;
   char gtype = 0;
   unsigned int number = 0;
+  // alteration says if there is a flat or a natural first in the next syllable, see gregoriotex.tex for more details
+  int alteration = 0;
   gregorio_glyph *glyph;
   gregorio_element *element;
 
@@ -2059,6 +2061,14 @@ libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable)
 	  glyph = element->first_glyph;
 	  while (glyph)
 	    {
+	      if (glyph->type == GRE_FLAT && alteration == 0)
+		{
+		  alteration = 20;
+		}
+	      if (glyph->type == GRE_NATURAL && alteration == 0)
+		{
+		  alteration = 40;
+		}
 	      if (glyph->type == GRE_GLYPH && glyph->first_note)
 		{
 		  switch (glyph->glyph_type)
@@ -2087,7 +2097,7 @@ libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable)
 		      break;
 		    }
 		}
-	      return type;
+	      return type + alteration;
 	    }
 	  glyph = glyph->next_glyph;
 	}
