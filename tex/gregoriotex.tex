@@ -1558,7 +1558,7 @@
 
 %macro to call if you wan to go to the next line
 \def\grenewline{%
-\hfil%
+%\hfil%
 \penalty-10000 %
 \relax%
 }
@@ -1632,9 +1632,9 @@
 \def\endofelement#1{%
 \ifcase#1%
 \hskip\interelementspace%
-\or%
+\or% case 1
 \hskip\largerspace%
-\or%
+\or% case 2
 \hskip\glyphspace%
 \fi%
 \penalty -100%
@@ -1695,27 +1695,27 @@
 
 % space between an alteration (flat or natural) and the next glyph
 \newskip\alterationspace
-\alterationspace = 8200 sp plus 820 sp minus 820 sp
+\alterationspace = 8200 sp plus 1400 sp minus 820 sp
 \multiply\alterationspace by \factor
 
 % space between elements
 \newskip\interelementspace
-\interelementspace = 8200 sp plus 820 sp minus 820 sp
+\interelementspace = 8200 sp plus 1400 sp minus 820 sp
 \multiply\interelementspace by \factor
 
 % larger space between elements
 \newskip\largerspace
-\largerspace = 8200 sp plus 820 sp minus 820 sp
+\largerspace = 8200 sp plus 1400 sp minus 820 sp
 \multiply\largerspace by \factor
 
 % space between elements which has the size of a note
 \newskip\glyphspace
-\glyphspace = 16500 sp plus 1650 sp minus 1650 sp
+\glyphspace = 16500 sp plus 2500 sp minus 1650 sp
 \multiply\glyphspace by \factor
 
 % minimum space between two notes of different syllables
 \newskip\intersyllablespace
-\intersyllablespace=32000 sp plus 2000 sp minus 0 sp
+\intersyllablespace=28000 sp plus 3000 sp minus 0 sp
 %\intersyllablespace=0 sp plus 0 sp minus 0 sp
 \multiply\intersyllablespace by \factor
 
@@ -1736,27 +1736,27 @@
 
 % space after a clef at the beginning of a line
 \newskip\spaceafterlineclef
-\spaceafterlineclef = 16500 sp plus 1650 sp minus 1650 sp
+\spaceafterlineclef = 16500 sp plus 4000 sp minus 1650 sp
 \multiply\spaceafterlineclef by \factor
 
 % space after at the end of a word when the last written symbol is a note and the first is a note
 \newskip\interwordspacenotes
-\interwordspacenotes = 32000 sp plus 3200 sp minus 3200 sp
+\interwordspacenotes = 32000 sp plus 6400 sp minus 3200 sp
 \multiply\interwordspacenotes by \factor
 
 % space after at the end of a word when the last written symbol is a note and the first is text
 \newskip\interwordspacenotestext
-\interwordspacenotestext = 35000 sp plus 2500 sp minus 2500 sp
+\interwordspacenotestext = 35000 sp plus 5000 sp minus 2500 sp
 \multiply\interwordspacenotestext by \factor
 
 % space after at the end of a word when the last written symbol is text and the first is a note
 \newskip\interwordspacetextnotes
-\interwordspacetextnotes = 30000 sp plus 3000 sp minus 3000 sp
+\interwordspacetextnotes = 30000 sp plus 6000 sp minus 3000 sp
 \multiply\interwordspacetextnotes by \factor
 
 % space after at the end of a word when the last written symbol is text and the first is text
 \newskip\interwordspacetext
-\interwordspacetext = 25000 sp plus 2500 sp minus 2500 sp
+\interwordspacetext = 25000 sp plus 7000 sp minus 2500 sp
 \multiply\interwordspacetext by \factor
 
 % space between notes of a bistropha and bivirga
@@ -1776,7 +1776,7 @@
 
 % space before puncta inclinata
 \newskip\beforepunctainclinatashift
-\beforepunctainclinatashift=5800 sp plus 580 sp minus 500 sp
+\beforepunctainclinatashift=5800 sp plus 800 sp minus 500 sp
 \multiply\beforepunctainclinatashift by \factor
 
 % space between a punctum inclinatum and a punctum inclinatum deminutus
@@ -1838,7 +1838,7 @@
 
 % minimal space between a note and a bar
 \newskip\notebarspace
-\notebarspace = 21000 sp plus 2100 sp minus 2100 sp
+\notebarspace = 21000 sp plus 10000 sp minus 2100 sp
 \multiply\notebarspace by \factor
 
 \newdimen\maximumspacewithoutdash

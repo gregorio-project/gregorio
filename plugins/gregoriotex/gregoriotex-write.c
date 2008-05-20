@@ -201,7 +201,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	    {
 	      fprintf (f, "\\endofelement{1}%%\n");
 	    }
-	  if (current_element->element_type == SP_LARGER_SPACE)
+	  if (current_element->element_type == SP_GLYPH_SPACE)
 	    {
 	      fprintf (f, "\\endofelement{2}%%\n");
 	    }
