@@ -220,7 +220,7 @@ def initialize_lengths():
         width_quilisma=166
         width_debilis=65
         width_deminutus=65
-        width_inclinatum=166
+        width_inclinatum=155
         width_stropha=163
         width_high_pes=155
         width_inclinatum_deminutus=112
@@ -308,9 +308,9 @@ def set_width(width):
 
 def name(i, j, k, shape, liquescentia):
     if shortglyphs==0:
-        glyphnumber=k+(5*j)+(25*i)+(256*liquescentiae[liquescentia])+(512*shapes[shape])
+        glyphnumber=i+(5*j)+(25*k)+(256*liquescentiae[liquescentia])+(512*shapes[shape])
     else :
-        glyphnumber=k+(5*j)+(25*i)+(64*liquescentiae[liquescentia])+(512*shapes[shape])
+        glyphnumber=i+(5*j)+(25*k)+(64*liquescentiae[liquescentia])+(512*shapes[shape])
     return "_%04d" % (glyphnumber)
 
 # function that simply pastes the src glyph into dst glyph, without moving it
@@ -424,7 +424,7 @@ def pes():
         write_pes_debilis_deminutus(i, 'pes', 'initiodebilisdeminutus')
 
 def write_pes(i, first_glyph, shape, liquescentia='nothing'):
-    glyphname=name(0, 0, i, shape, liquescentia)
+    glyphname=name(i, 0, 0, shape, liquescentia)
     begin_glyph(glyphname)
     # the difference of width of the two shapes, that will change a thing or two...
     if (first_glyph=="qbase"):
@@ -455,7 +455,7 @@ def write_pes(i, first_glyph, shape, liquescentia='nothing'):
     end_glyph(glyphname)    
 
 def write_pes_debilis(i, shape, liquescentia='nothing'):
-    glyphname=name(0, 0, i, shape, liquescentia)
+    glyphname=name(i, 0, 0, shape, liquescentia)
     begin_glyph(glyphname)
     # with a deminutus it is much more beautiful than with a idebilis
     paste_and_move("deminutus", glyphname, width_high_pes-line_width-width_debilis, 0)
@@ -466,7 +466,7 @@ def write_pes_debilis(i, shape, liquescentia='nothing'):
     end_glyph(glyphname) 
 
 def write_pes_deminutus(i, first_glyph, shape, liquescentia='nothing'):
-    glyphname=name(0, 0, i, shape, liquescentia)
+    glyphname=name(i, 0, 0, shape, liquescentia)
     begin_glyph(glyphname)
     simple_paste(first_glyph, glyphname)
     if (first_glyph=="qbase"):
@@ -479,7 +479,7 @@ def write_pes_deminutus(i, first_glyph, shape, liquescentia='nothing'):
     end_glyph(glyphname)
 
 def write_pes_debilis_deminutus(i, shape, liquescentia='nothing'):
-    glyphname=name(0, 0, i, shape, liquescentia)
+    glyphname=name(i, 0, 0, shape, liquescentia)
     begin_glyph(glyphname)
     simple_paste("deminutus", glyphname)
     write_line(i, glyphname, width_debilis, base_height)
@@ -525,7 +525,7 @@ def pes_quadratum():
         write_pes_quadratum(i, "qbase", "auctusd2", 'pesquilismaquadratum', 'auctusdescendens')
 
 def write_pes_quadratum(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
-    glyphname=name(0, 0, i, shape, liquescentia)
+    glyphname=name(i, 0, 0, shape, liquescentia)
     begin_glyph(glyphname)
     if (first_glyph=="idebilis"):
         first_width=width_deminutus
@@ -587,7 +587,7 @@ def flexus():
         write_flexus(i, "vlbase", 'auctusd1', 'flexus_longqueue', 'auctusdescendens')
 
 def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
-    glyphname=name(0, 0, i, shape, liquescentia)
+    glyphname=name(i, 0, 0, shape, liquescentia)
     begin_glyph(glyphname)
     # we add a queue if it is a deminutus
     if (first_glyph=="mdeminutus"):
@@ -647,7 +647,7 @@ def porrectus():
             write_alternate_porrectus_deminutus(i,j)
 
 def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):
-    glyphname=name(0, i, j, shape, liquescentia)
+    glyphname=name(i, j, 0, shape, liquescentia)
     begin_glyph(glyphname)
     length=porrectuswidths[i-1]
     if (with_bar):
@@ -665,7 +665,7 @@ def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):
     end_glyph(glyphname)
 
 def write_alternate_porrectus_deminutus(i,j):
-    glyphname=name(0, i, j, 'porrectus', 'deminutus')
+    glyphname=name(i, j, 0, 'porrectus', 'deminutus')
     begin_glyph(glyphname)
     write_first_bar(i, glyphname)
     simple_paste('base3', glyphname)
@@ -801,7 +801,7 @@ def torculus():
             write_torculus(i,j, "idebilis", "deminutus", 'torculus', 'initiodebilisdeminutus')
 
 def write_torculus(i,j, first_glyph, last_glyph, shape, liquescentia='nothing'):
-    glyphname=name(0, i, j, shape, liquescentia)
+    glyphname=name(i, j, 0, shape, liquescentia)
     begin_glyph(glyphname)
     length=width_punctum-line_width
     if (first_glyph=="idebilis"):
