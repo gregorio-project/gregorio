@@ -136,7 +136,7 @@ char *error;
 	libgregorio_message (error,
 		      "libgregorio_det_score", ERROR, 0);
 	}
-<score>[^\{\}\(\ \t\n<]+ {
+<score>[^\{\}\(<]+ {
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
@@ -188,9 +188,6 @@ char *error;
 <score>\}  {
 	return CENTER_END;
 	}
-<score>(\ |\t|\n)+ { 
-	return SPACE;
-	}
 <score>\( {
 	BEGIN(notes);
 	return OPENING_BRACKET;
@@ -205,5 +202,9 @@ char *error;
 <notes>\) {
 	BEGIN(score);
 	return CLOSING_BRACKET;
+	}
+<notes>\)(\ |\t|\n)+ {
+	BEGIN(score);
+	return CLOSING_BRACKET_WITH_SPACE;
 	}
 %%

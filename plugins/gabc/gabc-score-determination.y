@@ -372,15 +372,11 @@ update_position_with_space ()
 {
   if (position == WORD_MIDDLE)
     {
-      position = WORD_BEGINNING;
+      position = WORD_END;
     }
-  if (current_syllable && current_syllable->position == WORD_MIDDLE)
+  if (position == WORD_BEGINNING)
     {
-      current_syllable->position = WORD_END;
-    }
-  if (current_syllable && current_syllable->position == WORD_BEGINNING)
-    {
-      current_syllable->position = WORD_ONE_SYLLABLE;
+      position = WORD_ONE_SYLLABLE;
     }
 }
 
@@ -402,6 +398,10 @@ close_syllable ()
   if (position == WORD_BEGINNING)
     {
       position = WORD_MIDDLE;
+    }
+  if (position == WORD_ONE_SYLLABLE || position == WORD_END)
+    {
+      position = WORD_BEGINNING;
     }
   center_is_determined=0;
   first_letter=0;
@@ -950,7 +950,7 @@ end_style_determination ()
 
 %}
 
-%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANOTATION AUTHOR DATE MANUSCRIPT REFERENCE STORAGE_PLACE TRANSLATOR TRANSLATION_DATE STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE MODE GREGORIOTEX_FONT SOFTWARE_USED NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES INITIAL_KEY VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END
+%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANOTATION AUTHOR DATE MANUSCRIPT REFERENCE STORAGE_PLACE TRANSLATOR TRANSLATION_DATE STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE MODE GREGORIOTEX_FONT SOFTWARE_USED NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES INITIAL_KEY VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE
 
 %%
 
@@ -1245,6 +1245,24 @@ note:
 	voice=0;
 	}
 	|
+	NOTES CLOSING_BRACKET_WITH_SPACE {
+	if (voice<number_of_voices) {
+	elements[voice]=libgregorio_gabc_det_elements_from_string($1);
+	free($1);
+	}
+	else {
+	snprintf(error,105,ngettext("too many voices in note : %d foud, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
+	libgregorio_message(error, "libgregorio_det_score",ERROR,0);
+	}
+	if (voice<number_of_voices-1) {
+	snprintf(error,105,ngettext("not enough voices in note : %d foud, %d expected, completing with empty neume","not enough voices in note : %d foud, %d expected, completing with empty neume",voice+1),voice+1, number_of_voices);
+	libgregorio_message(error, "libgregorio_det_score",VERBOSE,0);
+	complete_with_nulls(voice);
+	}
+	voice=0;
+	update_position_with_space();
+	}
+	|
 	NOTES VOICE_CUT{
 	if (voice<number_of_voices) {
 	elements[voice]=libgregorio_gabc_det_elements_from_string($1);
@@ -1353,10 +1371,6 @@ syllable:
 	syllable_with_notes
 	|
 	notes_without_word
-	|
-	SPACE {
-	update_position_with_space();
-	}
 	;
 
 syllables:
