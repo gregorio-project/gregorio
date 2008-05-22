@@ -60,16 +60,77 @@
 \multiply\spacebeneathtext by \factor
 
 %constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
+\newdimen\constantglyphraise %
+
 % to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at spacelinestext + spacebeneathtext + 2*interstafflinespace + 2*stafflineheight
-\newdimen\constantglyphraise
-\constantglyphraise = -22000 sp
-\multiply\constantglyphraise by \the\factor
-\advance\constantglyphraise\spacebeneathtext
-\advance\constantglyphraise by \spacelinestext
-\advance\constantglyphraise by \interstafflinespace
-\advance\constantglyphraise by \interstafflinespace
-\advance\constantglyphraise by \stafflineheight
-\advance\constantglyphraise by \stafflineheight
+\def\calculateconstantglyphraise{%
+\global\constantglyphraise = -22000 sp%
+\global\multiply\constantglyphraise by \the\factor %
+\global\advance\constantglyphraise by \additionalbottomspace %
+\global\advance\constantglyphraise by \spacebeneathtext %
+\global\advance\constantglyphraise by \spacelinestext %
+\global\advance\constantglyphraise by \interstafflinespace %
+\global\advance\constantglyphraise by \interstafflinespace %
+\global\advance\constantglyphraise by \stafflineheight %
+\global\advance\constantglyphraise by \stafflineheight %
+\relax %
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for additionnal vertical spaces
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%macro to call if you wan to go to the next line simply
+\def\grenewline{%
+%\hfil%
+\updateadditionalspaces{0}{0}%
+\penalty-10000 %
+\relax%
+}
+
+% macro called to go to the next line but when there are additional vertical spaces to add
+%% 1: can be 0, 1 or 2 or 3. 1 is when there is a note above the 4th line, 2 when there is a note on the 5th line, and 3 when there is a note above the 5th line
+%% 2: iden, but with the bottom line (-1th)
+\def\grenewlinewithspace#1#2{%
+\updateadditionalspaces{#1}{#2}%
+\penalty-10000 %
+\relax %
+}
+
+% two dimensions for the additionalspaces
+\newdimen\additionalbottomspace
+\newdimen\additionaltopspace
+
+% same arguments as grenewlinewithspace
+\def\updateadditionalspaces#1#2{%
+\ifcase#1\relax %
+\global\additionalbottomspace=0 sp%
+\or % case 1
+\global\additionalbottomspace=0 sp%
+% here we don't add any space... it's just in case...
+\or % case 2
+\global\additionaltopspace=15000 sp%
+\global\multiply\additionaltopspace by \the\factor %
+\or % case 3
+\global\additionaltopspace=30000 sp%
+\global\multiply\additionaltopspace by \the\factor %
+\fi %
+\ifcase#2\relax %
+% case 0
+\global\additionalbottomspace=0 sp%
+\or % case 1
+\global\additionalbottomspace=0 sp%
+\or % case 2
+\global\additionalbottomspace=15000 sp%
+\global\multiply\additionalbottomspace by \the\factor %
+\or % case 3
+\global\additionalbottomspace=30000 sp%
+\global\multiply\additionalbottomspace by \the\factor %
+\fi %
+\generatelines %
+\calculateconstantglyphraise %
+\relax %
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of text
@@ -95,9 +156,9 @@
 \newdimen\textaligncenter
 
 \def\findtextaligncenter#1#2{%
-\widthof{\textfont #1#2}%
+\widthof{\gretextformat{#1#2}}%
 \global\textaligncenter=\the\tempwidth %
-\widthof{\textfont #2}%
+\widthof{\gretextformat{#2}}%
 \divide\tempwidth by 2 %
 \global\advance\textaligncenter by -\the\tempwidth%
 \relax%
@@ -222,6 +283,7 @@
 \hbox to0pt{%
 \vbox{%
 \vskip\spaceabovelines %
+\vskip\additionaltopspace %
 \hrule height \stafflineheight width \stafflinewidth %
 \kern\the\interstafflinespace %
 \hrule height \stafflineheight width \stafflinewidth %
@@ -231,6 +293,7 @@
 \hrule height \stafflineheight width \stafflinewidth %
 \vskip\spacelinestext %
 \vskip\spacebeneathtext %
+\vskip\additionalbottomspace %
 }%
 \hss%
 }%
@@ -240,9 +303,13 @@
 
 %% box containing the stafflines for other lines than the first
 \newbox\Lines
+
+% macro that must be called at each change of linewidth
+\def\generatelines{%
 \setbox\Lines=\hbox to0pt{%
 \vbox{%
 \vskip\spaceabovelines %
+\vskip\additionaltopspace %
 \hrule height \stafflineheight width \stafflinewidth %
 \kern\the\interstafflinespace %
 \hrule height \stafflineheight width \stafflinewidth %
@@ -251,10 +318,12 @@
 \kern\the\interstafflinespace %
 \hrule height \stafflineheight width \stafflinewidth %
 \vskip\spacelinestext %
+\vskip\additionalbottomspace %
 \vskip\spacebeneathtext %
 }%
 \hss%
-\relax%
+}%
+\relax %
 }
 
 %% macro that draws the lines : starts by the first and then draws the lines of every line.
@@ -785,19 +854,23 @@
 \newbox\Tempsign
 \newdimen\tempsignwidth
 
-%3: si on revient au début ou pas : 0 on revient au début
-% a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. If it is 2, it means that we must go back first of width #1, and then forward of #2. If it is 1, it means that we only need to go back of #2. It is very hard to understand, sorry.
+% a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. If it is 2, it means that we must go back first of width #1, and then forward of #2. If it is 1, it means that we only need to go back of #2. if it is 4, we go to the beginning of the glyph, then forward of #1 then back of #2
 \def\vepisemusaux#1#2#3{%
 \setbox\Tempsign=\hbox{\gregorianfont #2}%
 \tempsignwidth=\wd\Tempsign%
 \divide\tempsignwidth by 2 %
 \ifcase#3%
+% tempwidth is the width of the last glyph
 \advance\tempwidth by -\tempsignwidth %
 \or%
 \tempwidth=\tempsignwidth %
 \or%
 \setbox\Tempsign=\hbox{\gregorianfont #1}%
 \tempwidth=\wd\Tempsign %
+\advance\tempwidth by -\tempsignwidth %
+\or %
+\setbox\Tempsign=\hbox{\gregorianfont #1}%
+\advance\tempwidth by -\wd\Tempsign %
 \advance\tempwidth by -\tempsignwidth %
 \fi%
 % then we draw the sign
@@ -814,22 +887,35 @@
 \relax%
 }
 
-% a function to typeset a vertical episemus. The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are:
-%% 0: the episemus will be typeset in the middle of the last note, which is a standard punctum (works with pes)
-%% 1: the same, but the last note is a deminutus
-%% 2: the episemus is typeset in the middle of the note before the last note, which is a standard punctum
+% here are the common values for both hepisemus (and consequently also for additional lines) and vepisemus
+% this indicates the note
+%% 0: last note, which is a standard punctum (works with pes)
+%% 1: same, but the last note is a deminutus
+%% 2: the note before the last note, which is a standard punctum
 %% 3: idem, but the note is the note preceding a deminutus
-%% 4: the note before the note before the last note (for torculus resupinus)
+%% 4: the note before the note before the last note (for porrectus flexus)
 %% 5: idem, but when the two last notes are a deminutus
 %% 6: the first note, if it is a standard punctum
 %% 7: the first note, if it is an initio debilis
-%% 8: the first note, if it is a porrectus or a torculus resupinus
-%% 9: the last note, if it is a punctum inclinatum
-%% 10: idem, if it is a punctum inclinatum debilis
-%% 11: idem, if it is a stropha
-%% 12: idem, with a quilisma
-%% 13: idem, with an oriscus
-%% 14: idem of 2, but with ambitus of 1 between the two last notes (so no link between them) 
+%% 8: the first note, if it is a porrectus
+%%% the three next arguments make no sense for a vepisemus
+%% 9: the two first notes, if it is a porrectus
+%% 10: the two first notes, if it is a porrectus flexus
+%% 11: the notes two and three of a torculus resupinus
+%% 12: the last note, if it is a punctum inclinatum
+%% 13: idem, if it is a punctum inclinatum deminutus
+%% 14: idem, if it is a stropha
+%% 15: idem, with a quilisma
+%% 16: idem, with an oriscus
+%% 17: same of 2 but for ambitus of one
+%% 18: same of 0, but the last note is a smaller punctum (concerning simple podatus, podatus, and torculus resupinus)
+%% 19: the first note, if it is an oriscus
+%% 20: the first note, if it is a quilisma
+%% 21: the second note of a torculus resupinus with first ambitus of at least two
+%% 22: idem with ambitus of one
+%% 23: idem with initio debilis
+
+% a function to typeset a vertical episemus. The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are:
 \def\vepisemus#1#2{%
 \calculateglyphraisevalue{#1}{3}%
 \ifcase#2 %
@@ -863,147 +949,264 @@
 \or%
 %case 8, in which we do (for now) the same as case 6
 \vepisemusaux{0}{\char 17}{2}%
-\or%
-%case 9
+\or% case 9, 10 and 11
+\or\or\or %
+%case 12
 \vepisemusaux{0}{\char 19}{0}%
 \or%
-%case 10
+%case 13
 \vepisemusaux{0}{\char 32}{0}%
 \or%
-%case 11
+%case 14
 \vepisemusaux{0}{\char 20}{0}%
 \or%
-%case 12
+%case 15
 \vepisemusaux{0}{\char 26}{0}%
 \or%
-%case 13
+%case 16
 \vepisemusaux{0}{\char 27}{0}%
 \or%
-%case 14
+%case 17
 \vepisemusaux{\char 4097}{\char 17}{1}%
+\or%
+%case 18
+\vepisemusaux{0}{\char 74}{0}%
+\or%
+%case 19
+\vepisemusaux{0}{\char 28}{2}%
+\or%
+%case 20
+\vepisemusaux{0}{\char 26}{2}%
+\or%
+%case 21
+\vepisemusaux{\char 4098}{\char 17}{4}%
+\or%
+%case 22 %
+\vepisemusaux{\char 4097}{\char 17}{4}%
+\or%
+%case 23
+\vepisemusaux{\char 1986}{\char 17}{4}%
 \fi%
 \relax%
 }
 
 
-% a macro that will help in the typesetting of a horizontal episemus, the first argument is a glyph that have the same width as the width between the end of the glyph and the beginning of the episemus, and the second argument is the character of the episemus. If the third argument is 0, we go directly to the beginning of the glyph, else we don't change anything
-\def\hepisemusaux#1#2#3{%
+% a macro that will help in the typesetting of a horizontal episemus and additional lines, the first argument is a glyph that have the same width as the width between the end of the glyph and the beginning of the episemus, and the second argument is the character of the episemus. If the third argument is 0, we go directly to the beginning of the glyph, else we don't change anything
+% 4th argument is the same as in hepisorline
+\def\hepisorlineaux#1#2#3#4{%
 \ifnum#3=0%
 %remember, \tempwidth has the value of the last glyph width (cool isn't it?)
 \else%
 \setbox\Tempsign=\hbox{\gregorianfont #1}%
 \tempwidth=\wd\Tempsign%
 \fi%
+\kern -\tempwidth %
 % then we draw the sign, and go back to the beginning of the sign
 \setbox\Tempsign=\hbox{\gregorianfont \char #2}%
 % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
 \tempsignwidth=\wd\Tempsign %
-\kern -\tempwidth%
+\ifnum#4=0\relax % case of the lines
+\else %
+\temp=16000 sp%
+\multiply\temp by \the\factor %
+\kern -\temp %
+\advance\tempsignwidth by \temp %
+\advance\tempsignwidth by \temp %
+\fi %
+\ifcase#4%
+%case of hepisemus
 \raise \glyphraisevalue \copy\Tempsign %
+\or % case of a line at the top
+\glyphraisevalue=\additionalbottomspace %
+\advance\glyphraisevalue by \spacebeneathtext %
+\advance\glyphraisevalue by \spacelinestext %
+\advance\glyphraisevalue by \interstafflinespace %
+\advance\glyphraisevalue by \interstafflinespace %
+\advance\glyphraisevalue by \interstafflinespace %
+\advance\glyphraisevalue by \interstafflinespace %
+\advance\glyphraisevalue by \stafflineheight %
+\advance\glyphraisevalue by \stafflineheight %
+\advance\glyphraisevalue by \stafflineheight %
+\advance\glyphraisevalue by \stafflineheight %
+\raise\glyphraisevalue\hbox{\vrule height \stafflineheight width \tempsignwidth}%
+\kern \temp %
+\or % case of a line at the bottom
+\glyphraisevalue=\additionalbottomspace %
+\advance\glyphraisevalue by \spacebeneathtext %
+\advance\glyphraisevalue by \spacelinestext %
+\advance\glyphraisevalue by -\interstafflinespace %
+\advance\glyphraisevalue by -\stafflineheight %
+\raise\glyphraisevalue\hbox{\vrule height \stafflineheight width \tempsignwidth}%
+\kern \temp %
+\fi %
 % and finally we go back to the end of the glyph, where we were first
 \advance\tempwidth by -\tempsignwidth %
-\kern \tempwidth%
+\kern \tempwidth %
 \relax%
 }
 
-% a function to typeset a horizontal episemus. The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are:
-%% 0: the episemus will be typeset at the beginning of the last note, which is a standard punctum (works with pes)
-%% 1: the same, but the last note is a deminutus
-%% 2: the episemus is typeset at the beginning of the note before the last note, which is a standard punctum
-%% 3: idem, but the note is the note preceding a deminutus
-%% 4: the note before the note before the last note (for torculus resupinus)
-%% 5: idem, but when the two last notes are a deminutus
-%% 6: the first note, if it is a standard punctum
-%% 7: the first note, if it is an initio debilis
-%% 8: the two first notes, if it is a porrectus
-%% 9: the two first notes, if it is a porrectus flexus
+% a function to typeset a horizontal line (additional line or episemus). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are the common ones
 % the third argument is a bit particular, it is the ambitus of the porrectus or porrectus flexus if the second argument is 8 or 9, otherwise it is useless
-%% 10: the last note, if it is a punctum inclinatum
-%% 11: idem, if it is a punctum inclinatum debilis
-%% 12: idem, if it is a stropha
-%% 13: idem, with a quilisma
-%% 14: idem, with an oriscus
-%%% cases for the special spaces between the notes (for ambitus of one)
-%% 15: same of 2
-\def\hepisemus#1#2#3{%
+% #4 is 0 for an horizontal episemus, 2 for a line at the bottom and 1 for a line at the top
+\def\hepisorline#1#2#3#4{%
 \calculateglyphraisevalue{#1}{1}%
 \ifcase#2 %
 %case 0
-\hepisemusaux{\char 17}{40}{1}%
+\hepisorlineaux{\char 17}{40}{1}{#4}%
 \or%
 %case 1
-\hepisemusaux{\char 13}{42}{1}%
+\hepisorlineaux{\char 13}{42}{1}{#4}%
 \or%
 %case 2
 % a kind of flexus, it has the good width
-\hepisemusaux{\char 4098}{40}{1}%
+\hepisorlineaux{\char 4098}{40}{1}{#4}%
 \or%
 %case 3
 % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
-\hepisemusaux{\char 4225}{40}{1}%
+\hepisorlineaux{\char 4225}{40}{1}{#4}%
 \or%
 %case 4
 % a torculus, it has the good width
-\hepisemusaux{\char 14343}{40}{1}%
+\hepisorlineaux{\char 14343}{40}{1}{#4}%
 \or%
 %case 5
 % \char 29190 is a torculus deminutus, it has the good width
-\hepisemusaux{\char 14859}{40}{1}%
+\hepisorlineaux{\char 14859}{40}{1}{#4}%
 \or%
 %case 6
-\hepisemusaux{0}{40}{0}%
+\hepisorlineaux{0}{40}{0}{#4}%
 \or%
 %case 7
 %we assume that the initio-debilis has the same width as a punctum deminutus
-\hepisemusaux{0}{41}{0}%
+\hepisorlineaux{0}{41}{0}{#4}%
 \or%
 %case 8
-\ifcase#3%
-\or%
-\hepisemusaux{0}{45}{0}%
-\or%
-\hepisemusaux{0}{46}{0}%
-\or%
-\hepisemusaux{0}{47}{0}%
-\or%
-\hepisemusaux{0}{48}{0}%
-\or%
-\hepisemusaux{0}{49}{0}%
-\fi%
+\hepisorlineaux{0}{40}{0}{#4}%
 \or%
 %case 9
 \ifcase#3%
 \or%
-\hepisemusaux{0}{50}{0}%
+\hepisorlineaux{0}{45}{0}{#4}%
 \or%
-\hepisemusaux{0}{51}{0}%
+\hepisorlineaux{0}{46}{0}{#4}%
 \or%
-\hepisemusaux{0}{52}{0}%
+\hepisorlineaux{0}{47}{0}{#4}%
 \or%
-\hepisemusaux{0}{53}{0}%
+\hepisorlineaux{0}{48}{0}{#4}%
 \or%
-\hepisemusaux{0}{54}{0}%
+\hepisorlineaux{0}{49}{0}{#4}%
 \fi%
 \or%
 %case 10
-\hepisemusaux{\char 19}{43}{1}%
+\ifcase#3%
 \or%
+\hepisorlineaux{0}{50}{0}{#4}%
+\or%
+\hepisorlineaux{0}{51}{0}{#4}%
+\or%
+\hepisorlineaux{0}{52}{0}{#4}%
+\or%
+\hepisorlineaux{0}{53}{0}{#4}%
+\or%
+\hepisorlineaux{0}{54}{0}{#4}%
+\fi%
+\or %
 %case 11
-\hepisemusaux{\char 32}{44}{1}%
+\ifcase#3%
+\or%
+\hepisorlineaux{\char 10246}{50}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10247}{51}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10248}{52}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10249}{53}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10250}{54}{1}{#4}%
+\fi%
 \or%
 %case 12
-\hepisemusaux{\char 20}{45}{1}%
+\hepisorlineaux{\char 19}{43}{1}{#4}%
 \or%
 %case 13
-\hepisemusaux{\char 26}{56}{1}%
+\hepisorlineaux{\char 32}{44}{1}{#4}%
 \or%
 %case 14
-\hepisemusaux{\char 27}{47}{1}%
+\hepisorlineaux{\char 20}{45}{1}{#4}%
 \or%
 %case 15
-\hepisemusaux{\char 4097}{40}{1}%
+\hepisorlineaux{\char 26}{56}{1}{#4}%
+\or%
+%case 16
+\hepisorlineaux{\char 27}{47}{1}{#4}%
+\or%
+%case 17
+\hepisorlineaux{\char 4097}{40}{1}{#4}%
+\or %
+%case 18
+\hepisorlineaux{\char 74}{58}{1}{#4}%
+\or %
+%case 19
+\hepisorlineaux{0}{57}{0}{#4}%
+\or %
+%case 20
+\hepisorlineaux{0}{56}{0}{#4}%
+\or %
+%case 21
+\ifcase#3%
+\or%
+\hepisorlineaux{\char 10246}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10247}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10248}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10249}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10250}{40}{1}{#4}%
+\fi%
+\or %
+%case 22
+\ifcase#3%
+\or%
+\hepisorlineaux{\char 10246}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10247}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10248}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10249}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10250}{40}{1}{#4}%
+\fi%
+\or %
+%case 23
+\ifcase#3%
+\or%
+\hepisorlineaux{\char 10246}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10247}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10248}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10249}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10250}{40}{1}{#4}%
+\fi%
 \fi%
 \relax%
+}
+
+% dumb top function
+\def\hepisemus#1#2#3{%
+\hepisorline{#1}{#2}{#3}{0}%
+\relax %
+}
+
+% another dumb top function
+\def\additionalline#1#2#3{%
+\hepisorline{a}{#1}{#2}{#3}%
+\relax %
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1089,7 +1292,7 @@
 \fi %
 %\potentialdash=2 %
 \setnextbegindifference{#5}{#6}{#7}%
-\setbox\Syllabletext=\hbox{\textfont#1#2#3}%
+\setbox\Syllabletext=\hbox{\gretextformat{#1#2#3}}%
 \setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{1}%
 %\potentialdash=1 %
 \ifcase#4 %
@@ -1113,9 +1316,7 @@
 %
 \ifdim\temp>\maximumspacewithoutdash %
 %\potentialdash=2 %
-\setbox\Syllabletext=\hbox{\textfont #1#2#3%
-\gregoriotextdash%
-}%
+\setbox\Syllabletext=\hbox{\gretextformat{#1#2#3-}}%
 \setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{0}%
 \fi%
 \fi%
@@ -1178,7 +1379,7 @@
 % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
 % here we consider that #1 is : (or other stuff) that goes between the last syllable and *, so we don't center on it
 \findtextaligncenter{}{#2}%
-\setbox\Syllabletext=\hbox{\textfont #1#2#3}%
+\setbox\Syllabletext=\hbox{\gretextformat{#1#2#3}}%
 \syllablenotes{#8}%
 \notesaligncenter=\wd\Syllablenotes%
 \divide\notesaligncenter by 2\relax %
@@ -1581,6 +1782,9 @@
 
 %macro called at the beginning of a score
 \def\begingregorioscore{%
+\global\stafflinewidth=\linewidth %
+\generatelines %
+\calculateconstantglyphraise %
 \noindent%
 %\directlua0 {%
 %local hlist = node.id('hlist')
@@ -1639,13 +1843,7 @@
 \localrightbox{}%
 \global\keeprightbox=0 %
 \fi%
-\relax%
-}
-
-%macro to call if you wan to go to the next line
-\def\grenewline{%
-%\hfil%
-\penalty-10000 %
+\updateadditionalspaces{0}{0}%
 \relax%
 }
 
@@ -2037,7 +2235,6 @@
 \tempfactor = \the\factor %
 \multiply\tempfactor by 100000 %
 \global\font\gregorianfont=#1 at \the\tempfactor sp%
-\global\font\gregoriantextfont=#1 at 11pt%
 \relax%
 }
 
@@ -2048,6 +2245,17 @@
 
 \font\gregoriansymbolfont=gresym at 12pt
 
+\def\gretextformat#1{%
+{\textfont #1}%
+\relax %
+}
+
+\def\greinitialtextformat#1{%
+{\fontofinitial #1}%
+\relax %
+}
+
+% loading of default font
 \font\textfont=pncr at 12pt
 \font\fontofinitial=pncr at 40pt
 
