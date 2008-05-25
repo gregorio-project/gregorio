@@ -766,8 +766,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	  break;
 	}
       if (current_note->h_episemus_type != H_NO_EPISEMUS
-	  && current_note->h_episemus_top_note != 'm'
-	  && block_hepisemus == 0)
+	  && current_note->h_episemus_top_note != 'm' && block_hepisemus == 0)
 	{
 // if it is a porrectus or a porrectus flexus, we check if the episemus is on the two first notes:
 	  if ((type == T_PORRECTUS || type == T_PORRECTUSFLEXUS
@@ -1005,7 +1004,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	{
 	  if (current_glyph->liquescentia >= L_INITIO_DEBILIS)
 	    {
-	     *number = 1;
+	      *number = 1;
 	    }
 	  else
 	    {
@@ -1018,6 +1017,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 		  *number = 0;
 		}
 	    }
+	  normal_height ();
 	}
       else
 	{			/* i=2 */
@@ -1030,8 +1030,8 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	    {
 	      *number = 18;
 	    }
+	  height_layered_notes ();
 	}
-      height_layered_notes();
       break;
     case T_PESQUADRATUM:
     case T_PESQUASSUS:
