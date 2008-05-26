@@ -1,1 +1,1 @@
-EXTRA_DIST=gregoriotex.tex
+EXTRA_DIST=gregoriotex.tex gregoriotex.sty

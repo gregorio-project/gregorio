@@ -64,8 +64,9 @@ install: build
 	dh_installdirs 
 
 	$(MAKE) DESTDIR=$(CURDIR)/debian/gregorio install
-	cp $(FONTDIR)/*.map $(GREGORIOTEXDIR)/fonts/map/dvips/gregoriotex
-	cp $(CURDIR)/tex/*.tex $(GREGORIOTEXDIR)/tex/gregoriotex
+	cp $(FONTDIR)/*.map $(GREGORIOTEXDIR)/fonts/map/dvips/public/gregoriotex
+	cp $(CURDIR)/tex/gregoriotex.tex $(GREGORIOTEXDIR)/tex/gregoriotex
+	cp $(CURDIR)/tex/gregoriotex.sty $(GREGORIOTEXDIR)/tex/latex/gregoriotex
 	cp $(FONTDIR)/gregorio*.pfb $(GREGORIOTEXDIR)/fonts/type1/public/gregoriotex/gregorio
 	cp $(FONTDIR)/gregorio*.tfm $(GREGORIOTEXDIR)/fonts/tfm/public/gregoriotex/gregorio
 	cp $(FONTDIR)/gregorio*.ovf $(GREGORIOTEXDIR)/fonts/ovf/public/gregoriotex/gregorio
@@ -83,12 +84,14 @@ install: build
 	cp $(FONTDIR)/greciliae*.ofm $(GREGORIOTEXDIR)/fonts/ofm/public/gregoriotex/greciliae
 	cp $(FONTDIR)/gresym.pfb $(GREGORIOTEXDIR)/fonts/type1/public/gregoriotex/gresym
 	cp $(FONTDIR)/gresym.tfm $(GREGORIOTEXDIR)/fonts/tfm/public/gregoriotex/gresym
-	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/gregorio.map" > $(CURDIR)/debian/gregoriotex.maps
-	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/parmesan.map" >> $(CURDIR)/debian/gregoriotex.maps
-	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/greciliae.map" >> $(CURDIR)/debian/gregoriotex.maps
-	echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/gresym.map" >> $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap /usr/share/texmf/fonts/map/dvips/public/gregoriotex/gregorio.map" > $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap /usr/share/texmf/fonts/map/dvips/public/gregoriotex/parmesan.map" >> $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap /usr/share/texmf/fonts/map/dvips/public/gregoriotex/greciliae.map" >> $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap /usr/share/texmf/fonts/map/dvips/public/gregoriotex/gresym.map" >> $(CURDIR)/debian/gregoriotex.maps
 	dh_installtex
-
+	
+	dh_installdocs
+	dh_installexamples -A examples/*.tex examples/PopulusSion.gabc
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -99,14 +102,13 @@ binary-arch: build install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs 
-	dh_installdocs
-	dh_installexamples
 	dh_installman -a gregorio.1
 	dh_link
 	dh_strip
 	dh_compress
 	dh_fixperms
 	dh_installdeb
+	dh_makeshlibs
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums

@@ -2,12 +2,12 @@ Source: gregorio
 Section: x11
 Priority: optional
 Maintainer: Elie Roux <elie.roux@enst-bretagne.fr>
-Build-Depends: debhelper (>> 3.0.0), libxml2-dev, flex, bison, docbook-to-man, xsltproc, autotools-dev, fontforge, texlive-omega, python, perl, texlive-font-utils, automake, libtool, libltdl3-dev
+Build-Depends: debhelper (>> 3.0.0), libxml2-dev, flex, bison, docbook-to-man, xsltproc, autotools-dev, fontforge, texlive-omega, python, perl, texlive-font-utils, automake, libtool, libltdl3-dev, build-essentials
 Standards-Version: 3.6.2
 
 Package: gregorio
 Architecture: any
-Depends: libxml2
+Depends: libxml2, libc6
 Recommends: gregoriotex
 Description: a command-line tool to typeset gregorian chant
  Gregorio is a project with a lot of functionalities. The main interest is gabc,

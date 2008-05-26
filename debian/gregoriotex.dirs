@@ -1,11 +1,11 @@
 usr/share/texmf/tex/gregoriotex
-usr/share/texmf/fonts/map/dvips/gregoriotex
+usr/share/texmf/tex/latex/gregoriotex
+usr/share/texmf/fonts/map/dvips/public/gregoriotex
 usr/share/texmf/fonts/tfm/public/gregoriotex
 usr/share/texmf/fonts/type1/public/gregoriotex
 usr/share/texmf/fonts/ovf/public/gregoriotex
 usr/share/texmf/fonts/ovp/public/gregoriotex
 usr/share/texmf/fonts/ofm/public/gregoriotex
-usr/share/texmf/fonts/map/dvips/public/gregoriotex
 usr/share/texmf/fonts/tfm/public/gregoriotex/gregorio
 usr/share/texmf/fonts/type1/public/gregoriotex/gregorio
 usr/share/texmf/fonts/ovf/public/gregoriotex/gregorio
