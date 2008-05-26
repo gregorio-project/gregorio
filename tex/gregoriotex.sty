@@ -1,0 +1,37 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{gregoriotex}
+
+\input gregoriotex.tex
+
+\def\gretextformat#1{%
+#1\relax %
+}
+
+\def\greinitialtextformat#1{%
+\begin{huge}#1\end{huge}%
+}
+
+\def\includescore#1{%
+\input #1%
+\relax %
+}
+
+\def\greitalic#1{%
+\textit{#1}%
+\relax %
+}
+
+\def\gresmallcaps#1{%
+\textsc{#1}%
+\relax %
+}
+
+\def\greboldfont#1{%
+\textbf{#1}%
+\relax %
+}
+
+\def\grett#1{%
+\texttt{#1}%
+\relax %
+}

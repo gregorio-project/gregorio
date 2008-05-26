@@ -44,7 +44,7 @@ write_score (FILE * f, gregorio_score * score)
 			   ("gregoriotex only works in monophony (for the moment)"),
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
     }
-  fprintf (f, "\\input gregoriotex.tex\n\n\\begingregorioscore%%\n");
+  fprintf (f, "\\begingregorioscore%%\n");
   // we select the good font
   if (score->gregoriotex_font)
     {
@@ -103,7 +103,7 @@ write_score (FILE * f, gregorio_score * score)
 					      &first_syllable);
       current_syllable = current_syllable->next_syllable;
     }
-  fprintf (f, "\\endgregorioscore %%\n\\bye\n");
+  fprintf (f, "\\endgregorioscore %%\n");
 }
 
 
@@ -1018,6 +1018,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 		}
 	    }
 	  normal_height ();
+	  // TODO: patch for the episemus beneath the first note
 	}
       else
 	{			/* i=2 */
