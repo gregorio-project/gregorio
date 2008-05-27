@@ -39,6 +39,10 @@ libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
 			  char alterations[][13]);
 void
 libgregorio_xml_print_text (FILE * f, gregorio_character *text, char position);
+
+void
+libgregorio_xml_print_translation (FILE * f, gregorio_character * translation);
+
 void
 libgregorio_xml_write_key_change_in_polyphony (FILE * f, char step, int line,
 					 int voice);
@@ -163,6 +167,9 @@ void
 libgregorio_xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
 			   gregorio_syllable * syllable);
 
+void
+libgregorio_xml_read_translation (xmlNodePtr current_node, xmlDocPtr doc,
+			   gregorio_syllable * syllable);
 
 char
 libgregorio_xml_read_figura (char *liquescentia);

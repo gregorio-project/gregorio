@@ -295,11 +295,7 @@ libgregorio_gabc_write_gregorio_syllable (FILE * f,
 			   "libgregorio_gabc_write_syllable", ERROR, 0);
       return;
     }
-  if (!syllable->text)
-    {
-      fprintf (f, "(");
-    }
-  else
+  if (syllable->text)
     {
       // we call the magic function (defined in struct_utils.c), that will write our text.
       libgregorio_write_text (0, syllable->text, f,
@@ -308,8 +304,19 @@ libgregorio_gabc_write_gregorio_syllable (FILE * f,
 			      (&libgregorio_gabc_write_begin),
 			      (&libgregorio_gabc_write_end),
 			      (&libgregorio_gabc_write_special_char));
-      fprintf (f, "(");
     }
+  if (syllable->translation)
+    {
+      fprintf (f, "[");
+      libgregorio_write_text (0, syllable->translation, f,
+			      (&libgregorio_gabc_write_verb),
+			      (&libgregorio_gabc_print_char),
+			      (&libgregorio_gabc_write_begin),
+			      (&libgregorio_gabc_write_end),
+			      (&libgregorio_gabc_write_special_char));
+	  fprintf (f, "]");
+    }
+  fprintf (f, "(");
   while (voice < number_of_voices - 1)
     {
       //we enter this loop only in polyphony
@@ -345,7 +352,12 @@ libgregorio_gabc_write_gregorio_elements (FILE *
     {
       libgregorio_gabc_write_gregorio_element (f, element);
       // we don't want a bar after an end of line
-      if (element->type != GRE_END_OF_LINE && (element->type !=GRE_SPACE || (element->type==GRE_SPACE && element->element_type ==SP_NEUMATIC_CUT)) && element->next_element && element->next_element->type == GRE_ELEMENT)
+      if (element->type != GRE_END_OF_LINE
+	  && (element->type != GRE_SPACE
+	      || (element->type == GRE_SPACE
+		  && element->element_type == SP_NEUMATIC_CUT))
+	  && element->next_element
+	  && element->next_element->type == GRE_ELEMENT)
 	{
 	  fprintf (f, "/");
 	}
@@ -612,7 +624,7 @@ libgregorio_gabc_write_gregorio_note (FILE * f,
   note->pitch = tolower (note->pitch);
   switch (shape)
     {
-    // first we write the letters that determine the shapes
+      // first we write the letters that determine the shapes
     case S_PUNCTUM:
       fprintf (f, "%c", note->pitch);
       break;
@@ -620,24 +632,24 @@ libgregorio_gabc_write_gregorio_note (FILE * f,
       fprintf (f, "%c", toupper (note->pitch));
       break;
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
-        if (note->next_note)
-        {
-      fprintf (f, "%c~", toupper (note->pitch));
-      }
-      else 
-      {
-      fprintf (f, "%c", toupper (note->pitch));
-      }
+      if (note->next_note)
+	{
+	  fprintf (f, "%c~", toupper (note->pitch));
+	}
+      else
+	{
+	  fprintf (f, "%c", toupper (note->pitch));
+	}
       break;
     case S_PUNCTUM_INCLINATUM_AUCTUS:
-        if (note->next_note)
-        {
-      fprintf (f, "%c<", toupper (note->pitch));
-      }
-      else 
-      {
-      fprintf (f, "%c", toupper (note->pitch));
-      }
+      if (note->next_note)
+	{
+	  fprintf (f, "%c<", toupper (note->pitch));
+	}
+      else
+	{
+	  fprintf (f, "%c", toupper (note->pitch));
+	}
       break;
     case S_VIRGA:
       fprintf (f, "%cv", note->pitch);

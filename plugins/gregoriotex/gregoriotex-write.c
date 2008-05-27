@@ -182,15 +182,22 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
       libgregorio_gregoriotex_write_next_first_text (f,
 						     syllable->next_syllable->
 						     text);
-      fprintf (f, "{%d}",
+      fprintf (f, "{%d}{",
 	       libgregorio_gregoriotex_syllable_first_type (syllable->
 							    next_syllable));
     }
   else
     {
-      fprintf (f, "{}{}{0}");
+      fprintf (f, "{}{}{0}{");
     }
-  fprintf (f, "{%%\n");
+
+  if (syllable->translation)
+    {
+      fprintf (f, "%%\n\\writetranslation{");
+      libgregorio_gregoriotex_write_translation (f, syllable->translation);
+      fprintf(f, "}%%\n");
+    }
+  fprintf (f, "}{%%\n");
 
   current_element = (syllable->elements)[0];
   while (current_element)
@@ -420,6 +427,22 @@ libgregorio_gregoriotex_write_text (FILE * f, gregorio_character * text,
   fprintf (f, "}");
 }
 
+// the function to write the translation
+void
+libgregorio_gregoriotex_write_translation (FILE * f,
+					   gregorio_character * translation)
+{
+  if (translation == NULL)
+    {
+      return;
+    }
+  libgregorio_write_text (0, translation, f,
+			  (&libgregorio_gtex_write_verb),
+			  (&libgregorio_gtex_print_char),
+			  (&libgregorio_gtex_write_begin),
+			  (&libgregorio_gtex_write_end),
+			  (&libgregorio_gtex_write_special_char));
+}
 
 // a function to write only the two first syllables of the next syllables
 void

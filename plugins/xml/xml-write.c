@@ -371,6 +371,28 @@ libgregorio_xml_print_text (FILE * f, gregorio_character * text,
   fprintf (f, "</text>");
 }
 
+void
+libgregorio_xml_print_translation (FILE * f, gregorio_character * translation)
+{
+  if (!translation)
+    {
+      return;
+    }
+  fprintf (f, "<translation>");
+  libgregorio_write_text (0, translation, f,
+			  (&libgregorio_xml_write_verb),
+			  (&libgregorio_xml_print_char),
+			  (&libgregorio_xml_write_begin),
+			  (&libgregorio_xml_write_end),
+			  (&libgregorio_xml_write_special_char));
+  if (in_text)
+    {
+      fprintf (f, "</str>");
+      in_text = 0;
+    }
+  fprintf (f, "</translation>");
+}
+
 
 void
 libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
@@ -401,6 +423,10 @@ libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
   if (syllable->text)
     {
       libgregorio_xml_print_text (f, syllable->text, syllable->position);
+    }
+  if (syllable->translation)
+    {
+      libgregorio_xml_print_translation (f, syllable->translation);
     }
   for (i = 0; i < number_of_voices; i++)
     {

@@ -136,7 +136,7 @@ char *error;
 	libgregorio_message (error,
 		      "libgregorio_det_score", ERROR, 0);
 	}
-<score>[^\{\}\(<]+ {
+<score>[^\{\}\(\[\]<]+ {
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
@@ -187,6 +187,12 @@ char *error;
 	}
 <score>\}  {
 	return CENTER_END;
+	}
+<score>\[  {
+	return TRANSLATION_BEGINNING;
+	}
+<score>\]  {
+	return TRANSLATION_END;
 	}
 <score>\( {
 	BEGIN(notes);

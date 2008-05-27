@@ -474,7 +474,7 @@ libgregorio_end_style (gregorio_character ** current_character,
 void
 libgregorio_add_syllable (gregorio_syllable ** current_syllable,
 			  int number_of_voices, gregorio_element * elements[],
-			  gregorio_character * first_character, char position)
+			  gregorio_character * first_character, gregorio_character *first_translation_character, char position)
 {
   gregorio_syllable *next;
   gregorio_element **tab;
@@ -495,6 +495,7 @@ libgregorio_add_syllable (gregorio_syllable ** current_syllable,
   next->type = GRE_SYLLABLE;
   next->position = position;
   next->text = first_character;
+  next->translation = first_translation_character;
   next->next_syllable = NULL;
   tab = (gregorio_element **) malloc (number_of_voices *
 				  sizeof (gregorio_element *));
@@ -541,6 +542,10 @@ libgregorio_free_one_syllable (gregorio_syllable ** syllable,
   if ((*syllable)->text)
     {
       libgregorio_free_characters ((*syllable)->text);
+    }
+  if ((*syllable)->translation)
+    {
+      libgregorio_free_characters ((*syllable)->translation);
     }
   next = (*syllable)->next_syllable;
   free ((*syllable)->elements);
@@ -1578,10 +1583,10 @@ libgregorio_is_vowel (wchar_t letter)
   wchar_t vowels[] = { L'a', L'e', L'i', L'o', L'u', L'y', L'A', L'E',
     L'I', 'O', 'U', 'Y', L'œ', L'Œ', L'æ', L'Æ', L'ó', L'À', L'È',
     L'É', L'Ì', L'Í', L'Ý', L'Ò', L'Ó', L'è', L'é', L'ò', L'ú',
-    L'ù', L'ý', L'á', L'à', L'ǽ', L'Ǽ', L'í'
+    L'ù', L'ý', L'á', L'à', L'ǽ', L'Ǽ', L'í', L'*'
   };
   int i;
-  for (i = 0; i < 36; i++)
+  for (i = 0; i < 37; i++)
     {
       if (letter == vowels[i])
 	{

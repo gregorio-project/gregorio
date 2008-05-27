@@ -462,12 +462,19 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
   int line;
   gregorio_element *current_element = NULL;
 
-  libgregorio_add_syllable (current_syllable, number_of_voices, NULL, NULL,
+  libgregorio_add_syllable (current_syllable, number_of_voices, NULL, NULL, NULL,
 			    0);
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "text"))
     {
 // it is possible (and even often the case) that we don't have text
       libgregorio_xml_read_text (current_node, doc, *current_syllable);
+      current_node = current_node->next;
+    }
+
+  if (!xmlStrcmp (current_node->name, (const xmlChar *) "translation"))
+    {
+// it is possible (and even often the case) that we don't have text
+      libgregorio_xml_read_translation (current_node, doc, *current_syllable);
       current_node = current_node->next;
     }
 
@@ -620,6 +627,20 @@ libgregorio_xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
 				    &current_character);
   libgregorio_go_to_first_character (&current_character);
   syllable->text = current_character;
+}
+
+void
+libgregorio_xml_read_translation (xmlNodePtr current_node, xmlDocPtr doc,
+			   gregorio_syllable * syllable)
+{
+
+  char *temp;
+  gregorio_character *current_character = NULL;
+
+  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode, doc,
+				    &current_character);
+  libgregorio_go_to_first_character (&current_character);
+  syllable->translation = current_character;
 }
 
 void

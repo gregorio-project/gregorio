@@ -73,12 +73,24 @@
 \global\advance\constantglyphraise by \interstafflinespace %
 \global\advance\constantglyphraise by \stafflineheight %
 \global\advance\constantglyphraise by \stafflineheight %
+\global\advance\constantglyphraise by \translationheight %
 \relax %
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for additionnal vertical spaces
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% additional space for the translation, beneath the text
+\newdimen\translationheight
+
+% macro to tell gregorio to set space for the translation
+\def\addtranslationspace{%
+\global\translationheight=80000 sp%
+\global\multiply\translationheight by \the\factor %
+\global\textlower=\spacebeneathtext %
+\global\advance\textlower by \translationheight %
+}
 
 %macro to call if you wan to go to the next line simply
 \def\grenewline{%
@@ -138,6 +150,7 @@
 
 % \textlower is the height of the separation between the bottom line (which is invisible : for the notes which are very low) and the bottom of the text
 \newdimen\textlower \textlower=\spacebeneathtext
+\advance\textlower by \translationheight
 
 %% macro that sets \temp to the width of its argument
 
@@ -170,6 +183,11 @@
 \widthof{\gregoriotextdash}
 \gregoriotextdashwidth=\tempwidth
 
+\def\writetranslation#1{%
+\raise\spacebeneathtext\hbox to 0pt{{\translationfont #1}\hss}%
+\relax %
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the initial
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -179,13 +197,58 @@
 \newdimen\initialwidth
 \initialwidth=0pt
 
+
+% biginitial means that the inital takes two lines
+\newcount\biginitial
+
+\def\setbiginitial{%
+\global\biginitial=1\relax %
+\relax %
+}
+
+\def\adjustsecondline{%
+\smallsecondline %
+\localleftbox{%
+\kern\initialwidth %
+\copy\Lines % draws the lines
+\unkern %
+\copy\Leftbox %
+}
+\relax %
+}
+
+\def\adjustthirdline {%
+\normallines %
+\localleftbox{%
+\copy\Lines % draws the lines
+\unkern %
+\copy\Leftbox %
+}
+\relax %
+}
+
 \def\initial#1{%
 % we print the initial always at the same place, and the we print the Aboveinitialbox centered
 % first we print the initial
-\setbox\Initial=\hbox{\fontofinitial #1}%
-\global\initialwidth=\the\wd\Initial%
+\temp=-\textlower %
+% if it is a big initial we print it on the second line 
+\ifnum\biginitial=0\relax %
+\setbox\Initial=\hbox{{\fontofinitial #1}}%
+\global\initialwidth=\the\wd\Initial %
+\setbox\Initial=\hbox{\raise -\temp\hbox{\fontofinitial #1}}%
+\else %
+\advance\temp by \additionalbottomspace %
+\advance\temp by \spacebeneathtext %
+\advance\temp by \spacelinestext %
+\advance\temp by 4\interstafflinespace %
+\advance\temp by 4\stafflineheight %
+\advance\temp by \translationheight %
+\setbox\Initial=\hbox{{\fontofbiginitial #1}}%
+\global\initialwidth=\the\wd\Initial %
+\setbox\Initial=\hbox{\vbox to 0pt{\hbox{\raise -\temp\hbox{\fontofbiginitial #1}}\vss}}%
+\fi %
 \hskip\beforeinitialshift %
-\raise\textlower\copy\Initial%
+\copy\Initial%
 \hskip\afterinitialshift %
 \global\advance\initialwidth by \afterinitialshift%
 \global\advance\initialwidth by \beforeinitialshift %
@@ -201,7 +264,7 @@
 \kern\temp %
 \setbox\Aboveinitialbox=\hbox{}%
 \fi %
-\relax%
+\relax %
 }
 
 \newbox\Aboveinitialbox %
@@ -210,6 +273,7 @@
 \def\setfirstlineaboveinitial#1#2{%
 \global\aboveinitialraise=\staffheight %
 \global\advance\aboveinitialraise by \spacebeneathtext %
+\global\advance\constantglyphraise by \translationheight %
 \global\advance\aboveinitialraise by \spacelinestext %
 % we align the top of the box with the top of the line
 \setbox\Aboveinitialbox=\hbox{#2}%
@@ -279,7 +343,7 @@
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
 \def\drawfirstlines{%
 \advance\stafflinewidth by -\initialwidth%
-\initialwidth=0pt%
+%\initialwidth=0pt%
 \hbox to0pt{%
 \vbox{%
 \vskip\spaceabovelines %
@@ -293,6 +357,7 @@
 \hrule height \stafflineheight width \stafflinewidth %
 \vskip\spacelinestext %
 \vskip\spacebeneathtext %
+\vskip\translationheight %
 \vskip\additionalbottomspace %
 }%
 \hss%
@@ -320,9 +385,26 @@
 \vskip\spacelinestext %
 \vskip\additionalbottomspace %
 \vskip\spacebeneathtext %
+\vskip\translationheight %
 }%
 \hss%
 }%
+\relax %
+}
+
+% macro called when the initial is big, and so when the second line is at the same level as the first
+\def\smallsecondline{%
+\temp=\stafflinewidth %
+\global\advance\stafflinewidth by -\initialwidth %
+\generatelines %
+\global\stafflinewidth=\temp %
+\relax %
+}
+
+% macro called when we are after the second line of a big initial, to have normal lines back
+\def\normallines{%
+\global\stafflinewidth=\linewidth %
+\generatelines %
 \relax %
 }
 
@@ -340,6 +422,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the clefs of the beginning of lines and custos
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% a box containig the clef (and the space after)
+\newbox\Leftbox
 
 %% marcro to define the clef that will appear at the beginning of the lines
 % the first argument is the type : f or c, and the second is the height
@@ -372,12 +457,14 @@
 \ifx c#1% we check if it is a c key
 \ifcase#3%
 \raise\glyphraisevalue\hbox{\gregorianfont \char 1\hskip\spaceafterlineclef}%
+\setbox\Leftbox=\hbox{\raise\glyphraisevalue\hbox{\gregorianfont \char 1\hskip\spaceafterlineclef}}%
 \or%
 \raise\glyphraisevalue\hbox{\gregorianfont \char 3\hskip\spaceafterlineclef}%
 \fi%
 \else % we consider that it is a f key
 \ifcase#3%
 \raise\glyphraisevalue\hbox{\gregorianfont \char 2\hskip\spaceafterlineclef}%
+\setbox\Leftbox=\hbox{\raise\glyphraisevalue\hbox{\gregorianfont \char 1\hskip\spaceafterlineclef}}%
 \or%
 \raise\glyphraisevalue\hbox{\gregorianfont \char 4\hskip\spaceafterlineclef}%
 \fi%
@@ -390,6 +477,11 @@
 \def\setinitialclef#1#2{%
 \typekey{#1}{#2}{0}%
 \setlinesclef{#1}{#2}%
+% if the initial is big, then we adjust the second line
+\ifnum\biginitial=0\relax %
+\else %
+\adjustsecondline %
+\fi %
 \relax%
 }
 
@@ -1020,19 +1112,15 @@
 \glyphraisevalue=\additionalbottomspace %
 \advance\glyphraisevalue by \spacebeneathtext %
 \advance\glyphraisevalue by \spacelinestext %
-\advance\glyphraisevalue by \interstafflinespace %
-\advance\glyphraisevalue by \interstafflinespace %
-\advance\glyphraisevalue by \interstafflinespace %
-\advance\glyphraisevalue by \interstafflinespace %
-\advance\glyphraisevalue by \stafflineheight %
-\advance\glyphraisevalue by \stafflineheight %
-\advance\glyphraisevalue by \stafflineheight %
-\advance\glyphraisevalue by \stafflineheight %
+\advance\glyphraisevalue by \translationheight %
+\advance\glyphraisevalue by 4\interstafflinespace %
+\advance\glyphraisevalue by 4\stafflineheight %
 \raise\glyphraisevalue\hbox{\vrule height \stafflineheight width \tempsignwidth}%
 \kern \temp %
 \or % case of a line at the bottom
 \glyphraisevalue=\additionalbottomspace %
 \advance\glyphraisevalue by \spacebeneathtext %
+\advance\glyphraisevalue by \translationheight %
 \advance\glyphraisevalue by \spacelinestext %
 \advance\glyphraisevalue by -\interstafflinespace %
 \advance\glyphraisevalue by -\stafflineheight %
@@ -1255,17 +1343,18 @@
 % #4 : end of word : if it is 0 it means it is not an end of word, if it is 1 it is
 % TODO: find another system for the end syllable
 %% #5 (not used anymore) : beggining of word : if it is 0 it means it is not a beginning of word, if it is 1 it is
-% #8 : glyphs : all the notes
+% #9 : glyphs : all the notes
 % the three next parameters are to put an hyphen if necessary, they can be empty for end of words
 % #5 : first letters of the next syllable 
 % #6 : middle letters of the next syllabel
 % #7 : alignment type of the first next glyph
+% #8 : other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
 %% at the end we wall \endofword or \endofsyllable with #7, to reduce the space in case of a flat or natural
-\def\syllable#1#2#3#4#5#6#7#8{%
+\def\syllable#1#2#3#4#5#6#7#8#9{%
 \firstglyph=1 %
 \findtextaligncenter{#1}{#2}% we first get the width between the alignment point and the end of the syllable
-\syllablenotes{#8}% we put the notes in a box, so that we have the width of it
+\syllablenotes{#9}% we put the notes in a box, so that we have the width of it
 % now we calculate the begin difference, that is to say \notesaligncenter - \textaligncenter
 \begindifference=\notesaligncenter %
 \advance\begindifference by -\textaligncenter %
@@ -1324,10 +1413,11 @@
 \ifdim\begindifference > 0 pt%
 \kern \begindifference %
 \fi%
+#8\relax %
 \raise\textlower \copy\Syllabletext %
 \kern -\wd\Syllabletext %
 \kern -\begindifference %
-#8% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
+#9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
 \ifdim\the\enddifference <0pt%
 %% important, else we are not really at the end of the syllable
 \kern -\enddifference %
@@ -1372,7 +1462,7 @@
 \newskip\skipone
 
 %a macro to typeset a syllable with only a bar inside
-\def\barsyllable#1#2#3#4#5#6#7#8{%
+\def\barsyllable#1#2#3#4#5#6#7#8#9{%
 % the algorithm of this function is *extremely* complex, and has been much painful to write... good luck to understand.
 % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the prefious syllable and the first note of the next syllable. But there are limits : a bar cant go very far above text. For example if there is nuncncncncn with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
 % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
@@ -1380,7 +1470,7 @@
 % here we consider that #1 is : (or other stuff) that goes between the last syllable and *, so we don't center on it
 \findtextaligncenter{}{#2}%
 \setbox\Syllabletext=\hbox{\gretextformat{#1#2#3}}%
-\syllablenotes{#8}%
+\syllablenotes{#9}%
 \notesaligncenter=\wd\Syllablenotes%
 \divide\notesaligncenter by 2\relax %
 \begindifference=\notesaligncenter %
@@ -1426,7 +1516,7 @@
 \else %
 \kern -\wd\Syllablenotes %
 \fi %
-#8%
+#9\relax %
 \ifdim\temp < -\wd\Syllablenotes %
 \ifdim\nextbegindifference > 0 pt%
 \hskip\interwordspacetextnotes %
@@ -1464,14 +1554,16 @@
 \else %\ifdim\wd\Syllabletext= 0 pt
 \divide\skipone by 2 %
 \hskip -\skipone %
+#8\relax %
 \raise\textlower \copy\Syllabletext %
 \hskip\skipone %
 \fi %
 \setbox\Syllabletext=\hbox{#2#3}%
+#8\relax %
 \raise\textlower \copy\Syllabletext %
 \kern -\wd\Syllabletext %
 \kern -\begindifference %
-#8% 
+#9\relax %
 \ifdim\the\enddifference <0pt%
 %% important, else we are not really at the end of the syllable
 \kern -\enddifference %
@@ -2258,6 +2350,8 @@
 % loading of default font
 \font\textfont=pncr at 12pt
 \font\fontofinitial=pncr at 40pt
+\font\fontofbiginitial=pncr at 80pt
+\font\fontoftranslation=pncr at 12pt
 
 \def\setfactor#1{%
 \global\factor=#1 %

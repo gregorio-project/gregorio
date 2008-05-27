@@ -98,6 +98,7 @@ void write_score (FILE * f, gregorio_score * score);
 void libgregorio_gregoriotex_write_voice_info (FILE * f, gregorio_voice_info * voice_info);
 void libgregorio_gregoriotex_write_syllable (FILE * f, gregorio_syllable * syllable, char *first_syllable);
 void libgregorio_gregoriotex_write_text (FILE * f, gregorio_character *first_character, char *first_syllable);
+void libgregorio_gregoriotex_write_translation (FILE *f, gregorio_character *translation);
 void libgregorio_gregoriotex_write_element (FILE * f, gregorio_syllable * syllable, gregorio_element * element);
 void libgregorio_gregoriotex_write_bar (FILE * f, char type);
 void libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable, gregorio_element * element, gregorio_glyph * glyph);

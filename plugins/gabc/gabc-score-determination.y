@@ -82,6 +82,8 @@ gregorio_element **elements;
 //int gabc_score_determination_parse ();
 // other variables that we will have to use
 gregorio_character *current_character;
+gregorio_character *first_text_character;
+gregorio_character *first_translation_character;
 gregorio_voice_info *current_voice_info;
 int number_of_voices;
 int voice;
@@ -380,16 +382,29 @@ update_position_with_space ()
     }
 }
 
+/*
+
+The three next defines are the possible values of center_is_determined.
+
+HALF_DETERMINED means that lex has encountered a { but no }, and we will try to determine a middle starting after the {.
+FULLY_DETERMINED means that lex has encountered a { and a }, so we won't determine the middle, it is considered done.
+DETERMINING_MIDDLE is used internally in the big function to know where we are in the middle determination.
+
+*/
+
+#define NOT_DETERMINED 0
+#define HALF_DETERMINED 1
+#define FULLY_DETERMINED 2
+#define DETERMINING_MIDDLE 3
+
 /* Function to close a syllable and update the position.
  */
 
 void
 close_syllable ()
 {
-  end_style_determination ();
-  libgregorio_go_to_first_character(&current_character);
   libgregorio_add_syllable (&current_syllable, number_of_voices, elements,
-			    current_character, position);
+			    first_text_character, first_translation_character, position);
   if (!score->first_syllable)
     {
       score->first_syllable = current_syllable;
@@ -403,11 +418,28 @@ close_syllable ()
     {
       position = WORD_BEGINNING;
     }
-  center_is_determined=0;
+  center_is_determined=NOT_DETERMINED;
   first_letter=0;
   current_character = NULL;
+  first_text_character=NULL;
+  first_translation_character=NULL;
   //TODO : decide wether it will be freed all time or just at the end...
   free_styles();
+}
+
+// a function called when we see a [, basically, all characters are added to the translation pointer instead of the text pointer
+void start_translation() {
+  end_style_determination ();
+  libgregorio_go_to_first_character(&current_character);
+  first_text_character = current_character;
+  center_is_determined=FULLY_DETERMINED; // the middle letters of the translation have no sense
+  current_character=NULL;
+}
+
+void end_translation() {
+  end_style_determination ();
+  libgregorio_go_to_first_character(&current_character);
+  first_translation_character=current_character;
 }
 
 void
@@ -537,20 +569,6 @@ libgregorio_begin_style(&current_character, style);
 void end_style(unsigned char style) {
 libgregorio_end_style(&current_character, style);
 }
-
-/*
-
-The three next defines are the possible values of center_is_determined.
-
-HALF_DETERMINED means that lex has encountered a { but no }, and we will try to determine a middle starting after the {.
-FULLY_DETERMINED means that lex has encountered a { and a }, so we won't determine the middle, it is considered done.
-DETERMINING_MIDDLE is used internally in the big function to know where we are in the middle determination.
-
-*/
-
-#define HALF_DETERMINED 1
-#define FULLY_DETERMINED 2
-#define DETERMINING_MIDDLE 3
 
 /*
 
@@ -950,7 +968,7 @@ end_style_determination ()
 
 %}
 
-%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANOTATION AUTHOR DATE MANUSCRIPT REFERENCE STORAGE_PLACE TRANSLATOR TRANSLATION_DATE STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE MODE GREGORIOTEX_FONT SOFTWARE_USED NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES INITIAL_KEY VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE
+%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANOTATION AUTHOR DATE MANUSCRIPT REFERENCE STORAGE_PLACE TRANSLATOR TRANSLATION_DATE STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE MODE GREGORIOTEX_FONT SOFTWARE_USED NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES INITIAL_KEY VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END
 
 %%
 
@@ -1355,14 +1373,37 @@ text:
 	|text character
 	;
 
+translation_beginning:
+    TRANSLATION_BEGINNING {
+    start_translation();
+    }
+    ;
+
+translation:
+    translation_beginning text TRANSLATION_END {
+    end_translation();
+    }
+    ;
+
 syllable_with_notes:
 	text OPENING_BRACKET notes {
+	end_style_determination ();
+    libgregorio_go_to_first_character(&current_character);
+    first_text_character = current_character;
+	close_syllable();
+	}
+	|
+	text translation OPENING_BRACKET notes {
 	close_syllable();
 	}
 	;
 
 notes_without_word:
 	OPENING_BRACKET notes {
+	close_syllable();
+	}
+	|
+	translation OPENING_BRACKET notes {
 	close_syllable();
 	}
 	;

@@ -56,4 +56,10 @@ libgregorio_dump_signs (char signs);
 const char *
 libgregorio_dump_h_episemus_type (char h_episemus_type);
 
+void
+libgregorio_dump_write_characters (FILE * f, gregorio_character * current_character);
+
+const char *
+libgregorio_dump_style_to_string (unsigned char style);
+
 #endif

@@ -125,8 +125,6 @@ The we define the characters. First we define the different styles. You can noti
 
 */
 
-
-
 #define ST_NO_STYLE 0
 #define ST_ITALIC 1
 #define ST_CENTER 6
@@ -194,6 +192,8 @@ typedef struct gregorio_syllable {
   char position;
 // pointer to a gregorio_text structure corresponding to the text.
   struct gregorio_character *text;
+// pointer to a gregorio_text structure corresponding to the translation
+  struct gregorio_character *translation;
 // pointer to the next syllable. Here again we did not find useful to
 // include a pointer to the previous syllable.
   struct gregorio_syllable *next_syllable;
@@ -280,7 +280,7 @@ void libgregorio_add_glyph (gregorio_glyph **current_glyph, char type, gregorio_
 void libgregorio_add_element (gregorio_element **current_element, gregorio_glyph *first_glyph);
 void libgregorio_add_syllable (gregorio_syllable ** current_syllable,
 			  int number_of_voices, gregorio_element * elements[],
-			  gregorio_character * first_character, char position);
+			  gregorio_character * first_character, gregorio_character *first_translation_character, char position);
 
 void libgregorio_add_voice_info (gregorio_voice_info **current_voice_info);
 
