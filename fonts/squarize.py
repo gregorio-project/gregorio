@@ -85,7 +85,7 @@ current_font_number=0
 shortglyphs=0
 
 # initial glyphs are the names of the glyphs that are already in gregorio_base, mostly one-note glyphs. see initialize_glyphs() for more details
-initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,3,21,31,22,14,15,33,13,62,65,39,69,70,38,37,60,61,63,64,16,34,35,36,72,73]
+initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,3,21,31,22,14,15,33,13,62,65,39,69,70,38,37,60,61,63,64,16,34,35,36,72,73,74]
 
 def usage():
     print """
@@ -161,7 +161,7 @@ def initialize_glyphs():
         glyphs_to_append=("_2049",)
     for glyphnumber in glyphs_to_append:
         initial_glyphs.append(glyphnumber)
-    initialcount=173
+    initialcount=174
     count=initialcount
 
 #function in which we initialize the lenghts, depending on the font
@@ -379,6 +379,7 @@ def hepisemus():
     write_hepisemus(width_inclinatum_deminutus, "_0044")
     write_hepisemus(width_stropha, "_0045")
     write_hepisemus(width_quilisma, "_0056")
+    write_hepisemus(width_high_pes, "_0058")
     write_hepisemus(width_oriscus, "_0057")
     for i in range(max_interval):
         write_hepisemus(porrectuswidths[i], "_00%02d" % int(46+i))
