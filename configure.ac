@@ -22,7 +22,7 @@ AC_CONFIG_AUX_DIR([build-aux])
 
 AM_INIT_AUTOMAKE([foreign])
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.17])
+AM_GNU_GETTEXT_VERSION([0.15])
 
 AC_PROG_CC
 AC_PROG_CPP
@@ -31,13 +31,14 @@ AC_PROG_YACC
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
-## a patch for cygwin, who needs the -lintl explicit option, that doesn't work under linux
-AC_CHECK_PROGS(UNAME, uname -o, :)
+## a dirty patch for cygwin, who needs the -lintl explicit option, that doesn't work under linux
+AC_CHECK_PROGS(UNAME, uname, :)
 if test "$UNAME" = :; then
   AC_MSG_ERROR([Could not find uname.])
 else
+  HOST_OS=`$UNAME -o`
   if test "$HOST_OS" = "Cygwin"; then
-    LIBINTL = -lintl
+    LIBINTL=-lintl
     AC_SUBST(LIBINTL)
   fi
 fi
