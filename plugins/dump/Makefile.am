@@ -4,4 +4,4 @@ AM_CFLAGS =  -L$(top_srcdir)/lib
 pkglib_LTLIBRARIES=dump.la
 dump_la_SOURCES=dump.c
 dump_la_LDFLAGS=-no-undefined -module -avoid-version
-dump_la_LIBADD = -lgregorio
+dump_la_LIBADD = $(LIBINTL) -lgregorio

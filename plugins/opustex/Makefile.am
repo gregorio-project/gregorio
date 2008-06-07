@@ -4,4 +4,4 @@ AM_CFLAGS =  -L$(top_srcdir)/lib
 pkglib_LTLIBRARIES=opustex.la
 opustex_la_SOURCES=opustex-write.c
 opustex_la_LDFLAGS=-no-undefined -module -avoid-version
-opustex_la_LIBADD = -lgregorio
+opustex_la_LIBADD = $(LIBINTL) -lgregorio
