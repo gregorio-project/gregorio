@@ -39,6 +39,7 @@ else
   HOST_OS=`$UNAME -o`
   if test "$HOST_OS" = "Cygwin"; then
     LIBINTL=-lintl
+    LEXLIB=''
     AC_SUBST(LIBINTL)
   fi
 fi
