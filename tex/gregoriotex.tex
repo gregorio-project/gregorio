@@ -227,15 +227,25 @@
 \relax %
 }
 
+\def\greinitialformat#1{%
+{\fontofinitial #1}%
+\relax %
+}
+
+\def\grebiginitialformat#1{%
+{\fontofbiginitial #1}%
+\relax %
+}
+
 \def\initial#1{%
 % we print the initial always at the same place, and the we print the Aboveinitialbox centered
 % first we print the initial
 \temp=-\textlower %
 % if it is a big initial we print it on the second line 
 \ifnum\biginitial=0\relax %
-\setbox\Initial=\hbox{{\fontofinitial #1}}%
+\setbox\Initial=\hbox{\greinitialformat{#1}}%
 \global\initialwidth=\the\wd\Initial %
-\setbox\Initial=\hbox{\raise -\temp\hbox{\fontofinitial #1}}%
+\setbox\Initial=\hbox{\raise -\temp\hbox{\greinitialformat{#1}}}%
 \else %
 \advance\temp by \additionalbottomspace %
 \advance\temp by \spacebeneathtext %
@@ -243,9 +253,9 @@
 \advance\temp by 4\interstafflinespace %
 \advance\temp by 4\stafflineheight %
 \advance\temp by \translationheight %
-\setbox\Initial=\hbox{{\fontofbiginitial #1}}%
+\setbox\Initial=\hbox{\grebiginitialformat{#1}}%
 \global\initialwidth=\the\wd\Initial %
-\setbox\Initial=\hbox{\vbox to 0pt{\hbox{\raise -\temp\hbox{\fontofbiginitial #1}}\vss}}%
+\setbox\Initial=\hbox{\vbox to 0pt{\hbox{\raise -\temp\hbox{\grebiginitialformat{#1}}}\vss}}%
 \fi %
 \hskip\beforeinitialshift %
 \copy\Initial%
@@ -2339,11 +2349,6 @@
 
 \def\gretextformat#1{%
 {\textfont #1}%
-\relax %
-}
-
-\def\greinitialtextformat#1{%
-{\fontofinitial #1}%
 \relax %
 }
 
