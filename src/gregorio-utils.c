@@ -51,6 +51,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define GTEX_PLUGIN "gregoriotex"
 #define OTEX_PLUGIN "opustex"
 #define DUMP_PLUGIN "dump"
+#define DEFAULT_OUTPUT_FORMAT GTEX
+#define DEFAULT_INPUT_FORMAT GABC
 
 #define define_path(file_name,string) \
 		/*we first test if path is absolute */\
@@ -117,7 +119,7 @@ print_usage (char *name)
   printf (_("\nUsage :\n%s [OPTION] {file}\n  where OPTION is :\n\
 \t-o file    writes output to specified file\n\
 \t-S         writes output to stdout\n\
-\t-F format  specifies outpuf file format, default is xml\n\
+\t-F format  specifies outpuf file format, default is gtex\n\
 \t-l file    writes messages output to specified file (default stderr)\n\
 \t-f format  specifies input file format, default is gabc\n\
 \t-s         reads input from stdin\n\
@@ -128,10 +130,10 @@ print_usage (char *name)
 \t-W         displays all warnings\n\
 \n\
 available formats are:\n\
-\t gabc      gregorio-abc\n\
-\t xml       gregorio-xml\n\
-\t gtex      gregoriotex\n\
-\t otex      opustex\n\
+\t gabc      gabc\n\
+\t xml       GregorioXML\n\
+\t gtex      GregorioTeX\n\
+\t otex      OpusTeX\n\
 \t dump      simple text dump\n\
 \n"), name, name);
 }
@@ -456,12 +458,12 @@ main (int argc, char **argv)
   free (output_file_name);
   if (!input_format)
     {
-      input_format = GABC;
+      input_format = DEFAULT_INPUT_FORMAT;
     }
 
   if (!output_format)
     {
-      output_format = XML;
+      output_format = DEFAULT_OUTPUT_FORMAT;
     }
 
   if (!verb_mode)
