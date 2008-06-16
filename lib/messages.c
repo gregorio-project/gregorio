@@ -128,30 +128,30 @@ libgregorio_message (const char *string, const char *function_name, char verbosi
     {
       if (function_name)
 	{
-	  if (!file_name)
+	  /*if (!file_name)
 	    {
 	      fprintf (error_out, "in function `%s':%s %s\n",
 		       function_name, verbosity_str, string);
 	      return;
 	    }
 	  else
-	    {
+	    {*/
 	      fprintf (error_out, "%s: in function `%s':%s %s\n", file_name,
 		       function_name, verbosity_str, string);
-	    }
+	    //}
 	}
       else
-	{			//no function_name specified
+	{/*			//no function_name specified
 	  if (!file_name)
 	    {
 	      fprintf (error_out, "%s %s\n", verbosity_str, string);
 	      return;
 	    }
 	  else
-	    {
+	    {*/
 	      fprintf (error_out, "%s:%s %s\n", file_name,
 		       verbosity_str, string);
-	    }
+	    //}
 	}
     }
 }
