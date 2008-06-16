@@ -45,6 +45,16 @@ Here are the different types, they must be the same as in squarize.py
 #define T_TORCULUS 28
 #define T_TORCULUS_RESUPINUS 32
 
+// the liquescentia number of GregorioTeX (different because they have to be between 0 and 7)
+#define GL_NO_LIQUESCENTIA 0
+#define GL_INITIO_DEBILIS 1
+#define GL_DEMINUTUS 2
+#define GL_AUCTUS_ASCENDENS 3
+#define GL_AUCTUS_DESCENDENS 4
+#define GL_DEMINUTUS_INITIO_DEBILIS 5
+#define GL_AUCTUS_ASCENDENS_INITIO_DEBILIS 6
+#define GL_AUCTUS_DESCENDENS_INITIO_DEBILIS 7
+
 // the different types for the alignment of the notes in GregorioTeX
 #define AT_ONE_NOTE 0
 #define AT_FLEXUS 1

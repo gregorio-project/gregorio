@@ -195,7 +195,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
     {
       fprintf (f, "%%\n\\writetranslation{");
       libgregorio_gregoriotex_write_translation (f, syllable->translation);
-      fprintf(f, "}%%\n");
+      fprintf (f, "}%%\n");
     }
   fprintf (f, "}{%%\n");
 
@@ -1385,7 +1385,6 @@ gregoriotex_determine_liquescentia_number (unsigned int
   switch (type)
     {
     case L_ALL:
-      return factor * liquescentia;
       break;
     case L_NO_INITIO:
       if (liquescentia >= L_INITIO_DEBILIS)
@@ -1412,6 +1411,42 @@ gregoriotex_determine_liquescentia_number (unsigned int
     default:
       return 0;
     }
+
+  //now we convert liquescentia into the good GregorioTeX liquescentia numbers
+
+  switch (liquescentia)
+    {
+    case L_NO_LIQUESCENTIA:
+      liquescentia = GL_NO_LIQUESCENTIA;
+      break;
+    case L_DEMINUTUS:
+      liquescentia = GL_DEMINUTUS;
+      break;
+    case L_AUCTUS_ASCENDENS:
+      liquescentia = GL_AUCTUS_ASCENDENS;
+      break;
+    case L_AUCTA:
+    case L_AUCTUS_DESCENDENS:
+      liquescentia = GL_AUCTUS_DESCENDENS;
+      break;
+    case L_INITIO_DEBILIS:
+      liquescentia = GL_INITIO_DEBILIS;
+      break;
+    case L_DEMINUTUS_INITIO_DEBILIS:
+      liquescentia = GL_DEMINUTUS_INITIO_DEBILIS;
+      break;
+    case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
+      liquescentia = GL_AUCTUS_ASCENDENS_INITIO_DEBILIS;
+      break;
+    case L_AUCTA_INITIO_DEBILIS:
+    case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
+      liquescentia = GL_AUCTUS_DESCENDENS_INITIO_DEBILIS;
+      break;
+    default:
+      liquescentia = GL_NO_LIQUESCENTIA;
+      break;
+    }
+    
   return factor * liquescentia;
 }
 
