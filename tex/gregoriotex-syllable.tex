@@ -102,24 +102,24 @@
 \fi%
 \advance\tempcount by -7 %
 \glyphraisevalue = 15750 sp %
-\multiply\glyphraisevalue by \the\factor %
+\multiply\glyphraisevalue by \the\grefactor %
 \multiply\glyphraisevalue by \the\tempcount %
 \addedraisevalue= 0 sp%
 \ifcase#2 % 
 \or\or\or%3: if it is a vertical episemus on a line, we shift it a bit higher, so that it's more beautiful
 \ifnum\isonaline=1%
 \addedraisevalue=350 sp%
-\multiply\addedraisevalue by \the\factor %
+\multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
 \fi %
 \or% 4: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
 \ifnum\isonaline=1%
 \addedraisevalue=-400 sp%
-\multiply\addedraisevalue by \the\factor %
+\multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
 \fi%
 \fi%
-\multiply\addedraisevalue by \the\factor %
+\multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
 \advance\glyphraisevalue by \constantglyphraise %
 \global\tempcount=0%

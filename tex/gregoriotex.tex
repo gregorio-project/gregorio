@@ -21,8 +21,10 @@
 %%%%%%%%%%%%%%
 
 % factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
-\newcount\factor
-\factor=17
+% at the beginning it is set to 0, but if it is still 0 when begingregorianscore is called, it is set to the default value : 17 (the value that makes it look like a standard graduale)
+\newcount\grefactor
+\grefactor=0
+
 
 %%%%%%%%%%%%%%%%%%
 %% vertical spaces
@@ -30,44 +32,53 @@
 
 % \stafflineheight is the height of a staff line
 \newdimen\stafflineheight
-\stafflineheight=1500 sp 
-\multiply\stafflineheight by \the\factor 
 % \interstafflinespace is the space between two lines of staff
 \newdimen\interstafflinespace
-\interstafflinespace=30000 sp 
-\multiply\interstafflinespace by \the\factor 
-% \interstafflinespace is the width of a line
-\newdimen\linewidth \linewidth=\hsize 
-% \stafflinewidth is the width of a line of staff, this can vary, for example at the first line
-\newdimen\stafflinewidth \stafflinewidth=\linewidth 
 % \staffheight is the total height of the staff : that is to say the four written lines
-\newdimen\staffheight \staffheight=4\stafflineheight 
-\advance\staffheight by 3\interstafflinespace
+\newdimen\staffheight 
 
 % vertical spaces
 %the space above the lines
 \newskip\spaceabovelines
-%\spaceabovelines = 33000 sp plus 5000 sp minus 5000 sp
-\spaceabovelines = 25000 sp plus 0 sp minus 0 sp
-\multiply\spaceabovelines by \factor
 
 %the space between the lines and the bottom of the text
 \newskip\spacelinestext
-\spacelinestext = 59500 sp plus 0 sp minus 0 sp
-\multiply\spacelinestext by \factor
 
 %the space beneath the text
 \newskip\spacebeneathtext
-\spacebeneathtext = 18000 sp plus 0 sp minus 0 sp
-\multiply\spacebeneathtext by \factor
 
 %constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
 \newdimen\constantglyphraise %
 
+
+% \stafflinewidth is the width of a line of staff, this can vary, for example at the first line
+\newdimen\stafflinewidth
+
+\def\setgreverticalspaces{
+\global\stafflineheight=1500 sp%
+\global\multiply\stafflineheight by \the\grefactor %
+\global\interstafflinespace=30000 sp%
+\global\multiply\interstafflinespace by \the\grefactor %
+\global\staffheight=4\stafflineheight %
+\global\advance\staffheight by 3\interstafflinespace %
+\global\spaceabovelines = 25000 sp plus 0 sp minus 0 sp%
+\global\multiply\spaceabovelines by \grefactor %
+\global\spacelinestext = 59500 sp plus 0 sp minus 0 sp%
+\global\multiply\spacelinestext by \grefactor %
+\global\spacebeneathtext = 18000 sp plus 0 sp minus 0 sp%
+\global\multiply\spacebeneathtext by \grefactor %
+\global\calculateconstantglyphraise %
+\relax %
+}
+
+\newdimen\linewidth
+\linewidth=\hsize 
+\stafflinewidth=\linewidth 
+
 % to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at spacelinestext + spacebeneathtext + 2*interstafflinespace + 2*stafflineheight
 \def\calculateconstantglyphraise{%
 \global\constantglyphraise = -22000 sp%
-\global\multiply\constantglyphraise by \the\factor %
+\global\multiply\constantglyphraise by \the\grefactor %
 \global\advance\constantglyphraise by \additionalbottomspace %
 \global\advance\constantglyphraise by \spacebeneathtext %
 \global\advance\constantglyphraise by \spacelinestext %
@@ -89,7 +100,7 @@
 % macro to tell gregorio to set space for the translation
 \def\addtranslationspace{%
 \global\translationheight=80000 sp%
-\global\multiply\translationheight by \the\factor %
+\global\multiply\translationheight by \the\grefactor %
 \global\textlower=\spacebeneathtext %
 \global\advance\textlower by \translationheight %
 }
@@ -124,10 +135,10 @@
 % here we don't add any space... it's just in case...
 \or % case 2
 \global\additionaltopspace=15000 sp%
-\global\multiply\additionaltopspace by \the\factor %
+\global\multiply\additionaltopspace by \the\grefactor %
 \or % case 3
 \global\additionaltopspace=30000 sp%
-\global\multiply\additionaltopspace by \the\factor %
+\global\multiply\additionaltopspace by \the\grefactor %
 \fi %
 \ifcase#2\relax %
 % case 0
@@ -136,10 +147,10 @@
 \global\additionalbottomspace=0 sp%
 \or % case 2
 \global\additionalbottomspace=15000 sp%
-\global\multiply\additionalbottomspace by \the\factor %
+\global\multiply\additionalbottomspace by \the\grefactor %
 \or % case 3
 \global\additionalbottomspace=30000 sp%
-\global\multiply\additionalbottomspace by \the\factor %
+\global\multiply\additionalbottomspace by \the\grefactor %
 \fi %
 \generatelines %
 \calculateconstantglyphraise %
@@ -338,19 +349,9 @@
 \relax %
 }
 
-%\def\firstlineaboveinitial{%
-%\hbox
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the lines
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% maybe a good idea, but hard to exploit...
-%\def\gscale#1{%
-%\global\multiply#1 by \the\factor %
-%\global\divide#1 by 10 %
-%\relax%
-%}
 
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
 \def\drawfirstlines{%
@@ -381,7 +382,7 @@
 %% box containing the stafflines for other lines than the first
 \newbox\Lines
 
-% macro that must be called at each change of linewidth
+% macro that must be called at each change of linewidth and grefactor
 \def\generatelines{%
 \setbox\Lines=\hbox to0pt{%
 \vbox{%
@@ -444,7 +445,9 @@
 \def\begingregorioscore{%
 \global\stafflinewidth=\linewidth %
 \generatelines %
-\calculateconstantglyphraise %
+\ifnum\grefactor=0\relax %
+\setgrefactor{17}%
+\fi %
 \noindent%
 %\directlua0 {%
 %local hlist = node.id('hlist')
@@ -703,16 +706,14 @@
 \newcount\tempfactor %
 
 \def\setgregorianfont#1{%
-\tempfactor = \the\factor %
+\tempfactor = \the\grefactor %
 \multiply\tempfactor by 100000 %
 \global\font\gregorianfont=#1 at \the\tempfactor sp%
 \relax%
 }
 
-\tempfactor = \the\factor %
-\multiply\tempfactor by 100000 %
-% we open the font at \factor pt, we must know \factor because it will determine the line heigth, etc. 
-\font\gregorianfont=greciliae at \the\tempfactor sp
+% we open the font at 10 pt, this is a dumb value that will be overwritten by a call to setgrefactor
+\font\gregorianfont=greciliae at 10pt
 
 \font\gregoriansymbolfont=gresym at 12pt
 
@@ -727,8 +728,11 @@
 \font\fontofbiginitial=pncr at 80pt
 \font\fontoftranslation=pncr at 12pt
 
-\def\setfactor#1{%
-\global\factor=#1 %
-%\global\multiply\factor by 100000 %
+\def\setgrefactor#1{%
+\global\grefactor=#1\relax %
+\setgreverticalspaces %
+\setgrespaces %
+\generatelines %
+\setgregorianfont{greciliae}% TODO : change it, so that users can choose without changin the factor
 \relax %
 }

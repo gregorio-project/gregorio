@@ -87,7 +87,7 @@
 
 \def\changeclef#1#2{%
 \clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
-\multiply\clefchangespace by \the\factor %
+\multiply\clefchangespace by \the\grefactor %
 \hskip\clefchangespace %
 \typekey{#1}{#2}{1}%
 \hskip\clefchangespace %
@@ -99,7 +99,7 @@
 
 \def\inchangeclef#1#2{%
 \clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
-\multiply\clefchangespace by \factor %
+\multiply\clefchangespace by \grefactor %
 \hskip\clefchangespace %
 \typekey{#1}{#2}{1}%
 \hskip\clefchangespace %
@@ -355,7 +355,7 @@
 \ifnum#4=0\relax % case of the lines
 \else %
 \temp=16000 sp%
-\multiply\temp by \the\factor %
+\multiply\temp by \the\grefactor %
 \kern -\temp %
 \advance\tempsignwidth by \temp %
 \advance\tempsignwidth by \temp %
@@ -703,7 +703,7 @@
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 \temptwo = 12000 sp%
-\multiply\temptwo by \the\factor%
+\multiply\temptwo by \the\grefactor%
 \kern \temptwo%
 \penalty 10000%
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
