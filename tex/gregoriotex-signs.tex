@@ -1,0 +1,770 @@
+%GregorioTeX file.
+%Copyright (C) 2007 Elie Roux <elie.roux@enst-bretagne.fr>
+%
+%This program is free software: you can redistribute it and/or modify
+%it under the terms of the GNU General Public License as published by
+%the Free Software Foundation, either version 3 of the License, or
+%(at your option) any later version.
+%
+%This program is distributed in the hope that it will be useful,
+%but WITHOUT ANY WARRANTY; without even the implied warranty of
+%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%GNU General Public License for more details.
+%
+%You should have received a copy of the GNU General Public License
+%along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+% this file contains definitions of signs (bar, episemus, punctum, alterations)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of the clefs of the beginning of lines and custos
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% a box containig the clef (and the space after)
+\newbox\Leftbox
+
+%% marcro to define the clef that will appear at the beginning of the lines
+% the first argument is the type : f or c, and the second is the height
+
+\def\setlinesclef#1#2{%
+\localleftbox{%
+\copy\Lines% draws the lines
+\unkern %
+\typekey{#1}{#2}{0}%
+}%
+\relax%
+}
+
+% macro that typesets the key
+% arguments are : 
+%% #1: the type of the key : c or f
+%% #2: the line of the key (1 is the lowest)
+%% #3: if we must use small key characters (inside a line) or not 0 if not inside, 1 if inside
+\def\typekey#1#2#3{%
+\ifcase#2 %
+\or%
+\calculateglyphraisevalue{c}{0}%
+\or%
+\calculateglyphraisevalue{e}{0}%
+\or%
+\calculateglyphraisevalue{g}{0}%
+\or%
+\calculateglyphraisevalue{i}{0}%
+\fi%
+\ifx c#1% we check if it is a c key
+\ifcase#3%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 1\hskip\spaceafterlineclef}%
+\setbox\Leftbox=\hbox{\raise\glyphraisevalue\hbox{\gregorianfont \char 1\hskip\spaceafterlineclef}}%
+\or%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 3\hskip\spaceafterlineclef}%
+\fi%
+\else % we consider that it is a f key
+\ifcase#3%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 2\hskip\spaceafterlineclef}%
+\setbox\Leftbox=\hbox{\raise\glyphraisevalue\hbox{\gregorianfont \char 1\hskip\spaceafterlineclef}}%
+\or%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 4\hskip\spaceafterlineclef}%
+\fi%
+\fi%
+\relax%
+}
+
+% macro that writes the initial key, and sets the next keys to the same value
+
+\def\setinitialclef#1#2{%
+\typekey{#1}{#2}{0}%
+\setlinesclef{#1}{#2}%
+% if the initial is big, then we adjust the second line
+\ifnum\biginitial=0\relax %
+\else %
+\adjustsecondline %
+\fi %
+\relax%
+}
+
+% macro called when the key changes
+
+\def\changeclef#1#2{%
+\clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
+\multiply\clefchangespace by \the\factor %
+\hskip\clefchangespace %
+\typekey{#1}{#2}{1}%
+\hskip\clefchangespace %
+\setlinesclef{#1}{#2}%
+\relax%
+}
+
+% macro called when the key changes inside a syllable
+
+\def\inchangeclef#1#2{%
+\clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
+\multiply\clefchangespace by \factor %
+\hskip\clefchangespace %
+\typekey{#1}{#2}{1}%
+\hskip\clefchangespace %
+\setlinesclef{#1}{#2}%
+\relax%
+}
+
+% the argument is the height
+
+\def\setcusto#1{%
+\calculateglyphraisevalue{#1}{0}%
+\localrightbox{%
+\raise \glyphraisevalue%
+\hbox{%
+% we type a hskip and the we type the custo
+\hskip\spacebeforecusto %
+\gregorianfont %
+\ifx a#1%
+\char 62%
+\fi%
+\ifx b#1%
+\char 60%
+\fi%
+\ifx c#1%
+\char 61%
+\fi%
+\ifx d#1%
+\char 60%
+\fi%
+\ifx e#1%
+\char 61%
+\fi%
+\ifx f#1%
+\char 60%
+\fi%
+\ifx g#1%
+\char 61%
+\fi%
+\ifx h#1%
+\char 60%
+\fi%
+\ifx i#1%
+\char 61%
+\fi%
+\ifx j#1%
+\char 63%
+\fi%
+\ifx k#1%
+\char 64%
+\fi%
+\ifx l#1%
+\char 63%
+\fi%
+\ifx m#1%
+\char 65%
+\fi%
+}%
+}%
+\relax%
+}
+
+\def\removecusto{%
+\localrightbox{}%
+\relax%
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of the signs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% a function to typeset a punctum mora, the argument is the letter of the height of the punctum mora
+% if the second argument is one, we the go back to the end of the punctum
+\def\punctummora#1#2{%
+\ifnum#2=1\relax %
+\kern\spacebeforesigns %
+\else %
+\hskip\spacebeforesigns%
+\fi %
+\calculateglyphraisevalue{#1}{4}%
+\raise \glyphraisevalue \hbox{\gregorianfont \char 14}%
+\ifnum#2=1\relax %
+\setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
+\temp=\wd\Tempwidth %
+\advance\temp by \spacebeforesigns %
+\kern -\temp %
+\fi %
+\relax%
+}
+
+% a function to typeset a augmentum duplex, the argument is the letter of the height of the augmentum duplex
+\def\augmentumduplex#1{%
+\hskip\spacebeforesigns%
+\calculateglyphraisevalue{#1}{2}%
+\raise \glyphraisevalue \hbox{\gregorianfont \char 15}%
+\relax%
+}
+
+\newbox\Tempsign
+\newdimen\tempsignwidth
+
+% a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. If it is 2, it means that we must go back first of width #1, and then forward of #2. If it is 1, it means that we only need to go back of #2. if it is 4, we go to the beginning of the glyph, then forward of #1 then back of #2
+\def\vepisemusaux#1#2#3{%
+\setbox\Tempsign=\hbox{\gregorianfont #2}%
+\tempsignwidth=\wd\Tempsign%
+\divide\tempsignwidth by 2 %
+\ifcase#3%
+% tempwidth is the width of the last glyph
+\advance\tempwidth by -\tempsignwidth %
+\or%
+\tempwidth=\tempsignwidth %
+\or%
+\setbox\Tempsign=\hbox{\gregorianfont #1}%
+\tempwidth=\wd\Tempsign %
+\advance\tempwidth by -\tempsignwidth %
+\or %
+\setbox\Tempsign=\hbox{\gregorianfont #1}%
+\advance\tempwidth by -\wd\Tempsign %
+\advance\tempwidth by -\tempsignwidth %
+\fi%
+% then we draw the sign
+\setbox\Tempsign=\hbox{\gregorianfont \char 33}%
+% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+\tempsignwidth=\wd\Tempsign %
+\divide\tempsignwidth by 2 %
+\advance\tempwidth by \tempsignwidth %
+\kern -\tempwidth%
+\raise \glyphraisevalue \copy\Tempsign %
+% and finally we go back to the end of the glyph, where we were first
+\advance\tempwidth by -2\tempsignwidth %
+\kern \tempwidth%
+\relax%
+}
+
+% here are the common values for both hepisemus (and consequently also for additional lines) and vepisemus
+% this indicates the note
+%% 0: last note, which is a standard punctum (works with pes)
+%% 1: same, but the last note is a deminutus
+%% 2: the note before the last note, which is a standard punctum
+%% 3: idem, but the note is the note preceding a deminutus
+%% 4: the note before the note before the last note (for porrectus flexus)
+%% 5: idem, but when the two last notes are a deminutus
+%% 6: the first note, if it is a standard punctum
+%% 7: the first note, if it is an initio debilis
+%% 8: the first note, if it is a porrectus
+%%% the three next arguments make no sense for a vepisemus
+%% 9: the two first notes, if it is a porrectus
+%% 10: the two first notes, if it is a porrectus flexus
+%% 11: the notes two and three of a torculus resupinus
+%% 12: the last note, if it is a punctum inclinatum
+%% 13: idem, if it is a punctum inclinatum deminutus
+%% 14: idem, if it is a stropha
+%% 15: idem, with a quilisma
+%% 16: idem, with an oriscus
+%% 17: same of 2 but for ambitus of one
+%% 18: same of 0, but the last note is a smaller punctum (concerning simple podatus, podatus, and torculus resupinus)
+%% 19: the first note, if it is an oriscus
+%% 20: the first note, if it is a quilisma
+%% 21: the second note of a torculus resupinus with first ambitus of at least two
+%% 22: idem with ambitus of one
+%% 23: idem with initio debilis
+
+% a function to typeset a vertical episemus. The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are:
+\def\vepisemus#1#2{%
+\calculateglyphraisevalue{#1}{3}%
+\ifcase#2 %
+%case 0
+\vepisemusaux{0}{\char 17}{0}%
+\or%
+%case 1
+\vepisemusaux{0}{\char 13}{0}%
+\or%
+%case 2
+% a kind of flexus, it has the good width
+\vepisemusaux{\char 4098}{\char 17}{1}%
+\or%
+%case 3
+% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
+\vepisemusaux{0}{\char 4225}{1}%
+\or%
+%case 4
+% is a torculus, it has the good width
+\vepisemusaux{\char 14434}{\char 17}{1}%
+\or%
+%case 5
+% is a torculus deminutus, it has the good width
+\vepisemusaux{\char 14859}{\char 17}{1}%
+\or%
+%case 6
+\vepisemusaux{0}{\char 17}{2}%
+\or%
+%case 7
+\vepisemusaux{0}{\char 13}{2}%
+\or%
+%case 8, in which we do (for now) the same as case 6
+\vepisemusaux{0}{\char 17}{2}%
+\or% case 9, 10 and 11
+\or\or\or %
+%case 12
+\vepisemusaux{0}{\char 19}{0}%
+\or%
+%case 13
+\vepisemusaux{0}{\char 32}{0}%
+\or%
+%case 14
+\vepisemusaux{0}{\char 20}{0}%
+\or%
+%case 15
+\vepisemusaux{0}{\char 26}{0}%
+\or%
+%case 16
+\vepisemusaux{0}{\char 27}{0}%
+\or%
+%case 17
+\vepisemusaux{\char 4097}{\char 17}{1}%
+\or%
+%case 18
+\vepisemusaux{0}{\char 74}{0}%
+\or%
+%case 19
+\vepisemusaux{0}{\char 28}{2}%
+\or%
+%case 20
+\vepisemusaux{0}{\char 26}{2}%
+\or%
+%case 21
+\vepisemusaux{\char 4098}{\char 17}{4}%
+\or%
+%case 22 %
+\vepisemusaux{\char 4097}{\char 17}{4}%
+\or%
+%case 23
+\vepisemusaux{\char 1986}{\char 17}{4}%
+\fi%
+\relax%
+}
+
+
+% a macro that will help in the typesetting of a horizontal episemus and additional lines, the first argument is a glyph that have the same width as the width between the end of the glyph and the beginning of the episemus, and the second argument is the character of the episemus. If the third argument is 0, we go directly to the beginning of the glyph, else we don't change anything
+% 4th argument is the same as in hepisorline
+\def\hepisorlineaux#1#2#3#4{%
+\ifnum#3=0%
+%remember, \tempwidth has the value of the last glyph width (cool isn't it?)
+\else%
+\setbox\Tempsign=\hbox{\gregorianfont #1}%
+\tempwidth=\wd\Tempsign%
+\fi%
+\kern -\tempwidth %
+% then we draw the sign, and go back to the beginning of the sign
+\setbox\Tempsign=\hbox{\gregorianfont \char #2}%
+% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+\tempsignwidth=\wd\Tempsign %
+\ifnum#4=0\relax % case of the lines
+\else %
+\temp=16000 sp%
+\multiply\temp by \the\factor %
+\kern -\temp %
+\advance\tempsignwidth by \temp %
+\advance\tempsignwidth by \temp %
+\fi %
+\ifcase#4%
+%case of hepisemus
+\raise \glyphraisevalue \copy\Tempsign %
+\or % case of a line at the top
+\glyphraisevalue=\additionalbottomspace %
+\advance\glyphraisevalue by \spacebeneathtext %
+\advance\glyphraisevalue by \spacelinestext %
+\advance\glyphraisevalue by \translationheight %
+\advance\glyphraisevalue by 4\interstafflinespace %
+\advance\glyphraisevalue by 4\stafflineheight %
+\raise\glyphraisevalue\hbox{\vrule height \stafflineheight width \tempsignwidth}%
+\kern \temp %
+\or % case of a line at the bottom
+\glyphraisevalue=\additionalbottomspace %
+\advance\glyphraisevalue by \spacebeneathtext %
+\advance\glyphraisevalue by \translationheight %
+\advance\glyphraisevalue by \spacelinestext %
+\advance\glyphraisevalue by -\interstafflinespace %
+\advance\glyphraisevalue by -\stafflineheight %
+\raise\glyphraisevalue\hbox{\vrule height \stafflineheight width \tempsignwidth}%
+\kern \temp %
+\fi %
+% and finally we go back to the end of the glyph, where we were first
+\advance\tempwidth by -\tempsignwidth %
+\kern \tempwidth %
+\relax%
+}
+
+% a function to typeset a horizontal line (additional line or episemus). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are the common ones
+% the third argument is a bit particular, it is the ambitus of the porrectus or porrectus flexus if the second argument is 8 or 9, otherwise it is useless
+% #4 is 0 for an horizontal episemus, 2 for a line at the bottom and 1 for a line at the top
+\def\hepisorline#1#2#3#4{%
+\calculateglyphraisevalue{#1}{1}%
+\ifcase#2 %
+%case 0
+\hepisorlineaux{\char 17}{40}{1}{#4}%
+\or%
+%case 1
+\hepisorlineaux{\char 13}{42}{1}{#4}%
+\or%
+%case 2
+% a kind of flexus, it has the good width
+\hepisorlineaux{\char 4098}{40}{1}{#4}%
+\or%
+%case 3
+% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
+\hepisorlineaux{\char 4225}{40}{1}{#4}%
+\or%
+%case 4
+% a torculus, it has the good width
+\hepisorlineaux{\char 14343}{40}{1}{#4}%
+\or%
+%case 5
+% \char 29190 is a torculus deminutus, it has the good width
+\hepisorlineaux{\char 14859}{40}{1}{#4}%
+\or%
+%case 6
+\hepisorlineaux{0}{40}{0}{#4}%
+\or%
+%case 7
+%we assume that the initio-debilis has the same width as a punctum deminutus
+\hepisorlineaux{0}{41}{0}{#4}%
+\or%
+%case 8
+\hepisorlineaux{0}{40}{0}{#4}%
+\or%
+%case 9
+\ifcase#3%
+\or%
+\hepisorlineaux{0}{45}{0}{#4}%
+\or%
+\hepisorlineaux{0}{46}{0}{#4}%
+\or%
+\hepisorlineaux{0}{47}{0}{#4}%
+\or%
+\hepisorlineaux{0}{48}{0}{#4}%
+\or%
+\hepisorlineaux{0}{49}{0}{#4}%
+\fi%
+\or%
+%case 10
+\ifcase#3%
+\or%
+\hepisorlineaux{0}{50}{0}{#4}%
+\or%
+\hepisorlineaux{0}{51}{0}{#4}%
+\or%
+\hepisorlineaux{0}{52}{0}{#4}%
+\or%
+\hepisorlineaux{0}{53}{0}{#4}%
+\or%
+\hepisorlineaux{0}{54}{0}{#4}%
+\fi%
+\or %
+%case 11
+\ifcase#3%
+\or%
+\hepisorlineaux{\char 10246}{50}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10247}{51}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10248}{52}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10249}{53}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10250}{54}{1}{#4}%
+\fi%
+\or%
+%case 12
+\hepisorlineaux{\char 19}{43}{1}{#4}%
+\or%
+%case 13
+\hepisorlineaux{\char 32}{44}{1}{#4}%
+\or%
+%case 14
+\hepisorlineaux{\char 20}{45}{1}{#4}%
+\or%
+%case 15
+\hepisorlineaux{\char 26}{56}{1}{#4}%
+\or%
+%case 16
+\hepisorlineaux{\char 27}{47}{1}{#4}%
+\or%
+%case 17
+\hepisorlineaux{\char 4097}{40}{1}{#4}%
+\or %
+%case 18
+\hepisorlineaux{\char 74}{58}{1}{#4}%
+\or %
+%case 19
+\hepisorlineaux{0}{57}{0}{#4}%
+\or %
+%case 20
+\hepisorlineaux{0}{56}{0}{#4}%
+\or %
+%case 21
+\ifcase#3%
+\or%
+\hepisorlineaux{\char 10246}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10247}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10248}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10249}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10250}{40}{1}{#4}%
+\fi%
+\or %
+%case 22
+\ifcase#3%
+\or%
+\hepisorlineaux{\char 10246}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10247}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10248}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10249}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10250}{40}{1}{#4}%
+\fi%
+\or %
+%case 23
+\ifcase#3%
+\or%
+\hepisorlineaux{\char 10246}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10247}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10248}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10249}{40}{1}{#4}%
+\or%
+\hepisorlineaux{\char 10250}{40}{1}{#4}%
+\fi%
+\fi%
+\relax%
+}
+
+% dumb top function
+\def\hepisemus#1#2#3{%
+\hepisorline{#1}{#2}{#3}{0}%
+\relax %
+}
+
+% another dumb top function
+\def\additionalline#1#2#3{%
+\hepisorline{a}{#1}{#2}{#3}%
+\relax %
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of bars
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% we define two types of macro for each four bar : when it is inside a syllable, and when it is not
+
+\def\invirgula{%
+\writebar{0}{1}%
+\relax%
+}
+
+\def\virgula{%
+\writebar{0}{0}%
+\relax%
+}
+
+\def\indivisiominima{%
+\writebar{1}{1}%
+\relax%
+}
+
+\def\divisiominima{%
+\writebar{1}{0}%
+\relax%
+}
+
+\def\indivisiominor{%
+\writebar{2}{1}%
+\relax%
+}
+
+\def\divisiominor{%
+\writebar{2}{0}%
+\relax%
+}
+
+\def\indivisiomaior{%
+\writebar{3}{1}%
+\relax%
+}
+
+\def\divisiomaior{%
+\writebar{3}{0}%
+\relax%
+}
+
+\newdimen\temptwo
+
+\def\indivisiofinalis{%
+\ifcase\endofscore %
+\writebar{4}{1}%
+\or %
+\writebar{5}{1}%
+\fi %
+\relax%
+}
+
+\def\divisiofinalis{%
+\ifcase\endofscore %
+\writebar{4}{0}%
+\or %
+\writebar{5}{0}%
+\fi %
+\relax%
+}
+
+%a macro to write a bar
+%% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis
+%% 2: is % for now we don't use it
+%%% 0 if it is outside a syllable
+%%% 1 if it is in a syllable
+\def\writebar#1#2{%
+\ifcase#1 % 0 : virgula
+\penalty 7000 %
+\ifnum#2=1\relax %
+\hskip\spacebeforesmallbar %
+\penalty 7000 %
+\fi %
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
+\penalty -5000 %
+\ifnum#2=1\relax %
+\hskip\spaceaftersmallbar %
+\fi %
+\or % 1 : minima
+\penalty 7000%
+\ifnum#2=1\relax %
+\hskip\spacebeforesmallbar %
+\penalty 7000%
+\fi %
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
+\penalty -5000%
+\ifnum#2=1\relax %
+\hskip\spaceaftersmallbar %
+\fi %
+\or % 2 : minor
+\penalty 7000 %
+\ifnum#2=1\relax %
+\hskip\spacebeforeminor %
+\penalty 7000 %
+\fi %
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
+\penalty -5000 %
+\ifnum#2=1\relax %
+\hskip\spaceafterminor %
+\fi %
+\or % 3 : maior
+\penalty 7000 %
+\ifnum#2=1\relax %
+\hskip\spacebeforemaior %
+\penalty 7000 %
+\fi %
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+\penalty -5000 %
+\ifnum#2=1\relax %
+\hskip\spaceaftermaior %
+\fi %
+\or % 4 : finalis
+\penalty 7000 %
+\ifnum#2=1\relax %
+\hskip\spacebeforefinalis %
+\penalty 7000 %
+\fi %
+\divisiofinalissymbol%
+\penalty -5000 %
+\ifnum#2=1\relax %
+\hskip\spaceafterfinalis %
+\fi %
+\or % 5 : finalis
+\penalty 7000 %
+\ifnum#2=1\relax %
+\hskip\spacebeforefinalfinalis %
+\penalty 7000 %
+\fi %
+\divisiofinalissymbol%
+\penalty -5000 %
+\ifnum#2=1\relax %
+\hskip\spaceafterfinalis %
+\fi %
+\fi %
+\relax%
+}
+
+\def\divisiofinalissymbol{%
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+\temptwo = 12000 sp%
+\multiply\temptwo by \the\factor%
+\kern \temptwo%
+\penalty 10000%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+}
+
+%a count to tell if we have to keep the localrightbox until the end
+\newcount\keeprightbox
+
+%macro to end a line with a divisio finalis
+\def\finaldivisiofinalis{%
+\hskip\spacebeforefinalfinalis %
+\global\keeprightbox=1 %
+\localrightbox{%
+\divisiofinalissymbol %
+}%
+\relax%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for typesetting alterations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% a count saying if the first glyph is an alteration
+\newcount\firstisalteration
+
+\def\flat#1{%
+\ifnum\the\firstglyph=1\relax %
+\global\firstisalteration=1\relax %
+\fi %
+\calculateglyphraisevalue{#1}{0}%
+\setbox\Tempwidth=\hbox{\gregorianfont \char 6}%
+\tempwidth=\wd\Tempwidth%
+\raise \glyphraisevalue%
+\copy\Tempwidth%
+\ifnum\the\firstglyph=1\relax %
+\temp=\wd\Tempwidth %
+\advance\temp by \alterationspace %
+\global\advance\notesaligncenter by \temp %
+\kern\alterationspace %
+\else %
+\hskip\alterationspace %
+\fi %
+\relax%
+}
+
+\def\natural#1{%
+\ifnum\the\firstglyph=1\relax %
+\global\firstisalteration=1\relax %
+\fi %
+\calculateglyphraisevalue{#1}{0}%
+\setbox\Tempwidth=\hbox{\gregorianfont \char 6}%
+\tempwidth=\wd\Tempwidth%
+\raise \glyphraisevalue%
+\copy\Tempwidth%
+\ifnum\the\firstglyph=1\relax %
+\temp=\wd\Tempwidth %
+\advance\temp by \alterationspace %
+\global\advance\notesaligncenter by \temp %
+\kern\alterationspace %
+\else %
+\hskip\alterationspace %
+\fi %
+\relax%
+}

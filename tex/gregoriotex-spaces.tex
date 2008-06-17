@@ -1,0 +1,208 @@
+%GregorioTeX file.
+%Copyright (C) 2007 Elie Roux <elie.roux@enst-bretagne.fr>
+%
+%This program is free software: you can redistribute it and/or modify
+%it under the terms of the GNU General Public License as published by
+%the Free Software Foundation, either version 3 of the License, or
+%(at your option) any later version.
+%
+%This program is distributed in the hope that it will be useful,
+%but WITHOUT ANY WARRANTY; without even the implied warranty of
+%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%GNU General Public License for more details.
+%
+%You should have received a copy of the GNU General Public License
+%along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+% this file contains definitions of spaces
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of spaces
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% null space
+\newskip\zerowidthspace
+\zerowidthspace=0pt plus 0pt minus 0pt
+
+% space between glyphs in the same element
+\newskip\interglyphspace
+\interglyphspace = 8200 sp plus 820 sp minus 820 sp
+\multiply\interglyphspace by \factor
+
+% space between an alteration (flat or natural) and the next glyph
+\newskip\alterationspace
+\alterationspace = 12000 sp plus 2300 sp minus 1200 sp
+\multiply\alterationspace by \factor
+
+% negative space, difference between the normal space between two notes and the space between a note and a flat
+\newskip\beforealterationspace
+\beforealterationspace = -36000 sp plus 1200 sp minus 1200 sp
+\multiply\beforealterationspace by \factor
+
+% space between elements
+\newskip\interelementspace
+\interelementspace = 8200 sp plus 1400 sp minus 820 sp
+\multiply\interelementspace by \factor
+
+% larger space between elements
+\newskip\largerspace
+\largerspace = 8200 sp plus 1400 sp minus 820 sp
+\multiply\largerspace by \factor
+
+% space between elements which has the size of a note
+\newskip\glyphspace
+\glyphspace = 16500 sp plus 2500 sp minus 1650 sp
+\multiply\glyphspace by \factor
+
+% minimum space between two notes of different syllables
+\newskip\intersyllablespace
+\intersyllablespace=28000 sp plus 3000 sp minus 0 sp
+%\intersyllablespace=0 sp plus 0 sp minus 0 sp
+\multiply\intersyllablespace by \factor
+
+% space before custo
+\newskip\spacebeforecusto
+\spacebeforecusto = 16500 sp plus 16500 sp minus 8000 sp
+\multiply\spacebeforecusto by \factor
+
+% space before punctum mora and augmentum duplex
+\newskip\spacebeforesigns
+\spacebeforesigns=5000 sp plus 500 sp minus 500 sp
+\multiply\spacebeforesigns by \factor
+
+% space after punctum mora and augmentum duplex
+\newskip\spaceaftersigns
+\spaceaftersigns=9000 sp plus 900 sp minus 900 sp
+\multiply\spaceaftersigns by \factor
+
+% space after a clef at the beginning of a line
+\newskip\spaceafterlineclef
+\spaceafterlineclef = 16500 sp plus 4000 sp minus 1650 sp
+\multiply\spaceafterlineclef by \factor
+
+% space after at the end of a word when the last written symbol is a note and the first is a note
+\newskip\interwordspacenotes
+\interwordspacenotes = 32000 sp plus 6400 sp minus 3200 sp
+\multiply\interwordspacenotes by \factor
+
+% space after at the end of a word when the last written symbol is a note and the first is text
+\newskip\interwordspacenotestext
+\interwordspacenotestext = 35000 sp plus 5000 sp minus 2500 sp
+\multiply\interwordspacenotestext by \factor
+
+% space after at the end of a word when the last written symbol is text and the first is a note
+\newskip\interwordspacetextnotes
+\interwordspacetextnotes = 30000 sp plus 6000 sp minus 3000 sp
+\multiply\interwordspacetextnotes by \factor
+
+% space after at the end of a word when the last written symbol is text and the first is text
+\newskip\interwordspacetext
+\interwordspacetext = 25000 sp plus 7000 sp minus 2500 sp
+\multiply\interwordspacetext by \factor
+
+% space between notes of a bistropha and bivirga
+\newskip\bispace
+\bispace = 16500 sp plus 1650 sp minus 1650 sp
+\multiply\bispace by \factor
+
+% space between notes of a tristropha and trivirga
+\newskip\trispace
+\trispace = 16500 sp plus 1650 sp minus 1650 sp
+\multiply\trispace by \factor
+
+% space between two punctum inclinatum
+\newskip\punctuminclinatumshift
+\punctuminclinatumshift=-4850 sp plus 100 sp minus 100 sp
+\multiply\punctuminclinatumshift by \factor
+
+% space before puncta inclinata
+\newskip\beforepunctainclinatashift
+\beforepunctainclinatashift=5800 sp plus 800 sp minus 500 sp
+\multiply\beforepunctainclinatashift by \factor
+
+% space between a punctum inclinatum and a punctum inclinatum deminutus
+\newskip\punctuminclinatumanddebilisshift
+\punctuminclinatumanddebilisshift=-3000 sp plus 100 sp minus 100 sp
+\multiply\punctuminclinatumanddebilisshift by \factor
+
+% space between two punctum inclinatum deminutus
+\newskip\punctuminclinatumdebilisshift
+\punctuminclinatumdebilisshift=-1300 sp plus 100 sp minus 100 sp
+\multiply\punctuminclinatumdebilisshift by \factor
+
+% space for the bars
+%first for virgula and divisio minima
+\newskip\spacebeforesmallbar
+\spacebeforesmallbar = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spacebeforesmallbar by \factor
+
+\newskip\spaceaftersmallbar
+\spaceaftersmallbar = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spaceaftersmallbar by \factor
+
+%then divisio minor
+\newskip\spacebeforeminor
+\spacebeforeminor = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spacebeforeminor by \factor
+
+\newskip\spaceafterminor
+\spaceafterminor = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spaceafterminor by \factor
+
+%divisio major
+\newskip\spacebeforemaior
+\spacebeforemaior = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spacebeforemaior by \factor
+
+\newskip\spaceaftermaior
+\spaceaftermaior = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spaceaftermaior by \factor
+
+%divisio finalis
+\newskip\spacebeforefinalis
+\spacebeforefinalis = 8500 sp plus 1650 sp minus 1650 sp
+\multiply\spacebeforefinalis by \factor
+
+%a special space for finalis, for when it is the last glyph
+\newskip\spacebeforefinalfinalis
+\spacebeforefinalfinalis= 32000 sp plus 3000 sp minus 16000 sp
+\multiply\spacebeforefinalfinalis by \factor
+
+\newskip\spaceafterfinalis
+\spaceafterfinalis = 8500 sp plus 1650 sp minus 6000 sp
+\multiply\spaceafterfinalis by \factor
+
+% space between the text and the text of the bar
+\newskip\textbartextspace
+\textbartextspace = 13000 sp plus 1300 sp minus 1300 sp
+\multiply\textbartextspace by \factor
+
+% minimal space between a note and a bar
+\newskip\notebarspace
+\notebarspace = 35000 sp plus 20000 sp minus 3100 sp
+\multiply\notebarspace by \factor
+
+\newdimen\maximumspacewithoutdash
+\maximumspacewithoutdash = 4000 sp
+\multiply\maximumspacewithoutdash by \factor
+
+% space between the initial and the beginning of the score
+\newskip\afterinitialshift
+\afterinitialshift=0.6 em plus 0em minus 0em
+
+% space before the initial and the beginning of the score
+\newskip\beforeinitialshift
+\afterinitialshift=0.6 em plus 0em minus 0em
+
+\def\setspaceafterinitial#1{%
+\afterinitialshift=#1 %
+\relax %
+}
+
+\def\setspacebeforeinitial#1{%
+\beforeinitialshift=#1 %
+\relax %
+}
+
+% space for the clef changes
+\newskip\clefchangespace
