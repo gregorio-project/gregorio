@@ -149,7 +149,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
       if ((syllable->elements)[0]->type == GRE_END_OF_LINE
 	  && !(syllable->elements)[0]->next_element)
 	{
-	  fprintf (f, "%%\n%%\n\\gnewline %%\n%%\n%%\n");
+	  fprintf (f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
 	  return;
 	}
       if ((syllable->elements)[0]->type == GRE_BAR)
@@ -372,6 +372,11 @@ libgregorio_gtex_print_char (FILE * f, wchar_t to_print)
   if (to_print == L'*')
     {
       fprintf (f, "\\grestar ");
+      return;
+    }
+  if (to_print == L'+')
+    {
+      fprintf (f, "\\gredagger ");
       return;
     }
   if (to_print < 128)
