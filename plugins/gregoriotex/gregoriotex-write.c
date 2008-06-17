@@ -38,6 +38,13 @@ write_score (FILE * f, gregorio_score * score)
   int clef_line;
   gregorio_syllable *current_syllable;
 
+  if (!f) {
+      libgregorio_message (_
+			   ("call with NULL file"),
+			   "libgregorio_gregoriotex_write_score", ERROR, 0);
+			   return;
+  }
+
   if (score->number_of_voices != 1)
     {
       libgregorio_message (_

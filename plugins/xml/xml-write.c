@@ -35,6 +35,13 @@ libgregorio_xml_write_gregorio_note (FILE * f, gregorio_note * note, int clef,
   int octave;
   char alteration;
 
+  if (!f) {
+      libgregorio_message (_
+			   ("call with NULL file"),
+			   "libgregorio_gregoriotex_write_score", ERROR, 0);
+			   return;
+  }
+
   if (!note)
     {
       libgregorio_message (_("call with NULL argument"),

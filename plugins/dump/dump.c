@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "struct.h"
 #include "dump.h"
 #include <wchar.h>
+#include "messages.h"
 
 void
 write_score (FILE * f, gregorio_score * score)
@@ -35,6 +36,13 @@ write_score (FILE * f, gregorio_score * score)
   gregorio_element *element;
   gregorio_glyph *glyph;
   gregorio_note *note;
+
+  if (!f) {
+      libgregorio_message (_
+			   ("call with NULL file"),
+			   "libgregorio_gregoriotex_write_score", ERROR, 0);
+			   return;
+  }
 
   fprintf (f,
 	   "=====================================================================\n SCORE INFOS\n=====================================================================\n");

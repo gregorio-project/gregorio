@@ -53,6 +53,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DUMP_PLUGIN "dump"
 #define DEFAULT_OUTPUT_FORMAT GTEX
 #define DEFAULT_INPUT_FORMAT GABC
+#define GABC_EXT ".gabc"
+#define XML_EXT ".xml"
+#define GTEX_EXT ".tex"
+#define OTEX_EXT ".tex"
+#define DUMP_EXT ".dump"
 
 #define define_path(file_name,string) \
 		/*we first test if path is absolute */\
@@ -64,6 +69,62 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		file_name=malloc(150*sizeof(char));\
 		snprintf(file_name,150,"%s/%s", current_directory, string);\
 		}
+
+
+// function that returns the filename without the extension
+char *
+get_base_filename (char *fbasename)
+{
+  char *p;
+  int l;
+  char *ret;
+  p = strrchr (fbasename, '.');
+  if (!p)
+    {
+      return NULL;
+    }
+  l = strlen (fbasename) - strlen (p);
+  ret = (char *) malloc ((l + 1) * sizeof (char));
+  snprintf (ret, l + 1, "%s", fbasename);
+  ret[l + 1] = '\0';
+  return ret;
+}
+
+
+// function that adds the good extension to a basename (without extension)
+char *
+get_output_filename (char *fbasename, char output_format)
+{
+  char *extension = NULL;
+  char *output_filename = NULL;
+  switch (output_format)
+    {
+    case GABC:
+      extension = GABC_EXT;
+      break;
+    case XML:
+      extension = XML_EXT;
+      break;
+    case GTEX:
+      extension = GTEX_EXT;
+      break;
+    case OTEX:
+      extension = OTEX_EXT;
+      break;
+    case DUMP:
+      extension = DUMP_EXT;
+      break;
+    default:
+      return NULL;
+      break;
+    }
+  output_filename =
+    (char *) malloc (sizeof (char) *
+		     (strlen (extension) + strlen (fbasename) + 1));
+  output_filename = strcpy (output_filename, fbasename);
+  output_filename = strcat (output_filename, extension);
+  return output_filename;
+}
 
 
 /* the type definitions of the function to read a score from a file, and to write a score
@@ -78,7 +139,7 @@ void print_usage (char *name);
 /* a function to open a plugin with libtool */
 
 int
-open_plugin (const char *plugin, lt_dlhandle *module)
+open_plugin (const char *plugin, lt_dlhandle * module)
 {
   *module = lt_dlopenext (plugin);
   if (!*module)
@@ -148,6 +209,7 @@ main (int argc, char **argv)
   char *plugin = NULL;		// the plugin we will load (input or output)
   char *input_file_name = NULL;
   char *output_file_name = NULL;
+  char *output_basename = NULL;
   char *error_file_name = NULL;
   FILE *input_file = NULL;
   FILE *output_file = NULL;
@@ -182,7 +244,6 @@ main (int argc, char **argv)
       print_usage (argv[0]);
       exit (0);
     }
-
   current_directory = getcwd (current_directory, 150);
 
   bindtextdomain (PACKAGE, LOCALEDIR);
@@ -388,7 +449,9 @@ main (int argc, char **argv)
     }
   else
     {
-      define_path (input_file_name, argv[optind]) if (input_file)
+      define_path (input_file_name, argv[optind]);
+      output_basename = get_base_filename (input_file_name);
+      if (input_file)
 	{
 	  fprintf (stderr,
 		   "warning: can't read from stdin and a file, reading from file %s\n",
@@ -405,10 +468,38 @@ main (int argc, char **argv)
       printf ("\n");
     }
 
+  if (!input_format)
+    {
+      input_format = DEFAULT_INPUT_FORMAT;
+    }
+
+  if (!output_format)
+    {
+      output_format = DEFAULT_OUTPUT_FORMAT;
+    }
+
 // then we act...
   if (!output_file_name && !output_file)
     {
-      output_file = stdout;
+      if (!output_basename)
+	{
+	  output_file = stdout;
+	}
+      else
+	{
+	  if (input_format != output_format)
+	    {
+	      output_file_name =
+		get_output_filename (output_basename, output_format);
+	    }
+	  output_file = fopen (output_file_name, "w");
+	  if (!output_file)
+	    {
+	      fprintf (stderr, "error: can't write in file %s",
+		       output_file_name);
+	    }
+	  free (output_basename);
+	}
     }
   else
     {
@@ -456,15 +547,6 @@ main (int argc, char **argv)
   free (current_directory);
   free (input_file_name);
   free (output_file_name);
-  if (!input_format)
-    {
-      input_format = DEFAULT_INPUT_FORMAT;
-    }
-
-  if (!output_format)
-    {
-      output_format = DEFAULT_OUTPUT_FORMAT;
-    }
 
   if (!verb_mode)
     {
@@ -499,9 +581,11 @@ main (int argc, char **argv)
     }
 
   read_file = (read_func *) lt_dlsym (module, "read_score");
-  if (read_file==NULL) {
-    fprintf (stderr, "error in opening function read_score in module %s\n", plugin);
-  }
+  if (read_file == NULL)
+    {
+      fprintf (stderr, "error in opening function read_score in module %s\n",
+	       plugin);
+    }
   score = (*read_file) (input_file);
   error = lt_dlclose (module);
   if (error)
@@ -554,9 +638,11 @@ main (int argc, char **argv)
     }
 
   write_score = (write_func *) lt_dlsym (module, "write_score");
-  if (write_score==NULL) {
-    fprintf (stderr, "error in opening function write_score in module %s\n", plugin);
-  }
+  if (write_score == NULL)
+    {
+      fprintf (stderr, "error in opening function write_score in module %s\n",
+	       plugin);
+    }
   (*write_score) (output_file, score);
   error = lt_dlclose (module);
   if (error)
@@ -569,5 +655,3 @@ main (int argc, char **argv)
   libgregorio_free_score (score);
   exit (0);
 }
-
-

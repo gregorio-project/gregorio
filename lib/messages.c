@@ -105,7 +105,7 @@ libgregorio_message (const char *string, const char *function_name, char verbosi
 	    }
 	  else
 	    {
-	      fprintf (error_out, "%s:%d: in function `%s':%s %s\n", file_name,
+	      fprintf (error_out, "%d: in function `%s':%s %s\n",
 		       line_number, function_name, verbosity_str, string);
 	    }
 	}
@@ -119,7 +119,7 @@ libgregorio_message (const char *string, const char *function_name, char verbosi
 	    }
 	  else
 	    {
-	      fprintf (error_out, "%s:%d:%s %s\n", file_name, line_number,
+	      fprintf (error_out, "%d:%s %s\n", line_number,
 		       verbosity_str, string);
 	    }
 	}
@@ -136,7 +136,7 @@ libgregorio_message (const char *string, const char *function_name, char verbosi
 	    }
 	  else
 	    {*/
-	      fprintf (error_out, "%s: in function `%s':%s %s\n", file_name,
+	      fprintf (error_out, "in function `%s':%s %s\n",
 		       function_name, verbosity_str, string);
 	    //}
 	}
@@ -149,7 +149,7 @@ libgregorio_message (const char *string, const char *function_name, char verbosi
 	    }
 	  else
 	    {*/
-	      fprintf (error_out, "%s:%s %s\n", file_name,
+	      fprintf (error_out, "%s %s\n",
 		       verbosity_str, string);
 	    //}
 	}

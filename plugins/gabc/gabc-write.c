@@ -41,6 +41,13 @@ write_score (FILE * f, gregorio_score * score)
 {
   gregorio_syllable *syllable;
 
+  if (!f) {
+      libgregorio_message (_
+			   ("call with NULL file"),
+			   "libgregorio_gregoriotex_write_score", ERROR, 0);
+			   return;
+  }
+
   if (score->name)
     {
       fprintf (f, "name: %s;\n", score->name);
