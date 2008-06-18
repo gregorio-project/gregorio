@@ -127,7 +127,7 @@ char *error;
 <INITIAL>--(.*) {
 	return VOICE_CHANGE;
 	}
-<INITIAL>%(%)* {
+<INITIAL>%(%)*\n {
 	BEGIN(score);
 	return END_OF_DEFINITIONS;
 	 }
