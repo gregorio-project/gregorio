@@ -154,7 +154,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	}
       if ((syllable->elements)[0]->type == GRE_BAR)
 	{
-	  if (!syllable->next_syllable
+	  if (!syllable->next_syllable && !syllable->text
 	      && (syllable->elements)[0]->element_type == B_DIVISIO_FINALIS)
 	    {
 	      fprintf (f, "\\finaldivisiofinalis %%\n");
@@ -317,6 +317,7 @@ libgregorio_gtex_write_end_for_two (FILE * f, unsigned char style)
 void
 libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char)
 {
+  printf("prout : %ls\n", special_char);
   if (!wcscmp (special_char, L"A/"))
     {
       fprintf (f, "\\Abar");
