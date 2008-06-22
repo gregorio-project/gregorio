@@ -1292,6 +1292,17 @@ note:
 	libgregorio_message(error, "libgregorio_det_score",ERROR,0);
 	}
 	}
+	|
+	CLOSING_BRACKET {
+	elements[voice]=NULL;
+	voice=0;
+	}
+	|
+	CLOSING_BRACKET_WITH_SPACE {
+	elements[voice]=NULL;
+	voice=0;
+	update_position_with_space();
+	}
 	;
 
 style_beginning:
