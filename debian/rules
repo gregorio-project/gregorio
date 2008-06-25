@@ -37,7 +37,7 @@ build: build-stamp
 build-stamp:  config.status
 	dh_testdir
 	$(MAKE)
-	xsltproc -''-nonet /usr/share/apps/ksgmltools2/docbook/xsl/manpages/docbook.xsl debian/manpage.xml
+	xsltproc -''-nonet /usr/share/xml/docbook/stylesheet/nwalsh/manpages/docbook.xsl debian/manpage.xml
 	touch $@
 
 clean:
