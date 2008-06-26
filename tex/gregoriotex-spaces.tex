@@ -119,6 +119,9 @@
 
 \newdimen\maximumspacewithoutdash
 
+% an extensible space for the beginning of lines
+\newdimen\afterclefnospace
+
 % space between the initial and the beginning of the score
 \newskip\afterinitialshift
 \afterinitialshift=0.6 em plus 0em minus 0em
@@ -239,5 +242,8 @@
 %
 \maximumspacewithoutdash = 4000 sp%
 \multiply\maximumspacewithoutdash by \grefactor %
+%
+\afterclefnospace = 0pt minus 0pt plus 16000sp%
+\multiply\afterclefnospace by \grefactor %
 \relax %
 }

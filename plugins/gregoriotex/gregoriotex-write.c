@@ -72,7 +72,7 @@ write_score (FILE * f, gregorio_score * score)
   first_text = libgregorio_first_text (score);
   if (first_text)
     {
-      fprintf (f, "\\initial{");
+      fprintf (f, "\\greinitial{");
       libgregorio_write_first_letter (first_text, f,
 				      (&libgregorio_gtex_write_verb),
 				      (&libgregorio_gtex_print_char),
@@ -146,8 +146,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
   if ((syllable->elements) && (syllable->elements)[0])
     {
 
-      if ((syllable->elements)[0]->type == GRE_END_OF_LINE
-	  && !(syllable->elements)[0]->next_element)
+      if ((syllable->elements)[0]->type == GRE_END_OF_LINE)
 	{
 	  fprintf (f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
 	  return;
@@ -204,6 +203,11 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
       libgregorio_gregoriotex_write_translation (f, syllable->translation);
       fprintf (f, "}%%\n");
     }
+  if (syllable->next_syllable && (syllable->next_syllable->elements)[0] && (syllable->next_syllable->elements)[0]->type == GRE_END_OF_LINE)
+	{
+	  fprintf (f, "%%\n\\lastofline %%\n");
+	}
+    
   fprintf (f, "}{%%\n");
 
   current_element = (syllable->elements)[0];

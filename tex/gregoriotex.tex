@@ -107,9 +107,14 @@
 
 %macro to call if you wan to go to the next line simply
 \def\grenewline{%
-%\hfil%
 \updateadditionalspaces{0}{0}%
-\penalty-10000 %
+\lastoflinecount=2\relax %
+\localleftbox{%
+\copy\Lines% draws the lines
+\unkern %
+\hbox{\copy\Leftbox\hskip\afterclefnospace}%
+}%
+\penalty-10001 %
 \relax%
 }
 
@@ -118,8 +123,14 @@
 %% 2: iden, but with the bottom line (-1th)
 \def\grenewlinewithspace#1#2{%
 \updateadditionalspaces{#1}{#2}%
-\penalty-10000 %
-\relax %
+\lastoflinecount=2\relax %
+\localleftbox{%
+\copy\Lines% draws the lines
+\unkern %
+\hbox{\copy\Leftbox\hskip\afterclefnospace}
+}%
+\penalty-10001 %
+\relax%
 }
 
 % two dimensions for the additionalspaces
@@ -225,7 +236,7 @@
 \kern\initialwidth %
 \copy\Lines % draws the lines
 \unkern %
-\copy\Leftbox %
+\hbox{\copy\Leftbox\hskip\spaceafterlineclef}%
 }
 \relax %
 }
@@ -235,7 +246,7 @@
 \localleftbox{%
 \copy\Lines % draws the lines
 \unkern %
-\copy\Leftbox %
+\hbox{\copy\Leftbox\hskip\spaceafterlineclef}%
 }
 \relax %
 }
@@ -250,7 +261,7 @@
 \relax %
 }
 
-\def\initial#1{%
+\def\greinitial#1{%
 % we print the initial always at the same place, and the we print the Aboveinitialbox centered
 % first we print the initial
 \temp=-\textlower %
@@ -287,6 +298,13 @@
 \kern\temp %
 \setbox\Aboveinitialbox=\hbox{}%
 \fi %
+\relax %
+}
+
+\def\grenoitinial{%
+\setbox\Initial=\hbox{}%
+\global\initialwidth=0pt %
+\global\lastoflinecount=2\relax %
 \relax %
 }
 
@@ -559,7 +577,10 @@
 
 \newcount\lastoflinecount
 
-% macro to tell gregorioTeX no to put a space after the current syllable (otherwise it may cause annoying black boxes in the pdf)
+% macro to tell gregorioTeX no to put a space after the current syllable (otherwise it may cause annoying black boxes in the pdf if written in plainTeX)
+% 0 if nothing
+% 1 if the syllable is the last of the line
+% 2 after it has finished the syllable, so when it is two it means that the syllable is the first of a line
 \def\lastofline{%
 \global\lastoflinecount=1\relax%
 \relax%

@@ -421,6 +421,17 @@
 % now we calculate the begin difference, that is to say \notesaligncenter - \textaligncenter
 \begindifference=\notesaligncenter %
 \advance\begindifference by -\textaligncenter %
+% first we check if it is the first syllable of a line. If it is we apply the following algorithm : 
+% there must be at least a certain space between the key and the first note. The first letter can be beneath the key, but not to the left
+\ifnum\lastoflinecount=2\relax %
+\temp=\intersyllablespace %
+\advance\temp by \begindifference %
+\ifdim\temp <-\wd\Leftbox %
+\temp=-\wd\Leftbox %
+\fi %
+\hbox{\kern\temp}%
+\hskip\afterclefnospace %
+\else %\ifnum\lastoflinecount=2
 % then we do a kind of trick to separate more the notes of two different syllables : we put a space if we are in the same word (enddifference!=0) if necessary
 % there are two cases according to the sign of enddifference
 % and we do it only if it is not the first syllable of a word
@@ -440,6 +451,7 @@
 \fi % \ifnum\firstisalteration=1
 \ifdim\temp>0pt %
 \hskip\temp %
+\fi %
 \fi %
 \fi %
 %\potentialdash=2 %
@@ -485,6 +497,15 @@
 %% important, else we are not really at the end of the syllable
 \kern -\enddifference %
 \fi%
+\ifnum\lastoflinecount=2\relax %
+% we put a space after the initial clefs
+\localleftbox{%
+\copy\Lines% draws the lines
+\unkern %
+\hbox{\copy\Leftbox\hskip\spaceafterlineclef}%
+}%
+\global\lastoflinecount=0\relax %
+\fi %
 %% then we call end of syllable or end of word, but only if the next syllable is not a bar, that is to say, the number is between 10 and 19. TeX is a shitty language, so we do a dirty workaround to make a and in the if.
 \ifnum#7>9\relax %
 \ifnum#7<20\relax %
@@ -504,14 +525,13 @@
 % #1 is the #4 of syllable
 \def\shittytexworkaround#1{%
 \ifnum\lastoflinecount=1\relax %
-\global\lastoflinecount=0\relax %
-\grenewline %
+\global\lastoflinecount=2\relax %
 \ifcase#1 %
 \global\firstsyllableofword=0 %
 \or%
 \global\firstsyllableofword=1 %
 \fi%
-\else %\ifnum\lastoflinecount=1\relax %
+\else %\ifnum\lastoflinecount=1 %
 \ifcase#1 %
 \endofsyllable%
 \global\firstsyllableofword=0 %
@@ -632,21 +652,22 @@
 \kern -\enddifference %
 \fi%
 % end of same code as syllable
+\ifnum\lastoflinecount=1\relax %
+\global\lastoflinecount=2\relax %
+\else %
+\global\lastoflinecount=0\relax %
 \hskip\textbartextspace % same as above, we should make some if to determine the exact space...
+\fi %
 %and that's it !!
 \fi%
 \firstsyllableofword=1 %
-\ifnum\lastoflinecount=1\relax %
-\global\lastoflinecount=0\relax %
-\grenewline %
-\fi %
 \global\notesaligncenter= 0 pt\relax % very important, see flat and natural
 \relax%
 }
 
 %nextbegindifference is the begindifference of the next syllable
 \newskip\nextbegindifference
-\newskip\tempskip %TODO : couldn't we use another existing temp* ?
+\newskip\tempskip % couldn't we use another existing temp* ? maybe not
 
 % macro to set \nextbegindifference
 %% 1 : the first letters of the next syllable

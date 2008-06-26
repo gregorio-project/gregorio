@@ -21,17 +21,18 @@
 %% macros for the typesetting of the clefs of the beginning of lines and custos
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% a box containig the clef (and the space after)
+% a box containig the clef
 \newbox\Leftbox
 
 %% marcro to define the clef that will appear at the beginning of the lines
 % the first argument is the type : f or c, and the second is the height
+% the third argument is whether we must type a space after or not (0 if not, 1 if yes)
 
-\def\setlinesclef#1#2{%
+\def\setlinesclef#1#2#3{%
 \localleftbox{%
 \copy\Lines% draws the lines
 \unkern %
-\typekey{#1}{#2}{0}%
+\typekey{#1}{#2}{0}{#3}%
 }%
 \relax%
 }
@@ -41,7 +42,8 @@
 %% #1: the type of the key : c or f
 %% #2: the line of the key (1 is the lowest)
 %% #3: if we must use small key characters (inside a line) or not 0 if not inside, 1 if inside
-\def\typekey#1#2#3{%
+%% #4: if we must type a space after or not
+\def\typekey#1#2#3#4{%
 \ifcase#2 %
 \or%
 \calculateglyphraisevalue{c}{0}%
@@ -52,19 +54,23 @@
 \or%
 \calculateglyphraisevalue{i}{0}%
 \fi%
+\tempskip=\spaceafterlineclef %
+\ifnum#4=0\relax %
+\tempskip=\afterclefnospace %
+\fi %
 \ifx c#1% we check if it is a c key
 \ifcase#3%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 1\hskip\spaceafterlineclef}%
-\setbox\Leftbox=\hbox{\raise\glyphraisevalue\hbox{\gregorianfont \char 1\hskip\spaceafterlineclef}}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 1\hskip\tempskip}%
+\setbox\Leftbox=\hbox{\raise\glyphraisevalue\hbox{\gregorianfont \char 1}}%
 \or%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 3\hskip\spaceafterlineclef}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 3\hskip\tempskip}%
 \fi%
 \else % we consider that it is a f key
 \ifcase#3%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 2\hskip\spaceafterlineclef}%
-\setbox\Leftbox=\hbox{\raise\glyphraisevalue\hbox{\gregorianfont \char 1\hskip\spaceafterlineclef}}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 2\hskip\tempskip}%
+\setbox\Leftbox=\hbox{\raise\glyphraisevalue\hbox{\gregorianfont \char 1}}%
 \or%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 4\hskip\spaceafterlineclef}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 4\hskip\tempskip}%
 \fi%
 \fi%
 \relax%
@@ -73,8 +79,12 @@
 % macro that writes the initial key, and sets the next keys to the same value
 
 \def\setinitialclef#1#2{%
-\typekey{#1}{#2}{0}%
-\setlinesclef{#1}{#2}%
+\ifnum\lastoflinecount=2\relax % we must not type a space if there is no initial
+\typekey{#1}{#2}{0}{0}%
+\else %
+\typekey{#1}{#2}{0}{1}%
+\fi %
+\setlinesclef{#1}{#2}{1}%
 % if the initial is big, then we adjust the second line
 \ifnum\biginitial=0\relax %
 \else %
