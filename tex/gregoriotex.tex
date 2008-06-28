@@ -61,7 +61,7 @@
 \global\multiply\interstafflinespace by \the\grefactor %
 \global\staffheight=4\stafflineheight %
 \global\advance\staffheight by 3\interstafflinespace %
-\global\spaceabovelines = 25000 sp plus 0 sp minus 0 sp%
+\global\spaceabovelines = 25000 sp plus 60000 sp minus 0 sp%
 \global\multiply\spaceabovelines by \grefactor %
 \global\spacelinestext = 59500 sp plus 0 sp minus 0 sp%
 \global\multiply\spacelinestext by \grefactor %
@@ -312,6 +312,9 @@
 \newdimen\aboveinitialraise %
 
 \def\setfirstlineaboveinitial#1#2{%
+\ifnum\grefactor=0\relax %
+\setgrefactor{17}%
+\fi %
 \global\aboveinitialraise=\staffheight %
 \global\advance\aboveinitialraise by \spacebeneathtext %
 \global\advance\constantglyphraise by \translationheight %
