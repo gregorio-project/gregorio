@@ -37,13 +37,16 @@ write_score (FILE * f, gregorio_score * score)
   char clef_letter;
   int clef_line;
   gregorio_syllable *current_syllable;
+    // the current line (as far as we know), it is always 0, it can be 1 in the case of the first line of a score with a two lines initial
+  unsigned char line = 0;
 
-  if (!f) {
+  if (!f)
+    {
       libgregorio_message (_
 			   ("call with NULL file"),
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
-			   return;
-  }
+      return;
+    }
 
   if (score->number_of_voices != 1)
     {
@@ -69,6 +72,14 @@ write_score (FILE * f, gregorio_score * score)
 	}
     }
 // first we draw the initial (first letter) and the initial key
+  if (score->initial_style == NO_INITIAL) {
+    fprintf(f, "\\grenoinitial %%\n");
+  }
+  else {
+  if (score->initial_style == BIG_INITIAL) {
+    fprintf(f, "\\setbiginitial %%\n");
+    line = 1;
+  }
   first_text = libgregorio_first_text (score);
   if (first_text)
     {
@@ -82,6 +93,7 @@ write_score (FILE * f, gregorio_score * score)
       fprintf (f, "}%%\n");
       first_syllable = SKIP_FIRST_LETTER;
     }
+  }
   if (score->mode != 0)
     {
       fprintf (f, "\\gregorianmode{%d}%%\n", score->mode);
@@ -93,9 +105,9 @@ write_score (FILE * f, gregorio_score * score)
   fprintf (f, "\\beginscore %%\n");
   if (score->first_voice_info)
     {
-      libgregorio_det_step_and_line_from_key (score->first_voice_info->
-					      initial_key, &clef_letter,
-					      &clef_line);
+      libgregorio_det_step_and_line_from_key (score->
+					      first_voice_info->initial_key,
+					      &clef_letter, &clef_line);
     }
   else
     {
@@ -107,12 +119,11 @@ write_score (FILE * f, gregorio_score * score)
   while (current_syllable)
     {
       libgregorio_gregoriotex_write_syllable (f, current_syllable,
-					      &first_syllable);
+					      &first_syllable, &line);
       current_syllable = current_syllable->next_syllable;
     }
   fprintf (f, "\\endgregorioscore %%\n");
 }
-
 
 
 void
@@ -132,9 +143,10 @@ libgregorio_gregoriotex_write_voice_info (FILE * f,
 void
 libgregorio_gregoriotex_write_syllable (FILE * f,
 					gregorio_syllable * syllable,
-					char *first_syllable)
+					char *first_syllable, unsigned char * line_number)
 {
   gregorio_element *current_element;
+  gregorio_line *line;
 
   if (!syllable)
     {
@@ -148,7 +160,25 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 
       if ((syllable->elements)[0]->type == GRE_END_OF_LINE)
 	{
-	  fprintf (f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
+	  line = (gregorio_line *) malloc (sizeof (gregorio_line));
+	  libgregorio_gregoriotex_seeklinespaces (syllable->
+						  next_syllable, line);
+	  if (line->additional_bottom_space == 0
+	      && line->additional_top_space == 0)
+	    {
+	      fprintf (f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
+	    }
+	  else
+	    {
+	      fprintf (f, "%%\n%%\n\\grenewlinewithspace{%u}{%u}%%\n%%\n%%\n",
+		       line->additional_top_space,
+		       line->additional_bottom_space);
+	    }
+	  free (line);
+	  if (*line_number == 1) {
+	    fprintf(f, "\\adjustthirdline %%\n");
+	    *line_number = 0;  
+	  }
 	  return;
 	}
       if ((syllable->elements)[0]->type == GRE_BAR)
@@ -156,7 +186,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	  if (!syllable->next_syllable && !syllable->text
 	      && (syllable->elements)[0]->element_type == B_DIVISIO_FINALIS)
 	    {
-	      fprintf (f, "\\finaldivisiofinalis %%\n");
+	      fprintf (f, "\\finaldivisiofinalis{0}%%\n");
 	      return;
 	    }
 	  else
@@ -186,11 +216,11 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
   if (syllable->next_syllable)
     {
       libgregorio_gregoriotex_write_next_first_text (f,
-						     syllable->next_syllable->
-						     text);
+						     syllable->
+						     next_syllable->text);
       fprintf (f, "{%d}{",
-	       libgregorio_gregoriotex_syllable_first_type (syllable->
-							    next_syllable));
+	       libgregorio_gregoriotex_syllable_first_type
+	       (syllable->next_syllable));
     }
   else
     {
@@ -203,11 +233,12 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
       libgregorio_gregoriotex_write_translation (f, syllable->translation);
       fprintf (f, "}%%\n");
     }
-  if (syllable->next_syllable && (syllable->next_syllable->elements)[0] && (syllable->next_syllable->elements)[0]->type == GRE_END_OF_LINE)
-	{
-	  fprintf (f, "%%\n\\lastofline %%\n");
-	}
-    
+  if (syllable->next_syllable && (syllable->next_syllable->elements)[0]
+      && (syllable->next_syllable->elements)[0]->type == GRE_END_OF_LINE)
+    {
+      fprintf (f, "%%\n\\lastofline %%\n");
+    }
+
   fprintf (f, "}{%%\n");
 
   current_element = (syllable->elements)[0];
@@ -249,7 +280,26 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	}
       if (current_element->type == GRE_END_OF_LINE)
 	{
-	  fprintf (f, "\\grenewline %%\n");
+	  line = (gregorio_line *) malloc (sizeof (gregorio_line));
+	  // here we suppose we don't have two linebreaks in the same syllable
+	  libgregorio_gregoriotex_seeklinespaces (syllable->
+						  next_syllable, line);
+	  if (line->additional_bottom_space == 0
+	      && line->additional_top_space == 0)
+	    {
+	      fprintf (f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
+	    }
+	  else
+	    {
+	      fprintf (f, "%%\n%%\n\\grenewlinewithspace{%u}{%u}%%\n%%\n%%\n",
+		       line->additional_top_space,
+		       line->additional_bottom_space);
+	    }
+	  free (line);
+ 	  if (*line_number == 1) {
+	    fprintf(f, "\\adjustthirdline %%\n");
+	    *line_number = 0;  
+	  }
 	  current_element = current_element->next_element;
 	  continue;
 	}
@@ -267,6 +317,102 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
       || syllable->position == WORD_ONE_SYLLABLE || !syllable->text)
     {
       fprintf (f, "%%\n");
+    }
+}
+
+
+void
+libgregorio_gregoriotex_seeklinespaces (gregorio_syllable * syllable,
+					gregorio_line * line)
+{
+  gregorio_element *element;
+  gregorio_glyph *glyph;
+  gregorio_note *note;
+
+  if (line == NULL || syllable == NULL)
+    {
+      libgregorio_message (_
+			   ("call with NULL pointer"),
+			   "libgregorio_gregoriotex_write_score", ERROR, 0);
+      return;
+    }
+
+  line->additional_top_space = 0;
+  line->additional_bottom_space = 0;
+
+  while (syllable)
+    {
+      element = (syllable->elements)[0];
+      while (element)
+	{
+	  if (element->type == GRE_END_OF_LINE)
+	    {
+	      return;
+	    }
+	  if (element->type != GRE_ELEMENT)
+	    {
+	      element = element->next_element;
+	      continue;
+	    }
+	  glyph = element->first_glyph;
+	  while (glyph)
+	    {
+	      if (glyph->type != GRE_GLYPH)
+		{
+		  glyph = glyph->next_glyph;
+		  continue;
+		}
+	      note = glyph->first_note;
+	      while (note)
+		{
+		  switch (note->pitch)
+		    {
+		    case 'a':
+		      if (line->additional_bottom_space < 3)
+			{
+			  line->additional_bottom_space = 3;
+			}
+		      break;
+		    case 'b':
+		      if (line->additional_bottom_space < 2)
+			{
+			  line->additional_bottom_space = 2;
+			}
+		      break;
+		    case 'c':
+		      if (line->additional_bottom_space < 1)
+			{
+			  line->additional_bottom_space = 1;
+			}
+		      break;
+		    case 'm':
+		      if (line->additional_top_space < 3)
+			{
+			  line->additional_top_space = 3;
+			}
+		      break;
+		    case 'l':
+		      if (line->additional_top_space < 2)
+			{
+			  line->additional_top_space = 2;
+			}
+		      break;
+		    case 'k':
+		      if (line->additional_top_space < 1)
+			{
+			  line->additional_top_space = 1;
+			}
+		      break;
+		    default:
+		      break;
+		    }
+		  note = note->next_note;
+		}
+	      glyph = glyph->next_glyph;
+	    }
+	  element = element->next_element;
+	}
+      syllable = syllable->next_syllable;
     }
 }
 
@@ -321,7 +467,6 @@ libgregorio_gtex_write_end_for_two (FILE * f, unsigned char style)
 void
 libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char)
 {
-  printf("prout : %ls\n", special_char);
   if (!wcscmp (special_char, L"A/"))
     {
       fprintf (f, "\\Abar");
@@ -1463,7 +1608,7 @@ gregoriotex_determine_liquescentia_number (unsigned int
       liquescentia = GL_NO_LIQUESCENTIA;
       break;
     }
-    
+
   return factor * liquescentia;
 }
 

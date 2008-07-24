@@ -83,6 +83,10 @@ write_score (FILE * f, gregorio_score * score)
     {
       fprintf (f, "mode: %d;\n", score->mode);
     }
+  if (score->initial_style != NORMAL_INITIAL)
+    {
+      fprintf (f, "initial-style: %d;\n", score->initial_style);
+    }
   if (score->number_of_voices == 0)
     {
       libgregorio_message (_("gregorio_score seems to be empty"),

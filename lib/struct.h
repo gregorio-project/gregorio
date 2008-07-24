@@ -227,6 +227,8 @@ typedef struct gregorio_score {
   char *office_part;
 // the mode of a song is between 1 and 8
   char mode;
+// field giving informations on the initial (no initial, normal initial or two lines initial)
+  char initial_style;
 // these preambles will be added (in the future) as preamble in case
 // of OpusTeX, MusiXTeX or Lilypond output.
   char *lilypond_preamble;
@@ -402,7 +404,11 @@ libgregorio_set_octave_and_step_from_pitch (char *step,
 
 #define MONOPHONY 0
 
+// the different initial styles
 
+#define NO_INITIAL 0
+#define NORMAL_INITIAL 1
+#define BIG_INITIAL 2
 
 #define NO_ALTERATION USELESS_VALUE
 #define FLAT GRE_FLAT

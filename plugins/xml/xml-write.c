@@ -637,6 +637,10 @@ libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
     {
       fprintf (f, "<office-part>%s</office-part>", score->office_part);
     }
+  if (score->initial_style)
+    {
+      fprintf (f, "<initial-style>%d</initial-style>", score->initial_style);
+    }
   if (score->mode)
     {
       fprintf (f, "<mode>%d</mode>", score->mode);

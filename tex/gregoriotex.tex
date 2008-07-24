@@ -109,11 +109,7 @@
 \def\grenewline{%
 \updateadditionalspaces{0}{0}%
 \lastoflinecount=2\relax %
-\localleftbox{%
-\copy\Lines% draws the lines
-\unkern %
-\hbox{\copy\Leftbox\hskip\afterclefnospace}%
-}%
+\updateleftbox %
 \penalty-10001 %
 \relax%
 }
@@ -124,11 +120,7 @@
 \def\grenewlinewithspace#1#2{%
 \updateadditionalspaces{#1}{#2}%
 \lastoflinecount=2\relax %
-\localleftbox{%
-\copy\Lines% draws the lines
-\unkern %
-\hbox{\copy\Leftbox\hskip\afterclefnospace}
-}%
+\updateleftbox %
 \penalty-10001 %
 \relax%
 }
@@ -216,39 +208,56 @@
 %% macros for the typesetting of the initial
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%this dimention is the additional space that we have to add to the localleftbox sometimes. For now it is used only for the initials on two lines
+\newdimen\additionalleftspace
+
 %% box containing the initial, and dimen containing its width (and the width of the space after)
 \newbox\Initial
 \newdimen\initialwidth
-\initialwidth=0pt
+\initialwidth= 0 pt
 
 
 % biginitial means that the inital takes two lines
 \newcount\biginitial
 
+% macro to call before the call of \initial
 \def\setbiginitial{%
 \global\biginitial=1\relax %
 \relax %
 }
 
+% macro to call before the first syllable, but after setinitialclef
 \def\adjustsecondline{%
-\smallsecondline %
-\localleftbox{%
-\kern\initialwidth %
-\copy\Lines % draws the lines
-\unkern %
-\hbox{\copy\Leftbox\hskip\spaceafterlineclef}%
-}
+\additionalleftspace=\initialwidth %
+\updateleftbox %
 \relax %
 }
 
+% macro to call during the second line
 \def\adjustthirdline {%
-\normallines %
-\localleftbox{%
-\copy\Lines % draws the lines
-\unkern %
-\hbox{\copy\Leftbox\hskip\spaceafterlineclef}%
-}
+\additionalleftspace= 0 pt%
+\updateleftbox %
 \relax %
+}
+
+\def\updateleftbox{%
+\updatelinewidth %
+\localleftbox{%
+\kern\additionalleftspace %
+\copy\Lines% draws the lines
+\unkern %
+\hbox{\copy\Leftbox\hskip\afterclefnospace}%
+}%
+}
+
+\def\updatelinewidth{%
+\ifdim\additionalleftspace=0pt%
+\else %
+\temp=\stafflinewidth %
+\global\advance\stafflinewidth by -\additionalleftspace %
+\generatelines %
+\global\stafflinewidth=\temp %
+\fi %
 }
 
 \def\greinitialformat#1{%

@@ -968,7 +968,7 @@ end_style_determination ()
 
 %}
 
-%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANOTATION AUTHOR DATE MANUSCRIPT REFERENCE STORAGE_PLACE TRANSLATOR TRANSLATION_DATE STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE MODE GREGORIOTEX_FONT SOFTWARE_USED NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES INITIAL_KEY VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END
+%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANOTATION AUTHOR DATE MANUSCRIPT REFERENCE STORAGE_PLACE TRANSLATOR TRANSLATION_DATE STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT SOFTWARE_USED NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES INITIAL_KEY VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END
 
 %%
 
@@ -999,7 +999,7 @@ number_of_voices_definition:
 name_definition:
 	NAME attribute {
 	if ($2==NULL) {
-	libgregorio_message("name can't be empty","libgregorio_det_score",WARNING,0);
+	libgregorio_message("name can't be empty","libgregorio_det_score", WARNING, 0);
 	}
 	if (score->name) {
 	libgregorio_message(_("several name definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING, 0);
@@ -1055,12 +1055,22 @@ office_part_definition:
 
 mode_definition:
 	MODE attribute {
-	if (score->office_part) {
+	if (score->mode) {
 	libgregorio_message(_("several mode definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
 	}
 	if ($2)
 	  {
 	    score->mode=atoi($2);
+	    free($2);
+	  }
+	}
+	;
+
+initial_style_definition:
+	INITIAL_STYLE attribute {
+	if ($2)
+	  {
+	    score->initial_style=atoi($2);
 	    free($2);
 	  }
 	}
@@ -1231,6 +1241,8 @@ definition:
 	anotation_definition
 	|
 	office_part_definition
+	|
+	initial_style_definition
 	|
 	mode_definition
 	|

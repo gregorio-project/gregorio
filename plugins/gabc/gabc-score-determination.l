@@ -76,6 +76,9 @@ char *error;
 <INITIAL>office-part {
          return OFFICE_PART;
       }
+<INITIAL>initial-style {
+         return INITIAL_STYLE;
+      }
 <INITIAL>mode {
          return MODE;
       }

@@ -577,6 +577,7 @@ libgregorio_new_score ()
   new_score->first_syllable = NULL;
   new_score->number_of_voices = 1;
   new_score->name = NULL;
+  new_score->initial_style = NORMAL_INITIAL;
   new_score->office_part = NULL;
   new_score->lilypond_preamble = NULL;
   new_score->opustex_preamble = NULL;
@@ -1738,7 +1739,7 @@ libgregorio_write_first_letter (gregorio_character * current_character,
 	    {
 	      switch (current_character->cos.s.style)
 		{
-		case ST_CENTER:
+		case ST_CENTER:		  
 		  return;
 		  break;
 		case ST_VERBATIM:

@@ -34,6 +34,7 @@
 \unkern %
 \typekey{#1}{#2}{0}{#3}%
 }%
+\updateleftbox %
 \relax%
 }
 
@@ -723,12 +724,18 @@
 \newcount\keeprightbox
 
 %macro to end a line with a divisio finalis
-\def\finaldivisiofinalis{%
+\def\finaldivisiofinalis#1{%
+\ifcase#1% case 0
+\barsyllable{}{}{}{1}{}{}{0}{}{%
+\divisiofinalis %
+}%
+\or % case 1
 \hskip\spacebeforefinalfinalis %
 \global\keeprightbox=1 %
 \localrightbox{%
 \divisiofinalissymbol %
 }%
+\fi %
 \relax%
 }
 

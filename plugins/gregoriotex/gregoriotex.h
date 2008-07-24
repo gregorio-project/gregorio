@@ -104,9 +104,18 @@ Here are the different types, they must be the same as in squarize.py
 #define TT_BOTTOM 0
 #define TT_TOP 1
 
+// a structure containing the result of seekadditionalspaces
+
+typedef struct gregorio_line {
+unsigned char additional_top_space;
+unsigned char additional_bottom_space;
+} gregorio_line;
+
+
+
 void write_score (FILE * f, gregorio_score * score);
 void libgregorio_gregoriotex_write_voice_info (FILE * f, gregorio_voice_info * voice_info);
-void libgregorio_gregoriotex_write_syllable (FILE * f, gregorio_syllable * syllable, char *first_syllable);
+void libgregorio_gregoriotex_write_syllable (FILE * f, gregorio_syllable * syllable, char *first_syllable, unsigned char *line_number);
 void libgregorio_gregoriotex_write_text (FILE * f, gregorio_character *first_character, char *first_syllable);
 void libgregorio_gregoriotex_write_translation (FILE *f, gregorio_character *translation);
 void libgregorio_gregoriotex_write_element (FILE * f, gregorio_syllable * syllable, gregorio_element * element);
@@ -144,4 +153,6 @@ void libgregorio_gregoriotex_write_punctum_mora (FILE * f, gregorio_glyph * glyp
 void libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph, int i, char type, char sign_type, gregorio_note * current_note, char *number, char *height);
 
 void libgregorio_gregoriotex_write_additional_line (FILE * f, gregorio_glyph *current_glyph, int i, char type, char bottom_or_top, gregorio_note * current_note);
+
+void libgregorio_gregoriotex_seeklinespaces (gregorio_syllable * syllable, gregorio_line * line);
 #endif

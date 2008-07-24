@@ -59,6 +59,10 @@ write_score (FILE * f, gregorio_score * score)
     {
       fprintf (f, "   office_part               %s\n", score->office_part);
     }
+  if (score->initial_style)
+    {
+      fprintf (f, "   initial_style             %d\n", score->initial_style);
+    }
   if (score->mode)
     {
       fprintf (f, "   mode                      %d\n", score->mode);
