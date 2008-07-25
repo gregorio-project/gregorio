@@ -54,41 +54,18 @@ endif
 
 	dh_clean 
 
-FONTDIR = $(CURDIR)/fonts
-GREGORIOTEXDIR = $(CURDIR)/debian/gregoriotex/usr/share/texmf
-
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
-	dh_installdirs 
+	dh_clean -k  
 
 	$(MAKE) DESTDIR=$(CURDIR)/debian/gregorio install
-	cp $(FONTDIR)/*.map $(GREGORIOTEXDIR)/fonts/map/dvips/public/gregoriotex
-	cp $(CURDIR)/tex/gregoriotex*.tex $(GREGORIOTEXDIR)/tex/gregoriotex
-	cp $(CURDIR)/tex/gregoriotex.sty $(GREGORIOTEXDIR)/tex/latex/gregoriotex
-	cp $(FONTDIR)/gregorio*.pfb $(GREGORIOTEXDIR)/fonts/type1/public/gregoriotex/gregorio
-	cp $(FONTDIR)/gregorio*.tfm $(GREGORIOTEXDIR)/fonts/tfm/public/gregoriotex/gregorio
-	cp $(FONTDIR)/gregorio*.ovf $(GREGORIOTEXDIR)/fonts/ovf/public/gregoriotex/gregorio
-	cp $(FONTDIR)/gregorio*.ovp $(GREGORIOTEXDIR)/fonts/ovp/public/gregoriotex/gregorio
-	cp $(FONTDIR)/gregorio*.ofm $(GREGORIOTEXDIR)/fonts/ofm/public/gregoriotex/gregorio
-	cp $(FONTDIR)/parmesan*.pfb $(GREGORIOTEXDIR)/fonts/type1/public/gregoriotex/parmesan
-	cp $(FONTDIR)/parmesan*.tfm $(GREGORIOTEXDIR)/fonts/tfm/public/gregoriotex/parmesan
-	cp $(FONTDIR)/parmesan*.ovf $(GREGORIOTEXDIR)/fonts/ovf/public/gregoriotex/parmesan
-	cp $(FONTDIR)/parmesan*.ovp $(GREGORIOTEXDIR)/fonts/ovp/public/gregoriotex/parmesan
-	cp $(FONTDIR)/parmesan*.ofm $(GREGORIOTEXDIR)/fonts/ofm/public/gregoriotex/parmesan
-	cp $(FONTDIR)/greciliae*.pfb $(GREGORIOTEXDIR)/fonts/type1/public/gregoriotex/greciliae
-	cp $(FONTDIR)/greciliae*.tfm $(GREGORIOTEXDIR)/fonts/tfm/public/gregoriotex/greciliae
-	cp $(FONTDIR)/greciliae*.ovf $(GREGORIOTEXDIR)/fonts/ovf/public/gregoriotex/greciliae
-	cp $(FONTDIR)/greciliae*.ovp $(GREGORIOTEXDIR)/fonts/ovp/public/gregoriotex/greciliae
-	cp $(FONTDIR)/greciliae*.ofm $(GREGORIOTEXDIR)/fonts/ofm/public/gregoriotex/greciliae
-	cp $(FONTDIR)/gresym.pfb $(GREGORIOTEXDIR)/fonts/type1/public/gregoriotex/gresym
-	cp $(FONTDIR)/gresym.tfm $(GREGORIOTEXDIR)/fonts/tfm/public/gregoriotex/gresym
+	dh_install
 	echo "MixedMap /usr/share/texmf/fonts/map/dvips/public/gregoriotex/gregorio.map" > $(CURDIR)/debian/gregoriotex.maps
 	echo "MixedMap /usr/share/texmf/fonts/map/dvips/public/gregoriotex/parmesan.map" >> $(CURDIR)/debian/gregoriotex.maps
 	echo "MixedMap /usr/share/texmf/fonts/map/dvips/public/gregoriotex/greciliae.map" >> $(CURDIR)/debian/gregoriotex.maps
 	echo "MixedMap /usr/share/texmf/fonts/map/dvips/public/gregoriotex/gresym.map" >> $(CURDIR)/debian/gregoriotex.maps
-	dh_installtex
+	dh_installtex -pgregoriotex
 	
 	dh_installdocs
 	dh_installexamples -A examples/*.tex examples/PopulusSion.gabc

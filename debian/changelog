@@ -1,3 +1,12 @@
+gregorio (0.9-1) unstable; urgency=low
+
+  * New upstream version:
+     - stabilizing the TeX API
+     - adding support for Cygwin compilation
+     - adding too many new features to be listed
+
+ -- Elie Roux <elie.roux@telecom-bretagne.eu>  Fri, 25 Jul 2008 14:19:26 +0200
+
 gregorio (0.3-1) unstable; urgency=low
 
   * New upstream version:
