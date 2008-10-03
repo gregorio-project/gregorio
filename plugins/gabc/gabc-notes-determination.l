@@ -79,11 +79,11 @@ z {
 ::      {
 	libgregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_FINALIS);
 	}
-x[a-mA-M]       {
-	libgregorio_add_special_as_note (&current_note, GRE_FLAT, gabc_notes_determination_text[1]);
+[a-mA-M]x       {
+	libgregorio_add_special_as_note (&current_note, GRE_FLAT, gabc_notes_determination_text[0]);
 	}
-y[a-mA-M]       {
-	libgregorio_add_special_as_note (&current_note, GRE_NATURAL, gabc_notes_determination_text[1]);
+[a-mA-M]y       {
+	libgregorio_add_special_as_note (&current_note, GRE_NATURAL, gabc_notes_determination_text[0]);
 	}
 !       {
 	libgregorio_add_special_as_note (&current_note, GRE_SPACE, SP_ZERO_WIDTH);
