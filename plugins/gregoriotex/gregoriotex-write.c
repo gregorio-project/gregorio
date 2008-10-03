@@ -1156,8 +1156,18 @@ libgregorio_gregoriotex_write_vepisemus (FILE * f,
   *height=current_note->pitch -1;\
   }
 
+//same as before, but for one note and then another one higher, when the sign is on the last
+#define normal_height_top()\
+  if (sign_type == TT_H_EPISEMUS) {\
+  *height=current_note->h_episemus_top_note+1;\
+  }\
+  else {\
+  *height=current_note->pitch +2;\
+  }
+
+// case of one note and then one lower, when the sign is on the first
 #define height_layered_notes()\
-  if (sign_type== TT_H_EPISEMUS) {\
+  if (sign_type == TT_H_EPISEMUS) {\
   *height=current_note->h_episemus_top_note+1;\
   }\
   else\
@@ -1216,7 +1226,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	    {
 	      *number = 18;
 	    }
-	  height_layered_notes ();
+	  normal_height_top();
 	}
       break;
     case T_PESQUADRATUM:
@@ -1430,7 +1440,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	  break;
 	default:
 	  number_last_note (18);
-	  height_layered_notes ();
+	  normal_height_top();
 	  break;
 	}
       break;
