@@ -595,7 +595,10 @@ def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
         if shape=='flexus_nobar':
             write_deminutus(0, i, glyphname, length=0, tosimplify=1, firstbar=0)
         else:
-            write_first_bar(i, glyphname)
+            if shape=='flexus':
+                write_first_bar(1, glyphname)
+            else:
+                write_first_bar(2, glyphname)
             write_deminutus(0, i, glyphname, length=0, tosimplify=1, firstbar=1)
         length=width_flexusdeminutus
     else:
