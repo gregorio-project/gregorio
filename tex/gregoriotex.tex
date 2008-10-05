@@ -261,12 +261,12 @@
 }
 
 \def\greinitialformat#1{%
-{\fontofinitial #1}%
+{\grefontofinitial #1}%
 \relax %
 }
 
 \def\grebiginitialformat#1{%
-{\fontofbiginitial #1}%
+{\grefontofbiginitial #1}%
 \relax %
 }
 
@@ -751,15 +751,15 @@
 \font\gregoriansymbolfont=gresym at 12pt
 
 \def\gretextformat#1{%
-{\textfont #1}%
+{\gretextfont #1}%
 \relax %
 }
 
 % loading of default font
-\font\textfont=pncr at 12pt
-\font\fontofinitial=pncr at 40pt
-\font\fontofbiginitial=pncr at 80pt
-\font\fontoftranslation=pncr at 12pt
+\font\gretextfont=pncr at 12pt
+\font\grefontofinitial=pncr at 40pt
+\font\grefontofbiginitial=pncr at 80pt
+\font\grefontoftranslation=pncr at 12pt
 
 \def\setgrefactor#1{%
 \global\grefactor=#1\relax %
