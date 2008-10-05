@@ -902,6 +902,24 @@ A function that write the signs of a glyph, which has the type type (T_*, not G_
 
 */
 
+// a macro checking if an additional line is needed and, if it is the case,
+// calling the additional line function. It must be called after the vepisemus
+// but before the punctum mora
+
+#define additional_line()\
+    	      if (current_note->pitch < 'c')\
+	{\
+	  libgregorio_gregoriotex_write_additional_line (f, glyph, i, type,\
+							 TT_BOTTOM,\
+							 current_note);\
+	}\
+      if (current_note->pitch > 'k')\
+	{\
+	  libgregorio_gregoriotex_write_additional_line (f, glyph, i, type,\
+							 TT_TOP,\
+							 current_note);\
+	}
+
 void
 libgregorio_gregoriotex_write_signs (FILE * f, char type,
 				     gregorio_glyph * glyph,
@@ -913,41 +931,36 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
   char block_hepisemus = 0;
   while (current_note)
     {
-      if (current_note->pitch < 'c')
-	{
-	  libgregorio_gregoriotex_write_additional_line (f, glyph, i, type,
-							 TT_BOTTOM,
-							 current_note);
-	}
-      if (current_note->pitch > 'k')
-	{
-	  libgregorio_gregoriotex_write_additional_line (f, glyph, i, type,
-							 TT_TOP,
-							 current_note);
-	}
       switch (current_note->signs)
 	{
 	case _PUNCTUM_MORA:
+	  additional_line();
 	  libgregorio_gregoriotex_write_punctum_mora (f, glyph, current_note);
 	  break;
 	case _AUCTUM_DUPLEX:
-	  fprintf (f, "\\augmentumduplex{%c}%%\n", current_note->pitch);
+	  additional_line();
+	  libgregorio_gregoriotex_write_auctum_duplex(f, glyph, current_note);
+
 	  break;
 	case _V_EPISEMUS:
 	  libgregorio_gregoriotex_write_vepisemus (f, glyph, i, type,
 						   current_note);
+	  additional_line();
 	  break;
 	case _V_EPISEMUS_PUNCTUM_MORA:
 	  libgregorio_gregoriotex_write_vepisemus (f, glyph, i, type,
 						   current_note);
+	  additional_line();
 	  libgregorio_gregoriotex_write_punctum_mora (f, glyph, current_note);
 	  break;
 	case _V_EPISEMUS_AUCTUM_DUPLEX:
 	  libgregorio_gregoriotex_write_vepisemus (f, glyph, i, type,
 						   current_note);
-	  fprintf (f, "\\augmentumduplex{%c}%%\n", current_note->pitch);
+	  additional_line();
+	  libgregorio_gregoriotex_write_auctum_duplex(f, glyph, current_note);
 	  break;
 	default:
+	  additional_line();
 	  break;
 	}
       if (current_note->h_episemus_type != H_NO_EPISEMUS
@@ -1003,6 +1016,24 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	}
     }
 }
+
+
+void
+libgregorio_gregoriotex_write_auctum_duplex (FILE * f,
+					    gregorio_glyph * glyph,
+					    gregorio_note * current_note)
+{
+// in the case of a pes, we must not set the height of the augmentum duplex to current_note->pitch but to current_note->pitch -2...
+  if (glyph->glyph_type == G_PODATUS) 
+    {
+      fprintf (f, "\\augmentumduplex{%c}%%\n", current_note->pitch - 2);
+    }
+  else 
+    {
+	  fprintf (f, "\\augmentumduplex{%c}%%\n", current_note->pitch);
+    }
+}
+
 
 void
 libgregorio_gregoriotex_write_punctum_mora (FILE * f,
