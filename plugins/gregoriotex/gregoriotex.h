@@ -101,7 +101,7 @@ Here are the different types, they must be the same as in squarize.py
 // very temporary types
 #define TT_H_EPISEMUS 0
 #define TT_V_EPISEMUS 1
-#define TT_BOTTOM 0
+#define TT_BOTTOM 2
 #define TT_TOP 1
 
 // a structure containing the result of seekadditionalspaces
