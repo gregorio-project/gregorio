@@ -2064,7 +2064,7 @@ libgregorio_gregoriotex_write_note (FILE * f,
 	{
 //means that it is the first note of the puncta inclinata sequence
 	  temp = note->previous_note->pitch - note->pitch;
-	  if (temp < -2 || temp > 2)
+	  if (temp < -1 || temp > 1)
 	    {
 	      fprintf (f, "\\endofglyph{1}%%\n");
 	    }
