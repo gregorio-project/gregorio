@@ -271,7 +271,12 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	}
       if (current_element->type == GRE_BAR)
 	{
+	  if (current_element->next_element) {
+	  fprintf (f, "\\in");
+	  }
+	  else {
 	  fprintf (f, "\\");
+	  }
 	  libgregorio_gregoriotex_write_bar (f,
 					     current_element->element_type);
 	  fprintf (f, "%%\n");
