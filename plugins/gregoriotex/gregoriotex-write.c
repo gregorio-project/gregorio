@@ -676,7 +676,7 @@ libgregorio_gregoriotex_write_element (FILE * f,
 	}
       if (current_glyph->type == GRE_NATURAL)
 	{
-	  fprintf (f, "\\natural{%c}%%\n ", current_glyph->glyph_type);
+	  fprintf (f, "\\natural{%c}%%\n", current_glyph->glyph_type);
 	  current_glyph = current_glyph->next_glyph;
 	  continue;
 	}
