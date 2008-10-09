@@ -278,10 +278,10 @@
 \calculateglyphraisevalue{#1}{3}%
 \ifcase#2 %
 %case 0
-\vepisemusaux{0}{\char 17}{0}%
+\vepisemusaux{0}{\char 17}{1}%
 \or%
 %case 1
-\vepisemusaux{0}{\char 13}{0}%
+\vepisemusaux{0}{\char 13}{1}%
 \or%
 %case 2
 % a kind of flexus, it has the good width
@@ -328,7 +328,7 @@
 \vepisemusaux{\char 4097}{\char 17}{1}%
 \or%
 %case 18
-\vepisemusaux{0}{\char 74}{0}%
+\vepisemusaux{0}{\char 74}{1}%
 \or%
 %case 19
 \vepisemusaux{0}{\char 28}{2}%
@@ -771,7 +771,7 @@
 \global\firstisalteration=1\relax %
 \fi %
 \calculateglyphraisevalue{#1}{0}%
-\setbox\Tempwidth=\hbox{\gregorianfont \char 6}%
+\setbox\Tempwidth=\hbox{\gregorianfont \char 7}%
 \tempwidth=\wd\Tempwidth%
 \raise \glyphraisevalue%
 \copy\Tempwidth%
