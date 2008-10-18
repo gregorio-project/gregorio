@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-char *error;
 %}
 
 %x attribute
@@ -135,8 +134,9 @@ char *error;
 	return END_OF_DEFINITIONS;
 	 }
 <INITIAL>. {
-	snprintf(error,70,gettext("unrecognized character: %c in definition part"),gabc_score_determination_text[0]);
-	libgregorio_message (error,
+    char *dirtyvar = malloc(71*sizeof(char));
+	snprintf(dirtyvar,70,gettext("unrecognized character: \"%c\" in definition part"),gabc_score_determination_text[0]);
+	libgregorio_message (dirtyvar,
 		      "libgregorio_det_score", ERROR, 0);
 	}
 <score>[^\{\}\(\[\]<]+ {

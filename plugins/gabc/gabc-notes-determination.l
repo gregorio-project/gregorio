@@ -31,8 +31,6 @@ This file is quite huge but quite simple: it is just all the expressions you can
 	libgregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]), shape, signs, liquescentia,h_episemus)
 
 gregorio_note *current_note;
-char *error;
-
 %}
 
 %option stack
@@ -812,8 +810,9 @@ ____ 	{
 	lex_add_note(0, S_STROPHA, _V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTA,H_ONE);
 		}
 .       {	
-	snprintf(error,70,gettext("unrecognized character: %c"),gabc_notes_determination_text[0]);
-	libgregorio_message (error,
+    char *dirtyvar = malloc(71*sizeof(char));
+	snprintf(dirtyvar,70,gettext("unrecognized character: \"%c\""),gabc_notes_determination_text[0]);
+	libgregorio_message (dirtyvar,
 		      "libgregorio_det_notes_from_string", ERROR, 0);
 	}
 
@@ -821,8 +820,9 @@ ____ 	{
 
 void gabc_notes_determination_error(const char *str)
 {
-	snprintf(error,150,str);
-      libgregorio_message (error,
+    char *dirtyvartwo = malloc(151*sizeof(char));
+	snprintf(dirtyvartwo,150,str);
+      libgregorio_message (dirtyvartwo,
 		      "libgregorio_det_notes_from_string", ERROR, 0);
 }
 

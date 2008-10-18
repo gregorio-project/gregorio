@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 FILE *error_out;
 char *file_name = NULL;
 char verbosity_mode = 0;
+char debug_messages = 0;
 
 
 void
@@ -46,6 +47,12 @@ libgregorio_set_verbosity_mode (char new_mode)
   verbosity_mode = new_mode;
 }
 
+void
+libgregorio_set_debug_messages (char new_mode)
+{
+  debug_messages = new_mode;
+}
+
 const char *
 verbosity_to_str (char verbosity)
 {
@@ -53,13 +60,13 @@ verbosity_to_str (char verbosity)
   switch (verbosity)
     {
     case WARNING:
-      str = _(" warning:");
+      str = _("warning:");
       break;
     case ERROR:
-      str = _(" error:");
+      str = _("error:");
       break;
     case FATAL_ERROR:
-      str = _(" fatal error:");
+      str = _("fatal error:");
       break;
     default: //VERBOSE, for example
       str = " ";
@@ -73,6 +80,12 @@ libgregorio_message (const char *string, const char *function_name, char verbosi
 		int line_number)
 {
   const char *verbosity_str;
+
+  if (debug_messages == 0)
+    {
+      line_number=0;
+      function_name=NULL;    
+    }
 
   if (!error_out)
     {
@@ -99,7 +112,7 @@ libgregorio_message (const char *string, const char *function_name, char verbosi
 	{
 	  if (!file_name)
 	    {
-	      fprintf (error_out, "line %d: in function `%s':%s %s\n",
+	      fprintf (error_out, "line %d: in function `%s': %s %s\n",
 		       line_number, function_name, verbosity_str, string);
 	      return;
 	    }
@@ -113,13 +126,13 @@ libgregorio_message (const char *string, const char *function_name, char verbosi
 	{			//no function_name specified
 	  if (!file_name)
 	    {
-	      fprintf (error_out, "line %d:%s %s\n", line_number,
+	      fprintf (error_out, "line %d: %s %s\n", line_number,
 		       verbosity_str, string);
 	      return;
 	    }
 	  else
 	    {
-	      fprintf (error_out, "%d:%s %s\n", line_number,
+	      fprintf (error_out, "%d: %s %s\n", line_number,
 		       verbosity_str, string);
 	    }
 	}
@@ -136,7 +149,7 @@ libgregorio_message (const char *string, const char *function_name, char verbosi
 	    }
 	  else
 	    {*/
-	      fprintf (error_out, "in function `%s':%s %s\n",
+	      fprintf (error_out, "in function `%s': %s %s\n",
 		       function_name, verbosity_str, string);
 	    //}
 	}
