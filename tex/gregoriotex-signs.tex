@@ -746,7 +746,7 @@
 % a count saying if the first glyph is an alteration
 \newcount\firstisalteration
 
-\def\flat#1{%
+\def\flat#1#2{%
 \ifnum\the\firstglyph=1\relax %
 \global\firstisalteration=1\relax %
 \fi %
@@ -766,7 +766,7 @@
 \relax%
 }
 
-\def\natural#1{%
+\def\natural#1#2{%
 \ifnum\the\firstglyph=1\relax %
 \global\firstisalteration=1\relax %
 \fi %
