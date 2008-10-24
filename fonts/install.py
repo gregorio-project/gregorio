@@ -43,10 +43,14 @@ def main():
                 print "error: can't write in %s" % basedir
 
 def patch_cygwin():
+    # just some symlinks for texlive to work fine under cygwin
     # test to know if it is a cygwin system
     if access('/cygdrive/c/Program Files/texlive/2008', F_OK):
         # we have to copy some files
         basename='/cygdrive/c/Program Files/texlive/2008'
+        # we don't patch it two times, otherwise error occur
+        if access('%s/bin/win32/a2ping' % basename, F_OK):
+            return
         copy_cyg(basename, 'texmf/scripts/a2ping/a2ping.pl', 'a2ping')
         copy_cyg(basename, 'texmf-dist/scripts/context/stubs/unix/context', 'context')
         copy_cyg(basename, 'texmf-dist/scripts/dviasm/dviasm.py', 'dviasm')
@@ -88,7 +92,7 @@ def patch_cygwin():
         copy_cyg(basename, 'texmf/scripts/xindy/xindy.pl', 'xindy')
 
 def copy_cyg(basename, src, dst):
-    shutil.copy("%s/%s" %(basename, src), "%s/bin/win32/%s" %(basename, dst))
+    symlink("%s/%s" %(basename, src), "%s/bin/win32/%s" %(basename, dst))
 
 def install(basedir):
     makedir(basedir, 'fonts/tfm/public/gregoriotex')
@@ -111,32 +115,41 @@ def install(basedir):
     for fontname in Fonts:
         makedir(basedir, 'fonts/tfm/public/gregoriotex/%s' % fontname)    
         for i in range(NumberOfFiles):
-            copy(basedir, 'greciliae-%d.tfm' % i, 'fonts/tfm/public/gregoriotex/greciliae')
+            copy(basedir, '%s-%d.tfm' % (fontname, i), 'fonts/tfm/public/gregoriotex/%s' % fontname)
         makedir(basedir, 'fonts/type1/public/gregoriotex/%s' % fontname)    
         for i in range(NumberOfFiles):
-            copy(basedir, 'greciliae-%d.pfb' % i, 'fonts/type1/public/gregoriotex/greciliae')
+            copy(basedir, '%s-%d.pfb' % (fontname, i), 'fonts/type1/public/gregoriotex/%s' % fontname)
         makedir(basedir, 'fonts/map/dvips/public/gregoriotex')
         copy(basedir, '%s.map' % fontname, 'fonts/map/dvips/public/gregoriotex')
-        if access('/cygdrive', F_OK):
-            system("updmap-sys.bat --enable MixedMap=%s" % join(basedir, 'fonts/map/dvips/public/gregoriotex/', "%s.map" % fontname))
-        else:
-            system("updmap-sys --enable MixedMap=%s" % join(basedir, 'fonts/map/dvips/public/gregoriotex/', "%s.map" % fontname))
         makedir(basedir, 'fonts/ovf/public/gregoriotex/%s' % fontname)
         copy(basedir, '%s.ovf' % fontname, 'fonts/ovf/public/gregoriotex/%s' % fontname)
         makedir(basedir, 'fonts/ofm/public/gregoriotex/%s' % fontname)
         copy(basedir, '%s.ofm' % fontname, 'fonts/ofm/public/gregoriotex/%s' % fontname)
         makedir(basedir, 'fonts/ovp/public/gregoriotex/%s' % fontname)
         copy(basedir, '%s.ovp' % fontname, 'fonts/ovp/public/gregoriotex/%s' % fontname)
-        
+    endInstall(basedir)
+
 def makedir(basedir, dirname):
     name = join(basedir, dirname)
     if access(name, F_OK):
         pass
     else:
+        print ("creating directory %s" % name)
         makedirs(name)
         
 def copy(basedir, filename, dirname):
+    print ("copying %s in %s" % (filename, join(basedir, dirname)))
     shutil.copy(filename, join(basedir, dirname))
+
+def endInstall(basedir):
+    print ("running mktexlsr")
+    system("mktexlsr")
+    for fontname in Fonts:
+        print ("running updmap-sys --enable MixedMap=%s" % join(basedir, 'fonts/map/dvips/public/gregoriotex/', "%s.map" % fontname))
+        if access('/cygdrive', F_OK):
+            system("updmap-sys.bat --enable MixedMap=%s" % join(basedir, 'fonts/map/dvips/public/gregoriotex/', "%s.map" % fontname))
+        else:
+            system("updmap-sys --enable MixedMap=%s" % join(basedir, 'fonts/map/dvips/public/gregoriotex/', "%s.map" % fontname))
 
 if __name__ == "__main__":
     main()
