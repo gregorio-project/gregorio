@@ -40,23 +40,26 @@ The installation of the font depends on the system you have, that's why it is no
 First you need to copy the files at the good place. $(TEXMF) is almost all the time /usr/share/texmf
 
  # first we create global gregoriotex dirs:
- mkdir $(TEXMF)/fonts/tfm/public/gregoriotex
- mkdir $(TEXMF)/fonts/type1/public/gregoriotex
- mkdir $(TEXMF)/fonts/ovf/public/gregoriotex
- mkdir $(TEXMF)/fonts/ofm/public/gregoriotex
- mkdir $(TEXMF)/fonts/ovp/public/gregoriotex
- # then we create the directories for the font gregorio
- mkdir $(TEXMF)/fonts/tfm/public/gregoriotex/gregorio
- cp gregorio*.tfm $(TEXMF)/fonts/tfm/gregoriotex/gregorio
- mkdir $(TEXMF)/fonts/type1/public/gregoriotex/gregorio
- cp gregorio*.pfb $(TEXMF)/fonts/type1/gregoriotex/gregorio
- mkdir $(TEXMF)/fonts/ovf/public/gregoriotex/gregorio
- cp gregorio.ovf $(TEXMF)/fonts/ovf/gregoriotex/gregorio
- mkdir $(TEXMF)/fonts/ofm/public/gregoriotex/gregorio
- cp gregorio.ofm $(TEXMF)/fonts/ofm/gregoriotex/gregorio
- mkdir $(TEXMF)/fonts/ovp/public/gregoriotex/gregorio
- cp gregorio.ovp $(TEXMF)/fonts/ovp/gregoriotex/gregorio
- # done for the font gregorio, now we install gregoriotex and gresym
+ mkdir -p $(TEXMF)/fonts/tfm/public/gregoriotex
+ mkdir -p $(TEXMF)/fonts/type1/public/gregoriotex
+ mkdir -p $(TEXMF)/fonts/map/dvips/gregoriotex
+ mkdir -p $(TEXMF)/fonts/ovf/public/gregoriotex
+ mkdir -p $(TEXMF)/fonts/ofm/public/gregoriotex
+ mkdir -p $(TEXMF)/fonts/ovp/public/gregoriotex
+ mkdir -p $(TEXMF)/fonts/tfm/public/gregoriotex/greciliae
+ cp greciliae*.tfm $(TEXMF)/fonts/tfm/gregoriotex/greciliae
+ mkdir $(TEXMF)/fonts/type1/public/gregoriotex/greciliae
+ cp greciliae*.pfb $(TEXMF)/fonts/type1/gregoriotex/greciliae
+ mkdir $(TEXMF)/fonts/map/dvips/public/gregoriotex/greciliae
+ cp greciliae.map $(TEXMF)/fonts/map/dvips/gregoriotex/greciliae
+ mkdir $(TEXMF)/fonts/ovf/public/gregoriotex/greciliae
+ cp greciliae.ovf $(TEXMF)/fonts/ovf/gregoriotex/greciliae
+ mkdir $(TEXMF)/fonts/ofm/public/gregoriotex/greciliae
+ cp greciliae.ofm $(TEXMF)/fonts/ofm/gregoriotex/greciliae
+ mkdir $(TEXMF)/fonts/ovp/public/gregoriotex/greciliae
+ cp greciliae.ovp $(TEXMF)/fonts/ovp/gregoriotex/greciliae
+ # done for the font greciliae, now we install gregoriotex and gresym
+ # you can repeat this step for the fonts gregorio and parmesan if you want to install them
  mkdir $(TEXMF)/tex/gregoriotex
  cp ../tex/gregorio.tex $(TEXMF)/tex/gregoriotex
  mkdir $(TEXMF)/fonts/tfm/public/gregoriotex/gresym
@@ -73,11 +76,19 @@ If the directories are not the same (which is quite rare, you must change gregor
 
 To know where to copy it, try locate .map. Then you must build a reference to that map in the updmap configuration:
 
- echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregorio/gregorio.map" >>/etc/texmf/updmap.d/20gregoriotex.cfg
+ echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/greciliae.map" >>/etc/texmf/updmap.d/20gregoriotex.cfg
+ 
+or on non-debian systems :
+
+ echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/greciliae.map" >>/usr/share/texmf/web2c/updmap.cfg
 
 and another reference to gresym:
  
- echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregorio/gresym.map" >>/etc/texmf/updmap.d/20gregoriotex.cfg
+ echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/gresym.map" >>/etc/texmf/updmap.d/20gregoriotex.cfg
+ 
+or on non-debian systems :
+
+ echo "MixedMap /usr/share/texmf/fonts/map/dvips/gregoriotex/gresym.map" >>/usr/share/texmf/web2c/updmap.cfg
 
 Now we just have to run the programs to update tex (all must be executed with the root prvivileges):
 

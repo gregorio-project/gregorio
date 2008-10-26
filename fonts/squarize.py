@@ -38,7 +38,7 @@
 import getopt, sys
 
 #defines the maximal interval between two notes, the bigger this number is, the more glyphs you'll have to generate
-max_interval=4
+max_interval=5
 
 # the list of the number of the glyphs
 
@@ -195,7 +195,7 @@ def initialize_lengths():
         porrectusflexuswidths=(340,428,586,670,931)
         porrectuswidths=(490,575,650,740,931)
         # width that will be added to the standard width when we will build horizontal episemus. for example, if a punctum has the length 164, the episemus will have the width 244 and will be centered on the center of the punctum 
-        hepisemus_additional_width=40
+        hepisemus_additional_width=30
     if (font_name=="parmesan"):
         base_height=157.5
         line_width=22
@@ -211,7 +211,7 @@ def initialize_lengths():
         width_flexusdeminutus=161
         porrectusflexuswidths=(340,428,586,670,931)
         porrectuswidths=(490,575,650,740,931)
-        hepisemus_additional_width=40
+        hepisemus_additional_width=30
     if (font_name=="greciliae"):
         base_height=157.5
         line_width=18
@@ -227,7 +227,7 @@ def initialize_lengths():
         width_flexusdeminutus=168
         porrectusflexuswidths=(503,629,628,628,931)
         porrectuswidths=(503,629,628,628,931)
-        hepisemus_additional_width=40
+        hepisemus_additional_width=30
 
 # a function called at the beginning of the script, that opens the font
 def headers():

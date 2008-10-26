@@ -43,7 +43,7 @@ def main():
                 print "error: can't write in %s" % basedir
 
 def patch_cygwin():
-    # just some symlinks for texlive to work fine under cygwin
+    # just some symlinks for texlive 2008 to work fine under cygwin
     # test to know if it is a cygwin system
     if access('/cygdrive/c/Program Files/texlive/2008', F_OK):
         # we have to copy some files

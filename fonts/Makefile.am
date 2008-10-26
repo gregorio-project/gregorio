@@ -24,7 +24,9 @@ gregorio_PFB= \
 	gregorio-0.pfb \
 	gregorio-1.pfb \
 	gregorio-2.pfb \
-	gregorio-3.pfb
+	gregorio-3.pfb \
+	gregorio-4.pfb \
+	gregorio-5.pfb
 
 gregorio_TFM= $(gregorio_PFB:.pfb=.tfm)
 gregorio_PL= $(gregorio_PFB:.pfb=.pl)
@@ -43,7 +45,9 @@ parmesan_PFB= \
 	parmesan-0.pfb \
 	parmesan-1.pfb \
 	parmesan-2.pfb \
-	parmesan-3.pfb
+	parmesan-3.pfb \
+	parmesan-4.pfb \
+	parmesan-5.pfb
 
 parmesan_TFM= $(parmesan_PFB:.pfb=.tfm)
 parmesan_PL= $(parmesan_PFB:.pfb=.pl)
@@ -62,7 +66,9 @@ greciliae_PFB= \
 	greciliae-0.pfb \
 	greciliae-1.pfb \
 	greciliae-2.pfb \
-	greciliae-3.pfb
+	greciliae-3.pfb \
+	greciliae-4.pfb \
+	greciliae-5.pfb
 
 greciliae_TFM= $(greciliae_PFB:.pfb=.tfm)
 greciliae_PL= $(greciliae_PFB:.pfb=.pl)
