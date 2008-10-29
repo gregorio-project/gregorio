@@ -77,7 +77,6 @@ AC_CONFIG_FILES([
     include/Makefile
     examples/Makefile
     tex/Makefile
-    fonts/Makefile
     po/Makefile.in
 ])
 AC_OUTPUT
