@@ -30,7 +30,7 @@ TexliveDirs=['/usr/share/texmf/',
 
 Fonts=['greciliae', 'gregorio', 'parmesan']
 
-NumberOfFiles=5
+NumberOfFiles=8
 
 def main():
     for basedir in TexliveDirs:

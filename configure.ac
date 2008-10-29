@@ -58,31 +58,6 @@ else
   AC_SUBST(XML_LIBS)
 fi
 
-AC_CHECK_PROGS([PYTHON], [python], [:])
-if test "$PYTHON" = :; then
-  AC_MSG_ERROR([You need python to build this package.])
-fi
-
-AC_CHECK_PROGS([PERL], [perl], [:])
-if test "$PERL" = :; then
-  AC_MSG_ERROR([You need perl to build this package.])
-fi
-
-AC_CHECK_PROGS([FONTFORGE], [fontforge], [:])
-if test "$FONTFORGE" = :; then
-  AC_MSG_ERROR([You need fontforge to build this package.])
-fi
-
-AC_CHECK_PROGS([TFTOPL], [tftopl], [:])
-if test "$TFTOPL" = :; then
-  AC_MSG_ERROR([You need tftopl to build this package.])
-fi
-
-AC_CHECK_PROGS([OVP2OVF], [ovp2ovf], [:])
-if test "$OVP2OVF" = :; then
-  AC_MSG_ERROR([You need ovp2ovf to build this package.])
-fi
-
 AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
 
 LIBTOOL_LIB=-lltdl

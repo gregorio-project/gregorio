@@ -33,6 +33,21 @@
    (FONTAT R 1.0)
    (FONTDSIZE R 10.0)
    )
+(MAPFONT D 5
+   (FONTNAME parmesan-5)
+   (FONTAT R 1.0)
+   (FONTDSIZE R 10.0)
+   )
+(MAPFONT D 6
+   (FONTNAME parmesan-6)
+   (FONTAT R 1.0)
+   (FONTDSIZE R 10.0)
+   )
+(MAPFONT D 7
+   (FONTNAME parmesan-7)
+   (FONTAT R 1.0)
+   (FONTDSIZE R 10.0)
+   )
 (CHARACTER H 11
    (CHARWD R 0.160999)
    (CHARDP R 0.0)
@@ -11551,5 +11566,6296 @@
    (MAP
       (SELECTFONT D 4)
       (SETCHAR D 255)
+      )
+   )
+(CHARACTER H 223A
+   (CHARWD R 0.747)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 0)
+      )
+   )
+(CHARACTER H 2253
+   (CHARWD R 0.747)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 1)
+      )
+   )
+(CHARACTER H 226C
+   (CHARWD R 0.747)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 2)
+      )
+   )
+(CHARACTER H 2285
+   (CHARWD R 0.747)
+   (CHARDP R 1.10512)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 3)
+      )
+   )
+(CHARACTER H 2226
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 4)
+      )
+   )
+(CHARACTER H 223F
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 5)
+      )
+   )
+(CHARACTER H 2258
+   (CHARWD R 0.724999)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 6)
+      )
+   )
+(CHARACTER H 2271
+   (CHARWD R 0.724999)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 7)
+      )
+   )
+(CHARACTER H 228A
+   (CHARWD R 0.724999)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 8)
+      )
+   )
+(CHARACTER H 222B
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 9)
+      )
+   )
+(CHARACTER H 2244
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 10)
+      )
+   )
+(CHARACTER H 225D
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 11)
+      )
+   )
+(CHARACTER H 2276
+   (CHARWD R 0.724999)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 12)
+      )
+   )
+(CHARACTER H 228F
+   (CHARWD R 0.724999)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 13)
+      )
+   )
+(CHARACTER H 2230
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 14)
+      )
+   )
+(CHARACTER H 2249
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 15)
+      )
+   )
+(CHARACTER H 2262
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 16)
+      )
+   )
+(CHARACTER H 227B
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 17)
+      )
+   )
+(CHARACTER H 2294
+   (CHARWD R 0.724999)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 18)
+      )
+   )
+(CHARACTER H 2235
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 19)
+      )
+   )
+(CHARACTER H 224E
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 20)
+      )
+   )
+(CHARACTER H 2267
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 21)
+      )
+   )
+(CHARACTER H 2280
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 22)
+      )
+   )
+(CHARACTER H 2299
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 23)
+      )
+   )
+(CHARACTER H 2222
+   (CHARWD R 0.830999)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 24)
+      )
+   )
+(CHARACTER H 223B
+   (CHARWD R 0.830999)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 25)
+      )
+   )
+(CHARACTER H 2254
+   (CHARWD R 0.830999)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 26)
+      )
+   )
+(CHARACTER H 226D
+   (CHARWD R 0.830999)
+   (CHARDP R 1.10512)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 27)
+      )
+   )
+(CHARACTER H 2286
+   (CHARWD R 0.830999)
+   (CHARDP R 1.26312)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 28)
+      )
+   )
+(CHARACTER H 2227
+   (CHARWD R 0.809)
+   (CHARDP R 0.578807)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 29)
+      )
+   )
+(CHARACTER H 2240
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 30)
+      )
+   )
+(CHARACTER H 2259
+   (CHARWD R 0.809)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 31)
+      )
+   )
+(CHARACTER H 2272
+   (CHARWD R 0.809)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 32)
+      )
+   )
+(CHARACTER H 228B
+   (CHARWD R 0.809)
+   (CHARDP R 1.10512)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 33)
+      )
+   )
+(CHARACTER H 222C
+   (CHARWD R 0.809)
+   (CHARDP R 0.578807)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 34)
+      )
+   )
+(CHARACTER H 2245
+   (CHARWD R 0.809)
+   (CHARDP R 0.578807)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 35)
+      )
+   )
+(CHARACTER H 225E
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 36)
+      )
+   )
+(CHARACTER H 2277
+   (CHARWD R 0.809)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 37)
+      )
+   )
+(CHARACTER H 2290
+   (CHARWD R 0.809)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 38)
+      )
+   )
+(CHARACTER H 2231
+   (CHARWD R 0.809)
+   (CHARDP R 0.578807)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 39)
+      )
+   )
+(CHARACTER H 224A
+   (CHARWD R 0.809)
+   (CHARDP R 0.578807)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 40)
+      )
+   )
+(CHARACTER H 2263
+   (CHARWD R 0.809)
+   (CHARDP R 0.578807)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 41)
+      )
+   )
+(CHARACTER H 227C
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 42)
+      )
+   )
+(CHARACTER H 2295
+   (CHARWD R 0.809)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 43)
+      )
+   )
+(CHARACTER H 2236
+   (CHARWD R 0.809)
+   (CHARDP R 0.578807)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 44)
+      )
+   )
+(CHARACTER H 224F
+   (CHARWD R 0.809)
+   (CHARDP R 0.578807)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 45)
+      )
+   )
+(CHARACTER H 2268
+   (CHARWD R 0.809)
+   (CHARDP R 0.578807)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 46)
+      )
+   )
+(CHARACTER H 2281
+   (CHARWD R 0.809)
+   (CHARDP R 0.578807)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 47)
+      )
+   )
+(CHARACTER H 229A
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 48)
+      )
+   )
+(CHARACTER H 2223
+   (CHARWD R 1.092)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 49)
+      )
+   )
+(CHARACTER H 223C
+   (CHARWD R 1.092)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 50)
+      )
+   )
+(CHARACTER H 2255
+   (CHARWD R 1.092)
+   (CHARDP R 1.10512)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 51)
+      )
+   )
+(CHARACTER H 226E
+   (CHARWD R 1.092)
+   (CHARDP R 1.26312)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 52)
+      )
+   )
+(CHARACTER H 2287
+   (CHARWD R 1.092)
+   (CHARDP R 1.420119)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 53)
+      )
+   )
+(CHARACTER H 2228
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 54)
+      )
+   )
+(CHARACTER H 2241
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 55)
+      )
+   )
+(CHARACTER H 225A
+   (CHARWD R 1.07)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 56)
+      )
+   )
+(CHARACTER H 2273
+   (CHARWD R 1.07)
+   (CHARDP R 1.10512)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 57)
+      )
+   )
+(CHARACTER H 228C
+   (CHARWD R 1.07)
+   (CHARDP R 1.26312)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 58)
+      )
+   )
+(CHARACTER H 222D
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 59)
+      )
+   )
+(CHARACTER H 2246
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 60)
+      )
+   )
+(CHARACTER H 225F
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 61)
+      )
+   )
+(CHARACTER H 2278
+   (CHARWD R 1.07)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 62)
+      )
+   )
+(CHARACTER H 2291
+   (CHARWD R 1.07)
+   (CHARDP R 1.10512)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 63)
+      )
+   )
+(CHARACTER H 2232
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 64)
+      )
+   )
+(CHARACTER H 224B
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 65)
+      )
+   )
+(CHARACTER H 2264
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 66)
+      )
+   )
+(CHARACTER H 227D
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 67)
+      )
+   )
+(CHARACTER H 2296
+   (CHARWD R 1.07)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 68)
+      )
+   )
+(CHARACTER H 2237
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 69)
+      )
+   )
+(CHARACTER H 2250
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 70)
+      )
+   )
+(CHARACTER H 2269
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 71)
+      )
+   )
+(CHARACTER H 2282
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 72)
+      )
+   )
+(CHARACTER H 229B
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 73)
+      )
+   )
+(CHARACTER H 1A1F
+   (CHARWD R 0.500999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 74)
+      )
+   )
+(CHARACTER H 1A38
+   (CHARWD R 0.500999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 75)
+      )
+   )
+(CHARACTER H 1A51
+   (CHARWD R 0.500999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 76)
+      )
+   )
+(CHARACTER H 1A6A
+   (CHARWD R 0.500999)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 77)
+      )
+   )
+(CHARACTER H 1A83
+   (CHARWD R 0.500999)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 78)
+      )
+   )
+(CHARACTER H 1A24
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 79)
+      )
+   )
+(CHARACTER H 1A3D
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 80)
+      )
+   )
+(CHARACTER H 1A56
+   (CHARWD R 0.478999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 81)
+      )
+   )
+(CHARACTER H 1A6F
+   (CHARWD R 0.478999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 82)
+      )
+   )
+(CHARACTER H 1A88
+   (CHARWD R 0.478999)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 83)
+      )
+   )
+(CHARACTER H 1A29
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 84)
+      )
+   )
+(CHARACTER H 1A42
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 85)
+      )
+   )
+(CHARACTER H 1A5B
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 86)
+      )
+   )
+(CHARACTER H 1A74
+   (CHARWD R 0.478999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 87)
+      )
+   )
+(CHARACTER H 1A8D
+   (CHARWD R 0.478999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 88)
+      )
+   )
+(CHARACTER H 1A2E
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 89)
+      )
+   )
+(CHARACTER H 1A47
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 90)
+      )
+   )
+(CHARACTER H 1A60
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 91)
+      )
+   )
+(CHARACTER H 1A79
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 92)
+      )
+   )
+(CHARACTER H 1A92
+   (CHARWD R 0.478999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 93)
+      )
+   )
+(CHARACTER H 1A33
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.793998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 94)
+      )
+   )
+(CHARACTER H 1A4C
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.793998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 95)
+      )
+   )
+(CHARACTER H 1A65
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.793998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 96)
+      )
+   )
+(CHARACTER H 1A7E
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.793998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 97)
+      )
+   )
+(CHARACTER H 1A97
+   (CHARWD R 0.478999)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.793998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 98)
+      )
+   )
+(CHARACTER H 1A20
+   (CHARWD R 0.589)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 99)
+      )
+   )
+(CHARACTER H 1A39
+   (CHARWD R 0.589)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 100)
+      )
+   )
+(CHARACTER H 1A52
+   (CHARWD R 0.589)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 101)
+      )
+   )
+(CHARACTER H 1A6B
+   (CHARWD R 0.589)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 102)
+      )
+   )
+(CHARACTER H 1A84
+   (CHARWD R 0.589)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 103)
+      )
+   )
+(CHARACTER H 1A25
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 104)
+      )
+   )
+(CHARACTER H 1A3E
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 105)
+      )
+   )
+(CHARACTER H 1A57
+   (CHARWD R 0.566999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 106)
+      )
+   )
+(CHARACTER H 1A70
+   (CHARWD R 0.566999)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 107)
+      )
+   )
+(CHARACTER H 1A89
+   (CHARWD R 0.566999)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 108)
+      )
+   )
+(CHARACTER H 1A2A
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 109)
+      )
+   )
+(CHARACTER H 1A43
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 110)
+      )
+   )
+(CHARACTER H 1A5C
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 111)
+      )
+   )
+(CHARACTER H 1A75
+   (CHARWD R 0.566999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 112)
+      )
+   )
+(CHARACTER H 1A8E
+   (CHARWD R 0.566999)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 113)
+      )
+   )
+(CHARACTER H 1A2F
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 114)
+      )
+   )
+(CHARACTER H 1A48
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 115)
+      )
+   )
+(CHARACTER H 1A61
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 116)
+      )
+   )
+(CHARACTER H 1A7A
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 117)
+      )
+   )
+(CHARACTER H 1A93
+   (CHARWD R 0.566999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 118)
+      )
+   )
+(CHARACTER H 1A34
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 119)
+      )
+   )
+(CHARACTER H 1A4D
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 120)
+      )
+   )
+(CHARACTER H 1A66
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 121)
+      )
+   )
+(CHARACTER H 1A7F
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 122)
+      )
+   )
+(CHARACTER H 1A98
+   (CHARWD R 0.566999)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 123)
+      )
+   )
+(CHARACTER H 1A21
+   (CHARWD R 0.747)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 124)
+      )
+   )
+(CHARACTER H 1A3A
+   (CHARWD R 0.747)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 125)
+      )
+   )
+(CHARACTER H 1A53
+   (CHARWD R 0.747)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 126)
+      )
+   )
+(CHARACTER H 1A6C
+   (CHARWD R 0.747)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 127)
+      )
+   )
+(CHARACTER H 1A85
+   (CHARWD R 0.747)
+   (CHARDP R 1.10512)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 128)
+      )
+   )
+(CHARACTER H 1A26
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 129)
+      )
+   )
+(CHARACTER H 1A3F
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 130)
+      )
+   )
+(CHARACTER H 1A58
+   (CHARWD R 0.724999)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 131)
+      )
+   )
+(CHARACTER H 1A71
+   (CHARWD R 0.724999)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 132)
+      )
+   )
+(CHARACTER H 1A8A
+   (CHARWD R 0.724999)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 133)
+      )
+   )
+(CHARACTER H 1A2B
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 134)
+      )
+   )
+(CHARACTER H 1A44
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 135)
+      )
+   )
+(CHARACTER H 1A5D
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 136)
+      )
+   )
+(CHARACTER H 1A76
+   (CHARWD R 0.724999)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 137)
+      )
+   )
+(CHARACTER H 1A8F
+   (CHARWD R 0.724999)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 138)
+      )
+   )
+(CHARACTER H 1A30
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 139)
+      )
+   )
+(CHARACTER H 1A49
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 140)
+      )
+   )
+(CHARACTER H 1A62
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 141)
+      )
+   )
+(CHARACTER H 1A7B
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 142)
+      )
+   )
+(CHARACTER H 1A94
+   (CHARWD R 0.724999)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 143)
+      )
+   )
+(CHARACTER H 1A35
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 144)
+      )
+   )
+(CHARACTER H 1A4E
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 145)
+      )
+   )
+(CHARACTER H 1A67
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 146)
+      )
+   )
+(CHARACTER H 1A80
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 147)
+      )
+   )
+(CHARACTER H 1A99
+   (CHARWD R 0.724999)
+   (CHARDP R 0.473096)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 148)
+      )
+   )
+(CHARACTER H 1A22
+   (CHARWD R 0.830999)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 149)
+      )
+   )
+(CHARACTER H 1A3B
+   (CHARWD R 0.830999)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 150)
+      )
+   )
+(CHARACTER H 1A54
+   (CHARWD R 0.830999)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 151)
+      )
+   )
+(CHARACTER H 1A6D
+   (CHARWD R 0.830999)
+   (CHARDP R 1.10512)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 152)
+      )
+   )
+(CHARACTER H 1A86
+   (CHARWD R 0.830999)
+   (CHARDP R 1.26312)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 153)
+      )
+   )
+(CHARACTER H 1A27
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 154)
+      )
+   )
+(CHARACTER H 1A40
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 155)
+      )
+   )
+(CHARACTER H 1A59
+   (CHARWD R 0.809)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 156)
+      )
+   )
+(CHARACTER H 1A72
+   (CHARWD R 0.809)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 157)
+      )
+   )
+(CHARACTER H 1A8B
+   (CHARWD R 0.809)
+   (CHARDP R 1.10512)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 158)
+      )
+   )
+(CHARACTER H 1A2C
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 159)
+      )
+   )
+(CHARACTER H 1A45
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 160)
+      )
+   )
+(CHARACTER H 1A5E
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 161)
+      )
+   )
+(CHARACTER H 1A77
+   (CHARWD R 0.809)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 162)
+      )
+   )
+(CHARACTER H 1A90
+   (CHARWD R 0.809)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 163)
+      )
+   )
+(CHARACTER H 1A31
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 164)
+      )
+   )
+(CHARACTER H 1A4A
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 165)
+      )
+   )
+(CHARACTER H 1A63
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 166)
+      )
+   )
+(CHARACTER H 1A7C
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 167)
+      )
+   )
+(CHARACTER H 1A95
+   (CHARWD R 0.809)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 168)
+      )
+   )
+(CHARACTER H 1A36
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 169)
+      )
+   )
+(CHARACTER H 1A4F
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 170)
+      )
+   )
+(CHARACTER H 1A68
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 171)
+      )
+   )
+(CHARACTER H 1A81
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 172)
+      )
+   )
+(CHARACTER H 1A9A
+   (CHARWD R 0.809)
+   (CHARDP R 0.635111)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 173)
+      )
+   )
+(CHARACTER H 1A23
+   (CHARWD R 1.092)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 174)
+      )
+   )
+(CHARACTER H 1A3C
+   (CHARWD R 1.092)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 175)
+      )
+   )
+(CHARACTER H 1A55
+   (CHARWD R 1.092)
+   (CHARDP R 1.10512)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 176)
+      )
+   )
+(CHARACTER H 1A6E
+   (CHARWD R 1.092)
+   (CHARDP R 1.26312)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 177)
+      )
+   )
+(CHARACTER H 1A87
+   (CHARWD R 1.092)
+   (CHARDP R 1.420119)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 178)
+      )
+   )
+(CHARACTER H 1A28
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 179)
+      )
+   )
+(CHARACTER H 1A41
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 180)
+      )
+   )
+(CHARACTER H 1A5A
+   (CHARWD R 1.07)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 181)
+      )
+   )
+(CHARACTER H 1A73
+   (CHARWD R 1.07)
+   (CHARDP R 1.10512)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 182)
+      )
+   )
+(CHARACTER H 1A8C
+   (CHARWD R 1.07)
+   (CHARDP R 1.26312)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 183)
+      )
+   )
+(CHARACTER H 1A2D
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 184)
+      )
+   )
+(CHARACTER H 1A46
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 185)
+      )
+   )
+(CHARACTER H 1A5F
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 186)
+      )
+   )
+(CHARACTER H 1A78
+   (CHARWD R 1.07)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 187)
+      )
+   )
+(CHARACTER H 1A91
+   (CHARWD R 1.07)
+   (CHARDP R 1.10512)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 188)
+      )
+   )
+(CHARACTER H 1A32
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 189)
+      )
+   )
+(CHARACTER H 1A4B
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 190)
+      )
+   )
+(CHARACTER H 1A64
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 191)
+      )
+   )
+(CHARACTER H 1A7D
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 192)
+      )
+   )
+(CHARACTER H 1A96
+   (CHARWD R 1.07)
+   (CHARDP R 0.94812)
+   (CHARHT R 0.158099)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 193)
+      )
+   )
+(CHARACTER H 1A37
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 194)
+      )
+   )
+(CHARACTER H 1A50
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 195)
+      )
+   )
+(CHARACTER H 1A69
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 196)
+      )
+   )
+(CHARACTER H 1A82
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 197)
+      )
+   )
+(CHARACTER H 1A9B
+   (CHARWD R 1.07)
+   (CHARDP R 0.789014)
+   (CHARHT R 0.163997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 198)
+      )
+   )
+(CHARACTER H 401F
+   (CHARWD R 0.651)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 199)
+      )
+   )
+(CHARACTER H 4038
+   (CHARWD R 0.651)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 200)
+      )
+   )
+(CHARACTER H 4051
+   (CHARWD R 0.651)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 201)
+      )
+   )
+(CHARACTER H 406A
+   (CHARWD R 0.651)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.793998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 202)
+      )
+   )
+(CHARACTER H 4083
+   (CHARWD R 0.651)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.950999)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 203)
+      )
+   )
+(CHARACTER H 4024
+   (CHARWD R 0.735999)
+   (CHARDP R 0.201761)
+   (CHARHT R 0.315086)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 204)
+      )
+   )
+(CHARACTER H 403D
+   (CHARWD R 0.735999)
+   (CHARDP R 0.201761)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 205)
+      )
+   )
+(CHARACTER H 4056
+   (CHARWD R 0.735999)
+   (CHARDP R 0.201761)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 206)
+      )
+   )
+(CHARACTER H 406F
+   (CHARWD R 0.735999)
+   (CHARDP R 0.201761)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 207)
+      )
+   )
+(CHARACTER H 4088
+   (CHARWD R 0.735999)
+   (CHARDP R 0.201761)
+   (CHARHT R 0.793998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 208)
+      )
+   )
+(CHARACTER H 4029
+   (CHARWD R 0.811)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.315086)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 209)
+      )
+   )
+(CHARACTER H 4042
+   (CHARWD R 0.811)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.315086)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 210)
+      )
+   )
+(CHARACTER H 405B
+   (CHARWD R 0.811)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 211)
+      )
+   )
+(CHARACTER H 4074
+   (CHARWD R 0.811)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 212)
+      )
+   )
+(CHARACTER H 408D
+   (CHARWD R 0.811)
+   (CHARDP R 0.322045)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 213)
+      )
+   )
+(CHARACTER H 402E
+   (CHARWD R 0.901)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.332614)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 214)
+      )
+   )
+(CHARACTER H 4047
+   (CHARWD R 0.901)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.332614)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 215)
+      )
+   )
+(CHARACTER H 4060
+   (CHARWD R 0.901)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.332614)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 216)
+      )
+   )
+(CHARACTER H 4079
+   (CHARWD R 0.901)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.332614)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 217)
+      )
+   )
+(CHARACTER H 4092
+   (CHARWD R 0.901)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 218)
+      )
+   )
+(CHARACTER H 4033
+   (CHARWD R 1.092)
+   (CHARDP R 0.685853)
+   (CHARHT R 0.315086)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 219)
+      )
+   )
+(CHARACTER H 404C
+   (CHARWD R 1.092)
+   (CHARDP R 0.685853)
+   (CHARHT R 0.315086)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 220)
+      )
+   )
+(CHARACTER H 4065
+   (CHARWD R 1.092)
+   (CHARDP R 0.685853)
+   (CHARHT R 0.315086)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 221)
+      )
+   )
+(CHARACTER H 407E
+   (CHARWD R 1.092)
+   (CHARDP R 0.685853)
+   (CHARHT R 0.315086)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 222)
+      )
+   )
+(CHARACTER H 4097
+   (CHARWD R 1.092)
+   (CHARDP R 0.685853)
+   (CHARHT R 0.320997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 223)
+      )
+   )
+(CHARACTER H 4020
+   (CHARWD R 0.629)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 224)
+      )
+   )
+(CHARACTER H 4039
+   (CHARWD R 0.629)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 225)
+      )
+   )
+(CHARACTER H 4052
+   (CHARWD R 0.629)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.793998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 226)
+      )
+   )
+(CHARACTER H 406B
+   (CHARWD R 0.629)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.950999)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 227)
+      )
+   )
+(CHARACTER H 4084
+   (CHARWD R 0.629)
+   (CHARDP R 0.029475)
+   (CHARHT R 1.108999)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 228)
+      )
+   )
+(CHARACTER H 4025
+   (CHARWD R 0.714)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.472937)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 229)
+      )
+   )
+(CHARACTER H 403E
+   (CHARWD R 0.714)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 230)
+      )
+   )
+(CHARACTER H 4057
+   (CHARWD R 0.714)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 231)
+      )
+   )
+(CHARACTER H 4070
+   (CHARWD R 0.714)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.793998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 232)
+      )
+   )
+(CHARACTER H 4089
+   (CHARWD R 0.714)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.950999)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 233)
+      )
+   )
+(CHARACTER H 402A
+   (CHARWD R 0.789)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.473111)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 234)
+      )
+   )
+(CHARACTER H 4043
+   (CHARWD R 0.789)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.473111)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 235)
+      )
+   )
+(CHARACTER H 405C
+   (CHARWD R 0.789)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 236)
+      )
+   )
+(CHARACTER H 4075
+   (CHARWD R 0.789)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 237)
+      )
+   )
+(CHARACTER H 408E
+   (CHARWD R 0.789)
+   (CHARDP R 0.165581)
+   (CHARHT R 0.793998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 238)
+      )
+   )
+(CHARACTER H 402F
+   (CHARWD R 0.879)
+   (CHARDP R 0.365909)
+   (CHARHT R 0.490614)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 239)
+      )
+   )
+(CHARACTER H 4048
+   (CHARWD R 0.879)
+   (CHARDP R 0.365909)
+   (CHARHT R 0.490614)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 240)
+      )
+   )
+(CHARACTER H 4061
+   (CHARWD R 0.879)
+   (CHARDP R 0.365909)
+   (CHARHT R 0.490614)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 241)
+      )
+   )
+(CHARACTER H 407A
+   (CHARWD R 0.879)
+   (CHARDP R 0.365909)
+   (CHARHT R 0.490614)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 242)
+      )
+   )
+(CHARACTER H 4093
+   (CHARWD R 0.879)
+   (CHARDP R 0.365909)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 243)
+      )
+   )
+(CHARACTER H 4034
+   (CHARWD R 1.07)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.473111)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 244)
+      )
+   )
+(CHARACTER H 404D
+   (CHARWD R 1.07)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.473111)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 245)
+      )
+   )
+(CHARACTER H 4066
+   (CHARWD R 1.07)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.473111)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 246)
+      )
+   )
+(CHARACTER H 407F
+   (CHARWD R 1.07)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.473111)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 247)
+      )
+   )
+(CHARACTER H 4098
+   (CHARWD R 1.07)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.478997)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 248)
+      )
+   )
+(CHARACTER H 4021
+   (CHARWD R 0.629)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 249)
+      )
+   )
+(CHARACTER H 403A
+   (CHARWD R 0.629)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.793998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 250)
+      )
+   )
+(CHARACTER H 4053
+   (CHARWD R 0.629)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.950999)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 251)
+      )
+   )
+(CHARACTER H 406C
+   (CHARWD R 0.629)
+   (CHARDP R 0.029475)
+   (CHARHT R 1.108999)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 252)
+      )
+   )
+(CHARACTER H 4085
+   (CHARWD R 0.629)
+   (CHARDP R 0.029475)
+   (CHARHT R 1.266)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 253)
+      )
+   )
+(CHARACTER H 4026
+   (CHARWD R 0.714)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.629936)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 254)
+      )
+   )
+(CHARACTER H 403F
+   (CHARWD R 0.714)
+   (CHARDP R 0.029475)
+   (CHARHT R 0.635998)
+   (MAP
+      (SELECTFONT D 5)
+      (SETCHAR D 255)
+      )
+   )
+(CHARACTER H 4058
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 0)
+      )
+   )
+(CHARACTER H 4071
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 1)
+      )
+   )
+(CHARACTER H 408A
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 2)
+      )
+   )
+(CHARACTER H 402B
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 3)
+      )
+   )
+(CHARACTER H 4044
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 4)
+      )
+   )
+(CHARACTER H 405D
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 5)
+      )
+   )
+(CHARACTER H 4076
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 6)
+      )
+   )
+(CHARACTER H 408F
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 7)
+      )
+   )
+(CHARACTER H 4030
+   (CHARWD R 0.879)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.647614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 8)
+      )
+   )
+(CHARACTER H 4049
+   (CHARWD R 0.879)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.647614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 9)
+      )
+   )
+(CHARACTER H 4062
+   (CHARWD R 0.879)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.647614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 10)
+      )
+   )
+(CHARACTER H 407B
+   (CHARWD R 0.879)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.647614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 11)
+      )
+   )
+(CHARACTER H 4094
+   (CHARWD R 0.879)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 12)
+      )
+   )
+(CHARACTER H 4035
+   (CHARWD R 1.07)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 13)
+      )
+   )
+(CHARACTER H 404E
+   (CHARWD R 1.07)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 14)
+      )
+   )
+(CHARACTER H 4067
+   (CHARWD R 1.07)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 15)
+      )
+   )
+(CHARACTER H 4080
+   (CHARWD R 1.07)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 16)
+      )
+   )
+(CHARACTER H 4099
+   (CHARWD R 1.07)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 17)
+      )
+   )
+(CHARACTER H 4022
+   (CHARWD R 0.629)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 18)
+      )
+   )
+(CHARACTER H 403B
+   (CHARWD R 0.629)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 19)
+      )
+   )
+(CHARACTER H 4054
+   (CHARWD R 0.629)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 20)
+      )
+   )
+(CHARACTER H 406D
+   (CHARWD R 0.629)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.266)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 21)
+      )
+   )
+(CHARACTER H 4086
+   (CHARWD R 0.629)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.424)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 22)
+      )
+   )
+(CHARACTER H 4027
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 23)
+      )
+   )
+(CHARACTER H 4040
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 24)
+      )
+   )
+(CHARACTER H 4059
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 25)
+      )
+   )
+(CHARACTER H 4072
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 26)
+      )
+   )
+(CHARACTER H 408B
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.266)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 27)
+      )
+   )
+(CHARACTER H 402C
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 28)
+      )
+   )
+(CHARACTER H 4045
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 29)
+      )
+   )
+(CHARACTER H 405E
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 30)
+      )
+   )
+(CHARACTER H 4077
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 31)
+      )
+   )
+(CHARACTER H 4090
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 32)
+      )
+   )
+(CHARACTER H 4031
+   (CHARWD R 0.879)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.8056135)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 33)
+      )
+   )
+(CHARACTER H 404A
+   (CHARWD R 0.879)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.8056135)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 34)
+      )
+   )
+(CHARACTER H 4063
+   (CHARWD R 0.879)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.8056135)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 35)
+      )
+   )
+(CHARACTER H 407C
+   (CHARWD R 0.879)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.8056135)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 36)
+      )
+   )
+(CHARACTER H 4095
+   (CHARWD R 0.879)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 37)
+      )
+   )
+(CHARACTER H 4036
+   (CHARWD R 1.07)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 38)
+      )
+   )
+(CHARACTER H 404F
+   (CHARWD R 1.07)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 39)
+      )
+   )
+(CHARACTER H 4068
+   (CHARWD R 1.07)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 40)
+      )
+   )
+(CHARACTER H 4081
+   (CHARWD R 1.07)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 41)
+      )
+   )
+(CHARACTER H 409A
+   (CHARWD R 1.07)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 42)
+      )
+   )
+(CHARACTER H 4023
+   (CHARWD R 0.629)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 43)
+      )
+   )
+(CHARACTER H 403C
+   (CHARWD R 0.629)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 44)
+      )
+   )
+(CHARACTER H 4055
+   (CHARWD R 0.629)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.266)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 45)
+      )
+   )
+(CHARACTER H 406E
+   (CHARWD R 0.629)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.424)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 46)
+      )
+   )
+(CHARACTER H 4087
+   (CHARWD R 0.629)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.580999)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 47)
+      )
+   )
+(CHARACTER H 4028
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 48)
+      )
+   )
+(CHARACTER H 4041
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 49)
+      )
+   )
+(CHARACTER H 405A
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 50)
+      )
+   )
+(CHARACTER H 4073
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.266)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 51)
+      )
+   )
+(CHARACTER H 408C
+   (CHARWD R 0.714)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.424)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 52)
+      )
+   )
+(CHARACTER H 402D
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 53)
+      )
+   )
+(CHARACTER H 4046
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 54)
+      )
+   )
+(CHARACTER H 405F
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 55)
+      )
+   )
+(CHARACTER H 4078
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 56)
+      )
+   )
+(CHARACTER H 4091
+   (CHARWD R 0.789)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.266)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 57)
+      )
+   )
+(CHARACTER H 4032
+   (CHARWD R 0.879)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.962613)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 58)
+      )
+   )
+(CHARACTER H 404B
+   (CHARWD R 0.879)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.962613)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 59)
+      )
+   )
+(CHARACTER H 4064
+   (CHARWD R 0.879)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.962613)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 60)
+      )
+   )
+(CHARACTER H 407D
+   (CHARWD R 0.879)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.962613)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 61)
+      )
+   )
+(CHARACTER H 4096
+   (CHARWD R 0.879)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 62)
+      )
+   )
+(CHARACTER H 4037
+   (CHARWD R 1.07)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 63)
+      )
+   )
+(CHARACTER H 4050
+   (CHARWD R 1.07)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 64)
+      )
+   )
+(CHARACTER H 4069
+   (CHARWD R 1.07)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 65)
+      )
+   )
+(CHARACTER H 4082
+   (CHARWD R 1.07)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 66)
+      )
+   )
+(CHARACTER H 409B
+   (CHARWD R 1.07)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 67)
+      )
+   )
+(CHARACTER H 411F
+   (CHARWD R 0.565)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 68)
+      )
+   )
+(CHARACTER H 4138
+   (CHARWD R 0.565)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 69)
+      )
+   )
+(CHARACTER H 4151
+   (CHARWD R 0.565)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 70)
+      )
+   )
+(CHARACTER H 416A
+   (CHARWD R 0.565)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 71)
+      )
+   )
+(CHARACTER H 4183
+   (CHARWD R 0.565)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 72)
+      )
+   )
+(CHARACTER H 4124
+   (CHARWD R 0.65)
+   (CHARDP R 0.201761)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 73)
+      )
+   )
+(CHARACTER H 413D
+   (CHARWD R 0.65)
+   (CHARDP R 0.201761)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 74)
+      )
+   )
+(CHARACTER H 4156
+   (CHARWD R 0.65)
+   (CHARDP R 0.201761)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 75)
+      )
+   )
+(CHARACTER H 416F
+   (CHARWD R 0.65)
+   (CHARDP R 0.201761)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 76)
+      )
+   )
+(CHARACTER H 4188
+   (CHARWD R 0.65)
+   (CHARDP R 0.201761)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 77)
+      )
+   )
+(CHARACTER H 4129
+   (CHARWD R 0.724999)
+   (CHARDP R 0.323823)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 78)
+      )
+   )
+(CHARACTER H 4142
+   (CHARWD R 0.724999)
+   (CHARDP R 0.323823)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 79)
+      )
+   )
+(CHARACTER H 415B
+   (CHARWD R 0.724999)
+   (CHARDP R 0.323823)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 80)
+      )
+   )
+(CHARACTER H 4174
+   (CHARWD R 0.724999)
+   (CHARDP R 0.323823)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 81)
+      )
+   )
+(CHARACTER H 418D
+   (CHARWD R 0.724999)
+   (CHARDP R 0.323823)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 82)
+      )
+   )
+(CHARACTER H 412E
+   (CHARWD R 0.815)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.332614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 83)
+      )
+   )
+(CHARACTER H 4147
+   (CHARWD R 0.815)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.332614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 84)
+      )
+   )
+(CHARACTER H 4160
+   (CHARWD R 0.815)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.332614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 85)
+      )
+   )
+(CHARACTER H 4179
+   (CHARWD R 0.815)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.332614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 86)
+      )
+   )
+(CHARACTER H 4192
+   (CHARWD R 0.815)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 87)
+      )
+   )
+(CHARACTER H 4133
+   (CHARWD R 1.006)
+   (CHARDP R 0.685853)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 88)
+      )
+   )
+(CHARACTER H 414C
+   (CHARWD R 1.006)
+   (CHARDP R 0.685853)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 89)
+      )
+   )
+(CHARACTER H 4165
+   (CHARWD R 1.006)
+   (CHARDP R 0.685853)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 90)
+      )
+   )
+(CHARACTER H 417E
+   (CHARWD R 1.006)
+   (CHARDP R 0.685853)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 91)
+      )
+   )
+(CHARACTER H 4197
+   (CHARWD R 1.006)
+   (CHARDP R 0.685853)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 92)
+      )
+   )
+(CHARACTER H 4120
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 93)
+      )
+   )
+(CHARACTER H 4139
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 94)
+      )
+   )
+(CHARACTER H 4152
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 95)
+      )
+   )
+(CHARACTER H 416B
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 96)
+      )
+   )
+(CHARACTER H 4184
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 97)
+      )
+   )
+(CHARACTER H 4125
+   (CHARWD R 0.65)
+   (CHARDP R 0.043761)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 98)
+      )
+   )
+(CHARACTER H 413E
+   (CHARWD R 0.65)
+   (CHARDP R 0.043761)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 99)
+      )
+   )
+(CHARACTER H 4157
+   (CHARWD R 0.65)
+   (CHARDP R 0.043761)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 100)
+      )
+   )
+(CHARACTER H 4170
+   (CHARWD R 0.65)
+   (CHARDP R 0.043761)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 101)
+      )
+   )
+(CHARACTER H 4189
+   (CHARWD R 0.65)
+   (CHARDP R 0.043761)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 102)
+      )
+   )
+(CHARACTER H 412A
+   (CHARWD R 0.724999)
+   (CHARDP R 0.165823)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 103)
+      )
+   )
+(CHARACTER H 4143
+   (CHARWD R 0.724999)
+   (CHARDP R 0.165823)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 104)
+      )
+   )
+(CHARACTER H 415C
+   (CHARWD R 0.724999)
+   (CHARDP R 0.165823)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 105)
+      )
+   )
+(CHARACTER H 4175
+   (CHARWD R 0.724999)
+   (CHARDP R 0.165823)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 106)
+      )
+   )
+(CHARACTER H 418E
+   (CHARWD R 0.724999)
+   (CHARDP R 0.165823)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 107)
+      )
+   )
+(CHARACTER H 412F
+   (CHARWD R 0.815)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.490614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 108)
+      )
+   )
+(CHARACTER H 4148
+   (CHARWD R 0.815)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.490614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 109)
+      )
+   )
+(CHARACTER H 4161
+   (CHARWD R 0.815)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.490614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 110)
+      )
+   )
+(CHARACTER H 417A
+   (CHARWD R 0.815)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.490614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 111)
+      )
+   )
+(CHARACTER H 4193
+   (CHARWD R 0.815)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 112)
+      )
+   )
+(CHARACTER H 4134
+   (CHARWD R 1.006)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 113)
+      )
+   )
+(CHARACTER H 414D
+   (CHARWD R 1.006)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 114)
+      )
+   )
+(CHARACTER H 4166
+   (CHARWD R 1.006)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 115)
+      )
+   )
+(CHARACTER H 417F
+   (CHARWD R 1.006)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 116)
+      )
+   )
+(CHARACTER H 4198
+   (CHARWD R 1.006)
+   (CHARDP R 0.525881)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 117)
+      )
+   )
+(CHARACTER H 4121
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 118)
+      )
+   )
+(CHARACTER H 413A
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 119)
+      )
+   )
+(CHARACTER H 4153
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 120)
+      )
+   )
+(CHARACTER H 416C
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 121)
+      )
+   )
+(CHARACTER H 4185
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 1.266)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 122)
+      )
+   )
+(CHARACTER H 4126
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 123)
+      )
+   )
+(CHARACTER H 413F
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 124)
+      )
+   )
+(CHARACTER H 4158
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 125)
+      )
+   )
+(CHARACTER H 4171
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 126)
+      )
+   )
+(CHARACTER H 418A
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 127)
+      )
+   )
+(CHARACTER H 412B
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 128)
+      )
+   )
+(CHARACTER H 4144
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 129)
+      )
+   )
+(CHARACTER H 415D
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 130)
+      )
+   )
+(CHARACTER H 4176
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 131)
+      )
+   )
+(CHARACTER H 418F
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 132)
+      )
+   )
+(CHARACTER H 4130
+   (CHARWD R 0.815)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.647614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 133)
+      )
+   )
+(CHARACTER H 4149
+   (CHARWD R 0.815)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.647614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 134)
+      )
+   )
+(CHARACTER H 4162
+   (CHARWD R 0.815)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.647614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 135)
+      )
+   )
+(CHARACTER H 417B
+   (CHARWD R 0.815)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.647614)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 136)
+      )
+   )
+(CHARACTER H 4194
+   (CHARWD R 0.815)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 137)
+      )
+   )
+(CHARACTER H 4135
+   (CHARWD R 1.006)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 138)
+      )
+   )
+(CHARACTER H 414E
+   (CHARWD R 1.006)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 139)
+      )
+   )
+(CHARACTER H 4167
+   (CHARWD R 1.006)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 140)
+      )
+   )
+(CHARACTER H 4180
+   (CHARWD R 1.006)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 141)
+      )
+   )
+(CHARACTER H 4199
+   (CHARWD R 1.006)
+   (CHARDP R 0.3692045)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 142)
+      )
+   )
+(CHARACTER H 4122
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 143)
+      )
+   )
+(CHARACTER H 413B
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 144)
+      )
+   )
+(CHARACTER H 4154
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 145)
+      )
+   )
+(CHARACTER H 416D
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 1.266)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 146)
+      )
+   )
+(CHARACTER H 4186
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 1.424)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 147)
+      )
+   )
+(CHARACTER H 4127
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 148)
+      )
+   )
+(CHARACTER H 4140
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 149)
+      )
+   )
+(CHARACTER H 4159
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 150)
+      )
+   )
+(CHARACTER H 4172
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 151)
+      )
+   )
+(CHARACTER H 418B
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 1.266)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 152)
+      )
+   )
+(CHARACTER H 412C
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 153)
+      )
+   )
+(CHARACTER H 4145
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 154)
+      )
+   )
+(CHARACTER H 415E
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 155)
+      )
+   )
+(CHARACTER H 4177
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 156)
+      )
+   )
+(CHARACTER H 4190
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 157)
+      )
+   )
+(CHARACTER H 4131
+   (CHARWD R 0.815)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.8056135)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 158)
+      )
+   )
+(CHARACTER H 414A
+   (CHARWD R 0.815)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.8056135)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 159)
+      )
+   )
+(CHARACTER H 4163
+   (CHARWD R 0.815)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.8056135)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 160)
+      )
+   )
+(CHARACTER H 417C
+   (CHARWD R 0.815)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.8056135)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 161)
+      )
+   )
+(CHARACTER H 4195
+   (CHARWD R 0.815)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 162)
+      )
+   )
+(CHARACTER H 4136
+   (CHARWD R 1.006)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 163)
+      )
+   )
+(CHARACTER H 414F
+   (CHARWD R 1.006)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 164)
+      )
+   )
+(CHARACTER H 4168
+   (CHARWD R 1.006)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 165)
+      )
+   )
+(CHARACTER H 4181
+   (CHARWD R 1.006)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 166)
+      )
+   )
+(CHARACTER H 419A
+   (CHARWD R 1.006)
+   (CHARDP R 0.21088)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 167)
+      )
+   )
+(CHARACTER H 4123
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 168)
+      )
+   )
+(CHARACTER H 413C
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 169)
+      )
+   )
+(CHARACTER H 4155
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 1.266)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 170)
+      )
+   )
+(CHARACTER H 416E
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 1.424)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 171)
+      )
+   )
+(CHARACTER H 4187
+   (CHARWD R 0.565)
+   (CHARDP R 0.0)
+   (CHARHT R 1.580999)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 172)
+      )
+   )
+(CHARACTER H 4128
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 173)
+      )
+   )
+(CHARACTER H 4141
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 174)
+      )
+   )
+(CHARACTER H 415A
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 175)
+      )
+   )
+(CHARACTER H 4173
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 1.266)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 176)
+      )
+   )
+(CHARACTER H 418C
+   (CHARWD R 0.65)
+   (CHARDP R 0.0)
+   (CHARHT R 1.424)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 177)
+      )
+   )
+(CHARACTER H 412D
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 178)
+      )
+   )
+(CHARACTER H 4146
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 179)
+      )
+   )
+(CHARACTER H 415F
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 180)
+      )
+   )
+(CHARACTER H 4178
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 181)
+      )
+   )
+(CHARACTER H 4191
+   (CHARWD R 0.724999)
+   (CHARDP R 0.0)
+   (CHARHT R 1.266)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 182)
+      )
+   )
+(CHARACTER H 4132
+   (CHARWD R 0.815)
+   (CHARDP R 0.0)
+   (CHARHT R 0.962613)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 183)
+      )
+   )
+(CHARACTER H 414B
+   (CHARWD R 0.815)
+   (CHARDP R 0.0)
+   (CHARHT R 0.962613)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 184)
+      )
+   )
+(CHARACTER H 4164
+   (CHARWD R 0.815)
+   (CHARDP R 0.0)
+   (CHARHT R 0.962613)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 185)
+      )
+   )
+(CHARACTER H 417D
+   (CHARWD R 0.815)
+   (CHARDP R 0.0)
+   (CHARHT R 0.962613)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 186)
+      )
+   )
+(CHARACTER H 4196
+   (CHARWD R 0.815)
+   (CHARDP R 0.0)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 187)
+      )
+   )
+(CHARACTER H 4137
+   (CHARWD R 1.006)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 188)
+      )
+   )
+(CHARACTER H 4150
+   (CHARWD R 1.006)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 189)
+      )
+   )
+(CHARACTER H 4169
+   (CHARWD R 1.006)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 190)
+      )
+   )
+(CHARACTER H 4182
+   (CHARWD R 1.006)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 191)
+      )
+   )
+(CHARACTER H 419B
+   (CHARWD R 1.006)
+   (CHARDP R 0.053381)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 192)
+      )
+   )
+(CHARACTER H 421F
+   (CHARWD R 0.483)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 193)
+      )
+   )
+(CHARACTER H 4238
+   (CHARWD R 0.483)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 194)
+      )
+   )
+(CHARACTER H 4251
+   (CHARWD R 0.483)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 195)
+      )
+   )
+(CHARACTER H 426A
+   (CHARWD R 0.483)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 196)
+      )
+   )
+(CHARACTER H 4283
+   (CHARWD R 0.483)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 197)
+      )
+   )
+(CHARACTER H 4224
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 198)
+      )
+   )
+(CHARACTER H 423D
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 199)
+      )
+   )
+(CHARACTER H 4256
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 200)
+      )
+   )
+(CHARACTER H 426F
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 201)
+      )
+   )
+(CHARACTER H 4288
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 202)
+      )
+   )
+(CHARACTER H 4229
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 203)
+      )
+   )
+(CHARACTER H 4242
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 204)
+      )
+   )
+(CHARACTER H 425B
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 205)
+      )
+   )
+(CHARACTER H 4274
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 206)
+      )
+   )
+(CHARACTER H 428D
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 207)
+      )
+   )
+(CHARACTER H 422E
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 208)
+      )
+   )
+(CHARACTER H 4247
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 209)
+      )
+   )
+(CHARACTER H 4260
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 210)
+      )
+   )
+(CHARACTER H 4279
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 211)
+      )
+   )
+(CHARACTER H 4292
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 212)
+      )
+   )
+(CHARACTER H 4233
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.6585)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 213)
+      )
+   )
+(CHARACTER H 424C
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.6585)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 214)
+      )
+   )
+(CHARACTER H 4265
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.6585)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 215)
+      )
+   )
+(CHARACTER H 427E
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.6585)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 216)
+      )
+   )
+(CHARACTER H 4297
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.6585)
+   (CHARHT R 0.319406)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 217)
+      )
+   )
+(CHARACTER H 4220
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 218)
+      )
+   )
+(CHARACTER H 4239
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 219)
+      )
+   )
+(CHARACTER H 4252
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 220)
+      )
+   )
+(CHARACTER H 426B
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 221)
+      )
+   )
+(CHARACTER H 4284
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 222)
+      )
+   )
+(CHARACTER H 4225
+   (CHARWD R 0.438999)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 223)
+      )
+   )
+(CHARACTER H 423E
+   (CHARWD R 0.438999)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 224)
+      )
+   )
+(CHARACTER H 4257
+   (CHARWD R 0.438999)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 225)
+      )
+   )
+(CHARACTER H 4270
+   (CHARWD R 0.438999)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 226)
+      )
+   )
+(CHARACTER H 4289
+   (CHARWD R 0.438999)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 227)
+      )
+   )
+(CHARACTER H 422A
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 228)
+      )
+   )
+(CHARACTER H 4243
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 229)
+      )
+   )
+(CHARACTER H 425C
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 230)
+      )
+   )
+(CHARACTER H 4275
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 231)
+      )
+   )
+(CHARACTER H 428E
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 232)
+      )
+   )
+(CHARACTER H 422F
+   (CHARWD R 0.438999)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 233)
+      )
+   )
+(CHARACTER H 4248
+   (CHARWD R 0.438999)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 234)
+      )
+   )
+(CHARACTER H 4261
+   (CHARWD R 0.438999)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 235)
+      )
+   )
+(CHARACTER H 427A
+   (CHARWD R 0.438999)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 236)
+      )
+   )
+(CHARACTER H 4293
+   (CHARWD R 0.438999)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 237)
+      )
+   )
+(CHARACTER H 4234
+   (CHARWD R 0.438999)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 238)
+      )
+   )
+(CHARACTER H 424D
+   (CHARWD R 0.438999)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 239)
+      )
+   )
+(CHARACTER H 4266
+   (CHARWD R 0.438999)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 240)
+      )
+   )
+(CHARACTER H 427F
+   (CHARWD R 0.438999)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 241)
+      )
+   )
+(CHARACTER H 4298
+   (CHARWD R 0.438999)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.476489)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 242)
+      )
+   )
+(CHARACTER H 4221
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 243)
+      )
+   )
+(CHARACTER H 423A
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 244)
+      )
+   )
+(CHARACTER H 4253
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 245)
+      )
+   )
+(CHARACTER H 426C
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 246)
+      )
+   )
+(CHARACTER H 4285
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.255017)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 247)
+      )
+   )
+(CHARACTER H 4226
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 248)
+      )
+   )
+(CHARACTER H 423F
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 249)
+      )
+   )
+(CHARACTER H 4258
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.790105)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 250)
+      )
+   )
+(CHARACTER H 4271
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021782)
+   (CHARHT R 0.947797)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 251)
+      )
+   )
+(CHARACTER H 428A
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021782)
+   (CHARHT R 1.10743)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 252)
+      )
+   )
+(CHARACTER H 422B
+   (CHARWD R 0.438999)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 253)
+      )
+   )
+(CHARACTER H 4244
+   (CHARWD R 0.438999)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 254)
+      )
+   )
+(CHARACTER H 425D
+   (CHARWD R 0.438999)
+   (CHARDP R 0.030494)
+   (CHARHT R 0.632061)
+   (MAP
+      (SELECTFONT D 6)
+      (SETCHAR D 255)
+      )
+   )
+(CHARACTER H 4276
+   (CHARWD R 0.438999)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.783017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 0)
+      )
+   )
+(CHARACTER H 428F
+   (CHARWD R 0.438999)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 1)
+      )
+   )
+(CHARACTER H 4230
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 2)
+      )
+   )
+(CHARACTER H 4249
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 3)
+      )
+   )
+(CHARACTER H 4262
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 4)
+      )
+   )
+(CHARACTER H 427B
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 5)
+      )
+   )
+(CHARACTER H 4294
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.783017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 6)
+      )
+   )
+(CHARACTER H 4235
+   (CHARWD R 0.438999)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 7)
+      )
+   )
+(CHARACTER H 424E
+   (CHARWD R 0.438999)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 8)
+      )
+   )
+(CHARACTER H 4267
+   (CHARWD R 0.438999)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 9)
+      )
+   )
+(CHARACTER H 4280
+   (CHARWD R 0.438999)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 10)
+      )
+   )
+(CHARACTER H 4299
+   (CHARWD R 0.438999)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 11)
+      )
+   )
+(CHARACTER H 4222
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 12)
+      )
+   )
+(CHARACTER H 423B
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 13)
+      )
+   )
+(CHARACTER H 4254
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 14)
+      )
+   )
+(CHARACTER H 426D
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.255017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 15)
+      )
+   )
+(CHARACTER H 4286
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.413017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 16)
+      )
+   )
+(CHARACTER H 4227
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 17)
+      )
+   )
+(CHARACTER H 4240
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 18)
+      )
+   )
+(CHARACTER H 4259
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 19)
+      )
+   )
+(CHARACTER H 4272
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 20)
+      )
+   )
+(CHARACTER H 428B
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.255017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 21)
+      )
+   )
+(CHARACTER H 422C
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 22)
+      )
+   )
+(CHARACTER H 4245
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 23)
+      )
+   )
+(CHARACTER H 425E
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 24)
+      )
+   )
+(CHARACTER H 4277
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 25)
+      )
+   )
+(CHARACTER H 4290
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 26)
+      )
+   )
+(CHARACTER H 4231
+   (CHARWD R 0.438999)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 27)
+      )
+   )
+(CHARACTER H 424A
+   (CHARWD R 0.438999)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 28)
+      )
+   )
+(CHARACTER H 4263
+   (CHARWD R 0.438999)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 29)
+      )
+   )
+(CHARACTER H 427C
+   (CHARWD R 0.438999)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 30)
+      )
+   )
+(CHARACTER H 4295
+   (CHARWD R 0.438999)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 31)
+      )
+   )
+(CHARACTER H 4236
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 32)
+      )
+   )
+(CHARACTER H 424F
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 33)
+      )
+   )
+(CHARACTER H 4268
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 34)
+      )
+   )
+(CHARACTER H 4281
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 35)
+      )
+   )
+(CHARACTER H 429A
+   (CHARWD R 0.438999)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 36)
+      )
+   )
+(CHARACTER H 4223
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 37)
+      )
+   )
+(CHARACTER H 423C
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 38)
+      )
+   )
+(CHARACTER H 4255
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.255017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 39)
+      )
+   )
+(CHARACTER H 426E
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.413017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 40)
+      )
+   )
+(CHARACTER H 4287
+   (CHARWD R 0.4609995)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.570017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 41)
+      )
+   )
+(CHARACTER H 4228
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 42)
+      )
+   )
+(CHARACTER H 4241
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 43)
+      )
+   )
+(CHARACTER H 425A
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 44)
+      )
+   )
+(CHARACTER H 4273
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.255017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 45)
+      )
+   )
+(CHARACTER H 428C
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.413017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 46)
+      )
+   )
+(CHARACTER H 422D
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 47)
+      )
+   )
+(CHARACTER H 4246
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 48)
+      )
+   )
+(CHARACTER H 425F
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 49)
+      )
+   )
+(CHARACTER H 4278
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 50)
+      )
+   )
+(CHARACTER H 4291
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.255017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 51)
+      )
+   )
+(CHARACTER H 4232
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 52)
+      )
+   )
+(CHARACTER H 424B
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 53)
+      )
+   )
+(CHARACTER H 4264
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 54)
+      )
+   )
+(CHARACTER H 427D
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 55)
+      )
+   )
+(CHARACTER H 4296
+   (CHARWD R 0.438999)
+   (CHARDP R 0.021769)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 56)
+      )
+   )
+(CHARACTER H 4237
+   (CHARWD R 0.438999)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 57)
+      )
+   )
+(CHARACTER H 4250
+   (CHARWD R 0.438999)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 58)
+      )
+   )
+(CHARACTER H 4269
+   (CHARWD R 0.438999)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 59)
+      )
+   )
+(CHARACTER H 4282
+   (CHARWD R 0.438999)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 60)
+      )
+   )
+(CHARACTER H 429B
+   (CHARWD R 0.438999)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 61)
+      )
+   )
+(CHARACTER H 451F
+   (CHARWD R 0.396999)
+   (CHARDP R 0.021938)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 62)
+      )
+   )
+(CHARACTER H 4538
+   (CHARWD R 0.396999)
+   (CHARDP R 0.021938)
+   (CHARHT R 0.468018)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 63)
+      )
+   )
+(CHARACTER H 4551
+   (CHARWD R 0.396999)
+   (CHARDP R 0.021938)
+   (CHARHT R 0.625017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 64)
+      )
+   )
+(CHARACTER H 456A
+   (CHARWD R 0.396999)
+   (CHARDP R 0.021938)
+   (CHARHT R 0.783017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 65)
+      )
+   )
+(CHARACTER H 4583
+   (CHARWD R 0.396999)
+   (CHARDP R 0.021938)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 66)
+      )
+   )
+(CHARACTER H 4524
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 67)
+      )
+   )
+(CHARACTER H 453D
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 68)
+      )
+   )
+(CHARACTER H 4556
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.468018)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 69)
+      )
+   )
+(CHARACTER H 456F
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.625017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 70)
+      )
+   )
+(CHARACTER H 4588
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.783017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 71)
+      )
+   )
+(CHARACTER H 4529
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 72)
+      )
+   )
+(CHARACTER H 4542
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 73)
+      )
+   )
+(CHARACTER H 455B
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 74)
+      )
+   )
+(CHARACTER H 4574
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.468018)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 75)
+      )
+   )
+(CHARACTER H 458D
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.625017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 76)
+      )
+   )
+(CHARACTER H 452E
+   (CHARWD R 0.375)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 77)
+      )
+   )
+(CHARACTER H 4547
+   (CHARWD R 0.375)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 78)
+      )
+   )
+(CHARACTER H 4560
+   (CHARWD R 0.375)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 79)
+      )
+   )
+(CHARACTER H 4579
+   (CHARWD R 0.375)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 80)
+      )
+   )
+(CHARACTER H 4592
+   (CHARWD R 0.375)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.468018)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 81)
+      )
+   )
+(CHARACTER H 4533
+   (CHARWD R 0.375)
+   (CHARDP R 0.6585)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 82)
+      )
+   )
+(CHARACTER H 454C
+   (CHARWD R 0.375)
+   (CHARDP R 0.6585)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 83)
+      )
+   )
+(CHARACTER H 4565
+   (CHARWD R 0.375)
+   (CHARDP R 0.6585)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 84)
+      )
+   )
+(CHARACTER H 457E
+   (CHARWD R 0.375)
+   (CHARDP R 0.6585)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 85)
+      )
+   )
+(CHARACTER H 4597
+   (CHARWD R 0.375)
+   (CHARDP R 0.6585)
+   (CHARHT R 0.320996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 86)
+      )
+   )
+(CHARACTER H 4520
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 87)
+      )
+   )
+(CHARACTER H 4539
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.625017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 88)
+      )
+   )
+(CHARACTER H 4552
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.783017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 89)
+      )
+   )
+(CHARACTER H 456B
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 90)
+      )
+   )
+(CHARACTER H 4584
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 91)
+      )
+   )
+(CHARACTER H 4525
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 92)
+      )
+   )
+(CHARACTER H 453E
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 93)
+      )
+   )
+(CHARACTER H 4557
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.625017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 94)
+      )
+   )
+(CHARACTER H 4570
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.783017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 95)
+      )
+   )
+(CHARACTER H 4589
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 96)
+      )
+   )
+(CHARACTER H 452A
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 97)
+      )
+   )
+(CHARACTER H 4543
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 98)
+      )
+   )
+(CHARACTER H 455C
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 99)
+      )
+   )
+(CHARACTER H 4575
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.625017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 100)
+      )
+   )
+(CHARACTER H 458E
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.783017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 101)
+      )
+   )
+(CHARACTER H 452F
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 102)
+      )
+   )
+(CHARACTER H 4548
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 103)
+      )
+   )
+(CHARACTER H 4561
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 104)
+      )
+   )
+(CHARACTER H 457A
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 105)
+      )
+   )
+(CHARACTER H 4593
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.625017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 106)
+      )
+   )
+(CHARACTER H 4534
+   (CHARWD R 0.375)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 107)
+      )
+   )
+(CHARACTER H 454D
+   (CHARWD R 0.375)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 108)
+      )
+   )
+(CHARACTER H 4566
+   (CHARWD R 0.375)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 109)
+      )
+   )
+(CHARACTER H 457F
+   (CHARWD R 0.375)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 110)
+      )
+   )
+(CHARACTER H 4598
+   (CHARWD R 0.375)
+   (CHARDP R 0.5005)
+   (CHARHT R 0.478996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 111)
+      )
+   )
+(CHARACTER H 4521
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 112)
+      )
+   )
+(CHARACTER H 453A
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.783017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 113)
+      )
+   )
+(CHARACTER H 4553
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 114)
+      )
+   )
+(CHARACTER H 456C
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 115)
+      )
+   )
+(CHARACTER H 4585
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.255017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 116)
+      )
+   )
+(CHARACTER H 4526
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 117)
+      )
+   )
+(CHARACTER H 453F
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 118)
+      )
+   )
+(CHARACTER H 4558
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.783017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 119)
+      )
+   )
+(CHARACTER H 4571
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 120)
+      )
+   )
+(CHARACTER H 458A
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 121)
+      )
+   )
+(CHARACTER H 452B
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 122)
+      )
+   )
+(CHARACTER H 4544
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 123)
+      )
+   )
+(CHARACTER H 455D
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 124)
+      )
+   )
+(CHARACTER H 4576
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.783017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 125)
+      )
+   )
+(CHARACTER H 458F
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 126)
+      )
+   )
+(CHARACTER H 4530
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 127)
+      )
+   )
+(CHARACTER H 4549
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 128)
+      )
+   )
+(CHARACTER H 4562
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 129)
+      )
+   )
+(CHARACTER H 457B
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 130)
+      )
+   )
+(CHARACTER H 4594
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.783017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 131)
+      )
+   )
+(CHARACTER H 4535
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 132)
+      )
+   )
+(CHARACTER H 454E
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 133)
+      )
+   )
+(CHARACTER H 4567
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 134)
+      )
+   )
+(CHARACTER H 4580
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 135)
+      )
+   )
+(CHARACTER H 4599
+   (CHARWD R 0.375)
+   (CHARDP R 0.343499)
+   (CHARHT R 0.635997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 136)
+      )
+   )
+(CHARACTER H 4522
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 137)
+      )
+   )
+(CHARACTER H 453B
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 138)
+      )
+   )
+(CHARACTER H 4554
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 139)
+      )
+   )
+(CHARACTER H 456D
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.255017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 140)
+      )
+   )
+(CHARACTER H 4586
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.413017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 141)
+      )
+   )
+(CHARACTER H 4527
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 142)
+      )
+   )
+(CHARACTER H 4540
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 143)
+      )
+   )
+(CHARACTER H 4559
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 144)
+      )
+   )
+(CHARACTER H 4572
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 145)
+      )
+   )
+(CHARACTER H 458B
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.255017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 146)
+      )
+   )
+(CHARACTER H 452C
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 147)
+      )
+   )
+(CHARACTER H 4545
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 148)
+      )
+   )
+(CHARACTER H 455E
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 149)
+      )
+   )
+(CHARACTER H 4577
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 150)
+      )
+   )
+(CHARACTER H 4590
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 151)
+      )
+   )
+(CHARACTER H 4531
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 152)
+      )
+   )
+(CHARACTER H 454A
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 153)
+      )
+   )
+(CHARACTER H 4563
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 154)
+      )
+   )
+(CHARACTER H 457C
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 155)
+      )
+   )
+(CHARACTER H 4595
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.940017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 156)
+      )
+   )
+(CHARACTER H 4536
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 157)
+      )
+   )
+(CHARACTER H 454F
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 158)
+      )
+   )
+(CHARACTER H 4568
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 159)
+      )
+   )
+(CHARACTER H 4581
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 160)
+      )
+   )
+(CHARACTER H 459A
+   (CHARWD R 0.375)
+   (CHARDP R 0.185499)
+   (CHARHT R 0.793997)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 161)
+      )
+   )
+(CHARACTER H 4523
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 162)
+      )
+   )
+(CHARACTER H 453C
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 163)
+      )
+   )
+(CHARACTER H 4555
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.255017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 164)
+      )
+   )
+(CHARACTER H 456E
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.413017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 165)
+      )
+   )
+(CHARACTER H 4587
+   (CHARWD R 0.396999)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.570017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 166)
+      )
+   )
+(CHARACTER H 4528
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 167)
+      )
+   )
+(CHARACTER H 4541
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 168)
+      )
+   )
+(CHARACTER H 455A
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 169)
+      )
+   )
+(CHARACTER H 4573
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.255017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 170)
+      )
+   )
+(CHARACTER H 458C
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.413017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 171)
+      )
+   )
+(CHARACTER H 452D
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 172)
+      )
+   )
+(CHARACTER H 4546
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 173)
+      )
+   )
+(CHARACTER H 455F
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 174)
+      )
+   )
+(CHARACTER H 4578
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 175)
+      )
+   )
+(CHARACTER H 4591
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.255017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 176)
+      )
+   )
+(CHARACTER H 4532
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 177)
+      )
+   )
+(CHARACTER H 454B
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 178)
+      )
+   )
+(CHARACTER H 4564
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 179)
+      )
+   )
+(CHARACTER H 457D
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 180)
+      )
+   )
+(CHARACTER H 4596
+   (CHARWD R 0.375)
+   (CHARDP R 0.003119)
+   (CHARHT R 1.098017)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 181)
+      )
+   )
+(CHARACTER H 4537
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 182)
+      )
+   )
+(CHARACTER H 4550
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 183)
+      )
+   )
+(CHARACTER H 4569
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 184)
+      )
+   )
+(CHARACTER H 4582
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 185)
+      )
+   )
+(CHARACTER H 459B
+   (CHARWD R 0.375)
+   (CHARDP R 0.0285)
+   (CHARHT R 0.950996)
+   (MAP
+      (SELECTFONT D 7)
+      (SETCHAR D 186)
       )
    )

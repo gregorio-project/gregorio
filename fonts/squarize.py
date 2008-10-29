@@ -96,8 +96,8 @@ see gregorio-base.sfd for this convention.
 Usage:
         squarize.py fontname
 
-with fontame=gregorio or parmesan for now. The script generates squarize-fontame.pe
-which is a fontforge script.
+with fontame=gregorio, parmesan or greciliae for now. The script generates
+squarize-fontame.pe which is a fontforge script.
 """
 
 def main():
