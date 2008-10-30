@@ -44,6 +44,7 @@ Here are the different types, they must be the same as in squarize.py
 #define T_PORRECTUS_NOBAR 24
 #define T_TORCULUS 28
 #define T_TORCULUS_RESUPINUS 32
+#define T_TORCULUS_QUILISMA 36
 
 // the liquescentia number of GregorioTeX (different because they have to be between 0 and 7)
 #define GL_NO_LIQUESCENTIA 0

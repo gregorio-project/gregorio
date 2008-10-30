@@ -1792,13 +1792,25 @@ void
 	}
       break;
     case G_TORCULUS:
-      *type = AT_ONE_NOTE;
-      *gtype = T_TORCULUS;
-      temp =
+      if (glyph->first_note->shape == S_QUILISMA)
+        {
+          *type = AT_QUILISMA;
+          *gtype = T_TORCULUS_QUILISMA;
+          temp =
+	TYPE_FACTOR * T_TORCULUS_QUILISMA +
+	gregoriotex_determine_liquescentia_number (L_LIQ_FACTOR, L_NO_INITIO,
+						   glyph->liquescentia);
+        }
+      else
+        {  
+          *type = AT_ONE_NOTE;
+          *gtype = T_TORCULUS;
+          temp =
 	TYPE_FACTOR * T_TORCULUS +
 	gregoriotex_determine_liquescentia_number (L_LIQ_FACTOR, L_ALL,
 						   glyph->liquescentia);
-      break;
+	  }
+	break;
     case G_PORRECTUS:
       *type = AT_PORRECTUS;
       *gtype = T_PORRECTUS;

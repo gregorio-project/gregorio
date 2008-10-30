@@ -57,6 +57,7 @@ shapes={
 'porrectus_nobar':24,
 'torculus':28,
 'torculusresupinus':32,
+'torculusquilisma':36,
 }
 
 liquescentiae={
@@ -775,6 +776,9 @@ def torculus():
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
             write_torculus(i,j, "base5", "base7", 'torculus')
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            write_torculus(i,j, "qbase", "base7", 'torculusquilisma')
     precise_message("torculus initio debilis")
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
@@ -783,6 +787,9 @@ def torculus():
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
             write_torculus(i,j, "base5", "auctusd1", 'torculus', 'auctusdescendens')
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            write_torculus(i,j, "qbase", "auctusd1", 'torculusquilisma', 'auctusdescendens')
     precise_message("torculus initio debilis auctus descendens")
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
@@ -791,6 +798,9 @@ def torculus():
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
             write_torculus(i,j, "base5", "auctusa1", 'torculus', 'auctusascendens')
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            write_torculus(i,j, "qbase", "auctusa1", 'torculusquilisma', 'auctusascendens')
     precise_message("torculus initio debilis auctus ascendens")
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
@@ -799,6 +809,9 @@ def torculus():
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
             write_torculus(i,j, "base5", "deminutus", 'torculus', 'deminutus')
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            write_torculus(i,j, "qbase", "deminutus", 'torculusquilisma', 'deminutus')
     precise_message("torculus initio debilis deminutus")
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
@@ -810,6 +823,8 @@ def write_torculus(i,j, first_glyph, last_glyph, shape, liquescentia='nothing'):
     length=width_punctum-line_width
     if (first_glyph=="idebilis"):
         length=width_debilis
+    elif first_glyph=="qbase":
+        length=width_quilisma-line_width
     elif i==1:
         first_glyph='_0017'
         length=width_punctum
