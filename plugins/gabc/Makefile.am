@@ -2,7 +2,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/lib
 AM_CFLAGS =  -L$(top_srcdir)/lib
 
 pkglib_LTLIBRARIES = gabc.la
-pkginclude_HEADERS = gabc.h
+pkginclude_HEADERS = gabc.h gabc-score-determination-l.h
 gabc_la_LDFLAGS = -no-undefined -module -avoid-version
 
 gabc_la_SOURCES = gabc-elements-determination.c gabc-write.c \
