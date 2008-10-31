@@ -26,7 +26,7 @@ from os.path import join
 TexliveDirs=[
 '/usr/local/texmf/',
 '/sw/var/lib/texmf',
-'/usr/local/texlive/texmf-texlocal',
+'/usr/local/texlive/texmf-local',
 '/cygdrive/c/Program Files/texlive/texmf-local',
 '/usr/share/texmf/']
 
