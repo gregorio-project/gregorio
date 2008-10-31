@@ -23,17 +23,21 @@ import getopt, sys, shutil
 from os import access, F_OK, W_OK, makedirs, system, symlink
 from os.path import join
 
-TexliveDirs=['/usr/share/texmf/',
+TexliveDirs=[
 '/usr/local/texmf/',
 '/sw/var/lib/texmf',
-'/cygdrive/c/Program Files/texlive/texmf-local']
+'/usr/local/texlive/texmf-texlocal',
+'/cygdrive/c/Program Files/texlive/texmf-local',
+'/usr/share/texmf/']
 
 Fonts=['greciliae', 'gregorio', 'parmesan']
 
 NumberOfFiles=9
 
 def main():
+    i=0
     for basedir in TexliveDirs:
+        i=i+1
         if access(basedir, F_OK):
             if access(basedir, W_OK):
                 print "installing gregorio fonts in %s" % basedir
@@ -41,6 +45,8 @@ def main():
                 install(basedir)
             else:
                 print "error: can't write in %s" % basedir
+        elif i==len(TexliveDirs) +1:
+            print "error: unable to determine location of texmf directory"
 
 def patch_cygwin():
     # just some symlinks for texlive 2008 to work fine under cygwin
