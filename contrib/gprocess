@@ -151,7 +151,7 @@ __END__
 
 \documentclass[12pt, letterpaper]{article}
 \usepackage{fullpage}
-\usepackage{palatino}
+\usepackage{newcent}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{gregoriotex}
