@@ -1,4 +1,4 @@
-SUBDIRS= po lib include plugins src examples tex 
+SUBDIRS= po include lib plugins src examples tex contrib
 
 ACLOCAL_AMFLAGS = -I m4
 

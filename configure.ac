@@ -76,6 +76,7 @@ AC_CONFIG_FILES([
     lib/Makefile
     include/Makefile
     examples/Makefile
+    contrib/Makefile
     tex/Makefile
     po/Makefile.in
 ])
