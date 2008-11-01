@@ -14,6 +14,7 @@ mkdir -p $LIBDIR
 mkdir -p $MANDIR
 
 cp gregorio.1 $MANDIR
+cp gprocess $BINDIR
 
 cd fonts
 python install.py

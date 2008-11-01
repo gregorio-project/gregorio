@@ -43,6 +43,7 @@ rm $DESTDIR/xml/*.h
 rm $DESTDIR/xml/Makefile*
 cp cygwin/doinstall.sh $DESTDIR
 cp cygwin/README $DESTDIR
+cp contrib/gprocess $DESTDIR
 cp libtool $DESTDIR
 xsltproc -o $DESTDIR/gregorio.1 -''-nonet /usr/share/docbook-xsl/manpages/docbook.xsl debian/manpage.xml 
 cp -R fonts $DESTDIR
