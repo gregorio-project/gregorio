@@ -180,7 +180,7 @@ print_usage (char *name)
   printf (_("\nUsage :\n%s [OPTION] {file}\n  where OPTION is :\n\
 \t-o file    writes output to specified file\n\
 \t-S         writes output to stdout\n\
-\t-F format  specifies outpuf file format, default is gtex\n\
+\t-F format  specifies output file format, default is gtex\n\
 \t-l file    writes messages output to specified file (default stderr)\n\
 \t-f format  specifies input file format, default is gabc\n\
 \t-s         reads input from stdin\n\
