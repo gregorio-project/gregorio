@@ -48,6 +48,7 @@ cp libtool $DESTDIR
 xsltproc -o $DESTDIR/gregorio.1 -''-nonet /usr/share/docbook-xsl/manpages/docbook.xsl debian/manpage.xml 
 cp -R fonts $DESTDIR
 cp -R tex $DESTDIR
+rm $DESTDIR/tex/Makefile*
 cd cygwin
 tar czf ../gregorio-cygwin.tgz gregorio-cygwin
 cd ..
