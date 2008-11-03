@@ -26,6 +26,7 @@ use strict;
 
 my $PDFVIEWER = "/usr/bin/kpdf";
 my $TEXCOMPILER = "/usr/bin/lamed";
+my $DVIPDFCONVERTER = "/usr/bin/dvipdfm";
 
 ## END OF USER-MODIFIABLE COMMAND PATHS
 
@@ -47,14 +48,11 @@ my $KEEPSEARCHING = 1;
 my $INLINE = "";
 
 
-my $TEMPLATEFILE=$0;
-$TEMPLATEFILE =~ s#/[^/]*$#/gprocess-template.tex#;
-
 my $SCORETEXFILE = $GABCFILE;
 $SCORETEXFILE =~ s/gabc$/tex/;
 
 my $SCOREWRAPTEX = $SCORETEXFILE;
-$SCOREWRAPTEX =~ s/.tex/-main.tex/;
+$SCOREWRAPTEX =~ s/.tex$/-main.tex/;
 
 ####  GET THE SCORE TITLE FROM THE GABC FILE ####
 
@@ -103,7 +101,7 @@ my @TEMPLATELINES;
 
 ####  MAKE SUBSTITUTIONS ####
 
-&do_subst ("XXXX-SCORENAME-XXXX", uc $SCORENAME);
+&do_subst ("XXXX-SCORENAME-XXXX", $SCORENAME);
 &do_subst ("XXXX-SCORETEXFILE-XXXX", $SCORETEXFILE);
 &do_subst ("XXXX-ANNOTATION-XXXX", $ANNOTATION);
 &do_subst ("XXXX-OFFICEPART-XXXX", $OFFICEPART);
@@ -120,14 +118,22 @@ print TEXWRAP @TEMPLATELINES;
 close (TEXWRAP);
 
 #### RUN GREGORIO, LATEX, AND KPDF ####
-system("gregorio $GABCFILE");
-system("$TEXCOMPILER $SCOREWRAPTEX");
 my $DVIFILE = $SCOREWRAPTEX;
 $DVIFILE =~ s/tex$/dvi/;
-system ("dvipdf $DVIFILE");
 my $PDFFILE = $SCOREWRAPTEX;
 $PDFFILE =~ s/tex$/pdf/;
-system ("$PDFVIEWER $PDFFILE");
+
+# remove product files so that we don't accidentally view results
+# from a prior run
+unlink $SCORETEXFILE;
+unlink $DVIFILE;
+unlink $PDFFILE;
+
+do_cmd("gregorio $GABCFILE");
+do_cmd("$TEXCOMPILER $SCOREWRAPTEX");
+do_cmd ("$DVIPDFCONVERTER $DVIFILE");
+do_cmd ("$PDFVIEWER $PDFFILE");
+
 my $AUXFILE = $DVIFILE;
 $AUXFILE =~ s/dvi$/aux/;
 
@@ -145,6 +151,14 @@ sub do_subst {
      s/$TAG/$VAL/g;
   }
 };
+
+sub do_cmd {
+	my $CMD = $_[0];
+#debugging	print "Doing command: \n  $CMD\n\n";
+	system ($CMD) == 0 
+	   or die "\n\nSystem command failed: $CMD : $?\n";
+};
+
 
 #  THE LINES AFTER THIS "END" TAG ARE A TEMPLATE FOR THE TEX FILE TO BE GENERATED
 __END__
