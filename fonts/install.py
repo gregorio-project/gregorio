@@ -155,11 +155,11 @@ def endInstall(basedir):
     system("mktexlsr")
     Fonts.append("gresym")
     for fontname in Fonts:
-        print ("running updmap-sys --enable MixedMap=%s" % join(basedir, 'fonts/map/dvips/public/gregoriotex/', "%s.map" % fontname))
+        print ("running updmap-sys --enable MixedMap=%s.map" % fontname)
         if access('/cygdrive', F_OK):
-            system("updmap-sys.bat --enable MixedMap=%s" % join(basedir, 'fonts/map/dvips/public/gregoriotex/', "%s.map" % fontname))
+            system("updmap-sys.bat --enable MixedMap=%s.map" % fontname)
         else:
-            system("updmap-sys --enable MixedMap=%s" % join(basedir, 'fonts/map/dvips/public/gregoriotex/', "%s.map" % fontname))
+            system("updmap-sys --enable MixedMap=%s.map" % fontname)
 
 if __name__ == "__main__":
     main()
