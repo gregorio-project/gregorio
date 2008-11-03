@@ -61,10 +61,10 @@ install: build
 
 	$(MAKE) DESTDIR=$(CURDIR)/debian/gregorio install
 	dh_install
-	echo "MixedMap /usr/share/texmf/fonts/map/dvips/public/gregoriotex/gregorio.map" > $(CURDIR)/debian/gregoriotex.maps
-	echo "MixedMap /usr/share/texmf/fonts/map/dvips/public/gregoriotex/parmesan.map" >> $(CURDIR)/debian/gregoriotex.maps
-	echo "MixedMap /usr/share/texmf/fonts/map/dvips/public/gregoriotex/greciliae.map" >> $(CURDIR)/debian/gregoriotex.maps
-	echo "MixedMap /usr/share/texmf/fonts/map/dvips/public/gregoriotex/gresym.map" >> $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap gregorio.map" > $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap parmesan.map" >> $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap greciliae.map" >> $(CURDIR)/debian/gregoriotex.maps
+	echo "MixedMap gresym.map" >> $(CURDIR)/debian/gregoriotex.maps
 	dh_installtex -pgregoriotex
 	
 	dh_installdocs
