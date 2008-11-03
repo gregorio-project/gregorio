@@ -106,7 +106,7 @@ def install(basedir):
     makedir(basedir, 'fonts/ovf/public/gregoriotex')
     makedir(basedir, 'fonts/ofm/public/gregoriotex')
     makedir(basedir, 'fonts/ovp/public/gregoriotex')
-    makedir(basedir, 'fonts/maps/dvips/public/gregoriotex')
+    makedir(basedir, 'fonts/map/dvips/public/gregoriotex')
     makedir(basedir, 'tex/latex/gregoriotex')
     copy(basedir, '../tex/gregoriotex.sty', 'tex/latex/gregoriotex')
     copy(basedir, '../tex/gregoriosyms.sty', 'tex/latex/gregoriotex')
@@ -116,6 +116,7 @@ def install(basedir):
     copy(basedir, '../tex/gregoriotex-spaces.tex', 'tex/gregoriotex')
     copy(basedir, '../tex/gregoriotex-syllable.tex', 'tex/gregoriotex')
     copy(basedir, '../tex/gregoriotex-symbols.tex', 'tex/gregoriotex')
+    copy(basedir, 'gresym.map', 'fonts/map/dvips/public/gregoriotex')
     makedir(basedir, 'fonts/tfm/public/gregoriotex/gresym')
     copy(basedir, 'gresym.tfm', 'fonts/tfm/public/gregoriotex/gresym')
     makedir(basedir, 'fonts/type1/public/gregoriotex/gresym')
@@ -152,6 +153,7 @@ def copy(basedir, filename, dirname):
 def endInstall(basedir):
     print ("running mktexlsr")
     system("mktexlsr")
+    Fonts.append("gresym")
     for fontname in Fonts:
         print ("running updmap-sys --enable MixedMap=%s" % join(basedir, 'fonts/map/dvips/public/gregoriotex/', "%s.map" % fontname))
         if access('/cygdrive', F_OK):
