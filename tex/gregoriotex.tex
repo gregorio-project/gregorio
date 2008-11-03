@@ -340,27 +340,28 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\writemode#1{%
-\relax%
+\setfirstlineaboveinitial{\sc{\bf{#1}}}{\sc{\bf{#1}}}%
+\relax %
 }
 
 \def\gregorianmode#1{%
 \ifcase#1%
 \or%
-\writemode{I.}%
+\writemode{I}%
 \or%
-\writemode{II.}%
+\writemode{II}%
 \or%
-\writemode{III.}%
+\writemode{III}%
 \or%
-\writemode{IV.}%
+\writemode{IV}%
 \or%
-\writemode{V.}%
+\writemode{V}%
 \or%
-\writemode{VI.}%
+\writemode{VI}%
 \or%
-\writemode{VII.}%
+\writemode{VII}%
 \or%
-\writemode{VIII.}%
+\writemode{VIII}%
 \fi%
 \relax%
 }
@@ -685,6 +686,18 @@
 % a V with bar more adapted to small text
 \def\Vbarsmall{%
 {\gregoriansymbolfont \char 72}%
+\relax%
+}
+
+% bars for the letters
+
+\def\greletterbar{%
+{\gregoriansymbolfont \char 73}%
+\relax%
+}
+
+\def\greletteraltbar{%
+{\gregoriansymbolfont \char 74}%
 \relax%
 }
 
