@@ -158,6 +158,8 @@ def endInstall(basedir):
         print ("running updmap-sys --enable MixedMap=%s.map" % fontname)
         if access('/cygdrive', F_OK):
             system("updmap-sys.bat --enable MixedMap=%s.map" % fontname)
+            print ("running updmap --enable MixedMap=%s.map" % fontname)
+            system("updmap.bat --enable MixedMap=%s.map" % fontname)
         else:
             system("updmap-sys --enable MixedMap=%s.map" % fontname)
 

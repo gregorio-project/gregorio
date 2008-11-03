@@ -18,7 +18,6 @@ cp gprocess $BINDIR
 
 cd fonts
 python install.py
-updmap.bat
 cd ..
 
 ./libtool --mode=install $INSTALL -c lib/libgregorio.la $LIBDIR/libgregorio.la
