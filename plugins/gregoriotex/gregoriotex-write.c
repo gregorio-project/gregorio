@@ -539,6 +539,11 @@ libgregorio_gtex_print_char (FILE * f, wchar_t to_print)
       fprintf (f, "\\_ ");
       return;
     }
+  if (to_print == L'~')
+    {
+      fprintf (f, "\\ensuremath{\\sim}");
+      return;
+    }
   if (to_print < 128)
     {
       fprintf (f, "%lc", to_print);
