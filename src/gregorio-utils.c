@@ -86,7 +86,7 @@ get_base_filename (char *fbasename)
   l = strlen (fbasename) - strlen (p);
   ret = (char *) malloc ((l + 1) * sizeof (char));
   snprintf (ret, l + 1, "%s", fbasename);
-  ret[l + 1] = '\0';
+  ret[l] = '\0';
   return ret;
 }
 
