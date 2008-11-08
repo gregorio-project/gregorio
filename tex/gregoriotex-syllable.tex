@@ -39,14 +39,18 @@
 %% 2: puts the value on the interline just beneath if it is on a line
 %% 3: case of the vertical episemus, which is not placed at the same place if the corresponding note is on a line or not
 %% 4: case of the punctum mora, for the same reason
-\def\calculateglyphraisevalue#1#2{%
+% #3: 1 if it is a vertical episemus, else 0
+\def\calculateglyphraisevalue#1#2#3{%
 \global\isonaline=\number 0%
 \ifx a#1%
 \global\tempcount=\number 1%
 \fi%
 \ifx b#1%
 \global\tempcount=\number 2%
-%\global\isonaline=1 % temporary (or not) patch, for some complex reasons (think of a vertical episemus for a c)
+\ifcase#3%
+\global\isonaline=1 %
+\or % if it is a vertical episemus, we don't care if it is on a line or not... which may cause some problems...
+\fi %
 \fi%
 \ifx c#1%
 \global\tempcount=\number 3%
@@ -233,7 +237,7 @@
 %%%%% 8 : flexus with an ambitus of one
 %%%%% 9 : flexus deminutus
 \def\glyph#1#2#3#4{%
-\calculateglyphraisevalue{#2}{0}%
+\calculateglyphraisevalue{#2}{0}{0}%
 \setbox\Tempwidth=\hbox{\gregorianfont #1}%
 \tempwidth=\wd\Tempwidth%
 \raise \glyphraisevalue%
