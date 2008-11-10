@@ -1,0 +1,10 @@
+Here is the description of the different files in this section.
+
+gprocess is a perl script to instantly compile and show the result of a gabc
+file. You can modify some variables directly into the script, for example the
+pdf viewer program.
+
+gabc.lang is a lang file for gabc syntax highlighting in all the text viewer of
+the gnome project, like gedit. Simply copy the file in 
+/usr/share/gtksourceview-2.0/language-specs/ and it will work. There are still
+some bugs to fix, but at least it looks better.
