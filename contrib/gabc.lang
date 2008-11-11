@@ -40,8 +40,6 @@
     <context id="gabc">
       <include>
         <context id="header">
-          <start>^n</start>
-          <end>%%</end>
           <include>
             <context id="attribute-name" style-ref="attribute-name">
               <match>[^:]+:|;</match>
@@ -49,6 +47,8 @@
           </include>
         </context>
         <context id="score">
+          <start>%%</start>
+          <end>%%</end>
           <include>
             <context id="text" style-ref="text">
               <match>[^\(\[&lt;]+</match>
