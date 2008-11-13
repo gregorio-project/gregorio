@@ -8,3 +8,7 @@ gabc.lang is a lang file for gabc syntax highlighting in all the text viewer of
 the gnome project, like gedit. Simply copy the file in 
 /usr/share/gtksourceview-2.0/language-specs/ and it will work. There are still
 some bugs to fix, but at least it looks better.
+
+gabc.xml is a file for syntax highlighting in kate (and Kedit, etc.). To install
+it, simply copy the file in /usr/share/apps/katepart/syntax. This path may not
+be the same according to your distribution.
