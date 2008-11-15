@@ -20,8 +20,9 @@
 #This script installs the fonts on a TeXLive system.
 
 import getopt, sys, shutil
-from os import access, F_OK, W_OK, makedirs, system, symlink
-from os.path import join
+from os import access, F_OK, W_OK, makedirs, system, symlink, chmod
+from stat import S_IRUSR, S_IWUSR, S_IRGRP, S_IROTH
+from os.path import join, basename
 
 TexliveDirs=[
 '/usr/local/texmf/',
@@ -147,8 +148,11 @@ def makedir(basedir, dirname):
         makedirs(name)
         
 def copy(basedir, filename, dirname):
-    print ("copying %s in %s" % (filename, join(basedir, dirname)))
-    shutil.copy(filename, join(basedir, dirname))
+    destdir=join(basedir, dirname)
+    print ("copying %s in %s" % (filename, destdir))
+    shutil.copy(filename, destdir)
+    chmod(join(destdir, basename(filename)), S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+    
 
 def endInstall(basedir):
     print ("running mktexlsr")
