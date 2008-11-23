@@ -164,6 +164,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 					    current_note->pitch);
 	  current_glyph_first_note = current_note->next_note;
 	  libgregorio_free_one_note (&current_note);
+      last_pitch = USELESS_VALUE;
 	  //TODO : change behaviour here for flat and natural
 	  continue;
 	}
@@ -250,6 +251,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 		       current_note->previous_note);
 	  current_glyph_type = next_glyph_type;
 	  liquescentia = L_NO_LIQUESCENTIA;
+	  last_pitch = USELESS_VALUE;
 	  /* we deal with liquescentia */
 	  if (is_liquescentia (current_note->liquescentia))
 	    //not an initio debilis, because we considered it in the first
