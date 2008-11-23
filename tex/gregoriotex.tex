@@ -61,12 +61,14 @@
 \global\multiply\interstafflinespace by \the\grefactor %
 \global\staffheight=4\stafflineheight %
 \global\advance\staffheight by 3\interstafflinespace %
-\global\spaceabovelines = 25000 sp plus 60000 sp minus 0 sp%
+\global\spaceabovelines = 50000 sp plus 40000 sp minus 10000 sp%
 \global\multiply\spaceabovelines by \grefactor %
-\global\spacelinestext = 59500 sp plus 0 sp minus 0 sp%
+\global\spacelinestext = 63500 sp plus 0 sp minus 0 sp%
 \global\multiply\spacelinestext by \grefactor %
-\global\spacebeneathtext = 18000 sp plus 0 sp minus 0 sp%
-\global\multiply\spacebeneathtext by \grefactor %
+\global\spacebeneathtext = 0 sp plus 0 sp minus 0 sp%
+%\global\multiply\spacebeneathtext by \grefactor % uncomment it if you want
+% something else than 0
+\global\textlower=\spacebeneathtext %
 \global\calculateconstantglyphraise %
 \relax %
 }
@@ -75,7 +77,7 @@
 \linewidth=\hsize 
 \stafflinewidth=\linewidth 
 
-% to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at spacelinestext + spacebeneathtext + 2*interstafflinespace + 2*stafflineheight
+% to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at spacelinestext + spacebeneathtext + 2*interstafflinespace + 2*stafflineheight + translationheight
 \def\calculateconstantglyphraise{%
 \global\constantglyphraise = -22000 sp%
 \global\multiply\constantglyphraise by \the\grefactor %
@@ -99,15 +101,27 @@
 
 % macro to tell gregorio to set space for the translation
 \def\addtranslationspace{%
-\global\translationheight=80000 sp%
+\global\translationheight=60000 sp%
 \global\multiply\translationheight by \the\grefactor %
 \global\textlower=\spacebeneathtext %
 \global\advance\textlower by \translationheight %
+\generatelines %
+\calculateconstantglyphraise %
+\relax %
+}
+
+\def\removetranslationspace{%
+\global\translationheight=0 sp%
+\global\textlower=\spacebeneathtext %
+\generatelines %
+\calculateconstantglyphraise %
+\relax %
 }
 
 %macro to call if you want to go to the next line simply
 \def\grenewline{%
 \updateadditionalspaces{0}{0}%
+\removetranslationspace %
 \lastoflinecount=2\relax %
 \updateleftbox %
 \penalty-10001 %
@@ -116,9 +130,15 @@
 
 % macro called to go to the next line but when there are additional vertical spaces to add
 %% 1: can be 0, 1 or 2 or 3. 1 is when there is a note above the 4th line, 2 when there is a note on the 5th line, and 3 when there is a note above the 5th line
-%% 2: iden, but with the bottom line (-1th)
-\def\grenewlinewithspace#1#2{%
+%% 2: idem, but with the bottom line (-1th)
+%% 3: 1 if there is a translation somewhere
+\def\grenewlinewithspace#1#2#3{%
 \updateadditionalspaces{#1}{#2}%
+\ifnum#3 = 1\relax %
+\addtranslationspace %
+\else %
+\removetranslationspace %
+\fi %
 \lastoflinecount=2\relax %
 \updateleftbox %
 \penalty-10001 %
@@ -160,13 +180,41 @@
 \relax %
 }
 
+%% macros for additional bottom space for the first line
+
+% #1 is 1, 2 or 3, with the same signification as in grenewlinewithspace
+\def\firstlinebottomspace#1#2{%
+%TODO
+\ifcase#1\relax %
+% case 0
+\global\additionalbottomspace=0 sp%
+\or % case 1
+\global\additionalbottomspace=0 sp%
+\or % case 2
+\global\additionalbottomspace=15000 sp%
+\global\multiply\additionalbottomspace by \the\grefactor %
+\or % case 3
+\global\additionalbottomspace=30000 sp%
+\global\multiply\additionalbottomspace by \the\grefactor %
+\fi %
+\ifnum#2=1\relax %
+\addtranslationspace %
+\else %
+\removetranslationspace %
+\fi %
+\generatelines %
+\calculateconstantglyphraise %
+\relax %
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of text
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % \textlower is the height of the separation between the bottom line (which is invisible : for the notes which are very low) and the bottom of the text
-\newdimen\textlower \textlower=\spacebeneathtext
-\advance\textlower by \translationheight
+\newdimen\textlower
+\textlower=\spacebeneathtext
+%\advance\textlower by \translationheight
 
 %% macro that sets \temp to the width of its argument
 
@@ -200,7 +248,7 @@
 \gregoriotextdashwidth=\tempwidth
 
 \def\writetranslation#1{%
-\raise\spacebeneathtext\hbox to 0pt{{\translationfont #1}\hss}%
+\raise\spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
 \relax %
 }
 
@@ -242,12 +290,7 @@
 
 \def\updateleftbox{%
 \updatelinewidth %
-\localleftbox{%
-\kern\additionalleftspace %
-\copy\Lines% draws the lines
-\unkern %
-\hbox{\copy\Leftbox\hskip\afterclefnospace}%
-}%
+\updatelinesclef %
 }
 
 \def\updatelinewidth{%
@@ -258,16 +301,6 @@
 \generatelines %
 \global\stafflinewidth=\temp %
 \fi %
-}
-
-\def\greinitialformat#1{%
-{\grefontofinitial #1}%
-\relax %
-}
-
-\def\grebiginitialformat#1{%
-{\grefontofbiginitial #1}%
-\relax %
 }
 
 \def\greinitial#1{%
@@ -478,6 +511,7 @@
 \generatelines %
 \ifnum\grefactor=0\relax %
 \setgrefactor{17}%
+\setgreverticalspaces %
 \fi %
 \noindent%
 %\directlua0 {%
@@ -700,21 +734,30 @@
 \font\gregorianfont=greciliae at 10pt
 
 \def\gretextformat#1{%
-{\gretextfont #1}%
+#1\relax %
+}
+
+\def\gretranslationformat#1{%
+#1\relax %
+}
+
+\def\greinitialformat#1{%
+\font\grefontofinitial=pncr at 40pt%
+{\grefontofinitial #1}%
 \relax %
 }
 
-% loading of default font
-\font\gretextfont=pncr at 12pt
-\font\grefontofinitial=pncr at 40pt
-\font\grefontofbiginitial=pncr at 80pt
-\font\grefontoftranslation=pncr at 12pt
+\def\grebiginitialformat#1{%
+\font\grefontofbiginitial=pncr at 80pt%
+{\grefontofbiginitial #1}%
+\relax %
+}
 
 \def\setgrefactor#1{%
 \global\grefactor=#1\relax %
 \setgreverticalspaces %
 \setgrespaces %
 \generatelines %
-\setgregorianfont{greciliae}% TODO : change it, so that users can choose without changin the factor
+\setgregorianfont{greciliae}%
 \relax %
 }

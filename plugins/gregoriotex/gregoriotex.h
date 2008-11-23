@@ -108,8 +108,11 @@ Here are the different types, they must be the same as in squarize.py
 // a structure containing the result of seekadditionalspaces
 
 typedef struct gregorio_line {
-unsigned char additional_top_space;
+unsigned char additional_top_space; // 0, 1, 2 or 3. it is the argument of
+// grenewlinewithspaces in gregoriotex.tex
 unsigned char additional_bottom_space;
+unsigned char translation; // O or 1, indicates if there is a translation on
+// the line
 } gregorio_line;
 
 

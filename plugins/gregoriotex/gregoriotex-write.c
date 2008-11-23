@@ -39,6 +39,7 @@ write_score (FILE * f, gregorio_score * score)
   gregorio_syllable *current_syllable;
     // the current line (as far as we know), it is always 0, it can be 1 in the case of the first line of a score with a two lines initial
   unsigned char line = 0;
+  gregorio_line *first_line;
 
   if (!f)
     {
@@ -55,6 +56,14 @@ write_score (FILE * f, gregorio_score * score)
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
     }
   fprintf (f, "\\begingregorioscore%%\n");
+  // if necessary, we add some bottom space to the first line
+  first_line = (gregorio_line *) malloc (sizeof (gregorio_line));
+  libgregorio_gregoriotex_seeklinespaces (score->first_syllable, first_line);
+  if (first_line->additional_bottom_space != 0 || first_line->translation != 0)
+    {
+      fprintf(f, "\\firstlinebottomspace{%u}{%u}%%\n", first_line->additional_bottom_space, first_line->translation);
+    }
+  free(first_line);
   // we select the good font
   if (score->gregoriotex_font)
     {
@@ -164,15 +173,16 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	  libgregorio_gregoriotex_seeklinespaces (syllable->
 						  next_syllable, line);
 	  if (line->additional_bottom_space == 0
-	      && line->additional_top_space == 0)
+	      && line->additional_top_space == 0 && line->translation == 0)
 	    {
 	      fprintf (f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
 	    }
 	  else
 	    {
-	      fprintf (f, "%%\n%%\n\\grenewlinewithspace{%u}{%u}%%\n%%\n%%\n",
+	      fprintf (f, "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}%%\n%%\n%%\n",
 		       line->additional_top_space,
-		       line->additional_bottom_space);
+		       line->additional_bottom_space,
+		       line->translation);
 	    }
 	  free (line);
 	  if (*line_number == 1) {
@@ -290,15 +300,16 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	  libgregorio_gregoriotex_seeklinespaces (syllable->
 						  next_syllable, line);
 	  if (line->additional_bottom_space == 0
-	      && line->additional_top_space == 0)
+	      && line->additional_top_space == 0 && line->translation == 0)
 	    {
 	      fprintf (f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
 	    }
 	  else
 	    {
-	      fprintf (f, "%%\n%%\n\\grenewlinewithspace{%u}{%u}%%\n%%\n%%\n",
+	      fprintf (f, "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}%%\n%%\n%%\n",
 		       line->additional_top_space,
-		       line->additional_bottom_space);
+		       line->additional_bottom_space,
+		       line->translation);
 	    }
 	  free (line);
  	  if (*line_number == 1) {
@@ -344,9 +355,14 @@ libgregorio_gregoriotex_seeklinespaces (gregorio_syllable * syllable,
 
   line->additional_top_space = 0;
   line->additional_bottom_space = 0;
+  line->translation=0;
 
   while (syllable)
     {
+      if (syllable->translation) 
+        {
+          line->translation=1;
+        }
       element = (syllable->elements)[0];
       while (element)
 	{
@@ -2327,6 +2343,8 @@ libgregorio_gregoriotex_syllable_first_note (gregorio_syllable * syllable)
       return glyph->first_note->pitch;
     }
 }
+
+// a function to determine the 7th argument of syllable
 
 int
 libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable)

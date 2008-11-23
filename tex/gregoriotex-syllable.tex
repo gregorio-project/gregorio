@@ -48,8 +48,7 @@
 \ifx b#1%
 \global\tempcount=\number 2%
 \ifcase#3%
-\global\isonaline=1 %
-\or % if it is a vertical episemus, we don't care if it is on a line or not... which may cause some problems...
+\global\isonaline=1 % if it is a vertical episemus, we don't care if it is on a line or not... which may cause some problems...
 \fi %
 \fi%
 \ifx c#1%
@@ -430,8 +429,8 @@
 \ifnum\lastoflinecount=2\relax %
 \temp=\intersyllablespace %
 \advance\temp by \begindifference %
-\ifdim\temp <-\wd\Leftbox %
-\temp=-\wd\Leftbox %
+\ifdim\temp <-\clefwidth %
+\temp=-\clefwidth %
 \fi %
 \hbox{\kern\temp}%
 \hskip\afterclefnospace %
@@ -503,11 +502,11 @@
 \fi%
 \ifnum\lastoflinecount=2\relax %
 % we put a space after the initial clefs
-\localleftbox{%
-\copy\Lines% draws the lines
-\unkern %
-\hbox{\copy\Leftbox\hskip\spaceafterlineclef}%
-}%
+%\localleftbox{% I just commented it... I can't really remember why I did that thing...
+%\copy\Lines% draws the lines
+%\unkern %
+%\hbox{\copy\Leftbox\hskip\spaceafterlineclef}%
+%}%
 \global\lastoflinecount=0\relax %
 \fi %
 %% then we call end of syllable or end of word, but only if the next syllable is not a bar, that is to say, the number is between 10 and 19. TeX is a shitty language, so we do a dirty workaround to make a and in the if.
