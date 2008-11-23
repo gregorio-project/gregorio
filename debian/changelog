@@ -1,3 +1,11 @@
+gregorio (0.9.1-1) unstable; urgency=low
+
+  * New upstream version:
+     - fixing a lot of small bugs
+     - changing the number of arguments of some TeX functions
+
+ -- Elie Roux <elie.roux@telecom-bretagne.eu>  Sun, 23 Nov 2008 16:19:26 +0200
+
 gregorio (0.9-1) unstable; urgency=low
 
   * New upstream version:
