@@ -71,13 +71,13 @@
 \def\typekey#1#2#3#4{%
 \ifcase#2 %
 \or%
-\calculateglyphraisevalue{c}{0}{0}%
+\calculateglyphraisevalue{c}{0}%
 \or%
-\calculateglyphraisevalue{e}{0}{0}%
+\calculateglyphraisevalue{e}{0}%
 \or%
-\calculateglyphraisevalue{g}{0}{0}%
+\calculateglyphraisevalue{g}{0}%
 \or%
-\calculateglyphraisevalue{i}{0}{0}%
+\calculateglyphraisevalue{i}{0}%
 \fi%
 \tempskip=\spaceafterlineclef %
 \ifnum#4=0\relax %
@@ -148,7 +148,7 @@
 % the argument is the height
 
 \def\setcusto#1{%
-\calculateglyphraisevalue{#1}{0}{0}%
+\calculateglyphraisevalue{#1}{0}%
 \localrightbox{%
 \raise \glyphraisevalue%
 \hbox{%
@@ -217,7 +217,7 @@
 \else %
 \hskip\spacebeforesigns%
 \fi %
-\calculateglyphraisevalue{#1}{4}{0}%
+\calculateglyphraisevalue{#1}{4}%
 \raise \glyphraisevalue \hbox{\gregorianfont \char 14}%
 \ifnum#2=1\relax %
 \setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
@@ -231,7 +231,7 @@
 % a function to typeset a augmentum duplex, the argument is the letter of the height of the augmentum duplex
 \def\augmentumduplex#1{%
 \hskip\spacebeforesigns%
-\calculateglyphraisevalue{#1}{2}{0}%
+\calculateglyphraisevalue{#1}{2}%
 \raise \glyphraisevalue \hbox{\gregorianfont \char 15}%
 \relax%
 }
@@ -302,7 +302,7 @@
 
 % a function to typeset a vertical episemus. The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are:
 \def\vepisemus#1#2{%
-\calculateglyphraisevalue{#1}{3}{1}%
+\calculateglyphraisevalue{#1}{3}%
 \ifcase#2 %
 %case 0
 \vepisemusaux{0}{\char 17}{1}%
@@ -390,7 +390,7 @@
 \setbox\Tempsign=\hbox{\gregorianfont \char #2}%
 % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
 \tempsignwidth=\wd\Tempsign %
-\ifnum#4=0\relax % case of the lines
+\ifnum#4<2\relax % case of the lines
 \else %
 \temp=16000 sp%
 \multiply\temp by \the\grefactor %
@@ -400,6 +400,9 @@
 \fi %
 \ifcase#4%
 %case of hepisemus
+\raise \glyphraisevalue \copy\Tempsign %
+\or %
+%case of hepisemus at the bottom
 \raise \glyphraisevalue \copy\Tempsign %
 \or % case of a line at the top
 \glyphraisevalue=\additionalbottomspace %
@@ -428,9 +431,13 @@
 
 % a function to typeset a horizontal line (additional line or episemus). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are the common ones
 % the third argument is a bit particular, it is the ambitus of the porrectus or porrectus flexus if the second argument is 8 or 9, otherwise it is useless
-% #4 is 0 for an horizontal episemus, 2 for a line at the bottom and 1 for a line at the top
+% #4 is 0 for an horizontal episemus, 1 for an horizontal episemus under a note, 3 for a line at the bottom and 2 for a line at the top
 \def\hepisorline#1#2#3#4{%
-\calculateglyphraisevalue{#1}{1}{0}%
+\ifnum#4=1\relax %
+\calculateglyphraisevalue{#1}{5}%
+\else %
+\calculateglyphraisevalue{#1}{1}%
+\fi %
 \ifcase#2 %
 %case 0
 \hepisorlineaux{\char 17}{40}{1}{#4}%
@@ -584,6 +591,12 @@
 \relax %
 }
 
+% same but for episema at the bottom of a note
+\def\hepisemusbottom#1#2#3{%
+\hepisorline{#1}{#2}{#3}{1}%
+\relax %
+}
+
 % another dumb top function
 \def\additionalline#1#2#3{%
 \hepisorline{a}{#1}{#2}{#3}%
@@ -669,7 +682,7 @@
 \hskip\spacebeforesmallbar %
 \penalty 7000 %
 \fi %
-\calculateglyphraisevalue{g}{0}{0}% bar glyphs are made to be at this height
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
 \penalty -5000 %
 \ifnum#2=1\relax %
@@ -681,7 +694,7 @@
 \hskip\spacebeforesmallbar %
 \penalty 7000%
 \fi %
-\calculateglyphraisevalue{g}{0}{0}% bar glyphs are made to be at this height
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
 \penalty -5000%
 \ifnum#2=1\relax %
@@ -693,7 +706,7 @@
 \hskip\spacebeforeminor %
 \penalty 7000 %
 \fi %
-\calculateglyphraisevalue{g}{0}{0}% bar glyphs are made to be at this height
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
 \penalty -5000 %
 \ifnum#2=1\relax %
@@ -705,7 +718,7 @@
 \hskip\spacebeforemaior %
 \penalty 7000 %
 \fi %
-\calculateglyphraisevalue{g}{0}{0}% bar glyphs are made to be at this height
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 \penalty -5000 %
 \ifnum#2=1\relax %
@@ -777,7 +790,7 @@
 \ifnum\the\firstglyph=1\relax %
 \global\firstisalteration=1\relax %
 \fi %
-\calculateglyphraisevalue{#1}{0}{0}%
+\calculateglyphraisevalue{#1}{0}%
 \setbox\Tempwidth=\hbox{\gregorianfont \char 6}%
 \tempwidth=\wd\Tempwidth%
 \raise \glyphraisevalue%
@@ -797,7 +810,7 @@
 \ifnum\the\firstglyph=1\relax %
 \global\firstisalteration=1\relax %
 \fi %
-\calculateglyphraisevalue{#1}{0}{0}%
+\calculateglyphraisevalue{#1}{0}%
 \setbox\Tempwidth=\hbox{\gregorianfont \char 7}%
 \tempwidth=\wd\Tempwidth%
 \raise \glyphraisevalue%

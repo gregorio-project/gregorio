@@ -1103,6 +1103,7 @@ libgregorio_gregoriotex_write_hepisemus (FILE * f,
   char height = 0;
   char number = 0;
   char ambitus = 0;
+  char bottom = 0;
 
   if (!current_note || current_note->h_episemus_type == H_NO_EPISEMUS)
     {
@@ -1110,13 +1111,20 @@ libgregorio_gregoriotex_write_hepisemus (FILE * f,
     }
   libgregorio_gregoriotex_find_sign_number (current_glyph, i,
 					    type, TT_H_EPISEMUS, current_note,
-					    &number, &height);
+					    &number, &height, &bottom);
 
   if (i == HEPISEMUS_FIRST_TWO)
     {
       ambitus = current_note->pitch - current_note->next_note->pitch;
     }
-  fprintf (f, "\\hepisemus{%c}{%d}{%d}%%\n", height, number, ambitus);
+  if (bottom == 1)
+    {
+      fprintf (f, "\\hepisemusbottom{%c}{%d}{%d}%%\n", height, number, ambitus);
+    }
+  else
+    {
+      fprintf (f, "\\hepisemus{%c}{%d}{%d}%%\n", height, number, ambitus);
+    }
 }
 
 // a macro to write an additional line bottom_or_top is bottom, or top...
@@ -1140,7 +1148,7 @@ libgregorio_gregoriotex_write_additional_line (FILE * f,
     }
   libgregorio_gregoriotex_find_sign_number (current_glyph, i,
 					    type, TT_H_EPISEMUS, current_note,
-					    &number, &height);
+					    &number, &height, NULL);
 
   if (i == HEPISEMUS_FIRST_TWO)
     {
@@ -1176,7 +1184,7 @@ libgregorio_gregoriotex_write_vepisemus (FILE * f,
 
   libgregorio_gregoriotex_find_sign_number (current_glyph, i,
 					    type, TT_V_EPISEMUS, current_note,
-					    &number, &height);
+					    &number, &height, NULL);
   fprintf (f, "\\vepisemus{%c}{%d}%%\n", height, number);
 }
 
@@ -1243,6 +1251,21 @@ libgregorio_gregoriotex_write_vepisemus (FILE * f,
       *height=current_note->pitch -1;\
     }\
   }
+  
+// case of one note and then one higher, on the same vertical axis,
+// when the sign is on the first
+#define normal_height_bottom()\
+  if (sign_type == TT_H_EPISEMUS) {\
+  /* TODO: case for the second note of porrectus (see if there is a h episemus\
+   after or before*/\
+  *height=current_note->pitch - 1;\
+  if (bottom){\
+  *bottom=1;\
+  }\
+  }\
+  else {\
+  *height=current_note->pitch -1;\
+  }
 
 // a function that finds the good sign (additional line, vepisemus or hepisemus) number, according to the gregoriotex convention (described in gregoriotex.tex)
 // this function is REALLY a pain in the ass, but it is sadly necessary
@@ -1250,7 +1273,7 @@ void
 libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 					  int i, char type, char sign_type,
 					  gregorio_note * current_note,
-					  char *number, char *height)
+					  char *number, char *height, char *bottom)
 {
   switch (type)
     {
@@ -1274,8 +1297,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 		  *number = 0;
 		}
 	    }
-	  normal_height ();
-	  // TODO: patch for the episemus beneath the first note
+      normal_height_bottom();
 	}
       else
 	{			/* i=2 */
@@ -1378,7 +1400,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	    {
 	      *number = 4;
 	    }
-	  normal_height ();
+	  normal_height_bottom();
 	  break;
 	case 3:
 	  if (current_note->pitch - current_note->next_note->pitch != 1)
@@ -1908,8 +1930,6 @@ void
     }
 
 }
-
-
 
 unsigned int
 libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
