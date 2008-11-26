@@ -111,14 +111,37 @@ def main():
     fout.close()
     os.popen("python squarize.py gregoria")
     print "Generating gregorio glyphs for gregoria.\nThis step can be extremely long (10 minutes)."
-    #os.popen("fontforge -script gregoria.pe")
+    os.popen("fontforge -script gregoria.pe")
     os.popen("fontforge -script create-gregoria.pe")
     for i in range(1, 12):
         os.popen("fontforge -script merge-gregoria-%d.pe" % i)
-    fout=open("cut-gregoria.pe", 'w')
     cutGregoria()
+    createMap()
+    finishCreation()
+    
+def finishCreation():
+    for i in range(9):
+        print "tftopl gregoria-%d.tfm gregoria-%d.pl" % (i,i)
+        os.popen("tftopl gregoria-%d.tfm gregoria-%d.pl" % (i,i))
+    print "perl create-ovp.perl gregoria"
+    os.popen("perl create-ovp.perl gregoria")
+    print "ovp2ovf gregoria.ovp gregoria.ovf gregoria.ofm"
+    os.popen("ovp2ovf gregoria.ovp gregoria.ovf gregoria.ofm")
+
+def createMap():
+    print "Creating gregoria.map"
+    pompompompompompompododododooom="""gregoria-0 <gregoria-0.pfb
+gregoria-1 <gregoria-1.pfb
+gregoria-2 <gregoria-2.pfb
+gregoria-3 <gregoria-3.pfb
+gregoria-4 <gregoria-4.pfb
+gregoria-5 <gregoria-5.pfb
+gregoria-6 <gregoria-6.pfb
+gregoria-7 <gregoria-7.pfb
+gregoria-8 <gregoria-8.pfb"""
+    fout=open("gregoria.map", 'w')
+    fout.write(pompompompompompompododododooom)
     fout.close()
-    os.popen("fontforge -script cut-gregoria.pe")
 
     # I don't know why, but Select does not seem to work with glyph number, only with names, so we have to hardcode a correspondance table between the glyphnumber and the name... happily only for some value:
 cT={
@@ -126,7 +149,7 @@ cT={
     255:11285,
     256:7199,
     511:10,
-    512:53,
+    512:24,
     767:15128,
     768:15133,
     1023:6259,
@@ -145,17 +168,19 @@ cT={
 
 # a function to call the big gregoria font in 256 character fonts, and generate pfb and tfm
 def cutGregoria():
+    fout=open("cut-gregoria.pe", 'w')
     fout.write("#!/usr/local/bin/fontforge\n\n")
     fout.write("Open(\"gregoria.sfd\");\n")
-    deleteGlyph(".notdef")
     for i in range(9):
         # for each range, we select and delete the previous glyphs, and the next ones
         if i != 0:
-            removeRange(cT[256*(i-1)], cT[256*i - 1])
+            removeRange(cT[0], cT[256*i - 1])
         if i != 8:
-            removeRange(cT[256*(i+1)], cT[256*i])
+            removeRange(cT[256*(i+1)], cT[2133])
         generateFont(i)
     fout.write("Quit(0);\n")
+    fout.close()
+    os.popen("fontforge -script cut-gregoria.pe")
         
 def removeRange(begin, end):
     fout.write("Select(\"_%04d\", \"_%04d\");\n" % (begin, end))
