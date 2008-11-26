@@ -174,6 +174,8 @@ def endInstall(basedir):
 """)
         for fontname in Fonts:
             fout.write("MixedMap %s.map\n" % fontname)
+        print "running update-updmap"
+        system("update-updmap")
     else:
         for fontname in Fonts:
             print ("running updmap-sys --enable MixedMap=%s.map" % fontname)
