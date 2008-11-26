@@ -36,6 +36,8 @@ Fonts=['greciliae', 'gregorio', 'parmesan']
 NumberOfFiles=9
 
 def main():
+    if access('gregoria-0.pfb', F_OK):
+        Fonts.append('gregoria')
     i=0
     for basedir in TexliveDirs:
         i=i+1
@@ -155,17 +157,32 @@ def copy(basedir, filename, dirname):
     
 
 def endInstall(basedir):
-    print ("running mktexlsr")
-    system("mktexlsr")
+    print ("running mktexlsr %s" % basedir)
+    system("mktexlsr %s" % basedir)
     Fonts.append("gresym")
-    for fontname in Fonts:
-        print ("running updmap-sys --enable MixedMap=%s.map" % fontname)
-        if access('/cygdrive', F_OK):
-            system("updmap-sys.bat --enable MixedMap=%s.map" % fontname)
-            print ("running updmap --enable MixedMap=%s.map" % fontname)
-            system("updmap.bat --enable MixedMap=%s.map" % fontname)
-        else:
-            system("updmap-sys --enable MixedMap=%s.map" % fontname)
+    # we detect here if it is a debian system
+    if access('/etc/texmf/updmap.d', F_OK):
+        print "filling /etc/texmf/updmap.d/20gregoriotex.cfg"
+        fout=open("/etc/texmf/updmap.d/20gregoriotex.cfg", 'w')
+        fout.write ("""# 20gregoriotex.cfg
+# You can change/add entries to this file and changes will be preserved
+# over upgrades, even if you have removed the main package prior
+# (not if you purged it). You should leave the following pseudo comment
+# present in the file!
+# -_- DebPkgProvidedMaps -_-
+# 
+""")
+        for fontname in Fonts:
+            fout.write("MixedMap %s.map\n" % fontname)
+    else:
+        for fontname in Fonts:
+            print ("running updmap-sys --enable MixedMap=%s.map" % fontname)
+            if access('/cygdrive', F_OK):
+                system("updmap-sys.bat --enable MixedMap=%s.map" % fontname)
+                print ("running updmap --enable MixedMap=%s.map" % fontname)
+                system("updmap.bat --enable MixedMap=%s.map" % fontname)
+            else:
+                system("updmap-sys --enable MixedMap=%s.map" % fontname)
 
 if __name__ == "__main__":
     main()
