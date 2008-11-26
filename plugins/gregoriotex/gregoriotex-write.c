@@ -79,6 +79,10 @@ write_score (FILE * f, gregorio_score * score)
 	{
 	  fprintf (f, "\\setgregorianfont{greciliae}%%\n");
 	}
+      if (!strcmp (score->gregoriotex_font, "gregoria"))
+	{
+	  fprintf (f, "\\setgregorianfont{gregoria}%%\n");
+	}
     }
 // first we draw the initial (first letter) and the initial key
   if (score->initial_style == NO_INITIAL) {
