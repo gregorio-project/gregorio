@@ -125,6 +125,8 @@ def main():
         font_name="parmesan"
     elif args[0] == "greciliae":
         font_name="greciliae"
+    elif args[0] == "gregoria":
+        font_name="gregoria"
     else:
         usage()
         sys.exit(2)
@@ -133,7 +135,7 @@ def main():
     initialize_glyphs()
     initialize_lengths()
     current_glyph_number=len(initial_glyphs)
-    headers()
+    header()
     hepisemus()
     shortglyphs=1
     pes()
@@ -145,7 +147,7 @@ def main():
     porrectusflexus()
     torculusresupinus()
     end_font()
-    footers()
+    footer()
     fout.close()
 
 def initialize_glyphs():
@@ -156,9 +158,11 @@ def initialize_glyphs():
         initial_glyphs.remove(number)
     if font_name=="gregorio":
         glyphs_to_append=("_1025", "_2049")
-    if font_name=="parmesan":
+    elif font_name=="parmesan":
         glyphs_to_append=("_1025", "_2049")
-    if font_name=="greciliae":
+    elif font_name=="greciliae":
+        glyphs_to_append=("_2049",)
+    elif font_name=="gregoria":
         glyphs_to_append=("_2049",)
     for glyphnumber in glyphs_to_append:
         initial_glyphs.append(glyphnumber)
@@ -197,7 +201,7 @@ def initialize_lengths():
         porrectuswidths=(490,575,650,740,931)
         # width that will be added to the standard width when we will build horizontal episemus. for example, if a punctum has the length 164, the episemus will have the width 244 and will be centered on the center of the punctum 
         hepisemus_additional_width=30
-    if (font_name=="parmesan"):
+    elif (font_name=="parmesan"):
         base_height=157.5
         line_width=22
         width_punctum=161
@@ -213,7 +217,7 @@ def initialize_lengths():
         porrectusflexuswidths=(340,428,586,670,931)
         porrectuswidths=(490,575,650,740,931)
         hepisemus_additional_width=30
-    if (font_name=="greciliae"):
+    elif (font_name=="greciliae"):
         base_height=157.5
         line_width=18
         width_punctum=166
@@ -229,14 +233,36 @@ def initialize_lengths():
         porrectusflexuswidths=(503,629,628,628,931)
         porrectuswidths=(503,629,628,628,931)
         hepisemus_additional_width=30
+    if (font_name=="gregoria"):
+        base_height=157.5
+        line_width=22
+        width_punctum=164
+        width_oriscus=164
+        width_quilisma=164
+        width_debilis=88
+        width_deminutus=88
+        width_inclinatum=173
+        width_stropha=164
+        width_high_pes=154
+        width_inclinatum_deminutus=128
+        width_flexusdeminutus=186
+        porrectusflexuswidths=(340,428,586,670,931)
+        porrectuswidths=(490,575,650,740,931)
+        hepisemus_additional_width=30
 
 # a function called at the beginning of the script, that opens the font
-def headers():
-    fout.write("#!/usr/local/bin/fontforge\n\nPrint(\"Creating all square notation symbols for the %s font.\\nThis may take several minutes.\");\nOpen(\"%s-base.sfd\");\n" % (font_name, font_name))
+def header():
+    fout.write("#!/usr/local/bin/fontforge\n\nPrint(\"Creating all square notation symbols for the %s font.\\nThis may take several minutes.\");\n" % font_name)
+    open_base_font(font_name)
+
+def open_base_font(font_name):
+    if font_name=="gregoria":
+        fout.write("Open(\"gregorio-base.sfd\");\n")
+    else:
+        fout.write("Open(\"%s-base.sfd\");\n" % font_name)
 
 # the function that deletes the temporary glyphs and saves the modified font, called at the end
-
-def footers():
+def footer():
     fout.write("Close();\n")
     fout.write("Quit(0);\n")
 
@@ -266,13 +292,17 @@ def end_font():
             fout.write("Clear();\n")        
     fout.write("Reencode(\"compacted\");\n")
     fout.write("Reencode(\"original\",1);\n")
-    fout.write("SetFontNames(\"%s-%d\");\n" % (font_name, current_font_number))
-    # 66537 is for generating an afm and a tfm file
-    fout.write("Generate(\"%s-%d.pfb\",\"\",66537);\n" % (font_name,current_font_number))
-    # uncomment the next line if you want to generate sfd files (easier to debug)
-    #fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
+    #for gregoria font, we generate the sfd, not the pfb
+    if font_name=="gregoria":
+        fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
+    else:
+        fout.write("SetFontNames(\"%s-%d\");\n" % (font_name, current_font_number))
+        # 66537 is for generating an afm and a tfm file
+        fout.write("Generate(\"%s-%d.pfb\",\"\",66537);\n" % (font_name,current_font_number))
+        # uncomment the next line if you want to generate sfd files (easier to debug)
+        #fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
     fout.write("Close();\n")
-    fout.write("Open(\"%s-base.sfd\");\n" % font_name)
+    open_base_font(font_name)
     current_glyph_number=0
     current_font_number=current_font_number+1
     count=initialcount
@@ -673,7 +703,10 @@ def write_alternate_porrectus_deminutus(i,j):
     glyphname=name(i, j, 0, 'porrectus', 'deminutus')
     begin_glyph(glyphname)
     write_first_bar(i, glyphname)
-    simple_paste('base3', glyphname)
+    if i == 1:
+        simple_paste('base2', glyphname)
+    else:
+        simple_paste('base3', glyphname)
     write_line(i, glyphname, width_punctum-line_width, (-i+1)*base_height)
     simplify()
     paste_and_move('mpdeminutus', glyphname, (width_punctum-line_width), (-i)*base_height)
@@ -923,10 +956,24 @@ def write_torculusresupinusdeminutus(i,j,k, first_glyph, shape, liquescentia='no
     simple_paste(first_glyph, glyphname)
     if i!=1:
         write_line(i, glyphname, length, base_height)
-    if j==1:
-        paste_and_move("_0017", glyphname, length, i*base_height)
+    if j==1 and i==1:
+        if first_glyph=="idebilis":
+            paste_and_move("base4", glyphname, length, i*base_height)
+            length=length+width_punctum
+            last_glyph='mnbpdeminutus'
+        else:
+            paste_and_move("_0017", glyphname, length, i*base_height)
+            length=length+width_punctum
+            last_glyph='mnbpdeminutus'
+    elif j==1:
+        paste_and_move("base4", glyphname, length, i*base_height)
         length=length+width_punctum
         last_glyph='mnbpdeminutus'
+    elif i==1 and first_glyph != "idebilis":
+        paste_and_move("base2", glyphname, length, i*base_height)
+        length=length+width_punctum-line_width
+        write_line(j, glyphname, length, (i-j+1)*base_height)
+        last_glyph='mpdeminutus'
     else:
         paste_and_move("base3", glyphname, length, i*base_height)
         length=length+width_punctum-line_width
