@@ -121,13 +121,12 @@
 }
 
 % macro called when the key changes
-
 \def\changeclef#1#2{%
 \calculateclefnum{#1}{#2}%
 \clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
 \multiply\clefchangespace by \the\grefactor %
 \hskip\clefchangespace %
-\typekey{#1}{#2}{1}%
+\typekey{#1}{#2}{1}{0}%
 \hskip\clefchangespace %
 \setlinesclef{#1}{#2}{1}%
 \relax%
@@ -139,14 +138,13 @@
 \clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
 \multiply\clefchangespace by \grefactor %
 \hskip\clefchangespace %
-\typekey{#1}{#2}{1}%
+\typekey{#1}{#2}{1}{0}%
 \hskip\clefchangespace %
 \setlinesclef{#1}{#2}%
 \relax%
 }
 
 % the argument is the height
-
 \def\setcusto#1{%
 \calculateglyphraisevalue{#1}{0}%
 \localrightbox{%
@@ -751,7 +749,7 @@
 }
 
 \def\divisiofinalissymbol{%
-\calculateglyphraisevalue{g}{0}{0}% bar glyphs are made to be at this height
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 \temptwo = 12000 sp%
 \multiply\temptwo by \the\grefactor%
