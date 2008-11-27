@@ -1059,9 +1059,9 @@ libgregorio_gregoriotex_write_auctum_duplex (FILE * f,
 					    gregorio_note * current_note)
 {
 // in the case of a pes, we must not set the height of the augmentum duplex to current_note->pitch but to current_note->pitch -2...
-  if (glyph->glyph_type == G_PODATUS) 
+  if (glyph->glyph_type == G_PODATUS && current_note->previous_note) 
     {
-      fprintf (f, "\\augmentumduplex{%c}%%\n", current_note->pitch - 2);
+      fprintf (f, "\\augmentumduplex{%c}%%\n", current_note->previous_note->pitch);
     }
   else 
     {
