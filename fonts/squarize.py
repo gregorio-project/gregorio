@@ -163,7 +163,7 @@ def initialize_glyphs():
     elif font_name=="greciliae":
         glyphs_to_append=("_2049",)
     elif font_name=="gregoria":
-        glyphs_to_append=("_2049",)
+        glyphs_to_append=("_2049", "_1025")
     for glyphnumber in glyphs_to_append:
         initial_glyphs.append(glyphnumber)
     initialcount=174
@@ -292,11 +292,11 @@ def end_font():
             fout.write("Clear();\n")        
     fout.write("Reencode(\"compacted\");\n")
     fout.write("Reencode(\"original\",1);\n")
+    fout.write("SetFontNames(\"%s-%d\");\n" % (font_name, current_font_number))
     #for gregoria font, we generate the sfd, not the pfb
     if font_name=="gregoria":
         fout.write("Save(\"%s-%d.sfd\");\n" % (font_name, current_font_number))
     else:
-        fout.write("SetFontNames(\"%s-%d\");\n" % (font_name, current_font_number))
         # 66537 is for generating an afm and a tfm file
         fout.write("Generate(\"%s-%d.pfb\",\"\",66537);\n" % (font_name,current_font_number))
         # uncomment the next line if you want to generate sfd files (easier to debug)
@@ -430,7 +430,7 @@ def write_hepisemus(shape_width, glyphname):
 def pes():
     message("pes")
     precise_message("pes")
-    if (font_name=="gregorio" or font_name=="parmesan"):
+    if (font_name=="gregorio" or font_name=="parmesan" or font_name=="gregoria"):
     # we prefer drawing the pes with one ton of ambitus by hand, it is more beautiful
         for i in range(2,max_interval+1):
             write_pes(i, "pbase", 'pes')
@@ -439,7 +439,7 @@ def pes():
             write_pes(i, "pbase", 'pes')
     # idem for the pes quilisma
     precise_message("pes quilisma")
-    if (font_name=="gregorio" or font_name=="parmesan" or font_name=="greciliae"):
+    if (font_name=="gregorio" or font_name=="parmesan" or font_name=="greciliae" or font_name=="gregoria"):
         for i in range(2,max_interval+1):
             write_pes(i, "qbase", 'pesquilisma')
     else:
