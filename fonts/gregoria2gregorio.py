@@ -17,7 +17,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
+from os import system
 
 shapes={
 'pes':2,
@@ -101,20 +101,25 @@ def main():
     first_step()
     adjustDeminutaeAdditionalGlyphs()
     save_font("gregoria-deminutae")
+    footer()
+    fout.close()
+    system("python squarize.py gregoria")
+    print "Generating gregorio glyphs for gregoria"
+    #system("fontforge -script gregoria.pe")
+    system("fontforge -script create-gregoria.pe")
+    # Warning: big hack
+    # in fontforge, we can't change the width the EM has... in gregoria it is 2048, and it should be 1000
+    # so instead of starting to merge gregoria (as the principal font in the merge process) with like gregoria-1, we merge gregoria-8 (as the main font) with gregoria, like this the result (gregoria) will have the EM width of gregoria-7, which is 1000.
     # now we have our gregorio fonts with (only) the glyphs we want in it, and a table with all those glyphs
     # let's merge the fonts in one big gregoria.sfd
+    mergeFonts("gregoria-7", "gregoria", "gregoria", setinfos=1)
     mergeFonts("gregoria", "gregoria-auctae", "gregoria")
     mergeFonts("gregoria", "gregoria-deminutae", "gregoria")
     for i in range(9):
-        mergeFonts("gregoria", "gregoria-%d" % i, "gregoria")
-    footer()
-    fout.close()
-    os.popen("python squarize.py gregoria")
-    print "Generating gregorio glyphs for gregoria.\nThis step can be extremely long (10 minutes)."
-    os.popen("fontforge -script gregoria.pe")
-    os.popen("fontforge -script create-gregoria.pe")
+        if i!=7:
+            mergeFonts("gregoria", "gregoria-%d" % i, "gregoria")
     for i in range(1, 12):
-        os.popen("fontforge -script merge-gregoria-%d.pe" % i)
+        system("fontforge -script merge-gregoria-%d.pe" % i)
     cutGregoria()
     createMap()
     finishCreation()
@@ -122,11 +127,11 @@ def main():
 def finishCreation():
     for i in range(9):
         print "tftopl gregoria-%d.tfm gregoria-%d.pl" % (i,i)
-        os.popen("tftopl gregoria-%d.tfm gregoria-%d.pl" % (i,i))
+        system("tftopl gregoria-%d.tfm gregoria-%d.pl" % (i,i))
     print "perl create-ovp.perl gregoria"
-    os.popen("perl create-ovp.perl gregoria")
+    system("perl create-ovp.perl gregoria")
     print "ovp2ovf gregoria.ovp gregoria.ovf gregoria.ofm"
-    os.popen("ovp2ovf gregoria.ovp gregoria.ovf gregoria.ofm")
+    system("ovp2ovf gregoria.ovp gregoria.ovf gregoria.ofm")
 
 def createMap():
     print "Creating gregoria.map"
@@ -145,29 +150,30 @@ gregoria-8 <gregoria-8.pfb"""
 
     # I don't know why, but Select does not seem to work with glyph number, only with names, so we have to hardcode a correspondance table between the glyphnumber and the name... happily only for some value:
 cT={
-    0:60,
-    255:11285,
-    256:7199,
-    511:10,
-    512:24,
-    767:15128,
-    768:15133,
-    1023:6259,
-    1024:6284,
-    1279:9032,
-    1280:9057,
-    1535:8858,
-    1536:8739,
-    1791:16727,
-    1792:16752,
-    2047:17781,
-    2048:17806,
+    0:16759,
+    255:17788,
+    256:60,
+    511:11285,
+    512:7199,
+    767:10,
+    768:24,
+    1023:15114,
+    1024:15119,
+    1279:6189,
+    1280:6214,
+    1535:9082,
+    1536:9107,
+    1791:8764,
+    1792:8789,
+    2047:16777,
+    2048:16682,
     #the next one is not true, but it will make the algorithm work simply
     2303:17819,
     2133:17819}
 
 # a function to call the big gregoria font in 256 character fonts, and generate pfb and tfm
 def cutGregoria():
+    global fout
     fout=open("cut-gregoria.pe", 'w')
     fout.write("#!/usr/local/bin/fontforge\n\n")
     fout.write("Open(\"gregoria.sfd\");\n")
@@ -180,7 +186,7 @@ def cutGregoria():
         generateFont(i)
     fout.write("Quit(0);\n")
     fout.close()
-    os.popen("fontforge -script cut-gregoria.pe")
+    system("fontforge -script cut-gregoria.pe")
         
 def removeRange(begin, end):
     fout.write("Select(\"_%04d\", \"_%04d\");\n" % (begin, end))
@@ -197,7 +203,7 @@ def generateFont(i):
 scriptNum=1
 
 # fontforge segfaults when merging too many fonts in the same script, so we create one script per merging
-def mergeFonts(firstFont, secondFont, result):
+def mergeFonts(firstFont, secondFont, result, setinfos=0):
     global scriptNum
     fscript=open("merge-gregoria-%d.pe" % scriptNum, 'w')
     fscript.write("#!/usr/local/bin/fontforge\n\n")
@@ -205,11 +211,16 @@ def mergeFonts(firstFont, secondFont, result):
     fscript.write("MergeFonts(\"%s.sfd\");\n" % secondFont)
     fscript.write("Reencode(\"compacted\");\n")
     fscript.write("Reencode(\"original\",1);\n")
+    if (setinfos):
+        setFontInfos(fscript)
     fscript.write("Save(\"%s.sfd\");\n" % result)
     fscript.write("Close();\n")
     fscript.write("Quit(0);\n")
     scriptNum = scriptNum +1
     fscript.close()
+
+def setFontInfos(fscript):
+    fscript.write("SetFontNames(\"gregoria\",\"gregoria\",\"Gregoria\",\"Medium\",\"Copyright (c) 2006 by Elena Albertoni / AnatoleType. All rights reserved.\",\"1.0\");\n")
 
 def first_step():
     deleteUselessGlyphs()
@@ -476,6 +487,9 @@ def adjustThreeNotesGlyphs():
         if base == "torcDebilis" and fontName == "gregoria-auctae":
             for suffix in cTT.keys():
                 deleteGlyph("%s%s" % (base, suffix))
+        elif tNG[base][0]=='torculus':
+            for suffix in cTT.keys():
+                adjustThreeNotesGlyphsAux("%s%s" % (base, suffix), cTT[suffix][0], cTT[suffix][1], tNG[base][0], giveLiquescentia(tNG[base][1]))
         else:
             for suffix in cTP.keys():
                 adjustThreeNotesGlyphsAux("%s%s" % (base, suffix), cTP[suffix][0], cTP[suffix][1], tNG[base][0], giveLiquescentia(tNG[base][1]))
@@ -571,25 +585,26 @@ def adjustAdditionalGlyphs():
 baseGlyphs=['Z.short', 'z.short', 'grave', 'o', 'v', 'x', 'y', 'circumflex', 'quoteright', 'doH', 'faH', 'virga.alt',  'vir.inv', 'quilisma', 'z', 'Z', 'pes.quil', 'oriscus']
 
 # here we absolutely need to make an interation in a certain order (we must rename z.short before z), but python does not allow to iterate over a dictionary in the order in which it has been declared, so we must iterate over the list and look for the corresponding item in the dictionary.
+# the second element is the height adjustment
 baseGlyphsNewNames={
-    'Z.short':61,
-    'z.short':64,
-    'grave':8,
-    'o':27,
-    'v':23,
-    'x':6,
-    'y':5,
-    'circumflex':16,
-    'quoteright':33,
-    'doH':1,
-    'faH':2,
-    'virga.alt':22,
-    'vir.inv':25,
-    'quilisma':26,
-    'z':63,
-    'Z':60,
-    'pes.quil':2049,
-    'oriscus':28}
+    'Z.short':(61,-1),
+    'z.short':(64,-1),
+    'grave':(8,-1),
+    'o':(27,-1),
+    'v':(23,-1),
+    'x':(6,-1),
+    'y':(5,-1),
+    'circumflex':(16,-1),
+    'quoteright':(33,-1),
+    'doH':(1,0),
+    'faH':(2,0),
+    'virga.alt':(22,-1),
+    'vir.inv':(25,-1),
+    'quilisma':(26,-1),
+    'z':(63,-1),
+    'Z':(60,-1),
+    'pes.quil':(2049,0),
+    'oriscus':(28,-1)}
           
 def adjustAuctaeAdditionalGlyphs():
     for l in pitchLetters:
@@ -640,9 +655,16 @@ def adjustDeminutaeAdditionalGlyphs():
 def renameBaseGlyphs():
     if fontName=="gregoria":
         for oldname in baseGlyphs:
-            number = baseGlyphsNewNames[oldname]
-            adjustGlyphHeight(oldname, -1)
+            number = baseGlyphsNewNames[oldname][0]
+            adjustGlyphHeight(oldname, baseGlyphsNewNames[oldname][1])
             renameGlyph(oldname, "_%04d" % number)
+        # here we adjust the vertical episemus and the circumflexus
+        shiftGlyph('_0016',131)
+        adjustGlyphWidth('_0016',99)
+        adjustGlyphPreciseHeight('_0016',100)
+        shiftGlyph('_0033',89)
+        adjustGlyphWidth('_0033',15)
+        adjustGlyphPreciseHeight('_0033',120)
         renameGlyph('inclinatum', '_0019')
         adjustGlyphHeight('_0019', -1)
         renameGlyph('punctum', '_0017')
@@ -673,6 +695,10 @@ def adjustGlyphHeight(name, n):
     fout.write("Select(\"%s\");\n" % name)
     # we calculate the difference in the fontforge unity
     y=n*157.5
+    fout.write("Move(0,%d);\n" % y)
+
+def adjustGlyphPreciseHeight(name, y):
+    fout.write("Select(\"%s\");\n" % name)
     fout.write("Move(0,%d);\n" % y)
 
 def adjustGlyphWidth(name, width):
