@@ -157,8 +157,12 @@ def copy(basedir, filename, dirname):
     
 
 def endInstall(basedir):
-    print ("running mktexlsr %s" % basedir)
-    system("mktexlsr %s" % basedir)
+    if basedir == '/cygdrive/c/Program Files/texlive/texmf-local':
+        print ("running mktexlsr" % basedir)
+        system("mktexlsr" % basedir)
+    else:
+        print ("running mktexlsr %s" % basedir)
+        system("mktexlsr %s" % basedir)
     Fonts.append("gresym")
     # we detect here if it is a debian system
     if access('/etc/texmf/updmap.d', F_OK):
@@ -174,8 +178,13 @@ def endInstall(basedir):
 """)
         for fontname in Fonts:
             fout.write("MixedMap %s.map\n" % fontname)
+        fout.close()
         print "running update-updmap"
         system("update-updmap")
+        print "running updmap-sys"
+        system("updmap-sys")
+        print "running updmap"
+        system("updmap")
     else:
         for fontname in Fonts:
             print ("running updmap-sys --enable MixedMap=%s.map" % fontname)
