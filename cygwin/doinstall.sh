@@ -12,6 +12,7 @@ INSTALL="/usr/bin/install"
 mkdir -p $BINDIR
 mkdir -p $LIBDIR
 mkdir -p $MANDIR
+mkdir -p $GRELIBDIR
 
 cp gregorio.1 $MANDIR
 cp gprocess $BINDIR
@@ -22,10 +23,10 @@ cd ..
 
 ./libtool --mode=install $INSTALL -c lib/libgregorio.la $LIBDIR/libgregorio.la
 ./libtool --mode=finish $LIBDIR
-./libtool --mode=install $INSTALL -c dump/dump.la $GRELIBDIR/dump.la
-./libtool --mode=install $INSTALL -c gabc/gabc.la $GRELIBDIR/gabc.la
-./libtool --mode=install $INSTALL -c gregoriotex/gregoriotex.la $GRELIBDIR/gregoriotex.la
-./libtool --mode=install $INSTALL -c opustex/opustex.la $GRELIBDIR/opustex.la
-./libtool --mode=install $INSTALL -c xml/xml.la $GRELIBDIR/xml.la
+./libtool --mode=install $INSTALL -c plugins/dump/dump.la $GRELIBDIR/dump.la
+./libtool --mode=install $INSTALL -c plugins/gabc/gabc.la $GRELIBDIR/gabc.la
+./libtool --mode=install $INSTALL -c plugins/gregoriotex/gregoriotex.la $GRELIBDIR/gregoriotex.la
+./libtool --mode=install $INSTALL -c plugins/opustex/opustex.la $GRELIBDIR/opustex.la
+./libtool --mode=install $INSTALL -c plugins/xml/xml.la $GRELIBDIR/xml.la
 ./libtool --mode=finish $GRELIBDIR
-./libtool --mode=install $INSTALL -c bin/gregorio $BINDIR/gregorio
+$INSTALL -c bin/.libs/gregorio.exe $BINDIR/gregorio
