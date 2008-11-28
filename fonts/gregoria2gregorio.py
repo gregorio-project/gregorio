@@ -105,13 +105,11 @@ def main():
     fout.close()
     system("python squarize.py gregoria")
     print "Generating gregorio glyphs for gregoria"
-    #system("fontforge -script gregoria.pe")
+    system("fontforge -script gregoria.pe")
     system("fontforge -script create-gregoria.pe")
     # Warning: big hack
     # in fontforge, we can't change the width the EM has... in gregoria it is 2048, and it should be 1000
     # so instead of starting to merge gregoria (as the principal font in the merge process) with like gregoria-1, we merge gregoria-8 (as the main font) with gregoria, like this the result (gregoria) will have the EM width of gregoria-7, which is 1000.
-    # now we have our gregorio fonts with (only) the glyphs we want in it, and a table with all those glyphs
-    # let's merge the fonts in one big gregoria.sfd
     mergeFonts("gregoria-7", "gregoria", "gregoria", setinfos=1)
     mergeFonts("gregoria", "gregoria-auctae", "gregoria")
     mergeFonts("gregoria", "gregoria-deminutae", "gregoria")
