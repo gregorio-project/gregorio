@@ -858,6 +858,9 @@ def write_torculus(i,j, first_glyph, last_glyph, shape, liquescentia='nothing'):
         length=width_debilis
     elif first_glyph=="qbase":
         length=width_quilisma-line_width
+        if i==1:
+            first_glyph='_0026'
+            length=width_quilisma
     elif i==1:
         first_glyph='_0017'
         length=width_punctum
