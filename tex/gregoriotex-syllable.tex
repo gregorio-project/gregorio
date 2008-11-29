@@ -117,6 +117,10 @@
 \addedraisevalue=350 sp%
 \multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
+\else % if it is not on a line, we shift it a bit lower
+\addedraisevalue=-80 sp%
+\multiply\addedraisevalue by \the\grefactor %
+\advance\glyphraisevalue by \addedraisevalue %
 \fi %
 \or% 4: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
 \ifnum\isonaline=1%
