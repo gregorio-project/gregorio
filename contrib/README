@@ -12,3 +12,9 @@ some bugs to fix, but at least it looks better.
 gabc.xml is a file for syntax highlighting in kate (and Kedit, etc.). To install
 it, simply copy the file in /usr/share/apps/katepart/syntax. This path may not
 be the same according to your distribution.
+
+gabc.vim is the highlight syntax file for vim. You can copy it in
+/usr/share/vim/vimcurrent/syntax (on debian at least) and add the line
+au BufNewFile,BufRead *.gabc                    setf gabc
+somewhere near lines like it (near line 100 for example) in
+/usr/share/vim/vimcurrent/filetype.vim . This will autodetect the filetypes.

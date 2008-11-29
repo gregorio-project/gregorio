@@ -20,7 +20,6 @@
 -->
 <language id="gabc" _name="gabc" version="2.0" _section="Sources">
   <metadata>
-    <property name="mimetypes">text/plain</property>
     <property name="globs">*.gabc</property>
   </metadata>
   <styles>
