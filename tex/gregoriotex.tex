@@ -145,6 +145,33 @@
 \relax%
 }
 
+
+% basically same macros as above, but these one do a \hfill, the lines are not justified
+%macro to call if you want to go to the next line simply
+\def\grenewparline{%
+\updateadditionalspaces{0}{0}%
+\removetranslationspace %
+\lastoflinecount=2\relax %
+\updateleftbox %
+\hfill %
+\penalty-10001 %
+\relax%
+}
+
+\def\grenewparlinewithspace#1#2#3{%
+\updateadditionalspaces{#1}{#2}%
+\ifnum#3 = 1\relax %
+\addtranslationspace %
+\else %
+\removetranslationspace %
+\fi %
+\lastoflinecount=2\relax %
+\updateleftbox %
+\hfill %
+\penalty-10001 %
+\relax%
+}
+
 % two dimensions for the additionalspaces
 \newdimen\additionalbottomspace
 \newdimen\additionaltopspace
@@ -423,6 +450,7 @@
 %\initialwidth=0pt%
 \hbox to0pt{%
 \vbox{%
+\stafflinesformat %
 \vskip\spaceabovelines %
 \vskip\additionaltopspace %
 \hrule height \stafflineheight width \stafflinewidth %
@@ -450,6 +478,7 @@
 \def\generatelines{%
 \setbox\Lines=\hbox to0pt{%
 \vbox{%
+\stafflinesformat %
 \vskip\spaceabovelines %
 \vskip\additionaltopspace %
 \hrule height \stafflineheight width \stafflinewidth %
@@ -739,6 +768,10 @@
 
 \def\gretranslationformat#1{%
 #1\relax %
+}
+
+\def\stafflinesformat{%
+\relax %
 }
 
 \def\greinitialformat#1{%

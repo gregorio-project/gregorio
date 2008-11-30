@@ -53,3 +53,20 @@
 \texttt{#1}%
 \relax %
 }
+
+\def\coloredlines#1#2#3{%
+\definecolor{gretempcolor}{RGB}{#1,#2,#3}%
+\global\def\stafflinesformat{%
+\color{gretempcolor}\relax}
+\relax %
+}
+
+\def\redlines{%
+\coloredlines{213}{56}{7}%
+\relax %
+}
+
+\def\normallines{%
+\global\def\stafflinesformat{}
+\relax %
+}
