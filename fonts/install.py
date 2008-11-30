@@ -158,8 +158,8 @@ def copy(basedir, filename, dirname):
 
 def endInstall(basedir):
     if basedir == '/cygdrive/c/Program Files/texlive/texmf-local':
-        print ("running mktexlsr" % basedir)
-        system("mktexlsr" % basedir)
+        print ("running mktexlsr")
+        system("mktexlsr")
     else:
         print ("running mktexlsr %s" % basedir)
         system("mktexlsr %s" % basedir)
