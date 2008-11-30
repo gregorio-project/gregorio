@@ -1573,16 +1573,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	  break;
 	case S_PUNCTUM_INCLINATUM_AUCTUS:
 	case S_PUNCTUM_INCLINATUM:
-	  if (current_glyph->liquescentia ==
-	      L_DEMINUTUS_INITIO_DEBILIS
-	      || current_glyph->liquescentia == L_DEMINUTUS)
-	    {
-	      *number = 13;
-	    }
-	  else
-	    {
-	      *number = 12;
-	    }
+      *number = 12;
 	  break;
 	case S_STROPHA:
 	  *number = 14;
