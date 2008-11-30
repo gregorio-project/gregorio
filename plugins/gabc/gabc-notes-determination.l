@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 This file is quite huge but quite simple: it is just all the expressions you can find in gabc and the call to the right function. Lines are often enormous simply because we enable the user to put the signs in any order, for example av.'_ or a.v_', etc. for a virga with punctum mora, horizontal and vertical episemus.
+
+Update (three years later): This file is a HUGE CRAP... Hardcoding everything was definitely not the right thing to do. What should be done is the following: if we encounter a sign or a letter changing the shape, we just change the current note. Why the **** did I write this file like this...
 */
 
 #include "config.h"
@@ -52,7 +54,10 @@ gregorio_note *current_note;
 %%
 [\t\n]+      /* ignore ends of line and tabs */;
 z {
-	libgregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, USELESS_VALUE);
+	libgregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, GRE_END_OF_LINE);
+	}
+Z {
+	libgregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, GRE_END_OF_PAR);
 	}
 (c|f)[1-4] {
 	if (gabc_notes_determination_text[0]=='c') {

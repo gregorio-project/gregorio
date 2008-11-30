@@ -179,14 +179,32 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	  if (line->additional_bottom_space == 0
 	      && line->additional_top_space == 0 && line->translation == 0)
 	    {
-	      fprintf (f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
+	      if ((syllable->elements)[0]->element_type != GRE_END_OF_PAR)
+	        {
+	          fprintf (f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
+	        }
+	      else
+	        {
+	          fprintf (f, "%%\n%%\n\\grenewparline %%\n%%\n%%\n");
+	        }
 	    }
 	  else
 	    {
-	      fprintf (f, "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}%%\n%%\n%%\n",
+	      if ((syllable->elements)[0]->element_type != GRE_END_OF_PAR)
+	        {
+	          fprintf (f, "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}%%\n%%\n%%\n",
 		       line->additional_top_space,
 		       line->additional_bottom_space,
 		       line->translation);
+	        }
+	      else
+	        {
+	          fprintf (f, "%%\n%%\n\\grenewparlinewithspace{%u}{%u}{%u}%%\n%%\n%%\n",
+		       line->additional_top_space,
+		       line->additional_bottom_space,
+		       line->translation);
+	        }
+	      
 	    }
 	  free (line);
 	  if (*line_number == 1) {
@@ -306,14 +324,32 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	  if (line->additional_bottom_space == 0
 	      && line->additional_top_space == 0 && line->translation == 0)
 	    {
-	      fprintf (f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
+	      if (current_element->element_type != GRE_END_OF_PAR)
+	        {
+	          fprintf (f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
+	        }
+	      else
+	        {
+	          fprintf (f, "%%\n%%\n\\grenewparline %%\n%%\n%%\n");
+	        }
 	    }
 	  else
 	    {
-	      fprintf (f, "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}%%\n%%\n%%\n",
+	      if (current_element->element_type != GRE_END_OF_PAR)
+	        {
+	          fprintf (f, "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}%%\n%%\n%%\n",
 		       line->additional_top_space,
 		       line->additional_bottom_space,
 		       line->translation);
+	        }
+	      else
+	        {
+	          fprintf (f, "%%\n%%\n\\grenewparlinewithspace{%u}{%u}{%u}%%\n%%\n%%\n",
+		       line->additional_top_space,
+		       line->additional_bottom_space,
+		       line->translation);
+	        }
+	      
 	    }
 	  free (line);
  	  if (*line_number == 1) {

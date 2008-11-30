@@ -394,6 +394,7 @@ libgregorio_set_octave_and_step_from_pitch (char *step,
 #define GRE_END_OF_LINE 8
 #define GRE_SPACE 9
 #define GRE_BAR 10
+#define GRE_END_OF_PAR 11
 
 
 #define C_KEY 'c'
@@ -432,6 +433,12 @@ libgregorio_set_octave_and_step_from_pitch (char *step,
 #define _V_EPISEMUS 5
 #define _V_EPISEMUS_PUNCTUM_MORA 6
 #define _V_EPISEMUS_AUCTUM_DUPLEX 7
+// more rare signs, for now they can't be used with the others
+#define _ACCENTUS 8
+#define _ACCENTUS_REVERSUS 9
+#define _CIRCULUS 10
+#define _SEMI_CIRCULUS 11
+#define _SEMI_CIRCULUS_REVERSUS 12
 
 #define is_multi(h_episemus) \
 h_episemus>H_ALONE
