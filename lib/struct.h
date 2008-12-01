@@ -50,6 +50,9 @@ typedef struct gregorio_note {
   char shape;
 // signs is the signs on the notes, see below for all possible values
   char signs;
+// rare_sign is the sign we sometimes encounter on punctum cavum, like
+// accentus, semi-circulus, etc.
+  char rare_sign;
 // liquescentia is the liquescence on the note, it is not really used
 // in the final score, but it is, like type, used in the determination
 // of glyphs.
@@ -284,6 +287,9 @@ void libgregorio_add_syllable (gregorio_syllable ** current_syllable,
 			  int number_of_voices, gregorio_element * elements[],
 			  gregorio_character * first_character, gregorio_character *first_translation_character, char position);
 
+void libgregorio_add_special_sign (gregorio_note *current_note, char sign);
+void libgregorio_change_shape (gregorio_note *note, char shape);
+
 void libgregorio_add_voice_info (gregorio_voice_info **current_voice_info);
 
 void libgregorio_free_notes(gregorio_note **first_note);
@@ -356,8 +362,6 @@ void libgregorio_go_to_first_note (gregorio_note **note);
 void libgregorio_go_to_first_glyph (gregorio_glyph **glyph);
 
 char libgregorio_add_note_to_a_glyph (char glyph, char current_pitch, char last_pitch, char shape, char *end_of_glyph);
-
-
 void libgregorio_det_step_and_line_from_key (int key, char *step, int *line);
 
 char libgregorio_is_only_special (gregorio_element *element);
@@ -481,8 +485,11 @@ h_episemus>H_ALONE
 #define S_DISTROPHA_AUCTA 13
 #define S_TRISTROPHA 14
 #define S_TRISTROPHA_AUCTA 15
-// special shapes that must not appear in the final form of the score
-// : quadratum is the shape of the first note of a punctum quadratum
+#define S_PUNCTUM_CAVUM 28
+#define S_LINEA_PUNCTUM 29
+#define S_LINEA_PUNCTUM_CAVUM 30
+// special shapes that must not appear in the final form of the score :
+// quadratum is the shape of the first note of a punctum quadratum
 // and quilisma quadratum is the shape of the first note of a pes
 // quislisma quadratum
 #define S_QUADRATUM 16
@@ -491,7 +498,6 @@ h_episemus>H_ALONE
 #define S_PUNCTUM_AUCTUS_ASCENDENS 25
 #define S_PUNCTUM_AUCTUS_DESCENDENS 26
 #define S_PUNCTUM_DEMINUTUS 27
-
 
 // The different types of glyph
 

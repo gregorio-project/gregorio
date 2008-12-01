@@ -640,8 +640,6 @@ void
 libgregorio_xml_read_translation (xmlNodePtr current_node, xmlDocPtr doc,
 			   gregorio_syllable * syllable)
 {
-
-  char *temp;
   gregorio_character *current_character = NULL;
 
   libgregorio_xml_read_styled_text (current_node->xmlChildrenNode, doc,
@@ -1212,6 +1210,7 @@ void
   char shape = S_UNDETERMINED;
   char signs = _NO_SIGN;
   char h_episemus = H_NO_EPISEMUS;
+  char rare_sign=_NO_SIGN;
   xmlChar *temp;
 
   while (current_node)
@@ -1236,7 +1235,7 @@ void
 	{
 	  signs =
 	    libgregorio_xml_read_signs
-	    (current_node->xmlChildrenNode, doc, (&h_episemus));
+	    (current_node->xmlChildrenNode, doc, &h_episemus, &rare_sign);
 	  current_node = current_node->next;
 	  continue;
 	}
@@ -1264,6 +1263,7 @@ void
 //TODO : better understanding of liquescentia
       libgregorio_add_note (current_note, pitch, shape, signs, liquescentia,
 			    h_episemus);
+      libgregorio_add_special_sign (*current_note, rare_sign);
     }
 
 }
@@ -1401,6 +1401,18 @@ libgregorio_xml_read_shape (char *type)
     {
       return S_STROPHA;
     }
+  if (!strcmp (type, "punctum_cavum"))
+    {
+      return S_PUNCTUM_CAVUM;
+    }
+  if (!strcmp (type, "linea_punctum"))
+    {
+      return S_LINEA_PUNCTUM;
+    }
+  if (!strcmp (type, "linea_punctum_cavum"))
+    {
+      return S_LINEA_PUNCTUM_CAVUM;
+    }
   libgregorio_message
     (_
      ("unknown shape, punctum assumed"),
@@ -1408,9 +1420,11 @@ libgregorio_xml_read_shape (char *type)
   return S_PUNCTUM;
 }
 
+// returns signs
+// sets rare_sign
 char
 libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
-			    char *h_episemus)
+			    char *h_episemus, char *rare_sign)
 {
   xmlChar *temp;
   char signs = _NO_SIGN;
@@ -1423,7 +1437,7 @@ libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
 	  if (!xmlStrcmp (temp, (const xmlChar *) "auctum"))
 	    {
 	      signs = signs + _PUNCTUM_MORA;
-//TODO : bug if twi times <right>, but it would be bad XML anyway...
+//TODO : bug if two times <right>, but it would be bad XML anyway...
 	      current_node = current_node->next;
 	      xmlFree (temp);
 	      continue;
@@ -1459,11 +1473,57 @@ libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
 	  current_node = current_node->next;
 	  continue;
 	}
-
+	// rare signs (accentus, etc.)
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "above"))
+	{
+	  temp = xmlNodeListGetString (doc, current_node->xmlChildrenNode, 1);
+	  if (!xmlStrcmp (temp, (const xmlChar *) "accentus"))
+	    {
+	      *rare_sign = _ACCENTUS;
+	      current_node = current_node->next;
+	      xmlFree (temp);
+	      continue;
+	    }
+	  if (!xmlStrcmp (temp, (const xmlChar *) "reversed_accentus"))
+	    {
+	      *rare_sign = _ACCENTUS_REVERSUS;
+	      current_node = current_node->next;
+	      xmlFree (temp);
+	      continue;
+	    }
+	  if (!xmlStrcmp (temp, (const xmlChar *) "circulus"))
+	    {
+	      *rare_sign = _CIRCULUS;
+	      current_node = current_node->next;
+	      xmlFree (temp);
+	      continue;
+	    }
+	  if (!xmlStrcmp (temp, (const xmlChar *) "semi_circulus"))
+	    {
+	      *rare_sign = _SEMI_CIRCULUS;
+	      current_node = current_node->next;
+	      xmlFree (temp);
+	      continue;
+	    }
+	  if (!xmlStrcmp (temp, (const xmlChar *) "reversed_semi_circulus"))
+	    {
+	      *rare_sign = _SEMI_CIRCULUS_REVERSUS;
+	      current_node = current_node->next;
+	      xmlFree (temp);
+	      continue;
+	    }
+	  libgregorio_message
+	    (_
+	     ("unknown above sign"),
+	     "libgregorio_xml_read_signs", WARNING, 0);
+	  xmlFree (temp);
+	  current_node = current_node->next;
+	  continue;
+	}
       libgregorio_message
 	(_
-	 ("unknown shape, punctum assumed"),
-	 "libgregorio_read_shape", WARNING, 0);
+	 ("unknown sign"),
+	 "libgregorio_xml_read_signs", WARNING, 0);
       current_node = current_node->next;
     }
   return signs;

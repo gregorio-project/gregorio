@@ -54,6 +54,9 @@ const char *
 libgregorio_dump_signs (char signs);
 
 const char *
+libgregorio_dump_rare_sign (char rare_sign);
+
+const char *
 libgregorio_dump_h_episemus_type (char h_episemus_type);
 
 void

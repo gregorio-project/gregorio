@@ -102,6 +102,7 @@ Here are the different types, they must be the same as in squarize.py
 // very temporary types
 #define TT_H_EPISEMUS 0
 #define TT_V_EPISEMUS 1
+#define TT_RARE 4
 #define TT_BOTTOM 3
 #define TT_TOP 2
 
@@ -142,6 +143,7 @@ void libgregorio_gtex_print_char (FILE * f, wchar_t to_print);
 unsigned int gregoriotex_determine_liquescentia_number (unsigned int factor, unsigned char type, char liquescentia);
 void libgregorio_gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
 void libgregorio_gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
+void libgregorio_gregoriotex_write_rare (FILE * f, gregorio_glyph *current_glyph, int i, char type, gregorio_note * current_note, char rare);
 void libgregorio_gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_note * current_note);
 
 void libgregorio_gregoriotex_write_next_first_text (FILE * f, gregorio_character *current_character);

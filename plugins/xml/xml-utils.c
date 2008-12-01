@@ -59,6 +59,15 @@ libgregorio_xml_shape_to_str (char shape)
     case S_STROPHA:
       str = "stropha";
       break;
+    case S_PUNCTUM_CAVUM:
+      str = "punctum_cavum";
+      break;
+    case S_LINEA_PUNCTUM:
+      str = "linea_punctum";
+      break;
+    case S_LINEA_PUNCTUM_CAVUM:
+      str = "linea_punctum_cavum";
+      break;
     default:
       str = "punctum";
       libgregorio_message (_("unknown shape, `punctum' assumed"),
@@ -79,16 +88,31 @@ libgregorio_xml_signs_to_str (char signs)
       str = "<right>auctum</right>";
       break;
     case _AUCTUM_DUPLEX:
-      str = "<right>auctum-duplex</right>";
+      str = "<right>auctum_duplex</right>";
       break;
     case _V_EPISEMUS:
       str = "<bottom>v_episemus</bottom>";
       break;
     case _V_EPISEMUS_PUNCTUM_MORA:
-      str = "<right>auctum</right>\n<bottom>v-episemus</bottom>";
+      str = "<right>auctum</right>\n<bottom>v_episemus</bottom>";
       break;
     case _V_EPISEMUS_AUCTUM_DUPLEX:
-      str = "<right>auctum-duplex</right>\n<bottom>v-episemus</bottom>";
+      str = "<right>auctum_duplex</right>\n<bottom>v_episemus</bottom>";
+      break;
+    case _ACCENTUS:
+      str = "<above>accentus</above>";
+      break;
+    case _ACCENTUS_REVERSUS:
+      str = "<above>reversed_accentus</above>";
+      break;
+    case _CIRCULUS:
+      str = "<above>circulus</above>";
+      break;
+    case _SEMI_CIRCULUS:
+      str = "<above>semi_circulus</above>";
+      break;
+    case _SEMI_CIRCULUS_REVERSUS:
+      str = "<above>reversed_semi_circulus</above>";
       break;
     default:
       str = "";
@@ -98,11 +122,10 @@ libgregorio_xml_signs_to_str (char signs)
 }
 
 void
-libgregorio_xml_write_signs (FILE * f, char signs, char h_episemus_type)
+libgregorio_xml_write_signs (FILE * f, char signs, char h_episemus_type, char rare_sign)
 {
   const char *str;
-
-  if (signs != _NO_SIGN || h_episemus_type == H_ALONE)
+  if (signs != _NO_SIGN || rare_sign != _NO_SIGN || h_episemus_type == H_ALONE)
     {
       fprintf (f, "<signs>");
       if (h_episemus_type == H_ALONE)
@@ -112,6 +135,11 @@ libgregorio_xml_write_signs (FILE * f, char signs, char h_episemus_type)
       if (signs != _NO_SIGN)
 	{
 	  str = libgregorio_xml_signs_to_str (signs);
+	  fprintf (f, "%s", str);
+	}
+      if (rare_sign != _NO_SIGN)
+	{
+	  str = libgregorio_xml_signs_to_str (rare_sign);
 	  fprintf (f, "%s", str);
 	}
       fprintf (f, "</signs>");
@@ -134,7 +162,7 @@ libgregorio_xml_write_signs (FILE * f, char signs, char h_episemus_type)
 void
 libgregorio_xml_write_note (FILE * f, char signs, char step,
 		      int octave, char shape,
-		      char h_episemus_type, char alteration)
+		      char h_episemus_type, char alteration, char rare_sign)
 {
   const char *shape_str = libgregorio_xml_shape_to_str (shape);
 
@@ -147,7 +175,7 @@ libgregorio_xml_write_note (FILE * f, char signs, char step,
     }
   fprintf (f, "</pitch>");
   fprintf (f, "<shape>%s</shape>", shape_str);
-  libgregorio_xml_write_signs (f, signs, h_episemus_type);
+  libgregorio_xml_write_signs (f, signs, h_episemus_type, rare_sign);
   fprintf (f, "</note>");
 }
 

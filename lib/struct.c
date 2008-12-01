@@ -36,11 +36,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include <stdio.h>
 #include <wchar.h>
+#include "gettext.h"
 #include <stdlib.h>
 #include "messages.h"
 #include "struct.h"
 #include "gabc/gabc.h"
-#include "gettext.h"
 #define _(str) gettext(str)
 #define N_(str) str
 
@@ -61,6 +61,7 @@ libgregorio_add_note (gregorio_note ** current_note, char pitch, char shape,
   element->pitch = pitch;
   element->shape = shape;
   element->signs = signs;
+  element->rare_sign = _NO_SIGN;
   element->liquescentia = liquescentia;
   element->previous_note = *current_note;
   element->next_note = NULL;
@@ -98,6 +99,17 @@ libgregorio_add_special_as_note (gregorio_note ** current_note, char type,
   *current_note = element;
 }
 
+void
+libgregorio_add_special_sign (gregorio_note *note, char sign)
+{
+    note->rare_sign=sign;
+}
+
+void
+libgregorio_change_shape (gregorio_note *note, char shape)
+{
+    note->shape=shape;
+}
 
 void
 libgregorio_go_to_first_note (gregorio_note ** note)

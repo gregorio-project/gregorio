@@ -275,7 +275,7 @@ write_score (FILE * f, gregorio_score * score)
 		    }
 		  if (note->pitch)
 		    {
-		      fprintf (f, "         pitch               %d\n",
+		      fprintf (f, "         pitch               %c\n",
 			       note->pitch);
 		    }
 		  if (note->shape)
@@ -289,6 +289,12 @@ write_score (FILE * f, gregorio_score * score)
 		      fprintf (f, "         signs               %d (%s)\n",
 			       note->signs,
 			       libgregorio_dump_signs (note->signs));
+		    }
+		  if (note->rare_sign)
+		    {
+		      fprintf (f, "         rare sign           %d (%s)\n",
+			       note->rare_sign,
+			       libgregorio_dump_rare_sign (note->rare_sign));
 		    }
 		  if (note->liquescentia)
 		    {
@@ -821,6 +827,15 @@ libgregorio_dump_shape (char shape)
     case S_QUADRATUM:
       str = "S_QUADRATUM";
       break;
+    case S_PUNCTUM_CAVUM:
+      str = "S_PUNCTUM_CAVUM";
+      break; 
+    case S_LINEA_PUNCTUM:
+      str = "S_LINEA_PUNCTUM";
+      break;
+    case S_LINEA_PUNCTUM_CAVUM:
+      str = "S_LINEA_PUNCTUM_CAVUM";
+      break;      
     default:
       str = "unknown";
       break;
@@ -851,6 +866,34 @@ libgregorio_dump_signs (char signs)
       break;
     case _V_EPISEMUS_AUCTUM_DUPLEX:
       str = "_V_EPISEMUS_AUCTUM_DUPLEX";
+      break;
+    default:
+      str = "unknown";
+      break;
+    }
+  return str;
+}
+
+const char *
+libgregorio_dump_rare_sign (char rare_sign)
+{
+  const char *str;
+  switch (rare_sign)
+    {
+    case _ACCENTUS:
+      str = "_ACCENTUS";
+      break;
+    case _ACCENTUS_REVERSUS:
+      str = "_ACCENTUS_REVERSUS";
+      break;
+    case _CIRCULUS:
+      str = "_CIRCULUS";
+      break;
+    case _SEMI_CIRCULUS:
+      str = "_SEMI_CIRCULUS";
+      break;
+    case _SEMI_CIRCULUS_REVERSUS:
+      str = "_SEMI_CIRCULUS_REVERSUS";
       break;
     default:
       str = "unknown";

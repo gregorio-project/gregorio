@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "struct.h"
 #include "xml.h"
 #include <stdlib.h>
-#define write_note(shape) libgregorio_xml_write_note(f, note->signs, step, octave, shape, note->h_episemus_type, alteration)
+#define write_note(shape) libgregorio_xml_write_note(f, note->signs, step, octave, shape, note->h_episemus_type, alteration, note->rare_sign)
 
 void
 libgregorio_xml_write_gregorio_note (FILE * f, gregorio_note * note, int clef,

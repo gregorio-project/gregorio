@@ -82,6 +82,30 @@ Z {
 ::      {
 	libgregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_FINALIS);
 	}
+r	{
+    libgregorio_change_shape (current_note, S_PUNCTUM_CAVUM);
+    }
+R	{
+    libgregorio_change_shape (current_note, S_LINEA_PUNCTUM);
+    }
+r0	{
+    libgregorio_change_shape (current_note, S_LINEA_PUNCTUM_CAVUM);
+    }
+r1	{
+    libgregorio_add_special_sign (current_note, _ACCENTUS);
+    }
+r2	{
+    libgregorio_add_special_sign (current_note, _ACCENTUS_REVERSUS);
+    }
+r3	{
+    libgregorio_add_special_sign (current_note, _CIRCULUS);
+    }
+r4	{
+    libgregorio_add_special_sign (current_note, _SEMI_CIRCULUS);
+    }
+r5	{
+    libgregorio_add_special_sign (current_note, _SEMI_CIRCULUS_REVERSUS);
+    }
 [a-mA-M]x       {
 	libgregorio_add_special_as_note (&current_note, GRE_FLAT, gabc_notes_determination_text[0]);
 	}

@@ -680,6 +680,15 @@ libgregorio_gabc_write_gregorio_note (FILE * f,
     case S_QUILISMA:
       fprintf (f, "%cw", note->pitch);
       break;
+    case S_PUNCTUM_CAVUM:
+      fprintf (f, "%cr", note->pitch);
+      break;
+    case S_LINEA_PUNCTUM:
+      fprintf (f, "%cR", note->pitch);
+      break;
+    case S_LINEA_PUNCTUM_CAVUM:
+      fprintf (f, "%cr0", note->pitch);
+      break;
     case S_QUILISMA_QUADRATUM:
       fprintf (f, "%cW", note->pitch);
       break;
@@ -724,6 +733,26 @@ libgregorio_gabc_write_gregorio_note (FILE * f,
       break;
     case _V_EPISEMUS_AUCTUM_DUPLEX:
       fprintf (f, "'..");
+      break;
+    default:
+      break;
+    }
+  switch (note->rare_sign)
+    {
+    case _ACCENTUS:
+      fprintf (f, "r1");
+      break;
+    case _ACCENTUS_REVERSUS:
+      fprintf (f, "r2");
+      break;
+    case _CIRCULUS:
+      fprintf (f, "r3");
+      break;
+    case _SEMI_CIRCULUS:
+      fprintf (f, "r4");
+      break;
+    case _SEMI_CIRCULUS_REVERSUS:
+      fprintf (f, "r5");
       break;
     default:
       break;

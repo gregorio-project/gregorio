@@ -392,6 +392,12 @@ libgregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
 
   switch (shape)
     {
+    case S_PUNCTUM_CAVUM:
+    case S_LINEA_PUNCTUM:
+    case S_LINEA_PUNCTUM_CAVUM:
+      next_glyph_type = G_PUNCTUM;
+	  *end_of_glyph = DET_END_OF_BOTH;
+	  break;
     case S_PUNCTUM:
 /* we determine here the shape of the thing if it is made of puncta */
       if (current_pitch == last_pitch)

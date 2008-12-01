@@ -40,6 +40,7 @@
 %% 3: case of the vertical episemus, which is not placed at the same place if the corresponding note is on a line or not
 %% 4: case of the punctum mora, for the same reason
 %% 5: case of the horizontal episemus under a note, that must be placed a bit lower if the note is on a line
+%% 6: case of the signs above (accentus, etc.)
 \def\calculateglyphraisevalue#1#2{%
 \global\isonaline=\number 0%
 \ifx a#1%
@@ -133,10 +134,12 @@
 \addedraisevalue=-300 sp%
 \multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
-\fi%
-\fi%
+\fi %
+\or% 6: if it is a sign, we put it at an arbitrary height
+\addedraisevalue=-10000 sp%
 \multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
+\fi%
 \advance\glyphraisevalue by \constantglyphraise %
 \global\tempcount=0%
 \global\isonaline=0%

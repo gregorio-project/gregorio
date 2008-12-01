@@ -1034,7 +1034,11 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	  additional_line();
 	  break;
 	}
-      if (current_note->h_episemus_type != H_NO_EPISEMUS
+	if (current_note->rare_sign) {
+	libgregorio_gregoriotex_write_rare (f, glyph, i, type,
+						   current_note, current_note->rare_sign);
+	}	
+    if (current_note->h_episemus_type != H_NO_EPISEMUS
 	  && current_note->h_episemus_top_note != 'm' && block_hepisemus == 0)
 	{
 // if it is a porrectus or a porrectus flexus, we check if the episemus is on the two first notes:
@@ -1228,6 +1232,46 @@ libgregorio_gregoriotex_write_vepisemus (FILE * f,
   fprintf (f, "\\vepisemus{%c}{%d}%%\n", height, number);
 }
 
+
+/*
+a function that writes the rare signs in GregorioTeX. i is the position of the note in the glyph
+*/
+
+void
+libgregorio_gregoriotex_write_rare (FILE * f,
+					 gregorio_glyph *
+					 current_glyph,
+					 int i, char type,
+					 gregorio_note * current_note, char rare)
+{
+
+  char height = 0;
+  char number = 0;
+
+  libgregorio_gregoriotex_find_sign_number (current_glyph, i,
+					    type, TT_RARE, current_note,
+					    &number, &height, NULL);
+
+  switch (rare){
+    case _ACCENTUS:
+      fprintf (f, "\\accentus{%d}%%\n", number);
+    break;
+    case _ACCENTUS_REVERSUS:
+      fprintf (f, "\\reversedaccentus{%d}%%\n", number);
+    break;
+    case _CIRCULUS:
+      fprintf (f, "\\circulus{%d}%%\n", number);
+    break;
+    case _SEMI_CIRCULUS:
+      fprintf (f, "\\semicirculus{%d}%%\n", number);
+    break;
+    case _SEMI_CIRCULUS_REVERSUS:
+      fprintf (f, "\\reversedsemicirculus{%d}%%\n", number);
+    break;
+    default:
+    break;  
+  }
+}
 
 #define number_note_before_last_note() \
   if ((current_glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS || current_glyph->liquescentia == L_DEMINUTUS) && current_note->next_note)\
@@ -2246,6 +2290,15 @@ void
       break;
     case S_PUNCTUM_DEMINUTUS:
       *glyph_number = 13;
+      break;
+    case S_PUNCTUM_CAVUM:
+      *glyph_number = 34;
+      break;
+    case S_LINEA_PUNCTUM:
+      *glyph_number = 35;
+      break;
+    case S_LINEA_PUNCTUM_CAVUM:
+      *glyph_number = 36;
       break;
     case S_VIRGA:
       if (is_short (note->pitch))
