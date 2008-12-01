@@ -55,7 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	BEGIN(attribute);
 	return COLON;
 	}
-<attribute>;     {
+<attribute>;(\n|\r)*     {
 	BEGIN(INITIAL);
          return SEMICOLON;
       }
@@ -129,7 +129,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <INITIAL>--(.*) {
 	return VOICE_CHANGE;
 	}
-<INITIAL>%(%)*\n {
+<INITIAL>%(%)*(\n|\r)+ {
 	BEGIN(score);
 	return END_OF_DEFINITIONS;
 	 }
@@ -212,7 +212,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	BEGIN(score);
 	return CLOSING_BRACKET;
 	}
-<notes>\)(\ |\t|\n)+ {
+<notes>\)(\ |\t|\n|\r)+ {
 	BEGIN(score);
 	return CLOSING_BRACKET_WITH_SPACE;
 	}

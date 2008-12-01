@@ -52,7 +52,7 @@ gregorio_note *current_note;
 
 
 %%
-[\t\n]+      /* ignore ends of line and tabs */;
+[\t\r\n]+      /* ignore ends of line and tabs */;
 z {
 	libgregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, GRE_END_OF_LINE);
 	}
