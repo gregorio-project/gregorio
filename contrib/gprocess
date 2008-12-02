@@ -24,9 +24,14 @@ use strict;
 
 ## USER-MODIFIABLE COMMAND PATHS
 
-my $PDFVIEWER = "/usr/bin/kpdf";
+# search for a PDF viewer among these file paths; take the first
+my @PDFVIEWERS = grep { -e $_ && -x $_ } 
+   ("/usr/bin/kpdf","/usr/bin/okular","/usr/bin/acroread");
+my $PDFVIEWER = $PDFVIEWERS[0];
+
 my $TEXCOMPILER = "/usr/bin/lamed";
 my $DVIPDFCONVERTER = "/usr/bin/dvipdfm";
+my $PDFTK = "/usr/bin/pdftk";
 
 ## END OF USER-MODIFIABLE COMMAND PATHS
 
@@ -132,6 +137,13 @@ unlink $PDFFILE;
 do_cmd("gregorio $GABCFILE");
 do_cmd("$TEXCOMPILER $SCOREWRAPTEX");
 do_cmd ("$DVIPDFCONVERTER $DVIFILE");
+if ( -e $PDFTK && -x $PDFTK ) {
+	my $TMPFILE = $$ . ".pdf";
+	rename $PDFFILE, $TMPFILE;
+	printf "Reducing size of $PDFFILE...\n";
+	do_cmd ("$PDFTK $TMPFILE output $PDFFILE");
+	unlink $TMPFILE;
+};
 do_cmd ("$PDFVIEWER $PDFFILE");
 
 my $AUXFILE = $DVIFILE;
@@ -165,7 +177,7 @@ __END__
 
 \documentclass[12pt, letterpaper]{article}
 \usepackage{fullpage}
-\usepackage{newcent}
+\usepackage{palatino}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{gregoriotex}
@@ -184,6 +196,7 @@ __END__
 \setfirstlineaboveinitial{\small \textsc{\textbf{XXXX-ANNOTATION-XXXX}}}{\small \textsc{\textbf{XXXX-ANNOTATION-XXXX}}}
 \commentary{{\small \emph{XXXX-REFERENCE-XXXX}}}
 \setgrefactor{17}
+\spaceabovelines=5mm
 \includescore{XXXX-SCORETEXFILE-XXXX}
 
 \end{document}
