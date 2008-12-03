@@ -29,6 +29,22 @@ This is a simple and easyly understandable output module. If you want to write a
 #include "struct.h"
 #include "gabc.h"
 #include <wchar.h>
+#include "plugin.h"
+
+DECLARE_PLUGIN(gabc)
+{
+    .id = "gabc",
+    .name = "gabc",
+    .description = "GABC input/output plugin",
+    .author = "Elie Roux <elie.roux@enst-bretagne.fr>",
+
+    .file_extension = "gabc",
+
+    .type = GREGORIO_PLUGIN_BOTH,
+
+    .read = read_score,
+    .write = write_score
+};
 
 /*
 

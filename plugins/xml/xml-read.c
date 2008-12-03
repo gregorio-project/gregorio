@@ -1528,3 +1528,21 @@ libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
     }
   return signs;
 }
+
+#include "plugin.h"
+
+DECLARE_PLUGIN(xml)
+{
+    .id = "xml",
+    .name = "GregorioXML",
+    .description = "GregorioXML input/output plugin",
+    .author = "Elie Roux <elie.roux@enst-bretagne.fr>",
+
+    .file_extension = "xml",
+
+    .type = GREGORIO_PLUGIN_BOTH,
+
+    .read = read_score,
+    .write = write_score
+};
+

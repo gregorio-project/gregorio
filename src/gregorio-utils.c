@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <getopt.h>
 #include <libgen.h>		/* for basename */
 #include <string.h>		/* for strcmp */
-#include <ltdl.h>
+#include "plugin_loader.h"
 
 #include <locale.h>
 #include "gettext.h"
@@ -36,28 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #  define MODULE_PATH_ENV        "MODULE_PATH"
 #endif
 
-#define GABC 1
-#define XML 2
-#define GTEX 3
-#define OTEX 4
-#define DUMP 5
-#define GABC_STR "gabc"
-#define XML_STR "xml"
-#define GTEX_STR "gtex"
-#define OTEX_STR "otex"
-#define DUMP_STR "dump"
-#define GABC_PLUGIN "gabc"
-#define XML_PLUGIN "xml"
-#define GTEX_PLUGIN "gregoriotex"
-#define OTEX_PLUGIN "opustex"
-#define DUMP_PLUGIN "dump"
-#define DEFAULT_OUTPUT_FORMAT GTEX
-#define DEFAULT_INPUT_FORMAT GABC
-#define GABC_EXT ".gabc"
-#define XML_EXT ".xml"
-#define GTEX_EXT ".tex"
-#define OTEX_EXT ".tex"
-#define DUMP_EXT ".dump"
+#define DEFAULT_INPUT_FORMAT    "gabc"
+#define DEFAULT_OUTPUT_FORMAT   "gtex"
 
 #define define_path(file_name,string) \
 		/*we first test if path is absolute */\
@@ -72,7 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 // function that returns the filename without the extension
-char *
+static char *
 get_base_filename (char *fbasename)
 {
   char *p;
@@ -92,36 +72,15 @@ get_base_filename (char *fbasename)
 
 
 // function that adds the good extension to a basename (without extension)
-char *
-get_output_filename (char *fbasename, char output_format)
+static char *
+get_output_filename (char *fbasename, char *extension)
 {
-  char *extension = NULL;
   char *output_filename = NULL;
-  switch (output_format)
-    {
-    case GABC:
-      extension = GABC_EXT;
-      break;
-    case XML:
-      extension = XML_EXT;
-      break;
-    case GTEX:
-      extension = GTEX_EXT;
-      break;
-    case OTEX:
-      extension = OTEX_EXT;
-      break;
-    case DUMP:
-      extension = DUMP_EXT;
-      break;
-    default:
-      return NULL;
-      break;
-    }
   output_filename =
     (char *) malloc (sizeof (char) *
-		     (strlen (extension) + strlen (fbasename) + 1));
+		     (strlen (extension) + strlen (fbasename) + 2));
   output_filename = strcpy (output_filename, fbasename);
+  output_filename = strcat (output_filename, ".");
   output_filename = strcat (output_filename, extension);
   return output_filename;
 }
@@ -130,29 +89,7 @@ get_output_filename (char *fbasename, char output_format)
 /* the type definitions of the function to read a score from a file, and to write a score
 to a file. Necessary for the libtool stuff... */
 
-typedef gregorio_score *read_func (FILE * f);
-typedef void write_func (FILE * f, gregorio_score * score);
-
-void print_licence ();
-void print_usage (char *name);
-
-/* a function to open a plugin with libtool */
-
-int
-open_plugin (const char *plugin, lt_dlhandle * module)
-{
-  *module = lt_dlopenext (plugin);
-  if (!*module)
-    {
-      fprintf (stderr, "error : unable to load module %s\n", plugin);
-      return 1;
-    }
-
-  return 0;
-}
-
-
-void
+static void
 print_licence ()
 {
   printf ("\n\
@@ -174,7 +111,7 @@ along with this program; if not, write to the Free Software\n\
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n\n");
 }
 
-void
+static void
 print_usage (char *name)
 {
   printf (_("\nUsage :\n%s [OPTION] {file}\n  where OPTION is :\n\
@@ -206,7 +143,6 @@ main (int argc, char **argv)
     "Copyright (C) 2006 Elie Roux <elie.roux@enst-bretagne.fr>";
   int c;
 
-  char *plugin = NULL;		// the plugin we will load (input or output)
   char *input_file_name = NULL;
   char *output_file_name = NULL;
   char *output_basename = NULL;
@@ -214,16 +150,17 @@ main (int argc, char **argv)
   FILE *input_file = NULL;
   FILE *output_file = NULL;
   FILE *error_file = NULL;
-  char input_format = 0;
-  char output_format = 0;
+  char *input_format = NULL;
+  char *output_format = NULL;
   char verb_mode = 0;
   char *current_directory = malloc (150 * sizeof (char));
   int number_of_options = 0;
   int option_index = 0;
   int error = 0;
-  lt_dlhandle module;
-  read_func *read_file = NULL;
-  write_func *write_score = NULL;
+  gregorio_plugin *input_plugin = NULL;
+  gregorio_plugin_info *input_plugin_info = NULL;
+  gregorio_plugin *output_plugin = NULL;
+  gregorio_plugin_info *output_plugin_info = NULL;
   static struct option long_options[] = {
     {"output-file", 1, 0, 'o'},
     {"stdout", 0, 0, 'S'},
@@ -257,18 +194,10 @@ main (int argc, char **argv)
       exit (-1);
     }
 
-  error = lt_dlinit ();
+  error = gregorio_plugin_loader_init ();
   if (error)
     {
       fprintf (stderr, _("can't initalize libtool"));
-      free (current_directory);
-      exit (-1);
-    }
-
-  error = lt_dlsetsearchpath (PLUGINDIR);
-  if (error)
-    {
-      fprintf (stderr, "error in lt_dlsetsearchpath\n");
       free (current_directory);
       exit (-1);
     }
@@ -318,36 +247,7 @@ main (int argc, char **argv)
 		       "warning: several output formats declared, first taken\n");
 	      break;
 	    }
-	  if (!strcmp (optarg, XML_STR))
-	    {
-	      output_format = XML;
-	      break;
-	    }
-	  if (!strcmp (optarg, GABC_STR))
-	    {
-	      output_format = GABC;
-	      break;
-	    }
-	  if (!strcmp (optarg, GTEX_STR))
-	    {
-	      output_format = GTEX;
-	      break;
-	    }
-	  if (!strcmp (optarg, OTEX_STR))
-	    {
-	      output_format = OTEX;
-	      break;
-	    }
-	  if (!strcmp (optarg, DUMP_STR))
-	    {
-	      output_format = DUMP;
-	      break;
-	    }
-	  else
-	    {
-	      fprintf (stderr, "error: unknown output format: %s\n", optarg);
-	      exit (0);
-	    }
+          output_format = optarg;
 	  break;
 	case 'l':
 	  if (error_file_name)
@@ -366,20 +266,7 @@ main (int argc, char **argv)
 		       "warning: several output formats declared, first taken\n");
 	      break;
 	    }
-	  if (!strcmp (optarg, GABC_STR))
-	    {
-	      input_format = GABC;
-	      break;
-	    }
-	  if (!strcmp (optarg, XML_STR))
-	    {
-	      input_format = XML;
-	    }
-	  else
-	    {
-	      fprintf (stderr, "error: unknown input format: %s\n", optarg);
-	      exit (0);
-	    }
+          input_format = optarg;
 	  break;
 	case 's':
 	  if (input_file_name)
@@ -479,6 +366,41 @@ main (int argc, char **argv)
     }
 
 // then we act...
+
+  /* Load plugins */
+  output_plugin = gregorio_plugin_load(PLUGINDIR, output_format);
+  if (output_plugin == NULL)
+    {
+      fprintf (stderr, "error: invalid output plugin %s\n", output_format);
+      free (current_directory);
+      exit (1);
+    }
+  output_plugin_info = gregorio_plugin_get_info(output_plugin);
+  if ((output_plugin_info->type & GREGORIO_PLUGIN_OUTPUT) == 0)
+    {
+      gregorio_plugin_unload (output_plugin);
+      fprintf (stderr, "error: invalid output plugin %s\n", output_format);
+      free (current_directory);
+      exit (1);
+    }
+  input_plugin = gregorio_plugin_load(PLUGINDIR, input_format);
+  if (input_plugin == NULL)
+    {
+      gregorio_plugin_unload (output_plugin);
+      fprintf (stderr, "error: invalid input plugin %s\n", input_format);
+      free (current_directory);
+      exit (1);
+    }
+  input_plugin_info = gregorio_plugin_get_info(input_plugin);
+  if ((input_plugin_info->type & GREGORIO_PLUGIN_INPUT) == 0)
+    {
+      gregorio_plugin_unload (output_plugin);
+      gregorio_plugin_unload (input_plugin);
+      fprintf (stderr, "error: invalid input plugin %s\n", input_format);
+      free (current_directory);
+      exit (1);
+    }
+
   if (!output_file_name && !output_file)
     {
       if (!output_basename)
@@ -490,7 +412,8 @@ main (int argc, char **argv)
 	  if (input_format != output_format)
 	    {
 	      output_file_name =
-		get_output_filename (output_basename, output_format);
+		get_output_filename (output_basename,
+                                     output_plugin_info->file_extension);
 	    }
 	  output_file = fopen (output_file_name, "w");
 	  if (!output_file)
@@ -555,103 +478,25 @@ main (int argc, char **argv)
 
   libgregorio_set_verbosity_mode (verb_mode);
   setlocale (LC_CTYPE, "");	//to work with an utf-8 encoding
-  switch (input_format)
-    {
-    case GABC:
-      plugin = GABC_PLUGIN;
-      break;
-    case XML:
-      plugin = XML_PLUGIN;
-      break;
-    default:
-      fprintf (stderr, "error : invalid input format\n");
-      fclose (input_file);
-      fclose (output_file);
-      exit (-1);
-      break;
-    }
 
-  error = open_plugin (plugin, &module);
-  if (error)
-    {
-      fprintf (stderr, "error in opening module %s\n", plugin);
-      fclose (output_file);
-      fclose (input_file);
-      exit (-1);
-    }
-
-  read_file = (read_func *) lt_dlsym (module, "read_score");
-  if (read_file == NULL)
-    {
-      fprintf (stderr, "error in opening function read_score in module %s\n",
-	       plugin);
-    }
-  score = (*read_file) (input_file);
-  error = lt_dlclose (module);
-  if (error)
-    {
-      fprintf (stderr, "error in closing module %s\n", plugin);
-      fclose (input_file);
-      fclose (output_file);
-      exit (-1);
-    }
+  score = (input_plugin_info->read) (input_file);
+  gregorio_plugin_unload (input_plugin);
 
   fclose (input_file);
   if (score == NULL)
     {
+      gregorio_plugin_unload (output_plugin);
       fprintf (stderr, "error in file parsing\n");
       exit (-1);
     }
 
   libgregorio_fix_initial_keys (score, DEFAULT_KEY);
-  switch (output_format)
-    {
-    case XML:
-      plugin = XML_PLUGIN;
-      break;
-    case GABC:
-      plugin = GABC_PLUGIN;
-      break;
-    case GTEX:
-      plugin = GTEX_PLUGIN;
-      break;
-    case OTEX:
-      plugin = OTEX_PLUGIN;
-      break;
-    case DUMP:
-      plugin = DUMP_PLUGIN;
-      break;
-    default:
-      fprintf (stderr, "error : invalid input format\n");
-      libgregorio_free_score (score);
-      fclose (output_file);
-      exit (-1);
-      break;
-    }
 
-  error = open_plugin (plugin, &module);
-  if (error)
-    {
-      libgregorio_free_score (score);
-      fclose (output_file);
-      exit (-1);
-    }
-
-  write_score = (write_func *) lt_dlsym (module, "write_score");
-  if (write_score == NULL)
-    {
-      fprintf (stderr, "error in opening function write_score in module %s\n",
-	       plugin);
-    }
-  (*write_score) (output_file, score);
-  error = lt_dlclose (module);
-  if (error)
-    {
-      libgregorio_free_score (score);
-      fclose (output_file);
-      exit (-1);
-    }
+  (output_plugin_info->write) (output_file, score);
+  gregorio_plugin_unload (output_plugin);
   fclose (output_file);
   libgregorio_free_score (score);
+
+  gregorio_plugin_loader_exit();
   exit (0);
 }

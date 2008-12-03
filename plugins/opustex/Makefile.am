@@ -2,8 +2,7 @@ AM_CPPFLAGS=-I$(top_srcdir)/include -I$(top_srcdir)/lib
 AM_CFLAGS =  -L$(top_builddir)/lib
 
 pkglib_LTLIBRARIES=opustex.la
-pkginclude_HEADERS = opustex.h
-opustex_la_SOURCES=opustex-write.c
+opustex_la_SOURCES=opustex-write.c opustex.h
 opustex_la_LDFLAGS=-no-undefined -module -avoid-version
 opustex_la_LIBADD = $(LIBINTL) -lgregorio
 

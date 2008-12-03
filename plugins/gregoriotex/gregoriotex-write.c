@@ -27,6 +27,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <wchar.h>
 #include <string.h>
 #include "gregoriotex.h"
+#include "plugin.h"
+
+DECLARE_PLUGIN(gregoriotex)
+{
+    .id = "gtex",
+    .name = "gregoriotex",
+    .description = "GregorioTeX output plugin",
+    .author = "Elie Roux <elie.roux@enst-bretagne.fr>",
+
+    .file_extension = "tex",
+
+    .type = GREGORIO_PLUGIN_OUTPUT,
+
+    .write = write_score
+};
 
 void
 write_score (FILE * f, gregorio_score * score)

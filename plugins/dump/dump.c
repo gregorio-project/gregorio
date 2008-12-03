@@ -26,6 +26,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "dump.h"
 #include <wchar.h>
 #include "messages.h"
+#include "plugin.h"
+
+DECLARE_PLUGIN(dump)
+{
+  .id = "dump",
+  .name = "dump",
+  .description = "Raw dump plugin",
+  .author = "Elie Roux <elie.roux@enst-bretagne.fr>",
+
+  .type = GREGORIO_PLUGIN_OUTPUT,
+
+  .file_extension = "dump",
+
+  .write = write_score
+};
 
 void
 write_score (FILE * f, gregorio_score * score)
