@@ -1,6 +1,6 @@
 /* 
 Gregorio command line interface.
-Copyright (C) 2006 Elie Roux <elie.roux@enst-bretagne.fr>
+Copyright (C) 2006-2008 Elie Roux <elie.roux@telecom-bretagne.eu>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -94,10 +94,7 @@ print_licence ()
 {
   printf ("\n\
 Tools for manipulation of gregorian chant files\n\
-Copyright (C) 2006 Elie Roux <elie.roux@telecom-bretagne.eu>\n\
-\n\
-Gregorio command line interface.\n\
-Copyright (C) 2006 Elie Roux <elie.roux@enst-bretagne.fr>\n\
+Copyright (C) 2006-2008 Elie Roux <elie.roux@telecom-bretagne.eu>\n\
 \n\
 This program is free software: you can redistribute it and/or modify\n\
 it under the terms of the GNU General Public License as published by\n\
@@ -142,7 +139,7 @@ int
 main (int argc, char **argv)
 {
   const char *copyright =
-    "Copyright (C) 2006 Elie Roux <elie.roux@enst-bretagne.fr>";
+    "Copyright (C) 2006-2008 Elie Roux <elie.roux@telecom-bretagne.eu>";
   int c;
 
   char *input_file_name = NULL;
