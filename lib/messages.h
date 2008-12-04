@@ -24,7 +24,6 @@ void libgregorio_message (const char *string, const char *function_name, char ve
 void libgregorio_set_verbosity_mode (char new_mode);
 void libgregorio_set_file_name (char *new_name);
 void libgregorio_set_error_out (FILE *f);
-const char * verbosity_to_str (char verbosity);
 
 #define VERB_VERBOSE 1
 #define VERB_WARNINGS 2

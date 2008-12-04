@@ -53,7 +53,7 @@ libgregorio_set_debug_messages (char new_mode)
   debug_messages = new_mode;
 }
 
-const char *
+static const char *
 verbosity_to_str (char verbosity)
 {
   const char *str;
