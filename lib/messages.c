@@ -30,19 +30,19 @@ char debug_messages = 0;
 
 
 void
-libgregorio_set_error_out (FILE * f)
+gregorio_set_error_out (FILE * f)
 {
   error_out = f;
 }
 
 void
-libgregorio_set_file_name (char *new_name)
+gregorio_set_file_name (char *new_name)
 {
   file_name = new_name;
 }
 
 void
-libgregorio_set_verbosity_mode (char new_mode)
+gregorio_set_verbosity_mode (char new_mode)
 {
   verbosity_mode = new_mode;
 }
@@ -76,7 +76,7 @@ verbosity_to_str (char verbosity)
 }
 
 void
-libgregorio_message (const char *string, const char *function_name, char verbosity,
+gregorio_message (const char *string, const char *function_name, char verbosity,
 		int line_number)
 {
   const char *verbosity_str;
@@ -91,14 +91,14 @@ libgregorio_message (const char *string, const char *function_name, char verbosi
     {
       fprintf (stderr,
 	       _
-	       ("warning: error_out not set in libgregorio_messages, assumed stderr\n"));
+	       ("warning: error_out not set in gregorio_messages, assumed stderr\n"));
       error_out = stderr;
     }
   if (!verbosity_mode)
     {
       fprintf (stderr,
 	       _
-	       ("warning: verbosity mode not set in libgregorio_messages, assumed warnings\n"));
+	       ("warning: verbosity mode not set in gregorio_messages, assumed warnings\n"));
       verbosity_mode = VERB_WARNINGS;
     }
   if (verbosity < verbosity_mode)

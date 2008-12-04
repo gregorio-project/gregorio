@@ -53,7 +53,7 @@ write_score (FILE * f, gregorio_score * score)
   gregorio_note *note;
 
   if (!f) {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("call with NULL file"),
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
 			   return;

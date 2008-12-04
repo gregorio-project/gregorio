@@ -61,7 +61,7 @@ write_score (FILE * f, gregorio_score * score)
   gregorio_syllable *current_syllable = score->first_syllable;
 
   if (!f) {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("call with NULL file"),
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
 			   return;
@@ -69,7 +69,7 @@ write_score (FILE * f, gregorio_score * score)
 
   if (score->number_of_voices != 1)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("opustex only works in monophony (for the moment)"),
 			   "libgregorio_opustex_write_score", ERROR, 0);
     }
@@ -364,7 +364,7 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 	  if (current_element->type == GRE_C_KEY_CHANGE
 	      || current_element->type == GRE_F_KEY_CHANGE)
 	    {
-	      libgregorio_message (_
+	      gregorio_message (_
 				   ("clef change inside of a syllable doesn't work in OpusTeX"),
 				   "libgregorio_opustex_write syllable",
 				   ERROR, 0);
@@ -376,7 +376,7 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 	      if (current_element->next_element
 		  && current_element->next_element->type == GRE_BAR)
 		{
-		  libgregorio_message (_
+		  gregorio_message (_
 				       ("line break cannot be placed before a divisio in OpusTeX"),
 				       "libgregorio_opustex_write syllable",
 				       ERROR, 0);
@@ -647,7 +647,7 @@ libgregorio_opustex_write_barline (FILE * f, char type)
       fprintf (f, "divisiofinalis");
       break;
     default:
-      libgregorio_message (_("unknown bar type"),
+      gregorio_message (_("unknown bar type"),
 			   "libgregorio_opustex_write_barline", ERROR, 0);
       break;
     }
@@ -677,14 +677,14 @@ libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
 
   if (!glyph)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with NULL pointer"),
 			   "libgregorio_opustex_write_glyph", ERROR, 0);
       return;
     }
   if (!glyph->first_note)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with glyph without note"),
 			   "libgregorio_opustex_write_glyph", ERROR, 0);
       return;
@@ -1048,7 +1048,7 @@ libgregorio_opustex_glyph_type_to_str (char name)
       break;
     case G_PES_QUADRATUM:	//doesn't exist in OpusTeX
       str = "pes";
-      libgregorio_message (_("pes quadratum doesn't exist in OpusTeX"),
+      gregorio_message (_("pes quadratum doesn't exist in OpusTeX"),
 			   "libgregorio_opustex_glyph_type_to_str", ERROR, 0);
       break;
     case G_FLEXA:
@@ -1061,7 +1061,7 @@ libgregorio_opustex_glyph_type_to_str (char name)
       str = "torculusresupinus";
       break;
     case G_TORCULUS_RESUPINUS_FLEXUS:
-      libgregorio_message (_
+      gregorio_message (_
 			   ("torculus_resupinus_flexus doesn't exist in OpusTeX"),
 			   "libgregorio_opustex_glyph_type_to_str", ERROR, 0);
       break;
@@ -1115,7 +1115,7 @@ libgregorio_opustex_print_liquescentia (FILE * f, char liquescentia,
 	}
       else
 	{
-	  libgregorio_message (_("that glyph cannot be deminutus in OpusTeX"),
+	  gregorio_message (_("that glyph cannot be deminutus in OpusTeX"),
 			       "libgregorio_opustex_print_liquescentia",
 			       ERROR, 0);
 	}
@@ -1127,7 +1127,7 @@ libgregorio_opustex_print_liquescentia (FILE * f, char liquescentia,
 	}
       else
 	{
-	  libgregorio_message (_
+	  gregorio_message (_
 			       ("that glyph cannot be auctus ascendens in OpusTeX"),
 			       "libgregorio_opustex_print_liquescentia",
 			       ERROR, 0);
@@ -1141,7 +1141,7 @@ libgregorio_opustex_print_liquescentia (FILE * f, char liquescentia,
 	}
       else
 	{
-	  libgregorio_message (_
+	  gregorio_message (_
 			       ("that glyph cannot be auctus descendens in OpusTeX"),
 			       "libgregorio_opustex_print_liquescentia",
 			       ERROR, 0);
@@ -1154,7 +1154,7 @@ libgregorio_opustex_print_liquescentia (FILE * f, char liquescentia,
 	}
       else
 	{
-	  libgregorio_message (_("that glyph cannot be auctus in OpusTeX"),
+	  gregorio_message (_("that glyph cannot be auctus in OpusTeX"),
 			       "libgregorio_opustex_print_liquescentia",
 			       ERROR, 0);
 	}
@@ -1166,7 +1166,7 @@ libgregorio_opustex_print_liquescentia (FILE * f, char liquescentia,
 	}
       else
 	{
-	  libgregorio_message (_
+	  gregorio_message (_
 			       ("that glyph cannot have initio debilis in OpusTeX"),
 			       "libgregorio_opustex_print_liquescentia",
 			       ERROR, 0);
@@ -1179,14 +1179,14 @@ libgregorio_opustex_print_liquescentia (FILE * f, char liquescentia,
 	}
       else
 	{
-	  libgregorio_message (_
+	  gregorio_message (_
 			       ("that glyph cannot be deminutus initio debilis in OpusTeX"),
 			       "libgregorio_opustex_print_liquescentia",
 			       ERROR, 0);
 	}
       break;
     case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
-      libgregorio_message (_
+      gregorio_message (_
 			   ("there's no auctus ascendens initio debilis in OpusTeX"),
 			   "libgregorio_opustex_print_liquescentia", ERROR,
 			   0);
@@ -1198,14 +1198,14 @@ libgregorio_opustex_print_liquescentia (FILE * f, char liquescentia,
 	}
       else
 	{
-	  libgregorio_message (_
+	  gregorio_message (_
 			       ("that glyph cannot be auctus descendens initio debilis in OpusTeX"),
 			       "libgregorio_opustex_print_liquescentia",
 			       ERROR, 0);
 	}
       break;
     case L_AUCTA_INITIO_DEBILIS:
-      libgregorio_message (_("there's no aucta initio debilis in OpusTeX"),
+      gregorio_message (_("there's no aucta initio debilis in OpusTeX"),
 			   "libgregorio_opustex_print_liquescentia", ERROR,
 			   0);
       break;

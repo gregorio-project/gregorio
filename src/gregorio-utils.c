@@ -260,7 +260,7 @@ main (int argc, char **argv)
 	case 'f':
 	  if (input_format)
 	    {
-	      libgregorio_set_error_out (error_file);
+	      gregorio_set_error_out (error_file);
 	      fprintf (stderr,
 		       "warning: several output formats declared, first taken\n");
 	      break;
@@ -446,13 +446,13 @@ main (int argc, char **argv)
 		   input_file_name);
 	  exit (-1);
 	}
-      libgregorio_set_file_name (basename (input_file_name));
+      gregorio_set_file_name (basename (input_file_name));
     }
 
   if (!error_file_name)
     {
       error_file = stderr;
-      libgregorio_set_error_out (error_file);
+      gregorio_set_error_out (error_file);
     }
   else
     {
@@ -463,7 +463,7 @@ main (int argc, char **argv)
 		   error_file_name);
 	  exit (-1);
 	}
-      libgregorio_set_error_out (error_file);
+      gregorio_set_error_out (error_file);
     }
 
   free (current_directory);
@@ -475,7 +475,7 @@ main (int argc, char **argv)
       verb_mode = VERB_ERRORS;
     }
 
-  libgregorio_set_verbosity_mode (verb_mode);
+  gregorio_set_verbosity_mode (verb_mode);
   setlocale (LC_CTYPE, "");	//to work with an utf-8 encoding
 
   score = (input_plugin_info->read) (input_file);

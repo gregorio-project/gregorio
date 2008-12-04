@@ -58,7 +58,7 @@ write_score (FILE * f, gregorio_score * score)
   gregorio_syllable *syllable;
 
   if (!f) {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("call with NULL file"),
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
 			   return;
@@ -72,7 +72,7 @@ write_score (FILE * f, gregorio_score * score)
   else
     {
       fprintf (f, "name: unknown;\n");
-      libgregorio_message (_("name is mandatory"),
+      gregorio_message (_("name is mandatory"),
 			   "libgregorio_gabc_write_score", ERROR, 0);
     }
   if (score->office_part)
@@ -105,7 +105,7 @@ write_score (FILE * f, gregorio_score * score)
     }
   if (score->number_of_voices == 0)
     {
-      libgregorio_message (_("gregorio_score seems to be empty"),
+      gregorio_message (_("gregorio_score seems to be empty"),
 			   "libgregorio_gabc_write_score", ERROR, 0);
       return;
     }
@@ -155,7 +155,7 @@ libgregorio_gabc_write_voice_info (FILE * f, gregorio_voice_info * voice_info)
 
   if (!voice_info)
     {
-      libgregorio_message (_("no voice info"),
+      gregorio_message (_("no voice info"),
 			   "libgregorio_gabc_write_voice_info", WARNING, 0);
       return;
     }
@@ -318,7 +318,7 @@ libgregorio_gabc_write_gregorio_syllable (FILE * f,
   int voice = 0;
   if (!syllable)
     {
-      libgregorio_message (_("call with NULL argument"),
+      gregorio_message (_("call with NULL argument"),
 			   "libgregorio_gabc_write_syllable", ERROR, 0);
       return;
     }
@@ -404,7 +404,7 @@ libgregorio_gabc_write_gregorio_element (FILE * f, gregorio_element * element)
   gregorio_glyph *current_glyph;
   if (!element)
     {
-      libgregorio_message (_("call with NULL argument"),
+      gregorio_message (_("call with NULL argument"),
 			   "libgregorio_gabc_write_gregorio_element",
 			   ERROR, 0);
       return;
@@ -437,7 +437,7 @@ libgregorio_gabc_write_gregorio_element (FILE * f, gregorio_element * element)
       fprintf (f, "z");
       break;
     default:
-      libgregorio_message (_
+      gregorio_message (_
 			   ("call with an argument which type is unknown"),
 			   "libgregorio_gabc_write_gregorio_element",
 			   ERROR, 0);
@@ -459,7 +459,7 @@ libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
 
   if (!glyph)
     {
-      libgregorio_message (_("call with NULL argument"),
+      gregorio_message (_("call with NULL argument"),
 			   "libgregorio_gabc_write_gregorio_glyph", ERROR, 0);
       return;
     }
@@ -478,7 +478,7 @@ libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
 	}
       else
 	{
-	  libgregorio_message (_("bad space"),
+	  gregorio_message (_("bad space"),
 			       "libgregorio_gabc_write_gregorio_glyph",
 			       ERROR, 0);
 	}
@@ -502,7 +502,7 @@ libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
       break;
     default:
 
-      libgregorio_message (_
+      gregorio_message (_
 			   ("call with an argument which type is unknown"),
 			   "libgregorio_gabc_write_gregorio_glyph", ERROR, 0);
       break;
@@ -576,7 +576,7 @@ libgregorio_gabc_write_space (FILE * f, char type)
       // neumatic cuts are automatically added between elements
       break;
     default:
-      libgregorio_message (_("space type is unknown"),
+      gregorio_message (_("space type is unknown"),
 			   "libgregorio_gabc_write_space", ERROR, 0);
       break;
     }
@@ -609,7 +609,7 @@ libgregorio_gabc_write_bar (FILE * f, char type)
       fprintf (f, "::");
       break;
     default:
-      libgregorio_message (_
+      gregorio_message (_
 			   ("unknown bar type, nothing will be done"),
 			   "libgregorio_gabc_bar_to_str", ERROR, 0);
       break;
@@ -629,13 +629,13 @@ libgregorio_gabc_write_gregorio_note (FILE * f,
   char shape;
   if (!note)
     {
-      libgregorio_message (_("call with NULL argument"),
+      gregorio_message (_("call with NULL argument"),
 			   "libgregorio_gabc_write_gregorio_note", ERROR, 0);
       return;
     }
   if (note->type != GRE_NOTE)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("call with argument which type is not GRE_NOTE, wrote nothing"),
 			   "libgregorio_gabc_write_gregorio_note", ERROR, 0);
       return;

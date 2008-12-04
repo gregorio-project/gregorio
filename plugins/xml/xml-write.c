@@ -36,7 +36,7 @@ libgregorio_xml_write_gregorio_note (FILE * f, gregorio_note * note, int clef,
   char alteration;
 
   if (!f) {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("call with NULL file"),
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
 			   return;
@@ -44,13 +44,13 @@ libgregorio_xml_write_gregorio_note (FILE * f, gregorio_note * note, int clef,
 
   if (!note)
     {
-      libgregorio_message (_("call with NULL argument"),
+      gregorio_message (_("call with NULL argument"),
 			   "libgregorio_xml_write_gregorio_note", ERROR, 0);
       return;
     }
   if (note->type != GRE_NOTE)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("call with argument which type is not GRE_NOTE, wrote nothing"),
 			   "libgregorio_xml_write_gregorio_note", ERROR, 0);
       return;
@@ -99,7 +99,7 @@ libgregorio_xml_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph,
 
   if (!glyph)
     {
-      libgregorio_message (_("call with NULL argument"),
+      gregorio_message (_("call with NULL argument"),
 			   "libgregorio_xml_write_gregorio_glyph", ERROR, 0);
       return;
     }
@@ -116,7 +116,7 @@ libgregorio_xml_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph,
     }
   if (glyph->type != GRE_GLYPH)
     {
-      libgregorio_message (_("call with an argument which type is unknown"),
+      gregorio_message (_("call with an argument which type is unknown"),
 			   "libgregorio_xml_write_gregorio_glyph", ERROR, 0);
       return;
     }
@@ -141,7 +141,7 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
 
   if (!element)
     {
-      libgregorio_message (_("call with NULL argument"),
+      gregorio_message (_("call with NULL argument"),
 			   "libgregorio_xml_write_gregorio_element", ERROR,
 			   0);
       return;
@@ -190,7 +190,7 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
       return;
     }
 
-  libgregorio_message (_("call with an argument which type is unknown"),
+  gregorio_message (_("call with an argument which type is unknown"),
 		       "libgregorio_xml_write_gregorio_element", ERROR, 0);
 
 }
@@ -210,7 +210,7 @@ libgregorio_xml_write_space (FILE * f, char type)
       //we do not write neumatic cuts, they juste delimit elements
       break;
     default:
-      libgregorio_message (_("space type is unknown"),
+      gregorio_message (_("space type is unknown"),
 			   "libgregorio_xml_write_space", ERROR, 0);
       break;
     }
@@ -411,7 +411,7 @@ libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
 
   if (!syllable)
     {
-      libgregorio_message (_("call with NULL argument"),
+      gregorio_message (_("call with NULL argument"),
 			   "libgregorio_xml_write_syllable", ERROR, 0);
     }
   if (syllable->position == WORD_BEGINNING)
@@ -439,7 +439,7 @@ libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
     {
       if (!(syllable->elements[i]))
 	{
-	  libgregorio_message (_("not_enough voices in syllable"),
+	  gregorio_message (_("not_enough voices in syllable"),
 			       "libgregorio_xml_write_syllable", VERBOSE, 0);
 	  voice++;
 	  continue;
@@ -565,7 +565,7 @@ write_score (FILE * f, gregorio_score * score)
   gregorio_syllable *current_syllable;
   if (!score)
     {
-      libgregorio_message (_("call with NULL argument"),
+      gregorio_message (_("call with NULL argument"),
 			   "libgregorio_xml_write_score", ERROR, 0);
       return;
     }
@@ -577,7 +577,7 @@ write_score (FILE * f, gregorio_score * score)
     {
       if (!voice_info)
 	{
-	  libgregorio_message (_
+	  gregorio_message (_
 			       ("score has more voice infos than voices (attribute number of voices)"),
 			       "libgregorio_xml_write_syllable", ERROR, 0);
 	  return;
@@ -614,7 +614,7 @@ libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
 
   if (!score)
     {
-      libgregorio_message (_("call with NULL argument"),
+      gregorio_message (_("call with NULL argument"),
 			   "libgregorio_xml_write_score_attributes", ERROR,
 			   0);
       return;
@@ -623,7 +623,7 @@ libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
   fprintf (f, "<score-attributes>");
   if (!score->name || score->name == "")
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("score has no name attribute, which is mandatory"),
 			   "libgregorio_xml_write_score_attributes", ERROR,
 			   0);

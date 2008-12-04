@@ -20,10 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
-void libgregorio_message (const char *string, const char *function_name, char verbosity, int line_number);
-void libgregorio_set_verbosity_mode (char new_mode);
-void libgregorio_set_file_name (char *new_name);
-void libgregorio_set_error_out (FILE *f);
+void gregorio_message (const char *string, const char *function_name, char verbosity, int line_number);
+void gregorio_set_verbosity_mode (char new_mode);
+void gregorio_set_file_name (char *new_name);
+void gregorio_set_error_out (FILE *f);
 
 #define VERB_VERBOSE 1
 #define VERB_WARNINGS 2

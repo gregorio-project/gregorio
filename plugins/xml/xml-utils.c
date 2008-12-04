@@ -70,7 +70,7 @@ libgregorio_xml_shape_to_str (char shape)
       break;
     default:
       str = "punctum";
-      libgregorio_message (_("unknown shape, `punctum' assumed"),
+      gregorio_message (_("unknown shape, `punctum' assumed"),
 		      "libgregorio_xml_shape_to_str", WARNING, 0);
       break;
     }
@@ -356,7 +356,7 @@ libgregorio_xml_bar_to_str (char type)
       break;
     default:
       str = "";
-      libgregorio_message (_("unknown bar type, nothing will be done"),
+      gregorio_message (_("unknown bar type, nothing will be done"),
 		      "libgregorio_xml_bar_to_str", ERROR, 0);
       break;
     }

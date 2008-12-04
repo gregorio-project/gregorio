@@ -359,13 +359,13 @@ msgstr ""
 
 #: lib/messages.c:94
 #, c-format
-msgid "warning: error_out not set in libgregorio_messages, assumed stderr\n"
+msgid "warning: error_out not set in gregorio_messages, assumed stderr\n"
 msgstr ""
 
 #: lib/messages.c:101
 #, c-format
 msgid ""
-"warning: verbosity mode not set in libgregorio_messages, assumed warnings\n"
+"warning: verbosity mode not set in gregorio_messages, assumed warnings\n"
 msgstr ""
 
 #: plugins/opustex/opustex-write.c:58

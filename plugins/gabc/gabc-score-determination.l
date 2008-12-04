@@ -136,7 +136,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <INITIAL>. {
     char *dirtyvar = malloc(71*sizeof(char));
 	snprintf(dirtyvar,70,gettext("unrecognized character: \"%c\" in definition part"),gabc_score_determination_text[0]);
-	libgregorio_message (dirtyvar,
+	gregorio_message (dirtyvar,
 		      "libgregorio_det_score", ERROR, 0);
 	}
 <score>[^\{\}\(\[\]<]+ {

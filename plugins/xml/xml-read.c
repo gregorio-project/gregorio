@@ -45,7 +45,7 @@ read_score (FILE *f)
 
   if (doc == NULL)
     {
-      libgregorio_message (_("file not parsed successfully"),
+      gregorio_message (_("file not parsed successfully"),
 			   "libgregorio_xml_read_file", ERROR, 0);
       return NULL;
     }
@@ -54,7 +54,7 @@ read_score (FILE *f)
 
   if (current_node == NULL)
     {
-      libgregorio_message (_("empty file"),
+      gregorio_message (_("empty file"),
 			   "libgregorio_xml_read_file", WARNING, 0);
       xmlFreeDoc (doc);
       return NULL;
@@ -62,7 +62,7 @@ read_score (FILE *f)
 
   if (xmlStrcmp (current_node->name, (const xmlChar *) "score"))
     {
-      libgregorio_message (_("root element is not score"),
+      gregorio_message (_("root element is not score"),
 			   "libgregorio_xml_read_file", ERROR, 0);
       xmlFreeDoc (doc);
       return NULL;
@@ -74,7 +74,7 @@ read_score (FILE *f)
 
   if (xmlStrcmp (current_node->name, (const xmlChar *) "score-attributes"))
     {
-      libgregorio_message (_("score-attributes expected, not found"),
+      gregorio_message (_("score-attributes expected, not found"),
 			   "libgregorio_xml_read_file", WARNING, 0);
     }
   else
@@ -109,7 +109,7 @@ read_score (FILE *f)
 //we have to do one iteration, to have the first_syllable
   if (xmlStrcmp (current_node->name, (const xmlChar *) "syllable"))
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("unknown markup, syllable expected"),
 			   "libgregorio_xml_read_file", WARNING, 0);
     }
@@ -126,7 +126,7 @@ read_score (FILE *f)
     {
       if (xmlStrcmp (current_node->name, (const xmlChar *) "syllable"))
 	{
-	  libgregorio_message (_
+	  gregorio_message (_
 			       ("unknown markup, syllable expected"),
 			       "libgregorio_xml_read_file", WARNING, 0);
 	}
@@ -348,7 +348,7 @@ libgregorio_xml_read_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
 	}
       else
 	{
-	  libgregorio_message (_
+	  gregorio_message (_
 			       ("unknown markup, in attributes markup"),
 			       "libgregorio_xml_read_file", WARNING, 0);
 	}
@@ -362,7 +362,7 @@ libgregorio_xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc)
 {
   if (xmlStrcmp (current_node->name, (const xmlChar *) "type"))
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("unknown markup, in attributes markup"),
 			   "libgregorio_xml_read_file", WARNING, 0);
       return 0;
@@ -426,7 +426,7 @@ libgregorio_xml_read_key (xmlNodePtr current_node, xmlDocPtr doc, char *step,
 	  *step = ((char *) step_temp)[0];
 	  if (((char *) step_temp)[1])
 	    {
-	      libgregorio_message (_
+	      gregorio_message (_
 				   ("too long step declaration"),
 				   "libgregorio_xml_read_file", WARNING, 0);
 	    }
@@ -444,7 +444,7 @@ libgregorio_xml_read_key (xmlNodePtr current_node, xmlDocPtr doc, char *step,
 	}
       else
 	{
-	  libgregorio_message (_
+	  gregorio_message (_
 			       ("unknown markup, step or line expected"),
 			       "libgregorio_xml_read_file", WARNING, 0);
 	}
@@ -452,7 +452,7 @@ libgregorio_xml_read_key (xmlNodePtr current_node, xmlDocPtr doc, char *step,
     }
   if (*step == 0 || !(*line))
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("step or line markup missing in key declaration"),
 			   "libgregorio_xml_read_file", WARNING, 0);
     }
@@ -548,7 +548,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 		}
 	      else
 		{
-		  libgregorio_message (_
+		  gregorio_message (_
 				       ("unknown clef-change"),
 				       "libgregorio_xml_read_syllable",
 				       WARNING, 0);
@@ -556,7 +556,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 	      current_node = current_node->next;
 	      continue;
 	    }
-	  libgregorio_message (_
+	  gregorio_message (_
 			       ("unknown markup in syllable"),
 			       "libgregorio_xml_read_syllable", WARNING, 0);
 	  current_node = current_node->next;
@@ -600,7 +600,7 @@ libgregorio_xml_read_position (char *position)
     }
   else
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("text position unrecognized"),
 			   "libgregorio_xml_read_text", WARNING, 0);
       return WORD_ONE_SYLLABLE;
@@ -622,7 +622,7 @@ libgregorio_xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
   temp = (char *) xmlGetProp (current_node, (const xmlChar *) "position");
   if (!temp)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("position attribute missing, assuming beginning"),
 			   "libgregorio_xml_read_syllable", WARNING, 0);
       syllable->position = WORD_ONE_SYLLABLE;	//TODO: better gestion of word position
@@ -742,7 +742,7 @@ libgregorio_xml_read_mono_neumes (xmlNodePtr current_node, xmlDocPtr doc,
 {
   if (xmlStrcmp (current_node->name, (const xmlChar *) "neume"))
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("unknown markup, expecting neume"),
 			   "libgregorio_xml_read_syllable", WARNING, 0);
       return;
@@ -760,7 +760,7 @@ libgregorio_xml_read_multi_neumes (xmlNodePtr current_node, xmlDocPtr doc,
   int i;
   if (xmlStrcmp (current_node->name, (const xmlChar *) "neume"))
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("unknown markup, expecting neume"),
 			   "libgregorio_xml_read_syllable", WARNING, 0);
       return;
@@ -835,7 +835,7 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 	}
       else
 	{
-	  libgregorio_message (_
+	  gregorio_message (_
 			       ("unknown clef-change"),
 			       "libgregorio_xml_read_element", WARNING, 0);
 	}
@@ -868,7 +868,7 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 				   (*current_element), alterations, *key);
       return;
     }
-  libgregorio_message (_
+  gregorio_message (_
 		       ("unknown markup"),
 		       "libgregorio_xml_read_element", WARNING, 0);
 
@@ -921,7 +921,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 	  current_node = current_node->next;
 	  continue;
 	}
-      libgregorio_message (_
+      gregorio_message (_
 			   ("unknown markup"),
 			   "libgregorio_xml_read_glyphs", WARNING, 0);
 
@@ -953,7 +953,7 @@ libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
     }
   else
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("type missing in glyph markup"),
 			   "libgregorio_xml_read_glyph", ERROR, 0);
 //TODO : mechanism to determine the glyph ?
@@ -991,7 +991,7 @@ libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
 	  continue;
 	}
 
-      libgregorio_message (_
+      gregorio_message (_
 			   ("unknown markup, expecting note"),
 			   "libgregorio_xml_read_glyph", ERROR, 0);
 
@@ -1019,7 +1019,7 @@ libgregorio_xml_read_alteration (xmlNodePtr current_node, xmlDocPtr doc,
 	  step = step_temp[0];
 	  if (step_temp[1])
 	    {
-	      libgregorio_message (_
+	      gregorio_message (_
 				   ("too long step declaration"),
 				   "libgregorio_xml_read_alteration", WARNING,
 				   0);
@@ -1038,14 +1038,14 @@ libgregorio_xml_read_alteration (xmlNodePtr current_node, xmlDocPtr doc,
 	  current_node = current_node->next;
 	  continue;
 	}
-      libgregorio_message (_
+      gregorio_message (_
 			   ("unknown markup"),
 			   "libgregorio_xml_read_alteration", WARNING, 0);
       current_node = current_node->next;
     }
   if (step == 0 || !octave)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("step or line markup missing in alteration declaration"),
 			   "libgregorio_xml_read_alteration", WARNING, 0);
       return 0;
@@ -1060,7 +1060,7 @@ libgregorio_xml_read_glyph_type (char *type)
 {
   if (!type)
     {
-      libgregorio_message
+      gregorio_message
 	(_("empty glyph type markup"), "libgregorio_xml_read_glyph_type",
 	 ERROR, 0);
       return G_NO_GLYPH;
@@ -1169,7 +1169,7 @@ libgregorio_xml_read_glyph_type (char *type)
     {
       return G_SCANDICUS;
     }
-  libgregorio_message
+  gregorio_message
     (_("unknown glyph type"), "libgregorio_xml_read_glyph_type", ERROR, 0);
   return G_NO_GLYPH;
 }
@@ -1194,7 +1194,7 @@ libgregorio_xml_read_figura (char *liquescentia)
     {
       return L_AUCTA;
     }
-  libgregorio_message
+  gregorio_message
     (_("unknown liquescentia"), "libgregorio_xml_read_liquescentia", WARNING,
      0);
   return L_NO_LIQUESCENTIA;
@@ -1246,14 +1246,14 @@ void
 	  current_node = current_node->next;
 	  continue;
 	}
-      libgregorio_message
+      gregorio_message
 	(_("unknown markup, ignored"), "libgregorio_read_note", WARNING, 0);
       current_node = current_node->next;
       continue;
     }
   if (pitch == 0 || shape == S_UNDETERMINED)
     {
-      libgregorio_message
+      gregorio_message
 	(_("missing pitch or shape in note"), "libgregorio_read_note",
 	 WARNING, 0);
 
@@ -1284,7 +1284,7 @@ libgregorio_xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key)
 	  step = step_temp[0];
 	  if (step_temp[1])
 	    {
-	      libgregorio_message (_
+	      gregorio_message (_
 				   ("too long step declaration"),
 				   "libgregorio_xml_read_alteration", WARNING,
 				   0);
@@ -1309,14 +1309,14 @@ libgregorio_xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key)
 	  current_node = current_node->next;
 	  continue;
 	}
-      libgregorio_message (_
+      gregorio_message (_
 			   ("unknown markup"),
 			   "libgregorio_xml_read_alteration", WARNING, 0);
       current_node = current_node->next;
     }
   if (step == 0 || !octave)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("step or line markup missing in alteration declaration"),
 			   "libgregorio_xml_read_alteration", WARNING, 0);
       return 0;
@@ -1351,12 +1351,12 @@ libgregorio_xml_read_h_episemus (xmlNodePtr current_node, char *h_episemus)
     }
   if (!position)
     {
-      libgregorio_message
+      gregorio_message
 	(_("position attribute missing in multi-h-episemus"),
 	 "libgregorio_xml_read_h_episemus", WARNING, 0);
       return;
     }
-  libgregorio_message
+  gregorio_message
     (_("unknown position attribute in multi-h-episemus"),
      "libgregorio_xml_read_h_episemus", WARNING, 0);
   free (position);
@@ -1413,7 +1413,7 @@ libgregorio_xml_read_shape (char *type)
     {
       return S_LINEA_PUNCTUM_CAVUM;
     }
-  libgregorio_message
+  gregorio_message
     (_
      ("unknown shape, punctum assumed"),
      "libgregorio_read_shape", WARNING, 0);
@@ -1449,7 +1449,7 @@ libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
 	      xmlFree (temp);
 	      continue;
 	    }
-	  libgregorio_message
+	  gregorio_message
 	    (_
 	     ("unknown right sign"),
 	     "libgregorio_xml_read_signs", WARNING, 0);
@@ -1512,7 +1512,7 @@ libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
 	      xmlFree (temp);
 	      continue;
 	    }
-	  libgregorio_message
+	  gregorio_message
 	    (_
 	     ("unknown above sign"),
 	     "libgregorio_xml_read_signs", WARNING, 0);
@@ -1520,7 +1520,7 @@ libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
 	  current_node = current_node->next;
 	  continue;
 	}
-      libgregorio_message
+      gregorio_message
 	(_
 	 ("unknown sign"),
 	 "libgregorio_xml_read_signs", WARNING, 0);

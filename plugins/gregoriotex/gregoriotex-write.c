@@ -58,7 +58,7 @@ write_score (FILE * f, gregorio_score * score)
 
   if (!f)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("call with NULL file"),
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
       return;
@@ -66,7 +66,7 @@ write_score (FILE * f, gregorio_score * score)
 
   if (score->number_of_voices != 1)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("gregoriotex only works in monophony (for the moment)"),
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
     }
@@ -402,7 +402,7 @@ libgregorio_gregoriotex_seeklinespaces (gregorio_syllable * syllable,
 
   if (line == NULL || syllable == NULL)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("call with NULL pointer"),
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
       return;
@@ -811,7 +811,7 @@ libgregorio_gregoriotex_write_bar (FILE * f, char type)
       fprintf (f, "divisiofinalis");
       break;
     default:
-      libgregorio_message (_("unknown bar type"),
+      gregorio_message (_("unknown bar type"),
 			   "libgregorio_gregoriotex_write_bar", ERROR, 0);
       break;
     }
@@ -834,14 +834,14 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
 
   if (!glyph)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with NULL pointer"),
 			   "libgregorio_gregoriotex_write_glyph", ERROR, 0);
       return;
     }
   if (!glyph->first_note)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with glyph without note"),
 			   "libgregorio_gregoriotex_write_glyph", ERROR, 0);
       return;
@@ -1807,7 +1807,7 @@ void
   char liquescentia;
   if (!glyph)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with NULL pointer"),
 			   "libgregorio_gregoriotex_determine_number_and_type",
 			   ERROR, 0);
@@ -1815,7 +1815,7 @@ void
     }
   if (!glyph->first_note)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with a glyph that have no note"),
 			   "libgregorio_gregorio_tex_determine_number_and_type",
 			   ERROR, 0);
@@ -1999,7 +1999,7 @@ void
       *type = AT_ONE_NOTE;
       break;
     default:
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with unknown glyph"),
 			   "libgregorio_gregoriotex_determine_number_and_type",
 			   ERROR, 0);
@@ -2031,7 +2031,7 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
   char second;
   if (!glyph)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with NULL pointer"),
 			   "libgregorio_gregoriotex_determine_interval",
 			   ERROR, 0);
@@ -2039,7 +2039,7 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
     }
   if (!glyph->first_note)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with a glyph that have no note"),
 			   "libgregorio_gregoriotex_determine_interval",
 			   ERROR, 0);
@@ -2197,7 +2197,7 @@ libgregorio_gregoriotex_write_note (FILE * f,
   int type = AT_ONE_NOTE;
   if (!note)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with NULL pointer"),
 			   "libgregorio_gregoriotex_write_note", ERROR, 0);
       return;
@@ -2275,7 +2275,7 @@ void
 {
   if (!note)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with NULL pointer"),
 			   "libgregorio_gregoriotex_write_note", ERROR, 0);
       return;
@@ -2346,7 +2346,7 @@ void
       *glyph_number = 21;
       break;
     default:
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with unknown shape"),
 			   "libgregorio_gregoriotex_write_note", ERROR, 0);
       return;
@@ -2363,7 +2363,7 @@ char
   char temp;
   if (!glyph || !element || !syllable)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with a NULL argument"),
 			   "libgregorio_gregoriotex_determine_next_note",
 			   ERROR, 0);
@@ -2423,7 +2423,7 @@ libgregorio_gregoriotex_first_glyph (gregorio_syllable * syllable)
   gregorio_element *element;
   if (!syllable)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with a NULL argument"),
 			   "libgregorio_gregoriotex_determine_next_note",
 			   ERROR, 0);
@@ -2477,7 +2477,7 @@ libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable)
   gregorio_element *element;
   if (!syllable)
     {
-      libgregorio_message (_
+      gregorio_message (_
 			   ("called with a NULL argument"),
 			   "libgregorio_gregoriotex_determine_next_note",
 			   ERROR, 0);
