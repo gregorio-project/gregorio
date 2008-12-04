@@ -22,13 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
-#include "struct.h"
-#include "xml.h"
 #include "gettext.h"
 #define _(str) gettext(str)
 #define N_(str) str
-#include "messages.h"
+#include <gregorio/struct.h>
+#include <gregorio/messages.h>
 
+#include "xml.h"
 
 gregorio_score *
 read_score (FILE *f)
@@ -1529,7 +1529,7 @@ libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
   return signs;
 }
 
-#include "plugin.h"
+#include <gregorio/plugin.h>
 
 DECLARE_PLUGIN(xml)
 {

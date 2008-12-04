@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "config.h"
-#include "plugin.h"
+#include <gregorio/plugin.h>
 
 static gregorio_score *skel_read_score (FILE *f)
 {

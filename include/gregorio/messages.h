@@ -20,6 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void gregorio_message (const char *string, const char *function_name, char verbosity, int line_number);
 void gregorio_set_verbosity_mode (char new_mode);
 void gregorio_set_file_name (char *new_name);
@@ -32,5 +36,9 @@ void gregorio_set_error_out (FILE *f);
 #define WARNING VERB_WARNINGS
 #define ERROR VERB_ERRORS
 #define FATAL_ERROR 4
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

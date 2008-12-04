@@ -27,6 +27,10 @@ understanding, read it carefully.
 
 #include <wchar.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
 
 We start with the most precise structure, the note structure. The note
@@ -603,5 +607,9 @@ void gregorio_add_text (char *mbcharacters, gregorio_character **current_charact
 
 void gregorio_go_to_first_character (gregorio_character ** character);
 gregorio_character * gregorio_first_text (gregorio_score * score);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

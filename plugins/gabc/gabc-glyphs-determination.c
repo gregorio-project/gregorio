@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 #include <stdio.h>
-#include "struct.h"
-#include "gabc.h"
-#include "messages.h"
+#include <gregorio/struct.h>
+#include <gregorio/messages.h>
 
+#include "gabc.h"
 
 void
 close_glyph (gregorio_glyph ** current_glyph, char glyph_type,

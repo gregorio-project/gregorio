@@ -1,5 +1,5 @@
 /*
- * Gregorio plugin declaration headers.
+ * Gregorio plugin loader headers.
  * Copyright (C) 2008 Jeremie Corbier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,33 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PLUGIN_H
-#define PLUGIN_H
+#ifndef PLUGIN_LOADER_H
+#define PLUGIN_LOADER_H
 
-#include <stdio.h>
-#include "struct.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#define GREGORIO_PLUGIN_INPUT   1
-#define GREGORIO_PLUGIN_OUTPUT  2
-#define GREGORIO_PLUGIN_BOTH    GREGORIO_PLUGIN_INPUT | GREGORIO_PLUGIN_OUTPUT
+#include <gregorio/plugin.h>
 
-typedef gregorio_score *(*gregorio_read_func)(FILE *);
-typedef void (*gregorio_write_func)(FILE *, gregorio_score *);
+typedef struct gregorio_plugin gregorio_plugin;
 
-typedef struct {
-  char *id;
-  char *name;
-  char *author;
-  char *description;
+int gregorio_plugin_loader_init();
+int gregorio_plugin_loader_exit();
 
-  char *file_extension;
+gregorio_plugin *gregorio_plugin_load(const char *path, const char *id);
+void gregorio_plugin_unload(gregorio_plugin *plugin);
 
-  int type;
+gregorio_plugin_info *gregorio_plugin_get_info(gregorio_plugin *plugin);
 
-  gregorio_read_func read;
-  gregorio_write_func write;
-} gregorio_plugin_info;
-
-#define DECLARE_PLUGIN(_id) gregorio_plugin_info _id##_LTX_info =
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -25,8 +25,9 @@ Update (three years later): This file is a HUGE CRAP... Hardcoding everything wa
 #include <stdio.h>
 #include <ctype.h> /*for tolower*/
 #include "gettext.h"
-#include "struct.h"
-#include "messages.h"
+#include <gregorio/struct.h>
+#include <gregorio/messages.h>
+
 #include "gabc.h"
 
 #define lex_add_note(i,shape,signs,liquescentia,h_episemus)\

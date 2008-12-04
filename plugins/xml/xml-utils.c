@@ -21,8 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gettext.h"
 #define _(str) gettext(str)
 #define N_(str) str
-#include "messages.h"
-#include "struct.h"
+#include <gregorio/struct.h>
+#include <gregorio/messages.h>
+
 #include "xml.h"
 
 const char *

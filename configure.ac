@@ -75,6 +75,7 @@ AC_CONFIG_FILES([
     plugins/opustex/Makefile
     lib/Makefile
     include/Makefile
+    include/gregorio/Makefile
     examples/Makefile
     contrib/Makefile
     tex/Makefile

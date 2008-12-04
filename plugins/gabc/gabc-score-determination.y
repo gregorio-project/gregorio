@@ -27,11 +27,13 @@ This file is certainly not the most easy to understand, it is a bison file. See 
 #include <stdio.h>
 #include <stdlib.h>
 #include <wchar.h>
-#include "messages.h"
-#include "struct.h"
+#include <gregorio/struct.h>
+#include <gregorio/messages.h>
+
 #include "gabc.h"
 #include "gabc-score-determination-l.h"
 #include "gettext.h"
+
 #define _(str) gettext(str)
 #define N_(str) str
 // request translation to the user native language for bison

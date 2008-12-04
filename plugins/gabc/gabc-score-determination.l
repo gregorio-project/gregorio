@@ -19,14 +19,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 #define YYSTYPE char *
-#include "struct.h"
-#include "messages.h"
-#include "gabc.h"
-#include "gabc-score-determination-y.h"
 #include "gettext.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gregorio/struct.h>
+#include <gregorio/messages.h>
+
+#include "gabc.h"
+#include "gabc-score-determination-y.h"
 %}
 
 %x attribute

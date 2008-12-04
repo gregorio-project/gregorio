@@ -22,12 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gettext.h"
 #define _(str) gettext(str)
 #define N_(str) str
-#include "messages.h"
-#include "struct.h"
 #include <wchar.h>
 #include <string.h>
+#include <gregorio/plugin.h>
+#include <gregorio/struct.h>
+#include <gregorio/messages.h>
+
 #include "opustex.h"
-#include "plugin.h"
 
 DECLARE_PLUGIN(opustex)
 {

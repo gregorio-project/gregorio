@@ -19,14 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include <stdio.h>
 #include "gettext.h"
-#include "messages.h"
+#include <gregorio/messages.h>
 #define _(str) gettext(str)
 #define N_(str) str
 
-FILE *error_out;
-char *file_name = NULL;
-char verbosity_mode = 0;
-char debug_messages = 0;
+static FILE *error_out;
+static char *file_name = NULL;
+static char verbosity_mode = 0;
+static char debug_messages = 0;
 
 
 void

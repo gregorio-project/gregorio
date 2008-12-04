@@ -18,14 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 #include <stdio.h>
-#include "struct.h"
-#include "messages.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <getopt.h>
 #include <libgen.h>		/* for basename */
 #include <string.h>		/* for strcmp */
-#include "plugin_loader.h"
+#include <gregorio/struct.h>
+#include <gregorio/plugin_loader.h>
+#include <gregorio/messages.h>
 
 #include <locale.h>
 #include "gettext.h"

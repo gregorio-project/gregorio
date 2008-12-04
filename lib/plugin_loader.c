@@ -19,7 +19,7 @@
 #include <string.h>
 #include <ltdl.h>
 
-#include "plugin_loader.h"
+#include <gregorio/plugin_loader.h>
 
 int gregorio_plugin_loader_init ()
 {

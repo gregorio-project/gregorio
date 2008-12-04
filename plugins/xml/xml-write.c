@@ -17,14 +17,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "config.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include "gettext.h"
 #define _(str) gettext(str)
 #define N_(str) str
-#include "messages.h"
-#include "struct.h"
+#include <gregorio/struct.h>
+#include <gregorio/messages.h>
+
 #include "xml.h"
-#include <stdlib.h>
+
 #define write_note(shape) libgregorio_xml_write_note(f, note->signs, step, octave, shape, note->h_episemus_type, alteration, note->rare_sign)
 
 void

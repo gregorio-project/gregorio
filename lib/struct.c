@@ -38,9 +38,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <wchar.h>
 #include "gettext.h"
 #include <stdlib.h>
-#include "messages.h"
-#include "struct.h"
-#include "gabc/gabc.h"
+#include <gregorio/struct.h>
+#include <gregorio/messages.h>
 #define _(str) gettext(str)
 #define N_(str) str
 
