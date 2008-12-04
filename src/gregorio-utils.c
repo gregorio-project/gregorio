@@ -489,12 +489,12 @@ main (int argc, char **argv)
       exit (-1);
     }
 
-  libgregorio_fix_initial_keys (score, DEFAULT_KEY);
+  gregorio_fix_initial_keys (score, DEFAULT_KEY);
 
   (output_plugin_info->write) (output_file, score);
   gregorio_plugin_unload (output_plugin);
   fclose (output_file);
-  libgregorio_free_score (score);
+  gregorio_free_score (score);
 
   gregorio_plugin_loader_exit();
   exit (0);

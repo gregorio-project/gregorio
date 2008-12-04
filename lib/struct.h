@@ -275,105 +275,105 @@ typedef struct gregorio_voice_info {
   struct gregorio_voice_info *next_voice_info;
 } gregorio_voice_info;
 
-gregorio_score *libgregorio_new_score();
+gregorio_score *gregorio_new_score();
 
 void
-libgregorio_determine_h_episemus_type (gregorio_note * note);
+gregorio_determine_h_episemus_type (gregorio_note * note);
 
 
-void libgregorio_add_note(gregorio_note **current_note, char pitch, char shape, char signs, char liquescentia,char h_episemus);
-void libgregorio_add_glyph (gregorio_glyph **current_glyph, char type, gregorio_note *first_note, char liquescentia);
-void libgregorio_add_element (gregorio_element **current_element, gregorio_glyph *first_glyph);
-void libgregorio_add_syllable (gregorio_syllable ** current_syllable,
+void gregorio_add_note(gregorio_note **current_note, char pitch, char shape, char signs, char liquescentia,char h_episemus);
+void gregorio_add_glyph (gregorio_glyph **current_glyph, char type, gregorio_note *first_note, char liquescentia);
+void gregorio_add_element (gregorio_element **current_element, gregorio_glyph *first_glyph);
+void gregorio_add_syllable (gregorio_syllable ** current_syllable,
 			  int number_of_voices, gregorio_element * elements[],
 			  gregorio_character * first_character, gregorio_character *first_translation_character, char position);
 
-void libgregorio_add_special_sign (gregorio_note *current_note, char sign);
-void libgregorio_change_shape (gregorio_note *note, char shape);
+void gregorio_add_special_sign (gregorio_note *current_note, char sign);
+void gregorio_change_shape (gregorio_note *note, char shape);
 
-void libgregorio_add_voice_info (gregorio_voice_info **current_voice_info);
+void gregorio_add_voice_info (gregorio_voice_info **current_voice_info);
 
-void libgregorio_free_notes(gregorio_note **first_note);
-void libgregorio_free_glyphs(gregorio_glyph **glyph);
-void libgregorio_free_elements (gregorio_element ** element);
-void libgregorio_free_syllables (gregorio_syllable ** syllable, int number_of_voices);
-void libgregorio_free_score_infos (gregorio_score * score);
-void libgregorio_free_voice_infos (gregorio_voice_info *voice_info);
+void gregorio_free_notes(gregorio_note **first_note);
+void gregorio_free_glyphs(gregorio_glyph **glyph);
+void gregorio_free_elements (gregorio_element ** element);
+void gregorio_free_syllables (gregorio_syllable ** syllable, int number_of_voices);
+void gregorio_free_score_infos (gregorio_score * score);
+void gregorio_free_voice_infos (gregorio_voice_info *voice_info);
 
-void libgregorio_free_one_note(gregorio_note **note);
-void libgregorio_free_one_glyph(gregorio_glyph **glyph);
-void libgregorio_free_one_element(gregorio_element **element);
-void libgregorio_free_one_syllable (gregorio_syllable **syllable, int number_of_voices);
-void libgregorio_free_score(gregorio_score *score);
+void gregorio_free_one_note(gregorio_note **note);
+void gregorio_free_one_glyph(gregorio_glyph **glyph);
+void gregorio_free_one_element(gregorio_element **element);
+void gregorio_free_one_syllable (gregorio_syllable **syllable, int number_of_voices);
+void gregorio_free_score(gregorio_score *score);
 
-void libgregorio_add_special_as_glyph (gregorio_glyph **current_glyph, char type, char pitch);
-void libgregorio_add_special_as_note (gregorio_note **current_note, char type, char pitch);
-void libgregorio_add_special_as_element (gregorio_element **current_element, char type, char pitch);
+void gregorio_add_special_as_glyph (gregorio_glyph **current_glyph, char type, char pitch);
+void gregorio_add_special_as_note (gregorio_note **current_note, char type, char pitch);
+void gregorio_add_special_as_element (gregorio_element **current_element, char type, char pitch);
 
-void libgregorio_determine_good_top_notes (gregorio_note * current_note);
+void gregorio_determine_good_top_notes (gregorio_note * current_note);
 
-void libgregorio_reinitialize_alterations (char alterations[][13], int number_of_voices);
+void gregorio_reinitialize_alterations (char alterations[][13], int number_of_voices);
 
-void libgregorio_reinitialize_one_voice_alterations (char alterations[13]);
+void gregorio_reinitialize_one_voice_alterations (char alterations[13]);
 
 void
-libgregorio_set_score_name (gregorio_score * score, char *name);
+gregorio_set_score_name (gregorio_score * score, char *name);
 void
-libgregorio_set_score_office_part (gregorio_score * score, char *office_part);
+gregorio_set_score_office_part (gregorio_score * score, char *office_part);
 void
-libgregorio_set_score_number_of_voices (gregorio_score * score, int number_of_voices);
+gregorio_set_score_number_of_voices (gregorio_score * score, int number_of_voices);
 void
-libgregorio_set_score_lilypond_preamble (gregorio_score * score,
+gregorio_set_score_lilypond_preamble (gregorio_score * score,
 				    char *lilypond_preamble);
 void
-libgregorio_set_score_opustex_preamble (gregorio_score * score, char *opustex_preamble);
+gregorio_set_score_opustex_preamble (gregorio_score * score, char *opustex_preamble);
 void
-libgregorio_set_score_musixtex_preamble (gregorio_score * score,
+gregorio_set_score_musixtex_preamble (gregorio_score * score,
 				    char *musixtex_preamble);
 void
-libgregorio_set_voice_initial_key (gregorio_voice_info * voice_info, int initial_key);
+gregorio_set_voice_initial_key (gregorio_voice_info * voice_info, int initial_key);
 void
-libgregorio_set_voice_anotation (gregorio_voice_info * voice_info, char *anotation);
+gregorio_set_voice_anotation (gregorio_voice_info * voice_info, char *anotation);
 void
-libgregorio_set_voice_author (gregorio_voice_info * voice_info, char *author);
+gregorio_set_voice_author (gregorio_voice_info * voice_info, char *author);
 void
-libgregorio_set_voice_date (gregorio_voice_info * voice_info, char *date);
+gregorio_set_voice_date (gregorio_voice_info * voice_info, char *date);
 void
-libgregorio_set_voice_manuscript (gregorio_voice_info * voice_info, char *manuscript);
+gregorio_set_voice_manuscript (gregorio_voice_info * voice_info, char *manuscript);
 void
-libgregorio_set_voice_reference (gregorio_voice_info * voice_info, char *reference);
+gregorio_set_voice_reference (gregorio_voice_info * voice_info, char *reference);
 void
-libgregorio_set_voice_storage_place (gregorio_voice_info * voice_info, char *storage_place);
+gregorio_set_voice_storage_place (gregorio_voice_info * voice_info, char *storage_place);
 void
-libgregorio_set_voice_translator (gregorio_voice_info * voice_info, char *translator);
+gregorio_set_voice_translator (gregorio_voice_info * voice_info, char *translator);
 void
-libgregorio_set_voice_translation_date (gregorio_voice_info * voice_info, char *translation_date);
+gregorio_set_voice_translation_date (gregorio_voice_info * voice_info, char *translation_date);
 void
-libgregorio_set_voice_style (gregorio_voice_info * voice_info, char *style);
+gregorio_set_voice_style (gregorio_voice_info * voice_info, char *style);
 void
-libgregorio_set_voice_virgula_position (gregorio_voice_info * voice_info, char *virgula_position);
+gregorio_set_voice_virgula_position (gregorio_voice_info * voice_info, char *virgula_position);
 
 void
-libgregorio_fix_initial_keys (gregorio_score * score, int default_key);
+gregorio_fix_initial_keys (gregorio_score * score, int default_key);
 
 /*void
-libgregorio_fix_positions (gregorio_score * score);*/
+gregorio_fix_positions (gregorio_score * score);*/
 
-void libgregorio_go_to_first_note (gregorio_note **note);
-void libgregorio_go_to_first_glyph (gregorio_glyph **glyph);
+void gregorio_go_to_first_note (gregorio_note **note);
+void gregorio_go_to_first_glyph (gregorio_glyph **glyph);
 
-char libgregorio_add_note_to_a_glyph (char glyph, char current_pitch, char last_pitch, char shape, char *end_of_glyph);
-void libgregorio_det_step_and_line_from_key (int key, char *step, int *line);
+char gregorio_add_note_to_a_glyph (char glyph, char current_pitch, char last_pitch, char shape, char *end_of_glyph);
+void gregorio_det_step_and_line_from_key (int key, char *step, int *line);
 
-char libgregorio_is_only_special (gregorio_element *element);
+char gregorio_is_only_special (gregorio_element *element);
 
 
-int libgregorio_calculate_new_key(char step, int line);
+int gregorio_calculate_new_key(char step, int line);
 
-char libgregorio_det_pitch (int key, char step, int octave);
+char gregorio_det_pitch (int key, char step, int octave);
 
 void
-libgregorio_set_octave_and_step_from_pitch (char *step,
+gregorio_set_octave_and_step_from_pitch (char *step,
 					  int *octave, char pitch, int clef);
 
 // the maximum number of voices, more than this is total nonsense in
@@ -578,27 +578,27 @@ h_episemus>H_ALONE
 
 #define SKIP_FIRST_LETTER 1
 
-void libgregorio_add_character (gregorio_character **current_character, wchar_t wcharacter);
-void libgregorio_begin_style (gregorio_character **current_character, unsigned char style);
-void libgregorio_end_style (gregorio_character **current_character, unsigned char style);
+void gregorio_add_character (gregorio_character **current_character, wchar_t wcharacter);
+void gregorio_begin_style (gregorio_character **current_character, unsigned char style);
+void gregorio_end_style (gregorio_character **current_character, unsigned char style);
 
-int libgregorio_is_vowel (wchar_t letter);
+int gregorio_is_vowel (wchar_t letter);
 
-void libgregorio_write_text (char type, gregorio_character * text, FILE *f, void (*printverb)(FILE *, wchar_t *), void (*printchar)(FILE *, wchar_t), void (*begin)(FILE *, unsigned char), void (*end)(FILE *, unsigned char), void (*printspchar)(FILE *, wchar_t *)); 
+void gregorio_write_text (char type, gregorio_character * text, FILE *f, void (*printverb)(FILE *, wchar_t *), void (*printchar)(FILE *, wchar_t), void (*begin)(FILE *, unsigned char), void (*end)(FILE *, unsigned char), void (*printspchar)(FILE *, wchar_t *)); 
 
-void libgregorio_write_first_letter (gregorio_character * current_character, FILE * f, void (*printverb) (FILE *, wchar_t *), void (*printchar) (FILE *, wchar_t), void (*begin) (FILE *, unsigned char), void (*end) (FILE *, unsigned char), void (*printspchar) (FILE *, wchar_t *));
+void gregorio_write_first_letter (gregorio_character * current_character, FILE * f, void (*printverb) (FILE *, wchar_t *), void (*printchar) (FILE *, wchar_t), void (*begin) (FILE *, unsigned char), void (*end) (FILE *, unsigned char), void (*printspchar) (FILE *, wchar_t *));
 
-void libgregorio_free_characters (gregorio_character * current_character);
-void libgregorio_free_one_character (gregorio_character * current_character);
-void libgregorio_suppress_one_character (gregorio_character * current_character);
+void gregorio_free_characters (gregorio_character * current_character);
+void gregorio_free_one_character (gregorio_character * current_character);
+void gregorio_suppress_one_character (gregorio_character * current_character);
 
-void libgregorio_insert_character (gregorio_character * current_character, wchar_t wcharacter, unsigned int style, unsigned int type);
+void gregorio_insert_character (gregorio_character * current_character, wchar_t wcharacter, unsigned int style, unsigned int type);
 
-wchar_t libgregorio_first_letter (gregorio_score *score);
+wchar_t gregorio_first_letter (gregorio_score *score);
 
-void libgregorio_add_text (char *mbcharacters, gregorio_character **current_character);
+void gregorio_add_text (char *mbcharacters, gregorio_character **current_character);
 
-void libgregorio_go_to_first_character (gregorio_character ** character);
-gregorio_character * libgregorio_first_text (gregorio_score * score);
+void gregorio_go_to_first_character (gregorio_character ** character);
+gregorio_character * gregorio_first_text (gregorio_score * score);
 
 #endif

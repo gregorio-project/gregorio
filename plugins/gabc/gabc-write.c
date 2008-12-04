@@ -199,7 +199,7 @@ libgregorio_gabc_write_voice_info (FILE * f, gregorio_voice_info * voice_info)
     {
       fprintf (f, "virgula-position: %s;\n", voice_info->virgula_position);
     }
-  libgregorio_det_step_and_line_from_key (voice_info->initial_key, &step,
+  gregorio_det_step_and_line_from_key (voice_info->initial_key, &step,
 					  &line);
   fprintf (f, "initial-key: %c%d;\n", step, line);
 }
@@ -325,7 +325,7 @@ libgregorio_gabc_write_gregorio_syllable (FILE * f,
   if (syllable->text)
     {
       // we call the magic function (defined in struct_utils.c), that will write our text.
-      libgregorio_write_text (0, syllable->text, f,
+      gregorio_write_text (0, syllable->text, f,
 			      (&libgregorio_gabc_write_verb),
 			      (&libgregorio_gabc_print_char),
 			      (&libgregorio_gabc_write_begin),
@@ -335,7 +335,7 @@ libgregorio_gabc_write_gregorio_syllable (FILE * f,
   if (syllable->translation)
     {
       fprintf (f, "[");
-      libgregorio_write_text (0, syllable->translation, f,
+      gregorio_write_text (0, syllable->translation, f,
 			      (&libgregorio_gabc_write_verb),
 			      (&libgregorio_gabc_print_char),
 			      (&libgregorio_gabc_write_begin),
@@ -354,7 +354,7 @@ libgregorio_gabc_write_gregorio_syllable (FILE * f,
   // we write all the elements of the syllable.
   libgregorio_gabc_write_gregorio_elements (f, syllable->elements[voice]);
   if (syllable->position == WORD_END
-      || libgregorio_is_only_special (syllable->elements[0]))
+      || gregorio_is_only_special (syllable->elements[0]))
     // we assume here that if the first voice is only special, all will be only specials too
     {
       fprintf (f, ") ");

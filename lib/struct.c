@@ -46,7 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 void
-libgregorio_add_note (gregorio_note ** current_note, char pitch, char shape,
+gregorio_add_note (gregorio_note ** current_note, char pitch, char shape,
 		      char signs, char liquescentia, char h_episemus_type)
 {
 
@@ -75,7 +75,7 @@ libgregorio_add_note (gregorio_note ** current_note, char pitch, char shape,
 
 
 void
-libgregorio_add_special_as_note (gregorio_note ** current_note, char type,
+gregorio_add_special_as_note (gregorio_note ** current_note, char type,
 				 char pitch)
 {
   gregorio_note *element = malloc (sizeof (gregorio_note));
@@ -100,19 +100,19 @@ libgregorio_add_special_as_note (gregorio_note ** current_note, char type,
 }
 
 void
-libgregorio_add_special_sign (gregorio_note *note, char sign)
+gregorio_add_special_sign (gregorio_note *note, char sign)
 {
     note->rare_sign=sign;
 }
 
 void
-libgregorio_change_shape (gregorio_note *note, char shape)
+gregorio_change_shape (gregorio_note *note, char shape)
 {
     note->shape=shape;
 }
 
 void
-libgregorio_go_to_first_note (gregorio_note ** note)
+gregorio_go_to_first_note (gregorio_note ** note)
 {
   gregorio_note *tmp;
   if (!*note)
@@ -128,7 +128,7 @@ libgregorio_go_to_first_note (gregorio_note ** note)
 }
 
 void
-libgregorio_free_one_note (gregorio_note ** note)
+gregorio_free_one_note (gregorio_note ** note)
 {
   gregorio_note *next = NULL;
   if (!note || !*note)
@@ -149,7 +149,7 @@ libgregorio_free_one_note (gregorio_note ** note)
 }
 
 void
-libgregorio_free_notes (gregorio_note ** note)
+gregorio_free_notes (gregorio_note ** note)
 {
   gregorio_note *tmp;
   while (*note)
@@ -162,7 +162,7 @@ libgregorio_free_notes (gregorio_note ** note)
 
 
 void
-libgregorio_add_glyph (gregorio_glyph ** current_glyph, char type,
+gregorio_add_glyph (gregorio_glyph ** current_glyph, char type,
 		       gregorio_note * first_note, char liquescentia)
 {
   gregorio_glyph *next_glyph = malloc (sizeof (gregorio_glyph));
@@ -187,7 +187,7 @@ libgregorio_add_glyph (gregorio_glyph ** current_glyph, char type,
 
 
 void
-libgregorio_add_special_as_glyph (gregorio_glyph ** current_glyph, char type,
+gregorio_add_special_as_glyph (gregorio_glyph ** current_glyph, char type,
 				  char pitch)
 {
   gregorio_glyph *next_glyph = malloc (sizeof (gregorio_glyph));
@@ -212,7 +212,7 @@ libgregorio_add_special_as_glyph (gregorio_glyph ** current_glyph, char type,
 
 
 void
-libgregorio_go_to_first_glyph (gregorio_glyph ** glyph)
+gregorio_go_to_first_glyph (gregorio_glyph ** glyph)
 {
   gregorio_glyph *tmp;
   if (!*glyph)
@@ -229,7 +229,7 @@ libgregorio_go_to_first_glyph (gregorio_glyph ** glyph)
 
 
 void
-libgregorio_free_one_glyph (gregorio_glyph ** glyph)
+gregorio_free_one_glyph (gregorio_glyph ** glyph)
 {
   gregorio_glyph *next = NULL;
   if (!glyph || !*glyph)
@@ -245,14 +245,14 @@ libgregorio_free_one_glyph (gregorio_glyph ** glyph)
     {
       (*glyph)->previous_glyph->next_glyph = NULL;
     }
-  libgregorio_free_notes (&(*glyph)->first_note);
+  gregorio_free_notes (&(*glyph)->first_note);
   free (*glyph);
   *glyph = next;
 }
 
 
 void
-libgregorio_free_glyphs (gregorio_glyph ** glyph)
+gregorio_free_glyphs (gregorio_glyph ** glyph)
 {
   gregorio_glyph *next_glyph;
   if (!glyph || !*glyph)
@@ -262,7 +262,7 @@ libgregorio_free_glyphs (gregorio_glyph ** glyph)
   while (*glyph)
     {
       next_glyph = (*glyph)->next_glyph;
-      libgregorio_free_notes (&(*glyph)->first_note);
+      gregorio_free_notes (&(*glyph)->first_note);
       free (*glyph);
       *glyph = next_glyph;
     }
@@ -270,7 +270,7 @@ libgregorio_free_glyphs (gregorio_glyph ** glyph)
 
 
 void
-libgregorio_add_element (gregorio_element ** current_element,
+gregorio_add_element (gregorio_element ** current_element,
 			 gregorio_glyph * first_glyph)
 {
   gregorio_element *next = malloc (sizeof (gregorio_element));
@@ -293,7 +293,7 @@ libgregorio_add_element (gregorio_element ** current_element,
 
 
 void
-libgregorio_add_special_as_element (gregorio_element ** current_element,
+gregorio_add_special_as_element (gregorio_element ** current_element,
 				    char type, char pitch)
 {
   gregorio_element *special = malloc (sizeof (gregorio_element));
@@ -316,7 +316,7 @@ libgregorio_add_special_as_element (gregorio_element ** current_element,
 
 
 void
-libgregorio_free_one_element (gregorio_element ** element)
+gregorio_free_one_element (gregorio_element ** element)
 {
   gregorio_element *next;
   if (!element || !*element)
@@ -324,14 +324,14 @@ libgregorio_free_one_element (gregorio_element ** element)
       return;
     }
   next = (*element)->next_element;
-  libgregorio_free_glyphs (&(*element)->first_glyph);
+  gregorio_free_glyphs (&(*element)->first_glyph);
   free (*element);
   *element = next;
 }
 
 
 void
-libgregorio_free_elements (gregorio_element ** element)
+gregorio_free_elements (gregorio_element ** element)
 {
   gregorio_element *next;
   if (!element || !*element)
@@ -341,14 +341,14 @@ libgregorio_free_elements (gregorio_element ** element)
   while (*element)
     {
       next = (*element)->next_element;
-      libgregorio_free_glyphs (&(*element)->first_glyph);
+      gregorio_free_glyphs (&(*element)->first_glyph);
       free (*element);
       *element = next;
     }
 }
 
 void
-libgregorio_add_text (char *mbcharacters,
+gregorio_add_text (char *mbcharacters,
 		      gregorio_character ** current_character)
 {
   size_t len;
@@ -367,14 +367,14 @@ libgregorio_add_text (char *mbcharacters,
   // we add the corresponding characters in the list of gregorio_characters
   while (wtext[i])
     {
-      libgregorio_add_character (current_character, wtext[i]);
+      gregorio_add_character (current_character, wtext[i]);
       i++;
     }
   free (wtext);
 }
 
 void
-libgregorio_add_character (gregorio_character ** current_character,
+gregorio_add_character (gregorio_character ** current_character,
 			   wchar_t wcharacter)
 {
   gregorio_character *element =
@@ -382,7 +382,7 @@ libgregorio_add_character (gregorio_character ** current_character,
   if (!element)
     {
       gregorio_message (_("error in memory allocation"),
-			   "libgregorio_add_character", FATAL_ERROR, 0);
+			   "gregorio_add_character", FATAL_ERROR, 0);
       return;
     }
   element->is_character = 1;
@@ -398,13 +398,13 @@ libgregorio_add_character (gregorio_character ** current_character,
 
 
 void
-libgregorio_free_one_character (gregorio_character * current_character)
+gregorio_free_one_character (gregorio_character * current_character)
 {
   free (current_character);
 }
 
 void
-libgregorio_free_characters (gregorio_character * current_character)
+gregorio_free_characters (gregorio_character * current_character)
 {
   gregorio_character *next_character;
   if (!current_character)
@@ -414,13 +414,13 @@ libgregorio_free_characters (gregorio_character * current_character)
   while (current_character)
     {
       next_character = current_character->next_character;
-      libgregorio_free_one_character (current_character);
+      gregorio_free_one_character (current_character);
       current_character = next_character;
     }
 }
 
 void
-libgregorio_go_to_first_character (gregorio_character ** character)
+gregorio_go_to_first_character (gregorio_character ** character)
 {
   gregorio_character *tmp;
   if (!character || !*character)
@@ -436,7 +436,7 @@ libgregorio_go_to_first_character (gregorio_character ** character)
 }
 
 void
-libgregorio_begin_style (gregorio_character ** current_character,
+gregorio_begin_style (gregorio_character ** current_character,
 			 unsigned char style)
 {
   gregorio_character *element =
@@ -460,7 +460,7 @@ libgregorio_begin_style (gregorio_character ** current_character,
 }
 
 void
-libgregorio_end_style (gregorio_character ** current_character,
+gregorio_end_style (gregorio_character ** current_character,
 		       unsigned char style)
 {
   gregorio_character *element =
@@ -484,7 +484,7 @@ libgregorio_end_style (gregorio_character ** current_character,
 }
 
 void
-libgregorio_add_syllable (gregorio_syllable ** current_syllable,
+gregorio_add_syllable (gregorio_syllable ** current_syllable,
 			  int number_of_voices, gregorio_element * elements[],
 			  gregorio_character * first_character, gregorio_character *first_translation_character, char position)
 {
@@ -535,7 +535,7 @@ libgregorio_add_syllable (gregorio_syllable ** current_syllable,
 
 
 void
-libgregorio_free_one_syllable (gregorio_syllable ** syllable,
+gregorio_free_one_syllable (gregorio_syllable ** syllable,
 			       int number_of_voices)
 {
   int i;
@@ -548,16 +548,16 @@ libgregorio_free_one_syllable (gregorio_syllable ** syllable,
     }
   for (i = 0; i < number_of_voices; i++)
     {
-      libgregorio_free_elements ((struct gregorio_element **)
+      gregorio_free_elements ((struct gregorio_element **)
 				 &((*syllable)->elements[i]));
     }
   if ((*syllable)->text)
     {
-      libgregorio_free_characters ((*syllable)->text);
+      gregorio_free_characters ((*syllable)->text);
     }
   if ((*syllable)->translation)
     {
-      libgregorio_free_characters ((*syllable)->translation);
+      gregorio_free_characters ((*syllable)->translation);
     }
   next = (*syllable)->next_syllable;
   free ((*syllable)->elements);
@@ -567,7 +567,7 @@ libgregorio_free_one_syllable (gregorio_syllable ** syllable,
 
 
 void
-libgregorio_free_syllables (gregorio_syllable ** syllable,
+gregorio_free_syllables (gregorio_syllable ** syllable,
 			    int number_of_voices)
 {
   if (!syllable || !*syllable)
@@ -578,12 +578,12 @@ libgregorio_free_syllables (gregorio_syllable ** syllable,
     }
   while (*syllable)
     {
-      libgregorio_free_one_syllable (syllable, number_of_voices);
+      gregorio_free_one_syllable (syllable, number_of_voices);
     }
 }
 
 gregorio_score *
-libgregorio_new_score ()
+gregorio_new_score ()
 {
   gregorio_score *new_score = malloc (sizeof (gregorio_score));
   new_score->first_syllable = NULL;
@@ -601,7 +601,7 @@ libgregorio_new_score ()
 }
 
 void
-libgregorio_free_score (gregorio_score * score)
+gregorio_free_score (gregorio_score * score)
 {
   if (!score)
     {
@@ -609,44 +609,44 @@ libgregorio_free_score (gregorio_score * score)
 			   "free_one_syllable", WARNING, 0);
       return;
     }
-  libgregorio_free_syllables (&(score->first_syllable),
+  gregorio_free_syllables (&(score->first_syllable),
 			      score->number_of_voices);
-  libgregorio_free_score_infos (score);
+  gregorio_free_score_infos (score);
   free (score);
 }
 
 void
-libgregorio_set_score_name (gregorio_score * score, char *name)
+gregorio_set_score_name (gregorio_score * score, char *name)
 {
   if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_score_name", WARNING, 0);
+			   "gregorio_set_score_name", WARNING, 0);
       return;
     }
   score->name = name;
 }
 
 void
-libgregorio_set_score_office_part (gregorio_score * score, char *office_part)
+gregorio_set_score_office_part (gregorio_score * score, char *office_part)
 {
   if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_score_office_part", WARNING, 0);
+			   "gregorio_set_score_office_part", WARNING, 0);
       return;
     }
   score->office_part = office_part;
 }
 
 void
-libgregorio_set_score_number_of_voices (gregorio_score * score,
+gregorio_set_score_number_of_voices (gregorio_score * score,
 					int number_of_voices)
 {
   if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_score_number_of_voices", WARNING,
+			   "gregorio_set_score_number_of_voices", WARNING,
 			   0);
       return;
     }
@@ -654,13 +654,13 @@ libgregorio_set_score_number_of_voices (gregorio_score * score,
 }
 
 void
-libgregorio_set_score_lilypond_preamble (gregorio_score * score,
+gregorio_set_score_lilypond_preamble (gregorio_score * score,
 					 char *lilypond_preamble)
 {
   if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_score_lilypond_preamble", WARNING,
+			   "gregorio_set_score_lilypond_preamble", WARNING,
 			   0);
       return;
     }
@@ -668,13 +668,13 @@ libgregorio_set_score_lilypond_preamble (gregorio_score * score,
 }
 
 void
-libgregorio_set_score_opustex_preamble (gregorio_score * score,
+gregorio_set_score_opustex_preamble (gregorio_score * score,
 					char *opustex_preamble)
 {
   if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_score_opustex_preamble", WARNING,
+			   "gregorio_set_score_opustex_preamble", WARNING,
 			   0);
       return;
     }
@@ -682,13 +682,13 @@ libgregorio_set_score_opustex_preamble (gregorio_score * score,
 }
 
 void
-libgregorio_set_score_musixtex_preamble (gregorio_score * score,
+gregorio_set_score_musixtex_preamble (gregorio_score * score,
 					 char *musixtex_preamble)
 {
   if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_score_musixtex_preamble", WARNING,
+			   "gregorio_set_score_musixtex_preamble", WARNING,
 			   0);
       return;
     }
@@ -696,7 +696,7 @@ libgregorio_set_score_musixtex_preamble (gregorio_score * score,
 }
 
 void
-libgregorio_add_voice_info (gregorio_voice_info ** current_voice_info)
+gregorio_add_voice_info (gregorio_voice_info ** current_voice_info)
 {
   gregorio_voice_info *next = malloc (sizeof (gregorio_voice_info));
   next->initial_key = NO_KEY;
@@ -719,12 +719,12 @@ libgregorio_add_voice_info (gregorio_voice_info ** current_voice_info)
 }
 
 void
-libgregorio_free_score_infos (gregorio_score * score)
+gregorio_free_score_infos (gregorio_score * score)
 {
   if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_free_score_infos", WARNING, 0);
+			   "gregorio_free_score_infos", WARNING, 0);
       return;
     }
   if (score->name)
@@ -749,12 +749,12 @@ libgregorio_free_score_infos (gregorio_score * score)
     }
   if (score->first_voice_info)
     {
-      libgregorio_free_voice_infos (score->first_voice_info);
+      gregorio_free_voice_infos (score->first_voice_info);
     }
 }
 
 void
-libgregorio_free_voice_infos (gregorio_voice_info * voice_info)
+gregorio_free_voice_infos (gregorio_voice_info * voice_info)
 {
   gregorio_voice_info *next;
   if (!voice_info)
@@ -814,13 +814,13 @@ libgregorio_free_voice_infos (gregorio_voice_info * voice_info)
 /* a set of quite useless function */
 
 void
-libgregorio_set_voice_initial_key (gregorio_voice_info * voice_info,
+gregorio_set_voice_initial_key (gregorio_voice_info * voice_info,
 				   int initial_key)
 {
   if (!voice_info)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_voice_initial_key", WARNING, 0);
+			   "gregorio_set_voice_initial_key", WARNING, 0);
       return;
     }
   voice_info->initial_key = initial_key;
@@ -829,102 +829,102 @@ libgregorio_set_voice_initial_key (gregorio_voice_info * voice_info,
 
 
 void
-libgregorio_set_voice_anotation (gregorio_voice_info * voice_info,
+gregorio_set_voice_anotation (gregorio_voice_info * voice_info,
 				 char *anotation)
 {
   if (!voice_info)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_voice_anotation", WARNING, 0);
+			   "gregorio_set_voice_anotation", WARNING, 0);
       return;
     }
   voice_info->anotation = anotation;
 }
 
 void
-libgregorio_set_voice_author (gregorio_voice_info * voice_info, char *author)
+gregorio_set_voice_author (gregorio_voice_info * voice_info, char *author)
 {
   if (!voice_info)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_voice_author", WARNING, 0);
+			   "gregorio_set_voice_author", WARNING, 0);
       return;
     }
   voice_info->author = author;
 }
 
 void
-libgregorio_set_voice_date (gregorio_voice_info * voice_info, char *date)
+gregorio_set_voice_date (gregorio_voice_info * voice_info, char *date)
 {
   if (!voice_info)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_voice_date", WARNING, 0);
+			   "gregorio_set_voice_date", WARNING, 0);
       return;
     }
   voice_info->date = date;
 }
 
 void
-libgregorio_set_voice_manuscript (gregorio_voice_info * voice_info,
+gregorio_set_voice_manuscript (gregorio_voice_info * voice_info,
 				  char *manuscript)
 {
   if (!voice_info)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_voice_manuscript", WARNING, 0);
+			   "gregorio_set_voice_manuscript", WARNING, 0);
       return;
     }
   voice_info->manuscript = manuscript;
 }
 
 void
-libgregorio_set_voice_reference (gregorio_voice_info * voice_info,
+gregorio_set_voice_reference (gregorio_voice_info * voice_info,
 				 char *reference)
 {
   if (!voice_info)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_voice_reference", WARNING, 0);
+			   "gregorio_set_voice_reference", WARNING, 0);
       return;
     }
   voice_info->reference = reference;
 }
 
 void
-libgregorio_set_voice_storage_place (gregorio_voice_info * voice_info,
+gregorio_set_voice_storage_place (gregorio_voice_info * voice_info,
 				     char *storage_place)
 {
   if (!voice_info)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_voice_storage_place", WARNING, 0);
+			   "gregorio_set_voice_storage_place", WARNING, 0);
       return;
     }
   voice_info->storage_place = storage_place;
 }
 
 void
-libgregorio_set_voice_translator (gregorio_voice_info * voice_info,
+gregorio_set_voice_translator (gregorio_voice_info * voice_info,
 				  char *translator)
 {
   if (!voice_info)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_voice_translator", WARNING, 0);
+			   "gregorio_set_voice_translator", WARNING, 0);
       return;
     }
   voice_info->translator = translator;
 }
 
 void
-libgregorio_set_voice_translation_date (gregorio_voice_info * voice_info,
+gregorio_set_voice_translation_date (gregorio_voice_info * voice_info,
 					char *translation_date)
 {
   if (!voice_info)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_voice_translation_date", WARNING,
+			   "gregorio_set_voice_translation_date", WARNING,
 			   0);
       return;
     }
@@ -932,25 +932,25 @@ libgregorio_set_voice_translation_date (gregorio_voice_info * voice_info,
 }
 
 void
-libgregorio_set_voice_style (gregorio_voice_info * voice_info, char *style)
+gregorio_set_voice_style (gregorio_voice_info * voice_info, char *style)
 {
   if (!voice_info)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_voice_style", WARNING, 0);
+			   "gregorio_set_voice_style", WARNING, 0);
       return;
     }
   voice_info->style = style;
 }
 
 void
-libgregorio_set_voice_virgula_position (gregorio_voice_info * voice_info,
+gregorio_set_voice_virgula_position (gregorio_voice_info * voice_info,
 					char *virgula_position)
 {
   if (!voice_info)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "libgregorio_set_voice_virgula_position", WARNING,
+			   "gregorio_set_voice_virgula_position", WARNING,
 			   0);
       return;
     }
@@ -1040,7 +1040,7 @@ libgregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
  *********************************/
 
 void
-libgregorio_determine_good_top_notes (gregorio_note * current_note)
+gregorio_determine_good_top_notes (gregorio_note * current_note)
 {
   char top_note;
   gregorio_note *prev_note;
@@ -1107,7 +1107,7 @@ libgregorio_mix_h_episemus (gregorio_note * current_note, char type)
 	    {
 	      prev_note->h_episemus_type = H_MULTI;
 	    }
-	  libgregorio_determine_good_top_notes (current_note);
+	  gregorio_determine_good_top_notes (current_note);
 	}
     }
 }
@@ -1126,7 +1126,7 @@ libgregorio_mix_h_episemus (gregorio_note * current_note, char type)
  *********************************/
 
 void
-libgregorio_determine_h_episemus_type (gregorio_note * note)
+gregorio_determine_h_episemus_type (gregorio_note * note)
 {
   if (!note)
     {
@@ -1238,7 +1238,7 @@ libgregorio_det_shape (char pitch)
  *********************************/
 
 int
-libgregorio_calculate_new_key (char step, int line)
+gregorio_calculate_new_key (char step, int line)
 {
   switch (step)
     {
@@ -1250,7 +1250,7 @@ libgregorio_calculate_new_key (char step, int line)
       break;
     default:
       gregorio_message (_("can't calculate key"),
-			   "libgregorio_calculate_new_key", ERROR, 0);
+			   "gregorio_calculate_new_key", ERROR, 0);
       return NO_KEY;
     }
 }
@@ -1263,7 +1263,7 @@ libgregorio_calculate_new_key (char step, int line)
  *********************************/
 
 void
-libgregorio_det_step_and_line_from_key (int key, char *step, int *line)
+gregorio_det_step_and_line_from_key (int key, char *step, int *line)
 {
   switch (key)
     {
@@ -1303,7 +1303,7 @@ libgregorio_det_step_and_line_from_key (int key, char *step, int *line)
       *step = 0;
       *line = 0;
       gregorio_message (_("can't determine step and line of the key"),
-			   "libgregorio_det_step_and_line_from_key", ERROR,
+			   "gregorio_det_step_and_line_from_key", ERROR,
 			   0);
       return;
     }
@@ -1327,7 +1327,7 @@ libgregorio_det_step_and_line_from_key (int key, char *step, int *line)
  *********************************/
 
 char
-libgregorio_det_pitch (int key, char step, int octave)
+gregorio_det_pitch (int key, char step, int octave)
 {
   switch (octave)
     {
@@ -1342,7 +1342,7 @@ libgregorio_det_pitch (int key, char step, int octave)
       break;
     default:
       gregorio_message (_("unknown octave"),	//TODO : à améliorer
-			   "libgregorio_det_pitch", ERROR, 0);
+			   "gregorio_det_pitch", ERROR, 0);
       return 0;
       break;
     }
@@ -1357,7 +1357,7 @@ libgregorio_det_pitch (int key, char step, int octave)
  *********************************/
 
 void
-libgregorio_set_octave_and_step_from_pitch (char *step,
+gregorio_set_octave_and_step_from_pitch (char *step,
 					    int *octave, char pitch, int clef)
 {
   if (pitch - clef < 97)
@@ -1390,7 +1390,7 @@ libgregorio_set_octave_and_step_from_pitch (char *step,
  *********************************/
 
 void
-libgregorio_reinitialize_alterations (char alterations[][13],
+gregorio_reinitialize_alterations (char alterations[][13],
 				      int number_of_voices)
 {
   int i;
@@ -1411,7 +1411,7 @@ libgregorio_reinitialize_alterations (char alterations[][13],
  *********************************/
 
 void
-libgregorio_reinitialize_one_voice_alterations (char alterations[13])
+gregorio_reinitialize_one_voice_alterations (char alterations[13])
 {
   int i;
   for (i = 0; i < 13; i++)
@@ -1422,7 +1422,7 @@ libgregorio_reinitialize_one_voice_alterations (char alterations[13])
 
 /*
 void
-libgregorio_fix_positions (gregorio_score * score)
+gregorio_fix_positions (gregorio_score * score)
 {
   if (!score || !score->first_syllable)
     {
@@ -1456,7 +1456,7 @@ libgregorio_fix_positions (gregorio_score * score)
  *********************************/
 
 void
-libgregorio_fix_initial_keys (gregorio_score * score, int default_key)
+gregorio_fix_initial_keys (gregorio_score * score, int default_key)
 {
   char *error;
   int clef = 0;
@@ -1468,7 +1468,7 @@ libgregorio_fix_initial_keys (gregorio_score * score, int default_key)
   if (!score || !score->first_syllable || !score->first_voice_info)
     {
       gregorio_message (_("score is not available"),
-			   "libgregorio_fix_initial_keys", WARNING, 0);
+			   "gregorio_fix_initial_keys", WARNING, 0);
       return;
     }
   error = malloc (100 * sizeof (char));
@@ -1483,16 +1483,16 @@ libgregorio_fix_initial_keys (gregorio_score * score, int default_key)
       if (element->type == GRE_C_KEY_CHANGE)
 	{
 	  clef =
-	    libgregorio_calculate_new_key (C_KEY, element->element_type - 48);
+	    gregorio_calculate_new_key (C_KEY, element->element_type - 48);
 	  voice_info->initial_key = clef;
-	  libgregorio_free_one_element (&
+	  gregorio_free_one_element (&
 					(score->first_syllable->elements[i]));
 	  voice_info = voice_info->next_voice_info;
 	  snprintf (error, 80,
 		    _
 		    ("in voice %d the first element is a key definition, considered as initial key"),
 		    i + 1);
-	  gregorio_message (error, "libgregorio_fix_initial_keys", VERBOSE,
+	  gregorio_message (error, "gregorio_fix_initial_keys", VERBOSE,
 			       0);
 
 	  continue;
@@ -1500,15 +1500,15 @@ libgregorio_fix_initial_keys (gregorio_score * score, int default_key)
       if (element->type == GRE_F_KEY_CHANGE)
 	{
 	  clef =
-	    libgregorio_calculate_new_key (F_KEY, element->element_type - 48);
+	    gregorio_calculate_new_key (F_KEY, element->element_type - 48);
 	  voice_info->initial_key = clef;
-	  libgregorio_free_one_element (&
+	  gregorio_free_one_element (&
 					(score->first_syllable->elements[i]));
 	  snprintf (error, 80,
 		    _
 		    ("in voice %d the first element is a key definition, considered as initial key"),
 		    i + 1);
-	  gregorio_message (error, "libgregorio_fix_initial_keys", VERBOSE,
+	  gregorio_message (error, "gregorio_fix_initial_keys", VERBOSE,
 			       0);
 	}
       voice_info = voice_info->next_voice_info;
@@ -1527,7 +1527,7 @@ libgregorio_fix_initial_keys (gregorio_score * score, int default_key)
 
   if (to_delete)
     {
-      libgregorio_free_one_syllable (&(score->first_syllable),
+      gregorio_free_one_syllable (&(score->first_syllable),
 				     score->number_of_voices);
     }
 
@@ -1547,7 +1547,7 @@ libgregorio_fix_initial_keys (gregorio_score * score, int default_key)
 		    _
 		    ("no initial key definition in voice %d, default key definition applied"),
 		    i + 1);
-	  gregorio_message (error, "libgregorio_fix_initial_keys", VERBOSE,
+	  gregorio_message (error, "gregorio_fix_initial_keys", VERBOSE,
 			       0);
 	}
       voice_info = voice_info->next_voice_info;
@@ -1564,7 +1564,7 @@ libgregorio_fix_initial_keys (gregorio_score * score, int default_key)
  *********************************/
 
 char
-libgregorio_is_only_special (gregorio_element * element)
+gregorio_is_only_special (gregorio_element * element)
 {
   if (!element)
     {
@@ -1591,7 +1591,7 @@ libgregorio_is_only_special (gregorio_element * element)
 /* Here is a function that tests if a letter is a vowel or not */
 
 int
-libgregorio_is_vowel (wchar_t letter)
+gregorio_is_vowel (wchar_t letter)
 {
   wchar_t vowels[] = { L'a', L'e', L'i', L'o', L'u', L'y', L'A', L'E',
     L'I', 'O', 'U', 'Y', L'œ', L'Œ', L'æ', L'Æ', L'ó', L'À', L'È',
@@ -1669,7 +1669,7 @@ type may be 0, or SKIP_FIRST_SYLLABLE
 */
 
 void
-libgregorio_write_text (char type, gregorio_character * current_character,
+gregorio_write_text (char type, gregorio_character * current_character,
 			FILE * f, void (*printverb) (FILE *, wchar_t *),
 			void (*printchar) (FILE *, wchar_t),
 			void (*begin) (FILE *, unsigned char),
@@ -1731,7 +1731,7 @@ libgregorio_write_text (char type, gregorio_character * current_character,
 
 // the default behaviour is to write only the first character, except if there is a forced center somewhere. In this case we take all the letters until this forced center.
 void
-libgregorio_write_first_letter (gregorio_character * current_character,
+gregorio_write_first_letter (gregorio_character * current_character,
 				FILE * f, void (*printverb) (FILE *,
 							     wchar_t *),
 				void (*printchar) (FILE *, wchar_t),
@@ -1755,7 +1755,7 @@ libgregorio_write_first_letter (gregorio_character * current_character,
         }
       current_character = current_character->next_character;
     }
-  libgregorio_go_to_first_character(&current_character);
+  gregorio_go_to_first_character(&current_character);
   while (current_character)
     {
       if (current_character->is_character)
@@ -1812,13 +1812,13 @@ A very simple function that returns the first text of a score, or the null chara
 */
 
 gregorio_character *
-libgregorio_first_text (gregorio_score * score)
+gregorio_first_text (gregorio_score * score)
 {
   gregorio_syllable *current_syllable;
   if (!score || !score->first_syllable)
     {
       gregorio_message (_("unable to find the first letter of the score"),
-			   "libgregorio_first_text", ERROR, 0);
+			   "gregorio_first_text", ERROR, 0);
       return NULL;
     }
   current_syllable = score->first_syllable;
@@ -1832,19 +1832,19 @@ libgregorio_first_text (gregorio_score * score)
     }
 
   gregorio_message (_("unable to find the first letter of the score"),
-		       "libgregorio_first_text", ERROR, 0);
+		       "gregorio_first_text", ERROR, 0);
   return NULL;
 }
 
 wchar_t
-libgregorio_first_letter (gregorio_score * score)
+gregorio_first_letter (gregorio_score * score)
 {
   gregorio_syllable *current_syllable;
   gregorio_character *current_character;
   if (!score || !score->first_syllable)
     {
       gregorio_message (_("unable to find the first letter of the score"),
-			   "libgregorio_first_letter", ERROR, 0);
+			   "gregorio_first_letter", ERROR, 0);
       return L'\0';
     }
   current_syllable = score->first_syllable;
@@ -1863,6 +1863,6 @@ libgregorio_first_letter (gregorio_score * score)
     }
 
   gregorio_message (_("unable to find the first letter of the score"),
-		       "libgregorio_first_letter", ERROR, 0);
+		       "gregorio_first_letter", ERROR, 0);
   return L'\0';
 }

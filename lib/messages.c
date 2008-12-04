@@ -48,7 +48,7 @@ gregorio_set_verbosity_mode (char new_mode)
 }
 
 void
-libgregorio_set_debug_messages (char new_mode)
+gregorio_set_debug_messages (char new_mode)
 {
   debug_messages = new_mode;
 }

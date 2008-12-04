@@ -68,7 +68,7 @@ read_score (FILE *f)
       return NULL;
     }
 
-  score = libgregorio_new_score ();
+  score = gregorio_new_score ();
 
   current_node = current_node->xmlChildrenNode;
 
@@ -104,7 +104,7 @@ read_score (FILE *f)
 	}
     }
   char alterations[score->number_of_voices][13];
-  libgregorio_reinitialize_alterations (alterations, score->number_of_voices);
+  gregorio_reinitialize_alterations (alterations, score->number_of_voices);
 
 //we have to do one iteration, to have the first_syllable
   if (xmlStrcmp (current_node->name, (const xmlChar *) "syllable"))
@@ -235,7 +235,7 @@ libgregorio_xml_read_multi_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
 
   int number_of_voices = 0;
   gregorio_voice_info *voice_info;
-  libgregorio_add_voice_info (&score->first_voice_info);
+  gregorio_add_voice_info (&score->first_voice_info);
   voice_info = score->first_voice_info;
   while (current_node)
     {
@@ -243,7 +243,7 @@ libgregorio_xml_read_multi_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
 
       libgregorio_xml_read_voice_info (current_node->xmlChildrenNode, doc,
 				       voice_info);
-      libgregorio_add_voice_info (&voice_info);
+      gregorio_add_voice_info (&voice_info);
       number_of_voices++;
     }
   score->number_of_voices = number_of_voices;
@@ -255,7 +255,7 @@ libgregorio_xml_read_mono_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
 				      gregorio_score * score)
 {
 
-  libgregorio_add_voice_info (&(score->first_voice_info));
+  gregorio_add_voice_info (&(score->first_voice_info));
   libgregorio_xml_read_voice_info (current_node, doc,
 				   score->first_voice_info);
 }
@@ -407,7 +407,7 @@ libgregorio_xml_read_initial_key (xmlNodePtr current_node, xmlDocPtr doc)
   char step = 0;
   int line = 0;
   libgregorio_xml_read_key (current_node, doc, &step, &line);
-  return libgregorio_calculate_new_key (step, line);
+  return gregorio_calculate_new_key (step, line);
 }
 
 void
@@ -469,7 +469,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
   int line;
   gregorio_element *current_element = NULL;
 
-  libgregorio_add_syllable (current_syllable, number_of_voices, NULL, NULL, NULL,
+  gregorio_add_syllable (current_syllable, number_of_voices, NULL, NULL, NULL,
 			    0);
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "text"))
     {
@@ -500,14 +500,14 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 	      if (step != 0)
 		{
 
-		  libgregorio_add_special_as_element ((&current_element),
+		  gregorio_add_special_as_element ((&current_element),
 						      GRE_BAR, step);
 		  if (!((*current_syllable)->elements[0]))
 		    {
 // we need this to find the first element
 		      (*current_syllable)->elements[0] = current_element;
 		    }
-		  libgregorio_reinitialize_alterations (alterations,
+		  gregorio_reinitialize_alterations (alterations,
 							number_of_voices);
 		}
 	      current_node = current_node->next;
@@ -520,7 +520,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 					(&step), &(line));
 	      if (step == 'c')
 		{
-		  libgregorio_add_special_as_element ((&current_element),
+		  gregorio_add_special_as_element ((&current_element),
 						      GRE_C_KEY_CHANGE,
 						      line + 48);
 		  if (!((*current_syllable)->elements[0]))
@@ -528,13 +528,13 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 // we need this to find the first element
 		      (*current_syllable)->elements[0] = current_element;
 		    }
-		  libgregorio_reinitialize_alterations (alterations,
+		  gregorio_reinitialize_alterations (alterations,
 							number_of_voices);
-		  clefs[0] = libgregorio_calculate_new_key (step, line);
+		  clefs[0] = gregorio_calculate_new_key (step, line);
 		}
 	      if (step == 'f')
 		{
-		  libgregorio_add_special_as_element ((&current_element),
+		  gregorio_add_special_as_element ((&current_element),
 						      GRE_F_KEY_CHANGE,
 						      line + 48);
 		  if (!((*current_syllable)->elements[0]))
@@ -542,9 +542,9 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 // we need this to find the first element
 		      (*current_syllable)->elements[0] = current_element;
 		    }
-		  libgregorio_reinitialize_alterations (alterations,
+		  gregorio_reinitialize_alterations (alterations,
 							number_of_voices);
-		  clefs[0] = libgregorio_calculate_new_key (step, line);
+		  clefs[0] = gregorio_calculate_new_key (step, line);
 		}
 	      else
 		{
@@ -632,7 +632,7 @@ libgregorio_xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
   free (temp);
   libgregorio_xml_read_styled_text (current_node->xmlChildrenNode, doc,
 				    &current_character);
-  libgregorio_go_to_first_character (&current_character);
+  gregorio_go_to_first_character (&current_character);
   syllable->text = current_character;
 }
 
@@ -644,7 +644,7 @@ libgregorio_xml_read_translation (xmlNodePtr current_node, xmlDocPtr doc,
 
   libgregorio_xml_read_styled_text (current_node->xmlChildrenNode, doc,
 				    &current_character);
-  libgregorio_go_to_first_character (&current_character);
+  gregorio_go_to_first_character (&current_character);
   syllable->translation = current_character;
 }
 
@@ -657,7 +657,7 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
     {
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "str"))
 	{
-	  libgregorio_add_text ((char *) xmlNodeListGetString
+	  gregorio_add_text ((char *) xmlNodeListGetString
 				(doc, current_node->xmlChildrenNode, 1),
 				current_character);
 	  current_node = current_node->next;
@@ -665,65 +665,65 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
 	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "center"))
 	{
-	  libgregorio_begin_style (current_character, ST_CENTER);
+	  gregorio_begin_style (current_character, ST_CENTER);
 	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
-	  libgregorio_end_style (current_character, ST_CENTER);
+	  gregorio_end_style (current_character, ST_CENTER);
 	  current_node = current_node->next;
 	  continue;
 	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "italic"))
 	{
-	  libgregorio_begin_style (current_character, ST_ITALIC);
+	  gregorio_begin_style (current_character, ST_ITALIC);
 	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
-	  libgregorio_end_style (current_character, ST_ITALIC);
+	  gregorio_end_style (current_character, ST_ITALIC);
 	  current_node = current_node->next;
 	  continue;
 	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "bold"))
 	{
-	  libgregorio_begin_style (current_character, ST_BOLD);
+	  gregorio_begin_style (current_character, ST_BOLD);
 	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
-	  libgregorio_end_style (current_character, ST_BOLD);
+	  gregorio_end_style (current_character, ST_BOLD);
 	  current_node = current_node->next;
 	  continue;
 	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "tt"))
 	{
-	  libgregorio_begin_style (current_character, ST_TT);
+	  gregorio_begin_style (current_character, ST_TT);
 	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
-	  libgregorio_end_style (current_character, ST_TT);
+	  gregorio_end_style (current_character, ST_TT);
 	  current_node = current_node->next;
 	  continue;
 	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "small-capitals"))
 	{
-	  libgregorio_begin_style (current_character, ST_SMALL_CAPS);
+	  gregorio_begin_style (current_character, ST_SMALL_CAPS);
 	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
-	  libgregorio_end_style (current_character, ST_SMALL_CAPS);
+	  gregorio_end_style (current_character, ST_SMALL_CAPS);
 	  current_node = current_node->next;
 	  continue;
 	}
       if (!xmlStrcmp
 	  (current_node->name, (const xmlChar *) "special-character"))
 	{
-	  libgregorio_begin_style (current_character, ST_SPECIAL_CHAR);
+	  gregorio_begin_style (current_character, ST_SPECIAL_CHAR);
 	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
-	  libgregorio_end_style (current_character, ST_SPECIAL_CHAR);
+	  gregorio_end_style (current_character, ST_SPECIAL_CHAR);
 	  current_node = current_node->next;
 	  continue;
 	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "verbatim"))
 	{
-	  libgregorio_begin_style (current_character, ST_VERBATIM);
+	  gregorio_begin_style (current_character, ST_VERBATIM);
 	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
-	  libgregorio_end_style (current_character, ST_VERBATIM);
+	  gregorio_end_style (current_character, ST_VERBATIM);
 	  current_node = current_node->next;
 	  continue;
 	}
@@ -809,8 +809,8 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
       if (step != 0)
 	{
 
-	  libgregorio_add_special_as_element (current_element, GRE_BAR, step);
-	  libgregorio_reinitialize_one_voice_alterations (alterations);
+	  gregorio_add_special_as_element (current_element, GRE_BAR, step);
+	  gregorio_reinitialize_one_voice_alterations (alterations);
 	}
       return;
     }
@@ -821,17 +821,17 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 				(&step), &(line));
       if (step == 'c')
 	{
-	  libgregorio_add_special_as_element (current_element,
+	  gregorio_add_special_as_element (current_element,
 					      GRE_C_KEY_CHANGE, line + 48);
-	  libgregorio_reinitialize_one_voice_alterations (alterations);
-	  *key = libgregorio_calculate_new_key (step, line);
+	  gregorio_reinitialize_one_voice_alterations (alterations);
+	  *key = gregorio_calculate_new_key (step, line);
 	}
       if (step == 'f')
 	{
-	  libgregorio_add_special_as_element (current_element,
+	  gregorio_add_special_as_element (current_element,
 					      GRE_F_KEY_CHANGE, line + 48);
-	  libgregorio_reinitialize_one_voice_alterations (alterations);
-	  *key = libgregorio_calculate_new_key (step, line);
+	  gregorio_reinitialize_one_voice_alterations (alterations);
+	  *key = gregorio_calculate_new_key (step, line);
 	}
       else
 	{
@@ -844,26 +844,26 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
   if (!xmlStrcmp
       (current_node->name, (const xmlChar *) "larger-neumatic-space"))
     {
-      libgregorio_add_special_as_element (current_element,
+      gregorio_add_special_as_element (current_element,
 					  GRE_SPACE, SP_LARGER_SPACE);
       return;
     }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "end-of-line"))
     {
-      libgregorio_add_special_as_element (current_element,
+      gregorio_add_special_as_element (current_element,
 					  GRE_END_OF_LINE, USELESS_VALUE);
       return;
     }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "glyph-space"))
     {
-      libgregorio_add_special_as_element (current_element,
+      gregorio_add_special_as_element (current_element,
 					  GRE_SPACE, SP_GLYPH_SPACE);
       return;
     }
 
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "element"))
     {
-      libgregorio_add_element (current_element, NULL);
+      gregorio_add_element (current_element, NULL);
       libgregorio_xml_read_glyphs (current_node->xmlChildrenNode, doc,
 				   (*current_element), alterations, *key);
       return;
@@ -889,7 +889,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 	  step =
 	    libgregorio_xml_read_alteration (current_node->xmlChildrenNode,
 					     doc, key);
-	  libgregorio_add_special_as_glyph (&current_glyph, GRE_FLAT, step);
+	  gregorio_add_special_as_glyph (&current_glyph, GRE_FLAT, step);
 	  alterations[(int) step - 48] = FLAT;
 	  current_node = current_node->next;
 	  continue;
@@ -900,7 +900,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 	  step =
 	    libgregorio_xml_read_alteration (current_node->xmlChildrenNode,
 					     doc, key);
-	  libgregorio_add_special_as_glyph (&current_glyph, GRE_NATURAL,
+	  gregorio_add_special_as_glyph (&current_glyph, GRE_NATURAL,
 					    step);
 	  alterations[(int) step - 48] = NO_ALTERATION;
 	  current_node = current_node->next;
@@ -909,7 +909,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp
 	  (current_node->name, (const xmlChar *) "zero-width-space"))
 	{
-	  libgregorio_add_special_as_glyph (&current_glyph, GRE_SPACE,
+	  gregorio_add_special_as_glyph (&current_glyph, GRE_SPACE,
 					    SP_ZERO_WIDTH);
 	  current_node = current_node->next;
 	  continue;
@@ -927,7 +927,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 
       current_node = current_node->next;
     }
-  libgregorio_go_to_first_glyph (&current_glyph);
+  gregorio_go_to_first_glyph (&current_glyph);
   element->first_glyph = current_glyph;
 }
 
@@ -941,7 +941,7 @@ libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
   xmlChar *temp;
   gregorio_note *current_note = NULL;
 
-  libgregorio_add_glyph (current_glyph, G_UNDETERMINED,
+  gregorio_add_glyph (current_glyph, G_UNDETERMINED,
 			 NULL, L_NO_LIQUESCENTIA);
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "type"))
     {
@@ -997,7 +997,7 @@ libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
 
       current_node = current_node->next;
     }
-  libgregorio_go_to_first_note (&(current_note));
+  gregorio_go_to_first_note (&(current_note));
   (*current_glyph)->first_note = current_note;
   (*current_glyph)->liquescentia = liquescentia;
 }
@@ -1051,7 +1051,7 @@ libgregorio_xml_read_alteration (xmlNodePtr current_node, xmlDocPtr doc,
       return 0;
     }
 
-  return libgregorio_det_pitch (key, step, octave);
+  return gregorio_det_pitch (key, step, octave);
 
 }
 
@@ -1261,9 +1261,9 @@ void
   else
     {
 //TODO : better understanding of liquescentia
-      libgregorio_add_note (current_note, pitch, shape, signs, liquescentia,
+      gregorio_add_note (current_note, pitch, shape, signs, liquescentia,
 			    h_episemus);
-      libgregorio_add_special_sign (*current_note, rare_sign);
+      gregorio_add_special_sign (*current_note, rare_sign);
     }
 
 }
@@ -1322,7 +1322,7 @@ libgregorio_xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key)
       return 0;
     }
 
-  return libgregorio_det_pitch (key, step, octave);
+  return gregorio_det_pitch (key, step, octave);
 
 }
 

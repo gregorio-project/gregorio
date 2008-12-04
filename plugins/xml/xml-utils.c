@@ -274,7 +274,7 @@ void
 libgregorio_xml_set_pitch_from_octave_and_step (char step,
 					  int octave, char *pitch, int clef)
 {
-  *pitch=libgregorio_det_pitch(clef, step, octave);
+  *pitch=gregorio_det_pitch(clef, step, octave);
 }
 
 void
@@ -315,7 +315,7 @@ libgregorio_xml_write_alteration (FILE * f, char type, char pitch, int clef, cha
   char step;
   int octave;
 
-  libgregorio_set_octave_and_step_from_pitch (&step, &octave, pitch, clef);
+  gregorio_set_octave_and_step_from_pitch (&step, &octave, pitch, clef);
   switch (type)
     {
     case GRE_FLAT:

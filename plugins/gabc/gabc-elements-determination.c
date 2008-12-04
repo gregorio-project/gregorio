@@ -72,7 +72,7 @@ void
 close_element (gregorio_element ** current_element,
 	       gregorio_glyph * first_glyph)
 {
-  libgregorio_add_element (current_element, first_glyph);
+  gregorio_add_element (current_element, first_glyph);
   if (first_glyph && first_glyph->previous_glyph)
     {
       first_glyph->previous_glyph->next_glyph = NULL;
@@ -119,7 +119,7 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
       return NULL;
     }
 // first we go to the first glyph in the chained list of glyphs (maybe to suppress ?)
-  libgregorio_go_to_first_glyph (&current_glyph);
+  gregorio_go_to_first_glyph (&current_glyph);
 
 
   while (current_glyph)
@@ -152,7 +152,7 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 		{
 		  first_element = current_element;
 		}
-	      libgregorio_add_special_as_element (&current_element,
+	      gregorio_add_special_as_element (&current_element,
 						  current_glyph->type,
 						  current_glyph->glyph_type);
 	    }
@@ -161,7 +161,7 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	}
 	  first_glyph = current_glyph->next_glyph;
 	  previous_glyph = current_glyph->next_glyph;
-	  libgregorio_free_one_glyph (&current_glyph);
+	  gregorio_free_one_glyph (&current_glyph);
 	  continue;
 	}
 

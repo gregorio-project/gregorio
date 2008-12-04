@@ -30,7 +30,7 @@ Update (three years later): This file is a HUGE CRAP... Hardcoding everything wa
 #include "gabc.h"
 
 #define lex_add_note(i,shape,signs,liquescentia,h_episemus)\
-	libgregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]), shape, signs, liquescentia,h_episemus)
+	gregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]), shape, signs, liquescentia,h_episemus)
 
 gregorio_note *current_note;
 %}
@@ -54,75 +54,75 @@ gregorio_note *current_note;
 %%
 [\t\r\n]+      /* ignore ends of line and tabs */;
 z {
-	libgregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, GRE_END_OF_LINE);
+	gregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, GRE_END_OF_LINE);
 	}
 Z {
-	libgregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, GRE_END_OF_PAR);
+	gregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, GRE_END_OF_PAR);
 	}
 (c|f)[1-4] {
 	if (gabc_notes_determination_text[0]=='c') {
-	libgregorio_add_special_as_note (&current_note, GRE_C_KEY_CHANGE, gabc_notes_determination_text[1]);
+	gregorio_add_special_as_note (&current_note, GRE_C_KEY_CHANGE, gabc_notes_determination_text[1]);
 	}
 	else {
-	libgregorio_add_special_as_note (&current_note, GRE_F_KEY_CHANGE, gabc_notes_determination_text[1]);
+	gregorio_add_special_as_note (&current_note, GRE_F_KEY_CHANGE, gabc_notes_determination_text[1]);
 	}
 	}
 `       {
-	libgregorio_add_special_as_note (&current_note, GRE_BAR, B_VIRGULA);
+	gregorio_add_special_as_note (&current_note, GRE_BAR, B_VIRGULA);
 	}
 ,       {
-	libgregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINIMA);
+	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINIMA);
 	}
 ;       {
-	libgregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR);
+	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR);
 	}
 :       {
-	libgregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MAIOR);
+	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MAIOR);
 	}
 ::      {
-	libgregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_FINALIS);
+	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_FINALIS);
 	}
 r	{
-    libgregorio_change_shape (current_note, S_PUNCTUM_CAVUM);
+    gregorio_change_shape (current_note, S_PUNCTUM_CAVUM);
     }
 R	{
-    libgregorio_change_shape (current_note, S_LINEA_PUNCTUM);
+    gregorio_change_shape (current_note, S_LINEA_PUNCTUM);
     }
 r0	{
-    libgregorio_change_shape (current_note, S_LINEA_PUNCTUM_CAVUM);
+    gregorio_change_shape (current_note, S_LINEA_PUNCTUM_CAVUM);
     }
 r1	{
-    libgregorio_add_special_sign (current_note, _ACCENTUS);
+    gregorio_add_special_sign (current_note, _ACCENTUS);
     }
 r2	{
-    libgregorio_add_special_sign (current_note, _ACCENTUS_REVERSUS);
+    gregorio_add_special_sign (current_note, _ACCENTUS_REVERSUS);
     }
 r3	{
-    libgregorio_add_special_sign (current_note, _CIRCULUS);
+    gregorio_add_special_sign (current_note, _CIRCULUS);
     }
 r4	{
-    libgregorio_add_special_sign (current_note, _SEMI_CIRCULUS);
+    gregorio_add_special_sign (current_note, _SEMI_CIRCULUS);
     }
 r5	{
-    libgregorio_add_special_sign (current_note, _SEMI_CIRCULUS_REVERSUS);
+    gregorio_add_special_sign (current_note, _SEMI_CIRCULUS_REVERSUS);
     }
 [a-mA-M]x       {
-	libgregorio_add_special_as_note (&current_note, GRE_FLAT, gabc_notes_determination_text[0]);
+	gregorio_add_special_as_note (&current_note, GRE_FLAT, gabc_notes_determination_text[0]);
 	}
 [a-mA-M]y       {
-	libgregorio_add_special_as_note (&current_note, GRE_NATURAL, gabc_notes_determination_text[0]);
+	gregorio_add_special_as_note (&current_note, GRE_NATURAL, gabc_notes_determination_text[0]);
 	}
 !       {
-	libgregorio_add_special_as_note (&current_note, GRE_SPACE, SP_ZERO_WIDTH);
+	gregorio_add_special_as_note (&current_note, GRE_SPACE, SP_ZERO_WIDTH);
 	}
 \/      {
-	libgregorio_add_special_as_note (&current_note, GRE_SPACE, SP_NEUMATIC_CUT);
+	gregorio_add_special_as_note (&current_note, GRE_SPACE, SP_NEUMATIC_CUT);
 	}
 \/\/    {
-	libgregorio_add_special_as_note (&current_note, GRE_SPACE, SP_LARGER_SPACE);
+	gregorio_add_special_as_note (&current_note, GRE_SPACE, SP_LARGER_SPACE);
 	}
 \       {
-	libgregorio_add_special_as_note (&current_note, GRE_SPACE, SP_GLYPH_SPACE);
+	gregorio_add_special_as_note (&current_note, GRE_SPACE, SP_GLYPH_SPACE);
 	}
 [a-mA-M]vv   {
 	lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
@@ -863,6 +863,6 @@ buf=yy_scan_string(str);
 yylex();
 yy_flush_buffer(buf);
 yy_delete_buffer(buf);
-libgregorio_go_to_first_note (&current_note);
+gregorio_go_to_first_note (&current_note);
 return current_note;
 }

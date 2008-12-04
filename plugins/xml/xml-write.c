@@ -55,8 +55,8 @@ libgregorio_xml_write_gregorio_note (FILE * f, gregorio_note * note, int clef,
 			   "libgregorio_xml_write_gregorio_note", ERROR, 0);
       return;
     }
-  libgregorio_determine_h_episemus_type (note);
-  libgregorio_set_octave_and_step_from_pitch (&step, &octave, note->pitch,
+  gregorio_determine_h_episemus_type (note);
+  gregorio_set_octave_and_step_from_pitch (&step, &octave, note->pitch,
 					      clef);
   alteration = alterations[(note->pitch) - 'a'];
 
@@ -166,7 +166,7 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
     }
   if (element->type == GRE_BAR)
     {
-      libgregorio_reinitialize_one_voice_alterations (alterations);
+      gregorio_reinitialize_one_voice_alterations (alterations);
       libgregorio_xml_write_neumatic_bar (f, element->element_type);
       return;
     }
@@ -178,14 +178,14 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
   if (element->type == GRE_C_KEY_CHANGE)
     {
       *clef =
-	libgregorio_calculate_new_key (C_KEY, element->element_type - 48);
+	gregorio_calculate_new_key (C_KEY, element->element_type - 48);
       libgregorio_xml_write_key_change (f, C_KEY, element->element_type - 48);
       return;
     }
   if (element->type == GRE_F_KEY_CHANGE)
     {
       *clef =
-	libgregorio_calculate_new_key (F_KEY, element->element_type - 48);
+	gregorio_calculate_new_key (F_KEY, element->element_type - 48);
       libgregorio_xml_write_key_change (f, F_KEY, element->element_type - 48);
       return;
     }
@@ -366,7 +366,7 @@ libgregorio_xml_print_text (FILE * f, gregorio_character * text,
       return;
     }
   fprintf (f, "<text position=\"%s\">", position_str);
-  libgregorio_write_text (0, text, f,
+  gregorio_write_text (0, text, f,
 			  (&libgregorio_xml_write_verb),
 			  (&libgregorio_xml_print_char),
 			  (&libgregorio_xml_write_begin),
@@ -388,7 +388,7 @@ libgregorio_xml_print_translation (FILE * f, gregorio_character * translation)
       return;
     }
   fprintf (f, "<translation>");
-  libgregorio_write_text (0, translation, f,
+  gregorio_write_text (0, translation, f,
 			  (&libgregorio_xml_write_verb),
 			  (&libgregorio_xml_print_char),
 			  (&libgregorio_xml_write_begin),
@@ -418,7 +418,7 @@ libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
     }
   if (syllable->position == WORD_BEGINNING)
     {
-      libgregorio_reinitialize_alterations (alterations, number_of_voices);
+      gregorio_reinitialize_alterations (alterations, number_of_voices);
     }
   if (number_of_voices == 1)
     {
@@ -446,7 +446,7 @@ libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
 	  voice++;
 	  continue;
 	}
-      if (libgregorio_is_only_special (syllable->elements[i]))
+      if (gregorio_is_only_special (syllable->elements[i]))
 	{
 	  libgregorio_xml_write_specials_as_neumes (f, syllable->elements[i],
 						    voice, &clefs[i]);
@@ -518,7 +518,7 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 	  if (voice == MONOPHONY)
 	    {
 	      *clef =
-		libgregorio_calculate_new_key (C_KEY,
+		gregorio_calculate_new_key (C_KEY,
 					       element->element_type - 48);
 	      libgregorio_xml_write_key_change (f, C_KEY,
 						element->element_type - 48);
@@ -526,7 +526,7 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 	  else
 	    {
 	      *clef =
-		libgregorio_calculate_new_key (C_KEY,
+		gregorio_calculate_new_key (C_KEY,
 					       element->element_type - 48);
 	      libgregorio_xml_write_key_change_in_polyphony (f, C_KEY,
 							     element->
@@ -539,7 +539,7 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 	  if (voice == MONOPHONY)
 	    {
 	      *clef =
-		libgregorio_calculate_new_key (F_KEY,
+		gregorio_calculate_new_key (F_KEY,
 					       element->element_type - 48);
 	      libgregorio_xml_write_key_change (f, F_KEY,
 						element->element_type - 48);
@@ -547,7 +547,7 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 	  else
 	    {
 	      *clef =
-		libgregorio_calculate_new_key (F_KEY,
+		gregorio_calculate_new_key (F_KEY,
 					       element->element_type - 48);
 	      libgregorio_xml_write_key_change_in_polyphony (f, F_KEY,
 							     element->
@@ -590,7 +590,7 @@ write_score (FILE * f, gregorio_score * score)
 
 // the clefs array is good, now let's take care of alterations
   char alterations[score->number_of_voices][13];
-  libgregorio_reinitialize_alterations (alterations, score->number_of_voices);
+  gregorio_reinitialize_alterations (alterations, score->number_of_voices);
 
   fprintf (f, "<score>");
   libgregorio_xml_write_score_attributes (f, score);
@@ -735,7 +735,7 @@ libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
 	{
 	  fprintf (f, "<style>%s</style>", current_voice_info->style);
 	}
-      libgregorio_det_step_and_line_from_key (current_voice_info->initial_key,
+      gregorio_det_step_and_line_from_key (current_voice_info->initial_key,
 					      &step, &line);
       fprintf (f, "<clef><step>%c</step><line>%d</line></clef>", step, line);
       if (voice != MONOPHONY)

@@ -80,7 +80,7 @@ write_score (FILE * f, gregorio_score * score)
   // first we draw the initial (first letter) and the initial key
   if (score->first_voice_info)
     {
-      libgregorio_det_step_and_line_from_key (score->first_voice_info->
+      gregorio_det_step_and_line_from_key (score->first_voice_info->
 					      initial_key, &clef_letter,
 					      &clef_line);
       if (clef_letter == 'f')
@@ -100,11 +100,11 @@ write_score (FILE * f, gregorio_score * score)
   // a char that will contain 1 if it is the first syllable and 0 if not. It is for the initial.
   fprintf (f,
 	   "\\musicindent10mm\n\\raisesong3\\Internote\n\\initiumgregorianum\n");
-  first_text = libgregorio_first_text (score);
+  first_text = gregorio_first_text (score);
   if (first_text)
     {
       fprintf (f, "\\musicinitial{}{");
-      libgregorio_write_first_letter (first_text, f,
+      gregorio_write_first_letter (first_text, f,
 				      (&libgregorio_otex_write_verb),
 				      (&libgregorio_otex_print_char),
 				      (&libgregorio_otex_write_begin),
@@ -221,7 +221,7 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 	  if (next_note != 0)
 	    {
 	      clef =
-		libgregorio_calculate_new_key (C_KEY,
+		gregorio_calculate_new_key (C_KEY,
 					       current_element->element_type -
 					       48);
 	      if (new_line == 1)
@@ -258,7 +258,7 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 	  if (next_note != 0)
 	    {
 	      clef =
-		libgregorio_calculate_new_key (F_KEY,
+		gregorio_calculate_new_key (F_KEY,
 					       current_element->element_type -
 					       48);
 	      if (new_line == 1)
@@ -570,7 +570,7 @@ libgregorio_opustex_write_text (FILE * f, gregorio_character * text,
       return;
     }
   fprintf (f, "{");
-  libgregorio_write_text (*first_syllable, text, f,
+  gregorio_write_text (*first_syllable, text, f,
 			  (&libgregorio_otex_write_verb),
 			  (&libgregorio_otex_print_char),
 			  (&libgregorio_otex_write_begin),

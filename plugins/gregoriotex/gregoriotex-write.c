@@ -108,11 +108,11 @@ write_score (FILE * f, gregorio_score * score)
     fprintf(f, "\\setbiginitial %%\n");
     line = 1;
   }
-  first_text = libgregorio_first_text (score);
+  first_text = gregorio_first_text (score);
   if (first_text)
     {
       fprintf (f, "\\greinitial{");
-      libgregorio_write_first_letter (first_text, f,
+      gregorio_write_first_letter (first_text, f,
 				      (&libgregorio_gtex_write_verb),
 				      (&libgregorio_gtex_print_char),
 				      (&libgregorio_gtex_write_begin),
@@ -133,7 +133,7 @@ write_score (FILE * f, gregorio_score * score)
   fprintf (f, "\\beginscore %%\n");
   if (score->first_voice_info)
     {
-      libgregorio_det_step_and_line_from_key (score->
+      gregorio_det_step_and_line_from_key (score->
 					      first_voice_info->initial_key,
 					      &clef_letter, &clef_line);
     }
@@ -664,7 +664,7 @@ libgregorio_gregoriotex_write_text (FILE * f, gregorio_character * text,
       return;
     }
   fprintf (f, "{");
-  libgregorio_write_text (*first_syllable, text, f,
+  gregorio_write_text (*first_syllable, text, f,
 			  (&libgregorio_gtex_write_verb),
 			  (&libgregorio_gtex_print_char),
 			  (&libgregorio_gtex_write_begin),
@@ -686,7 +686,7 @@ libgregorio_gregoriotex_write_translation (FILE * f,
     {
       return;
     }
-  libgregorio_write_text (0, translation, f,
+  gregorio_write_text (0, translation, f,
 			  (&libgregorio_gtex_write_verb),
 			  (&libgregorio_gtex_print_char),
 			  (&libgregorio_gtex_write_begin),
@@ -719,7 +719,7 @@ libgregorio_gregoriotex_write_next_first_text (FILE * f,
 	  current_character->next_character = NULL;
 
 	  fprintf (f, "{");
-	  libgregorio_write_text (0, first_character, f,
+	  gregorio_write_text (0, first_character, f,
 				  (&libgregorio_gtex_write_verb),
 				  (&libgregorio_gtex_print_char),
 				  (&libgregorio_gtex_write_begin),

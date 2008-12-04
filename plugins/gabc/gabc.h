@@ -36,7 +36,7 @@ gregorio_element *libgregorio_gabc_det_elements_from_notes (gregorio_note *curre
 gregorio_element *libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph);
 gregorio_glyph *libgregorio_gabc_det_glyphs_from_notes (gregorio_note *current_note);
 
-// see comments on libgregorio_add_note_to_a_glyph for meaning of these variables
+// see comments on gregorio_add_note_to_a_glyph for meaning of these variables
 #define DET_NO_END 'A'
 #define DET_END_OF_CURRENT 'B'
 #define DET_END_OF_PREVIOUS 'C'

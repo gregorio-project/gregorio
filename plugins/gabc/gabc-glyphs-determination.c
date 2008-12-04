@@ -68,7 +68,7 @@ close_glyph (gregorio_glyph ** last_glyph, char glyph_type,
       glyph_type = G_PUNCTUM;
     }
 
-  libgregorio_add_glyph (last_glyph, glyph_type, *first_note, liquescentia);
+  gregorio_add_glyph (last_glyph, glyph_type, *first_note, liquescentia);
   if (current_note->next_note)
     {
       current_note->next_note->previous_note = NULL;
@@ -110,7 +110,7 @@ close_glyph (gregorio_glyph ** last_glyph, char glyph_type,
  * have the shape quilisma for very rare forms). But these shapes must
  * not appear in the final form of the score, and we transform them
  * respectively in punctum and quilisma (and the glyph type must be
- * pes_quadratum, but it is done in libgregorio_add_note_to_a_glyph).
+ * pes_quadratum, but it is done in gregorio_add_note_to_a_glyph).
  * 
 ****************************/
 
@@ -134,7 +134,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
   gregorio_note *next_note = NULL;
 
   // determination of end of glyphs, see comments on
-  // libgregorio_add_note_to_a_glyph
+  // gregorio_add_note_to_a_glyph
   char end_of_glyph;
 
   // a char representing the liquescentia of the current glyph
@@ -145,7 +145,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
       return NULL;
     }
 
-  libgregorio_go_to_first_note (&current_note);
+  gregorio_go_to_first_note (&current_note);
 
   while (current_note)
     {
@@ -160,10 +160,10 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 	      current_glyph_type = G_UNDETERMINED;
 	      liquescentia = L_NO_LIQUESCENTIA;
 	    }
-	  libgregorio_add_special_as_glyph (&last_glyph, current_note->type,
+	  gregorio_add_special_as_glyph (&last_glyph, current_note->type,
 					    current_note->pitch);
 	  current_glyph_first_note = current_note->next_note;
-	  libgregorio_free_one_note (&current_note);
+	  gregorio_free_one_note (&current_note);
       last_pitch = USELESS_VALUE;
 	  //TODO : change behaviour here for flat and natural
 	  continue;
@@ -184,7 +184,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 	}
 
       next_glyph_type =
-	libgregorio_add_note_to_a_glyph (current_glyph_type,
+	gregorio_add_note_to_a_glyph (current_glyph_type,
 					 current_note->pitch, last_pitch,
 					 current_note->shape, &end_of_glyph);
 
@@ -202,7 +202,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 	  current_note->shape = S_QUILISMA;
 	}
 
-// see comments on libgregorio_add_note_to_a_glyph for the meaning of
+// see comments on gregorio_add_note_to_a_glyph for the meaning of
 // end_of_glyph
       switch (end_of_glyph)
 	{
@@ -317,7 +317,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
       current_note = next_note;
     }				// end of while
 
-  libgregorio_go_to_first_glyph (&last_glyph);
+  gregorio_go_to_first_glyph (&last_glyph);
   return last_glyph;
 }
 
@@ -367,7 +367,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 
 
 char
-libgregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
+gregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
 				 char last_pitch, char shape,
 				 char *end_of_glyph)
 {

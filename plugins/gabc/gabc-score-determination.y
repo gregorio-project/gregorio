@@ -149,10 +149,10 @@ read_score (FILE * f_in)
   fclose (f_out);
   free_variables ();
   // the we check the validity and integrity of the score we have built.
-  libgregorio_fix_initial_keys (score, DEFAULT_KEY);
+  gregorio_fix_initial_keys (score, DEFAULT_KEY);
   if (!check_score_integrity (score))
     {
-      libgregorio_free_score (score);
+      gregorio_free_score (score);
       score = NULL;
       gregorio_message (_("unable to determine a valid score from file"),
 			   "libgregorio_det_score", FATAL_ERROR, 0);
@@ -196,10 +196,10 @@ void
 initialize_variables ()
 {
   // build a brand new empty score
-  score = libgregorio_new_score ();
+  score = gregorio_new_score ();
   // initialization of the first voice info to an empty voice info
   current_voice_info = NULL;
-  libgregorio_add_voice_info (&current_voice_info);
+  gregorio_add_voice_info (&current_voice_info);
   score->first_voice_info = current_voice_info;
   // other initializations
   number_of_voices = 0;
@@ -233,7 +233,7 @@ next_voice_info ()
   //we must do this test in the case where there would be a "--" before first_declarations
   if (voice_info_is_not_empty (current_voice_info))
     {
-      libgregorio_add_voice_info (&current_voice_info);
+      gregorio_add_voice_info (&current_voice_info);
       voice++;
     }
 }
@@ -265,7 +265,7 @@ set_clef (char *str)
       return;
     }
 
-  clef = libgregorio_calculate_new_key (str[0], str[1] - 48);
+  clef = gregorio_calculate_new_key (str[0], str[1] - 48);
   if (str[2])
     {
       gregorio_message (_
@@ -285,7 +285,7 @@ reajust_voice_infos (gregorio_voice_info * voice_info, int final_count)
     {
       voice_info = voice_info->next_voice_info;
     }
-  libgregorio_free_voice_infos (voice_info);
+  gregorio_free_voice_infos (voice_info);
 }
 
 /* Function called when we have reached the end of the definitions, it tries to make the voice_infos coherent.
@@ -403,7 +403,7 @@ DETERMINING_MIDDLE is used internally in the big function to know where we are i
 void
 close_syllable ()
 {
-  libgregorio_add_syllable (&current_syllable, number_of_voices, elements,
+  gregorio_add_syllable (&current_syllable, number_of_voices, elements,
 			    first_text_character, first_translation_character, position);
   if (!score->first_syllable)
     {
@@ -430,7 +430,7 @@ close_syllable ()
 // a function called when we see a [, basically, all characters are added to the translation pointer instead of the text pointer
 void start_translation() {
   end_style_determination ();
-  libgregorio_go_to_first_character(&current_character);
+  gregorio_go_to_first_character(&current_character);
   first_text_character = current_character;
   center_is_determined=FULLY_DETERMINED; // the middle letters of the translation have no sense
   current_character=NULL;
@@ -438,7 +438,7 @@ void start_translation() {
 
 void end_translation() {
   end_style_determination ();
-  libgregorio_go_to_first_character(&current_character);
+  gregorio_go_to_first_character(&current_character);
   first_translation_character=current_character;
 }
 
@@ -550,7 +550,7 @@ add_text (char *mbcharacters)
   // we add the corresponding characters in the list of gregorio_characters
   while (wtext[i])
     {
-      libgregorio_add_character (&current_character, wtext[i]);
+      gregorio_add_character (&current_character, wtext[i]);
       i++;
     }
   free (wtext);
@@ -565,13 +565,13 @@ The two functions called when lex returns a style, we simply add it. All the com
 void
 add_style(unsigned char style) 
 {
-  libgregorio_begin_style(&current_character, style);
+  gregorio_begin_style(&current_character, style);
 }
 
 void
 end_style(unsigned char style) 
 {
-  libgregorio_end_style(&current_character, style);
+  gregorio_end_style(&current_character, style);
 }
 
 /*
@@ -786,7 +786,7 @@ end_style_determination ()
   unsigned char false_middle = 0;
   unsigned char center_type = 0; // determining the type of centering (forced or not)
   // so, here we start: we go to the first_character
-  libgregorio_go_to_first_character(&current_character);
+  gregorio_go_to_first_character(&current_character);
   // we first loop to see if there is already a center determined
   if (center_is_determined == 0)
     {
@@ -810,7 +810,7 @@ end_style_determination ()
 	    }
       // then, the second case is if the user has'nt determined the middle, and we have only seen vowels so far (else center_is_determined would be DETERMINING_MIDDLE). The current_character is the first vowel, so we start the center here.
 	  if (!center_is_determined
-	      && libgregorio_is_vowel (current_character->cos.character))
+	      && gregorio_is_vowel (current_character->cos.character))
 	    {
 	      if (current_character->cos.character == L'i'
 		  || current_character->cos.character == L'u')
@@ -821,7 +821,7 @@ end_style_determination ()
 		    {
 		      if (temp->is_character)
 			{
-			 if (libgregorio_is_vowel (temp->cos.character))
+			 if (gregorio_is_vowel (temp->cos.character))
 			  {
 			    false_middle = 1;
 			    break;
@@ -847,7 +847,7 @@ end_style_determination ()
 	    }
           // the case where the user has not determined the middle and we are in the middle section of the syllable, but there we encounter something that is not a vowel, so the center ends there.
 	  if (center_is_determined == DETERMINING_MIDDLE
-	      && !libgregorio_is_vowel (current_character->cos.character))
+	      && !gregorio_is_vowel (current_character->cos.character))
 	    {
 	      end_center (center_type)
 	      center_is_determined = FULLY_DETERMINED;
@@ -984,7 +984,7 @@ end_style_determination ()
 // these last lines are for the case where the user didn't tell anything about the middle and there aren't any vowel in the syllable, so we begin the center before the first character (you can notice that there is no problem of style).
   if (!center_is_determined)
     {
-      libgregorio_go_to_first_character (&current_character);
+      gregorio_go_to_first_character (&current_character);
       insert_style_before (ST_T_BEGIN, ST_CENTER);
     }
 // well.. you're quite brave if you reach this comment.
@@ -1019,7 +1019,7 @@ number_of_voices_definition:
 	snprintf(error, 40, _("can't define %d voices, maximum is %d"), number_of_voices, MAX_NUMBER_OF_VOICES);
 	gregorio_message(error,"libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_score_number_of_voices (score, number_of_voices);
+	gregorio_set_score_number_of_voices (score, number_of_voices);
 	}
 
 name_definition:
@@ -1030,7 +1030,7 @@ name_definition:
 	if (score->name) {
 	gregorio_message(_("several name definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING, 0);
 	}
-	libgregorio_set_score_name (score, $2);
+	gregorio_set_score_name (score, $2);
 	}
 	;
 
@@ -1039,7 +1039,7 @@ lilypond_preamble_definition:
 	if (score->lilypond_preamble) {
 	gregorio_message(_("several lilypond preamble definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_score_lilypond_preamble (score, $2);
+	gregorio_set_score_lilypond_preamble (score, $2);
 	}
 	;
 
@@ -1048,7 +1048,7 @@ opustex_preamble_definition:
 	if (score->opustex_preamble) {
 	gregorio_message(_("several OpusTeX preamble definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_score_opustex_preamble (score, $2);
+	gregorio_set_score_opustex_preamble (score, $2);
 	}
 	;
 
@@ -1057,7 +1057,7 @@ musixtex_preamble_definition:
 	if (score->musixtex_preamble) {
 	gregorio_message(_("several MusiXTeX preamble definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_score_musixtex_preamble (score, $2);
+	gregorio_set_score_musixtex_preamble (score, $2);
 	}
 	;
 
@@ -1075,7 +1075,7 @@ office_part_definition:
 	if (score->office_part) {
 	gregorio_message(_("several office part definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_score_office_part (score, $2);
+	gregorio_set_score_office_part (score, $2);
 	}
 	;
 
@@ -1109,7 +1109,7 @@ initial_key_definition:
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
 	set_clef($2);
-	libgregorio_set_voice_initial_key (current_voice_info, clef);
+	gregorio_set_voice_initial_key (current_voice_info, clef);
 	}
 	;
 
@@ -1119,7 +1119,7 @@ anotation_definition:
 	snprintf(error,99,_("several definitions of anotation found for voice %d, only the last will be taken into consideration"),voice);
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_voice_anotation (current_voice_info, $2);
+	gregorio_set_voice_anotation (current_voice_info, $2);
 	}
 	;
 
@@ -1129,7 +1129,7 @@ author_definition:
 	snprintf(error,99,_("several definitions of author found for voice %d, only the last will be taken into consideration"),voice);
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_voice_author (current_voice_info, $2);
+	gregorio_set_voice_author (current_voice_info, $2);
 	}
 	;
 
@@ -1139,7 +1139,7 @@ date_definition:
 	snprintf(error,99,_("several definitions of date found for voice %d, only the last will be taken into consideration"),voice);
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_voice_date (current_voice_info, $2);
+	gregorio_set_voice_date (current_voice_info, $2);
 	}
 	;
 
@@ -1149,7 +1149,7 @@ manuscript_definition:
 	snprintf(error,99,_("several definitions of manuscript found for voice %d, only the last will be taken into consideration"),voice);
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_voice_manuscript (current_voice_info, $2);
+	gregorio_set_voice_manuscript (current_voice_info, $2);
 	}
 	;
 
@@ -1159,7 +1159,7 @@ reference_definition:
 	snprintf(error,99,_("several definitions of reference found for voice %d, only the last will be taken into consideration"),voice);
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_voice_reference (current_voice_info, $2);
+	gregorio_set_voice_reference (current_voice_info, $2);
 	}
 	;
 
@@ -1169,7 +1169,7 @@ storage_place_definition:
 	snprintf(error,105,_("several definitions of storage place found for voice %d, only the last will be taken into consideration"),voice);
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_voice_storage_place (current_voice_info, $2);
+	gregorio_set_voice_storage_place (current_voice_info, $2);
 	}
 	;
 
@@ -1179,7 +1179,7 @@ translator_definition:
 	snprintf(error,99,_("several definitions of translator found for voice %d, only the last will be taken into consideration"),voice);
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_voice_translator (current_voice_info, $2);
+	gregorio_set_voice_translator (current_voice_info, $2);
 	//free($2);
 	}
 	;
@@ -1190,7 +1190,7 @@ translation_date_definition:
 	snprintf(error,105,_("several definitions of translation date found for voice %d, only the last will be taken into consideration"),voice);
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_voice_translation_date (current_voice_info, $2);
+	gregorio_set_voice_translation_date (current_voice_info, $2);
 	}
 	;
 
@@ -1200,7 +1200,7 @@ style_definition:
 	snprintf(error,99,_("several definitions of style found for voice %d, only the last will be taken into consideration"),voice);
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_voice_style (current_voice_info, $2);
+	gregorio_set_voice_style (current_voice_info, $2);
 	}
 	;
 
@@ -1210,7 +1210,7 @@ virgula_position_definition:
 	snprintf(error,105,_("several definitions of virgula position found for voice %d, only the last will be taken into consideration"),voice);
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	libgregorio_set_voice_virgula_position (current_voice_info, $2);
+	gregorio_set_voice_virgula_position (current_voice_info, $2);
 	}
 	;
 
@@ -1410,7 +1410,7 @@ style_end:
 
 character:
 	CHARACTERS {
-	libgregorio_add_text($1, &current_character);
+	gregorio_add_text($1, &current_character);
 	}
 	|
 	style_beginning
@@ -1437,7 +1437,7 @@ translation:
 syllable_with_notes:
 	text OPENING_BRACKET notes {
 	end_style_determination ();
-    libgregorio_go_to_first_character(&current_character);
+    gregorio_go_to_first_character(&current_character);
     first_text_character = current_character;
 	close_syllable();
 	}
