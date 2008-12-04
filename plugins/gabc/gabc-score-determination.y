@@ -562,12 +562,16 @@ The two functions called when lex returns a style, we simply add it. All the com
 
 */
 
-void add_style(unsigned char style) {
-libgregorio_begin_style(&current_character, style);
+void
+add_style(unsigned char style) 
+{
+  libgregorio_begin_style(&current_character, style);
 }
 
-void end_style(unsigned char style) {
-libgregorio_end_style(&current_character, style);
+void
+end_style(unsigned char style) 
+{
+  libgregorio_end_style(&current_character, style);
 }
 
 /*
@@ -590,7 +594,8 @@ next the macro called when we have determined that we must end the center here :
 
 */
 
-#define end_center() while (current_style)\
+// type is ST_CENTER or ST_FORCED_CENTER
+#define end_center(type) while (current_style)\
 	    {\
 	      close_style ()\
 	if (current_style->next_style) {\
@@ -600,7 +605,7 @@ next the macro called when we have determined that we must end the center here :
 	break;\
 	}\
 	    }\
-	  insert_style_before (ST_T_END, ST_CENTER);\
+	  insert_style_before (ST_T_END, type);\
 	  while (current_style)\
 	    {\
 	      insert_style_before (ST_T_BEGIN, current_style->style);\
@@ -616,7 +621,7 @@ next the macro called when we have determined that we must end the center here :
 about the same, but adding a {
 */
 
-#define begin_center() while (current_style)\
+#define begin_center(type) while (current_style)\
 	    {\
 	      close_style ()\
 	if (current_style->next_style) {\
@@ -626,7 +631,7 @@ about the same, but adding a {
 	break;\
 	}\
 	    }\
-	  insert_style_before (ST_T_BEGIN, ST_CENTER);\
+	  insert_style_before (ST_T_BEGIN, type);\
 	  while (current_style)\
 	    {\
 	      insert_style_before (ST_T_BEGIN, current_style->style);\
@@ -683,23 +688,23 @@ This is the macro that will determine the center, etc. for the first
 */
 
 #define first_syllable()	  switch (first_letter) {\
-case FIRST_LETTER:\
-first_letter=SECOND_LETTER;\
-break;\
-case SECOND_LETTER:\
-begin_center ()\
-center_is_determined = DETERMINING_MIDDLE;\
-first_letter=THIRD_LETTER;\
-break;\
-case THIRD_LETTER:\
-end_center ()\
-first_letter=0;\
-center_is_determined = FULLY_DETERMINED;\
-break;\
-default:\
-first_letter=0;\
-break;\
-}
+  case FIRST_LETTER:\
+    first_letter=SECOND_LETTER;\
+  break;\
+  case SECOND_LETTER:\
+    begin_center (center_type)\
+    center_is_determined = DETERMINING_MIDDLE;\
+    first_letter=THIRD_LETTER;\
+  break;\
+  case THIRD_LETTER:\
+    end_center (center_type)\
+    first_letter=0;\
+    center_is_determined = FULLY_DETERMINED;\
+  break;\
+  default:\
+    first_letter=0;\
+  break;\
+  }
 
 /*
 
@@ -779,8 +784,18 @@ end_style_determination ()
   unsigned char this_style;
   // a char that will be useful for the determination of iota and digamma
   unsigned char false_middle = 0;
+  unsigned char center_type = 0; // determining the type of centering (forced or not)
   // so, here we start: we go to the first_character
   libgregorio_go_to_first_character(&current_character);
+  // we first loop to see if there is already a center determined
+  if (center_is_determined == 0)
+    {
+      center_type = ST_CENTER;
+    }
+  else
+    {
+      center_type = ST_FORCED_CENTER;
+    }
   // we loop until there isn't any character
   while (current_character)
     {
@@ -826,7 +841,7 @@ end_style_determination ()
 		  // remember? this macro has a continue; in it
 		  end_c ()
 		}
-	      begin_center ()
+	      begin_center (center_type)
 	      center_is_determined = DETERMINING_MIDDLE;
 	      end_c ()
 	    }
@@ -834,7 +849,7 @@ end_style_determination ()
 	  if (center_is_determined == DETERMINING_MIDDLE
 	      && !libgregorio_is_vowel (current_character->cos.character))
 	    {
-	      end_center ()
+	      end_center (center_type)
 	      center_is_determined = FULLY_DETERMINED;
 	    }
 	  // in the case where it is just a normal character... we simply pass.
@@ -844,7 +859,8 @@ end_style_determination ()
 // there starts the second part of the function that deals with the styles characters
 
       if (current_character->cos.s.type == ST_T_BEGIN
-	  && current_character->cos.s.style != ST_CENTER)
+	  && current_character->cos.s.style != ST_CENTER
+	  && current_character->cos.s.style != ST_FORCED_CENTER)
 	{
       // first, if it it the beginning of a style, which is not center. We check if the style is not already in the stack. If it is the case, we suppress the character and pass (with the good macro)
 	  while (current_style
@@ -864,18 +880,28 @@ end_style_determination ()
 	}
       // if it is a beginning of a center, we call the good macro and end.
       if (current_character->cos.s.type == ST_T_BEGIN
-	  && current_character->cos.s.style == ST_CENTER)
+	  && (current_character->cos.s.style == ST_CENTER
+	  || current_character->cos.s.style == ST_FORCED_CENTER))
 	{
+	  if (current_character->cos.s.style == ST_CENTER)
+	    {
+	      center_type = ST_CENTER;
+	    }
+	  else
+	    {
+	      center_type = ST_FORCED_CENTER;
+	    }
 	  if (center_is_determined)
 	    {
 	      end_c ()
 	    }
 	  //center_is_determined = DETERMINING_MIDDLE; // TODO: not really sure, but shouldn't be there
-	  begin_center ()
+	  begin_center (center_type)
 	  end_c ()
 	}
       if (current_character->cos.s.type == ST_T_END
-	  && current_character->cos.s.style != ST_CENTER)
+	  && current_character->cos.s.style != ST_CENTER
+	  && current_character->cos.s.style != ST_FORCED_CENTER)
 	{
 	  // the case of the end of a style (the most complex). First, we have to see if the style is in the stack. If there is no stack, we just suppress and continue.
 	  if (!current_style)
@@ -953,7 +979,7 @@ end_style_determination ()
 //current_character is at the end of the list now, so if we havn't closed the center, we do it at the end.
   if (center_is_determined != FULLY_DETERMINED)
     {
-      insert_style_after (ST_T_END, ST_CENTER);
+      insert_style_after (ST_T_END, center_type);
     }
 // these last lines are for the case where the user didn't tell anything about the middle and there aren't any vowel in the syllable, so we begin the center before the first character (you can notice that there is no problem of style).
   if (!center_is_determined)
@@ -1343,7 +1369,7 @@ style_beginning:
 	}
 	|
 	CENTER_BEGINNING {if (!center_is_determined) {
-	add_style(ST_CENTER);
+	add_style(ST_FORCED_CENTER);
 	center_is_determined=HALF_DETERMINED;
 	}
 	}
@@ -1376,7 +1402,7 @@ style_end:
 	|
 	CENTER_END {
 	if (center_is_determined==HALF_DETERMINED) {
-	  end_style(ST_CENTER);
+	  end_style(ST_FORCED_CENTER);
 	  center_is_determined=FULLY_DETERMINED;
 	}
 	}

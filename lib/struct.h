@@ -131,6 +131,7 @@ The we define the characters. First we define the different styles. You can noti
 #define ST_NO_STYLE 0
 #define ST_ITALIC 1
 #define ST_CENTER 6
+#define ST_FORCED_CENTER 8 // when the user types a {}, basically the same behaviour, except for the initial
 #define ST_BOLD 2
 #define ST_TT 3
 #define ST_SMALL_CAPS 7

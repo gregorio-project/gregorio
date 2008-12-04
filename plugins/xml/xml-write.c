@@ -262,6 +262,7 @@ libgregorio_xml_write_begin (FILE * f, unsigned char style)
     case ST_BOLD:
       fprintf (f, "<bold>");
       break;
+    case ST_FORCED_CENTER:
     case ST_CENTER:
       fprintf (f, "<center>");
       break;
@@ -292,6 +293,7 @@ libgregorio_xml_write_end (FILE * f, unsigned char style)
     case ST_BOLD:
       fprintf (f, "</bold>");
       break;
+    case ST_FORCED_CENTER:
     case ST_CENTER:
       fprintf (f, "</center>");
       break;

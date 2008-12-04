@@ -508,6 +508,7 @@ libgregorio_gtex_write_begin (FILE * f, unsigned char style)
     case ST_BOLD:
       fprintf (f, "\\greboldfont{");
       break;
+    case ST_FORCED_CENTER:
     case ST_CENTER:
       fprintf (f, "}{");
       break;
@@ -524,6 +525,7 @@ libgregorio_gtex_write_end (FILE * f, unsigned char style)
 {
   switch (style)
     {
+    case ST_FORCED_CENTER:
     case ST_CENTER:
       fprintf (f, "}{");
       break;
@@ -709,7 +711,8 @@ libgregorio_gregoriotex_write_next_first_text (FILE * f,
   while (current_character)
     {
       if (current_character->is_character == 0
-	  && current_character->cos.s.style == ST_CENTER
+	  && (current_character->cos.s.style == ST_CENTER
+	  || current_character->cos.s.style == ST_FORCED_CENTER)
 	  && current_character->cos.s.type == ST_T_END)
 	{
 	  next_character = current_character->next_character;

@@ -1689,7 +1689,8 @@ libgregorio_write_text (char type, gregorio_character * current_character,
       while (current_character)
 	{
 	  if (!current_character->is_character
-	      && current_character->cos.s.style == ST_CENTER)
+	      && (current_character->cos.s.style == ST_CENTER
+	      || current_character->cos.s.style == ST_FORCED_CENTER))
 	    {
 	      break;
 	    }
@@ -1727,6 +1728,8 @@ libgregorio_write_text (char type, gregorio_character * current_character,
     }
 }
 
+
+// the default behaviour is to write only the first character, except if there is a forced center somewhere. In this case we take all the letters until this forced center.
 void
 libgregorio_write_first_letter (gregorio_character * current_character,
 				FILE * f, void (*printverb) (FILE *,
@@ -1739,11 +1742,29 @@ libgregorio_write_first_letter (gregorio_character * current_character,
   int i, j;
   wchar_t *text;
   gregorio_character *begin_character;
+  // a char indicating if there is a forced center somewhere
+  unsigned char forced_center = 0;
+  // we start by looping over the characters to see if there is a forced space somewhere:
+  while (current_character->next_character)
+    {
+      if (!current_character->is_character
+          && current_character->cos.s.style == ST_FORCED_CENTER)
+        {
+          forced_center = 1;
+          break;
+        }
+      current_character = current_character->next_character;
+    }
+  libgregorio_go_to_first_character(&current_character);
   while (current_character)
     {
       if (current_character->is_character)
 	{
 	  printchar (f, current_character->cos.character);
+	  if (forced_center == 0)
+	    {
+	      break;
+	    }
 	}
       else
 	{
@@ -1751,13 +1772,24 @@ libgregorio_write_first_letter (gregorio_character * current_character,
 	    {
 	      switch (current_character->cos.s.style)
 		{
-		case ST_CENTER:		  
+		case ST_CENTER:
+		case ST_FORCED_CENTER:	  
 		  return;
 		  break;
 		case ST_VERBATIM:
-		  verb_or_sp (ST_VERBATIM, printverb) break;
+		  verb_or_sp (ST_VERBATIM, printverb);
+		  if (forced_center == 0)
+	        {
+	          return;
+	        }
+		  break;
 		case ST_SPECIAL_CHAR:
-		  verb_or_sp (ST_SPECIAL_CHAR, printspchar) break;
+		  verb_or_sp (ST_SPECIAL_CHAR, printspchar);
+		  if (forced_center == 0)
+	        {
+	          return;
+	        }
+		  break;
 		default:
 		  begin (f, current_character->cos.s.style);
 		  break;

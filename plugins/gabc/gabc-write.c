@@ -226,7 +226,7 @@ libgregorio_gabc_write_begin (FILE * f, unsigned char style)
     case ST_BOLD:
       fprintf (f, "<b>");
       break;
-    case ST_CENTER:
+    case ST_FORCED_CENTER:
       fprintf (f, "{");
       break;
     case ST_TT:
@@ -257,7 +257,7 @@ libgregorio_gabc_write_end (FILE * f, unsigned char style)
     case ST_BOLD:
       fprintf (f, "</b>");
       break;
-    case ST_CENTER:
+    case ST_FORCED_CENTER:
       fprintf (f, "}");
       break;
     case ST_TT:

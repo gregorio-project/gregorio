@@ -43,7 +43,7 @@ gregorio_glyph *libgregorio_gabc_det_glyphs_from_notes (gregorio_note *current_n
 #define DET_END_OF_BOTH 'D'
 
 // defines the maximal interval between two notes of the same glyph
-#define MAX_INTERVAL 4
+#define MAX_INTERVAL 5
 
 // functions to write gabc
 void write_score (FILE * f, gregorio_score * score);
