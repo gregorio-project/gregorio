@@ -27,6 +27,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <wchar.h>
 #include <string.h>
 #include "opustex.h"
+#include "plugin.h"
+
+DECLARE_PLUGIN(opustex)
+{
+  .id = "otex",
+  .name = "opustex",
+  .description = "OpusTeX output plugin",
+  .author = "Elie Roux <elie.roux@enst-bretagne.fr>",
+
+  .file_extension = "tex",
+
+  .type = GREGORIO_PLUGIN_OUTPUT,
+
+  .write = write_score
+};
 
 int i;
 int clef;
