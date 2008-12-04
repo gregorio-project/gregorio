@@ -70,7 +70,7 @@ gregorio_add_note (gregorio_note ** current_note, char pitch, char shape,
       (*current_note)->next_note = element;
     }
   *current_note = element;
-  libgregorio_mix_h_episemus (*current_note, h_episemus_type);
+  gregorio_mix_h_episemus (*current_note, h_episemus_type);
 }
 
 
@@ -969,7 +969,7 @@ gregorio_set_voice_virgula_position (gregorio_voice_info * voice_info,
  * 
  *********************************/
 void
-libgregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
+gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
 {
   int i;
   gregorio_note *tmp = current_note;
@@ -1081,7 +1081,7 @@ gregorio_determine_good_top_notes (gregorio_note * current_note)
  *********************************/
 
 void
-libgregorio_mix_h_episemus (gregorio_note * current_note, char type)
+gregorio_mix_h_episemus (gregorio_note * current_note, char type)
 {
   gregorio_note *prev_note = NULL;
   if (current_note)
@@ -1206,7 +1206,7 @@ gregorio_determine_h_episemus_type (gregorio_note * note)
  *********************************/
 
 char
-libgregorio_det_shape (char pitch)
+gregorio_det_shape (char pitch)
 {
   if (pitch < 'a')
     {

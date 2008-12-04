@@ -143,196 +143,196 @@ r5	{
 	lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTA,H_NO_EPISEMUS);
 		}
 _ 	{
-	libgregorio_activate_isolated_h_episemus (current_note, 1);
+	gregorio_activate_isolated_h_episemus (current_note, 1);
 	}
 __ 	{
-	libgregorio_activate_isolated_h_episemus (current_note, 2);
+	gregorio_activate_isolated_h_episemus (current_note, 2);
 	}
 ___ 	{
-	libgregorio_activate_isolated_h_episemus (current_note, 3);
+	gregorio_activate_isolated_h_episemus (current_note, 3);
 	}
 ____ 	{
-	libgregorio_activate_isolated_h_episemus (current_note, 4);
+	gregorio_activate_isolated_h_episemus (current_note, 4);
 	}
 [a-mA-M]        {
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
 		}
 [a-mA-M]'       {
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
 		}
 [a-mA-M]\.\.    {
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
 		}
 [a-mA-M]\.      {
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
 		}
 [a-mA-M](\.'|'\.)  {
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
 		}
 [a-mA-M](\.\.'|'\.\.) {
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
 		}
 [a-mA-M]_       {
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_NO_LIQUESCENTIA,H_ONE);
 		}
 [a-mA-M](\.\._|_\.\.) {
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
 		}
 [a-mA-M](\._|_\.) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
 		}
 [a-mA-M]('_|_') { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_NO_LIQUESCENTIA,H_ONE);
 		}
 [a-mA-M](_\.'|_'\.|\._'|'_\.|\.'_|'\._)  { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_NO_LIQUESCENTIA,H_ONE);
 		}
 [a-mA-M](_\.\.'|_'\.\.|\.\._'|'_\.\.|\.\.'_|'\.\._) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
 		}
 [a-mA-M]~         { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]),_NO_SIGN, L_DEMINUTUS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]),_NO_SIGN, L_DEMINUTUS,H_NO_EPISEMUS);
 		}
 [a-mA-M]('~|~') { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_DEMINUTUS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_DEMINUTUS,H_NO_EPISEMUS);
 		}
 [a-mA-M](\.\.~|~\.\.) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_DEMINUTUS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_DEMINUTUS,H_NO_EPISEMUS);
 		}
 [a-mA-M](\.~|~\.) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_DEMINUTUS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_DEMINUTUS,H_NO_EPISEMUS);
 		}
 [a-mA-M](~\.'|~'\.|\.~'|'~\.|\.'~|'\.~) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_DEMINUTUS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_DEMINUTUS,H_NO_EPISEMUS);
 		}
 [a-mA-M](~\.\.'|~'\.\.|\.\.~'|'~\.\.|\.\.'~|'\.\.~) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_DEMINUTUS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_DEMINUTUS,H_NO_EPISEMUS);
 		}
 [a-mA-M]_~         { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_DEMINUTUS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_DEMINUTUS,H_ONE);
 		}
 [a-mA-M](~'_|~_'|'~_|_~'|'_~|_'~) {
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_DEMINUTUS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_DEMINUTUS,H_ONE);
 		}
 [a-mA-M](~\.\._|~_\.\.|\.\.~_|_~\.\.|\.\._~|_\.\.~) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_DEMINUTUS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_DEMINUTUS,H_ONE);
 		}
 [a-mA-M](~\._|~_\.|\.~_|_~\.|\._~|_\.~) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_DEMINUTUS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_DEMINUTUS,H_ONE);
 		}
 [a-mA-M](~_\.'|~_'\.|~\._'|~'_\.|~\.'_|~'\._|_~\.'|_~'\.|\.~_'|'~_\.|\.~'_|'~\._|_\.~'|_'~\.|\._~'|'_~\.|\.'~_|'\.~_|_\.'~|_'\.~|\._'~|'_\.~|\.'_~|'\._~)  { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]),_V_EPISEMUS_PUNCTUM_MORA, L_DEMINUTUS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]),_V_EPISEMUS_PUNCTUM_MORA, L_DEMINUTUS,H_ONE);
 		}
 [a-mA-M](~_\.\.'|~_'\.\.|~\.\._'|~'_\.\.|~\.\.'_|~'\.\._|_~\.\.'|_~'\.\.|\.\.~_'|'~_\.\.|\.\.~'_|'~\.\._|_\.\.~'|_'~\.\.|\.\._~'|'_~\.\.|\.\.'~_|'\.\.~_|_\.\.'~|_'\.\.~|\.\._'~|'_\.\.~|\.\.'_~|'\.\._~) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_DEMINUTUS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_DEMINUTUS,H_ONE);
 		}
 [a-mA-M]\>         { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
 		}
 [a-mA-M]('\>|\>') { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]),_V_EPISEMUS, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]),_V_EPISEMUS, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
 		}
 [a-mA-M](\.\.\>|\>\.\.) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
 		}
 [a-mA-M](\.\>|\>\.) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
 		}
 [a-mA-M](\>\.'|\>'\.|\.\>'|'\>\.|\.'\>|'\.\>) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]),_V_EPISEMUS_PUNCTUM_MORA, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]),_V_EPISEMUS_PUNCTUM_MORA, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
 		}
 [a-mA-M](\>\.\.'|\>'\.\.|\.\.\>'|'\>\.\.|\.\.'\>|'\.\.\>) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]),_V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]),_V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTUS_DESCENDENS,H_NO_EPISEMUS);
 		}
 [a-mA-M](_\>|\>_)         { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_AUCTUS_DESCENDENS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_AUCTUS_DESCENDENS,H_ONE);
 		}
 [a-mA-M](\>'_|\>_'|'\>_|_\>'|'_\>|_'\>) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_AUCTUS_DESCENDENS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_AUCTUS_DESCENDENS,H_ONE);
 		}
 [a-mA-M](\>\.\._|\>_\.\.|\.\.\>_|_\>\.\.|\.\._\>|_\.\.\>) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_AUCTUS_DESCENDENS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_AUCTUS_DESCENDENS,H_ONE);
 		}
 [a-mA-M](\>\._|\>_\.|\.\>_|_\>\.|\._\>|_\.\>) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_AUCTUS_DESCENDENS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_AUCTUS_DESCENDENS,H_ONE);
 		}
 [a-mA-M](\>_\.'|\>_'\.|\>\._'|\>'_\.|\>\.'_|\>'\._|_\>\.'|_\>'\.|\.\>_'|'\>_\.|\.\>'_|'\>\._|_\.\>'|_'\>\.|\._\>'|'_\>\.|\.'\>_|'\.\>_|_\.'\>|_'\.\>|\._'\>|'_\.\>|\.'_\>|'\._\>)  { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_AUCTUS_DESCENDENS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_AUCTUS_DESCENDENS,H_ONE);
 		}
 [a-mA-M](\>_\.\.'|\>_'\.\.|\>\.\._'|\>'_\.\.|\>\.\.'_|\>'\.\._|_\>\.\.'|_\>'\.\.|\.\.\>_'|'\>_\.\.|\.\.\>'_|'\>\.\._|_\.\.\>'|_'\>\.\.|\.\._\>'|'_\>\.\.|\.\.'\>_|'\.\.\>_|_\.\.'\>|_'\.\.\>|\.\._'\>|'_\.\.\>|\.\.'_\>|'\.\._\>) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTUS_DESCENDENS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTUS_DESCENDENS,H_ONE);
 		}
 [a-mA-M]\< { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
 		}
 [a-mA-M]('\<|\<') { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
 		}
 [a-mA-M](\.\.\<|\<\.\.) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
 		}
 [a-mA-M](\.\<|\<\.) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
 		}
 [a-mA-M](\<\.'|\<'\.|\.\<'|'\<\.|\.'\<|'\.\<) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
 		}
 [a-mA-M](\<\.\.'|\<'\.\.|\.\.\<'|'\<\.\.|\.\.'\<|'\.\.\<) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTUS_ASCENDENS,H_NO_EPISEMUS);
 		}
 [a-mA-M](_\<|\<_) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_AUCTUS_ASCENDENS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _NO_SIGN, L_AUCTUS_ASCENDENS,H_ONE);
 		}
 [a-mA-M](\<\.\._|\<_\.\.|\.\.\<_|_\<\.\.|\.\._\<|_\.\.\<) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_AUCTUS_ASCENDENS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _AUCTUM_DUPLEX, L_AUCTUS_ASCENDENS,H_ONE);
 		}
 [a-mA-M](\<'_|\<_'|'\<_|_\<'|'_\<|_'\<) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_AUCTUS_ASCENDENS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS, L_AUCTUS_ASCENDENS,H_ONE);
 		}
 [a-mA-M](\<\._|\<_\.|\.\<_|_\<\.|\._\<|_\.\<) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_AUCTUS_ASCENDENS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _PUNCTUM_MORA, L_AUCTUS_ASCENDENS,H_ONE);
 		}
 [a-mA-M](\<_\.'|\<_'\.|\<\._'|\<'_\.|\<\.'_|\<'\._|_\<\.'|_\<'\.|\.\<_'|'\<_\.|\.\<'_|'\<\._|_\.\<'|_'\<\.|\._\<'|'_\<\.|\.'\<_|'\.\<_|_\.'\<|_'\.\<|\._'\<|'_\.\<|\.'_\<|'\._\<)  { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_AUCTUS_ASCENDENS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_PUNCTUM_MORA, L_AUCTUS_ASCENDENS,H_ONE);
 		}
 [a-mA-M](\<_\.\.'|\<_'\.\.|\<\.\._'|\<'_\.\.|\<\.\.'_|\<'\.\._|_\<\.\.'|_\<'\.\.|\.\.\<_'|'\<_\.\.|\.\.\<'_|'\<\.\._|_\.\.\<'|_'\<\.\.|\.\._\<'|'_\<\.\.|\.\.'\<_|'\.\.\<_|_\.\.'\<|_'\.\.\<|\.\._'\<|'_\.\.\<|\.\.'_\<|'\.\._\<) { 
-	lex_add_note(0, libgregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTUS_ASCENDENS,H_ONE);
+	lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]), _V_EPISEMUS_AUCTUM_DUPLEX, L_AUCTUS_ASCENDENS,H_ONE);
 		}
 -[a-mA-M] { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _NO_SIGN, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _NO_SIGN, L_INITIO_DEBILIS,H_NO_EPISEMUS);
 		}
 -[a-mA-M]' { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS, L_INITIO_DEBILIS,H_NO_EPISEMUS);
 		}
 -[a-mA-M]\.\. { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_NO_EPISEMUS);
 		}
 -[a-mA-M]\. { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _PUNCTUM_MORA, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _PUNCTUM_MORA, L_INITIO_DEBILIS,H_NO_EPISEMUS);
 		}
 -[a-mA-M](\.'|'\.) { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_PUNCTUM_MORA, L_INITIO_DEBILIS,H_NO_EPISEMUS);;
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_PUNCTUM_MORA, L_INITIO_DEBILIS,H_NO_EPISEMUS);;
 		}
 -[a-mA-M](\.\.'|'\.\.) { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_NO_EPISEMUS);
 		}
 -[a-mA-M]_ { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _NO_SIGN, L_INITIO_DEBILIS,H_ONE);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _NO_SIGN, L_INITIO_DEBILIS,H_ONE);
 		}
 -[a-mA-M]('_|_') { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]),_V_EPISEMUS, L_INITIO_DEBILIS,H_ONE);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]),_V_EPISEMUS, L_INITIO_DEBILIS,H_ONE);
 		}
 -[a-mA-M](\.\._|_\.\.) { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]),_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_ONE);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]),_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_ONE);
 		}
 -[a-mA-M](\._|_\.) { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _PUNCTUM_MORA, L_INITIO_DEBILIS,H_ONE);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _PUNCTUM_MORA, L_INITIO_DEBILIS,H_ONE);
 		}
 -[a-mA-M](_\.'|_'\.|\._'|'_\.|\.'_|'\._) { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_PUNCTUM_MORA, L_INITIO_DEBILIS,H_ONE);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_PUNCTUM_MORA, L_INITIO_DEBILIS,H_ONE);
 		}
 -[a-mA-M](_\.\.'|_'\.\.|\.\._'|'_\.\.|\.\.'_|'\.\._) { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_ONE);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_ONE);
 		}
 [a-mA-M]q         { 
 	lex_add_note(0, S_QUADRATUM, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
@@ -371,40 +371,40 @@ ____ 	{
 	lex_add_note(0, S_QUADRATUM, _V_EPISEMUS_AUCTUM_DUPLEX, L_NO_LIQUESCENTIA,H_ONE);
 		}
 -[a-mA-M]q         { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _NO_SIGN, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _NO_SIGN, L_INITIO_DEBILIS,H_NO_EPISEMUS);
 		}
 -[a-mA-M]('q|q') {
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS, L_INITIO_DEBILIS,H_NO_EPISEMUS);
 		}
 -[a-mA-M](\.\.q|q\.\.) {
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_NO_EPISEMUS);
 		}
 -[a-mA-M](\.q|q\.) {
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _PUNCTUM_MORA, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _PUNCTUM_MORA, L_INITIO_DEBILIS,H_NO_EPISEMUS);
 		}
 -[a-mA-M](q\.'|q'\.|\.q'|'q\.|\.'q|'\.q) {
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_PUNCTUM_MORA, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_PUNCTUM_MORA, L_INITIO_DEBILIS,H_NO_EPISEMUS);
 		}
 -[a-mA-M](q\.\.'|q'\.\.|\.\.q'|'q\.\.|\.\.'q|'\.\.q) {
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_NO_EPISEMUS);
 		}
 -[a-mA-M](_q|q_)         { 
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _NO_SIGN, L_INITIO_DEBILIS,H_ONE);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _NO_SIGN, L_INITIO_DEBILIS,H_ONE);
 		}
 -[a-mA-M](q'_|q_'|'q_|_q'|'_q|_'q) {
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS, L_INITIO_DEBILIS,H_ONE);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS, L_INITIO_DEBILIS,H_ONE);
 		}
 -[a-mA-M](q\.\._|q_\.\.|\.\.q_|_q\.\.|\.\._q|_\.\.q) {
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_ONE);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_ONE);
 		}
 -[a-mA-M](q\._|q_\.|\.q_|_q\.|\._q|_\.q) {
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _PUNCTUM_MORA, L_INITIO_DEBILIS,H_ONE);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _PUNCTUM_MORA, L_INITIO_DEBILIS,H_ONE);
 		}
 -[a-mA-M](q_\.'|q_'\.|q\._'|q'_\.|q\.'_|q'\._|_q\.'|_q'\.|\.q_'|'q_\.|\.q'_|'q\._|_\.q'|_'q\.|\._q'|'_q\.|\.'q_|'\.q_|_\.'q|_'\.q|\._'q|'_\.q|\.'_q|'\._q)  {
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_PUNCTUM_MORA, L_INITIO_DEBILIS,H_ONE);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_PUNCTUM_MORA, L_INITIO_DEBILIS,H_ONE);
 		}
 -[a-mA-M](q_\.\.'|q_'\.\.|q\.\._'|q'_\.\.|q\.\.'_|q'\.\._|_q\.\.'|_q'\.\.|\.\.q_'|'q_\.\.|\.\.q'_|'q\.\._|_\.\.q'|_'q\.\.|\.\._q'|'_q\.\.|\.\.'q_|'\.\.q_|_\.\.'q|_'\.\.q|\.\._'q|'_\.\.q|\.\.'_q|'\.\._q) {
-	lex_add_note(1, libgregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_ONE);
+	lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]), _V_EPISEMUS_AUCTUM_DUPLEX, L_INITIO_DEBILIS,H_ONE);
 		}
 [a-mA-M]o         {
 	lex_add_note(0, S_ORISCUS, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);

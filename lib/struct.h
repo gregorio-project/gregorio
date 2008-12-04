@@ -280,6 +280,9 @@ gregorio_score *gregorio_new_score();
 void
 gregorio_determine_h_episemus_type (gregorio_note * note);
 
+void gregorio_activate_isolated_h_episemus (gregorio_note *current_note, int n);
+void gregorio_mix_h_episemus (gregorio_note *current_note, char type);
+char gregorio_det_shape (char pitch);
 
 void gregorio_add_note(gregorio_note **current_note, char pitch, char shape, char signs, char liquescentia,char h_episemus);
 void gregorio_add_glyph (gregorio_glyph **current_glyph, char type, gregorio_note *first_note, char liquescentia);

@@ -22,9 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 // functions to read gabc
 gregorio_score * read_score (FILE * f);
-void libgregorio_activate_isolated_h_episemus (gregorio_note *current_note, int n);
-void libgregorio_mix_h_episemus (gregorio_note *current_note, char type);
-char libgregorio_det_shape (char pitch);
 
 gregorio_note *libgregorio_gabc_det_notes_from_string (char *str);
 gregorio_glyph * libgregorio_gabc_det_glyphs_from_string (char *str);
