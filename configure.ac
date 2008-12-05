@@ -24,6 +24,14 @@ AM_INIT_AUTOMAKE([foreign])
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.15])
 
+# libgregorio versioning
+LIBGREGORIO_CURRENT=0
+LIBGREGORIO_REVISION=0
+LIBGREGORIO_AGE=0
+AC_SUBST(LIBGREGORIO_CURRENT)
+AC_SUBST(LIBGREGORIO_REVISION)
+AC_SUBST(LIBGREGORIO_AGE)
+
 AC_PROG_CC
 AC_PROG_CPP
 AM_PROG_LEX
@@ -74,6 +82,7 @@ AC_CONFIG_FILES([
     plugins/gregoriotex/Makefile
     plugins/opustex/Makefile
     lib/Makefile
+    lib/gregorio.pc
     include/Makefile
     include/gregorio/Makefile
     examples/Makefile
