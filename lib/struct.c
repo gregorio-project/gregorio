@@ -35,14 +35,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 #include <stdio.h>
-#include <wchar.h>
 #include "gettext.h"
 #include <stdlib.h>
 #include <gregorio/struct.h>
+#include <gregorio/unicode.h>
 #include <gregorio/messages.h>
 #define _(str) gettext(str)
 #define N_(str) str
-
 
 void
 gregorio_add_note (gregorio_note ** current_note, char pitch, char shape,
@@ -346,35 +345,38 @@ gregorio_free_elements (gregorio_element ** element)
     }
 }
 
+/*
+
+This function converts a buffer of utf8 characters into a list of gregorio_character and adds it to the current_character.
+
+*/
+
 void
 gregorio_add_text (char *mbcharacters,
 		      gregorio_character ** current_character)
 {
-  size_t len;
-  wchar_t *wtext;
-  int i = 0;
-  if (mbcharacters == NULL)
+  if (!current_character) 
     {
       return;
     }
-  len = strlen (mbcharacters);	//to get the length of the syllable in ASCII
-  wtext = (wchar_t *) malloc ((len + 1) * sizeof (wchar_t));
-  mbstowcs (wtext, mbcharacters, (sizeof (wchar_t) * (len + 1)));	//converting into wchar_t
-  // then we get the real length of the syllable, in letters
-  len = wcslen (wtext);
-  wtext[len] = L'\0';
-  // we add the corresponding characters in the list of gregorio_characters
-  while (wtext[i])
+  if (*current_character)
     {
-      gregorio_add_character (current_character, wtext[i]);
-      i++;
+      (*current_character)->next_character = gregorio_build_char_list_from_buf(mbcharacters);
+      (*current_character)->next_character->previous_character = (*current_character);
     }
-  free (wtext);
+  else
+    {
+      *current_character = gregorio_build_char_list_from_buf(mbcharacters);
+    }
+  while ((*current_character) -> next_character)
+    {
+      (*current_character) = (*current_character) -> next_character;
+    }
 }
 
 void
 gregorio_add_character (gregorio_character ** current_character,
-			   wchar_t wcharacter)
+			   grewchar wcharacter)
 {
   gregorio_character *element =
     (gregorio_character *) malloc (sizeof (gregorio_character));
@@ -1590,9 +1592,9 @@ gregorio_is_only_special (gregorio_element * element)
 /* Here is a function that tests if a letter is a vowel or not */
 
 int
-gregorio_is_vowel (wchar_t letter)
+gregorio_is_vowel (grewchar letter)
 {
-  wchar_t vowels[] = { L'a', L'e', L'i', L'o', L'u', L'y', L'A', L'E',
+  grewchar vowels[] = { L'a', L'e', L'i', L'o', L'u', L'y', L'A', L'E',
     L'I', 'O', 'U', 'Y', L'œ', L'Œ', L'æ', L'Æ', L'ó', L'À', L'È',
     L'É', L'Ì', L'Í', L'Ý', L'Ò', L'Ó', L'è', L'é', L'ò', L'ú',
     L'ù', L'ý', L'á', L'à', L'ǽ', L'Ǽ', L'í', L'*'
@@ -1608,7 +1610,7 @@ gregorio_is_vowel (wchar_t letter)
   return 0;
 }
 
-// a macro that will be used for verbatim and special-characters in the next function, it calls function with a wchar_t * which is the verbatim or special-character. It places current_character to the character next to the end of the verbatim or special_char charachters.
+// a macro that will be used for verbatim and special-characters in the next function, it calls function with a grewchar * which is the verbatim or special-character. It places current_character to the character next to the end of the verbatim or special_char charachters.
 
 #define verb_or_sp(ST_TYPE, function) \
 		  i = 0;\
@@ -1636,7 +1638,7 @@ gregorio_is_vowel (wchar_t letter)
 		    {\
 		      break;\
 		    }\
-		  text = (wchar_t *) malloc ((i + 1) * sizeof (wchar_t));\
+		  text = (grewchar *) malloc ((i + 1) * sizeof (grewchar));\
 		  current_character = begin_character;\
 		  while (j < i)\
 		    {\
@@ -1669,13 +1671,13 @@ type may be 0, or SKIP_FIRST_SYLLABLE
 
 void
 gregorio_write_text (char type, gregorio_character * current_character,
-			FILE * f, void (*printverb) (FILE *, wchar_t *),
-			void (*printchar) (FILE *, wchar_t),
+			FILE * f, void (*printverb) (FILE *, grewchar *),
+			void (*printchar) (FILE *, grewchar),
 			void (*begin) (FILE *, unsigned char),
 			void (*end) (FILE *, unsigned char),
-			void (*printspchar) (FILE *, wchar_t *))
+			void (*printspchar) (FILE *, grewchar *))
 {
-  wchar_t *text;
+  grewchar *text;
   int i, j;
   gregorio_character *begin_character;
 
@@ -1732,14 +1734,14 @@ gregorio_write_text (char type, gregorio_character * current_character,
 void
 gregorio_write_first_letter (gregorio_character * current_character,
 				FILE * f, void (*printverb) (FILE *,
-							     wchar_t *),
-				void (*printchar) (FILE *, wchar_t),
+							     grewchar *),
+				void (*printchar) (FILE *, grewchar),
 				void (*begin) (FILE *, unsigned char),
 				void (*end) (FILE *, unsigned char),
-				void (*printspchar) (FILE *, wchar_t *))
+				void (*printspchar) (FILE *, grewchar *))
 {
   int i, j;
-  wchar_t *text;
+  grewchar *text;
   gregorio_character *begin_character;
   // a char indicating if there is a forced center somewhere
   unsigned char forced_center = 0;
@@ -1835,7 +1837,7 @@ gregorio_first_text (gregorio_score * score)
   return NULL;
 }
 
-wchar_t
+grewchar
 gregorio_first_letter (gregorio_score * score)
 {
   gregorio_syllable *current_syllable;

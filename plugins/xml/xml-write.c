@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _(str) gettext(str)
 #define N_(str) str
 #include <gregorio/struct.h>
+#include <gregorio/unicode.h>
 #include <gregorio/messages.h>
 
 #include "xml.h"
@@ -308,7 +309,7 @@ libgregorio_xml_write_end (FILE * f, unsigned char style)
 }
 
 void
-libgregorio_xml_write_special_char (FILE * f, wchar_t * special_char)
+libgregorio_xml_write_special_char (FILE * f, grewchar * special_char)
 {
   if (in_text)
     {
@@ -319,7 +320,7 @@ libgregorio_xml_write_special_char (FILE * f, wchar_t * special_char)
 }
 
 void
-libgregorio_xml_write_verb (FILE * f, wchar_t * verb_str)
+libgregorio_xml_write_verb (FILE * f, grewchar * verb_str)
 {
   if (in_text)
     {
@@ -330,7 +331,7 @@ libgregorio_xml_write_verb (FILE * f, wchar_t * verb_str)
 }
 
 void
-libgregorio_xml_print_char (FILE * f, wchar_t to_print)
+libgregorio_xml_print_char (FILE * f, grewchar to_print)
 {
   if (!in_text)
     {
@@ -625,7 +626,7 @@ libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
     }
 
   fprintf (f, "<score-attributes>");
-  if (!score->name || score->name == "")
+  if (!score->name)
     {
       gregorio_message (_
 			   ("score has no name attribute, which is mandatory"),

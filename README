@@ -49,9 +49,9 @@ INSTALL.
 USING the gregorio software:
 
 gregorio can handle several file types. To use the software for
-converting a gabc file into a OpusTeX file, simply do
+converting a gabc file into a GregorioTeX file, simply do
 
- $ gregorio -F otex myfile.gabc -o myfile.tex
+ $ gregorio myfile.gabc
 
 To see all the possible gregorio options, try
 

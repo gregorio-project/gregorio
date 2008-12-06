@@ -66,6 +66,19 @@ else
   AC_SUBST(XML_LIBS)
 fi
 
+AC_ARG_ENABLE(glib-utf8, 
+    [  --enable-glib-utf8 link with glib for the character system.\
+    This option is optional under Linux and MacOSX, but necessary under Windows.], 
+    [AC_DEFINE([GREGORIO_GLIB], [1], [Glib or OS-dependant wchar_t character system.])
+    AM_PATH_GLIB_2_0( 2.0.0, [], [AC_MSG_FAILURE([Glib not found])])
+    ], [AC_DEFINE([GREGORIO_GLIB], [0], [Glib or OS-dependant wchar_t character system.])
+    GLIB_LIBS=
+    AC_SUBST(GLIB_LIBS)
+    GLIB_CFLAGS=
+    AC_SUBST(GLIB_CFLAGS)
+    ])
+
+
 AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
 
 LIBTOOL_LIB=-lltdl

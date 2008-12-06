@@ -1,1 +1,1 @@
-pkginclude_HEADERS = struct.h messages.h plugin_loader.h plugin.h
+pkginclude_HEADERS = struct.h messages.h plugin_loader.h plugin.h unicode.h

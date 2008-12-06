@@ -26,8 +26,8 @@ This file is certainly not the most easy to understand, it is a bison file. See 
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <wchar.h>
 #include <gregorio/struct.h>
+#include <gregorio/unicode.h>
 #include <gregorio/messages.h>
 
 #include "gabc.h"
@@ -529,33 +529,26 @@ free_styles () {
 
 /*
 
-add_text is the function called when lex returns a char *. In this function we convert it into wchar_t *, and then we add the corresponding gregorio_characters in the list of gregorio_characters.
+gregorio_gabc_add_text is the function called when lex returns a char *. In this function we convert it into grewchar, and then we add the corresponding gregorio_characters in the list of gregorio_characters.
 
 */
 
 void
-add_text (char *mbcharacters)
+gregorio_gabc_add_text (char *mbcharacters)
 {
-  int i = 0;
-  size_t len;
-  wchar_t *wtext;
-  if (mbcharacters == NULL)
+  if (current_character)
     {
-      return;
+      current_character->next_character = gregorio_build_char_list_from_buf (mbcharacters);
+      current_character->next_character->previous_character = current_character;
     }
-  len = strlen (mbcharacters);	//to get the length of the syllable in ASCII
-  wtext = (wchar_t *) malloc ((len + 1) * sizeof (wchar_t));
-  mbstowcs (wtext, mbcharacters, (sizeof (wchar_t) * (len + 1)));	//converting into wchar_t
-  // then we get the real length of the syllable, in letters
-  len = wcslen (wtext);
-  wtext[len] = L'\0';
-  // we add the corresponding characters in the list of gregorio_characters
-  while (wtext[i])
+  else
     {
-      gregorio_add_character (&current_character, wtext[i]);
-      i++;
+      current_character = gregorio_build_char_list_from_buf (mbcharacters);
     }
-  free (wtext);
+  while (current_character -> next_character)
+    {
+      current_character = current_character -> next_character;
+    }
 }
 
 /*
@@ -1328,7 +1321,7 @@ note:
 	voice++;
 	}
 	else {
-	snprintf(error,105,ngettext("too many voices in note : %d foud, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
+	snprintf(error,105,ngettext("too many voices in note : %d found, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
 	gregorio_message(error, "libgregorio_det_score",ERROR,0);
 	}
 	}
@@ -1412,7 +1405,7 @@ style_end:
 
 character:
 	CHARACTERS {
-	gregorio_add_text($1, &current_character);
+	gregorio_gabc_add_text($1);
 	}
 	|
 	style_beginning

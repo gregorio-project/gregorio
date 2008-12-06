@@ -22,10 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gettext.h"
 #define _(str) gettext(str)
 #define N_(str) str
-#include <wchar.h>
 #include <string.h>
 #include <gregorio/plugin.h>
 #include <gregorio/struct.h>
+#include <gregorio/unicode.h>
 #include <gregorio/messages.h>
 
 #include "opustex.h"
@@ -477,7 +477,7 @@ libgregorio_otex_write_end (FILE * f, unsigned char style)
 }
 
 void
-libgregorio_otex_write_special_char (FILE * f, wchar_t * special_char)
+libgregorio_otex_write_special_char (FILE * f, grewchar * special_char)
 {
   if (!wcscmp (special_char, L"'æ"))
     {
@@ -512,13 +512,13 @@ libgregorio_otex_write_special_char (FILE * f, wchar_t * special_char)
 }
 
 void
-libgregorio_otex_write_verb (FILE * f, wchar_t * verb_str)
+libgregorio_otex_write_verb (FILE * f, grewchar * verb_str)
 {
   fprintf (f, "%ls", verb_str);
 }
 
 void
-libgregorio_otex_print_char (FILE * f, wchar_t to_print)
+libgregorio_otex_print_char (FILE * f, grewchar to_print)
 {
   switch (to_print)
     {

@@ -22,10 +22,10 @@ understanding, read it carefully.
 
 */
 
+#include <gregorio/unicode.h>
+
 #ifndef STRUCT_H
 #define STRUCT_H
-
-#include <wchar.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -154,7 +154,7 @@ Then the different types of styles. See the next comments for further readings.
 
 /*
 
-gregorio_characters are a bit specials. As there can be styles in the text, I had to find a structure mode adapted that just wchar_t *. So basically a gregorio_character is a double-chained list of things that can be wchar_t or gregorio_styles. For example if you type (in gabc) p<i>o</i>t, the corresponding gregorio_character list will be P->style(type: beginning, style italic) -> o -> style(type:end, style: italic). But for this list to be coherent, it is mandatory that it is xml-compliant, that is to say that a<b>c<i>d</b>e</i> will be interpreted as a<b>c<i>d</i></b><i>e</i>. This MUST be done when reading a file, so that the structure in memory is coherent. It makes input modules more comple, but output modules muche more simpler. The last particularity is that center must also be determined in the input modules, so that it is already defined in memory. But it is a bit more complex, because for TeX-like output modules, we need to close all styles before the center style: if the user types <i>pot</i> it must be represented as <i>p</i>{<i>o</i>}<i>t</i>.
+gregorio_characters are a bit specials. As there can be styles in the text, I had to find a structure mode adapted that just grewchar *. So basically a gregorio_character is a double-chained list of things that can be grewchar or gregorio_styles. For example if you type (in gabc) p<i>o</i>t, the corresponding gregorio_character list will be P->style(type: beginning, style italic) -> o -> style(type:end, style: italic). But for this list to be coherent, it is mandatory that it is xml-compliant, that is to say that a<b>c<i>d</b>e</i> will be interpreted as a<b>c<i>d</i></b><i>e</i>. This MUST be done when reading a file, so that the structure in memory is coherent. It makes input modules more comple, but output modules muche more simpler. The last particularity is that center must also be determined in the input modules, so that it is already defined in memory. But it is a bit more complex, because for TeX-like output modules, we need to close all styles before the center style: if the user types <i>pot</i> it must be represented as <i>p</i>{<i>o</i>}<i>t</i>.
 
 Here is the declaration of the gregorio_style struct. It is simply two chars, one telling the type of style character it is (beginning for a character that marks the beginning of a style, and end for a character marking the end of a style). The other char simply is the style represented by the character (italic, etc.)
 
@@ -167,11 +167,11 @@ typedef struct gregorio_style {
 
 /*
 
-This union is quite ugly... but necessary for a gregorio_character to be able to be a wchar_t or gregorio_style.
+This union is quite ugly... but necessary for a gregorio_character to be able to be a grewchar or gregorio_style.
 
 */
 typedef union character_or_style {
-  wchar_t character;
+  grewchar character;
   struct gregorio_style s;
 } character_or_style;
 
@@ -585,23 +585,23 @@ h_episemus>H_ALONE
 
 #define SKIP_FIRST_LETTER 1
 
-void gregorio_add_character (gregorio_character **current_character, wchar_t wcharacter);
+void gregorio_add_character (gregorio_character **current_character, grewchar wcharacter);
 void gregorio_begin_style (gregorio_character **current_character, unsigned char style);
 void gregorio_end_style (gregorio_character **current_character, unsigned char style);
 
-int gregorio_is_vowel (wchar_t letter);
+int gregorio_is_vowel (grewchar letter);
 
-void gregorio_write_text (char type, gregorio_character * text, FILE *f, void (*printverb)(FILE *, wchar_t *), void (*printchar)(FILE *, wchar_t), void (*begin)(FILE *, unsigned char), void (*end)(FILE *, unsigned char), void (*printspchar)(FILE *, wchar_t *)); 
+void gregorio_write_text (char type, gregorio_character * text, FILE *f, void (*printverb)(FILE *, grewchar *), void (*printchar)(FILE *, grewchar), void (*begin)(FILE *, unsigned char), void (*end)(FILE *, unsigned char), void (*printspchar)(FILE *, grewchar *)); 
 
-void gregorio_write_first_letter (gregorio_character * current_character, FILE * f, void (*printverb) (FILE *, wchar_t *), void (*printchar) (FILE *, wchar_t), void (*begin) (FILE *, unsigned char), void (*end) (FILE *, unsigned char), void (*printspchar) (FILE *, wchar_t *));
+void gregorio_write_first_letter (gregorio_character * current_character, FILE * f, void (*printverb) (FILE *, grewchar *), void (*printchar) (FILE *, grewchar), void (*begin) (FILE *, unsigned char), void (*end) (FILE *, unsigned char), void (*printspchar) (FILE *, grewchar *));
 
 void gregorio_free_characters (gregorio_character * current_character);
 void gregorio_free_one_character (gregorio_character * current_character);
 void gregorio_suppress_one_character (gregorio_character * current_character);
 
-void gregorio_insert_character (gregorio_character * current_character, wchar_t wcharacter, unsigned int style, unsigned int type);
+void gregorio_insert_character (gregorio_character * current_character, grewchar wcharacter, unsigned int style, unsigned int type);
 
-wchar_t gregorio_first_letter (gregorio_score *score);
+grewchar gregorio_first_letter (gregorio_score *score);
 
 void gregorio_add_text (char *mbcharacters, gregorio_character **current_character);
 

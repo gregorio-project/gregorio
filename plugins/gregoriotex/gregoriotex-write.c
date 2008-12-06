@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gettext.h"
 #define _(str) gettext(str)
 #define N_(str) str
-#include <wchar.h>
 #include <string.h>
 #include <gregorio/struct.h>
+#include <gregorio/unicode.h>
 #include <gregorio/plugin.h>
 #include <gregorio/messages.h>
 
@@ -544,7 +544,7 @@ libgregorio_gtex_write_end_for_two (FILE * f, unsigned char style)
 }
 
 void
-libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char)
+libgregorio_gtex_write_special_char (FILE * f, grewchar * special_char)
 {
   if (!wcscmp (special_char, L"A/"))
     {
@@ -589,13 +589,13 @@ libgregorio_gtex_write_special_char (FILE * f, wchar_t * special_char)
 }
 
 void
-libgregorio_gtex_write_verb (FILE * f, wchar_t * verb_str)
+libgregorio_gtex_write_verb (FILE * f, grewchar * verb_str)
 {
   fprintf (f, "%ls", verb_str);
 }
 
 void
-libgregorio_gtex_print_char (FILE * f, wchar_t to_print)
+libgregorio_gtex_print_char (FILE * f, grewchar to_print)
 {
 // special case for the star, as it is < 128
   if (to_print == L'*')
@@ -637,9 +637,9 @@ libgregorio_gtex_print_char (FILE * f, wchar_t to_print)
     }
 }
 
-// a function that takes a wchar_t * and write it in omega style : every character is reprensented by ^^^^x where x is its hexadecimal representation on 4 letters (completed with 0)
+// a function that takes a grewchar * and write it in omega style : every character is reprensented by ^^^^x where x is its hexadecimal representation on 4 letters (completed with 0)
 void
-libgregorio_print_unicode_letters (FILE * f, wchar_t * wstr)
+libgregorio_print_unicode_letters (FILE * f, grewchar * wstr)
 {
   int i = 0;
 

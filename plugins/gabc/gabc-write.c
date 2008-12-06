@@ -22,8 +22,8 @@ This is a simple and easyly understandable output module. If you want to write a
 #include "config.h"
 #include <ctype.h>
 #include <stdio.h>
-#include <wchar.h>
 #include <gregorio/struct.h>
+#include <gregorio/unicode.h>
 #include <gregorio/plugin.h>
 #include <gregorio/messages.h>
 
@@ -277,7 +277,7 @@ This function writes the special chars. As the specials chars are represented si
 */
 
 void
-libgregorio_gabc_write_special_char (FILE * f, wchar_t * special_char)
+libgregorio_gabc_write_special_char (FILE * f, grewchar * special_char)
 {
   fprintf (f, "<sp>%ls</sp>", special_char);
 }
@@ -289,7 +289,7 @@ This functions writes verbatim output... but as the previous one it is very simp
 */
 
 void
-libgregorio_gabc_write_verb (FILE * f, wchar_t * verb_str)
+libgregorio_gabc_write_verb (FILE * f, grewchar * verb_str)
 {
   fprintf (f, "<v>%ls</v>", verb_str);
 }
@@ -301,7 +301,7 @@ The function called when we will encounter a character. There may be other repre
 */
 
 void
-libgregorio_gabc_print_char (FILE * f, wchar_t to_print)
+libgregorio_gabc_print_char (FILE * f, grewchar to_print)
 {
   fprintf (f, "%lc", to_print);
 }

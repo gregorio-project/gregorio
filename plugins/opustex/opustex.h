@@ -1,11 +1,11 @@
 /* 
 Gregorio OpusTeX headers.
-Copyright (C) 2007 Olivier Berten.
+Copyright (C) 2007 Elie Roux <elie.roux@telecom-bretagne.eu>.
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef OPUSTEX_H
@@ -65,8 +64,8 @@ libgregorio_opustex_is_out_of_neume (gregorio_syllable * syllable);
 
 void libgregorio_otex_write_begin (FILE * f, unsigned char style);
 void libgregorio_otex_write_end (FILE * f, unsigned char style);
-void libgregorio_otex_write_special_char (FILE * f, wchar_t * special_char);
-void libgregorio_otex_write_verb (FILE * f, wchar_t * verb_str);
-void libgregorio_otex_print_char (FILE * f, wchar_t to_print);
+void libgregorio_otex_write_special_char (FILE * f, grewchar * special_char);
+void libgregorio_otex_write_verb (FILE * f, grewchar * verb_str);
+void libgregorio_otex_print_char (FILE * f, grewchar to_print);
 
 #endif
