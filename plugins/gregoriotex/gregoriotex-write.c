@@ -1056,7 +1056,8 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 		  libgregorio_gregoriotex_write_hepisemus (f, glyph, i, type,
 							   current_note);
 		}
-	  }
+	    }
+	}
       switch (current_note->signs)
 	{
 	case _PUNCTUM_MORA:
@@ -1097,7 +1098,6 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 					      current_note,
 					      current_note->rare_sign);
 	}
-	}
       else
 	{
 	  if (block_hepisemus == 1)
@@ -1115,7 +1115,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	  current_note = current_note->next_note;
 	  i++;
 	}
-  }
+    }
 }
 
 
