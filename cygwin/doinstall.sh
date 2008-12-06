@@ -25,5 +25,6 @@ cd ..
 
 cp lib/* $LIBDIR
 cp lib/gregorio/* $GRELIBDIR
+cp lib/pkgconfig/* $LIBDIR/pkgconfig
 cp bin/* $BINDIR
 cp include/gregorio/* $GREINCLUDEDIR
