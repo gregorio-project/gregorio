@@ -55,7 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <INITIAL>^(\xBB|\xEF|\xBF)* {
 //BOM written by a lot of windows softwares when they write UTF-8
 }
-<INITIAL>: {
+<INITIAL>:(\ )? {
 	BEGIN(attribute);
 	return COLON;
 	}
