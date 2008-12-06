@@ -8,7 +8,7 @@ CURDIR=`cd .. && pwd`
 
 cd ..
 autoreconf -f -i
-./configure --prefix=$PREFIX
+./configure --prefix=$PREFIX --enable-glib-utf8
 make
 make DESTDIR=$CURDIR/$DESTDIR install
 xsltproc -o $DESTDIR/gregorio.1 -''-nonet /usr/share/docbook-xsl/manpages/docbook.xsl debian/manpage.xml 
