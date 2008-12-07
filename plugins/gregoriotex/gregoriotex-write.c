@@ -307,13 +307,13 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	}
       if (current_element->type == GRE_C_KEY_CHANGE)
 	{
-	  fprintf (f, "\\changeclef{1}{2}%%\n");	//TODO : change
+	  fprintf (f, "\\changeclef{c}{%d}%%\n", current_element->element_type - 48);
 	  current_element = current_element->next_element;
 	  continue;
 	}
       if (current_element->type == GRE_F_KEY_CHANGE)
 	{
-	  fprintf (f, "\\changeclef{1}{2}%%\n");	//TODO : change
+	  fprintf (f, "\\changeclef{f}{%d}%%\n", current_element->element_type - 48);
 	  current_element = current_element->next_element;
 	  continue;
 	}
