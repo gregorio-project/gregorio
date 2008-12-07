@@ -617,7 +617,7 @@ THE big function. Very long, using a lot of long macros, etc. I hope you really 
 
 current character is a pointer to a gregorio_character. The gregorio_character double-chained list it is in will be totally reorganized so that it is xml compliant, and the function will update it to the first character of this brand new list.
 
-center_is_determined is an historical parameter. It has the values present in characters.h
+center_is_determined has the values present in characters.h.
 
 */
 
@@ -844,8 +844,6 @@ param_character is a pointer to the (pointer to the) first character, it will be
 void
 gregorio_rebuild_first_syllable (gregorio_character ** param_character)
 {
-  // a det_style, to walk through the list
-  det_style *current_style = NULL;
   // the current_character
   gregorio_character *current_character = *param_character;
   unsigned char forced_center = 0;

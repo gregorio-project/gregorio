@@ -46,9 +46,6 @@ typedef struct det_style
 
 grewchar gregorio_first_letter (gregorio_score *score);
 
-void gregorio_add_text (char *mbcharacters, gregorio_character **current_character);
-
-void gregorio_go_to_first_character (gregorio_character ** character);
 gregorio_character * gregorio_first_text (gregorio_score * score);
 
 int gregorio_is_vowel (grewchar letter);
@@ -62,7 +59,7 @@ gregorio_write_text (char type, gregorio_character * current_character,
 			void (*printspchar) (FILE *, grewchar *));
 			
 void
-gregorio_write_first_letter (gregorio_character * current_character,
+gregorio_write_initial (gregorio_character * current_character,
 				FILE * f, void (*printverb) (FILE *,
 							     grewchar *),
 				void (*printchar) (FILE *, grewchar),

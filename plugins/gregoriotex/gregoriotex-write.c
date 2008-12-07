@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <gregorio/unicode.h>
 #include <gregorio/plugin.h>
 #include <gregorio/messages.h>
+#include <gregorio/characters.h>
 
 #include "gregoriotex.h"
 

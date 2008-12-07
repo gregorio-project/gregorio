@@ -314,6 +314,9 @@ void gregorio_free_one_element(gregorio_element **element);
 void gregorio_free_one_syllable (gregorio_syllable **syllable, int number_of_voices);
 void gregorio_free_score(gregorio_score *score);
 
+void gregorio_go_to_first_character (gregorio_character ** character);
+void gregorio_add_text (char *mbcharacters, gregorio_character **current_character);
+
 void gregorio_add_special_as_glyph (gregorio_glyph **current_glyph, char type, char pitch);
 void gregorio_add_special_as_note (gregorio_note **current_note, char type, char pitch);
 void gregorio_add_special_as_element (gregorio_element **current_element, char type, char pitch);
