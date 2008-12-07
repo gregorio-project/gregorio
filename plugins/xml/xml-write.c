@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define N_(str) str
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
+#include <gregorio/characters.h>
 #include <gregorio/messages.h>
 
 #include "xml.h"
@@ -262,6 +263,9 @@ libgregorio_xml_write_begin (FILE * f, unsigned char style)
     case ST_SMALL_CAPS:
       fprintf (f, "<small-caps>");
       break;
+    case ST_INITIAL:
+      fprintf (f, "<initial>");
+      break;
     case ST_BOLD:
       fprintf (f, "<bold>");
       break;
@@ -292,6 +296,9 @@ libgregorio_xml_write_end (FILE * f, unsigned char style)
       break;
     case ST_SMALL_CAPS:
       fprintf (f, "</small-caps>");
+      break;
+    case ST_INITIAL:
+      fprintf (f, "</initial>");
       break;
     case ST_BOLD:
       fprintf (f, "</bold>");

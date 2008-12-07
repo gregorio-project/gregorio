@@ -141,6 +141,7 @@ The we define the characters. First we define the different styles. You can noti
 #define ST_SMALL_CAPS 7
 #define ST_SPECIAL_CHAR 4
 #define ST_VERBATIM 5
+#define ST_INITIAL 9 // a style used to determine the initial
 
 /*
 
@@ -600,13 +601,6 @@ void gregorio_free_one_character (gregorio_character * current_character);
 void gregorio_suppress_one_character (gregorio_character * current_character);
 
 void gregorio_insert_character (gregorio_character * current_character, grewchar wcharacter, unsigned int style, unsigned int type);
-
-grewchar gregorio_first_letter (gregorio_score *score);
-
-void gregorio_add_text (char *mbcharacters, gregorio_character **current_character);
-
-void gregorio_go_to_first_character (gregorio_character ** character);
-gregorio_character * gregorio_first_text (gregorio_score * score);
 
 #ifdef __cplusplus
 }

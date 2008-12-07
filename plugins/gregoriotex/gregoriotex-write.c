@@ -111,7 +111,7 @@ write_score (FILE * f, gregorio_score * score)
       if (first_text)
 	{
 	  fprintf (f, "\\greinitial{");
-	  gregorio_write_first_letter (first_text, f,
+	  gregorio_write_initial (first_text, f,
 				       (&libgregorio_gtex_write_verb),
 				       (&libgregorio_gtex_print_char),
 				       (&libgregorio_gtex_write_begin),
@@ -1024,7 +1024,8 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
   char block_hepisemus = 0;
   while (current_note)
     {
-          if (current_note->h_episemus_type != H_NO_EPISEMUS
+      // we start by the hepisemus
+      if (current_note->h_episemus_type != H_NO_EPISEMUS
 	  && current_note->h_episemus_top_note != 'm' && block_hepisemus == 0)
 	{
 // if it is a porrectus or a porrectus flexus, we check if the episemus is on the two first notes:

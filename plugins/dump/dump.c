@@ -360,6 +360,9 @@ libgregorio_dump_style_to_string (unsigned char style)
     case ST_FORCED_CENTER:
       return " ST_FORCED_CENTER";
       break;
+    case ST_INITIAL:
+      return "      ST_INITIAL";
+      break;
     case ST_BOLD:
       return "         ST_BOLD";
       break;

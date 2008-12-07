@@ -728,6 +728,15 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
 	  current_node = current_node->next;
 	  continue;
 	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "initial"))
+	{
+	  gregorio_begin_style (current_character, ST_INITIAL);
+	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
+					    doc, current_character);
+	  gregorio_end_style (current_character, ST_INITIAL);
+	  current_node = current_node->next;
+	  continue;
+	}
       else
 	{
 	  current_node = current_node->next;

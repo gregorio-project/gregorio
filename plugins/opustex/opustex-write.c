@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <gregorio/plugin.h>
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
+#include <gregorio/characters.h>
 #include <gregorio/messages.h>
 
 #include "opustex.h"
@@ -105,7 +106,7 @@ write_score (FILE * f, gregorio_score * score)
   if (first_text)
     {
       fprintf (f, "\\musicinitial{}{");
-      gregorio_write_first_letter (first_text, f,
+      gregorio_write_initial (first_text, f,
 				      (&libgregorio_otex_write_verb),
 				      (&libgregorio_otex_print_char),
 				      (&libgregorio_otex_write_begin),

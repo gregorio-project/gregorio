@@ -29,6 +29,7 @@ This file is certainly not the most easy to understand, it is a bison file. See 
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
 #include <gregorio/messages.h>
+#include <gregorio/characters.h>
 
 #include "gabc.h"
 #include "gabc-score-determination-l.h"
@@ -38,8 +39,6 @@ This file is certainly not the most easy to understand, it is a bison file. See 
 #define N_(str) str
 // request translation to the user native language for bison
 #define YYENABLE_NLS 1
-// don't know... to test..
-//#define YYLTYPE_IS_TRIVIAL 0
 
 
 /*
@@ -60,17 +59,6 @@ We will need some variables and functions through the entire file, we declare th
 
 */
 
-/* to understand the det_style, you need to read the comments about text, where all is explained.
- */
-
-typedef struct det_style
-{
-  unsigned char style;
-  struct det_style *previous_style;
-  struct det_style *next_style;
-} det_style;
-
-
 // the two functions to initialize and free the file variables
 void initialize_variables ();
 void free_variables ();
@@ -90,32 +78,19 @@ gregorio_voice_info *current_voice_info;
 int number_of_voices;
 int voice;
 int clef;
-det_style *first_style;
 // a char that will take some useful values see comments on text to understand it
 char center_is_determined;
 
-#define FIRST_LETTER 1
-#define SECOND_LETTER 2
-#define THIRD_LETTER 3
-char first_letter;
-
 int check_score_integrity (gregorio_score * score);
-void free_styles();
 void next_voice_info ();
 void set_clef (char *str);
 void reajust_voice_infos (gregorio_voice_info * voice_info, int final_count);
 void end_definitions ();
 void suppress_useless_styles ();
 void close_syllable ();
-void push (unsigned char style);
-void pop (det_style * element);
-void add_text (char *mbcharacters);
-void add_style(unsigned char style);
-void end_style(unsigned char style);
-void insert_style_before (unsigned char type, unsigned char style);
-void insert_style_after (unsigned char type, unsigned char style);
-void suppress_this_character (gregorio_character *to_suppress);
-void end_style_determination ();
+void gregorio_gabc_add_text (char *mbcharacters);
+void gregorio_gabc_add_style(unsigned char style);
+void gregorio_gabc_end_style(unsigned char style);
 void complete_with_nulls (int voice);
 
 void gabc_score_determination_error(char *error_str) {
@@ -207,9 +182,7 @@ initialize_variables ()
   number_of_voices = 0;
   voice = 1;
   current_character = NULL;
-  first_style = NULL;
   center_is_determined=0;
-  first_letter=FIRST_LETTER;
 }
 
 
@@ -220,7 +193,6 @@ void
 free_variables ()
 {
   free (elements);
-  free_styles();
 }
 
 // a macro to put inside a if to see if a voice_info is empty
@@ -384,31 +356,21 @@ update_position_with_space ()
     }
 }
 
-/*
-
-The three next defines are the possible values of center_is_determined.
-
-HALF_DETERMINED means that lex has encountered a { but no }, and we will try to determine a middle starting after the {.
-FULLY_DETERMINED means that lex has encountered a { and a }, so we won't determine the middle, it is considered done.
-DETERMINING_MIDDLE is used internally in the big function to know where we are in the middle determination.
-
-*/
-
-#define NOT_DETERMINED 0
-#define HALF_DETERMINED 1
-#define FULLY_DETERMINED 2
-#define DETERMINING_MIDDLE 3
-
 /* Function to close a syllable and update the position.
  */
 
 void
 close_syllable ()
 {
+      if (!score -> first_syllable && score->initial_style != NO_INITIAL)
+      {
+        gregorio_rebuild_first_syllable (&first_text_character);
+      }
   gregorio_add_syllable (&current_syllable, number_of_voices, elements,
 			    first_text_character, first_translation_character, position);
   if (!score->first_syllable)
     {
+    // we rebuild the first syllable if we have to
       score->first_syllable = current_syllable;
     }
   //we update the position
@@ -420,27 +382,22 @@ close_syllable ()
     {
       position = WORD_BEGINNING;
     }
-  center_is_determined=NOT_DETERMINED;
-  first_letter=0;
+  center_is_determined=CENTER_NOT_DETERMINED;
   current_character = NULL;
   first_text_character=NULL;
   first_translation_character=NULL;
-  //TODO : decide wether it will be freed all time or just at the end...
-  free_styles();
 }
 
 // a function called when we see a [, basically, all characters are added to the translation pointer instead of the text pointer
 void start_translation() {
-  end_style_determination ();
-  gregorio_go_to_first_character(&current_character);
+  gregorio_rebuild_characters (&current_character, center_is_determined);
   first_text_character = current_character;
-  center_is_determined=FULLY_DETERMINED; // the middle letters of the translation have no sense
+  center_is_determined=CENTER_FULLY_DETERMINED; // the middle letters of the translation have no sense
   current_character=NULL;
 }
 
 void end_translation() {
-  end_style_determination ();
-  gregorio_go_to_first_character(&current_character);
+  gregorio_rebuild_characters (&current_character, center_is_determined);
   first_translation_character=current_character;
 }
 
@@ -448,83 +405,6 @@ void
 test ()
 {
 
-}
-
-/* Here starts the code of the interpretation of text and styles.
-
-This part is not the easiest, in fact is is the most complicated. The reason is that I want to make something coherent in memory (easy to interprete), and to let the user type whatever he wants. 
-
-Functionalities: For example if the user types tt<i>ttt<b>ttt</i>tt I want it to be represented as tt<i>ttt<b>ttt</b></i><b>tt</b>. The fabulous thing is that it is xml-compliant. This part also determines the middle, for example pot will be interpreted as p{o}t. When I did that I also thought about TeX styles that needed things like {p}{o}{t}, so when the user types <i>pot</i>, it is interpreted as <i>p</i>{<i>o</i>}<i>t</i>.
-
-Internal structure: To do so we have a structure, det_style, that will help us : it is a stack (double chained list) of the styles that we have seen until now. When we encounter a <i>, we push the i style on the stack. If we encounter a </i> we suppress the i style from the stack. Let's take a more complex example: if we encounter <i><b></i>, the stack will be first null, then i then bi, and there we want to end i, but it is not the first style of the stack, so we close all the styles that we encounter before we encounter i (remember, this is for xml-compliance), so we insert a </b> before the </i>. But that's not all, we also write a <b> after the </i>, so that the b style continues. There our stack is just b. For center, we just close all the styles in the stack, insert a { and reopen all the styles in the stack.
-
-The structure used for character, styles, etc. is described in include/struct.h
-
-The functionment in this file is quite simple : we add all the characters that we see, even if they are incoherent, in the gregorio_character list, and then we call a very complex function that will build a stack of the style, determine the middle, make all xml-compliant, mow the lawn, etc.
-
-*/
-
-/*
-The push function pushes a style in the stack, and updates first_style to this element.
-*/
-
-void
-push (unsigned char style)
-{
-  det_style *element = (det_style *) malloc (sizeof (det_style));
-  element->style = style;
-  element->previous_style = NULL;
-  element->next_style = first_style;
-  if (first_style)
-    {
-      first_style->previous_style = element;
-    }
-  first_style = element;
-}
-
-/*
-Pop deletes an style in the stack (the style to delete is the parameter)
-*/
-
-void
-pop (det_style * element)
-{
-  if (!element)
-    {
-      return;
-    }
-  if (element->previous_style)
-    {
-      element->previous_style->next_style = element->next_style;
-    }
-  else
-    {
-      if (element->next_style)
-	{
-	  element->next_style->previous_style = element->previous_style;
-	  first_style=element->next_style;
-	}
-      else
-	{
-	  first_style = NULL;
-	}
-    }
-  free (element);
-}
-
-/*
-free_styles just free the stack. You may notice that it will never be used in a normal functionment. But we never know...
-*/
-
-void
-free_styles () {
-  det_style *current_style=first_style;
-  while (current_style) 
-    {
-      current_style=current_style->next_style;
-      free(first_style);
-      first_style=current_style;
-    }
 }
 
 /*
@@ -558,434 +438,16 @@ The two functions called when lex returns a style, we simply add it. All the com
 */
 
 void
-add_style(unsigned char style) 
+gregorio_gabc_add_style(unsigned char style) 
 {
   gregorio_begin_style(&current_character, style);
 }
 
 void
-end_style(unsigned char style) 
+gregorio_gabc_end_style(unsigned char style) 
 {
   gregorio_end_style(&current_character, style);
 }
-
-/*
-
-Then start the macros for the big function. the first one is the macro we call when we close a style. The magic thing is that is will prevent things like a<i></i>{<i>b</b>: when the user types a<i>b</i>, if the middle is between a and b (...), it will interpret it as a{<i>b</i>.
-
-*/
-
-#define close_style() if (!current_character->previous_character->is_character && current_character->previous_character->cos.s.style==current_style->style) {\
-/* we suppose that there is a previous_character, because there is a current_style*/\
-suppress_this_character(current_character->previous_character);\
-}\
-else {\
-insert_style_before(ST_T_END, current_style->style);\
-}
-
-/*
-
-next the macro called when we have determined that we must end the center here : it closes all styles, adds a } and then reopens all styles.
-
-*/
-
-// type is ST_CENTER or ST_FORCED_CENTER
-#define end_center(type) while (current_style)\
-	    {\
-	      close_style ()\
-	if (current_style->next_style) {\
-	      current_style = current_style->next_style;\
-	}\
-	else {\
-	break;\
-	}\
-	    }\
-	  insert_style_before (ST_T_END, type);\
-	  while (current_style)\
-	    {\
-	      insert_style_before (ST_T_BEGIN, current_style->style);\
-	if (current_style->previous_style) {\
-		current_style=current_style->previous_style;\
-	}\
-	else {\
-	break;\
-	}\
-	    }
-
-/*
-about the same, but adding a {
-*/
-
-#define begin_center(type) while (current_style)\
-	    {\
-	      close_style ()\
-	if (current_style->next_style) {\
-	      current_style = current_style->next_style;\
-	}\
-	else {\
-	break;\
-	}\
-	    }\
-	  insert_style_before (ST_T_BEGIN, type);\
-	  while (current_style)\
-	    {\
-	      insert_style_before (ST_T_BEGIN, current_style->style);\
-	if (current_style->previous_style) {\
-		current_style=current_style->previous_style;\
-	}\
-	else {\
-	break;\
-	}\
-	    }
-
-
-/*
-
-the macro called when we have ended the determination of the current character. It makes current_character point to the last character, not to null at the end of the determination.
-
-*/
-
-#define end_c()	if (current_character->next_character) {\
-	  current_character=current_character->next_character;\
-	  continue;\
-	}\
-	else {\
-	  break;\
-	}
-
-/*
-
-basically the same except that we suppress the current_character
-
-*/
-
-#define suppress_char_and_end_c() 	if (current_character->next_character) {\
-	current_character=current_character->next_character;\
-	suppress_this_character (current_character->previous_character);\
-	  continue;\
-	}\
-	else {\
-	if (current_character->previous_character) {\
-	current_character=current_character->previous_character;\
-	suppress_this_character (current_character->next_character);\
-	}\
-	else {\
-	suppress_this_character(current_character);\
-	current_character=NULL;\
-	}\
-	  break;\
-	}
-
-/*
-
-This is the macro that will determine the center, etc. for the first
-
-*/
-
-#define first_syllable()	  switch (first_letter) {\
-  case FIRST_LETTER:\
-    first_letter=SECOND_LETTER;\
-  break;\
-  case SECOND_LETTER:\
-    begin_center (center_type)\
-    center_is_determined = DETERMINING_MIDDLE;\
-    first_letter=THIRD_LETTER;\
-  break;\
-  case THIRD_LETTER:\
-    end_center (center_type)\
-    first_letter=0;\
-    center_is_determined = FULLY_DETERMINED;\
-  break;\
-  default:\
-    first_letter=0;\
-  break;\
-  }
-
-/*
-
-This function inserts a style before current_character, updating the double chained list.
-
-*/
-
-void insert_style_before (unsigned char type, unsigned char style) {
-  gregorio_character *element =
-    (gregorio_character *) malloc (sizeof (gregorio_character));
-  element->is_character=0;
-  element->cos.s.type=type;
-  element->cos.s.style=style;
-  element->next_character=current_character;
-  if (current_character->previous_character) 
-    {
-      current_character->previous_character->next_character=element;
-    }
-  element->previous_character=current_character->previous_character;
-  current_character->previous_character=element;
-}
-
-/*
-
-This function puts a style after current_character, and updates current_character to the gregorio_character it created. It updates the double chained list. It does not touche to the det_styles list.
-
-*/
-
-
-void insert_style_after (unsigned char type, unsigned char style) {
-  gregorio_character *element =
-    (gregorio_character *) malloc (sizeof (gregorio_character));
-  element->is_character=0;
-  element->cos.s.type=type;
-  element->cos.s.style=style;
-  element->next_character=current_character->next_character;
-  if (current_character->next_character) 
-    {
-      current_character->next_character->previous_character=element;
-    }
-  element->previous_character=current_character;
-  current_character->next_character=element;
-  current_character=element;
-}
-
-/*
-
-This function suppresses the corresponding character, updates the double chained list, but does not touch to current_character.
-
-*/
-
-void suppress_this_character (gregorio_character *to_suppress) {
-  if (to_suppress->previous_character) 
-    {
-        to_suppress->previous_character->next_character=to_suppress->next_character;
-    }
-  if (current_character->next_character) 
-    {
-	to_suppress->next_character->previous_character=to_suppress->previous_character;
-    }
-  free(to_suppress);
-}
-
-
-/*
-
-THE big function. Very long, using a lot of long macros, etc. I hope you really want to understand it, 'cause it won't be easy.
-
-*/
-
-void
-end_style_determination ()
-{
-  // a det_style, to walk through the list
-  det_style *current_style = NULL;
-  // a char that we will use in a very particular case
-  unsigned char this_style;
-  // a char that will be useful for the determination of iota and digamma
-  unsigned char false_middle = 0;
-  unsigned char center_type = 0; // determining the type of centering (forced or not)
-  // so, here we start: we go to the first_character
-  gregorio_go_to_first_character(&current_character);
-  // we first loop to see if there is already a center determined
-  if (center_is_determined == 0)
-    {
-      center_type = ST_CENTER;
-    }
-  else
-    {
-      center_type = ST_FORCED_CENTER;
-    }
-  // we loop until there isn't any character
-  while (current_character)
-    {
-      // the first part of the function deals with real characters (not styles)
-      if (current_character->is_character)
-	{
-      // the first case is when the user hasn't put { nor } (center_is_determined is 0), so we have to determine the center, and moreover it is the first_syllables. We call the good macro (see above).
-	  if (center_is_determined!=FULLY_DETERMINED && center_is_determined!=HALF_DETERMINED && first_letter) 
-	    {
-	      first_syllable()
-	      end_c ()
-	    }
-      // then, the second case is if the user has'nt determined the middle, and we have only seen vowels so far (else center_is_determined would be DETERMINING_MIDDLE). The current_character is the first vowel, so we start the center here.
-	  if (!center_is_determined
-	      && gregorio_is_vowel (current_character->cos.character))
-	    {
-	      if (current_character->cos.character == L'i'
-		  || current_character->cos.character == L'u')
-		{
-      // did you really think it would be that easy?... we have to deal with iota and digamma, that are not aligned the same way... So if the current character is i or u, we check if the next character is also a vowel or not. If it is the case we just pass, else we start the center there.
-		  gregorio_character *temp = current_character->next_character;
-		  while (temp)
-		    {
-		      if (temp->is_character)
-			{
-			 if (gregorio_is_vowel (temp->cos.character))
-			  {
-			    false_middle = 1;
-			    break;
-			  }
-			 else 
-			  {
-			    break;
-			  }
-			}
-		      temp = temp->next_character;
-		    }
-		}
-	      if (false_middle)
-		{
-	// the case of the iota or digamma
-		  false_middle = 0;
-		  // remember? this macro has a continue; in it
-		  end_c ()
-		}
-	      begin_center (center_type)
-	      center_is_determined = DETERMINING_MIDDLE;
-	      end_c ()
-	    }
-          // the case where the user has not determined the middle and we are in the middle section of the syllable, but there we encounter something that is not a vowel, so the center ends there.
-	  if (center_is_determined == DETERMINING_MIDDLE
-	      && !gregorio_is_vowel (current_character->cos.character))
-	    {
-	      end_center (center_type)
-	      center_is_determined = FULLY_DETERMINED;
-	    }
-	  // in the case where it is just a normal character... we simply pass.
-	  end_c ()
-	}
-
-// there starts the second part of the function that deals with the styles characters
-
-      if (current_character->cos.s.type == ST_T_BEGIN
-	  && current_character->cos.s.style != ST_CENTER
-	  && current_character->cos.s.style != ST_FORCED_CENTER)
-	{
-      // first, if it it the beginning of a style, which is not center. We check if the style is not already in the stack. If it is the case, we suppress the character and pass (with the good macro)
-	  while (current_style
-		 && current_style->style != current_character->cos.s.style)
-	    {
-	      current_style = current_style->next_style;
-	    }
-	  if (current_style)
-	    {
-	      current_style=first_style;
-	      suppress_char_and_end_c ()
-	    }
-       // if it is something to add then we just push the style in the stack and continue.
-	  push (current_character->cos.s.style);
-	  current_style=first_style;
-	  end_c ()
-	}
-      // if it is a beginning of a center, we call the good macro and end.
-      if (current_character->cos.s.type == ST_T_BEGIN
-	  && (current_character->cos.s.style == ST_CENTER
-	  || current_character->cos.s.style == ST_FORCED_CENTER))
-	{
-	  if (current_character->cos.s.style == ST_CENTER)
-	    {
-	      center_type = ST_CENTER;
-	    }
-	  else
-	    {
-	      center_type = ST_FORCED_CENTER;
-	    }
-	  if (center_is_determined)
-	    {
-	      end_c ()
-	    }
-	  //center_is_determined = DETERMINING_MIDDLE; // TODO: not really sure, but shouldn't be there
-	  begin_center (center_type)
-	  end_c ()
-	}
-      if (current_character->cos.s.type == ST_T_END
-	  && current_character->cos.s.style != ST_CENTER
-	  && current_character->cos.s.style != ST_FORCED_CENTER)
-	{
-	  // the case of the end of a style (the most complex). First, we have to see if the style is in the stack. If there is no stack, we just suppress and continue.
-	  if (!current_style)
-	    {
-	      suppress_char_and_end_c ()
-	    }
-	  // so, we look if it is in the stack. If it is we put current_style to the style just before the style corresponding to the character that we are trating (still there ?)
-	  if (current_style->style != current_character->cos.s.style)
-	    {
-	      while (current_style->next_style
-		     && current_style->next_style->style !=
-		     current_character->cos.s.style)
-		{
-		  current_style = current_style->next_style;
-		}
-	      if (current_style->next_style)
-		{
-		  current_style=first_style;
-		  while (current_style)
-		    {
-		// if there are styles before in the stack, we close them
-		      insert_style_before (ST_T_END, current_style->style);
-		      current_style = current_style->previous_style;
-		    }
-		  current_style = first_style;
-		  this_style = current_character->cos.s.style;
-		// and then we reopen them
-		  while (current_style && current_style->style != this_style)
-		    {
-		      insert_style_after (ST_T_BEGIN, current_style->style);
-		      current_style = current_style->next_style;
-		    }
-		//we delete the style in the stack
-		  pop(current_style);
-		  current_style=first_style;
-		}
-	      else
-		{
-		  suppress_char_and_end_c ()
-		}
-	    }
-	else {
-	  pop (current_style);
-	  current_style=first_style;
-	  end_c ()
-	}
-	}
-      else
-	{// ST_T_END && ST_CENTER
-	// a quite simple case, we just call the good macro.
-	  if (!center_is_determined)
-	    {
-	      suppress_char_and_end_c ()
-	    }
-	}
-      end_c ()
-    }
-  if (!current_character)
-    {
-      return;
-    }
-// we terminate all the styles that are still in the stack
-  while (current_style)
-    {
-      insert_style_after (ST_T_END, current_style->style);
-      current_style = current_style->next_style;
-    }
-// case where the syllable is composed of only one letter
-  if (first_letter==SECOND_LETTER)
-    {
-      insert_style_after (ST_T_BEGIN, ST_CENTER);
-      insert_style_after (ST_T_END, ST_CENTER);
-      return;
-    }
-//current_character is at the end of the list now, so if we havn't closed the center, we do it at the end.
-  if (center_is_determined != FULLY_DETERMINED)
-    {
-      insert_style_after (ST_T_END, center_type);
-    }
-// these last lines are for the case where the user didn't tell anything about the middle and there aren't any vowel in the syllable, so we begin the center before the first character (you can notice that there is no problem of style).
-  if (!center_is_determined)
-    {
-      gregorio_go_to_first_character (&current_character);
-      insert_style_before (ST_T_BEGIN, ST_CENTER);
-    }
-// well.. you're quite brave if you reach this comment.
-}
-
-
 
 %}
 
@@ -1340,65 +802,65 @@ note:
 
 style_beginning:
 	I_BEGINNING {
-	add_style(ST_ITALIC);
+	gregorio_gabc_add_style(ST_ITALIC);
 	}
 	|
 	TT_BEGINNING {
-	add_style(ST_TT);
+	gregorio_gabc_add_style(ST_TT);
 	}
 	|
 	B_BEGINNING {
-	add_style(ST_BOLD);
+	gregorio_gabc_add_style(ST_BOLD);
 	}
 	|
 	SC_BEGINNING {
-	add_style(ST_SMALL_CAPS);
+	gregorio_gabc_add_style(ST_SMALL_CAPS);
 	}
 	|
 	VERB_BEGINNING {
-	add_style(ST_VERBATIM);
+	gregorio_gabc_add_style(ST_VERBATIM);
 	}
 	|
 	SP_BEGINNING {
-	add_style(ST_SPECIAL_CHAR);
+	gregorio_gabc_add_style(ST_SPECIAL_CHAR);
 	}
 	|
 	CENTER_BEGINNING {if (!center_is_determined) {
-	add_style(ST_FORCED_CENTER);
-	center_is_determined=HALF_DETERMINED;
+	gregorio_gabc_add_style(ST_FORCED_CENTER);
+	center_is_determined=CENTER_HALF_DETERMINED;
 	}
 	}
 	;
 	
 style_end:
 	I_END {
-	end_style(ST_ITALIC);
+	gregorio_gabc_end_style(ST_ITALIC);
 	}
 	|
 	TT_END {
-	end_style(ST_TT);
+	gregorio_gabc_end_style(ST_TT);
 	}
 	|
 	B_END {
-	end_style(ST_BOLD);
+	gregorio_gabc_end_style(ST_BOLD);
 	}
 	|
 	SC_END {
-	end_style(ST_SMALL_CAPS);
+	gregorio_gabc_end_style(ST_SMALL_CAPS);
 	}
 	|
 	VERB_END {
-	end_style(ST_VERBATIM);
+	gregorio_gabc_end_style(ST_VERBATIM);
 	}
 	|
 	SP_END {
-	end_style(ST_SPECIAL_CHAR);
+	gregorio_gabc_end_style(ST_SPECIAL_CHAR);
 	}
 	|
 	CENTER_END {
-	if (center_is_determined==HALF_DETERMINED) {
-	  end_style(ST_FORCED_CENTER);
-	  center_is_determined=FULLY_DETERMINED;
+	if (center_is_determined==CENTER_HALF_DETERMINED) {
+	  gregorio_gabc_end_style(ST_FORCED_CENTER);
+	  center_is_determined=CENTER_FULLY_DETERMINED;
 	}
 	}
 	;
@@ -1431,8 +893,7 @@ translation:
 
 syllable_with_notes:
 	text OPENING_BRACKET notes {
-	end_style_determination ();
-    gregorio_go_to_first_character(&current_character);
+	gregorio_rebuild_characters (&current_character, center_is_determined);
     first_text_character = current_character;
 	close_syllable();
 	}
