@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1227988826
+ModificationTime: 1228669803
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -37,14 +37,15 @@ HheadDOffset: 1
 OS2Vendor: 'PfEd'
 DEI: 91125
 Encoding: Custom
+Compacted: 1
 UnicodeInterp: none
 NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 0 12 6
+WinInfo: 36 12 6
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 350 350
+BeginChars: 353 352
 
 StartChar: _0017
 Encoding: 0 66 0
@@ -55,13 +56,13 @@ HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore
 SplineSet
-82.3496 169.7 m 4
- 138.25 169.7 166 153.667 166 121.6 c 2
+82.3496 168.7 m 4
+ 138.25 168.7 166 153.667 166 121.6 c 2
  166 -35.7002 l 1
  147.8 -17.5 120.268 -8.40039 83 -8.40039 c 0
  44.8672 -8.40039 18.2002 -17.5 0 -35.7002 c 1
  0 121.6 l 2
- 0 153.667 26.4502 169.7 82.3496 169.7 c 4
+ 0 153.667 26.4502 168.7 82.3496 168.7 c 4
 EndSplineSet
 EndChar
 
@@ -1381,7 +1382,7 @@ StartChar: _0031
 Encoding: 60 -1 60
 Width: 164
 VWidth: 2048
-Flags: HWO
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore
@@ -1849,14 +1850,14 @@ HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore
 SplineSet
-137 -33.8008 m 5
- 137 -6 119.521 20.7998 78.3994 20.7998 c 4
- 48.0674 20.7998 19.9326 13.8672 0 0 c 5
- 0 129.1 l 6
- 0 162.032 28.1328 178.5 78.3994 178.5 c 4
- 111.55 178.5 155 168.619 155 129.1 c 6
- 155 -33.8008 l 5
- 137 -33.8008 l 5
+137 -44.8008 m 5
+ 137 -17 119.521 9.7998 78.3994 9.7998 c 4
+ 48.0674 9.7998 19.9326 2.86719 0 -11 c 5
+ 0 118.1 l 6
+ 0 151.032 28.1328 167.5 78.3994 167.5 c 4
+ 111.55 167.5 155 157.619 155 118.1 c 6
+ 155 -44.8008 l 5
+ 137 -44.8008 l 5
 EndSplineSet
 EndChar
 
@@ -2124,22 +2125,60 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: NameMe.174
+StartChar: p2base
 Encoding: 94 -1 94
-Width: 2048
-VWidth: 2048
-Flags: W
+Width: 166
+VWidth: 2613
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
+Fore
+SplineSet
+74.2998 -15.2998 m 0
+ 51.3535 -15.2998 38 -14 26 -11 c 0
+ 8.68652 -6.67188 0 -4.43555 0 2.5 c 2
+ 0 146 l 6
+ 0 152.067 2.16699 155.101 6.5 155.101 c 6
+ 10.4004 155.101 l 6
+ 14.7334 154.233 29.5332 146.8 69.4004 146.8 c 4
+ 81.8047 146.8 92.5234 146.61 101.668 146.61 c 4
+ 131.756 146.61 148 158.366 148 176 c 5
+ 148 185 l 5
+ 166 185 l 5
+ 166 3.7998 l 2
+ 166 -4.31055 136.757 -15.5137 107.375 -15.5137 c 0
+ 94.999 -15.5137 94.9414 -15.2998 74.2998 -15.2998 c 0
+EndSplineSet
 EndChar
 
-StartChar: NameMe.175
+StartChar: _1025
 Encoding: 95 -1 95
-Width: 2048
-VWidth: 2048
-Flags: W
+Width: 166
+VWidth: 2613
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
+Fore
+SplineSet
+79.2998 -31.2998 m 0
+ 56.3535 -31.2998 39.9717 -31.5459 28.3018 -31.5459 c 0
+ 3.54395 -31.5459 0 -30.4355 0 -23.5 c 2
+ 0 111 l 2
+ 0 117.067 2.16699 120.101 6.5 120.101 c 2
+ 10.4004 120.101 l 2
+ 14.7334 119.233 35.5332 118.8 75.4004 118.8 c 0
+ 87.8047 118.8 98.5234 118.61 107.668 118.61 c 0
+ 137.756 118.61 148 123.366 148 141 c 2
+ 148 141.199 l 2
+ 148 169 130.521 185.8 89.3994 185.8 c 0
+ 59.0674 185.8 30.9326 178.867 11 165 c 1
+ 11 294.1 l 2
+ 11 327.032 39.1328 343.5 89.3994 343.5 c 0
+ 122.55 343.5 166 333.619 166 294.1 c 2
+ 166 -22.2002 l 2
+ 166 -30.3105 157.757 -31.5137 128.375 -31.5137 c 0
+ 115.999 -31.5137 99.9414 -31.2998 79.2998 -31.2998 c 0
+EndSplineSet
 EndChar
 
 StartChar: NameMe.176
@@ -4421,6 +4460,24 @@ EndChar
 
 StartChar: NameMe.429
 Encoding: 349 -1 349
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+EndChar
+
+StartChar: NameMe.430
+Encoding: 350 -1 350
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+EndChar
+
+StartChar: NameMe.431
+Encoding: 351 -1 351
 Width: 2048
 VWidth: 2048
 Flags: W

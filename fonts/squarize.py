@@ -73,7 +73,7 @@ liquescentiae={
 
 # a list of temporary glyphs, that must be removed from the finame font
 
-toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase', 'hepisemus_base','phigh', 'hepisemusleft', 'hepisemusright', 'mpdeminutus', 'mnbdeminutus', 'mnbpdeminutus', 'porrectusflexusnb1', 'porrectusflexusnb2', 'porrectusflexusnb3', 'porrectusflexusnb4', 'porrectusflexusnb5']
+toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'p2base', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase', 'hepisemus_base','phigh', 'hepisemusleft', 'hepisemusright', 'mpdeminutus', 'mnbdeminutus', 'mnbpdeminutus', 'porrectusflexusnb1', 'porrectusflexusnb2', 'porrectusflexusnb3', 'porrectusflexusnb4', 'porrectusflexusnb5']
 
 # in the police, all the free glyphs have the name NameMexxxx where xxxx is a number starting from 141 and increasing by one. For example each new glyph will be basically NameMecount, the next NameMecount+1, etc. They are initiated in initalize_glyphs()
 initialcount=0
@@ -158,15 +158,18 @@ def initialize_glyphs():
         initial_glyphs.remove(number)
     if font_name=="gregorio":
         glyphs_to_append=("_1025", "_2049")
+        initialcount=175
     elif font_name=="parmesan":
         glyphs_to_append=("_1025", "_2049")
+        initialcount=175
     elif font_name=="greciliae":
-        glyphs_to_append=("_2049",)
+        glyphs_to_append=("_2049", "_1025")
+        initialcount=176
     elif font_name=="gregoria":
         glyphs_to_append=("_2049", "_1025")
+        initialcount=175
     for glyphnumber in glyphs_to_append:
         initial_glyphs.append(glyphnumber)
-    initialcount=174
     count=initialcount
 
 #function in which we initialize the lenghts, depending on the font
@@ -430,10 +433,10 @@ def write_hepisemus(shape_width, glyphname):
 def pes():
     message("pes")
     precise_message("pes")
-    if (font_name=="gregorio" or font_name=="parmesan" or font_name=="gregoria"):
+    if (font_name=="gregorio" or font_name=="parmesan" or font_name=="gregoria" or font_name=="greciliae"):
     # we prefer drawing the pes with one ton of ambitus by hand, it is more beautiful
         for i in range(2,max_interval+1):
-            write_pes(i, "pbase", 'pes')
+            write_pes(i, "p2base", 'pes')
     else:
         for i in range(1,max_interval+1):
             write_pes(i, "pbase", 'pes')
@@ -461,7 +464,7 @@ def write_pes(i, first_glyph, shape, liquescentia='nothing'):
     # the difference of width of the two shapes, that will change a thing or two...
     if (first_glyph=="qbase"):
         width_difference=width_quilisma-width_high_pes
-    elif (first_glyph=="pbase"):
+    elif (first_glyph=="pbase" or first_glyph == "p2base"):
         width_difference=width_punctum-width_high_pes
     else:
         width_difference=0
