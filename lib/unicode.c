@@ -63,12 +63,6 @@ gregorio_build_char_list_from_buf (char *buf)
   return current_character;
 }
 
-void
-gregorio_fprint_grewchar (FILE *f, grewchar gwc)
-{
-
-}
-
 #else
 
 gregorio_character *
@@ -97,12 +91,6 @@ gregorio_build_char_list_from_buf (char *buf)
   free (gwstring);
   gregorio_go_to_first_character(&current_character);
   return current_character;
-}
-
-void
-gregorio_fprint_grewchar (FILE *f, grewchar gwc)
-{
-
 }
 
 #endif

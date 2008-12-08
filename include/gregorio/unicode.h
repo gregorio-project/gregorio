@@ -49,7 +49,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define UNICODE_H_SECOND_PART
 
 gregorio_character * gregorio_build_char_list_from_buf (char *buf);
-void gregorio_fprint_grewchar (FILE *f, grewchar gwc);
 
 #endif
 

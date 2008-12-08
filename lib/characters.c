@@ -157,18 +157,20 @@ gregorio_write_text (char type, gregorio_character * current_character,
 		  break;
 		case ST_INITIAL:
 		  if (type == SKIP_FIRST_LETTER)
-		  {
-		  while (current_character) {
-		    if (!current_character -> is_character
-		      && current_character->cos.s.type == ST_T_END
-		      && current_character->cos.s.style == ST_INITIAL)
-		      {
-		        break;
-		      }
-		    current_character = current_character->next_character;
-		  }
-		  }
-		break;
+		    {
+		      while (current_character)
+			{
+			  if (!current_character->is_character
+			      && current_character->cos.s.type == ST_T_END
+			      && current_character->cos.s.style == ST_INITIAL)
+			    {
+			      break;
+			    }
+			  current_character =
+			    current_character->next_character;
+			}
+		    }
+		  break;
 		default:
 		  begin (f, current_character->cos.s.style);
 		  break;
@@ -248,7 +250,7 @@ gregorio_write_initial (gregorio_character * current_character,
 		}
 	    }
 	}
-		  current_character = current_character->next_character;
+      current_character = current_character->next_character;
     }
 }
 
@@ -361,9 +363,9 @@ Pop deletes an style in the stack (the style to delete is the parameter)
 */
 
 void
-gregorio_style_pop (det_style ** current_style, det_style * element)
+gregorio_style_pop (det_style ** first_style, det_style * element)
 {
-  if (!element)
+  if (!element || !first_style || !*first_style)
     {
       return;
     }
@@ -376,11 +378,11 @@ gregorio_style_pop (det_style ** current_style, det_style * element)
       if (element->next_style)
 	{
 	  element->next_style->previous_style = element->previous_style;
-	  (*current_style) = element->next_style;
+	  (*first_style) = element->next_style;
 	}
       else
 	{
-	  (*current_style) = NULL;
+	  (*first_style) = NULL;
 	}
     }
   free (element);
@@ -393,6 +395,10 @@ free_styles just free the stack. You may notice that it will never be used in a 
 void
 gregorio_free_styles (det_style ** first_style)
 {
+  if (!first_style)
+    {
+      return;
+    }
   det_style *current_style = (*first_style);
   while (current_style)
     {
@@ -570,6 +576,10 @@ This function suppresses the corresponding character, updates the double chained
 void
 gregorio_suppress_this_character (gregorio_character * to_suppress)
 {
+  if (!to_suppress)
+    {
+      return;
+    }
   if (to_suppress->previous_character)
     {
       to_suppress->previous_character->next_character =
@@ -684,10 +694,12 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
 		  // the case of the iota or digamma
 		  false_middle = 0;
 		  // remember? this macro has a continue; in it
-		end_c ()}
+		  end_c ();
+		}
 	      begin_center (center_type)
 		center_is_determined = CENTER_DETERMINING_MIDDLE;
-	    end_c ()}
+	      end_c ();
+	    }
 	  // the case where the user has not determined the middle and we are in the middle section of the syllable, but there we encounter something that is not a vowel, so the center ends there.
 	  if (center_is_determined == CENTER_DETERMINING_MIDDLE
 	      && !gregorio_is_vowel (current_character->cos.character))
@@ -696,7 +708,8 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
 		center_is_determined = CENTER_FULLY_DETERMINED;
 	    }
 	  // in the case where it is just a normal character... we simply pass.
-	end_c ()}
+	  end_c ();
+	}
 
 // there starts the second part of the function that deals with the styles characters
 
@@ -713,12 +726,13 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
 	  if (current_style)
 	    {
 	      current_style = first_style;
-	    suppress_char_and_end_c ()}
+	      suppress_char_and_end_c ();
+	    }
 	  // if it is something to add then we just push the style in the stack and continue.
-	  gregorio_style_push (&current_style,
-			       current_character->cos.s.style);
+	  gregorio_style_push (&first_style, current_character->cos.s.style);
 	  current_style = first_style;
-	end_c ()}
+	  end_c ();
+	}
       // if it is a beginning of a center, we call the good macro and end.
       if (current_character->cos.s.type == ST_T_BEGIN
 	  && (current_character->cos.s.style == ST_CENTER
@@ -734,7 +748,8 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
 	    }
 	  if (center_is_determined)
 	    {
-	    end_c ()}
+	      end_c ();
+	    }
 	  //center_is_determined = DETERMINING_MIDDLE; // TODO: not really sure, but shouldn't be there
 	begin_center (center_type) end_c ()}
       if (current_character->cos.s.type == ST_T_END
@@ -744,7 +759,8 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
 	  // the case of the end of a style (the most complex). First, we have to see if the style is in the stack. If there is no stack, we just suppress and continue.
 	  if (!current_style)
 	    {
-	    suppress_char_and_end_c ()}
+	      suppress_char_and_end_c ();
+	    }
 	  // so, we look if it is in the stack. If it is we put current_style to the style just before the style corresponding to the character that we are trating (still there ?)
 	  if (current_style->style != current_character->cos.s.style)
 	    {
@@ -776,27 +792,31 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
 		      current_style = current_style->next_style;
 		    }
 		  //we delete the style in the stack
-		  gregorio_style_pop (&current_style, current_style);
+		  gregorio_style_pop (&first_style, current_style);
 		  current_style = first_style;
 		}
 	      else
 		{
-		suppress_char_and_end_c ()}
+		  suppress_char_and_end_c ();
+		}
 	    }
 	  else
 	    {
-	      gregorio_style_pop (&current_style, current_style);
+	      gregorio_style_pop (&first_style, current_style);
 	      current_style = first_style;
-	    end_c ()}
+	      end_c ();
+	    }
 	}
       else
 	{			// ST_T_END && ST_CENTER
 	  // a quite simple case, we just call the good macro.
 	  if (!center_is_determined)
 	    {
-	    suppress_char_and_end_c ()}
+	      suppress_char_and_end_c ();
+	    }
 	}
-    end_c ()}
+      end_c ();
+    }
   if (!current_character)
     {
       return;
