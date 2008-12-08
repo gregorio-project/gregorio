@@ -1645,6 +1645,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	}
       break;
     case T_TORCULUS:
+    case T_TORCULUS_QUILISMA:
       switch (i)
 	{
 	case 1:
@@ -1654,7 +1655,14 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	    }
 	  else
 	    {
+	    if (type == T_TORCULUS_QUILISMA)
+	    {
+	      *number = 20;
+	    }
+	    else 
+	    {
 	      *number = 6;
+	    }
 	    }
 	  normal_height ();
 	  break;

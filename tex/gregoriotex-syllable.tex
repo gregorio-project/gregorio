@@ -231,8 +231,8 @@
 \relax%
 }
 
-% the width of the last glyph, including the width of the text which is after
-%\newdimen\lastglyphwidth
+% the width of the last glyph
+\newdimen\lastglyphwidth
 % the width of the text which is after the glyph
 %\newdimen\additionalwidth
 
@@ -255,6 +255,7 @@
 \calculateglyphraisevalue{#2}{0}%
 \setbox\Tempwidth=\hbox{\gregorianfont #1}%
 \tempwidth=\wd\Tempwidth%
+\global\lastglyphwidth=\tempwidth %
 \raise \glyphraisevalue%
 \copy\Tempwidth%
 \ifnum\the\endofscore=0 %
@@ -569,8 +570,7 @@
 % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the prefious syllable and the first note of the next syllable. But there are limits : a bar cant go very far above text. For example if there is nuncncncncn with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
 % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
 % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
-% here we consider that #1 is : (or other stuff) that goes between the last syllable and *, so we don't center on it
-\findtextaligncenter{}{#2}%
+\findtextaligncenter{#1}{#2}%
 \setbox\Syllabletext=\hbox{\gretextformat{#1#2#3}}%
 \syllablenotes{#9}%
 \notesaligncenter=\wd\Syllablenotes%
@@ -644,28 +644,15 @@
 % I'm a little lazy for now, I won't make the usual mountain of ifs... TODO: use different spaces
 \skipone=\textbartextspace %
 % same code as in syllable
-%\temp=\begindifference %
-%%%\ifdim\temp > 0 pt %
-%%%\advance\skipone by \temp %
-%%%\fi%
-\kern \skipone %
-% we add the width of #1 to the space because, remember, #1 has a special alignment with bars
-\setbox\Syllabletext=\hbox{#1}%
-% if #1 is not nul, we put #1 in the middle of the last space
-\ifdim\wd\Syllabletext= 0 pt%
-\else %\ifdim\wd\Syllabletext= 0 pt
-\divide\skipone by 2 %
-\hskip -\skipone %
-#8\relax %
-\raise\textlower \copy\Syllabletext %
-\hskip\skipone %
-\fi %
-\setbox\Syllabletext=\hbox{#2#3}%
+\temp=\begindifference %
+\ifdim\temp > 0 pt %
+\advance\skipone by \temp %
+\fi%
 #8\relax %
 \raise\textlower \copy\Syllabletext %
 \kern -\wd\Syllabletext %
 \kern -\begindifference %
-#9\relax %
+#9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
 \ifdim\the\enddifference <0pt%
 %% important, else we are not really at the end of the syllable
 \kern -\enddifference %

@@ -241,6 +241,8 @@
 % #4 is 0 a shift that we want to get applied, useful for punctum inclinatum for example
 % #5 is the glyph number
 \def\vepisemusorrareaux#1#2#3#4#5{%
+% first we set \tempwidth to the width of the last glyph
+\tempwidth=\lastglyphwidth %
 \setbox\Tempsign=\hbox{\gregorianfont #2}%
 \tempsignwidth=\wd\Tempsign%
 \divide\tempsignwidth by 2 %
@@ -325,24 +327,24 @@
 \or%
 %case 3
 % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
-\vepisemusorrareaux{0}{\char 4225}{1}{0}{#3}%
+\vepisemusorrareaux{0}{\char 3715}{1}{0}{#3}%
 \or%
 %case 4
 % is a torculus, it has the good width
-\vepisemusorrareaux{\char 14434}{\char 17}{1}{0}{#3}%
+\vepisemusorrareaux{\char 14362}{\char 17}{1}{0}{#3}%
 \or%
 %case 5
 % is a torculus deminutus, it has the good width
 \vepisemusorrareaux{\char 14859}{\char 17}{1}{0}{#3}%
 \or%
 %case 6
-\vepisemusorrareaux{0}{\char 17}{2}{0}{#3}%
+\vepisemusorrareaux{0}{\char 17}{0}{0}{#3}%
 \or%
 %case 7
-\vepisemusorrareaux{0}{\char 13}{2}{0}{#3}%
+\vepisemusorrareaux{0}{\char 13}{0}{0}{#3}%
 \or%
 %case 8, in which we do (for now) the same as case 6
-\vepisemusorrareaux{0}{\char 17}{2}{0}{#3}%
+\vepisemusorrareaux{0}{\char 17}{0}{0}{#3}%
 \or% case 9, 10 and 11
 \or\or\or %
 %case 12
@@ -367,10 +369,10 @@
 \vepisemusorrareaux{0}{\char 74}{1}{0}{#3}%
 \or%
 %case 19
-\vepisemusorrareaux{0}{\char 28}{2}{0}{#3}%
+\vepisemusorrareaux{0}{\char 28}{0}{0}{#3}%
 \or%
 %case 20
-\vepisemusorrareaux{0}{\char 26}{2}{0}{#3}%
+\vepisemusorrareaux{0}{\char 26}{0}{0}{#3}%
 \or%
 %case 21
 \vepisemusorrareaux{\char 4098}{\char 17}{4}{0}{#3}%
@@ -418,7 +420,8 @@
 % 4th argument is the same as in hepisorline
 \def\hepisorlineaux#1#2#3#4{%
 \ifnum#3=0%
-%remember, \tempwidth has the value of the last glyph width (cool isn't it?)
+% first we set \tempwidth to the width of the last glyph
+\tempwidth=\lastglyphwidth %
 \else%
 \setbox\Tempsign=\hbox{\gregorianfont #1}%
 \tempwidth=\wd\Tempsign%
@@ -489,11 +492,11 @@
 \or%
 %case 3
 % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
-\hepisorlineaux{\char 4225}{40}{1}{#4}%
+\hepisorlineaux{\char 3715}{40}{1}{#4}%
 \or%
 %case 4
 % a torculus, it has the good width
-\hepisorlineaux{\char 14343}{40}{1}{#4}%
+\hepisorlineaux{\char 14362}{40}{1}{#4}%
 \or%
 %case 5
 % \char 29190 is a torculus deminutus, it has the good width
