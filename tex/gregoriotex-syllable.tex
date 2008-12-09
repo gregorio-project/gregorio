@@ -115,23 +115,23 @@
 \ifcase#2 % 
 \or\or\or%3: if it is a vertical episemus on a line, we shift it a bit higher, so that it's more beautiful
 \ifnum\isonaline=1%
-\addedraisevalue=350 sp%
+\addedraisevalue=7250 sp%
 \multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
 \else % if it is not on a line, we shift it a bit lower
-\addedraisevalue=-80 sp%
+\addedraisevalue=-1380 sp%
 \multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
 \fi %
 \or% 4: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
 \ifnum\isonaline=1%
-\addedraisevalue=-400 sp%
+\addedraisevalue=-6900 sp%
 \multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
 \fi%
-\or% 5: if it is a horizontal episemus in a inter-line, we shift it lower
+\or% 5: if it is a horizontal episemus under a note which is on a line, we shift it lower
 \ifnum\isonaline=0%
-\addedraisevalue=-300 sp%
+\addedraisevalue=-4980 sp%
 \multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
 \fi %
