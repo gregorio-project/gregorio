@@ -17,22 +17,23 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#This script takes a very simple .sfd file with a few symbols and builds a|
+#This script takes a very simple .sfd file with a few symbols and builds a
 #complete square notation font. See gregorio-base.sfd for naming conventions
 #of these symbols.
 #
 #This python script generates a fontforge native script (.pe). In the future, 
-#python will also work (better that .pe) to control fontforge with scripts, but
+#python will also work (better than .pe) to control fontforge with scripts, but
 #it is not yet implemented. The .pe script will build foo-0.pfb (and also .tfm,
-#.afm and .enc) to foo-5.pfb.
+#.afm and .enc) to foo-8.pfb.
 #
-#To build you own font, look at gregorio-base.sfd, and build you own glyphs from
+#To build your own font, look at gregorio-base.sfd, and build your own glyphs from
 #it.
 #
 #Basic use :
-# ./sqarize.py
-# chmod +x squarize.pe
-# ./squarize.pe
+# ./squarize.py fontname
+# chmod +x fontname.pe
+# ./fontname.pe
+#where fontname = gregorio, parmesan, or greciliae 
 # the last step may take a few minutes
 
 import getopt, sys
@@ -97,8 +98,8 @@ see gregorio-base.sfd for this convention.
 Usage:
         squarize.py fontname
 
-with fontame=gregorio, parmesan or greciliae for now. The script generates
-squarize-fontame.pe which is a fontforge script.
+with fontname=gregorio, parmesan or greciliae for now. The script generates
+fontname.pe which is a fontforge script.
 """
 
 def main():
