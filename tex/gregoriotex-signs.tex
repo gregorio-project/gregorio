@@ -226,12 +226,11 @@
 \relax%
 }
 
-% a function to typeset a augmentum duplex, the argument is the letter of the height of the augmentum duplex
-\def\augmentumduplex#1{%
-\hskip\spacebeforesigns%
-\calculateglyphraisevalue{#1}{2}%
-\raise \glyphraisevalue \hbox{\gregorianfont \char 15}%
-\relax%
+% a function to typeset a augmentum duplex, easy enough to be understood...
+\def\augmentumduplex#1#2{%
+\punctummora{#1}{1}%
+\punctummora{#2}{0}%
+\relax %
 }
 
 \newbox\Tempsign
@@ -323,19 +322,19 @@
 \or%
 %case 2
 % a kind of flexus, it has the good width
-\vepisemusorrareaux{\char 4098}{\char 17}{1}{0}{#3}%
+\vepisemusorrareaux{\char 5634}{\char 17}{1}{0}{#3}%
 \or%
 %case 3
 % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
-\vepisemusorrareaux{0}{\char 3715}{1}{0}{#3}%
+\vepisemusorrareaux{0}{\char 5250}{1}{0}{#3}%
 \or%
 %case 4
 % is a torculus, it has the good width
-\vepisemusorrareaux{\char 14362}{\char 17}{1}{0}{#3}%
+\vepisemusorrareaux{\char 15371}{\char 17}{1}{0}{#3}%
 \or%
 %case 5
 % is a torculus deminutus, it has the good width
-\vepisemusorrareaux{\char 14859}{\char 17}{1}{0}{#3}%
+\vepisemusorrareaux{\char 15884}{\char 17}{1}{0}{#3}%
 \or%
 %case 6
 \vepisemusorrareaux{0}{\char 17}{0}{0}{#3}%
@@ -363,7 +362,7 @@
 \vepisemusorrareaux{0}{\char 27}{0}{0}{#3}%
 \or%
 %case 17
-\vepisemusaux{\char 4097}{\char 17}{1}{0}{#3}%
+\vepisemusaux{\char 5633}{\char 17}{1}{0}{#3}%
 \or%
 %case 18
 \vepisemusorrareaux{0}{\char 74}{1}{0}{#3}%
@@ -375,10 +374,10 @@
 \vepisemusorrareaux{0}{\char 26}{0}{0}{#3}%
 \or%
 %case 21
-\vepisemusorrareaux{\char 4098}{\char 17}{4}{0}{#3}%
+\vepisemusorrareaux{\char 5634}{\char 17}{4}{0}{#3}%
 \or%
 %case 22 %
-\vepisemusorrareaux{\char 4097}{\char 17}{4}{0}{#3}%
+\vepisemusorrareaux{\char 5633}{\char 17}{4}{0}{#3}%
 \or%
 %case 23
 \vepisemusorrareaux{\char 1986}{\char 17}{4}{0}{#3}%
@@ -488,19 +487,19 @@
 \or%
 %case 2
 % a kind of flexus, it has the good width
-\hepisorlineaux{\char 4098}{40}{1}{#4}%
+\hepisorlineaux{\char 5634}{40}{1}{#4}%
 \or%
 %case 3
 % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
-\hepisorlineaux{\char 3715}{40}{1}{#4}%
+\hepisorlineaux{\char 5250}{40}{1}{#4}%
 \or%
 %case 4
 % a torculus, it has the good width
-\hepisorlineaux{\char 14362}{40}{1}{#4}%
+\hepisorlineaux{\char 15371}{40}{1}{#4}%
 \or%
 %case 5
 % \char 29190 is a torculus deminutus, it has the good width
-\hepisorlineaux{\char 14859}{40}{1}{#4}%
+\hepisorlineaux{\char 15884}{40}{1}{#4}%
 \or%
 %case 6
 \hepisorlineaux{0}{40}{0}{#4}%
@@ -543,15 +542,15 @@
 %case 11
 \ifcase#3%
 \or%
-\hepisorlineaux{\char 10246}{50}{1}{#4}%
+\hepisorlineaux{\char 11270}{50}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10247}{51}{1}{#4}%
+\hepisorlineaux{\char 11271}{51}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10248}{52}{1}{#4}%
+\hepisorlineaux{\char 11272}{52}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10249}{53}{1}{#4}%
+\hepisorlineaux{\char 11273}{53}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10250}{54}{1}{#4}%
+\hepisorlineaux{\char 11274}{54}{1}{#4}%
 \fi%
 \or%
 %case 12
@@ -570,7 +569,7 @@
 \hepisorlineaux{\char 27}{47}{1}{#4}%
 \or%
 %case 17
-\hepisorlineaux{\char 4097}{40}{1}{#4}%
+\hepisorlineaux{\char 5633}{40}{1}{#4}%
 \or %
 %case 18
 \hepisorlineaux{\char 74}{58}{1}{#4}%
@@ -584,43 +583,43 @@
 %case 21
 \ifcase#3%
 \or%
-\hepisorlineaux{\char 10246}{40}{1}{#4}%
+\hepisorlineaux{\char 11270}{40}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10247}{40}{1}{#4}%
+\hepisorlineaux{\char 11271}{40}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10248}{40}{1}{#4}%
+\hepisorlineaux{\char 11272}{40}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10249}{40}{1}{#4}%
+\hepisorlineaux{\char 11273}{40}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10250}{40}{1}{#4}%
+\hepisorlineaux{\char 11274}{40}{1}{#4}%
 \fi%
 \or %
 %case 22
 \ifcase#3%
 \or%
-\hepisorlineaux{\char 10246}{40}{1}{#4}%
+\hepisorlineaux{\char 11270}{40}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10247}{40}{1}{#4}%
+\hepisorlineaux{\char 11271}{40}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10248}{40}{1}{#4}%
+\hepisorlineaux{\char 11272}{40}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10249}{40}{1}{#4}%
+\hepisorlineaux{\char 11273}{40}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10250}{40}{1}{#4}%
+\hepisorlineaux{\char 11274}{40}{1}{#4}%
 \fi%
 \or %
 %case 23
 \ifcase#3%
 \or%
-\hepisorlineaux{\char 10246}{40}{1}{#4}%
+\hepisorlineaux{\char 11270}{40}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10247}{40}{1}{#4}%
+\hepisorlineaux{\char 11271}{40}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10248}{40}{1}{#4}%
+\hepisorlineaux{\char 11272}{40}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10249}{40}{1}{#4}%
+\hepisorlineaux{\char 11273}{40}{1}{#4}%
 \or%
-\hepisorlineaux{\char 10250}{40}{1}{#4}%
+\hepisorlineaux{\char 11274}{40}{1}{#4}%
 \fi%
 \fi%
 \relax%

@@ -1126,16 +1126,57 @@ libgregorio_gregoriotex_write_auctum_duplex (FILE * f,
 					     gregorio_glyph * glyph,
 					     gregorio_note * current_note)
 {
-// in the case of a pes, we must not set the height of the augmentum duplex to current_note->pitch but to current_note->pitch -2...
-  if (glyph->glyph_type == G_PODATUS && current_note->previous_note)
-    {
-      fprintf (f, "\\augmentumduplex{%c}%%\n",
-	       current_note->previous_note->pitch);
-    }
-  else
-    {
-      fprintf (f, "\\augmentumduplex{%c}%%\n", current_note->pitch);
-    }
+// we suppose we are on the last note... I don't really understand what it would mean otherwise...
+// the algorith is the following : if there is a previous note, we consider that the two puncta of the augumentum duplex must correspond to the last note and the previous note, if there is no such thing, we just typeset two puncta spaced of 2.
+char pitch=current_note->pitch;
+char previous_pitch=0;
+// second_pitch is the second argument of the \augmentumduplex macro, that's what this function is all about.
+char second_pitch;
+
+ if (current_note->previous_note)
+   {
+     previous_pitch = current_note->previous_note->pitch;
+   }
+ 
+ // the behaviour (try to make some examples to understand) is to draw a puctum for each note, but they must be separated of at least two
+ if (previous_pitch && previous_pitch < pitch)
+   {
+     if (pitch - previous_pitch > 1 || is_on_a_line(pitch))
+       {
+         second_pitch = previous_pitch;
+       }
+     else
+       {
+         second_pitch = previous_pitch -1; // for the fg.. to look differently, try pitch + 1 instead
+       }
+   }
+
+  if (previous_pitch && previous_pitch > pitch)
+   {
+     if (previous_pitch - pitch > 1 || is_between_lines(pitch))
+       {
+         second_pitch = previous_pitch;
+       }
+     else
+       {
+         second_pitch = pitch - 1; // for the gf.. to look differently, try previous_pitch + 1 instead
+       }
+   }
+ 
+ if (!previous_pitch || previous_pitch == pitch)
+   {
+     if (is_on_a_line(pitch))
+       {
+         second_pitch = pitch -1;
+       }
+     else
+       {
+         second_pitch = pitch +1;
+       }
+   }
+    
+  fprintf (f, "\\augmentumduplex{%c}{%c}%%\n", pitch, second_pitch);
+    
 }
 
 
@@ -1828,7 +1869,7 @@ void
   (gregorio_glyph * glyph, int *type, char *gtype, unsigned int *glyph_number)
 {
   unsigned int temp = 0;
-  char pitch;
+  char pitch=0;
   char liquescentia;
   if (!glyph)
     {
@@ -1859,22 +1900,31 @@ void
   switch (glyph->glyph_type)
     {
     case G_PODATUS:
+    pitch = glyph->first_note->next_note->pitch;
       switch (glyph->first_note->shape)
 	{
 	case S_QUILISMA:
 	  *type = AT_QUILISMA;
-	  *gtype = T_PESQUILISMA;
+      *gtype = T_PESQUILISMA;
 	  temp =
 	    TYPE_FACTOR * T_PESQUILISMA +
-	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR, L_ALL,
+	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR, L_NO_INITIO,
 						       glyph->liquescentia);
 	  break;
 	case S_ORISCUS:
 	  *type = AT_ORISCUS;
-	  *gtype = T_PESQUASSUS;
+	  // TODO: we could factorize this code
+	  if (glyph->liquescentia == L_NO_LIQUESCENTIA && is_long(pitch))
+	    {
+	      *gtype = T_PESQUASSUS_LONGQUEUE;
+	    }
+	  else
+	    {
+	      *gtype = T_PESQUASSUS;
+	    }
 	  temp =
-	    TYPE_FACTOR * T_PESQUASSUS +
-	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR, L_ALL,
+	    TYPE_FACTOR * (*gtype) +
+	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR, L_NO_INITIO,
 						       glyph->liquescentia);
 	  break;
 	default:
@@ -1889,29 +1939,51 @@ void
 	}
       break;
     case G_PES_QUADRATUM:
+    pitch = glyph->first_note->next_note->pitch;
       switch (glyph->first_note->shape)
 	{
 	case S_QUILISMA:
 	  *type = AT_QUILISMA;
-	  *gtype = T_PESQUILISMA;
+	  if (glyph->liquescentia == L_NO_LIQUESCENTIA && is_long(pitch))
+	    {
+	      *gtype = T_PESQUILISMAQUADRATUM_LONGQUEUE;
+	    }
+	  else
+	    {
+	      *gtype = T_PESQUILISMAQUADRATUM;
+	    }
 	  temp =
-	    TYPE_FACTOR * T_PESQUILISMA +
-	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR, L_ALL,
+	    TYPE_FACTOR * (*gtype) +
+	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR, L_NO_INITIO,
 						       glyph->liquescentia);
 	  break;
 	case S_ORISCUS:
 	  *type = AT_ORISCUS;
-	  *gtype = T_PESQUILISMAQUADRATUM;
+	  if (glyph->liquescentia == L_NO_LIQUESCENTIA && is_long(pitch))
+	    {
+	      *gtype = T_PESQUASSUS_LONGQUEUE;
+	    }
+	  else
+	    {
+	      *gtype = T_PESQUASSUS;
+	    }
 	  temp =
-	    TYPE_FACTOR * T_PESQUILISMAQUADRATUM +
-	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR, L_ALL,
+	    TYPE_FACTOR * (*gtype) +
+	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR, L_NO_INITIO,
 						       glyph->liquescentia);
 	  break;
 	default:
 	  *type = AT_ONE_NOTE;
-	  *gtype = T_PESQUADRATUM;
+	  if (glyph->liquescentia == L_NO_LIQUESCENTIA && is_long(pitch))
+	    {
+	      *gtype = T_PESQUADRATUM_LONGQUEUE;
+	    }
+	  else
+	    {
+	      *gtype = T_PESQUADRATUM;
+	    }
 	  temp =
-	    TYPE_FACTOR * T_PESQUADRATUM +
+	    TYPE_FACTOR * (*gtype) +
 	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
 						       L_ALL,
 						       glyph->liquescentia);

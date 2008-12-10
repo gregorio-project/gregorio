@@ -46,19 +46,22 @@ max_interval=5
 shapes={
 'pes':2,
 'pesquadratum':3,
-'pesquilisma':4,
-'pesquassus':5,
-'pesquilismaquadratum':6,
-'flexus':7,
-'flexus_nobar':8,
-'flexus_longqueue':9,
-'porrectusflexus':12,
-'porrectusflexus_nobar':16,
-'porrectus':20,
-'porrectus_nobar':24,
-'torculus':28,
-'torculusresupinus':32,
-'torculusquilisma':36,
+'pesquadratum_longqueue':4,
+'pesquilisma':5,
+'pesquassus':6,
+'pesquassus_longqueue':7,
+'pesquilismaquadratum':8,
+'pesquilismaquadratum_longqueue':9,
+'flexus':10,
+'flexus_nobar':11,
+'flexus_longqueue':12,
+'porrectusflexus':14,
+'porrectusflexus_nobar':18,
+'porrectus':22,
+'porrectus_nobar':26,
+'torculus':30,
+'torculusresupinus':34,
+'torculusquilisma':38,
 }
 
 liquescentiae={
@@ -74,7 +77,7 @@ liquescentiae={
 
 # a list of temporary glyphs, that must be removed from the finame font
 
-toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'p2base', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'vbase', 'vlbase', 'hepisemus_base','phigh', 'hepisemusleft', 'hepisemusright', 'mpdeminutus', 'mnbdeminutus', 'mnbpdeminutus', 'porrectusflexusnb1', 'porrectusflexusnb2', 'porrectusflexusnb3', 'porrectusflexusnb4', 'porrectusflexusnb5']
+toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'p2base', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'rvsbase', 'rvlbase', 'vlbase', 'hepisemus_base','phigh', 'hepisemusleft', 'hepisemusright', 'mpdeminutus', 'mnbdeminutus', 'mnbpdeminutus', 'porrectusflexusnb1', 'porrectusflexusnb2', 'porrectusflexusnb3', 'porrectusflexusnb4', 'porrectusflexusnb5']
 
 # in the police, all the free glyphs have the name NameMexxxx where xxxx is a number starting from 141 and increasing by one. For example each new glyph will be basically NameMecount, the next NameMecount+1, etc. They are initiated in initalize_glyphs()
 initialcount=0
@@ -159,16 +162,16 @@ def initialize_glyphs():
         initial_glyphs.remove(number)
     if font_name=="gregorio":
         glyphs_to_append=("_1025", "_2049")
-        initialcount=175
+        initialcount=176
     elif font_name=="parmesan":
         glyphs_to_append=("_1025", "_2049")
-        initialcount=175
+        initialcount=176
     elif font_name=="greciliae":
         glyphs_to_append=("_2049", "_1025")
-        initialcount=176
+        initialcount=177
     elif font_name=="gregoria":
         glyphs_to_append=("_2049", "_1025")
-        initialcount=175
+        initialcount=176
     for glyphnumber in glyphs_to_append:
         initial_glyphs.append(glyphnumber)
     count=initialcount
@@ -296,6 +299,7 @@ def end_font():
             fout.write("Clear();\n")        
     fout.write("Reencode(\"compacted\");\n")
     fout.write("Reencode(\"original\",1);\n")
+    fout.write("Reencode(\"compacted\");\n")
     fout.write("SetFontNames(\"%s-%d\");\n" % (font_name, current_font_number))
     #for gregoria font, we generate the sfd, not the pfb
     if font_name=="gregoria":
@@ -528,13 +532,19 @@ def pes_quadratum():
     message("pes quadratum")
     precise_message("pes quadratum")
     for i in range(1,max_interval+1):
-        write_pes_quadratum(i, "base5", "vbase", 'pesquadratum')
+        write_pes_quadratum(i, "base5", "rvsbase", 'pesquadratum')
+    for i in range(1,max_interval+1):
+        write_pes_quadratum(i, "base5", "rvlbase", 'pesquadratum_longqueue')
     precise_message("pes quassus")
     for i in range(1,max_interval+1):
-        write_pes_quadratum(i, "obase", "vbase", 'pesquassus')
+        write_pes_quadratum(i, "obase", "rvsbase", 'pesquassus')
+    for i in range(1,max_interval+1):
+        write_pes_quadratum(i, "obase", "rvlbase", 'pesquassus_longqueue')
     precise_message("pes quilisma quadratum")
     for i in range(1,max_interval+1):
-        write_pes_quadratum(i, "qbase", "vbase", 'pesquilismaquadratum')
+        write_pes_quadratum(i, "qbase", "rvsbase", 'pesquilismaquadratum')
+    for i in range(1,max_interval+1):
+        write_pes_quadratum(i, "qbase", "rvlbase", 'pesquilismaquadratum_longqueue')
     precise_message("pes auctus ascendens")
     for i in range(1,max_interval+1):
         write_pes_quadratum(i, "base5", "auctusa2", 'pesquadratum', 'auctusascendens')

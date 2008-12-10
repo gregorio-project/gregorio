@@ -30,20 +30,23 @@ Here are the different types, they must be the same as in squarize.py
 #define T_ONE_NOTE 1
 #define T_PES 2
 #define T_PESQUADRATUM 3
-#define T_PESQUILISMA 4
-#define T_PESQUASSUS 5
-#define T_PESQUILISMAQUADRATUM 6
-#define T_FLEXUS 7
-#define T_FLEXUS_NOBAR 8
-#define T_FLEXUS_LONGQUEUE 9
+#define T_PESQUADRATUM_LONGQUEUE 4
+#define T_PESQUILISMA 5
+#define T_PESQUASSUS 6
+#define T_PESQUASSUS_LONGQUEUE 7
+#define T_PESQUILISMAQUADRATUM 8
+#define T_PESQUILISMAQUADRATUM_LONGQUEUE 9
+#define T_FLEXUS 10
+#define T_FLEXUS_NOBAR 11
+#define T_FLEXUS_LONGQUEUE 12
 // the next are the long ones
-#define T_PORRECTUSFLEXUS 12
-#define T_PORRECTUSFLEXUS_NOBAR 16
-#define T_PORRECTUS 20
-#define T_PORRECTUS_NOBAR 24
-#define T_TORCULUS 28
-#define T_TORCULUS_RESUPINUS 32
-#define T_TORCULUS_QUILISMA 36
+#define T_PORRECTUSFLEXUS 14
+#define T_PORRECTUSFLEXUS_NOBAR 18
+#define T_PORRECTUS 22
+#define T_PORRECTUS_NOBAR 26
+#define T_TORCULUS 30
+#define T_TORCULUS_RESUPINUS 34
+#define T_TORCULUS_QUILISMA 38
 
 // the liquescentia number of GregorioTeX (different because they have to be between 0 and 7)
 #define GL_NO_LIQUESCENTIA 0
@@ -75,7 +78,10 @@ Here are the different types, they must be the same as in squarize.py
 
 // macro that we will use to determine if we need a short bar or not
 
-#define is_short(pitch) pitch=='a'||pitch=='c'||pitch=='e'||pitch=='g'||pitch=='i'||pitch=='k'||pitch=='m'
+#define is_short(pitch) (pitch=='a'||pitch=='c'||pitch=='e'||pitch=='g'||pitch=='i'||pitch=='k'||pitch=='m')
+#define is_long(pitch) (pitch=='b'||pitch=='d'||pitch=='f'||pitch=='h'||pitch=='j'||pitch=='l')
+#define is_on_a_line(pitch) is_long(pitch)
+#define is_between_lines(pitch) is_short(pitch)
 
 // Here we define a function that will determine the number of the liquescentia that we will add to the glyph number. There are several types as all glyphs can't have all liquescentiae. Let's first define the different types:
 

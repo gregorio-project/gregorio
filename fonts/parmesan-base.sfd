@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1228664787
+ModificationTime: 1228896281
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -44,7 +44,7 @@ AntiAlias: 1
 FitToEm: 1
 WinInfo: 288 12 6
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 352 352
+BeginChars: 353 353
 
 StartChar: _0017
 Encoding: 0 66 0
@@ -890,7 +890,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: vbase
+StartChar: rvsbase
 Encoding: 38 -1 38
 Width: 161
 Flags: HW
@@ -929,7 +929,7 @@ SplineSet
  139 -24 139 -27.8333 139.004 -23.002 c 1
  133.667 -17.8333 116.615 -5.80859 81.2754 -5.80859 c 0
  42.5146 -5.80859 34.6667 -9.33333 22 -21.5 c 1
- 22.1172 -359.873 l 5
+ 22.1172 -359.873 l 1
  18.4922 -362.373 0 -363 0 -363 c 5
 EndSplineSet
 EndChar
@@ -2213,13 +2213,26 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: NameMe.175
+StartChar: rvlbase
 Encoding: 96 -1 96
-Width: 2048
-VWidth: 2048
-Flags: W
+Width: 161
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
+Fore
+SplineSet
+160.992 -363.002 m 5
+ 160.992 -363.002 142.5 -362.375 138.875 -359.875 c 5
+ 139 -21.5 l 1
+ 126.333 -9.33301 118.485 -5.80859 79.7246 -5.80859 c 0
+ 44.3848 -5.80859 27.333 -17.833 21.9961 -23.002 c 1
+ 22 -27.833 22 -24 22.0039 -31.0049 c 1
+ 9.66699 -30.833 17.167 -31 0 -30.6738 c 1
+ 0 130.972 l 1
+ 0 157.191 69.7402 163.997 80 163.997 c 0
+ 91.4004 163.997 161 157.157 161 130.938 c 2
+ 160.992 -363.002 l 5
+EndSplineSet
 EndChar
 
 StartChar: NameMe.176
@@ -4510,6 +4523,15 @@ EndChar
 
 StartChar: NameMe.430
 Encoding: 351 -1 351
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+EndChar
+
+StartChar: NameMe.431
+Encoding: 352 -1 352
 Width: 2048
 VWidth: 2048
 Flags: W
