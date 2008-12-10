@@ -161,16 +161,16 @@ def initialize_glyphs():
         initial_glyphs.insert(0,toto)
         initial_glyphs.remove(number)
     if font_name=="gregorio":
-        glyphs_to_append=("_1025", "_2049")
+        glyphs_to_append=("_1025", "_2561")
         initialcount=176
     elif font_name=="parmesan":
-        glyphs_to_append=("_1025", "_2049")
+        glyphs_to_append=("_1025", "_2561")
         initialcount=176
     elif font_name=="greciliae":
-        glyphs_to_append=("_2049", "_1025")
+        glyphs_to_append=("_2561", "_1025")
         initialcount=177
     elif font_name=="gregoria":
-        glyphs_to_append=("_2049", "_1025")
+        glyphs_to_append=("_2561", "_1025")
         initialcount=176
     for glyphnumber in glyphs_to_append:
         initial_glyphs.append(glyphnumber)

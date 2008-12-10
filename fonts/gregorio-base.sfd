@@ -1334,7 +1334,7 @@ EndSplineSet
 Validated: 33
 EndChar
 
-StartChar: _2049
+StartChar: _2561
 Encoding: 58 -1 58
 Width: 164
 VWidth: 2048
@@ -2195,7 +2195,7 @@ StartChar: rvlbase
 Encoding: 96 -1 96
 Width: 164
 VWidth: 2048
-Flags: HWO
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore

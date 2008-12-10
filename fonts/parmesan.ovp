@@ -251,6 +251,15 @@
       (SETCHAR D 21)
       )
    )
+(CHARACTER H A01
+   (CHARWD R 0.160999)
+   (CHARDP R 0.0)
+   (CHARHT R 0.324707)
+   (MAP
+      (SELECTFONT D 0)
+      (SETCHAR D 22)
+      )
+   )
 (CHARACTER H 15
    (CHARWD R 0.167999)
    (CHARDP R 0.0)

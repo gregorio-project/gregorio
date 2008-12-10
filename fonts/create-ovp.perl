@@ -123,51 +123,75 @@ my %width;
 my %height;
 my %depth;
 my $character;
+my %warnings = ();
 
-for ($i=0;$i<$number_of_font;$i++) {
-# there you must have the .pl files, they are generated from tfm by tftopl (in the tetex or texlive distribution)
-#open IN,"tftopl $name-$i.tfm |";
-open IN,"<$name-$i.pl";
-while (<IN>) {
-  if (m/\(CHARACTER O ([0-7]+)/) { 
-    $character=oct($1);
-    $width{$namex{$i."-".$character}}="0.0";
-    $height{$namex{$i."-".$character}}="0.0";
-    $depth{$namex{$i."-".$character}}="0.0";
+for ($i=0;$i<$number_of_font;$i++)
+{
+  # there you must have the .pl files, they are generated from tfm by tftopl (in the tetex or texlive distribution)
+  #open IN,"tftopl $name-$i.tfm |";
+  open IN,"<$name-$i.pl";
+  while (<IN>)
+  {
+    my @todoset = ();
+    my $action;
+
+    if (m/\(CHARACTER O ([0-7]+)/) { 
+        $character=oct($1);
+        push(@todoset, [ \%width,  "0.0" ]);
+        push(@todoset, [ \%height, "0.0" ]);
+        push(@todoset, [ \%depth,  "0.0" ]);
+    }
+    elsif (m/\(CHARACTER D ([0-9]+)/) {
+        $character=$1;
+        push(@todoset, [ \%width,  "0.0" ]);
+        push(@todoset, [ \%height, "0.0" ]);
+        push(@todoset, [ \%depth,  "0.0" ]);
+    }
+    elsif (m/\(CHARACTER H ([0-9A-F]+)/) {
+        $character=hex($1);
+        push(@todoset, [ \%width,  "0.0" ]);
+        push(@todoset, [ \%height, "0.0" ]);
+        push(@todoset, [ \%depth,  "0.0" ]);
+    }
+    elsif (m/\(CHARACTER C ([A-Za-z0-9])/) {
+        $character=ord($1);
+        push(@todoset, [ \%width,  "0.0" ]);
+        push(@todoset, [ \%height, "0.0" ]);
+        push(@todoset, [ \%depth,  "0.0" ]);
+    }
+    elsif (m/\(CHARWD R ([0-9.-]+)/) {
+        # "grouik" workaround of a fontforge (bug|feature) on 64 bit, before I bugreport
+        push(@todoset, [ \%width,  $1 ]);
+    } 
+    elsif (m/\(CHARHT R ([0-9.-]+)/) {
+        push(@todoset, [ \%height, $1 ]);
+    } 
+    elsif (m/\(CHARDP R ([0-9.-]+)/) {
+        push(@todoset, [ \%depth,  $1 ]);
+    } 
+
+    foreach $action (@todoset)
+    {
+      if (defined($namex{$i."-".$character}))
+      {
+        ($action->[0])->{$namex{$i."-".$character}} = $action->[1];
+      }
+      else
+      {
+        if (!defined($warnings{$i."-".$character})) { $warnings{$i."-".$character} = 0; }
+        $warnings{$i."-".$character}++;
+      }
+    }
   }
-  elsif (m/\(CHARACTER D ([0-9]+)/) {
-    $character=$1;
-    $width{$namex{$i."-".$character}}="0.0";
-    $height{$namex{$i."-".$character}}="0.0";
-    $depth{$namex{$i."-".$character}}="0.0";
-  }
-  elsif (m/\(CHARACTER H ([0-9A-F]+)/) {
-    $character=hex($1);
-    $width{$namex{$i."-".$character}}="0.0";
-    $height{$namex{$i."-".$character}}="0.0";
-    $depth{$namex{$i."-".$character}}="0.0";
-  }
-  elsif (m/\(CHARACTER C ([A-Za-z0-9])/) {
-    $character=ord($1);
-    $width{$namex{$i."-".$character}}="0.0";
-    $height{$namex{$i."-".$character}}="0.0";
-    $depth{$namex{$i."-".$character}}="0.0";
-  }
-  elsif (m/\(CHARWD R ([0-9.-]+)/) {
-    # "grouik" workaround of a fontforge (bug|feature) on 64 bit, before I bugreport
-    $width{$namex{$i."-".$character}}=$1;
-  } 
-  elsif (m/\(CHARHT R ([0-9.-]+)/) {
-    $height{$namex{$i."-".$character}}=$1;
-  } 
-  elsif (m/\(CHARDP R ([0-9.-]+)/) {
-    $depth{$namex{$i."-".$character}}=$1;
-  } 
-  }
-close IN;
+  close IN;
 }
 
 my $temp;
+
+foreach $temp (keys %warnings)
+{
+   print STDERR "* WARNING: $temp is not a key of namex: required ".$warnings{$temp}." time(s)\n";
+}
 
 open OUT, ">$name.ovp";
 print OUT $static."\n";
