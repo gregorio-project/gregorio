@@ -62,6 +62,10 @@ shapes={
 'torculus':30,
 'torculusresupinus':34,
 'torculusquilisma':38,
+# if one day we are running out of namespace, we may consider these two next as specials, because only the deminutus are generated
+'scandicus':42,
+'ancus':46,
+'ancus_longqueue':50,
 }
 
 liquescentiae={
@@ -77,7 +81,7 @@ liquescentiae={
 
 # a list of temporary glyphs, that must be removed from the finame font
 
-toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'p2base', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'rvsbase', 'rvlbase', 'vlbase', 'hepisemus_base','phigh', 'hepisemusleft', 'hepisemusright', 'mpdeminutus', 'mnbdeminutus', 'mnbpdeminutus', 'porrectusflexusnb1', 'porrectusflexusnb2', 'porrectusflexusnb3', 'porrectusflexusnb4', 'porrectusflexusnb5']
+toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'p2base', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'rvsbase', 'rvlbase', 'vlbase', 'hepisemus_base','phigh', 'hepisemusleft', 'hepisemusright', 'mpdeminutus', 'mnbdeminutus', 'mnbpdeminutus', 'porrectusflexusnb1', 'porrectusflexusnb2', 'porrectusflexusnb3', 'porrectusflexusnb4', 'porrectusflexusnb5', 'msdeminutus', 'mademinutus']
 
 # in the police, all the free glyphs have the name NameMexxxx where xxxx is a number starting from 141 and increasing by one. For example each new glyph will be basically NameMecount, the next NameMecount+1, etc. They are initiated in initalize_glyphs()
 initialcount=0
@@ -146,6 +150,8 @@ def main():
     pes_quadratum()
     flexus()
     shortglyphs=0
+    scandicus()
+    ancus()
     torculus()
     porrectus()
     porrectusflexus()
@@ -162,16 +168,16 @@ def initialize_glyphs():
         initial_glyphs.remove(number)
     if font_name=="gregorio":
         glyphs_to_append=("_1025", "_2561")
-        initialcount=176
+        initialcount=178
     elif font_name=="parmesan":
         glyphs_to_append=("_1025", "_2561")
-        initialcount=176
+        initialcount=178
     elif font_name=="greciliae":
         glyphs_to_append=("_2561", "_1025")
-        initialcount=177
+        initialcount=179
     elif font_name=="gregoria":
         glyphs_to_append=("_2561", "_1025")
-        initialcount=176
+        initialcount=178
     for glyphnumber in glyphs_to_append:
         initial_glyphs.append(glyphnumber)
     count=initialcount
@@ -1003,6 +1009,65 @@ def write_torculusresupinusdeminutus(i,j,k, first_glyph, shape, liquescentia='no
     set_width(length)
     end_glyph(glyphname)
 
-
+def scandicus():
+    message("scandicus")
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            write_scandicus(i,j)
+            
+def write_scandicus(i,j):
+    glyphname=name(i, j, 0, 'scandicus', 'deminutus')
+    begin_glyph(glyphname)
+    if i == 1:
+        simple_paste('_0017', glyphname)
+        length = width_punctum
+        second_glyph = 'mnbpdeminutus'
+    else:
+        simple_paste('base5', glyphname)
+        length = width_punctum - line_width
+        write_line(i, glyphname, length, base_height)
+        second_glyph = 'msdeminutus'
+    paste_and_move(second_glyph, glyphname, length, i*base_height)
+    length = length + width_flexusdeminutus
+    if j != 1:
+        write_line(j, glyphname, length - line_width, (i+1) * base_height)
+    paste_and_move('rdeminutus', glyphname, length - width_deminutus - line_width, (i+j)*base_height)
+    set_width(length)
+    end_glyph(glyphname)
+        
+def ancus():
+    message("ancus")
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            write_ancus(i,j, 'vsbase', 'ancus')
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            write_ancus(i,j, 'vlbase', 'ancus_longqueue')
+            
+def write_ancus(i,j, first_glyph, glyph_type):
+    glyphname=name(i, j, 0, glyph_type, 'deminutus')
+    begin_glyph(glyphname)
+    if i == 1:
+        length = width_punctum
+        second_glyph = 'mnbdeminutus'
+        if first_glyph == 'vsbase':
+            first_glyph = '_0025'
+        else:
+            first_glyph = '_0024'
+    else:
+        length = width_punctum - line_width
+        second_glyph = 'mademinutus'
+    simple_paste(first_glyph, glyphname)
+    if i != 1:
+        write_line(i, glyphname, length, (-i+1)*base_height)
+    paste_and_move(second_glyph, glyphname, length, -(i)*base_height)
+    length = length + width_flexusdeminutus
+    if j != 1:
+        write_line(j, glyphname, length - line_width, (-i-j+1) * base_height)
+    paste_and_move('deminutus', glyphname, length - width_deminutus - line_width, (-i-j)*base_height)
+    set_width(length)
+    end_glyph(glyphname)
+    
+    
 if __name__ == "__main__":
     main()

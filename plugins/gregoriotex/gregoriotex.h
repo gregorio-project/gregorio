@@ -47,6 +47,10 @@ Here are the different types, they must be the same as in squarize.py
 #define T_TORCULUS 30
 #define T_TORCULUS_RESUPINUS 34
 #define T_TORCULUS_QUILISMA 38
+// only deminutus are generated for the next two
+#define T_SCANDICUS 42
+#define T_ANCUS 46
+#define T_ANCUS_LONGQUEUE 50
 
 // the liquescentia number of GregorioTeX (different because they have to be between 0 and 7)
 #define GL_NO_LIQUESCENTIA 0

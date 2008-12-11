@@ -107,13 +107,13 @@ my $order=0;
 
 # first we read the afm files and we fill position, font, name and namex with the values
 for ($i=0;$i<$number_of_font;$i++) {
-open IN,"<$name-$i.afm";
-while (<IN>) {
-if (m/C ([0-9]+) ; WX [0-9-]+ ; N _([0-9-]+) ;/) {
-$position{$2}=$1; $font{$2}=$i; $namex{$i."-".$1}=$2; $name[$order]=$2; $order++;
-}
-}
-close IN;
+  open IN,"<$name-$i.afm";
+  while (<IN>) {
+    if (m/C ([0-9]+) ; WX [0-9-]+ ; N _([0-9-]+) ;/) {
+      $position{$2}=$1; $font{$2}=$i; $namex{$i."-".$1}=$2; $name[$order]=$2; $order++;
+    }
+  }
+  close IN;
 }
 
 # then we open the pl files and we fill hash tables width, height and depth for every glyph
@@ -160,7 +160,6 @@ for ($i=0;$i<$number_of_font;$i++)
         push(@todoset, [ \%depth,  "0.0" ]);
     }
     elsif (m/\(CHARWD R ([0-9.-]+)/) {
-        # "grouik" workaround of a fontforge (bug|feature) on 64 bit, before I bugreport
         push(@todoset, [ \%width,  $1 ]);
     } 
     elsif (m/\(CHARHT R ([0-9.-]+)/) {
