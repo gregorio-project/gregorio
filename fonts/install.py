@@ -70,8 +70,10 @@ def patch_cygwin(basedir):
     # we have to copy some files
     if access('%s/2008' % basedir, F_OK):
         basename = '%s/2008' % basedir
+    elif access('%s/bin' % basedir, F_OK):
+        basename = basedir
     else:
-        # I don't know what to do for non-TeXLive 2008 distros
+        # I don't know what to do for other cases
         return
     # we don't patch it two times, otherwise error occur
     if access('%s/bin/win32/a2ping' % basename, F_OK):
