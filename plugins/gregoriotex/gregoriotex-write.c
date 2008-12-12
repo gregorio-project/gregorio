@@ -1287,13 +1287,80 @@ libgregorio_gregoriotex_write_additional_line (FILE * f,
     {
       return;
     }
+  
+  // patch to get a line under the full glyph in the case of dbc (for example)
+    
+  switch (type)
+    {
+    case T_PORRECTUSFLEXUS:
+    case T_PORRECTUSFLEXUS_NOBAR:
+    case T_PORRECTUS:
+    case T_PORRECTUS_NOBAR:
+      if (i == 1)
+        {
+          i = HEPISEMUS_FIRST_TWO;
+        }
+      if (i == 2)
+        {
+          if (current_note -> previous_note -> pitch > 'b')
+            {
+              i = HEPISEMUS_FIRST_TWO;
+            }
+          else
+          // we don't need to add twice the same line
+            {
+              return;
+            }
+        }
+      if (i==3)
+        {
+          // here the line has also been already added before
+          return;
+        }
+    break;
+    case T_TORCULUS_RESUPINUS:
+      if (i == 2)
+        {
+          i = HEPISEMUS_FIRST_TWO;
+        }
+      if (i==3 && current_note -> previous_note -> pitch > 'b')
+        {
+          if (current_note -> previous_note -> pitch > 'b')
+            {
+              i = HEPISEMUS_FIRST_TWO;
+            }
+          else
+            {
+              return;
+            }
+        }
+      if (i==4)
+        {
+          // here the line has also been already added before
+          return;
+        }
+    break;
+    default:
+    break;    
+    }
+    
   libgregorio_gregoriotex_find_sign_number (current_glyph, i,
 					    type, TT_H_EPISEMUS, current_note,
 					    &number, &height, NULL);
 
   if (i == HEPISEMUS_FIRST_TWO)
     {
-      ambitus = current_note->pitch - current_note->next_note->pitch;
+      // here we must compare the first note of the big bar with the second one
+      // but it may be tricky sometimes, because of the previous patch
+      if (current_note -> previous_note &&
+        current_note -> previous_note -> pitch > current_note -> pitch)
+        {
+          ambitus = current_note->previous_note -> pitch - current_note -> pitch;
+        }
+      else
+        {
+          ambitus = current_note->pitch - current_note->next_note->pitch;
+        }
     }
   fprintf (f, "\\additionalline{%d}{%d}{%d}%%\n", number, ambitus,
 	   bottom_or_top);
