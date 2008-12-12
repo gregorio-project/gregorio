@@ -770,6 +770,9 @@ libgregorio_dump_glyph_type (char glyph_type)
     case G_TRISTROPHA:
       str = "G_TRISTROPHA";
       break;
+    case G_ANCUS:
+      str = "G_ANCUS";
+      break;
     case G_TRISTROPHA_AUCTA:
       str = "G_TRISTROPHA_AUCTA";
       break;

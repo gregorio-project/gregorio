@@ -1179,6 +1179,10 @@ libgregorio_xml_read_glyph_type (char *type)
     {
       return G_SCANDICUS;
     }
+  if (!strcmp (type, "ancus"))
+    {
+      return G_ANCUS;
+    }
   gregorio_message
     (_("unknown glyph type"), "libgregorio_xml_read_glyph_type", ERROR, 0);
   return G_NO_GLYPH;

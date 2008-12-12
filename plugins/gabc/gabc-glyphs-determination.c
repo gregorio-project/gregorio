@@ -459,8 +459,8 @@ gregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
 	    }
 	  else
 	    {
-	      *end_of_glyph = DET_END_OF_PREVIOUS;
-	      next_glyph_type = G_PUNCTUM;
+	      *end_of_glyph = DET_END_OF_CURRENT;
+	      next_glyph_type = G_ANCUS;
 	    }
 	  break;
 	case G_TORCULUS:

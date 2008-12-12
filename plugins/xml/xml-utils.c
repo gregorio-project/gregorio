@@ -264,6 +264,10 @@ libgregorio_xml_glyph_type_to_str (char name)
       break;
     case G_SCANDICUS:
       str = "scandicus";
+      break;
+    case G_ANCUS:
+      str = "ancus";
+      break;
     default:
       str = "";
       break;
