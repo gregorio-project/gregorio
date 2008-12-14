@@ -648,6 +648,7 @@
 \ifdim\temp > 0 pt %
 \advance\skipone by \temp %
 \fi%
+%\kern\skipone %
 #8\relax %
 \raise\textlower \copy\Syllabletext %
 \kern -\wd\Syllabletext %
@@ -662,7 +663,7 @@
 \global\lastoflinecount=2\relax %
 \else %
 \global\lastoflinecount=0\relax %
-\hskip\textbartextspace % same as above, we should make some if to determine the exact space...
+\endafterbar %
 \fi %
 %and that's it !!
 \fi%

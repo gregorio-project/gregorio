@@ -562,6 +562,15 @@
 %% other macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% trying to test if we are under luatex or not... but doesn't seem to work...
+\newif\iflua
+\luafalse
+%\expandafter\ifx\csname\directlua\endcsname\relax
+%\luafalse
+%\else
+%\showthe\luatexversion
+%\luatrue
+%\fi
 
 %macro called at the beginning of a score
 \def\begingregorioscore{%
@@ -573,48 +582,19 @@
 \fi %
 \noindent%
 %\directlua0 {%
-%local hlist = node.id('hlist')
-%tempnode=node.new(node.id('glyph'), 0)
-%tempnode.font=65 % TODO : don't know why 65...
-%tempnode.char=tex.defaulthyphenchar
-%dashnode=node.hpack(tempnode)
-%dashnode.shift=393216 % TODO : a less static value
-%function addhyphen(h, groupcode, glyphes)
-%    local lastseennode=nil
-%    local attributeid=1
-%    local potentialdashvalue=3
-%    local nopotentialdashvalue=2
-%    local adddash=false
-%    % we explore the lines
-%    for a in node.traverse_id(hlist, h) do
-%        for b in node.traverse_id(hlist, a.list) do
-%            if adddash == false then
-%                if node.has_attribute(b, attributeid, potentialdashvalue) then
-%                    adddash=true
-%                    lastseennode=b
-%                    attr = b.attr.next
-%                    %texio.write_nl('ATTR number = ' .. attr.number .. ' value = ' .. attr.value)
-%                end
-%            else
-%                if node.has_attribute(b, attributeid, nopotentialdashvalue) then
-%                    adddash=false
-%                    attr = b.attr.next
-%                    %texio.write_nl('ATTR number = ' .. attr.number .. ' value = ' .. attr.value)
-%                end 
-%            end
-%        end
-%        if adddash==true then
-%            local temp= node.copy(dashnode)
-%            %TODO: remove the last glue in b first, and insert a glue of ancient glue - withdof(dashnode) after the dash
-%            node.insert_after(a.list, b, temp)
-%            addash=false
-%        end
-%    end
-%    return true
-%end 
-%callback.register('post_linebreak_filter', addhyphen)
+%dofile('gregoriotex.lua')
+%atScoreBeggining()
 %}%
 \relax%
+}
+
+%macro telling if we are under lua(la)tex or not
+\def\iflua#1{%
+\ifx\luatexversion\empty %
+\else %
+#1\relax %
+\fi %
+\relax %
 }
 
 %macro called at the beginning of a score
@@ -678,7 +658,28 @@
 
 % macro called at the end of a word or syllable when the next thing is a bar
 \def\endbeforebar{%
+\ifdim\enddifference > 0 pt %
+\ifdim\nextbegindifference > 0 pt %
+\hskip\notebarspace %
+\else % (next begin difference >0pt)
+\hskip\interwordspacenotestext %
+\fi %
+\else%(enddifference < Opt)
+\ifdim\nextbegindifference < 0 pt %
+\hskip\textbartextspace %
+\else %(next begin difference < 0 pt)
+\hskip\interwordspacetextnotes %
+\fi %
+\fi %
+\penalty -1000%
+\global\enddifference=0pt %
+\relax%
 %
+}
+
+% macro called at the end of a bar
+\def\endafterbar{%
+\endbeforebar %
 }
 
 \newcount\lastoflinecount

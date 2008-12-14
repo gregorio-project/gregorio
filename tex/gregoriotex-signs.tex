@@ -144,6 +144,13 @@
 \relax%
 }
 
+% custo just typesets a custo, useful for before the key changes for example
+\def\custo#1{%
+\calculateglyphraisevalue{#1}{0}%
+\gregorianfont %
+\custochar#1\relax %
+}
+
 % the argument is the height
 \def\setcusto#1{%
 \calculateglyphraisevalue{#1}{0}%
@@ -153,6 +160,13 @@
 % we type a hskip and the we type the custo
 \hskip\spacebeforecusto %
 \gregorianfont %
+\custochar#1\relax %
+}%
+}%
+\relax%
+}
+
+\def\custochar#1{%
 \ifx a#1%
 \char 62%
 \fi%
@@ -192,9 +206,6 @@
 \ifx m#1%
 \char 65%
 \fi%
-}%
-}%
-\relax%
 }
 
 \def\removecusto{%
