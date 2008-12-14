@@ -1897,6 +1897,10 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	case S_ORISCUS:
 	  *number = 16;
 	  break;
+	case S_LINEA_PUNCTUM:
+	case S_LINEA_PUNCTUM_CAVUM:
+	  *number = 24;
+	  break;
 	default:
 	  number_last_note (0);
 	  break;

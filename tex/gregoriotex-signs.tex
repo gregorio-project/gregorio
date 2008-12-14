@@ -313,6 +313,7 @@
 %% 21: the second note of a torculus resupinus with first ambitus of at least two
 %% 22: idem with ambitus of one
 %% 23: idem with initio debilis
+%% 24: the last note, if it is a linea punctum (or linea punctum cavum)
 
 % a function to typeset a vertical episemus or a rare accent (like accentus, circulus, etc.). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The values are described in the commentary just above.
 % the third argument is the glyph number in the font.
@@ -392,6 +393,9 @@
 \or%
 %case 23
 \vepisemusorrareaux{\char 1986}{\char 17}{4}{0}{#3}%
+\or%
+%case 24
+\vepisemusorrareaux{0}{\char 35}{1}{0}{#3}%
 \fi%
 \relax%
 }
@@ -632,6 +636,9 @@
 \or%
 \hepisorlineaux{\char 11274}{40}{1}{#4}%
 \fi%
+\or%
+%case 24
+\hepisorlineaux{\char 1985}{40}{1}{#4}%the episemus is not quite long enough so I assumed a different width for now...
 \fi%
 \relax%
 }
