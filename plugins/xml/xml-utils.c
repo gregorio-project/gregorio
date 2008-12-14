@@ -159,6 +159,16 @@ libgregorio_xml_write_signs (FILE * f, char signs, char h_episemus_type, char ra
     }
 }
 
+void
+libgregorio_xml_write_pitch(FILE *f, char pitch, char clef)
+{
+  char step;
+  int octave;
+    gregorio_set_octave_and_step_from_pitch (&step, &octave, pitch,
+					      clef);
+  fprintf (f, "<pitch><step>%c</step><octave>%d</octave></pitch>",
+	   step, octave);
+}
 
 void
 libgregorio_xml_write_note (FILE * f, char signs, char step,

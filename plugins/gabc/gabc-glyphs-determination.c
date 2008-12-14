@@ -31,12 +31,12 @@ close_glyph (gregorio_glyph ** current_glyph, char glyph_type,
 
 
 gregorio_glyph *
-libgregorio_gabc_det_glyphs_from_string (char *str)
+libgregorio_gabc_det_glyphs_from_string (char *str, int *initial_key)
 {
   gregorio_note *tmp;
   gregorio_glyph *final;
   tmp = libgregorio_gabc_det_notes_from_string (str);
-  final = libgregorio_gabc_det_glyphs_from_notes (tmp);
+  final = libgregorio_gabc_det_glyphs_from_notes (tmp, initial_key);
   return final;
 }
 
@@ -78,6 +78,34 @@ close_glyph (gregorio_glyph ** last_glyph, char glyph_type,
 
 }
 
+// a small function to automatically determine the pitch of a custo : it is the pitch of the next note, but we must take care of the clef changes, as custo are (normally and for now) only present before clef changes.
+
+char
+libgregorio_gabc_determine_custo_pitch (gregorio_note *current_note, int current_key)
+{
+  int pitch_difference = 0;
+  int newkey;
+  while(current_note)
+    {
+      if (current_note->type == GRE_C_KEY_CHANGE)
+        {
+          newkey = gregorio_calculate_new_key (C_KEY, current_note->pitch - 48);
+          pitch_difference = newkey - current_key;
+        }
+      if (current_note->type == GRE_F_KEY_CHANGE)
+        {
+          newkey = gregorio_calculate_new_key (C_KEY, current_note->pitch - 48);
+          pitch_difference = newkey - current_key;
+        }
+      if (current_note->type == GRE_NOTE)
+        {
+          return current_note -> pitch + (char) pitch_difference;
+        }
+      current_note = current_note -> next_note;
+    }
+  return 'g';
+}
+
 /****************************
  * 
  * Function called with a list of gregorio_notes as argument, this
@@ -114,9 +142,10 @@ close_glyph (gregorio_glyph ** last_glyph, char glyph_type,
  * 
 ****************************/
 
+// this function updates current_key with the new values (with clef changes)
 
 gregorio_glyph *
-libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
+libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note, int *current_key)
 {
   // the first note of the current glyph, to be able to close it well:
   // later we will cut the link (next_notes and previous_note) between
@@ -159,6 +188,19 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note)
 			   current_note->previous_note);
 	      current_glyph_type = G_UNDETERMINED;
 	      liquescentia = L_NO_LIQUESCENTIA;
+	    }
+	  if (current_note->type == GRE_C_KEY_CHANGE)
+        {
+          *current_key = gregorio_calculate_new_key (C_KEY, current_note->pitch - 48);
+        }
+      if (current_note->type == GRE_F_KEY_CHANGE)
+        {
+          *current_key = gregorio_calculate_new_key (C_KEY, current_note->pitch - 48);
+        }
+	  if (current_note->type == GRE_CUSTO)
+	    {
+	      current_note->pitch =
+	          libgregorio_gabc_determine_custo_pitch (current_note->next_note, *current_key);
 	    }
 	  gregorio_add_special_as_glyph (&last_glyph, current_note->type,
 					    current_note->pitch);

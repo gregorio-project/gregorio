@@ -57,6 +57,9 @@ gregorio_note *current_note;
 z {
 	gregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, GRE_END_OF_LINE);
 	}
+z0 {
+	gregorio_add_special_as_note (&current_note, GRE_CUSTO, USELESS_VALUE);
+	}
 Z {
 	gregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, GRE_END_OF_PAR);
 	}

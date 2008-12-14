@@ -824,7 +824,14 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 	}
       return;
     }
-
+	  if (!xmlStrcmp (current_node->name, (const xmlChar *) "custo"))
+	    {
+	  step =
+	    libgregorio_xml_read_pitch
+	    (current_node->xmlChildrenNode->xmlChildrenNode, doc, *key);
+		  gregorio_add_special_as_element (current_element,
+						      GRE_CUSTO, step);
+	    }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "clef-change"))
     {
       libgregorio_xml_read_key (current_node->xmlChildrenNode, doc,

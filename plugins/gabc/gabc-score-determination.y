@@ -77,9 +77,12 @@ gregorio_character *first_translation_character;
 gregorio_voice_info *current_voice_info;
 int number_of_voices;
 int voice;
+// can't remember what it is...
 int clef;
 // a char that will take some useful values see comments on text to understand it
 char center_is_determined;
+// current_key is... the current key... updated by each notes determination (for key changes)
+int current_key = DEFAULT_KEY;
 
 int check_score_integrity (gregorio_score * score);
 void next_voice_info ();
@@ -246,6 +249,7 @@ set_clef (char *str)
 			   ("in initial_key definition, only two characters are needed : format is`(c|f)[1-4]'"),
 			   "libgregorio_det_score", WARNING, 0);
     }
+  current_key = clef;
 }
 
 /* Function that frees the voice_infos for voices > final_count. Useful if there are too many voice_infos
@@ -743,7 +747,7 @@ notes:
 note:
 	NOTES CLOSING_BRACKET {
 	if (voice<number_of_voices) {
-	elements[voice]=libgregorio_gabc_det_elements_from_string($1);
+	elements[voice]=libgregorio_gabc_det_elements_from_string($1, &current_key);
 	free($1);
 	}
 	else {
@@ -760,7 +764,7 @@ note:
 	|
 	NOTES CLOSING_BRACKET_WITH_SPACE {
 	if (voice<number_of_voices) {
-	elements[voice]=libgregorio_gabc_det_elements_from_string($1);
+	elements[voice]=libgregorio_gabc_det_elements_from_string($1, &current_key);
 	free($1);
 	}
 	else {
@@ -778,7 +782,7 @@ note:
 	|
 	NOTES VOICE_CUT{
 	if (voice<number_of_voices) {
-	elements[voice]=libgregorio_gabc_det_elements_from_string($1);
+	elements[voice]=libgregorio_gabc_det_elements_from_string($1, &current_key);
 	free($1);
 	voice++;
 	}

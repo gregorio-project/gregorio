@@ -208,6 +208,11 @@ write_score (FILE * f, gregorio_score * score)
 		       element->element_type,
 		       libgregorio_dump_element_type (element->element_type));
 	    }
+	  if (element->element_type && element->type == GRE_CUSTO)
+	    {
+	      fprintf (f, "     pitch                   %c     \n",
+		       element->element_type);
+	    }
 	  if (element->element_type && element->type == GRE_SPACE)
 	    {
 	      fprintf (f, "     element_type            %d (%s)\n",
@@ -509,6 +514,9 @@ libgregorio_dump_type (char type)
       break;
     case GRE_END_OF_LINE:
       str = "GRE_END_OF_LINE";
+      break;
+    case GRE_CUSTO:
+      str = "GRE_CUSTO";
       break;
     case GRE_SPACE:
       str = "GRE_SPACE";

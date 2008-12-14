@@ -320,6 +320,12 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	  current_element = current_element->next_element;
 	  continue;
 	}
+      if (current_element->type == GRE_CUSTO)
+	{
+	  fprintf (f, "\\custo{%c}%%\n", current_element -> element_type);
+	  current_element = current_element->next_element;
+	  continue;
+	}
       if (current_element->type == GRE_BAR)
 	{
 	  if (current_element->next_element)

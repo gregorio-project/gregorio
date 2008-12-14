@@ -56,6 +56,7 @@ void libgregorio_xml_write_liquescentia (FILE *f, char liquescentia);
 
 void determine_h_episemus_type (gregorio_note *note);
 
+void libgregorio_xml_write_pitch(FILE *f, char pitch, char clef);
 
 void libgregorio_xml_write_gregorio_glyph (FILE *f, gregorio_glyph *glyph, int clef, char alterations[]);
 void libgregorio_xml_write_gregorio_note (FILE *f, gregorio_note *note, int clef, char alterations[]);

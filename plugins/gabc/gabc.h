@@ -23,14 +23,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 gregorio_score * read_score (FILE * f);
 
 gregorio_note *libgregorio_gabc_det_notes_from_string (char *str);
-gregorio_glyph * libgregorio_gabc_det_glyphs_from_string (char *str);
-gregorio_element *libgregorio_gabc_det_elements_from_string (char *str);
+gregorio_glyph * libgregorio_gabc_det_glyphs_from_string (char *str, int *current_key);
+gregorio_element *libgregorio_gabc_det_elements_from_string (char *str, int *current_key);
+
+char libgregorio_gabc_determine_custo_pitch (gregorio_note *current_note, int current_key);
 
 void close_element (gregorio_element ** current_element, gregorio_glyph * first_glyph);
 
-gregorio_element *libgregorio_gabc_det_elements_from_notes (gregorio_note *current_note);
+gregorio_element *libgregorio_gabc_det_elements_from_notes (gregorio_note *current_note, int *current_key);
 gregorio_element *libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph);
-gregorio_glyph *libgregorio_gabc_det_glyphs_from_notes (gregorio_note *current_note);
+gregorio_glyph *libgregorio_gabc_det_glyphs_from_notes (gregorio_note *current_note, int *current_key);
 
 // see comments on gregorio_add_note_to_a_glyph for meaning of these variables
 #define DET_NO_END 'A'

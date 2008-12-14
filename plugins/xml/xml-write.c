@@ -174,6 +174,13 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
       libgregorio_xml_write_neumatic_bar (f, element->element_type);
       return;
     }
+  if (element->type == GRE_CUSTO)
+    {
+      fprintf(f, "<custo>");
+      libgregorio_xml_write_pitch (f, element->element_type, *clef);
+      fprintf(f, "</custo>");
+      return;
+    }
   if (element->type == GRE_END_OF_LINE)
     {
       fprintf (f, "<end-of-line />");
