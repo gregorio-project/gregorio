@@ -282,6 +282,7 @@ gregorio_add_element (gregorio_element ** current_element,
   next->type = GRE_ELEMENT;
   //next->element_type = 0;
   next->first_glyph = first_glyph;
+  next->previous_element = *current_element;
   next->next_element = NULL;
   if (*current_element)
     {
@@ -306,6 +307,7 @@ gregorio_add_special_as_element (gregorio_element ** current_element,
   special->element_type = pitch;
   special->first_glyph = NULL;
   special->next_element = NULL;
+  special->previous_element = *current_element;
   if (*current_element)
     {
       (*current_element)->next_element = special;

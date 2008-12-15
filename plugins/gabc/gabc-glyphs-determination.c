@@ -99,7 +99,7 @@ libgregorio_gabc_determine_custo_pitch (gregorio_note *current_note, int current
         }
       if (current_note->type == GRE_NOTE)
         {
-          return current_note -> pitch + (char) pitch_difference;
+          return current_note -> pitch - (char) pitch_difference;
         }
       current_note = current_note -> next_note;
     }

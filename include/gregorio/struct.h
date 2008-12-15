@@ -120,9 +120,9 @@ typedef struct gregorio_element {
   char element_type;
 // a pointer to the first glyph of the element.
   struct gregorio_glyph *first_glyph;
-// a pointer to the next element. We did not find useful to include a
-// pointer to the previous element.
+// pointers to the next and previous elements.
   struct gregorio_element *next_element;
+  struct gregorio_element *previous_element;
   //struct gregorio_element *previous_element;
 } gregorio_element;
 

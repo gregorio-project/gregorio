@@ -308,21 +308,42 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	}
       if (current_element->type == GRE_C_KEY_CHANGE)
 	{
-	  fprintf (f, "\\changeclef{c}{%d}%%\n",
-		   current_element->element_type - 48);
+	  if (current_element->previous_element &&
+	       current_element->previous_element->type == GRE_BAR)
+	    {
+	      // the third argument is 0 or 1 according to the need for a space before the clef
+          fprintf (f, "\\changeclef{c}{%d}{0}%%\n",
+		     current_element->element_type - 48);
+	    }
+	  else 
+	    {
+          fprintf (f, "\\changeclef{c}{%d}{1}%%\n",
+		    current_element->element_type - 48);
+		}
 	  current_element = current_element->next_element;
 	  continue;
 	}
       if (current_element->type == GRE_F_KEY_CHANGE)
 	{
-	  fprintf (f, "\\changeclef{f}{%d}%%\n",
-		   current_element->element_type - 48);
+	  if (current_element->previous_element &&
+	       current_element->previous_element->type == GRE_BAR)
+	    {
+	      // the third argument is 0 or 1 according to the need for a space before the clef
+          fprintf (f, "\\changeclef{f}{%d}{0}%%\n",
+		     current_element->element_type - 48);
+	    }
+	  else 
+	    {
+          fprintf (f, "\\changeclef{f}{%d}{1}%%\n",
+		    current_element->element_type - 48);
+		}
 	  current_element = current_element->next_element;
 	  continue;
 	}
       if (current_element->type == GRE_CUSTO)
 	{
-	  fprintf (f, "\\custo{%c}%%\n", current_element -> element_type);
+	  // we also print a larger space before the custo
+	  fprintf (f, "\\endofelement{1}%%\n\\custo{%c}%%\n", current_element -> element_type);
 	  current_element = current_element->next_element;
 	  continue;
 	}

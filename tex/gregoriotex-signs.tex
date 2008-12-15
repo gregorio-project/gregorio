@@ -121,11 +121,18 @@
 }
 
 % macro called when the key changes
-\def\changeclef#1#2{%
+% #1 and #2 are the type and line of the clef
+% #3 is 1 or 0 according to the need of a space before the clef. Useful for clefs after bars for example
+\def\changeclef#1#2#3{%
 \calculateclefnum{#1}{#2}%
 \clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
 \multiply\clefchangespace by \the\grefactor %
+\ifnum#3=1\relax %
 \hskip\clefchangespace %
+\else %
+% here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
+\hskip -\spacearoundclefbars %
+\fi %
 \typekey{#1}{#2}{1}{0}%
 \hskip\clefchangespace %
 \setlinesclef{#1}{#2}{1}%
@@ -148,6 +155,8 @@
 \def\custo#1{%
 \calculateglyphraisevalue{#1}{0}%
 \raise\glyphraisevalue\hbox{\custochar#1}%
+% for now we consider we always have a bar after the custo
+\hskip -\spacearoundclefbars %
 \relax %
 }
 
@@ -737,61 +746,61 @@
 \ifcase#1 % 0 : virgula
 \penalty 7000 %
 \ifnum#2=1\relax %
-\hskip\spacebeforesmallbar %
+\hskip\spacearoundsmallbar %
 \penalty 7000 %
 \fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
 \penalty -5000 %
 \ifnum#2=1\relax %
-\hskip\spaceaftersmallbar %
+\hskip\spacearoundsmallbar %
 \fi %
 \or % 1 : minima
 \penalty 7000%
 \ifnum#2=1\relax %
-\hskip\spacebeforesmallbar %
+\hskip\spacearoundsmallbar %
 \penalty 7000%
 \fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
 \penalty -5000%
 \ifnum#2=1\relax %
-\hskip\spaceaftersmallbar %
+\hskip\spacearoundsmallbar %
 \fi %
 \or % 2 : minor
 \penalty 7000 %
 \ifnum#2=1\relax %
-\hskip\spacebeforeminor %
+\hskip\spacearoundminor %
 \penalty 7000 %
 \fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
 \penalty -5000 %
 \ifnum#2=1\relax %
-\hskip\spaceafterminor %
+\hskip\spacearoundminor %
 \fi %
 \or % 3 : maior
 \penalty 7000 %
 \ifnum#2=1\relax %
-\hskip\spacebeforemaior %
+\hskip\spacearoundmaior %
 \penalty 7000 %
 \fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 \penalty -5000 %
 \ifnum#2=1\relax %
-\hskip\spaceaftermaior %
+\hskip\spacearoundmaior %
 \fi %
 \or % 4 : finalis
 \penalty 7000 %
 \ifnum#2=1\relax %
-\hskip\spacebeforefinalis %
+\hskip\spacearoundfinalis %
 \penalty 7000 %
 \fi %
 \divisiofinalissymbol%
 \penalty -5000 %
 \ifnum#2=1\relax %
-\hskip\spaceafterfinalis %
+\hskip\spacearoundfinalis %
 \fi %
 \or % 5 : finalis
 \penalty 7000 %
@@ -802,7 +811,7 @@
 \divisiofinalissymbol%
 \penalty -5000 %
 \ifnum#2=1\relax %
-\hskip\spaceafterfinalis %
+\hskip\spacearoundfinalis %
 \fi %
 \fi %
 \relax%

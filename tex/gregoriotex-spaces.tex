@@ -87,29 +87,25 @@
 % space between two punctum inclinatum deminutus
 \newskip\punctuminclinatumdebilisshift
 
-% space for the bars
+% space for the bars (inside syllables)
 %first for virgula and divisio minima
-\newskip\spacebeforesmallbar
-
-\newskip\spaceaftersmallbar
+\newskip\spacearoundsmallbar
 
 %then divisio minor
-\newskip\spacebeforeminor
-
-\newskip\spaceafterminor
+\newskip\spacearoundminor
 
 %divisio major
-\newskip\spacebeforemaior
-
-\newskip\spaceaftermaior
+\newskip\spacearoundmaior
 
 %divisio finalis
-\newskip\spacebeforefinalis
+\newskip\spacearoundfinalis
 
 %a special space for finalis, for when it is the last glyph
 \newskip\spacebeforefinalfinalis
 
-\newskip\spaceafterfinalis
+% the space that will appear around bars that are preceded by a custo and followed by a key.
+% well... actually it's the difference between the normal space around bars and the space described previously.
+\newskip\spacearoundclefbars
 
 % space between the text and the text of the bar
 \newskip\textbartextspace
@@ -207,32 +203,23 @@
 \punctuminclinatumdebilisshift=-100 sp plus 100 sp minus 100 sp%
 \multiply\punctuminclinatumdebilisshift by \grefactor %
 %
-\spacebeforesmallbar = 27000 sp plus 1400 sp minus 1400 sp%
-\multiply\spacebeforesmallbar by \grefactor %
+\spacearoundsmallbar = 20000 sp plus 1400 sp minus 1400 sp%
+\multiply\spacearoundsmallbar by \grefactor %
 %
-\spaceaftersmallbar = 27000 sp plus 1400 sp minus 1400 sp%
-\multiply\spaceaftersmallbar by \grefactor %
+\spacearoundminor = 20000 sp plus 1400 sp minus 1400 sp%
+\multiply\spacearoundminor by \grefactor %
 %
-\spacebeforeminor = 27000 sp plus 1400 sp minus 1400 sp%
-\multiply\spacebeforeminor by \grefactor %
+\spacearoundmaior = 20000 sp plus 1650 sp minus 1650 sp%
+\multiply\spacearoundmaior by \grefactor %
 %
-\spaceafterminor = 27000 sp plus 1650 sp minus 1650 sp%
-\multiply\spaceafterminor by \grefactor %
-%
-\spacebeforemaior = 27000 sp plus 1650 sp minus 1650 sp%
-\multiply\spacebeforemaior by \grefactor %
-%
-\spaceaftermaior = 27000 sp plus 1650 sp minus 1650 sp%
-\multiply\spaceaftermaior by \grefactor %
-%
-\spacebeforefinalis = 27000 sp plus 1650 sp minus 1650 sp%
-\multiply\spacebeforefinalis by \grefactor %
+\spacearoundfinalis = 20000 sp plus 1650 sp minus 1650 sp%
+\multiply\spacearoundfinalis by \grefactor %
 %
 \spacebeforefinalfinalis= 32000 sp plus 3000 sp minus 16000 sp%
 \multiply\spacebeforefinalfinalis by \grefactor %
 %
-\spaceafterfinalis = 27000 sp plus 1650 sp minus 6000 sp%
-\multiply\spaceafterfinalis by \grefactor %
+\spacearoundclefbars= 7000 sp plus 100 sp minus 100 sp%
+\multiply\spacearoundclefbars by \grefactor %
 %
 \textbartextspace = 13000 sp plus 1300 sp minus 1300 sp%
 \multiply\textbartextspace by \grefactor %
