@@ -323,25 +323,37 @@ libgregorio_xml_write_end (FILE * f, unsigned char style)
 }
 
 void
-libgregorio_xml_write_special_char (FILE * f, grewchar * special_char)
+libgregorio_xml_write_special_char (FILE * f, grewchar *first_char)
 {
   if (in_text)
     {
       fprintf (f, "</str>");
       in_text = 0;
     }
-  fprintf (f, "<secial-char>%ls</special-char>", special_char);
+  fprintf (f, "<special-char>");
+  while (*first_char != 0)
+    {
+      fprintf (f, "%lc", *first_char);
+      first_char ++;
+    }
+  fprintf (f, "</special-char>");
 }
 
 void
-libgregorio_xml_write_verb (FILE * f, grewchar * verb_str)
+libgregorio_xml_write_verb (FILE * f, grewchar *first_char)
 {
   if (in_text)
     {
       fprintf (f, "</str>");
       in_text = 0;
     }
-  fprintf (f, "<verbatim>%ls</verbatim>", verb_str);
+  fprintf (f, "<verbatim>");
+  while (*first_char != 0)
+    {
+      fprintf (f, "%lc", *first_char);
+      first_char ++;
+    }
+  fprintf (f, "</verbatim>");
 }
 
 void

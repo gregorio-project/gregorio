@@ -621,10 +621,16 @@ libgregorio_gtex_write_special_char (FILE * f, grewchar * special_char)
     }
 }
 
+// here we need to print character by character, otherwise it won't work for windows (because %ls under windows is totally different from a utf8 %ls)
+// but %lc is close enough to work...
 void
-libgregorio_gtex_write_verb (FILE * f, grewchar * verb_str)
+libgregorio_gtex_write_verb (FILE * f, grewchar * first_char)
 {
-  fprintf (f, "%ls", verb_str);
+  while (*first_char != 0)
+    {
+      fprintf (f, "%lc", *first_char);
+      first_char ++;
+    }
 }
 
 void

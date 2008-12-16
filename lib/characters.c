@@ -103,7 +103,7 @@ gregorio_is_vowel (grewchar letter)
 			    current_character->next_character;\
 			}\
 		    }\
-		  text[i] = L'\0';\
+		  text[i] = 0;\
 		  function (f, text);\
 		  free (text);
 

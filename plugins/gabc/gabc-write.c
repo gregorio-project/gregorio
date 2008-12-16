@@ -275,11 +275,16 @@ libgregorio_gabc_write_end (FILE * f, unsigned char style)
 This function writes the special chars. As the specials chars are represented simply in gabc, this function is very simple, but for TeX output modules, this may be.. a little more difficult.
 
 */
-
 void
-libgregorio_gabc_write_special_char (FILE * f, grewchar * special_char)
+libgregorio_gabc_write_special_char (FILE * f, grewchar * first_char)
 {
-  fprintf (f, "<sp>%ls</sp>", special_char);
+  fprintf (f, "<sp>");
+  while (*first_char != 0)
+    {
+      fprintf (f, "%lc", *first_char);
+      first_char ++;
+    }
+  fprintf (f, "</sp>");
 }
 
 /*
@@ -287,11 +292,16 @@ libgregorio_gabc_write_special_char (FILE * f, grewchar * special_char)
 This functions writes verbatim output... but as the previous one it is very simple.
 
 */
-
 void
-libgregorio_gabc_write_verb (FILE * f, grewchar * verb_str)
+libgregorio_gabc_write_verb (FILE * f, grewchar *first_char)
 {
-  fprintf (f, "<v>%ls</v>", verb_str);
+  fprintf (f, "<v>");
+  while (*first_char != 0)
+    {
+      fprintf (f, "%lc", *first_char);
+      first_char ++;
+    }
+  fprintf (f, "</v>");
 }
 
 /*
