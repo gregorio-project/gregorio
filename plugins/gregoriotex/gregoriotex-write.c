@@ -952,7 +952,7 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
       glyph->first_note = current_note;
       break;
     case G_BIVIRGA:
-    case G_DISTROPHA:
+    case G_TRIVIRGA:
       while (current_note)
 	{
 	  libgregorio_gregoriotex_write_note (f, current_note,
@@ -966,8 +966,10 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
 	    }
 	}
       break;
-    case G_TRIVIRGA:
     case G_TRISTROPHA:
+    case G_TRISTROPHA_AUCTA:
+    case G_DISTROPHA:
+    case G_DISTROPHA_AUCTA:
       while (current_note)
 	{
 	  libgregorio_gregoriotex_write_note (f, current_note,
@@ -2865,6 +2867,12 @@ libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable)
 		    case G_STROPHA:
 		    case G_VIRGA:
 		    case G_STROPHA_AUCTA:
+		    case G_DISTROPHA:
+		    case G_DISTROPHA_AUCTA:
+		    case G_TRISTROPHA:
+		    case G_TRISTROPHA_AUCTA:
+		    case G_BIVIRGA:
+		    case G_TRIVIRGA:
 		      libgregorio_gregoriotex_determine_note_number_and_type
 			(glyph->first_note, &type, &number);
 		      break;

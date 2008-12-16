@@ -25,6 +25,14 @@
 \newcount\grefactor
 \grefactor=0
 
+% a if to see if we are called with lua(la)tex or not
+\newif\ifluatex
+% Set \ifluatex accordingly
+\expandafter\ifx\csname directlua\endcsname\relax
+\luatexfalse
+\else
+\luatextrue
+\fi
 
 %%%%%%%%%%%%%%%%%%
 %% vertical spaces
@@ -562,16 +570,6 @@
 %% other macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% trying to test if we are under luatex or not... but doesn't seem to work...
-\newif\iflua
-\luafalse
-%\expandafter\ifx\csname\directlua\endcsname\relax
-%\luafalse
-%\else
-%\showthe\luatexversion
-%\luatrue
-%\fi
-
 %macro called at the beginning of a score
 \def\begingregorioscore{%
 \global\stafflinewidth=\linewidth %
@@ -581,20 +579,13 @@
 \setgreverticalspaces %
 \fi %
 \noindent%
-%\directlua0 {%
-%dofile('gregoriotex.lua')
-%atScoreBeggining()
-%}%
-\relax%
-}
-
-%macro telling if we are under lua(la)tex or not
-\def\iflua#1{%
-\ifx\luatexversion\empty %
-\else %
-#1\relax %
+\ifluatex %
+\directlua0 {%
+dofile('gregoriotex.lua')%
+atScoreBeggining()%
+}%
 \fi %
-\relax %
+\relax%
 }
 
 %macro called at the beginning of a score
@@ -723,8 +714,8 @@
 %% 3: space between two puncta inclinata
 %% 7: space between a punctum inclinatum and a punctum inclinatum deminutus
 %% 8: space between two puncta inclinata deminuti
-%% 4: space between bivirga or bistropha
-%% 5: space between tristropha or trivirga
+%% 4: space between bivirga or trivirga
+%% 5: space between bistropha or tristropha
 %% 6: space after a punctum mora XXX: not used yet, not so sure it is a good idea...
 %% 7: space between a punctum inclinatum and a punctum inclinatum debilis
 %% 8: space between two puncta inclinata debilis
@@ -739,9 +730,9 @@
 \or% case 3
 \hskip\punctuminclinatumshift %
 \or% case 4
-\hskip\bispace %
+\hskip\bitrivirspace %
 \or% case 5
-\hskip\trispace %
+\hskip\bitristrospace %
 \or% case 6
 \hskip\spaceaftersigns %
 \or% case 7

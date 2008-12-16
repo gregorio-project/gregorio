@@ -61,6 +61,9 @@ close_glyph (gregorio_glyph ** last_glyph, char glyph_type,
 	     gregorio_note * current_note)
 {
 
+  // a variable necessary for the patch for G_BIVIRGA & co.
+  gregorio_note *added_notes = NULL;
+
 // patch to have good glyph type in the case where a glyph ends by a note with shape S_QUADRATUM
   if (glyph_type == G_PES_QUADRATUM_FIRST_PART
       || glyph_type == G_PES_QUILISMA_QUADRATUM_FIRST_PART)
@@ -76,6 +79,74 @@ close_glyph (gregorio_glyph ** last_glyph, char glyph_type,
       current_note->next_note = NULL;
     }
 
+  // here we "patch" the structure for bivirga, tristropha, etc.
+  // the idea is not to have a S_BIVIRGA in the shape of the note (which is dirty)
+  // but rather a G_BIVIRGA in the glyph (which is the case now) and two virgas
+
+  if (glyph_type == G_BIVIRGA || glyph_type == G_DISTROPHA || glyph_type == G_TRIVIRGA || glyph_type == G_TRISTROPHA || glyph_type == G_DISTROPHA_AUCTA || glyph_type == G_TRISTROPHA_AUCTA)
+   {
+    gregorio_go_to_first_note(&current_note);
+    while (current_note)
+      {
+        if (current_note -> shape == S_BIVIRGA)
+          {
+            gregorio_add_note (&added_notes, current_note -> pitch, S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note -> h_episemus_type);
+            gregorio_add_note (&added_notes, current_note -> pitch, S_VIRGA, current_note -> signs, current_note -> liquescentia, current_note -> h_episemus_type);
+          }
+        if (current_note -> shape == S_TRIVIRGA)
+          {
+            gregorio_add_note (&added_notes, current_note -> pitch, S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note -> h_episemus_type);
+            gregorio_add_note (&added_notes, current_note -> pitch, S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note -> h_episemus_type);
+            gregorio_add_note (&added_notes, current_note -> pitch, S_VIRGA, current_note -> signs, current_note -> liquescentia, current_note -> h_episemus_type);
+          }
+        if (current_note -> shape == S_DISTROPHA)
+          {
+            gregorio_add_note (&added_notes, current_note -> pitch, S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note -> h_episemus_type);
+            gregorio_add_note (&added_notes, current_note -> pitch, S_STROPHA, current_note -> signs, current_note -> liquescentia, current_note -> h_episemus_type);
+          }
+        if (current_note -> shape == S_DISTROPHA_AUCTA)
+          {
+            gregorio_add_note (&added_notes, current_note -> pitch, S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note -> h_episemus_type);
+            gregorio_add_note (&added_notes, current_note -> pitch, S_STROPHA_AUCTA, current_note -> signs, current_note -> liquescentia, current_note -> h_episemus_type);
+          }
+        if (current_note -> shape == S_TRISTROPHA)
+          {
+            gregorio_add_note (&added_notes, current_note -> pitch, S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note -> h_episemus_type);
+            gregorio_add_note (&added_notes, current_note -> pitch, S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note -> h_episemus_type);
+            gregorio_add_note (&added_notes, current_note -> pitch, S_STROPHA, current_note -> signs, current_note -> liquescentia, current_note -> h_episemus_type);
+          }
+        if (current_note -> shape == S_TRISTROPHA_AUCTA)
+          {
+            gregorio_add_note (&added_notes, current_note -> pitch, S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note -> h_episemus_type);
+            gregorio_add_note (&added_notes, current_note -> pitch, S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note -> h_episemus_type);
+            gregorio_add_note (&added_notes, current_note -> pitch, S_STROPHA_AUCTA, current_note -> signs, current_note -> liquescentia, current_note -> h_episemus_type);
+          }
+        // now we have what we want, we set up the links and free the old note
+        if (current_note->next_note)
+          {
+            current_note -> next_note -> previous_note = added_notes;
+            added_notes -> next_note = current_note -> next_note;
+          }
+        gregorio_go_to_first_note (&added_notes);
+        if (current_note->previous_note)
+          {
+            current_note->previous_note -> next_note = added_notes;
+            added_notes -> previous_note = current_note -> previous_note;
+          }
+        if (!current_note -> previous_note && !current_note -> next_note)
+          {
+            current_note = added_notes;
+            break;
+          }
+        else 
+          {
+            gregorio_free_one_note (&current_note); // automatically sets first_note to the next note
+          }
+      }
+      gregorio_go_to_first_note(&current_note);
+      // finally we set the just added glyph first_note to current_note
+      (*last_glyph)->first_note = current_note;
+   }
 }
 
 // a small function to automatically determine the pitch of a custo : it is the pitch of the next note, but we must take care of the clef changes, as custo are (normally and for now) only present before clef changes.
