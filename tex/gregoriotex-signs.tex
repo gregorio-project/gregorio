@@ -229,19 +229,44 @@
 
 % a function to typeset a punctum mora, the argument is the letter of the height of the punctum mora
 % if the second argument is one, we the go back to the end of the punctum
+% if the second argument is two, it means that we must shift the width of one punctum to the left
+% if it is three, it means the same as when it is two, but with ambitus of one
 \def\punctummora#1#2{%
-\ifnum#2=1\relax %
-\kern\spacebeforesigns %
-\else %
+\ifcase#2\relax %
 \hskip\spacebeforesigns%
+\or %
+\kern\spacebeforesigns %
+\or %
+% to get the widht of a punctum minus a line, we calculate the width of a flexus (with ambitus of two) minus the width of a punctum
+\setbox\Tempwidth=\hbox{\gregorianfont \char 2051}%
+\temp=\wd\Tempwidth %
+\setbox\Tempwidth=\hbox{\gregorianfont \char 17}%
+\advance\temp by -\wd\Tempwidth %
+\kern -\temp %
+\kern \spacebeforesigns %
+\or %
+\setbox\Tempwidth=\hbox{\gregorianfont \char 17}%
+\temp=\wd\Tempwidth %
+\kern -\temp %
+\kern \spacebeforesigns %
 \fi %
 \calculateglyphraisevalue{#1}{4}%
 \raise \glyphraisevalue \hbox{\gregorianfont \char 14}%
-\ifnum#2=1\relax %
+\ifcase#2\relax %
+\or %
 \setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
-\temp=\wd\Tempwidth %
-\advance\temp by \spacebeforesigns %
-\kern -\temp %
+\kern -\wd\Tempwidth %
+\kern -\spacebeforesigns %
+\or %
+\setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
+\kern -\wd\Tempwidth %
+\kern -\spacebeforesigns %
+\kern \temp %
+\or %
+\setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
+\kern -\wd\Tempwidth %
+\kern -\spacebeforesigns %
+\kern \temp %
 \fi %
 \relax%
 }

@@ -408,13 +408,10 @@
 \newcount\firstsyllableofword
 \firstsyllableofword=1
 
-%\attributedef\potentialdash 1
-%\potentialdash=1
-%\attributedef {potentialdash} 16
-
-% \zerowidthdash is a special character that will be treated by lua after the linebreak algorithm, see lua part of the file for more details
-%\newbox\Zerowidthdash
-%\setbox\Zerowidthdash=\hbox to 0pt{\hbox to 1pt{}}
+\ifluatex
+\attributedef\potentialdash
+\potentialdash=1
+\fi
 
 % we specify if it is the last syllable of the score with that value
 \newcount\endofscore
@@ -474,11 +471,15 @@
 \fi %
 \fi %
 \fi %
-%\potentialdash=2 %
+\ifluatex %
+\potentialdash=2\relax %
+\fi %
 \setnextbegindifference{#5}{#6}{#7}%
 \setbox\Syllabletext=\hbox{\gretextformat{#1#2#3}}%
 \setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{1}%
-%\potentialdash=1 %
+\ifluatex %
+\potentialdash=1\relax %
+\fi %
 \ifcase#4 %
 % we enter here if the end of word is 0, so we must determine if we need to type the gragorio dash here
 %
@@ -499,7 +500,9 @@
 % then we compare it with \maximumspacewithoutdash, if it is larger, we add a dash
 %
 \ifdim\temp>\maximumspacewithoutdash %
-%\potentialdash=2 %
+\ifluatex %
+\potentialdash=2\relax %
+\fi %
 \setbox\Syllabletext=\hbox{\gretextformat{#1#2#3-}}%
 \setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{0}%
 \fi%
