@@ -1240,6 +1240,52 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
 					    gregorio_glyph * glyph,
 					    gregorio_note * current_note)
 {
+    // well... the boring part... the punctummora before the last note in some glyphs (flexus principally)
+    // in this if we consider that the puncta are only on the last two notes (maybe it would be useful to consider it more entirely, but it would be really weird...)
+    // I had the choice between writing a 15 lines if or a switch... a switch seems more understandable and changeable
+    // the variable that will be set to 1 if we have to shift the punctum inclinatum before the last note
+  unsigned char shift_before = 0;
+    // we go into this switch only if it is the note before the last note
+  if (current_note -> next_note)
+   {
+    switch (glyph->glyph_type)
+      {
+        case G_FLEXUS:
+        case G_TORCULUS:
+        case G_TORCULUS_RESUPINUS_FLEXUS:
+        case G_PORRECTUS_FLEXUS:
+          if (glyph->liquescentia != L_DEMINUTUS && glyph->liquescentia != L_DEMINUTUS_INITIO_DEBILIS)
+            {
+              shift_before = 1;
+            }
+        break;
+        case G_PES:
+          if ((current_note -> shape != S_PUNCTUM && current_note -> shape != S_QUILISMA) || glyph -> liquescentia == L_AUCTUS_DESCENDENS || glyph -> liquescentia == L_AUCTUS_ASCENDENS || glyph -> liquescentia == L_AUCTUS_ASCENDENS_INITIO_DEBILIS || glyph -> liquescentia == L_AUCTUS_DESCENDENS_INITIO_DEBILIS)
+            {
+              shift_before = 1;
+            }
+        break;
+        case G_PES_QUADRATUM:
+          shift_before = 1;
+        break;
+        default:
+        break;
+      }
+  }
+
+  if (shift_before == 1)
+    {
+      if (current_note-> next_note->pitch - current_note->pitch == -1 || current_note->next_note->pitch - current_note -> pitch == 1)
+        {
+          fprintf (f, "\\punctummora{%c}{3}%%\n", current_note->pitch);
+        }
+      else 
+        {
+          fprintf (f, "\\punctummora{%c}{2}%%\n", current_note->pitch);
+        }
+      return;
+    }
+
 // there is a case in which we do something special : if the next glyph is a ZERO_WIDTH_SPACE, and the current glyph is a PES, and the punctum mora is on the first note, and the glyph after is a pes and the first note of the next pes is at least two (or three depending on something) pitchs higher than the current note. You'll all have understood, this case is quite rare... but when it appears, we pass 1 as a second argument of \punctummora so that it removes the space introduced by the punctummora.
   if (glyph->glyph_type == G_PODATUS && glyph->next_glyph
       && glyph->next_glyph->type == GRE_SPACE
