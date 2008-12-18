@@ -513,6 +513,7 @@ gregorio_add_syllable (gregorio_syllable ** current_syllable,
   next->text = first_character;
   next->translation = first_translation_character;
   next->next_syllable = NULL;
+  next->previous_syllable = *current_syllable;
   tab = (gregorio_element **) malloc (number_of_voices *
 				  sizeof (gregorio_element *));
   if (elements)

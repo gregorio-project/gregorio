@@ -203,9 +203,9 @@ typedef struct gregorio_syllable {
   struct gregorio_character *text;
 // pointer to a gregorio_text structure corresponding to the translation
   struct gregorio_character *translation;
-// pointer to the next syllable. Here again we did not find useful to
-// include a pointer to the previous syllable.
+// pointer to the next and previous syllable
   struct gregorio_syllable *next_syllable;
+  struct gregorio_syllable *previous_syllable;
 // and finally a pointer to the elements of the structure. Here we see
 // that we point to an array of elements. In fact it is the array of
 // the first elements of the different voices of the syllable, for the
