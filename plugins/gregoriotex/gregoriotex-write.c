@@ -2593,13 +2593,26 @@ libgregorio_gregoriotex_write_note (FILE * f,
 	{
 //means that it is the first note of the puncta inclinata sequence
 	  temp = note->previous_note->pitch - note->pitch;
-	  if (temp < -1 || temp > 1)
+	  //if (temp < -1 || temp > 1)
+	  switch (temp) //we switch on the range of the inclinata
 	    {
-	      fprintf (f, "\\endofglyph{1}%%\n");
-	    }
-	  else
-	    {
+		// this will look somewhat strange if temp is negative... to be aligned then, 
+		//the second note should really shift differently
+	    case -2:
+	    case 2:
+	      fprintf (f, "\\endofglyph{10}%%\n");
+	      break;
+	    case -3:
+	    case 3:
+	      fprintf (f, "\\endofglyph{11}%%\n");
+	      break;
+	    case -4:
+	    case 4: //not sure we ever need to consider a larger ambitus here
+	      fprintf (f, "\\endofglyph{11}%%\n");
+	      break;
+	    default:
 	      fprintf (f, "\\endofglyph{3}%%\n");
+	      break;
 	    }
 	}
     }
