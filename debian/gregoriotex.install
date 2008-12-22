@@ -1,5 +1,6 @@
 fonts/*.map /usr/share/texmf/fonts/map/dvips/public/gregoriotex
 tex/gregorio*.tex /usr/share/texmf/tex/gregoriotex
+tex/gregorio*.lua /usr/share/texmf/tex/gregoriotex
 tex/gregorio*.sty /usr/share/texmf/tex/latex/gregoriotex
 fonts/gregorio*.pfb /usr/share/texmf/fonts/type1/public/gregoriotex/gregorio
 fonts/gregorio*.tfm /usr/share/texmf/fonts/tfm/public/gregoriotex/gregorio
