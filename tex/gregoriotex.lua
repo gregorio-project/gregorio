@@ -72,6 +72,7 @@ function addhyphen(h, groupcode, glyphes)
         end
         if adddash==true then
             local temp= node.copy(dashnode)
+            node.insert_after(a.list, lastseennode, temp)
             addash=false
         end
         -- we reinitialize the shift value, because it may change according to the line
