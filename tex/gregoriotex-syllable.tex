@@ -409,7 +409,11 @@
 \firstsyllableofword=1
 
 \ifluatex
-\attributedef\potentialdash 987
+% an attribute we put on the text nodes.
+% if it is 1, it means that there may be a dash here if this syllable is at the end of a line
+% if it is 2, it means that it's never useful to typeset a dash
+% if it is 0, it is the same as if it was unset
+\attributedef\potentialdash=987
 \fi
 
 % we specify if it is the last syllable of the score with that value
@@ -431,6 +435,9 @@
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
 %% at the end we wall \endofword or \endofsyllable with #7, to reduce the space in case of a flat or natural
 \def\syllable#1#2#3#4#5#6#7#8#9{%
+\ifluatex % by default, potentialdash will be 2
+\potentialdash=2\relax %
+\fi %
 \firstglyph=1 %
 \findtextaligncenter{#1}{#2}% we first get the width between the alignment point and the end of the syllable
 \syllablenotes{#9}% we put the notes in a box, so that we have the width of it
@@ -470,40 +477,29 @@
 \fi %
 \fi %
 \fi %
-\ifluatex %
-\potentialdash=2\relax %
-\fi %
 \setnextbegindifference{#5}{#6}{#7}%
 \setbox\Syllabletext=\hbox{\gretextformat{#1#2#3}}%
 \setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{1}%
-\ifluatex %
-\potentialdash=1\relax %
-\fi %
 \ifcase#4 %
-% we enter here if the end of word is 0, so we must determine if we need to type the gragorio dash here
+% we enter here if the end of word is 0, so we must determine if we need to type a dash here
 %
 % we set temp to the additional space that will be needed before the next syllable
 %\ifdim\enddifference>0pt%
 \temp=\enddifference %
 \advance\temp by \intersyllablespace %
 \advance\temp by \nextbegindifference %
-%\else %\enddifference<0
-%\temp=\intersyllablespace %
-%\advance\temp by \nextbegindifference %
-%\advance\temp by \enddifference %
-%\fi %
-%\temp=\intersyllablespace %
-%\advance\temp by -\nextbegindifference %
-%\advance\temp by \enddifference %
 %
 % then we compare it with \maximumspacewithoutdash, if it is larger, we add a dash
 %
 \ifdim\temp>\maximumspacewithoutdash %
-\ifluatex %
-\potentialdash=2\relax %
-\fi %
 \setbox\Syllabletext=\hbox{\gretextformat{#1#2#3-}}%
 \setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{0}%
+\else %
+\ifluatex %
+\potentialdash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
+% we rebuild this box, in order it to have the attribute
+\setbox\Syllabletext=\hbox{\gretextformat{#1#2#3}}%
+\fi %
 \fi%
 \fi%
 % then we reuse temp, we assign to it the \begindifference, but only if it is positive, else it is 0
@@ -514,6 +510,9 @@
 \raise\textlower \copy\Syllabletext %
 \kern -\wd\Syllabletext %
 \kern -\begindifference %
+\ifluatex % here we need to unset \potentialdash for the typesetting of notes
+\potentialdash=0\relax %
+\fi %
 #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
 \ifdim\the\enddifference <0pt%
 %% important, else we are not really at the end of the syllable
