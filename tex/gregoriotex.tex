@@ -570,8 +570,11 @@
 %% other macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% gregorioattr (see its definition in gregorio-syllable) is 0 when we are in a score, and unset (-1) when we are not
+
 %macro called at the beginning of a score
 \def\begingregorioscore{%
+\gregorioattr=0\relax %
 \global\stafflinewidth=\linewidth %
 \generatelines %
 \ifnum\grefactor=0\relax %
@@ -596,6 +599,7 @@ atScoreBeggining()%
 \localrightbox{}%
 \fi %
 \hfil %
+\gregorioattr=-1\relax %
 \par%
 \ifnum\keeprightbox=1 %
 \localrightbox{}%
