@@ -238,6 +238,12 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	      fprintf (f, "\\finaldivisiofinalis{0}%%\n");
 	      return;
 	    }
+	  if (!syllable->next_syllable && !syllable->text
+	      && (syllable->elements)[0]->element_type == B_DIVISIO_MAIOR)
+	    {
+	      fprintf (f, "\\finaldivisiomaior{0}%%\n");
+	      return;
+	    }
 	  else
 	    {
 	      fprintf (f, "\\barsyllable");

@@ -860,6 +860,8 @@
 %macro to end a line with a divisio finalis
 \def\finaldivisiofinalis#1{%
 \ifcase#1% case 0
+\localrightbox{}%
+\localleftbox{}%
 \barsyllable{}{}{}{1}{}{}{0}{}{%
 \divisiofinalis %
 }%
@@ -868,6 +870,25 @@
 \global\keeprightbox=1 %
 \localrightbox{%
 \divisiofinalissymbol %
+}%
+\fi %
+\relax%
+}
+
+%macro to end a line with a divisio maior
+\def\finaldivisiomaior#1{%
+\ifcase#1% case 0
+\localrightbox{}%
+\localleftbox{}%
+\barsyllable{}{}{}{1}{}{}{0}{}{%
+\divisiomaior %
+}%
+\or % case 1
+\hskip\spacebeforefinalfinalis %
+\global\keeprightbox=1 %
+\localrightbox{%
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 }%
 \fi %
 \relax%
