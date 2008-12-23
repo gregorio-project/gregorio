@@ -534,7 +534,13 @@
 \ifnum\lastoflinecount=1\relax %
 \endbeforebar{0}%
 \else %
+% otherwise we call it with 1 only if there is no letters after
+% /!\ warning: can be buggy...
+\ifdim\nextbegindifference>0pt%
+\endbeforebar{0}%
+\else %
 \endbeforebar{1}%
+\fi %
 \fi %
 \global\firstsyllableofword=1 %
 \else %
