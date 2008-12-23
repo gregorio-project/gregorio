@@ -590,6 +590,7 @@ atScoreBeggining()%
 
 %macro called at the beginning of a score
 \def\endgregorioscore{%
+\global\blockcusto=0\relax %
 \localleftbox{}%
 \ifnum\keeprightbox=0 %
 \localrightbox{}%
@@ -708,8 +709,20 @@ atScoreBeggining()%
 
 % same as above, but for the score. For now it is the same behaviour.
 \def\lastofscore{%
+\localleftbox{}%
+\blockcustos %
 \global\lastoflinecount=1\relax%
 \relax%
+}
+
+% a count that is 1 if we block the custo, and 0 if we don't. We just block custos at the end of a score, to prevent a bug.
+\newcount\blockcusto
+
+% macro to suppress the custos
+\def\blockcustos{%
+\global\blockcusto=1\relax %
+\localrightbox{}%
+\relax %
 }
 
 % macro called at each end of syllable which is not an end of word

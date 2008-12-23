@@ -162,6 +162,7 @@
 
 % the argument is the height
 \def\setcusto#1{%
+\ifnum\blockcusto=0\relax %
 \calculateglyphraisevalue{#1}{0}%
 \localrightbox{%
 \raise \glyphraisevalue%
@@ -171,6 +172,7 @@
 \custochar#1\relax %
 }%
 }%
+\fi %
 \relax%
 }
 
