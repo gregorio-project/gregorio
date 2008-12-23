@@ -527,10 +527,15 @@
 %}%
 \global\lastoflinecount=0\relax %
 \fi %
+% we call end of syllable
 %% then we call end of syllable or end of word, but only if the next syllable is not a bar, that is to say, the number is between 10 and 19. TeX is a shitty language, so we do a dirty workaround to make a and in the if.
 \ifnum#7>9\relax %
 \ifnum#7<20\relax %
-\endbeforebar %
+\ifnum\lastoflinecount=1\relax %
+\endbeforebar{0}%
+\else %
+\endbeforebar{1}%
+\fi %
 \global\firstsyllableofword=1 %
 \else %
 \shittytexworkaround{#4}%
@@ -550,6 +555,7 @@
 \ifcase#1 %
 \global\firstsyllableofword=0 %
 \or%
+\endofword{0}%
 \global\firstsyllableofword=1 %
 \fi%
 \else %\ifnum\lastoflinecount=1 %
@@ -557,7 +563,7 @@
 \endofsyllable%
 \global\firstsyllableofword=0 %
 \or%
-\endofword%
+\endofword{1}%
 \global\firstsyllableofword=1 %
 \fi%
 \fi%
@@ -662,9 +668,10 @@
 % end of same code as syllable
 \ifnum\lastoflinecount=1\relax %
 \global\lastoflinecount=2\relax %
+\endafterbar{0}%
 \else %
 \global\lastoflinecount=0\relax %
-\endafterbar %
+\endafterbar{1}%
 \fi %
 %and that's it !!
 \fi%

@@ -287,7 +287,10 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
     {
       fprintf (f, "%%\n\\lastofline %%\n");
     }
-
+  if (!syllable->next_syllable)
+    {
+      fprintf (f, "%%\n\\lastofscore %%\n");
+    }
   fprintf (f, "}{%%\n");
 
   current_element = (syllable->elements)[0];

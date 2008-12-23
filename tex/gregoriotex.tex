@@ -628,7 +628,9 @@ atScoreBeggining()%
 }
 
 % macro called at each end of word
-\def\endofword{%
+\def\endofword#1{%
+\penalty -1000%
+\ifnum#1=1\relax %
 \ifdim\enddifference > 0 pt %
 \ifdim\nextbegindifference > 0 pt %
 \hskip\interwordspacenotes %
@@ -642,13 +644,15 @@ atScoreBeggining()%
 \hskip\interwordspacetextnotes %
 \fi %
 \fi %
-\penalty -1000%
+\fi %
 \global\enddifference=0pt %
 \relax%
 }
 
 % macro called at the end of a word or syllable when the next thing is a bar
-\def\endbeforebar{%
+\def\endbeforebar#1{%
+\penalty 1000%
+\ifnum#1=1\relax %
 \ifdim\enddifference > 0 pt %
 \ifdim\nextbegindifference > 0 pt %
 \hskip\notebarspace %
@@ -662,15 +666,33 @@ atScoreBeggining()%
 \hskip\interwordspacetextnotes %
 \fi %
 \fi %
-\penalty -1000%
+\fi %
+\penalty 1000%
 \global\enddifference=0pt %
-\relax%
-%
+\relax %
 }
 
-% macro called at the end of a bar
-\def\endafterbar{%
-\endbeforebar %
+% macro called at the end of a bar. Almost the same, but not for the penalties
+\def\endafterbar#1{%
+\penalty -2000%
+\ifnum#1=1\relax %
+\ifdim\enddifference > 0 pt %
+\ifdim\nextbegindifference > 0 pt %
+\hskip\notebarspace %
+\else % (next begin difference >0pt)
+\hskip\interwordspacenotestext %
+\fi %
+\else%(enddifference < Opt)
+\ifdim\nextbegindifference < 0 pt %
+\hskip\textbartextspace %
+\else %(next begin difference < 0 pt)
+\hskip\interwordspacetextnotes %
+\fi %
+\fi %
+\fi %
+\penalty -2000%
+\global\enddifference=0pt %
+\relax %
 }
 
 \newcount\lastoflinecount
@@ -680,6 +702,12 @@ atScoreBeggining()%
 % 1 if the syllable is the last of the line
 % 2 after it has finished the syllable, so when it is two it means that the syllable is the first of a line
 \def\lastofline{%
+\global\lastoflinecount=1\relax%
+\relax%
+}
+
+% same as above, but for the score. For now it is the same behaviour.
+\def\lastofscore{%
 \global\lastoflinecount=1\relax%
 \relax%
 }
