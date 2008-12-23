@@ -534,22 +534,23 @@
 \ifnum\lastoflinecount=1\relax %
 \endbeforebar{0}%
 \else %
-% otherwise we call it with 1 only if there is no letters after
+% otherwise we call it with 1 only if there is no letters after (we can see it with nextbegindifference)
+\setbox\Tempwidth=\hbox{#5#6}%
 % /!\ warning: can be buggy...
-\ifdim\nextbegindifference>0pt%
+\ifdim\wd\Tempwidth=0pt%
 \endbeforebar{0}%
 \else %
 \endbeforebar{1}%
 \fi %
 \fi %
-\global\firstsyllableofword=1 %
+\global\firstsyllableofword=1\relax %
 \else %
 \shittytexworkaround{#4}%
 \fi %
 \else %
 \shittytexworkaround{#4}%
 \fi%
-\global\notesaligncenter= 0 pt\relax % very important, see flat and natural
+\global\notesaligncenter=0pt% very important, see flat and natural
 \relax%
 }
 
@@ -559,18 +560,18 @@
 \ifnum\lastoflinecount=1\relax %
 \global\lastoflinecount=2\relax %
 \ifcase#1 %
-\global\firstsyllableofword=0 %
+\global\firstsyllableofword=0\relax %
 \or%
 \endofword{0}%
-\global\firstsyllableofword=1 %
+\global\firstsyllableofword=1\relax %
 \fi%
 \else %\ifnum\lastoflinecount=1 %
 \ifcase#1 %
 \endofsyllable%
-\global\firstsyllableofword=0 %
+\global\firstsyllableofword=0\relax %
 \or%
 \endofword{1}%
-\global\firstsyllableofword=1 %
+\global\firstsyllableofword=1\relax %
 \fi%
 \fi%
 }
