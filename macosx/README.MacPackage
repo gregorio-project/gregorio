@@ -1,0 +1,78 @@
+Modifications for Building a Mac OS X Package
+=============================================
+To distribute a binary for OS X, we need to remove the dependencies on the shared libraries libintl.8.dylib and libltdl.3.dylib, which are not guaranteed to exist on a user's system. To do this, we prepare the project source for static linking with these commands in the top source directory:
+$ gettextize --intl -f
+$ glibtoolize --ltdl
+
+** OS X renames GNU libtool/libtoolize as glibtool/glibtoolize, since it has its own (different) libtool command. Unfortunately, glibtoolize seems to be lacking in functionality, so it is necessary to take glibtoolize from MacPorts...
+
+
+And make the following modifications to the build system (commented lines show the current, unmodified commands):
+
+Changes in configure.ac
+=======================
+- change the gettext invocation to use an internal gettext
+#AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT()
+
+- change the libtool lines
+#LIBTOOL_LIB=-lltdl
+#AC_SUBST(LIBTOOL_LIB)
+LT_CONFIG_LTDL_DIR([libltdl])
+LT_INIT([dlopen])
+LTDL_INIT([convenience])
+
+- gettextize should also have automatically added intl/Makefile to AC_CONFIG_FILES
+
+Changes in Makefile.am
+======================
+- in the top directory (/trunk/Makefile.am), add the intl and libltdl to the list of subdirectories
+SUBDIRS= po include intl libltdl lib plugins src examples tex contrib
+
+Then change the lines that cause linking to the external libltdl on the builder's machine
+- in src/Makefile.am
+#gregorio_LDADD=$(GLIB_LIBS) $(LIBINTL) $(LIBTOOL_LIB) ../lib/libgregorio.la
+gregorio_LDADD=$(GLIB_LIBS) $(LIBINTL) $(LIBLTDL) ../lib/libgregorio.la
+
+- in lib/Makefile.am
+#libgregorio_la_LIBADD = $(GLIB_LIBS) $(LIBINTL) $(LIBTOOL_LIB)
+libgregorio_la_LIBADD = $(GLIB_LIBS) $(LIBINTL) $(LIBLTDL)
+libgregorio_la_DEPENDENCIES = $(LTDLDEPS)
+
+
+==================================
+That should be all that is needed... so now we run
+$ autoreconf
+There will be a ton of warnings, which hopefully can safely be ignored.
+$ ./configure --with-included-gettext --with-included-ltdl
+I'm not 100% certain the ltdl flag is strictly necessary, but it doesn't hurt
+$ make
+# make install
+
+Possible Issues
+=================
+- Make may fail in the libintl subdir -- When building in libintl, it looks for config.h in the top src dir (i.e. trunk) when in fact it's in trunk/include. You can probably change it to look in the proper place, but the lazy method of copying config.h into trunk also works...
+- I just realized I build against Leopard's libiconv, which is more updated than Tiger's... crap. It needs a little more work to work on 10.4. And more to work on ppc.
+- building in a more convenient subdirectory (i.e. running ./configure --prefix="/my/package/builddir/root") requires fixing the library path names later (it may actually work without doing so, but leaving the incorrect paths seems a bit ugly)
+
+Using PackageMaker
+===============================
+PackageMaker requires absolute paths to be given for everything installed. So it's easier to create a package root with two subdirs, usr (which leads to all the gregorio files in local/bin, local/lib, etc) and private/tmp/Gregorio, where we can put contrib/, examples/, fonts/, tex/, and the uninstall script. The postflight script will move this directory into the user's home dir, and delete the /private/tmp folder.
+
+We'll assume we have all the files necessary. Opening PackageMaker first gives a dialog where you can fill in the org name and min target for deployment. If you built in a special directory like /my/package/builddir/root, you can just drag the entire thing into the Contents frame. If not... just be careful in recreating the exact directory you want copied onto the user's machine.
+
+**If there are any unwanted files like the .DS_STORE files in this directory, you can filter them out in the Contents view. Or delete them before copying the directory, by running something like
+$ find /my/package/builddir/root -name ".DS_Store" -exec rm -f {} \;
+
+Also change the permissions here to match what they should be on the user's machine.
+
+In the scripts view, just add the postflight.sh script.
+
+In edit interface, you can change the background image, and add the Welcome, Read Me, and license files and add localizations.
+
+Thats pretty much it, run build to make the package.
+
+Then it's standard to distribute packages in dmg files. You can do that with Disk utility -- file->new->disk image from folder (there's a commandline equivalent; I don't know what it is though)
+Call it Gregorio-0.9.2.dmg or something similar I suppose, and it's done.
+
+
