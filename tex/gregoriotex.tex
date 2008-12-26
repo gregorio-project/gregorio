@@ -574,7 +574,9 @@
 
 %macro called at the beginning of a score
 \def\begingregorioscore{%
+\ifluatex%
 \gregorioattr=0\relax %
+\fi %
 \global\stafflinewidth=\linewidth %
 \generatelines %
 \ifnum\grefactor=0\relax %
@@ -599,7 +601,9 @@ atScoreBeggining()%
 \localrightbox{}%
 \fi %
 \hfil %
+\ifluatex%
 \gregorioattr=-1\relax %
+\fi %
 \par%
 \ifnum\keeprightbox=1 %
 \localrightbox{}%
