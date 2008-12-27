@@ -3,7 +3,7 @@
 #a gregorio cygwin distribution
 
 PREFIX="/usr"
-DESTDIR="cygwin/gregorio-cygwin"
+DESTDIR="cygwin/gregorio-0.9.2"
 CURDIR=`cd .. && pwd`
 
 cd ..
