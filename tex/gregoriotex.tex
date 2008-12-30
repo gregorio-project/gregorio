@@ -586,7 +586,7 @@
 \noindent%
 \ifluatex %
 \directlua0 {%
-dofile('gregoriotex.lua')%
+dofile(kpse.find_file('gregoriotex.lua'))%
 atScoreBeggining()%
 }%
 \fi %
