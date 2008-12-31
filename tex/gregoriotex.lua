@@ -34,12 +34,10 @@ function addhyphenandremovedumblines(h, groupcode, glyphes)
     tempnode.char=tex.defaulthyphenchar
     dashnode=node.hpack(tempnode)
     dashnode.shift=0
-    local i=0
     --% we explore the lines
     for a in node.traverse_id(hlist, h) do
         -- the next two lines are to remove the dumb lines
         if node.has_attribute(a.list, gregorioattr) then
-            i = i+1
             if node.count(hlist, a.list) == 2 then
                 node.remove(h, a)
             else
@@ -48,7 +46,6 @@ function addhyphenandremovedumblines(h, groupcode, glyphes)
 		    		--    texio.write_nl('prout')
 		    		--end
 		    		if node.has_attribute(b, gregorioattr, potentialdashvalue) then
-		    		    texio.write_nl("prout " .. i)
 			    		adddash=true
 		    			lastseennode=b
 		    			--attr = b.attr.next
@@ -71,7 +68,6 @@ function addhyphenandremovedumblines(h, groupcode, glyphes)
 		    		end
 		    	end
 		    	if adddash==true then
-		    	    texio.write_nl("lalalalala, je met un hyphen")
 		    		local temp= node.copy(dashnode)
 		    		node.insert_after(a.list, lastseennode, temp)
 		    		addash=false
