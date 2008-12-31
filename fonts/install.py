@@ -44,8 +44,14 @@ def main():
         if access(basedir, F_OK):
             if access(basedir, W_OK) or basedir == '/cygdrive':
                 if basedir == '/cygdrive':
+                    if access('/usr/bin/latex.exe', W_OK):
+                        print "error: TeTeX installation of cygwin detected, aborting installation.\nYou must remove the TeX installation of cygwin before proceeding"
+                        return
                     basedir = cyg_find_basedir()
-                    patch_cygwin(basedir)
+                    if basedir == '':
+                        print "error: can't locate latex.exe, aborting installation"
+                        return
+                    #patch_cygwin(basedir)
                     basedir = '%s/texmf-local' % basedir
                     install(basedir)
                 else:
@@ -53,11 +59,14 @@ def main():
 					install(basedir)
             else:
                 print "error: can't write in %s" % basedir
+            return
         elif i==len(TexliveDirs) +1:
             print "error: unable to determine location of texmf directory"
 
 def cyg_find_basedir():
-	line = popen("which latex.exe").readline()
+	line = popen("which.exe latex.exe").readline()
+	if line == "":
+	    return ''
 	splitpath = line.split('/')
 	splitpath = splitpath[0:-3]
 	if splitpath[-1] == '2008':
@@ -76,6 +85,7 @@ def patch_cygwin(basedir):
         # I don't know what to do for other cases
         return
     # we don't patch it two times, otherwise error occur
+    print basename
     if access('%s/bin/win32/a2ping' % basename, F_OK):
         return
     copy_cyg(basename, 'texmf/scripts/a2ping/a2ping.pl', 'a2ping')
@@ -137,6 +147,7 @@ def install(basedir):
     copy(basedir, '../tex/gregoriotex-spaces.tex', 'tex/gregoriotex')
     copy(basedir, '../tex/gregoriotex-syllable.tex', 'tex/gregoriotex')
     copy(basedir, '../tex/gregoriotex-symbols.tex', 'tex/gregoriotex')
+    copy(basedir, '../tex/gregoriotex.lua', 'tex/gregoriotex')
     copy(basedir, 'gresym.map', 'fonts/map/dvips/public/gregoriotex')
     makedir(basedir, 'fonts/tfm/public/gregoriotex/gresym')
     copy(basedir, 'gresym.tfm', 'fonts/tfm/public/gregoriotex/gresym')
