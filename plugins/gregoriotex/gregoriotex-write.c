@@ -260,7 +260,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
     }
   libgregorio_gregoriotex_write_text (f, syllable->text, first_syllable);
   if (syllable->position == WORD_END
-      || syllable->position == WORD_ONE_SYLLABLE || !syllable->text)
+      || syllable->position == WORD_ONE_SYLLABLE || !syllable->text || !syllable -> next_syllable || !syllable -> next_syllable -> type == GRE_END_OF_LINE || !syllable -> next_syllable -> type == GRE_END_OF_PAR)
     {
       fprintf (f, "{1}");
     }
