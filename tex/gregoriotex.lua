@@ -23,17 +23,7 @@ local gregorioattr=987 -- the number declared with gregorioattr
 
 -- in each function we check if we really are inside a score, which we can see with the gregorioattr being set or not
 
--- the algorithm here is simple: we look at the number of hlists in a line. If it is two, it means that it is a dumb line, and we remove it...
-function removedumblines(h, groupcode, glyphes)
-    for line in node.traverse_id(hlist, h) do
-        if node.count(hlist, line.list) == 2 and node.has_attribute(line.list, gregorioattr) then
-            node.remove(h, line)
-        end
-    end
-    return true
-end
-
-function addhyphen(h, groupcode, glyphes)
+function addhyphenandremovedumblines(h, groupcode, glyphes)
     local lastseennode=nil
     local potentialdashvalue=1
     local nopotentialdashvalue=2
@@ -44,50 +34,58 @@ function addhyphen(h, groupcode, glyphes)
     tempnode.char=tex.defaulthyphenchar
     dashnode=node.hpack(tempnode)
     dashnode.shift=0
+    local i=0
     --% we explore the lines
     for a in node.traverse_id(hlist, h) do
-		if node.has_attribute(a.list, gregorioattr) then
-			for b in node.traverse_id(hlist, a.list) do
-				--if node.has_attribute(b, attributeid, 2) then
-				--    texio.write_nl('prout')
-				--end
-				if node.has_attribute(b, gregorioattr, potentialdashvalue) then
-					adddash=true
-					lastseennode=b
-					--attr = b.attr.next
-					-- texio.write_nl('ATTR number = ' .. attr.number .. ' value = ' .. attr.value)
-					-- here we set up the font number of the hyphen
-					if (tempnode.font == 0) then
-						for g in node.traverse_id(glyph, b.list) do
-							tempnode.font = g.font
-							break
-						end
-					end
-					if dashnode.shift==0 then
-						dashnode.shift = b.shift
-					end
-				-- if we encounter a text that doesn't need a dash, we acknowledge it
-				elseif node.has_attribute(b, gregorioattr, nopotentialdashvalue) then
-					adddash=false
-					--attr = b.attr.next
-					-- texio.write_nl('ATTR number = ' .. attr.number .. ' value = ' .. attr.value)
-				end
-			end
-			if adddash==true then
-				local temp= node.copy(dashnode)
-				node.insert_after(a.list, lastseennode, temp)
-				addash=false
-			end
-		end
-        -- we reinitialize the shift value, because it may change according to the line
-        dashnode.shift=0
+        -- the next two lines are to remove the dumb lines
+        if node.has_attribute(a.list, gregorioattr) then
+            i = i+1
+            if node.count(hlist, a.list) == 2 then
+                node.remove(h, a)
+            else
+			    for b in node.traverse_id(hlist, a.list) do
+			    	--if node.has_attribute(b, attributeid, 2) then
+		    		--    texio.write_nl('prout')
+		    		--end
+		    		if node.has_attribute(b, gregorioattr, potentialdashvalue) then
+		    		    texio.write_nl("prout " .. i)
+			    		adddash=true
+		    			lastseennode=b
+		    			--attr = b.attr.next
+		    			-- texio.write_nl('ATTR number = ' .. attr.number .. ' value = ' .. attr.value)
+		    			-- here we set up the font number of the hyphen
+		    			if (tempnode.font == 0) then
+		    				for g in node.traverse_id(glyph, b.list) do
+		    					tempnode.font = g.font
+		    					break
+		    				end
+		    			end
+		    			if dashnode.shift==0 then
+		    				dashnode.shift = b.shift
+		    			end
+		    		-- if we encounter a text that doesn't need a dash, we acknowledge it
+		    		elseif node.has_attribute(b, gregorioattr, nopotentialdashvalue) then
+		    			adddash=false
+		    			--attr = b.attr.next
+		    			-- texio.write_nl('ATTR number = ' .. attr.number .. ' value = ' .. attr.value)
+		    		end
+		    	end
+		    	if adddash==true then
+		    	    texio.write_nl("lalalalala, je met un hyphen")
+		    		local temp= node.copy(dashnode)
+		    		node.insert_after(a.list, lastseennode, temp)
+		    		addash=false
+		    	end
+		    end
+            -- we reinitialize the shift value, because it may change according to the line
+            dashnode.shift=0
+        end
     end
     return true
 end 
 
 function gregorioCallback(h, groupcode, glyphes)
-    removedumblines(h, groupcode, glyphes)
-    addhyphen(h, groupcode, glyphes)
+    addhyphenandremovedumblines(h, groupcode, glyphes)
     return true
 end
 
