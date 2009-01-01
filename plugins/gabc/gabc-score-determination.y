@@ -369,7 +369,7 @@ close_syllable ()
   // we rebuild the first syllable text if it is the first syllable, or if it is the second when the first has no text.
   // it is a patch for cases like (c4) Al(ab)le(ab)
   if ((!score -> first_syllable && score->initial_style != NO_INITIAL && first_text_character)
-       || (!current_syllable->previous_syllable && !current_syllable->text && first_text_character))
+       || (current_syllable && !current_syllable->previous_syllable && !current_syllable->text && first_text_character))
     {
        gregorio_rebuild_first_syllable (&first_text_character);
     }
