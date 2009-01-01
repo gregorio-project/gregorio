@@ -888,6 +888,11 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
 	    }
 	  if (current_character->cos.s.style == ST_CENTER)
 	    {
+		  // we have to do it in case param_character (the first character) is a ST_CENTER beginning
+		  if (!current_character->previous_character && current_character == *param_character)
+		    {
+			  *param_character = (*param_character)->next_character;
+			}
 	      gregorio_suppress_current_character (&current_character);
 	      continue;
 	    }
