@@ -2145,9 +2145,17 @@ void
 	{
 	case S_QUILISMA:
 	  *type = AT_QUILISMA;
-	  *gtype = T_PESQUILISMA;
+	  // the next if is because we made the choice that AUCTUS shapes look like pes quadratum.
+	  if (glyph->liquescentia == L_AUCTUS_ASCENDENS || glyph->liquescentia == L_AUCTUS_DESCENDENS || glyph-> liquescentia == L_AUCTUS_DESCENDENS_INITIO_DEBILIS || glyph -> liquescentia == L_AUCTUS_ASCENDENS_INITIO_DEBILIS)
+	    {
+	      *gtype = T_PESQUILISMAQUADRATUM;
+	    }
+	  else 
+	    {
+	      *gtype = T_PESQUILISMA;
+	    }
 	  temp =
-	    TYPE_FACTOR * T_PESQUILISMA +
+	    TYPE_FACTOR * (*gtype) +
 	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
 						       L_NO_INITIO,
 						       glyph->liquescentia);
@@ -2171,9 +2179,16 @@ void
 	  break;
 	default:
 	  *type = AT_ONE_NOTE;
-	  *gtype = T_PES;
+	  if (glyph->liquescentia == L_AUCTUS_ASCENDENS || glyph->liquescentia == L_AUCTUS_DESCENDENS || glyph-> liquescentia == L_AUCTUS_DESCENDENS_INITIO_DEBILIS || glyph -> liquescentia == L_AUCTUS_ASCENDENS_INITIO_DEBILIS)
+	    {
+	      *gtype = T_PESQUADRATUM;
+	    }
+	  else 
+	    {
+	      *gtype = T_PES;
+	    }
 	  temp =
-	    TYPE_FACTOR * T_PES +
+	    TYPE_FACTOR * (*gtype) +
 	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
 						       L_ALL,
 						       glyph->liquescentia);
