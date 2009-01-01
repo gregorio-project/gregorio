@@ -745,6 +745,7 @@ atScoreBeggining()%
 %% 2 : glyph space
 
 \def\endofelement#1{%
+\penalty -1000%
 \ifcase#1%
 \hskip\interelementspace%
 \or% case 1
@@ -752,7 +753,6 @@ atScoreBeggining()%
 \or% case 2
 \hskip\glyphspace%
 \fi%
-\penalty -100%
 \relax%
 }
 
@@ -772,6 +772,7 @@ atScoreBeggining()%
 %% 10: space between puncta inclinata, larger ambitus (range=3rd)
 %% 11: space between puncta inclinata, larger ambitus (range=4th or more)
 \def\endofglyph#1{%
+\penalty 10001%
 \ifcase#1%
 \hskip\interglyphspace %
 \or% case 1
