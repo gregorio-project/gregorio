@@ -660,7 +660,7 @@ atScoreBeggining()%
 
 % macro called at the end of a word or syllable when the next thing is a bar
 \def\endbeforebar#1{%
-\penalty 1000%
+\penalty 10001%
 \ifnum#1=1\relax %
 \ifdim\enddifference > 0 pt %
 \ifdim\nextbegindifference > 0 pt %
@@ -676,7 +676,7 @@ atScoreBeggining()%
 \fi %
 \fi %
 \fi %
-\penalty 1000%
+\penalty 10001%
 %\global\enddifference=0pt %
 \relax %
 }

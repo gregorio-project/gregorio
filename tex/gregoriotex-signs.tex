@@ -234,6 +234,7 @@
 % if the second argument is two, it means that we must shift the width of one punctum to the left
 % if it is three, it means the same as when it is two, but with ambitus of one
 \def\punctummora#1#2{%
+\penalty 10001\relax %
 \ifcase#2\relax %
 \hskip\spacebeforesigns%
 \or %
@@ -253,7 +254,9 @@
 \kern \spacebeforesigns %
 \fi %
 \calculateglyphraisevalue{#1}{4}%
+\penalty 10001\relax %
 \raise \glyphraisevalue \hbox{\gregorianfont \char 14}%
+\penalty 10001\relax %
 \ifcase#2\relax %
 \or %
 \setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
@@ -270,6 +273,7 @@
 \kern -\spacebeforesigns %
 \kern \temp %
 \fi %
+\penalty 10001\relax %
 \relax%
 }
 
@@ -771,75 +775,75 @@
 %%% 1 if it is in a syllable
 \def\writebar#1#2{%
 \ifcase#1 % 0 : virgula
-\penalty 7000 %
+\penalty 10001 %
 \ifnum#2=1\relax %
 \hskip\spacearoundsmallbar %
-\penalty 7000 %
+\penalty 10001 %
 \fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
-\penalty -5000 %
 \ifnum#2=1\relax %
 \hskip\spacearoundsmallbar %
 \fi %
+\penalty -5000 %
 \or % 1 : minima
-\penalty 7000%
+\penalty 10001%
 \ifnum#2=1\relax %
 \hskip\spacearoundsmallbar %
-\penalty 7000%
+\penalty 10001%
 \fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
-\penalty -5000%
 \ifnum#2=1\relax %
 \hskip\spacearoundsmallbar %
 \fi %
+\penalty -5000%
 \or % 2 : minor
-\penalty 7000 %
+\penalty 10001 %
 \ifnum#2=1\relax %
 \hskip\spacearoundminor %
-\penalty 7000 %
+\penalty 10001 %
 \fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
-\penalty -5000 %
 \ifnum#2=1\relax %
 \hskip\spacearoundminor %
 \fi %
+\penalty -5000 %
 \or % 3 : maior
-\penalty 7000 %
+\penalty 10001 %
 \ifnum#2=1\relax %
 \hskip\spacearoundmaior %
-\penalty 7000 %
+\penalty 10001 %
 \fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\penalty -5000 %
 \ifnum#2=1\relax %
 \hskip\spacearoundmaior %
 \fi %
+\penalty -5000 %
 \or % 4 : finalis
-\penalty 7000 %
+\penalty 10001 %
 \ifnum#2=1\relax %
 \hskip\spacearoundfinalis %
-\penalty 7000 %
+\penalty 10001 %
 \fi %
 \divisiofinalissymbol%
-\penalty -5000 %
 \ifnum#2=1\relax %
 \hskip\spacearoundfinalis %
 \fi %
+\penalty -5000 %
 \or % 5 : finalis
-\penalty 7000 %
+\penalty 10001 %
 \ifnum#2=1\relax %
 \hskip\spacebeforefinalfinalis %
-\penalty 7000 %
+\penalty 10001 %
 \fi %
 \divisiofinalissymbol%
-\penalty -5000 %
 \ifnum#2=1\relax %
 \hskip\spacearoundfinalis %
 \fi %
+\penalty -5000 %
 \fi %
 \relax%
 }
@@ -850,7 +854,7 @@
 \temptwo = 12000 sp%
 \multiply\temptwo by \the\grefactor%
 \kern \temptwo%
-\penalty 10000%
+\penalty 10001%
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 }
 

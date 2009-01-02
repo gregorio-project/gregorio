@@ -627,12 +627,15 @@
 \ifdim\previousenddifference < 0 pt%
 \advance\temp by \previousenddifference %
 \fi %
+\penalty 10001\relax %
 \ifdim\temp > -\wd\Syllablenotes %
 \kern\temp %
 \else %
 \kern -\wd\Syllablenotes %
 \fi %
+\penalty 10001\relax %
 #9\relax %
+\penalty -1000\relax %
 \ifdim\temp < -\wd\Syllablenotes %
 \ifdim\nextbegindifference > 0 pt%
 \hskip\interwordspacetextnotes %
