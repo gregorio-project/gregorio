@@ -134,6 +134,10 @@
 \addedraisevalue=-4980 sp%
 \multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
+\else % if it is under a note between two lines, we shift it higher
+\addedraisevalue=4000 sp%
+\multiply\addedraisevalue by \the\grefactor %
+\advance\glyphraisevalue by \addedraisevalue %
 \fi %
 \or% 6: if it is a sign, we put it at an arbitrary height
 \addedraisevalue=-10000 sp%

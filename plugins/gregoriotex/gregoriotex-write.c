@@ -1703,6 +1703,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 		  *number = 6;
 		}
 	    }
+	  normal_height_bottom();
 	}
       else
 	{			/* i=2 */
@@ -1715,8 +1716,8 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	    {
 	      *number = 0;
 	    }
+	  normal_height ();
 	}
-      normal_height ();
       break;
     case T_FLEXUS:
     case T_FLEXUS_LONGQUEUE:
@@ -1736,7 +1737,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	  break;
 	default:		/* i=2 */
 	  number_last_note (0);
-	  normal_height ();
+	  normal_height_bottom ();
 	  break;
 	}
       break;
@@ -1956,7 +1957,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 		  *number = 6;
 		}
 	    }
-	  normal_height ();
+	  normal_height_bottom ();
 	  break;
 	case 2:
 	  number_note_before_last_note ();
@@ -1972,7 +1973,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	  break;
 	default:
 	  number_last_note (0);
-	  normal_height ();
+	  normal_height_bottom ();
 	  break;
 	}
       break;
