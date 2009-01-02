@@ -936,6 +936,17 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
 	  // and we're done
 	  break;
 	}
+	  // case where there is only one letter
+      if (!current_character->next_character
+	  && forced_center == 0)
+	{
+	  gregorio_insert_style_after (ST_T_BEGIN, ST_CENTER,
+					&current_character);
+	  gregorio_insert_style_after (ST_T_END, ST_CENTER,
+				       &current_character);
+	  // and we're done
+	  break;
+	}
       current_character = current_character->next_character;
     }
   current_character = *param_character;
