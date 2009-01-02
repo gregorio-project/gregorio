@@ -605,17 +605,32 @@ libgregorio_gtex_write_special_char (FILE * f, grewchar * special_char)
     }
   if (!wcscmp (special_char, L"'æ"))
     {
-      fprintf (f, "\\'æ");
+      fprintf (f, "\\'\\ae");
+      return;
+    }
+  if (!wcscmp (special_char, L"'ae"))
+    {
+      fprintf (f, "\\'\\ae");
       return;
     }
   if (!wcscmp (special_char, L"'œ"))
     {
-      fprintf (f, "\\'œ");
+      fprintf (f, "\\'\\oe");
+      return;
+    }
+  if (!wcscmp (special_char, L"'oe"))
+    {
+      fprintf (f, "\\'\\oe");
       return;
     }
   if (!wcscmp (special_char, L"ae"))
     {
       fprintf (f, "\\ae");
+      return;
+    }
+  if (!wcscmp (special_char, L"oe"))
+    {
+      fprintf (f, "\\oe");
       return;
     }
   if (!wcscmp (special_char, L"*"))
