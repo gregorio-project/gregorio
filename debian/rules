@@ -57,14 +57,22 @@ install: build
 	dh_clean -k  
 
 	$(MAKE) DESTDIR=$(CURDIR)/debian/gregorio install
-	dh_install
-	dh_installtex -pgregoriotex
-	dh_installdocs
-	dh_installexamples -A examples/*.tex examples/PopulusSion.gabc
 
 # Build architecture-independent files here.
 binary-indep: build install
-# We have nothing to do by default.
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installexamples -A examples/*.tex examples/PopulusSion.gabc
+	dh_installtex -pgregoriotex
+	dh_install
+	dh_installdocs
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
 
 # Build architecture-dependent files here.
 binary-arch: build install
@@ -72,7 +80,6 @@ binary-arch: build install
 	dh_testroot
 	dh_installchangelogs 
 	dh_installman -a gregorio.1
-	dh_link
 	dh_strip
 	dh_compress
 	dh_fixperms
