@@ -2,13 +2,13 @@ Source: gregorio
 Section: x11
 Priority: optional
 Maintainer: Elie Roux <elie.roux@telecom-bretagne.eu>
-Build-Depends: debhelper (>= 7), libxml2-dev, flex, bison, docbook-to-man, xsltproc, autotools-dev, python, automake, libtool, libltdl3-dev
+Build-Depends: debhelper (>= 7), libxml2-dev, flex, bison, docbook-to-man, xsltproc, autotools-dev, python, automake, libtool, libltdl3-dev, cvs, tex-common, libglib2.0-dev, docbook-xsl
 Standards-Version: 3.8.0
 Homepage: http://home.gna.org/gregorio
 
 Package: gregorio
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: gregoriotex
 Description: command-line tool to typeset Gregorian chant
  Gregorio is a project with a lot of functionalities. The main interest is gabc,
@@ -20,7 +20,7 @@ Description: command-line tool to typeset Gregorian chant
 
 Package: gregoriotex
 Architecture: any
-Depends: tex-common (>= 0.33), texlive-omega, texlive-fonts-recommended
+Depends: tex-common (>= 0.33), texlive-omega, texlive-fonts-recommended, ${misc:Depends}
 Recommends: gregorio
 Description: Omega style for Gregorian chant scores
  GregorioTeX is a omega style for writing Gregorian chant scores. The code to

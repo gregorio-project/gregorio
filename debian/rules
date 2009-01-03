@@ -76,12 +76,12 @@ binary-arch: build install
 	dh_strip
 	dh_compress
 	dh_fixperms
-	dh_installdeb
 	dh_makeshlibs
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
+	dh_installdeb
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install 
