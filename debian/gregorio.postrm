@@ -19,10 +19,10 @@ set -e
 
 
 case "$1" in
-    remove)
+    remove|purge)
         ldconfig
     ;;
-    purge|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;
     *)
         echo "postrm called with unknown argument \`$1'" >&2
