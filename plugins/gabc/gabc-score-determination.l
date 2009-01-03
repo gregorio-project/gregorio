@@ -73,6 +73,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <INITIAL>name {
          return NAME;
       }
+<INITIAL>license {
+         return LICENSE;
+      }
 <INITIAL>initial-key {
          return INITIAL_KEY;
       }

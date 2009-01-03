@@ -65,6 +65,18 @@ write_score (FILE * f, gregorio_score * score)
 			("gregoriotex only works in monophony (for the moment)"),
 			"libgregorio_gregoriotex_write_score", ERROR, 0);
     }
+  if (score->name)
+    {
+      fprintf(f, "%% Name: %s\n", score->name);
+    }
+  if (score->first_voice_info && score->first_voice_info->author)
+    {
+      fprintf(f, "%% Author: %s\n", score->first_voice_info->author);
+    }
+  if (score->license)
+    {
+      fprintf(f, "%% The license of this file is: %s\n", score->license);
+    }
   fprintf (f, "\\begingregorioscore%%\n");
   // if necessary, we add some bottom space to the first line
   first_line = (gregorio_line *) malloc (sizeof (gregorio_line));

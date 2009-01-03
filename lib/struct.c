@@ -594,6 +594,7 @@ gregorio_new_score ()
   new_score->first_syllable = NULL;
   new_score->number_of_voices = 1;
   new_score->name = NULL;
+  new_score->license = NULL;
   new_score->initial_style = NORMAL_INITIAL;
   new_score->office_part = NULL;
   new_score->lilypond_preamble = NULL;
@@ -630,6 +631,18 @@ gregorio_set_score_name (gregorio_score * score, char *name)
       return;
     }
   score->name = name;
+}
+
+void
+gregorio_set_score_license (gregorio_score * score, char *license)
+{
+  if (!score)
+    {
+      gregorio_message (_("function called with NULL argument"),
+			   "gregorio_set_score_license", WARNING, 0);
+      return;
+    }
+  score->license = license;
 }
 
 void

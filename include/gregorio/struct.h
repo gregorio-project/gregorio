@@ -233,6 +233,7 @@ typedef struct gregorio_score {
   int number_of_voices;
 // then start some metadata:
   char *name;
+  char *license;
   char *office_part;
 // the mode of a song is between 1 and 8
   char mode;
@@ -329,6 +330,8 @@ void gregorio_reinitialize_one_voice_alterations (char alterations[13]);
 
 void
 gregorio_set_score_name (gregorio_score * score, char *name);
+void
+gregorio_set_score_license (gregorio_score * score, char *license);
 void
 gregorio_set_score_office_part (gregorio_score * score, char *office_part);
 void
