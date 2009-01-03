@@ -60,35 +60,36 @@ install: build
 
 # Build architecture-independent files here.
 binary-indep: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs 
-	dh_installexamples -A examples/*.tex examples/PopulusSion.gabc
-	dh_installtex -pgregoriotex
-	dh_install
-	dh_installdocs
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
+	dh_testdir -i
+	dh_testroot -i
+	dh_installchangelogs  -i
+	dh_installexamples -i -A examples/*.tex examples/PopulusSion.gabc
+	dh_installtex -pgregoriotex -i
+	dh_install -i
+	dh_installdocs -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
 
 # Build architecture-dependent files here.
 binary-arch: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs 
+	dh_testdir -a
+	dh_testroot -a
+	dh_installchangelogs -a
+	dh_lintian -a
 	dh_installman -a gregorio.1
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_makeshlibs
-	dh_shlibdeps
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
+	dh_strip -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_makeshlibs -a
+	dh_shlibdeps -a
+	dh_installdeb -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install 
