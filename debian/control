@@ -3,7 +3,8 @@ Section: x11
 Priority: optional
 Maintainer: Elie Roux <elie.roux@enst-bretagne.fr>
 Build-Depends: debhelper (>= 7), libxml2-dev, flex, bison, docbook-to-man, xsltproc, autotools-dev, python, automake, libtool, libltdl3-dev
-Standards-Version: 3.6.2
+Standards-Version: 3.8.0
+Homepage: http://home.gna.org/gregorio
 
 Package: gregorio
 Architecture: any
@@ -16,7 +17,6 @@ Description: command-line tool to typeset Gregorian chant
  score, like for example OpusTeX or GregorioTeX. But it also handles a XML
  format: GregorioXML.  You can use the tool to read or write gabc and
  GregorioXML, and to write OpusTeX and GregorioTeX.
-Homepage: http://home.gna.org/gregorio
 
 Package: gregoriotex
 Architecture: any
@@ -26,4 +26,3 @@ Description: Omega style for Gregorian chant scores
  GregorioTeX is a omega style for writing Gregorian chant scores. The code to
  write for a score is quite complex and should be written directly by the
  gregorio software.
-Homepage: http://home.gna.org/gregorio

@@ -16,7 +16,7 @@ DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
 deb:
-	dpkg-buildpackage -rfakeroot -i'/\.svn|/\.git'
+	debuild -i
 
 CFLAGS = -Wall -g
 
@@ -29,6 +29,8 @@ endif
 config.status:
 	dh_testdir
 	autoreconf -f -i
+	cp -f /usr/share/misc/config.sub build-aux/config.sub
+	cp -f /usr/share/misc/config.guess build-aux/config.guess
 	./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
 
 
@@ -37,21 +39,16 @@ build: build-stamp
 build-stamp:  config.status
 	dh_testdir
 	$(MAKE)
-	xsltproc -''-nonet /usr/share/xml/docbook/stylesheet/nwalsh/manpages/docbook.xsl debian/manpage.xml
+	xsltproc --nonet /usr/share/xml/docbook/stylesheet/nwalsh/manpages/docbook.xsl debian/manpage.xml
 	touch $@
 
 clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp 
-	-$(MAKE) distclean
-ifneq "$(wildcard /usr/share/misc/config.sub)" ""
-	cp -f /usr/share/misc/config.sub config.sub
-endif
-ifneq "$(wildcard /usr/share/misc/config.guess)" ""
-	cp -f /usr/share/misc/config.guess config.guess
-endif
-
+	[ ! -f Makefile ] || $(MAKE) distclean
+	rm build-aux/config.sub
+	rm build-aux/config.guess
 	dh_clean 
 
 install: build
@@ -61,12 +58,7 @@ install: build
 
 	$(MAKE) DESTDIR=$(CURDIR)/debian/gregorio install
 	dh_install
-	echo "MixedMap gregorio.map" > $(CURDIR)/debian/gregoriotex.maps
-	echo "MixedMap parmesan.map" >> $(CURDIR)/debian/gregoriotex.maps
-	echo "MixedMap greciliae.map" >> $(CURDIR)/debian/gregoriotex.maps
-	echo "MixedMap gresym.map" >> $(CURDIR)/debian/gregoriotex.maps
 	dh_installtex -pgregoriotex
-	
 	dh_installdocs
 	dh_installexamples -A examples/*.tex examples/PopulusSion.gabc
 
