@@ -19,7 +19,7 @@ Description: command-line tool to typeset Gregorian chant
  GregorioXML, and to write OpusTeX and GregorioTeX.
 
 Package: gregoriotex
-Architecture: any
+Architecture: all
 Depends: tex-common (>= 0.33), texlive-omega, texlive-fonts-recommended, ${misc:Depends}
 Recommends: gregorio
 Description: Omega style for Gregorian chant scores
