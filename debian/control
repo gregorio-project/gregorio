@@ -1,7 +1,7 @@
 Source: gregorio
 Section: x11
 Priority: optional
-Maintainer: Elie Roux <elie.roux@enst-bretagne.fr>
+Maintainer: Elie Roux <elie.roux@telecom-bretagne.eu>
 Build-Depends: debhelper (>= 7), libxml2-dev, flex, bison, docbook-to-man, xsltproc, autotools-dev, python, automake, libtool, libltdl3-dev
 Standards-Version: 3.8.0
 Homepage: http://home.gna.org/gregorio
