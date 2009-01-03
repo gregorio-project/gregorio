@@ -170,6 +170,10 @@ gregorio_write_text (char type, gregorio_character * current_character,
 			    current_character->next_character;
 			}
 		    }
+		  else
+		    {
+		      begin (f, ST_INITIAL);
+		    }
 		  break;
 		default:
 		  begin (f, current_character->cos.s.style);
