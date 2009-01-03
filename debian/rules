@@ -82,6 +82,7 @@ binary-arch: build install
 	dh_installexamples -i examples/PopulusSion.gabc
 	dh_lintian -a
 	dh_installman -a gregorio.1
+	dh_installdocs -a
 	dh_strip -a
 	dh_compress -a
 	dh_fixperms -a
