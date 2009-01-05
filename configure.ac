@@ -76,13 +76,18 @@ AC_ARG_ENABLE(glib-utf8,
     AC_SUBST(GLIB_LIBS)
     GLIB_CFLAGS=
     AC_SUBST(GLIB_CFLAGS)
-    ])
+    ]
+)
 
+AC_ARG_ENABLE(static-ltdl, 
+    [  --enable-static-ltdl for statical linking with libltdl (useful for MacOSX packages).], 
+    [LIBTOOL_LIB=["-lltdl -static"]], 
+    [LIBTOOL_LIB=-lltdl]
+)
+    
+AC_SUBST(LIBTOOL_LIB)
 
 AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
-
-LIBTOOL_LIB=-lltdl
-AC_SUBST(LIBTOOL_LIB)
 
 AM_CONFIG_HEADER([include/config.h])
 AC_CONFIG_FILES([
