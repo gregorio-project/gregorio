@@ -50,6 +50,14 @@ else
     LEXLIB=''
     AC_SUBST(LIBINTL)
   fi
+  ## a patch for statically linking libltdl under mac
+  HOST_OS=`$UNAME -s`
+  if test "$HOST_OS" = "Darwin"; then
+    LIBTOOL_LIB_STATIC=/usr/lib/libltdl.a
+  else
+    LIBTOOL_LIB_STATIC="-lltdl -static"
+  fi
+  AC_SUBST(LIBTOOL_LIB_STATIC)
 fi
 
 AC_HEADER_STDC
@@ -81,7 +89,7 @@ AC_ARG_ENABLE(glib-utf8,
 
 AC_ARG_ENABLE(static-ltdl, 
     [  --enable-static-ltdl for statical linking with libltdl (useful for MacOSX packages).], 
-    [LIBTOOL_LIB=["-lltdl -static"]], 
+    [LIBTOOL_LIB=LIBTOOL_LIB_STATIC], 
     [LIBTOOL_LIB=-lltdl]
 )
     
