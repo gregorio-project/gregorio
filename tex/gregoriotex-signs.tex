@@ -374,7 +374,7 @@
 \or%
 %case 2
 % a kind of flexus, it has the good width
-\vepisemusorrareaux{\char 5634}{\char 17}{1}{0}{#3}%
+\vepisemusorrareaux{\char 5634}{\char 17}{2}{0}{#3}%
 \or%
 %case 3
 % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
@@ -414,7 +414,7 @@
 \vepisemusorrareaux{0}{\char 27}{0}{0}{#3}%
 \or%
 %case 17
-\vepisemusorrareaux{\char 5633}{\char 17}{1}{0}{#3}%
+\vepisemusorrareaux{\char 5633}{\char 17}{2}{0}{#3}%
 \or%
 %case 18
 \vepisemusorrareaux{0}{\char 74}{1}{0}{#3}%
@@ -785,7 +785,7 @@
 \ifnum#2=1\relax %
 \hskip\spacearoundsmallbar %
 \fi %
-\penalty -5000 %
+%\penalty -5000 %
 \or % 1 : minima
 \penalty 10001%
 \ifnum#2=1\relax %
@@ -797,7 +797,7 @@
 \ifnum#2=1\relax %
 \hskip\spacearoundsmallbar %
 \fi %
-\penalty -5000%
+%\penalty -5000%
 \or % 2 : minor
 \penalty 10001 %
 \ifnum#2=1\relax %
@@ -809,7 +809,7 @@
 \ifnum#2=1\relax %
 \hskip\spacearoundminor %
 \fi %
-\penalty -5000 %
+%\penalty -5000 %
 \or % 3 : maior
 \penalty 10001 %
 \ifnum#2=1\relax %
@@ -821,7 +821,7 @@
 \ifnum#2=1\relax %
 \hskip\spacearoundmaior %
 \fi %
-\penalty -5000 %
+%\penalty -5000 %
 \or % 4 : finalis
 \penalty 10001 %
 \ifnum#2=1\relax %
@@ -832,7 +832,7 @@
 \ifnum#2=1\relax %
 \hskip\spacearoundfinalis %
 \fi %
-\penalty -5000 %
+%\penalty -5000 %
 \or % 5 : finalis
 \penalty 10001 %
 \ifnum#2=1\relax %
@@ -843,7 +843,7 @@
 \ifnum#2=1\relax %
 \hskip\spacearoundfinalis %
 \fi %
-\penalty -5000 %
+%\penalty -5000 %
 \fi %
 \relax%
 }
