@@ -89,7 +89,7 @@ AC_ARG_ENABLE(glib-utf8,
 
 AC_ARG_ENABLE(static-ltdl, 
     [  --enable-static-ltdl for statical linking with libltdl (useful for MacOSX packages).], 
-    [LIBTOOL_LIB=LIBTOOL_LIB_STATIC], 
+    [LIBTOOL_LIB=$LIBTOOL_LIB_STATIC], 
     [LIBTOOL_LIB=-lltdl]
 )
     
