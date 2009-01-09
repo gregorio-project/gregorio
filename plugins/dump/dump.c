@@ -192,6 +192,11 @@ write_score (FILE * f, gregorio_score * score)
 	  fprintf (f, "\n  Translation\n");
 	  libgregorio_dump_write_characters (f, syllable->translation);
 	}
+      if (syllable->additional_infos)
+	{
+	  fprintf (f, "   additional infos                   %s\n",
+	  libgregorio_dump_rare_sign(syllable->additional_infos));
+	}	
       element = syllable->elements[0];
       while (element)
 	{
@@ -224,6 +229,12 @@ write_score (FILE * f, gregorio_score * score)
 	      fprintf (f, "     element_type            %d (%s)\n",
 		       element->element_type,
 		       libgregorio_dump_bar_type (element->element_type));
+		  if (element->additional_infos)
+		    {
+	          fprintf (f, "     additional_infos        %d (%s)\n",
+		        element->element_type,
+		        libgregorio_dump_rare_sign (element->additional_infos));
+		    }
 	    }
 	  if (element->element_type && element->type == GRE_C_KEY_CHANGE)
 	    {
@@ -276,11 +287,18 @@ write_score (FILE * f, gregorio_score * score)
 							    glyph_type));
 		    }
 		}
-	      if (glyph->liquescentia)
+	      if (glyph->liquescentia && glyph->glyph_type != GRE_BAR)
 		{
 		  fprintf (f, "       liquescentia          %d (%s)\n",
 			   glyph->liquescentia,
 			   libgregorio_dump_liquescentia (glyph->
+							  liquescentia));
+		}
+	      if (glyph->liquescentia && glyph->glyph_type == GRE_BAR)
+		{
+		  fprintf (f, "       liquescentia          %d (%s)\n",
+			   glyph->liquescentia,
+			   libgregorio_dump_rare_sign (glyph->
 							  liquescentia));
 		}
 	      note = glyph->first_note;
@@ -907,6 +925,7 @@ libgregorio_dump_signs (char signs)
   return str;
 }
 
+// a function dumping rare_signs or additional_informations
 const char *
 libgregorio_dump_rare_sign (char rare_sign)
 {
@@ -927,6 +946,18 @@ libgregorio_dump_rare_sign (char rare_sign)
       break;
     case _SEMI_CIRCULUS_REVERSUS:
       str = "_SEMI_CIRCULUS_REVERSUS";
+      break;
+    case _ICTUS_A:
+      str = "_ICTUS_A";
+      break;
+    case _ICTUS_T:
+      str = "_ICTUS_T";
+      break;
+    case _V_EPISEMUS_ICTUS_A:
+      str = "_V_EPISEMUS_ICTUS_A";
+      break;
+    case _V_EPISEMUS_ICTUS_T:
+      str = "_V_EPISEMUS_ICTUS_T";
       break;
     default:
       str = "unknown";

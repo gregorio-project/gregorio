@@ -87,7 +87,7 @@ gregorio_add_special_as_note (gregorio_note ** current_note, char type,
   element->type = type;
   element->pitch = pitch;
   //element->shape = NULL;
-  //element->signs = NULL;
+  element->signs = NULL;
   //element->liquescentia=NULL;
   element->previous_note = *current_note;
   element->next_note = NULL;
@@ -102,6 +102,12 @@ void
 gregorio_add_special_sign (gregorio_note *note, char sign)
 {
     note->rare_sign=sign;
+}
+
+void
+gregorio_set_signs (gregorio_note *note, char signs)
+{
+    note->signs=signs;
 }
 
 void
@@ -187,7 +193,7 @@ gregorio_add_glyph (gregorio_glyph ** current_glyph, char type,
 
 void
 gregorio_add_special_as_glyph (gregorio_glyph ** current_glyph, char type,
-				  char pitch)
+				  char pitch, char additional_infos)
 {
   gregorio_glyph *next_glyph = malloc (sizeof (gregorio_glyph));
   if (!next_glyph)
@@ -198,7 +204,7 @@ gregorio_add_special_as_glyph (gregorio_glyph ** current_glyph, char type,
     }
   next_glyph->type = type;
   next_glyph->glyph_type = pitch;
-  //next_glyph->liquescentia = 0;
+  next_glyph->liquescentia = additional_infos;
   next_glyph->first_note = NULL;
   next_glyph->next_glyph = NULL;
   next_glyph->previous_glyph = *current_glyph;
@@ -294,7 +300,7 @@ gregorio_add_element (gregorio_element ** current_element,
 
 void
 gregorio_add_special_as_element (gregorio_element ** current_element,
-				    char type, char pitch)
+				    char type, char pitch, char additional_infos)
 {
   gregorio_element *special = malloc (sizeof (gregorio_element));
   if (!special)
@@ -305,6 +311,7 @@ gregorio_add_special_as_element (gregorio_element ** current_element,
     }
   special->type = type;
   special->element_type = pitch;
+  special->additional_infos = additional_infos;
   special->first_glyph = NULL;
   special->next_element = NULL;
   special->previous_element = *current_element;

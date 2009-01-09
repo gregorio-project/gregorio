@@ -115,6 +115,18 @@ libgregorio_xml_signs_to_str (char signs)
     case _SEMI_CIRCULUS_REVERSUS:
       str = "<above>reversed_semi_circulus</above>";
       break;
+    case _ICTUS_A:
+      str = "<ictus_a/>";
+      break;
+    case _ICTUS_T:
+      str = "<ictus_t/>";
+      break;
+    case _ICTUS_A_V_EPISEMUS:
+      str = "<bottom>v_episemus</bottom><ictus_a/>";
+      break;
+    case _ICTUS_T_V_EPISEMUS:
+      str = "<bottom>v_episemus</bottom><ictus_t/>";
+      break;
     default:
       str = "";
       break;

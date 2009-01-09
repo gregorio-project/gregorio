@@ -157,7 +157,13 @@ libgregorio_xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc,
 	  current_node = current_node->next;
 	  continue;
 	}
-
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "license"))
+	{
+	  score->license = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "office-part"))
 	{
 	  score->office_part = (char *) xmlNodeListGetString
@@ -502,7 +508,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 		{
 
 		  gregorio_add_special_as_element ((&current_element),
-						      GRE_BAR, step);
+						      GRE_BAR, step, 0);
 		  if (!((*current_syllable)->elements[0]))
 		    {
 // we need this to find the first element
@@ -523,7 +529,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 		{
 		  gregorio_add_special_as_element ((&current_element),
 						      GRE_C_KEY_CHANGE,
-						      line + 48);
+						      line + 48, 0);
 		  if (!((*current_syllable)->elements[0]))
 		    {
 // we need this to find the first element
@@ -537,7 +543,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 		{
 		  gregorio_add_special_as_element ((&current_element),
 						      GRE_F_KEY_CHANGE,
-						      line + 48);
+						      line + 48, 0);
 		  if (!((*current_syllable)->elements[0]))
 		    {
 // we need this to find the first element
@@ -819,7 +825,7 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
       if (step != 0)
 	{
 
-	  gregorio_add_special_as_element (current_element, GRE_BAR, step);
+	  gregorio_add_special_as_element (current_element, GRE_BAR, step, 0);
 	  gregorio_reinitialize_one_voice_alterations (alterations);
 	}
       return;
@@ -830,7 +836,7 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 	    libgregorio_xml_read_pitch
 	    (current_node->xmlChildrenNode->xmlChildrenNode, doc, *key);
 		  gregorio_add_special_as_element (current_element,
-						      GRE_CUSTO, step);
+						      GRE_CUSTO, step, 0);
 	    }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "clef-change"))
     {
@@ -839,14 +845,14 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
       if (step == 'c')
 	{
 	  gregorio_add_special_as_element (current_element,
-					      GRE_C_KEY_CHANGE, line + 48);
+					      GRE_C_KEY_CHANGE, line + 48, 0);
 	  gregorio_reinitialize_one_voice_alterations (alterations);
 	  *key = gregorio_calculate_new_key (step, line);
 	}
       if (step == 'f')
 	{
 	  gregorio_add_special_as_element (current_element,
-					      GRE_F_KEY_CHANGE, line + 48);
+					      GRE_F_KEY_CHANGE, line + 48, 0);
 	  gregorio_reinitialize_one_voice_alterations (alterations);
 	  *key = gregorio_calculate_new_key (step, line);
 	}
@@ -862,19 +868,19 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
       (current_node->name, (const xmlChar *) "larger-neumatic-space"))
     {
       gregorio_add_special_as_element (current_element,
-					  GRE_SPACE, SP_LARGER_SPACE);
+					  GRE_SPACE, SP_LARGER_SPACE, 0);
       return;
     }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "end-of-line"))
     {
       gregorio_add_special_as_element (current_element,
-					  GRE_END_OF_LINE, USELESS_VALUE);
+					  GRE_END_OF_LINE, USELESS_VALUE, 0);
       return;
     }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "glyph-space"))
     {
       gregorio_add_special_as_element (current_element,
-					  GRE_SPACE, SP_GLYPH_SPACE);
+					  GRE_SPACE, SP_GLYPH_SPACE, 0);
       return;
     }
 
@@ -906,7 +912,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 	  step =
 	    libgregorio_xml_read_alteration (current_node->xmlChildrenNode,
 					     doc, key);
-	  gregorio_add_special_as_glyph (&current_glyph, GRE_FLAT, step);
+	  gregorio_add_special_as_glyph (&current_glyph, GRE_FLAT, step, 0);
 	  alterations[(int) step - 48] = FLAT;
 	  current_node = current_node->next;
 	  continue;
@@ -918,7 +924,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 	    libgregorio_xml_read_alteration (current_node->xmlChildrenNode,
 					     doc, key);
 	  gregorio_add_special_as_glyph (&current_glyph, GRE_NATURAL,
-					    step);
+					    step, 0);
 	  alterations[(int) step - 48] = NO_ALTERATION;
 	  current_node = current_node->next;
 	  continue;
@@ -927,7 +933,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 	  (current_node->name, (const xmlChar *) "zero-width-space"))
 	{
 	  gregorio_add_special_as_glyph (&current_glyph, GRE_SPACE,
-					    SP_ZERO_WIDTH);
+					    SP_ZERO_WIDTH, 0);
 	  current_node = current_node->next;
 	  continue;
 	}

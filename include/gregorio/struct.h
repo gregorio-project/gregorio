@@ -99,6 +99,7 @@ typedef struct gregorio_glyph {
   char glyph_type;
 // liquescentia is really used, because that will determine the shape
 // we will have to use.
+// it may also contain additional informations (a bit hacky)
   char liquescentia;
 // a pointer to a (chained list of) gregorio_notes, the first of the
 // glyph.
@@ -118,6 +119,8 @@ typedef struct gregorio_element {
 // GRE_*_KEY_CHANGE, it is 0. If it is GRE_SPACE, it is the kind of
 // space (it can't be SP_ZERO_WIDTH).
   char element_type;
+// contain additional informations, like for example bar signs
+  char additional_infos;
 // a pointer to the first glyph of the element.
   struct gregorio_glyph *first_glyph;
 // pointers to the next and previous elements.
@@ -199,6 +202,8 @@ typedef struct gregorio_syllable {
 // word, WORD_ONE_SYLLABLE for syllable that are alone in their word,
 // and i let you gess what are WORD_MIDDLE and WORD_END.
   char position;
+// again, an additional field to put some signs or other things...
+  char additional_infos;
 // pointer to a gregorio_text structure corresponding to the text.
   struct gregorio_character *text;
 // pointer to a gregorio_text structure corresponding to the translation
@@ -297,6 +302,7 @@ void gregorio_add_syllable (gregorio_syllable ** current_syllable,
 			  int number_of_voices, gregorio_element * elements[],
 			  gregorio_character * first_character, gregorio_character *first_translation_character, char position);
 
+void gregorio_set_signs (gregorio_note *current_note, char signs);
 void gregorio_add_special_sign (gregorio_note *current_note, char sign);
 void gregorio_change_shape (gregorio_note *note, char shape);
 
@@ -318,9 +324,9 @@ void gregorio_free_score(gregorio_score *score);
 void gregorio_go_to_first_character (gregorio_character ** character);
 void gregorio_add_text (char *mbcharacters, gregorio_character **current_character);
 
-void gregorio_add_special_as_glyph (gregorio_glyph **current_glyph, char type, char pitch);
+void gregorio_add_special_as_glyph (gregorio_glyph **current_glyph, char type, char pitch, char additional_infos);
 void gregorio_add_special_as_note (gregorio_note **current_note, char type, char pitch);
-void gregorio_add_special_as_element (gregorio_element **current_element, char type, char pitch);
+void gregorio_add_special_as_element (gregorio_element **current_element, char type, char pitch, char additional_infos);
 
 void gregorio_determine_good_top_notes (gregorio_note * current_note);
 
@@ -459,6 +465,11 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define _CIRCULUS 10
 #define _SEMI_CIRCULUS 11
 #define _SEMI_CIRCULUS_REVERSUS 12
+#define _ICTUS_A 13
+#define _ICTUS_T 14
+// signs of a bar
+#define _V_EPISEMUS_ICTUS_A 15
+#define _V_EPISEMUS_ICTUS_T 16
 
 #define is_multi(h_episemus) \
 h_episemus>H_ALONE

@@ -231,6 +231,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note, int *curre
   char current_glyph_type = G_UNDETERMINED;
   char next_glyph_type = G_UNDETERMINED;
   char last_pitch = USELESS_VALUE;
+  char bar_signs = NULL; // a variable for the signs of bars
   gregorio_note *next_note = NULL;
 
   // determination of end of glyphs, see comments on
@@ -273,8 +274,27 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note, int *curre
 	      current_note->pitch =
 	          libgregorio_gabc_determine_custo_pitch (current_note->next_note, *current_key);
 	    }
+	  // we calculate the signs of the bars
+	  if (current_note->type == GRE_BAR)
+	    {
+	      if (current_note -> signs == _V_EPISEMUS)
+	        {
+	          if (current_note -> rare_sign == _ICTUS_A)
+	            {
+	              bar_signs = _V_EPISEMUS_ICTUS_A;
+	            }
+	          else
+	            {
+	              bar_signs = _V_EPISEMUS_ICTUS_T;
+	            }
+	        }
+	      else
+	        {
+              bar_signs = current_note -> rare_sign;
+	        }
+	    }
 	  gregorio_add_special_as_glyph (&last_glyph, current_note->type,
-					    current_note->pitch);
+					    current_note->pitch, bar_signs);
 	  current_glyph_first_note = current_note->next_note;
 	  gregorio_free_one_note (&current_note);
       last_pitch = USELESS_VALUE;
