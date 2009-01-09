@@ -1,10 +1,7 @@
 Modifications for Building a Mac OS X Package
 =============================================
-To distribute a binary for OS X, we need to remove the dependencies on the shared libraries libintl.8.dylib and libltdl.3.dylib, which are not guaranteed to exist on a user's system. To do this, we prepare the project source for static linking with these commands in the top source directory:
+To distribute a binary for OS X, we need to remove the dependencies on the shared libraries libintl.8.dylib and libltdl.3.dylib, which are not guaranteed to exist on a user's system. To do this, we statically link against libltdl and prepare the project source for building its own static libintl with this in the top source directory:
 $ gettextize --intl -f
-$ glibtoolize --ltdl
-
-** OS X renames GNU libtool/libtoolize as glibtool/glibtoolize, since it has its own (different) libtool command. Unfortunately, glibtoolize seems to be lacking in functionality, so it is necessary to take glibtoolize from MacPorts...
 
 
 And make the following modifications to the build system (commented lines show the current, unmodified commands):
@@ -15,44 +12,42 @@ Changes in configure.ac
 #AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT()
 
-- change the libtool lines
-#LIBTOOL_LIB=-lltdl
-#AC_SUBST(LIBTOOL_LIB)
-LT_CONFIG_LTDL_DIR([libltdl])
-LT_INIT([dlopen])
-LTDL_INIT([convenience])
-
 - gettextize should also have automatically added intl/Makefile to AC_CONFIG_FILES
 
 Changes in Makefile.am
 ======================
-- in the top directory (/trunk/Makefile.am), add the intl and libltdl to the list of subdirectories
-SUBDIRS= po include intl libltdl lib plugins src examples tex contrib
+- in the top directory (/trunk/Makefile.am), add the intl dir list of subdirectories
+SUBDIRS= po include intl lib plugins src examples tex contrib
 
-Then change the lines that cause linking to the external libltdl on the builder's machine
-- in src/Makefile.am
-#gregorio_LDADD=$(GLIB_LIBS) $(LIBINTL) $(LIBTOOL_LIB) ../lib/libgregorio.la
-gregorio_LDADD=$(GLIB_LIBS) $(LIBINTL) $(LIBLTDL) ../lib/libgregorio.la
-
-- in lib/Makefile.am
-#libgregorio_la_LIBADD = $(GLIB_LIBS) $(LIBINTL) $(LIBTOOL_LIB)
-libgregorio_la_LIBADD = $(GLIB_LIBS) $(LIBINTL) $(LIBLTDL)
-libgregorio_la_DEPENDENCIES = $(LTDLDEPS)
-
-
+Building Universal Binary
 ==================================
 That should be all that is needed... so now we run
 $ autoreconf
 There will be a ton of warnings, which hopefully can safely be ignored.
-$ ./configure --with-included-gettext --with-included-ltdl
-I'm not 100% certain the ltdl flag is strictly necessary, but it doesn't hurt
-$ make
+$ ./configure --with-included-gettext --enable-static-ltdl --disable-dependency-tracking
+
+$ make CFLAGS="-isysroot /Developer/SDKs/MacOSX10.5.sdk -arch ppc -arch i386" LDFLAGS="-isysroot /Developer/SDKs/MacOSX10.5.sdk -arch ppc -arch i386 -arch ppc -arch i386"
 # make install
+
+**TODO: -isysroot really?**
+If this method fails, you can build the architectures separately, and use lipo to combine them.
+ 
+For 10.4 compatibility
+=====================
+**TODO: figure out build errors using the Tiger SDK (libiconv might be the source)**
+--for Tiger compatibility this (or an equivalent setting) is also needed:
+$ MACOSX_DEPLOYMENT_TARGET=10.4
+$ export MACOSX_DEPLOYMENT_TARGET
+--also would need to remind user to make sure /usr/local is in their PATH (this is not true in a default 10.4 machine, even if it is true in Leopard)
+
+**TODO: find out what this warning even means:
+ld warning: can't add line info to anonymous symbol __text@0 from /Developer/SDKs/MacOSX10.5.sdk/usr/lib/libltdl.a(ltdl.o)
+The binary still works, but it's kind of crappy to see a hundred of those lines while building (only happens when building a universal binary directly; building intel and ppc separately and then combining them with lipo gives no such warnings)**
 
 Possible Issues
 =================
-- Make may fail in the libintl subdir -- When building in libintl, it looks for config.h in the top src dir (i.e. trunk) when in fact it's in trunk/include. You can probably change it to look in the proper place, but the lazy method of copying config.h into trunk also works...
-- I just realized I build against Leopard's libiconv, which is more updated than Tiger's... crap. It needs a little more work to work on 10.4. And more to work on ppc.
+- Make may fail in the intl subdir -- When building in intl, it looks for config.h in the top src dir (i.e. trunk) when in fact it's in trunk/include. You can probably change it to look in the proper place, but the lazy method of copying config.h into trunk also works...
+- Leopard (by default) builds ppc shared libraries (e.g., libgregorio.dylib) for ppc7400. This is bad for G3 and earlier Macs, but since these directions currently build a Leopard only binary, which wouldn't run on such old computers, this hardly matters. It may later...
 - building in a more convenient subdirectory (i.e. running ./configure --prefix="/my/package/builddir/root") requires fixing the library path names later (it may actually work without doing so, but leaving the incorrect paths seems a bit ugly)
 
 Using PackageMaker
