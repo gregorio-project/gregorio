@@ -171,7 +171,9 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
   if (element->type == GRE_BAR)
     {
       gregorio_reinitialize_one_voice_alterations (alterations);
-      libgregorio_xml_write_neumatic_bar (f, element->element_type);
+      fprintf (f, "<neumatic-bar>");
+      libgregorio_xml_write_bar (f, element->element_type, element->additional_infos);
+      fprintf (f, "</neumatic-bar>");
       return;
     }
   if (element->type == GRE_CUSTO)
@@ -228,11 +230,25 @@ libgregorio_xml_write_space (FILE * f, char type)
 }
 
 void
-libgregorio_xml_write_neumatic_bar (FILE * f, char type)
+libgregorio_xml_write_bar (FILE * f, char type, char signs)
 {
   const char *str;
   str = libgregorio_xml_bar_to_str (type);
-  fprintf (f, "<neumatic-bar><type>%s</type></neumatic-bar>", str);
+  fprintf (f, "<type>%s</type>", str);
+  switch (signs)
+    {
+    case _V_EPISEMUS:
+      fprintf(f, "<signs>vertical-episemus</signs>");
+      break;
+    case _V_EPISEMUS_ICTUS_A:
+      fprintf(f, "<signs>vertical-episemus-ictus-a</signs>");
+      break;
+    case _V_EPISEMUS_ICTUS_T:
+      fprintf(f, "<signs>vertical-episemus-ictus-t</signs>");
+      break;
+    default:
+      break;
+    }
 }
 
 void
@@ -527,15 +543,17 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
     {
       if (element->type == GRE_BAR)
 	{
-	  str = libgregorio_xml_bar_to_str (element->element_type);
 	  if (voice == MONOPHONY)
 	    {
-	      fprintf (f, "<bar><type>%s</type></bar>", str);
+	      fprintf (f, "<bar>");
+          libgregorio_xml_write_bar (f, element->element_type, element->additional_infos);
+          fprintf(f, "</bar>", str);
 	    }
 	  else
 	    {
-	      fprintf (f, "<bar voice=\"%d\"><type>%s</type></bar>",
-		       voice, str);
+		  fprintf (f, "<bar voice=\"%d\">", voice);
+          libgregorio_xml_write_bar (f, element->element_type, element->additional_infos);
+          fprintf(f, "</bar>", str);
 	    }
 	}
       if (element->type == GRE_END_OF_LINE)

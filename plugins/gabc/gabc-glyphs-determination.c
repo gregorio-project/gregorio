@@ -279,13 +279,17 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note, int *curre
 	    {
 	      if (current_note -> signs == _V_EPISEMUS)
 	        {
-	          if (current_note -> rare_sign == _ICTUS_A)
+	          switch (current_note->rare_sign)
 	            {
+	            case _ICTUS_A:
 	              bar_signs = _V_EPISEMUS_ICTUS_A;
-	            }
-	          else
-	            {
+	              break;
+                case _ICTUS_T:
 	              bar_signs = _V_EPISEMUS_ICTUS_T;
+	              break;
+	            default:
+	              bar_signs = _V_EPISEMUS;
+	              break;
 	            }
 	        }
 	      else

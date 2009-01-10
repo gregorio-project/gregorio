@@ -68,7 +68,7 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element, in
 			   char alterations[]);
 
 const char * libgregorio_xml_bar_to_str(char type);
-void libgregorio_xml_write_neumatic_bar (FILE * f, char type);
+void libgregorio_xml_write_bar (FILE * f, char type, char signs);
 void libgregorio_xml_write_space (FILE * f, char type);
 
 void libgregorio_xml_write_key_change (FILE *f, char step, int line);
@@ -174,7 +174,7 @@ libgregorio_xml_read_translation (xmlNodePtr current_node, xmlDocPtr doc,
 char
 libgregorio_xml_read_figura (char *liquescentia);
 
-char libgregorio_xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc);
+void libgregorio_xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc, char *type, char *signs);
 char libgregorio_xml_read_position (char *position);
 
 #endif

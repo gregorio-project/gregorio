@@ -179,6 +179,11 @@ write_score (FILE * f, gregorio_score * score)
 		   syllable->position,
 		   libgregorio_dump_syllable_position (syllable->position));
 	}
+	  if (syllable->additional_infos)
+	{
+	  fprintf (f, "   additional infos                   %s\n",
+	  libgregorio_dump_rare_sign(syllable->additional_infos));
+	}
       if (syllable->text)
 	{
 	  if (syllable->translation)
@@ -191,11 +196,6 @@ write_score (FILE * f, gregorio_score * score)
 	{
 	  fprintf (f, "\n  Translation\n");
 	  libgregorio_dump_write_characters (f, syllable->translation);
-	}
-      if (syllable->additional_infos)
-	{
-	  fprintf (f, "   additional infos                   %s\n",
-	  libgregorio_dump_rare_sign(syllable->additional_infos));
 	}	
       element = syllable->elements[0];
       while (element)
@@ -958,6 +958,9 @@ libgregorio_dump_rare_sign (char rare_sign)
       break;
     case _V_EPISEMUS_ICTUS_T:
       str = "_V_EPISEMUS_ICTUS_T";
+      break;
+    case _V_EPISEMUS:
+      str = "_V_EPISEMUS";
       break;
     default:
       str = "unknown";

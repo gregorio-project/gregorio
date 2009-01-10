@@ -364,48 +364,91 @@ libgregorio_xml_read_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
 
 }
 
-char
-libgregorio_xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc)
+void
+libgregorio_xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc, char *type, char *signs)
 {
-  if (xmlStrcmp (current_node->name, (const xmlChar *) "type"))
+  xmlNodePtr current_children_node;
+  while (current_node)
     {
-      gregorio_message (_
-			   ("unknown markup, in attributes markup"),
-			   "libgregorio_xml_read_file", WARNING, 0);
-      return 0;
-    }
-  current_node = current_node->xmlChildrenNode;
+  if (!xmlStrcmp (current_node->name, (const xmlChar *) "type"))
+    {
+  current_children_node = current_node->xmlChildrenNode;
   if (!xmlStrcmp
-      (xmlNodeListGetString (doc, current_node, 1),
+      (xmlNodeListGetString (doc, current_children_node, 1),
        (const xmlChar *) "virgula"))
     {
-      return B_VIRGULA;
+      *type = B_VIRGULA;
+      current_node = current_node -> next;
+      continue;
     }
   if (!xmlStrcmp
-      (xmlNodeListGetString (doc, current_node, 1),
+      (xmlNodeListGetString (doc, current_children_node, 1),
        (const xmlChar *) "divisio-minima"))
     {
-      return B_DIVISIO_MINIMA;
+      *type = B_DIVISIO_MINIMA;
+      current_node = current_node -> next;
+      continue;
     }
   if (!xmlStrcmp
-      (xmlNodeListGetString (doc, current_node, 1),
+      (xmlNodeListGetString (doc, current_children_node, 1),
        (const xmlChar *) "divisio-minor"))
     {
-      return B_DIVISIO_MINOR;
+      *type = B_DIVISIO_MINOR;
+      current_node = current_node -> next;
+      continue;
     }
   if (!xmlStrcmp
-      (xmlNodeListGetString (doc, current_node, 1),
+      (xmlNodeListGetString (doc, current_children_node, 1),
        (const xmlChar *) "divisio-maior"))
     {
-      return B_DIVISIO_MAIOR;
+      *type = B_DIVISIO_MAIOR;
+      current_node = current_node -> next;
+      continue;
     }
   if (!xmlStrcmp
-      (xmlNodeListGetString (doc, current_node, 1),
+      (xmlNodeListGetString (doc, current_children_node, 1),
        (const xmlChar *) "divisio-finalis"))
     {
-      return B_DIVISIO_FINALIS;
+      *type = B_DIVISIO_FINALIS;
+      current_node = current_node -> next;
+      continue;
     }
-  return B_NO_BAR;
+    
+  }
+  if (!xmlStrcmp (current_node->name, (const xmlChar *) "signs"))
+    {
+  current_children_node = current_node->xmlChildrenNode;
+  if (!xmlStrcmp
+      (xmlNodeListGetString (doc, current_children_node, 1),
+       (const xmlChar *) "vertical-episemus"))
+    {
+      *signs = _V_EPISEMUS;
+      current_node = current_node -> next;
+      continue;
+    }
+  if (!xmlStrcmp
+      (xmlNodeListGetString (doc, current_children_node, 1),
+       (const xmlChar *) "vertical-episemus-ictus-a"))
+    {
+      *signs = _V_EPISEMUS_ICTUS_A;
+      current_node = current_node -> next;
+      continue;
+    }
+  if (!xmlStrcmp
+      (xmlNodeListGetString (doc, current_children_node, 1),
+       (const xmlChar *) "vertical-episemus-ictus-t"))
+    {
+      *signs = _V_EPISEMUS_ICTUS_T;
+      current_node = current_node -> next;
+      continue;
+    }
+    }
+    current_node = current_node -> next;
+	gregorio_message (_
+				   ("unknown markup in bar"),
+				   "libgregorio_xml_read_file", WARNING, 0);
+    }
+  
 }
 
 int
@@ -473,6 +516,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 			       int clefs[])
 {
   char step;
+  char bar_signs;
   int line;
   gregorio_element *current_element = NULL;
 
@@ -501,14 +545,14 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 	{
 	  if (!xmlStrcmp (current_node->name, (const xmlChar *) "bar"))
 	    {
-	      step =
-		libgregorio_xml_read_bar (current_node->xmlChildrenNode, doc);
+		libgregorio_xml_read_bar (current_node->xmlChildrenNode, doc, &step, &bar_signs);
 	      //here we use step, but it is juste to verify if we can really read the bar
 	      if (step != 0)
 		{
 
 		  gregorio_add_special_as_element ((&current_element),
 						      GRE_BAR, step, 0);
+		  current_element->additional_infos = bar_signs;
 		  if (!((*current_syllable)->elements[0]))
 		    {
 // we need this to find the first element
@@ -816,16 +860,18 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 			      char alterations[13], int *key)
 {
   char step;
+  char bar_signs;
   int line;
 
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "neumatic-bar"))
     {
-      step = libgregorio_xml_read_bar (current_node->xmlChildrenNode, doc);
+      libgregorio_xml_read_bar (current_node->xmlChildrenNode, doc, &step, &bar_signs);
       //here we use step, but it is juste to verify if we can really read the bar
       if (step != 0)
 	{
 
 	  gregorio_add_special_as_element (current_element, GRE_BAR, step, 0);
+	  (*current_element)->additional_infos = bar_signs;
 	  gregorio_reinitialize_one_voice_alterations (alterations);
 	}
       return;
@@ -1483,7 +1529,7 @@ libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
 	  xmlFree (temp);
 	  current_node = current_node->next;
 	  continue;
-	}
+	}	
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "top"))
 	{
 	  if (*h_episemus == H_NO_EPISEMUS)
@@ -1500,6 +1546,18 @@ libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
 	  current_node = current_node->next;
 	  continue;
 	}
+	  if (!xmlStrcmp (current_node->name, (const xmlChar *) "ictus-a"))
+	    {
+	      *rare_sign = _ICTUS_A;
+	      current_node = current_node->next;
+	      continue;
+	    }
+	  if (!xmlStrcmp (current_node->name, (const xmlChar *) "ictus-t"))
+	    {
+	      *rare_sign = _ICTUS_T;
+	      current_node = current_node->next;
+	      continue;
+	    }
 	// rare signs (accentus, etc.)
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "above"))
 	{

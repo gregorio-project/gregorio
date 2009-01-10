@@ -86,9 +86,7 @@ gregorio_add_special_as_note (gregorio_note ** current_note, char type,
     }
   element->type = type;
   element->pitch = pitch;
-  //element->shape = NULL;
-  element->signs = NULL;
-  //element->liquescentia=NULL;
+  element->signs = _NO_SIGN;
   element->previous_note = *current_note;
   element->next_note = NULL;
   if (*current_note)
@@ -286,7 +284,8 @@ gregorio_add_element (gregorio_element ** current_element,
       return;
     }
   next->type = GRE_ELEMENT;
-  //next->element_type = 0;
+  next->element_type = 0;
+  next->additional_infos = 0;
   next->first_glyph = first_glyph;
   next->previous_element = *current_element;
   next->next_element = NULL;
@@ -516,6 +515,7 @@ gregorio_add_syllable (gregorio_syllable ** current_syllable,
       return;
     }
   next->type = GRE_SYLLABLE;
+  next->additional_infos = 0;
   next->position = position;
   next->text = first_character;
   next->translation = first_translation_character;
@@ -1116,6 +1116,7 @@ gregorio_mix_h_episemus (gregorio_note * current_note, char type)
   if (type == H_NO_EPISEMUS)
     {
       current_note->h_episemus_type = H_NO_EPISEMUS;
+      current_note->h_episemus_top_note = 0;
     }
   else
     {
