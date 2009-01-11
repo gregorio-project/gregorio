@@ -115,6 +115,10 @@ Here are the different types, they must be the same as in squarize.py
 #define TT_BOTTOM 3
 #define TT_TOP 2
 
+// some bars, to know if they are inside a syllable or if they are a syllable
+#define INSIDE_BAR 0
+#define SYLLABLE_BAR 1
+
 // a structure containing the result of seekadditionalspaces
 
 typedef struct gregorio_line {
@@ -133,7 +137,7 @@ void libgregorio_gregoriotex_write_syllable (FILE * f, gregorio_syllable * sylla
 void libgregorio_gregoriotex_write_text (FILE * f, gregorio_character *first_character, char *first_syllable);
 void libgregorio_gregoriotex_write_translation (FILE *f, gregorio_character *translation);
 void libgregorio_gregoriotex_write_element (FILE * f, gregorio_syllable * syllable, gregorio_element * element);
-void libgregorio_gregoriotex_write_bar (FILE * f, char type);
+void libgregorio_gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable);
 void libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable, gregorio_element * element, gregorio_glyph * glyph);
 void libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *glyph, int *type, char *gtype, unsigned int *glyph_number);
 

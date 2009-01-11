@@ -373,15 +373,12 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	{
 	  if (current_element->next_element)
 	    {
-	      fprintf (f, "\\in");
+	      libgregorio_gregoriotex_write_bar (f, current_element->element_type, current_element->additional_infos, INSIDE_BAR);
 	    }
 	  else
 	    {
-	      fprintf (f, "\\");
+	      libgregorio_gregoriotex_write_bar (f, current_element->element_type, current_element->additional_infos, SYLLABLE_BAR);
 	    }
-	  libgregorio_gregoriotex_write_bar (f,
-					     current_element->element_type);
-	  fprintf (f, "%%\n");
 	  current_element = current_element->next_element;
 	  continue;
 	}
@@ -843,9 +840,7 @@ libgregorio_gregoriotex_write_element (FILE * f,
 	}
       if (current_glyph->type == GRE_BAR)
 	{
-	  fprintf (f, "\\in");
-	  libgregorio_gregoriotex_write_bar (f, current_glyph->glyph_type);
-	  fprintf (f, "%%\n");
+	  libgregorio_gregoriotex_write_bar (f, current_glyph->glyph_type, current_glyph->liquescentia, INSIDE_BAR);
 	  current_glyph = current_glyph->next_glyph;
 	  continue;
 	}
@@ -871,29 +866,64 @@ libgregorio_gregoriotex_write_element (FILE * f,
 
 
 void
-libgregorio_gregoriotex_write_bar (FILE * f, char type)
+libgregorio_gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable)
 {
+  // the type number of function vepisemusorrare
+  char typenumber = 26;
+  if (inorsyllable == INSIDE_BAR)
+    {
+      fprintf(f, "\\in");
+    }
+  else
+    {
+      fprintf(f, "\\");
+    }
   switch (type)
     {
     case B_VIRGULA:
-      fprintf (f, "virgula");
+      fprintf (f, "virgula %%\n");
+      typenumber = 26;
       break;
     case B_DIVISIO_MINIMA:
-      fprintf (f, "divisiominima");
+      fprintf (f, "divisiominima %%\n");
+      typenumber = 25;
       break;
     case B_DIVISIO_MINOR:
-      fprintf (f, "divisiominor");
+      fprintf (f, "divisiominor %%\n");
+      typenumber = 25;
       break;
     case B_DIVISIO_MAIOR:
-      fprintf (f, "divisiomaior");
+      fprintf (f, "divisiomaior %%\n");
+      typenumber = 25;
       break;
     case B_DIVISIO_FINALIS:
-      fprintf (f, "divisiofinalis");
+      fprintf (f, "divisiofinalis %%\n");
+      typenumber = 27;
       break;
     default:
       gregorio_message (_("unknown bar type"),
 			"libgregorio_gregoriotex_write_bar", ERROR, 0);
       break;
+    }
+  switch (signs)
+    { 
+      case _V_EPISEMUS:
+        fprintf (f, "\\barvepisemus{%d}%%\n", typenumber);
+        break;
+      case _ICTUS_A:
+        fprintf (f, "\\ictusa{%d}%%\n", typenumber);
+        break;
+      case _ICTUS_T:
+        fprintf (f, "\\ictust{%d}%%\n", typenumber);
+        break;
+      case _V_EPISEMUS_ICTUS_A:
+        fprintf (f, "\\barvepisemusictusa{%d}%%\n", typenumber);
+        break;
+      case _V_EPISEMUS_ICTUS_T:
+        fprintf (f, "\\barvepisemusictust{%d}%%\n", typenumber);
+        break;
+      default:
+        break;
     }
 }
 
@@ -1158,6 +1188,13 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 		}
 	    }
 	}
+	  // write_rare also writes the vepisemus
+      if (current_note->rare_sign)
+	{
+	  libgregorio_gregoriotex_write_rare (f, glyph, i, type,
+					      current_note,
+					      current_note->rare_sign);
+	}
       switch (current_note->signs)
 	{
 	case _PUNCTUM_MORA:
@@ -1171,19 +1208,28 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 
 	  break;
 	case _V_EPISEMUS:
-	  libgregorio_gregoriotex_write_vepisemus (f, glyph, i, type,
+	  if (current_note->rare_sign != _ICTUS_A && current_note->rare_sign != _ICTUS_T)
+	  {
+	    libgregorio_gregoriotex_write_vepisemus (f, glyph, i, type,
 						   current_note);
+	  }
 	  additional_line ();
 	  break;
 	case _V_EPISEMUS_PUNCTUM_MORA:
-	  libgregorio_gregoriotex_write_vepisemus (f, glyph, i, type,
+	  if (current_note->rare_sign != _ICTUS_A && current_note->rare_sign != _ICTUS_T)
+	  {
+	    libgregorio_gregoriotex_write_vepisemus (f, glyph, i, type,
 						   current_note);
+	  }
 	  additional_line ();
 	  libgregorio_gregoriotex_write_punctum_mora (f, glyph, current_note);
 	  break;
 	case _V_EPISEMUS_AUCTUM_DUPLEX:
-	  libgregorio_gregoriotex_write_vepisemus (f, glyph, i, type,
+	  if (current_note->rare_sign != _ICTUS_A && current_note->rare_sign != _ICTUS_T)
+	  {
+	    libgregorio_gregoriotex_write_vepisemus (f, glyph, i, type,
 						   current_note);
+	  }
 	  additional_line ();
 	  libgregorio_gregoriotex_write_auctum_duplex (f, glyph,
 						       current_note);
@@ -1192,13 +1238,8 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	  additional_line ();
 	  break;
 	}
-      if (current_note->rare_sign)
-	{
-	  libgregorio_gregoriotex_write_rare (f, glyph, i, type,
-					      current_note,
-					      current_note->rare_sign);
-	}
-      else
+	  // why is this if there?...
+      if (!current_note->rare_sign)
 	{
 	  if (block_hepisemus == 1)
 	    {
@@ -1529,9 +1570,10 @@ libgregorio_gregoriotex_write_rare (FILE * f,
 
   char height = 0;
   char number = 0;
-
+  
+  // we set TT_V_EPISEMUS because the only height we have to calculate is this one
   libgregorio_gregoriotex_find_sign_number (current_glyph, i,
-					    type, TT_RARE, current_note,
+					    type, TT_V_EPISEMUS, current_note,
 					    &number, &height, NULL);
 
   switch (rare)
@@ -1550,6 +1592,31 @@ libgregorio_gregoriotex_write_rare (FILE * f,
       break;
     case _SEMI_CIRCULUS_REVERSUS:
       fprintf (f, "\\reversedsemicirculus{%d}%%\n", number);
+      break;
+    // the cases of the bar signs are dealt in another function (write_bar)
+    case _ICTUS_A:
+      switch (current_note->signs) {
+        case _V_EPISEMUS:
+        case _V_EPISEMUS_PUNCTUM_MORA:
+        case _V_EPISEMUS_AUCTUM_DUPLEX:
+          fprintf (f, "\\vepisemusictusa{%c}{%d}%%\n", height, number);
+          break;
+        default:
+          fprintf (f, "\\ictusa{%d}%%\n", number);
+          break;
+        }
+      break;
+    case _ICTUS_T:
+      switch (current_note->signs) {
+        case _V_EPISEMUS:
+        case _V_EPISEMUS_PUNCTUM_MORA:
+        case _V_EPISEMUS_AUCTUM_DUPLEX:
+          fprintf (f, "\\vepisemusictust{%c}{%d}%%\n", height, number);
+          break;
+        default:
+          fprintf (f, "\\ictust{%d}%%\n", number);
+          break;
+        }
       break;
     default:
       break;

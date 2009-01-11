@@ -289,7 +289,7 @@
 
 % a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. If it is 2, it means that we must go back first of width #1, and then forward of #2. If it is 1, it means that we only need to go back of #2. if it is 4, we go to the beginning of the glyph, then forward of #1 then back of #2
 % #4 is 0 a shift that we want to get applied, useful for punctum inclinatum for example
-% #5 is the glyph number
+% #5 is the glyph number. If it is 1 it is an ictus arsicus (?) and 2 for an ictus theticus
 \def\vepisemusorrareaux#1#2#3#4#5{%
 % first we set \tempwidth to the width of the last glyph
 \tempwidth=\lastglyphwidth %
@@ -310,18 +310,30 @@
 \advance\tempwidth by -\wd\Tempsign %
 \advance\tempwidth by -\tempsignwidth %
 \fi%
+\kern-\tempwidth % we do it here because of the ictus
+% here we save the position of the ictus or we draw the glyph
+\ifnum#5<3\relax %
+\ifcase#5\or %
+% case 1: ictus arsicus
+\saveictusapos %
+\or %
+% case 2: ictus theticus
+\saveictustpos %
+\fi %
+\else %
 % then we draw the sign
 \setbox\Tempsign=\hbox{\gregorianfont \char #5}%
 % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
 \tempsignwidth=\wd\Tempsign %
 \divide\tempsignwidth by 2 %
 \advance\tempwidth by \tempsignwidth %
-\kern -\tempwidth%
+\kern -\tempsignwidth%
 \kern #4sp%
 \raise \glyphraisevalue \copy\Tempsign %
 \kern -#4sp%
 % and finally we go back to the end of the glyph, where we were first
 \advance\tempwidth by -2\tempsignwidth %
+\fi %
 \kern \tempwidth%
 \relax%
 }
@@ -354,6 +366,9 @@
 %% 22: idem with ambitus of one
 %% 23: idem with initio debilis
 %% 24: the last note, if it is a linea punctum (or linea punctum cavum)
+%% 25: the last note, if it is a bar (don't laugh)
+%% 26: the last note, if it is a virgula
+%% 27: the last note, if it is a divisio finalis
 
 % a function to typeset a vertical episemus or a rare accent (like accentus, circulus, etc.). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The values are described in the commentary just above.
 % the third argument is the glyph number in the font.
@@ -436,12 +451,61 @@
 \or%
 %case 24
 \vepisemusorrareaux{0}{\char 35}{1}{0}{#3}%
+\or%
+%case 25
+\vepisemusorrareaux{0}{\char 9}{1}{0}{#3}%
+\or%
+%case 26
+\vepisemusorrareaux{0}{\char 8}{1}{0}{#3}%
+\or%
+%case 27
+\vepisemusorrareaux{0}{\divisiofinalissymbol}{1}{0}{#3}%
 \fi%
 \relax%
 }
 
 \def\vepisemus#1#2{%
 \vepisemusorrare{#1}{#2}{33}%
+\relax %
+}
+
+\def\barvepisemus#1{%
+\vepisemusorrare{c}{#1}{33}%
+\relax %
+}
+
+\def\ictusa#1{%
+\vepisemusorrare{a}{#1}{1}%
+\relax %
+}
+
+\def\ictust#1{%
+\vepisemusorrare{a}{#1}{2}%
+\relax %
+}
+
+% maybe these four should be optimized
+\def\vepisemusictusa#1#2{%
+\vepisemusorrare{#1}{#2}{33}%
+\ictusa{#2}%
+\relax %
+}
+
+\def\barvepisemusictusa#1{%
+\vepisemusorrare{c}{#1}{33}%
+\ictusa{#1}%
+\relax %
+}
+
+\def\vepisemusictust#1#2{%
+\vepisemusorrare{#1}{#2}{33}%
+\ictust{#2}%
+\relax %
+}
+
+\def\barvepisemusictust#1{%
+\vepisemusorrare{c}{#1}{33}%
+\ictust{#1}%
 \relax %
 }
 
@@ -467,6 +531,21 @@
 
 \def\reversedsemicirculus#1{%
 \vepisemusorrare{m}{#1}{70}%
+\relax %
+}
+
+
+%% the macros to save the absolute positions of ictus a and t in the aux file
+
+\def\saveictusapos{%
+\pdfsavepos %
+\grewriteaux{ia:\number\pdflastxpos}%
+\relax %
+}
+
+\def\saveictustpos{%
+\pdfsavepos %
+\grewriteaux{it:\number\pdflastxpos}%
 \relax %
 }
 
@@ -774,14 +853,16 @@
 %%% 0 if it is outside a syllable
 %%% 1 if it is in a syllable
 \def\writebar#1#2{%
+\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \ifcase#1 % 0 : virgula
 \penalty 10001 %
 \ifnum#2=1\relax %
 \hskip\spacearoundsmallbar %
 \penalty 10001 %
 \fi %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
+\setbox\Tempwidth=\hbox{\gregorianfont \char 8}%
+\raise\glyphraisevalue\Tempwidth %
+\global\lastglyphwidth=\wd\Tempwidth %
 \ifnum#2=1\relax %
 \hskip\spacearoundsmallbar %
 \fi %
@@ -792,7 +873,6 @@
 \hskip\spacearoundsmallbar %
 \penalty 10001%
 \fi %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
 \ifnum#2=1\relax %
 \hskip\spacearoundsmallbar %
@@ -804,7 +884,6 @@
 \hskip\spacearoundminor %
 \penalty 10001 %
 \fi %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
 \ifnum#2=1\relax %
 \hskip\spacearoundminor %
@@ -816,7 +895,6 @@
 \hskip\spacearoundmaior %
 \penalty 10001 %
 \fi %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 \ifnum#2=1\relax %
 \hskip\spacearoundmaior %

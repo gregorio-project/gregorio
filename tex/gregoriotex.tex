@@ -625,6 +625,7 @@ atScoreBeggining()%
 
 %macro called at the beginning of a score
 \def\endgregorioscore{%
+\global\lastoflinecount=0\relax %
 \global\blockcusto=0\relax %
 \localleftbox{}%
 \ifnum\keeprightbox=0 %
