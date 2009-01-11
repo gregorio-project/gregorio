@@ -18,3 +18,22 @@ gabc.vim is the highlight syntax file for vim. You can copy it in
 au BufNewFile,BufRead *.gabc                    setf gabc
 somewhere near lines like it (near line 100 for example) in
 /usr/share/vim/vimcurrent/filetype.vim . This will autodetect the filetypes.
+
+Some files specifically for TeXShop Users on Mac OS X:
+
+lamed-dvipdfm.engine is an engine file so you can compile TeX files using 
+lamed from within TeXShop. It also runs dvipdfm, and the pdf result will 
+open in the preview window. See the comments within the file if you want to
+modify it for a lamed/dvips/ps2pdf process instead. Install it by copying it
+into the ~/Library/TeXShop/Engines folder.
+
+pdfLuaLaTeX.engine is a similar file, to allow compiling with lualatex. Also
+install by copying into ~/Library/TeXShop/Engines.
+
+gregorio.scpt is an Applescript macro which you can use if you write gabc files
+directly within TeXShop, instead of an external editor. It will call gregorio
+on your gabc file, converting to gtex. You can modify it if you need another 
+output format. To set it up, open the Macro Editor in TeXShop. Select New Item,
+and call it gregorio (or whatvever you wish). Copy and paste all the text of 
+gregorio.scpt into the Content window, and click save. To use it, type and save
+a gabc file and then just choose the gregorio macro from the menu.

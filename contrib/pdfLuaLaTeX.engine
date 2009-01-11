@@ -1,0 +1,5 @@
+#!/bin/sh
+# This does exactly what it looks like it does...
+echo "typesetting file and converting to pdf..."
+#lualatex $1
+pdflualatex "$1"
