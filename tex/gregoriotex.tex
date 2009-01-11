@@ -16,15 +16,6 @@
 
 % this file contains definitions for lines, initial, fonts, etc.
 
-%%%%%%%%%%%%%%
-%% basic start
-%%%%%%%%%%%%%%
-
-% factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
-% at the beginning it is set to 0, but if it is still 0 when begingregorianscore is called, it is set to the default value : 17 (the value that makes it look like a standard graduale)
-\newcount\grefactor
-\grefactor=0
-
 % a if to see if we are called with lua(la)tex or not
 \newif\ifluatex
 % Set \ifluatex accordingly
@@ -33,6 +24,45 @@
 \else
 \luatextrue
 \fi
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%% aux file definitions
+%%%%%%%%%%%%%%%%%%%%%%%
+
+% for now, we only use an aux file with LuaTeX
+
+\ifluatex
+\newwrite\Greaux
+\fi
+
+\def\grewriteaux#1{%
+\ifluatex %
+\write\Greaux{#1}%
+\fi %
+\relax %
+}
+
+\def\opengreaux{%
+\ifluatex %
+\openout\Greaux \jobname .gaux\relax%
+\fi %
+}
+
+\def\closegreaux{%
+\ifluatex %
+\closeout\Greaux %
+\fi %
+}
+
+
+%%%%%%%%%%%%%%
+%% basic start
+%%%%%%%%%%%%%%
+
+% factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
+% at the beginning it is set to 0, but if it is still 0 when begingregorianscore is called, it is set to the default value : 17 (the value that makes it look like a standard graduale)
+\newcount\grefactor
+\grefactor=0
 
 %%%%%%%%%%%%%%%%%%
 %% vertical spaces
