@@ -764,5 +764,39 @@
 %\fi%
 %}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macro for putting text above lines for annotations and the like
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% additional space for the text above lines
+\def\abovelinestextstyle#1{\small\itshape #1}
+\newdimen\abovelinestextraise % raises the text above the note line
+\newdimen\abovelinestextwidth % used for kerning to ``reset'' spacing
+\newbox\abovelinestextbox % box for the text above
+
+% set space above the text lines - almost the same as for the translation
+\def\addspaceabove{%
+\global\abovelinestextraise=60000 sp%
+\global\multiply\abovelinestextraise by \the\grefactor %
+%\global\advance\spaceabovelines by \abovelinestextraise %
+\generatelines %
+\calculateconstantglyphraise %
+\global\advance\abovelinestextraise by 4\stafflineheight
+\global\advance\abovelinestextraise by 4\interstafflinespace
+\relax %
+}
+% we don't need space above any more
+\def\removespaceabove{%
+\global\abovelinestextraise=0 sp%
+\generatelines %
+\calculateconstantglyphraise %
+\relax %
+}
+% set the text above the line
+\def\abovelinestext#1{%
+\setbox\abovelinestextbox\hbox{\abovelinestextstyle{#1}}
+\leavevmode\raise\abovelinestextraise\copy\abovelinestextbox%
+\global\abovelinestextwidth=\wd\abovelinestextbox%
+\kern-\abovelinestextwidth%
+}
 
