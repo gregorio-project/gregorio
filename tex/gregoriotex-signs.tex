@@ -225,9 +225,9 @@
 }
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the typesetting of the signs
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting vertical episemus, rare signs and ictus
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % a function to typeset a punctum mora, the argument is the letter of the height of the punctum mora
 % if the second argument is one, we the go back to the end of the punctum
@@ -313,13 +313,7 @@
 \kern-\tempwidth % we do it here because of the ictus
 % here we save the position of the ictus or we draw the glyph
 \ifnum#5<3\relax %
-\ifcase#5\or %
-% case 1: ictus arsicus
-\saveictusapos %
-\or %
-% case 2: ictus theticus
-\saveictustpos %
-\fi %
+\ictus{#5}%
 \else %
 % then we draw the sign
 \setbox\Tempsign=\hbox{\gregorianfont \char #5}%
@@ -534,20 +528,27 @@
 \relax %
 }
 
-
 %% the macros to save the absolute positions of ictus a and t in the aux file
 
-\def\saveictusapos{%
+% macro called at the place of an ictus
+% #1 is 1 if ictus a, 2 if ictus t
+\def\ictus#1{%
 \pdfsavepos %
+\ifcase#1\or %
 \grewriteaux{ia:\number\pdflastxpos}%
+\or %
+\grewriteaux{it:\number\pdflastxpos}%
+\fi %
+\gregorioattr=4\relax %
+\hbox to 0pt{}%
+\gregorioattr=0\relax %
 \relax %
 }
 
-\def\saveictustpos{%
-\pdfsavepos %
-\grewriteaux{it:\number\pdflastxpos}%
-\relax %
-}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting horizontal episemus
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 % a macro that will help in the typesetting of a horizontal episemus and additional lines, the first argument is a glyph that have the same width as the width between the end of the glyph and the beginning of the episemus, and the second argument is the character of the episemus. If the third argument is 0, we go directly to the beginning of the glyph, else we don't change anything
 % 4th argument is the same as in hepisorline

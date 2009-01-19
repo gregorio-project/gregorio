@@ -596,6 +596,33 @@
 
 \input gregoriotex-syllable.tex
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the chironomic signs lines
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% here is a quite special macro called at beggining of lines, that inserts a line of chironomic signs
+\def\insertchiroline{%
+\ifluatex %
+\directlua0{chiroPrintLine()}%
+\fi %
+\relax %
+}
+
+%macro to call just after begingregorioscore, if there are some chironomic signs
+\def\activatechironomy{%
+% we print the absolute position of the beginning of the score, and the width of a line, to get the absolute positions of the begginning and end of lines
+\pdfsavepos %
+\grewriteaux{begin:\number\pdflastxpos}%
+\grewriteaux{width:\number\stafflinewidth}%
+\directlua0{dofile(kpse.find_file('gregoriotex-ictus.lua'))}%
+\relax %
+}
+
+% count that is 1 or 0 if we need to print the small vertical bars in the chironomic line
+\newcount\printchirovbars
+\printchirovbars=1
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% other macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
