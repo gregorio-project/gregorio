@@ -81,7 +81,13 @@ write_score (FILE * f, gregorio_score * score)
   fprintf (f, "\\begingregorioscore%%\n");
   // if necessary, we add some bottom space to the first line
   first_line = (gregorio_line *) malloc (sizeof (gregorio_line));
-  libgregorio_gregoriotex_seeklinespaces (score->first_syllable, first_line);
+  libgregorio_gregoriotex_getlineinfos (score->first_syllable, first_line);
+  // here we assume that if there is chironomy somewhere, there will be chironomy on the first line
+  if (first_line->ictus)
+    {
+      fprintf (f, "\\activatechironomy %%\n");
+      fprintf (f, "\\insertchiroline %%\n");
+    }
   if (first_line->additional_bottom_space != 0
       || first_line->translation != 0)
     {
@@ -203,7 +209,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
       if ((syllable->elements)[0]->type == GRE_END_OF_LINE)
 	{
 	  line = (gregorio_line *) malloc (sizeof (gregorio_line));
-	  libgregorio_gregoriotex_seeklinespaces (syllable->next_syllable,
+	  libgregorio_gregoriotex_getlineinfos (syllable->next_syllable,
 						  line);
 	  if (line->additional_bottom_space == 0
 	      && line->additional_top_space == 0 && line->translation == 0)
@@ -235,6 +241,10 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 		}
 
 	    }
+      if (line->ictus)
+        {
+          fprintf (f, "\\insertchiroline %%\n%%\n");
+        }
 	  free (line);
 	  if (*line_number == 1)
 	    {
@@ -386,7 +396,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	{
 	  line = (gregorio_line *) malloc (sizeof (gregorio_line));
 	  // here we suppose we don't have two linebreaks in the same syllable
-	  libgregorio_gregoriotex_seeklinespaces (syllable->next_syllable,
+	  libgregorio_gregoriotex_getlineinfos (syllable->next_syllable,
 						  line);
 	  if (line->additional_bottom_space == 0
 	      && line->additional_top_space == 0 && line->translation == 0)
@@ -416,8 +426,11 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 			   line->additional_top_space,
 			   line->additional_bottom_space, line->translation);
 		}
-
 	    }
+      if (line->ictus)
+        {
+          fprintf (f, "\\insertchiroline %%\n%%\n");
+        }
 	  free (line);
 	  if (*line_number == 1)
 	    {
@@ -444,9 +457,9 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
     }
 }
 
-
+// function filling the gregorio_line (see gregoriotex.h) struct with the infos on the line following syllable
 void
-libgregorio_gregoriotex_seeklinespaces (gregorio_syllable * syllable,
+libgregorio_gregoriotex_getlineinfos (gregorio_syllable * syllable,
 					gregorio_line * line)
 {
   gregorio_element *element;
@@ -464,6 +477,7 @@ libgregorio_gregoriotex_seeklinespaces (gregorio_syllable * syllable,
   line->additional_top_space = 0;
   line->additional_bottom_space = 0;
   line->translation = 0;
+  line->ictus = 0;
 
   while (syllable)
     {
@@ -477,6 +491,22 @@ libgregorio_gregoriotex_seeklinespaces (gregorio_syllable * syllable,
 	  if (element->type == GRE_END_OF_LINE)
 	    {
 	      return;
+	    }
+	  if (element->type == GRE_BAR)
+	    {
+	      switch (element->additional_infos)
+	        {
+	          case _ICTUS_A:
+	          case _ICTUS_T:
+	          case _V_EPISEMUS_ICTUS_A:
+	          case _V_EPISEMUS_ICTUS_T:
+	            line->ictus = 1;
+	            break;
+	          default:
+	            break;
+	        }
+	      element = element->next_element;
+	      continue;
 	    }
 	  if (element->type != GRE_ELEMENT)
 	    {
@@ -494,6 +524,10 @@ libgregorio_gregoriotex_seeklinespaces (gregorio_syllable * syllable,
 	      note = glyph->first_note;
 	      while (note)
 		{
+		  if (note->rare_sign == _ICTUS_A || note->rare_sign == _ICTUS_T)
+		    {
+		      line->ictus = 1;
+		    }
 		  switch (note->pitch)
 		    {
 		    case 'a':

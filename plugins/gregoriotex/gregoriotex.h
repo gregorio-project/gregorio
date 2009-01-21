@@ -126,6 +126,7 @@ unsigned char additional_top_space; // 0, 1, 2 or 3. it is the argument of
 // grenewlinewithspaces in gregoriotex.tex
 unsigned char additional_bottom_space;
 unsigned char translation; // O or 1, indicates if there is a translation on
+unsigned char ictus; // idem
 // the line
 } gregorio_line;
 
@@ -174,5 +175,5 @@ void libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph, i
 
 void libgregorio_gregoriotex_write_additional_line (FILE * f, gregorio_glyph *current_glyph, int i, char type, char bottom_or_top, gregorio_note * current_note);
 
-void libgregorio_gregoriotex_seeklinespaces (gregorio_syllable * syllable, gregorio_line * line);
+void libgregorio_gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line);
 #endif

@@ -1,8 +1,10 @@
-chiroCurrentLine = 1
-chiroCurrentScore = 1
-chiroList = {}
+chiroCurrentLine = chiroCurrentLine or 1
+chiroCurrentScore = chiroCurrentScore or 0
+chiroList = chiroList or nil
 local ia=0
 local it=1
+
+--dofile(table.lua)
 
 --[[
 
@@ -18,17 +20,25 @@ ictus: type, pos
 
 -- we work in pt in this file
 
+function atBeginChiroScore()
+  -- as we call this function at each score beginning, we don't rebuild the list each time
+  if chiroList == nil then
+    chiroCreateList()
+  end
+  chiroCurrentScore = chiroCurrentScore + 1
+  chiroCurrentLine = 1
+end
+
 function chiroCreateList()
   -- the philosophy is to fill current* and then to append it to the good lists
-  f = io.open(tex.jobname .. '.gaux')
-  chiroList.scores={}
+  local f = io.open(tex.jobname .. '.gaux')
   local currentLine = nil
   local currentScore = nil
   local currentScoreWidth = 0
   local currentScoreBeginPos = 0
   local currentPos = 0
   if f == nil then
-    return nil, false
+    return false
   end
   for line in f:lines() do
     key, pos = string.match(line, "(%w+):(%d+)")
@@ -41,7 +51,7 @@ function chiroCreateList()
           table.insert(currentScore.lines, currentLine)
           currentLine = {}
           currentLine.ictus = {}
-          currentLine.begin = currentBeginPos
+          currentLine.begin = currentScoreBeginPos
           currentLine.width = currentScoreWidth
         end
         currentPos = pos
@@ -51,16 +61,21 @@ function chiroCreateList()
           table.insert(currentScore.lines, currentLine)
           currentLine = {}
           currentLine.ictus = {}
-          currentLine.begin = currentBeginPos
+          currentLine.begin = currentScoreBeginPos
           currentLine.width = currentScoreWidth
         end
         currentPos = pos
         table.insert(currentLine.ictus, {['type'] = it, ['pos'] = pos})
       elseif key == 'begin' then
+        if currentLine ~= nil and currentScore ~= nil then
+          table.insert(currentScore.lines, currentLine)
+        end
+        if chiroList == nil then
+          chiroList = {}
+          chiroList.scores={}
+        end
         currentScoreBeginPos = pos
-        if currentScore == nil then
-          currentScore = {}
-        else
+        if currentScore ~= nil then
           table.insert(chiroList.scores, currentScore)
         end
         currentScore = {}
@@ -77,6 +92,7 @@ function chiroCreateList()
     end
   end
   if currentScore ~= nil then
+    table.insert(currentScore.lines, currentLine)
     table.insert(chiroList.scores, currentScore)
   end
   io.close(f)
@@ -86,19 +102,38 @@ end
 
 -- function called in the TeX Code, calls ChiroPrintCLine with the good line
 function chiroPrintLine()
-  if chiroCurrentLine > table.maxn(chiroList.scores[chiroCurrentScore].lines) then
-    if chiroCurrentScore > table.maxn(chiroList.scores) then
-      -- basically if there are too many calls, we do nothing after the valid calls
-      return
-    else
-      chiroCurrentLine = 1
-      chiroCurrentScore = chiroCurrentScore + 1
-      chiroPrintCLine (chiroList.scores[chiroCurrentScore].lines[chiroCurrentLine])
-    end
+  if chiroList == nil or chiroCurrentScore > table.maxn(chiroList.scores) then
+    return
+  elseif chiroCurrentLine > table.maxn(chiroList.scores[chiroCurrentScore].lines) then
+    texio.write_nl('linea' .. chiroCurrentLine)
+    texio.write_nl('lineg' .. chiroCurrentScore)
+    texio.write_nl('scoreg' .. table.maxn(chiroList.scores[chiroCurrentScore].lines))
+    -- if there are too many calls in a score
+    return
+  elseif table.maxn(chiroList.scores) < chiroCurrentScore  or chiroCurrentScore == 0 then
+    texio.write_nl('lineb' .. chiroCurrentLine)
+    -- a basic check
+    return
   else
     --printTable(chiroList.scores[chiroCurrentScore].lines[chiroCurrentLine], '')
+    texio.write_nl('linec' .. chiroCurrentLine)
     chiroPrintCLine (chiroList.scores[chiroCurrentScore].lines[chiroCurrentLine])
     chiroCurrentLine = chiroCurrentLine + 1
+  end
+end
+
+function printTable(table, s)
+  if table == {} or table == nil then
+    return
+  end
+  for k,v in pairs(table) do
+    texio.write_nl(s .. 'key : ' .. k)
+    if type(v) == 'table' then
+      texio.write_nl(s .. "table : ")
+      printTable(v, s .. ' ')
+    else
+      texio.write_nl(s .. 'value : ' .. v)
+    end
   end
 end
 
@@ -106,13 +141,18 @@ function chiroPrintCLine (line)
   -- just to know if we print small bars or not
   printSmallBars = tex.count.printchirovbars
   --printTable(line, '')
-  local s = "\n\\mplibcode\nbeginfig(1);\npickup pencircle xscaled 1 yscaled 0.5 rotated 30;\npath p,q;\n"
+  if line == nil then
+    return
+  end
+  local s = "\\mplibcode\nbeginfig(1);\npickup pencircle xscaled 1 yscaled 0.5 rotated 30;\npath p,q;\n"
   local startPos = line.begin
   local endPos = line.begin + line.width
   local currentPos = startPos
   local previousLen = 0
   local path = nil
   local i = 1
+  local firstShift = nil -- the kern we'll have to do before just printing the mplib
+  local temp -- a stupid temporary value
   local first = 1 -- useful for a test (we can't test i because sometimes i == 2 the first time)
   -- first we deal with the last point of the line:
   -- we add a point at min (lastpoint.pos + 20, endPos), except if it's the last line (TODO: check if it's the last line)
@@ -122,20 +162,19 @@ function chiroPrintCLine (line)
   while line.ictus[i+1] do
     if line.ictus[i].type == it then
       if line.ictus[i+1].type == ia then
-        path = itia(line.ictus[i].pos, line.ictus[i+1].pos, previousLen, printSmallBars)
+        path, temp = itia(line.ictus[i].pos, line.ictus[i+1].pos, previousLen, printSmallBars)
       else
-        path = itit(line.ictus[i].pos, line.ictus[i+1].pos, previousLen, printSmallBars)
+        path, temp = itit(line.ictus[i].pos, line.ictus[i+1].pos, previousLen, printSmallBars)
       end
       previousLen = 0
       i = i + 1
     else
       if line.ictus[i+1].type == it then
         previousLen = (line.ictus[i+1].pos - line.ictus[i].pos)
-        -- TODO: case of the first one
-        path = iait(line.ictus[i].pos, line.ictus[i+1].pos, 0, printSmallBars)
+        path, temp = iait(line.ictus[i].pos, line.ictus[i+1].pos, 0, printSmallBars)
         i = i + 1
       else
-        path = itit(line.ictus[i].pos, line.ictus[i+1].pos, previousLen, printSmallBars)
+        path, temp = itit(line.ictus[i].pos, line.ictus[i+1].pos, previousLen, printSmallBars)
         previousLen = 0
         --path = iaiait
         i = i + 1
@@ -149,9 +188,18 @@ function chiroPrintCLine (line)
     else
       s = s .. path .. "q := q & p;\n"
     end
+    if firstShift == nil then
+      -- we calculate the kern we'll have to make, in pt, and we do it
+      -- temp is the difference between the point 0 of the metapost coordonate system and the effective beginning of the metapost figure (it can go in the negative corrdonates)
+      -- line.ictus[1] is the position of the first ictus
+      firstShift = line.ictus[1].pos - line.begin - temp
+      temp = string.format("\\kern %fpt\n", firstShift)
+      s = temp .. s
+    end
   end
   s = s .. "draw q;\nendfig;\n\\endmplibcode\n"
   tex.print(s)
+  texio.write_nl(s)
 end
 
 -- function that returns a string like "draw mypath;" where mypath is a small 
@@ -191,7 +239,7 @@ function iait (ibegin, iend, first, printSmallBar)
     path = path .. chiroPrintBar(ibegin, 3)
   end
   -- we return path, and the left shift at the beginning (for the first of a line)
-  return path
+  return path, iaitfirstdiameter(ibegin, iend)/2
 end
 
 function iaiait (ibegin, imiddle, iend, first, printSmallBar)
@@ -224,7 +272,7 @@ function iaiait (ibegin, imiddle, iend, first, printSmallBar)
   if printSmallBar == 1 then
     path = path .. chiroPrintBar(ibegin, 3)
   end
-  return path
+  return path, 0
 end
 
 function itia (ibegin, iend, previouslen, printSmallBar)
@@ -235,7 +283,7 @@ function itia (ibegin, iend, previouslen, printSmallBar)
   if printSmallBar == 1 then
     path = path .. chiroPrintBar(ibegin, 3)
   end
-  return path
+  return path, 0
 end
 
 function itit (ibegin, iend, previouslen, printSmallBar)
@@ -246,7 +294,5 @@ function itit (ibegin, iend, previouslen, printSmallBar)
   if printSmallBar == 1 then
     path = path .. chiroPrintBar(ibegin, 3)
   end
-  return path
+  return path, 0
 end
-
-chiroCreateList()

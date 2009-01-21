@@ -55,7 +55,7 @@ typedef struct gregorio_note {
 // signs is the signs on the notes, see below for all possible values
   char signs;
 // rare_sign is the sign we sometimes encounter on punctum cavum, like
-// accentus, semi-circulus, etc.
+// accentus, semi-circulus, etc. can also be the ictus
   char rare_sign;
 // liquescentia is the liquescence on the note, it is not really used
 // in the final score, but it is, like type, used in the determination

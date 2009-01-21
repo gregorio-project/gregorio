@@ -497,7 +497,6 @@
 }
 
 \def\beginscore{%
-\global\knownline=1\relax %
 \drawlines%
 \relax%
 }
@@ -603,18 +602,36 @@
 % here is a quite special macro called at beggining of lines, that inserts a line of chironomic signs
 \def\insertchiroline{%
 \ifluatex %
+% the first line is a special case
+\ifnum\knownline=1\relax %
 \directlua0{chiroPrintLine()}%
+\hfill %
+\penalty -10001\relax %
+\else %
+% not very beaufiful, I don't like to make a new par inside a score, but....
+\localleftbox{}%
+\localrightbox{}%
+\par %
+\noindent\directlua0{chiroPrintLine()}%
+\updateleftbox %
+\par %
+\penalty 10001\relax %
+\noindent %
+\fi %
 \fi %
 \relax %
 }
 
 %macro to call just after begingregorioscore, if there are some chironomic signs
 \def\activatechironomy{%
+\ifluatex %
 % we print the absolute position of the beginning of the score, and the width of a line, to get the absolute positions of the begginning and end of lines
 \pdfsavepos %
 \grewriteaux{begin:\number\pdflastxpos}%
 \grewriteaux{width:\number\stafflinewidth}%
-\directlua0{dofile(kpse.find_file('gregoriotex-ictus.lua'))}%
+\directlua0{dofile(kpse.find_file('gregoriotex-ictus.lua'))%
+atBeginChiroScore()}%
+\fi %
 \relax %
 }
 
@@ -647,6 +664,7 @@ dofile(kpse.find_file('gregoriotex.lua'))%
 atScoreBeggining()%
 }%
 \fi %
+\global\knownline=1\relax %
 \relax%
 }
 
