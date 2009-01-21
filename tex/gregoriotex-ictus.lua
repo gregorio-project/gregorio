@@ -1,6 +1,8 @@
 chiroCurrentLine = chiroCurrentLine or 1
 chiroCurrentScore = chiroCurrentScore or 0
 chiroList = chiroList or nil
+normalPen = normalPen or "pencircle xscaled 1 yscaled 0.5 rotated 30"
+smallBarPen = smallBarPen or "pencircle xscaled 0.5 yscaled 0.25 rotated 60"
 local ia=0
 local it=1
 
@@ -144,7 +146,7 @@ function chiroPrintCLine (line)
   if line == nil then
     return
   end
-  local s = "\\mplibcode\nbeginfig(1);\npickup pencircle xscaled 1 yscaled 0.5 rotated 30;\npath p,q;\n"
+  local s = "\\mplibcode\nbeginfig(1);\npickup " .. normalPen .. ";\npath p,q;\n"
   local startPos = line.begin
   local endPos = line.begin + line.width
   local currentPos = startPos
@@ -204,7 +206,7 @@ end
 
 -- function that returns a string like "draw mypath;" where mypath is a small 
 function chiroPrintBar (x,y)
-  return string.format("draw (%d, %d){down} .. {down}(%d, %d);\n",
+  return string.format("draw (%.01f, %.01f){down} .. {down}(%.01f, %.01f) withpen " .. smallBarPen .. ";\n",
     x,
     y + 2,
     x,
@@ -228,7 +230,7 @@ function iait (ibegin, iend, first, printSmallBar)
   else
     init_height = 3
   end
-  local path =  string.format("p := (%d, %d){left} .. {right}(%d, %d){right} .. {dir-%d}(%d,3);\n",
+  local path =  string.format("p := (%.01f, %.01f){left} .. {right}(%.01f, %.01f){right} .. {dir-%d}(%.01f,3);\n",
   ibegin,
   init_height,
   ibegin,
@@ -255,7 +257,7 @@ function iaiait (ibegin, imiddle, iend, first, printSmallBar)
   else
     init_height = 3
   end
-  local path =  string.format("p := (%d, %d){left} .. {right}(%d, %.01f){right} .. {down}(%d, %.01f){down} .. {up}(%d, %.01f){up} .. {right}(%d,%.01f){right} .. {dir-%d}(%d,%d);\n",
+  local path =  string.format("p := (%.01f, %.01f){left} .. {right}(%.01f, %.01f){right} .. {down}(%.01f, %.01f){down} .. {up}(%.01f, %.01f){up} .. {right}(%.01f,%.01f){right} .. {dir-%d}(%.01f,%.01f);\n",
   ibegin,
   init_height,
   ibegin,
@@ -271,12 +273,13 @@ function iaiait (ibegin, imiddle, iend, first, printSmallBar)
   3)
   if printSmallBar == 1 then
     path = path .. chiroPrintBar(ibegin, 3)
+    path = path .. chiroPrintBar(imiddle, 10 + maxdiff)
   end
   return path, 0
 end
 
 function itia (ibegin, iend, previouslen, printSmallBar)
-  local path = string.format("p := (%d, 3){dir-%d} .. {dir30}(%d, 3);\n",
+  local path = string.format("p := (%.01f, 3){dir-%d} .. {dir30}(%.01f, 3);\n",
   ibegin,
   iaitlastangle (previouslen),
   iend)
@@ -287,7 +290,7 @@ function itia (ibegin, iend, previouslen, printSmallBar)
 end
 
 function itit (ibegin, iend, previouslen, printSmallBar)
-  local path = string.format("p := (%d, 3){dir-%d} .. {dir-30}(%d, 3);\n",
+  local path = string.format("p := (%.01f, 3){dir-%d} .. {dir-30}(%.01f, 3);\n",
   ibegin,
   iaitlastangle (previouslen),
   iend)

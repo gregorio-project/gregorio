@@ -134,6 +134,12 @@
 %% macros for additionnal vertical spaces
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% first, we have two spaces for the chironomic signs
+\newdimen\abovesignsspace
+\abovesignsspace = 8mm
+\newdimen\belowsignsspace
+\belowsignsspace = 0mm
+
 % additional space for the translation, beneath the text
 \newdimen\translationheight
 
@@ -604,17 +610,25 @@
 \ifluatex %
 % the first line is a special case
 \ifnum\knownline=1\relax %
-\directlua0{chiroPrintLine()}%
-\hfill %
-\penalty -10001\relax %
+% some bugs appear if we don't box it
+\hbox{\directlua0{chiroPrintLine()}}%
+\par %
+% TODO: this line bugs with my version of LuaTeX
+%\penalty -10001\relax%
+\kern\belowsignsspace %
+%\penalty -10001\relax %
+\noindent %
 \else %
 % not very beaufiful, I don't like to make a new par inside a score, but....
 \localleftbox{}%
 \localrightbox{}%
 \par %
-\noindent\directlua0{chiroPrintLine()}%
+\kern\abovesignsspace %
+\noindent\hbox{\directlua0{chiroPrintLine()}}%
 \updateleftbox %
 \par %
+\penalty 10001\relax %
+\kern\belowsignsspace %
 \penalty 10001\relax %
 \noindent %
 \fi %
