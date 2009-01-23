@@ -1,0 +1,26 @@
+name: probare omnia capita;
+gabc-copyright: Matt 10:8b;
+score-copyright: nescio;
+office-part: introitus?;
+occasion: numquam;
+meter: nihil;
+commentary: invocatio;
+arranger: quis?;
+gabc-version: 0.9.3;
+author: Innominatus;
+date: xxi c;
+manuscript: ms;
+manuscript-reference: quid?;
+manuscript-storage-place: utopia;
+book: Liber scriptus;
+transcriber: petrus (non sanctus);
+transcription-date: 2009;
+gregoriotex-font: parmesan;
+mode: 6;
+initial-style: 2;
+user-notes: this file just shows all the possible header fields;
+user-notes: of course, it doesn't make sense to use all at once;
+annotation: IN.;
+annotation: III.;
+%%
+(c4)IN(ed~) nó(g)mi(hj)ne(j) Je(ij)su(j.)
