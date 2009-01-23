@@ -148,6 +148,7 @@ def install(basedir):
     copy(basedir, '../tex/gregoriotex-syllable.tex', 'tex/gregoriotex')
     copy(basedir, '../tex/gregoriotex-symbols.tex', 'tex/gregoriotex')
     copy(basedir, '../tex/gregoriotex.lua', 'tex/gregoriotex')
+    copy(basedir, '../tex/gregoriotex-ictus.lua', 'tex/gregoriotex')
     copy(basedir, 'gresym.map', 'fonts/map/dvips/public/gregoriotex')
     makedir(basedir, 'fonts/tfm/public/gregoriotex/gresym')
     copy(basedir, 'gresym.tfm', 'fonts/tfm/public/gregoriotex/gresym')
