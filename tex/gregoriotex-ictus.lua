@@ -274,19 +274,28 @@ function iaiait (ibegin, imiddle, iend, first, printSmallBar, beginvpos, nextLen
   else
     maxdiff = (20 - (iend - imiddle))/2
   end
+  -- the initial height
   local init_height
   if first == 1 then
     init_height = 0
   else
     init_height = 3
   end
+  -- a variable we use several times
+  local var1
+  if imiddle - ibegin > 60 then
+    var1 = 0
+  else
+    var1 = 20 - (imiddle - ibegin)/3
+  end
+  var1 = 0
   local path =  string.format("p := (%.01f, %.01f){left} .. {right}(%.01f, %.01f){right} .. {down}(%.01f, %.01f){down} .. {up}(%.01f, %.01f){up} .. {right}(%.01f,%.01f){right} .. {dir-%d}(%.01f,%.01f);\n",
   -- (%.01f, %.01f){left}
   ibegin,
   init_height,
   -- {right}(%.01f, %.01f){right}
   ibegin,
-  24 + (20 - (imiddle - ibegin))/3,
+  24 + var1,
   -- {down}(%.01f, %.01f){down}
   imiddle+3,
   10 + maxdiff,
@@ -295,7 +304,7 @@ function iaiait (ibegin, imiddle, iend, first, printSmallBar, beginvpos, nextLen
   10 + maxdiff,
   -- {right}(%.01f,%.01f){right}
   imiddle + (iend - imiddle)/3,
-  24 + (20 - (imiddle - ibegin))/3,
+  24 + var1,
   -- {dir-%d}(%.01f,%.01f)
   30,
   iend,
@@ -341,7 +350,7 @@ function iaiaiait (ibegin, imiddle1, imiddle2, iend, first, printSmallBar, begin
   10 + maxdiff,
   --{right}(%.01f,%.01f){right}
   imiddle2 + (iend - imiddle2)/3,
-  24 + (20 - (imiddle2 - ibegin))/3,
+  24 + (20 - (imiddle2 - imiddle1))/3,
   -- {dir-%d}(%.01f,%.01f)
   30,
   iend,
