@@ -671,6 +671,7 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
 	      && gregorio_is_vowel (current_character->cos.character))
 	    {
 	      if (current_character->cos.character == L'i'
+		  || current_character->cos.character == L'I'
 		  || current_character->cos.character == L'u')
 		{
 		  // did you really think it would be that easy?... we have to deal with iota and digamma, that are not aligned the same way... So if the current character is i or u, we check if the next character is also a vowel or not. If it is the case we just pass, else we start the center there.
