@@ -1,4 +1,4 @@
-/* 
+/*
 Gregorio dump output format.
 Copyright (C) 2007 Elie Roux <elie.roux@enst-bretagne.fr>
 
@@ -52,6 +52,7 @@ write_score (FILE * f, gregorio_score * score)
   gregorio_element *element;
   gregorio_glyph *glyph;
   gregorio_note *note;
+  int annotation_num;
 
   if (!f) {
       gregorio_message (_
@@ -59,7 +60,6 @@ write_score (FILE * f, gregorio_score * score)
 			   "libgregorio_gregoriotex_write_score", ERROR, 0);
 			   return;
   }
-
   fprintf (f,
 	   "=====================================================================\n SCORE INFOS\n=====================================================================\n");
   if (score->number_of_voices)
@@ -71,17 +71,72 @@ write_score (FILE * f, gregorio_score * score)
     {
       fprintf (f, "   name                      %s\n", score->name);
     }
+  if (score->gabc_copyright)
+    {
+      fprintf (f, "   gabc_copyright            %s\n", score->gabc_copyright);
+    }
+  if (score->score_copyright)
+    {
+      fprintf (f, "   score_copyright           %s\n", score->score_copyright);
+    }
   if (score->office_part)
     {
       fprintf (f, "   office_part               %s\n", score->office_part);
     }
-  if (score->initial_style)
+  if (score->occasion)
     {
-      fprintf (f, "   initial_style             %d\n", score->initial_style);
+      fprintf (f, "   occasion                  %s\n", score->occasion);
     }
-  if (score->mode)
+  if (score->meter)
     {
-      fprintf (f, "   mode                      %d\n", score->mode);
+      fprintf (f, "   meter                     %s\n", score->meter);
+    }
+  if (score->commentary)
+    {
+      fprintf (f, "   commentary                %s\n", score->commentary);
+    }
+  if (score->arranger)
+    {
+      fprintf (f, "   arranger                  %s\n", score->arranger);
+    }
+  if (score->si.author)
+    {
+      fprintf (f, "   author                    %s\n",
+	       score->si.author);
+    }
+  if (score->si.date)
+    {
+      fprintf (f, "   date                      %s\n", score->si.date);
+    }
+  if (score->si.manuscript)
+    {
+      fprintf (f, "   manuscript                %s\n",
+	       score->si.manuscript);
+    }
+  if (score->si.manuscript_reference)
+    {
+      fprintf (f, "   manuscript_reference      %s\n",
+	       score->si.manuscript_reference);
+    }
+  if (score->si.manuscript_storage_place)
+    {
+      fprintf (f, "   manuscript_storage_place  %s\n",
+	       score->si.manuscript_storage_place);
+    }
+  if (score->si.book)
+    {
+      fprintf (f, "   book                      %s\n",
+	       score->si.book);
+    }
+  if (score->si.transcriber)
+    {
+      fprintf (f, "   transcriber               %s\n",
+	       score->si.transcriber);
+    }
+  if (score->si.transcription_date)
+    {
+      fprintf (f, "   transcription_date        %s\n",
+	       score->si.transcription_date);
     }
   if (score->lilypond_preamble)
     {
@@ -103,6 +158,14 @@ write_score (FILE * f, gregorio_score * score)
       fprintf (f, "   gregoriotex_font          %s\n",
 	       score->gregoriotex_font);
     }
+  if (score->mode)
+    {
+      fprintf (f, "   mode                      %d\n", score->mode);
+    }
+  if (score->initial_style)
+    {
+      fprintf (f, "   initial_style             %d\n", score->initial_style);
+    }
   fprintf (f,
 	   "\n\n=====================================================================\n VOICES INFOS\n=====================================================================\n");
   for (i = 0; i < score->number_of_voices; i++)
@@ -114,44 +177,13 @@ write_score (FILE * f, gregorio_score * score)
 		   voice_info->initial_key,
 		   libgregorio_dump_key_to_char (voice_info->initial_key));
 	}
-      if (voice_info->anotation)
+      for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num)
 	{
-	  fprintf (f, "   anotation                 %s\n",
-		   voice_info->anotation);
+	  if (voice_info->annotation [annotation_num])
+	{
+	      fprintf (f, "   annotation                %s\n",
+		       voice_info->annotation [annotation_num]);
 	}
-      if (voice_info->author)
-	{
-	  fprintf (f, "   author                    %s\n",
-		   voice_info->author);
-	}
-      if (voice_info->date)
-	{
-	  fprintf (f, "   date                      %s\n", voice_info->date);
-	}
-      if (voice_info->manuscript)
-	{
-	  fprintf (f, "   manuscript                %s\n",
-		   voice_info->manuscript);
-	}
-      if (voice_info->reference)
-	{
-	  fprintf (f, "   reference                 %s\n",
-		   voice_info->reference);
-	}
-      if (voice_info->storage_place)
-	{
-	  fprintf (f, "   storage_place             %s\n",
-		   voice_info->storage_place);
-	}
-      if (voice_info->translator)
-	{
-	  fprintf (f, "   translator                %s\n",
-		   voice_info->translator);
-	}
-      if (voice_info->translation_date)
-	{
-	  fprintf (f, "   translation_date          %s\n",
-		   voice_info->translation_date);
 	}
       if (voice_info->style)
 	{
@@ -196,7 +228,7 @@ write_score (FILE * f, gregorio_score * score)
 	{
 	  fprintf (f, "\n  Translation\n");
 	  libgregorio_dump_write_characters (f, syllable->translation);
-	}	
+	}
       element = syllable->elements[0];
       while (element)
 	{
@@ -880,13 +912,13 @@ libgregorio_dump_shape (char shape)
       break;
     case S_PUNCTUM_CAVUM:
       str = "S_PUNCTUM_CAVUM";
-      break; 
+      break;
     case S_LINEA_PUNCTUM:
       str = "S_LINEA_PUNCTUM";
       break;
     case S_LINEA_PUNCTUM_CAVUM:
       str = "S_LINEA_PUNCTUM_CAVUM";
-      break;      
+      break;
     default:
       str = "unknown";
       break;

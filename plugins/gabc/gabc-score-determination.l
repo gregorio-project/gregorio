@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %option stack
 %option pointer
 %option nounput
-%option noyy_push_state 
+%option noyy_push_state
 %option noyy_pop_state
 %option noyy_top_state
 %option align
@@ -73,14 +73,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <INITIAL>name {
          return NAME;
       }
-<INITIAL>license {
-         return LICENSE;
+<INITIAL>score-copyright {
+         return SCORE_COPYRIGHT;
       }
-<INITIAL>initial-key {
-         return INITIAL_KEY;
+<INITIAL>gabc-copyright {
+         return GABC_COPYRIGHT;
       }
 <INITIAL>office-part {
          return OFFICE_PART;
+      }
+<INITIAL>occasion {
+         return OCCASION;
+      }
+<INITIAL>meter {
+         return METER;
+      }
+<INITIAL>commentary {
+         return COMMENTARY;
+      }
+<INITIAL>arranger {
+         return ARRANGER;
+      }
+<INITIAL>gabc-version {
+         return GABC_VERSION;
       }
 <INITIAL>initial-style {
          return INITIAL_STYLE;
@@ -88,8 +103,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <INITIAL>mode {
          return MODE;
       }
-<INITIAL>anotation {
-         return ANOTATION;
+<INITIAL>annotation {
+         return ANNOTATION;
       }
 <INITIAL>author {
          return AUTHOR;
@@ -100,20 +115,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <INITIAL>manuscript {
          return MANUSCRIPT;
       }
-<INITIAL>reference {
-         return REFERENCE;
+<INITIAL>manuscript-reference {
+         return MANUSCRIPT_REFERENCE;
       }
-<INITIAL>storage-place {
-         return STORAGE_PLACE;
+<INITIAL>manuscript-storage-place {
+         return MANUSCRIPT_STORAGE_PLACE;
       }
-<INITIAL>translator {
-         return TRANSLATOR;
+<INITIAL>book {
+         return BOOK;
       }
-<INITIAL>software(\ |-)used {
-         return SOFTWARE_USED;
+<INITIAL>transcriber {
+         return TRANSCRIBER;
       }
-<INITIAL>translation-date {
-         return TRANSLATION_DATE;
+<INITIAL>generated-by {
+         return GENERATED_BY;
+      }
+<INITIAL>transcription-date {
+         return TRANSCRIPTION_DATE;
       }
 <INITIAL>style {
          return STYLE;
@@ -132,6 +150,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       }
 <INITIAL>gregoriotex-font {
          return GREGORIOTEX_FONT;
+      }
+<INITIAL>user-notes {
+         return USER_NOTES;
       }
 <INITIAL>--(.*) {
 	return VOICE_CHANGE;

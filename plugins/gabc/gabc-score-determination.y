@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* 
+/*
 
 This file is certainly not the most easy to understand, it is a bison file. See the bison manual on gnu.org for further details.
 
@@ -101,8 +101,8 @@ gregorio_message (error_str, (const char *)"gabc_score_determination_parse", ERR
 }
 
 
-/* The "main" function. It is the function that is called when we have to read a gabc file. 
- * It takes a file descriptor, that is to say a file that is aleady open. 
+/* The "main" function. It is the function that is called when we have to read a gabc file.
+ * It takes a file descriptor, that is to say a file that is aleady open.
  * It returns a valid gregorio_score
  */
 
@@ -153,7 +153,7 @@ check_score_integrity (gregorio_score * score_to_check)
   return 1;
 }
 
-/* 
+/*
  * Another function to be improved: this one checks the validity of the voice_infos.
  */
 
@@ -198,9 +198,16 @@ free_variables ()
   free (elements);
 }
 
-// a macro to put inside a if to see if a voice_info is empty
-#define voice_info_is_not_empty(voice_info)   voice_info->initial_key!=5 || voice_info->anotation || voice_info->author || voice_info->date || voice_info->manuscript || voice_info->reference || voice_info->storage_place || voice_info->translator || voice_info->translation_date || voice_info->style || voice_info->virgula_position
-
+// see whether a voice_info is empty
+int
+voice_info_is_not_empty(const gregorio_voice_info * voice_info)
+{
+  return  (voice_info->initial_key!=5 ||
+	   voice_info->annotation[0] ||
+	   voice_info->annotation[1] ||
+	   voice_info->style ||
+	   voice_info->virgula_position);
+}
 
 /* a function called when we see "--\n" that end the infos for a certain voice
  */
@@ -316,7 +323,7 @@ end_definitions ()
 	    }
 	}
     }
-  voice = 0;			// voice is now voice-1, so that it can be the index of elements 
+  voice = 0;			// voice is now voice-1, so that it can be the index of elements
   elements =
     (gregorio_element **) malloc (number_of_voices *
 				  sizeof (gregorio_element *));
@@ -445,20 +452,20 @@ The two functions called when lex returns a style, we simply add it. All the com
 */
 
 void
-gregorio_gabc_add_style(unsigned char style) 
+gregorio_gabc_add_style(unsigned char style)
 {
   gregorio_begin_style(&current_character, style);
 }
 
 void
-gregorio_gabc_end_style(unsigned char style) 
+gregorio_gabc_end_style(unsigned char style)
 {
   gregorio_end_style(&current_character, style);
 }
 
 %}
 
-%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANOTATION AUTHOR DATE MANUSCRIPT REFERENCE STORAGE_PLACE TRANSLATOR TRANSLATION_DATE STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT SOFTWARE_USED NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES INITIAL_KEY VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END LICENSE
+%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER GABC_VERSION USER_NOTES
 
 %%
 
@@ -506,13 +513,22 @@ lilypond_preamble_definition:
 	gregorio_set_score_lilypond_preamble (score, $2);
 	}
 	;
-	
-license_definition:
-	LICENSE attribute {
-	if (score->license) {
-	gregorio_message(_("several licenses found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
+
+gabc_copyright_definition:
+	GABC_COPYRIGHT attribute {
+	if (score->gabc_copyright) {
+	gregorio_message(_("several gabc-copyright fields found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
 	}
-	gregorio_set_score_license (score, $2);
+	gregorio_set_score_gabc_copyright (score, $2);
+	}
+	;
+
+score_copyright_definition:
+	SCORE_COPYRIGHT attribute {
+	if (score->score_copyright) {
+	gregorio_message(_("several score_copyright fields found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
+	}
+	gregorio_set_score_score_copyright (score, $2);
 	}
 	;
 
@@ -552,6 +568,53 @@ office_part_definition:
 	}
 	;
 
+occasion_definition:
+	OCCASION attribute {
+	if (score->occasion) {
+	gregorio_message(_("several occasion definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
+	}
+	gregorio_set_score_occasion (score, $2);
+	}
+	;
+
+meter_definition:
+	METER attribute {
+	if (score->meter) {
+	gregorio_message(_("several meter definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
+	}
+	gregorio_set_score_meter (score, $2);
+	}
+	;
+
+commentary_definition:
+	COMMENTARY attribute {
+	if (score->commentary) {
+	gregorio_message(_("several commentary definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
+	}
+	gregorio_set_score_commentary (score, $2);
+	}
+	;
+
+arranger_definition:
+	ARRANGER attribute {
+	if (score->arranger) {
+	gregorio_message(_("several arranger definitions found, only the last will be taken into consideration"), "libgregorio_det_score",WARNING,0);
+	}
+	gregorio_set_score_arranger (score, $2);
+	}
+	;
+
+gabc_version_definition:
+	GABC_VERSION attribute {
+	// So far this handling of the version is rudimentary.  When
+	// we start supporting multiple input versions, it will become
+	// more complex.  For the moment, just issue a warning.
+	if (strcmp ($2, GABC_CURRENT_VERSION) != 0) {
+	gregorio_message(_("gabc-version is not the current one " GABC_CURRENT_VERSION " ; there may be problems"), "libgregorio_det_score",WARNING,0);
+	}
+	}
+	;
+
 mode_definition:
 	MODE attribute {
 	if (score->mode) {
@@ -575,95 +638,94 @@ initial_style_definition:
 	}
 	;
 
-initial_key_definition:
-	INITIAL_KEY attribute {
-	if (current_voice_info->initial_key!=NO_KEY) {
-	snprintf(error,99,_("several definitions of initial key found for voice %d, only the last will be taken into consideration"),voice);
+annotation_definition:
+	ANNOTATION attribute {
+	if (current_voice_info->annotation [NUM_ANNOTATIONS - 1]) {
+	snprintf(error,99,_("too many definitions of annotation found for voice %d, only the first %d will be taken into consideration"),voice, NUM_ANNOTATIONS);
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	set_clef($2);
-	gregorio_set_voice_initial_key (current_voice_info, clef);
-	}
-	;
-
-anotation_definition:
-	ANOTATION attribute {
-	if (current_voice_info->anotation) {
-	snprintf(error,99,_("several definitions of anotation found for voice %d, only the last will be taken into consideration"),voice);
-	gregorio_message(error, "libgregorio_det_score",WARNING,0);
-	}
-	gregorio_set_voice_anotation (current_voice_info, $2);
+	gregorio_set_voice_annotation (current_voice_info, $2);
 	}
 	;
 
 author_definition:
 	AUTHOR attribute {
-	if (current_voice_info->author) {
-	snprintf(error,99,_("several definitions of author found for voice %d, only the last will be taken into consideration"),voice);
+	if (score->si.author) {
+	snprintf(error,99,_("several definitions of author found, only the last will be taken into consideration"));
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	gregorio_set_voice_author (current_voice_info, $2);
+	gregorio_set_score_author (score, $2);
 	}
 	;
 
 date_definition:
 	DATE attribute {
-	if (current_voice_info->date) {
-	snprintf(error,99,_("several definitions of date found for voice %d, only the last will be taken into consideration"),voice);
+	if (score->si.date) {
+	snprintf(error,99,_("several definitions of date found, only the last will be taken into consideration"));
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	gregorio_set_voice_date (current_voice_info, $2);
+	gregorio_set_score_date (score, $2);
 	}
 	;
 
 manuscript_definition:
 	MANUSCRIPT attribute {
-	if (current_voice_info->manuscript) {
-	snprintf(error,99,_("several definitions of manuscript found for voice %d, only the last will be taken into consideration"),voice);
+	if (score->si.manuscript) {
+	snprintf(error,99,_("several definitions of manuscript found, only the last will be taken into consideration"));
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	gregorio_set_voice_manuscript (current_voice_info, $2);
+	gregorio_set_score_manuscript (score, $2);
 	}
 	;
 
-reference_definition:
-	REFERENCE attribute {
-	if (current_voice_info->reference) {
-	snprintf(error,99,_("several definitions of reference found for voice %d, only the last will be taken into consideration"),voice);
+manuscript_reference_definition:
+	MANUSCRIPT_REFERENCE attribute {
+	if (score->si.manuscript_reference) {
+	snprintf(error,99,_("several definitions of manuscript-reference found, only the last will be taken into consideration"));
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	gregorio_set_voice_reference (current_voice_info, $2);
+	gregorio_set_score_manuscript_reference (score, $2);
 	}
 	;
 
-storage_place_definition:
-	STORAGE_PLACE attribute {
-	if (current_voice_info->storage_place) {
-	snprintf(error,105,_("several definitions of storage place found for voice %d, only the last will be taken into consideration"),voice);
+manuscript_storage_place_definition:
+	MANUSCRIPT_STORAGE_PLACE attribute {
+	if (score->si.manuscript_storage_place) {
+	snprintf(error,105,_("several definitions of manuscript-storage-place found, only the last will be taken into consideration"));
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	gregorio_set_voice_storage_place (current_voice_info, $2);
+	gregorio_set_score_manuscript_storage_place (score, $2);
 	}
 	;
 
-translator_definition:
-	TRANSLATOR attribute {
-	if (current_voice_info->translator) {
-	snprintf(error,99,_("several definitions of translator found for voice %d, only the last will be taken into consideration"),voice);
+book_definition:
+	BOOK attribute {
+	if (score->si.book) {
+	snprintf(error,99,_("several definitions of book found, only the last will be taken into consideration"));
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	gregorio_set_voice_translator (current_voice_info, $2);
+	gregorio_set_score_book (score, $2);
+	}
+	;
+
+transcriber_definition:
+	TRANSCRIBER attribute {
+	if (score->si.transcriber) {
+	snprintf(error,99,_("several definitions of transcriber found, only the last will be taken into consideration"));
+	gregorio_message(error, "libgregorio_det_score",WARNING,0);
+	}
+	gregorio_set_score_transcriber (score, $2);
 	//free($2);
 	}
 	;
 
-translation_date_definition:
-	TRANSLATION_DATE attribute {
-	if (current_voice_info->translation_date) {
-	snprintf(error,105,_("several definitions of translation date found for voice %d, only the last will be taken into consideration"),voice);
+transcription_date_definition:
+	TRANSCRIPTION_DATE attribute {
+	if (score->si.transcription_date) {
+	snprintf(error,105,_("several definitions of transcription date found, only the last will be taken into consideration"));
 	gregorio_message(error, "libgregorio_det_score",WARNING,0);
 	}
-	gregorio_set_voice_translation_date (current_voice_info, $2);
+	gregorio_set_score_transcription_date (score, $2);
 	}
 	;
 
@@ -688,9 +750,18 @@ virgula_position_definition:
 	;
 
 
-sotfware_used_definition:
-	SOFTWARE_USED attribute {
-	//libgregorio_set_voice_sotfware_used (current_voice_info, $2);
+generated_by_definition:
+	GENERATED_BY attribute {
+	//libgregorio_set_voice_generated_by (current_voice_info, $2);
+	}
+	;
+
+user_notes_definition:
+	USER_NOTES attribute {
+	  // Currently just ignore the user-notes as comments.  They
+	  // may in future be accepted and passed verbatim to the xml
+	  // etc.
+	  //gregorio_set_score_user_notes (score, $2);
 	}
 	;
 
@@ -709,11 +780,11 @@ definition:
 	|
 	name_definition
 	|
-	license_definition
+	gabc_copyright_definition
 	|
-	initial_key_definition
+	score_copyright_definition
 	|
-	sotfware_used_definition
+	generated_by_definition
 	|
 	musixtex_preamble_definition
 	|
@@ -725,29 +796,43 @@ definition:
 	|
 	style_definition
 	|
-	translation_date_definition
+	transcription_date_definition
 	|
-	translator_definition
+	transcriber_definition
 	|
-	storage_place_definition
+	manuscript_storage_place_definition
 	|
-	reference_definition
+	manuscript_reference_definition
 	|
 	manuscript_definition
+	|
+	book_definition
 	|
 	date_definition
 	|
 	author_definition
 	|
-	anotation_definition
+	annotation_definition
 	|
 	office_part_definition
+	|
+	occasion_definition
+	|
+	meter_definition
+	|
+	commentary_definition
+	|
+	arranger_definition
+	|
+	gabc_version_definition
 	|
 	initial_style_definition
 	|
 	mode_definition
 	|
 	gregoriotex_font_definition
+	|
+	user_notes_definition
 	|
 	VOICE_CHANGE {
 	next_voice_info ();
@@ -849,7 +934,7 @@ style_beginning:
 	}
 	}
 	;
-	
+
 style_end:
 	I_END {
 	gregorio_gabc_end_style(ST_ITALIC);
@@ -892,7 +977,7 @@ character:
 	|
 	style_end
 	;
-	
+
 text:
 	|text character
 	;

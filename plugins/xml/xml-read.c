@@ -1,4 +1,4 @@
-/* 
+/*
 Gregorio xml input.
 Copyright (C) 2006 Elie Roux <elie.roux@enst-bretagne.fr>
 
@@ -107,7 +107,9 @@ read_score (FILE *f)
   char alterations[score->number_of_voices][13];
   gregorio_reinitialize_alterations (alterations, score->number_of_voices);
 
-//we have to do one iteration, to have the first_syllable
+  if (current_node)
+    {
+      //we have to do one iteration, to have the first_syllable
   if (xmlStrcmp (current_node->name, (const xmlChar *) "syllable"))
     {
       gregorio_message (_
@@ -140,6 +142,11 @@ read_score (FILE *f)
 	}
       current_node = current_node->next;
     }
+    }
+  else
+    {
+      // some sort of empty or corrupt file: what should we do?
+    }
   xmlFreeDoc (doc);
   return score;
 }
@@ -157,9 +164,16 @@ libgregorio_xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc,
 	  current_node = current_node->next;
 	  continue;
 	}
-      if (!xmlStrcmp (current_node->name, (const xmlChar *) "license"))
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "gabc-copyright"))
 	{
-	  score->license = (char *) xmlNodeListGetString
+	  score->gabc_copyright = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "score-copyright"))
+	{
+	  score->score_copyright = (char *) xmlNodeListGetString
 	    (doc, current_node->xmlChildrenNode, 1);
 	  current_node = current_node->next;
 	  continue;
@@ -167,6 +181,91 @@ libgregorio_xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "office-part"))
 	{
 	  score->office_part = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "occasion"))
+	{
+	  score->occasion = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "meter"))
+	{
+	  score->meter = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "commentary"))
+	{
+	  score->commentary = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "arranger"))
+	{
+	  score->arranger = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "author"))
+	{
+	  score->si.author = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "date"))
+	{
+	  score->si.date = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "manuscript"))
+	{
+	  score->si.manuscript = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "manuscript-reference"))
+	{
+	  score->si.manuscript_reference = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "manuscript-storage-place"))
+	{
+	  score->si.manuscript_storage_place = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "book"))
+	{
+	  score->si.book = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "transcriber"))
+	{
+	  score->si.transcriber = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp
+	  (current_node->name, (const xmlChar *) "transcription-date"))
+	{
+	  score->si.transcription_date = (char *) xmlNodeListGetString
 	    (doc, current_node->xmlChildrenNode, 1);
 	  current_node = current_node->next;
 	  continue;
@@ -271,64 +370,23 @@ void
 libgregorio_xml_read_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
 				 gregorio_voice_info * voice_info)
 {
+  int annotation_num = 0;
 
   while (current_node)
     {
 
-      if (!xmlStrcmp (current_node->name, (const xmlChar *) "anotation"))
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "annotation"))
 	{
-	  voice_info->anotation = (char *) xmlNodeListGetString
+	  if (annotation_num < NUM_ANNOTATIONS)
+	{
+	      voice_info->annotation [annotation_num] = (char *) xmlNodeListGetString
 	    (doc, current_node->xmlChildrenNode, 1);
-	  current_node = current_node->next;
-	  continue;
+	      ++annotation_num;
 	}
-      if (!xmlStrcmp (current_node->name, (const xmlChar *) "author"))
+	  else
 	{
-	  voice_info->author = (char *) xmlNodeListGetString
-	    (doc, current_node->xmlChildrenNode, 1);
-	  current_node = current_node->next;
-	  continue;
+	      // we haven't space to hold it -- what should we do?
 	}
-      if (!xmlStrcmp (current_node->name, (const xmlChar *) "date"))
-	{
-	  voice_info->date = (char *) xmlNodeListGetString
-	    (doc, current_node->xmlChildrenNode, 1);
-	  current_node = current_node->next;
-	  continue;
-	}
-      if (!xmlStrcmp (current_node->name, (const xmlChar *) "manuscript"))
-	{
-	  voice_info->manuscript = (char *) xmlNodeListGetString
-	    (doc, current_node->xmlChildrenNode, 1);
-	  current_node = current_node->next;
-	  continue;
-	}
-      if (!xmlStrcmp (current_node->name, (const xmlChar *) "reference"))
-	{
-	  voice_info->reference = (char *) xmlNodeListGetString
-	    (doc, current_node->xmlChildrenNode, 1);
-	  current_node = current_node->next;
-	  continue;
-	}
-      if (!xmlStrcmp (current_node->name, (const xmlChar *) "storage-place"))
-	{
-	  voice_info->storage_place = (char *) xmlNodeListGetString
-	    (doc, current_node->xmlChildrenNode, 1);
-	  current_node = current_node->next;
-	  continue;
-	}
-      if (!xmlStrcmp (current_node->name, (const xmlChar *) "translator"))
-	{
-	  voice_info->translator = (char *) xmlNodeListGetString
-	    (doc, current_node->xmlChildrenNode, 1);
-	  current_node = current_node->next;
-	  continue;
-	}
-      if (!xmlStrcmp
-	  (current_node->name, (const xmlChar *) "translation-date"))
-	{
-	  voice_info->translation_date = (char *) xmlNodeListGetString
-	    (doc, current_node->xmlChildrenNode, 1);
 	  current_node = current_node->next;
 	  continue;
 	}
@@ -413,7 +471,7 @@ libgregorio_xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc, char *type, ch
       current_node = current_node -> next;
       continue;
     }
-    
+
   }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "signs"))
     {
@@ -448,7 +506,7 @@ libgregorio_xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc, char *type, ch
 				   ("unknown markup in bar"),
 				   "libgregorio_xml_read_file", WARNING, 0);
     }
-  
+
 }
 
 int
@@ -1529,7 +1587,7 @@ libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
 	  xmlFree (temp);
 	  current_node = current_node->next;
 	  continue;
-	}	
+	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "top"))
 	{
 	  if (*h_episemus == H_NO_EPISEMUS)

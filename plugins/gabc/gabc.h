@@ -1,4 +1,4 @@
-/* 
+/*
 Gregorio gabc format headers.
 Copyright (C) 2006 Elie Roux <elie.roux@telecom-bretagne.eu>.
 
@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef GABC_H
 #define GABC_H
+
+#define GABC_CURRENT_VERSION "0.9.3"
 
 // functions to read gabc
 gregorio_score * read_score (FILE * f);

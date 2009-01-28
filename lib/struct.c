@@ -1,4 +1,4 @@
-/* 
+/*
 Gregorio structure manipulation file.
 Copyright (C) 2006 Elie Roux <elie.roux@enst-bretagne.fr>
 
@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * seem a bit strange).
  *
  * All the delete functions are recursive and free all memory.
- * 
+ *
 */
 
 #include "config.h"
@@ -364,7 +364,7 @@ void
 gregorio_add_text (char *mbcharacters,
 		      gregorio_character ** current_character)
 {
-  if (!current_character) 
+  if (!current_character)
     {
       return;
     }
@@ -595,15 +595,21 @@ gregorio_free_syllables (gregorio_syllable ** syllable,
 }
 
 gregorio_score *
-gregorio_new_score ()
+gregorio_new_score (void)
 {
   gregorio_score *new_score = malloc (sizeof (gregorio_score));
   new_score->first_syllable = NULL;
   new_score->number_of_voices = 1;
   new_score->name = NULL;
-  new_score->license = NULL;
+  new_score->gabc_copyright = NULL;
+  new_score->score_copyright = NULL;
   new_score->initial_style = NORMAL_INITIAL;
   new_score->office_part = NULL;
+  new_score->occasion = NULL;
+  new_score->meter = NULL;
+  new_score->commentary = NULL;
+  new_score->arranger = NULL;
+  gregorio_source_info_init (&new_score->si);
   new_score->lilypond_preamble = NULL;
   new_score->opustex_preamble = NULL;
   new_score->musixtex_preamble = NULL;
@@ -611,6 +617,19 @@ gregorio_new_score ()
   new_score->mode=0;
   new_score->gregoriotex_font = NULL;
   return new_score;
+}
+
+void
+gregorio_source_info_init (source_info *si)
+{
+  si->author = NULL;
+  si->date = NULL;
+  si->manuscript = NULL;
+  si->manuscript_reference = NULL;
+  si->manuscript_storage_place = NULL;
+  si->transcriber = NULL;
+  si->transcription_date = NULL;
+  si->book = NULL;
 }
 
 void
@@ -641,15 +660,27 @@ gregorio_set_score_name (gregorio_score * score, char *name)
 }
 
 void
-gregorio_set_score_license (gregorio_score * score, char *license)
+gregorio_set_score_gabc_copyright (gregorio_score * score, char *gabc_copyright)
 {
   if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "gregorio_set_score_license", WARNING, 0);
+			   "gregorio_set_score_gabc_copyright", WARNING, 0);
       return;
     }
-  score->license = license;
+  score->gabc_copyright = gabc_copyright;
+}
+
+void
+gregorio_set_score_score_copyright (gregorio_score * score, char *score_copyright)
+{
+  if (!score)
+    {
+      gregorio_message (_("function called with NULL argument"),
+			   "gregorio_set_score_score_copyright", WARNING, 0);
+      return;
+    }
+  score->score_copyright = score_copyright;
 }
 
 void
@@ -662,6 +693,54 @@ gregorio_set_score_office_part (gregorio_score * score, char *office_part)
       return;
     }
   score->office_part = office_part;
+}
+
+void
+gregorio_set_score_occasion (gregorio_score * score, char *occasion)
+{
+  if (!score)
+    {
+      gregorio_message (_("function called with NULL argument"),
+			   "gregorio_set_score_occasion", WARNING, 0);
+      return;
+    }
+  score->occasion = occasion;
+}
+
+void
+gregorio_set_score_meter (gregorio_score * score, char *meter)
+{
+  if (!score)
+    {
+      gregorio_message (_("function called with NULL argument"),
+			   "gregorio_set_score_meter", WARNING, 0);
+      return;
+    }
+  score->meter = meter;
+}
+
+void
+gregorio_set_score_commentary (gregorio_score * score, char *commentary)
+{
+  if (!score)
+    {
+      gregorio_message (_("function called with NULL argument"),
+			   "gregorio_set_score_commentary", WARNING, 0);
+      return;
+    }
+  score->commentary = commentary;
+}
+
+void
+gregorio_set_score_arranger (gregorio_score * score, char *arranger)
+{
+  if (!score)
+    {
+      gregorio_message (_("function called with NULL argument"),
+			   "gregorio_set_score_arranger", WARNING, 0);
+      return;
+    }
+  score->arranger = arranger;
 }
 
 void
@@ -723,16 +802,13 @@ gregorio_set_score_musixtex_preamble (gregorio_score * score,
 void
 gregorio_add_voice_info (gregorio_voice_info ** current_voice_info)
 {
+  int annotation_num;
   gregorio_voice_info *next = malloc (sizeof (gregorio_voice_info));
   next->initial_key = NO_KEY;
-  next->anotation = NULL;
-  next->author = NULL;
-  next->date = NULL;
-  next->manuscript = NULL;
-  next->reference = NULL;
-  next->storage_place = NULL;
-  next->translator = NULL;
-  next->translation_date = NULL;
+  for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num)
+    {
+      next->annotation [annotation_num] = NULL;
+    }
   next->style = NULL;
   next->virgula_position = NULL;
   next->next_voice_info = NULL;
@@ -760,6 +836,22 @@ gregorio_free_score_infos (gregorio_score * score)
     {
       free (score->office_part);
     }
+  if (score->occasion)
+    {
+      free (score->occasion);
+    }
+  if (score->meter)
+    {
+      free (score->meter);
+    }
+  if (score->commentary)
+    {
+      free (score->commentary);
+    }
+  if (score->arranger)
+    {
+      free (score->arranger);
+    }
   if (score->lilypond_preamble)
     {
       free (score->lilypond_preamble);
@@ -772,6 +864,7 @@ gregorio_free_score_infos (gregorio_score * score)
     {
       free (score->musixtex_preamble);
     }
+  gregorio_free_source_info (&score->si);
   if (score->first_voice_info)
     {
       gregorio_free_voice_infos (score->first_voice_info);
@@ -779,48 +872,57 @@ gregorio_free_score_infos (gregorio_score * score)
 }
 
 void
+gregorio_free_source_info (source_info *si)
+{
+  if (si->date)
+    {
+      free (si->date);
+    }
+  if (si->author)
+    {
+      free (si->author);
+    }
+  if (si->manuscript)
+	{
+      free (si->manuscript);
+	}
+  if (si->manuscript_reference)
+	{
+      free (si->manuscript_reference);
+	}
+  if (si->manuscript_storage_place)
+	{
+      free (si->manuscript_storage_place);
+	}
+  if (si->transcriber)
+	{
+      free (si->transcriber);
+	}
+  if (si->transcription_date)
+	{
+      free (si->transcription_date);
+	}
+}
+
+void
 gregorio_free_voice_infos (gregorio_voice_info * voice_info)
 {
+  int annotation_num;
   gregorio_voice_info *next;
   if (!voice_info)
-    {
+	{
       gregorio_message (_("function called with NULL argument"),
 			   "free_voice_info", WARNING, 0);
       return;
-    }
+	}
   while (voice_info)
     {
-      if (voice_info->anotation)
+      for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num)
 	{
-	  free (voice_info->anotation);
+	  if (voice_info->annotation [annotation_num])
+	{
+	      free (voice_info->annotation [annotation_num]);
 	}
-      if (voice_info->date)
-	{
-	  free (voice_info->date);
-	}
-      if (voice_info->author)
-	{
-	  free (voice_info->author);
-	}
-      if (voice_info->manuscript)
-	{
-	  free (voice_info->manuscript);
-	}
-      if (voice_info->reference)
-	{
-	  free (voice_info->reference);
-	}
-      if (voice_info->storage_place)
-	{
-	  free (voice_info->storage_place);
-	}
-      if (voice_info->translator)
-	{
-	  free (voice_info->translator);
-	}
-      if (voice_info->translation_date)
-	{
-	  free (voice_info->translation_date);
 	}
       if (voice_info->style)
 	{
@@ -839,121 +941,128 @@ gregorio_free_voice_infos (gregorio_voice_info * voice_info)
 /* a set of quite useless function */
 
 void
-gregorio_set_voice_initial_key (gregorio_voice_info * voice_info,
-				   int initial_key)
+gregorio_set_voice_annotation (gregorio_voice_info * voice_info,
+			       char *annotation)
 {
+  int annotation_num;
   if (!voice_info)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "gregorio_set_voice_initial_key", WARNING, 0);
+			   "gregorio_set_voice_annotation", WARNING, 0);
       return;
     }
-  voice_info->initial_key = initial_key;
+  // save the annotation in the first spare place.
+  for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num)
+    {
+      if (voice_info->annotation [annotation_num] == NULL)
+	{
+	  voice_info->annotation [annotation_num] = annotation;
+	  break;
+	}
+    }
 }
 
-
-
 void
-gregorio_set_voice_anotation (gregorio_voice_info * voice_info,
-				 char *anotation)
+gregorio_set_score_author (gregorio_score *score, char *author)
 {
-  if (!voice_info)
+  if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "gregorio_set_voice_anotation", WARNING, 0);
+			   "gregorio_set_score_author", WARNING, 0);
       return;
     }
-  voice_info->anotation = anotation;
+  score->si.author = author;
 }
 
 void
-gregorio_set_voice_author (gregorio_voice_info * voice_info, char *author)
+gregorio_set_score_date (gregorio_score *score, char *date)
 {
-  if (!voice_info)
+  if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "gregorio_set_voice_author", WARNING, 0);
+			   "gregorio_set_score_date", WARNING, 0);
       return;
     }
-  voice_info->author = author;
+score->si.date = date;
 }
 
 void
-gregorio_set_voice_date (gregorio_voice_info * voice_info, char *date)
-{
-  if (!voice_info)
-    {
-      gregorio_message (_("function called with NULL argument"),
-			   "gregorio_set_voice_date", WARNING, 0);
-      return;
-    }
-  voice_info->date = date;
-}
-
-void
-gregorio_set_voice_manuscript (gregorio_voice_info * voice_info,
+gregorio_set_score_manuscript (gregorio_score *score,
 				  char *manuscript)
 {
-  if (!voice_info)
+  if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "gregorio_set_voice_manuscript", WARNING, 0);
+			   "gregorio_set_score_manuscript", WARNING, 0);
       return;
     }
-  voice_info->manuscript = manuscript;
+  score->si.manuscript = manuscript;
 }
 
 void
-gregorio_set_voice_reference (gregorio_voice_info * voice_info,
-				 char *reference)
+gregorio_set_score_manuscript_reference (gregorio_score *score,
+					 char *manuscript_reference)
 {
-  if (!voice_info)
+  if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "gregorio_set_voice_reference", WARNING, 0);
+			   "gregorio_set_score_reference", WARNING, 0);
       return;
     }
-  voice_info->reference = reference;
+  score->si.manuscript_reference = manuscript_reference;
 }
 
 void
-gregorio_set_voice_storage_place (gregorio_voice_info * voice_info,
-				     char *storage_place)
+gregorio_set_score_manuscript_storage_place (gregorio_score *score,
+					     char *manuscript_storage_place)
 {
-  if (!voice_info)
+  if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "gregorio_set_voice_storage_place", WARNING, 0);
+			   "gregorio_set_score_manuscript_storage_place", WARNING, 0);
       return;
     }
-  voice_info->storage_place = storage_place;
+  score->si.manuscript_storage_place = manuscript_storage_place;
 }
 
 void
-gregorio_set_voice_translator (gregorio_voice_info * voice_info,
-				  char *translator)
+gregorio_set_score_book (gregorio_score *score,
+			 char *book)
 {
-  if (!voice_info)
+  if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "gregorio_set_voice_translator", WARNING, 0);
+			   "gregorio_set_score_book", WARNING, 0);
       return;
     }
-  voice_info->translator = translator;
+  score->si.book = book;
 }
 
 void
-gregorio_set_voice_translation_date (gregorio_voice_info * voice_info,
-					char *translation_date)
+gregorio_set_score_transcriber (gregorio_score *score,
+				  char *transcriber)
 {
-  if (!voice_info)
+  if (!score)
     {
       gregorio_message (_("function called with NULL argument"),
-			   "gregorio_set_voice_translation_date", WARNING,
+			   "gregorio_set_score_transcriber", WARNING, 0);
+      return;
+    }
+  score->si.transcriber = transcriber;
+}
+
+void
+gregorio_set_score_transcription_date (gregorio_score *score,
+					char *transcription_date)
+{
+  if (!score)
+    {
+      gregorio_message (_("function called with NULL argument"),
+			   "gregorio_set_score_transcription_date", WARNING,
 			   0);
       return;
     }
-  voice_info->translation_date = translation_date;
+  score->si.transcription_date = transcription_date;
 }
 
 void
@@ -985,13 +1094,13 @@ gregorio_set_voice_virgula_position (gregorio_voice_info * voice_info,
 
 
 /**********************************
- * 
+ *
  * Activate_isolated_h_episemus is used when we see an "isolated"
  * horizontal episemus: when we type ab__ lex see a then b_ then _, so
  * we must put the _ on the a (kind of backward process), and say the
  * the episemus on the b is a multi episemus. Here n is the length of
  * the isolated episemus we found (can be up to 4).
- * 
+ *
  *********************************/
 void
 gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
@@ -1051,7 +1160,7 @@ gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
 }
 
 /**********************************
- * 
+ *
  * Top notes are present in the score structure for the horizontal
  * episemus: if we type ab__ we must put the top notes of the two
  * notes to b, that's what is done with this function. It is a quite
@@ -1061,7 +1170,7 @@ gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
  * top-notes to this note, and if it is note it will set the top note
  * of the current note to the top note of the previous notes. Kind of
  * recursive process in fact.
- * 
+ *
  *********************************/
 
 void
@@ -1097,12 +1206,12 @@ gregorio_determine_good_top_notes (gregorio_note * current_note)
 }
 
 /**********************************
- * 
+ *
  * mix_h_episemus is quite uneasy to understand. The basis is that: we
  * have determined well the previous h episemus until the current note
  * (even the top notes !), now we have a h episemus (argument type)
  * and we would like to integrate it. That's what we do there.
- * 
+ *
  *********************************/
 
 void
@@ -1140,7 +1249,7 @@ gregorio_mix_h_episemus (gregorio_note * current_note, char type)
 
 
 /**********************************
- * 
+ *
  * There are still problems with the h episemus (for example if you
  * separate a multi h episemus into two different elements, this is a
  * patch function that makes it better, but it is quite ugly. What I
@@ -1148,7 +1257,7 @@ gregorio_mix_h_episemus (gregorio_note * current_note, char type)
  * element determination part, so that it will be ok in the score
  * structure. But element determination part is not enough advanced
  * for that.
- * 
+ *
  *********************************/
 
 void
@@ -1225,10 +1334,10 @@ gregorio_determine_h_episemus_type (gregorio_note * note)
 }
 
 /**********************************
- * 
+ *
  * Very small function to determine if a punctum is a punctum
  * inclinatum or not.
- * 
+ *
  *********************************/
 
 char
@@ -1245,22 +1354,22 @@ gregorio_det_shape (char pitch)
 }
 
 /**********************************
- * 
+ *
  * A function to build an integer from a key, very useful to represent
  * it in the structure.
  *
- *The representation is : 
+ *The representation is :
  *
  * * 1 for a C key on the first (bottom) line
  * * 3 for a C key on the second line
  * * 5 for a C key on the third line (default key)
  * * 7 for a C key on the fourth line
- * 
+ *
  * * -2 for a F key on the first line
  * * 0 for a F key on the second line
  * * 2 for a F key on the third line
  * * 4 for a F key on the fourth line
- * 
+ *
  *********************************/
 
 int
@@ -1282,10 +1391,10 @@ gregorio_calculate_new_key (char step, int line)
 }
 
 /**********************************
- * 
+ *
  * The reverse function of the preceeding : give step (c or f) and
  * line (1-4) from an integer representing the key.
- * 
+ *
  *********************************/
 
 void
@@ -1326,7 +1435,7 @@ gregorio_det_step_and_line_from_key (int key, char *step, int *line)
       *line = 4;
       break;
     default:
-      *step = 0;
+      *step = '?';
       *line = 0;
       gregorio_message (_("can't determine step and line of the key"),
 			   "gregorio_det_step_and_line_from_key", ERROR,
@@ -1336,7 +1445,7 @@ gregorio_det_step_and_line_from_key (int key, char *step, int *line)
 }
 
 /**********************************
- * 
+ *
  * You must be asking yourself why such numbers ? It is simple : it
  * are the magic numbers that make a correspondance between the height
  * (on the score) and the real pitch (depending on the key) of a note
@@ -1349,7 +1458,7 @@ gregorio_det_step_and_line_from_key (int key, char *step, int *line)
  *
  * Of course you need to add or withdraw 7 depending on which octave
  * the note you want is in.
- * 
+ *
  *********************************/
 
 char
@@ -1375,11 +1484,11 @@ gregorio_det_pitch (int key, char step, int octave)
 }
 
 /**********************************
- * 
+ *
  * The reverse function of the preceeding, it gives you the step and
  * the octave of a character representing a note, according to the
  * key.
- * 
+ *
  *********************************/
 
 void
@@ -1398,13 +1507,13 @@ gregorio_set_octave_and_step_from_pitch (char *step,
       *octave = 3;
       return;
     }
-//else : 
+//else :
   *step = pitch - clef;
   *octave = 2;
 }
 
 /**********************************
- * 
+ *
  * A function that may be useful (used in xml-write) : we have a
  * tabular of alterations (we must remember all alterations on all
  * notes all the time, they are reinitialized when a bar is found),
@@ -1412,7 +1521,7 @@ gregorio_set_octave_and_step_from_pitch (char *step,
  *
  *This function works in fact with a tabular of tabular, one per
  *voice, for polyphony.
- * 
+ *
  *********************************/
 
 void
@@ -1431,9 +1540,9 @@ gregorio_reinitialize_alterations (char alterations[][13],
 }
 
 /**********************************
- * 
+ *
  * The corresponding function for monophony.
- * 
+ *
  *********************************/
 
 void
@@ -1473,12 +1582,12 @@ gregorio_fix_positions (gregorio_score * score)
 */
 
 /**********************************
- * 
+ *
  * A function called after the entire score is determined : we check
  * if the first element is a key change, if it is the case we delete
  * it and we update the score->voice-info->initial_key. Works in
  * polyphony.
- * 
+ *
  *********************************/
 
 void
@@ -1582,11 +1691,11 @@ gregorio_fix_initial_keys (gregorio_score * score, int default_key)
 }
 
 /**********************************
- * 
+ *
  * A small function to determine if an element list contains only
  * special elements (bar, key-change, etc.), useful because the
  * representation (in xml for example) may vary according to it.
- * 
+ *
  *********************************/
 
 char

@@ -1,4 +1,4 @@
-/* 
+/*
 Gregorio structure manipulation headers.
 Copyright (C) 2006 Elie Roux
 
@@ -219,7 +219,24 @@ typedef struct gregorio_syllable {
   struct gregorio_element ** elements;
 } gregorio_syllable;
 
-
+  // The items in source_info used to be -- well, most of them -- in
+  // gregorio_voice_info.  This is because the different `voices' may
+  // in future be used for different variants of a melody:
+  // e.g. notated in square notation, notated in some early neumatic
+  // form from manuscript A, and another in manuscript B.  In that
+  // case the different voices would naturally have different source
+  // info.  However, this enhancement to gregorio is not yet planned,
+  // and so this structure is made part of gregorio_score.
+typedef struct source_info {
+  char *author;
+  char *date;
+  char *manuscript;
+  char *manuscript_reference; // was reference
+  char *manuscript_storage_place; // was storage_place
+  char *book;
+  char *transcriber;
+  char *transcription_date;
+} source_info;
 
 /*
 
@@ -238,8 +255,15 @@ typedef struct gregorio_score {
   int number_of_voices;
 // then start some metadata:
   char *name;
-  char *license;
+  char *gabc_copyright;
+  char *score_copyright;
   char *office_part;
+  char *occasion;
+  // the meter, numbers of syllables per line, as e.g. 8.8.8.8
+  char *meter;
+  char *commentary;
+  char *arranger;
+  struct source_info si;
 // the mode of a song is between 1 and 8
   char mode;
 // field giving informations on the initial (no initial, normal initial or two lines initial)
@@ -268,25 +292,23 @@ representation on the score).
 
 */
 
+#define NUM_ANNOTATIONS 2
+
 typedef struct gregorio_voice_info {
 // the only thing that is worth a comment here is the key. We have a
 // special representation for the key. See comments on
 // src/struct-utils.c for further reading.
   int initial_key;
-  char *anotation;
-  char *author;
-  char *date;
-  char *manuscript;
-  char *reference;
-  char *storage_place;
-  char *translator;
-  char *translation_date;
+  // There is one annotation for each line above the initial letter
+  char *annotation[NUM_ANNOTATIONS];
+  // See source_info above for comments about the move of author etc.
   char *style;
   char *virgula_position;
   struct gregorio_voice_info *next_voice_info;
 } gregorio_voice_info;
 
-gregorio_score *gregorio_new_score();
+gregorio_score *gregorio_new_score(void);
+void gregorio_source_info_init (source_info *si);
 
 void
 gregorio_determine_h_episemus_type (gregorio_note * note);
@@ -314,6 +336,7 @@ void gregorio_free_elements (gregorio_element ** element);
 void gregorio_free_syllables (gregorio_syllable ** syllable, int number_of_voices);
 void gregorio_free_score_infos (gregorio_score * score);
 void gregorio_free_voice_infos (gregorio_voice_info *voice_info);
+void gregorio_free_source_info (source_info *si);
 
 void gregorio_free_one_note(gregorio_note **note);
 void gregorio_free_one_glyph(gregorio_glyph **glyph);
@@ -337,9 +360,21 @@ void gregorio_reinitialize_one_voice_alterations (char alterations[13]);
 void
 gregorio_set_score_name (gregorio_score * score, char *name);
 void
-gregorio_set_score_license (gregorio_score * score, char *license);
+gregorio_set_score_gabc_copyright (gregorio_score * score, char *gabc_copyright);
+void
+gregorio_set_score_score_copyright (gregorio_score * score, char *score_copyright);
 void
 gregorio_set_score_office_part (gregorio_score * score, char *office_part);
+void
+gregorio_set_score_occasion (gregorio_score * score, char *occasion);
+void
+gregorio_set_score_meter (gregorio_score * score, char *meter);
+void
+gregorio_set_score_commentary (gregorio_score * score, char *commentary);
+void
+gregorio_set_score_arranger (gregorio_score * score, char *arranger);
+void
+gregorio_set_score_gabc_version (gregorio_score * score, char *gabc_version);
 void
 gregorio_set_score_number_of_voices (gregorio_score * score, int number_of_voices);
 void
@@ -351,27 +386,29 @@ void
 gregorio_set_score_musixtex_preamble (gregorio_score * score,
 				    char *musixtex_preamble);
 void
-gregorio_set_voice_initial_key (gregorio_voice_info * voice_info, int initial_key);
+gregorio_set_voice_annotation (gregorio_voice_info * voice_info, char *annotation);
 void
-gregorio_set_voice_anotation (gregorio_voice_info * voice_info, char *anotation);
+gregorio_set_score_author (gregorio_score * score, char *author);
 void
-gregorio_set_voice_author (gregorio_voice_info * voice_info, char *author);
+gregorio_set_score_date (gregorio_score * score, char *date);
 void
-gregorio_set_voice_date (gregorio_voice_info * voice_info, char *date);
+gregorio_set_score_manuscript (gregorio_score * score, char *manuscript);
 void
-gregorio_set_voice_manuscript (gregorio_voice_info * voice_info, char *manuscript);
+gregorio_set_score_book (gregorio_score * score, char *book);
 void
-gregorio_set_voice_reference (gregorio_voice_info * voice_info, char *reference);
+gregorio_set_score_manuscript_reference (gregorio_score * score, char *reference);
 void
-gregorio_set_voice_storage_place (gregorio_voice_info * voice_info, char *storage_place);
+gregorio_set_score_manuscript_storage_place (gregorio_score * score, char *storage_place);
 void
-gregorio_set_voice_translator (gregorio_voice_info * voice_info, char *translator);
+gregorio_set_score_transcriber (gregorio_score * score, char *transcriber);
 void
-gregorio_set_voice_translation_date (gregorio_voice_info * voice_info, char *translation_date);
+gregorio_set_score_transcription_date (gregorio_score * score, char *transcription_date);
 void
 gregorio_set_voice_style (gregorio_voice_info * voice_info, char *style);
 void
 gregorio_set_voice_virgula_position (gregorio_voice_info * voice_info, char *virgula_position);
+void
+gregorio_set_voice_annotation (gregorio_voice_info * voice_info, char *annotation);
 
 void
 gregorio_fix_initial_keys (gregorio_score * score, int default_key);
@@ -612,7 +649,7 @@ void gregorio_end_style (gregorio_character **current_character, unsigned char s
 
 int gregorio_is_vowel (grewchar letter);
 
-void gregorio_write_text (char type, gregorio_character * text, FILE *f, void (*printverb)(FILE *, grewchar *), void (*printchar)(FILE *, grewchar), void (*begin)(FILE *, unsigned char), void (*end)(FILE *, unsigned char), void (*printspchar)(FILE *, grewchar *)); 
+void gregorio_write_text (char type, gregorio_character * text, FILE *f, void (*printverb)(FILE *, grewchar *), void (*printchar)(FILE *, grewchar), void (*begin)(FILE *, unsigned char), void (*end)(FILE *, unsigned char), void (*printspchar)(FILE *, grewchar *));
 
 void gregorio_write_first_letter (gregorio_character * current_character, FILE * f, void (*printverb) (FILE *, grewchar *), void (*printchar) (FILE *, grewchar), void (*begin) (FILE *, unsigned char), void (*end) (FILE *, unsigned char), void (*printspchar) (FILE *, grewchar *));
 

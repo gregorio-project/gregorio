@@ -1,4 +1,4 @@
-/* 
+/*
 Gregorio xml output format.
 Copyright (C) 2006 Elie Roux <elie.roux@enst-bretagne.fr>
 
@@ -660,6 +660,7 @@ libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
   int line;
   int voice = MONOPHONY;
   gregorio_voice_info *current_voice_info;
+  int annotation_num;
 
   if (!score)
     {
@@ -682,21 +683,85 @@ libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
     {
       fprintf (f, "<name>%s</name>", score->name);
     }
+  if (score->gabc_copyright)
+    {
+      fprintf (f, "<gabc-copyright>%s</gabc-copyright>", score->gabc_copyright);
+    }
+  if (score->score_copyright)
+    {
+      fprintf (f, "<score-copyright>%s</score-copyright>", score->score_copyright);
+    }
   if (score->office_part)
     {
       fprintf (f, "<office-part>%s</office-part>", score->office_part);
+    }
+  if (score->occasion)
+    {
+      fprintf (f, "<occasion>%s</occasion>", score->occasion);
+    }
+  if (score->meter)
+    {
+      fprintf (f, "<meter>%s</meter>", score->meter);
+    }
+  if (score->commentary)
+    {
+      fprintf (f, "<commentary>%s</commentary>", score->commentary);
+    }
+  if (score->arranger)
+    {
+      fprintf (f, "<arranger>%s</arranger>", score->arranger);
     }
   if (score->initial_style)
     {
       fprintf (f, "<initial-style>%d</initial-style>", score->initial_style);
     }
-  if (score->license)
-    {
-      fprintf (f, "<license>%s</license>", score->license);
-    }
   if (score->mode)
     {
       fprintf (f, "<mode>%d</mode>", score->mode);
+    }
+  if (score->si.author)
+    {
+      fprintf (f, "<author>%s</author>", score->si.author);
+    }
+  if (score->si.date)
+    {
+      fprintf (f, "<date>%s</date>", score->si.date);
+    }
+  if (score->si.manuscript)
+    {
+      fprintf (f,
+	       "<manuscript>%s</manuscript>",
+	       score->si.manuscript);
+    }
+  if (score->si.manuscript_reference)
+    {
+      fprintf (f,
+	       "<manuscript-reference>%s</manuscript-reference>",
+	       score->si.manuscript_reference);
+    }
+  if (score->si.manuscript_storage_place)
+    {
+      fprintf (f,
+	       "<manuscript-storage-place>%s</manuscript-storage-place>",
+	       score->si.manuscript_storage_place);
+    }
+  if (score->si.book)
+    {
+      fprintf (f,
+	       "<book>%s</book>",
+	       score->si.book);
+    }
+  if (score->si.transcriber)
+    {
+      fprintf (f,
+	       "<transcriber>%s</transcriber>",
+	       score->si.transcriber);
+    }
+  if (score->si.transcription_date)
+    {
+      fprintf (f,
+	       "<transcription-date>%s</transcription-date>",
+	       score->si.transcription_date);
     }
   if (score->lilypond_preamble)
     {
@@ -737,49 +802,14 @@ libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
 	{
 	  fprintf (f, "<voice-info id=\"%d\">", voice);
 	}
-      if (current_voice_info->anotation)
+      for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num)
+	{
+	  if (current_voice_info->annotation [annotation_num])
 	{
 	  fprintf (f,
-		   "<anotation>%s</anotation>",
-		   current_voice_info->anotation);
+		       "<annotation>%s</annotation>",
+		       current_voice_info->annotation [annotation_num]);
 	}
-      if (current_voice_info->author)
-	{
-	  fprintf (f, "<author>%s</author>", current_voice_info->author);
-	}
-      if (current_voice_info->date)
-	{
-	  fprintf (f, "<date>%s</date>", current_voice_info->date);
-	}
-      if (current_voice_info->manuscript)
-	{
-	  fprintf (f,
-		   "<manuscript>%s</manuscript>",
-		   current_voice_info->manuscript);
-	}
-      if (current_voice_info->reference)
-	{
-	  fprintf (f,
-		   "<reference>%s</reference>",
-		   current_voice_info->reference);
-	}
-      if (current_voice_info->storage_place)
-	{
-	  fprintf (f,
-		   "<storage-place>%s</storage-place>",
-		   current_voice_info->storage_place);
-	}
-      if (current_voice_info->translator)
-	{
-	  fprintf (f,
-		   "<translator>%s</translator>",
-		   current_voice_info->translator);
-	}
-      if (current_voice_info->translation_date)
-	{
-	  fprintf (f,
-		   "<translation-date>%s</translation-date>",
-		   current_voice_info->translation_date);
 	}
 
       if (current_voice_info->style)
