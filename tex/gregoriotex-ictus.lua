@@ -313,7 +313,7 @@ function iaiait (ibegin, imiddle, iend, first, printSmallBar, beginvpos, nextLen
     path = path .. chiroPrintBar(ibegin, 3)
     path = path .. chiroPrintBar(imiddle, 7 + maxdiff)
   end
-  return path, 0
+  return path, (24 + var1)/2
 end
 
 function iaiaiait (ibegin, imiddle1, imiddle2, iend, first, printSmallBar, beginvpos, nextLen)
@@ -360,7 +360,7 @@ function iaiaiait (ibegin, imiddle1, imiddle2, iend, first, printSmallBar, begin
     path = path .. chiroPrintBar(imiddle1, 7 + maxdiff)
     path = path .. chiroPrintBar(imiddle2, 7 + maxdiff)
   end
-  return path, 0
+  return path, (24 + (20 - (imiddle1 - ibegin))/3)/2
 end
 
 function itia (ibegin, iend, previouslen, printSmallBar, beginvpos, nextLen)
