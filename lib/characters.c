@@ -633,6 +633,8 @@ current character is a pointer to a gregorio_character. The gregorio_character d
 
 center_is_determined has the values present in characters.h.
 
+Another difficulty is the fact that we must consider characters in verbatim and special character styles like only one block, we can't say the center is in the middle of a verbatim block.
+
 */
 
 void
@@ -701,23 +703,21 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
 		  // remember? this macro has a continue; in it
 		  end_c ();
 		}
-	      begin_center (center_type)
-		center_is_determined = CENTER_DETERMINING_MIDDLE;
+	      begin_center (center_type);
+	      center_is_determined = CENTER_DETERMINING_MIDDLE;
 	      end_c ();
 	    }
 	  // the case where the user has not determined the middle and we are in the middle section of the syllable, but there we encounter something that is not a vowel, so the center ends there.
 	  if (center_is_determined == CENTER_DETERMINING_MIDDLE
 	      && !gregorio_is_vowel (current_character->cos.character))
 	    {
-	      end_center (center_type)
-		center_is_determined = CENTER_FULLY_DETERMINED;
+	      end_center (center_type);
+	      center_is_determined = CENTER_FULLY_DETERMINED;
 	    }
 	  // in the case where it is just a normal character... we simply pass.
 	  end_c ();
 	}
-
 // there starts the second part of the function that deals with the styles characters
-
       if (current_character->cos.s.type == ST_T_BEGIN
 	  && current_character->cos.s.style != ST_CENTER
 	  && current_character->cos.s.style != ST_FORCED_CENTER)
@@ -736,7 +736,24 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
 	  // if it is something to add then we just push the style in the stack and continue.
 	  gregorio_style_push (&first_style, current_character->cos.s.style);
 	  current_style = first_style;
-	  end_c ();
+	  // Here we pass all the characters after a verbatim (or special char) beginning, until we find a style (begin or end)
+	  if (current_character->cos.s.style == ST_VERBATIM
+	      || current_character->cos.s.style == ST_SPECIAL_CHAR)
+	    {
+	      if (current_character->next_character)
+	        {
+	          current_character = current_character->next_character;
+	        }
+	      while (current_character->next_character
+		     && current_character->is_character)
+		{
+		  current_character = current_character->next_character;
+		}
+	    }
+	  else
+	    {
+	      end_c ();
+	    }
 	}
       // if it is a beginning of a center, we call the good macro and end.
       if (current_character->cos.s.type == ST_T_BEGIN
@@ -756,7 +773,8 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
 	      end_c ();
 	    }
 	  //center_is_determined = DETERMINING_MIDDLE; // TODO: not really sure, but shouldn't be there
-	begin_center (center_type) end_c ()}
+	  begin_center (center_type) end_c ();
+	}
       if (current_character->cos.s.type == ST_T_END
 	  && current_character->cos.s.style != ST_CENTER
 	  && current_character->cos.s.style != ST_FORCED_CENTER)
@@ -893,11 +911,12 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
 	    }
 	  if (current_character->cos.s.style == ST_CENTER)
 	    {
-		  // we have to do it in case param_character (the first character) is a ST_CENTER beginning
-		  if (!current_character->previous_character && current_character == *param_character)
-		    {
-			  *param_character = (*param_character)->next_character;
-			}
+	      // we have to do it in case param_character (the first character) is a ST_CENTER beginning
+	      if (!current_character->previous_character
+		  && current_character == *param_character)
+		{
+		  *param_character = (*param_character)->next_character;
+		}
 	      gregorio_suppress_current_character (&current_character);
 	      continue;
 	    }
@@ -921,6 +940,48 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
 				       &current_character);
 	  break;
 	}
+	// this if is a hack to make gregorio consider verbatim blocks and special chars like one block, not a sequence of letters
+	  if (!current_character->is_character
+	  && current_character->cos.s.type == ST_T_BEGIN
+	  && (current_character->cos.s.style == ST_VERBATIM
+	  || current_character->cos.s.style == ST_SPECIAL_CHAR))
+	  
+	{
+      if (letter == 0)
+	{
+	  letter = 1;
+	  gregorio_insert_style_before (ST_T_BEGIN, ST_INITIAL,
+					current_character);
+	  if (current_character->next_character)
+	    {
+	      current_character = current_character->next_character;
+	    }
+	  while(current_character->next_character && current_character->is_character)
+	    {
+	      current_character = current_character->next_character;
+	    }
+	  gregorio_insert_style_after (ST_T_END, ST_INITIAL,
+				       &current_character);
+	  continue;
+	}
+      if (letter == 1 && forced_center == 0)
+	{
+	  gregorio_insert_style_before (ST_T_BEGIN, ST_CENTER,
+					current_character);
+	  if (current_character->next_character)
+	    {
+	      current_character = current_character->next_character;
+	    }
+	  while(current_character->next_character && current_character->is_character)
+	    {
+	      current_character = current_character->next_character;
+	    }
+	  gregorio_insert_style_after (ST_T_END, ST_CENTER,
+				       &current_character);
+	  // and we're done
+	  break;
+	}
+	}
       if (current_character->is_character && letter == 0)
 	{
 	  letter = 1;
@@ -941,12 +1002,11 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
 	  // and we're done
 	  break;
 	}
-	  // case where there is only one letter
-      if (!current_character->next_character
-	  && forced_center == 0)
+      // case where there is only one letter
+      if (!current_character->next_character && forced_center == 0)
 	{
 	  gregorio_insert_style_after (ST_T_BEGIN, ST_CENTER,
-					&current_character);
+				       &current_character);
 	  gregorio_insert_style_after (ST_T_END, ST_CENTER,
 				       &current_character);
 	  // and we're done

@@ -299,6 +299,9 @@ libgregorio_xml_write_begin (FILE * f, unsigned char style)
     case ST_TT:
       fprintf (f, "<tt>");
       break;
+    case ST_UNDERLINED:
+      fprintf (f, "<ul>");
+      break;
     default:
       break;
     }
@@ -332,6 +335,9 @@ libgregorio_xml_write_end (FILE * f, unsigned char style)
       break;
     case ST_TT:
       fprintf (f, "</tt>");
+      break;
+    case ST_UNDERLINED:
+      fprintf (f, "</ul>");
       break;
     default:
       break;

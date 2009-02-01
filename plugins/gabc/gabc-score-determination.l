@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %x score
 %x notes
 %x verb
+%x special
 
 %option stack
 %option pointer
@@ -183,6 +184,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <score><\/tt> {
 	return TT_END;
 	}
+<score><ul> {
+	return UL_BEGINNING;
+	}
+<score><\/ul> {
+	return UL_END;
+	}
 <score><b> {
 	return B_BEGINNING;
 	}
@@ -196,9 +203,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	return SC_END;
 	}
 <score><sp> {
+    BEGIN(special);
 	return SP_BEGINNING;
 	}
-<score><\/sp> {
+<special>[^"<\/sp>"]+ {
+	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	return CHARACTERS;
+	}
+<special><\/sp> {
+    BEGIN(score);
 	return SP_END;
 	}
 <score><v> {

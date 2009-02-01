@@ -808,6 +808,15 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
 	  current_node = current_node->next;
 	  continue;
 	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "ul"))
+	{
+	  gregorio_begin_style (current_character, ST_UNDERLINED);
+	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
+					    doc, current_character);
+	  gregorio_end_style (current_character, ST_UNDERLINED);
+	  current_node = current_node->next;
+	  continue;
+	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "small-capitals"))
 	{
 	  gregorio_begin_style (current_character, ST_SMALL_CAPS);

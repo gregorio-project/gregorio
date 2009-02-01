@@ -424,6 +424,9 @@ libgregorio_dump_style_to_string (unsigned char style)
     case ST_TT:
       return "           ST_TT";
       break;
+    case ST_UNDERLINED:
+      return "   ST_UNDERLINED";
+      break;
     case ST_SMALL_CAPS:
       return "   ST_SMALL_CAPS";
       break;

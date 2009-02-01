@@ -610,6 +610,9 @@ libgregorio_gtex_write_begin (FILE * f, unsigned char style)
     case ST_TT:
       fprintf (f, "\\grett{");
       break;
+    case ST_UNDERLINED:
+      fprintf (f, "\\greul{");
+      break;
     default:
       break;
     }
