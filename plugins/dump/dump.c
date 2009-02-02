@@ -278,6 +278,11 @@ write_score (FILE * f, gregorio_score * score)
 	      fprintf (f, "     element_type            %d (f%d)\n",
 		       element->element_type, element->element_type - 48);
 	    }
+	  if (element->element_type && element->type == GRE_END_OF_LINE)
+	    {
+	      fprintf (f, "     element_type            %d (%s)\n",
+		       element->element_type, libgregorio_dump_type (element->element_type));
+	    }
 	  glyph = element->first_glyph;
 	  while (glyph)
 	    {
@@ -567,6 +572,9 @@ libgregorio_dump_type (char type)
       break;
     case GRE_END_OF_LINE:
       str = "GRE_END_OF_LINE";
+      break;
+    case GRE_END_OF_PAR:
+      str = "GRE_END_OF_PAR";
       break;
     case GRE_CUSTO:
       str = "GRE_CUSTO";

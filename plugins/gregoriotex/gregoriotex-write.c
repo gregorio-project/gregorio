@@ -474,7 +474,7 @@ libgregorio_gregoriotex_getlineinfos (gregorio_syllable * syllable,
   gregorio_glyph *glyph;
   gregorio_note *note;
 
-  if (line == NULL || syllable == NULL)
+  if (line == NULL)
     {
       gregorio_message (_
 			("call with NULL pointer"),
@@ -486,6 +486,12 @@ libgregorio_gregoriotex_getlineinfos (gregorio_syllable * syllable,
   line->additional_bottom_space = 0;
   line->translation = 0;
   line->ictus = 0;
+
+  if (syllable == NULL)
+    {
+      // we allow the call with NULL syllable
+      return;
+    }
 
   while (syllable)
     {

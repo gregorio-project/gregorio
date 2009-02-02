@@ -564,7 +564,14 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 	}
       if (element->type == GRE_END_OF_LINE)
 	{
+	  if (element->element_type == GRE_END_OF_PAR)
+	    {
+	      fprintf (f, "<end-of-paragraph/>");
+	    }
+	  else
+	    {
 	      fprintf (f, "<end-of-line/>");
+	    }
 	}
       if (element->type == GRE_C_KEY_CHANGE)
 	{

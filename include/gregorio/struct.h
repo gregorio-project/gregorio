@@ -457,7 +457,7 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define GRE_END_OF_LINE 8
 #define GRE_SPACE 9
 #define GRE_BAR 10
-#define GRE_END_OF_PAR 11
+#define GRE_END_OF_PAR 13
 #define GRE_CUSTO 12
 
 
