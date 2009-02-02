@@ -175,7 +175,7 @@
 
 % macro called to go to the next line but when there are additional vertical spaces to add
 %% 1: can be 0, 1 or 2 or 3. 1 is when there is a note above the 4th line, 2 when there is a note on the 5th line, and 3 when there is a note above the 5th line
-%% 2: idem, but with the bottom line (-1th)
+%% 2: idem, but with the bottom line (-1th). It can be 4, in the case of a bottom note with a vertical episemus.
 %% 3: 1 if there is a translation somewhere
 \def\grenewlinewithspace#1#2#3{%
 \newlinecommon %
@@ -263,6 +263,9 @@
 \global\multiply\additionalbottomspace by \the\grefactor %
 \or % case 3
 \global\additionalbottomspace=30000 sp%
+\global\multiply\additionalbottomspace by \the\grefactor %
+\or % case 4
+\global\additionalbottomspace=45000 sp%
 \global\multiply\additionalbottomspace by \the\grefactor %
 \fi %
 \generatelines %

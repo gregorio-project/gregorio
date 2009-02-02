@@ -465,6 +465,9 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
     }
 }
 
+// see the comments on the i variable to understand it
+#define NUMBER_OF_NOTES 6
+
 // function filling the gregorio_line (see gregoriotex.h) struct with the infos on the line following syllable
 void
 libgregorio_gregoriotex_getlineinfos (gregorio_syllable * syllable,
@@ -473,6 +476,10 @@ libgregorio_gregoriotex_getlineinfos (gregorio_syllable * syllable,
   gregorio_element *element;
   gregorio_glyph *glyph;
   gregorio_note *note;
+  unsigned char i; // a counter to know at which note we are in a syllable
+  // the idea behind it is that after the 6th note (arbitrary number), we can
+  // consider that the bottom notes won't be bothering the text, because
+  // they won't be above it.
 
   if (line == NULL)
     {
@@ -495,6 +502,7 @@ libgregorio_gregoriotex_getlineinfos (gregorio_syllable * syllable,
 
   while (syllable)
     {
+      i = 0;
       if (syllable->translation)
 	{
 	  line->translation = 1;
@@ -538,6 +546,7 @@ libgregorio_gregoriotex_getlineinfos (gregorio_syllable * syllable,
 	      note = glyph->first_note;
 	      while (note)
 		{
+		  i = i + 1;
 		  if (note->rare_sign == _ICTUS_A || note->rare_sign == _ICTUS_T)
 		    {
 		      line->ictus = 1;
@@ -545,21 +554,43 @@ libgregorio_gregoriotex_getlineinfos (gregorio_syllable * syllable,
 		  switch (note->pitch)
 		    {
 		    case 'a':
-		      if (line->additional_bottom_space < 3)
+		      if (line->additional_bottom_space < 3 && i < NUMBER_OF_NOTES)
 			{
-			  line->additional_bottom_space = 3;
+			  // the idea is to put an extra space when a low note has a vertical episemus
+			    if (note->signs >= _V_EPISEMUS)
+			  {
+			    line->additional_bottom_space = 4;
+			  }
+			    else
+			  {
+			    line->additional_bottom_space = 3;
+			  }
 			}
 		      break;
 		    case 'b':
-		      if (line->additional_bottom_space < 2)
+		      if (line->additional_bottom_space < 2 && i < NUMBER_OF_NOTES)
 			{
-			  line->additional_bottom_space = 2;
+			    if (note->signs >= _V_EPISEMUS)
+			  {
+			    line->additional_bottom_space = 3;
+			  }
+			    else
+			  {
+			    line->additional_bottom_space = 2;
+			  }
 			}
 		      break;
 		    case 'c':
-		      if (line->additional_bottom_space < 1)
+		      if (line->additional_bottom_space < 1 && i < NUMBER_OF_NOTES)
 			{
-			  line->additional_bottom_space = 1;
+			    if (note->signs >= _V_EPISEMUS)
+			  {
+			    line->additional_bottom_space = 2;
+			  }
+			    else
+			  {
+			    line->additional_bottom_space = 1;
+			  }
 			}
 		      break;
 		    case 'm':
