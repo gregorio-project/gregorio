@@ -699,6 +699,10 @@ atScoreBeggining()%
 \localrightbox{}%
 \global\keeprightbox=0 %
 \fi%
+\ifluatex % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
+\localleftbox{}%
+\localrightbox{}%
+\fi
 \updateadditionalspaces{0}{0}%
 \normalinitial %
 \relax%
