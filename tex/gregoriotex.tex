@@ -277,7 +277,6 @@
 
 % #1 is 1, 2 or 3, with the same signification as in grenewlinewithspace
 \def\firstlinebottomspace#1#2{%
-%TODO
 \ifcase#1\relax %
 % case 0
 \global\additionalbottomspace=0 sp%
@@ -406,6 +405,8 @@
 }
 
 \def\greinitial#1{%
+% see comments on this function to see what it does
+\setaboveinitialraise %
 % we print the initial always at the same place, and the we print the Aboveinitialbox centered
 % first we print the initial
 \temp=-\textlower %
@@ -459,14 +460,20 @@
 \ifnum\grefactor=0\relax %
 \setgrefactor{17}%
 \fi %
-\global\aboveinitialraise=\staffheight %
-\global\advance\aboveinitialraise by \spacebeneathtext %
-\global\advance\constantglyphraise by \translationheight %
-\global\advance\aboveinitialraise by \spacelinestext %
 % we align the top of the box with the top of the line
+% here the variables are a bit strange... we can calculate the final value of aboveinitialraise only after the beginning of the score, after the call to this macro. So we just set aboveinitialraise to the negative value the #2 will add, and then, after the beginning of the score, we'll add setaboveinitialraise that will... set aboveinitialraise.
 \setbox\Aboveinitialbox=\hbox{#2}%
-\global\advance\aboveinitialraise by -\ht\Aboveinitialbox %
+\global\aboveinitialraise=-\ht\Aboveinitialbox %
 \global\setbox\Aboveinitialbox=\hbox{#1}%
+\relax %
+}
+
+\def\setaboveinitialraise{%
+\global\advance\aboveinitialraise by \staffheight %
+\global\advance\aboveinitialraise by \spacebeneathtext %
+\global\advance\aboveinitialraise by \translationheight %
+\global\advance\aboveinitialraise by \spacelinestext %
+\global\advance\aboveinitialraise by \additionalbottomspace %
 \relax %
 }
 
@@ -706,6 +713,7 @@ atScoreBeggining()%
 \localleftbox{}%
 \localrightbox{}%
 \fi
+\setbox\Aboveinitialbox=\hbox{}
 \updateadditionalspaces{0}{0}%
 \normalinitial %
 \relax%
