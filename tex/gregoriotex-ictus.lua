@@ -1,12 +1,30 @@
-chiroCurrentLine = chiroCurrentLine or 1
-chiroCurrentScore = chiroCurrentScore or 0
-chiroList = chiroList or nil
-normalPen = normalPen or "pencircle xscaled 1 yscaled 0.5 rotated 30"
-smallBarPen = smallBarPen or "pencircle xscaled 0.5 yscaled 0.25 rotated 60"
+if not modules then modules = { } end modules ['grechiro'] = {
+    version   = 0.99,
+    comment   = "GregorioTeX module for chironomy",
+    author    = "Elie Roux",
+    copyright = "Elie Roux",
+    license   = "public domain",
+}
+
+if grechiro and grechiro.version then
+ -- we simply don't load
+else
+
+grechiro = {}
+grechiro.version  = 0.99
+grechiro.showlog  = grechiro.showlog or false
+
+grechiro.currentLine = grechiro.currentLine or 1
+grechiro.currentScore = grechiro.currentScore or 0
+grechiro.list = grechiro.list or nil
+grechiro.normalPen = grechiro.normalPen or "pencircle xscaled 1 yscaled 0.5 rotated 30"
+grechiro.smallBarPen = grechiro.smallBarPen or "pencircle xscaled 0.5 yscaled 0.25 rotated 60"
+
+local normalPen = grechiro.normalPen
+local smallBarPen = grechiro.smallBarPen
+
 local ia=0
 local it=1
-
---dofile(table.lua)
 
 --[[
 
@@ -22,16 +40,16 @@ ictus: type, pos
 
 -- we work in pt in this file
 
-function atBeginChiroScore()
+grechiro.atBeginScore = grechiro.atBeginScore or function()
   -- as we call this function at each score beginning, we don't rebuild the list each time
-  if chiroList == nil then
-    chiroCreateList()
+  if grechiro.list == nil then
+    grechiro.createList()
   end
-  chiroCurrentScore = chiroCurrentScore + 1
-  chiroCurrentLine = 1
+  grechiro.currentScore = grechiro.currentScore + 1
+  grechiro.currentLine = 1
 end
 
-function chiroCreateList()
+grechiro.createList = grechiro.createList or function ()
   -- the philosophy is to fill current* and then to append it to the good lists
   local f = io.open(tex.jobname .. '.gaux')
   local currentLine = nil
@@ -72,13 +90,13 @@ function chiroCreateList()
         if currentLine ~= nil and currentScore ~= nil then
           table.insert(currentScore.lines, currentLine)
         end
-        if chiroList == nil then
-          chiroList = {}
-          chiroList.scores={}
+        if grechiro.list == nil then
+          grechiro.list = {}
+          grechiro.list.scores={}
         end
         currentScoreBeginPos = pos
         if currentScore ~= nil then
-          table.insert(chiroList.scores, currentScore)
+          table.insert(grechiro.list.scores, currentScore)
         end
         currentScore = {}
         currentScore.lines = {}
@@ -95,49 +113,38 @@ function chiroCreateList()
   end
   if currentScore ~= nil then
     table.insert(currentScore.lines, currentLine)
-    table.insert(chiroList.scores, currentScore)
+    table.insert(grechiro.list.scores, currentScore)
   end
   io.close(f)
-  --printTable(chiroList, '')
+  --printTable(grechiro.list, '')
   return true
 end
 
+local createList = grechiro.createList
+
 -- function called in the TeX Code, calls ChiroPrintCLine with the good line
-function chiroPrintLine()
-  if chiroList == nil or chiroCurrentScore > table.maxn(chiroList.scores) then
+grechiro.printLine = grechiro.printLine or function ()
+  if grechiro.list == nil or grechiro.currentScore > table.maxn(grechiro.list.scores) then
     return
-  elseif chiroCurrentLine > table.maxn(chiroList.scores[chiroCurrentScore].lines) then
+  elseif grechiro.currentLine > table.maxn(grechiro.list.scores[grechiro.currentScore].lines) then
     -- if there are too many calls in a score
     return
-  elseif table.maxn(chiroList.scores) < chiroCurrentScore  or chiroCurrentScore == 0 then
+  elseif table.maxn(grechiro.list.scores) < grechiro.currentScore  or grechiro.currentScore == 0 then
     -- a basic check
     return
   else
-    --printTable(chiroList.scores[chiroCurrentScore].lines[chiroCurrentLine], '')
-    chiroPrintCLine (chiroList.scores[chiroCurrentScore].lines[chiroCurrentLine])
-    chiroCurrentLine = chiroCurrentLine + 1
+    --printTable(grechiro.list.scores[chiroCurrentScore].lines[chiroCurrentLine], '')
+    grechiro.printCLine (grechiro.list.scores[grechiro.currentScore].lines[grechiro.currentLine])
+    grechiro.currentLine = grechiro.currentLine + 1
+    
   end
 end
 
-function printTable(table, s)
-  if table == {} or table == nil then
-    return
-  end
-  for k,v in pairs(table) do
-    texio.write_nl(s .. 'key : ' .. k)
-    if type(v) == 'table' then
-      texio.write_nl(s .. "table : ")
-      printTable(v, s .. ' ')
-    else
-      texio.write_nl(s .. 'value : ' .. v)
-    end
-  end
-end
+local printLine = grechiro.printLine
 
-function chiroPrintCLine (line)
+grechiro.printCLine = grechiro.printCLine or function (line)
   -- just to know if we print small bars or not
   printSmallBars = tex.count.printchirovbars
-  --printTable(line, '')
   if line == nil then
     return
   end
@@ -167,9 +174,9 @@ function chiroPrintCLine (line)
         nextLen = 0
       end
       if line.ictus[i+1].type == ia then
-        path, temp, vpos = itia(line.ictus[i].pos, line.ictus[i+1].pos, previousLen, printSmallBars, lastvpos, nextLen)
+        path, temp, vpos = grechiro.itia(line.ictus[i].pos, line.ictus[i+1].pos, previousLen, printSmallBars, lastvpos, nextLen)
       else
-        path, temp, vpos = itit(line.ictus[i].pos, line.ictus[i+1].pos, previousLen, printSmallBars, lastvpos, nextLen)
+        path, temp, vpos = grechiro.itit(line.ictus[i].pos, line.ictus[i+1].pos, previousLen, printSmallBars, lastvpos, nextLen)
       end
       previousLen = 0
       i = i + 1
@@ -181,7 +188,7 @@ function chiroPrintCLine (line)
           nextLen = 0
         end
         previousLen = (line.ictus[i+1].pos - line.ictus[i].pos)
-        path, temp, vpos = iait(line.ictus[i].pos, line.ictus[i+1].pos, 0, printSmallBars, lastvpos, nextLen)
+        path, temp, vpos = grechiro.iait(line.ictus[i].pos, line.ictus[i+1].pos, 0, printSmallBars, lastvpos, nextLen)
         i = i + 1
       elseif line.ictus[i+2] ~= nil and line.ictus[i+2].type == it then
         if line.ictus[i+3] ~= nil then
@@ -189,7 +196,7 @@ function chiroPrintCLine (line)
         else
           nextLen = 0
         end
-        path, temp, vpos = iaiait(line.ictus[i].pos, line.ictus[i+1].pos, line.ictus[i+2].pos, 0, printSmallBars, lastvpos, nextLen)
+        path, temp, vpos = grechiro.iaiait(line.ictus[i].pos, line.ictus[i+1].pos, line.ictus[i+2].pos, 0, printSmallBars, lastvpos, nextLen)
         previousLen = 0
         i = i + 2
       elseif line.ictus[i+2] ~= nil and line.ictus[i+3] ~= nil and line.ictus[i+2].type == ia then
@@ -198,7 +205,7 @@ function chiroPrintCLine (line)
         else
           nextLen = 0
         end
-        path, temp, vpos = iaiaiait(line.ictus[i].pos, line.ictus[i+1].pos, line.ictus[i+2].pos, line.ictus[i+3].pos, previousLen, printSmallBars, lastvpos, nextLen)
+        path, temp, vpos = grechiro.iaiaiait(line.ictus[i].pos, line.ictus[i+1].pos, line.ictus[i+2].pos, line.ictus[i+3].pos, previousLen, printSmallBars, lastvpos, nextLen)
         previousLen = 0
         --path = iaiait
         i = i + 3
@@ -227,8 +234,10 @@ function chiroPrintCLine (line)
   -- texio.write_nl(s)
 end
 
+local printCLine = grechiro.printCLine
+
 -- function that returns a string like "draw mypath;" where mypath is a small 
-function chiroPrintBar (x,y)
+grechiro.printBar = grechiro.printBar or function (x,y)
   return string.format("draw (%.01f, %.01f){down} .. {down}(%.01f, %.01f) withpen " .. smallBarPen .. ";\n",
     x,
     y + 2,
@@ -237,16 +246,20 @@ function chiroPrintBar (x,y)
 end
 
 -- function that calculates the diameter of the first circle of ia (used in several functions)
-function iaitfirstdiameter (ibegin, iend)
+grechiro.iaitfirstdiameter = grechiro.iaitfirstdiameter or function(ibegin, iend)
   return (10 + 0.35 * (iend - ibegin))
 end
 
+local iaitfirstdiameter = grechiro.iaitfirstdiameter
+
 -- idem for the last angle
-function iaitlastangle (width)
+grechiro.iaitlastangle = grechiro.iaitlastangle or function (width)
   return (30 - 0.2 * (width))
 end
 
-function iait (ibegin, iend, first, printSmallBar, beginvpos, nextLen)
+local iaitlastangle = grechiro.iaitlastangle
+
+grechiro.iait = grechiro.iait or function (ibegin, iend, first, printSmallBar, beginvpos, nextLen)
   local init_height
   if first == 1 then
     init_height = 0
@@ -261,13 +274,13 @@ function iait (ibegin, iend, first, printSmallBar, beginvpos, nextLen)
   iaitlastangle (iend - ibegin), 
   iend)
   if printSmallBar == 1 then
-    path = path .. chiroPrintBar(ibegin, 3)
+    path = path .. grechiro.printBar(ibegin, 3)
   end
   -- we return path, and the left shift at the beginning (for the first of a line)
   return path, iaitfirstdiameter(ibegin, iend)/2
 end
 
-function iaiait (ibegin, imiddle, iend, first, printSmallBar, beginvpos, nextLen)
+grechiro.iaiait = grechiro.iaiait or function (ibegin, imiddle, iend, first, printSmallBar, beginvpos, nextLen)
   local maxdiff-- a value we will use several times
   if imiddle - ibegin < iend - imiddle then
     maxdiff = (20 - (imiddle - ibegin))/2
@@ -310,13 +323,13 @@ function iaiait (ibegin, imiddle, iend, first, printSmallBar, beginvpos, nextLen
   iend,
   3)
   if printSmallBar == 1 then
-    path = path .. chiroPrintBar(ibegin, 3)
-    path = path .. chiroPrintBar(imiddle, 7 + maxdiff)
+    path = path .. grechiro.printBar(ibegin, 3)
+    path = path .. grechiro.printBar(imiddle, 7 + maxdiff)
   end
   return path, (24 + var1)/2
 end
 
-function iaiaiait (ibegin, imiddle1, imiddle2, iend, first, printSmallBar, beginvpos, nextLen)
+grechiro.iaiaiait = grechiro.iaiaiait or function (ibegin, imiddle1, imiddle2, iend, first, printSmallBar, beginvpos, nextLen)
   local maxdiff-- a value we will use several times
   maxdiff = math.max(imiddle1 - ibegin, imiddle2 - imiddle1, iend - imiddle2)
   maxdiff = 20 - maxdiff/2
@@ -356,31 +369,33 @@ function iaiaiait (ibegin, imiddle1, imiddle2, iend, first, printSmallBar, begin
   iend,
   3)
   if printSmallBar == 1 then
-    path = path .. chiroPrintBar(ibegin, 3)
-    path = path .. chiroPrintBar(imiddle1, 7 + maxdiff)
-    path = path .. chiroPrintBar(imiddle2, 7 + maxdiff)
+    path = path .. grechiro.printBar(ibegin, 3)
+    path = path .. grechiro.printBar(imiddle1, 7 + maxdiff)
+    path = path .. grechiro.printBar(imiddle2, 7 + maxdiff)
   end
   return path, (24 + (20 - (imiddle1 - ibegin))/3)/2
 end
 
-function itia (ibegin, iend, previouslen, printSmallBar, beginvpos, nextLen)
+grechiro.itia = grechiro.itia or function (ibegin, iend, previouslen, printSmallBar, beginvpos, nextLen)
   local path = string.format("p := (%.01f, 3){dir-%d} .. {dir30}(%.01f, 3);\n",
   ibegin,
   iaitlastangle (previouslen),
   iend)
   if printSmallBar == 1 then
-    path = path .. chiroPrintBar(ibegin, 3)
+    path = path .. grechiro.printBar(ibegin, 3)
   end
   return path, 0
 end
 
-function itit (ibegin, iend, previouslen, printSmallBar, beginvpos, nextLen)
+grechiro.itit = grechiro.itit or function (ibegin, iend, previouslen, printSmallBar, beginvpos, nextLen)
   local path = string.format("p := (%.01f, 3){dir-%d} .. {dir-30}(%.01f, 3);\n",
   ibegin,
   iaitlastangle (previouslen),
   iend)
   if printSmallBar == 1 then
-    path = path .. chiroPrintBar(ibegin, 3)
+    path = path .. grechiro.printBar(ibegin, 3)
   end
   return path, 0
+end
+
 end
