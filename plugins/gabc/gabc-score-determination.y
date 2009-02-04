@@ -758,10 +758,7 @@ generated_by_definition:
 
 user_notes_definition:
 	USER_NOTES attribute {
-	  // Currently just ignore the user-notes as comments.  They
-	  // may in future be accepted and passed verbatim to the xml
-	  // etc.
-	  //gregorio_set_score_user_notes (score, $2);
+	  gregorio_set_score_user_notes (score, $2);
 	}
 	;
 

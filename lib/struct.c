@@ -616,6 +616,7 @@ gregorio_new_score (void)
   new_score->first_voice_info = NULL;
   new_score->mode=0;
   new_score->gregoriotex_font = NULL;
+  new_score->user_notes = NULL;
   return new_score;
 }
 
@@ -800,6 +801,18 @@ gregorio_set_score_musixtex_preamble (gregorio_score * score,
 }
 
 void
+gregorio_set_score_user_notes (gregorio_score * score, char *user_notes)
+{
+  if (!score)
+    {
+      gregorio_message (_("function called with NULL argument"),
+			   "gregorio_set_score_name", WARNING, 0);
+      return;
+    }
+  score->user_notes = user_notes;
+}
+
+void
 gregorio_add_voice_info (gregorio_voice_info ** current_voice_info)
 {
   int annotation_num;
@@ -863,6 +876,10 @@ gregorio_free_score_infos (gregorio_score * score)
   if (score->musixtex_preamble)
     {
       free (score->musixtex_preamble);
+    }
+  if (score->user_notes)
+    {
+      free (score->user_notes);
     }
   gregorio_free_source_info (&score->si);
   if (score->first_voice_info)

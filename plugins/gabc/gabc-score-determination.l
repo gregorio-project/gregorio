@@ -52,21 +52,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %option noyywrap
 
 
+
+/* The expression for attribute below is rather messy because we allow
+for (a) single-line values, ending with a semicolon at end of line or a
+double semicolon, (b) multi-line values, which end at a double
+semicolon. */
+
 %%
 <INITIAL>^(\xBB|\xEF|\xBF)* {
 //BOM written by a lot of windows softwares when they write UTF-8
 }
 <INITIAL>:(\ )? {
-	BEGIN(attribute);
-	return COLON;
+	 BEGIN(attribute);
+	 return COLON;
 	}
-<attribute>;(\n|\r)*     {
-	BEGIN(INITIAL);
-         return SEMICOLON;
-      }
-<attribute>[^;]* {
-	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+<attribute>[^;\n\r]*(;[^;\n\r]+)*((\n|\r)[^;]*(;[^;]+)*)? {
+	 gabc_score_determination_lval=strdup(gabc_score_determination_text);
          return ATTRIBUTE;
+      }
+<attribute>;(;|\n|\r)    {
+	 BEGIN(INITIAL);
+         return SEMICOLON;
       }
 <INITIAL>number-of-voices {
          return NUMBER_OF_VOICES;

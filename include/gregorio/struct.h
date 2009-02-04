@@ -276,6 +276,7 @@ typedef struct gregorio_score {
   char *musixtex_preamble;
 // the font to use in gregoriotex
   char *gregoriotex_font;
+  char *user_notes;
 // the determination method (maximal ambitus, etc.)
   unsigned char det_method;
 // then, as there are some metadata that are voice-specific, we add a
@@ -404,6 +405,8 @@ void
 gregorio_set_score_transcriber (gregorio_score * score, char *transcriber);
 void
 gregorio_set_score_transcription_date (gregorio_score * score, char *transcription_date);
+void
+gregorio_set_score_user_notes (gregorio_score * score, char *user_notes);
 void
 gregorio_set_voice_style (gregorio_voice_info * voice_info, char *style);
 void

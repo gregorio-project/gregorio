@@ -305,6 +305,14 @@ libgregorio_xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc,
 	  current_node = current_node->next;
 	  continue;
 	}
+      if (!xmlStrcmp
+	  (current_node->name, (const xmlChar *) "user_notes"))
+	{
+	  score->user_notes = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
+	  current_node = current_node->next;
+	  continue;
+	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "initial-style"))
 	{
 	  score->initial_style = atoi ((char *) xmlNodeListGetString

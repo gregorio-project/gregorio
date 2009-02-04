@@ -166,6 +166,10 @@ write_score (FILE * f, gregorio_score * score)
     {
       fprintf (f, "   initial_style             %d\n", score->initial_style);
     }
+  if (score->user_notes)
+    {
+      fprintf (f, "   user_notes                %s\n", score->user_notes);
+    }
   fprintf (f,
 	   "\n\n=====================================================================\n VOICES INFOS\n=====================================================================\n");
   for (i = 0; i < score->number_of_voices; i++)

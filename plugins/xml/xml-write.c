@@ -796,6 +796,11 @@ libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
       fprintf (f, "<gregoriotex_font>%s</gregoriotex_font>",
 	       score->gregoriotex_font);
     }
+  if (score->user_notes)
+    {
+      fprintf (f, "<user_notes>%s</user_notes>",
+	       score->user_notes);
+    }
 
 //then we consider the voice_info
   current_voice_info = score->first_voice_info;
