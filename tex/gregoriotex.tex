@@ -621,7 +621,7 @@
 % the first line is a special case
 \ifnum\knownline=1\relax %
 % some bugs appear if we don't box it
-\hbox{\directlua0{chiroPrintLine()}}%
+\hbox{\directlua0{grechiro.printLine()}}%
 \par %
 % TODO: this line bugs with my version of LuaTeX
 %\penalty -10001\relax%
@@ -634,7 +634,7 @@
 \localrightbox{}%
 \par %
 \kern\abovesignsspace %
-\noindent\hbox{\directlua0{chiroPrintLine()}}%
+\noindent\hbox{\directlua0{grechiro.printLine()}}%
 \updateleftbox %
 \par %
 \penalty 10001\relax %
@@ -654,7 +654,7 @@
 \grewriteaux{begin:\number\pdflastxpos}%
 \grewriteaux{width:\number\stafflinewidth}%
 \directlua0{dofile(kpse.find_file('gregoriotex-ictus.lua'))%
-atBeginChiroScore()}%
+grechiro.atBeginScore()}%
 \fi %
 \relax %
 }
@@ -685,7 +685,7 @@ atBeginChiroScore()}%
 \ifluatex %
 \directlua0 {%
 dofile(kpse.find_file('gregoriotex.lua'))%
-atScoreBeggining()%
+gregoriotex.atScoreBeggining()%
 }%
 \fi %
 \global\knownline=1\relax %

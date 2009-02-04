@@ -1,9 +1,28 @@
+--GregorioTeX Lua file.
+--Copyright (C) 2008-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
+--
+--This program is free software: you can redistribute it and/or modify
+--it under the terms of the GNU General Public License as published by
+--the Free Software Foundation, either version 3 of the License, or
+--(at your option) any later version.
+--
+--This program is distributed in the hope that it will be useful,
+--but WITHOUT ANY WARRANTY; without even the implied warranty of
+--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--GNU General Public License for more details.
+--
+--You should have received a copy of the GNU General Public License
+--along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-- this file contains lua functions for chironomy used by GregorioTeX
+-- when called with LuaTeX.
+
 if not modules then modules = { } end modules ['grechiro'] = {
-    version   = 0.99,
+    version   = 0.93,
     comment   = "GregorioTeX module for chironomy",
     author    = "Elie Roux",
     copyright = "Elie Roux",
-    license   = "public domain",
+    license   = "GPLv3",
 }
 
 if grechiro and grechiro.version then
@@ -11,7 +30,7 @@ if grechiro and grechiro.version then
 else
 
 grechiro = {}
-grechiro.version  = 0.99
+grechiro.version  = "0.9.3"
 grechiro.showlog  = grechiro.showlog or false
 
 grechiro.currentLine = grechiro.currentLine or 1
