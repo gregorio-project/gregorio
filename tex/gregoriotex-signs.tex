@@ -862,7 +862,8 @@
 \penalty 10001 %
 \fi %
 \setbox\Tempwidth=\hbox{\gregorianfont \char 8}%
-\raise\glyphraisevalue\Tempwidth %
+%\raise\glyphraisevalue\Tempwidth %
+\raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
 \global\lastglyphwidth=\wd\Tempwidth %
 \ifnum#2=1\relax %
 \hskip\spacearoundsmallbar %
