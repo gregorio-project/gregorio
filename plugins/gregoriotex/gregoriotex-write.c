@@ -2826,20 +2826,29 @@ libgregorio_gregoriotex_write_note (FILE * f,
 	  temp = note->previous_note->pitch - note->pitch;
 	  if (temp < -2 || temp > 2)
 	    {
-	      fprintf (f, "\\endofglyph{1}%%\n");
+	      fprintf (f, "\\endofglyph{11}%%\n");
 	    }
 	  else
 	    {
 	      if (note->previous_note
 		  && note->previous_note->shape ==
 		  S_PUNCTUM_INCLINATUM_DEMINUTUS)
-		{
-		  fprintf (f, "\\endofglyph{8}%%\n");
-		}
-	      else
-		{
-		  fprintf (f, "\\endofglyph{7}%%\n");
-		}
+		    {
+			  if (temp < -1 || temp > 1)
+			  //really if the ambitus = 3rd at this point
+			  {
+		        fprintf (f, "\\endofglyph{10}%%\n");
+			  }
+			  else
+			  {
+		        fprintf (f, "\\endofglyph{8}%%\n");
+			  }
+		    }
+		  else
+		    {
+		      //puncta inclinatum followed by puncta inclinatum debilis
+		      fprintf (f, "\\endofglyph{7}%%\n");
+		    }
 	    }
 	}
     }
