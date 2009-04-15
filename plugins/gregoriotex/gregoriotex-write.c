@@ -2004,7 +2004,8 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	    }
 	  normal_height ();
 	case 3:
-	  number_note_before_last_note ();
+	  // you might think number_note_before_last_note more appropriate, but in the current fonts the third note of the torculus resupinus is v aligned with the last note
+	  number_last_note (18);
 	  if (current_glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS
 	      || current_glyph->liquescentia == L_DEMINUTUS)
 	    {
