@@ -1453,12 +1453,13 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
     }
 
 // there is a case in which we do something special : if the next glyph is a ZERO_WIDTH_SPACE, and the current glyph is a PES, and the punctum mora is on the first note, and the glyph after is a pes and the first note of the next pes is at least two (or three depending on something) pitchs higher than the current note. You'll all have understood, this case is quite rare... but when it appears, we pass 1 as a second argument of \punctummora so that it removes the space introduced by the punctummora.
+// These are necessary, but perhaps not sufficient conditions. This may need updated still.
   if (glyph->glyph_type == G_PODATUS && glyph->next_glyph
       && glyph->next_glyph->type == GRE_SPACE
       && glyph->next_glyph->glyph_type == SP_ZERO_WIDTH
       && current_note->next_note && glyph->next_glyph->next_glyph
       && glyph->next_glyph->next_glyph->type == GRE_GLYPH
-      && glyph->next_glyph->next_glyph->glyph_type == G_PODATUS
+      //&& glyph->next_glyph->next_glyph->glyph_type == G_PODATUS //I'll leave this commented out for now
       && glyph->next_glyph->next_glyph->first_note
       && (glyph->next_glyph->next_glyph->first_note->pitch -
 	  current_note->pitch > 1))
