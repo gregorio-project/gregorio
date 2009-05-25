@@ -412,7 +412,7 @@
 \newcount\firstsyllableofword
 \firstsyllableofword=1
 
-\ifluatex
+\ifgreluatex
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
 % if it is 2, it means that it's never useful to typeset a dash
@@ -439,7 +439,7 @@
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
 %% at the end we wall \endofword or \endofsyllable with #7, to reduce the space in case of a flat or natural
 \def\syllable#1#2#3#4#5#6#7#8#9{%
-\ifluatex % by default, gregorioattr will be 2
+\ifgreluatex % by default, gregorioattr will be 2
 \gregorioattr=2\relax %
 \fi %
 \firstglyph=1 %
@@ -499,7 +499,7 @@
 \setbox\Syllabletext=\hbox{\gretextformat{#1#2#3-}}%
 \setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{0}%
 \else %
-\ifluatex %
+\ifgreluatex %
 \gregorioattr=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
 % we rebuild this box, in order it to have the attribute
 \setbox\Syllabletext=\hbox{\gretextformat{#1#2#3}}%
@@ -514,7 +514,7 @@
 \raise\textlower \copy\Syllabletext %
 \kern -\wd\Syllabletext %
 \kern -\begindifference %
-\ifluatex % here we need to unset \gregorioattr for the typesetting of notes
+\ifgreluatex % here we need to unset \gregorioattr for the typesetting of notes
 \gregorioattr=0\relax %
 \fi %
 #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
