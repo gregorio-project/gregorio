@@ -209,28 +209,28 @@ semicolon. */
 	return SC_END;
 	}
 <score><sp> {
-    BEGIN(special);
+	BEGIN(special);
 	return SP_BEGINNING;
 	}
-<special>[^"<\/sp>"]+ {
+<special><\/sp> {
+	BEGIN(score);
+	return SP_END;
+	}
+<special>[^<>]* {
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);
 	return CHARACTERS;
-	}
-<special><\/sp> {
-    BEGIN(score);
-	return SP_END;
 	}
 <score><v> {
 	BEGIN(verb);
 	return VERB_BEGINNING;
 	}
-<verb>[^"<\/v>"]+ {
-	gabc_score_determination_lval=strdup(gabc_score_determination_text);
-	return CHARACTERS;
-	}
 <verb><\/v> {
 	BEGIN(score);
 	return VERB_END;
+	}
+<verb>[^<>]* {
+	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	return CHARACTERS;
 	}
 <score>\{  {
 	return CENTER_BEGINNING;
