@@ -16,26 +16,38 @@
 
 -- this file contains lua functions used by GregorioTeX when called with LuaTeX.
 
-if not modules then modules = { } end modules ['gregoriotex'] = {
-    version   = 0.93,
-    comment   = "GregorioTeX module",
-    author    = "Elie Roux",
-    copyright = "Elie Roux",
-    license   = "GPLv3",
-}
-
 if gregoriotex and gregoriotex.version then
  -- we simply don't load
 else
 
 gregoriotex = {}
+
+gregoriotex.module = {
+    name          = "gregoriotex",
+    version       = 0.93,
+    date          = "2009/07/28",
+    description   = "GregorioTeX module.",
+    author        = "Elie Roux",
+    copyright     = "Elie Roux",
+    license       = "GPLv3",
+}
+
+if luatextra and luatextra.provides_module then
+    luatextra.provides_module(gregoriotex.module)
+end
+
 gregoriotex.version  = "0.9.3"
 gregoriotex.showlog  = gregoriotex.showlog or false
 
 local hlist = node.id('hlist')
 local vlist = node.id('vlist')
 local glyph = node.id('glyph')
-local gregorioattr=987 -- the number declared with gregorioattr
+local gregorioattr
+if tex.attributenumber and tex.attributenumber and tex.attributenumber['gregorioattr'] then
+  gregorioattr = tex.attributenumber['gregorioattr']
+else
+  gregorioattr = 987 -- the number declared with gregorioattr
+end
 
 -- in each function we check if we really are inside a score, which we can see with the gregorioattr being set or not
 
@@ -95,7 +107,11 @@ gregoriotex.callback = gregoriotex.callback or function (h, groupcode, glyphes)
 end
 
 gregoriotex.atScoreBeggining = gregoriotex.atScoreBeggining or function ()
-    callback.register('post_linebreak_filter', gregoriotex.callback)
+    if callback.add then
+      callback.add('post_linebreak_filter', gregoriotex.callback, 'gregoriotex.callback')
+    else
+      callback.register('post_linebreak_filter', gregoriotex.callback)
+    end
 end
 
 end

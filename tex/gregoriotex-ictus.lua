@@ -17,19 +17,26 @@
 -- this file contains lua functions for chironomy used by GregorioTeX
 -- when called with LuaTeX.
 
-if not modules then modules = { } end modules ['grechiro'] = {
-    version   = 0.93,
-    comment   = "GregorioTeX module for chironomy",
-    author    = "Elie Roux",
-    copyright = "Elie Roux",
-    license   = "GPLv3",
-}
-
 if grechiro and grechiro.version then
  -- we simply don't load
 else
 
 grechiro = {}
+
+grechiro.module = {
+    name          = "gregoriotex-ictus",
+    version       = 0.93,
+    date          = "2009/07/28",
+    description   = "GregorioTeX module for chironomy.",
+    author        = "Elie Roux",
+    copyright     = "Elie Roux",
+    license       = "GPLv3"  
+}
+
+if luatextra and luatextra.provides_module then
+    luatextra.provides_module(grechiro.module)
+end
+
 grechiro.version  = "0.9.3"
 grechiro.showlog  = grechiro.showlog or false
 

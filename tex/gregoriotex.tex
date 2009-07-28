@@ -20,10 +20,75 @@
 \newif\ifgreluatex
 % Set \ifgreluatex accordingly
 \expandafter\ifx\csname directlua\endcsname\relax
-\greluatexfalse
+  \greluatexfalse
 \else
-\greluatextrue
+  \greluatextrue
 \fi
+
+% we need to check if luatextra is loaded or not
+\newif\ifgreluatextra
+\expandafter\ifx\csname newluaattribute\endcsname\relax
+  \greluatextrafalse
+\else
+  \ifgreluatex
+    \greluatextratrue
+  \else
+    \greluatextrafalse
+  \fi
+\fi
+
+% an attribute we put on the text nodes.
+% if it is 1, it means that there may be a dash here if this syllable is at the end of a line
+% if it is 2, it means that it's never useful to typeset a dash
+% if it is 0, it just means that we are in a score...
+\ifgreluatextra
+  \newluaattribute\gregorioattr
+\else
+  \ifgreluatex
+    \attributedef\gregorioattr=987
+  \fi
+\fi
+  
+% if we are used with LuaTeX we need to define some version-specific functions
+\ifgreluatex
+  \ifnum\luatexversion<36
+    \def\gredirectlua{\directlua0}
+  \else
+    \ifgreluatextra
+      \def\gredirectlua{\luadirect}
+    \else
+      \def\gredirectlua{\directlua}
+    \fi
+  \fi
+\fi
+  
+\ifgreluatextra
+  \def\greloadluamodule#1{\luaUseModule{#1}}
+\else
+  \ifgreluatex
+    \def\greloadluamodule#1{\gredirectlua{dofile(kpse.find_file('#1.lua'))}}
+  \else
+    \def\greloadluamodule#1{}
+  \fi
+\fi
+
+\greloadluamodule{gregoriotex}
+
+\ifgreluatextra
+  \def\greunsetattribute{\unsetluaattribute{\gregorioattr}}
+\else
+  \ifgreluatex
+    \def\greunsetattribute{%
+      \ifnum\luatexversion<37\relax %
+        \gregorioattr=-1\relax %
+      \else %
+        \gregorioattr=-"7FFFFFFF\relax %
+      \fi %
+    }
+  \fi
+\fi
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %% aux file definitions
@@ -621,7 +686,7 @@
 % the first line is a special case
 \ifnum\knownline=1\relax %
 % some bugs appear if we don't box it
-\hbox{\directlua0{grechiro.printLine()}}%
+\hbox{\gredirectlua{grechiro.printLine()}}%
 \par %
 % TODO: this line bugs with my version of LuaTeX
 %\penalty -10001\relax%
@@ -634,7 +699,7 @@
 \localrightbox{}%
 \par %
 \kern\abovesignsspace %
-\noindent\hbox{\directlua0{grechiro.printLine()}}%
+\noindent\hbox{\gredirectlua{grechiro.printLine()}}%
 \updateleftbox %
 \par %
 \penalty 10001\relax %
@@ -653,7 +718,8 @@
 \pdfsavepos %
 \grewriteaux{begin:\number\pdflastxpos}%
 \grewriteaux{width:\number\stafflinewidth}%
-\directlua0{dofile(kpse.find_file('gregoriotex-ictus.lua'))%
+\greloadluamodule{gregoriotex-ictus}%
+\gredirectlua{%
 grechiro.atBeginScore()}%
 \fi %
 \relax %
@@ -683,8 +749,7 @@ grechiro.atBeginScore()}%
 \fi %
 \noindent%
 \ifgreluatex %
-\directlua0 {%
-dofile(kpse.find_file('gregoriotex.lua'))%
+\gredirectlua{%
 gregoriotex.atScoreBeggining()%
 }%
 \fi %
@@ -702,7 +767,7 @@ gregoriotex.atScoreBeggining()%
 \fi %
 \hfil %
 \ifgreluatex%
-\gregorioattr=-1\relax %
+\greunsetattribute %
 \fi %
 \par%
 \ifnum\keeprightbox=1 %
