@@ -472,7 +472,7 @@
 \def\greinitial#1{%
 % see comments on this function to see what it does
 \setaboveinitialraise %
-% we print the initial always at the same place, and the we print the Aboveinitialbox centered
+% we print the initial always at the same place, and the we print the Aboveinitialfirstbox centered
 % first we print the initial
 \temp=-\textlower %
 % if it is a big initial we print it on the second line 
@@ -496,17 +496,29 @@
 \hskip\afterinitialshift %
 \global\advance\initialwidth by \afterinitialshift%
 \global\advance\initialwidth by \beforeinitialshift %
-% then we center the box above the initial, if there is one
-\ifdim\wd\Aboveinitialbox=0 pt\relax %
+% then we center the first box above the initial, if there is one
+\ifdim\wd\Aboveinitialfirstbox=0 pt\relax %
 \else %
 \temp=\initialwidth %
-\advance\temp by -\wd\Aboveinitialbox %
+\advance\temp by -\wd\Aboveinitialfirstbox %
 \divide\temp by 2 %
 \hskip -\initialwidth %
 \kern\temp %
-\raise\aboveinitialraise\copy\Aboveinitialbox %
+\raise\aboveinitialfirstraise\copy\Aboveinitialfirstbox %
 \kern\temp %
-\setbox\Aboveinitialbox=\hbox{}%
+\setbox\Aboveinitialfirstbox=\hbox{}%
+\fi %
+% then we center the second box above the initial, if there is one
+\ifdim\wd\Aboveinitialsecondbox=0 pt\relax %
+\else %
+\temp=\initialwidth %
+\advance\temp by -\wd\Aboveinitialsecondbox %
+\divide\temp by 2 %
+\hskip -\initialwidth %
+\kern\temp %
+\raise\aboveinitialsecondraise\copy\Aboveinitialsecondbox %
+\kern\temp %
+\setbox\Aboveinitialsecondbox=\hbox{}%
 \fi %
 \relax %
 }
@@ -518,27 +530,51 @@
 \relax %
 }
 
-\newbox\Aboveinitialbox %
-\newdimen\aboveinitialraise %
+% We set two boxes for the two lines above the initial
+
+\newbox\Aboveinitialfirstbox %
+\newdimen\aboveinitialfirstraise%
+\newbox\Aboveinitialsecondbox %
+\newdimen\aboveinitialsecondraise
+% this dimention will be the height difference between the two lines above the inital
+\newdimen\aboveinitialseparation %
 
 \def\setfirstlineaboveinitial#1#2{%
 \ifnum\grefactor=0\relax %
 \setgrefactor{17}%
 \fi %
 % we align the top of the box with the top of the line
-% here the variables are a bit strange... we can calculate the final value of aboveinitialraise only after the beginning of the score, after the call to this macro. So we just set aboveinitialraise to the negative value the #2 will add, and then, after the beginning of the score, we'll add setaboveinitialraise that will... set aboveinitialraise.
-\setbox\Aboveinitialbox=\hbox{#2}%
-\global\aboveinitialraise=-\ht\Aboveinitialbox %
-\global\setbox\Aboveinitialbox=\hbox{#1}%
+% here the variables are a bit strange... we can calculate the final value of aboveinitialfirstraise only after the beginning of the score, after the call to this macro. So we just set aboveinitialfirstraise to the negative value the #2 will add, and then, after the beginning of the score, we'll add setaboveinitialraise that will... set aboveinitialfirstraise.
+\setbox\Aboveinitialfirstbox=\hbox{#2}%
+\global\aboveinitialfirstraise=-\ht\Aboveinitialfirstbox %
+\global\setbox\Aboveinitialfirstbox=\hbox{#1}%
 \relax %
 }
 
+\def\setfirstannotation#1{
+\setfirstlineaboveinitial{#1}{#1}%
+\relax %
+}
+
+\def\setsecondannotation#1{%
+\ifnum\grefactor=0\relax %
+\setgrefactor{17}%
+\fi %
+% TODO: set a coherent raise
+\setbox\Aboveinitialsecondbox=\hbox{#1}%
+\global\aboveinitialsecondraise=-\ht\Aboveinitialsecondbox %
+\global\advance\aboveinitialsecondraise by -\aboveinitialseparation %
+\relax %
+}
+
+%here we set the true raises of the two lines above the inital
 \def\setaboveinitialraise{%
-\global\advance\aboveinitialraise by \staffheight %
-\global\advance\aboveinitialraise by \spacebeneathtext %
-\global\advance\aboveinitialraise by \translationheight %
-\global\advance\aboveinitialraise by \spacelinestext %
-\global\advance\aboveinitialraise by \additionalbottomspace %
+\global\advance\aboveinitialfirstraise by \staffheight %
+\global\advance\aboveinitialfirstraise by \spacebeneathtext %
+\global\advance\aboveinitialfirstraise by \translationheight %
+\global\advance\aboveinitialfirstraise by \spacelinestext %
+\global\advance\aboveinitialfirstraise by \additionalbottomspace %
+\global\advance\aboveinitialsecondraise by \aboveinitialfirstraise %
 \relax %
 }
 
@@ -778,7 +814,7 @@ gregoriotex.atScoreBeggining()%
 \localleftbox{}%
 \localrightbox{}%
 \fi
-\setbox\Aboveinitialbox=\hbox{}
+\setbox\Aboveinitialfirstbox=\hbox{}
 \updateadditionalspaces{0}{0}%
 \normalinitial %
 \relax%

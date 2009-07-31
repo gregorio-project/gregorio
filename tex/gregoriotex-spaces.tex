@@ -132,6 +132,17 @@
 \newskip\beforeinitialshift
 \afterinitialshift=0.6 em plus 0em minus 0em
 
+% this space is the one between the bottom of the first anotation line and the top
+% of the second anotation line (above the initial)
+
+\newdimen\aboveinitialseparation
+\aboveinitialseparation = 0.5mm
+
+\def\setaboveinitialseparation#1{
+\aboveinitialseparation=#1%
+\relax %
+}
+
 \def\setspaceafterinitial#1{%
 \afterinitialshift=#1 %
 \relax %
