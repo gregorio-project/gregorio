@@ -124,6 +124,11 @@
 % an extensible space for the beginning of lines
 \newskip\afterclefnospace
 
+% width of the additional lines, used only for the custos (maybe should depend on the width of the custo...)
+% the width is the one for the custos at end of lines, the line for custos in the middle of a score is the same
+% multiplied by 2.
+\newdimen\additionallineswidth
+
 % space between the initial and the beginning of the score
 \newskip\afterinitialshift
 \afterinitialshift=0.6 em plus 0em minus 0em
@@ -255,5 +260,9 @@
 %
 \afterclefnospace = 0 pt plus 30000 sp minus 0 pt%
 \multiply\afterclefnospace by \grefactor %
+%
+\additionallineswidth = 17000 sp%
+\multiply\additionallineswidth by \grefactor %
+%
 \relax %
 }
