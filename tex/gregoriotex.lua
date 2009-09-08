@@ -37,7 +37,7 @@ if luatextra and luatextra.provides_module then
 end
 
 gregoriotex.version  = "0.9.3"
-gregoriotex.showlog  = gregoriotex.showlog or false
+gregoriotex.showlog  = false
 
 local hlist = node.id('hlist')
 local vlist = node.id('vlist')
@@ -51,7 +51,7 @@ end
 
 -- in each function we check if we really are inside a score, which we can see with the gregorioattr being set or not
 
-gregoriotex.addhyphenandremovedumblines = gregoriotex.addhyphenandremovedumblines or function (h, groupcode, glyphes)
+function gregoriotex.addhyphenandremovedumblines (h, groupcode, glyphes)
     local lastseennode=nil
     local potentialdashvalue=1
     local nopotentialdashvalue=2
@@ -101,16 +101,24 @@ gregoriotex.addhyphenandremovedumblines = gregoriotex.addhyphenandremovedumbline
     return true
 end 
 
-gregoriotex.callback = gregoriotex.callback or function (h, groupcode, glyphes)
+function gregoriotex.callback (h, groupcode, glyphes)
     gregoriotex.addhyphenandremovedumblines(h, groupcode, glyphes)
     return true
 end
 
-gregoriotex.atScoreBeggining = gregoriotex.atScoreBeggining or function ()
+function gregoriotex.atScoreBeggining ()
     if callback.add then
       callback.add('post_linebreak_filter', gregoriotex.callback, 'gregoriotex.callback')
     else
       callback.register('post_linebreak_filter', gregoriotex.callback)
+    end
+end
+
+function gregoriotex.atScoreEnd ()
+    if callback.remove then
+      callback.remove('post_linebreak_filter', 'gregoriotex.callback')
+    else
+      callback.register('post_linebreak_filter', nil)
     end
 end
 
