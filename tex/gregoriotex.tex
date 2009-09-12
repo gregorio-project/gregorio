@@ -816,9 +816,11 @@ gregoriotex.atScoreBeggining()%
 \setbox\Aboveinitialfirstbox=\hbox{}
 \updateadditionalspaces{0}{0}%
 \normalinitial %
+\ifgreluatex %
 \gredirectlua{%
 gregoriotex.atScoreEnd()%
 }%
+\fi %
 \relax%
 }
 
