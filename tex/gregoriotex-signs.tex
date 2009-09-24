@@ -31,7 +31,7 @@
 % the first argument is the type : f or c, and the second is the height
 % the third argument is whether we must type a space after or not (0 if not, 1 if yes)
 \def\setlinesclef#1#2#3{%
-\localleftbox{%
+\grelocalleftbox{%
 \kern\additionalleftspace %
 \copy\Lines% draws the lines
 \unkern %
@@ -187,7 +187,7 @@
 \custochar#1\relax %
 }%
 \global\tempwidth=\wd\Tempwidth %
-\localrightbox{%
+\grelocalrightbox{%
 \ifx l#1%
 \additionaltopcustolineend %
 \fi %
@@ -331,7 +331,7 @@
 }
 
 \def\removecusto{%
-\localrightbox{}%
+\grelocalrightbox{}%
 \relax%
 }
 
@@ -1055,15 +1055,15 @@
 %macro to end a line with a divisio finalis
 \def\finaldivisiofinalis#1{%
 \ifcase#1% case 0
-\localrightbox{}%
-\localleftbox{}%
+\grelocalrightbox{}%
+\grelocalleftbox{}%
 \barsyllable{}{}{}{1}{}{}{0}{}{%
 \divisiofinalis %
 }%
 \or % case 1
 \hskip\spacebeforefinalfinalis %
 \global\keeprightbox=1 %
-\localrightbox{%
+\grelocalrightbox{%
 \divisiofinalissymbol %
 }%
 \fi %
@@ -1073,15 +1073,15 @@
 %macro to end a line with a divisio maior
 \def\finaldivisiomaior#1{%
 \ifcase#1% case 0
-\localrightbox{}%
-\localleftbox{}%
+\grelocalrightbox{}%
+\grelocalleftbox{}%
 \barsyllable{}{}{}{1}{}{}{0}{}{%
 \divisiomaior %
 }%
 \or % case 1
 \hskip\spacebeforefinalfinalis %
 \global\keeprightbox=1 %
-\localrightbox{%
+\grelocalrightbox{%
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 }%

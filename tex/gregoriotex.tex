@@ -37,15 +37,51 @@
   \fi
 \fi
 
+% we need to check if luatextra is in a recent version... even if it will
+% certainly keep backward compatibility, it's better to be sure...
+\newif\ifgreluatextranew
+\expandafter\ifx\csname newluatexattribute\endcsname\relax
+  \greluatextranewfalse
+\else
+  \ifgreluatex
+    \greluatextranewtrue
+  \else
+    \greluatextranewfalse
+  \fi
+\fi
+
+% in TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
+% available without prefix. We mostly rely on \directlua that is still available
+% without prefix, but we also rely on the Omega primitives, that have a luatex 
+% prefix in TeXLive 2009.
+\newif\ifgreluatexnew
+\expandafter\ifx\csname luatexlocalleftbox\endcsname\relax
+  \let\grelocalleftbox\localleftbox
+  \let\grelocalrightbox\localrightbox
+  \greluatexnewfalse
+\else
+  \let\grelocalleftbox\luatexlocalleftbox
+  \let\grelocalrightbox\luatexlocalrightbox
+  \greluatexnewtrue
+\fi
+
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
 % if it is 2, it means that it's never useful to typeset a dash
 % if it is 0, it just means that we are in a score...
-\ifgreluatextra
-  \newluaattribute\gregorioattr
+\ifgreluatextranew
+  \newluatexattribute\gregorioattr
 \else
-  \ifgreluatex
-    \attributedef\gregorioattr=987
+  \ifgreluatextra
+    \newluaattribute\gregorioattr
+  \else
+    \ifgreluatex
+      \ifgreluatexnew
+        \luatexattributedef\gregorioattr=987
+      \else
+        \attributedef\gregorioattr=987
+      \fi
+    \fi
   \fi
 \fi
   
@@ -54,21 +90,29 @@
   \ifnum\luatexversion<36
     \def\gredirectlua{\directlua0}
   \else
-    \ifgreluatextra
-      \def\gredirectlua{\luadirect}
+    \ifgreluatextranew
+      \let\gredirectlua\luadirect
     \else
-      \def\gredirectlua{\directlua}
+      \ifgreluatextra
+        \let\gredirectlua\luadirect
+      \else
+        \let\gredirectlua\directlua
+      \fi
     \fi
   \fi
 \fi
   
-\ifgreluatextra
-  \def\greloadluamodule#1{\luaUseModule{#1}}
+\ifgreluatextranew
+  \let\greloadluamodule\luatexUseModule
 \else
-  \ifgreluatex
-    \def\greloadluamodule#1{\gredirectlua{dofile(kpse.find_file('#1.lua'))}}
+  \ifgreluatextra
+    \let\greloadluamodule\luaUseModule
   \else
-    \def\greloadluamodule#1{}
+    \ifgreluatex
+      \def\greloadluamodule#1{\gredirectlua{dofile(kpse.find_file('#1.lua'))}}
+    \else
+      \def\greloadluamodule#1{}
+    \fi
   \fi
 \fi
 
@@ -701,7 +745,7 @@
 \def\drawlines{%
 \drawfirstlines %
 %%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
-\localleftbox{%
+\grelocalleftbox{%
 \copy\Lines %
 }%
 \relax%
@@ -730,8 +774,8 @@
 \noindent %
 \else %
 % not very beaufiful, I don't like to make a new par inside a score, but....
-\localleftbox{}%
-\localrightbox{}%
+\grelocalleftbox{}%
+\grelocalrightbox{}%
 \par %
 \kern\abovesignsspace %
 \noindent\hbox{\gredirectlua{grechiro.printLine()}}%
@@ -796,9 +840,9 @@ gregoriotex.atScoreBeggining()%
 \def\endgregorioscore{%
 \global\lastoflinecount=0\relax %
 \global\blockcusto=0\relax %
-\localleftbox{}%
+\grelocalleftbox{}%
 \ifnum\keeprightbox=0 %
-\localrightbox{}%
+\grelocalrightbox{}%
 \fi %
 \hfil %
 \ifgreluatex%
@@ -806,12 +850,12 @@ gregoriotex.atScoreBeggining()%
 \fi %
 \par%
 \ifnum\keeprightbox=1 %
-\localrightbox{}%
+\grelocalrightbox{}%
 \global\keeprightbox=0 %
 \fi%
 \ifgreluatex % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
-\localleftbox{}%
-\localrightbox{}%
+\grelocalleftbox{}%
+\grelocalrightbox{}%
 \fi
 \setbox\Aboveinitialfirstbox=\hbox{}
 \updateadditionalspaces{0}{0}%
@@ -840,8 +884,8 @@ gregoriotex.atScoreEnd()%
 \fi %
 \fi %
 \global\endofscore=1 %
-\localrightbox{}%
-\localleftbox{}%
+\grelocalrightbox{}%
+\grelocalleftbox{}%
 \penalty 1000 %
 \relax%
 }
@@ -927,7 +971,7 @@ gregoriotex.atScoreEnd()%
 
 % same as above, but for the score. For now it is the same behaviour.
 \def\lastofscore{%
-\localleftbox{}%
+\grelocalleftbox{}%
 \blockcustos %
 \global\lastoflinecount=1\relax%
 \relax%
