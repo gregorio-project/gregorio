@@ -16,6 +16,10 @@
 
 % this file contains definitions for lines, initial, fonts, etc.
 
+%%%%%%%%%%%%%%%%%%
+%% engine checking
+%%%%%%%%%%%%%%%%%%
+
 % a if to see if we are called with lua(la)tex or not
 \newif\ifgreluatex
 % Set \ifgreluatex accordingly
@@ -23,6 +27,15 @@
   \greluatexfalse
 \else
   \greluatextrue
+\fi
+
+% if we are not under LuaTeX, we check if we are under lamed or omega...
+% if not, we output an error message
+
+\ifgreluatex\else
+  \expandafter\ifx\csname localrightbox\endcsname\relax
+    \errmessage{Error: this document must be compiled with Aleph (lamed) or LuaTeX (lualatex)}
+  \fi
 \fi
 
 % we need to check if luatextra is loaded or not
@@ -1129,5 +1142,28 @@ gregoriotex.atScoreEnd()%
 \setgrespaces %
 \generatelines %
 \setgregorianfont{greciliae}%
+\relax %
+}
+
+%%%%%%%%%%%%%%%%%%
+%% score including
+%%%%%%%%%%%%%%%%%%
+
+% function that includes a score in TeX format
+\def\includetexscore#1{%
+\input #1%
+\relax %
+}
+
+% function provided for backward compatibility
+\let\includescore\includetexscore
+
+% TODO: comment, lamed version?
+\def\includegabcscore#1{%
+\ifgreluatex %
+\gredirectlua{gregoriotex.include_gabc_score([[#1]])}%
+\else %
+\errmessage{GregorioTeX error: you must use LuaTeX to use \string\includegabcscore}%
+\fi %
 \relax %
 }

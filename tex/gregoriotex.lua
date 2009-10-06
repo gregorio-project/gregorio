@@ -25,7 +25,7 @@ gregoriotex = {}
 gregoriotex.module = {
     name          = "gregoriotex",
     version       = 0.93,
-    date          = "2009/07/28",
+    date          = "2009/10/06",
     description   = "GregorioTeX module.",
     author        = "Elie Roux",
     copyright     = "Elie Roux",
@@ -34,9 +34,28 @@ gregoriotex.module = {
 
 if luatextra and luatextra.provides_module then
     luatextra.provides_module(gregoriotex.module)
+    function gregoriotex.error(...)
+        luatextra.module_error("GregorioTeX", string.format(...))
+    end
+    function gregoriotex.log(...)
+        luatextra.module_log("GregorioTeX", string.format(...)) 
+    end
+    function gregoriotex.info(...)
+        luatextra.module_info("GregorioTeX", string.format(...)) 
+    end
+else
+    function gregoriotex.error(...)
+        tex.sprint(string.format("\\immediate\\write16{}\\errmessage{GregorioTeX error: %s^^J^^J}\n", string.format(...)))
+    end
+    function gregoriotex.log(...)
+        texio.write_nl('log', string.format("GregorioTeX: %s", string.format(...)))
+    end
+    function gregoriotex.info(...)
+        texio.write_nl("GregorioTeX: "..string.format(...)) 
+    end
 end
 
-gregoriotex.version  = "0.9.3"
+gregoriotex.version  = 0.93
 gregoriotex.showlog  = false
 
 local hlist = node.id('hlist')
@@ -120,6 +139,56 @@ function gregoriotex.atScoreEnd ()
     else
       callback.register('post_linebreak_filter', nil)
     end
+end
+
+-- a variable vith the value:
+--- 1 if we can launch gregorio
+--- 2 if we cannot
+--- nil if we don't know (yet)
+gregoriotex.shell_escape = nil
+
+function gregoriotex.compile_gabc(gabc_file, tex_file)
+    if not gregoriotex.shell_escape then
+        local test = io.popen("gregorio -V")
+        --local test = io.popen("echo caca")
+        if test then
+            local output = test:read("*a")
+            test:close()
+            if not output or output == "" then
+                gregoriotex.shell_escape = 2
+            else
+                gregoriotex.shell_escape = 1
+            end
+        else
+            gregoriotex.shell_escape = 2
+        end
+    end
+    if gregoriotex.shell_escape == 2 then
+        gregoriotex.error("unable to launch gregorio, shell-escape mode may not be activated. Try to compile with:\n    %s --shell-escape %s.tex\nSee the documentation of gregorio or your TeX distribution to automatize it.", tex.formatname, tex.jobname)
+    else
+        gregoriotex.info("compiling the score %s...", gabc_file)
+        os.execute(string.format("gregorio -o %s %s", tex_file, gabc_file))
+    end
+end
+
+function gregoriotex.include_gabc_score(gabc_file)
+    if not lfs.isfile(gabc_file) then
+        gregoriotex.error("the file %s does not exist.", gabc_file)
+        return
+    end
+    local gabc_timestamp = lfs.attributes(gabc_file).modification
+    local tex_file = gabc_file:gsub("%.gabc+$","-auto.tex")
+    if lfs.isfile(tex_file) then
+        local tex_timestamp = lfs.attributes(tex_file).modification
+        if tex_timestamp < gabc_timestamp then
+            gregoriotex.compile_gabc(gabc_file, tex_file)
+        else
+            gregoriotex.log("using the file %s without recompiling, as %s hasn't changed since last compilation.", tex_file, gabc_file)
+        end
+    else
+        gregoriotex.compile_gabc(gabc_file, tex_file)
+    end
+    tex.print(string.format("\\input %s", tex_file))
 end
 
 end

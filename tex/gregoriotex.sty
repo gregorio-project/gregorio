@@ -15,7 +15,8 @@
 %along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{gregoriotex}
+\ProvidesPackage{gregoriotex}%
+    [2009/09/26 v0.93 GregorioTeX system.]
 
 \input gregoriotex.tex
 
@@ -26,11 +27,6 @@
 
 \def\grebiginitialformat#1{%
 \begin{Huge}#1\end{Huge}%
-\relax %
-}
-
-\def\includescore#1{%
-\input #1%
 \relax %
 }
 
@@ -77,7 +73,10 @@
 }
 
 % opening and closing of the aux file. We can't do it another way,
-% because of the case of several scores.
+% because of the case of several scores. We do it only in the case
+% it's useful, meaning with LuaTeX
 
-\AtBeginDocument{\opengreaux }
-\AtEndDocument{\closegreaux }
+\ifgreluatex
+  \AtBeginDocument{\opengreaux }
+  \AtEndDocument{\closegreaux }
+\fi
