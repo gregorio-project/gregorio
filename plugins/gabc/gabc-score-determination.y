@@ -439,7 +439,7 @@ gregorio_gabc_add_text (char *mbcharacters)
     {
       current_character = gregorio_build_char_list_from_buf (mbcharacters);
     }
-  while (current_character -> next_character)
+  while (current_character && current_character -> next_character)
     {
       current_character = current_character -> next_character;
     }
