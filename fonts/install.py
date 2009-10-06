@@ -69,7 +69,7 @@ def cyg_find_basedir():
 	    return ''
 	splitpath = line.split('/')
 	splitpath = splitpath[0:-3]
-	if splitpath[-1] == '2008':
+	if splitpath[-1][0] == '2': # we test if the last directory is 2008 or 2009 or...
 		splitpath = splitpath[0:-1]
 	return '/'.join(splitpath)
 
