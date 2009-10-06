@@ -19,6 +19,7 @@ AC_INIT([gregorio],[0.9.3-svn],[gregorio-devel@gna.org])
 AC_PREREQ(2.53)
 AC_CONFIG_SRCDIR([src/gregorio-utils.c])
 AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([foreign])
 AM_GNU_GETTEXT([external])
