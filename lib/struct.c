@@ -818,6 +818,7 @@ gregorio_add_voice_info (gregorio_voice_info ** current_voice_info)
   int annotation_num;
   gregorio_voice_info *next = malloc (sizeof (gregorio_voice_info));
   next->initial_key = NO_KEY;
+  next->flatted_key = NO_FLAT_KEY;
   for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num)
     {
       next->annotation [annotation_num] = NULL;
@@ -1637,6 +1638,10 @@ gregorio_fix_initial_keys (gregorio_score * score, int default_key)
 	  clef =
 	    gregorio_calculate_new_key (C_KEY, element->element_type - 48);
 	  voice_info->initial_key = clef;
+      if (element->additional_infos == FLAT_KEY)
+        {
+          voice_info->flatted_key = FLAT_KEY;
+        }
 	  gregorio_free_one_element (&
 					(score->first_syllable->elements[i]));
 	  voice_info = voice_info->next_voice_info;
@@ -1654,6 +1659,10 @@ gregorio_fix_initial_keys (gregorio_score * score, int default_key)
 	  clef =
 	    gregorio_calculate_new_key (F_KEY, element->element_type - 48);
 	  voice_info->initial_key = clef;
+      if (element->additional_infos == FLAT_KEY)
+        {
+          voice_info->flatted_key = FLAT_KEY;
+        }
 	  gregorio_free_one_element (&
 					(score->first_syllable->elements[i]));
 	  snprintf (error, 80,
@@ -1689,9 +1698,6 @@ gregorio_fix_initial_keys (gregorio_score * score, int default_key)
 
   for (i = 0; i < score->number_of_voices; i++)
     {
-
-
-
       if (voice_info->initial_key == NO_KEY)
 	{
 	  voice_info->initial_key = default_key;

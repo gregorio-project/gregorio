@@ -180,6 +180,10 @@ write_score (FILE * f, gregorio_score * score)
 	  fprintf (f, "   initial_key               %d (%s)\n",
 		   voice_info->initial_key,
 		   libgregorio_dump_key_to_char (voice_info->initial_key));
+      if (voice_info->flatted_key == FLAT_KEY)
+        {
+           fprintf (f, "   flat_key                  FLAT_KEY\n");
+        }
 	}
       for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num)
 	{
@@ -276,11 +280,19 @@ write_score (FILE * f, gregorio_score * score)
 	    {
 	      fprintf (f, "     element_type            %d (c%d)\n",
 		       element->element_type, element->element_type - 48);
+          if (element->additional_infos == FLAT_KEY)
+            {
+              fprintf(f, "     additional_infos        FLAT_KEY\n");       
+            }
 	    }
 	  if (element->element_type && element->type == GRE_F_KEY_CHANGE)
 	    {
 	      fprintf (f, "     element_type            %d (f%d)\n",
 		       element->element_type, element->element_type - 48);
+          if (element->additional_infos == FLAT_KEY)
+            {
+              fprintf(f, "     additional_infos        FLAT_KEY\n");        
+            }
 	    }
 	  if (element->element_type && element->type == GRE_END_OF_LINE)
 	    {

@@ -71,6 +71,14 @@ Z {
 	gregorio_add_special_as_note (&current_note, GRE_F_KEY_CHANGE, gabc_notes_determination_text[1]);
 	}
 	}
+(cb|fb)[1-4] {
+	if (gabc_notes_determination_text[0]=='c') {
+	gregorio_add_special_as_note (&current_note, GRE_C_KEY_CHANGE_FLATED, gabc_notes_determination_text[2]);
+	}
+	else {
+	gregorio_add_special_as_note (&current_note, GRE_F_KEY_CHANGE_FLATED, gabc_notes_determination_text[2]);
+	}
+	}
 `       {
 	gregorio_add_special_as_note (&current_note, GRE_BAR, B_VIRGULA);
 	}

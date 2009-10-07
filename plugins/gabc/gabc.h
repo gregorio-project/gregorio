@@ -53,7 +53,7 @@ void libgregorio_gabc_write_gregorio_elements (FILE * f, gregorio_element * elem
 void libgregorio_gabc_write_gregorio_element (FILE * f, gregorio_element * element);
 void libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph);
 void libgregorio_gabc_write_end_liquescentia (FILE * f, char liquescentia);
-void libgregorio_gabc_write_key_change (FILE * f, char step, int line);
+void libgregorio_gabc_write_key_change (FILE * f, char step, int line, char has_flat);
 void libgregorio_gabc_write_space (FILE * f, char type);
 void libgregorio_gabc_write_bar (FILE * f, char type);
 void libgregorio_gabc_write_gregorio_note (FILE * f, gregorio_note * note, char glyph_type);

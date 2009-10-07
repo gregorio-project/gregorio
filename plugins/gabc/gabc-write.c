@@ -143,7 +143,14 @@ write_score (FILE * f, gregorio_score * score)
   // at present we only allow for one clef at the start of the gabc
   gregorio_det_step_and_line_from_key (score->first_voice_info->initial_key,
 				       &step, &line);
-  fprintf (f, "(%c%d)", step, line);
+  if (score->first_voice_info->flatted_key == FLAT_KEY)
+    {
+      fprintf (f, "(%cb%d)", step, line);
+    }
+  else
+    {
+      fprintf (f, "(%c%d)", step, line);
+    }
   syllable = score->first_syllable;
   // the we write every syllable
   while (syllable)
@@ -439,11 +446,11 @@ libgregorio_gabc_write_gregorio_element (FILE * f, gregorio_element * element)
       break;
     case GRE_C_KEY_CHANGE:
       libgregorio_gabc_write_key_change (f, C_KEY,
-					 element->element_type - 48);
+					 element->element_type - 48, element->additional_infos);
       break;
     case GRE_F_KEY_CHANGE:
       libgregorio_gabc_write_key_change (f, F_KEY,
-					 element->element_type - 48);
+					 element->element_type - 48, element->additional_infos);
       break;
     case GRE_END_OF_LINE:
       fprintf (f, "z");
@@ -562,9 +569,16 @@ The function that writes a key change... quite simple.
 */
 
 void
-libgregorio_gabc_write_key_change (FILE * f, char step, int line)
+libgregorio_gabc_write_key_change (FILE * f, char step, int line, char has_flat)
 {
-  fprintf (f, "%c%d", step, line);
+  if (has_flat == FLAT_KEY)
+    {
+      fprintf (f, "%c%d", step, line);
+    }
+  else
+    {
+      fprintf (f, "%cb%d", step, line);
+    }
 }
 
 /*

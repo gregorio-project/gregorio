@@ -150,6 +150,7 @@ close_glyph (gregorio_glyph ** last_glyph, char glyph_type,
 }
 
 // a small function to automatically determine the pitch of a custo : it is the pitch of the next note, but we must take care of the clef changes, as custo are (normally and for now) only present before clef changes.
+// TODO: there may be a side effect with the flated keys...
 
 char
 libgregorio_gabc_determine_custo_pitch (gregorio_note *current_note, int current_key)
@@ -158,14 +159,14 @@ libgregorio_gabc_determine_custo_pitch (gregorio_note *current_note, int current
   int newkey;
   while(current_note)
     {
-      if (current_note->type == GRE_C_KEY_CHANGE)
+      if (current_note->type == GRE_C_KEY_CHANGE || current_note->type == GRE_C_KEY_CHANGE_FLATED)
         {
           newkey = gregorio_calculate_new_key (C_KEY, current_note->pitch - 48);
           pitch_difference = newkey - current_key;
         }
-      if (current_note->type == GRE_F_KEY_CHANGE)
+      if (current_note->type == GRE_F_KEY_CHANGE || current_note->type == GRE_F_KEY_CHANGE_FLATED)
         {
-          newkey = gregorio_calculate_new_key (C_KEY, current_note->pitch - 48);
+          newkey = gregorio_calculate_new_key (F_KEY, current_note->pitch - 48);
           pitch_difference = newkey - current_key;
         }
       if (current_note->type == GRE_NOTE)
@@ -231,7 +232,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note, int *curre
   char current_glyph_type = G_UNDETERMINED;
   char next_glyph_type = G_UNDETERMINED;
   char last_pitch = USELESS_VALUE;
-  char bar_signs = NULL; // a variable for the signs of bars
+  char additional_infos = 0; // a variable for the signs of bars and to tell if a key is flatted or not
   gregorio_note *next_note = NULL;
 
   // determination of end of glyphs, see comments on
@@ -267,7 +268,27 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note, int *curre
         }
       if (current_note->type == GRE_F_KEY_CHANGE)
         {
+          *current_key = gregorio_calculate_new_key (F_KEY, current_note->pitch - 48);
+        }
+	  if (current_note->type == GRE_C_KEY_CHANGE_FLATED)
+        {
           *current_key = gregorio_calculate_new_key (C_KEY, current_note->pitch - 48);
+          gregorio_add_special_as_glyph (&last_glyph, GRE_C_KEY_CHANGE,
+                            current_note->pitch, FLAT_KEY);
+          current_glyph_first_note = current_note->next_note;
+          gregorio_free_one_note (&current_note);
+          last_pitch = USELESS_VALUE;
+          continue;
+        }
+      if (current_note->type == GRE_F_KEY_CHANGE_FLATED)
+        {
+          *current_key = gregorio_calculate_new_key (F_KEY, current_note->pitch - 48);
+          gregorio_add_special_as_glyph (&last_glyph, GRE_F_KEY_CHANGE,
+                            current_note->pitch, FLAT_KEY);
+          current_glyph_first_note = current_note->next_note;
+          gregorio_free_one_note (&current_note);
+          last_pitch = USELESS_VALUE;
+          continue;
         }
 	  if (current_note->type == GRE_CUSTO)
 	    {
@@ -282,27 +303,29 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note, int *curre
 	          switch (current_note->rare_sign)
 	            {
 	            case _ICTUS_A:
-	              bar_signs = _V_EPISEMUS_ICTUS_A;
+	              additional_infos = _V_EPISEMUS_ICTUS_A;
 	              break;
                 case _ICTUS_T:
-	              bar_signs = _V_EPISEMUS_ICTUS_T;
+	              additional_infos = _V_EPISEMUS_ICTUS_T;
 	              break;
 	            default:
-	              bar_signs = _V_EPISEMUS;
+	              additional_infos = _V_EPISEMUS;
 	              break;
 	            }
 	        }
 	      else
 	        {
-              bar_signs = current_note -> rare_sign;
+              additional_infos = current_note -> rare_sign;
 	        }
 	    }
 	  gregorio_add_special_as_glyph (&last_glyph, current_note->type,
-					    current_note->pitch, bar_signs);
+					    current_note->pitch, additional_infos);
 	  current_glyph_first_note = current_note->next_note;
 	  gregorio_free_one_note (&current_note);
       last_pitch = USELESS_VALUE;
+      additional_infos = 0;
 	  //TODO : change behaviour here for flat and natural
+      //UPDATE: what does this TODO mean?...
 	  continue;
 	}
       /* first we do what must be done with liquescentia */

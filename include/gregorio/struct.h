@@ -119,7 +119,8 @@ typedef struct gregorio_element {
 // GRE_*_KEY_CHANGE, it is 0. If it is GRE_SPACE, it is the kind of
 // space (it can't be SP_ZERO_WIDTH).
   char element_type;
-// contain additional informations, like for example bar signs
+// contain additional informations, like for example bar signs, or if
+// the key has a flat or not
   char additional_infos;
 // a pointer to the first glyph of the element.
   struct gregorio_glyph *first_glyph;
@@ -301,6 +302,7 @@ typedef struct gregorio_voice_info {
 // special representation for the key. See comments on
 // src/struct-utils.c for further reading.
   int initial_key;
+  char flatted_key;
   // There is one annotation for each line above the initial letter
   char *annotation[NUM_ANNOTATIONS];
   // See source_info above for comments about the move of author etc.
@@ -455,8 +457,10 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define GRE_FLAT 4
 #define GRE_NATURAL 5
 #define GRE_C_KEY_CHANGE 6
+#define GRE_C_KEY_CHANGE_FLATED 14
 #define GRE_SYLLABLE 11
 #define GRE_F_KEY_CHANGE 7
+#define GRE_F_KEY_CHANGE_FLATED 15
 #define GRE_END_OF_LINE 8
 #define GRE_SPACE 9
 #define GRE_BAR 10
@@ -468,6 +472,8 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define F_KEY 'f'
 #define NO_KEY -5
 #define DEFAULT_KEY 5
+#define FLAT_KEY 25
+#define NO_FLAT_KEY 0
 
 
 #define MONOPHONY 0
