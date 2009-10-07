@@ -46,6 +46,7 @@ write_score (FILE * f, gregorio_score * score)
   char first_syllable = 0;
   char clef_letter;
   int clef_line;
+  char clef_has_flat = 0;
   gregorio_syllable *current_syllable;
   // the current line (as far as we know), it is always 0, it can be 1 in the case of the first line of a score with a two lines initial
   unsigned char line = 0;
@@ -164,13 +165,22 @@ write_score (FILE * f, gregorio_score * score)
       gregorio_det_step_and_line_from_key (score->
 					   first_voice_info->initial_key,
 					   &clef_letter, &clef_line);
+	  if (score->first_voice_info->flatted_key == FLAT_KEY)
+	    {
+	      clef_has_flat = 1;
+	    }
+	  else
+	    {
+	      clef_has_flat = 0;
+	    }  
     }
   else
     {
       clef_letter = 'c';
       clef_line = 3;
+      clef_has_flat = 0;
     }
-  fprintf (f, "\\setinitialclef{%c}{%d}%%\n", clef_letter, clef_line);
+  fprintf (f, "\\setinitialclef{%c}{%d}{%d}%%\n", clef_letter, clef_line, clef_has_flat);
   current_syllable = score->first_syllable;
   while (current_syllable)
     {
@@ -351,14 +361,31 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	  if (current_element->previous_element &&
 	       current_element->previous_element->type == GRE_BAR)
 	    {
-	      // the third argument is 0 or 1 according to the need for a space before the clef
-          fprintf (f, "\\changeclef{c}{%d}{0}%%\n",
-		     current_element->element_type - 48);
+	      if (current_element->additional_infos == FLAT_KEY)
+	        {
+	          // the third argument is 0 or 1 according to the need for a space before the clef
+              fprintf (f, "\\changeclef{c}{%d}{0}{1}%%\n",
+		         current_element->element_type - 48);
+	        }
+	      else
+	        {
+	          fprintf (f, "\\changeclef{c}{%d}{0}{0}%%\n",
+		         current_element->element_type - 48);
+	        }
 	    }
 	  else
 	    {
-          fprintf (f, "\\changeclef{c}{%d}{1}%%\n",
-		    current_element->element_type - 48);
+	      if (current_element->additional_infos == FLAT_KEY)
+	        {
+	          // the third argument is 0 or 1 according to the need for a space before the clef
+              fprintf (f, "\\changeclef{c}{%d}{1}{1}%%\n",
+		         current_element->element_type - 48);
+	        }
+	      else
+	        {
+	          fprintf (f, "\\changeclef{c}{%d}{1}{0}%%\n",
+		         current_element->element_type - 48);
+	        }
 		}
 	  current_element = current_element->next_element;
 	  continue;

@@ -104,7 +104,8 @@
 }
 
 % macro that writes the initial key, and sets the next keys to the same value
-\def\setinitialclef#1#2{%
+% if #3 is 1, it means that we must put a flat after the key
+\def\setinitialclef#1#2#3{%
 \calculateclefnum{#1}{#2}%
 \ifnum\lastoflinecount=2\relax % we must not type a space if there is no initial
 \typekey{#1}{#2}{0}{0}%
@@ -123,7 +124,8 @@
 % macro called when the key changes
 % #1 and #2 are the type and line of the clef
 % #3 is 1 or 0 according to the need of a space before the clef. Useful for clefs after bars for example
-\def\changeclef#1#2#3{%
+% if #4 is 1, it means that we must put a flat after the key
+\def\changeclef#1#2#3#4{%
 \calculateclefnum{#1}{#2}%
 \clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
 \multiply\clefchangespace by \the\grefactor %
