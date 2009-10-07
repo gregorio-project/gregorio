@@ -1,6 +1,6 @@
 /*
 Gregorio structure manipulation headers.
-Copyright (C) 2006 Elie Roux
+Copyright (C) 2006-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License

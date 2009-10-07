@@ -1,6 +1,6 @@
 /* 
 Gregorio command line interface.
-Copyright (C) 2006-2008 Elie Roux <elie.roux@telecom-bretagne.eu>
+Copyright (C) 2006-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
