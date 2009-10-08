@@ -38,6 +38,9 @@ DECLARE_PLUGIN (gregoriotex)
     "Elie Roux <elie.roux@enst-bretagne.fr>",.file_extension = "tex",.type =
     GREGORIO_PLUGIN_OUTPUT,.write = write_score};
 
+// the value indicating to GregorioTeX that there is no flat
+#define NO_KEY_FLAT 'a'
+    
 void
 write_score (FILE * f, gregorio_score * score)
 {
@@ -46,7 +49,7 @@ write_score (FILE * f, gregorio_score * score)
   char first_syllable = 0;
   char clef_letter;
   int clef_line;
-  char clef_has_flat = 0;
+  char clef_flat = NO_KEY_FLAT;
   gregorio_syllable *current_syllable;
   // the current line (as far as we know), it is always 0, it can be 1 in the case of the first line of a score with a two lines initial
   unsigned char line = 0;
@@ -167,20 +170,20 @@ write_score (FILE * f, gregorio_score * score)
 					   &clef_letter, &clef_line);
 	  if (score->first_voice_info->flatted_key == FLAT_KEY)
 	    {
-	      clef_has_flat = 1;
+	      clef_flat = libgregorio_gregoriotex_clef_flat_height(clef_letter, clef_line);
 	    }
 	  else
 	    {
-	      clef_has_flat = 0;
+	      clef_flat = NO_KEY_FLAT;
 	    }  
     }
   else
     {
       clef_letter = 'c';
       clef_line = 3;
-      clef_has_flat = 0;
+      clef_flat = NO_KEY_FLAT;
     }
-  fprintf (f, "\\setinitialclef{%c}{%d}{%d}%%\n", clef_letter, clef_line, clef_has_flat);
+  fprintf (f, "\\setinitialclef{%c}{%d}{%c}%%\n", clef_letter, clef_line, clef_flat);
   current_syllable = score->first_syllable;
   while (current_syllable)
     {
@@ -364,13 +367,13 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	      if (current_element->additional_infos == FLAT_KEY)
 	        {
 	          // the third argument is 0 or 1 according to the need for a space before the clef
-              fprintf (f, "\\changeclef{c}{%d}{0}{1}%%\n",
-		         current_element->element_type - 48);
+              fprintf (f, "\\changeclef{c}{%d}{0}{%c}%%\n",
+		         current_element->element_type - 48, libgregorio_gregoriotex_clef_flat_height('c', current_element->element_type - 48));
 	        }
 	      else
 	        {
-	          fprintf (f, "\\changeclef{c}{%d}{0}{0}%%\n",
-		         current_element->element_type - 48);
+	          fprintf (f, "\\changeclef{c}{%d}{0}{%c}%%\n",
+		         current_element->element_type - 48, NO_KEY_FLAT);
 	        }
 	    }
 	  else
@@ -378,13 +381,13 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	      if (current_element->additional_infos == FLAT_KEY)
 	        {
 	          // the third argument is 0 or 1 according to the need for a space before the clef
-              fprintf (f, "\\changeclef{c}{%d}{1}{1}%%\n",
-		         current_element->element_type - 48);
+              fprintf (f, "\\changeclef{c}{%d}{1}{%c}%%\n",
+		         current_element->element_type - 48, libgregorio_gregoriotex_clef_flat_height('c', current_element->element_type - 48));
 	        }
 	      else
 	        {
-	          fprintf (f, "\\changeclef{c}{%d}{1}{0}%%\n",
-		         current_element->element_type - 48);
+	          fprintf (f, "\\changeclef{c}{%d}{1}{%c}%%\n",
+		         current_element->element_type - 48, NO_KEY_FLAT);
 	        }
 		}
 	  current_element = current_element->next_element;
@@ -970,6 +973,66 @@ libgregorio_gregoriotex_write_element (FILE * f,
 	    }
 	}
       current_glyph = current_glyph->next_glyph;
+    }
+}
+
+// a function to compute the height of the flat of a key
+// the flat is always on the line of the 
+
+char
+libgregorio_gregoriotex_clef_flat_height(char step, int line)
+{
+  switch(step)
+    {
+    case C_KEY:
+      switch (line)
+      {
+        case 1:
+          return 'c';
+          break;
+        case 2:
+          return 'e';
+          break;
+        case 3:
+          return 'g';
+          break;
+        case 4:
+          return 'i';
+          break;
+        default:
+          gregorio_message (_("unknown line number"),
+			"libgregorio_gregoriotex_clef_flat_height", ERROR, 0);
+          return 'g';
+          break;
+      }
+      break;
+    case F_KEY:
+      switch (line)
+      {
+        case 1:
+          return 'g';
+          break;
+        case 2:
+          return 'i';
+          break;
+        case 3:
+          return 'e';
+          break;
+        case 4:
+          return 'g';
+          break;
+        default:
+          gregorio_message (_("unknown line number"),
+			"libgregorio_gregoriotex_clef_flat_height", ERROR, 0);
+          return 'g';
+          break;
+      }
+      break;
+    default:
+      gregorio_message (_("unknown clef type"),
+			"libgregorio_gregoriotex_clef_flat_height", ERROR, 0);
+      return 'g';
+      break;
     }
 }
 

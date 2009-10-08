@@ -176,4 +176,6 @@ void libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph, i
 void libgregorio_gregoriotex_write_additional_line (FILE * f, gregorio_glyph *current_glyph, int i, char type, char bottom_or_top, gregorio_note * current_note);
 
 void libgregorio_gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line);
+
+char libgregorio_gregoriotex_clef_flat_height(char step, int line);
 #endif

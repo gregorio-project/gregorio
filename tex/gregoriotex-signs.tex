@@ -30,12 +30,13 @@
 %% marcro to define the clef that will appear at the beginning of the lines
 % the first argument is the type : f or c, and the second is the height
 % the third argument is whether we must type a space after or not (0 if not, 1 if yes)
-\def\setlinesclef#1#2#3{%
+% if the fourth argument is a, it means that we must not put a flat after the key, otherwise it's the height of the flat
+\def\setlinesclef#1#2#3#4{%
 \grelocalleftbox{%
 \kern\additionalleftspace %
 \copy\Lines% draws the lines
 \unkern %
-\hbox{\typekey{#1}{#2}{0}{#3}\hskip\afterclefnospace}%
+\hbox{\typekey{#1}{#2}{0}{#3}{#4}\hskip\afterclefnospace}%
 }%
 \relax%
 }
@@ -68,7 +69,8 @@
 %% #2: the line of the key (1 is the lowest)
 %% #3: if we must use small key characters (inside a line) or not 0 if not inside, 1 if inside
 %% #4: if we must type a space after or not
-\def\typekey#1#2#3#4{%
+%% #5: if a, it means that we must not put a flat after the key, otherwise it's the height of the flat
+\def\typekey#1#2#3#4#5{%
 \ifcase#2 %
 \or%
 \calculateglyphraisevalue{c}{0}%
@@ -85,34 +87,42 @@
 \fi %
 \ifx c#1% we check if it is a c key
 \ifcase#3%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 1\hskip\tempskip}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 1}%\hskip\tempskip}%
 \setbox\Tempwidth=\hbox{\gregorianfont \char 1}%
 \global\clefwidth=\wd\Tempwidth %
 \or%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 3\hskip\tempskip}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 3}%\hskip\tempskip}%
 \fi%
 \else % we consider that it is a f key
 \ifcase#3%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 2\hskip\tempskip}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 2}%\hskip\tempskip}%
 \setbox\Tempwidth=\hbox{\gregorianfont \char 2}%
 \global\clefwidth=\wd\Tempwidth %
 \or%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 4\hskip\tempskip}%
+\raise\glyphraisevalue\hbox{\gregorianfont \char 4}%\hskip\tempskip}%
 \fi%
 \fi%
-\relax%
+\ifx a#5%
+\hskip\tempskip %
+\else %
+\calculateglyphraisevalue{#5}{0}%
+\hskip\clefflatspace\raise\glyphraisevalue\hbox{\gregorianfont \char 6}%
+\hskip\tempskip %
+\fi %
+\relax %
 }
 
 % macro that writes the initial key, and sets the next keys to the same value
-% if #3 is 1, it means that we must put a flat after the key
+% if #3 is a, it means that we must not put a flat after the key, otherwise it's the height
+% of the flat
 \def\setinitialclef#1#2#3{%
 \calculateclefnum{#1}{#2}%
 \ifnum\lastoflinecount=2\relax % we must not type a space if there is no initial
-\typekey{#1}{#2}{0}{0}%
+\typekey{#1}{#2}{0}{0}{#3}%
 \else %
-\typekey{#1}{#2}{0}{1}%
+\typekey{#1}{#2}{0}{1}{#3}%
 \fi %
-\setlinesclef{#1}{#2}{1}%
+\setlinesclef{#1}{#2}{1}{#3}%
 % if the initial is big, then we adjust the second line
 \ifnum\biginitial=0\relax %
 \else %
@@ -124,7 +134,8 @@
 % macro called when the key changes
 % #1 and #2 are the type and line of the clef
 % #3 is 1 or 0 according to the need of a space before the clef. Useful for clefs after bars for example
-% if #4 is 1, it means that we must put a flat after the key
+% if #4 is a, it means that we must not put a flat after the key, otherwise it's the height
+% of the flat
 \def\changeclef#1#2#3#4{%
 \calculateclefnum{#1}{#2}%
 \clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
@@ -135,21 +146,21 @@
 % here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
 \hskip -\spacearoundclefbars %
 \fi %
-\typekey{#1}{#2}{1}{0}%
+\typekey{#1}{#2}{1}{0}{#4}%
 \hskip\clefchangespace %
-\setlinesclef{#1}{#2}{1}%
+\setlinesclef{#1}{#2}{1}{#4}%
 \relax%
 }
 
 % macro called when the key changes inside a syllable
 
-\def\inchangeclef#1#2{%
+\def\inchangeclef#1#2#3{%
 \clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
 \multiply\clefchangespace by \grefactor %
 \hskip\clefchangespace %
-\typekey{#1}{#2}{1}{0}%
+\typekey{#1}{#2}{1}{0}{#3}%
 \hskip\clefchangespace %
-\setlinesclef{#1}{#2}%
+\setlinesclef{#1}{#2}{0}{#3}%
 \relax%
 }
 

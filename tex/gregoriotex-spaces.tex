@@ -30,6 +30,9 @@
 % space between an alteration (flat or natural) and the next glyph
 \newskip\alterationspace
 
+% space between a clef and a flat (for clefs with flat)
+\newskip\clefflatspace
+
 % negative space, difference between the normal space between two notes and the space between a note and a flat
 \newskip\beforealterationspace
 
@@ -167,6 +170,9 @@
 %
 \alterationspace = 8500 sp plus 1400 sp minus 500 sp%
 \multiply\alterationspace by \grefactor %
+%
+\clefflatspace = 6000 sp plus 700 sp minus 700 sp%
+\multiply\clefflatspace by \grefactor %
 %
 \beforealterationspace = -36000 sp plus 1200 sp minus 1200 sp%
 \multiply\beforealterationspace by \grefactor %
