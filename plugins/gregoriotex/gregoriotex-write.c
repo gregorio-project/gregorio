@@ -1016,10 +1016,10 @@ libgregorio_gregoriotex_clef_flat_height(char step, int line)
           return 'i';
           break;
         case 3:
-          return 'e';
+          return 'd';
           break;
         case 4:
-          return 'g';
+          return 'f';
           break;
         default:
           gregorio_message (_("unknown line number"),
