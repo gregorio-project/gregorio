@@ -21,7 +21,7 @@
 %% macros for the typesetting of the clefs of the beginning of lines and custos
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% a count describing the clef : 1 for c on the first (bottom) line, 2 for c on the second line, 5 for f on the first, etc.
+% a count describing the clef line and pitch : 1 for c on the first (bottom) line, 2 for c on the second line, 5 for f on the first, etc.
 \newcount\clefnum
 
 % the width of the clef
@@ -42,9 +42,11 @@
 }
 
 %% macro calculating the \clefnum from the letter and number
-% #1 is the letter, and #2 the line number
-\def\calculateclefnum#1#2{%
-\global\clefnum=#2%
+% #1 is the letter, and #2 the line number, #3 is a if not flated
+% and otherwise the height of the flat
+\def\calculateclefnum#1#2#3{%
+\global\clefnum=#2\relax %
+\global\xdef\clefflat{#3}
 \ifx f#1%
 \global\advance\clefnum by 4\relax %
 \fi %
@@ -56,9 +58,9 @@
 \ifnum\clefnum > 5\relax%
 \tempcount=\clefnum %
 \advance\tempcount by -4\relax %
-\setlinesclef{f}{\tempcount}{1}%
+\setlinesclef{f}{\tempcount}{1}{\clefflat}%
 \else %
-\setlinesclef{c}{\clefnum}{1}%
+\setlinesclef{c}{\clefnum}{1}{\clefflat}%
 \fi %
 \relax %
 }
@@ -102,7 +104,7 @@
 \raise\glyphraisevalue\hbox{\gregorianfont \char 4}%\hskip\tempskip}%
 \fi%
 \fi%
-\ifx a#5%
+\if a#5%
 \hskip\tempskip %
 \else %
 \calculateglyphraisevalue{#5}{0}%
@@ -116,7 +118,7 @@
 % if #3 is a, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
 \def\setinitialclef#1#2#3{%
-\calculateclefnum{#1}{#2}%
+\calculateclefnum{#1}{#2}{#3}%
 \ifnum\lastoflinecount=2\relax % we must not type a space if there is no initial
 \typekey{#1}{#2}{0}{0}{#3}%
 \else %
@@ -137,7 +139,7 @@
 % if #4 is a, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
 \def\changeclef#1#2#3#4{%
-\calculateclefnum{#1}{#2}%
+\calculateclefnum{#1}{#2}{#4}%
 \clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
 \multiply\clefchangespace by \the\grefactor %
 \ifnum#3=1\relax %
