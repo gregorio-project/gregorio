@@ -1,3 +1,17 @@
+gregorio (0.9.3-1) unstable; urgency=low
+
+  * New upstream version:
+     - fixing a lot of bugs
+     - changing the number of arguments of some TeX function
+     - changing the glyph names
+     - adding the possibility to put a flat after the clef
+     - adding the possibility to put a custo before a clef change
+
+  * Adding instructions about adding gregorio to the list of the 
+    programs allowed to be executed from TeX in the README.Debian
+
+ -- Elie Roux <elie.roux@telecom-bretagne.eu>  Wed, 14 Dec 2009 21:50:45 +0300
+
 gregorio (0.9.2-1) unstable; urgency=low
 
   * New upstream version:
