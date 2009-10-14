@@ -46,7 +46,7 @@
 % and otherwise the height of the flat
 \def\calculateclefnum#1#2#3{%
 \global\clefnum=#2\relax %
-\global\xdef\clefflat{#3}
+\global\xdef\clefflat{#3}%
 \ifx f#1%
 \global\advance\clefnum by 4\relax %
 \fi %
