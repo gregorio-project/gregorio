@@ -20,117 +20,163 @@
 %% macros for the typesetting of spaces
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% All the following values correspond to a grefactor of 1,
+%% so in most cases it will be much smaller that what you will finally
+%% get with an average factor (17 is the default value for the factor).
+%% We multiply all the columns by the factor when the factor changes,
+%% and it changes at the beginning of the first score by default.
+
+%%%%%%%%%%%%%%%%%%%%
+%% horizontal spaces
+%%%%%%%%%%%%%%%%%%%%
+
 % null space
 \newskip\zerowidthspace
 \zerowidthspace=0pt plus 0pt minus 0pt
 
 % space between glyphs in the same element
 \newskip\interglyphspace
+\interglyphspace = 7600 sp plus 400 sp minus 400 sp%
 
 % space between an alteration (flat or natural) and the next glyph
 \newskip\alterationspace
+\alterationspace = 8500 sp plus 1400 sp minus 500 sp%
 
 % space between a clef and a flat (for clefs with flat)
 \newskip\clefflatspace
+\clefflatspace = 6000 sp plus 700 sp minus 700 sp%
 
 % negative space, difference between the normal space between two notes and the space between a note and a flat
 \newskip\beforealterationspace
+\beforealterationspace = -36000 sp plus 1200 sp minus 1200 sp%
 
 % space between elements
 \newskip\interelementspace
+\interelementspace = 7600 sp plus 200 sp minus 400 sp%
 
 % larger space between elements
 \newskip\largerspace
+\largerspace = 12000 sp plus 2000 sp minus 1000 sp%
 
 % space between elements which has the size of a note
 \newskip\glyphspace
+\glyphspace = 24000 sp plus 2000 sp minus 2000 sp%
 
 % minimum space between two notes of different syllables
 \newskip\intersyllablespace
+\intersyllablespace= 28000 sp plus 35000 sp minus 0 sp%
 
 % space before custo
 \newskip\spacebeforecusto
+\spacebeforecusto = 20000 sp plus 35000 sp minus 7000 sp%
 
 % space before punctum mora and augmentum duplex
 \newskip\spacebeforesigns
+\spacebeforesigns= 6000 sp plus 500 sp minus 500 sp%
 
 % space after punctum mora and augmentum duplex
 \newskip\spaceaftersigns
+\spaceaftersigns= 9000 sp plus 900 sp minus 900 sp%
 
 % space after a clef at the beginning of a line
 \newskip\spaceafterlineclef
+\spaceafterlineclef = 30000 sp plus 16000 sp minus 1500 sp%
 
 % space after at the end of a word when the last written symbol is a note and the first is a note
 \newskip\interwordspacenotes
+\interwordspacenotes = 32000 sp plus 9600 sp minus 6000 sp%
 
 % space after at the end of a word when the last written symbol is a note and the first is text
 \newskip\interwordspacenotestext
+\interwordspacenotestext = 30000 sp plus 30000 sp minus 8000 sp%
 
 % space after at the end of a word when the last written symbol is text and the first is a note
 \newskip\interwordspacetextnotes
+\interwordspacetextnotes = 30000 sp plus 30000 sp minus 8000 sp%
 
 % space after at the end of a word when the last written symbol is text and the first is text
 \newskip\interwordspacetext
+\interwordspacetext = 25000 sp plus 45000 sp minus 8000 sp%
 
 % space between notes of a bivirga or trivirga
 \newskip\bitrivirspace
+\bitrivirspace = 7600 sp plus 200 sp minus 600 sp%
 
 % space between notes of a bistropha or tristropha
 \newskip\bitristrospace
+\bitristrospace = 7600 sp plus 200 sp minus 600 sp%
 
 % space between two punctum inclinatum
 \newskip\punctuminclinatumshift
+\punctuminclinatumshift= -2350 sp plus 100 sp minus 100 sp%
 
 % space before puncta inclinata
 \newskip\beforepunctainclinatashift
+\beforepunctainclinatashift= 5800 sp plus 800 sp minus 500 sp%
 
 % space between a punctum inclinatum and a punctum inclinatum deminutus
 \newskip\punctuminclinatumanddebilisshift
+\punctuminclinatumanddebilisshift= -1700 sp plus 100 sp minus 100 sp%
 
 % space between two punctum inclinatum deminutus
 \newskip\punctuminclinatumdebilisshift
+\punctuminclinatumdebilisshift= -100 sp plus 100 sp minus 100 sp%
 
 % space between puncta inclinata, larger ambitus (range=3rd)
 \newskip\punctuminclinatumbigshift %
+\punctuminclinatumbigshift= 9800 sp plus 100 sp minus 100 sp%
 
 % space between puncta inclinata, larger ambitus (range=4th -or more?-)
 \newskip\punctuminclinatummaxshift %
+\punctuminclinatummaxshift= 19600 sp plus 100 sp minus 100 sp%
 
 % space for the bars (inside syllables)
 %first for virgula and divisio minima
 \newskip\spacearoundsmallbar
+\spacearoundsmallbar = 20000 sp plus 10000 sp minus 6000 sp%
 
 %then divisio minor
 \newskip\spacearoundminor
+\spacearoundminor = 20000 sp plus 15000 sp minus 6000 sp%
 
 %divisio major
 \newskip\spacearoundmaior
+\spacearoundmaior = 20000 sp plus 15000 sp minus 6000 sp%
 
 %divisio finalis
 \newskip\spacearoundfinalis
+\spacearoundfinalis = 20000 sp plus 10000 sp minus 6000 sp%
 
 %a special space for finalis, for when it is the last glyph
 \newskip\spacebeforefinalfinalis
+\spacebeforefinalfinalis= 32000 sp plus 8000 sp minus 16000 sp%
 
 % the space that will appear around bars that are preceded by a custo and followed by a key.
 % well... actually it's the difference between the normal space around bars and the space described previously.
 \newskip\spacearoundclefbars
+\spacearoundclefbars= 4000 sp plus 500 sp minus 100 sp%
 
 % space between the text and the text of the bar
 \newskip\textbartextspace
+\textbartextspace = 27000 sp plus 15000 sp minus 5400 sp%
 
 % minimal space between a note and a bar
 \newskip\notebarspace
+\notebarspace = 35000 sp plus 30000 sp minus 3100 sp%
 
+% maximal space between two syllables for which we consider a dash is not needed
 \newdimen\maximumspacewithoutdash
+\maximumspacewithoutdash = 2200 sp%
 
 % an extensible space for the beginning of lines
 \newskip\afterclefnospace
+\afterclefnospace = 0 pt plus 30000 sp minus 0 pt%
 
 % width of the additional lines, used only for the custos (maybe should depend on the width of the custo...)
 % the width is the one for the custos at end of lines, the line for custos in the middle of a score is the same
 % multiplied by 2.
 \newdimen\additionallineswidth
+\additionallineswidth = 17000 sp%
 
 % space between the initial and the beginning of the score
 \newskip\afterinitialshift
@@ -161,114 +207,137 @@
 \relax %
 }
 
+%%%%%%%%%%%%%%%%%%
+%% vertical spaces
+%%%%%%%%%%%%%%%%%%
+
+% \stafflineheight is the height of a staff line
+\newdimen\stafflineheight
+\stafflineheight=1500 sp%
+
+% \interstafflinespace is the space between two lines of staff
+\newdimen\interstafflinespace
+\interstafflinespace=30000 sp%
+
+%the space above the lines
+\newskip\spaceabovelines
+\spaceabovelines = 50000 sp plus 40000 sp minus 10000 sp%
+
+%the space between the lines and the bottom of the text
+\newskip\spacelinestext
+\spacelinestext = 66500 sp plus 0 sp minus 0 sp%
+
+%the space beneath the text
+\newskip\spacebeneathtext
+\global\spacebeneathtext = 0 sp plus 0 sp minus 0 sp%
+
+%%% the following values are computed from the others, after some calculus
+
+%constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
+\newdimen\constantglyphraise %
+
+% \staffheight is the total height of the staff : that is to say the four written lines
+\newdimen\staffheight 
+
+% \stafflinewidth is the width of a line of staff, this can vary, for example at the first line
+\newdimen\stafflinewidth
+
 % space for the clef changes
 \newskip\clefchangespace
 
-\def\setgrespaces{%
-\interglyphspace = 7600 sp plus 400 sp minus 400 sp%
-\multiply\interglyphspace by \grefactor %
-%
-\alterationspace = 8500 sp plus 1400 sp minus 500 sp%
-\multiply\alterationspace by \grefactor %
-%
-\clefflatspace = 6000 sp plus 700 sp minus 700 sp%
-\multiply\clefflatspace by \grefactor %
-%
-\beforealterationspace = -36000 sp plus 1200 sp minus 1200 sp%
-\multiply\beforealterationspace by \grefactor %
-%
-\interelementspace = 7600 sp plus 200 sp minus 400 sp%
-\multiply\interelementspace by \grefactor %
-%
-\largerspace = 12000 sp plus 2000 sp minus 1000 sp%
-\multiply\largerspace by \grefactor %
-%
-\glyphspace = 24000 sp plus 2000 sp minus 2000 sp%
-\multiply\glyphspace by \grefactor %
-%
-\intersyllablespace= 28000 sp plus 35000 sp minus 0 sp%
-\multiply\intersyllablespace by \grefactor %
-%
-\spacebeforecusto = 20000 sp plus 35000 sp minus 7000 sp%
-\multiply\spacebeforecusto by \grefactor %
-%
-\spacebeforesigns= 6000 sp plus 500 sp minus 500 sp%
-\multiply\spacebeforesigns by \grefactor %
-%
-\spaceaftersigns= 9000 sp plus 900 sp minus 900 sp%
-\multiply\spaceaftersigns by \grefactor %
-%
-\spaceafterlineclef = 30000 sp plus 16000 sp minus 1500 sp%
-\multiply\spaceafterlineclef by \grefactor %
-%
-\interwordspacenotes = 32000 sp plus 9600 sp minus 6000 sp%
-\multiply\interwordspacenotes by \grefactor %
-%
-\interwordspacenotestext = 30000 sp plus 30000 sp minus 8000 sp%
-\multiply\interwordspacenotestext by \grefactor %
-%
-\interwordspacetextnotes = 30000 sp plus 30000 sp minus 8000 sp%
-\multiply\interwordspacetextnotes by \grefactor %
-%
-\interwordspacetext = 25000 sp plus 45000 sp minus 8000 sp%
-\multiply\interwordspacetext by \grefactor %
-%
-\bitrivirspace = 7600 sp plus 200 sp minus 600 sp%
-\multiply\bitrivirspace by \grefactor %
-%
-\bitristrospace = 7600 sp plus 200 sp minus 600 sp%
-\multiply\bitristrospace by \grefactor %
-%
-\punctuminclinatumshift= -2350 sp plus 100 sp minus 100 sp%
-\multiply\punctuminclinatumshift by \grefactor %
-%
-\beforepunctainclinatashift= 5800 sp plus 800 sp minus 500 sp%
-\multiply\beforepunctainclinatashift by \grefactor %
-%
-\punctuminclinatumanddebilisshift= -1700 sp plus 100 sp minus 100 sp%
-\multiply\punctuminclinatumanddebilisshift by \grefactor %
-%
-\punctuminclinatumdebilisshift= -100 sp plus 100 sp minus 100 sp%
-\multiply\punctuminclinatumdebilisshift by \grefactor %
-%
-\punctuminclinatumbigshift= 9800 sp plus 100 sp minus 100 sp%
-\multiply\punctuminclinatumbigshift by \grefactor%
-%
-\punctuminclinatummaxshift= 19600 sp plus 100 sp minus 100 sp%
-\multiply\punctuminclinatummaxshift by \grefactor%
-%
-\spacearoundsmallbar = 20000 sp plus 10000 sp minus 6000 sp%
-\multiply\spacearoundsmallbar by \grefactor %
-%
-\spacearoundminor = 20000 sp plus 15000 sp minus 6000 sp%
-\multiply\spacearoundminor by \grefactor %
-%
-\spacearoundmaior = 20000 sp plus 15000 sp minus 6000 sp%
-\multiply\spacearoundmaior by \grefactor %
-%
-\spacearoundfinalis = 20000 sp plus 10000 sp minus 6000 sp%
-\multiply\spacearoundfinalis by \grefactor %
-%
-\spacebeforefinalfinalis= 32000 sp plus 8000 sp minus 16000 sp%
-\multiply\spacebeforefinalfinalis by \grefactor %
-%
-\spacearoundclefbars= 4000 sp plus 500 sp minus 100 sp%
-\multiply\spacearoundclefbars by \grefactor %
-%
-\textbartextspace = 27000 sp plus 15000 sp minus 5400 sp%
-\multiply\textbartextspace by \grefactor %
-%
-\notebarspace = 35000 sp plus 30000 sp minus 3100 sp%
-\multiply\notebarspace by \grefactor %
-%
-\maximumspacewithoutdash = 2200 sp%
-\multiply\maximumspacewithoutdash by \grefactor %
-%
-\afterclefnospace = 0 pt plus 30000 sp minus 0 pt%
-\multiply\afterclefnospace by \grefactor %
-%
-\additionallineswidth = 17000 sp%
-\multiply\additionallineswidth by \grefactor %
-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% dimension changing macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% This macro changes one dim (#1) to the value #2, with the current factor.
+%% If the factor is 0, it takes the default value (17), but warning: this
+%% means that you have to set your personal grefactor before changing the values,
+%% or use the next macro.
+\def\changegredim#1#2{%
+\ifnum\grefactor=0\relax %
+\changegredimatfactor{#1}{#2}{17}%
+\else %
+\changegredimatfactor{#1}{#2}{\grefactor}%
+\fi %
+\relax %
+}
+
+%% This macro changes one dimen (#1) to the value #2, at the factor specified
+%% in #3.
+\def\changegredimatfactor#1#2#3{%
+#1=#2%
+\ifnum #3=\grefactor\else %
+\divide #1 by \number #3%
+\ifnum\grefactor=0\else % 
+% if grefactor = 0 it means that we must consider it's 1,
+% as we are before the beginning of the first score.
+\multiply #1 by \grefactor %
+\fi %
+\fi %
+\setgreverticalspaces %
+\relax %
+}
+
+%% Here is the function to compute some more vertical spaces from the basic values
+\def\setgreverticalspaces{%
+\staffheight=4\stafflineheight %
+\advance\staffheight by 3\interstafflinespace %
+%\global\multiply\spacebeneathtext by \grefactor % uncomment it if you want
+% something else than 0
+\global\textlower=\spacebeneathtext %
+\global\calculateconstantglyphraise %
+\relax %
+}
+
+%% an aux function adapting the value #1 from the factor #2 to the factor #3
+\def\changeonedimenfactor#1#2#3{%
+\global\divide #1 by \number #2%
+\global\multiply #1 by \number #3%
+\relax %
+}
+%% this function changes all the values of the spaces (vertical and horizontal) from one factor to another
+%% simply by dividing them by the old factor, and multiplying them by the new one.
+% #1 is the old grefactor, #2 is the new one
+\def\changedimenfactor#1#2{%
+\changeonedimenfactor{\stafflineheight}{#1}{#2}%
+\changeonedimenfactor{\interstafflinespace}{#1}{#2}%
+\changeonedimenfactor{\spaceabovelines}{#1}{#2}%
+\changeonedimenfactor{\spacelinestext}{#1}{#2}%
+\changeonedimenfactor{\spacebeneathtext}{#1}{#2}%
+\changeonedimenfactor{\interglyphspace}{#1}{#2}%
+\changeonedimenfactor{\alterationspace}{#1}{#2}%
+\changeonedimenfactor{\clefflatspace}{#1}{#2}%
+\changeonedimenfactor{\beforealterationspace}{#1}{#2}%
+\changeonedimenfactor{\interelementspace}{#1}{#2}%
+\changeonedimenfactor{\largerspace}{#1}{#2}%
+\changeonedimenfactor{\glyphspace}{#1}{#2}%
+\changeonedimenfactor{\intersyllablespace}{#1}{#2}%
+\changeonedimenfactor{\spacebeforecusto}{#1}{#2}%
+\changeonedimenfactor{\spacebeforesigns}{#1}{#2}%
+\changeonedimenfactor{\spaceaftersigns}{#1}{#2}%
+\changeonedimenfactor{\spaceafterlineclef}{#1}{#2}%
+\changeonedimenfactor{\interwordspacenotes}{#1}{#2}%
+\changeonedimenfactor{\interwordspacenotestext}{#1}{#2}%
+\changeonedimenfactor{\interwordspacetextnotes}{#1}{#2}%
+\changeonedimenfactor{\interwordspacetext}{#1}{#2}%
+\changeonedimenfactor{\bitrivirspace}{#1}{#2}%
+\changeonedimenfactor{\bitristrospace}{#1}{#2}%
+\changeonedimenfactor{\punctuminclinatumshift}{#1}{#2}%
+\changeonedimenfactor{\beforepunctainclinatashift}{#1}{#2}%
+\changeonedimenfactor{\punctuminclinatumanddebilisshift}{#1}{#2}%
+\changeonedimenfactor{\punctuminclinatumdebilisshift}{#1}{#2}%
+\changeonedimenfactor{\punctuminclinatumbigshift}{#1}{#2}%
+\changeonedimenfactor{\punctuminclinatummaxshift}{#1}{#2}%
+\changeonedimenfactor{\spacearoundsmallbar}{#1}{#2}%
+\changeonedimenfactor{\spacearoundminor}{#1}{#2}%
+\changeonedimenfactor{\spacearoundmaior}{#1}{#2}%
+\changeonedimenfactor{\spacearoundfinalis}{#1}{#2}%
+\changeonedimenfactor{\spacebeforefinalfinalis}{#1}{#2}%
+\changeonedimenfactor{\spacearoundclefbars}{#1}{#2}%
+\changeonedimenfactor{\textbartextspace}{#1}{#2}%
+\changeonedimenfactor{\notebarspace}{#1}{#2}%
+\changeonedimenfactor{\maximumspacewithoutdash}{#1}{#2}%
+\changeonedimenfactor{\afterclefnospace}{#1}{#2}%
+\changeonedimenfactor{\additionallineswidth}{#1}{#2}%
 \relax %
 }

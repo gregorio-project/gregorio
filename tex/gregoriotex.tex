@@ -190,48 +190,7 @@
 %% vertical spaces
 %%%%%%%%%%%%%%%%%%
 
-% \stafflineheight is the height of a staff line
-\newdimen\stafflineheight
-% \interstafflinespace is the space between two lines of staff
-\newdimen\interstafflinespace
-% \staffheight is the total height of the staff : that is to say the four written lines
-\newdimen\staffheight 
-
-% vertical spaces
-%the space above the lines
-\newskip\spaceabovelines
-
-%the space between the lines and the bottom of the text
-\newskip\spacelinestext
-
-%the space beneath the text
-\newskip\spacebeneathtext
-
-%constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
-\newdimen\constantglyphraise %
-
-
-% \stafflinewidth is the width of a line of staff, this can vary, for example at the first line
-\newdimen\stafflinewidth
-
-\def\setgreverticalspaces{
-\global\stafflineheight=1500 sp%
-\global\multiply\stafflineheight by \the\grefactor %
-\global\interstafflinespace=30000 sp%
-\global\multiply\interstafflinespace by \the\grefactor %
-\global\staffheight=4\stafflineheight %
-\global\advance\staffheight by 3\interstafflinespace %
-\global\spaceabovelines = 50000 sp plus 40000 sp minus 10000 sp%
-\global\multiply\spaceabovelines by \grefactor %
-\global\spacelinestext = 66500 sp plus 0 sp minus 0 sp%
-\global\multiply\spacelinestext by \grefactor %
-\global\spacebeneathtext = 0 sp plus 0 sp minus 0 sp%
-%\global\multiply\spacebeneathtext by \grefactor % uncomment it if you want
-% something else than 0
-\global\textlower=\spacebeneathtext %
-\global\calculateconstantglyphraise %
-\relax %
-}
+\input gregoriotex-spaces.tex
 
 \newdimen\linewidth
 \linewidth=\hsize 
@@ -826,7 +785,7 @@ grechiro.atBeginScore()}%
 %% other macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% gregorioattr (see its definition in gregorio-syllable) is 0 when we are in a score, and unset (-1) when we are not
+% gregorioattr (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
 %macro called at the beginning of a score
 \def\begingregorioscore{%
@@ -1069,8 +1028,6 @@ gregoriotex.atScoreEnd()%
 \relax%
 }
 
-\input gregoriotex-spaces.tex
-
 \input gregoriotex-symbols.tex
 
 %%%%%%%%
@@ -1137,9 +1094,13 @@ gregoriotex.atScoreEnd()%
 }
 
 \def\setgrefactor#1{%
+\ifnum\grefactor=0\relax %
+\changedimenfactor{1}{#1}%
+\else %
+\changedimenfactor{\grefactor}{#1}%
+\fi %
 \global\grefactor=#1\relax %
 \setgreverticalspaces %
-\setgrespaces %
 \generatelines %
 \setgregorianfont{greciliae}%
 \relax %
