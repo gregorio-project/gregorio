@@ -35,7 +35,7 @@ DECLARE_PLUGIN (gregoriotex)
 {
 .id = "gtex",.name = "gregoriotex",.description =
     "GregorioTeX output plugin",.author =
-    "Elie Roux <elie.roux@enst-bretagne.fr>",.file_extension = "tex",.type =
+    "Elie Roux <elie.roux@telecom-bretagne.eu>",.file_extension = "tex",.type =
     GREGORIO_PLUGIN_OUTPUT,.write = write_score};
 
 // the value indicating to GregorioTeX that there is no flat
@@ -191,7 +191,7 @@ write_score (FILE * f, gregorio_score * score)
 					      &first_syllable, &line);
       current_syllable = current_syllable->next_syllable;
     }
-  fprintf (f, "\\endgregorioscore %%\n");
+  fprintf (f, "\\endgregorioscore %%\n\\endinput %%\n");
 }
 
 
