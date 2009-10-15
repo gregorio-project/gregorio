@@ -129,12 +129,22 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
     {
       if (current_glyph->type != GRE_GLYPH)
 	{
-	  //we ignore flats and naturals
+	  //we ignore flats and naturals, except if they are alone
 	  if (current_glyph->type == GRE_NATURAL
 	      || current_glyph->type == GRE_FLAT)
 	    {
-	      current_glyph = current_glyph->next_glyph;
-	      continue;
+          if (current_glyph->next_glyph)
+            {
+              current_glyph = current_glyph->next_glyph;
+	          continue;
+            }
+          else 
+            {
+              first_element = current_element;
+              close_element (&current_element, first_glyph);
+              current_glyph = current_glyph->next_glyph;
+              continue;
+            }
 	    }
 	  //we must not cut after a zero_width_space
 	  if (current_glyph->type == GRE_SPACE
