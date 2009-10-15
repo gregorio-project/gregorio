@@ -694,6 +694,8 @@ libgregorio_gtex_write_end (FILE * f, unsigned char style)
     case ST_CENTER:
       fprintf (f, "}{");
       break;
+    case ST_INITIAL:
+      break;
     default:
       fprintf (f, "}");
       break;
