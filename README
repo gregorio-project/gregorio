@@ -46,6 +46,16 @@ If you downloaded the sources from the svn repository
 For all the details about the options of autotools, read the file named
 INSTALL.
 
+There are some facilities in GregorioTeX to call gregorio directly from 
+TeX. To use them you have two solutions: you can call your TeX compiler
+(aleph or lualatex typically) with the option --shell-escape, or, if you
+have TeXLive 2009 (or later) installed, you can add gregorio to the list
+of the programs allowed to execute from TeX. This list is in the file
+texmf.cnf (typically C:\Program Files\texlive\2009\texmf\web2c\texmf.cnf
+under windows and /etc/texmf/texmf.cnf under Linux), at the line starting
+by 'shell_escape_commands = ', you simply have to add gregorio to this
+list of commands.
+
 USING the gregorio software:
 
 gregorio can handle several file types. To use the software for
