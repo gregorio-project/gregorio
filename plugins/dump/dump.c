@@ -327,8 +327,8 @@ write_score (FILE * f, gregorio_score * score)
 		  if ((glyph->type == GRE_FLAT)
 		      || (glyph->type == GRE_NATURAL))
 		    {
-		      fprintf (f, "       glyph_type            %d\n",
-			       glyph->glyph_type);
+		      fprintf (f, "       glyph_type            %d (%c)\n",
+			       glyph->glyph_type, glyph->glyph_type);
 		    }
 		  if ((glyph->type != GRE_SPACE) && (glyph->type != GRE_BAR)
 		      && (glyph->type != GRE_FLAT)
