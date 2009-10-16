@@ -28,13 +28,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "gabc.h"
 #include "gabc-score-determination-y.h"
+
+unsigned char style_stack = 0;
 %}
 
 %x attribute
 %x score
 %x notes
+%x style
 %x verb
-%x special
 
 %option stack
 %option pointer
@@ -178,53 +180,104 @@ semicolon. */
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
-<score><i> {
+<score,style><i> {
+	BEGIN(style);
+    style_stack ++;
 	return I_BEGINNING;
 	}
-<score><\/i> {
+<style><\/i> {
+    style_stack --;
+    if (style_stack == 0)
+      {
+        BEGIN(score);
+      }
 	return I_END;
 	}
-<score><tt> {
+<score,style><tt> {
+	BEGIN(style);
+    style_stack ++;
 	return TT_BEGINNING;
 	}
-<score><\/tt> {
+<style><\/tt> {
+    style_stack --;
+    if (style_stack == 0)
+      {
+        BEGIN(score);
+      }
+    BEGIN(score);
 	return TT_END;
 	}
-<score><ul> {
+<score,style><ul> {
+	BEGIN(style);
+    style_stack ++;
 	return UL_BEGINNING;
 	}
-<score><\/ul> {
+<style><\/ul> {
+    style_stack --;
+    if (style_stack == 0)
+      {
+        BEGIN(score);
+      }
+    BEGIN(score);
 	return UL_END;
 	}
-<score><b> {
+<score,style><b> {
+	BEGIN(style);
+    style_stack ++;
 	return B_BEGINNING;
 	}
-<score><\/b> {
+<style><\/b> {
+    style_stack --;
+    if (style_stack == 0)
+      {
+        BEGIN(score);
+      }
+    BEGIN(score);
 	return B_END;
 	}
-<score><sc> {
+<score,style><sc> {
+	BEGIN(style);
+    style_stack ++;
 	return SC_BEGINNING;
 	}
-<score><\/sc> {
+<style><\/sc> {
+    style_stack --;
+    if (style_stack == 0)
+      {
+        BEGIN(score);
+      }
+    BEGIN(score);
 	return SC_END;
 	}
-<score><sp> {
-	BEGIN(special);
+<score,style><sp> {
+	BEGIN(style);
+    style_stack ++;
 	return SP_BEGINNING;
 	}
-<special><\/sp> {
+<style><\/sp> {
+    style_stack --;
+    if (style_stack == 0)
+      {
+        BEGIN(score);
+      }
 	BEGIN(score);
 	return SP_END;
 	}
-<special>[^<>]* {
+<style>[^<>\{\}]* {
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
-<score><v> {
+<style,score><v> {
 	BEGIN(verb);
+    style_stack ++;
 	return VERB_BEGINNING;
 	}
 <verb><\/v> {
+    style_stack --;
+    if (style_stack == 0)
+      {
+        BEGIN(score);
+      }
 	BEGIN(score);
 	return VERB_END;
 	}
@@ -232,10 +285,10 @@ semicolon. */
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
-<score>\{  {
+<score,style>\{  {
 	return CENTER_BEGINNING;
 	}
-<score>\}  {
+<score,style>\}  {
 	return CENTER_END;
 	}
 <score>\[  {
