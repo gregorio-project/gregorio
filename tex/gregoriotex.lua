@@ -150,7 +150,6 @@ gregoriotex.shell_escape = nil
 function gregoriotex.compile_gabc(gabc_file, tex_file)
     if not gregoriotex.shell_escape then
         local test = io.popen("gregorio -V")
-        --local test = io.popen("echo caca")
         if test then
             local output = test:read("*a")
             test:close()
