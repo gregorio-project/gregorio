@@ -204,7 +204,6 @@ semicolon. */
       {
         BEGIN(score);
       }
-    BEGIN(score);
 	return TT_END;
 	}
 <score,style><ul> {
@@ -218,7 +217,6 @@ semicolon. */
       {
         BEGIN(score);
       }
-    BEGIN(score);
 	return UL_END;
 	}
 <score,style><b> {
@@ -232,7 +230,6 @@ semicolon. */
       {
         BEGIN(score);
       }
-    BEGIN(score);
 	return B_END;
 	}
 <score,style><sc> {
@@ -246,7 +243,6 @@ semicolon. */
       {
         BEGIN(score);
       }
-    BEGIN(score);
 	return SC_END;
 	}
 <score,style><sp> {
@@ -260,7 +256,6 @@ semicolon. */
       {
         BEGIN(score);
       }
-	BEGIN(score);
 	return SP_END;
 	}
 <style>[^<>\{\}]* {
@@ -269,16 +264,17 @@ semicolon. */
 	}
 <style,score><v> {
 	BEGIN(verb);
-    style_stack ++;
 	return VERB_BEGINNING;
 	}
 <verb><\/v> {
-    style_stack --;
     if (style_stack == 0)
       {
         BEGIN(score);
       }
-	BEGIN(score);
+    else 
+      {
+        BEGIN(style);
+      }
 	return VERB_END;
 	}
 <verb>[^<>]* {
