@@ -25,8 +25,8 @@ grechiro = {}
 
 grechiro.module = {
     name          = "gregoriotex-ictus",
-    version       = 0.93,
-    date          = "2009/07/28",
+    version       = 1.0,
+    date          = "2009/10/19",
     description   = "GregorioTeX module for chironomy.",
     author        = "Elie Roux",
     copyright     = "Elie Roux",

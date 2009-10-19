@@ -24,8 +24,8 @@ gregoriotex = {}
 
 gregoriotex.module = {
     name          = "gregoriotex",
-    version       = 0.93,
-    date          = "2009/10/06",
+    version       = 1.0,
+    date          = "2009/10/19",
     description   = "GregorioTeX module.",
     author        = "Elie Roux",
     copyright     = "Elie Roux",
