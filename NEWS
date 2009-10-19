@@ -1,4 +1,4 @@
-Major changes in Gregorio 0.9.3, released October 14th, 2009:
+Major changes in Gregorio 1.0, released October 19th, 2009:
 
      - fixing a lot of bugs
      - changing the number of arguments of some TeX function
@@ -8,6 +8,7 @@ Major changes in Gregorio 0.9.3, released October 14th, 2009:
        are more consistent
      - adding the possibility to put a flat after the clef
      - adding the possibility to put a custo before a clef change
+     - changing the markup system in gabc to be more natural
 
 
 Major changes in Gregorio 0.9.2, released December 27th, 2008:
