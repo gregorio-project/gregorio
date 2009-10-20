@@ -55,7 +55,7 @@ else
     end
 end
 
-gregoriotex.version  = 0.93
+gregoriotex.version  = 1.1
 gregoriotex.showlog  = false
 
 local hlist = node.id('hlist')

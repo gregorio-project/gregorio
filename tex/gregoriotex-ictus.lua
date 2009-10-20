@@ -37,7 +37,7 @@ if luatextra and luatextra.provides_module then
     luatextra.provides_module(grechiro.module)
 end
 
-grechiro.version  = "0.9.3"
+grechiro.version  = 1.1
 grechiro.showlog  = grechiro.showlog or false
 
 grechiro.currentLine = grechiro.currentLine or 1
