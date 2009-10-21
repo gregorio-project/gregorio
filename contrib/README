@@ -37,3 +37,12 @@ output format. To set it up, open the Macro Editor in TeXShop. Select New Item,
 and call it gregorio (or whatvever you wish). Copy and paste all the text of 
 gregorio.scpt into the Content window, and click save. To use it, type and save
 a gabc file and then just choose the gregorio macro from the menu.
+
+gregorio-scribus.pl, gregorio.png and 900_gregorio.xml are files to use Gregorio
+in scribus. In order to use it, copy the .pl file somewhere it can be executed
+(like /usr/bin under Unix or or C:\Program Files\Scribus under windows) and the 
+two other files in the editorconfig folder of scribus 
+(/usr/share/scribus-ng/editorconfig under debian for example,
+or C:\Program Files\Scribus\share\editorconfig under Windows).
+After that you can use them by inserting a render frame and using the program
+gregorio.
