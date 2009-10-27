@@ -15,49 +15,99 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# See the different comments in the file to change some options in order
+# for it to work.
+#
+# Do not forget that you must have perl installed under Windows in order
+# for it to work.
 
 use strict;
 
-my $dir = $ARGV[0];
-my $file = $ARGV[1];
-open(INPUTFILE,"<","$file") || die("Cannot open file $file");
-my @raw_data=<INPUTFILE>; 
-open(TEX,">gregorio-scribus-tmp.tex") || die("Cannot open file gregorio-scribus-tmp.tex");
-open(GABC,">gregorio-scribus-tmp-score.gabc") || die("Cannot open file gregorio-scribus-tmp-score.gabc");
-foreach my $lineo (@raw_data)
+# $gregorio is the path of the gregorio executable. Do not forget to
+# escape the \ (you must replace them by \\) for Windows paths.
+# Under windows, if you want to use a native perl, you must put something
+# like:
+# my $gregorio = 'C:\\cygwinnew\\bin\\gregorio.exe';
+# under Linux  or if you want to use the cygwin perl (which is advised as
+# it is more simple), it can simply be:
+my $gregorio = 'gregorio';
+
+# $lualatex is the name of the LuaLaTeX executable in PDF mode.
+# This variable is necessary because under TeXLive 2009, the formats
+# have been changed and pdflualatex is replaced by lualatex, and
+# lualatex has been replaced by dvilualatex. To sum up,
+# under TeXLive 2008 use
+# my $lualatex = "pdflualatex";
+# and under TeXLive 2009 :
+# my $lualatex = "lualatex";
+my $lualatex = "lualatex";
+
+my $path = $ARGV[0];
+my $dir = $ARGV[1];
+my @splitpath =split (m=[\\/]=,"$path");
+my $file = $splitpath[$#splitpath];
+if(defined($dir))
 {
-        if(defined($lineo))
-	{
-		my $line = $lineo;
-		if(substr($lineo,0,1) eq "\\")
-		{
-			print TEX $line;
-		}
-		else
-		{
-			print GABC $line;
-		}
-	}
+    chdir($dir);
+}
+open(INPUTFILE,"<","$path") || die("Cannot open file $path");
+open(TEX,">", "$path.tex") || die("Cannot open file $path-main.tex");
+open(GABC,">", "$path-score.gabc") || die("Cannot open file $path-score.gabc");
+my $scheme = "lamed";
+my $line;
+foreach $line (<INPUTFILE>)
+{
+    if($line =~ /^\\/)
+    {
+        print TEX $line;
+    }
+    elsif($line =~ /^%%%/)
+    {
+        if($line =~ /^%%%%gregorio-scribus-scheme:lualatex/)
+        {
+            $scheme = "lualatex";
+        }
+    }
+    elsif($line eq "\n")
+    {
+    }
+    else
+    {
+        print GABC $line;
+    }
 }
 print TEX <<EOF;
-\\includescore{gregorio-scribus-tmp-score.tex}
+\\includescore{$file-score.tex}
 \\end{document}
 EOF
 close TEX;
 close GABC;
-print 'calling \'gregorio gregorio-scribus-tmp-score.gabc\'\n';
-unlink('gregorio-scribus-tmp-score.tex');
-system('gregorio gregorio-scribus-tmp-score.gabc');
-if( -e 'gregorio-scribus-tmp-score.tex')
+print "calling \'$gregorio $file-score.gabc\'\n";
+unlink("$file-score.tex");
+system("$gregorio $file-score.gabc");
+if( -e "$file-score.tex")
 {
-  system('lamed gregorio-scribus-tmp.tex');
-  print 'calling \'lamed gregorio-scribus-tmp.tex\'\n';
-  system("dvipdfm $dir/gregorio-scribus-tmp.dvi");
-  print 'calling \'dvipdfm $dir/gregorio-scribus-tmp.dvi\'\n';
-  system("mv gregorio-scribus-tmp.pdf $file.pdf");
-  unlink('gregorio-scribus-tmp-score.gabc');
-  unlink('gregorio-scribus-tmp-score.tex');
-  unlink('gregorio-scribus-tmp.tex');
-  unlink('gregorio-scribus-tmp.dvi');
+  if($scheme eq "lualatex")
+  {
+    print "calling \'$lualatex --interaction nonstopmode $file.tex\'\n";
+    system("$lualatex --interaction nonstopmode $file.tex");
+  }
+  else
+  {
+    print "calling \'lamed --interaction nonstopmode $file.tex\'\n";
+    system("lamed --interaction nonstopmode $file.tex");
+    print "calling \'dvipdfm $file.dvi\'\n";
+    system("dvipdfm $file.dvi");
+    unlink("$file.dvi");
+  }
+  unlink("$file-score.gabc");
+  unlink("$file-score.tex");
+  unlink("$file.tex");
+  unlink("$file.aux");
+}
+else
+{
+  print "error: gregorio did not create \'$file-score.tex\'\n";
 }
 exit;

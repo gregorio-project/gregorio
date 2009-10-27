@@ -9,14 +9,14 @@ the gnome project, like gedit. Simply copy the file in
 /usr/share/gtksourceview-2.0/language-specs/ and it will work. There are still
 some bugs to fix, but at least it looks better.
 
-gabc.xml is a file for syntax highlighting in kate (and Kedit, etc.). To install
-it, simply copy the file in /usr/share/apps/katepart/syntax. This path may not
-be the same according to your distribution.
+gabc.xml is a file for syntax highlighting in kate (and Kedit, etc.). To 
+install it, simply copy the file in /usr/share/apps/katepart/syntax. This path
+may not be the same according to your distribution.
 
 gabc.vim is the highlight syntax file for vim. You can copy it in
 /usr/share/vim/vimcurrent/syntax (on debian at least) and add the line
 au BufNewFile,BufRead *.gabc                    setf gabc
-somewhere near lines like it (near line 100 for example) in
+somewhere near lines of the same type (near line 100 for example) in
 /usr/share/vim/vimcurrent/filetype.vim . This will autodetect the filetypes.
 
 Some files specifically for TeXShop Users on Mac OS X:
@@ -38,11 +38,14 @@ and call it gregorio (or whatvever you wish). Copy and paste all the text of
 gregorio.scpt into the Content window, and click save. To use it, type and save
 a gabc file and then just choose the gregorio macro from the menu.
 
-gregorio-scribus.pl, gregorio.png and 900_gregorio.xml are files to use Gregorio
-in scribus. In order to use it, copy the .pl file somewhere it can be executed
-(like /usr/bin under Unix or or C:\Program Files\Scribus under windows) and the 
-two other files in the editorconfig folder of scribus 
-(/usr/share/scribus-ng/editorconfig under debian for example,
-or C:\Program Files\Scribus\share\editorconfig under Windows).
-After that you can use them by inserting a render frame and using the program
-gregorio.
+gregorio-scribus.pl, gregorio.png and 900_gregorio.xml are files to use 
+Gregorio in scribus. In order to use it, copy the three files .pl file
+in the editorconfig folder of scribus (/usr/share/scribus-ng/editorconfig
+under debian for example, or C:\Program Files\Scribus\share\editorconfig
+nder Windows). Then read the comments in the two files and change some
+variables accordingly. The following step is to allow Scribus to call 
+gregorio, by going in File->Preferences->External Tools, clicking add 
+in the "Render Frames" part and select the file 900_gregorio.xml.
+After that you can use them by inserting a render frame and using the
+program gregorio, and simply typing gabc (in right-click->edit sources).
+For more details see http://home.gna.org/gregorio/scribus.

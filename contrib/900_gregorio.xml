@@ -17,42 +17,94 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+ See the different comments in the file to change the default configuration.
 -->
 <editorsettings description="gregorio" icon="gregorio.png">
-	<executable command="gregorio-scribus.pl  %dir %file" />
+    <!-- change the path to perl and gregorio-scribus.pl here. Here are several cases:
+    -  if you are under Linux, simply put 'perl /path/to/gregorio-scribus.pl %file %dir'
+    -  if you want to use Cygwin's perl, put
+         'C:\cygwinnew\bin\perl /cygwin/path/to/gregorio-scribus.pl %file %dir'
+    -  if you want to use a native perl installation under Windows, put
+         'perl C:\path\to\gregorio-scribus.pl %file %dir'
+    -->
+	<executable command="C:\cygwinnew\bin\perl C:\cygwinnew\home\elier\testgregorio\gregorio-scribus.pl %file %dir"/>
 	<imagefile extension=".pdf"/>
 	<highlighter>
-		<rule name="Command" regex="\\[a-zA-Z@+]+" color="#800000"/>
-		<rule name="Command argument" regex="\\[a-zA-Z@*]+\{([^\}]+)\}" color="blue"/>
-		<rule name="Section commands" regex="\\(?:section|subsection|subsubsection|paragraph|subparagraph)(?:[*]?)\{([^\}]+)\}" color="black" bold="true"/>
-		<rule name="Scribus specials" regex="\$scribus_(.+)\$" color="#FF00FF" minimal="true"/>
-		<rule name="Comments" regex="(?:(?:^|[^\\])(?:\\\\)*)(%.+)" color="#808080" italic="true"/>
+        <rule name="gabc header" regex="[a-zA-Z]+:" color="blue" minimal="true"/>
+        <rule name="gabc delimiter" regex="%%" color="green" minimal="true"/>
+        <rule name="gabc notes" regex="\([^)]*\)" color="red" minimal="true"/>
 	</highlighter>
     <empty-frame-text>
-\begin{document}
-\setspaceafterinitial{1mm plus 0em minus 0em}
-\setspacebeforeinitial{1mm plus 0em minus 0em}
-\def\greinitialformat#1{{\fontsize{33}{33}\selectfont #1}}
-\def\grebiginitialformat#1{{\fontsize{73}{73}\selectfont #1}}
-\redlines
+name: myscore;
 %%
 (c3) Pó(eh/hi)pu(h)lus(h) Si(hi)on,(hgh.)
     </empty-frame-text>
+    <!-- you can change the basic headers there -->
     <preamble>
-\documentclass[a4paper,$scribus_fontsize$]{extarticle}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+\documentclass[a4paper,$scribus_grefontsize$]{extarticle}
 \usepackage[left=0cm,top=0cm,right=0cm,bottom=0cm,nohead,nofoot]{geometry}
-\usepackage{gregoriotex}
-\usepackage{gregoriosyms}
 \usepackage{color}
 \title{Scribus-Latex-gregorio-File}
-$scribus_font$
-$scribus_additionalheaders$
+$scribus_additionalgreheaders$
+\usepackage{gregoriotex}
 \author{Scribus}
 \pagestyle{empty}
 \setlength{\textwidth}{$scribus_realwidth$ pt}
+\begin{document}
+%%%%gregorio-scribus-scheme:$scribus_grescheme$
+$scribus_greconf$
 </preamble>
 <postamble>
 </postamble>
+	<tab type="settings">
+		<title><i18n>
+				<en>Headers</en>
+				<fr>En-tête</fr>
+		</i18n></title>
+        		<list name="grefontsize" default="11pt">
+			<title><i18n>
+					<en>Fontsize:</en>
+					<de>Schriftgröße:</de>
+					<fr>Taille police :</fr>
+					<pl>Stopień pisma:</pl>
+					<ru>Кегль шрифт:</ru>
+			</i18n></title>
+			<option value="8pt">8pt</option>
+			<option value="9pt">9pt</option>
+			<option value="10pt">10pt</option>
+			<option value="11pt">11pt</option>
+			<option value="12pt">12pt</option>
+			<option value="14pt">14pt</option>
+			<option value="17pt">17pt</option>
+			<option value="20pt">20pt</option>
+		</list>
+        <!-- change lamed to lualatex here if you want luatex by default -->
+        <list name="grescheme" default="lamed">
+			<title><i18n>
+					<en>Compilation method:</en>
+					<fr>Méthode de compilation :</fr>
+			</i18n></title>
+			<option value="lualatex">LuaLaTeX</option>
+			<option value="lamed">Lamed + dvipdf</option>
+		</list>
+		<text name="additionalgreheaders" type="long" default="\usepackage[utf8]{luainputenc}
+\usepackage[T1]{fontenc}
+\usepackage{kpfonts}"><i18n>
+			<en>Additional LaTeX Headers:</en>
+			<de>Zusätzliche LaTeX Header:</de>
+			<fr>En-tête LaTeX additionnel :</fr>
+		</i18n></text>
+	</tab>
+	<tab type="settings">
+		<title><i18n>
+				<en>Gregorio Options</en>
+				<fr>Conf. gregorio</fr>
+		</i18n></title>
+        <comment><i18n>
+			<en>Input here your additional gregorio-specific TeX commands.
+</en><fr>Ajoutez ici vos commandes additionelles pour GregorioTeX.
+</fr>
+		</i18n></comment>
+        <text name="greconf" type="long" default="\setgrefactor{17}"></text>
+	</tab>
 </editorsettings>
