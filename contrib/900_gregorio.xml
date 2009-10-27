@@ -27,7 +27,7 @@
     -  if you want to use a native perl installation under Windows, put
          'perl C:\path\to\gregorio-scribus.pl %file %dir'
     -->
-	<executable command="C:\cygwinnew\bin\perl C:\cygwinnew\home\elier\testgregorio\gregorio-scribus.pl %file %dir"/>
+	<executable command="perl /usr/share/scribus-ng/editorconfig/gregorio-scribus.pl %file %dir"/>
 	<imagefile extension=".pdf"/>
 	<highlighter>
         <rule name="gabc header" regex="[a-zA-Z]+:" color="blue" minimal="true"/>
