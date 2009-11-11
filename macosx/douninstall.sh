@@ -6,7 +6,6 @@ BINDIR="$PREFIX/bin"
 LIBDIR="$PREFIX/lib"
 GRELIBDIR="$LIBDIR/gregorio"
 GREINCLUDEDIR="$PREFIX/include/gregorio"
-MANDIR="$PREFIX/man/man1"
 RECEIPTDIR="/Library/Receipts"
 
 rm $BINDIR/gregorio
@@ -15,8 +14,7 @@ rm $LIBDIR/pkgconfig/gregorio.pc
 rm $LIBDIR/libgregorio*.dylib
 rm $LIBDIR/libgregorio*.la
 rm -dR $GREINCLUDEDIR
-rm $MANDIR/gregorio.1
-rm -dR $RECEIPTDIR/gregorio-0.9.2.pkg
+rm $RECEIPTDIR/boms/org.gregorio.gregorio-1.0.pkg.bom
 
 echo "Gregorio uninstalled. You may now delete the Gregorio folder\ncontaining this script and \
 the example files if you wish.\nThanks!"
