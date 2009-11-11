@@ -27,16 +27,17 @@ open in the preview window. See the comments within the file if you want to
 modify it for a lamed/dvips/ps2pdf process instead. Install it by copying it
 into the ~/Library/TeXShop/Engines folder.
 
-pdfLuaLaTeX.engine is a similar file, to allow compiling with lualatex. Also
-install by copying into ~/Library/TeXShop/Engines.
-
-gregorio.scpt is an Applescript macro which you can use if you write gabc files
-directly within TeXShop, instead of an external editor. It will call gregorio
-on your gabc file, converting to gtex. You can modify it if you need another 
-output format. To set it up, open the Macro Editor in TeXShop. Select New Item,
-and call it gregorio (or whatvever you wish). Copy and paste all the text of 
-gregorio.scpt into the Content window, and click save. To use it, type and save
-a gabc file and then just choose the gregorio macro from the menu.
+There are 2 ways of compiling gabc files directly from TeXShop:
+1) Using gregorio.engine. To do this, copy gregorio.engine into ~/Library/TeXShop/Engines. Then in a Terminal window, run 
+defaults write TeXShop OtherTeXExtensions -array-add "gabc"
+Restart TeXShop, and you should be able to see "gregorio" as a typesetting 
+option in the upper left corner.
+2) Using gregorio.scpt. It will call gregorio on your gabc file, converting 
+to gtex. You can modify it if you need another output format. To set it up, 
+open the Macro Editor in TeXShop. Select New Item,
+and call it gregorio (or whatever you wish). Copy and paste all the text of 
+gregorio.scpt into the Content window, and click save. To use it, type and 
+save a gabc file and then just choose the gregorio macro from the menu.
 
 gregorio-scribus.pl, gregorio.png and 900_gregorio.xml are files to use 
 Gregorio in scribus. In order to use it, copy the three files .pl file

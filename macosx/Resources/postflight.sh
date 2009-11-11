@@ -12,6 +12,6 @@ mkdir -p $GREUSERDIR
 mv $TEMPDIR/* $GREUSERDIR
 
 cd $GREFONTDIR
-python install.py
+sudo python install.py
 
 rm -dR $TEMPDIR

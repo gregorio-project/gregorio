@@ -19,23 +19,9 @@ set m to (number of characters of contents of baseName)
 set dirName to quoted form of (characters 1 thru (n - m - 1) of fileName as string)
 set gabcName to baseName & ".gabc"
 
-tell application "Terminal" 
-activate
-do script "cd " & dirName & "; " & "gregorio " & gabcName
-delay 2
--- gives processes chance to terminate so user isn't prompted to kill them
-close the front window
--- TODO: change behavior because number of windows spawned changes
--- should also consider letting Terminal quit
-tell application "System Events"
-tell process "Terminal"
-keystroke "`" using {command down}
-keystroke "w" using {command down}
-end tell
-end tell
-end tell
+do shell script "cd " & dirName & ";" & "/usr/local/bin/gregorio " & gabcName
 
 tell application "TeXShop"
 activate
 end tell
--- we return to TeXShop
+-- we return to TeXShop  TODO: the option of opening the tex file?
