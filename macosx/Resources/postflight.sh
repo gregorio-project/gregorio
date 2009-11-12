@@ -3,7 +3,7 @@
 #convenient place (in the user's home directory) and to -globally-
 #install the fonts in the user's TeX distribution
 
-TEMPDIR="/private/tmp/gregorio"
+TEMPDIR="/private/temp/gregorio"
 GREUSERDIR="$HOME/Documents/Gregorio"
 GREFONTDIR="$GREUSERDIR/fonts"
 

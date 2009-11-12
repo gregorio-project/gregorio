@@ -14,7 +14,7 @@ rm $LIBDIR/pkgconfig/gregorio.pc
 rm $LIBDIR/libgregorio*.dylib
 rm $LIBDIR/libgregorio*.la
 rm -dR $GREINCLUDEDIR
-rm $RECEIPTDIR/boms/org.gregorio.gregorio-1.0.pkg.bom
+rm -dR $RECEIPTDIR/gregorio-1.0.pkg
 
 echo "Gregorio uninstalled. You may now delete the Gregorio folder\ncontaining this script and \
 the example files if you wish.\nThanks!"
