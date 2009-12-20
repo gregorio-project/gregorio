@@ -9,9 +9,9 @@ GREFONTDIR="$GREUSERDIR/fonts"
 
 mkdir -p $GREUSERDIR
 
-mv $TEMPDIR/* $GREUSERDIR
+mv -f $TEMPDIR/* $GREUSERDIR
 
 cd $GREFONTDIR
-sudo python install.py
+python install.py
 
 rm -dR $TEMPDIR
