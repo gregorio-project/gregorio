@@ -264,6 +264,11 @@ write_score (FILE * f, gregorio_score * score)
 		       element->element_type,
 		       libgregorio_dump_space_type (element->element_type));
 	    }
+	  if (element->element_type && element->type == GRE_TEXVERB)
+	    {
+	      fprintf (f, "     element_type            %d\n",
+		       element->element_type);
+	    }
 	  if (element->element_type && element->type == GRE_BAR)
 	    {
 	      fprintf (f, "     element_type            %d (%s)\n",
@@ -603,6 +608,9 @@ libgregorio_dump_type (char type)
       break;
     case GRE_SYLLABLE:
       str = "GRE_SYLLABLE";
+      break;
+    case GRE_TEXVERB:
+      str = "GRE_TEXVERB";
       break;
     default:
       str = "unknown";

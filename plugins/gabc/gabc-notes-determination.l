@@ -51,8 +51,18 @@ gregorio_note *current_note;
 %option outfile="gabc-notes-determination-l.c"
 %option noyywrap
 
+%x texverb
 
 %%
+\<tex> {
+    BEGIN(texverb);
+    }
+<texverb>[^<]+ {
+	gregorio_add_texverb(&current_note, strdup(gabc_notes_determination_text));
+    }
+<texverb><\/tex> {
+	BEGIN(INITIAL);
+    } 
 [\t\r\n]+      /* ignore ends of line and tabs */;
 z {
 	gregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, GRE_END_OF_LINE);

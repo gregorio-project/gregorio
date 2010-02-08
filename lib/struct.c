@@ -97,6 +97,28 @@ gregorio_add_special_as_note (gregorio_note ** current_note, char type,
 }
 
 void
+gregorio_add_texverb (gregorio_note ** current_note, char *str)
+{
+  gregorio_note *element = malloc (sizeof (gregorio_note));
+  if (!element)
+    {
+      gregorio_message (_("error in memory allocation"),
+			   "add_special_as_note", FATAL_ERROR, 0);
+      return;
+    }
+  element->type = GRE_TEXVERB;
+  element->pitch = 0;
+  element->signs = _NO_SIGN;
+  element->previous_note = *current_note;
+  element->next_note = NULL;
+  if (*current_note)
+    {
+      (*current_note)->next_note = element;
+    }
+  *current_note = element;
+}
+
+void
 gregorio_add_special_sign (gregorio_note *note, char sign)
 {
     note->rare_sign=sign;

@@ -353,6 +353,7 @@ void gregorio_add_text (char *mbcharacters, gregorio_character **current_charact
 
 void gregorio_add_special_as_glyph (gregorio_glyph **current_glyph, char type, char pitch, char additional_infos);
 void gregorio_add_special_as_note (gregorio_note **current_note, char type, char pitch);
+void gregorio_add_texverb (gregorio_note **current_note, char *str);
 void gregorio_add_special_as_element (gregorio_element **current_element, char type, char pitch, char additional_infos);
 
 void gregorio_determine_good_top_notes (gregorio_note * current_note);
@@ -466,6 +467,7 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define GRE_BAR 10
 #define GRE_END_OF_PAR 13
 #define GRE_CUSTO 12
+#define GRE_TEXVERB 16
 
 
 #define C_KEY 'c'
