@@ -402,12 +402,12 @@ libgregorio_gabc_write_gregorio_elements (FILE *
 	  && (element->type != GRE_SPACE
 	      || (element->type == GRE_SPACE
 		  && element->element_type == SP_NEUMATIC_CUT))
-	  && element->next_element
-	  && element->next_element->type == GRE_ELEMENT)
+	  && element->next
+	  && element->next->type == GRE_ELEMENT)
 	{
 	  fprintf (f, "/");
 	}
-      element = element->next_element;
+      element = element->next;
     }
 }
 
@@ -435,7 +435,7 @@ libgregorio_gabc_write_gregorio_element (FILE * f, gregorio_element * element)
       while (current_glyph)
 	{
 	  libgregorio_gabc_write_gregorio_glyph (f, current_glyph);
-	  current_glyph = current_glyph->next_glyph;
+	  current_glyph = current_glyph->next;
 	}
       break;
     case GRE_SPACE:
@@ -491,7 +491,7 @@ libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
       fprintf (f, "y%c", glyph->glyph_type);
       break;
     case GRE_SPACE:
-      if (glyph->glyph_type == SP_ZERO_WIDTH && glyph->next_glyph)
+      if (glyph->glyph_type == SP_ZERO_WIDTH && glyph->next)
 	{
 	  fprintf (f, "!");
 	}
@@ -515,7 +515,7 @@ libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
 						current_note,
 						glyph->glyph_type);
 //third argument necessary for the special shape pes quadratum
-	  current_note = current_note->next_note;
+	  current_note = current_note->next;
 	}
       libgregorio_gabc_write_end_liquescentia (f, glyph->liquescentia);
       break;
@@ -685,7 +685,7 @@ libgregorio_gabc_write_gregorio_note (FILE * f,
       fprintf (f, "%c", toupper (note->pitch));
       break;
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
-      if (note->next_note)
+      if (note->next)
 	{
 	  fprintf (f, "%c~", toupper (note->pitch));
 	}
@@ -695,7 +695,7 @@ libgregorio_gabc_write_gregorio_note (FILE * f,
 	}
       break;
     case S_PUNCTUM_INCLINATUM_AUCTUS:
-      if (note->next_note)
+      if (note->next)
 	{
 	  fprintf (f, "%c<", toupper (note->pitch));
 	}

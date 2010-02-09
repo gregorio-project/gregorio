@@ -46,6 +46,9 @@ typedef struct gregorio_note {
 // states that can appear in the determination, where notes can be
 // other things. This is the case for example in gabc reading.
   char type;
+// then two pointer to other notes, to make a chained list.
+  struct gregorio_note *previous;
+  struct gregorio_note *next;
 // the pitch is the height of the note on the score, that is to say
 // the letter it is represented by in gabc.
   char pitch;
@@ -73,10 +76,18 @@ typedef struct gregorio_note {
 // under the same horizontal episemus of the note. If the note is not
 // under an episemus, it is 0.
   char h_episemus_top_note;
-// then two pointer to other notes, to make a chained list.
-  struct gregorio_note *previous_note;
-  struct gregorio_note *next_note;
 } gregorio_note;
+
+typedef struct gregorio_texverb {
+// always GRE_TEXVERB
+  char type;
+// the usual linked chain pointers
+  void *previous;
+  void *next;
+// the TeX string
+  char *texstr;
+} gregorio_texverb;
+  
 
 /*
 
@@ -88,6 +99,9 @@ GRE_NATURAL or GRE_SPACE
 typedef struct gregorio_glyph {
 // type can have the values explained in the comment juste above.
   char type;
+// two pointer to make a chained list
+  struct gregorio_glyph *previous;
+  struct gregorio_glyph *next;
 // in the case of a GRE_GLYPH, glyph_type is the type of the glyph
 // (porrectus, pes, etc.), they are all listed below. If it is a
 // GRE_FLAT or a GRE_NATURAL, it is the height of the flat or natural
@@ -104,15 +118,15 @@ typedef struct gregorio_glyph {
 // a pointer to a (chained list of) gregorio_notes, the first of the
 // glyph.
   struct gregorio_note *first_note;
-// two pointer to make a chained list
-  struct gregorio_glyph *next_glyph;
-  struct gregorio_glyph *previous_glyph;
 } gregorio_glyph;
 
 typedef struct gregorio_element {
 // type can have the values GRE_ELEMENT, GRE_BAR, GRE_C_KEY_CHANGE,
 // GRE_F_KEY_CHANGE, GRE_END_OF_LINE or GRE_SPACE.
   char type;
+// pointers to the next and previous elements.
+  struct gregorio_element *previous;
+  struct gregorio_element *next;
 // in the case of a GRE_ELEMENT, element_type is the kind of element
 // it is (but it is very blur.. don't watch this value). In the case
 // of a GRE_BAR it is the type of bar (listed below). If it is
@@ -124,9 +138,6 @@ typedef struct gregorio_element {
   char additional_infos;
 // a pointer to the first glyph of the element.
   struct gregorio_glyph *first_glyph;
-// pointers to the next and previous elements.
-  struct gregorio_element *next_element;
-  struct gregorio_element *previous_element;
   //struct gregorio_element *previous_element;
 } gregorio_element;
 

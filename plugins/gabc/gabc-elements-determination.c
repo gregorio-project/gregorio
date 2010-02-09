@@ -76,10 +76,10 @@ close_element (gregorio_element ** current_element,
 	       gregorio_glyph * first_glyph)
 {
   gregorio_add_element (current_element, first_glyph);
-  if (first_glyph && first_glyph->previous_glyph)
+  if (first_glyph && first_glyph->previous)
     {
-      first_glyph->previous_glyph->next_glyph = NULL;
-      first_glyph->previous_glyph = NULL;
+      first_glyph->previous->next = NULL;
+      first_glyph->previous = NULL;
     }
 }
 
@@ -133,16 +133,16 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	  if (current_glyph->type == GRE_NATURAL
 	      || current_glyph->type == GRE_FLAT)
 	    {
-          if (current_glyph->next_glyph)
+          if (current_glyph->next)
             {
-              current_glyph = current_glyph->next_glyph;
+              current_glyph = current_glyph->next;
 	          continue;
             }
           else 
             {
               first_element = current_element;
               close_element (&current_element, first_glyph);
-              current_glyph = current_glyph->next_glyph;
+              current_glyph = current_glyph->next;
               continue;
             }
 	    }
@@ -150,7 +150,7 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	  if (current_glyph->type == GRE_SPACE
 	      && current_glyph->glyph_type == SP_ZERO_WIDTH)
 	    {
-	      current_glyph = current_glyph->next_glyph;
+	      current_glyph = current_glyph->next;
 	      do_not_cut = 1;
 	      continue;
 	    }
@@ -172,8 +172,8 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	  else {
 	
 	}
-	  first_glyph = current_glyph->next_glyph;
-	  previous_glyph = current_glyph->next_glyph;
+	  first_glyph = current_glyph->next;
+	  previous_glyph = current_glyph->next;
 	  gregorio_free_one_glyph (&current_glyph);
 	  continue;
 	}
@@ -222,9 +222,9 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	      char last_pitch;
 	      gregorio_note *tmp_note;
 	      tmp_note = previous_glyph->first_note;
-	      while (tmp_note->next_note)
+	      while (tmp_note->next)
 		{
-		  tmp_note = tmp_note->next_note;
+		  tmp_note = tmp_note->next;
 		}
 	      last_pitch = tmp_note->pitch;
 	      if (current_glyph->first_note->pitch == last_pitch)
@@ -250,11 +250,11 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	{
 	  first_element = current_element;
 	}
-      if (!current_glyph->next_glyph)
+      if (!current_glyph->next)
 	{
 	  close_element (&current_element, first_glyph);
 	}
-      current_glyph = current_glyph->next_glyph;
+      current_glyph = current_glyph->next;
     }				//end of while
 
 /* we must determine the first element, that we will return */

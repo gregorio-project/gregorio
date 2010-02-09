@@ -132,7 +132,7 @@ libgregorio_xml_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph,
     {
       libgregorio_xml_write_gregorio_note (f, current_note, clef,
 					   alterations);
-      current_note = current_note->next_note;
+      current_note = current_note->next;
     }
   fprintf (f, "</glyph>");
 }
@@ -158,7 +158,7 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
 	{
 	  libgregorio_xml_write_gregorio_glyph (f, current_glyph, *clef,
 						alterations);
-	  current_glyph = current_glyph->next_glyph;
+	  current_glyph = current_glyph->next;
 	}
       fprintf (f, "</element>");
       return;
@@ -533,7 +533,7 @@ libgregorio_xml_write_neume (FILE * f, gregorio_element * element, int voice,
   while (element)
     {
       libgregorio_xml_write_gregorio_element (f, element, clef, alterations);
-      element = element->next_element;
+      element = element->next;
     }
   fprintf (f, "</neume>");
 }
@@ -615,7 +615,7 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 							     48, voice);
 	    }
 	}
-      element = element->next_element;
+      element = element->next;
     }
 }
 

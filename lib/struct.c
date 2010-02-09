@@ -62,11 +62,11 @@ gregorio_add_note (gregorio_note ** current_note, char pitch, char shape,
   element->signs = signs;
   element->rare_sign = _NO_SIGN;
   element->liquescentia = liquescentia;
-  element->previous_note = *current_note;
-  element->next_note = NULL;
+  element->previous = *current_note;
+  element->next = NULL;
   if (*current_note)
     {
-      (*current_note)->next_note = element;
+      (*current_note)->next = element;
     }
   *current_note = element;
   gregorio_mix_h_episemus (*current_note, h_episemus_type);
@@ -87,11 +87,11 @@ gregorio_add_special_as_note (gregorio_note ** current_note, char type,
   element->type = type;
   element->pitch = pitch;
   element->signs = _NO_SIGN;
-  element->previous_note = *current_note;
-  element->next_note = NULL;
+  element->previous = *current_note;
+  element->next = NULL;
   if (*current_note)
     {
-      (*current_note)->next_note = element;
+      (*current_note)->next = element;
     }
   *current_note = element;
 }
@@ -109,11 +109,11 @@ gregorio_add_texverb (gregorio_note ** current_note, char *str)
   element->type = GRE_TEXVERB;
   element->pitch = 0;
   element->signs = _NO_SIGN;
-  element->previous_note = *current_note;
-  element->next_note = NULL;
+  element->previous = *current_note;
+  element->next = NULL;
   if (*current_note)
     {
-      (*current_note)->next_note = element;
+      (*current_note)->next = element;
     }
   *current_note = element;
 }
@@ -145,9 +145,9 @@ gregorio_go_to_first_note (gregorio_note ** note)
       return;
     }
   tmp = *note;
-  while (tmp->previous_note)
+  while (tmp->previous)
     {
-      tmp = tmp->previous_note;
+      tmp = tmp->previous;
     }
   *note = tmp;
 }
@@ -160,14 +160,14 @@ gregorio_free_one_note (gregorio_note ** note)
     {
       return;
     }
-  if ((*note)->next_note)
+  if ((*note)->next)
     {
-      (*note)->next_note->previous_note = NULL;
-      next = (*note)->next_note;
+      (*note)->next->previous = NULL;
+      next = (*note)->next;
     }
-  if ((*note)->previous_note)
+  if ((*note)->previous)
     {
-      (*note)->previous_note->next_note = NULL;
+      (*note)->previous->next = NULL;
     }
   free (*note);
   *note = next;
@@ -179,7 +179,7 @@ gregorio_free_notes (gregorio_note ** note)
   gregorio_note *tmp;
   while (*note)
     {
-      tmp = (*note)->next_note;
+      tmp = (*note)->next;
       free (*note);
       *note = tmp;
     }
@@ -201,11 +201,11 @@ gregorio_add_glyph (gregorio_glyph ** current_glyph, char type,
   next_glyph->glyph_type = type;
   next_glyph->liquescentia = liquescentia;
   next_glyph->first_note = first_note;
-  next_glyph->next_glyph = NULL;
-  next_glyph->previous_glyph = *current_glyph;
+  next_glyph->next = NULL;
+  next_glyph->previous = *current_glyph;
   if (*current_glyph)
     {
-      (*current_glyph)->next_glyph = next_glyph;
+      (*current_glyph)->next = next_glyph;
     }
   *current_glyph = next_glyph;
 }
@@ -226,11 +226,11 @@ gregorio_add_special_as_glyph (gregorio_glyph ** current_glyph, char type,
   next_glyph->glyph_type = pitch;
   next_glyph->liquescentia = additional_infos;
   next_glyph->first_note = NULL;
-  next_glyph->next_glyph = NULL;
-  next_glyph->previous_glyph = *current_glyph;
+  next_glyph->next = NULL;
+  next_glyph->previous = *current_glyph;
   if (*current_glyph)
     {
-      (*current_glyph)->next_glyph = next_glyph;
+      (*current_glyph)->next = next_glyph;
     }
   *current_glyph = next_glyph;
 }
@@ -245,9 +245,9 @@ gregorio_go_to_first_glyph (gregorio_glyph ** glyph)
       return;
     }
   tmp = *glyph;
-  while (tmp->previous_glyph)
+  while (tmp->previous)
     {
-      tmp = tmp->previous_glyph;
+      tmp = tmp->previous;
     }
   *glyph = tmp;
 }
@@ -261,14 +261,14 @@ gregorio_free_one_glyph (gregorio_glyph ** glyph)
     {
       return;
     }
-  if ((*glyph)->next_glyph)
+  if ((*glyph)->next)
     {
-      (*glyph)->next_glyph->previous_glyph = NULL;
-      next = (*glyph)->next_glyph;
+      (*glyph)->next->previous = NULL;
+      next = (*glyph)->next;
     }
-  if ((*glyph)->previous_glyph)
+  if ((*glyph)->previous)
     {
-      (*glyph)->previous_glyph->next_glyph = NULL;
+      (*glyph)->previous->next = NULL;
     }
   gregorio_free_notes (&(*glyph)->first_note);
   free (*glyph);
@@ -286,7 +286,7 @@ gregorio_free_glyphs (gregorio_glyph ** glyph)
     }
   while (*glyph)
     {
-      next_glyph = (*glyph)->next_glyph;
+      next_glyph = (*glyph)->next;
       gregorio_free_notes (&(*glyph)->first_note);
       free (*glyph);
       *glyph = next_glyph;
@@ -309,11 +309,11 @@ gregorio_add_element (gregorio_element ** current_element,
   next->element_type = 0;
   next->additional_infos = 0;
   next->first_glyph = first_glyph;
-  next->previous_element = *current_element;
-  next->next_element = NULL;
+  next->previous = *current_element;
+  next->next = NULL;
   if (*current_element)
     {
-      (*current_element)->next_element = next;
+      (*current_element)->next = next;
     }
   *current_element = next;
 }
@@ -334,11 +334,11 @@ gregorio_add_special_as_element (gregorio_element ** current_element,
   special->element_type = pitch;
   special->additional_infos = additional_infos;
   special->first_glyph = NULL;
-  special->next_element = NULL;
-  special->previous_element = *current_element;
+  special->next = NULL;
+  special->previous = *current_element;
   if (*current_element)
     {
-      (*current_element)->next_element = special;
+      (*current_element)->next = special;
     }
   *current_element = special;
 }
@@ -352,7 +352,7 @@ gregorio_free_one_element (gregorio_element ** element)
     {
       return;
     }
-  next = (*element)->next_element;
+  next = (*element)->next;
   gregorio_free_glyphs (&(*element)->first_glyph);
   free (*element);
   *element = next;
@@ -369,7 +369,7 @@ gregorio_free_elements (gregorio_element ** element)
     }
   while (*element)
     {
-      next = (*element)->next_element;
+      next = (*element)->next;
       gregorio_free_glyphs (&(*element)->first_glyph);
       free (*element);
       *element = next;
@@ -1166,7 +1166,7 @@ gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
     }
   /* we make the first iteration by hand,in the case where something would be in highest_pitch */
   top_note = current_note->pitch;
-  tmp = tmp->previous_note;
+  tmp = tmp->previous;
   if (!tmp)
     {
       // case of b___
@@ -1178,9 +1178,9 @@ gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
   for (i = 0; i < n; i++)
     {
       top_note = max (top_note, tmp->pitch);
-      if (tmp->previous_note && tmp->previous_note->type == GRE_NOTE)
+      if (tmp->previous && tmp->previous->type == GRE_NOTE)
 	{
-	  tmp = tmp->previous_note;
+	  tmp = tmp->previous;
 	}
       else
 	{
@@ -1194,7 +1194,7 @@ gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
     {
       tmp->h_episemus_type = H_MULTI;
       tmp->h_episemus_top_note = top_note;
-      tmp = tmp->next_note;
+      tmp = tmp->next;
     }
 
 }
@@ -1225,7 +1225,7 @@ gregorio_determine_good_top_notes (gregorio_note * current_note)
 			   "activate_h_isolated_episemus", ERROR, 0);
       return;
     }
-  prev_note = current_note->previous_note;
+  prev_note = current_note->previous;
   if (!prev_note)
     {
       return;
@@ -1240,7 +1240,7 @@ gregorio_determine_good_top_notes (gregorio_note * current_note)
       while (prev_note && prev_note->h_episemus_type == H_MULTI)
 	{
 	  prev_note->h_episemus_top_note = top_note;
-	  prev_note = prev_note->previous_note;
+	  prev_note = prev_note->previous;
 	}
     }
 }
@@ -1260,7 +1260,7 @@ gregorio_mix_h_episemus (gregorio_note * current_note, char type)
   gregorio_note *prev_note = NULL;
   if (current_note)
     {
-      prev_note = current_note->previous_note;
+      prev_note = current_note->previous;
     }
   if (type == H_NO_EPISEMUS)
     {
@@ -1315,15 +1315,15 @@ gregorio_determine_h_episemus_type (gregorio_note * note)
       return;
     }
   //here h_episemus_type is H_MULTI
-  if (!note->next_note && !note->previous_note)
+  if (!note->next && !note->previous)
     {
       note->h_episemus_type = H_ALONE;
       return;
     }
 
-  if (note->next_note)
+  if (note->next)
     {
-      if (is_multi (note->next_note->h_episemus_type))
+      if (is_multi (note->next->h_episemus_type))
 	{
 	  note->h_episemus_type = H_MULTI_MIDDLE;
 	}
@@ -1334,7 +1334,7 @@ gregorio_determine_h_episemus_type (gregorio_note * note)
     }
   else
     {
-      if (note->previous_note->h_episemus_type == H_NO_EPISEMUS)
+      if (note->previous->h_episemus_type == H_NO_EPISEMUS)
 	{
 	  note->h_episemus_type = H_ALONE;
 	  return;
@@ -1345,9 +1345,9 @@ gregorio_determine_h_episemus_type (gregorio_note * note)
 	}
     }
 
-  if (note->previous_note)
+  if (note->previous)
     {
-      if (is_multi (note->previous_note->h_episemus_type))
+      if (is_multi (note->previous->h_episemus_type))
 	{
 	  if (note->h_episemus_type != H_MULTI_END)
 	    {
@@ -1361,7 +1361,7 @@ gregorio_determine_h_episemus_type (gregorio_note * note)
     }
   else
     {
-      if (note->next_note->h_episemus_type == H_NO_EPISEMUS)
+      if (note->next->h_episemus_type == H_NO_EPISEMUS)
 	{
 	  note->h_episemus_type = H_ALONE;
 	}
@@ -1756,7 +1756,7 @@ gregorio_is_only_special (gregorio_element * element)
 	{
 	  return 0;
 	}
-      element = element->next_element;
+      element = element->next;
     }
   return 1;
 }

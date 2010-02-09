@@ -172,7 +172,7 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 						 current_element->
 						 element_type);
 	      fprintf (f, "\n\\spatium\n");
-	      current_element = current_element->next_element;
+	      current_element = current_element->next;
 	    }
 	  else
 	    {
@@ -346,7 +346,7 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 		  fprintf (f, "\\spatium");
 		  break;
 		}
-	      current_element = current_element->next_element;
+	      current_element = current_element->next;
 	      key_change = 0;
 	      new_line = 0;
 	      continue;
@@ -358,7 +358,7 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 						 current_element->
 						 element_type);
 	      fprintf (f, "\\spatium");	// OpusTeX: inside a neume, divisio needs to be followed by a spatium
-	      current_element = current_element->next_element;
+	      current_element = current_element->next;
 	      key_change = 0;
 	      new_line = 0;
 	      continue;
@@ -370,13 +370,13 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 				   ("clef change inside of a syllable doesn't work in OpusTeX"),
 				   "libgregorio_opustex_write syllable",
 				   ERROR, 0);
-	      current_element = current_element->next_element;
+	      current_element = current_element->next;
 	      continue;
 	    }
 	  if (current_element->type == GRE_END_OF_LINE)
 	    {
-	      if (current_element->next_element
-		  && current_element->next_element->type == GRE_BAR)
+	      if (current_element->next
+		  && current_element->next->type == GRE_BAR)
 		{
 		  gregorio_message (_
 				       ("line break cannot be placed before a divisio in OpusTeX"),
@@ -388,7 +388,7 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 		  next_note =
 		    libgregorio_find_next_note (current_element, syllable);
 		  if (next_note == 0
-		      || (!(current_element->next_element)
+		      || (!(current_element->next)
 			  && (syllable->next_syllable
 			      && syllable->next_syllable->elements[0]
 			      && (syllable->next_syllable->elements[0]->
@@ -405,13 +405,13 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 		      fprintf (f, "\\lineaproxima");
 		    }
 		}
-	      current_element = current_element->next_element;
+	      current_element = current_element->next;
 	      key_change = 0;
 	      new_line = 1;
 	      continue;
 	    }
 	  libgregorio_opustex_write_element (f, current_element);
-	  current_element = current_element->next_element;
+	  current_element = current_element->next;
 	  key_change = 0;
 	  new_line = 0;
 	  continue;
@@ -599,21 +599,21 @@ libgregorio_opustex_write_element (FILE * f, gregorio_element * element)
 	    {
 	      fprintf (f, "\\Nonspatium");
 	    }
-	  current_glyph = current_glyph->next_glyph;
+	  current_glyph = current_glyph->next;
 	  continue;
 	}
       if (current_glyph->type == GRE_FLAT)
 	{
 	  fprintf (f, "\\bmolle ");
 	  libgregorio_opustex_print_note (f, current_glyph->glyph_type);
-	  current_glyph = current_glyph->next_glyph;
+	  current_glyph = current_glyph->next;
 	  continue;
 	}
       if (current_glyph->type == GRE_NATURAL)
 	{
 	  fprintf (f, "\\bdurum ");
 	  libgregorio_opustex_print_note (f, current_glyph->glyph_type);
-	  current_glyph = current_glyph->next_glyph;
+	  current_glyph = current_glyph->next;
 	  continue;
 	}
       if (current_glyph->type == GRE_BAR)
@@ -621,12 +621,12 @@ libgregorio_opustex_write_element (FILE * f, gregorio_element * element)
 	  fprintf (f, "\\");
 	  libgregorio_opustex_write_barline (f, current_glyph->glyph_type);
 	  fprintf (f, "\n\\spatium\n");
-	  current_glyph = current_glyph->next_glyph;
+	  current_glyph = current_glyph->next;
 	  continue;
 	}
       // at this point glyph->type is GRE_GLYPH
       libgregorio_opustex_write_glyph (f, current_glyph);
-      current_glyph = current_glyph->next_glyph;
+      current_glyph = current_glyph->next;
     }
 }
 
@@ -706,7 +706,7 @@ libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
 	  fprintf (f, "\\ictus ");
 	  libgregorio_opustex_print_note (f, current_note->pitch);
 	}
-      current_note = current_note->next_note;
+      current_note = current_note->next;
     }
   current_note = glyph->first_note;
   // divide puncta_inclinata into single glyphs
@@ -720,7 +720,7 @@ libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
 	}
       fprintf (f, "\\punctuminclinatum ");
       libgregorio_opustex_print_note (f, glyph->first_note->pitch);
-      current_note = glyph->first_note->next_note;
+      current_note = glyph->first_note->next;
       while (current_note)
 	{
 	  fprintf (f, "\\nonspatium");
@@ -735,7 +735,7 @@ libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
 	    }
 	  fprintf (f, "\\punctuminclinatum ");
 	  libgregorio_opustex_print_note (f, current_note->pitch);
-	  current_note = current_note->next_note;
+	  current_note = current_note->next;
 	}
       return;
     }
@@ -755,7 +755,7 @@ libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
 		  h_length++;
 		  h_pitch = current_note->h_episemus_top_note;
 		}
-	      current_note = current_note->next_note;
+	      current_note = current_note->next;
 	    }
 	  if (h_length > 0)
 	    {
@@ -770,10 +770,10 @@ libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
 						      glyph->first_note->
 						      pitch, 1);
 	    }
-	  if (glyph->first_note->next_note->h_episemus_type > H_NO_EPISEMUS)
+	  if (glyph->first_note->next->h_episemus_type > H_NO_EPISEMUS)
 	    {
 	      libgregorio_opustex_print_episem (f,
-						glyph->first_note->next_note->
+						glyph->first_note->next->
 						pitch, 1);
 	    }
 	}
@@ -855,7 +855,7 @@ libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
   while (current_note)
     {
       libgregorio_opustex_print_note (f, current_note->pitch);
-      current_note = current_note->next_note;
+      current_note = current_note->next;
     }
 
   current_note = glyph->first_note;
@@ -875,15 +875,15 @@ libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
 	  libgregorio_opustex_print_augmentum_note (f, current_note->pitch);
 	  libgregorio_opustex_print_augmentum_note (f,
 						    current_note->
-						    previous_note->pitch);
+						    previous->pitch);
 	  augmentum = 1;
 	}
-      current_note = current_note->next_note;
+      current_note = current_note->next;
     }
 
-  if (augmentum == 1 && glyph->next_glyph
-      && glyph->next_glyph->type == GRE_SPACE
-      && glyph->next_glyph->glyph_type == SP_ZERO_WIDTH)
+  if (augmentum == 1 && glyph->next
+      && glyph->next->type == GRE_SPACE
+      && glyph->next->glyph_type == SP_ZERO_WIDTH)
     loff++;
 }
 
@@ -1220,7 +1220,7 @@ char
 libgregorio_find_next_note (gregorio_element * current_element,
 			    gregorio_syllable * current_syllable)
 {
-  gregorio_element *next_element = current_element->next_element;
+  gregorio_element *next_element = current_element->next;
   gregorio_element *element_element = NULL;
   char stop = 0;
   gregorio_glyph *next_glyph = NULL;
@@ -1236,7 +1236,7 @@ libgregorio_find_next_note (gregorio_element * current_element,
 	    }
 	  else
 	    {
-	      next_element = next_element->next_element;
+	      next_element = next_element->next;
 	    }
 	}
       else
@@ -1257,7 +1257,7 @@ libgregorio_find_next_note (gregorio_element * current_element,
       next_glyph = element_element->first_glyph;
       while (next_glyph->type != GRE_GLYPH)
 	{
-	  next_glyph = next_glyph->next_glyph;
+	  next_glyph = next_glyph->next;
 	}
     }
   if (next_glyph)

@@ -412,11 +412,11 @@ write_score (FILE * f, gregorio_score * score)
 		      fprintf (f, "         h_episemus_top_note %d\n",
 			       note->h_episemus_top_note);
 		    }
-		  note = note->next_note;
+		  note = note->next;
 		}
-	      glyph = glyph->next_glyph;
+	      glyph = glyph->next;
 	    }
-	  element = element->next_element;
+	  element = element->next;
 	}
       fprintf (f,
 	       "=====================================================================\n");
