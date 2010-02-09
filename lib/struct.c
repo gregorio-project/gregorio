@@ -64,6 +64,7 @@ gregorio_add_note (gregorio_note ** current_note, char pitch, char shape,
   element->liquescentia = liquescentia;
   element->previous = *current_note;
   element->next = NULL;
+  element->texverb = NULL;
   if (*current_note)
     {
       (*current_note)->next = element;
@@ -89,6 +90,7 @@ gregorio_add_special_as_note (gregorio_note ** current_note, char type,
   element->signs = _NO_SIGN;
   element->previous = *current_note;
   element->next = NULL;
+  element->texverb = NULL;
   if (*current_note)
     {
       (*current_note)->next = element;
@@ -97,7 +99,7 @@ gregorio_add_special_as_note (gregorio_note ** current_note, char type,
 }
 
 void
-gregorio_add_texverb (gregorio_note ** current_note, char *str)
+gregorio_add_texverb_as_note (gregorio_note ** current_note, char *str)
 {
   gregorio_note *element = malloc (sizeof (gregorio_note));
   if (!element)
@@ -111,6 +113,7 @@ gregorio_add_texverb (gregorio_note ** current_note, char *str)
   element->signs = _NO_SIGN;
   element->previous = *current_note;
   element->next = NULL;
+  element->texverb = str;
   if (*current_note)
     {
       (*current_note)->next = element;
@@ -156,6 +159,8 @@ void
 gregorio_free_one_note (gregorio_note ** note)
 {
   gregorio_note *next = NULL;
+  // we have to comment in and free only when we free the element (a bit dirty)
+  //free((*note)->texverb);
   if (!note || !*note)
     {
       return;
@@ -202,6 +207,7 @@ gregorio_add_glyph (gregorio_glyph ** current_glyph, char type,
   next_glyph->liquescentia = liquescentia;
   next_glyph->first_note = first_note;
   next_glyph->next = NULL;
+  next_glyph->texverb = NULL;
   next_glyph->previous = *current_glyph;
   if (*current_glyph)
     {
@@ -213,7 +219,7 @@ gregorio_add_glyph (gregorio_glyph ** current_glyph, char type,
 
 void
 gregorio_add_special_as_glyph (gregorio_glyph ** current_glyph, char type,
-				  char pitch, char additional_infos)
+				  char pitch, char additional_infos, char *texverb)
 {
   gregorio_glyph *next_glyph = malloc (sizeof (gregorio_glyph));
   if (!next_glyph)
@@ -227,6 +233,7 @@ gregorio_add_special_as_glyph (gregorio_glyph ** current_glyph, char type,
   next_glyph->liquescentia = additional_infos;
   next_glyph->first_note = NULL;
   next_glyph->next = NULL;
+  next_glyph->texverb = texverb;
   next_glyph->previous = *current_glyph;
   if (*current_glyph)
     {
@@ -270,6 +277,8 @@ gregorio_free_one_glyph (gregorio_glyph ** glyph)
     {
       (*glyph)->previous->next = NULL;
     }
+  // we free texverb only when we free elements, otherwise we'll free it several times
+  //free((*glyph)->texverb);
   gregorio_free_notes (&(*glyph)->first_note);
   free (*glyph);
   *glyph = next;
@@ -311,6 +320,7 @@ gregorio_add_element (gregorio_element ** current_element,
   next->first_glyph = first_glyph;
   next->previous = *current_element;
   next->next = NULL;
+  next->texverb = NULL;
   if (*current_element)
     {
       (*current_element)->next = next;
@@ -321,7 +331,7 @@ gregorio_add_element (gregorio_element ** current_element,
 
 void
 gregorio_add_special_as_element (gregorio_element ** current_element,
-				    char type, char pitch, char additional_infos)
+				    char type, char pitch, char additional_infos, char *texverb)
 {
   gregorio_element *special = malloc (sizeof (gregorio_element));
   if (!special)
@@ -335,6 +345,7 @@ gregorio_add_special_as_element (gregorio_element ** current_element,
   special->additional_infos = additional_infos;
   special->first_glyph = NULL;
   special->next = NULL;
+  special->texverb = texverb;
   special->previous = *current_element;
   if (*current_element)
     {
@@ -352,6 +363,7 @@ gregorio_free_one_element (gregorio_element ** element)
     {
       return;
     }
+  free((*element)->texverb);
   next = (*element)->next;
   gregorio_free_glyphs (&(*element)->first_glyph);
   free (*element);

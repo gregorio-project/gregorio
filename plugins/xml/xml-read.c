@@ -625,7 +625,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 		{
 
 		  gregorio_add_special_as_element ((&current_element),
-						   GRE_BAR, step, 0);
+						   GRE_BAR, step, 0, NULL);
 		  current_element->additional_infos = bar_signs;
 		  if (!((*current_syllable)->elements[0]))
 		    {
@@ -647,7 +647,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 		{
 		  gregorio_add_special_as_element ((&current_element),
 						   GRE_C_KEY_CHANGE,
-						   line + 48, 0);
+						   line + 48, 0, NULL);
 		  if (!((*current_syllable)->elements[0]))
 		    {
 // we need this to find the first element
@@ -661,7 +661,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 		{
 		  gregorio_add_special_as_element ((&current_element),
 						   GRE_F_KEY_CHANGE,
-						   line + 48, 0);
+						   line + 48, 0, NULL);
 		  if (!((*current_syllable)->elements[0]))
 		    {
 // we need this to find the first element
@@ -686,7 +686,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 	    {
 	      gregorio_add_special_as_element ((&current_element),
 					       GRE_END_OF_LINE,
-					       GRE_END_OF_LINE, 0);
+					       GRE_END_OF_LINE, 0, NULL);
 	      if (!((*current_syllable)->elements[0]))
 		{
 		  (*current_syllable)->elements[0] = current_element;
@@ -699,7 +699,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 	    {
 	      gregorio_add_special_as_element ((&current_element),
 					       GRE_END_OF_LINE,
-					       GRE_END_OF_PAR, 0);
+					       GRE_END_OF_PAR, 0, NULL);
 	      if (!((*current_syllable)->elements[0]))
 		{
 		  (*current_syllable)->elements[0] = current_element;
@@ -982,7 +982,7 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
       if (step != 0)
 	{
 
-	  gregorio_add_special_as_element (current_element, GRE_BAR, step, 0);
+	  gregorio_add_special_as_element (current_element, GRE_BAR, step, 0, NULL);
 	  (*current_element)->additional_infos = bar_signs;
 	  gregorio_reinitialize_one_voice_alterations (alterations);
 	}
@@ -993,7 +993,7 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
       step =
 	libgregorio_xml_read_pitch
 	(current_node->xmlChildrenNode->xmlChildrenNode, doc, *key);
-      gregorio_add_special_as_element (current_element, GRE_CUSTO, step, 0);
+      gregorio_add_special_as_element (current_element, GRE_CUSTO, step, 0, NULL);
     }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "clef-change"))
     {
@@ -1002,14 +1002,14 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
       if (step == 'c')
 	{
 	  gregorio_add_special_as_element (current_element,
-					   GRE_C_KEY_CHANGE, line + 48, 0);
+					   GRE_C_KEY_CHANGE, line + 48, 0, NULL);
 	  gregorio_reinitialize_one_voice_alterations (alterations);
 	  *key = gregorio_calculate_new_key (step, line);
 	}
       if (step == 'f')
 	{
 	  gregorio_add_special_as_element (current_element,
-					   GRE_F_KEY_CHANGE, line + 48, 0);
+					   GRE_F_KEY_CHANGE, line + 48, 0, NULL);
 	  gregorio_reinitialize_one_voice_alterations (alterations);
 	  *key = gregorio_calculate_new_key (step, line);
 	}
@@ -1025,25 +1025,25 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
       (current_node->name, (const xmlChar *) "larger-neumatic-space"))
     {
       gregorio_add_special_as_element (current_element,
-				       GRE_SPACE, SP_LARGER_SPACE, 0);
+				       GRE_SPACE, SP_LARGER_SPACE, 0, NULL);
       return;
     }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "end-of-line"))
     {
       gregorio_add_special_as_element (current_element,
-				       GRE_END_OF_LINE, GRE_END_OF_LINE, 0);
+				       GRE_END_OF_LINE, GRE_END_OF_LINE, 0, NULL);
       return;
     }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "end-of-paragraph"))
     {
       gregorio_add_special_as_element (current_element,
-				       GRE_END_OF_LINE, GRE_END_OF_PAR, 0);
+				       GRE_END_OF_LINE, GRE_END_OF_PAR, 0, NULL);
       return;
     }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "glyph-space"))
     {
       gregorio_add_special_as_element (current_element,
-				       GRE_SPACE, SP_GLYPH_SPACE, 0);
+				       GRE_SPACE, SP_GLYPH_SPACE, 0, NULL);
       return;
     }
 
@@ -1075,7 +1075,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 	  step =
 	    libgregorio_xml_read_alteration (current_node->xmlChildrenNode,
 					     doc, key);
-	  gregorio_add_special_as_glyph (&current_glyph, GRE_FLAT, step, 0);
+	  gregorio_add_special_as_glyph (&current_glyph, GRE_FLAT, step, 0, NULL);
 	  alterations[(int) step - 48] = FLAT;
 	  current_node = current_node->next;
 	  continue;
@@ -1087,7 +1087,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 	    libgregorio_xml_read_alteration (current_node->xmlChildrenNode,
 					     doc, key);
 	  gregorio_add_special_as_glyph (&current_glyph, GRE_NATURAL,
-					 step, 0);
+					 step, 0, NULL);
 	  alterations[(int) step - 48] = NO_ALTERATION;
 	  current_node = current_node->next;
 	  continue;
@@ -1096,7 +1096,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 	  (current_node->name, (const xmlChar *) "zero-width-space"))
 	{
 	  gregorio_add_special_as_glyph (&current_glyph, GRE_SPACE,
-					 SP_ZERO_WIDTH, 0);
+					 SP_ZERO_WIDTH, 0, NULL);
 	  current_node = current_node->next;
 	  continue;
 	}

@@ -167,7 +167,7 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 		}
 	      gregorio_add_special_as_element (&current_element,
 						  current_glyph->type,
-						  current_glyph->glyph_type, current_glyph->liquescentia);
+						  current_glyph->glyph_type, current_glyph->liquescentia, current_glyph->texverb);
 	    }
 	  else {
 	

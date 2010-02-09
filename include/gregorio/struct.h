@@ -76,19 +76,11 @@ typedef struct gregorio_note {
 // under the same horizontal episemus of the note. If the note is not
 // under an episemus, it is 0.
   char h_episemus_top_note;
+// a string containing a possible TeX verbatim; necessary during
+// structure generation.
+  char *texverb;
 } gregorio_note;
-
-typedef struct gregorio_texverb {
-// always GRE_TEXVERB
-  char type;
-// the usual linked chain pointers
-  void *previous;
-  void *next;
-// the TeX string
-  char *texstr;
-} gregorio_texverb;
   
-
 /*
 
 gregorio_glyph can be other things as GRE_GLYPH: it can be GRE_FLAT,
@@ -118,6 +110,9 @@ typedef struct gregorio_glyph {
 // a pointer to a (chained list of) gregorio_notes, the first of the
 // glyph.
   struct gregorio_note *first_note;
+// a string containing a possible TeX verbatim; necessary during
+// structure generation.
+  char *texverb;
 } gregorio_glyph;
 
 typedef struct gregorio_element {
@@ -138,7 +133,8 @@ typedef struct gregorio_element {
   char additional_infos;
 // a pointer to the first glyph of the element.
   struct gregorio_glyph *first_glyph;
-  //struct gregorio_element *previous_element;
+// a string containing a possible TeX verbatim.
+  char *texverb;
 } gregorio_element;
 
 /*
@@ -362,10 +358,10 @@ void gregorio_free_score(gregorio_score *score);
 void gregorio_go_to_first_character (gregorio_character ** character);
 void gregorio_add_text (char *mbcharacters, gregorio_character **current_character);
 
-void gregorio_add_special_as_glyph (gregorio_glyph **current_glyph, char type, char pitch, char additional_infos);
+void gregorio_add_special_as_glyph (gregorio_glyph **current_glyph, char type, char pitch, char additional_infos, char *texverb);
 void gregorio_add_special_as_note (gregorio_note **current_note, char type, char pitch);
-void gregorio_add_texverb (gregorio_note **current_note, char *str);
-void gregorio_add_special_as_element (gregorio_element **current_element, char type, char pitch, char additional_infos);
+void gregorio_add_texverb_as_note (gregorio_note **current_note, char *str);
+void gregorio_add_special_as_element (gregorio_element **current_element, char type, char pitch, char additional_infos, char *texverb);
 
 void gregorio_determine_good_top_notes (gregorio_note * current_note);
 

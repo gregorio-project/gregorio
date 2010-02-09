@@ -264,10 +264,10 @@ write_score (FILE * f, gregorio_score * score)
 		       element->element_type,
 		       libgregorio_dump_space_type (element->element_type));
 	    }
-	  if (element->element_type && element->type == GRE_TEXVERB)
+	  if (element->type == GRE_TEXVERB)
 	    {
-	      fprintf (f, "     element_type            %d\n",
-		       element->element_type);
+          fprintf (f, "     TeX string:       %s\n",
+		       element->texverb);
 	    }
 	  if (element->element_type && element->type == GRE_BAR)
 	    {

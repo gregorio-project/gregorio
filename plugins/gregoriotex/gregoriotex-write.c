@@ -359,6 +359,12 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	  current_element = current_element->next;
 	  continue;
 	}
+      if (current_element->type == GRE_TEXVERB && current_element->texverb)
+	{
+	  fprintf(f, "%s", current_element->texverb);
+	  current_element = current_element->next;
+	  continue;
+	}
       if (current_element->type == GRE_C_KEY_CHANGE)
 	{
 	  if (current_element->previous &&

@@ -58,7 +58,7 @@ gregorio_note *current_note;
     BEGIN(texverb);
     }
 <texverb>[^<]+ {
-	gregorio_add_texverb(&current_note, strdup(gabc_notes_determination_text));
+	gregorio_add_texverb_as_note(&current_note, strdup(gabc_notes_determination_text));
     }
 <texverb><\/tex> {
 	BEGIN(INITIAL);

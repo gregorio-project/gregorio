@@ -301,7 +301,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note,
 	      *current_key =
 		gregorio_calculate_new_key (C_KEY, current_note->pitch - 48);
 	      gregorio_add_special_as_glyph (&last_glyph, GRE_C_KEY_CHANGE,
-					     current_note->pitch, FLAT_KEY);
+					     current_note->pitch, FLAT_KEY, NULL);
 	      current_glyph_first_note = current_note->next;
 	      gregorio_free_one_note (&current_note);
 	      last_pitch = USELESS_VALUE;
@@ -312,7 +312,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note,
 	      *current_key =
 		gregorio_calculate_new_key (F_KEY, current_note->pitch - 48);
 	      gregorio_add_special_as_glyph (&last_glyph, GRE_F_KEY_CHANGE,
-					     current_note->pitch, FLAT_KEY);
+					     current_note->pitch, FLAT_KEY, NULL);
 	      current_glyph_first_note = current_note->next;
 	      gregorio_free_one_note (&current_note);
 	      last_pitch = USELESS_VALUE;
@@ -322,7 +322,8 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note,
 	    {
 	      current_note->pitch =
 		libgregorio_gabc_determine_custo_pitch (current_note->
-							next, *current_key);
+							next,
+							*current_key);
 	    }
 	  // we calculate the signs of the bars
 	  if (current_note->type == GRE_BAR)
@@ -349,7 +350,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note,
 	    }
 	  gregorio_add_special_as_glyph (&last_glyph, current_note->type,
 					 current_note->pitch,
-					 additional_infos);
+					 additional_infos, current_note->texverb);
 	  current_glyph_first_note = current_note->next;
 	  gregorio_free_one_note (&current_note);
 	  last_pitch = USELESS_VALUE;
