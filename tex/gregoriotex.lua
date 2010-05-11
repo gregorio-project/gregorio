@@ -139,7 +139,7 @@ function gregoriotex.atScoreBeggining ()
     if callback.add then
       callback.add('post_linebreak_filter', gregoriotex.callback, 'gregoriotex.callback')
     elseif luatexbase then
-      luatexbase.add_to_callback('post_linebreak_filter', gregoriotex.callback)
+      luatexbase.add_to_callback('post_linebreak_filter', gregoriotex.callback, 'gregoriotex.callback')
     else
       callback.register('post_linebreak_filter', gregoriotex.callback)
     end
