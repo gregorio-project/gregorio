@@ -31,7 +31,6 @@ gregoriotex.module = {
     copyright     = "Elie Roux",
     license       = "GPLv3",
 }
-
 if luatextra and luatextra.provides_module then
     luatextra.provides_module(gregoriotex.module)
     function gregoriotex.error(...)
@@ -42,6 +41,17 @@ if luatextra and luatextra.provides_module then
     end
     function gregoriotex.info(...)
         luatextra.module_info("GregorioTeX", string.format(...)) 
+    end
+elseif luatexbase and luatexbase.provides_module then
+    luatexbase.provides_module(gregoriotex.module)
+    function gregoriotex.error(...)
+        luatexbase.module_error("GregorioTeX", string.format(...))
+    end
+    function gregoriotex.log(...)
+        luatexbase.module_log("GregorioTeX", string.format(...)) 
+    end
+    function gregoriotex.info(...)
+        luatexbase.module_info("GregorioTeX", string.format(...)) 
     end
 else
     function gregoriotex.error(...)
@@ -128,6 +138,8 @@ end
 function gregoriotex.atScoreBeggining ()
     if callback.add then
       callback.add('post_linebreak_filter', gregoriotex.callback, 'gregoriotex.callback')
+    elseif luatexbase then
+      luatexbase.add_to_callback('post_linebreak_filter', gregoriotex.callback)
     else
       callback.register('post_linebreak_filter', gregoriotex.callback)
     end
@@ -136,6 +148,8 @@ end
 function gregoriotex.atScoreEnd ()
     if callback.remove then
       callback.remove('post_linebreak_filter', 'gregoriotex.callback')
+    elseif luatexbase then
+      luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.callback')
     else
       callback.register('post_linebreak_filter', nil)
     end
