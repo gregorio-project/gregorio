@@ -72,8 +72,10 @@ local hlist = node.id('hlist')
 local vlist = node.id('vlist')
 local glyph = node.id('glyph')
 local gregorioattr
-if tex.attributenumber and tex.attributenumber and tex.attributenumber['gregorioattr'] then
+if tex.attributenumber and tex.attributenumber['gregorioattr'] then
   gregorioattr = tex.attributenumber['gregorioattr']
+elseif luatexbase and luatexbase.attributes and luatexbase.attributes['gregorioattr'] then
+  gregorioattr = luatexbase.attributes['gregorioattr']
 else
   gregorioattr = 987 -- the number declared with gregorioattr
 end
