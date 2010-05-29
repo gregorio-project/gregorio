@@ -811,23 +811,8 @@ libgregorio_gtex_print_char (FILE * f, grewchar to_print)
       fprintf (f, "\\ensuremath{\\sim}");
       return;
     }
-  if (to_print < 128)
-    {
-      fprintf (f, "%lc", to_print);
-      return;
-    }
-  switch (to_print)
-    {
-    case L'œ':
-      fprintf (f, "\\oe ");
-      break;
-    case L'æ':
-      fprintf (f, "\\ae ");
-      break;
-    default:
-      fprintf (f, "\\char %d", to_print);
-      break;
-    }
+    fprintf (f, "%lc", to_print);
+    return;
 }
 
 // a function that takes a grewchar * and write it in omega style : every character is reprensented by ^^^^x where x is its hexadecimal representation on 4 letters (completed with 0)
