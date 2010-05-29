@@ -20,9 +20,9 @@ Description: command-line tool to typeset Gregorian chant
 
 Package: gregoriotex
 Architecture: all
-Depends: tex-common (>= 0.33), texlive-omega, texlive-fonts-recommended, ${misc:Depends}
-Recommends: gregorio, luatex
-Description: Omega style for Gregorian chant scores
- GregorioTeX is a omega style for writing Gregorian chant scores. The code to
- write for a score is quite complex and should be written directly by the
- gregorio software.
+Depends: luatex, texlive-luatex, texlive-fonts-recommended, ${misc:Depends}
+Recommends: gregorio, texlive-omega
+Description: LuaTeX style for Gregorian chant scores
+ GregorioTeX is a Omega/LuaTeX style for writing Gregorian chant scores.
+ The code to write for a score is quite complex and should be written directly
+ by the gregorio software.
