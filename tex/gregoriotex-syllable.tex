@@ -589,6 +589,12 @@
 \advance\begindifference by -\textaligncenter %
 \setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{1}%
 \setnextbegindifference{#5}{#6}{#7}%
+% for LuaTeX syllable counting in optimize_gabc, we put an empty syllable box with gregorioattr set to 2. With this we can count every syllable.
+\ifgreluatex %
+\gregorioattr=2\relax %
+\hbox to 0pt{}%
+\gregorioattr=0\relax %
+\fi %
 % then we check if there is something to write
 \ifdim\wd\Syllabletext = 0 pt\relax %
 % the most difficult case : when there is nothing to write
