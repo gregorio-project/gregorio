@@ -137,6 +137,8 @@ function gregoriotex.callback (h, groupcode, glyphes)
     return true
 end
 
+-- one day (when TeXLive 2007 will be really far away), proper callbacks should be created with luatexbase.
+
 function gregoriotex.atScoreBeggining ()
     if callback.add then
       callback.add('post_linebreak_filter', gregoriotex.callback, 'gregoriotex.callback')
@@ -144,6 +146,10 @@ function gregoriotex.atScoreBeggining ()
       luatexbase.add_to_callback('post_linebreak_filter', gregoriotex.callback, 'gregoriotex.callback')
     else
       callback.register('post_linebreak_filter', gregoriotex.callback)
+    end
+    -- we call the optimize_gabc functions here
+    if optimize_gabc_style then
+        optimize_gabc_style.add_callback()
     end
 end
 
@@ -154,6 +160,9 @@ function gregoriotex.atScoreEnd ()
       luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.callback')
     else
       callback.register('post_linebreak_filter', nil)
+    end
+    if optimize_gabc_style then
+        optimize_gabc_style.remove_callback()
     end
 end
 
