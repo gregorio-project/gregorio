@@ -515,7 +515,11 @@ libgregorio_otex_write_special_char (FILE * f, grewchar * special_char)
 void
 libgregorio_otex_write_verb (FILE * f, grewchar * verb_str)
 {
-  fprintf (f, "%ls", verb_str);
+  while (*verb_str != 0)
+    {
+      fprintf (f, "%lc", *verb_str);
+      verb_str ++;
+    }
 }
 
 void
@@ -557,7 +561,7 @@ libgregorio_otex_print_char (FILE * f, grewchar to_print)
       fprintf (f, "\\'o ");
       break;
     default:
-      fprintf (f, "%lc", to_print);
+      gregorio_write_one_tex_char(f, to_print);
       break;
     }
 }

@@ -322,6 +322,64 @@ gregorio_first_letter (gregorio_score * score)
   return L'\0';
 }
 
+/*
+
+A function to print one character in TeX. The reason of this function is that
+sometimes you need gregorio to write \char 232 (because of some bugs) and
+sometimes é, directly in utf8.
+
+*/
+
+// the variable that will decide if we're writing old or modern style
+unsigned char tex_write = WRITE_UTF_TEX;
+
+void
+gregorio_set_tex_write(unsigned char new)
+{
+    if (new == WRITE_OLD_TEX)
+      {
+        tex_write = WRITE_OLD_TEX;
+      }
+    else
+      {
+        tex_write = WRITE_UTF_TEX;
+      }
+}
+
+void
+gregorio_write_one_tex_char (FILE * f, grewchar to_print)
+{
+    if (tex_write == WRITE_OLD_TEX) 
+      {
+        gregorio_write_one_tex_char_old (f, to_print);
+      }
+    else
+      {
+        gregorio_write_one_tex_char_utf (f, to_print);
+      } 
+}
+
+// the function uses one of the following functions:
+
+void
+gregorio_write_one_tex_char_old (FILE * f, grewchar to_print)
+{
+      if (to_print < 128)
+    {
+      fprintf (f, "%lc", to_print);
+      return;
+    }
+    fprintf(f, "\\char %d", to_print);
+}
+
+void
+gregorio_write_one_tex_char_utf (FILE * f, grewchar to_print)
+{
+    fprintf (f, "%lc", to_print);
+}
+
+// this function sets the pointer
+
 /* Here starts the code of the handling of text and styles.
 
 This part is not the easiest, in fact is is the most complicated. The reason is that I want to make something coherent in memory (easy to interprete), and to let the user type whatever he wants. This part was originally written for gabc, that's why it's always talking about it. But it could as well be used by other read plugins, to put things in order.

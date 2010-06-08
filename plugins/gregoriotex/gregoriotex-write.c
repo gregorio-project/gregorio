@@ -791,6 +791,11 @@ void
 libgregorio_gtex_print_char (FILE * f, grewchar to_print)
 {
 // special case for the star, as it is < 128
+  if (to_print < 128)
+    {
+      fprintf (f, "%lc", to_print);
+      return;
+    }    
   if (to_print == L'*')
     {
       fprintf (f, "\\grestar ");
@@ -811,26 +816,8 @@ libgregorio_gtex_print_char (FILE * f, grewchar to_print)
       fprintf (f, "\\ensuremath{\\sim}");
       return;
     }
-    fprintf (f, "%lc", to_print);
+    gregorio_write_one_tex_char(f, to_print);
     return;
-}
-
-// a function that takes a grewchar * and write it in omega style : every character is reprensented by ^^^^x where x is its hexadecimal representation on 4 letters (completed with 0)
-void
-libgregorio_print_unicode_letters (FILE * f, grewchar * wstr)
-{
-  int i = 0;
-
-  if (!wstr)
-    {
-      return;
-    }
-  while (wstr[i])
-    {
-      libgregorio_gtex_print_char (f, wstr[i]);
-      i++;
-    }
-  return;
 }
 
 void

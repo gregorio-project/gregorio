@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <gregorio/struct.h>
 #include <gregorio/plugin_loader.h>
 #include <gregorio/messages.h>
+#include <gregorio/characters.h>
 
 #include <locale.h>
 #include "gettext.h"
@@ -117,6 +118,7 @@ print_usage (char *name)
 \t-o file    writes output to specified file\n\
 \t-S         writes output to stdout\n\
 \t-F format  specifies output file format, default is gtex\n\
+\t-O         write two-bytes characters as \\char %%d instead of utf8 in TeX\n\
 \t-l file    writes messages output to specified file (default stderr)\n\
 \t-f format  specifies input file format, default is gabc\n\
 \t-s         reads input from stdin\n\
@@ -139,7 +141,7 @@ int
 main (int argc, char **argv)
 {
   const char *copyright =
-    "Copyright (C) 2006-2008 Elie Roux <elie.roux@telecom-bretagne.eu>";
+    "Copyright (C) 2006-2010 Elie Roux <elie.roux@telecom-bretagne.eu>";
   int c;
 
   char *input_file_name = NULL;
@@ -167,6 +169,7 @@ main (int argc, char **argv)
     {"messages-file", 1, 0, 'l'},
     {"input-format", 1, 0, 'f'},
     {"stdin", 0, 0, 's'},
+    {"old-style-tex", 0, 0, 'O'},
     {"help", 0, 0, 'h'},
     {"version", 0, 0, 'V'},
     {"licence", 0, 0, 'L'},
@@ -203,7 +206,7 @@ main (int argc, char **argv)
 
   while (1)
     {
-      c = getopt_long (argc, argv, "o:SF:l:f:shLVvW",
+      c = getopt_long (argc, argv, "o:SF:l:f:shOLVvW",
 		       long_options, &option_index);
       if (c == -1)
 	break;
@@ -238,6 +241,9 @@ main (int argc, char **argv)
 	      break;
 	    }
 	  output_file = stdout;
+	  break;
+	case 'O':
+	  gregorio_set_tex_write(WRITE_OLD_TEX);
 	  break;
 	case 'F':
 	  if (output_format)
@@ -287,7 +293,11 @@ main (int argc, char **argv)
 	  exit (0);
 	  break;
 	case 'V':
-	  printf ("%s version %s\n%s\n", argv[0], VERSION, copyright);
+	  #if GREGORIO_GLIB == 1
+	    printf ("%s version %s, compiled with glib.\n%s\n", argv[0], VERSION, copyright);
+	  #else
+	    printf ("%s version %s.\n%s\n", argv[0], VERSION, copyright);
+	  #endif
 	  exit (0);
 	  break;
 	case 'v':

@@ -35,6 +35,10 @@ CENTER_DETERMINING_MIDDLE is used internally in the big function to know where w
 #define CENTER_FULLY_DETERMINED 2
 #define CENTER_DETERMINING_MIDDLE 3
 
+// two constants to know if we write old style TeX or modern utf TeX.
+#define WRITE_OLD_TEX 1
+#define WRITE_UTF_TEX 2
+
 // this is a temporary structure that will be used for style determination
 
 typedef struct det_style
@@ -50,16 +54,14 @@ gregorio_character * gregorio_first_text (gregorio_score * score);
 
 int gregorio_is_vowel (grewchar letter);
 
-void
-gregorio_write_text (char type, gregorio_character * current_character,
+void gregorio_write_text (char type, gregorio_character * current_character,
 			FILE * f, void (*printverb) (FILE *, grewchar *),
 			void (*printchar) (FILE *, grewchar),
 			void (*begin) (FILE *, unsigned char),
 			void (*end) (FILE *, unsigned char),
 			void (*printspchar) (FILE *, grewchar *));
 			
-void
-gregorio_write_initial (gregorio_character * current_character,
+void gregorio_write_initial (gregorio_character * current_character,
 				FILE * f, void (*printverb) (FILE *,
 							     grewchar *),
 				void (*printchar) (FILE *, grewchar),
@@ -67,23 +69,27 @@ gregorio_write_initial (gregorio_character * current_character,
 				void (*end) (FILE *, unsigned char),
 				void (*printspchar) (FILE *, grewchar *));
 				
-gregorio_character *
-gregorio_first_text (gregorio_score * score);
+gregorio_character * gregorio_first_text (gregorio_score * score);
 
-grewchar
-gregorio_first_letter (gregorio_score * score);
+grewchar gregorio_first_letter (gregorio_score * score);
 
-void
-gregorio_free_styles (det_style **first_style);
+void gregorio_free_styles (det_style **first_style);
 
 void
-gregorio_insert_style_before (unsigned char type, unsigned char style, gregorio_character *current_character);
+gregorio_insert_style_before (unsigned char type, unsigned char style, 
+                 gregorio_character *current_character);
 
-void
-gregorio_rebuild_characters (gregorio_character ** param_character,
+void gregorio_rebuild_characters (gregorio_character ** param_character,
 			     char center_is_determined);
 			     
-void
-gregorio_rebuild_first_syllable (gregorio_character ** param_character);
+void gregorio_rebuild_first_syllable (gregorio_character ** param_character);
+
+void gregorio_write_one_tex_char_old (FILE * f, grewchar to_print);
+
+void gregorio_write_one_tex_char (FILE * f, grewchar to_print);
+
+void gregorio_write_one_tex_char_utf (FILE * f, grewchar to_print);
+
+void gregorio_set_tex_write(unsigned char new);
 
 #endif
