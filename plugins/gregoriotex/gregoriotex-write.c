@@ -208,6 +208,46 @@ libgregorio_gregoriotex_write_voice_info (FILE * f,
   // be needed in future.
 }
 
+
+// this function indicates if the syllable is the last of the line. If it's the
+// last of the score it returns 0, as it's handled another way
+unsigned char
+libgregorio_gregoriotex_is_last_of_line (gregorio_syllable * syllable)
+{
+    gregorio_element *current_element = NULL;
+    if (!(syllable->next_syllable))
+    {
+      return 0;
+    }
+    if ((syllable->next_syllable->elements)[0]
+      && (syllable->next_syllable->elements)[0]->type == GRE_END_OF_LINE)
+    {
+      // the next syllable start by an end of line
+      return 1;
+    }
+    current_element = (syllable->elements)[0];
+  while (current_element)
+    {
+      if (current_element->type == GRE_END_OF_LINE)
+	{
+	  // we return 1 only if the end of line is the last element
+	  if (!(current_element->next))
+	  {
+	    return 1;
+	  }
+	  else
+	  {
+        return 0;
+	  }
+	}
+	  else
+	{
+      current_element = current_element->next;
+	}
+	}
+  return 0;
+}
+
 void
 libgregorio_gregoriotex_write_syllable (FILE * f,
 					gregorio_syllable * syllable,
@@ -332,8 +372,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
       libgregorio_gregoriotex_write_translation (f, syllable->translation);
       fprintf (f, "}%%\n");
     }
-  if (syllable->next_syllable && (syllable->next_syllable->elements)[0]
-      && (syllable->next_syllable->elements)[0]->type == GRE_END_OF_LINE)
+  if (libgregorio_gregoriotex_is_last_of_line(syllable) != 0)
     {
       fprintf (f, "%%\n\\lastofline %%\n");
     }
@@ -773,6 +812,11 @@ libgregorio_gtex_write_special_char (FILE * f, grewchar * special_char)
       fprintf (f, "\\gredagger ");
       return;
     }
+  if (!wcscmp (special_char, L"-"))
+    {
+      fprintf (f, "\\zerhyph ");
+      return;
+    }
 }
 
 // here we need to print character by character, otherwise it won't work for windows (because %ls under windows is totally different from a utf8 %ls)
@@ -790,12 +834,6 @@ libgregorio_gtex_write_verb (FILE * f, grewchar * first_char)
 void
 libgregorio_gtex_print_char (FILE * f, grewchar to_print)
 {
-// special case for the star, as it is < 128
-  if (to_print < 128)
-    {
-      fprintf (f, "%lc", to_print);
-      return;
-    }    
   if (to_print == L'*')
     {
       fprintf (f, "\\grestar ");
@@ -811,13 +849,19 @@ libgregorio_gtex_print_char (FILE * f, grewchar to_print)
       fprintf (f, "\\_ ");
       return;
     }
+  // not sure it's a perfect idea...
+  if (to_print == L'-')
+    {
+      fprintf (f, "\\grehyph ");
+      return;
+    }
   if (to_print == L'~')
     {
       fprintf (f, "\\ensuremath{\\sim}");
       return;
     }
-    gregorio_write_one_tex_char(f, to_print);
-    return;
+  gregorio_write_one_tex_char(f, to_print);
+  return;
 }
 
 void

@@ -147,7 +147,6 @@ void libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note, char ne
 char libgregorio_gregoriotex_determine_next_note (gregorio_syllable * syllable, gregorio_element * element, gregorio_glyph * glyph);
 
 char libgregorio_gregoriotex_syllable_first_note (gregorio_syllable * syllable);
-void libgregorio_print_unicode_letters (FILE *f, grewchar *wstr);
 void libgregorio_gtex_write_begin (FILE * f, unsigned char style);
 void libgregorio_gtex_write_end (FILE * f, unsigned char style);
 void libgregorio_gtex_write_special_char (FILE * f, grewchar * special_char);

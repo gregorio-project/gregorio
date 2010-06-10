@@ -803,6 +803,10 @@ grechiro.atBeginScore()}%
 gregoriotex.atScoreBeggining()%
 }%
 \fi %
+%TODO do something like LaTeX's AtBeginDocument
+\ifdefined\optgabcAtScoreBeginning %
+\optgabcAtScoreBeginning %
+\fi %
 \global\knownline=1\relax %
 \relax%
 }
@@ -931,6 +935,7 @@ gregoriotex.atScoreEnd()%
 
 \newcount\lastoflinecount
 
+% TODO: case where we're at the beginning *and* end of a line... quite rare case though...
 % macro to tell gregorioTeX no to put a space after the current syllable (otherwise it may cause annoying black boxes in the pdf if written in plainTeX)
 % 0 if nothing
 % 1 if the syllable is the last of the line
@@ -1126,4 +1131,30 @@ gregoriotex.atScoreEnd()%
 \errmessage{GregorioTeX error: you must use LuaTeX to use \string\includegabcscore}%
 \fi %
 \relax %
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% some hyphen definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% a zero-width hyphen, useful for fine tuning line endings. To input in gabc verb for example.
+\def\zerhyph{%
+\hbox to 0pt{-\hss}%
+}
+
+% a normal hyphen
+\def\normalhyph{%
+-%
+}
+
+% the definition that will be always used for end of lines hyphens in gregorio, except if one of the two before is explicitely used
+\let\grehyph\normalhyph 
+
+% two macros to change the definition of the hyphen:
+\def\usenormalhyphen{%
+\global\let\grehyph\normalhyph %
+}
+
+\def\usezerohyphen{
+\global\let\grehyph\zerhyph %
 }

@@ -488,7 +488,12 @@
 % then we compare it with \maximumspacewithoutdash, if it is larger, we add a dash
 %
 \ifdim\temp>\maximumspacewithoutdash %
+% if it's the last syllable of line, the hyphen will be \grehyph
+\ifnum\lastoflinecount=1\relax %
+\setbox\Syllabletext=\hbox{\gretextformat{#1#2#3\grehyph\relax}}%
+\else %
 \setbox\Syllabletext=\hbox{\gretextformat{#1#2#3-}}%
+\fi %
 \setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{0}%
 \else %
 \ifgreluatex %
