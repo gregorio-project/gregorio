@@ -170,9 +170,11 @@ end
 --- 1 if we can launch gregorio
 --- 2 if we cannot
 --- nil if we don't know (yet)
+-- TODO: set the value through TeX
 gregoriotex.shell_escape = nil
 
 function gregoriotex.compile_gabc(gabc_file, tex_file)
+    --
     if not gregoriotex.shell_escape then
         local test = io.popen("gregorio -V")
         if test then
@@ -191,7 +193,12 @@ function gregoriotex.compile_gabc(gabc_file, tex_file)
         gregoriotex.error("unable to launch gregorio, shell-escape mode may not be activated. Try to compile with:\n    %s --shell-escape %s.tex\nSee the documentation of gregorio or your TeX distribution to automatize it.", tex.formatname, tex.jobname)
     else
         gregoriotex.info("compiling the score %s...", gabc_file)
+        -- LuaTeX forces LC_CTYPES to be C, which breaks gregorio, so we force it
+        -- to be nil, which is the default normally.
+        -- I hope it doesn't break other systems than Linux...
+        os.setenv("LC_CTYPE", nil)
         os.execute(string.format("gregorio -o %s %s", tex_file, gabc_file))
+        os.setenv("LC_CTYPE", "C")
     end
 end
 
