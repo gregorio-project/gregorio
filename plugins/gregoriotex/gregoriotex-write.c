@@ -458,7 +458,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
       if (current_element->type == GRE_CUSTO)
 	{
 	  // we also print a larger space before the custo
-	  fprintf (f, "\\endofelement{1}%%\n\\custo{%c}%%\n", current_element -> element_type);
+	  fprintf (f, "\\endofelement{1}%%\n\\custo{%c}%%\n", libgregorio_gregoriotex_determine_next_note (syllable, current_element, NULL));
 	  current_element = current_element->next;
 	  continue;
 	}
@@ -3088,7 +3088,7 @@ char
    gregorio_glyph * glyph)
 {
   char temp;
-  if (!glyph || !element || !syllable)
+  if (!element || !syllable)
     {
       gregorio_message (_
 			("called with a NULL argument"),
@@ -3096,15 +3096,18 @@ char
 			ERROR, 0);
       return 'g';
     }
-// we first explore the next glyphs to find a note
-  glyph = glyph->next;
-  while (glyph)
+  // we first explore the next glyphs to find a note, if there is one
+  if (glyph)
     {
-      if (glyph->type == GRE_GLYPH && glyph->first_note)
-	{
-	  return glyph->first_note->pitch;
-	}
       glyph = glyph->next;
+      while (glyph)
+        {
+          if (glyph->type == GRE_GLYPH && glyph->first_note)
+	    {
+	      return glyph->first_note->pitch;
+	    }
+          glyph = glyph->next;
+        }
     }
 // then we do the same with the elements
   element = element->next;
