@@ -52,6 +52,49 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		}
 
 
+// The function to set the locale.
+// The reason of this function is to have UTF-8 on Linux even when called in a
+// script that forces LC_CTYPE to be "C", which is the case for texlua and
+// certainly other script languages.
+void
+set_gregorio_locale()
+{
+#if defined (_WIN32) || defined(__CYGWIN__) || defined(__NT__)
+  // we're on windows, no idea what to do here...
+  setlocale("LC_CTYPE", "");
+#else
+// We try first LC_CTYPE, LC_ALL and then LANG to find a locale containing
+// the substring "UTF-8".
+ const char *locale = NULL;
+ const char *s;
+ if ((s = getenv("LC_CTYPE")) && *s && strstr(s, "UTF-8"))
+   {
+     locale = s;
+   }
+ if (!locale && (s = getenv("LC_ALL")) && *s && strstr(s, "UTF-8"))
+   {
+     locale = s;
+   }
+ if (!locale && (s = getenv("LANG")) && *s && strstr(s, "UTF-8"))
+   {
+     locale = s;
+   }
+ if (!locale)
+   {
+    printf("Error: cannot find any UTF-8 locale (looked in LC_CTYPE, LC_ALL and LANG).\nPlease set one of these environment variables to a UTF-8 locale\nor compile gregorio with the glib (./configure --enable-glib-utf8).\n");
+    exit (1);
+   }
+ else
+  {
+    if (!setlocale (LC_CTYPE, locale))
+      {
+        printf("Error setting locale to %s, please set a valid locale in the\nenvironment variable LC_CTYPE.\n", locale);
+        exit(1);
+      }
+  }
+#endif
+}
+
 // function that returns the filename without the extension
 static char *
 get_base_filename (char *fbasename)
@@ -183,6 +226,7 @@ main (int argc, char **argv)
       print_usage (argv[0]);
       exit (0);
     }
+  set_gregorio_locale();    
   current_directory = getcwd (current_directory, 150);
 
   bindtextdomain (PACKAGE, LOCALEDIR);
@@ -486,7 +530,6 @@ main (int argc, char **argv)
     }
 
   gregorio_set_verbosity_mode (verb_mode);
-  setlocale (LC_CTYPE, "");	//to work with an utf-8 encoding
 
   score = (input_plugin_info->read) (input_file);
   gregorio_plugin_unload (input_plugin);
