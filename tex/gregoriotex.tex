@@ -248,7 +248,7 @@
 \newlinecommon %
 \updateadditionalspaces{0}{0}%
 \removetranslationspace %
-\lastoflinecount=2\relax %
+\global\lastoflinecount=2\relax %
 \updateleftbox %
 \penalty-10001 %
 \relax%
@@ -266,7 +266,7 @@
 \else %
 \removetranslationspace %
 \fi %
-\lastoflinecount=2\relax %
+\global\lastoflinecount=2\relax %
 \updateleftbox %
 \penalty-10001 %
 \relax%
@@ -279,15 +279,20 @@
 \newlinecommon %
 \updateadditionalspaces{0}{0}%
 \removetranslationspace %
-\lastoflinecount=2\relax %
+\global\lastoflinecount=2\relax %
 \updateleftbox %
 \hfill %
 \penalty-10001 %
 \relax%
 }
 
+% a macro describing a kern to make before ending the line, which we sometimes want (see \syllable)
+\xdef\kernbeforeeol{0pt\relax}
+
 % the macro we call each time we force a changing of line, it automatically sets \knownline, and adjusts left spaces
 \def\newlinecommon{%
+% sometimes we need to add a space before ending the line:
+\kern\kernbeforeeol\relax %
 \ifnum\biginitial=1\relax %
 \ifcase\knownline %
 % 0: should not happend...
@@ -309,7 +314,7 @@
 \else %
 \removetranslationspace %
 \fi %
-\lastoflinecount=2\relax %
+\global\lastoflinecount=2\relax %
 \updateleftbox %
 \hfill %
 \penalty-10001 %
@@ -566,7 +571,7 @@
 \relax %
 }
 
-\def\setfirstannotation#1{
+\def\setfirstannotation#1{%
 \setfirstlineaboveinitial{#1}{#1}%
 \relax %
 }
@@ -832,7 +837,7 @@ gregoriotex.atScoreBeggining()%
 \grelocalleftbox{}%
 \grelocalrightbox{}%
 \fi
-\setbox\Aboveinitialfirstbox=\hbox{}
+\setbox\Aboveinitialfirstbox=\hbox{}%
 \updateadditionalspaces{0}{0}%
 \normalinitial %
 \ifgreluatex %
@@ -951,6 +956,17 @@ gregoriotex.atScoreEnd()%
 \blockcustos %
 \global\lastoflinecount=1\relax%
 \relax%
+}
+
+% a macro to disable (or reenable) the left shift for first syllables of scores
+\edef\disableeolshifts{0}
+
+\def\greDisableEOLShifts{%
+\xdef\disableeolshifts{1}%
+}
+
+\def\greEnableEOLShifts{%
+\xdef\disableeolshifts{0}%
 }
 
 % a count that is 1 if we block the custo, and 0 if we don't. We just block custos at the end of a score, to prevent a bug.
@@ -1139,12 +1155,18 @@ gregoriotex.atScoreEnd()%
 
 % a zero-width hyphen, useful for fine tuning line endings. To input in gabc verb for example.
 \def\zerhyph{%
-\hbox to 0pt{-\hss}%
+\hbox to 0pt{%
+%-%
+\char\the\hyphenchar\font %
+\hss %
+}%
 }
 
 % a normal hyphen
 \def\normalhyph{%
--%
+%-%
+\char\the\hyphenchar\font %
+\relax %
 }
 
 % the definition that will be always used for end of lines hyphens in gregorio, except if one of the two before is explicitely used

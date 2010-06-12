@@ -69,7 +69,7 @@
 % arguments are : 
 %% #1: the type of the key : c or f
 %% #2: the line of the key (1 is the lowest)
-%% #3: if we must use small key characters (inside a line) or not 0 if not inside, 1 if inside
+%% #3: if we must use small key characters (inside a line) or not 0: if not inside, 1 if inside
 %% #4: if we must type a space after or not
 %% #5: if a, it means that we must not put a flat after the key, otherwise it's the height of the flat
 \def\typekey#1#2#3#4#5{%
@@ -157,6 +157,10 @@
 % macro called when the key changes inside a syllable
 
 \def\inchangeclef#1#2#3{%
+% to see why we reset \lastoflinecount, see comments of \glyph.
+\ifnum\lastoflinecount=2\relax %
+\global\lastoflinecount=0\relax %
+\fi %
 \clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
 \multiply\clefchangespace by \grefactor %
 \hskip\clefchangespace %
@@ -187,7 +191,10 @@
 \raise \glyphraisevalue%
 \copy\Tempwidth %
 % for now we consider we always have a bar after the custo
+% we don't want to end the line here
+\penalty 10001\relax %
 \hskip -\spacearoundclefbars %
+\penalty 10001\relax %
 \relax %
 }
 
@@ -980,6 +987,10 @@
 %%% 0 if it is outside a syllable
 %%% 1 if it is in a syllable
 \def\writebar#1#2{%
+% to see why we reset \lastoflinecount, see comments of \glyph.
+\ifnum\lastoflinecount=2\relax %
+\global\lastoflinecount=0\relax %
+\fi %
 \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
 \ifcase#1 % 0 : virgula
 \penalty 10001 %
@@ -1115,6 +1126,10 @@
 % will determine if the flat has zero width or not.
 
 \def\flat#1#2{%
+% to see why we reset \lastoflinecount, see comments of \glyph.
+\ifnum\lastoflinecount=2\relax %
+\global\lastoflinecount=0\relax %
+\fi %
 \ifnum\the\firstglyph=1\relax %
 \global\firstisalteration=1\relax %
 \fi %
@@ -1123,6 +1138,8 @@
 \tempwidth=\wd\Tempwidth%
 \raise \glyphraisevalue%
 \copy\Tempwidth%
+% we try to avoir line breaking after a flat or a natural
+\penalty 10001\relax %
 \ifnum\the\firstglyph=1\relax %
 \temp=\wd\Tempwidth %
 \advance\temp by \alterationspace %
@@ -1131,12 +1148,17 @@
 \else %
 \hskip\alterationspace %
 \fi %
+\penalty 10001\relax %
 \relax%
 }
 
 % Same as the one before, but for naturals.
 
 \def\natural#1#2{%
+% to see why we reset \lastoflinecount, see comments of \glyph.
+\ifnum\lastoflinecount=2\relax %
+\global\lastoflinecount=0\relax %
+\fi %
 \ifnum\the\firstglyph=1\relax %
 \global\firstisalteration=1\relax %
 \fi %
@@ -1145,6 +1167,7 @@
 \tempwidth=\wd\Tempwidth%
 \raise \glyphraisevalue%
 \copy\Tempwidth%
+\penalty 10001\relax %
 \ifnum\the\firstglyph=1\relax %
 \temp=\wd\Tempwidth %
 \advance\temp by \alterationspace %
@@ -1153,5 +1176,6 @@
 \else %
 \hskip\alterationspace %
 \fi %
+\penalty 10001\relax %
 \relax%
 }
