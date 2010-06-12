@@ -83,6 +83,8 @@ end
 -- in each function we check if we really are inside a score, which we can see with the gregorioattr being set or not
 
 function gregoriotex.addhyphenandremovedumblines (h, groupcode, glyphes)
+    -- TODO: to be changed according to the font
+    local hyphen = tex.defaulthyphenchar or 45 
     local lastseennode=nil
     local potentialdashvalue=1
     local nopotentialdashvalue=2
@@ -91,7 +93,7 @@ function gregoriotex.addhyphenandremovedumblines (h, groupcode, glyphes)
     local tempnode=node.new(glyph, 0)
     local dashnode
     tempnode.font=0
-    tempnode.char=tex.defaulthyphenchar
+    tempnode.char = hyphen
     dashnode=node.hpack(tempnode)
     dashnode.shift=0
     -- we explore the lines
@@ -105,12 +107,18 @@ function gregoriotex.addhyphenandremovedumblines (h, groupcode, glyphes)
 		    		if node.has_attribute(b, gregorioattr, potentialdashvalue) then
 			    		adddash=true
 		    			lastseennode=b
-		    			if (tempnode.font == 0) then
-		    				for g in node.traverse_id(glyph, b.list) do
-		    					tempnode.font = g.font
-		    					break
-		    				end
-		    			end
+		    			local font = 0
+		    			-- we traverse the list, to detect the font to use,
+		    			-- and also not to add an hyphen if there is already one
+	    				for g in node.traverse_id(glyph, b.list) do
+	    				    if font == 0 then
+	    				        font = g.font
+	    					end
+	    					if g.char == hyphen or g.char == 45 then
+	    					    adddash = false
+	    					end
+	    				end
+	    				tempnode.font = font
 		    			if dashnode.shift==0 then
 		    				dashnode.shift = b.shift
 		    			end
@@ -121,6 +129,7 @@ function gregoriotex.addhyphenandremovedumblines (h, groupcode, glyphes)
 		    	end
 		    	if adddash==true then
 		    		local temp= node.copy(dashnode)
+		    		texio.write_nl(node.has_attribute(temp, gregorioattr))
 		    		node.insert_after(a.list, lastseennode, temp)
 		    		addash=false
 		    	end
@@ -170,11 +179,9 @@ end
 --- 1 if we can launch gregorio
 --- 2 if we cannot
 --- nil if we don't know (yet)
--- TODO: set the value through TeX
 gregoriotex.shell_escape = nil
 
 function gregoriotex.compile_gabc(gabc_file, tex_file)
-    --
     if not gregoriotex.shell_escape then
         local test = io.popen("gregorio -V")
         if test then
@@ -193,12 +200,7 @@ function gregoriotex.compile_gabc(gabc_file, tex_file)
         gregoriotex.error("unable to launch gregorio, shell-escape mode may not be activated. Try to compile with:\n    %s --shell-escape %s.tex\nSee the documentation of gregorio or your TeX distribution to automatize it.", tex.formatname, tex.jobname)
     else
         gregoriotex.info("compiling the score %s...", gabc_file)
-        -- LuaTeX forces LC_CTYPES to be C, which breaks gregorio, so we force it
-        -- to be nil, which is the default normally.
-        -- I hope it doesn't break other systems than Linux...
-        os.setenv("LC_CTYPE", nil)
         os.execute(string.format("gregorio -o %s %s", tex_file, gabc_file))
-        os.setenv("LC_CTYPE", "C")
     end
 end
 
