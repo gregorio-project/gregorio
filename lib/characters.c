@@ -366,7 +366,7 @@ gregorio_write_one_tex_char_old (FILE * f, grewchar to_print)
 {
       if (to_print < 128)
     {
-      fprintf (f, "%lc", to_print);
+      gregorio_print_unichar (f, to_print);
       return;
     }
     fprintf(f, "\\char %d", to_print);
@@ -375,7 +375,7 @@ gregorio_write_one_tex_char_old (FILE * f, grewchar to_print)
 void
 gregorio_write_one_tex_char_utf (FILE * f, grewchar to_print)
 {
-    fprintf (f, "%lc", to_print);
+    gregorio_print_unichar (f, to_print);
 }
 
 // this function sets the pointer

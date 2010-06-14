@@ -33,13 +33,9 @@ This file is certainly not the most easy to understand, it is a bison file. See 
 
 #include "gabc.h"
 #include "gabc-score-determination-l.h"
-#include "gettext.h"
 
-#define _(str) gettext(str)
-#define N_(str) str
 // request translation to the user native language for bison
-#define YYENABLE_NLS 1
-
+#define YYENABLE_NLS ENABLE_NLS
 
 /*
 
@@ -106,8 +102,14 @@ gregorio_message (error_str, (const char *)"gabc_score_determination_parse", ERR
  * It returns a valid gregorio_score
  */
 
+
+#if ALL_STATIC == 0
 gregorio_score *
 read_score (FILE * f_in)
+#else
+gregorio_score *
+gabc_read_score (FILE * f_in)
+#endif
 {
   // we initialize a file descriptor to /dev/null (see three lines below)
   FILE *f_out = fopen ("/dev/null", "w");

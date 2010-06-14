@@ -19,16 +19,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "gettext.h"
-#define _(str) gettext(str)
-#define N_(str) str
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
-#include <gregorio/plugin.h>
+#if ALL_STATIC == 0
+    #include <gregorio/plugin.h>
+#endif
 #include <gregorio/messages.h>
 
 #include "dump.h"
 
+#if ALL_STATIC == 0
 DECLARE_PLUGIN(dump)
 {
   .id = "dump",
@@ -42,9 +42,15 @@ DECLARE_PLUGIN(dump)
 
   .write = write_score
 };
+#endif
 
+#if ALL_STATIC == 0
 void
 write_score (FILE * f, gregorio_score * score)
+#else
+void
+dump_write_score (FILE * f, gregorio_score * score)
+#endif
 {
   gregorio_syllable *syllable = score->first_syllable;
   gregorio_voice_info *voice_info = score->first_voice_info;
@@ -478,8 +484,9 @@ libgregorio_dump_write_characters (FILE * f,
 	       "---------------------------------------------------------------------\n");
       if (current_character->is_character)
 	{
-	  fprintf (f, "     character                 %lc\n",
-		   current_character->cos.character);
+	  fprintf (f, "     character                 ");
+	  gregorio_print_unichar(f, current_character->cos.character);
+	  fprintf (f, "\n");
 	}
       else
 	{

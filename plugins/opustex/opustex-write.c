@@ -19,11 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "gettext.h"
-#define _(str) gettext(str)
-#define N_(str) str
 #include <string.h>
-#include <gregorio/plugin.h>
+#if ALL_STATIC == 0
+    #include <gregorio/plugin.h>
+#endif
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
 #include <gregorio/characters.h>
@@ -31,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "opustex.h"
 
+#if ALL_STATIC == 0
 DECLARE_PLUGIN(opustex)
 {
   .id = "otex",
@@ -44,6 +44,7 @@ DECLARE_PLUGIN(opustex)
 
   .write = write_score
 };
+#endif
 
 int i;
 int clef;
@@ -53,8 +54,13 @@ char italic = 0;
 char key_change = 0;
 char new_line = 0;
 
+#if ALL_STATIC == 0
 void
 write_score (FILE * f, gregorio_score * score)
+#else
+void
+opustex_write_score (FILE * f, gregorio_score * score)
+#endif
 {
   char first_syllable = 0;
   char clef_letter;
@@ -515,11 +521,7 @@ libgregorio_otex_write_special_char (FILE * f, grewchar * special_char)
 void
 libgregorio_otex_write_verb (FILE * f, grewchar * verb_str)
 {
-  while (*verb_str != 0)
-    {
-      fprintf (f, "%lc", *verb_str);
-      verb_str ++;
-    }
+  gregorio_print_unistring  (f, verb_str);
 }
 
 void

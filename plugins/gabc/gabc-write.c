@@ -24,17 +24,16 @@ This is a simple and easyly understandable output module. If you want to write a
 #include <stdio.h>
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
-#include <gregorio/plugin.h>
+#if ALL_STATIC == 0
+    #include <gregorio/plugin.h>
+#endif
 #include <gregorio/messages.h>
-
-#include "gettext.h"
-#define _(str) gettext(str)
-#define N_(str) str
 
 #include "gabc.h"
 
 static void libgregorio_gabc_write_str_attribute (FILE * f, const char *name, const char *attr);
 
+#if ALL_STATIC == 0
 DECLARE_PLUGIN(gabc)
 {
     .id = "gabc",
@@ -49,6 +48,7 @@ DECLARE_PLUGIN(gabc)
     .read = read_score,
     .write = write_score
 };
+#endif
 
 /*
 
@@ -56,8 +56,13 @@ This is the top function, the one called when we want to write a gregorio_score 
 
 */
 
+#if ALL_STATIC == 0
 void
 write_score (FILE * f, gregorio_score * score)
+#else
+void
+gabc_write_score (FILE * f, gregorio_score * score)
+#endif
 {
   char step;
   int line;
@@ -286,11 +291,7 @@ void
 libgregorio_gabc_write_special_char (FILE * f, grewchar * first_char)
 {
   fprintf (f, "<sp>");
-  while (*first_char != 0)
-    {
-      fprintf (f, "%lc", *first_char);
-      first_char ++;
-    }
+  gregorio_print_unistring(f, first_char);
   fprintf (f, "</sp>");
 }
 
@@ -303,11 +304,7 @@ void
 libgregorio_gabc_write_verb (FILE * f, grewchar *first_char)
 {
   fprintf (f, "<v>");
-  while (*first_char != 0)
-    {
-      fprintf (f, "%lc", *first_char);
-      first_char ++;
-    }
+  gregorio_print_unistring(f, first_char);
   fprintf (f, "</v>");
 }
 
@@ -320,7 +317,7 @@ The function called when we will encounter a character. There may be other repre
 void
 libgregorio_gabc_print_char (FILE * f, grewchar to_print)
 {
-  fprintf (f, "%lc", to_print);
+  gregorio_print_unichar(f, to_print);
 }
 
 /*

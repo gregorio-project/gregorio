@@ -19,30 +19,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "gettext.h"
-#define _(str) gettext(str)
-#define N_(str) str
 #include <string.h>
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
-#include <gregorio/plugin.h>
+#if ALL_STATIC == 0
+    #include <gregorio/plugin.h>
+#endif
 #include <gregorio/messages.h>
 #include <gregorio/characters.h>
 
 #include "gregoriotex.h"
 
+#if ALL_STATIC == 0
 DECLARE_PLUGIN (gregoriotex)
 {
 .id = "gtex",.name = "gregoriotex",.description =
     "GregorioTeX output plugin",.author =
     "Elie Roux <elie.roux@telecom-bretagne.eu>",.file_extension = "tex",.type =
     GREGORIO_PLUGIN_OUTPUT,.write = write_score};
+#endif
 
 // the value indicating to GregorioTeX that there is no flat
 #define NO_KEY_FLAT 'a'
     
+#if ALL_STATIC == 0
 void
 write_score (FILE * f, gregorio_score * score)
+#else
+void
+gregoriotex_write_score (FILE * f, gregorio_score * score)
+#endif
 {
   gregorio_character *first_text;
   // a char that will contain 1 if it is the first syllable and 0 if not. It is for the initial.
@@ -819,16 +825,10 @@ libgregorio_gtex_write_special_char (FILE * f, grewchar * special_char)
     }
 }
 
-// here we need to print character by character, otherwise it won't work for windows (because %ls under windows is totally different from a utf8 %ls)
-// but %lc is close enough to work...
 void
 libgregorio_gtex_write_verb (FILE * f, grewchar * first_char)
 {
-  while (*first_char != 0)
-    {
-      fprintf (f, "%lc", *first_char);
-      first_char ++;
-    }
+  gregorio_print_unistring  (f, first_char);
 }
 
 void

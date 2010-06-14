@@ -18,9 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 #include <stdio.h>
-#include "gettext.h"
-#define _(str) gettext(str)
-#define N_(str) str
 #include <gregorio/struct.h>
 #include <gregorio/messages.h>
 

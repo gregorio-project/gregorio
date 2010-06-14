@@ -20,6 +20,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
+#if ENABLE_NLS == 1
+    #include "gettext.h"
+    #define _(str) gettext(str)
+    #define N_(str) str
+#else
+    #define _(str) str
+    #define N_(str) str
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

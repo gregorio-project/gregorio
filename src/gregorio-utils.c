@@ -23,15 +23,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <getopt.h>
 #include <libgen.h>		/* for basename */
 #include <string.h>		/* for strcmp */
+#include <locale.h>
 #include <gregorio/struct.h>
-#include <gregorio/plugin_loader.h>
+#if ALL_STATIC == 1
+    #include <gregorio/plugins.h>
+#else
+    #include <gregorio/plugin_loader.h>
+#endif
 #include <gregorio/messages.h>
 #include <gregorio/characters.h>
-
-#include <locale.h>
-#include "gettext.h"
-#define _(str) gettext(str)
-#define N_(str) str
 
 #ifndef MODULE_PATH_ENV
 #  define MODULE_PATH_ENV        "MODULE_PATH"
@@ -50,50 +50,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		file_name=malloc(150*sizeof(char));\
 		snprintf(file_name,150,"%s/%s", current_directory, string);\
 		}
-
-
-// The function to set the locale.
-// The reason of this function is to have UTF-8 on Linux even when called in a
-// script that forces LC_CTYPE to be "C", which is the case for texlua and
-// certainly other script languages.
-void
-set_gregorio_locale()
-{
-#if defined (_WIN32) || defined(__CYGWIN__) || defined(__NT__)
-  // we're on windows, no idea what to do here...
-  setlocale("LC_CTYPE", "");
-#else
-// We try first LC_CTYPE, LC_ALL and then LANG to find a locale containing
-// the substring "UTF-8".
- const char *locale = NULL;
- const char *s;
- if ((s = getenv("LC_CTYPE")) && *s && strstr(s, "UTF-8"))
-   {
-     locale = s;
-   }
- if (!locale && (s = getenv("LC_ALL")) && *s && strstr(s, "UTF-8"))
-   {
-     locale = s;
-   }
- if (!locale && (s = getenv("LANG")) && *s && strstr(s, "UTF-8"))
-   {
-     locale = s;
-   }
- if (!locale)
-   {
-    printf("Error: cannot find any UTF-8 locale (looked in LC_CTYPE, LC_ALL and LANG).\nPlease set one of these environment variables to a UTF-8 locale\nor compile gregorio with the glib (./configure --enable-glib-utf8).\n");
-    exit (1);
-   }
- else
-  {
-    if (!setlocale (LC_CTYPE, locale))
-      {
-        printf("Error setting locale to %s, please set a valid locale in the\nenvironment variable LC_CTYPE.\n", locale);
-        exit(1);
-      }
-  }
-#endif
-}
 
 // function that returns the filename without the extension
 static char *
@@ -226,7 +182,7 @@ main (int argc, char **argv)
       print_usage (argv[0]);
       exit (0);
     }
-  set_gregorio_locale();    
+  setlocale (LC_CTYPE, "C");
   current_directory = getcwd (current_directory, 150);
 
   bindtextdomain (PACKAGE, LOCALEDIR);
@@ -240,6 +196,7 @@ main (int argc, char **argv)
       exit (-1);
     }
 
+  #if ALL_STATIC == 0
   error = gregorio_plugin_loader_init ();
   if (error)
     {
@@ -247,7 +204,7 @@ main (int argc, char **argv)
       free (current_directory);
       exit (-1);
     }
-
+  #endif
   while (1)
     {
       c = getopt_long (argc, argv, "o:SF:l:f:shOLVvW",
@@ -337,11 +294,7 @@ main (int argc, char **argv)
 	  exit (0);
 	  break;
 	case 'V':
-	  #if GREGORIO_GLIB == 1
-	    printf ("%s version %s, compiled with glib.\n%s\n", argv[0], VERSION, copyright);
-	  #else
-	    printf ("%s version %s.\n%s\n", argv[0], VERSION, copyright);
-	  #endif
+	  printf ("%s version %s.\n%s\n", argv[0], VERSION, copyright);
 	  exit (0);
 	  break;
 	case 'v':
@@ -420,6 +373,7 @@ main (int argc, char **argv)
 
 // then we act...
 
+  #if ALL_STATIC == 0
   /* Load plugins */
   output_plugin = gregorio_plugin_load(PLUGINDIR, output_format);
   if (output_plugin == NULL)
@@ -453,6 +407,7 @@ main (int argc, char **argv)
       free (current_directory);
       exit (1);
     }
+  #endif
 
   if (!output_file_name && !output_file)
     {
@@ -531,24 +486,33 @@ main (int argc, char **argv)
 
   gregorio_set_verbosity_mode (verb_mode);
 
+  #if ALL_STATIC == 0
   score = (input_plugin_info->read) (input_file);
   gregorio_plugin_unload (input_plugin);
+  #endif
 
   fclose (input_file);
   if (score == NULL)
     {
+      #if ALL_STATIC == 0
       gregorio_plugin_unload (output_plugin);
+      #endif
+      fclose (output_file);
       fprintf (stderr, "error in file parsing\n");
       exit (-1);
     }
 
   gregorio_fix_initial_keys (score, DEFAULT_KEY);
 
+  #if ALL_STATIC == 0
   (output_plugin_info->write) (output_file, score);
   gregorio_plugin_unload (output_plugin);
+  #endif
   fclose (output_file);
   gregorio_free_score (score);
 
+  #if ALL_STATIC == 0
   gregorio_plugin_loader_exit();
+  #endif
   exit (0);
 }

@@ -62,34 +62,57 @@ else
 fi
 
 AC_HEADER_STDC
-AC_CHECK_PROGS(XML2_CONFIG, xml2-config, :)
-if test "$XML2_CONFIG" = :; then
-  AC_MSG_ERROR([Could not find xml2-config.])
-else
-  AC_DEFINE(HAVE_LIBXML2, 1, [Define if you have libxml2])
-  # xml2-config in some versions erroneously includes -I/include
-  # in the --cflags output.
-  XML_CFLAGS="$CFLAGS `$XML2_CONFIG --cflags | sed 's|-I/include||g'`"
-  AC_SUBST(XML_CFLAGS)
-  XML_LIBS="$LIBS `$XML2_CONFIG --libs | sed 's|-L/usr/lib||g'`"
-  AC_SUBST(XML_LIBS)
-fi
 
-AC_ARG_ENABLE(glib-utf8, 
-    [  --enable-glib-utf8 link with glib for the character system.\
-    This option is optional under Linux and MacOSX, but necessary under Windows.], 
-    [AC_DEFINE([GREGORIO_GLIB], [1], [Glib or OS-dependant wchar_t character system.])
-    AM_PATH_GLIB_2_0( 2.0.0, [], [AC_MSG_FAILURE([Glib not found])])
-    ], [AC_DEFINE([GREGORIO_GLIB], [0], [Glib or OS-dependant wchar_t character system.])
-    GLIB_LIBS=
-    AC_SUBST(GLIB_LIBS)
-    GLIB_CFLAGS=
-    AC_SUBST(GLIB_CFLAGS)
+# linux has integer types in stdint.h, solaris, vms in inttypes.h
+AC_CHECK_HEADERS([stdint.h])
+
+AC_ARG_ENABLE(xml, 
+    [  --enable-xml            link with libxml2 to produce GregorioXML.\
+                          Note that you cannot produce GregorioXML without this.], 
+    [gre_no_xml="no"
+    AC_CHECK_PROGS(XML2_CONFIG, xml2-config, :)
+    if test "$XML2_CONFIG" = :; then
+      AC_MSG_ERROR([Could not find xml2-config.])
+    else
+      AC_DEFINE(HAVE_LIBXML2, 1, [Define if you have libxml2])
+      # xml2-config in some versions erroneously includes -I/include
+      # in the --cflags output.
+      XML_CFLAGS="$CFLAGS `$XML2_CONFIG --cflags | sed 's|-I/include||g'`"
+      XML_LIBS="$LIBS `$XML2_CONFIG --libs | sed 's|-L/usr/lib||g'`"  
+    fi
+    #some dirty tricks for Makefiles...
+    subdirs_xml_tmp=xml
+    extradist_xml_tmp=
+    ], [
+    subdirs_xml_tmp=
+    extradist_xml_tmp=xml
+    XML_CFLAGS=
+    XML_LIBS=
+    AC_DEFINE(HAVE_LIBXML2, 0, [Define if you have libxml2])
     ]
 )
 
+AC_SUBST(XML_LIBS)
+AC_SUBST(XML_CFLAGS)
+AC_SUBST(gre_no_xml)
+AC_SUBST(subdirs_xml_tmp)
+AC_SUBST(extradist_xml_tmp)
+ 
+# I let it for backward compatibility purposes
+AC_ARG_ENABLE(all-static, 
+    [  --enable-all-static     Produce only one binary containing everything.], 
+    [AC_DEFINE(ALL_STATIC, 1, [Define if you want to disable libtool])], 
+    [AC_DEFINE(ALL_STATIC, 0, [Define if you want to disable libtool])]
+)
+
+AC_ARG_ENABLE(glib-utf8, 
+    [  --enable-glib-utf8      link with glib for the character system.\
+                          This option is deprecated, do not use it.], 
+    [], []
+)
+
 AC_ARG_ENABLE(static-ltdl, 
-    [  --enable-static-ltdl for statical linking with libltdl (useful for MacOSX packages).], 
+    [  --enable-static-ltdl    statical linking with libltdl (useful for MacOSX).], 
     [LIBTOOL_LIB=$LIBTOOL_LIB_STATIC], 
     [LIBTOOL_LIB=-lltdl]
 )

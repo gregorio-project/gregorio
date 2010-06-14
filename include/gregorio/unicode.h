@@ -16,27 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GREGORIO_GLIB
-#define GREGORIO_GLIB 0
-#endif
-
 #ifndef UNICODE_H_FIRST_PART
 #define UNICODE_H_FIRST_PART
 #define UNICODE_H
 
-#if GREGORIO_GLIB
-
-#include <glib.h>
-
-#define grewchar gunichar
-
+#ifdef HAVE_STDINT_H
+# include <stdint.h>
 #else
-
-#include <wchar.h>
-
-#define grewchar wchar_t
-
+# include <inttypes.h>
 #endif
+
+typedef uint32_t grewchar;
+
+void gregorio_print_unichar (FILE *f, grewchar to_print);
+void gregorio_print_unistring  (FILE *f, grewchar *first_char);
+size_t gregorio_mbstowcs (grewchar * dest, char *src, int n);
 
 #endif
 

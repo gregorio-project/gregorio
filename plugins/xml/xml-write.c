@@ -19,9 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "gettext.h"
-#define _(str) gettext(str)
-#define N_(str) str
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
 #include <gregorio/characters.h>
@@ -353,11 +350,7 @@ libgregorio_xml_write_special_char (FILE * f, grewchar *first_char)
       in_text = 0;
     }
   fprintf (f, "<special-char>");
-  while (*first_char != 0)
-    {
-      fprintf (f, "%lc", *first_char);
-      first_char ++;
-    }
+  gregorio_print_unistring(f, first_char);
   fprintf (f, "</special-char>");
 }
 
@@ -370,11 +363,7 @@ libgregorio_xml_write_verb (FILE * f, grewchar *first_char)
       in_text = 0;
     }
   fprintf (f, "<verbatim>");
-  while (*first_char != 0)
-    {
-      fprintf (f, "%lc", *first_char);
-      first_char ++;
-    }
+  gregorio_print_unistring(f, first_char);
   fprintf (f, "</verbatim>");
 }
 
@@ -386,7 +375,7 @@ libgregorio_xml_print_char (FILE * f, grewchar to_print)
       fprintf (f, "<str>");
       in_text = 1;
     }
-  fprintf (f, "%lc", to_print);
+  gregorio_print_unichar(f, to_print);
 }
 
 void
@@ -619,8 +608,13 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
     }
 }
 
+#if ALL_STATIC == 0
 void
 write_score (FILE * f, gregorio_score * score)
+#else
+void
+xml_write_score (FILE * f, gregorio_score * score)
+#endif
 {
   int i;
   gregorio_voice_info *voice_info;

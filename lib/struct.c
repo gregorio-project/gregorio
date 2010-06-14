@@ -65,6 +65,7 @@ gregorio_add_note (gregorio_note ** current_note, char pitch, char shape,
   element->previous = *current_note;
   element->next = NULL;
   element->texverb = NULL;
+  element->texverb = NULL;
   if (*current_note)
     {
       (*current_note)->next = element;
@@ -91,6 +92,7 @@ gregorio_add_special_as_note (gregorio_note ** current_note, char type,
   element->previous = *current_note;
   element->next = NULL;
   element->texverb = NULL;
+  element->texverb = NULL;
   if (*current_note)
     {
       (*current_note)->next = element;
@@ -113,6 +115,7 @@ gregorio_add_texverb_as_note (gregorio_note ** current_note, char *str)
   element->signs = _NO_SIGN;
   element->previous = *current_note;
   element->next = NULL;
+  element->texverb = str;
   element->texverb = str;
   if (*current_note)
     {

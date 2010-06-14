@@ -24,7 +24,6 @@ Update (three years later): This file is a HUGE CRAP... Hardcoding everything wa
 #include "config.h"
 #include <stdio.h>
 #include <ctype.h> /*for tolower*/
-#include "gettext.h"
 #include <gregorio/struct.h>
 #include <gregorio/messages.h>
 
