@@ -39,8 +39,9 @@
 %% 2: puts the value on the interline just beneath if it is on a line
 %% 3: case of the vertical episemus, which is not placed at the same place if the corresponding note is on a line or not
 %% 4: case of the punctum mora, for the same reason
-%% 5: case of the horizontal episemus under a note, that must be placed a bit lower if the note is on a line
-%% 6: case of the signs above (accentus, etc.)
+%% 6: case of the horizontal episemus under a note, that must be placed a bit lower if the note is on a line
+%% 7: case of the signs above (accentus, etc.)
+%% 8: case of the punctum mora of the first note of a podatus or the 2nd note of a porrectus, etc.
 \def\calculateglyphraisevalue#1#2{%
 \global\isonaline=\number 0%
 \ifx a#1%
@@ -105,6 +106,8 @@
 \advance\tempcount by 1%
 \or% 5
 \advance\tempcount by -1%
+\or\or\or % 8
+\advance\tempcount by -1%
 \fi%
 \fi%
 \advance\tempcount by -7 %
@@ -143,6 +146,12 @@
 \addedraisevalue=-10000 sp%
 \multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
+\or\or% 8: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
+\ifnum\isonaline=1%
+\addedraisevalue=6900 sp%
+\multiply\addedraisevalue by \the\grefactor %
+\advance\glyphraisevalue by \addedraisevalue %
+\fi%
 \fi%
 \advance\glyphraisevalue by \constantglyphraise %
 \global\tempcount=0%
@@ -436,7 +445,6 @@
 %% at the end we wall \endofword or \endofsyllable with #7, to reduce the space in case of a flat or natural
 \def\syllable#1#2#3#4#5#6#7#8#9{%
 \ifgreluatex % by default, gregorioattr will be 2
-\gregorioattr=2\relax %
 \fi %
 \firstglyph=1 %
 \findtextaligncenter{#1}{#2}% we first get the width between the alignment point and the end of the syllable
@@ -488,6 +496,7 @@
 \fi %
 \fi %
 \fi %
+\gregorioattr=2\relax %
 \setnextbegindifference{#5}{#6}{#7}%
 \setbox\Syllabletext=\hbox{\gretextformat{#1#2#3}}%
 \setenddifference{\wd\Syllablenotes}{\wd\Syllabletext}{\textaligncenter}{\notesaligncenter}{1}%
@@ -543,6 +552,9 @@
 \advance\temp by -\spacebeforecusto %
 \fi %
 \advance\temp by \minimalspaceatlinebeginning %
+\fi %
+\ifdim\the\temp <-\the\enddifference %
+\temp=-\the\enddifference %
 \fi %
 \xdef\kernbeforeeol{\the\temp\relax}%
 \fi %
