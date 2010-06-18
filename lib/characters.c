@@ -28,14 +28,11 @@ So this file is basically very hard to maintain. Moreover, it has not been very 
 
 #include "config.h"
 #include <stdio.h>
-#include "gettext.h"
 #include <stdlib.h>
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
 #include <gregorio/characters.h>
 #include <gregorio/messages.h>
-#define _(str) gettext(str)
-#define N_(str) str
 
 /* Here is a function that tests if a letter is a vowel or not */
 
@@ -405,11 +402,12 @@ The push function pushes a style in the stack, and updates first_style to this e
 void
 gregorio_style_push (det_style ** current_style, unsigned char style)
 {
+  det_style *element;
   if (!current_style)
     {
       return;
     }
-  det_style *element = (det_style *) malloc (sizeof (det_style));
+  element = (det_style *) malloc (sizeof (det_style));
   element->style = style;
   element->previous_style = NULL;
   element->next_style = (*current_style);
@@ -457,11 +455,12 @@ free_styles just free the stack. You may notice that it will never be used in a 
 void
 gregorio_free_styles (det_style ** first_style)
 {
+  det_style *current_style;
   if (!first_style)
     {
       return;
     }
-  det_style *current_style = (*first_style);
+  current_style = (*first_style);
   while (current_style)
     {
       current_style = current_style->next_style;
@@ -664,11 +663,12 @@ This function suppresses the current character, updates the double chained list,
 void
 gregorio_suppress_current_character (gregorio_character ** current_character)
 {
+  gregorio_character *thischaracter;
   if (!current_character || !*current_character)
     {
       return;
     }
-  gregorio_character *thischaracter = *current_character;
+  thischaracter = *current_character;
   if ((*current_character)->previous_character)
     {
       (*current_character)->previous_character->next_character =
@@ -790,6 +790,14 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
 	    {
 	      current_style = first_style;
 	      suppress_char_and_end_c ();
+	    }
+	  // if we are determining the end of the middle and we have a VERBATIM or SPECIAL_CHAR style, we end the center determination
+	  if ((current_character->cos.s.style == ST_VERBATIM
+	      || current_character->cos.s.style == ST_SPECIAL_CHAR)
+	      && center_is_determined == CENTER_DETERMINING_MIDDLE)
+	    {
+	      end_center (center_type);
+	      center_is_determined = CENTER_FULLY_DETERMINED;
 	    }
 	  // if it is something to add then we just push the style in the stack and continue.
 	  gregorio_style_push (&first_style, current_character->cos.s.style);

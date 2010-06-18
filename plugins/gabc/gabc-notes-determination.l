@@ -887,7 +887,7 @@ ____ 	{
 		}
 .       {	
     char *dirtyvar = malloc(71*sizeof(char));
-	snprintf(dirtyvar,70,gettext("unrecognized character: \"%c\""),gabc_notes_determination_text[0]);
+	snprintf(dirtyvar,70,_("unrecognized character: \"%c\""),gabc_notes_determination_text[0]);
 	gregorio_message (dirtyvar,
 		      "libgregorio_det_notes_from_string", ERROR, 0);
 	}
@@ -904,8 +904,8 @@ void gabc_notes_determination_error(const char *str)
 
 
 gregorio_note *libgregorio_gabc_det_notes_from_string (char *str) {
-current_note=NULL;
 YY_BUFFER_STATE buf;
+current_note=NULL;
 buf=yy_scan_string(str);
 yylex();
 yy_flush_buffer(buf);

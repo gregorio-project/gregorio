@@ -763,62 +763,62 @@ libgregorio_gtex_write_end_for_two (FILE * f, unsigned char style)
 void
 libgregorio_gtex_write_special_char (FILE * f, grewchar * special_char)
 {
-  if (!wcscmp (special_char, L"A/"))
+  if (!gregorio_wcsbufcmp(special_char, "A/"))
     {
       fprintf (f, "\\Abar");
       return;
     }
-  if (!wcscmp (special_char, L"R/"))
+  if (!gregorio_wcsbufcmp(special_char, "R/"))
     {
       fprintf (f, "\\Rbar");
       return;
     }
-  if (!wcscmp (special_char, L"V/"))
+  if (!gregorio_wcsbufcmp(special_char, "V/"))
     {
       fprintf (f, "\\Vbar");
       return;
     }
-  if (!wcscmp (special_char, L"'æ"))
+  if (!gregorio_wcsbufcmp(special_char, "'æ"))
     {
       fprintf (f, "\\'\\ae");
       return;
     }
-  if (!wcscmp (special_char, L"'ae"))
+  if (!gregorio_wcsbufcmp(special_char, "'ae"))
     {
       fprintf (f, "\\'\\ae");
       return;
     }
-  if (!wcscmp (special_char, L"'œ"))
+  if (!gregorio_wcsbufcmp(special_char, "'œ"))
     {
       fprintf (f, "\\'\\oe");
       return;
     }
-  if (!wcscmp (special_char, L"'oe"))
+  if (!gregorio_wcsbufcmp(special_char, "'oe"))
     {
       fprintf (f, "\\'\\oe");
       return;
     }
-  if (!wcscmp (special_char, L"ae"))
+  if (!gregorio_wcsbufcmp(special_char, "ae"))
     {
       fprintf (f, "\\ae");
       return;
     }
-  if (!wcscmp (special_char, L"oe"))
+  if (!gregorio_wcsbufcmp(special_char, "oe"))
     {
       fprintf (f, "\\oe");
       return;
     }
-  if (!wcscmp (special_char, L"*"))
+  if (!gregorio_wcsbufcmp(special_char, "*"))
     {
       fprintf (f, "\\grestar ");
       return;
     }
-  if (!wcscmp (special_char, L"+"))
+  if (!gregorio_wcsbufcmp(special_char, "+"))
     {
       fprintf (f, "\\gredagger ");
       return;
     }
-  if (!wcscmp (special_char, L"-"))
+  if (!gregorio_wcsbufcmp(special_char, "-"))
     {
       fprintf (f, "\\zerhyph ");
       return;
@@ -910,13 +910,13 @@ libgregorio_gregoriotex_write_next_first_text (FILE * f,
 					       gregorio_character *
 					       current_character)
 {
+  gregorio_character *first_character = current_character;
+  gregorio_character *next_character;
   if (current_character == NULL)
     {
       fprintf (f, "{}{}");
       return;
     }
-  gregorio_character *first_character = current_character;
-  gregorio_character *next_character;
   // big dirty hack to have only the first two syllables printed : we cut the thing just after the ST_CENTER closing
   while (current_character)
     {
@@ -1399,8 +1399,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	  break;
 	case _AUCTUM_DUPLEX:
 	  additional_line ();
-	  libgregorio_gregoriotex_write_auctum_duplex (f, glyph,
-						       current_note);
+	  libgregorio_gregoriotex_write_auctum_duplex (f, current_note);
 
 	  break;
 	case _V_EPISEMUS:
@@ -1427,8 +1426,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 						   current_note);
 	  }
 	  additional_line ();
-	  libgregorio_gregoriotex_write_auctum_duplex (f, glyph,
-						       current_note);
+	  libgregorio_gregoriotex_write_auctum_duplex (f, current_note);
 	  break;
 	default:
 	  additional_line ();
@@ -1458,7 +1456,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 
 void
 libgregorio_gregoriotex_write_auctum_duplex (FILE * f,
-					     gregorio_glyph * glyph,
+					     //gregorio_glyph * glyph,
 					     gregorio_note * current_note)
 {
 // we suppose we are on the last note... I don't really understand what it would mean otherwise...
@@ -1511,7 +1509,6 @@ libgregorio_gregoriotex_write_auctum_duplex (FILE * f,
     }
 
   fprintf (f, "\\augmentumduplex{%c}{%c}%%\n", pitch, second_pitch);
-
 }
 
 

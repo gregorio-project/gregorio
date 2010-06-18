@@ -31,6 +31,10 @@ typedef uint32_t grewchar;
 void gregorio_print_unichar (FILE *f, grewchar to_print);
 void gregorio_print_unistring  (FILE *f, grewchar *first_char);
 size_t gregorio_mbstowcs (grewchar * dest, char *src, int n);
+unsigned char gregorio_wcsbufcmp (grewchar *wstr, char *buf);
+
+// this macro is for portability under windows, where L'x' is only two-bytes long, and thus needs to be cast to a 4-bytes integer.
+#define GL(wc) ((const grewchar) L'wc')
 
 #endif
 

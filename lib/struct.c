@@ -35,14 +35,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 #include <stdio.h>
-#include "gettext.h"
 #include <stdlib.h>
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
 #include <gregorio/messages.h>
 #include <gregorio/characters.h>
-#define _(str) gettext(str)
-#define N_(str) str
 
 void
 gregorio_add_note (gregorio_note ** current_note, char pitch, char shape,
@@ -1165,7 +1162,7 @@ gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
   char top_note;
   if (!current_note)
     {
-      gregorio_message (ngettext
+      gregorio_message (ngt_
 			   ("isolated horizontal episemus at the beginning of a note sequence, ignored",
 			    "isolated horizontal episemus at the beginning of a note sequence, ignored",
 			    n), "activate_h_isolated_episemus", WARNING, 0);
@@ -1173,7 +1170,7 @@ gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
     }
   if (current_note->type != GRE_NOTE)
     {
-      gregorio_message (ngettext
+      gregorio_message (ngt_
 			   ("isolated horizontal episemus after something that is not a note, ignored",
 			    "isolated horizontal episemus after something that is not a note, ignored",
 			    n), "activate_h_isolated_episemus", WARNING, 0);

@@ -81,11 +81,13 @@ void libgregorio_xml_print_char (FILE * f, grewchar to_print);
 
 void libgregorio_xml_set_pitch_from_octave_and_step (char step, int octave, char *pitch, int clef);
 
+#if ENABLE_XML == 1
 // Functions to read GregorioXML
 
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 
+gregorio_score * read_score (FILE * f);
 gregorio_score * read_file (char *filename);
 void libgregorio_xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc, gregorio_score * score);
 void libgregorio_xml_read_multi_voice_info (xmlNodePtr current_node, xmlDocPtr doc, gregorio_score * score);
@@ -176,5 +178,5 @@ libgregorio_xml_read_figura (char *liquescentia);
 
 void libgregorio_xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc, char *type, char *signs);
 char libgregorio_xml_read_position (char *position);
-
+#endif
 #endif

@@ -111,13 +111,8 @@ gregorio_score *
 gabc_read_score (FILE * f_in)
 #endif
 {
-  // we initialize a file descriptor to /dev/null (see three lines below)
-  FILE *f_out = fopen ("/dev/null", "w");
   // the input file that flex will parse
   gabc_score_determination_in = f_in;
-  // the output file flex will write in (here /dev/null). We do not have to write in some file, we just have to build a score. Warnings and errors of flex are not written in this file, so they will appear anyway.
-  gabc_score_determination_out = f_out;
-
   if (!f_in)
     {
       gregorio_message (_
@@ -128,7 +123,6 @@ gabc_read_score (FILE * f_in)
   initialize_variables ();
   // the flex/bison main call, it will build the score (that we have initialized)
   gabc_score_determination_parse ();
-  fclose (f_out);
   free_variables ();
   // the we check the validity and integrity of the score we have built.
   gregorio_fix_initial_keys (score, DEFAULT_KEY);
@@ -302,7 +296,7 @@ end_definitions ()
       if (number_of_voices > voice)
 	{
 	  snprintf (error, 62,
-		    ngettext
+		    ngt_
 		    ("not enough voice infos found: %d found, %d waited, %d assumed",
 		     "not enough voice infos found: %d found, %d waited, %d assumed",
 		     voice), voice, number_of_voices, voice);
@@ -315,7 +309,7 @@ end_definitions ()
 	  if (number_of_voices < voice)
 	    {
 	      snprintf (error, 62,
-			ngettext
+			ngt_
 			("too many voice infos found: %d found, %d waited, %d assumed",
 			 "not enough voice infos found: %d found, %d waited, %d assumed",
 			 number_of_voices), voice, number_of_voices,
@@ -849,11 +843,11 @@ note:
 	free($1);
 	}
 	else {
-	snprintf(error,105,ngettext("too many voices in note : %d foud, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
+	snprintf(error,105,ngt_("too many voices in note : %d foud, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
 	gregorio_message(error, "libgregorio_det_score",ERROR,0);
 	}
 	if (voice<number_of_voices-1) {
-	snprintf(error,105,ngettext("not enough voices in note : %d foud, %d expected, completing with empty neume","not enough voices in note : %d foud, %d expected, completing with empty neume",voice+1),voice+1, number_of_voices);
+	snprintf(error,105,ngt_("not enough voices in note : %d foud, %d expected, completing with empty neume","not enough voices in note : %d foud, %d expected, completing with empty neume",voice+1),voice+1, number_of_voices);
 	gregorio_message(error, "libgregorio_det_score",VERBOSE,0);
 	complete_with_nulls(voice);
 	}
@@ -866,11 +860,11 @@ note:
 	free($1);
 	}
 	else {
-	snprintf(error,105,ngettext("too many voices in note : %d foud, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
+	snprintf(error,105,ngt_("too many voices in note : %d foud, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
 	gregorio_message(error, "libgregorio_det_score",ERROR,0);
 	}
 	if (voice<number_of_voices-1) {
-	snprintf(error,105,ngettext("not enough voices in note : %d foud, %d expected, completing with empty neume","not enough voices in note : %d foud, %d expected, completing with empty neume",voice+1),voice+1, number_of_voices);
+	snprintf(error,105,ngt_("not enough voices in note : %d foud, %d expected, completing with empty neume","not enough voices in note : %d foud, %d expected, completing with empty neume",voice+1),voice+1, number_of_voices);
 	gregorio_message(error, "libgregorio_det_score",VERBOSE,0);
 	complete_with_nulls(voice);
 	}
@@ -885,7 +879,7 @@ note:
 	voice++;
 	}
 	else {
-	snprintf(error,105,ngettext("too many voices in note : %d found, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
+	snprintf(error,105,ngt_("too many voices in note : %d found, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
 	gregorio_message(error, "libgregorio_det_score",ERROR,0);
 	}
 	}

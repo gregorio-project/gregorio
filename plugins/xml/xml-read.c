@@ -22,23 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
-#if ALL_STATIC == 0
-    #include <gregorio/plugin.h>
-#endif
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
 #include <gregorio/messages.h>
 
 #include "xml.h"
-
-#if ALL_STATIC == 0
-DECLARE_PLUGIN (xml)
-{
-.id = "xml",.name = "GregorioXML",.description =
-    "GregorioXML input/output plugin",.author =
-    "Elie Roux <elie.roux@enst-bretagne.fr>",.file_extension = "xml",.type =
-    GREGORIO_PLUGIN_BOTH,.read = read_score,.write = write_score};
-#endif
 
 #if ALL_STATIC == 0
 gregorio_score *

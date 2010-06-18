@@ -168,7 +168,7 @@ void libgregorio_gregoriotex_determine_note_number_and_type (gregorio_note * not
 void libgregorio_gtex_write_end_for_two (FILE * f, unsigned char style);
 
 void libgregorio_gregoriotex_write_punctum_mora (FILE * f, gregorio_glyph * glyph, gregorio_note * current_note);
-void libgregorio_gregoriotex_write_auctum_duplex (FILE * f, gregorio_glyph * glyph, gregorio_note * current_note);
+void libgregorio_gregoriotex_write_auctum_duplex (FILE * f, gregorio_note * current_note);
 
 void libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph, int i, char type, char sign_type, gregorio_note * current_note, char *number, char *height, char *bottom);
 

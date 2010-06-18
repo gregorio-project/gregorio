@@ -37,8 +37,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #  define MODULE_PATH_ENV        "MODULE_PATH"
 #endif
 
+#if ALL_STATIC == 0
 #define DEFAULT_INPUT_FORMAT    "gabc"
 #define DEFAULT_OUTPUT_FORMAT   "gtex"
+#else
+#define GABC 1
+#define XML 2
+#define GTEX 3
+#define OTEX 4
+#define DUMP 5
+#define GABC_STR "gabc"
+#define XML_STR "xml"
+#define GTEX_STR "gtex"
+#define OTEX_STR "otex"
+#define DUMP_STR "dump"
+#define DEFAULT_INPUT_FORMAT    GABC
+#define DEFAULT_OUTPUT_FORMAT   GTEX
+#endif
 
 #define define_path(file_name,string) \
 		/*we first test if path is absolute */\
@@ -150,17 +165,22 @@ main (int argc, char **argv)
   FILE *input_file = NULL;
   FILE *output_file = NULL;
   FILE *error_file = NULL;
+  #if ALL_STATIC == 0
   char *input_format = NULL;
   char *output_format = NULL;
-  char verb_mode = 0;
-  char *current_directory = malloc (150 * sizeof (char));
-  int number_of_options = 0;
-  int option_index = 0;
-  int error = 0;
   gregorio_plugin *input_plugin = NULL;
   gregorio_plugin_info *input_plugin_info = NULL;
   gregorio_plugin *output_plugin = NULL;
   gregorio_plugin_info *output_plugin_info = NULL;
+  int error = 0;
+  #else
+  unsigned char input_format = 0;
+  unsigned char output_format = 0;
+  #endif
+  char verb_mode = 0;
+  char *current_directory = malloc (150 * sizeof (char));
+  int number_of_options = 0;
+  int option_index = 0;
   static struct option long_options[] = {
     {"output-file", 1, 0, 'o'},
     {"stdout", 0, 0, 'S'},
@@ -184,10 +204,12 @@ main (int argc, char **argv)
     }
   setlocale (LC_CTYPE, "C");
   current_directory = getcwd (current_directory, 150);
-
+  
+  #if ENABLE_NLS == 1
   bindtextdomain (PACKAGE, LOCALEDIR);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
+  #endif
 
   if (current_directory == NULL)
     {
@@ -253,7 +275,40 @@ main (int argc, char **argv)
 		       "warning: several output formats declared, first taken\n");
 	      break;
 	    }
-          output_format = optarg;
+	    #if ALL_STATIC == 0
+	    output_format = optarg;
+	    #else
+	  if (!strcmp (optarg, XML_STR))
+	    {
+	      output_format = XML;
+	      break;
+	    }
+	  if (!strcmp (optarg, GABC_STR))
+	    {
+	      output_format = GABC;
+	      break;
+	    }
+	  if (!strcmp (optarg, GTEX_STR))
+	    {
+	      output_format = GTEX;
+	      break;
+	    }
+	  if (!strcmp (optarg, OTEX_STR))
+	    {
+	      output_format = OTEX;
+	      break;
+	    }
+	  if (!strcmp (optarg, DUMP_STR))
+	    {
+	      output_format = DUMP;
+	      break;
+	    }
+	  else
+	    {
+	      fprintf (stderr, "error: unknown output format: %s\n", optarg);
+	      exit (0);
+	    }
+	    #endif
 	  break;
 	case 'l':
 	  if (error_file_name)
@@ -272,7 +327,27 @@ main (int argc, char **argv)
 		       "warning: several output formats declared, first taken\n");
 	      break;
 	    }
+	    #if ALL_STATIC == 0
           input_format = optarg;
+        #else
+      if (!strcmp (optarg, GABC_STR))
+	    {
+	      input_format = GABC;
+	      break;
+	    }
+	    #if ENABLE_XML == 1
+	  if (!strcmp (optarg, XML_STR))
+	    {
+	      input_format = XML;
+	      break;
+	    }
+	    #endif
+	  else
+	    {
+	      fprintf (stderr, "error: unknown input format: %s\n", optarg);
+	      exit (0);
+	    }
+	    #endif
 	  break;
 	case 's':
 	  if (input_file_name)
@@ -408,7 +483,6 @@ main (int argc, char **argv)
       exit (1);
     }
   #endif
-
   if (!output_file_name && !output_file)
     {
       if (!output_basename)
@@ -419,9 +493,28 @@ main (int argc, char **argv)
 	{
 	  if (input_format != output_format)
 	    {
+        #if ALL_STATIC == 0
 	      output_file_name =
 		get_output_filename (output_basename,
                                      output_plugin_info->file_extension);
+        #else
+	        switch (output_format)
+            {
+            case XML:
+              output_file_name = get_output_filename (output_basename, "xml");
+              break;
+            case GABC:
+              output_file_name = get_output_filename (output_basename, "gabc");
+              break;
+            case GTEX:
+            case OTEX:
+              output_file_name = get_output_filename (output_basename, "tex");
+              break;
+            case DUMP:
+              output_file_name = get_output_filename (output_basename, "dump");
+              break;
+            }
+        #endif
 	    }
 	  output_file = fopen (output_file_name, "w");
 	  if (!output_file)
@@ -489,6 +582,24 @@ main (int argc, char **argv)
   #if ALL_STATIC == 0
   score = (input_plugin_info->read) (input_file);
   gregorio_plugin_unload (input_plugin);
+  #else
+    switch (input_format)
+    {
+    case GABC:
+      score = gabc_read_score (input_file);
+      break;
+    #if ENABLE_XML == 1
+    case XML:
+      score = xml_read_score (input_file);
+      break;
+    #endif
+    default:
+      fprintf (stderr, "error : invalid input format\n");
+      fclose (input_file);
+      fclose (output_file);
+      exit (-1);
+      break;
+    }
   #endif
 
   fclose (input_file);
@@ -507,6 +618,31 @@ main (int argc, char **argv)
   #if ALL_STATIC == 0
   (output_plugin_info->write) (output_file, score);
   gregorio_plugin_unload (output_plugin);
+  #else
+    switch (output_format)
+    {
+    case XML:
+      xml_write_score (output_file, score);
+      break;
+    case GABC:
+      gabc_write_score (output_file, score);
+      break;
+    case GTEX:
+      gregoriotex_write_score (output_file, score);
+      break;
+    case OTEX:
+      opustex_write_score (output_file, score);
+      break;
+    case DUMP:
+      dump_write_score (output_file, score);
+      break;
+    default:
+      fprintf (stderr, "error : invalid output format\n");
+      gregorio_free_score (score);
+      fclose (output_file);
+      exit (-1);
+      break;
+    }
   #endif
   fclose (output_file);
   gregorio_free_score (score);

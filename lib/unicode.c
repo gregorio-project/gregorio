@@ -18,13 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 #include <stdio.h>
-#include "gettext.h"
+#include <string.h> // for strlen
 #include <stdlib.h>
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
 #include <gregorio/messages.h>
-#define _(str) gettext(str)
-#define N_(str) str
 
 /*
 
@@ -35,6 +33,8 @@ reason is that Windows XP (...) is not UTF-8 and thus would need the glib in
 oder to run, which make dependencies much bigger.
 
 */
+
+// the function to build a gregorio_character list from a buffer.
 
 gregorio_character *
 gregorio_build_char_list_from_buf (char *buf)
@@ -61,19 +61,56 @@ gregorio_build_char_list_from_buf (char *buf)
   return current_character;
 }
 
+// the function to compare a grewchar * and a buf. Returns 1 if different, 0 if not.
+
+unsigned char
+gregorio_wcsbufcmp (grewchar *wstr, char *buf)
+{
+  int i=0;
+  size_t len;
+  grewchar *gwbuf;
+  if (!buf || !wstr)
+    {
+      return 1;
+    }
+  len = strlen (buf);		//to get the length of the syllable in ASCII
+  gwbuf = (grewchar *) malloc ((len + 1) * sizeof (grewchar));
+  gregorio_mbstowcs (gwbuf, buf, len);	//converting into wchar_t
+  // we add the corresponding characters in the list of gregorio_characters
+  while (gwbuf[i] && wstr[i])
+    {
+      if (gwbuf[i] != wstr[i])
+        {
+          free (gwbuf);
+          return 1;
+        }
+      i = i + 1;
+    }
+  // we finished the two strings
+  if (gwbuf[i] == 0 && wstr[i] == 0)
+    {
+      free(gwbuf);
+      return 0;
+    }
+  free(gwbuf);
+  return 1;
+}
+
+// an utf8 version of mbstowcs
+
 size_t
 gregorio_mbstowcs (grewchar * dest, char *src, int n)
 {
+  unsigned char bytes_to_come;
+  grewchar result = 0;
+  unsigned char c;
+  size_t res = 0;		// number of bytes we've done so far
   if (!src)
     {
       gregorio_message (_("call with a NULL argument"),
 			"gregorio_mbstowcs", ERROR, 0);
     }
-  unsigned char bytes_to_come;
-  grewchar result = 0;
-  unsigned char c;
-  size_t res = 0;		// number of bytes we've done so far
-  while (*src && (res <= n || !dest))
+  while (*src && ((int)res <= n || !dest))
     {
       c = (unsigned char) (*src);
       if (c < 128)
@@ -134,7 +171,7 @@ gregorio_mbstowcs (grewchar * dest, char *src, int n)
       result = 0;
       src++;
     }
-  if (!(*src) && res <= n && dest)
+  if (!(*src) && (int)res <= n && dest)
     {
       dest[res] = 0;
     }

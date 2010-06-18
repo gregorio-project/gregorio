@@ -1,7 +1,11 @@
 AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/lib
 AM_CFLAGS = -L$(top_builddir)/lib
 
-pkglib_LTLIBRARIES = gabc.la
+if ALL_STATIC
+noinst_LTLIBRARIES=gabc.la
+else
+pkglib_LTLIBRARIES=gabc.la
+endif
 gabc_la_LDFLAGS = -no-undefined -module -avoid-version
 
 gabc_la_SOURCES = gabc-elements-determination.c gabc-write.c \

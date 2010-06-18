@@ -486,32 +486,32 @@ libgregorio_otex_write_end (FILE * f, unsigned char style)
 void
 libgregorio_otex_write_special_char (FILE * f, grewchar * special_char)
 {
-  if (!wcscmp (special_char, L"'æ"))
+  if (!gregorio_wcsbufcmp(special_char, "'æ"))
     {
       fprintf (f, "\\'ae");
       return;
     }
-  if (!wcscmp (special_char, L"'œ"))
+  if (!gregorio_wcsbufcmp(special_char, "'œ"))
     {
       fprintf (f, "\\'oe");
       return;
     }
-  if (!wcscmp (special_char, L"ae"))
+  if (!gregorio_wcsbufcmp(special_char, "ae"))
     {
       fprintf (f, "\\ae");
       return;
     }
-  if (!wcscmp (special_char, L"R/"))
+  if (!gregorio_wcsbufcmp(special_char, "R/"))
     {
       fprintf (f, "\\s R");
       return;
     }
-  if (!wcscmp (special_char, L"A/"))
+  if (!gregorio_wcsbufcmp(special_char, "A/"))
     {
       fprintf (f, "\\s A");
       return;
     }
-  if (!wcscmp (special_char, L"V/"))
+  if (!gregorio_wcsbufcmp(special_char, "V/"))
     {
       fprintf (f, "\\s V");
       return;

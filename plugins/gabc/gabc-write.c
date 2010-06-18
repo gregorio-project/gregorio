@@ -22,6 +22,7 @@ This is a simple and easyly understandable output module. If you want to write a
 #include "config.h"
 #include <ctype.h>
 #include <stdio.h>
+#include <string.h> // for strchr
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
 #if ALL_STATIC == 0

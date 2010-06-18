@@ -52,7 +52,7 @@ unsigned char style_stack = 0;
 %option prefix="gabc_score_determination_"
 %option outfile="gabc-score-determination-l.c"
 %option noyywrap
-
+%option bison-bridge
 
 
 /* The expression for attribute below is rather messy because we allow
