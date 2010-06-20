@@ -1,0 +1,14 @@
+name:complete tests;
+%%
+f.g(f.g) fg.(fg.) g.h(g.h) gh.(gh.Z)
+-f.g(-f.g) -fg.(-fg.) -g.h(-g.h) -gh.(-gh.Z)
+f.g~(f.g~) fg.~(fg.~) g.h~(g.h~) gh.~(gh.~Z) % this is a comment
+f.g<(f.g<) fg.<(fg.<) g.h<(g.h<) gh.<(gh.<Z)
+fg..(fg..) gh..(gh..) gf..(gf..) hg..(hg..) fh..(fh..) gi..(gi..) fi..(fi..) gj..(gj..) hf..(hf..) ig..(ig..) if..(if..) jg..(jg..) f..(f..) g..(g..) -fg..(-fg..) -gh..(-gh..) fg..~(fg..~) gh..~(gh..~) fg..<v><</v>(fg..<) gh..<v><</v>(gh..<Z)
+gjhj.(gjhj.) ijghf.(ijghf.) ghfg.(ghfg.)
+eh_gh(eh_gh) e_hgh(e_hgh) ehg_h(ehg_h) ehgh_(ehgh_) e_h_gh(e_h_gh) eh_g_h(eh_g_h) ehg_h_(ehg_h_)
+{a}<i>i</i><b>b</b><ul>ul</ul><sp>+</sp><v>a</v>(ghZ)
+{a}<a<sp>+</sp><sp>%</sp>><v><</v><v>></sp></v>(ghZ)
+{fg!hi}(fg!hi) {fg/hi}(fg/hi) {fg//hi}(fg//hi) {fg hi}(fg hi) {fg!/hi}(fg!/hi) {fg!//hi}(fg!//hi) {fg! hi}(fg! hiZ)
+æ(dc) æ(ab/dc)
+gvv(gvv) gvgv(gvgv) gvvv(gvvv) gvgvgv(gvgvgv) gss(gss) gsgs(gsgs) gsss(gsss) gsgsgs(gsgsgs)
