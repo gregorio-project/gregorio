@@ -683,6 +683,15 @@ libgregorio_dump_space_type (char element_type)
     case SP_GLYPH_SPACE:
       str = "SP_GLYPH_SPACE";
       break;
+    case SP_GLYPH_SPACE_NB:
+      str = "SP_GLYPH_SPACE_NB";
+      break;
+    case SP_LARGER_SPACE_NB:
+      str = "SP_LARGER_SPACE_NB";
+      break;
+    case SP_NEUMATIC_CUT_NB:
+      str = "SP_NEUMATIC_CUT_NB";
+      break;
     default:
       str = "unknown";
       break;

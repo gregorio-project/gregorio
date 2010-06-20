@@ -233,6 +233,15 @@ libgregorio_xml_write_space (FILE * f, char type)
     case SP_GLYPH_SPACE:
       fprintf (f, "<glyph-space />");
       break;
+    case SP_GLYPH_SPACE_NB:
+      fprintf (f, "<unbreakable-glyph-space />");
+      break;
+    case SP_LARGER_SPACE_NB:
+      fprintf (f, "<unbreakable-larger-neumatic-space />");
+      break;
+    case SP_NEUMATIC_CUT_NB:
+      fprintf (f, "<unbreakable-neumatic-cut />");
+      break;
     case SP_NEUMATIC_CUT:
       //we do not write neumatic cuts, they juste delimit elements
       break;

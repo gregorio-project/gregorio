@@ -1048,6 +1048,24 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 				       GRE_SPACE, SP_GLYPH_SPACE, 0, NULL);
       return;
     }
+  if (!xmlStrcmp (current_node->name, (const xmlChar *) "unbreakable-glyph-space"))
+    {
+      gregorio_add_special_as_element (current_element,
+				       GRE_SPACE, SP_GLYPH_SPACE_NB, 0, NULL);
+      return;
+    }
+  if (!xmlStrcmp (current_node->name, (const xmlChar *) "unbreakable-larger-neumatic-space"))
+    {
+      gregorio_add_special_as_element (current_element,
+				       GRE_SPACE, SP_LARGER_SPACE_NB, 0, NULL);
+      return;
+    }    
+  if (!xmlStrcmp (current_node->name, (const xmlChar *) "unbreakable-neumatic-cut"))
+    {
+      gregorio_add_special_as_element (current_element,
+				       GRE_SPACE, SP_NEUMATIC_CUT_NB, 0, NULL);
+      return;
+    }   
 
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "element"))
     {

@@ -159,9 +159,6 @@ r5	{
 [a-mA-M]y       {
 	gregorio_add_special_as_note (&current_note, GRE_NATURAL, gabc_notes_determination_text[0]);
 	}
-!       {
-	gregorio_add_special_as_note (&current_note, GRE_SPACE, SP_ZERO_WIDTH);
-	}
 \/      {
 	gregorio_add_special_as_note (&current_note, GRE_SPACE, SP_NEUMATIC_CUT);
 	}
@@ -170,6 +167,18 @@ r5	{
 	}
 \       {
 	gregorio_add_special_as_note (&current_note, GRE_SPACE, SP_GLYPH_SPACE);
+	}
+!\/      {
+	gregorio_add_special_as_note (&current_note, GRE_SPACE, SP_NEUMATIC_CUT_NB);
+	}
+!\/\/    {
+	gregorio_add_special_as_note (&current_note, GRE_SPACE, SP_LARGER_SPACE_NB);
+	}
+!\       {
+	gregorio_add_special_as_note (&current_note, GRE_SPACE, SP_GLYPH_SPACE_NB);
+	}
+!/[^\/ ]       {
+	gregorio_add_special_as_note (&current_note, GRE_SPACE, SP_ZERO_WIDTH);
 	}
 [a-mA-M]vv   {
 	lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);

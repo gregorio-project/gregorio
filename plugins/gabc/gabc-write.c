@@ -596,8 +596,18 @@ libgregorio_gabc_write_space (FILE * f, char type)
     case SP_GLYPH_SPACE:
       fprintf (f, " ");
       break;
+    case SP_LARGER_SPACE_NB:
+      fprintf (f, "!//");
+      break;
+    case SP_GLYPH_SPACE_NB:
+      fprintf (f, "! ");
+      break;
+    case SP_NEUMATIC_CUT_NB:
+      fprintf (f, "!/");
+      break;
     case SP_NEUMATIC_CUT:
-      // neumatic cuts are automatically added between elements
+      // do not uncomment it, the code is strangely done but it works
+      //fprintf (f, "/");
       break;
     default:
       gregorio_message (_("space type is unknown"),

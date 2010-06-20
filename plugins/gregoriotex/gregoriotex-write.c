@@ -393,14 +393,29 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
     {
       if (current_element->type == GRE_SPACE)
 	{
-	  if (current_element->element_type == SP_LARGER_SPACE)
-	    {
-	      fprintf (f, "\\endofelement{1}%%\n");
-	    }
-	  if (current_element->element_type == SP_GLYPH_SPACE)
-	    {
-	      fprintf (f, "\\endofelement{2}%%\n");
-	    }
+	  switch (current_element->element_type)
+	  {
+	  case SP_ZERO_WIDTH:
+	      fprintf (f, "\\endofelement{3}{1}%%\n");
+      break;
+      case SP_LARGER_SPACE:
+          fprintf (f, "\\endofelement{1}{0}%%\n");
+      break;
+      case SP_GLYPH_SPACE:
+          fprintf (f, "\\endofelement{2}{0}%%\n");
+      break;
+      case SP_GLYPH_SPACE_NB:
+          fprintf (f, "\\endofelement{2}{1}%%\n");
+      break;
+      case SP_LARGER_SPACE_NB:
+          fprintf (f, "\\endofelement{1}{1}%%\n");
+      break;
+      case SP_NEUMATIC_CUT_NB:
+          fprintf (f, "\\endofelement{0}{1}%%\n");
+      break;
+      default:
+      break;
+	  }
 	  current_element = current_element->next;
 	  continue;
 	}
@@ -463,8 +478,8 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	}
       if (current_element->type == GRE_CUSTO)
 	{
-	  // we also print a larger space before the custo
-	  fprintf (f, "\\endofelement{1}%%\n\\custo{%c}%%\n", libgregorio_gregoriotex_determine_next_note (syllable, current_element, NULL));
+	  // we also print an unbreakable larger space before the custo
+	  fprintf (f, "\\endofelement{1}{1}%%\n\\custo{%c}%%\n", libgregorio_gregoriotex_determine_next_note (syllable, current_element, NULL));
 	  current_element = current_element->next;
 	  continue;
 	}
@@ -534,7 +549,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
       if (current_element->next
 	  && current_element->next->type == GRE_ELEMENT)
 	{
-	  fprintf (f, "\\endofelement{0}%%\n");
+	  fprintf (f, "\\endofelement{0}{0}%%\n");
 	}
       current_element = current_element->next;
     }
@@ -768,6 +783,11 @@ libgregorio_gtex_write_special_char (FILE * f, grewchar * special_char)
       fprintf (f, "\\Abar");
       return;
     }
+  if (!gregorio_wcsbufcmp(special_char, "%"))
+    {
+      fprintf (f, "\\%%");
+      return;
+    }
   if (!gregorio_wcsbufcmp(special_char, "R/"))
     {
       fprintf (f, "\\Rbar");
@@ -837,6 +857,11 @@ libgregorio_gtex_print_char (FILE * f, grewchar to_print)
   if (to_print == L'*')
     {
       fprintf (f, "\\grestar ");
+      return;
+    }
+  if (to_print == L'%')
+    {
+      fprintf (f, "\\%%");
       return;
     }
   if (to_print == L'+')
@@ -1137,7 +1162,6 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
   char gtype = 0;
   char next_note_pitch = 0;
   gregorio_note *current_note;
-
   if (!glyph)
     {
       gregorio_message (_
@@ -1204,7 +1228,7 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
       break;
     case G_TORCULUS_RESUPINUS_FLEXUS:
       libgregorio_gregoriotex_write_note (f, current_note, next_note_pitch);
-      libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+      libgregorio_gregoriotex_write_signs (f, T_ONE_NOTE_TRF, glyph,
 					   glyph->first_note);
       glyph->glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
       // tricky to have the good position for these glyphs
@@ -1212,13 +1236,13 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
       libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
 							 &gtype,
 							 &glyph_number);
-      libgregorio_gregoriotex_write_signs (f, gtype, glyph,
-					   glyph->first_note);
-      glyph->glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
 //TODO : fusion functions
       fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n", glyph_number,
 	       glyph->first_note->pitch, next_note_pitch, type);
       glyph->first_note = current_note;
+      libgregorio_gregoriotex_write_signs (f, gtype, glyph,
+					   glyph->first_note);
+      glyph->glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
       break;
     case G_BIVIRGA:
     case G_TRIVIRGA:
@@ -1395,11 +1419,11 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	{
 	case _PUNCTUM_MORA:
 	  additional_line ();
-	  libgregorio_gregoriotex_write_punctum_mora (f, glyph, current_note);
+	  libgregorio_gregoriotex_write_punctum_mora (f, glyph, type, current_note);
 	  break;
 	case _AUCTUM_DUPLEX:
 	  additional_line ();
-	  libgregorio_gregoriotex_write_auctum_duplex (f, current_note);
+	  libgregorio_gregoriotex_write_auctum_duplex (f, glyph, current_note);
 
 	  break;
 	case _V_EPISEMUS:
@@ -1417,7 +1441,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 						   current_note);
 	  }
 	  additional_line ();
-	  libgregorio_gregoriotex_write_punctum_mora (f, glyph, current_note);
+	  libgregorio_gregoriotex_write_punctum_mora (f, glyph, type, current_note);
 	  break;
 	case _V_EPISEMUS_AUCTUM_DUPLEX:
 	  if (current_note->rare_sign != _ICTUS_A && current_note->rare_sign != _ICTUS_T)
@@ -1426,7 +1450,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 						   current_note);
 	  }
 	  additional_line ();
-	  libgregorio_gregoriotex_write_auctum_duplex (f, current_note);
+	  libgregorio_gregoriotex_write_auctum_duplex (f, glyph, current_note);
 	  break;
 	default:
 	  additional_line ();
@@ -1441,7 +1465,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	    }
 	}
       // a bit dirty, depends on the way we call it
-      if (type == T_ONE_NOTE)
+      if (type == T_ONE_NOTE || type == T_ONE_NOTE_TRF)
 	{
 	  return;
 	}
@@ -1456,7 +1480,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 
 void
 libgregorio_gregoriotex_write_auctum_duplex (FILE * f,
-					     //gregorio_glyph * glyph,
+					     gregorio_glyph * glyph,
 					     gregorio_note * current_note)
 {
 // we suppose we are on the last note... I don't really understand what it would mean otherwise...
@@ -1465,56 +1489,47 @@ libgregorio_gregoriotex_write_auctum_duplex (FILE * f,
   char previous_pitch = 0;
 // second_pitch is the second argument of the \augmentumduplex macro, that's what this function is all about.
   char second_pitch = 0;
+  // this variable will be set to 1 if we are on the note before the last note of a podatus or a porrectus or a torculus resupinus
+  unsigned char special_punctum = 0;
 
-  if (current_note->previous)
+    if (current_note->previous)
     {
-      previous_pitch = current_note->previous->pitch;
+      if (current_note-> previous ->pitch - current_note->pitch == -1 || current_note-> previous -> pitch - current_note -> pitch == 1)
+	{
+	  special_punctum = 1;
+	}
+     second_pitch = current_note->previous->pitch;
+     previous_pitch = second_pitch;
     }
-
-  // the behaviour (try to make some examples to understand) is to draw a puctum for each note, but they must be separated of at least two
-  if (previous_pitch && previous_pitch < pitch)
-    {
-      if (pitch - previous_pitch > 1 || is_on_a_line (pitch))
-	{
-	  second_pitch = previous_pitch;
-	}
-      else
-	{
-	  second_pitch = previous_pitch - 1;	// for the fg.. to look differently, try pitch + 1 instead
-	}
-    }
-
-  if (previous_pitch && previous_pitch > pitch)
-    {
-      if (previous_pitch - pitch > 1 || is_between_lines (pitch))
-	{
-	  second_pitch = previous_pitch;
-	}
-      else
-	{
-	  second_pitch = pitch - 1;	// for the gf.. to look differently, try previous_pitch + 1 instead
-	}
-    }
-
+    
   if (!previous_pitch || previous_pitch == pitch)
     {
       if (is_on_a_line (pitch))
 	{
-	  second_pitch = pitch - 1;
+	  second_pitch = pitch;
+	  special_punctum = 1;
 	}
       else
 	{
 	  second_pitch = pitch + 1;
 	}
     }
-
-  fprintf (f, "\\augmentumduplex{%c}{%c}%%\n", pitch, second_pitch);
+  // the first argument should always be the lowest one, that's what we do here:
+  if (pitch > second_pitch)
+    {
+      previous_pitch = pitch;
+      pitch = second_pitch;
+      second_pitch = previous_pitch;
+    }
+  // maybe the third argument should be changed
+  fprintf (f, "\\augmentumduplex{%c}{%c}{%d}%%\n", pitch, second_pitch, special_punctum);
 }
 
 
 void
 libgregorio_gregoriotex_write_punctum_mora (FILE * f,
 					    gregorio_glyph * glyph,
+					    char type,
 					    gregorio_note * current_note)
 {
     // well... the boring part... the punctummora before the last note in some glyphs (flexus principally)
@@ -1522,6 +1537,13 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
     // I had the choice between writing a 15 lines if or a switch... a switch seems more understandable and changeable
     // the variable that will be set to 1 if we have to shift the punctum inclinatum before the last note
   unsigned char shift_before = 0;
+  // this variable will be set to 1 if we are on the note before the last note of a podatus or a porrectus or a torculus resupinus
+  unsigned char special_punctum = 0;
+  // first: the very special case where type == T_ONE_NOTE_TRF, the punctum is at a strange place:
+  if (type == T_ONE_NOTE_TRF)
+    {
+      fprintf (f, "\\punctummora{%c}{1}{0}%%\n", current_note->pitch);
+    }
     // we go into this switch only if it is the note before the last note
   if (current_note -> next)
    {
@@ -1541,10 +1563,23 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
             {
               shift_before = 1;
             }
+          else
+            {
+          // case for f.g
+            if (current_note-> next->pitch - current_note->pitch == -1 || current_note->next->pitch - current_note -> pitch == 1)
+              {
+                special_punctum = 1;
+              }
+            }
         break;
         case G_PES_QUADRATUM:
           shift_before = 1;
         break;
+        case G_PORRECTUS:
+        case G_TORCULUS_RESUPINUS:
+          // this case is only for the note before the previous note
+          if ((current_note-> next->pitch - current_note->pitch == -1 || current_note->next->pitch - current_note -> pitch == 1) && !(current_note -> next -> next))
+          special_punctum = 1;
         default:
         break;
       }
@@ -1554,11 +1589,11 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
     {
       if (current_note-> next->pitch - current_note->pitch == -1 || current_note->next->pitch - current_note -> pitch == 1)
         {
-          fprintf (f, "\\punctummora{%c}{3}%%\n", current_note->pitch);
+          fprintf (f, "\\punctummora{%c}{3}{%d}%%\n", current_note->pitch, special_punctum);
         }
       else
         {
-          fprintf (f, "\\punctummora{%c}{2}%%\n", current_note->pitch);
+          fprintf (f, "\\punctummora{%c}{2}{%d}%%\n", current_note->pitch, special_punctum);
         }
       return;
     }
@@ -1573,7 +1608,7 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
       && (glyph->next->next->first_note->pitch -
 	  current_note->pitch > 1))
     {
-      fprintf (f, "\\punctummora{%c}{1}%%\n", current_note->pitch);
+      fprintf (f, "\\punctummora{%c}{1}{%d}%%\n", current_note->pitch, special_punctum);
       return;
     }
 // And the second: when the punctum mora is on a note on a line, and the prior note is on the space immediately above, the dot is placed on the space below the line instead
@@ -1581,12 +1616,12 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
       && (current_note->previous->pitch - current_note->pitch == 1)
       && is_on_a_line (current_note->pitch))
     {
-      fprintf (f, "\\punctummora{%c}{1}%%\n", current_note->pitch-1);
+      fprintf (f, "\\punctummora{%c}{1}{%d}%%\n", current_note->pitch-1, special_punctum);
       return;
     }
 
 // the normal operation
-  fprintf (f, "\\punctummora{%c}{0}%%\n", current_note->pitch);
+  fprintf (f, "\\punctummora{%c}{0}{%d}%%\n", current_note->pitch, special_punctum);
 }
 
 // a function that writes the good \hepisemus un GregorioTeX. i is the position of the note in the glyph.
@@ -1612,7 +1647,7 @@ libgregorio_gregoriotex_write_hepisemus (FILE * f,
 					    type, TT_H_EPISEMUS, current_note,
 					    &number, &height, &bottom);
 
-  if (i == HEPISEMUS_FIRST_TWO)
+  if (current_note->next)
     {
       ambitus = current_note->pitch - current_note->next->pitch;
     }
@@ -2121,6 +2156,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 		}
 	    }
 	  normal_height ();
+	break;
 	case 3:
 	  // you might think number_note_before_last_note more appropriate, but in the current fonts the third note of the torculus resupinus is v aligned with the last note
 	  number_last_note (18);
@@ -2434,6 +2470,7 @@ void
      {
      glyph->liquescentia = L_AUCTUS_DESCENDENS_INITIO_DEBILIS;
      } */
+
   switch (glyph->glyph_type)
     {
     case G_PODATUS:
@@ -2602,6 +2639,12 @@ void
 	    gregoriotex_determine_liquescentia_number (L_LIQ_FACTOR, L_ALL,
 						       glyph->liquescentia);
 	}
+      break;
+    case G_TORCULUS_RESUPINUS_FLEXUS:
+      // not sure about that... TODO: check
+      *type = AT_ONE_NOTE;
+      *gtype = T_TORCULUS_RESUPINUS;
+      temp =0;
       break;
     case G_PORRECTUS:
       *type = AT_PORRECTUS;

@@ -37,6 +37,7 @@ unsigned char style_stack = 0;
 %x notes
 %x style
 %x verb
+%x comments
 
 %option stack
 %option pointer
@@ -176,7 +177,7 @@ semicolon. */
 	gregorio_message (dirtyvar,
 		      "libgregorio_det_score", ERROR, 0);
 	}
-<score>[^\{\}\(\[\]<]+ {
+<score>[^\{\}\(\[\]<%]+ {
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
@@ -258,10 +259,19 @@ semicolon. */
       }
 	return SP_END;
 	}
-<style>[^<>\{\}]* {
+<style>[^<\{\}]* {
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
+<score>\%  {
+	BEGIN(comments);
+	}
+<comments>(\n|\r)+  {
+    BEGIN(score);
+    }
+<comments>[^\n\r]*  {
+    //ignored
+    }
 <style,score><v> {
 	BEGIN(verb);
 	return VERB_BEGINNING;
@@ -277,7 +287,11 @@ semicolon. */
       }
 	return VERB_END;
 	}
-<verb>[^<>]* {
+<verb>[^<]* {
+	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	return CHARACTERS;
+	}
+<verb,style,score>< {
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}

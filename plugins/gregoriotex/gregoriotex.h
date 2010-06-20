@@ -51,6 +51,8 @@ Here are the different types, they must be the same as in squarize.py
 #define T_SCANDICUS 42
 #define T_ANCUS 46
 #define T_ANCUS_LONGQUEUE 50
+// this is a special type for the first note of a torculus resupinus flexus
+#define T_ONE_NOTE_TRF 72
 
 // the liquescentia number of GregorioTeX (different because they have to be between 0 and 7)
 #define GL_NO_LIQUESCENTIA 0
@@ -82,8 +84,9 @@ Here are the different types, they must be the same as in squarize.py
 
 // macro that we will use to determine if we need a short bar or not
 
-#define is_short(pitch) (pitch=='a'||pitch=='c'||pitch=='e'||pitch=='g'||pitch=='i'||pitch=='k'||pitch=='m')
-#define is_long(pitch) (pitch=='b'||pitch=='d'||pitch=='f'||pitch=='h'||pitch=='j'||pitch=='l')
+// we define d to be short instead of long... may induce errors, but fixes some too
+#define is_short(pitch) (pitch=='a'||pitch=='c'||pitch=='d'||pitch=='e'||pitch=='g'||pitch=='i'||pitch=='k'||pitch=='m')
+#define is_long(pitch) (pitch=='b'||pitch=='f'||pitch=='h'||pitch=='j'||pitch=='l')
 #define is_on_a_line(pitch) is_long(pitch)
 #define is_between_lines(pitch) is_short(pitch)
 
@@ -118,6 +121,12 @@ Here are the different types, they must be the same as in squarize.py
 // some bars, to know if they are inside a syllable or if they are a syllable
 #define INSIDE_BAR 0
 #define SYLLABLE_BAR 1
+
+// a structure containing the status
+typedef struct gregoriotex_status {
+unsigned char additional_line; // 1 if the current_glyph will have an additional line under or not (useful to determine the length of the bar in case of a flexa starting at d
+unsigned char last_h_episemus; // to link two hepisemus that are at the same pitch
+} gregorio_status;
 
 // a structure containing the result of seekadditionalspaces
 
@@ -167,8 +176,8 @@ void libgregorio_gregoriotex_determine_note_number_and_type (gregorio_note * not
 
 void libgregorio_gtex_write_end_for_two (FILE * f, unsigned char style);
 
-void libgregorio_gregoriotex_write_punctum_mora (FILE * f, gregorio_glyph * glyph, gregorio_note * current_note);
-void libgregorio_gregoriotex_write_auctum_duplex (FILE * f, gregorio_note * current_note);
+void libgregorio_gregoriotex_write_punctum_mora (FILE * f, gregorio_glyph * glyph, char type, gregorio_note * current_note);
+void libgregorio_gregoriotex_write_auctum_duplex (FILE * f, gregorio_glyph * glyph,  gregorio_note * current_note);
 
 void libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph, int i, char type, char sign_type, gregorio_note * current_note, char *number, char *height, char *bottom);
 
