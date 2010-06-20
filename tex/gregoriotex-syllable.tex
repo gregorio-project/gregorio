@@ -148,7 +148,7 @@
 \advance\glyphraisevalue by \addedraisevalue %
 \or\or% 8: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
 \ifnum\isonaline=1%
-\addedraisevalue=6900 sp%
+\addedraisevalue=5000 sp%
 \multiply\addedraisevalue by \the\grefactor %
 \advance\glyphraisevalue by \addedraisevalue %
 \fi%
@@ -469,8 +469,11 @@
 \fi %
 \advance\clefwidth by \minimalspaceatlinebeginning %
 \hbox{}%
+\advance\temp by -\spaceafterlineclef %
+\ifdim\the\temp < -\the\begindifference %
+\temp=-\the\begindifference %
+\fi %
 \kern\temp %
-\kern-\spaceafterlineclef %
 \hskip\afterclefnospace %
 \fi %
 \else %\ifnum\lastoflinecount=2

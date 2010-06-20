@@ -985,13 +985,19 @@ gregoriotex.atScoreEnd()%
 \relax%
 }
 
-% macro to end elements, argument is the type of space, it can be : 
-%% 0 : default space 
-%% 1 : larger space
-%% 2 : glyph space
+% macro to end elements, #1 is the type of space, it can be : 
+%% 0: default space 
+%% 1: larger space
+%% 2: glyph space
+%% 3: zero-width space
+% #2 is if the space is unbreakable (1) or not (0)
 
-\def\endofelement#1{%
+\def\endofelement#1#2{%
+\ifnum #2=0\relax %
 \penalty -1000%
+\else %
+\penalty 10001%
+\fi %
 \ifcase#1%
 \hskip\interelementspace%
 \or% case 1
@@ -999,6 +1005,9 @@ gregoriotex.atScoreEnd()%
 \or% case 2
 \hskip\glyphspace%
 \fi%
+\ifnum #2=1\relax %
+\penalty 10001%
+\fi %
 \relax%
 }
 
@@ -1155,7 +1164,10 @@ gregoriotex.atScoreEnd()%
 
 % a zero-width hyphen, useful for fine tuning line endings. To input in gabc verb for example.
 \def\zerhyph{%
-\hbox to 0pt{%
+\hbox to 0m<verb>[^<]* {
+	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	return CHARACTERS;
+	}m{%
 %-%
 \char\the\hyphenchar\font %
 \hss %

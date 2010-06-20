@@ -366,7 +366,8 @@
 % if the second argument is one, we the go back to the end of the punctum
 % if the second argument is two, it means that we must shift the width of one punctum to the left
 % if it is three, it means the same as when it is two, but with ambitus of one
-\def\punctummora#1#2{%
+% #3 is 1 in case of a punctommora in the note before the last note of a podatus, porrectus or torculus resupinus, 0 otherwise.
+\def\punctummora#1#2#3{%
 \penalty 10001\relax %
 \ifcase#2\relax %
 \hskip\spacebeforesigns%
@@ -386,7 +387,11 @@
 \kern -\temp %
 \kern \spacebeforesigns %
 \fi %
+\ifnum #3=0 %
 \calculateglyphraisevalue{#1}{4}%
+\else %
+\calculateglyphraisevalue{#1}{8}%
+\fi %
 \penalty 10001\relax %
 \raise \glyphraisevalue \hbox{\gregorianfont \char 14}%
 \penalty 10001\relax %
@@ -411,9 +416,9 @@
 }
 
 % a function to typeset an augmentum duplex, easy enough to be understood...
-\def\augmentumduplex#1#2{%
-\punctummora{#1}{1}%
-\punctummora{#2}{0}%
+\def\augmentumduplex#1#2#3{%
+\punctummora{#1}{1}{#3}%
+\punctummora{#2}{0}{0}%
 \relax %
 }
 
