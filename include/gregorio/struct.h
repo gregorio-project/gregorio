@@ -636,6 +636,9 @@ h_episemus>H_ALONE
 #define SP_NEUMATIC_CUT '4'
 #define SP_LARGER_SPACE '5'
 #define SP_GLYPH_SPACE '6'
+#define SP_NEUMATIC_CUT_NB '7'
+#define SP_LARGER_SPACE_NB '8'
+#define SP_GLYPH_SPACE_NB '9'
 
 #define is_liquescentia(liquescentia) liquescentia==L_DEMINUTUS||liquescentia==L_AUCTUS_ASCENDENS||liquescentia==L_AUCTUS_DESCENDENS||liquescentia==L_AUCTA
 
