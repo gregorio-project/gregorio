@@ -32,37 +32,37 @@
 % the third argument is whether we must type a space after or not (0 if not, 1 if yes)
 % if the fourth argument is a, it means that we must not put a flat after the key, otherwise it's the height of the flat
 \def\setlinesclef#1#2#3#4{%
-\grelocalleftbox{%
-\kern\additionalleftspace %
-\copy\Lines% draws the lines
-\unkern %
-\hbox{\typekey{#1}{#2}{0}{#3}{#4}\hskip\afterclefnospace}%
-}%
-\relax%
+  \grelocalleftbox{%
+    \kern\additionalleftspace %
+    \copy\Lines% draws the lines
+    \unkern %
+    \hbox{\typekey{#1}{#2}{0}{#3}{#4}\hskip\afterclefnospace}%
+  }%
+  \relax%
 }
 
 %% macro calculating the \clefnum from the letter and number
 % #1 is the letter, and #2 the line number, #3 is a if not flated
 % and otherwise the height of the flat
 \def\calculateclefnum#1#2#3{%
-\global\clefnum=#2\relax %
-\global\xdef\clefflat{#3}%
-\ifx f#1%
-\global\advance\clefnum by 4\relax %
-\fi %
-\relax %
+  \global\clefnum=#2\relax %
+  \global\xdef\clefflat{#3}%
+  \ifx f#1%
+    \global\advance\clefnum by 4\relax %
+  \fi %
+  \relax %
 }
 
 %% macro redrawing a key from clefnum, useful for vertical space changes
 \def\updatelinesclef{%
-\ifnum\clefnum > 5\relax%
-\tempcount=\clefnum %
-\advance\tempcount by -4\relax %
-\setlinesclef{f}{\tempcount}{1}{\clefflat}%
-\else %
-\setlinesclef{c}{\clefnum}{1}{\clefflat}%
-\fi %
-\relax %
+  \ifnum\clefnum > 5\relax%
+    \tempcount=\clefnum %
+    \advance\tempcount by -4\relax %
+    \setlinesclef{f}{\tempcount}{1}{\clefflat}%
+  \else %
+    \setlinesclef{c}{\clefnum}{1}{\clefflat}%
+  \fi %
+  \relax %
 }
 
 % macro that typesets the key
@@ -73,64 +73,64 @@
 %% #4: if we must type a space after or not
 %% #5: if a, it means that we must not put a flat after the key, otherwise it's the height of the flat
 \def\typekey#1#2#3#4#5{%
-\ifcase#2 %
-\or%
-\calculateglyphraisevalue{c}{0}%
-\or%
-\calculateglyphraisevalue{e}{0}%
-\or%
-\calculateglyphraisevalue{g}{0}%
-\or%
-\calculateglyphraisevalue{i}{0}%
-\fi%
-\tempskip=\spaceafterlineclef %
-\ifnum#4=0\relax %
-\tempskip=\afterclefnospace %
-\fi %
-\ifx c#1% we check if it is a c key
-\ifcase#3%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 1}%\hskip\tempskip}%
-\setbox\Tempwidth=\hbox{\gregorianfont \char 1}%
-\global\clefwidth=\wd\Tempwidth %
-\or%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 3}%\hskip\tempskip}%
-\fi%
-\else % we consider that it is a f key
-\ifcase#3%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 2}%\hskip\tempskip}%
-\setbox\Tempwidth=\hbox{\gregorianfont \char 2}%
-\global\clefwidth=\wd\Tempwidth %
-\or%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 4}%\hskip\tempskip}%
-\fi%
-\fi%
-\if a#5%
-\hskip\tempskip %
-\else %
-\calculateglyphraisevalue{#5}{0}%
-\hskip\clefflatspace\raise\glyphraisevalue\hbox{\gregorianfont \char 6}%
-\hskip\tempskip %
-\fi %
-\relax %
+  \ifcase#2 %
+  \or%
+    \calculateglyphraisevalue{c}{0}%
+  \or%
+    \calculateglyphraisevalue{e}{0}%
+  \or%
+    \calculateglyphraisevalue{g}{0}%
+  \or%
+    \calculateglyphraisevalue{i}{0}%
+  \fi%
+  \tempskip=\spaceafterlineclef %
+  \ifnum#4=0\relax %
+    \tempskip=\afterclefnospace %
+  \fi %
+  \ifx c#1% we check if it is a c key
+    \ifcase#3%
+      \raise\glyphraisevalue\hbox{\gregorianfont \char 1}%\hskip\tempskip}%
+      \setbox\Tempwidth=\hbox{\gregorianfont \char 1}%
+      \global\clefwidth=\wd\Tempwidth %
+    \or%
+      \raise\glyphraisevalue\hbox{\gregorianfont \char 3}%\hskip\tempskip}%
+    \fi%
+  \else % we consider that it is a f key
+    \ifcase#3%
+      \raise\glyphraisevalue\hbox{\gregorianfont \char 2}%\hskip\tempskip}%
+      \setbox\Tempwidth=\hbox{\gregorianfont \char 2}%
+      \global\clefwidth=\wd\Tempwidth %
+    \or%
+      \raise\glyphraisevalue\hbox{\gregorianfont \char 4}%\hskip\tempskip}%
+    \fi%
+  \fi%
+  \if a#5%
+    \hskip\tempskip %
+  \else %
+    \calculateglyphraisevalue{#5}{0}%
+    \hskip\clefflatspace\raise\glyphraisevalue\hbox{\gregorianfont \char 6}%
+    \hskip\tempskip %
+  \fi %
+  \relax %
 }
 
 % macro that writes the initial key, and sets the next keys to the same value
 % if #3 is a, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
 \def\setinitialclef#1#2#3{%
-\calculateclefnum{#1}{#2}{#3}%
-\ifnum\lastoflinecount=2\relax % we must not type a space if there is no initial
-\typekey{#1}{#2}{0}{0}{#3}%
-\else %
-\typekey{#1}{#2}{0}{1}{#3}%
-\fi %
-\setlinesclef{#1}{#2}{1}{#3}%
-% if the initial is big, then we adjust the second line
-\ifnum\biginitial=0\relax %
-\else %
-\adjustsecondline %
-\fi %
-\relax%
+  \calculateclefnum{#1}{#2}{#3}%
+  \ifnum\lastoflinecount=2\relax % we must not type a space if there is no initial
+    \typekey{#1}{#2}{0}{0}{#3}%
+  \else %
+    \typekey{#1}{#2}{0}{1}{#3}%
+  \fi %
+  \setlinesclef{#1}{#2}{1}{#3}%
+  % if the initial is big, then we adjust the second line
+  \ifnum\biginitial=0\relax %
+  \else %
+    \adjustsecondline %
+  \fi %
+  \relax%
 }
 
 % macro called when the key changes
@@ -139,222 +139,222 @@
 % if #4 is a, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
 \def\changeclef#1#2#3#4{%
-\calculateclefnum{#1}{#2}{#4}%
-\clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
-\multiply\clefchangespace by \the\grefactor %
-\ifnum#3=1\relax %
-\hskip\clefchangespace %
-\else %
-% here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
-\hskip -\spacearoundclefbars %
-\fi %
-\typekey{#1}{#2}{1}{0}{#4}%
-\hskip\clefchangespace %
-\setlinesclef{#1}{#2}{1}{#4}%
-\relax%
+  \calculateclefnum{#1}{#2}{#4}%
+  \clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
+  \multiply\clefchangespace by \the\grefactor %
+  \ifnum#3=1\relax %
+    \hskip\clefchangespace %
+  \else %
+    % here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
+    \hskip -\spacearoundclefbars %
+  \fi %
+  \typekey{#1}{#2}{1}{0}{#4}%
+  \hskip\clefchangespace %
+  \setlinesclef{#1}{#2}{1}{#4}%
+  \relax%
 }
 
 % macro called when the key changes inside a syllable
 
 \def\inchangeclef#1#2#3{%
-% to see why we reset \lastoflinecount, see comments of \glyph.
-\ifnum\lastoflinecount=2\relax %
-\global\lastoflinecount=0\relax %
-\fi %
-\clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
-\multiply\clefchangespace by \grefactor %
-\hskip\clefchangespace %
-\typekey{#1}{#2}{1}{0}{#3}%
-\hskip\clefchangespace %
-\setlinesclef{#1}{#2}{0}{#3}%
-\relax%
+  % to see why we reset \lastoflinecount, see comments of \glyph.
+  \ifnum\lastoflinecount=2\relax %
+    \global\lastoflinecount=0\relax %
+  \fi %
+  \clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
+  \multiply\clefchangespace by \grefactor %
+  \hskip\clefchangespace %
+  \typekey{#1}{#2}{1}{0}{#3}%
+  \hskip\clefchangespace %
+  \setlinesclef{#1}{#2}{0}{#3}%
+  \relax%
 }
 
 % custo just typesets a custo, useful for before the key changes for example
 \def\custo#1{%
-\calculateglyphraisevalue{#1}{0}%
-%here we need some tricks to draw the line before the custo (for the color)
-\setbox\Tempwidth=\hbox{\custochar#1}%
-\global\tempwidth=\wd\Tempwidth %
-\ifx l#1%
-\additionaltopcustolinemiddle %
-\fi %
-\ifx m#1%
-\additionaltopcustolinemiddle %
-\fi %
-\ifx a#1%
-\additionalbottomcustolinemiddle %
-\fi %
-\ifx b#1%
-\additionalbottomcustolinemiddle %
-\fi %
-\raise \glyphraisevalue%
-\copy\Tempwidth %
-% for now we consider we always have a bar after the custo
-% we don't want to end the line here
-\penalty 10001\relax %
-\hskip -\spacearoundclefbars %
-\penalty 10001\relax %
-\relax %
+  \calculateglyphraisevalue{#1}{0}%
+  %here we need some tricks to draw the line before the custo (for the color)
+  \setbox\Tempwidth=\hbox{\custochar#1}%
+  \global\tempwidth=\wd\Tempwidth %
+  \ifx l#1%
+    \additionaltopcustolinemiddle %
+  \fi %
+  \ifx m#1%
+    \additionaltopcustolinemiddle %
+  \fi %
+  \ifx a#1%
+    \additionalbottomcustolinemiddle %
+  \fi %
+  \ifx b#1%
+    \additionalbottomcustolinemiddle %
+  \fi %
+  \raise \glyphraisevalue%
+  \copy\Tempwidth %
+  % for now we consider we always have a bar after the custo
+  % we don't want to end the line here
+  \penalty 10001\relax %
+  \hskip -\spacearoundclefbars %
+  \penalty 10001\relax %
+  \relax %
 }
 
 % the argument is the height
 \def\setcusto#1{%
-\ifnum\blockcusto=0\relax %
-\calculateglyphraisevalue{#1}{0}%
-%here we need some tricks to draw the line before the custo (for the color)
-\setbox\Tempwidth=\hbox{%
-% we type a hskip and the we type the custo
-\hskip\spacebeforecusto %
-\custochar#1\relax %
-}%
-\global\tempwidth=\wd\Tempwidth %
-\grelocalrightbox{%
-\ifx l#1%
-\additionaltopcustolineend %
-\fi %
-\ifx m#1%
-\additionaltopcustolineend %
-\fi %
-\ifx a#1%
-\additionalbottomcustolineend %
-\fi %
-\ifx b#1%
-\additionalbottomcustolineend %
-\fi %
-\raise \glyphraisevalue%
-\copy\Tempwidth %
-}%
-\fi %
-\relax%
+  \ifnum\blockcusto=0\relax %
+    \calculateglyphraisevalue{#1}{0}%
+    %here we need some tricks to draw the line before the custo (for the color)
+    \setbox\Tempwidth=\hbox{%
+    % we type a hskip and the we type the custo
+    \hskip\spacebeforecusto %
+    \custochar#1\relax %
+    }%
+    \global\tempwidth=\wd\Tempwidth %
+    \grelocalrightbox{%
+    \ifx l#1%
+      \additionaltopcustolineend %
+    \fi %
+    \ifx m#1%
+      \additionaltopcustolineend %
+    \fi %
+    \ifx a#1%
+      \additionalbottomcustolineend %
+    \fi %
+    \ifx b#1%
+      \additionalbottomcustolineend %
+    \fi %
+    \raise \glyphraisevalue%
+    \copy\Tempwidth %
+    }%
+  \fi %
+  \relax%
 }
 
 % macro that typesets an additional line at the top for custos at end of line
 
 \def\additionaltopcustolineend{%
-\temp=\staffheight %
-\advance\temp by \spacebeneathtext %
-\advance\temp by \spacelinestext %
-\advance\temp by \interstafflinespace %
-\advance\temp by \additionalbottomspace %
-\advance\temp by \translationheight %
-\raise\temp %
-\hbox to 0pt{%
-\stafflinesformat %
-\kern\tempwidth %
-\kern -\additionallineswidth %
-\vrule width \additionallineswidth height \stafflineheight%
-\hss %
-}%
-\relax %
+  \temp=\staffheight %
+  \advance\temp by \spacebeneathtext %
+  \advance\temp by \spacelinestext %
+  \advance\temp by \interstafflinespace %
+  \advance\temp by \additionalbottomspace %
+  \advance\temp by \translationheight %
+  \raise\temp %
+  \hbox to 0pt{%
+    \stafflinesformat %
+    \kern\tempwidth %
+    \kern -\additionallineswidth %
+    \vrule width \additionallineswidth height \stafflineheight%
+    \hss %
+  }%
+  \relax %
 }
 
 \def\additionalbottomcustolineend{%
-\temp=\spacebeneathtext %
-\advance\temp by \spacelinestext %
-\advance\temp by \additionalbottomspace %
-\advance\temp by \translationheight %
-\advance\temp by -\interstafflinespace %
-\advance\temp by -\stafflineheight %
-\raise\temp %
-\hbox to 0pt{%
-\stafflinesformat %
-\kern\tempwidth %
-\kern -\additionallineswidth %
-\vrule width \additionallineswidth height \stafflineheight%
-\hss %
-}%
-\relax %
+  \temp=\spacebeneathtext %
+  \advance\temp by \spacelinestext %
+  \advance\temp by \additionalbottomspace %
+  \advance\temp by \translationheight %
+  \advance\temp by -\interstafflinespace %
+  \advance\temp by -\stafflineheight %
+  \raise\temp %
+  \hbox to 0pt{%
+    \stafflinesformat %
+    \kern\tempwidth %
+    \kern -\additionallineswidth %
+    \vrule width \additionallineswidth height \stafflineheight%
+    \hss %
+  }%
+  \relax %
 }
 
 % same macros, but for a custo in the middle
 
 \def\additionaltopcustolinemiddle{%
-\temp=\staffheight %
-\advance\temp by \spacebeneathtext %
-\advance\temp by \spacelinestext %
-\advance\temp by \interstafflinespace %
-\advance\temp by \additionalbottomspace %
-\advance\temp by \translationheight %
-\raise\temp %
-\hbox to 0pt{%
-\stafflinesformat %
-\hss %
-\kern\tempwidth %
-\temp=\additionallineswidth %
-\multiply\temp by 2%
-\vrule width \temp height \stafflineheight%
-\hss %
-}%
-\relax %
+  \temp=\staffheight %
+  \advance\temp by \spacebeneathtext %
+  \advance\temp by \spacelinestext %
+  \advance\temp by \interstafflinespace %
+  \advance\temp by \additionalbottomspace %
+  \advance\temp by \translationheight %
+  \raise\temp %
+  \hbox to 0pt{%
+    \stafflinesformat %
+    \hss %
+    \kern\tempwidth %
+    \temp=\additionallineswidth %
+    \multiply\temp by 2%
+    \vrule width \temp height \stafflineheight%
+    \hss %
+  }%
+  \relax %
 }
 
 \def\additionalbottomcustolinemiddle{%
-\temp=\spacebeneathtext %
-\advance\temp by \spacelinestext %
-\advance\temp by \additionalbottomspace %
-\advance\temp by \translationheight %
-\advance\temp by -\interstafflinespace %
-\advance\temp by -\stafflineheight %
-\raise\temp %
-\hbox to 0pt{%
-\stafflinesformat %
-\hss %
-\kern\tempwidth %
-\temp=\additionallineswidth %
-\multiply\temp by 2%
-\vrule width \temp height \stafflineheight%
-\hss %
-}%
-\relax %
+  \temp=\spacebeneathtext %
+  \advance\temp by \spacelinestext %
+  \advance\temp by \additionalbottomspace %
+  \advance\temp by \translationheight %
+  \advance\temp by -\interstafflinespace %
+  \advance\temp by -\stafflineheight %
+  \raise\temp %
+  \hbox to 0pt{%
+    \stafflinesformat %
+    \hss %
+    \kern\tempwidth %
+    \temp=\additionallineswidth %
+    \multiply\temp by 2%
+    \vrule width \temp height \stafflineheight%
+    \hss %
+  }%
+  \relax %
 }
 
 \def\custochar#1{%
-\gregorianfont %
-\ifx a#1%
-\char 62%
-\fi%
-\ifx b#1%
-\char 60%
-\fi%
-\ifx c#1%
-\char 61%
-\fi%
-\ifx d#1%
-\char 60%
-\fi%
-\ifx e#1%
-\char 61%
-\fi%
-\ifx f#1%
-\char 60%
-\fi%
-\ifx g#1%
-\char 61%
-\fi%
-\ifx h#1%
-\char 60%
-\fi%
-\ifx i#1%
-\char 61%
-\fi%
-\ifx j#1%
-\char 63%
-\fi%
-\ifx k#1%
-\char 64%
-\fi%
-\ifx l#1%
-\char 63%
-\fi%
-\ifx m#1%
-\char 65%
-\fi%
+  \gregorianfont %
+  \ifx a#1%
+    \char 62%
+  \fi%
+  \ifx b#1%
+    \char 60%
+  \fi%
+  \ifx c#1%
+    \char 61%
+  \fi%
+  \ifx d#1%
+    \char 60%
+  \fi%
+  \ifx e#1%
+    \char 61%
+  \fi%
+  \ifx f#1%
+    \char 60%
+  \fi%
+  \ifx g#1%
+    \char 61%
+  \fi%
+  \ifx h#1%
+    \char 60%
+  \fi%
+  \ifx i#1%
+    \char 61%
+  \fi%
+  \ifx j#1%
+    \char 63%
+  \fi%
+  \ifx k#1%
+    \char 64%
+  \fi%
+  \ifx l#1%
+    \char 63%
+  \fi%
+  \ifx m#1%
+    \char 65%
+  \fi%
 }
 
 \def\removecusto{%
-\grelocalrightbox{}%
-\relax%
+  \grelocalrightbox{}%
+  \relax%
 }
 
 
@@ -368,58 +368,57 @@
 % if it is three, it means the same as when it is two, but with ambitus of one
 % #3 is 1 in case of a punctommora in the note before the last note of a podatus, porrectus or torculus resupinus, 0 otherwise.
 \def\punctummora#1#2#3{%
-\penalty 10001\relax %
-\ifcase#2\relax %
-\hskip\spacebeforesigns%
-\or %
-\kern\spacebeforesigns %
-\or %
-% to get the widht of a punctum minus a line, we calculate the width of a flexus (with ambitus of two) minus the width of a punctum
-\setbox\Tempwidth=\hbox{\gregorianfont \char 2051}%
-\temp=\wd\Tempwidth %
-\setbox\Tempwidth=\hbox{\gregorianfont \char 17}%
-\advance\temp by -\wd\Tempwidth %
-\kern -\temp %
-\kern \spacebeforesigns %
-\or %
-\setbox\Tempwidth=\hbox{\gregorianfont \char 17}%
-\temp=\wd\Tempwidth %
-\kern -\temp %
-\kern \spacebeforesigns %
-\fi %
-\ifnum #3=0 %
-\calculateglyphraisevalue{#1}{4}%
-\else %
-\calculateglyphraisevalue{#1}{8}%
-\fi %
-\penalty 10001\relax %
-\raise \glyphraisevalue \hbox{\gregorianfont \char 14}%
-\penalty 10001\relax %
-\ifcase#2\relax %
-\or %
-\setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
-\kern -\wd\Tempwidth %
-\kern -\spacebeforesigns %
-\or %
-\setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
-\kern -\wd\Tempwidth %
-\kern -\spacebeforesigns %
-\kern \temp %
-\or %
-\setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
-\kern -\wd\Tempwidth %
-\kern -\spacebeforesigns %
-\kern \temp %
-\fi %
-\penalty 10001\relax %
-\relax%
+  \penalty 10001\relax %
+  \ifcase#2\relax %
+    \hskip\spacebeforesigns%
+  \or %
+    \kern\spacebeforesigns %
+  \or %
+    % to get the widht of a punctum minus a line, we calculate the width of a flexus (with ambitus of two) minus the width of a punctum
+    \setbox\Tempwidth=\hbox{\gregorianfont \char 2051}%
+    \temp=\wd\Tempwidth %
+    \setbox\Tempwidth=\hbox{\gregorianfont \char 17}%
+    \advance\temp by -\wd\Tempwidth %
+    \kern -\temp %
+    \kern \spacebeforesigns %
+  \or %
+    \setbox\Tempwidth=\hbox{\gregorianfont \char 17}%
+    \temp=\wd\Tempwidth %
+    \kern -\temp %
+    \kern \spacebeforesigns %
+  \fi %
+  \ifnum #3=0 %
+    \calculateglyphraisevalue{#1}{4}%
+  \else %
+    \calculateglyphraisevalue{#1}{8}%
+  \fi %
+  \penalty 10001\relax %
+  \raise \glyphraisevalue \hbox{\gregorianfont \char 14}%
+  \penalty 10001\relax %
+  \ifcase#2\relax\or %
+    \setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
+    \kern -\wd\Tempwidth %
+    \kern -\spacebeforesigns %
+  \or %
+    \setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
+    \kern -\wd\Tempwidth %
+    \kern -\spacebeforesigns %
+    \kern \temp %
+  \or %
+    \setbox\Tempwidth=\hbox{\gregorianfont \char 14}%
+    \kern -\wd\Tempwidth %
+    \kern -\spacebeforesigns %
+    \kern \temp %
+  \fi %
+  \penalty 10001\relax %
+  \relax%
 }
 
 % a function to typeset an augmentum duplex, easy enough to be understood...
 \def\augmentumduplex#1#2#3{%
-\punctummora{#1}{1}{#3}%
-\punctummora{#2}{0}{0}%
-\relax %
+  \punctummora{#1}{1}{#3}%
+  \punctummora{#2}{0}{0}%
+  \relax %
 }
 
 \newbox\Tempsign
@@ -429,45 +428,45 @@
 % #4 is 0 a shift that we want to get applied, useful for punctum inclinatum for example
 % #5 is the glyph number. If it is 1 it is an ictus arsicus (?) and 2 for an ictus theticus
 \def\vepisemusorrareaux#1#2#3#4#5{%
-% first we set \tempwidth to the width of the last glyph
-\tempwidth=\lastglyphwidth %
-\setbox\Tempsign=\hbox{\gregorianfont #2}%
-\tempsignwidth=\wd\Tempsign%
-\divide\tempsignwidth by 2 %
-\ifcase#3%
-% tempwidth is the width of the last glyph
-\advance\tempwidth by -\tempsignwidth %
-\or%
-\tempwidth=\tempsignwidth %
-\or%
-\setbox\Tempsign=\hbox{\gregorianfont #1}%
-\tempwidth=\wd\Tempsign %
-\advance\tempwidth by -\tempsignwidth %
-\or %
-\setbox\Tempsign=\hbox{\gregorianfont #1}%
-\advance\tempwidth by -\wd\Tempsign %
-\advance\tempwidth by -\tempsignwidth %
-\fi%
-\kern-\tempwidth % we do it here because of the ictus
-% here we save the position of the ictus or we draw the glyph
-\ifnum#5<3\relax %
-\ictus{#5}%
-\else %
-% then we draw the sign
-\setbox\Tempsign=\hbox{\gregorianfont \char #5}%
-% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
-\tempsignwidth=\wd\Tempsign %
-\divide\tempsignwidth by 2 %
-\advance\tempwidth by \tempsignwidth %
-\kern -\tempsignwidth%
-\kern #4sp%
-\raise \glyphraisevalue \copy\Tempsign %
-\kern -#4sp%
-% and finally we go back to the end of the glyph, where we were first
-\advance\tempwidth by -2\tempsignwidth %
-\fi %
-\kern \tempwidth%
-\relax%
+  % first we set \tempwidth to the width of the last glyph
+  \tempwidth=\lastglyphwidth %
+  \setbox\Tempsign=\hbox{\gregorianfont #2}%
+  \tempsignwidth=\wd\Tempsign%
+  \divide\tempsignwidth by 2 %
+  \ifcase#3%
+  % tempwidth is the width of the last glyph
+    \advance\tempwidth by -\tempsignwidth %
+  \or%
+    \tempwidth=\tempsignwidth %
+  \or%
+    \setbox\Tempsign=\hbox{\gregorianfont #1}%
+    \tempwidth=\wd\Tempsign %
+    \advance\tempwidth by -\tempsignwidth %
+  \or %
+    \setbox\Tempsign=\hbox{\gregorianfont #1}%
+    \advance\tempwidth by -\wd\Tempsign %
+    \advance\tempwidth by -\tempsignwidth %
+  \fi%
+  \kern-\tempwidth % we do it here because of the ictus
+  % here we save the position of the ictus or we draw the glyph
+  \ifnum#5<3\relax %
+    \ictus{#5}%
+  \else %
+  % then we draw the sign
+    \setbox\Tempsign=\hbox{\gregorianfont \char #5}%
+    % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+    \tempsignwidth=\wd\Tempsign %
+    \divide\tempsignwidth by 2 %
+    \advance\tempwidth by \tempsignwidth %
+    \kern -\tempsignwidth%
+    \kern #4sp%
+    \raise \glyphraisevalue \copy\Tempsign %
+    \kern -#4sp%
+    % and finally we go back to the end of the glyph, where we were first
+    \advance\tempwidth by -2\tempsignwidth %
+  \fi %
+  \kern \tempwidth%
+  \relax%
 }
 
 % here are the common values for both hepisemus (and consequently also for additional lines) and vepisemus
@@ -505,165 +504,165 @@
 % a function to typeset a vertical episemus or a rare accent (like accentus, circulus, etc.). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The values are described in the commentary just above.
 % the third argument is the glyph number in the font.
 \def\vepisemusorrare#1#2#3{%
-\ifnum#3=33\relax %
-% if it is a vertical episemus, we call the normal calculateglyphvalue
-\calculateglyphraisevalue{#1}{3}%
-\else %
-% if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.)
-\calculateglyphraisevalue{m}{6}%
-\fi %
-\ifcase#2 %
-%case 0
-\vepisemusorrareaux{0}{\char 17}{1}{0}{#3}%
-\or%
-%case 1
-\vepisemusorrareaux{0}{\char 13}{1}{0}{#3}%
-\or%
-%case 2
-% a kind of flexus, it has the good width
-\vepisemusorrareaux{\char 5634}{\char 17}{2}{0}{#3}%
-\or%
-%case 3
-% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
-\vepisemusorrareaux{0}{\char 5250}{1}{0}{#3}%
-\or%
-%case 4
-% is a torculus, it has the good width
-\vepisemusorrareaux{\char 15371}{\char 17}{1}{0}{#3}%
-\or%
-%case 5
-% is a torculus deminutus, it has the good width
-\vepisemusorrareaux{\char 15884}{\char 17}{1}{0}{#3}%
-\or%
-%case 6
-\vepisemusorrareaux{0}{\char 17}{0}{0}{#3}%
-\or%
-%case 7
-\vepisemusorrareaux{0}{\char 13}{0}{0}{#3}%
-\or%
-%case 8, in which we do (for now) the same as case 6
-\vepisemusorrareaux{0}{\char 17}{0}{0}{#3}%
-\or% case 9, 10 and 11
-\or\or\or %
-%case 12
-\vepisemusorrareaux{0}{\char 19}{0}{200\the\grefactor }{#3}%
-\or%
-%case 13
-\vepisemusorrareaux{0}{\char 32}{0}{0}{#3}%
-\or%
-%case 14
-\vepisemusorrareaux{0}{\char 20}{0}{0}{#3}%
-\or%
-%case 15
-\vepisemusorrareaux{0}{\char 26}{0}{0}{#3}%
-\or%
-%case 16
-\vepisemusorrareaux{0}{\char 27}{0}{0}{#3}%
-\or%
-%case 17
-\vepisemusorrareaux{\char 5633}{\char 17}{2}{0}{#3}%
-\or%
-%case 18
-\vepisemusorrareaux{0}{\char 74}{1}{0}{#3}%
-\or%
-%case 19
-\vepisemusorrareaux{0}{\char 28}{0}{0}{#3}%
-\or%
-%case 20
-\vepisemusorrareaux{0}{\char 26}{0}{0}{#3}%
-\or%
-%case 21
-\vepisemusorrareaux{\char 5634}{\char 17}{4}{0}{#3}%
-\or%
-%case 22 %
-\vepisemusorrareaux{\char 5633}{\char 17}{4}{0}{#3}%
-\or%
-%case 23
-\vepisemusorrareaux{\char 1986}{\char 17}{4}{0}{#3}%
-\or%
-%case 24
-\vepisemusorrareaux{0}{\char 35}{1}{0}{#3}%
-\or%
-%case 25
-\vepisemusorrareaux{0}{\char 9}{1}{0}{#3}%
-\or%
-%case 26
-\vepisemusorrareaux{0}{\char 8}{1}{0}{#3}%
-\or%
-%case 27
-\vepisemusorrareaux{0}{\divisiofinalissymbol}{1}{0}{#3}%
-\fi%
-\relax%
+  \ifnum#3=33\relax %
+    % if it is a vertical episemus, we call the normal calculateglyphvalue
+    \calculateglyphraisevalue{#1}{3}%
+  \else %
+    % if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.)
+    \calculateglyphraisevalue{m}{6}%
+  \fi %
+  \ifcase#2 %
+    %case 0
+    \vepisemusorrareaux{0}{\char 17}{1}{0}{#3}%
+  \or%
+    %case 1
+    \vepisemusorrareaux{0}{\char 13}{1}{0}{#3}%
+  \or%
+    %case 2
+    % a kind of flexus, it has the good width
+    \vepisemusorrareaux{\char 5634}{\char 17}{2}{0}{#3}%
+  \or%
+    %case 3
+    % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
+    \vepisemusorrareaux{0}{\char 5250}{1}{0}{#3}%
+  \or%
+    %case 4
+    % is a torculus, it has the good width
+    \vepisemusorrareaux{\char 15371}{\char 17}{1}{0}{#3}%
+  \or%
+    %case 5
+    % is a torculus deminutus, it has the good width
+    \vepisemusorrareaux{\char 15884}{\char 17}{1}{0}{#3}%
+  \or%
+    %case 6
+    \vepisemusorrareaux{0}{\char 17}{0}{0}{#3}%
+  \or%
+    %case 7
+    \vepisemusorrareaux{0}{\char 13}{0}{0}{#3}%
+  \or%
+    %case 8, in which we do (for now) the same as case 6
+    \vepisemusorrareaux{0}{\char 17}{0}{0}{#3}%
+  \or% case 9, 10 and 11
+  \or\or\or %
+    %case 12
+    \vepisemusorrareaux{0}{\char 19}{0}{200\the\grefactor }{#3}%
+  \or%
+    %case 13
+    \vepisemusorrareaux{0}{\char 32}{0}{0}{#3}%
+  \or%
+    %case 14
+    \vepisemusorrareaux{0}{\char 20}{0}{0}{#3}%
+  \or%
+    %case 15
+    \vepisemusorrareaux{0}{\char 26}{0}{0}{#3}%
+  \or%
+    %case 16
+    \vepisemusorrareaux{0}{\char 27}{0}{0}{#3}%
+  \or%
+    %case 17
+    \vepisemusorrareaux{\char 5633}{\char 17}{2}{0}{#3}%
+  \or%
+    %case 18
+    \vepisemusorrareaux{0}{\char 74}{1}{0}{#3}%
+  \or%
+    %case 19
+    \vepisemusorrareaux{0}{\char 28}{0}{0}{#3}%
+  \or%
+    %case 20
+    \vepisemusorrareaux{0}{\char 26}{0}{0}{#3}%
+  \or%
+    %case 21
+    \vepisemusorrareaux{\char 5634}{\char 17}{4}{0}{#3}%
+  \or%
+    %case 22 %
+    \vepisemusorrareaux{\char 5633}{\char 17}{4}{0}{#3}%
+  \or%
+    %case 23
+    \vepisemusorrareaux{\char 1986}{\char 17}{4}{0}{#3}%
+  \or%
+    %case 24
+    \vepisemusorrareaux{0}{\char 35}{1}{0}{#3}%
+  \or%
+    %case 25
+    \vepisemusorrareaux{0}{\char 9}{1}{0}{#3}%
+  \or%
+    %case 26
+    \vepisemusorrareaux{0}{\char 8}{1}{0}{#3}%
+  \or%
+    %case 27
+    \vepisemusorrareaux{0}{\divisiofinalissymbol}{1}{0}{#3}%
+  \fi%
+  \relax%
 }
 
 \def\vepisemus#1#2{%
-\vepisemusorrare{#1}{#2}{33}%
-\relax %
+  \vepisemusorrare{#1}{#2}{33}%
+  \relax %
 }
 
 \def\barvepisemus#1{%
-\vepisemusorrare{c}{#1}{33}%
-\relax %
+  \vepisemusorrare{c}{#1}{33}%
+  \relax %
 }
 
 \def\ictusa#1{%
-\vepisemusorrare{a}{#1}{1}%
-\relax %
+  \vepisemusorrare{a}{#1}{1}%
+  \relax %
 }
 
 \def\ictust#1{%
-\vepisemusorrare{a}{#1}{2}%
-\relax %
+  \vepisemusorrare{a}{#1}{2}%
+  \relax %
 }
 
 % maybe these four should be optimized
 \def\vepisemusictusa#1#2{%
-\vepisemusorrare{#1}{#2}{33}%
-\ictusa{#2}%
-\relax %
+  \vepisemusorrare{#1}{#2}{33}%
+  \ictusa{#2}%
+  \relax %
 }
 
 \def\barvepisemusictusa#1{%
-\vepisemusorrare{c}{#1}{33}%
-\ictusa{#1}%
-\relax %
+  \vepisemusorrare{c}{#1}{33}%
+  \ictusa{#1}%
+  \relax %
 }
 
 \def\vepisemusictust#1#2{%
-\vepisemusorrare{#1}{#2}{33}%
-\ictust{#2}%
-\relax %
+  \vepisemusorrare{#1}{#2}{33}%
+  \ictust{#2}%
+  \relax %
 }
 
 \def\barvepisemusictust#1{%
-\vepisemusorrare{c}{#1}{33}%
-\ictust{#1}%
-\relax %
+  \vepisemusorrare{c}{#1}{33}%
+  \ictust{#1}%
+  \relax %
 }
 
 \def\accentus#1{%
-\vepisemusorrare{m}{#1}{39}%
-\relax %
+  \vepisemusorrare{m}{#1}{39}%
+  \relax %
 }
 
 \def\semicirculus#1{%
-\vepisemusorrare{m}{#1}{38}%
-\relax %
+  \vepisemusorrare{m}{#1}{38}%
+  \relax %
 }
 
 \def\circulus#1{%
-\vepisemusorrare{m}{#1}{37}%
-\relax %
+  \vepisemusorrare{m}{#1}{37}%
+  \relax %
 }
 
 \def\reversedaccentus#1{%
-\vepisemusorrare{m}{#1}{69}%
-\relax %
+  \vepisemusorrare{m}{#1}{69}%
+  \relax %
 }
 
 \def\reversedsemicirculus#1{%
-\vepisemusorrare{m}{#1}{70}%
-\relax %
+  \vepisemusorrare{m}{#1}{70}%
+  \relax %
 }
 
 %% the macros to save the absolute positions of ictus a and t in the aux file
@@ -671,16 +670,16 @@
 % macro called at the place of an ictus
 % #1 is 1 if ictus a, 2 if ictus t
 \def\ictus#1{%
-\pdfsavepos %
-\ifcase#1\or %
-\grewriteaux{ia:\number\pdflastxpos}%
-\or %
-\grewriteaux{it:\number\pdflastxpos}%
-\fi %
-\gregorioattr=4\relax %
-\hbox to 0pt{}%
-\gregorioattr=0\relax %
-\relax %
+  \pdfsavepos %
+  \ifcase#1\or %
+    \grewriteaux{ia:\number\pdflastxpos}%
+  \or %
+    \grewriteaux{it:\number\pdflastxpos}%
+  \fi %
+  \gregorioattr=4\relax %
+  \hbox to 0pt{}%
+  \gregorioattr=0\relax %
+  \relax %
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -691,232 +690,232 @@
 % a macro that will help in the typesetting of a horizontal episemus and additional lines, the first argument is a glyph that have the same width as the width between the end of the glyph and the beginning of the episemus, and the second argument is the character of the episemus. If the third argument is 0, we go directly to the beginning of the glyph, else we don't change anything
 % 4th argument is the same as in hepisorline
 \def\hepisorlineaux#1#2#3#4{%
-\ifnum#3=0%
-% first we set \tempwidth to the width of the last glyph
-\tempwidth=\lastglyphwidth %
-\else%
-\setbox\Tempsign=\hbox{\gregorianfont #1}%
-\tempwidth=\wd\Tempsign%
-\fi%
-\kern -\tempwidth %
-% then we draw the sign, and go back to the beginning of the sign
-\setbox\Tempsign=\hbox{\gregorianfont \char #2}%
-% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
-\tempsignwidth=\wd\Tempsign %
-\ifnum#4<2\relax % case of the lines
-\else %
-\temp=16000 sp%
-\multiply\temp by \the\grefactor %
-\kern -\temp %
-\advance\tempsignwidth by \temp %
-\advance\tempsignwidth by \temp %
-\fi %
-\ifcase#4%
-%case of hepisemus
-\raise \glyphraisevalue \copy\Tempsign %
-\or %
-%case of hepisemus at the bottom
-\raise \glyphraisevalue \copy\Tempsign %
-\or % case of a line at the top
-\glyphraisevalue=\additionalbottomspace %
-\advance\glyphraisevalue by \spacebeneathtext %
-\advance\glyphraisevalue by \spacelinestext %
-\advance\glyphraisevalue by \translationheight %
-\advance\glyphraisevalue by 4\interstafflinespace %
-\advance\glyphraisevalue by 4\stafflineheight %
-\raise\glyphraisevalue\hbox{\vrule height \stafflineheight width \tempsignwidth}%
-\kern \temp %
-\or % case of a line at the bottom
-\glyphraisevalue=\additionalbottomspace %
-\advance\glyphraisevalue by \spacebeneathtext %
-\advance\glyphraisevalue by \translationheight %
-\advance\glyphraisevalue by \spacelinestext %
-\advance\glyphraisevalue by -\interstafflinespace %
-\advance\glyphraisevalue by -\stafflineheight %
-\raise\glyphraisevalue\hbox{\vrule height \stafflineheight width \tempsignwidth}%
-\kern \temp %
-\fi %
-% and finally we go back to the end of the glyph, where we were first
-\advance\tempwidth by -\tempsignwidth %
-\kern \tempwidth %
-\relax%
+  \ifnum#3=0%
+  % first we set \tempwidth to the width of the last glyph
+    \tempwidth=\lastglyphwidth %
+  \else%
+    \setbox\Tempsign=\hbox{\gregorianfont #1}%
+    \tempwidth=\wd\Tempsign%
+  \fi%
+  \kern -\tempwidth %
+  % then we draw the sign, and go back to the beginning of the sign
+  \setbox\Tempsign=\hbox{\gregorianfont \char #2}%
+  % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+  \tempsignwidth=\wd\Tempsign %
+  \ifnum#4<2\relax % case of the lines
+  \else %
+    \temp=16000 sp%
+    \multiply\temp by \the\grefactor %
+    \kern -\temp %
+    \advance\tempsignwidth by \temp %
+    \advance\tempsignwidth by \temp %
+  \fi %
+  \ifcase#4%
+    %case of hepisemus
+    \raise \glyphraisevalue \copy\Tempsign %
+  \or %
+    %case of hepisemus at the bottom
+    \raise \glyphraisevalue \copy\Tempsign %
+  \or % case of a line at the top
+    \glyphraisevalue=\additionalbottomspace %
+    \advance\glyphraisevalue by \spacebeneathtext %
+    \advance\glyphraisevalue by \spacelinestext %
+    \advance\glyphraisevalue by \translationheight %
+    \advance\glyphraisevalue by 4\interstafflinespace %
+    \advance\glyphraisevalue by 4\stafflineheight %
+    \raise\glyphraisevalue\hbox{\vrule height \stafflineheight width \tempsignwidth}%
+    \kern \temp %
+  \or % case of a line at the bottom
+    \glyphraisevalue=\additionalbottomspace %
+    \advance\glyphraisevalue by \spacebeneathtext %
+    \advance\glyphraisevalue by \translationheight %
+    \advance\glyphraisevalue by \spacelinestext %
+    \advance\glyphraisevalue by -\interstafflinespace %
+    \advance\glyphraisevalue by -\stafflineheight %
+    \raise\glyphraisevalue\hbox{\vrule height \stafflineheight width \tempsignwidth}%
+    \kern \temp %
+  \fi %
+  % and finally we go back to the end of the glyph, where we were first
+  \advance\tempwidth by -\tempsignwidth %
+  \kern \tempwidth %
+  \relax%
 }
 
 % a function to typeset a horizontal line (additional line or episemus). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \glyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are the common ones
 % the third argument is a bit particular, it is the ambitus of the porrectus or porrectus flexus if the second argument is 8 or 9, otherwise it is useless
 % #4 is 0 for an horizontal episemus, 1 for an horizontal episemus under a note, 3 for a line at the bottom and 2 for a line at the top
 \def\hepisorline#1#2#3#4{%
-\ifnum#4=1\relax %
-\calculateglyphraisevalue{#1}{5}%
-\else %
-\calculateglyphraisevalue{#1}{1}%
-\fi %
-\ifcase#2 %
-%case 0
-\hepisorlineaux{\char 17}{40}{1}{#4}%
-\or%
-%case 1
-\hepisorlineaux{\char 13}{42}{1}{#4}%
-\or%
-%case 2
-% a kind of flexus, it has the good width
-\hepisorlineaux{\char 5634}{40}{1}{#4}%
-\or%
-%case 3
-% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
-\hepisorlineaux{\char 5250}{40}{1}{#4}%
-\or%
-%case 4
-% a torculus, it has the good width
-\hepisorlineaux{\char 15371}{40}{1}{#4}%
-\or%
-%case 5
-% \char 29190 is a torculus deminutus, it has the good width
-\hepisorlineaux{\char 15884}{40}{1}{#4}%
-\or%
-%case 6
-\hepisorlineaux{0}{40}{0}{#4}%
-\or%
-%case 7
-%we assume that the initio-debilis has the same width as a punctum deminutus
-\hepisorlineaux{0}{41}{0}{#4}%
-\or%
-%case 8
-\hepisorlineaux{0}{40}{0}{#4}%
-\or%
-%case 9
-\ifcase#3%
-\or%
-\hepisorlineaux{0}{46}{0}{#4}%
-\or%
-\hepisorlineaux{0}{47}{0}{#4}%
-\or%
-\hepisorlineaux{0}{48}{0}{#4}%
-\or%
-\hepisorlineaux{0}{49}{0}{#4}%
-\or%
-\hepisorlineaux{0}{50}{0}{#4}%
-\fi%
-\or%
-%case 10
-\ifcase#3%
-\or%
-\hepisorlineaux{0}{51}{0}{#4}%
-\or%
-\hepisorlineaux{0}{52}{0}{#4}%
-\or%
-\hepisorlineaux{0}{53}{0}{#4}%
-\or%
-\hepisorlineaux{0}{54}{0}{#4}%
-\or%
-\hepisorlineaux{0}{55}{0}{#4}%
-\fi%
-\or %
-%case 11
-\ifcase#3%
-\or%
-\hepisorlineaux{\char 11270}{51}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11271}{52}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11272}{53}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11273}{54}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11274}{55}{1}{#4}%
-\fi%
-\or%
-%case 12
-\hepisorlineaux{\char 19}{43}{1}{#4}%
-\or%
-%case 13
-\hepisorlineaux{\char 32}{44}{1}{#4}%
-\or%
-%case 14
-\hepisorlineaux{\char 20}{45}{1}{#4}%
-\or%
-%case 15
-\hepisorlineaux{\char 26}{56}{1}{#4}%
-\or%
-%case 16
-\hepisorlineaux{\char 27}{47}{1}{#4}%
-\or%
-%case 17
-\hepisorlineaux{\char 5633}{40}{1}{#4}%
-\or %
-%case 18
-\hepisorlineaux{\char 74}{58}{1}{#4}%
-\or %
-%case 19
-\hepisorlineaux{0}{57}{0}{#4}%
-\or %
-%case 20
-\hepisorlineaux{0}{56}{0}{#4}%
-\or %
-%case 21
-\ifcase#3%
-\or%
-\hepisorlineaux{\char 11270}{40}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11271}{40}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11272}{40}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11273}{40}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11274}{40}{1}{#4}%
-\fi%
-\or %
-%case 22
-\ifcase#3%
-\or%
-\hepisorlineaux{\char 11270}{40}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11271}{40}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11272}{40}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11273}{40}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11274}{40}{1}{#4}%
-\fi%
-\or %
-%case 23
-\ifcase#3%
-\or%
-\hepisorlineaux{\char 11270}{40}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11271}{40}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11272}{40}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11273}{40}{1}{#4}%
-\or%
-\hepisorlineaux{\char 11274}{40}{1}{#4}%
-\fi%
-\or%
-%case 24
-\hepisorlineaux{\char 1985}{40}{1}{#4}%the episemus is not quite long enough so I assumed a different width for now...
-\fi%
-\relax%
+  \ifnum#4=1\relax %
+    \calculateglyphraisevalue{#1}{5}%
+  \else %
+    \calculateglyphraisevalue{#1}{9}%
+  \fi %
+  \ifcase#2 %
+    %case 0
+    \hepisorlineaux{\char 17}{40}{1}{#4}%
+  \or%
+    %case 1
+    \hepisorlineaux{\char 13}{42}{1}{#4}%
+  \or%
+    %case 2
+    % a kind of flexus, it has the good width
+    \hepisorlineaux{\char 5634}{40}{1}{#4}%
+  \or%
+    %case 3
+    % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
+    \hepisorlineaux{\char 5250}{40}{1}{#4}%
+  \or%
+    %case 4
+    % a torculus, it has the good width
+    \hepisorlineaux{\char 15371}{40}{1}{#4}%
+  \or%
+    %case 5
+    % \char 29190 is a torculus deminutus, it has the good width
+    \hepisorlineaux{\char 15884}{40}{1}{#4}%
+  \or%
+    %case 6
+    \hepisorlineaux{0}{40}{0}{#4}%
+  \or%
+    %case 7
+    %we assume that the initio-debilis has the same width as a punctum deminutus
+    \hepisorlineaux{0}{41}{0}{#4}%
+  \or%
+    %case 8
+    \hepisorlineaux{0}{40}{0}{#4}%
+  \or%
+    %case 9
+    \ifcase#3%
+    \or%
+      \hepisorlineaux{0}{46}{0}{#4}%
+    \or%
+      \hepisorlineaux{0}{47}{0}{#4}%
+    \or%
+      \hepisorlineaux{0}{48}{0}{#4}%
+    \or%
+      \hepisorlineaux{0}{49}{0}{#4}%
+    \or%
+      \hepisorlineaux{0}{50}{0}{#4}%
+    \fi%
+  \or%
+    %case 10
+    \ifcase#3%
+    \or%
+      \hepisorlineaux{0}{51}{0}{#4}%
+    \or%
+      \hepisorlineaux{0}{52}{0}{#4}%
+    \or%
+      \hepisorlineaux{0}{53}{0}{#4}%
+    \or%
+      \hepisorlineaux{0}{54}{0}{#4}%
+    \or%
+      \hepisorlineaux{0}{55}{0}{#4}%
+    \fi%
+  \or %
+    %case 11
+    \ifcase#3%
+    \or%
+      \hepisorlineaux{\char 11270}{51}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11271}{52}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11272}{53}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11273}{54}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11274}{55}{1}{#4}%
+    \fi%
+  \or%
+    %case 12
+    \hepisorlineaux{\char 19}{43}{1}{#4}%
+  \or%
+    %case 13
+    \hepisorlineaux{\char 32}{44}{1}{#4}%
+  \or%
+    %case 14
+    \hepisorlineaux{\char 20}{45}{1}{#4}%
+  \or%
+    %case 15
+    \hepisorlineaux{\char 26}{56}{1}{#4}%
+  \or%
+    %case 16
+    \hepisorlineaux{\char 27}{47}{1}{#4}%
+  \or%
+    %case 17
+    \hepisorlineaux{\char 5633}{40}{1}{#4}%
+  \or %
+    %case 18
+    \hepisorlineaux{\char 74}{58}{1}{#4}%
+  \or %
+    %case 19
+    \hepisorlineaux{0}{57}{0}{#4}%
+  \or %
+    %case 20
+    \hepisorlineaux{0}{56}{0}{#4}%
+  \or %
+    %case 21
+    \ifcase#3%
+    \or%
+      \hepisorlineaux{\char 11270}{40}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11271}{40}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11272}{40}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11273}{40}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11274}{40}{1}{#4}%
+    \fi%
+  \or %
+    %case 22
+    \ifcase#3%
+    \or%
+      \hepisorlineaux{\char 11270}{40}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11271}{40}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11272}{40}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11273}{40}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11274}{40}{1}{#4}%
+    \fi%
+  \or %
+    %case 23
+    \ifcase#3%
+    \or%
+      \hepisorlineaux{\char 11270}{40}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11271}{40}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11272}{40}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11273}{40}{1}{#4}%
+    \or%
+      \hepisorlineaux{\char 11274}{40}{1}{#4}%
+    \fi%
+  \or%
+    %case 24
+    \hepisorlineaux{\char 1985}{40}{1}{#4}%the episemus is not quite long enough so I assumed a different width for now...
+  \fi%
+  \relax%
 }
 
 % dumb top function
 \def\hepisemus#1#2#3{%
-\hepisorline{#1}{#2}{#3}{0}%
-\relax %
+  \hepisorline{#1}{#2}{#3}{0}%
+  \relax %
 }
 
 % same but for episema at the bottom of a note
 \def\hepisemusbottom#1#2#3{%
-\hepisorline{#1}{#2}{#3}{1}%
-\relax %
+  \hepisorline{#1}{#2}{#3}{1}%
+  \relax %
 }
 
 % another dumb top function
 \def\additionalline#1#2#3{%
-\hepisorline{a}{#1}{#2}{#3}%
-\relax %
+  \hepisorline{a}{#1}{#2}{#3}%
+  \relax %
 }
 
 
@@ -927,63 +926,63 @@
 % we define two types of macro for each four bar : when it is inside a syllable, and when it is not
 
 \def\invirgula{%
-\writebar{0}{1}%
-\relax%
+  \writebar{0}{1}%
+  \relax%
 }
 
 \def\virgula{%
-\writebar{0}{0}%
-\relax%
+  \writebar{0}{0}%
+  \relax%
 }
 
 \def\indivisiominima{%
-\writebar{1}{1}%
-\relax%
+  \writebar{1}{1}%
+  \relax%
 }
 
 \def\divisiominima{%
-\writebar{1}{0}%
-\relax%
+  \writebar{1}{0}%
+  \relax%
 }
 
 \def\indivisiominor{%
-\writebar{2}{1}%
-\relax%
+  \writebar{2}{1}%
+  \relax%
 }
 
 \def\divisiominor{%
-\writebar{2}{0}%
-\relax%
+  \writebar{2}{0}%
+  \relax%
 }
 
 \def\indivisiomaior{%
-\writebar{3}{1}%
-\relax%
+  \writebar{3}{1}%
+  \relax%
 }
 
 \def\divisiomaior{%
-\writebar{3}{0}%
-\relax%
+  \writebar{3}{0}%
+  \relax%
 }
 
 \newdimen\temptwo
 
 \def\indivisiofinalis{%
-\ifcase\endofscore %
-\writebar{4}{1}%
-\or %
-\writebar{5}{1}%
-\fi %
-\relax%
+  \ifcase\endofscore %
+    \writebar{4}{1}%
+  \or %
+    \writebar{5}{1}%
+  \fi %
+  \relax%
 }
 
 \def\divisiofinalis{%
-\ifcase\endofscore %
-\writebar{4}{0}%
-\or %
-\writebar{5}{0}%
-\fi %
-\relax%
+  \ifcase\endofscore %
+    \writebar{4}{0}%
+  \or %
+    \writebar{5}{0}%
+  \fi %
+  \relax%
 }
 
 %a macro to write a bar
@@ -992,92 +991,92 @@
 %%% 0 if it is outside a syllable
 %%% 1 if it is in a syllable
 \def\writebar#1#2{%
-% to see why we reset \lastoflinecount, see comments of \glyph.
-\ifnum\lastoflinecount=2\relax %
-\global\lastoflinecount=0\relax %
-\fi %
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\ifcase#1 % 0 : virgula
-\penalty 10001 %
-\ifnum#2=1\relax %
-\hskip\spacearoundsmallbar %
-\penalty 10001 %
-\fi %
-\setbox\Tempwidth=\hbox{\gregorianfont \char 8}%
-%\raise\glyphraisevalue\Tempwidth %
-\raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
-\global\lastglyphwidth=\wd\Tempwidth %
-\ifnum#2=1\relax %
-\hskip\spacearoundsmallbar %
-\fi %
-%\penalty -5000 %
-\or % 1 : minima
-\penalty 10001%
-\ifnum#2=1\relax %
-\hskip\spacearoundsmallbar %
-\penalty 10001%
-\fi %
-\raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
-\ifnum#2=1\relax %
-\hskip\spacearoundsmallbar %
-\fi %
-%\penalty -5000%
-\or % 2 : minor
-\penalty 10001 %
-\ifnum#2=1\relax %
-\hskip\spacearoundminor %
-\penalty 10001 %
-\fi %
-\raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
-\ifnum#2=1\relax %
-\hskip\spacearoundminor %
-\fi %
-%\penalty -5000 %
-\or % 3 : maior
-\penalty 10001 %
-\ifnum#2=1\relax %
-\hskip\spacearoundmaior %
-\penalty 10001 %
-\fi %
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\ifnum#2=1\relax %
-\hskip\spacearoundmaior %
-\fi %
-%\penalty -5000 %
-\or % 4 : finalis
-\penalty 10001 %
-\ifnum#2=1\relax %
-\hskip\spacearoundfinalis %
-\penalty 10001 %
-\fi %
-\divisiofinalissymbol%
-\ifnum#2=1\relax %
-\hskip\spacearoundfinalis %
-\fi %
-%\penalty -5000 %
-\or % 5 : finalis
-\penalty 10001 %
-\ifnum#2=1\relax %
-\hskip\spacebeforefinalfinalis %
-\penalty 10001 %
-\fi %
-\divisiofinalissymbol%
-\ifnum#2=1\relax %
-\hskip\spacearoundfinalis %
-\fi %
-%\penalty -5000 %
-\fi %
-\relax%
+  % to see why we reset \lastoflinecount, see comments of \glyph.
+  \ifnum\lastoflinecount=2\relax %
+    \global\lastoflinecount=0\relax %
+  \fi %
+  \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+  \ifcase#1 % 0 : virgula
+    \penalty 10001 %
+    \ifnum#2=1\relax %
+      \hskip\spacearoundsmallbar %
+      \penalty 10001 %
+    \fi %
+    \setbox\Tempwidth=\hbox{\gregorianfont \char 8}%
+    %\raise\glyphraisevalue\Tempwidth %
+    \raise\glyphraisevalue\hbox{\gregorianfont \char 8}%
+    \global\lastglyphwidth=\wd\Tempwidth %
+    \ifnum#2=1\relax %
+      \hskip\spacearoundsmallbar %
+    \fi %
+    %\penalty -5000 %
+  \or % 1 : minima
+    \penalty 10001%
+    \ifnum#2=1\relax %
+      \hskip\spacearoundsmallbar %
+      \penalty 10001%
+    \fi %
+    \raise\glyphraisevalue\hbox{\gregorianfont \char 9}%
+    \ifnum#2=1\relax %
+      \hskip\spacearoundsmallbar %
+    \fi %
+    %\penalty -5000%
+  \or % 2 : minor
+    \penalty 10001 %
+    \ifnum#2=1\relax %
+      \hskip\spacearoundminor %
+      \penalty 10001 %
+    \fi %
+    \raise\glyphraisevalue\hbox{\gregorianfont \char 10}%
+    \ifnum#2=1\relax %
+      \hskip\spacearoundminor %
+    \fi %
+    %\penalty -5000 %
+  \or % 3 : maior
+    \penalty 10001 %
+    \ifnum#2=1\relax %
+      \hskip\spacearoundmaior %
+      \penalty 10001 %
+    \fi %
+    \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+    \ifnum#2=1\relax %
+      \hskip\spacearoundmaior %
+    \fi %
+    %\penalty -5000 %
+  \or % 4 : finalis
+    \penalty 10001 %
+    \ifnum#2=1\relax %
+      \hskip\spacearoundfinalis %
+      \penalty 10001 %
+    \fi %
+    \divisiofinalissymbol%
+    \ifnum#2=1\relax %
+      \hskip\spacearoundfinalis %
+    \fi %
+    %\penalty -5000 %
+  \or % 5 : finalis
+    \penalty 10001 %
+    \ifnum#2=1\relax %
+      \hskip\spacebeforefinalfinalis %
+      \penalty 10001 %
+    \fi %
+    \divisiofinalissymbol%
+    \ifnum#2=1\relax %
+      \hskip\spacearoundfinalis %
+    \fi %
+    %\penalty -5000 %
+  \fi %
+  \relax%
 }
 
 \def\divisiofinalissymbol{%
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-\temptwo = 12000 sp%
-\multiply\temptwo by \the\grefactor%
-\kern \temptwo%
-\penalty 10001%
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+  \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+  \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+  \temptwo = 12000 sp%
+  \multiply\temptwo by \the\grefactor%
+  \kern \temptwo%
+  \penalty 10001%
+  \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
 }
 
 %a count to tell if we have to keep the localrightbox until the end
@@ -1085,39 +1084,39 @@
 
 %macro to end a line with a divisio finalis
 \def\finaldivisiofinalis#1{%
-\ifcase#1% case 0
-\grelocalrightbox{}%
-\grelocalleftbox{}%
-\barsyllable{}{}{}{1}{}{}{0}{}{%
-\divisiofinalis %
-}%
-\or % case 1
-\hskip\spacebeforefinalfinalis %
-\global\keeprightbox=1 %
-\grelocalrightbox{%
-\divisiofinalissymbol %
-}%
-\fi %
-\relax%
+  \ifcase#1% case 0
+    \grelocalrightbox{}%
+    \grelocalleftbox{}%
+      \barsyllable{}{}{}{1}{}{}{0}{}{%
+      \divisiofinalis %
+    }%
+  \or % case 1
+    \hskip\spacebeforefinalfinalis %
+    \global\keeprightbox=1 %
+    \grelocalrightbox{%
+      \divisiofinalissymbol %
+    }%
+  \fi %
+  \relax%
 }
 
 %macro to end a line with a divisio maior
 \def\finaldivisiomaior#1{%
-\ifcase#1% case 0
-\grelocalrightbox{}%
-\grelocalleftbox{}%
-\barsyllable{}{}{}{1}{}{}{0}{}{%
-\divisiomaior %
-}%
-\or % case 1
-\hskip\spacebeforefinalfinalis %
-\global\keeprightbox=1 %
-\grelocalrightbox{%
-\calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-\raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
-}%
-\fi %
-\relax%
+  \ifcase#1% case 0
+    \grelocalrightbox{}%
+    \grelocalleftbox{}%
+      \barsyllable{}{}{}{1}{}{}{0}{}{%
+      \divisiomaior %
+    }%
+  \or % case 1
+    \hskip\spacebeforefinalfinalis %
+    \global\keeprightbox=1 %
+    \grelocalrightbox{%
+      \calculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+      \raise\glyphraisevalue\hbox{\gregorianfont \char 11}%
+    }%
+  \fi %
+  \relax%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1131,56 +1130,57 @@
 % will determine if the flat has zero width or not.
 
 \def\flat#1#2{%
-% to see why we reset \lastoflinecount, see comments of \glyph.
-\ifnum\lastoflinecount=2\relax %
-\global\lastoflinecount=0\relax %
-\fi %
-\ifnum\the\firstglyph=1\relax %
-\global\firstisalteration=1\relax %
-\fi %
-\calculateglyphraisevalue{#1}{0}%
-\setbox\Tempwidth=\hbox{\gregorianfont \char 6}%
-\tempwidth=\wd\Tempwidth%
-\raise \glyphraisevalue%
-\copy\Tempwidth%
-% we try to avoir line breaking after a flat or a natural
-\penalty 10001\relax %
-\ifnum\the\firstglyph=1\relax %
-\temp=\wd\Tempwidth %
-\advance\temp by \alterationspace %
-\global\advance\notesaligncenter by \temp %
-\kern\alterationspace %
-\else %
-\hskip\alterationspace %
-\fi %
-\penalty 10001\relax %
-\relax%
+  % to see why we reset \lastoflinecount, see comments of \glyph.
+  \ifnum\lastoflinecount=2\relax %
+    \global\lastoflinecount=0\relax %
+  \fi %
+  \ifnum\the\firstglyph=1\relax %
+    \global\firstisalteration=1\relax %
+  \fi %
+  \calculateglyphraisevalue{#1}{0}%
+  \setbox\Tempwidth=\hbox{\gregorianfont \char 6}%
+  \tempwidth=\wd\Tempwidth%
+  \raise \glyphraisevalue%
+  \copy\Tempwidth%
+  % we try to avoir line breaking after a flat or a natural
+  \penalty 10001\relax %
+  \ifnum\the\firstglyph=1\relax %
+    \temp=\wd\Tempwidth %
+    \advance\temp by \alterationspace %
+    \global\advance\notesaligncenter by \temp %
+    \kern\alterationspace %
+  \else %
+    \hskip\alterationspace %
+  \fi %
+  \penalty 10001\relax %
+  \relax%
 }
 
 % Same as the one before, but for naturals.
 
 \def\natural#1#2{%
-% to see why we reset \lastoflinecount, see comments of \glyph.
-\ifnum\lastoflinecount=2\relax %
-\global\lastoflinecount=0\relax %
-\fi %
-\ifnum\the\firstglyph=1\relax %
-\global\firstisalteration=1\relax %
-\fi %
-\calculateglyphraisevalue{#1}{0}%
-\setbox\Tempwidth=\hbox{\gregorianfont \char 7}%
-\tempwidth=\wd\Tempwidth%
-\raise \glyphraisevalue%
-\copy\Tempwidth%
-\penalty 10001\relax %
-\ifnum\the\firstglyph=1\relax %
-\temp=\wd\Tempwidth %
-\advance\temp by \alterationspace %
-\global\advance\notesaligncenter by \temp %
-\kern\alterationspace %
-\else %
-\hskip\alterationspace %
-\fi %
-\penalty 10001\relax %
-\relax%
+  % to see why we reset \lastoflinecount, see comments of \glyph.
+  \ifnum\lastoflinecount=2\relax %
+    \global\lastoflinecount=0\relax %
+  \fi %
+  \ifnum\the\firstglyph=1\relax %
+    \global\firstisalteration=1\relax %
+  \fi %
+  \calculateglyphraisevalue{#1}{0}%
+  \setbox\Tempwidth=\hbox{\gregorianfont \char 7}%
+  \tempwidth=\wd\Tempwidth%
+  \raise \glyphraisevalue%
+  \copy\Tempwidth%
+  \penalty 10001\relax %
+  \ifnum\the\firstglyph=1\relax %
+    \temp=\wd\Tempwidth %
+    \advance\temp by \alterationspace %
+    \global\advance\notesaligncenter by \temp %
+    \kern\alterationspace %
+  \else %
+    \hskip\alterationspace %
+  \fi %
+  \penalty 10001\relax %
+  \relax%
 }
+

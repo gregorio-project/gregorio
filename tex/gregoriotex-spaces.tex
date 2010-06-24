@@ -197,18 +197,18 @@
 \aboveinitialseparation = 0.5mm
 
 \def\setaboveinitialseparation#1{
-\aboveinitialseparation=#1%
-\relax %
+  \aboveinitialseparation=#1%
+  \relax %
 }
 
 \def\setspaceafterinitial#1{%
-\afterinitialshift=#1 %
-\relax %
+  \afterinitialshift=#1 %
+  \relax %
 }
 
 \def\setspacebeforeinitial#1{%
-\beforeinitialshift=#1 %
-\relax %
+  \beforeinitialshift=#1 %
+  \relax %
 }
 
 %%%%%%%%%%%%%%%%%%
@@ -258,90 +258,90 @@
 %% means that you have to set your personal grefactor before changing the values,
 %% or use the next macro.
 \def\changegredim#1#2{%
-\ifnum\grefactor=0\relax %
-\changegredimatfactor{#1}{#2}{17}%
-\else %
-\changegredimatfactor{#1}{#2}{\grefactor}%
-\fi %
-\relax %
+  \ifnum\grefactor=0\relax %
+    \changegredimatfactor{#1}{#2}{17}%
+  \else %
+    \changegredimatfactor{#1}{#2}{\grefactor}%
+  \fi %
+  \relax %
 }
 
 %% This macro changes one dimen (#1) to the value #2, at the factor specified
 %% in #3.
 \def\changegredimatfactor#1#2#3{%
-#1=#2%
-\ifnum #3=\grefactor\else %
-\divide #1 by \number #3%
-\ifnum\grefactor=0\else % 
-% if grefactor = 0 it means that we must consider it's 1,
-% as we are before the beginning of the first score.
-\multiply #1 by \grefactor %
-\fi %
-\fi %
-\setgreverticalspaces %
-\relax %
+  #1=#2%
+  \ifnum #3=\grefactor\else %
+    \divide #1 by \number #3%
+    \ifnum\grefactor=0\else % 
+      % if grefactor = 0 it means that we must consider it's 1,
+      % as we are before the beginning of the first score.
+      \multiply #1 by \grefactor %
+    \fi %
+  \fi %
+  \setgreverticalspaces %
+  \relax %
 }
 
 %% Here is the function to compute some more vertical spaces from the basic values
 \def\setgreverticalspaces{%
-\staffheight=4\stafflineheight %
-\advance\staffheight by 3\interstafflinespace %
-%\global\multiply\spacebeneathtext by \grefactor % uncomment it if you want
-% something else than 0
-\global\textlower=\spacebeneathtext %
-\global\calculateconstantglyphraise %
-\relax %
+  \staffheight=4\stafflineheight %
+  \advance\staffheight by 3\interstafflinespace %
+  %\global\multiply\spacebeneathtext by \grefactor % uncomment it if you want
+  % something else than 0
+  \global\textlower=\spacebeneathtext %
+  \global\calculateconstantglyphraise %
+  \relax %
 }
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
 \def\changeonedimenfactor#1#2#3{%
-\global\divide #1 by \number #2%
-\global\multiply #1 by \number #3%
-\relax %
+  \global\divide #1 by \number #2%
+  \global\multiply #1 by \number #3%
+  \relax %
 }
 %% this function changes all the values of the spaces (vertical and horizontal) from one factor to another
 %% simply by dividing them by the old factor, and multiplying them by the new one.
 % #1 is the old grefactor, #2 is the new one
 \def\changedimenfactor#1#2{%
-\changeonedimenfactor{\stafflineheight}{#1}{#2}%
-\changeonedimenfactor{\interstafflinespace}{#1}{#2}%
-\changeonedimenfactor{\spaceabovelines}{#1}{#2}%
-\changeonedimenfactor{\spacelinestext}{#1}{#2}%
-\changeonedimenfactor{\spacebeneathtext}{#1}{#2}%
-\changeonedimenfactor{\interglyphspace}{#1}{#2}%
-\changeonedimenfactor{\alterationspace}{#1}{#2}%
-\changeonedimenfactor{\clefflatspace}{#1}{#2}%
-\changeonedimenfactor{\beforealterationspace}{#1}{#2}%
-\changeonedimenfactor{\interelementspace}{#1}{#2}%
-\changeonedimenfactor{\largerspace}{#1}{#2}%
-\changeonedimenfactor{\glyphspace}{#1}{#2}%
-\changeonedimenfactor{\intersyllablespace}{#1}{#2}%
-\changeonedimenfactor{\spacebeforecusto}{#1}{#2}%
-\changeonedimenfactor{\spacebeforesigns}{#1}{#2}%
-\changeonedimenfactor{\spaceaftersigns}{#1}{#2}%
-\changeonedimenfactor{\spaceafterlineclef}{#1}{#2}%
-\changeonedimenfactor{\interwordspacenotes}{#1}{#2}%
-\changeonedimenfactor{\interwordspacenotestext}{#1}{#2}%
-\changeonedimenfactor{\interwordspacetextnotes}{#1}{#2}%
-\changeonedimenfactor{\interwordspacetext}{#1}{#2}%
-\changeonedimenfactor{\bitrivirspace}{#1}{#2}%
-\changeonedimenfactor{\bitristrospace}{#1}{#2}%
-\changeonedimenfactor{\punctuminclinatumshift}{#1}{#2}%
-\changeonedimenfactor{\beforepunctainclinatashift}{#1}{#2}%
-\changeonedimenfactor{\punctuminclinatumanddebilisshift}{#1}{#2}%
-\changeonedimenfactor{\punctuminclinatumdebilisshift}{#1}{#2}%
-\changeonedimenfactor{\punctuminclinatumbigshift}{#1}{#2}%
-\changeonedimenfactor{\punctuminclinatummaxshift}{#1}{#2}%
-\changeonedimenfactor{\spacearoundsmallbar}{#1}{#2}%
-\changeonedimenfactor{\spacearoundminor}{#1}{#2}%
-\changeonedimenfactor{\spacearoundmaior}{#1}{#2}%
-\changeonedimenfactor{\spacearoundfinalis}{#1}{#2}%
-\changeonedimenfactor{\spacebeforefinalfinalis}{#1}{#2}%
-\changeonedimenfactor{\spacearoundclefbars}{#1}{#2}%
-\changeonedimenfactor{\textbartextspace}{#1}{#2}%
-\changeonedimenfactor{\notebarspace}{#1}{#2}%
-\changeonedimenfactor{\maximumspacewithoutdash}{#1}{#2}%
-\changeonedimenfactor{\afterclefnospace}{#1}{#2}%
-\changeonedimenfactor{\additionallineswidth}{#1}{#2}%
-\relax %
+  \changeonedimenfactor{\stafflineheight}{#1}{#2}%
+  \changeonedimenfactor{\interstafflinespace}{#1}{#2}%
+  \changeonedimenfactor{\spaceabovelines}{#1}{#2}%
+  \changeonedimenfactor{\spacelinestext}{#1}{#2}%
+  \changeonedimenfactor{\spacebeneathtext}{#1}{#2}%
+  \changeonedimenfactor{\interglyphspace}{#1}{#2}%
+  \changeonedimenfactor{\alterationspace}{#1}{#2}%
+  \changeonedimenfactor{\clefflatspace}{#1}{#2}%
+  \changeonedimenfactor{\beforealterationspace}{#1}{#2}%
+  \changeonedimenfactor{\interelementspace}{#1}{#2}%
+  \changeonedimenfactor{\largerspace}{#1}{#2}%
+  \changeonedimenfactor{\glyphspace}{#1}{#2}%
+  \changeonedimenfactor{\intersyllablespace}{#1}{#2}%
+  \changeonedimenfactor{\spacebeforecusto}{#1}{#2}%
+  \changeonedimenfactor{\spacebeforesigns}{#1}{#2}%
+  \changeonedimenfactor{\spaceaftersigns}{#1}{#2}%
+  \changeonedimenfactor{\spaceafterlineclef}{#1}{#2}%
+  \changeonedimenfactor{\interwordspacenotes}{#1}{#2}%
+  \changeonedimenfactor{\interwordspacenotestext}{#1}{#2}%
+  \changeonedimenfactor{\interwordspacetextnotes}{#1}{#2}%
+  \changeonedimenfactor{\interwordspacetext}{#1}{#2}%
+  \changeonedimenfactor{\bitrivirspace}{#1}{#2}%
+  \changeonedimenfactor{\bitristrospace}{#1}{#2}%
+  \changeonedimenfactor{\punctuminclinatumshift}{#1}{#2}%
+  \changeonedimenfactor{\beforepunctainclinatashift}{#1}{#2}%
+  \changeonedimenfactor{\punctuminclinatumanddebilisshift}{#1}{#2}%
+  \changeonedimenfactor{\punctuminclinatumdebilisshift}{#1}{#2}%
+  \changeonedimenfactor{\punctuminclinatumbigshift}{#1}{#2}%
+  \changeonedimenfactor{\punctuminclinatummaxshift}{#1}{#2}%
+  \changeonedimenfactor{\spacearoundsmallbar}{#1}{#2}%
+  \changeonedimenfactor{\spacearoundminor}{#1}{#2}%
+  \changeonedimenfactor{\spacearoundmaior}{#1}{#2}%
+  \changeonedimenfactor{\spacearoundfinalis}{#1}{#2}%
+  \changeonedimenfactor{\spacebeforefinalfinalis}{#1}{#2}%
+  \changeonedimenfactor{\spacearoundclefbars}{#1}{#2}%
+  \changeonedimenfactor{\textbartextspace}{#1}{#2}%
+  \changeonedimenfactor{\notebarspace}{#1}{#2}%
+  \changeonedimenfactor{\maximumspacewithoutdash}{#1}{#2}%
+  \changeonedimenfactor{\afterclefnospace}{#1}{#2}%
+  \changeonedimenfactor{\additionallineswidth}{#1}{#2}%
+  \relax %
 }

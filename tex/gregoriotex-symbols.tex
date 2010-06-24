@@ -25,91 +25,92 @@
 
 % the macros to typeset the A, R and V with bar
 \def\Abar{%
-{\gregoriansymbolfont \char 64}%
-\relax%
+  {\gregoriansymbolfont \char 64}%
+  \relax%
 }
 
 \def\Rbar{%
-{\gregoriansymbolfont \char 65}%
-\relax%
+  {\gregoriansymbolfont \char 65}%
+  \relax%
 }
 
 \def\Vbar{%
-{\gregoriansymbolfont \char 66}%
-\relax%
+  {\gregoriansymbolfont \char 66}%
+  \relax%
 }
 
 % a V with bar more adapted to small text
 \def\Vbarsmall{%
-{\gregoriansymbolfont \char 72}%
-\relax%
+  {\gregoriansymbolfont \char 72}%
+  \relax%
 }
 
 % bars for the letters
 
 \def\greletterbar{%
-{\gregoriansymbolfont \char 73}%
-\relax%
+  {\gregoriansymbolfont \char 73}%
+  \relax%
 }
 
 \def\greletteraltbar{%
-{\gregoriansymbolfont \char 74}%
-\relax%
+  {\gregoriansymbolfont \char 74}%
+  \relax%
 }
 
 % the gothic R and V
 \def\gothRbar{%
-{\gregoriansymbolfont \char 77}%
-\relax%
+  {\gregoriansymbolfont \char 77}%
+  \relax%
 }
 
 \def\gothVbar{%
-{\gregoriansymbolfont \char 78}%
-\relax%
+  {\gregoriansymbolfont \char 78}%
+  \relax%
 }
 
 % the macro to typeset a dagger
 \def\gredagger{%
-{\gregoriansymbolfont \char 68}%
-\relax%
+  {\gregoriansymbolfont \char 68}%
+  \relax%
 }
 
 % macro to typeset a (malt) cross
 \def\grecross{%
-{\gregoriansymbolfont \char 70}%
-\relax%
+  {\gregoriansymbolfont \char 70}%
+  \relax%
 }
 
 \def\grealtcross{%
-{\gregoriansymbolfont \char 84}%
-\relax%
+  {\gregoriansymbolfont \char 84}%
+  \relax%
 }
 
 %lines
 %#1 is the type of line (1-5)
 %#2 is the number of pt of the font it will use
 \def\gresep#1#2{%
-\tempfactor=#1% we're reusing tempfactor
-\advance \tempfactor by 78\relax %
-{\font\linefont=gresym at #2pt\linefont \char \tempfactor}%
-\relax%
+  \tempfactor=#1% we're reusing tempfactor
+  \advance \tempfactor by 78\relax %
+  {\font\linefont=gresym at #2pt\linefont \char \tempfactor}%
+  \relax%
 }
 
 %stars
 \def\grestar{%
-\gresixstar %
-\relax%
+  \gresixstar %
+  \relax%
 }
 
 \def\greheightstar{%
-{\gregoriansymbolfont \char 69}%
-\relax %
+  {\gregoriansymbolfont \char 69}%
+  \relax %
 }
 
 \def\gresixstar{%
-{\gregoriansymbolfont \char 71}%
-\relax %
+  {\gregoriansymbolfont \char 71}%
+  \relax %
 }
 
 %you can redefine this with the width you want
 \font\gregoriansymbolfont=gresym at 12pt
+
