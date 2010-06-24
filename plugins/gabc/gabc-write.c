@@ -370,7 +370,7 @@ libgregorio_gabc_write_gregorio_syllable (FILE * f,
     }
   // we write all the elements of the syllable.
   libgregorio_gabc_write_gregorio_elements (f, syllable->elements[voice]);
-  if (syllable->position == WORD_END
+  if (syllable->position == WORD_END || syllable->position == WORD_ONE_SYLLABLE
       || gregorio_is_only_special (syllable->elements[0]))
     // we assume here that if the first voice is only special, all will be only specials too
     {
@@ -436,6 +436,12 @@ libgregorio_gabc_write_gregorio_element (FILE * f, gregorio_element * element)
 	  current_glyph = current_glyph->next;
 	}
       break;
+    case GRE_TEXVERB_ELEMENT:
+      if (element->texverb)
+        {
+          fprintf (f, "[ev:%s]", element->texverb);
+        }
+      break;
     case GRE_SPACE:
       libgregorio_gabc_write_space (f, element->element_type);
       break;
@@ -484,6 +490,12 @@ libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
     {
     case GRE_FLAT:
       fprintf (f, "x%c", glyph->glyph_type);
+      break;
+    case GRE_TEXVERB_GLYPH:
+      if (glyph->texverb)
+        {
+          fprintf (f, "[gv:%s]", glyph->texverb);
+        }
       break;
     case GRE_NATURAL:
       fprintf (f, "y%c", glyph->glyph_type);
@@ -807,9 +819,17 @@ libgregorio_gabc_write_gregorio_note (FILE * f,
     default:
       break;
     }
-  if (note->h_episemus_type != H_NO_EPISEMUS)
+  if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS)
     {
       fprintf (f, "_");
+    }
+  if (has_bottom(note->h_episemus_type))
+    {
+      fprintf (f, "_0");
+    }
+  if (note->texverb)
+    {
+      fprintf(f, "[nv:%s]", note->texverb);
     }
 }
 

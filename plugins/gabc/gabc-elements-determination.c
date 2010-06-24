@@ -150,8 +150,22 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	  if (current_glyph->type == GRE_SPACE
 	      && current_glyph->glyph_type == SP_ZERO_WIDTH)
 	    {
+          if (!current_glyph->next)
+        	{
+         	  close_element (&current_element, first_glyph);
+	        }
 	      current_glyph = current_glyph->next;
 	      do_not_cut = 1;
+	      continue;
+	    }
+	  //we must not cut after a zero_width_space
+	  if (current_glyph->type == GRE_TEXVERB_GLYPH)
+	    {
+          if (!current_glyph->next)
+        	{
+         	  close_element (&current_element, first_glyph);
+	        }
+	      current_glyph = current_glyph->next;
 	      continue;
 	    }
 	    // clef change or space or end of line
@@ -244,7 +258,6 @@ libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	      cut_before ()
 	    }
 	}
-
 /* we must determine the first element, that we will return */
       if (!first_element && current_element)
 	{

@@ -132,15 +132,19 @@ libgregorio_xml_signs_to_str (char signs)
 }
 
 void
-libgregorio_xml_write_signs (FILE * f, char signs, char h_episemus_type, char rare_sign)
+libgregorio_xml_write_signs (FILE * f, char signs, unsigned char h_episemus_type, char rare_sign)
 {
   const char *str;
-  if (signs != _NO_SIGN || rare_sign != _NO_SIGN || h_episemus_type == H_ALONE)
+  if (signs != _NO_SIGN || rare_sign != _NO_SIGN || simple_htype(h_episemus_type == H_ALONE))
     {
       fprintf (f, "<signs>");
-      if (h_episemus_type == H_ALONE)
+      if (simple_htype(h_episemus_type == H_ALONE))
 	{
 	  fprintf (f, "<top>h_episemus</top>");
+	}
+      if (has_bottom(h_episemus_type))
+	{
+	  fprintf (f, "<bottom>h_episemus</bottom>");
 	}
       if (signs != _NO_SIGN)
 	{
@@ -154,15 +158,15 @@ libgregorio_xml_write_signs (FILE * f, char signs, char h_episemus_type, char ra
 	}
       fprintf (f, "</signs>");
     }
-  if (h_episemus_type == H_MULTI_BEGINNING)
+  if (simple_htype(h_episemus_type) == H_MULTI_BEGINNING)
     {
       fprintf (f, "<multi-h-episemus position=\"beginning\" />");
     }
-  if (h_episemus_type == H_MULTI_MIDDLE)
+  if (simple_htype(h_episemus_type) == H_MULTI_MIDDLE)
     {
       fprintf (f, "<multi-h-episemus position=\"middle\" />");
     }
-  if (h_episemus_type == H_MULTI_END)
+  if (simple_htype(h_episemus_type) == H_MULTI_END)
     {
       fprintf (f, "<multi-h-episemus position=\"end\" />");
     }
@@ -182,7 +186,7 @@ libgregorio_xml_write_pitch(FILE *f, char pitch, char clef)
 void
 libgregorio_xml_write_note (FILE * f, char signs, char step,
 		      int octave, char shape,
-		      char h_episemus_type, char alteration, char rare_sign)
+		      unsigned char h_episemus_type, char alteration, char rare_sign, char *texverb)
 {
   const char *shape_str = libgregorio_xml_shape_to_str (shape);
 
@@ -195,6 +199,10 @@ libgregorio_xml_write_note (FILE * f, char signs, char step,
     }
   fprintf (f, "</pitch>");
   fprintf (f, "<shape>%s</shape>", shape_str);
+  if (texverb)
+    {
+      fprintf(f, "<texverb>%s</texverb>", texverb);
+    }
   libgregorio_xml_write_signs (f, signs, h_episemus_type, rare_sign);
   fprintf (f, "</note>");
 }

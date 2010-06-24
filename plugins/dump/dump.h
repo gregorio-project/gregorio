@@ -56,7 +56,7 @@ const char *
 libgregorio_dump_rare_sign (char rare_sign);
 
 const char *
-libgregorio_dump_h_episemus_type (char h_episemus_type);
+libgregorio_dump_h_episemus_type (unsigned char h_episemus_type);
 
 void
 libgregorio_dump_write_characters (FILE * f, gregorio_character * current_character);

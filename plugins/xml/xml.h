@@ -48,8 +48,8 @@ libgregorio_xml_write_key_change_in_polyphony (FILE * f, char step, int line,
 
 const char *libgregorio_xml_shape_to_str (char shape);
 const char *libgregorio_xml_signs_to_str (char signs);
-void libgregorio_xml_write_signs (FILE *f, char signs, char rare_sign, char multi_h_episemus_type);
-void libgregorio_xml_write_note (FILE *f, char signs, char step, int octave, char shape, char multi_h_episemus_type, char alteration, char rare_sign);
+void libgregorio_xml_write_signs (FILE *f, char signs, unsigned char h_episemus_type, char rare_sign);
+void libgregorio_xml_write_note (FILE *f, char signs, char step, int octave, char shape, unsigned char h_episemus_type, char alteration, char rare_sign, char *texverb);
 const char *libgregorio_xml_glyph_type_to_str(char name);
 
 void libgregorio_xml_write_liquescentia (FILE *f, char liquescentia);
@@ -111,13 +111,13 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 
 char
 libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
-			    char * h_episemus, char *rare_sign);
+			    unsigned char * h_episemus, char *rare_sign);
 
 char
 libgregorio_xml_read_shape (char *type);
 
 void
-libgregorio_xml_read_h_episemus (xmlNodePtr current_node, char *h_episemus);
+libgregorio_xml_read_h_episemus (xmlNodePtr current_node, unsigned char *h_episemus);
 
 char
 libgregorio_xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key);

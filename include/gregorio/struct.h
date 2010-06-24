@@ -71,7 +71,7 @@ typedef struct gregorio_note {
 // you guess what could be the use of H_MULTI_END. Other values are
 // temporary values used in determination, they must not appear in the
 // final structure.
-  char h_episemus_type;
+  unsigned char h_episemus_type;
 // h_episemus_top_note is the highest pitch of the notes that are
 // under the same horizontal episemus of the note. If the note is not
 // under an episemus, it is 0.
@@ -325,7 +325,7 @@ void
 gregorio_determine_h_episemus_type (gregorio_note * note);
 
 void gregorio_activate_isolated_h_episemus (gregorio_note *current_note, int n);
-void gregorio_mix_h_episemus (gregorio_note *current_note, char type);
+void gregorio_mix_h_episemus (gregorio_note *current_note, unsigned char type);
 char gregorio_det_shape (char pitch);
 
 void gregorio_add_note(gregorio_note **current_note, char pitch, char shape, char signs, char liquescentia,char h_episemus);
@@ -338,6 +338,10 @@ void gregorio_add_syllable (gregorio_syllable ** current_syllable,
 void gregorio_set_signs (gregorio_note *current_note, char signs);
 void gregorio_add_special_sign (gregorio_note *current_note, char sign);
 void gregorio_change_shape (gregorio_note *note, char shape);
+void gregorio_add_h_episemus (gregorio_note *note, unsigned char type, unsigned int *nbof_isolated_episemus);
+void gregorio_set_h_episemus(gregorio_note *note, unsigned char type);
+void gregorio_add_sign (gregorio_note *note, char sign);
+void gregorio_add_liquescentia (gregorio_note *note, char liquescentia);
 
 void gregorio_add_voice_info (gregorio_voice_info **current_voice_info);
 
@@ -360,7 +364,8 @@ void gregorio_add_text (char *mbcharacters, gregorio_character **current_charact
 
 void gregorio_add_special_as_glyph (gregorio_glyph **current_glyph, char type, char pitch, char additional_infos, char *texverb);
 void gregorio_add_special_as_note (gregorio_note **current_note, char type, char pitch);
-void gregorio_add_texverb_as_note (gregorio_note **current_note, char *str);
+void gregorio_add_texverb_as_note (gregorio_note **current_note, char *str, char type);
+void gregorio_add_texverb_to_note (gregorio_note **current_note, char *str);
 void gregorio_add_special_as_element (gregorio_element **current_element, char type, char pitch, char additional_infos, char *texverb);
 
 void gregorio_determine_good_top_notes (gregorio_note * current_note);
@@ -474,7 +479,10 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define GRE_BAR 10
 #define GRE_END_OF_PAR 13
 #define GRE_CUSTO 12
-#define GRE_TEXVERB 16
+// I don't really know how I could use the a TEXVERB_NOTE in gregoriotex, as we don't write note by note...
+//#define GRE_TEXVERB_NOTE 16
+#define GRE_TEXVERB_GLYPH 17
+#define GRE_TEXVERB_ELEMENT 18
 
 
 #define C_KEY 'c'
@@ -527,8 +535,6 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define _V_EPISEMUS_ICTUS_A 15
 #define _V_EPISEMUS_ICTUS_T 16
 
-#define is_multi(h_episemus) \
-h_episemus>H_ALONE
 
 #define H_NO_EPISEMUS 0
 #define H_ONE 1
@@ -538,6 +544,12 @@ h_episemus>H_ALONE
 #define H_MULTI_MIDDLE 5
 #define H_MULTI_END 6
 #define H_UNDETERMINED 7
+// this H_EPISEMUS can be mixed with another one:
+#define H_BOTTOM 16
+
+#define simple_htype(h) ((h) & (255-H_BOTTOM))
+#define has_bottom(arg)  (((arg) & H_BOTTOM) == H_BOTTOM)
+#define is_multi(h_episemus) (simple_htype(h_episemus)) > H_ALONE
 
 // the different kind of bars
 

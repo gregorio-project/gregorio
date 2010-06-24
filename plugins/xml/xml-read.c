@@ -1030,6 +1030,13 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 				       GRE_SPACE, SP_LARGER_SPACE, 0, NULL);
       return;
     }
+  if (!xmlStrcmp
+      (current_node->name, (const xmlChar *) "texverb-element"))
+    {
+      gregorio_add_special_as_element (current_element,
+				       GRE_TEXVERB_ELEMENT, 0, 0, strdup((char *)xmlNodeListGetString (doc, current_node->xmlChildrenNode, 1)));
+      return;
+    }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "end-of-line"))
     {
       gregorio_add_special_as_element (current_element,
@@ -1117,6 +1124,14 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 	{
 	  gregorio_add_special_as_glyph (&current_glyph, GRE_SPACE,
 					 SP_ZERO_WIDTH, 0, NULL);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp
+	  (current_node->name, (const xmlChar *) "texverb-glyph"))
+	{
+	  gregorio_add_special_as_glyph (&current_glyph, GRE_TEXVERB_GLYPH,
+					 0, 0, strdup((char *)xmlNodeListGetString (doc, current_node->xmlChildrenNode, 1)));
 	  current_node = current_node->next;
 	  continue;
 	}
@@ -1417,8 +1432,9 @@ void
   char liquescentia = L_NO_LIQUESCENTIA;
   char shape = S_UNDETERMINED;
   char signs = _NO_SIGN;
-  char h_episemus = H_NO_EPISEMUS;
+  unsigned char h_episemus = H_NO_EPISEMUS;
   char rare_sign = _NO_SIGN;
+  char *texverb = NULL;
   xmlChar *temp;
 
   while (current_node)
@@ -1436,6 +1452,12 @@ void
 	  temp = xmlNodeListGetString (doc, current_node->xmlChildrenNode, 1);
 	  shape = libgregorio_xml_read_shape ((char *) temp);
 	  xmlFree (temp);
+	  current_node = current_node->next;
+	  continue;
+	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "texverb"))
+	{
+	  texverb = strdup((char *)xmlNodeListGetString (doc, current_node->xmlChildrenNode, 1));
 	  current_node = current_node->next;
 	  continue;
 	}
@@ -1472,6 +1494,10 @@ void
       gregorio_add_note (current_note, pitch, shape, signs, liquescentia,
 			 h_episemus);
       gregorio_add_special_sign (*current_note, rare_sign);
+      if (texverb)
+        {
+          (*current_note)->texverb = texverb;
+        }
     }
 
 }
@@ -1535,7 +1561,7 @@ libgregorio_xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key)
 }
 
 void
-libgregorio_xml_read_h_episemus (xmlNodePtr current_node, char *h_episemus)
+libgregorio_xml_read_h_episemus (xmlNodePtr current_node, unsigned char *h_episemus)
 {
   char *position =
     (char *) xmlGetProp (current_node, (const xmlChar *) "position");
@@ -1632,7 +1658,7 @@ libgregorio_xml_read_shape (char *type)
 // sets rare_sign
 char
 libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
-			    char *h_episemus, char *rare_sign)
+			    unsigned char *h_episemus, char *rare_sign)
 {
   xmlChar *temp;
   char signs = _NO_SIGN;

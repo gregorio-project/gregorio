@@ -270,9 +270,9 @@ dump_write_score (FILE * f, gregorio_score * score)
 		       element->element_type,
 		       libgregorio_dump_space_type (element->element_type));
 	    }
-	  if (element->type == GRE_TEXVERB)
+	  if (element->type == GRE_TEXVERB_ELEMENT)
 	    {
-          fprintf (f, "     TeX string:       %s\n",
+          fprintf (f, "     TeX string              \"%s\"\n",
 		       element->texverb);
 	    }
 	  if (element->element_type && element->type == GRE_BAR)
@@ -320,6 +320,11 @@ dump_write_score (FILE * f, gregorio_score * score)
 		  fprintf (f, "       type                  %d (%s)\n",
 			   glyph->type, libgregorio_dump_type (glyph->type));
 		}
+          if (glyph->type == GRE_TEXVERB_GLYPH)
+	    {
+          fprintf (f, "       TeX string            \"%s\"\n",
+		     glyph->texverb);
+	    }
 	      if (glyph->glyph_type)
 		{
 		  if (glyph->type == GRE_SPACE)
@@ -381,6 +386,11 @@ dump_write_score (FILE * f, gregorio_score * score)
 		      fprintf (f, "         pitch               %c\n",
 			       note->pitch);
 		    }
+		  if (note->texverb)
+		    {
+		      fprintf (f, "         TeX string          \"%s\"\n",
+		       note->texverb);
+		    }
 		  if (note->shape)
 		    {
 		      fprintf (f, "         shape               %d (%s)\n",
@@ -408,10 +418,14 @@ dump_write_score (FILE * f, gregorio_score * score)
 		    }
 		  if (note->h_episemus_type)
 		    {
-		      fprintf (f, "         h_episemus_type     %d (%s)\n",
-			       note->h_episemus_type,
-			       libgregorio_dump_h_episemus_type (note->
-								 h_episemus_type));
+		      fprintf (f, "         h_episemus_type     %d (",
+			       note->h_episemus_type);
+			    fprintf(f, "%s", libgregorio_dump_h_episemus_type (simple_htype(note-> h_episemus_type)));
+			    if (has_bottom(note->h_episemus_type))
+			      {
+              fprintf(f, " & H_BOTTOM");
+			      }
+			    fprintf(f, ")\n");
 		    }
 		  if (note->h_episemus_top_note)
 		    {
@@ -616,8 +630,11 @@ libgregorio_dump_type (char type)
     case GRE_SYLLABLE:
       str = "GRE_SYLLABLE";
       break;
-    case GRE_TEXVERB:
-      str = "GRE_TEXVERB";
+    case GRE_TEXVERB_GLYPH:
+      str = "GRE_TEXVERB_GLYPH";
+      break;
+    case GRE_TEXVERB_ELEMENT:
+      str = "GRE_TEXVERB_ELEMENT";
       break;
     default:
       str = "unknown";
@@ -1053,7 +1070,7 @@ libgregorio_dump_rare_sign (char rare_sign)
 }
 
 const char *
-libgregorio_dump_h_episemus_type (char h_episemus_type)
+libgregorio_dump_h_episemus_type (unsigned char h_episemus_type)
 {
   const char *str;
   switch (h_episemus_type)

@@ -43,7 +43,7 @@ DECLARE_PLUGIN (xml)
     .write = write_score};
 #endif
 
-#define write_note(shape) libgregorio_xml_write_note(f, note->signs, step, octave, shape, note->h_episemus_type, alteration, note->rare_sign)
+#define write_note(shape) libgregorio_xml_write_note(f, note->signs, step, octave, shape, note->h_episemus_type, alteration, note->rare_sign, note->texverb)
 
 void
 libgregorio_xml_write_gregorio_note (FILE * f, gregorio_note * note, int clef,
@@ -132,6 +132,14 @@ libgregorio_xml_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph,
       fprintf (f, "<zero-width-space />");
       return;
     }
+  if (glyph->type == GRE_TEXVERB_GLYPH)
+    {
+      if (glyph->texverb)
+        {
+          fprintf(f, "<texverb-glyph>%s</texverb-glyph>", glyph->texverb);
+        }
+      return;
+    }
   if (glyph->type != GRE_GLYPH)
     {
       gregorio_message (_("call with an argument which type is unknown"),
@@ -180,6 +188,14 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
   if (element->type == GRE_SPACE)
     {
       libgregorio_xml_write_space (f, element->element_type);
+      return;
+    }
+  if (element->type == GRE_TEXVERB_ELEMENT)
+    {
+      if (element->texverb)
+        {
+          fprintf(f, "<texverb-element>%s</texverb-element>", element->texverb);
+        }
       return;
     }
   if (element->type == GRE_BAR)
@@ -558,7 +574,6 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 					  gregorio_element * element,
 					  int voice, int *clef)
 {
-  const char *str;
 
   while (element)
     {
@@ -568,13 +583,13 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 	    {
 	      fprintf (f, "<bar>");
           libgregorio_xml_write_bar (f, element->element_type, element->additional_infos);
-          fprintf(f, "</bar>", str);
+          fprintf(f, "</bar>");
 	    }
 	  else
 	    {
 		  fprintf (f, "<bar voice=\"%d\">", voice);
           libgregorio_xml_write_bar (f, element->element_type, element->additional_infos);
-          fprintf(f, "</bar>", str);
+          fprintf(f, "</bar>");
 	    }
 	}
       if (element->type == GRE_END_OF_LINE)

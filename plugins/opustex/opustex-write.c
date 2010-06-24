@@ -369,6 +369,17 @@ libgregorio_opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 	      new_line = 0;
 	      continue;
 	    }
+	  if (current_element->type == GRE_TEXVERB_ELEMENT)
+	    {
+	      if (current_element->texverb)
+	        {
+	          fprintf (f, "%s", current_element->texverb);
+	        }
+	      current_element = current_element->next;
+	      key_change = 0;
+	      new_line = 0;
+	      continue;
+	    }
 	  if (current_element->type == GRE_C_KEY_CHANGE
 	      || current_element->type == GRE_F_KEY_CHANGE)
 	    {
@@ -692,6 +703,14 @@ libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
 			   "libgregorio_opustex_write_glyph", ERROR, 0);
       return;
     }
+  if (glyph->type == GRE_TEXVERB_GLYPH)
+    {
+      if (glyph->texverb)
+        {
+          fprintf(f, "%s", glyph->texverb);
+        }
+      return;
+    }
   if (!glyph->first_note)
     {
       gregorio_message (_
@@ -730,7 +749,7 @@ libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
       while (current_note)
 	{
 	  fprintf (f, "\\nonspatium");
-	  if (current_note->h_episemus_type == H_ALONE)
+	  if (simple_htype(current_note->h_episemus_type == H_ALONE))
 	    {
 	      libgregorio_opustex_print_episem (f, current_note->pitch, 1);
 	    }
@@ -751,12 +770,12 @@ libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
 	{
 	  while (current_note)
 	    {
-	      if (current_note->h_episemus_type == H_ALONE)
+	      if (simple_htype(current_note->h_episemus_type == H_ALONE))
 		{
 		  libgregorio_opustex_print_episem (f, current_note->pitch,
 						    1);
 		}
-	      if (current_note->h_episemus_type == H_MULTI)
+	      if (simple_htype(current_note->h_episemus_type == H_MULTI))
 		{
 		  h_length++;
 		  h_pitch = current_note->h_episemus_top_note;
@@ -770,13 +789,13 @@ libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
 	}
       else
 	{
-	  if (glyph->first_note->h_episemus_type > H_NO_EPISEMUS)
+	  if (simple_htype(glyph->first_note->h_episemus_type) != H_NO_EPISEMUS)
 	    {
 	      libgregorio_opustex_print_episem_under (f,
 						      glyph->first_note->
 						      pitch, 1);
 	    }
-	  if (glyph->first_note->next->h_episemus_type > H_NO_EPISEMUS)
+	  if (simple_htype(glyph->first_note->next->h_episemus_type) != H_NO_EPISEMUS)
 	    {
 	      libgregorio_opustex_print_episem (f,
 						glyph->first_note->next->

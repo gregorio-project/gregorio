@@ -419,9 +419,9 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	  current_element = current_element->next;
 	  continue;
 	}
-      if (current_element->type == GRE_TEXVERB && current_element->texverb)
+      if (current_element->type == GRE_TEXVERB_ELEMENT && current_element->texverb)
 	{
-	  fprintf(f, "%s", current_element->texverb);
+	  fprintf (f, "%% verbatim text at element level:\n%s%%\n%% end of verbatim text\n", current_element->texverb);
 	  current_element = current_element->next;
 	  continue;
 	}
@@ -987,6 +987,12 @@ libgregorio_gregoriotex_write_element (FILE * f,
 	  current_glyph = current_glyph->next;
 	  continue;
 	}
+      if (current_glyph->type == GRE_TEXVERB_GLYPH && current_glyph->texverb)
+	{
+	  fprintf (f, "%% verbatim text at glyph level:\n%s%%\n%% end of verbatim text\n", current_glyph->texverb);
+	  current_glyph = current_glyph->next;
+	  continue;
+	}
       if (current_glyph->type == GRE_FLAT)
 	{
 	  fprintf (f, "\\flat{%c}{0}%%\n", current_glyph->glyph_type);
@@ -1002,6 +1008,12 @@ libgregorio_gregoriotex_write_element (FILE * f,
       if (current_glyph->type == GRE_BAR)
 	{
 	  libgregorio_gregoriotex_write_bar (f, current_glyph->glyph_type, current_glyph->liquescentia, INSIDE_BAR);
+	  current_glyph = current_glyph->next;
+	  continue;
+	}
+      if (current_glyph->type == GRE_TEXVERB_GLYPH && current_glyph->texverb)
+	{
+	  fprintf(f, "%s", current_glyph->texverb);
 	  current_glyph = current_glyph->next;
 	  continue;
 	}
@@ -1149,6 +1161,28 @@ libgregorio_gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyl
 }
 
 void
+libgregorio_gregoriotex_write_last_note_verb (FILE * f,
+				     gregorio_glyph * glyph)
+{
+  gregorio_note *note = glyph->first_note;
+  while (note)
+    {
+      if (note->next)
+        {
+          note = note->next;
+        }
+      else
+        {
+          break;
+        }
+    }
+  if (note && note->texverb)
+    {
+	  fprintf (f, "%% verbatim text at note level:\n%s%%\n%% end of verbatim text\n", note->texverb);
+	}
+}
+
+void
 libgregorio_gregoriotex_write_glyph (FILE * f,
 				     gregorio_syllable * syllable,
 				     gregorio_element * element,
@@ -1211,6 +1245,7 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
 							     &glyph_number);
 	  fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
+      libgregorio_gregoriotex_write_last_note_verb (f, glyph);
 	  libgregorio_gregoriotex_write_signs (f, gtype, glyph,
 					       glyph->first_note);
 	}
@@ -1239,6 +1274,7 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
 //TODO : fusion functions
       fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n", glyph_number,
 	       glyph->first_note->pitch, next_note_pitch, type);
+	  libgregorio_gregoriotex_write_last_note_verb (f, glyph);
       glyph->first_note = current_note;
       libgregorio_gregoriotex_write_signs (f, gtype, glyph,
 					   glyph->first_note);
@@ -1316,12 +1352,13 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
 	  libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
 							     &gtype,
 							     &glyph_number);
-	  libgregorio_gregoriotex_write_signs (f, gtype, glyph,
-					       glyph->first_note);
 	  glyph->glyph_type = G_TORCULUS_RESUPINUS;
 //TODO : fusion functions
 	  fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
+	  libgregorio_gregoriotex_write_last_note_verb (f, glyph);
+	  libgregorio_gregoriotex_write_signs (f, gtype, glyph,
+					       glyph->first_note);
 	  glyph->first_note = current_note;
 	}
       else
@@ -1331,6 +1368,7 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
 							     &glyph_number);
 	  fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
+      libgregorio_gregoriotex_write_last_note_verb (f, glyph);
 	  libgregorio_gregoriotex_write_signs (f, gtype, glyph,
 					       glyph->first_note);
 	  break;
@@ -1381,7 +1419,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	  if ((type == T_PORRECTUS || type == T_PORRECTUSFLEXUS
 	       || type == T_PORRECTUSFLEXUS_NOBAR
 	       || type == T_PORRECTUS_NOBAR) && current_note->next
-	      && current_note->next->h_episemus_type != H_NO_EPISEMUS
+	      && simple_htype(current_note->next->h_episemus_type) != H_NO_EPISEMUS
 	      && i == 1)
 	    {
 	      libgregorio_gregoriotex_write_hepisemus (f, glyph,
@@ -1392,7 +1430,7 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	  else
 	    {
 	      if (type == T_TORCULUS_RESUPINUS && current_note->next
-		  && current_note->next->h_episemus_type != H_NO_EPISEMUS
+		  && simple_htype(current_note->next->h_episemus_type) != H_NO_EPISEMUS
 		  && i == 2)
 		{
 		  libgregorio_gregoriotex_write_hepisemus (f, glyph,
@@ -1638,6 +1676,7 @@ libgregorio_gregoriotex_write_hepisemus (FILE * f,
   char number = 0;
   char ambitus = 0;
   char bottom = 0;
+  char has_bottom = 0;
 
   if (!current_note || current_note->h_episemus_type == H_NO_EPISEMUS)
     {
@@ -1650,6 +1689,16 @@ libgregorio_gregoriotex_write_hepisemus (FILE * f,
   if (current_note->next)
     {
       ambitus = current_note->pitch - current_note->next->pitch;
+    }
+  if (has_bottom(current_note->h_episemus_type))
+    {
+      fprintf (f, "\\hepisemusbottom{%c}{%d}{%d}%%\n", current_note->pitch - 1, number,
+	       ambitus);
+      if (bottom != 1 && simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS)
+    {
+      fprintf (f, "\\hepisemus{%c}{%d}{%d}%%\n", height, number, ambitus);
+    }
+    return;
     }
   if (bottom == 1)
     {
@@ -1889,10 +1938,10 @@ libgregorio_gregoriotex_write_rare (FILE * f,
 
 #define normal_height() \
   if (sign_type == TT_H_EPISEMUS) {\
-  *height=current_note->h_episemus_top_note+1;\
+    *height=current_note->h_episemus_top_note+1;\
   }\
   else {\
-  *height=current_note->pitch -1;\
+    *height=current_note->pitch -1;\
   }
 
 //same as before, but for one note and then another one higher, when the sign is on the last
@@ -1929,8 +1978,8 @@ libgregorio_gregoriotex_write_rare (FILE * f,
     {\
   /* we check if the previous or the next note has an horizontal episemus\
   // if it is the case, we use this height. If not, we put the episemus under the note*/\
-      if ((!current_note->previous || !current_note->previous -> h_episemus_type)\
-          && (!current_note->next || !current_note->next->h_episemus_type))\
+      if ((!current_note->previous || simple_htype(current_note->previous -> h_episemus_type) == H_NO_EPISEMUS)\
+          && (!current_note->next || simple_htype(current_note->next->h_episemus_type) == H_NO_EPISEMUS))\
         {\
           *height=current_note->pitch - 1;\
            if (bottom){\
@@ -1941,6 +1990,21 @@ libgregorio_gregoriotex_write_rare (FILE * f,
         {\
           *height=current_note->h_episemus_top_note+1;\
         }\
+    }\
+  else\
+    {\
+      *height=current_note->pitch -1;\
+    }
+
+// case of one note and then one higher, on the same vertical axis,
+// when the sign is on the first, special case of the pes
+#define normal_height_bottom_pes()\
+  if (sign_type == TT_H_EPISEMUS) \
+    {\
+       *height=current_note->pitch - 1;\
+       if (bottom) {\
+         *bottom=1;\
+       }\
     }\
   else\
     {\
@@ -1978,7 +2042,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 		  *number = 0;
 		}
 	    }
-	  normal_height_bottom ();
+	  normal_height_bottom_pes ();
 	}
       else
 	{			/* i=2 */
@@ -2136,7 +2200,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	    {
 	      *number = 6;
 	    }
-	  normal_height ();
+	  normal_height_bottom ();
 	  break;
 	case 2:
 	  if (current_glyph->liquescentia >= L_INITIO_DEBILIS)
@@ -3034,6 +3098,10 @@ libgregorio_gregoriotex_write_note (FILE * f,
 
   fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n",
 	   glyph_number, note->pitch, next_note_pitch, type);
+  if (note->texverb)
+    {
+	  fprintf (f, "%% verbatim text at note level:\n%s%%\n%% end of verbatim text\n", note->texverb);
+	}
 }
 
 void
