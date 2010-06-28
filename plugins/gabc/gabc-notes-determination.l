@@ -54,8 +54,18 @@ unsigned int nbof_isolated_episemus;
 %x texverbnote
 %x texverbglyph
 %x texverbelement
+%x comments
 
 %%
+<INITIAL>\%  {
+	BEGIN(comments);
+	}
+<comments>(\n|\r)+  {
+    BEGIN(INITIAL);
+    }
+<comments>[^\n\r]*  {
+    //ignored
+    }
 <INITIAL>\[nv: {
     BEGIN(texverbnote);
     }

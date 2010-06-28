@@ -268,7 +268,10 @@ gregorio_add_sign (gregorio_note *note, char sign)
       switch (note->signs)
         {
           case _NO_SIGN:
-            note->signs = _AUCTUM_DUPLEX;
+            note->signs = _PUNCTUM_MORA;
+            break;
+          case _V_EPISEMUS:
+            note->signs = _V_EPISEMUS_PUNCTUM_MORA;
             break;
           case _PUNCTUM_MORA:
             note->signs = _AUCTUM_DUPLEX;

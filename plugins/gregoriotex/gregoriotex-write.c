@@ -1577,6 +1577,10 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
   unsigned char shift_before = 0;
   // this variable will be set to 1 if we are on the note before the last note of a podatus or a porrectus or a torculus resupinus
   unsigned char special_punctum = 0;
+  // 0 if space is normal, 1 if there should be no space after a punctum
+  unsigned char no_space = 0;
+  // a temp variable
+  gregorio_note *tmpnote;
   // first: the very special case where type == T_ONE_NOTE_TRF, the punctum is at a strange place:
   if (type == T_ONE_NOTE_TRF)
     {
@@ -1649,17 +1653,28 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
       fprintf (f, "\\punctummora{%c}{1}{%d}%%\n", current_note->pitch, special_punctum);
       return;
     }
+  // if there is a punctum or a auctum dumplex on a note after, we put a zero-width punctum
+  tmpnote = current_note -> next;
+  while(tmpnote)
+    {
+      if (tmpnote -> signs == _PUNCTUM_MORA || tmpnote -> signs == _AUCTUM_DUPLEX || tmpnote -> signs == _V_EPISEMUS_PUNCTUM_MORA || tmpnote -> signs == _V_EPISEMUS_AUCTUM_DUPLEX)
+        {
+          no_space = 1;
+          break;
+        }
+      tmpnote = tmpnote -> next;
+    }
 // And the second: when the punctum mora is on a note on a line, and the prior note is on the space immediately above, the dot is placed on the space below the line instead
   if (current_note->previous 
       && (current_note->previous->pitch - current_note->pitch == 1)
       && is_on_a_line (current_note->pitch))
     {
-      fprintf (f, "\\punctummora{%c}{1}{%d}%%\n", current_note->pitch-1, special_punctum);
+      fprintf (f, "\\punctummora{%c}{%d}{%d}%%\n", current_note->pitch-1, no_space, special_punctum);
       return;
     }
 
 // the normal operation
-  fprintf (f, "\\punctummora{%c}{0}{%d}%%\n", current_note->pitch, special_punctum);
+  fprintf (f, "\\punctummora{%c}{%d}{%d}%%\n", current_note->pitch, no_space, special_punctum);
 }
 
 // a function that writes the good \hepisemus un GregorioTeX. i is the position of the note in the glyph.
@@ -2236,7 +2251,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	  break;
 	default:
 	  number_last_note (18);
-	  normal_height ();
+	  normal_height_top ();
 	  break;
 	}
       break;
