@@ -1,8 +1,11 @@
 name:complete tests;
 %%
 % shapes:
+%
 fg(fg) gvFE(gvFE) ghg(ghg) ghgh(ghgh) ghghg(ghghg) gwhghg(gwhghg) gqh(gqh) gwh(gwh) gWh(gWh) go(go) goh(goh) gf(gf) gwf(gwf) gof(gofZ)
+%
 % pes:
+%
 f.g(f.g) fg.(fg.) g.h(g.h) gh.(gh.Z)
 -f.g(-f.g) -fg.(-fg.) -g.h(-g.h) -gh.(-gh.Z)
 f.g~(f.g~) fg.~(fg.~) g.h~(g.h~) gh.~(gh.~Z) 
@@ -13,47 +16,95 @@ f.g>(f.g>) fg.>(fg.>) g.h>(g.h>) gh.>(gh.>Z)
 fg..(fg..) gh..(gh..) gf..(gf..) hg..(hg..) fh..(fh..) gi..(gi..) fi..(fi..) gj..(gj..) hf..(hf..) ig..(ig..) if..(if..) jg..(jg..) f..(f..) g..(g..) -fg..(-fg..) -gh..(-gh..) fg..~(fg..~) gh..~(gh..~) fg..<(fg..<) gh..<(gh..<Z)
 f'g(f'g) fg'(fg') f'g'(f'g') f'h'(f'h') f'i' (f'i') f'j'(f'j') f'_g'(f'_g') f'g'_(f'_g')
 -f'g(-f'g) -fg'(-fg') -f'g'(-f'g') -f'h'(-f'h') -f'i' (-f'i') -f'j'(-f'j') -f'_g'(-f'_g') -f'g'_(-f'_g')
-f._'g(f.g) fg._'(fg.) g._'h(g.h) gh._'(gh.Z)
+f.'g(f.g) fg.'(fg.) g.'h(g.h) gh.'(gh.Z)
+%
 % virga:
+%
 gf<(gf<) gf>(gf>) -gf(-gf) gf~(gf~Z)
 g.f(g.f) gf.(gf.) gf..(gf..) g.f.(g.f.Z)
 g'f(g'f) gf'(gf') g'f'(g'f') h'f(h'f) hf'(hf') h'f'(h'f'Z) 
 g_f(g_f) gf_(gf_) g_f_(g_f_) h_f(h_f) hf_(hf_) h_f_(h_f_Z)
-g_.'f(g_.'f) gf_'.(gf_'.) g_'.f_'.(g_'.f_'.) h_.'f(h_.'f) hf_.'(hf_.') h_.'f_.'(h_.'f_.'Z)
-g_.'fo(g_.'f) gfo_'.(gf_'.) go_'.fo_'.(g_'.f_'.) h_.'fo(h_.'f) hfo_.'(hf_.') h_.'fo_.'(h_.'f_.'Z)
+g.'f(g.'f) gf'.(gf'.) g'.f'.(g'.f'.) h.'f(h.'f) hf.'(hf.') h.'f.'(h.'f.'Z)
+g.'fo(g.'f) gfo'.(gf'.) go'.fo'.(g'.f'.) h.'fo(h.'f) hfo.'(hf.') h.'fo.'(h.'f.'Z)
+%
 % torculus
+%
 ghg(ghg) fif(fifZ)
+%
 g.hg(g.hg) f.if(f.if) gh.g(gh.g) fi.f(fi.f) ghg.(ghg.) fif.(fif.) g.h.g.(g.h.g.) f.i.f.(f.i.f.) ghg..(ghg..) fif..(fif..Z)  
 g_hg(g_hg) f_if(f_if) gh_g(gh_g) fi_f(fi_f) ghg_(ghg_) fif_(fif_) g_h_g_(g_h_g_) f_i_f_(f_i_f_Z)
 g'hg(g'hg) f'if(f'if) gh'g(gh'g) fi'f(fi'f) ghg'(ghg') fif'(fif') g'h'g'(g'h'g') f'i'f'(f'i'f'Z)
-g._'hg(g._'hg) f._'if(f._'if) gh._'g(gh._'g) fi._'f(fi._'f) gh._'g(gh._'g) fif._'(fif._') g._'h._'g._'(g._'h._'g._') f._'i._'f._'(f._'i._'f._'Z)
+g.'hg(g.'hg) f.'if(f.'if) gh.'g(gh.'g) fi.'f(fi.'f) gh.'g(gh.'g) fif.'(fif.') g.'h.'g.'(g.'h.'g.') f.'i.'f.'(f.'i.'f.'Z)
+%
 % porrectus
+%
 hgh(hgh) ifi(ifiZ)
 h.gh(h.gh) i.fi(i.fi) hg.h(hg.h) if.i(if.i) hgh.(hgh.) ifi.(ifi.) h.g.h.(h.g.h.) i.f.i.(i.f.i.) hgh..(hgh..) ifi..(ifi..Z)  
 h_gh(h_gh) i_fi(i_fi) hg_h(hg_h) if_i(if_i) hg_h(hg_h_) if_i(if_i_) hg_h(h_g_h) if_i(i_f_i) ghg_(hgh_) ifi_(ifi_) h_g_h_(h_g_h_) i_f_i_(i_f_i_Z)
 h'gh(h'gh) f'if(i'fi) hg'h(hg'h) if'f(if'i) hgh'(hgh') ifi'(ifi') h'g'h'(h'g'h') f'i'f'(i'f'i'Z)
-g._'hg(h._'gh) i._'fi(i._'fi) gh._'g(hg._'h) if._'i(if._'f) gh._'g(hg._'h) ifi._'(ifi._') g._'h._'g._'(h._'g._'h._') f._'i._'f._'(i._'f._'i._'Z)
+g.'hg(h.'gh) i.'fi(i.'fi) gh.'g(hg.'h) if.'i(if.'f) gh.'g(hg.'h) ifi.'(ifi.') g.'h.'g.'(h.'g.'h.') f.'i.'f.'(i.'f.'i.'Z)
+%
 % torculus resupinus
+%
 {ghgi}(ghgi) fifg~(fifg~) fifg(fifgZ)
-{g.hgi}(g.hgi) f.ifg(f.ifg) {gh.gi}(gh.gi) fi.fg(fi.fg) {ghg.i}(ghg.i) fif.g(fif.g) {g.h.g.i}(g.h.g.i) f.i.f.g(f.i.f.g) {gh}gi..(ghgi..) fif..(fifg..Z)  
+%
+{g.hgi}(g.hgi) f.ifg(f.ifg) {gh.gi}(gh.gi) fi.fg(fi.fg) {ghg.i}(ghg.i) fif.g(fif.g) {ghgi.}(ghgi.) fifg.(fifg.) {g.h.g.i}(g.h.g.i) f.i.f.g(f.i.f.g) {gh}gi..(ghgi..) fifg..(fifg..Z)  
+%
 {g_}hgi(g_hgi) f_ifg(f_ifg) {gh}_gi(gh_gi) fi_fg(fi_fg) {gh}g_i(ghg_i) fif_g(fif_g) {gh}gi_(ghgi_) fifg_(fifg_) {gh}g_i_(ghg_i_) fif_g_(fif_g_) {gh}_g_i(gh_g_i) fi_f_g(fi_f_g) {g_h}_gi(g_h_gi) f_i_fg(f_i_fg) {g_h}_g_i(g_h_g_i) f_i_f_g(f_i_f_g) {g_h}_g_i_(g_h_g_i_) f_i_f_g_(f_i_f_g_Z)
+%
 {g'}hgi(g'hgi) f'ifg(f'ifg) {g}h'gi(gh'gi) fi'fg(fi'fg) {g}hg'i(ghg'i) fif'g(fif'g) {g}hgi'(ghgi') fifg'(fifg') {g}'h'g'i(g'h'g'i) f'i'f'g(f'i'f'g) {g}'h'g'i'(g'h'g'i') f'i'f'g'(f'i'f'g'Z)
-{g}._'hgi(g._'hgi) f._'ifg(f._'ifg) {g}h._'gi(gh._'gi) fi._'fg(fi._'fg) {g}h._'gi(gh._'gi) fif._'g(fif._'g) {g}._'h._'g._'i(g._'h._'g._'i) f._'i._'f._'g(f._'i._'f._'g) {g}._'h._'g._'i._'(g._'h._'g._'i.'_)f._'i._'f._'g._'(f._'i._'f._'g._'Z)
-gjhj.(gjhj.) ijghf.(ijghf.) ghfg.(ghfg.)
-% torculus resupinus
-eh_gh(eh_gh) e_hgh(e_hgh) ehg_h(ehg_h) ehgh_(ehgh_) e_h_gh(e_h_gh) eh_g_h(eh_g_h) ehg_h_(ehg_h_) f_g_(f_g_) g_h_(g_h_)
+%
+{g}.'hgi(g.'hgi) f.'ifg(f.'ifg) {g}h.'gi(gh.'gi) fi.'fg(fi.'fg) {g}h.'gi(gh.'gi) fif.'g(fif.'g) {g}.'h.'g.'i(g.'h.'g.'i) f.'i.'f.'g(f.'i.'f.'g) {g}.'h.'g.'i.'(g.'h.'g.'i.')f.'i.'f.'g.'(f.'i.'f.'g.'Z)
+%
+% torculus resupinus flexus
+%
+{g}hgif(ghgif) fifg(fifgeZ)
+%
+{g.}hgif(g.hgif) f.ifge(f.ifge) {gh.gif}(gh.gif) fi.fge(fi.fge) {ghg.if}(ghg.if) fif.ge(fif.ge) {ghgi.f}(ghgi.f) fifg.e(fifg.e) {ghgif.}(ghgif.) fifge.(fifge.) {ghgif}(ghgi.f.) fifg.e.(fifg.e.) {gh}gif..(ghgif..) fifge..(fifge..Z)  
+%
+{g_}hgif(g_hgif) f_ifge(f_ifge) {gh}_gif(gh_gif) fi_fge(fi_fge) {gh}g_if(ghg_if) fif_ge(fif_ge) {gh}gi_f(ghgi_f) fifg_e(fifg_e) {gh}gif_(ghgif_) fifge_(fifge_) {gh}g_i_f(ghg_i_f) fif_g_e(fif_g_e) {gh}_g_if(gh_g_if) fi_f_ge(fi_f_ge) {g_h}_gif(g_h_gif) f_i_fge(f_i_fge) {g_h}_g_if(g_h_g_if) f_i_f_ge(f_i_f_ge) {g_h}_g_i_f_(g_h_g_i_f_) f_i_f_g_e_(f_i_f_g_e_Z)
+%
+{g'}hgif(g'hgif) f'ifge(f'ifge) {g}h'gif(gh'gif) fi'fge(fi'fge) {g}hg'if(ghg'if) fif'ge(fif'ge) {g}hgi'f(ghgi'f) fifg'e(fifg'e) {g}hgif'(ghgif') fifge'(fifge') {g}'h'g'i'f'(g'h'g'i'f') f'i'f'g'e'(f'i'f'g'e'Z)
+%
+{g}.'hgi(g.'hgi) f.'ifg(f.'ifg) {g}h.'gi(gh.'gi) fi._'fg(fi.'fg) {g}h.'gi(gh.'gi) fif._'g(fif.'g) {g}.'h.'g.'i(g.'h.'g.'i) f.'i.'f.'g(f.'i.'f.'g) {g}.'h.'g.'i.'(g.'h.'g.'i.') f.'i.'f.'g.'(f.'i.'f.'g.'Z)
+%
+% flats and naturals
+%
+gx(gx) hx(hx) gy(gy) hy(hy) gxg(gxg) gyg(gyg) gxgh(gxgh) ggxgh(ggxgh) ggygh(ggygh)
+%
+% key change
+%
+ghz0::c4(ghz0::c4) f(f) f3(f3) f(f) ghz0::c4(ghz0::c4) f(f)
+%
+% bars
+%
+,(,) (,) g,h(g,h) ;(;) (;) g;h(g;h) :(:) (:) g:h(g:h) ::(::) (::) g::h(g::h)
+%
 % styles, verb and special characters
+%
 {a}<i>i</i><b>b</b><ul>ul</ul><sp>+</sp><v>a</v>(Z)
 {a}<a<sp>+</sp><sp>%</sp>><v><</v><v>></sp></v>(Z)
+%
 % spaces
+%
 {fg!hi}(fg!hi) {fg/hi}(fg/hi) {fg//hi}(fg//hi) {fg hi}(fg hi) {fg!/hi}(fg!/hi) {fg!//hi}(fg!//hi) {fg! hi}(fg! hiZ)
 æ(dc) æ(ab/dc)
+%
 % bivirga, bistropha, etc.
+%
 gvv(gvv) gvgv(gvgv) gvvv(gvvv) gvgvgv(gvgvgv) gss(gss) gsgs(gsgs) gsss(gsss) gsgsgs(gsgsgsZ)
+%
 % bottom hepisemus
+%
 abc(g_0h_ g_h_ g_0_h_g_0_)
-g_//g_(g_//g_) g_/g_(g_/g_) fg_g_(fg_g_) g_/fg_(g_/fg_) f_fg_(f_fg_) f_/f_g_(f_/f_g_Z)
-gr(gr) gR(gR) gr0(gr0) gr1(gr1) gr2(gr2) gr3(gr3) gr4(gr4) gr5(gr5) % this is a comment at the end of a line
+%
+% rare signs
+%
+gr(gr) gR(gR) gr0(gr0) gr1(gr1) gr2(gr2) gr3(gr3) gr4(gr4) gr5(gr5)
+%
+% comments
+%
+gh(gh) % this is a comment at the end of a line
 % this is a line comment
 fg(f% this is a comment inside some notes
 g)
