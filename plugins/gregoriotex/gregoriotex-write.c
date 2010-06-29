@@ -464,14 +464,31 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
 	  if (current_element->previous &&
 	       current_element->previous->type == GRE_BAR)
 	    {
-	      // the third argument is 0 or 1 according to the need for a space before the clef
-          fprintf (f, "\\changeclef{f}{%d}{0}%%\n",
-		     current_element->element_type - 48);
+	      if (current_element->additional_infos == FLAT_KEY)
+	        {
+	          // the third argument is 0 or 1 according to the need for a space before the clef
+              fprintf (f, "\\changeclef{f}{%d}{0}{%c}%%\n",
+		         current_element->element_type - 48, libgregorio_gregoriotex_clef_flat_height('f', current_element->element_type - 48));
+	        }
+	      else
+	        {
+	          fprintf (f, "\\changeclef{f}{%d}{0}{%c}%%\n",
+		         current_element->element_type - 48, NO_KEY_FLAT);
+	        }
 	    }
 	  else
 	    {
-          fprintf (f, "\\changeclef{f}{%d}{1}%%\n",
-		    current_element->element_type - 48);
+	      if (current_element->additional_infos == FLAT_KEY)
+	        {
+	          // the third argument is 0 or 1 according to the need for a space before the clef
+              fprintf (f, "\\changeclef{f}{%d}{1}{%c}%%\n",
+		         current_element->element_type - 48, libgregorio_gregoriotex_clef_flat_height('f', current_element->element_type - 48));
+	        }
+	      else
+	        {
+	          fprintf (f, "\\changeclef{f}{%d}{1}{%c}%%\n",
+		         current_element->element_type - 48, NO_KEY_FLAT);
+	        }
 		}
 	  current_element = current_element->next;
 	  continue;
@@ -479,7 +496,7 @@ libgregorio_gregoriotex_write_syllable (FILE * f,
       if (current_element->type == GRE_CUSTO)
 	{
 	  // we also print an unbreakable larger space before the custo
-	  fprintf (f, "\\endofelement{1}{1}%%\n\\custo{%c}%%\n", libgregorio_gregoriotex_determine_next_note (syllable, current_element, NULL));
+	  fprintf (f, "\\endofelement{1}{1}%%\n\\custo{%c}%%\n", current_element->element_type);
 	  current_element = current_element->next;
 	  continue;
 	}
@@ -871,7 +888,7 @@ libgregorio_gtex_print_char (FILE * f, grewchar to_print)
     }
   if (to_print == L'_')
     {
-      fprintf (f, "\\_ ");
+      fprintf (f, "\\_");
       return;
     }
   // not sure it's a perfect idea...
@@ -1211,7 +1228,7 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
       return;
     }
   next_note_pitch =
-    libgregorio_gregoriotex_determine_next_note (syllable, element, glyph);
+    gregorio_determine_next_pitch (syllable, element, glyph);
   current_note = glyph->first_note;
 // first we check if it is really a unique glyph in gregoriotex... the glyphs that are not a unique glyph are : trigonus and pucta inclinata in general, and torculus resupinus and torculus resupinus flexus, so we first divide the glyph into real gregoriotex glyphs
   switch (glyph->glyph_type)
@@ -1274,10 +1291,10 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
 //TODO : fusion functions
       fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n", glyph_number,
 	       glyph->first_note->pitch, next_note_pitch, type);
-	  libgregorio_gregoriotex_write_last_note_verb (f, glyph);
-      glyph->first_note = current_note;
+	    libgregorio_gregoriotex_write_last_note_verb (f, glyph);
       libgregorio_gregoriotex_write_signs (f, gtype, glyph,
 					   glyph->first_note);
+			glyph->first_note = current_note;
       glyph->glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
       break;
     case G_BIVIRGA:
@@ -1352,13 +1369,13 @@ libgregorio_gregoriotex_write_glyph (FILE * f,
 	  libgregorio_gregoriotex_determine_number_and_type (glyph, &type,
 							     &gtype,
 							     &glyph_number);
-	  glyph->glyph_type = G_TORCULUS_RESUPINUS;
 //TODO : fusion functions
 	  fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
 	  libgregorio_gregoriotex_write_last_note_verb (f, glyph);
 	  libgregorio_gregoriotex_write_signs (f, gtype, glyph,
 					       glyph->first_note);
+		glyph->glyph_type = G_TORCULUS_RESUPINUS;
 	  glyph->first_note = current_note;
 	}
       else
@@ -1497,9 +1514,13 @@ libgregorio_gregoriotex_write_signs (FILE * f, char type,
 	  // why is this if there?...
       if (!current_note->rare_sign)
 	{
-	  if (block_hepisemus == 1)
+	  if (block_hepisemus == 2)
 	    {
 	      block_hepisemus = 0;
+	    }
+	  if (block_hepisemus == 1)
+	    {
+	      block_hepisemus = 2;
 	    }
 	}
       // a bit dirty, depends on the way we call it
@@ -1959,6 +1980,21 @@ libgregorio_gregoriotex_write_rare (FILE * f,
     *height=current_note->pitch -1;\
   }
 
+#define normal_height_long_first() \
+  if (sign_type == TT_H_EPISEMUS) {\
+    *height=current_note->h_episemus_top_note+1;\
+  }\
+  else {\
+    if (sign_type == TT_V_EPISEMUS)\
+      {\
+        *height=current_note->pitch -2;\
+      }\
+    else \
+      {\
+        *height=current_note->pitch -1;\
+      }\
+  }
+
 //same as before, but for one note and then another one higher, when the sign is on the last
 #define normal_height_top()\
   if (sign_type == TT_H_EPISEMUS) {\
@@ -2146,10 +2182,11 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	      *number = 0;
 	    }
 	  *number = 10;
+	  normal_height ();
 	  break;
 	case 1:
 	  *number = 6;
-	  normal_height ();
+	  normal_height_long_first ();
 	  break;
 	case 2:
 	  if (current_glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS
@@ -2190,7 +2227,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	  break;
 	default:
 	  number_last_note (0);
-	  normal_height ();
+	  normal_height_bottom ();
 	  break;
 	}
       break;
@@ -2224,17 +2261,16 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	    }
 	  else
 	    {
-	      if (current_note->pitch - current_note->previous->pitch ==
-		  1)
-		{
-		  *number = 21;
-		}
-	      else
+	      if (current_note->pitch - current_note->previous->pitch == 1)
 		{
 		  *number = 22;
 		}
+	      else
+		{
+		  *number = 21;
+		}
 	    }
-	  normal_height ();
+	  normal_height_long_first ();
 	break;
 	case 3:
 	  // you might think number_note_before_last_note more appropriate, but in the current fonts the third note of the torculus resupinus is v aligned with the last note
@@ -2269,7 +2305,7 @@ libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	  normal_height ()break;
 	case 1:
 	  *number = 6;
-	  normal_height ();
+	  normal_height_long_first ();
 	  break;
 	case 2:
 	  if ((current_glyph->liquescentia ==
@@ -3205,119 +3241,6 @@ void
 
 }
 
-char
-  libgregorio_gregoriotex_determine_next_note
-  (gregorio_syllable * syllable, gregorio_element * element,
-   gregorio_glyph * glyph)
-{
-  char temp;
-  if (!element || !syllable)
-    {
-      gregorio_message (_
-			("called with a NULL argument"),
-			"libgregorio_gregoriotex_determine_next_note",
-			ERROR, 0);
-      return 'g';
-    }
-  // we first explore the next glyphs to find a note, if there is one
-  if (glyph)
-    {
-      glyph = glyph->next;
-      while (glyph)
-        {
-          if (glyph->type == GRE_GLYPH && glyph->first_note)
-	    {
-	      return glyph->first_note->pitch;
-	    }
-          glyph = glyph->next;
-        }
-    }
-// then we do the same with the elements
-  element = element->next;
-  while (element)
-    {
-      if (element->type == GRE_ELEMENT && element->first_glyph)
-	{
-	  glyph = element->first_glyph;
-	  while (glyph)
-	    {
-	      if (glyph->type == GRE_GLYPH && glyph->first_note)
-		{
-		  return glyph->first_note->pitch;
-		}
-	      glyph = glyph->next;
-	    }
-	}
-      element = element->next;
-    }
-
-// then we do the same with the syllables
-  syllable = syllable->next_syllable;
-  while (syllable)
-    {
-// we call another function that will return the pitch of the first note if syllable has a note, and 0 else
-      temp = libgregorio_gregoriotex_syllable_first_note (syllable);
-      if (temp)
-	{
-	  return temp;
-	}
-      syllable = syllable->next_syllable;
-    }
-// here it means that there is no next note, so we return a stupid value, but it won' t be used
-  return 'g';
-}
-
-// the second argument says if we want to also look for a sign element or not
-
-gregorio_glyph *
-libgregorio_gregoriotex_first_glyph (gregorio_syllable * syllable)
-{
-  gregorio_glyph *glyph;
-  gregorio_element *element;
-  if (!syllable)
-    {
-      gregorio_message (_
-			("called with a NULL argument"),
-			"libgregorio_gregoriotex_determine_next_note",
-			ERROR, 0);
-    }
-  element = syllable->elements[0];
-  while (element)
-    {
-      if (element->type == GRE_ELEMENT && element->first_glyph)
-	{
-	  glyph = element->first_glyph;
-	  while (glyph)
-	    {
-	      if (glyph->type == GRE_GLYPH && glyph->first_note)
-		{
-		  return glyph;
-		}
-	      glyph = glyph->next;
-	    }
-	}
-      element = element->next;
-    }
-  return NULL;
-}
-
-char
-libgregorio_gregoriotex_syllable_first_note (gregorio_syllable * syllable)
-{
-  gregorio_glyph *glyph;
-  glyph = libgregorio_gregoriotex_first_glyph (syllable);
-  if (glyph == NULL)
-    {
-      return 0;
-    }
-  else
-    {
-      return glyph->first_note->pitch;
-    }
-}
-
-// a function to determine the 7th argument of syllable
-
 int
 libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable)
 {
@@ -3332,7 +3255,7 @@ libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable)
     {
       gregorio_message (_
 			("called with a NULL argument"),
-			"libgregorio_gregoriotex_determine_next_note",
+			"libgregorio_gregoriotex_syllable_first_type",
 			ERROR, 0);
     }
   element = syllable->elements[0];

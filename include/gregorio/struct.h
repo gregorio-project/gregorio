@@ -686,6 +686,9 @@ int gregorio_is_vowel (grewchar letter);
 void gregorio_write_text (char type, gregorio_character * text, FILE *f, void (*printverb)(FILE *, grewchar *), void (*printchar)(FILE *, grewchar), void (*begin)(FILE *, unsigned char), void (*end)(FILE *, unsigned char), void (*printspchar)(FILE *, grewchar *));
 
 void gregorio_write_first_letter (gregorio_character * current_character, FILE * f, void (*printverb) (FILE *, grewchar *), void (*printchar) (FILE *, grewchar), void (*begin) (FILE *, unsigned char), void (*end) (FILE *, unsigned char), void (*printspchar) (FILE *, grewchar *));
+char gregorio_determine_next_pitch (gregorio_syllable * syllable, gregorio_element * element, gregorio_glyph * glyph);
+gregorio_glyph * gregorio_first_glyph (gregorio_syllable * syllable);
+char gregorio_syllable_first_note (gregorio_syllable * syllable);
 
 void gregorio_free_characters (gregorio_character * current_character);
 void gregorio_free_one_character (gregorio_character * current_character);

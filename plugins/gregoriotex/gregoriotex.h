@@ -109,7 +109,7 @@ Here are the different types, they must be the same as in squarize.py
 #define G_PORRECTUS_FLEXUS_NO_BAR 41
 #define G_PES_QUILISMA 42
 
-#define HEPISEMUS_FIRST_TWO 0
+#define HEPISEMUS_FIRST_TWO 12
 
 // very temporary types
 #define TT_H_EPISEMUS 0
@@ -154,9 +154,7 @@ void libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *glyph, i
 
 unsigned int libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph);
 void libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note, char next_note_pitch);
-char libgregorio_gregoriotex_determine_next_note (gregorio_syllable * syllable, gregorio_element * element, gregorio_glyph * glyph);
 
-char libgregorio_gregoriotex_syllable_first_note (gregorio_syllable * syllable);
 void libgregorio_gtex_write_begin (FILE * f, unsigned char style);
 void libgregorio_gtex_write_end (FILE * f, unsigned char style);
 void libgregorio_gtex_write_special_char (FILE * f, grewchar * special_char);
@@ -171,7 +169,6 @@ void libgregorio_gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * 
 
 void libgregorio_gregoriotex_write_next_first_text (FILE * f, gregorio_character *current_character);
 int libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable);
-gregorio_glyph * libgregorio_gregoriotex_first_glyph (gregorio_syllable * syllable);
 
 void libgregorio_gregoriotex_determine_note_number_and_type (gregorio_note * note, int *type, unsigned int *glyph_number);
 

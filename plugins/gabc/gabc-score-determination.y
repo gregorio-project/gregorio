@@ -57,6 +57,7 @@ We will need some variables and functions through the entire file, we declare th
 
 // the two functions to initialize and free the file variables
 void initialize_variables ();
+void gabc_fix_custos (gregorio_score * score_to_check);
 void free_variables ();
 // the error string
 char error[200];
@@ -123,9 +124,10 @@ gabc_read_score (FILE * f_in)
   initialize_variables ();
   // the flex/bison main call, it will build the score (that we have initialized)
   gabc_score_determination_parse ();
+  gregorio_fix_initial_keys (score, DEFAULT_KEY);
+  gabc_fix_custos(score);
   free_variables ();
   // the we check the validity and integrity of the score we have built.
-  gregorio_fix_initial_keys (score, DEFAULT_KEY);
   if (!check_score_integrity (score))
     {
       gregorio_free_score (score);
@@ -134,6 +136,73 @@ gabc_read_score (FILE * f_in)
 			   "libgregorio_det_score", FATAL_ERROR, 0);
     }
   return score;
+}
+
+void
+gabc_fix_custos (gregorio_score * score_to_check)
+{
+  gregorio_syllable *current_syllable;
+  gregorio_element *current_element;
+  gregorio_element *custo_element;
+  char pitch = 0;
+  char pitch_difference = 0;
+  int newkey;
+  int current_key;
+  if (!score || !score->first_syllable || !score->first_voice_info)
+    {
+      return;
+    }
+  current_key = score->first_voice_info->initial_key;
+  current_syllable = score->first_syllable;
+  while(current_syllable)
+    {
+      current_element = (current_syllable->elements)[0];
+      while (current_element)
+        {
+          if (current_element->type == GRE_CUSTO)
+            {
+              custo_element = current_element;
+              // we look for the key
+              while(current_element)
+                {
+                  switch (current_element->type)
+                    {
+                      case GRE_C_KEY_CHANGE:
+                      case GRE_C_KEY_CHANGE_FLATED:
+                        pitch = gregorio_determine_next_pitch(current_syllable, current_element, NULL);
+                        newkey = gregorio_calculate_new_key (C_KEY, current_element->element_type - 48);
+	                      pitch_difference = (char) newkey - (char) current_key;
+	                      custo_element->element_type = pitch - pitch_difference;
+                        break;
+                      case GRE_F_KEY_CHANGE:
+                      case GRE_F_KEY_CHANGE_FLATED:
+                        pitch = gregorio_determine_next_pitch(current_syllable, current_element, NULL);
+                        newkey = gregorio_calculate_new_key (F_KEY, current_element->element_type - 48);
+	                      pitch_difference = (char) newkey - (char) current_key;
+	                      custo_element->element_type = pitch - pitch_difference;
+                        break;
+                      default:
+                        current_element = current_element->next;
+                        break;
+                    }
+                  current_element = current_element->next;
+                }
+            }
+          if (current_element)
+            {
+              if (current_element->type == GRE_C_KEY_CHANGE || current_element->type == GRE_C_KEY_CHANGE_FLATED)
+                {
+                  current_key = gregorio_calculate_new_key (C_KEY, current_element->element_type - 48);
+                }
+              if (current_element->type == GRE_F_KEY_CHANGE || current_element->type == GRE_F_KEY_CHANGE_FLATED)
+                {
+                  current_key = gregorio_calculate_new_key (F_KEY, current_element->element_type - 48);
+                }
+              current_element = current_element->next;
+            }
+        }
+      current_syllable = current_syllable->next_syllable;
+    }
 }
 
 /* A function that checks to score integrity. For now it is... quite ridiculous... but it might be improved in the future.

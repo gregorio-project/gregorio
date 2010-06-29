@@ -429,7 +429,7 @@ dump_write_score (FILE * f, gregorio_score * score)
 		    }
 		  if (note->h_episemus_top_note)
 		    {
-		      fprintf (f, "         h_episemus_top_note %d\n",
+		      fprintf (f, "         h_episemus_top_note %c\n",
 			       note->h_episemus_top_note);
 		    }
 		  note = note->next;

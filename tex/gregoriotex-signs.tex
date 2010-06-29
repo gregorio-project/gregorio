@@ -424,8 +424,8 @@
 \newbox\Tempsign
 \newdimen\tempsignwidth
 
-% a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. If it is 2, it means that we must go back first of width #1, and then forward of #2. If it is 1, it means that we only need to go back of #2. if it is 4, we go to the beginning of the glyph, then forward of #1 then back of #2
-% #4 is 0 a shift that we want to get applied, useful for punctum inclinatum for example
+% a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. If it is 2, it means that we must go back first of width #1, and then forward of #2. If it is 1, it means that we only need to go back of #2. if it is 3, we go to the beginning of the glyph, then forward of #1 then back of #2
+% #4 is a shift that we want to get applied, useful for punctum inclinatum for example
 % #5 is the glyph number. If it is 1 it is an ictus arsicus (?) and 2 for an ictus theticus
 \def\vepisemusorrareaux#1#2#3#4#5{%
   % first we set \tempwidth to the width of the last glyph
@@ -445,7 +445,7 @@
   \or %
     \setbox\Tempsign=\hbox{\gregorianfont #1}%
     \advance\tempwidth by -\wd\Tempsign %
-    \advance\tempwidth by -\tempsignwidth %
+    \advance\tempwidth by \tempsignwidth %
   \fi%
   \kern-\tempwidth % we do it here because of the ictus
   % here we save the position of the ictus or we draw the glyph
@@ -528,11 +528,11 @@
   \or%
     %case 4
     % is a torculus, it has the good width
-    \vepisemusorrareaux{\char 15371}{\char 17}{1}{0}{#3}%
+    \vepisemusorrareaux{\char 15371}{\char 17}{2}{0}{#3}%
   \or%
     %case 5
     % is a torculus deminutus, it has the good width
-    \vepisemusorrareaux{\char 15884}{\char 17}{1}{0}{#3}%
+    \vepisemusorrareaux{\char 15884}{\char 17}{2}{0}{#3}%
   \or%
     %case 6
     \vepisemusorrareaux{0}{\char 17}{0}{0}{#3}%
@@ -572,13 +572,15 @@
     \vepisemusorrareaux{0}{\char 26}{0}{0}{#3}%
   \or%
     %case 21
-    \vepisemusorrareaux{\char 5634}{\char 17}{4}{0}{#3}%
+    % 5634 is a flexus without bar with ambitus of 2
+    \vepisemusorrareaux{\char 5634}{\char 17}{3}{0}{#3}%
   \or%
     %case 22 %
-    \vepisemusorrareaux{\char 5633}{\char 17}{4}{0}{#3}%
+    % 5633 is a flexus without bar with ambitus of 1
+    \vepisemusorrareaux{\char 5633}{\char 17}{3}{0}{#3}%
   \or%
     %case 23
-    \vepisemusorrareaux{\char 1986}{\char 17}{4}{0}{#3}%
+    \vepisemusorrareaux{\char 1986}{\char 17}{3}{0}{#3}%
   \or%
     %case 24
     \vepisemusorrareaux{0}{\char 35}{1}{0}{#3}%

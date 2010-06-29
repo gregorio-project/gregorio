@@ -1731,6 +1731,115 @@ gregorio_set_octave_and_step_from_pitch (char *step,
   *octave = 2;
 }
 
+char
+  gregorio_determine_next_pitch
+  (gregorio_syllable * syllable, gregorio_element * element,
+   gregorio_glyph * glyph)
+{
+  char temp;
+  if (!element || !syllable)
+    {
+      gregorio_message (_
+			("called with a NULL argument"),
+			"gregorio_determine_next_pitch",
+			ERROR, 0);
+      return 'g';
+    }
+  // we first explore the next glyphs to find a note, if there is one
+  if (glyph)
+    {
+      glyph = glyph->next;
+      while (glyph)
+        {
+          if (glyph->type == GRE_GLYPH && glyph->first_note)
+	    {
+	      return glyph->first_note->pitch;
+	    }
+          glyph = glyph->next;
+        }
+    }
+// then we do the same with the elements
+  element = element->next;
+  while (element)
+    {
+      if (element->type == GRE_ELEMENT && element->first_glyph)
+	{
+	  glyph = element->first_glyph;
+	  while (glyph)
+	    {
+	      if (glyph->type == GRE_GLYPH && glyph->first_note)
+		{
+		  return glyph->first_note->pitch;
+		}
+	      glyph = glyph->next;
+	    }
+	}
+      element = element->next;
+    }
+
+// then we do the same with the syllables
+  syllable = syllable->next_syllable;
+  while (syllable)
+    {
+// we call another function that will return the pitch of the first note if syllable has a note, and 0 else
+      temp = gregorio_syllable_first_note (syllable);
+      if (temp)
+	{
+	  return temp;
+	}
+      syllable = syllable->next_syllable;
+    }
+// here it means that there is no next note, so we return a stupid value, but it won' t be used
+  return 'g';
+}
+
+gregorio_glyph *
+gregorio_first_glyph (gregorio_syllable * syllable)
+{
+  gregorio_glyph *glyph;
+  gregorio_element *element;
+  if (!syllable)
+    {
+      gregorio_message (_
+			("called with a NULL argument"),
+			"gregorio_first_glyph",
+			ERROR, 0);
+    }
+  element = syllable->elements[0];
+  while (element)
+    {
+      if (element->type == GRE_ELEMENT && element->first_glyph)
+	{
+	  glyph = element->first_glyph;
+	  while (glyph)
+	    {
+	      if (glyph->type == GRE_GLYPH && glyph->first_note)
+		{
+		  return glyph;
+		}
+	      glyph = glyph->next;
+	    }
+	}
+      element = element->next;
+    }
+  return NULL;
+}
+
+char
+gregorio_syllable_first_note (gregorio_syllable * syllable)
+{
+  gregorio_glyph *glyph;
+  glyph = gregorio_first_glyph (syllable);
+  if (glyph == NULL)
+    {
+      return 0;
+    }
+  else
+    {
+      return glyph->first_note->pitch;
+    }
+}
+
 /**********************************
  *
  * A function that may be useful (used in xml-write) : we have a
