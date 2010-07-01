@@ -86,7 +86,13 @@ unsigned int nbof_isolated_episemus;
     }
 <texverbnote,texverbglyph,texverbelement>\] {
 	BEGIN(INITIAL);
-    } 
+    }
+\{  {
+	gregorio_add_texverb_as_note(&current_note, strdup("\\hbox to 0pt{"), GRE_TEXVERB_ELEMENT);
+    }
+\}  {
+	gregorio_add_texverb_as_note(&current_note, strdup("\\hss%\n}%\n\\penalty 10001\\relax "), GRE_TEXVERB_ELEMENT);
+    }
 [\t\r\n]+      /* ignore ends of line and tabs */;
 z {
 	gregorio_add_special_as_note (&current_note, GRE_END_OF_LINE, GRE_END_OF_LINE);

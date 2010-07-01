@@ -1121,9 +1121,31 @@
   \relax%
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for filling holes of empty notes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% the argument is the character with which we fill the hole, and we suppose that
+% isonaline and glyphraisevalue are correctly set.
+\def\fillhole#1{%
+  \ifcase\isonaline\or %
+  \setbox\Tempwidth=\hbox{\gregorianfont #1}%
+  \hbox to 0pt{%
+    \color@begingroup %
+    \color{grebackgroundcolor}%
+    \raise \glyphraisevalue%
+    \copy\Tempwidth %
+    \color@endgroup %
+    \hss %
+  }%
+  \penalty 10001\relax %
+  \fi %
+\relax %
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for typesetting alterations
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % a count saying if the first glyph is an alteration
 \newcount\firstisalteration
@@ -1140,6 +1162,9 @@
     \global\firstisalteration=1\relax %
   \fi %
   \calculateglyphraisevalue{#1}{0}%
+  \ifnum\grehidelines=1\relax %
+    \fillhole{\char 81}%
+  \fi %
   \setbox\Tempwidth=\hbox{\gregorianfont \char 6}%
   \tempwidth=\wd\Tempwidth%
   \raise \glyphraisevalue%
@@ -1169,6 +1194,9 @@
     \global\firstisalteration=1\relax %
   \fi %
   \calculateglyphraisevalue{#1}{0}%
+  \ifnum\grehidelines=1\relax %
+    \fillhole{\char 82}%
+  \fi %
   \setbox\Tempwidth=\hbox{\gregorianfont \char 7}%
   \tempwidth=\wd\Tempwidth%
   \raise \glyphraisevalue%
@@ -1186,3 +1214,53 @@
   \relax%
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for typesetting punctum cavum
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\UseAlternatePunctumCavum{%
+\xdef\punctumcavumchar{\char 75}%
+\xdef\lineapunctumcavumchar{\char 76}%
+\xdef\punctumcavumholechar{\char 78}%
+\xdef\lineapunctumcavumholechar{\char 80}%
+\relax %
+}
+
+\def\UseNormalPunctumCavum{%
+\xdef\punctumcavumchar{\char 34}%
+\xdef\lineapunctumcavumchar{\char 36}%
+\xdef\punctumcavumholechar{\char 77}%
+\xdef\lineapunctumcavumholechar{\char 79}%
+\relax %
+}
+
+\UseNormalPunctumCavum
+
+\def\GreHideLines{%
+\xdef\grehidelines{1}%
+}
+
+\def\GreDontHideLines{%
+\xdef\grehidelines{0}%
+}
+
+\GreDontHideLines
+
+\def\punctumcavum#1#2#3{%
+  \calculateglyphraisevalue{#1}{0}%
+  \ifnum\grehidelines=1\relax %
+    \fillhole{\punctumcavumholechar}%
+  \fi %
+  \glyph{\punctumcavumchar}{#1}{#2}{#3}%
+  \relax %
+}
+
+% Same as the one before, but for naturals.
+\def\lineapunctumcavum#1#2#3{%
+  \calculateglyphraisevalue{#1}{0}%
+  \ifnum\grehidelines=1\relax %
+    \fillhole{\lineapunctumcavumholechar}%
+  \fi %
+  \glyph{\lineapunctumcavumchar}{#1}{#2}{#3}%
+  \relax %
+}

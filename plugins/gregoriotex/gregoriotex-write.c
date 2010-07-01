@@ -888,7 +888,7 @@ libgregorio_gtex_print_char (FILE * f, grewchar to_print)
     }
   if (to_print == L'_')
     {
-      fprintf (f, "\\_");
+      fprintf (f, "\\_\\relax ");
       return;
     }
   // not sure it's a perfect idea...
@@ -1600,6 +1600,8 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
   unsigned char special_punctum = 0;
   // 0 if space is normal, 1 if there should be no space after a punctum
   unsigned char no_space = 0;
+  // the pitch where to set the punctum
+  char pitch = current_note->pitch;
   // a temp variable
   gregorio_note *tmpnote;
   // first: the very special case where type == T_ONE_NOTE_TRF, the punctum is at a strange place:
@@ -1625,11 +1627,23 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
           if ((current_note -> shape != S_PUNCTUM && current_note -> shape != S_QUILISMA) || glyph -> liquescentia == L_AUCTUS_DESCENDENS || glyph -> liquescentia == L_AUCTUS_ASCENDENS || glyph -> liquescentia == L_AUCTUS_ASCENDENS_INITIO_DEBILIS || glyph -> liquescentia == L_AUCTUS_DESCENDENS_INITIO_DEBILIS)
             {
               shift_before = 1;
+              // fine tuning
+              if (current_note-> next->pitch - current_note->pitch == 1)
+              {
+                if (is_on_a_line (current_note->pitch))
+                  {
+                    special_punctum = 1;
+                  }
+                else
+                  {
+                    pitch = current_note->pitch -1;
+                  }
+              }
             }
           else
             {
           // case for f.g
-            if (current_note-> next->pitch - current_note->pitch == -1 || current_note->next->pitch - current_note -> pitch == 1)
+            if (current_note-> next->pitch - current_note->pitch == 1)
               {
                 special_punctum = 1;
               }
@@ -1637,6 +1651,17 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
         break;
         case G_PES_QUADRATUM:
           shift_before = 1;
+          if (current_note-> next->pitch - current_note->pitch == 1)
+            {
+              if (is_on_a_line (current_note->pitch))
+                {
+                  special_punctum = 1;
+                }
+              else
+                {
+                  pitch = current_note->pitch -1;
+                }
+            }
         break;
         case G_PORRECTUS:
         case G_TORCULUS_RESUPINUS:
@@ -1648,15 +1673,23 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
       }
   }
 
+//when the punctum mora is on a note on a line, and the prior note is on the space immediately above, the dot is placed on the space below the line instead
+  if (current_note->previous 
+      && (current_note->previous->pitch - current_note->pitch == 1)
+      && is_on_a_line (current_note->pitch))
+    {
+      pitch = current_note->pitch -1;
+    }
+
   if (shift_before == 1)
     {
       if (current_note-> next->pitch - current_note->pitch == -1 || current_note->next->pitch - current_note -> pitch == 1)
         {
-          fprintf (f, "\\punctummora{%c}{3}{%d}%%\n", current_note->pitch, special_punctum);
+          fprintf (f, "\\punctummora{%c}{3}{%d}%%\n", pitch, special_punctum);
         }
       else
         {
-          fprintf (f, "\\punctummora{%c}{2}{%d}%%\n", current_note->pitch, special_punctum);
+          fprintf (f, "\\punctummora{%c}{2}{%d}%%\n", pitch, special_punctum);
         }
       return;
     }
@@ -1671,7 +1704,7 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
       && (glyph->next->next->first_note->pitch -
 	  current_note->pitch > 1))
     {
-      fprintf (f, "\\punctummora{%c}{1}{%d}%%\n", current_note->pitch, special_punctum);
+      fprintf (f, "\\punctummora{%c}{1}{%d}%%\n", pitch, special_punctum);
       return;
     }
   // if there is a punctum or a auctum dumplex on a note after, we put a zero-width punctum
@@ -1685,17 +1718,9 @@ libgregorio_gregoriotex_write_punctum_mora (FILE * f,
         }
       tmpnote = tmpnote -> next;
     }
-// And the second: when the punctum mora is on a note on a line, and the prior note is on the space immediately above, the dot is placed on the space below the line instead
-  if (current_note->previous 
-      && (current_note->previous->pitch - current_note->pitch == 1)
-      && is_on_a_line (current_note->pitch))
-    {
-      fprintf (f, "\\punctummora{%c}{%d}{%d}%%\n", current_note->pitch-1, no_space, special_punctum);
-      return;
-    }
 
 // the normal operation
-  fprintf (f, "\\punctummora{%c}{%d}{%d}%%\n", current_note->pitch, no_space, special_punctum);
+  fprintf (f, "\\punctummora{%c}{%d}{%d}%%\n", pitch, no_space, special_punctum);
 }
 
 // a function that writes the good \hepisemus un GregorioTeX. i is the position of the note in the glyph.
@@ -1998,10 +2023,17 @@ libgregorio_gregoriotex_write_rare (FILE * f,
 //same as before, but for one note and then another one higher, when the sign is on the last
 #define normal_height_top()\
   if (sign_type == TT_H_EPISEMUS) {\
-  *height=current_note->h_episemus_top_note+1;\
+    *height=current_note->h_episemus_top_note+1;\
   }\
   else {\
-  *height=current_note->pitch +2;\
+    if (current_note->previous && current_note -> pitch - current_note -> previous -> pitch > 2)\
+      {\
+        *height=current_note->pitch - 1;\
+      }\
+    else\
+      {\
+        *height=current_note->pitch + 2;\
+      }\
   }
 
 // case of one note and then one lower, when the sign is on the first
@@ -2991,6 +3023,14 @@ libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph)
 * 37: circulus
 * 38: semi-curculus
 * 39: accentus
+* 75: punctum cavum alt
+* 76: linea punctum cavum alt
+* 77: punctum cavum hole
+* 78: punctum cavum alt hole
+* 79: linea punctum cavum hole
+* 80: linea punctum cavum alt hole
+* 81: flat hole
+* 82: natural hole
 * 69: reversed accentus
 * 70: reversed semi-circulus
 * 72: punctum auctus ascendens
@@ -3146,9 +3186,19 @@ libgregorio_gregoriotex_write_note (FILE * f,
 	    }
 	}
     }
-
-  fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n",
-	   glyph_number, note->pitch, next_note_pitch, type);
+  switch (note->shape)
+    {
+    case S_PUNCTUM_CAVUM:
+      fprintf(f, "\\punctumcavum{%c}{%c}{%d}%%\n", note->pitch, next_note_pitch, type);
+      break;
+    case S_LINEA_PUNCTUM_CAVUM:
+      fprintf(f, "\\lineapunctumcavum{%c}{%c}{%d}%%\n", note->pitch, next_note_pitch, type);
+      break;
+    default:
+      fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n",
+	       glyph_number, note->pitch, next_note_pitch, type);
+	    break;
+	  }
   if (note->texverb)
     {
 	  fprintf (f, "%% verbatim text at note level:\n%s%%\n%% end of verbatim text\n", note->texverb);

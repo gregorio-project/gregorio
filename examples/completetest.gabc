@@ -13,6 +13,7 @@ f.g<(f.g<) fg.<(fg.<) g.h<(g.h<) gh.<(gh.<Z)
 f.g>(f.g>) fg.>(fg.>) g.h>(g.h>) gh.>(gh.>Z)
 -f.g~(f.g~) -fg.~(fg.~) -g.h~(g.h~) -gh.~(gh.~Z)
 -f.g<(f.g<) -fg.<(fg.<) -g.h<(g.h<) -gh.<(gh.<Z)
+-f.h<(f.h<) -fh.<(fh.<) -g.i<(g.i<) -gi.<(gi.<Z)
 fg..(fg..) gh..(gh..) gf..(gf..) hg..(hg..) fh..(fh..) gi..(gi..) fi..(fi..) gj..(gj..) hf..(hf..) ig..(ig..) if..(if..) jg..(jg..) f..(f..) g..(g..) -fg..(-fg..) -gh..(-gh..) fg..~(fg..~) gh..~(gh..~) fg..<(fg..<) gh..<(gh..<Z)
 f'g(f'g) fg'(fg') f'g'(f'g') f'h'(f'h') f'i' (f'i') f'j'(f'j') f'_g'(f'_g') f'g'_(f'_g')
 -f'g(-f'g) -fg'(-fg') -f'g'(-f'g') -f'h'(-f'h') -f'i' (-f'i') -f'j'(-f'j') -f'_g'(-f'_g') -f'g'_(-f'_g')
@@ -68,9 +69,14 @@ g.'hg(h.'gh) i.'fi(i.'fi) gh.'g(hg.'h) if.'i(if.'f) gh.'g(hg.'h) ifi.'(ifi.') g.
 %
 {g}.'hgi(g.'hgi) f.'ifg(f.'ifg) {g}h.'gi(gh.'gi) fi._'fg(fi.'fg) {g}h.'gi(gh.'gi) fif._'g(fif.'g) {g}.'h.'g.'i(g.'h.'g.'i) f.'i.'f.'g(f.'i.'f.'g) {g}.'h.'g.'i.'(g.'h.'g.'i.') f.'i.'f.'g.'(f.'i.'f.'g.'Z)
 %
+% other particular glyphs
+%
+f.g!hwiHG'F(f.g!hwiHG'FZ)
+%
 % flats and naturals
 %
-gx(gx) hx(hx) gy(gy) hy(hy) gxg(gxg) gyg(gyg) gxgh(gxgh) ggxgh(ggxgh) ggygh(ggygh)
+gx(gx) hx(hx) gy(gy) hy(hy) gxg(gxg) gyg(gyg) gxgh(gxgh) ggxgh(ggxgh) ggygh(ggyghZ)
+gx(gxg)
 %
 % key change
 %
@@ -100,7 +106,7 @@ abc(g_0h_ g_h_ g_0_h_g_0_)
 %
 % rare signs
 %
-gr(gr) gR(gR) gr0(gr0) gr1(gr1) gr2(gr2) gr3(gr3) gr4(gr4) gr5(gr5)
+gr(gr) hr(hr) gR(gR) hr0(hr0) gr0(gr0) gr1(gr1) gr2(gr2) gr3(gr3) gr4(gr4) gr5(gr5)
 %
 % comments
 %
@@ -108,4 +114,7 @@ gh(gh) % this is a comment at the end of a line
 % this is a line comment
 fg(f% this is a comment inside some notes
 g)
-
+%
+% macros
+%
+<v>\{</v>gr<v>\}</v>ir({gr}ir)
