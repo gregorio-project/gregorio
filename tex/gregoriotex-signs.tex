@@ -914,6 +914,26 @@
   \relax %
 }
 
+\def\AddHEpisemusBridges{%
+\xdef\addhepisemusbridges{1}%
+\relax %
+}
+
+\def\RemoveHEpisemusBridges{%
+\xdef\addhepisemusbridges{1}%
+\relax %
+}
+
+\AddHEpisemusBridges
+
+% same but for a "bridge episemus" after the last note of a glyph (element, syllable) if the next episemus is at the same height
+\def\hepisemusbridge#1#2#3{%
+  \ifnum\addhepisemusbridges=1\relax %
+    %TODO
+  \fi %
+  \relax %
+}
+
 % another dumb top function
 \def\additionalline#1#2#3{%
   \hepisorline{a}{#1}{#2}{#3}%
@@ -1125,17 +1145,36 @@
 %% macros for filling holes of empty notes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\def\GreHidePCLines{%
+\xdef\grehidepclines{1}%
+}
+
+\def\GreDontHidePCLines{%
+\xdef\grehidepclines{0}%
+}
+
+\def\GreHideAltLines{%
+\xdef\grehidealtlines{1}%
+}
+
+\def\GreDontHideAltLines{%
+\xdef\grehidealtlines{0}%
+}
+
+\GreDontHideAltLines
+\GreHidePCLines
+
+
 % the argument is the character with which we fill the hole, and we suppose that
 % isonaline and glyphraisevalue are correctly set.
 \def\fillhole#1{%
   \ifcase\isonaline\or %
   \setbox\Tempwidth=\hbox{\gregorianfont #1}%
   \hbox to 0pt{%
-    \color@begingroup %
     \color{grebackgroundcolor}%
     \raise \glyphraisevalue%
     \copy\Tempwidth %
-    \color@endgroup %
+    \pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
     \hss %
   }%
   \penalty 10001\relax %
@@ -1162,7 +1201,7 @@
     \global\firstisalteration=1\relax %
   \fi %
   \calculateglyphraisevalue{#1}{0}%
-  \ifnum\grehidelines=1\relax %
+  \ifnum\grehidealtlines=1\relax %
     \fillhole{\char 81}%
   \fi %
   \setbox\Tempwidth=\hbox{\gregorianfont \char 6}%
@@ -1194,7 +1233,7 @@
     \global\firstisalteration=1\relax %
   \fi %
   \calculateglyphraisevalue{#1}{0}%
-  \ifnum\grehidelines=1\relax %
+  \ifnum\grehidealtlines=1\relax %
     \fillhole{\char 82}%
   \fi %
   \setbox\Tempwidth=\hbox{\gregorianfont \char 7}%
@@ -1236,19 +1275,9 @@
 
 \UseNormalPunctumCavum
 
-\def\GreHideLines{%
-\xdef\grehidelines{1}%
-}
-
-\def\GreDontHideLines{%
-\xdef\grehidelines{0}%
-}
-
-\GreDontHideLines
-
 \def\punctumcavum#1#2#3{%
   \calculateglyphraisevalue{#1}{0}%
-  \ifnum\grehidelines=1\relax %
+  \ifnum\grehidepclines=1\relax %
     \fillhole{\punctumcavumholechar}%
   \fi %
   \glyph{\punctumcavumchar}{#1}{#2}{#3}%
@@ -1258,7 +1287,7 @@
 % Same as the one before, but for naturals.
 \def\lineapunctumcavum#1#2#3{%
   \calculateglyphraisevalue{#1}{0}%
-  \ifnum\grehidelines=1\relax %
+  \ifnum\grehidepclines=1\relax %
     \fillhole{\lineapunctumcavumholechar}%
   \fi %
   \glyph{\lineapunctumcavumchar}{#1}{#2}{#3}%
