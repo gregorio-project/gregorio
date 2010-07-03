@@ -24,17 +24,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // functions to read gabc
 gregorio_score * read_score (FILE * f);
 
-gregorio_note *libgregorio_gabc_det_notes_from_string (char *str);
-gregorio_glyph * libgregorio_gabc_det_glyphs_from_string (char *str, int *current_key);
-gregorio_element *libgregorio_gabc_det_elements_from_string (char *str, int *current_key);
+gregorio_note *gabc_det_notes_from_string (char *str);
+gregorio_glyph * gabc_det_glyphs_from_string (char *str, int *current_key);
+gregorio_element *gabc_det_elements_from_string (char *str, int *current_key);
 
-char libgregorio_gabc_determine_custo_pitch (gregorio_note *current_note, int current_key);
+char gabc_determine_custo_pitch (gregorio_note *current_note, int current_key);
 
 void close_element (gregorio_element ** current_element, gregorio_glyph * first_glyph);
 
-gregorio_element *libgregorio_gabc_det_elements_from_notes (gregorio_note *current_note, int *current_key);
-gregorio_element *libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph);
-gregorio_glyph *libgregorio_gabc_det_glyphs_from_notes (gregorio_note *current_note, int *current_key);
+gregorio_element *gabc_det_elements_from_notes (gregorio_note *current_note, int *current_key);
+gregorio_element *gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph);
+gregorio_glyph *gabc_det_glyphs_from_notes (gregorio_note *current_note, int *current_key);
 
 // see comments on gregorio_add_note_to_a_glyph for meaning of these variables
 #define DET_NO_END 'A'
@@ -47,20 +47,20 @@ gregorio_glyph *libgregorio_gabc_det_glyphs_from_notes (gregorio_note *current_n
 
 // functions to write gabc
 void write_score (FILE * f, gregorio_score * score);
-void libgregorio_gabc_write_voice_info (FILE * f, gregorio_voice_info * voice_info);
-void libgregorio_gabc_write_gregorio_syllable (FILE * f, gregorio_syllable * syllable, int number_of_voices);
-void libgregorio_gabc_write_gregorio_elements (FILE * f, gregorio_element * element);
-void libgregorio_gabc_write_gregorio_element (FILE * f, gregorio_element * element);
-void libgregorio_gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph);
-void libgregorio_gabc_write_end_liquescentia (FILE * f, char liquescentia);
-void libgregorio_gabc_write_key_change (FILE * f, char step, int line, char has_flat);
-void libgregorio_gabc_write_space (FILE * f, char type);
-void libgregorio_gabc_write_bar (FILE * f, char type);
-void libgregorio_gabc_write_gregorio_note (FILE * f, gregorio_note * note, char glyph_type);
-void libgregorio_gabc_write_begin (FILE * f, unsigned char style);
-void libgregorio_gabc_write_end (FILE * f, unsigned char style);
-void libgregorio_gabc_write_special_char (FILE * f, grewchar * special_char);
-void libgregorio_gabc_write_verb (FILE * f, grewchar * verb_str);
-void libgregorio_gabc_print_char (FILE * f, grewchar to_print);
+void gabc_write_voice_info (FILE * f, gregorio_voice_info * voice_info);
+void gabc_write_gregorio_syllable (FILE * f, gregorio_syllable * syllable, int number_of_voices);
+void gabc_write_gregorio_elements (FILE * f, gregorio_element * element);
+void gabc_write_gregorio_element (FILE * f, gregorio_element * element);
+void gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph);
+void gabc_write_end_liquescentia (FILE * f, char liquescentia);
+void gabc_write_key_change (FILE * f, char step, int line, char has_flat);
+void gabc_write_space (FILE * f, char type);
+void gabc_write_bar (FILE * f, char type);
+void gabc_write_gregorio_note (FILE * f, gregorio_note * note, char glyph_type);
+void gabc_write_begin (FILE * f, unsigned char style);
+void gabc_write_end (FILE * f, unsigned char style);
+void gabc_write_special_char (FILE * f, grewchar * special_char);
+void gabc_write_verb (FILE * f, grewchar * verb_str);
+void gabc_print_char (FILE * f, grewchar to_print);
 
 #endif

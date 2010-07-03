@@ -43,10 +43,10 @@ DECLARE_PLUGIN (xml)
     .write = write_score};
 #endif
 
-#define write_note(shape) libgregorio_xml_write_note(f, note->signs, step, octave, shape, note->h_episemus_type, alteration, note->rare_sign, note->texverb)
+#define write_note(shape) xml_write_note(f, note->signs, step, octave, shape, note->h_episemus_type, alteration, note->rare_sign, note->texverb)
 
 void
-libgregorio_xml_write_gregorio_note (FILE * f, gregorio_note * note, int clef,
+xml_write_gregorio_note (FILE * f, gregorio_note * note, int clef,
 				     char alterations[])
 {
   char step;
@@ -56,21 +56,21 @@ libgregorio_xml_write_gregorio_note (FILE * f, gregorio_note * note, int clef,
   if (!f) {
       gregorio_message (_
 			   ("call with NULL file"),
-			   "libgregorio_gregoriotex_write_score", ERROR, 0);
+			   "gregoriotex_write_score", ERROR, 0);
 			   return;
   }
 
   if (!note)
     {
       gregorio_message (_("call with NULL argument"),
-			   "libgregorio_xml_write_gregorio_note", ERROR, 0);
+			   "xml_write_gregorio_note", ERROR, 0);
       return;
     }
   if (note->type != GRE_NOTE)
     {
       gregorio_message (_
 			   ("call with argument which type is not GRE_NOTE, wrote nothing"),
-			   "libgregorio_xml_write_gregorio_note", ERROR, 0);
+			   "xml_write_gregorio_note", ERROR, 0);
       return;
     }
   gregorio_determine_h_episemus_type (note);
@@ -109,7 +109,7 @@ libgregorio_xml_write_gregorio_note (FILE * f, gregorio_note * note, int clef,
 }
 
 void
-libgregorio_xml_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph,
+xml_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph,
 				      int clef, char alterations[])
 {
   const char *type;
@@ -118,12 +118,12 @@ libgregorio_xml_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph,
   if (!glyph)
     {
       gregorio_message (_("call with NULL argument"),
-			   "libgregorio_xml_write_gregorio_glyph", ERROR, 0);
+			   "xml_write_gregorio_glyph", ERROR, 0);
       return;
     }
   if (is_alteration (glyph->type))
     {
-      libgregorio_xml_write_alteration (f, glyph->type, glyph->glyph_type,
+      xml_write_alteration (f, glyph->type, glyph->glyph_type,
 					clef, alterations);
       return;
     }
@@ -143,16 +143,16 @@ libgregorio_xml_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph,
   if (glyph->type != GRE_GLYPH)
     {
       gregorio_message (_("call with an argument which type is unknown"),
-			   "libgregorio_xml_write_gregorio_glyph", ERROR, 0);
+			   "xml_write_gregorio_glyph", ERROR, 0);
       return;
     }
-  type = libgregorio_xml_glyph_type_to_str (glyph->glyph_type);
+  type = xml_glyph_type_to_str (glyph->glyph_type);
   fprintf (f, "<glyph><type>%s</type>", type);
-  libgregorio_xml_write_liquescentia (f, glyph->liquescentia);
+  xml_write_liquescentia (f, glyph->liquescentia);
   current_note = glyph->first_note;
   while (current_note)
     {
-      libgregorio_xml_write_gregorio_note (f, current_note, clef,
+      xml_write_gregorio_note (f, current_note, clef,
 					   alterations);
       current_note = current_note->next;
     }
@@ -160,7 +160,7 @@ libgregorio_xml_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph,
 }
 
 void
-libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
+xml_write_gregorio_element (FILE * f, gregorio_element * element,
 					int *clef, char alterations[])
 {
   gregorio_glyph *current_glyph;
@@ -168,7 +168,7 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
   if (!element)
     {
       gregorio_message (_("call with NULL argument"),
-			   "libgregorio_xml_write_gregorio_element", ERROR,
+			   "xml_write_gregorio_element", ERROR,
 			   0);
       return;
     }
@@ -178,7 +178,7 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
       current_glyph = element->first_glyph;
       while (current_glyph)
 	{
-	  libgregorio_xml_write_gregorio_glyph (f, current_glyph, *clef,
+	  xml_write_gregorio_glyph (f, current_glyph, *clef,
 						alterations);
 	  current_glyph = current_glyph->next;
 	}
@@ -187,7 +187,7 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
     }
   if (element->type == GRE_SPACE)
     {
-      libgregorio_xml_write_space (f, element->element_type);
+      xml_write_space (f, element->element_type);
       return;
     }
   if (element->type == GRE_TEXVERB_ELEMENT)
@@ -202,14 +202,14 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
     {
       gregorio_reinitialize_one_voice_alterations (alterations);
       fprintf (f, "<neumatic-bar>");
-      libgregorio_xml_write_bar (f, element->element_type, element->additional_infos);
+      xml_write_bar (f, element->element_type, element->additional_infos);
       fprintf (f, "</neumatic-bar>");
       return;
     }
   if (element->type == GRE_CUSTO)
     {
       fprintf(f, "<custo>");
-      libgregorio_xml_write_pitch (f, element->element_type, *clef);
+      xml_write_pitch (f, element->element_type, *clef);
       fprintf(f, "</custo>");
       return;
     }
@@ -222,24 +222,24 @@ libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element,
     {
       *clef =
 	gregorio_calculate_new_key (C_KEY, element->element_type - 48);
-      libgregorio_xml_write_key_change (f, C_KEY, element->element_type - 48);
+      xml_write_key_change (f, C_KEY, element->element_type - 48);
       return;
     }
   if (element->type == GRE_F_KEY_CHANGE)
     {
       *clef =
 	gregorio_calculate_new_key (F_KEY, element->element_type - 48);
-      libgregorio_xml_write_key_change (f, F_KEY, element->element_type - 48);
+      xml_write_key_change (f, F_KEY, element->element_type - 48);
       return;
     }
 
   gregorio_message (_("call with an argument which type is unknown"),
-		       "libgregorio_xml_write_gregorio_element", ERROR, 0);
+		       "xml_write_gregorio_element", ERROR, 0);
 
 }
 
 void
-libgregorio_xml_write_space (FILE * f, char type)
+xml_write_space (FILE * f, char type)
 {
   switch (type)
     {
@@ -263,16 +263,16 @@ libgregorio_xml_write_space (FILE * f, char type)
       break;
     default:
       gregorio_message (_("space type is unknown"),
-			   "libgregorio_xml_write_space", ERROR, 0);
+			   "xml_write_space", ERROR, 0);
       break;
     }
 }
 
 void
-libgregorio_xml_write_bar (FILE * f, char type, char signs)
+xml_write_bar (FILE * f, char type, char signs)
 {
   const char *str;
-  str = libgregorio_xml_bar_to_str (type);
+  str = xml_bar_to_str (type);
   fprintf (f, "<type>%s</type>", str);
   switch (signs)
     {
@@ -291,7 +291,7 @@ libgregorio_xml_write_bar (FILE * f, char type, char signs)
 }
 
 void
-libgregorio_xml_write_key_change (FILE * f, char step, int line)
+xml_write_key_change (FILE * f, char step, int line)
 {
   fprintf (f,
 	   "<clef-change><step>%c</step><line>%d</line></clef-change>",
@@ -299,7 +299,7 @@ libgregorio_xml_write_key_change (FILE * f, char step, int line)
 }
 
 void
-libgregorio_xml_write_key_change_in_polyphony (FILE * f, char step, int line,
+xml_write_key_change_in_polyphony (FILE * f, char step, int line,
 					       int voice)
 {
   fprintf (f,
@@ -310,7 +310,7 @@ libgregorio_xml_write_key_change_in_polyphony (FILE * f, char step, int line,
 char in_text = 0;
 
 void
-libgregorio_xml_write_begin (FILE * f, unsigned char style)
+xml_write_begin (FILE * f, unsigned char style)
 {
   if (in_text)
     {
@@ -347,7 +347,7 @@ libgregorio_xml_write_begin (FILE * f, unsigned char style)
 }
 
 void
-libgregorio_xml_write_end (FILE * f, unsigned char style)
+xml_write_end (FILE * f, unsigned char style)
 {
   if (in_text)
     {
@@ -384,7 +384,7 @@ libgregorio_xml_write_end (FILE * f, unsigned char style)
 }
 
 void
-libgregorio_xml_write_special_char (FILE * f, grewchar *first_char)
+xml_write_special_char (FILE * f, grewchar *first_char)
 {
   if (in_text)
     {
@@ -397,7 +397,7 @@ libgregorio_xml_write_special_char (FILE * f, grewchar *first_char)
 }
 
 void
-libgregorio_xml_write_verb (FILE * f, grewchar *first_char)
+xml_write_verb (FILE * f, grewchar *first_char)
 {
   if (in_text)
     {
@@ -410,7 +410,7 @@ libgregorio_xml_write_verb (FILE * f, grewchar *first_char)
 }
 
 void
-libgregorio_xml_print_char (FILE * f, grewchar to_print)
+xml_print_char (FILE * f, grewchar to_print)
 {
   if (!in_text)
     {
@@ -421,7 +421,7 @@ libgregorio_xml_print_char (FILE * f, grewchar to_print)
 }
 
 void
-libgregorio_xml_print_text (FILE * f, gregorio_character * text,
+xml_print_text (FILE * f, gregorio_character * text,
 			    char position)
 {
   const char *position_str;
@@ -449,11 +449,11 @@ libgregorio_xml_print_text (FILE * f, gregorio_character * text,
     }
   fprintf (f, "<text position=\"%s\">", position_str);
   gregorio_write_text (0, text, f,
-			  (&libgregorio_xml_write_verb),
-			  (&libgregorio_xml_print_char),
-			  (&libgregorio_xml_write_begin),
-			  (&libgregorio_xml_write_end),
-			  (&libgregorio_xml_write_special_char));
+			  (&xml_write_verb),
+			  (&xml_print_char),
+			  (&xml_write_begin),
+			  (&xml_write_end),
+			  (&xml_write_special_char));
   if (in_text)
     {
       fprintf (f, "</str>");
@@ -463,7 +463,7 @@ libgregorio_xml_print_text (FILE * f, gregorio_character * text,
 }
 
 void
-libgregorio_xml_print_translation (FILE * f, gregorio_character * translation)
+xml_print_translation (FILE * f, gregorio_character * translation)
 {
   if (!translation)
     {
@@ -471,11 +471,11 @@ libgregorio_xml_print_translation (FILE * f, gregorio_character * translation)
     }
   fprintf (f, "<translation>");
   gregorio_write_text (0, translation, f,
-			  (&libgregorio_xml_write_verb),
-			  (&libgregorio_xml_print_char),
-			  (&libgregorio_xml_write_begin),
-			  (&libgregorio_xml_write_end),
-			  (&libgregorio_xml_write_special_char));
+			  (&xml_write_verb),
+			  (&xml_print_char),
+			  (&xml_write_begin),
+			  (&xml_write_end),
+			  (&xml_write_special_char));
   if (in_text)
     {
       fprintf (f, "</str>");
@@ -486,7 +486,7 @@ libgregorio_xml_print_translation (FILE * f, gregorio_character * translation)
 
 
 void
-libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
+xml_write_syllable (FILE * f, gregorio_syllable * syllable,
 				int number_of_voices, int clefs[],
 				char alterations[][13])
 {
@@ -496,7 +496,7 @@ libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
   if (!syllable)
     {
       gregorio_message (_("call with NULL argument"),
-			   "libgregorio_xml_write_syllable", ERROR, 0);
+			   "xml_write_syllable", ERROR, 0);
     }
   if (syllable->position == WORD_BEGINNING)
     {
@@ -513,29 +513,29 @@ libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
   fprintf (f, "<syllable>");
   if (syllable->text)
     {
-      libgregorio_xml_print_text (f, syllable->text, syllable->position);
+      xml_print_text (f, syllable->text, syllable->position);
     }
   if (syllable->translation)
     {
-      libgregorio_xml_print_translation (f, syllable->translation);
+      xml_print_translation (f, syllable->translation);
     }
   for (i = 0; i < number_of_voices; i++)
     {
       if (!(syllable->elements[i]))
 	{
 	  gregorio_message (_("not_enough voices in syllable"),
-			       "libgregorio_xml_write_syllable", VERBOSE, 0);
+			       "xml_write_syllable", VERBOSE, 0);
 	  voice++;
 	  continue;
 	}
       if (gregorio_is_only_special (syllable->elements[i]))
 	{
-	  libgregorio_xml_write_specials_as_neumes (f, syllable->elements[i],
+	  xml_write_specials_as_neumes (f, syllable->elements[i],
 						    voice, &clefs[i]);
 	}
       else
 	{
-	  libgregorio_xml_write_neume (f, syllable->elements[i], voice,
+	  xml_write_neume (f, syllable->elements[i], voice,
 				       &clefs[i], alterations[i]);
 	}
       voice++;
@@ -546,7 +546,7 @@ libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
 }
 
 void
-libgregorio_xml_write_neume (FILE * f, gregorio_element * element, int voice,
+xml_write_neume (FILE * f, gregorio_element * element, int voice,
 			     int *clef, char alterations[])
 {
   if (!element)
@@ -563,14 +563,14 @@ libgregorio_xml_write_neume (FILE * f, gregorio_element * element, int voice,
     }
   while (element)
     {
-      libgregorio_xml_write_gregorio_element (f, element, clef, alterations);
+      xml_write_gregorio_element (f, element, clef, alterations);
       element = element->next;
     }
   fprintf (f, "</neume>");
 }
 
 void
-libgregorio_xml_write_specials_as_neumes (FILE * f,
+xml_write_specials_as_neumes (FILE * f,
 					  gregorio_element * element,
 					  int voice, int *clef)
 {
@@ -582,13 +582,13 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 	  if (voice == MONOPHONY)
 	    {
 	      fprintf (f, "<bar>");
-          libgregorio_xml_write_bar (f, element->element_type, element->additional_infos);
+          xml_write_bar (f, element->element_type, element->additional_infos);
           fprintf(f, "</bar>");
 	    }
 	  else
 	    {
 		  fprintf (f, "<bar voice=\"%d\">", voice);
-          libgregorio_xml_write_bar (f, element->element_type, element->additional_infos);
+          xml_write_bar (f, element->element_type, element->additional_infos);
           fprintf(f, "</bar>");
 	    }
 	}
@@ -610,7 +610,7 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 	      *clef =
 		gregorio_calculate_new_key (C_KEY,
 					       element->element_type - 48);
-	      libgregorio_xml_write_key_change (f, C_KEY,
+	      xml_write_key_change (f, C_KEY,
 						element->element_type - 48);
 	    }
 	  else
@@ -618,7 +618,7 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 	      *clef =
 		gregorio_calculate_new_key (C_KEY,
 					       element->element_type - 48);
-	      libgregorio_xml_write_key_change_in_polyphony (f, C_KEY,
+	      xml_write_key_change_in_polyphony (f, C_KEY,
 							     element->
 							     element_type -
 							     48, voice);
@@ -631,7 +631,7 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 	      *clef =
 		gregorio_calculate_new_key (F_KEY,
 					       element->element_type - 48);
-	      libgregorio_xml_write_key_change (f, F_KEY,
+	      xml_write_key_change (f, F_KEY,
 						element->element_type - 48);
 	    }
 	  else
@@ -639,7 +639,7 @@ libgregorio_xml_write_specials_as_neumes (FILE * f,
 	      *clef =
 		gregorio_calculate_new_key (F_KEY,
 					       element->element_type - 48);
-	      libgregorio_xml_write_key_change_in_polyphony (f, F_KEY,
+	      xml_write_key_change_in_polyphony (f, F_KEY,
 							     element->
 							     element_type -
 							     48, voice);
@@ -663,7 +663,7 @@ xml_write_score (FILE * f, gregorio_score * score)
   if (!score)
     {
       gregorio_message (_("call with NULL argument"),
-			   "libgregorio_xml_write_score", ERROR, 0);
+			   "xml_write_score", ERROR, 0);
       return;
     }
 
@@ -676,7 +676,7 @@ xml_write_score (FILE * f, gregorio_score * score)
 	{
 	  gregorio_message (_
 			       ("score has more voice infos than voices (attribute number of voices)"),
-			       "libgregorio_xml_write_syllable", ERROR, 0);
+			       "xml_write_syllable", ERROR, 0);
 	  return;
 	}
       clefs[i] = voice_info->initial_key;
@@ -688,11 +688,11 @@ xml_write_score (FILE * f, gregorio_score * score)
   gregorio_reinitialize_alterations (alterations, score->number_of_voices);
   fprintf(f, "<?xml version=\"1.0\"?>\n<!-- File generated by gregorio %s -->\n", VERSION);
   fprintf (f, "<score>");
-  libgregorio_xml_write_score_attributes (f, score);
+  xml_write_score_attributes (f, score);
   current_syllable = score->first_syllable;
   while (current_syllable)
     {
-      libgregorio_xml_write_syllable (f, current_syllable,
+      xml_write_syllable (f, current_syllable,
 				      score->number_of_voices, clefs,
 				      alterations);
       current_syllable = current_syllable->next_syllable;
@@ -701,7 +701,7 @@ xml_write_score (FILE * f, gregorio_score * score)
 }
 
 void
-libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
+xml_write_score_attributes (FILE * f, gregorio_score * score)
 {
   //two variables for the key determination
   char step;
@@ -713,7 +713,7 @@ libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
   if (!score)
     {
       gregorio_message (_("call with NULL argument"),
-			   "libgregorio_xml_write_score_attributes", ERROR,
+			   "xml_write_score_attributes", ERROR,
 			   0);
       return;
     }
@@ -723,7 +723,7 @@ libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score)
     {
       gregorio_message (_
 			   ("score has no name attribute, which is mandatory"),
-			   "libgregorio_xml_write_score_attributes", ERROR,
+			   "xml_write_score_attributes", ERROR,
 			   0);
       fprintf (f, "<name></name>");
     }

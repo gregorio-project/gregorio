@@ -43,21 +43,21 @@ All those functions change the current_key, according to the possible new values
 */
 
 gregorio_element *
-libgregorio_gabc_det_elements_from_string (char *str, int *current_key)
+gabc_det_elements_from_string (char *str, int *current_key)
 {
   gregorio_element *final;
   gregorio_note *tmp;
-  tmp = libgregorio_gabc_det_notes_from_string (str);
-  final = libgregorio_gabc_det_elements_from_notes (tmp, current_key);
+  tmp = gabc_det_notes_from_string (str);
+  final = gabc_det_elements_from_notes (tmp, current_key);
   return final;
 }
 
 gregorio_element *
-libgregorio_gabc_det_elements_from_notes (gregorio_note * current_note, int *current_key)
+gabc_det_elements_from_notes (gregorio_note * current_note, int *current_key)
 {
   gregorio_element *final = NULL;
-  gregorio_glyph *tmp = libgregorio_gabc_det_glyphs_from_notes (current_note, current_key);
-  final = libgregorio_gabc_det_elements_from_glyphs (tmp);
+  gregorio_glyph *tmp = gabc_det_glyphs_from_notes (current_note, current_key);
+  final = gabc_det_elements_from_glyphs (tmp);
   return final;
 }
 
@@ -102,7 +102,7 @@ The big function of the file, but rather simple I think.
 */
 
 gregorio_element *
-libgregorio_gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
+gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 {
 // the last element we have successfully added to the list of elements
   gregorio_element *current_element = NULL;

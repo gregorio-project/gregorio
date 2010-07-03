@@ -142,46 +142,46 @@ unsigned char ictus; // idem
 
 
 void write_score (FILE * f, gregorio_score * score);
-void libgregorio_gregoriotex_write_voice_info (FILE * f, gregorio_voice_info * voice_info);
-void libgregorio_gregoriotex_write_syllable (FILE * f, gregorio_syllable * syllable, char *first_syllable, unsigned char *line_number);
-void libgregorio_gregoriotex_write_text (FILE * f, gregorio_character *first_character, char *first_syllable);
-void libgregorio_gregoriotex_write_translation (FILE *f, gregorio_character *translation);
-void libgregorio_gregoriotex_write_element (FILE * f, gregorio_syllable * syllable, gregorio_element * element);
-void libgregorio_gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable);
-void libgregorio_gregoriotex_write_last_note_verb (FILE *f, gregorio_glyph * glyph);
-void libgregorio_gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable, gregorio_element * element, gregorio_glyph * glyph);
-void libgregorio_gregoriotex_determine_number_and_type (gregorio_glyph *glyph, int *type, char *gtype, unsigned int *glyph_number);
+void gregoriotex_write_voice_info (FILE * f, gregorio_voice_info * voice_info);
+void gregoriotex_write_syllable (FILE * f, gregorio_syllable * syllable, char *first_syllable, unsigned char *line_number);
+void gregoriotex_write_text (FILE * f, gregorio_character *first_character, char *first_syllable);
+void gregoriotex_write_translation (FILE *f, gregorio_character *translation);
+void gregoriotex_write_element (FILE * f, gregorio_syllable * syllable, gregorio_element * element);
+void gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable);
+void gregoriotex_write_last_note_verb (FILE *f, gregorio_glyph * glyph);
+void gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable, gregorio_element * element, gregorio_glyph * glyph);
+void gregoriotex_determine_number_and_type (gregorio_glyph *glyph, int *type, char *gtype, unsigned int *glyph_number);
 
-unsigned int libgregorio_gregoriotex_determine_interval (gregorio_glyph * glyph);
-void libgregorio_gregoriotex_write_note (FILE * f, gregorio_note * note, char next_note_pitch);
+unsigned int gregoriotex_determine_interval (gregorio_glyph * glyph);
+void gregoriotex_write_note (FILE * f, gregorio_note * note, char next_note_pitch);
 
-void libgregorio_gtex_write_begin (FILE * f, unsigned char style);
-void libgregorio_gtex_write_end (FILE * f, unsigned char style);
-void libgregorio_gtex_write_special_char (FILE * f, grewchar * special_char);
-void libgregorio_gtex_write_verb (FILE * f, grewchar * verb_str);
-void libgregorio_gtex_print_char (FILE * f, grewchar to_print);
+void gtex_write_begin (FILE * f, unsigned char style);
+void gtex_write_end (FILE * f, unsigned char style);
+void gtex_write_special_char (FILE * f, grewchar * special_char);
+void gtex_write_verb (FILE * f, grewchar * verb_str);
+void gtex_print_char (FILE * f, grewchar to_print);
 
 unsigned int gregoriotex_determine_liquescentia_number (unsigned int factor, unsigned char type, char liquescentia);
-void libgregorio_gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
-void libgregorio_gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
-void libgregorio_gregoriotex_write_rare (FILE * f, gregorio_glyph *current_glyph, int i, char type, gregorio_note * current_note, char rare);
-void libgregorio_gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_note * current_note);
+void gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
+void gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
+void gregoriotex_write_rare (FILE * f, gregorio_glyph *current_glyph, int i, char type, gregorio_note * current_note, char rare);
+void gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_note * current_note);
 
-void libgregorio_gregoriotex_write_next_first_text (FILE * f, gregorio_character *current_character);
-int libgregorio_gregoriotex_syllable_first_type (gregorio_syllable * syllable);
+void gregoriotex_write_next_first_text (FILE * f, gregorio_character *current_character);
+int gregoriotex_syllable_first_type (gregorio_syllable * syllable);
 
-void libgregorio_gregoriotex_determine_note_number_and_type (gregorio_note * note, int *type, unsigned int *glyph_number);
+void gregoriotex_determine_note_number_and_type (gregorio_note * note, int *type, unsigned int *glyph_number);
 
-void libgregorio_gtex_write_end_for_two (FILE * f, unsigned char style);
+void gtex_write_end_for_two (FILE * f, unsigned char style);
 
-void libgregorio_gregoriotex_write_punctum_mora (FILE * f, gregorio_glyph * glyph, char type, gregorio_note * current_note);
-void libgregorio_gregoriotex_write_auctum_duplex (FILE * f, gregorio_glyph * glyph,  gregorio_note * current_note);
+void gregoriotex_write_punctum_mora (FILE * f, gregorio_glyph * glyph, char type, gregorio_note * current_note);
+void gregoriotex_write_auctum_duplex (FILE * f, gregorio_glyph * glyph,  gregorio_note * current_note);
 
-void libgregorio_gregoriotex_find_sign_number (gregorio_glyph * current_glyph, int i, char type, char sign_type, gregorio_note * current_note, char *number, char *height, char *bottom);
+void gregoriotex_find_sign_number (gregorio_glyph * current_glyph, int i, char type, char sign_type, gregorio_note * current_note, char *number, char *height, char *bottom);
 
-void libgregorio_gregoriotex_write_additional_line (FILE * f, gregorio_glyph *current_glyph, int i, char type, char bottom_or_top, gregorio_note * current_note);
+void gregoriotex_write_additional_line (FILE * f, gregorio_glyph *current_glyph, int i, char type, char bottom_or_top, gregorio_note * current_note);
 
-void libgregorio_gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line);
+void gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line);
 
-char libgregorio_gregoriotex_clef_flat_height(char step, int line);
+char gregoriotex_clef_flat_height(char step, int line);
 #endif

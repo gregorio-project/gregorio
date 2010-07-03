@@ -22,64 +22,64 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define XML_H
 
 void
-libgregorio_xml_write_score_attributes (FILE * f, gregorio_score * score);
+xml_write_score_attributes (FILE * f, gregorio_score * score);
 void
 write_score (FILE * f, gregorio_score * score);
 void
-libgregorio_xml_write_specials_as_neumes (FILE * f, gregorio_element * element,
+xml_write_specials_as_neumes (FILE * f, gregorio_element * element,
 				    int voice, int *clef);
 
 void
-libgregorio_xml_write_neume (FILE * f, gregorio_element * element, int voice, int *clef,
+xml_write_neume (FILE * f, gregorio_element * element, int voice, int *clef,
 		       char alterations[]);
 void
-libgregorio_xml_write_syllable (FILE * f, gregorio_syllable * syllable,
+xml_write_syllable (FILE * f, gregorio_syllable * syllable,
 			  int number_of_voices, int clef[],
 			  char alterations[][13]);
 void
-libgregorio_xml_print_text (FILE * f, gregorio_character *text, char position);
+xml_print_text (FILE * f, gregorio_character *text, char position);
 
 void
-libgregorio_xml_print_translation (FILE * f, gregorio_character * translation);
+xml_print_translation (FILE * f, gregorio_character * translation);
 
 void
-libgregorio_xml_write_key_change_in_polyphony (FILE * f, char step, int line,
+xml_write_key_change_in_polyphony (FILE * f, char step, int line,
 					 int voice);
 
-const char *libgregorio_xml_shape_to_str (char shape);
-const char *libgregorio_xml_signs_to_str (char signs);
-void libgregorio_xml_write_signs (FILE *f, char signs, unsigned char h_episemus_type, char rare_sign);
-void libgregorio_xml_write_note (FILE *f, char signs, char step, int octave, char shape, unsigned char h_episemus_type, char alteration, char rare_sign, char *texverb);
-const char *libgregorio_xml_glyph_type_to_str(char name);
+const char *xml_shape_to_str (char shape);
+const char *xml_signs_to_str (char signs);
+void xml_write_signs (FILE *f, char signs, unsigned char h_episemus_type, char rare_sign);
+void xml_write_note (FILE *f, char signs, char step, int octave, char shape, unsigned char h_episemus_type, char alteration, char rare_sign, char *texverb);
+const char *xml_glyph_type_to_str(char name);
 
-void libgregorio_xml_write_liquescentia (FILE *f, char liquescentia);
+void xml_write_liquescentia (FILE *f, char liquescentia);
 
 void determine_h_episemus_type (gregorio_note *note);
 
-void libgregorio_xml_write_pitch(FILE *f, char pitch, char clef);
+void xml_write_pitch(FILE *f, char pitch, char clef);
 
-void libgregorio_xml_write_gregorio_glyph (FILE *f, gregorio_glyph *glyph, int clef, char alterations[]);
-void libgregorio_xml_write_gregorio_note (FILE *f, gregorio_note *note, int clef, char alterations[]);
+void xml_write_gregorio_glyph (FILE *f, gregorio_glyph *glyph, int clef, char alterations[]);
+void xml_write_gregorio_note (FILE *f, gregorio_note *note, int clef, char alterations[]);
 
-void libgregorio_xml_write_alteration (FILE *f, char type, char pitch, int clef, char *tab);
+void xml_write_alteration (FILE *f, char type, char pitch, int clef, char *tab);
 
 void
-libgregorio_xml_write_gregorio_element (FILE * f, gregorio_element * element, int *clef,
+xml_write_gregorio_element (FILE * f, gregorio_element * element, int *clef,
 			   char alterations[]);
 
-const char * libgregorio_xml_bar_to_str(char type);
-void libgregorio_xml_write_bar (FILE * f, char type, char signs);
-void libgregorio_xml_write_space (FILE * f, char type);
+const char * xml_bar_to_str(char type);
+void xml_write_bar (FILE * f, char type, char signs);
+void xml_write_space (FILE * f, char type);
 
-void libgregorio_xml_write_key_change (FILE *f, char step, int line);
+void xml_write_key_change (FILE *f, char step, int line);
 
-void libgregorio_xml_write_begin (FILE * f, unsigned char style);
-void libgregorio_xml_write_end (FILE * f, unsigned char style);
-void libgregorio_xml_write_special_char (FILE * f, grewchar * special_char);
-void libgregorio_xml_write_verb (FILE * f, grewchar * verb_str);
-void libgregorio_xml_print_char (FILE * f, grewchar to_print);
+void xml_write_begin (FILE * f, unsigned char style);
+void xml_write_end (FILE * f, unsigned char style);
+void xml_write_special_char (FILE * f, grewchar * special_char);
+void xml_write_verb (FILE * f, grewchar * verb_str);
+void xml_print_char (FILE * f, grewchar to_print);
 
-void libgregorio_xml_set_pitch_from_octave_and_step (char step, int octave, char *pitch, int clef);
+void xml_set_pitch_from_octave_and_step (char step, int octave, char *pitch, int clef);
 
 #if ENABLE_XML == 1
 // Functions to read GregorioXML
@@ -89,94 +89,94 @@ void libgregorio_xml_set_pitch_from_octave_and_step (char step, int octave, char
 
 gregorio_score * read_score (FILE * f);
 gregorio_score * read_file (char *filename);
-void libgregorio_xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc, gregorio_score * score);
-void libgregorio_xml_read_multi_voice_info (xmlNodePtr current_node, xmlDocPtr doc, gregorio_score * score);
+void xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc, gregorio_score * score);
+void xml_read_multi_voice_info (xmlNodePtr current_node, xmlDocPtr doc, gregorio_score * score);
 
-void libgregorio_xml_read_mono_voice_info (xmlNodePtr current_node, xmlDocPtr doc, gregorio_score * score);
+void xml_read_mono_voice_info (xmlNodePtr current_node, xmlDocPtr doc, gregorio_score * score);
 
-void libgregorio_xml_read_voice_info (xmlNodePtr current_node, xmlDocPtr doc, gregorio_voice_info * voice_info);
+void xml_read_voice_info (xmlNodePtr current_node, xmlDocPtr doc, gregorio_voice_info * voice_info);
 
 int
-libgregorio_xml_read_initial_key (xmlNodePtr current_node, xmlDocPtr doc);
+xml_read_initial_key (xmlNodePtr current_node, xmlDocPtr doc);
 
 void
-libgregorio_xml_read_key (xmlNodePtr current_node, xmlDocPtr doc, char *step,
+xml_read_key (xmlNodePtr current_node, xmlDocPtr doc, char *step,
 			  int *line);
 
 void
-libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 			       gregorio_syllable ** current_syllable,
 			       int number_of_voices, char alterations[][13],
 			       int clefs[]);
 
 char
-libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
 			    unsigned char * h_episemus, char *rare_sign);
 
 char
-libgregorio_xml_read_shape (char *type);
+xml_read_shape (char *type);
 
 void
-libgregorio_xml_read_h_episemus (xmlNodePtr current_node, unsigned char *h_episemus);
+xml_read_h_episemus (xmlNodePtr current_node, unsigned char *h_episemus);
 
 char
-libgregorio_xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key);
+xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key);
 
 void
-  libgregorio_xml_read_note
+  xml_read_note
   (xmlNodePtr
    current_node, xmlDocPtr doc, gregorio_note ** current_note, int key);
 
 char
-libgregorio_xml_read_glyph_type (char *type);
+xml_read_glyph_type (char *type);
 
 char
-libgregorio_xml_read_alteration (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_alteration (xmlNodePtr current_node, xmlDocPtr doc,
 				 int key);
 
 void
-libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
 			    gregorio_glyph ** current_glyph,
 			    int key);
 
 void
-libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 			     gregorio_element * element, char alterations[13],
 			     int key);
 
 void
-libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 			      gregorio_element ** current_element,
 			      char alterations[13], int *key);
 
 void
-libgregorio_xml_read_elements (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_elements (xmlNodePtr current_node, xmlDocPtr doc,
 			       gregorio_element ** first_element,
 			       char alterations[13], int *key);
 
 void
-libgregorio_xml_read_multi_neumes (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_multi_neumes (xmlNodePtr current_node, xmlDocPtr doc,
 				   gregorio_syllable * syllable,
 				   int number_of_voices, char alterations[][13],
 				   int clefs[]);
 
 void
-libgregorio_xml_read_mono_neumes (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_mono_neumes (xmlNodePtr current_node, xmlDocPtr doc,
 				  gregorio_syllable * syllable,
 				  char alterations[][13], int clefs[]);
 
 void
-libgregorio_xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
 			   gregorio_syllable * syllable);
 
 void
-libgregorio_xml_read_translation (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_translation (xmlNodePtr current_node, xmlDocPtr doc,
 			   gregorio_syllable * syllable);
 
 char
-libgregorio_xml_read_figura (char *liquescentia);
+xml_read_figura (char *liquescentia);
 
-void libgregorio_xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc, char *type, char *signs);
-char libgregorio_xml_read_position (char *position);
+void xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc, char *type, char *signs);
+char xml_read_position (char *position);
 #endif
 #endif

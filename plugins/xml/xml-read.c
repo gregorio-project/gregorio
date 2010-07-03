@@ -49,7 +49,7 @@ xml_read_score (FILE * f)
   if (doc == NULL)
     {
       gregorio_message (_("file not parsed successfully"),
-			"libgregorio_xml_read_file", ERROR, 0);
+			"xml_read_file", ERROR, 0);
       return NULL;
     }
 
@@ -58,7 +58,7 @@ xml_read_score (FILE * f)
   if (current_node == NULL)
     {
       gregorio_message (_("empty file"),
-			"libgregorio_xml_read_file", WARNING, 0);
+			"xml_read_file", WARNING, 0);
       xmlFreeDoc (doc);
       return NULL;
     }
@@ -66,7 +66,7 @@ xml_read_score (FILE * f)
   if (xmlStrcmp (current_node->name, (const xmlChar *) "score"))
     {
       gregorio_message (_("root element is not score"),
-			"libgregorio_xml_read_file", ERROR, 0);
+			"xml_read_file", ERROR, 0);
       xmlFreeDoc (doc);
       return NULL;
     }
@@ -78,11 +78,11 @@ xml_read_score (FILE * f)
   if (xmlStrcmp (current_node->name, (const xmlChar *) "score-attributes"))
     {
       gregorio_message (_("score-attributes expected, not found"),
-			"libgregorio_xml_read_file", WARNING, 0);
+			"xml_read_file", WARNING, 0);
     }
   else
     {
-      libgregorio_xml_read_score_attributes (current_node->xmlChildrenNode,
+      xml_read_score_attributes (current_node->xmlChildrenNode,
 					     doc, score);
     }
   current_node = current_node->next;
@@ -116,11 +116,11 @@ xml_read_score (FILE * f)
 	{
 	  gregorio_message (_
 			    ("unknown markup, syllable expected"),
-			    "libgregorio_xml_read_file", WARNING, 0);
+			    "xml_read_file", WARNING, 0);
 	}
       else
 	{
-	  libgregorio_xml_read_syllable (current_node->xmlChildrenNode, doc,
+	  xml_read_syllable (current_node->xmlChildrenNode, doc,
 					 (&current_syllable),
 					 score->number_of_voices, alterations,
 					 clefs);
@@ -133,11 +133,11 @@ xml_read_score (FILE * f)
 	    {
 	      gregorio_message (_
 				("unknown markup, syllable expected"),
-				"libgregorio_xml_read_file", WARNING, 0);
+				"xml_read_file", WARNING, 0);
 	    }
 	  else
 	    {
-	      libgregorio_xml_read_syllable (current_node->xmlChildrenNode,
+	      xml_read_syllable (current_node->xmlChildrenNode,
 					     doc, &(current_syllable),
 					     score->number_of_voices,
 					     alterations, clefs);
@@ -154,7 +154,7 @@ xml_read_score (FILE * f)
 }
 
 void
-libgregorio_xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc,
 				       gregorio_score * score)
 {
   while (current_node)
@@ -332,14 +332,14 @@ libgregorio_xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc,
 	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "voice-list"))
 	{
-	  libgregorio_xml_read_multi_voice_info
+	  xml_read_multi_voice_info
 	    (current_node->xmlChildrenNode, doc, score);
 	  break;
 	}
       else
 	{
 	  score->number_of_voices = 1;
-	  libgregorio_xml_read_mono_voice_info (current_node, doc, score);
+	  xml_read_mono_voice_info (current_node, doc, score);
 	  break;
 
 	}
@@ -349,7 +349,7 @@ libgregorio_xml_read_score_attributes (xmlNodePtr current_node, xmlDocPtr doc,
 }
 
 void
-libgregorio_xml_read_multi_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_multi_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
 				       gregorio_score * score)
 {
 
@@ -361,7 +361,7 @@ libgregorio_xml_read_multi_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
     {
 // todo : check if the voices are in order
 
-      libgregorio_xml_read_voice_info (current_node->xmlChildrenNode, doc,
+      xml_read_voice_info (current_node->xmlChildrenNode, doc,
 				       voice_info);
       gregorio_add_voice_info (&voice_info);
       number_of_voices++;
@@ -371,17 +371,17 @@ libgregorio_xml_read_multi_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
 }
 
 void
-libgregorio_xml_read_mono_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_mono_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
 				      gregorio_score * score)
 {
 
   gregorio_add_voice_info (&(score->first_voice_info));
-  libgregorio_xml_read_voice_info (current_node, doc,
+  xml_read_voice_info (current_node, doc,
 				   score->first_voice_info);
 }
 
 void
-libgregorio_xml_read_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
 				 gregorio_voice_info * voice_info)
 {
   int annotation_num = 0;
@@ -424,14 +424,14 @@ libgregorio_xml_read_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "clef"))
 	{
 	  voice_info->initial_key =
-	    libgregorio_xml_read_initial_key (current_node->xmlChildrenNode,
+	    xml_read_initial_key (current_node->xmlChildrenNode,
 					      doc);
 	}
       else
 	{
 	  gregorio_message (_
 			    ("unknown markup, in attributes markup"),
-			    "libgregorio_xml_read_file", WARNING, 0);
+			    "xml_read_file", WARNING, 0);
 	}
       current_node = current_node->next;
     }
@@ -439,7 +439,7 @@ libgregorio_xml_read_voice_info (xmlNodePtr current_node, xmlDocPtr doc,
 }
 
 void
-libgregorio_xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc, char *type,
+xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc, char *type,
 			  char *signs)
 {
   xmlNodePtr current_children_node;
@@ -521,22 +521,22 @@ libgregorio_xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc, char *type,
       current_node = current_node->next;
       gregorio_message (_
 			("unknown markup in bar"),
-			"libgregorio_xml_read_file", WARNING, 0);
+			"xml_read_file", WARNING, 0);
     }
 
 }
 
 int
-libgregorio_xml_read_initial_key (xmlNodePtr current_node, xmlDocPtr doc)
+xml_read_initial_key (xmlNodePtr current_node, xmlDocPtr doc)
 {
   char step = 0;
   int line = 0;
-  libgregorio_xml_read_key (current_node, doc, &step, &line);
+  xml_read_key (current_node, doc, &step, &line);
   return gregorio_calculate_new_key (step, line);
 }
 
 void
-libgregorio_xml_read_key (xmlNodePtr current_node, xmlDocPtr doc, char *step,
+xml_read_key (xmlNodePtr current_node, xmlDocPtr doc, char *step,
 			  int *line)
 {
   xmlChar *step_temp;
@@ -553,7 +553,7 @@ libgregorio_xml_read_key (xmlNodePtr current_node, xmlDocPtr doc, char *step,
 	    {
 	      gregorio_message (_
 				("too long step declaration"),
-				"libgregorio_xml_read_file", WARNING, 0);
+				"xml_read_file", WARNING, 0);
 	    }
 	  xmlFree (step_temp);
 	  current_node = current_node->next;
@@ -571,7 +571,7 @@ libgregorio_xml_read_key (xmlNodePtr current_node, xmlDocPtr doc, char *step,
 	{
 	  gregorio_message (_
 			    ("unknown markup, step or line expected"),
-			    "libgregorio_xml_read_file", WARNING, 0);
+			    "xml_read_file", WARNING, 0);
 	}
       current_node = current_node->next;
     }
@@ -579,13 +579,13 @@ libgregorio_xml_read_key (xmlNodePtr current_node, xmlDocPtr doc, char *step,
     {
       gregorio_message (_
 			("step or line markup missing in key declaration"),
-			"libgregorio_xml_read_file", WARNING, 0);
+			"xml_read_file", WARNING, 0);
     }
 
 }
 
 void
-libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 			       gregorio_syllable ** current_syllable,
 			       int number_of_voices, char alterations[][13],
 			       int clefs[])
@@ -600,14 +600,14 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "text"))
     {
 // it is possible (and even often the case) that we don't have text
-      libgregorio_xml_read_text (current_node, doc, *current_syllable);
+      xml_read_text (current_node, doc, *current_syllable);
       current_node = current_node->next;
     }
 
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "translation"))
     {
 // it is possible (and even often the case) that we don't have text
-      libgregorio_xml_read_translation (current_node, doc, *current_syllable);
+      xml_read_translation (current_node, doc, *current_syllable);
       current_node = current_node->next;
     }
 
@@ -620,7 +620,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 	{
 	  if (!xmlStrcmp (current_node->name, (const xmlChar *) "bar"))
 	    {
-	      libgregorio_xml_read_bar (current_node->xmlChildrenNode, doc,
+	      xml_read_bar (current_node->xmlChildrenNode, doc,
 					&step, &bar_signs);
 	      //here we use step, but it is juste to verify if we can really read the bar
 	      if (step != 0)
@@ -643,7 +643,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 	  if (!xmlStrcmp
 	      (current_node->name, (const xmlChar *) "clef-change"))
 	    {
-	      libgregorio_xml_read_key (current_node->xmlChildrenNode, doc,
+	      xml_read_key (current_node->xmlChildrenNode, doc,
 					(&step), &(line));
 	      if (step == 'c')
 		{
@@ -677,7 +677,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 		{
 		  gregorio_message (_
 				    ("unknown clef-change"),
-				    "libgregorio_xml_read_syllable",
+				    "xml_read_syllable",
 				    WARNING, 0);
 		}
 	      current_node = current_node->next;
@@ -711,7 +711,7 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 	    }
 	  gregorio_message (_
 			    ("unknown markup in syllable"),
-			    "libgregorio_xml_read_syllable", WARNING, 0);
+			    "xml_read_syllable", WARNING, 0);
 	  current_node = current_node->next;
 	  continue;
 	}
@@ -723,19 +723,19 @@ libgregorio_xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
 
   if (number_of_voices == 1)
     {
-      libgregorio_xml_read_mono_neumes (current_node, doc, *current_syllable,
+      xml_read_mono_neumes (current_node, doc, *current_syllable,
 					alterations, clefs);
     }
   else
     {
-      libgregorio_xml_read_multi_neumes (current_node, doc, *current_syllable,
+      xml_read_multi_neumes (current_node, doc, *current_syllable,
 					 number_of_voices, alterations,
 					 clefs);
     }
 }
 
 char
-libgregorio_xml_read_position (char *position)
+xml_read_position (char *position)
 {
   if (!strcmp (position, "beginning"))
     {
@@ -757,17 +757,17 @@ libgregorio_xml_read_position (char *position)
     {
       gregorio_message (_
 			("text position unrecognized"),
-			"libgregorio_xml_read_text", WARNING, 0);
+			"xml_read_text", WARNING, 0);
       return WORD_ONE_SYLLABLE;
     }
 }
 
-void libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
+void xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
 				       gregorio_character **
 				       current_character);
 
 void
-libgregorio_xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
 			   gregorio_syllable * syllable)
 {
 
@@ -779,32 +779,32 @@ libgregorio_xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
     {
       gregorio_message (_
 			("position attribute missing, assuming beginning"),
-			"libgregorio_xml_read_syllable", WARNING, 0);
+			"xml_read_syllable", WARNING, 0);
       syllable->position = WORD_ONE_SYLLABLE;	//TODO: better gestion of word position
       return;
     }
-  syllable->position = libgregorio_xml_read_position (temp);
+  syllable->position = xml_read_position (temp);
   free (temp);
-  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode, doc,
+  xml_read_styled_text (current_node->xmlChildrenNode, doc,
 				    &current_character);
   gregorio_go_to_first_character (&current_character);
   syllable->text = current_character;
 }
 
 void
-libgregorio_xml_read_translation (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_translation (xmlNodePtr current_node, xmlDocPtr doc,
 				  gregorio_syllable * syllable)
 {
   gregorio_character *current_character = NULL;
 
-  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode, doc,
+  xml_read_styled_text (current_node->xmlChildrenNode, doc,
 				    &current_character);
   gregorio_go_to_first_character (&current_character);
   syllable->translation = current_character;
 }
 
 void
-libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
 				  gregorio_character ** current_character)
 {
 
@@ -821,7 +821,7 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "center"))
 	{
 	  gregorio_begin_style (current_character, ST_CENTER);
-	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
+	  xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
 	  gregorio_end_style (current_character, ST_CENTER);
 	  current_node = current_node->next;
@@ -830,7 +830,7 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "italic"))
 	{
 	  gregorio_begin_style (current_character, ST_ITALIC);
-	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
+	  xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
 	  gregorio_end_style (current_character, ST_ITALIC);
 	  current_node = current_node->next;
@@ -839,7 +839,7 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "bold"))
 	{
 	  gregorio_begin_style (current_character, ST_BOLD);
-	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
+	  xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
 	  gregorio_end_style (current_character, ST_BOLD);
 	  current_node = current_node->next;
@@ -848,7 +848,7 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "tt"))
 	{
 	  gregorio_begin_style (current_character, ST_TT);
-	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
+	  xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
 	  gregorio_end_style (current_character, ST_TT);
 	  current_node = current_node->next;
@@ -857,7 +857,7 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "ul"))
 	{
 	  gregorio_begin_style (current_character, ST_UNDERLINED);
-	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
+	  xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
 	  gregorio_end_style (current_character, ST_UNDERLINED);
 	  current_node = current_node->next;
@@ -866,7 +866,7 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "small-capitals"))
 	{
 	  gregorio_begin_style (current_character, ST_SMALL_CAPS);
-	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
+	  xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
 	  gregorio_end_style (current_character, ST_SMALL_CAPS);
 	  current_node = current_node->next;
@@ -876,7 +876,7 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
 	  (current_node->name, (const xmlChar *) "special-character"))
 	{
 	  gregorio_begin_style (current_character, ST_SPECIAL_CHAR);
-	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
+	  xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
 	  gregorio_end_style (current_character, ST_SPECIAL_CHAR);
 	  current_node = current_node->next;
@@ -885,7 +885,7 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "verbatim"))
 	{
 	  gregorio_begin_style (current_character, ST_VERBATIM);
-	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
+	  xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
 	  gregorio_end_style (current_character, ST_VERBATIM);
 	  current_node = current_node->next;
@@ -894,7 +894,7 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "initial"))
 	{
 	  gregorio_begin_style (current_character, ST_INITIAL);
-	  libgregorio_xml_read_styled_text (current_node->xmlChildrenNode,
+	  xml_read_styled_text (current_node->xmlChildrenNode,
 					    doc, current_character);
 	  gregorio_end_style (current_character, ST_INITIAL);
 	  current_node = current_node->next;
@@ -909,7 +909,7 @@ libgregorio_xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
 
 
 void
-libgregorio_xml_read_mono_neumes (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_mono_neumes (xmlNodePtr current_node, xmlDocPtr doc,
 				  gregorio_syllable * syllable,
 				  char alterations[][13], int clefs[])
 {
@@ -917,15 +917,15 @@ libgregorio_xml_read_mono_neumes (xmlNodePtr current_node, xmlDocPtr doc,
     {
       gregorio_message (_
 			("unknown markup, expecting neume"),
-			"libgregorio_xml_read_syllable", WARNING, 0);
+			"xml_read_syllable", WARNING, 0);
       return;
     }
-  libgregorio_xml_read_elements (current_node->xmlChildrenNode, doc,
+  xml_read_elements (current_node->xmlChildrenNode, doc,
 				 syllable->elements, alterations[0], clefs);
 }
 
 void
-libgregorio_xml_read_multi_neumes (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_multi_neumes (xmlNodePtr current_node, xmlDocPtr doc,
 				   gregorio_syllable * syllable,
 				   int number_of_voices,
 				   char alterations[][13], int clefs[])
@@ -935,13 +935,13 @@ libgregorio_xml_read_multi_neumes (xmlNodePtr current_node, xmlDocPtr doc,
     {
       gregorio_message (_
 			("unknown markup, expecting neume"),
-			"libgregorio_xml_read_syllable", WARNING, 0);
+			"xml_read_syllable", WARNING, 0);
       return;
     }
 //TODO : check the order of the voices
   for (i = 0; i < number_of_voices; i++)
     {
-      libgregorio_xml_read_elements (current_node->xmlChildrenNode, doc,
+      xml_read_elements (current_node->xmlChildrenNode, doc,
 				     syllable->elements + i, alterations[i],
 				     clefs + i);
       current_node = current_node->next;
@@ -949,26 +949,26 @@ libgregorio_xml_read_multi_neumes (xmlNodePtr current_node, xmlDocPtr doc,
 }
 
 void
-libgregorio_xml_read_elements (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_elements (xmlNodePtr current_node, xmlDocPtr doc,
 			       gregorio_element ** first_element,
 			       char alterations[13], int *key)
 {
   gregorio_element *current_element = NULL;
 
-  libgregorio_xml_read_element (current_node, doc, &(current_element),
+  xml_read_element (current_node, doc, &(current_element),
 				alterations, key);
   (*first_element) = current_element;
   current_node = current_node->next;
   while (current_node)
     {
-      libgregorio_xml_read_element (current_node, doc, &(current_element),
+      xml_read_element (current_node, doc, &(current_element),
 				    alterations, key);
       current_node = current_node->next;
     }
 }
 
 void
-libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 			      gregorio_element ** current_element,
 			      char alterations[13], int *key)
 {
@@ -978,7 +978,7 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "neumatic-bar"))
     {
-      libgregorio_xml_read_bar (current_node->xmlChildrenNode, doc, &step,
+      xml_read_bar (current_node->xmlChildrenNode, doc, &step,
 				&bar_signs);
       //here we use step, but it is juste to verify if we can really read the bar
       if (step != 0)
@@ -993,13 +993,13 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "custo"))
     {
       step =
-	libgregorio_xml_read_pitch
+	xml_read_pitch
 	(current_node->xmlChildrenNode->xmlChildrenNode, doc, *key);
       gregorio_add_special_as_element (current_element, GRE_CUSTO, step, 0, NULL);
     }
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "clef-change"))
     {
-      libgregorio_xml_read_key (current_node->xmlChildrenNode, doc,
+      xml_read_key (current_node->xmlChildrenNode, doc,
 				(&step), &(line));
       if (step == 'c')
 	{
@@ -1019,7 +1019,7 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
 	{
 	  gregorio_message (_
 			    ("unknown clef-change"),
-			    "libgregorio_xml_read_element", WARNING, 0);
+			    "xml_read_element", WARNING, 0);
 	}
       return;
     }
@@ -1077,18 +1077,18 @@ libgregorio_xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "element"))
     {
       gregorio_add_element (current_element, NULL);
-      libgregorio_xml_read_glyphs (current_node->xmlChildrenNode, doc,
+      xml_read_glyphs (current_node->xmlChildrenNode, doc,
 				   (*current_element), alterations, *key);
       return;
     }
   gregorio_message (_
 		    ("unknown markup"),
-		    "libgregorio_xml_read_element", WARNING, 0);
+		    "xml_read_element", WARNING, 0);
 
 }
 
 void
-libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 			     gregorio_element * element, char alterations[13],
 			     int key)
 {
@@ -1100,7 +1100,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "flat"))
 	{
 	  step =
-	    libgregorio_xml_read_alteration (current_node->xmlChildrenNode,
+	    xml_read_alteration (current_node->xmlChildrenNode,
 					     doc, key);
 	  gregorio_add_special_as_glyph (&current_glyph, GRE_FLAT, step, 0, NULL);
 	  alterations[(int) step - 48] = FLAT;
@@ -1111,7 +1111,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "natural"))
 	{
 	  step =
-	    libgregorio_xml_read_alteration (current_node->xmlChildrenNode,
+	    xml_read_alteration (current_node->xmlChildrenNode,
 					     doc, key);
 	  gregorio_add_special_as_glyph (&current_glyph, GRE_NATURAL,
 					 step, 0, NULL);
@@ -1137,14 +1137,14 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "glyph"))
 	{
-	  libgregorio_xml_read_glyph (current_node->xmlChildrenNode, doc,
+	  xml_read_glyph (current_node->xmlChildrenNode, doc,
 				      (&current_glyph), key);
 	  current_node = current_node->next;
 	  continue;
 	}
       gregorio_message (_
 			("unknown markup"),
-			"libgregorio_xml_read_glyphs", WARNING, 0);
+			"xml_read_glyphs", WARNING, 0);
 
       current_node = current_node->next;
     }
@@ -1155,7 +1155,7 @@ libgregorio_xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 // TODO : verify that il handles flats well
 
 void
-libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
 			    gregorio_glyph ** current_glyph, int key)
 {
   char liquescentia = L_NO_LIQUESCENTIA;
@@ -1167,7 +1167,7 @@ libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
     {
       temp = xmlNodeListGetString (doc, current_node->xmlChildrenNode, 1);
       (*current_glyph)->glyph_type =
-	libgregorio_xml_read_glyph_type ((char *) temp);
+	xml_read_glyph_type ((char *) temp);
       xmlFree (temp);
       current_node = current_node->next;
     }
@@ -1175,7 +1175,7 @@ libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
     {
       gregorio_message (_
 			("type missing in glyph markup"),
-			"libgregorio_xml_read_glyph", ERROR, 0);
+			"xml_read_glyph", ERROR, 0);
 //TODO : mechanism to determine the glyph ?
       return;
     }
@@ -1184,7 +1184,7 @@ libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
     {
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "note"))
 	{
-	  libgregorio_xml_read_note (current_node->xmlChildrenNode, doc,
+	  xml_read_note (current_node->xmlChildrenNode, doc,
 				     (&current_note), key);
 	  current_node = current_node->next;
 	  continue;
@@ -1192,7 +1192,7 @@ libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "figura"))
 	{
 	  liquescentia = liquescentia +
-	    libgregorio_xml_read_figura ((char *)
+	    xml_read_figura ((char *)
 					 xmlNodeListGetString (doc,
 							       current_node->xmlChildrenNode,
 							       1));
@@ -1212,7 +1212,7 @@ libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
 
       gregorio_message (_
 			("unknown markup, expecting note"),
-			"libgregorio_xml_read_glyph", ERROR, 0);
+			"xml_read_glyph", ERROR, 0);
 
       current_node = current_node->next;
     }
@@ -1222,7 +1222,7 @@ libgregorio_xml_read_glyph (xmlNodePtr current_node, xmlDocPtr doc,
 }
 
 char
-libgregorio_xml_read_alteration (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_alteration (xmlNodePtr current_node, xmlDocPtr doc,
 				 int key)
 {
   char *step_temp;
@@ -1240,7 +1240,7 @@ libgregorio_xml_read_alteration (xmlNodePtr current_node, xmlDocPtr doc,
 	    {
 	      gregorio_message (_
 				("too long step declaration"),
-				"libgregorio_xml_read_alteration", WARNING,
+				"xml_read_alteration", WARNING,
 				0);
 	    }
 	  free (step_temp);
@@ -1259,14 +1259,14 @@ libgregorio_xml_read_alteration (xmlNodePtr current_node, xmlDocPtr doc,
 	}
       gregorio_message (_
 			("unknown markup"),
-			"libgregorio_xml_read_alteration", WARNING, 0);
+			"xml_read_alteration", WARNING, 0);
       current_node = current_node->next;
     }
   if (step == 0 || !octave)
     {
       gregorio_message (_
 			("step or line markup missing in alteration declaration"),
-			"libgregorio_xml_read_alteration", WARNING, 0);
+			"xml_read_alteration", WARNING, 0);
       return 0;
     }
 
@@ -1275,12 +1275,12 @@ libgregorio_xml_read_alteration (xmlNodePtr current_node, xmlDocPtr doc,
 }
 
 char
-libgregorio_xml_read_glyph_type (char *type)
+xml_read_glyph_type (char *type)
 {
   if (!type)
     {
       gregorio_message
-	(_("empty glyph type markup"), "libgregorio_xml_read_glyph_type",
+	(_("empty glyph type markup"), "xml_read_glyph_type",
 	 ERROR, 0);
       return G_NO_GLYPH;
     }
@@ -1393,13 +1393,13 @@ libgregorio_xml_read_glyph_type (char *type)
       return G_ANCUS;
     }
   gregorio_message
-    (_("unknown glyph type"), "libgregorio_xml_read_glyph_type", ERROR, 0);
+    (_("unknown glyph type"), "xml_read_glyph_type", ERROR, 0);
   return G_NO_GLYPH;
 }
 
 
 char
-libgregorio_xml_read_figura (char *liquescentia)
+xml_read_figura (char *liquescentia)
 {
   if (!strcmp (liquescentia, "deminutus"))
     {
@@ -1418,13 +1418,13 @@ libgregorio_xml_read_figura (char *liquescentia)
       return L_AUCTA;
     }
   gregorio_message
-    (_("unknown liquescentia"), "libgregorio_xml_read_liquescentia", WARNING,
+    (_("unknown liquescentia"), "xml_read_liquescentia", WARNING,
      0);
   return L_NO_LIQUESCENTIA;
 }
 
 void
-  libgregorio_xml_read_note
+  xml_read_note
   (xmlNodePtr
    current_node, xmlDocPtr doc, gregorio_note ** current_note, int key)
 {
@@ -1442,7 +1442,7 @@ void
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "pitch"))
 	{
 	  pitch =
-	    libgregorio_xml_read_pitch
+	    xml_read_pitch
 	    (current_node->xmlChildrenNode, doc, key);
 	  current_node = current_node->next;
 	  continue;
@@ -1450,7 +1450,7 @@ void
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "shape"))
 	{
 	  temp = xmlNodeListGetString (doc, current_node->xmlChildrenNode, 1);
-	  shape = libgregorio_xml_read_shape ((char *) temp);
+	  shape = xml_read_shape ((char *) temp);
 	  xmlFree (temp);
 	  current_node = current_node->next;
 	  continue;
@@ -1464,7 +1464,7 @@ void
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "signs"))
 	{
 	  signs =
-	    libgregorio_xml_read_signs
+	    xml_read_signs
 	    (current_node->xmlChildrenNode, doc, &h_episemus, &rare_sign);
 	  current_node = current_node->next;
 	  continue;
@@ -1472,19 +1472,19 @@ void
       if (!xmlStrcmp
 	  (current_node->name, (const xmlChar *) "multi-h-episemus"))
 	{
-	  libgregorio_xml_read_h_episemus (current_node, (&h_episemus));
+	  xml_read_h_episemus (current_node, (&h_episemus));
 	  current_node = current_node->next;
 	  continue;
 	}
       gregorio_message
-	(_("unknown markup, ignored"), "libgregorio_read_note", WARNING, 0);
+	(_("unknown markup, ignored"), "read_note", WARNING, 0);
       current_node = current_node->next;
       continue;
     }
   if (pitch == 0 || shape == S_UNDETERMINED)
     {
       gregorio_message
-	(_("missing pitch or shape in note"), "libgregorio_read_note",
+	(_("missing pitch or shape in note"), "read_note",
 	 WARNING, 0);
 
     }
@@ -1503,7 +1503,7 @@ void
 }
 
 char
-libgregorio_xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key)
+xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key)
 {
   char *step_temp;
   char step = 0;
@@ -1520,7 +1520,7 @@ libgregorio_xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key)
 	    {
 	      gregorio_message (_
 				("too long step declaration"),
-				"libgregorio_xml_read_alteration", WARNING,
+				"xml_read_alteration", WARNING,
 				0);
 	    }
 	  free (step_temp);
@@ -1545,14 +1545,14 @@ libgregorio_xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key)
 	}
       gregorio_message (_
 			("unknown markup"),
-			"libgregorio_xml_read_alteration", WARNING, 0);
+			"xml_read_alteration", WARNING, 0);
       current_node = current_node->next;
     }
   if (step == 0 || !octave)
     {
       gregorio_message (_
 			("step or line markup missing in alteration declaration"),
-			"libgregorio_xml_read_alteration", WARNING, 0);
+			"xml_read_alteration", WARNING, 0);
       return 0;
     }
 
@@ -1561,7 +1561,7 @@ libgregorio_xml_read_pitch (xmlNodePtr current_node, xmlDocPtr doc, int key)
 }
 
 void
-libgregorio_xml_read_h_episemus (xmlNodePtr current_node, unsigned char *h_episemus)
+xml_read_h_episemus (xmlNodePtr current_node, unsigned char *h_episemus)
 {
   char *position =
     (char *) xmlGetProp (current_node, (const xmlChar *) "position");
@@ -1587,17 +1587,17 @@ libgregorio_xml_read_h_episemus (xmlNodePtr current_node, unsigned char *h_epise
     {
       gregorio_message
 	(_("position attribute missing in multi-h-episemus"),
-	 "libgregorio_xml_read_h_episemus", WARNING, 0);
+	 "xml_read_h_episemus", WARNING, 0);
       return;
     }
   gregorio_message
     (_("unknown position attribute in multi-h-episemus"),
-     "libgregorio_xml_read_h_episemus", WARNING, 0);
+     "xml_read_h_episemus", WARNING, 0);
   free (position);
 }
 
 char
-libgregorio_xml_read_shape (char *type)
+xml_read_shape (char *type)
 {
   if (!strcmp (type, "punctum"))
     {
@@ -1650,14 +1650,14 @@ libgregorio_xml_read_shape (char *type)
   gregorio_message
     (_
      ("unknown shape, punctum assumed"),
-     "libgregorio_read_shape", WARNING, 0);
+     "read_shape", WARNING, 0);
   return S_PUNCTUM;
 }
 
 // returns signs
 // sets rare_sign
 char
-libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
+xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
 			    unsigned char *h_episemus, char *rare_sign)
 {
   xmlChar *temp;
@@ -1686,7 +1686,7 @@ libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
 	  gregorio_message
 	    (_
 	     ("unknown right sign"),
-	     "libgregorio_xml_read_signs", WARNING, 0);
+	     "xml_read_signs", WARNING, 0);
 	  xmlFree (temp);
 	  current_node = current_node->next;
 	  continue;
@@ -1761,13 +1761,13 @@ libgregorio_xml_read_signs (xmlNodePtr current_node, xmlDocPtr doc,
 	  gregorio_message
 	    (_
 	     ("unknown above sign"),
-	     "libgregorio_xml_read_signs", WARNING, 0);
+	     "xml_read_signs", WARNING, 0);
 	  xmlFree (temp);
 	  current_node = current_node->next;
 	  continue;
 	}
       gregorio_message
-	(_("unknown sign"), "libgregorio_xml_read_signs", WARNING, 0);
+	(_("unknown sign"), "xml_read_signs", WARNING, 0);
       current_node = current_node->next;
     }
   return signs;

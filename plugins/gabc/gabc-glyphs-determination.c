@@ -31,12 +31,12 @@ close_glyph (gregorio_glyph ** current_glyph, char glyph_type,
 
 
 gregorio_glyph *
-libgregorio_gabc_det_glyphs_from_string (char *str, int *initial_key)
+gabc_det_glyphs_from_string (char *str, int *initial_key)
 {
   gregorio_note *tmp;
   gregorio_glyph *final;
-  tmp = libgregorio_gabc_det_notes_from_string (str);
-  final = libgregorio_gabc_det_glyphs_from_notes (tmp, initial_key);
+  tmp = gabc_det_notes_from_string (str);
+  final = gabc_det_glyphs_from_notes (tmp, initial_key);
   return final;
 }
 
@@ -44,7 +44,7 @@ libgregorio_gabc_det_glyphs_from_string (char *str, int *initial_key)
 /****************************
  * 
  * First see the comments of
- * libgregorio_gabc_det_glyphs_from_notes. This function is used when
+ * gabc_det_glyphs_from_notes. This function is used when
  * we have finished to determine a glyph. We have the last glyph that
  * have been added: last_glyph. The glyph we want to add is given by
  * glyph_type and liquescentia.
@@ -171,7 +171,7 @@ close_glyph (gregorio_glyph ** last_glyph, char glyph_type,
 // TODO: there may be a side effect with the flated keys...
 
 char
-libgregorio_gabc_determine_custo_pitch (gregorio_note * current_note,
+gabc_determine_custo_pitch (gregorio_note * current_note,
 					int current_key)
 {
   int pitch_difference = 0;
@@ -205,7 +205,7 @@ libgregorio_gabc_determine_custo_pitch (gregorio_note * current_note,
  * 
  * Function called with a list of gregorio_notes as argument, this
  * list is determined from gabc notation by the function
- * libgregorio_gabc_det_notes_from_string.
+ * gabc_det_notes_from_string.
  * 
  * In this function we create a list of glyphs, by determining their
  * type according to the sequence of notes (we look at their height,
@@ -240,7 +240,7 @@ libgregorio_gabc_determine_custo_pitch (gregorio_note * current_note,
 // this function updates current_key with the new values (with clef changes)
 
 gregorio_glyph *
-libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note,
+gabc_det_glyphs_from_notes (gregorio_note * current_note,
 					int *current_key)
 {
   // the first note of the current glyph, to be able to close it well:
@@ -321,7 +321,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note,
 	  if (current_note->type == GRE_CUSTO)
 	    {
 	      current_note->pitch =
-		libgregorio_gabc_determine_custo_pitch (current_note->
+		gabc_determine_custo_pitch (current_note->
 							next,
 							*current_key);
 	    }
@@ -521,7 +521,7 @@ libgregorio_gabc_det_glyphs_from_notes (gregorio_note * current_note,
  * glyph, or will it be the first note of another glyph ?
  * 
  * current_glyph_type is the type of the current_glyph (current_glyph
- * as meant in libgregorio_gabc_det_glyphs_from_notes).  curent_pitch
+ * as meant in gabc_det_glyphs_from_notes).  curent_pitch
  * is the height of the note that we want to "add" to the glyph.
  * last_pitch is the height of the last note of current_glyph.  shape
  * is the shape of the note we want to "add" to the glyph.

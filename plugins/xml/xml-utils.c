@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xml.h"
 
 const char *
-libgregorio_xml_shape_to_str (char shape)
+xml_shape_to_str (char shape)
 {
   const char *str;
 
@@ -69,14 +69,14 @@ libgregorio_xml_shape_to_str (char shape)
     default:
       str = "punctum";
       gregorio_message (_("unknown shape, `punctum' assumed"),
-		      "libgregorio_xml_shape_to_str", WARNING, 0);
+		      "xml_shape_to_str", WARNING, 0);
       break;
     }
   return str;
 }
 
 const char *
-libgregorio_xml_signs_to_str (char signs)
+xml_signs_to_str (char signs)
 {
   const char *str;
 
@@ -132,7 +132,7 @@ libgregorio_xml_signs_to_str (char signs)
 }
 
 void
-libgregorio_xml_write_signs (FILE * f, char signs, unsigned char h_episemus_type, char rare_sign)
+xml_write_signs (FILE * f, char signs, unsigned char h_episemus_type, char rare_sign)
 {
   const char *str;
   if (signs != _NO_SIGN || rare_sign != _NO_SIGN || simple_htype(h_episemus_type == H_ALONE))
@@ -148,12 +148,12 @@ libgregorio_xml_write_signs (FILE * f, char signs, unsigned char h_episemus_type
 	}
       if (signs != _NO_SIGN)
 	{
-	  str = libgregorio_xml_signs_to_str (signs);
+	  str = xml_signs_to_str (signs);
 	  fprintf (f, "%s", str);
 	}
       if (rare_sign != _NO_SIGN)
 	{
-	  str = libgregorio_xml_signs_to_str (rare_sign);
+	  str = xml_signs_to_str (rare_sign);
 	  fprintf (f, "%s", str);
 	}
       fprintf (f, "</signs>");
@@ -173,7 +173,7 @@ libgregorio_xml_write_signs (FILE * f, char signs, unsigned char h_episemus_type
 }
 
 void
-libgregorio_xml_write_pitch(FILE *f, char pitch, char clef)
+xml_write_pitch(FILE *f, char pitch, char clef)
 {
   char step;
   int octave;
@@ -184,11 +184,11 @@ libgregorio_xml_write_pitch(FILE *f, char pitch, char clef)
 }
 
 void
-libgregorio_xml_write_note (FILE * f, char signs, char step,
+xml_write_note (FILE * f, char signs, char step,
 		      int octave, char shape,
 		      unsigned char h_episemus_type, char alteration, char rare_sign, char *texverb)
 {
-  const char *shape_str = libgregorio_xml_shape_to_str (shape);
+  const char *shape_str = xml_shape_to_str (shape);
 
   fprintf (f,
 	   "<note><pitch><step>%c</step><octave>%d</octave>",
@@ -203,12 +203,12 @@ libgregorio_xml_write_note (FILE * f, char signs, char step,
     {
       fprintf(f, "<texverb>%s</texverb>", texverb);
     }
-  libgregorio_xml_write_signs (f, signs, h_episemus_type, rare_sign);
+  xml_write_signs (f, signs, h_episemus_type, rare_sign);
   fprintf (f, "</note>");
 }
 
 const char *
-libgregorio_xml_glyph_type_to_str (char name)
+xml_glyph_type_to_str (char name)
 {
   const char *str;
 
@@ -303,14 +303,14 @@ libgregorio_xml_glyph_type_to_str (char name)
 }
 
 void
-libgregorio_xml_set_pitch_from_octave_and_step (char step,
+xml_set_pitch_from_octave_and_step (char step,
 					  int octave, char *pitch, int clef)
 {
   *pitch=gregorio_det_pitch(clef, step, octave);
 }
 
 void
-libgregorio_xml_write_liquescentia (FILE * f, char liquescentia)
+xml_write_liquescentia (FILE * f, char liquescentia)
 {
   if (liquescentia == L_NO_LIQUESCENTIA)
     {
@@ -342,7 +342,7 @@ libgregorio_xml_write_liquescentia (FILE * f, char liquescentia)
 }
 
 void
-libgregorio_xml_write_alteration (FILE * f, char type, char pitch, int clef, char *tab)
+xml_write_alteration (FILE * f, char type, char pitch, int clef, char *tab)
 {
   char step;
   int octave;
@@ -365,7 +365,7 @@ libgregorio_xml_write_alteration (FILE * f, char type, char pitch, int clef, cha
 }
 
 const char *
-libgregorio_xml_bar_to_str (char type)
+xml_bar_to_str (char type)
 {
   const char *str;
 
@@ -389,7 +389,7 @@ libgregorio_xml_bar_to_str (char type)
     default:
       str = "";
       gregorio_message (_("unknown bar type, nothing will be done"),
-		      "libgregorio_xml_bar_to_str", ERROR, 0);
+		      "xml_bar_to_str", ERROR, 0);
       break;
     }
   return str;

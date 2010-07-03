@@ -63,7 +63,7 @@ dump_write_score (FILE * f, gregorio_score * score)
   if (!f) {
       gregorio_message (_
 			   ("call with NULL file"),
-			   "libgregorio_gregoriotex_write_score", ERROR, 0);
+			   "gregoriotex_write_score", ERROR, 0);
 			   return;
   }
   fprintf (f,
@@ -185,7 +185,7 @@ dump_write_score (FILE * f, gregorio_score * score)
 	{
 	  fprintf (f, "   initial_key               %d (%s)\n",
 		   voice_info->initial_key,
-		   libgregorio_dump_key_to_char (voice_info->initial_key));
+		   dump_key_to_char (voice_info->initial_key));
       if (voice_info->flatted_key == FLAT_KEY)
         {
            fprintf (f, "   flat_key                  FLAT_KEY\n");
@@ -217,18 +217,18 @@ dump_write_score (FILE * f, gregorio_score * score)
       if (syllable->type)
 	{
 	  fprintf (f, "   type                      %d (%s)\n",
-		   syllable->type, libgregorio_dump_type (syllable->type));
+		   syllable->type, dump_type (syllable->type));
 	}
       if (syllable->position)
 	{
 	  fprintf (f, "   position                  %d (%s)\n",
 		   syllable->position,
-		   libgregorio_dump_syllable_position (syllable->position));
+		   dump_syllable_position (syllable->position));
 	}
 	  if (syllable->additional_infos)
 	{
 	  fprintf (f, "   additional infos                   %s\n",
-	  libgregorio_dump_rare_sign(syllable->additional_infos));
+	  dump_rare_sign(syllable->additional_infos));
 	}
       if (syllable->text)
 	{
@@ -236,12 +236,12 @@ dump_write_score (FILE * f, gregorio_score * score)
 	    {
 	      fprintf (f, "\n  Text\n");
 	    }
-	  libgregorio_dump_write_characters (f, syllable->text);
+	  dump_write_characters (f, syllable->text);
 	}
       if (syllable->translation)
 	{
 	  fprintf (f, "\n  Translation\n");
-	  libgregorio_dump_write_characters (f, syllable->translation);
+	  dump_write_characters (f, syllable->translation);
 	}
       element = syllable->elements[0];
       while (element)
@@ -251,13 +251,13 @@ dump_write_score (FILE * f, gregorio_score * score)
 	  if (element->type)
 	    {
 	      fprintf (f, "     type                    %d (%s)\n",
-		       element->type, libgregorio_dump_type (element->type));
+		       element->type, dump_type (element->type));
 	    }
 	  if (element->element_type && element->type == GRE_ELEMENT)
 	    {
 	      fprintf (f, "     element_type            %d (%s)\n",
 		       element->element_type,
-		       libgregorio_dump_element_type (element->element_type));
+		       dump_element_type (element->element_type));
 	    }
 	  if (element->element_type && element->type == GRE_CUSTO)
 	    {
@@ -268,7 +268,7 @@ dump_write_score (FILE * f, gregorio_score * score)
 	    {
 	      fprintf (f, "     element_type            %d (%s)\n",
 		       element->element_type,
-		       libgregorio_dump_space_type (element->element_type));
+		       dump_space_type (element->element_type));
 	    }
 	  if (element->type == GRE_TEXVERB_ELEMENT)
 	    {
@@ -279,12 +279,12 @@ dump_write_score (FILE * f, gregorio_score * score)
 	    {
 	      fprintf (f, "     element_type            %d (%s)\n",
 		       element->element_type,
-		       libgregorio_dump_bar_type (element->element_type));
+		       dump_bar_type (element->element_type));
 		  if (element->additional_infos)
 		    {
 	          fprintf (f, "     additional_infos        %d (%s)\n",
 		        element->element_type,
-		        libgregorio_dump_rare_sign (element->additional_infos));
+		        dump_rare_sign (element->additional_infos));
 		    }
 	    }
 	  if (element->element_type && element->type == GRE_C_KEY_CHANGE)
@@ -308,7 +308,7 @@ dump_write_score (FILE * f, gregorio_score * score)
 	  if (element->element_type && element->type == GRE_END_OF_LINE)
 	    {
 	      fprintf (f, "     element_type            %d (%s)\n",
-		       element->element_type, libgregorio_dump_type (element->element_type));
+		       element->element_type, dump_type (element->element_type));
 	    }
 	  glyph = element->first_glyph;
 	  while (glyph)
@@ -318,7 +318,7 @@ dump_write_score (FILE * f, gregorio_score * score)
 	      if (glyph->type)
 		{
 		  fprintf (f, "       type                  %d (%s)\n",
-			   glyph->type, libgregorio_dump_type (glyph->type));
+			   glyph->type, dump_type (glyph->type));
 		}
           if (glyph->type == GRE_TEXVERB_GLYPH)
 	    {
@@ -331,14 +331,14 @@ dump_write_score (FILE * f, gregorio_score * score)
 		    {
 		      fprintf (f, "       glyph_type            %d (%s)\n",
 			       glyph->glyph_type,
-			       libgregorio_dump_space_type (glyph->
+			       dump_space_type (glyph->
 							    glyph_type));
 		    }
 		  if (glyph->type == GRE_BAR)
 		    {
 		      fprintf (f, "       glyph_type            %d (%s)\n",
 			       glyph->glyph_type,
-			       libgregorio_dump_bar_type (glyph->glyph_type));
+			       dump_bar_type (glyph->glyph_type));
 		    }
 		  if ((glyph->type == GRE_FLAT)
 		      || (glyph->type == GRE_NATURAL))
@@ -352,7 +352,7 @@ dump_write_score (FILE * f, gregorio_score * score)
 		    {
 		      fprintf (f, "       glyph_type            %d (%s)\n",
 			       glyph->glyph_type,
-			       libgregorio_dump_glyph_type (glyph->
+			       dump_glyph_type (glyph->
 							    glyph_type));
 		    }
 		}
@@ -360,14 +360,14 @@ dump_write_score (FILE * f, gregorio_score * score)
 		{
 		  fprintf (f, "       liquescentia          %d (%s)\n",
 			   glyph->liquescentia,
-			   libgregorio_dump_liquescentia (glyph->
+			   dump_liquescentia (glyph->
 							  liquescentia));
 		}
 	      if (glyph->liquescentia && glyph->glyph_type == GRE_BAR)
 		{
 		  fprintf (f, "       liquescentia          %d (%s)\n",
 			   glyph->liquescentia,
-			   libgregorio_dump_rare_sign (glyph->
+			   dump_rare_sign (glyph->
 							  liquescentia));
 		}
 	      note = glyph->first_note;
@@ -379,7 +379,7 @@ dump_write_score (FILE * f, gregorio_score * score)
 		    {
 		      fprintf (f, "         type                %d (%s)\n",
 			       note->type,
-			       libgregorio_dump_type (note->type));
+			       dump_type (note->type));
 		    }
 		  if (note->pitch)
 		    {
@@ -395,32 +395,32 @@ dump_write_score (FILE * f, gregorio_score * score)
 		    {
 		      fprintf (f, "         shape               %d (%s)\n",
 			       note->shape,
-			       libgregorio_dump_shape (note->shape));
+			       dump_shape (note->shape));
 		    }
 		  if (note->signs)
 		    {
 		      fprintf (f, "         signs               %d (%s)\n",
 			       note->signs,
-			       libgregorio_dump_signs (note->signs));
+			       dump_signs (note->signs));
 		    }
 		  if (note->rare_sign)
 		    {
 		      fprintf (f, "         rare sign           %d (%s)\n",
 			       note->rare_sign,
-			       libgregorio_dump_rare_sign (note->rare_sign));
+			       dump_rare_sign (note->rare_sign));
 		    }
 		  if (note->liquescentia)
 		    {
 		      fprintf (f, "         liquescentia        %d (%s)\n",
 			       note->liquescentia,
-			       libgregorio_dump_liquescentia (note->
+			       dump_liquescentia (note->
 							      liquescentia));
 		    }
 		  if (note->h_episemus_type)
 		    {
 		      fprintf (f, "         h_episemus_type     %d (",
 			       note->h_episemus_type);
-			    fprintf(f, "%s", libgregorio_dump_h_episemus_type (simple_htype(note-> h_episemus_type)));
+			    fprintf(f, "%s", dump_h_episemus_type (simple_htype(note-> h_episemus_type)));
 			    if (has_bottom(note->h_episemus_type))
 			      {
               fprintf(f, " & H_BOTTOM");
@@ -445,7 +445,7 @@ dump_write_score (FILE * f, gregorio_score * score)
 }
 
 const char *
-libgregorio_dump_style_to_string (unsigned char style)
+dump_style_to_string (unsigned char style)
 {
   switch (style)
     {
@@ -489,7 +489,7 @@ libgregorio_dump_style_to_string (unsigned char style)
 }
 
 void
-libgregorio_dump_write_characters (FILE * f,
+dump_write_characters (FILE * f,
 				   gregorio_character * current_character)
 {
   while (current_character)
@@ -507,13 +507,13 @@ libgregorio_dump_write_characters (FILE * f,
 	  if (current_character->cos.s.type == ST_T_BEGIN)
 	    {
 	      fprintf (f, "     beginning of style   %s\n",
-		       libgregorio_dump_style_to_string (current_character->
+		       dump_style_to_string (current_character->
 							 cos.s.style));
 	    }
 	  else
 	    {
 	      fprintf (f, "     end of style         %s\n",
-		       libgregorio_dump_style_to_string (current_character->
+		       dump_style_to_string (current_character->
 							 cos.s.style));
 	    }
 	}
@@ -522,7 +522,7 @@ libgregorio_dump_write_characters (FILE * f,
 }
 
 const char *
-libgregorio_dump_key_to_char (int key)
+dump_key_to_char (int key)
 {
   const char *str;
   switch (key)
@@ -560,7 +560,7 @@ libgregorio_dump_key_to_char (int key)
 
 
 const char *
-libgregorio_dump_syllable_position (char pos)
+dump_syllable_position (char pos)
 {
   const char *str;
   switch (pos)
@@ -586,7 +586,7 @@ libgregorio_dump_syllable_position (char pos)
 
 
 const char *
-libgregorio_dump_type (char type)
+dump_type (char type)
 {
   const char *str;
   switch (type)
@@ -645,7 +645,7 @@ libgregorio_dump_type (char type)
 
 
 const char *
-libgregorio_dump_bar_type (char element_type)
+dump_bar_type (char element_type)
 {
   const char *str;
   switch (element_type)
@@ -677,7 +677,7 @@ libgregorio_dump_bar_type (char element_type)
 
 
 const char *
-libgregorio_dump_space_type (char element_type)
+dump_space_type (char element_type)
 {
   const char *str;
   switch (element_type)
@@ -719,7 +719,7 @@ libgregorio_dump_space_type (char element_type)
 
 // not so sure it has still a meaning now...
 const char *
-libgregorio_dump_element_type (char element_type)
+dump_element_type (char element_type)
 {
   const char *str;
   switch (element_type)
@@ -762,7 +762,7 @@ libgregorio_dump_element_type (char element_type)
 }
 
 const char *
-libgregorio_dump_liquescentia (char liquescentia)
+dump_liquescentia (char liquescentia)
 {
   const char *str;
   switch (liquescentia)
@@ -804,7 +804,7 @@ libgregorio_dump_liquescentia (char liquescentia)
   return str;
 }
 const char *
-libgregorio_dump_glyph_type (char glyph_type)
+dump_glyph_type (char glyph_type)
 {
   const char *str;
   switch (glyph_type)
@@ -916,7 +916,7 @@ libgregorio_dump_glyph_type (char glyph_type)
 }
 
 const char *
-libgregorio_dump_shape (char shape)
+dump_shape (char shape)
 {
   const char *str;
   switch (shape)
@@ -995,7 +995,7 @@ libgregorio_dump_shape (char shape)
 }
 
 const char *
-libgregorio_dump_signs (char signs)
+dump_signs (char signs)
 {
   const char *str;
   switch (signs)
@@ -1027,7 +1027,7 @@ libgregorio_dump_signs (char signs)
 
 // a function dumping rare_signs or additional_informations
 const char *
-libgregorio_dump_rare_sign (char rare_sign)
+dump_rare_sign (char rare_sign)
 {
   const char *str;
   switch (rare_sign)
@@ -1070,7 +1070,7 @@ libgregorio_dump_rare_sign (char rare_sign)
 }
 
 const char *
-libgregorio_dump_h_episemus_type (unsigned char h_episemus_type)
+dump_h_episemus_type (unsigned char h_episemus_type)
 {
   const char *str;
   switch (h_episemus_type)

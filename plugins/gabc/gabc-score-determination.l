@@ -174,7 +174,7 @@ semicolon. */
     char *dirtyvar = malloc(71*sizeof(char));
 	snprintf(dirtyvar,70,gettext("unrecognized character: \"%c\" in definition part"),gabc_score_determination_text[0]);
 	gregorio_message (dirtyvar,
-		      "libgregorio_det_score", ERROR, 0);
+		      "det_score", ERROR, 0);
 	}
 <score>[^\{\}\(\[\]<%]+ {
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);

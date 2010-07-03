@@ -23,45 +23,45 @@ void
 write_score (FILE * f, gregorio_score * score);
 
 const char *
-libgregorio_dump_key_to_char(int key);
+dump_key_to_char(int key);
 
 const char *
-libgregorio_dump_syllable_position (char pos);
+dump_syllable_position (char pos);
 
 const char *
-libgregorio_dump_type (char type);
+dump_type (char type);
 
 const char *
-libgregorio_dump_bar_type (char element_type);
+dump_bar_type (char element_type);
 
 const char *
-libgregorio_dump_space_type (char element_type);
+dump_space_type (char element_type);
 
 const char *
-libgregorio_dump_element_type (char element_type);
+dump_element_type (char element_type);
 
 const char *
-libgregorio_dump_liquescentia (char liquescentia);
+dump_liquescentia (char liquescentia);
 
 const char *
-libgregorio_dump_glyph_type (char glyph_type);
+dump_glyph_type (char glyph_type);
 
 const char *
-libgregorio_dump_shape (char shape);
+dump_shape (char shape);
 
 const char *
-libgregorio_dump_signs (char signs);
+dump_signs (char signs);
 
 const char *
-libgregorio_dump_rare_sign (char rare_sign);
+dump_rare_sign (char rare_sign);
 
 const char *
-libgregorio_dump_h_episemus_type (unsigned char h_episemus_type);
+dump_h_episemus_type (unsigned char h_episemus_type);
 
 void
-libgregorio_dump_write_characters (FILE * f, gregorio_character * current_character);
+dump_write_characters (FILE * f, gregorio_character * current_character);
 
 const char *
-libgregorio_dump_style_to_string (unsigned char style);
+dump_style_to_string (unsigned char style);
 
 #endif

@@ -21,51 +21,51 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void write_score (FILE * f, gregorio_score * score);
 
-void libgregorio_opustex_write_syllable (FILE * f,
+void opustex_write_syllable (FILE * f,
 					 gregorio_syllable * syllable,
 					 char *first_syllable);
 
-void libgregorio_opustex_write_text (FILE * f, gregorio_character *first_character,
+void opustex_write_text (FILE * f, gregorio_character *first_character,
 				     char *first_syllable);
 
-void libgregorio_opustex_write_element (FILE * f, gregorio_element * element);
+void opustex_write_element (FILE * f, gregorio_element * element);
 
-void libgregorio_opustex_write_barline (FILE * f, char type);
+void opustex_write_barline (FILE * f, char type);
 
-void libgregorio_opustex_write_finis (FILE * f, char type);
+void opustex_write_finis (FILE * f, char type);
 
-void libgregorio_opustex_write_glyph (FILE * f, gregorio_glyph * glyph);
+void opustex_write_glyph (FILE * f, gregorio_glyph * glyph);
 
-int libgregorio_opustex_first_letter (gregorio_score * score);
+int opustex_first_letter (gregorio_score * score);
 
-char libgregorio_opustex_is_vowel (int c);
+char opustex_is_vowel (int c);
 
 char is_even (int c);
 
-void libgregorio_opustex_print_note (FILE * f, char pitch);
+void opustex_print_note (FILE * f, char pitch);
 
-void libgregorio_opustex_print_episem (FILE * f, char pitch, char length);
+void opustex_print_episem (FILE * f, char pitch, char length);
 
-void libgregorio_opustex_print_episem_under (FILE * f, char pitch, char length);
+void opustex_print_episem_under (FILE * f, char pitch, char length);
 
-const char *libgregorio_opustex_glyph_type_to_str (char name);
-
-void
-libgregorio_opustex_print_liquescentia (FILE * f, char liquescentia, char glyph);
+const char *opustex_glyph_type_to_str (char name);
 
 void
-libgregorio_opustex_print_augmentum_note (FILE * f, char pitch);
+opustex_print_liquescentia (FILE * f, char liquescentia, char glyph);
+
+void
+opustex_print_augmentum_note (FILE * f, char pitch);
 
 char
-libgregorio_find_next_note (gregorio_element * current_element, gregorio_syllable * current_syllable);
+find_next_note (gregorio_element * current_element, gregorio_syllable * current_syllable);
 
 char
-libgregorio_opustex_is_out_of_neume (gregorio_syllable * syllable);
+opustex_is_out_of_neume (gregorio_syllable * syllable);
 
-void libgregorio_otex_write_begin (FILE * f, unsigned char style);
-void libgregorio_otex_write_end (FILE * f, unsigned char style);
-void libgregorio_otex_write_special_char (FILE * f, grewchar * special_char);
-void libgregorio_otex_write_verb (FILE * f, grewchar * verb_str);
-void libgregorio_otex_print_char (FILE * f, grewchar to_print);
+void otex_write_begin (FILE * f, unsigned char style);
+void otex_write_end (FILE * f, unsigned char style);
+void otex_write_special_char (FILE * f, grewchar * special_char);
+void otex_write_verb (FILE * f, grewchar * verb_str);
+void otex_print_char (FILE * f, grewchar to_print);
 
 #endif
