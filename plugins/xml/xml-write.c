@@ -392,7 +392,7 @@ xml_write_special_char (FILE * f, grewchar *first_char)
       in_text = 0;
     }
   fprintf (f, "<special-char>");
-  gregorio_print_unistring(f, first_char);
+  xml_print_unistring(f, first_char);
   fprintf (f, "</special-char>");
 }
 
@@ -405,8 +405,47 @@ xml_write_verb (FILE * f, grewchar *first_char)
       in_text = 0;
     }
   fprintf (f, "<verbatim>");
-  gregorio_print_unistring(f, first_char);
+  xml_print_unistring(f, first_char);
   fprintf (f, "</verbatim>");
+}
+
+void
+xml_print_unistring(FILE *f, grewchar *first_char)
+{
+  while (*first_char != 0)
+    {
+      xml_print_unichar (f, *first_char);
+      first_char++;
+    }
+}
+
+void
+xml_print_unichar (FILE * f, grewchar to_print)
+{
+  switch (to_print)
+    {
+    case L'<':
+      fprintf (f, "&lt;");
+      break;
+    case L'>':
+      fprintf (f, "&gt;");
+      break;
+    case L'\'':
+      fprintf (f, "&apos;");
+      break;
+    case L'&':
+      fprintf (f, "&amp;");
+      break;
+    case L'"':
+      fprintf (f, "\\\"");
+      break;
+    case L'\\':
+      fprintf (f, "\\\\");
+      break;
+   default:
+     gregorio_print_unichar(f, to_print);
+     break;
+   }
 }
 
 void
@@ -417,7 +456,7 @@ xml_print_char (FILE * f, grewchar to_print)
       fprintf (f, "<str>");
       in_text = 1;
     }
-  gregorio_print_unichar(f, to_print);
+   xml_print_unichar(f, to_print);
 }
 
 void

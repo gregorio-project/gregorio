@@ -871,38 +871,39 @@ gtex_write_verb (FILE * f, grewchar * first_char)
 void
 gtex_print_char (FILE * f, grewchar to_print)
 {
-  if (to_print == L'*')
+  switch (to_print)
     {
+    case L'*':
       fprintf (f, "\\grestar ");
-      return;
-    }
-  if (to_print == L'%')
-    {
+      break;
+    case L'%':
       fprintf (f, "\\%%");
-      return;
-    }
-  if (to_print == L'+')
-    {
+      break;
+    case L'\\':
+      fprintf (f, "\\textbackslash ");
+      break;
+    case L'&':
+      fprintf (f, "\\&\\relax ");
+      break;
+    case L'#':
+      fprintf (f, "\\#\\relax ");
+      break;
+    case L'+':
       fprintf (f, "\\gredagger ");
-      return;
-    }
-  if (to_print == L'_')
-    {
+      break;
+    case L'_':
       fprintf (f, "\\_\\relax ");
-      return;
-    }
-  // not sure it's a perfect idea...
-  if (to_print == L'-')
-    {
+      break;
+    case L'-':
       fprintf (f, "\\grehyph ");
-      return;
-    }
-  if (to_print == L'~')
-    {
-      fprintf (f, "\\ensuremath{\\sim}");
-      return;
-    }
-  gregorio_write_one_tex_char(f, to_print);
+      break;
+    case L'~':
+      fprintf (f, "\\gretilde ");
+      break;
+   default:
+     gregorio_write_one_tex_char(f, to_print);
+     break;
+   }
   return;
 }
 

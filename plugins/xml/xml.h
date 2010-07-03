@@ -81,6 +81,9 @@ void xml_print_char (FILE * f, grewchar to_print);
 
 void xml_set_pitch_from_octave_and_step (char step, int octave, char *pitch, int clef);
 
+void xml_print_unichar (FILE * f, grewchar to_print);
+void xml_print_unistring(FILE *f, grewchar *first_char);
+
 #if ENABLE_XML == 1
 // Functions to read GregorioXML
 
