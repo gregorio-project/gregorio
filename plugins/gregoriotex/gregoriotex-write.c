@@ -1247,7 +1247,7 @@ gregoriotex_write_glyph (FILE * f,
 	{
 	  gregoriotex_write_note (f, current_note,
 					      next_note_pitch);
-	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
 					       current_note);
 	  current_note = current_note->next;
 	}
@@ -1263,7 +1263,7 @@ gregoriotex_write_glyph (FILE * f,
 	  fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
       gregoriotex_write_last_note_verb (f, glyph);
-	  gregoriotex_write_signs (f, gtype, glyph,
+	  gregoriotex_write_signs (f, gtype, glyph, element, syllable,
 					       glyph->first_note);
 	}
       else
@@ -1272,7 +1272,7 @@ gregoriotex_write_glyph (FILE * f,
 	    {
 	      gregoriotex_write_note (f, current_note,
 						  next_note_pitch);
-	      gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+	      gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
 						   current_note);
 	      current_note = current_note->next;
 	    }
@@ -1280,7 +1280,7 @@ gregoriotex_write_glyph (FILE * f,
       break;
     case G_TORCULUS_RESUPINUS_FLEXUS:
       gregoriotex_write_note (f, current_note, next_note_pitch);
-      gregoriotex_write_signs (f, T_ONE_NOTE_TRF, glyph,
+      gregoriotex_write_signs (f, T_ONE_NOTE_TRF, glyph, element, syllable,
 					   glyph->first_note);
       glyph->glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
       // tricky to have the good position for these glyphs
@@ -1292,7 +1292,7 @@ gregoriotex_write_glyph (FILE * f,
       fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n", glyph_number,
 	       glyph->first_note->pitch, next_note_pitch, type);
 	    gregoriotex_write_last_note_verb (f, glyph);
-      gregoriotex_write_signs (f, gtype, glyph,
+      gregoriotex_write_signs (f, gtype, glyph, element, syllable,
 					   glyph->first_note);
 			glyph->first_note = current_note;
       glyph->glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
@@ -1303,7 +1303,7 @@ gregoriotex_write_glyph (FILE * f,
 	{
 	  gregoriotex_write_note (f, current_note,
 					      next_note_pitch);
-	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
 					       current_note);
 	  current_note = current_note->next;
 	  if (current_note)
@@ -1320,7 +1320,7 @@ gregoriotex_write_glyph (FILE * f,
 	{
 	  gregoriotex_write_note (f, current_note,
 					      next_note_pitch);
-	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
 					       current_note);
 	  current_note = current_note->next;
 	  if (current_note)
@@ -1351,7 +1351,7 @@ gregoriotex_write_glyph (FILE * f,
     case G_STROPHA_AUCTA:
       gregoriotex_write_note (f, glyph->first_note,
 					  next_note_pitch);
-      gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+      gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
 					   current_note);
       break;
     default:
@@ -1361,7 +1361,7 @@ gregoriotex_write_glyph (FILE * f,
 	{
 	  gregoriotex_write_note (f, current_note,
 					      next_note_pitch);
-	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph,
+	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
 					       glyph->first_note);
 	  // tricky to have the good position for these glyphs
 	  glyph->first_note = current_note->next;
@@ -1373,7 +1373,7 @@ gregoriotex_write_glyph (FILE * f,
 	  fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
 	  gregoriotex_write_last_note_verb (f, glyph);
-	  gregoriotex_write_signs (f, gtype, glyph,
+	  gregoriotex_write_signs (f, gtype, glyph, element, syllable,
 					       glyph->first_note);
 		glyph->glyph_type = G_TORCULUS_RESUPINUS;
 	  glyph->first_note = current_note;
@@ -1386,7 +1386,7 @@ gregoriotex_write_glyph (FILE * f,
 	  fprintf (f, "\\glyph{\\char %d}{%c}{%c}{%d}%%\n", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
       gregoriotex_write_last_note_verb (f, glyph);
-	  gregoriotex_write_signs (f, gtype, glyph,
+	  gregoriotex_write_signs (f, gtype, glyph, element, syllable,
 					       glyph->first_note);
 	  break;
 	}
@@ -1420,6 +1420,8 @@ A function that write the signs of a glyph, which has the type type (T_*, not G_
 void
 gregoriotex_write_signs (FILE * f, char type,
 				     gregorio_glyph * glyph,
+				  	 gregorio_element *element,
+				  	 gregorio_syllable *syllable,
 				     gregorio_note * current_note)
 {
   // i is the number of the note for which we are typesetting the sign.
@@ -1439,7 +1441,7 @@ gregoriotex_write_signs (FILE * f, char type,
 	      && simple_htype(current_note->next->h_episemus_type) != H_NO_EPISEMUS
 	      && i == 1)
 	    {
-	      gregoriotex_write_hepisemus (f, glyph,
+	      gregoriotex_write_hepisemus (f, glyph, element, syllable,
 						       HEPISEMUS_FIRST_TWO,
 						       type, current_note);
 	      block_hepisemus = 1;
@@ -1450,7 +1452,7 @@ gregoriotex_write_signs (FILE * f, char type,
 		  && simple_htype(current_note->next->h_episemus_type) != H_NO_EPISEMUS
 		  && i == 2)
 		{
-		  gregoriotex_write_hepisemus (f, glyph,
+		  gregoriotex_write_hepisemus (f, glyph, element, syllable,
 							   HEPISEMUS_FIRST_TWO,
 							   type,
 							   current_note);
@@ -1458,7 +1460,7 @@ gregoriotex_write_signs (FILE * f, char type,
 		}
 	      else
 		{
-		  gregoriotex_write_hepisemus (f, glyph, i, type,
+		  gregoriotex_write_hepisemus (f, glyph, element, syllable, i, type,
 							   current_note);
 		}
 	    }
@@ -1729,6 +1731,8 @@ void
 gregoriotex_write_hepisemus (FILE * f,
 					 gregorio_glyph *
 					 current_glyph,
+					 gregorio_element *current_element,
+					 gregorio_syllable *current_syllable,
 					 int i, char type,
 					 gregorio_note * current_note)
 {
@@ -1758,6 +1762,7 @@ gregoriotex_write_hepisemus (FILE * f,
       if (bottom != 1 && simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS)
     {
       fprintf (f, "\\hepisemus{%c}{%d}{%d}%%\n", height, number, ambitus);
+      gregoriotex_write_bridge_hepisemus(f, current_glyph, current_element, current_syllable, height);
     }
     return;
     }
@@ -1769,8 +1774,22 @@ gregoriotex_write_hepisemus (FILE * f,
   else
     {
       fprintf (f, "\\hepisemus{%c}{%d}{%d}%%\n", height, number, ambitus);
+      gregoriotex_write_bridge_hepisemus(f, current_glyph, current_element, current_syllable, height);
     }
-    
+}
+
+void
+gregoriotex_write_bridge_hepisemus (FILE * f,
+					 gregorio_glyph *
+					 current_glyph,
+					 gregorio_element *current_element,
+					 gregorio_syllable *current_syllable,
+					 char height)
+{
+    /*gregoriotex_find_sign_number (current_glyph, i,
+					    type, TT_H_EPISEMUS, current_note,
+					    &number, &height, &bottom);
+		*/
 }
 
 // a macro to write an additional line bottom_or_top is bottom, or top...
@@ -2184,6 +2203,7 @@ gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
       break;
     case T_FLEXUS:
     case T_FLEXUS_LONGQUEUE:
+    case T_FLEXUS_ORISCUS:
       switch (i)
 	{
 	case 1:
@@ -2531,6 +2551,12 @@ gregoriotex_determine_liquescentia_number (unsigned int
 	{
 	  liquescentia = L_NO_LIQUESCENTIA;
 	}
+    case L_ONLY_AUCTUS:
+      if (liquescentia != L_AUCTUS_ASCENDENS
+	  && liquescentia != L_AUCTUS_DESCENDENS)
+	{
+	  liquescentia = L_NO_LIQUESCENTIA;
+	}
     case L_UNDET_AUCTUS:
       if (liquescentia == L_AUCTUS_DESCENDENS)
 	{
@@ -2748,7 +2774,18 @@ void
 	      *type = AT_FLEXUS;
 	    }
 	}
-      if (is_short (pitch))
+	    if (glyph->first_note->shape == S_ORISCUS)
+	      {
+          *gtype = T_FLEXUS_ORISCUS;
+          temp =
+	    TYPE_FACTOR * T_FLEXUS_ORISCUS +
+	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
+						       L_ONLY_AUCTUS,
+						       glyph->liquescentia);
+	      }
+     else 
+       {
+       if (is_short (pitch))
 	{
 	  *gtype = T_FLEXUS;
 	  temp =
@@ -2765,6 +2802,7 @@ void
 	    gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
 						       L_NO_INITIO,
 						       glyph->liquescentia);
+	}
 	}
       break;
     case G_TORCULUS:

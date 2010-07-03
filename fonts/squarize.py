@@ -55,6 +55,7 @@ shapes={
 'flexus':10,
 'flexus_nobar':11,
 'flexus_longqueue':12,
+'flexus_oriscus':13,
 'porrectusflexus':14,
 'porrectusflexus_nobar':18,
 'porrectus':22,
@@ -81,7 +82,7 @@ liquescentiae={
 
 # a list of temporary glyphs, that must be removed from the finame font
 
-toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'p2base', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'rvsbase', 'rvlbase', 'vlbase', 'hepisemus_base','phigh', 'hepisemusleft', 'hepisemusright', 'mpdeminutus', 'mnbdeminutus', 'mnbpdeminutus', 'porrectusflexusnb1', 'porrectusflexusnb2', 'porrectusflexusnb3', 'porrectusflexusnb4', 'porrectusflexusnb5', 'msdeminutus', 'mademinutus']
+toremove=['base2', 'base3', 'base4', 'base5', 'base6', 'base7', 'line2', 'line3', 'line4', 'line5', 'pesdeminutus', 'mdeminutus', 'auctusa1', 'auctusa2', 'auctusd1', 'auctusd2', 'queue', 'idebilis', 'deminutus', 'rdeminutus', 'obase', 'qbase', 'pbase', 'p2base', 'porrectus1', 'porrectus2', 'porrectus3', 'porrectus4', 'porrectus5', 'porrectusflexus1', 'porrectusflexus2', 'porrectusflexus3', 'porrectusflexus4', 'porrectusflexus5', 'vsbase', 'rvsbase', 'rvlbase', 'vlbase', 'hepisemus_base','phigh', 'hepisemusleft', 'hepisemusright', 'mpdeminutus', 'mnbdeminutus', 'mnbpdeminutus', 'porrectusflexusnb1', 'porrectusflexusnb2', 'porrectusflexusnb3', 'porrectusflexusnb4', 'porrectusflexusnb5', 'msdeminutus', 'mademinutus','odbase']
 
 # in the police, all the free glyphs have the name NameMexxxx where xxxx is a number starting from 141 and increasing by one. For example each new glyph will be basically NameMecount, the next NameMecount+1, etc. They are initiated in initalize_glyphs()
 initialcount=0
@@ -168,13 +169,13 @@ def initialize_glyphs():
         initial_glyphs.remove(number)
     if font_name=="gregorio":
         glyphs_to_append=("_1025", "_2561")
-        initialcount=182
+        initialcount=183
     elif font_name=="parmesan":
         glyphs_to_append=("_1025", "_2561")
-        initialcount=182
+        initialcount=183
     elif font_name=="greciliae":
         glyphs_to_append=("_2561", "_1025", "_0075", "_0076", "_0078", "_0080")
-        initialcount=189
+        initialcount=190
     elif font_name=="gregoria":
         glyphs_to_append=("_2561", "_1025")
         initialcount=178
@@ -184,7 +185,7 @@ def initialize_glyphs():
 
 #function in which we initialize the lenghts, depending on the font
 def initialize_lengths():
-    global base_height, line_width, width_punctum, width1, width2, width_debilis, width_deminutus, width_inclinatum_deminutus, width_flexusdeminutus, porrectusflexuswidths, porrectuswidths, width_inclinatum, width_stropha, hepisemus_additional_width, width_oriscus, width_quilisma, width_high_pes
+    global base_height, line_width, width_punctum, width1, width2, width_debilis, width_deminutus, width_inclinatum_deminutus, width_flexusdeminutus, porrectusflexuswidths, porrectuswidths, width_inclinatum, width_stropha, hepisemus_additional_width, width_oriscus, width_quilisma, width_high_pes, width_oriscus_rev
     if (font_name=="gregorio"):
         # the base heigth is half the space between two lines plus half the heigth of a line
         base_height=157.5
@@ -196,6 +197,8 @@ def initialize_lengths():
         # width_oriscus is the width of an oriscus, idem for quilisma
         width_oriscus=164
         width_quilisma=164
+        # width_oriscus_rev is the width of an oriscus reversus
+        width_oriscus_rev=164
         # the width of the first note of an initio debilis, and the one of the last note of a deminutus. Warning, in GregorioTeX they must be the same! you must (almost always) add the width of a line to have the real width.
         width_debilis=88
         width_deminutus=88
@@ -219,6 +222,7 @@ def initialize_lengths():
         line_width=22
         width_punctum=161
         width_oriscus=192
+        width_oriscus_rev=192
         width_quilisma=161
         width_debilis=75
         width_deminutus=75
@@ -235,6 +239,7 @@ def initialize_lengths():
         line_width=18
         width_punctum=166
         width_oriscus=166
+        width_oriscus_rev=168
         width_quilisma=166
         width_debilis=65
         width_deminutus=65
@@ -251,6 +256,7 @@ def initialize_lengths():
         line_width=22
         width_punctum=164
         width_oriscus=164
+        width_oriscus_rev=164
         width_quilisma=164
         width_debilis=88
         width_deminutus=88
@@ -615,6 +621,8 @@ def flexus():
     for i in range(1,max_interval+1):
         write_flexus(i, "base2", 'base7', 'flexus_nobar')
     for i in range(1,max_interval+1):
+        write_flexus(i, "odbase", 'base7', 'flexus_oriscus')
+    for i in range(1,max_interval+1):
         write_flexus(i, "vsbase", 'base7', 'flexus')
     for i in range(1,max_interval+1):
         write_flexus(i, "vlbase", 'base7', 'flexus_longqueue')
@@ -629,12 +637,16 @@ def flexus():
     for i in range(1,max_interval+1):
         write_flexus(i, "base2", 'auctusa1', 'flexus_nobar', 'auctusascendens')
     for i in range(1,max_interval+1):
+        write_flexus(i, "odbase", 'auctusa1', 'flexus_oriscus', 'auctusascendens')
+    for i in range(1,max_interval+1):
         write_flexus(i, "vsbase", 'auctusa1', 'flexus', 'auctusascendens')
     for i in range(1,max_interval+1):
         write_flexus(i, "vlbase", 'auctusa1', 'flexus_longqueue', 'auctusascendens')
     precise_message("flexus auctus descendens")
     for i in range(1,max_interval+1):
         write_flexus(i, "base2", 'auctusd1', 'flexus_nobar', 'auctusdescendens')
+    for i in range(1,max_interval+1):
+        write_flexus(i, "odbase", 'auctusd1', 'flexus_oriscus', 'auctusdescendens')
     for i in range(1,max_interval+1):
         write_flexus(i, "vsbase", 'auctusd1', 'flexus', 'auctusdescendens')
     for i in range(1,max_interval+1):
@@ -647,11 +659,11 @@ def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
     if (first_glyph=="mdeminutus"):
         if shape=='flexus_nobar':
             write_deminutus(0, i, glyphname, length=0, tosimplify=1, firstbar=0)
+        elif shape=='flexus':
+            write_first_bar(1, glyphname)
+            write_deminutus(0, i, glyphname, length=0, tosimplify=1, firstbar=1)
         else:
-            if shape=='flexus':
-                write_first_bar(1, glyphname)
-            else:
-                write_first_bar(2, glyphname)
+            write_first_bar(2, glyphname)
             write_deminutus(0, i, glyphname, length=0, tosimplify=1, firstbar=1)
         length=width_flexusdeminutus
     else:
@@ -664,21 +676,29 @@ def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
                 last_glyph='_0073' 
             if first_glyph=='base2':
                 first_glyph='_0017'
+            if first_glyph=='odbase':
+                first_glyph='_0028'
             elif first_glyph=='vsbase':
                 first_glyph='_0025'
             elif first_glyph=='vlbase':
                 first_glyph='_0024'
         simple_paste(first_glyph, glyphname)
-        if i==1:
-            length=width_punctum
+        if first_glyph=='odbase':
+            length = width_oriscus_rev
         else:
-            length=width_punctum-line_width
+            length=width_punctum
+        if i!=1:
+            length=length-line_width
             write_line(i, glyphname, length, (1-i)*base_height)
         paste_and_move(last_glyph, glyphname, length, (-i)*base_height)
-        if i==1:
-            length=2*width_punctum
+        if first_glyph=='odbase':
+            length = width_oriscus_rev
         else:
-            length=2*width_punctum-line_width
+            length = width_punctum
+        if i==1:
+            length = 2 * length
+        else:
+            length = 2 * length - line_width
     set_width(length)
     end_glyph(glyphname)
 

@@ -27,6 +27,11 @@ g'f(g'f) gf'(gf') g'f'(g'f') h'f(h'f) hf'(hf') h'f'(h'f'Z)
 g_f(g_f) gf_(gf_) g_f_(g_f_) h_f(h_f) hf_(hf_) h_f_(h_f_Z)
 g.'f(g.'f) gf'.(gf'.) g'.f'.(g'.f'.) h.'f(h.'f) hf.'(hf.') h.'f.'(h.'f.'Z)
 g.'fo(g.'f) gfo'.(gf'.) go'.fo'.(g'.f'.) h.'fo(h.'f) hfo.'(hf.') h.'fo.'(h.'f.'Z)
+gof<(gof<) gof>(gof>) -gof(-gof) gof~(gof~Z)
+g.of(go.f) gof.(gof.) gof..(gof..) g.of.(go.f.Z)
+go'f(go'f) gof'(gof') g'of'(go'f') h'of(ho'f) hof'(hof') h'of'(ho'f'Z) 
+g_of(go_f) gof_(gof_) g_of_(go_f_) h_of(ho_f) hof_(hof_) h_of_(ho_f_Z)
+g.o'f(go.'f) gof'.(gof'.) g'o.f'.(go'.f'.) ho.'f(ho.'f) hof.'(hof.') ho.'f.'(ho.'f.'Z)
 %
 % torculus
 %
@@ -106,7 +111,7 @@ abc(g_0h_ g_h_ g_0_h_g_0_)
 %
 % rare signs
 %
-gr(gr) hr(hr) gR(gR) hr0(hr0) gr0(gr0) gr1(gr1) gr2(gr2) gr3(gr3) gr4(gr4) gr5(gr5)
+gr(gr) hr(hr) gR(gR) hr0(hr0) gr0(gr0) gr1(gr1) gr2(gr2) gr3(gr3) gr4(gr4) gr5(gr5) krr5(krr5) lrr2(lrr2) mrr3(mrr3)
 %
 % comments
 %

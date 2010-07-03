@@ -39,6 +39,7 @@ Here are the different types, they must be the same as in squarize.py
 #define T_FLEXUS 10
 #define T_FLEXUS_NOBAR 11
 #define T_FLEXUS_LONGQUEUE 12
+#define T_FLEXUS_ORISCUS 13
 // the next are the long ones
 #define T_PORRECTUSFLEXUS 14
 #define T_PORRECTUSFLEXUS_NOBAR 18
@@ -98,6 +99,7 @@ Here are the different types, they must be the same as in squarize.py
 #define L_NONE 3		/* for glyphs that don't accept liquescentia */
 #define L_ONLY_DEMINUTUS 4
 #define L_NO_DEMINUTUS 5
+#define L_ONLY_AUCTUS 6
 
 // the definitions of the type and liquescentia factors
 #define TYPE_FACTOR 512
@@ -163,9 +165,9 @@ void gtex_print_char (FILE * f, grewchar to_print);
 
 unsigned int gregoriotex_determine_liquescentia_number (unsigned int factor, unsigned char type, char liquescentia);
 void gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
-void gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
+void gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, gregorio_element * current_element, gregorio_syllable * current_syllable, int i, char type, gregorio_note * current_note);
 void gregoriotex_write_rare (FILE * f, gregorio_glyph *current_glyph, int i, char type, gregorio_note * current_note, char rare);
-void gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_note * current_note);
+void gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_element * element, gregorio_syllable * syllable, gregorio_note * current_note);
 
 void gregoriotex_write_next_first_text (FILE * f, gregorio_character *current_character);
 int gregoriotex_syllable_first_type (gregorio_syllable * syllable);
@@ -184,4 +186,6 @@ void gregoriotex_write_additional_line (FILE * f, gregorio_glyph *current_glyph,
 void gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line);
 
 char gregoriotex_clef_flat_height(char step, int line);
+
+void gregoriotex_write_bridge_hepisemus (FILE * f, gregorio_glyph *current_glyph, gregorio_element *current_element,	 gregorio_syllable *current_syllable, char height);
 #endif
