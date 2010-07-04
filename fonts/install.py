@@ -77,8 +77,10 @@ def patch_cygwin(basedir):
     # just some symlinks for texlive 2008 to work fine under cygwin
     # test to know if it is a cygwin system
     # we have to copy some files
-    if access('%s/2008' % basedir, F_OK):
-        basename = '%s/2008' % basedir
+    if access('%s/2009' % basedir, F_OK):
+        basename = '%s/2009' % basedir
+    if access('%s/2010' % basedir, F_OK):
+        basename = '%s/2010' % basedir
     elif access('%s/bin' % basedir, F_OK):
         basename = basedir
     else:
@@ -219,9 +221,9 @@ def endInstall(basedir):
         for fontname in Fonts:
             print ("running updmap-sys --enable MixedMap=%s.map" % fontname)
             if access('/cygdrive', F_OK):
-                system("updmap-sys.bat --enable MixedMap=%s.map" % fontname)
+                system("updmap-sys.exe --enable MixedMap=%s.map" % fontname)
                 print ("running updmap --enable MixedMap=%s.map" % fontname)
-                system("updmap.bat --enable MixedMap=%s.map" % fontname)
+                system("updmap.exe --enable MixedMap=%s.map" % fontname)
             else:
                 system("updmap-sys --enable MixedMap=%s.map" % fontname)
 
