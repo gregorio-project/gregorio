@@ -701,7 +701,7 @@
   \fi%
   \kern -\gretempwidth %
   % then we draw the sign, and go back to the beginning of the sign
-  \setbox\GreTempsign=\hbox{\gregoriofont \char #2}%
+  \setbox\GreTempsign=\hbox{\gregoriofont\char #2}%
   % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
   \gretempdimsignwidth=\wd\GreTempsign %
   \ifnum#4<2\relax % case of the lines
@@ -904,13 +904,13 @@
 
 % dumb top function
 \def\grehepisemus#1#2#3{%
-  \grehepisorlineaux{#1}{#2}{#3}{0}%
+  \grehepisorline{#1}{#2}{#3}{0}%
   \relax %
 }
 
 % same but for episema at the bottom of a note
 \def\grehepisemusbottom#1#2#3{%
-  \grehepisorlineaux{#1}{#2}{#3}{1}%
+  \grehepisorline{#1}{#2}{#3}{1}%
   \relax %
 }
 
@@ -936,7 +936,7 @@
 
 % another dumb top function
 \def\greadditionalline#1#2#3{%
-  \grehepisorlineaux{a}{#1}{#2}{#3}%
+  \grehepisorline{a}{#1}{#2}{#3}%
   \relax %
 }
 
