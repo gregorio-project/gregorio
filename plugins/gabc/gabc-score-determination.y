@@ -182,7 +182,6 @@ gabc_fix_custos (gregorio_score * score_to_check)
 	                      custo_element->element_type = pitch - pitch_difference;
                         break;
                       default:
-                        current_element = current_element->next;
                         break;
                     }
                   current_element = current_element->next;
