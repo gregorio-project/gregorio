@@ -1109,13 +1109,18 @@
   \ifcase#1% case 0
     \grelocalrightbox{}%
     \grelocalleftbox{}%
-      \barsyllable{}{}{}{1}{}{}{0}{}{%
-      \divisiofinalis %
+    \penalty 10001\relax %
+    \hskip\grespacebeforefinalfinalis %
+    \penalty 10001\relax %
+    \grebarsyllable{}{}{}{1}{}{}{0}{}{%
+      \gredivisiofinalis %
     }%
   \or % case 1
-    \hskip\grespacebeforefinalfinalis %
     \global\keeprightbox=1 %
     \grelocalrightbox{%
+      \hbox{%
+        \hskip\grespacebeforefinalfinalis %
+      }%
       \gredivisiofinalissymbol %
     }%
   \fi %
@@ -1127,8 +1132,8 @@
   \ifcase#1% case 0
     \grelocalrightbox{}%
     \grelocalleftbox{}%
-      \barsyllable{}{}{}{1}{}{}{0}{}{%
-      \divisiomaior %
+      \grebarsyllable{}{}{}{1}{}{}{0}{}{%
+      \gredivisiomaior %
     }%
   \or % case 1
     \hskip\grespacebeforefinalfinalis %

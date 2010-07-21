@@ -391,10 +391,12 @@
       \advance\greclefwidth by \greminimalspaceatlinebeginning %
       \hbox{}%
       \advance\gretempdim by -\grespaceafterlineclef %
-      \ifdim\the\gretempdim < -\the\grebegindifference %
-        \gretempdim=-\the\grebegindifference %
+      \ifdim\the\gretempdim < \the\grebegindifference %
+        \gretempdim=\the\grebegindifference %
       \fi %
-      \kern\gretempdim %
+      \ifdim\the\gretempdim < 0pt%
+        \kern\the\gretempdim %
+      \fi %
       \hskip\greafterclefnospace %
     \fi %
   \else %\ifnum\grelastoflinecount=2
