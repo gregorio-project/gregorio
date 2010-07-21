@@ -219,18 +219,12 @@
 %% macros for additionnal vertical spaces
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% first, we have two spaces for the chironomic signs
-\newdimen\greabovesignsspace
-\greabovesignsspace = 8mm
-\newdimen\grebelowsignsspace
-\grebelowsignsspace = 0mm
-
-% additional space for the translation, beneath the text
-\newdimen\gretranslationheight
+% temporary value for space for the translation, beneath the text
+\newdimen\grecurrenttranslationheight
 
 % macro to tell gregorio to set space for the translation
 \def\greaddtranslationspace{%
-  \global\gretranslationheight=60000 sp%
+  \global\grecurrenttranslationheight=\gretranslationheight %
   \global\multiply\gretranslationheight by \the\grefactor %
   \global\gretextlower=\grespacebeneathtext %
   \global\advance\gretextlower by \gretranslationheight %
@@ -240,7 +234,7 @@
 }
 
 \def\greremovetranslationspace{%
-  \global\gretranslationheight=0 sp%
+  \global\grecurrenttranslationheight=0 sp%
   \global\gretextlower=\grespacebeneathtext %
   \gregeneratelines %
   \grecalculateconstantglyphraise %
