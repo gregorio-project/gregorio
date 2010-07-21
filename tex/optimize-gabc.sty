@@ -40,7 +40,7 @@ require("optimize_gabc_style")
 }
 
 \def\setmaxpos{%
-\directlua{optimize_gabc_style.setstaffwidth("\the\stafflinewidth")}%
+\directlua{optimize_gabc_style.setstaffwidth("\the\grestafflinewidth")}%
 \pdfsavepos %
 \luatexlatelua{optimize_gabc_style.setinitpos(\number\pdflastxpos)}%
 }
@@ -53,8 +53,8 @@ require("optimize_gabc_style")
 \settolerance{0}
 
 \def\sethyphenwidth{%
-\setbox\Tempwidth=\hbox{-}%
-\directlua{optimize_gabc_style.sethyphenwidth("\the\wd\Tempwidth")}%
+\setbox\GreTempwidth=\hbox{-}%
+\directlua{optimize_gabc_style.sethyphenwidth("\the\wd\GreTempwidth")}%
 }
 
 \def\optgabcAtScoreBeginning{%

@@ -17,8 +17,15 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{gregoriotex}%
     [2010/06/22 v1.1 GregorioTeX system.]
+\RequirePackage{xcolor}
 
 \input gregoriotex.tex
+
+% we hide lines only under LaTeX
+\GreHideAltLines
+\GreHidePCLines
+
+\definecolor{grebackgroundcolor}{RGB}{255,255,255}%
 
 \def\greinitialformat#1{%
   \begin{huge}#1\end{huge}%
@@ -55,24 +62,28 @@
   \relax %
 }
 
-\def\coloredlines#1#2#3{%
+\def\grecoloredlines#1#2#3{%
   \definecolor{gretempcolor}{RGB}{#1,#2,#3}%
-  \global\def\stafflinesformat{%
+  \global\def\grestafflinesformat{%
     \color{gretempcolor}\relax}
   \relax %
 }
 
-\def\redlines{%
+\def\greredlines{%
   \coloredlines{229}{53}{44}%
   \relax %
 }
 
-\def\normallines{%
-  \global\def\stafflinesformat{}
+\let\redlines\greredlines
+
+\def\grenormallines{%
+  \global\def\grestafflinesformat{}
   \relax %
 }
 
-\def\abovelinestextstyle#1{%
+\let\normallines\grenormallines
+
+\def\greabovelinestextstyle#1{%
   \small\textit{#1}%
   \relax %
 }
