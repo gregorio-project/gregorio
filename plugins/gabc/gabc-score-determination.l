@@ -172,7 +172,7 @@ semicolon. */
 	 }
 <INITIAL>. {
     char *dirtyvar = malloc(71*sizeof(char));
-	snprintf(dirtyvar,70,gettext("unrecognized character: \"%c\" in definition part"),gabc_score_determination_text[0]);
+	snprintf(dirtyvar,70,_("unrecognized character: \"%c\" in definition part"),gabc_score_determination_text[0]);
 	gregorio_message (dirtyvar,
 		      "det_score", ERROR, 0);
 	}
