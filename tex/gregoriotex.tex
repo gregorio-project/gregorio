@@ -242,12 +242,7 @@
 
 %macro to call if you want to go to the next line simply
 \def\grenewline{%
-  \grenewlinecommon %
-  \greupdateadditionalspaces{0}{0}%
-  \greremovetranslationspace %
-  \global\grelastoflinecount=2\relax %
-  \greupdateleftbox %
-  \penalty-10001 %
+  \grenewlinecommon{0}{0}{0}{0}%
   \relax%
 }
 
@@ -256,16 +251,7 @@
 %% 2: idem, but with the bottom line (-1th). It can be 4, in the case of a bottom note with a vertical episemus.
 %% 3: 1 if there is a translation somewhere
 \def\grenewlinewithspace#1#2#3{%
-  \grenewlinecommon %
-  \greupdateadditionalspaces{#1}{#2}%
-  \ifnum#3 = 1\relax %
-    \greaddtranslationspace %
-  \else %
-    \greremovetranslationspace %
-  \fi %
-  \global\grelastoflinecount=2\relax %
-  \greupdateleftbox %
-  \penalty-10001 %
+  \grenewlinecommon{#1}{#2}{#3}{0}%
   \relax%
 }
 
@@ -273,49 +259,46 @@
 % basically same macros as above, but these one do a \hfill, the lines are not justified
 %macro to call if you want to go to the next line simply
 \def\grenewparline{%
-  \grenewlinecommon %
-  \greupdateadditionalspaces{0}{0}%
-  \greremovetranslationspace %
-  \global\grelastoflinecount=2\relax %
-  \greupdateleftbox %
-  \hfill %
-  \penalty-10001 %
+  \grenewlinecommon{0}{0}{0}{1}%
   \relax%
+}
+
+\def\grenewparlinewithspace#1#2#3{%
+  \grenewlinecommon{#1}{#2}{#3}{1}%
 }
 
 % a macro describing a kern to make before ending the line, which we sometimes want (see \syllable)
 \xdef\grekernbeforeeol{0pt\relax}
 
 % the macro we call each time we force a changing of line, it automatically sets \greknownline, and adjusts left spaces
-\def\grenewlinecommon{%
+\def\grenewlinecommon#1#2#3#4{%
   % sometimes we need to add a space before ending the line:
   \kern\grekernbeforeeol\relax %
-  \ifnum\grebiginitial=1\relax %
-    \ifcase\greknownline %
-    % 0: should not happend...
-    \or % 1
-      \greadjustsecondline %
-    \or %2
-      \greadjustthirdline %
+  \ifnum\greboxing=0\relax %
+    \ifnum\grebiginitial=1\relax %
+      \ifcase\greknownline %
+      % 0: should not happend...
+      \or % 1
+        \greadjustsecondline %
+      \or %2
+        \greadjustthirdline %
+      \fi %
     \fi %
+    \global\advance\greknownline by 1\relax %
+    \greupdateadditionalspaces{#1}{#2}%
+      \ifnum#3 = 1\relax %
+        \greaddtranslationspace %
+      \else %
+        \greremovetranslationspace %
+      \fi %
+    \global\grelastoflinecount=2\relax %
+    \greupdateleftbox %
+    \ifnum#4=1\relax %
+      \hfill %
+    \fi %
+    \penalty-10001 %
   \fi %
-  \global\advance\greknownline by 1\relax %
   \relax %
-}
-
-\def\grenewparlinewithspace#1#2#3{%
-  \grenewlinecommon %
-  \greupdateadditionalspaces{#1}{#2}%
-  \ifnum#3 = 1\relax %
-    \greaddtranslationspace %
-  \else %
-    \greremovetranslationspace %
-  \fi %
-  \global\grelastoflinecount=2\relax %
-  \greupdateleftbox %
-  \hfill %
-  \penalty-10001 %
-  \relax%
 }
 
 % two dimensions for the additionalspaces
@@ -702,7 +685,7 @@
   %\greinitialwidth=0pt%
   \hbox to0pt{%
     \vbox{%
-      \grestafflinesformat %
+      \grenormalstafflinesformat %
       \vskip\grespaceabovelines %
       \vskip\greadditionaltopspace %
       \hrule height \grestafflineheight width \grestafflinewidth %
@@ -730,7 +713,7 @@
 \def\gregeneratelines{%
   \setbox\GreLines=\hbox to0pt{%
     \vbox{%
-      \grestafflinesformat %
+      \grenormalstafflinesformat %
       \vskip\grespaceabovelines %
       \vskip\greadditionaltopspace %
       \hrule height \grestafflineheight width \grestafflinewidth %
@@ -1156,7 +1139,17 @@
   \relax %
 }
 
-\def\grestafflinesformat{%
+\def\grenormalstafflinesformat{%
+  \relax %
+}
+
+\def\greadditionalstafflinesformat{%
+  \relax %
+}
+
+\def\GreSetStaffLinesFormat#1{%
+  \global\def\greadditionalstafflinesformat{#1\relax }%
+  \global\def\grenormalstafflinesformat{#1\relax }%
   \relax %
 }
 

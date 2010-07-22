@@ -190,16 +190,23 @@
 %%%%% 7 : case of a stropha
 %%%%% 8 : flexus with an ambitus of one
 %%%%% 9 : flexus deminutus
-\def\greglyph#1#2#3#4{%
+% #5 are the signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)
+% #6 are the signs to typeset after the glyph (almost all signs)
+\def\greglyph#1#2#3#4#5#6{%
   % first there is something we must do: setting \grelastoflinecount to 0 if its value is 2. The reason of this is that in ab(abzcd), we cannot let \grelastoflinecount set to 2 after the end of line... the only way I found to achieve it is to reset \grelastoflinecount to 0 after each glyph or bar.
   \ifnum\grelastoflinecount=2\relax %
     \global\grelastoflinecount=0\relax %
   \fi %
   \grecalculateglyphraisevalue{#2}{0}%
   \setbox\GreTempwidth=\hbox{\gregoriofont #1}%
-  \gretempwidth=\wd\GreTempwidth%
+  \gretempwidth=\wd\GreTempwidth %
   \global\grelastglyphwidth=\gretempwidth %
-  \raise \greglyphraisevalue%
+  % the three next lines are a trick to get the additional lines below the glyphs
+  \kern\grelastglyphwidth %
+  #5\relax %
+  \kern-\grelastglyphwidth %
+  \color{black}%
+  \raise\greglyphraisevalue %
   \copy\GreTempwidth%
   \ifnum\the\greendofscore=0 %
     \gresetcusto{#3}%
@@ -209,6 +216,8 @@
     \global\grefirstglyph=0%
   \fi%
   %\grelastglyphwidth=\gretempwidth%
+  %#5\relax %
+  #6\relax %
   \relax%
 }
 
@@ -351,6 +360,9 @@
 % we specify if it is the last syllable of the score with that value
 \newcount\greendofscore
 
+% a helper macro (see details in \gresyllable)
+\xdef\greboxing{0}%
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : the first letters of the syllable, that don't count for the alignment
 % #2 : the middle letters of the syllable, we must align in the middle of them
@@ -371,7 +383,10 @@
   \grefindtextaligncenter{#1}{#2}% we first get the width between the alignment point and the end of the syllable
   % we need to save lastoflinecount, because otherwise when a \newline appears inside a syllable, it is counted two times (once here and once later when #9 will be really output), so \grelastoflinecount has a wrong value. Thus
   \edef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
+  % a counter to know we are not really typesetting things (useful for end of lines)
+  \xdef\greboxing{1}%
   \gresyllablenotes{#9}% we put the notes in a box, so that we have the width of it
+  \xdef\greboxing{0}%
   \grefirstglyph=1 %
   \global\grelastoflinecount=\gresavedlastoflinecount\relax %
   % now we calculate the begin difference, that is to say \grenotesaligncenter - \gretextaligncenter

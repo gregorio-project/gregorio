@@ -64,13 +64,14 @@
 
 \def\grecoloredlines#1#2#3{%
   \definecolor{gretempcolor}{RGB}{#1,#2,#3}%
-  \global\def\grestafflinesformat{%
-    \color{gretempcolor}\relax}
+  \GreSetStaffLinesFormat{%
+  \color{gretempcolor}%
+  }%  
   \relax %
 }
 
 \def\greredlines{%
-  \coloredlines{229}{53}{44}%
+  \grecoloredlines{229}{53}{44}%
   \relax %
 }
 

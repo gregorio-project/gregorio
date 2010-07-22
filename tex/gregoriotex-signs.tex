@@ -237,10 +237,10 @@
   \advance\gretempdim by \grespacelinestext %
   \advance\gretempdim by \greinterstafflinespace %
   \advance\gretempdim by \greadditionalbottomspace %
-  \advance\gretempdim by \gretranslationheight %
+  \advance\gretempdim by \grecurrenttranslationheight %
   \raise\gretempdim %
   \hbox to 0pt{%
-    \grestafflinesformat %
+    \greadditionalstafflinesformat %
     \kern\gretempwidth %
     \kern -\greadditionallineswidth %
     \vrule width \greadditionallineswidth height \grestafflineheight%
@@ -253,12 +253,12 @@
   \gretempdim=\grespacebeneathtext %
   \advance\gretempdim by \grespacelinestext %
   \advance\gretempdim by \greadditionalbottomspace %
-  \advance\gretempdim by \gretranslationheight %
+  \advance\gretempdim by \grecurrenttranslationheight %
   \advance\gretempdim by -\greinterstafflinespace %
   \advance\gretempdim by -\grestafflineheight %
   \raise\gretempdim %
   \hbox to 0pt{%
-    \grestafflinesformat %
+    \greadditionalstafflinesformat %
     \kern\gretempwidth %
     \kern -\greadditionallineswidth %
     \vrule width \greadditionallineswidth height \grestafflineheight%
@@ -275,10 +275,10 @@
   \advance\gretempdim by \grespacelinestext %
   \advance\gretempdim by \greinterstafflinespace %
   \advance\gretempdim by \greadditionalbottomspace %
-  \advance\gretempdim by \gretranslationheight %
+  \advance\gretempdim by \grecurrenttranslationheight %
   \raise\gretempdim %
   \hbox to 0pt{%
-    \grestafflinesformat %
+    \greadditionalstafflinesformat %
     \hss %
     \kern\gretempwidth %
     \gretempdim=\greadditionallineswidth %
@@ -293,12 +293,12 @@
   \gretempdim=\grespacebeneathtext %
   \advance\gretempdim by \grespacelinestext %
   \advance\gretempdim by \greadditionalbottomspace %
-  \advance\gretempdim by \gretranslationheight %
+  \advance\gretempdim by \grecurrenttranslationheight %
   \advance\gretempdim by -\greinterstafflinespace %
   \advance\gretempdim by -\grestafflineheight %
   \raise\gretempdim %
   \hbox to 0pt{%
-    \grestafflinesformat %
+    \greadditionalstafflinesformat %
     \hss %
     \kern\gretempwidth %
     \gretempdim=\greadditionallineswidth %
@@ -722,7 +722,7 @@
     \greglyphraisevalue=\greadditionalbottomspace %
     \advance\greglyphraisevalue by \grespacebeneathtext %
     \advance\greglyphraisevalue by \grespacelinestext %
-    \advance\greglyphraisevalue by \gretranslationheight %
+    \advance\greglyphraisevalue by \grecurrenttranslationheight %
     \advance\greglyphraisevalue by 4\greinterstafflinespace %
     \advance\greglyphraisevalue by 4\grestafflineheight %
     \raise\greglyphraisevalue\hbox{\vrule height \grestafflineheight width \gretempdimsignwidth}%
@@ -730,7 +730,7 @@
   \or % case of a line at the bottom
     \greglyphraisevalue=\greadditionalbottomspace %
     \advance\greglyphraisevalue by \grespacebeneathtext %
-    \advance\greglyphraisevalue by \gretranslationheight %
+    \advance\greglyphraisevalue by \grecurrenttranslationheight %
     \advance\greglyphraisevalue by \grespacelinestext %
     \advance\greglyphraisevalue by -\greinterstafflinespace %
     \advance\greglyphraisevalue by -\grestafflineheight %
@@ -747,10 +747,15 @@
 % the third argument is a bit particular, it is the ambitus of the porrectus or porrectus flexus if the second argument is 8 or 9, otherwise it is useless
 % #4 is 0 for an horizontal episemus, 1 for an horizontal episemus under a note, 3 for a line at the bottom and 2 for a line at the top
 \def\grehepisorline#1#2#3#4{%
-  \ifnum#4=1\relax %
-    \grecalculateglyphraisevalue{#1}{5}%
-  \else %
+  \ifcase#4 %
     \grecalculateglyphraisevalue{#1}{9}%
+  \or %
+    \grecalculateglyphraisevalue{#1}{5}%
+  \or %
+    % the glyphraisevalue is ignored anyway... but it's just in case...
+    \grecalculateglyphraisevalue{l}{0}%
+  \or %
+    \grecalculateglyphraisevalue{b}{0}%
   \fi %
   \ifcase#2 %
     %case 0
@@ -915,12 +920,12 @@
 }
 
 \def\AddHEpisemusBridges{%
-\xdef\addhepisemusbridges{1}%
+\xdef\greaddhepisemusbridges{1}%
 \relax %
 }
 
 \def\RemoveHEpisemusBridges{%
-\xdef\addhepisemusbridges{1}%
+\xdef\greaddhepisemusbridges{0}%
 \relax %
 }
 
@@ -928,7 +933,7 @@
 
 % same but for a "bridge episemus" after the last note of a glyph (element, syllable) if the next episemus is at the same height
 \def\grehepisemusbridge#1#2#3{%
-  \ifnum\addhepisemusbridges=1\relax %
+  \ifnum\greaddhepisemusbridges=1\relax %
     %TODO
   \fi %
   \relax %
@@ -936,7 +941,11 @@
 
 % another dumb top function
 \def\greadditionalline#1#2#3{%
+  \xdef\gresavedglyphraise{\the\greglyphraisevalue}%
+  {\greadditionalstafflinesformat %
   \grehepisorline{a}{#1}{#2}{#3}%
+  }%
+  \greglyphraisevalue=\gresavedglyphraise %
   \relax %
 }
 
@@ -1173,17 +1182,15 @@
 % the argument is the character with which we fill the hole, and we suppose that
 % isonaline and glyphraisevalue are correctly set.
 \def\grefillhole#1{%
-  \ifcase\greisonaline\or %
   \setbox\GreTempwidth=\hbox{\gregoriofont #1}%
   \hbox to 0pt{%
     \color{grebackgroundcolor}%
-    \raise \greglyphraisevalue%
+    \raise \greglyphraisevalue %
     \copy\GreTempwidth %
     \pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
     \hss %
   }%
   \penalty 10001\relax %
-  \fi %
 \relax %
 }
 
@@ -1195,7 +1202,7 @@
 \newcount\grefirstisalteration
 
 % This macro typesets a flat on the height provided by #1. #2 is not used yet, but it
-% will determine if the flat has zero width or not.
+% will determine if the flat has zero width or not. #3 and #4 should be the same as greglyph's #5 and #6, but it's not really done nor useful...
 
 \def\greflat#1#2{%
   % to see why we reset \grelastoflinecount, see comments of \greglyph.
@@ -1210,7 +1217,10 @@
     \grefillhole{\char 81}%
   \fi %
   \setbox\GreTempwidth=\hbox{\gregoriofont \char 6}%
-  \gretempwidth=\wd\GreTempwidth%
+  \gretempwidth=\wd\GreTempwidth %
+  %\kern\gretempwidth %
+  %#3\relax %
+  %\kern-\gretempwidth %
   \raise \greglyphraisevalue%
   \copy\GreTempwidth%
   % we try to avoir line breaking after a flat or a natural
@@ -1224,6 +1234,8 @@
     \hskip\grealterationspace %
   \fi %
   \penalty 10001\relax %
+  %#4\relax %
+  %\penalty 10001\relax %
   \relax%
 }
 
@@ -1243,6 +1255,9 @@
   \fi %
   \setbox\GreTempwidth=\hbox{\gregoriofont \char 7}%
   \gretempwidth=\wd\GreTempwidth%
+  %\kern\gretempwidth %
+  %#3\relax %
+  %\kern-\gretempwidth %
   \raise \greglyphraisevalue%
   \copy\GreTempwidth%
   \penalty 10001\relax %
@@ -1255,6 +1270,8 @@
     \hskip\grealterationspace %
   \fi %
   \penalty 10001\relax %
+  %#4\relax %
+  %\penalty 10001\relax %
   \relax%
 }
 
@@ -1280,21 +1297,31 @@
 
 \UseNormalPunctumCavum
 
-\def\grepunctumcavum#1#2#3{%
+\def\grepunctumcavum#1#2#3#4#5{%
   \grecalculateglyphraisevalue{#1}{0}%
+  \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctumcavumchar}%
+  \global\grelastglyphwidth=\wd\GreTempwidth %
+  \kern\grelastglyphwidth %
+  #4\relax %
+  \kern-\grelastglyphwidth %
   \ifnum\grehidepclines=1\relax %
     \grefillhole{\grepunctumcavumholechar}%
   \fi %
-  \greglyph{\grepunctumcavumchar}{#1}{#2}{#3}%
+  \greglyph{\grepunctumcavumchar}{#1}{#2}{#3}{}{#5}%
   \relax %
 }
 
 % Same as the one before, but for naturals.
-\def\grelineapunctumcavum#1#2#3{%
+\def\grelineapunctumcavum#1#2#3#4#5{%
   \grecalculateglyphraisevalue{#1}{0}%
+  \setbox\GreTempwidth=\hbox{\gregoriofont\grelineapunctumcavumchar}%
+  \global\grelastglyphwidth=\wd\GreTempwidth %
+  \kern\grelastglyphwidth %
+  #4\relax %
+  \kern-\grelastglyphwidth %
   \ifnum\grehidepclines=1\relax %
     \grefillhole{\grelineapunctumcavumholechar}%
   \fi %
-  \greglyph{\grelineapunctumcavumchar}{#1}{#2}{#3}%
+  \greglyph{\grelineapunctumcavumchar}{#1}{#2}{#3}{}{#5}%
   \relax %
 }
