@@ -42,15 +42,15 @@ g.o'f(go.'f) gof'.(gof'.) g'o.f'.(go'.f'.) ho.'f(ho.'f) hof.'(hof.') ho.'f.'(ho.
 %
 ghg(ghg) fif(fifZ)
 %
-g.hg(g.hg) f.if(f.if) gh.g(gh.g) fi.f(fi.f) ghg.(ghg.) fif.(fif.) g.h.g.(g.h.g.) f.i.f.(f.i.f.) ghg..(ghg..) fif..(fif..Z)  
+gh.g(gh.g) fi.f(fi.f) ghg.(ghg.) fif.(fif.) g.h.g.(g.h.g.) f.i.f.(f.i.f.) ghg..(ghg..) fif..(fif..Z)  
 g_hg(g_hg) f_if(f_if) gh_g(gh_g) fi_f(fi_f) ghg_(ghg_) fif_(fif_) g_h_g_(g_h_g_) f_i_f_(f_i_f_Z)
 g'hg(g'hg) f'if(f'if) gh'g(gh'g) fi'f(fi'f) ghg'(ghg') fif'(fif') g'h'g'(g'h'g') f'i'f'(f'i'f'Z)
-g.'hg(g.'hg) f.'if(f.'if) gh.'g(gh.'g) fi.'f(fi.'f) gh.'g(gh.'g) fif.'(fif.') g.'h.'g.'(g.'h.'g.') f.'i.'f.'(f.'i.'f.'Z)
+g'hg(g'hg) f'if(f'if) gh.'g(gh.'g) fi.'f(fi.'f) gh.'g(gh.'g) fif.'(fif.') g'h.'g.'(g'h.'g.') f'i.'f.'(f'i.'f.'Z)
 %
 % porrectus
 %
 hgh(hgh) ifi(ifiZ)
-h.gh(h.gh) i.fi(i.fi) hg.h(hg.h) if.i(if.i) hgh.(hgh.) ifi.(ifi.) h.g.h.(h.g.h.) i.f.i.(i.f.i.) hgh..(hgh..) ifi..(ifi..Z)  
+hg.h(hg.h) if.i(if.i) hgh.(hgh.) ifi.(ifi.) hg.h.(hg.h.) if.i.(if.i.) hgh..(hgh..) ifi..(ifi..Z)  
 h_gh(h_gh) i_fi(i_fi) hg_h(hg_h) if_i(if_i) hg_h_(hg_h_) if_i_(if_i_) h_g_h(h_g_h) i_f_i(i_f_i) ghg_(hgh_) ifi_(ifi_) h_g_h_(h_g_h_) i_f_i_(i_f_i_Z)
 h'gh(h'gh) f'if(i'fi) hg'h(hg'h) if'f(if'i) hgh'(hgh') ifi'(ifi') h'g'h'(h'g'h') f'i'f'(i'f'i'Z)
 g.'hg(h.'gh) i.'fi(i.'fi) gh.'g(hg.'h) if.'i(if.'f) gh.'g(hg.'h) ifi.'(ifi.') g.'h.'g.'(h.'g.'h.') f.'i.'f.'(i.'f.'i.'Z)
@@ -59,25 +59,25 @@ g.'hg(h.'gh) i.'fi(i.'fi) gh.'g(hg.'h) if.'i(if.'f) gh.'g(hg.'h) ifi.'(ifi.') g.
 %
 {ghgi}(ghgi) fifg~(fifg~) fifg(fifgZ)
 %
-{g.hgi}(g.hgi) f.ifg(f.ifg) {gh.gi}(gh.gi) fi.fg(fi.fg) {ghg.i}(ghg.i) fif.g(fif.g) {ghgi.}(ghgi.) fifg.(fifg.) {g.h.g.i}(g.h.g.i) f.i.f.g(f.i.f.g) {gh}gi..(ghgi..) fifg..(fifg..Z)  
+{ghg.i}(ghg.i) fif.g(fif.g) {ghgi.}(ghgi.) fifg.(fifg.) {g.h.g.i}(g.h.g.i) f.i.f.g(f.i.f.g) {gh}gi..(ghgi..) fifg..(fifg..Z)  
 %
 {g_}hgi(g_hgi) f_ifg(f_ifg) {gh}_gi(gh_gi) fi_fg(fi_fg) {gh}g_i(ghg_i) fif_g(fif_g) {gh}gi_(ghgi_) fifg_(fifg_) {gh}g_i_(ghg_i_) fif_g_(fif_g_) {gh}_g_i(gh_g_i) fi_f_g(fi_f_g) {g_h}_gi(g_h_gi) f_i_fg(f_i_fg) {g_h}_g_i(g_h_g_i) f_i_f_g(f_i_f_g) {g_h}_g_i_(g_h_g_i_) f_i_f_g_(f_i_f_g_Z)
 %
 {g'}hgi(g'hgi) f'ifg(f'ifg) {g}h'gi(gh'gi) fi'fg(fi'fg) {g}hg'i(ghg'i) fif'g(fif'g) {g}hgi'(ghgi') fifg'(fifg') {g}'h'g'i(g'h'g'i) f'i'f'g(f'i'f'g) {g}'h'g'i'(g'h'g'i') f'i'f'g'(f'i'f'g'Z)
 %
-{g}.'hgi(g.'hgi) f.'ifg(f.'ifg) {g}h.'gi(gh.'gi) fi.'fg(fi.'fg) {g}h.'gi(gh.'gi) fif.'g(fif.'g) {g}.'h.'g.'i(g.'h.'g.'i) f.'i.'f.'g(f.'i.'f.'g) {g}.'h.'g.'i.'(g.'h.'g.'i.')f.'i.'f.'g.'(f.'i.'f.'g.'Z)
+fif.'g(fif.'g) {g}'h'g.'i(g'h'g.'i) f'i'f.'g(f'i'f.'g) {g}'h'g.'i.'(g'h'g.'i.')f'i'f.'g.'(f.'i.'f.'g.'Z)
 %
 % torculus resupinus flexus
 %
 {g}hgif(ghgif) fifg(fifgeZ)
 %
-{g.}hgif(g.hgif) f.ifge(f.ifge) {gh.gif}(gh.gif) fi.fge(fi.fge) {ghg.if}(ghg.if) fif.ge(fif.ge) {ghgi.f}(ghgi.f) fifg.e(fifg.e) {ghgif.}(ghgif.) fifge.(fifge.) {ghgif}(ghgi.f.) fifg.e.(fifg.e.) {gh}gif..(ghgif..) fifge..(fifge..Z)  
+{ghgi.f}(ghgi.f) fifg.e(fifg.e) {ghgif.}(ghgif.) fifge.(fifge.) {ghgif}(ghgi.f.) fifg.e.(fifg.e.) {gh}gif..(ghgif..) fifge..(fifge..Z)  
 %
 {g_}hgif(g_hgif) f_ifge(f_ifge) {gh}_gif(gh_gif) fi_fge(fi_fge) {gh}g_if(ghg_if) fif_ge(fif_ge) {gh}gi_f(ghgi_f) fifg_e(fifg_e) {gh}gif_(ghgif_) fifge_(fifge_) {gh}g_i_f(ghg_i_f) fif_g_e(fif_g_e) {gh}_g_if(gh_g_if) fi_f_ge(fi_f_ge) {g_h}_gif(g_h_gif) f_i_fge(f_i_fge) {g_h}_g_if(g_h_g_if) f_i_f_ge(f_i_f_ge) {g_h}_g_i_f_(g_h_g_i_f_) f_i_f_g_e_(f_i_f_g_e_Z)
 %
 {g'}hgif(g'hgif) f'ifge(f'ifge) {g}h'gif(gh'gif) fi'fge(fi'fge) {g}hg'if(ghg'if) fif'ge(fif'ge) {g}hgi'f(ghgi'f) fifg'e(fifg'e) {g}hgif'(ghgif') fifge'(fifge') {g}'h'g'i'f'(g'h'g'i'f') f'i'f'g'e'(f'i'f'g'e'Z)
 %
-{g}.'hgi(g.'hgi) f.'ifg(f.'ifg) {g}h.'gi(gh.'gi) fi._'fg(fi.'fg) {g}h.'gi(gh.'gi) fif._'g(fif.'g) {g}.'h.'g.'i(g.'h.'g.'i) f.'i.'f.'g(f.'i.'f.'g) {g}.'h.'g.'i.'(g.'h.'g.'i.') f.'i.'f.'g.'(f.'i.'f.'g.'Z)
+fif._'g(fif.'g) {g}'h'g.'i(g'h'g.'i) f'i'f.'g(f'i'f.'g) {g}'h'g.'i.'(g'h'g.'i.') f'i'f.'g.'(f'i'f.'g.'Z)
 %
 % other particular glyphs
 %
