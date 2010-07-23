@@ -1960,14 +1960,13 @@ gregoriotex_write_vepisemus (FILE * f,
   char height = 0;
   char number = 0;
 
-  if (current_note->pitch == 'a')
-    {
-      return;
-    }
-
   gregoriotex_find_sign_number (current_glyph, i,
 				type, TT_V_EPISEMUS, current_note,
 				&number, &height, NULL);
+  if (current_note->pitch == 'a')
+    {
+      height = 'z';
+    }
   fprintf (f, "\\grevepisemus{%c}{%d}%%\n", height, number);
 }
 

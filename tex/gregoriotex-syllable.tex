@@ -45,7 +45,11 @@
 %% 9: case of the horizontal episemus, that must be placed a bit lower if the note is on a line
 \def\grecalculateglyphraisevalue#1#2{%
   \global\greisonaline=\number 0%
-    \ifx a#1%
+  % z is the very special case of vertical episemus on the lowest note
+  \ifx z#1%
+    \global\gretempdimcount=\number 0%
+  \fi%
+  \ifx a#1%
     \global\gretempdimcount=\number 1%
     \fi%
   \ifx b#1%
