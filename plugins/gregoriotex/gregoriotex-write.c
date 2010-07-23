@@ -1788,15 +1788,27 @@ gregoriotex_write_hepisemus (FILE * f,
   char number = 0;
   char ambitus = 0;
   char bottom = 0;
-  char has_bottom = 0;
+  char next_height = -1;
 
   if (!current_note || current_note->h_episemus_type == H_NO_EPISEMUS)
     {
       return;
     }
+
+  next_height = gregoriotex_find_next_hepisemus_height (current_glyph, current_element);
+
   gregoriotex_find_sign_number (current_glyph, i,
 				type, TT_H_EPISEMUS, current_note,
 				&number, &height, &bottom);
+
+  if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS && !current_note->next && (!current_note->previous || simple_htype(current_note->previous->h_episemus_type) == H_NO_EPISEMUS) && bottom == 0 && next_height != -1 && (height == next_height || (height == next_height -1 && is_on_a_line(height))))
+    {
+      fprintf (f, "\\grehepisemusbridge{%c}{}{}%%\n", next_height);
+    }
+  else
+    {
+      next_height = height;
+    }
 
   if (current_note->next)
     {
@@ -1809,11 +1821,8 @@ gregoriotex_write_hepisemus (FILE * f,
       if (bottom != 1
 	  && simple_htype (current_note->h_episemus_type) != H_NO_EPISEMUS)
 	{
-	  fprintf (f, "\\grehepisemus{%c}{%d}{%d}%%\n", height, number,
-		   ambitus);
-	  gregoriotex_write_bridge_hepisemus (f, current_glyph,
-					      current_element,
-					      current_syllable, height);
+	  fprintf (f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n", height, number,
+		   ambitus, next_height);
 	}
       return;
     }
@@ -1824,24 +1833,102 @@ gregoriotex_write_hepisemus (FILE * f,
     }
   else
     {
-      fprintf (f, "\\grehepisemus{%c}{%d}{%d}%%\n", height, number, ambitus);
-      gregoriotex_write_bridge_hepisemus (f, current_glyph, current_element,
-					  current_syllable, height);
+      fprintf (f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n", height, number, ambitus, next_height);
     }
 }
 
-void
-gregoriotex_write_bridge_hepisemus (FILE * f,
-				    gregorio_glyph *
-				    current_glyph,
-				    gregorio_element * current_element,
-				    gregorio_syllable * current_syllable,
-				    char height)
+// a function to find the next horizontal episemus height (returns -1 if none interesting)
+
+char
+gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph,
+   gregorio_element *element)
 {
-  /*gregoriotex_find_sign_number (current_glyph, i,
-     type, TT_H_EPISEMUS, current_note,
-     &number, &height, &bottom);
-   */
+  gregorio_note *note;
+  char  i = 1;
+  char height = 0;
+  char number = 0;
+  char bottom = 0;
+  int type = 0;
+  char gtype = 0;
+  unsigned int glyph_number = 0;
+  if(glyph->next)
+    {
+      glyph = glyph->next;
+      note = glyph->first_note;
+      if (glyph->glyph_type == G_PES)
+        {
+          note = note->next;
+          i = 2;
+          gtype = T_PES;
+        }
+      else
+        {
+          gregoriotex_determine_number_and_type (glyph, &type,
+						 &gtype, &glyph_number);
+        }
+      if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS)
+        { 
+          gregoriotex_find_sign_number (glyph, i,
+				        gtype, TT_H_EPISEMUS, note,
+				        &number, &height, &bottom);
+				  if (bottom == 0)
+				    {
+              return height;
+            }
+          else
+            {
+              return -1;
+            }
+        }
+      else
+        {
+          return -1;
+        }
+    }
+  element = element->next;
+  if (!element)
+    {
+      return -1;
+    }
+  if (element->type == GRE_SPACE && (element->element_type == SP_NEUMATIC_CUT || element->element_type == SP_LARGER_SPACE || element->element_type == SP_NEUMATIC_CUT_NB || element->element_type == SP_LARGER_SPACE_NB))
+    {
+      element=element->next;
+    }
+  if (!element || element->type != GRE_ELEMENT)
+    {
+      return -1; 
+    }
+  glyph = element->first_glyph;
+  note = glyph->first_note;
+  if (glyph->glyph_type == G_PES)
+    {
+      note = note->next;
+      i = 2;
+      gtype = T_PES;
+    }
+  else
+    {
+      gregoriotex_determine_number_and_type (glyph, &type,
+				 &gtype, &glyph_number);
+    }
+  if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS)
+    { 
+      gregoriotex_find_sign_number (glyph, i,
+		        gtype, TT_H_EPISEMUS, note,
+		        &number, &height, &bottom);
+				  if (bottom == 0)
+				    {
+              return height;
+            }
+          else
+            {
+              return -1;
+            }
+    }
+  else
+    {
+      return -1;
+    }
 }
 
 // a macro to write an additional line bottom_or_top is bottom, or top...
@@ -2987,6 +3074,12 @@ void
 	  // TODO: do it really...
 	  *type = AT_ONE_NOTE;
 	}
+      break;
+    case G_ONE_NOTE:
+    case G_PUNCTUM:
+    case G_STROPHA:
+    case G_VIRGA:
+      *type = AT_ONE_NOTE;
       break;
     default:
       gregorio_message (_

@@ -930,8 +930,13 @@
 }
 
 % dumb top function
-\def\grehepisemus#1#2#3{%
-  \grehepisorline{#1}{#2}{#3}{0}%
+% #4 is a trick for bridges: if we must use a different height because of a bridge, it's #4, otherwise #4=#1
+\def\grehepisemus#1#2#3#4{%
+  \ifnum\greaddhepisemusbridges=1\relax %
+    \grehepisorline{#4}{#2}{#3}{0}%
+  \else %
+    \grehepisorline{#1}{#2}{#3}{0}%
+  \fi %
   \relax %
 }
 
@@ -956,7 +961,8 @@
 % same but for a "bridge episemus" after the last note of a glyph (element, syllable) if the next episemus is at the same height
 \def\grehepisemusbridge#1#2#3{%
   \ifnum\greaddhepisemusbridges=1\relax %
-    %TODO
+    \grecalculateglyphraisevalue{#1}{9}%
+    \raise\greglyphraisevalue\hbox to 0pt{\gregoriofont\char 40\hss}%
   \fi %
   \relax %
 }
