@@ -1466,8 +1466,7 @@ gregoriotex_write_signs (FILE * f, char type,
 	while (current_note)
 	 {
       // we continue with the hepisemus
-      if (current_note->h_episemus_type != H_NO_EPISEMUS
-	  && current_note->h_episemus_top_note != 'm' && block_hepisemus == 0)
+      if (current_note->h_episemus_type != H_NO_EPISEMUS && block_hepisemus == 0)
 	{
 	  // if it is a porrectus or a porrectus flexus, we check if the episemus is on the two first notes:
 	  _found();

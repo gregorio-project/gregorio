@@ -93,6 +93,10 @@
   \ifx m#1%
     \global\gretempdimcount=\number 13%
   \fi%
+  % n is only useful for horizontal episemus
+  \ifx n#1%
+    \global\gretempdimcount=\number 14%
+  \fi%
   % if the note is on a line, we change its height
   \ifcase\greisonaline\or% isonaline = 1
     \ifcase#2 %
