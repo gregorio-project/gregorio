@@ -508,8 +508,30 @@
     % if it is a vertical episemus, we call the normal calculateglyphvalue
     \grecalculateglyphraisevalue{#1}{3}%
   \else %
-    % if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.)
-    \grecalculateglyphraisevalue{m}{6}%
+    % if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.) the first argument is m if the pitch is < k, otherwise it's n.
+    \edef\greisabovek{\number 0}%
+    \ifx m#1%
+      \edef\greisabovek{\number 1}%
+    \fi%
+    \ifx l#1%
+      \edef\greisabovek{\number 2}%
+    \fi%
+    \ifx k#1%
+      \edef\greisabovek{\number 3}%
+    \fi%
+    \ifnum\greisabovek=1\relax %
+      \grecalculateglyphraisevalue{n}{6}%
+    \else %
+      \ifnum\greisabovek=2\relax %
+        \grecalculateglyphraisevalue{m}{6}%
+      \else %
+        \ifnum\greisabovek=3\relax %
+          \grecalculateglyphraisevalue{l}{6}%
+        \else %
+          \grecalculateglyphraisevalue{k}{6}%
+        \fi %
+      \fi %
+    \fi %
   \fi %
   \ifcase#2 %
     %case 0
@@ -642,28 +664,28 @@
   \relax %
 }
 
-\def\greaccentus#1{%
-  \grevepisemusorrare{m}{#1}{39}%
+\def\greaccentus#1#2{%
+  \grevepisemusorrare{#1}{#2}{39}%
   \relax %
 }
 
-\def\gresemicirculus#1{%
-  \grevepisemusorrare{m}{#1}{38}%
+\def\gresemicirculus#1#2{%
+  \grevepisemusorrare{#1}{#2}{38}%
   \relax %
 }
 
-\def\grecirculus#1{%
-  \grevepisemusorrare{m}{#1}{37}%
+\def\grecirculus#1#2{%
+  \grevepisemusorrare{#1}{#2}{37}%
   \relax %
 }
 
-\def\grereversedaccentus#1{%
-  \grevepisemusorrare{m}{#1}{69}%
+\def\grereversedaccentus#1#2{%
+  \grevepisemusorrare{#1}{#2}{69}%
   \relax %
 }
 
-\def\grereversedsemicirculus#1{%
-  \grevepisemusorrare{m}{#1}{70}%
+\def\grereversedsemicirculus#1#2{%
+  \grevepisemusorrare{#1}{#2}{70}%
   \relax %
 }
 

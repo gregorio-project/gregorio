@@ -1994,19 +1994,19 @@ gregoriotex_write_rare (FILE * f,
   switch (rare)
     {
     case _ACCENTUS:
-      fprintf (f, "\\greaccentus{%d}%%\n", number);
+      fprintf (f, "\\greaccentus{%c}{%d}%%\n", current_note->pitch, number);
       break;
     case _ACCENTUS_REVERSUS:
-      fprintf (f, "\\grereversedaccentus{%d}%%\n", number);
+      fprintf (f, "\\grereversedaccentus{%c}{%d}%%\n", current_note->pitch, number);
       break;
     case _CIRCULUS:
-      fprintf (f, "\\grecirculus{%d}%%\n", number);
+      fprintf (f, "\\grecirculus{%c}{%d}%%\n", current_note->pitch, number);
       break;
     case _SEMI_CIRCULUS:
-      fprintf (f, "\\gresemicirculus{%d}%%\n", number);
+      fprintf (f, "\\gresemicirculus{%c}{%d}%%\n", current_note->pitch, number);
       break;
     case _SEMI_CIRCULUS_REVERSUS:
-      fprintf (f, "\\grereversedsemicirculus{%d}%%\n", number);
+      fprintf (f, "\\grereversedsemicirculus{%c}{%d}%%\n", current_note->pitch, number);
       break;
       // the cases of the bar signs are dealt in another function (write_bar)
     case _ICTUS_A:

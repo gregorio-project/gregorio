@@ -97,7 +97,7 @@
   \ifx m#1%
     \global\gretempdimcount=\number 13%
   \fi%
-  % n is only useful for horizontal episemus
+  % n is only useful for horizontal episemus and rare signs (signs below k have m as first argument, and above have n)
   \ifx n#1%
     \global\gretempdimcount=\number 14%
   \fi%
@@ -153,7 +153,7 @@
       \advance\greglyphraisevalue by \greaddedraisevalue %
     \fi %
   \or% 6: if it is a sign, we put it at an arbitrary height
-    \greaddedraisevalue=-10000 sp%
+    \greaddedraisevalue=20000 sp%
     \multiply\greaddedraisevalue by \the\grefactor %
     \advance\greglyphraisevalue by \greaddedraisevalue %
   \or\or% 8: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
