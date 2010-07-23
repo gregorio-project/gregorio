@@ -1,5 +1,10 @@
 name:complete tests;
 %%
+%
+% notes
+%
+a(a) b(b) c(c) d(d) e(e) f(f) g(g) h(h) i(i) j(j) k(k) l(l) m(m)
+%
 % shapes:
 %
 fg(fg) gvFE(gvFE) ghg(ghg) ghgh(ghgh) ghghg(ghghg) gwhghg(gwhghg) gqh(gqh) gwh(gwh) gWh(gWh) go(go) goh(goh) gf(gf) gwf(gwf) gof(gofZ)
@@ -46,7 +51,7 @@ g.'hg(g.'hg) f.'if(f.'if) gh.'g(gh.'g) fi.'f(fi.'f) gh.'g(gh.'g) fif.'(fif.') g.
 %
 hgh(hgh) ifi(ifiZ)
 h.gh(h.gh) i.fi(i.fi) hg.h(hg.h) if.i(if.i) hgh.(hgh.) ifi.(ifi.) h.g.h.(h.g.h.) i.f.i.(i.f.i.) hgh..(hgh..) ifi..(ifi..Z)  
-h_gh(h_gh) i_fi(i_fi) hg_h(hg_h) if_i(if_i) hg_h(hg_h_) if_i(if_i_) hg_h(h_g_h) if_i(i_f_i) ghg_(hgh_) ifi_(ifi_) h_g_h_(h_g_h_) i_f_i_(i_f_i_Z)
+h_gh(h_gh) i_fi(i_fi) hg_h(hg_h) if_i(if_i) hg_h_(hg_h_) if_i_(if_i_) h_g_h(h_g_h) i_f_i(i_f_i) ghg_(hgh_) ifi_(ifi_) h_g_h_(h_g_h_) i_f_i_(i_f_i_Z)
 h'gh(h'gh) f'if(i'fi) hg'h(hg'h) if'f(if'i) hgh'(hgh') ifi'(ifi') h'g'h'(h'g'h') f'i'f'(i'f'i'Z)
 g.'hg(h.'gh) i.'fi(i.'fi) gh.'g(hg.'h) if.'i(if.'f) gh.'g(hg.'h) ifi.'(ifi.') g.'h.'g.'(h.'g.'h.') f.'i.'f.'(i.'f.'i.'Z)
 %
@@ -107,11 +112,15 @@ gvv(gvv) gvgv(gvgv) gvvv(gvvv) gvgvgv(gvgvgv) gss(gss) gsgs(gsgs) gsss(gsss) gsg
 %
 % bottom hepisemus
 %
-abc(g_0h_ g_h_ g_0_h_g_0_)
+abc(g_0h_ g_h_ g_0_h_g_0_Z)
 %
 % rare signs
 %
-gr(gr) hr(hr) gR(gR) hr0(hr0) gr0(gr0) gr1(gr1) gr2(gr2) gr3(gr3) gr4(gr4) gr5(gr5) krr5(krr5) lrr2(lrr2) mrr3(mrr3)
+gr(gr) hr(hr) gR(gR) hr0(hr0) gr0(gr0) gr1(gr1) gr2(gr2) gr3(gr3) gr4(gr4) gr5(gr5) krr5(krr5) lrr2(lrr2) mrr3(mrr3Z)
+%
+% limit cases
+%
+a_.'(a_.') b_.'(b_.') c_.'(c_.') k_.'(k_.') l_.'(l_.') m_.'(m_.'Z)
 %
 % comments
 %
@@ -123,3 +132,12 @@ g)
 % macros
 %
 <v>\{</v>gr<v>\}</v>ir({gr}ir)
+%
+% translation
+%
+ab[cd](ghZ)
+%
+% h episemus bridges
+%
+g_/g_(g_/g_) g_//g_(g_//g_) g_ g_Z(g_ g_) g_!/g_(g_!/g_) g_!//g_(g_!//g_) g_! g_(g_! g_Z)
+g_/h_(g_/h_) h_/g_(h_/g_) gh_/g_(gh_/g_) h_/gh_(h_/gh_)
