@@ -42,6 +42,8 @@ DECLARE_PLUGIN (gregoriotex)
 // the value indicating to GregorioTeX that there is no flat
 #define NO_KEY_FLAT 'a'
 
+gregoriotex_status *status = NULL;
+
 #if ALL_STATIC == 0
 void
 write_score (FILE * f, gregorio_score * score)
@@ -51,6 +53,7 @@ gregoriotex_write_score (FILE * f, gregorio_score * score)
 #endif
 {
   gregorio_character *first_text;
+  status = malloc (sizeof (gregoriotex_status));
   // a char that will contain 1 if it is the first syllable and 0 if not. It is for the initial.
   char first_syllable = 0;
   char clef_letter;
@@ -202,6 +205,7 @@ gregoriotex_write_score (FILE * f, gregorio_score * score)
       current_syllable = current_syllable->next_syllable;
     }
   fprintf (f, "\\endgregorioscore %%\n\\endinput %%\n");
+  free(status);
 }
 
 
@@ -1785,25 +1789,59 @@ gregoriotex_write_hepisemus (FILE * f,
 {
 
   char height = 0;
+  char no_bridge_height = 0;
   char number = 0;
   char ambitus = 0;
   char bottom = 0;
   char next_height = -1;
+  // a helper value containing 0 if we must not change the height (case of the height already modified by a previous hepisemus bridge
+  char do_not_change_height = 0;
+  gregorio_note *next_note = NULL;
 
   if (!current_note || current_note->h_episemus_type == H_NO_EPISEMUS)
     {
       return;
     }
 
-  next_height = gregoriotex_find_next_hepisemus_height (current_glyph, current_element);
-
   gregoriotex_find_sign_number (current_glyph, i,
 				type, TT_H_EPISEMUS, current_note,
 				&number, &height, &bottom);
 
-  if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS && !current_note->next && (!current_note->previous || simple_htype(current_note->previous->h_episemus_type) == H_NO_EPISEMUS) && bottom == 0 && next_height != -1 && (height == next_height || (height == next_height -1 && is_on_a_line(height))))
+  no_bridge_height = height;
+
+  if (status->to_modify_note && status->to_modify_note == current_note)
     {
-      fprintf (f, "\\grehepisemusbridge{%c}{}{}%%\n", next_height);
+      do_not_change_height = 1;
+      height = status->to_modify_h_episemus;
+      // we also modify the next note if necessary
+      if (current_note->next && simple_htype(current_note->next->h_episemus_type) != H_NO_EPISEMUS)
+        {
+          status->to_modify_note = current_note->next;
+        }
+      else
+        {
+          status->to_modify_note = NULL;
+        }
+    }
+
+  next_height = gregoriotex_find_next_hepisemus_height (current_glyph, current_element, &next_note);
+
+  if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS && !current_note->next && (!current_note->previous || simple_htype(current_note->previous->h_episemus_type) == H_NO_EPISEMUS) && bottom == 0 && next_height != -1)
+    {
+      if (height == next_height || do_not_change_height == 0 && (height == next_height -1 && is_on_a_line(height)))
+        {
+          fprintf (f, "\\grehepisemusbridge{%c}{}{}%%\n", next_height);
+        }
+      else
+        {
+          if (height == next_height + 1 && is_on_a_line(next_height))
+            {
+              status->to_modify_h_episemus = height;
+              status->to_modify_note = next_note;
+              fprintf (f, "\\grehepisemusbridge{%c}{}{}%%\n", height);
+            }
+          next_height = height;
+        }
     }
   else
     {
@@ -1821,19 +1859,19 @@ gregoriotex_write_hepisemus (FILE * f,
       if (bottom != 1
 	  && simple_htype (current_note->h_episemus_type) != H_NO_EPISEMUS)
 	{
-	  fprintf (f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n", height, number,
+	  fprintf (f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n", no_bridge_height, number,
 		   ambitus, next_height);
 	}
       return;
     }
   if (bottom == 1)
     {
-      fprintf (f, "\\grehepisemusbottom{%c}{%d}{%d}%%\n", height, number,
+      fprintf (f, "\\grehepisemusbottom{%c}{%d}{%d}%%\n", no_bridge_height, number,
 	       ambitus);
     }
   else
     {
-      fprintf (f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n", height, number, ambitus, next_height);
+      fprintf (f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n", no_bridge_height, number, ambitus, next_height);
     }
 }
 
@@ -1841,7 +1879,7 @@ gregoriotex_write_hepisemus (FILE * f,
 
 char
 gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph,
-   gregorio_element *element)
+   gregorio_element *element, gregorio_note **final_note)
 {
   gregorio_note *note;
   char  i = 1;
@@ -1873,6 +1911,7 @@ gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph,
 				        &number, &height, &bottom);
 				  if (bottom == 0)
 				    {
+				      *final_note = note;
               return height;
             }
           else
@@ -1918,6 +1957,7 @@ gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph,
 		        &number, &height, &bottom);
 				  if (bottom == 0)
 				    {
+				      *final_note = note;
               return height;
             }
           else
