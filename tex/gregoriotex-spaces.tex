@@ -178,22 +178,58 @@
 
 \let\setspacebeforeinitial\GreSetSpaceBeforeInitial
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% staff line height changing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \grestafflineheight is the height of a staff line
+\newdimen\grestafflineheight
+\grestafflineheight=1500 sp
+
+% \greinterstafflinespace is the space between two lines of staff
+\newdimen\greinterstafflinespace
+\greinterstafflinespace=30000 sp
+
+% the value is (1500*stafflinefactor - 1500)/2
+\newdimen\grestafflinediff
+\grestafflinediff=0 sp
+
+% the default factor
+\xdef\grestafflinefactor{1}%
+
+% a macro to define a ratio on the default value
+\def\gresetstafflinefactor#1{%
+  \xdef\grestafflinefactor{#1}%
+  \gretempdimcount=#1\relax %
+  \global\grestafflineheight = 1500sp%
+  \global\multiply\grestafflineheight by \gretempdimcount\relax %
+  % for non-integer numbers... in fact #1 is 10 times the factor we really want
+  \global\divide\grestafflineheight by 10\relax %
+  % we have:
+  %   interstafflinespace = 30000 - (lineheight-1500) = 31500 - lineheight
+  %   primaryglyphraisevalue = interstafflinespace/2 + lineheight/2 + (1500 - lineheight) = 17250 - lineheight
+  \global\greinterstafflinespace=31500sp%
+  \global\advance\greinterstafflinespace by -\grestafflineheight %
+  \global\grestafflinediff=\grestafflineheight %
+  \global\advance\grestafflinediff by -1500sp%
+  \global\divide\grestafflinediff by 2\relax %
+  \ifnum\the\grefactor=0\else %
+    \global\multiply\grestafflinediff by \the\grefactor %
+    \global\multiply\greinterstafflinespace by \the\grefactor %
+    \global\multiply\grestafflineheight by \the\grefactor %
+    \gresetverticalspaces %
+  \fi %
+  \relax %
+}
+
 %%%%%%%%%%%%%%%%%%
 %% vertical spaces
 %%%%%%%%%%%%%%%%%%
-
-% first, we have two spaces for the chironomic signs
 \newdimen\greabovesignsspace
 \newdimen\grebelowsignsspace
 
 % the space for the translation
 \newdimen\gretranslationheight
-
-% \grestafflineheight is the height of a staff line
-\newdimen\grestafflineheight
-
-% \greinterstafflinespace is the space between two lines of staff
-\newdimen\greinterstafflinespace
 
 %the space above the lines
 \newskip\grespaceabovelines
@@ -227,7 +263,7 @@
   \ifnum\the\grefactor=0\else %
     \greadaptconfvalues %
     \gresetverticalspaces %
-  \fi
+  \fi %
   \relax %
 }
 
@@ -268,8 +304,6 @@
   \greadaptoneconfvalue{\gremaximumspacewithoutdash}%
   \greadaptoneconfvalue{\greafterclefnospace}%
   \greadaptoneconfvalue{\greadditionallineswidth}%
-  \greadaptoneconfvalue{\grestafflineheight}%
-  \greadaptoneconfvalue{\greinterstafflinespace}%
   \greadaptoneconfvalue{\grespaceabovelines}%
   \greadaptoneconfvalue{\grespacelinestext}%
   \relax %
@@ -335,6 +369,7 @@
 % #1 is the old grefactor, #2 is the new one
 \def\changedimenfactor#1#2{%
   \grechangeonedimenfactor{\grestafflineheight}{#1}{#2}%
+  \grechangeonedimenfactor{\grestafflinediff}{#1}{#2}%
   \grechangeonedimenfactor{\greinterstafflinespace}{#1}{#2}%
   \grechangeonedimenfactor{\grespaceabovelines}{#1}{#2}%
   \grechangeonedimenfactor{\grespacelinestext}{#1}{#2}%
