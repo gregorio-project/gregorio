@@ -497,7 +497,7 @@
 %% 22: idem with ambitus of one
 %% 23: idem with initio debilis
 %% 24: the last note, if it is a linea punctum (or linea punctum cavum)
-%% 25: the last note, if it is a bar (don't laugh)
+%% 25: the last note, if it is a bar
 %% 26: the last note, if it is a virgula
 %% 27: the last note, if it is a divisio finalis
 
@@ -984,96 +984,96 @@
 
 % we define two types of macro for each four bar : when it is inside a syllable, and when it is not
 
-\def\greinvirgula{%
-  \grewritebar{0}{1}%
+\def\greinvirgula#1{%
+  \grewritebar{0}{1}{#1}%
   \relax%
 }
 
-\def\grevirgula{%
-  \grewritebar{0}{0}%
+\def\grevirgula#1{%
+  \grewritebar{0}{0}{#1}%
   \relax%
 }
 
-\def\greindivisiominima{%
-  \grewritebar{1}{1}%
+\def\greindivisiominima#1{%
+  \grewritebar{1}{1}{#1}%
   \relax%
 }
 
-\def\gredivisiominima{%
-  \grewritebar{1}{0}%
+\def\gredivisiominima#1{%
+  \grewritebar{1}{0}{#1}%
   \relax%
 }
 
-\def\greindivisiominor{%
-  \grewritebar{2}{1}%
+\def\greindivisiominor#1{%
+  \grewritebar{2}{1}{#1}%
   \relax%
 }
 
-\def\gredivisiominor{%
-  \grewritebar{2}{0}%
+\def\gredivisiominor#1{%
+  \grewritebar{2}{0}{#1}%
   \relax%
 }
 
-\def\greindivisiomaior{%
-  \grewritebar{3}{1}%
+\def\greindivisiomaior#1{%
+  \grewritebar{3}{1}{#1}%
   \relax%
 }
 
-\def\gredivisiomaior{%
-  \grewritebar{3}{0}%
+\def\gredivisiomaior#1{%
+  \grewritebar{3}{0}{#1}%
   \relax%
 }
 
-\def\gredominica#1{%
+\def\gredominica#1#2{%
   \ifcase#1\or %
-    \grewritebar{6}{0}%
+    \grewritebar{6}{0}{#2}%
   \or %
-    \grewritebar{7}{0}%
+    \grewritebar{7}{0}{#2}%
   \or %
-    \grewritebar{8}{0}%
+    \grewritebar{8}{0}{#2}%
   \or %
-    \grewritebar{9}{0}%
+    \grewritebar{9}{0}{#2}%
   \or %
-    \grewritebar{10}{0}%
+    \grewritebar{10}{0}{#2}%
   \or %
-    \grewritebar{11}{0}%
+    \grewritebar{11}{0}{#2}%
   \fi %
   \relax%
 }
 
-\def\greindominica#1{%
+\def\greindominica#1#2{%
   \ifcase#1\or %
-    \grewritebar{6}{1}%
+    \grewritebar{6}{1}{#2}%
   \or %
-    \grewritebar{7}{1}%
+    \grewritebar{7}{1}{#2}%
   \or %
-    \grewritebar{8}{1}%
+    \grewritebar{8}{1}{#2}%
   \or %
-    \grewritebar{9}{1}%
+    \grewritebar{9}{1}{#2}%
   \or %
-    \grewritebar{10}{1}%
+    \grewritebar{10}{1}{#2}%
   \or %
-    \grewritebar{11}{1}%
+    \grewritebar{11}{1}{#2}%
   \fi %
   \relax%
 }
 
 \newdimen\gretempdimtwo
 
-\def\greindivisiofinalis{%
+\def\greindivisiofinalis#1{%
   \ifcase\greendofscore %
-    \grewritebar{4}{1}%
+    \grewritebar{4}{1}{#1}%
   \or %
-    \grewritebar{5}{1}%
+    \grewritebar{5}{1}{#1}%
   \fi %
   \relax%
 }
 
-\def\gredivisiofinalis{%
+\def\gredivisiofinalis#1{%
   \ifcase\greendofscore %
-    \grewritebar{4}{0}%
+    \grewritebar{4}{0}{#1}%
   \or %
-    \grewritebar{5}{0}%
+    \grewritebar{5}{0}{#1}%
   \fi %
   \relax%
 }
@@ -1083,7 +1083,8 @@
 %% 2: is % for now we don't use it
 %%% 0 if it is outside a syllable
 %%% 1 if it is in a syllable
-\def\grewritebar#1#2{%
+%% 3: macros that may happen before the skip after the bar (typically grevepisemus)
+\def\grewritebar#1#2#3{%
   % to see why we reset \grelastoflinecount, see comments of \greglyph.
   \ifnum\grelastoflinecount=2\relax %
     \global\grelastoflinecount=0\relax %
@@ -1096,9 +1097,8 @@
       \penalty 10001 %
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 8}%
-    %\raise\greglyphraisevalue\GreTempwidth %
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 8}%
-    \global\grelastglyphwidth=\wd\GreTempwidth %
+    #3\relax %
     \ifnum#2=1\relax %
       \hskip\grespacearoundsmallbar %
     \fi %
@@ -1107,7 +1107,9 @@
       \hskip\grespacearoundsmallbar %
       \penalty 10001%
     \fi %
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 9}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 9}%
+    #3\relax %
     \ifnum#2=1\relax %
       \hskip\grespacearoundsmallbar %
     \fi %
@@ -1116,7 +1118,9 @@
       \hskip\grespacearoundminor %
       \penalty 10001 %
     \fi %
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 10}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 10}%
+    #3\relax %
     \ifnum#2=1\relax %
       \hskip\grespacearoundminor %
     \fi %
@@ -1125,7 +1129,9 @@
       \hskip\grespacearoundmaior %
       \penalty 10001 %
     \fi %
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 11}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 11}%
+    #3\relax %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
     \fi %
@@ -1134,6 +1140,8 @@
       \hskip\grespacearoundfinalis %
       \penalty 10001 %
     \fi %
+    \setbox\GreTempwidth=\hbox{\gredivisiofinalissymbol}%
+    #3\relax %
     \gredivisiofinalissymbol%
     \ifnum#2=1\relax %
       \hskip\grespacearoundfinalis %
@@ -1143,6 +1151,8 @@
       \hskip\grespacebeforefinalfinalis %
       \penalty 10001 %
     \fi %
+    \setbox\GreTempwidth=\hbox{\gredivisiofinalissymbol}%
+    #3\relax %
     \gredivisiofinalissymbol%
     \ifnum#2=1\relax %
       \hskip\grespacearoundfinalis %
@@ -1153,7 +1163,9 @@
       \hskip\grespacearoundmaior %
       \penalty 10001 %
     \fi %
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 83}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
+    #3\relax %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
     \fi %
@@ -1163,7 +1175,9 @@
       \hskip\grespacearoundmaior %
       \penalty 10001 %
     \fi %
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 84}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
+    #3\relax %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
     \fi %
@@ -1172,7 +1186,9 @@
       \hskip\grespacearoundmaior %
       \penalty 10001 %
     \fi %
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 83}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
+    #3\relax %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
     \fi %
@@ -1181,7 +1197,9 @@
       \hskip\grespacearoundmaior %
       \penalty 10001 %
     \fi %
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 84}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
+    #3\relax %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
     \fi %
@@ -1191,7 +1209,9 @@
       \hskip\grespacearoundmaior %
       \penalty 10001 %
     \fi %
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 83}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
+    #3\relax %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
     \fi %
@@ -1201,11 +1221,14 @@
       \hskip\grespacearoundmaior %
       \penalty 10001 %
     \fi %
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 84}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
+    #3\relax %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
     \fi %
   \fi %
+  \global\grelastglyphwidth=\wd\GreTempwidth %
   \relax%
 }
 

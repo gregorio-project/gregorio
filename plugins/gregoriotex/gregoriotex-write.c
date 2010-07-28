@@ -1157,52 +1157,52 @@ gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable)
   switch (type)
     {
     case B_VIRGULA:
-      fprintf (f, "virgula %%\n");
+      fprintf (f, "virgula");
       typenumber = 26;
       break;
     case B_DIVISIO_MINIMA:
-      fprintf (f, "divisiominima %%\n");
+      fprintf (f, "divisiominima");
       typenumber = 25;
       break;
     case B_DIVISIO_MINOR:
-      fprintf (f, "divisiominor %%\n");
+      fprintf (f, "divisiominor");
       typenumber = 25;
       break;
     case B_DIVISIO_MAIOR:
-      fprintf (f, "divisiomaior %%\n");
+      fprintf (f, "divisiomaior");
       typenumber = 25;
       break;
     case B_DIVISIO_FINALIS:
-      fprintf (f, "divisiofinalis %%\n");
+      fprintf (f, "divisiofinalis");
       typenumber = 27;
       break;
     case B_DIVISIO_MINOR_D1:
-      fprintf (f, "dominica{1}%%\n");
+      fprintf (f, "dominica{1}");
       // TODO: a true typenumber
       typenumber = 25;
       break;
     case B_DIVISIO_MINOR_D2:
-      fprintf (f, "dominica{2}%%\n");
+      fprintf (f, "dominica{2}");
       // TODO: a true typenumber
       typenumber = 25;
       break;
     case B_DIVISIO_MINOR_D3:
-      fprintf (f, "dominica{3}%%\n");
+      fprintf (f, "dominica{3}");
       // TODO: a true typenumber
       typenumber = 25;
       break;
     case B_DIVISIO_MINOR_D4:
-      fprintf (f, "dominica{4}%%\n");
+      fprintf (f, "dominica{4}");
       // TODO: a true typenumber
       typenumber = 25;
       break;
     case B_DIVISIO_MINOR_D5:
-      fprintf (f, "dominica{5}%%\n");
+      fprintf (f, "dominica{5}");
       // TODO: a true typenumber
       typenumber = 25;
       break;
     case B_DIVISIO_MINOR_D6:
-      fprintf (f, "dominica{6}%%\n");
+      fprintf (f, "dominica{6}");
       // TODO: a true typenumber
       typenumber = 25;
       break;
@@ -1214,21 +1214,22 @@ gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable)
   switch (signs)
     {
     case _V_EPISEMUS:
-      fprintf (f, "\\grebarvepisemus{%d}%%\n", typenumber);
+      fprintf (f, "{\\grebarvepisemus{%d}}%%\n", typenumber);
       break;
     case _ICTUS_A:
-      fprintf (f, "\\greictusa{%d}%%\n", typenumber);
+      fprintf (f, "{\\greictusa{%d}}%%\n", typenumber);
       break;
     case _ICTUS_T:
-      fprintf (f, "\\greictust{%d}%%\n", typenumber);
+      fprintf (f, "{\\greictust{%d}}%%\n", typenumber);
       break;
     case _V_EPISEMUS_ICTUS_A:
-      fprintf (f, "\\grebarvepisemusictusa{%d}%%\n", typenumber);
+      fprintf (f, "{\\grebarvepisemusictusa{%d}}%%\n", typenumber);
       break;
     case _V_EPISEMUS_ICTUS_T:
-      fprintf (f, "\\grebarvepisemusictust{%d}%%\n", typenumber);
+      fprintf (f, "{\\grebarvepisemusictust{%d}}%%\n", typenumber);
       break;
     default:
+      fprintf (f, "{}%%\n", typenumber);
       break;
     }
 }
