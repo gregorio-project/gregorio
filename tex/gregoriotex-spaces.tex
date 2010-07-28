@@ -1,5 +1,5 @@
 %GregorioTeX file.
-%Copyright (C) 2007-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
+%Copyright (C) 2007-2010 Elie Roux <elie.roux@telecom-bretagne.eu>
 %
 %This program is free software: you can redistribute it and/or modify
 %it under the terms of the GNU General Public License as published by
@@ -32,169 +32,130 @@
 
 % null space
 \newskip\grezerowidthspace
-\grezerowidthspace=0pt plus 0pt minus 0pt
 
 % space between glyphs in the same element
 \newskip\greinterglyphspace
-\greinterglyphspace = 7600 sp plus 400 sp minus 400 sp%
 
 % space between an alteration (flat or natural) and the next glyph
 \newskip\grealterationspace
-\grealterationspace = 8500 sp plus 1400 sp minus 500 sp%
 
 % space between a clef and a flat (for clefs with flat)
 \newskip\clefflatspace
-\clefflatspace = 6000 sp plus 700 sp minus 700 sp%
+
 
 % negative space, difference between the normal space between two notes and the space between a note and a flat
 \newskip\grebeforealterationspace
-\grebeforealterationspace = -36000 sp plus 1200 sp minus 1200 sp%
 
 % space between elements
 \newskip\greinterelementspace
-\greinterelementspace = 7600 sp plus 200 sp minus 400 sp%
 
 % larger space between elements
 \newskip\grelargerspace
-\grelargerspace = 12000 sp plus 2000 sp minus 1000 sp%
 
 % space between elements which has the size of a note
 \newskip\greglyphspace
-\greglyphspace = 24000 sp plus 2000 sp minus 2000 sp%
 
 % minimum space between two notes of different syllables
 \newskip\greintersyllablespace
-\greintersyllablespace= 28000 sp plus 35000 sp minus 0 sp%
 
 % space before custo
 \newskip\grespacebeforecusto
-\grespacebeforecusto = 20000 sp plus 35000 sp minus 7000 sp%
 
 % space before punctum mora and augmentum duplex
 \newskip\grespacebeforesigns
-\grespacebeforesigns= 6000 sp plus 500 sp minus 500 sp%
 
 % space after punctum mora and augmentum duplex
 \newskip\grespaceaftersigns
-\grespaceaftersigns= 9000 sp plus 900 sp minus 900 sp%
 
 % space after a clef at the beginning of a line
 \newskip\grespaceafterlineclef
-\grespaceafterlineclef = 30000 sp plus 16000 sp minus 1500 sp%
 
 % space after at the end of a word when the last written symbol is a note and the first is a note
 \newskip\greinterwordspacenotes
-\greinterwordspacenotes = 32000 sp plus 9600 sp minus 6000 sp%
 
 % space after at the end of a word when the last written symbol is a note and the first is text
 \newskip\greinterwordspacenotestext
-\greinterwordspacenotestext = 30000 sp plus 30000 sp minus 8000 sp%
 
 % space after at the end of a word when the last written symbol is text and the first is a note
 \newskip\greinterwordspacetextnotes
-\greinterwordspacetextnotes = 30000 sp plus 30000 sp minus 8000 sp%
 
 % space after at the end of a word when the last written symbol is text and the first is text
 \newskip\greinterwordspacetext
-\greinterwordspacetext = 25000 sp plus 45000 sp minus 8000 sp%
 
 % space between notes of a bivirga or trivirga
 \newskip\grebitrivirspace
-\grebitrivirspace = 7600 sp plus 200 sp minus 600 sp%
 
 % space between notes of a bistropha or tristropha
 \newskip\grebitristrospace
-\grebitristrospace = 7600 sp plus 200 sp minus 600 sp%
 
 % space between two punctum inclinatum
 \newskip\grepunctuminclinatumshift
-\grepunctuminclinatumshift= -2350 sp plus 100 sp minus 100 sp%
 
 % space before puncta inclinata
 \newskip\grebeforepunctainclinatashift
-\grebeforepunctainclinatashift= 5800 sp plus 800 sp minus 500 sp%
 
 % space between a punctum inclinatum and a punctum inclinatum deminutus
 \newskip\grepunctuminclinatumanddebilisshift
-\grepunctuminclinatumanddebilisshift= -1700 sp plus 100 sp minus 100 sp%
 
 % space between two punctum inclinatum deminutus
 \newskip\grepunctuminclinatumdebilisshift
-\grepunctuminclinatumdebilisshift= -100 sp plus 100 sp minus 100 sp%
 
 % space between puncta inclinata, larger ambitus (range=3rd)
 \newskip\grepunctuminclinatumbigshift %
-\grepunctuminclinatumbigshift= 9800 sp plus 100 sp minus 100 sp%
 
 % space between puncta inclinata, larger ambitus (range=4th -or more?-)
 \newskip\grepunctuminclinatummaxshift %
-\grepunctuminclinatummaxshift= 19600 sp plus 100 sp minus 100 sp%
 
 % space for the bars (inside syllables)
 %first for virgula and divisio minima
 \newskip\grespacearoundsmallbar
-\grespacearoundsmallbar = 20000 sp plus 10000 sp minus 6000 sp%
 
 %then divisio minor
 \newskip\grespacearoundminor
-\grespacearoundminor = 20000 sp plus 15000 sp minus 6000 sp%
 
 %divisio major
 \newskip\grespacearoundmaior
-\grespacearoundmaior = 20000 sp plus 15000 sp minus 6000 sp%
 
 %divisio finalis
 \newskip\grespacearoundfinalis
-\grespacearoundfinalis = 20000 sp plus 10000 sp minus 6000 sp%
 
 %a special space for finalis, for when it is the last glyph
 \newskip\grespacebeforefinalfinalis
-\grespacebeforefinalfinalis= 32000 sp plus 8000 sp minus 30000 sp%
 
 % the space that will appear around bars that are preceded by a custo and followed by a key.
 % well... actually it's the difference between the normal space around bars and the space described previously.
 \newskip\grespacearoundclefbars
-\grespacearoundclefbars= 4000 sp plus 500 sp minus 100 sp%
 
 % space between the text and the text of the bar
 \newskip\gretextbartextspace
-\gretextbartextspace = 27000 sp plus 15000 sp minus 5400 sp%
 
 % minimal space between a note and a bar
 \newskip\grenotebarspace
-\grenotebarspace = 35000 sp plus 30000 sp minus 3100 sp%
 
 % maximal space between two syllables for which we consider a dash is not needed
 \newdimen\gremaximumspacewithoutdash
-\gremaximumspacewithoutdash = 2200 sp%
 
 % an extensible space for the beginning of lines
 \newskip\greafterclefnospace
-\greafterclefnospace = 0 pt plus 30000 sp minus 0 pt%
 
 % width of the additional lines, used only for the custos (maybe should depend on the width of the custo...)
 % the width is the one for the custos at end of lines, the line for custos in the middle of a score is the same
 % multiplied by 2.
 \newdimen\greadditionallineswidth
-\greadditionallineswidth = 17000 sp%
 
 % space between the initial and the beginning of the score
 \newskip\greafterinitialshift
-\greafterinitialshift=0.6 em plus 0em minus 0em
 
 % space before the initial and the beginning of the score
 \newskip\grebeforeinitialshift
-\greafterinitialshift=0.6 em plus 0em minus 0em
 
 % space before the initial and the beginning of the score
 \newdimen\greminimalspaceatlinebeginning
-\greminimalspaceatlinebeginning=1mm
 
 % this space is the one between the bottom of the first anotation line and the top
 % of the second anotation line (above the initial)
 
 \newdimen\greaboveinitialseparation
-\greaboveinitialseparation = 0.5mm
 
 \def\GreSetAboveInitialSeparation#1{
   \greaboveinitialseparation=#1%
@@ -223,33 +184,25 @@
 
 % first, we have two spaces for the chironomic signs
 \newdimen\greabovesignsspace
-\greabovesignsspace = 8mm
 \newdimen\grebelowsignsspace
-\grebelowsignsspace = 0mm
 
 % the space for the translation
 \newdimen\gretranslationheight
-\gretranslationheight = 0.5cm
 
 % \grestafflineheight is the height of a staff line
 \newdimen\grestafflineheight
-\grestafflineheight=1500 sp
 
 % \greinterstafflinespace is the space between two lines of staff
 \newdimen\greinterstafflinespace
-\greinterstafflinespace=30000 sp
 
 %the space above the lines
 \newskip\grespaceabovelines
-\grespaceabovelines = 50000 sp plus 40000 sp minus 10000 sp
 
 %the space between the lines and the bottom of the text
 \newskip\grespacelinestext
-\grespacelinestext = 66500 sp plus 0 sp minus 0 sp
 
 %the space beneath the text
 \newskip\grespacebeneathtext
-\global\grespacebeneathtext = 0 sp plus 0 sp minus 0 sp
 
 %%% the following values are computed from the others, after some calculus
 
@@ -261,6 +214,72 @@
 
 % space for the clef changes
 \newskip\greclefchangespace
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% space configuration loading
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% first we input the default config, for everything to work fine
+\input gsp-default.tex
+
+\def\GreLoadSpaceConf#1{%
+  \input gsp-#1.tex\relax %
+  \ifnum\the\grefactor=0\else %
+    \greadaptconfvalues %
+  \fi
+  \relax %
+}
+
+\def\greadaptconfvalues{%
+  \greadaptoneconfvalue{\grezerowidthspace}%
+  \greadaptoneconfvalue{\greinterglyphspace}%
+  \greadaptoneconfvalue{\grealterationspace}%
+  \greadaptoneconfvalue{\clefflatspace}%
+  \greadaptoneconfvalue{\grebeforealterationspace}%
+  \greadaptoneconfvalue{\greinterelementspace}%
+  \greadaptoneconfvalue{\grelargerspace}%
+  \greadaptoneconfvalue{\greglyphspace}%
+  \greadaptoneconfvalue{\greintersyllablespace}%
+  \greadaptoneconfvalue{\grespacebeforecusto}%
+  \greadaptoneconfvalue{\grespacebeforesigns}%
+  \greadaptoneconfvalue{\grespaceaftersigns}%
+  \greadaptoneconfvalue{\grespaceafterlineclef}%
+  \greadaptoneconfvalue{\greinterwordspacenotes}%
+  \greadaptoneconfvalue{\greinterwordspacenotestext}%
+  \greadaptoneconfvalue{\greinterwordspacetextnotes}%
+  \greadaptoneconfvalue{\greinterwordspacetext}%
+  \greadaptoneconfvalue{\grebitrivirspace}%
+  \greadaptoneconfvalue{\grebitristrospace}%
+  \greadaptoneconfvalue{\grepunctuminclinatumshift}%
+  \greadaptoneconfvalue{\grebeforepunctainclinatashift}%
+  \greadaptoneconfvalue{\grepunctuminclinatumanddebilisshift}%
+  \greadaptoneconfvalue{\grepunctuminclinatumdebilisshift}%
+  \greadaptoneconfvalue{\grepunctuminclinatumbigshift}%
+  \greadaptoneconfvalue{\grepunctuminclinatummaxshift}%
+  \greadaptoneconfvalue{\grespacearoundsmallbar}%
+  \greadaptoneconfvalue{\grespacearoundminor}%
+  \greadaptoneconfvalue{\grespacearoundmaior}%
+  \greadaptoneconfvalue{\grespacearoundfinalis}%
+  \greadaptoneconfvalue{\grespacebeforefinalfinalis}%
+  \greadaptoneconfvalue{\grespacearoundclefbars}%
+  \greadaptoneconfvalue{\gretextbartextspace}%
+  \greadaptoneconfvalue{\grenotebarspace}%
+  \greadaptoneconfvalue{\gremaximumspacewithoutdash}%
+  \greadaptoneconfvalue{\greafterclefnospace}%
+  \greadaptoneconfvalue{\greadditionallineswidth}%
+  \greadaptoneconfvalue{\greafterinitialshift}%
+  \greadaptoneconfvalue{\greafterinitialshift}%
+  \greadaptoneconfvalue{\grestafflineheight}%
+  \greadaptoneconfvalue{\greinterstafflinespace}%
+  \greadaptoneconfvalue{\grespaceabovelines}%
+  \greadaptoneconfvalue{\grespacelinestext}%
+  \relax %
+}
+
+\edef\greadaptoneconfvalue#1{%
+  \multiply #1 by \the\grefactor %
+  \relax %
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% dimension changing macros
