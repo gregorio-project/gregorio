@@ -226,6 +226,7 @@
   \input gsp-#1.tex\relax %
   \ifnum\the\grefactor=0\else %
     \greadaptconfvalues %
+    \gresetverticalspaces %
   \fi
   \relax %
 }
@@ -267,8 +268,6 @@
   \greadaptoneconfvalue{\gremaximumspacewithoutdash}%
   \greadaptoneconfvalue{\greafterclefnospace}%
   \greadaptoneconfvalue{\greadditionallineswidth}%
-  \greadaptoneconfvalue{\greafterinitialshift}%
-  \greadaptoneconfvalue{\greafterinitialshift}%
   \greadaptoneconfvalue{\grestafflineheight}%
   \greadaptoneconfvalue{\greinterstafflinespace}%
   \greadaptoneconfvalue{\grespaceabovelines}%
@@ -276,8 +275,8 @@
   \relax %
 }
 
-\edef\greadaptoneconfvalue#1{%
-  \multiply #1 by \the\grefactor %
+\def\greadaptoneconfvalue#1{%
+  \global\multiply #1 by \grefactor %
   \relax %
 }
 
