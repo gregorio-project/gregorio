@@ -358,9 +358,9 @@
 }
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the typesetting vertical episemus, rare signs and ictus
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of punctum mora, auctum duplex and choral signs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % a function to typeset a punctum mora, the argument is the letter of the height of the punctum mora
 % if the second argument is one, we the go back to the end of the punctum
@@ -420,6 +420,22 @@
   \grepunctummora{#2}{0}{0}%
   \relax %
 }
+
+\def\grechoralsignstyle#1{#1}
+
+% quite simple function: #1 is the height, #2 is the string
+\def\grechoralsign#1#2{%
+  \grecalculateglyphraisevalue{#1}{10}%
+  \penalty 10001\relax %
+  \kern\grebeforechoralsignspace %
+  \penalty 10001\relax %
+  \raise\greglyphraisevalue\hbox{\grechoralsignstyle{#2}}%
+  \relax %
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of vertical episemus
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newbox\GreTempsign
 \newdimen\gretempdimsignwidth

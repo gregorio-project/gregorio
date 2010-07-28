@@ -43,6 +43,7 @@
 %% 6: case of the signs above (accentus, etc.)
 %% 8: case of the punctum mora of the first note of a podatus or the 2nd note of a porrectus, etc.
 %% 9: case of the horizontal episemus, that must be placed a bit lower if the note is on a line
+%% 10: case of the choral sign
 \def\grecalculateglyphraisevalue#1#2{%
   \global\greisonaline=\number 0%
   % z is the very special case of vertical episemus on the lowest note
@@ -170,6 +171,8 @@
     \fi %
     \multiply\greaddedraisevalue by \the\grefactor %
     \advance\greglyphraisevalue by \greaddedraisevalue %
+  \or% 10: if it is a choral sign, we shift it a bit lower, of a user-defined value
+    \advance\greglyphraisevalue by -\grechoralsignshift %
   \fi%
   \advance\greglyphraisevalue by \greconstantglyphraise %
   \global\gretempdimcount=0%

@@ -64,7 +64,7 @@ gregorio_add_note (gregorio_note ** current_note, char pitch, char shape,
   element->h_episemus_top_note = 0;
   element->next = NULL;
   element->texverb = NULL;
-  element->texverb = NULL;
+  element->choral_sign = NULL;
   if (*current_note)
     {
       (*current_note)->next = element;
@@ -129,6 +129,15 @@ gregorio_add_texverb_to_note (gregorio_note ** current_note, char *str)
   if (*current_note)
     {
       (*current_note)->texverb = str;
+    }
+}
+
+void
+gregorio_add_cs_to_note (gregorio_note ** current_note, char *str)
+{
+  if (*current_note)
+    {
+      (*current_note)->choral_sign = str;
     }
 }
 
@@ -323,8 +332,8 @@ void
 gregorio_free_one_note (gregorio_note ** note)
 {
   gregorio_note *next = NULL;
-  // we have to comment in and free only when we free the element (a bit dirty)
-  //free((*note)->texverb);
+  free((*note)->texverb);
+  free((*note)->choral_sign);
   if (!note || !*note)
     {
       return;
@@ -441,8 +450,7 @@ gregorio_free_one_glyph (gregorio_glyph ** glyph)
     {
       (*glyph)->previous->next = NULL;
     }
-  // we free texverb only when we free elements, otherwise we'll free it several times
-  //free((*glyph)->texverb);
+  free((*glyph)->texverb);
   gregorio_free_notes (&(*glyph)->first_note);
   free (*glyph);
   *glyph = next;

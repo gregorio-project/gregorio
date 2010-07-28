@@ -39,9 +39,11 @@
 % space between an alteration (flat or natural) and the next glyph
 \newskip\grealterationspace
 
-% space between a clef and a flat (for clefs with flat)
-\newskip\clefflatspace
+% space before a choral sign
+\newskip\grebeforechoralsignspace
 
+% space between a clef and a flat (for clefs with flat)
+\newskip\greclefflatspace
 
 % negative space, difference between the normal space between two notes and the space between a note and a flat
 \newskip\grebeforealterationspace
@@ -228,6 +230,9 @@
 \newdimen\greabovesignsspace
 \newdimen\grebelowsignsspace
 
+% the shift for the choral sign
+\newdimen\grechoralsignshift
+
 % the space for the translation
 \newdimen\gretranslationheight
 
@@ -271,7 +276,7 @@
   \greadaptoneconfvalue{\grezerowidthspace}%
   \greadaptoneconfvalue{\greinterglyphspace}%
   \greadaptoneconfvalue{\grealterationspace}%
-  \greadaptoneconfvalue{\clefflatspace}%
+  \greadaptoneconfvalue{\greclefflatspace}%
   \greadaptoneconfvalue{\grebeforealterationspace}%
   \greadaptoneconfvalue{\greinterelementspace}%
   \greadaptoneconfvalue{\grelargerspace}%
@@ -306,6 +311,8 @@
   \greadaptoneconfvalue{\greadditionallineswidth}%
   \greadaptoneconfvalue{\grespaceabovelines}%
   \greadaptoneconfvalue{\grespacelinestext}%
+  \greadaptoneconfvalue{\grechoralsignshift}%
+  \greadaptoneconfvalue{\grebeforechoralsignspace}%
   \relax %
 }
 
@@ -376,7 +383,7 @@
   \grechangeonedimenfactor{\grespacebeneathtext}{#1}{#2}%
   \grechangeonedimenfactor{\greinterglyphspace}{#1}{#2}%
   \grechangeonedimenfactor{\grealterationspace}{#1}{#2}%
-  \grechangeonedimenfactor{\clefflatspace}{#1}{#2}%
+  \grechangeonedimenfactor{\greclefflatspace}{#1}{#2}%
   \grechangeonedimenfactor{\grebeforealterationspace}{#1}{#2}%
   \grechangeonedimenfactor{\greinterelementspace}{#1}{#2}%
   \grechangeonedimenfactor{\grelargerspace}{#1}{#2}%
@@ -409,5 +416,7 @@
   \grechangeonedimenfactor{\gremaximumspacewithoutdash}{#1}{#2}%
   \grechangeonedimenfactor{\greafterclefnospace}{#1}{#2}%
   \grechangeonedimenfactor{\greadditionallineswidth}{#1}{#2}%
+  \grechangeonedimenfactor{\grechoralsignshift}{#1}{#2}%
+  \grechangeonedimenfactor{\grebeforechoralsignspace}{#1}{#2}%
   \relax %
 }

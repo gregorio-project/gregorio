@@ -60,6 +60,9 @@ typedef struct gregorio_note {
 // rare_sign is the sign we sometimes encounter on punctum cavum, like
 // accentus, semi-circulus, etc. can also be the ictus
   char rare_sign;
+// choral sign is a letter that appears next to a note in some choral scores
+// we put it as char* because sometimes two letters appear
+  char *choral_sign;
 // liquescentia is the liquescence on the note, it is not really used
 // in the final score, but it is, like type, used in the determination
 // of glyphs.
@@ -366,6 +369,7 @@ void gregorio_add_special_as_glyph (gregorio_glyph **current_glyph, char type, c
 void gregorio_add_special_as_note (gregorio_note **current_note, char type, char pitch);
 void gregorio_add_texverb_as_note (gregorio_note **current_note, char *str, char type);
 void gregorio_add_texverb_to_note (gregorio_note **current_note, char *str);
+void gregorio_add_cs_to_note (gregorio_note **current_note, char *str);
 void gregorio_add_special_as_element (gregorio_element **current_element, char type, char pitch, char additional_infos, char *texverb);
 
 void gregorio_determine_good_top_notes (gregorio_note * current_note);
@@ -559,6 +563,12 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define B_DIVISIO_MINOR 3
 #define B_DIVISIO_MAIOR 4
 #define B_DIVISIO_FINALIS 5
+#define B_DIVISIO_MINOR_D1 6
+#define B_DIVISIO_MINOR_D2 7
+#define B_DIVISIO_MINOR_D3 8
+#define B_DIVISIO_MINOR_D4 9
+#define B_DIVISIO_MINOR_D5 10
+#define B_DIVISIO_MINOR_D6 11
 
 // the different shapes, only for notes
 

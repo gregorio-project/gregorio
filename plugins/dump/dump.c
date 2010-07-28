@@ -391,6 +391,11 @@ dump_write_score (FILE * f, gregorio_score * score)
 		      fprintf (f, "         TeX string          \"%s\"\n",
 		       note->texverb);
 		    }
+		  if (note->choral_sign)
+		    {
+		      fprintf (f, "         Choral Sign         \"%s\"\n",
+		       note->choral_sign);
+		    }
 		  if (note->shape)
 		    {
 		      fprintf (f, "         shape               %d (%s)\n",

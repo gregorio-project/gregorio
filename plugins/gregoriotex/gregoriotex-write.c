@@ -1595,6 +1595,11 @@ gregoriotex_write_signs (FILE * f, char type,
 	      block_hepisemus = 2;
 	    }
 	}
+	  if (current_note->choral_sign)
+	    {
+	      _found();
+        gregoriotex_write_choral_sign(f, glyph, current_note);
+	    }
       // a bit dirty, depends on the way we call it
       if (type == T_ONE_NOTE || type == T_ONE_NOTE_TRF)
 	{
@@ -1610,6 +1615,20 @@ gregoriotex_write_signs (FILE * f, char type,
    fprintf(f, "}%%\n");
 }
 
+void
+gregoriotex_write_choral_sign (FILE * f,
+				 gregorio_glyph * glyph,
+				 gregorio_note * current_note)
+{
+  if (is_on_a_line(current_note->pitch))
+    {
+      fprintf(f, "\\grechoralsign{%c}{%s}%%\n", current_note->pitch + 1, current_note->choral_sign);
+    }
+  else
+    {
+      fprintf(f, "\\grechoralsign{%c}{%s}%%\n", current_note->pitch, current_note->choral_sign);
+    }
+}
 
 void
 gregoriotex_write_auctum_duplex (FILE * f,
