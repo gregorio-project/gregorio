@@ -668,6 +668,24 @@ dump_bar_type (char element_type)
     case B_DIVISIO_FINALIS:
       str = "B_DIVISIO_FINALIS";
       break;
+    case B_DIVISIO_MINOR_D1:
+      str = "B_DIVISIO_MINOR_D1";
+      break;
+    case B_DIVISIO_MINOR_D2:
+      str = "B_DIVISIO_MINOR_D2";
+      break;
+    case B_DIVISIO_MINOR_D3:
+      str = "B_DIVISIO_MINOR_D3";
+      break;
+    case B_DIVISIO_MINOR_D4:
+      str = "B_DIVISIO_MINOR_D4";
+      break;
+    case B_DIVISIO_MINOR_D5:
+      str = "B_DIVISIO_MINOR_D5";
+      break;
+    case B_DIVISIO_MINOR_D6:
+      str = "B_DIVISIO_MINOR_D6";
+      break;
     default:
       str = "unknown";
       break;

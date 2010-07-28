@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1278166612
+ModificationTime: 1280322203
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -44,7 +44,7 @@ AntiAlias: 1
 FitToEm: 1
 WinInfo: 72 12 5
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 364 364
+BeginChars: 366 366
 
 StartChar: _0017
 Encoding: 0 66 0
@@ -798,11 +798,11 @@ HStem: -420 15 -106 15 210 15 524 15
 LayerCount: 2
 Fore
 SplineSet
-0 -12 m 25
+0 -12 m 29
  0 300 l 29
  18 300 l 29
- 18 -12 l 25
- 0 -12 l 25
+ 18 -12 l 29
+ 0 -12 l 29
 EndSplineSet
 EndChar
 
@@ -2428,7 +2428,7 @@ StartChar: odbase
 Encoding: 107 -1 107
 Width: 168
 VWidth: 2612
-Flags: HWO
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore
@@ -2447,22 +2447,38 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: NameMe.190
+StartChar: _0083
 Encoding: 108 -1 108
-Width: 2048
+Width: 18
 VWidth: 2048
-Flags: W
-HStem: -409 15 -94 15 221 15 536 15
+Flags: HW
+HStem: -420 15 -106 15 210 15 524 15
 LayerCount: 2
+Fore
+SplineSet
+0 -106 m 29
+ 0 374 l 25
+ 18 374 l 25
+ 18 -106 l 25
+ 0 -106 l 29
+EndSplineSet
 EndChar
 
-StartChar: NameMe.191
+StartChar: _0084
 Encoding: 109 -1 109
-Width: 2048
+Width: 18
 VWidth: 2048
-Flags: W
-HStem: -409 15 -94 15 221 15 536 15
+Flags: HW
+HStem: -420 15 -106 15 210 15 524 15
 LayerCount: 2
+Fore
+SplineSet
+0 -255 m 29
+ 0 225 l 29
+ 18 225 l 25
+ 18 -255 l 25
+ 0 -255 l 29
+EndSplineSet
 EndChar
 
 StartChar: NameMe.192
@@ -4744,6 +4760,24 @@ EndChar
 
 StartChar: NameMe.445
 Encoding: 363 -1 363
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+EndChar
+
+StartChar: NameMe.446
+Encoding: 364 -1 364
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+EndChar
+
+StartChar: NameMe.447
+Encoding: 365 -1 365
 Width: 2048
 VWidth: 2048
 Flags: W

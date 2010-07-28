@@ -94,7 +94,7 @@ ghz0::c4(ghz0::c4) f(f) f3(f3) f(f) ghz0::c4(ghz0::c4) f(f)
 %
 % bars
 %
-,(,) (,) g,h(g,h) ;(;) (;) g;h(g;h) :(:) (:) g:h(g:h) ::(::) (::) g::h(g::h)
+,(,) (,) g,h(g,h) ;(;) (;) g;h(g;h) :(:) (:) g:h(g:h) ::(::) (::) g::h(g::h) ,'(,') (,') g,h(g,'h) ;'(;') (;') g;'h(g;'h) :'(:') (:') g:'h(g:'h) ::(::') (::') g::'h(g::'h) ;1(;1) (;1) g;1h(g;1h) ;1'(;1') (;1') g;1'h(g;1'h) ;2(;2) (;2) g;2h(g;2h) ;2'(;2') (;2') g;1'h(g;2'h) ;3(;3) (;3) g;3h(g;3h) ;3'(;3') (;3') g;3'h(g;3'h) ;4(;4) (;4) g;4h(g;4h) ;4'(;4') (;4') g;4'h(g;4'h) ;5(;5) (;5) g;5h(g;5h) ;5'(;5') (;5') g;5'h(g;5'h) ;6(;6) (;6) g;6h(g;6h) ;6'(;6') (;6') g;6'h(g;6'h)
 %
 % styles, verb and special characters
 %
@@ -120,7 +120,7 @@ gr(gr) hr(hr) gR(gR) hr0(hr0) gr0(gr0) gr1(gr1) gr2(gr2) gr3(gr3) gr4(gr4) gr5(g
 %
 % limit cases
 %
-a_.'(a_.') b_.'(b_.') c_.'(c_.') k_.'(k_.') l_.'(l_.') m_.'(m_.'Z)
+a_.'(a_.') b_.'(b_.') c_.'(c_.') k_.'(k_.') l_.'(l_.') m_.'(m_.'Z) a/dc(a/dc) a//dc(a//dc) a dc(a dc)
 %
 % comments
 %
@@ -140,4 +140,4 @@ ab[cd](ghZ)
 % h episemus bridges
 %
 g_/g_(g_/g_) g_//g_(g_//g_) g_ g_Z(g_ g_) g_!/g_(g_!/g_) g_!//g_(g_!//g_) g_! g_(g_! g_Z)
-g_/h_(g_/h_) h_/g_(h_/g_) gh_/g_(gh_/g_) h_/gh_(h_/gh_)
+g_/h_(g_/h_) h_/g_(h_/g_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) {h}_/i_(h_/i_) i_/h_(i_/h_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) gh_/g_/g_(gh_/g_/g_)

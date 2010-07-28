@@ -1024,6 +1024,40 @@
   \relax%
 }
 
+\def\gredominica#1{%
+  \ifcase#1\or %
+    \grewritebar{6}{0}%
+  \or %
+    \grewritebar{7}{0}%
+  \or %
+    \grewritebar{8}{0}%
+  \or %
+    \grewritebar{9}{0}%
+  \or %
+    \grewritebar{10}{0}%
+  \or %
+    \grewritebar{11}{0}%
+  \fi %
+  \relax%
+}
+
+\def\greindominica#1{%
+  \ifcase#1\or %
+    \grewritebar{6}{1}%
+  \or %
+    \grewritebar{7}{1}%
+  \or %
+    \grewritebar{8}{1}%
+  \or %
+    \grewritebar{9}{1}%
+  \or %
+    \grewritebar{10}{1}%
+  \or %
+    \grewritebar{11}{1}%
+  \fi %
+  \relax%
+}
+
 \newdimen\gretempdimtwo
 
 \def\greindivisiofinalis{%
@@ -1055,8 +1089,8 @@
     \global\grelastoflinecount=0\relax %
   \fi %
   \grecalculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+  \penalty 10001 %
   \ifcase#1 % 0 : virgula
-    \penalty 10001 %
     \ifnum#2=1\relax %
       \hskip\grespacearoundsmallbar %
       \penalty 10001 %
@@ -1068,9 +1102,7 @@
     \ifnum#2=1\relax %
       \hskip\grespacearoundsmallbar %
     \fi %
-    %\penalty -5000 %
   \or % 1 : minima
-    \penalty 10001%
     \ifnum#2=1\relax %
       \hskip\grespacearoundsmallbar %
       \penalty 10001%
@@ -1079,9 +1111,7 @@
     \ifnum#2=1\relax %
       \hskip\grespacearoundsmallbar %
     \fi %
-    %\penalty -5000%
   \or % 2 : minor
-    \penalty 10001 %
     \ifnum#2=1\relax %
       \hskip\grespacearoundminor %
       \penalty 10001 %
@@ -1090,9 +1120,7 @@
     \ifnum#2=1\relax %
       \hskip\grespacearoundminor %
     \fi %
-    %\penalty -5000 %
   \or % 3 : maior
-    \penalty 10001 %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
       \penalty 10001 %
@@ -1101,9 +1129,7 @@
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
     \fi %
-    %\penalty -5000 %
   \or % 4 : finalis
-    \penalty 10001 %
     \ifnum#2=1\relax %
       \hskip\grespacearoundfinalis %
       \penalty 10001 %
@@ -1112,9 +1138,7 @@
     \ifnum#2=1\relax %
       \hskip\grespacearoundfinalis %
     \fi %
-    %\penalty -5000 %
   \or % 5 : finalis
-    \penalty 10001 %
     \ifnum#2=1\relax %
       \hskip\grespacebeforefinalfinalis %
       \penalty 10001 %
@@ -1123,7 +1147,64 @@
     \ifnum#2=1\relax %
       \hskip\grespacearoundfinalis %
     \fi %
-    %\penalty -5000 %
+  \or % 6 : dominican bar 1
+    \grecalculateglyphraisevalue{e}{0}%
+    \ifnum#2=1\relax %
+      \hskip\grespacearoundmaior %
+      \penalty 10001 %
+    \fi %
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
+    \ifnum#2=1\relax %
+      \hskip\grespacearoundmaior %
+    \fi %
+  \or % 7 : dominican bar 2
+    \grecalculateglyphraisevalue{e}{0}%
+    \ifnum#2=1\relax %
+      \hskip\grespacearoundmaior %
+      \penalty 10001 %
+    \fi %
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
+    \ifnum#2=1\relax %
+      \hskip\grespacearoundmaior %
+    \fi %
+  \or % 8 : dominican bar 3
+    \ifnum#2=1\relax %
+      \hskip\grespacearoundmaior %
+      \penalty 10001 %
+    \fi %
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
+    \ifnum#2=1\relax %
+      \hskip\grespacearoundmaior %
+    \fi %
+  \or % 9 : dominican bar 4
+    \ifnum#2=1\relax %
+      \hskip\grespacearoundmaior %
+      \penalty 10001 %
+    \fi %
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
+    \ifnum#2=1\relax %
+      \hskip\grespacearoundmaior %
+    \fi %
+  \or % 10 : dominican bar 5
+    \grecalculateglyphraisevalue{i}{0}%
+    \ifnum#2=1\relax %
+      \hskip\grespacearoundmaior %
+      \penalty 10001 %
+    \fi %
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
+    \ifnum#2=1\relax %
+      \hskip\grespacearoundmaior %
+    \fi %
+  \or % 11 : dominican bar 6
+    \grecalculateglyphraisevalue{i}{0}%
+    \ifnum#2=1\relax %
+      \hskip\grespacearoundmaior %
+      \penalty 10001 %
+    \fi %
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
+    \ifnum#2=1\relax %
+      \hskip\grespacearoundmaior %
+    \fi %
   \fi %
   \relax%
 }

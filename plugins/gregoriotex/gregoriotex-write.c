@@ -1176,6 +1176,36 @@ gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable)
       fprintf (f, "divisiofinalis %%\n");
       typenumber = 27;
       break;
+    case B_DIVISIO_MINOR_D1:
+      fprintf (f, "dominica{1}%%\n");
+      // TODO: a true typenumber
+      typenumber = 25;
+      break;
+    case B_DIVISIO_MINOR_D2:
+      fprintf (f, "dominica{2}%%\n");
+      // TODO: a true typenumber
+      typenumber = 25;
+      break;
+    case B_DIVISIO_MINOR_D3:
+      fprintf (f, "dominica{3}%%\n");
+      // TODO: a true typenumber
+      typenumber = 25;
+      break;
+    case B_DIVISIO_MINOR_D4:
+      fprintf (f, "dominica{4}%%\n");
+      // TODO: a true typenumber
+      typenumber = 25;
+      break;
+    case B_DIVISIO_MINOR_D5:
+      fprintf (f, "dominica{5}%%\n");
+      // TODO: a true typenumber
+      typenumber = 25;
+      break;
+    case B_DIVISIO_MINOR_D6:
+      fprintf (f, "dominica{6}%%\n");
+      // TODO: a true typenumber
+      typenumber = 25;
+      break;
     default:
       gregorio_message (_("unknown bar type"),
 			"gregoriotex_write_bar", ERROR, 0);
@@ -3299,6 +3329,8 @@ gregoriotex_determine_interval (gregorio_glyph * glyph)
 * 10: divisio minor
 * 11: divisio maior
 * 12: divisio finalis
+* 83: virgula minor oriented to the top
+* 84: virgula minor oriented to the bottom
 * 13: punctum deminutum
 * 14: punctum mora
 * 15: auctum duplex

@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1278166937
+ModificationTime: 1280322613
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -42,9 +42,9 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 48 12 5
+WinInfo: 60 12 5
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 360 360
+BeginChars: 362 362
 
 StartChar: _0017
 Encoding: 0 66 0
@@ -362,16 +362,16 @@ HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore
 SplineSet
-0.0078125 -224.002 m 5
- 0 130.938 l 6
- 0 157.157 69.5996 163.997 81 163.997 c 4
- 91.2598 163.997 161 157.191 161 130.972 c 5
- 161 -4.66504 l 5
- 160.615 -13.7842 153.135 -21.7686 143.975 -21.7686 c 5
- 137.135 -21.7686 116.615 -5.80859 81.2754 -5.80859 c 4
- 42.5146 -5.80859 34.6667 -9.33333 22 -21.5 c 5
+0.0078125 -224.002 m 1
+ 0 130.938 l 2
+ 0 157.157 69.5996 163.997 81 163.997 c 0
+ 91.2598 163.997 161 157.191 161 130.972 c 1
+ 161 -4.66504 l 1
+ 160.615 -13.7842 153.135 -21.7686 143.975 -21.7686 c 1
+ 137.135 -21.7686 116.615 -5.80859 81.2754 -5.80859 c 0
+ 42.5146 -5.80859 34.6667 -9.33333 22 -21.5 c 1
  22.125 -220.875 l 5
- 18.5 -223.375 0.0078125 -224.002 0.0078125 -224.002 c 5
+ 18.5 -223.375 0.0078125 -224.002 0.0078125 -224.002 c 1
 EndSplineSet
 EndChar
 
@@ -2356,7 +2356,7 @@ EndChar
 StartChar: odbase
 Encoding: 103 -1 103
 Width: 192
-Flags: HWO
+Flags: HW
 HStem: -473.822 17.1 -114.722 17.1 244.378 17.1 603.478 17.1
 LayerCount: 2
 Fore
@@ -2377,22 +2377,38 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: NameMe.183
+StartChar: _0083
 Encoding: 104 -1 104
-Width: 2048
+Width: 22
 VWidth: 2048
 Flags: W
-HStem: -409 15 -94 15 221 15 536 15
+HStem: -420 15 -106 15 210 15 524 15
 LayerCount: 2
+Fore
+SplineSet
+0 -106 m 25
+ 0 374 l 25
+ 22 374 l 25
+ 22 -106 l 25
+ 0 -106 l 25
+EndSplineSet
 EndChar
 
-StartChar: NameMe.184
+StartChar: _0084
 Encoding: 105 -1 105
-Width: 2048
+Width: 22
 VWidth: 2048
 Flags: W
-HStem: -409 15 -94 15 221 15 536 15
+HStem: -420 15 -106 15 210 15 524 15
 LayerCount: 2
+Fore
+SplineSet
+0 -255 m 25
+ 0 225 l 25
+ 22 225 l 17
+ 22 -255 l 9
+ 0 -255 l 25
+EndSplineSet
 EndChar
 
 StartChar: NameMe.185
@@ -4674,6 +4690,24 @@ EndChar
 
 StartChar: NameMe.438
 Encoding: 359 -1 359
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+EndChar
+
+StartChar: NameMe.439
+Encoding: 360 -1 360
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+EndChar
+
+StartChar: NameMe.440
+Encoding: 361 -1 361
 Width: 2048
 VWidth: 2048
 Flags: W
