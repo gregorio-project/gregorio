@@ -54,6 +54,8 @@ gregoriotex_write_score (FILE * f, gregorio_score * score)
 {
   gregorio_character *first_text;
   status = malloc (sizeof (gregoriotex_status));
+  status -> bottom_line = 0;
+  status -> to_modify_note = NULL;
   // a char that will contain 1 if it is the first syllable and 0 if not. It is for the initial.
   char first_syllable = 0;
   char clef_letter;
@@ -1268,7 +1270,7 @@ gregoriotex_write_glyph (FILE * f,
     case G_5_PUNCTA_INCLINATA_ASCENDENS:
       while (current_note)
 	{
-	  gregoriotex_write_note (f, current_note, next_note_pitch);
+	  gregoriotex_write_note (f, current_note, glyph, element, next_note_pitch);
 	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
 				   current_note);
 	  current_note = current_note->next;
@@ -1279,7 +1281,7 @@ gregoriotex_write_glyph (FILE * f,
       if (glyph->liquescentia == L_DEMINUTUS
 	  || glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS)
 	{
-	  gregoriotex_determine_number_and_type (glyph, &type,
+	  gregoriotex_determine_number_and_type (glyph, element, &type,
 						 &gtype, &glyph_number);
 	  fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
@@ -1291,7 +1293,7 @@ gregoriotex_write_glyph (FILE * f,
 	{
 	  while (current_note)
 	    {
-	      gregoriotex_write_note (f, current_note, next_note_pitch);
+	      gregoriotex_write_note (f, current_note, glyph, element, next_note_pitch);
 	      gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element,
 				       syllable, current_note);
 	      current_note = current_note->next;
@@ -1299,13 +1301,13 @@ gregoriotex_write_glyph (FILE * f,
 	}
       break;
     case G_TORCULUS_RESUPINUS_FLEXUS:
-      gregoriotex_write_note (f, current_note, next_note_pitch);
+      gregoriotex_write_note (f, current_note, glyph, element, next_note_pitch);
       gregoriotex_write_signs (f, T_ONE_NOTE_TRF, glyph, element, syllable,
 			       glyph->first_note);
       glyph->glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
       // tricky to have the good position for these glyphs
       glyph->first_note = current_note->next;
-      gregoriotex_determine_number_and_type (glyph, &type,
+      gregoriotex_determine_number_and_type (glyph, element, &type,
 					     &gtype, &glyph_number);
 //TODO : fusion functions
       fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
@@ -1320,7 +1322,7 @@ gregoriotex_write_glyph (FILE * f,
     case G_TRIVIRGA:
       while (current_note)
 	{
-	  gregoriotex_write_note (f, current_note, next_note_pitch);
+	  gregoriotex_write_note (f, current_note, glyph, element, next_note_pitch);
 	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
 				   current_note);
 	  current_note = current_note->next;
@@ -1336,7 +1338,7 @@ gregoriotex_write_glyph (FILE * f,
     case G_DISTROPHA_AUCTA:
       while (current_note)
 	{
-	  gregoriotex_write_note (f, current_note, next_note_pitch);
+	  gregoriotex_write_note (f, current_note, glyph, element, next_note_pitch);
 	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
 				   current_note);
 	  current_note = current_note->next;
@@ -1366,7 +1368,7 @@ gregoriotex_write_glyph (FILE * f,
     case G_VIRGA:
     case G_STROPHA:
     case G_STROPHA_AUCTA:
-      gregoriotex_write_note (f, glyph->first_note, next_note_pitch);
+      gregoriotex_write_note (f, glyph->first_note, glyph, element, next_note_pitch);
       gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
 			       current_note);
       break;
@@ -1375,13 +1377,13 @@ gregoriotex_write_glyph (FILE * f,
       if (glyph->glyph_type == G_TORCULUS_RESUPINUS
 	  && current_note->shape != S_PUNCTUM)
 	{
-	  gregoriotex_write_note (f, current_note, next_note_pitch);
+	  gregoriotex_write_note (f, current_note, glyph, element, next_note_pitch);
 	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
 				   glyph->first_note);
 	  // tricky to have the good position for these glyphs
 	  glyph->first_note = current_note->next;
 	  glyph->glyph_type = G_PORRECTUS_NO_BAR;
-	  gregoriotex_determine_number_and_type (glyph, &type,
+	  gregoriotex_determine_number_and_type (glyph, element, &type,
 						 &gtype, &glyph_number);
 //TODO : fusion functions
 	  fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
@@ -1394,7 +1396,7 @@ gregoriotex_write_glyph (FILE * f,
 	}
       else
 	{
-	  gregoriotex_determine_number_and_type (glyph, &type,
+	  gregoriotex_determine_number_and_type (glyph, element, &type,
 						 &gtype, &glyph_number);
 	  fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
@@ -1444,6 +1446,7 @@ gregoriotex_write_signs (FILE * f, char type,
 	    }
 	  gregoriotex_write_additional_line (f, glyph, i, type,
 					     TT_BOTTOM, current_note);
+		status -> bottom_line = 1;
 	}
       if (current_note->pitch > 'k')
 	{
@@ -1901,7 +1904,7 @@ gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph,
         }
       else
         {
-          gregoriotex_determine_number_and_type (glyph, &type,
+          gregoriotex_determine_number_and_type (glyph, element, &type,
 						 &gtype, &glyph_number);
         }
       if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS)
@@ -1938,6 +1941,10 @@ gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph,
       return -1; 
     }
   glyph = element->first_glyph;
+  if (!glyph || !glyph->first_note)
+    {
+      return -1;
+    }
   note = glyph->first_note;
   if (glyph->glyph_type == G_PES)
     {
@@ -1947,7 +1954,7 @@ gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph,
     }
   else
     {
-      gregoriotex_determine_number_and_type (glyph, &type,
+      gregoriotex_determine_number_and_type (glyph, element, &type,
 				 &gtype, &glyph_number);
     }
   if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS)
@@ -2787,11 +2794,77 @@ gregoriotex_determine_liquescentia_number (unsigned int
   return factor * liquescentia;
 }
 
+// a helper macro for the following function
+#define whileglyph(prevornext) \
+        while(glyph)\
+          {\
+            if (glyph->type == GRE_GLYPH)\
+              {\
+                note = glyph->first_note;\
+                while (note)\
+                  {\
+                    if (note->pitch < 'c')\
+                      {\
+                        return 1;\
+                      }\
+                    note = note->next;\
+                  }\
+              }\
+            glyph = glyph->prevornext;\
+          }
+
+// a function that determines if we must use a long queue or not (less easy that it might seem)
+
+unsigned char
+gregoriotex_is_long(char pitch, gregorio_glyph *current_glyph, gregorio_element *current_element)
+{
+  gregorio_note *note;
+  gregorio_glyph *glyph = current_glyph->next;
+  gregorio_element *element = current_element->next;
+  switch (pitch)
+    {
+      case 'b':
+      case 'f':
+      case 'h':
+      case 'j':
+      case 'l':
+        return 1;
+      case 'd':
+        //we first look forward to see if there is a note underneath c
+        whileglyph(next);
+        if (element && element->type == GRE_SPACE && (element->element_type == SP_NEUMATIC_CUT || element->element_type == SP_LARGER_SPACE || element->element_type == SP_NEUMATIC_CUT_NB || element->element_type == SP_LARGER_SPACE_NB))
+          {
+            element=element->next;
+          }
+        if (element && element->type == GRE_ELEMENT)
+          { 
+            glyph = element->first_glyph;
+            whileglyph(next);
+          }
+        // and now something completely different
+        glyph = current_glyph->previous;
+        element = current_element->previous;
+        whileglyph(previous);
+        if (element && element->type == GRE_SPACE && (element->element_type == SP_NEUMATIC_CUT || element->element_type == SP_LARGER_SPACE || element->element_type == SP_NEUMATIC_CUT_NB || element->element_type == SP_LARGER_SPACE_NB))
+          {
+            element=element->previous;
+          }
+        if (element && element->type == GRE_ELEMENT)
+          { 
+            glyph = element->first_glyph;
+            whileglyph(next);
+          }
+        return 0;
+      default:
+        return 0;
+    }
+}
+
 // finaly the function that calculates the number of the glyph. It also calculates the type, used for determining the position of signs. Type is very basic, it is only the global dimensions : torculus, one_note, etc.
 
 void
-  gregoriotex_determine_number_and_type
-  (gregorio_glyph * glyph, int *type, char *gtype, unsigned int *glyph_number)
+gregoriotex_determine_number_and_type
+  (gregorio_glyph * glyph, gregorio_element *element, int *type, char *gtype, unsigned int *glyph_number)
 {
   unsigned int temp = 0;
   char pitch = 0;
@@ -2850,7 +2923,7 @@ void
 	case S_ORISCUS:
 	  *type = AT_ORISCUS;
 	  // TODO: we could factorize this code
-	  if (glyph->liquescentia == L_NO_LIQUESCENTIA && is_long (pitch))
+	  if (glyph->liquescentia == L_NO_LIQUESCENTIA && gregoriotex_is_long(pitch, glyph, element) == 1)
 	    {
 	      *gtype = T_PESQUASSUS_LONGQUEUE;
 	    }
@@ -2891,7 +2964,7 @@ void
 	{
 	case S_QUILISMA:
 	  *type = AT_QUILISMA;
-	  if (glyph->liquescentia == L_NO_LIQUESCENTIA && is_long (pitch))
+	  if (glyph->liquescentia == L_NO_LIQUESCENTIA && gregoriotex_is_long(pitch, glyph, element) == 1)
 	    {
 	      *gtype = T_PESQUILISMAQUADRATUM_LONGQUEUE;
 	    }
@@ -2907,7 +2980,7 @@ void
 	  break;
 	case S_ORISCUS:
 	  *type = AT_ORISCUS;
-	  if (glyph->liquescentia == L_NO_LIQUESCENTIA && is_long (pitch))
+	  if (glyph->liquescentia == L_NO_LIQUESCENTIA && gregoriotex_is_long(pitch, glyph, element) == 1)
 	    {
 	      *gtype = T_PESQUASSUS_LONGQUEUE;
 	    }
@@ -2923,7 +2996,7 @@ void
 	  break;
 	default:
 	  *type = AT_ONE_NOTE;
-	  if (glyph->liquescentia == L_NO_LIQUESCENTIA && is_long (pitch))
+	  if (glyph->liquescentia == L_NO_LIQUESCENTIA && gregoriotex_is_long(pitch, glyph, element) == 1)
 	    {
 	      *gtype = T_PESQUADRATUM_LONGQUEUE;
 	    }
@@ -2967,7 +3040,7 @@ void
 	}
       else
 	{
-	  if (is_short (pitch))
+	  if (is_short (pitch, glyph, element))
 	    {
 	      *gtype = T_FLEXUS;
 	      temp =
@@ -3073,7 +3146,7 @@ void
 	    {
 	      *type = AT_FLEXUS;
 	    }
-	  if (is_short (pitch))
+	  if (is_short (pitch, glyph, element))
 	    {
 	      *gtype = T_ANCUS;
 	      temp = TYPE_FACTOR * T_ANCUS +
@@ -3315,7 +3388,7 @@ gregoriotex_determine_interval (gregorio_glyph * glyph)
 #define H_SMALL_PUNCTUM 58
 
 void
-gregoriotex_write_note (FILE * f, gregorio_note * note, char next_note_pitch)
+gregoriotex_write_note (FILE * f, gregorio_note * note, gregorio_glyph *glyph, gregorio_element *element, char next_note_pitch)
 {
   unsigned int glyph_number;
   char temp;
@@ -3329,7 +3402,7 @@ gregoriotex_write_note (FILE * f, gregorio_note * note, char next_note_pitch)
       return;
     }
 
-  gregoriotex_determine_note_number_and_type (note, &type, &glyph_number);
+  gregoriotex_determine_note_number_and_type (note, glyph, element, &type, &glyph_number);
 // special things for puncta inclinata
   if (note->shape == S_PUNCTUM_INCLINATUM)
     {
@@ -3435,7 +3508,7 @@ gregoriotex_write_note (FILE * f, gregorio_note * note, char next_note_pitch)
 
 void
   gregoriotex_determine_note_number_and_type
-  (gregorio_note * note, int *type, unsigned int *glyph_number)
+  (gregorio_note * note, gregorio_glyph *glyph, gregorio_element *element, int *type, unsigned int *glyph_number)
 {
   if (!note)
     {
@@ -3480,7 +3553,7 @@ void
       *glyph_number = 36;
       break;
     case S_VIRGA:
-      if (is_short (note->pitch))
+      if (is_short (note->pitch, glyph, element))
 	{
 	  *glyph_number = 23;
 	}
@@ -3598,11 +3671,11 @@ gregoriotex_syllable_first_type (gregorio_syllable * syllable)
 		    case G_BIVIRGA:
 		    case G_TRIVIRGA:
 		      gregoriotex_determine_note_number_and_type
-			(glyph->first_note, &type, &number);
+			(glyph->first_note, glyph, element, &type, &number);
 		      break;
 		    default:
 		      gregoriotex_determine_number_and_type
-			(glyph, &type, &gtype, &number);
+			(glyph, element, &type, &gtype, &number);
 		      break;
 		    }
 		  return type + alteration;

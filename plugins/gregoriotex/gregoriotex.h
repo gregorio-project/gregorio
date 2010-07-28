@@ -86,10 +86,9 @@ Here are the different types, they must be the same as in squarize.py
 // macro that we will use to determine if we need a short bar or not
 
 // we define d to be short instead of long... may induce errors, but fixes some too
-#define is_short(pitch) (pitch=='a'||pitch=='c'||pitch=='d'||pitch=='e'||pitch=='g'||pitch=='i'||pitch=='k'||pitch=='m')
-#define is_long(pitch) (pitch=='b'||pitch=='f'||pitch=='h'||pitch=='j'||pitch=='l')
-#define is_on_a_line(pitch) is_long(pitch)
-#define is_between_lines(pitch) is_short(pitch)
+#define is_short(pitch, glyph, element) gregoriotex_is_long(pitch, glyph, element) == 0
+#define is_on_a_line(pitch) (pitch=='b' || pitch=='d' ||pitch=='f'||pitch=='h'||pitch=='j'||pitch=='l')
+#define is_between_lines(pitch) (pitch=='a' || pitch=='c' ||pitch=='e'||pitch=='g'||pitch=='i'||pitch=='k'||pitch=='m')
 
 // Here we define a function that will determine the number of the liquescentia that we will add to the glyph number. There are several types as all glyphs can't have all liquescentiae. Let's first define the different types:
 
@@ -126,7 +125,7 @@ Here are the different types, they must be the same as in squarize.py
 
 // a structure containing the status
 typedef struct gregoriotex_status {
-unsigned char additional_line; // 1 if the current_glyph will have an additional line under or not (useful to determine the length of the bar in case of a flexa starting at d
+unsigned char bottom_line; // 1 if the current_glyph will have an additional line under or not (useful to determine the length of the bar in case of a flexa starting at d
 unsigned char to_modify_h_episemus; // to link two hepisemus that are at the same pitch
 gregorio_note* to_modify_note;
 } gregoriotex_status;
@@ -154,10 +153,10 @@ void gregoriotex_write_element (FILE * f, gregorio_syllable * syllable, gregorio
 void gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable);
 void gregoriotex_write_last_note_verb (FILE *f, gregorio_glyph * glyph);
 void gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable, gregorio_element * element, gregorio_glyph * glyph);
-void gregoriotex_determine_number_and_type (gregorio_glyph *glyph, int *type, char *gtype, unsigned int *glyph_number);
+void gregoriotex_determine_number_and_type (gregorio_glyph *glyph, gregorio_element *element, int *type, char *gtype, unsigned int *glyph_number);
 
 unsigned int gregoriotex_determine_interval (gregorio_glyph * glyph);
-void gregoriotex_write_note (FILE * f, gregorio_note * note, char next_note_pitch);
+void gregoriotex_write_note (FILE * f, gregorio_note * note, gregorio_glyph *glyph, gregorio_element *element, char next_note_pitch);
 
 void gtex_write_begin (FILE * f, unsigned char style);
 void gtex_write_end (FILE * f, unsigned char style);
@@ -175,7 +174,7 @@ void gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, grego
 void gregoriotex_write_next_first_text (FILE * f, gregorio_character *current_character);
 int gregoriotex_syllable_first_type (gregorio_syllable * syllable);
 
-void gregoriotex_determine_note_number_and_type (gregorio_note * note, int *type, unsigned int *glyph_number);
+void gregoriotex_determine_note_number_and_type (gregorio_note * note, gregorio_glyph *glyph, gregorio_element *element, int *type, unsigned int *glyph_number);
 
 void gtex_write_end_for_two (FILE * f, unsigned char style);
 
@@ -189,6 +188,8 @@ void gregoriotex_write_additional_line (FILE * f, gregorio_glyph *current_glyph,
 void gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line);
 
 char gregoriotex_clef_flat_height(char step, int line);
+
+unsigned char gregoriotex_is_long(char pitch, gregorio_glyph *glyph, gregorio_element *element);
 
 void gregoriotex_write_bridge_hepisemus (FILE * f, gregorio_glyph *current_glyph, gregorio_element *current_element,	 gregorio_syllable *current_syllable, char height);
 #endif
