@@ -17,12 +17,17 @@ made a gregorian chant font (in square or ancient notation) under a free (GPL
 or OFL) license, mail gregorio-devel@gna.org, we will be happy to integrate it
 in the project!
 
-The project has two fonts: 
+The project has several fonts: 
 
 - gregorio, created by Elie Roux with fontforge in 2007
 
 - parmesan, created by Juergen Reuter in 2000 in metafont, and
   adapted to gregorio by Elie Roux in 2007
+
+- greextra, an adaptation of some other glyphs from parmesan
+
+- gresyms, a symbol font containing some lines and ornaments, created by
+  Elie Roux in 2008
 
 - greciliae, created by Matthew Spencer in 2007 in otf, and
   adapted to gregorio by Elie Roux in 2008
@@ -141,8 +146,8 @@ E: elie.roux@telecom-bretagne.eu
 W: http://home.gna.org/gregorio
 D: Author
 
-Licence and copyright for the parmesan font
-===========================================
+Licence and copyright for the parmesan and greextra font
+========================================================
 
 LilyPond's pretty-but-neat music font.
 Copyright (C) 2002--2006 Juergen Reuter <reuter@ipd.uka.de>
@@ -176,9 +181,15 @@ ChangeLog for the parmesan font
 - Initial release of font "parmesan" for gregorio, based on the font "parmesan"
   created by Juergen Reuter for Lilypond
 
+ChangeLog for the greextra font
+===============================
 
-Acknowledgements for the parmesan font
-======================================
+3 Aug 2010 (Elie Roux) greextra Version 1.0
+- Initial release of font "greextra" for gregorio, based on the font "parmesan"
+  created by Juergen Reuter for Lilypond
+
+Acknowledgements for the parmesan and greextra font
+===================================================
 If you make modifications be sure to add your name (N), email (E),
 web-address (W) and description (D). This list is sorted by last name in 
 alphabetical order.
