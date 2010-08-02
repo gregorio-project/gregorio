@@ -54,6 +54,7 @@ unsigned int nbof_isolated_episemus;
 %x texverbnote
 %x texverbglyph
 %x texverbelement
+%x choralsign
 %x comments
 
 %%
@@ -66,6 +67,9 @@ unsigned int nbof_isolated_episemus;
 <comments>[^\n\r]*  {
     //ignored
     }
+<INITIAL>\[cs: {
+    BEGIN(choralsign);
+    }
 <INITIAL>\[nv: {
     BEGIN(texverbnote);
     }
@@ -74,6 +78,9 @@ unsigned int nbof_isolated_episemus;
     }
 <INITIAL>\[ev: {
     BEGIN(texverbelement);
+    }
+<choralsign>[^\]]+ {
+	gregorio_add_cs_to_note(&current_note, strdup(gabc_notes_determination_text));
     }
 <texverbnote>[^\]]+ {
 	gregorio_add_texverb_to_note(&current_note, strdup(gabc_notes_determination_text));
@@ -84,7 +91,7 @@ unsigned int nbof_isolated_episemus;
 <texverbelement>[^\]]+ {
 	gregorio_add_texverb_as_note(&current_note, strdup(gabc_notes_determination_text), GRE_TEXVERB_ELEMENT);
     }
-<texverbnote,texverbglyph,texverbelement>\] {
+<texverbnote,texverbglyph,texverbelement,choralsign>\] {
 	BEGIN(INITIAL);
     }
 \{  {
@@ -228,6 +235,9 @@ r5	{
     }
 [a-mA-M]x       {
 	gregorio_add_special_as_note (&current_note, GRE_FLAT, gabc_notes_determination_text[0]);
+	}
+[a-mA-M]#       {
+	gregorio_add_special_as_note (&current_note, GRE_SHARP, gabc_notes_determination_text[0]);
 	}
 [a-mA-M]y       {
 	gregorio_add_special_as_note (&current_note, GRE_NATURAL, gabc_notes_determination_text[0]);

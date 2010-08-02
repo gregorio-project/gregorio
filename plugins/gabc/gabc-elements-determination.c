@@ -131,7 +131,8 @@ gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	{
 	  //we ignore flats and naturals, except if they are alone
 	  if (current_glyph->type == GRE_NATURAL
-	      || current_glyph->type == GRE_FLAT)
+	      || current_glyph->type == GRE_FLAT
+	      || current_glyph->type == GRE_SHARP)
 	    {
           if (current_glyph->next)
             {
@@ -188,6 +189,7 @@ gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	}
 	  first_glyph = current_glyph->next;
 	  previous_glyph = current_glyph->next;
+	  current_glyph->texverb = NULL;
 	  gregorio_free_one_glyph (&current_glyph);
 	  continue;
 	}

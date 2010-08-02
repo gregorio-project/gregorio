@@ -1049,6 +1049,12 @@ gregoriotex_write_element (FILE * f,
 	  current_glyph = current_glyph->next;
 	  continue;
 	}
+      if (current_glyph->type == GRE_SHARP)
+	{
+	  fprintf (f, "\\gresharp{%c}{0}%%\n", current_glyph->glyph_type);
+	  current_glyph = current_glyph->next;
+	  continue;
+	}
       if (current_glyph->type == GRE_BAR)
 	{
 	  gregoriotex_write_bar (f, current_glyph->glyph_type,
@@ -3344,6 +3350,8 @@ gregoriotex_determine_interval (gregorio_glyph * glyph)
 * 05: flat (oriented to the top)
 * 06: flat (oriented to the bottom)
 * 07: natural
+* 85: sharp
+* 86: sharp hole
 * 08: virgula
 * 09: divisio minima
 * 10: divisio minor
@@ -3697,6 +3705,10 @@ gregoriotex_syllable_first_type (gregorio_syllable * syllable)
 	      if (glyph->type == GRE_NATURAL && alteration == 0)
 		{
 		  alteration = 40;
+		}
+	      if (glyph->type == GRE_SHARP && alteration == 0)
+		{
+		  alteration = 60;
 		}
 	      if (glyph->type == GRE_GLYPH && glyph->first_note)
 		{

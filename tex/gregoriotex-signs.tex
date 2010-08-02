@@ -1330,7 +1330,7 @@
 % the argument is the character with which we fill the hole, and we suppose that
 % isonaline and glyphraisevalue are correctly set.
 \def\grefillhole#1{%
-  \setbox\GreTempwidth=\hbox{\gregoriofont #1}%
+  \setbox\GreTempwidth=\hbox{#1}%
   \hbox to 0pt{%
     \color{grebackgroundcolor}%
     \raise \greglyphraisevalue %
@@ -1349,10 +1349,11 @@
 % a count saying if the first glyph is an alteration
 \newcount\grefirstisalteration
 
-% This macro typesets a flat on the height provided by #1. #2 is not used yet, but it
-% will determine if the flat has zero width or not. #3 and #4 should be the same as greglyph's #5 and #6, but it's not really done nor useful...
-
-\def\greflat#1#2{%
+% the top level macro:
+% #1 is the height
+% #2 is the char of the alteration
+% #3 is the char of the alteration hole
+\def\grealteration#1#2#3{%
   % to see why we reset \grelastoflinecount, see comments of \greglyph.
   \ifnum\grelastoflinecount=2\relax %
     \global\grelastoflinecount=0\relax %
@@ -1362,16 +1363,16 @@
   \fi %
   \grecalculateglyphraisevalue{#1}{0}%
   \ifnum\grehidealtlines=1\relax %
-    \grefillhole{\char 81}%
+    \grefillhole{#3}%
   \fi %
-  \setbox\GreTempwidth=\hbox{\gregoriofont \char 6}%
+  \setbox\GreTempwidth=\hbox{#2}%
   \gretempwidth=\wd\GreTempwidth %
   %\kern\gretempwidth %
   %#3\relax %
   %\kern-\gretempwidth %
   \raise \greglyphraisevalue%
   \copy\GreTempwidth%
-  % we try to avoir line breaking after a flat or a natural
+  % we try to avoid line breaking after a flat or a natural
   \penalty 10001\relax %
   \ifnum\the\grefirstglyph=1\relax %
     \gretempdim=\wd\GreTempwidth %
@@ -1384,42 +1385,36 @@
   \penalty 10001\relax %
   %#4\relax %
   %\penalty 10001\relax %
+  \relax %
+}
+
+% a set of macros for the default characters
+\gdef\greflatchar{\gregoriofont\char 6}
+\gdef\greflatholechar{\gregoriofont\char 81}
+\gdef\grenaturalchar{\gregoriofont\char 7}
+\gdef\grenaturalholechar{\gregoriofont\char 82}
+\gdef\gresharpchar{\gregoriofont\char 85}
+\gdef\gresharpholechar{\gregoriofont\char 86}
+  
+% This macro typesets a flat on the height provided by #1. #2 is not used yet, but it
+% will determine if the flat has zero width or not. #3 and #4 should be the same as greglyph's #5 and #6, but it's not really done nor useful...
+
+\def\greflat#1#2{%
+  \grealteration{#1}{\greflatchar}{\greflatholechar}%
   \relax%
 }
 
 % Same as the one before, but for naturals.
 
 \def\grenatural#1#2{%
-  % to see why we reset \grelastoflinecount, see comments of \greglyph.
-  \ifnum\grelastoflinecount=2\relax %
-    \global\grelastoflinecount=0\relax %
-  \fi %
-  \ifnum\the\grefirstglyph=1\relax %
-    \global\grefirstisalteration=1\relax %
-  \fi %
-  \grecalculateglyphraisevalue{#1}{0}%
-  \ifnum\grehidealtlines=1\relax %
-    \grefillhole{\char 82}%
-  \fi %
-  \setbox\GreTempwidth=\hbox{\gregoriofont \char 7}%
-  \gretempwidth=\wd\GreTempwidth%
-  %\kern\gretempwidth %
-  %#3\relax %
-  %\kern-\gretempwidth %
-  \raise \greglyphraisevalue%
-  \copy\GreTempwidth%
-  \penalty 10001\relax %
-  \ifnum\the\grefirstglyph=1\relax %
-    \gretempdim=\wd\GreTempwidth %
-    \advance\gretempdim by \grealterationspace %
-    \global\advance\grenotesaligncenter by \gretempdim %
-    \kern\grealterationspace %
-  \else %
-    \hskip\grealterationspace %
-  \fi %
-  \penalty 10001\relax %
-  %#4\relax %
-  %\penalty 10001\relax %
+  \grealteration{#1}{\grenaturalchar}{\grenaturalholechar}%
+  \relax%
+}
+
+% Same as the one before, but for sharps.
+
+\def\gresharp#1#2{%
+  \grealteration{#1}{\gresharpchar}{\gresharpholechar}%
   \relax%
 }
 
@@ -1428,18 +1423,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\UseAlternatePunctumCavum{%
-\xdef\punctumcavumchar{\char 75}%
-\xdef\lineapunctumcavumchar{\char 76}%
-\xdef\punctumcavumholechar{\char 78}%
-\xdef\lineapunctumcavumholechar{\char 80}%
+\gdef\punctumcavumchar{\gregoriofont\char 75}%
+\gdef\lineapunctumcavumchar{\gregoriofont\char 76}%
+\gdef\punctumcavumholechar{\gregoriofont\char 78}%
+\gdef\lineapunctumcavumholechar{\gregoriofont\char 80}%
 \relax %
 }
 
 \def\UseNormalPunctumCavum{%
-\xdef\grepunctumcavumchar{\char 34}%
-\xdef\grelineapunctumcavumchar{\char 36}%
-\xdef\grepunctumcavumholechar{\char 77}%
-\xdef\grelineapunctumcavumholechar{\char 79}%
+\gdef\grepunctumcavumchar{\gregoriofont\char 34}%
+\gdef\grelineapunctumcavumchar{\gregoriofont\char 36}%
+\gdef\grepunctumcavumholechar{\gregoriofont\char 77}%
+\gdef\grelineapunctumcavumholechar{\gregoriofont\char 79}%
 \relax %
 }
 
@@ -1459,7 +1454,6 @@
   \relax %
 }
 
-% Same as the one before, but for naturals.
 \def\grelineapunctumcavum#1#2#3#4#5{%
   \grecalculateglyphraisevalue{#1}{0}%
   \setbox\GreTempwidth=\hbox{\gregoriofont\grelineapunctumcavumchar}%

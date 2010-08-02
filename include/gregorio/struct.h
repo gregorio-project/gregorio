@@ -472,6 +472,7 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define GRE_GLYPH 2
 #define GRE_ELEMENT 3
 #define GRE_FLAT 4
+#define GRE_SHARP 19
 #define GRE_NATURAL 5
 #define GRE_C_KEY_CHANGE 6
 #define GRE_C_KEY_CHANGE_FLATED 14

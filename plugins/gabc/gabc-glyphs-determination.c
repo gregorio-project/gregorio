@@ -352,6 +352,7 @@ gabc_det_glyphs_from_notes (gregorio_note * current_note,
 					 current_note->pitch,
 					 additional_infos, current_note->texverb);
 	  current_glyph_first_note = current_note->next;
+	  current_note->texverb = NULL;
 	  gregorio_free_one_note (&current_note);
 	  last_pitch = USELESS_VALUE;
 	  additional_infos = 0;

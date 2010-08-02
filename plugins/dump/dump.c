@@ -608,6 +608,9 @@ dump_type (char type)
     case GRE_FLAT:
       str = "GRE_FLAT";
       break;
+    case GRE_SHARP:
+      str = "GRE_SHARP";
+      break;
     case GRE_NATURAL:
       str = "GRE_NATURAL";
       break;

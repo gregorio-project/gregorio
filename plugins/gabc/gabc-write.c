@@ -489,7 +489,7 @@ gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
   switch (glyph->type)
     {
     case GRE_FLAT:
-      fprintf (f, "x%c", glyph->glyph_type);
+      fprintf (f, "%cx", glyph->glyph_type);
       break;
     case GRE_TEXVERB_GLYPH:
       if (glyph->texverb)
@@ -498,7 +498,10 @@ gabc_write_gregorio_glyph (FILE * f, gregorio_glyph * glyph)
         }
       break;
     case GRE_NATURAL:
-      fprintf (f, "y%c", glyph->glyph_type);
+      fprintf (f, "%cy", glyph->glyph_type);
+      break;
+    case GRE_SHARP:
+      fprintf (f, "%c#", glyph->glyph_type);
       break;
     case GRE_SPACE:
       if (glyph->glyph_type == SP_ZERO_WIDTH && glyph->next)
@@ -653,6 +656,24 @@ gabc_write_bar (FILE * f, char type)
       break;
     case B_DIVISIO_FINALIS:
       fprintf (f, "::");
+      break;
+    case B_DIVISIO_MINOR_D1:
+      fprintf (f, ";1");
+      break;
+    case B_DIVISIO_MINOR_D2:
+      fprintf (f, ";2");
+      break;
+    case B_DIVISIO_MINOR_D3:
+      fprintf (f, ";3");
+      break;
+    case B_DIVISIO_MINOR_D4:
+      fprintf (f, ";4");
+      break;
+    case B_DIVISIO_MINOR_D5:
+      fprintf (f, ";5");
+      break;
+    case B_DIVISIO_MINOR_D6:
+      fprintf (f, ";6");
       break;
     default:
       gregorio_message (_
