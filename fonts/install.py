@@ -109,10 +109,15 @@ def install(basedir):
     copy(basedir, '../tex/gregoriotex.lua', 'tex/gregoriotex')
     copy(basedir, '../tex/gregoriotex-ictus.lua', 'tex/gregoriotex')
     copy(basedir, 'gresym.map', 'fonts/map/dvips/public/gregoriotex')
+    copy(basedir, 'greextra.map', 'fonts/map/dvips/public/gregoriotex')
     makedir(basedir, 'fonts/tfm/public/gregoriotex/gresym')
     copy(basedir, 'gresym.tfm', 'fonts/tfm/public/gregoriotex/gresym')
+    makedir(basedir, 'fonts/tfm/public/gregoriotex/greextra')
+    copy(basedir, 'greextra.tfm', 'fonts/tfm/public/gregoriotex/greextra')
     makedir(basedir, 'fonts/type1/public/gregoriotex/gresym')
     copy(basedir, 'gresym.pfb', 'fonts/type1/public/gregoriotex/gresym')
+    makedir(basedir, 'fonts/type1/public/gregoriotex/greextra')
+    copy(basedir, 'greextra.pfb', 'fonts/type1/public/gregoriotex/greextra')
     for fontname in Fonts:
         makedir(basedir, 'fonts/tfm/public/gregoriotex/%s' % fontname)    
         for i in range(NumberOfFiles):
@@ -153,6 +158,7 @@ def endInstall(basedir):
         print ("running mktexlsr %s" % basedir)
         system("mktexlsr %s" % basedir)
     Fonts.append("gresym")
+    Fonts.append("greextra")
     # we detect here if it is a debian system
     if access('/etc/texmf/updmap.d', F_OK):
         print "filling /etc/texmf/updmap.d/20gregoriotex.cfg"

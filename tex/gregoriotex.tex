@@ -1132,6 +1132,18 @@
   \relax%
 }
 
+\xdef\greusestylefont{0}
+
+% gregoriostylefont is the font used for additional glyphs
+\def\gresetstylefont{%
+  \ifnum\grefactor=0\else %
+    \gretempdimcount = \the\grefactor %
+    \multiply\gretempdimcount by 100000 %
+    \global\font\gregoriostylefont=greextra at \the\gretempdimcount sp%
+  \fi %
+  \relax%
+}
+
 \def\gretextformat#1{%
   #1\relax %
 }
@@ -1177,6 +1189,9 @@
   \gresetverticalspaces %
   \gregeneratelines %
   \setgregoriofont{\gregoriofontname}%
+  \ifnum\greusestylefont=1\relax %
+  \gresetstylefont %
+  \fi %
   \relax %
 }
 

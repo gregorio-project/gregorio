@@ -104,8 +104,8 @@ $(greciliae_TFM): $(greciliae_PFB)
 
 ## rules tu put all this in common
 
-all_PFB= $(parmesan_PFB) $(gregorio_PFB) $(greciliae_PFB) gresym.pfb
-all_TFM= $(parmesan_TFM) $(gregorio_TFM) $(greciliae_TFM) gresym.tfm
+all_PFB= $(parmesan_PFB) $(gregorio_PFB) $(greciliae_PFB) gresym.pfb greextra.pfb
+all_TFM= $(parmesan_TFM) $(gregorio_TFM) $(greciliae_TFM) gresym.tfm greextra.tfm
 all_OVF= $(parmesan_OVF) $(gregorio_OVF) $(greciliae_OVF)
 all_OVP= $(parmesan_OVP) $(gregorio_OVP) $(greciliae_OVP)
 all_OFM= $(parmesan_OFM) $(gregorio_OFM) $(greciliae_OFM)

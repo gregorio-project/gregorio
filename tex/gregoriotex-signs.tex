@@ -89,26 +89,26 @@
   \fi %
   \ifx c#1% we check if it is a c key
     \ifcase#3%
-      \raise\greglyphraisevalue\hbox{\gregoriofont\char 1}%\hskip\gretempdimskip}%
-      \setbox\GreTempwidth=\hbox{\gregoriofont\char 1}%
+      \raise\greglyphraisevalue\hbox{\grecclefchar}%\hskip\gretempdimskip}%
+      \setbox\GreTempwidth=\hbox{\grecclefchar}%
       \global\greclefwidth=\wd\GreTempwidth %
     \or%
-      \raise\greglyphraisevalue\hbox{\gregoriofont\char 3}%\hskip\gretempdimskip}%
+      \raise\greglyphraisevalue\hbox{\greincclefchar}%\hskip\gretempdimskip}%
     \fi%
   \else % we consider that it is a f key
     \ifcase#3%
-      \raise\greglyphraisevalue\hbox{\gregoriofont\char 2}%\hskip\gretempdimskip}%
-      \setbox\GreTempwidth=\hbox{\gregoriofont\char 2}%
+      \raise\greglyphraisevalue\hbox{\grefclefchar}%\hskip\gretempdimskip}%
+      \setbox\GreTempwidth=\hbox{\grefclefchar}%
       \global\greclefwidth=\wd\GreTempwidth %
     \or%
-      \raise\greglyphraisevalue\hbox{\gregoriofont\char 4}%\hskip\gretempdimskip}%
+      \raise\greglyphraisevalue\hbox{\greinfclefchar}%\hskip\gretempdimskip}%
     \fi%
   \fi%
   \if a#5%
     \hskip\gretempdimskip %
   \else %
-    \grecalculateglyphraisevalue{#5}{0}%
-    \hskip\greclefflatspace\raise\greglyphraisevalue\hbox{\gregoriofont\char 6}%
+    \hskip\greclefflatspace %
+    \greflat{#5}{1}%
     \hskip\gretempdimskip %
   \fi %
   \relax %
@@ -209,6 +209,10 @@
     \grecustochar#1\relax %
     }%
     \global\gretempwidth=\wd\GreTempwidth %
+    % we make \wd\GreTempsign contain the width of a custo
+    \setbox\GreTempsign=\hbox{%
+    \grecustochar#1\relax %
+    }%
     \grelocalrightbox{%
     \ifx l#1%
       \greadditionaltopcustolineend %
@@ -242,8 +246,10 @@
   \hbox to 0pt{%
     \greadditionalstafflinesformat %
     \kern\gretempwidth %
-    \kern -\greadditionallineswidth %
-    \vrule width \greadditionallineswidth height \grestafflineheight%
+    \gretempdim=\wd\GreTempsign %
+    \advance\gretempdim by \greadditionallineswidth %
+    \kern -\gretempdim %
+    \vrule width \gretempdim height \grestafflineheight%
     \hss %
   }%
   \relax %
@@ -260,8 +266,10 @@
   \hbox to 0pt{%
     \greadditionalstafflinesformat %
     \kern\gretempwidth %
-    \kern -\greadditionallineswidth %
-    \vrule width \greadditionallineswidth height \grestafflineheight%
+    \gretempdim=\wd\GreTempsign %
+    \advance\gretempdim by \greadditionallineswidth %
+    \kern -\gretempdim %
+    \vrule width \gretempdim height \grestafflineheight%
     \hss %
   }%
   \relax %
@@ -283,6 +291,7 @@
     \kern\gretempwidth %
     \gretempdim=\greadditionallineswidth %
     \multiply\gretempdim by 2%
+    \advance\gretempdim by \wd\GreTempsign %
     \vrule width \gretempdim height \grestafflineheight%
     \hss %
   }%
@@ -303,6 +312,7 @@
     \kern\gretempwidth %
     \gretempdim=\greadditionallineswidth %
     \multiply\gretempdim by 2%
+    \advance\gretempdim by \wd\GreTempsign %
     \vrule width \gretempdim height \grestafflineheight%
     \hss %
   }%
@@ -310,45 +320,44 @@
 }
 
 \def\grecustochar#1{%
-  \gregoriofont %
   \ifx a#1%
-    \char 62%
+    \grecustotopmiddlechar %
   \fi%
   \ifx b#1%
-    \char 60%
+    \grecustotoplongchar %
   \fi%
   \ifx c#1%
-    \char 61%
+    \grecustotopshortchar %
   \fi%
   \ifx d#1%
-    \char 60%
+    \grecustotoplongchar %
   \fi%
   \ifx e#1%
-    \char 61%
+    \grecustotopshortchar %
   \fi%
   \ifx f#1%
-    \char 60%
+    \grecustotoplongchar %
   \fi%
   \ifx g#1%
-    \char 61%
+    \grecustotoplongchar %
   \fi%
   \ifx h#1%
-    \char 60%
+    \grecustotoplongchar %
   \fi%
   \ifx i#1%
-    \char 61%
+    \grecustotoplongchar %
   \fi%
   \ifx j#1%
-    \char 63%
+    \grecustobottomlongchar %
   \fi%
   \ifx k#1%
-    \char 64%
+    \grecustobottomshortchar %
   \fi%
   \ifx l#1%
-    \char 63%
+    \grecustobottomlongchar %
   \fi%
   \ifx m#1%
-    \char 65%
+    \grecustobottommiddlechar %
   \fi%
 }
 
@@ -393,19 +402,19 @@
     \grecalculateglyphraisevalue{#1}{8}%
   \fi %
   \penalty 10001\relax %
-  \raise \greglyphraisevalue \hbox{\gregoriofont \char 14}%
+  \raise \greglyphraisevalue \hbox{\grepunctummorachar}%
   \penalty 10001\relax %
   \ifcase#2\relax\or %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 14}%
+    \setbox\GreTempwidth=\hbox{\grepunctummorachar}%
     \kern -\wd\GreTempwidth %
     \kern -\grespacebeforesigns %
   \or %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 14}%
+    \setbox\GreTempwidth=\hbox{\grepunctummorachar}%
     \kern -\wd\GreTempwidth %
     \kern -\grespacebeforesigns %
     \kern \gretempdim %
   \or %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 14}%
+    \setbox\GreTempwidth=\hbox{\grepunctummorachar}%
     \kern -\wd\GreTempwidth %
     \kern -\grespacebeforesigns %
     \kern \gretempdim %
@@ -469,7 +478,11 @@
     \ictus{#5}%
   \else %
   % then we draw the sign
-    \setbox\GreTempsign=\hbox{\gregoriofont \char #5}%
+    \ifnum#5=33\relax %
+      \setbox\GreTempsign=\hbox{\greverticalepisemuschar}%
+    \else %
+      \setbox\GreTempsign=\hbox{\gregoriofont \char #5}%
+    \fi %
     % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
     \gretempdimsignwidth=\wd\GreTempsign %
     \divide\gretempdimsignwidth by 2 %
@@ -1353,13 +1366,16 @@
 % #1 is the height
 % #2 is the char of the alteration
 % #3 is the char of the alteration hole
-\def\grealteration#1#2#3{%
+% #4 is 1 in the case of a flat for a key change, 0 otherwise
+\def\grealteration#1#2#3#4{%
   % to see why we reset \grelastoflinecount, see comments of \greglyph.
-  \ifnum\grelastoflinecount=2\relax %
-    \global\grelastoflinecount=0\relax %
-  \fi %
-  \ifnum\the\grefirstglyph=1\relax %
-    \global\grefirstisalteration=1\relax %
+  \ifnum#4=0\relax %
+    \ifnum\grelastoflinecount=2\relax %
+      \global\grelastoflinecount=0\relax %
+    \fi %
+    \ifnum\the\grefirstglyph=1\relax %
+      \global\grefirstisalteration=1\relax %
+    \fi %
   \fi %
   \grecalculateglyphraisevalue{#1}{0}%
   \ifnum\grehidealtlines=1\relax %
@@ -1372,49 +1388,43 @@
   %\kern-\gretempwidth %
   \raise \greglyphraisevalue%
   \copy\GreTempwidth%
-  % we try to avoid line breaking after a flat or a natural
-  \penalty 10001\relax %
-  \ifnum\the\grefirstglyph=1\relax %
-    \gretempdim=\wd\GreTempwidth %
-    \advance\gretempdim by \grealterationspace %
-    \global\advance\grenotesaligncenter by \gretempdim %
-    \kern\grealterationspace %
-  \else %
-    \hskip\grealterationspace %
+  \ifnum#4=0\relax %
+    % we try to avoid line breaking after a flat or a natural
+    \penalty 10001\relax %
+    \ifnum\the\grefirstglyph=1\relax %
+      \gretempdim=\wd\GreTempwidth %
+      \advance\gretempdim by \grealterationspace %
+      \global\advance\grenotesaligncenter by \gretempdim %
+      \kern\grealterationspace %
+    \else %
+      \hskip\grealterationspace %
+    \fi %
+    \penalty 10001\relax %
   \fi %
-  \penalty 10001\relax %
   %#4\relax %
   %\penalty 10001\relax %
   \relax %
 }
-
-% a set of macros for the default characters
-\gdef\greflatchar{\gregoriofont\char 6}
-\gdef\greflatholechar{\gregoriofont\char 81}
-\gdef\grenaturalchar{\gregoriofont\char 7}
-\gdef\grenaturalholechar{\gregoriofont\char 82}
-\gdef\gresharpchar{\gregoriofont\char 85}
-\gdef\gresharpholechar{\gregoriofont\char 86}
   
 % This macro typesets a flat on the height provided by #1. #2 is not used yet, but it
 % will determine if the flat has zero width or not. #3 and #4 should be the same as greglyph's #5 and #6, but it's not really done nor useful...
 
 \def\greflat#1#2{%
-  \grealteration{#1}{\greflatchar}{\greflatholechar}%
+  \grealteration{#1}{\greflatchar}{\greflatholechar}{#2}%
   \relax%
 }
 
 % Same as the one before, but for naturals.
 
 \def\grenatural#1#2{%
-  \grealteration{#1}{\grenaturalchar}{\grenaturalholechar}%
+  \grealteration{#1}{\grenaturalchar}{\grenaturalholechar}{#2}%
   \relax%
 }
 
 % Same as the one before, but for sharps.
 
 \def\gresharp#1#2{%
-  \grealteration{#1}{\gresharpchar}{\gresharpholechar}%
+  \grealteration{#1}{\gresharpchar}{\gresharpholechar}{#2}%
   \relax%
 }
 
@@ -1467,3 +1477,85 @@
   \greglyph{\grelineapunctumcavumchar}{#1}{#2}{#3}{}{#5}%
   \relax %
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the different styles
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\greusedefaultstyle{%
+\gdef\greflatchar{\gregoriofont\char 6}%
+\gdef\greflatholechar{\gregoriofont\char 81}%
+\gdef\grenaturalchar{\gregoriofont\char 7}%
+\gdef\grenaturalholechar{\gregoriofont\char 82}%
+\gdef\gresharpchar{\gregoriofont\char 85}%
+\gdef\gresharpholechar{\gregoriofont\char 86}%
+\gdef\grecclefchar{\gregoriofont\char 1}%
+\gdef\grefclefchar{\gregoriofont\char 2}%
+\gdef\greincclefchar{\gregoriofont\char 3}%
+\gdef\greinfclefchar{\gregoriofont\char 4}%
+\gdef\grepunctummorachar{\gregoriofont\char 14}%
+\gdef\greverticalepisemuschar{\gregoriofont\char 33}%
+\gdef\grecustotoplongchar{\gregoriofont\char 60}%
+\gdef\grecustotopshortchar{\gregoriofont\char 61}%
+\gdef\grecustotopmiddlechar{\gregoriofont\char 62}%
+\gdef\grecustobottomlongchar{\gregoriofont\char 63}%
+\gdef\grecustobottomshortchar{\gregoriofont\char 64}%
+\gdef\grecustobottommiddlechar{\gregoriofont\char 65}%
+\relax %
+}
+
+\def\greusemedicaeastyle{%
+\greusestylecommon %
+\gdef\grecustotoplongchar{\gregoriostylefont\char 8}%
+\gdef\grecustotopshortchar{\gregoriostylefont\char 7}%
+\gdef\grecustotopmiddlechar{\gregoriostylefont\char 9}%
+\gdef\grecustobottomlongchar{\gregoriostylefont\char 11}%
+\gdef\grecustobottomshortchar{\gregoriostylefont\char 10}%
+\gdef\grecustobottommiddlechar{\gregoriostylefont\char 12}%
+\gdef\grecclefchar{\gregoriostylefont\char 21}%
+\gdef\grefclefchar{\gregoriostylefont\char 23}%
+\gdef\greincclefchar{\gregoriostylefont\char 22}%
+\gdef\greinfclefchar{\gregoriostylefont\char 24}%
+\gdef\greflatchar{\gregoriostylefont\char 0}%
+\gdef\greflatholechar{\gregoriostylefont\char 33}%
+\relax %
+}
+
+\def\greusehufnagelstyle{%
+\greusestylecommon %
+\gdef\grecustotoplongchar{\gregoriostylefont\char 2}%
+\gdef\grecustotopshortchar{\gregoriostylefont\char 1}%
+\gdef\grecustotopmiddlechar{\gregoriostylefont\char 3}%
+\gdef\grecustobottomlongchar{\gregoriostylefont\char 5}%
+\gdef\grecustobottomshortchar{\gregoriostylefont\char 4}%
+\gdef\grecustobottommiddlechar{\gregoriostylefont\char 6}%
+\gdef\grecclefchar{\gregoriostylefont\char 25}%
+\gdef\grefclefchar{\gregoriostylefont\char 26}%
+\gdef\greincclefchar{\gregoriostylefont\char 27}%
+\gdef\greinfclefchar{\gregoriostylefont\char 28}%
+\gdef\greflatchar{\gregoriostylefont\char 20}%
+\gdef\greflatholechar{\gregoriostylefont\char 32}%
+\relax %
+}
+
+\def\greusemensuralstyle{%
+\greusestylecommon %
+\gdef\grecustotoplongchar{\gregoriostylefont\char 14}%
+\gdef\grecustotopshortchar{\gregoriostylefont\char 13}%
+\gdef\grecustotopmiddlechar{\gregoriostylefont\char 15}%
+\gdef\grecustobottomlongchar{\gregoriostylefont\char 17}%
+\gdef\grecustobottomshortchar{\gregoriostylefont\char 16}%
+\gdef\grecustobottommiddlechar{\gregoriostylefont\char 18}%
+\gdef\greflatchar{\gregoriostylefont\char 19}%
+\gdef\greflatholechar{\gregoriostylefont\char 31}%
+\relax %
+}
+
+\def\greusestylecommon{%
+  \ifnum\greusestylefont=0\relax %
+  \xdef\greusestylefont{1}%
+  \gresetstylefont %
+  \relax %
+}
+
+\greusedefaultstyle
