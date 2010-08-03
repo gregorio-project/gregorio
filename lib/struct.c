@@ -102,7 +102,12 @@ gregorio_add_special_as_note (gregorio_note ** current_note, char type,
 void
 gregorio_add_texverb_as_note (gregorio_note ** current_note, char *str, char type)
 {
-  gregorio_note *element = malloc (sizeof (gregorio_note));
+  gregorio_note *element;
+  if (str == NULL)
+    {
+      return;
+    }
+  element = malloc (sizeof (gregorio_note));
   if (!element)
     {
       gregorio_message (_("error in memory allocation"),
@@ -115,7 +120,7 @@ gregorio_add_texverb_as_note (gregorio_note ** current_note, char *str, char typ
   element->previous = *current_note;
   element->next = NULL;
   element->texverb = str;
-  element->texverb = str;
+  element->choral_sign = NULL;
   if (*current_note)
     {
       (*current_note)->next = element;
@@ -129,6 +134,10 @@ gregorio_add_texverb_to_note (gregorio_note ** current_note, char *str)
   size_t len;
   char *res;
   int i;
+  if (str == NULL)
+    {
+      return;
+    }
   if (*current_note)
     {
       if ((*current_note)->texverb)
@@ -136,11 +145,13 @@ gregorio_add_texverb_to_note (gregorio_note ** current_note, char *str)
           len = strlen((*current_note)->texverb) + strlen(str) +1;
           res = malloc(len*sizeof(char));
           len = strlen((*current_note)->texverb);
-          for (i=0;i<len;i++)
+          for (i=0;i<=len;i++)
             {
               res[i] = ((*current_note)->texverb)[i];
             }
           strcat(res, str);
+          free((*current_note)->texverb);
+          (*current_note)->texverb = res;
         }
       else
         {
