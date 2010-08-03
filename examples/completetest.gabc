@@ -133,6 +133,10 @@ g)
 %
 ab(gh[cs:c])
 %
+% tex verbatim
+%
+ab(g[nv:%test1]h[nv:%test2][gv:%test3] gh[gv:%test4] [ev:%test5] g[nv:%test6][nv:test7] g[nm1])
+%
 % macros
 %
 <v>\{</v>gr<v>\}</v>ir({gr}ir)

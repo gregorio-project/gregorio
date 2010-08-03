@@ -43,11 +43,11 @@ All those functions change the current_key, according to the possible new values
 */
 
 gregorio_element *
-gabc_det_elements_from_string (char *str, int *current_key)
+gabc_det_elements_from_string (char *str, int *current_key, char *macros[10])
 {
   gregorio_element *final;
   gregorio_note *tmp;
-  tmp = gabc_det_notes_from_string (str);
+  tmp = gabc_det_notes_from_string (str, macros);
   final = gabc_det_elements_from_notes (tmp, current_key);
   return final;
 }

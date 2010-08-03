@@ -31,11 +31,11 @@ close_glyph (gregorio_glyph ** current_glyph, char glyph_type,
 
 
 gregorio_glyph *
-gabc_det_glyphs_from_string (char *str, int *initial_key)
+gabc_det_glyphs_from_string (char *str, int *initial_key, char *macros[10])
 {
   gregorio_note *tmp;
   gregorio_glyph *final;
-  tmp = gabc_det_notes_from_string (str);
+  tmp = gabc_det_notes_from_string (str, macros);
   final = gabc_det_glyphs_from_notes (tmp, initial_key);
   return final;
 }

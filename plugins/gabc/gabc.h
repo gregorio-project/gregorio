@@ -24,9 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // functions to read gabc
 gregorio_score * read_score (FILE * f);
 
-gregorio_note *gabc_det_notes_from_string (char *str);
-gregorio_glyph * gabc_det_glyphs_from_string (char *str, int *current_key);
-gregorio_element *gabc_det_elements_from_string (char *str, int *current_key);
+gregorio_note *gabc_det_notes_from_string (char *str, char *macros[10]);
+gregorio_glyph * gabc_det_glyphs_from_string (char *str, int *current_key, char *macros[10]);
+gregorio_element *gabc_det_elements_from_string (char *str, int *current_key, char *macros[10]);
 
 char gabc_determine_custo_pitch (gregorio_note *current_note, int current_key);
 

@@ -33,6 +33,7 @@ This file is quite huge but quite simple: it is just all the expressions you can
 
 gregorio_note *current_note;
 unsigned int nbof_isolated_episemus;
+char * macros[10];
 
 %}
 
@@ -69,6 +70,31 @@ unsigned int nbof_isolated_episemus;
     }
 <INITIAL>\[cs: {
     BEGIN(choralsign);
+    }
+<INITIAL>\[nm[1-9]\] {
+    if (macros[gabc_notes_determination_text[3]-48])
+      {
+        gregorio_add_texverb_to_note(&current_note, strdup(macros[gabc_notes_determination_text[3]-48]));
+      }
+    else
+      {
+        char *dirtyvar = malloc(71*sizeof(char));
+	      snprintf(dirtyvar,70,_("undefined macro used: m%d"),gabc_notes_determination_text[3]-48);
+	      gregorio_message (dirtyvar,
+		      "gabc_notes_determination", ERROR, 0);
+      }
+    }
+<INITIAL>\[gm[1-9]\] {
+    if (macros[gabc_notes_determination_text[3]-48])
+      {
+        gregorio_add_texverb_as_note(&current_note, strdup(macros[gabc_notes_determination_text[3]-48]), GRE_TEXVERB_GLYPH);
+      }
+    }
+<INITIAL>\[em[1-9]\] {
+    if (macros[gabc_notes_determination_text[3]-48])
+      {
+        gregorio_add_texverb_as_note(&current_note, strdup(macros[gabc_notes_determination_text[3]-48]), GRE_TEXVERB_ELEMENT);
+      }
     }
 <INITIAL>\[nv: {
     BEGIN(texverbnote);
@@ -344,20 +370,26 @@ s         {
 void gabc_notes_determination_error(const char *str)
 {
     char *dirtyvartwo = malloc(151*sizeof(char));
-	snprintf(dirtyvartwo,150,str);
-      gregorio_message (dirtyvartwo,
-		      "det_notes_from_string", ERROR, 0);
+	  snprintf(dirtyvartwo,150,str);
+    gregorio_message (dirtyvartwo, "det_notes_from_string", ERROR, 0);
 }
 
 
-gregorio_note *gabc_det_notes_from_string (char *str) {
-YY_BUFFER_STATE buf;
-current_note=NULL;
-buf=yy_scan_string(str);
-yylex();
-yy_flush_buffer(buf);
-yy_delete_buffer(buf);
-gregorio_go_to_first_note (&current_note);
-return current_note;
+gregorio_note *
+gabc_det_notes_from_string (char *str, char *newmacros[10]) 
+{
+  int i;
+  for (i=0;i<10;i++)
+    {
+      macros[i] = newmacros[i];
+    }
+  YY_BUFFER_STATE buf;
+  current_note=NULL;
+  buf=yy_scan_string(str);
+  yylex();
+  yy_flush_buffer(buf);
+  yy_delete_buffer(buf);
+  gregorio_go_to_first_note (&current_note);
+  return current_note;
 }
 

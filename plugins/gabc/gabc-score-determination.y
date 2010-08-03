@@ -65,6 +65,8 @@ char error[200];
 gregorio_score *score;
 // an array of elements that we will use for each syllable
 gregorio_element **elements;
+// a table containing the macros to use in gabc file
+char * macros[10];
 // declaration of some functions, the first is the one initializing the flex/bison process
 //int gabc_score_determination_parse ();
 // other variables that we will have to use
@@ -239,6 +241,7 @@ check_infos_integrity (gregorio_score * score_to_check)
 void
 initialize_variables ()
 {
+  int i;
   // build a brand new empty score
   score = gregorio_new_score ();
   // initialization of the first voice info to an empty voice info
@@ -250,6 +253,10 @@ initialize_variables ()
   voice = 1;
   current_character = NULL;
   center_is_determined=0;
+  for (i=0;i<10;i++)
+    {
+      macros[i] = NULL;
+    }
 }
 
 
@@ -259,7 +266,12 @@ initialize_variables ()
 void
 free_variables ()
 {
+  int i;
   free (elements);
+  for (i=0;i<10;i++)
+    {
+      free(macros[i]);
+    }
 }
 
 // see whether a voice_info is empty
@@ -907,7 +919,7 @@ notes:
 note:
 	NOTES CLOSING_BRACKET {
 	if (voice<number_of_voices) {
-	elements[voice]=gabc_det_elements_from_string($1, &current_key);
+	elements[voice]=gabc_det_elements_from_string($1, &current_key, macros);
 	free($1);
 	}
 	else {
@@ -924,7 +936,7 @@ note:
 	|
 	NOTES CLOSING_BRACKET_WITH_SPACE {
 	if (voice<number_of_voices) {
-	elements[voice]=gabc_det_elements_from_string($1, &current_key);
+	elements[voice]=gabc_det_elements_from_string($1, &current_key, macros);
 	free($1);
 	}
 	else {
@@ -942,7 +954,7 @@ note:
 	|
 	NOTES VOICE_CUT{
 	if (voice<number_of_voices) {
-	elements[voice]=gabc_det_elements_from_string($1, &current_key);
+	elements[voice]=gabc_det_elements_from_string($1, &current_key, macros);
 	free($1);
 	voice++;
 	}
