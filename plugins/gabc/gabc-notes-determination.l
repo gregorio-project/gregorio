@@ -31,6 +31,15 @@ This file is quite huge but quite simple: it is just all the expressions you can
 #define lex_add_note(i,shape,signs,liquescentia,h_episemus)\
 	gregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]), shape, signs, liquescentia,h_episemus)
 
+#define else_error_macro()\
+      else\
+      {\
+        char *dirtyvar = malloc(71*sizeof(char));\
+	      snprintf(dirtyvar,70,_("undefined macro used: m%d"),gabc_notes_determination_text[3]-48);\
+	      gregorio_message (dirtyvar,\
+		      "gabc_notes_determination", ERROR, 0);\
+      }
+
 gregorio_note *current_note;
 unsigned int nbof_isolated_episemus;
 char * macros[10];
@@ -76,25 +85,21 @@ char * macros[10];
       {
         gregorio_add_texverb_to_note(&current_note, strdup(macros[gabc_notes_determination_text[3]-48]));
       }
-    else
-      {
-        char *dirtyvar = malloc(71*sizeof(char));
-	      snprintf(dirtyvar,70,_("undefined macro used: m%d"),gabc_notes_determination_text[3]-48);
-	      gregorio_message (dirtyvar,
-		      "gabc_notes_determination", ERROR, 0);
-      }
+    else_error_macro();
     }
 <INITIAL>\[gm[1-9]\] {
     if (macros[gabc_notes_determination_text[3]-48])
       {
         gregorio_add_texverb_as_note(&current_note, strdup(macros[gabc_notes_determination_text[3]-48]), GRE_TEXVERB_GLYPH);
       }
+    else_error_macro();
     }
 <INITIAL>\[em[1-9]\] {
     if (macros[gabc_notes_determination_text[3]-48])
       {
         gregorio_add_texverb_as_note(&current_note, strdup(macros[gabc_notes_determination_text[3]-48]), GRE_TEXVERB_ELEMENT);
       }
+    else_error_macro();
     }
 <INITIAL>\[nv: {
     BEGIN(texverbnote);
