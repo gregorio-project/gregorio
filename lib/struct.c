@@ -91,7 +91,7 @@ gregorio_add_special_as_note (gregorio_note ** current_note, char type,
   element->previous = *current_note;
   element->next = NULL;
   element->texverb = NULL;
-  element->texverb = NULL;
+  element->choral_sign = NULL;
   if (*current_note)
     {
       (*current_note)->next = element;
@@ -126,9 +126,26 @@ gregorio_add_texverb_as_note (gregorio_note ** current_note, char *str, char typ
 void
 gregorio_add_texverb_to_note (gregorio_note ** current_note, char *str)
 {
+  size_t len;
+  char *res;
+  int i;
   if (*current_note)
     {
-      (*current_note)->texverb = str;
+      if ((*current_note)->texverb)
+        {
+          len = strlen((*current_note)->texverb) + strlen(str) +1;
+          res = malloc(len*sizeof(char));
+          len = strlen((*current_note)->texverb);
+          for (i=0;i<len;i++)
+            {
+              res[i] = ((*current_note)->texverb)[i];
+            }
+          strcat(res, str);
+        }
+      else
+        {
+          (*current_note)->texverb = str;
+        }
     }
 }
 
