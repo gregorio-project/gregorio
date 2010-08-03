@@ -86,11 +86,11 @@ f.g!hwiHG'F(f.g!hwiHG'FZ)
 % flats and naturals
 %
 gx(gx) hx(hx) gy(gy) hy(hy) gxg(gxg) gyg(gyg) gxgh(gxgh) ggxgh(ggxgh) ggygh(ggyghZ)
-gx(gxg)
+g#(g#) h#(h#)
 %
 % key change
 %
-ghz0::c4(ghz0::c4) f(f) f3(f3) f(f) ghz0::c4(ghz0::c4) f(f)
+ghz0::c4(ghz0::c4) f(f) f3(f3) f(f) ghz0::c4(ghz0::c4) f(f) cb3(cb3)
 %
 % bars
 %
@@ -145,3 +145,11 @@ ab[cd](ghZ)
 %
 g_/g_(g_/g_) g_//g_(g_//g_) g_ g_Z(g_ g_) g_!/g_(g_!/g_) g_!//g_(g_!//g_) g_! g_(g_! g_Z)
 g_/h_(g_/h_) h_/g_(h_/g_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) {h}_/i_(h_/i_) i_/h_(i_/h_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) gh_/g_/g_(gh_/g_/g_)
+%
+% some more "real life" examples
+%
+Do(f_gFEf./hif'/ge./fgf.,hjIF_hvGEC.ef)gra(f_gFEf./hif'/ge./fgf.,hjIF_hvGEC.ef)ti(fe)as(f_hGEf.) 
+%
+% the final divisio finalis
+%
+(::)
