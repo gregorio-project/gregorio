@@ -3245,9 +3245,26 @@ gregoriotex_determine_number_and_type
 	}
       break;
     case G_ONE_NOTE:
+    case G_TRIGONUS:
+    case G_PUNCTA_INCLINATA:
+    case G_2_PUNCTA_INCLINATA_DESCENDENS:
+    case G_3_PUNCTA_INCLINATA_DESCENDENS:
+    case G_4_PUNCTA_INCLINATA_DESCENDENS:
+    case G_5_PUNCTA_INCLINATA_DESCENDENS:
+    case G_2_PUNCTA_INCLINATA_ASCENDENS:
+    case G_3_PUNCTA_INCLINATA_ASCENDENS:
+    case G_4_PUNCTA_INCLINATA_ASCENDENS:
+    case G_5_PUNCTA_INCLINATA_ASCENDENS:
     case G_PUNCTUM:
     case G_STROPHA:
     case G_VIRGA:
+    case G_STROPHA_AUCTA:
+    case G_DISTROPHA:
+    case G_DISTROPHA_AUCTA:
+    case G_TRISTROPHA:
+    case G_TRISTROPHA_AUCTA:
+    case G_BIVIRGA:
+    case G_TRIVIRGA:
       *type = AT_ONE_NOTE;
       break;
     default:
