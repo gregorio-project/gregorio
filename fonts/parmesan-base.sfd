@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1280774495
+ModificationTime: 1280935210
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -2386,11 +2386,11 @@ HStem: -420 15 -106 15 210 15 524 15
 LayerCount: 2
 Fore
 SplineSet
-0 -106 m 25
- 0 374 l 25
- 22 374 l 25
- 22 -106 l 25
- 0 -106 l 25
+0 -94 m 29
+ 0 383 l 25
+ 22 383 l 25
+ 22 -94 l 29
+ 0 -94 l 29
 EndSplineSet
 EndChar
 
@@ -2403,11 +2403,11 @@ HStem: -420 15 -106 15 210 15 524 15
 LayerCount: 2
 Fore
 SplineSet
-0 -255 m 25
- 0 225 l 25
- 22 225 l 17
- 22 -255 l 9
- 0 -255 l 25
+0 -246 m 29
+ 0 231 l 29
+ 22 231 l 29
+ 22 -246 l 29
+ 0 -246 l 29
 EndSplineSet
 EndChar
 

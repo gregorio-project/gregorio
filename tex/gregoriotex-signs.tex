@@ -38,6 +38,7 @@
     \unkern %
     \hbox{\gretypekey{#1}{#2}{0}{#3}{#4}\hskip\greafterclefnospace}%
   }%
+  \xdef\greclefflat{#4}%
   \relax%
 }
 
@@ -46,7 +47,6 @@
 % and otherwise the height of the flat
 \def\grecalculateclefnum#1#2#3{%
   \global\greclefnum=#2\relax %
-  \global\xdef\greclefflat{#3}%
   \ifx f#1%
     \global\advance\greclefnum by 4\relax %
   \fi %
@@ -1197,7 +1197,7 @@
       \penalty 10001 %
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 11}%
-    \raise\greglyphraisevalue\hbox{\gregoriofont \char 11}%
+    \gredivisiomaiorsymbol %
     #3\relax %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
@@ -1226,6 +1226,8 @@
     \fi %
   \or % 6 : dominican bar 1
     \grecalculateglyphraisevalue{e}{0}%
+    % we need to adjust the height of the bar a little so that it is perfectly aligned with the bottom (or the top for some bars) of the staff line, which is not the case by default if \grestafflinefactor is not 10.
+    \advance\greglyphraisevalue by -\grestafflinediff %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
       \penalty 10001 %
@@ -1238,6 +1240,7 @@
     \fi %
   \or % 7 : dominican bar 2
     \grecalculateglyphraisevalue{e}{0}%
+    \advance\greglyphraisevalue by \grestafflinediff %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
       \penalty 10001 %
@@ -1253,6 +1256,7 @@
       \hskip\grespacearoundmaior %
       \penalty 10001 %
     \fi %
+    \advance\greglyphraisevalue by -\grestafflinediff %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 83}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
     #3\relax %
@@ -1264,6 +1268,7 @@
       \hskip\grespacearoundmaior %
       \penalty 10001 %
     \fi %
+    \advance\greglyphraisevalue by \grestafflinediff %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 84}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
     #3\relax %
@@ -1272,6 +1277,7 @@
     \fi %
   \or % 10 : dominican bar 5
     \grecalculateglyphraisevalue{i}{0}%
+    \advance\greglyphraisevalue by -\grestafflinediff %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
       \penalty 10001 %
@@ -1284,6 +1290,7 @@
     \fi %
   \or % 11 : dominican bar 6
     \grecalculateglyphraisevalue{i}{0}%
+    \advance\greglyphraisevalue by \grestafflinediff %
     \ifnum#2=1\relax %
       \hskip\grespacearoundmaior %
       \penalty 10001 %
@@ -1299,14 +1306,33 @@
   \relax%
 }
 
+\def\gredivisiomaiorsymbol{%
+  \ifnum\grestafflinefactor=10\relax %
+    %\grecalculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char 11}%
+  \else %
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 11}%
+    % we calculate the raise of the bar
+    \gretempdim=\greadditionalbottomspace %
+    \advance\gretempdim by \grespacebeneathtext %
+    \advance\gretempdim by \grespacelinestext %
+    \advance\gretempdim by \grecurrenttranslationheight %
+    % we calculate the height of the bar
+    \gretempwidth=4\grestafflineheight %
+    \advance\gretempwidth by 3\greinterstafflinespace %
+    \raise\gretempdim\hbox{\vrule height \gretempwidth width \wd\GreTempwidth}%
+  \fi %
+  \relax %
+}
+
 \def\gredivisiofinalissymbol{%
   \grecalculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-  \raise\greglyphraisevalue\hbox{\gregoriofont \char 11}%
+  \gredivisiomaiorsymbol %
   \gretempdimtwo = 12000 sp%
   \multiply\gretempdimtwo by \the\grefactor%
   \kern \gretempdimtwo%
   \penalty 10001%
-  \raise\greglyphraisevalue\hbox{\gregoriofont \char 11}%
+  \gredivisiomaiorsymbol %
 }
 
 %a count to tell if we have to keep the localrightbox until the end
