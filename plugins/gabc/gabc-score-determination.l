@@ -76,6 +76,10 @@ semicolon. */
 	 BEGIN(INITIAL);
          return SEMICOLON;
       }
+<INITIAL>def-m[0-9] {
+         gabc_score_determination_lval=gabc_score_determination_text[5];
+         return DEF_MACRO;
+      }
 <INITIAL>number-of-voices {
          return NUMBER_OF_VOICES;
       }
