@@ -371,7 +371,7 @@
 %% macros for the typesetting of punctum mora, auctum duplex and choral signs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% a function to typeset a punctum mora, the argument is the letter of the height of the punctum mora
+% a function to typeset a punctum mora, the first argument is the letter of the height of the punctum mora
 % if the second argument is one, we the go back to the end of the punctum
 % if the second argument is two, it means that we must shift the width of one punctum to the left
 % if it is three, it means the same as when it is two, but with ambitus of one
@@ -430,15 +430,53 @@
   \relax %
 }
 
-\def\grechoralsignstyle#1{#1}
+\gdef\grechoralsignstyle#1{#1}
 
-% quite simple function: #1 is the height, #2 is the string
-\def\grechoralsign#1#2{%
-  \grecalculateglyphraisevalue{#1}{10}%
+% quite simple function: #1 is the height, #2 is the string, #3 is #2 of punctum mora, #4 is #3 of punctum mora
+\def\grechoralsign#1#2#3#4{%
   \penalty 10001\relax %
-  \kern\grebeforechoralsignspace %
+  \ifcase#3\relax %
+    \hskip\grebeforechoralsignspace%
+  \or %
+    \kern\grebeforechoralsignspace %
+  \or %
+    % to get the widht of a punctum minus a line, we calculate the width of a flexus (with ambitus of two) minus the width of a punctum
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 2051}%
+    \gretempdim=\wd\GreTempwidth %
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 17}%
+    \advance\gretempdim by -\wd\GreTempwidth %
+    \kern -\gretempdim %
+    \kern \grebeforechoralsignspace %
+  \or %
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char 17}%
+    \gretempdim=\wd\GreTempwidth %
+    \kern -\gretempdim %
+    \kern \grebeforechoralsignspace %
+  \fi %
+  \ifnum #4=0 %
+    \grecalculateglyphraisevalue{#1}{10}%
+  \else %
+    \grecalculateglyphraisevalue{#1}{11}%
+  \fi %
   \penalty 10001\relax %
   \raise\greglyphraisevalue\hbox{\grechoralsignstyle{#2}}%
+  \penalty 10001\relax %
+  \ifcase#3\relax\or %
+    \setbox\GreTempwidth=\hbox{\grechoralsignstyle{#2}}%
+    \kern -\wd\GreTempwidth %
+    \kern -\grebeforechoralsignspace %
+  \or %
+    \setbox\GreTempwidth=\hbox{\grechoralsignstyle{#2}}%
+    \kern -\wd\GreTempwidth %
+    \kern -\grebeforechoralsignspace %
+    \kern \gretempdim %
+  \or %
+    \setbox\GreTempwidth=\hbox{\grechoralsignstyle{#2}}%
+    \kern -\wd\GreTempwidth %
+    \kern -\grebeforechoralsignspace %
+    \kern \gretempdim %
+  \fi %
+  \penalty 10001\relax %
   \relax %
 }
 
