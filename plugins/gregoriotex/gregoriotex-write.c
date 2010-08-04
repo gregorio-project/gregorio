@@ -1809,9 +1809,12 @@ gregoriotex_pm_or_cs_number_pitch (gregorio_glyph *glyph, char type, gregorio_no
 //when the punctum mora is on a note on a line, and the prior note is on the space immediately above, the dot is placed on the space below the line instead
   if (current_note->previous
       && (current_note->previous->pitch - current_note->pitch == 1)
-      && is_on_a_line (current_note->pitch))
+      && is_on_a_line (current_note->pitch)
+      && (current_note->signs == _PUNCTUM_MORA
+	    || current_note->signs == _V_EPISEMUS_PUNCTUM_MORA
+	    || current_note -> choral_sign))
     {
-      *pitch = current_note->pitch - 1;
+      *special_punctum = 1;
     }
 }
 
