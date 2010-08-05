@@ -30,6 +30,9 @@
 %% horizontal spaces
 %%%%%%%%%%%%%%%%%%%%
 
+% additional lines width
+\newskip\greadditionallineswidth
+
 % null space
 \newskip\grezerowidthspace
 
@@ -230,8 +233,11 @@
 \newdimen\greabovesignsspace
 \newdimen\grebelowsignsspace
 
-% the shift for the choral sign
-\newdimen\grechoralsignshift
+% the shift for the low choral sign
+\newdimen\grelowchoralsignshift
+
+% the shift for the high choral sign
+\newdimen\grehighchoralsignshift
 
 % the space for the translation
 \newdimen\gretranslationheight
@@ -273,6 +279,7 @@
 }
 
 \def\greadaptconfvalues{%
+  \greadaptoneconfvalue{\greadditionallineswidth}%
   \greadaptoneconfvalue{\grezerowidthspace}%
   \greadaptoneconfvalue{\greinterglyphspace}%
   \greadaptoneconfvalue{\grealterationspace}%
@@ -416,7 +423,8 @@
   \grechangeonedimenfactor{\gremaximumspacewithoutdash}{#1}{#2}%
   \grechangeonedimenfactor{\greafterclefnospace}{#1}{#2}%
   \grechangeonedimenfactor{\greadditionallineswidth}{#1}{#2}%
-  \grechangeonedimenfactor{\grechoralsignshift}{#1}{#2}%
+  \grechangeonedimenfactor{\grehighchoralsignshift}{#1}{#2}%
+  \grechangeonedimenfactor{\grelowchoralsignshift}{#1}{#2}%
   \grechangeonedimenfactor{\grebeforechoralsignspace}{#1}{#2}%
   \relax %
 }

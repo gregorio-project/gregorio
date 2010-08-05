@@ -1459,6 +1459,17 @@ A function that write the signs of a glyph, which has the type type (T_*, not G_
 	      fprintf (f, "%%\n");\
 	    }
 
+#define _end_loop()\
+      if (type == T_ONE_NOTE || type == T_ONE_NOTE_TRF)\
+	{\
+	  break;\
+	}\
+      else\
+	{\
+	  current_note = current_note->next;\
+	  i++;\
+	}
+
 void
 gregoriotex_write_signs (FILE * f, char type,
 			 gregorio_glyph * glyph,
@@ -1496,6 +1507,7 @@ gregoriotex_write_signs (FILE * f, char type,
 					     TT_TOP, current_note);
 	}
 	  current_note = current_note->next;
+	  i++;
 	}
 	  if (found == 0)
   {
@@ -1506,6 +1518,20 @@ gregoriotex_write_signs (FILE * f, char type,
 	  fprintf (f, "}{");
 	}
 	found = 0;
+	i=1;
+	current_note = glyph->first_note;
+	// now a first loop for the choral signs, because high signs must be taken into account before any hepisemus
+	while (current_note)
+	  {
+      if (current_note->choral_sign)
+        {
+	        _found();
+	        gregoriotex_write_choral_sign(f, glyph, type, i, current_note, 0);
+        }
+     _end_loop()
+	  }
+	// a loop for rare signs, vertical episemus, horizontal episemus and ictus
+	i=1;
 	current_note = glyph->first_note;
 	while (current_note)
 	 {
@@ -1556,35 +1582,14 @@ gregoriotex_write_signs (FILE * f, char type,
 	    }
       switch (current_note->signs)
 	{
-	case _PUNCTUM_MORA:
-	  gregoriotex_write_punctum_mora (f, glyph, type, current_note);
-	  break;
-	case _AUCTUM_DUPLEX:
-	  gregoriotex_write_auctum_duplex (f, glyph, current_note);
-
-	  break;
 	case _V_EPISEMUS:
-	  if (current_note->rare_sign != _ICTUS_A
-	      && current_note->rare_sign != _ICTUS_T)
-	    {
-	      gregoriotex_write_vepisemus (f, glyph, i, type, current_note);
-	    }
-	  break;
 	case _V_EPISEMUS_PUNCTUM_MORA:
-	  if (current_note->rare_sign != _ICTUS_A
-	      && current_note->rare_sign != _ICTUS_T)
-	    {
-	      gregoriotex_write_vepisemus (f, glyph, i, type, current_note);
-	    }
-	  gregoriotex_write_punctum_mora (f, glyph, type, current_note);
-	  break;
 	case _V_EPISEMUS_AUCTUM_DUPLEX:
 	  if (current_note->rare_sign != _ICTUS_A
 	      && current_note->rare_sign != _ICTUS_T)
 	    {
 	      gregoriotex_write_vepisemus (f, glyph, i, type, current_note);
 	    }
-	  gregoriotex_write_auctum_duplex (f, glyph, current_note);
 	  break;
 	default:
 	  break;
@@ -1601,87 +1606,158 @@ gregoriotex_write_signs (FILE * f, char type,
 	      block_hepisemus = 2;
 	    }
 	}
+    _end_loop()
+  // final loop for choral signs and punctum mora
+    }
+  i = 1;
+  current_note = glyph->first_note;
+  while (current_note)
+    {
+      switch (current_note->signs)
+	{
+	case _PUNCTUM_MORA:
+	case _V_EPISEMUS_PUNCTUM_MORA:
+	  gregoriotex_write_punctum_mora (f, glyph, type, current_note);
+	  break;
+	case _AUCTUM_DUPLEX:
+	case _V_EPISEMUS_AUCTUM_DUPLEX:
+	  gregoriotex_write_auctum_duplex (f, glyph, current_note);
+	  break;
+	default:
+	  break;
+	}
 	  if (current_note->choral_sign)
 	    {
 	      _found();
-        gregoriotex_write_choral_sign(f, glyph, type, current_note);
+        gregoriotex_write_choral_sign(f, glyph, type, i, current_note, 1);
 	    }
-      // a bit dirty, depends on the way we call it
-      if (type == T_ONE_NOTE || type == T_ONE_NOTE_TRF)
-	{
-	  fprintf(f, "}%%\n");
-	  return;
-	}
-      else
-	{
-	  current_note = current_note->next;
-	  i++;
-	}
-    }
-   fprintf(f, "}%%\n");
+	  _end_loop();
+    } 
+  fprintf(f, "}%%\n");
 }
 
 void
 gregoriotex_write_choral_sign (FILE * f,
-				 gregorio_glyph * glyph, char type,
-				 gregorio_note * current_note)
+				 gregorio_glyph * glyph, char type, int i,
+				 gregorio_note * current_note, char low)
 {
-  // the variable that will be set to 1 if we have to shift the punctum inclinatum before the last note
-  unsigned char shift_before = 0;
-  // this variable will be set to 1 if we are on the note before the last note of a podatus or a porrectus or a torculus resupinus
-  unsigned char special_punctum = 0;
-  // variable to say if we have a zero-width sign or not
-  unsigned char no_space = 0;
-  // a temp variable
-  gregorio_note *tmpnote;
-  // the pitch where to set the punctum
-  char pitch = current_note->pitch;
-  gregoriotex_pm_or_cs_number_pitch (glyph, type, current_note, &special_punctum, &shift_before, &pitch);
-    if (shift_before == 1)
-    {
-      if (current_note->next->pitch - current_note->pitch == -1
-	  || current_note->next->pitch - current_note->pitch == 1)
+  // 0 in the normal case (sign above the note), 1 in the case of it's next to the note (same height as a punctum)
+  unsigned char low_sign = 0;
+  char bottom = 0;
+  char number = 0;
+  char height = 0;
+  // a temp value
+  char kind_of_pes = 0;
+  gregorio_note *tmpnote=NULL;
+  
+    switch (glyph->glyph_type)
 	{
-	  fprintf (f, "\\grechoralsign{%c}{%s}{3}{%d}%%\n", pitch, current_note->choral_sign,
-		   special_punctum);
-	}
-      else
-	{
-	  fprintf (f, "\\grechoralsign{%c}{%s}{2}{%d}%%\n", pitch, current_note->choral_sign,
-		   special_punctum);
-	}
-      return;
-    }
-
-// There are two special cases. The first: if the next glyph is a ZERO_WIDTH_SPACE, and the current glyph is a PES, and the punctum mora is on the first note, and the first note of the next glyph is at least two (or three depending on something) pitches higher than the current note. You'll all have understood, this case is quite rare... but when it appears, we pass 1 as a second argument of \punctummora so that it removes the space introduced by the punctummora.
-  if (glyph->glyph_type == G_PODATUS && glyph->next
-      && glyph->next->type == GRE_SPACE
-      && glyph->next->glyph_type == SP_ZERO_WIDTH
-      && current_note->next && glyph->next->next
-      && glyph->next->next->type == GRE_GLYPH
-      && glyph->next->next->first_note
-      && (glyph->next->next->first_note->pitch - current_note->pitch > 1))
-    {
-      fprintf (f, "\\grechoralsign{%c}{%s}{1}{%d}%%\n", pitch, current_note->choral_sign, special_punctum);
-      return;
-    }
-  // if there is a punctum or a auctum dumplex on a note after, we put a zero-width punctum
-  tmpnote = current_note->next;
-  while (tmpnote)
-    {
-      if (tmpnote->signs == _PUNCTUM_MORA || tmpnote->signs == _AUCTUM_DUPLEX
-	  || tmpnote->signs == _V_EPISEMUS_PUNCTUM_MORA
-	  || tmpnote->signs == _V_EPISEMUS_AUCTUM_DUPLEX || tmpnote -> choral_sign)
-	{
-	  no_space = 1;
+	case G_FLEXUS:
+	case G_TORCULUS:
+	case G_TORCULUS_RESUPINUS_FLEXUS:
+	case G_PORRECTUS_FLEXUS:
+	  if (!current_note->next)
+	    {
+	      low_sign = 1;
+	    }
+	  break;
+	case G_PES:
+	case G_PORRECTUS:
+	case G_TORCULUS_RESUPINUS:
+	  if (!current_note->next)
+	    {
+        break;
+	    }
+	  kind_of_pes = 1;
+	  if (current_note->shape != S_QUILISMA)
+	    {
+	      low_sign = 1;
+	    }
+	  break;
+	default:
 	  break;
 	}
-      tmpnote = tmpnote->next;
-    }
 
-// the normal operation
-  fprintf (f, "\\grechoralsign{%c}{%s}{%d}{%d}%%\n", pitch, current_note->choral_sign, no_space,
-	   special_punctum);
+  // the low choral signs must be typeset after the punctum, whereas the high must be typeset before the h episemus
+  if ((low_sign == 1 && low == 0) || (low_sign == 0 && low == 1))
+    {
+      return;
+    }
+/*//when the punctum mora is on a note on a line, and the prior note is on the space immediately above, the dot is placed on the space below the line instead
+  if (current_note->previous
+      && (current_note->previous->pitch - current_note->pitch == 1)
+      && is_on_a_line (current_note->pitch)
+      && (current_note->previous->signs == _PUNCTUM_MORA
+	    || current_note->previous->signs == _V_EPISEMUS_PUNCTUM_MORA
+	    || current_note -> previous-> choral_sign))
+    {
+      special_punctum = 1;
+    }*/
+  if (low_sign ==  0)
+    {
+      // let's cheat a little
+      current_note -> h_episemus_top_note = current_note->pitch;
+      gregoriotex_find_sign_number (glyph, i,
+				type, TT_H_EPISEMUS, current_note,
+				&number, &height, &bottom);
+		  fprintf(f, "\\grehighchoralsign{%c}{%s}{%d}%%\n", current_note->pitch, current_note->choral_sign, number);
+		  if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS)
+		    {
+		      tmpnote = current_note;
+          while(tmpnote)
+            {
+              if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS)
+                {
+                  if (is_on_a_line(tmpnote->h_episemus_top_note))
+                    {
+                      tmpnote->h_episemus_top_note = tmpnote-> h_episemus_top_note + 1;
+                    }
+                  else
+                    {
+                      tmpnote->h_episemus_top_note = tmpnote-> h_episemus_top_note + 2;
+                    }
+                }
+              tmpnote = tmpnote -> next;
+            }
+          tmpnote = current_note -> previous;
+          while(tmpnote)
+            {
+              if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS)
+                {
+                  if (is_on_a_line(tmpnote->h_episemus_top_note))
+                    {
+                      tmpnote->h_episemus_top_note = tmpnote-> h_episemus_top_note + 1;
+                    }
+                  else
+                    {
+                      tmpnote->h_episemus_top_note = tmpnote-> h_episemus_top_note + 2;
+                    }
+                }
+              tmpnote = tmpnote -> previous;
+            }
+		    }
+    }
+  else
+    {
+      // very approximative euristic, some things may have to be adapted here...
+      if (is_on_a_line(current_note->pitch))
+        {
+          if (kind_of_pes = 1 && current_note->pitch - current_note->next->pitch == -1)
+            {
+              fprintf(f, "\\grelowchoralsign{%c}{%s}{1}%%\n", current_note->pitch, current_note->choral_sign);
+              return;
+            }
+          if (current_note->previous && (current_note->previous->signs == _PUNCTUM_MORA || current_note->previous->signs == _V_EPISEMUS_PUNCTUM_MORA))
+            {
+              fprintf(f, "\\grelowchoralsign{%c}{%s}{1}%%\n", current_note->pitch, current_note->choral_sign);
+              return;
+            }
+        }
+      else
+        {
+          fprintf(f, "\\grelowchoralsign{%c}{%s}{0}%%\n", current_note->pitch, current_note->choral_sign);
+        }
+    }
 }
 
 void
@@ -1733,91 +1809,6 @@ gregoriotex_write_auctum_duplex (FILE * f,
 	   special_punctum);
 }
 
-void
-gregoriotex_pm_or_cs_number_pitch (gregorio_glyph *glyph, char type, gregorio_note *current_note, unsigned char *special_punctum, unsigned char *shift_before, char *pitch)
-{
-  if (current_note->next)
-    {
-      switch (glyph->glyph_type)
-	{
-	case G_FLEXUS:
-	case G_TORCULUS:
-	case G_TORCULUS_RESUPINUS_FLEXUS:
-	case G_PORRECTUS_FLEXUS:
-	  if (glyph->liquescentia != L_DEMINUTUS
-	      && glyph->liquescentia != L_DEMINUTUS_INITIO_DEBILIS)
-	    {
-	      *shift_before = 1;
-	    }
-	  break;
-	case G_PES:
-	  if ((current_note->shape != S_PUNCTUM
-	       && current_note->shape != S_QUILISMA)
-	      || glyph->liquescentia == L_AUCTUS_DESCENDENS
-	      || glyph->liquescentia == L_AUCTUS_ASCENDENS
-	      || glyph->liquescentia == L_AUCTUS_ASCENDENS_INITIO_DEBILIS
-	      || glyph->liquescentia == L_AUCTUS_DESCENDENS_INITIO_DEBILIS)
-	    {
-	      *shift_before = 1;
-	      // fine tuning
-	      if (current_note->next->pitch - current_note->pitch == 1)
-		{
-		  if (is_on_a_line (current_note->pitch))
-		    {
-		      *special_punctum = 1;
-		    }
-		  else
-		    {
-		      *pitch = current_note->pitch - 1;
-		    }
-		}
-	    }
-	  else
-	    {
-	      // case for f.g
-	      if (current_note->next->pitch - current_note->pitch == 1)
-		{
-		  *special_punctum = 1;
-		}
-	    }
-	  break;
-	case G_PES_QUADRATUM:
-	  *shift_before = 1;
-	  if (current_note->next->pitch - current_note->pitch == 1)
-	    {
-	      if (is_on_a_line (current_note->pitch))
-		{
-		  *special_punctum = 1;
-		}
-	      else
-		{
-		  *pitch = current_note->pitch - 1;
-		}
-	    }
-	  break;
-	case G_PORRECTUS:
-	case G_TORCULUS_RESUPINUS:
-	  // this case is only for the note before the previous note
-	  if ((current_note->next->pitch - current_note->pitch == -1
-	       || current_note->next->pitch - current_note->pitch == 1)
-	      && !(current_note->next->next))
-	    *special_punctum = 1;
-	default:
-	  break;
-	}
-    }
-//when the punctum mora is on a note on a line, and the prior note is on the space immediately above, the dot is placed on the space below the line instead
-  if (current_note->previous
-      && (current_note->previous->pitch - current_note->pitch == 1)
-      && is_on_a_line (current_note->pitch)
-      && (current_note->signs == _PUNCTUM_MORA
-	    || current_note->signs == _V_EPISEMUS_PUNCTUM_MORA
-	    || current_note -> choral_sign))
-    {
-      *special_punctum = 1;
-    }
-}
-
 
 void
 gregoriotex_write_punctum_mora (FILE * f,
@@ -1843,8 +1834,87 @@ gregoriotex_write_punctum_mora (FILE * f,
       fprintf (f, "\\grepunctummora{%c}{1}{0}%%\n", current_note->pitch);
     }
   // we go into this switch only if it is the note before the last note
-
-  gregoriotex_pm_or_cs_number_pitch (glyph, type, current_note, &special_punctum, &shift_before, &pitch);
+  if (current_note->next)
+    {
+      switch (glyph->glyph_type)
+	{
+	case G_FLEXUS:
+	case G_TORCULUS:
+	case G_TORCULUS_RESUPINUS_FLEXUS:
+	case G_PORRECTUS_FLEXUS:
+	  if (glyph->liquescentia != L_DEMINUTUS
+	      && glyph->liquescentia != L_DEMINUTUS_INITIO_DEBILIS)
+	    {
+	      shift_before = 1;
+	    }
+	  break;
+	case G_PES:
+	  if ((current_note->shape != S_PUNCTUM
+	       && current_note->shape != S_QUILISMA)
+	      || glyph->liquescentia == L_AUCTUS_DESCENDENS
+	      || glyph->liquescentia == L_AUCTUS_ASCENDENS
+	      || glyph->liquescentia == L_AUCTUS_ASCENDENS_INITIO_DEBILIS
+	      || glyph->liquescentia == L_AUCTUS_DESCENDENS_INITIO_DEBILIS)
+	    {
+	      shift_before = 1;
+	      // fine tuning
+	      if (current_note->next->pitch - current_note->pitch == 1)
+		{
+		  if (is_on_a_line (current_note->pitch))
+		    {
+		      special_punctum = 1;
+		    }
+		  else
+		    {
+		      pitch = current_note->pitch - 1;
+		    }
+		}
+	    }
+	  else
+	    {
+	      // case for f.g
+	      if (current_note->next->pitch - current_note->pitch == 1)
+		{
+		  special_punctum = 1;
+		}
+	    }
+	  break;
+	case G_PES_QUADRATUM:
+	  shift_before = 1;
+	  if (current_note->next->pitch - current_note->pitch == 1)
+	    {
+	      if (is_on_a_line (current_note->pitch))
+		{
+		  special_punctum = 1;
+		}
+	      else
+		{
+		  pitch = current_note->pitch - 1;
+		}
+	    }
+	  break;
+	case G_PORRECTUS:
+	case G_TORCULUS_RESUPINUS:
+	  // this case is only for the note before the previous note
+	  if ((current_note->next->pitch - current_note->pitch == -1
+	       || current_note->next->pitch - current_note->pitch == 1)
+	      && !(current_note->next->next))
+	    special_punctum = 1;
+	  break;
+	default:
+	  break;
+	}
+    }
+//when the punctum mora is on a note on a line, and the prior note is on the space immediately above, the dot is placed on the space below the line instead
+  if (current_note->previous
+      && (current_note->previous->pitch - current_note->pitch == 1)
+      && is_on_a_line (current_note->pitch)
+      && (current_note->previous->signs == _PUNCTUM_MORA
+	    || current_note->previous->signs == _V_EPISEMUS_PUNCTUM_MORA
+	    || current_note -> previous-> choral_sign))
+    {
+      special_punctum = 1;
+    }
   
   if (shift_before == 1)
     {

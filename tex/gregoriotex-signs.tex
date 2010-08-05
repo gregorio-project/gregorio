@@ -430,53 +430,28 @@
   \relax %
 }
 
-\gdef\grechoralsignstyle#1{#1}
+\gdef\grelowchoralsignstyle#1{#1}
+\gdef\grehighchoralsignstyle#1{#1}
 
 % quite simple function: #1 is the height, #2 is the string, #3 is #2 of punctum mora, #4 is #3 of punctum mora
-\def\grechoralsign#1#2#3#4{%
+% #3 is 1 if it must be a bit higher
+\def\grelowchoralsign#1#2#3{%
   \penalty 10001\relax %
-  \ifcase#3\relax %
-    \hskip\grebeforechoralsignspace%
-  \or %
-    \kern\grebeforechoralsignspace %
-  \or %
-    % to get the widht of a punctum minus a line, we calculate the width of a flexus (with ambitus of two) minus the width of a punctum
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 2051}%
-    \gretempdim=\wd\GreTempwidth %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 17}%
-    \advance\gretempdim by -\wd\GreTempwidth %
-    \kern -\gretempdim %
-    \kern \grebeforechoralsignspace %
-  \or %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 17}%
-    \gretempdim=\wd\GreTempwidth %
-    \kern -\gretempdim %
-    \kern \grebeforechoralsignspace %
-  \fi %
-  \ifnum #4=0 %
-    \grecalculateglyphraisevalue{#1}{10}%
+  \hskip\grebeforechoralsignspace %
+  \penalty 10001\relax %
+  \ifnum#3=1\relax %
+    \grecalculateglyphraisevalue{#1}{12}%
   \else %
-    \grecalculateglyphraisevalue{#1}{11}%
+    \grecalculateglyphraisevalue{#1}{10}%
   \fi %
+  \raise\greglyphraisevalue\hbox{\grelowchoralsignstyle{#2}}%
+  \relax %
+}
+
+\def\grehighchoralsign#1#2#3{%
   \penalty 10001\relax %
-  \raise\greglyphraisevalue\hbox{\grechoralsignstyle{#2}}%
-  \penalty 10001\relax %
-  \ifcase#3\relax\or %
-    \setbox\GreTempwidth=\hbox{\grechoralsignstyle{#2}}%
-    \kern -\wd\GreTempwidth %
-    \kern -\grebeforechoralsignspace %
-  \or %
-    \setbox\GreTempwidth=\hbox{\grechoralsignstyle{#2}}%
-    \kern -\wd\GreTempwidth %
-    \kern -\grebeforechoralsignspace %
-    \kern \gretempdim %
-  \or %
-    \setbox\GreTempwidth=\hbox{\grechoralsignstyle{#2}}%
-    \kern -\wd\GreTempwidth %
-    \kern -\grebeforechoralsignspace %
-    \kern \gretempdim %
-  \fi %
-  \penalty 10001\relax %
+  \grevepisemusorrare{#1}{#3}{4}{3}{\grehighchoralsignstyle{#2}}%
+  %\grehepisorline{#1}{#3}{0}{4}{\grehighchoralsignstyle{#2}}%
   \relax %
 }
 
@@ -490,7 +465,9 @@
 % a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. If it is 2, it means that we must go back first of width #1, and then forward of #2. If it is 1, it means that we only need to go back of #2. if it is 3, we go to the beginning of the glyph, then forward of #1 then back of #2
 % #4 is a shift that we want to get applied, useful for punctum inclinatum for example
 % #5 is the glyph number. If it is 1 it is an ictus arsicus (?) and 2 for an ictus theticus
-\def\grevepisemusorrareaux#1#2#3#4#5{%
+% #6 is the type of sign (1: vertical episemus, 2: rare sign, 3: choral sign)
+% #7 is the choral sign if relevant
+\def\grevepisemusorrareaux#1#2#3#4#5#6#7{%
   % first we set \gretempwidth to the width of the last glyph
   \gretempwidth=\grelastglyphwidth %
   \setbox\GreTempsign=\hbox{\gregoriofont #2}%
@@ -513,13 +490,16 @@
   \kern-\gretempwidth % we do it here because of the ictus
   % here we save the position of the ictus or we draw the glyph
   \ifnum#5<3\relax %
-    \ictus{#5}%
+    \greictus{#5}%
   \else %
   % then we draw the sign
-    \ifnum#5=33\relax %
+    \ifcase#6\or %
+      % vertical episemus
       \setbox\GreTempsign=\hbox{\greverticalepisemuschar}%
-    \else %
+    \or % rare sign
       \setbox\GreTempsign=\hbox{\gregoriofont \char #5}%
+    \or % choral sign
+      \setbox\GreTempsign=\hbox{#7}%
     \fi %
     % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
     \gretempdimsignwidth=\wd\GreTempsign %
@@ -569,12 +549,14 @@
 %% 27: the last note, if it is a divisio finalis
 
 % a function to typeset a vertical episemus or a rare accent (like accentus, circulus, etc.). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \greglyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The values are described in the commentary just above.
-% the third argument is the glyph number in the font.
-\def\grevepisemusorrare#1#2#3{%
-  \ifnum#3=33\relax %
+% the third argument is the glyph number in the font
+% #4 is type (1: vertical episemus, 2: rare sign, 3: choral sign)
+% #5 is the choral sign if relevant
+\def\grevepisemusorrare#1#2#3#4#5{%
+  \ifcase#4\or %
     % if it is a vertical episemus, we call the normal calculateglyphvalue
     \grecalculateglyphraisevalue{#1}{3}%
-  \else %
+  \or %
     % if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.) the first argument is m if the pitch is < k, otherwise it's n.
     \edef\greisabovek{\number 0}%
     \ifx m#1%
@@ -599,160 +581,162 @@
         \fi %
       \fi %
     \fi %
+  \or % if it's a choral sign
+    \grecalculateglyphraisevalue{#1}{11}%
   \fi %
   \ifcase#2 %
     %case 0
-    \grevepisemusorrareaux{0}{\char 17}{1}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 17}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 1
-    \grevepisemusorrareaux{0}{\char 13}{1}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 13}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 2
     % a kind of flexus, it has the good width
-    \grevepisemusorrareaux{\char 5634}{\char 17}{2}{0}{#3}%
+    \grevepisemusorrareaux{\char 5634}{\char 17}{2}{0}{#3}{#4}{#5}%
   \or%
     %case 3
     % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
-    \grevepisemusorrareaux{0}{\char 5250}{1}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 5250}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 4
     % is a torculus, it has the good width
-    \grevepisemusorrareaux{\char 15371}{\char 17}{2}{0}{#3}%
+    \grevepisemusorrareaux{\char 15371}{\char 17}{2}{0}{#3}{#4}{#5}%
   \or%
     %case 5
     % is a torculus deminutus, it has the good width
-    \grevepisemusorrareaux{\char 15884}{\char 17}{2}{0}{#3}%
+    \grevepisemusorrareaux{\char 15884}{\char 17}{2}{0}{#3}{#4}{#5}%
   \or%
     %case 6
-    \grevepisemusorrareaux{0}{\char 17}{0}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 17}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 7
-    \grevepisemusorrareaux{0}{\char 13}{0}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 13}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 8, in which we do (for now) the same as case 6
-    \grevepisemusorrareaux{0}{\char 17}{0}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 17}{0}{0}{#3}{#4}{#5}%
   \or% case 9, 10 and 11
   \or\or\or %
     %case 12
-    \grevepisemusorrareaux{0}{\char 19}{0}{200\the\grefactor }{#3}%
+    \grevepisemusorrareaux{0}{\char 19}{0}{200\the\grefactor }{#3}{#4}{#5}%
   \or%
     %case 13
-    \grevepisemusorrareaux{0}{\char 32}{0}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 32}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 14
-    \grevepisemusorrareaux{0}{\char 20}{0}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 20}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 15
-    \grevepisemusorrareaux{0}{\char 26}{0}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 26}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 16
-    \grevepisemusorrareaux{0}{\char 27}{0}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 27}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 17
-    \grevepisemusorrareaux{\char 5633}{\char 17}{2}{0}{#3}%
+    \grevepisemusorrareaux{\char 5633}{\char 17}{2}{0}{#3}{#4}{#5}%
   \or%
     %case 18
-    \grevepisemusorrareaux{0}{\char 74}{1}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 74}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 19
-    \grevepisemusorrareaux{0}{\char 28}{0}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 28}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 20
-    \grevepisemusorrareaux{0}{\char 26}{0}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 26}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 21
     % 5634 is a flexus without bar with ambitus of 2
-    \grevepisemusorrareaux{\char 5634}{\char 17}{3}{0}{#3}%
+    \grevepisemusorrareaux{\char 5634}{\char 17}{3}{0}{#3}{#4}{#5}%
   \or%
     %case 22 %
     % 5633 is a flexus without bar with ambitus of 1
-    \grevepisemusorrareaux{\char 5633}{\char 17}{3}{0}{#3}%
+    \grevepisemusorrareaux{\char 5633}{\char 17}{3}{0}{#3}{#4}{#5}%
   \or%
     %case 23
-    \grevepisemusorrareaux{\char 1986}{\char 17}{3}{0}{#3}%
+    \grevepisemusorrareaux{\char 1986}{\char 17}{3}{0}{#3}{#4}{#5}%
   \or%
     %case 24
-    \grevepisemusorrareaux{0}{\char 35}{1}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 35}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 25
-    \grevepisemusorrareaux{0}{\char 9}{1}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 9}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 26
-    \grevepisemusorrareaux{0}{\char 8}{1}{0}{#3}%
+    \grevepisemusorrareaux{0}{\char 8}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 27
-    \grevepisemusorrareaux{0}{\gredivisiofinalissymbol}{1}{0}{#3}%
+    \grevepisemusorrareaux{0}{\gredivisiofinalissymbol}{1}{0}{#3}{#4}{#5}%
   \fi%
   \relax%
 }
 
 \def\grevepisemus#1#2{%
-  \grevepisemusorrare{#1}{#2}{33}%
+  \grevepisemusorrare{#1}{#2}{33}{1}{}%
   \relax %
 }
 
 \def\grebarvepisemus#1{%
-  \grevepisemusorrare{c}{#1}{33}%
+  \grevepisemusorrare{c}{#1}{33}{1}{}%
   \relax %
 }
 
 \def\greictusa#1{%
-  \grevepisemusorrare{a}{#1}{1}%
+  \grevepisemusorrare{a}{#1}{1}{2}{}%
   \relax %
 }
 
 \def\greictust#1{%
-  \grevepisemusorrare{a}{#1}{2}%
+  \grevepisemusorrare{a}{#1}{2}{2}{}%
   \relax %
 }
 
 % maybe these four should be optimized
 \def\grevepisemusictusa#1#2{%
-  \grevepisemusorrare{#1}{#2}{33}%
-  \ictusa{#2}%
+  \grevepisemusorrare{#1}{#2}{33}{1}{}%
+  \greictusa{#2}%
   \relax %
 }
 
 \def\grebarvepisemusictusa#1{%
-  \grevepisemusorrare{c}{#1}{33}%
-  \ictusa{#1}%
+  \grevepisemusorrare{c}{#1}{33}{1}{}%
+  \greictusa{#1}%
   \relax %
 }
 
 \def\grevepisemusictust#1#2{%
-  \grevepisemusorrare{#1}{#2}{33}%
-  \ictust{#2}%
+  \grevepisemusorrare{#1}{#2}{33}{1}{}%
+  \greictust{#2}%
   \relax %
 }
 
 \def\grebarvepisemusictust#1{%
-  \grevepisemusorrare{c}{#1}{33}%
-  \ictust{#1}%
+  \grevepisemusorrare{c}{#1}{33}{1}{}%
+  \greictust{#1}%
   \relax %
 }
 
 \def\greaccentus#1#2{%
-  \grevepisemusorrare{#1}{#2}{39}%
+  \grevepisemusorrare{#1}{#2}{39}{2}{}%
   \relax %
 }
 
 \def\gresemicirculus#1#2{%
-  \grevepisemusorrare{#1}{#2}{38}%
+  \grevepisemusorrare{#1}{#2}{38}{2}{}%
   \relax %
 }
 
 \def\grecirculus#1#2{%
-  \grevepisemusorrare{#1}{#2}{37}%
+  \grevepisemusorrare{#1}{#2}{37}{2}{}%
   \relax %
 }
 
 \def\grereversedaccentus#1#2{%
-  \grevepisemusorrare{#1}{#2}{69}%
+  \grevepisemusorrare{#1}{#2}{69}{2}{}%
   \relax %
 }
 
 \def\grereversedsemicirculus#1#2{%
-  \grevepisemusorrare{#1}{#2}{70}%
+  \grevepisemusorrare{#1}{#2}{70}{2}{}%
   \relax %
 }
 
@@ -780,6 +764,7 @@
 
 % a macro that will help in the typesetting of a horizontal episemus and additional lines, the first argument is a glyph that have the same width as the width between the end of the glyph and the beginning of the episemus, and the second argument is the character of the episemus. If the third argument is 0, we go directly to the beginning of the glyph, else we don't change anything
 % 4th argument is the same as in hepisorline
+% #5 is the choral sign if relevant
 \def\grehepisorlineaux#1#2#3#4{%
   \ifnum#3=0%
   % first we set \gretempwidth to the width of the last glyph
@@ -795,11 +780,9 @@
   \gretempdimsignwidth=\wd\GreTempsign %
   \ifnum#4<2\relax % case of the lines
   \else %
-    \gretempdim=16000 sp%
-    \multiply\gretempdim by \the\grefactor %
+    \gretempdim=\greadditionallineswidth %
     \kern -\gretempdim %
-    \advance\gretempdimsignwidth by \gretempdim %
-    \advance\gretempdimsignwidth by \gretempdim %
+    \advance\gretempdimsignwidth by 2\gretempdim %
   \fi %
   \ifcase#4%
     %case of hepisemus
@@ -825,6 +808,10 @@
     \advance\greglyphraisevalue by -\grestafflineheight %
     \raise\greglyphraisevalue\hbox{\vrule height \grestafflineheight width \gretempdimsignwidth}%
     \kern \gretempdim %
+  \or %
+    %case of choral sign
+    \raise \greglyphraisevalue \copy\GreTempsign %
+  \or %
   \fi %
   % and finally we go back to the end of the glyph, where we were first
   \advance\gretempwidth by -\gretempdimsignwidth %
@@ -833,8 +820,8 @@
 }
 
 % a function to typeset a horizontal line (additional line or episemus). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \greglyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are the common ones
-% the third argument is a bit particular, it is the ambitus of the porrectus or porrectus flexus if the second argument is 8 or 9, otherwise it is useless
-% #4 is 0 for an horizontal episemus, 1 for an horizontal episemus under a note, 3 for a line at the bottom and 2 for a line at the top
+% the third argument is a bit particular, it is the ambitus of the porrectus or porrectus flexus if the second argument is 8 or 9, otherwise
+% #4 is 0 for an horizontal episemus, 1 for an horizontal episemus under a note, 3 for a line at the bottom, 2 for a line at the top
 \def\grehepisorline#1#2#3#4{%
   \ifcase#4 %
     \grecalculateglyphraisevalue{#1}{9}%
@@ -845,6 +832,8 @@
     \grecalculateglyphraisevalue{l}{0}%
   \or %
     \grecalculateglyphraisevalue{b}{0}%
+  \or %
+    \grecalculateglyphraisevalue{#1}{11}%
   \fi %
   \ifcase#2 %
     %case 0

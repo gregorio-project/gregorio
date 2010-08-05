@@ -47,7 +47,6 @@
 %% 8: case of the punctum mora of the first note of a podatus or the 2nd note of a porrectus, etc.
 %% 9: case of the horizontal episemus, that must be placed a bit lower if the note is on a line
 %% 10: case of the choral sign
-%% 11: case of the choral sign in the case of the first note of a podatus or the 2nd note of a porrectus, etc.
 \def\grecalculateglyphraisevalue#1#2{%
   \global\greisonaline=\number 0%
   % z is the very special case of vertical episemus on the lowest note
@@ -126,6 +125,8 @@
     \or % 10
       \global\advance\gretempdimcount by 1%
     \or % 11
+      \global\advance\gretempdimcount by 1%
+    \or % 11
       \global\advance\gretempdimcount by -1%
     \fi%
   \fi%
@@ -179,10 +180,20 @@
     \fi %
     \multiply\greaddedraisevalue by \the\grefactor %
     \global\advance\greglyphraisevalue by \greaddedraisevalue %
-  \or% 10: if it is a choral sign, we shift it a bit lower, of a user-defined value
-    \global\advance\greglyphraisevalue by -\grechoralsignshift %
-  \or% 11: idem
-    \global\advance\greglyphraisevalue by -\grechoralsignshift %
+  \or% 10: if it is a low choral sign, we shift it a bit lower, of a user-defined value
+    \global\advance\greglyphraisevalue by -\grelowchoralsignshift %
+  \or% 11: if it is a high choral sign, we shift it a bit lower, of a user-defined value
+    \ifnum\greisonaline=1%
+      \global\advance\greglyphraisevalue by -\grehighchoralsignshift %
+    \else %
+      \global\advance\greglyphraisevalue by -\grelowchoralsignshift %
+    \fi %
+  \or% 12: if it is a low choral sign that is lower than the note, we shift it a bit higher
+    \ifnum\greisonaline=1%
+      \global\advance\greglyphraisevalue by -\grehighchoralsignshift %
+    \else %
+      \global\advance\greglyphraisevalue by -\grelowchoralsignshift %
+    \fi %
   \fi%
   \global\advance\greglyphraisevalue by \greconstantglyphraise %
   \global\gretempdimcount=0%

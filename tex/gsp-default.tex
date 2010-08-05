@@ -16,6 +16,8 @@
 
 % this file contains definitions of spaces
 
+% the additional width of the additional lines (compared to the width of the glyph they're associated with)
+\greadditionallineswidth = 16000sp
 % null space
 \grezerowidthspace=0pt plus 0pt minus 0pt
 % space between glyphs in the same element
@@ -25,7 +27,7 @@
 % space between a clef and a flat (for clefs with flat)
 \greclefflatspace = 6000 sp plus 700 sp minus 700 sp
 % space before a choral sign
-\grebeforechoralsignspace = 6000 sp plus 700 sp minus 700 sp
+\grebeforechoralsignspace = 5000 sp plus 700 sp minus 700 sp
 % negative space, difference between the normal space between two notes and the space between a note and a flat
 \grebeforealterationspace = -36000 sp plus 1200 sp minus 1200 sp
 % space between elements
@@ -109,8 +111,10 @@
 % first, we have two spaces for the chironomic signs
 \greabovesignsspace = 8mm
 \grebelowsignsspace = 0mm
-% the shift for the choral sign
-\grechoralsignshift = 1000sp
+% the shift for the low choral sign and the high choral signs on totally free interlines
+\grelowchoralsignshift = 1000sp
+% the shift for the high choral sign
+\grehighchoralsignshift = -5000sp
 % the space for the translation
 \gretranslationheight = 0.5cm
 %the space above the lines

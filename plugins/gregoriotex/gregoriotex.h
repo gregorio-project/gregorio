@@ -118,6 +118,7 @@ Here are the different types, they must be the same as in squarize.py
 #define TT_RARE 4
 #define TT_BOTTOM 3
 #define TT_TOP 2
+#define TT_CHORAL_SIGN 5
 
 // some bars, to know if they are inside a syllable or if they are a syllable
 #define INSIDE_BAR 0
@@ -166,7 +167,7 @@ void gtex_print_char (FILE * f, grewchar to_print);
 
 unsigned int gregoriotex_determine_liquescentia_number (unsigned int factor, unsigned char type, char liquescentia);
 void gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
-void gregoriotex_write_choral_sign (FILE * f, gregorio_glyph * glyph, char type, gregorio_note * current_note);
+void gregoriotex_write_choral_sign (FILE * f, gregorio_glyph * glyph, char type, int i, gregorio_note * current_note, char low);
 void gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, gregorio_element * current_element, gregorio_syllable * current_syllable, int i, char type, gregorio_note * current_note);
 char gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph, gregorio_element *element, gregorio_note **final_note);
 void gregoriotex_write_rare (FILE * f, gregorio_glyph *current_glyph, int i, char type, gregorio_note * current_note, char rare);
@@ -183,7 +184,6 @@ void gregoriotex_write_punctum_mora (FILE * f, gregorio_glyph * glyph, char type
 void gregoriotex_write_auctum_duplex (FILE * f, gregorio_glyph * glyph,  gregorio_note * current_note);
 
 void gregoriotex_find_sign_number (gregorio_glyph * current_glyph, int i, char type, char sign_type, gregorio_note * current_note, char *number, char *height, char *bottom);
-void gregoriotex_pm_or_cs_number_pitch (gregorio_glyph *glyph, char type, gregorio_note *current_note, unsigned char *special_punctum, unsigned char *shift_before, char *pitch);
 void gregoriotex_write_additional_line (FILE * f, gregorio_glyph *current_glyph, int i, char type, char bottom_or_top, gregorio_note * current_note);
 
 void gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line);

@@ -1,4 +1,5 @@
 name:complete tests;
+def-m1:%test72;
 %%
 %
 % notes
@@ -98,8 +99,8 @@ ghz0::c4(ghz0::c4) f(f) f3(f3) f(f) ghz0::c4(ghz0::c4) f(f) cb3(cb3)
 %
 % styles, verb and special characters
 %
-{a}<i>i</i><b>b</b><ul>ul</ul><sp>+</sp><v>a</v>(Z)
-{a}<a<sp>+</sp><sp>%</sp>><v><</v><v>></sp></v>(Z)
+{a}<i>i</i><b>b</b><ul>ul</ul><sp>+</sp><v>a</v>(gZ)
+{a}<a<sp>+</sp><sp>%</sp>><v><</v><v>></sp></v>(fZ)
 %
 % spaces
 %
@@ -131,7 +132,7 @@ g)
 %
 % choral signs
 %
-ab(gh[cs:c])
+ab(gh[cs:c]) ab(h[cs:c]g[cs:t]) ab(h_.g_[cs:t]) ab(f_[cs:c]g_) ab(h_[cs:t].g_)
 %
 % tex verbatim
 %
@@ -152,7 +153,7 @@ g_/h_(g_/h_) h_/g_(h_/g_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) {h}_/i_(h_/i_) i_/h_(i_/
 %
 % some more "real life" examples
 %
-Do(f_gFEf./hif'/ge./fgf.,hjIF_hvGEC.ef)gra(f_gFEf./hif'/ge./fgf.,hjIF_hvGEC.ef)ti(fe)as(f_hGEf.) 
+Do(f_gFEf./fvED./hif'/ge./fgf.,hjIF_hvGEC.ef)gra(f_gFEf./hif'/ge./fgf.,hjIF_hvGEC.ef)ti(fe)as(f_hGEf.) 
 %
 % the final divisio finalis
 %
