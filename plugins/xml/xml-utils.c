@@ -66,6 +66,9 @@ xml_shape_to_str (char shape)
     case S_LINEA_PUNCTUM_CAVUM:
       str = "linea_punctum_cavum";
       break;
+    case S_LINEA:
+      str = "linea";
+      break;
     default:
       str = "punctum";
       gregorio_message (_("unknown shape, `punctum' assumed"),
@@ -359,6 +362,12 @@ xml_write_alteration (FILE * f, char type, char pitch, int clef, char *tab)
       tab[pitch - 'a'] = NO_ALTERATION;
       fprintf (f,
 	       "<natural><step>%c</step><octave>%d</octave></natural>",
+	       step, octave);
+      break;
+    case GRE_SHARP:
+      tab[pitch - 'a'] = NO_ALTERATION;
+      fprintf (f,
+	       "<sharp><step>%c</step><octave>%d</octave></sharp>",
 	       step, octave);
       break;
     }

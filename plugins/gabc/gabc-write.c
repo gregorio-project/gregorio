@@ -763,6 +763,9 @@ gabc_write_gregorio_note (FILE * f,
     case S_QUILISMA:
       fprintf (f, "%cw", note->pitch);
       break;
+    case S_LINEA:
+      fprintf (f, "%c=", note->pitch);
+      break;
     case S_PUNCTUM_CAVUM:
       fprintf (f, "%cr", note->pitch);
       break;

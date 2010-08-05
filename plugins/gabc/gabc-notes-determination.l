@@ -294,6 +294,9 @@ r5	{
 !/[^\/ ]       {
 	gregorio_add_special_as_note (&current_note, GRE_SPACE, SP_ZERO_WIDTH);
 	}
+=   {
+	gregorio_change_shape (current_note, S_LINEA);
+		}
 [a-mA-M]vv   {
 	lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
 		}

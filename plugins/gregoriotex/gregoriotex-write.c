@@ -2877,6 +2877,9 @@ gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	case S_LINEA_PUNCTUM_CAVUM:
 	  *number = 24;
 	  break;
+	case S_LINEA:
+	  *number = 0;
+	  break;
 	default:
 	  number_last_note (0);
 	  break;
@@ -3721,6 +3724,10 @@ gregoriotex_write_note (FILE * f, gregorio_note * note, gregorio_glyph *glyph, g
       fprintf (f, "\\grelineapunctumcavum{%c}{%c}{%d}", note->pitch,
 	       next_note_pitch, type);
       break;
+    case S_LINEA:
+      fprintf (f, "\\grelinea{%c}{%c}{%d}", note->pitch,
+	       next_note_pitch, type);
+      break;
     default:
       fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}",
 	       glyph_number, note->pitch, next_note_pitch, type);
@@ -3773,6 +3780,9 @@ void
       break;
     case S_PUNCTUM_CAVUM:
       *glyph_number = 34;
+      break;
+    case S_LINEA:
+      *glyph_number = 87;
       break;
     case S_LINEA_PUNCTUM:
       *glyph_number = 35;

@@ -1119,6 +1119,16 @@ xml_read_glyphs (xmlNodePtr current_node, xmlDocPtr doc,
 	  current_node = current_node->next;
 	  continue;
 	}
+      if (!xmlStrcmp (current_node->name, (const xmlChar *) "sharp"))
+	{
+	  step =
+	    xml_read_alteration (current_node->xmlChildrenNode,
+					     doc, key);
+	  gregorio_add_special_as_glyph (&current_glyph, GRE_NATURAL,
+					 step, 0, NULL);
+	  current_node = current_node->next;
+	  continue;
+	}
       if (!xmlStrcmp
 	  (current_node->name, (const xmlChar *) "zero-width-space"))
 	{
@@ -1646,6 +1656,10 @@ xml_read_shape (char *type)
   if (!strcmp (type, "linea_punctum_cavum"))
     {
       return S_LINEA_PUNCTUM_CAVUM;
+    }
+  if (!strcmp (type, "linea"))
+    {
+      return S_LINEA;
     }
   gregorio_message
     (_

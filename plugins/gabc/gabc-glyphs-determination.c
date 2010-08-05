@@ -584,6 +584,7 @@ gregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
     case S_PUNCTUM_CAVUM:
     case S_LINEA_PUNCTUM:
     case S_LINEA_PUNCTUM_CAVUM:
+    case S_LINEA:
       next_glyph_type = G_PUNCTUM;
       *end_of_glyph = DET_END_OF_BOTH;
       break;

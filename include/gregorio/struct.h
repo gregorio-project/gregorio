@@ -604,6 +604,7 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define S_PUNCTUM_AUCTUS_ASCENDENS 25
 #define S_PUNCTUM_AUCTUS_DESCENDENS 26
 #define S_PUNCTUM_DEMINUTUS 27
+#define S_LINEA 31
 
 // The different types of glyph
 

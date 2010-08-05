@@ -1013,6 +1013,9 @@ dump_shape (char shape)
     case S_LINEA_PUNCTUM_CAVUM:
       str = "S_LINEA_PUNCTUM_CAVUM";
       break;
+    case S_LINEA:
+      str = "S_LINEA";
+      break;
     default:
       str = "unknown";
       break;
