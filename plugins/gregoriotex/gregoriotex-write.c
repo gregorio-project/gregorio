@@ -1475,13 +1475,14 @@ gregoriotex_write_signs (FILE * f, char type,
 			 gregorio_glyph * glyph,
 			 gregorio_element * element,
 			 gregorio_syllable * syllable,
-			 gregorio_note * current_note)
+			 gregorio_note * note)
 {
   // i is the number of the note for which we are typesetting the sign.
   int i = 1;
   // a dumb char
   char block_hepisemus = 0;
   unsigned char found = 0;
+  gregorio_note *current_note = note;
   while (current_note)
     {
       // we start by the additional lines
@@ -1519,7 +1520,7 @@ gregoriotex_write_signs (FILE * f, char type,
 	}
 	found = 0;
 	i=1;
-	current_note = glyph->first_note;
+	current_note = note;
 	// now a first loop for the choral signs, because high signs must be taken into account before any hepisemus
 	while (current_note)
 	  {
@@ -1532,7 +1533,7 @@ gregoriotex_write_signs (FILE * f, char type,
 	  }
 	// a loop for rare signs, vertical episemus, horizontal episemus and ictus
 	i=1;
-	current_note = glyph->first_note;
+	current_note = note;
 	while (current_note)
 	 {
       // we continue with the hepisemus
@@ -1610,7 +1611,7 @@ gregoriotex_write_signs (FILE * f, char type,
   // final loop for choral signs and punctum mora
     }
   i = 1;
-  current_note = glyph->first_note;
+  current_note = note;
   while (current_note)
     {
       switch (current_note->signs)
@@ -1905,6 +1906,28 @@ gregoriotex_write_punctum_mora (FILE * f,
 	  break;
 	}
     }
+  // we enter here in any case
+  switch (glyph->glyph_type)
+    {
+        case G_TRIGONUS:
+        case G_PUNCTA_INCLINATA:
+        case G_2_PUNCTA_INCLINATA_DESCENDENS:
+        case G_3_PUNCTA_INCLINATA_DESCENDENS:
+        case G_4_PUNCTA_INCLINATA_DESCENDENS:
+        case G_5_PUNCTA_INCLINATA_DESCENDENS:
+        case G_2_PUNCTA_INCLINATA_ASCENDENS:
+        case G_3_PUNCTA_INCLINATA_ASCENDENS:
+        case G_4_PUNCTA_INCLINATA_ASCENDENS:
+        case G_5_PUNCTA_INCLINATA_ASCENDENS:
+          if (! current_note->next)
+            {
+              special_punctum = 1;
+            }
+          break;
+        default:
+          break;
+    }
+    
 //when the punctum mora is on a note on a line, and the prior note is on the space immediately above, the dot is placed on the space below the line instead
   if (current_note->previous
       && (current_note->previous->pitch - current_note->pitch == 1)
@@ -3541,6 +3564,7 @@ gregoriotex_determine_interval (gregorio_glyph * glyph)
 * 72: punctum auctus ascendens
 * 73: punctum auctus descendens
 * 74: smaller punctum for pes, porrectus and torculus resupinus (theorically never used alone, but necessary for some measures
+* 87: linea
 
 * 60: custo for bass notes (oriented to the top)
 * 61: custo for bass notes (oriented to the top) with short bar
