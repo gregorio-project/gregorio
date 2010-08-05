@@ -1827,12 +1827,14 @@ gregoriotex_write_punctum_mora (FILE * f,
   unsigned char no_space = 0;
   // the pitch where to set the punctum
   char pitch = current_note->pitch;
+  // a variable to know if we are on a punctum inclinatum or not
+  unsigned char punctum_inclinatum = 0;
   // a temp variable
   gregorio_note *tmpnote;
   // first: the very special case where type == T_ONE_NOTE_TRF, the punctum is at a strange place:
   if (type == T_ONE_NOTE_TRF)
     {
-      fprintf (f, "\\grepunctummora{%c}{1}{0}%%\n", current_note->pitch);
+      fprintf (f, "\\grepunctummora{%c}{1}{0}{0}%%\n", current_note->pitch);
     }
   // we go into this switch only if it is the note before the last note
   if (current_note->next)
@@ -1915,10 +1917,6 @@ gregoriotex_write_punctum_mora (FILE * f,
         case G_3_PUNCTA_INCLINATA_DESCENDENS:
         case G_4_PUNCTA_INCLINATA_DESCENDENS:
         case G_5_PUNCTA_INCLINATA_DESCENDENS:
-        case G_2_PUNCTA_INCLINATA_ASCENDENS:
-        case G_3_PUNCTA_INCLINATA_ASCENDENS:
-        case G_4_PUNCTA_INCLINATA_ASCENDENS:
-        case G_5_PUNCTA_INCLINATA_ASCENDENS:
           if (! current_note->next)
             {
               special_punctum = 1;
@@ -1926,6 +1924,14 @@ gregoriotex_write_punctum_mora (FILE * f,
           break;
         default:
           break;
+    }
+  if (current_note -> shape == S_PUNCTUM_INCLINATUM)
+    {
+      punctum_inclinatum = 1;
+    }
+  if (current_note -> shape == S_PUNCTUM_INCLINATUM_DEMINUTUS)
+    {
+      punctum_inclinatum = 1;
     }
     
 //when the punctum mora is on a note on a line, and the prior note is on the space immediately above, the dot is placed on the space below the line instead
@@ -1944,13 +1950,13 @@ gregoriotex_write_punctum_mora (FILE * f,
       if (current_note->next->pitch - current_note->pitch == -1
 	  || current_note->next->pitch - current_note->pitch == 1)
 	{
-	  fprintf (f, "\\grepunctummora{%c}{3}{%d}%%\n", pitch,
-		   special_punctum);
+	  fprintf (f, "\\grepunctummora{%c}{3}{%d}{%d}%%\n", pitch,
+		   special_punctum, punctum_inclinatum);
 	}
       else
 	{
-	  fprintf (f, "\\grepunctummora{%c}{2}{%d}%%\n", pitch,
-		   special_punctum);
+	  fprintf (f, "\\grepunctummora{%c}{2}{%d}{%d}%%\n", pitch,
+		   special_punctum, punctum_inclinatum);
 	}
       return;
     }
@@ -1964,7 +1970,7 @@ gregoriotex_write_punctum_mora (FILE * f,
       && glyph->next->next->first_note
       && (glyph->next->next->first_note->pitch - current_note->pitch > 1))
     {
-      fprintf (f, "\\grepunctummora{%c}{1}{%d}%%\n", pitch, special_punctum);
+      fprintf (f, "\\grepunctummora{%c}{1}{%d}{%d}%%\n", pitch, special_punctum, punctum_inclinatum);
       return;
     }
   // if there is a punctum or a auctum dumplex on a note after, we put a zero-width punctum
@@ -1982,8 +1988,8 @@ gregoriotex_write_punctum_mora (FILE * f,
     }
 
 // the normal operation
-  fprintf (f, "\\grepunctummora{%c}{%d}{%d}%%\n", pitch, no_space,
-	   special_punctum);
+  fprintf (f, "\\grepunctummora{%c}{%d}{%d}{%d}%%\n", pitch, no_space,
+	   special_punctum, punctum_inclinatum);
 }
 
 // a function that writes the good \hepisemus un GregorioTeX. i is the position of the note in the glyph.

@@ -376,7 +376,8 @@
 % if the second argument is two, it means that we must shift the width of one punctum to the left
 % if it is three, it means the same as when it is two, but with ambitus of one
 % #3 is 1 in case of a punctommora in the note before the last note of a podatus, porrectus or torculus resupinus, 0 otherwise.
-\def\grepunctummora#1#2#3{%
+% #4 is 1 if we are at a punctum inclinatum, 0 otherwise
+\def\grepunctummora#1#2#3#4{%
   \penalty 10001\relax %
   \ifcase#2\relax %
     \hskip\grespacebeforesigns%
@@ -400,6 +401,21 @@
     \grecalculateglyphraisevalue{#1}{4}%
   \else %
     \grecalculateglyphraisevalue{#1}{8}%
+  \fi %
+  % here we shift a bit left in the case where we have a punctum inclinatum on a line
+  \ifnum#4=1\relax %
+    \ifnum\greisonaline=1\relax %
+      \gretempwidth=3700sp%
+      \multiply\gretempwidth by \the\grefactor %
+      \kern -\gretempwidth %
+      \gretempwidth =4500sp%
+      \multiply\gretempwidth by \the\grefactor %
+      \advance\greglyphraisevalue by -\gretempwidth %
+    \else %
+      \gretempwidth =2500sp%
+      \multiply\gretempwidth by \the\grefactor %
+      \advance\greglyphraisevalue by -\gretempwidth %
+    \fi %
   \fi %
   \penalty 10001\relax %
   \raise \greglyphraisevalue \hbox{\grepunctummorachar}%
@@ -425,8 +441,8 @@
 
 % a function to typeset an augmentum duplex, easy enough to be understood...
 \def\greaugmentumduplex#1#2#3{%
-  \grepunctummora{#1}{1}{#3}%
-  \grepunctummora{#2}{0}{0}%
+  \grepunctummora{#1}{1}{#3}{0}%
+  \grepunctummora{#2}{0}{0}{0}%
   \relax %
 }
 
@@ -627,7 +643,7 @@
   \or% case 9, 10 and 11
   \or\or\or %
     %case 12
-    \grevepisemusorrareaux{0}{\char 19}{0}{200\the\grefactor }{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char 19}{0}{30\the\grefactor }{#3}{#4}{#5}%
   \or%
     %case 13
     \grevepisemusorrareaux{0}{\char 32}{0}{0}{#3}{#4}{#5}%

@@ -151,6 +151,10 @@
       \greaddedraisevalue=-6900 sp%
       \multiply\greaddedraisevalue by \the\grefactor %
       \global\advance\greglyphraisevalue by \greaddedraisevalue %
+    \else % 
+      \greaddedraisevalue=-3000 sp%
+      \multiply\greaddedraisevalue by \the\grefactor %
+      \global\advance\greglyphraisevalue by \greaddedraisevalue %
     \fi%
   \or% 5: if it is a horizontal episemus under a note which is on a line, we shift it lower
     \ifnum\greisonaline=0%
