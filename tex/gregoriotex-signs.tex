@@ -21,6 +21,17 @@
 %% macros for the typesetting of the clefs of the beginning of lines and custos
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% if this macro is set to 1, it simply removes the key
+\xdef\greremoveclefcount{0}
+
+\def\greremoveclef{%
+  \xdef\greremoveclefcount{1}%
+}
+
+\def\grenormalclef{%
+  \xdef\greremoveclefcount{0}%
+}
+
 % a count describing the clef line and pitch : 1 for c on the first (bottom) line, 2 for c on the second line, 5 for f on the first, etc.
 \newcount\greclefnum
 
@@ -36,7 +47,11 @@
     \kern\greadditionalleftspace %
     \copy\GreLines% draws the lines
     \unkern %
-    \hbox{\gretypekey{#1}{#2}{0}{#3}{#4}\hskip\greafterclefnospace}%
+    \ifnum\greremoveclefcount=0\relax %
+      \hbox{\gretypekey{#1}{#2}{0}{#3}{#4}\hskip\greafterclefnospace}%
+    \else %
+      \hbox{\kern\grenoclefspace}%
+    \fi %
   }%
   \xdef\greclefflat{#4}%
   \relax%
@@ -119,10 +134,12 @@
 % of the flat
 \def\gresetinitialclef#1#2#3{%
   \grecalculateclefnum{#1}{#2}{#3}%
-  \ifnum\grelastoflinecount=2\relax % we must not type a space if there is no initial
-    \gretypekey{#1}{#2}{0}{0}{#3}%
-  \else %
-    \gretypekey{#1}{#2}{0}{1}{#3}%
+  \ifnum\greremoveclefcount=0\relax %
+    \ifnum\grelastoflinecount=2\relax % we must not type a space if there is no initial
+      \gretypekey{#1}{#2}{0}{0}{#3}%
+    \else %
+      \gretypekey{#1}{#2}{0}{1}{#3}%
+    \fi %
   \fi %
   \gresetlinesclef{#1}{#2}{1}{#3}%
   % if the initial is big, then we adjust the second line
@@ -139,6 +156,8 @@
 % if #4 is a, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
 \def\grechangeclef#1#2#3#4{%
+  % it makes no sense to change the clef when there is no clef...
+  \grenormalclef %
   \grecalculateclefnum{#1}{#2}{#4}%
   \greclefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
   \multiply\greclefchangespace by \the\grefactor %
@@ -157,6 +176,7 @@
 % macro called when the key changes inside a syllable
 
 \def\greinchangeclef#1#2#3{%
+  \grenormalclef %
   % to see why we reset \grelastoflinecount, see comments of \greglyph.
   \ifnum\grelastoflinecount=2\relax %
     \global\grelastoflinecount=0\relax %
