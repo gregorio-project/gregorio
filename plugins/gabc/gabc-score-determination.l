@@ -37,6 +37,7 @@ unsigned char style_stack = 0;
 %x style
 %x verb
 %x comments
+%x alt
 
 %option stack
 %option pointer
@@ -294,7 +295,7 @@ semicolon. */
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
-<verb,style,score>< {
+<verb,style,score,alt>< {
 	gabc_score_determination_lval=strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
@@ -303,6 +304,18 @@ semicolon. */
 	}
 <score,style>\}  {
 	return CENTER_END;
+	}
+<score><alt>  {
+  BEGIN(alt);
+	return ALT_BEGIN;
+	}
+<alt>[^<]* {
+	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	return CHARACTERS;
+	}
+<alt><\/alt>  {
+  BEGIN(score);
+	return ALT_END;
 	}
 <score>\[  {
 	return TRANSLATION_BEGINNING;

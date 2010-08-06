@@ -220,6 +220,8 @@ typedef struct gregorio_syllable {
   struct gregorio_character *text;
 // pointer to a gregorio_text structure corresponding to the translation
   struct gregorio_character *translation;
+// a string representing the text above the lines (raw TeX)
+  char *abovelinestext;
 // pointer to the next and previous syllable
   struct gregorio_syllable *next_syllable;
   struct gregorio_syllable *previous_syllable;
@@ -336,7 +338,7 @@ void gregorio_add_glyph (gregorio_glyph **current_glyph, char type, gregorio_not
 void gregorio_add_element (gregorio_element **current_element, gregorio_glyph *first_glyph);
 void gregorio_add_syllable (gregorio_syllable ** current_syllable,
 			  int number_of_voices, gregorio_element * elements[],
-			  gregorio_character * first_character, gregorio_character *first_translation_character, char position);
+			  gregorio_character * first_character, gregorio_character *first_translation_character, char position, char *abovelinestext);
 
 void gregorio_set_signs (gregorio_note *current_note, char signs);
 void gregorio_add_special_sign (gregorio_note *current_note, char sign);

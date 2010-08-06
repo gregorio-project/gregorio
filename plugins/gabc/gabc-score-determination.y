@@ -411,9 +411,9 @@ end_definitions ()
 
 /* Here starts the code for the determinations of the notes. The notes are not precisely determined here, we separate the text describing the notes of each voice, and we call determine_elements_from_string to really determine them.
  */
-char *current_text = NULL; // TODO : not sure of the =NULL
 char position = WORD_BEGINNING;
 gregorio_syllable *current_syllable = NULL;
+char *abovelinestext = NULL;
 
 
 /* Function called when we see a ")", it completes the gregorio_element array of the syllable with NULL pointers. Usefull in the cases where for example you have two voices, but a voice that is silent on a certain syllable.
@@ -457,7 +457,7 @@ close_syllable ()
        gregorio_rebuild_first_syllable (&first_text_character);
     }
   gregorio_add_syllable (&current_syllable, number_of_voices, elements,
-			    first_text_character, first_translation_character, position);
+			    first_text_character, first_translation_character, position, abovelinestext);
   if (!score->first_syllable)
     {
     // we rebuild the first syllable if we have to
@@ -476,6 +476,7 @@ close_syllable ()
   current_character = NULL;
   first_text_character=NULL;
   first_translation_character=NULL;
+  abovelinestext = NULL;
 }
 
 // a function called when we see a [, basically, all characters are added to the translation pointer instead of the text pointer
@@ -541,7 +542,7 @@ gregorio_gabc_end_style(unsigned char style)
 
 %}
 
-%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER GABC_VERSION USER_NOTES DEF_MACRO
+%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END
 
 %%
 
@@ -1059,6 +1060,8 @@ style_end:
 	;
 
 character:
+  above_line_text
+  |
 	CHARACTERS {
 	gregorio_gabc_add_text($1);
 	}
@@ -1081,6 +1084,12 @@ translation_beginning:
 translation:
     translation_beginning text TRANSLATION_END {
     end_translation();
+    }
+    ;
+
+above_line_text:
+    ALT_BEGIN CHARACTERS ALT_END {
+      abovelinestext = $2;
     }
     ;
 

@@ -482,13 +482,52 @@ xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc, char *type,
 	    }
 	  if (!xmlStrcmp
 	      (xmlNodeListGetString (doc, current_children_node, 1),
-	       (const xmlChar *) "divisio-finalis"))
+	       (const xmlChar *) "dominican-bar-1"))
 	    {
-	      *type = B_DIVISIO_FINALIS;
+	      *type = B_DIVISIO_MINOR_D1;
 	      current_node = current_node->next;
 	      continue;
 	    }
-
+	  if (!xmlStrcmp
+	      (xmlNodeListGetString (doc, current_children_node, 1),
+	       (const xmlChar *) "dominican-bar-2"))
+	    {
+	      *type = B_DIVISIO_MINOR_D2;
+	      current_node = current_node->next;
+	      continue;
+	    }
+	  if (!xmlStrcmp
+	      (xmlNodeListGetString (doc, current_children_node, 1),
+	       (const xmlChar *) "dominican-bar-3"))
+	    {
+	      *type = B_DIVISIO_MINOR_D3;
+	      current_node = current_node->next;
+	      continue;
+	    }
+	  if (!xmlStrcmp
+	      (xmlNodeListGetString (doc, current_children_node, 1),
+	       (const xmlChar *) "dominican-bar-4"))
+	    {
+	      *type = B_DIVISIO_MINOR_D4;
+	      current_node = current_node->next;
+	      continue;
+	    }
+	  if (!xmlStrcmp
+	      (xmlNodeListGetString (doc, current_children_node, 1),
+	       (const xmlChar *) "dominican-bar-5"))
+	    {
+	      *type = B_DIVISIO_MINOR_D5;
+	      current_node = current_node->next;
+	      continue;
+	    }
+	  if (!xmlStrcmp
+	      (xmlNodeListGetString (doc, current_children_node, 6),
+	       (const xmlChar *) "dominican-bar-6"))
+	    {
+	      *type = B_DIVISIO_MINOR_D1;
+	      current_node = current_node->next;
+	      continue;
+	    }
 	}
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "signs"))
 	{
@@ -608,6 +647,13 @@ xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
     {
 // it is possible (and even often the case) that we don't have text
       xml_read_translation (current_node, doc, *current_syllable);
+      current_node = current_node->next;
+    }
+
+  if (!xmlStrcmp (current_node->name, (const xmlChar *) "abovelinestext"))
+    {
+      (*current_syllable)->abovelinestext = (char *) xmlNodeListGetString
+	    (doc, current_node->xmlChildrenNode, 1);
       current_node = current_node->next;
     }
 

@@ -395,6 +395,24 @@ xml_bar_to_str (char type)
     case B_DIVISIO_FINALIS:
       str = "divisio-finalis";
       break;
+    case B_DIVISIO_MINOR_D1:
+      str = "dominican-bar-1";
+      break;
+    case B_DIVISIO_MINOR_D2:
+      str = "dominican-bar-2";
+      break;
+    case B_DIVISIO_MINOR_D3:
+      str = "dominican-bar-3";
+      break;
+    case B_DIVISIO_MINOR_D4:
+      str = "dominican-bar-4";
+      break;
+    case B_DIVISIO_MINOR_D5:
+      str = "dominican-bar-5";
+      break;
+    case B_DIVISIO_MINOR_D6:
+      str = "dominican-bar-6";
+      break;
     default:
       str = "";
       gregorio_message (_("unknown bar type, nothing will be done"),

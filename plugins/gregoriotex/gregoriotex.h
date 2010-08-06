@@ -140,6 +140,7 @@ unsigned char additional_top_space; // 0, 1, 2 or 3. it is the argument of
 unsigned char additional_bottom_space;
 unsigned char translation; // O or 1, indicates if there is a translation on
 unsigned char ictus; // idem
+unsigned char abovelinestext;//idem
 // the line
 } gregorio_line;
 

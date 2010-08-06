@@ -286,7 +286,7 @@ gregoriotex_write_syllable (FILE * f,
 	  line = (gregorio_line *) malloc (sizeof (gregorio_line));
 	  gregoriotex_getlineinfos (syllable->next_syllable, line);
 	  if (line->additional_bottom_space == 0
-	      && line->additional_top_space == 0 && line->translation == 0)
+	      && line->additional_top_space == 0 && line->translation == 0 && line->abovelinestext == 0)
 	    {
 	      if ((syllable->elements)[0]->element_type != GRE_END_OF_PAR)
 		{
@@ -302,16 +302,16 @@ gregoriotex_write_syllable (FILE * f,
 	      if ((syllable->elements)[0]->element_type != GRE_END_OF_PAR)
 		{
 		  fprintf (f,
-			   "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}%%\n%%\n%%\n",
+			   "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
 			   line->additional_top_space,
-			   line->additional_bottom_space, line->translation);
+			   line->additional_bottom_space, line->translation, line->abovelinestext);
 		}
 	      else
 		{
 		  fprintf (f,
-			   "%%\n%%\n\\grenewparlinewithspace{%u}{%u}{%u}%%\n%%\n%%\n",
+			   "%%\n%%\n\\grenewparlinewithspace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
 			   line->additional_top_space,
-			   line->additional_bottom_space, line->translation);
+			   line->additional_bottom_space, line->translation, line->abovelinestext);
 		}
 
 	    }
@@ -378,12 +378,15 @@ gregoriotex_write_syllable (FILE * f,
     {
       fprintf (f, "{}{}{0}{");
     }
-
   if (syllable->translation)
     {
       fprintf (f, "%%\n\\grewritetranslation{");
       gregoriotex_write_translation (f, syllable->translation);
       fprintf (f, "}%%\n");
+    }
+  if (syllable->abovelinestext)
+    {
+      fprintf (f, "%%\n\\gresettextabovelines{%s}%%\n", syllable->abovelinestext);
     }
   if (gregoriotex_is_last_of_line (syllable) != 0)
     {
@@ -546,7 +549,7 @@ gregoriotex_write_syllable (FILE * f,
 	  // here we suppose we don't have two linebreaks in the same syllable
 	  gregoriotex_getlineinfos (syllable->next_syllable, line);
 	  if (line->additional_bottom_space == 0
-	      && line->additional_top_space == 0 && line->translation == 0)
+	      && line->additional_top_space == 0 && line->translation == 0 && line->abovelinestext == 0)
 	    {
 	      if (current_element->element_type != GRE_END_OF_PAR)
 		{
@@ -562,16 +565,16 @@ gregoriotex_write_syllable (FILE * f,
 	      if (current_element->element_type != GRE_END_OF_PAR)
 		{
 		  fprintf (f,
-			   "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}%%\n%%\n%%\n",
+			   "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
 			   line->additional_top_space,
-			   line->additional_bottom_space, line->translation);
+			   line->additional_bottom_space, line->translation, line->abovelinestext);
 		}
 	      else
 		{
 		  fprintf (f,
-			   "%%\n%%\n\\grenewparlinewithspace{%u}{%u}{%u}%%\n%%\n%%\n",
+			   "%%\n%%\n\\grenewparlinewithspace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
 			   line->additional_top_space,
-			   line->additional_bottom_space, line->translation);
+			   line->additional_bottom_space, line->translation, line->abovelinestext);
 		}
 	    }
 	  if (line->ictus)
@@ -630,6 +633,7 @@ gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line)
   line->additional_bottom_space = 0;
   line->translation = 0;
   line->ictus = 0;
+  line->abovelinestext = 0;
 
   if (syllable == NULL)
     {
@@ -643,6 +647,10 @@ gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line)
       if (syllable->translation)
 	{
 	  line->translation = 1;
+	}
+      if (syllable->abovelinestext)
+	{
+	  line->abovelinestext = 1;
 	}
       element = (syllable->elements)[0];
       while (element)

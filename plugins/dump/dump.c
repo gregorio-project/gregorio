@@ -243,6 +243,10 @@ dump_write_score (FILE * f, gregorio_score * score)
 	  fprintf (f, "\n  Translation\n");
 	  dump_write_characters (f, syllable->translation);
 	}
+      if (syllable->abovelinestext)
+	{
+	  fprintf (f, "\n  Abovelinestext\n    %s", syllable->abovelinestext);
+	}
       element = syllable->elements[0];
       while (element)
 	{

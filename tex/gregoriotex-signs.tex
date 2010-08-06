@@ -1166,10 +1166,7 @@
 %%% 1 if it is in a syllable
 %% 3: macros that may happen before the skip after the bar (typically grevepisemus)
 \def\grewritebar#1#2#3{%
-  % to see why we reset \grelastoflinecount, see comments of \greglyph.
-  \ifnum\grelastoflinecount=2\relax %
-    \global\grelastoflinecount=0\relax %
-  \fi %
+  \grenewglyphcommon %
   \grecalculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
   \penalty 10001 %
   \ifcase#1 % 0 : virgula
@@ -1448,9 +1445,7 @@
 \def\grealteration#1#2#3#4{%
   % to see why we reset \grelastoflinecount, see comments of \greglyph.
   \ifnum#4=0\relax %
-    \ifnum\grelastoflinecount=2\relax %
-      \global\grelastoflinecount=0\relax %
-    \fi %
+    \grenewglyphcommon %
     \ifnum\the\grefirstglyph=1\relax %
       \global\grefirstisalteration=1\relax %
     \fi %

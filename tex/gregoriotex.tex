@@ -244,7 +244,7 @@
 
 %macro to call if you want to go to the next line simply
 \def\grenewline{%
-  \grenewlinecommon{0}{0}{0}{0}%
+  \grenewlinecommon{0}{0}{0}{0}{0}%
   \relax%
 }
 
@@ -252,8 +252,9 @@
 %% 1: can be 0, 1 or 2 or 3. 1 is when there is a note above the 4th line, 2 when there is a note on the 5th line, and 3 when there is a note above the 5th line
 %% 2: idem, but with the bottom line (-1th). It can be 4, in the case of a bottom note with a vertical episemus.
 %% 3: 1 if there is a translation somewhere
-\def\grenewlinewithspace#1#2#3{%
-  \grenewlinecommon{#1}{#2}{#3}{0}%
+% #4 is if 1 if we have space above the staff
+\def\grenewlinewithspace#1#2#3#4{%
+  \grenewlinecommon{#1}{#2}{#3}{0}{#4}%
   \relax%
 }
 
@@ -261,19 +262,19 @@
 % basically same macros as above, but these one do a \hfill, the lines are not justified
 %macro to call if you want to go to the next line simply
 \def\grenewparline{%
-  \grenewlinecommon{0}{0}{0}{1}%
+  \grenewlinecommon{0}{0}{0}{1}{0}%
   \relax%
 }
 
-\def\grenewparlinewithspace#1#2#3{%
-  \grenewlinecommon{#1}{#2}{#3}{1}%
+\def\grenewparlinewithspace#1#2#3#4{%
+  \grenewlinecommon{#1}{#2}{#3}{1}{#4}%
 }
 
 % a macro describing a kern to make before ending the line, which we sometimes want (see \syllable)
 \xdef\grekernbeforeeol{0pt\relax}
 
 % the macro we call each time we force a changing of line, it automatically sets \greknownline, and adjusts left spaces
-\def\grenewlinecommon#1#2#3#4{%
+\def\grenewlinecommon#1#2#3#4#5{%
   % sometimes we need to add a space before ending the line:
   \kern\grekernbeforeeol\relax %
   \ifnum\greboxing=0\relax %
@@ -288,11 +289,16 @@
     \fi %
     \global\advance\greknownline by 1\relax %
     \greupdateadditionalspaces{#1}{#2}%
-      \ifnum#3 = 1\relax %
-        \greaddtranslationspace %
-      \else %
-        \greremovetranslationspace %
-      \fi %
+    \ifnum#3 = 1\relax %
+      \greaddtranslationspace %
+    \else %
+      \greremovetranslationspace %
+    \fi %
+    \ifnum#5 = 1\relax %
+      \greaddspaceabove %
+    \else %
+      \greremovespaceabove %
+    \fi %
     \global\grelastoflinecount=2\relax %
     \greupdateleftbox %
     \ifnum#4=1\relax %
@@ -638,43 +644,53 @@
 %% macro for putting text above lines for annotations and the like
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% I'm not sure if it's used at all...
+\newdimen\grecurrentabovelinestextheight
+\grecurrentabovelinestextheight = 0pt
 
 % additional space for the text above lines
-\def\greabovelinestextstyle#1{%
-\small\itshape #1\relax %
-}
-
-\newdimen\greabovelinestextraise % raises the text above the note line
-\newdimen\greabovelinestextwidth % used for kerning to ``reset'' spacing
-\newbox\GreAbovelinestextbox % box for the text above
+%\def\greabovelinestextstyle#1{%
+%#1\relax %
+%}
 
 % set space above the text lines - almost the same as for the translation
 \def\greaddspaceabove{%
-  \global\greabovelinestextraise=60000 sp%
-  \global\multiply\greabovelinestextraise by \the\grefactor %
-  %\global\advance\grespaceabovelines by \greabovelinestextraise %
+  \global\grecurrentabovelinestextheight=\greabovelinestextheight %
   \gregeneratelines %
-  \grecalculateconstantglyphraise %
-  \global\advance\greabovelinestextraise by 4\grestafflineheight %
-  \global\advance\greabovelinestextraise by 4\greinterstafflinespace %
   \relax %
 }
 
 % we don't need space above any more
 \def\greremovespaceabove{%
-  \global\greabovelinestextraise=0 sp%
+  \global\grecurrentabovelinestextheight=0 sp%
   \gregeneratelines %
-  \grecalculateconstantglyphraise %
   \relax %
 }
 
-% set the text above the line
-\def\greabovelinestext#1{%
-  \setbox\GreAbovelinestextbox\hbox{\greabovelinestextstyle{#1}}
-  \leavevmode\raise\greabovelinestextraise\copy\GreAbovelinestextbox%
-  \global\greabovelinestextwidth=\wd\GreAbovelinestextbox%
-  \kern-\greabovelinestextwidth%
+% the code is a bit strange here: we always execute \grespaceabovelines at the beginning of a glyph. This will:
+%  - typeset the text above the lines if relevant, and making sure we execute it only once
+%  - not do anything else
+
+\xdef\grecurrenttextabovelines{}
+
+\def\gresettextabovelines#1{%
+  \gdef\grecurrenttextabovelines{%
+    \gretypesettextabovelines{#1}%
+    \gdef\grecurrenttextabovelines{}%
+    \relax %
+  }%
+}
+
+% typesets the text above the line
+\def\gretypesettextabovelines#1{%
+  \global\gretempdim=\greabovelinestextraise %
+  \global\advance\gretempdim by 4\grestafflineheight %
+  \global\advance\gretempdim by 4\greinterstafflinespace %
+  \global\advance\gretempdim by \grespacebeneathtext %
+  \global\advance\gretempdim by \grecurrenttranslationheight %
+  \global\advance\gretempdim by \grespacelinestext %
+  \global\advance\gretempdim by \greadditionalbottomspace %
+  \leavevmode\raise\gretempdim\hbox to 0pt{\greabovelinestextstyle{#1}\hss}%
+  \relax %
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -688,7 +704,7 @@
   \hbox to0pt{%
     \vbox{%
       \grenormalstafflinesformat %
-      \vskip\grespaceabovelines %
+      \vskip\grecurrentabovelinestextheight %
       \vskip\greadditionaltopspace %
       \hrule height \grestafflineheight width \grestafflinewidth %
       \kern\the\greinterstafflinespace %
@@ -717,7 +733,7 @@
     \vbox{%
       \grenormalstafflinesformat %
       \vskip\grespaceabovelines %
-      \vskip\greadditionaltopspace %
+      \vskip\grecurrentabovelinestextheight %
       \hrule height \grestafflineheight width \grestafflinewidth %
       \kern\the\greinterstafflinespace %
       \hrule height \grestafflineheight width \grestafflinewidth %

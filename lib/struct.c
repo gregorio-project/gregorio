@@ -730,7 +730,7 @@ gregorio_end_style (gregorio_character ** current_character,
 void
 gregorio_add_syllable (gregorio_syllable ** current_syllable,
 			  int number_of_voices, gregorio_element * elements[],
-			  gregorio_character * first_character, gregorio_character *first_translation_character, char position)
+			  gregorio_character * first_character, gregorio_character *first_translation_character, char position, char *abovelinestext)
 {
   gregorio_syllable *next;
   gregorio_element **tab;
@@ -753,6 +753,7 @@ gregorio_add_syllable (gregorio_syllable ** current_syllable,
   next->position = position;
   next->text = first_character;
   next->translation = first_translation_character;
+  next->abovelinestext = abovelinestext;
   next->next_syllable = NULL;
   next->previous_syllable = *current_syllable;
   tab = (gregorio_element **) malloc (number_of_voices *
@@ -805,6 +806,7 @@ gregorio_free_one_syllable (gregorio_syllable ** syllable,
     {
       gregorio_free_characters ((*syllable)->translation);
     }
+  free((*syllable)->abovelinestext);
   next = (*syllable)->next_syllable;
   free ((*syllable)->elements);
   free (*syllable);
