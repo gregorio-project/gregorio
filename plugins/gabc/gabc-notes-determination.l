@@ -65,6 +65,7 @@ char * macros[10];
 %x texverbglyph
 %x texverbelement
 %x choralsign
+%x alt
 %x comments
 
 %%
@@ -101,6 +102,13 @@ char * macros[10];
       }
     else_error_macro();
     }
+<INITIAL>\[altm[1-9]\] {
+    if (macros[gabc_notes_determination_text[5]-48])
+      {
+        gregorio_add_texverb_as_note(&current_note, strdup(macros[gabc_notes_determination_text[5]-48]), GRE_TEXVERB_ELEMENT);
+      }
+    else_error_macro();
+    }
 <INITIAL>\[nv: {
     BEGIN(texverbnote);
     }
@@ -109,6 +117,9 @@ char * macros[10];
     }
 <INITIAL>\[ev: {
     BEGIN(texverbelement);
+    }
+<INITIAL>\[alt: {
+    BEGIN(alt);
     }
 <choralsign>[^\]]+ {
 	gregorio_add_cs_to_note(&current_note, strdup(gabc_notes_determination_text));
@@ -122,7 +133,10 @@ char * macros[10];
 <texverbelement>[^\]]+ {
 	gregorio_add_texverb_as_note(&current_note, strdup(gabc_notes_determination_text), GRE_TEXVERB_ELEMENT);
     }
-<texverbnote,texverbglyph,texverbelement,choralsign>\] {
+<alt>[^\]]+ {
+	gregorio_add_texverb_as_note(&current_note, strdup(gabc_notes_determination_text), GRE_ALT);
+    }
+<texverbnote,texverbglyph,texverbelement,choralsign,alt>\] {
 	BEGIN(INITIAL);
     }
 \{  {

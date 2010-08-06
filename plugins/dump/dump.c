@@ -279,6 +279,11 @@ dump_write_score (FILE * f, gregorio_score * score)
           fprintf (f, "     TeX string              \"%s\"\n",
 		       element->texverb);
 	    }
+	  if (element->type == GRE_ALT)
+	    {
+          fprintf (f, "     Above lines text        \"%s\"\n",
+		       element->texverb);
+	    }
 	  if (element->element_type && element->type == GRE_BAR)
 	    {
 	      fprintf (f, "     element_type            %d (%s)\n",

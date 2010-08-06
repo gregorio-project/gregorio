@@ -442,6 +442,12 @@ gabc_write_gregorio_element (FILE * f, gregorio_element * element)
           fprintf (f, "[ev:%s]", element->texverb);
         }
       break;
+    case GRE_ALT:
+      if (element->texverb)
+        {
+          fprintf (f, "[alt:%s]", element->texverb);
+        }
+      break;
     case GRE_SPACE:
       gabc_write_space (f, element->element_type);
       break;

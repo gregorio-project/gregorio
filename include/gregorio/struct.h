@@ -490,6 +490,8 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 //#define GRE_TEXVERB_NOTE 16
 #define GRE_TEXVERB_GLYPH 17
 #define GRE_TEXVERB_ELEMENT 18
+// above lines text, quite the same as GRE_TEXVERB_ELEMENT, but counted differently for the spaces above the lines
+#define GRE_ALT 20
 
 
 #define C_KEY 'c'

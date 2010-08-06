@@ -438,6 +438,15 @@ gregoriotex_write_syllable (FILE * f,
 	  current_element = current_element->next;
 	  continue;
 	}
+      if (current_element->type == GRE_ALT
+	  && current_element->texverb)
+	{
+	  fprintf (f,
+		   "\\gresettextabovelines{%s}%%\n",
+		   current_element->texverb);
+	  current_element = current_element->next;
+	  continue;
+	}
       if (current_element->type == GRE_C_KEY_CHANGE)
 	{
 	  if (current_element->previous &&
@@ -592,7 +601,12 @@ gregoriotex_write_syllable (FILE * f,
 	}
 // there current_element->type is GRE_ELEMENT
       gregoriotex_write_element (f, syllable, current_element);
-      if (current_element->next && current_element->next->type == GRE_ELEMENT)
+      if (current_element->next 
+      && (current_element->next->type == GRE_ELEMENT
+      || current_element->next->next && current_element->next->type == GRE_ALT
+         && current_element->next->next->type == GRE_ELEMENT
+      )
+      )
 	{
 	  fprintf (f, "\\greendofelement{0}{0}%%\n");
 	}
@@ -658,6 +672,10 @@ gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line)
 	  if (element->type == GRE_END_OF_LINE)
 	    {
 	      return;
+	    }
+	  if (element->type == GRE_ALT)
+	    {
+	      line->abovelinestext = 1;
 	    }
 	  if (element->type == GRE_BAR)
 	    {
