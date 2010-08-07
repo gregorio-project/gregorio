@@ -406,15 +406,32 @@
 % #4: a horizontal shift
 % #5: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\greovercurlybrace#1#2#3#4#5{%
+  \ifnum#5=1\relax %
+    \setbox\GreTempsign=\hbox{\grepunctumchar}%
+    \gretempdim=\wd\GreTempsign %
+    \kern -\gretempdim %
+  \fi %
   \grecalculateglyphraisevalue{g}{0}%
   \advance\greglyphraisevalue by #3\relax %
   \setbox\GreTempsign=\hbox{\grecurlybracechar}%
-  \raise\greglyphraisevalue\hbox to 0pt{%
+  \hbox to 0pt{%
     \kern #4\relax %
-    \greresizebox{#1}{\ht\GreTempsign}{\grecurlybracechar}%
+    \raise\greglyphraisevalue\hbox{%
+      \greresizebox{#1}{\ht\GreTempsign}{\grecurlybracechar}%
+    }%
     \hss %
+    \ifnum#2=1\relax %
+      \grecalculateglyphraisevalue{m}{0}%
+      \raise\greglyphraisevalue\hbox{%
+        \gregoriofont\char 39\relax %
+      }%
+      \hss %
+    \fi %
   }%
-\relax %
+  \ifnum#5=1\relax %
+    \kern \gretempdim %
+  \fi %
+  \relax %
 }
 
 % #1: the width
@@ -422,14 +439,23 @@
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\greoverbrace#1#2#3#4{%
+  \ifnum#4=1\relax %
+    \setbox\GreTempsign=\hbox{\grepunctumchar}%
+    \gretempdim=\wd\GreTempsign %
+    \kern -\gretempdim %
+  \fi %
   \grecalculateglyphraisevalue{g}{0}%
-  \advance\greglyphraisevalue by #3\relax %
+  \setbox\GreTempsign=\hbox{\grebracechar}%
+  \advance\greglyphraisevalue by #2\relax %
   \raise\greglyphraisevalue\hbox to 0pt{%
-    \kern #4\relax %
-    \grecurlybracechar %
+    \kern #3\relax %
+    \greresizebox{#1}{\ht\GreTempsign}{\grebracechar}%
     \hss %
   }%
-\relax %
+  \ifnum#4=1\relax %
+    \kern \gretempdim %
+  \fi %
+  \relax %
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1651,6 +1677,7 @@
 \gdef\grecustobottomshortchar{\gregoriofont\char 64}%
 \gdef\grecustobottommiddlechar{\gregoriofont\char 65}%
 \gdef\greabovebarbracechar{\gregoriofont\char 90}%
+\gdef\grepunctumchar{\gregoriofont\char 17}%
 \relax %
 }
 

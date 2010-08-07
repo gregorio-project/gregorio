@@ -153,7 +153,6 @@ void gregoriotex_write_text (FILE * f, gregorio_character *first_character, char
 void gregoriotex_write_translation (FILE *f, gregorio_character *translation);
 void gregoriotex_write_element (FILE * f, gregorio_syllable * syllable, gregorio_element * element);
 void gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable);
-void gregoriotex_write_last_note_verb (FILE *f, gregorio_glyph * glyph);
 void gregoriotex_write_glyph (FILE * f, gregorio_syllable * syllable, gregorio_element * element, gregorio_glyph * glyph);
 void gregoriotex_determine_number_and_type (gregorio_glyph *glyph, gregorio_element *element, int *type, char *gtype, unsigned int *glyph_number);
 

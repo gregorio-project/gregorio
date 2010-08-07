@@ -34,15 +34,17 @@ This file is quite huge but quite simple: it is just all the expressions you can
 #define else_error_macro()\
       else\
       {\
-        char *dirtyvar = malloc(71*sizeof(char));\
-	      snprintf(dirtyvar,70,_("undefined macro used: m%d"),gabc_notes_determination_text[3]-48);\
-	      gregorio_message (dirtyvar,\
+        char *tempstr = malloc(71*sizeof(char));\
+	      snprintf(tempstr,70,_("undefined macro used: m%d"),gabc_notes_determination_text[3]-48);\
+	      gregorio_message (tempstr,\
 		      "gabc_notes_determination", ERROR, 0);\
       }
 
 gregorio_note *current_note;
+char char_for_brace;
 unsigned int nbof_isolated_episemus;
 char * macros[10];
+char *tempstr=NULL;
 
 %}
 
@@ -67,6 +69,9 @@ char * macros[10];
 %x choralsign
 %x alt
 %x comments
+%x overbrace
+%x overcurlybrace
+%x overcurlyaccentusbrace
 
 %%
 <INITIAL>\%  {
@@ -80,6 +85,18 @@ char * macros[10];
     }
 <INITIAL>\[cs: {
     BEGIN(choralsign);
+    }
+<INITIAL>\[ob:[1-9]; {
+    char_for_brace = gabc_notes_determination_text[4]-48;
+    BEGIN(overbrace);
+    }
+<INITIAL>\[ocb:[1-9]; {
+    char_for_brace = gabc_notes_determination_text[5]-48;
+    BEGIN(overcurlybrace);
+    }
+<INITIAL>\[ocba:[1-9]; {
+    char_for_brace = gabc_notes_determination_text[6]-48;
+    BEGIN(overcurlyaccentusbrace);
     }
 <INITIAL>\[nm[1-9]\] {
     if (macros[gabc_notes_determination_text[3]-48])
@@ -121,6 +138,18 @@ char * macros[10];
 <INITIAL>\[alt: {
     BEGIN(alt);
     }
+<overbrace>[^\]]+ {
+  snprintf(tempstr,70, "\\greoverbrace{%s}{0pt}{0pt}{%d}",gabc_notes_determination_text, char_for_brace);
+	gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+    }
+<overcurlybrace>[^\]]+ {
+  snprintf(tempstr,70, "\\greovercurlybrace{%s}{0}{0pt}{0pt}{%d}",gabc_notes_determination_text, char_for_brace);
+	gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+    }
+<overcurlyaccentusbrace>[^\]]+ {
+  snprintf(tempstr,70, "\\greovercurlybrace{%s}{1}{0pt}{0pt}{%d}",gabc_notes_determination_text, char_for_brace);
+	gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+    }
 <choralsign>[^\]]+ {
 	gregorio_add_cs_to_note(&current_note, strdup(gabc_notes_determination_text));
     }
@@ -136,7 +165,7 @@ char * macros[10];
 <alt>[^\]]+ {
 	gregorio_add_texverb_as_note(&current_note, strdup(gabc_notes_determination_text), GRE_ALT);
     }
-<texverbnote,texverbglyph,texverbelement,choralsign,alt>\] {
+<texverbnote,texverbglyph,texverbelement,choralsign,alt,overcurlyaccentusbrace,overcurlybrace,overbrace>\] {
 	BEGIN(INITIAL);
     }
 \{  {
@@ -173,10 +202,6 @@ Z {
 	}
 `       {
 	gregorio_add_special_as_note (&current_note, GRE_BAR, B_VIRGULA);
-	}
-`'       {
-	gregorio_add_special_as_note (&current_note, GRE_BAR, B_VIRGULA);
-	gregorio_set_signs (current_note, _V_EPISEMUS);
 	}
 ,       {
 	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINIMA);
@@ -341,9 +366,8 @@ s         {
 	gregorio_change_shape(current_note, S_STROPHA);
 		  }
 .         {	
-    char *dirtyvar = malloc(71*sizeof(char));
-	snprintf(dirtyvar,70,_("unrecognized character: \"%c\""),gabc_notes_determination_text[0]);
-	gregorio_message (dirtyvar,
+	snprintf(tempstr,70,_("unrecognized character: \"%c\""),gabc_notes_determination_text[0]);
+	gregorio_message (tempstr,
 		      "det_notes_from_string", ERROR, 0);
 	      }
 
@@ -351,9 +375,10 @@ s         {
 
 void gabc_notes_determination_error(const char *str)
 {
-    char *dirtyvartwo = malloc(151*sizeof(char));
-	  snprintf(dirtyvartwo,150,str);
-    gregorio_message (dirtyvartwo, "det_notes_from_string", ERROR, 0);
+    char *tempstrtwo = malloc(151*sizeof(char));
+	  snprintf(tempstrtwo,150,str);
+    gregorio_message (tempstrtwo, "det_notes_from_string", ERROR, 0);
+    free(tempstrtwo);
 }
 
 
@@ -361,10 +386,12 @@ gregorio_note *
 gabc_det_notes_from_string (char *str, char *newmacros[10]) 
 {
   int i;
+  // a small optimization could uccur here: we could do it only once at the beginning of the score, not at each syllable
   for (i=0;i<10;i++)
     {
       macros[i] = newmacros[i];
     }
+  tempstr = malloc(71*sizeof(char));
   YY_BUFFER_STATE buf;
   current_note=NULL;
   buf=yy_scan_string(str);
@@ -372,6 +399,11 @@ gabc_det_notes_from_string (char *str, char *newmacros[10])
   yy_flush_buffer(buf);
   yy_delete_buffer(buf);
   gregorio_go_to_first_note (&current_note);
+  free(tempstr);
+  for (i=0;i<10;i++)
+    {
+      free(macros[i]);
+    }
   return current_note;
 }
 

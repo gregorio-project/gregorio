@@ -1285,29 +1285,6 @@ gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable)
 }
 
 void
-gregoriotex_write_last_note_verb (FILE * f, gregorio_glyph * glyph)
-{
-  gregorio_note *note = glyph->first_note;
-  while (note)
-    {
-      if (note->next)
-	{
-	  note = note->next;
-	}
-      else
-	{
-	  break;
-	}
-    }
-  if (note && note->texverb)
-    {
-      fprintf (f,
-	       "%% verbatim text at note level:\n%s%%\n%% end of verbatim text\n",
-	       note->texverb);
-    }
-}
-
-void
 gregoriotex_write_glyph (FILE * f,
 			 gregorio_syllable * syllable,
 			 gregorio_element * element, gregorio_glyph * glyph)
@@ -1366,7 +1343,6 @@ gregoriotex_write_glyph (FILE * f,
 						 &gtype, &glyph_number);
 	  fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
-	  gregoriotex_write_last_note_verb (f, glyph);
 	  gregoriotex_write_signs (f, gtype, glyph, element, syllable,
 				   glyph->first_note);
 	}
@@ -1393,7 +1369,6 @@ gregoriotex_write_glyph (FILE * f,
 //TODO : fusion functions
       fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
 	       glyph->first_note->pitch, next_note_pitch, type);
-      gregoriotex_write_last_note_verb (f, glyph);
       gregoriotex_write_signs (f, gtype, glyph, element, syllable,
 			       glyph->first_note);
       glyph->first_note = current_note;
@@ -1469,7 +1444,6 @@ gregoriotex_write_glyph (FILE * f,
 //TODO : fusion functions
 	  fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
-	  gregoriotex_write_last_note_verb (f, glyph);
 	  gregoriotex_write_signs (f, gtype, glyph, element, syllable,
 				   glyph->first_note);
 	  glyph->glyph_type = G_TORCULUS_RESUPINUS;
@@ -1481,7 +1455,6 @@ gregoriotex_write_glyph (FILE * f,
 						 &gtype, &glyph_number);
 	  fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
-	  gregoriotex_write_last_note_verb (f, glyph);
 	  gregoriotex_write_signs (f, gtype, glyph, element, syllable,
 				   glyph->first_note);
 	  break;
@@ -1551,8 +1524,7 @@ gregoriotex_write_signs (FILE * f, char type,
 	  gregoriotex_write_additional_line (f, glyph, i, type,
 					     TT_TOP, current_note);
 	}
-	  current_note = current_note->next;
-	  i++;
+	  _end_loop();
 	}
 	  if (found == 0)
   {
@@ -1573,13 +1545,20 @@ gregoriotex_write_signs (FILE * f, char type,
 	        _found();
 	        gregoriotex_write_choral_sign(f, glyph, type, i, current_note, 0);
         }
-     _end_loop()
+     _end_loop();
 	  }
 	// a loop for rare signs, vertical episemus, horizontal episemus and ictus
 	i=1;
 	current_note = note;
 	while (current_note)
 	 {
+	     if (current_note->texverb)
+	    {
+	      	  _found();
+	          fprintf (f,
+	             "%% verbatim text at note level:\n%s%%\n%% end of verbatim text\n",
+	             current_note->texverb);
+	    }
       // we continue with the hepisemus
       if (current_note->h_episemus_type != H_NO_EPISEMUS && block_hepisemus == 0)
 	{
@@ -3782,12 +3761,6 @@ gregoriotex_write_note (FILE * f, gregorio_note * note, gregorio_glyph *glyph, g
       fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}",
 	       glyph_number, note->pitch, next_note_pitch, type);
       break;
-    }
-  if (note->texverb)
-    {
-      fprintf (f,
-	       "%% verbatim text at note level:\n%s%%\n%% end of verbatim text\n",
-	       note->texverb);
     }
 }
 
