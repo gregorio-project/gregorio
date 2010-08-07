@@ -157,7 +157,7 @@ g_/h_(g_/h_) h_/g_(h_/g_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) {h}_/i_(h_/i_) i_/h_(i_/
 %
 % over braces
 %
-ab(g,_h) ab(g_,_h_) ab(g,'_h) ab(g_, '_ h_) ab(g[ob:1;6mm]!hgh) ab(g[ocb:1;6mm]!hgh) ab(g[ocba:1;6mm]!hgh)
+ab(g,_h) ab(g_,_h_) ab(g,'_h) ab(g_,'_ h_) ab(g[ob:1;6mm]!hgh) ab(g[ocb:1;6mm]!hgh) ab(g[ocba:1;6mm]!hgh)
 %
 % some more "real life" examples
 %
