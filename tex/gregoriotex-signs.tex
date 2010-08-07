@@ -411,7 +411,7 @@
     \gretempdim=\wd\GreTempsign %
     \kern -\gretempdim %
   \fi %
-  \grecalculateglyphraisevalue{g}{0}%
+  \grecalculateglyphraisevalue{g}{13}%
   \advance\greglyphraisevalue by #3\relax %
   \setbox\GreTempsign=\hbox{\grecurlybracechar}%
   \hbox to 0pt{%
@@ -421,7 +421,7 @@
     }%
     \hss %
     \ifnum#2=1\relax %
-      \grecalculateglyphraisevalue{m}{0}%
+      \grecalculateglyphraisevalue{m}{13}%
       \raise\greglyphraisevalue\hbox{%
         \gregoriofont\char 39\relax %
       }%
@@ -444,7 +444,7 @@
     \gretempdim=\wd\GreTempsign %
     \kern -\gretempdim %
   \fi %
-  \grecalculateglyphraisevalue{g}{0}%
+  \grecalculateglyphraisevalue{g}{13}%
   \setbox\GreTempsign=\hbox{\grebracechar}%
   \advance\greglyphraisevalue by #2\relax %
   \raise\greglyphraisevalue\hbox to 0pt{%
@@ -587,8 +587,8 @@
   % first we set \gretempwidth to the width of the last glyph
   \gretempwidth=\grelastglyphwidth %
   \setbox\GreTempsign=\hbox{\gregoriofont #2}%
-  \gretempdimsignwidth=\wd\GreTempsign%
-  \divide\gretempdimsignwidth by 2 %
+  \gretempdimsignwidth=\wd\GreTempsign %
+  \divide\gretempdimsignwidth by 2\relax %
   \ifcase#3%
   % tempwidth is the width of the last glyph
     \advance\gretempwidth by -\gretempdimsignwidth %
@@ -756,7 +756,7 @@
     \grevepisemusorrareaux{\char 5633}{\char 17}{2}{0}{#3}{#4}{#5}%
   \or%
     %case 18
-    \grevepisemusorrareaux{0}{\char 74}{1}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char 74}{1}{-30\the\grefactor}{#3}{#4}{#5}%
   \or%
     %case 19
     \grevepisemusorrareaux{0}{\char 28}{0}{0}{#3}{#4}{#5}%

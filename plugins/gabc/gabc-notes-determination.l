@@ -400,10 +400,6 @@ gabc_det_notes_from_string (char *str, char *newmacros[10])
   yy_delete_buffer(buf);
   gregorio_go_to_first_note (&current_note);
   free(tempstr);
-  for (i=0;i<10;i++)
-    {
-      free(macros[i]);
-    }
   return current_note;
 }
 
