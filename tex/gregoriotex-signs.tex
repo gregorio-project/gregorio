@@ -489,6 +489,9 @@
     \kern -\gretempdim %
     \kern \grespacebeforesigns %
   \fi %
+  \ifnum#2=1\else %
+    \xdef\grelastispunctum{1}%
+  \fi %
   \ifnum #3=0 %
     \grecalculateglyphraisevalue{#1}{4}%
   \else %
@@ -1269,6 +1272,12 @@
 %%% 1 if it is in a syllable
 %% 3: macros that may happen before the skip after the bar (typically grevepisemus)
 \def\grewritebar#1#2#3{%
+  % first, for the bar to be really centered, if the last glyph has a punctum mora, we kern of the corresponding space (we could also have done it in the gregorio core)
+  \ifnum\grelastispunctum=1\relax %
+    \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctummorachar}%
+    \kern -\wd\GreTempwidth %
+    \kern -\grespacebeforesigns %
+  \fi %
   \grenewglyphcommon %
   \grecalculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
   \penalty 10001 %
