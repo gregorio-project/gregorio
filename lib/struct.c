@@ -1478,6 +1478,11 @@ gregorio_mix_h_episemus (gregorio_note * current_note, unsigned char type)
 			   "gregorio_mix_h_episemus", WARNING, 0);
       return;
     }
+  // case of the bar with a brace above it
+  if (current_note->type != GRE_NOTE)
+    {
+      current_note->h_episemus_type = H_ALONE;
+    }
   prev_note = current_note->previous;
   if (type == H_NO_EPISEMUS)
     {
@@ -1532,13 +1537,13 @@ gregorio_determine_h_episemus_type (gregorio_note * note)
       return;
     }
   //here h_episemus_type is H_MULTI
-  if (!note->next && !note->previous)
+  if ((!note->next || note->next->type != GRE_NOTE) && (!note->previous || note->previous->type != GRE_NOTE))
     {
       gregorio_set_h_episemus(note, H_ALONE);
       return;
     }
 
-  if (note->next)
+  if (note->next && note->next->type == GRE_NOTE)
     {
       if (is_multi (note->next->h_episemus_type))
 	{
@@ -1562,7 +1567,7 @@ gregorio_determine_h_episemus_type (gregorio_note * note)
 	}
     }
 
-  if (note->previous)
+  if (note->previous && note->previous->type == GRE_NOTE)
     {
       if (is_multi (note->previous->h_episemus_type))
 	{

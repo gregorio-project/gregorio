@@ -56,6 +56,7 @@ void gabc_write_end_liquescentia (FILE * f, char liquescentia);
 void gabc_write_key_change (FILE * f, char step, int line, char has_flat);
 void gabc_write_space (FILE * f, char type);
 void gabc_write_bar (FILE * f, char type);
+void gabc_write_bar_signs (FILE * f, char type);
 void gabc_write_gregorio_note (FILE * f, gregorio_note * note, char glyph_type);
 void gabc_write_begin (FILE * f, unsigned char style);
 void gabc_write_end (FILE * f, unsigned char style);

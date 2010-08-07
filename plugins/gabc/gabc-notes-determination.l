@@ -181,10 +181,6 @@ Z {
 ,       {
 	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINIMA);
 	}
-,'       {
-	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINIMA);
-	gregorio_set_signs (current_note, _V_EPISEMUS);
-	}
 ;       {
 	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR);
 	}
@@ -206,47 +202,11 @@ Z {
 ;6       {
 	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D6);
 	}
-;1'       {
-	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D1);
-	gregorio_set_signs (current_note, _V_EPISEMUS);
-	}
-;2'       {
-	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D2);
-	gregorio_set_signs (current_note, _V_EPISEMUS);
-	}
-;3'       {
-	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D3);
-	gregorio_set_signs (current_note, _V_EPISEMUS);
-	}
-;4'       {
-	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D4);
-	gregorio_set_signs (current_note, _V_EPISEMUS);
-	}
-;5'       {
-	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D5);
-	gregorio_set_signs (current_note, _V_EPISEMUS);
-	}
-;6'       {
-	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D6);
-	gregorio_set_signs (current_note, _V_EPISEMUS);
-	}
-;'       {
-	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR);
-	gregorio_set_signs (current_note, _V_EPISEMUS);
-	}
 :       {
 	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MAIOR);
 	}
-:'       {
-	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MAIOR);
-	gregorio_set_signs (current_note, _V_EPISEMUS);
-	}
 ::      {
 	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_FINALIS);
-	}
-::'      {
-	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_FINALIS);
-	gregorio_set_signs (current_note, _V_EPISEMUS);
 	}
 U   {
     gregorio_add_special_sign (current_note, _ICTUS_A);

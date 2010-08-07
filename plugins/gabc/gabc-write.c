@@ -453,6 +453,7 @@ gabc_write_gregorio_element (FILE * f, gregorio_element * element)
       break;
     case GRE_BAR:
       gabc_write_bar (f, element->element_type);
+      gabc_write_bar_signs(f, element->additional_infos);
       break;
     case GRE_C_KEY_CHANGE:
       gabc_write_key_change (f, C_KEY,
@@ -685,6 +686,51 @@ gabc_write_bar (FILE * f, char type)
       gregorio_message (_
 			   ("unknown bar type, nothing will be done"),
 			   "gabc_bar_to_str", ERROR, 0);
+      break;
+    }
+}
+
+// writing the signs of a bar
+
+void
+gabc_write_bar_signs (FILE * f, char type)
+{
+  switch (type)
+    {
+    case _ICTUS_A:
+      fprintf (f, "U");
+      break;
+    case _ICTUS_T:
+      fprintf (f, "u");
+      break;
+    case _V_EPISEMUS_ICTUS_A:
+      fprintf (f, "'U");
+      break;
+    case _V_EPISEMUS_ICTUS_T:
+      fprintf (f, "'u");
+      break;
+    case _V_EPISEMUS:
+      fprintf (f, "'");
+      break;
+    case _V_EPISEMUS_H_EPISEMUS:
+      fprintf (f, "'_");
+      break;
+    case _V_EPISEMUS_H_EPISEMUS_ICTUS_A:
+      fprintf (f, "_'U");
+      break;
+    case _V_EPISEMUS_H_EPISEMUS_ICTUS_T:
+      fprintf (f, "_'u");
+      break;
+    case _H_EPISEMUS_ICTUS_A:
+      fprintf (f, "_U");
+      break;
+    case _H_EPISEMUS_ICTUS_T:
+      fprintf (f, "_u");
+      break;
+    case _H_EPISEMUS:
+      fprintf (f, "_");
+      break;
+    default:
       break;
     }
 }

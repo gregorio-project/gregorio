@@ -543,7 +543,12 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 // signs of a bar
 #define _V_EPISEMUS_ICTUS_A 15
 #define _V_EPISEMUS_ICTUS_T 16
-
+#define _V_EPISEMUS_H_EPISEMUS 17
+#define _V_EPISEMUS_H_EPISEMUS_ICTUS_A 18
+#define _V_EPISEMUS_H_EPISEMUS_ICTUS_T 19
+#define _H_EPISEMUS_ICTUS_A 20
+#define _H_EPISEMUS_ICTUS_T 21
+#define _H_EPISEMUS 22
 
 #define H_NO_EPISEMUS 0
 #define H_ONE 1

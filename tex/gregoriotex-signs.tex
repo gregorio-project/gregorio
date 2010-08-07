@@ -390,6 +390,47 @@
   \relax%
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of braces and other things above the score
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\gdef\grecurlybracechar{\gregoriofont\char 89}
+\gdef\grebracechar{\gregoriofont\char 88}
+
+% the command to resize a box (nothing under Plain, \resizebox under LaTeX)
+\xdef\greresizebox#1#2#3{#3}
+
+% #1: the width
+% #2: 1 if we put an accentus above or not
+% #3: a vertical shift
+% #4: a horizontal shift
+% #5: 1 if we shift to the beginning of the last glyph, 0 otherwise
+\def\greovercurlybrace#1#2#3#4#5{%
+  \grecalculateglyphraisevalue{g}{0}%
+  \advance\greglyphraisevalue by #3\relax %
+  \setbox\GreTempsign=\hbox{\grecurlybracechar}%
+  \raise\greglyphraisevalue\hbox to 0pt{%
+    \kern #4\relax %
+    \greresizebox{#1}{\ht\GreTempsign}{\grecurlybracechar}%
+    \hss %
+  }%
+\relax %
+}
+
+% #1: the width
+% #2: a vertical shift
+% #3: a horizontal shift
+% #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
+\def\greoverbrace#1#2#3#4{%
+  \grecalculateglyphraisevalue{g}{0}%
+  \advance\greglyphraisevalue by #3\relax %
+  \raise\greglyphraisevalue\hbox to 0pt{%
+    \kern #4\relax %
+    \grecurlybracechar %
+    \hss %
+  }%
+\relax %
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of punctum mora, auctum duplex and choral signs
@@ -549,6 +590,8 @@
       \setbox\GreTempsign=\hbox{\gregoriofont \char #5}%
     \or % choral sign
       \setbox\GreTempsign=\hbox{#7}%
+    \or % brace above bar
+      \setbox\GreTempsign=\hbox{\greabovebarbracechar}%
     \fi %
     % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
     \gretempdimsignwidth=\wd\GreTempsign %
@@ -599,7 +642,7 @@
 
 % a function to typeset a vertical episemus or a rare accent (like accentus, circulus, etc.). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \greglyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The values are described in the commentary just above.
 % the third argument is the glyph number in the font
-% #4 is type (1: vertical episemus, 2: rare sign, 3: choral sign)
+% #4 is type (1: vertical episemus, 2: rare sign, 3: choral sign, 4: brace above the bar)
 % #5 is the choral sign if relevant
 \def\grevepisemusorrare#1#2#3#4#5{%
   \ifcase#4\or %
@@ -632,6 +675,8 @@
     \fi %
   \or % if it's a choral sign
     \grecalculateglyphraisevalue{#1}{11}%
+  \or % if it's the brace above the bar
+    \grecalculateglyphraisevalue{#1}{13}%
   \fi %
   \ifcase#2 %
     %case 0
@@ -721,6 +766,11 @@
 
 \def\grevepisemus#1#2{%
   \grevepisemusorrare{#1}{#2}{33}{1}{}%
+  \relax %
+}
+
+\def\grebarbrace#1{%
+  \grevepisemusorrare{g}{#1}{90}{4}{}%
   \relax %
 }
 
@@ -1600,6 +1650,7 @@
 \gdef\grecustobottomlongchar{\gregoriofont\char 63}%
 \gdef\grecustobottomshortchar{\gregoriofont\char 64}%
 \gdef\grecustobottommiddlechar{\gregoriofont\char 65}%
+\gdef\greabovebarbracechar{\gregoriofont\char 90}%
 \relax %
 }
 

@@ -347,6 +347,30 @@ gabc_det_glyphs_from_notes (gregorio_note * current_note,
 		{
 		  additional_infos = current_note->rare_sign;
 		}
+		if (current_note->h_episemus_type != H_NO_EPISEMUS)
+      {
+        switch (additional_infos)
+          {
+		    case _ICTUS_A:
+		      additional_infos = _H_EPISEMUS_ICTUS_A;
+		      break;
+		    case _ICTUS_T:
+		      additional_infos = _H_EPISEMUS_ICTUS_T;
+		      break;
+		    case _V_EPISEMUS:
+		      additional_infos = _V_EPISEMUS_H_EPISEMUS;
+		      break;
+		    case _V_EPISEMUS_ICTUS_T:
+		      additional_infos = _V_EPISEMUS_H_EPISEMUS_ICTUS_T;
+		      break;
+		    case _V_EPISEMUS_ICTUS_A:
+		      additional_infos = _V_EPISEMUS_H_EPISEMUS_ICTUS_T;
+		      break;
+		    default:
+		      additional_infos = _H_EPISEMUS;
+		      break;
+          }
+      }
 	    }
 	  gregorio_add_special_as_glyph (&last_glyph, current_note->type,
 					 current_note->pitch,

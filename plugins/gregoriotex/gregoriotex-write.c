@@ -1260,6 +1260,24 @@ gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable)
     case _V_EPISEMUS_ICTUS_T:
       fprintf (f, "{\\grebarvepisemusictust{%d}}%%\n", typenumber);
       break;
+    case _H_EPISEMUS:
+      fprintf (f, "{\\grebarbrace{%d}}%%\n", typenumber);
+      break;
+    case _V_EPISEMUS_H_EPISEMUS:
+      fprintf (f, "{\\grebarbrace{%d}\\grebarvepisemus{%d}}%%\n", typenumber, typenumber);
+      break;
+    case _H_EPISEMUS_ICTUS_A:
+      fprintf (f, "{\\grebarbrace{%d}\\greictusa{%d}}%%\n", typenumber, typenumber);
+      break;
+    case _H_EPISEMUS_ICTUS_T:
+      fprintf (f, "{\\grebarbrace{%d}\\greictust{%d}}%%\n", typenumber, typenumber);
+      break;
+    case _V_EPISEMUS_H_EPISEMUS_ICTUS_A:
+      fprintf (f, "{\\grebarbrace{%d}\\grebarvepisemusictusa{%d}}%%\n", typenumber, typenumber);
+      break;
+    case _V_EPISEMUS_H_EPISEMUS_ICTUS_T:
+      fprintf (f, "{\\grebarbrace{%d}\\grebarvepisemusictust{%d}}%%\n", typenumber, typenumber);
+      break;
     default:
       fprintf (f, "{}%%\n", typenumber);
       break;

@@ -288,7 +288,7 @@ dump_write_score (FILE * f, gregorio_score * score)
 	    {
 	      fprintf (f, "     element_type            %d (%s)\n",
 		       element->element_type,
-		       dump_bar_type (element->element_type));
+           dump_bar_type (element->element_type));
 		  if (element->additional_infos)
 		    {
 	          fprintf (f, "     additional_infos        %d (%s)\n",
@@ -1099,6 +1099,24 @@ dump_rare_sign (char rare_sign)
       break;
     case _V_EPISEMUS:
       str = "_V_EPISEMUS";
+      break;
+    case _V_EPISEMUS_H_EPISEMUS:
+      str = "_V_EPISEMUS_H_EPISEMUS";
+      break;
+    case _V_EPISEMUS_H_EPISEMUS_ICTUS_A:
+      str = "_V_EPISEMUS_H_EPISEMUS_ICTUS_A";
+      break;
+    case _V_EPISEMUS_H_EPISEMUS_ICTUS_T:
+      str = "_V_EPISEMUS_H_EPISEMUS_ICTUS_T";
+      break;
+    case _H_EPISEMUS_ICTUS_A:
+      str = "_H_EPISEMUS_ICTUS_A";
+      break;
+    case _H_EPISEMUS_ICTUS_T:
+      str = "_H_EPISEMUS_ICTUS_T";
+      break;
+    case _H_EPISEMUS:
+      str = "_H_EPISEMUS";
       break;
     default:
       str = "unknown";
