@@ -253,7 +253,6 @@
 % #6 are the signs to typeset after the glyph (almost all signs)
 \def\greglyph#1#2#3#4#5#6{%
   \grenewglyphcommon %
-  \grecalculateglyphraisevalue{#2}{0}%
   \setbox\GreTempwidth=\hbox{\gregoriofont #1}%
   \gretempwidth=\wd\GreTempwidth %
   \global\grelastglyphwidth=\gretempwidth %
@@ -261,7 +260,7 @@
   \kern\grelastglyphwidth %
   #5\relax %
   \kern-\grelastglyphwidth %
-  \color{black}%
+  \grecalculateglyphraisevalue{#2}{0}%
   \raise\greglyphraisevalue %
   \copy\GreTempwidth%
   \ifnum\the\greendofscore=0 %
