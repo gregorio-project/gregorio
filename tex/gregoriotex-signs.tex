@@ -196,17 +196,19 @@
   %here we need some tricks to draw the line before the custo (for the color)
   \setbox\GreTempwidth=\hbox{\grecustochar#1}%
   \global\gretempwidth=\wd\GreTempwidth %
-  \ifx l#1%
-    \greadditionaltopcustolinemiddle %
-  \fi %
-  \ifx m#1%
-    \greadditionaltopcustolinemiddle %
-  \fi %
-  \ifx a#1%
-    \greadditionalbottomcustolinemiddle %
-  \fi %
-  \ifx b#1%
-    \greadditionalbottomcustolinemiddle %
+  \ifnum\greremovelinescount=0\relax %
+    \ifx l#1%
+      \greadditionaltopcustolinemiddle %
+    \fi %
+    \ifx m#1%
+      \greadditionaltopcustolinemiddle %
+    \fi %
+    \ifx a#1%
+      \greadditionalbottomcustolinemiddle %
+    \fi %
+    \ifx b#1%
+      \greadditionalbottomcustolinemiddle %
+    \fi %
   \fi %
   \raise \greglyphraisevalue%
   \copy\GreTempwidth %
@@ -234,17 +236,19 @@
     \grecustochar#1\relax %
     }%
     \grelocalrightbox{%
-    \ifx l#1%
-      \greadditionaltopcustolineend %
-    \fi %
-    \ifx m#1%
-      \greadditionaltopcustolineend %
-    \fi %
-    \ifx a#1%
-      \greadditionalbottomcustolineend %
-    \fi %
-    \ifx b#1%
-      \greadditionalbottomcustolineend %
+    \ifnum\greremovelinescount=0\relax %
+      \ifx l#1%
+        \greadditionaltopcustolineend %
+      \fi %
+      \ifx m#1%
+        \greadditionaltopcustolineend %
+      \fi %
+      \ifx a#1%
+        \greadditionalbottomcustolineend %
+      \fi %
+      \ifx b#1%
+        \greadditionalbottomcustolineend %
+      \fi %
     \fi %
     \raise \greglyphraisevalue%
     \copy\GreTempwidth %
@@ -1070,11 +1074,13 @@
 
 % another dumb top function
 \def\greadditionalline#1#2#3{%
-  \xdef\gresavedglyphraise{\the\greglyphraisevalue}%
-  {\greadditionalstafflinesformat %
-  \grehepisorline{a}{#1}{#2}{#3}%
-  }%
-  \greglyphraisevalue=\gresavedglyphraise %
+  \ifnum\greremovelinescount=0\relax %
+    \xdef\gresavedglyphraise{\the\greglyphraisevalue}%
+    {\greadditionalstafflinesformat %
+    \grehepisorline{a}{#1}{#2}{#3}%
+    }%
+    \greglyphraisevalue=\gresavedglyphraise %
+  \fi %
   \relax %
 }
 

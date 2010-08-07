@@ -697,6 +697,19 @@
 %% macros for the typesetting of the lines
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% first a macro to prevent the typesetting of the lines (useful for some people)
+\xdef\greremovelinescount{0}
+
+\def\greremovelines{%
+  \xdef\greremovelinescount{1}%
+  \relax %
+}
+
+\def\gredonotremovelines{%
+  \xdef\greremovelinescount{0}%
+  \relax %
+}
+
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
 \def\gredrawfirstlines{%
   \advance\grestafflinewidth by -\greinitialwidth%
@@ -706,13 +719,29 @@
       \grenormalstafflinesformat %
       \vskip\grecurrentabovelinestextheight %
       \vskip\greadditionaltopspace %
-      \hrule height \grestafflineheight width \grestafflinewidth %
+      \ifnum\greremovelinescount=0\relax %
+        \hrule height \grestafflineheight width \grestafflinewidth %
+      \else %
+        \vskip\grestafflineheight %
+      \fi %
       \kern\the\greinterstafflinespace %
-      \hrule height \grestafflineheight width \grestafflinewidth %
+      \ifnum\greremovelinescount=0\relax %
+        \hrule height \grestafflineheight width \grestafflinewidth %
+      \else %
+        \vskip\grestafflineheight %
+      \fi %
       \kern\the\greinterstafflinespace %
-      \hrule height \grestafflineheight width \grestafflinewidth %
+      \ifnum\greremovelinescount=0\relax %
+        \hrule height \grestafflineheight width \grestafflinewidth %
+      \else %
+        \vskip\grestafflineheight %
+      \fi %
       \kern\the\greinterstafflinespace %
-      \hrule height \grestafflineheight width \grestafflinewidth %
+      \ifnum\greremovelinescount=0\relax %
+        \hrule height \grestafflineheight width \grestafflinewidth %
+      \else %
+        \vskip\grestafflineheight %
+      \fi %
       \vskip\grespacelinestext %
       \vskip\grespacebeneathtext %
       \vskip\grecurrenttranslationheight %
@@ -734,13 +763,29 @@
       \grenormalstafflinesformat %
       \vskip\grespaceabovelines %
       \vskip\grecurrentabovelinestextheight %
-      \hrule height \grestafflineheight width \grestafflinewidth %
+      \ifnum\greremovelinescount=0\relax %
+        \hrule height \grestafflineheight width \grestafflinewidth %
+      \else %
+        \vskip\grestafflineheight %
+      \fi %
       \kern\the\greinterstafflinespace %
-      \hrule height \grestafflineheight width \grestafflinewidth %
+      \ifnum\greremovelinescount=0\relax %
+        \hrule height \grestafflineheight width \grestafflinewidth %
+      \else %
+        \vskip\grestafflineheight %
+      \fi %
       \kern\the\greinterstafflinespace %
-      \hrule height \grestafflineheight width \grestafflinewidth %
+      \ifnum\greremovelinescount=0\relax %
+        \hrule height \grestafflineheight width \grestafflinewidth %
+      \else %
+        \vskip\grestafflineheight %
+      \fi %
       \kern\the\greinterstafflinespace %
-      \hrule height \grestafflineheight width \grestafflinewidth %
+      \ifnum\greremovelinescount=0\relax %
+        \hrule height \grestafflineheight width \grestafflinewidth %
+      \else %
+        \vskip\grestafflineheight %
+      \fi %
       \vskip\grespacelinestext %
       \vskip\greadditionalbottomspace %
       \vskip\grespacebeneathtext %
