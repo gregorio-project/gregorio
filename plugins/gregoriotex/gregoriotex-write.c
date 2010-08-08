@@ -851,67 +851,92 @@ gtex_write_special_char (FILE * f, grewchar * special_char)
 {
   if (!gregorio_wcsbufcmp (special_char, "A/"))
     {
-      fprintf (f, "\\Abar");
+      fprintf (f, "\\Abar{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "%"))
     {
-      fprintf (f, "\\%%");
+      fprintf (f, "\\%%{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "R/"))
     {
-      fprintf (f, "\\Rbar");
+      fprintf (f, "\\Rbar{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "V/"))
     {
-      fprintf (f, "\\Vbar");
+      fprintf (f, "\\Vbar{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "'æ"))
     {
-      fprintf (f, "\\'\\ae");
+      fprintf (f, "\\'\\ae{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "'ae"))
     {
-      fprintf (f, "\\'\\ae");
+      fprintf (f, "\\'\\ae{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "'œ"))
     {
-      fprintf (f, "\\'\\oe");
+      fprintf (f, "\\'\\oe{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "'oe"))
     {
-      fprintf (f, "\\'\\oe");
+      fprintf (f, "\\'\\oe{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "ae"))
     {
-      fprintf (f, "\\ae");
+      fprintf (f, "\\ae{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "oe"))
     {
-      fprintf (f, "\\oe");
+      fprintf (f, "\\oe{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "*"))
     {
-      fprintf (f, "\\grestar ");
+      fprintf (f, "\\grestar{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "+"))
     {
-      fprintf (f, "\\gredagger ");
+      fprintf (f, "\\gredagger{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "-"))
     {
-      fprintf (f, "\\zerhyph ");
+      fprintf (f, "\\zerhyph{}");
+      return;
+    }
+  if (!gregorio_wcsbufcmp (special_char, "\\"))
+    {
+      fprintf (f, "\\textbackslash{}");
+      return;
+    }
+  if (!gregorio_wcsbufcmp (special_char, "&"))
+    {
+      fprintf (f, "\\&{}");
+      return;
+    }
+  if (!gregorio_wcsbufcmp (special_char, "#"))
+    {
+      fprintf (f, "\\#{}");
+      return;
+    }
+  if (!gregorio_wcsbufcmp (special_char, "_"))
+    {
+      fprintf (f, "\\_{}");
+      return;
+    }
+  if (!gregorio_wcsbufcmp (special_char, "~"))
+    {
+      fprintf (f, "\\gretilde{}");
       return;
     }
 }
@@ -928,31 +953,28 @@ gtex_print_char (FILE * f, grewchar to_print)
   switch (to_print)
     {
     case L'*':
-      fprintf (f, "\\grestar ");
+      fprintf (f, "\\grestar{}");
       break;
     case L'%':
-      fprintf (f, "\\%%");
+      fprintf (f, "\\%%{}");
       break;
     case L'\\':
-      fprintf (f, "\\textbackslash ");
+      fprintf (f, "\\textbackslash{}");
       break;
     case L'&':
-      fprintf (f, "\\&\\relax ");
+      fprintf (f, "\\&{}");
       break;
     case L'#':
-      fprintf (f, "\\#\\relax ");
+      fprintf (f, "\\#{}");
       break;
     case L'+':
-      fprintf (f, "\\gredagger ");
+      fprintf (f, "\\gredagger{}");
       break;
     case L'_':
-      fprintf (f, "\\_\\relax ");
+      fprintf (f, "\\_{}");
       break;
     case L'-':
-      fprintf (f, "\\grehyph ");
-      break;
-    case L'~':
-      fprintf (f, "\\gretilde ");
+      fprintf (f, "\\grehyph{}");
       break;
     default:
       gregorio_write_one_tex_char (f, to_print);
