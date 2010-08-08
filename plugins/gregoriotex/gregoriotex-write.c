@@ -333,12 +333,28 @@ gregoriotex_write_syllable (FILE * f,
 	      && (syllable->elements)[0]->element_type == B_DIVISIO_FINALIS)
 	    {
 	      fprintf (f, "\\grefinaldivisiofinalis{0}%%\n");
+	      if ((syllable->elements)[0]->next 
+	          && (syllable->elements)[0]->next->type == GRE_TEXVERB_ELEMENT
+	          && (syllable->elements)[0]->next->texverb)
+	        {
+            	  fprintf (f,
+		   "%% verbatim text at element level:\n%s%%\n%% end of verbatim text\n",
+		   (syllable->elements)[0]->next->texverb);
+	        }
 	      return;
 	    }
 	  if (!syllable->next_syllable && !syllable->text
 	      && (syllable->elements)[0]->element_type == B_DIVISIO_MAIOR)
 	    {
 	      fprintf (f, "\\grefinaldivisiomaior{0}%%\n");
+	      if ((syllable->elements)[0]->next 
+	          && (syllable->elements)[0]->next->type == GRE_TEXVERB_ELEMENT
+	          && (syllable->elements)[0]->next->texverb)
+	        {
+            	  fprintf (f,
+		   "%% verbatim text at element level:\n%s%%\n%% end of verbatim text\n",
+		   (syllable->elements)[0]->next->texverb);
+	        }
 	      return;
 	    }
 	  else
