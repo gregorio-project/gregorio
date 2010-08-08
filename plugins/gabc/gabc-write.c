@@ -812,6 +812,9 @@ gabc_write_gregorio_note (FILE * f,
     case S_ORISCUS_AUCTUS:
       fprintf (f, "%co", note->pitch);	//we consider that the AUCTUS is also in the liquescentia
       break;
+    case S_ORISCUS_DEMINUTUS:
+      fprintf (f, "%co", note->pitch);	//we consider that the AUCTUS is also in the liquescentia
+      break;
     case S_QUILISMA:
       fprintf (f, "%cw", note->pitch);
       break;

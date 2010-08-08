@@ -989,6 +989,9 @@ dump_shape (char shape)
     case S_ORISCUS_AUCTUS:
       str = "S_ORISCUS_AUCTUS";
       break;
+    case S_ORISCUS_DEMINUTUS:
+      str = "S_ORISCUS_DEMINUTUS";
+      break;
     case S_QUILISMA:
       str = "S_QUILISMA";
       break;

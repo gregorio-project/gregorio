@@ -726,6 +726,10 @@ gregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
       *end_of_glyph = DET_END_OF_PREVIOUS;
       next_glyph_type = G_PUNCTUM;
       break;
+    case S_ORISCUS_DEMINUTUS:
+      *end_of_glyph = DET_END_OF_PREVIOUS;
+      next_glyph_type = G_PUNCTUM;
+      break;
     case S_QUILISMA:
       *end_of_glyph = DET_END_OF_PREVIOUS;
       next_glyph_type = G_PUNCTUM;

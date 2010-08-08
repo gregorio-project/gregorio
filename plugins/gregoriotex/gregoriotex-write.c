@@ -1405,6 +1405,10 @@ gregoriotex_write_glyph (FILE * f,
 	}
       break;
     case G_PUNCTUM:
+      if (glyph->first_note->shape != S_ORISCUS
+        && glyph->first_note->shape != S_ORISCUS_AUCTUS
+        && glyph->first_note->shape != S_ORISCUS_DEMINUTUS)
+      {
       switch (glyph->liquescentia)
 	{
 	case L_AUCTUS_ASCENDENS:
@@ -1419,6 +1423,7 @@ gregoriotex_write_glyph (FILE * f,
 	  glyph->first_note->shape = S_PUNCTUM_DEMINUTUS;
 	default:
 	  break;
+	}
 	}
     case G_PUNCTUM_INCLINATUM:
     case G_VIRGA:
@@ -1524,6 +1529,17 @@ gregoriotex_write_signs (FILE * f, char type,
 	  gregoriotex_write_additional_line (f, glyph, i, type,
 					     TT_TOP, current_note);
 	}
+     if (current_note->texverb)
+    {
+	  	  if (found == 0)
+	    {
+	      found = 1;
+	      fprintf (f, "%%\n{%%\n");
+	    }
+          fprintf (f,
+             "%% verbatim text at note level:\n%s%%\n%% end of verbatim text\n",
+             current_note->texverb);
+    }
 	  _end_loop();
 	}
 	  if (found == 0)
@@ -1552,13 +1568,6 @@ gregoriotex_write_signs (FILE * f, char type,
 	current_note = note;
 	while (current_note)
 	 {
-	     if (current_note->texverb)
-	    {
-	      	  _found();
-	          fprintf (f,
-	             "%% verbatim text at note level:\n%s%%\n%% end of verbatim text\n",
-	             current_note->texverb);
-	    }
       // we continue with the hepisemus
       if (current_note->h_episemus_type != H_NO_EPISEMUS && block_hepisemus == 0)
 	{
@@ -2900,6 +2909,8 @@ gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	  *number = 15;
 	  break;
 	case S_ORISCUS:
+	case S_ORISCUS_AUCTUS:
+	case S_ORISCUS_DEMINUTUS:
 	  *number = 16;
 	  break;
 	case S_LINEA_PUNCTUM:
@@ -3574,6 +3585,7 @@ gregoriotex_determine_interval (gregorio_glyph * glyph)
 * 26: quilisma
 * 27: oriscus
 * 28: oriscus auctus
+* 91: oriscus deminutus
 * 31: punctum inclinatum auctum
 * 32: punctum inclinatum deminutus
 * 33: vertical episemus
@@ -3830,6 +3842,10 @@ void
     case S_ORISCUS_AUCTUS:
       *type = AT_ORISCUS;
       *glyph_number = 28;
+      break;
+    case S_ORISCUS_DEMINUTUS:
+      *type = AT_ORISCUS;
+      *glyph_number = 91;
       break;
     case S_QUILISMA:
       *type = AT_QUILISMA;
