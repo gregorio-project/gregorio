@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 You must run this program with texlua, if possible under a TeXLive 2010.
+This program installs gregorio under Windows.
 --]]
 
 kpse.set_program_name("luatex")
@@ -56,9 +57,7 @@ local latex_files = {
 function io.loaddata(filename,textmode)
     local f = io.open(filename,(textmode and 'r') or 'rb')
     if f then
-    --  collectgarbage("step") -- sometimes makes a big difference in mem consumption
         local data = f:read('*all')
-    --  garbagecollector.check(data)
         f:close()
         return data
     else
@@ -83,6 +82,10 @@ function copy_one_file(src, dest)
 end
 
 function copy_files()
+  print("copying files...")
+  local texmfbin = kpse.expand_var("$TEXMFDIST")
+  texmfbin = texmfbin:gsub("/", "\\").."\\..\\bin\\win32\\"
+  copy_one_file("gregorio.exe", texmfbin)
   for _,f in ipairs(fonts_files) do
     copy_one_file('fonts\\'..f..'.pfb', dirs.type1)
     copy_one_file('fonts\\'..f..'.tfm', dirs.tfm)
@@ -123,7 +126,14 @@ end
 
 function run_texcommands()
   print("running mktexlsr")
-  os.exec("mktexlsr "..texmflocal)
+  local p = os.spawn("mktexlsr "..texmflocal)
+  print("prout")
+  for _,font in pairs(fonts) do
+    print(string.format("updmap-sys.exe --enable MixedMap=%s.map", font))
+    os.spawn(string.format("updmap-sys.exe --enable MixedMap=%s.map", font))
+	print(string.format("updmap.exe --enable MixedMap=%s.map", font))
+	os.spawn(string.format("updmap.exe --enable MixedMap=%s.map", font))
+  end
 end
 
 create_dirs()
