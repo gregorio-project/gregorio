@@ -593,6 +593,7 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define S_TRIVIRGA 6
 #define S_ORISCUS 7
 #define S_ORISCUS_AUCTUS 8
+#define S_ORISCUS_DEMINUTUS 32
 #define S_QUILISMA 9
 #define S_STROPHA 10
 #define S_STROPHA_AUCTA 11

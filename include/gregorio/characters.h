@@ -79,6 +79,8 @@ void
 gregorio_insert_style_before (unsigned char type, unsigned char style, 
                  gregorio_character *current_character);
 
+void gregorio_insert_char_after (grewchar c, gregorio_character ** current_character);
+
 void gregorio_rebuild_characters (gregorio_character ** param_character,
 			     char center_is_determined);
 			     
