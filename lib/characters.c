@@ -628,6 +628,24 @@ gregorio_insert_style_after (unsigned char type, unsigned char style,
   (*current_character) = element;
 }
 
+void
+gregorio_insert_char_after (grewchar c,
+			     gregorio_character ** current_character)
+{
+  gregorio_character *element =
+    (gregorio_character *) malloc (sizeof (gregorio_character));
+  element->is_character = 1;
+  element->cos.character = c;
+  element->next_character = (*current_character)->next_character;
+  if ((*current_character)->next_character)
+    {
+      (*current_character)->next_character->previous_character = element;
+    }
+  element->previous_character = (*current_character);
+  (*current_character)->next_character = element;
+  (*current_character) = element;
+}
+
 /*
 
 This function suppresses the corresponding character, updates the double chained list, but does not touch to current_character.
@@ -1073,6 +1091,9 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
 	{
 	  gregorio_insert_style_after (ST_T_BEGIN, ST_CENTER,
 				       &current_character);
+	  // not such a good idea: some people might want nothing here
+	  //gregorio_insert_char_after (L'-',
+		//		       &current_character);
 	  gregorio_insert_style_after (ST_T_END, ST_CENTER,
 				       &current_character);
 	  // and we're done

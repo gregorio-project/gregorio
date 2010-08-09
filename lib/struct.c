@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
 #include <gregorio/messages.h>
@@ -211,6 +212,23 @@ gregorio_change_shape (gregorio_note *note, char shape)
           break;
       }
     }
+    if (note->shape == S_ORISCUS)
+      {
+      switch (note->liquescentia) {
+        case L_AUCTUS_ASCENDENS:
+        case L_AUCTUS_DESCENDENS:
+        case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
+        case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
+          note->shape = S_ORISCUS_AUCTUS;
+          break;
+        case L_DEMINUTUS:
+        case L_DEMINUTUS_INITIO_DEBILIS:
+          note->shape = S_ORISCUS_DEMINUTUS;
+          break;
+        default:
+          break;
+      }
+      }
 }
 
 void
@@ -256,6 +274,23 @@ gregorio_add_liquescentia (gregorio_note *note, char liq)
           break;
       }
     }
+    if (note->shape == S_ORISCUS)
+      {
+      switch (note->liquescentia) {
+        case L_AUCTUS_ASCENDENS:
+        case L_AUCTUS_DESCENDENS:
+        case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
+        case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
+          note->shape = S_ORISCUS_AUCTUS;
+          break;
+        case L_DEMINUTUS:
+        case L_DEMINUTUS_INITIO_DEBILIS:
+          note->shape = S_ORISCUS_DEMINUTUS;
+          break;
+        default:
+          break;
+      }
+      }
 }
 
 void
