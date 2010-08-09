@@ -3890,8 +3890,15 @@ void
       *glyph_number = 26;
       break;
     case S_STROPHA:
+	    if (glyph->liquescentia == L_AUCTA)
+	      {
+	        *glyph_number = 21;
+	      }
+	    else
+	      {
+          *glyph_number = 20;
+	      }
       *type = AT_STROPHA;
-      *glyph_number = 20;
       break;
     case S_STROPHA_AUCTA:
       *type = AT_STROPHA;
