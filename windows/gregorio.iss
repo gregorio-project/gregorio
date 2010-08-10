@@ -31,6 +31,7 @@ Source: "README.txt"; DestDir: "{app}";
 Source: "license.txt"; DestDir: "{app}";
 Source: "contrib\*"; DestDir: "{app}\contrib";
 Source: "tex\*"; DestDir: "{app}\tex";
+Source: "fonts\*"; DestDir: "{app}\fonts";
 
 [Run]
 Filename: "texlua.exe"; Parameters: """{app}\install.lua"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";
