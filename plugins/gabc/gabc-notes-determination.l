@@ -43,7 +43,7 @@ This file is quite huge but quite simple: it is just all the expressions you can
 gregorio_note *current_note;
 char char_for_brace;
 unsigned int nbof_isolated_episemus;
-char * macros[10];
+char * notesmacros[10];
 char *tempstr=NULL;
 
 %}
@@ -99,30 +99,30 @@ char *tempstr=NULL;
     BEGIN(overcurlyaccentusbrace);
     }
 <INITIAL>\[nm[1-9]\] {
-    if (macros[gabc_notes_determination_text[3]-48])
+    if (notesmacros[gabc_notes_determination_text[3]-48])
       {
-        gregorio_add_texverb_to_note(&current_note, strdup(macros[gabc_notes_determination_text[3]-48]));
+        gregorio_add_texverb_to_note(&current_note, strdup(notesmacros[gabc_notes_determination_text[3]-48]));
       }
     else_error_macro();
     }
 <INITIAL>\[gm[1-9]\] {
-    if (macros[gabc_notes_determination_text[3]-48])
+    if (notesmacros[gabc_notes_determination_text[3]-48])
       {
-        gregorio_add_texverb_as_note(&current_note, strdup(macros[gabc_notes_determination_text[3]-48]), GRE_TEXVERB_GLYPH);
+        gregorio_add_texverb_as_note(&current_note, strdup(notesmacros[gabc_notes_determination_text[3]-48]), GRE_TEXVERB_GLYPH);
       }
     else_error_macro();
     }
 <INITIAL>\[em[1-9]\] {
-    if (macros[gabc_notes_determination_text[3]-48])
+    if (notesmacros[gabc_notes_determination_text[3]-48])
       {
-        gregorio_add_texverb_as_note(&current_note, strdup(macros[gabc_notes_determination_text[3]-48]), GRE_TEXVERB_ELEMENT);
+        gregorio_add_texverb_as_note(&current_note, strdup(notesmacros[gabc_notes_determination_text[3]-48]), GRE_TEXVERB_ELEMENT);
       }
     else_error_macro();
     }
 <INITIAL>\[altm[1-9]\] {
-    if (macros[gabc_notes_determination_text[5]-48])
+    if (notesmacros[gabc_notes_determination_text[5]-48])
       {
-        gregorio_add_texverb_as_note(&current_note, strdup(macros[gabc_notes_determination_text[5]-48]), GRE_TEXVERB_ELEMENT);
+        gregorio_add_texverb_as_note(&current_note, strdup(notesmacros[gabc_notes_determination_text[5]-48]), GRE_TEXVERB_ELEMENT);
       }
     else_error_macro();
     }
@@ -394,7 +394,7 @@ gabc_det_notes_from_string (char *str, char *newmacros[10])
   // a small optimization could uccur here: we could do it only once at the beginning of the score, not at each syllable
   for (i=0;i<10;i++)
     {
-      macros[i] = newmacros[i];
+      notesmacros[i] = newmacros[i];
     }
   tempstr = malloc(71*sizeof(char));
   YY_BUFFER_STATE buf;
