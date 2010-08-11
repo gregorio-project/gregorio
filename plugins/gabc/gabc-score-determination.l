@@ -67,7 +67,7 @@ semicolon. */
 //BOM written by a lot of windows softwares when they write UTF-8
 }
 <INITIAL>^[\n\r]+ {
-//BOM written by a lot of windows softwares when they write UTF-8
+// ignoring empty lines
 }
 <INITIAL>^[\%#]  {
 	BEGIN(inicomments);
@@ -82,11 +82,11 @@ semicolon. */
 	 BEGIN(attribute);
 	 return COLON;
 	}
-<attribute>[^;\n\r]*(;[^;\n\r]+)*((\n|\r)[^;]*(;[^;]+)*)? {
+<attribute>[^;\n\r]*(;[^;\n\r]+)*([\n\r]+[^;]*(;[^;]+)*)? {
 	 gabc_score_determination_lval=strdup(gabc_score_determination_text);
          return ATTRIBUTE;
       }
-<attribute>;(;|\n|\r)    {
+<attribute>;(;|[\n\r]+)    {
 	 BEGIN(INITIAL);
          return SEMICOLON;
       }
@@ -356,3 +356,4 @@ semicolon. */
 	return CLOSING_BRACKET_WITH_SPACE;
 	}
 %%
+
