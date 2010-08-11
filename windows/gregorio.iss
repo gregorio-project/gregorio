@@ -15,8 +15,15 @@ AppPublisherURL=http://home.gna.org/gregorio/
 AppReadmeFile=http://home.gna.org/gregorio/
 BackColor=$D4AE65
 BackColor2=$FDF7EB
-WizardSmallImageFile=gregorio-24.bmp
+WizardSmallImageFile=gregorio-32.bmp
 WizardImageFile=gregorio-image.bmp
+ChangesAssociations=yes
+
+[Registry]
+Root: HKCR; Subkey: ".gabc"; ValueType: string; ValueName: ""; ValueData: "Gregorio"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: "Gregorio"; ValueType: string; ValueName: ""; ValueData: "Gregorio score"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "Gregorio\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\gregorio.ico"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "Gregorio\shell\open\command"; ValueType: string; ValueName: ""; ValueData: "texworks.exe ""%1"""; Flags: uninsdeletekey
 
 [Dirs]
 Name: "{app}\fonts"
@@ -27,15 +34,16 @@ Name: "{app}\contrib"
 Source: "gregorio.exe"; DestDir: "{app}";
 Source: "gregorio.ico"; DestDir: "{app}";
 Source: "install.lua"; DestDir: "{app}";
-Source: "README.txt"; DestDir: "{app}";
+Source: "README.txt"; DestDir: "{app}"; Flags: isreadme
 Source: "license.txt"; DestDir: "{app}";
 Source: "contrib\*"; DestDir: "{app}\contrib";
+Source: "examples\*"; DestDir: "{app}\examples";
 Source: "tex\*"; DestDir: "{app}\tex";
 Source: "fonts\*"; DestDir: "{app}\fonts";
 
 [Run]
 Filename: "texlua.exe"; Parameters: """{app}\install.lua"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";
-Filename: "{app}\README.txt"; Description: "View the README file"; Flags: postinstall shellexec skipifsilent;
+Filename: "texlua.exe"; Parameters: """{app}\install.lua"" --conf"; StatusMsg: "Configuring TeXWorks..."; Description: "Configure TeXWorks"; Flags: postinstall ; WorkingDir: "{app}";
 
 [Code]
 procedure URLLabelOnClickOne(Sender: TObject);

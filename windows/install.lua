@@ -136,6 +136,122 @@ function run_texcommands()
   end
 end
 
-create_dirs()
-copy_files()
-run_texcommands()
+function main_install()
+	create_dirs()
+	copy_files()
+	run_texcommands()
+end
+
+function texworks_conf()
+	local filesdir = kpse.expand_var("$TEXMFCONFIG")
+	filesdir = filesdir:gsub("/", "\\").."\\texworks\\"
+	print("Modifying tools.ini ...")
+	texworks_conf_tools(filesdir.."configuration\\tools.ini")
+	print("Modifying TeXWorks.ini ...")
+	texworks_conf_ini(filesdir.."TUG\\TeXWorks.ini")
+	print("Modifying texworks-config.txt ...")
+	texworks_conf_config(filesdir.."configuration\\texworks-config.txt")
+end
+
+function remove_read_only(filename)
+    os.spawn(string.format("attrib -r \"%s\"", filename))
+end
+
+function texworks_conf_config(filename)
+    remove_read_only(filename)
+	local data = ""
+	local f = io.open(filename, 'r')
+	for l in f:lines() do
+		-- we consider that if someone has already modified it (or a previous intall of gregorio), we don't do anything
+		local m = l:find("^file%-open%-filter")
+	    if m then
+		    return
+		end
+		data = data..l.."\n"
+    end
+	data = data..[[
+file-open-filter:	TeX documents (*.tex)
+file-open-filter:	Gabc score (*.gabc)
+file-open-filter:	LaTeX documents (*.ltx)
+file-open-filter:	BibTeX databases (*.bib)
+file-open-filter:	Style files (*.sty)
+file-open-filter:	Class files (*.cls)
+file-open-filter:	Documented macros (*.dtx)
+file-open-filter:	Auxiliary files (*.aux *.toc *.lot *.lof *.nav *.out *.snm *.ind *.idx *.bbl *.log)
+file-open-filter:	Text files (*.txt)
+file-open-filter:	PDF documents (*.pdf)
+file-open-filter:	All files (*.* *)
+]]
+	io.savedata(filename, data)
+end
+
+function texworks_conf_ini(filename)
+    remove_read_only(filename)
+	local f = io.open(filename, 'r')
+	local data = ""
+	for l in f:lines() do
+	    if l:match("defaultEngine") then
+		    data = data.."defaultEngine=LuaLaTeX\n"
+		else
+			data = data..l.."\n"
+		end
+    end
+	io.savedata(filename, data)
+end
+
+function texworks_conf_tools(filename)
+   	-- let's remove the read-only attribute
+	remove_read_only(filename)
+	local f = io.open(filename, 'r')
+	local toolstable = {}
+	local current = 0
+	local lualatexfound = 0
+	local gregoriofound = 0
+	for l in f:lines() do
+	    local num = tonumber(l:match("(%d+)\]"))
+		if num then
+		  current = num
+		else
+		  if l == "" then
+		  elseif string.lower(l) == "name=lualatex" then
+		    lualatexfound = 1
+		  elseif string.lower(l) == "name=gregorio" then
+		    gregoriofound = 1
+		  elseif toolstable[current] == nil then
+		    toolstable[current] = l
+	      else
+		    toolstable[current] = toolstable[current]..'\n'..l
+		  end
+		end
+	end
+	if lualatexfound == 0 then
+		local tmp = toolstable[1]
+		toolstable[1] = [[name=LuaLaTeX
+program=lualatex
+arguments=$synctexoption, $fullname
+showPdf=true]]
+		toolstable[current+1] = tmp
+	end
+	if gregoriofound == 0 then
+		local tmp = toolstable[2]
+		toolstable[2] = [[name=Gregorio
+program=gregorio
+arguments=$fullname
+showPdf=false]]
+		toolstable[current+2] = tmp
+	end
+	if gregoriofound == 1 and lualatexfound == 1 then
+		return
+	end
+	local data = ""
+	for i,s in ipairs(toolstable) do
+	  data = data..string.format("[%03d]\n", i)..s..'\n\n'
+	end
+	io.savedata(filename, data)
+end
+
+if arg[1] == nil or arg[1] ~= '--conf' then
+	main_install()
+else
+	texworks_conf()
+end
