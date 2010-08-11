@@ -18,7 +18,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  
 -->
-<language id="gabc" _name="gabc" version="2.0" _section="Sources">
+<language id="gabc" _name="Gabc" version="2.0" _section="Sources">
   <metadata>
     <property name="globs">*.gabc</property>
   </metadata>
@@ -27,6 +27,7 @@
     <style id="text" _name="Text" map-to="def:keyword"/>
     <style id="text-markups" _name="Text Markups" map-to="def:statement"/>
     <style id="translation" _name="Translation" map-to="def:doc-comment-element"/>
+    <style id="comment" _name="Comment" map-to="def:doc-comment-element"/>
     <style id="notes" _name="Notes"/>
     <style id="notes-base" _name="Basic Notes" map-to="def:constant"/>
     <style id="alterations" _name="Alterations" map-to="def:identifier"/>
@@ -48,6 +49,11 @@
           <include>
             <context id="text" style-ref="text">
               <match>[^\(\[&lt;]+</match>
+            </context>
+            <context id="comment" style-ref="comment">
+              <!--<start>%</start>
+              <end>&#x0a;</end>-->
+              <match>\%[^%]\n</match>
             </context>
             <context id="translation" style-ref="translation">
               <start>\[</start>

@@ -21,14 +21,8 @@
  See the different comments in the file to change the default configuration.
 -->
 <editorsettings description="gregorio" icon="gregorio.png">
-    <!-- change the path to perl and gregorio-scribus.pl here. Here are several cases:
-    -  if you are under Linux, simply put 'perl /path/to/gregorio-scribus.pl %file %dir'
-    -  if you want to use Cygwin's perl, put
-         'C:\cygwinnew\bin\perl /cygwin/path/to/gregorio-scribus.pl %file %dir'
-    -  if you want to use a native perl installation under Windows, put
-         'perl C:\path\to\gregorio-scribus.pl %file %dir'
-    -->
-	<executable command="perl /usr/share/scribus-ng/editorconfig/gregorio-scribus.pl %file %dir"/>
+    <!-- change the path to gregorio-scribus.lua here. -->
+	<executable command='texlua /usr/share/scribus-ng/editorconfig/gregorio-scribus.lua "%file" "%dir"'/>
 	<imagefile extension=".pdf"/>
 	<highlighter>
         <rule name="gabc header" regex="[a-zA-Z]+:" color="blue" minimal="true"/>
@@ -52,7 +46,6 @@ $scribus_additionalgreheaders$
 \pagestyle{empty}
 \setlength{\textwidth}{$scribus_realwidth$ pt}
 \begin{document}
-%%%%gregorio-scribus-scheme:$scribus_grescheme$
 $scribus_greconf$
 </preamble>
 <postamble>
@@ -79,18 +72,9 @@ $scribus_greconf$
 			<option value="17pt">17pt</option>
 			<option value="20pt">20pt</option>
 		</list>
-        <!-- change lamed to lualatex here if you want luatex by default -->
-        <list name="grescheme" default="lamed">
-			<title><i18n>
-					<en>Compilation method:</en>
-					<fr>Méthode de compilation :</fr>
-			</i18n></title>
-			<option value="lualatex">LuaLaTeX</option>
-			<option value="lamed">Lamed + dvipdf</option>
-		</list>
 		<text name="additionalgreheaders" type="long" default="\usepackage[utf8]{luainputenc}
 \usepackage[T1]{fontenc}
-\usepackage{kpfonts}"><i18n>
+\usepackage{times}"><i18n>
 			<en>Additional LaTeX Headers:</en>
 			<de>Zusätzliche LaTeX Header:</de>
 			<fr>En-tête LaTeX additionnel :</fr>

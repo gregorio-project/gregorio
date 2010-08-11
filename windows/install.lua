@@ -253,8 +253,22 @@ showPdf=false]]
 	io.savedata(filename, data)
 end
 
+function scribus_config()
+	local f = io.open('contrib\\900_gregorio.xml', 'r')
+	local data = ""
+	for l in f:lines() do
+	    if l:match("executable command") then
+		    data = data..string.format("	<executable command='texlua \"%s\" \"%%file\" \"%%dir\"'/>\n", lfs.currentdir().."\\contrib\\gregorio-scribus.lua")
+		else
+			data = data..l.."\n"
+		end
+    end
+	io.savedata('contrib\\900_gregorio.xml', data)
+end
+
 if arg[1] == nil or arg[1] ~= '--conf' then
 	main_install()
+	scribus_config()
 else
 	texworks_conf()
 end
