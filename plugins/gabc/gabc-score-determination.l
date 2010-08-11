@@ -37,6 +37,7 @@ unsigned char style_stack = 0;
 %x style
 %x verb
 %x comments
+%x inicomments
 %x alt
 
 %option stack
@@ -65,6 +66,15 @@ semicolon. */
 <INITIAL>^(\xBB|\xEF|\xBF)* {
 //BOM written by a lot of windows softwares when they write UTF-8
 }
+<INITIAL>^[\%#]  {
+	BEGIN(inicomments);
+	}
+<inicomments>(\n|\r)+  {
+    BEGIN(INITIAL);
+    }
+<inicomments>[^\n\r]*  {
+    //ignored
+    }
 <INITIAL>:(\ )? {
 	 BEGIN(attribute);
 	 return COLON;
