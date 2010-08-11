@@ -22,9 +22,8 @@ This program installs gregorio under Windows.
 
 kpse.set_program_name("luatex")
 
-local texmflocal = kpse.expand_var("$TEXMFLOCAL")
-texmflocal = texmflocal:gsub("/", "\\")
-texmflocal = texmflocal..'\\'
+local texmflocal = kpse.expand_var("$TEXMFLOCAL"):gsub("/", "\\")..'\\'
+local texworksdir = kpse.expand_var("$TEXMFCONFIG"):gsub("/", "\\")..'\\texworks\\'
 
 local suffix = "gregoriotex\\"
 local dirs = {
@@ -36,6 +35,8 @@ local dirs = {
   ovp = texmflocal.."fonts\\ovp\\"..suffix,
   tex = texmflocal.."tex\\generic\\"..suffix,
   latex = texmflocal.."tex\\latex\\"..suffix,
+  templatemain = texworksdir.."templates\\Gregorio Main File\\",
+  templatescore = texworksdir.."templates\\Gregorio Score\\",
 }
 
 local fonts = {"greciliae", "parmesan", "gresym", "greextra", "gregorio"}
@@ -107,11 +108,14 @@ function copy_files()
   for _,f in ipairs(latex_files) do
     copy_one_file('tex\\'..f, dirs.latex)
   end
+  copy_one_file('examples\\main-lualatex.tex', dirs.templatemain)
+  copy_one_file('examples\\PopulusSion.gabc', dirs.templatescore)
 end
 
 local base_dirs = {
   texmflocal.."fonts",  texmflocal.."tex", texmflocal.."tex\\generic",  texmflocal.."tex\\latex", texmflocal.."fonts\\ofm",
   texmflocal.."fonts\\tfm", texmflocal.."fonts\\type1", texmflocal.."fonts\\ovp", texmflocal.."fonts\\ovf", texmflocal.."fonts\\map",
+  templatemain, templatescore,
 }
 
 function create_dirs()
@@ -143,8 +147,7 @@ function main_install()
 end
 
 function texworks_conf()
-	local filesdir = kpse.expand_var("$TEXMFCONFIG")
-	filesdir = filesdir:gsub("/", "\\").."\\texworks\\"
+	local filesdir = texworksdir
 	print("Modifying tools.ini ...")
 	texworks_conf_tools(filesdir.."configuration\\tools.ini")
 	print("Modifying TeXWorks.ini ...")

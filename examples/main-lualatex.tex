@@ -1,28 +1,56 @@
-\documentclass[12pt, a4paper]{article}
-\usepackage{fullpage}
+% !TEX TS-program = lualatex
+% !TEX encoding = UTF-8
+
+% This is a simple template for a LuaLaTeX document using gregorio scores.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+% usual packages loading:
+\usepackage{luatextra}
+\usepackage{graphicx} % support the \includegraphics command and options
+\usepackage{geometry} % See geometry.pdf to learn the layout options. There are lots.
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+\usepackage{gregoriotex} % for gregorio score inclusion
+\usepackage{fullpage} % to reduce the margins
+
+% choose the language of the document here
+\usepackage[latin]{babel}
+
+% use the two following package for using normal TeX fonts
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{luainputenc}
-\usepackage[latin]{babel}
-\usepackage{luatextra}
-\usepackage{kpfonts}
-\usepackage{color}
-\usepackage{gregoriotex}
-\pagestyle{empty}
+
+% If you use usual TeX fonts, here is a starting point:
+\usepackage{times}
+% to change the font to something better, you can install the kpfonts package (if not already installed). To do so
+% go open the "TeX Live Manager" in the Menu Start->All Programs->TeX Live 2010
+
+% here we begin the document
 \begin{document}
 
+% The title:
 \begin{center}\begin{huge}\textsc{Populus Sion}\end{huge}\end{center}
 
+% Here we set the space around the initial.
+% Please report to http://home.gna.org/gregorio/gregoriotex/details for more details and options
 \setspaceafterinitial{2.2mm plus 0em minus 0em}
 \setspacebeforeinitial{2.2mm plus 0em minus 0em}
 
+% Here we set the initial font. Change 43 if you want a bigger initial.
 \def\greinitialformat#1{%
 {\fontsize{43}{43}\selectfont #1}%
 }
 
+% We set red lines here, comment it if you want black ones.
 \redlines
 
+% We set VII above the initial.
 \gresetfirstlineaboveinitial{\small \textsc{\textbf{VII}}}{\small \textsc{\textbf{VII}}}
+
+% We type a text in the top right corner of the score:
 \commentary{{\small \emph{Cf. Is. 30, 19 . 30 ; Ps. 79}}}
+
+% and finally we include the score. The file must be in the same directory as this one.
 \includescore{PopulusSion.tex}
 
 \end{document}
