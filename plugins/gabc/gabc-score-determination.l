@@ -66,6 +66,9 @@ semicolon. */
 <INITIAL>^(\xBB|\xEF|\xBF)* {
 //BOM written by a lot of windows softwares when they write UTF-8
 }
+<INITIAL>^[\n\r]+ {
+//BOM written by a lot of windows softwares when they write UTF-8
+}
 <INITIAL>^[\%#]  {
 	BEGIN(inicomments);
 	}
