@@ -47,7 +47,7 @@ DECLARE_PLUGIN(opustex)
 #endif
 
 int i;
-int clef;
+int otexclef;
 char loff = 0;
 char centered = 0;
 char italic = 0;
@@ -122,7 +122,7 @@ opustex_write_score (FILE * f, gregorio_score * score)
       first_syllable = SKIP_FIRST_LETTER;
     }
 
-  clef = score->first_voice_info->initial_key;
+  otexclef = score->first_voice_info->initial_key;
   current_syllable = score->first_syllable;
   while (current_syllable)
     {
@@ -228,7 +228,7 @@ opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 	{
 	  if (next_note != 0)
 	    {
-	      clef =
+	      otexclef =
 		gregorio_calculate_new_key (C_KEY,
 					       current_element->element_type -
 					       48);
@@ -265,7 +265,7 @@ opustex_write_syllable (FILE * f, gregorio_syllable * syllable,
 	{
 	  if (next_note != 0)
 	    {
-	      clef =
+	      otexclef =
 		gregorio_calculate_new_key (F_KEY,
 					       current_element->element_type -
 					       48);
@@ -915,26 +915,26 @@ opustex_write_glyph (FILE * f, gregorio_glyph * glyph)
 void
 opustex_print_note (FILE * f, char pitch)
 {
-  if (is_even (clef))
+  if (is_even (otexclef))
     {
-      if (pitch - clef < 104)
+      if (pitch - otexclef < 104)
 	{
-	  fprintf (f, "%c", pitch - clef - 25);
+	  fprintf (f, "%c", pitch - otexclef - 25);
 	}
       else
 	{
-	  fprintf (f, "%c", pitch - clef - 7);
+	  fprintf (f, "%c", pitch - otexclef - 7);
 	}
     }
   else
     {
-      if (pitch - clef < 97)
+      if (pitch - otexclef < 97)
 	{
-	  fprintf (f, "%c", pitch - clef - 18);
+	  fprintf (f, "%c", pitch - otexclef - 18);
 	}
       else
 	{
-	  fprintf (f, "%c", pitch - clef);
+	  fprintf (f, "%c", pitch - otexclef);
 	}
     }
 }
@@ -944,26 +944,26 @@ opustex_print_episem (FILE * f, char pitch, char length)
 {
   int realpitch;
 
-  if (is_even (clef))
+  if (is_even (otexclef))
     {
-      if (pitch - clef < 104)
+      if (pitch - otexclef < 104)
 	{
-	  realpitch = pitch - clef - 25;
+	  realpitch = pitch - otexclef - 25;
 	}
       else
 	{
-	  realpitch = pitch - clef - 7;
+	  realpitch = pitch - otexclef - 7;
 	}
     }
   else
     {
-      if (pitch - clef < 97)
+      if (pitch - otexclef < 97)
 	{
-	  realpitch = pitch - clef - 18;
+	  realpitch = pitch - otexclef - 18;
 	}
       else
 	{
-	  realpitch = pitch - clef;
+	  realpitch = pitch - otexclef;
 	}
     }
   if (!is_even (pitch) && pitch < 'k')	// if the note is between staff lines
@@ -981,26 +981,26 @@ opustex_print_episem_under (FILE * f, char pitch, char length)
 {
   int realpitch;
 
-  if (is_even (clef))
+  if (is_even (otexclef))
     {
-      if (pitch - clef < 104)
+      if (pitch - otexclef < 104)
 	{
-	  realpitch = pitch - clef - 25;
+	  realpitch = pitch - otexclef - 25;
 	}
       else
 	{
-	  realpitch = pitch - clef - 7;
+	  realpitch = pitch - otexclef - 7;
 	}
     }
   else
     {
-      if (pitch - clef < 97)
+      if (pitch - otexclef < 97)
 	{
-	  realpitch = pitch - clef - 18;
+	  realpitch = pitch - otexclef - 18;
 	}
       else
 	{
-	  realpitch = pitch - clef;
+	  realpitch = pitch - otexclef;
 	}
     }
   if (!is_even (pitch) && pitch > 'c')	// if the note is between staff lines
@@ -1019,26 +1019,26 @@ opustex_print_augmentum_note (FILE * f, char pitch)
 {
   int realpitch;
 
-  if (is_even (clef))
+  if (is_even (otexclef))
     {
-      if (pitch - clef < 104)
+      if (pitch - otexclef < 104)
 	{
-	  realpitch = pitch - clef - 25;
+	  realpitch = pitch - otexclef - 25;
 	}
       else
 	{
-	  realpitch = pitch - clef - 7;
+	  realpitch = pitch - otexclef - 7;
 	}
     }
   else
     {
-      if (pitch - clef < 97)
+      if (pitch - otexclef < 97)
 	{
-	  realpitch = pitch - clef - 18;
+	  realpitch = pitch - otexclef - 18;
 	}
       else
 	{
-	  realpitch = pitch - clef;
+	  realpitch = pitch - otexclef;
 	}
     }
   if (is_even (realpitch))
