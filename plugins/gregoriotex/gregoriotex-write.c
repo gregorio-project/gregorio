@@ -3476,6 +3476,7 @@ gregoriotex_determine_number_and_type
 	}
       break;
     case G_ONE_NOTE:
+    case G_PUNCTUM_INCLINATUM:
     case G_TRIGONUS:
     case G_PUNCTA_INCLINATA:
     case G_2_PUNCTA_INCLINATA_DESCENDENS:
