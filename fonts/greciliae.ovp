@@ -657,7 +657,7 @@
       )
    )
 (CHARACTER H 2B
-   (CHARWD R 0.155)
+   (CHARWD R 0.184999)
    (CHARDP R 0.0)
    (CHARHT R 0.10408)
    (MAP
@@ -666,7 +666,7 @@
       )
    )
 (CHARACTER H 2C
-   (CHARWD R 0.1119995)
+   (CHARWD R 0.139)
    (CHARDP R 0.0)
    (CHARHT R 0.10408)
    (MAP
