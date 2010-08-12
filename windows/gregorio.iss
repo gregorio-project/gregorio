@@ -29,6 +29,7 @@ Root: HKCR; Subkey: "Gregorio\shell\open\command"; ValueType: string; ValueName:
 Name: "{app}\fonts"
 Name: "{app}\tex"
 Name: "{app}\contrib"
+Name: "{app}\examples"
 
 [Files]
 Source: "gregorio.exe"; DestDir: "{app}";
