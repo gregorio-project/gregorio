@@ -92,6 +92,8 @@ gregorio_add_special_as_note (gregorio_note ** current_note, char type,
   element->previous = *current_note;
   element->next = NULL;
   element->texverb = NULL;
+  element->h_episemus_type = H_NO_EPISEMUS;
+  element->h_episemus_top_note = 0;
   element->choral_sign = NULL;
   if (*current_note)
     {
@@ -119,6 +121,8 @@ gregorio_add_texverb_as_note (gregorio_note ** current_note, char *str, char typ
   element->pitch = 0;
   element->signs = _NO_SIGN;
   element->previous = *current_note;
+  element->h_episemus_type = H_NO_EPISEMUS;
+  element->h_episemus_top_note = 0;
   element->next = NULL;
   element->texverb = str;
   element->choral_sign = NULL;
