@@ -143,6 +143,6 @@ function write_file()
     --texio.write_nl("write_file")
     res.lines = lines
     res.endpos = pos
-    texio.write_nl(table.serialize(res))
+    --texio.write_nl(table.serialize(res))
     io.savedata(".optimize_gabc.tmp", table.serialize(res, "return"))
 end

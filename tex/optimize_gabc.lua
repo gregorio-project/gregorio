@@ -119,11 +119,14 @@ function read_gabc_file(gabc_file, forced)
     -- Now we have a table with all the syllables, and we analyze it.
     -- We remove spurious - and end of lines, and we keep in mind if we're at
     -- an end of words or not.
-    for i, syl in ipairs(res) do
+    local i = 1
+    local j = 1
+    while(res[j] ~= nil) do
+        syl = res[j]
         local end_of_word = true
         local forced_eol = false
         local text = syl:sub(1, syl:find('%(')-1)
-        if text:find('-$') or (res[i+1] and res[i+1]:sub(1, 1) ~= " ") then
+        if text:find('-$') or (res[j+1] and res[j+1]:sub(1, 1) ~= " ") then
             end_of_word = false
         end
         if forced then
@@ -140,7 +143,15 @@ function read_gabc_file(gabc_file, forced)
             notes = notes:gsub('[zZ]+', '')
         end
         notes = notes:gsub('UUUU', 'z0')
-        res[i] = {text..notes, end_of_word, forced_eol}
+        if not (forced and notes == "()" and (text == "" or text==" " or text=="\n")) then
+            res[i] = {text..notes, end_of_word, forced_eol}
+            i = i+1
+        end
+        j = j+1
+    end
+    while (i<j) do
+      res[i] = nil
+      i = i + 1
     end
     return res
 end
@@ -174,9 +185,6 @@ function simple_compile(gabc_file, tex_file, produce_pdf, iteration)
 end
 
 function one_iteration(gabc_file, tex_file, syllables, lines, to_line, forced, final)
-    if not final then
-      simple_compile(gabc_file, tex_file, final, to_line)
-    end
     local data = syllables[0].."\n%%\n"
     local line, syllables_in_line = 1, 1
     for i, syl in ipairs(syllables) do
@@ -201,7 +209,7 @@ function one_iteration(gabc_file, tex_file, syllables, lines, to_line, forced, f
             if i == lines[line] then
                 line = line + 1
             end
-            if eow and forced_eol and not forced then
+            if forced_eol and not forced then
                 if final then
                     data = data..syl..'\n'
                 else
@@ -214,9 +222,12 @@ function one_iteration(gabc_file, tex_file, syllables, lines, to_line, forced, f
             end
         end
     end
-    io.savedata(gabc_file, data)
     if debug then
-        io.savedata(string.format(gabc_file..'.it%02d', to_line), data)
+      texio.write_nl(data)
+    end
+    io.savedata(gabc_file, data)
+    if not final then
+      simple_compile(gabc_file, tex_file, final, to_line)
     end
     if not final then
       local res = dofile(".optimize_gabc.tmp")
@@ -240,6 +251,9 @@ function simple_write_first(gabc_file, syllables, forced)
         else
             data = data..syl
         end
+    end
+    if debug then
+      texio.write_nl(data)
     end
     io.savedata(gabc_file, data)
 end
@@ -309,13 +323,13 @@ function simple_optimize(gabc_file, tex_file, syllables, res, forced)
                  to_try_lines[line] = nbs -1
                  obtained_res = one_iteration(gabc_file, tex_file, syllables, to_try_lines, line, forced, false)
                  if results_wrong(obtained_res) == line or #(obtained_res.lines) > nblines  then
-                    texio.write_nl("error: can't find a good way to break lines, there will be some mistakes in the score, stopping now.")
+                    texio.write_nl("error: can't find a good way to break lines, there will be some mistakes in the score, stopping now.\n")
                     return false
                  else
                     texio.write_nl("line "..line.." corrected")
                  end
                else
-                 texio.write_nl("error: can't find a good way to break lines, there will be some mistakes in the score, stopping now.")
+                 texio.write_nl("error: can't find a good way to break lines, there will be some mistakes in the score, stopping now.\n")
                    return false
                end
                line = line + 1
@@ -332,24 +346,50 @@ function agressive_optimize(gabc_file, tex_file, syllables, res, forced)
     -- we need to do one iteration first, in order to know which line is the first line
     local obtained_res = nil --one_iteration(gabc_file, syllables, to_try_lines, line, forced, false)
     local nblines = #(res.lines)
-    while line <= nblines do
+    while line <= nblines  and line <= #to_try_lines do
         -- we check if the line is forced or not:
-        if forced and syllables[res.lines[line]][3] == true then -- TODO: check this
+        if not forced and syllables[res.lines[line]][3] == true then -- TODO: check this
             line = line + 1
         else
             -- line is not forced
             -- first we try to make the linebreak one syllable before as it is now:
             to_try_lines[line] = to_try_lines[line] + 1
+            if debug then
+              print(table.serialize(to_try_lines))
+            end
             obtained_res = one_iteration(gabc_file, tex_file, syllables, to_try_lines, line, forced, false)
-            if results_wrong(obtained_res) ~= line and #(obtained_res.lines) <= nblines then
+            if debug then
+              print(table.serialize(obtained_res))
+            end
+            local nextsyl = nil
+            if syllables[to_try_lines[line]+1] then
+              local nextsyl = syllables[to_try_lines[line]+1][1]
+            end
+            if results_wrong(obtained_res) ~= line and (not nextsyl or not nextsyl:find('%([,;`:]')) and #(obtained_res.lines) <= nblines and obtained_res.lines[line] == to_try_lines[line] then
                -- everything's fine, we keep it as it is
                texio.write_nl("line "..line.." optimized")
+               -- let's try some more
+               local oldres = obtained_res
+               to_try_lines[line] = to_try_lines[line] + 1
+               obtained_res = one_iteration(gabc_file, tex_file, syllables, to_try_lines, line, forced, false)
+               if debug then
+                 print(table.serialize(obtained_res))
+                 print(table.serialize(to_try_lines))
+               end
+               if results_wrong(obtained_res) ~= line and #(obtained_res.lines) <= nblines and obtained_res.lines[line] == to_try_lines[line] then
+                   -- everything's fine, we keep it as it is
+                   texio.write_nl("line "..line.." optimized again")
+               else
+                   texio.write_nl("can't optimize line "..line..' more')
+                   to_try_lines[line] = to_try_lines[line] - 1
+                   obtained_res = oldres
+               end
                line = line + 1
             else
                texio.write_nl("can't optimize line "..line)
                to_try_lines[line] = to_try_lines[line] - 1
                obtained_res = one_iteration(gabc_file, tex_file, syllables, to_try_lines, line, forced, false)
-               if results_wrong(obtained_res) ~= line and #(obtained_res.lines) <= nblines then
+               if results_wrong(obtained_res) ~= line and #(obtained_res.lines) <= nblines and obtained_res.lines[line] == to_try_lines[line] then
                  texio.write_nl("line "..line.." ok")
                  line = line + 1
                else
@@ -358,14 +398,14 @@ function agressive_optimize(gabc_file, tex_file, syllables, res, forced)
                  if to_try_lines[line] > 1 then
                    to_try_lines[line] = to_try_lines[line] -1
                    obtained_res = one_iteration(gabc_file, tex_file, syllables, to_try_lines, line, forced, false)
-                   if results_wrong(obtained_res) == line or #(obtained_res.lines) > nblines  then
-                      texio.write_nl("error: can't find a good way to break lines, there will be some mistakes in the score, stopping now.")
+                   if results_wrong(obtained_res) == line or #(obtained_res.lines) > nblines and obtained_res.lines[line] == to_try_lines[line] then
+                      texio.write_nl("error: can't find a good way to break lines, there will be some mistakes in the score, stopping now.\n")
                       return false
                    else
                       texio.write_nl("line "..line.." corrected")
                    end
                  else
-                   texio.write_nl("error: can't find a good way to break lines, there will be some mistakes in the score, stopping now.")
+                   texio.write_nl("error: can't find a good way to break lines, there will be some mistakes in the score, stopping now.\n")
                    return false
                  end
                  line = line + 1
