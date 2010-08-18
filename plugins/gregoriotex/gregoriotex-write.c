@@ -3023,6 +3023,7 @@ gregoriotex_determine_liquescentia_number (unsigned int
 	{
 	  liquescentia = L_NO_LIQUESCENTIA;
 	}
+      break;
     case L_ONLY_AUCTUS:
       if (liquescentia != L_AUCTUS_ASCENDENS
 	  && liquescentia != L_AUCTUS_DESCENDENS)
