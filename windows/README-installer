@@ -1,5 +1,10 @@
 This folder is dedicated to the windows self-installer.
 
+The first step is to compile gregorio.exe. You can certainly do so under a
+windows compiler, but it hasn't been tested. A more convenient way is to
+compile it under Linux with mingw32 (aptitude install mingw32 under debian
+systems). Compile it with `./build.sh --mingw' in the root directory.
+
 To build the installer, you must first have Windows and InnoSetup (free) 
 installed. Then build a folder under windows witht the following files:
   |
