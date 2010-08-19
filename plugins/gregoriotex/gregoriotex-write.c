@@ -2174,8 +2174,12 @@ gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph,
   int type = 0;
   char gtype = 0;
   unsigned int glyph_number = 0;
-  if(glyph->next)
+  if(glyph->next && glyph->next->type == GRE_GLYPH || glyph->next && glyph->next->next && glyph->next->next->type == GRE_GLYPH)
     {
+      if (glyph->next->type != GRE_GLYPH)
+        {
+          glyph = glyph->next;
+        }
       glyph = glyph->next;
       note = glyph->first_note;
       if (glyph->glyph_type == G_PES)
@@ -3167,7 +3171,7 @@ gregoriotex_determine_number_and_type
   if (!glyph->first_note)
     {
       gregorio_message (_
-			("called with a glyph that have no note"),
+			("called with a glyph that has no note"),
 			"gregorio_tex_determine_number_and_type", ERROR, 0);
       return;
     }
