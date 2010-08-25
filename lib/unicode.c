@@ -184,16 +184,19 @@ gregorio_print_unichar (FILE * f, grewchar to_print)
   if (to_print <= 0x7F)
     {
       fprintf (f, "%c", (unsigned char) to_print);
+      return;
     }
   if (to_print >= 0x80 && to_print <= 0x7FF)
     {
       fprintf (f, "%c%c", 0xC0 | (to_print >> 6), 0x80 | (to_print & 0x3F));
+      return;
     }
   if ((to_print >= 0x800 && to_print <= 0xD7FF) ||
       (to_print >= 0xE000 && to_print <= 0xFFFF))
     {
       fprintf (f, "%c%c%c", 0xE0 | (to_print >> 12),
 	       0x80 | ((to_print >> 6) & 0x3F), 0x80 | (to_print & 0x3F));
+	    return;
     }
   if (to_print >= 0x10000 && to_print <= 0x10FFFF)
     {
