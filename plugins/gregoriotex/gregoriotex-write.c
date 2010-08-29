@@ -1754,16 +1754,7 @@ gregoriotex_write_choral_sign (FILE * f,
     {
       return;
     }
-/*//when the punctum mora is on a note on a line, and the prior note is on the space immediately above, the dot is placed on the space below the line instead
-  if (current_note->previous
-      && (current_note->previous->pitch - current_note->pitch == 1)
-      && is_on_a_line (current_note->pitch)
-      && (current_note->previous->signs == _PUNCTUM_MORA
-	    || current_note->previous->signs == _V_EPISEMUS_PUNCTUM_MORA
-	    || current_note -> previous-> choral_sign))
-    {
-      special_punctum = 1;
-    }*/
+
   if (low_sign ==  0)
     {
       // let's cheat a little
@@ -1771,7 +1762,14 @@ gregoriotex_write_choral_sign (FILE * f,
       gregoriotex_find_sign_number (glyph, i,
 				type, TT_H_EPISEMUS, current_note,
 				&number, &height, &bottom);
-		  fprintf(f, "\\grehighchoralsign{%c}{%s}{%d}%%\n", current_note->pitch, current_note->choral_sign, number);
+		  if (is_on_a_line(current_note->pitch))
+		    {
+		      fprintf(f, "\\grehighchoralsign{%c}{%s}{%d}%%\n", current_note->pitch, current_note->choral_sign, number);
+		    }
+		  else
+		    {
+		      fprintf(f, "\\grehighchoralsign{%c}{%s}{%d}%%\n", current_note->pitch+2, current_note->choral_sign, number);
+		    }
 		  if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS)
 		    {
 		      tmpnote = current_note;
