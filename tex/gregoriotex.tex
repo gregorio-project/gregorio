@@ -496,9 +496,9 @@
     \advance\gretempdim by 4\greinterstafflinespace %
     \advance\gretempdim by 4\grestafflineheight %
     \advance\gretempdim by \grecurrenttranslationheight %
-    \setbox\GreInitial=\hbox{\gregrebiginitialformat{#1}}%
+    \setbox\GreInitial=\hbox{\grebiginitialformat{#1}}%
     \global\greinitialwidth=\the\wd\GreInitial %
-    \setbox\GreInitial=\hbox{\vbox to 0pt{\hbox{\raise -\gretempdim\hbox{\gregrebiginitialformat{#1}}}\vss}}%
+    \setbox\GreInitial=\hbox{\vbox to 0pt{\hbox{\raise -\gretempdim\hbox{\grebiginitialformat{#1}}}\vss}}%
   \fi %
   \hskip\grebeforeinitialshift %
   \copy\GreInitial%
@@ -1234,7 +1234,7 @@
   \relax %
 }
 
-\def\gregrebiginitialformat#1{%
+\def\grebiginitialformat#1{%
   \font\grefontofgrebiginitial=pncr at 80pt%
   {\grefontofgrebiginitial #1}%
   \relax %
