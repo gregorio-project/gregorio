@@ -2109,9 +2109,10 @@ gregoriotex_write_hepisemus (FILE * f,
         }
     }
 
-  next_height = gregoriotex_find_next_hepisemus_height (current_glyph, current_element, &next_note);
+  next_height = gregoriotex_find_next_hepisemus_height (current_glyph, current_note, current_element, &next_note);
 
-  if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS && !current_note->next && (!current_note->previous || simple_htype(current_note->previous->h_episemus_type) == H_NO_EPISEMUS) && bottom == 0 && next_height != -1)
+  if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS && (!current_note->next 
+  || current_note->next->shape == S_PUNCTUM_INCLINATUM || current_note->next->shape == S_PUNCTUM_INCLINATUM_DEMINUTUS || current_note->next->shape == S_PUNCTUM_INCLINATUM_AUCTUS) && (!current_note->previous || simple_htype(current_note->previous->h_episemus_type) == H_NO_EPISEMUS) && bottom == 0 && next_height != -1)
     {
       if (height == next_height || do_not_change_height == 0 && (height == next_height -1 && is_on_a_line(height)))
         {
@@ -2163,10 +2164,9 @@ gregoriotex_write_hepisemus (FILE * f,
 // a function to find the next horizontal episemus height (returns -1 if none interesting)
 
 char
-gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph,
+gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph, gregorio_note *note,
    gregorio_element *element, gregorio_note **final_note)
 {
-  gregorio_note *note;
   char  i = 1;
   char height = 0;
   char number = 0;
@@ -2174,6 +2174,16 @@ gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph,
   int type = 0;
   char gtype = 0;
   unsigned int glyph_number = 0;
+  
+  if (note && note->shape == S_PUNCTUM_INCLINATUM && note->next && 
+   (note->next-> shape == S_PUNCTUM_INCLINATUM
+    || note->next-> shape == S_PUNCTUM_INCLINATUM_DEMINUTUS
+    || note->next-> shape == S_PUNCTUM_INCLINATUM_AUCTUS)   
+    && simple_htype(note->next->h_episemus_type) != H_NO_EPISEMUS)
+    {
+       return note->next->h_episemus_top_note + 1;
+    }
+  note = NULL;
   if(glyph->next && glyph->next->type == GRE_GLYPH || glyph->next && glyph->next->next && glyph->next->next->type == GRE_GLYPH)
     {
       if (glyph->next->type != GRE_GLYPH)

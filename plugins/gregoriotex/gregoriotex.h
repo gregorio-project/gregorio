@@ -169,7 +169,7 @@ unsigned int gregoriotex_determine_liquescentia_number (unsigned int factor, uns
 void gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
 void gregoriotex_write_choral_sign (FILE * f, gregorio_glyph * glyph, char type, int i, gregorio_note * current_note, char low);
 void gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, gregorio_element * current_element, gregorio_syllable * current_syllable, int i, char type, gregorio_note * current_note);
-char gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph, gregorio_element *element, gregorio_note **final_note);
+char gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph, gregorio_note *note, gregorio_element *element, gregorio_note **final_note);
 void gregoriotex_write_rare (FILE * f, gregorio_glyph *current_glyph, int i, char type, gregorio_note * current_note, char rare);
 void gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_element * element, gregorio_syllable * syllable, gregorio_note * current_note);
 

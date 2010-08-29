@@ -1,6 +1,15 @@
-# test first type of comment
-name:complete tests;
-% test second type of comment in the header
+% !TEX TS-program = gregorio
+% !TEX encoding = UTF-8
+
+% The first part of the score is called the header, you can input some useful informations here:
+name: Pópulus Sion;
+office-part: Introitus;
+occasion: Dominica II Adventus;
+date: 2006;
+transcriber: Elie Roux;
+transcription-date: 2006;
+style: modern;
+
 def-m1:%test72;
 %%
 %
@@ -10,7 +19,7 @@ a(a) b(b) c(c) d(d) e(e) f(f) g(g) h(h) i(i) j(j) k(k) l(l) m(m)
 %
 % shapes:
 %
-fg(fg) gvFE(gvFE) ghg(ghg) ghgh(ghgh) ghghg(ghghg) gwhghg(gwhghg) gqh(gqh) gwh(gwh) gWh(gWh) go(go) goh(goh) gf(gf) gwf(gwf) gof(gofZ) g=(g=) h=(h=) go<(go<) go<sp>~</sp>(go~) ab(gFE<) ab(gFE~) gs(gs) gs<(gs<)
+fg(fg) gvFE(gvFE) ghg(ghg) ghgh(ghgh) ghghg(ghghg) gwhghg(gwhghg) gqh(gqh) gwh(gwh) gWh(gWh) go(go) goh(goh) gf(gf) gwf(gwf) gof(gofZ) g=(g=) h=(h=) go<(go<) go<sp>~</sp>(go~) ab(gFE<) ab(gFE~) gs(gs) gs<(gs<) fvE'D.(fvE'D.) gvFD(gvFD) hvGD(hvGD) ivHD(ivHD)
 %
 % pes:
 %
@@ -156,7 +165,7 @@ ab<alt>above lines</alt>(ghZ)
 % h episemus bridges
 %
 g_/g_(g_/g_) g_//g_(g_//g_) g_ g_Z(g_ g_) g_!/g_(g_!/g_) g_!//g_(g_!//g_) g_! g_(g_! g_Z)
-g_/h_(g_/h_) h_/g_(h_/g_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) {h}_/i_(h_/i_) i_/h_(i_/h_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) gh_/g_/g_(gh_/g_/g_)
+g_/h_(g_/h_) h_/g_(h_/g_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) {h}_/i_(h_/i_) i_/h_(i_/h_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) gh_/g_/g_(gh_/g_/g_) fh!jv_I_G_(fh!jv_I_G_)
 %
 % over braces
 %
