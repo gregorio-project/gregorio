@@ -1352,31 +1352,31 @@
     % we need to adjust the height of the bar a little so that it is perfectly aligned with the bottom (or the top for some bars) of the staff line, which is not the case by default if \grestafflinefactor is not 10.
     \advance\greglyphraisevalue by -\grestafflinediff %
     \ifnum#2=1\relax %
-      \hskip\grespacearoundmaior %
+      \hskip\grespacearoundminor %
       \penalty 10001 %
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 83}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
     #3\relax %
     \ifnum#2=1\relax %
-      \hskip\grespacearoundmaior %
+      \hskip\grespacearoundminor %
     \fi %
   \or % 7 : dominican bar 2
     \grecalculateglyphraisevalue{e}{0}%
     \advance\greglyphraisevalue by \grestafflinediff %
     \ifnum#2=1\relax %
-      \hskip\grespacearoundmaior %
+      \hskip\grespacearoundminor %
       \penalty 10001 %
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 84}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
     #3\relax %
     \ifnum#2=1\relax %
-      \hskip\grespacearoundmaior %
+      \hskip\grespacearoundminor %
     \fi %
   \or % 8 : dominican bar 3
     \ifnum#2=1\relax %
-      \hskip\grespacearoundmaior %
+      \hskip\grespacearoundminor %
       \penalty 10001 %
     \fi %
     \advance\greglyphraisevalue by -\grestafflinediff %
@@ -1384,11 +1384,11 @@
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
     #3\relax %
     \ifnum#2=1\relax %
-      \hskip\grespacearoundmaior %
+      \hskip\grespacearoundminor %
     \fi %
   \or % 9 : dominican bar 4
     \ifnum#2=1\relax %
-      \hskip\grespacearoundmaior %
+      \hskip\grespacearoundminor %
       \penalty 10001 %
     \fi %
     \advance\greglyphraisevalue by \grestafflinediff %
@@ -1396,33 +1396,33 @@
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
     #3\relax %
     \ifnum#2=1\relax %
-      \hskip\grespacearoundmaior %
+      \hskip\grespacearoundminor %
     \fi %
   \or % 10 : dominican bar 5
     \grecalculateglyphraisevalue{i}{0}%
     \advance\greglyphraisevalue by -\grestafflinediff %
     \ifnum#2=1\relax %
-      \hskip\grespacearoundmaior %
+      \hskip\grespacearoundminor %
       \penalty 10001 %
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 83}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
     #3\relax %
     \ifnum#2=1\relax %
-      \hskip\grespacearoundmaior %
+      \hskip\grespacearoundminor %
     \fi %
   \or % 11 : dominican bar 6
     \grecalculateglyphraisevalue{i}{0}%
     \advance\greglyphraisevalue by \grestafflinediff %
     \ifnum#2=1\relax %
-      \hskip\grespacearoundmaior %
+      \hskip\grespacearoundminor %
       \penalty 10001 %
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 84}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
     #3\relax %
     \ifnum#2=1\relax %
-      \hskip\grespacearoundmaior %
+      \hskip\grespacearoundminor %
     \fi %
   \fi %
   \global\grelastglyphwidth=\wd\GreTempwidth %

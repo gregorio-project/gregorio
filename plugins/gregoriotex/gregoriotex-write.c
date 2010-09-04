@@ -3958,6 +3958,12 @@ gregoriotex_syllable_first_type (gregorio_syllable * syllable)
 	    case B_DIVISIO_MINIMA:
 	    case B_DIVISIO_MINOR:
 	    case B_DIVISIO_MAIOR:
+	    case B_DIVISIO_MINOR_D1:
+	    case B_DIVISIO_MINOR_D2:
+	    case B_DIVISIO_MINOR_D3:
+	    case B_DIVISIO_MINOR_D4:
+	    case B_DIVISIO_MINOR_D5:
+	    case B_DIVISIO_MINOR_D6:
 	      type = 11;
 	      break;
 	    case B_DIVISIO_FINALIS:
