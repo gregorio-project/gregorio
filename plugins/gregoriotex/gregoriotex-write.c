@@ -1,6 +1,6 @@
 /*
 Gregorio GregorioTeX output format.
-Copyright (C) 2006-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
+Copyright (C) 2006-2010 Elie Roux <elie.roux@telecom-bretagne.eu>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,6 +15,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+/**
+ * @file
+ * @brief The plugin which writes a GregorioTeX score.
+ */
 
 #include "config.h"
 #include <stdio.h>
@@ -39,7 +44,7 @@ DECLARE_PLUGIN (gregoriotex)
     "tex",.type = GREGORIO_PLUGIN_OUTPUT,.write = write_score};
 #endif
 
-// the value indicating to GregorioTeX that there is no flat
+/// the value indicating to GregorioTeX that there is no flat
 #define NO_KEY_FLAT 'a'
 
 gregoriotex_status *status = NULL;
@@ -210,7 +215,11 @@ gregoriotex_write_score (FILE * f, gregorio_score * score)
   free(status);
 }
 
-
+/** 
+ * This now does nothing useful, since the manuscript_reference is
+ * now part of the score info.  But we keep it here in case it may
+ * be needed in future.
+ */
 void
 gregoriotex_write_voice_info (FILE * f, gregorio_voice_info * voice_info)
 {
@@ -218,11 +227,7 @@ gregoriotex_write_voice_info (FILE * f, gregorio_voice_info * voice_info)
     {
       return;
     }
-  // This now does nothing useful, since the manuscript_reference is
-  // now part of the score info.  But we keep it here in case it may
-  // be needed in future.
 }
-
 
 // this function indicates if the syllable is the last of the line. If it's the
 // last of the score it returns 0, as it's handled another way
@@ -636,10 +641,21 @@ gregoriotex_write_syllable (FILE * f,
     }
 }
 
-// see the comments on the i variable to understand it
+/*!
+ * @brief This is an arbitrary maximum of notes we consider to affect the syllable's text.
+ * 
+ * We automatically lower the textline if the chant notes are below the staff, so that they do not overlap.
+ * However, after a certain point (defined by this value), the notes extend far beyond the letters of the text,
+ * and thus lowering the text does not need to be considered.
+ *
+ * Used by gregoriotex_getlineinfos()
+ */
 #define NUMBER_OF_NOTES 6
 
-// function filling the gregorio_line (see gregoriotex.h) struct with the infos on the line following syllable
+/*!
+ * @brief function filling the gregorio_line (see gregoriotex.h) struct with the infos on the line following syllable
+ *
+ */
 void
 gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line)
 {
@@ -807,8 +823,12 @@ gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line)
     }
 }
 
-// we will need type for one thing for the moment : type=first_syllable=1 when it is the first syllable (for the initial).
+/// @todo: What is this comment -here- for? --> we will need type for one thing for the moment : type=first_syllable=1 when it is the first syllable (for the initial).
 
+/*!
+ * @brief Prints the beginning of each text style
+ *
+ */
 void
 gtex_write_begin (FILE * f, unsigned char style)
 {
@@ -838,6 +858,9 @@ gtex_write_begin (FILE * f, unsigned char style)
     }
 }
 
+/**
+ * @brief Ends each text style
+ */
 void
 gtex_write_end (FILE * f, unsigned char style)
 {
@@ -855,13 +878,19 @@ gtex_write_end (FILE * f, unsigned char style)
     }
 }
 
-// a specific function for writing ends of the two first parts of the text of the next syllable
+/// a specific function for writing ends of the two first parts of the text of the next syllable
 void
 gtex_write_end_for_two (FILE * f, unsigned char style)
 {
   fprintf (f, "}");
 }
 
+/*!
+ * @brief Writes GregorioTeX special characters.
+ *
+ * This function takes the special characters as input (i.e. from gabc representation), and writes them in
+ * GregorioTeX form.
+ */
 void
 gtex_write_special_char (FILE * f, grewchar * special_char)
 {
@@ -1021,7 +1050,12 @@ gregoriotex_write_text (FILE * f, gregorio_character * text,
   fprintf (f, "}");
 }
 
-// the function to write the translation
+/*
+ * @brief Writes the translation.
+ * 
+ * There is no special handling of translation text; that is, we just print the entire string of text
+ * under the normal text line, without considering any special centering or linebreaks. 
+ */
 void
 gregoriotex_write_translation (FILE * f, gregorio_character * translation)
 {
@@ -1829,20 +1863,24 @@ gregoriotex_write_choral_sign (FILE * f,
     }
 }
 
+/*!
+ * @brief Writes augmentum duplexes (double dots)
+ *
+ * We suppose we are on the last note. \n
+ * The algorithm is the following: if there is a previous note, we consider that the two puncta of the augumentum duplex must correspond to the last note and the previous note.
+ * If we are adding to a single note glyph, which would be weird but sure why not, we just typeset two puncta spaced of 2.
+ */
 void
 gregoriotex_write_auctum_duplex (FILE * f,
 				 gregorio_glyph * glyph,
 				 gregorio_note * current_note)
 {
-// we suppose we are on the last note... I don't really understand what it would mean otherwise...
-// the algorith is the following : if there is a previous note, we consider that the two puncta of the augumentum duplex must correspond to the last note and the previous note, if there is no such thing, we just typeset two puncta spaced of 2.
   char pitch = current_note->pitch;
   char previous_pitch = 0;
 // second_pitch is the second argument of the \augmentumduplex macro, that's what this function is all about.
   char second_pitch = 0;
   // this variable will be set to 1 if we are on the note before the last note of a podatus or a porrectus or a torculus resupinus
   unsigned char special_punctum = 0;
-
   if (current_note->previous)
     {
       if (current_note->previous->pitch - current_note->pitch == -1
@@ -1878,15 +1916,18 @@ gregoriotex_write_auctum_duplex (FILE * f,
 	   special_punctum);
 }
 
-
+/**
+ * @brief Adds a dot.
+ *
+ * Writes \c \\grepunctummora in the gtex file, with the appropriate arguments. You might think this function
+ * more straightforward than it actually is...
+ */
 void
 gregoriotex_write_punctum_mora (FILE * f,
 				gregorio_glyph * glyph,
 				char type, gregorio_note * current_note)
 {
-  // well... the boring part... the punctummora before the last note in some glyphs (flexus principally)
   // in this if we consider that the puncta are only on the last two notes (maybe it would be useful to consider it more entirely, but it would be really weird...)
-  // I had the choice between writing a 15 lines if or a switch... a switch seems more understandable and changeable
   // the variable that will be set to 1 if we have to shift the punctum inclinatum before the last note
   unsigned char shift_before = 0;
   // this variable will be set to 1 if we are on the note before the last note of a podatus or a porrectus or a torculus resupinus
@@ -2060,8 +2101,10 @@ gregoriotex_write_punctum_mora (FILE * f,
 	   special_punctum, punctum_inclinatum);
 }
 
-// a function that writes the good \hepisemus un GregorioTeX. i is the position of the note in the glyph.
-
+/**
+ * @brief A function that writes the good \c \\hepisemus in GregorioTeX. 
+ * @param i The position of the note in the glyph.
+ */
 void
 gregoriotex_write_hepisemus (FILE * f,
 			     gregorio_glyph *

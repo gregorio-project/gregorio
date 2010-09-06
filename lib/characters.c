@@ -16,15 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-
-This file contains almost all the gregorio_character manipulation things.
-
-The code is very spaghetti, but I don't really think I can do it another way with the chosen representation of styles, and the fact that everything must be xml-compliant and tex-compliant...
-
-So this file is basically very hard to maintain. Moreover, it has not been very well coded, so it is even harder to maintain...
-
-*/
+/**
+ * @file
+ * @brief This file contains almost all the gregorio_character manipulation things.
+ *
+ * @warning The code is very spaghetti, but I don't really think I can do it another way with the chosen representation of styles, and the fact that everything must be xml-compliant and tex-compliant...
+ * So this file is basically very hard to maintain. Moreover, it has not been very well coded, so it is even harder to maintain...
+ */
 
 #include "config.h"
 #include <stdio.h>
@@ -34,8 +32,13 @@ So this file is basically very hard to maintain. Moreover, it has not been very 
 #include <gregorio/characters.h>
 #include <gregorio/messages.h>
 
-/* Here is a function that tests if a letter is a vowel or not */
-
+/*!
+ * @brief Tests if a letter is a vowel or not. 
+ * 
+ * Necessary for determining proper centering, as we want the first neume centered over the vowel. Simple, we just compare \c letter to a list of vowels used in Latin, both accented and not.
+ * \param letter The letter being tested
+ * \return returns \c 1 if a vowel; otherwise returns \c 0
+ */
 int
 gregorio_is_vowel (grewchar letter)
 {
@@ -56,7 +59,6 @@ gregorio_is_vowel (grewchar letter)
 }
 
 // a macro that will be used for verbatim and special-characters in the next function, it calls function with a grewchar * which is the verbatim or special-character. It places current_character to the character next to the end of the verbatim or special_char charachters.
-
 #define verb_or_sp(ST_TYPE, function) \
 		  i = 0;\
 		  j = 0;\
@@ -106,18 +108,13 @@ gregorio_is_vowel (grewchar letter)
 
 
 
-/*
-
-This function is made to simplify the output modules : they just have to declare some simple functions (what to do when meeting a beginning of style, a character, etc.) and to call this function with pointer to these functions, and that will automatically write the good ouput. This function does not test at all the gregorio_character list, if it is wrong, then the ouput will be wrong. It is very simple to understand, even if it is a bit long.
-
-type may be 0, or SKIP_FIRST_LETTER
-
-The difficulty comes when we have to write the first syllable text, without the first letter.
-
-The behaviour can have some bugs is this case if the first syllable has some complex styles. It would be a bit stupid to so such a thing, but users are usually very creative when it comes to invent twisted things...
-
-*/
-
+/**
+ * This function is made to simplify the output modules : they just have to declare some simple functions (what to do when meeting a beginning of style, a character, etc.) and to call this function with pointer to these functions, and that will automatically write the good ouput. This function does not test at all the gregorio_character list, if it is wrong, then the ouput will be wrong. It is very simple to understand, even if it is a bit long.
+ * type may be 0, or SKIP_FIRST_LETTER
+ * 
+ * @warning The difficulty comes when we have to write the first syllable text, without the first letter.
+ * The behaviour can have some bugs is this case if the first syllable has some complex styles. It would be a bit stupid to do such a thing, but users are usually very creative when it comes to inventing twisted things...
+ */
 void
 gregorio_write_text (char type, gregorio_character * current_character,
 		     FILE * f, void (*printverb) (FILE *, grewchar *),
@@ -319,15 +316,8 @@ gregorio_first_letter (gregorio_score * score)
   return L'\0';
 }
 
-/*
-
-A function to print one character in TeX. The reason of this function is that
-sometimes you need gregorio to write \char 232 (because of some bugs) and
-sometimes é, directly in utf8.
-
-*/
-
-// the variable that will decide if we're writing old or modern style
+/// the variable that will decide if we're writing old or modern style \n
+/// It is set by gregorio_set_tex_write() and used in gregorio_write_one_tex_char()
 unsigned char tex_write = WRITE_UTF_TEX;
 
 void
@@ -343,6 +333,12 @@ gregorio_set_tex_write(unsigned char new)
       }
 }
 
+/*!
+ * A function to print one character in TeX. The reason of this function is that
+ * sometimes you need gregorio to write \char 232 (because of some bugs) and
+ *sometimes é, directly in utf8.
+ *
+ */
 void
 gregorio_write_one_tex_char (FILE * f, grewchar to_print)
 {
@@ -952,22 +948,22 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
   gregorio_free_styles (&first_style);
 }
 
-/*
-
-This function will determine the behaviour of gregorio when it comes to the recognition of the initial. Basically it will take a gregorio_character list and return the same list, but with a style added : ST_INITIAL. This style will incidate the initial. The center will be placed to the second syllable except if there is a FORCED_CENTER somewhere. Finally all will be xml-compliant and tex-compliant when we call gregorio_rebuild_characters.
-
-If we note <> for the initial and {} for the center, here is what we want:
-
-Po -> <P>{o}
-{A}b -> <>{A}b
-{}a -> <>{}a
-Glo -> <G>{l}o
-Gl{o} -> <G>l{o}
-
-param_character is a pointer to the (pointer to the) first character, it will be modified so that it points to the new first character.
-
-*/
-
+/**
+ * @brief This function will determine the behaviour of gregorio when it comes to the recognition of the initial. 
+ * 
+ * Basically it will take a gregorio_character list and return the same list, but with a style added : ST_INITIAL. This style will incidate the initial. The center will be placed at the second letter, unless there is a FORCED_CENTER somewhere. 
+ * Finally all will be xml-compliant and tex-compliant when we call gregorio_rebuild_characters.
+ *
+ * If we note <> for the initial and {} for the center, here is what we want:
+ *
+ * @li \verbatim Po -> <P>{o} \endverbatim
+ * @li \verbatim {A}b -> <>{A}b \endverbatim
+ * @li \verbatim {}a -> <>{}a \endverbatim
+ * @li \verbatim Glo -> <G>{l}o \endverbatim
+ * @li \verbatim Gl{o} -> <G>l{o} \endverbatim
+ *
+ * @param param_character is a pointer to the (pointer to the) first character, it will be modified so that it points to the new first character.
+ */
 void
 gregorio_rebuild_first_syllable (gregorio_character ** param_character)
 {
@@ -1016,7 +1012,7 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
 	  && current_character->cos.s.style == ST_FORCED_CENTER
 	  && letter == 0)
 	{
-	  // we don't touche anything after a FORCED_CENTER, so we put an empty INITIAL style just before
+	  // we don't touch anything after a FORCED_CENTER, so we put an empty INITIAL style just before
 	  gregorio_insert_style_before (ST_T_BEGIN, ST_INITIAL,
 					current_character);
 	  current_character = current_character->previous_character;

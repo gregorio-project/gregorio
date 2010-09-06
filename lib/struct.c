@@ -1,6 +1,6 @@
 /*
 Gregorio structure manipulation file.
-Copyright (C) 2006-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
+Copyright (C) 2006-2010 Elie Roux <elie.roux@telecom-bretagne.eu>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,9 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
- * This file contains a set of function to manipulate the gregorio
- * structure. It starts by simple add/delete functions for almost all
+/**
+ * @file
+ * @brief This file contains a set of function to manipulate the gregorio
+ * structure. 
+ *
+ * It starts by simple add/delete functions for almost all
  * structs, and ends with more complex functions for manipulating
  * horizontal episemus, keys, etc.
  *
@@ -31,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * All the delete functions are recursive and free all memory.
  *
-*/
+ */
 
 #include "config.h"
 #include <stdio.h>

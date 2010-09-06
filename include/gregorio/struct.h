@@ -1,6 +1,6 @@
 /*
 Gregorio structure manipulation headers.
-Copyright (C) 2006-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
+Copyright (C) 2006-2010 Elie Roux <elie.roux@telecom-bretagne.eu>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -15,12 +15,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-The file starts by the definition of all the structures used in
-gregorio. As it is certainly the most important file for
-understanding, read it carefully.
-
 */
+
+/**
+ * @file
+ * The file starts by the definition of all the structures used in
+ * gregorio. As it is certainly the most important file for
+ * understanding, read it carefully.
+ */
 
 #include <gregorio/unicode.h>
 
@@ -31,14 +33,12 @@ understanding, read it carefully.
 extern "C" {
 #endif
 
-/*
-
-We start with the most precise structure, the note structure. The note
-is always a real note (we'll see that glyphs and elements can be other
-things.
-
-*/
-
+/*!
+ *
+ * We start with the most precise structure, the note structure. The note
+ * is always a real note (we'll see that glyphs and elements can be other
+ * things).
+ */
 typedef struct gregorio_note {
 // we have seen that notes are always real notes, that is to say
 // GRE_NOTE. the type is always that in the final structure. But there
@@ -49,8 +49,7 @@ typedef struct gregorio_note {
 // then two pointer to other notes, to make a chained list.
   struct gregorio_note *previous;
   struct gregorio_note *next;
-// the pitch is the height of the note on the score, that is to say
-// the letter it is represented by in gabc.
+/// the pitch is the height of the note on the score, that is to say the letter it is represented by in gabc.
   char pitch;
 // shape is the shape of the note... if you want to know the different
 // possible shapes, see below.
@@ -84,15 +83,14 @@ typedef struct gregorio_note {
   char *texverb;
 } gregorio_note;
   
-/*
-
-gregorio_glyph can be other things as GRE_GLYPH: it can be GRE_FLAT,
-GRE_NATURAL or GRE_SPACE
-
-*/
-
+/*!
+ * @brief The gregorio glyph structure
+ *
+ * Unlike gregorio_note, gregorio_glyph can be other things besides \c GRE_GLYPH: 
+ * it can also be \c GRE_FLAT, \c GRE_NATURAL or \c GRE_SPACE
+ */
 typedef struct gregorio_glyph {
-// type can have the values explained in the comment juste above.
+// type can have the values explained in the comment just above.
   char type;
 // two pointer to make a chained list
   struct gregorio_glyph *previous;
