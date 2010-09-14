@@ -180,6 +180,11 @@ def endInstall(basedir):
         system("updmap-sys")
         print "running updmap"
         system("updmap")
+    elif sys.platform == 'darwin':
+        for fontname in Fonts:
+            print ("running updmap-sys --nomkmap --enable MixedMap=%s.map" % fontname)
+            system("updmap-sys --nomkmap --enable MixedMap=%s.map" % fontname)
+        system("updmap-sys")
     else:
         for fontname in Fonts:
             print ("running updmap-sys --enable MixedMap=%s.map" % fontname)
