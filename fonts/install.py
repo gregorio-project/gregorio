@@ -29,7 +29,8 @@ TexliveDirs=[
 '/sw/var/lib/texmf',
 '/usr/local/texlive/texmf-local',
 '/cygdrive',
-'/usr/share/texmf/']
+'/usr/share/texmf/',
+'/usr/local/texlive/2010basic/texmf-local']
 
 Fonts=['greciliae', 'gregorio', 'parmesan']
 
