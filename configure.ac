@@ -117,13 +117,6 @@ AC_SUBST(LIBTOOL_LIB)
 
 AM_CONDITIONAL([ALL_STATIC], [test "$gre_all_static" = "yes"])
 
-# I let it for backward compatibility purposes
-AC_ARG_ENABLE(glib-utf8, 
-    [  --enable-glib-utf8      link with glib for the character system.\
-                          This option is deprecated, do not use it.], 
-    [], []
-)
-
 AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
 
 AM_CONFIG_HEADER([include/config.h])
