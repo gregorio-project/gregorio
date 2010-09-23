@@ -129,7 +129,6 @@ function gregoriotex.addhyphenandremovedumblines (h, groupcode, glyphes)
 		    	end
 		    	if adddash==true then
 		    		local temp= node.copy(dashnode)
-		    		texio.write_nl(node.has_attribute(temp, gregorioattr))
 		    		node.insert_after(a.list, lastseennode, temp)
 		    		addash=false
 		    	end
