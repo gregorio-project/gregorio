@@ -50,13 +50,7 @@ else
     LEXLIB=''
     AC_SUBST(LIBINTL)
   fi
-  ## a patch for statically linking libltdl under mac
-  HOST_OS=`$UNAME -s`
-  if test "$HOST_OS" = "Darwin"; then
-    LIBTOOL_LIB_STATIC=/usr/lib/libltdl.a
-  else
-    LIBTOOL_LIB_STATIC="-lltdl -static"
-  fi
+  LIBTOOL_LIB_STATIC="-lltdl -static"
   AC_SUBST(LIBTOOL_LIB_STATIC)
 fi
 
