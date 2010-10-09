@@ -1,5 +1,5 @@
 --GregorioTeX Lua file.
---Copyright (C) 2008-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
+--Copyright (C) 2008-2010 Elie Roux <elie.roux@telecom-bretagne.eu>
 --
 --This program is free software: you can redistribute it and/or modify
 --it under the terms of the GNU General Public License as published by
@@ -25,8 +25,8 @@ grechiro = {}
 
 grechiro.module = {
     name          = "gregoriotex-ictus",
-    version       = 1.1,
-    date          = "2009/07/28",
+    version       = 2.0,
+    date          = "2010/09/27",
     description   = "GregorioTeX module for chironomy.",
     author        = "Elie Roux",
     copyright     = "Elie Roux",
@@ -37,7 +37,7 @@ if luatextra and luatextra.provides_module then
     luatextra.provides_module(grechiro.module)
 end
 
-grechiro.version  = 1.1
+grechiro.version  = 2.0
 grechiro.showlog  = grechiro.showlog or false
 
 grechiro.currentLine = grechiro.currentLine or 1

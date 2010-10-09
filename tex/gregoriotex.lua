@@ -1,5 +1,5 @@
 --GregorioTeX Lua file.
---Copyright (C) 2008-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
+--Copyright (C) 2008-2010 Elie Roux <elie.roux@telecom-bretagne.eu>
 --
 --This program is free software: you can redistribute it and/or modify
 --it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@ gregoriotex = {}
 
 gregoriotex.module = {
     name          = "gregoriotex",
-    version       = 1.1,
-    date          = "2009/10/06",
+    version       = 2.0,
+    date          = "2010/09/27",
     description   = "GregorioTeX module.",
     author        = "Elie Roux",
     copyright     = "Elie Roux",
@@ -65,7 +65,7 @@ else
     end
 end
 
-gregoriotex.version  = 1.1
+gregoriotex.version  = 2.0
 gregoriotex.showlog  = false
 
 local hlist = node.id('hlist')
