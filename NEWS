@@ -1,3 +1,23 @@
+Major changes in Gregorio 2.0, released September 27th, 2010:
+
+     - as always, fixing a lot of bugs
+     - first release with automatic Windows installer
+     - gregorio API changed and GregorioTeX macros prepended with \gre, to
+       avoid potential name conflicts
+     - adding requested features: Dominican bars, choral signs, text above
+       staff lines
+     - updated greciliae font
+     - fine-tuning the spacing, and making it easier for users to change
+       the defaults
+     - enabling comments in gabc files
+     - adding ability to write verbatim TeX at {note, glyph, element} level
+     - introducing horizontal episemus bridges
+     - default output is now utf8 directly; the -O option allows old-style
+       TeX output, i.e. \char XXXX
+     - GregorioXML reading is now optional (via --enable-xml-read flag)
+     - new static build system for packaged distributions
+
+
 Major changes in Gregorio 1.0, released October 19th, 2009:
 
      - fixing a lot of bugs
