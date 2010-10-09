@@ -1,10 +1,22 @@
 #!/usr/bin/perl
-#
+
 # gprocess
 # a script for 'compiling' gregorio gabc music files
+# v0.2
+# Copyright (c) 2010 Richard Chonak <chonak@yahoo.com>
+# Changes in v0.2:
+# -- change list of PDF viewers
+# -- invoke LuaLateX instead of lamed/dvipdfm
+# -- drop use of pdftk (it's not available for my system)
+# -- use latin1 character set instead of utf8
+# -- update macro and variable names (with "gre" prefix) as needed
+# -- add 'redlines'
+# -- 
+#
 # v0.1
 # Copyright (C) 2008 Richard Chonak <chonak@yahoo.com>
 # 
+
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -18,17 +30,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 use strict;
 
 ## USER-MODIFIABLE COMMAND PATHS
 
 # search for a PDF viewer among these file paths; take the first
 my @PDFVIEWERS = grep { -e $_ && -x $_ } 
-   ("/usr/bin/kpdf","/usr/bin/okular","/usr/bin/acroread");
+   ("/usr/local/bin/acroread","/usr/bin/acroread","/usr/bin/okular");
 my $PDFVIEWER = $PDFVIEWERS[0];
 
-my $TEXCOMPILER = "/usr/bin/lamed";
-my $DVIPDFCONVERTER = "/usr/bin/dvipdfm";
+my $TEXCOMPILER = "lualatex";
+
 my $PDFTK = "/usr/bin/pdftk";
 
 ## END OF USER-MODIFIABLE COMMAND PATHS
@@ -121,36 +134,28 @@ print TEXWRAP @TEMPLATELINES;
 close (TEXWRAP);
 
 #### RUN GREGORIO, LATEX, AND KPDF ####
-my $DVIFILE = $SCOREWRAPTEX;
-$DVIFILE =~ s/tex$/dvi/;
 my $PDFFILE = $SCOREWRAPTEX;
 $PDFFILE =~ s/tex$/pdf/;
+my $AUXFILE = $SCOREWRAPTEX;
+$AUXFILE =~ s/tex$/aux/;
+my $GAUXFILE = $SCOREWRAPTEX;
+$GAUXFILE =~ s/tex$/gaux/;
 
 # remove product files so that we don't accidentally view results
 # from a prior run
 unlink $SCORETEXFILE;
-unlink $DVIFILE;
 unlink $PDFFILE;
+
 
 do_cmd("gregorio $GABCFILE");
 do_cmd("$TEXCOMPILER $SCOREWRAPTEX");
-do_cmd ("$DVIPDFCONVERTER $DVIFILE");
-if ( -e $PDFTK && -x $PDFTK ) {
-	my $TMPFILE = $$ . ".pdf";
-	rename $PDFFILE, $TMPFILE;
-	printf "Reducing size of $PDFFILE...\n";
-	do_cmd ("$PDFTK $TMPFILE output $PDFFILE");
-	unlink $TMPFILE;
-};
-do_cmd ("$PDFVIEWER $PDFFILE");
-
-my $AUXFILE = $DVIFILE;
-$AUXFILE =~ s/dvi$/aux/;
-
-unlink $DVIFILE or warn "Could not delete temporary file: $DVIFILE\n";
-unlink $AUXFILE or warn "Could not delete temporary file: $AUXFILE\n";
+unlink $AUXFILE;
+unlink $GAUXFILE;
 
 print "\n\nOutput is in $PDFFILE .\n";
+do_cmd ("$PDFVIEWER $PDFFILE");
+
+
 exit;
 
 sub do_subst {
@@ -175,12 +180,15 @@ __END__
 
 \documentclass[12pt, letterpaper]{article}
 \usepackage{fullpage}
-\usepackage{palatino}
 \usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+\usepackage[latin1]{inputenc}
+\usepackage{palatino}
 \usepackage{gregoriotex}
+\usepackage{color}
+\usepackage{ifthen}
 \pagestyle{empty}
 \begin{document}
+\redlines
 
 \begin{center}\begin{huge}\textsc{XXXX-SCORENAME-XXXX}\end{huge}\end{center}
 
@@ -191,10 +199,11 @@ __END__
 {\fontsize{43}{43}\selectfont #1}%
 }
 
-\setfirstlineaboveinitial{\small \textsc{\textbf{XXXX-ANNOTATION-XXXX}}}{\small \textsc{\textbf{XXXX-ANNOTATION-XXXX}}}
+\gresetfirstlineaboveinitial{\small \textsc{\textbf{XXXX-ANNOTATION-XXXX}}}{\small \textsc{\textbf{XXXX-ANNOTATION-XXXX}}}
 \commentary{{\small \emph{XXXX-REFERENCE-XXXX}}}
+
 \setgrefactor{17}
-\spaceabovelines=5mm
+\grespaceabovelines=5mm
 \includescore{XXXX-SCORETEXFILE-XXXX}
 
 \end{document}
