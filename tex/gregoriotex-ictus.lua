@@ -25,7 +25,7 @@ grechiro = {}
 
 grechiro.module = {
     name          = "gregoriotex-ictus",
-    version       = 2.0,
+    version       = 2.1,
     date          = "2010/09/27",
     description   = "GregorioTeX module for chironomy.",
     author        = "Elie Roux",
@@ -37,7 +37,7 @@ if luatextra and luatextra.provides_module then
     luatextra.provides_module(grechiro.module)
 end
 
-grechiro.version  = 2.0
+grechiro.version  = 2.1
 grechiro.showlog  = grechiro.showlog or false
 
 grechiro.currentLine = grechiro.currentLine or 1

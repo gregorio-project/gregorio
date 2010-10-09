@@ -24,7 +24,7 @@ gregoriotex = {}
 
 gregoriotex.module = {
     name          = "gregoriotex",
-    version       = 2.0,
+    version       = 2.1,
     date          = "2010/09/27",
     description   = "GregorioTeX module.",
     author        = "Elie Roux",
@@ -65,7 +65,7 @@ else
     end
 end
 
-gregoriotex.version  = 2.0
+gregoriotex.version  = 2.1
 gregoriotex.showlog  = false
 
 local hlist = node.id('hlist')
