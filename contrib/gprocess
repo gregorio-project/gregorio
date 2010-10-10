@@ -37,12 +37,10 @@ use strict;
 
 # search for a PDF viewer among these file paths; take the first
 my @PDFVIEWERS = grep { -e $_ && -x $_ } 
-   ("/usr/local/bin/acroread","/usr/bin/acroread","/usr/bin/okular");
+   ("/usr/bin/kpdf","/usr/bin/okular","/usr/local/bin/acroread","/usr/bin/acroread");
 my $PDFVIEWER = $PDFVIEWERS[0];
 
 my $TEXCOMPILER = "lualatex";
-
-my $PDFTK = "/usr/bin/pdftk";
 
 ## END OF USER-MODIFIABLE COMMAND PATHS
 
@@ -181,7 +179,7 @@ __END__
 \documentclass[12pt, letterpaper]{article}
 \usepackage{fullpage}
 \usepackage[T1]{fontenc}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{luainputenc}
 \usepackage{palatino}
 \usepackage{gregoriotex}
 \usepackage{color}
