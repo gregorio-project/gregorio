@@ -2571,7 +2571,14 @@ gregoriotex_write_rare (FILE * f,
   else {\
     if (current_note->previous && current_note -> pitch - current_note -> previous -> pitch > 2)\
       {\
-        *height=current_note->pitch - 1;\
+         /* an exceptional case, which may be too particular: marking a salicus starting with an interval of a 5th...*/ \
+         if (sign_type == TT_V_EPISEMUS && current_note -> pitch - current_note -> previous -> pitch == 4) {\
+           *height=current_note->pitch + 2;\
+         }\
+         else \
+           {\
+             *height=current_note->pitch - 1;\
+           }\
       }\
     else\
       {\
