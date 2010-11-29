@@ -697,6 +697,11 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 
 #define SKIP_FIRST_LETTER 1
 
+// the centering schemes for gabc:
+#define SCHEME_LATINE 1
+#define SCHEME_ENGLISH 2
+#define SCHEME_DEFAULT SCHEME_LATINE
+
 void gregorio_add_character (gregorio_character **current_character, grewchar wcharacter);
 void gregorio_begin_style (gregorio_character **current_character, unsigned char style);
 void gregorio_end_style (gregorio_character **current_character, unsigned char style);

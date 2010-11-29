@@ -82,7 +82,7 @@ gregorio_insert_style_before (unsigned char type, unsigned char style,
 void gregorio_insert_char_after (grewchar c, gregorio_character ** current_character);
 
 void gregorio_rebuild_characters (gregorio_character ** param_character,
-			     char center_is_determined);
+			     char center_is_determined, unsigned char centering_scheme);
 			     
 void gregorio_rebuild_first_syllable (gregorio_character ** param_character);
 

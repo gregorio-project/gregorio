@@ -707,11 +707,15 @@ center_is_determined has the values present in characters.h.
 
 Another difficulty is the fact that we must consider characters in verbatim and special character styles like only one block, we can't say the center is in the middle of a verbatim block.
 
+29/11/10: there is now the possibility to choose between two centering schemes:
+  - latine is the one used before
+  - english is a new scheme where the whole syllable (except for forced centering) is centered
+
 */
 
 void
 gregorio_rebuild_characters (gregorio_character ** param_character,
-			     char center_is_determined)
+			     char center_is_determined, unsigned char centering_scheme)
 {
   // a det_style, to walk through the list
   det_style *current_style = NULL;
@@ -725,7 +729,7 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
   unsigned char center_type = 0;	// determining the type of centering (forced or not)
   // so, here we start: we go to the first_character
   gregorio_go_to_first_character (&current_character);
-  // we first loop to see if there is already a center determined
+  // first we see if there is already a center determined
   if (center_is_determined == 0)
     {
       center_type = ST_CENTER;
@@ -733,6 +737,12 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
   else
     {
       center_type = ST_FORCED_CENTER;
+    }
+  // if there is no forced centering, we open the centering before the very first letter
+  if (centering_scheme == SCHEME_ENGLISH && center_type == ST_CENTER)
+    {
+      gregorio_insert_style_before (ST_T_BEGIN, ST_CENTER, current_character);
+      center_is_determined = CENTER_FULLY_DETERMINED;
     }
   // we loop until there isn't any character
   while (current_character)
@@ -936,13 +946,17 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
     {
       gregorio_insert_style_after (ST_T_END, center_type, &current_character);
     }
-// these last lines are for the case where the user didn't tell anything about the middle and there aren't any vowel in the syllable, so we begin the center before the first character (you can notice that there is no problem of style).
+  // these three lines are for the case where the user didn't tell anything about the middle and there aren't any vowel in the syllable, so we begin the center before the first character (you can notice that there is no problem of style).
   if (!center_is_determined)
     {
       gregorio_go_to_first_character (&current_character);
       gregorio_insert_style_before (ST_T_BEGIN, ST_CENTER, current_character);
     }
-// well.. you're quite brave if you reach this comment.
+  if (centering_scheme == SCHEME_ENGLISH && center_type == ST_CENTER)
+    {
+      gregorio_insert_style_after (ST_T_END, ST_CENTER, &current_character);
+    }
+  // well.. you're quite brave if you reach this comment.
   gregorio_go_to_first_character (&current_character);
   (*param_character) = current_character;
   gregorio_free_styles (&first_style);

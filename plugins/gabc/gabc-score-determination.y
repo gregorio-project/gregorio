@@ -94,6 +94,7 @@ void gregorio_gabc_add_text (char *mbcharacters);
 void gregorio_gabc_add_style(unsigned char style);
 void gregorio_gabc_end_style(unsigned char style);
 void complete_with_nulls (int voice);
+unsigned char centering_scheme;
 
 void gabc_score_determination_error(char *error_str) {
 gregorio_message (error_str, (const char *)"gabc_score_determination_parse", ERROR, 0);
@@ -252,6 +253,7 @@ initialize_variables ()
   number_of_voices = 0;
   voice = 1;
   current_character = NULL;
+  centering_scheme = SCHEME_DEFAULT;
   center_is_determined=0;
   for (i=0;i<10;i++)
     {
@@ -481,21 +483,15 @@ close_syllable ()
 
 // a function called when we see a [, basically, all characters are added to the translation pointer instead of the text pointer
 void start_translation() {
-  gregorio_rebuild_characters (&current_character, center_is_determined);
+  gregorio_rebuild_characters (&current_character, center_is_determined, centering_scheme);
   first_text_character = current_character;
   center_is_determined=CENTER_FULLY_DETERMINED; // the middle letters of the translation have no sense
   current_character=NULL;
 }
 
 void end_translation() {
-  gregorio_rebuild_characters (&current_character, center_is_determined);
+  gregorio_rebuild_characters (&current_character, center_is_determined, centering_scheme);
   first_translation_character=current_character;
-}
-
-void
-test ()
-{
-
 }
 
 /*
@@ -522,6 +518,23 @@ gregorio_gabc_add_text (char *mbcharacters)
     }
 }
 
+/* the function called when centering_scheme is seen in gabc */
+void
+set_centering_scheme(char *sc)
+{
+  if (strncmp((const char *)sc, "latine", 6) == 0)
+    {
+      centering_scheme = SCHEME_LATINE;
+      return;
+    }
+  if (strncmp((const char *)sc, "english", 6) == 0)
+    {
+      centering_scheme = SCHEME_ENGLISH;
+      return;
+    }
+  gregorio_message("centering-scheme unknown value: must be \"latine\" or \"english\"", "set_centering_scheme", WARNING, 0);
+}
+
 /*
 
 The two functions called when lex returns a style, we simply add it. All the complex things will be done by the function after...
@@ -542,7 +555,7 @@ gregorio_gabc_end_style(unsigned char style)
 
 %}
 
-%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END
+%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
 
 %%
 
@@ -595,6 +608,12 @@ lilypond_preamble_definition:
 	gregorio_message(_("several lilypond preamble definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
 	}
 	gregorio_set_score_lilypond_preamble (score, $2);
+	}
+	;
+	
+centering_scheme_definition:
+	CENTERING_SCHEME attribute {
+	set_centering_scheme($2);
 	}
 	;
 
@@ -917,6 +936,8 @@ definition:
 	|
 	user_notes_definition
 	|
+	centering_scheme_definition
+	|
 	VOICE_CHANGE {
 	next_voice_info ();
 	}
@@ -1095,7 +1116,7 @@ above_line_text:
 
 syllable_with_notes:
 	text OPENING_BRACKET notes {
-	gregorio_rebuild_characters (&current_character, center_is_determined);
+	gregorio_rebuild_characters (&current_character, center_is_determined, centering_scheme);
     first_text_character = current_character;
 	close_syllable();
 	}

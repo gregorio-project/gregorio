@@ -83,7 +83,7 @@ semicolon. */
 	 return COLON;
 	}
 <attribute>[^;\n\r]*(;[^;\n\r]+)*([\n\r]+[^;]*(;[^;]+)*)? {
-	 gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	 gabc_score_determination_lval = strdup(gabc_score_determination_text);
          return ATTRIBUTE;
       }
 <attribute>;(;|[\n\r]+)    {
@@ -156,6 +156,9 @@ semicolon. */
       }
 <INITIAL>generated-by {
          return GENERATED_BY;
+      }
+<INITIAL>centering-scheme {
+         return CENTERING_SCHEME;
       }
 <INITIAL>transcription-date {
          return TRANSCRIPTION_DATE;
