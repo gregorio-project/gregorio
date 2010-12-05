@@ -500,11 +500,24 @@
   \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{1}%
   \ifcase#4 %
     % we enter here if the end of word is 0, so we must determine if we need to type a dash here
-    % we set temp to the additional space that will be needed before the next syllable
-    %\ifdim\greenddifference>0pt%
-    \gretempdim=\greenddifference %
-    \advance\gretempdim by \greintersyllablespace %
-    \advance\gretempdim by \grenextbegindifference %
+    % we set gretempdim to the additional space that will be needed before the next syllable (just like it was somes lines above)
+    \ifdim\greenddifference>0pt%
+      \gretempdim=\greintersyllablespace %
+      \advance\gretempdim by \grenextbegindifference %
+    \else %\greenddifference<0
+      \gretempdim=\greintersyllablespace %
+      \advance\gretempdim by \grenextbegindifference %
+      \advance\gretempdim by \greenddifference %
+    \fi % \ifdim\greenddifference>0pt
+    \ifnum\grefirstisalteration=1\relax %
+      \advance\gretempdim by \grebeforealterationspace %
+    \fi % \ifnum\grefirstisalteration=1
+    \ifdim\gretempdim<0pt %
+      \gretempdim=0pt%
+    \fi %
+    % then we set gretempdim to the actual space between the texts of the two syllables
+    \advance\gretempdim by \greenddifference %
+    %\vrule width 2.7pt height 1mm%
     %
     % then we compare it with \gremaximumspacewithoutdash, if it is larger, we add a dash
     %
@@ -538,23 +551,23 @@
   % trick: we want to kern -enddifference if necessary before any change of line, which we can achieve only with this trick if the end of line is the last thing of the notes (it's the case of \grelastoflinecount is 1).
   % For the kern in this case, the base is to kern -\greenddifference if it's negative, but we can kern a bit more for the text to get a bit more to the right, but not after the end of the scores minus \greminimalspaceatlinebeginning
   \ifnum\grelastoflinecount=1\relax %
-  \ifdim\the\greenddifference <0pt%
-    \gretempdim=-\greenddifference %
-    % we don't do it if it's the last syllable of a score or if the user disabled it
-    \ifnum\gredisableeolshifts=0\relax %
-      \ifnum\greblockcusto=1\else %
-        \setbox\GreTempwidth=\hbox{\grecustochar{g}}%
-        \gretempwidth=\wd\GreTempwidth %
-        \advance\gretempdim by -\gretempwidth %
-        \advance\gretempdim by -\grespacebeforecusto %
+    \ifdim\the\greenddifference <0pt%
+      \gretempdim=-\greenddifference %
+      % we don't do it if it's the last syllable of a score or if the user disabled it
+      \ifnum\gredisableeolshifts=0\relax %
+        \ifnum\greblockcusto=1\else %
+          \setbox\GreTempwidth=\hbox{\grecustochar{g}}%
+          \gretempwidth=\wd\GreTempwidth %
+          \advance\gretempdim by -\gretempwidth %
+          \advance\gretempdim by -\grespacebeforecusto %
+        \fi %
+        \advance\gretempdim by \greminimalspaceatlinebeginning %
       \fi %
-      \advance\gretempdim by \greminimalspaceatlinebeginning %
+      \ifdim\the\gretempdim <-\the\greenddifference %
+        \gretempdim=-\the\greenddifference %
+      \fi %
+      \xdef\grekernbeforeeol{\the\gretempdim\relax}%
     \fi %
-    \ifdim\the\gretempdim <-\the\greenddifference %
-      \gretempdim=-\the\greenddifference %
-    \fi %
-    \xdef\grekernbeforeeol{\the\gretempdim\relax}%
-  \fi %
   \fi%
   \penalty 10001\relax % no line breaks between text and notes
   #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
@@ -570,7 +583,7 @@
   \fi%
   \xdef\grekernbeforeeol{0pt\relax}%
   % we call end of syllable
-  %% then we call end of syllable or end of word, but only if the next syllable is not a bar, that is to say, the number is between 10 and 19. TeX is a shitty language, so we do a dirty workaround to make a and in the if.
+  %% then we call end of syllable or end of word, but only if the next syllable is not a bar, that is to say, the number is between 10 and 19. TeX is a ****** language, so we do a dirty workaround to make a and in the if.
   \ifnum#7>9\relax %
     \ifnum#7<20\relax %
       \ifnum\grelastoflinecount=1\relax %
@@ -591,9 +604,9 @@
     \fi %
   \else %
     \gretexworkaround{#4}%
-  \fi%
+  \fi %
   \global\grenotesaligncenter=0pt% very important, see flat and natural
-  \relax%
+  \relax %
 }
 
 % The only reason of this function is that TeX can't have and in if
