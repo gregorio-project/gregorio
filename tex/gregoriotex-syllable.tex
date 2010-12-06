@@ -475,12 +475,9 @@
     % and we do it only if it is not the first syllable of a word
     % but we must not do it when there is a bar before... so when there is a bar enddifference = 0
     \ifnum\grefirstsyllableofword=0 %
-      \ifdim\greenddifference>0pt%
-        \gretempdim=\greintersyllablespace %
-        \advance\gretempdim by \grebegindifference %
-      \else %\greenddifference<0
-        \gretempdim=\greintersyllablespace %
-        \advance\gretempdim by \grebegindifference %
+      \gretempdim=\greintersyllablespace %
+      \advance\gretempdim by \grebegindifference %
+      \ifdim\greenddifference<0pt%
         \advance\gretempdim by \greenddifference %
       \fi % \ifdim\greenddifference>0pt
       \ifnum\grefirstisalteration=1\relax %
@@ -500,24 +497,23 @@
   \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{1}%
   \ifcase#4 %
     % we enter here if the end of word is 0, so we must determine if we need to type a dash here
-    % we set gretempdim to the additional space that will be needed before the next syllable (just like it was somes lines above)
-    \ifdim\greenddifference>0pt%
-      \gretempdim=\greintersyllablespace %
-      \advance\gretempdim by \grenextbegindifference %
-    \else %\greenddifference<0
-      \gretempdim=\greintersyllablespace %
-      \advance\gretempdim by \grenextbegindifference %
+    % we set gretempdim to the actual space between the text of the two syllables. The algorithm is quite complex, but quite similar to the one computing the space between the two syllables several lines above.
+    \gretempdim=\greintersyllablespace %
+    \advance\gretempdim by \grenextbegindifference %
+    \ifdim\greenddifference<0pt%
       \advance\gretempdim by \greenddifference %
     \fi % \ifdim\greenddifference>0pt
-    \ifnum\grefirstisalteration=1\relax %
-      \advance\gretempdim by \grebeforealterationspace %
-    \fi % \ifnum\grefirstisalteration=1
-    \ifdim\gretempdim<0pt %
+    % there is a small """feature""" here: if the first glyph is an alteration, the algorithm will be quite pessimistic
+    % about the space, so an hyphen may be added when it's not really necessary.
+    \ifdim\gretempdim<0pt%
       \gretempdim=0pt%
     \fi %
-    % then we set gretempdim to the actual space between the texts of the two syllables
-    \advance\gretempdim by \greenddifference %
-    %\vrule width 2.7pt height 1mm%
+    \ifdim\greenddifference >0pt%
+      \advance\gretempdim by \greenddifference %
+    \fi %
+    \ifdim\grenextbegindifference >0pt%
+      \advance\gretempdim by \grenextbegindifference %
+    \fi %
     %
     % then we compare it with \gremaximumspacewithoutdash, if it is larger, we add a dash
     %
