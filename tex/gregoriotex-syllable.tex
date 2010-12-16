@@ -464,6 +464,12 @@
       \ifdim\the\gretempdim < \the\grebegindifference %
         \gretempdim=\the\grebegindifference %
       \fi %
+      % Don't allow kern past the beginning of the first line with no initial
+      \ifdim\greinitialwidth = 0pt %
+        \ifnum\greknownline=1 %
+          \advance\gretempdim by \greclefwidth %
+        \fi %
+      \fi %
       \ifdim\the\gretempdim < 0pt%
         \kern\the\gretempdim %
       \fi %
