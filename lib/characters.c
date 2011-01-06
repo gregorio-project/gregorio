@@ -45,7 +45,7 @@ gregorio_is_vowel (grewchar letter)
   grewchar vowels[] = { L'a', L'e', L'i', L'o', L'u', L'y', L'A', L'E',
     L'I', 'O', 'U', 'Y', L'œ', L'Œ', L'æ', L'Æ', L'ó', L'À', L'È',
     L'É', L'Ì', L'Í', L'Ý', L'Ò', L'Ó', L'è', L'é', L'ò', L'ú',
-    L'ù', L'ý', L'á', L'à', L'ǽ', L'Ǽ', L'í', L'*'
+    L'ù', L'ý', L'á', L'à', L'ǽ', L'Ǽ', L'í', L'ë', L'*'
   };
   int i;
   for (i = 0; i < 37; i++)
