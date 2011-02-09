@@ -1,6 +1,6 @@
 #!/usr/bin/env texlua
 --[[
-Gregorio gabc optimization script.
+Gregorio/Scribus script.
 Copyright (C) 2010 Elie Roux <elie.roux@telecom-bretagne.eu>
 
 This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-You must run this program with texlua, if possible under a TeXLive 2010.
-This program installs gregorio under Windows.
+You must run this program with texlua, if possible under TeXLive 2010 (or later).
+This program allows gregorio to be integrated in Scribus.
 --]]
 
 local gregoriobin = 'gregorio';
@@ -27,8 +27,8 @@ local function basename(name)
     return string.match(name,"^.+[/\\](.-)$") or name
 end
 
-local f = nil
-local dir = nil
+local f = arg[1]
+local dir = arg[2]
 local current = ""
 
 -- first we need to rebuild the arguments that are lost in pieces
