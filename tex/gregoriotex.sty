@@ -89,6 +89,12 @@
   \relax %
 }
 
+% keep this here, but \writemode may be deprecated at some point
+\def\writemode#1{%
+  \gresetfirstlineaboveinitial{\textsc{\textbf{#1}}}{\textsc{\textbf{#1}}}%
+  \relax %
+}
+
 % opening and closing of the aux file. We can't do it another way,
 % because of the case of several scores. We do it only in the case
 % it's useful, meaning with LuaTeX
