@@ -1,5 +1,5 @@
 %GregorioTeX file.
-%Copyright (C) 2007 Elie Roux <elie.roux@telecom-bretagne.eu>
+%Copyright (C) 2007-2013 Elie Roux <elie.roux@telecom-bretagne.eu>
 %
 %This program is free software: you can redistribute it and/or modify
 %it under the terms of the GNU General Public License as published by
@@ -20,46 +20,29 @@
 %% engine checking
 %%%%%%%%%%%%%%%%%%
 
-% a if to see if we are called with lua(la)tex or not
-\newif\ifgreluatex
-% Set \ifgreluatex accordingly
-\expandafter\ifx\csname directlua\endcsname\relax
-  \greluatexfalse
+\expandafter\ifx\csname RequirePackage\endcsname\relax
+  \input ifluatex.sty
 \else
-  \greluatextrue
+  \RequirePackage{ifluatex}
 \fi
+
+\ifluatex
+  \expandafter\ifx\csname RequirePackage\endcsname\relax
+    \input luatexbase.sty
+  \else
+    \RequirePackage{luatexbase}
+  \fi
+\fi
+
+% for backward compatibility with old gregorio files
+\let\ifgreluatex\ifluatex
 
 % if we are not under LuaTeX, we check if we are under lamed or omega...
 % if not, we output an error message
 
-\ifgreluatex\else
+\ifluatex\else
   \expandafter\ifx\csname localrightbox\endcsname\relax
     \errmessage{Error: this document must be compiled with Aleph (lamed) or LuaTeX (lualatex)}
-  \fi
-\fi
-
-% we need to check if luatextra is loaded or not
-\newif\ifgreluatextra
-\expandafter\ifx\csname newluaattribute\endcsname\relax
-  \greluatextrafalse
-\else
-  \ifgreluatex
-    \greluatextratrue
-  \else
-    \greluatextrafalse
-  \fi
-\fi
-
-% we need to check if luatextra is in a recent version... even if it will
-% certainly keep backward compatibility, it's better to be sure...
-\newif\ifgreluatextranew
-\expandafter\ifx\csname newluatexattribute\endcsname\relax
-  \greluatextranewfalse
-\else
-  \ifgreluatex
-    \greluatextranewtrue
-  \else
-    \greluatextranewfalse
   \fi
 \fi
 
@@ -67,85 +50,27 @@
 % available without prefix. We mostly rely on \directlua that is still available
 % without prefix, but we also rely on the Omega primitives, that have a luatex 
 % prefix in TeXLive 2009.
-\newif\ifgreluatexnew
-\expandafter\ifx\csname luatexlocalleftbox\endcsname\relax
-  \let\grelocalleftbox\localleftbox
-  \let\grelocalrightbox\localrightbox
-  \greluatexnewfalse
-\else
+
+\ifluatex
   \let\grelocalleftbox\luatexlocalleftbox
   \let\grelocalrightbox\luatexlocalrightbox
-  \greluatexnewtrue
-\fi
-
-% an attribute we put on the text nodes.
-% if it is 1, it means that there may be a dash here if this syllable is at the end of a line
-% if it is 2, it means that it's never useful to typeset a dash
-% if it is 0, it just means that we are in a score...
-\ifgreluatextranew
+  % an attribute we put on the text nodes.
+  % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
+  % if it is 2, it means that it's never useful to typeset a dash
+  % if it is 0, it just means that we are in a score...
   \newluatexattribute\gregorioattr
+  \let\greloadluamodule\RequireLuaModule
+  \def\greunsetattribute{\unsetluatexattribute{\gregorioattr}}
 \else
-  \ifgreluatextra
-    \newluaattribute\gregorioattr
-  \else
-    \ifgreluatex
-      \ifgreluatexnew
-        \luatexattributedef\gregorioattr=987
-      \else
-        \attributedef\gregorioattr=987
-      \fi
-    \fi
-  \fi
+  \let\grelocalleftbox\localleftbox
+  \let\grelocalrightbox\localrightbox
+  \def\greloadluamodule#1{}
 \fi
   
 % if we are used with LuaTeX we need to define some version-specific functions
-\ifgreluatex
-  \ifnum\luatexversion<36
-    \def\gredirectlua{\directlua0}
-  \else
-    \ifgreluatextranew
-      \let\gredirectlua\luadirect
-    \else
-      \ifgreluatextra
-        \let\gredirectlua\luadirect
-      \else
-        \let\gredirectlua\directlua
-      \fi
-    \fi
-  \fi
-\fi
-  
-\ifgreluatextranew
-  \let\greloadluamodule\luatexUseModule
-\else
-  \ifgreluatextra
-    \let\greloadluamodule\luaUseModule
-  \else
-    \ifgreluatex
-      \def\greloadluamodule#1{\gredirectlua{dofile(kpse.find_file('#1.lua'))}}
-    \else
-      \def\greloadluamodule#1{}
-    \fi
-  \fi
-\fi
+\let\gredirectlua\directlua
 
 \greloadluamodule{gregoriotex}
-
-\ifgreluatextra
-  \def\greunsetattribute{\unsetluaattribute{\gregorioattr}}
-\else
-  \ifgreluatex
-    \def\greunsetattribute{%
-      \ifnum\luatexversion<37\relax %
-        \gregorioattr=-1\relax %
-      \else %
-        \gregorioattr=-"7FFFFFFF\relax %
-      \fi %
-    }
-  \fi
-\fi
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %% aux file definitions
@@ -153,25 +78,25 @@
 
 % for now, we only use an aux file with LuaTeX
 
-\ifgreluatex
+\ifluatex
   \newwrite\Greaux
 \fi
 
 \def\grewriteaux#1{%
-  \ifgreluatex %
+  \ifluatex %
     \write\Greaux{#1}%
   \fi %
   \relax %
 }
 
 \def\opengreaux{%
-  \ifgreluatex %
+  \ifluatex %
     \openout\Greaux \jobname .gaux\relax%
   \fi %
 }
 
 \def\closegreaux{%
-  \ifgreluatex %
+  \ifluatex %
     \closeout\Greaux %
   \fi %
 }
