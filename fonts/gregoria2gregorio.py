@@ -18,6 +18,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from os import system
+import fontforge, psMat
 
 shapes={
 'pes':2,
@@ -55,101 +56,38 @@ liquescentiae={
 
 pitchLetters=['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm']
 
-fout=open("create-gregoria.pe", 'w')
-
-# the current font name
-fontName=""
-
 # a big list in which we put all the glyph numbers that have been created
 bigList=[]
 
-# a function called at the beginning of the script, that opens the font
-def header():
-    fout.write("#!/usr/local/bin/fontforge\n\nPrint(\"Adapting the gregoria font for gregorio.\\nThis may take several minutes.\");\n")
-    
-
-def openFont(fontName):
-    fout.write("Open(\"%s\");\n" % fontName)
-
-# the function that deletes the temporary glyphs and saves the modified font, called at the end
-
-def footer():
-    fout.write("Quit(0);\n")
-    
-# function called when we are at the 255th glyph of a font, we start a new one.
-def save_font(fontName):
-    fout.write("Reencode(\"compacted\");\n")
-    fout.write("Reencode(\"original\",1);\n")
-    fout.write("SetFontNames(\"%s\");\n" % (fontName))
-    # 66537 is for generating an afm and a tfm file
-    #fout.write("Generate(\"%s.pfb\",\"\",66537);\n" % (fontName))
-    # uncomment the next line if you want to generate sfd files (easier to debug)
-    fout.write("Save(\"%s.sfd\");\n" % (fontName))
-    fout.write("Close();\n")
-
 def main():
-    global fontName, fout
-    header()
-    # first let's "clean" gregoria of all these
-    openFont("Gregoria.otf")
-    fontName="gregoria"
+    global newfont, oldfont, fontName
+    newfont = fontforge.font()
+#    newfont.em = 2048
+    oldfont = fontforge.open("Gregoria.otf")
+    fontName = "gregoria"
+    newfont.encoding="ISO10646-1"
+    newfont.fontname="gregoriao"
+    newfont.fullname="gregoriao"
+    newfont.familyname="gregoriao"
+    newfont.weight=oldfont.weight
+    newfont.copyright=oldfont.copyright
     first_step()
     adjustAdditionalGlyphs()
-    save_font("gregoria")
-    openFont("Gregoria-Auctae.otf")
-    fontName="gregoria-auctae"
-    first_step()
-    adjustAuctaeAdditionalGlyphs()
-    save_font("gregoria-auctae")
-    openFont("Gregoria-Deminutae.otf")
+    oldfont.close()
+    oldfont = fontforge.open("Gregoria-Deminutae.otf")
     fontName="gregoria-deminutae"
     first_step()
-    adjustDeminutaeAdditionalGlyphs()
-    save_font("gregoria-deminutae")
-    footer()
-    fout.close()
-    system("python squarize.py gregoria")
-    print "Generating gregorio glyphs for gregoria"
-    system("fontforge -script gregoria.pe")
-    system("fontforge -script create-gregoria.pe")
-    # Warning: big hack
-    # in fontforge, we can't change the width the EM has... in gregoria it is 2048, and it should be 1000
-    # so instead of starting to merge gregoria (as the principal font in the merge process) with like gregoria-1, we merge gregoria-8 (as the main font) with gregoria, like this the result (gregoria) will have the EM width of gregoria-7, which is 1000.
-    mergeFonts("gregoria-7", "gregoria", "gregoria", setinfos=1)
-    mergeFonts("gregoria", "gregoria-auctae", "gregoria")
-    mergeFonts("gregoria", "gregoria-deminutae", "gregoria")
-    for i in range(9):
-        if i!=7:
-            mergeFonts("gregoria", "gregoria-%d" % i, "gregoria")
-    for i in range(1, 12):
-        system("fontforge -script merge-gregoria-%d.pe" % i)
-    cutGregoria()
-    createMap()
-    finishCreation()
+    adjustAdditionalGlyphs()
+    oldfont.close()
+    oldfont = fontforge.open("Gregoria-Auctae.otf")
+    fontName="gregoria-auctae"
+    first_step()
+    adjustAdditionalGlyphs()
+    oldfont.close()
+    newfont.em = 2048
+    newfont.generate("gregoriao.ttf")
+    newfont.close()
     
-def finishCreation():
-    for i in range(9):
-        print "tftopl gregoria-%d.tfm gregoria-%d.pl" % (i,i)
-        system("tftopl gregoria-%d.tfm gregoria-%d.pl" % (i,i))
-    print "perl create-ovp.perl gregoria"
-    system("perl create-ovp.perl gregoria")
-    print "ovp2ovf gregoria.ovp gregoria.ovf gregoria.ofm"
-    system("ovp2ovf gregoria.ovp gregoria.ovf gregoria.ofm")
-
-def createMap():
-    print "Creating gregoria.map"
-    pompompompompompompododododooom="""gregoria-0 <gregoria-0.pfb
-gregoria-1 <gregoria-1.pfb
-gregoria-2 <gregoria-2.pfb
-gregoria-3 <gregoria-3.pfb
-gregoria-4 <gregoria-4.pfb
-gregoria-5 <gregoria-5.pfb
-gregoria-6 <gregoria-6.pfb
-gregoria-7 <gregoria-7.pfb
-gregoria-8 <gregoria-8.pfb"""
-    fout=open("gregoria.map", 'w')
-    fout.write(pompompompompompompododododooom)
-    fout.close()
 
     # I don't know why, but Select does not seem to work with glyph number, only with names, so we have to hardcode a correspondance table between the glyphnumber and the name... happily only for some value:
 cT={
@@ -174,199 +112,11 @@ cT={
     2303:17819,
     2133:17819}
 
-# a function to call the big gregoria font in 256 character fonts, and generate pfb and tfm
-def cutGregoria():
-    global fout
-    fout=open("cut-gregoria.pe", 'w')
-    fout.write("#!/usr/local/bin/fontforge\n\n")
-    fout.write("Open(\"gregoria.sfd\");\n")
-    for i in range(9):
-        # for each range, we select and delete the previous glyphs, and the next ones
-        if i != 0:
-            removeRange(cT[0], cT[256*i - 1])
-        if i != 8:
-            removeRange(cT[256*(i+1)], cT[2133])
-        generateFont(i)
-    fout.write("Quit(0);\n")
-    fout.close()
-    system("fontforge -script cut-gregoria.pe")
-        
-def removeRange(begin, end):
-    fout.write("Select(\"_%04d\", \"_%04d\");\n" % (begin, end))
-    fout.write("Clear();\n")
-
-def generateFont(i):
-    fout.write("Reencode(\"compacted\");\n")
-    fout.write("Reencode(\"original\",1);\n")
-    fout.write("SetFontNames(\"gregoria-%d\");\n" % i)
-    fout.write("Generate(\"gregoria-%d.pfb\",\"\",66537);\n" % i)
-    fout.write("Close();\n")
-    fout.write("Open(\"gregoria.sfd\");\n")
-
-scriptNum=1
-
-# fontforge segfaults when merging too many fonts in the same script, so we create one script per merging
-def mergeFonts(firstFont, secondFont, result, setinfos=0):
-    global scriptNum
-    fscript=open("merge-gregoria-%d.pe" % scriptNum, 'w')
-    fscript.write("#!/usr/local/bin/fontforge\n\n")
-    fscript.write("Open(\"%s.sfd\");\n" % firstFont)
-    fscript.write("MergeFonts(\"%s.sfd\");\n" % secondFont)
-    fscript.write("Reencode(\"compacted\");\n")
-    fscript.write("Reencode(\"original\",1);\n")
-    if (setinfos):
-        setFontInfos(fscript)
-    fscript.write("Save(\"%s.sfd\");\n" % result)
-    fscript.write("Close();\n")
-    fscript.write("Quit(0);\n")
-    scriptNum = scriptNum +1
-    fscript.close()
-
-def setFontInfos(fscript):
-    fscript.write("SetFontNames(\"gregoria\",\"gregoria\",\"Gregoria\",\"Medium\",\"Copyright (c) 2006 by Elena Albertoni / AnatoleType. All rights reserved.\",\"1.0\");\n")
-
 def first_step():
-    deleteUselessGlyphs()
     adjustTwoNotesGlyphs()
     adjustThreeNotesGlyphs()
     adjustFourNotesGlyphs()
     renameBaseGlyphs()
-    
-def deleteGlyph(GlyphName):
-    fout.write("Select(\"%s\");\n" % GlyphName)
-    fout.write("Clear();\n") 
-
-def deleteUselessGlyphs():
-    # first some random glyphs
-    randomGlyphs=['.notdef', '.null', 'CR', 'space', 'exclam', 'numbersign', 'quotesingle', 'plus', 'comma', 'hyphen', 'period', 'slash', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'colon', 'semicolon', 'question', 'V', 'W', 'X', 'Y', 'q', 'w', 'nbspace', 'asciicircum', 'underscore', 'apostrophe', 'N', 'O', 'n', 'virga.alt.001', 'virga', 'doF.alt', 'doH.alt', 'doJ.alt', 'faH.alt', 'faJ.alt', 'apostropha', 'quilisma.001', 'S', 'doF', 'doJ', 'faJ']
-    for glyph in randomGlyphs:
-        deleteGlyph(glyph)
-    combinationLetters=['x', 'y', 'o', 'v', 'w', 's']
-    #
-    # type eo
-    #
-    for letter in combinationLetters:
-        for pitch in pitchLetters:
-          if letter=='y' and pitch == 'b': # TODO: bugreport
-              deleteGlyph("b_y")
-          else:
-              deleteGlyph("%c%c" % (pitch, letter)) 
-    # various things
-    for pitch in pitchLetters:
-        deleteGlyph("%cv.alt" % pitch)
-        deleteGlyph("%cs.alt" % pitch)
-        deleteGlyph("%cV" % pitch.upper())
-        deleteGlyph("%c.alt.001" % pitch)
-        deleteGlyph("%c.alt" % pitch)
-        deleteGlyph("%c.alt" % pitch.upper())
-    #          
-    # type g and G
-    #
-    for pitch in pitchLetters:
-        deleteGlyph("%c" % pitch)
-        deleteGlyph("%c" % pitch.upper())
-    #
-    # type spaceXXX
-    #    
-    spaceTypes=['205', '246', '328', '410', '492', '574', '656', '738', '820', '902', '984']
-    for space in spaceTypes:
-        deleteGlyph("SP%s" % space)
-    deleteGlyph("SP246.001")
-    deleteGlyph("SPdiv2")
-    #
-    # type pmoraA1
-    #
-    Types=["", '1', '2', '3', '4']
-    for pmora in Types:
-        for letter in pitchLetters:
-            deleteGlyph("pmora%c%s" % (letter.upper(), pmora))
-    for i in range(1,5):
-        deleteGlyph("pmora%d" % i)
-    #
-    # type episema2wA1
-    #
-    episemaPrefix=["", "2w", "3w"]
-    for episema in Types:
-        for prefix in episemaPrefix:
-            if episema != "" and prefix != "":
-                deleteGlyph("episema%s%s" % (prefix, episema))
-            for letter in pitchLetters:
-                deleteGlyph("episema%s%c%s" % (prefix, letter.upper(), episema))
-    for i in range(1, 5):
-        deleteGlyph("episema%d" % i)
-    deleteGlyph("episema2w")
-    deleteGlyph("episema3w")
-    #
-    # type episVertA1
-    #
-    for epis in Types:
-        for letter in pitchLetters:
-            deleteGlyph("episVert%c%s" % (letter.upper(), epis))
-            deleteGlyph("episVert%c%s.alt" % (letter.upper(), epis))
-    for i in range(1, 5):
-        deleteGlyph("episVert%d" % i)
-        deleteGlyph("episVert%d.alt" % i)
-    #
-    # type enddownA (custos)
-    #    
-    for letter in pitchLetters:
-        deleteGlyph("enddown%c" % letter.upper())
-        deleteGlyph("endup%c" % letter.upper())
-        deleteGlyph("endup%c.norm" % letter.upper())
-        deleteGlyph("enddown%c.norm" % letter.upper())
-    #
-    # various types of simple glyphs
-    # 
-    twoNoteGlyphs=["pes", "pes.quadratum", "flexa", "pes.quassus", "flexus", "pesDebilis"]
-    for glyph in twoNoteGlyphs:
-        for i in range(1, 43):
-            deleteGlyph("%s%02d" % (glyph, i))
-    for i in range(1, 43):
-        deleteGlyph("flexa%02d.alt" % i)
-    for i in range(1, 14):
-        deleteGlyph("stratus%d" % i)
-    for i in range(1, 13):
-        deleteGlyph("pes.quil%02d" % i)
-    for i in range(1, 5):
-        for j in range(1, 14-i):
-            deleteGlyph("bar%d.%02d" % (i, j))
-    for i in range(1,5):
-        deleteGlyph("bar%d" % i)
-    if fontName=="gregoria":
-        for i in range(1, 5):
-            deleteGlyph("flexa%d" % i)
-    else:
-        deleteGlyph("flexa1.b")
-        deleteGlyph("flexa2.b")
-        deleteGlyph("flexa3b")
-        deleteGlyph("flexa4b")
-    supressThreeNotesGlyph("torcDebilis")
-    supressThreeNotesGlyph("porrectus")
-    supressThreeNotesGlyph("torculus")
-    supressThreeNotesGlyph("tor.resupinus")
-    supressFourNotesGlyph("por.resupinus")
-    supressFourNotesGlyph("por.flex")
-    
-def supressThreeNotesGlyph(name):
-    for i in range(1, 13):
-        deleteGlyph("%s1.%d" % (name, i))
-    for i in range(1, 34):
-        deleteGlyph("%s2.%d" % (name, i))
-    for i in range(1, 51):
-        deleteGlyph("%s3.%d" % (name, i))
-    for i in range(1, 64):
-        deleteGlyph("%s4.%d" % (name, i))
-
-
-def supressFourNotesGlyph(name):
-    for i in range(1, 13):
-        deleteGlyph("%s1.%d" % (name, i))
-    for i in range(1, 66):
-        deleteGlyph("%s2.%d" % (name, i))
-    for i in range(1, 141):
-        deleteGlyph("%s3.%d" % (name, i))
-    for i in range(1, 277):
-        deleteGlyph("%s4.%02d" % (name, i))
 
 # a simple function giving the liquescentia
 def giveLiquescentia(debilis):
@@ -392,55 +142,47 @@ def adjustTwoNotesGlyphs():
     twoNotesGlyphs=['flexa', 'flexus'] # there is a . in the name of the 3 and 4
     # case of pes
     for i in range(1,5):
-        name=glyphName(i, 0, 0, 'pes', giveLiquescentia('nothing'), 1)
-        adjustGlyphHeight("pes%d" % i, i-1)
+        name=glyphNum(i, 0, 0, 'pes', giveLiquescentia('nothing'), 1)
         renameGlyph("pes%d" % i, name)
+        adjustGlyphHeight(name, i-1)
     # case of pesDebilis
     for i in range(1,5):
         if fontName=="gregoria":
-            name=glyphName(i, 0, 0, 'pes', giveLiquescentia('initiodebilis'), 1)
-            adjustGlyphHeight("pesDebilis%d" % i, i-1)
+            name=glyphNum(i, 0, 0, 'pes', giveLiquescentia('initiodebilis'), 1)
             renameGlyph("pesDebilis%d" % i, name)
-        else:
-            deleteGlyph("pesDebilis%d" % i)
+            adjustGlyphHeight(name, i-1)
     # case of pes.quadratum
     for i in range(1,5):
         if fontName == "gregoria":
-            name=glyphName(i, 0, 0, 'pesquadratum', giveLiquescentia('nothing'), 1)
-            adjustGlyphHeight("pes.quadratum%d" % i, i-1)
+            name=glyphNum(i, 0, 0, 'pesquadratum', giveLiquescentia('nothing'), 1)
             renameGlyph("pes.quadratum%d" % i, name)
+            adjustGlyphHeight(name, i-1)
             adjustGlyphWidth(name, 329)
-        else:
-            deleteGlyph("pes.quadratum%d" % i)
     # case of pes.quassus
     for i in range(1,5):
         if fontName == "gregoria":
-            name=glyphName(i, 0, 0, 'pesquassus', giveLiquescentia('nothing'), 1)
-            adjustGlyphHeight("pes.quassus%d" % i, i-1)
+            name=glyphNum(i, 0, 0, 'pesquassus', giveLiquescentia('nothing'), 1)
             renameGlyph("pes.quassus%d" % i, name)
-        else:
-            deleteGlyph("pes.quassus%d" % i)
+            adjustGlyphHeight(name, i-1)
     # case of flexus
     for i in range(1,5):
-        name=glyphName(i, 0, 0, 'flexus_nobar', giveLiquescentia('nothing'), 1)
+        name=glyphNum(i, 0, 0, 'flexus_nobar', giveLiquescentia('nothing'), 1)
+        glyphname="flexus%db" %i
         if i<3:
             glyphname="flexus%d.b" % i
-        else:
-            glyphname="flexus%db" %i
-        adjustGlyphHeight(glyphname, -1)
         renameGlyph(glyphname, name)
+        adjustGlyphHeight(name, -1)
     # case of flexa
     for i in range(1,5):
-        name=glyphName(i, 0, 0, 'flexus', giveLiquescentia('nothing'), 1)
+        name=glyphNum(i, 0, 0, 'flexus', giveLiquescentia('nothing'), 1)
+        glyphname = "flexa%d" % i
         if fontName=="gregoria":
             if i<3:
                 glyphname="flexa%d.b" % i
             else:
                 glyphname="flexa%db" %i
-        else:
-            glyphname="flexa%d" % i
-        adjustGlyphHeight(glyphname, -1)
         renameGlyph(glyphname, name)
+        adjustGlyphHeight(name, -1)
 
 # adjust the height and renames three notes glyphs
 def adjustThreeNotesGlyphs():
@@ -487,10 +229,7 @@ def adjustThreeNotesGlyphs():
     'porrectus':('porrectus', 'nothing'),
     'tor.resupinus':('porrectus_nobar', 'nothing')}
     for base in tNG.keys():
-        if base == "torcDebilis" and fontName == "gregoria-auctae":
-            for suffix in cTT.keys():
-                deleteGlyph("%s%s" % (base, suffix))
-        elif tNG[base][0]=='torculus':
+        if tNG[base][0]=='torculus':
             for suffix in cTT.keys():
                 adjustThreeNotesGlyphsAux("%s%s" % (base, suffix), cTT[suffix][0], cTT[suffix][1], tNG[base][0], giveLiquescentia(tNG[base][1]))
         else:
@@ -499,14 +238,14 @@ def adjustThreeNotesGlyphs():
 
 
 def adjustThreeNotesGlyphsAux(oldname, i, j, glyphType, liquescentia):
-    newname=glyphName(i, j, 0, glyphType, liquescentia, 0)
+    newname=glyphNum(i, j, 0, glyphType, liquescentia, 0)
+    renameGlyph(oldname, newname)
     # the constant thing is that the second note is on the good height
     if glyphType == 'torculus':
-        adjustGlyphHeight(oldname, i-1)
+        adjustGlyphHeight(newname, i-1)
     else:
-        adjustGlyphHeight(oldname, -i)
-    centerGlyph(oldname)
-    renameGlyph(oldname, newname)
+        adjustGlyphHeight(newname, -i)
+    centerGlyph(newname)
 
 # adjust the height and renames four notes glyphs
 def adjustFourNotesGlyphs():
@@ -566,23 +305,21 @@ def adjustFourNotesGlyphs():
     '4d.':(1,3,4,2)}
     for suffix in cT.keys():
         adjustFourNotesGlyphsAux("por.flexus%s" % suffix, cT[suffix][0], cT[suffix][1], cT[suffix][2], 'porrectusflexus', giveLiquescentia('nothing'), cT[suffix][3])
-        if fontName == "gregoria-auctae":
-            deleteGlyph("por.flexus%s.001" % suffix)
-        else:
+        if fontName != "gregoria-auctae":
             adjustFourNotesGlyphsAux("por.flexus%s.001" % suffix, cT[suffix][0], cT[suffix][1], cT[suffix][2], 'porrectusflexus_nobar', giveLiquescentia('nothing'), cT[suffix][3])
             
 def adjustFourNotesGlyphsAux(oldname, i, j, k, glyphType, liquescentia, shift):
-    newname=glyphName(i, j, k, glyphType, liquescentia, 0)
+    newname=glyphNum(i, j, k, glyphType, liquescentia, 0)
     # the constant thing is that the second note is on the good height
-    adjustGlyphHeight(oldname, -shift)
     renameGlyph(oldname, newname)
+    adjustGlyphHeight(newname, -shift)
 
 # some small random adjustments of width, etc.
 def adjustAdditionalGlyphs():
-    adjustGlyphWidth('_0019',173)
-    centerGlyph('_0019')
-    adjustGlyphWidth('_0027',164)
-    centerGlyph('_0027')
+    adjustGlyphWidth(19,173)
+    centerGlyph(19)
+    adjustGlyphWidth(27,164)
+    centerGlyph(27)
 
 # glyphs appearing in every font, but we keep only one of each, the corresponding thing is their name in the gregorio name convention, when they are in Gregoria (not Gregoria-Auctae or Diminutae)
 baseGlyphs=['Z.short', 'z.short', 'grave', 'o', 'v', 'x', 'y', 'circumflex', 'quoteright', 'doH', 'faH', 'virga.alt',  'vir.inv', 'quilisma', 'z', 'Z', 'pes.quil', 'oriscus']
@@ -610,48 +347,30 @@ baseGlyphsNewNames={
     'oriscus':(28,-1)}
           
 def adjustAuctaeAdditionalGlyphs():
-    for l in pitchLetters:
-        deleteGlyph("%c.quad" % l)
-    deleteGlyph("_0073.quad")
-    for g in baseGlyphs:
-        deleteGlyph(g)
     # we have to adapt some width because they are wrong in gregoria
     correctionTable={
-    '_11287':903,
-    '_11286':657,
-    '_11285':657}
+    11287:903,
+    11286:657,
+    11285:657}
     for (k,v) in correctionTable.items():
         adjustGlyphWidth(k, v)
         centerGlyph(k)
     
         
 def adjustDeminutaeAdditionalGlyphs():
-    for l in pitchLetters:
-        deleteGlyph("%c.quad" % l)
-    deleteGlyph("punctum.quad")
-    for g in baseGlyphs:
-        deleteGlyph(g)
-    for i in range(1, 50):
-        deleteGlyph("scandicus%02d" % i)
-    deleteGlyph("scandicus1")
-    deleteGlyph("scandicus2")
-    deleteGlyph("scandicus1a")
-    deleteGlyph("scandicus1b")
-    deleteGlyph("scandicus2a")
-    deleteGlyph("SPdiv2.001")
     # for an unknown reason, the height of the porrectus without bar are messed up in gregoria-deminutae...
     cTP={
-    '_12818':1,
-    '_12824':3,
-    '_12807':-1,
-    '_12811':-3,
-    '_12817':-1,
-    '_12813':-1,
-    '_12816':-3,
-    '_12823':1,
-    '_12814':3,
-    '_12822':-1,
-    '_12809':2}
+    12818:1,
+    12824:3,
+    12807:-1,
+    12811:-3,
+    12817:-1,
+    12813:-1,
+    12816:-3,
+    12823:1,
+    12814:3,
+    12822:-1,
+    12809:2}
     for (k,v) in cTP.items():
         adjustGlyphHeight(k,v)
 
@@ -659,70 +378,69 @@ def renameBaseGlyphs():
     if fontName=="gregoria":
         for oldname in baseGlyphs:
             number = baseGlyphsNewNames[oldname][0]
-            adjustGlyphHeight(oldname, baseGlyphsNewNames[oldname][1])
-            renameGlyph(oldname, "_%04d" % number)
+            renameGlyph(oldname, number)
+            adjustGlyphHeight(number, baseGlyphsNewNames[oldname][1])
         # here we adjust the vertical episemus and the circumflexus
-        shiftGlyph('_0016',131)
-        adjustGlyphWidth('_0016',99)
-        adjustGlyphPreciseHeight('_0016',100)
-        shiftGlyph('_0033',89)
-        adjustGlyphWidth('_0033',15)
-        adjustGlyphPreciseHeight('_0033',120)
-        renameGlyph('inclinatum', '_0019')
-        adjustGlyphHeight('_0019', -1)
-        renameGlyph('punctum', '_0017')
-        adjustGlyphHeight('_0017', -1)
-        renameGlyph('s', '_0020')
-        adjustGlyphHeight('_0020', -1)
+        shiftGlyph(16,131)
+        adjustGlyphWidth(16,99)
+        adjustGlyphPreciseHeight(16,100)
+        shiftGlyph(33,89)
+        adjustGlyphWidth(33,15)
+        adjustGlyphPreciseHeight(33,120)
+        renameGlyph('inclinatum', 19)
+        adjustGlyphHeight(19, -1)
+        renameGlyph('punctum', 17)
+        adjustGlyphHeight(17, -1)
+        renameGlyph('s', 20)
+        adjustGlyphHeight(20, -1)
     elif fontName=="gregoria-auctae":
-        renameGlyph('inclinatum', '_0031')
-        adjustGlyphHeight('_0031', -1)
-        renameGlyph('punctum', '_0073')
-        adjustGlyphHeight('_0073', -1)
-        renameGlyph('s', '_0021')
-        adjustGlyphHeight('_0021', -1)
+        renameGlyph('inclinatum', 31)
+        adjustGlyphHeight(31, -1)
+        renameGlyph('punctum', 73)
+        adjustGlyphHeight(73, -1)
+        renameGlyph('s', 21)
+        adjustGlyphHeight(21, -1)
     else:
-        renameGlyph('inclinatum', '_0032')
-        adjustGlyphHeight('_0032', -1)
-        deleteGlyph('s')
-        deleteGlyph('punctum')
+        renameGlyph('inclinatum', 32)
+        adjustGlyphHeight(32, -1)
 
 # function to rename a glyph
-def renameGlyph(oldname, newname):
-    fout.write("Select(\"%s\");\n" % oldname)
-    fout.write("SetGlyphName(\"%s\");\n" % newname)    
-    bigList.append(newname)
+def renameGlyph(oldname, newnum):
+    global oldfont, newfont
+    oldfont.selection.select(("singletons",), oldname)
+    oldfont.copy()
+    newfont.selection.select(("singletons",), "u%05x" % int(newnum))
+    newfont.pasteInto()
 
 # function to add n (can be negative) to the height of a glyph. n is the difference of pitch.
-def adjustGlyphHeight(name, n):
-    fout.write("Select(\"%s\");\n" % name)
+def adjustGlyphHeight(num, n):
     # we calculate the difference in the fontforge unity
-    y=n*157.5
-    fout.write("Move(0,%d);\n" % y)
+    global newfont
+    newfont[num].transform(psMat.translate(0,157.5*n))
 
-def adjustGlyphPreciseHeight(name, y):
-    fout.write("Select(\"%s\");\n" % name)
-    fout.write("Move(0,%d);\n" % y)
+def adjustGlyphPreciseHeight(num, y):
+    global newfont
+    newfont[num].transform(psMat.translate(0,y))
 
-def adjustGlyphWidth(name, width):
-    fout.write("Select(\"%s\");\n" % name)
-    fout.write("SetWidth(%d);\n" % width)
-    
-def shiftGlyph(name, shift):
-    fout.write("Select(\"%s\");\n" % name)
-    fout.write("Move(%d,0);\n" % shift)
+def adjustGlyphWidth(num, width):
+    global newfont
+    newfont[num].width = width
 
-def centerGlyph(name):
-    fout.write("Select(\"%s\");\n" % name)
-    fout.write("CenterInWidth();\n")
+def shiftGlyph(num, shift):
+    global newfont
+    newfont[num].transform(psMat.translate(shift,0))
+
+def centerGlyph(num):
+    global newfont
+    g = newfont[num]
+    g.left_side_bearing = g.right_side_bearing = (g.left_side_bearing + g.right_side_bearing)/2 
 
 # function to get the name of the glyph, with the name of the general shape, and the name of the different ambitus
-def glyphName(i, j, k, shape, liquescentia, shortglyph):
+def glyphNum(i, j, k, shape, liquescentia, shortglyph):
     if shortglyph==0:
-        glyphnumber=i+(5*j)+(25*k)+(256*liquescentiae[liquescentia])+(512*shapes[shape])
+        return i+(5*j)+(25*k)+(256*liquescentiae[liquescentia])+(512*shapes[shape])
     else :
-        glyphnumber=i+(5*j)+(25*k)+(64*liquescentiae[liquescentia])+(512*shapes[shape])
-    return "_%04d" % (glyphnumber)
+        return i+(5*j)+(25*k)+(64*liquescentiae[liquescentia])+(512*shapes[shape])
     
 if __name__ == "__main__":
     main()
