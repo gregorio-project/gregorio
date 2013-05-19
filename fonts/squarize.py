@@ -170,24 +170,26 @@ def initialize_glyphs():
     unislots = []
     for number in initial_glyphs:
         name="_00%02d" % int(number)
-        initial_glyphs.insert(0,name)
-        initial_glyphs.remove(number)
-        names.append(name)
+#        initial_glyphs.insert(0,name)
+#        initial_glyphs.remove(number)
+        names.append("_00%02d" % int(number))
         unislots.append("u%05x" % int(number))
     if font_name=="gregorio":
-        glyphs_to_append=("_1025", "_2561")
+        glyphs_to_append=(1025, 2561)
         initialcount=192
     elif font_name=="parmesan":
-        glyphs_to_append=("_1025", "_2561")
+        glyphs_to_append=(1025, 2561)
         initialcount=192
     elif font_name=="greciliae":
-        glyphs_to_append=("_2561", "_1025", "_0075", "_0076", "_0078", "_0080")
+        glyphs_to_append=(2561, 1025, 75, 76, 78, 80)
         initialcount=199
     elif font_name=="gregoria":
-        glyphs_to_append=("_2561", "_1025")
+        glyphs_to_append=(2561, 1025)
         initialcount=178
     for glyphnumber in glyphs_to_append:
-        initial_glyphs.append(glyphnumber)
+#        initial_glyphs.append(glyphnumber)
+        names.append("_%04d" % int(glyphnumber))
+        unislots.append("u%05x" % int(glyphnumber))
     count=initialcount
     #print unislots
     for i in range(len(names)):
