@@ -34,10 +34,8 @@ TexliveDirs=[
 
 Fonts=['greciliae', 'gregorio', 'parmesan']
 
-NumberOfFiles=9
-
 def main():
-    if access('gregoria-0.pfb', F_OK):
+    if access('gregoriao.ttf', F_OK):
         Fonts.append('gregoria')
     i=0
     for basedir in TexliveDirs:
@@ -52,7 +50,6 @@ def main():
                     if basedir == '':
                         print "error: can't locate latex.exe, aborting installation"
                         return
-                    #patch_cygwin(basedir)
                     basedir = '%s/texmf-local' % basedir
                     install(basedir)
                 else:
@@ -70,33 +67,10 @@ def cyg_find_basedir():
 	    return ''
 	splitpath = line.split('/')
 	splitpath = splitpath[0:-3]
-	if splitpath[-1][0] == '2': # we test if the last directory is 2008 or 2009 or...
-		splitpath = splitpath[0:-1]
 	return '/'.join(splitpath)
-
-def patch_cygwin(basedir):
-    # just some symlinks for texlive 2008 to work fine under cygwin
-    # test to know if it is a cygwin system
-    # we have to copy some files
-    if access('%s/2009' % basedir, F_OK):
-        basename = '%s/2009' % basedir
-    if access('%s/2010' % basedir, F_OK):
-        basename = '%s/2010' % basedir
-    elif access('%s/bin' % basedir, F_OK):
-        basename = basedir
-    else:
-        # I don't know what to do for other cases
-        return
-    # we don't patch it two times, otherwise error occur
-    print basename
     
 def install(basedir):
-    makedir(basedir, 'fonts/tfm/public/gregoriotex')
-    makedir(basedir, 'fonts/type1/public/gregoriotex')
-    makedir(basedir, 'fonts/ovf/public/gregoriotex')
-    makedir(basedir, 'fonts/ofm/public/gregoriotex')
-    makedir(basedir, 'fonts/ovp/public/gregoriotex')
-    makedir(basedir, 'fonts/map/dvips/public/gregoriotex')
+    makedir(basedir, 'fonts/truetype/public/gregoriotex')
     makedir(basedir, 'tex/latex/gregoriotex')
     copy(basedir, '../tex/gregoriotex.sty', 'tex/latex/gregoriotex')
     copy(basedir, '../tex/gregoriosyms.sty', 'tex/latex/gregoriotex')
@@ -109,31 +83,8 @@ def install(basedir):
     copy(basedir, '../tex/gregoriotex-symbols.tex', 'tex/gregoriotex')
     copy(basedir, '../tex/gregoriotex.lua', 'tex/gregoriotex')
     copy(basedir, '../tex/gregoriotex-ictus.lua', 'tex/gregoriotex')
-    copy(basedir, 'gresym.map', 'fonts/map/dvips/public/gregoriotex')
-    copy(basedir, 'greextra.map', 'fonts/map/dvips/public/gregoriotex')
-    makedir(basedir, 'fonts/tfm/public/gregoriotex/gresym')
-    copy(basedir, 'gresym.tfm', 'fonts/tfm/public/gregoriotex/gresym')
-    makedir(basedir, 'fonts/tfm/public/gregoriotex/greextra')
-    copy(basedir, 'greextra.tfm', 'fonts/tfm/public/gregoriotex/greextra')
-    makedir(basedir, 'fonts/type1/public/gregoriotex/gresym')
-    copy(basedir, 'gresym.pfb', 'fonts/type1/public/gregoriotex/gresym')
-    makedir(basedir, 'fonts/type1/public/gregoriotex/greextra')
-    copy(basedir, 'greextra.pfb', 'fonts/type1/public/gregoriotex/greextra')
     for fontname in Fonts:
-        makedir(basedir, 'fonts/tfm/public/gregoriotex/%s' % fontname)    
-        for i in range(NumberOfFiles):
-            copy(basedir, '%s-%d.tfm' % (fontname, i), 'fonts/tfm/public/gregoriotex/%s' % fontname)
-        makedir(basedir, 'fonts/type1/public/gregoriotex/%s' % fontname)    
-        for i in range(NumberOfFiles):
-            copy(basedir, '%s-%d.pfb' % (fontname, i), 'fonts/type1/public/gregoriotex/%s' % fontname)
-        makedir(basedir, 'fonts/map/dvips/public/gregoriotex')
-        copy(basedir, '%s.map' % fontname, 'fonts/map/dvips/public/gregoriotex')
-        makedir(basedir, 'fonts/ovf/public/gregoriotex/%s' % fontname)
-        copy(basedir, '%s.ovf' % fontname, 'fonts/ovf/public/gregoriotex/%s' % fontname)
-        makedir(basedir, 'fonts/ofm/public/gregoriotex/%s' % fontname)
-        copy(basedir, '%s.ofm' % fontname, 'fonts/ofm/public/gregoriotex/%s' % fontname)
-        makedir(basedir, 'fonts/ovp/public/gregoriotex/%s' % fontname)
-        copy(basedir, '%s.ovp' % fontname, 'fonts/ovp/public/gregoriotex/%s' % fontname)
+        copy(basedir, '%s.ttf' % fontname, 'fonts/truetype/public/gregoriotex')
     endInstall(basedir)
 
 def makedir(basedir, dirname):
@@ -158,43 +109,6 @@ def endInstall(basedir):
     else:
         print ("running mktexlsr %s" % basedir)
         system("mktexlsr %s" % basedir)
-    Fonts.append("gresym")
-    Fonts.append("greextra")
-    # we detect here if it is a debian system
-    if access('/etc/texmf/updmap.d', F_OK):
-        print "filling /etc/texmf/updmap.d/20gregoriotex.cfg"
-        fout=open("/etc/texmf/updmap.d/20gregoriotex.cfg", 'w')
-        fout.write ("""# 20gregoriotex.cfg
-# You can change/add entries to this file and changes will be preserved
-# over upgrades, even if you have removed the main package prior
-# (not if you purged it). You should leave the following pseudo comment
-# present in the file!
-# -_- DebPkgProvidedMaps -_-
-# 
-""")
-        for fontname in Fonts:
-            fout.write("MixedMap %s.map\n" % fontname)
-        fout.close()
-        print "running update-updmap"
-        system("update-updmap")
-        print "running updmap-sys"
-        system("updmap-sys")
-        print "running updmap"
-        system("updmap")
-    elif sys.platform == 'darwin':
-        for fontname in Fonts:
-            print ("running updmap-sys --nomkmap --enable MixedMap=%s.map" % fontname)
-            system("updmap-sys --nomkmap --enable MixedMap=%s.map" % fontname)
-        system("updmap-sys")
-    else:
-        for fontname in Fonts:
-            print ("running updmap-sys --enable MixedMap=%s.map" % fontname)
-            if access('/cygdrive', F_OK):
-                system("updmap-sys.exe --enable MixedMap=%s.map" % fontname)
-                print ("running updmap --enable MixedMap=%s.map" % fontname)
-                system("updmap.exe --enable MixedMap=%s.map" % fontname)
-            else:
-                system("updmap-sys --enable MixedMap=%s.map" % fontname)
 
 if __name__ == "__main__":
     main()
