@@ -956,7 +956,7 @@ gtex_write_special_char (FILE * f, grewchar * special_char)
     }
   if (!gregorio_wcsbufcmp (special_char, "-"))
     {
-      fprintf (f, "\\zerhyph{}");
+      fprintf (f, "\\grezerhyph{}");
       return;
     }
   if (!gregorio_wcsbufcmp (special_char, "\\"))
