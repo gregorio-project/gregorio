@@ -58,6 +58,28 @@ with fontname=gregorio, parmesan or greciliae for now. The script generates
 fontname.pe which is a fontforge script.
 """
 
+gplv3="""This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+As a special exception, if you create a document which uses this font,
+and embed this font or unaltered portions of this font into the document,
+this font does not by itself cause the resulting document to be covered by
+the GNU General Public License. This exception does not however invalidate
+any other reasons why the document might be covered by the GNU General Public
+License. If you modify this font, you may extend this exception to your
+version of the font, but you are not obligated to do so. If you do not wish
+to do so, delete this exception statement from your version."""
+
 def main():
     global oldfont, newfont, font_name
     global current_glyph_number, shortglyphs
@@ -92,6 +114,28 @@ def main():
     newfont = fontforge.font()
     newfont.encoding="ISO10646-1"
     newfont.fontname="%s" % font_name
+    newfont.fullname="%s" % font_name
+    newfont.fontlog="See file FONTLOG you should have received with the software"
+    newfont.familyname="%s" % font_name
+    if font_name == "greciliae":
+        newfont.copyright="""Greciliae font, adapted with fontforge by Elie Roux
+Copyright (C) 2007 Matthew Spencer
+with Reserved Font Name Caeciliae
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is also available with a FAQ at:
+http://scripts.sil.org/OFL"""
+    elif font_name == "gregorio":
+        newfont.copyright="""gregorio font, created with FontForge.
+Copyright (C) 2007 Elie Roux <elie.roux@telecom-bretagne.eu>
+
+"""+gplv3
+    elif font_name == "parmesan":
+       newfont.copyright="""LilyPond's pretty-but-neat music font.
+Copyright (C) 2002--2006 Juergen Reuter <reuter@ipd.uka.de>
+
+"""+gplv3
+    newfont.weight="regular"
     initialize_glyphs()
     initialize_lengths()
     hepisemus()
