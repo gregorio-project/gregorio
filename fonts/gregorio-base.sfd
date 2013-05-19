@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1281256449
+ModificationTime: 1368967938
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -42,7 +42,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 60 12 5
+WinInfo: 36 12 5
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
 BeginChars: 369 369
 
@@ -1521,9 +1521,9 @@ LayerCount: 2
 Fore
 SplineSet
 0 64 m 29
- 0 96 l 29
- 1 96 l 29
- 1 64 l 29
+ 0 96 l 25
+ 1 96 l 25
+ 1 64 l 25
  0 64 l 29
 EndSplineSet
 EndChar
@@ -1918,11 +1918,11 @@ HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore
 SplineSet
--2 64 m 29
- 0 91 l 29
- 1 91 l 29
- 1 64 l 29
- -2 64 l 29
+-2 64 m 25
+ 0 96 l 25
+ 1 96 l 25
+ 1 64 l 25
+ -2 64 l 25
 EndSplineSet
 EndChar
 
@@ -1930,16 +1930,16 @@ StartChar: hepisemusright
 Encoding: 83 -1 83
 Width: 2
 VWidth: 2048
-Flags: HW
+Flags: HWO
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore
 SplineSet
-0 64 m 29
- -1 64 l 29
- -1 91 l 29
- 2 91 l 29
- 0 64 l 29
+0 64 m 25
+ -1 64 l 25
+ -1 96 l 25
+ 2 96 l 25
+ 0 64 l 25
 EndSplineSet
 EndChar
 
@@ -1966,7 +1966,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: _0072
+StartChar: _0073
 Encoding: 85 -1 85
 Width: 164
 VWidth: 2048
@@ -1988,7 +1988,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: _0073
+StartChar: _0072
 Encoding: 86 -1 86
 Width: 164
 VWidth: 2048
@@ -2580,7 +2580,7 @@ StartChar: _0091
 Encoding: 112 -1 112
 Width: 187
 VWidth: 2048
-Flags: HWO
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore
