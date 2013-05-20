@@ -1,3 +1,41 @@
+gregorio (2.3) unstable; urgency=low
+
+  * New upstream version:
+     - fixing a lot of bugs
+     - dropping support for Aleph/Omega
+     - font system is now based on ttf files
+
+ -- Elie Roux <elie.roux@telecom-bretagne.eu>  Sat, 29 May 2010 14:50:45 +0200
+
+gregorio (2.0-1.2) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * tex-common v3 transition:
+    . build-depend on tex-common (>= 3)
+      (debian/control)
+    . remove obsolete conffile updmap.d/20gregoriotex.cfg 
+      (debian/gregoriotex.maintscript)
+
+ -- Norbert Preining <preining@debian.org>  Fri, 23 Mar 2012 11:26:28 +0900
+
+gregorio (2.0-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Empty dependency_libs (Closes: #621334).
+
+ -- Luk Claes <luk@debian.org>  Sat, 18 Jun 2011 19:29:34 +0200
+
+gregorio (2.0-1) unstable; urgency=low
+
+  * New upstream release
+  * New maintainer
+  * Bump Standards-Version to 3.9.1.0
+  * [gregoriotex] Add dependency on texlive-latex-extra
+  * debian/gregorio.{postinst,postrm}: remove
+  * debian/rules: fix calls to dh_clean
+
+ -- JÃ©rÃ´me Marant <jerome@debian.org>  Wed, 05 Jan 2011 22:19:35 +0100 
+
 gregorio (1.0-1) unstable; urgency=low
 
   * New upstream version:
