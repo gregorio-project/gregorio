@@ -3,9 +3,10 @@
 
 SRCFILES = Makefile gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd squarize.py greextra.sfd gresym.sfd
 DOCFILES = INSTALL FONTLOG 
-TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf gresym.ttf greextra.ttf
+TTFFILES = $(wildcard *.ttf)
+FNTSRCFILES = $(wildcard *.sfd) squarize.py
 TEXFILES = $(wildcard ../tex/*.tex) $(wildcard ../tex/gregorio*.sty) $(wildcard ../tex/*.lua)
-ALLFILES = $(SRCFILES) $(DOCFILES) $(TEXFILES) $(TTFFILES)
+ALLFILES = $(SRCFILES) $(DOCFILES) $(TEXFILES) $(TTFFILES) $(FNTSRCFILES)
 
 TDS_ZIP = $(NAME).tds.zip
 
@@ -16,15 +17,17 @@ TEXDIR = $(TEXMFROOT)/tex/$(FORMAT)/$(NAME)
 DOCDIR = $(TEXMFROOT)/doc/$(FORMAT)/$(NAME)
 TTFDIR = $(TEXMFROOT)/fonts/truetype/public/$(NAME)
 SRCDIR = $(TEXMFROOT)/source/$(FORMAT)/$(NAME)
+FNTSRCDIR = $(TEXMFROOT)/fonts/source/$(NAME)
 
-# a temporary value
-TEXMFROOT = ./texmf
+# a default value
+TEXMFROOT = `kpsewhich -var-value TEXMFHOME`
 
 # installation rules
 INSTALL_TEXFILES = @mkdir -p $(TEXDIR) && cp $(TEXFILES) $(TEXDIR)
 INSTALL_DOCFILES = @mkdir -p $(DOCDIR) && cp $(DOCFILES) $(DOCDIR)
 INSTALL_SRCFILES = @mkdir -p $(SRCDIR) && cp $(SRCFILES) $(SRCDIR)
 INSTALL_TTFFILES = @mkdir -p $(TTFDIR) && cp $(TTFFILES) $(TTFDIR)
+INSTALL_TTFFILES = @mkdir -p $(FNTSRCDIR) && cp $(FNTSRCFILES) $(FNTSRCDIR)
 
 $(TDS_ZIP): TEXMFROOT=./tmp-texmf
 $(TDS_ZIP): $(ALLFILES)
@@ -34,6 +37,7 @@ $(TDS_ZIP): $(ALLFILES)
 	$(INSTALL_DOCFILES)
 	$(INSTALL_SRCFILES)
 	$(INSTALL_TTFFILES)
+	$(INSTALL_FNTSRCFILES)
 	@cd $(TEXMFROOT) && zip -9 ../$@ -r . >/dev/null
 	@$(RM) -r -- $(TEXMFROOT)
 	
@@ -43,6 +47,7 @@ install: $(ALLFILES)
 	$(INSTALL_DOCFILES)
 	$(INSTALL_SRCFILES)
 	$(INSTALL_TTFFILES)
+	$(INSTALL_FNTSRCFILES)
 
 gregorio.ttf: squarize.py gregorio-base.sfd
 	python squarize.py gregorio

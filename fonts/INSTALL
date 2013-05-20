@@ -18,7 +18,7 @@ To install the fonts, running
 
 make install TEXMFROOT=/path/to/texmf
 
-will install both font and TeX files. Warning: 'make install' without giving a TEXMFROOT will put files in './texmf', which is probably not what you want. TEXMFROOT is typically $HOME/texmf/ under Debian or Ubuntu.
+will install both font and TeX files. Warning: 'make install' without giving a TEXMFROOT will put files in TEXMFHOME, which might not be what you want. TEXMFHOME is typically $HOME/texmf/ under Debian or Ubuntu.
 
 You can also copy the fonts in
 
