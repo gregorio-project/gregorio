@@ -27,33 +27,9 @@ local texworksdir = kpse.expand_var("$TEXMFCONFIG"):gsub("/", "\\")..'\\texworks
 
 local suffix = "gregoriotex\\"
 local dirs = {
-  type1 = texmflocal.."fonts\\type1\\"..suffix,
-  tfm = texmflocal.."fonts\\tfm\\"..suffix,
-  map = texmflocal.."fonts\\map\\"..suffix,
-  ofm = texmflocal.."fonts\\ofm\\"..suffix,
-  ovf = texmflocal.."fonts\\ovf\\"..suffix,
-  ovp = texmflocal.."fonts\\ovp\\"..suffix,
-  tex = texmflocal.."tex\\generic\\"..suffix,
-  latex = texmflocal.."tex\\latex\\"..suffix,
   templatemain = texworksdir.."templates\\Gregorio Main File\\",
   templatescore = texworksdir.."templates\\Gregorio Score\\",
 }
-
-local fonts = {"greciliae", "parmesan", "gresym", "greextra", "gregorio"}
-
-local fonts_files = {
-  "greciliae-0", "greciliae-1", "greciliae-2", "greciliae-3", "greciliae-4", "greciliae-5", "greciliae-6", "greciliae-7", "greciliae-8",
-  "gregorio-0", "gregorio-1", "gregorio-2", "gregorio-3", "gregorio-4", "gregorio-5", "gregorio-6", "gregorio-7", "gregorio-8",
-  "parmesan-0", "parmesan-1", "parmesan-2", "parmesan-3", "parmesan-4", "parmesan-6", "parmesan-6", "parmesan-7", "parmesan-8",
-}
-
-local tex_files = {
-  "optimize_gabc_style.lua",  "gregoriotex-ictus.lua", "gregoriotex.lua", "gregoriotex-signs.tex", "gregoriotex.tex", "gsp-default.tex", "gregoriotex-spaces.tex", "gregoriotex-syllable.tex", "gregoriotex-symbols.tex", "optimize_gabc.lua",
-  }
-
-local latex_files = {
-    "optimize-gabc.sty", "gregoriosyms.sty", "gregoriotex.sty",
-  }
 
 function io.loaddata(filename,textmode)
     local f = io.open(filename,(textmode and 'r') or 'rb')
@@ -83,31 +59,15 @@ function copy_one_file(src, dest)
 end
 
 function copy_files()
+  if not lfs.isdir(texmflocal) then
+    lfs.mkdir(texmflocal)
+  end
   print("copying files...")
   local texmfbin = kpse.expand_var("$TEXMFDIST")
   texmfbin = texmfbin:gsub("/", "\\").."\\..\\bin\\win32\\"
   copy_one_file("gregorio.exe", texmfbin)
-  for _,f in ipairs(fonts_files) do
-    copy_one_file('fonts\\'..f..'.pfb', dirs.type1)
-    copy_one_file('fonts\\'..f..'.tfm', dirs.tfm)
-  end
-  for _,f in ipairs(fonts) do
-    copy_one_file('fonts\\'..f..'.map', dirs.map)
-    if f == 'greextra' or f == "gresym" then
-      copy_one_file('fonts\\'..f..'.pfb', dirs.type1)
-      copy_one_file('fonts\\'..f..'.tfm', dirs.tfm)
-    else
-      copy_one_file('fonts\\'..f..'.ofm', dirs.ofm)
-      copy_one_file('fonts\\'..f..'.ovp', dirs.ovp)
-      copy_one_file('fonts\\'..f..'.ovf', dirs.ovf)
-    end
-  end
-  for _,f in ipairs(tex_files) do
-    copy_one_file('tex\\'..f, dirs.tex)
-  end
-  for _,f in ipairs(latex_files) do
-    copy_one_file('tex\\'..f, dirs.latex)
-  end
+  print("unzipping TDS zip file...")
+  os.spawn("unzip.exe gregoriotex.tds.zip -d "..texmflocal:gsub("\\", "/")) -- TeXLive provides unzip!
   copy_one_file('examples\\main-lualatex.tex', dirs.templatemain)
   copy_one_file('examples\\PopulusSion.gabc', dirs.templatescore)
 end
@@ -131,13 +91,6 @@ end
 function run_texcommands()
   print("running mktexlsr")
   local p = os.spawn("mktexlsr "..texmflocal)
-  print("prout")
-  for _,font in pairs(fonts) do
-    print(string.format("updmap-sys.exe --enable MixedMap=%s.map", font))
-    os.spawn(string.format("updmap-sys.exe --enable MixedMap=%s.map", font))
-	print(string.format("updmap.exe --enable MixedMap=%s.map", font))
-	os.spawn(string.format("updmap.exe --enable MixedMap=%s.map", font))
-  end
 end
 
 function main_install()
@@ -148,6 +101,10 @@ end
 
 function texworks_conf()
 	local filesdir = texworksdir
+	if not lfs.isdir(texworksdir:gsub("\\", "/")) then
+	   texio.write_nl("TeXWorks not found, skipping"..texworksdir)
+	   --return
+	end
 	print("Modifying tools.ini ...")
 	texworks_conf_tools(filesdir.."configuration\\tools.ini")
 	print("Modifying TeXWorks.ini ...")
@@ -206,12 +163,16 @@ function texworks_conf_tools(filename)
    	-- let's remove the read-only attribute
 	remove_read_only(filename)
 	local f = io.open(filename, 'r')
+	if not f then 
+	  texio.write_nl("error: "..filename.." not found")
+	  return
+	end
 	local toolstable = {}
 	local current = 0
 	local lualatexfound = 0
 	local gregoriofound = 0
 	for l in f:lines() do
-	    local num = tonumber(l:match("(%d+)\]"))
+	    local num = tonumber(l:match("(%d+)%]"))
 		if num then
 		  current = num
 		else
@@ -266,9 +227,6 @@ function scribus_config()
 	io.savedata('contrib\\900_gregorio.xml', data)
 end
 
-if arg[1] == nil or arg[1] ~= '--conf' then
-	main_install()
-	scribus_config()
-else
-	texworks_conf()
-end
+main_install()
+scribus_config()
+texworks_conf()
