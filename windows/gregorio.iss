@@ -39,12 +39,11 @@ Source: "README.txt"; DestDir: "{app}"; Flags: isreadme
 Source: "license.txt"; DestDir: "{app}";
 Source: "contrib\*"; DestDir: "{app}\contrib";
 Source: "examples\*"; DestDir: "{app}\examples";
-Source: "tex\*"; DestDir: "{app}\tex";
-Source: "fonts\*"; DestDir: "{app}\fonts";
+Source: "gregoriotex.tds.zip"; DestDir: "{app}";
 
 [Run]
-Filename: "texlua.exe"; Parameters: """{app}\install.lua"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";
-Filename: "texlua.exe"; Parameters: """{app}\install.lua"" --conf"; StatusMsg: "Configuring TeXWorks..."; Description: "Configure TeXWorks"; Flags: postinstall ; WorkingDir: "{app}";
+Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}install.log"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";
+Filename: "texlua.exe"; Parameters: """{app}\install.lua"" --conf > ""{app}install-conf.log"""; StatusMsg: "Configuring TeXWorks..."; Description: "Configure TeXWorks"; Flags: postinstall ; WorkingDir: "{app}";
 
 [Code]
 procedure URLLabelOnClickOne(Sender: TObject);

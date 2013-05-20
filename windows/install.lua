@@ -67,7 +67,7 @@ function copy_files()
   texmfbin = texmfbin:gsub("/", "\\").."\\..\\bin\\win32\\"
   copy_one_file("gregorio.exe", texmfbin)
   print("unzipping TDS zip file...")
-  os.spawn("unzip.exe gregoriotex.tds.zip -d "..texmflocal:gsub("\\", "/")) -- TeXLive provides unzip!
+  os.spawn("unzip.exe -o gregoriotex.tds.zip -d "..texmflocal:gsub("\\", "/")) -- TeXLive provides unzip!
   copy_one_file('examples\\main-lualatex.tex', dirs.templatemain)
   copy_one_file('examples\\PopulusSion.gabc', dirs.templatescore)
 end
@@ -99,17 +99,22 @@ function main_install()
 	run_texcommands()
 end
 
+-- lfs.isdir doesn't allow trailing slashes
+function format_dirpath(p)
+    return p:gsub("\\$", "")
+end
+
 function texworks_conf()
 	local filesdir = texworksdir
-	if not lfs.isdir(texworksdir:gsub("\\", "/")) then
+	if not lfs.isdir(format_dirpath(texworksdir)) then
 	   texio.write_nl("TeXWorks not found, skipping"..texworksdir)
-	   --return
+	   return
 	end
-	print("Modifying tools.ini ...")
+	texio.write_nl("Modifying tools.ini ...")
 	texworks_conf_tools(filesdir.."configuration\\tools.ini")
-	print("Modifying TeXWorks.ini ...")
+	texio.write_nl("Modifying TeXWorks.ini ...")
 	texworks_conf_ini(filesdir.."TUG\\TeXWorks.ini")
-	print("Modifying texworks-config.txt ...")
+	texio.write_nl("Modifying texworks-config.txt ...")
 	texworks_conf_config(filesdir.."configuration\\texworks-config.txt")
 end
 
@@ -159,14 +164,88 @@ function texworks_conf_ini(filename)
 	io.savedata(filename, data)
 end
 
+local full_tools_ini = [[[001]
+name=LuaLaTeX
+program=lualatex.exe
+arguments=$synctexoption, $fullname
+showPdf=true
+
+[002]
+name=Gregorio
+program=gregorio.exe
+arguments=$fullname
+showPdf=false
+
+[003]
+name=pdfTeX
+program=pdftex.exe
+arguments=$synctexoption, $fullname
+showPdf=true
+
+[004]
+name=pdfLaTeX
+program=pdflatex.exe
+arguments=$synctexoption, $fullname
+showPdf=true
+
+[005]
+name=LuaTeX
+program=luatex.exe
+arguments=$synctexoption, $fullname
+showPdf=true
+
+[006]
+name=XeTeX
+program=xetex.exe
+arguments=$synctexoption, $fullname
+showPdf=true
+
+[007]
+name=XeLaTeX
+program=xelatex.exe
+arguments=$synctexoption, $fullname
+showPdf=true
+
+[008]
+name=ConTeXt (LuaTeX)
+program=context.exe
+arguments=--synctex, $fullname
+showPdf=true
+
+[009]
+name=ConTeXt (pdfTeX)
+program=texexec.exe
+arguments=--synctex, $fullname
+showPdf=true
+
+[010]
+name=ConTeXt (XeTeX)
+program=texexec.exe
+arguments=--synctex, --xtx, $fullname
+showPdf=true
+
+[011]
+name=BibTeX
+program=bibtex.exe
+arguments=$basename
+showPdf=false
+
+[012]
+name=MakeIndex
+program=makeindex.exe
+arguments=$basename
+showPdf=false]]
+
 function texworks_conf_tools(filename)
+	-- by default, there is no tools.ini in the recent versions of TeXWorks
+	if not lfs.isfile(filename) then 
+	  texio.write_nl(filename.." does not exist, creating it...")
+	  io.savedata(filename, full_tools_ini)
+	  return
+	end
    	-- let's remove the read-only attribute
 	remove_read_only(filename)
 	local f = io.open(filename, 'r')
-	if not f then 
-	  texio.write_nl("error: "..filename.." not found")
-	  return
-	end
 	local toolstable = {}
 	local current = 0
 	local lualatexfound = 0
@@ -227,6 +306,9 @@ function scribus_config()
 	io.savedata('contrib\\900_gregorio.xml', data)
 end
 
-main_install()
-scribus_config()
-texworks_conf()
+if arg[1] == nil or arg[1] ~= '--conf' then 	 
+  main_install()
+  scribus_config()
+else 	 
+  texworks_conf()
+end
