@@ -1,13 +1,13 @@
 [Setup]
 AppName=gregorio
-AppVersion=1.1
+AppVersion=2.3
 DefaultDirName={pf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
 Compression=lzma2
 SolidCompression=yes
 LicenseFile=license.txt
-AppCopyright=Copyright (C) 2006-2010 Elie Roux
+AppCopyright=Copyright (C) 2006-2013 Elie Roux
 AppComments=Gregorian chant typesetting software.
 AppContact=gregorio-devel@gna.org
 AppPublisher=Elie Roux
@@ -26,8 +26,6 @@ Root: HKCR; Subkey: "Gregorio\DefaultIcon"; ValueType: string; ValueName: ""; Va
 Root: HKCR; Subkey: "Gregorio\shell\open\command"; ValueType: string; ValueName: ""; ValueData: "texworks.exe ""%1"""; Flags: uninsdeletekey
 
 [Dirs]
-Name: "{app}\fonts"
-Name: "{app}\tex"
 Name: "{app}\contrib"
 Name: "{app}\examples"
 
