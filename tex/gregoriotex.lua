@@ -31,8 +31,6 @@ local err, warn, info, log = luatexbase.provides_module({
     license       = "GPLv3",
 })
 
-gregoriotex.showlog  = false
-
 local hlist = node.id('hlist')
 local vlist = node.id('vlist')
 local glyph = node.id('glyph')
