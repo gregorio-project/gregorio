@@ -30,23 +30,12 @@ optimize_gabc_style.module = {
     license       = "GPLv3"
 }
 
-if luatextra and luatextra.provides_module then
-    luatextra.provides_module(optimize_gabc_style.module)
-elseif luatexbase and luatexbase.provides_module then
-    luatexbase.provides_module(optimize_gabc_style.module)
-end
+luatexbase.provides_module(optimize_gabc_style.module)
 
 local hlist = node.id('hlist')
 local vlist = node.id('vlist')
 local glyph = node.id('glyph')
-local gregorioattr
-if tex.attributenumber and tex.attributenumber['gregorioattr'] then
-  gregorioattr = tex.attributenumber['gregorioattr']
-elseif luatexbase and luatexbase.attributes and luatexbase.attributes['gregorioattr'] then
-  gregorioattr = luatexbase.attributes['gregorioattr']
-else
-  gregorioattr = 987 -- the number declared with gregorioattr
-end
+local gregorioattr = luatexbase.attributes['gregorioattr']
 
 -- table containing the lines syllable number
 local lines
@@ -81,23 +70,11 @@ end
 
 -- these functions are automatically called by gregorio.
 function add_callback()
-    if callback.add then
-      callback.add('post_linebreak_filter', count_syllables, 'count_syllables')
-    elseif luatexbase then
-      luatexbase.add_to_callback('post_linebreak_filter', count_syllables, 'count_syllables')
-    else
-      error("you need luatexbase to run this script")
-    end
+  luatexbase.add_to_callback('post_linebreak_filter', count_syllables, 'count_syllables')
 end
 
 function remove_callback()
-    if callback.remove then
-      callback.remove('post_linebreak_filter', 'count_syllables')
-    elseif luatexbase then
-      luatexbase.remove_from_callback('post_linebreak_filter', 'count_syllables')
-    else
-      error("you need luatexbase to run this script")
-    end
+  luatexbase.remove_from_callback('post_linebreak_filter', 'count_syllables')
 end
 
 -- functions for position handling

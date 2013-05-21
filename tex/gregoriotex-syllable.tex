@@ -495,9 +495,8 @@
       \fi %
     \fi %
   \fi %
-  \ifgreluatex % by default, gregorioattr will be 2
-    \gregorioattr=2\relax %
-  \fi %
+  % by default, gregorioattr will be 2
+  \gregorioattr=2\relax %
   \gresetnextbegindifference{#5}{#6}{#7}%
   \setbox\GreSyllabletext=\hbox{\gretextformat{#1#2#3}}%
   \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{1}%
@@ -532,11 +531,9 @@
       \fi %
       \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{0}%
     \else %
-      \ifgreluatex %
-        \gregorioattr=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
-        % we rebuild this box, in order it to have the attribute
-        \setbox\GreSyllabletext=\hbox{\gretextformat{#1#2#3}}%
-      \fi %
+      \gregorioattr=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
+      % we rebuild this box, in order it to have the attribute
+      \setbox\GreSyllabletext=\hbox{\gretextformat{#1#2#3}}%
     \fi%
   \fi% ficase#4
   % then we reuse temp, we assign to it the \grebegindifference, but only if it is positive, else it is 0
@@ -547,9 +544,8 @@
   \raise\gretextlower \copy\GreSyllabletext %
   \kern -\wd\GreSyllabletext %
   \kern -\grebegindifference %
-  \ifgreluatex % here we need to unset \gregorioattr for the typesetting of notes
-    \gregorioattr=0\relax %
-  \fi %
+  % here we need to unset \gregorioattr for the typesetting of notes
+  \gregorioattr=0\relax %
   % trick: we want to kern -enddifference if necessary before any change of line, which we can achieve only with this trick if the end of line is the last thing of the notes (it's the case of \grelastoflinecount is 1).
   % For the kern in this case, the base is to kern -\greenddifference if it's negative, but we can kern a bit more for the text to get a bit more to the right, but not after the end of the scores minus \greminimalspaceatlinebeginning
   \ifnum\grelastoflinecount=1\relax %
@@ -651,11 +647,9 @@
   \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{1}%
   \gresetnextbegindifference{#5}{#6}{#7}%
   % for LuaTeX syllable counting in optimize_gabc, we put an empty syllable box with gregorioattr set to 2. With this we can count every syllable.
-  \ifgreluatex %
-    \gregorioattr=2\relax %
-    \hbox to 0pt{}%
-    \gregorioattr=0\relax %
-  \fi %
+  \gregorioattr=2\relax %
+  \hbox to 0pt{}%
+  \gregorioattr=0\relax %
   % then we check if there is something to write
   \ifdim\wd\GreSyllabletext = 0 pt\relax %
     % the most difficult case : when there is nothing to write

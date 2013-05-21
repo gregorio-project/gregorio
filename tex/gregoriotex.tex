@@ -22,55 +22,33 @@
 
 \expandafter\ifx\csname RequirePackage\endcsname\relax
   \input ifluatex.sty
+  \input luatexbase.sty
+  \input luaotfload.sty
 \else
   \RequirePackage{ifluatex}
+  \RequirePackage{luatexbase}
+  \RequirePackage{luaotfload}
 \fi
-
-\ifluatex
-  \expandafter\ifx\csname RequirePackage\endcsname\relax
-    \input luatexbase.sty
-  \else
-    \RequirePackage{luatexbase}
-  \fi
-\fi
-
-% for backward compatibility with old gregorio files
-\let\ifgreluatex\ifluatex
-
-% if we are not under LuaTeX, we check if we are under lamed or omega...
-% if not, we output an error message
 
 \ifluatex\else
-  \expandafter\ifx\csname localrightbox\endcsname\relax
-    \errmessage{Error: this document must be compiled with Aleph (lamed) or LuaTeX (lualatex)}
-  \fi
+  \errmessage{Error: this document must be compiled with LuaTeX (lualatex)}
 \fi
 
-% in TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
+% Since TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
 % available without prefix. We mostly rely on \directlua that is still available
 % without prefix, but we also rely on the Omega primitives, that have a luatex 
 % prefix in TeXLive 2009.
 
-\ifluatex
-  \let\grelocalleftbox\luatexlocalleftbox
-  \let\grelocalrightbox\luatexlocalrightbox
-  % an attribute we put on the text nodes.
-  % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
-  % if it is 2, it means that it's never useful to typeset a dash
-  % if it is 0, it just means that we are in a score...
-  \newluatexattribute\gregorioattr
-  \let\greloadluamodule\RequireLuaModule
-  \def\greunsetattribute{\unsetluatexattribute{\gregorioattr}}
-\else
-  \let\grelocalleftbox\localleftbox
-  \let\grelocalrightbox\localrightbox
-  \def\greloadluamodule#1{}
-\fi
-  
-% if we are used with LuaTeX we need to define some version-specific functions
-\let\gredirectlua\directlua
+\let\grelocalleftbox\luatexlocalleftbox
+\let\grelocalrightbox\luatexlocalrightbox
+% an attribute we put on the text nodes.
+% if it is 1, it means that there may be a dash here if this syllable is at the end of a line
+% if it is 2, it means that it's never useful to typeset a dash
+% if it is 0, it just means that we are in a score...
+\newluatexattribute\gregorioattr
+\def\greunsetattribute{\unsetluatexattribute{\gregorioattr}}
 
-\greloadluamodule{gregoriotex}
+\RequireLuaModule{gregoriotex}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %% aux file definitions
@@ -83,22 +61,16 @@
 \fi
 
 \def\grewriteaux#1{%
-  \ifluatex %
-    \write\Greaux{#1}%
-  \fi %
+  \write\Greaux{#1}%
   \relax %
 }
 
 \def\opengreaux{%
-  \ifluatex %
-    \openout\Greaux \jobname .gaux\relax%
-  \fi %
+  \openout\Greaux \jobname .gaux\relax%
 }
 
 \def\closegreaux{%
-  \ifluatex %
-    \closeout\Greaux %
-  \fi %
+  \closeout\Greaux %
 }
 
 
@@ -747,47 +719,42 @@
 
 % here is a quite special macro called at beggining of lines, that inserts a line of chironomic signs
 \def\greinsertchiroline{%
-  \ifgreluatex %
-    % the first line is a special case
-    \ifnum\greknownline=1\relax %
-      % some bugs appear if we don't box it
-      \hbox{\gredirectlua{grechiro.printLine()}}%
-      \par %
-      % TODO: this line bugs with my version of LuaTeX
-      %\penalty -10001\relax%
-      \kern\grebelowsignsspace %
-      %\penalty -10001\relax %
-      \noindent %
-    \else %
-      % not very beaufiful, I don't like to make a new par inside a score, but....
-      \grelocalleftbox{}%
-      \grelocalrightbox{}%
-      \par %
-      \kern\greabovesignsspace %
-      \noindent\hbox{\gredirectlua{grechiro.printLine()}}%
-      \greupdateleftbox %
-      \par %
-      \penalty 10001\relax %
-      \kern\grebelowsignsspace %
-      \penalty 10001\relax %
-      \noindent %
-    \fi %
+  % the first line is a special case
+  \ifnum\greknownline=1\relax %
+    % some bugs appear if we don't box it
+    \hbox{\directlua{grechiro.printLine()}}%
+    \par %
+    % TODO: this line bugs with my version of LuaTeX
+    %\penalty -10001\relax%
+    \kern\grebelowsignsspace %
+    %\penalty -10001\relax %
+    \noindent %
+  \else %
+    % not very beaufiful, I don't like to make a new par inside a score, but....
+    \grelocalleftbox{}%
+    \grelocalrightbox{}%
+    \par %
+    \kern\greabovesignsspace %
+    \noindent\hbox{\directlua{grechiro.printLine()}}%
+    \greupdateleftbox %
+    \par %
+    \penalty 10001\relax %
+    \kern\grebelowsignsspace %
+    \penalty 10001\relax %
+    \noindent %
   \fi %
   \relax %
 }
 
 %macro to call just after begingregorioscore, if there are some chironomic signs
 \def\greactivatechironomy{%
-  \ifgreluatex %
-    % we print the absolute position of the beginning of the score, and the width of a line, to get the absolute positions of the begginning and end of lines
-    \pdfsavepos %
-    \grewriteaux{begin:\number\pdflastxpos}%
-    \grewriteaux{width:\number\grestafflinewidth}%
-    \greloadluamodule{gregoriotex-ictus}%
-    \gredirectlua{%
-    grechiro.atBeginScore()}%
-  \fi %
-  \relax %
+  % we print the absolute position of the beginning of the score, and the width of a line, to get the absolute positions of the begginning and end of lines
+  \pdfsavepos %
+  \grewriteaux{begin:\number\pdflastxpos}%
+  \grewriteaux{width:\number\grestafflinewidth}%
+  \RequireLuaModule{gregoriotex-ictus}%
+  \directlua{grechiro.atBeginScore()}%
+\fi %
 }
 
 % count that is 1 or 0 if we need to print the small vertical bars in the chironomic line
@@ -805,9 +772,7 @@
 \def\begingregorioscore{%
   % not sure it's perfect to put that here, but it's the only way I found to make it work....
   \global\grelinewidth=\hsize %
-  \ifgreluatex%
-    \gregorioattr=0\relax %
-  \fi %
+  \gregorioattr=0\relax %
   \global\grestafflinewidth=\grelinewidth %
   \gregeneratelines %
   \ifnum\grefactor=0\relax %
@@ -815,11 +780,7 @@
     \gresetverticalspaces %
   \fi %
   \noindent%
-  \ifgreluatex %
-    \gredirectlua{%
-    gregoriotex.atScoreBeggining()%
-    }%
-  \fi %
+  \directlua{gregoriotex.atScoreBeggining()}%
   %TODO do something like LaTeX's AtBeginDocument
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %
@@ -837,26 +798,19 @@
     \grelocalrightbox{}%
   \fi %
   \hfil %
-  \ifgreluatex%
-    \greunsetattribute %
-  \fi %
+  \greunsetattribute %
   \par%
   \ifnum\keeprightbox=1 %
     \grelocalrightbox{}%
     \global\keeprightbox=0 %
   \fi%
-  \ifgreluatex % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
-    \grelocalleftbox{}%
-    \grelocalrightbox{}%
-  \fi
+  % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
+  \grelocalleftbox{}%
+  \grelocalrightbox{}%
   \setbox\GreAboveinitialfirstbox=\hbox{}%
   \greupdateadditionalspaces{0}{0}%
   \grenormalinitial %
-  \ifgreluatex %
-    \gredirectlua{%
-    gregoriotex.atScoreEnd()%
-    }%
-  \fi %
+  \directlua{gregoriotex.atScoreEnd()}%
   \relax%
 }
 
@@ -1195,13 +1149,9 @@
 \let\includetexscore\greincludetexscore
 \let\includescore\includetexscore
 
-% TODO: comment, lamed version?
+% TODO: comment
 \def\greincludegabcscore#1{%
-  \ifgreluatex %
-    \gredirectlua{gregoriotex.include_gabc_score([[#1]])}%
-  \else %
-    \errmessage{GregorioTeX error: you must use LuaTeX to use \string\includegabcscore}%
-  \fi %
+  \gredirectlua{gregoriotex.include_gabc_score([[#1]])}%
   \relax %
 }
 
