@@ -124,32 +124,12 @@ local function atScoreEnd ()
     end
 end
 
--- a variable vith the value:
---- 1 if we can launch gregorio
---- 2 if we cannot
---- nil if we don't know (yet)
-local shell_escape = nil
-
 local function compile_gabc(gabc_file, tex_file)
-    if not shell_escape then
-        local test = io.popen("gregorio -V")
-        if test then
-            local output = test:read("*a")
-            test:close()
-            if not output or output == "" then
-                shell_escape = 2
-            else
-                shell_escape = 1
-            end
-        else
-            shell_escape = 2
-        end
-    end
-    if shell_escape == 2 then
-        err("unable to launch gregorio, shell-escape mode may not be activated. Try to compile with:\n    %s --shell-escape %s.tex\nSee the documentation of gregorio or your TeX distribution to automatize it.", tex.formatname, tex.jobname)
-    else
-        info("compiling the score %s...", gabc_file)
-        os.execute(string.format("gregorio -o %s %s", tex_file, gabc_file))
+    info("compiling the score %s...", gabc_file)
+    res = os.execute(string.format("gregorio -o %s %s", tex_file, gabc_file))
+    if not res then
+        err("\nsomething went wrong when executing\n    'gregorio -o %s %s'.\n"
+        .."shell-escape mode may not be activated. Try\n    '%s --shell-escape %s.tex'\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", tex_file, gabc_file, tex.formatname, tex.jobname)
     end
 end
 
