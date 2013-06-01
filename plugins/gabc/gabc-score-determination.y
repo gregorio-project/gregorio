@@ -176,6 +176,7 @@ gabc_fix_custos (gregorio_score * score_to_check)
                         newkey = gregorio_calculate_new_key (C_KEY, current_element->element_type - 48);
 	                      pitch_difference = (char) newkey - (char) current_key;
 	                      custo_element->element_type = pitch - pitch_difference;
+	                      current_key = newkey;
                         break;
                       case GRE_F_KEY_CHANGE:
                       case GRE_F_KEY_CHANGE_FLATED:
@@ -183,6 +184,7 @@ gabc_fix_custos (gregorio_score * score_to_check)
                         newkey = gregorio_calculate_new_key (F_KEY, current_element->element_type - 48);
 	                      pitch_difference = (char) newkey - (char) current_key;
 	                      custo_element->element_type = pitch - pitch_difference;
+	                      current_key = newkey;
                         break;
                       default:
                         break;
