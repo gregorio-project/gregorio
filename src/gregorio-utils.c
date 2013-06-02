@@ -57,13 +57,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define define_path(file_name,string) \
 		/*we first test if path is absolute */\
-		if (string[0]=='/') {\
+		if (string[0]=='/' || string[0]=='\\') {\
 		/*path is absolute*/\
-		file_name=string;\
+		file_name=strdup(string);\
 		}\
 		else {/*path is relative*/\
-		file_name=malloc(150*sizeof(char));\
-		snprintf(file_name,150,"%s/%s", current_directory, string);\
+		file_name=malloc(255*sizeof(char));\
+		snprintf(file_name,255,"%s/%s", current_directory, string);\
 		}
 
 // function that returns the filename without the extension
