@@ -200,8 +200,9 @@ gregorio_set_signs (gregorio_note *note, char signs)
 void
 gregorio_change_shape (gregorio_note *note, char shape)
 {
-    if (!note) {
-      // error
+    if (!note || note->type != GRE_NOTE) {
+      gregorio_message (_("trying to change the shape of something that is not a note"),
+			   "change_shape", FATAL_ERROR, 0);
       return;
     }
     note->shape=shape;
@@ -241,8 +242,9 @@ gregorio_change_shape (gregorio_note *note, char shape)
 void
 gregorio_add_liquescentia (gregorio_note *note, char liq)
 {
-    if (!note) {
-      // error
+    if (!note || note->type != GRE_NOTE) {
+      gregorio_message (_("trying to make a liquescence on something that is not a note"),
+			   "add_liquescentia", FATAL_ERROR, 0);
       return;
     }
     if (is_initio_debilis(liq))
@@ -303,6 +305,12 @@ gregorio_add_liquescentia (gregorio_note *note, char liq)
 void
 gregorio_add_h_episemus (gregorio_note *note, unsigned char type, unsigned int *nbof_isolated_episemus) 
 {
+  if (!note || note->type != GRE_NOTE)
+    {
+      gregorio_message (_("trying to add an horizontal episemus on something that is not a note"),
+			   "add_h_episemus", FATAL_ERROR, 0);
+      return;
+    }
   if (type == H_BOTTOM)
     {
       note->h_episemus_type = note->h_episemus_type | H_BOTTOM;
@@ -324,6 +332,12 @@ gregorio_add_h_episemus (gregorio_note *note, unsigned char type, unsigned int *
 void
 gregorio_set_h_episemus(gregorio_note *note, unsigned char type)
 {
+  if (!note || note->type != GRE_NOTE)
+    {
+      gregorio_message (_("trying to add an horizontal episemus on something that is not a note"),
+			   "set_h_episemus", FATAL_ERROR, 0);
+      return;
+    }
   if (type == H_BOTTOM)
     {
       note->h_episemus_type = (note->h_episemus_type) | H_BOTTOM;
