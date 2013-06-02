@@ -789,7 +789,7 @@
   \relax%
 }
 
-%macro called at the beginning of a score
+%macro called at the end of a score
 \def\endgregorioscore{%
   \global\grelastoflinecount=0\relax %
   \global\greblockcusto=0\relax %
@@ -809,6 +809,8 @@
   \grelocalrightbox{}%
   \setbox\GreAboveinitialfirstbox=\hbox{}%
   \greupdateadditionalspaces{0}{0}%
+  \global\grecurrentabovelinestextheight=0 sp%
+  \greremovetranslationspace %
   \grenormalinitial %
   \directlua{gregoriotex.atScoreEnd()}%
   \relax%
