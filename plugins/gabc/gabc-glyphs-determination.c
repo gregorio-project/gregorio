@@ -60,7 +60,6 @@ close_glyph (gregorio_glyph ** last_glyph, char glyph_type,
 	     gregorio_note ** first_note, char liquescentia,
 	     gregorio_note * current_note)
 {
-
   // a variable necessary for the patch for G_BIVIRGA & co.
   gregorio_note *added_notes = NULL;
 
@@ -261,7 +260,7 @@ gabc_det_glyphs_from_notes (gregorio_note * current_note,
 
   // determination of end of glyphs, see comments on
   // gregorio_add_note_to_a_glyph
-  char end_of_glyph;
+  char end_of_glyph = DET_NO_END;
 
   // a char representing the liquescentia of the current glyph
   char liquescentia = L_NO_LIQUESCENTIA;
@@ -461,9 +460,12 @@ gabc_det_glyphs_from_notes (gregorio_note * current_note,
 	    }
 	  break;
 	case DET_END_OF_PREVIOUS:
-	  close_glyph (&last_glyph, current_glyph_type,
-		       &current_glyph_first_note, liquescentia,
-		       current_note->previous);
+	  if (current_note->previous) // we don't want to close previous glyph twice
+	    {
+        close_glyph (&last_glyph, current_glyph_type,
+           &current_glyph_first_note, liquescentia,
+           current_note->previous);
+      }
 	  current_glyph_type = next_glyph_type;
 	  liquescentia = L_NO_LIQUESCENTIA;
 	  last_pitch = USELESS_VALUE;
@@ -510,9 +512,12 @@ gabc_det_glyphs_from_notes (gregorio_note * current_note,
 	  liquescentia = L_NO_LIQUESCENTIA;
 	  break;
 	default:		//case DET_END_OF_BOTH:
-	  close_glyph (&last_glyph, current_glyph_type,
+	  if (current_note->previous) // we don't want to close previous glyph twice
+	    {
+	      close_glyph (&last_glyph, current_glyph_type,
 		       &current_glyph_first_note, liquescentia,
 		       current_note->previous);
+		  }
 	  current_glyph_type = G_UNDETERMINED;
 	  liquescentia = L_NO_LIQUESCENTIA;
 	  close_glyph (&last_glyph, next_glyph_type,
