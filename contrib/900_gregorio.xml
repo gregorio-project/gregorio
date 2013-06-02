@@ -22,7 +22,7 @@
 -->
 <editorsettings description="gregorio" icon="gregorio.png">
     <!-- change the path to gregorio-scribus.lua here. -->
-	<executable command='texlua /usr/share/scribus-ng/editorconfig/gregorio-scribus.lua "%file" "%dir"'/>
+	<executable command='texlua /usr/share/scribus/editorconfig/gregorio-scribus.lua "%file" "%dir"'/>
 	<imagefile extension=".pdf"/>
 	<highlighter>
         <rule name="gabc header" regex="[a-zA-Z]+:" color="blue" minimal="true"/>

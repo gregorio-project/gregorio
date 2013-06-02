@@ -20,11 +20,13 @@ You must run this program with texlua, if possible under TeXLive 2010 (or later)
 This program allows gregorio to be integrated in Scribus.
 --]]
 
-local gregoriobin = 'gregorio';
-local lualatexbin = "lualatex";
+require"lfs"
+
+local gregoriobin = 'gregorio'
+local lualatexbin = "lualatex"
 
 local function basename(name)
-    return string.match(name,"^.+[/\\](.-)$") or name
+    return name and string.match(name,"^.+[/\\](.-)$") or name
 end
 
 local f = arg[1]
@@ -80,8 +82,6 @@ local format = string.format
 texfile:write(format("\n\\includescore{%s-score.tex}\n\\end{document}\n", pathbase))
 texfile:close()
 gabcfile:close()
-
-print(pathbase)
 
 print(format("calling 'gregorio %s-score.gabc'\n", f))
 os.remove(format("%s-score.tex", f))
