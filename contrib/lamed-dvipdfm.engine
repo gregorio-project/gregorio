@@ -1,9 +1,0 @@
-#!/bin/sh
-# This engine converts a .tex file to pdf using lamed and dvipdfm
-# If you wish to switch to dvips, just uncomment (delete the # sign) 
-# the simpdftex line and delete all the lines after it
-echo "typesetting file..."
-#simpdftex lamed --maxpfb --distiller ps2pdf14 --extratexopts --shell-escape "$1"
-lamed "$1"
-echo "conversion to pdf..."
-dvipdfm "$(basename -s .tex $1).dvi"
