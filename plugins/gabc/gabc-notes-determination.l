@@ -166,6 +166,8 @@ char *tempstr=NULL;
 	gregorio_add_texverb_as_note(&current_note, strdup(gabc_notes_determination_text), GRE_ALT);
     }
 <texverbnote,texverbglyph,texverbelement,choralsign,alt,overcurlyaccentusbrace,overcurlybrace,overbrace>\] {
+  printf("tutu!\n");
+  printf("%s!", gabc_notes_determination_text);
 	BEGIN(INITIAL);
     }
 \{  {
@@ -210,6 +212,24 @@ Z {
 	}
 ,       {
 	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINIMA);
+	}
+,1       {
+	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D1);
+	}
+,2       {
+	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D2);
+	}
+,3       {
+	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D3);
+	}
+,4       {
+	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D4);
+	}
+,5       {
+	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D5);
+	}
+,6       {
+	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR_D6);
 	}
 ;       {
 	gregorio_add_special_as_note (&current_note, GRE_BAR, B_DIVISIO_MINOR);
@@ -391,13 +411,13 @@ gregorio_note *
 gabc_det_notes_from_string (char *str, char *newmacros[10]) 
 {
   int i;
+  YY_BUFFER_STATE buf;
   // a small optimization could uccur here: we could do it only once at the beginning of the score, not at each syllable
   for (i=0;i<10;i++)
     {
       notesmacros[i] = newmacros[i];
     }
   tempstr = malloc(71*sizeof(char));
-  YY_BUFFER_STATE buf;
   current_note=NULL;
   buf=yy_scan_string(str);
   yylex();
