@@ -1,34 +1,45 @@
 Here is the description of the different files in this section.
 
-gprocess is a perl script to instantly compile and show the result of a gabc
-file. You can modify some variables directly into the script, for example the
-pdf viewer program.
+Scribus: gregorio-scribus.lua, gregorio.png and 900_gregorio.xml
+========
+These are files to use Gregorio in scribus. To use them, copy the three files
+in the editorconfig folder of scribus (/usr/share/scribus/editorconfig
+under debian for example, or C:\Program Files\Scribus\share\editorconfig
+under Windows). Then read the comments in the .xml files and change some
+variables accordingly. 
+The second step is to allow Scribus to call gregorio: go in 
+File->Preferences->External Tools, click add in the "Render Frames" part and
+select the file 900_gregorio.xml.
+After that you can insert a render frame using the program gregorio, and simply 
+typing gabc (in right-click->edit sources).
+For more details see http://home.gna.org/gregorio/scribus.
 
-gabc.lang is a lang file for gabc syntax highlighting in all the text viewer of
+Gnome/Gtk/Gedit: gabc.lang
+================
+This is a lang file for gabc syntax highlighting in all the text viewer of
 the gnome project, like gedit. Simply copy the file in 
 /usr/share/gtksourceview-2.0/language-specs/ and it will work. There are still
 some bugs to fix, but at least it looks better.
 
-gabc.xml is a file for syntax highlighting in kate (and Kedit, etc.). To 
+Kde/Kate/Kedit: gabc.xml
+===============
+This is a file for syntax highlighting in kate (and Kedit, etc.). To 
 install it, simply copy the file in /usr/share/apps/katepart/syntax. This path
 may not be the same according to your distribution.
 
-gabc.vim is the highlight syntax file for vim. You can copy it in
+Vim: gabc.vim
+====
+This is the highlight syntax file for vim. You can copy it in
 /usr/share/vim/vimcurrent/syntax (on debian at least) and add the line
 au BufNewFile,BufRead *.gabc                    setf gabc
 somewhere near lines of the same type (near line 100 for example) in
 /usr/share/vim/vimcurrent/filetype.vim . This will autodetect the filetypes.
 
-Some files specifically for TeXShop Users on Mac OS X:
-
-lamed-dvipdfm.engine is an engine file so you can compile TeX files using 
-lamed from within TeXShop. It also runs dvipdfm, and the pdf result will 
-open in the preview window. See the comments within the file if you want to
-modify it for a lamed/dvips/ps2pdf process instead. Install it by copying it
-into the ~/Library/TeXShop/Engines folder.
-
+TeXShop (Mac OSX): gregorio.engine and gregorio.scpt
+=================
 There are 2 ways of compiling gabc files directly from TeXShop:
-1) Using gregorio.engine. To do this, copy gregorio.engine into ~/Library/TeXShop/Engines. Then in a Terminal window, run 
+1) Using gregorio.engine. To do this, copy gregorio.engine into ~/Library/TeXShop/Engines.
+Then in a Terminal window, run 
 defaults write TeXShop OtherTeXExtensions -array-add "gabc"
 Restart TeXShop, and you should be able to see "gregorio" as a typesetting 
 option in the upper left corner.
@@ -39,14 +50,14 @@ and call it gregorio (or whatever you wish). Copy and paste all the text of
 gregorio.scpt into the Content window, and click save. To use it, type and 
 save a gabc file and then just choose the gregorio macro from the menu.
 
-gregorio-scribus.pl, gregorio.png and 900_gregorio.xml are files to use 
-Gregorio in scribus. In order to use it, copy the three files .pl file
-in the editorconfig folder of scribus (/usr/share/scribus-ng/editorconfig
-under debian for example, or C:\Program Files\Scribus\share\editorconfig
-nder Windows). Then read the comments in the two files and change some
-variables accordingly. The following step is to allow Scribus to call 
-gregorio, by going in File->Preferences->External Tools, clicking add 
-in the "Render Frames" part and select the file 900_gregorio.xml.
-After that you can use them by inserting a render frame and using the
-program gregorio, and simply typing gabc (in right-click->edit sources).
-For more details see http://home.gna.org/gregorio/scribus.
+BBEdit and TextWrangler: gabc-syntax.plist
+========================
+This file will highlight gabc syntax in the BBEdit and TextWrangler editors. To
+install it, just copy it into ~/Library/Application Support/TextWrangler/Language Modules/ 
+and restart BBEdit or TextWrangler.
+
+Automatic Gregorio Processing: gprocess
+==============================
+gprocess is a perl script to instantly compile and show the result of a gabc
+file. You can modify some variables directly into the script, for example the
+pdf viewer program.
