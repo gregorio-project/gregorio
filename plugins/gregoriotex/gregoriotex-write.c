@@ -2315,7 +2315,7 @@ gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph, gregorio_note *no
     }
 }
 
-// a macro to write an additional line bottom_or_top is bottom, or top...
+// a macro to write an additional line bottom_or_top is bottom (TT_BOTTOM), or top (TT_TOP)...
 
 void
 gregoriotex_write_additional_line (FILE * f,
@@ -2329,14 +2329,14 @@ gregoriotex_write_additional_line (FILE * f,
   char height = 0;
   char number = 0;
   char ambitus = 0;
-
   if (!current_note)
     {
+      gregorio_message (_
+			  ("called with no note"),
+			  "gregoriotex_write_additional_line", ERROR, 0);
       return;
     }
-
   // patch to get a line under the full glyph in the case of dbc (for example)
-
   switch (type)
     {
     case T_PORRECTUSFLEXUS:
@@ -2349,20 +2349,22 @@ gregoriotex_write_additional_line (FILE * f,
 	}
       if (i == 2)
 	{
-	  if (current_note->previous->pitch > 'b')
+	  if (current_note->previous->pitch > 'b' && current_note->previous->pitch < 'l')
 	    {
 	      i = HEPISEMUS_FIRST_TWO;
 	    }
 	  else
-	    // we don't need to add twice the same line
 	    {
 	      return;
 	    }
 	}
       if (i == 3)
 	{
-	  // here the line has also been already added before
-	  return;
+     if (bottom_or_top == TT_BOTTOM || current_note->previous->pitch > 'k')
+	      {
+        // we don't need to add twice the same line
+	        return;
+	      }
 	}
       break;
     case T_TORCULUS_RESUPINUS:
@@ -2370,7 +2372,7 @@ gregoriotex_write_additional_line (FILE * f,
 	{
 	  i = HEPISEMUS_FIRST_TWO;
 	}
-      if (i == 3 && current_note->previous->pitch > 'b')
+      if (i == 3)
 	{
 	  if (current_note->previous->pitch > 'b')
 	    {
@@ -2383,8 +2385,11 @@ gregoriotex_write_additional_line (FILE * f,
 	}
       if (i == 4)
 	{
-	  // here the line has also been already added before
-	  return;
+     if (bottom_or_top == TT_BOTTOM || current_note->previous->pitch > 'k')
+	      {
+        // we don't need to add twice the same line
+	        return;
+	      }
 	}
       break;
     default:
@@ -2394,7 +2399,6 @@ gregoriotex_write_additional_line (FILE * f,
   gregoriotex_find_sign_number (current_glyph, i,
 				type, TT_H_EPISEMUS, current_note,
 				&number, &height, NULL);
-
   if (i == HEPISEMUS_FIRST_TWO)
     {
       // here we must compare the first note of the big bar with the second one
@@ -2903,8 +2907,8 @@ gregoriotex_find_sign_number (gregorio_glyph * current_glyph,
 	    }
 	  normal_height_bottom ();
 	  break;
-	default:
-	  number_last_note (1);
+	default: // case 3
+	  number_last_note (18);
 	  normal_height_top ();
 	  break;
 	}
