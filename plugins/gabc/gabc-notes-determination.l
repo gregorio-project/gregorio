@@ -49,6 +49,7 @@ char *tempstr=NULL;
 %}
 
 %option stack
+%option 8bit
 %option pointer
 %option nounput
 %option noyy_push_state 
@@ -166,8 +167,6 @@ char *tempstr=NULL;
 	gregorio_add_texverb_as_note(&current_note, strdup(gabc_notes_determination_text), GRE_ALT);
     }
 <texverbnote,texverbglyph,texverbelement,choralsign,alt,overcurlyaccentusbrace,overcurlybrace,overbrace>\] {
-  printf("tutu!\n");
-  printf("%s!", gabc_notes_determination_text);
 	BEGIN(INITIAL);
     }
 \{  {

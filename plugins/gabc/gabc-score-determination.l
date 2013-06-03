@@ -55,6 +55,7 @@ unsigned char style_stack = 0;
 %option outfile="gabc-score-determination-l.c"
 %option noyywrap
 %option bison-bridge
+%option 8bit
 
 
 /* The expression for attribute below is rather messy because we allow
