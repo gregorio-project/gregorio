@@ -92,4 +92,4 @@ if not lfs.isfile(format("%s-score.gabc", pathbase)) then
 end
 
 print(format("calling 'lualatex --interaction nonstopmode %s.tex'\n", pathbase))
-os.spawn(format("%s %s.tex", lualatexbin, pathbase))
+os.spawn(format("%s --interaction=nonstopmode %s.tex", lualatexbin, pathbase))
