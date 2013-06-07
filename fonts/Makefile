@@ -48,6 +48,7 @@ install: $(ALLFILES)
 	$(INSTALL_SRCFILES)
 	$(INSTALL_TTFFILES)
 	$(INSTALL_FNTSRCFILES)
+	texhash
 
 gregorio.ttf: squarize.py gregorio-base.sfd
 	python squarize.py gregorio
