@@ -84,16 +84,26 @@ begin
 
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(60);;
-  StaticText.Caption := 'The best way to install it is to install the free TeX distribution TeXLive (at least 2010).';
+  StaticText.Caption := 'The best way to install LuaTeX is to install the TeXLive distribution.';
   StaticText.Parent := Page.Surface;
 
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(75);;
   StaticText.Caption := 'If you have not already installed it, please do it before proceeding further!';
   StaticText.Parent := Page.Surface;
+
+  StaticText := TNewStaticText.Create(Page);
+  StaticText.Top := ScaleY(100);;
+  StaticText.Caption := 'Note that you have to reboot your computer after having installed TeXLive';
+  StaticText.Parent := Page.Surface;
   
   StaticText := TNewStaticText.Create(Page);
-  StaticText.Top := ScaleY(105);;
+  StaticText.Top := ScaleY(115);;
+  StaticText.Caption := 'and before installing Gregorio.';
+  StaticText.Parent := Page.Surface;
+
+  StaticText := TNewStaticText.Create(Page);
+  StaticText.Top := ScaleY(145);;
   StaticText.Caption := 'http://www.tug.org/texlive/acquire.html';
   StaticText.Cursor := crHand;
   StaticText.OnClick := @URLLabelOnClickOne;
@@ -102,7 +112,7 @@ begin
   StaticText.Font.Color := clBlue;
   
   StaticText := TNewStaticText.Create(Page);
-  StaticText.Top := ScaleY(125);;
+  StaticText.Top := ScaleY(165);;
   StaticText.Caption := 'http://home.gna.org/gregorio/installation-windows';
   StaticText.Cursor := crHand;
   StaticText.OnClick := @URLLabelOnClickTwo;
