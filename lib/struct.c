@@ -305,7 +305,7 @@ gregorio_add_liquescentia (gregorio_note *note, char liq)
 void
 gregorio_add_h_episemus (gregorio_note *note, unsigned char type, unsigned int *nbof_isolated_episemus) 
 {
-  if (!note || note->type != GRE_NOTE)
+  if (!note || (note->type != GRE_NOTE && note->type != GRE_BAR))
     {
       gregorio_message (_("trying to add an horizontal episemus on something that is not a note"),
 			   "add_h_episemus", FATAL_ERROR, 0);
@@ -332,7 +332,7 @@ gregorio_add_h_episemus (gregorio_note *note, unsigned char type, unsigned int *
 void
 gregorio_set_h_episemus(gregorio_note *note, unsigned char type)
 {
-  if (!note || note->type != GRE_NOTE)
+  if (!note || (note->type != GRE_NOTE && note->type != GRE_BAR))
     {
       gregorio_message (_("trying to add an horizontal episemus on something that is not a note"),
 			   "set_h_episemus", FATAL_ERROR, 0);
