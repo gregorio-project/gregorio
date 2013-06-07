@@ -1,10 +1,10 @@
 ## This makefile is made to build to fonts from the sfd, it won't be useful for
 ## the average user.
 
-SRCFILES = Makefile gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd squarize.py greextra.sfd gresym.sfd
+SRCFILES = Makefile
 DOCFILES = INSTALL FONTLOG 
-TTFFILES = $(wildcard *.ttf)
-FNTSRCFILES = $(wildcard *.sfd) squarize.py
+TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf gresym.ttf greextra.ttf
+FNTSRCFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd squarize.py greextra.sfd gresym.sfd
 TEXFILES = $(wildcard ../tex/*.tex) $(wildcard ../tex/gregorio*.sty) $(wildcard ../tex/*.lua)
 ALLFILES = $(SRCFILES) $(DOCFILES) $(TEXFILES) $(TTFFILES) $(FNTSRCFILES)
 
@@ -27,7 +27,7 @@ INSTALL_TEXFILES = @mkdir -p $(TEXDIR) && cp $(TEXFILES) $(TEXDIR)
 INSTALL_DOCFILES = @mkdir -p $(DOCDIR) && cp $(DOCFILES) $(DOCDIR)
 INSTALL_SRCFILES = @mkdir -p $(SRCDIR) && cp $(SRCFILES) $(SRCDIR)
 INSTALL_TTFFILES = @mkdir -p $(TTFDIR) && cp $(TTFFILES) $(TTFDIR)
-INSTALL_TTFFILES = @mkdir -p $(FNTSRCDIR) && cp $(FNTSRCFILES) $(FNTSRCDIR)
+INSTALL_FNTSRCFILES = @mkdir -p $(FNTSRCDIR) && cp $(FNTSRCFILES) $(FNTSRCDIR)
 
 $(TDS_ZIP): TEXMFROOT=./tmp-texmf
 $(TDS_ZIP): $(ALLFILES)
@@ -66,7 +66,7 @@ greciliae: greciliae.ttf
 
 parmesan: parmesan.ttf
 
-gregoria: Gregoria.otf Gregoria-Auctae.otf Gregoria-Deminutae.otf
+gregoria: Gregoria.otf Gregoria-Auctae.otf Gregoria-Deminutae.otf gregoria2gregorio.py
 	python gregoria2gregorio.py
 
 tds: $(TDS_ZIP)
