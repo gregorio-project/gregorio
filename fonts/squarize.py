@@ -874,7 +874,7 @@ def write_torculus(i,j, first_glyph, last_glyph, shape, liquescentia='nothing'):
             length=width_quilisma
     elif i==1:
         first_glyph='_0017'
-        length=width_punctum
+        length=width_punctum+0.1
     simple_paste(first_glyph, glyphnumber)
     if i!=1:
         write_line(i, glyphnumber, length, base_height)
@@ -938,7 +938,7 @@ def write_torculusresupinus(i,j,k, first_glyph, last_glyph, shape, liquescentia=
     elif i==1:
         if first_glyph=='base5':
             first_glyph='_0017'
-            length=width_punctum
+            length=width_punctum+0.1
     else:
         if first_glyph=='base5':
             length=width_punctum-line_width
@@ -964,7 +964,7 @@ def write_torculusresupinusdeminutus(i,j,k, first_glyph, shape, liquescentia='no
         length=width_debilis
     elif i==1:
         first_glyph='_0017'
-        length=width_punctum
+        length=width_punctum+0.1
     simple_paste(first_glyph, glyphnumber)
     if i!=1:
         write_line(i, glyphnumber, length, base_height)
