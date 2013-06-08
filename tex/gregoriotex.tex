@@ -1075,7 +1075,7 @@
   \ifnum\grefactor=0\else %
     \gretempdimcount = \the\grefactor %
     \multiply\gretempdimcount by 100000 %
-    \global\font\gregoriofont=#1 at \the\gretempdimcount sp%
+    \global\font\gregoriofont="name:#1" at \the\gretempdimcount sp%
   \fi %
   \relax%
 }
@@ -1087,7 +1087,7 @@
   \ifnum\grefactor=0\else %
     \gretempdimcount = \the\grefactor %
     \multiply\gretempdimcount by 100000 %
-    \global\font\gregoriostylefont=greextra at \the\gretempdimcount sp%
+    \global\font\gregoriostylefont="name:greextra" at \the\gretempdimcount sp%
   \fi %
   \relax%
 }

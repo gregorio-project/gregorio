@@ -91,7 +91,7 @@
 \def\gresep#1#2{%
   \gretempfactor=#1% we're reusing tempfactor
   \advance \gretempfactor by 78\relax %
-  {\font\grelinefont=gresym at #2pt\grelinefont \char \gretempfactor}%
+  {\font\grelinefont="name:gresym" at #2pt\grelinefont \char \gretempfactor}%
   \relax%
 }
 
@@ -112,5 +112,5 @@
 }
 
 %you can redefine this with the width you want
-\font\gregoriosymbolfont=gresym at 12pt
+\font\gregoriosymbolfont="name:gresym" at 12pt
 
