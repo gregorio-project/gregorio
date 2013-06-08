@@ -308,6 +308,12 @@ gregorio_add_h_episemus (gregorio_note *note, unsigned char type, unsigned int *
   if (!note || (note->type != GRE_NOTE && note->type != GRE_BAR))
     {
       gregorio_message (_("trying to add an horizontal episemus on something that is not a note"),
+			   "add_h_episemus", ERROR, 0);
+      return;
+    }
+  if (!nbof_isolated_episemus)
+    {
+      gregorio_message (_("NULL argument nbof_isolated_episemus"),
 			   "add_h_episemus", FATAL_ERROR, 0);
       return;
     }
@@ -316,7 +322,7 @@ gregorio_add_h_episemus (gregorio_note *note, unsigned char type, unsigned int *
       note->h_episemus_type = note->h_episemus_type | H_BOTTOM;
       return;
     }
-  if (!note->h_episemus_top_note || nbof_isolated_episemus == NULL || *nbof_isolated_episemus == 0)
+  if (!note->h_episemus_top_note || *nbof_isolated_episemus == 0)
     {
       gregorio_mix_h_episemus (note, H_ONE);
       *nbof_isolated_episemus = 1;
@@ -1406,7 +1412,7 @@ gregorio_set_voice_virgula_position (gregorio_voice_info * voice_info,
 /**********************************
  *
  * Activate_isolated_h_episemus is used when we see an "isolated"
- * horizontal episemus: when we type ab__ lex see a then b_ then _, so
+ * horizontal episemus: when we type ab__ lex see a then b then _ then _, so
  * we must put the _ on the a (kind of backward process), and say the
  * the episemus on the b is a multi episemus. Here n is the length of
  * the isolated episemus we found (can be up to 4).
@@ -1437,6 +1443,7 @@ gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
   /* we make the first iteration by hand,in the case where something would be in highest_pitch */
   top_note = current_note->pitch;
   tmp = tmp->previous;
+  top_note = max (top_note, tmp->pitch);
   if (!tmp)
     {
       // case of b___
@@ -1445,7 +1452,7 @@ gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
 			   "activate_h_isolated_episemus", WARNING, 0);
       return;
     }
-  for (i = 0; i < n; i++)
+  for (i = 0; i < n-1; i++)
     {
       top_note = max (top_note, tmp->pitch);
       if (tmp->previous && tmp->previous->type == GRE_NOTE)

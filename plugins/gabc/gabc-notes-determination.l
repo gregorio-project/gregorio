@@ -29,6 +29,7 @@ This file is quite huge but quite simple: it is just all the expressions you can
 #include "gabc.h"
 
 #define lex_add_note(i,shape,signs,liquescentia,h_episemus)\
+	nbof_isolated_episemus=0;\
 	gregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]), shape, signs, liquescentia,h_episemus)
 
 #define else_error_macro()\
@@ -417,6 +418,7 @@ gabc_det_notes_from_string (char *str, char *newmacros[10])
       notesmacros[i] = newmacros[i];
     }
   tempstr = malloc(71*sizeof(char));
+  nbof_isolated_episemus = 0;
   current_note=NULL;
   buf=yy_scan_string(str);
   yylex();
