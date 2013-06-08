@@ -639,7 +639,14 @@
   % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
   \grefindtextaligncenter{#1}{#2}%
   \setbox\GreSyllabletext=\hbox{\gretextformat{#1#2#3}}%
+  % we need to save lastoflinecount, because otherwise when a \newline appears inside a syllable, it is counted two times (once here and once later when #9 will be really output), so \grelastoflinecount has a wrong value. Thus
+  \edef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
+  % a counter to know we are not really typesetting things (useful for end of lines)
+  \xdef\greboxing{1}%
   \gresyllablenotes{#9}%
+  \xdef\greboxing{0}%
+  \grefirstglyph=1 %
+  \global\grelastoflinecount=\gresavedlastoflinecount\relax %
   \grenotesaligncenter=\wd\GreSyllablenotes%
   \divide\grenotesaligncenter by 2\relax %
   \grebegindifference=\grenotesaligncenter %
