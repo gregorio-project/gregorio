@@ -1466,11 +1466,11 @@
 \def\grefinaldivisiofinalis#1{%
   \ifcase#1% case 0
     \grelocalrightbox{}%
-    \grelocalleftbox{}%
+%    \grelocalleftbox{}%
     \penalty 10001\relax %
     \hskip\grespacebeforefinalfinalis %
     \penalty 10001\relax %
-    \grebarsyllable{}{}{}{1}{}{}{0}{}{%
+    \grebarsyllable{}{}{}{1}{}{}{0}{\grelastofline}{%
       \gredivisiofinalis{}%
     }%
   \or % case 1
