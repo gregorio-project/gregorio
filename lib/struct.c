@@ -1467,6 +1467,13 @@ gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
 	  break;
 	}
     }
+  // improvement: we consider also the previous note (if it's a GRE_NOTE) for
+  // the top note. TODO: we should consider also the next note, but we cannot
+  // do it at this stage.
+  if (tmp->previous && tmp->previous->type == GRE_NOTE)
+    {
+      top_note = max (top_note, tmp->previous->pitch);
+    }
   while (tmp)
     {
       gregorio_set_h_episemus(tmp, H_MULTI);
@@ -1554,7 +1561,14 @@ gregorio_mix_h_episemus (gregorio_note * current_note, unsigned char type)
     }
   else
     {
-      current_note->h_episemus_top_note = current_note->pitch;
+      if (prev_note && prev_note->type == GRE_NOTE)
+        {
+          current_note->h_episemus_top_note = max(prev_note->pitch, current_note->pitch);
+        }
+      else
+        {
+          current_note->h_episemus_top_note = current_note->pitch;
+        }
       if (!prev_note || prev_note->type != GRE_NOTE
 	  || simple_htype(prev_note->h_episemus_type) == H_NO_EPISEMUS)
 	{
