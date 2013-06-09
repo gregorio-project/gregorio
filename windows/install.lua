@@ -72,17 +72,7 @@ function copy_files()
   copy_one_file('examples\\PopulusSion.gabc', dirs.templatescore)
 end
 
-local base_dirs = {
-  texmflocal.."fonts",  texmflocal.."tex", texmflocal.."tex\\generic",  texmflocal.."tex\\latex", texmflocal.."fonts\\ofm",
-  texmflocal.."fonts\\tfm", texmflocal.."fonts\\type1", texmflocal.."fonts\\ovp", texmflocal.."fonts\\ovf", texmflocal.."fonts\\map",
-  templatemain, templatescore,
-}
-
 function create_dirs()
-  -- just in case
-  for _,d in ipairs(base_dirs) do
-	lfs.mkdir(d)
-  end
   for _, d in pairs(dirs) do
     lfs.mkdir(d)
   end
@@ -93,7 +83,34 @@ function run_texcommands()
   local p = os.spawn("mktexlsr "..texmflocal)
 end
 
+local old_base_dirs = {
+  texmflocal.."tex\\generic\\gregoriotex",
+  texmflocal.."tex\\latex\\gregoriotex",
+  texmflocal.."fonts\\ofm\\gregoriotex",
+  texmflocal.."fonts\\tfm\\gregoriotex",
+  texmflocal.."fonts\\type1\\gregoriotex",
+  texmflocal.."fonts\\ovp\\gregoriotex",
+  texmflocal.."fonts\\ovf\\gregoriotex", 
+  exmflocal.."fonts\\map\\gregoriotex",
+}
+
+-- gregorio used to be installed in other directories which have precedence
+-- over the new ones
+function remove_possible_old_install()
+  local old_install_was_present = false
+  for _, d in pairs(dirs) do
+    if lfs.isdir(d) then
+      old_install_was_present = true
+      lfs.mkdir(d)
+    end
+  end
+  if old_install_was_present then
+    os.spawn("updmap")
+  end
+end
+
 function main_install()
+	remove_possible_old_install()
 	create_dirs()
 	copy_files()
 	run_texcommands()
