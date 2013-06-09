@@ -291,24 +291,28 @@
 }
 
 %% macro that typesets the text of the syllable, and sets \gretextaligncenter to the middle of the middle letters, it is needed because we align the note (often the middle of the note) with the middle of the middle letters
-%% warning : gretextaligncenter is the width from the beginning of the letters to the middle of the middle letters
+%% third argument is 0 if it's the current syllable, 1 if it's the alignment of the following one
+%% warning: gretextaligncenter is the width from the beginning of the letters to the middle of the middle letters
+%% warning: value is approximative when a ligature appears
 
 \newdimen\gretextaligncenter
 
-\def\grefindtextaligncenter#1#2{%
-  \grewidthof{\gretextformat{#1#2}}%
+\def\grefindtextaligncenter#1#2#3{%
+  \ifnum#3=0\relax%
+    \grewidthof{\grefixedtextformat{#1#2}}%
+  \else %
+    \grewidthof{\grefixednexttextformat{#1#2}}%
+  \fi %
   \global\gretextaligncenter=\the\gretempwidth %
-  \grewidthof{\gretextformat{#2}}%
+  \ifnum#3=0\relax%
+    \grewidthof{\grefixedtextformat{#2}}%
+  \else %
+    \grewidthof{\grefixednexttextformat{#2}}%
+  \fi %
   \divide\gretempwidth by 2 %
   \global\advance\gretextaligncenter by -\the\gretempwidth%
   \relax%
 }
-
-% definition of the dash that we will use after the text if necessary
-\def\gregoriotextdash{-}
-\newdimen\gregoriotextdashwidth
-\grewidthof{\gregoriotextdash}
-\gregoriotextdashwidth=\gretempwidth
 
 \def\grewritetranslation#1{%
   \raise\grespacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
@@ -1044,7 +1048,7 @@
 
 \def\greitalic#1{%
   {\it #1}%
-  \relax %
+%  \relax %
 }
 
 \def\gresmallcaps#1{%
@@ -1182,7 +1186,6 @@
 \def\grenormalhyph{%
   %-%
   \char\the\hyphenchar\font %
-  \relax %
 }
 
 % the definition that will be always used for end of lines hyphens in gregorio, except if one of the two before is explicitely used

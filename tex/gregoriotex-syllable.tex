@@ -467,11 +467,36 @@
 }
 
 % a function to cancel the previous one
-\def\greunsetfixtextformat{%
+\def\greunsetfixedtextformat{%
   \global\let\grefixedtextformat\gretextnormal %
 }
 
 \let\grefixedtextformat\gretextnormal %
+
+% The same but for the next syllable
+
+\def\gresetfixednexttextformat#1{%
+  \ifcase#1\relax
+    \global\let\grefixednexttextformat\gretextnormal %
+  \or %
+    \global\let\grefixednexttextformat\greitalic %
+  \or %
+    \global\let\grefixednexttextformat\grebold %
+  \or %
+    \global\let\grefixednexttextformat\gresmallcaps %
+  \or %
+    \global\let\grefixednexttextformat\grett %
+  \or %
+    \global\let\grefixednexttextformat\greul %
+  \fi %
+}
+
+% a function to cancel the previous one
+\def\greunsetfixednexttextformat{%
+  \global\let\grefixednexttextformat\gretextnormal %
+}
+
+\let\grefixednexttextformat\gretextnormal %
 
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : the first letters of the syllable, that don't count for the alignment
@@ -490,7 +515,7 @@
 %% at the end we wall \greendofword or \greendofsyllable with #7, to reduce the space in case of a flat or natural
 \def\gresyllable#1#2#3#4#5#6#7#8#9{%
   \grefirstglyph=1 %
-  \grefindtextaligncenter{#1}{#2}% we first get the width between the alignment point and the end of the syllable
+  \grefindtextaligncenter{#1}{#2}{0}% we first get the width between the alignment point and the end of the syllable
   % we need to save lastoflinecount, because otherwise when a \newline appears inside a syllable, it is counted two times (once here and once later when #9 will be really output), so \grelastoflinecount has a wrong value. Thus
   \edef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
   % a counter to know we are not really typesetting things (useful for end of lines)
@@ -659,7 +684,8 @@
     \gretexworkaround{#4}%
   \fi %
   \global\grenotesaligncenter=0pt% very important, see flat and natural
-  \greunsetfixtextformat %
+  \greunsetfixedtextformat %
+  \greunsetfixednexttextformat %
   \relax %
 }
 
@@ -693,7 +719,7 @@
   % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the prefious syllable and the first note of the next syllable. But there are limits : a bar cant go very far above text. For example if there is nuncncncncn with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
   % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
   % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
-  \grefindtextaligncenter{#1}{#2}%
+  \grefindtextaligncenter{#1}{#2}{0}%
   \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3}}%
   % we need to save lastoflinecount, because otherwise when a \newline appears inside a syllable, it is counted two times (once here and once later when #9 will be really output), so \grelastoflinecount has a wrong value. Thus
   \edef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
@@ -808,7 +834,8 @@
   \fi%
   \grefirstsyllableofword=1 %
   \global\grenotesaligncenter= 0 pt\relax % very important, see flat and natural
-  \greunsetfixtextformat %
+  \greunsetfixedtextformat %
+  \greunsetfixednexttextformat %
   \relax%
 }
 
@@ -823,7 +850,7 @@
 \def\gresetnextbegindifference#1#2#3{%
   %to prevent the pollution of the normal values, we stock them into a temp value
   \gretempdimskip=\gretextaligncenter %
-  \grefindtextaligncenter{#1}{#2}%
+  \grefindtextaligncenter{#1}{#2}{1}%
   \global\grenextbegindifference=-\gretextaligncenter %
   \global\gretextaligncenter=\gretempdimskip %
   \gretempdimskip=\grenotesaligncenter %
