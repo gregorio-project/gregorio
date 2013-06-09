@@ -418,6 +418,61 @@
 % a helper macro (see details in \gresyllable)
 \xdef\greboxing{0}%
 
+% 
+% Helper macros for fixing text in rare cases
+% 
+
+% the macro we call with all normal text
+\def\gretextformat#1{%
+  #1\relax %
+}
+
+\let\gretextnormal\gretextformat
+
+% macro to specify a text which is different from #1#2#3 (of \gresyllable). It is useful for
+% styles, for instance with
+%
+%    <i>ffj</i>(gh)
+%
+% , we will have
+%
+%    #1 = \textit{f}
+%    #2 = \textit{f}
+%    #3 = \textit{j}
+%
+% and thus #1#2#3 will be \textit{f}\textit{f}\textit{j}, which won't typeset
+% ligatures. In this example we should call \grefixedtext{\textit{ffj}}.
+%
+% for the argument, we have:
+% 0: nothing
+% 1: italic
+% 2: bold
+% 3: small caps
+% 4: tt
+% 5: ul
+\def\gresetfixedtextformat#1{%
+  \ifcase#1\relax
+    \global\let\grefixedtextformat\gretextnormal %
+  \or %
+    \global\let\grefixedtextformat\greitalic %
+  \or %
+    \global\let\grefixedtextformat\grebold %
+  \or %
+    \global\let\grefixedtextformat\gresmallcaps %
+  \or %
+    \global\let\grefixedtextformat\grett %
+  \or %
+    \global\let\grefixedtextformat\greul %
+  \fi %
+}
+
+% a function to cancel the previous one
+\def\greunsetfixtextformat{%
+  \global\let\grefixedtextformat\gretextnormal %
+}
+
+\let\grefixedtextformat\gretextnormal %
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : the first letters of the syllable, that don't count for the alignment
 % #2 : the middle letters of the syllable, we must align in the middle of them
@@ -498,7 +553,7 @@
   % by default, gregorioattr will be 2
   \gregorioattr=2\relax %
   \gresetnextbegindifference{#5}{#6}{#7}%
-  \setbox\GreSyllabletext=\hbox{\gretextformat{#1#2#3}}%
+  \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3}}%
   \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{1}%
   \ifcase#4 %
     % we enter here if the end of word is 0, so we must determine if we need to type a dash here
@@ -525,15 +580,15 @@
     \ifdim\gretempdim>\gremaximumspacewithoutdash %
       % if it's the last syllable of line, the hyphen will be \grehyph
       \ifnum\grelastoflinecount=1\relax %
-        \setbox\GreSyllabletext=\hbox{\gretextformat{#1#2#3\grehyph\relax}}%
+        \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3\grehyph\relax}}%
       \else %
-        \setbox\GreSyllabletext=\hbox{\gretextformat{#1#2#3-}}%
+        \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3-}}%
       \fi %
       \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{0}%
     \else %
       \gregorioattr=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
-      \setbox\GreSyllabletext=\hbox{\gretextformat{#1#2#3}}%
+      \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3}}%
     \fi%
   \fi% ficase#4
   % then we reuse temp, we assign to it the \grebegindifference, but only if it is positive, else it is 0
@@ -604,6 +659,7 @@
     \gretexworkaround{#4}%
   \fi %
   \global\grenotesaligncenter=0pt% very important, see flat and natural
+  \greunsetfixtextformat %
   \relax %
 }
 
@@ -638,7 +694,7 @@
   % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
   % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
   \grefindtextaligncenter{#1}{#2}%
-  \setbox\GreSyllabletext=\hbox{\gretextformat{#1#2#3}}%
+  \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3}}%
   % we need to save lastoflinecount, because otherwise when a \newline appears inside a syllable, it is counted two times (once here and once later when #9 will be really output), so \grelastoflinecount has a wrong value. Thus
   \edef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
   % a counter to know we are not really typesetting things (useful for end of lines)
@@ -752,6 +808,7 @@
   \fi%
   \grefirstsyllableofword=1 %
   \global\grenotesaligncenter= 0 pt\relax % very important, see flat and natural
+  \greunsetfixtextformat %
   \relax%
 }
 

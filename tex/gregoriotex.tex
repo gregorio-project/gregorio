@@ -1052,10 +1052,12 @@
   \relax %
 }
 
-\def\greboldfont#1{%
+\def\grebold#1{%
   {\bf #1}%
   \relax %
 }
+
+\let\greboldfont\grebold
 
 \def\grett#1{%
   {\tt #1}%
@@ -1066,6 +1068,8 @@
   {#1}%
   \relax %
 }
+
+
 
 % the default gregorio font
 \xdef\gregoriofontname{greciliae}
@@ -1090,10 +1094,6 @@
     \global\font\gregoriostylefont="name:greextra" at \the\gretempdimcount sp%
   \fi %
   \relax%
-}
-
-\def\gretextformat#1{%
-  #1\relax %
 }
 
 \def\gretranslationformat#1{%
