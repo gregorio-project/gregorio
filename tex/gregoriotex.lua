@@ -68,7 +68,7 @@ local function process (h, groupcode, glyphes)
     for a in traverse_id(hlist, h) do
         if has_attribute(a.list, gregorioattr) then
             -- the next two lines are to remove the dumb lines
-            if count(hlist, a.list) == 2 then
+            if count(hlist, a.list) <= 2 then
                 remove(h, a)
             else
 			          for b in traverse_id(hlist, a.list) do
@@ -109,8 +109,16 @@ local function process (h, groupcode, glyphes)
     return true
 end 
 
+-- In gregoriotex, hyphenation is made by the process function, so TeX hyphenation
+-- is just a waste of time. This function will be registered in the hyphenate
+-- callback to skip this step and thus gain a little time.
+local function disable_hyphenation()
+    return false
+end
+
 local function atScoreBeggining ()
-    luatexbase.add_to_callback('post_linebreak_filter', process, 'gregoriotex.callback')
+    luatexbase.add_to_callback('post_linebreak_filter', process, 'gregoriotex.callback', 1)
+    luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
     -- we call the optimize_gabc functions here
     if optimize_gabc_style then
         optimize_gabc_style.add_callback()
@@ -119,6 +127,7 @@ end
 
 local function atScoreEnd ()
     luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.callback')
+    luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
     if optimize_gabc_style then
         optimize_gabc_style.remove_callback()
     end
