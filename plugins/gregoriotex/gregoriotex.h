@@ -150,6 +150,7 @@ void write_score (FILE * f, gregorio_score * score);
 void gregoriotex_write_voice_info (FILE * f, gregorio_voice_info * voice_info);
 void gregoriotex_write_syllable (FILE * f, gregorio_syllable * syllable, char *first_syllable, unsigned char *line_number);
 void gregoriotex_write_text (FILE * f, gregorio_character *first_character, char *first_syllable);
+unsigned char gregoriotex_fix_style(gregorio_character *first_character);
 void gregoriotex_write_translation (FILE *f, gregorio_character *translation);
 void gregoriotex_write_element (FILE * f, gregorio_syllable * syllable, gregorio_element * element);
 void gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable);
@@ -193,4 +194,11 @@ char gregoriotex_clef_flat_height(char step, int line);
 unsigned char gregoriotex_is_long(char pitch, gregorio_glyph *glyph, gregorio_element *element);
 
 void gregoriotex_write_bridge_hepisemus (FILE * f, gregorio_glyph *current_glyph, gregorio_element *current_element,	 gregorio_syllable *current_syllable, char height);
+
+unsigned char gregoriotex_internal_style_to_gregoriotex(unsigned char style);
+
+// a global variable... could be good to remove it, but the structure of gregorio
+// is really flawed, and there are many many things to fix before that!
+unsigned char gregoriotex_ignore_style = 0;
+
 #endif

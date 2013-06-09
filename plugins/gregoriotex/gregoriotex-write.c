@@ -832,6 +832,10 @@ gregoriotex_getlineinfos (gregorio_syllable * syllable, gregorio_line * line)
 void
 gtex_write_begin (FILE * f, unsigned char style)
 {
+  if (style == gregoriotex_ignore_style)
+    {
+      return;
+    }
   switch (style)
     {
     case ST_ITALIC:
@@ -864,6 +868,10 @@ gtex_write_begin (FILE * f, unsigned char style)
 void
 gtex_write_end (FILE * f, unsigned char style)
 {
+  if (style == gregoriotex_ignore_style)
+    {
+      return;
+    }
   switch (style)
     {
     case ST_FORCED_CENTER:
@@ -882,7 +890,10 @@ gtex_write_end (FILE * f, unsigned char style)
 void
 gtex_write_end_for_two (FILE * f, unsigned char style)
 {
-  fprintf (f, "}");
+  if (style != gregoriotex_ignore_style)
+    {
+      fprintf (f, "}");
+    }
 }
 
 /*!
@@ -1038,6 +1049,11 @@ gregoriotex_write_text (FILE * f, gregorio_character * text,
       return;
     }
   fprintf (f, "{");
+  gregoriotex_ignore_style = gregoriotex_fix_style(text);
+  if (gregoriotex_ignore_style != 0)
+    {
+      fprintf(f, "\\gresetfixedtextformat{%d}", gregoriotex_internal_style_to_gregoriotex(gregoriotex_ignore_style));
+    }
   gregorio_write_text (*first_syllable, text, f,
 		       (&gtex_write_verb),
 		       (&gtex_print_char),
@@ -1047,7 +1063,123 @@ gregoriotex_write_text (FILE * f, gregorio_character * text,
     {
       *first_syllable = 0;
     }
+  gregoriotex_ignore_style = 0;
   fprintf (f, "}");
+}
+
+// a function to map the internal ST_* styles to gregoriotex styles as defined
+// in gregoriotex-syllables.tex
+unsigned char
+gregoriotex_internal_style_to_gregoriotex(unsigned char style)
+{
+  switch (style)
+  {
+    case ST_ITALIC:
+      return 1;
+      break;
+    case ST_BOLD:
+      return 2;
+      break;
+    case ST_SMALL_CAPS:
+      return 3;
+      break;
+    case ST_TT:
+      return 4;
+      break;
+    case ST_UNDERLINED:
+      return 5;
+      break;
+    default:
+      return 0;
+      break;
+  }
+}
+
+/*
+ * A quite hacky function: when we have only one style (typically italic) and
+ * when this style is on all the parts, then we return this style.
+ *
+ */
+unsigned char
+gregoriotex_fix_style(gregorio_character *first_character)
+{
+  unsigned char possible_fixed_style= 0;
+  unsigned char state = 0;
+  /* states are: 
+      - 0: we didn't meet any style yet, which means that if we encounter:
+          * a character -> we can return, nothing to do
+          * a style -> we go in state 1
+          * center or initial: stay in state 0
+      - 1: we encountered a style, if we encounter
+          * another style : we can return
+          * something that makes us change syllable part (like center or initial) -> go in state 2
+          * a character : stay in state 1
+      - 2: if we encounter:
+          * another style, then return
+          * a character, then return
+          * the same style: go in state 1
+  */
+  gregorio_character *current_char = first_character;
+  while(current_char)
+    {
+      switch (state)
+      {
+        case 0:
+          if (current_char->is_character)
+            return 0;
+          if (current_char->cos.s.style != ST_CENTER
+                && current_char->cos.s.style != ST_FORCED_CENTER
+                && current_char->cos.s.style != ST_SPECIAL_CHAR
+                && current_char->cos.s.style != ST_VERBATIM
+                && current_char->cos.s.style != ST_INITIAL)
+              {
+                possible_fixed_style=current_char->cos.s.style;
+                state = 1;
+              }
+        break;
+        case 1:
+          if (!current_char->is_character)
+            {
+              if (!current_char->is_character
+                    && current_char->cos.s.style != ST_CENTER
+                    && current_char->cos.s.style != ST_FORCED_CENTER
+                    && current_char->cos.s.style != ST_INITIAL)
+                 {
+                   state = 2;
+                 }
+              else if (current_char->cos.s.style != possible_fixed_style
+                && current_char->cos.s.style != ST_SPECIAL_CHAR
+                && current_char->cos.s.style != ST_VERBATIM)
+                return 0;
+           }
+        break;
+        case 2:
+          if (current_char->is_character)
+            return 0;
+          if (current_char->cos.s.style != ST_CENTER
+                && current_char->cos.s.style != ST_FORCED_CENTER
+                && current_char->cos.s.style != ST_SPECIAL_CHAR
+                && current_char->cos.s.style != ST_VERBATIM
+                && current_char->cos.s.style != ST_INITIAL)
+             {
+               if (current_char->cos.s.style != possible_fixed_style)
+                 {
+                   return 0;
+                 }
+               else
+                 {
+                   state = 1;
+                 }
+             }
+        break;
+        default:
+        break;
+      }
+      current_char = current_char->next_character;
+    }
+    // if we reached here, this means that we there is only one style applied
+    // to all the syllables
+  return possible_fixed_style;
 }
 
 /*
@@ -1082,6 +1214,7 @@ gregoriotex_write_next_first_text (FILE * f,
       fprintf (f, "{}{}");
       return;
     }
+  gregoriotex_ignore_style = gregoriotex_fix_style(current_character);
   // big dirty hack to have only the first two syllables printed : we cut the thing just after the ST_CENTER closing
   while (current_character)
     {
@@ -1094,6 +1227,10 @@ gregoriotex_write_next_first_text (FILE * f,
 	  current_character->next_character = NULL;
 
 	  fprintf (f, "{");
+  if (gregoriotex_ignore_style != 0)
+    {
+      fprintf(f, "\\gresetfixedtextformat{%d}", gregoriotex_internal_style_to_gregoriotex(gregoriotex_ignore_style));
+    }
 	  gregorio_write_text (0, first_character, f,
 			       (&gtex_write_verb),
 			       (&gtex_print_char),
@@ -1101,6 +1238,7 @@ gregoriotex_write_next_first_text (FILE * f,
 			       (&gtex_write_end_for_two),
 			       (&gtex_write_special_char));
 	  current_character->next_character = next_character;
+	  gregoriotex_ignore_style = 0;
 	  return;
 	}
       else
