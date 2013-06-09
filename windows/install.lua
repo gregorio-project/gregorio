@@ -62,11 +62,11 @@ function copy_files()
   if not lfs.isdir(texmflocal) then
     lfs.mkdir(texmflocal)
   end
-  print("copying files...")
+  print("copying files...\n")
   local texmfbin = kpse.expand_var("$TEXMFDIST")
   texmfbin = texmfbin:gsub("/", "\\").."\\..\\bin\\win32\\"
   copy_one_file("gregorio.exe", texmfbin)
-  print("unzipping TDS zip file...")
+  print("unzipping TDS zip file...\n")
   os.spawn("unzip.exe -o gregoriotex.tds.zip -d "..texmflocal:gsub("\\", "/")) -- TeXLive provides unzip!
   copy_one_file('examples\\main-lualatex.tex', dirs.templatemain)
   copy_one_file('examples\\PopulusSion.gabc', dirs.templatescore)
@@ -79,7 +79,7 @@ function create_dirs()
 end
 
 function run_texcommands()
-  print("running mktexlsr")
+  print("running mktexlsr\n")
   local p = os.spawn("mktexlsr "..texmflocal)
 end
 
@@ -91,17 +91,19 @@ local old_base_dirs = {
   texmflocal.."fonts\\type1\\gregoriotex",
   texmflocal.."fonts\\ovp\\gregoriotex",
   texmflocal.."fonts\\ovf\\gregoriotex", 
-  exmflocal.."fonts\\map\\gregoriotex",
+  texmflocal.."fonts\\map\\gregoriotex",
 }
 
 -- gregorio used to be installed in other directories which have precedence
 -- over the new ones
 function remove_possible_old_install()
+  print("Removing possible old GregorioTeX files...\n")
   local old_install_was_present = false
-  for _, d in pairs(dirs) do
+  for _, d in pairs(old_base_dirs) do
     if lfs.isdir(d) then
       old_install_was_present = true
-      lfs.mkdir(d)
+	  print("Removing directory "..d)
+      lfs.rmdir(d)
     end
   end
   if old_install_was_present then
@@ -124,14 +126,14 @@ end
 function texworks_conf()
 	local filesdir = texworksdir
 	if not lfs.isdir(format_dirpath(texworksdir)) then
-	   texio.write_nl("TeXWorks not found, skipping"..texworksdir)
+	   print("TeXWorks not found, skipping.\n"..texworksdir)
 	   return
 	end
-	texio.write_nl("Modifying tools.ini ...")
+	print("Modifying tools.ini...\n")
 	texworks_conf_tools(filesdir.."configuration\\tools.ini")
-	texio.write_nl("Modifying TeXWorks.ini ...")
+	print("Modifying TeXWorks.ini...\n")
 	texworks_conf_ini(filesdir.."TUG\\TeXWorks.ini")
-	texio.write_nl("Modifying texworks-config.txt ...")
+	print("Modifying texworks-config.txt...\n")
 	texworks_conf_config(filesdir.."configuration\\texworks-config.txt")
 end
 
@@ -256,7 +258,7 @@ showPdf=false]]
 function texworks_conf_tools(filename)
 	-- by default, there is no tools.ini in the recent versions of TeXWorks
 	if not lfs.isfile(filename) then 
-	  texio.write_nl(filename.." does not exist, creating it...")
+	  print(filename.." does not exist, creating it...\n")
 	  io.savedata(filename, full_tools_ini)
 	  return
 	end
