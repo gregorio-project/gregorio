@@ -161,6 +161,7 @@
   \grecalculateclefnum{#1}{#2}{#4}%
   \greclefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
   \multiply\greclefchangespace by \the\grefactor %
+  \gresetlinesclef{#1}{#2}{1}{#4}%
   \ifnum#3=1\relax %
     \hskip\greclefchangespace %
   \else %
@@ -169,7 +170,6 @@
   \fi %
   \gretypekey{#1}{#2}{1}{0}{#4}%
   \hskip\greclefchangespace %
-  \gresetlinesclef{#1}{#2}{1}{#4}%
   \relax%
 }
 
@@ -183,10 +183,10 @@
   \fi %
   \greclefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
   \multiply\greclefchangespace by \grefactor %
+  \gresetlinesclef{#1}{#2}{0}{#3}%
   \hskip\greclefchangespace %
   \gretypekey{#1}{#2}{1}{0}{#3}%
   \hskip\greclefchangespace %
-  \gresetlinesclef{#1}{#2}{0}{#3}%
   \relax%
 }
 
