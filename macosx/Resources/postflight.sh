@@ -15,7 +15,6 @@ TEXSHOPDIR="$HOME/Library/TeXShop"
 
 mkdir -p $GREUSERDIR
 cp -f -R $TEMPDIR/* $GREUSERDIR
-
 chown -R $USER $GREUSERDIR
 
 # cleanup from older package installation, if it exists
@@ -31,7 +30,8 @@ if [[ -f $OLDGREUSERDIR/douninstall.sh ]]; then
 	rm -dR /Library/Receipts/gregorio-1.0.pkg
 	rm $OLDGREUSERDIR/douninstall.sh
 fi
-
+# at 2.3 remove old files
+lua $TEMPDIR/install.lua
 # TeXShop support
 if [[ -d $TEXSHOPDIR ]]; then
 	cp -f $GRECONTRIBDIR/gregorio.engine $TEXSHOPDIR/Engines
