@@ -20,6 +20,8 @@ You must run this program with texlua, if possible under a TeXLive 2010.
 This program installs gregorio under Windows.
 --]]
 
+require("lfs")
+
 kpse.set_program_name("luatex")
 
 local pathsep = '/'
@@ -117,6 +119,40 @@ local old_base_dirs = {
   fixpath(texmflocal.."fonts/map/gregoriotex"),
 }
 
+-- should remove the Read-Only flag on files under Windows, but doesn't work, no idea why... even the attrib command in cmd.exe doesn't work...
+-- Windows doesn't seem to be a very reliable OS, it should be avoided...
+function remove_read_only(filename)
+  if os.name == "windows" or os.name == "msdos" then
+    os.spawn(string.format("attrib -r \"%s\" /s /d", filename))
+  end
+end
+
+-- a function removing one file
+local function rm_one(filename)
+  print("removing "..filename)
+  remove_read_only(filename)
+  local b, err = os.remove(filename)
+  if not b then
+    if err then
+      print("error: "..err)
+    else
+      print("error when trying to remove "..filename)
+    end
+  end
+end
+
+-- a function removing a directory with all included files, using the previous one
+-- does not work with subdirectories (we shouldn't have any here)
+local function rmdirrecursive(dir)
+  print("Removing directory "..dir)
+  for filename in lfs.dir(dir) do
+    if filename ~= "." and filename ~= ".." then
+      rm_one(dir..pathsep..filename)
+	end
+  end
+  rm_one(dir)
+end
+
 -- gregorio used to be installed in other directories which have precedence
 -- over the new ones
 function remove_possible_old_install()
@@ -125,8 +161,7 @@ function remove_possible_old_install()
   for _, d in pairs(old_base_dirs) do
     if lfs.isdir(d) then
       old_install_was_present = true
-	  print("Removing directory "..d)
-      lfs.rmdir(d)
+      rmdirrecursive(d)
     end
   end
   if old_install_was_present then
@@ -153,10 +188,6 @@ function texworks_conf()
 	texworks_conf_ini(filesdir.."TUG"..pathsep.."TeXWorks.ini")
 	print("Modifying texworks-config.txt...\n")
 	texworks_conf_config(filesdir.."configuration"..pathsep.."texworks-config.txt")
-end
-
-function remove_read_only(filename)
-    os.spawn(string.format("attrib -r \"%s\"", filename))
 end
 
 function texworks_conf_config(filename)
