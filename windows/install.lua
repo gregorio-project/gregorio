@@ -22,13 +22,36 @@ This program installs gregorio under Windows.
 
 kpse.set_program_name("luatex")
 
-local texmflocal = kpse.expand_var("$TEXMFLOCAL"):gsub("/", "\\")..'\\'
-local texworksdir = kpse.expand_var("$TEXMFCONFIG"):gsub("/", "\\")..'\\texworks\\'
+local pathsep = '/'
+local function fixpath(path)
+  return path
+end
+local function remove_trailing_slash(path)
+  return path:gsub("/$" ,"")
+end
+local function basename(path)
+  return path:gsub("^[^/]+/" ,"")
+end
+if os_type == "windows" or os_type == "msdos" then
+  pathsep = '\\'
+  fixpath = function(path)
+    return path:gsub("/", "\\")
+  end
+  remove_trailing_slash = function(path)
+    return path:gsub("\\$" ,"")
+  end
+  basename = function(path)
+    return path:gsub("^[^\\]+\\" ,"")
+  end
+end
 
-local suffix = "gregoriotex\\"
+local texmflocal = fixpath(kpse.expand_var("$TEXMFLOCAL"))..pathsep
+local texworksdir = fixpath(kpse.expand_var("$TEXMFCONFIG"))..pathsep..'texworks'..pathsep
+
+local suffix = "gregoriotex"..pathsep
 local dirs = {
-  templatemain = texworksdir.."templates\\Gregorio Main File\\",
-  templatescore = texworksdir.."templates\\Gregorio Score\\",
+  templatemain = texworksdir.."templates"..pathsep.."Gregorio Main File"..pathsep,
+  templatescore = texworksdir.."templates"..pathsep.."Gregorio Score"..pathsep,
 }
 
 function io.loaddata(filename,textmode)
@@ -54,7 +77,7 @@ function io.savedata(filename,data,joiner)
 end
 
 function copy_one_file(src, dest)
-  local destfile = dest..src:gsub("^[^\\]+\\" ,"")
+  local destfile = dest..basename(src)
   io.savedata(destfile, io.loaddata(src))
 end
 
@@ -64,12 +87,12 @@ function copy_files()
   end
   print("copying files...\n")
   local texmfbin = kpse.expand_var("$TEXMFDIST")
-  texmfbin = texmfbin:gsub("/", "\\").."\\..\\bin\\win32\\"
+  texmfbin = fixpath(texmfbin.."/../bin/win32/")
   copy_one_file("gregorio.exe", texmfbin)
   print("unzipping TDS zip file...\n")
   os.spawn("unzip.exe -o gregoriotex.tds.zip -d "..texmflocal:gsub("\\", "/")) -- TeXLive provides unzip!
-  copy_one_file('examples\\main-lualatex.tex', dirs.templatemain)
-  copy_one_file('examples\\PopulusSion.gabc', dirs.templatescore)
+  copy_one_file(fixpath('examples/main-lualatex.tex'), dirs.templatemain)
+  copy_one_file(fixpath('examples/PopulusSion.gabc'), dirs.templatescore)
 end
 
 function create_dirs()
@@ -84,14 +107,14 @@ function run_texcommands()
 end
 
 local old_base_dirs = {
-  texmflocal.."tex\\generic\\gregoriotex",
-  texmflocal.."tex\\latex\\gregoriotex",
-  texmflocal.."fonts\\ofm\\gregoriotex",
-  texmflocal.."fonts\\tfm\\gregoriotex",
-  texmflocal.."fonts\\type1\\gregoriotex",
-  texmflocal.."fonts\\ovp\\gregoriotex",
-  texmflocal.."fonts\\ovf\\gregoriotex", 
-  texmflocal.."fonts\\map\\gregoriotex",
+  fixpath(texmflocal.."tex/generic/gregoriotex"),
+  fixpath(texmflocal.."tex/latex/gregoriotex"),
+  fixpath(texmflocal.."fonts/ofm/gregoriotex"),
+  fixpath(texmflocal.."fonts/tfm/gregoriotex"),
+  fixpath(texmflocal.."fonts/type1/gregoriotex"),
+  fixpath(texmflocal.."fonts/ovp/gregoriotex"),
+  fixpath(texmflocal.."fonts/ovf/gregoriotex"), 
+  fixpath(texmflocal.."fonts/map/gregoriotex"),
 }
 
 -- gregorio used to be installed in other directories which have precedence
@@ -118,23 +141,18 @@ function main_install()
 	run_texcommands()
 end
 
--- lfs.isdir doesn't allow trailing slashes
-function format_dirpath(p)
-    return p:gsub("\\$", "")
-end
-
 function texworks_conf()
 	local filesdir = texworksdir
-	if not lfs.isdir(format_dirpath(texworksdir)) then
+	if not lfs.isdir(remove_trailing_slash(texworksdir)) then
 	   print("TeXWorks not found, skipping.\n"..texworksdir)
 	   return
 	end
 	print("Modifying tools.ini...\n")
-	texworks_conf_tools(filesdir.."configuration\\tools.ini")
+	texworks_conf_tools(filesdir.."configuration"..pathsep.."tools.ini")
 	print("Modifying TeXWorks.ini...\n")
-	texworks_conf_ini(filesdir.."TUG\\TeXWorks.ini")
+	texworks_conf_ini(filesdir.."TUG"..pathsep.."TeXWorks.ini")
 	print("Modifying texworks-config.txt...\n")
-	texworks_conf_config(filesdir.."configuration\\texworks-config.txt")
+	texworks_conf_config(filesdir.."configuration"..pathsep.."texworks-config.txt")
 end
 
 function remove_read_only(filename)
@@ -313,21 +331,21 @@ showPdf=false]]
 end
 
 function scribus_config()
-	local f = io.open('contrib\\900_gregorio.xml', 'r')
+	local f = io.open('contrib'..pathsep..'900_gregorio.xml', 'r')
 	local data = ""
 	for l in f:lines() do
 	    if l:match("executable command") then
-		    data = data..string.format("	<executable command='texlua \"%s\" \"%%file\" \"%%dir\"'/>\n", lfs.currentdir().."\\contrib\\gregorio-scribus.lua")
+		    data = data..string.format("	<executable command='texlua \"%s\" \"%%file\" \"%%dir\"'/>\n", lfs.currentdir()..pathsep.."contrib"..pathsep.."gregorio-scribus.lua")
 		else
 			data = data..l.."\n"
 		end
     end
-	io.savedata('contrib\\900_gregorio.xml', data)
+	io.savedata('contrib'..pathsep..'900_gregorio.xml', data)
 end
 
 if arg[1] == nil or arg[1] ~= '--conf' then 	 
   main_install()
   scribus_config()
-else 	 
+else
   texworks_conf()
 end
