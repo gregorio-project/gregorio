@@ -1229,7 +1229,7 @@ gregoriotex_write_next_first_text (FILE * f,
 	  fprintf (f, "{");
   if (gregoriotex_ignore_style != 0)
     {
-      fprintf(f, "\\gresetfixedtextformat{%d}", gregoriotex_internal_style_to_gregoriotex(gregoriotex_ignore_style));
+      fprintf(f, "\\gresetfixednexttextformat{%d}", gregoriotex_internal_style_to_gregoriotex(gregoriotex_ignore_style));
     }
 	  gregorio_write_text (0, first_character, f,
 			       (&gtex_write_verb),

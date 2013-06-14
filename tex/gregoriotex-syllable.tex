@@ -578,6 +578,7 @@
   % by default, gregorioattr will be 2
   \gregorioattr=2\relax %
   \gresetnextbegindifference{#5}{#6}{#7}%
+  \greunsetfixednexttextformat %
   \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3}}%
   \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{1}%
   \ifcase#4 %
@@ -685,7 +686,6 @@
   \fi %
   \global\grenotesaligncenter=0pt% very important, see flat and natural
   \greunsetfixedtextformat %
-  \greunsetfixednexttextformat %
   \relax %
 }
 
@@ -735,6 +735,7 @@
   \advance\grebegindifference by -\gretextaligncenter %
   \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{1}%
   \gresetnextbegindifference{#5}{#6}{#7}%
+  \greunsetfixednexttextformat %
   % for LuaTeX syllable counting in optimize_gabc, we put an empty syllable box with gregorioattr set to 2. With this we can count every syllable.
   \gregorioattr=2\relax %
   \hbox to 0pt{}%
@@ -834,7 +835,6 @@
   \grefirstsyllableofword=1 %
   \global\grenotesaligncenter= 0 pt\relax % very important, see flat and natural
   \greunsetfixedtextformat %
-  \greunsetfixednexttextformat %
   \relax%
 }
 
