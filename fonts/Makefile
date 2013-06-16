@@ -43,7 +43,7 @@ $(TDS_ZIP): $(ALLFILES)
 	
 install: $(ALLFILES)
 	@echo "Installing in '$(TEXMFROOT)'."
-	mkdir -p $(TEXMFROOT)
+	@mkdir -p $(TEXMFROOT)
 	$(INSTALL_TEXFILES)
 	$(INSTALL_DOCFILES)
 	$(INSTALL_SRCFILES)
