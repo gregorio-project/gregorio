@@ -21,14 +21,17 @@ local hpack, traverse_id, has_attribute, count, remove, insert_after, copy = nod
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
+local internalversion = 20130616
+
 local err, warn, info, log = luatexbase.provides_module({
-    name          = "gregoriotex",
-    version       = 2.3,
-    date          = "2013/05/21",
-    description   = "GregorioTeX module.",
-    author        = "Elie Roux",
-    copyright     = "Elie Roux",
-    license       = "GPLv3",
+    name               = "gregoriotex",
+    version            = 2.3,
+    greinternalversion = internalversion,
+    date               = "2013/05/21",
+    description        = "GregorioTeX module.",
+    author             = "Elie Roux",
+    copyright          = "Elie Roux",
+    license            = "GPLv3",
 })
 
 local hlist = node.id('hlist')
@@ -162,7 +165,14 @@ local function include_gabc_score(gabc_file)
     tex.print(string.format("\\input %s", tex_file))
 end
 
+local function check_version(greinternalversion)
+    if greinternalversion ~= internalversion then
+        err("uncoherent file versions: gregoriotex.tex is version %i while gregoriotex.lua is version "..internalversion, greinternalversion)
+    end
+end
+
 gregoriotex.include_gabc_score = include_gabc_score
 gregoriotex.compile_gabc = compile_gabc
 gregoriotex.atScoreEnd = atScoreEnd
 gregoriotex.atScoreBeggining = atScoreBeggining
+gregoriotex.check_version = check_version

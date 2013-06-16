@@ -24,31 +24,17 @@
   \input ifluatex.sty
   \input luatexbase.sty
   \input luaotfload.sty
+  \def\greerror#1{GregorioTeX: \errmessage{#1}}
 \else
   \RequirePackage{ifluatex}
   \RequirePackage{luatexbase}
   \RequirePackage{luaotfload}
+  \def\greerror#1{\PackageError{GregorioTeX}{#1}{}}
 \fi
 
 \ifluatex\else
-  \errmessage{Error: this document must be compiled with LuaTeX (lualatex)}
+  \greerror{Error: this document must be compiled with LuaTeX (lualatex)}
 \fi
-
-% The general version of GregorioTeX (we mean by that the "API", the way
-% Gregorio will write things
-\xdef\gregoriotexversion{20130616}
-
-% the version of the internal files (all must have the same)
-\xdef\greinternalversion{20130616} % date format
-
-% first some macros to allow checks for version:
-% #1 is the name of the file
-% #2 is the version
-\def\gredeclarefileversion#1#2{%
-  \ifnum\number#2=\the\number\greinternalversion\else %
-    
-  \fi %
-}
 
 % Since TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
 % available without prefix. We mostly rely on \directlua that is still available
@@ -65,6 +51,31 @@
 \def\greunsetattribute{\unsetluatexattribute{\gregorioattr}}
 
 \RequireLuaModule{gregoriotex}
+
+% The general version of GregorioTeX (we mean by that the "API", the way
+% Gregorio will write things)
+\xdef\gregoriotexversion{20130616}
+
+% the version of the internal files (all must have the same)
+\xdef\greinternalversion{20130616} % date format
+\directlua{gregoriotex.check_version(\number\greinternalversion)}
+
+% first some macros to allow checks for version:
+% #1 is the name of the file
+% #2 is the version
+\def\gredeclarefileversion#1#2{%
+  \ifnum\number#2=\number\greinternalversion\else %
+    \greerror{uncoherent file versions: gregoriotex.tex is version \number\greinternalversion \space\space while #1 is version \number#2}
+  \fi %
+}
+
+% macro called by scores
+% #1 is the version of GregorioTeX the score is made for.
+\def\gregoriotexapiversion#1{%
+  \ifnum\number#1=\number\gregoriotexversion\else %
+    \greerror{GregorioTeX is version \number\gregoriotexversion\ while a score you included requires version \number #1. Please recompile your scores}
+  \fi %
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %% aux file definitions
