@@ -34,6 +34,22 @@
   \errmessage{Error: this document must be compiled with LuaTeX (lualatex)}
 \fi
 
+% The general version of GregorioTeX (we mean by that the "API", the way
+% Gregorio will write things
+\xdef\gregoriotexversion{20130616}
+
+% the version of the internal files (all must have the same)
+\xdef\greinternalversion{20130616} % date format
+
+% first some macros to allow checks for version:
+% #1 is the name of the file
+% #2 is the version
+\def\gredeclarefileversion#1#2{%
+  \ifnum\number#2=\the\number\greinternalversion\else %
+    
+  \fi %
+}
+
 % Since TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
 % available without prefix. We mostly rely on \directlua that is still available
 % without prefix, but we also rely on the Omega primitives, that have a luatex 
