@@ -650,5 +650,5 @@ main (int argc, char **argv)
   #if ALL_STATIC == 0
   gregorio_plugin_loader_exit();
   #endif
-  exit (0);
+  exit(gregorio_get_return_value());
 }

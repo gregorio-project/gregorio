@@ -24,7 +24,12 @@ static FILE *error_out;
 static char *file_name = NULL;
 static char verbosity_mode = 0;
 static char debug_messages = 0;
+static int return_value = 0;
 
+int gregorio_get_return_value()
+{
+  return return_value;
+}
 
 void
 gregorio_set_error_out (FILE * f)
@@ -163,5 +168,16 @@ gregorio_message (const char *string, const char *function_name, char verbosity,
 		       verbosity_str, string);
 	    //}
 	}
+    }
+  switch (verbosity)
+    {
+    case ERROR:
+      return_value = 1;
+      break;
+    case FATAL_ERROR:
+      exit(1);
+      break;
+    default:
+      break;
     }
 }

@@ -202,7 +202,7 @@ gregorio_change_shape (gregorio_note *note, char shape)
 {
     if (!note || note->type != GRE_NOTE) {
       gregorio_message (_("trying to change the shape of something that is not a note"),
-			   "change_shape", FATAL_ERROR, 0);
+			   "change_shape", ERROR, 0);
       return;
     }
     note->shape=shape;
@@ -244,7 +244,7 @@ gregorio_add_liquescentia (gregorio_note *note, char liq)
 {
     if (!note || note->type != GRE_NOTE) {
       gregorio_message (_("trying to make a liquescence on something that is not a note"),
-			   "add_liquescentia", FATAL_ERROR, 0);
+			   "add_liquescentia", ERROR, 0);
       return;
     }
     if (is_initio_debilis(liq))
@@ -341,7 +341,7 @@ gregorio_set_h_episemus(gregorio_note *note, unsigned char type)
   if (!note || (note->type != GRE_NOTE && note->type != GRE_BAR))
     {
       gregorio_message (_("trying to add an horizontal episemus on something that is not a note"),
-			   "set_h_episemus", FATAL_ERROR, 0);
+			   "set_h_episemus", ERROR, 0);
       return;
     }
   if (type == H_BOTTOM)
