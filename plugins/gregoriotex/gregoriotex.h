@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef GREGORIOTEX_H
 #define GREGORIOTEX_H
 
+#define GREGORIOTEX_API_VERSION 20130616
+
 #define NO_FUSION 0
 #define FUSION 1
 

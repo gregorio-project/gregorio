@@ -65,7 +65,7 @@
 % #2 is the version
 \def\gredeclarefileversion#1#2{%
   \ifnum\number#2=\number\greinternalversion\else %
-    \greerror{uncoherent file versions: gregoriotex.tex is version \number\greinternalversion \space\space while #1 is version \number#2}
+    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\greinternalversion \space\space while #1 is in version \number#2}
   \fi %
 }
 
@@ -73,7 +73,7 @@
 % #1 is the version of GregorioTeX the score is made for.
 \def\gregoriotexapiversion#1{%
   \ifnum\number#1=\number\gregoriotexversion\else %
-    \greerror{GregorioTeX is version \number\gregoriotexversion\ while a score you included requires version \number #1. Please recompile your scores}
+    \greerror{GregorioTeX is in version \number\gregoriotexversion \space\space while a score you included requires version \number#1. Please recompile your scores}
   \fi %
 }
 
