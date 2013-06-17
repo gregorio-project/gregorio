@@ -88,15 +88,15 @@ char *tempstr=NULL;
 <INITIAL>\[cs: {
     BEGIN(choralsign);
     }
-<INITIAL>\[ob:[1-9]; {
+<INITIAL>\[ob:[01]; {
     char_for_brace = gabc_notes_determination_text[4]-48;
     BEGIN(overbrace);
     }
-<INITIAL>\[ocb:[1-9]; {
+<INITIAL>\[ocb:[01]; {
     char_for_brace = gabc_notes_determination_text[5]-48;
     BEGIN(overcurlybrace);
     }
-<INITIAL>\[ocba:[1-9]; {
+<INITIAL>\[ocba:[01]; {
     char_for_brace = gabc_notes_determination_text[6]-48;
     BEGIN(overcurlyaccentusbrace);
     }
