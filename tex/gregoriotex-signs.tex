@@ -399,8 +399,8 @@
 \gdef\grecurlybracechar{\gregoriofont\char 89}
 \gdef\grebracechar{\gregoriofont\char 88}
 
-% the command to resize a box (nothing under Plain, \resizebox under LaTeX)
-\xdef\greresizebox#1#2#3{#3}
+% the command to resize a box, \resizebox is provided by graphicx
+\global\let\greresizebox\resizebox 
 
 % #1: the width
 % #2: 1 if we put an accentus above or not

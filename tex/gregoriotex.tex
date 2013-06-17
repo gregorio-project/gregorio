@@ -24,9 +24,11 @@
   \input ifluatex.sty
   \input luatexbase.sty
   \input luaotfload.sty
+  \input graphicx.sty % for \resizebox
   \def\greerror#1{GregorioTeX: \errmessage{#1}}
 \else
   \RequirePackage{ifluatex}
+  \RequirePackage{graphicx}% for \resizebox
   \RequirePackage{luatexbase}
   \RequirePackage{luaotfload}
   \def\greerror#1{\PackageError{GregorioTeX}{#1}{}}
