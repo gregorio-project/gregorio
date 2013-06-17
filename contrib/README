@@ -27,6 +27,12 @@ This is a file for syntax highlighting in kate (and Kedit, etc.). To
 install it, simply copy the file in /usr/share/apps/katepart/syntax. This path
 may not be the same according to your distribution.
 
+Emacs: gregorio-mode.el
+======
+This is a file for gregorio integration in Emacs. See
+https://github.com/cajetanus/gregorio-mode.el for more details, updates and
+documentation.
+
 Vim: gabc.vim
 ====
 This is the highlight syntax file for vim. You can copy it in
