@@ -1443,7 +1443,6 @@ gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
   /* we make the first iteration by hand,in the case where something would be in highest_pitch */
   top_note = current_note->pitch;
   tmp = tmp->previous;
-  top_note = max (top_note, tmp->pitch);
   if (!tmp)
     {
       // case of b___
@@ -1452,12 +1451,14 @@ gregorio_activate_isolated_h_episemus (gregorio_note * current_note, int n)
 			   "activate_h_isolated_episemus", WARNING, 0);
       return;
     }
+  top_note = max (top_note, tmp->pitch);
   for (i = 0; i < n-1; i++)
     {
       top_note = max (top_note, tmp->pitch);
       if (tmp->previous && tmp->previous->type == GRE_NOTE)
 	{
 	  tmp = tmp->previous;
+	  top_note = max (top_note, tmp->pitch);
 	}
       else
 	{
