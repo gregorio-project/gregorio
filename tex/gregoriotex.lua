@@ -139,9 +139,11 @@ end
 local function compile_gabc(gabc_file, tex_file)
     info("compiling the score %s...", gabc_file)
     res = os.execute(string.format("gregorio -o %s %s", tex_file, gabc_file))
-    if not res then
+    if res == nil then
         err("\nsomething went wrong when executing\n    'gregorio -o %s %s'.\n"
         .."shell-escape mode may not be activated. Try\n    '%s --shell-escape %s.tex'\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", tex_file, gabc_file, tex.formatname, tex.jobname)
+    elseif res ~= 0 then
+        err("\nan error occured when compiling the file %s with gregorio.\nPlease check your score file.", gabc_file)
     end
 end
 
