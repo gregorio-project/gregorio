@@ -232,7 +232,8 @@ gabc_det_elements_from_glyphs (gregorio_glyph * current_glyph)
 	case G_ONE_NOTE:
 	  if (current_glyph->first_note
 	      && (current_glyph->first_note->shape == S_STROPHA
-		  || current_glyph->first_note->shape == S_VIRGA))
+		  || current_glyph->first_note->shape == S_VIRGA
+		  || current_glyph->first_note->shape == S_VIRGA_REVERSA))
 	    {
 // we determine the last pitch
 	      char last_pitch;

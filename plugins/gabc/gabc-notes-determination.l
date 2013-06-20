@@ -16,7 +16,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-This file is quite huge but quite simple: it is just all the expressions you can find in gabc and the call to the right function. Lines are often enormous simply because we enable the user to put the signs in any order, for example av.'_ or a.v_', etc. for a virga with punctum mora, horizontal and vertical episemus.
 
 */
 
@@ -384,8 +383,11 @@ w         {
 W         {
 	gregorio_change_shape(current_note, S_QUILISMA_QUADRATUM);
 		  }
-(V|v)     {
+v     {
 	gregorio_change_shape(current_note, S_VIRGA);
+		  }
+V     {
+	gregorio_change_shape(current_note, S_VIRGA_REVERSA);
 		  }
 s         {
 	gregorio_change_shape(current_note, S_STROPHA);

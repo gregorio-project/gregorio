@@ -45,6 +45,9 @@ xml_shape_to_str (char shape)
     case S_VIRGA:
       str = "virga";
       break;
+    case S_VIRGA_REVERSA:
+      str = "virga-reversa";
+      break;
     case S_ORISCUS:
       str = "oriscus";
       break;
@@ -252,6 +255,9 @@ xml_glyph_type_to_str (char name)
       break;
     case G_VIRGA:
       str = "virga";
+      break;
+    case G_VIRGA_REVERSA:
+      str = "virga-reversa";
       break;
     case G_STROPHA:
       str = "stropha";

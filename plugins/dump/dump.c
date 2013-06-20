@@ -883,6 +883,9 @@ dump_glyph_type (char glyph_type)
     case G_VIRGA:
       str = "G_VIRGA";
       break;
+    case G_VIRGA_REVERSA:
+      str = "G_VIRGA_REVERSA";
+      break;
     case G_STROPHA:
       str = "G_STROPHA";
       break;
@@ -976,6 +979,9 @@ dump_shape (char shape)
       break;
     case S_VIRGA:
       str = "S_VIRGA";
+      break;
+    case S_VIRGA_REVERSA:
+      str = "S_VIRGA_REVERSA";
       break;
     case S_BIVIRGA:
       str = "S_BIVIRGA";

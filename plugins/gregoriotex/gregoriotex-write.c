@@ -1638,6 +1638,7 @@ gregoriotex_write_glyph (FILE * f,
 	}
     case G_PUNCTUM_INCLINATUM:
     case G_VIRGA:
+    case G_VIRGA_REVERSA:
     case G_STROPHA:
     case G_STROPHA_AUCTA:
       gregoriotex_write_note (f, glyph->first_note, glyph, element, next_note_pitch);
@@ -3696,6 +3697,7 @@ gregoriotex_determine_number_and_type
     case G_PUNCTUM:
     case G_STROPHA:
     case G_VIRGA:
+    case G_VIRGA_REVERSA:
     case G_STROPHA_AUCTA:
     case G_DISTROPHA:
     case G_DISTROPHA_AUCTA:
@@ -4080,6 +4082,16 @@ void
 	  *glyph_number = 22;
 	}
       break;
+    case S_VIRGA_REVERSA:
+      if (is_short (note->pitch, glyph, element))
+	{
+	  *glyph_number = 25;
+	}
+      else
+	{
+	  *glyph_number = 24;
+	}
+      break;
     case S_ORISCUS:
       *type = AT_ORISCUS;
       *glyph_number = 27;
@@ -4202,6 +4214,7 @@ gregoriotex_syllable_first_type (gregorio_syllable * syllable)
 		    case G_PUNCTUM:
 		    case G_STROPHA:
 		    case G_VIRGA:
+		    case G_VIRGA_REVERSA:
 		    case G_STROPHA_AUCTA:
 		    case G_DISTROPHA:
 		    case G_DISTROPHA_AUCTA:

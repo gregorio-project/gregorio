@@ -800,6 +800,9 @@ gabc_write_gregorio_note (FILE * f,
     case S_VIRGA:
       fprintf (f, "%cv", note->pitch);
       break;
+    case S_VIRGA_REVERSA:
+      fprintf (f, "%cV", note->pitch);
+      break;
     case S_BIVIRGA:
       fprintf (f, "%cvv", note->pitch);
       break;

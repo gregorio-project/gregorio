@@ -1388,6 +1388,10 @@ xml_read_glyph_type (char *type)
     {
       return G_VIRGA;
     }
+  if (!strcmp (type, "virga-reversa"))
+    {
+      return G_VIRGA_REVERSA;
+    }
   if (!strcmp (type, "stropha"))
     {
       return G_STROPHA;
@@ -1674,6 +1678,10 @@ xml_read_shape (char *type)
   if (!strcmp (type, "virga"))
     {
       return S_VIRGA;
+    }
+  if (!strcmp (type, "virga_reversa"))
+    {
+      return S_VIRGA_REVERSA;
     }
   if (!strcmp (type, "oriscus"))
     {

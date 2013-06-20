@@ -757,6 +757,10 @@ gregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
 	    }
 	}
       break;
+    case S_VIRGA_REVERSA:
+      *end_of_glyph = DET_END_OF_PREVIOUS;
+	    next_glyph_type = G_VIRGA_REVERSA;
+	    break;
     case S_BIVIRGA:
       if (current_glyph_type == G_VIRGA && last_pitch == current_pitch)
 	{

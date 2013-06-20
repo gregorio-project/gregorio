@@ -587,6 +587,7 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define S_PUNCTUM_INCLINATUM_DEMINUTUS 20
 #define S_PUNCTUM_INCLINATUM_AUCTUS 21
 #define S_VIRGA 4
+#define S_VIRGA_REVERSA 33
 #define S_BIVIRGA 5
 #define S_TRIVIRGA 6
 #define S_ORISCUS 7
@@ -653,10 +654,10 @@ gregorio_set_octave_and_step_from_pitch (char *step,
 #define G_SCANDICUS 32
 #define G_PES_QUILISMA_QUADRATUM_FIRST_PART 33
 #define G_ANCUS 34
-
 #define G_ONE_NOTE 36
 #define G_PUNCTA_ASCENDENS 34
 #define G_PUNCTA_DESCENDENS 35
+#define G_VIRGA_REVERSA 37
 
 #define is_puncta_inclinata(glyph) glyph<=G_5_PUNCTA_INCLINATA_ASCENDENS
 
