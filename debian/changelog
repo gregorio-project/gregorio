@@ -1,11 +1,13 @@
-gregorio (2.3) unstable; urgency=low
+gregorio (2.3-1) unstable; urgency=low
 
   * New upstream version:
-     - fixing a lot of bugs
+     - fixing a lot of bugs (#20914, #20913, #20906, #20897, #20860, #20802, 
+        #20801, #20795, #20558, #20274, #20209)
      - dropping support for Aleph/Omega
      - font system is now based on ttf files
+     - fixing lintian warnings and errors
 
- -- Elie Roux <elie.roux@telecom-bretagne.eu>  Sat, 29 May 2010 14:50:45 +0200
+ -- Elie Roux <elie.roux@telecom-bretagne.eu>  Sat, 22 Jun 2013 14:50:45 +0200
 
 gregorio (2.0-1.2) unstable; urgency=low
 
@@ -34,7 +36,7 @@ gregorio (2.0-1) unstable; urgency=low
   * debian/gregorio.{postinst,postrm}: remove
   * debian/rules: fix calls to dh_clean
 
- -- JÃ©rÃ´me Marant <jerome@debian.org>  Wed, 05 Jan 2011 22:19:35 +0100 
+ -- Jérôme Marant <jerome@debian.org>  Wed, 05 Jan 2011 22:19:35 +0100 
 
 gregorio (1.0-1) unstable; urgency=low
 

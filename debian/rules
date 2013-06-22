@@ -9,6 +9,10 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,-z,defs
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/buildflags.mk
 
 # These are used for cross-compiling and for saving the configure script
 # from having to guess our platform (since we know it already)
@@ -18,21 +22,12 @@ DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 deb:
 	debuild -i
 
-CFLAGS = -Wall -g
-
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -O0
-else
-	CFLAGS += -O2
-endif
-
 config.status:
 	dh_testdir
 	autoreconf -f -i
 	cp -f /usr/share/misc/config.sub build-aux/config.sub
 	cp -f /usr/share/misc/config.guess build-aux/config.guess
-	./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
-
+	./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --enable-all-static --enable-xml-read --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CPPFLAGS="$(CPPFLAGS)"
 
 build: build-stamp
 
@@ -55,8 +50,8 @@ install: build
 	dh_testdir
 	dh_testroot
 	dh_clean -k  
-
 	$(MAKE) DESTDIR=$(CURDIR)/debian/gregorio install
+#	sed -i "/dependency_libs/ s/'.*'/''/" `find $(CURDIR)/debian/gregorio -name '*.la'`
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -86,7 +81,7 @@ binary-arch: build install
 	dh_strip -a
 	dh_compress -a
 	dh_fixperms -a
-	dh_makeshlibs -a
+#	dh_makeshlibs -a
 	dh_shlibdeps -a
 	dh_installdeb -a
 	dh_gencontrol -a
@@ -94,4 +89,8 @@ binary-arch: build install
 	dh_builddeb -a
 
 binary: binary-indep binary-arch
+
+%:
+	dh $@ --with tex --with autoreconf --with autotools-dev
+
 .PHONY: build clean binary-indep binary-arch binary install 
