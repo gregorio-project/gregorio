@@ -1490,7 +1490,7 @@ gregoriotex_write_bar (FILE * f, char type, char signs, char inorsyllable)
       fprintf (f, "{\\grebarbrace{%d}\\grebarvepisemusictust{%d}}%%\n", typenumber, typenumber);
       break;
     default:
-      fprintf (f, "{}%%\n", typenumber);
+      fprintf (f, "{}%%\n");
       break;
     }
 }
