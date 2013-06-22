@@ -176,6 +176,7 @@ gabc_fix_custos (gregorio_score * score_to_check)
                         newkey = gregorio_calculate_new_key (C_KEY, current_element->element_type - 48);
 	                      pitch_difference = (char) newkey - (char) current_key;
 	                      custo_element->element_type = pitch - pitch_difference;
+	                      
 	                      current_key = newkey;
                         break;
                       case GRE_F_KEY_CHANGE:
@@ -189,6 +190,14 @@ gabc_fix_custos (gregorio_score * score_to_check)
                       default:
                         break;
                     }
+                  /* in ASCII, 97 is a and 109 is m */
+	                if (custo_element->element_type < 97 || custo_element->element_type > 109)
+	                  {
+	                    gregorio_message (_
+			              ("pitch difference too high to set automatic custo (z0), please check your score"),
+			              "gabc_fix_custos", ERROR, 0);
+			              custo_element->element_type = 'g';
+	                  }
                   current_element = current_element->next;
                 }
             }
