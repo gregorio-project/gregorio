@@ -171,10 +171,10 @@ void gtex_print_char (FILE * f, grewchar to_print);
 unsigned int gregoriotex_determine_liquescentia_number (unsigned int factor, unsigned char type, char liquescentia);
 void gregoriotex_write_vepisemus (FILE * f, gregorio_glyph * current_glyph, int i, char type, gregorio_note * current_note);
 void gregoriotex_write_choral_sign (FILE * f, gregorio_glyph * glyph, char type, int i, gregorio_note * current_note, char low);
-void gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, gregorio_element * current_element, gregorio_syllable * current_syllable, int i, char type, gregorio_note * current_note);
+void gregoriotex_write_hepisemus (FILE * f, gregorio_glyph * current_glyph, gregorio_element * current_element, int i, char type, gregorio_note * current_note);
 char gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph, gregorio_note *note, gregorio_element *element, gregorio_note **final_note);
 void gregoriotex_write_rare (FILE * f, gregorio_glyph *current_glyph, int i, char type, gregorio_note * current_note, char rare);
-void gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_element * element, gregorio_syllable * syllable, gregorio_note * current_note);
+void gregoriotex_write_signs (FILE * f, char type, gregorio_glyph * glyph, gregorio_element * element, gregorio_note * current_note);
 
 void gregoriotex_write_next_first_text (FILE * f, gregorio_character *current_character);
 int gregoriotex_syllable_first_type (gregorio_syllable * syllable);
@@ -184,7 +184,7 @@ void gregoriotex_determine_note_number_and_type (gregorio_note * note, gregorio_
 void gtex_write_end_for_two (FILE * f, unsigned char style);
 
 void gregoriotex_write_punctum_mora (FILE * f, gregorio_glyph * glyph, char type, gregorio_note * current_note);
-void gregoriotex_write_auctum_duplex (FILE * f, gregorio_glyph * glyph,  gregorio_note * current_note);
+void gregoriotex_write_auctum_duplex (FILE * f, gregorio_note * current_note);
 
 void gregoriotex_find_sign_number (gregorio_glyph * current_glyph, int i, char type, char sign_type, gregorio_note * current_note, char *number, char *height, char *bottom);
 void gregoriotex_write_additional_line (FILE * f, gregorio_glyph *current_glyph, int i, char type, char bottom_or_top, gregorio_note * current_note);

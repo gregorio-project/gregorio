@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 #include <stdio.h>
+#include <stdlib.h> /* for exit() */
 #include <gregorio/messages.h>
 
 static FILE *error_out;

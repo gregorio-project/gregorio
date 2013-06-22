@@ -115,8 +115,8 @@ This program is free software: you can redistribute it and/or modify\n\
 it under the terms of the GNU General Public License as published by\n\
 the Free Software Foundation, either version 3 of the License, or\n\
 (at your option) any later version.\n\
-\n\
-This program is distributed in the hope that it will be useful,\n\
+\n");
+  printf("This program is distributed in the hope that it will be useful,\n\
 but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
 GNU General Public License for more details.\n\
@@ -137,8 +137,8 @@ print_usage (char *name)
 \t-f format  specifies input file format, default is gabc\n\
 \t-s         reads input from stdin\n\
 \t-h         displays this message\n\
-\t-V         displays %s version\n\
-\t-L         displays licence\n\
+\t-V         displays %s version\n"), name, name);
+  printf(_("\t-L         displays licence\n\
 \t-v         verbose mode\n\
 \t-W         displays all warnings\n\
 \n\
@@ -148,7 +148,7 @@ available formats are:\n\
 \t gtex      GregorioTeX\n\
 \t otex      OpusTeX\n\
 \t dump      simple text dump\n\
-\n"), name, name);
+\n"));
 }
 
 int

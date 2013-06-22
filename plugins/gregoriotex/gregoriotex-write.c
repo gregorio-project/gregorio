@@ -58,9 +58,6 @@ gregoriotex_write_score (FILE * f, gregorio_score * score)
 #endif
 {
   gregorio_character *first_text;
-  status = malloc (sizeof (gregoriotex_status));
-  status -> bottom_line = 0;
-  status -> to_modify_note = NULL;
   // a char that will contain 1 if it is the first syllable and 0 if not. It is for the initial.
   char first_syllable = 0;
   char clef_letter;
@@ -70,6 +67,10 @@ gregoriotex_write_score (FILE * f, gregorio_score * score)
   // the current line (as far as we know), it is always 0, it can be 1 in the case of the first line of a score with a two lines initial
   unsigned char line = 0;
   gregorio_line *first_line;
+
+  status = malloc (sizeof (gregoriotex_status));
+  status -> bottom_line = 0;
+  status -> to_modify_note = NULL;
 
   if (!f)
     {
@@ -625,9 +626,8 @@ gregoriotex_write_syllable (FILE * f,
       gregoriotex_write_element (f, syllable, current_element);
       if (current_element->next 
       && (current_element->next->type == GRE_ELEMENT
-      || current_element->next->next && current_element->next->type == GRE_ALT
-         && current_element->next->next->type == GRE_ELEMENT
-      )
+      || (current_element->next->next && current_element->next->type == GRE_ALT
+         && current_element->next->next->type == GRE_ELEMENT))
       )
 	{
 	  fprintf (f, "\\greendofelement{0}{0}%%\n");
@@ -1540,7 +1540,7 @@ gregoriotex_write_glyph (FILE * f,
       while (current_note)
 	{
 	  gregoriotex_write_note (f, current_note, glyph, element, next_note_pitch);
-	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
+	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, 
 				   current_note);
 	  current_note = current_note->next;
 	}
@@ -1554,7 +1554,7 @@ gregoriotex_write_glyph (FILE * f,
 						 &gtype, &glyph_number);
 	  fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
-	  gregoriotex_write_signs (f, gtype, glyph, element, syllable,
+	  gregoriotex_write_signs (f, gtype, glyph, element, 
 				   glyph->first_note);
 	}
       else
@@ -1563,14 +1563,14 @@ gregoriotex_write_glyph (FILE * f,
 	    {
 	      gregoriotex_write_note (f, current_note, glyph, element, next_note_pitch);
 	      gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element,
-				       syllable, current_note);
+				       current_note);
 	      current_note = current_note->next;
 	    }
 	}
       break;
     case G_TORCULUS_RESUPINUS_FLEXUS:
       gregoriotex_write_note (f, current_note, glyph, element, next_note_pitch);
-      gregoriotex_write_signs (f, T_ONE_NOTE_TRF, glyph, element, syllable,
+      gregoriotex_write_signs (f, T_ONE_NOTE_TRF, glyph, element, 
 			       glyph->first_note);
       glyph->glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
       // tricky to have the good position for these glyphs
@@ -1580,7 +1580,7 @@ gregoriotex_write_glyph (FILE * f,
 //TODO : fusion functions
       fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
 	       glyph->first_note->pitch, next_note_pitch, type);
-      gregoriotex_write_signs (f, gtype, glyph, element, syllable,
+      gregoriotex_write_signs (f, gtype, glyph, element, 
 			       glyph->first_note);
       glyph->first_note = current_note;
       glyph->glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
@@ -1590,7 +1590,7 @@ gregoriotex_write_glyph (FILE * f,
       while (current_note)
 	{
 	  gregoriotex_write_note (f, current_note, glyph, element, next_note_pitch);
-	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
+	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, 
 				   current_note);
 	  current_note = current_note->next;
 	  if (current_note)
@@ -1606,7 +1606,7 @@ gregoriotex_write_glyph (FILE * f,
       while (current_note)
 	{
 	  gregoriotex_write_note (f, current_note, glyph, element, next_note_pitch);
-	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
+	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, 
 				   current_note);
 	  current_note = current_note->next;
 	  if (current_note)
@@ -1642,7 +1642,7 @@ gregoriotex_write_glyph (FILE * f,
     case G_STROPHA:
     case G_STROPHA_AUCTA:
       gregoriotex_write_note (f, glyph->first_note, glyph, element, next_note_pitch);
-      gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
+      gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, 
 			       current_note);
       break;
     default:
@@ -1651,7 +1651,7 @@ gregoriotex_write_glyph (FILE * f,
 	  && current_note->shape != S_PUNCTUM)
 	{
 	  gregoriotex_write_note (f, current_note, glyph, element, next_note_pitch);
-	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, syllable,
+	  gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element, 
 				   glyph->first_note);
 	  // tricky to have the good position for these glyphs
 	  glyph->first_note = current_note->next;
@@ -1661,7 +1661,7 @@ gregoriotex_write_glyph (FILE * f,
 //TODO : fusion functions
 	  fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
-	  gregoriotex_write_signs (f, gtype, glyph, element, syllable,
+	  gregoriotex_write_signs (f, gtype, glyph, element, 
 				   glyph->first_note);
 	  glyph->glyph_type = G_TORCULUS_RESUPINUS;
 	  glyph->first_note = current_note;
@@ -1672,7 +1672,7 @@ gregoriotex_write_glyph (FILE * f,
 						 &gtype, &glyph_number);
 	  fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
 		   glyph->first_note->pitch, next_note_pitch, type);
-	  gregoriotex_write_signs (f, gtype, glyph, element, syllable,
+	  gregoriotex_write_signs (f, gtype, glyph, element, 
 				   glyph->first_note);
 	  break;
 	}
@@ -1708,7 +1708,6 @@ void
 gregoriotex_write_signs (FILE * f, char type,
 			 gregorio_glyph * glyph,
 			 gregorio_element * element,
-			 gregorio_syllable * syllable,
 			 gregorio_note * note)
 {
   // i is the number of the note for which we are typesetting the sign.
@@ -1791,7 +1790,7 @@ gregoriotex_write_signs (FILE * f, char type,
 	      && simple_htype (current_note->next->h_episemus_type) !=
 	      H_NO_EPISEMUS && i == 1)
 	    {
-	      gregoriotex_write_hepisemus (f, glyph, element, syllable,
+	      gregoriotex_write_hepisemus (f, glyph, element, 
 					   HEPISEMUS_FIRST_TWO,
 					   type, current_note);
 	      block_hepisemus = 1;
@@ -1802,14 +1801,14 @@ gregoriotex_write_signs (FILE * f, char type,
 		  && simple_htype (current_note->next->h_episemus_type) !=
 		  H_NO_EPISEMUS && i == 2)
 		{
-		  gregoriotex_write_hepisemus (f, glyph, element, syllable,
+		  gregoriotex_write_hepisemus (f, glyph, element, 
 					       HEPISEMUS_FIRST_TWO,
 					       type, current_note);
 		  block_hepisemus = 1;
 		}
 	      else
 		{
-		  gregoriotex_write_hepisemus (f, glyph, element, syllable, i,
+		  gregoriotex_write_hepisemus (f, glyph, element, i,
 					       type, current_note);
 		}
 	    }
@@ -1866,7 +1865,7 @@ gregoriotex_write_signs (FILE * f, char type,
 	  break;
 	case _AUCTUM_DUPLEX:
 	case _V_EPISEMUS_AUCTUM_DUPLEX:
-	  gregoriotex_write_auctum_duplex (f, glyph, current_note);
+	  gregoriotex_write_auctum_duplex (f, current_note);
 	  break;
 	default:
 	  break;
@@ -1985,7 +1984,7 @@ gregoriotex_write_choral_sign (FILE * f,
       // very approximative euristic, some things may have to be adapted here...
       if (is_on_a_line(current_note->pitch))
         {
-          if (kind_of_pes = 1 && current_note->pitch - current_note->next->pitch == -1)
+          if (kind_of_pes == 1 && current_note->pitch - current_note->next->pitch == -1)
             {
               fprintf(f, "\\grelowchoralsign{%c}{%s}{1}%%\n", current_note->pitch, current_note->choral_sign);
               return;
@@ -2012,7 +2011,6 @@ gregoriotex_write_choral_sign (FILE * f,
  */
 void
 gregoriotex_write_auctum_duplex (FILE * f,
-				 gregorio_glyph * glyph,
 				 gregorio_note * current_note)
 {
   char pitch = current_note->pitch;
@@ -2250,7 +2248,6 @@ gregoriotex_write_hepisemus (FILE * f,
 			     gregorio_glyph *
 			     current_glyph,
 			     gregorio_element * current_element,
-			     gregorio_syllable * current_syllable,
 			     int i, char type, gregorio_note * current_note)
 {
 
@@ -2295,6 +2292,7 @@ gregoriotex_write_hepisemus (FILE * f,
   if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS && (!current_note->next 
   || current_note->next->shape == S_PUNCTUM_INCLINATUM || current_note->next->shape == S_PUNCTUM_INCLINATUM_DEMINUTUS || current_note->next->shape == S_PUNCTUM_INCLINATUM_AUCTUS) && (!current_note->previous || simple_htype(current_note->previous->h_episemus_type) == H_NO_EPISEMUS) && bottom == 0 && next_height != -1)
     {
+      /* TODO: remove conditional ambiguity */
       if (height == next_height || do_not_change_height == 0 && (height == next_height -1 && is_on_a_line(height)))
         {
           fprintf (f, "\\grehepisemusbridge{%c}{}{}%%\n", next_height);
@@ -2365,7 +2363,7 @@ gregoriotex_find_next_hepisemus_height (gregorio_glyph *glyph, gregorio_note *no
        return note->next->h_episemus_top_note + 1;
     }
   note = NULL;
-  if(glyph->next && glyph->next->type == GRE_GLYPH || glyph->next && glyph->next->next && glyph->next->next->type == GRE_GLYPH)
+  if((glyph->next && glyph->next->type == GRE_GLYPH) || (glyph->next && glyph->next->next && glyph->next->next->type == GRE_GLYPH))
     {
       if (glyph->next->type != GRE_GLYPH)
         {

@@ -68,7 +68,7 @@ gregorio_element **elements;
 // a table containing the macros to use in gabc file
 char * macros[10];
 // declaration of some functions, the first is the one initializing the flex/bison process
-//int gabc_score_determination_parse ();
+int gabc_score_determination_parse ();
 // other variables that we will have to use
 gregorio_character *current_character;
 gregorio_character *first_text_character;
@@ -151,12 +151,12 @@ gabc_fix_custos (gregorio_score * score_to_check)
   char pitch_difference = 0;
   int newkey;
   int current_key;
-  if (!score || !score->first_syllable || !score->first_voice_info)
+  if (!score_to_check || !score_to_check->first_syllable || !score_to_check->first_voice_info)
     {
       return;
     }
-  current_key = score->first_voice_info->initial_key;
-  current_syllable = score->first_syllable;
+  current_key = score_to_check->first_voice_info->initial_key;
+  current_syllable = score_to_check->first_syllable;
   while(current_syllable)
     {
       current_element = (current_syllable->elements)[0];
@@ -176,7 +176,6 @@ gabc_fix_custos (gregorio_score * score_to_check)
                         newkey = gregorio_calculate_new_key (C_KEY, current_element->element_type - 48);
 	                      pitch_difference = (char) newkey - (char) current_key;
 	                      custo_element->element_type = pitch - pitch_difference;
-	                      
 	                      current_key = newkey;
                         break;
                       case GRE_F_KEY_CHANGE:

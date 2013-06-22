@@ -141,7 +141,7 @@ gregorio_add_texverb_to_note (gregorio_note ** current_note, char *str)
 {
   size_t len;
   char *res;
-  int i;
+  unsigned int i;
   if (str == NULL)
     {
       return;
