@@ -402,8 +402,7 @@ s         {
 
 void gabc_notes_determination_error(const char *str)
 {
-    char *tempstrtwo = malloc(151*sizeof(char));
-	  snprintf(tempstrtwo,150,str);
+    char *tempstrtwo = strdup(str);
     gregorio_message (tempstrtwo, "det_notes_from_string", ERROR, 0);
     free(tempstrtwo);
 }

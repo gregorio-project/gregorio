@@ -1,3 +1,4 @@
-# watch control file for uscan
 version=3
-http://download.gna.org/gregorio/releases/current gregorio-(.*)-src\.tar\.gz
+http://download.gna.org/gregorio/releases/current/ \
+(?:.*/|.*=|)gregorio[\-\._](\d\S*)\.(?:tar\.xz|txz|tar\.bz2|tbz2|tar\.gz|tgz)(?:/\S*)?
+# Bart Martens <bartm@debian.org>  Wed, 29 May 2013 17:29:47 +0000

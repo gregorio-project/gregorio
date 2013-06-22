@@ -1,3 +1,0 @@
-#This package includes both runtime binary and its own tiny library:
-gregorio: non-dev-pkg-with-shlib-symlink
-gregorio: package-name-doesnt-match-sonames
