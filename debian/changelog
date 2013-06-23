@@ -1,11 +1,28 @@
 gregorio (2.3-1) unstable; urgency=low
 
   * New upstream version:
-     - fixing a lot of bugs (#20914, #20913, #20906, #20897, #20860, #20802, 
-        #20801, #20795, #20558, #20274, #20209)
+     - fixing absolute path handling
+     - fixing several segfaults
+     - fixing height of automatic custo
+     - fixing height of the bars in some cases
+     - fixing italic and bold automatic hyphen and ligatures
+     - cs: field now accepts non-ascii characters
+     - missing additional lines on porrectus
+     - braces over the notes should now work as documented
+     - vertical spaces are resetted between scores
+     - errors now affect the return value
+     - adapting to LuaTeX >= 0.75
+     - droppint support for TeXLive < 2010
      - dropping support for Aleph/Omega
      - font system is now based on ttf files
      - fixing lintian warnings and errors
+  * New watch file
+  * Bump Standards-Version to 3.9.4.0
+  * Build-Depends on dh-autoreconf and dpkg-dev
+  * Bump compat to 9
+  * New maintainer (Closes: #675755)
+  * Adding Vcs-Browser and Vcs-Svn fields
+  * Switch to dpkg-source 3.0 (quilt) format
 
  -- Elie Roux <elie.roux@telecom-bretagne.eu>  Sat, 22 Jun 2013 14:50:45 +0200
 
