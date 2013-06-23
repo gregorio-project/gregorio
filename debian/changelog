@@ -22,6 +22,7 @@ gregorio (2.3-1) unstable; urgency=low
   * Bump compat to 9
   * New maintainer (Closes: #675755)
   * Adding Vcs-Browser and Vcs-Svn fields
+  * Switch to dpkg-source 3.0 (quilt) format
 
  -- Elie Roux <elie.roux@telecom-bretagne.eu>  Sat, 22 Jun 2013 14:50:45 +0200
 
