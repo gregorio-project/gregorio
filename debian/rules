@@ -14,20 +14,13 @@ export DEB_LDFLAGS_MAINT_APPEND = -Wl,-z,defs
 DPKG_EXPORT_BUILDFLAGS = 1
 include /usr/share/dpkg/buildflags.mk
 
-# These are used for cross-compiling and for saving the configure script
-# from having to guess our platform (since we know it already)
-DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
-DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
-
 deb:
 	debuild -i
 
 config.status:
 	dh_testdir
-	autoreconf -f -i
-	cp -f /usr/share/misc/config.sub build-aux/config.sub
-	cp -f /usr/share/misc/config.guess build-aux/config.guess
-	./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --enable-all-static --enable-xml-read --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CPPFLAGS="$(CPPFLAGS)"
+	dh_autoreconf
+	dh_auto_configure -- --enable-all-static --enable-xml-read
 
 build: build-stamp
 
@@ -40,6 +33,8 @@ build-stamp:  config.status
 clean:
 	dh_testdir
 	dh_testroot
+	dh_auto_clean
+	dh_autoreconf_clean
 	rm -f build-stamp 
 	[ ! -f Makefile ] || $(MAKE) distclean
 	rm -f build-aux/config.sub
