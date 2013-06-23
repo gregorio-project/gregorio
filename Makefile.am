@@ -6,6 +6,6 @@ EXTRA_DIST = build-aux/config.rpath fonts
 
 # Generate ChangeLog from SVN history - do not fail if there is no network
 # connection or svn is not available
-svn_trunk_url="svn://svn.gna.org/svn/gregorio/trunk"
+svn_trunk_url="svn://svn.gna.org/svn/gregorio/tags/2.3"
 dist-hook:
 	-svn log $(svn_trunk_url) > $(distdir)/ChangeLog
