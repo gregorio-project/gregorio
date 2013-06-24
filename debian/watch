@@ -1,4 +1,4 @@
 version=3
 http://download.gna.org/gregorio/releases/current/ \
-(?:.*/|.*=|)gregorio[\-\._](\d\S*)\.(?:tar\.xz|txz|tar\.bz2|tbz2|tar\.gz|tgz)(?:/\S*)?
-# Bart Martens <bartm@debian.org>  Wed, 29 May 2013 17:29:47 +0000
+(?:.*/|.*=|)gregorio[\-\._](\d\S*)-src\.(?:tar\.xz|txz|tar\.bz2|tbz2|tar\.gz|tgz)(?:/\S*)?
+# Elie Roux <elie.roux@telecom-bretagne.eu>  Mon, 24 Jun 2013 09:25:47 +0200
