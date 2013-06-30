@@ -879,19 +879,19 @@
 
 % macro called at each end of word
 \def\greendofword#1{%
-  \penalty -1000%
+  \grepenalty -1000%
   \ifnum#1=1\relax %
     \ifdim\greenddifference > 0 pt %
       \ifdim\grenextbegindifference > 0 pt %
-        \hskip\greinterwordspacenotes %
+        \grehskip\greinterwordspacenotes %
       \else % (next begin difference >0pt)
-        \hskip\greinterwordspacenotestext %
+        \grehskip\greinterwordspacenotestext %
       \fi %
     \else %(enddifference < Opt)
       \ifdim\grenextbegindifference < 0 pt %
-        \hskip\greinterwordspacetext %
+        \grehskip\greinterwordspacetext %
       \else %(next begin difference < 0 pt)
-        \hskip\greinterwordspacetextnotes %
+        \grehskip\greinterwordspacetextnotes %
       \fi %
     \fi %
   \fi %
@@ -901,46 +901,46 @@
 
 % macro called at the end of a word or syllable when the next thing is a bar
 \def\greendbeforebar#1{%
-  \penalty 10001%
+  \grepenalty 10001%
   \ifnum#1=1\relax %
     \ifdim\greenddifference > 0 pt %
       \ifdim\grenextbegindifference > 0 pt %
-        \hskip\grenotebarspace %
+        \grehskip\grenotebarspace %
       \else % (next begin difference >0pt)
-        \hskip\gretextbartextspace %
+        \grehskip\gretextbartextspace %
       \fi %
     \else%(enddifference < Opt)
       \ifdim\grenextbegindifference < 0 pt %
-        \hskip\gretextbartextspace %
+        \grehskip\gretextbartextspace %
       \else %(next begin difference < 0 pt)
-        \hskip\greinterwordspacetextnotes %
+        \grehskip\greinterwordspacetextnotes %
       \fi %
     \fi %
   \fi %
-  \penalty 10001%
+  \grepenalty 10001%
   %\global\greenddifference=0pt %
   \relax %
 }
 
 % macro called at the end of a bar. Almost the same, but not for the penalties
 \def\greendafterbar#1{%
-  \penalty -2000%
+  \grepenalty -2000%
   \ifnum#1=1\relax %
     \ifdim\greenddifference > 0 pt %
       \ifdim\grenextbegindifference > 0 pt %
-        \hskip\grenotebarspace %
+        \grehskip\grenotebarspace %
       \else % (next begin difference >0pt)
-        \hskip\gretextbartextspace %
+        \grehskip\gretextbartextspace %
       \fi %
     \else%(enddifference < Opt)
       \ifdim\grenextbegindifference < 0 pt %
-        \hskip\gretextbartextspace %
+        \grehskip\gretextbartextspace %
       \else %(next begin difference < 0 pt)
-        \hskip\greinterwordspacetextnotes %
+        \grehskip\greinterwordspacetextnotes %
       \fi %
     \fi %
   \fi %
-  \penalty -2000%
+  \grepenalty -2000%
   %\global\greenddifference=0pt %
   \relax %
 }
@@ -988,7 +988,7 @@
 
 % macro called at each end of syllable which is not an end of word
 \def\greendofsyllable{%
-  \penalty -500%
+  \grepenalty -500%
   \relax%
 }
 
@@ -1001,19 +1001,19 @@
 
 \def\greendofelement#1#2{%
   \ifnum #2=0\relax %
-    \penalty -1000%
+    \grepenalty -1000%
   \else %
-    \penalty 10001%
+    \grepenalty 10001%
   \fi %
   \ifcase#1%
-    \hskip\greinterelementspace %
+    \grehskip\greinterelementspace %
   \or% case 1
-    \hskip\grelargerspace %
+    \grehskip\grelargerspace %
   \or% case 2
-    \hskip\greglyphspace %
+    \grehskip\greglyphspace %
   \fi%
   \ifnum #2=1\relax %
-    \penalty 10001%
+    \grepenalty 10001%
   \fi %
 \relax%
 }
@@ -1036,31 +1036,31 @@
 \def\greendofglyph#1{%
   \penalty 10001%
   \ifcase#1%
-    \hskip\greinterglyphspace %
+    \grehskip\greinterglyphspace %
   \or% case 1
-    \hskip\grezerowidthspace %
+    \grehskip\grezerowidthspace %
   \or% case 2
-    \hskip\grealterationspace %
+    \grehskip\grealterationspace %
   \or% case 3
-    \hskip\grepunctuminclinatumshift %
+    \grehskip\grepunctuminclinatumshift %
   \or% case 4
-    \hskip\grebitrivirspace %
+    \grehskip\grebitrivirspace %
   \or% case 5
-    \hskip\grebitristrospace %
+    \grehskip\grebitristrospace %
   \or% case 6
-    \hskip\grespaceaftersigns %
+    \grehskip\grespaceaftersigns %
   \or% case 7
-    \hskip\grepunctuminclinatumanddebilisshift %
+    \grehskip\grepunctuminclinatumanddebilisshift %
   \or% case 8
-    \hskip\grepunctuminclinatumdebilisshift %
+    \grehskip\grepunctuminclinatumdebilisshift %
   \or% case 9
-    \hskip\grebeforepunctainclinatashift %
+    \grehskip\grebeforepunctainclinatashift %
   \or% case 10
-    \hskip\grepunctuminclinatumbigshift %
+    \grehskip\grepunctuminclinatumbigshift %
   \or% case 11
-    \hskip\grepunctuminclinatummaxshift %
+    \grehskip\grepunctuminclinatummaxshift %
   \fi%
-  \penalty 10001%
+  \grepenalty 10001%
   \relax%
 }
 
