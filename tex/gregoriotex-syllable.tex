@@ -517,7 +517,7 @@
   \grefirstglyph=1 %
   \grefindtextaligncenter{#1}{#2}{0}% we first get the width between the alignment point and the end of the syllable
   % we need to save lastoflinecount, because otherwise when a \newline appears inside a syllable, it is counted two times (once here and once later when #9 will be really output), so \grelastoflinecount has a wrong value. Thus
-  \edef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
+  \xdef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
   % a counter to know we are not really typesetting things (useful for end of lines)
   \xdef\greboxing{1}%
   \gresyllablenotes{#9}% we put the notes in a box, so that we have the width of it
@@ -648,17 +648,17 @@
       \xdef\grekernbeforeeol{\the\gretempdim\relax}%
     \fi %
   \fi%
-  \grepenalty 10001\relax % no line breaks between text and notes
+  \grepenalty{10001}% no line breaks between text and notes
   #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
   \ifdim\the\greenddifference <0pt%
     %% important, else we are not really at the end of the syllable
-    \grepenalty 10001\relax %
+    \grepenalty{10001}%
     \ifnum\grelastoflinecount=1\relax %
       \kern\grekernbeforeeol %
     \else %
       \kern -\greenddifference %
     \fi %
-    \grepenalty 10001\relax %
+    \grepenalty{10001}%
   \fi%
   \xdef\grekernbeforeeol{0pt\relax}%
   % we call end of syllable
@@ -722,12 +722,12 @@
   \grefindtextaligncenter{#1}{#2}{0}%
   \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3}}%
   % we need to save lastoflinecount, because otherwise when a \newline appears inside a syllable, it is counted two times (once here and once later when #9 will be really output), so \grelastoflinecount has a wrong value. Thus
-  \edef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
+  \xdef\gresavedlastoflinecount{\number\grelastoflinecount\relax}%
   % a counter to know we are not really typesetting things (useful for end of lines)
   \xdef\greboxing{1}%
   \gresyllablenotes{#9}%
   \xdef\greboxing{0}%
-  \grefirstglyph=1 %
+  \grefirstglyph=1\relax %
   \global\grelastoflinecount=\gresavedlastoflinecount\relax %
   \grenotesaligncenter=\wd\GreSyllablenotes%
   \divide\grenotesaligncenter by 2\relax %
@@ -774,15 +774,15 @@
     \ifdim\grepreviousenddifference < 0 pt%
       \advance\gretempdim by \grepreviousenddifference %
     \fi %
-    \grepenalty 10001\relax %
+    \grepenalty{10001}%
     \ifdim\gretempdim > -\wd\GreSyllablenotes %
       \kern\gretempdim %
     \else %
       \kern -\wd\GreSyllablenotes %
     \fi %
-    \grepenalty 10001\relax %
+    \grepenalty{10001}%
     #9\relax %
-    \grepenalty -1000\relax %
+    \grepenalty{-1000}%
     \ifdim\gretempdim < -\wd\GreSyllablenotes %
       \ifdim\grenextbegindifference > 0 pt%
         \hskip\greinterwordspacetextnotes %
@@ -800,7 +800,7 @@
       \ifdim\gretempdim > -\wd\GreSyllablenotes %
         \kern\gretempdim %
       \else % \ifdim\gretempdim > -\wd\GreSyllablenotes %
-        \hskip -\wd\GreSyllablenotes %
+        \grehskip -\wd\GreSyllablenotes %
       \fi %
     \fi %
   % then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
@@ -809,7 +809,7 @@
     \greskipone=\gretextbartextspace %
     % same code as in syllable
     \gretempdim=\grebegindifference %
-    \ifdim\gretempdim > 0 pt %
+    \ifdim\gretempdim > 0 pt%
       \advance\greskipone by \gretempdim %
     \fi%
     %\kern\greskipone %
@@ -831,7 +831,7 @@
       \greendafterbar{1}%
     \fi %
     %and that's it !!
-  \fi%
+  \fi %
   \grefirstsyllableofword=1 %
   \global\grenotesaligncenter= 0 pt\relax % very important, see flat and natural
   \greunsetfixedtextformat %

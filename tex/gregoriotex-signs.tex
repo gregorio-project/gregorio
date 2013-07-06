@@ -32,26 +32,31 @@
 % To remedy that, we define \grehskip to be \hskip outside a discretionary, and
 % \kern inside a discretionary. This is what these macros do:
 
+
+
+\def\grefalsepenalty#1{}
+\def\gretruepenalty#1{\penalty#1}
+
 \let\grehskip\hskip
-\let\grepenalty\penalty
+\let\grepenalty\gretruepenalty
 \xdef\greinsidediscretionary{\number 0}
 
-\def\grefalsepenalty #1{}
-
-
-\def\grediscretionary#1#2#3{%
+\def\grediscretionary#1#2{%
   \global\let\grehskip\kern %
   \global\let\grepenalty\grefalsepenalty %
   \global\xdef\greinsidediscretionary{\number 1}%
   \discretionary{%
+    \global\grelastoflinecount=1\relax % (a good magic trick)
+    #1%
     \kern\grekernbeforeeol\relax %
-    #1}{%
-    #2}{%
+    }{%
     \global\grelastoflinecount=2\relax % (a good magic trick)
-    #3}%
+    }{%
+    #2%
+    }%
   \global\xdef\greinsidediscretionary{\number 0}%
   \global\let\grehskip\hskip %
-  \global\let\grepenalty\penalty %
+  \global\let\grepenalty\gretruepenalty %
   \relax %
 }
 
@@ -278,9 +283,9 @@
   \copy\GreTempwidth %
   % for now we consider we always have a bar after the custo
   % we don't want to end the line here
-  \grepenalty 10001\relax %
+  \grepenalty{10001}%
   \grehskip -\grespacearoundclefbars %
-  \grepenalty 10001\relax %
+  \grepenalty{10001}%
   \relax %
 }
 
@@ -536,7 +541,7 @@
 % #3 is 1 in case of a punctommora in the note before the last note of a podatus, porrectus or torculus resupinus, 0 otherwise.
 % #4 is 1 if we are at a punctum inclinatum, 0 otherwise
 \def\grepunctummora#1#2#3#4{%
-  \grepenalty 10001\relax %
+  \grepenalty{10001}%
   \ifcase#2\relax %
     \hskip\grespacebeforesigns%
   \or %
@@ -578,9 +583,9 @@
       \advance\greglyphraisevalue by -\gretempwidth %
     \fi %
   \fi %
-  \grepenalty 10001\relax %
+  \grepenalty{10001}%
   \raise \greglyphraisevalue \hbox{\grepunctummorachar}%
-  \grepenalty 10001\relax %
+  \grepenalty{10001}%
   \ifcase#2\relax\or %
     \setbox\GreTempwidth=\hbox{\grepunctummorachar}%
     \kern -\wd\GreTempwidth %
@@ -596,7 +601,7 @@
     \kern -\grespacebeforesigns %
     \kern \gretempdim %
   \fi %
-  \grepenalty 10001\relax %
+  \grepenalty{10001}%
   \relax%
 }
 
@@ -613,9 +618,9 @@
 % quite simple function: #1 is the height, #2 is the string, #3 is #2 of punctum mora, #4 is #3 of punctum mora
 % #3 is 1 if it must be a bit higher
 \def\grelowchoralsign#1#2#3{%
-  \grepenalty 10001\relax %
+  \grepenalty{10001}%
   \hskip\grebeforechoralsignspace %
-  \grepenalty 10001\relax %
+  \grepenalty{10001}%
   \ifnum#3=1\relax %
     \grecalculateglyphraisevalue{#1}{12}%
   \else %
@@ -626,7 +631,7 @@
 }
 
 \def\grehighchoralsign#1#2#3{%
-  \grepenalty 10001\relax %
+  \grepenalty{10001}%
   \grevepisemusorrare{#1}{#3}{4}{3}{\grehighchoralsignstyle{#2}}%
   %\grehepisorline{#1}{#3}{0}{4}{\grehighchoralsignstyle{#2}}%
   \relax %
@@ -1347,11 +1352,11 @@
   \fi %
   \grenewglyphcommon %
   \grecalculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-  \grepenalty 10001 %
+  \grepenalty{10001}%
   \ifcase#1 % 0 : virgula
     \ifnum#2=1\relax %
       \grehskip\grespacearoundsmallbar %
-      \grepenalty 10001 %
+      \grepenalty{10001}%
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 8}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 8}%
@@ -1362,7 +1367,7 @@
   \or % 1 : minima
     \ifnum#2=1\relax %
       \grehskip\grespacearoundsmallbar %
-      \grepenalty 10001%
+      \grepenalty{10001}%
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 9}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 9}%
@@ -1373,7 +1378,7 @@
   \or % 2 : minor
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
-      \grepenalty 10001 %
+      \grepenalty{10001}%
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 10}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 10}%
@@ -1384,7 +1389,7 @@
   \or % 3 : maior
     \ifnum#2=1\relax %
       \grehskip\grespacearoundmaior %
-      \grepenalty 10001 %
+      \grepenalty{10001}%
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 11}%
     \gredivisiomaiorsymbol %
@@ -1395,7 +1400,7 @@
   \or % 4 : finalis
     \ifnum#2=1\relax %
       \grehskip\grespacearoundfinalis %
-      \grepenalty 10001 %
+      \grepenalty{10001}%
     \fi %
     \setbox\GreTempwidth=\hbox{\gredivisiofinalissymbol}%
     #3\relax %
@@ -1406,7 +1411,7 @@
   \or % 5 : finalis
     \ifnum#2=1\relax %
       \grehskip\grespacebeforefinalfinalis %
-      \grepenalty 10001 %
+      \grepenalty{10001}%
     \fi %
     \setbox\GreTempwidth=\hbox{\gredivisiofinalissymbol}%
     #3\relax %
@@ -1420,7 +1425,7 @@
     \advance\greglyphraisevalue by -\grestafflinediff %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
-      \grepenalty 10001 %
+      \grepenalty{10001}%
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 83}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
@@ -1433,7 +1438,7 @@
     \advance\greglyphraisevalue by \grestafflinediff %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
-      \grepenalty 10001 %
+      \grepenalty{10001}%
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 84}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
@@ -1444,7 +1449,7 @@
   \or % 8 : dominican bar 3
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
-      \grepenalty 10001 %
+      \grepenalty{10001}%
     \fi %
     \advance\greglyphraisevalue by -\grestafflinediff %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 83}%
@@ -1456,7 +1461,7 @@
   \or % 9 : dominican bar 4
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
-      \grepenalty 10001 %
+      \grepenalty{10001}%
     \fi %
     \advance\greglyphraisevalue by \grestafflinediff %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 84}%
@@ -1470,7 +1475,7 @@
     \advance\greglyphraisevalue by -\grestafflinediff %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
-      \grepenalty 10001 %
+      \grepenalty{10001}%
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 83}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
@@ -1483,7 +1488,7 @@
     \advance\greglyphraisevalue by \grestafflinediff %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
-      \grepenalty 10001 %
+      \grepenalty{10001}%
     \fi %
     \setbox\GreTempwidth=\hbox{\gregoriofont \char 84}%
     \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
@@ -1521,7 +1526,7 @@
   \gretempdimtwo = 12000 sp%
   \multiply\gretempdimtwo by \the\grefactor%
   \kern \gretempdimtwo%
-  \grepenalty 10001%
+  \grepenalty{10001}%
   \gredivisiomaiorsymbol %
 }
 
@@ -1533,9 +1538,9 @@
   \ifcase#1% case 0
     \grelocalrightbox{}%
 %    \grelocalleftbox{}%
-    \grepenalty 10001\relax %
+    \grepenalty{10001}%
     \grehskip\grespacebeforefinalfinalis %
-    \grepenalty 10001\relax %
+    \grepenalty{10001}%
     \grebarsyllable{}{}{}{1}{}{}{0}{\grelastofline}{%
       \gredivisiofinalis{}%
     }%
@@ -1605,7 +1610,7 @@
     \pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
     \hss %
   }%
-  \grepenalty 10001\relax %
+  \grepenalty{10001}%
 \relax %
 }
 
@@ -1642,7 +1647,7 @@
   \copy\GreTempwidth%
   \ifnum#4=0\relax %
     % we try to avoid line breaking after a flat or a natural
-    \grepenalty 10001\relax %
+    \grepenalty{10001}%
     \ifnum\the\grefirstglyph=1\relax %
       \gretempdim=\wd\GreTempwidth %
       \advance\gretempdim by \grealterationspace %
@@ -1651,7 +1656,7 @@
     \else %
       \grehskip\grealterationspace %
     \fi %
-    \grepenalty 10001\relax %
+    \grepenalty{10001}%
   \fi %
   %#4\relax %
   %\grepenalty 10001\relax %
