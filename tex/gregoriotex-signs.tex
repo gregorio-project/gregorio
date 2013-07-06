@@ -34,6 +34,7 @@
 
 \let\grehskip\hskip
 \let\grepenalty\penalty
+\xdef\greinsidediscretionary{\number 0}
 
 \def\grefalsepenalty #1{}
 
@@ -41,7 +42,14 @@
 \def\grediscretionary#1#2#3{%
   \global\let\grehskip\kern %
   \global\let\grepenalty\grefalsepenalty %
-  \discretionary{#1}{#2}{#3}%
+  \global\xdef\greinsidediscretionary{\number 1}%
+  \discretionary{%
+    \kern\grekernbeforeeol\relax %
+    #1}{%
+    #2}{%
+    \global\grelastoflinecount=2\relax % (a good magic trick)
+    #3}%
+  \global\xdef\greinsidediscretionary{\number 0}%
   \global\let\grehskip\hskip %
   \global\let\grepenalty\penalty %
   \relax %
@@ -191,7 +199,9 @@
   \grecalculateclefnum{#1}{#2}{#4}%
   \greclefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
   \multiply\greclefchangespace by \the\grefactor %
-  \gresetlinesclef{#1}{#2}{1}{#4}%
+  \ifnum\greinsidediscretionary=0\relax %
+    \gresetlinesclef{#1}{#2}{1}{#4}%
+  \fi %
   \ifnum#3=1\relax %
     \grehskip\greclefchangespace %
   \else %
@@ -235,7 +245,9 @@
   \fi %
   \greclefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
   \multiply\greclefchangespace by \grefactor %
-  \gresetlinesclef{#1}{#2}{0}{#3}%
+  \ifnum\greinsidediscretionary=0\relax %
+    \gresetlinesclef{#1}{#2}{0}{#3}%
+  \fi %
   \hskip\greclefchangespace %
   \gretypekey{#1}{#2}{1}{0}{#3}%
   \hskip\greclefchangespace %
@@ -274,37 +286,39 @@
 
 % the argument is the height
 \def\gresetcusto#1{%
-  \ifnum\greblockcusto=0\relax %
-    \grecalculateglyphraisevalue{#1}{0}%
-    %here we need some tricks to draw the line before the custo (for the color)
-    \setbox\GreTempwidth=\hbox{%
-    % we type a hskip and the we type the custo
-    \hskip\grespacebeforecusto %
-    \grecustochar#1\relax %
-    }%
-    \global\gretempwidth=\wd\GreTempwidth %
-    % we make \wd\GreTempsign contain the width of a custo
-    \setbox\GreTempsign=\hbox{%
-    \grecustochar#1\relax %
-    }%
-    \grelocalrightbox{%
-    \ifnum\greremovelinescount=0\relax %
-      \ifx l#1%
-        \greadditionaltopcustolineend %
+  \ifnum\greinsidediscretionary=0\relax %
+    \ifnum\greblockcusto=0\relax %
+      \grecalculateglyphraisevalue{#1}{0}%
+      %here we need some tricks to draw the line before the custo (for the color)
+      \setbox\GreTempwidth=\hbox{%
+      % we type a hskip and the we type the custo
+      \hskip\grespacebeforecusto %
+      \grecustochar#1\relax %
+      }%
+      \global\gretempwidth=\wd\GreTempwidth %
+      % we make \wd\GreTempsign contain the width of a custo
+      \setbox\GreTempsign=\hbox{%
+      \grecustochar#1\relax %
+      }%
+      \grelocalrightbox{%
+      \ifnum\greremovelinescount=0\relax %
+        \ifx l#1%
+          \greadditionaltopcustolineend %
+        \fi %
+        \ifx m#1%
+          \greadditionaltopcustolineend %
+        \fi %
+        \ifx a#1%
+          \greadditionalbottomcustolineend %
+        \fi %
+        \ifx b#1%
+          \greadditionalbottomcustolineend %
+        \fi %
       \fi %
-      \ifx m#1%
-        \greadditionaltopcustolineend %
-      \fi %
-      \ifx a#1%
-        \greadditionalbottomcustolineend %
-      \fi %
-      \ifx b#1%
-        \greadditionalbottomcustolineend %
-      \fi %
+      \raise \greglyphraisevalue%
+      \copy\GreTempwidth %
+      }%
     \fi %
-    \raise \greglyphraisevalue%
-    \copy\GreTempwidth %
-    }%
   \fi %
   \relax%
 }

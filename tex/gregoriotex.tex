@@ -226,11 +226,13 @@
       \greremovespaceabove %
     \fi %
     \global\grelastoflinecount=2\relax %
-    \greupdateleftbox %
+    \ifnum\greinsidediscretionary=0\relax %
+      \greupdateleftbox %
+    \fi %
     \ifnum#4=1\relax %
       \hfill %
     \fi %
-    \penalty-10001 %
+    \grepenalty -10001%
   \fi %
   \relax %
 }
