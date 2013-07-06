@@ -14,7 +14,32 @@
 %You should have received a copy of the GNU General Public License
 %along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-% this file contains definitions of spaces
+% this file contains definitions of spaces and penalties
+
+%% First, the penalties
+
+% penalty at the end of a syllable which is the end of a word
+\xdef\greendofwordpenalty{-1000}
+% penalty at the end of a syllable which is not the end of a word
+\xdef\greendofwordpenalty{-500}
+% penalty at the end of a syllable which is just a bar, with something printed
+% under it
+\xdef\greendafterbarpenalty{-2000}
+% penalty right after a bar with nothing printed
+\xdef\greendafterbaraltpenalty{-1000}
+% penalty at the end of a breakable neumatic element (typically at a space
+% between elements)
+\xdef\greendofelementpenalty{-1000}
+
+%% Then, some fine tunings
+\def\grelooseness{\looseness}
+\def\gretolerance{9000}
+\def\grepretolerance{500}
+\def\greemergencystretch{\emergencystretch}
+\def\grewidowpenalty{9999}
+\def\greclubpenalty{9999}
+
+%% And finally, all the spacings:
 
 % the additional width of the additional lines (compared to the width of the glyph they're associated with)
 \greadditionallineswidth = 16000sp

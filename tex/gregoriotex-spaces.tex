@@ -32,7 +32,7 @@
 \xdef\grenobreakpenalty{10001}
 \def\grenobreak{\grepenalty{\grenobreakpenalty}}
 
-% called in \grenolastline (can't remember what it does...)
+% called in \grenolastline (seems deprecated...)
 \xdef\grenolastlinepenalty{1000}
 
 % penalty at the end of a syllable which is the end of a word
@@ -41,15 +41,75 @@
 % penalty at the end of a syllable which is not the end of a word
 \xdef\greendofwordpenalty{-500}
 
-% penalty at the end of a syllable which is just a bar
+% penalty at the end of a syllable which is just a bar, with something printed
+% under it
 \xdef\greendafterbarpenalty{-2000}
 
-% penalty right after a bar... TODO: I don't understand why such a thing exist..
+% penalty right after a bar with nothing printed
 \xdef\greendafterbaraltpenalty{-1000}
 
 % penalty at the end of a breakable neumatic element (typically at a space
 % between elements)
 \xdef\greendofelementpenalty{-1000}
+
+
+%% The following macros cancel some useless penalties, and reinstances them
+%% at the end of a score
+
+\def\grecancelpenalties{%
+  \xdef\grehyphenpenaltysave{\the\hyphenpenalty }%
+  \xdef\greexhyphenpenaltysave{\the\exhyphenpenalty }%
+  \xdef\gredoublehyphendemeritssave{\the\doublehyphendemerits }%
+  \xdef\grefinalhyphendemeritssave{\the\finalhyphendemerits }%
+  \hyphenpenalty=0\relax %
+  \exhyphenpenalty=0\relax %
+  \doublehyphendemerits=0\relax %
+  \finalhyphendemerits=0\relax %
+}
+
+\def\grerestorepenalties{%
+  \hyphenpenalty=\grehyphenpenaltysave %
+  \exhyphenpenalty=\greexhyphenpenaltysave %
+  \doublehyphendemerits=\gredoublehyphendemeritssave %
+  \finalhyphendemerits=\grefinalhyphendemeritssave %
+}
+
+%% These macro enable the tuning of linepenalty, tolerance, pretolerance
+%% and emergencystretch
+
+% the macros to be modified by the users, 
+\def\grelooseness{\looseness}
+\def\gretolerance{\tolerance}
+\def\grepretolerance{\pretolerance}
+\def\greemergencystretch{\emergencystretch}
+\def\grewidowpenalty{\widowpenalty}
+\def\greclubpenalty{\clubpenalty}
+
+% macro called at ea
+\def\gredofinetuning{%
+  \xdef\greloosenesssave{\the\looseness}%
+  \xdef\gretolerancesave{\the\tolerance}%
+  \xdef\grepretolerancesave{\the\pretolerance}%
+  \xdef\greemergencystretchsave{\the\emergencystretch}%
+  \xdef\grewidowpenaltysave{\the\widowpenalty}%
+  \xdef\greclubpenaltysave{\the\clubpenalty}%
+  \looseness=\grelooseness %
+  \tolerance=\gretolerance %
+  \pretolerance=\grepretolerance %
+  \emergencystretch=\greemergencystretch %
+  \widowpenalty=\grewidowpenalty %
+  \clubpenalty=\greclubpenalty %
+}
+
+\def\greendfinetuning{%
+  \looseness=\greloosenesssave %
+  \tolerance=\gretolerancesave %
+  \pretolerance=\grepretolerancesave %
+  \emergencystretch=\greemergencystretchsave %
+  \widowpenalty=\grewidowpenaltysave %
+  \clubpenalty=\greclubpenaltysave %
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of spaces
