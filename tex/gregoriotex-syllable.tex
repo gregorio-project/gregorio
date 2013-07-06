@@ -648,17 +648,17 @@
       \xdef\grekernbeforeeol{\the\gretempdim\relax}%
     \fi %
   \fi%
-  \grepenalty{10001}% no line breaks between text and notes
+  \grenobreak % no line breaks between text and notes
   #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
   \ifdim\the\greenddifference <0pt%
     %% important, else we are not really at the end of the syllable
-    \grepenalty{10001}%
+    \grenobreak %
     \ifnum\grelastoflinecount=1\relax %
       \kern\grekernbeforeeol %
     \else %
       \kern -\greenddifference %
     \fi %
-    \grepenalty{10001}%
+    \grenobreak %
   \fi%
   \xdef\grekernbeforeeol{0pt\relax}%
   % we call end of syllable
@@ -774,15 +774,15 @@
     \ifdim\grepreviousenddifference < 0 pt%
       \advance\gretempdim by \grepreviousenddifference %
     \fi %
-    \grepenalty{10001}%
+    \grenobreak %
     \ifdim\gretempdim > -\wd\GreSyllablenotes %
       \kern\gretempdim %
     \else %
       \kern -\wd\GreSyllablenotes %
     \fi %
-    \grepenalty{10001}%
+    \grenobreak %
     #9\relax %
-    \grepenalty{-1000}%
+    \grepenalty{\greendafterbaraltpenalty }% TODO: isn't it a bit buggy?
     \ifdim\gretempdim < -\wd\GreSyllablenotes %
       \ifdim\grenextbegindifference > 0 pt%
         \hskip\greinterwordspacetextnotes %

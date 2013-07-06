@@ -766,9 +766,9 @@
     \hbox{\directlua{grechiro.printLine()}}%
     \par %
     % TODO: this line bugs with my version of LuaTeX
-    %\penalty -10001\relax%
+    %\grenobreak %
     \kern\grebelowsignsspace %
-    %\penalty -10001\relax %
+    %\grenobreak %
     \noindent %
   \else %
     % not very beaufiful, I don't like to make a new par inside a score, but....
@@ -779,9 +779,9 @@
     \noindent\hbox{\directlua{grechiro.printLine()}}%
     \greupdateleftbox %
     \par %
-    \penalty{10001}%
+    \grenobreak%
     \kern\grebelowsignsspace %
-    \penalty{10001}%
+    \grenobreak %
     \noindent %
   \fi %
   \relax %
@@ -875,13 +875,13 @@
   \global\greendofscore=1 %
   \grelocalrightbox{}%
   \grelocalleftbox{}%
-  \penalty{1000}%
+  \penalty{\grenolastlinepenalty }%
   \relax%
 }
 
 % macro called at each end of word
 \def\greendofword#1{%
-  \grepenalty{-1000}%
+  \grepenalty{\greendofwordpenalty }%
   \ifnum#1=1\relax %
     \ifdim\greenddifference > 0 pt %
       \ifdim\grenextbegindifference > 0 pt %
@@ -903,7 +903,7 @@
 
 % macro called at the end of a word or syllable when the next thing is a bar
 \def\greendbeforebar#1{%
-  \grepenalty{10001}%
+  \grenobreak %
   \ifnum#1=1\relax %
     \ifdim\greenddifference > 0 pt %
       \ifdim\grenextbegindifference > 0 pt %
@@ -919,14 +919,14 @@
       \fi %
     \fi %
   \fi %
-  \grepenalty{10001}%
+  \grenobreak %
   %\global\greenddifference=0pt %
   \relax %
 }
 
 % macro called at the end of a bar. Almost the same, but not for the penalties
 \def\greendafterbar#1{%
-  \grepenalty{-2000}\relax %
+  \grepenalty{\greendafterbarpenalty }\relax %
   \ifnum#1=1\relax %
     \ifdim\greenddifference > 0 pt %
       \ifdim\grenextbegindifference > 0 pt %
@@ -942,7 +942,7 @@
       \fi %
     \fi %
   \fi %
-  \grepenalty{-2000}\relax %
+  %\grepenalty{\greendafterbarpenalty }\relax %
   %\global\greenddifference=0pt %
   \relax %
 }
@@ -990,7 +990,7 @@
 
 % macro called at each end of syllable which is not an end of word
 \def\greendofsyllable{%
-  \grepenalty{-500}%
+  \grepenalty{\greendofwordpenalty }%
   \relax%
 }
 
@@ -1003,9 +1003,9 @@
 
 \def\greendofelement#1#2{%
   \ifnum #2=0\relax %
-    \grepenalty{-1000}%
+    \grepenalty{\greendofelementpenalty}%
   \else %
-    \grepenalty{10001}%
+    \grenobreak %
   \fi %
   \ifcase#1%
     \grehskip\greinterelementspace %
@@ -1015,7 +1015,7 @@
     \grehskip\greglyphspace %
   \fi%
   \ifnum #2=1\relax %
-    \grepenalty{10001}%
+    \grenobreak %
   \fi %
 \relax%
 }
@@ -1036,7 +1036,7 @@
 %% 10: space between puncta inclinata (also debilis for now), larger ambitus (range=3rd).
 %% 11: space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more)
 \def\greendofglyph#1{%
-  \grepenalty{10001}%
+  \grenobreak %
   \ifcase#1%
     \grehskip\greinterglyphspace %
   \or% case 1
@@ -1062,7 +1062,7 @@
   \or% case 11
     \grehskip\grepunctuminclinatummaxshift %
   \fi%
-  \grepenalty{10001}%
+  \grenobreak %
   \relax%
 }
 

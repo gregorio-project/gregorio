@@ -18,6 +18,39 @@
 
 \gredeclarefileversion{gregoriotex-spaces.tex}{20130616}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for tuning penalties
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% The following macros enable users to tune penalties used in Gregorio
+
+% penalty to force a break on a new line
+\xdef\grenewlinepenalty{-10001}
+\def\greforcebreak{\grepenalty{\grenewlinepenalty}}
+
+% penalty to prevent a line break
+\xdef\grenobreakpenalty{10001}
+\def\grenobreak{\grepenalty{\grenobreakpenalty}}
+
+% called in \grenolastline (can't remember what it does...)
+\xdef\grenolastlinepenalty{1000}
+
+% penalty at the end of a syllable which is the end of a word
+\xdef\greendofwordpenalty{-1000}
+
+% penalty at the end of a syllable which is not the end of a word
+\xdef\greendofwordpenalty{-500}
+
+% penalty at the end of a syllable which is just a bar
+\xdef\greendafterbarpenalty{-2000}
+
+% penalty right after a bar... TODO: I don't understand why such a thing exist..
+\xdef\greendafterbaraltpenalty{-1000}
+
+% penalty at the end of a breakable neumatic element (typically at a space
+% between elements)
+\xdef\greendofelementpenalty{-1000}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of spaces
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
