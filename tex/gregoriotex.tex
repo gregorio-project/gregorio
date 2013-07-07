@@ -812,6 +812,8 @@
 %macro called at the beginning of a score
 \def\begingregorioscore{%
   % not sure it's perfect to put that here, but it's the only way I found to make it work....
+  \grecancelpenalties %
+  \gredofinetuning %
   \global\grelinewidth=\hsize %
   \gregorioattr=0\relax %
   \global\grestafflinewidth=\grelinewidth %
@@ -853,11 +855,15 @@
   \global\grecurrentabovelinestextheight=0 sp%
   \greremovetranslationspace %
   \grenormalinitial %
+  \grerestorepenalties %
+  \greendfinetuning %
   \directlua{gregoriotex.atScoreEnd()}%
   \relax%
 }
 
-%macro to call when there is just a little thing that will go to the last line, when it is not necessary
+% macro to call when there is just a little thing that will go to the last line,
+% when it is not necessary
+% It doesn't seem to be used, so it's a good candidate for deprecation!
 \def\grenolastline{%
   \ifdim\greenddifference > 0 pt %
     \ifdim\grenextbegindifference > 0 pt %
@@ -990,7 +996,7 @@
 
 % macro called at each end of syllable which is not an end of word
 \def\greendofsyllable{%
-  \grepenalty{\greendofwordpenalty }%
+  \grepenalty{\greendofsyllablepenalty }%
   \relax%
 }
 

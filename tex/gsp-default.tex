@@ -19,17 +19,21 @@
 %% First, the penalties
 
 % penalty at the end of a syllable which is the end of a word
-\xdef\greendofwordpenalty{-1000}
+\xdef\greendofwordpenalty{-100}
 % penalty at the end of a syllable which is not the end of a word
-\xdef\greendofwordpenalty{-500}
+\xdef\greendofsyllablepenalty{-50}
 % penalty at the end of a syllable which is just a bar, with something printed
 % under it
-\xdef\greendafterbarpenalty{-2000}
+\xdef\greendafterbarpenalty{-200}
 % penalty right after a bar with nothing printed
-\xdef\greendafterbaraltpenalty{-1000}
+\xdef\greendafterbaraltpenalty{-200}
 % penalty at the end of a breakable neumatic element (typically at a space
 % between elements)
-\xdef\greendofelementpenalty{-1000}
+\xdef\greendofelementpenalty{-50}
+% hyphenpenalty will be used in discretionaries, in Gregorio this is used for
+% a bar with clef change for example. It also set \exhyphenpenalty. It should
+% be close to \greendafterbarpenalty
+\xdef\grehyphenpenalty{-200}
 
 %% Then, some fine tunings
 \def\grelooseness{\looseness}
