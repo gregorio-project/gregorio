@@ -21,20 +21,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 #include <stdlib.h>
 #include <getopt.h>
-#include <libgen.h>		/* for basename */
-#include <string.h>		/* for strcmp */
+#include <libgen.h>             /* for basename */
+#include <string.h>             /* for strcmp */
 #include <locale.h>
 #include <gregorio/struct.h>
 #if ALL_STATIC == 1
-    #include <gregorio/plugins.h>
+#include <gregorio/plugins.h>
 #else
-    #include <gregorio/plugin_loader.h>
+#include <gregorio/plugin_loader.h>
 #endif
 #include <gregorio/messages.h>
 #include <gregorio/characters.h>
 
 #ifndef MODULE_PATH_ENV
-#  define MODULE_PATH_ENV        "MODULE_PATH"
+#define MODULE_PATH_ENV        "MODULE_PATH"
 #endif
 
 #if ALL_STATIC == 0
@@ -85,7 +85,6 @@ get_base_filename (char *fbasename)
   return ret;
 }
 
-
 // function that adds the good extension to a basename (without extension)
 static char *
 get_output_filename (char *fbasename, char *extension)
@@ -93,13 +92,12 @@ get_output_filename (char *fbasename, char *extension)
   char *output_filename = NULL;
   output_filename =
     (char *) malloc (sizeof (char) *
-		     (strlen (extension) + strlen (fbasename) + 2));
+                     (strlen (extension) + strlen (fbasename) + 2));
   output_filename = strcpy (output_filename, fbasename);
   output_filename = strcat (output_filename, ".");
   output_filename = strcat (output_filename, extension);
   return output_filename;
 }
-
 
 /* the type definitions of the function to read a score from a file, and to write a score
 to a file. Necessary for the libtool stuff... */
@@ -116,7 +114,7 @@ it under the terms of the GNU General Public License as published by\n\
 the Free Software Foundation, either version 3 of the License, or\n\
 (at your option) any later version.\n\
 \n");
-  printf("This program is distributed in the hope that it will be useful,\n\
+  printf ("This program is distributed in the hope that it will be useful,\n\
 but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
 GNU General Public License for more details.\n\
@@ -138,7 +136,7 @@ print_usage (char *name)
 \t-s         reads input from stdin\n\
 \t-h         displays this message\n\
 \t-V         displays %s version\n"), name, name);
-  printf(_("\t-L         displays licence\n\
+  printf (_("\t-L         displays licence\n\
 \t-v         verbose mode\n\
 \t-W         displays all warnings\n\
 \n\
@@ -165,7 +163,7 @@ main (int argc, char **argv)
   FILE *input_file = NULL;
   FILE *output_file = NULL;
   FILE *error_file = NULL;
-  #if ALL_STATIC == 0
+#if ALL_STATIC == 0
   char *input_format = NULL;
   char *output_format = NULL;
   gregorio_plugin *input_plugin = NULL;
@@ -173,10 +171,10 @@ main (int argc, char **argv)
   gregorio_plugin *output_plugin = NULL;
   gregorio_plugin_info *output_plugin_info = NULL;
   int error = 0;
-  #else
+#else
   unsigned char input_format = 0;
   unsigned char output_format = 0;
-  #endif
+#endif
   char verb_mode = 0;
   char *current_directory = malloc (150 * sizeof (char));
   int number_of_options = 0;
@@ -204,12 +202,12 @@ main (int argc, char **argv)
     }
   setlocale (LC_CTYPE, "C");
   current_directory = getcwd (current_directory, 150);
-  
-  #if ENABLE_NLS == 1
+
+#if ENABLE_NLS == 1
   bindtextdomain (PACKAGE, LOCALEDIR);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
-  #endif
+#endif
 
   if (current_directory == NULL)
     {
@@ -218,7 +216,7 @@ main (int argc, char **argv)
       exit (-1);
     }
 
-  #if ALL_STATIC == 0
+#if ALL_STATIC == 0
   error = gregorio_plugin_loader_init ();
   if (error)
     {
@@ -226,213 +224,213 @@ main (int argc, char **argv)
       free (current_directory);
       exit (-1);
     }
-  #endif
+#endif
   while (1)
     {
       c = getopt_long (argc, argv, "o:SF:l:f:shOLVvW",
-		       long_options, &option_index);
+                       long_options, &option_index);
       if (c == -1)
-	break;
+        break;
       switch (c)
-	{
-	case 'o':
-	  if (output_file_name)
-	    {
-	      fprintf (stderr,
-		       "warning: several output files declared, %s taken\n",
-		       output_file_name);
-	      break;
-	    }
-	  if (output_file)
-	    {			//means that stdout is defined
-	      fprintf (stderr,
-		       "warning: can't write to file and stdout, writing on stdout\n");
-	      break;
-	    }
-	  define_path (output_file_name, optarg) break;
-	case 'S':
-	  if (output_file_name)
-	    {
-	      fprintf (stderr,
-		       "warning: can't write to file and stdout, writing on %s\n",
-		       output_file_name);
-	      break;
-	    }
-	  if (output_file)
-	    {			//means that stdout is defined
-	      fprintf (stderr, "warning: option used two times: %c\n", c);
-	      break;
-	    }
-	  output_file = stdout;
-	  break;
-	case 'O':
-	  gregorio_set_tex_write(WRITE_OLD_TEX);
-	  break;
-	case 'F':
-	  if (output_format)
-	    {
-	      fprintf (stderr,
-		       "warning: several output formats declared, first taken\n");
-	      break;
-	    }
-	    #if ALL_STATIC == 0
-	    output_format = optarg;
-	    #else
-	  if (!strcmp (optarg, XML_STR))
-	    {
-	      output_format = XML;
-	      break;
-	    }
-	  if (!strcmp (optarg, GABC_STR))
-	    {
-	      output_format = GABC;
-	      break;
-	    }
-	  if (!strcmp (optarg, GTEX_STR))
-	    {
-	      output_format = GTEX;
-	      break;
-	    }
-	  if (!strcmp (optarg, OTEX_STR))
-	    {
-	      output_format = OTEX;
-	      break;
-	    }
-	  if (!strcmp (optarg, DUMP_STR))
-	    {
-	      output_format = DUMP;
-	      break;
-	    }
-	  else
-	    {
-	      fprintf (stderr, "error: unknown output format: %s\n", optarg);
-	      exit (0);
-	    }
-	    #endif
-	  break;
-	case 'l':
-	  if (error_file_name)
-	    {
-	      fprintf (stderr,
-		       "warning: several error files declared, %s taken\n",
-		       error_file_name);
-	      break;
-	    }
-	  define_path (error_file_name, optarg) break;
-	case 'f':
-	  if (input_format)
-	    {
-	      gregorio_set_error_out (error_file);
-	      fprintf (stderr,
-		       "warning: several output formats declared, first taken\n");
-	      break;
-	    }
-	    #if ALL_STATIC == 0
+        {
+        case 'o':
+          if (output_file_name)
+            {
+              fprintf (stderr,
+                       "warning: several output files declared, %s taken\n",
+                       output_file_name);
+              break;
+            }
+          if (output_file)
+            {                   //means that stdout is defined
+              fprintf (stderr,
+                       "warning: can't write to file and stdout, writing on stdout\n");
+              break;
+            }
+          define_path (output_file_name, optarg) break;
+        case 'S':
+          if (output_file_name)
+            {
+              fprintf (stderr,
+                       "warning: can't write to file and stdout, writing on %s\n",
+                       output_file_name);
+              break;
+            }
+          if (output_file)
+            {                   //means that stdout is defined
+              fprintf (stderr, "warning: option used two times: %c\n", c);
+              break;
+            }
+          output_file = stdout;
+          break;
+        case 'O':
+          gregorio_set_tex_write (WRITE_OLD_TEX);
+          break;
+        case 'F':
+          if (output_format)
+            {
+              fprintf (stderr,
+                       "warning: several output formats declared, first taken\n");
+              break;
+            }
+#if ALL_STATIC == 0
+          output_format = optarg;
+#else
+          if (!strcmp (optarg, XML_STR))
+            {
+              output_format = XML;
+              break;
+            }
+          if (!strcmp (optarg, GABC_STR))
+            {
+              output_format = GABC;
+              break;
+            }
+          if (!strcmp (optarg, GTEX_STR))
+            {
+              output_format = GTEX;
+              break;
+            }
+          if (!strcmp (optarg, OTEX_STR))
+            {
+              output_format = OTEX;
+              break;
+            }
+          if (!strcmp (optarg, DUMP_STR))
+            {
+              output_format = DUMP;
+              break;
+            }
+          else
+            {
+              fprintf (stderr, "error: unknown output format: %s\n", optarg);
+              exit (0);
+            }
+#endif
+          break;
+        case 'l':
+          if (error_file_name)
+            {
+              fprintf (stderr,
+                       "warning: several error files declared, %s taken\n",
+                       error_file_name);
+              break;
+            }
+          define_path (error_file_name, optarg) break;
+        case 'f':
+          if (input_format)
+            {
+              gregorio_set_error_out (error_file);
+              fprintf (stderr,
+                       "warning: several output formats declared, first taken\n");
+              break;
+            }
+#if ALL_STATIC == 0
           input_format = optarg;
-        #else
-      if (!strcmp (optarg, GABC_STR))
-	    {
-	      input_format = GABC;
-	      break;
-	    }
-	    #if ENABLE_XML == 1
-	  if (!strcmp (optarg, XML_STR))
-	    {
-	      input_format = XML;
-	      break;
-	    }
-	    #endif
-	  else
-	    {
-	      fprintf (stderr, "error: unknown input format: %s\n", optarg);
-	      exit (0);
-	    }
-	    #endif
-	  break;
-	case 's':
-	  if (input_file_name)
-	    {
-	      fprintf (stderr,
-		       "warning: can't read from file and stdin, writing on %s\n",
-		       input_file_name);
-	      break;
-	    }
-	  if (input_file)
-	    {			//means that stdin is defined
-	      fprintf (stderr, "warning: option used two times: %c\n", c);
-	      break;
-	    }
-	  input_file = stdin;
-	  break;
-	case 'h':
-	  print_usage (argv[0]);
-	  exit (0);
-	  break;
-	case 'V':
-	  printf ("%s version %s.\n%s\n", argv[0], VERSION, copyright);
-	  exit (0);
-	  break;
-	case 'v':
-	  if (verb_mode && verb_mode != VERB_WARNINGS)
-	    {
-	      fprintf (stderr, "warning: verbose option passed two times\n");
-	      break;
-	    }
-	  verb_mode = VERB_VERBOSE;
-	  break;
-	case 'W':
-	  if (verb_mode == VERB_WARNINGS)
-	    {
-	      fprintf (stderr,
-		       "warning: all-warnings option passed two times\n");
-	      break;
-	    }
-	  if (verb_mode != VERB_VERBOSE)
-	    {
-	      verb_mode = VERB_WARNINGS;
-	    }
-	  break;
-	case 'L':
-	  print_licence ();
-	  exit (0);
-	  break;
-	case '?':
-	  break;
-	default:
-	  fprintf (stderr, "unknown option: %c\n", c);
-	  print_usage (argv[0]);
-	  exit (0);
-	  break;
-	}
+#else
+          if (!strcmp (optarg, GABC_STR))
+            {
+              input_format = GABC;
+              break;
+            }
+#if ENABLE_XML == 1
+          if (!strcmp (optarg, XML_STR))
+            {
+              input_format = XML;
+              break;
+            }
+#endif
+          else
+            {
+              fprintf (stderr, "error: unknown input format: %s\n", optarg);
+              exit (0);
+            }
+#endif
+          break;
+        case 's':
+          if (input_file_name)
+            {
+              fprintf (stderr,
+                       "warning: can't read from file and stdin, writing on %s\n",
+                       input_file_name);
+              break;
+            }
+          if (input_file)
+            {                   //means that stdin is defined
+              fprintf (stderr, "warning: option used two times: %c\n", c);
+              break;
+            }
+          input_file = stdin;
+          break;
+        case 'h':
+          print_usage (argv[0]);
+          exit (0);
+          break;
+        case 'V':
+          printf ("%s version %s.\n%s\n", argv[0], VERSION, copyright);
+          exit (0);
+          break;
+        case 'v':
+          if (verb_mode && verb_mode != VERB_WARNINGS)
+            {
+              fprintf (stderr, "warning: verbose option passed two times\n");
+              break;
+            }
+          verb_mode = VERB_VERBOSE;
+          break;
+        case 'W':
+          if (verb_mode == VERB_WARNINGS)
+            {
+              fprintf (stderr,
+                       "warning: all-warnings option passed two times\n");
+              break;
+            }
+          if (verb_mode != VERB_VERBOSE)
+            {
+              verb_mode = VERB_WARNINGS;
+            }
+          break;
+        case 'L':
+          print_licence ();
+          exit (0);
+          break;
+        case '?':
+          break;
+        default:
+          fprintf (stderr, "unknown option: %c\n", c);
+          print_usage (argv[0]);
+          exit (0);
+          break;
+        }
       number_of_options++;
-    }				//end of while
+    }                           //end of while
   if (optind == argc)
     {
       if (!input_file)
-	{			//input not undefined (could be stdin)
-	  fprintf (stderr, "error: no input file specified\n");
-	  print_usage (argv[0]);
-	  exit (-1);
-	}
+        {                       //input not undefined (could be stdin)
+          fprintf (stderr, "error: no input file specified\n");
+          print_usage (argv[0]);
+          exit (-1);
+        }
     }
   else
     {
       define_path (input_file_name, argv[optind]);
       output_basename = get_base_filename (input_file_name);
       if (input_file)
-	{
-	  fprintf (stderr,
-		   "warning: can't read from stdin and a file, reading from file %s\n",
-		   input_file_name);
-	  input_file = NULL;
-	}
+        {
+          fprintf (stderr,
+                   "warning: can't read from stdin and a file, reading from file %s\n",
+                   input_file_name);
+          input_file = NULL;
+        }
     }
   optind++;
   if (optind < argc)
     {
       printf ("ignored arguments: ");
       while (number_of_options < argc)
-	printf ("%s ", argv[number_of_options++]);
+        printf ("%s ", argv[number_of_options++]);
       printf ("\n");
     }
 
@@ -448,16 +446,16 @@ main (int argc, char **argv)
 
 // then we act...
 
-  #if ALL_STATIC == 0
+#if ALL_STATIC == 0
   /* Load plugins */
-  output_plugin = gregorio_plugin_load(PLUGINDIR, output_format);
+  output_plugin = gregorio_plugin_load (PLUGINDIR, output_format);
   if (output_plugin == NULL)
     {
       fprintf (stderr, "error: invalid output plugin %s\n", output_format);
       free (current_directory);
       exit (1);
     }
-  output_plugin_info = gregorio_plugin_get_info(output_plugin);
+  output_plugin_info = gregorio_plugin_get_info (output_plugin);
   if ((output_plugin_info->type & GREGORIO_PLUGIN_OUTPUT) == 0)
     {
       gregorio_plugin_unload (output_plugin);
@@ -465,7 +463,7 @@ main (int argc, char **argv)
       free (current_directory);
       exit (1);
     }
-  input_plugin = gregorio_plugin_load(PLUGINDIR, input_format);
+  input_plugin = gregorio_plugin_load (PLUGINDIR, input_format);
   if (input_plugin == NULL)
     {
       gregorio_plugin_unload (output_plugin);
@@ -473,7 +471,7 @@ main (int argc, char **argv)
       free (current_directory);
       exit (1);
     }
-  input_plugin_info = gregorio_plugin_get_info(input_plugin);
+  input_plugin_info = gregorio_plugin_get_info (input_plugin);
   if ((input_plugin_info->type & GREGORIO_PLUGIN_INPUT) == 0)
     {
       gregorio_plugin_unload (output_plugin);
@@ -482,60 +480,64 @@ main (int argc, char **argv)
       free (current_directory);
       exit (1);
     }
-  #endif
+#endif
   if (!output_file_name && !output_file)
     {
       if (!output_basename)
-	{
-	  output_file = stdout;
-	}
+        {
+          output_file = stdout;
+        }
       else
-	{
-	  if (input_format != output_format)
-	    {
-        #if ALL_STATIC == 0
-	      output_file_name =
-		get_output_filename (output_basename,
-                                     output_plugin_info->file_extension);
-        #else
-	        switch (output_format)
+        {
+          if (input_format != output_format)
             {
-            case XML:
-              output_file_name = get_output_filename (output_basename, "xml");
-              break;
-            case GABC:
-              output_file_name = get_output_filename (output_basename, "gabc");
-              break;
-            case GTEX:
-            case OTEX:
-              output_file_name = get_output_filename (output_basename, "tex");
-              break;
-            case DUMP:
-              output_file_name = get_output_filename (output_basename, "dump");
-              break;
+#if ALL_STATIC == 0
+              output_file_name =
+                get_output_filename (output_basename,
+                                     output_plugin_info->file_extension);
+#else
+              switch (output_format)
+                {
+                case XML:
+                  output_file_name =
+                    get_output_filename (output_basename, "xml");
+                  break;
+                case GABC:
+                  output_file_name =
+                    get_output_filename (output_basename, "gabc");
+                  break;
+                case GTEX:
+                case OTEX:
+                  output_file_name =
+                    get_output_filename (output_basename, "tex");
+                  break;
+                case DUMP:
+                  output_file_name =
+                    get_output_filename (output_basename, "dump");
+                  break;
+                }
+#endif
             }
-        #endif
-	    }
-	  output_file = fopen (output_file_name, "w");
-	  if (!output_file)
-	    {
-	      fprintf (stderr, "error: can't write in file %s",
-		       output_file_name);
-	    }
-	  free (output_basename);
-	}
+          output_file = fopen (output_file_name, "w");
+          if (!output_file)
+            {
+              fprintf (stderr, "error: can't write in file %s",
+                       output_file_name);
+            }
+          free (output_basename);
+        }
     }
   else
     {
       if (!output_file)
-	{
-	  output_file = fopen (output_file_name, "w");
-	  if (!output_file)
-	    {
-	      fprintf (stderr, "error: can't write in file %s",
-		       output_file_name);
-	    }
-	}
+        {
+          output_file = fopen (output_file_name, "w");
+          if (!output_file)
+            {
+              fprintf (stderr, "error: can't write in file %s",
+                       output_file_name);
+            }
+        }
     }
 
 //we always have input_file or input_file_name
@@ -543,11 +545,11 @@ main (int argc, char **argv)
     {
       input_file = fopen (input_file_name, "r");
       if (!input_file)
-	{
-	  fprintf (stderr, "error: can't open file %s for reading\n",
-		   input_file_name);
-	  exit (-1);
-	}
+        {
+          fprintf (stderr, "error: can't open file %s for reading\n",
+                   input_file_name);
+          exit (-1);
+        }
       gregorio_set_file_name (basename (input_file_name));
     }
 
@@ -560,11 +562,11 @@ main (int argc, char **argv)
     {
       error_file = fopen (error_file_name, "w");
       if (!error_file)
-	{
-	  fprintf (stderr, "error: can't open file %s for writing\n",
-		   error_file_name);
-	  exit (-1);
-	}
+        {
+          fprintf (stderr, "error: can't open file %s for writing\n",
+                   error_file_name);
+          exit (-1);
+        }
       gregorio_set_error_out (error_file);
     }
 
@@ -579,20 +581,20 @@ main (int argc, char **argv)
 
   gregorio_set_verbosity_mode (verb_mode);
 
-  #if ALL_STATIC == 0
+#if ALL_STATIC == 0
   score = (input_plugin_info->read) (input_file);
   gregorio_plugin_unload (input_plugin);
-  #else
-    switch (input_format)
+#else
+  switch (input_format)
     {
     case GABC:
       score = gabc_read_score (input_file);
       break;
-    #if ENABLE_XML == 1
+#if ENABLE_XML == 1
     case XML:
       score = xml_read_score (input_file);
       break;
-    #endif
+#endif
     default:
       fprintf (stderr, "error : invalid input format\n");
       fclose (input_file);
@@ -600,14 +602,14 @@ main (int argc, char **argv)
       exit (-1);
       break;
     }
-  #endif
+#endif
 
   fclose (input_file);
   if (score == NULL)
     {
-      #if ALL_STATIC == 0
+#if ALL_STATIC == 0
       gregorio_plugin_unload (output_plugin);
-      #endif
+#endif
       fclose (output_file);
       fprintf (stderr, "error in file parsing\n");
       exit (-1);
@@ -615,11 +617,11 @@ main (int argc, char **argv)
 
   gregorio_fix_initial_keys (score, DEFAULT_KEY);
 
-  #if ALL_STATIC == 0
+#if ALL_STATIC == 0
   (output_plugin_info->write) (output_file, score);
   gregorio_plugin_unload (output_plugin);
-  #else
-    switch (output_format)
+#else
+  switch (output_format)
     {
     case XML:
       xml_write_score (output_file, score);
@@ -643,12 +645,12 @@ main (int argc, char **argv)
       exit (-1);
       break;
     }
-  #endif
+#endif
   fclose (output_file);
   gregorio_free_score (score);
 
-  #if ALL_STATIC == 0
-  gregorio_plugin_loader_exit();
-  #endif
-  exit(gregorio_get_return_value());
+#if ALL_STATIC == 0
+  gregorio_plugin_loader_exit ();
+#endif
+  exit (gregorio_get_return_value ());
 }
