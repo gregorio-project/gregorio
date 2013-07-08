@@ -816,6 +816,8 @@
   \gredofinetuning %
   \global\grelinewidth=\hsize %
   \gregorioattr=0\relax %
+  \xdef\greexhyphencharsave{\the\exhyphenchar}%
+  \exhyphenchar=-1\relax %
   \global\grestafflinewidth=\grelinewidth %
   \gregeneratelines %
   \ifnum\grefactor=0\relax %
@@ -857,6 +859,7 @@
   \grenormalinitial %
   \grerestorepenalties %
   \greendfinetuning %
+  \exhyphenchar=\greexhyphencharsave %
   \directlua{gregoriotex.atScoreEnd()}%
   \relax%
 }
