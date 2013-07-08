@@ -6,6 +6,12 @@
 -ts2
 -sob
 --line-length80
+-lc80
+-d0
+-fca
+-fc1
+-cdb
+-sc
 
 -T FILE
 
