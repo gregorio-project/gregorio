@@ -1,20 +1,20 @@
-/* 
-Gregorio xml output format.
-Copyright (C) 2006-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+/*
+ * Gregorio xml output format. Copyright (C) 2006-2009 Elie Roux
+ * <elie.roux@telecom-bretagne.eu>
+ * 
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with 
+ * this program.  If not, see <http://www.gnu.org/licenses/>. 
+ */
 
 #include "config.h"
 #include <stdio.h>
@@ -75,7 +75,7 @@ xml_shape_to_str (char shape)
     default:
       str = "punctum";
       gregorio_message (_("unknown shape, `punctum' assumed"),
-		      "xml_shape_to_str", WARNING, 0);
+                        "xml_shape_to_str", WARNING, 0);
       break;
     }
   return str;
@@ -138,67 +138,67 @@ xml_signs_to_str (char signs)
 }
 
 void
-xml_write_signs (FILE * f, char signs, unsigned char h_episemus_type, char rare_sign)
+xml_write_signs (FILE *f, char signs, unsigned char h_episemus_type,
+                 char rare_sign)
 {
   const char *str;
-  if (signs != _NO_SIGN || rare_sign != _NO_SIGN || simple_htype(h_episemus_type == H_ALONE))
+  if (signs != _NO_SIGN || rare_sign != _NO_SIGN
+      || simple_htype (h_episemus_type == H_ALONE))
     {
       fprintf (f, "<signs>");
-      if (simple_htype(h_episemus_type == H_ALONE))
-	{
-	  fprintf (f, "<top>h_episemus</top>");
-	}
-      if (has_bottom(h_episemus_type))
-	{
-	  fprintf (f, "<bottom>h_episemus</bottom>");
-	}
+      if (simple_htype (h_episemus_type == H_ALONE))
+        {
+          fprintf (f, "<top>h_episemus</top>");
+        }
+      if (has_bottom (h_episemus_type))
+        {
+          fprintf (f, "<bottom>h_episemus</bottom>");
+        }
       if (signs != _NO_SIGN)
-	{
-	  str = xml_signs_to_str (signs);
-	  fprintf (f, "%s", str);
-	}
+        {
+          str = xml_signs_to_str (signs);
+          fprintf (f, "%s", str);
+        }
       if (rare_sign != _NO_SIGN)
-	{
-	  str = xml_signs_to_str (rare_sign);
-	  fprintf (f, "%s", str);
-	}
+        {
+          str = xml_signs_to_str (rare_sign);
+          fprintf (f, "%s", str);
+        }
       fprintf (f, "</signs>");
     }
-  if (simple_htype(h_episemus_type) == H_MULTI_BEGINNING)
+  if (simple_htype (h_episemus_type) == H_MULTI_BEGINNING)
     {
       fprintf (f, "<multi-h-episemus position=\"beginning\" />");
     }
-  if (simple_htype(h_episemus_type) == H_MULTI_MIDDLE)
+  if (simple_htype (h_episemus_type) == H_MULTI_MIDDLE)
     {
       fprintf (f, "<multi-h-episemus position=\"middle\" />");
     }
-  if (simple_htype(h_episemus_type) == H_MULTI_END)
+  if (simple_htype (h_episemus_type) == H_MULTI_END)
     {
       fprintf (f, "<multi-h-episemus position=\"end\" />");
     }
 }
 
 void
-xml_write_pitch(FILE *f, char pitch, char clef)
+xml_write_pitch (FILE *f, char pitch, char clef)
 {
   char step;
   int octave;
-    gregorio_set_octave_and_step_from_pitch (&step, &octave, pitch,
-					      clef);
+  gregorio_set_octave_and_step_from_pitch (&step, &octave, pitch, clef);
   fprintf (f, "<pitch><step>%c</step><octave>%d</octave></pitch>",
-	   step, octave);
+           step, octave);
 }
 
 void
-xml_write_note (FILE * f, char signs, char step,
-		      int octave, char shape,
-		      unsigned char h_episemus_type, char alteration, char rare_sign, char *texverb)
+xml_write_note (FILE *f, char signs, char step,
+                int octave, char shape,
+                unsigned char h_episemus_type, char alteration, char rare_sign,
+                char *texverb)
 {
   const char *shape_str = xml_shape_to_str (shape);
 
-  fprintf (f,
-	   "<note><pitch><step>%c</step><octave>%d</octave>",
-	   step, octave);
+  fprintf (f, "<note><pitch><step>%c</step><octave>%d</octave>", step, octave);
   if (alteration == FLAT)
     {
       fprintf (f, "<flated />");
@@ -207,7 +207,7 @@ xml_write_note (FILE * f, char signs, char step,
   fprintf (f, "<shape>%s</shape>", shape_str);
   if (texverb)
     {
-      fprintf(f, "<texverb>%s</texverb>", texverb);
+      fprintf (f, "<texverb>%s</texverb>", texverb);
     }
   xml_write_signs (f, signs, h_episemus_type, rare_sign);
   fprintf (f, "</note>");
@@ -313,13 +313,13 @@ xml_glyph_type_to_str (char name)
 
 void
 xml_set_pitch_from_octave_and_step (char step,
-					  int octave, char *pitch, int clef)
+                                    int octave, char *pitch, int clef)
 {
-  *pitch=gregorio_det_pitch(clef, step, octave);
+  *pitch = gregorio_det_pitch (clef, step, octave);
 }
 
 void
-xml_write_liquescentia (FILE * f, char liquescentia)
+xml_write_liquescentia (FILE *f, char liquescentia)
 {
   if (liquescentia == L_NO_LIQUESCENTIA)
     {
@@ -329,8 +329,7 @@ xml_write_liquescentia (FILE * f, char liquescentia)
     {
       fprintf (f, "<initio_debilis />");
     }
-  if (liquescentia == L_DEMINUTUS
-      || liquescentia == L_DEMINUTUS_INITIO_DEBILIS)
+  if (liquescentia == L_DEMINUTUS || liquescentia == L_DEMINUTUS_INITIO_DEBILIS)
     {
       fprintf (f, "<figura>deminutus</figura>");
     }
@@ -351,7 +350,7 @@ xml_write_liquescentia (FILE * f, char liquescentia)
 }
 
 void
-xml_write_alteration (FILE * f, char type, char pitch, int clef, char *tab)
+xml_write_alteration (FILE *f, char type, char pitch, int clef, char *tab)
 {
   char step;
   int octave;
@@ -362,19 +361,19 @@ xml_write_alteration (FILE * f, char type, char pitch, int clef, char *tab)
     case GRE_FLAT:
       tab[pitch - 'a'] = FLAT;
       fprintf (f, "<flat><step>%c</step><octave>%d</octave></flat>",
-	       step, octave);
+               step, octave);
       break;
     case GRE_NATURAL:
       tab[pitch - 'a'] = NO_ALTERATION;
       fprintf (f,
-	       "<natural><step>%c</step><octave>%d</octave></natural>",
-	       step, octave);
+               "<natural><step>%c</step><octave>%d</octave></natural>",
+               step, octave);
       break;
     case GRE_SHARP:
       tab[pitch - 'a'] = NO_ALTERATION;
       fprintf (f,
-	       "<sharp><step>%c</step><octave>%d</octave></sharp>",
-	       step, octave);
+               "<sharp><step>%c</step><octave>%d</octave></sharp>",
+               step, octave);
       break;
     }
 }
@@ -422,7 +421,7 @@ xml_bar_to_str (char type)
     default:
       str = "";
       gregorio_message (_("unknown bar type, nothing will be done"),
-		      "xml_bar_to_str", ERROR, 0);
+                        "xml_bar_to_str", ERROR, 0);
       break;
     }
   return str;

@@ -18,27 +18,21 @@
 #include "config.h"
 #include <gregorio/plugin.h>
 
-static gregorio_score *skel_read_score (FILE *f)
+static gregorio_score *
+skel_read_score (FILE *f)
 {
   return NULL;
 }
 
-static void skel_write_score (FILE *f, gregorio_score *score)
+static void
+skel_write_score (FILE *f, gregorio_score *score)
 {
 }
 
-DECLARE_PLUGIN(skel)
+DECLARE_PLUGIN (skel)
 {
-  .id = "skel",
-  .name = "skeleton",
-  .description = "Gregorio plugin skeleton",
-  .author = "Jeremie Corbier <jeremie.corbier@resel.enst-bretagne.fr>",
-
-  .type = GREGORIO_PLUGIN_BOTH,
-
-  .file_extension = "txt",
-
-  .read = skel_read_score,
-  .write = skel_write_score
-};
-
+.id = "skel",.name = "skeleton",.description =
+    "Gregorio plugin skeleton",.author =
+    "Jeremie Corbier <jeremie.corbier@resel.enst-bretagne.fr>",.type =
+    GREGORIO_PLUGIN_BOTH,.file_extension = "txt",.read =
+    skel_read_score,.write = skel_write_score};

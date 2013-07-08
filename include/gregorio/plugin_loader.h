@@ -20,20 +20,21 @@
 #define PLUGIN_LOADER_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include <gregorio/plugin.h>
 
-typedef struct gregorio_plugin gregorio_plugin;
+  typedef struct gregorio_plugin gregorio_plugin;
 
-int gregorio_plugin_loader_init();
-int gregorio_plugin_loader_exit();
+  int gregorio_plugin_loader_init ();
+  int gregorio_plugin_loader_exit ();
 
-gregorio_plugin *gregorio_plugin_load(const char *path, const char *id);
-void gregorio_plugin_unload(gregorio_plugin *plugin);
+  gregorio_plugin *gregorio_plugin_load (const char *path, const char *id);
+  void gregorio_plugin_unload (gregorio_plugin * plugin);
 
-gregorio_plugin_info *gregorio_plugin_get_info(gregorio_plugin *plugin);
+  gregorio_plugin_info *gregorio_plugin_get_info (gregorio_plugin * plugin);
 
 #ifdef __cplusplus
 }

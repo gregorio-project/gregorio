@@ -1,20 +1,20 @@
-/* 
-Gregorio command line interface.
-Copyright (C) 2006-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+/*
+ * Gregorio command line interface. Copyright (C) 2006-2009 Elie Roux
+ * <elie.roux@telecom-bretagne.eu>
+ * 
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with 
+ * this program.  If not, see <http://www.gnu.org/licenses/>. 
+ */
 
 #include "config.h"
 #include <stdio.h>
@@ -99,8 +99,10 @@ get_output_filename (char *fbasename, char *extension)
   return output_filename;
 }
 
-/* the type definitions of the function to read a score from a file, and to write a score
-to a file. Necessary for the libtool stuff... */
+/*
+ * the type definitions of the function to read a score from a file, and to
+ * write a score to a file. Necessary for the libtool stuff... 
+ */
 
 static void
 print_licence ()
@@ -242,7 +244,7 @@ main (int argc, char **argv)
               break;
             }
           if (output_file)
-            {                   //means that stdout is defined
+            {                   // means that stdout is defined
               fprintf (stderr,
                        "warning: can't write to file and stdout, writing on stdout\n");
               break;
@@ -257,7 +259,7 @@ main (int argc, char **argv)
               break;
             }
           if (output_file)
-            {                   //means that stdout is defined
+            {                   // means that stdout is defined
               fprintf (stderr, "warning: option used two times: %c\n", c);
               break;
             }
@@ -356,7 +358,7 @@ main (int argc, char **argv)
               break;
             }
           if (input_file)
-            {                   //means that stdin is defined
+            {                   // means that stdin is defined
               fprintf (stderr, "warning: option used two times: %c\n", c);
               break;
             }
@@ -403,11 +405,11 @@ main (int argc, char **argv)
           break;
         }
       number_of_options++;
-    }                           //end of while
+    }                           // end of while
   if (optind == argc)
     {
       if (!input_file)
-        {                       //input not undefined (could be stdin)
+        {                       // input not undefined (could be stdin)
           fprintf (stderr, "error: no input file specified\n");
           print_usage (argv[0]);
           exit (-1);
@@ -444,10 +446,12 @@ main (int argc, char **argv)
       output_format = DEFAULT_OUTPUT_FORMAT;
     }
 
-// then we act...
+  // then we act...
 
 #if ALL_STATIC == 0
-  /* Load plugins */
+  /*
+   * Load plugins 
+   */
   output_plugin = gregorio_plugin_load (PLUGINDIR, output_format);
   if (output_plugin == NULL)
     {
@@ -540,7 +544,7 @@ main (int argc, char **argv)
         }
     }
 
-//we always have input_file or input_file_name
+  // we always have input_file or input_file_name
   if (!input_file)
     {
       input_file = fopen (input_file_name, "r");

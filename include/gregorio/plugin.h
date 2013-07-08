@@ -26,10 +26,11 @@
 #define GREGORIO_PLUGIN_OUTPUT  2
 #define GREGORIO_PLUGIN_BOTH    GREGORIO_PLUGIN_INPUT | GREGORIO_PLUGIN_OUTPUT
 
-typedef gregorio_score *(*gregorio_read_func)(FILE *);
-typedef void (*gregorio_write_func)(FILE *, gregorio_score *);
+typedef gregorio_score *(*gregorio_read_func) (FILE *);
+typedef void (*gregorio_write_func) (FILE *, gregorio_score *);
 
-typedef struct {
+typedef struct
+{
   char *id;
   char *name;
   char *author;
