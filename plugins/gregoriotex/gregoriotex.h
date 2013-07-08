@@ -147,14 +147,13 @@ typedef struct gregoriotex_status
 
 typedef struct gregorio_line
 {
-  unsigned char additional_top_space; // 0, 1, 2 or 3. it is the argument of
-  // grenewlinewithspaces in gregoriotex.tex
+  // 0, 1, 2 or 3. it is the argument of grenewlinewithspaces in gregoriotex.tex
+  unsigned char additional_top_space; 
   unsigned char additional_bottom_space;
-  unsigned char translation;    // O or 1, indicates if there is a translation
-                                // on
+  // O or 1, indicates if there is a translation on the line
+  unsigned char translation;    
   unsigned char ictus;          // idem
-  unsigned char abovelinestext; // idem
-  // the line
+  unsigned char abovelinestext;//idem
 } gregorio_line;
 
 void write_score (FILE *f, gregorio_score *score);
@@ -246,6 +245,8 @@ void gregoriotex_write_bridge_hepisemus (FILE *f, gregorio_glyph *current_glyph,
                                          char height);
 
 unsigned char gregoriotex_internal_style_to_gregoriotex (unsigned char style);
+
+gregorio_element * gregoriotex_syllable_is_clef_change(gregorio_syllable *syllable);
 
 // a global variable... could be good to remove it, but the structure of
 // gregorio

@@ -270,6 +270,43 @@ gregoriotex_is_last_of_line (gregorio_syllable *syllable)
   return 0;
 }
 
+/* A small helper for the following function */
+
+#define is_clef(x) (x == GRE_C_KEY_CHANGE || x == GRE_F_KEY_CHANGE || \
+                    x == GRE_C_KEY_CHANGE_FLATED || x == GRE_F_KEY_CHANGE_FLATED)
+
+/* This function is used in write_syllable, it detects if the syllable is like
+ * (c4), (::c4), (z0c4) or (z0::c4).
+ * It returns the gregorio_element of the clef change.
+ */
+gregorio_element *
+gregoriotex_syllable_is_clef_change (gregorio_syllable *syllable)
+{
+  if (!syllable || !syllable->elements || !syllable->elements[0])
+    {
+      return NULL;
+    }
+  gregorio_element *element=syllable->elements[0];
+  // we just detect the foud cases
+  if (element->type == GRE_CUSTO && element->next && (is_clef(element->next->type)) && !element->next->next)
+    {
+      return element->next;
+    }
+  if (element->type == GRE_BAR && element->next && (is_clef(element->next->type)) && !element->next->next)
+    {
+      return element->next;
+    }
+  if ((is_clef(element->type)) && !element->next)
+    {
+      return element;
+    }
+  if (element->type == GRE_CUSTO && element->next && element->next->type == GRE_BAR && element->next->next && (is_clef(element->next->next->type)) && !element->next->next->next)
+    {
+      return element->next->next;
+    }
+  return NULL;
+}
+
 void
 gregoriotex_write_syllable (FILE *f,
                             gregorio_syllable *syllable,
@@ -277,7 +314,7 @@ gregoriotex_write_syllable (FILE *f,
 {
   gregorio_element *current_element;
   gregorio_line *line;
-
+  gregorio_element *clef_change_element = NULL;
   if (!syllable)
     {
       return;
@@ -339,6 +376,17 @@ gregoriotex_write_syllable (FILE *f,
               *line_number = 0;
             }
           return;
+        }
+      /* This case is not simple: if the syllable contains a clef change, whether
+       * it is (c4) or (::c4) or (z0::c4), we put it in a discretionary.
+       * Warning: only these three cases will have the expected effect.
+       *
+       * So first we detect it:
+       */
+      clef_change_element = gregoriotex_syllable_is_clef_change(syllable);
+      if (clef_change_element)
+        {
+          /* In this case, the first thing to do is... */
         }
       if ((syllable->elements)[0]->type == GRE_BAR)
         {
