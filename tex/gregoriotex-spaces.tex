@@ -57,6 +57,10 @@
 % be close to \greendafterbarpenalty
 \xdef\grehyphenpenalty{-200}
 
+% broken penalty is the vertical penalty inserted after a break on a clef change
+% I'm not sure it should be set, but it might be useful...
+\xdef\grebrokenpenlalty{0}
+
 %% The following macros cancel some useless penalties, and reinstances them
 %% at the end of a score
 
@@ -65,10 +69,12 @@
   \xdef\greexhyphenpenaltysave{\the\exhyphenpenalty }%
   \xdef\gredoublehyphendemeritssave{\the\doublehyphendemerits }%
   \xdef\grefinalhyphendemeritssave{\the\finalhyphendemerits }%
+  \xdef\grebrokenpenlaltysave{\the\brokenpenalty }%
   \hyphenpenalty=\grehyphenpenalty\relax %
   \exhyphenpenalty=\grehyphenpenalty\relax %
   \doublehyphendemerits=0\relax %
   \finalhyphendemerits=0\relax %
+  \brokenpenalty=\grebrokenpenalty\relax %
 }
 
 \def\grerestorepenalties{%
@@ -76,6 +82,7 @@
   \exhyphenpenalty=\greexhyphenpenaltysave %
   \doublehyphendemerits=\gredoublehyphendemeritssave %
   \finalhyphendemerits=\grefinalhyphendemeritssave %
+  \brokenpenalty=\grebrokenpenaltysave %
 }
 
 %% These macro enable the tuning of linepenalty, tolerance, pretolerance
