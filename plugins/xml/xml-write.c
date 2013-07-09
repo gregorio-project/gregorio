@@ -476,10 +476,6 @@ xml_print_text (FILE *f, gregorio_character *text, char position)
       position_str = "";
       break;
     }
-  if (!text)
-    {
-      return;
-    }
   fprintf (f, "<text position=\"%s\">", position_str);
   gregorio_write_text (0, text, f,
                        (&xml_write_verb),
@@ -540,10 +536,7 @@ xml_write_syllable (FILE *f, gregorio_syllable *syllable,
       voice = 1;
     }
   fprintf (f, "<syllable>");
-  if (syllable->text)
-    {
-      xml_print_text (f, syllable->text, syllable->position);
-    }
+  xml_print_text (f, syllable->text, syllable->position);
   if (syllable->translation)
     {
       xml_print_translation (f, syllable->translation);

@@ -467,6 +467,14 @@ xml_read_bar (xmlNodePtr current_node, xmlDocPtr doc, char *type, char *signs)
             }
           if (!xmlStrcmp
               (xmlNodeListGetString (doc, current_children_node, 1),
+               (const xmlChar *) "divisio-finalis"))
+            {
+              *type = B_DIVISIO_FINALIS;
+              current_node = current_node->next;
+              continue;
+            }
+          if (!xmlStrcmp
+              (xmlNodeListGetString (doc, current_children_node, 1),
                (const xmlChar *) "dominican-bar-1"))
             {
               *type = B_DIVISIO_MINOR_D1;
@@ -612,7 +620,7 @@ xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
                    int number_of_voices, char alterations[][13], int clefs[])
 {
   char step;
-  char bar_signs;
+  char bar_signs = 0;
   int line;
   gregorio_element *current_element = NULL;
   if (!current_node) {return;}
@@ -667,6 +675,7 @@ xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
                   gregorio_reinitialize_alterations (alterations,
                                                      number_of_voices);
                 }
+              bar_signs = 0;
               current_node = current_node->next;
               continue;
             }
@@ -793,10 +802,8 @@ void
 xml_read_text (xmlNodePtr current_node, xmlDocPtr doc,
                gregorio_syllable *syllable)
 {
-
   char *temp;
   gregorio_character *current_character = NULL;
-
   temp = (char *) xmlGetProp (current_node, (const xmlChar *) "position");
   if (!temp)
     {
@@ -829,7 +836,6 @@ void
 xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
                       gregorio_character **current_character)
 {
-
   while (current_node)
     {
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "str"))
@@ -895,11 +901,12 @@ xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
           continue;
         }
       if (!xmlStrcmp
-          (current_node->name, (const xmlChar *) "special-character"))
+          (current_node->name, (const xmlChar *) "special-char"))
         {
           gregorio_begin_style (current_character, ST_SPECIAL_CHAR);
-          xml_read_styled_text (current_node->xmlChildrenNode,
-                                doc, current_character);
+          gregorio_add_text ((char *) xmlNodeListGetString
+                             (doc, current_node->xmlChildrenNode, 1),
+                             current_character);
           gregorio_end_style (current_character, ST_SPECIAL_CHAR);
           current_node = current_node->next;
           continue;
@@ -907,8 +914,9 @@ xml_read_styled_text (xmlNodePtr current_node, xmlDocPtr doc,
       if (!xmlStrcmp (current_node->name, (const xmlChar *) "verbatim"))
         {
           gregorio_begin_style (current_character, ST_VERBATIM);
-          xml_read_styled_text (current_node->xmlChildrenNode,
-                                doc, current_character);
+          gregorio_add_text ((char *) xmlNodeListGetString
+                             (doc, current_node->xmlChildrenNode, 1),
+                             current_character);
           gregorio_end_style (current_character, ST_VERBATIM);
           current_node = current_node->next;
           continue;
@@ -991,10 +999,9 @@ xml_read_element (xmlNodePtr current_node, xmlDocPtr doc,
                   gregorio_element **current_element,
                   char alterations[13], int *key)
 {
-  char step;
-  char bar_signs;
-  int line;
-
+  char step=0;
+  char bar_signs=0;
+  int line=0;
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "neumatic-bar"))
     {
       xml_read_bar (current_node->xmlChildrenNode, doc, &step, &bar_signs);
