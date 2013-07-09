@@ -615,7 +615,7 @@ xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
   char bar_signs;
   int line;
   gregorio_element *current_element = NULL;
-
+  if (!current_node) {return;}
   gregorio_add_syllable (current_syllable, number_of_voices, NULL, NULL, NULL,
                          0, NULL);
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "text"))
@@ -624,21 +624,21 @@ xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
       xml_read_text (current_node, doc, *current_syllable);
       current_node = current_node->next;
     }
-
+  if (!current_node) {return;}
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "translation"))
     {
       // it is possible (and even often the case) that we don't have text
       xml_read_translation (current_node, doc, *current_syllable);
       current_node = current_node->next;
     }
-
+  if (!current_node) {return;}
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "abovelinestext"))
     {
       (*current_syllable)->abovelinestext = (char *) xmlNodeListGetString
         (doc, current_node->xmlChildrenNode, 1);
       current_node = current_node->next;
     }
-
+  if (!current_node) {return;}
   // warning : we cannot do something like <syllable><bar>..</bar><neume>..
   // TODO : implement it (not very difficult)
   if (xmlStrcmp (current_node->name, (const xmlChar *) "neume"))
