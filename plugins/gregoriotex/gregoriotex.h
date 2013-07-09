@@ -89,12 +89,14 @@
 // macro that we will use to determine if we need a short bar or not
 
 // we define d to be short instead of long... may induce errors, but fixes some 
+// 
 // too
 #define is_short(pitch, glyph, element) gregoriotex_is_long(pitch, glyph, element) == 0
 #define is_on_a_line(pitch) (pitch=='b' || pitch=='d' ||pitch=='f'||pitch=='h'||pitch=='j'||pitch=='l')
 #define is_between_lines(pitch) (pitch=='a' || pitch=='c' ||pitch=='e'||pitch=='g'||pitch=='i'||pitch=='k'||pitch=='m')
 
 // Here we define a function that will determine the number of the liquescentia 
+// 
 // that we will add to the glyph number. There are several types as all glyphs
 // can't have all liquescentiae. Let's first define the different types:
 
@@ -135,11 +137,11 @@
 typedef struct gregoriotex_status
 {
   unsigned char bottom_line;    // 1 if the current_glyph will have an
-                                // additional line under or not (useful to
-                                // determine the length of the bar in case of a 
-                                // flexa starting at d
+  // additional line under or not (useful to
+  // determine the length of the bar in case of a 
+  // flexa starting at d
   unsigned char to_modify_h_episemus; // to link two hepisemus that are at the
-                                      // same pitch
+  // same pitch
   gregorio_note *to_modify_note;
 } gregoriotex_status;
 
@@ -147,20 +149,22 @@ typedef struct gregoriotex_status
 
 typedef struct gregorio_line
 {
-  // 0, 1, 2 or 3. it is the argument of grenewlinewithspaces in gregoriotex.tex
-  unsigned char additional_top_space; 
+  // 0, 1, 2 or 3. it is the argument of grenewlinewithspaces in
+  // gregoriotex.tex
+  unsigned char additional_top_space;
   unsigned char additional_bottom_space;
   // O or 1, indicates if there is a translation on the line
-  unsigned char translation;    
+  unsigned char translation;
   unsigned char ictus;          // idem
-  unsigned char abovelinestext;//idem
+  unsigned char abovelinestext; // idem
 } gregorio_line;
 
 void write_score (FILE *f, gregorio_score *score);
 void gregoriotex_write_voice_info (FILE *f, gregorio_voice_info *voice_info);
 void gregoriotex_write_syllable (FILE *f, gregorio_syllable *syllable,
                                  char *first_syllable,
-                                 unsigned char *line_number);
+                                 unsigned char *line_number,
+                                 unsigned char first_of_disc);
 void gregoriotex_write_text (FILE *f, gregorio_character *first_character,
                              char *first_syllable);
 unsigned char gregoriotex_fix_style (gregorio_character *first_character);
@@ -246,7 +250,10 @@ void gregoriotex_write_bridge_hepisemus (FILE *f, gregorio_glyph *current_glyph,
 
 unsigned char gregoriotex_internal_style_to_gregoriotex (unsigned char style);
 
-gregorio_element * gregoriotex_syllable_is_clef_change(gregorio_syllable *syllable);
+void gregoriotex_print_change_line_clef (FILE *f, gregorio_element *current_element);
+
+gregorio_element *gregoriotex_syllable_is_clef_change (gregorio_syllable
+                                                       *syllable);
 
 // a global variable... could be good to remove it, but the structure of
 // gregorio

@@ -59,6 +59,7 @@ gregoriotex_write_score (FILE *f, gregorio_score *score)
   gregorio_character *first_text;
   // a char that will contain 1 if it is the first syllable and 0 if not. It is 
   // 
+  // 
   // for the initial.
   char first_syllable = 0;
   char clef_letter;
@@ -210,7 +211,8 @@ gregoriotex_write_score (FILE *f, gregorio_score *score)
   current_syllable = score->first_syllable;
   while (current_syllable)
     {
-      gregoriotex_write_syllable (f, current_syllable, &first_syllable, &line);
+      gregoriotex_write_syllable (f, current_syllable, &first_syllable, &line,
+                                  0);
       current_syllable = current_syllable->next_syllable;
     }
   fprintf (f, "\\endgregorioscore %%\n\\endinput %%\n");
@@ -270,14 +272,17 @@ gregoriotex_is_last_of_line (gregorio_syllable *syllable)
   return 0;
 }
 
-/* A small helper for the following function */
+/*
+ * A small helper for the following function 
+ */
 
 #define is_clef(x) (x == GRE_C_KEY_CHANGE || x == GRE_F_KEY_CHANGE || \
                     x == GRE_C_KEY_CHANGE_FLATED || x == GRE_F_KEY_CHANGE_FLATED)
 
-/* This function is used in write_syllable, it detects if the syllable is like
- * (c4), (::c4), (z0c4) or (z0::c4).
- * It returns the gregorio_element of the clef change.
+/*
+ * This function is used in write_syllable, it detects if the syllable is like
+ * (c4), (::c4), (z0c4) or (z0::c4). It returns the gregorio_element of the
+ * clef change. 
  */
 gregorio_element *
 gregoriotex_syllable_is_clef_change (gregorio_syllable *syllable)
@@ -286,31 +291,94 @@ gregoriotex_syllable_is_clef_change (gregorio_syllable *syllable)
     {
       return NULL;
     }
-  gregorio_element *element=syllable->elements[0];
+  gregorio_element *element = syllable->elements[0];
   // we just detect the foud cases
-  if (element->type == GRE_CUSTO && element->next && (is_clef(element->next->type)) && !element->next->next)
+  if (element->type == GRE_CUSTO && element->next
+      && (is_clef (element->next->type)) && !element->next->next)
     {
       return element->next;
     }
-  if (element->type == GRE_BAR && element->next && (is_clef(element->next->type)) && !element->next->next)
+  if (element->type == GRE_BAR && element->next
+      && (is_clef (element->next->type)) && !element->next->next)
     {
       return element->next;
     }
-  if ((is_clef(element->type)) && !element->next)
+  if ((is_clef (element->type)) && !element->next)
     {
       return element;
     }
-  if (element->type == GRE_CUSTO && element->next && element->next->type == GRE_BAR && element->next->next && (is_clef(element->next->next->type)) && !element->next->next->next)
+  if (element->type == GRE_CUSTO && element->next
+      && element->next->type == GRE_BAR && element->next->next
+      && (is_clef (element->next->next->type)) && !element->next->next->next)
     {
       return element->next->next;
     }
   return NULL;
 }
 
+/*
+ * Function printing the line clef change (only updating \localleftbox, not
+ * printing the key). Useful for \grediscretionary.
+ * TODO: I'm not sure about the third argument, but that's how it's called in
+ * \grechangeclef.
+ */
+void
+gregoriotex_print_change_line_clef (FILE *f, gregorio_element *current_element)
+{
+  if (current_element->type == GRE_C_KEY_CHANGE)
+    {
+      if (current_element->additional_infos == FLAT_KEY)
+        {
+          fprintf (f, "\\gresetlinesclef{c}{%d}{1}{%c}%%\n",
+                   current_element->element_type - 48,
+                   gregoriotex_clef_flat_height ('c',
+                                                 current_element->element_type -
+                                                 48));
+        }
+      else
+        {
+          fprintf (f, "\\gresetlinesclef{c}{%d}{1}{%c}%%\n",
+                   current_element->element_type - 48, NO_KEY_FLAT);
+        }
+    }
+  if (current_element->type == GRE_F_KEY_CHANGE)
+    {
+      if (current_element->additional_infos == FLAT_KEY)
+        {
+          // the third argument is 0 or 1 according to the need for a
+          // space before the clef
+          fprintf (f, "\\gresetlinesclef{f}{%d}{1}{%c}%%\n",
+                   current_element->element_type - 48,
+                   gregoriotex_clef_flat_height ('f',
+                                                 current_element->element_type
+                                                 - 48));
+        }
+      else
+        {
+          fprintf (f, "\\gresetlinesclef{f}{%d}{1}{%c}%%\n",
+                   current_element->element_type - 48, NO_KEY_FLAT);
+        }
+    }
+}
+
+/*
+ * Arguments are relatively obvious. The most obscure is certainly first_of_disc
+ * which is 0 all the time, except in the case of a "clef change syllable". In
+ * this case we make a \grediscretionary with two arguments: 
+ *   1.what should be printed if the syllable is the last of its line (which
+ *   basically means everything but clefs and custos), and 
+ *   2. what should be printed if it's in a middle of a line (which means
+ *   everything)
+ * So the first_of_disc argument is:
+ *   0 if we don't know (general case)
+ *   1 in case of the first argument of a \grediscretionary
+ *   2 if we are in the second argument (necessary in order to avoid infinite loops)
+ */
 void
 gregoriotex_write_syllable (FILE *f,
                             gregorio_syllable *syllable,
-                            char *first_syllable, unsigned char *line_number)
+                            char *first_syllable, unsigned char *line_number,
+                            unsigned char first_of_disc)
 {
   gregorio_element *current_element;
   gregorio_line *line;
@@ -377,16 +445,30 @@ gregoriotex_write_syllable (FILE *f,
             }
           return;
         }
-      /* This case is not simple: if the syllable contains a clef change, whether
-       * it is (c4) or (::c4) or (z0::c4), we put it in a discretionary.
-       * Warning: only these three cases will have the expected effect.
-       *
-       * So first we detect it:
+      /*
+       * This case is not simple: if the syllable contains a clef change,
+       * whether it is (c4) or (::c4) or (z0::c4), we put it in a
+       * discretionary. Warning: only these three cases will have the expected
+       * effect. So first we detect it: 
        */
-      clef_change_element = gregoriotex_syllable_is_clef_change(syllable);
-      if (clef_change_element)
+      if (first_of_disc == 0) /* to avoid infinite loops */
         {
-          /* In this case, the first thing to do is... */
+          clef_change_element = gregoriotex_syllable_is_clef_change (syllable);
+          if (clef_change_element)
+            {
+              /*
+               * In this case, the first thing to do is to change the line clef 
+               */
+              gregoriotex_print_change_line_clef (f, clef_change_element);
+              fprintf (f, "\\grediscretionary{%%\n");
+              gregoriotex_write_syllable (f, syllable, first_syllable, line_number,
+                                          1);
+              fprintf (f, "}{%%\n");
+              gregoriotex_write_syllable (f, syllable, first_syllable, line_number,
+                                          2);
+              fprintf (f, "}%%\n");
+              return;
+            }
         }
       if ((syllable->elements)[0]->type == GRE_BAR)
         {
@@ -523,7 +605,10 @@ gregoriotex_write_syllable (FILE *f,
           current_element = current_element->next;
           continue;
         }
-      if (current_element->type == GRE_C_KEY_CHANGE)
+      /*
+       * We don't print clef changes at the end of a line 
+       */
+      if (current_element->type == GRE_C_KEY_CHANGE && first_of_disc != 1)
         {
           if (current_element->previous &&
               current_element->previous->type == GRE_BAR)
@@ -535,8 +620,8 @@ gregoriotex_write_syllable (FILE *f,
                   fprintf (f, "\\grechangeclef{c}{%d}{0}{%c}%%\n",
                            current_element->element_type - 48,
                            gregoriotex_clef_flat_height ('c',
-                                                         current_element->element_type
-                                                         - 48));
+                                                         current_element->
+                                                         element_type - 48));
                 }
               else
                 {
@@ -553,8 +638,8 @@ gregoriotex_write_syllable (FILE *f,
                   fprintf (f, "\\grechangeclef{c}{%d}{1}{%c}%%\n",
                            current_element->element_type - 48,
                            gregoriotex_clef_flat_height ('c',
-                                                         current_element->element_type
-                                                         - 48));
+                                                         current_element->
+                                                         element_type - 48));
                 }
               else
                 {
@@ -565,7 +650,10 @@ gregoriotex_write_syllable (FILE *f,
           current_element = current_element->next;
           continue;
         }
-      if (current_element->type == GRE_F_KEY_CHANGE)
+      /*
+       * We don't print clef changes at the end of a line 
+       */
+      if (current_element->type == GRE_F_KEY_CHANGE && first_of_disc != 1)
         {
           if (current_element->previous &&
               current_element->previous->type == GRE_BAR)
@@ -577,8 +665,8 @@ gregoriotex_write_syllable (FILE *f,
                   fprintf (f, "\\grechangeclef{f}{%d}{0}{%c}%%\n",
                            current_element->element_type - 48,
                            gregoriotex_clef_flat_height ('f',
-                                                         current_element->element_type
-                                                         - 48));
+                                                         current_element->
+                                                         element_type - 48));
                 }
               else
                 {
@@ -595,8 +683,8 @@ gregoriotex_write_syllable (FILE *f,
                   fprintf (f, "\\grechangeclef{f}{%d}{1}{%c}%%\n",
                            current_element->element_type - 48,
                            gregoriotex_clef_flat_height ('f',
-                                                         current_element->element_type
-                                                         - 48));
+                                                         current_element->
+                                                         element_type - 48));
                 }
               else
                 {
@@ -607,7 +695,10 @@ gregoriotex_write_syllable (FILE *f,
           current_element = current_element->next;
           continue;
         }
-      if (current_element->type == GRE_CUSTO)
+      /*
+       * We don't print custos before a bar at the end of a line 
+       */
+      if (current_element->type == GRE_CUSTO && first_of_disc != 1)
         {
           // we also print an unbreakable larger space before the custo
           fprintf (f, "\\greendofelement{1}{1}%%\n\\grecusto{%c}%%\n",
@@ -950,6 +1041,7 @@ gtex_write_end (FILE *f, unsigned char style)
 }
 
 // / a specific function for writing ends of the two first parts of the text of 
+// 
 // 
 // the next syllable
 void
@@ -1313,6 +1405,7 @@ gregoriotex_write_next_first_text (FILE *f,
 
 // here we absolutely need to pass the syllable as an argument, because we will 
 // 
+// 
 // need the next note, that may be contained in the next syllable
 
 void
@@ -1598,7 +1691,9 @@ gregoriotex_write_glyph (FILE *f,
   current_note = glyph->first_note;
   // first we check if it is really a unique glyph in gregoriotex... the glyphs 
   // 
+  // 
   // that are not a unique glyph are : trigonus and pucta inclinata in general, 
+  // 
   // 
   // and torculus resupinus and torculus resupinus flexus, so we first divide
   // the glyph into real gregoriotex glyphs
@@ -2289,6 +2384,7 @@ gregoriotex_write_punctum_mora (FILE *f,
 
   // when the punctum mora is on a note on a line, and the prior note is on the 
   // 
+  // 
   // space immediately above, the dot is placed on the space below the line
   // instead
   if (current_note->previous
@@ -2323,6 +2419,7 @@ gregoriotex_write_punctum_mora (FILE *f,
   // (or three depending on something) pitches higher than the current note.
   // You'll all have understood, this case is quite rare... but when it
   // appears, we pass 1 as a second argument of \punctummora so that it removes 
+  // 
   // 
   // the space introduced by the punctummora.
   if (glyph->glyph_type == G_PODATUS && glyph->next
@@ -3119,6 +3216,7 @@ gregoriotex_find_sign_number (gregorio_glyph *current_glyph,
           // two notes of a glyph. We consider current_note to be the second
           // note. in the case of the toruculus resupinus, it are the notes two 
           // 
+          // 
           // and three. Warning, this MUST NOT be called if the porrectus is
           // deminutus.
           if (!current_note->next)
@@ -3160,7 +3258,9 @@ gregoriotex_find_sign_number (gregorio_glyph *current_glyph,
         case 3:
           // you might think number_note_before_last_note more appropriate, but 
           // 
+          // 
           // in the current fonts the third note of the torculus resupinus is v 
+          // 
           // 
           // aligned with the last note
           number_last_note (18);
