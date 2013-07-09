@@ -91,7 +91,13 @@
 % the macros to be modified by the users, 
 \def\grelooseness{\looseness}
 \def\gretolerance{\tolerance}
-\def\grepretolerance{\pretolerance}
+% Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
+% see http://tug.org/pipermail/luatex/2013-July/004516.html
+\ifnum\the\luatexversion < 78\relax %
+  \global\def\grepretolerance{-1}
+\else %
+  \global\def\grepretolerance{\pretolerance}
+\fi %
 \def\greemergencystretch{\emergencystretch}
 \def\grewidowpenalty{\widowpenalty}
 \def\greclubpenalty{\clubpenalty}

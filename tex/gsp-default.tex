@@ -42,10 +42,20 @@
 %% Then, some fine tunings
 \def\grelooseness{\looseness}
 \def\gretolerance{9000}
-\def\grepretolerance{500}
+% Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
+% see http://tug.org/pipermail/luatex/2013-July/004516.html
+\ifnum\the\luatexversion < 78\relax %
+  \global\def\grepretolerance{-1}
+\else %
+  \global\def\grepretolerance{\pretolerance}
+\fi %
 \def\greemergencystretch{\emergencystretch}
-\def\grewidowpenalty{9999}
-\def\greclubpenalty{9999}
+% By default, we don't care if a line of score is alone on the page,
+% if you think it is bad, you can modify the two following values. Assigning
+% 10000 to them will prevent all orphaned lines (this will certainly improve
+% some spacings a lot).
+\def\grewidowpenalty{0}
+\def\greclubpenalty{0}
 
 %% And finally, all the spacings:
 

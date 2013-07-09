@@ -32,8 +32,6 @@
 % To remedy that, we define \grehskip to be \hskip outside a discretionary, and
 % \kern inside a discretionary. This is what these macros do:
 
-
-
 \def\grefalsepenalty#1{}
 \def\gretruepenalty#1{\penalty#1}
 
@@ -215,28 +213,6 @@
   \fi %
   \gretypekey{#1}{#2}{1}{0}{#4}%
   \grehskip\greclefchangespace %
-  \relax%
-}
-
-% This macro should be used if the clef is alone in a syllable. In this case,
-% we put it in a discretionary.
-\def\grechangeclefdis#1#2#3#4{%
-  % it makes no sense to change the clef when there is no clef...
-  \grenormalclef %
-  \grecalculateclefnum{#1}{#2}{#4}%
-  \greclefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
-  \multiply\greclefchangespace by \the\grefactor %
-  \gresetlinesclef{#1}{#2}{1}{#4}%
-  \grediscretionary{}{%
-    \ifnum#3=1\relax %
-      \grehskip\greclefchangespace %
-    \else %
-     % here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
-      \grehskip -\grespacearoundclefbars %
-    \fi %
-    \gretypekey{#1}{#2}{1}{0}{#4}%
-    \grehskip\greclefchangespace %
-  }{}%
   \relax%
 }
 
