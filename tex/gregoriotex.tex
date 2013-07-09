@@ -969,7 +969,9 @@
 
 % same as above, but for the score. For now it is the same behaviour.
 \def\grelastofscore{%
-  \grelocalleftbox{}%
+%  \grelocalleftbox{}% For an unknown reason, if I uncomment this line, the
+%  blank line removing algorithm (in lua) will let some blank space after the
+%  last line... (see bug #20953)
   \greblockcustos %
   \global\grelastoflinecount=1\relax%
   \relax%
