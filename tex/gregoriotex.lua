@@ -69,10 +69,10 @@ local function process (h, groupcode, glyphes)
     local currentshift = 0
     -- we explore the lines
     for a in traverse_id(hlist, h) do
-        if has_attribute(a.list, gregorioattr) then
+        if has_attribute(a, gregorioattr) then
             -- the next two lines are to remove the dumb lines
             if count(hlist, a.list) <= 2 then
-                remove(h, a)
+                h = remove(h, a)
             else
 			          for b in traverse_id(hlist, a.list) do
 		          		if has_attribute(b, gregorioattr, potentialdashvalue) then
@@ -109,7 +109,7 @@ local function process (h, groupcode, glyphes)
             currentshift=0
         end
     end
-    return true
+    return h
 end 
 
 -- In gregoriotex, hyphenation is made by the process function, so TeX hyphenation

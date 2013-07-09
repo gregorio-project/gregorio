@@ -839,16 +839,15 @@
   \global\grelastoflinecount=0\relax %
   \global\greblockcusto=0\relax %
   \grelocalleftbox{}%
-  \ifnum\keeprightbox=0 %
+  \ifnum\keeprightbox=0\relax %
     \grelocalrightbox{}%
   \fi %
   \hfil %
-  \greunsetattribute %
   \par %
-  \ifnum\keeprightbox=1 %
-    \grelocalrightbox{}%
-    \global\keeprightbox=0 %
+  \ifnum\keeprightbox=1\relax %
+    \global\keeprightbox=0\relax %
   \fi%
+  \greunsetattribute %
   % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
   \grelocalleftbox{}%
   \grelocalrightbox{}%
