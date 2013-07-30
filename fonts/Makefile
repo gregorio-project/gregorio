@@ -20,7 +20,7 @@ SRCDIR = $(TEXMFROOT)/source/$(FORMAT)/$(NAME)
 FNTSRCDIR = $(TEXMFROOT)/fonts/source/$(NAME)
 
 # a default value
-TEXMFROOT = `kpsewhich -var-value TEXMFLOCAL`
+TEXMFROOT = `kpsewhich -var-value TEXMFHOME`
 
 # installation rules
 INSTALL_TEXFILES = @mkdir -p $(TEXDIR) && cp $(TEXFILES) $(TEXDIR)
