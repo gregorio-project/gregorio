@@ -2187,11 +2187,9 @@ gregoriotex_write_choral_sign (FILE *f,
               return;
             }
         }
-      else
-        {
-          fprintf (f, "\\grelowchoralsign{%c}{%s}{0}%%\n",
-                   current_note->pitch, current_note->choral_sign);
-        }
+
+      fprintf (f, "\\grelowchoralsign{%c}{%s}{0}%%\n",
+               current_note->pitch, current_note->choral_sign);
     }
 }
 
