@@ -25,9 +25,9 @@ local internalversion = 20130616
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
-    version            = 2.3,
+    version            = 2.4,
     greinternalversion = internalversion,
-    date               = "2013/05/21",
+    date               = "2013/08/26",
     description        = "GregorioTeX module.",
     author             = "Elie Roux",
     copyright          = "Elie Roux",
@@ -72,7 +72,7 @@ local function process (h, groupcode, glyphes)
         if has_attribute(a, gregorioattr) then
             -- the next two lines are to remove the dumb lines
             if count(hlist, a.list) <= 2 then
-                h = remove(h, a)
+                h, a = remove(h, a)
             else
 			          for b in traverse_id(hlist, a.list) do
 		          		if has_attribute(b, gregorioattr, potentialdashvalue) then
@@ -109,7 +109,8 @@ local function process (h, groupcode, glyphes)
             currentshift=0
         end
     end
-    return h
+    -- due to special cases, we don't return h here (see comments in bug #20974)
+    return true
 end 
 
 -- In gregoriotex, hyphenation is made by the process function, so TeX hyphenation
