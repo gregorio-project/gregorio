@@ -334,6 +334,12 @@ semicolon. */
   BEGIN(score);
 	return ALT_END;
 	}
+<score>\[\/]  {
+	return TRANSLATION_CENTER_END;
+	}
+<score>\[\/  {
+	return TRANSLATION_BEGINNING_WITH_CENTER;
+	}
 <score>\[  {
 	return TRANSLATION_BEGINNING;
 	}

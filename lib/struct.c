@@ -792,7 +792,7 @@ gregorio_end_style (gregorio_character ** current_character,
 void
 gregorio_add_syllable (gregorio_syllable ** current_syllable,
 			  int number_of_voices, gregorio_element * elements[],
-			  gregorio_character * first_character, gregorio_character *first_translation_character, char position, char *abovelinestext)
+			  gregorio_character * first_character, gregorio_character *first_translation_character, char position, char *abovelinestext, unsigned char translation_type)
 {
   gregorio_syllable *next;
   gregorio_element **tab;
@@ -815,6 +815,7 @@ gregorio_add_syllable (gregorio_syllable ** current_syllable,
   next->position = position;
   next->text = first_character;
   next->translation = first_translation_character;
+  next->translation_type = translation_type;
   next->abovelinestext = abovelinestext;
   next->next_syllable = NULL;
   next->previous_syllable = *current_syllable;

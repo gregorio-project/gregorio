@@ -49,4 +49,6 @@ void dump_write_characters (FILE *f, gregorio_character *current_character);
 
 const char *dump_style_to_string (unsigned char style);
 
+const char *dump_translation_type_to_string (unsigned char translation_type);
+
 #endif

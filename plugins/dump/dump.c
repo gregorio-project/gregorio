@@ -225,6 +225,14 @@ dump_write_score (FILE *f, gregorio_score *score)
             }
           dump_write_characters (f, syllable->text);
         }
+      if ((syllable->translation && syllable->translation_type != TR_WITH_CENTER_END) || syllable->translation_type == TR_WITH_CENTER_END)
+        {
+          fprintf (f, "\n  Translation type             %s", dump_translation_type_to_string (syllable->translation_type));
+          if (syllable->translation_type == TR_WITH_CENTER_END) 
+            {
+              fprintf(f, "\n");
+            }
+        }
       if (syllable->translation)
         {
           fprintf (f, "\n  Translation\n");
@@ -436,6 +444,26 @@ dump_write_score (FILE *f, gregorio_score *score)
       fprintf (f,
                "=====================================================================\n");
       syllable = syllable->next_syllable;
+    }
+}
+
+const char *
+dump_translation_type_to_string (unsigned char translation_type)
+{
+  switch (translation_type)
+    {
+    case TR_NORMAL:
+      return "TR_NORMAL";
+      break;
+    case TR_WITH_CENTER_BEGINNING:
+      return "TR_WITH_CENTER_BEGINNING";
+      break;
+    case TR_WITH_CENTER_END:
+      return "TR_WITH_CENTER_END";
+      break;
+    default:
+      return "";
+      break;
     }
 }
 
