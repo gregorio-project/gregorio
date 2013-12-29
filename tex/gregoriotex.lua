@@ -37,12 +37,17 @@ local err, warn, info, log = luatexbase.provides_module({
 local hlist = node.id('hlist')
 local vlist = node.id('vlist')
 local glyph = node.id('glyph')
-local gregorioattr = luatexbase.attributes['gregorioattr']
 
 local hyphen = tex.defaulthyphenchar or 45 
-local potentialdashvalue=1
-local nopotentialdashvalue=2
-local ictus=4
+
+local gregorioattr         = luatexbase.attributes['gregorioattr']
+local potentialdashvalue   = 1
+local nopotentialdashvalue = 2
+local ictus                = 4
+
+local gregoriocenterattr = luatexbase.attributes['gregoriocenterattr']
+local startcenter = 1
+local endcenter   = 2
 
 -- node factory
 local tmpnode = node.new(glyph, 0)
@@ -59,14 +64,37 @@ local function getdashnnode()
   return dashnode,hyphnode
 end
 
+local function center_translation(startnode, endnode, ratio, sign, order)
+    -- total width between beginning the two centering points
+    local total_width = node.dimensions(ratio, sign, order, startnode, endnode)
+    -- definition of translation with a beginning is:
+    --  \hbox to 0pt{
+    --    \kern 0pt
+    --    \vbox to 0pt{
+    --      \vss\hbox to 0pt{
+    --        translation\hss
+    --      }
+    --    }
+    --    \kern 0pt
+    --  }
+    -- 
+    -- hence translation width is:
+    local trans_width = nodes.dimensions(startnode.list.next.list.next.list)
+    -- now we must transform the kern 0pt into kern Xpt and kern -Xpt where X is:
+    local X = (total_width - trans_width) / 2
+    startnode.list.kern = X
+    startnode.list.next.next.kern = -X
+end
+
 -- in each function we check if we really are inside a score, 
 -- which we can see with the gregorioattr being set or not
 local function process (h, groupcode, glyphes)
     -- TODO: to be changed according to the font
-    local lastseennode=nil
-    local adddash=false
-    local currentfont = 0
-    local currentshift = 0
+    local lastseennode    = nil
+    local adddash         = false
+    local currentfont     = 0
+    local currentshift    = 0
+    local centerstartnode = nil
     -- we explore the lines
     for line in traverse_id(hlist, h) do
         if has_attribute(line, gregorioattr) then
@@ -74,8 +102,13 @@ local function process (h, groupcode, glyphes)
             if count(hlist, line.list) <= 2 then
                 h, line = remove(h, line)
             else
+                centerstartnode = nil
                 for n in traverse_id(hlist, line.list) do
-                  if has_attribute(n, gregorioattr, potentialdashvalue) then
+                  if has_attribute(n, gregoriocenterattr, startcenter) then
+                    centerstartnode = n
+                  elseif has_attribute(n, gregoriocenterattr, endcenter) then
+                    center_translation(centerstartnode, n, line.glue_set, line.glue_sign, line.glue_order)
+                  elseif has_attribute(n, gregorioattr, potentialdashvalue) then
                     adddash=true
                     lastseennode=n
                     currentfont = 0
@@ -175,7 +208,7 @@ local function check_version(greinternalversion)
 end
 
 gregoriotex.include_gabc_score = include_gabc_score
-gregoriotex.compile_gabc = compile_gabc
-gregoriotex.atScoreEnd = atScoreEnd
-gregoriotex.atScoreBeggining = atScoreBeggining
-gregoriotex.check_version = check_version
+gregoriotex.compile_gabc       = compile_gabc
+gregoriotex.atScoreEnd         = atScoreEnd
+gregoriotex.atScoreBeggining   = atScoreBeggining
+gregoriotex.check_version      = check_version

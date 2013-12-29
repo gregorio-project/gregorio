@@ -52,6 +52,9 @@
 \newluatexattribute\gregorioattr
 \def\greunsetattribute{\unsetluatexattribute{\gregorioattr}}
 
+% an attribute used for translation centering
+\newluatexattribute\gregoriocenterattr
+
 \RequireLuaModule{gregoriotex}
 
 % The general version of GregorioTeX (we mean by that the "API", the way
@@ -347,6 +350,20 @@
 
 \def\grewritetranslation#1{%
   \raise\grespacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
+  \relax %
+}
+
+\def\grewritetranslationwithcenterbeginning#1{%
+  \gregoriocenterattr=1\relax %
+  \raise\grespacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}\kern 0pt}%
+  \unsetluatexattribute{\gregoriocenterattr}%
+  \relax %
+}
+
+\def\gretranslationcenterend{%
+  \gregoriocenterattr=2\relax %
+  \raise\grespacebeneathtext\hbox to 0pt{}%
+  \unsetluatexattribute{\gregoriocenterattr}%
   \relax %
 }
 
