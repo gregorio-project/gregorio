@@ -539,9 +539,19 @@ gregoriotex_write_syllable (FILE *f,
     }
   if (syllable->translation)
     {
-      fprintf (f, "%%\n\\grewritetranslation{");
+      if (syllable->translation_type == TR_WITH_CENTER_BEGINNING)
+        {
+          fprintf (f, "%%\n\\grewritetranslationwithcenterbeginning{");
+        } else {
+          fprintf (f, "%%\n\\grewritetranslation{");
+        }
       gregoriotex_write_translation (f, syllable->translation);
       fprintf (f, "}%%\n");
+    }
+  if (syllable->translation_type)
+    {
+      if (syllable->translation_type == TR_WITH_CENTER_END)
+      fprintf (f, "%%\n\\gretranslationcenterend %%\n");
     }
   if (syllable->abovelinestext)
     {
