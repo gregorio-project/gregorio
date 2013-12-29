@@ -27,7 +27,7 @@ local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
     version            = 2.4,
     greinternalversion = internalversion,
-    date               = "2013/08/26",
+    date               = "2013/12/29",
     description        = "GregorioTeX module.",
     author             = "Elie Roux",
     copyright          = "Elie Roux",
@@ -68,43 +68,43 @@ local function process (h, groupcode, glyphes)
     local currentfont = 0
     local currentshift = 0
     -- we explore the lines
-    for a in traverse_id(hlist, h) do
-        if has_attribute(a, gregorioattr) then
+    for line in traverse_id(hlist, h) do
+        if has_attribute(line, gregorioattr) then
             -- the next two lines are to remove the dumb lines
-            if count(hlist, a.list) <= 2 then
-                h, a = remove(h, a)
+            if count(hlist, line.list) <= 2 then
+                h, line = remove(h, line)
             else
-			          for b in traverse_id(hlist, a.list) do
-		          		if has_attribute(b, gregorioattr, potentialdashvalue) then
-			          		adddash=true
-		          			lastseennode=b
-		          			currentfont = 0
-		          			-- we traverse the list, to detect the font to use,
-		          			-- and also not to add an hyphen if there is already one
-	          				for g in node.traverse_id(glyph, b.list) do
-	          				    if currentfont == 0 then
-	          				        currentfont = g.font
-	          					end
-	          					if g.char == hyphen or g.char == 45 then
-	          					    adddash = false
-	          					end
-	          				end
-		          			if currentshift == 0 then
-		          				currentshift = b.shift
-		          			end
-		          		-- if we encounter a text that doesn't need a dash, we acknowledge it
-		          		elseif has_attribute(b, gregorioattr, nopotentialdashvalue) then
-		          			adddash=false
-		          		end
-		          	end
-		          	if adddash==true then
-		          		local dashnode, hyphnode = getdashnnode()
-		          		dashnode.shift = currentshift
-		          		hyphnode.font = currentfont
-		          		insert_after(a.list, lastseennode, dashnode)
-		          		addash=false
-		          	end
-		        end
+                for n in traverse_id(hlist, line.list) do
+                  if has_attribute(n, gregorioattr, potentialdashvalue) then
+                    adddash=true
+                    lastseennode=n
+                    currentfont = 0
+                    -- we traverse the list, to detect the font to use,
+                    -- and also not to add an hyphen if there is already one
+                    for g in node.traverse_id(glyph, n.list) do
+                        if currentfont == 0 then
+                            currentfont = g.font
+                      end
+                      if g.char == hyphen or g.char == 45 then
+                          adddash = false
+                      end
+                    end
+                    if currentshift == 0 then
+                      currentshift = n.shift
+                    end
+                  -- if we encounter a text that doesn't need a dash, we acknowledge it
+                  elseif has_attribute(n, gregorioattr, nopotentialdashvalue) then
+                    adddash=false
+                  end
+                end
+                if adddash==true then
+                  local dashnode, hyphnode = getdashnnode()
+                  dashnode.shift = currentshift
+                  hyphnode.font = currentfont
+                  insert_after(line.list, lastseennode, dashnode)
+                  addash=false
+                end
+            end
             -- we reinitialize the shift value, because it may change according to the line
             currentshift=0
         end
