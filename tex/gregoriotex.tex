@@ -360,7 +360,14 @@
   \relax %
 }
 
+\xdef\gremustdotranslationcenterend{0}
+
 \def\gretranslationcenterend{%
+  \xdef\gremustdotranslationcenterend{1}%
+  \relax %
+}
+
+\def\gredotranslationcenterend{%
   \gregoriocenterattr=2\relax %
   \raise\grespacebeneathtext\hbox to 0pt{}%
   \unsetluatexattribute{\gregoriocenterattr}%

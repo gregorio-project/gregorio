@@ -623,6 +623,11 @@
   \fi%
   #8\relax %
   \raise\gretextlower \copy\GreSyllabletext %
+  \ifnum\gremustdotranslationcenterend=1\relax %
+    % case of end of translation centering, we do it after the typesetting of the text
+    \gredotranslationcenterend %
+    \xdef\gremustdotranslationcenterend{0}%
+  \fi %
   \kern -\wd\GreSyllabletext %
   \kern -\grebegindifference %
   % here we need to unset \gregorioattr for the typesetting of notes
@@ -781,6 +786,12 @@
       \kern -\wd\GreSyllablenotes %
     \fi %
     \grenobreak %
+    #8\relax %
+    \ifnum\gremustdotranslationcenterend=1\relax %
+      % case of end of translation centering, we do it after the typesetting of the text
+      \gredotranslationcenterend %
+      \xdef\gremustdotranslationcenterend{0}%
+    \fi %
     #9\relax %
     \grepenalty{\greendafterbaraltpenalty }% TODO: isn't it a bit buggy?
     \ifdim\gretempdim < -\wd\GreSyllablenotes %
@@ -815,6 +826,11 @@
     %\kern\greskipone %
     #8\relax %
     \raise\gretextlower \copy\GreSyllabletext %
+    \ifnum\gremustdotranslationcenterend=1\relax %
+      % case of end of translation centering, we do it after the typesetting of the text
+      \gredotranslationcenterend %
+      \xdef\gremustdotranslationcenterend{0}%
+    \fi %
     \kern -\wd\GreSyllabletext %
     \kern -\grebegindifference %
     #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
