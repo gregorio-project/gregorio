@@ -63,7 +63,8 @@ close_glyph (gregorio_glyph **last_glyph, char glyph_type,
   // patch to have good glyph type in the case where a glyph ends by a note
   // with shape S_QUADRATUM
   if (glyph_type == G_PES_QUADRATUM_FIRST_PART
-      || glyph_type == G_PES_QUILISMA_QUADRATUM_FIRST_PART)
+      || glyph_type == G_PES_QUILISMA_QUADRATUM_FIRST_PART
+      || glyph_type == G_PES_ORISCUS_QUADRATUM_FIRST_PART)
     {
       glyph_type = G_PUNCTUM;
     }
@@ -421,15 +422,17 @@ gabc_det_glyphs_from_notes (gregorio_note *current_note, int *current_key)
 
       // patch to have good shapes in the special cases of pes quadratum and
       // pes quilisma quadratum.
-
       if (current_note->shape == S_QUADRATUM)
         {
           current_note->shape = S_PUNCTUM;
         }
-
       if (current_note->shape == S_QUILISMA_QUADRATUM)
         {
           current_note->shape = S_QUILISMA;
+        }
+      if (current_note->shape == S_ORISCUS_QUADRATUM)
+        {
+          current_note->shape = S_ORISCUS;
         }
 
       // see comments on gregorio_add_note_to_a_glyph for the meaning of
@@ -682,6 +685,7 @@ gregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
             }
           break;
         case G_PES_QUILISMA_QUADRATUM_FIRST_PART:
+        case G_PES_ORISCUS_QUADRATUM_FIRST_PART:
           if (current_pitch > last_pitch)
             {
               next_glyph_type = G_PES_QUADRATUM;
@@ -805,6 +809,10 @@ gregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
     case S_QUILISMA_QUADRATUM:
       *end_of_glyph = DET_END_OF_PREVIOUS;
       next_glyph_type = G_PES_QUILISMA_QUADRATUM_FIRST_PART;
+      break;
+    case S_ORISCUS_QUADRATUM:
+      *end_of_glyph = DET_END_OF_PREVIOUS;
+      next_glyph_type = G_PES_ORISCUS_QUADRATUM_FIRST_PART;
       break;
     case S_PUNCTUM_INCLINATUM:
   /** Warning : this part of the code is specific to the

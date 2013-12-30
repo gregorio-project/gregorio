@@ -641,6 +641,7 @@ gregorio_fix_positions (gregorio_score * score);*/
 #define S_QUADRATUM 16
 // those shapes are for now used only in gregoriotex
 #define S_QUILISMA_QUADRATUM 17
+#define S_ORISCUS_QUADRATUM 34
 #define S_PUNCTUM_AUCTUS_ASCENDENS 25
 #define S_PUNCTUM_AUCTUS_DESCENDENS 26
 #define S_PUNCTUM_DEMINUTUS 27
@@ -684,6 +685,7 @@ gregorio_fix_positions (gregorio_score * score);*/
 #define G_PES_QUADRATUM_FIRST_PART 31
 #define G_SCANDICUS 32
 #define G_PES_QUILISMA_QUADRATUM_FIRST_PART 33
+#define G_PES_ORISCUS_QUADRATUM_FIRST_PART 38
 #define G_ANCUS 34
 #define G_ONE_NOTE 36
 #define G_PUNCTA_ASCENDENS 34

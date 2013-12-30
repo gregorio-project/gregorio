@@ -377,6 +377,9 @@ q         {
 o         {
 	gregorio_change_shape(current_note, S_ORISCUS);
 		  }
+O         {
+	gregorio_change_shape(current_note, S_ORISCUS_QUADRATUM);
+		  }
 w         {
 	gregorio_change_shape(current_note, S_QUILISMA);
 		  }
