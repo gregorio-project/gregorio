@@ -403,7 +403,7 @@ def write_deminutus(i, j, glyphnumber, length=0, tosimplify=0, firstbar=1):
 def hepisemus():
     message("horizontal episemus")
     write_hepisemus(width_punctum, 40)
-    write_hepisemus(width_flexusdeminutus, 41)          
+    write_hepisemus(width_flexusdeminutus, 41)
     write_hepisemus(width_debilis+line_width, 42)
     write_hepisemus(width_inclinatum, 43)
     write_hepisemus(width_inclinatum_deminutus, 44)
@@ -684,17 +684,6 @@ def porrectus():
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
             write_porrectus(i,j, "phigh", 0, 'porrectus_nobar')
-    #precise_message("porrectus deminutus")
-    #for i in range(1,max_interval+1):
-    #    for j in range(1,max_interval+1):
-    #        write_porrectus(i,j, "rdeminutus", 1, 'porrectus', 'deminutus')
-    #for i in range(1,max_interval+1):
-    #    for j in range(1,max_interval+1):
-    #        write_porrectus(i,j, "rdeminutus", 0, 'porrectus_nobar', 'deminutus')
-    precise_message("porrectus deminutus")
-    for i in range(1, max_interval+1):
-        for j in range(1, max_interval+1):
-            write_alternate_porrectus_deminutus(i,j)
     precise_message("porrectus auctus ascendens")
     for i in range(1, max_interval+1):
         for j in range(1, max_interval+1):
@@ -709,6 +698,17 @@ def porrectus():
     for i in range(1, max_interval+1):
         for j in range(1, max_interval+1):
             write_porrectus(i,j, "auctusd2", 0, 'porrectus_nobar', 'auctusdescendens')
+    #precise_message("porrectus deminutus")
+    #for i in range(1,max_interval+1):
+    #    for j in range(1,max_interval+1):
+    #        write_porrectus(i,j, "rdeminutus", 1, 'porrectus', 'deminutus')
+    #for i in range(1,max_interval+1):
+    #    for j in range(1,max_interval+1):
+    #        write_porrectus(i,j, "rdeminutus", 0, 'porrectus_nobar', 'deminutus')
+    precise_message("porrectus deminutus")
+    for i in range(1, max_interval+1):
+        for j in range(1, max_interval+1):
+            write_alternate_porrectus_deminutus(i,j)
 
 def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):
     glyphnumber=gnumber(i, j, 0, shape, liquescentia)
@@ -724,6 +724,7 @@ def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):
         paste_and_move(last_glyph, glyphnumber, (length-width_deminutus-line_width), (j-i)*base_height)
     elif (last_glyph=='auctusa2' or last_glyph == 'auctusd2'):
         paste_and_move(last_glyph, glyphnumber, (length-line_width), (j-i)*base_height)
+        length = length - line_width + width_punctum
     else:
         paste_and_move(last_glyph, glyphnumber, (length-width_high_pes), (j-i)*base_height)
     set_width(glyphnumber, length)
@@ -987,6 +988,7 @@ def write_torculusresupinus(i,j,k, first_glyph, last_glyph, shape, liquescentia=
         paste_and_move(last_glyph, glyphnumber, (length-width_deminutus-line_width), (i-j+k)*base_height)
     elif (last_glyph=='auctusa2' or last_glyph == 'auctusd2'):
         paste_and_move(last_glyph, glyphnumber, (length-line_width), (i-j+k)*base_height)
+        length = length - line_width + width_punctum
     else:
         paste_and_move(last_glyph, glyphnumber, (length-width_high_pes), (i-j+k)*base_height)
     set_width(glyphnumber, length)
