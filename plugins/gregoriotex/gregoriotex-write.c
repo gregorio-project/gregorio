@@ -3148,7 +3148,7 @@ gregoriotex_find_sign_number (gregorio_glyph *current_glyph,
               normal_height ();
             }
           break;
-        default:               /* i=2 */
+        default:               /* i>=2 */
           number_last_note (0);
           normal_height_bottom ();
           break;
@@ -3878,7 +3878,7 @@ void
       temp =
         TYPE_FACTOR * T_PORRECTUS +
         gregoriotex_determine_liquescentia_number (L_LIQ_FACTOR,
-                                                   L_ONLY_DEMINUTUS,
+                                                   L_NO_INITIO,
                                                    glyph->liquescentia);
       break;
     case G_TORCULUS_RESUPINUS:
@@ -3887,7 +3887,7 @@ void
       temp =
         TYPE_FACTOR * T_TORCULUS_RESUPINUS +
         gregoriotex_determine_liquescentia_number (L_LIQ_FACTOR,
-                                                   L_ONLY_DEMINUTUS,
+                                                   L_ALL,
                                                    glyph->liquescentia);
       break;
     case G_PORRECTUS_FLEXUS:
@@ -3905,7 +3905,7 @@ void
       temp =
         TYPE_FACTOR * T_PORRECTUS_NOBAR +
         gregoriotex_determine_liquescentia_number (L_LIQ_FACTOR,
-                                                   L_ONLY_DEMINUTUS,
+                                                   L_NO_INITIO,
                                                    glyph->liquescentia);
       break;
     case G_PORRECTUS_FLEXUS_NO_BAR:
