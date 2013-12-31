@@ -716,6 +716,8 @@ def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):
     if (with_bar):
         write_first_bar(i, glyphnumber)
     first_glyph="porrectus%d" % i
+    if (last_glyph=='auctusa2' or last_glyph == 'auctusd2'):
+        first_glyph="porrectusflexus%d" % i
     simple_paste(first_glyph, glyphnumber)
     write_line(j, glyphnumber, length-line_width, (-i+1)*base_height)
     if (with_bar):
@@ -980,6 +982,8 @@ def write_torculusresupinus(i,j,k, first_glyph, last_glyph, shape, liquescentia=
     if i!=1:
         write_line(i, glyphnumber, length, base_height)
     middle_glyph="porrectus%d" % j
+    if (last_glyph=='auctusa2' or last_glyph == 'auctusd2'):
+        middle_glyph="porrectusflexus%d" % j
     paste_and_move(middle_glyph, glyphnumber, length, i*base_height)
     length=length + porrectuswidths[j-1]
     write_line(k, glyphnumber, length-line_width, (i-j+1)*base_height)
