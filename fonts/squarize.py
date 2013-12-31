@@ -695,6 +695,20 @@ def porrectus():
     for i in range(1, max_interval+1):
         for j in range(1, max_interval+1):
             write_alternate_porrectus_deminutus(i,j)
+    precise_message("porrectus auctus ascendens")
+    for i in range(1, max_interval+1):
+        for j in range(1, max_interval+1):
+            write_porrectus(i,j, "auctusa2", 1, 'porrectus', 'auctusascendens')
+    for i in range(1, max_interval+1):
+        for j in range(1, max_interval+1):
+            write_porrectus(i,j, "auctusa2", 0, 'porrectus_nobar', 'auctusascendens')
+    precise_message("porrectus auctus descendens")
+    for i in range(1, max_interval+1):
+        for j in range(1, max_interval+1):
+            write_porrectus(i,j, "auctusd2", 1, 'porrectus', 'auctusdescendens')
+    for i in range(1, max_interval+1):
+        for j in range(1, max_interval+1):
+            write_porrectus(i,j, "auctusd2", 0, 'porrectus_nobar', 'auctusdescendens')
 
 def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):
     glyphnumber=gnumber(i, j, 0, shape, liquescentia)
@@ -708,6 +722,8 @@ def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):
         simplify(glyphnumber)
     if (last_glyph=="rdeminutus"):
         paste_and_move(last_glyph, glyphnumber, (length-width_deminutus-line_width), (j-i)*base_height)
+    elif (last_glyph=='auctusa2' or last_glyph == 'auctusd2'):
+        paste_and_move(last_glyph, glyphnumber, (length-line_width), (j-i)*base_height)
     else:
         paste_and_move(last_glyph, glyphnumber, (length-width_high_pes), (j-i)*base_height)
     set_width(glyphnumber, length)
@@ -929,7 +945,24 @@ def torculusresupinus():
         for j in range(1,max_interval+1):
             for k in range(1,max_interval+1):
                 write_torculusresupinusdeminutus(i,j,k, 'idebilis', 'torculusresupinus', 'initiodebilisdeminutus')
-                
+    precise_message("torculus resupinus auctus ascendens")
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            for k in range(1,max_interval+1):
+                write_torculusresupinus(i,j,k, 'base5', "auctusa2", 'torculusresupinus', 'auctusascendens')
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            for k in range(1,max_interval+1):
+                write_torculusresupinus(i,j,k, 'idebilis', "auctusa2", 'torculusresupinus', 'initiodebilisauctusascendens')
+    precise_message("torculus resupinus auctus descendens")
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            for k in range(1,max_interval+1):
+                write_torculusresupinus(i,j,k, 'base5', "auctusd2", 'torculusresupinus', 'auctusdescendens')
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            for k in range(1,max_interval+1):
+                write_torculusresupinus(i,j,k, 'idebilis', "auctusd2", 'torculusresupinus', 'initiodebilisauctusdescendens')
 
 def write_torculusresupinus(i,j,k, first_glyph, last_glyph, shape, liquescentia='nothing'):
     glyphnumber=gnumber(i, j, k, shape, liquescentia)
@@ -952,6 +985,8 @@ def write_torculusresupinus(i,j,k, first_glyph, last_glyph, shape, liquescentia=
     simplify(glyphnumber)
     if (last_glyph=="rdeminutus"):
         paste_and_move(last_glyph, glyphnumber, (length-width_deminutus-line_width), (i-j+k)*base_height)
+    elif (last_glyph=='auctusa2' or last_glyph == 'auctusd2'):
+        paste_and_move(last_glyph, glyphnumber, (length-line_width), (i-j+k)*base_height)
     else:
         paste_and_move(last_glyph, glyphnumber, (length-width_high_pes), (i-j+k)*base_height)
     set_width(glyphnumber, length)
