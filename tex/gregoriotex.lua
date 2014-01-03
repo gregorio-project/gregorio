@@ -107,7 +107,11 @@ local function process (h, groupcode, glyphes)
                   if has_attribute(n, gregoriocenterattr, startcenter) then
                     centerstartnode = n
                   elseif has_attribute(n, gregoriocenterattr, endcenter) then
-                    center_translation(centerstartnode, n, line.glue_set, line.glue_sign, line.glue_order)
+                    if not centerstartnode then
+                      warn("End of a translation centering area encountered on a\nline without translation centering beginning,\nskipping translation...")
+                    else
+                      center_translation(centerstartnode, n, line.glue_set, line.glue_sign, line.glue_order)
+                    end
                   elseif has_attribute(n, gregorioattr, potentialdashvalue) then
                     adddash=true
                     lastseennode=n
