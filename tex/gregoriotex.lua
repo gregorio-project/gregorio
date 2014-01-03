@@ -79,11 +79,11 @@ local function center_translation(startnode, endnode, ratio, sign, order)
     --  }
     -- 
     -- hence translation width is:
-    local trans_width = nodes.dimensions(startnode.list.next.list.next.list)
+    local trans_width = node.dimensions(startnode.head.next.head.next.head)
     -- now we must transform the kern 0pt into kern Xpt and kern -Xpt where X is:
     local X = (total_width - trans_width) / 2
-    startnode.list.kern = X
-    startnode.list.next.next.kern = -X
+    startnode.head.kern = X
+    startnode.head.next.next.kern = -X
 end
 
 -- in each function we check if we really are inside a score, 
@@ -99,11 +99,11 @@ local function process (h, groupcode, glyphes)
     for line in traverse_id(hlist, h) do
         if has_attribute(line, gregorioattr) then
             -- the next two lines are to remove the dumb lines
-            if count(hlist, line.list) <= 2 then
+            if count(hlist, line.head) <= 2 then
                 h, line = remove(h, line)
             else
                 centerstartnode = nil
-                for n in traverse_id(hlist, line.list) do
+                for n in traverse_id(hlist, line.head) do
                   if has_attribute(n, gregoriocenterattr, startcenter) then
                     centerstartnode = n
                   elseif has_attribute(n, gregoriocenterattr, endcenter) then
@@ -114,7 +114,7 @@ local function process (h, groupcode, glyphes)
                     currentfont = 0
                     -- we traverse the list, to detect the font to use,
                     -- and also not to add an hyphen if there is already one
-                    for g in node.traverse_id(glyph, n.list) do
+                    for g in node.traverse_id(glyph, n.head) do
                         if currentfont == 0 then
                             currentfont = g.font
                       end
@@ -134,7 +134,7 @@ local function process (h, groupcode, glyphes)
                   local dashnode, hyphnode = getdashnnode()
                   dashnode.shift = currentshift
                   hyphnode.font = currentfont
-                  insert_after(line.list, lastseennode, dashnode)
+                  insert_after(line.head, lastseennode, dashnode)
                   addash=false
                 end
             end
