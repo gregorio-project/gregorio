@@ -459,6 +459,35 @@ update_position_with_space ()
     }
 }
 
+/* When we encounter a translation center ending, we call this function that sets
+ * translation_type = TR_WITH_CENTER_BEGINNING on previous syllable with translation
+ */
+void
+gregorio_set_translation_center_beginning(gregorio_syllable *current_syllable)
+{
+  gregorio_syllable *syllable = current_syllable->previous_syllable;
+  while (syllable)
+    {
+      if (syllable->translation_type==TR_WITH_CENTER_END) 
+        {
+          gregorio_message ("encountering translation centering end but cannot find translation centering beginning...",
+            "set_translation_center_beginning", ERROR, 0);
+          current_syllable->translation_type = TR_NORMAL;
+          return;
+        }
+      if (syllable->translation)
+        {
+          syllable->translation_type = TR_WITH_CENTER_BEGINNING;
+          return;
+        }
+      syllable = syllable->previous_syllable;
+    }
+  // we didn't find any beginning...
+    gregorio_message ("encountering translation centering end but cannot find translation centering beginning...",
+      "set_translation_center_beginning", ERROR, 0);
+    current_syllable->translation_type = TR_NORMAL;
+}
+
 /* Function to close a syllable and update the position.
  */
 
@@ -478,6 +507,10 @@ close_syllable ()
     {
     // we rebuild the first syllable if we have to
       score->first_syllable = current_syllable;
+    }
+  if (translation_type == TR_WITH_CENTER_END)
+    {
+      gregorio_set_translation_center_beginning(current_syllable);
     }
   //we update the position
   if (position == WORD_BEGINNING)
@@ -569,7 +602,7 @@ gregorio_gabc_end_style(unsigned char style)
 
 %}
 
-%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME TRANSLATION_BEGINNING_WITH_CENTER TRANSLATION_CENTER_END
+%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME TRANSLATION_CENTER_END
 
 %%
 
@@ -1113,10 +1146,6 @@ text:
 translation_beginning:
     TRANSLATION_BEGINNING {
     start_translation(TR_NORMAL);
-    }
-    |
-    TRANSLATION_BEGINNING_WITH_CENTER {
-    start_translation(TR_WITH_CENTER_BEGINNING);
     }
     ;
 

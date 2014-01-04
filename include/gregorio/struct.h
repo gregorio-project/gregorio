@@ -232,12 +232,12 @@ Then the two pointers to build the double chained list, and finally the union. S
     char position;
 // again, an additional field to put some signs or other things...
     char additional_infos;
+// type of translation (with center beginning or only center end)
+    unsigned char translation_type;
 // pointer to a gregorio_text structure corresponding to the text.
     struct gregorio_character *text;
 // pointer to a gregorio_text structure corresponding to the translation
     struct gregorio_character *translation;
-// type of translation (with center beginning or only center end)
-    unsigned char translation_type;
 // a string representing the text above the lines (raw TeX)
     char *abovelinestext;
 // pointer to the next and previous syllable
