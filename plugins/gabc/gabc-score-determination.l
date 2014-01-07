@@ -241,6 +241,19 @@ semicolon. */
       }
 	return UL_END;
 	}
+<score,style><c> {
+	BEGIN(style);
+    style_stack ++;
+	return C_BEGINNING;
+	}
+<style><\/c> {
+    style_stack --;
+    if (style_stack == 0)
+      {
+        BEGIN(score);
+      }
+	return C_END;
+	}
 <score,style><b> {
 	BEGIN(style);
     style_stack ++;

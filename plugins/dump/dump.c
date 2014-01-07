@@ -496,6 +496,9 @@ dump_style_to_string (unsigned char style)
     case ST_UNDERLINED:
       return "   ST_UNDERLINED";
       break;
+    case ST_COLORED:
+      return "      ST_COLORED";
+      break;
     case ST_SMALL_CAPS:
       return "   ST_SMALL_CAPS";
       break;

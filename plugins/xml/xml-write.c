@@ -336,6 +336,9 @@ xml_write_begin (FILE *f, unsigned char style)
     case ST_UNDERLINED:
       fprintf (f, "<ul>");
       break;
+    case ST_COLORED:
+      fprintf (f, "<colored>");
+      break;
     default:
       break;
     }
@@ -372,6 +375,9 @@ xml_write_end (FILE *f, unsigned char style)
       break;
     case ST_UNDERLINED:
       fprintf (f, "</ul>");
+      break;
+    case ST_COLORED:
+      fprintf (f, "</colored>");
       break;
     default:
       break;

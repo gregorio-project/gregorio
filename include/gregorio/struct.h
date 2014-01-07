@@ -159,6 +159,7 @@ The we define the characters. First we define the different styles. You can noti
 #define ST_VERBATIM 5
 #define ST_INITIAL 9            // a style used to determine the initial
 #define ST_UNDERLINED 10
+#define ST_COLORED 11
 
 /*
 

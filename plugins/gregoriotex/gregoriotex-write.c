@@ -1021,6 +1021,9 @@ gtex_write_begin (FILE *f, unsigned char style)
     case ST_UNDERLINED:
       fprintf (f, "\\greul{");
       break;
+    case ST_COLORED:
+      fprintf (f, "\\grecolored{");
+      break;
     default:
       break;
     }
@@ -1255,6 +1258,9 @@ gregoriotex_internal_style_to_gregoriotex (unsigned char style)
       break;
     case ST_UNDERLINED:
       return 5;
+      break;
+    case ST_COLORED:
+      return 6;
       break;
     default:
       return 0;
