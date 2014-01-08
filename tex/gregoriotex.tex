@@ -1100,6 +1100,36 @@
   \relax%
 }
 
+\def\grebeginnlbarea{%
+  \xdef\grenobreakpenaltysave{\grenobreakpenalty }%
+  \xdef\grenobreakpenalty{10001}%
+  \xdef\grenolastlinepenaltysave{\grenolastlinepenalty }%
+  \xdef\grenolastlinepenalty{10001}%
+  \xdef\greendofwordpenaltysave{\greendofwordpenalty }%
+  \xdef\greendofwordpenalty{10001}%
+  \xdef\greendofsyllablepenaltysave{\greendofsyllablepenalty }%
+  \xdef\greendofsyllablepenalty{10001}%
+  \xdef\greendafterbarpenaltysave{\greendafterbarpenalty }%
+  \xdef\greendafterbarpenalty{10001}%
+  \xdef\greendafterbaraltpenaltysave{\greendafterbaraltpenalty }%
+  \xdef\greendafterbaraltpenalty{10001}%
+  \xdef\greendofelementpenaltysave{\greendofelementpenalty }%
+  \xdef\greendofelementpenalty{10001}%
+  \xdef\grehyphenpenaltysave{\grehyphenpenalty }%
+  \xdef\grehyphenpenalty{10001}%
+}
+
+\def\greendnlbarea{%
+  \xdef\grenobreakpenalty{\grenobreakpenaltysave }%
+  \xdef\grenolastlinepenalty{\grenolastlinepenaltysave}%
+  \xdef\greendofwordpenalty{\greendofwordpenaltysave}%
+  \xdef\greendofsyllablepenalty{\greendofsyllablepenaltysave}%
+  \xdef\greendafterbarpenalty{\greendafterbarpenaltysave}%
+  \xdef\greendafterbaraltpenalty{\greendafterbaraltpenaltysave}%
+  \xdef\greendofelementpenalty{\greendofelementpenaltysave}%
+  \xdef\grehyphenpenalty{\grehyphenpenaltysave}%
+}
+
 \input gregoriotex-symbols.tex
 
 %%%%%%%%
