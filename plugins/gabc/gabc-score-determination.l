@@ -207,6 +207,12 @@ semicolon. */
     style_stack ++;
 	return I_BEGINNING;
 	}
+<score,style><nlba> {
+	return BNLBA;
+	}
+<score,style><\/nlba> {
+	return ENLBA;
+	}
 <style><\/i> {
     style_stack --;
     if (style_stack == 0)

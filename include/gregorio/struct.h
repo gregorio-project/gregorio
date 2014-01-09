@@ -162,9 +162,7 @@ The we define the characters. First we define the different styles. You can noti
 #define ST_COLORED 11
 
 /*
-
 Then the different types of styles. See the next comments for further readings.
-
 */
 
 #define ST_T_NOTHING 0
@@ -172,14 +170,20 @@ Then the different types of styles. See the next comments for further readings.
 #define ST_T_END 2
 
 /*
-
 The different types of translation centerings
-
 */
 
 #define TR_NORMAL 0
 #define TR_WITH_CENTER_BEGINNING 1
 #define TR_WITH_CENTER_END 2
+
+/*
+Nothing, beginning or end of area without linebreak
+*/
+
+#define NLBA_NORMAL 0
+#define NLBA_BEGINNING 1
+#define NLBA_END 2
 
 /*
 
@@ -235,6 +239,8 @@ Then the two pointers to build the double chained list, and finally the union. S
     char additional_infos;
 // type of translation (with center beginning or only center end)
     unsigned char translation_type;
+// beginning or end of area without linebreak?
+    unsigned char no_linebreak_area;
 // pointer to a gregorio_text structure corresponding to the text.
     struct gregorio_character *text;
 // pointer to a gregorio_text structure corresponding to the translation
@@ -368,7 +374,8 @@ representation on the score).
                               gregorio_character *first_character,
                               gregorio_character *first_translation_character,
                               char position, char *abovelinestext,
-                              unsigned char translation_type);
+                              unsigned char translation_type,
+                              unsigned char no_linebreak_area);
 
   void gregorio_set_signs (gregorio_note *current_note, char signs);
   void gregorio_add_special_sign (gregorio_note *current_note, char sign);

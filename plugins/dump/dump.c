@@ -233,6 +233,10 @@ dump_write_score (FILE *f, gregorio_score *score)
               fprintf(f, "\n");
             }
         }
+      if (syllable->no_linebreak_area != NLBA_NORMAL)
+        {
+          fprintf (f, "\n  No line break area           %s\n", dump_no_linebreak_area_to_string (syllable->no_linebreak_area));
+        }
       if (syllable->translation)
         {
           fprintf (f, "\n  Translation\n");
@@ -460,6 +464,26 @@ dump_translation_type_to_string (unsigned char translation_type)
       break;
     case TR_WITH_CENTER_END:
       return "TR_WITH_CENTER_END";
+      break;
+    default:
+      return "";
+      break;
+    }
+}
+
+const char *
+dump_no_linebreak_area_to_string (unsigned char no_linebreak_area)
+{
+  switch (no_linebreak_area)
+    {
+    case NLBA_NORMAL:
+      return "NLBA_NORMAL";
+      break;
+    case NLBA_BEGINNING:
+      return "NLBA_BEGINNING";
+      break;
+    case NLBA_END:
+      return "NLBA_END";
       break;
     default:
       return "";

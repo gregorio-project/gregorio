@@ -74,6 +74,7 @@ gregorio_character *current_character;
 gregorio_character *first_text_character;
 gregorio_character *first_translation_character;
 unsigned char translation_type;
+unsigned char no_linebreak_area;
 gregorio_voice_info *current_voice_info;
 int number_of_voices;
 int voice;
@@ -267,6 +268,7 @@ initialize_variables ()
   first_translation_character = NULL;
   first_text_character = NULL;
   translation_type = TR_NORMAL;
+  no_linebreak_area = NLBA_NORMAL;
   centering_scheme = SCHEME_DEFAULT;
   center_is_determined=0;
   for (i=0;i<10;i++)
@@ -502,7 +504,7 @@ close_syllable ()
        gregorio_rebuild_first_syllable (&first_text_character);
     }
   gregorio_add_syllable (&current_syllable, number_of_voices, elements,
-			    first_text_character, first_translation_character, position, abovelinestext, translation_type);
+			    first_text_character, first_translation_character, position, abovelinestext, translation_type, no_linebreak_area);
   if (!score->first_syllable)
     {
     // we rebuild the first syllable if we have to
@@ -526,6 +528,7 @@ close_syllable ()
   first_text_character=NULL;
   first_translation_character=NULL;
   translation_type=TR_NORMAL;
+  no_linebreak_area = NLBA_NORMAL;
   abovelinestext = NULL;
 }
 
@@ -602,7 +605,7 @@ gregorio_gabc_end_style(unsigned char style)
 
 %}
 
-%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END C_BEGINNING C_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME TRANSLATION_CENTER_END
+%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END C_BEGINNING C_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME TRANSLATION_CENTER_END BNLBA ENLBA
 
 %%
 
@@ -1135,6 +1138,16 @@ style_end:
 	}
 	;
 
+linebreak_area:
+  BNLBA {
+    no_linebreak_area = NLBA_BEGINNING;
+  }
+  |
+  ENLBA {
+    no_linebreak_area = NLBA_END;
+  }
+  ;
+
 character:
   above_line_text
   |
@@ -1145,6 +1158,8 @@ character:
 	style_beginning
 	|
 	style_end
+	|
+	linebreak_area
 	;
 
 text:

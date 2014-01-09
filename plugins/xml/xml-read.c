@@ -625,7 +625,7 @@ xml_read_syllable (xmlNodePtr current_node, xmlDocPtr doc,
   gregorio_element *current_element = NULL;
   if (!current_node) {return;}
   gregorio_add_syllable (current_syllable, number_of_voices, NULL, NULL, NULL,
-                         0, NULL, TR_NORMAL);
+                         0, NULL, TR_NORMAL, NLBA_NORMAL); // TODO
   if (!xmlStrcmp (current_node->name, (const xmlChar *) "text"))
     {
       // it is possible (and even often the case) that we don't have text

@@ -69,8 +69,8 @@ gregoriotex_write_score (FILE *f, gregorio_score *score)
   // the current line (as far as we know), it is always 0, it can be 1 in the
   // case of the first line of a score with a two lines initial
   unsigned char line = 0;
-  gregorio_line *first_line;
 
+  gregorio_line *first_line;
   status = malloc (sizeof (gregoriotex_status));
   status->bottom_line = 0;
   status->to_modify_note = NULL;
@@ -386,6 +386,11 @@ gregoriotex_write_syllable (FILE *f,
   if (!syllable)
     {
       return;
+    }
+  // Very first: before anything, if the syllable is the beginning of a no-linebreak area:
+  if (syllable->no_linebreak_area==NLBA_BEGINNING)
+    {
+      fprintf (f, "\\grebeginnlbarea % %%\n");
     }
   /*
    * first we check if the syllable is only a end of line. If it is the case,
@@ -800,6 +805,11 @@ gregoriotex_write_syllable (FILE *f,
       || syllable->position == WORD_ONE_SYLLABLE || !syllable->text)
     {
       fprintf (f, "%%\n");
+    }
+  // Very last, if the syllable is the end of a no-linebreak area:
+  if (syllable->no_linebreak_area==NLBA_END)
+    {
+      fprintf (f, "\\greendnlbarea % %%\n");
     }
 }
 
