@@ -139,6 +139,12 @@ char *tempstr=NULL;
 <INITIAL>\[alt: {
     BEGIN(alt);
     }
+<INITIAL><nlba> {
+  gregorio_add_nlba_as_note(&current_note, NLBA_BEGINNING);
+    }
+<INITIAL><\/nlba> {
+  gregorio_add_nlba_as_note(&current_note, NLBA_END);
+    }
 <overbrace>[^\]]+ {
   snprintf(tempstr,70, "\\greoverbrace{%s}{0pt}{0pt}{%d}",gabc_notes_determination_text, char_for_brace);
 	gregorio_add_texverb_to_note(&current_note, strdup(tempstr));

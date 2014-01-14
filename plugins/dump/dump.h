@@ -51,6 +51,6 @@ const char *dump_style_to_string (unsigned char style);
 
 const char *dump_translation_type_to_string (unsigned char translation_type);
 
-const char * dump_no_linebreak_area_to_string (unsigned char no_linebreak_area);
+const char * dump_nlba_to_string (unsigned char no_linebreak_area);
 
 #endif

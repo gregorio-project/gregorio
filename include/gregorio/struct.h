@@ -122,7 +122,8 @@ extern "C"
   typedef struct gregorio_element
   {
 // type can have the values GRE_ELEMENT, GRE_BAR, GRE_C_KEY_CHANGE,
-// GRE_F_KEY_CHANGE, GRE_END_OF_LINE or GRE_SPACE.
+// GRE_F_KEY_CHANGE, GRE_END_OF_LINE, GRE_SPACE, GRE_TEXVERB_ELEMENT
+// or GRE_NLBA
     char type;
 // pointers to the next and previous elements.
     struct gregorio_element *previous;
@@ -531,6 +532,7 @@ gregorio_fix_positions (gregorio_score * score);*/
 #define GRE_TEXVERB_ELEMENT 18
 // above lines text, quite the same as GRE_TEXVERB_ELEMENT, but counted differently for the spaces above the lines
 #define GRE_ALT 20
+#define GRE_NLBA 21
 
 #define C_KEY 'c'
 #define F_KEY 'f'

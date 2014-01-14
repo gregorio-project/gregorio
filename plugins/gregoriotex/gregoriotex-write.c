@@ -613,6 +613,19 @@ gregoriotex_write_syllable (FILE *f,
           current_element = current_element->next;
           continue;
         }
+      if (current_element->type == GRE_NLBA)
+        {
+          if (current_element->element_type == NLBA_BEGINNING)
+            {
+              fprintf (f,"\\grebeginnlbarea % %%\n");
+            }
+          else
+            {
+              fprintf (f,"\\greendnlbarea % %%\n");
+            }
+          current_element = current_element->next;
+          continue;
+        }
       if (current_element->type == GRE_ALT && current_element->texverb)
         {
           fprintf (f,

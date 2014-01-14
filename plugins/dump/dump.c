@@ -217,6 +217,10 @@ dump_write_score (FILE *f, gregorio_score *score)
           fprintf (f, "   additional infos                   %s\n",
                    dump_rare_sign (syllable->additional_infos));
         }
+      if (syllable->no_linebreak_area != NLBA_NORMAL)
+        {
+          fprintf (f, "   no line break area        %s\n", dump_nlba_to_string (syllable->no_linebreak_area));
+        }
       if (syllable->text)
         {
           if (syllable->translation)
@@ -232,10 +236,6 @@ dump_write_score (FILE *f, gregorio_score *score)
             {
               fprintf(f, "\n");
             }
-        }
-      if (syllable->no_linebreak_area != NLBA_NORMAL)
-        {
-          fprintf (f, "\n  No line break area           %s\n", dump_no_linebreak_area_to_string (syllable->no_linebreak_area));
         }
       if (syllable->translation)
         {
@@ -277,6 +277,12 @@ dump_write_score (FILE *f, gregorio_score *score)
             {
               fprintf (f, "     TeX string              \"%s\"\n",
                        element->texverb);
+            }
+          if (element->type == GRE_NLBA)
+            {
+              fprintf (f, "     element_type            %d (%s)\n",
+                       element->element_type,
+                       dump_nlba_to_string (element->element_type));
             }
           if (element->type == GRE_ALT)
             {
@@ -472,7 +478,7 @@ dump_translation_type_to_string (unsigned char translation_type)
 }
 
 const char *
-dump_no_linebreak_area_to_string (unsigned char no_linebreak_area)
+dump_nlba_to_string (unsigned char no_linebreak_area)
 {
   switch (no_linebreak_area)
     {
@@ -683,6 +689,12 @@ dump_type (char type)
       break;
     case GRE_TEXVERB_ELEMENT:
       str = "GRE_TEXVERB_ELEMENT";
+      break;
+    case GRE_NLBA:
+      str = "GRE_NLBA";
+      break;
+    case GRE_ALT:
+      str = "GRE_ALT";
       break;
     default:
       str = "unknown";

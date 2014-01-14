@@ -137,6 +137,33 @@ gregorio_add_texverb_as_note (gregorio_note ** current_note, char *str, char typ
 }
 
 void
+gregorio_add_nlba_as_note (gregorio_note ** current_note, char type)
+{
+  gregorio_note *element;
+  element = malloc (sizeof (gregorio_note));
+  if (!element)
+    {
+      gregorio_message (_("error in memory allocation"),
+			   "add_special_as_note", FATAL_ERROR, 0);
+      return;
+    }
+  element->type = GRE_NLBA;
+  element->pitch = type;
+  element->signs = _NO_SIGN;
+  element->previous = *current_note;
+  element->h_episemus_type = H_NO_EPISEMUS;
+  element->h_episemus_top_note = 0;
+  element->next = NULL;
+  element->texverb = NULL;
+  element->choral_sign = NULL;
+  if (*current_note)
+    {
+      (*current_note)->next = element;
+    }
+  *current_note = element;
+}
+
+void
 gregorio_add_texverb_to_note (gregorio_note ** current_note, char *str)
 {
   size_t len;
