@@ -712,23 +712,35 @@ def porrectus():
 
 def write_porrectus(i,j, last_glyph, with_bar, shape, liquescentia='nothing'):
     glyphnumber=gnumber(i, j, 0, shape, liquescentia)
+    descendens=0
     length=porrectuswidths[i-1]
     if (with_bar):
         write_first_bar(i, glyphnumber)
     first_glyph="porrectus%d" % i
     if (last_glyph=='auctusa2' or last_glyph == 'auctusd2'):
-        first_glyph="porrectusflexus%d" % i
+        length=porrectusflexuswidths[i-1]
+        if (j==1):
+            first_glyph="porrectusflexusnb%d" % i
+        else:
+            first_glyph="porrectusflexus%d" % i
     simple_paste(first_glyph, glyphnumber)
-    write_line(j, glyphnumber, length-line_width, (-i+1)*base_height)
+    if (j != 1 or (last_glyph!='auctusa2' and last_glyph != 'auctusd2')):
+        write_line(j, glyphnumber, length-line_width, (-i+1)*base_height)
+        length=length-line_width
     if (with_bar):
         simplify(glyphnumber)
     if (last_glyph=="rdeminutus"):
-        paste_and_move(last_glyph, glyphnumber, (length-width_deminutus-line_width), (j-i)*base_height)
+        paste_and_move(last_glyph, glyphnumber, (length-width_deminutus), (j-i)*base_height)
     elif (last_glyph=='auctusa2' or last_glyph == 'auctusd2'):
-        paste_and_move(last_glyph, glyphnumber, (length-line_width), (j-i)*base_height)
-        length = length - line_width + width_punctum
+        if (last_glyph=='auctusa2' and j==1):
+            last_glyph='_0072'
+        elif (last_glyph=='auctusd2' and j==1):
+            last_glyph='_0073'
+        paste_and_move(last_glyph, glyphnumber, (length), (j-i)*base_height)
+        length = length + width_punctum
     else:
-        paste_and_move(last_glyph, glyphnumber, (length-width_high_pes), (j-i)*base_height)
+        paste_and_move(last_glyph, glyphnumber, (length-width_high_pes+line_width), (j-i)*base_height)
+        length=length+line_width
     set_width(glyphnumber, length)
     end_glyph(glyphnumber)
 
@@ -983,14 +995,26 @@ def write_torculusresupinus(i,j,k, first_glyph, last_glyph, shape, liquescentia=
         write_line(i, glyphnumber, length, base_height)
     middle_glyph="porrectus%d" % j
     if (last_glyph=='auctusa2' or last_glyph == 'auctusd2'):
-        middle_glyph="porrectusflexus%d" % j
+        if (k==1):
+            middle_glyph="porrectusflexusnb%d" % j
+        else:
+            middle_glyph="porrectusflexus%d" % j
     paste_and_move(middle_glyph, glyphnumber, length, i*base_height)
     length=length + porrectuswidths[j-1]
-    write_line(k, glyphnumber, length-line_width, (i-j+1)*base_height)
+    if (last_glyph=='auctusa2' or last_glyph == 'auctusd2'):
+        length=length + porrectusflexuswidths[j-1]
+    if ((last_glyph!='auctusa2' and last_glyph != 'auctusd2') or k!=1):
+        write_line(k, glyphnumber, length-line_width, (i-j+1)*base_height)
     simplify(glyphnumber)
     if (last_glyph=="rdeminutus"):
         paste_and_move(last_glyph, glyphnumber, (length-width_deminutus-line_width), (i-j+k)*base_height)
     elif (last_glyph=='auctusa2' or last_glyph == 'auctusd2'):
+        if (last_glyph=='auctusa2' and k==1):
+            last_glyph='_0072'
+        elif (last_glyph=='auctusd2' and k==1):
+            last_glyph='_0073'
+        if (k==1):
+            length=length+line_width
         paste_and_move(last_glyph, glyphnumber, (length-line_width), (i-j+k)*base_height)
         length = length - line_width + width_punctum
     else:
