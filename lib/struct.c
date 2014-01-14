@@ -813,6 +813,7 @@ gregorio_add_syllable (gregorio_syllable ** current_syllable,
   next->type = GRE_SYLLABLE;
   next->additional_infos = 0;
   next->position = position;
+  next->no_linebreak_area = no_linebreak_area;
   next->text = first_character;
   next->translation = first_translation_character;
   next->translation_type = translation_type;
