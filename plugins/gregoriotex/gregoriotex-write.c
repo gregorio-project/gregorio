@@ -390,7 +390,7 @@ gregoriotex_write_syllable (FILE *f,
   // Very first: before anything, if the syllable is the beginning of a no-linebreak area:
   if (syllable->no_linebreak_area==NLBA_BEGINNING)
     {
-      fprintf (f, "\\grebeginnlbarea % %%\n");
+      fprintf (f, "\\grebeginnlbarea{1}% %%\n");
     }
   /*
    * first we check if the syllable is only a end of line. If it is the case,
@@ -617,11 +617,11 @@ gregoriotex_write_syllable (FILE *f,
         {
           if (current_element->element_type == NLBA_BEGINNING)
             {
-              fprintf (f,"\\grebeginnlbarea % %%\n");
+              fprintf (f,"\\grebeginnlbarea{0}% %%\n");
             }
           else
             {
-              fprintf (f,"\\greendnlbarea % %%\n");
+              fprintf (f,"\\greendnlbarea{0}% %%\n");
             }
           current_element = current_element->next;
           continue;
@@ -822,7 +822,7 @@ gregoriotex_write_syllable (FILE *f,
   // Very last, if the syllable is the end of a no-linebreak area:
   if (syllable->no_linebreak_area==NLBA_END)
     {
-      fprintf (f, "\\greendnlbarea % %%\n");
+      fprintf (f, "\\greendnlbarea{1}% %%\n");
     }
 }
 

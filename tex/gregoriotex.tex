@@ -1100,7 +1100,7 @@
   \relax%
 }
 
-\def\grebeginnlbarea{%
+\def\grebeginnlbarea#1{%
   \xdef\grenobreakpenaltysave{\grenobreakpenalty }%
   \xdef\grenobreakpenalty{10001}%
   \xdef\grenolastlinepenaltysave{\grenolastlinepenalty }%
@@ -1119,7 +1119,7 @@
   \xdef\grehyphenpenalty{10001}%
 }
 
-\def\greendnlbarea{%
+\def\greendnlbarea#1{%
   \xdef\grenobreakpenalty{\grenobreakpenaltysave }%
   \xdef\grenolastlinepenalty{\grenolastlinepenaltysave}%
   \xdef\greendofwordpenalty{\greendofwordpenaltysave}%
@@ -1128,6 +1128,11 @@
   \xdef\greendafterbaraltpenalty{\greendafterbaraltpenaltysave}%
   \xdef\greendofelementpenalty{\greendofelementpenaltysave}%
   \xdef\grehyphenpenalty{\grehyphenpenaltysave}%
+  \ifnum #1=0\relax %
+    \grepenalty{\greendofelementpenalty}%
+  \else %
+    \grepenalty{\greendofsyllablepenalty}%
+  \fi %
 }
 
 \input gregoriotex-symbols.tex
