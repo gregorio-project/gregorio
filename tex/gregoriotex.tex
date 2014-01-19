@@ -348,32 +348,6 @@
   \relax%
 }
 
-\def\grewritetranslation#1{%
-  \raise\grespacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
-  \relax %
-}
-
-\def\grewritetranslationwithcenterbeginning#1{%
-  \gregoriocenterattr=1\relax %
-  \raise\grespacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}\kern 0pt}%
-  \unsetluatexattribute{\gregoriocenterattr}%
-  \relax %
-}
-
-\xdef\gremustdotranslationcenterend{0}
-
-\def\gretranslationcenterend{%
-  \xdef\gremustdotranslationcenterend{1}%
-  \relax %
-}
-
-\def\gredotranslationcenterend{%
-  \gregoriocenterattr=2\relax %
-  \raise\grespacebeneathtext\hbox to 0pt{}%
-  \unsetluatexattribute{\gregoriocenterattr}%
-  \relax %
-}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the initial
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -777,6 +751,51 @@
 \input gregoriotex-signs.tex
 
 \input gregoriotex-syllable.tex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the translations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\xdef\gretranslationcenteringscheme{0}
+
+\def\setgretranslationcenteringscheme#1{
+  \xdef\gretranslationcenteringscheme{\number #1}%
+}
+
+\def\grewritetranslation#1{%
+  \ifnum\gretranslationcenteringscheme=0\relax %
+    \raise\grespacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
+  \else %
+    \gretempdim=\wd\GreSyllabletext %
+    \setbox\GreTempwidth=\hbox{#1}%
+    \advance\gretempdim by -\wd\GreTempwidth %
+    \divide\gretempdim by 2\relax %
+    \kern \gretempdim %
+    \raise\grespacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
+    \kern -\gretempdim %
+  \fi %
+}
+
+\def\grewritetranslationwithcenterbeginning#1{%
+  \gregoriocenterattr=1\relax %
+  \raise\grespacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}\kern 0pt}%
+  \unsetluatexattribute{\gregoriocenterattr}%
+  \relax %
+}
+
+\xdef\gremustdotranslationcenterend{0}
+
+\def\gretranslationcenterend{%
+  \xdef\gremustdotranslationcenterend{1}%
+  \relax %
+}
+
+\def\gredotranslationcenterend{%
+  \gregoriocenterattr=2\relax %
+  \raise\grespacebeneathtext\hbox to 0pt{}%
+  \unsetluatexattribute{\gregoriocenterattr}%
+  \relax %
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the chironomic signs lines
