@@ -862,6 +862,9 @@
 \def\endgregorioscore{%
   \global\grelastoflinecount=0\relax %
   \global\greblockcusto=0\relax %
+  \ifnum\greinnlbarea=1\relax %
+    \greendnlbarea{2}%
+  \fi %
   \grelocalleftbox{}%
   \ifnum\keeprightbox=0\relax %
     \grelocalrightbox{}%
@@ -1100,7 +1103,10 @@
   \relax%
 }
 
+\xdef\greinnlbarea{0}
+
 \def\grebeginnlbarea#1{%
+  \xdef\greinnlbarea{1}%
   \xdef\grenobreakpenaltysave{\grenobreakpenalty }%
   \xdef\grenobreakpenalty{10001}%
   \xdef\grenolastlinepenaltysave{\grenolastlinepenalty }%
@@ -1120,6 +1126,7 @@
 }
 
 \def\greendnlbarea#1{%
+  \xdef\greinnlbarea{0}%
   \xdef\grenobreakpenalty{\grenobreakpenaltysave }%
   \xdef\grenolastlinepenalty{\grenolastlinepenaltysave}%
   \xdef\greendofwordpenalty{\greendofwordpenaltysave}%
@@ -1128,10 +1135,12 @@
   \xdef\greendafterbaraltpenalty{\greendafterbaraltpenaltysave}%
   \xdef\greendofelementpenalty{\greendofelementpenaltysave}%
   \xdef\grehyphenpenalty{\grehyphenpenaltysave}%
-  \ifnum #1=0\relax %
+  \ifcase #1\relax %
     \grepenalty{\greendofelementpenalty}%
-  \else %
+  \or %
     \grepenalty{\greendofsyllablepenalty}%
+  \or %
+% end of score, no penalty needs to be added
   \fi %
 }
 
