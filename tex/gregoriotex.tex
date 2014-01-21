@@ -762,6 +762,12 @@
   \xdef\gretranslationcenteringscheme{\number #1}%
 }
 
+\xdef\grenlbintranslation{0}
+
+\def\gresetnlbintranslation#1{%
+  \xdef\grenlbintranslation{\number #1}%
+}
+
 \def\grewritetranslation#1{%
   \ifnum\gretranslationcenteringscheme=0\relax %
     \raise\grespacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
@@ -777,6 +783,9 @@
 }
 
 \def\grewritetranslationwithcenterbeginning#1{%
+  \ifnum\grenlbintranslation=1\relax %
+    \grebeginnlbarea{0}{1}%
+  \fi %
   \gregoriocenterattr=1\relax %
   \raise\grespacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}\kern 0pt}%
   \unsetluatexattribute{\gregoriocenterattr}%
@@ -791,6 +800,9 @@
 }
 
 \def\gredotranslationcenterend{%
+  \ifnum\grenlbintranslation=1\relax %
+    \greendnlbarea{0}{1}%
+  \fi %
   \gregoriocenterattr=2\relax %
   \raise\grespacebeneathtext\hbox to 0pt{}%
   \unsetluatexattribute{\gregoriocenterattr}%
@@ -881,7 +893,7 @@
 \def\endgregorioscore{%
   \global\grelastoflinecount=0\relax %
   \global\greblockcusto=0\relax %
-  \ifnum\greinnlbarea=1\relax %
+  \ifnum\grenlbstate=0\else %
     \greendnlbarea{2}%
   \fi %
   \grelocalleftbox{}%
@@ -1122,44 +1134,79 @@
   \relax%
 }
 
-\xdef\greinnlbarea{0}
+% The different states of line break areas:
+% 0: not currently in a no line break area
+% 1: no line break area due tu translation centering
+% 2: no line break area due to <nlba> tag
+\xdef\grenlbstate{0}
 
-\def\grebeginnlbarea#1{%
-  \xdef\greinnlbarea{1}%
-  \xdef\grenobreakpenaltysave{\grenobreakpenalty }%
-  \xdef\grenobreakpenalty{10001}%
-  \xdef\grenolastlinepenaltysave{\grenolastlinepenalty }%
-  \xdef\grenolastlinepenalty{10001}%
-  \xdef\greendofwordpenaltysave{\greendofwordpenalty }%
-  \xdef\greendofwordpenalty{10001}%
-  \xdef\greendofsyllablepenaltysave{\greendofsyllablepenalty }%
-  \xdef\greendofsyllablepenalty{10001}%
-  \xdef\greendafterbarpenaltysave{\greendafterbarpenalty }%
-  \xdef\greendafterbarpenalty{10001}%
-  \xdef\greendafterbaraltpenaltysave{\greendafterbaraltpenalty }%
-  \xdef\greendafterbaraltpenalty{10001}%
-  \xdef\greendofelementpenaltysave{\greendofelementpenalty }%
-  \xdef\greendofelementpenalty{10001}%
-  \xdef\grehyphenpenaltysave{\grehyphenpenalty }%
-  \xdef\grehyphenpenalty{10001}%
+% first argument is if if the nlba is starting in neumes or not
+% second argument is if it is called from translation centering or not
+\def\grebeginnlbarea#1#2{%
+  \xdef\grenlbinitialstate{\grenlbstate}%
+  \ifnum#2=0\relax %
+    \xdef\grenlbstate{2}%
+  \else %
+      \ifcase\grenlbstate %
+        \xdef\grenlbstate{1}%
+      \or %
+        \xdef\grenlbstate{1}%
+      \or %
+        \xdef\grenlbstate{2}%
+      \fi %
+  \fi %
+  \ifnum\grenlbinitialstate=0\relax %
+      \xdef\grenobreakpenaltysave{\grenobreakpenalty }%
+      \xdef\grenobreakpenalty{10001}%
+      \xdef\grenolastlinepenaltysave{\grenolastlinepenalty }%
+      \xdef\grenolastlinepenalty{10001}%
+      \xdef\greendofwordpenaltysave{\greendofwordpenalty }%
+      \xdef\greendofwordpenalty{10001}%
+      \xdef\greendofsyllablepenaltysave{\greendofsyllablepenalty }%
+      \xdef\greendofsyllablepenalty{10001}%
+      \xdef\greendafterbarpenaltysave{\greendafterbarpenalty }%
+      \xdef\greendafterbarpenalty{10001}%
+      \xdef\greendafterbaraltpenaltysave{\greendafterbaraltpenalty }%
+      \xdef\greendafterbaraltpenalty{10001}%
+      \xdef\greendofelementpenaltysave{\greendofelementpenalty }%
+      \xdef\greendofelementpenalty{10001}%
+      \xdef\grehyphenpenaltysave{\grehyphenpenalty }%
+      \xdef\grehyphenpenalty{10001}%
+  \fi %
 }
 
-\def\greendnlbarea#1{%
-  \xdef\greinnlbarea{0}%
-  \xdef\grenobreakpenalty{\grenobreakpenaltysave }%
-  \xdef\grenolastlinepenalty{\grenolastlinepenaltysave}%
-  \xdef\greendofwordpenalty{\greendofwordpenaltysave}%
-  \xdef\greendofsyllablepenalty{\greendofsyllablepenaltysave}%
-  \xdef\greendafterbarpenalty{\greendafterbarpenaltysave}%
-  \xdef\greendafterbaraltpenalty{\greendafterbaraltpenaltysave}%
-  \xdef\greendofelementpenalty{\greendofelementpenaltysave}%
-  \xdef\grehyphenpenalty{\grehyphenpenaltysave}%
-  \ifcase #1\relax %
-    \grepenalty{\greendofelementpenalty}%
-  \or %
-    \grepenalty{\greendofsyllablepenalty}%
-  \or %
-% end of score, no penalty needs to be added
+\def\greendnlbarea#1#2{%
+  \xdef\grenlbinitialstate{\grenlbstate}%
+  \ifnum#2=0\relax %
+    \xdef\grenlbstate{0}%
+  \else %
+      \ifcase\grenlbstate %
+        \xdef\grenlbstate{0}%
+      \or %
+        \xdef\grenlbstate{0}%
+      \or %
+        \xdef\grenlbstate{2}%
+      \fi %
+  \fi %
+  % if grenlbstate is not 0, then nothing should happend
+  \ifnum\grenlbstate=0\relax %
+    \ifnum\grenlbinitialstate=0\else %
+      \xdef\grenobreakpenalty{\grenobreakpenaltysave }%
+      \xdef\grenolastlinepenalty{\grenolastlinepenaltysave}%
+      \xdef\greendofwordpenalty{\greendofwordpenaltysave}%
+      \xdef\greendofsyllablepenalty{\greendofsyllablepenaltysave}%
+      \xdef\greendafterbarpenalty{\greendafterbarpenaltysave}%
+      \xdef\greendafterbaraltpenalty{\greendafterbaraltpenaltysave}%
+      \xdef\greendofelementpenalty{\greendofelementpenaltysave}%
+      \xdef\grehyphenpenalty{\grehyphenpenaltysave}%
+      \ifcase #1\relax %
+        \grepenalty{\greendofelementpenalty}%
+      \or %
+        \grepenalty{\greendofsyllablepenalty}%
+      \or %
+    % end of score, no penalty needs to be added
+      \fi %
+    \fi %
   \fi %
 }
 
