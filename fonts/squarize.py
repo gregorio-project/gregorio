@@ -487,11 +487,11 @@ def write_pes(i, first_glyph, shape, liquescentia='nothing'):
 def write_pes_debilis(i, shape, liquescentia='nothing'):
     glyphnumber=gnumber(i, 0, 0, shape, liquescentia)
     # with a deminutus it is much more beautiful than with a idebilis
-    paste_and_move("deminutus", glyphnumber, width_high_pes-line_width-width_debilis, 0)
-    write_line(i, glyphnumber, width_high_pes-line_width, base_height)
+    paste_and_move("deminutus", glyphnumber, 0, 0)
+    write_line(i, glyphnumber, width_debilis, base_height)
     simplify(glyphnumber)
-    paste_and_move("phigh", glyphnumber, 0, i*base_height)
-    set_width(glyphnumber, width_high_pes)
+    paste_and_move("base4", glyphnumber, width_debilis, i*base_height)
+    set_width(glyphnumber, width_punctum+width_debilis)
     end_glyph(glyphnumber) 
 
 def write_pes_deminutus(i, first_glyph, shape, liquescentia='nothing'):
