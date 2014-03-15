@@ -1,0 +1,18 @@
+#!/bin/tcsh
+
+# (C) 2014 R. Padraic Springuel, This work is licensed under a Creative Commons Attribution 4.0 International License.
+
+set path= ($path /usr/texbin /usr/local/bin)
+set filename = "$1"
+set greglines = `grep '[\]includescore[{].*[}]' "$filename"`
+foreach line ($greglines)
+	set file = `expr "$line" : 'includescore\(.*\)'`
+	set gregname = "${file:r}.gabc"
+	if (-M "$gregname" > -M "$file") then
+		gregorio -vW  "$gregname"
+		echo "produced $file"
+	else
+		echo "$gregname has not changed since last compilation"
+	endif
+end
+lualatex -file-line-error -synctex=1 "$1"

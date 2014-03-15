@@ -14,6 +14,7 @@ After that you can insert a render frame using the program gregorio, and simply
 typing gabc (in right-click->edit sources).
 For more details see http://home.gna.org/gregorio/scribus.
 
+
 Gnome/Gtk/Gedit: gabc.lang
 ================
 This is a lang file for gabc syntax highlighting in all the text viewer of
@@ -21,17 +22,20 @@ the gnome project, like gedit. Simply copy the file in
 /usr/share/gtksourceview-2.0/language-specs/ and it will work. There are still
 some bugs to fix, but at least it looks better.
 
+
 Kde/Kate/Kedit: gabc.xml
 ===============
 This is a file for syntax highlighting in kate (and Kedit, etc.). To 
 install it, simply copy the file in /usr/share/apps/katepart/syntax. This path
 may not be the same according to your distribution.
 
+
 Emacs: gregorio-mode.el
 ======
 This is a file for gregorio integration in Emacs. See
 https://github.com/cajetanus/gregorio-mode.el for more details, updates and
 documentation.
+
 
 Vim: gabc.vim
 ====
@@ -41,26 +45,58 @@ au BufNewFile,BufRead *.gabc                    setf gabc
 somewhere near lines of the same type (near line 100 for example) in
 /usr/share/vim/vimcurrent/filetype.vim . This will autodetect the filetypes.
 
-TeXShop (Mac OSX): gregorio.engine and gregorio.scpt
+
+TeXShop (Mac OSX): gregorio.engine, greg-book.engine and gregorio.scpt
 =================
 There are 2 ways of compiling gabc files directly from TeXShop:
-1) Using gregorio.engine. To do this, copy gregorio.engine into ~/Library/TeXShop/Engines.
-Then in a Terminal window, run 
-defaults write TeXShop OtherTeXExtensions -array-add "gabc"
-Restart TeXShop, and you should be able to see "gregorio" as a typesetting 
-option in the upper left corner.
+
+1) Installing gregorio.engine and greg-book.engine. To do this, copy
+   gregorio.engine into ~/Library/TeXShop/Engines. Then in a Terminal window,
+   run:
+
+      defaults write TeXShop OtherTeXExtensions -array-add "gabc"
+
+   Restart TeXShop, and you should be able to see "gregorio" and "greg-book" as
+   a typesetting option in the upper left corner.
+   
+   To use gregorio.engine, place
+
+      % !TEX engine = gregorio
+
+   as the first line in a gabc file.  Now typesetting the gabc file will run
+   gregorio on it.
+   
+   To use greg-book.engine, place
+
+      % !TEX engine = greg-book
+
+   as the first line in the main project file (i.e. the one that calls 
+   \includescore). Now typesetting the main project file will cause the engine
+   to check for changes to any included gabc scores, run gregorio on those which
+   have changed since the last time the project was compiled, and then compile
+   the project using lualatex.
+
+   Also you can place
+
+      % !TEX root = path_to_main_project_file.tex
+
+   as the first line in the gabc file. Now typesetting the gabc file will
+   trigger the typesetting of the main project file.
+   
 2) Using gregorio.scpt. It will call gregorio on your gabc file, converting 
-to gtex. You can modify it if you need another output format. To set it up, 
-open the Macro Editor in TeXShop. Select New Item,
-and call it gregorio (or whatever you wish). Copy and paste all the text of 
-gregorio.scpt into the Content window, and click save. To use it, type and 
-save a gabc file and then just choose the gregorio macro from the menu.
+   to GregorioTeX. You can modify it if you need another output format. To set
+   it up, open the Macro Editor in TeXShop. Select "New Item", and call it 
+   "gregorio" (or whatever you wish). Copy and paste all the text of 
+   gregorio.scpt into the Content window, and click save. To use it, type and 
+   save a gabc file and then just choose the gregorio macro from the menu.
+
 
 BBEdit and TextWrangler: gabc-syntax.plist
 ========================
 This file will highlight gabc syntax in the BBEdit and TextWrangler editors. To
 install it, just copy it into ~/Library/Application Support/TextWrangler/Language Modules/ 
 and restart BBEdit or TextWrangler.
+
 
 Automatic Gregorio Processing: gprocess
 ==============================
