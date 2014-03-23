@@ -429,7 +429,7 @@ def pes():
     message("pes")
     precise_message("pes")
     if (font_name=="gregorio" or font_name=="parmesan" or font_name=="gregoria" or font_name=="greciliae"):
-    # we prefer drawing the pes with one ton of ambitus by hand, it is more beautiful
+    # we prefer drawing the pes with ambitus of one by hand, it is more beautiful
         for i in range(2,max_interval+1):
             write_pes(i, "p2base", 'pes')
     else:
@@ -1075,24 +1075,33 @@ def scandicus():
     message("scandicus")
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
-            write_scandicus(i,j)
+            write_scandicus(i, j, 'phigh')
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            write_scandicus(i, j, 'rdeminutus', 'deminutus')
             
-def write_scandicus(i,j):
-    glyphnumber=gnumber(i, j, 0, 'scandicus', 'deminutus')
+def write_scandicus(i, j, last_glyph, liquescentia='nothing'):
+    glyphnumber=gnumber(i, j, 0, 'scandicus', liquescentia)
     if i == 1:
         simple_paste('_0017', glyphnumber)
         length = width_punctum
-        second_glyph = 'mnbpdeminutus'
+        second_glyph = 'p2base'
     else:
         simple_paste('base5', glyphnumber)
         length = width_punctum - line_width
         write_line(i, glyphnumber, length, base_height)
         second_glyph = 'msdeminutus'
     paste_and_move(second_glyph, glyphnumber, length, i*base_height)
-    length = length + width_flexusdeminutus
+    if i==1:
+        length = length + width_punctum
+    else:
+        length = length + width_flexusdeminutus
     if j != 1:
         write_line(j, glyphnumber, length - line_width, (i+1) * base_height)
-    paste_and_move('rdeminutus', glyphnumber, length - width_deminutus - line_width, (i+j)*base_height)
+    if last_glyph == 'rdeminutus':
+        paste_and_move('rdeminutus', glyphnumber, length - width_deminutus - line_width, (i+j)*base_height)
+    else:
+        paste_and_move(last_glyph, glyphnumber, length - width_high_pes, (i+j)*base_height)
     set_width(glyphnumber, length)
     end_glyph(glyphnumber)
         
