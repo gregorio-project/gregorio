@@ -19,7 +19,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1389717271
+ModificationTime: 1395607863
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -41,7 +41,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 39 13 6
+WinInfo: 0 19 8
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
 BeginChars: 373 373
 
@@ -1305,7 +1305,7 @@ StartChar: porrectusflexus5
 Encoding: 57 -1 57
 Width: 931
 VWidth: 2048
-Flags: HWO
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore
@@ -2211,22 +2211,24 @@ StartChar: msdeminutus
 Encoding: 97 -1 97
 Width: 168
 VWidth: 2048
-Flags: HW
-HStem: -408.997 15 -93.9968 15 221.003 15 536.003 15
+Flags: HWO
+HStem: -19.5 180.5<25.9038 150>
+VStem: 0 18<-59.999 -40.3816> 150 18<161 180.5>
 LayerCount: 2
 Fore
 SplineSet
-168 5.66309 m 18
- 168 -1 156.818 -8.2013 154.375 -9.37109 c 0
- 128 -22 71.5 -44.4961 18 -44.9961 c 1
- 18 -48.9043 18.5 -55.5 18 -62 c 1
- 8.5 -62 13 -62 0 -62 c 1
- 0 151.5 l 21
- 4.5 143 14.5 135.5 20.5 135.5 c 4
- 44.6367 135.5 112.741 151.085 137.875 160.254 c 4
- 145.623 163.08 149.5 171.504 150 182.003 c 5
- 168 182.003 l 29
- 168 5.66309 l 18
+150 180 m 1
+ 150 180 150 180 168 180 c 1
+ 168 -25 l 1
+ 166 -23 156 -20 150 -20 c 0
+ 137 -20 76 -25 69 -27 c 0
+ 44 -32 37 -34 30 -38 c 0
+ 22 -43 18 -50 18 -60 c 0
+ 18 -60 7 -60 0 -60 c 25
+ 0 127 l 17
+ 0 134 11.0615 137.5 13.625 138.375 c 0
+ 43.625 148.858 96.5 161 150 161 c 1
+ 150 161.535 150 180 150 180 c 1
 EndSplineSet
 EndChar
 
