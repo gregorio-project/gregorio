@@ -46,42 +46,64 @@ somewhere near lines of the same type (near line 100 for example) in
 /usr/share/vim/vimcurrent/filetype.vim . This will autodetect the filetypes.
 
 
-TeXShop (Mac OSX): gregorio.engine, greg-book.engine and gregorio.scpt
+TeXShop (Mac OSX): gregorio.engine, greg-book.engine, greg-lily-book.engine
+                   and gregorio.scpt
 =================
 There are 2 ways of compiling gabc files directly from TeXShop:
 
-1) Installing gregorio.engine and greg-book.engine. To do this, copy
-   gregorio.engine into ~/Library/TeXShop/Engines. Then in a Terminal window,
-   run:
+1) Using an engine.  There are three TeXShop engines, each of which serves a different
+   purpose: gregorio.engine, greg-book.engine, and greg-lily-book.engine. To use
+   them copy them into ~/Library/TeXShop/Engines. Then in a Terminal window, run:
 
       defaults write TeXShop OtherTeXExtensions -array-add "gabc"
 
-   Restart TeXShop, and you should be able to see "gregorio" and "greg-book" as
-   a typesetting option in the upper left corner.
+   Restart TeXShop, and you should be able to see the three engines as typesetting
+   option in the upper left corner.
    
-   To use gregorio.engine, place
+   a) gregorio.engine: This is the simplest engines and is designed to run gregorio on
+      a gabc file and convert it to a tex file.  It will not produce a pdf output.  To
+      make it the default engine for a gabc file add
 
-      % !TEX engine = gregorio
+         % !TEX engine = gregorio
 
-   as the first line in a gabc file.  Now typesetting the gabc file will run
-   gregorio on it.
+      as the first line in the file.  Now typesetting the gabc file will run
+      gregorio on it.
    
-   To use greg-book.engine, place
+   b) greg-book.engine: This engine is designed to compile a full project, running
+      gregorio on any included gabc files which have changed since the last compilation.
+      It will produce a pdf output.  To make it the default engine for a tex file place
 
-      % !TEX engine = greg-book
+         % !TEX engine = greg-book
 
-   as the first line in the main project file (i.e. the one that calls 
-   \includescore). Now typesetting the main project file will cause the engine
-   to check for changes to any included gabc scores, run gregorio on those which
-   have changed since the last time the project was compiled, and then compile
-   the project using lualatex.
+      as the first line in the main project file (i.e. the one that contains the document
+      class declaration). With this engine set for the main project file, you can place
 
-   Also you can place
+         % !TEX root = path_to_main_project/file.tex
 
-      % !TEX root = path_to_main_project_file.tex
+      as the first line in the gabc file. Now typesetting the gabc file will trigger the
+      typesetting of the main project file.
 
-   as the first line in the gabc file. Now typesetting the gabc file will
-   trigger the typesetting of the main project file.
+   c) greg-lily-book.engine: This engine is designed to compile a full project which
+      combines gregorio with LilyPond (enabling both modern and chant notation in the
+      same project).  To use it you must have LilyPond-Book.engine (version 2.0.4,
+      released 2014/03/23,  or higher) installed as an active engine on your system.
+      Updated versions of this engine are available at 
+
+         https://sole.dimi.uniud.it/~nicola.vitacolonna/software/lilypond-texshop/
+
+      To make this engine the default engine for a tex file add
+
+         % !TEX angine = greg-lily-book
+	 % !LILYPOND tex = lualatex --shell-escape
+
+      as the first two lines.  Note that the second line is required to override
+      lilypond-book's default tex processor (pdflatex) and force the use of lualatex.
+      The option (--shell-escape) is needed if you use (gre)includegabcscore in your
+      document.  If you confine yourself to (gre)include(tex)score it can be left off
+      (and you can get away with some earlier versions of LilyPond-Book).  However, when
+      using (gre)include(tex)score you must provide the gtex extension explicitly.  If
+      you leave off the extension or provide the extension tex LilyPond-Book will be
+      unable to find the included scores.
    
 2) Using gregorio.scpt. It will call gregorio on your gabc file, converting 
    to GregorioTeX. You can modify it if you need another output format. To set
