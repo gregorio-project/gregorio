@@ -604,6 +604,8 @@ def flexus():
     for i in range(1,max_interval+1):
         write_flexus(i, "mdeminutus", 'base7', 'flexus_nobar', 'deminutus')
     for i in range(1,max_interval+1):
+        write_flexus(i, "odbase", 'deminutus', 'flexus_oriscus', 'deminutus')
+    for i in range(1,max_interval+1):
         write_flexus(i, "mdeminutus", 'base7', 'flexus', 'deminutus')
     for i in range(1,max_interval+1):
         write_flexus(i, "mdeminutus", 'base7', 'flexus_longqueue', 'deminutus')
@@ -639,6 +641,12 @@ def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
             write_first_bar(2, glyphnumber)
             write_deminutus(0, i, glyphnumber, length=0, tosimplify=1, firstbar=1)
         length=width_flexusdeminutus
+    elif first_glyph=='odbase' and last_glyph == 'deminutus':
+        simple_paste(first_glyph, glyphnumber)
+        write_line(i, glyphnumber, width_oriscus_rev - line_width, (1-i)*base_height)
+        simplify(glyphnumber)
+        paste_and_move("deminutus", glyphnumber, width_oriscus_rev - width_deminutus - line_width, (-i)*base_height)
+        length = width_oriscus_rev
     else:
         if i==1:#we remove the bar aspect
             if last_glyph=='base7':
@@ -649,7 +657,7 @@ def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
                 last_glyph='_0073' 
             if first_glyph=='base2':
                 first_glyph='_0017'
-            if first_glyph=='odbase':
+            elif first_glyph=='odbase':
                 first_glyph='_0028'
             elif first_glyph=='vsbase':
                 first_glyph='_0025'
