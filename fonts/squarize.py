@@ -1082,10 +1082,20 @@ def scandicus():
             
 def write_scandicus(i, j, last_glyph, liquescentia='nothing'):
     glyphnumber=gnumber(i, j, 0, 'scandicus', liquescentia)
+    # special case of i=j=1, we use glyph 1025 directly
+    if i == 1 and j==1:
+        simple_paste('_0017', glyphnumber)
+        second_glyph = '_1025'
+        paste_and_move(second_glyph, glyphnumber, width_punctum, base_height)
+        set_width(glyphnumber, 2*width_punctum)
+        end_glyph(glyphnumber)
+        return
     if i == 1:
         simple_paste('_0017', glyphnumber)
         length = width_punctum
         second_glyph = 'p2base'
+        if liquescentia == 'deminutus':
+            second_glyph = 'mnbpdeminutus'
     else:
         simple_paste('base5', glyphnumber)
         length = width_punctum - line_width
