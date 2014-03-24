@@ -1009,8 +1009,6 @@ def write_torculusresupinus(i,j,k, first_glyph, last_glyph, shape, liquescentia=
             middle_glyph="porrectusflexus%d" % j
     paste_and_move(middle_glyph, glyphnumber, length, i*base_height)
     length=length + porrectuswidths[j-1]
-    if (last_glyph=='auctusa2' or last_glyph == 'auctusd2'):
-        length=length + porrectusflexuswidths[j-1]
     if ((last_glyph!='auctusa2' and last_glyph != 'auctusd2') or k!=1):
         write_line(k, glyphnumber, length-line_width, (i-j+1)*base_height)
     simplify(glyphnumber)
