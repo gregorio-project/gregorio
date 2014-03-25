@@ -1008,7 +1008,10 @@ def write_torculusresupinus(i,j,k, first_glyph, last_glyph, shape, liquescentia=
         else:
             middle_glyph="porrectusflexus%d" % j
     paste_and_move(middle_glyph, glyphnumber, length, i*base_height)
-    length=length + porrectusflexuswidths[j-1]
+    if (last_glyph=='auctusa2' or last_glyph == 'auctusd2'): 	 
+        length=length + porrectusflexuswidths[j-1]
+    else:
+        length=length + porrectuswidths[j-1]
     if ((last_glyph!='auctusa2' and last_glyph != 'auctusd2') or k!=1):
         write_line(k, glyphnumber, length-line_width, (i-j+1)*base_height)
     simplify(glyphnumber)
@@ -1081,7 +1084,7 @@ def scandicus():
 def write_scandicus(i, j, last_glyph, liquescentia='nothing'):
     glyphnumber=gnumber(i, j, 0, 'scandicus', liquescentia)
     # special case of i=j=1, we use glyph 1025 directly
-    if i == 1 and j==1:
+    if i == 1 and j==1 and liquescentia == 'nothing':
         simple_paste('_0017', glyphnumber)
         second_glyph = '_1025'
         paste_and_move(second_glyph, glyphnumber, width_punctum, base_height)
@@ -1100,7 +1103,7 @@ def write_scandicus(i, j, last_glyph, liquescentia='nothing'):
         write_line(i, glyphnumber, length, base_height)
         second_glyph = 'msdeminutus'
     paste_and_move(second_glyph, glyphnumber, length, i*base_height)
-    if i==1:
+    if (i==1) and liquescentia == 'nothing':
         length = length + width_punctum
     else:
         length = length + width_flexusdeminutus
