@@ -52,8 +52,11 @@
 #define T_TORCULUS_QUILISMA 38
 // only deminutus are generated for the next two
 #define T_SCANDICUS 42
-#define T_ANCUS 46
-#define T_ANCUS_LONGQUEUE 50
+#define T_ANCUS 44
+#define T_ANCUS_LONGQUEUE 46
+#define T_SALICUS_FIRST 48
+#define T_SALICUS 50
+#define T_SALICUS_LONGQUEUE 52
 // this is a special type for the first note of a torculus resupinus flexus
 #define T_ONE_NOTE_TRF 72
 

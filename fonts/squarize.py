@@ -144,14 +144,14 @@ Copyright (C) 2002--2006 Juergen Reuter <reuter@ipd.uka.de>
     pes_quadratum()
     salicus_first()
     flexus()
-    shortglyphs=0
     scandicus()
     ancus()
+    salicus()
+    shortglyphs=0
     torculus()
     porrectus()
     porrectusflexus()
     torculusresupinus()
-    shortglyphs=1
     newfont.generate("%s.ttf" % font_name)
     oldfont.close()
     newfont.close()
@@ -309,11 +309,12 @@ shapes={
 'torculus':30,
 'torculusresupinus':34,
 'torculusquilisma':38,
-# if one day we are running out of namespace, we may consider these two next as specials, because only the deminutus are generated
 'scandicus':42,
-'ancus':46,
-'ancus_longqueue':50,
-'salicus_first':54,
+'ancus':44,
+'ancus_longqueue':46,
+'salicus_first':48,
+'salicus':50,
+'salicus_longqueue':52,
 }
 
 liquescentiae={
@@ -611,6 +612,57 @@ def write_salicus_first(i, first_glyph, last_glyph, shape, liquescentia='nothing
         paste_and_move(linename, glyphnumber, first_width, base_height)
     paste_and_move(last_glyph, glyphnumber, first_width, i*base_height)
     set_width(glyphnumber, first_width+width_oriscus)
+    end_glyph(glyphnumber)
+
+def salicus():
+    message("salicus")
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            write_salicus(i, j, "rvsbase", 'salicus')
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            write_salicus(i, j, "rvlbase", 'salicus_longqueue')
+
+def write_salicus(i, j, last_glyph, shape, liquescentia='nothing'):
+    glyphnumber=gnumber(i, j, 0, shape, liquescentia)
+    if j==1:
+        if last_glyph=='rvsbase':
+            last_glyph='_0023'
+        elif last_glyph=='rvlbase':
+            last_glyph='_0022'
+    if i==1 and j==1:
+        first_glyph = '_0017'
+        first_width = width_punctum
+        middle_glyph ='_0027'
+        middle_width = width_oriscus
+    elif i==1:
+        first_glyph = '_0017'
+        first_width = width_punctum
+        middle_glyph ='obase'
+        middle_width = width_oriscus-line_width
+    elif j==1:
+        first_glyph = 'base5'
+        first_width = width_punctum-line_width
+        middle_glyph ='obase4'
+        middle_width = width_oriscus
+    else:
+        first_glyph = 'base5'
+        first_width = width_punctum-line_width
+        middle_glyph ='obase8'
+        middle_width = width_oriscus-line_width
+    simple_paste(first_glyph, glyphnumber)
+    if (i!=1):
+        linename= "line%d" % i
+        paste_and_move(linename, glyphnumber, first_width, base_height)
+    paste_and_move(middle_glyph, glyphnumber, first_width, i*base_height)
+    length = first_width+middle_width
+    if (j!=1):
+        linename= "line%d" % j
+        paste_and_move(linename, glyphnumber, length, (i+1)*base_height)
+    else:
+        length = length-0.01
+    paste_and_move(last_glyph, glyphnumber, length, (i+j)*base_height)
+    set_width(glyphnumber, length+width_punctum)
     end_glyph(glyphnumber)
 
 def flexus():
@@ -1139,7 +1191,7 @@ def write_scandicus(i, j, last_glyph, liquescentia='nothing'):
         paste_and_move(last_glyph, glyphnumber, length - width_high_pes, (i+j)*base_height)
     set_width(glyphnumber, length)
     end_glyph(glyphnumber)
-        
+
 def ancus():
     message("ancus")
     for i in range(1,max_interval+1):
@@ -1148,7 +1200,7 @@ def ancus():
     for i in range(1,max_interval+1):
         for j in range(1,max_interval+1):
             write_ancus(i,j, 'vlbase', 'ancus_longqueue')
-            
+
 def write_ancus(i,j, first_glyph, glyph_type):
     glyphnumber=gnumber(i, j, 0, glyph_type, 'deminutus')
     if i == 1:
