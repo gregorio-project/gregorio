@@ -64,7 +64,7 @@ There are 2 ways of compiling gabc files directly from TeXShop:
       a gabc file and convert it to a tex file.  It will not produce a pdf output.  To
       make it the default engine for a gabc file add
 
-         % !TEX engine = gregorio
+         % !TEX TS-program = gregorio
 
       as the first line in the file.  Now typesetting the gabc file will run
       gregorio on it.
@@ -73,7 +73,7 @@ There are 2 ways of compiling gabc files directly from TeXShop:
       gregorio on any included gabc files which have changed since the last compilation.
       It will produce a pdf output.  To make it the default engine for a tex file place
 
-         % !TEX engine = greg-book
+         % !TEX TS-program = greg-book
 
       as the first line in the main project file (i.e. the one that contains the document
       class declaration). With this engine set for the main project file, you can place
@@ -93,7 +93,7 @@ There are 2 ways of compiling gabc files directly from TeXShop:
 
       To make this engine the default engine for a tex file add
 
-         % !TEX angine = greg-lily-book
+         % !TEX TS-program = greg-lily-book
 	 % !LILYPOND tex = lualatex --shell-escape
 
       as the first two lines.  Note that the second line is required to override
