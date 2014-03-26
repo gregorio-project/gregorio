@@ -80,6 +80,12 @@ License. If you modify this font, you may extend this exception to your
 version of the font, but you are not obligated to do so. If you do not wish
 to do so, delete this exception statement from your version."""
 
+# the unicode character at which we start our numbering
+# 161 prevents gregorio chars to be control characters
+# but U+F0000 Supplemental Private Use Area-A might be better...
+# set to 0 for now, GregorioTeX should be heavily changed before it's usable
+unicode_char_start = 0
+
 def main():
     global oldfont, newfont, font_name
     global current_glyph_number, shortglyphs
@@ -167,7 +173,7 @@ def precise_message(glyph_name):
 initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,3,21,31,22,14,15,33,13,62,65,39,69,70,38,37,60,61,63,64,16,34,35,36,72,73,74,77,79,81,82,83,84,85,86, 87,88,89,90,91]
 
 def initialize_glyphs():
-    global initial_glyphs, initialcount, count, newfont, oldfont
+    global initial_glyphs, initialcount, count, newfont, oldfont, unicode_char_start
     names = []
     unislots = []
     for number in initial_glyphs:
@@ -175,7 +181,7 @@ def initialize_glyphs():
 #        initial_glyphs.insert(0,name)
 #        initial_glyphs.remove(number)
         names.append("_00%02d" % int(number))
-        unislots.append("u%05x" % int(number))
+        unislots.append("u%05x" % (int(number)+unicode_char_start))
     if font_name=="gregorio":
         glyphs_to_append=(1025, 2561)
         initialcount=192
@@ -191,7 +197,7 @@ def initialize_glyphs():
     for glyphnumber in glyphs_to_append:
 #        initial_glyphs.append(glyphnumber)
         names.append("_%04d" % int(glyphnumber))
-        unislots.append("u%05x" % int(glyphnumber))
+        unislots.append("u%05x" % (int(glyphnumber)+unicode_char_start))
     count=initialcount
     #print unislots
     for i in range(len(names)):
@@ -330,10 +336,11 @@ liquescentiae={
 
 # function to get the number of the glyph, with the name of the general shape, and the name of the different ambitus
 def gnumber(i, j, k, shape, liquescentia):
+    global unicode_char_start
     if shortglyphs==0:
-        return i+(5*j)+(25*k)+(256*liquescentiae[liquescentia])+(512*shapes[shape])
+        return i+(5*j)+(25*k)+(256*liquescentiae[liquescentia])+(512*shapes[shape])+unicode_char_start
     else:
-        return i+(5*j)+(25*k)+(64*liquescentiae[liquescentia])+(512*shapes[shape])
+        return i+(5*j)+(25*k)+(64*liquescentiae[liquescentia])+(512*shapes[shape])+unicode_char_start
 
 def simple_paste(src, dstnum):
     global oldfont, newfont
@@ -421,6 +428,8 @@ def hepisemus():
         write_hepisemus(porrectusflexuswidths[i], int(51+i))
     
 def write_hepisemus(shape_width, glyphnumber):
+    global unicode_char_start
+    glyphnumber = glyphnumber + unicode_char_start
     simple_paste("hepisemus_base", glyphnumber)
     scale(glyphnumber, shape_width + 2*hepisemus_additional_width, 1)
     move(glyphnumber, -hepisemus_additional_width, 0)

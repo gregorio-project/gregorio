@@ -4029,9 +4029,8 @@ void
                         "gregoriotex_determine_number_and_type", ERROR, 0);
       break;
     }
-
   *glyph_number = gregoriotex_determine_interval (glyph);
-  *glyph_number = temp + (*glyph_number);
+  *glyph_number = temp + (*glyph_number) + GLYPH_NUMBERING_START;
   // we change to the original liquescentia
   glyph->liquescentia = liquescentia;
   // we fix *type with initio_debilis
@@ -4414,7 +4413,7 @@ void
       return;
       break;
     }
-
+    *glyph_number = *glyph_number+GLYPH_NUMBERING_START;
 }
 
 int
