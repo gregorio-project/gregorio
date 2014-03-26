@@ -3849,7 +3849,7 @@ void
           temp =
             TYPE_FACTOR * T_FLEXUS_ORISCUS +
             gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
-                                                       L_ONLY_AUCTUS,
+                                                       L_NO_INITIO,
                                                        glyph->liquescentia);
         }
       else
@@ -3997,14 +3997,6 @@ void
           // TODO: do it really...
           *type = AT_ONE_NOTE;
         }
-      break;
-    case G_FLEXUS_ORISCUS:
-      *type = AT_ORISCUS;
-      *gtype = T_FLEXUS_ORISCUS;
-      temp = TYPE_FACTOR * T_FLEXUS_ORISCUS +
-        gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
-                                                   L_NO_INITIO,
-                                                   glyph->liquescentia);
       break;
     case G_SALICUS:
       *type = AT_ONE_NOTE;

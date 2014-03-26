@@ -703,7 +703,6 @@ gregorio_fix_positions (gregorio_score * score);*/
 #define G_VIRGA_REVERSA 37
 #define G_SALICUS 39
 #define G_SALICUS_FIRST_PART 40
-#define G_FLEXUS_ORISCUS 41
 
 #define is_puncta_inclinata(glyph) glyph<=G_5_PUNCTA_INCLINATA_ASCENDENS
 

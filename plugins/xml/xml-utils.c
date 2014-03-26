@@ -304,9 +304,6 @@ xml_glyph_type_to_str (char name)
     case G_SALICUS:
       str = "salicus";
       break;
-    case G_FLEXUS_ORISCUS:
-      str = "flexus-oriscus";
-      break;
     case G_ANCUS:
       str = "ancus";
       break;
