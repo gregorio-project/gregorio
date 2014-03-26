@@ -120,9 +120,9 @@
 #define S_LIQ_FACTOR 64
 
 // additional glyph types, necessary for determination
-#define G_PORRECTUS_NO_BAR 40
-#define G_PORRECTUS_FLEXUS_NO_BAR 41
-#define G_PES_QUILISMA 42
+#define G_PORRECTUS_NO_BAR 45
+#define G_PORRECTUS_FLEXUS_NO_BAR 46
+#define G_PES_QUILISMA 47
 
 #define HEPISEMUS_FIRST_TWO 12
 

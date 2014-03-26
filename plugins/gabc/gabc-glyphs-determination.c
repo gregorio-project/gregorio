@@ -697,6 +697,18 @@ gregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
               *end_of_glyph = DET_END_OF_PREVIOUS;
             }
           break;
+        case G_SALICUS_FIRST_PART:
+          if (current_pitch > last_pitch)
+            {
+              next_glyph_type = G_SALICUS;
+              *end_of_glyph = DET_END_OF_CURRENT;
+            }
+          else
+            {
+              next_glyph_type = G_PUNCTUM;
+              *end_of_glyph = DET_END_OF_PREVIOUS;
+            }
+          break;
         case G_FLEXA:
           if (current_pitch > last_pitch)
             {
@@ -811,8 +823,15 @@ gregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
       next_glyph_type = G_PES_QUILISMA_QUADRATUM_FIRST_PART;
       break;
     case S_ORISCUS_QUADRATUM:
-      *end_of_glyph = DET_END_OF_PREVIOUS;
-      next_glyph_type = G_PES_ORISCUS_QUADRATUM_FIRST_PART;
+      if (current_glyph_type == G_PUNCTUM && last_pitch < current_pitch)
+        {
+          next_glyph_type = G_SALICUS_FIRST_PART;
+        }
+      else
+        {
+          *end_of_glyph = DET_END_OF_PREVIOUS;
+          next_glyph_type = G_PES_ORISCUS_QUADRATUM_FIRST_PART;
+        }
       break;
     case S_PUNCTUM_INCLINATUM:
   /** Warning : this part of the code is specific to the

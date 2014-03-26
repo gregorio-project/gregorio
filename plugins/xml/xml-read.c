@@ -1435,7 +1435,15 @@ xml_read_glyph_type (char *type)
     }
   if (!strcmp (type, "scandicus"))
     {
+      return G_SALICUS;
+    }
+  if (!strcmp (type, "salicus"))
+    {
       return G_SCANDICUS;
+    }
+  if (!strcmp (type, "flexus-oriscus"))
+    {
+      return G_FLEXUS_ORISCUS;
     }
   if (!strcmp (type, "ancus"))
     {

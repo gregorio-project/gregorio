@@ -231,6 +231,9 @@ gabc_write_begin (FILE *f, unsigned char style)
     case ST_ITALIC:
       fprintf (f, "<i>");
       break;
+    case ST_COLORED:
+      fprintf (f, "<c>");
+      break;
     case ST_SMALL_CAPS:
       fprintf (f, "<sc>");
       break;
@@ -264,6 +267,9 @@ gabc_write_end (FILE *f, unsigned char style)
     {
     case ST_ITALIC:
       fprintf (f, "</i>");
+      break;
+    case ST_COLORED:
+      fprintf (f, "</c>");
       break;
     case ST_SMALL_CAPS:
       fprintf (f, "</sc>");
@@ -844,6 +850,9 @@ gabc_write_gregorio_note (FILE *f, gregorio_note *note, char glyph_type)
       break;
     case S_QUILISMA_QUADRATUM:
       fprintf (f, "%cW", note->pitch);
+      break;
+    case S_ORISCUS_QUADRATUM:
+      fprintf (f, "%cO", note->pitch);
       break;
     case S_STROPHA:
       fprintf (f, "%cs", note->pitch);

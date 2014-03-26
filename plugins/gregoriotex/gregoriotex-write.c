@@ -3989,7 +3989,7 @@ void
           *gtype = T_SCANDICUS;
           temp = TYPE_FACTOR * T_SCANDICUS +
             gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
-                                                       L_ONLY_DEMINUTUS,
+                                                       L_NO_INITIO,
                                                        glyph->liquescentia);
         }
       else
@@ -3997,6 +3997,30 @@ void
           // TODO: do it really...
           *type = AT_ONE_NOTE;
         }
+      break;
+    case G_FLEXUS_ORISCUS:
+      *type = AT_ORISCUS;
+      *gtype = T_FLEXUS_ORISCUS;
+      temp = TYPE_FACTOR * T_FLEXUS_ORISCUS +
+        gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
+                                                   L_NO_INITIO,
+                                                   glyph->liquescentia);
+      break;
+    case G_SALICUS:
+      *type = AT_ONE_NOTE;
+      pitch = glyph->first_note->next->next->pitch;
+      if (gregoriotex_is_long (pitch, glyph, element) == 1)
+        {
+          *gtype = T_SALICUS_LONGQUEUE;
+        }
+      else
+        {
+          *gtype = T_SALICUS;
+        }
+      temp = TYPE_FACTOR * (*gtype) +
+      gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
+                                                   L_NO_INITIO,
+                                                   glyph->liquescentia);
       break;
     case G_ONE_NOTE:
     case G_PUNCTUM_INCLINATUM:

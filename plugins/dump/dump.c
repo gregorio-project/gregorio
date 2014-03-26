@@ -987,6 +987,15 @@ dump_glyph_type (char glyph_type)
     case G_SCANDICUS:
       str = "G_SCANDICUS";
       break;
+    case G_SALICUS:
+      str = "G_SALICUS";
+      break;
+    case G_SALICUS_FIRST_PART:
+      str = "G_SALICUS_FIRST_PART";
+      break;
+    case G_FLEXUS_ORISCUS:
+      str = "G_FLEXUS_ORISCUS";
+      break;
     default:
       str = "unknown";
       break;
