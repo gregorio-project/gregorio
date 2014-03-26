@@ -1757,6 +1757,28 @@ gregoriotex_write_glyph (FILE *f,
         }
       break;
     case G_SCANDICUS:
+      if (glyph->liquescentia == L_DEMINUTUS
+          || glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS
+          || glyph->liquescentia == L_NO_LIQUESCENTIA)
+        {
+          gregoriotex_determine_number_and_type (glyph, element, &type,
+                                                 &gtype, &glyph_number);
+          fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
+                   glyph->first_note->pitch, next_note_pitch, type);
+          gregoriotex_write_signs (f, gtype, glyph, element, glyph->first_note);
+        }
+      else
+        {
+          while (current_note)
+            {
+              gregoriotex_write_note (f, current_note, glyph, element,
+                                      next_note_pitch);
+              gregoriotex_write_signs (f, T_ONE_NOTE, glyph, element,
+                                       current_note);
+              current_note = current_note->next;
+            }
+        }
+      break;
     case G_ANCUS:
       if (glyph->liquescentia == L_DEMINUTUS
           || glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS)
@@ -3982,21 +4004,12 @@ void
         }
       break;
     case G_SCANDICUS:
-      if (glyph->liquescentia == L_DEMINUTUS
-          || glyph->liquescentia == L_DEMINUTUS_INITIO_DEBILIS)
-        {
-          *type = AT_ONE_NOTE;
-          *gtype = T_SCANDICUS;
-          temp = TYPE_FACTOR * T_SCANDICUS +
-            gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
-                                                       L_NO_INITIO,
-                                                       glyph->liquescentia);
-        }
-      else
-        {
-          // TODO: do it really...
-          *type = AT_ONE_NOTE;
-        }
+      *type = AT_ONE_NOTE;
+      *gtype = T_SCANDICUS;
+      temp = TYPE_FACTOR * T_SCANDICUS +
+        gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
+                                                   L_NO_INITIO,
+                                                   glyph->liquescentia);
       break;
     case G_SALICUS:
       *type = AT_ONE_NOTE;
