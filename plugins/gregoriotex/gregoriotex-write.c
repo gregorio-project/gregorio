@@ -3962,7 +3962,7 @@ void
             {
               *gtype = T_ANCUS;
               temp = TYPE_FACTOR * T_ANCUS +
-                gregoriotex_determine_liquescentia_number (L_LIQ_FACTOR,
+                gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
                                                            L_ONLY_DEMINUTUS,
                                                            glyph->liquescentia);
             }
@@ -3970,7 +3970,7 @@ void
             {
               *gtype = T_ANCUS_LONGQUEUE;
               temp = TYPE_FACTOR * T_ANCUS_LONGQUEUE +
-                gregoriotex_determine_liquescentia_number (L_LIQ_FACTOR,
+                gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
                                                            L_ONLY_DEMINUTUS,
                                                            glyph->liquescentia);
             }
@@ -3988,9 +3988,9 @@ void
           *type = AT_ONE_NOTE;
           *gtype = T_SCANDICUS;
           temp = TYPE_FACTOR * T_SCANDICUS +
-            gregoriotex_determine_liquescentia_number (L_LIQ_FACTOR,
+            gregoriotex_determine_liquescentia_number (S_LIQ_FACTOR,
                                                        L_ONLY_DEMINUTUS,
-                                                       glyph->liquescentia);;
+                                                       glyph->liquescentia);
         }
       else
         {
