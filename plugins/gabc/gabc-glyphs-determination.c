@@ -446,6 +446,16 @@ gabc_det_glyphs_from_notes (gregorio_note *current_note, int *current_key)
            */
           if (is_liquescentia (current_note->liquescentia))
             {
+              // special cases of oriscus auctus, treated like normal oriscus
+              // in some cases.
+              if (current_note->shape == S_ORISCUS_AUCTUS && current_note->next
+                      && current_note->next->pitch < current_note->pitch) {
+                last_pitch = current_note->pitch;
+                current_note->shape = S_ORISCUS;
+                current_note->liquescentia = L_NO_LIQUESCENTIA;
+                current_note = next_note;
+                continue;
+              }
               // special cases of the punctum inclinatum deminutus and auctus
               if (current_note->shape == S_PUNCTUM_INCLINATUM)
                 {
