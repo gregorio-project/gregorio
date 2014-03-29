@@ -1,6 +1,6 @@
 #!/bin/tcsh
 
-# (C) 2014 R. Padraic Springuel, This work is licensed under a Creative Commons Attribution 4.0 International License.
+echo Gregorio Engine for processing documents which include scores in conjunction with LilyPond. (TeXShop Version)echo (C) 2014 R. Padraic Springuel. This work is licensed under a Creative Commons Attribution 4.0 International License.
 
 set path= ($path /usr/texbin /usr/local/bin)
 set filename = "$1"
