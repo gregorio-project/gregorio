@@ -1,0 +1,36 @@
+#!/bin/tcsh
+
+# (C) 2014 R. Padraic Springuel, This work is licensed under a Creative Commons Attribution 4.0 International License.
+
+set path= ($path /usr/texbin /usr/local/bin)
+set filename = "$1"
+set greglines = `grep '[\][gre]\{0,3\}include[tex]\{0,3\}score[{].*[}]' "$filename"`
+foreach line ($greglines)
+	set file = `expr "$line" : '[gre]\{0,3\}include[tex]\{0,3\}score\(.*\)'`
+	set gregname = "${file:r}.gabc"
+	if ("${file:r}" == "$file") then
+		set output = "$file.tex"
+	else
+		set output = "$file"
+	endif
+	if (! -e "$gregname") then
+		if (! -e "$output") then
+			echo "Error: Neither $gregname nor $output exists!"
+			echo "Enter [y] to abort (else continue)."
+			set prompt = $< 
+			if ("$prompt" == "y") then
+				exit
+			endif
+		else
+			echo "Warning: Cannot update $output.  $gregname does not exist."
+		endif
+	else		
+		if (-M "$gregname" > -M "$output") then
+			gregorio -vW  "$gregname" -o "$output"
+			echo "produced $output"
+		else
+			echo "$gregname has not changed since last compilation"
+		endif
+	endif
+end
+perl ~/.TeXworks/engines/LilyPond-Book.engine "$filename"

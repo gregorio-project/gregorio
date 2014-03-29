@@ -1,0 +1,43 @@
+#!/bin/tcsh
+
+# (C) 2014 R. Padraic Springuel, This work is licensed under a Creative Commons Attribution 4.0 International License.
+
+set path= ($path /usr/texbin /usr/local/bin)
+set filename = "$1"
+# scan the file for lines which add a gregorio score:
+set greglines = `grep '[\][gre]\{0,3\}include[tex]\{0,3\}score[{].*[}]' "$filename"`
+foreach line ($greglines)
+	# set the filename of the score and the included file
+	set file = `expr "$line" : '[gre]\{0,3\}include[tex]\{0,3\}score\(.*\)'`
+	set gregname = "${file:r}.gabc"
+	if ("${file:r}" == "$file") then
+		set output = "$file.tex"
+	else
+		set output = "$file"
+	endif
+	# check to see if the score exists
+	if (! -e "$gregname") then
+		# check to see if the included file exists
+		if (! -e "$output") then
+			echo "Error: Neither $gregname nor $output exists!"
+			echo "Enter [y] to abort (else continue)."
+			set prompt = $< 
+			if ("$prompt" == "y") then
+				exit
+			endif
+		else
+			echo "Warning: Cannot update $output.  $gregname does not exist."
+		endif
+	else
+		# check to see if the score as changed since the included file was generated
+		if (-M "$gregname" > -M "$output") then
+			# update the included file
+			gregorio -vW  "$gregname" -o "$output"
+			echo "produced $output"
+		else
+			echo "$gregname has not changed since last compilation"
+		endif
+	endif
+end
+# compile the main project file
+lualatex --shell-escape -file-line-error -synctex=1 "$1"

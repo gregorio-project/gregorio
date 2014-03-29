@@ -124,12 +124,22 @@ These engines work identically to the ones for TeXShop with the following except
    have to create this folder.  You will also need to place LilyPond-Book.engine here if
    you plan on using greg-lily-book.engine.
 
-2) On Windows the engine files do not work.  Use the bat files instead.  These duplicate
+2) On Linux the files should be placed in ~/.TeXworks/engines/.  Note that .TeXworks is a
+   hidden folder.  Use Ctrl + H to reveal it in the Home Folder.  You also will most
+   likely have to create the engines subfolder.  If you want to use greg-lily-book.engine,
+   you will need to place LilyPond-Book.engine here as well.  Finally, you need to make
+   sure that you have the tcsh shell installed (as the engines were written in that
+   scripting language).  If the shell tells you it doesn't recognize the command, then use
+   the following command to get it:
+
+      sudo apt-get install tcsh
+
+3) On Windows the engine files do not work.  Use the bat files instead.  These duplicate
    the functionality of the corresponding engine file but are written to run natively on
    Windows.  Development of a Windows equivalent of greg-lily-book.engine is ongoing.  To
    figure out where to place the bat files, open TeXworks and select Help -> Settings and
    Resources.  Click on the link to the Resources folder (a trick which also works in
-   OSX), create an engines folder here, and place the bat files inside.
+   OSX and Linux), create an engines folder here, and place the bat files inside.
 
 Once you've placed the engine or bat files, open TeXworks Preferences and select the 
 Typesetting tab.  Click on the plus sign in the bottom pane to add a new tex processor, 
@@ -138,6 +148,20 @@ to that engine, and then add "$fullname" as the argument for the engine.  On Win
 should also add "$basename" as the second argument.  Click OK and repeat for each engine 
 you're installing.  Once you've set them all up, click OK to apply the preference changes 
 and you should be ready to go.
+
+Finally, a word of warning: TeXworks takes its cue as to which engine to use from the one 
+selected in the list (which defaults to the one specified by "% !TEX TS-program = *").  
+This means that if you are specifying a root file, you should specify the engine to be 
+used on that root file even if the current file isn't compatible with that engine.  For 
+example, the first two lines in a gabc file that is part of a larger project should read:
+
+   % !TEX root = path_to_main_project/file.tex
+   % !TEX TS-program = greg-book
+
+If you use "% !TEX TS-program = gregorio" as your second line then TeXworks will try to 
+run gregorio on your main project file, likely overwriting it in the process.  For those 
+of you used to TeXShop, this behavior is DIFFERENT from what TeXShop does.  Always make 
+sure you know which typesetting engine is selected before hitting the "Go" button.
 
 
 BBEdit and TextWrangler: gabc-syntax.plist
