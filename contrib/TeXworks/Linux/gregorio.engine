@@ -1,7 +1,10 @@
 #!/bin/tcsh
 
+echo "Gregorio Engine for processing gabc scores. (TeXworks Linux Version)"
+echo "(C) 2014 R. Padraic Springuel. This work is licensed under a Creative Commons Attribution 4.0 International License."
+
 set path= ($path /usr/texbin /usr/local/bin)
 set filename = "$1"
-set texname = "${filename:r}.tex"
-gregorio -vW  "$filename"
-echo "produced $texname"
+set texname = "${filename:r}.gtex"
+gregorio -vW  "$filename" -o "$texname"
+echo "Produced $texname"
