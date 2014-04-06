@@ -19,6 +19,8 @@
 
 \gredeclarefileversion{gregoriotex-signs.tex}{20130616}
 
+\input gregoriotex-chars.tex
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for discretionaries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -441,8 +443,8 @@
 %% macros for the typesetting of braces and other things above the score
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\gdef\grecurlybracechar{\gregoriofont\char 89}
-\gdef\grebracechar{\gregoriofont\char 88}
+\gdef\grecurlybracechar{\gregoriofont\char \gre@char@curlybrace}
+\gdef\grebracechar{\gregoriofont\char \gre@char@brace}
 
 % the command to resize a box, \resizebox is provided by graphicx
 \global\let\greresizebox\resizebox 
@@ -524,14 +526,14 @@
     \kern\grespacebeforesigns %
   \or %
     % to get the widht of a punctum minus a line, we calculate the width of a flexus (with ambitus of two) minus the width of a punctum
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 2051}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@flexus}%
     \gretempdim=\wd\GreTempwidth %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 17}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@punctum}%
     \advance\gretempdim by -\wd\GreTempwidth %
     \kern -\gretempdim %
     \kern \grespacebeforesigns %
   \or %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 17}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@punctum}%
     \gretempdim=\wd\GreTempwidth %
     \kern -\gretempdim %
     \kern \grespacebeforesigns %
@@ -757,83 +759,83 @@
   \fi %
   \ifcase#2 %
     %case 0
-    \grevepisemusorrareaux{0}{\char 17}{1}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@punctum}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 1
-    \grevepisemusorrareaux{0}{\char 13}{1}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@smallpunctum}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 2
     % a kind of flexus, it has the good width
-    \grevepisemusorrareaux{\char 5634}{\char 17}{2}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{\char \gre@char@flexusalt}{\char \gre@char@punctum}{2}{0}{#3}{#4}{#5}%
   \or%
     %case 3
     % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
-    \grevepisemusorrareaux{0}{\char 5250}{1}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@flexusdeminutus}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 4
     % is a torculus, it has the good width
-    \grevepisemusorrareaux{\char 15371}{\char 17}{2}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{\char \gre@char@torculus}{\char \gre@char@punctum}{2}{0}{#3}{#4}{#5}%
   \or%
     %case 5
     % is a torculus deminutus, it has the good width
-    \grevepisemusorrareaux{\char 15884}{\char 17}{2}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{\char \gre@char@torculusdeminutus}{\char \gre@char@punctum}{2}{0}{#3}{#4}{#5}%
   \or%
     %case 6
-    \grevepisemusorrareaux{0}{\char 17}{0}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@punctum}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 7
-    \grevepisemusorrareaux{0}{\char 13}{0}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@smallpunctum}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 8, in which we do (for now) the same as case 6
-    \grevepisemusorrareaux{0}{\char 17}{0}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@punctum}{0}{0}{#3}{#4}{#5}%
   \or% case 9, 10 and 11
   \or\or\or %
     %case 12
-    \grevepisemusorrareaux{0}{\char 19}{0}{30\the\grefactor }{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@punctuminclinatum}{0}{30\the\grefactor }{#3}{#4}{#5}%
   \or%
     %case 13
-    \grevepisemusorrareaux{0}{\char 32}{0}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@punctuminclinatumdem}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 14
-    \grevepisemusorrareaux{0}{\char 20}{0}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@stropha}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 15
-    \grevepisemusorrareaux{0}{\char 26}{0}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@quilisma}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 16
-    \grevepisemusorrareaux{0}{\char 27}{0}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@oriscus}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 17
-    \grevepisemusorrareaux{\char 5633}{\char 17}{2}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{\char \gre@char@flexusaltone}{\char \gre@char@punctum}{2}{0}{#3}{#4}{#5}%
   \or%
     %case 18
-    \grevepisemusorrareaux{0}{\char 74}{1}{-30\the\grefactor}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@peshigh}{1}{-30\the\grefactor}{#3}{#4}{#5}%
   \or%
     %case 19
-    \grevepisemusorrareaux{0}{\char 28}{0}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@oriscusauctus}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 20
-    \grevepisemusorrareaux{0}{\char 26}{0}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@quilisma}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 21
     % 5634 is a flexus without bar with ambitus of 2
-    \grevepisemusorrareaux{\char 5634}{\char 17}{3}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{\char \gre@char@flexusalt}{\char \gre@char@punctum}{3}{0}{#3}{#4}{#5}%
   \or%
     %case 22 %
     % 5633 is a flexus without bar with ambitus of 1
-    \grevepisemusorrareaux{\char 5633}{\char 17}{3}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{\char \gre@char@flexusaltone}{\char \gre@char@punctum}{3}{0}{#3}{#4}{#5}%
   \or%
     %case 23
-    \grevepisemusorrareaux{\char 1986}{\char 17}{3}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{\char \gre@char@pesinitauctus}{\char \gre@char@punctum}{3}{0}{#3}{#4}{#5}%
   \or%
     %case 24
-    \grevepisemusorrareaux{0}{\char 35}{1}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@lineapunctum}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 25
-    \grevepisemusorrareaux{0}{\char 9}{1}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@divisiominima}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 26
-    \grevepisemusorrareaux{0}{\char 8}{1}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\char \gre@char@virgula}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 27
     \grevepisemusorrareaux{0}{\gredivisiofinalissymbol}{1}{0}{#3}{#4}{#5}%
@@ -1014,14 +1016,14 @@
   \fi %
   \ifcase#2 %
     %case 0
-    \grehepisorlineaux{\char 17}{40}{1}{#4}%
+    \grehepisorlineaux{\char \gre@char@punctum}{40}{1}{#4}%
   \or%
     %case 1
-    \grehepisorlineaux{\char 13}{42}{1}{#4}%
+    \grehepisorlineaux{\char \gre@char@smallpunctum}{42}{1}{#4}%
   \or%
     %case 2
     % a kind of flexus, it has the good width
-    \grehepisorlineaux{\char 5634}{40}{1}{#4}%
+    \grehepisorlineaux{\char \gre@char@flexusalt}{40}{1}{#4}%
   \or%
     %case 3
     % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
@@ -1334,8 +1336,8 @@
       \grehskip\grespacearoundsmallbar %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 8}%
-    \raise\greglyphraisevalue\hbox{\gregoriofont \char 8}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@virgula}%
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char \gre@char@virgula}%
     #3\relax %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundsmallbar %
@@ -1345,8 +1347,8 @@
       \grehskip\grespacearoundsmallbar %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 9}%
-    \raise\greglyphraisevalue\hbox{\gregoriofont \char 9}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@divisiominima}%
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char \gre@char@divisiominima}%
     #3\relax %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundsmallbar %
@@ -1356,8 +1358,8 @@
       \grehskip\grespacearoundminor %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 10}%
-    \raise\greglyphraisevalue\hbox{\gregoriofont \char 10}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@divisiominor{10}}%
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char \gre@char@divisiominor{10}}%
     #3\relax %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
@@ -1367,7 +1369,7 @@
       \grehskip\grespacearoundmaior %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 11}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@divisiomaior{11}}%
     \gredivisiomaiorsymbol %
     #3\relax %
     \ifnum#2=1\relax %
@@ -1403,8 +1405,8 @@
       \grehskip\grespacearoundminor %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 83}%
-    \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@divisiodominican{83}}%
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char \gre@char@divisiodominican{83}}%
     #3\relax %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
@@ -1416,8 +1418,8 @@
       \grehskip\grespacearoundminor %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 84}%
-    \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@divisiodominicanalt{84}}%
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char \gre@char@divisiodominicanalt{84}}%
     #3\relax %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
@@ -1428,8 +1430,8 @@
       \grenobreak %
     \fi %
     \advance\greglyphraisevalue by -\grestafflinediff %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 83}%
-    \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@divisiodominican{83}}%
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char \gre@char@divisiodominican{83}}%
     #3\relax %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
@@ -1440,8 +1442,8 @@
       \grenobreak %
     \fi %
     \advance\greglyphraisevalue by \grestafflinediff %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 84}%
-    \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@divisiodominicanalt{84}}%
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char \gre@char@divisiodominicanalt{84}}%
     #3\relax %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
@@ -1453,8 +1455,8 @@
       \grehskip\grespacearoundminor %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 83}%
-    \raise\greglyphraisevalue\hbox{\gregoriofont \char 83}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@divisiodominican{83}}%
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char \gre@char@divisiodominican{83}}%
     #3\relax %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
@@ -1466,8 +1468,8 @@
       \grehskip\grespacearoundminor %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 84}%
-    \raise\greglyphraisevalue\hbox{\gregoriofont \char 84}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@divisiodominicanalt{84}}%
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char \gre@char@divisiodominicanalt{84}}%
     #3\relax %
     \ifnum#2=1\relax %
       \grehskip\grespacearoundminor %
@@ -1480,9 +1482,9 @@
 \def\gredivisiomaiorsymbol{%
   \ifnum\grestafflinefactor=10\relax %
     %\grecalculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-    \raise\greglyphraisevalue\hbox{\gregoriofont \char 11}%
+    \raise\greglyphraisevalue\hbox{\gregoriofont \char \gre@char@divisiomaior}%
   \else %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \char 11}%
+    \setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@divisiomaior}%
     % we calculate the raise of the bar
     \gretempdim=\greadditionalbottomspace %
     \advance\gretempdim by \grespacebeneathtext %
@@ -1545,7 +1547,7 @@
     \global\keeprightbox=1 %
     \grelocalrightbox{%
       \grecalculateglyphraisevalue{g}{0}% bar glyphs are made to be at this height
-      \raise\greglyphraisevalue\hbox{\gregoriofont\char 11}%
+      \raise\greglyphraisevalue\hbox{\gregoriofont\char \gre@char@divisiomaior}%
     }%
   \fi %
   \relax%
@@ -1666,18 +1668,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\UseAlternatePunctumCavum{%
-\gdef\grepunctumcavumchar{\gregoriofont\char 75}%
-\gdef\grelineapunctumcavumchar{\gregoriofont\char 76}%
-\gdef\grepunctumcavumholechar{\gregoriofont\char 78}%
-\gdef\grelineapunctumcavumholechar{\gregoriofont\char 80}%
+\gdef\grepunctumcavumchar{\gregoriofont\char \gre@char@punctumcavumalt}%
+\gdef\grelineapunctumcavumchar{\gregoriofont\char \gre@char@lineapunctumcavumalt}%
+\gdef\grepunctumcavumholechar{\gregoriofont\char \gre@char@punctumcavumholealt}%
+\gdef\grelineapunctumcavumholechar{\gregoriofont\char \gre@char@lineapunctumcavumholealt}%
 \relax %
 }
 
 \def\UseNormalPunctumCavum{%
-\gdef\grepunctumcavumchar{\gregoriofont\char 34}%
-\gdef\grelineapunctumcavumchar{\gregoriofont\char 36}%
-\gdef\grepunctumcavumholechar{\gregoriofont\char 77}%
-\gdef\grelineapunctumcavumholechar{\gregoriofont\char 79}%
+\gdef\grepunctumcavumchar{\gregoriofont\char \gre@char@punctumcavum}%
+\gdef\grelineapunctumcavumchar{\gregoriofont\char \gre@char@lineapunctumcavum}%
+\gdef\grepunctumcavumholechar{\gregoriofont\char \gre@char@punctumcavumhole}%
+\gdef\grelineapunctumcavumholechar{\gregoriofont\char \gre@char@lineapunctumcavumhole}%
 \relax %
 }
 
@@ -1710,87 +1712,3 @@
   \greglyph{\grelineapunctumcavumchar}{#1}{#2}{#3}{}{#5}%
   \relax %
 }
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the different styles
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\def\greusedefaultstyle{%
-\gdef\greflatchar{\gregoriofont\char 6}%
-\gdef\greflatholechar{\gregoriofont\char 81}%
-\gdef\grenaturalchar{\gregoriofont\char 7}%
-\gdef\grenaturalholechar{\gregoriofont\char 82}%
-\gdef\gresharpchar{\gregoriofont\char 85}%
-\gdef\gresharpholechar{\gregoriofont\char 86}%
-\gdef\grecclefchar{\gregoriofont\char 1}%
-\gdef\grefclefchar{\gregoriofont\char 2}%
-\gdef\greincclefchar{\gregoriofont\char 3}%
-\gdef\greinfclefchar{\gregoriofont\char 4}%
-\gdef\grepunctummorachar{\gregoriofont\char 14}%
-\gdef\greverticalepisemuschar{\gregoriofont\char 33}%
-\gdef\grecustotoplongchar{\gregoriofont\char 60}%
-\gdef\grecustotopshortchar{\gregoriofont\char 61}%
-\gdef\grecustotopmiddlechar{\gregoriofont\char 62}%
-\gdef\grecustobottomlongchar{\gregoriofont\char 63}%
-\gdef\grecustobottomshortchar{\gregoriofont\char 64}%
-\gdef\grecustobottommiddlechar{\gregoriofont\char 65}%
-\gdef\greabovebarbracechar{\gregoriofont\char 90}%
-\gdef\grepunctumchar{\gregoriofont\char 17}%
-\relax %
-}
-
-\def\greusemedicaeastyle{%
-\greusestylecommon %
-\gdef\grecustotoplongchar{\gregoriostylefont\char 8}%
-\gdef\grecustotopshortchar{\gregoriostylefont\char 7}%
-\gdef\grecustotopmiddlechar{\gregoriostylefont\char 9}%
-\gdef\grecustobottomlongchar{\gregoriostylefont\char 11}%
-\gdef\grecustobottomshortchar{\gregoriostylefont\char 10}%
-\gdef\grecustobottommiddlechar{\gregoriostylefont\char 12}%
-\gdef\grecclefchar{\gregoriostylefont\char 21}%
-\gdef\grefclefchar{\gregoriostylefont\char 23}%
-\gdef\greincclefchar{\gregoriostylefont\char 22}%
-\gdef\greinfclefchar{\gregoriostylefont\char 24}%
-\gdef\greflatchar{\gregoriostylefont\char 0}%
-\gdef\greflatholechar{\gregoriostylefont\char 33}%
-\relax %
-}
-
-\def\greusehufnagelstyle{%
-\greusestylecommon %
-\gdef\grecustotoplongchar{\gregoriostylefont\char 2}%
-\gdef\grecustotopshortchar{\gregoriostylefont\char 1}%
-\gdef\grecustotopmiddlechar{\gregoriostylefont\char 3}%
-\gdef\grecustobottomlongchar{\gregoriostylefont\char 5}%
-\gdef\grecustobottomshortchar{\gregoriostylefont\char 4}%
-\gdef\grecustobottommiddlechar{\gregoriostylefont\char 6}%
-\gdef\grecclefchar{\gregoriostylefont\char 25}%
-\gdef\grefclefchar{\gregoriostylefont\char 26}%
-\gdef\greincclefchar{\gregoriostylefont\char 27}%
-\gdef\greinfclefchar{\gregoriostylefont\char 28}%
-\gdef\greflatchar{\gregoriostylefont\char 20}%
-\gdef\greflatholechar{\gregoriostylefont\char 32}%
-\relax %
-}
-
-\def\greusemensuralstyle{%
-\greusestylecommon %
-\gdef\grecustotoplongchar{\gregoriostylefont\char 14}%
-\gdef\grecustotopshortchar{\gregoriostylefont\char 13}%
-\gdef\grecustotopmiddlechar{\gregoriostylefont\char 15}%
-\gdef\grecustobottomlongchar{\gregoriostylefont\char 17}%
-\gdef\grecustobottomshortchar{\gregoriostylefont\char 16}%
-\gdef\grecustobottommiddlechar{\gregoriostylefont\char 18}%
-\gdef\greflatchar{\gregoriostylefont\char 19}%
-\gdef\greflatholechar{\gregoriostylefont\char 31}%
-\relax %
-}
-
-\def\greusestylecommon{%
-  \ifnum\greusestylefont=0\relax %
-  \xdef\greusestylefont{1}%
-  \gresetstylefont %
-  \relax %
-}
-
-\greusedefaultstyle

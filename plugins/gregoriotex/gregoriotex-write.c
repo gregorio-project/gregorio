@@ -4174,44 +4174,44 @@ gregoriotex_determine_interval (gregorio_glyph *glyph)
 
 // and the different types of horizontal episemus:
 // * 40: horizontal episemus, width of a punctum
-#define H_PUNCTUM 40
+#define H_PUNCTUM 40+GLYPH_NUMBERING_START
 // * 41: horizontal episemus, width of a flexus debilis
-#define H_FLEXUS 41
+#define H_FLEXUS 41+GLYPH_NUMBERING_START
 // * 42: horizontal episemus, width of an initio debilis
-#define H_INITIO 42
+#define H_INITIO 42+GLYPH_NUMBERING_START
 // * 43: horizontal episemus, width of a punctum inclinatum
-#define H_INCLINATUM 43
+#define H_INCLINATUM 43+GLYPH_NUMBERING_START
 // * 44: horizontal episemus, width of a punctum inclinatum deminutus
-#define H_INCLINATUM_DEMINUTUS 44
+#define H_INCLINATUM_DEMINUTUS 44+GLYPH_NUMBERING_START
 // * 45: horizontal episemus, width of a stropha
-#define H_STROPHA 45
+#define H_STROPHA 45+GLYPH_NUMBERING_START
 // * 46: horizontal episemus, width of a porrectus with ambitus of 1
-#define H_PORRECTUS1 46
+#define H_PORRECTUS1 46+GLYPH_NUMBERING_START
 // * 47: horizontal episemus, width of a porrectus with ambitus of 2
-#define H_PORRECTUS2 47
+#define H_PORRECTUS2 47+GLYPH_NUMBERING_START
 // * 48: horizontal episemus, width of a porrectus with ambitus of 3
-#define H_PORRECTUS3 48
+#define H_PORRECTUS3 48+GLYPH_NUMBERING_START
 // * 49: horizontal episemus, width of a porrectus with ambitus of 4
-#define H_PORRECTUS4 49
+#define H_PORRECTUS4 49+GLYPH_NUMBERING_START
 // * 50: horizontal episemus, width of a porrectus with ambitus of 5
-#define H_PORRECTUS5 50
+#define H_PORRECTUS5 50+GLYPH_NUMBERING_START
 // * 51: horizontal episemus, width of a porrectus flexus with ambitus of 1
-#define H_PORRECTUS_FLEXUS1 51
+#define H_PORRECTUS_FLEXUS1 51+GLYPH_NUMBERING_START
 // * 52: horizontal episemus, width of a porrectus flexus with ambitus of 2
-#define H_PORRECTUS_FLEXUS2 52
+#define H_PORRECTUS_FLEXUS2 52+GLYPH_NUMBERING_START
 // * 53: horizontal episemus, width of a porrectus flexus with ambitus of 3
-#define H_PORRECTUS_FLEXUS3 53
+#define H_PORRECTUS_FLEXUS3 53+GLYPH_NUMBERING_START
 // * 54: horizontal episemus, width of a porrectus flexus with ambitus of 4
-#define H_PORRECTUS_FLEXUS4 54
+#define H_PORRECTUS_FLEXUS4 54+GLYPH_NUMBERING_START
 // * 55: horizontal episemus, width of a porrectus flexus with ambitus of 5
-#define H_PORRECTUS_FLEXUS5 55
+#define H_PORRECTUS_FLEXUS5 55+GLYPH_NUMBERING_START
 // * 56: horizontal episemus, width of a quilisma
-#define H_QUILISMA 56
+#define H_QUILISMA 56+GLYPH_NUMBERING_START
 // * 57: horizontal episemus, width of an oriscus
-#define H_ORISCUS 57
+#define H_ORISCUS 57+GLYPH_NUMBERING_START
 // * 58: horizontal episemus width of a small punctum for pes, porrectus and
 // torculus resupinus
-#define H_SMALL_PUNCTUM 58
+#define H_SMALL_PUNCTUM 58+GLYPH_NUMBERING_START
 
 void
 gregoriotex_write_note (FILE *f, gregorio_note *note,
@@ -4351,89 +4351,89 @@ void
   switch (note->shape)
     {
     case S_PUNCTUM_INCLINATUM:
-      *glyph_number = 19;
+      *glyph_number = 19+GLYPH_NUMBERING_START;
       *type = AT_PUNCTUM_INCLINATUM;
       break;
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
-      *glyph_number = 32;
+      *glyph_number = 32+GLYPH_NUMBERING_START;
       break;
     case S_PUNCTUM_INCLINATUM_AUCTUS:
-      *glyph_number = 31;
+      *glyph_number = 31+GLYPH_NUMBERING_START;
       break;
     case S_PUNCTUM:
-      *glyph_number = 17;
+      *glyph_number = 17+GLYPH_NUMBERING_START;
       break;
     case S_PUNCTUM_AUCTUS_ASCENDENS:
-      *glyph_number = 72;
+      *glyph_number = 72+GLYPH_NUMBERING_START;
       break;
     case S_PUNCTUM_AUCTUS_DESCENDENS:
-      *glyph_number = 73;
+      *glyph_number = 73+GLYPH_NUMBERING_START;
       break;
     case S_PUNCTUM_DEMINUTUS:
-      *glyph_number = 13;
+      *glyph_number = 13+GLYPH_NUMBERING_START;
       break;
     case S_PUNCTUM_CAVUM:
-      *glyph_number = 34;
+      *glyph_number = 34+GLYPH_NUMBERING_START;
       break;
     case S_LINEA:
-      *glyph_number = 87;
+      *glyph_number = 87+GLYPH_NUMBERING_START;
       break;
     case S_LINEA_PUNCTUM:
-      *glyph_number = 35;
+      *glyph_number = 35+GLYPH_NUMBERING_START;
       break;
     case S_LINEA_PUNCTUM_CAVUM:
-      *glyph_number = 36;
+      *glyph_number = 36+GLYPH_NUMBERING_START;
       break;
     case S_VIRGA:
       if (is_short (note->pitch, glyph, element))
         {
-          *glyph_number = 23;
+          *glyph_number = 23+GLYPH_NUMBERING_START;
         }
       else
         {
-          *glyph_number = 22;
+          *glyph_number = 22+GLYPH_NUMBERING_START;
         }
       break;
     case S_VIRGA_REVERSA:
       if (is_short (note->pitch, glyph, element))
         {
-          *glyph_number = 25;
+          *glyph_number = 25+GLYPH_NUMBERING_START;
         }
       else
         {
-          *glyph_number = 24;
+          *glyph_number = 24+GLYPH_NUMBERING_START;
         }
       break;
     case S_ORISCUS:
       *type = AT_ORISCUS;
-      *glyph_number = 27;
+      *glyph_number = 27+GLYPH_NUMBERING_START;
       break;
     case S_ORISCUS_AUCTUS:
       *type = AT_ORISCUS;
-      *glyph_number = 28;
+      *glyph_number = 28+GLYPH_NUMBERING_START;
       break;
     case S_ORISCUS_DEMINUTUS:
       *type = AT_ORISCUS;
-      *glyph_number = 91;
+      *glyph_number = 91+GLYPH_NUMBERING_START;
       break;
     case S_QUILISMA:
       *type = AT_QUILISMA;
-      *glyph_number = 26;
+      *glyph_number = 26+GLYPH_NUMBERING_START;
       break;
     case S_STROPHA:
       if (glyph->liquescentia == L_AUCTA)
         {
-          *glyph_number = 21;
+          *glyph_number = 21+GLYPH_NUMBERING_START;
         }
       else
         {
-          *glyph_number = 20;
+          *glyph_number = 20+GLYPH_NUMBERING_START;
         }
       *type = AT_STROPHA;
       break;
     case S_STROPHA_AUCTA:
       *type = AT_STROPHA;
-      *glyph_number = 21;
+      *glyph_number = 21+GLYPH_NUMBERING_START;
       break;
     default:
       gregorio_message (_
