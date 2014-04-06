@@ -91,6 +91,8 @@ function copy_files()
   local texmfbin = kpse.expand_var("$TEXMFDIST")
   texmfbin = fixpath(texmfbin.."/../bin/win32/")
   copy_one_file("gregorio.exe", texmfbin)
+  copy_one_file("contrib/TeXworks/Windows/convert-gabc.bat", texmfbin)
+  copy_one_file("contrib/TeXworks/Windows/greg-book.bat", texmfbin)
   print("unzipping TDS zip file...\n")
   os.spawn("unzip.exe -o gregoriotex.tds.zip -d "..texmflocal:gsub("\\", "/")) -- TeXLive provides unzip!
   copy_one_file(fixpath('examples/main-lualatex.tex'), dirs.templatemain)
@@ -239,66 +241,72 @@ arguments=$synctexoption, $fullname
 showPdf=true
 
 [002]
-name=Gregorio
-program=gregorio.exe
-arguments=$fullname
+name=convert-gabc
+program=convert-gabc.bat
+arguments=$fullname, $basename
 showPdf=false
 
 [003]
+name=greg-book
+program=greg-book.bat
+arguments=$fullname
+showPdf=false
+
+[004]
 name=pdfTeX
 program=pdftex.exe
 arguments=$synctexoption, $fullname
 showPdf=true
 
-[004]
+[005]
 name=pdfLaTeX
 program=pdflatex.exe
 arguments=$synctexoption, $fullname
 showPdf=true
 
-[005]
+[006]
 name=LuaTeX
 program=luatex.exe
 arguments=$synctexoption, $fullname
 showPdf=true
 
-[006]
+[007]
 name=XeTeX
 program=xetex.exe
 arguments=$synctexoption, $fullname
 showPdf=true
 
-[007]
+[008]
 name=XeLaTeX
 program=xelatex.exe
 arguments=$synctexoption, $fullname
 showPdf=true
 
-[008]
+[009]
 name=ConTeXt (LuaTeX)
 program=context.exe
 arguments=--synctex, $fullname
 showPdf=true
 
-[009]
+[010]
 name=ConTeXt (pdfTeX)
 program=texexec.exe
 arguments=--synctex, $fullname
 showPdf=true
 
-[010]
+[011]
 name=ConTeXt (XeTeX)
 program=texexec.exe
 arguments=--synctex, --xtx, $fullname
 showPdf=true
 
-[011]
+[012]
 name=BibTeX
 program=bibtex.exe
 arguments=$basename
 showPdf=false
 
-[012]
+[013]
 name=MakeIndex
 program=makeindex.exe
 arguments=$basename
@@ -318,6 +326,7 @@ function texworks_conf_tools(filename)
 	local current = 0
 	local lualatexfound = 0
 	local gregoriofound = 0
+	local gregbookfound = 0
 	for l in f:lines() do
 	    local num = tonumber(l:match("(%d+)%]"))
 		if num then
@@ -326,8 +335,10 @@ function texworks_conf_tools(filename)
 		  if l == "" then
 		  elseif string.lower(l) == "name=lualatex" then
 		    lualatexfound = 1
-		  elseif string.lower(l) == "name=gregorio" then
+		  elseif string.lower(l) == "name=convert-gabc" then
 		    gregoriofound = 1
+		  elseif string.lower(l) == "name=greg-book" then
+		    gregbookfound = 1
 		  elseif toolstable[current] == nil then
 		    toolstable[current] = l
 	      else
@@ -345,13 +356,21 @@ showPdf=true]]
 	end
 	if gregoriofound == 0 then
 		local tmp = toolstable[2]
-		toolstable[2] = [[name=Gregorio
-program=gregorio
+		toolstable[2] = [[name=convert-gabc
+program=convert-gabc.bat
 arguments=$fullname
 showPdf=false]]
 		toolstable[current+2] = tmp
 	end
-	if gregoriofound == 1 and lualatexfound == 1 then
+	if gregoriofound == 0 then
+		local tmp = toolstable[3]
+		toolstable[3] = [[name=greg-book
+program=greg-book.bat
+arguments=$fullname
+showPdf=false]]
+		toolstable[current+3] = tmp
+	end
+	if gregbookfound == 1 and gregoriofound == 1 and lualatexfound == 1 then
 		return
 	end
 	local data = ""
