@@ -4351,89 +4351,89 @@ void
   switch (note->shape)
     {
     case S_PUNCTUM_INCLINATUM:
-      *glyph_number = 19+GLYPH_NUMBERING_START;
+      *glyph_number = 19;
       *type = AT_PUNCTUM_INCLINATUM;
       break;
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
-      *glyph_number = 32+GLYPH_NUMBERING_START;
+      *glyph_number = 32;
       break;
     case S_PUNCTUM_INCLINATUM_AUCTUS:
-      *glyph_number = 31+GLYPH_NUMBERING_START;
+      *glyph_number = 31;
       break;
     case S_PUNCTUM:
-      *glyph_number = 17+GLYPH_NUMBERING_START;
+      *glyph_number = 17;
       break;
     case S_PUNCTUM_AUCTUS_ASCENDENS:
-      *glyph_number = 72+GLYPH_NUMBERING_START;
+      *glyph_number = 72;
       break;
     case S_PUNCTUM_AUCTUS_DESCENDENS:
-      *glyph_number = 73+GLYPH_NUMBERING_START;
+      *glyph_number = 73;
       break;
     case S_PUNCTUM_DEMINUTUS:
-      *glyph_number = 13+GLYPH_NUMBERING_START;
+      *glyph_number = 13;
       break;
     case S_PUNCTUM_CAVUM:
-      *glyph_number = 34+GLYPH_NUMBERING_START;
+      *glyph_number = 34;
       break;
     case S_LINEA:
-      *glyph_number = 87+GLYPH_NUMBERING_START;
+      *glyph_number = 87;
       break;
     case S_LINEA_PUNCTUM:
-      *glyph_number = 35+GLYPH_NUMBERING_START;
+      *glyph_number = 35;
       break;
     case S_LINEA_PUNCTUM_CAVUM:
-      *glyph_number = 36+GLYPH_NUMBERING_START;
+      *glyph_number = 36;
       break;
     case S_VIRGA:
       if (is_short (note->pitch, glyph, element))
         {
-          *glyph_number = 23+GLYPH_NUMBERING_START;
+          *glyph_number = 23;
         }
       else
         {
-          *glyph_number = 22+GLYPH_NUMBERING_START;
+          *glyph_number = 22;
         }
       break;
     case S_VIRGA_REVERSA:
       if (is_short (note->pitch, glyph, element))
         {
-          *glyph_number = 25+GLYPH_NUMBERING_START;
+          *glyph_number = 25;
         }
       else
         {
-          *glyph_number = 24+GLYPH_NUMBERING_START;
+          *glyph_number = 24;
         }
       break;
     case S_ORISCUS:
       *type = AT_ORISCUS;
-      *glyph_number = 27+GLYPH_NUMBERING_START;
+      *glyph_number = 27;
       break;
     case S_ORISCUS_AUCTUS:
       *type = AT_ORISCUS;
-      *glyph_number = 28+GLYPH_NUMBERING_START;
+      *glyph_number = 28;
       break;
     case S_ORISCUS_DEMINUTUS:
       *type = AT_ORISCUS;
-      *glyph_number = 91+GLYPH_NUMBERING_START;
+      *glyph_number = 91;
       break;
     case S_QUILISMA:
       *type = AT_QUILISMA;
-      *glyph_number = 26+GLYPH_NUMBERING_START;
+      *glyph_number = 26;
       break;
     case S_STROPHA:
       if (glyph->liquescentia == L_AUCTA)
         {
-          *glyph_number = 21+GLYPH_NUMBERING_START;
+          *glyph_number = 21;
         }
       else
         {
-          *glyph_number = 20+GLYPH_NUMBERING_START;
+          *glyph_number = 20;
         }
       *type = AT_STROPHA;
       break;
     case S_STROPHA_AUCTA:
       *type = AT_STROPHA;
-      *glyph_number = 21+GLYPH_NUMBERING_START;
+      *glyph_number = 21;
       break;
     default:
       gregorio_message (_

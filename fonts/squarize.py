@@ -84,7 +84,7 @@ to do so, delete this exception statement from your version."""
 # 161 prevents gregorio chars to be control characters
 # but U+F0000 Supplemental Private Use Area-A might be better...
 # set to 0 for now, GregorioTeX should be heavily changed before it's usable
-unicode_char_start = 0
+unicode_char_start = 161
 
 def main():
     global oldfont, newfont, font_name

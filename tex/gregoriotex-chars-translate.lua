@@ -3,7 +3,7 @@
 infile = io.open("gregoriotex-chars.tex.in");
 outfile = io.open("gregoriotex-chars.tex", 'w');
 
-charrangestart = 0
+charrangestart = 161
 
 for line in infile:lines() do
   newline = line
