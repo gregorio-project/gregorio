@@ -34,4 +34,5 @@ foreach line ($greglines)
 		endif
 	endif
 end
+echo "Gregorio files are up to date.  Calling LilyPond-Book.engine..."
 perl ~/.TeXworks/engines/LilyPond-Book.engine "$filename"
