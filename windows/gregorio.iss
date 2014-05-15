@@ -28,6 +28,7 @@ Root: HKCR; Subkey: "Gregorio\shell\open\command"; ValueType: string; ValueName:
 [Dirs]
 Name: "{app}\contrib"
 Name: "{app}\examples"
+Name: "{app}\contrib\TeXworks"
 
 [Files]
 Source: "gregorio.exe"; DestDir: "{app}";
@@ -38,10 +39,11 @@ Source: "license.txt"; DestDir: "{app}";
 Source: "contrib\*"; DestDir: "{app}\contrib";
 Source: "examples\*"; DestDir: "{app}\examples";
 Source: "gregoriotex.tds.zip"; DestDir: "{app}";
+Source: "contrib\TeXworks\Windows\*"; DestDir: "{app}\contrib\TeXworks";
 
 [Run]
-Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}install.log"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";
-Filename: "texlua.exe"; Parameters: """{app}\install.lua"" --conf > ""{app}install-conf.log"""; StatusMsg: "Configuring TeXWorks..."; Description: "Configure TeXWorks"; Flags: postinstall ; WorkingDir: "{app}";
+Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";
+Filename: "texlua.exe"; Parameters: """{app}\install.lua"" --conf ""{app}"" > ""{app}\install-conf.log"""; StatusMsg: "Configuring TeXWorks..."; Description: "Configure TeXWorks"; Flags: postinstall ; WorkingDir: "{app}";
 
 [Code]
 procedure URLLabelOnClickOne(Sender: TObject);

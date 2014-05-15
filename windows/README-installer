@@ -8,7 +8,7 @@ also need the .tds.zip archive. To compile it, execute make tds in the fonts
 directory.
 
 To build the installer, you must first have Windows and InnoSetup (free) 
-installed. Then build a folder under windows witht the following files:
+installed. Then build a folder under windows with the following files:
   |
   + gregorio.exe
   + gregorio.iss
@@ -22,7 +22,7 @@ installed. Then build a folder under windows witht the following files:
   + contrib\
   + + all the files of the contrib/ directory of the svn
   + examples\
-  + + all the files of the contrib/ directory of the svn
+  + + all the files of the examples/ directory of the svn
 
 Then simply compile the gregorio.iss file with InnoSetup and you're done.
 
