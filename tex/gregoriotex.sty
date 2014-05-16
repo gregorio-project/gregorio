@@ -16,7 +16,7 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{gregoriotex}%
-    [2010/09/27 v2.1 GregorioTeX system.]
+    [2014/05/16 v2.4 GregorioTeX system.]
 \RequirePackage{xcolor}
 
 \input gregoriotex.tex
@@ -25,81 +25,147 @@
 \GreHideAltLines
 \GreHidePCLines
 
+\newcommand{\gre@deprecated}[2]{\PackageWarning{GregorioTeX}{\protect#1\space is gre@deprecated.\MessageBreak  Use \protect#2\space instead.}
+
+
+%%%%%%%%%%%%%%
+%	Color definitions	%
+%%%%%%%%%%%%%%
+
 \definecolor{grebackgroundcolor}{RGB}{255,255,255}%
-
-\def\greinitialformat#1{%
-  \begin{huge}#1\end{huge}%
-  \relax %
-}
-
-\def\grebiginitialformat#1{%
-  \begin{Huge}#1\end{Huge}%
-  \relax %
-}
-
-\def\greitalic#1{%
-  \textit{#1}%
-  \relax %
-}
-
-\def\gresmallcaps#1{%
-  \textsc{#1}%
-  \relax %
-}
-
-\def\greboldfont#1{%
-  \textbf{#1}%
-  \relax %
-}
-
-\def\grett#1{%
-  \texttt{#1}%
-  \relax %
-}
-
-\def\greul#1{%
-  \underline{#1}%
-  \relax %
-}
-
 \definecolor{gregoriocolor}{RGB}{229,53,44}
 
-\def\grecolored#1{
+
+%%%%%%%%%%%%%%%%%
+%	Enviroments for Initials	%
+%%%%%%%%%%%%%%%%%
+
+\def\gre@initialformat#1{%
+  \begin{initialformat}#1\end{initialformat}%
+  \relax %
+}
+\newenvironment*{\initialformat}{\begin{huge}}{\end{huge}
+
+\def\gre@biginitialformat#1{%
+  \begin{biginitialformat}#1\end{biginitialformat}%
+  \relax %
+}
+\newenvironment*{biginitialformat}{\begin{Huge}}{\end{Huge}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%	Commands to color elements of score	%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\gre@colored#1{
   {%
     \color{gregoriocolor}#1%
   }%
 }
+\newcommand*{\colored}{}
+\let\colored\gre@colored
+\def\grecolored#1{%
+	\gre@deprecated{\protect\grecolored}{\protect\colored}%
+	\gre@colored#1%
+}
 
-\def\grecoloredlines#1#2#3{%
-  \definecolor{gretempcolor}{RGB}{#1,#2,#3}%
+\def\gre@coloredlines#1{%
   \GreSetStaffLinesFormat{%
-  \color{gretempcolor}%
+  \color{#1}%
   }%  
   \relax %
 }
-
-\def\greredlines{%
-  \grecoloredlines{229}{53}{44}%
-  \relax %
+\newcommand*{\coloredlines}{}
+\let\coloredlines\gre@coloredlines
+\def\grecoloredlines#1{%
+	\gre@deprecated{\protect\grecoloredlines}{\protect\coloredlines}%
+	\gre@coloredlines#1%
 }
 
-\let\redlines\greredlines
+\def\gre@redlines{%
+  \gre@coloredlines{gregoriocolor}%
+  \relax %
+}
+\newcommand*{\redlines}{}
+\let\redlines\gre@redlines
+\def\greredlines{%
+	\gre@deprecated{\protect\greredlines}{\protect\redlines}%
+	\gre@redlines
+}
 
-\def\grenormallines{%
+\def\gre@normallines{%
   \global\def\grestafflinesformat{}
   \relax %
 }
+\newcommand*{\normallines}{}
+\let\normallines\gre@normallines
+\def\grenormallines{%
+	\gre@deprecated{\protect\grenormallines}{\protect\normallines}%
+	\gre@normallines
+}
 
-\let\normallines\grenormallines
 
-\def\greabovelinestextstyle#1{%
+%%%%%%%%%%%%%%
+%	Formating aliases	%
+%%%%%%%%%%%%%%
+
+%Need to keep an eye out for the Plain definitions of these aliases.
+
+\def\gre@italic#1{%
+  \textit{#1}%
+  \relax %
+}
+\def\gre@italic#1{%
+	\gre@deprecated{\protect\greitalic}{\protect\italic}%
+	\gre@italic#1}
+
+\def\gre@smallcaps#1{%
+  \textsc{#1}%
+  \relax %
+}
+\def\gresmallcaps#1{%
+	\gre@deprecated{\protect\gresmallcaps}{\protect\textsc}%
+	\gre@smallcaps#1}
+	
+\def\gre@boldfont#1{%
+  \textbf{#1}%
+  \relax %
+}
+\def\greboldfont#1{%
+	\gre@deprecated{\protect\greboldfont}{\protect\textbf}%
+	\gre@boldfont#1}
+
+\def\gre@tt#1{%
+  \texttt{#1}%
+  \relax %
+}
+\def\grett#1{%
+	\gre@deprecated{\protect\grett}{\protect\texttt}%
+	\gre@tt#1}
+
+\def\gre@ul#1{%
+  \underline{#1}%
+  \relax %
+}
+\def\greul#1{%
+	\gre@deprecated{\protect\greul}{\protect\underline}%
+	\gre@ul#1}
+
+%Not sure this one is a simple format alias like those above, but will treat it that way for now.
+\def\gre@abovelinestextstyle#1{%
   \small\textit{#1}%
   \relax %
 }
+\def\greabovelinestextstyle#1{%
+	\gre@deprecated{\protect\greabovelinestextstyle}{\protect\small\protect\textit}%
+	\gre@abovelinestextstyle#1}
 
-% keep this here, but \writemode may be deprecated at some point
+
+
+% Apparently this was 
 \def\writemode#1{%
-  \gresetfirstlineaboveinitial{\textsc{\textbf{#1}}}{\textsc{\textbf{#1}}}%
+	\gre@deprecated{\protect\writemode}{\protect\setfirstannotation}%
+	\gre@setfirstannotation{\textsc{\textbf{#1}}}%
   \relax %
 }
 

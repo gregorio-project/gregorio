@@ -25,17 +25,17 @@
   \input luatexbase.sty
   \input luaotfload.sty
   \input graphicx.sty % for \resizebox
-  \def\greerror#1{GregorioTeX: \errmessage{#1}}
+  \def\gre@error#1{GregorioTeX: \errmessage{#1}}
 \else
   \RequirePackage{ifluatex}
   \RequirePackage{graphicx}% for \resizebox
   \RequirePackage{luatexbase}
   \RequirePackage{luaotfload}
-  \def\greerror#1{\PackageError{GregorioTeX}{#1}{}}
+  \def\gre@error#1{\PackageError{GregorioTeX}{#1}{}}
 \fi
 
 \ifluatex\else
-  \greerror{Error: this document must be compiled with LuaTeX (lualatex)}
+  \gre@error{Error: this document must be compiled with LuaTeX (lualatex)}
 \fi
 
 % Since TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
@@ -43,14 +43,14 @@
 % without prefix, but we also rely on the Omega primitives, that have a luatex 
 % prefix in TeXLive 2009.
 
-\let\grelocalleftbox\luatexlocalleftbox
-\let\grelocalrightbox\luatexlocalrightbox
+\let\gre@localleftbox\luatexlocalleftbox
+\let\gre@localrightbox\luatexlocalrightbox
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
 % if it is 2, it means that it's never useful to typeset a dash
 % if it is 0, it just means that we are in a score...
 \newluatexattribute\gregorioattr
-\def\greunsetattribute{\unsetluatexattribute{\gregorioattr}}
+\def\gre@unsetattribute{\unsetluatexattribute{\gregorioattr}}
 
 % an attribute used for translation centering
 \newluatexattribute\gregoriocenterattr
@@ -59,18 +59,18 @@
 
 % The general version of GregorioTeX (we mean by that the "API", the way
 % Gregorio will write things)
-\xdef\gregoriotexversion{20130616}
+\xdef\gregoriotexversion{20140516}
 
 % the version of the internal files (all must have the same)
-\xdef\greinternalversion{20130616} % date format
-\directlua{gregoriotex.check_version(\number\greinternalversion)}
+\xdef\gre@internalversion{20140516} % date format
+\directlua{gregoriotex.check_version(\number\gre@internalversion)}
 
 % first some macros to allow checks for version:
 % #1 is the name of the file
 % #2 is the version
-\def\gredeclarefileversion#1#2{%
-  \ifnum\number#2=\number\greinternalversion\else %
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\greinternalversion \space\space while #1 is in version \number#2}
+\def\gre@declarefileversion#1#2{%
+  \ifnum\number#2=\number\gre@internalversion\else %
+    \gre@error{uncoherent file versions: gregoriotex.tex is in version \number\gre@internalversion \space\space while #1 is in version \number#2}
   \fi %
 }
 
@@ -112,8 +112,9 @@
 
 % factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
 % at the beginning it is set to 0, but if it is still 0 when begingregorianscore is called, it is set to the default value : 17 (the value that makes it look like a standard graduale)
-\newcount\grefactor
-\grefactor=0
+\newcount\gre@factor
+\gre@factor=0
+\def\grefactor
 
 %%%%%%%%%%%%%%%%%%
 %% vertical spaces
