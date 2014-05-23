@@ -25,8 +25,6 @@
 \GreHideAltLines
 \GreHidePCLines
 
-\newcommand{\gre@deprecated}[2]{\PackageWarning{GregorioTeX}{\protect#1\space is gre@deprecated.\MessageBreak  Use \protect#2\space instead.}
-
 
 %%%%%%%%%%%%%%
 %	Color definitions	%
@@ -44,30 +42,35 @@
   \begin{initialformat}#1\end{initialformat}%
   \relax %
 }
-\newenvironment*{\initialformat}{\begin{huge}}{\end{huge}
+\newenvironment*{initialformat}{\begin{huge}}{\end{huge}
+\newcommand{\greinitialformat}[1]{%
+	\PackageWarning{GregorioTeX}{\protect\greinitialformat\space is deprecated.\MessageBreak  Redefine initialformat enviroment instead}%
+	\renewenvironment*{initialformat}{#1}{}%
+}
+	
 
 \def\gre@biginitialformat#1{%
   \begin{biginitialformat}#1\end{biginitialformat}%
   \relax %
 }
 \newenvironment*{biginitialformat}{\begin{Huge}}{\end{Huge}}
+\newcommand{\grebiginitialformat}[1]{%
+	\PackageWarning{GregorioTeX}{\protect\grebiginitialformat\space is deprecated.\MessageBreak  redefine biginitialformat environment instead}%
+	\renewenvironment*{biginitialformat}{#1}{}%
+}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %	Commands to color elements of score	%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\gre@colored#1{
+\def\grecolored#1{
   {%
     \color{gregoriocolor}#1%
   }%
 }
 \newcommand*{\colored}{}
-\let\colored\gre@colored
-\def\grecolored#1{%
-	\gre@deprecated{\protect\grecolored}{\protect\colored}%
-	\gre@colored#1%
-}
+\let\colored\grecolored
 
 \def\gre@coloredlines#1{%
   \GreSetStaffLinesFormat{%
@@ -77,9 +80,10 @@
 }
 \newcommand*{\coloredlines}{}
 \let\coloredlines\gre@coloredlines
-\def\grecoloredlines#1{%
-	\gre@deprecated{\protect\grecoloredlines}{\protect\coloredlines}%
-	\gre@coloredlines#1%
+\def\grecoloredlines#1#2#3{%
+	\PackageWarning{GregorioTeX}{\protect\grecoloredlines\space is deprecated.\MessageBreak  Use \protect\coloredlines\space instead}%
+	\definecolor{gretempcolor}{RGB}{#1,#2,#3}%
+	\gre@coloredlines{gretempcolor}%
 }
 
 \def\gre@redlines{%
@@ -89,7 +93,7 @@
 \newcommand*{\redlines}{}
 \let\redlines\gre@redlines
 \def\greredlines{%
-	\gre@deprecated{\protect\greredlines}{\protect\redlines}%
+	\PackageWarning{GregorioTeX}{\protect\greredlines\space is deprecated.\MessageBreak  Use \protect\redlines\space instead}%
 	\gre@redlines
 }
 
@@ -100,7 +104,7 @@
 \newcommand*{\normallines}{}
 \let\normallines\gre@normallines
 \def\grenormallines{%
-	\gre@deprecated{\protect\grenormallines}{\protect\normallines}%
+	\PackageWarning{GregorioTeX}{\protect\grenormallines\space is deprecated.\MessageBreak  Use \protect\normallines\space instead}%
 	\gre@normallines
 }
 
@@ -109,47 +113,30 @@
 %	Formating aliases	%
 %%%%%%%%%%%%%%
 
-%Need to keep an eye out for the Plain definitions of these aliases.
-
-\def\gre@italic#1{%
+\def\greitalic#1{%
   \textit{#1}%
   \relax %
 }
-\def\gre@italic#1{%
-	\gre@deprecated{\protect\greitalic}{\protect\italic}%
-	\gre@italic#1}
 
-\def\gre@smallcaps#1{%
+\def\gresmallcaps#1{%
   \textsc{#1}%
   \relax %
 }
-\def\gresmallcaps#1{%
-	\gre@deprecated{\protect\gresmallcaps}{\protect\textsc}%
-	\gre@smallcaps#1}
 	
-\def\gre@boldfont#1{%
+\def\greboldfont#1{%
   \textbf{#1}%
   \relax %
 }
-\def\greboldfont#1{%
-	\gre@deprecated{\protect\greboldfont}{\protect\textbf}%
-	\gre@boldfont#1}
 
-\def\gre@tt#1{%
+\def\grett#1{%
   \texttt{#1}%
   \relax %
 }
-\def\grett#1{%
-	\gre@deprecated{\protect\grett}{\protect\texttt}%
-	\gre@tt#1}
 
-\def\gre@ul#1{%
+\def\greul#1{%
   \underline{#1}%
   \relax %
 }
-\def\greul#1{%
-	\gre@deprecated{\protect\greul}{\protect\underline}%
-	\gre@ul#1}
 
 %Not sure this one is a simple format alias like those above, but will treat it that way for now.
 \def\gre@abovelinestextstyle#1{%
@@ -162,9 +149,9 @@
 
 
 
-% Apparently this was 
+% Apparently this was another alias for \setfirstannotation.  Possibly earlier.
 \def\writemode#1{%
-	\gre@deprecated{\protect\writemode}{\protect\setfirstannotation}%
+	\PackageWarning{GregorioTeX}{\protect\writemode\space is deprecated.\MessageBreak  Use \protect\setfirstannoation\space instead}%
 	\gre@setfirstannotation{\textsc{\textbf{#1}}}%
   \relax %
 }

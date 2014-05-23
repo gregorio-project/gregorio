@@ -1,0 +1,304 @@
+\section{User Controls}
+
+These functions are available to the user to customize elements of the score which cannot be controlled from the gabc file.
+
+\subsection{Colors}
+
+All colors can be redefined using \verb=\definecolor=.  See \verb=xcolor= package for documentation.
+
+\verb=grebackgroundcolor=
+?? color behind staves?}
+\verb={RGB}{255,255,255}= (white)
+
+\verb=gregoriocolor=
+Color of elements formatted by \verb=\colored=
+\verb={RGB}{229,53,44} (red similar to what is found in manuscripts)
+
+
+\subsection{Environments}
+
+\verb=initialformat=
+	Defines how the first letter of a score appears when using leading initial.
+\verb=huge=
+	Deprecated version: \verb=\greinitialformat=
+
+\verb=biginitialformat=
+	Defines how the first letter of a score appears when using a 2-line leading initial
+\verb=Huge=
+	Deprecated version: \verb=\grebiginitialformat=
+
+
+\subsection{Commands}
+
+In general, commands should not be modified.  Exceptions are noted below.
+
+\verb=\colored{<text>}=
+	Colors its argument with \verb=gregoriocolor=
+	Modify color by changing \verb=gregoriocolor=.
+
+\verb=\coloredlines{<color-name>}=
+	Colors the staff lines.  Color argument must be a named color defined using \verb=\definecolor=
+	Deprecated version: \verb=\grecoloredlines=
+
+\verb=\redlines=
+	Short cut for coloring the staff lines \verb=gregoriocolor=.  Equivalent to \verb=\coloredlines{gregoriocolor}=
+	Modify color by changing \verb=gregoriocolor=.
+	Deprecated version: \verb=\greredlines=
+
+\verb=\normallines=
+	Removes all formatting from staff lines.
+	Deprecated version: \verb=\grenormallines=
+
+\verb=\setstaffsize{<int>}=
+	Changes the size of the staff (and the neumes placed on the staves).  Larger values for larger staves, smaller values for smaller staves.  Default value is 17.  \emph{Note:} This does not change the size of the accompanying text (lyrics and/or translations).
+
+\verb=\addtranslationspace=%Not sure this needs to be a user function
+	Add space below the stave for a translation.  Has no effect if space is already allocated for a translation.
+
+\verb=\removetranslationspace=%Not sure this needs to be a user function
+	Removes the space below the stave for the translation (un-does \verb=\addtranslationspace=).  Has no effect if space is currently not allocated to a translation.
+
+\verb=\setfirstannotation=
+	Deprecated version: \verb=\writemode= (\nb this applied small caps and bold automatically while \verb=\setfirstannotation= does not.)
+
+\verb=\greabovelinestextstyle=
+	Deprecated.  Makes text small and italics.
+
+\section{Gregorio Controls}
+
+The functions are the ones written by Gregorio to the gtex file.  While one could, in theory, use/change them to alter the appearance of elements of the score, it is far better to make your changes in the gabc file and let Gregorio make the changes to the gtex file.
+
+
+\verb=\begingregorioscore=
+\verb=\endgregorioscore=
+
+\verb=\greaccentus=
+\verb=\greactiveatechironomy=
+\verb=\greadditionalline=
+\verb=\greadjustsecondline=
+\verb=\greadjustthirdline=
+\verb=\greaugmentumduplex=
+
+\verb=\grebarbrace=
+\verb=\grebarsyllable=
+\verb=\grebarvepisemus=
+\verb=\grebarvepisemusictusa=
+\verb=\grebarvepisemusictust=
+\verb=\grebeginnlbarea=
+\verb=\grebeginnotes=
+\verb=\greboldfont{<string>}=
+	Makes <string> bold.  Accesses \LaTeX \verb=\textbf= or PlainTeX \verb=\bf= as appropriate.  Corresponds to ``<b></b>'' tags in gabc.
+
+\verb=\grechangeclef
+\verb=\grecirculus=
+\verb=\grecolored{<string>}=
+	Colors <string> in \verb=gregoriocolor.=  Corresponds to ``<c></c>'' tags in gabc.
+\verb=\grecusto=
+
+\verb=\gredagger=
+\verb=\grediscretionary{}=
+\verb=\gredivisiofinalis=
+\verb=\gredivisiomaior=
+\verb=\gredivisiominima=
+\verb=\gredivisiominor=
+\verb=\gredominica=
+
+\verb=\greendnlbarea=
+\verb=\greendofelement=
+\verb=\greendofglyph=
+
+\verb=\grefinaldivisiofinalis{0}=
+\verb=\grefinaldivisiomaior{0}=
+\verb=\grefirstlinebottomspace{<int1>}{<int2>}=
+	Macro for additional bottom space for the first line
+	<int1>: 0 = no note below staff; 1 note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
+	<int2>: 0 = no translation; 1 = translation present
+\verb=\greflat=
+
+\verb=\greglyph=
+\verb=\gregorianmode=
+\verb=\gregorioapiverstion{<int>}=
+	Checks to see if GregorioTeX API is version <int> (and therefore compatible with the score.  <int> is date in format: yyyymmdd
+
+\verb=\grehepisemus=
+\verb=\grehepisemusbottom=
+\verb=\grehepisemusbridge=
+\verb=\grehighchoralsign=
+\verb=\grehyph=
+
+\verb=\greictusa=
+\verb=\greictust=
+\verb=\grein=
+\verb=\greinitial=
+\verb=\greinsertchiroline=
+\verb=\greitalic{<string>}=
+	Makes <string> italic.  Accesses \LaTeX \verb=\textit= or PlainTeX \verb=\it= as appropriate.  Corresponds to ``<i></i>'' tags in gabc.
+
+\verb=\grelastofline=
+\verb=\grelastofscore=
+\verb=\grelinea=
+\verb=\grelineapunctumcavum=
+\verb=\grelowchoralsign=
+
+\verb=\grenatural=
+\verb=\grenewline=
+	Macro to call if you want to go to the next line simply.
+\verb=\grenewlinewithspace{<int1>}{<int2>}{<int3>}{<int4>}=
+	Macro called to go to the next line but when there are additional vertical spaces to add
+	<int1>: 0 = no note above staff; 1 = note above 4th line (position k); 2 = note on 5th line (position l); 3 = note above 5th line (position m)
+	<int2>: 0 = no note below staff; 1 note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
+	<int3>: 0 = no translation; 1 = translation present
+	<int4>: 0 = no extra space above staff; 1 = extra space above staff
+\verb=\grenewparline=
+	Same as \verb=\grenewline= except line is not justified.
+\verb=\grenewparlinewithspace{<u1>}{<u2>}{<u3>}{<u4>}=
+	Same as \verb=\grenewlinewithspace= except line is not justified.
+\verb=\grenoinitial=
+
+\verb=\grepunctumcavum=
+\verb=\grepunctummora=
+
+\verb=\grereversedaccentus=
+\verb=\grereversedsemicirculus=
+
+\verb=\grescorereference=
+\verb=\gresemicirculus=
+\verb=\gresetbiginitial=
+\verb=\gresetfixednexttextformat=
+\verb=\gresetfixedtextformat=
+\verb=\gresetinitialclef{<char>}{<int>}{<boolean>}=
+	possible values for <char>: c, f
+\verb=\gresetlinesclef{<char>}{<int1>}{<int2>}{<int3>}=
+	possible values for <char>: c, f
+	possible values for <int2>: 0, 1 (1 = space before clef, 0 = no space)
+\verb=\gresettextabovelines=
+\verb=\gresharp=
+\verb=\gresmallcaps{<string>}=
+	Makes <string> small capitals.  Accesses \LaTeX \verb=\textsc= or PlainTeX \verb=\sc= as appropriate  Corresponds to ``<sc></sc>'' tags in gabc.
+\verb=\grestar=
+\verb=\gresyllable=
+
+\verb=\gretilde=
+\verb=\gretranslationcenterend=
+\verb=\grett{<string>}=
+	Makes <string> typewriter font.  Accesses \LaTeX \verb=\texttt= or PlainTeX \verb=\tt= as appropriate.
+
+\verb=\greul{<string>}=
+	Makes <string> underlined under \LaTeX using \verb=\underline=.  Does nothing in PlainTeX
+
+\verb=\grevepisemus=
+\verb=\grevepisemusictusa=
+\verb=\grevirgula=
+
+\verb=\grewritetranslation=
+\verb=\grewritetranslationwithcenterbeginning=
+
+\verb=\grezerhyph=
+
+\verb=\setgregoriofont{<string>}=
+	possible values: gregorio parmesan greciliae gregoria
+
+
+\section{Gregoriotex Controls}
+
+These functions are the ones used by Gregoriotex internally as it process the commands listed above.  They should not appear in any user document and are listed here for programmer documentation purposes only.
+
+\verb=\gre@coloredlines{<string>}=
+	Changes the color of the staff lines to <string>.  <string> must be a named color defined using \verb=\definecolor=
+
+\verb=\gre@redlines=
+	Changes the color of the staff lines to \verb=gregoriocolor=.
+
+\verb=\gre@normallines
+	Resets the formatting of the staff lines.
+
+\verb=\gre@abovelinestextstyle=
+	??Who calls this??
+
+\verb=\gre@error{<string>}=
+	Raises an error which is identified as coming from GregorioTeX.  Uses \LaTeX \verb=\PackageError= or PlainTeX \verb=\errmessage= as appropriate.  <string> is the accompanying message.
+	
+\verb=\gre@localleftbox=
+	Alias for \verb=\luatexlocalleftbox=.  Used to make propagating changes in latex easier.
+
+\verb=\gre@localrightbox=
+	Alias for \verb=\luatexlocalrightbox=.  Used to make propagating changes in latex easier.
+	
+\verb=\gre@unsetattribute=
+	Alias for \verb=\unsetlutexattribute{\gregorioattr}=
+
+\verb=\gregorioattr=
+	A luatex attribute we put on the text nodes.
+	If it is 1, it means that there may be a dash here if this syllable is at the end of a line.
+	If it is 2, it means that it's never useful to typeset a dash.
+	If it is 0, it just means that we are in a score.
+
+\verb=\gregoriocenterattr=
+	A luatex attribute used for translation centering.
+
+\verb=\gregoriotexversion{<int>}=
+	Defines the current version of GregorioTeX API.  <int> is a date in format: yyyymmdd
+
+\verb=\gre@internalversion{<int>}=
+	The version of GregorioTeX.  <int> is a date in format: yyyymmdd
+
+\verb=\gre@declarefileversion{<string>}{<int>}=
+	Checks to see if GregorioTeX component <string> with version <int> is compatible with \verb=\gre@internalversion=
+
+\verb=\gre@factor=
+	Count representing the size of the staff.  Initialized to 0, but changed to 17 by \verb=\begingregorianscore= if user hasn't changed it.
+	
+\verb=\gre@stafflinewidth=
+	Dimension representing the width of a line of staff.  Can vary, for example, at the first line.
+
+\verb=\gre@linewidth=
+	Dimension representing the width of the score (including initial).
+
+\verb=\gre@calculateconstantglyphraise=
+	Macro to caluclate \verb=\gre@constantglyphraise=
+
+\verb=\gre@constantglyphraise=
+	Dimension representing ??
+
+\verb=\gre@currenttranslationheight=
+	Dimension representing the space for the translation beneath the text.
+
+\verb=\gre@addtranslationspace=
+	Macro to tell Gregorio to set space for the translation.
+
+\verb=\gre@removetranslationspace=
+	Macro to tell Gregorio to remove the space allocated to the translation.
+
+\verb=\gre@kernbeforeeol
+	Macro describing a kern to make before ending the line, which we sometimes want (see \verb=\gresyllable=)
+
+\verb=\gre@newlinecommon{<int1>}{<int2>}{<int3>}{<int4>}{<int5>}=
+	Macro we call each time we force a changing of line, it automatically sets \verb=\greknownline=, and adjusts left spaces.
+	<int1>: 0 = no note above staff; 1 = note above 4th line (position k); 2 = note on 5th line (position l); 3 = note above 5th line (position m)
+	<int2>: 0 = no note below staff; 1 note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
+	<int3>: 0 = no translation; 1 = translation present
+	<int4>: 0 = justify line; 1 = do not justify line
+	<int5>: 0 = no extra space above staff; 1 = extra space above staff
+
+\verb=\gre@additionalbottomspace=
+	Dimension representing extra space below the staff needed for low notes.
+
+\verb=\gre@additionaltopspace=
+	Dimension representing extra space above the staff needed for high notes.
+
+\verb=\gre@updateadditionalspaces{<int1>}{<int2>}=
+	Macro which updates \verb=\gre@additionalbottomspace= and \verb=\gre@additionaltopspace=
+	<int1>: 0 = no note above staff; 1 = note above 4th line (position k); 2 = note on 5th line (position l); 3 = note above 5th line (position m)
+	<int2>: 0 = no note below staff; 1 note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
+
+\verb=\gre@textlower=
+	Dimension representing the height of the separation between the 0th line (which is invisible except for notes in the a or b position) and the bottom of the text.
+
+\verb=\gre@Tempwidth=
+	Box used to calculate \verb=\gre@tempwidth=
+	
+\verb=\gre@tempwidth=
+	Dimension representing width of some element.
+
+\verb=\gre@widthof{<string>}
+	Macro which calculates \verb=\gre@tempwidth= as width of <string>.

@@ -25,7 +25,7 @@
   \input luatexbase.sty
   \input luaotfload.sty
   \input graphicx.sty % for \resizebox
-  \def\gre@error#1{GregorioTeX: \errmessage{#1}}
+  \def\gre@error#1{\errmessage{GregorioTeX: #1}}
 \else
   \RequirePackage{ifluatex}
   \RequirePackage{graphicx}% for \resizebox
@@ -78,7 +78,7 @@
 % #1 is the version of GregorioTeX the score is made for.
 \def\gregoriotexapiversion#1{%
   \ifnum\number#1=\number\gregoriotexversion\else %
-    \greerror{GregorioTeX is in version \number\gregoriotexversion \space\space while a score you included requires version \number#1. Please recompile your scores}
+    \gre@error{GregorioTeX is in version \number\gregoriotexversion \space\space while a score you included requires version \number#1. Please recompile your scores}
   \fi %
 }
 
@@ -114,7 +114,13 @@
 % at the beginning it is set to 0, but if it is still 0 when begingregorianscore is called, it is set to the default value : 17 (the value that makes it look like a standard graduale)
 \newcount\gre@factor
 \gre@factor=0
-\def\grefactor
+\ifdefined\setstaffsize%
+	\gre@error{\protect\setstaffsize\space is already defined.  Check for package conflicts.}%
+\else%
+	\def\setstaffsize#1{%
+		\gre@factor=#1%
+	}%
+\fi
 
 %%%%%%%%%%%%%%%%%%
 %% vertical spaces
@@ -122,28 +128,28 @@
 
 \input gregoriotex-spaces.tex
 
-% \grestafflinewidth is the width of a line of staff, this can vary, for example at the first line
-\newdimen\grestafflinewidth
+% \gre@stafflinewidth is the width of a line of staff, this can vary, for example at the first line
+\newdimen\gre@stafflinewidth
 
-% \grelinewidth is the width of a line of a score (including the initial)
-\newdimen\grelinewidth
-\grelinewidth=\hsize 
-\grestafflinewidth=\grelinewidth 
+% \gre@linewidth is the width of a line of a score (including the initial)
+\newdimen\gre@linewidth
+\gre@linewidth=\hsize 
+\gre@stafflinewidth=\gre@linewidth 
 
-% to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at grespacelinestext + grespacebeneathtext + 2*greinterstafflinespace + 2*grestafflineheight + translationheight
-\def\grecalculateconstantglyphraise{%
-  \global\greconstantglyphraise = -22000 sp%
-  \global\multiply\greconstantglyphraise by \the\grefactor %
-  \global\advance\greconstantglyphraise by \greadditionalbottomspace %
-  \global\advance\greconstantglyphraise by \grespacebeneathtext %
-  \global\advance\greconstantglyphraise by \grespacelinestext %
-  \global\advance\greconstantglyphraise by \greinterstafflinespace %
-  \global\advance\greconstantglyphraise by \greinterstafflinespace %
-  \global\advance\greconstantglyphraise by \grestafflineheight %
-  \global\advance\greconstantglyphraise by \grestafflineheight %
-  \global\advance\greconstantglyphraise by \grecurrenttranslationheight %
+% to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at gre@spacelinestext + gre@spacebeneathtext + 2*gre@interstafflinespace + 2*gre@stafflineheight + gre@translationheight
+\def\gre@calculateconstantglyphraise{%
+  \global\gre@constantglyphraise = -22000 sp%
+  \global\multiply\gre@constantglyphraise by \the\gre@factor %
+  \global\advance\gre@constantglyphraise by \gre@additionalbottomspace %
+  \global\advance\gre@constantglyphraise by \gre@spacebeneathtext %
+  \global\advance\gre@constantglyphraise by \gre@spacelinestext %
+  \global\advance\gre@constantglyphraise by \gre@interstafflinespace %
+  \global\advance\gre@constantglyphraise by \gre@interstafflinespace %
+  \global\advance\gre@constantglyphraise by \gre@stafflineheight %
+  \global\advance\gre@constantglyphraise by \gre@stafflineheight %
+  \global\advance\gre@constantglyphraise by \gre@currenttranslationheight %
   % an adjustment in the case of big lines
-  \global\advance\greconstantglyphraise by \grestafflinediff %
+  \global\advance\gre@constantglyphraise by \gre@stafflinediff %
   \relax %
 }
 
@@ -152,29 +158,43 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % temporary value for space for the translation, beneath the text
-\newdimen\grecurrenttranslationheight
+\newdimen\gre@currenttranslationheight
 
 % macro to tell gregorio to set space for the translation
-\def\greaddtranslationspace{%
-  \global\grecurrenttranslationheight=\gretranslationheight %
-  \global\gretextlower=\grespacebeneathtext %
-  \global\advance\gretextlower by \gretranslationheight %
-  \gregeneratelines %
-  \grecalculateconstantglyphraise %
+\def\gre@addtranslationspace{%
+  \global\gre@currenttranslationheight=\gre@translationheight %
+  \global\gre@textlower=\gre@spacebeneathtext %
+  \global\advance\gre@textlower by \gre@translationheight %
+  \gre@generatelines %
+  \gre@calculateconstantglyphraise %
   \relax %
 }
+\ifdefined\addtranslationspace%
+	\gre@error{\addtranslationspace\space is already defined.  Check for package conflicts.}%
+\else%
+	\def\addtranslationspace{%
+		\gre@addtranslationspace%
+	}%
+\fi
 
-\def\greremovetranslationspace{%
-  \global\grecurrenttranslationheight=0 sp%
-  \global\gretextlower=\grespacebeneathtext %
-  \gregeneratelines %
-  \grecalculateconstantglyphraise %
+\def\gre@removetranslationspace{%
+  \global\gre@currenttranslationheight=0 sp%
+  \global\gre@textlower=\gre@spacebeneathtext %
+  \gre@generatelines %
+  \gre@calculateconstantglyphraise %
   \relax %
 }
+\ifdefined\removetranslationspace%
+	\gre@error{\removetranslationspace\space is already defined.  Check for package conflicts.}%
+\else%
+	\def\removetranslationspace{%
+		\gre@removetranslationspace%
+	}%
+\fi
 
 %macro to call if you want to go to the next line simply
 \def\grenewline{%
-  \grenewlinecommon{0}{0}{0}{0}{0}%
+  \gre@newlinecommon{0}{0}{0}{0}{0}%
   \relax%
 }
 
@@ -184,7 +204,7 @@
 %% 3: 1 if there is a translation somewhere
 % #4 is if 1 if we have space above the staff
 \def\grenewlinewithspace#1#2#3#4{%
-  \grenewlinecommon{#1}{#2}{#3}{0}{#4}%
+  \gre@newlinecommon{#1}{#2}{#3}{0}{#4}%
   \relax%
 }
 
@@ -192,24 +212,24 @@
 % basically same macros as above, but these one do a \hfill, the lines are not justified
 %macro to call if you want to go to the next line simply
 \def\grenewparline{%
-  \grenewlinecommon{0}{0}{0}{1}{0}%
+  \gre@newlinecommon{0}{0}{0}{1}{0}%
   \relax%
 }
 
 \def\grenewparlinewithspace#1#2#3#4{%
-  \grenewlinecommon{#1}{#2}{#3}{1}{#4}%
+  \gre@newlinecommon{#1}{#2}{#3}{1}{#4}%
 }
 
 % a macro describing a kern to make before ending the line, which we sometimes want (see \syllable)
-\xdef\grekernbeforeeol{0pt\relax}
+\xdef\gre@kernbeforeeol{0pt\relax}
 
 % the macro we call each time we force a changing of line, it automatically sets \greknownline, and adjusts left spaces
-\def\grenewlinecommon#1#2#3#4#5{%
+\def\gre@newlinecommon#1#2#3#4#5{%
   % sometimes we need to add a space before ending the line:
-  \kern\grekernbeforeeol\relax %
-  \ifnum\greboxing=0\relax %
-    \ifnum\grebiginitial=1\relax %
-      \ifcase\greknownline %
+  \kern\gre@kernbeforeeol\relax %
+  \ifnum\gre@boxing=0\relax %
+    \ifnum\gre@biginitial=1\relax %
+      \ifcase\gre@knownline %
       % 0: should not happend...
       \or % 1
         \greadjustsecondline %
@@ -217,65 +237,65 @@
         \greadjustthirdline %
       \fi %
     \fi %
-    \global\advance\greknownline by 1\relax %
-    \greupdateadditionalspaces{#1}{#2}%
+    \global\advance\gre@knownline by 1\relax %
+    \gre@updateadditionalspaces{#1}{#2}%
     \ifnum#3 = 1\relax %
-      \greaddtranslationspace %
+      \gre@addtranslationspace %
     \else %
-      \greremovetranslationspace %
+      \gre@removetranslationspace %
     \fi %
     \ifnum#5 = 1\relax %
-      \greaddspaceabove %
+      \gre@addspaceabove %
     \else %
-      \greremovespaceabove %
+      \gre@removespaceabove %
     \fi %
-    \global\grelastoflinecount=2\relax %
-    \ifnum\greinsidediscretionary=0\relax %
-      \greupdateleftbox %
+    \global\gre@lastoflinecount=2\relax %
+    \ifnum\gre@insidediscretionary=0\relax %
+      \gre@updateleftbox %
     \fi %
     \ifnum#4=1\relax %
       \hfill %
     \fi %
-    \grepenalty{-10001}%
+    \gre@penalty{-10001}%
   \fi %
   \relax %
 }
 
 % two dimensions for the additionalspaces
-\newdimen\greadditionalbottomspace
-\newdimen\greadditionaltopspace
+\newdimen\gre@additionalbottomspace
+\newdimen\gre@additionaltopspace
 
-% same arguments as grenewlinewithspace
-\def\greupdateadditionalspaces#1#2{%
+% same arguments as \gre@newlinewithspace
+\def\gre@updateadditionalspaces#1#2{%
   \ifcase#1\relax %
-    \global\greadditionalbottomspace=0 sp%
+    \global\gre@additionalbottomspace=0 sp%
   \or % case 1
-    \global\greadditionalbottomspace=0 sp%
+    \global\gre@additionalbottomspace=0 sp%
     % here we don't add any space... it's just in case...
   \or % case 2
-    \global\greadditionaltopspace=15000 sp%
-    \global\multiply\greadditionaltopspace by \the\grefactor %
+    \global\gre@additionaltopspace=15000 sp%
+    \global\multiply\grea@dditionaltopspace by \the\gre@factor %
   \or % case 3
-    \global\greadditionaltopspace=30000 sp%
-    \global\multiply\greadditionaltopspace by \the\grefactor %
+    \global\gre@additionaltopspace=30000 sp%
+    \global\multiply\gre@additionaltopspace by \the\gre@factor %
   \fi %
   \ifcase#2\relax %
     % case 0
-    \global\greadditionalbottomspace=0 sp%
+    \global\gre@additionalbottomspace=0 sp%
   \or % case 1
-    \global\greadditionalbottomspace=0 sp%
+    \global\gre@additionalbottomspace=0 sp%
   \or % case 2
-    \global\greadditionalbottomspace=15000 sp%
-    \global\multiply\greadditionalbottomspace by \the\grefactor %
+    \global\gre@additionalbottomspace=15000 sp%
+    \global\multiply\gre@additionalbottomspace by \the\gre@factor %
   \or % case 3
-    \global\greadditionalbottomspace=30000 sp%
-    \global\multiply\greadditionalbottomspace by \the\grefactor %
+    \global\gre@additionalbottomspace=30000 sp%
+    \global\multiply\gre@additionalbottomspace by \the\gre@factor %
   \or % case 4
-    \global\greadditionalbottomspace=45000 sp%
-    \global\multiply\greadditionalbottomspace by \the\grefactor %
+    \global\gre@additionalbottomspace=45000 sp%
+    \global\multiply\gre@additionalbottomspace by \the\gre@factor %
   \fi %
-  \gregeneratelines %
-  \grecalculateconstantglyphraise %
+  \gre@generatelines %
+  \gre@calculateconstantglyphraise %
   \relax %
 }
 
@@ -285,23 +305,23 @@
 \def\grefirstlinebottomspace#1#2{%
   \ifcase#1\relax %
     % case 0
-    \global\greadditionalbottomspace=0 sp%
+    \global\gre@additionalbottomspace=0 sp%
   \or % case 1
-    \global\greadditionalbottomspace=0 sp%
+    \global\gre@additionalbottomspace=0 sp%
   \or % case 2
-    \global\greadditionalbottomspace=15000 sp%
-    \global\multiply\greadditionalbottomspace by \the\grefactor %
+    \global\gre@additionalbottomspace=15000 sp%
+    \global\multiply\gre@additionalbottomspace by \the\gre@factor %
   \or % case 3
-    \global\greadditionalbottomspace=30000 sp%
-    \global\multiply\greadditionalbottomspace by \the\grefactor %
+    \global\gre@additionalbottomspace=30000 sp%
+    \global\multiply\gre@additionalbottomspace by \the\gre@factor %
   \fi %
   \ifnum#2=1\relax %
-    \greaddtranslationspace %
+    \gre@addtranslationspace %
   \else %
-    \greremovetranslationspace %
+    \gre@removetranslationspace %
   \fi %
-  \gregeneratelines %
-  \grecalculateconstantglyphraise %
+  \gre@generatelines %
+  \gre@calculateconstantglyphraise %
   \relax %
 }
 
@@ -309,19 +329,19 @@
 %% macros for the typesetting of text
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \gretextlower is the height of the separation between the bottom line (which is invisible : for the notes which are very low) and the bottom of the text
-\newdimen\gretextlower
-\gretextlower=\grespacebeneathtext
+% \gre@textlower is the height of the separation between the bottom line (which is invisible : for the notes which are very low) and the bottom of the text
+\newdimen\gre@textlower
+\gretextlower=\gre@spacebeneathtext
 %\advance\gretextlower by \translationheight
 
-%% macro that sets \gretempwidth to the width of its argument
+%% macro that sets \gre@tempwidth to the width of its argument
 
-\newbox\GreTempwidth
-\newdimen\gretempwidth
+\newbox\Gre@Tempwidth
+\newdimen\gre@tempwidth
 
-\def\grewidthof#1{%
-  \setbox\GreTempwidth=\hbox{#1}%
-  \global\gretempwidth=\wd\GreTempwidth%
+\def\gre@widthof#1{%
+  \setbox\Gre@Tempwidth=\hbox{#1}%
+  \global\gre@tempwidth=\wd\Gre@Tempwidth%
   \relax%
 }
 
