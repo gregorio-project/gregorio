@@ -25,13 +25,15 @@
   \input luatexbase.sty
   \input luaotfload.sty
   \input graphicx.sty % for \resizebox
-  \def\gre@error#1{\errmessage{GregorioTeX: #1}}
+  \def\gre@error#1{\errmessage{GregorioTeX error: #1}}
+  \def\gre@warning#1{\message{GregorioTeX warning: #1}}
 \else
   \RequirePackage{ifluatex}
   \RequirePackage{graphicx}% for \resizebox
   \RequirePackage{luatexbase}
   \RequirePackage{luaotfload}
   \def\gre@error#1{\PackageError{GregorioTeX}{#1}{}}
+  \def\gre@warning#1{\PackageWarning{GregorioTeX}{#1}}
 \fi
 
 \ifluatex\else
@@ -121,6 +123,10 @@
 		\gre@factor=#1%
 	}%
 \fi
+\def\setgrefactor#1{%
+	\gre@warning{\protect\setgrefactor\space is deprecated.\MessageBreak Use \protect\setstaffsize\space instead}
+	\gre@factor=0
+}
 
 %%%%%%%%%%%%%%%%%%
 %% vertical spaces
@@ -345,27 +351,27 @@
   \relax%
 }
 
-%% macro that typesets the text of the syllable, and sets \gretextaligncenter to the middle of the middle letters, it is needed because we align the note (often the middle of the note) with the middle of the middle letters
+%% macro that typesets the text of the syllable, and sets \gre@textaligncenter to the middle of the middle letters, it is needed because we align the note (often the middle of the note) with the middle of the middle letters
 %% third argument is 0 if it's the current syllable, 1 if it's the alignment of the following one
-%% warning: gretextaligncenter is the width from the beginning of the letters to the middle of the middle letters
+%% warning: \gre@textaligncenter is the width from the beginning of the letters to the middle of the middle letters
 %% warning: value is approximative when a ligature appears
 
-\newdimen\gretextaligncenter
+\newdimen\gre@textaligncenter
 
-\def\grefindtextaligncenter#1#2#3{%
+\def\gre@findtextaligncenter#1#2#3{%
   \ifnum#3=0\relax%
-    \grewidthof{\grefixedtextformat{#1#2}}%
+    \gre@widthof{\gre@fixedtextformat{#1#2}}%
   \else %
-    \grewidthof{\grefixednexttextformat{#1#2}}%
+    \gre@widthof{\gre@fixednexttextformat{#1#2}}%
   \fi %
-  \global\gretextaligncenter=\the\gretempwidth %
+  \global\gre@textaligncenter=\the\gre@tempwidth %
   \ifnum#3=0\relax%
-    \grewidthof{\grefixedtextformat{#2}}%
+    \gre@widthof{\gre@fixedtextformat{#2}}%
   \else %
-    \grewidthof{\grefixednexttextformat{#2}}%
+    \gre@widthof{\gre@fixednexttextformat{#2}}%
   \fi %
-  \divide\gretempwidth by 2 %
-  \global\advance\gretextaligncenter by -\the\gretempwidth%
+  \divide\gre@tempwidth by 2 %
+  \global\advance\gre@textaligncenter by -\the\gre@tempwidth%
   \relax%
 }
 
@@ -374,160 +380,184 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %this dimention is the additional space that we have to add to the localleftbox sometimes. For now it is used only for the initials on two lines
-\newdimen\greadditionalleftspace
+\newdimen\gre@additionalleftspace
 
 %% box containing the initial, and dimen containing its width (and the width of the space after)
-\newbox\GreInitial
-\newdimen\greinitialwidth
-\greinitialwidth= 0 pt
+\newbox\Gre@Initial
+\newdimen\gre@initialwidth
+\gre@initialwidth= 0 pt
 
 
 % grebiginitial means that the inital takes two lines
-\newcount\grebiginitial
+\newcount\gre@biginitial
 
 % greknownline is the line we think we are in
-\newcount\greknownline
+\newcount\gre@knownline
 
 % macro to call before the call of \initial
 \def\gresetbiginitial{%
-  \global\grebiginitial=1\relax %
+  \global\gre@biginitial=1\relax %
   \relax %
 }
 
 % macro to cancel before the call of \initial
 \def\grenormalinitial{%
-  \global\grebiginitial=0\relax %
+  \global\gre@biginitial=0\relax %
   \relax %
 }
 
-% macro to call before the first syllable, but after setinitialclef
+% macro to call before the first syllable, but after \gresetinitialclef
 \def\greadjustsecondline{%
-  \greadditionalleftspace=\greinitialwidth %
-  \greupdateleftbox %
+  \gre@additionalleftspace=\gre@initialwidth %
+  \gre@updateleftbox %
   \relax %
 }
 
 % macro to call during the second line
 \def\greadjustthirdline{%
-  \greadditionalleftspace= 0 pt%
-  \greupdateleftbox %
+  \gre@additionalleftspace= 0 pt%
+  \gre@updateleftbox %
   \relax %
 }
 
-\def\greupdateleftbox{%
-  \greupdatelinewidth %
-  \greupdatelinesclef %
+\def\gre@updateleftbox{%
+  \gre@updatelinewidth %
+  \gre@updatelinesclef %
 }
 
-\def\greupdatelinewidth{%
-  \ifdim\greadditionalleftspace=0pt%
+\def\gre@updatelinewidth{%
+  \ifdim\gre@additionalleftspace=0pt%
   \else %
-    \gretempdim=\grestafflinewidth %
-    \global\advance\grestafflinewidth by -\greadditionalleftspace %
-    \gregeneratelines %
-    \global\grestafflinewidth=\gretempdim %
+    \gre@tempdim=\gre@stafflinewidth %
+    \global\advance\gre@stafflinewidth by -\gre@additionalleftspace %
+    \gre@generatelines %
+    \global\gre@stafflinewidth=\gre@tempdim %
   \fi %
 }
 
 \def\greinitial#1{%
   % see comments on this function to see what it does
-  \gresetaboveinitialraise %
+  \gre@setaboveinitialraise %
   % we print the initial always at the same place, and the we print the GreAboveinitialfirstbox  centered
   % first we print the initial
-  \gretempdim=-\gretextlower %
+  \gre@tempdim=-\gre@textlower %
   % if it is a big initial we print it on the second line 
-  \ifnum\grebiginitial=0\relax %
-    \setbox\GreInitial=\hbox{\greinitialformat{#1}}%
-    \global\greinitialwidth=\the\wd\GreInitial %
-    \setbox\GreInitial=\hbox{\raise -\gretempdim\hbox{\greinitialformat{#1}}}%
+  \ifnum\gre@biginitial=0\relax %
+    \setbox\Gre@Initial=\hbox{\gre@initialformat{#1}}%
+    \global\gre@initialwidth=\the\wd\Gre@Initial %
+    \setbox\Gre@Initial=\hbox{\raise -\gre@tempdim\hbox{\gre@initialformat{#1}}}%
   \else %
-    \advance\gretempdim by \greadditionalbottomspace %
-    \advance\gretempdim by \grespacebeneathtext %
-    \advance\gretempdim by \grespacelinestext %
-    \advance\gretempdim by 4\greinterstafflinespace %
-    \advance\gretempdim by 4\grestafflineheight %
-    \advance\gretempdim by \grecurrenttranslationheight %
-    \setbox\GreInitial=\hbox{\grebiginitialformat{#1}}%
-    \global\greinitialwidth=\the\wd\GreInitial %
-    \setbox\GreInitial=\hbox{\vbox to 0pt{\hbox{\raise -\gretempdim\hbox{\grebiginitialformat{#1}}}\vss}}%
+    \advance\gre@tempdim by \gre@additionalbottomspace %
+    \advance\gre@tempdim by \gre@spacebeneathtext %
+    \advance\gre@tempdim by \gres@pacelinestext %
+    \advance\gre@tempdim by 4\gre@interstafflinespace %
+    \advance\gre@tempdim by 4\gre@stafflineheight %
+    \advance\gre@tempdim by \gre@currenttranslationheight %
+    \setbox\Gre@Initial=\hbox{\gre@biginitialformat{#1}}%
+    \global\gre@initialwidth=\the\wd\Gre@Initial %
+    \setbox\Gre@Initial=\hbox{\vbox to 0pt{\hbox{\raise -\gre@tempdim\hbox{\gre@biginitialformat{#1}}}\vss}}%
   \fi %
-  \hskip\grebeforeinitialshift %
-  \copy\GreInitial%
-  \hskip\greafterinitialshift %
-  \global\advance\greinitialwidth by \greafterinitialshift%
-  \global\advance\greinitialwidth by \grebeforeinitialshift %
+  \hskip\gre@beforeinitialshift %
+  \copy\Gre@Initial%
+  \hskip\gre@afterinitialshift %
+  \global\advance\gre@initialwidth by \gre@afterinitialshift%
+  \global\advance\gre@initialwidth by \gre@beforeinitialshift %
   % then we center the first box above the initial, if there is one
-  \ifdim\wd\GreAboveinitialfirstbox=0 pt\relax %
+  \ifdim\wd\Gre@Aboveinitialfirstbox=0 pt\relax %
   \else %
-    \gretempdim=\greinitialwidth %
-    \advance\gretempdim by -\wd\GreAboveinitialfirstbox  %
-    \divide\gretempdim by 2 %
-    \hskip -\greinitialwidth %
-    \kern\gretempdim %
-    \raise\greaboveinitialfirstraise\copy\GreAboveinitialfirstbox  %
-    \kern\gretempdim %
-    \setbox\GreAboveinitialfirstbox=\hbox{}%
+    \gre@tempdim=\gre@initialwidth %
+    \advance\gre@tempdim by -\wd\Gre@Aboveinitialfirstbox  %
+    \divide\gre@tempdim by 2 %
+    \hskip -\gre@initialwidth %
+    \kern\gre@tempdim %
+    \raise\gre@aboveinitialfirstraise\copy\Gre@Aboveinitialfirstbox  %
+    \kern\gre@tempdim %
+    \setbox\Gre@Aboveinitialfirstbox=\hbox{}%
   \fi %
   % then we center the second box above the initial, if there is one
-  \ifdim\wd\GreAboveinitialsecondbox=0 pt\relax %
+  \ifdim\wd\Gre@Aboveinitialsecondbox=0 pt\relax %
   \else %
-    \gretempdim=\greinitialwidth %
-    \advance\gretempdim by -\wd\GreAboveinitialsecondbox %
-    \divide\gretempdim by 2 %
-    \hskip -\greinitialwidth %
-    \kern\gretempdim %
-    \raise\greaboveinitialsecondraise\copy\GreAboveinitialsecondbox %
-    \kern\gretempdim %
-    \setbox\GreAboveinitialsecondbox=\hbox{}%
+    \gre@tempdim=\gre@initialwidth %
+    \advance\gre@tempdim by -\wd\Gre@Aboveinitialsecondbox %
+    \divide\gre@tempdim by 2 %
+    \hskip -\gre@initialwidth %
+    \kern\gre@tempdim %
+    \raise\gre@aboveinitialsecondraise\copy\Gre@Aboveinitialsecondbox %
+    \kern\gre@tempdim %
+    \setbox\Gre@Aboveinitialsecondbox=\hbox{}%
   \fi %
   \relax %
 }
 
 \def\grenoinitial{%
-  \setbox\GreInitial=\hbox{}%
-  \global\greinitialwidth=0pt %
-  \global\grelastoflinecount=2\relax %
+  \setbox\Gre@Initial=\hbox{}%
+  \global\gre@initialwidth=0pt %
+  \global\gre@lastoflinecount=2\relax %
   \relax %
 }
 
 % We set two boxes for the two lines above the initial
 
-\newbox\GreAboveinitialfirstbox
-\newdimen\greaboveinitialfirstraise
-\newbox\GreAboveinitialsecondbox
-\newdimen\greaboveinitialsecondraise
-% the height difference between the bottom of the first annotation line and the top of the second annotation line (above the initial) is controlled by the \greaboveinitialseparation space, in gregoriotex-spaces.tex
+\newbox\Gre@Aboveinitialfirstbox
+\newdimen\gre@aboveinitialfirstraise
+\newbox\Gre@Aboveinitialsecondbox
+\newdimen\gre@aboveinitialsecondraise
+% the height difference between the bottom of the first annotation line and the top of the second annotation line (above the initial) is controlled by the \gre@aboveinitialseparation space, in gregoriotex-spaces.tex
+
+\ifdefined\setfirstlineaboveinitial%
+	\gre@error{\protect\setfirstlineaboveinitial\space is already defined.  Check for package conflicts.}%
+\else%
+	\def\setfirstlineaboveinitial#1#2{%
+	  \ifnum\gre@factor=0\relax %
+	    \setstaffsize{17}%
+	  \fi %
+	  % we align the baseline of the box with the top of the line
+	  % here the variables are a bit strange... we can calculate the final value of \gre@aboveinitialfirstraise only after the beginning of the score, after the call to this macro. So we just set \gre@aboveinitialfirstraise to the negative value the #2 will add, and then, after the beginning of the score, we'll add \gre@setaboveinitialraise that will... set \gre@aboveinitialfirstraise.
+	  \setbox\Gre@Aboveinitialfirstbox=\hbox{#2}%
+	  \global\gre@aboveinitialfirstraise=-\ht\Gre@Aboveinitialfirstbox %
+	  \global\setbox\Gre@Aboveinitialfirstbox=\hbox{#1}%
+	  \relax %
+	}
+\fi
 
 \def\gresetfirstlineaboveinitial#1#2{%
-  \ifnum\grefactor=0\relax %
-    \setgrefactor{17}%
-  \fi %
-  % we align the top of the box with the top of the line
-  % here the variables are a bit strange... we can calculate the final value of greaboveinitialfirstraise only after the beginning of the score, after the call to this macro. So we just set greaboveinitialfirstraise to the negative value the #2 will add, and then, after the beginning of the score, we'll add gresetaboveinitialraise that will... set greaboveinitialfirstraise.
-  \setbox\GreAboveinitialfirstbox=\hbox{#2}%
-  \global\greaboveinitialfirstraise=-\ht\GreAboveinitialfirstbox %
-  \global\setbox\GreAboveinitialfirstbox=\hbox{#1}%
-  \relax %
+	\gre@warning{\protect\gresetfirstlineaboveinitial\space is deprecated.\MessageBreak Use \protect\setfirstlineaboveinitial\space instead}%
+	\gre@setfirstlineaboveinitial#1#2%
+	\relax%
 }
 
 \def\gresetfirstannotation#1{%
-  \gresetfirstlineaboveinitial{#1}{#1}%
-  \relax %
+	\gre@warning{\protect\gresetfirstannotaion\space is deprecated.\MessageBreak Use \protect\setfirstannoation\space instead}
+	\setfirstlineaboveinitial{#1}{#1}%
+	\relax %
 }
+\ifdefined\setfirstannotation%
+	\gre@error{\protect\setfirstannoation\space is already defined.  Check for package conflicts.}%
+\else%
+	\def\setfirstannotation{%
+		\setfirstlineaboveinitial{#1}{#1}%
+		\relax %
+	}
+\fi
 
-\let\setfirstannotation\gresetfirstannotation
+\ifdefined\setsecondannotation%
+	\gre@error{\protect\setsecondannoations\space is already defined.  Check for package conflicts.}%
+\else%
+	\def\setsecondannotation#1{%
+	  \ifnum\grefactor=0\relax %
+	    \setgrefactor{17}%
+	  \fi %
+	  \setbox\Gre@Aboveinitialsecondbox=\hbox{#1}%
+	  \global\gre@aboveinitialsecondraise=-\ht\Gre@Aboveinitialsecondbox %
+	  \global\advance\gre@aboveinitialsecondraise by -\gre@aboveinitialseparation %
+	  \relax %
+	}
+\fi
 
 \def\gresetsecondannotation#1{%
-  \ifnum\grefactor=0\relax %
-    \setgrefactor{17}%
-  \fi %
-  \setbox\GreAboveinitialsecondbox=\hbox{#1}%
-  \global\greaboveinitialsecondraise=-\ht\GreAboveinitialsecondbox %
-  \global\advance\greaboveinitialsecondraise by -\greaboveinitialseparation %
-  \relax %
+	\gre@warning{\protect\gresetsecondannotation\space is already deprecated.\MessageBreak Use \protect\setsecondannotation\space instead}%
+	\setsecondannotation#1%
 }
-
-\let\setsecondannotation\gresetsecondannotation
 
 %here we set the true raises of the two lines above the inital
 \def\gresetaboveinitialraise{%

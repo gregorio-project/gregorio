@@ -51,6 +51,7 @@ In general, commands should not be modified.  Exceptions are noted below.
 
 \verb=\setstaffsize{<int>}=
 	Changes the size of the staff (and the neumes placed on the staves).  Larger values for larger staves, smaller values for smaller staves.  Default value is 17.  \emph{Note:} This does not change the size of the accompanying text (lyrics and/or translations).
+	Deprecated version: \verb=\setgrefactor=
 
 \verb=\addtranslationspace=%Not sure this needs to be a user function
 	Add space below the stave for a translation.  Has no effect if space is already allocated for a translation.
@@ -58,8 +59,18 @@ In general, commands should not be modified.  Exceptions are noted below.
 \verb=\removetranslationspace=%Not sure this needs to be a user function
 	Removes the space below the stave for the translation (un-does \verb=\addtranslationspace=).  Has no effect if space is currently not allocated to a translation.
 
-\verb=\setfirstannotation=
+\verb=\setfirstannotation{<string>}=
+	Macro to set the first (top) annotation above the initial.  This macro automatically aligns the top of the annotation with the 4th bar line.  This is equivalent to \verb=\setfirstlineaboveinitial{<string>}{<string>}=.
+	Deprecated version: \verb=\gresetfirstannotation=
 	Deprecated version: \verb=\writemode= (\nb this applied small caps and bold automatically while \verb=\setfirstannotation= does not.)
+
+\verb=\setfirstlineaboveinitial{<string>}{<object>}=
+	Macro to set the first (top} annotation above the initial.  This macros allows you to control how far below the top of the staff <string> appears via the second argument.  When its height is 0, the baseline of the annotation aligns with the 4th bar line.  Positive values for the height push the annotation down.  The argument cannot have a negative height.  <object> can be pretty much anything with a visible representation.  \verb=\newline= and \verb=\\= are not respected in either <string> or <object>.  Note: large annotations which stick out above the staff will push the commentary up.
+	Deprecated version: \verb=\gresetfirstlineaboveinitial=
+
+\verb=\setsecondannotation{<string>}=
+	Macro to set the second (bottom) annotation above the initial.
+	Deprecated version: \verb=\gresetsecondannotation=
 
 \verb=\greabovelinestextstyle=
 	Deprecated.  Makes text small and italics.
@@ -75,8 +86,10 @@ The functions are the ones written by Gregorio to the gtex file.  While one coul
 \verb=\greaccentus=
 \verb=\greactiveatechironomy=
 \verb=\greadditionalline=
-\verb=\greadjustsecondline=
+\verb=\greadjustsecondline=%didn't actually find this one in gregoriotex-write.c
+	Macro to call before first syllable, but after \verb=\gresetinitialclef=
 \verb=\greadjustthirdline=
+	Macro to call during the second line.
 \verb=\greaugmentumduplex=
 
 \verb=\grebarbrace=
@@ -129,7 +142,8 @@ The functions are the ones written by Gregorio to the gtex file.  While one coul
 \verb=\greictusa=
 \verb=\greictust=
 \verb=\grein=
-\verb=\greinitial=
+\verb=\greinitial{<char>}=
+	Macro to set the initial (<char>) in the score.
 \verb=\greinsertchiroline=
 \verb=\greitalic{<string>}=
 	Makes <string> italic.  Accesses \LaTeX \verb=\textit= or PlainTeX \verb=\it= as appropriate.  Corresponds to ``<i></i>'' tags in gabc.
@@ -154,6 +168,9 @@ The functions are the ones written by Gregorio to the gtex file.  While one coul
 \verb=\grenewparlinewithspace{<u1>}{<u2>}{<u3>}{<u4>}=
 	Same as \verb=\grenewlinewithspace= except line is not justified.
 \verb=\grenoinitial=
+	Macro called when no initial is being set.
+\verb=\grenormalinitial=%not actually found in gregoriotex-write.c
+	Macro to cancel a 2-line initial.
 
 \verb=\grepunctumcavum=
 \verb=\grepunctummora=
@@ -164,6 +181,7 @@ The functions are the ones written by Gregorio to the gtex file.  While one coul
 \verb=\grescorereference=
 \verb=\gresemicirculus=
 \verb=\gresetbiginitial=
+	Macro which indicates that a 2-line initial is desired.
 \verb=\gresetfixednexttextformat=
 \verb=\gresetfixedtextformat=
 \verb=\gresetinitialclef{<char>}{<int>}{<boolean>}=
@@ -217,6 +235,9 @@ These functions are the ones used by Gregoriotex internally as it process the co
 
 \verb=\gre@error{<string>}=
 	Raises an error which is identified as coming from GregorioTeX.  Uses \LaTeX \verb=\PackageError= or PlainTeX \verb=\errmessage= as appropriate.  <string> is the accompanying message.
+	
+\verb=\gre@warn{<string>}
+	Raises a warning which is identified as coming from GregorioTeX.  Uses \LaTeX \verb=\PackageWarning= or PlainTeX \verb=\message= as appropriate.  <string is the accompanying message.
 	
 \verb=\gre@localleftbox=
 	Alias for \verb=\luatexlocalleftbox=.  Used to make propagating changes in latex easier.
@@ -302,3 +323,53 @@ These functions are the ones used by Gregoriotex internally as it process the co
 
 \verb=\gre@widthof{<string>}
 	Macro which calculates \verb=\gre@tempwidth= as width of <string>.
+
+\verb=\gre@textaligncenter=
+	Dimension representing the width from the beginning of the letters in a syllable to the middle of the middle letters.  Used for lining up neumes and syllables.
+	
+\verb=\gre@findtextaligncenter{<string1>}{<string2>}{<int>}=
+	Macro for calculating \verb=\gre@textaligncenter=.
+	<string1>: The first part of the syllable (any preceding consonants in Latin)
+	<string2>: The middle part of the syllable (the vowel in Latin)
+	<int>: syllable the calculation is being performed for; 0 = current syllable; 1 = next syllable
+
+\verb=\gre@additionalleftspace=
+	Dimension representing the additional space that has to be added to the localleftbox for a big initial (one taking two lines).
+
+\verb=\Gre@Initial=
+	Box containing the initial.
+
+\verb=\gre@initialwidth=
+	Dimension representing the width of the initial (and the space after).
+
+\verb=\gre@biginitial=
+	Count indicating whether initial takes 2 lines: 0 = it doesn't; 1 = it does.
+
+\verb=\gre@knowline=
+	Line gregoriotex thinks is being set.
+
+\verb=\gre@updateleftbox=
+	Macro which adjusts size of line and clef placement after initial.
+
+\verb=\gre@updatelinewidth=
+	Macro which adjusts the width of the line.
+
+\verb=\gre@initialformat{<char>}=
+	Macro which applies formatting in \verb=initialformat= environment to initial (<char>).
+
+\verb=\gre@biginitialformat{<char>}=
+	Macro which applies formatting in \verb=biginitialformat= environment to initial (<char>).
+
+\verb=\Gre@Aboveinitialfirstbox=
+	The box which contains the first (top) annotation above the initial.
+
+\verb=\gre@aboveinitialfirstraise=
+	Dimension representing the space allocated to the first annotation.
+
+\verb=\Gre@Aboveinitialsecondbox=
+	The box which contains the second (bottom) annotation above the initial.
+
+\verb=\gre@aboveinitialsecondraise=
+	Dimension representing the space allocated to the second annotation.
+
+	
