@@ -561,12 +561,12 @@
 
 %here we set the true raises of the two lines above the inital
 \def\gresetaboveinitialraise{%
-  \global\advance\greaboveinitialfirstraise by \grestaffheight %
-  \global\advance\greaboveinitialfirstraise by \grespacebeneathtext %
-  \global\advance\greaboveinitialfirstraise by \grecurrenttranslationheight %
-  \global\advance\greaboveinitialfirstraise by \grespacelinestext %
-  \global\advance\greaboveinitialfirstraise by \greadditionalbottomspace %
-  \global\advance\greaboveinitialsecondraise by \greaboveinitialfirstraise %
+  \global\advance\gre@aboveinitialfirstraise by \gre@staffheight %
+  \global\advance\gre@aboveinitialfirstraise by \gre@spacebeneathtext %
+  \global\advance\gre@aboveinitialfirstraise by \gre@currenttranslationheight %
+  \global\advance\gre@aboveinitialfirstraise by \gre@spacelinestext %
+  \global\advance\gre@aboveinitialfirstraise by \gre@additionalbottomspace %
+  \global\advance\gre@aboveinitialsecondraise by \gre@aboveinitialfirstraise %
   \relax %
 }
 
@@ -575,6 +575,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grescorereference#1{}
+\def\scorereference#1{%
+  \relax%
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting the things above the initial
@@ -607,17 +610,13 @@
   \relax%
 }
 
-\def\scorereference#1{%
-  \relax%
-}
-
 %% macro that draws the lines : starts by the first and then draws the lines of every line.
 %% has to be called before drawing the key, after drawing the initial
 \def\grebeginnotes{%
-  \gredrawfirstlines %
+  \gre@drawfirstlines %
   %%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
-  \grelocalleftbox{%
-    \copy\GreLines %
+  \gre@localleftbox{%
+    \copy\Gre@Lines %
   }%
   \relax %
 }
@@ -631,12 +630,20 @@
 %% macro for putting text above lines for annotations and the like
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newdimen\grecurrentabovelinestextheight
-\grecurrentabovelinestextheight = 0pt
-
 % additional space for the text above lines
-\def\greabovelinestextstyle#1{%
-#1\relax %
+\newdimen\gre@currentabovelinestextheight
+\gre@currentabovelinestextheight = 0pt
+
+% A pseudo-environment for styling the text above the lines.  gregoriotex.sty redefines this to a real LaTeX environment for LaTeX users.
+\def\gre@abovelinestextstyle#1{%
+\startabovelinetextstyle#1\stopabovelinetextstyle\relax %
+}
+\def\startabovelinetextstyle{%
+	\begingroup
+	\it
+}
+\def\stopabovelinetextstyle{%
+	\endgroup
 }
 
 % set space above the text lines - almost the same as for the translation

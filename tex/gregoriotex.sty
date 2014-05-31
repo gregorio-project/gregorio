@@ -35,7 +35,7 @@
 
 
 %%%%%%%%%%%%%%%%%
-%	Enviroments for Initials	%
+%	Environments for Initials	%
 %%%%%%%%%%%%%%%%%
 
 \def\gre@initialformat#1{%
@@ -55,9 +55,23 @@
 }
 \newenvironment*{biginitialformat}{\begin{Huge}}{\end{Huge}}
 \newcommand{\grebiginitialformat}[1]{%
-	\PackageWarning{GregorioTeX}{\protect\grebiginitialformat\space is deprecated.\MessageBreak  redefine biginitialformat environment instead}%
+	\PackageWarning{GregorioTeX}{\protect\grebiginitialformat\space is deprecated.\MessageBreak  Redefine biginitialformat environment instead}%
 	\renewenvironment*{biginitialformat}{#1}{}%
 }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%	Environment for the text above the lines	%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\gre@abovelinestextstyle#1{%
+  \begin{abovelinetextstyle}#1\end{abovelinetextstyle}%
+  \relax %
+}
+\newenvironment{abovelinetextstyle}{\begin{textit}\begin{small}}{\end{small}\end{textit}}
+\def\greabovelinestextstyle#1{%
+	\PackageWarning{GregorioTeX}{\protect\greabovelinestextstyle\space is deprecated.\MessageBreak Redefine abovelinetextstyle environment instead}%
+	\renewenvironment{abovelinetextstyle}{#1}{}%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -137,15 +151,6 @@
   \underline{#1}%
   \relax %
 }
-
-%Not sure this one is a simple format alias like those above, but will treat it that way for now.
-\def\gre@abovelinestextstyle#1{%
-  \small\textit{#1}%
-  \relax %
-}
-\def\greabovelinestextstyle#1{%
-	\gre@deprecated{\protect\greabovelinestextstyle}{\protect\small\protect\textit}%
-	\gre@abovelinestextstyle#1}
 
 
 
