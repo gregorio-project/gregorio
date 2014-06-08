@@ -309,7 +309,7 @@ function texworks_conf_tools(filename, install_dir)
            elseif l ~= "" then
                if string.lower(l) == "name=lualatex" then
                    lualatexfound = 1
-               elseif string.lower(l) == "name=convert-gabc" then
+               elseif string.lower(l) == "name=gregorio" then
                    gregoriofound = 1
                elseif string.lower(l) == "name=greg-book" then
                    gregbookfound = 1
@@ -331,8 +331,8 @@ function texworks_conf_tools(filename, install_dir)
 	end
 	if gregoriofound == 0 then
 		current = current + 1
-		toolstable[current] = "name=convert-gabc"
-        toolstable[current] = toolstable[current]..'\n'..'program='..install_dir..'/contrib/TeXworks/convert-gabc.bat'
+		toolstable[current] = "name=gregorio"
+        toolstable[current] = toolstable[current]..'\n'..'program='..install_dir..'/contrib/TeXworks/gregorio.bat'
         toolstable[current] = toolstable[current]..'\n'..'arguments=$fullname, $basename'
         toolstable[current] = toolstable[current]..'\n'..'showPdf=false'
 	end
