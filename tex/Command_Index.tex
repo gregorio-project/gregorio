@@ -35,6 +35,10 @@ While environments are technically a \LaTeX\ phenomena, for users of PlainTeX ea
 	Defines how the text placed above the staff lines appears.  Defaults to \verb=small= and \verb=italic= (\verb=italic= only in PlainTeX).
 	Deprecated version: \verb=\greabovelinestextstyle=
 
+\verb=translationformat=%tex.sty, PlainTeX version in ???
+	Defines how the translation text appears.  Defaults to \verb=italic=.
+
+
 \subsection{Commands}
 
 In general, commands should not be modified.  Exceptions are noted below.
@@ -79,26 +83,48 @@ In general, commands should not be modified.  Exceptions are noted below.
 	Macro to set the second (bottom) annotation above the initial.
 	Deprecated version: \verb=\gresetsecondannotation=
 
-\verb=\greabovelinestextstyle=%tex.tex
-	Deprecated.  Makes text small and italics.
-
 \verb=\scorereference=%tex.tex
 	Does nothing.
 
 \verb=\commentary=%tex.tex
 	Marco to place the commentary (usually the scriptural reference) in the top right-hand corner of the score.  While individual calls do not support multiple lines, the macro can be called multiple times; each call will typeset a new line.
 	
+\verb=\removelines=%tex.tex
+	Macro to remove the staff lines.
+	Deprecated version: \verb=\greremovelines=
 
+\verb=\donotremovelines=%tex.tex
+	Macro to force staff lines (undoes the effects of \verb=\removelines=).
+	Deprecated version: \verb=\gredonotremovelines=
+
+\verb=\settranslationcenteringscheme{<int>}=%tex.tex
+	Macro to change the centering scheme for the translation.
+	Possible values: 0=translation is left aligned with the corresponding text; 1=translation is centered below the corresponding text
+	Deprecated version: \verb=\setgretranslationcenteringscheme=
+
+\verb=\setnlbintranslation{<int>}=%tex.tex
+	Macro to change whether line breaks are allowed in the translations.
+	Possible values: 0=line breaks are allowed; 1=line breaks are prohibited
+
+\verb=\blockcustos=%tex.tex
+	Macro to block custom.  Applies to all subsequent scores in group.
+	Deprecated version: \verb=\greblockcustos=
+
+
+	
 \section{Gregorio Controls}
 
 These functions are the ones written by Gregorio to the gtex file.  While one could, in theory, use/change them to alter the appearance of elements of the score, it is far better to make your changes in the gabc file and let Gregorio make the changes to the gtex file.
 
 
-\verb=\begingregorioscore=
-\verb=\endgregorioscore=
+\verb=\begingregorioscore=%tex.tex
+	Macro to start a score.
+\verb=\endgregorioscore=%tex.tex
+	Macro to end a score.
 
 \verb=\greaccentus=
-\verb=\greactiveatechironomy=
+\verb=\greactiveatechironomy=%tex.tex
+	Macro called at the beginning of the score to enable chironomy.
 \verb=\greadditionalline=
 \verb=\greadjustsecondline=%didn't actually find this one in gregoriotex-write.c%tex.tex
 	Macro to call before first syllable, but after \verb=\gresetinitialclef=
@@ -111,7 +137,10 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 \verb=\grebarvepisemus=
 \verb=\grebarvepisemusictusa=
 \verb=\grebarvepisemusictust=
-\verb=\grebeginnlbarea=
+\verb=\grebeginnlbarea{<int1>}{<int2>}=%tex.tex
+	Macro called at beginning of a no line break area.
+	<int1>: 0 = not in the neumes; 1 = in the neumes
+	<int2>: 0 = call didn't come from translation centering; 1 = call came from translation centering.
 \verb=\grebeginnotes=%tex.tex
 	Macro to draw the staff lines.  Comes after the initial but before the clef.
 \verb=\greboldfont{<string>}=%tex.sty, PlainTeX version in tex.tex
@@ -131,15 +160,24 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 \verb=\gredivisiominor=
 \verb=\gredominica=
 
-\verb=\greendnlbarea=
-\verb=\greendofelement=
-\verb=\greendofglyph=
+\verb=\greendnlbarea=%tex.tex
+	Macro called at beginning of a no line break area.
+	<int1>: 0 = not in the neumes; 1 = in the neumes
+	<int2>: 0 = call didn't come from translation centering; 1 = call came from translation centering.
+
+\verb=\greendofelement{<int1>}{<int2>}=%tex.tex
+	Macro to end elements.
+	<int1>: 0 = default space; 1 = larger space; 2 = glyph space; 3 = zero-width space
+	<int2>: 0 = space is breakable; 1 = space is unbreakable
+\verb=\greendofglyph{<int>}=%tex.tex
+	Macro to end a glyph without ending the element.
+	<int>: 0 = default space; 1 = zero-width space; 2 = space between flat or natural and a note; 3 = space between two puncta inclinata; 4 = space between bivirga or trivirga; 5 = space between bistropha or tristropha; 6 = space after a punctum mora XXX: not used yet, not so sure it is a good idea...; 7 = space between a punctum inclinatum and a punctum inclinatum debilis; 8 = space between two puncta inclinata debilis; 9 = space before a punctum (or something else) and a punctum inclinatum; 10 = space between puncta inclinata (also debilis for now), larger ambitus (range=3rd).; 11 = space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more)
 
 \verb=\grefinaldivisiofinalis{0}=
 \verb=\grefinaldivisiomaior{0}=
 \verb=\grefirstlinebottomspace{<int1>}{<int2>}=%tex.tex
 	Macro for additional bottom space for the first line
-	<int1>: 0 = no note below staff; 1 note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
+	<int1>: 0 = no note below staff; 1 = note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
 	<int2>: 0 = no translation; 1 = translation present
 \verb=\greflat=
 
@@ -161,12 +199,15 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 \verb=\grein=
 \verb=\greinitial{<char>}=%tex.tex
 	Macro to set the initial (<char>) in the score.
-\verb=\greinsertchiroline=
+\verb=\greinsertchiroline=%tex.tex
+	Macro called at the beginning of a line to insert the chironomic signs.
 \verb=\greitalic{<string>}=%tex.sty, PlainTeX version in tex.tex
 	Makes <string> italic.  Accesses \LaTeX \verb=\textit= or PlainTeX \verb=\it= as appropriate.  Corresponds to ``<i></i>'' tags in gabc.
 
-\verb=\grelastofline=
-\verb=\grelastofscore=
+\verb=\grelastofline=%tex.tex
+	Macro to set \verb=\gre@lastoflinecount= to 1 (i.e. mark that this syllable is the last of the line).
+\verb=\grelastofscore=%tex.tex
+	Macro to mark the syllable as the last of the score.
 \verb=\grelinea=
 \verb=\grelineapunctumcavum=
 \verb=\grelowchoralsign=
@@ -207,15 +248,18 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 \verb=\gresetlinesclef{<char>}{<int1>}{<int2>}{<int3>}=%tex.tex
 	possible values for <char>: c, f
 	possible values for <int2>: 0, 1 (1 = space before clef, 0 = no space)
-\verb=\gresettextabovelines=
+\verb=\gresettextabovelines<{string>}=
+	Macro to place <string> above the lines and empty \verb=\gre@currenttextabovelines= when done.
 \verb=\gresharp=
 \verb=\gresmallcaps{<string>}=%tex.sty, PlainTeX version in tex.tex
 	Makes <string> small capitals.  Accesses \LaTeX \verb=\textsc= or PlainTeX \verb=\sc= as appropriate  Corresponds to ``<sc></sc>'' tags in gabc.
 \verb=\grestar=
 \verb=\gresyllable=
 
-\verb=\gretilde=
-\verb=\gretranslationcenterend=
+\verb=\gretilde=%tex.tex
+	Macro to print $\sim$.
+\verb=\gretranslationcenterend=%tex.tex
+	Macro to set \verb=\gre@mustdotranslationcenerend= to 1.
 \verb=\grett{<string>}=%tex.sty, PlainTeX version in tex.tex
 	Makes <string> typewriter font.  Accesses \LaTeX \verb=\texttt= or PlainTeX \verb=\tt= as appropriate.
 
@@ -226,13 +270,16 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 \verb=\grevepisemusictusa=
 \verb=\grevirgula=
 
-\verb=\grewritetranslation=
-\verb=\grewritetranslationwithcenterbeginning=
+\verb=\grewritetranslation{<string>}=%tex.tex
+	Macro to typeset <string> in the translation position.
+\verb=\grewritetranslationwithcenterbeginning{<string>}=%tex.tex
+	Macro to typeset <string> in the translation position (at the beginning of a line?).
 
 \verb=\grezerhyph=
 
 \verb=\setgregoriofont{<string>}=%tex.tex
-	possible values: gregorio parmesan greciliae gregoria
+	Macro to set the font used for the glyphs.
+	<string>: gregorio; parmesan; greciliae; gregoria
 
 
 \section{Gregoriotex Controls}
@@ -396,3 +443,101 @@ These functions are the ones used by Gregoriotex internally as it process the co
 \verb=\gre@abovelinestextstyle{<string>}=%tex.tex
 	Macro to apply the above line text style to <string>.
 
+\verb=\gre@addspaceabove=%tex.tex
+	Macro to allocate space for text placed above the staff lines.
+
+\verb=\gre@removespaceabove=%tex.tex
+	Macro to unallocate space for text above the staff lines.
+
+\verb=\gre@currenttextabovelines{<string>}=%tex.tex
+	Macro containing the text (<string>) which is currently being placed above the staff lines.
+
+\verb=\gre@typsettextabovelines{<string>}=%tex.tex
+	Macro to typeset <string> above the staff lines.
+
+\verb=\gre@removelinescount=%tex.tex
+	Boolean indicating whether staff lines should be printed.  Has value 0 when lines are printed, 1 when they are not.
+
+\verb=\gre@drawfirstlines=%tex.tex
+	Macro to draw the staff lines for the first line of the score (\ie it accounts for the space taken up by the initial).
+
+\verb=\Gre@Lines=%tex.tex
+	Box to contain the staff lines for lines other than the first line.
+
+\verb=\gre@generatelines=%tex.tex
+	Macro to fill \verb=\Gre@Lines=.
+
+\verb=\gre@smallsecondline=%tex.tex
+	Macro called when the initial is big to make the second set of staff lines the same length as the first.
+
+\verb=\gre@normallines=%tex.tex
+	Marco called after the second set of staff lines when the initial is big to go back to normal width lines.
+
+\verb=\gre@translationcenteringscheme=%tex.tex
+	Boolean to indicate the centering scheme used for the translation.
+	Possible values: 0=translation is left aligned with corresponding text; 1=translation is centered with the corresponding text
+
+\verb=\gre@nlbintranslation=%tex.tex
+	Variable used to indicate whether line breaks are allowed in the translation.
+	Possible values: 0=line breaks are allowed; 1=line breaks are prohibited
+
+\verb=\gre@translationformat{<string>}=%tex.tex (is this defined somewhere else too?)
+	Macro to apply the translation format to string.
+
+\verb=\gre@mustdotranslationcenterend=%tex.tex
+	Boolean to indicate if the translation is at the end of a line?
+	Possible values: 0=not at the end of a line; 1=at the end of a line
+
+\verb=\gre@dotranslationcenterend=%tex.tex
+	Macro to set things up for a translation at the end of a line.
+
+\verb=\gre@printchirovbars=%tex.tex
+	Count that is 1 or 0 if we need to print the small vertical bars in the chironomic line.
+
+\verb=\gre@nolastline=%tex.tex
+	Macro to call when there is just a little thing that will go to the last line, when it is not necessary
+	It doesn't seem to be used, so it's a good candidate for deprecation!
+
+\verb=\gre@endofword{<int>}=%tex.tex
+	Macro called at the end of each word.  Does extra stuff when <int> is 1?
+
+\verb=\gre@endbeforebar{<int>}=%tex.tex
+	Macro called at end of word when next element is a bar.  <int> has same function as in \verb=\gre@endofword=.
+
+\verb=\gre@endafterbar{<int>}=%tex.tex
+	Macro called after a bar.  <int> has same function as in \verb=\gre@endofword=.
+
+\verb=\gre@lastoflinecount=%tex.tex
+	Count which marks the last syllable of the line.
+	Possible values: 0=nothing; 1=last syllable of line; 2=first syllable of line
+
+\verb=\gre@disableeolshifts=%tex.tex
+	Boolean which indicates that the syllable should be shifted left a bit.
+	Possible values: 0=shift happens; 1=shift doesn't happen.
+
+\verb=\Gre@DisableEOLShifts=%tex.tex
+	Macro to set \verb=\gre@disableeolshifts= to 1.
+
+\verb=\Gre@EnableEOLShifts=%tex.tex
+	Macro to set \verb=\gre@disableeolshifts= to 0.
+
+\verb=\gre@blockcusto=%tex.tex
+	Count to indicate if the custo should be blocked.
+	Possible values: 0=do not block custo; 1=block custo
+
+\verb=\gre@endofsyllable=%tex.tex
+	Macro called at the end of a syllable which does not end a word.
+
+\verb=\gre@nlbstate=%tex.tex
+	Count to indicate the no line break areas.
+	Possible values: 0 = not a no line break area; 1 = no line break due to translation centering; 2 = no line break due to <nlba> tag
+
+\verb=\gregoriofontname=%tex.tex
+	Macro which holds the default font name (greciliae).
+
+\verb=\gre@usestylefont=%tex.tex
+	Count to indicate if gregoriostylefont should be used.
+	Possible values: 0 = do not use; 1 = use
+
+\verb=\gre@setstylefont=%tex.tex
+	Macro to load greextra as gregoriostylefont at correct size.

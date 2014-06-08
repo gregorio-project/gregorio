@@ -34,9 +34,9 @@
 \definecolor{gregoriocolor}{RGB}{229,53,44}
 
 
-%%%%%%%%%%%%%%%%%
-%	Environments for Initials	%
-%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+%	Environments for Score elements	%
+%%%%%%%%%%%%%%%%%%%%%%
 
 \def\gre@initialformat#1{%
   \begin{initialformat}#1\end{initialformat}%
@@ -60,10 +60,6 @@
 }
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-%	Environment for the text above the lines	%
-%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \def\gre@abovelinestextstyle#1{%
   \begin{abovelinetextstyle}#1\end{abovelinetextstyle}%
   \relax %
@@ -72,6 +68,12 @@
 \def\greabovelinestextstyle#1{%
 	\PackageWarning{GregorioTeX}{\protect\greabovelinestextstyle\space is deprecated.\MessageBreak Redefine abovelinetextstyle environment instead}%
 	\renewenvironment{abovelinetextstyle}{#1}{}%
+
+\def\gre@translationformat#1{%
+	\begin{translationformat}#1\end{translationformat}%
+	\relax%
+}
+\newenvironment{translationformat}{\begin{textit}}{\end{textit}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -87,7 +89,7 @@
 \let\colored\grecolored
 
 \def\gre@coloredlines#1{%
-  \GreSetStaffLinesFormat{%
+  \Gre@SetStaffLinesFormat{%
   \color{#1}%
   }%  
   \relax %
@@ -112,7 +114,7 @@
 }
 
 \def\gre@normallines{%
-  \global\def\grestafflinesformat{}
+  \global\def\gre@stafflinesformat{}
   \relax %
 }
 \newcommand*{\normallines}{}
