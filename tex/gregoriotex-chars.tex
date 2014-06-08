@@ -86,7 +86,7 @@
 \gdef\grenaturalholechar{\gregoriofont\char 243}%
 \gdef\gresharpchar{\gregoriofont\char 246}%
 \gdef\gresharpholechar{\gregoriofont\char 247}%
-\gdef\grecclefchar{\gregoriofont\char 1}%
+\gdef\grecclefchar{\gregoriofont\char 162}%
 \gdef\grefclefchar{\gregoriofont\char 163}%
 \gdef\greincclefchar{\gregoriofont\char 164}%
 \gdef\greinfclefchar{\gregoriofont\char 165}%
@@ -115,7 +115,7 @@
 \gdef\grefclefchar{\gregoriostylefont\char 184}%
 \gdef\greincclefchar{\gregoriostylefont\char 183}%
 \gdef\greinfclefchar{\gregoriostylefont\char 185}%
-\gdef\greflatchar{\gregoriostylefont\char 0}%
+\gdef\greflatchar{\gregoriostylefont\char 161}%
 \gdef\greflatholechar{\gregoriostylefont\char 194}%
 \relax %
 }
@@ -123,7 +123,7 @@
 \def\greusehufnagelstyle{%
 \greusestylecommon %
 \gdef\grecustotoplongchar{\gregoriostylefont\char 163}%
-\gdef\grecustotopshortchar{\gregoriostylefont\char 1}%
+\gdef\grecustotopshortchar{\gregoriostylefont\char 162}%
 \gdef\grecustotopmiddlechar{\gregoriostylefont\char 164}%
 \gdef\grecustobottomlongchar{\gregoriostylefont\char 166}%
 \gdef\grecustobottomshortchar{\gregoriostylefont\char 165}%
@@ -149,12 +149,3 @@
 \gdef\greflatholechar{\gregoriostylefont\char 192}%
 \relax %
 }
-
-\def\greusestylecommon{%
-  \ifnum\greusestylefont=0\relax %
-  \xdef\greusestylefont{1}%
-  \gresetstylefont %
-  \relax %
-}
-
-\greusedefaultstyle

@@ -21,6 +21,15 @@
 
 \input gregoriotex-chars.tex
 
+\def\greusestylecommon{%
+  \ifnum\greusestylefont=0\relax %
+  \xdef\greusestylefont{1}%
+  \gresetstylefont %
+  \relax %
+}
+
+\greusedefaultstyle
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for discretionaries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -149,12 +149,3 @@
 \gdef\greflatholechar{\gregoriostylefont\char 31}%
 \relax %
 }
-
-\def\greusestylecommon{%
-  \ifnum\greusestylefont=0\relax %
-  \xdef\greusestylefont{1}%
-  \gresetstylefont %
-  \relax %
-}
-
-\greusedefaultstyle
