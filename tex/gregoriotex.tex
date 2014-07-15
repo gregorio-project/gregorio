@@ -112,7 +112,7 @@
 %% basic start
 %%%%%%%%%%%%%%
 
-% factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
+% gre@factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
 % at the beginning it is set to 0, but if it is still 0 when begingregorianscore is called, it is set to the default value : 17 (the value that makes it look like a standard graduale)
 \newcount\gre@factor
 \gre@factor=0
@@ -120,12 +120,25 @@
 	\gre@error{\protect\setstaffsize\space is already defined.  Check for package conflicts.}%
 \else%
 	\def\setstaffsize#1{%
-		\gre@factor=#1%
+		\ifnum\gre@factor=0\relax %
+			\changedimenfactor{1}{#1}%
+		\else %
+			\changedimenfactor{\gre@factor}{#1}%
+		\fi %
+		\global\gre@factor=#1\relax %
+		\gre@setverticalspaces %
+		\gre@generatelines %
+		\setgregoriofont{\gregoriofontname}%
+		\ifnum\gre@usestylefont=1\relax %
+			\gre@setstylefont %
+		\fi %
+		\relax %
 	}%
 \fi
+
 \def\setgrefactor#1{%
 	\gre@warning{\protect\setgrefactor\space is deprecated.\MessageBreak Use \protect\setstaffsize\space instead}
-	\gre@factor=0
+	\setstaffsize{#1}
 }
 
 %%%%%%%%%%%%%%%%%%
@@ -731,7 +744,7 @@
   %\greinitialwidth=0pt%
   \hbox to 0pt{%
     \vbox{%
-      \gre@normalstafflinesformat %
+      \gre@normalstafflinesformat{ %
       \vskip\gre@currentabovelinestextheight %
       \vskip\gre@additionaltopspace %
       \ifnum\gre@removelinescount=0\relax %
@@ -761,7 +774,7 @@
       \vskip\gre@spacebeneathtext %
       \vskip\gre@currenttranslationheight %
       \vskip\gre@additionalbottomspace %
-    }%
+    }}%
     \hss%
   }%
   \gre@stafflinewidth=\gre@linewidth%
@@ -775,7 +788,7 @@
 \def\gre@generatelines{%
   \setbox\Gre@Lines=\hbox to 0pt{%
     \vbox{%
-      \gre@normalstafflinesformat %
+      \gre@normalstafflinesformat{ %
       \vskip\gre@spaceabovelines %
       \vskip\gre@currentabovelinestextheight %
       \ifnum\gre@removelinescount=0\relax %
@@ -805,7 +818,7 @@
       \vskip\gre@additionalbottomspace %
       \vskip\gre@spacebeneathtext %
       \vskip\gre@currenttranslationheight %
-    }%
+    }}%
     \hss%
   }%
   \relax %
@@ -1389,69 +1402,99 @@
   \relax%
 }
 
-\def\grenormalstafflinesformat{%
-  \relax %
+\def\gre@normalstafflinesformat#1{%
+	\startnormalstafflinesformat#1\stopnormalstafflinesformat %
+}
+\def\startnormalstafflinesformat{
+	\begingroup%
+}
+\def\stopnormalstafflinesformat{
+	\endgroup%
 }
 
-\def\greadditionalstafflinesformat{%
-  \relax %
+\def\gre@additionalstafflinesformat#1{%
+	\startadditionalstafflinesformat#1\stopadditionalstafflinesformat %
 }
+\let\startadditionalstafflinesformat\startnormalstafflinesformat
+\let\stopadditionalstafflinesformat\stopnormalstafflinesformat
 
 \def\GreSetStaffLinesFormat#1{%
-  \global\def\greadditionalstafflinesformat{#1\relax }%
-  \global\def\grenormalstafflinesformat{#1\relax }%
-  \relax %
+	\gre@warning{\protect\GreSetStaffLinesFormat\space is deprecated.\MessageBreak Manipulate the normalstafflinesformat environment instead.}
+	\global\def\startnormalstafflinesformat{\begingroup#1\relax }%
+	\relax %
 }
 
-\def\greinitialformat#1{%
-  \font\grefontofinitial=pncr at 40pt%
-  {\grefontofinitial #1}%
-  \relax %
+\def\gre@initialformat#1{%
+	\startinitialformat#1\stopinitialformat
+}
+\def\startinitialformat{%
+	\begingroup
+	\font\grefontofinitial=pncr at 40pt%
+	{\grefontofinitial #1}%
+	\relax %
+}
+\def\stopinitialformat{%
+	\endgroup
 }
 
-\def\grebiginitialformat#1{%
-  \font\grefontofgrebiginitial=pncr at 80pt%
-  {\grefontofgrebiginitial #1}%
-  \relax %
+\def\gre@biginitialformat#1{%
+	\startbiginitialformat#1\stopbiginitialformat
+}
+\def\startbiginitialformat{%
+	\begingroup
+	\font\grefontofgrebiginitial=pncr at 80pt%
+	{\grefontofgrebiginitial #1}%
+	\relax %
+}
+\def\stopbiginitialformat{%
+	\endgroup
 }
 
-\def\setgrefactor#1{%
-  \ifnum\grefactor=0\relax %
-    \changedimenfactor{1}{#1}%
-  \else %
-    \changedimenfactor{\grefactor}{#1}%
-  \fi %
-  \global\grefactor=#1\relax %
-  \gresetverticalspaces %
-  \gregeneratelines %
-  \setgregoriofont{\gregoriofontname}%
-  \ifnum\greusestylefont=1\relax %
-  \gresetstylefont %
-  \fi %
-  \relax %
-}
 
 %%%%%%%%%%%%%%%%%%
 %% score including
 %%%%%%%%%%%%%%%%%%
 
 % function that includes a score in TeX format
-\def\greincludetexscore#1{%
+\def\gre@includetexscore#1{%
   \input #1%
   \relax %
 }
+\ifdefined\includetexscore
+	\gre@error{\protect\includetexscore\space is already defined.  Check for package conflicts.}
+\else
+	\def\includetexscore#1{%
+		\gre@includetexscore{#1}
+	}
+\fi
+\def\greincludetexscore#1{%
+	\gre@warning{\protect\greincludedtexscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}
+	\gre@includetexscore{#1}
+}
 
-% function provided for backward compatibility
-\let\includetexscore\greincludetexscore
-\let\includescore\includetexscore
 
-% TODO: comment
-\def\greincludegabcscore#1{%
+% function that includes scores in gabc format
+\def\gre@includegabcscore#1{%
   \directlua{gregoriotex.include_gabc_score([[#1]])}%
   \relax %
 }
+\ifdefined\includegabcscore
+	\gre@error{\protect\includegabcscore\space is already defined.  Check for package conflicts.}
+\else
+	\def\includegabcscore#1{%
+		\gre@includegabcscore{#1}
+	}
+\fi
+\def\greincludegabcscore#1{%
+	\gre@warning{\protect\greincludedgabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}
+	\gre@includegabcscore{#1}
+}
 
-\let\includegabcscore\greincludegabcscore
+% Wrapper function that can handle both file types.  This is done by checking the filename (using the string tests from the xstring package) to see if it ends with .gabc.  If it does, we assume the file is in gabc format and pass it to \ger@includegabcscore.  All other files are assumed to be in gtex format and are processed using \gre@includetexscore.
+\input xstring.tex
+\def\includescore#1{%
+\IfEndWith{#1}{.gabc}{\gre@includegabcscore{#1}}{\gre@includetexscore{#1}}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% some hyphen definitions

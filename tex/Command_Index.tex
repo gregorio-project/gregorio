@@ -24,20 +24,27 @@ Environments are used to apply standard formatting to elements of the score.  Re
 While environments are technically a \LaTeX\ phenomena, for users of PlainTeX each environment has a pseudo-environment equivalent (defined in \verb=gregoriotex.tex=) which is used in place of the environment.  The pseudo-enviroments are called with a \verb=\start*= and \verb=\stop*= command (where ``*'' is the name of the environment).  To change the format of the text in the pseudo-environment, simply redefine these commands (usually you only need to redefine the \verb=\start*= command).  Just make sure that any new definition for \verb=\start*= has \verb=\begingroup= as the first line and for \verb=\stop*= has \verb=\endgroup= as the last line.
 
 \verb=initialformat=%tex.sty, PlainTeX version in tex.tex
-	Defines how the first letter of a score appears when using leading initial.  Defaults to \verb=huge= (in PlainTeX).
+	Defines how the first letter of a score appears when using leading initial.  Defaults to \verb=huge= (New Century Roman at 40pt in PlainTeX).
 	Deprecated version: \verb=\greinitialformat=
 
 \verb=biginitialformat=%tex.sty, PlainTeX version in tex.tex
-	Defines how the first letter of a score appears when using a 2-line leading initial.  Defaults to \verb=Huge= (in PlainTeX)
+	Defines how the first letter of a score appears when using a 2-line leading initial.  Defaults to \verb=Huge= (New Century Roman at 80pt in PlainTeX)
 	Deprecated version: \verb=\grebiginitialformat=
 
 \verb=abovelinetextstyle=%tex.sty, PlainTeX version in tex.tex
 	Defines how the text placed above the staff lines appears.  Defaults to \verb=small= and \verb=italic= (\verb=italic= only in PlainTeX).
 	Deprecated version: \verb=\greabovelinestextstyle=
 
-\verb=translationformat=%tex.sty, PlainTeX version in ???
+\verb=translationformat=%tex.sty, PlainTeX version in tex.tex
 	Defines how the translation text appears.  Defaults to \verb=italic=.
 
+\verb=normalstafflinesformat=%tex.sty, PlainTeX version in tex.tex
+	Defines how the staff lines will appear.  Note that the staff lines are drawn with \verb=\hrule= and so very few things will actually affect their appearance (color being the most prominent one that does).
+	Deprecated version: \verb=\grenormalstafflinesformat
+
+\verb=additionalstafflinesformat=%tex.sty, PlainTeX version in tex.tex
+	Defines how the additional staff lines (the little ones which are drawn for notes above or below the normal staff lines) appear.  Defaults to \verb=normalstafflinesformat=.
+	Deprecated version: \verb=\greadditionalstafflinesformat
 
 \subsection{Commands}
 
@@ -110,8 +117,20 @@ In general, commands should not be modified.  Exceptions are noted below.
 	Macro to block custom.  Applies to all subsequent scores in group.
 	Deprecated version: \verb=\greblockcustos=
 
+\verb=\GreSetStaffLinesFormat{<string>}=%tex.tex
+	Deprecated.  Used to set the format for the staff lines.  See above notes on the environments for updated documentation.
 
-	
+\verb=\includescore{<filename>}=%tex.tex
+	Macro for including scores.  Works on both gabc and tex files.
+
+\verb=\includetexscore{<filename>}=%tex.tex
+	Macro for including scores which have already been run through gregorio (i.e. are in gtex format).
+	Deprecated version: \verb=\greincludetexscore=
+
+\verb=\includegabcscore{<filename>}=%tex.tex
+	Macro for including scores which are in gabc format.
+	Deprecated version: \verb=\greincludegabcscore=
+
 \section{Gregorio Controls}
 
 These functions are the ones written by Gregorio to the gtex file.  While one could, in theory, use/change them to alter the appearance of elements of the score, it is far better to make your changes in the gabc file and let Gregorio make the changes to the gtex file.
@@ -541,3 +560,15 @@ These functions are the ones used by Gregoriotex internally as it process the co
 
 \verb=\gre@setstylefont=%tex.tex
 	Macro to load greextra as gregoriostylefont at correct size.
+	
+\verb=\gre@normalstafflinesformat=%tex.tex
+	Macro to apply formatting to the normal staff lines.
+	
+\verb=\gre@additionalstafflinesformat=%tex.tex
+	Macro to apply formatting to the additional staff lines.
+
+\verb=\gre@includetexscore{<filename>}=%tex.tex
+	Macro to include scores in gtex format.
+
+\verb=\gre@includegabcscore{<filename>}=%tex.tex
+	Macro to include scores in gabc format.

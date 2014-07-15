@@ -43,10 +43,6 @@
   \relax %
 }
 \newenvironment*{initialformat}{\begin{huge}}{\end{huge}
-\newcommand{\greinitialformat}[1]{%
-	\PackageWarning{GregorioTeX}{\protect\greinitialformat\space is deprecated.\MessageBreak  Redefine initialformat enviroment instead}%
-	\renewenvironment*{initialformat}{#1}{}%
-}
 	
 
 \def\gre@biginitialformat#1{%
@@ -54,10 +50,6 @@
   \relax %
 }
 \newenvironment*{biginitialformat}{\begin{Huge}}{\end{Huge}}
-\newcommand{\grebiginitialformat}[1]{%
-	\PackageWarning{GregorioTeX}{\protect\grebiginitialformat\space is deprecated.\MessageBreak  Redefine biginitialformat environment instead}%
-	\renewenvironment*{biginitialformat}{#1}{}%
-}
 
 
 \def\gre@abovelinestextstyle#1{%
@@ -65,15 +57,30 @@
   \relax %
 }
 \newenvironment{abovelinetextstyle}{\begin{textit}\begin{small}}{\end{small}\end{textit}}
-\def\greabovelinestextstyle#1{%
-	\PackageWarning{GregorioTeX}{\protect\greabovelinestextstyle\space is deprecated.\MessageBreak Redefine abovelinetextstyle environment instead}%
-	\renewenvironment{abovelinetextstyle}{#1}{}%
 
 \def\gre@translationformat#1{%
 	\begin{translationformat}#1\end{translationformat}%
 	\relax%
 }
 \newenvironment{translationformat}{\begin{textit}}{\end{textit}}
+
+\def\gre@normalstafflinesformat#1{%
+	\begin{normalstafflinesformat}#1\end{normalstafflinesformat}%
+	\relax%
+}
+\newenvironment{normalstafflinesformat}{\relax}{}
+
+\def\gre@additionalstafflinesformat#1{%
+	\begin{additionalstafflinesformat}#1\end{additionalstafflinesformat}%
+	\relax%
+}
+\newenvironment{additionalstafflinesformat}{\begin{normalstafflinesformat}}{\end{normalstafflinesformat}}
+
+\def\GreSetStaffLinesFormat#1{%
+	\gre@warning{\protect\GreSetStaffLinesFormat\space is deprecated.  Manipulate the normalstafflinesformat environment instead.}
+	\renewenvironment{normalstafflinesformat}{#1}{}%
+	\relax %
+}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
