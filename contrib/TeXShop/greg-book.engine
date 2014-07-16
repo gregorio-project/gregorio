@@ -1,6 +1,6 @@
 #!/bin/tcsh
 
-echo "Gregorio Engine for processing documents with included scores. (TeXShop Version)"
+echo "Gregorio Engine for processing documents with included scores."
 echo "(C) 2014 R. Padraic Springuel. This work is licensed under a Creative Commons Attribution 4.0 International License."
 
 set path= ($path /usr/texbin /usr/local/bin)
