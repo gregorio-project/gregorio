@@ -61,10 +61,10 @@
 
 % The general version of GregorioTeX (we mean by that the "API", the way
 % Gregorio will write things)
-\xdef\gregoriotexversion{20140516}
+\xdef\gregoriotexversion{20130616}
 
 % the version of the internal files (all must have the same)
-\xdef\gre@internalversion{20140516} % date format
+\xdef\gre@internalversion{20130616} % date format
 \directlua{gregoriotex.check_version(\number\gre@internalversion)}
 
 % first some macros to allow checks for version:
@@ -113,7 +113,7 @@
 %%%%%%%%%%%%%%
 
 % gre@factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
-% at the beginning it is set to 0, but if it is still 0 when begingregorianscore is called, it is set to the default value : 17 (the value that makes it look like a standard graduale)
+% at the beginning it is set to 0, but if it is still 0 when \begingregorianscore is called, it is set to the default value : 17 (the value that makes it look like a standard graduale)
 \newcount\gre@factor
 \gre@factor=0
 \ifdefined\setstaffsize%
@@ -1515,7 +1515,7 @@
   \char\the\hyphenchar\font %
 }
 
-% the definition that will be always used for end of lines hyphens in gregorio, except if one of the two before is explicitely used
+% the definition that will be always used for end of lines hyphens in gregorio, except if one of the two before is explicitly used
 \let\grehyph\grenormalhyph 
 
 % two macros to change the definition of the hyphen:

@@ -131,6 +131,13 @@ In general, commands should not be modified.  Exceptions are noted below.
 	Macro for including scores which are in gabc format.
 	Deprecated version: \verb=\greincludegabcscore=
 
+\verb=\GreUseNormalHyphen=%tex.tex
+	Tell gregoriotex to use normal hyphens at the end of lines (default behavior).
+	Note: Placing an explicit hyphen in between special character brackets (\ie <sp>-</sp>) in the gabc file will always result in a zero-width hyphen.
+	
+\verb=\GreUseZeroHyphen=%tex.tex
+	Tell gregoriotex to use zero-width hyphens at the end of lines.
+
 \section{Gregorio Controls}
 
 These functions are the ones written by Gregorio to the gtex file.  While one could, in theory, use/change them to alter the appearance of elements of the score, it is far better to make your changes in the gabc file and let Gregorio make the changes to the gtex file.
@@ -211,7 +218,8 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 \verb=\grehepisemusbottom=
 \verb=\grehepisemusbridge=
 \verb=\grehighchoralsign=
-\verb=\grehyph=
+\verb=\grehyph=%tex.tex
+	Macro used for end of line hyphens.  Defaults to =\grenormalhyph=.
 
 \verb=\greictusa=
 \verb=\greictust=
@@ -244,6 +252,8 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 	Same as \verb=\grenewline= except line is not justified.
 \verb=\grenewparlinewithspace{<int1>}{<int2>}{<int3>}{<int4>}=%tex.tex
 	Same as \verb=\grenewlinewithspace= except line is not justified.
+\verb=\grenormalhyph=%tex.tex, not actually found in gregoriotex-write.c
+	Macro to typeset a normal hyphen.
 \verb=\grenoinitial=%tex.tex
 	Macro called when no initial is being set.
 \verb=\grenormalinitial=%not actually found in gregoriotex-write.c%tex.tex
@@ -294,7 +304,8 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 \verb=\grewritetranslationwithcenterbeginning{<string>}=%tex.tex
 	Macro to typeset <string> in the translation position (at the beginning of a line?).
 
-\verb=\grezerhyph=
+\verb=\grezerhyph=%tex.tex
+	Macho to typeset a zero-width hyphen (the hyphen is visible, it is treated as if it had 0 width though.  Used for fine tuning spacing (especially at line endings).
 
 \verb=\setgregoriofont{<string>}=%tex.tex
 	Macro to set the font used for the glyphs.
