@@ -65,24 +65,24 @@
 %% at the end of a score
 
 \def\grecancelpenalties{%
-  \xdef\grehyphenpenaltysave{\the\hyphenpenalty }%
-  \xdef\greexhyphenpenaltysave{\the\exhyphenpenalty }%
-  \xdef\gredoublehyphendemeritssave{\the\doublehyphendemerits }%
-  \xdef\grefinalhyphendemeritssave{\the\finalhyphendemerits }%
-  \xdef\grebrokenpenaltysave{\the\brokenpenalty }%
-  \hyphenpenalty=\grehyphenpenalty\relax %
-  \exhyphenpenalty=\grehyphenpenalty\relax %
-  \doublehyphendemerits=0\relax %
-  \finalhyphendemerits=0\relax %
-  \brokenpenalty=\grebrokenpenalty\relax %
+	\xdef\grehyphenpenaltysave{\the\hyphenpenalty }%
+	\xdef\greexhyphenpenaltysave{\the\exhyphenpenalty }%
+	\xdef\gredoublehyphendemeritssave{\the\doublehyphendemerits }%
+	\xdef\grefinalhyphendemeritssave{\the\finalhyphendemerits }%
+	\xdef\grebrokenpenaltysave{\the\brokenpenalty }%
+	\hyphenpenalty=\grehyphenpenalty\relax %
+	\exhyphenpenalty=\grehyphenpenalty\relax %
+	\doublehyphendemerits=0\relax %
+	\finalhyphendemerits=0\relax %
+	\brokenpenalty=\grebrokenpenalty\relax %
 }
 
 \def\grerestorepenalties{%
-  \hyphenpenalty=\grehyphenpenaltysave %
-  \exhyphenpenalty=\greexhyphenpenaltysave %
-  \doublehyphendemerits=\gredoublehyphendemeritssave %
-  \finalhyphendemerits=\grefinalhyphendemeritssave %
-  \brokenpenalty=\grebrokenpenaltysave %
+	\hyphenpenalty=\grehyphenpenaltysave %
+	\exhyphenpenalty=\greexhyphenpenaltysave %
+	\doublehyphendemerits=\gredoublehyphendemeritssave %
+	\finalhyphendemerits=\grefinalhyphendemeritssave %
+	\brokenpenalty=\grebrokenpenaltysave %
 }
 
 %% These macro enable the tuning of linepenalty, tolerance, pretolerance
@@ -94,9 +94,9 @@
 % Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
 % see http://tug.org/pipermail/luatex/2013-July/004516.html
 \ifnum\the\luatexversion < 78\relax %
-  \global\def\grepretolerance{-1}
+	\global\def\grepretolerance{-1}
 \else %
-  \global\def\grepretolerance{\pretolerance}
+	\global\def\grepretolerance{\pretolerance}
 \fi %
 \def\greemergencystretch{\emergencystretch}
 \def\grewidowpenalty{\widowpenalty}
@@ -104,27 +104,27 @@
 
 % macro called at ea
 \def\gredofinetuning{%
-  \xdef\greloosenesssave{\the\looseness}%
-  \xdef\gretolerancesave{\the\tolerance}%
-  \xdef\grepretolerancesave{\the\pretolerance}%
-  \xdef\greemergencystretchsave{\the\emergencystretch}%
-  \xdef\grewidowpenaltysave{\the\widowpenalty}%
-  \xdef\greclubpenaltysave{\the\clubpenalty}%
-  \looseness=\grelooseness %
-  \tolerance=\gretolerance %
-  \pretolerance=\grepretolerance %
-  \emergencystretch=\greemergencystretch %
-  \widowpenalty=\grewidowpenalty %
-  \clubpenalty=\greclubpenalty %
+	\xdef\greloosenesssave{\the\looseness}%
+	\xdef\gretolerancesave{\the\tolerance}%
+	\xdef\grepretolerancesave{\the\pretolerance}%
+	\xdef\greemergencystretchsave{\the\emergencystretch}%
+	\xdef\grewidowpenaltysave{\the\widowpenalty}%
+	\xdef\greclubpenaltysave{\the\clubpenalty}%
+	\looseness=\grelooseness %
+	\tolerance=\gretolerance %
+	\pretolerance=\grepretolerance %
+	\emergencystretch=\greemergencystretch %
+	\widowpenalty=\grewidowpenalty %
+	\clubpenalty=\greclubpenalty %
 }
 
 \def\greendfinetuning{%
-  \looseness=\greloosenesssave %
-  \tolerance=\gretolerancesave %
-  \pretolerance=\grepretolerancesave %
-  \emergencystretch=\greemergencystretchsave %
-  \widowpenalty=\grewidowpenaltysave %
-  \clubpenalty=\greclubpenaltysave %
+	\looseness=\greloosenesssave %
+	\tolerance=\gretolerancesave %
+	\pretolerance=\grepretolerancesave %
+	\emergencystretch=\greemergencystretchsave %
+	\widowpenalty=\grewidowpenaltysave %
+	\clubpenalty=\greclubpenaltysave %
 }
 
 
@@ -275,22 +275,22 @@
 \newdimen\greaboveinitialseparation
 
 \def\GreSetAboveInitialSeparation#1{
-  \greaboveinitialseparation=#1%
-  \relax %
+	\greaboveinitialseparation=#1%
+	\relax %
 }
 
 \let\setaboveinitialseparation\GreSetAboveInitialSeparation
 
 \def\GreSetSpaceAfterInitial#1{%
-  \greafterinitialshift=#1 %
-  \relax %
+	\greafterinitialshift=#1 %
+	\relax %
 }
 
 \let\setspaceafterinitial\GreSetSpaceAfterInitial
 
 \def\GreSetSpaceBeforeInitial#1{%
-  \grebeforeinitialshift=#1 %
-  \relax %
+	\grebeforeinitialshift=#1 %
+	\relax %
 }
 
 \let\setspacebeforeinitial\GreSetSpaceBeforeInitial
@@ -316,27 +316,27 @@
 
 % a macro to define a ratio on the default value
 \def\gresetstafflinefactor#1{%
-  \xdef\grestafflinefactor{#1}%
-  \gretempdimcount=#1\relax %
-  \global\grestafflineheight = 1500sp%
-  \global\multiply\grestafflineheight by \gretempdimcount\relax %
-  % for non-integer numbers... in fact #1 is 10 times the factor we really want
-  \global\divide\grestafflineheight by 10\relax %
-  % we have:
-  %   interstafflinespace = 30000 - (lineheight-1500) = 31500 - lineheight
-  %   primaryglyphraisevalue = interstafflinespace/2 + lineheight/2 + (1500 - lineheight) = 17250 - lineheight
-  \global\greinterstafflinespace=31500sp%
-  \global\advance\greinterstafflinespace by -\grestafflineheight %
-  \global\grestafflinediff=\grestafflineheight %
-  \global\advance\grestafflinediff by -1500sp%
-  \global\divide\grestafflinediff by 2\relax %
-  \ifnum\the\grefactor=0\else %
-    \global\multiply\grestafflinediff by \the\grefactor %
-    \global\multiply\greinterstafflinespace by \the\grefactor %
-    \global\multiply\grestafflineheight by \the\grefactor %
-    \gresetverticalspaces %
-  \fi %
-  \relax %
+	\xdef\grestafflinefactor{#1}%
+	\gretempdimcount=#1\relax %
+	\global\grestafflineheight = 1500sp%
+	\global\multiply\grestafflineheight by \gretempdimcount\relax %
+	% for non-integer numbers... in fact #1 is 10 times the factor we really want
+	\global\divide\grestafflineheight by 10\relax %
+	% we have:
+	%	 interstafflinespace = 30000 - (lineheight-1500) = 31500 - lineheight
+	%	 primaryglyphraisevalue = interstafflinespace/2 + lineheight/2 + (1500 - lineheight) = 17250 - lineheight
+	\global\greinterstafflinespace=31500sp%
+	\global\advance\greinterstafflinespace by -\grestafflineheight %
+	\global\grestafflinediff=\grestafflineheight %
+	\global\advance\grestafflinediff by -1500sp%
+	\global\divide\grestafflinediff by 2\relax %
+	\ifnum\the\grefactor=0\else %
+		\global\multiply\grestafflinediff by \the\grefactor %
+		\global\multiply\greinterstafflinespace by \the\grefactor %
+		\global\multiply\grestafflineheight by \the\grefactor %
+		\gresetverticalspaces %
+	\fi %
+	\relax %
 }
 
 %%%%%%%%%%%%%%%%%%
@@ -397,63 +397,63 @@
 \input gsp-default.tex
 
 \def\GreLoadSpaceConf#1{%
-  \input gsp-#1.tex\relax %
-  \ifnum\the\grefactor=0\else %
-    \greadaptconfvalues %
-    \gresetverticalspaces %
-  \fi %
-  \relax %
+	\input gsp-#1.tex\relax %
+	\ifnum\the\grefactor=0\else %
+		\greadaptconfvalues %
+		\gresetverticalspaces %
+	\fi %
+	\relax %
 }
 
 \def\greadaptconfvalues{%
-  \greadaptoneconfvalue{\greadditionallineswidth}%
-  \greadaptoneconfvalue{\grezerowidthspace}%
-  \greadaptoneconfvalue{\greinterglyphspace}%
-  \greadaptoneconfvalue{\grealterationspace}%
-  \greadaptoneconfvalue{\greclefflatspace}%
-  \greadaptoneconfvalue{\grebeforealterationspace}%
-  \greadaptoneconfvalue{\greinterelementspace}%
-  \greadaptoneconfvalue{\grelargerspace}%
-  \greadaptoneconfvalue{\greglyphspace}%
-  \greadaptoneconfvalue{\greintersyllablespace}%
-  \greadaptoneconfvalue{\grespacebeforecusto}%
-  \greadaptoneconfvalue{\grespacebeforesigns}%
-  \greadaptoneconfvalue{\grespaceaftersigns}%
-  \greadaptoneconfvalue{\grespaceafterlineclef}%
-  \greadaptoneconfvalue{\greinterwordspacenotes}%
-  \greadaptoneconfvalue{\greinterwordspacenotestext}%
-  \greadaptoneconfvalue{\greinterwordspacetextnotes}%
-  \greadaptoneconfvalue{\greinterwordspacetext}%
-  \greadaptoneconfvalue{\grebitrivirspace}%
-  \greadaptoneconfvalue{\grebitristrospace}%
-  \greadaptoneconfvalue{\grepunctuminclinatumshift}%
-  \greadaptoneconfvalue{\grebeforepunctainclinatashift}%
-  \greadaptoneconfvalue{\grepunctuminclinatumanddebilisshift}%
-  \greadaptoneconfvalue{\grepunctuminclinatumdebilisshift}%
-  \greadaptoneconfvalue{\grepunctuminclinatumbigshift}%
-  \greadaptoneconfvalue{\grepunctuminclinatummaxshift}%
-  \greadaptoneconfvalue{\grespacearoundsmallbar}%
-  \greadaptoneconfvalue{\grespacearoundminor}%
-  \greadaptoneconfvalue{\grespacearoundmaior}%
-  \greadaptoneconfvalue{\grespacearoundfinalis}%
-  \greadaptoneconfvalue{\grespacebeforefinalfinalis}%
-  \greadaptoneconfvalue{\grespacearoundclefbars}%
-  \greadaptoneconfvalue{\gretextbartextspace}%
-  \greadaptoneconfvalue{\grenotebarspace}%
-  \greadaptoneconfvalue{\gremaximumspacewithoutdash}%
-  \greadaptoneconfvalue{\greafterclefnospace}%
-  \greadaptoneconfvalue{\greadditionallineswidth}%
-  \greadaptoneconfvalue{\grespaceabovelines}%
-  \greadaptoneconfvalue{\grespacelinestext}%
-  \greadaptoneconfvalue{\grelowchoralsignshift}%
-  \greadaptoneconfvalue{\grehighchoralsignshift}%
-  \greadaptoneconfvalue{\grebeforechoralsignspace}%
-  \relax %
+	\greadaptoneconfvalue{\greadditionallineswidth}%
+	\greadaptoneconfvalue{\grezerowidthspace}%
+	\greadaptoneconfvalue{\greinterglyphspace}%
+	\greadaptoneconfvalue{\grealterationspace}%
+	\greadaptoneconfvalue{\greclefflatspace}%
+	\greadaptoneconfvalue{\grebeforealterationspace}%
+	\greadaptoneconfvalue{\greinterelementspace}%
+	\greadaptoneconfvalue{\grelargerspace}%
+	\greadaptoneconfvalue{\greglyphspace}%
+	\greadaptoneconfvalue{\greintersyllablespace}%
+	\greadaptoneconfvalue{\grespacebeforecusto}%
+	\greadaptoneconfvalue{\grespacebeforesigns}%
+	\greadaptoneconfvalue{\grespaceaftersigns}%
+	\greadaptoneconfvalue{\grespaceafterlineclef}%
+	\greadaptoneconfvalue{\greinterwordspacenotes}%
+	\greadaptoneconfvalue{\greinterwordspacenotestext}%
+	\greadaptoneconfvalue{\greinterwordspacetextnotes}%
+	\greadaptoneconfvalue{\greinterwordspacetext}%
+	\greadaptoneconfvalue{\grebitrivirspace}%
+	\greadaptoneconfvalue{\grebitristrospace}%
+	\greadaptoneconfvalue{\grepunctuminclinatumshift}%
+	\greadaptoneconfvalue{\grebeforepunctainclinatashift}%
+	\greadaptoneconfvalue{\grepunctuminclinatumanddebilisshift}%
+	\greadaptoneconfvalue{\grepunctuminclinatumdebilisshift}%
+	\greadaptoneconfvalue{\grepunctuminclinatumbigshift}%
+	\greadaptoneconfvalue{\grepunctuminclinatummaxshift}%
+	\greadaptoneconfvalue{\grespacearoundsmallbar}%
+	\greadaptoneconfvalue{\grespacearoundminor}%
+	\greadaptoneconfvalue{\grespacearoundmaior}%
+	\greadaptoneconfvalue{\grespacearoundfinalis}%
+	\greadaptoneconfvalue{\grespacebeforefinalfinalis}%
+	\greadaptoneconfvalue{\grespacearoundclefbars}%
+	\greadaptoneconfvalue{\gretextbartextspace}%
+	\greadaptoneconfvalue{\grenotebarspace}%
+	\greadaptoneconfvalue{\gremaximumspacewithoutdash}%
+	\greadaptoneconfvalue{\greafterclefnospace}%
+	\greadaptoneconfvalue{\greadditionallineswidth}%
+	\greadaptoneconfvalue{\grespaceabovelines}%
+	\greadaptoneconfvalue{\grespacelinestext}%
+	\greadaptoneconfvalue{\grelowchoralsignshift}%
+	\greadaptoneconfvalue{\grehighchoralsignshift}%
+	\greadaptoneconfvalue{\grebeforechoralsignspace}%
+	\relax %
 }
 
 \def\greadaptoneconfvalue#1{%
-  \global\multiply #1 by \grefactor %
-  \relax %
+	\global\multiply #1 by \grefactor %
+	\relax %
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -465,94 +465,94 @@
 %% means that you have to set your personal grefactor before changing the values,
 %% or use the next macro.
 \def\grechangedim#1#2{%
-  \ifnum\grefactor=0\relax %
-    \grechangedimatfactor{#1}{#2}{17}%
-  \else %
-    \grechangedimatfactor{#1}{#2}{\grefactor}%
-  \fi %
-  \relax %
+	\ifnum\grefactor=0\relax %
+		\grechangedimatfactor{#1}{#2}{17}%
+	\else %
+		\grechangedimatfactor{#1}{#2}{\grefactor}%
+	\fi %
+	\relax %
 }
 
 %% This macro changes one dimen (#1) to the value #2, at the factor specified
 %% in #3.
 \def\grechangedimatfactor#1#2#3{%
-  #1=#2%
-  \ifnum #3=\grefactor\else %
-    \divide #1 by \number #3%
-    \ifnum\grefactor=0\else % 
-      % if grefactor = 0 it means that we must consider it's 1,
-      % as we are before the beginning of the first score.
-      \multiply #1 by \grefactor %
-    \fi %
-  \fi %
-  \gresetverticalspaces %
-  \relax %
+	#1=#2%
+	\ifnum #3=\grefactor\else %
+		\divide #1 by \number #3%
+		\ifnum\grefactor=0\else % 
+			% if grefactor = 0 it means that we must consider it's 1,
+			% as we are before the beginning of the first score.
+			\multiply #1 by \grefactor %
+		\fi %
+	\fi %
+	\gresetverticalspaces %
+	\relax %
 }
 
 %% Here is the function to compute some more vertical spaces from the basic values
 \def\gresetverticalspaces{%
-  \grestaffheight=4\grestafflineheight %
-  \advance\grestaffheight by 3\greinterstafflinespace %
-  %\global\multiply\grespacebeneathtext by \grefactor % uncomment it if you want
-  % something else than 0
-  \global\gretextlower=\grespacebeneathtext %
-  \global\grecalculateconstantglyphraise %
-  \relax %
+	\grestaffheight=4\grestafflineheight %
+	\advance\grestaffheight by 3\greinterstafflinespace %
+	%\global\multiply\grespacebeneathtext by \grefactor % uncomment it if you want
+	% something else than 0
+	\global\gretextlower=\grespacebeneathtext %
+	\global\grecalculateconstantglyphraise %
+	\relax %
 }
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
 \def\grechangeonedimenfactor#1#2#3{%
-  \global\divide #1 by \number #2%
-  \global\multiply #1 by \number #3%
-  \relax %
+	\global\divide #1 by \number #2%
+	\global\multiply #1 by \number #3%
+	\relax %
 }
 %% this function changes all the values of the spaces (vertical and horizontal) from one factor to another
 %% simply by dividing them by the old factor, and multiplying them by the new one.
 % #1 is the old grefactor, #2 is the new one
 \def\changedimenfactor#1#2{%
-  \grechangeonedimenfactor{\grestafflineheight}{#1}{#2}%
-  \grechangeonedimenfactor{\grestafflinediff}{#1}{#2}%
-  \grechangeonedimenfactor{\greinterstafflinespace}{#1}{#2}%
-  \grechangeonedimenfactor{\grespaceabovelines}{#1}{#2}%
-  \grechangeonedimenfactor{\grespacelinestext}{#1}{#2}%
-  \grechangeonedimenfactor{\grespacebeneathtext}{#1}{#2}%
-  \grechangeonedimenfactor{\greinterglyphspace}{#1}{#2}%
-  \grechangeonedimenfactor{\grealterationspace}{#1}{#2}%
-  \grechangeonedimenfactor{\greclefflatspace}{#1}{#2}%
-  \grechangeonedimenfactor{\grebeforealterationspace}{#1}{#2}%
-  \grechangeonedimenfactor{\greinterelementspace}{#1}{#2}%
-  \grechangeonedimenfactor{\grelargerspace}{#1}{#2}%
-  \grechangeonedimenfactor{\greglyphspace}{#1}{#2}%
-  \grechangeonedimenfactor{\greintersyllablespace}{#1}{#2}%
-  \grechangeonedimenfactor{\grespacebeforecusto}{#1}{#2}%
-  \grechangeonedimenfactor{\grespacebeforesigns}{#1}{#2}%
-  \grechangeonedimenfactor{\grespaceaftersigns}{#1}{#2}%
-  \grechangeonedimenfactor{\grespaceafterlineclef}{#1}{#2}%
-  \grechangeonedimenfactor{\greinterwordspacenotes}{#1}{#2}%
-  \grechangeonedimenfactor{\greinterwordspacenotestext}{#1}{#2}%
-  \grechangeonedimenfactor{\greinterwordspacetextnotes}{#1}{#2}%
-  \grechangeonedimenfactor{\greinterwordspacetext}{#1}{#2}%
-  \grechangeonedimenfactor{\grebitrivirspace}{#1}{#2}%
-  \grechangeonedimenfactor{\grebitristrospace}{#1}{#2}%
-  \grechangeonedimenfactor{\grepunctuminclinatumshift}{#1}{#2}%
-  \grechangeonedimenfactor{\grebeforepunctainclinatashift}{#1}{#2}%
-  \grechangeonedimenfactor{\grepunctuminclinatumanddebilisshift}{#1}{#2}%
-  \grechangeonedimenfactor{\grepunctuminclinatumdebilisshift}{#1}{#2}%
-  \grechangeonedimenfactor{\grepunctuminclinatumbigshift}{#1}{#2}%
-  \grechangeonedimenfactor{\grepunctuminclinatummaxshift}{#1}{#2}%
-  \grechangeonedimenfactor{\grespacearoundsmallbar}{#1}{#2}%
-  \grechangeonedimenfactor{\grespacearoundminor}{#1}{#2}%
-  \grechangeonedimenfactor{\grespacearoundmaior}{#1}{#2}%
-  \grechangeonedimenfactor{\grespacearoundfinalis}{#1}{#2}%
-  \grechangeonedimenfactor{\grespacebeforefinalfinalis}{#1}{#2}%
-  \grechangeonedimenfactor{\grespacearoundclefbars}{#1}{#2}%
-  \grechangeonedimenfactor{\gretextbartextspace}{#1}{#2}%
-  \grechangeonedimenfactor{\grenotebarspace}{#1}{#2}%
-  \grechangeonedimenfactor{\gremaximumspacewithoutdash}{#1}{#2}%
-  \grechangeonedimenfactor{\greafterclefnospace}{#1}{#2}%
-  \grechangeonedimenfactor{\greadditionallineswidth}{#1}{#2}%
-  \grechangeonedimenfactor{\grehighchoralsignshift}{#1}{#2}%
-  \grechangeonedimenfactor{\grelowchoralsignshift}{#1}{#2}%
-  \grechangeonedimenfactor{\grebeforechoralsignspace}{#1}{#2}%
-  \relax %
+	\grechangeonedimenfactor{\grestafflineheight}{#1}{#2}%
+	\grechangeonedimenfactor{\grestafflinediff}{#1}{#2}%
+	\grechangeonedimenfactor{\greinterstafflinespace}{#1}{#2}%
+	\grechangeonedimenfactor{\grespaceabovelines}{#1}{#2}%
+	\grechangeonedimenfactor{\grespacelinestext}{#1}{#2}%
+	\grechangeonedimenfactor{\grespacebeneathtext}{#1}{#2}%
+	\grechangeonedimenfactor{\greinterglyphspace}{#1}{#2}%
+	\grechangeonedimenfactor{\grealterationspace}{#1}{#2}%
+	\grechangeonedimenfactor{\greclefflatspace}{#1}{#2}%
+	\grechangeonedimenfactor{\grebeforealterationspace}{#1}{#2}%
+	\grechangeonedimenfactor{\greinterelementspace}{#1}{#2}%
+	\grechangeonedimenfactor{\grelargerspace}{#1}{#2}%
+	\grechangeonedimenfactor{\greglyphspace}{#1}{#2}%
+	\grechangeonedimenfactor{\greintersyllablespace}{#1}{#2}%
+	\grechangeonedimenfactor{\grespacebeforecusto}{#1}{#2}%
+	\grechangeonedimenfactor{\grespacebeforesigns}{#1}{#2}%
+	\grechangeonedimenfactor{\grespaceaftersigns}{#1}{#2}%
+	\grechangeonedimenfactor{\grespaceafterlineclef}{#1}{#2}%
+	\grechangeonedimenfactor{\greinterwordspacenotes}{#1}{#2}%
+	\grechangeonedimenfactor{\greinterwordspacenotestext}{#1}{#2}%
+	\grechangeonedimenfactor{\greinterwordspacetextnotes}{#1}{#2}%
+	\grechangeonedimenfactor{\greinterwordspacetext}{#1}{#2}%
+	\grechangeonedimenfactor{\grebitrivirspace}{#1}{#2}%
+	\grechangeonedimenfactor{\grebitristrospace}{#1}{#2}%
+	\grechangeonedimenfactor{\grepunctuminclinatumshift}{#1}{#2}%
+	\grechangeonedimenfactor{\grebeforepunctainclinatashift}{#1}{#2}%
+	\grechangeonedimenfactor{\grepunctuminclinatumanddebilisshift}{#1}{#2}%
+	\grechangeonedimenfactor{\grepunctuminclinatumdebilisshift}{#1}{#2}%
+	\grechangeonedimenfactor{\grepunctuminclinatumbigshift}{#1}{#2}%
+	\grechangeonedimenfactor{\grepunctuminclinatummaxshift}{#1}{#2}%
+	\grechangeonedimenfactor{\grespacearoundsmallbar}{#1}{#2}%
+	\grechangeonedimenfactor{\grespacearoundminor}{#1}{#2}%
+	\grechangeonedimenfactor{\grespacearoundmaior}{#1}{#2}%
+	\grechangeonedimenfactor{\grespacearoundfinalis}{#1}{#2}%
+	\grechangeonedimenfactor{\grespacebeforefinalfinalis}{#1}{#2}%
+	\grechangeonedimenfactor{\grespacearoundclefbars}{#1}{#2}%
+	\grechangeonedimenfactor{\gretextbartextspace}{#1}{#2}%
+	\grechangeonedimenfactor{\grenotebarspace}{#1}{#2}%
+	\grechangeonedimenfactor{\gremaximumspacewithoutdash}{#1}{#2}%
+	\grechangeonedimenfactor{\greafterclefnospace}{#1}{#2}%
+	\grechangeonedimenfactor{\greadditionallineswidth}{#1}{#2}%
+	\grechangeonedimenfactor{\grehighchoralsignshift}{#1}{#2}%
+	\grechangeonedimenfactor{\grelowchoralsignshift}{#1}{#2}%
+	\grechangeonedimenfactor{\grebeforechoralsignspace}{#1}{#2}%
+	\relax %
 }

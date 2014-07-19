@@ -134,9 +134,25 @@ In general, commands should not be modified.  Exceptions are noted below.
 \verb=\GreUseNormalHyphen=%tex.tex
 	Tell gregoriotex to use normal hyphens at the end of lines (default behavior).
 	Note: Placing an explicit hyphen in between special character brackets (\ie <sp>-</sp>) in the gabc file will always result in a zero-width hyphen.
+	Note: This command only affects the hyphens within a score.  Hyphens elsewhere in a document are unaffected (hence the "Gre" in the command name).
 	
 \verb=\GreUseZeroHyphen=%tex.tex
 	Tell gregoriotex to use zero-width hyphens at the end of lines.
+	Note: This command only affects the hyphens within a score.  Hyphens elsewhere in a document are unaffected (hence the "Gre" in the command name).
+
+\verb=\GreForceHyphen=%tex.tex
+	Tell gregoriotex to force the appearance of hyphens between all syllables.
+	Note: This command only affects the hyphens within a score.  Hyphens elsewhere in a document are unaffected (hence the "Gre" in the command name).
+
+\verb=\removeclef=%tex-signs.tex
+	Macro to remove the clefs from a score.
+	Deprecated version: \verb=\greremoveclef=
+
+\verb=\normalclef=%tex-signs.tex
+	Macro to restore clefs to a score (undoes the effects of \verb=\removeclef=).
+	Deprecated version: \verb=\grenormalclef=
+
+
 
 \section{Gregorio Controls}
 
@@ -305,7 +321,7 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 	Macro to typeset <string> in the translation position (at the beginning of a line?).
 
 \verb=\grezerhyph=%tex.tex
-	Macho to typeset a zero-width hyphen (the hyphen is visible, it is treated as if it had 0 width though.  Used for fine tuning spacing (especially at line endings).
+	Macro to typeset a zero-width hyphen (the hyphen is visible, it is treated as if it had 0 width though.  Used for fine tuning spacing (especially at line endings).
 
 \verb=\setgregoriofont{<string>}=%tex.tex
 	Macro to set the font used for the glyphs.
@@ -583,3 +599,50 @@ These functions are the ones used by Gregoriotex internally as it process the co
 
 \verb=\gre@includegabcscore{<filename>}=%tex.tex
 	Macro to include scores in gabc format.
+
+\verb=\gre@usestylecommon=%tex-signs.tex
+	Checks to see if gregoriostylefont has been loaded and loads it if it has not.
+
+\verb=\gre@falsepenalty{<int>}=%tex-signs.tex
+	Does nothing.
+
+\verb=\gre@truepenalty{<int>}=%tex-signs.tex
+	Alias for \verb=\penalty{<int>}=.  Used in combination with \verb=\gre@falsepenalty= to avoid placing \verb=\penalty= where it isn't allowed.
+
+\verb=\gre@hskip=%tex-signs.tex
+	Alias for \verb=\hskip= outside of discretionaries and \verb=\kern= inside of them.
+
+\verb=\gre@penalty{<int>}=%tex-signs.tex
+	Alias for \verb=\gre@truepenalty= outside of discretionaries and \verb=\gre@falsepenalty= inside of them.
+
+\verb=\gre@insidediscretionary=%tex-signs.tex
+	Count for tracking whether we are in a discretionary (1) or not (0).
+
+\verb=\gre@discretionary{<string1>}{<string3>}=%tex-signs.tex
+	Sets \verb=\gre@hskip=, \verb=\gre@penalty=, \verb=\gre@insidediscretionary= to their within discretionary values and then calls \verb=\discretionary{<string1>}{<string2>}{<string3>}=.  <string2> is a non-printing string which sets \verb=\gre@lastoflinecount= to 2.  After resolving the \verb=\discretionary= command \verb=\gre@hskip=, \verb=\gre@penalty=, and \verb=\gre@insidediscretionary= are restored to their outside values.
+
+\verb=\gre@removeclefcount=%tex-signs.tex
+	Count for indicating if the clef should be printed (1) or not (0).
+
+\verb=\gre@clefnum=%tex-signs.tex
+	Count indicated the clef line and pitch: 1- c on bottom line, 2 - c on second line, 3 - c on third line, 4 - c on top line, 5 - f on bottom line, 6 - f on second line, 7 - f on third line, 8 - f on top line.
+
+\verb=\gre@clefwidth=%tex-signs.tex
+	Width of the clef.
+
+\verb=\gre@setlinesclef{<char1>}{<char2>}{<int>}{<char3>}=%tex-signs.tex
+	Macro to define the clef that will appear at the beginning of the lines.
+	<char1>: type of clef (c or f)
+	<char2>: height of clef (using gabc height letters)
+	<int>: add a space after the clef (1), or not (0)
+	<char3>: height of flat after clef (using gabc height letters, a = no flat)
+
+\verb=\gre@calculateclefnum{<char1>}{<int>}{<char2>}=%tex-signs.tex
+	Macro to calculate the clef number and store it in \verb=\gre@clefnum=.
+	<char1>: type of clef (c or f)
+	<int>: line on which the clef appears (1--4)
+	<char3>: height of flat after clef (using gabc height letters, a = no flat)
+
+\verb=\gre@updatelinesclef=%tex-signs.tex
+	Macro redrawing a key from \verb=\gre@clefnum=.  Useful for vertical space changes.
+	

@@ -15,14 +15,14 @@
 %along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 \expandafter\ifx\csname ProvidesPackage\endcsname\relax
-  \input luatextra.sty
-  \input gregoriotex.sty
+	\input luatextra.sty
+	\input gregoriotex.sty
 \else
-  \NeedsTeXFormat{LaTeX2e}
-  \ProvidesPackage{optimize-gabc}%
-    [2010/06/06 v1.0 Gregorio gabc optimization style]
-  \RequirePackage{luatextra}
-  \RequirePackage{gregoriotex}
+	\NeedsTeXFormat{LaTeX2e}
+	\ProvidesPackage{optimize-gabc}%
+		[2010/06/06 v1.0 Gregorio gabc optimization style]
+	\RequirePackage{luatextra}
+	\RequirePackage{gregoriotex}
 \fi
 
 \directlua{
