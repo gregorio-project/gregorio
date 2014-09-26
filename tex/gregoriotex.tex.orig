@@ -1178,12 +1178,18 @@
 }
 
 % macro called at each end of syllable which is not an end of word
+<<<<<<< HEAD
 \def\gre@endofsyllable{%
-  \ifnum\gre@blockcusto=1\relax %
-     \gre@localrightbox{}%
+	\gre@penalty{\gre@endofsyllablepenalty }%
+	\relax%
+=======
+\def\greendofsyllable{%
+  \ifnum\greblockcusto=1\relax %
+     \grelocalrightbox{}%
   \fi %
-  \gre@penalty{\gre@endofsyllablepenalty }%
+  \grepenalty{\greendofsyllablepenalty }%
   \relax%
+>>>>>>> edd24f52ac8cdcd09d0f25bc46bcc47f58adffbd
 }
 
 % macro to end elements, #1 is the type of space, it can be : 

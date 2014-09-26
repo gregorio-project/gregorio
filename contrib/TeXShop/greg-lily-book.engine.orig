@@ -48,5 +48,8 @@ foreach line ($greglines)
 	endif
 end
 echo "Gregorio files are up to date.  Calling LilyPond-Book.engine..."
+<<<<<<< HEAD
+=======
 # hand project off to LilyPond-Book
+>>>>>>> edd24f52ac8cdcd09d0f25bc46bcc47f58adffbd
 perl ~/Library/TeXShop/engines/LilyPond-Book.engine "$filename"

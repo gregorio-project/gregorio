@@ -1,0 +1,51 @@
+*~
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+
+## Intermediate documents:
+*.dvi
+# these rules might exclude image files for figures etc.
+*.ps
+*.eps
+*.pdf
+
+## Build tool auxiliary files:
+*.fdb_latexmk
+*.synctex.gz
+*.synctex.gz(busy)
+*.pdfsync
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]

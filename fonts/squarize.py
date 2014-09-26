@@ -905,7 +905,7 @@ def write_porrectusflexus(i,j,k, last_glyph, with_bar, shape, liquescentia='noth
     write_line(j, glyphnumber, length-line_width, (-i+1)*base_height)
     if (last_glyph=="deminutus"):
         if j==1:
-            write_deminutus(j-i,k,glyphnumber, length-line_width,with_bar,firstbar=0)
+            write_deminutus(j-i,k,glyphnumber, length,with_bar,firstbar=0)
             length=length+width_flexusdeminutus
         else:
             write_deminutus(j-i,k,glyphnumber, length-line_width,with_bar,firstbar=1)
