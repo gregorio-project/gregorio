@@ -1058,6 +1058,9 @@
 
 % macro called at each end of syllable which is not an end of word
 \def\greendofsyllable{%
+  \ifnum\greblockcusto=1\relax %
+     \grelocalrightbox{}%
+  \fi %
   \grepenalty{\greendofsyllablepenalty }%
   \relax%
 }
