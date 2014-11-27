@@ -1591,10 +1591,12 @@
 \def\grefillhole#1{%
   \setbox\GreTempwidth=\hbox{#1}%
   \hbox to 0pt{%
+    {%
     \color{grebackgroundcolor}%
     \raise \greglyphraisevalue %
     \copy\GreTempwidth %
-    \pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
+    }%
+    %\pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
     \hss %
   }%
   \grenobreak %
