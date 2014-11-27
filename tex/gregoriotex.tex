@@ -204,6 +204,9 @@
 
 % the macro we call each time we force a changing of line, it automatically sets \greknownline, and adjusts left spaces
 \def\grenewlinecommon#1#2#3#4#5{%
+  \ifnum\greblockcusto=1\relax\ifnum\greinsidediscretionary=0\relax %
+     \grelocalrightbox{}%
+  \fi\fi %
   % sometimes we need to add a space before ending the line:
   \kern\grekernbeforeeol\relax %
   \ifnum\greboxing=0\relax %
@@ -1058,9 +1061,6 @@
 
 % macro called at each end of syllable which is not an end of word
 \def\greendofsyllable{%
-  \ifnum\greblockcusto=1\relax %
-     \grelocalrightbox{}%
-  \fi %
   \grepenalty{\greendofsyllablepenalty }%
   \relax%
 }

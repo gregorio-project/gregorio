@@ -695,6 +695,9 @@
   \fi %
   \global\grenotesaligncenter=0pt% very important, see flat and natural
   \greunsetfixedtextformat %
+  \ifnum\greblockcusto=1\relax\ifnum\greinsidediscretionary=0\relax %
+     \grelocalrightbox{}%
+  \fi\fi %
   \relax %
 }
 
@@ -855,6 +858,9 @@
   \grefirstsyllableofword=1 %
   \global\grenotesaligncenter= 0 pt\relax % very important, see flat and natural
   \greunsetfixedtextformat %
+  \ifnum\greblockcusto=1\relax\ifnum\greinsidediscretionary=0\relax %
+     \grelocalrightbox{}%
+  \fi\fi %
   \relax%
 }
 
