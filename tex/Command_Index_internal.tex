@@ -1,0 +1,441 @@
+\section{Gregoriotex Controls}
+
+These functions are the ones used by Gregoriotex internally as it process the commands listed above.  They should not appear in any user document and are listed here for programmer documentation purposes only.
+
+\verb=\gre@coloredlines#1=%tex.sty
+	Changes the color of the staff lines to #1.  #1 must be a named color defined using \verb=\definecolor=
+
+\verb=\gre@redlines=%tex.sty
+	Changes the color of the staff lines to \verb=gregoriocolor=.
+
+\verb=\gre@normallines%tex.sty
+	Resets the formatting of the staff lines.
+
+\verb=\gre@error#1=%tex.tex
+	Raises an error which is identified as coming from GregorioTeX.  Uses \LaTeX \verb=\PackageError= or PlainTeX \verb=\errmessage= as appropriate.  #1 (a string) is the accompanying message.
+	
+\verb=\gre@warn#1=%tex.tex
+	Raises a warning which is identified as coming from GregorioTeX.  Uses \LaTeX \verb=\PackageWarning= or PlainTeX \verb=\message= as appropriate.  <string is the accompanying message.
+	
+\verb=\gre@localleftbox=%tex.tex
+	Alias for \verb=\luatexlocalleftbox=.  Used to make propagating changes in latex easier.
+
+\verb=\gre@localrightbox=%tex.tex
+	Alias for \verb=\luatexlocalrightbox=.  Used to make propagating changes in latex easier.
+	
+\verb=\gre@unsetattribute=%tex.tex
+	Alias for \verb=\unsetlutexattribute{\gregorioattr}=
+
+\verb=\gregorioattr=%tex.tex
+	A luatex attribute we put on the text nodes.
+	If it is 1, it means that there may be a dash here if this syllable is at the end of a line.
+	If it is 2, it means that it's never useful to typeset a dash.
+	If it is 0, it just means that we are in a score.
+
+\verb=\gregoriocenterattr=%tex.tex
+	A luatex attribute used for translation centering.
+
+\verb=\gregoriotexversion#1=%tex.tex
+	Defines the current version of GregorioTeX API.  #1 is an integer date in format: yyyymmdd
+
+\verb=\gre@internalversion#1=%tex.tex
+	The version of GregorioTeX.  #1 is an integer date in format: yyyymmdd
+
+\verb=\gre@declarefileversion#1#2=%tex.tex
+	Checks to see if GregorioTeX component #1 (a string containing the name) with version #2 (an integer in date format yyyymmdd) is compatible with \verb=\gre@internalversion=
+
+\verb=\gre@factor=%tex.tex
+	Count representing the size of the staff.  Initialized to 0, but changed to 17 by \verb=\begingregorianscore= if user hasn't changed it.
+	
+\verb=\gre@stafflinewidth=%tex.tex
+	Dimension representing the width of a line of staff.  Can vary, for example, at the first line.
+
+\verb=\gre@linewidth=%tex.tex
+	Dimension representing the width of the score (including initial).
+
+\verb=\gre@calculateconstantglyphraise=%tex.tex
+	Macro to caluclate \verb=\gre@constantglyphraise=
+
+\verb=\gre@constantglyphraise=%tex.tex
+	Dimension representing ??
+
+\verb=\gre@currenttranslationheight=%tex.tex
+	Dimension representing the space for the translation beneath the text.
+
+\verb=\gre@addtranslationspace=%tex.tex
+	Macro to tell Gregorio to set space for the translation.
+
+\verb=\gre@removetranslationspace=%tex.tex
+	Macro to tell Gregorio to remove the space allocated to the translation.
+
+\verb=\gre@kernbeforeeol=%tex.tex
+	Macro describing a kern to make before ending the line, which we sometimes want (see \verb=\gresyllable=)
+
+\verb=\gre@newlinecommon#1#2#3#4#5=%tex.tex
+	Macro we call each time we force a changing of line, it automatically sets \verb=\greknownline=, and adjusts left spaces.
+	#1 --- integer: 0 = no note above staff; 1 = note above 4th line (position k); 2 = note on 5th line (position l); 3 = note above 5th line (position m)
+	#2 --- integer: 0 = no note below staff; 1 note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
+	#3 --- integer: 0 = no translation; 1 = translation present
+	#4 --- integer: 0 = justify line; 1 = do not justify line
+	#5 --- integer: 0 = no extra space above staff; 1 = extra space above staff
+
+\verb=\gre@additionalbottomspace=%tex.tex
+	Dimension representing extra space below the staff needed for low notes.
+
+\verb=\gre@additionaltopspace=%tex.tex
+	Dimension representing extra space above the staff needed for high notes.
+
+\verb=\gre@updateadditionalspaces#1#2=%tex.tex
+	Macro which updates \verb=\gre@additionalbottomspace= and \verb=\gre@additionaltopspace=
+%	#1 --- integer: 0 = no note above staff; 1 = note above 4th line (position k); 2 = note on 5th line (position l); 3 = note above 5th line (position m)
+%	#2 --- integer: 0 = no note below staff; 1 note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
+
+\verb=\gre@textlower=%tex.tex
+	Dimension representing the height of the separation between the 0th line (which is invisible except for notes in the a or b position) and the bottom of the text.
+
+\verb=\gre@Tempwidth=%tex.tex
+	Box used to calculate \verb=\gre@tempwidth=
+	
+\verb=\gre@tempwidth=%tex.tex
+	Dimension representing width of some element.
+
+\verb=\gre@widthof#1=%tex.tex
+	Macro which calculates \verb=\gre@tempwidth= as width of #1.
+
+\verb=\gre@textaligncenter=%tex.tex
+	Dimension representing the width from the beginning of the letters in a syllable to the middle of the middle letters.  Used for lining up neumes and syllables.
+	
+\verb=\gre@findtextaligncenter#1#2#3=%tex.tex
+	Macro for calculating \verb=\gre@textaligncenter=.
+	#1 --- string: The first part of the syllable (any preceding consonants in Latin)
+	#2 --- string: The middle part of the syllable (the vowel in Latin)
+	#3 --- integer: syllable the calculation is being performed for; 0 = current syllable; 1 = next syllable
+
+\verb=\gre@additionalleftspace=%tex.tex
+	Dimension representing the additional space that has to be added to the localleftbox for a big initial (one taking two lines).
+
+\verb=\Gre@Initial=%tex.tex
+	Box containing the initial.
+
+\verb=\gre@initialwidth=%tex.tex
+	Dimension representing the width of the initial (and the space after).
+
+\verb=\gre@biginitial=%tex.tex
+	Count indicating whether initial takes 2 lines: 0 = it doesn't; 1 = it does.
+
+\verb=\gre@knowline=%tex.tex
+	Line gregoriotex thinks is being set.
+
+\verb=\gre@updateleftbox=%tex.tex
+	Macro which adjusts size of line and clef placement after initial.
+
+\verb=\gre@updatelinewidth=%tex.tex
+	Macro which adjusts the width of the line.
+
+\verb=\gre@initialformat#1=%tex.tex
+	Macro which applies formatting in \verb=initialformat= environment to initial (#1, a character).
+
+\verb=\gre@biginitialformat#1=%tex.tex
+	Macro which applies formatting in \verb=biginitialformat= environment to initial (#1, a character).
+
+\verb=\Gre@Aboveinitialfirstbox=%tex.tex
+	The box which contains the first (top) annotation above the initial.
+
+\verb=\gre@aboveinitialfirstraise=%tex.tex
+	Dimension representing the space allocated to the first annotation.
+
+\verb=\Gre@Aboveinitialsecondbox=%tex.tex
+	The box which contains the second (bottom) annotation above the initial.
+
+\verb=\gre@aboveinitialsecondraise=%tex.tex
+	Dimension representing the space allocated to the second annotation.
+
+\verb=\gre@setaboveinitialrais=%tex.tex
+	Macro to give \verb=\gre@aboveinitialfirstraise= and \verb=\gre@aboveinitialsecondraise= their working values.
+	
+\verb=\gre@currentabovelinestextheight=%tex.tex
+	Dimension representing the space allocated above the lines for text.	
+
+\verb=\gre@abovelinestextstyle#1=%tex.tex
+	Macro to apply the above line text style to argument (a character).
+
+\verb=\gre@addspaceabove=%tex.tex
+	Macro to allocate space for text placed above the staff lines.
+
+\verb=\gre@removespaceabove=%tex.tex
+	Macro to unallocate space for text above the staff lines.
+
+\verb=\gre@currenttextabovelines#1=%tex.tex
+	Macro containing the text (#1) which is currently being placed above the staff lines.
+
+\verb=\gre@typsettextabovelines#1=%tex.tex
+	Macro to typeset argument (a string) above the staff lines.
+
+\verb=\gre@removelinescount=%tex.tex
+	Boolean indicating whether staff lines should be printed.  Has value 0 when lines are printed, 1 when they are not.
+
+\verb=\gre@drawfirstlines=%tex.tex
+	Macro to draw the staff lines for the first line of the score (\ie it accounts for the space taken up by the initial).
+
+\verb=\Gre@Lines=%tex.tex
+	Box to contain the staff lines for lines other than the first line.
+
+\verb=\gre@generatelines=%tex.tex
+	Macro to fill \verb=\Gre@Lines=.
+
+\verb=\gre@smallsecondline=%tex.tex
+	Macro called when the initial is big to make the second set of staff lines the same length as the first.
+
+\verb=\gre@normallines=%tex.tex
+	Marco called after the second set of staff lines when the initial is big to go back to normal width lines.
+
+\verb=\gre@translationcenteringscheme=%tex.tex
+	Boolean to indicate the centering scheme used for the translation.
+	Possible values: 0=translation is left aligned with corresponding text; 1=translation is centered with the corresponding text
+
+\verb=\gre@nlbintranslation=%tex.tex
+	Variable used to indicate whether line breaks are allowed in the translation.
+	Possible values: 0=line breaks are allowed; 1=line breaks are prohibited
+
+\verb=\gre@translationformat#1=%tex.tex (is this defined somewhere else too?)
+	Macro to apply the translation format to string.
+
+\verb=\gre@mustdotranslationcenterend=%tex.tex
+	Boolean to indicate if the translation is at the end of a line?
+	Possible values: 0=not at the end of a line; 1=at the end of a line
+
+\verb=\gre@dotranslationcenterend=%tex.tex
+	Macro to set things up for a translation at the end of a line.
+
+\verb=\gre@printchirovbars=%tex.tex
+	Count that is 1 or 0 if we need to print the small vertical bars in the chironomic line.
+
+\verb=\gre@nolastline=%tex.tex
+	Macro to call when there is just a little thing that will go to the last line, when it is not necessary
+	It doesn't seem to be used, so it's a good candidate for deprecation!
+
+\verb=\gre@endofword#1=%tex.tex
+	Macro called at the end of each word.  Does extra stuff when argument (an integer) is 1?
+
+\verb=\gre@endbeforebar#1=%tex.tex
+	Macro called at end of word when next element is a bar.  Argument (an integer) has same function as in \verb=\gre@endofword=.
+
+\verb=\gre@endafterbar#1=%tex.tex
+	Macro called after a bar.  Argument (an integer) has same function as in \verb=\gre@endofword=.
+
+\verb=\gre@lastoflinecount=%tex.tex
+	Count which marks the last syllable of the line.
+	Possible values: 0=nothing; 1=last syllable of line; 2=first syllable of line
+
+\verb=\gre@disableeolshifts=%tex.tex
+	Boolean which indicates that the syllable should be shifted left a bit.
+	Possible values: 0=shift happens; 1=shift doesn't happen.
+
+\verb=\Gre@DisableEOLShifts=%tex.tex
+	Macro to set \verb=\gre@disableeolshifts= to 1.
+
+\verb=\Gre@EnableEOLShifts=%tex.tex
+	Macro to set \verb=\gre@disableeolshifts= to 0.
+
+\verb=\gre@blockcusto=%tex.tex
+	Count to indicate if the custo should be blocked.
+	Possible values: 0=do not block custo; 1=block custo
+
+\verb=\gre@endofsyllable=%tex.tex
+	Macro called at the end of a syllable which does not end a word.
+
+\verb=\gre@nlbstate=%tex.tex
+	Count to indicate the no line break areas.
+	Possible values: 0 = not a no line break area; 1 = no line break due to translation centering; 2 = no line break due to <nlba> tag
+
+\verb=\gregoriofontname=%tex.tex
+	Macro which holds the default font name (greciliae).
+
+\verb=\gre@usestylefont=%tex.tex
+	Count to indicate if gregoriostylefont should be used.
+	Possible values: 0 = do not use; 1 = use
+
+\verb=\gre@setstylefont=%tex.tex
+	Macro to load greextra as gregoriostylefont at correct size.
+	
+\verb=\gre@normalstafflinesformat=%tex.tex
+	Macro to apply formatting to the normal staff lines.
+	
+\verb=\gre@additionalstafflinesformat=%tex.tex
+	Macro to apply formatting to the additional staff lines.
+
+\verb=\gre@includetexscore#1=%tex.tex
+	Macro to include scores in gtex format.
+
+\verb=\gre@includegabcscore#1=%tex.tex
+	Macro to include scores in gabc format.
+
+\verb=\gre@usestylecommon=%tex-signs.tex
+	Checks to see if gregoriostylefont has been loaded and loads it if it has not.
+
+\verb=\gre@falsepenalty#1=%tex-signs.tex
+	Does nothing.
+
+\verb=\gre@truepenalty#1=%tex-signs.tex
+	Alias for \verb=\penalty#1=.  Used in combination with \verb=\gre@falsepenalty= to avoid placing \verb=\penalty= where it isn't allowed.
+
+\verb=\gre@hskip=%tex-signs.tex
+	Alias for \verb=\hskip= outside of discretionaries and \verb=\kern= inside of them.
+
+\verb=\gre@penalty#1=%tex-signs.tex
+	Alias for \verb=\gre@truepenalty= outside of discretionaries and \verb=\gre@falsepenalty= inside of them.
+
+\verb=\gre@insidediscretionary=%tex-signs.tex
+	Count for tracking whether we are in a discretionary (1) or not (0).
+
+\verb=\gre@discretionary#1#2=%tex-signs.tex
+	Sets \verb=\gre@hskip=, \verb=\gre@penalty=, \verb=\gre@insidediscretionary= to their within discretionary values and then calls \verb=\discretionary#1#2#3=.  #2 (a string) is a non-printing string which sets \verb=\gre@lastoflinecount= to 2.  After resolving the \verb=\discretionary= command \verb=\gre@hskip=, \verb=\gre@penalty=, and \verb=\gre@insidediscretionary= are restored to their outside values.
+
+\verb=\gre@removeclefcount=%tex-signs.tex
+	Count for indicating if the clef should be printed (1) or not (0).
+
+\verb=\gre@clefnum=%tex-signs.tex
+	Count indicated the clef line and pitch: 1- c on bottom line, 2 - c on second line, 3 - c on third line, 4 - c on top line, 5 - f on bottom line, 6 - f on second line, 7 - f on third line, 8 - f on top line.
+
+\verb=\gre@clefwidth=%tex-signs.tex
+	Width of the clef.
+
+\verb=\gre@setlinesclef#1#2#3#4=%tex-signs.tex
+	Macro to define the clef that will appear at the beginning of the lines.
+	#1 --- character: type of clef (c or f)
+	#2 --- character: height of clef (using gabc height letters)
+	#3 --- integer: add a space after the clef (1), or not (0)
+	#4 --- character: height of flat after clef (using gabc height letters, a = no flat)
+
+\verb=\gre@calculateclefnum#1#2#3=%tex-signs.tex
+	Macro to calculate the clef number and store it in \verb=\gre@clefnum=.
+	#1 --- character: type of clef (c or f)
+	#2 --- integer: line on which the clef appears (1--4)
+	#3 --- character: height of flat after clef (using gabc height letters, a = no flat)
+
+\verb=\gre@updatelinesclef=%tex-signs.tex
+	Macro redrawing a key from \verb=\gre@clefnum=.  Useful for vertical space changes.
+	
+\verb=\gre@typekey#1#2#3#4#5=%tex-signs.tex
+	Macro for typesetting the key signature.
+	#1 --- character: type of clef (c or f)
+	#2 --- integer: line of the key (1 to 4)
+	#3 --- integer: Use small key characters (1), or not (0)
+	#4 --- integer: Print a space after the key (1), or not (0)
+	#5 --- character: Height of flat in key (‘a’ for no flat)
+
+\verb=\gre@inchangeclef#1#2#3=%tex-signs.tex
+	Macro for changing key inside a syllable.
+	#1 --- character: type of clef (c or f)
+	#2 --- integer: line on which the clef appears (1--4)
+	#3 --- character: height of flat after clef (using gabc height letters, a = no flat)
+
+\verb=\gre@setcusto#1=%tex-signs.tex
+	Macro for typesetting custos.
+	#1 --- character: height of custom
+
+\verb=\gre@additionaltopcusotolineend=%tex-signs.tex
+	Macro for typesetting the line behind a high custos at end of line.
+
+\verb=\gre@additionalbottomcusotlineend=%tex-signs.tex
+	Macro for typesetting the line behind a low custos at end of line.
+
+\verb=\gre@additionaltopcusotolinemiddle=%tex-signs.tex
+	Macro for typesetting the line behind a high custos in middle of line.
+
+\verb=\gre@additionalbottomcusotlinemiddle=%tex-signs.tex
+	Macro for typesetting the line behind a low custos in middle of line.
+
+\verb=\gre@custocahar#1=%tex-signs.tex
+	Selects the appropriate custos character.
+	#1 --- character: height of the custos
+
+\verb=\gre@curlybracechar=%tex-signs.tex
+	Macro for the char ‘\{‘ (which is rotated 90 and placed over the notes)
+
+\verb=\gre@bracechar=%tex-signs.tex
+	Macro for the char ‘(‘ (which is rotated 90 and placed over the notes)
+
+\verb=\gre@resizebox=%tex-signs.tex
+	Local alias for \verb=\resizebox= (currently borrowed from graphics)
+
+\verb=\gre@lowchoralsignstyle#1=%tex.sty and tex-signs.tex
+	Applies the formatting to the low choral signs specified by the appropriate (pseudo-)environment.
+
+\verb=\gre@highchoralsignstyle#1=%tex.sty and tex-signs.tex
+	Applies the formatting to the high choral signs specified by the appropriate (pseudo-)environment.
+
+\verb=\Gre@Tempsign=%tex-signs.tex
+	Box for temporarily holding a sign needed for calculations.
+
+\verb=\gre@tempdimsignwidth=%tex-signs.tex
+	Temporary dimension used to calculate placement of signs.
+
+\verb=\gre@vepisemusorrareaux#1#2#3#4#5#6#7=%tex-signs.tex
+	Macro help with typesetting of episemus.
+	#1 --- character: A preceding symbol needed for calculating position of episemus.
+	#2 --- character: Another preceding symbol.
+	#3 --- integer: Indicates how far to move back; 0 = go back to beginning of glyph, 1 = go back width of #2, 2 = go back width of #1 and forward width of #2, 3 = go to beginning of glyph, forward by width of #1 and back width of #2
+	#4 --- integer: An additional shift (in sp) to apply to the episemus.
+	#5 --- integer: Use ictus arsicus (1) or ictus theticus (2)
+	#6 --- integer: Set a vertical episemus (1), a rare sign (2), a choral sign (3), or a brace above the bar (4)
+	#7 --- integer: If #6=3 then the choral sign.
+
+\verb=\gre@vepisemusorrare#1#2#3#4#5=%tex-signs.tex
+	Macro for typesetting vertical episemus or rare accent.
+	#1 --- character: height of episemus
+	#2 --- integer: Type of glyph the episemus is attached to.  See episemus special argument for description of options.
+	#3 --- integer: Glyph number of glyph being typeset
+	#4 --- integer: Set a vertical episemus (1), a rare sign (2), a choral sign (3), or a brace above the bar (4)
+	#5 --- string: If #4=3 then the choral sign.
+
+\verb=\grewriteaux#1=%tex.tex
+	Macro for writing to the aux file.
+	#1 --- string: what is written to the aux file.
+
+\verb=\opengreaux=%tex.tex
+	Macro for opening the aux file.
+
+\verb=\closegreaux=%tex.tex
+	Macro for closing the aux file.
+
+\verb=\gre@ictus#1=%tex-signs.tex
+	Macro for writing the position of an ictus to the aux file.
+	#1 --- integer: type of ictus which was typeset, 1 = type a, 2 = type t
+
+\section{Special arguments}
+
+These arguments are used by multiple functions and take a lot of space to describe so we describe them once here and refer to this section rather than have multiple definitions.
+
+\subsection{Episemus special}
+Integer with the following possibilities:
+    0: last note, which is a standard punctum (works with pes)
+    1: same, but the last note is a deminutus
+    2: the note before the last note, which is a standard punctum
+    3: idem, but the note is the note preceding a deminutus
+    4: the note before the note before the last note (for porrectus flexus)
+    5: idem, but when the two last notes are a deminutus
+    6: the first note, if it is a standard punctum
+    7: the first note, if it is an initio debilis
+    8: the first note, if it is a porrectus
+    % the three next arguments make no sense for a vepisemus
+    9: the two first notes, if it is a porrectus
+    10: the two first notes, if it is a porrectus flexus
+    11: the notes two and three of a torculus resupinus
+    12: the last note, if it is a punctum inclinatum
+    13: idem, if it is a punctum inclinatum deminutus
+    14: idem, if it is a stropha
+    15: idem, with a quilisma
+    16: idem, with an oriscus
+    17: same of 2 but for ambitus of one
+    18: same of 0, but the last note is a smaller punctum (concerning simple podatus, podatus, and torculus resupinus)
+    19: the first note, if it is an oriscus
+    20: the first note, if it is a quilisma
+    21: the second note of a torculus resupinus with first ambitus of at least two
+    22: idem with ambitus of one
+    23: idem with initio debilis
+    24: the last note, if it is a linea punctum (or linea punctum cavum)
+    25: the last note, if it is a bar
+    26: the last note, if it is a virgula
+    27: the last note, if it is a divisio finalis
+

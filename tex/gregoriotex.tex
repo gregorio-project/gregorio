@@ -25,6 +25,7 @@
 	\input luatexbase.sty
 	\input luaotfload.sty
 	\input graphicx.sty % for \resizebox
+	\input xstring.tex
 	\def\gre@error#1{\errmessage{GregorioTeX error: #1}}
 	\def\gre@warning#1{\message{GregorioTeX warning: #1}}
 \else
@@ -32,6 +33,7 @@
 	\RequirePackage{graphicx}% for \resizebox
 	\RequirePackage{luatexbase}
 	\RequirePackage{luaotfload}
+	\RequirePackage{xstring}
 	\def\gre@error#1{\PackageError{GregorioTeX}{#1}{}}
 	\def\gre@warning#1{\PackageWarning{GregorioTeX}{#1}}
 \fi
@@ -509,7 +511,11 @@
 	\relax %
 }
 
-%Ideas to simplify the setting of annotations:
+%TODO: add illuminate command which swaps out initial with an image
+%1) build command around \includegraphics from graphicx
+%2) command sets a boolean flag which tells the above initial functions that there’s an image to use, in which case they fill Gre@Initial with image instead of text letter
+
+%TODO: simplify the setting of annotations
 %1) Have one box which contains the annotations.  Box is empty at start.
 %2) Have one function which adds a line to annotation.  Function has one required argument (the annotation to be added) and two optional arguments (horizontal alignment with current box contents and additional space between elements)
 
@@ -1143,7 +1149,7 @@
 %	\grelocalleftbox{}% For an unknown reason, if I uncomment this line, the
 %	blank line removing algorithm (in lua) will let some blank space after the
 %	last line... (see bug #20953)
-	\gre@blockcustos %
+	\blockcustos %
 	\global\gre@lastoflinecount=1\relax%
 	\relax%
 }
@@ -1494,7 +1500,6 @@
 }
 
 % Wrapper function that can handle both file types.  This is done by checking the filename (using the string tests from the xstring package) to see if it ends with .gabc.  If it does, we assume the file is in gabc format and pass it to \ger@includegabcscore.  All other files are assumed to be in gtex format and are processed using \gre@includetexscore.
-\input xstring.tex
 \def\includescore#1{%
 \IfEndWith{#1}{.gabc}{\gre@includegabcscore{#1}}{\gre@includetexscore{#1}}
 }

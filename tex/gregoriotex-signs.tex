@@ -17,7 +17,7 @@
 
 % this file contains definitions of signs (bar, episemus, punctum, alterations)
 
-\gredeclarefileversion{gregoriotex-signs.tex}{20130616}
+\gre@declarefileversion{gregoriotex-signs.tex}{20130616}
 
 \input gregoriotex-chars.tex
 
@@ -156,7 +156,7 @@
 %% #3: if we must use small key characters (inside a line) or not 0: if not inside, 1 if inside
 %% #4: if we must type a space after or not
 %% #5: if a, it means that we must not put a flat after the key, otherwise it's the height of the flat
-\def\gretypekey#1#2#3#4#5{%
+\def\gre@typekey#1#2#3#4#5{%
 	\ifcase#2 %
 	\or%
 		\grecalculateglyphraisevalue{c}{0}%
@@ -202,19 +202,19 @@
 % if #3 is a, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
 \def\gresetinitialclef#1#2#3{%
-	\grecalculateclefnum{#1}{#2}{#3}%
-	\ifnum\greremoveclefcount=0\relax %
-		\ifnum\grelastoflinecount=2\relax % we must not type a space if there is no initial
-			\gretypekey{#1}{#2}{0}{0}{#3}%
+	\gre@calculateclefnum{#1}{#2}{#3}%
+	\ifnum\gre@removeclefcount=0\relax %
+		\ifnum\gre@lastoflinecount=2\relax % we must not type a space if there is no initial
+			\gre@typekey{#1}{#2}{0}{0}{#3}%
 		\else %
-			\gretypekey{#1}{#2}{0}{1}{#3}%
+			\gre@typekey{#1}{#2}{0}{1}{#3}%
 		\fi %
 	\fi %
-	\gresetlinesclef{#1}{#2}{1}{#3}%
+	\gre@setlinesclef{#1}{#2}{1}{#3}%
 	% if the initial is big, then we adjust the second line
-	\ifnum\grebiginitial=0\relax %
+	\ifnum\gre@biginitial=0\relax %
 	\else %
-		\greadjustsecondline %
+		\gre@adjustsecondline %
 	\fi %
 	\relax%
 }
@@ -226,106 +226,106 @@
 % of the flat
 \def\grechangeclef#1#2#3#4{%
 	% it makes no sense to change the clef when there is no clef...
-	\grenormalclef %
-	\grecalculateclefnum{#1}{#2}{#4}%
-	\greclefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
-	\multiply\greclefchangespace by \the\grefactor %
-	\ifnum\greinsidediscretionary=0\relax %
-		\gresetlinesclef{#1}{#2}{1}{#4}%
+	\gre@normalclef %
+	\gre@calculateclefnum{#1}{#2}{#4}%
+	\gre@clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
+	\multiply\gre@clefchangespace by \the\gre@factor %
+	\ifnum\gre@insidediscretionary=0\relax %
+		\gre@setlinesclef{#1}{#2}{1}{#4}%
 	\fi %
 	\ifnum#3=1\relax %
-		\grehskip\greclefchangespace %
+		\gre@hskip\gre@clefchangespace %
 	\else %
 		% here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
-		\grehskip -\grespacearoundclefbars %
+		\gre@hskip -\gre@spacearoundclefbars %
 	\fi %
-	\gretypekey{#1}{#2}{1}{0}{#4}%
-	\grehskip\greclefchangespace %
+	\gre@typekey{#1}{#2}{1}{0}{#4}%
+	\gre@hskip\gre@clefchangespace %
 	\relax%
 }
 
 % macro called when the key changes inside a syllable
 
-\def\greinchangeclef#1#2#3{%
-	\grenormalclef %
+\def\gre@inchangeclef#1#2#3{%
+	\gre@normalclef %
 	% to see why we reset \grelastoflinecount, see comments of \greglyph.
-	\ifnum\grelastoflinecount=2\relax %
-		\global\grelastoflinecount=0\relax %
+	\ifnum\gre@lastoflinecount=2\relax %
+		\global\gre@lastoflinecount=0\relax %
 	\fi %
-	\greclefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
-	\multiply\greclefchangespace by \grefactor %
-	\ifnum\greinsidediscretionary=0\relax %
+	\gre@clefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
+	\multiply\gre@clefchangespace by \gre@factor %
+	\ifnum\gre@insidediscretionary=0\relax %
 		\gresetlinesclef{#1}{#2}{0}{#3}%
 	\fi %
-	\hskip\greclefchangespace %
-	\gretypekey{#1}{#2}{1}{0}{#3}%
-	\hskip\greclefchangespace %
+	\hskip\gre@clefchangespace %
+	\gre@typekey{#1}{#2}{1}{0}{#3}%
+	\hskip\gre@clefchangespace %
 	\relax%
 }
 
 % custo just typesets a custo, useful for before the key changes for example
 \def\grecusto#1{%
-	\grecalculateglyphraisevalue{#1}{0}%
+	\gre@calculateglyphraisevalue{#1}{0}%
 	%here we need some tricks to draw the line before the custo (for the color)
-	\setbox\GreTempwidth=\hbox{\grecustochar#1}%
-	\global\gretempwidth=\wd\GreTempwidth %
-	\ifnum\greremovelinescount=0\relax %
+	\setbox\Gre@Tempwidth=\hbox{\gre@custochar#1}%
+	\global\gre@tempwidth=\wd\Gre@Tempwidth %
+	\ifnum\gre@removelinescount=0\relax %
 		\ifx l#1%
-			\greadditionaltopcustolinemiddle %
+			\gre@additionaltopcustolinemiddle %
 		\fi %
 		\ifx m#1%
-			\greadditionaltopcustolinemiddle %
+			\gre@additionaltopcustolinemiddle %
 		\fi %
 		\ifx a#1%
-			\greadditionalbottomcustolinemiddle %
+			\gre@additionalbottomcustolinemiddle %
 		\fi %
 		\ifx b#1%
-			\greadditionalbottomcustolinemiddle %
+			\gre@additionalbottomcustolinemiddle %
 		\fi %
 	\fi %
-	\raise \greglyphraisevalue%
-	\copy\GreTempwidth %
+	\raise \gre@glyphraisevalue%
+	\copy\Gre@Tempwidth %
 	% for now we consider we always have a bar after the custo
 	% we don't want to end the line here
-	\grenobreak %
-	\grehskip -\grespacearoundclefbars %
-	\grenobreak %
+	\gre@nobreak %
+	\gre@hskip -\gres@pacearoundclefbars %
+	\gre@nobreak %
 	\relax %
 }
 
 % the argument is the height
-\def\gresetcusto#1{%
-	\ifnum\greinsidediscretionary=0\relax %
-		\ifnum\greblockcusto=0\relax %
-			\grecalculateglyphraisevalue{#1}{0}%
+\def\gre@setcusto#1{%
+	\ifnum\gre@insidediscretionary=0\relax %
+		\ifnum\gre@blockcusto=0\relax %
+			\gre@calculateglyphraisevalue{#1}{0}%
 			%here we need some tricks to draw the line before the custo (for the color)
-			\setbox\GreTempwidth=\hbox{%
+			\setbox\Gre@Tempwidth=\hbox{%
 			% we type a hskip and the we type the custo
-			\hskip\grespacebeforecusto %
-			\grecustochar#1\relax %
+			\hskip\gre@spacebeforecusto %
+			\gre@custochar#1\relax %
 			}%
-			\global\gretempwidth=\wd\GreTempwidth %
+			\global\gre@tempwidth=\wd\Gre@Tempwidth %
 			% we make \wd\GreTempsign contain the width of a custo
-			\setbox\GreTempsign=\hbox{%
-			\grecustochar#1\relax %
+			\setbox\Gre@Tempsign=\hbox{%
+			\gre@custochar#1\relax %
 			}%
-			\grelocalrightbox{%
-			\ifnum\greremovelinescount=0\relax %
+			\gre@localrightbox{%
+			\ifnum\gre@removelinescount=0\relax %
 				\ifx l#1%
-					\greadditionaltopcustolineend %
+					\gre@additionaltopcustolineend %
 				\fi %
 				\ifx m#1%
-					\greadditionaltopcustolineend %
+					\gre@additionaltopcustolineend %
 				\fi %
 				\ifx a#1%
-					\greadditionalbottomcustolineend %
+					\grea@dditionalbottomcustolineend %
 				\fi %
 				\ifx b#1%
-					\greadditionalbottomcustolineend %
+					\gre@additionalbottomcustolineend %
 				\fi %
 			\fi %
-			\raise \greglyphraisevalue%
-			\copy\GreTempwidth %
+			\raise \gre@glyphraisevalue%
+			\copy\Gre@Tempwidth %
 			}%
 		\fi %
 	\fi %
@@ -334,41 +334,41 @@
 
 % macro that typesets an additional line at the top for custos at end of line
 
-\def\greadditionaltopcustolineend{%
-	\gretempdim=\grestaffheight %
-	\advance\gretempdim by \grespacebeneathtext %
-	\advance\gretempdim by \grespacelinestext %
-	\advance\gretempdim by \greinterstafflinespace %
-	\advance\gretempdim by \greadditionalbottomspace %
-	\advance\gretempdim by \grecurrenttranslationheight %
-	\raise\gretempdim %
+\def\gre@additionaltopcustolineend{%
+	\gre@tempdim=\gre@staffheight %
+	\advance\gre@tempdim by \gre@spacebeneathtext %
+	\advance\gre@tempdim by \gre@spacelinestext %
+	\advance\gre@tempdim by \gre@interstafflinespace %
+	\advance\gre@tempdim by \gre@additionalbottomspace %
+	\advance\gre@tempdim by \gre@currenttranslationheight %
+	\raise\gre@tempdim %
 	\hbox to 0pt{%
-		\greadditionalstafflinesformat %
-		\kern\gretempwidth %
-		\gretempdim=\wd\GreTempsign %
-		\advance\gretempdim by \greadditionallineswidth %
-		\kern -\gretempdim %
-		\vrule width \gretempdim height \grestafflineheight%
+		\gre@additionalstafflinesformat %
+		\kern\gre@tempwidth %
+		\gre@tempdim=\wd\Gre@Tempsign %
+		\advance\gre@tempdim by \grea@dditionallineswidth %
+		\kern -\gre@tempdim %
+		\vrule width \gre@tempdim height \gre@stafflineheight%
 		\hss %
 	}%
 	\relax %
 }
 
-\def\greadditionalbottomcustolineend{%
-	\gretempdim=\grespacebeneathtext %
-	\advance\gretempdim by \grespacelinestext %
-	\advance\gretempdim by \greadditionalbottomspace %
-	\advance\gretempdim by \grecurrenttranslationheight %
-	\advance\gretempdim by -\greinterstafflinespace %
-	\advance\gretempdim by -\grestafflineheight %
-	\raise\gretempdim %
+\def\gre@additionalbottomcustolineend{%
+	\gre@tempdim=\gre@spacebeneathtext %
+	\advance\gre@tempdim by \gre@spacelinestext %
+	\advance\gre@tempdim by \gre@additionalbottomspace %
+	\advance\gre@tempdim by \gre@currenttranslationheight %
+	\advance\gre@tempdim by -\gre@interstafflinespace %
+	\advance\gre@tempdim by -\gre@stafflineheight %
+	\raise\gre@tempdim %
 	\hbox to 0pt{%
-		\greadditionalstafflinesformat %
-		\kern\gretempwidth %
-		\gretempdim=\wd\GreTempsign %
-		\advance\gretempdim by \greadditionallineswidth %
-		\kern -\gretempdim %
-		\vrule width \gretempdim height \grestafflineheight%
+		\gre@additionalstafflinesformat %
+		\kern\gre@tempwidth %
+		\gre@tempdim=\wd\Gre@Tempsign %
+		\advance\gre@tempdim by \gre@additionallineswidth %
+		\kern -\gre@tempdim %
+		\vrule width \gre@tempdim height \gre@stafflineheight%
 		\hss %
 	}%
 	\relax %
@@ -376,92 +376,92 @@
 
 % same macros, but for a custo in the middle
 
-\def\greadditionaltopcustolinemiddle{%
-	\gretempdim=\grestaffheight %
-	\advance\gretempdim by \grespacebeneathtext %
-	\advance\gretempdim by \grespacelinestext %
-	\advance\gretempdim by \greinterstafflinespace %
-	\advance\gretempdim by \greadditionalbottomspace %
-	\advance\gretempdim by \grecurrenttranslationheight %
-	\raise\gretempdim %
+\def\gre@additionaltopcustolinemiddle{%
+	\gre@tempdim=\gre@staffheight %
+	\advance\gre@tempdim by \gre@spacebeneathtext %
+	\advance\gre@tempdim by \gre@spacelinestext %
+	\advance\gre@tempdim by \gre@interstafflinespace %
+	\advance\gre@tempdim by \gre@additionalbottomspace %
+	\advance\gre@tempdim by \gre@currenttranslationheight %
+	\raise\gre@tempdim %
 	\hbox to 0pt{%
-		\greadditionalstafflinesformat %
+		\gre@additionalstafflinesformat %
 		\hss %
-		\kern\gretempwidth %
-		\gretempdim=\greadditionallineswidth %
-		\multiply\gretempdim by 2%
-		\advance\gretempdim by \wd\GreTempsign %
-		\vrule width \gretempdim height \grestafflineheight%
+		\kern\gre@tempwidth %
+		\gre@tempdim=\gre@additionallineswidth %
+		\multiply\gre@tempdim by 2%
+		\advance\gre@tempdim by \wd\Gre@Tempsign %
+		\vrule width \gre@tempdim height \gres@tafflineheight%
 		\hss %
 	}%
 	\relax %
 }
 
-\def\greadditionalbottomcustolinemiddle{%
-	\gretempdim=\grespacebeneathtext %
-	\advance\gretempdim by \grespacelinestext %
-	\advance\gretempdim by \greadditionalbottomspace %
-	\advance\gretempdim by \grecurrenttranslationheight %
-	\advance\gretempdim by -\greinterstafflinespace %
-	\advance\gretempdim by -\grestafflineheight %
-	\raise\gretempdim %
+\def\gre@additionalbottomcustolinemiddle{%
+	\gre@tempdim=\gre@spacebeneathtext %
+	\advance\gre@tempdim by \gre@spacelinestext %
+	\advance\gre@tempdim by \gre@additionalbottomspace %
+	\advance\gre@tempdim by \gre@currenttranslationheight %
+	\advance\gre@tempdim by -\gre@interstafflinespace %
+	\advance\gre@tempdim by -\gre@stafflineheight %
+	\raise\gre@tempdim %
 	\hbox to 0pt{%
-		\greadditionalstafflinesformat %
+		\gre@additionalstafflinesformat %
 		\hss %
-		\kern\gretempwidth %
-		\gretempdim=\greadditionallineswidth %
-		\multiply\gretempdim by 2%
-		\advance\gretempdim by \wd\GreTempsign %
-		\vrule width \gretempdim height \grestafflineheight%
+		\kern\gre@tempwidth %
+		\gre@tempdim=\gre@additionallineswidth %
+		\multiply\gre@tempdim by 2%
+		\advance\gre@tempdim by \wd\Gre@Tempsign %
+		\vrule width \gre@tempdim height \gre@stafflineheight%
 		\hss %
 	}%
 	\relax %
 }
 
-\def\grecustochar#1{%
+\def\gre@custochar#1{%
 	\ifx a#1%
-		\grecustotopmiddlechar %
+		\gre@custotopmiddlechar %
 	\fi%
 	\ifx b#1%
-		\grecustotoplongchar %
+		\gre@custotoplongchar %
 	\fi%
 	\ifx c#1%
-		\grecustotopshortchar %
+		\gre@custotopshortchar %
 	\fi%
 	\ifx d#1%
-		\grecustotoplongchar %
+		\gre@custotoplongchar %
 	\fi%
 	\ifx e#1%
-		\grecustotopshortchar %
+		\gre@custotopshortchar %
 	\fi%
 	\ifx f#1%
-		\grecustotoplongchar %
+		\gre@custotoplongchar %
 	\fi%
 	\ifx g#1%
-		\grecustotopshortchar %
+		\gre@custotopshortchar %
 	\fi%
 	\ifx h#1%
-		\grecustotoplongchar %
+		\gre@custotoplongchar %
 	\fi%
 	\ifx i#1%
-		\grecustotopshortchar %
+		\gre@custotopshortchar %
 	\fi%
 	\ifx j#1%
-		\grecustobottomlongchar %
+		\gre@custobottomlongchar %
 	\fi%
 	\ifx k#1%
-		\grecustobottomshortchar %
+		\gre@custobottomshortchar %
 	\fi%
 	\ifx l#1%
-		\grecustobottomlongchar %
+		\gre@custobottomlongchar %
 	\fi%
 	\ifx m#1%
-		\grecustobottommiddlechar %
+		\gre@custobottommiddlechar %
 	\fi%
 }
 
 \def\removecusto{%
-	\grelocalrightbox{}%
+	\gre@localrightbox{}%
 	\relax%
 }
 
@@ -469,11 +469,11 @@
 %% macros for the typesetting of braces and other things above the score
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\gdef\grecurlybracechar{\gregoriofont\char \gre@char@curlybrace}
-\gdef\grebracechar{\gregoriofont\char \gre@char@brace}
+\gdef\gre@curlybracechar{\gregoriofont\char \gre@char@curlybrace}
+\gdef\gre@bracechar{\gregoriofont\char \gre@char@brace}
 
 % the command to resize a box, \resizebox is provided by graphicx
-\global\let\greresizebox\resizebox 
+\global\let\gre@resizebox\resizebox 
 
 % #1: the width
 % #2: 1 if we put an accentus above or not
@@ -482,30 +482,30 @@
 % #5: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\greovercurlybrace#1#2#3#4#5{%
 	\ifnum#5=1\relax %
-		\setbox\GreTempsign=\hbox{\grepunctumchar}%
-		\gretempdim=\wd\GreTempsign %
-		\kern -\gretempdim %
+		\setbox\Gre@Tempsign=\hbox{\gre@punctumchar}%
+		\gre@tempdim=\wd\Gre@Tempsign %
+		\kern -\gre@tempdim %
 	\fi %
-	\grecalculateglyphraisevalue{g}{13}%
-	\advance\greglyphraisevalue by #3\relax %
-	\setbox\GreTempsign=\hbox{\grecurlybracechar}%
+	\gre@calculateglyphraisevalue{g}{13}%
+	\advance\gre@glyphraisevalue by #3\relax %
+	\setbox\Gre@Tempsign=\hbox{\gre@curlybracechar}%
 	\hbox to 0pt{%
 		\kern #4\relax %
-		\raise\greglyphraisevalue\hbox{%
-			\greresizebox{#1}{\ht\GreTempsign}{\grecurlybracechar}%
+		\raise\gre@glyphraisevalue\hbox{%
+			\gre@resizebox{#1}{\ht\Gre@Tempsign}{\gre@curlybracechar}%
 		}%
 		\hss %
 		\ifnum#2=1\relax %
-			\grecalculateglyphraisevalue{m}{13}%
-			\advance\greglyphraisevalue by \grecurlybraceaccentusshift %
-			\raise\greglyphraisevalue\hbox{%
+			\gre@calculateglyphraisevalue{m}{13}%
+			\advance\gre@glyphraisevalue by \gre@curlybraceaccentusshift %
+			\raise\gre@glyphraisevalue\hbox{%
 				\gregoriofont\char 39\relax %
 			}%
 			\hss %
 		\fi %
 	}%
 	\ifnum#5=1\relax %
-		\kern \gretempdim %
+		\kern \gre@tempdim %
 	\fi %
 	\relax %
 }
@@ -516,20 +516,20 @@
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\greoverbrace#1#2#3#4{%
 	\ifnum#4=1\relax %
-		\setbox\GreTempsign=\hbox{\grepunctumchar}%
-		\gretempdim=\wd\GreTempsign %
-		\kern -\gretempdim %
+		\setbox\Gre@Tempsign=\hbox{\gre@punctumchar}%
+		\gre@tempdim=\wd\Gre@Tempsign %
+		\kern -\gre@tempdim %
 	\fi %
-	\grecalculateglyphraisevalue{g}{13}%
-	\setbox\GreTempsign=\hbox{\grebracechar}%
-	\advance\greglyphraisevalue by #2\relax %
-	\raise\greglyphraisevalue\hbox to 0pt{%
+	\gre@calculateglyphraisevalue{g}{13}%
+	\setbox\Gre@Tempsign=\hbox{\gre@bracechar}%
+	\advance\gre@glyphraisevalue by #2\relax %
+	\raise\gre@glyphraisevalue\hbox to 0pt{%
 		\kern #3\relax %
-		\greresizebox{#1}{\ht\GreTempsign}{\grebracechar}%
+		\gre@resizebox{#1}{\ht\Gre@Tempsign}{\gre@bracechar}%
 		\hss %
 	}%
 	\ifnum#4=1\relax %
-		\kern \gretempdim %
+		\kern \gre@tempdim %
 	\fi %
 	\relax %
 }
@@ -545,67 +545,67 @@
 % #3 is 1 in case of a punctommora in the note before the last note of a podatus, porrectus or torculus resupinus, 0 otherwise.
 % #4 is 1 if we are at a punctum inclinatum, 0 otherwise
 \def\grepunctummora#1#2#3#4{%
-	\grenobreak %
+	\gre@nobreak %
 	\ifcase#2\relax %
-		\hskip\grespacebeforesigns%
+		\hskip\gre@spacebeforesigns%
 	\or %
-		\kern\grespacebeforesigns %
+		\kern\gres@pacebeforesigns %
 	\or %
 		% to get the widht of a punctum minus a line, we calculate the width of a flexus (with ambitus of two) minus the width of a punctum
-		\setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@flexus}%
-		\gretempdim=\wd\GreTempwidth %
-		\setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@punctum}%
-		\advance\gretempdim by -\wd\GreTempwidth %
-		\kern -\gretempdim %
-		\kern \grespacebeforesigns %
+		\setbox\Gre@Tempwidth=\hbox{\gregoriofont \char \gre@char@flexus}%
+		\gre@tempdim=\wd\Gre@Tempwidth %
+		\setbox\Gre@Tempwidth=\hbox{\gregoriofont \char \gre@char@punctum}%
+		\advance\gre@tempdim by -\wd\Gre@Tempwidth %
+		\kern -\gre@tempdim %
+		\kern \gre@spacebeforesigns %
 	\or %
-		\setbox\GreTempwidth=\hbox{\gregoriofont \char \gre@char@punctum}%
-		\gretempdim=\wd\GreTempwidth %
-		\kern -\gretempdim %
-		\kern \grespacebeforesigns %
+		\setbox\Gre@Tempwidth=\hbox{\gregoriofont \char \gre@char@punctum}%
+		\gre@tempdim=\wd\Gre@Tempwidth %
+		\kern -\gre@tempdim %
+		\kern \gre@spacebeforesigns %
 	\fi %
 	\ifnum#2=1\else %
-		\xdef\grelastispunctum{1}%
+		\xdef\gre@lastispunctum{1}%
 	\fi %
 	\ifnum #3=0 %
-		\grecalculateglyphraisevalue{#1}{4}%
+		\gre@calculateglyphraisevalue{#1}{4}%
 	\else %
-		\grecalculateglyphraisevalue{#1}{8}%
+		\gre@calculateglyphraisevalue{#1}{8}%
 	\fi %
 	% here we shift a bit left in the case where we have a punctum inclinatum on a line
 	\ifnum#4=1\relax %
-		\ifnum\greisonaline=1\relax %
-			\gretempwidth=3700sp%
-			\multiply\gretempwidth by \the\grefactor %
-			\kern -\gretempwidth %
-			\gretempwidth =4500sp%
-			\multiply\gretempwidth by \the\grefactor %
-			\advance\greglyphraisevalue by -\gretempwidth %
+		\ifnum\gre@isonaline=1\relax %
+			\gre@tempwidth=3700sp%
+			\multiply\gre@tempwidth by \the\gre@factor %
+			\kern -\gre@tempwidth %
+			\gre@tempwidth =4500sp%
+			\multiply\gre@tempwidth by \the\gre@factor %
+			\advance\gre@glyphraisevalue by -\gre@tempwidth %
 		\else %
-			\gretempwidth =2500sp%
-			\multiply\gretempwidth by \the\grefactor %
-			\advance\greglyphraisevalue by -\gretempwidth %
+			\gre@tempwidth =2500sp%
+			\multiply\gre@tempwidth by \the\gre@factor %
+			\advance\gre@glyphraisevalue by -\gre@tempwidth %
 		\fi %
 	\fi %
-	\grenobreak %
-	\raise \greglyphraisevalue \hbox{\grepunctummorachar}%
-	\grenobreak %
+	\gre@nobreak %
+	\raise \gre@glyphraisevalue \hbox{\gre@punctummorachar}%
+	\gre@nobreak %
 	\ifcase#2\relax\or %
-		\setbox\GreTempwidth=\hbox{\grepunctummorachar}%
-		\kern -\wd\GreTempwidth %
-		\kern -\grespacebeforesigns %
+		\setbox\Gre@Tempwidth=\hbox{\gre@punctummorachar}%
+		\kern -\wd\Gre@Tempwidth %
+		\kern -\gre@spacebeforesigns %
 	\or %
-		\setbox\GreTempwidth=\hbox{\grepunctummorachar}%
-		\kern -\wd\GreTempwidth %
-		\kern -\grespacebeforesigns %
-		\kern \gretempdim %
+		\setbox\Gre@Tempwidth=\hbox{\gre@punctummorachar}%
+		\kern -\wd\Gre@Tempwidth %
+		\kern -\gre@spacebeforesigns %
+		\kern \gre@tempdim %
 	\or %
-		\setbox\GreTempwidth=\hbox{\grepunctummorachar}%
-		\kern -\wd\GreTempwidth %
-		\kern -\grespacebeforesigns %
-		\kern \gretempdim %
+		\setbox\Gre@Tempwidth=\hbox{\gre@punctummorachar}%
+		\kern -\wd\Gre@Tempwidth %
+		\kern -\gre@spacebeforesigns %
+		\kern \gre@tempdim %
 	\fi %
-	\grenobreak %
+	\gre@nobreak %
 	\relax%
 }
 
@@ -616,27 +616,44 @@
 	\relax %
 }
 
-\gdef\grelowchoralsignstyle#1{#1}
-\gdef\grehighchoralsignstyle#1{#1}
+\gdef\gre@lowchoralsignstyle#1{%
+	\startlowchoralsignstyle#1\stoplowchoralsignstyle
+}
+\def\startlowchoralsignstyle{%
+	\begingroup
+}
+\def\stoplowchoralsignstyle{%
+	\endgroup
+}
+
+\gdef\gre@highchoralsignstyle#1{%
+	\starthighchoralsignstyle#1\stophighchoralsignstyle
+}
+\def\starthighchoralsignstyle{%
+	\begingroup
+}
+\def\stophighchoralsignstyle{%
+	\endgroup
+}
 
 % quite simple function: #1 is the height, #2 is the string, #3 is #2 of punctum mora, #4 is #3 of punctum mora
 % #3 is 1 if it must be a bit higher
 \def\grelowchoralsign#1#2#3{%
-	\grenobreak %
-	\hskip\grebeforechoralsignspace %
-	\grenobreak %
+	\gre@nobreak %
+	\hskip\gre@beforechoralsignspace %
+	\gre@nobreak %
 	\ifnum#3=1\relax %
-		\grecalculateglyphraisevalue{#1}{12}%
+		\gre@calculateglyphraisevalue{#1}{12}%
 	\else %
-		\grecalculateglyphraisevalue{#1}{10}%
+		\gre@calculateglyphraisevalue{#1}{10}%
 	\fi %
-	\raise\greglyphraisevalue\hbox{\grelowchoralsignstyle{#2}}%
+	\raise\gre@glyphraisevalue\hbox{\gre@lowchoralsignstyle{#2}}%
 	\relax %
 }
 
 \def\grehighchoralsign#1#2#3{%
-	\grenobreak %
-	\grevepisemusorrare{#1}{#3}{4}{3}{\grehighchoralsignstyle{#2}}%
+	\gre@nobreak %
+	\gre@vepisemusorrare{#1}{#3}{4}{3}{\gre@highchoralsignstyle{#2}}%
 	%\grehepisorline{#1}{#3}{0}{4}{\grehighchoralsignstyle{#2}}%
 	\relax %
 }
@@ -654,62 +671,62 @@
 %% macros for the typesetting of vertical episemus
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newbox\GreTempsign
-\newdimen\gretempdimsignwidth
+\newbox\Gre@Tempsign
+\newdimen\gre@tempdimsignwidth
 
 % a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. If it is 2, it means that we must go back first of width #1, and then forward of #2. If it is 1, it means that we only need to go back of #2. if it is 3, we go to the beginning of the glyph, then forward of #1 then back of #2
 % #4 is a shift that we want to get applied, useful for punctum inclinatum for example
 % #5 is the glyph number. If it is 1 it is an ictus arsicus (?) and 2 for an ictus theticus
 % #6 is the type of sign (1: vertical episemus, 2: rare sign, 3: choral sign)
 % #7 is the choral sign if relevant
-\def\grevepisemusorrareaux#1#2#3#4#5#6#7{%
+\def\gre@vepisemusorrareaux#1#2#3#4#5#6#7{%
 	% first we set \gretempwidth to the width of the last glyph
-	\gretempwidth=\grelastglyphwidth %
-	\setbox\GreTempsign=\hbox{\gregoriofont #2}%
-	\gretempdimsignwidth=\wd\GreTempsign %
-	\divide\gretempdimsignwidth by 2\relax %
+	\gre@tempwidth=\gre@lastglyphwidth %
+	\setbox\Gre@Tempsign=\hbox{\gregoriofont #2}%
+	\gre@tempdimsignwidth=\wd\Gre@Tempsign %
+	\divide\gre@tempdimsignwidth by 2\relax %
 	\ifcase#3%
 	% tempwidth is the width of the last glyph
-		\advance\gretempwidth by -\gretempdimsignwidth %
+		\advance\gre@tempwidth by -\gre@tempdimsignwidth %
 	\or%
-		\gretempwidth=\gretempdimsignwidth %
+		\gre@tempwidth=\gre@tempdimsignwidth %
 	\or%
-		\setbox\GreTempsign=\hbox{\gregoriofont #1}%
-		\gretempwidth=\wd\GreTempsign %
-		\advance\gretempwidth by -\gretempdimsignwidth %
+		\setbox\Gre@Tempsign=\hbox{\gregoriofont #1}%
+		\gre@tempwidth=\wd\Gre@Tempsign %
+		\advance\gre@tempwidth by -\gre@tempdimsignwidth %
 	\or %
-		\setbox\GreTempsign=\hbox{\gregoriofont #1}%
-		\advance\gretempwidth by -\wd\GreTempsign %
-		\advance\gretempwidth by \gretempdimsignwidth %
+		\setbox\Gre@Tempsign=\hbox{\gregoriofont #1}%
+		\advance\gre@tempwidth by -\wd\Gre@Tempsign %
+		\advance\gre@tempwidth by \gre@tempdimsignwidth %
 	\fi%
-	\kern-\gretempwidth % we do it here because of the ictus
+	\kern-\gre@tempwidth % we do it here because of the ictus
 	% here we save the position of the ictus or we draw the glyph
 	\ifnum#5<3\relax %
-		\greictus{#5}%
+		\gre@ictus{#5}%
 	\else %
 	% then we draw the sign
 		\ifcase#6\or %
 			% vertical episemus
-			\setbox\GreTempsign=\hbox{\greverticalepisemuschar}%
+			\setbox\Gre@Tempsign=\hbox{\gre@verticalepisemuschar}%
 		\or % rare sign
-			\setbox\GreTempsign=\hbox{\gregoriofont \char #5}%
+			\setbox\Gre@Tempsign=\hbox{\gregoriofont \char #5}%
 		\or % choral sign
-			\setbox\GreTempsign=\hbox{#7}%
+			\setbox\Gre@Tempsign=\hbox{#7}%
 		\or % brace above bar
-			\setbox\GreTempsign=\hbox{\greabovebarbracechar}%
+			\setbox\Gre@Tempsign=\hbox{\gre@abovebarbracechar}%
 		\fi %
 		% we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
-		\gretempdimsignwidth=\wd\GreTempsign %
-		\divide\gretempdimsignwidth by 2 %
-		\advance\gretempwidth by \gretempdimsignwidth %
-		\kern -\gretempdimsignwidth%
+		\gre@tempdimsignwidth=\wd\Gre@Tempsign %
+		\divide\gre@tempdimsignwidth by 2 %
+		\advance\gre@tempwidth by \gre@tempdimsignwidth %
+		\kern -\gre@tempdimsignwidth%
 		\kern #4sp%
-		\raise \greglyphraisevalue \copy\GreTempsign %
+		\raise \gre@glyphraisevalue \copy\Gre@Tempsign %
 		\kern -#4sp%
 		% and finally we go back to the end of the glyph, where we were first
-		\advance\gretempwidth by -2\gretempdimsignwidth %
+		\advance\gre@tempwidth by -2\gre@tempdimsignwidth %
 	\fi %
-	\kern \gretempwidth%
+	\kern \gre@tempwidth%
 	\relax%
 }
 
@@ -749,198 +766,198 @@
 % the third argument is the glyph number in the font
 % #4 is type (1: vertical episemus, 2: rare sign, 3: choral sign, 4: brace above the bar)
 % #5 is the choral sign if relevant
-\def\grevepisemusorrare#1#2#3#4#5{%
+\def\gre@vepisemusorrare#1#2#3#4#5{%
 	\ifcase#4\or %
 		% if it is a vertical episemus, we call the normal calculateglyphvalue
-		\grecalculateglyphraisevalue{#1}{3}%
+		\gre@calculateglyphraisevalue{#1}{3}%
 	\or %
 		% if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.) the first argument is m if the pitch is < k, otherwise it's n.
-		\edef\greisabovek{\number 0}%
+		\edef\gre@isabovek{\number 0}%
 		\ifx m#1%
-			\edef\greisabovek{\number 1}%
+			\edef\gre@isabovek{\number 1}%
 		\fi%
 		\ifx l#1%
-			\edef\greisabovek{\number 2}%
+			\edef\gre@isabovek{\number 2}%
 		\fi%
 		\ifx k#1%
-			\edef\greisabovek{\number 3}%
+			\edef\gre@isabovek{\number 3}%
 		\fi%
-		\ifnum\greisabovek=1\relax %
-			\grecalculateglyphraisevalue{n}{6}%
+		\ifnum\gre@isabovek=1\relax %
+			\gre@calculateglyphraisevalue{n}{6}%
 		\else %
-			\ifnum\greisabovek=2\relax %
-				\grecalculateglyphraisevalue{m}{6}%
+			\ifnum\gre@isabovek=2\relax %
+				\gre@calculateglyphraisevalue{m}{6}%
 			\else %
-				\ifnum\greisabovek=3\relax %
-					\grecalculateglyphraisevalue{l}{6}%
+				\ifnum\gre@isabovek=3\relax %
+					\gre@calculateglyphraisevalue{l}{6}%
 				\else %
-					\grecalculateglyphraisevalue{k}{6}%
+					\gre@calculateglyphraisevalue{k}{6}%
 				\fi %
 			\fi %
 		\fi %
 	\or % if it's a choral sign
-		\grecalculateglyphraisevalue{#1}{11}%
+		\gre@calculateglyphraisevalue{#1}{11}%
 	\or % if it's the brace above the bar
-		\grecalculateglyphraisevalue{#1}{13}%
+		\gre@calculateglyphraisevalue{#1}{13}%
 	\fi %
 	\ifcase#2 %
 		%case 0
-		\grevepisemusorrareaux{0}{\char \gre@char@punctum}{1}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@punctum}{1}{0}{#3}{#4}{#5}%
 	\or%
 		%case 1
-		\grevepisemusorrareaux{0}{\char \gre@char@smallpunctum}{1}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@smallpunctum}{1}{0}{#3}{#4}{#5}%
 	\or%
 		%case 2
 		% a kind of flexus, it has the good width
-		\grevepisemusorrareaux{\char \gre@char@flexusalt}{\char \gre@char@punctum}{2}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{\char \gre@char@flexusalt}{\char \gre@char@punctum}{2}{0}{#3}{#4}{#5}%
 	\or%
 		%case 3
 		% in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
-		\grevepisemusorrareaux{0}{\char \gre@char@flexusdeminutus}{1}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@flexusdeminutus}{1}{0}{#3}{#4}{#5}%
 	\or%
 		%case 4
 		% is a torculus, it has the good width
-		\grevepisemusorrareaux{\char \gre@char@torculus}{\char \gre@char@punctum}{2}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{\char \gre@char@torculus}{\char \gre@char@punctum}{2}{0}{#3}{#4}{#5}%
 	\or%
 		%case 5
 		% is a torculus deminutus, it has the good width
-		\grevepisemusorrareaux{\char \gre@char@torculusdeminutus}{\char \gre@char@punctum}{2}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{\char \gre@char@torculusdeminutus}{\char \gre@char@punctum}{2}{0}{#3}{#4}{#5}%
 	\or%
 		%case 6
-		\grevepisemusorrareaux{0}{\char \gre@char@punctum}{0}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@punctum}{0}{0}{#3}{#4}{#5}%
 	\or%
 		%case 7
-		\grevepisemusorrareaux{0}{\char \gre@char@smallpunctum}{0}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@smallpunctum}{0}{0}{#3}{#4}{#5}%
 	\or%
 		%case 8, in which we do (for now) the same as case 6
-		\grevepisemusorrareaux{0}{\char \gre@char@punctum}{0}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@punctum}{0}{0}{#3}{#4}{#5}%
 	\or% case 9, 10 and 11
 	\or\or\or %
 		%case 12
-		\grevepisemusorrareaux{0}{\char \gre@char@punctuminclinatum}{0}{30\the\grefactor }{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@punctuminclinatum}{0}{30\the\grefactor }{#3}{#4}{#5}%
 	\or%
 		%case 13
-		\grevepisemusorrareaux{0}{\char \gre@char@punctuminclinatumdem}{0}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@punctuminclinatumdem}{0}{0}{#3}{#4}{#5}%
 	\or%
 		%case 14
-		\grevepisemusorrareaux{0}{\char \gre@char@stropha}{0}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@stropha}{0}{0}{#3}{#4}{#5}%
 	\or%
 		%case 15
-		\grevepisemusorrareaux{0}{\char \gre@char@quilisma}{0}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@quilisma}{0}{0}{#3}{#4}{#5}%
 	\or%
 		%case 16
-		\grevepisemusorrareaux{0}{\char \gre@char@oriscus}{0}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@oriscus}{0}{0}{#3}{#4}{#5}%
 	\or%
 		%case 17
-		\grevepisemusorrareaux{\char \gre@char@flexusaltone}{\char \gre@char@punctum}{2}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{\char \gre@char@flexusaltone}{\char \gre@char@punctum}{2}{0}{#3}{#4}{#5}%
 	\or%
 		%case 18
-		\grevepisemusorrareaux{0}{\char \gre@char@peshigh}{1}{-30\the\grefactor}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@peshigh}{1}{-30\the\grefactor}{#3}{#4}{#5}%
 	\or%
 		%case 19
-		\grevepisemusorrareaux{0}{\char \gre@char@oriscusauctus}{0}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@oriscusauctus}{0}{0}{#3}{#4}{#5}%
 	\or%
 		%case 20
-		\grevepisemusorrareaux{0}{\char \gre@char@quilisma}{0}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@quilisma}{0}{0}{#3}{#4}{#5}%
 	\or%
 		%case 21
 		% 5634 is a flexus without bar with ambitus of 2
-		\grevepisemusorrareaux{\char \gre@char@flexusalt}{\char \gre@char@punctum}{3}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{\char \gre@char@flexusalt}{\char \gre@char@punctum}{3}{0}{#3}{#4}{#5}%
 	\or%
 		%case 22 %
 		% 5633 is a flexus without bar with ambitus of 1
-		\grevepisemusorrareaux{\char \gre@char@flexusaltone}{\char \gre@char@punctum}{3}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{\char \gre@char@flexusaltone}{\char \gre@char@punctum}{3}{0}{#3}{#4}{#5}%
 	\or%
 		%case 23
-		\grevepisemusorrareaux{\char \gre@char@pesinitauctus}{\char \gre@char@punctum}{3}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{\char \gre@char@pesinitauctus}{\char \gre@char@punctum}{3}{0}{#3}{#4}{#5}%
 	\or%
 		%case 24
-		\grevepisemusorrareaux{0}{\char \gre@char@lineapunctum}{1}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@lineapunctum}{1}{0}{#3}{#4}{#5}%
 	\or%
 		%case 25
-		\grevepisemusorrareaux{0}{\char \gre@char@divisiominima}{1}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@divisiominima}{1}{0}{#3}{#4}{#5}%
 	\or%
 		%case 26
-		\grevepisemusorrareaux{0}{\char \gre@char@virgula}{1}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\char \gre@char@virgula}{1}{0}{#3}{#4}{#5}%
 	\or%
 		%case 27
-		\grevepisemusorrareaux{0}{\gredivisiofinalissymbol}{1}{0}{#3}{#4}{#5}%
+		\gre@vepisemusorrareaux{0}{\gredivisiofinalissymbol}{1}{0}{#3}{#4}{#5}%
 	\fi%
 	\relax%
 }
 
 \def\grevepisemus#1#2{%
-	\grevepisemusorrare{#1}{#2}{\gre@char@vepisemus}{1}{}%
+	\gre@vepisemusorrare{#1}{#2}{\gre@char@vepisemus}{1}{}%
 	\relax %
 }
 
 \def\grebarbrace#1{%
-	\grevepisemusorrare{g}{#1}{\gre@char@barbrace}{4}{}%
+	\gre@vepisemusorrare{g}{#1}{\gre@char@barbrace}{4}{}%
 	\relax %
 }
 
 \def\grebarvepisemus#1{%
-	\grevepisemusorrare{c}{#1}{\gre@char@vepisemus}{1}{}%
+	\gre@vepisemusorrare{c}{#1}{\gre@char@vepisemus}{1}{}%
 	\relax %
 }
 
 \def\greictusa#1{%
-	\grevepisemusorrare{a}{#1}{1}{2}{}%
+	\gre@vepisemusorrare{a}{#1}{1}{2}{}%
 	\relax %
 }
 
 \def\greictust#1{%
-	\grevepisemusorrare{a}{#1}{2}{2}{}%
+	\gre@vepisemusorrare{a}{#1}{2}{2}{}%
 	\relax %
 }
 
 % maybe these four should be optimized
 \def\grevepisemusictusa#1#2{%
-	\grevepisemusorrare{#1}{#2}{\gre@char@vepisemus}{1}{}%
+	\gre@vepisemusorrare{#1}{#2}{\gre@char@vepisemus}{1}{}%
 	\greictusa{#2}%
 	\relax %
 }
 
 \def\grebarvepisemusictusa#1{%
-	\grevepisemusorrare{c}{#1}{\gre@char@vepisemus}{1}{}%
+	\gre@vepisemusorrare{c}{#1}{\gre@char@vepisemus}{1}{}%
 	\greictusa{#1}%
 	\relax %
 }
 
 \def\grevepisemusictust#1#2{%
-	\grevepisemusorrare{#1}{#2}{\gre@char@vepisemus}{1}{}%
+	\gre@vepisemusorrare{#1}{#2}{\gre@char@vepisemus}{1}{}%
 	\greictust{#2}%
 	\relax %
 }
 
 \def\grebarvepisemusictust#1{%
-	\grevepisemusorrare{c}{#1}{\gre@char@vepisemus}{1}{}%
+	\gre@vepisemusorrare{c}{#1}{\gre@char@vepisemus}{1}{}%
 	\greictust{#1}%
 	\relax %
 }
 
 \def\greaccentus#1#2{%
-	\grevepisemusorrare{#1}{#2}{\gre@char@accentus}{2}{}%
+	\gre@vepisemusorrare{#1}{#2}{\gre@char@accentus}{2}{}%
 	\relax %
 }
 
 \def\gresemicirculus#1#2{%
-	\grevepisemusorrare{#1}{#2}{\gre@char@semicirculus}{2}{}%
+	\gre@vepisemusorrare{#1}{#2}{\gre@char@semicirculus}{2}{}%
 	\relax %
 }
 
 \def\grecirculus#1#2{%
-	\grevepisemusorrare{#1}{#2}{\gre@char@circulus}{2}{}%
+	\gre@vepisemusorrare{#1}{#2}{\gre@char@circulus}{2}{}%
 	\relax %
 }
 
 \def\grereversedaccentus#1#2{%
-	\grevepisemusorrare{#1}{#2}{\gre@char@reversedaccentus}{2}{}%
+	\gre@vepisemusorrare{#1}{#2}{\gre@char@reversedaccentus}{2}{}%
 	\relax %
 }
 
 \def\grereversedsemicirculus#1#2{%
-	\grevepisemusorrare{#1}{#2}{\gre@char@reversedsemicirculus}{2}{}%
+	\gre@vepisemusorrare{#1}{#2}{\gre@char@reversedsemicirculus}{2}{}%
 	\relax %
 }
 
@@ -948,7 +965,7 @@
 
 % macro called at the place of an ictus
 % #1 is 1 if ictus a, 2 if ictus t
-\def\greictus#1{%
+\def\gre@ictus#1{%
 	\pdfsavepos %
 	\ifcase#1\or %
 		\grewriteaux{ia:\number\pdflastxpos}%
@@ -1023,7 +1040,7 @@
 	\relax%
 }
 
-% a function to typeset a horizontal line (additional line or episemus). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \greglyph. 
+% a function to typeset a horizontal line (additional line or episemus). The first argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \greglyph. 
 %The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are the common ones
 % the third argument is a bit particular, it is the ambitus of the porrectus or porrectus flexus if the second argument is 8 or 9, otherwise
 % #4 is 0 for an horizontal episemus, 1 for an horizontal episemus under a note, 3 for a line at the bottom, 2 for a line at the top

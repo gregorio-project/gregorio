@@ -1,7 +1,7 @@
-% !TEX TS-program = gregorio
+% !TEX root = completetest.tex
 % !TEX encoding = UTF-8
 
-% The first part of the score is called the header, you can input some useful informations here:
+%The first part of the score is called the header, you can input some useful informations here:
 name: Pópulus Sion;
 office-part: Introitus;
 occasion: Dominica II Adventus;
@@ -9,19 +9,22 @@ date: 2006;
 transcriber: Elie Roux;
 transcription-date: 2006;
 style: modern;
+initial-style: 0;
+centering-scheme: english;
 
-def-m1:%test72;
+def-m1:test72;
 %%
+(c3)
 %
-% notes
+<alt>notes:</alt> 
 %
-a(a) b(b) c(c) d(d) e(e) f(f) g(g) h(h) i(i) j(j) k(k) l(l) m(m)
+a(a) b(b) c(c) d(d) e(e) f(f) g(g) h(h) i(i) j(j) k(k) l(l) m(m) (Z)
 %
-% shapes:
+<alt>shapes:</alt>
 %
-fg(fg) gvFE(gvFE) ghg(ghg) ghgh(ghgh) ghghg(ghghg) gwhghg(gwhghg) gqh(gqh) gwh(gwh) gWh(gWh) go(go) goh(goh) gf(gf) gwf(gwf) gof(gofZ) g=(g=) h=(h=) go<(go<) go<sp>~</sp>(go~) ab(gFE<) ab(gFE~) gs(gs) gs<(gs<) fvE'D.(fvE'D.) gvFD(gvFD) hvGD(hvGD) ivHD(ivHD)
+fg(fg) gvFE(gvFE) ghg(ghg) ghgh(ghgh) ghghg(ghghg) gwhghg(gwhghg) gqh(gqh) gwh(gwh) gWh(gWh) go(go) goh(goh) gf(gf) gwf(gwf) gof(gofZ) g=(g=) h=(h=) go<(go<) go<sp>~</sp>(go~) gFE<(gFE<) gFE~(gFE~) gs(gs) gs<(gs<) fvE'D.(fvE'D.) gvFD(gvFD) hvGD(hvGD) ivHD(ivHD) (Z)
 %
-% pes:
+<alt>pes:</alt>
 %
 f.g(f.g) fg.(fg.) g.h(g.h) gh.(gh.Z)
 -f.g(-f.g) -fg.(-fg.) -g.h(-g.h) -gh.(-gh.Z)
@@ -36,7 +39,7 @@ f'g(f'g) fg'(fg') f'g'(f'g') f'h'(f'h') f'i' (f'i') f'j'(f'j') f'_g'(f'_g') f'g'
 -f'g(-f'g) -fg'(-fg') -f'g'(-f'g') -f'h'(-f'h') -f'i' (-f'i') -f'j'(-f'j') -f'_g'(-f'_g') -f'g'_(-f'_g')
 f.'g(f.g) fg.'(fg.) g.'h(g.h) gh.'(gh.Z)
 %
-% virga:
+<alt>virga:</alt>
 %
 gf<(gf<) gf>(gf>) -gf(-gf) gf~(gf~Z)
 g.f(g.f) gf.(gf.) gf..(gf..) g.f.(g.f.Z)
@@ -50,7 +53,7 @@ go'f(go'f) gof'(gof') g'of'(go'f') h'of(ho'f) hof'(hof') h'of'(ho'f'Z)
 g_of(go_f) gof_(gof_) g_of_(go_f_) h_of(ho_f) hof_(hof_) h_of_(ho_f_Z)
 g.o'f(go.'f) gof'.(gof'.) g'o.f'.(go'.f'.) ho.'f(ho.'f) hof.'(hof.') ho.'f.'(ho.'f.'Z)
 %
-% torculus
+<alt>torculus:</alt>
 %
 ghg(ghg) fif(fifZ)
 %
@@ -59,7 +62,7 @@ g_hg(g_hg) f_if(f_if) gh_g(gh_g) fi_f(fi_f) ghg_(ghg_) fif_(fif_) g_h_g_(g_h_g_)
 g'hg(g'hg) f'if(f'if) gh'g(gh'g) fi'f(fi'f) ghg'(ghg') fif'(fif') g'h'g'(g'h'g') f'i'f'(f'i'f'Z)
 g'hg(g'hg) f'if(f'if) gh.'g(gh.'g) fi.'f(fi.'f) gh.'g(gh.'g) fif.'(fif.') g'h.'g.'(g'h.'g.') f'i.'f.'(f'i.'f.'Z)
 %
-% porrectus
+<alt>porrectus:</alt>
 %
 hgh(hgh) ifi(ifiZ)
 hg.h(hg.h) if.i(if.i) hgh.(hgh.) ifi.(ifi.) hg.h.(hg.h.) if.i.(if.i.) hgh..(hgh..) ifi..(ifi..Z)  
@@ -67,7 +70,7 @@ h_gh(h_gh) i_fi(i_fi) hg_h(hg_h) if_i(if_i) hg_h_(hg_h_) if_i_(if_i_) h_g_h(h_g_
 h'gh(h'gh) f'if(i'fi) hg'h(hg'h) if'f(if'i) hgh'(hgh') ifi'(ifi') h'g'h'(h'g'h') f'i'f'(i'f'i'Z)
 g.'hg(h.'gh) i.'fi(i.'fi) gh.'g(hg.'h) if.'i(if.'f) gh.'g(hg.'h) ifi.'(ifi.') g.'h.'g.'(h.'g.'h.') f.'i.'f.'(i.'f.'i.'Z)
 %
-% torculus resupinus
+<alt>torculus resupinus:</alt>
 %
 {ghgi}(ghgi) fifg~(fifg~) fifg(fifgZ)
 %
@@ -79,7 +82,7 @@ g.'hg(h.'gh) i.'fi(i.'fi) gh.'g(hg.'h) if.'i(if.'f) gh.'g(hg.'h) ifi.'(ifi.') g.
 %
 fif.'g(fif.'g) {g}'h'g.'i(g'h'g.'i) f'i'f.'g(f'i'f.'g) {g}'h'g.'i.'(g'h'g.'i.')f'i'f.'g.'(f.'i.'f.'g.'Z)
 %
-% torculus resupinus flexus
+<alt>torculus resupinus flexus:</alt>
 %
 {g}hgif(ghgif) fifg(fifgeZ)
 %
@@ -91,90 +94,90 @@ fif.'g(fif.'g) {g}'h'g.'i(g'h'g.'i) f'i'f.'g(f'i'f.'g) {g}'h'g.'i.'(g'h'g.'i.')f
 %
 fif._'g(fif.'g) {g}'h'g.'i(g'h'g.'i) f'i'f.'g(f'i'f.'g) {g}'h'g.'i.'(g'h'g.'i.') f'i'f.'g.'(f'i'f.'g.'Z)
 %
-% other particular glyphs
+<alt>other particular glyphs:</alt>
 %
 f.g!hwiHG'F(f.g!hwiHG'FZ)
 %
-% flats and naturals
+<alt>flats and naturals:</alt>
 %
-gx(gx) hx(hx) gy(gy) hy(hy) gxg(gxg) gyg(gyg) gxgh(gxgh) ggxgh(ggxgh) ggygh(ggyghZ)
-g#(g#) h#(h#)
+gx(gx) hx(hx) gy(gy) hy(hy) gxg(gxg) gyg(gyg) gxgh(gxgh) ggxgh(ggxgh) ggygh(ggygh)
+g#(g#) h#(h#) (Z)
 %
-% key change
+<alt>key change:</alt>
 %
-ghz0::c4(ghz0::c4) f(f) f3(f3) f(f) ghz0::c4(ghz0::c4) f(f) cb3(cb3)
+ghz0::c4(ghz0::c4) f(f) f4(f4) f(f) ghz0::cb4(ghz0::cb4) f(f) (Z) %cb3(cb3) 
 %
-% bars
+<alt>bars:</alt>
 %
 ,(,) (,) g,h(g,h) ;(;) (;) g;h(g;h) :(:) (:) g:h(g:h) ::(::) (::) g::h(g::h) ,'(,') (,') g,h(g,'h) ;'(;') (;') g;'h(g;'h) :'(:') (:') g:'h(g:'h) ::(::') (::') g::'h(g::'h) ;1(;1) (;1) g;1h(g;1h) ;1'(;1') (;1') g;1'h(g;1'h) ;2(;2) (;2) g;2h(g;2h) ;2'(;2') (;2') g;2'h(g;2'h) ;3(;3) (;3) g;3h(g;3h) ;3'(;3') (;3') g;3'h(g;3'h) ;4(;4) (;4) g;4h(g;4h) ;4'(;4') (;4') g;4'h(g;4'h) ;5(;5) (;5) g;5h(g;5h) ;5'(;5') (;5') g;5'h(g;5'h) ;6(;6) (;6) g;6h(g;6h) ;6'(;6') (;6') g;6'h(g;6'hZ)
 g.,g(g.,gZ)
 %
-% styles, verb and special characters
+<alt>styles, verb and special characters:</alt>
 %
 {a}<i>i</i><b>b</b><ul>ul</ul><sp>+</sp><v>a</v>(gZ)
-{a}<a<sp>+</sp><sp>%</sp>><v><</v><v>></sp></v>(fZ)
+%{a}<a<sp>+</sp><sp>%</sp>><v><</v><v>></sp></v>(fZ)
 %
-% spaces
+<alt>spaces:</alt>
 %
-{fg!hi}(fg!hi) {fg/hi}(fg/hi) {fg//hi}(fg//hi) {fg hi}(fg hi) {fg!/hi}(fg!/hi) {fg!//hi}(fg!//hi) {fg! hi}(fg! hiZ)
-æ(dc) æ(ab/dc)
+{fg!hi}(fg!hi) {fg/hi}(fg/hi) {fg//hi}(fg//hi) {fg hi}(fg hi) {fg!/hi}(fg!/hi) {fg!//hi}(fg!//hi) {fg! hi}(fg! hi)
+dc(dc) ab/dc(ab/dc) (Z)
 %
-% bivirga, bistropha, etc.
+<alt>bivirga, bistropha, etc.:</alt>
 %
 gvv(gvv) gvgv(gvgv) gvvv(gvvv) gvgvgv(gvgvgv) gss(gss) gsgs(gsgs) gsss(gsss) gsgsgs(gsgsgsZ)
 %
-% bottom hepisemus
+<alt>bottom hepisemus:</alt>
 %
 abc(g_0h_ g_h_ g_0_h_g_0_Z)
 %
-% rare signs
+<alt>rare signs:</alt>
 %
 gr(gr) hr(hr) gR(gR) hr0(hr0) gr0(gr0) gr1(gr1) gr2(gr2) gr3(gr3) gr4(gr4) gr5(gr5) krr5(krr5) lrr2(lrr2) mrr3(mrr3Z)
 %
-% limit cases
+<alt>limit cases:</alt>
 %
-a_.'(a_.') b_.'(b_.') c_.'(c_.') k_.'(k_.') l_.'(l_.') m_.'(m_.'Z) a/dc(a/dc) a//dc(a//dc) a dc(a dc)
+a_.'(a_.') b_.'(b_.') c_.'(c_.') k_.'(k_.') l_.'(l_.') m_.'(m_.'Z) a/dc(a/dc) a//dc(a//dc) a dc(a dc) (Z)
 %
-% comments
+<alt>comments:</alt>
 %
-gh(gh) % this is a comment at the end of a line
-% this is a line comment
-fg(f% this is a comment inside some notes
-g)
+gh(gh) %this is a comment at the end of a line
+%this is a line comment
+fg(f%this is a comment inside some notes
+g) (Z)
 %
-% choral signs
+<alt>choral signs:</alt>
 %
-ab(gh[cs:c]) ab(h[cs:c]g[cs:t]) ab(h_.g_[cs:t]) ab(f_[cs:c]g_) ab(h_[cs:t].g_)
+ab(gh[cs:c]) ab(h[cs:c]g[cs:t]) ab(h_.g_[cs:t]) ab(f_[cs:c]g_) ab(h_[cs:t].g_) (Z)
 %
-% tex verbatim
+<alt>tex verbatim:</alt>
 %
-ab(g[nv:%test1]h[nv:%test2][gv:%test3] gh[gv:%test4] [ev:%test5] g[nv:%test6][nv:test7] g[nm1])
+ab(g[nv:test1]h[nv:test2][gv:test3] gh[gv:test4] [ev:test5] g[nv:test6][nv:test7]) (Z)
 %
-% macros
+<alt>macros:</alt>
 %
-<v>\{</v>gr<v>\}</v>ir({gr}ir)
+<v>\{</v>gr<v>\}</v>ir({gr}ir g[nm1]) (Z)
 %
-% translation
+<alt>translation:</alt>
 %
 ab[cd](ghZ)
 %
-% abovelinestext
+<alt>abovelinestext:</alt>
 %
 ab<alt>above lines</alt>(ghZ)
 %
-% h episemus bridges
+<alt>h episemus bridges:</alt>
 %
-g_/g_(g_/g_) g_//g_(g_//g_) g_ g_Z(g_ g_) g_!/g_(g_!/g_) g_!//g_(g_!//g_) g_! g_(g_! g_Z)
-g_/h_(g_/h_) h_/g_(h_/g_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) {h}_/i_(h_/i_) i_/h_(i_/h_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) gh_/g_/g_(gh_/g_/g_) fh!jv_I_G_(fh!jv_I_G_)
+g_/g_(g_/g_) g_//g_(g_//g_) g_ g_Z(g_ g_) g_!/g_(g_!/g_) g_!//g_(g_!//g_) g_! g_(g_! g_)
+g_/h_(g_/h_) h_/g_(h_/g_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) {h}_/i_(h_/i_) i_/h_(i_/h_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) gh_/g_/g_(gh_/g_/g_) fh!jv_I_G_(fh!jv_I_G_) (Z)
 %
-% over braces
+<alt>over braces:</alt>
 %
-ab(g,_h) ab(g_,_h_) ab(g,'_h) ab(g_,'_ h_) ab(g[ob:1;6mm]!hgh) ab(g[ocb:1;6mm]!hghZ) ab(g[ocba:1;6mm]/hgh)
+ab(g,_h) ab(g_,_h_) ab(g,'_h) ab(g_,'_ h_) ab(g[ob:1;6mm]!hgh) ab(g[ocb:1;6mm]!hgh) ab(g[ocba:1;6mm]/hgh) (Z)
 %
-% some more "real life" examples
+<alt>some more ``real life'' examples:</alt>
 %
-Do(f_gFEf./fvED./hif'/ge./fgf.,hjIF_hvGEC.ef)gra(f_gFEf./hif'/ge./fgf.,hjIF_hvGEC.ef)ti(fe)as(f_hGEf.) 
+Do(f_gFEf./fvED./hif'/ge./fgf.,hjIF_hvGEC.ef)gra(f_gFEf./hif'/ge./fgf.,hjIF_hvGEC.ef)ti(fe)as(f_hGEf.) (Z)
 %
-% the final divisio finalis
+<alt>the final divisio finalis:</alt>
 %
 (::g+)
