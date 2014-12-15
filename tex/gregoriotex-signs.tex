@@ -332,6 +332,10 @@
 	\relax%
 }
 
+\def\gremanualcusto#1{%
+  \kern\grespacebeforecusto\grecusto{#1}%
+}
+
 % macro that typesets an additional line at the top for custos at end of line
 
 \def\gre@additionaltopcustolineend{%
@@ -1623,15 +1627,17 @@
 % the argument is the character with which we fill the hole, and we suppose that
 % isonaline and glyphraisevalue are correctly set.
 \def\grefillhole#1{%
-	\setbox\GreTempwidth=\hbox{#1}%
-	\hbox to 0pt{%
-		\color{grebackgroundcolor}%
-		\raise \greglyphraisevalue %
-		\copy\GreTempwidth %
-		\pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
-		\hss %
-	}%
-	\grenobreak %
+  \setbox\GreTempwidth=\hbox{#1}%
+  \hbox to 0pt{%
+    {%
+    \color{grebackgroundcolor}%
+    \raise \greglyphraisevalue %
+    \copy\GreTempwidth %
+    }%
+    %\pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
+    \hss %
+  }%
+  \grenobreak %
 \relax %
 }
 
