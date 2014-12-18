@@ -299,40 +299,40 @@
 \def\grefindsimplenotesaligncenter#1{%
   \ifcase#1%
     %case of punctum
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont \char 17}%
+    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@punctum}%
   \or%
     %case of flexus
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont \char 4098}%
+    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@flexus}%
   \or%
     %case of porrectus (we consider it to have the same alignment as punctum)
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont \char 17}%
+    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@punctum}%
   \or%
     %case of a initio debilis
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont \char 13}%
+    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@smallpunctum}%
   \or %
     %case of a quilisma
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont \char 26}%
+    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@quilisma}%
   \or %
     %case of an oriscus
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont \char 28}%
+    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@oriscus}%
   \or %
     %case of a punctum inclinatum
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont \char 19}%
+    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@punctuminclinatum}%
   \or %
     %case of a stropha
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont \char 20}%
+    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@stropha}%
   \or %
     % case of flexus with ambitus of one
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont \char 4097}%
+    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@flexusone}%
   \or %
     % case of flexus deminutus
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont \char 4225}%
+    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@flexusdeminutus}%
   \or %
     % case of virgula
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont \char 9}%
+    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@virgula}%
   \or %
     % case of divisio minima, minor, maior
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont \char 13}%
+    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@smallpunctum}%
   \or %
     % case of divisiofinalis
     \global\setbox\GreTempwidth=\hbox{\gredivisiofinalissymbol}%
