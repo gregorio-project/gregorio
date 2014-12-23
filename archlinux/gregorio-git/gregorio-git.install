@@ -1,0 +1,17 @@
+# Written by: Br. Elijah Schwab, O.Carm (github - eschwab)
+
+post_upgrade() {
+    echo "Updating package database..."
+    texhash
+    echo "Updating font map files..."
+    updmag-sys
+    echo "Run updmap as non-root user."
+}
+
+post_install() {
+    post_upgrade
+}
+
+post_remove() {
+    post_upgrade
+}
