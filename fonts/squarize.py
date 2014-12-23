@@ -36,6 +36,8 @@
 #where fontname = gregorio, parmesan, or greciliae 
 # the last step may take a few minutes
 
+from __future__ import print_function
+
 import getopt, sys
 import fontforge, psMat
 
@@ -46,7 +48,7 @@ max_interval=5
 shortglyphs=0
 
 def usage():
-    print """
+    print("""
 Python script to convert a small set of glyphs into a complete
 gregorian square notation font. The initial glyphs have a name convention,
 see gregorio-base.sfd for this convention.
@@ -56,7 +58,7 @@ Usage:
 
 with fontname=gregorio, parmesan or greciliae for now. The script generates
 fontname.pe which is a fontforge script.
-"""
+""")
 
 gplv3="""This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -164,10 +166,10 @@ Copyright (C) 2002--2006 Juergen Reuter <reuter@ipd.uka.de>
 
 # a function that prints a message to stdout, so that the user gets less bored when building the font
 def message(glyph_name):
-    print "generating %s for %s..." % (glyph_name, font_name)
+    print("generating", glyph_name, "for", font_name)
 
 def precise_message(glyph_name):
-    print "  * %s" % glyph_name
+    print("  *", glyph_name)
 
 # initial glyphs are the names of the glyphs that are already in gregorio_base, mostly one-note glyphs. see initialize_glyphs() for more details
 initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,3,21,31,22,14,15,33,13,62,65,39,69,70,38,37,60,61,63,64,16,34,35,36,72,73,74,77,79,81,82,83,84,85,86, 87,88,89,90,91]

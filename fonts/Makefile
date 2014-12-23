@@ -76,13 +76,13 @@ localinstall: $(ALLFILES)
 	texhash
 
 gregorio.ttf: squarize.py gregorio-base.sfd
-	python squarize.py gregorio
+	python2 squarize.py gregorio
 
 parmesan.ttf: squarize.py parmesan-base.sfd
-	python squarize.py parmesan
+	python2 squarize.py parmesan
 	
 greciliae.ttf: squarize.py greciliae-base.sfd
-	python squarize.py greciliae
+	python2 squarize.py greciliae
 
 all: gregorio.ttf parmesan.ttf greciliae.ttf
 
@@ -93,7 +93,7 @@ greciliae: greciliae.ttf
 parmesan: parmesan.ttf
 
 gregoria: Gregoria.otf Gregoria-Auctae.otf Gregoria-Deminutae.otf gregoria2gregorio.py
-	python gregoria2gregorio.py
+	python2 gregoria2gregorio.py
 
 tds: $(TDS_ZIP)
 
