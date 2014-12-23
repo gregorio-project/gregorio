@@ -1,0 +1,40 @@
+# Written by: Br. Elijah Schwab, O.Carm (github - eschwab)
+# Contributor: David Gippner davidgippner at googlemail dot com
+
+pkgname=gregorio-git
+pkgver=908.6df3abf
+pkgrel=1
+pkgdesc="A tool for typesetting gregorian chant melodies using TeX. (git-version)"
+url="http://home.gna.org/gregorio"
+arch=('i686' 'x86_64')
+install=${pkgname}.install
+license=('GPL')
+depends=('texlive-core' 'texlive-fontsextra' 'texlive-formatsextra')
+makedepends=('libxml2' 'python' 'git')
+provides=('gregorio-git')
+conflicts=('gregorio' 'gregorio-svn' 'gregorio-dev')
+source=('gregorio::git+https://github.com/gregorio-project/gregorio.git')
+md5sums=('SKIP')
+
+_gitname='gregorio'
+
+pkgver() {
+    cd $_gitname
+    echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+    cd "$srcdir/$_gitname"
+    msg "Configuring..."
+    autoreconf -f -i
+    ./configure --prefix=/usr || return 1
+}
+
+package() {
+    msg "Compiling..."
+    cd "$srcdir/$_gitname"
+    make || return 1
+    make DESTDIR="$pkgdir/" install
+    cd "$srcdir/$_gitname/fonts"
+    make DESTDIR="$pkgdir/" install TEXMFROOT="$pkgdir/usr/local/texlive/texmf-local"    
+}
