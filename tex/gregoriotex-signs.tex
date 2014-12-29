@@ -1699,12 +1699,12 @@
 \UseNormalPunctumCavum
 
 \def\grepunctumcavum#1#2#3#4#5{%
-  \grecalculateglyphraisevalue{#1}{0}%
   \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctumcavumchar}%
   \global\grelastglyphwidth=\wd\GreTempwidth %
   \kern\grelastglyphwidth %
   #4\relax %
   \kern-\grelastglyphwidth %
+  \grecalculateglyphraisevalue{#1}{0}%
   \ifnum\grehidepclines=1\relax %
     \grefillhole{\grepunctumcavumholechar}%
   \fi %
@@ -1713,12 +1713,12 @@
 }
 
 \def\grelineapunctumcavum#1#2#3#4#5{%
-  \grecalculateglyphraisevalue{#1}{0}%
   \setbox\GreTempwidth=\hbox{\gregoriofont\grelineapunctumcavumchar}%
   \global\grelastglyphwidth=\wd\GreTempwidth %
   \kern\grelastglyphwidth %
   #4\relax %
   \kern-\grelastglyphwidth %
+  \grecalculateglyphraisevalue{#1}{0}%
   \ifnum\grehidepclines=1\relax %
     \grefillhole{\grelineapunctumcavumholechar}%
   \fi %
