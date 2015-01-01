@@ -45,6 +45,7 @@
 \xdef\gre@char@curlybrace{89}
 \xdef\gre@char@barbrace{90}
 \xdef\gre@char@brace{88}
+\xdef\gre@char@linea{87}
 \xdef\gre@char@vepisemus{33}
 \xdef\gre@char@accentus{39}
 \xdef\gre@char@semicirculus{38}

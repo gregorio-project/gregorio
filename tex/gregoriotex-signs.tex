@@ -484,7 +484,7 @@
       \grecalculateglyphraisevalue{m}{13}%
       \advance\greglyphraisevalue by \grecurlybraceaccentusshift %
       \raise\greglyphraisevalue\hbox{%
-        \gregoriofont\char 39\relax %
+        \gregoriofont\char \gre@char@accentus\relax %
       }%
       \hss %
     \fi %
@@ -631,7 +631,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grelinea#1#2#3{%
-  \greglyph{\char 87}{#1}{#2}{#3}{}{}%
+  \greglyph{\char \gre@char@linea}{#1}{#2}{#3}{}{}%
   \relax %
 }
 
