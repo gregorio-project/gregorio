@@ -191,7 +191,7 @@ def initialize_glyphs():
         glyphs_to_append=(1025, 2561)
         initialcount=192
     elif font_name=="greciliae":
-        glyphs_to_append=(2561, 1025, 75, 76, 78, 80)
+        glyphs_to_append=(2561, 1025, 75, 76, 78, 80, 92, 93)
         initialcount=199
     elif font_name=="gregoria":
         glyphs_to_append=(2561, 1025)
