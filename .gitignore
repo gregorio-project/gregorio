@@ -5,6 +5,9 @@
 *.ko
 *.obj
 *.elf
+*.lo
+*.la
+
 
 # Libraries
 *.lib
@@ -32,6 +35,7 @@
 *.fls
 *.out
 *.toc
+*.gaux
 
 ## Intermediate documents:
 *.dvi
@@ -49,3 +53,33 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+
+# http://www.gnu.org/software/automake
+Makefile.in
+Makefile
+# http://www.gnu.org/software/autoconf
+/autom4te.cache
+/aclocal.m4
+/compile
+/configure
+/depcomp
+/install-sh
+/missing
+/stamp-h1
+/build-aux
+.deps
+.libs
+/m4
+/libtool
+config.status
+lib/gregorio.pc
+src/gregorio
+
+
+#gregorio specific
+
+*.zip
+plugins/gabc/gabc-score-determination-y*
+plugins/gabc/gabc-score-determination-l*
+plugins/gabc/gabc-notes-determination-l*
+windows/Ouput
