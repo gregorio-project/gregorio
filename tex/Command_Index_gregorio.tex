@@ -14,7 +14,11 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 	#2 --- integer: Type of glyph the episemus is attached to.  See episemus special argument for description of options.
 \verb=\greactiveatechironomy=%tex.tex
 	Macro called at the beginning of the score to enable chironomy.
-\verb=\greadditionalline=
+\verb=\greadditionalline#1#2#3=%tex-signs.tex
+	Macro to typeset the additional line above or below the staff.
+	#1 --- special: See Episemus special
+	#2 --- integer: The ambitus of the porrectus or porrectus flexes if the first argument is 9, 10, 11, 21, 22, 23; ignored otherwise
+	#3 --- integer: set horizontal episemus (0), horizontal episemus under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4)
 \verb=\greadjustsecondline=%didn't actually find this one in gregoriotex-write.c%tex.tex
 	Macro to call before first syllable, but after \verb=\gresetinitialclef=
 \verb=\greadjustthirdline=%tex.tex
@@ -65,17 +69,27 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 
 \verb=\gredagger=
 \verb=\grediscretionary{}=
-\verb=\gredivisiofinalis=
-\verb=\gredivisiomaior=
-\verb=\gredivisiominima=
-\verb=\gredivisiominor=
-\verb=\gredominica=
+\verb=\gredivisiofinalis#1=%tex-signs.tex
+	Macro to typeset a divisio finalis.
+	#1 --- code: Macros which may happen before the skip but after the divisio finalis (typically \verb=\grevepisemus=)
+\verb=\gredivisiomaior#1=%tex-signs.tex
+	Macro to typeset a divisio maior.
+	#1 --- code: Macros which may happen before the skip but after the divisio maior (typically \verb=\grevepisemus=)
+\verb=\gredivisiominima#1=%tex-signs.tex
+	Macro to typeset a divisio minima.
+	#1 --- code: Macros which may happen before the skip but after the divisio minima (typically \verb=\grevepisemus=)
+\verb=\gredivisiominor#1=%tex-signs.tex
+	Macro to typeset a divisio minor.
+	#1 --- code: Macros which may happen before the skip but after the divisio minor (typically \verb=\grevepisemus=)
+\verb=\gredominica#1#2=%tex-signs.tex
+	Macro to typeset a dominican bar.
+	#1 --- integer: Type of dominican bar. 6--11 corresponds to types 1--6
+	#2 --- code: Macros which may happen before the skip but after the divisio minor (typically \verb=\grevepisemus=)
 
 \verb=\greendnlbarea#1#2=%tex.tex
 	Macro called at beginning of a no line break area.
 	#1 --- integer: 0 = not in the neumes; 1 = in the neumes
 	#2 --- integer: 0 = call didn't come from translation centering; 1 = call came from translation centering.
-
 \verb=\greendofelement#1#2=%tex.tex
 	Macro to end elements.
 	#1 --- integer: 0 = default space; 1 = larger space; 2 = glyph space; 3 = zero-width space
@@ -84,13 +98,20 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 	Macro to end a glyph without ending the element.
 	#1 --- integer: 0 = default space; 1 = zero-width space; 2 = space between flat or natural and a note; 3 = space between two puncta inclinata; 4 = space between bivirga or trivirga; 5 = space between bistropha or tristropha; 6 = space after a punctum mora XXX: not used yet, not so sure it is a good idea...; 7 = space between a punctum inclinatum and a punctum inclinatum debilis; 8 = space between two puncta inclinata debilis; 9 = space before a punctum (or something else) and a punctum inclinatum; 10 = space between puncta inclinata (also debilis for now), larger ambitus (range=3rd).; 11 = space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more)
 
-\verb=\grefinaldivisiofinalis=
-\verb=\grefinaldivisiomaior=
+\verb=\grefinaldivisiofinalis#1=%tex-signs.tex
+	Macro to end a line with a divisio finalis.
+	#1 --- integer: There is something which needs to be placed after the divisio finalis (1), or not (0).
+\verb=\grefinaldivisiomaior#1=%tex-signs.tex
+	Macro to end a line with a divisio maior.
+	#1 --- integer: There is something which needs to be placed after the divisio maior (1), or not (0).
 \verb=\grefirstlinebottomspace#1#2=%tex.tex
 	Macro for additional bottom space for the first line
 	#1 --- integer: 0 = no note below staff; 1 = note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
 	#2 --- integer: 0 = no translation; 1 = translation present
-\verb=\greflat=
+\verb=\greflat#1#2=%tex-signs.tex
+	Macro to typeset a flat.
+	#1 --- character: Height of the flat.
+	#2 --- integer: Indicates the a flat for a key change (1), or not (0)
 
 \verb=\greglyph=
 \verb=\gregorianmode#1=%tex.tex
@@ -99,9 +120,22 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 \verb=\gregorioapiverstion#1=%tex.tex
 	Checks to see if GregorioTeX API is version specified by argument (and therefore compatible with the score.  #1 is date in format: yyyymmdd
 
-\verb=\grehepisemus=
-\verb=\grehepisemusbottom=
-\verb=\grehepisemusbridge=
+\verb=\grehepisemus#1#2#3#4=%tex-signs.tex
+	Macro to typeset a episemus.
+	#1 --- character: Height of the episemus
+	#2 --- special: See Episemus special
+	#3 --- integer: The ambitus of the porrectus or porrectus flexes if the second argument is 9, 10, 11, 21, 22, 23; ignored otherwise
+	#4 --- character: replacement for #1 if a bridge causes a height substitution	
+\verb=\grehepisemusbottom#1#2#3=%tex-signs.tex
+	Macro to typeset a episemus at the bottom of a note
+	#1 --- character: Height of the episemus
+	#2 --- special: See Episemus special
+	#3 --- integer: The ambitus of the porrectus or porrectus flexes if the second argument is 9, 10, 11, 21, 22, 23; ignored otherwise
+\verb=\grehepisemusbridge#1#2#3=%tex-signs.tex
+	Macro to typeset a bridge episemus father the last note of a glyph (element, syllable) if the next episemus is at the same height.
+	#1 --- character: Height of the episemus
+	#2 --- special: See Episemus special
+	#3 --- integer: The ambitus of the porrectus or porrectus flexes if the second argument is 9, 10, 11, 21, 22, 23; ignored otherwise
 \verb=\grehighchoralsign#1#2#3=%tex-signs.tex
 	Macro for typesetting high choral signs.
 	#1 --- character: height of the sign
@@ -118,10 +152,29 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 	#1 --- integer: Type of glyph the ictus is attached to.  See episemus special argument for description of options.
 	
 \verb=\grein=
+\verb=\greindivisiofinalis#1=%tex-signs.tex
+	Macro to typeset a divisio finalis inside a syllable.
+	#1 --- code: Macros which may happen before the skip but after the divisio finalis (typically \verb=\grevepisemus=)
+\verb=\greindivisiomaior#1=%tex-signs.tex
+	Macro to typeset a divisio maior inside a syllable.
+	#1 --- code: Macros which may happen before the skip but after the divisio maior (typically \verb=\grevepisemus=)
+\verb=\greindivisiominima#1=%tex-signs.tex
+	Macro to typeset a divisio minima inside a syllable.
+	#1 --- code: Macros which may happen before the skip but after the divisio minima (typically \verb=\grevepisemus=)
+\verb=\greindivisiominor#1=%tex-signs.tex
+	Macro to typeset a divisio minor inside a syllable.
+	#1 --- code: Macros which may happen before the skip but after the divisio minor (typically \verb=\grevepisemus=)
+\verb=\greindominica#1#2=%tex-signs.tex
+	Macro to typeset a dominican bar inside a syllable.
+	#1 --- integer: Type of dominican bar. 6--11 corresponds to types 1--6
+	#2 --- code: Macros which may happen before the skip but after the divisio minor (typically \verb=\grevepisemus=)
 \verb=\greinitial#1=%tex.tex
 	Macro to set the initial (#1, a character) in the score.
 \verb=\greinsertchiroline=%tex.tex
 	Macro called at the beginning of a line to insert the chironomic signs.
+\verb=\greinvirgula#1=%tex-signs.tex
+	Macro to typeset a virgula inside a syllable.
+	#1 --- code: Macros which may happen before the skip but after the virgula (typically \verb=\grevepisemus=)
 \verb=\greitalic#1=%tex.sty, PlainTeX version in tex.tex
 	Makes argument (a string) italic.  Accesses \LaTeX \verb=\textit= or PlainTeX \verb=\it= as appropriate.  Corresponds to ``<i></i>'' tags in gabc.
 
@@ -135,13 +188,22 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 	#2 --- : %argument 3 from greglyph
 	#3 --- : %argument 4 from greglyph
 \verb=\grelineapunctumcavum=
+	Macro to typeset a linea punctum cavum.
+	#1 --- %argument 2 from greglyph
+	#2 --- %argument 3 from greglyph
+	#3 --- %argument 4 from greglyph
+	#4 --- code: Code executed before the punctum cavum is written.
+	#5 --- %argument 5 from greglyph
 \verb=\grelowchoralsign#1#2#3=%tex-signs.tex
 	Macro for typesetting low choral signs.
 	#1 --- character: height of the sign
 	#2 --- string: the choral sign
 	#3 --- integer: choral sign occurs before last note of podatus, porrectus, or torculus resupinus (1), or not (0)
 
-\verb=\grenatural=
+\verb=\grenatural#1#2=%tex-signs.tex
+	Macro to typeset a natural.
+	#1 --- character: Height of the flat.
+	#2 --- integer: Indicates the a flat for a key change (1), or not (0)
 \verb=\grenewline=%tex.tex
 	Macro to call if you want to go to the next line simply.
 \verb=\grenewlinewithspace#1#2#3#4=%tex.tex
@@ -175,7 +237,13 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 	#4 --- dimension: the horizontal shift
 	#5 --- integer: Shift to the beginning of the last glyph (1), or not (0)
 
-\verb=\grepunctumcavum=
+\verb=\grepunctumcavum#1#2#3#4#5=%tex-signs.tex
+	Macro to typeset a punctum cavum.
+	#1 --- %argument 2 from greglyph
+	#2 --- %argument 3 from greglyph
+	#3 --- %argument 4 from greglyph
+	#4 --- code: Code executed before the punctum cavum is written.
+	#5 --- %argument 5 from greglyph
 \verb=\grepunctummora#1#2#3#4=%tex-signs.tex
 	Macro for typesetting punctum mora.
 	#1 --- character: height of punctum mora
@@ -212,7 +280,10 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 %	possible values for <integer2>: 0, 1 (1 = space before clef, 0 = no space)
 \verb=\gresettextabovelines#1=
 	Macro to place argument (a string) above the lines and empty \verb=\gre@currenttextabovelines= when done.
-\verb=\gresharp=
+\verb=\gresharp#1#2=%tex-signs.tex
+	Macro to typeset a sharp.
+	#1 --- character: Height of the flat.
+	#2 --- integer: Indicates the a flat for a key change (1), or not (0)
 \verb=\gresmallcaps#1=%tex.sty, PlainTeX version in tex.tex
 	Makes argument (a string) small capitals.  Accesses \LaTeX \verb=\textsc= or PlainTeX \verb=\sc= as appropriate  Corresponds to ``<sc></sc>'' tags in gabc.
 \verb=\grestar=
@@ -240,7 +311,9 @@ These functions are the ones written by Gregorio to the gtex file.  While one co
 	Macro for typesetting the vertical episemus and ictus (type t) on the same glyph.
 	#1 --- character: height of episemus
 	#2 --- integer: Type of glyph the episemus and ictus are attached to.  See episemus special argument for description of options.
-\verb=\grevirgula=
+\verb=\grevirgula#1=%tex-signs.tex
+	Macro to typeset a virgula.
+	#1 --- code: Macros which may happen before the skip but after the virgula (typically \verb=\grevepisemus=)
 
 \verb=\grewritetranslation#1=%tex.tex
 	Macro to typeset argument (a string) in the translation position.

@@ -9,7 +9,7 @@ Colors are strictly a \LaTeX\ phenomena as currently implemented.  All commands 
 All colors can be redefined using \verb=\definecolor=.  See \verb=xcolor= package for documentation.
 
 \verb=grebackgroundcolor=%tex.sty
-?? color behind staves?
+Color gregoriotex uses to block out elements which have been printed, but shouldn't show (\eg, the staff line going through the interior of a punctum cavum)
 \verb={RGB}{255,255,255}= (white)
 
 \verb=gregoriocolor=%tex.sty
@@ -165,3 +165,20 @@ In general, commands should not be modified.  Exceptions are noted below.
 	Macro to empty the box containing the custos.
 	%I’m not sure what the purpose of this macro is.  Need to figure out where it is used.
 
+\verb=\GreHidePCLines=%tex-signs.tex
+	Macro to tell gregoriotex to hide the lines through the middle of a punctum cavum.  Default.
+
+\verb=\GreDontHidePCLines=%tex-signs.tex
+	Macro to tell gregoriotex not to hide the lines through the middle of a punctum cavum.
+	
+\verb=\GreHideAltLines=%tex-signs.tex
+	Macro to tell gregoriotex to hide the lines behind alterations.
+
+\verb=\GreDontHideAltLines=%tex-signs.tex
+	Macro to tell gregoriotex not to hide the lines behind alterations.  Default.
+
+\verb=\UseAlternatePunctumCavum=%tex-signs.tex
+	Changes settings to use the alternative punctum cavum.
+
+\verb=\UseNormalPunctumCavum=%tex-signs.tex
+	Changes settings to use the normal punctum cavum.  Default.
