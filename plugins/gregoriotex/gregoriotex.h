@@ -59,6 +59,8 @@
 #define T_SALICUS_FIRST 48
 #define T_SALICUS 50
 #define T_SALICUS_LONGQUEUE 52
+#define T_TORCULUS_LIQUESCENS 54
+#define T_TORCULUS_LIQUESCENS_QUILISMA 58
 // this is a special type for the first note of a torculus resupinus flexus
 #define T_ONE_NOTE_TRF 72
 
