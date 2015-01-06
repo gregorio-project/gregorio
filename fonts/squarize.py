@@ -157,6 +157,7 @@ Copyright (C) 2002--2006 Juergen Reuter <reuter@ipd.uka.de>
     salicus()
     shortglyphs=0
     torculus()
+    torculus_liquescens()
     porrectus()
     porrectusflexus()
     torculusresupinus()
@@ -323,6 +324,8 @@ shapes={
 'salicus_first':48,
 'salicus':50,
 'salicus_longqueue':52,
+'torculus_liquescens': 54,
+'torculus_liquescens_quilisma': 58,
 }
 
 liquescentiae={
@@ -404,10 +407,12 @@ def write_first_bar(i, glyphnumber):
 
 # as the glyph before a deminutus is not the same as a normal glyph, and always the same, we can call this function each time. Sometimes we have to simplify before building the last glyph (tosimplify=1), and length is the offset.
 def write_deminutus(i, j, glyphnumber, length=0, tosimplify=0, firstbar=1):
-    if firstbar!=0:
+    if firstbar == 1:
         paste_and_move("mdeminutus", glyphnumber, length, i*base_height)
-    else:
+    elif firstbar == 0:
         paste_and_move("mnbdeminutus", glyphnumber, length, i*base_height)
+    else:
+        paste_and_move("mademinutus", glyphnumber, length, i*base_height)
     write_line(j, glyphnumber, length+width_flexusdeminutus-line_width, (i-j+1)*base_height)
     if (tosimplify):
         simplify(glyphnumber)
@@ -1032,6 +1037,52 @@ def write_torculus(i,j, first_glyph, last_glyph, shape, liquescentia='nothing'):
             write_line(j, glyphnumber, length, (i-j+1)*base_height)
         paste_and_move(last_glyph, glyphnumber,  length, (i-j)*base_height)
         length=length+width_punctum
+    set_width(glyphnumber, length)
+    end_glyph(glyphnumber)
+
+def torculus_liquescens():
+    precise_message("torculus liquescens")
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            for k in range(1,max_interval+1):
+                write_torculus_liquescens(i,j,k, 'base5', 'torculus_liquescens', 'deminutus')
+    precise_message("torculus liquescens quilisma")
+    for i in range(1,max_interval+1):
+        for j in range(1,max_interval+1):
+            for k in range(1,max_interval+1):
+                write_torculus_liquescens(i,j,k, 'qbase', 'torculus_liquescens_quilisma', 'deminutus')
+
+def write_torculus_liquescens(i,j, k, first_glyph, shape, liquescentia='deminutus'):
+    glyphnumber=gnumber(i, j, k, shape, liquescentia)
+    length=width_punctum-line_width
+    if first_glyph=="qbase":
+        length=width_quilisma-line_width
+        if i==1:
+            first_glyph='_0026'
+            length=width_quilisma
+    elif i==1:
+        first_glyph='_0017'
+        length=width_punctum+0.1
+    simple_paste(first_glyph, glyphnumber)
+    if i!=1:
+        write_line(i, glyphnumber, length, base_height)
+    flexus_firstbar = 2
+    if j==1:
+        flexus_firstbar = 0
+        if i==1:
+            paste_and_move("_0017", glyphnumber, length, i*base_height)
+        else:
+            paste_and_move("base4", glyphnumber, length, i*base_height)
+        length=length+width_punctum
+    else:
+        if i==1:
+            paste_and_move("base2", glyphnumber, length, i*base_height)
+        else:
+            paste_and_move("base3", glyphnumber, length, i*base_height)
+        length=length+width_punctum-line_width
+        write_line(j, glyphnumber, length, (i-j+1)*base_height)
+    write_deminutus(i-j,k, glyphnumber, length, firstbar=flexus_firstbar)
+    length=length+width_flexusdeminutus
     set_width(glyphnumber, length)
     end_glyph(glyphnumber)
 
