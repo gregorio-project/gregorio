@@ -423,8 +423,9 @@ gabc_det_glyphs_from_notes (gregorio_note *current_note, int *current_key)
       next_glyph_type =
         gregorio_add_note_to_a_glyph (current_glyph_type,
                                       current_note->pitch, last_pitch, 
+                                      current_note->shape,
                                       current_note->liquescentia,
-                                      current_note->shape, &end_of_glyph);
+                                      &end_of_glyph);
 
       // patch to have good shapes in the special cases of pes quadratum and
       // pes quilisma quadratum.
