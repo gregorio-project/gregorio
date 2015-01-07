@@ -172,7 +172,7 @@ def precise_message(glyph_name):
     print("  *", glyph_name)
 
 # initial glyphs are the names of the glyphs that are already in gregorio_base, mostly one-note glyphs. see initialize_glyphs() for more details
-initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,3,21,31,22,14,15,33,13,62,65,39,69,70,38,37,60,61,63,64,16,34,35,36,72,73,74,77,79,81,82,83,84,85,86, 87,88,89,90,91]
+initial_glyphs=[1,2,17,19,20,26,27,28,6,32,11,8,23,25,9,10,24,7,4,3,21,31,22,14,15,33,13,62,65,39,69,70,38,37,60,61,63,64,16,34,35,36,72,73,74,77,79,81,82,83,84,85,86, 87,88,89,90,91,92,93]
 
 def initialize_glyphs():
     global initial_glyphs, initialcount, count, newfont, oldfont, unicode_char_start

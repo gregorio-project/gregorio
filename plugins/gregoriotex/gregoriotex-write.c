@@ -4169,7 +4169,7 @@ gregoriotex_determine_interval (gregorio_glyph *glyph)
  * (for the lowest note) * 63: custo for high notes (oriented to the bottom) *
  * 64: custo for high notes (oriented to the bottom) with short bar * 65: custo
  * for high notes (oriented to the bottom) with middle bar (for the highest
- * note) 
+ * note), 93: virga aucta, 92: virga aucta short bar.
  */
 
 // and the different types of horizontal episemus:
@@ -4395,14 +4395,25 @@ void
         }
       break;
     case S_VIRGA_REVERSA:
-      if (is_short (note->pitch, glyph, element))
-        {
-          *glyph_number = 25;
-        }
-      else
-        {
-          *glyph_number = 24;
-        }
+      if (note->liquescentia == L_AUCTUS_DESCENDENS) {
+        if (is_short (note->pitch, glyph, element))
+          {
+            *glyph_number = 92;
+          }
+        else
+          {
+            *glyph_number = 93;
+          }
+      } else {
+        if (is_short (note->pitch, glyph, element))
+          {
+            *glyph_number = 25;
+          }
+        else
+          {
+            *glyph_number = 24;
+          }
+      }
       break;
     case S_ORISCUS:
       *type = AT_ORISCUS;
