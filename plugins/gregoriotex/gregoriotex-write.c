@@ -2138,6 +2138,7 @@ gregoriotex_write_choral_sign (FILE *f,
     {
     case G_FLEXUS:
     case G_TORCULUS:
+    case G_TORCULUS_LIQUESCENS:
     case G_TORCULUS_RESUPINUS_FLEXUS:
     case G_PORRECTUS_FLEXUS:
       if (!current_note->next)
@@ -3914,6 +3915,28 @@ void
           temp =
             TYPE_FACTOR * T_TORCULUS +
             gregoriotex_determine_liquescentia_number (L_LIQ_FACTOR, L_ALL,
+                                                       glyph->liquescentia);
+        }
+      break;
+    case G_TORCULUS_LIQUESCENS:
+      if (glyph->first_note->shape == S_QUILISMA)
+        {
+          *type = AT_QUILISMA;
+          *gtype = T_TORCULUS_LIQUESCENS_QUILISMA;
+          temp =
+            TYPE_FACTOR * T_TORCULUS_LIQUESCENS_QUILISMA +
+            gregoriotex_determine_liquescentia_number (L_LIQ_FACTOR,
+                                                       L_ONLY_DEMINUTUS,
+                                                       glyph->liquescentia);
+        }
+      else
+        {
+          *type = AT_ONE_NOTE;
+          *gtype = T_TORCULUS_LIQUESCENS;
+          temp =
+            TYPE_FACTOR * T_TORCULUS_LIQUESCENS +
+            gregoriotex_determine_liquescentia_number (L_LIQ_FACTOR, 
+                                                       L_ONLY_DEMINUTUS,
                                                        glyph->liquescentia);
         }
       break;

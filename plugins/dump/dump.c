@@ -993,6 +993,9 @@ dump_glyph_type (char glyph_type)
     case G_SALICUS_FIRST_PART:
       str = "G_SALICUS_FIRST_PART";
       break;
+    case G_TORCULUS_LIQUESCENS:
+      str = "G_TORCULUS_LIQUESCENS";
+      break;
     default:
       str = "unknown";
       break;
