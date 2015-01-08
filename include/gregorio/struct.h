@@ -80,6 +80,8 @@ extern "C"
 // under the same horizontal episemus of the note. If the note is not
 // under an episemus, it is 0.
     char h_episemus_top_note;
+// same for bottom_note
+    char h_episemus_bottom_note;
 // a string containing a possible TeX verbatim; necessary during
 // structure generation.
     char *texverb;
@@ -423,6 +425,7 @@ representation on the score).
                                         char additional_infos, char *texverb);
 
   void gregorio_determine_good_top_notes (gregorio_note *current_note);
+  void gregorio_determine_good_bottom_notes (gregorio_note *current_note);
 
   void gregorio_reinitialize_alterations (char alterations[][13],
                                           int number_of_voices);
