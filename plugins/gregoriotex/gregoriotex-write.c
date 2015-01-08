@@ -2609,7 +2609,7 @@ gregoriotex_write_hepisemus (FILE *f,
   if (has_bottom (current_note->h_episemus_type))
     {
       fprintf (f, "\\grehepisemusbottom{%c}{%d}{%d}%%\n",
-               current_note->pitch - 1, number, ambitus);
+               current_note->h_episemus_bottom_note - 1, number, ambitus);
       if (bottom != 1
           && simple_htype (current_note->h_episemus_type) != H_NO_EPISEMUS)
         {
