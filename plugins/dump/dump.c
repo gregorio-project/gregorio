@@ -387,49 +387,49 @@ dump_write_score (FILE *f, gregorio_score *score)
                            "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  \n");
                   if (note->type)
                     {
-                      fprintf (f, "         type                %d (%s)\n",
+                      fprintf (f, "         type                   %d (%s)\n",
                                note->type, dump_type (note->type));
                     }
                   if (note->pitch)
                     {
-                      fprintf (f, "         pitch               %c\n",
+                      fprintf (f, "         pitch                  %c\n",
                                note->pitch);
                     }
                   if (note->texverb)
                     {
-                      fprintf (f, "         TeX string          \"%s\"\n",
+                      fprintf (f, "         TeX string             \"%s\"\n",
                                note->texverb);
                     }
                   if (note->choral_sign)
                     {
-                      fprintf (f, "         Choral Sign         \"%s\"\n",
+                      fprintf (f, "         Choral Sign            \"%s\"\n",
                                note->choral_sign);
                     }
                   if (note->shape)
                     {
-                      fprintf (f, "         shape               %d (%s)\n",
+                      fprintf (f, "         shape                  %d (%s)\n",
                                note->shape, dump_shape (note->shape));
                     }
                   if (note->signs)
                     {
-                      fprintf (f, "         signs               %d (%s)\n",
+                      fprintf (f, "         signs                  %d (%s)\n",
                                note->signs, dump_signs (note->signs));
                     }
                   if (note->rare_sign)
                     {
-                      fprintf (f, "         rare sign           %d (%s)\n",
+                      fprintf (f, "         rare sign              %d (%s)\n",
                                note->rare_sign,
                                dump_rare_sign (note->rare_sign));
                     }
                   if (note->liquescentia)
                     {
-                      fprintf (f, "         liquescentia        %d (%s)\n",
+                      fprintf (f, "         liquescentia           %d (%s)\n",
                                note->liquescentia,
                                dump_liquescentia (note->liquescentia));
                     }
                   if (note->h_episemus_type)
                     {
-                      fprintf (f, "         h_episemus_type     %d (",
+                      fprintf (f, "         h_episemus_type        %d (",
                                note->h_episemus_type);
                       fprintf (f, "%s",
                                dump_h_episemus_type (simple_htype
@@ -442,8 +442,13 @@ dump_write_score (FILE *f, gregorio_score *score)
                     }
                   if (note->h_episemus_top_note)
                     {
-                      fprintf (f, "         h_episemus_top_note %c\n",
+                      fprintf (f, "         h_episemus_top_note    %c\n",
                                note->h_episemus_top_note);
+                    }
+                  if (note->h_episemus_bottom_note)
+                    {
+                      fprintf (f, "         h_episemus_bottom_note %c\n",
+                               note->h_episemus_bottom_note);
                     }
                   note = note->next;
                 }
@@ -992,6 +997,9 @@ dump_glyph_type (char glyph_type)
       break;
     case G_SALICUS_FIRST_PART:
       str = "G_SALICUS_FIRST_PART";
+      break;
+    case G_TORCULUS_LIQUESCENS:
+      str = "G_TORCULUS_LIQUESCENS";
       break;
     default:
       str = "unknown";

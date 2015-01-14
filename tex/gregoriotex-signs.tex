@@ -503,7 +503,7 @@
 			\gre@calculateglyphraisevalue{m}{13}%
 			\advance\gre@glyphraisevalue by \gre@curlybraceaccentusshift %
 			\raise\gre@glyphraisevalue\hbox{%
-				\gregoriofont\char 39\relax %
+				\gregoriofont\char \gre@char@accentus\relax %
 			}%
 			\hss %
 		\fi %
@@ -667,7 +667,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grelinea#1#2#3{%
-	\greglyph{\char 87}{#1}{#2}{#3}{}{}%
+	\greglyph{\char \gre@char@linea}{#1}{#2}{#3}{}{}%
 	\relax %
 }
 
@@ -1735,12 +1735,12 @@
 \UseNormalPunctumCavum
 
 \def\grepunctumcavum#1#2#3#4#5{%
-	\gre@calculateglyphraisevalue{#1}{0}%
 	\setbox\Gre@Tempwidth=\hbox{\gregoriofont\gre@punctumcavumchar}%
 	\global\gre@lastglyphwidth=\wd\Gre@Tempwidth %
 	\kern\gre@lastglyphwidth %
 	#4\relax %
 	\kern-\gre@lastglyphwidth %
+	\gre@calculateglyphraisevalue{#1}{0}%
 	\ifnum\gre@hidepclines=1\relax %
 		\gre@fillhole{\gre@punctumcavumholechar}%
 	\fi %
@@ -1749,12 +1749,12 @@
 }
 
 \def\grelineapunctumcavum#1#2#3#4#5{%
-	\gre@calculateglyphraisevalue{#1}{0}%
 	\setbox\Gre@Tempwidth=\hbox{\gregoriofont\gre@lineapunctumcavumchar}%
 	\global\gre@lastglyphwidth=\wd\Gre@Tempwidth %
 	\kern\gre@lastglyphwidth %
 	#4\relax %
 	\kern-\gre@lastglyphwidth %
+	\gre@calculateglyphraisevalue{#1}{0}%
 	\ifnum\gre@hidepclines=1\relax %
 		\gre@fillhole{\gre@lineapunctumcavumholechar}%
 	\fi %

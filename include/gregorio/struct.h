@@ -80,6 +80,8 @@ extern "C"
 // under the same horizontal episemus of the note. If the note is not
 // under an episemus, it is 0.
     char h_episemus_top_note;
+// same for bottom_note
+    char h_episemus_bottom_note;
 // a string containing a possible TeX verbatim; necessary during
 // structure generation.
     char *texverb;
@@ -423,6 +425,7 @@ representation on the score).
                                         char additional_infos, char *texverb);
 
   void gregorio_determine_good_top_notes (gregorio_note *current_note);
+  void gregorio_determine_good_bottom_notes (gregorio_note *current_note);
 
   void gregorio_reinitialize_alterations (char alterations[][13],
                                           int number_of_voices);
@@ -483,9 +486,6 @@ gregorio_fix_positions (gregorio_score * score);*/
   void gregorio_go_to_first_note (gregorio_note **note);
   void gregorio_go_to_first_glyph (gregorio_glyph **glyph);
 
-  char gregorio_add_note_to_a_glyph (char glyph, char current_pitch,
-                                     char last_pitch, char shape,
-                                     char *end_of_glyph);
   void gregorio_det_step_and_line_from_key (int key, char *step, int *line);
 
   char gregorio_is_only_special (gregorio_element *element);
@@ -703,6 +703,7 @@ gregorio_fix_positions (gregorio_score * score);*/
 #define G_VIRGA_REVERSA 37
 #define G_SALICUS 39
 #define G_SALICUS_FIRST_PART 40
+#define G_TORCULUS_LIQUESCENS 41
 
 #define is_puncta_inclinata(glyph) glyph<=G_5_PUNCTA_INCLINATA_ASCENDENS
 

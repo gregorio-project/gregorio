@@ -66,6 +66,7 @@ gregorio_add_note (gregorio_note ** current_note, char pitch, char shape,
   element->previous = *current_note;
   element->h_episemus_type = H_NO_EPISEMUS;
   element->h_episemus_top_note = 0;
+  element->h_episemus_bottom_note = 0;
   element->next = NULL;
   element->texverb = NULL;
   element->choral_sign = NULL;
@@ -97,6 +98,7 @@ gregorio_add_special_as_note (gregorio_note ** current_note, char type,
   element->texverb = NULL;
   element->h_episemus_type = H_NO_EPISEMUS;
   element->h_episemus_top_note = 0;
+  element->h_episemus_bottom_note = 0;
   element->choral_sign = NULL;
   if (*current_note)
     {
@@ -126,6 +128,7 @@ gregorio_add_texverb_as_note (gregorio_note ** current_note, char *str, char typ
   element->previous = *current_note;
   element->h_episemus_type = H_NO_EPISEMUS;
   element->h_episemus_top_note = 0;
+  element->h_episemus_bottom_note = 0;
   element->next = NULL;
   element->texverb = str;
   element->choral_sign = NULL;
@@ -153,6 +156,7 @@ gregorio_add_nlba_as_note (gregorio_note ** current_note, char type)
   element->previous = *current_note;
   element->h_episemus_type = H_NO_EPISEMUS;
   element->h_episemus_top_note = 0;
+  element->h_episemus_bottom_note = 0;
   element->next = NULL;
   element->texverb = NULL;
   element->choral_sign = NULL;
@@ -347,6 +351,7 @@ gregorio_add_h_episemus (gregorio_note *note, unsigned char type, unsigned int *
   if (type == H_BOTTOM)
     {
       note->h_episemus_type = note->h_episemus_type | H_BOTTOM;
+      gregorio_determine_good_bottom_notes(note);
       return;
     }
   if (!note->h_episemus_top_note || *nbof_isolated_episemus == 0)
@@ -1544,7 +1549,7 @@ gregorio_determine_good_top_notes (gregorio_note * current_note)
     {
       return;
     }
-  if (current_note->h_episemus_top_note < prev_note->h_episemus_top_note)
+  if (current_note->h_episemus_top_note <= prev_note->h_episemus_top_note)
     {
       current_note->h_episemus_top_note = prev_note->h_episemus_top_note;
     }
@@ -1554,6 +1559,41 @@ gregorio_determine_good_top_notes (gregorio_note * current_note)
       while (prev_note && simple_htype(prev_note->h_episemus_type) == H_MULTI)
 	{
 	  prev_note->h_episemus_top_note = top_note;
+	  prev_note = prev_note->previous;
+	}
+    }
+}
+
+// same with bottom notes
+
+void
+gregorio_determine_good_bottom_notes (gregorio_note * current_note)
+{
+  char bottom_note;
+  gregorio_note *prev_note;
+  if (!current_note)
+    {
+      gregorio_message (_
+			   ("call with NULL argument"),
+			   "gregorio_determine_good_bottom_notes", ERROR, 0);
+      return;
+    }
+  prev_note = current_note->previous;
+  current_note->h_episemus_bottom_note = current_note->pitch;
+  if (!prev_note || !has_bottom(prev_note->h_episemus_type))
+    {
+      return;
+    }
+  if (current_note->h_episemus_bottom_note >= prev_note->h_episemus_bottom_note)
+    {
+      current_note->h_episemus_bottom_note = prev_note->h_episemus_bottom_note;
+    }
+  else
+    {
+      bottom_note = current_note->h_episemus_bottom_note;
+      while (prev_note && has_bottom(prev_note->h_episemus_type))
+	{
+	  prev_note->h_episemus_bottom_note = bottom_note;
 	  prev_note = prev_note->previous;
 	}
     }
