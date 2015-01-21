@@ -3,16 +3,16 @@
 These functions are the ones used by Gregoriotex internally as it process the commands listed above.  They should not appear in any user document and are listed here for programmer documentation purposes only.
 
 \verb=\gre@coloredlines#1=%tex.sty
-	Changes the color of the staff lines to #1.  #1 must be a named color defined using \verb=\definecolor=
+	Changes the color of the staff lines to \#1.  \#1 must be a named color defined using \verb=\definecolor=
 
 \verb=\gre@redlines=%tex.sty
 	Changes the color of the staff lines to \verb=gregoriocolor=.
 
-\verb=\gre@normallines%tex.sty
+\verb=\gre@normallines=%tex.sty
 	Resets the formatting of the staff lines.
 
 \verb=\gre@error#1=%tex.tex
-	Raises an error which is identified as coming from GregorioTeX.  Uses \LaTeX \verb=\PackageError= or PlainTeX \verb=\errmessage= as appropriate.  #1 (a string) is the accompanying message.
+	Raises an error which is identified as coming from GregorioTeX.  Uses \LaTeX \verb=\PackageError= or PlainTeX \verb=\errmessage= as appropriate.  \#1 (a string) is the accompanying message.
 	
 \verb=\gre@warn#1=%tex.tex
 	Raises a warning which is identified as coming from GregorioTeX.  Uses \LaTeX \verb=\PackageWarning= or PlainTeX \verb=\message= as appropriate.  <string is the accompanying message.
@@ -36,13 +36,13 @@ These functions are the ones used by Gregoriotex internally as it process the co
 	A luatex attribute used for translation centering.
 
 \verb=\gregoriotexversion#1=%tex.tex
-	Defines the current version of GregorioTeX API.  #1 is an integer date in format: yyyymmdd
+	Defines the current version of GregorioTeX API.  \#1 is an integer date in format: yyyymmdd
 
 \verb=\gre@internalversion#1=%tex.tex
-	The version of GregorioTeX.  #1 is an integer date in format: yyyymmdd
+	The version of GregorioTeX.  \#1 is an integer date in format: yyyymmdd
 
 \verb=\gre@declarefileversion#1#2=%tex.tex
-	Checks to see if GregorioTeX component #1 (a string containing the name) with version #2 (an integer in date format yyyymmdd) is compatible with \verb=\gre@internalversion=
+	Checks to see if GregorioTeX component \#1 (a string containing the name) with version \#2 (an integer in date format yyyymmdd) is compatible with \verb=\gre@internalversion=
 
 \verb=\gre@factor=%tex.tex
 	Count representing the size of the staff.  Initialized to 0, but changed to 17 by \verb=\begingregorianscore= if user hasn't changed it.
@@ -73,11 +73,11 @@ These functions are the ones used by Gregoriotex internally as it process the co
 
 \verb=\gre@newlinecommon#1#2#3#4#5=%tex.tex
 	Macro we call each time we force a changing of line, it automatically sets \verb=\greknownline=, and adjusts left spaces.
-	#1 --- integer: 0 = no note above staff; 1 = note above 4th line (position k); 2 = note on 5th line (position l); 3 = note above 5th line (position m)
-	#2 --- integer: 0 = no note below staff; 1 note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
-	#3 --- integer: 0 = no translation; 1 = translation present
-	#4 --- integer: 0 = justify line; 1 = do not justify line
-	#5 --- integer: 0 = no extra space above staff; 1 = extra space above staff
+	\#1 --- integer: 0 = no note above staff; 1 = note above 4th line (position k); 2 = note on 5th line (position l); 3 = note above 5th line (position m)
+	\#2 --- integer: 0 = no note below staff; 1 note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
+	\#3 --- integer: 0 = no translation; 1 = translation present
+	\#4 --- integer: 0 = justify line; 1 = do not justify line
+	\#5 --- integer: 0 = no extra space above staff; 1 = extra space above staff
 
 \verb=\gre@additionalbottomspace=%tex.tex
 	Dimension representing extra space below the staff needed for low notes.
@@ -87,8 +87,8 @@ These functions are the ones used by Gregoriotex internally as it process the co
 
 \verb=\gre@updateadditionalspaces#1#2=%tex.tex
 	Macro which updates \verb=\gre@additionalbottomspace= and \verb=\gre@additionaltopspace=
-%	#1 --- integer: 0 = no note above staff; 1 = note above 4th line (position k); 2 = note on 5th line (position l); 3 = note above 5th line (position m)
-%	#2 --- integer: 0 = no note below staff; 1 note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
+%	\#1 --- integer: 0 = no note above staff; 1 = note above 4th line (position k); 2 = note on 5th line (position l); 3 = note above 5th line (position m)
+%	\#2 --- integer: 0 = no note below staff; 1 note below 1st line (position c); 2 = note on 0th line (position b); 3 = note below 0th line (position a); 4 = note below 0th line (position a) with vertical episemus
 
 \verb=\gre@textlower=%tex.tex
 	Dimension representing the height of the separation between the 0th line (which is invisible except for notes in the a or b position) and the bottom of the text.
@@ -100,16 +100,16 @@ These functions are the ones used by Gregoriotex internally as it process the co
 	Dimension representing width of some element.
 
 \verb=\gre@widthof#1=%tex.tex
-	Macro which calculates \verb=\gre@tempwidth= as width of #1.
+	Macro which calculates \verb=\gre@tempwidth= as width of \#1.
 
 \verb=\gre@textaligncenter=%tex.tex
 	Dimension representing the width from the beginning of the letters in a syllable to the middle of the middle letters.  Used for lining up neumes and syllables.
 	
 \verb=\gre@findtextaligncenter#1#2#3=%tex.tex
 	Macro for calculating \verb=\gre@textaligncenter=.
-	#1 --- string: The first part of the syllable (any preceding consonants in Latin)
-	#2 --- string: The middle part of the syllable (the vowel in Latin)
-	#3 --- integer: syllable the calculation is being performed for; 0 = current syllable; 1 = next syllable
+	\#1 --- string: The first part of the syllable (any preceding consonants in Latin)
+	\#2 --- string: The middle part of the syllable (the vowel in Latin)
+	\#3 --- integer: syllable the calculation is being performed for; 0 = current syllable; 1 = next syllable
 
 \verb=\gre@additionalleftspace=%tex.tex
 	Dimension representing the additional space that has to be added to the localleftbox for a big initial (one taking two lines).
@@ -133,10 +133,10 @@ These functions are the ones used by Gregoriotex internally as it process the co
 	Macro which adjusts the width of the line.
 
 \verb=\gre@initialformat#1=%tex.tex
-	Macro which applies formatting in \verb=initialformat= environment to initial (#1, a character).
+	Macro which applies formatting in \verb=initialformat= environment to initial (\#1, a character).
 
 \verb=\gre@biginitialformat#1=%tex.tex
-	Macro which applies formatting in \verb=biginitialformat= environment to initial (#1, a character).
+	Macro which applies formatting in \verb=biginitialformat= environment to initial (\#1, a character).
 
 \verb=\Gre@Aboveinitialfirstbox=%tex.tex
 	The box which contains the first (top) annotation above the initial.
@@ -166,7 +166,7 @@ These functions are the ones used by Gregoriotex internally as it process the co
 	Macro to unallocate space for text above the staff lines.
 
 \verb=\gre@currenttextabovelines#1=%tex.tex
-	Macro containing the text (#1) which is currently being placed above the staff lines.
+	Macro containing the text (\#1) which is currently being placed above the staff lines.
 
 \verb=\gre@typsettextabovelines#1=%tex.tex
 	Macro to typeset argument (a string) above the staff lines.
@@ -289,7 +289,7 @@ These functions are the ones used by Gregoriotex internally as it process the co
 	Count for tracking whether we are in a discretionary (1) or not (0).
 
 \verb=\gre@discretionary#1#2=%tex-signs.tex
-	Sets \verb=\gre@hskip=, \verb=\gre@penalty=, \verb=\gre@insidediscretionary= to their within discretionary values and then calls \verb=\discretionary#1#2#3=.  #2 (a string) is a non-printing string which sets \verb=\gre@lastoflinecount= to 2.  After resolving the \verb=\discretionary= command \verb=\gre@hskip=, \verb=\gre@penalty=, and \verb=\gre@insidediscretionary= are restored to their outside values.
+	Sets \verb=\gre@hskip=, \verb=\gre@penalty=, \verb=\gre@insidediscretionary= to their within discretionary values and then calls \verb=\discretionary#1#2#3=.  \#2 (a string) is a non-printing string which sets \verb=\gre@lastoflinecount= to 2.  After resolving the \verb=\discretionary= command \verb=\gre@hskip=, \verb=\gre@penalty=, and \verb=\gre@insidediscretionary= are restored to their outside values.
 
 \verb=\gre@removeclefcount=%tex-signs.tex
 	Count for indicating if the clef should be printed (1) or not (0).
@@ -302,37 +302,37 @@ These functions are the ones used by Gregoriotex internally as it process the co
 
 \verb=\gre@setlinesclef#1#2#3#4=%tex-signs.tex
 	Macro to define the clef that will appear at the beginning of the lines.
-	#1 --- character: type of clef (c or f)
-	#2 --- character: height of clef (using gabc height letters)
-	#3 --- integer: add a space after the clef (1), or not (0)
-	#4 --- character: height of flat after clef (using gabc height letters, a = no flat)
+	\#1 --- character: type of clef (c or f)
+	\#2 --- character: height of clef (using gabc height letters)
+	\#3 --- integer: add a space after the clef (1), or not (0)
+	\#4 --- character: height of flat after clef (using gabc height letters, a = no flat)
 
 \verb=\gre@calculateclefnum#1#2#3=%tex-signs.tex
 	Macro to calculate the clef number and store it in \verb=\gre@clefnum=.
-	#1 --- character: type of clef (c or f)
-	#2 --- integer: line on which the clef appears (1--4)
-	#3 --- character: height of flat after clef (using gabc height letters, a = no flat)
+	\#1 --- character: type of clef (c or f)
+	\#2 --- integer: line on which the clef appears (1--4)
+	\#3 --- character: height of flat after clef (using gabc height letters, a = no flat)
 
 \verb=\gre@updatelinesclef=%tex-signs.tex
 	Macro redrawing a key from \verb=\gre@clefnum=.  Useful for vertical space changes.
 	
 \verb=\gre@typekey#1#2#3#4#5=%tex-signs.tex
 	Macro for typesetting the key signature.
-	#1 --- character: type of clef (c or f)
-	#2 --- integer: line of the key (1 to 4)
-	#3 --- integer: Use small key characters (1), or not (0)
-	#4 --- integer: Print a space after the key (1), or not (0)
-	#5 --- character: Height of flat in key (‘a’ for no flat)
+	\#1 --- character: type of clef (c or f)
+	\#2 --- integer: line of the key (1 to 4)
+	\#3 --- integer: Use small key characters (1), or not (0)
+	\#4 --- integer: Print a space after the key (1), or not (0)
+	\#5 --- character: Height of flat in key (‘a’ for no flat)
 
 \verb=\gre@inchangeclef#1#2#3=%tex-signs.tex
 	Macro for changing key inside a syllable.
-	#1 --- character: type of clef (c or f)
-	#2 --- integer: line on which the clef appears (1--4)
-	#3 --- character: height of flat after clef (using gabc height letters, a = no flat)
+	\#1 --- character: type of clef (c or f)
+	\#2 --- integer: line on which the clef appears (1--4)
+	\#3 --- character: height of flat after clef (using gabc height letters, a = no flat)
 
 \verb=\gre@setcusto#1=%tex-signs.tex
 	Macro for typesetting custos.
-	#1 --- character: height of custom
+	\#1 --- character: height of custom
 
 \verb=\gre@additionaltopcusotolineend=%tex-signs.tex
 	Macro for typesetting the line behind a high custos at end of line.
@@ -348,7 +348,7 @@ These functions are the ones used by Gregoriotex internally as it process the co
 
 \verb=\gre@custocahar#1=%tex-signs.tex
 	Selects the appropriate custos character.
-	#1 --- character: height of the custos
+	\#1 --- character: height of the custos
 
 \verb=\gre@curlybracechar=%tex-signs.tex
 	Macro for the char ‘\{‘ (which is rotated 90 and placed over the notes)
@@ -373,25 +373,25 @@ These functions are the ones used by Gregoriotex internally as it process the co
 
 \verb=\gre@vepisemusorrareaux#1#2#3#4#5#6#7=%tex-signs.tex
 	Macro help with typesetting of episemus.
-	#1 --- character: A preceding symbol needed for calculating position of episemus.
-	#2 --- character: Another preceding symbol.
-	#3 --- integer: Indicates how far to move back; 0 = go back to beginning of glyph, 1 = go back width of #2, 2 = go back width of #1 and forward width of #2, 3 = go to beginning of glyph, forward by width of #1 and back width of #2
-	#4 --- integer: An additional shift (in sp) to apply to the episemus.
-	#5 --- integer: Use ictus arsicus (1) or ictus theticus (2)
-	#6 --- integer: Set a vertical episemus (1), a rare sign (2), a choral sign (3), or a brace above the bar (4)
-	#7 --- integer: If #6=3 then the choral sign.
+	\#1 --- character: A preceding symbol needed for calculating position of episemus.
+	\#2 --- character: Another preceding symbol.
+	\#3 --- integer: Indicates how far to move back; 0 = go back to beginning of glyph, 1 = go back width of \#2, 2 = go back width of \#1 and forward width of \#2, 3 = go to beginning of glyph, forward by width of \#1 and back width of \#2
+	\#4 --- integer: An additional shift (in sp) to apply to the episemus.
+	\#5 --- integer: Use ictus arsicus (1) or ictus theticus (2)
+	\#6 --- integer: Set a vertical episemus (1), a rare sign (2), a choral sign (3), or a brace above the bar (4)
+	\#7 --- integer: If \#6=3 then the choral sign.
 
 \verb=\gre@vepisemusorrare#1#2#3#4#5=%tex-signs.tex
 	Macro for typesetting vertical episemus or rare accent.
-	#1 --- character: height of episemus
-	#2 --- integer: Type of glyph the episemus is attached to.  See episemus special argument for description of options.
-	#3 --- integer: Glyph number of glyph being typeset
-	#4 --- integer: Set a vertical episemus (1), a rare sign (2), a choral sign (3), or a brace above the bar (4)
-	#5 --- string: If #4=3 then the choral sign.
+	\#1 --- character: height of episemus
+	\#2 --- integer: Type of glyph the episemus is attached to.  See episemus special argument for description of options.
+	\#3 --- integer: Glyph number of glyph being typeset
+	\#4 --- integer: Set a vertical episemus (1), a rare sign (2), a choral sign (3), or a brace above the bar (4)
+	\#5 --- string: If \#4=3 then the choral sign.
 
 \verb=\grewriteaux#1=%tex.tex
 	Macro for writing to the aux file.
-	#1 --- string: what is written to the aux file.
+	\#1 --- string: what is written to the aux file.
 
 \verb=\opengreaux=%tex.tex
 	Macro for opening the aux file.
@@ -401,21 +401,21 @@ These functions are the ones used by Gregoriotex internally as it process the co
 
 \verb=\gre@ictus#1=%tex-signs.tex
 	Macro for writing the position of an ictus to the aux file.
-	#1 --- integer: type of ictus which was typeset, 1 = type a, 2 = type t
+	\#1 --- integer: type of ictus which was typeset, 1 = type a, 2 = type t
 
 \verb=\gre@hepisorlineaux#1#2#3#4=%tex-signs.tex
 	Macro for helping to typeset a horizontal episemus and additional line.
-	#1 --- character: a glyph having the same width as the width between the end of the glyph and the beginning of the episemus
-	#2 --- integer: glyph number of the episemus
-	#3 --- integer: go to beginning of glyph (0), or not (else)
-	#4 --- integer: set horizontal episemus (0), horizontal episemus under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4)
+	\#1 --- character: a glyph having the same width as the width between the end of the glyph and the beginning of the episemus
+	\#2 --- integer: glyph number of the episemus
+	\#3 --- integer: go to beginning of glyph (0), or not (else)
+	\#4 --- integer: set horizontal episemus (0), horizontal episemus under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4)
 
 \verb=\gre@hepisorline#1#2#3#4=%tex-signs.tex
 	Macro for typesetting a horizontal line (additional line or episemus).
-	#1 --- character: Height of the episemus
-	#2 --- special: See Episemus special
-	#3 --- integer: The ambitus of the porrectus or porrectus flexes if the second argument is 9, 10, 11, 21, 22, 23; ignored otherwise
-	#4 --- integer: set horizontal episemus (0), horizontal episemus under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4)
+	\#1 --- character: Height of the episemus
+	\#2 --- special: See Episemus special
+	\#3 --- integer: The ambitus of the porrectus or porrectus flexes if the second argument is 9, 10, 11, 21, 22, 23; ignored otherwise
+	\#4 --- integer: set horizontal episemus (0), horizontal episemus under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4)
 
 \verb=\gre@AddHEpisemusBridges=%tex-signs.tex
 	Macro to activate bridging horizontal episemus.
@@ -425,9 +425,9 @@ These functions are the ones used by Gregoriotex internally as it process the co
 
 \verb=\gre@writebar#1#2#3=%tex-signs.tex
 	Macro to typeset a bar line.
-	#1 --- integer: Type of bar line: virgula (0), minima (2), maior (3), finalis (4), last finalis (5), dominican bar 1 (6), dominican bar 2 (7), dominican bar 3 (8), dominican bar 4 (9), dominican bar 5 (10), or dominican bar 6 (11)
-	#2 --- integer: The bar appears within a syllable (1), or not (0)
-	#3 --- code: Macros which may happen before the skip but after the bar (typically \verb=\grevepisemus=)
+	\#1 --- integer: Type of bar line: virgula (0), minima (2), maior (3), finalis (4), last finalis (5), dominican bar 1 (6), dominican bar 2 (7), dominican bar 3 (8), dominican bar 4 (9), dominican bar 5 (10), or dominican bar 6 (11)
+	\#2 --- integer: The bar appears within a syllable (1), or not (0)
+	\#3 --- code: Macros which may happen before the skip but after the bar (typically \verb=\grevepisemus=)
 
 \verb=\gre@tempdimtwo=
 	A temporary dimension used in calculations.
@@ -449,17 +449,17 @@ These functions are the ones used by Gregoriotex internally as it process the co
 
 \verb=\gre@fillhole#1=%tex-signs.tex
 	Character to fill a hole in a character with the color grebackgroundcolor.
-	#1 --- character: The shape of the hole.
+	\#1 --- character: The shape of the hole.
 
 \verb=\gre@firstisalteration=%tex-signs.tex
 	Count to track if the first glyph is an alteration.
 
 \verb=\gre@alteration#1#2#3#4=%tex-signs.tex
 	Macro to typeset an alteration (sharp, flat, or natural).
-	#1 --- character: The height of the alteration
-	#2 --- character: The alteration itself.
-	#3 --- character: The character of the hole for the alteration.
-	#4 --- integer: Indicates a flat for a key change (1), or not (0).
+	\#1 --- character: The height of the alteration
+	\#2 --- character: The alteration itself.
+	\#3 --- character: The character of the hole for the alteration.
+	\#4 --- integer: Indicates a flat for a key change (1), or not (0).
 
 \section{Special arguments}
 
@@ -497,3 +497,8 @@ Integer with the following possibilities:
     26: the last note, if it is a virgula
     27: the last note, if it is a divisio finalis
 
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "Documentation"
+%%% End:

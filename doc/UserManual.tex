@@ -1,0 +1,32 @@
+\documentclass[12pt]{article}
+%\usepackage[letterpaper, margin=1.25in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage{times}
+\usepackage[lighttt]{lmodern}
+\usepackage{color}
+
+\usepackage{minted}
+
+\usepackage{xspace}
+\newcommand*{\eg}{e.g.\@\xspace}
+\newcommand*{\nb}{n.b.\@\xspace}
+\newcommand*{\ie}{i.e.\@\xspace}
+
+\makeatletter
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalsize\ttfamily\bfseries}}
+\makeatother
+
+\begin{document}
+
+
+
+\input{Command_Index_User}
+% \input{Command_Index_internal}
+% \input{Command_Index_gregorio}
+
+
+\end{document}
