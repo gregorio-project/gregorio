@@ -1,0 +1,86 @@
+*~
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+*.lo
+*.la
+
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.gaux
+
+## Intermediate documents:
+*.dvi
+# these rules might exclude image files for figures etc.
+*.ps
+*.eps
+*.pdf
+
+## Build tool auxiliary files:
+*.fdb_latexmk
+*.synctex.gz
+*.synctex.gz(busy)
+*.pdfsync
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# http://www.gnu.org/software/automake
+Makefile.in
+Makefile
+# http://www.gnu.org/software/autoconf
+/autom4te.cache
+/aclocal.m4
+/compile
+/configure
+/depcomp
+/install-sh
+/missing
+/stamp-h1
+/build-aux
+.deps
+.libs
+/m4
+/libtool
+config.status
+lib/gregorio.pc
+src/gregorio
+
+
+#gregorio specific
+
+*.zip
+plugins/gabc/gabc-score-determination-y*
+plugins/gabc/gabc-score-determination-l*
+plugins/gabc/gabc-notes-determination-l*
+windows/Ouput
+completetest.gtex

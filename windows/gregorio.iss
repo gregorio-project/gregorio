@@ -1,13 +1,13 @@
 [Setup]
 AppName=gregorio
-AppVersion=2.3
+AppVersion=2.4
 DefaultDirName={pf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
 Compression=lzma2
 SolidCompression=yes
 LicenseFile=license.txt
-AppCopyright=Copyright (C) 2006-2013 Elie Roux
+AppCopyright=Copyright (C) 2006-2014 Elie Roux
 AppComments=Gregorian chant typesetting software.
 AppContact=gregorio-devel@gna.org
 AppPublisher=Elie Roux
@@ -31,15 +31,15 @@ Name: "{app}\examples"
 Name: "{app}\contrib\TeXworks"
 
 [Files]
-Source: "gregorio.exe"; DestDir: "{app}";
+Source: "../src/gregorio.exe"; DestDir: "{app}";
 Source: "gregorio.ico"; DestDir: "{app}";
 Source: "install.lua"; DestDir: "{app}";
 Source: "README.txt"; DestDir: "{app}"; Flags: isreadme
 Source: "license.txt"; DestDir: "{app}";
-Source: "contrib\*"; DestDir: "{app}\contrib";
-Source: "examples\*"; DestDir: "{app}\examples";
-Source: "gregoriotex.tds.zip"; DestDir: "{app}";
-Source: "contrib\TeXworks\Windows\*"; DestDir: "{app}\contrib\TeXworks";
+Source: "../contrib\*"; DestDir: "{app}\contrib";
+Source: "../examples\*"; DestDir: "{app}\examples";
+Source: "../fonts/gregoriotex.tds.zip"; DestDir: "{app}";
+Source: "../contrib\TeXworks\Windows\*"; DestDir: "{app}\contrib\TeXworks";
 
 [Run]
 Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";

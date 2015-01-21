@@ -1,7 +1,7 @@
-% !TEX TS-program = gregorio
+% !TEX root = completetest.tex
 % !TEX encoding = UTF-8
 
-% The first part of the score is called the header, you can input some useful informations here:
+%The first part of the score is called the header, you can input some useful informations here:
 name: Pópulus Sion;
 office-part: Introitus;
 occasion: Dominica II Adventus;
@@ -9,77 +9,84 @@ date: 2006;
 transcriber: Elie Roux;
 transcription-date: 2006;
 style: modern;
+initial-style: 0;
+centering-scheme: english;
 
-def-m1:%test72;
+def-m1:macro;
 %%
+(c3)
 %
-% notes
+<alt>notes:</alt> 
 %
-a(a) b(b) c(c) d(d) e(e) f(f) g(g) h(h) i(i) j(j) k(k) l(l) m(m)
+a(a) b(b) c(c) d(d) e(e) f(f) g(g) h(h) i(i) j(j) k(k) l(l) m(m) (Z)
 %
-% shapes:
+<alt>shapes:</alt>
 %
-fg(fg) gvFE(gvFE) ghg(ghg) ghgh(ghgh) ghghg(ghghg) gwhghg(gwhghg) gqh(gqh) gwh(gwh) gWh(gWh) go(go) goh(goh) gf(gf) gwf(gwf) gof(gofZ) g=(g=) h=(h=) go<(go<) go<sp>~</sp>(go~) ab(gFE<) ab(gFE~) gs(gs) gs<(gs<) fvE'D.(fvE'D.) gvFD(gvFD) hvGD(hvGD) ivHD(ivHD)
+g(g) g<sp>~</sp>(g~) g<tt><</tt>(g<) g<tt>></tt>(g>) g=(g=) h=(h=) G(G) G<sp>~</sp>(G~) G<tt>></tt>(G>) go(go) go<sp>~</sp>(go~) go<tt><</tt>(go<) gw(gw) gv(gv) gV(gV) gs(gs) gs<tt><</tt>(gs<) (Z)
+
+fg(fg) gvFE(gvFE) ghg(ghg) ghgh(ghgh) ghghg(ghghg) gwhghg(gwhghg) gqh(gqh) gwh(gwh) gWh(gWh) goh(goh) gf(gf) gwf(gwf) gof(gofZ)
+
+gFE<tt><</tt>(gFE<) gFE<sp>~</sp>(gFE~) fvE<v>{\textquotesingle}</v>D.(fvE'D.) gvFD(gvFD) hvGD(hvGD) ivHD(ivHD) (Z)
 %
-% pes:
+<alt>pes:</alt>
 %
 f.g(f.g) fg.(fg.) g.h(g.h) gh.(gh.Z)
 -f.g(-f.g) -fg.(-fg.) -g.h(-g.h) -gh.(-gh.Z)
-f.g~(f.g~) fg.~(fg.~) g.h~(g.h~) gh.~(gh.~Z) 
-f.g<(f.g<) fg.<(fg.<) g.h<(g.h<) gh.<(gh.<Z)
-f.g>(f.g>) fg.>(fg.>) g.h>(g.h>) gh.>(gh.>Z)
--f.g~(f.g~) -fg.~(fg.~) -g.h~(g.h~) -gh.~(gh.~Z)
--f.g<(f.g<) -fg.<(fg.<) -g.h<(g.h<) -gh.<(gh.<Z)
--f.h<(f.h<) -fh.<(fh.<) -g.i<(g.i<) -gi.<(gi.<Z)
-fg..(fg..) gh..(gh..) gf..(gf..) hg..(hg..) fh..(fh..) gi..(gi..) fi..(fi..) gj..(gj..) hf..(hf..) ig..(ig..) if..(if..) jg..(jg..) f..(f..) g..(g..) -fg..(-fg..) -gh..(-gh..) fg..~(fg..~) gh..~(gh..~) fg..<(fg..<) gh..<(gh..<Z)
-f'g(f'g) fg'(fg') f'g'(f'g') f'h'(f'h') f'i' (f'i') f'j'(f'j') f'_g'(f'_g') f'g'_(f'_g')
--f'g(-f'g) -fg'(-fg') -f'g'(-f'g') -f'h'(-f'h') -f'i' (-f'i') -f'j'(-f'j') -f'_g'(-f'_g') -f'g'_(-f'_g')
-f.'g(f.g) fg.'(fg.) g.'h(g.h) gh.'(gh.Z)
+f.g<sp>~</sp>(f.g~) fg.<sp>~</sp>(fg.~) g.h<sp>~</sp>(g.h~) gh.<sp>~</sp>(gh.~Z) 
+f.g<tt><</tt>(f.g<) fg.<tt><</tt>(fg.<) g.h<tt><</tt>(g.h<) gh.<tt><</tt>(gh.<Z)
+f.g<tt>></tt>(f.g>) fg.<tt>></tt>(fg.>) g.h<tt>></tt>(g.h>) gh.<tt>></tt>(gh.>Z)
+-f.g<sp>~</sp>(f.g~) -fg.<sp>~</sp>(fg.~) -g.h<sp>~</sp>(g.h~) -gh.<sp>~</sp>(gh.~Z)
+-f.g<tt><</tt>(f.g<) -fg.<tt><</tt>(fg.<) -g.h<tt><</tt>(g.h<) -gh.<tt><</tt>(gh.<Z)
+-f.h<tt><</tt>(f.h<) -fh.<tt><</tt>(fh.<) -g.i<tt><</tt>(g.i<) -gi.<tt><</tt>(gi.<Z)
+fg..(fg..) gh..(gh..) gf..(gf..) hg..(hg..) fh..(fh..) gi..(gi..) fi..(fi..) gj..(gj..) hf..(hf..) ig..(ig..) if..(if..) jg..(jg..) f..(f..) g..(g..) -fg..(-fg..) -gh..(-gh..) fg..<sp>~</sp>(fg..~) gh..<sp>~</sp>(gh..~) fg..<tt><</tt>(fg..<) gh..<tt><</tt>(gh..<Z)
+f<v>{\textquotesingle}</v>g(f'g) fg<v>{\textquotesingle}</v>(fg') f<v>{\textquotesingle}</v>g<v>{\textquotesingle}</v>(f'g') f<v>{\textquotesingle}</v>h<v>{\textquotesingle}</v>(f'h') f<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v> (f'i') f<v>{\textquotesingle}</v>j<v>{\textquotesingle}</v>(f'j') f<v>{\textquotesingle}</v>_g<v>{\textquotesingle}</v>(f'_g') f<v>{\textquotesingle}</v>g<v>{\textquotesingle}</v>_(f'_g')
+-f<v>{\textquotesingle}</v>g(-f'g) -fg<v>{\textquotesingle}</v>(-fg') -f<v>{\textquotesingle}</v>g<v>{\textquotesingle}</v>(-f'g') -f<v>{\textquotesingle}</v>h<v>{\textquotesingle}</v>(-f'h') -f<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v>(-f'i') -f<v>{\textquotesingle}</v>j<v>{\textquotesingle}</v>(-f'j') -f<v>{\textquotesingle}</v>_g<v>{\textquotesingle}</v>(-f'_g') -f<v>{\textquotesingle}</v>g<v>{\textquotesingle}</v>_(-f'_g')
+f.<v>{\textquotesingle}</v>g(f.'g) fg.<v>{\textquotesingle}</v>(fg.') g.<v>{\textquotesingle}</v>h(g.'h) gh.<v>{\textquotesingle}</v>(gh.'Z)
 %
-% virga:
+<alt>virga:</alt>
 %
-gf<(gf<) gf>(gf>) -gf(-gf) gf~(gf~Z)
+gf<tt><</tt>(gf<) gf<tt>></tt>(gf>) -gf(-gf) gf<sp>~</sp>(gf~Z)
 g.f(g.f) gf.(gf.) gf..(gf..) g.f.(g.f.Z)
-g'f(g'f) gf'(gf') g'f'(g'f') h'f(h'f) hf'(hf') h'f'(h'f'Z) 
+g<v>{\textquotesingle}</v>f(g'f) gf<v>{\textquotesingle}</v>(gf') g<v>{\textquotesingle}</v>f<v>{\textquotesingle}</v>(g'f') h<v>{\textquotesingle}</v>f(h'f) hf<v>{\textquotesingle}</v>(hf') h<v>{\textquotesingle}</v>f<v>{\textquotesingle}</v>(h'f'Z) 
 g_f(g_f) gf_(gf_) g_f_(g_f_) h_f(h_f) hf_(hf_) h_f_(h_f_Z)
-g.'f(g.'f) gf'.(gf'.) g'.f'.(g'.f'.) h.'f(h.'f) hf.'(hf.') h.'f.'(h.'f.'Z)
-g.'fo(g.'f) gfo'.(gf'.) go'.fo'.(g'.f'.) h.'fo(h.'f) hfo.'(hf.') h.'fo.'(h.'f.'Z)
-gof<(gof<) gof>(gof>) -gof(-gof) gof~(gof~Z)
+g.<v>{\textquotesingle}</v>f(g.'f) gf<v>{\textquotesingle}</v>.(gf'.) g<v>{\textquotesingle}</v>.f<v>{\textquotesingle}</v>.(g'.f'.) h.<v>{\textquotesingle}</v>f(h.'f) hf.<v>{\textquotesingle}</v>(hf.') h.<v>{\textquotesingle}</v>f.<v>{\textquotesingle}</v>(h.'f.'Z)
+g.<v>{\textquotesingle}</v>fo(g.'fo) gfo<v>{\textquotesingle}</v>.(gfo'.) go<v>{\textquotesingle}</v>.fo<v>{\textquotesingle}</v>.(go'.fo'.) h.<v>{\textquotesingle}</v>fo(h.'fo) hfo.<v>{\textquotesingle}</v>(hfo.') h.<v>{\textquotesingle}</v>fo.<v>{\textquotesingle}</v>(h.'fo.'Z)
+gof<tt><</tt>(gof<) gof<tt>></tt>(gof>) -gof(-gof) gof<sp>~</sp>(gof~Z)
 g.of(go.f) gof.(gof.) gof..(gof..) g.of.(go.f.Z)
-go'f(go'f) gof'(gof') g'of'(go'f') h'of(ho'f) hof'(hof') h'of'(ho'f'Z) 
+go<v>{\textquotesingle}</v>f(go'f) gof<v>{\textquotesingle}</v>(gof') g<v>{\textquotesingle}</v>of<v>{\textquotesingle}</v>(go'f') h<v>{\textquotesingle}</v>of(ho'f) hof<v>{\textquotesingle}</v>(hof') h<v>{\textquotesingle}</v>of<v>{\textquotesingle}</v>(ho'f'Z) 
 g_of(go_f) gof_(gof_) g_of_(go_f_) h_of(ho_f) hof_(hof_) h_of_(ho_f_Z)
-g.o'f(go.'f) gof'.(gof'.) g'o.f'.(go'.f'.) ho.'f(ho.'f) hof.'(hof.') ho.'f.'(ho.'f.'Z)
+g.o<v>{\textquotesingle}</v>f(go.'f) gof<v>{\textquotesingle}</v>.(gof'.) go<v>{\textquotesingle}</v>.f<v>{\textquotesingle}</v>.(go'.f'.) ho.<v>{\textquotesingle}</v>f(ho.'f) hof.<v>{\textquotesingle}</v>(hof.') ho.<v>{\textquotesingle}</v>f.<v>{\textquotesingle}</v>(ho.'f.'Z)
 %
-% torculus
+<alt>torculus:</alt>
 %
 ghg(ghg) fif(fifZ)
 %
 gh.g(gh.g) fi.f(fi.f) ghg.(ghg.) fif.(fif.) g.h.g.(g.h.g.) f.i.f.(f.i.f.) ghg..(ghg..) fif..(fif..Z)  
 g_hg(g_hg) f_if(f_if) gh_g(gh_g) fi_f(fi_f) ghg_(ghg_) fif_(fif_) g_h_g_(g_h_g_) f_i_f_(f_i_f_Z)
-g'hg(g'hg) f'if(f'if) gh'g(gh'g) fi'f(fi'f) ghg'(ghg') fif'(fif') g'h'g'(g'h'g') f'i'f'(f'i'f'Z)
-g'hg(g'hg) f'if(f'if) gh.'g(gh.'g) fi.'f(fi.'f) gh.'g(gh.'g) fif.'(fif.') g'h.'g.'(g'h.'g.') f'i.'f.'(f'i.'f.'Z)
+g<v>{\textquotesingle}</v>hg(g'hg) f<v>{\textquotesingle}</v>if(f'if) gh<v>{\textquotesingle}</v>g(gh'g) fi<v>{\textquotesingle}</v>f(fi'f) ghg<v>{\textquotesingle}</v>(ghg') fif<v>{\textquotesingle}</v>(fif') g<v>{\textquotesingle}</v>h<v>{\textquotesingle}</v>g<v>{\textquotesingle}</v>(g'h'g') f<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v>f<v>{\textquotesingle}</v>(f'i'f'Z)
+g<v>{\textquotesingle}</v>hg(g'hg) f<v>{\textquotesingle}</v>if(f'if) gh.<v>{\textquotesingle}</v>g(gh.'g) fi.<v>{\textquotesingle}</v>f(fi.'f) gh.<v>{\textquotesingle}</v>g(gh.'g) fif.<v>{\textquotesingle}</v>(fif.') g<v>{\textquotesingle}</v>h.<v>{\textquotesingle}</v>g.<v>{\textquotesingle}</v>(g'h.'g.') f<v>{\textquotesingle}</v>i.<v>{\textquotesingle}</v>f.<v>{\textquotesingle}</v>(f'i.'f.'Z)
 %
-% porrectus
+<alt>porrectus:</alt>
 %
 hgh(hgh) ifi(ifiZ)
 hg.h(hg.h) if.i(if.i) hgh.(hgh.) ifi.(ifi.) hg.h.(hg.h.) if.i.(if.i.) hgh..(hgh..) ifi..(ifi..Z)  
 h_gh(h_gh) i_fi(i_fi) hg_h(hg_h) if_i(if_i) hg_h_(hg_h_) if_i_(if_i_) h_g_h(h_g_h) i_f_i(i_f_i) ghg_(hgh_) ifi_(ifi_) h_g_h_(h_g_h_) i_f_i_(i_f_i_Z)
-h'gh(h'gh) f'if(i'fi) hg'h(hg'h) if'f(if'i) hgh'(hgh') ifi'(ifi') h'g'h'(h'g'h') f'i'f'(i'f'i'Z)
-g.'hg(h.'gh) i.'fi(i.'fi) gh.'g(hg.'h) if.'i(if.'f) gh.'g(hg.'h) ifi.'(ifi.') g.'h.'g.'(h.'g.'h.') f.'i.'f.'(i.'f.'i.'Z)
+h<v>{\textquotesingle}</v>gh(h'gh) f<v>{\textquotesingle}</v>if(i'fi) hg<v>{\textquotesingle}</v>h(hg'h) if<v>{\textquotesingle}</v>f(if'i) hgh<v>{\textquotesingle}</v>(hgh') ifi<v>{\textquotesingle}</v>(ifi') h<v>{\textquotesingle}</v>g<v>{\textquotesingle}</v>h<v>{\textquotesingle}</v>(h'g'h') f<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v>f<v>{\textquotesingle}</v>(i'f'i'Z)
+g.<v>{\textquotesingle}</v>hg(h.'gh) i.<v>{\textquotesingle}</v>fi(i.'fi) gh.<v>{\textquotesingle}</v>g(hg.'h) if.<v>{\textquotesingle}</v>i(if.'f) gh.<v>{\textquotesingle}</v>g(hg.'h) ifi.<v>{\textquotesingle}</v>(ifi.') g.<v>{\textquotesingle}</v>h.<v>{\textquotesingle}</v>g.<v>{\textquotesingle}</v>(h.'g.'h.') f.<v>{\textquotesingle}</v>i.<v>{\textquotesingle}</v>f.<v>{\textquotesingle}</v>(i.'f.'i.'Z)
 %
-% torculus resupinus
+<alt>torculus resupinus:</alt>
 %
-{ghgi}(ghgi) fifg~(fifg~) fifg(fifgZ)
+{ghgi}(ghgi) fifg<sp>~</sp>(fifg~) fifg(fifgZ)
 %
 {ghg.i}(ghg.i) fif.g(fif.g) {ghgi.}(ghgi.) fifg.(fifg.) {g.h.g.i}(g.h.g.i) f.i.f.g(f.i.f.g) {gh}gi..(ghgi..) fifg..(fifg..Z)  
 %
 {g_}hgi(g_hgi) f_ifg(f_ifg) {gh}_gi(gh_gi) fi_fg(fi_fg) {gh}g_i(ghg_i) fif_g(fif_g) {gh}gi_(ghgi_) fifg_(fifg_) {gh}g_i_(ghg_i_) fif_g_(fif_g_) {gh}_g_i(gh_g_i) fi_f_g(fi_f_g) {g_h}_gi(g_h_gi) f_i_fg(f_i_fg) {g_h}_g_i(g_h_g_i) f_i_f_g(f_i_f_g) {g_h}_g_i_(g_h_g_i_) f_i_f_g_(f_i_f_g_Z)
 %
-{g'}hgi(g'hgi) f'ifg(f'ifg) {g}h'gi(gh'gi) fi'fg(fi'fg) {g}hg'i(ghg'i) fif'g(fif'g) {g}hgi'(ghgi') fifg'(fifg') {g}'h'g'i(g'h'g'i) f'i'f'g(f'i'f'g) {g}'h'g'i'(g'h'g'i') f'i'f'g'(f'i'f'g'Z)
+{g<v>{\textquotesingle}</v>}hgi(g'hgi) f<v>{\textquotesingle}</v>ifg(f'ifg) {g}h<v>{\textquotesingle}</v>gi(gh'gi) fi<v>{\textquotesingle}</v>fg(fi'fg) {g}hg<v>{\textquotesingle}</v>i(ghg'i) fif<v>{\textquotesingle}</v>g(fif'g) {g}hgi<v>{\textquotesingle}</v>(ghgi') fifg<v>{\textquotesingle}</v>(fifg') {g}<v>{\textquotesingle}</v>h<v>{\textquotesingle}</v>g<v>{\textquotesingle}</v>i(g'h'g'i) f<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v>f<v>{\textquotesingle}</v>g(f'i'f'g) {g}<v>{\textquotesingle}</v>h<v>{\textquotesingle}</v>g<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v>(g'h'g'i') f<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v>f<v>{\textquotesingle}</v>g<v>{\textquotesingle}</v>(f'i'f'g'Z)
 %
-fif.'g(fif.'g) {g}'h'g.'i(g'h'g.'i) f'i'f.'g(f'i'f.'g) {g}'h'g.'i.'(g'h'g.'i.')f'i'f.'g.'(f.'i.'f.'g.'Z)
+fif.<v>{\textquotesingle}</v>g(fif.'g) {g}<v>{\textquotesingle}</v>h<v>{\textquotesingle}</v>g.<v>{\textquotesingle}</v>i(g'h'g.'i) f<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v>f.<v>{\textquotesingle}</v>g(f'i'f.'g) {g}<v>{\textquotesingle}</v>h<v>{\textquotesingle}</v>g.<v>{\textquotesingle}</v>i.<v>{\textquotesingle}</v>(g'h'g.'i.') f<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v>f.<v>{\textquotesingle}</v>g.<v>{\textquotesingle}</v>(f.'i.'f.'g.'Z)
 %
-% torculus resupinus flexus
+<alt>torculus resupinus flexus:</alt>
 %
 {g}hgif(ghgif) fifg(fifgeZ)
 %
@@ -87,94 +94,100 @@ fif.'g(fif.'g) {g}'h'g.'i(g'h'g.'i) f'i'f.'g(f'i'f.'g) {g}'h'g.'i.'(g'h'g.'i.')f
 %
 {g_}hgif(g_hgif) f_ifge(f_ifge) {gh}_gif(gh_gif) fi_fge(fi_fge) {gh}g_if(ghg_if) fif_ge(fif_ge) {gh}gi_f(ghgi_f) fifg_e(fifg_e) {gh}gif_(ghgif_) fifge_(fifge_) {gh}g_i_f(ghg_i_f) fif_g_e(fif_g_e) {gh}_g_if(gh_g_if) fi_f_ge(fi_f_ge) {g_h}_gif(g_h_gif) f_i_fge(f_i_fge) {g_h}_g_if(g_h_g_if) f_i_f_ge(f_i_f_ge) {g_h}_g_i_f_(g_h_g_i_f_) f_i_f_g_e_(f_i_f_g_e_Z)
 %
-{g'}hgif(g'hgif) f'ifge(f'ifge) {g}h'gif(gh'gif) fi'fge(fi'fge) {g}hg'if(ghg'if) fif'ge(fif'ge) {g}hgi'f(ghgi'f) fifg'e(fifg'e) {g}hgif'(ghgif') fifge'(fifge') {g}'h'g'i'f'(g'h'g'i'f') f'i'f'g'e'(f'i'f'g'e'Z)
+{g<v>{\textquotesingle}</v>}hgif(g'hgif) f<v>{\textquotesingle}</v>ifge(f'ifge) {g}h<v>{\textquotesingle}</v>gif(gh'gif) fi<v>{\textquotesingle}</v>fge(fi'fge) {g}hg<v>{\textquotesingle}</v>if(ghg'if) fif<v>{\textquotesingle}</v>ge(fif'ge) {g}hgi<v>{\textquotesingle}</v>f(ghgi'f) fifg<v>{\textquotesingle}</v>e(fifg'e) {g}hgif<v>{\textquotesingle}</v>(ghgif') fifge<v>{\textquotesingle}</v>(fifge') {g}<v>{\textquotesingle}</v>h<v>{\textquotesingle}</v>g<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v>f<v>{\textquotesingle}</v>(g'h'g'i'f') f<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v>f<v>{\textquotesingle}</v>g<v>{\textquotesingle}</v>e<v>{\textquotesingle}</v>(f'i'f'g'e'Z)
 %
-fif._'g(fif.'g) {g}'h'g.'i(g'h'g.'i) f'i'f.'g(f'i'f.'g) {g}'h'g.'i.'(g'h'g.'i.') f'i'f.'g.'(f'i'f.'g.'Z)
+fif._<v>{\textquotesingle}</v>g(fif.'g) {g}<v>{\textquotesingle}</v>h<v>{\textquotesingle}</v>g.<v>{\textquotesingle}</v>i(g'h'g.'i) f<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v>f.<v>{\textquotesingle}</v>g(f'i'f.'g) {g}<v>{\textquotesingle}</v>h<v>{\textquotesingle}</v>g.<v>{\textquotesingle}</v>i.<v>{\textquotesingle}</v>(g'h'g.'i.') f<v>{\textquotesingle}</v>i<v>{\textquotesingle}</v>f.<v>{\textquotesingle}</v>g.<v>{\textquotesingle}</v>(f'i'f.'g.'Z)
 %
-% other particular glyphs
+<alt>other particular glyphs:</alt>
 %
-f.g!hwiHG'F(f.g!hwiHG'FZ)
+f.g!hwiHG<v>{\textquotesingle}</v>F(f.g!hwiHG'FZ)
 %
-% flats and naturals
+<alt>flats and naturals:</alt>
 %
-gx(gx) hx(hx) gy(gy) hy(hy) gxg(gxg) gyg(gyg) gxgh(gxgh) ggxgh(ggxgh) ggygh(ggyghZ)
-g#(g#) h#(h#)
+gx(gx) hx(hx) gy(gy) hy(hy) gxg(gxg) gyg(gyg) gxgh(gxgh) ggxgh(ggxgh) ggygh(ggygh)
+g#(g#) h#(h#) (Z)
 %
-% key change
+<alt>key change:</alt>
 %
-ghz0::c4(ghz0::c4) f(f) f3(f3) f(f) ghz0::c4(ghz0::c4) f(f) cb3(cb3)
+ghz0::c4(ghz0::c4) f(f) f4(f4) f(f) ghz0::cb4(ghz0::cb4) f(f) (Z) %cb3(cb3) 
 %
-% bars
+<alt>bars:</alt>
 %
-,(,) (,) g,h(g,h) ;(;) (;) g;h(g;h) :(:) (:) g:h(g:h) ::(::) (::) g::h(g::h) ,'(,') (,') g,h(g,'h) ;'(;') (;') g;'h(g;'h) :'(:') (:') g:'h(g:'h) ::(::') (::') g::'h(g::'h) ;1(;1) (;1) g;1h(g;1h) ;1'(;1') (;1') g;1'h(g;1'h) ;2(;2) (;2) g;2h(g;2h) ;2'(;2') (;2') g;2'h(g;2'h) ;3(;3) (;3) g;3h(g;3h) ;3'(;3') (;3') g;3'h(g;3'h) ;4(;4) (;4) g;4h(g;4h) ;4'(;4') (;4') g;4'h(g;4'h) ;5(;5) (;5) g;5h(g;5h) ;5'(;5') (;5') g;5'h(g;5'h) ;6(;6) (;6) g;6h(g;6h) ;6'(;6') (;6') g;6'h(g;6'hZ)
+,(,) (,) g,h(g,h) ;(;) (;) g;h(g;h) :(:) (:) g:h(g:h) ::(::) (::) g::h(g::h) ,<v>{\textquotesingle}</v>(,') g,h(g,h) ;<v>{\textquotesingle}</v>(;') g;<v>{\textquotesingle}</v>h(g;'h) :<v>{\textquotesingle}</v>(:') g:<v>{\textquotesingle}</v>h(g:'h) ::<v>{\textquotesingle}</v>(::') g::<v>{\textquotesingle}</v>h(g::'h) ;1(;1) g;1h(g;1h) ;1<v>{\textquotesingle}</v>(;1') g;1<v>{\textquotesingle}</v>h(g;1'h) ;2(;2) g;2h(g;2h) ;2<v>{\textquotesingle}</v>(;2') g;2<v>{\textquotesingle}</v>h(g;2'h) ;3(;3) g;3h(g;3h) ;3<v>{\textquotesingle}</v>(;3') g;3<v>{\textquotesingle}</v>h(g;3'h) ;4(;4) g;4h(g;4h) ;4<v>{\textquotesingle}</v>(;4') g;4<v>{\textquotesingle}</v>h(g;4'h) ;5(;5) g;5h(g;5h) ;5<v>{\textquotesingle}</v>(;5') g;5<v>{\textquotesingle}</v>h(g;5'h) ;6(;6) g;6h(g;6h) ;6<v>{\textquotesingle}</v>(;6') g;6<v>{\textquotesingle}</v>h(g;6'hZ)
 g.,g(g.,gZ)
 %
-% styles, verb and special characters
+<alt>styles, verb and special characters:</alt>
 %
 {a}<i>i</i><b>b</b><ul>ul</ul><sp>+</sp><v>a</v>(gZ)
-{a}<a<sp>+</sp><sp>%</sp>><v><</v><v>></sp></v>(fZ)
+%{a}<a<sp>+</sp><sp>%</sp>><v><</v><v>></sp></v>(fZ)
 %
-% spaces
+<alt>spaces:</alt>
 %
-{fg!hi}(fg!hi) {fg/hi}(fg/hi) {fg//hi}(fg//hi) {fg hi}(fg hi) {fg!/hi}(fg!/hi) {fg!//hi}(fg!//hi) {fg! hi}(fg! hiZ)
-æ(dc) æ(ab/dc)
+{fg!hi}(fg!hi) {fg/hi}(fg/hi) {fg//hi}(fg//hi) {fg hi}(fg hi) {fg!/hi}(fg!/hi) {fg!//hi}(fg!//hi) {fg! hi}(fg! hi)
+dc(dc) ab/dc(ab/dc) (Z)
 %
-% bivirga, bistropha, etc.
+<alt>bivirga, bistropha, etc.:</alt>
 %
 gvv(gvv) gvgv(gvgv) gvvv(gvvv) gvgvgv(gvgvgv) gss(gss) gsgs(gsgs) gsss(gsss) gsgsgs(gsgsgsZ)
 %
-% bottom hepisemus
+<alt>bottom hepisemus:</alt>
 %
 abc(g_0h_ g_h_ g_0_h_g_0_Z)
 %
-% rare signs
+<alt>rare signs:</alt>
 %
 gr(gr) hr(hr) gR(gR) hr0(hr0) gr0(gr0) gr1(gr1) gr2(gr2) gr3(gr3) gr4(gr4) gr5(gr5) krr5(krr5) lrr2(lrr2) mrr3(mrr3Z)
 %
-% limit cases
+<alt>limit cases:</alt>
 %
-a_.'(a_.') b_.'(b_.') c_.'(c_.') k_.'(k_.') l_.'(l_.') m_.'(m_.'Z) a/dc(a/dc) a//dc(a//dc) a dc(a dc)
+a_.<v>{\textquotesingle}</v>(a_.') b_.<v>{\textquotesingle}</v>(b_.') c_.<v>{\textquotesingle}</v>(c_.') k_.<v>{\textquotesingle}</v>(k_.') l_.<v>{\textquotesingle}</v>(l_.') m_.<v>{\textquotesingle}</v>(m_.'Z) 
+
+a/dc(a/dc) a//dc(a//dc) a dc(a dc) (Z)
 %
-% comments
+<alt>comments:</alt>
 %
-gh(gh) % this is a comment at the end of a line
-% this is a line comment
-fg(f% this is a comment inside some notes
-g)
+gh(gh) %this is a comment at the end of a line
+%this is a line comment
+fg(f%this is a comment inside some notes
+g) (Z)
 %
-% choral signs
+<alt>choral signs:</alt>
 %
-ab(gh[cs:c]) ab(h[cs:c]g[cs:t]) ab(h_.g_[cs:t]) ab(f_[cs:c]g_) ab(h_[cs:t].g_)
+gh<v>[</v>cs:c<v>]</v>(gh[cs:c]) h<v>[</v>cs:c<v>]</v>g<v>[</v>cs:t<v>]</v>(h[cs:c]g[cs:t]) h_.g_<v>[</v>cs:t<v>]</v>(h_.g_[cs:t]) f_<v>[</v>cs:c<v>]</v>g_(f_[cs:c]g_) h_<v>[</v>cs:t<v>]</v>.g_(h_[cs:t].g_) (Z)
 %
-% tex verbatim
+<alt>tex verbatim:</alt>
 %
-ab(g[nv:%test1]h[nv:%test2][gv:%test3] gh[gv:%test4] [ev:%test5] g[nv:%test6][nv:test7] g[nm1])
+ab(g[nv:nv1]h[nv:nv2][gv:gv1] gh[gv:gv2] [ev:ev1] g[nv:nv3][nv:nv4]) (Z)
 %
-% macros
+<alt>polyphonic notation:</alt>
 %
-<v>\{</v>gr<v>\}</v>ir({gr}ir)
+<v>\{</v>gr<v>\}</v>ir({gr}ir) (Z)
 %
-% translation
+<alt>macros:</alt>
 %
-ab[cd](ghZ)
+(g[nm1]) (Z)
 %
-% abovelinestext
+<alt>translation:</alt>
+%
+text[trans](ghZ)
+%
+<alt>abovelinestext:</alt>
 %
 ab<alt>above lines</alt>(ghZ)
 %
-% h episemus bridges
+<alt>h episemus bridges:</alt>
 %
-g_/g_(g_/g_) g_//g_(g_//g_) g_ g_Z(g_ g_) g_!/g_(g_!/g_) g_!//g_(g_!//g_) g_! g_(g_! g_Z)
-g_/h_(g_/h_) h_/g_(h_/g_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) {h}_/i_(h_/i_) i_/h_(i_/h_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) gh_/g_/g_(gh_/g_/g_) fh!jv_I_G_(fh!jv_I_G_)
+g_/g_(g_/g_) g_//g_(g_//g_) g_ g_Z(g_ g_) g_!/g_(g_!/g_) g_!//g_(g_!//g_) g_! g_(g_! g_)
+g_/h_(g_/h_) h_/g_(h_/g_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) {h}_/i_(h_/i_) i_/h_(i_/h_) gh_/g_(gh_/g_) h_/gh_(h_/gh_) gh_/g_/g_(gh_/g_/g_) fh!jv_I_G_(fh!jv_I_G_) (Z)
 %
-% over braces
+<alt>over braces:</alt>
 %
-ab(g,_h) ab(g_,_h_) ab(g,'_h) ab(g_,'_ h_) ab(g[ob:1;6mm]!hgh) ab(g[ocb:1;6mm]!hghZ) ab(g[ocba:1;6mm]/hgh)
+g,_h(g,_h) g_,_h_(g_,_h_) g,<v>{\textquotesingle}</v>_h(g,'_h) g_,<v>{\textquotesingle}</v>_ h_(g_,'_ h_) g<v>[</v>ob:1;6mm<v>]</v>!hgh(g[ob:1;6mm]!hgh) g<v>[</v>ocb:1;6mm<v>]</v>!hgh(g[ocb:1;6mm]!hgh) g<v>[</v>ocba:1;6mm<v>]</v>/hgh(g[ocba:1;6mm]/hgh) (Z)
 %
-% some more "real life" examples
+<alt>some more ``real life'' examples:</alt>
 %
-Do(f_gFEf./fvED./hif'/ge./fgf.,hjIF_hvGEC.ef)gra(f_gFEf./hif'/ge./fgf.,hjIF_hvGEC.ef)ti(fe)as(f_hGEf.) 
+Do(f_gFEf./fvED./hif'/ge./fgf.,hjIF_hvGEC.ef)gra(f_gFEf./hif'/ge./fgf.,hjIF_hvGEC.ef)ti(fe)as(f_hGEf.) (Z)
 %
-% the final divisio finalis
+<alt>the final divisio finalis:</alt>
 %
 (::g+)

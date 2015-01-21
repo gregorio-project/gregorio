@@ -28,6 +28,11 @@ close_glyph (gregorio_glyph **current_glyph, char glyph_type,
              gregorio_note **first_note, char liquescentia,
              gregorio_note *current_note);
 
+char
+gregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
+                              char last_pitch, char shape, char liquescentia,
+                              char *end_of_glyph);
+
 gregorio_glyph *
 gabc_det_glyphs_from_string (char *str, int *initial_key, char *macros[10])
 {
@@ -417,8 +422,10 @@ gabc_det_glyphs_from_notes (gregorio_note *current_note, int *current_key)
 
       next_glyph_type =
         gregorio_add_note_to_a_glyph (current_glyph_type,
-                                      current_note->pitch, last_pitch,
-                                      current_note->shape, &end_of_glyph);
+                                      current_note->pitch, last_pitch, 
+                                      current_note->shape,
+                                      current_note->liquescentia,
+                                      &end_of_glyph);
 
       // patch to have good shapes in the special cases of pes quadratum and
       // pes quilisma quadratum.
@@ -620,7 +627,8 @@ gabc_det_glyphs_from_notes (gregorio_note *current_note, int *current_key)
 
 char
 gregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
-                              char last_pitch, char shape, char *end_of_glyph)
+                              char last_pitch, char shape, char liquescentia,
+                              char *end_of_glyph)
 {
 
   // next glyph type is the type of the glyph that will be returned (the
@@ -737,8 +745,8 @@ gregorio_add_note_to_a_glyph (char current_glyph_type, char current_pitch,
             }
           else
             {
-              *end_of_glyph = DET_END_OF_PREVIOUS;
-              next_glyph_type = G_PUNCTUM;
+              *end_of_glyph = DET_END_OF_CURRENT;
+              next_glyph_type = G_TORCULUS_LIQUESCENS;
             }
           break;
         case G_TORCULUS_RESUPINUS:
