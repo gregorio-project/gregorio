@@ -75,6 +75,10 @@ config.status
 lib/gregorio.pc
 src/gregorio
 
+#emacs auto gen files
+auto/
+
+!UserManual.pdf
 
 #gregorio specific
 

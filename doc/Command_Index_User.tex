@@ -16,14 +16,14 @@ All colors can be redefined using \verb=\definecolor=.  See
 \end{minted}
 
 
-%\verb=grebackgroundcolor=}%tex.sty
 \subsubsection*{grebackgroundcolor}%tex.sty
+%\verb=grebackgroundcolor=}%tex.sty
 Color gregoriotex uses to block out elements which have been printed,
 but shouldn't show (\eg, the staff line going through the interior of
 a punctum cavum) \verb={RGB}{255,255,255}= (white)
 
-%\verb=gregoriocolor=%tex.sty
 \subsubsection*{gregoriocolor}
+%\verb=gregoriocolor=%tex.sty
 Color of elements formatted by \verb=\colored= \verb={RGB}{229,53,44}=
 (red similar to what is found in liturgical documents)
 
@@ -36,7 +36,7 @@ command) allows the user to change how these elements appear in the
 score.
 
 While environments are technically a \LaTeX\ phenomena, for users of
-PlainTeX each environment has a pseudo-environment equivalent which is
+Plain\TeX each environment has a pseudo-environment equivalent which is
 used in place of the environment.  The pseudo-enviroments are called
 with a \verb=\start*= and \verb=\stop*= command (where ``*'' is the
 name of the environment).  To change the format of the text in the
@@ -45,173 +45,318 @@ need to redefine the \verb=\start*= command).  Just make sure that any
 new definition for \verb=\start*= has \verb=\begingroup= as the first
 line and for \verb=\stop*= has \verb=\endgroup= as the last line.
 
-%\verb=initialformat=%tex.sty, PlainTeX version in tex.tex
 \subsubsection*{initialformat}
+%\verb=initialformat=%tex.sty, Plain\TeX version in tex.tex
 Defines how the first letter of a score appears when using leading
 initial.  Defaults to \verb=huge= (New Century Roman at 40pt in
-PlainTeX).  Deprecated version: \verb=\greinitialformat=
+Plain\TeX).
 
-%\verb=biginitialformat=%tex.sty, PlainTeX version in tex.tex
+\smallskip\indent Deprecated version: \verb=\greinitialformat=
+
 \subsubsection*{biginitialformat}
+%\verb=biginitialformat=%tex.sty, Plain\TeX version in tex.tex
 Defines how the first letter of a score appears when using a 2-line
 leading initial.  Defaults to \verb=Huge= (New Century Roman at 80pt
-in PlainTeX) Deprecated version: \verb=\grebiginitialformat=
+in Plain\TeX)
 
-%\verb=abovelinetextstyle=%tex.sty, PlainTeX version in tex.tex
+\smallskip\indent Deprecated version: \verb=\grebiginitialformat=
+
 \subsubsection*{abovelinetextstyle}
+%\verb=abovelinetextstyle=%tex.sty, Plain\TeX version in tex.tex
 Defines how the text placed above the staff lines appears.  Defaults
-to \verb=small= and \verb=italic= (\verb=italic= only in PlainTeX).
-Deprecated version: \verb=\greabovelinestextstyle=
+to \verb=small= and \verb=italic= (\verb=italic= only in Plain\TeX).
 
-\verb=translationformat=%tex.sty, PlainTeX version in tex.tex
-	Defines how the translation text appears.  Defaults to \verb=italic=.
+\smallskip\indent Deprecated version: \verb=\greabovelinestextstyle=
 
-\verb=normalstafflinesformat=%tex.sty, PlainTeX version in tex.tex
-	Defines how the staff lines will appear.  Note that the staff lines are drawn with \verb=\hrule= and so very few things will actually affect their appearance (color being the most prominent one that does).  Empty default.
-	Deprecated version: \verb=\grenormalstafflinesformat=
+\subsubsection*{translationformat}
+%\verb=translationformat=%tex.sty, Plain\TeX version in tex.tex
+Defines how the translation text appears.  Defaults to \verb=italic=.
 
-\verb=additionalstafflinesformat=%tex.sty, PlainTeX version in tex.tex
-	Defines how the additional staff lines (the little ones which are drawn for notes above or below the normal staff lines) appear.  Defaults to \verb=normalstafflinesformat=.
-	Deprecated version: \verb=\greadditionalstafflinesformat=
+\subsubsection*{normalstafflinesformat}
+%\verb=normalstafflinesformat=%tex.sty, Plain\TeX version in tex.tex
+Defines how the staff lines will appear.  Note that the staff lines
+are drawn with \verb=\hrule= and so very few things will actually
+affect their appearance (color being the most prominent one that
+does).  Empty default.
 
-\verb=lowchoralsignstyle=%tex.sty, PlainTeX version in tex-signs.tex
-	Defines how the low choral signs should appear.  Empty default.
-	Deprecated version: \verb=\grelowchoralsignstyle=
+\smallskip\indent Deprecated version: \verb=\grenormalstafflinesformat=
 
-\verb=highchoralsignstyle=%tex.sty, PlainTeX version in tex-signs.tex
-	Defines how the high choral signs should appear.  Empty default.
-	Deprecated version: \verb=\grelowchoralsignstyle=
+\subsubsection*{additionalstafflinesformat}
+%\verb=additionalstafflinesformat=%tex.sty, Plain\TeX version in tex.tex
+Defines how the additional staff lines (the little ones which are
+drawn for notes above or below the normal staff lines) appear.
+Defaults to \verb=normalstafflinesformat=.
+
+\smallskip\indent Deprecated version: \verb=\greadditionalstafflinesformat=
+
+\subsubsection*{lowchoralsignstyle}
+%\verb=lowchoralsignstyle=%tex.sty, Plain\TeX version in tex-signs.tex
+Defines how the low choral signs should appear.  Empty default.
+
+\smallskip\indent Deprecated version: \verb=\grelowchoralsignstyle=
+
+\subsubsection*{highchoralsignstyle}
+%\verb=highchoralsignstyle=%tex.sty, Plain\TeX version in tex-signs.tex
+Defines how the high choral signs should appear.  Empty default.
+
+\smallskip\indent Deprecated version: \verb=\grelowchoralsignstyle=
 
 \subsection{Commands}
 
 In general, commands should not be modified.  Exceptions are noted below.
 
-\verb=\colored#1=%tex.sty
-	Colors its argument with \verb=gregoriocolor=
-	Modify color by changing \verb=gregoriocolor=.
+\subsubsection*{\textbackslash colorred\{\#1\}}
+%\verb=\colored#1=%tex.sty
+Colors its argument with \verb=gregoriocolor= Modify color by changing
+\verb=gregoriocolor=.
 
-\verb=\coloredlines#1=%tex.sty
-	Colors the staff lines.
-	\#1 must be a named color defined using \verb=\definecolor=
-	Deprecated version: \verb=\grecoloredlines=
+\#1 is string.
 
-\verb=\redlines=%tex.sty
-	Short cut for coloring the staff lines \verb=gregoriocolor=.  Equivalent to \verb=\coloredlines{gregoriocolor}=
-	Modify color by changing \verb=gregoriocolor=.
-	Deprecated version: \verb=\greredlines=
+\subsubsection*{\textbackslash colorredlines\{\#1\}}
+%\verb=\coloredlines#1=%tex.sty
+Colors the staff lines.
 
-\verb=\normallines=%tex.sty
-	Removes all formatting from staff lines.
-	Deprecated version: \verb=\grenormallines=
+\#1 must be a named color defined using \verb=\definecolor=
 
-\verb=\setstaffsize#1=%tex.tex
-	Changes the size of the staff (and the neumes placed on the staves).  \#1 is an integer. Larger values for larger staves, smaller values for smaller staves.  Default value is 17.  \emph{Note:} This does not change the size of the accompanying text (lyrics and/or translations).
-	Deprecated version: \verb=\setgrefactor=
+\smallskip\indent Deprecated version: \verb=\grecoloredlines=
 
-\verb=\addtranslationspace=%Not sure this needs to be a user function%tex.tex
-	Add space below the stave for a translation.  Has no effect if space is already allocated for a translation.
+\subsubsection*{\textbackslash redlines}
+%\verb=\redlines=%tex.sty
+Short cut for coloring the staff lines \verb=gregoriocolor=.
 
-\verb=\removetranslationspace=%Not sure this needs to be a user function%tex.tex
-	Removes the space below the stave for the translation (un-does \verb=\addtranslationspace=).  Has no effect if space is currently not allocated to a translation.
+Equivalent to \verb=\coloredlines{gregoriocolor}= Modify color by
+changing \verb=gregoriocolor=.
 
-\verb=\setfirstannotation#1=%tex.tex
-	Macro to set the first (top) annotation above the initial.  Argument is string (the contents of the annotation).  This macro automatically aligns the top of the annotation with the 4th bar line.  This is equivalent to \verb=\setfirstlineaboveinitial{#1}{#1}=.
-	Deprecated version: \verb=\gresetfirstannotation=
-	Deprecated version: \verb=\writemode= (\nb this applied small caps and bold automatically while \verb=\setfirstannotation= does not.)%tex.sty, PlainTeX version in tex.tex
+\smallskip\indent Deprecated version: \verb=\greredlines=
 
-\verb=\setfirstlineaboveinitial#1#2=%tex.tex
-	Macro to set the first (top\} annotation above the initial.  This macros allows you to control how far below the top of the staff \#1 (string containing contents of annotation) appears via the second argument.  When its height is 0, the baseline of the annotation aligns with the 4th bar line.  Positive values for the height push the annotation down.  The argument cannot have a negative height.  \#2 can be pretty much anything with a visible representation.  \verb=\newline= and \verb=\\= are not respected in either \#1 or \#2.  Note: large annotations which stick out above the staff will push the commentary up.
-	Deprecated version: \verb=\gresetfirstlineaboveinitial=
+\subsubsection*{\textbackslash normallines}
+%\verb=\normallines=%tex.sty
+Removes all formatting from staff lines.
 
-\verb=\setsecondannotation#1=%tex.tex
-	Macro to set the second (bottom) annotation above the initial.  Argument is string containing contents of annotation.
-	Deprecated version: \verb=\gresetsecondannotation=
+\smallskip\indent Deprecated version: \verb=\grenormallines=
 
-\verb=\scorereference=%tex.tex
-	Does nothing.
+\subsubsection*{\textbackslash setstaffsize\{\#1\}}
+%\verb=\setstaffsize#1=%tex.tex
+Changes the size of the staff (and the neumes placed on the staves).
 
-\verb=\commentary=%tex.tex
-	Marco to place the commentary (usually the scriptural reference) in the top right-hand corner of the score.  While individual calls do not support multiple lines, the macro can be called multiple times; each call will typeset a new line.
-	
-\verb=\removelines=%tex.tex
-	Macro to remove the staff lines.
-	Deprecated version: \verb=\greremovelines=
+\#1 is an integer. Larger values for larger staves, smaller values for
+smaller staves.  Default value is 17.  \emph{Note:} This does not
+change the size of the accompanying text (lyrics and/or translations).
 
-\verb=\donotremovelines=%tex.tex
-	Macro to force staff lines (undoes the effects of \verb=\removelines=).
-	Deprecated version: \verb=\gredonotremovelines=
+\smallskip\indent Deprecated version: \verb=\setgrefactor=
 
-\verb=\settranslationcenteringscheme#1=%tex.tex
-	Macro to change the centering scheme for the translation.
-	\#1 --- integer: 0=translation is left aligned with the corresponding text; 1=translation is centered below the corresponding text
-	Deprecated version: \verb=\setgretranslationcenteringscheme=
+\subsubsection*{\textbackslash addtranslationspace}
+%\verb=\addtranslationspace=%Not sure this needs to be a user function%tex.tex
+Add space below the stave for a translation.  Has no effect if space
+is already allocated for a translation.
 
-\verb=\setnlbintranslation#1=%tex.tex
-	Macro to change whether line breaks are allowed in the translations.
-	\#1 --- integer: 0=line breaks are allowed; 1=line breaks are prohibited
+\subsubsection*{\textbackslash removetranslationspace}
+%\verb=\removetranslationspace=%Not sure this needs to be a user function%tex.tex
+Removes the space below the stave for the translation (un-does
+\verb=\addtranslationspace=). Has no effect if space is currently not
+allocated to a translation.
 
-\verb=\blockcustos=%tex.tex
-	Macro to block custom.  Applies to all subsequent scores in group.
-	Deprecated version: \verb=\greblockcustos=
+\subsubsection*{\textbackslash setfirstannotation\{\#1\}}
+%\verb=\setfirstannotation#1=%tex.tex
+Macro to set the first (top) annotation above the initial.  Argument
+is string (the contents of the annotation).  This macro automatically
+aligns the top of the annotation with the 4th bar line.  This is
+equivalent to \verb=\setfirstlineaboveinitial{#1}{#1}=.
 
-\verb=\GreSetStaffLinesFormat#1=%tex.tex
-	Deprecated.  Used to set the format for the staff lines.  See above notes on the environments for updated documentation.
+\smallskip\indent Deprecated version: \verb=\gresetfirstannotation=
 
-\verb=\includescore#1=%tex.tex
-	Macro for including scores.  Works on both gabc and tex files.  \#1 is string specifying the filename and location of the score (relative or absolute).
+\smallskip\indent Deprecated version: \verb=\writemode= (\nb this
+applied small caps and bold automatically while
+\verb=\setfirstannotation= does
+not.)%tex.sty, Plain\TeX version in tex.tex
 
-\verb=\includetexscore#1=%tex.tex
-	Macro for including scores which have already been run through gregorio (i.e. are in gtex format).  \#1 is string specifying the filename and location of the score (relative or absolute).
-	Deprecated version: \verb=\greincludetexscore=
+\subsubsection*{\textbackslash setfirstlineaboveinitial\{\#1\}\{\#2\}}
+%\verb=\setfirstlineaboveinitial#1#2=%tex.tex
+Macro to set the first (top) annotation above the initial.  This
+macros allows you to control how far below the top of the staff \#1
+(string containing contents of annotation) appears via the second
+argument.  When its height is 0, the baseline of the annotation aligns
+with the 4th bar line.  Positive values for the height push the
+annotation down.  The argument cannot have a negative height.  \#2 can
+be pretty much anything with a visible representation.
+\verb=\newline= and \verb=\\= are not respected in either \#1 or \#2.
+Note: large annotations which stick out above the staff will push the
+commentary up.
 
-\verb=\includegabcscore#1=%tex.tex
-	Macro for including scores which are in gabc format.  This macro will run gregorio on the file before including it.  \#1 is string specifying the filename and location of the score (relative or absolute).
-	Deprecated version: \verb=\greincludegabcscore=
+\smallskip\indent Deprecated version: \verb=\gresetfirstlineaboveinitial=
 
-\verb=\GreUseNormalHyphen=%tex.tex
-	Tell gregoriotex to use normal hyphens at the end of lines (default behavior).
-	Note: Placing an explicit hyphen in between special character brackets (\ie <sp>-</sp>) in the gabc file will always result in a zero-width hyphen.
-	Note: This command only affects the hyphens within a score.  Hyphens elsewhere in a document are unaffected (hence the "Gre" in the command name).
-	
-\verb=\GreUseZeroHyphen=%tex.tex
-	Tell gregoriotex to use zero-width hyphens at the end of lines.
-	Note: This command only affects the hyphens within a score.  Hyphens elsewhere in a document are unaffected (hence the "Gre" in the command name).
+\subsubsection*{\textbackslash setsecondannotation\{\#1\}}
+%\verb=\setsecondannotation#1=%tex.tex
+Macro to set the second (bottom) annotation above the initial.
 
-\verb=\GreForceHyphen=%tex.tex
-	Tell gregoriotex to force the appearance of hyphens between all syllables.
-	Note: This command only affects the hyphens within a score.  Hyphens elsewhere in a document are unaffected (hence the "Gre" in the command name).
+\#1 is string containing contents of annotation.
 
-\verb=\removeclef=%tex-signs.tex
-	Macro to remove the clefs from a score.
-	Deprecated version: \verb=\greremoveclef=
+\smallskip\indent Deprecated version: \verb=\gresetsecondannotation=
 
-\verb=\normalclef=%tex-signs.tex
-	Macro to restore clefs to a score (undoes the effects of \verb=\removeclef=).
-	Deprecated version: \verb=\grenormalclef=
+\subsubsection*{\textbackslash scorereference}
+%\verb=\scorereference=%tex.tex
+Does nothing.
 
-\verb=\removecusto=%tex-signs.tex
-	Macro to empty the box containing the custos.
-	%I’m not sure what the purpose of this macro is.  Need to figure out where it is used.
+\subsubsection*{\textbackslash commentary\{\#1\}}
+%\verb=\commentary=%tex.tex
+Marco to place the commentary (usually the scriptural reference) in
+the top right-hand corner of the score.  While individual calls do not
+support multiple lines, the macro can be called multiple times; each
+call will typeset a new line.
 
-\verb=\GreHidePCLines=%tex-signs.tex
-	Macro to tell gregoriotex to hide the lines through the middle of a punctum cavum.  Default.
+\#1 is string containing contents of commentary.
 
-\verb=\GreDontHidePCLines=%tex-signs.tex
-	Macro to tell gregoriotex not to hide the lines through the middle of a punctum cavum.
-	
-\verb=\GreHideAltLines=%tex-signs.tex
-	Macro to tell gregoriotex to hide the lines behind alterations.
+\subsubsection*{\textbackslash removelines}	
+%\verb=\removelines=%tex.tex
+Macro to remove the staff lines.
 
-\verb=\GreDontHideAltLines=%tex-signs.tex
-	Macro to tell gregoriotex not to hide the lines behind alterations.  Default.
+\smallskip\indent Deprecated version: \verb=\greremovelines=
 
-\verb=\UseAlternatePunctumCavum=%tex-signs.tex
-	Changes settings to use the alternative punctum cavum.
+\subsubsection*{\textbackslash donotremovelines}
+%\verb=\donotremovelines=%tex.tex
+Macro to force staff lines (undoes the effects of
+\verb=\removelines=).
 
-\verb=\UseNormalPunctumCavum=%tex-signs.tex
-	Changes settings to use the normal punctum cavum.  Default.
+\smallskip\indent Deprecated version: \verb=\gredonotremovelines=
+
+\subsubsection*{\textbackslash settrantlationcenteringscheme\{\#1\}}
+%\verb=\settranslationcenteringscheme#1=%tex.tex
+Macro to change the centering scheme for the translation.
+
+\noindent\#1 --- integer:
+
+\begin{enumerate}[label=\arabic* =]\setcounter{enumi}{-1}
+ \item = translation is left aligned with the corresponding text;
+ \item = translation is centered below the corresponding text
+\end{enumerate}
+
+\smallskip\indent Deprecated version: \verb=\setgretranslationcenteringscheme=
+
+\subsubsection*{\textbackslash setnlbintranslation\{\#1\}}
+%\verb=\setnlbintranslation#1=%tex.tex
+Macro to change whether line breaks are allowed in the translations.
+
+\noindent\#1 --- integer: 
+\begin{enumerate}[label=\arabic* =]\setcounter{enumi}{-1}
+ \item = line breaks are allowed
+ \item = line breaks are prohibited
+\end{enumerate}
+
+\subsubsection*{\textbackslash blockcustos}
+%\verb=\blockcustos=%tex.tex
+Macro to block custom.  Applies to all subsequent scores in group.
+
+\smallskip\indent Deprecated version: \verb=\greblockcustos=
+
+\subsubsection*{\textbackslash GreSetStaffLinerFormat\{\#1\}}
+%\verb=\GreSetStaffLinesFormat#1=%tex.tex
+Deprecated.  Used to set the format for the staff lines.  See above
+notes on the environments for updated documentation.
+
+\subsubsection*{\textbackslash includescore\{\#1\}}
+%\verb=\includescore#1=%tex.tex
+Macro for including scores.  Works on both gabc and tex files.
+
+\#1 is string specifying the filename and location of the score
+(relative or absolute).
+
+\subsubsection*{\textbackslash includetexscore\{\#1\}}
+%\verb=\includetexscore#1=%tex.tex
+Macro for including scores which have already been run through
+gregorio (i.e. are in gtex format).
+
+\#1 is string specifying the filename and location of the score
+(relative or absolute).
+
+\smallskip\indent Deprecated version: \verb=\greincludetexscore=
+
+\subsubsection*{\textbackslash includegabescore\{\#1\}}
+%\verb=\includegabcscore#1=%tex.tex
+Macro for including scores which are in gabc format.  This macro will
+run gregorio on the file before including it.
+
+\#1 is string specifying the filename and location of the score
+(relative or absolute).
+
+\smallskip\indent Deprecated version: \verb=\greincludegabcscore=
+
+\subsubsection*{\textbackslash GreUseNormalHyphen}
+%\verb=\GreUseNormalHyphen=%tex.tex
+Tell gregoriotex to use normal hyphens at the end of lines (default
+behavior).
+
+Note: Placing an explicit hyphen in between special character brackets
+(\ie <sp>-</sp>) in the gabc file will always result in a zero-width
+hyphen.
+
+Note: This command only affects the hyphens within a score.  Hyphens
+elsewhere in a document are unaffected (hence the "Gre" in the command
+name).
+
+\subsubsection*{\textbackslash GreUseZeroHyphen}	
+%\verb=\GreUseZeroHyphen=%tex.tex
+Tell gregoriotex to use zero-width hyphens at the end of lines.
+
+Note: This command only affects the hyphens within a score.  Hyphens
+elsewhere in a document are unaffected (hence the "Gre" in the command
+name).
+
+\subsubsection*{\textbackslash GreForceHyphen}
+%\verb=\GreForceHyphen=%tex.tex
+Tell gregoriotex to force the appearance of hyphens between all
+syllables.
+
+Note: This command only affects the hyphens within a score.  Hyphens
+elsewhere in a document are unaffected (hence the "Gre" in the command
+name).
+
+\subsubsection*{\textbackslash removeclef}
+%\verb=\removeclef=%tex-signs.tex
+Macro to remove the clefs from a score.
+
+\smallskip\indent Deprecated version: \verb=\greremoveclef=
+
+\subsubsection*{\textbackslash normalclef}
+%\verb=\normalclef=%tex-signs.tex
+Macro to restore clefs to a score (undoes the effects of
+\verb=\removeclef=).
+
+\smallskip\indent Deprecated version: \verb=\grenormalclef=
+
+\subsubsection*{\textbackslash removecusto}
+%\verb=\removecusto=%tex-signs.tex
+Macro to empty the box containing the custos.
+% I’m not sure what the purpose of this macro is.  Need to figure out
+% where it is used.
+
+\subsubsection*{\textbackslash GreHidePCLines}
+%\verb=\GreHidePCLines=%tex-signs.tex
+Macro to tell gregoriotex to hide the lines through the middle of a
+punctum cavum.  Default.
+
+\subsubsection*{\textbackslash GreDontHidePCLines}
+%\verb=\GreDontHidePCLines=%tex-signs.tex
+Macro to tell gregoriotex not to hide the lines through the middle of
+a punctum cavum.
+
+\subsubsection*{\textbackslash GreHideAltLines}	
+%\verb=\GreHideAltLines=%tex-signs.tex
+Macro to tell gregoriotex to hide the lines behind alterations.
+
+\subsubsection*{\textbackslash GreDontHideAltLines}
+%\verb=\GreDontHideAltLines=%tex-signs.tex
+Macro to tell gregoriotex not to hide the lines behind alterations.
+Default.
+
+\subsubsection*{\textbackslash UseAlternatePunctumCavum}
+%\verb=\UseAlternatePunctumCavum=%tex-signs.tex
+Changes settings to use the alternative punctum cavum.
+
+\subsubsection*{\textbackslash UseNormalPunctumCavum}
+%\verb=\UseNormalPunctumCavum=%tex-signs.tex
+Changes settings to use the normal punctum cavum.  Default.
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: "Documentation"
+%%% TeX-master: "UserManual"
 %%% End:
