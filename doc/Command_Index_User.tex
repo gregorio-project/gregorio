@@ -1,6 +1,9 @@
 \section{User Controls}
 
-These functions are available to the user to customize elements of the score which cannot be controlled from the gabc file.
+These functions are available to the user to customize elements of the
+score which cannot be controlled from the gabc file. They can be added
+to any \verb=.tex= file. Do not add them to any \verb=.gtex= or
+\verb=.gabc= file.
 
 \subsection{Colors}
 
@@ -8,13 +11,13 @@ Colors are strictly a \LaTeX\ phenomena as currently implemented.  All
 commands which change the color of text simply print the text without
 alteration in Plain\TeX.
 
-All colors can be redefined using \verb=\definecolor=.  See
-\verb=xcolor= package for documentation. Example:
+All colors can be redefined using \verb=\definecolor=.  See the
+\verb=xcolor= package for documentation.
 
-\begin{minted}{latex}
+Example:\par\medskip
+\begin{latexcode}
   \definecolor{gregoriocolor}{RGB}{229,53,44}
-\end{minted}
-
+\end{latexcode}
 
 \subsubsection*{grebackgroundcolor}%tex.sty
 %\verb=grebackgroundcolor=}%tex.sty
@@ -26,7 +29,6 @@ a punctum cavum) \verb={RGB}{255,255,255}= (white)
 %\verb=gregoriocolor=%tex.sty
 Color of elements formatted by \verb=\colored= \verb={RGB}{229,53,44}=
 (red similar to what is found in liturgical documents)
-
 
 \subsection{Environments}
 
@@ -120,6 +122,11 @@ Colors its argument with \verb=gregoriocolor= Modify color by changing
   \#1 & string & The text to be colored. \\
 \end{argtable}
 
+Example:\par\medskip
+\begin{latexcode}
+  \colorred{This text is red.}
+\end{latexcode}
+
 \subsubsection*{\textbackslash colorredlines\{\#1\}}
 %\verb=\coloredlines#1=%tex.sty
 Colors the staff lines.
@@ -127,6 +134,12 @@ Colors the staff lines.
 \begin{argtable}
   \#1 & string & Must be a named color defined using \verb=\definecolor= \\
 \end{argtable}
+
+Example:\par\medskip
+\begin{latexcode}
+  \definecolor{myorange}{RGB}{221,86,8}
+  \coloredlines{myorange}
+\end{latexcode}
 
 \smallskip\hskip 15pt Deprecated version: \verb=\grecoloredlines=
 
@@ -157,6 +170,11 @@ Changes the size of the staff (and the neumes placed on the staves).
   smaller staves. Default value is 17. \\
 \end{argtable}
 
+Example:\par\medskip
+\begin{latexcode}
+  \setstaffsize{20}
+\end{latexcode}
+
 \emph{Note:} If set to \verb=0= gregoriotex will use the default value.
 
 \smallskip\hskip 15pt Deprecated version: \verb=\setgrefactor=
@@ -178,9 +196,17 @@ Macro to set the first (top) annotation above the initial.  This macro
 automatically aligns the top of the annotation with the 4th bar line.
 This is equivalent to \verb=\setfirstlineaboveinitial{#1}{#1}=.
 
+See also \verb=\setsecondannotation= for typesetting two lines of text
+above the initial.
+
 \begin{argtable}
   \#1 & string & The text of the annotation.\\
 \end{argtable}
+
+Example:\par\medskip
+\begin{latexcode}
+  \setfirstannotation{VIII g}
+\end{latexcode}
 
 \smallskip\hskip 15pt Deprecated version: \verb=\gresetfirstannotation=
 
@@ -207,6 +233,11 @@ commentary up.
   \#2 & string & Any text with a positive heigth.\\
 \end{argtable}
 
+Example:\par\medskip
+\begin{latexcode}
+  \setfirstlineaboveinitial{I g2}{I}
+\end{latexcode}
+
 \smallskip\hskip 15pt Deprecated version: \verb=\gresetfirstlineaboveinitial=
 
 \subsubsection*{\textbackslash setsecondannotation\{\#1\}}
@@ -216,6 +247,20 @@ Macro to set the second (bottom) annotation above the initial.
 \begin{argtable}
   \#1 & string & The text of the annotation.\\
 \end{argtable}
+
+Example:\par\medskip
+\begin{latexcode}
+  \setsecondannotation{III a}
+\end{latexcode}
+
+Can be used in conjunction with \verb=\setfirstannotation= to typeset
+two lines of text above the initial.
+
+\medskip
+\begin{latexcode}
+  \setfirstannotation{I Ant.}
+  \setsecondannotation{IV a}
+\end{latexcode}
 
 \smallskip\hskip 15pt Deprecated version: \verb=\gresetsecondannotation=
 
@@ -233,6 +278,11 @@ call will typeset a new line.
 \begin{argtable}
   \#1 & string & The text of the commentary.\\
 \end{argtable}
+
+Example:\par\medskip
+\begin{latexcode}
+  \commentary{Ps. 109:3}
+\end{latexcode}
 
 \subsubsection*{\textbackslash removelines}	
 %\verb=\removelines=%tex.tex
@@ -256,6 +306,11 @@ Macro to change the centering scheme for the translation.
       & 1 & Translation is centered below the corresponding text.\\
 \end{argtable}
 
+Example:\par\medskip
+\begin{latexcode}
+  \settranslationcenteringscheme{1}
+\end{latexcode}
+
 \smallskip\hskip 15pt Deprecated version: \verb=\setgretranslationcenteringscheme=
 
 \subsubsection*{\textbackslash setnlbintranslation\{\#1\}}
@@ -267,9 +322,14 @@ Macro to change whether line breaks are allowed in the translations.
       & 1 & Line breaks are prohibited.\\
 \end{argtable}
 
+Example:\par\medskip
+\begin{latexcode}
+  \setnlbintranslation{0}
+\end{latexcode}
+
 \subsubsection*{\textbackslash blockcustos}
 %\verb=\blockcustos=%tex.tex
-Macro to block custom.  Applies to all subsequent scores in group.
+Macro to block custos.  Applies to all subsequent scores in group.
 
 \smallskip\hskip 15pt Deprecated version: \verb=\greblockcustos=
 
@@ -285,6 +345,19 @@ Macro for including scores.  Works on both gabc and tex files.
 \begin{argtable}
   \#1 & string & Relative or absolute path to the score.\\
 \end{argtable}
+
+Example:\par\medskip
+\begin{latexcode}
+  \includescore{TecumPrincipium.tex}
+  \includescore{Chant/VirgoVirginum.gabc}
+  \includescore{/home/user/chant/AdTeLevavi}
+
+  The following lines include the same score:
+  \includescore{Christus}
+  \includescore{Christus.gtex}
+  \includescore{./Christus}
+  \includescore{./Christus.gabc}
+\end{latexcode}
 
 \subsubsection*{\textbackslash includetexscore\{\#1\}}
 %\verb=\includetexscore#1=%tex.tex

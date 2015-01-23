@@ -4,12 +4,18 @@
 \usepackage[lighttt]{lmodern}
 \usepackage{enumitem}
 \usepackage{xspace}
+\usepackage{multicol}
+\usepackage{hyperref}
+
+\hypersetup{colorlinks, citecolor=black, filecolor=black, linkcolor=green, urlcolor=green}
 
 \usepackage[table]{xcolor}
 \definecolor{lightgray}{gray}{0.9}
+\definecolor{green}{HTML}{0c700c}
+\definecolor{myred}{HTML}{FF3333}
 
 \usepackage{minted} % must be after xcolor
-\newminted{latex}{gobble=2}
+\newminted{latex}{gobble=2,bgcolor=lightgray}
 
 \newcommand*{\eg}{e.g.\@\xspace}
 \newcommand*{\nb}{n.b.\@\xspace}
@@ -31,6 +37,24 @@
 \setlength{\parindent}{0mm} % Default is 15pt
 
 \begin{document}
+
+\begin{titlepage}
+  \begin{center}
+    \Huge
+    \textcolor{myred}{Gregorio} and \textcolor{myred}{gregoriotex}:
+
+    A project which provides tools for gregorian score engraving.
+
+    \vspace{1cm}\large\href{http://home.gna.org/gregorio/}{Homepage}
+
+    Source code available on
+    \href{http://github.com/gregorio-project/gregorio}{GitHub}.
+  \end{center}
+  \vspace{2cm}
+  \begin{multicols}{2}
+    \tableofcontents
+  \end{multicols}
+\end{titlepage}
 
 \input{Command_Index_User}
 % \input{Command_Index_internal}
