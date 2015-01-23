@@ -51,7 +51,13 @@ Defines how the first letter of a score appears when using leading
 initial.  Defaults to \verb=huge= (New Century Roman at 40pt in
 Plain\TeX).
 
-\smallskip\indent Deprecated version: \verb=\greinitialformat=
+Example, to change the font of the first letter:
+
+\begin{latexcode}
+  \renewenvironment*{initialformat}{\fontfamily{ppl}\selectfont\huge}{}
+\end{latexcode}
+
+\smallskip\hskip 15pt Deprecated version: \verb=\greinitialformat=
 
 \subsubsection*{biginitialformat}
 %\verb=biginitialformat=%tex.sty, Plain\TeX version in tex.tex
@@ -59,14 +65,14 @@ Defines how the first letter of a score appears when using a 2-line
 leading initial.  Defaults to \verb=Huge= (New Century Roman at 80pt
 in Plain\TeX)
 
-\smallskip\indent Deprecated version: \verb=\grebiginitialformat=
+\smallskip\hskip 15pt Deprecated version: \verb=\grebiginitialformat=
 
 \subsubsection*{abovelinetextstyle}
 %\verb=abovelinetextstyle=%tex.sty, Plain\TeX version in tex.tex
 Defines how the text placed above the staff lines appears.  Defaults
 to \verb=small= and \verb=italic= (\verb=italic= only in Plain\TeX).
 
-\smallskip\indent Deprecated version: \verb=\greabovelinestextstyle=
+\smallskip\hskip 15pt Deprecated version: \verb=\greabovelinestextstyle=
 
 \subsubsection*{translationformat}
 %\verb=translationformat=%tex.sty, Plain\TeX version in tex.tex
@@ -79,7 +85,7 @@ are drawn with \verb=\hrule= and so very few things will actually
 affect their appearance (color being the most prominent one that
 does).  Empty default.
 
-\smallskip\indent Deprecated version: \verb=\grenormalstafflinesformat=
+\smallskip\hskip 15pt Deprecated version: \verb=\grenormalstafflinesformat=
 
 \subsubsection*{additionalstafflinesformat}
 %\verb=additionalstafflinesformat=%tex.sty, Plain\TeX version in tex.tex
@@ -87,19 +93,19 @@ Defines how the additional staff lines (the little ones which are
 drawn for notes above or below the normal staff lines) appear.
 Defaults to \verb=normalstafflinesformat=.
 
-\smallskip\indent Deprecated version: \verb=\greadditionalstafflinesformat=
+\smallskip\hskip 15pt Deprecated version: \verb=\greadditionalstafflinesformat=
 
 \subsubsection*{lowchoralsignstyle}
 %\verb=lowchoralsignstyle=%tex.sty, Plain\TeX version in tex-signs.tex
 Defines how the low choral signs should appear.  Empty default.
 
-\smallskip\indent Deprecated version: \verb=\grelowchoralsignstyle=
+\smallskip\hskip 15pt Deprecated version: \verb=\grelowchoralsignstyle=
 
 \subsubsection*{highchoralsignstyle}
 %\verb=highchoralsignstyle=%tex.sty, Plain\TeX version in tex-signs.tex
 Defines how the high choral signs should appear.  Empty default.
 
-\smallskip\indent Deprecated version: \verb=\grelowchoralsignstyle=
+\smallskip\hskip 15pt Deprecated version: \verb=\grelowchoralsignstyle=
 
 \subsection{Commands}
 
@@ -110,15 +116,19 @@ In general, commands should not be modified.  Exceptions are noted below.
 Colors its argument with \verb=gregoriocolor= Modify color by changing
 \verb=gregoriocolor=.
 
-\#1 is string.
+\begin{argtable}
+  \#1 & string & The text to be colored. \\
+\end{argtable}
 
 \subsubsection*{\textbackslash colorredlines\{\#1\}}
 %\verb=\coloredlines#1=%tex.sty
 Colors the staff lines.
 
-\#1 must be a named color defined using \verb=\definecolor=
+\begin{argtable}
+  \#1 & string & Must be a named color defined using \verb=\definecolor= \\
+\end{argtable}
 
-\smallskip\indent Deprecated version: \verb=\grecoloredlines=
+\smallskip\hskip 15pt Deprecated version: \verb=\grecoloredlines=
 
 \subsubsection*{\textbackslash redlines}
 %\verb=\redlines=%tex.sty
@@ -127,23 +137,29 @@ Short cut for coloring the staff lines \verb=gregoriocolor=.
 Equivalent to \verb=\coloredlines{gregoriocolor}= Modify color by
 changing \verb=gregoriocolor=.
 
-\smallskip\indent Deprecated version: \verb=\greredlines=
+\smallskip\hskip 15pt Deprecated version: \verb=\greredlines=
 
 \subsubsection*{\textbackslash normallines}
 %\verb=\normallines=%tex.sty
 Removes all formatting from staff lines.
 
-\smallskip\indent Deprecated version: \verb=\grenormallines=
+\smallskip\hskip 15pt Deprecated version: \verb=\grenormallines=
 
 \subsubsection*{\textbackslash setstaffsize\{\#1\}}
 %\verb=\setstaffsize#1=%tex.tex
 Changes the size of the staff (and the neumes placed on the staves).
 
-\#1 is an integer. Larger values for larger staves, smaller values for
-smaller staves.  Default value is 17.  \emph{Note:} This does not
-change the size of the accompanying text (lyrics and/or translations).
+\emph{Note:} This does not change the size of the accompanying text
+(lyrics and/or translations).
 
-\smallskip\indent Deprecated version: \verb=\setgrefactor=
+\begin{argtable}
+  \#1 & integer & Larger values for larger staves, smaller values for
+  smaller staves. Default value is 17. \\
+\end{argtable}
+
+\emph{Note:} If set to \verb=0= gregoriotex will use the default value.
+
+\smallskip\hskip 15pt Deprecated version: \verb=\setgrefactor=
 
 \subsubsection*{\textbackslash addtranslationspace}
 %\verb=\addtranslationspace=%Not sure this needs to be a user function%tex.tex
@@ -152,20 +168,23 @@ is already allocated for a translation.
 
 \subsubsection*{\textbackslash removetranslationspace}
 %\verb=\removetranslationspace=%Not sure this needs to be a user function%tex.tex
-Removes the space below the stave for the translation (un-does
+Removes the space below the stave for the translation (un-does\\
 \verb=\addtranslationspace=). Has no effect if space is currently not
 allocated to a translation.
 
 \subsubsection*{\textbackslash setfirstannotation\{\#1\}}
 %\verb=\setfirstannotation#1=%tex.tex
-Macro to set the first (top) annotation above the initial.  Argument
-is string (the contents of the annotation).  This macro automatically
-aligns the top of the annotation with the 4th bar line.  This is
-equivalent to \verb=\setfirstlineaboveinitial{#1}{#1}=.
+Macro to set the first (top) annotation above the initial.  This macro
+automatically aligns the top of the annotation with the 4th bar line.
+This is equivalent to \verb=\setfirstlineaboveinitial{#1}{#1}=.
 
-\smallskip\indent Deprecated version: \verb=\gresetfirstannotation=
+\begin{argtable}
+  \#1 & string & The text of the annotation.\\
+\end{argtable}
 
-\smallskip\indent Deprecated version: \verb=\writemode= (\nb this
+\smallskip\hskip 15pt Deprecated version: \verb=\gresetfirstannotation=
+
+\smallskip\hskip 15pt Deprecated version: \verb=\writemode= (\nb this
 applied small caps and bold automatically while
 \verb=\setfirstannotation= does
 not.)%tex.sty, Plain\TeX version in tex.tex
@@ -183,15 +202,22 @@ be pretty much anything with a visible representation.
 Note: large annotations which stick out above the staff will push the
 commentary up.
 
-\smallskip\indent Deprecated version: \verb=\gresetfirstlineaboveinitial=
+\begin{argtable}
+  \#1 & string & The text of the annotation.\\
+  \#2 & string & Any text with a positive heigth.\\
+\end{argtable}
+
+\smallskip\hskip 15pt Deprecated version: \verb=\gresetfirstlineaboveinitial=
 
 \subsubsection*{\textbackslash setsecondannotation\{\#1\}}
 %\verb=\setsecondannotation#1=%tex.tex
 Macro to set the second (bottom) annotation above the initial.
 
-\#1 is string containing contents of annotation.
+\begin{argtable}
+  \#1 & string & The text of the annotation.\\
+\end{argtable}
 
-\smallskip\indent Deprecated version: \verb=\gresetsecondannotation=
+\smallskip\hskip 15pt Deprecated version: \verb=\gresetsecondannotation=
 
 \subsubsection*{\textbackslash scorereference}
 %\verb=\scorereference=%tex.tex
@@ -204,49 +230,48 @@ the top right-hand corner of the score.  While individual calls do not
 support multiple lines, the macro can be called multiple times; each
 call will typeset a new line.
 
-\#1 is string containing contents of commentary.
+\begin{argtable}
+  \#1 & string & The text of the commentary.\\
+\end{argtable}
 
 \subsubsection*{\textbackslash removelines}	
 %\verb=\removelines=%tex.tex
 Macro to remove the staff lines.
 
-\smallskip\indent Deprecated version: \verb=\greremovelines=
+\smallskip\hskip 15pt Deprecated version: \verb=\greremovelines=
 
 \subsubsection*{\textbackslash donotremovelines}
 %\verb=\donotremovelines=%tex.tex
 Macro to force staff lines (undoes the effects of
 \verb=\removelines=).
 
-\smallskip\indent Deprecated version: \verb=\gredonotremovelines=
+\smallskip\hskip 15pt Deprecated version: \verb=\gredonotremovelines=
 
 \subsubsection*{\textbackslash settrantlationcenteringscheme\{\#1\}}
 %\verb=\settranslationcenteringscheme#1=%tex.tex
 Macro to change the centering scheme for the translation.
 
-\noindent\#1 --- integer:
+\begin{argtable}
+  \#1 & 0 & Translation is left aligned with the corresponding text.\\
+      & 1 & Translation is centered below the corresponding text.\\
+\end{argtable}
 
-\begin{enumerate}[label=\arabic* =]\setcounter{enumi}{-1}
- \item = translation is left aligned with the corresponding text;
- \item = translation is centered below the corresponding text
-\end{enumerate}
-
-\smallskip\indent Deprecated version: \verb=\setgretranslationcenteringscheme=
+\smallskip\hskip 15pt Deprecated version: \verb=\setgretranslationcenteringscheme=
 
 \subsubsection*{\textbackslash setnlbintranslation\{\#1\}}
 %\verb=\setnlbintranslation#1=%tex.tex
 Macro to change whether line breaks are allowed in the translations.
 
-\noindent\#1 --- integer: 
-\begin{enumerate}[label=\arabic* =]\setcounter{enumi}{-1}
- \item = line breaks are allowed
- \item = line breaks are prohibited
-\end{enumerate}
+\begin{argtable}
+  \#1 & 0 & Line breaks are allowed.\\
+      & 1 & Line breaks are prohibited.\\
+\end{argtable}
 
 \subsubsection*{\textbackslash blockcustos}
 %\verb=\blockcustos=%tex.tex
 Macro to block custom.  Applies to all subsequent scores in group.
 
-\smallskip\indent Deprecated version: \verb=\greblockcustos=
+\smallskip\hskip 15pt Deprecated version: \verb=\greblockcustos=
 
 \subsubsection*{\textbackslash GreSetStaffLinerFormat\{\#1\}}
 %\verb=\GreSetStaffLinesFormat#1=%tex.tex
@@ -257,28 +282,31 @@ notes on the environments for updated documentation.
 %\verb=\includescore#1=%tex.tex
 Macro for including scores.  Works on both gabc and tex files.
 
-\#1 is string specifying the filename and location of the score
-(relative or absolute).
+\begin{argtable}
+  \#1 & string & Relative or absolute path to the score.\\
+\end{argtable}
 
 \subsubsection*{\textbackslash includetexscore\{\#1\}}
 %\verb=\includetexscore#1=%tex.tex
 Macro for including scores which have already been run through
 gregorio (i.e. are in gtex format).
 
-\#1 is string specifying the filename and location of the score
-(relative or absolute).
+\begin{argtable}
+  \#1 & string & Relative or absolute path to the .\@gtex score.\\
+\end{argtable}
 
-\smallskip\indent Deprecated version: \verb=\greincludetexscore=
+\smallskip\hskip 15pt Deprecated version: \verb=\greincludetexscore=
 
 \subsubsection*{\textbackslash includegabescore\{\#1\}}
 %\verb=\includegabcscore#1=%tex.tex
 Macro for including scores which are in gabc format.  This macro will
 run gregorio on the file before including it.
 
-\#1 is string specifying the filename and location of the score
-(relative or absolute).
+\begin{argtable}
+  \#1 & string & Relative or absolute path to the .\@gabc score.\\
+\end{argtable}
 
-\smallskip\indent Deprecated version: \verb=\greincludegabcscore=
+\smallskip\hskip 15pt Deprecated version: \verb=\greincludegabcscore=
 
 \subsubsection*{\textbackslash GreUseNormalHyphen}
 %\verb=\GreUseNormalHyphen=%tex.tex
@@ -314,14 +342,14 @@ name).
 %\verb=\removeclef=%tex-signs.tex
 Macro to remove the clefs from a score.
 
-\smallskip\indent Deprecated version: \verb=\greremoveclef=
+\smallskip\hskip 15pt Deprecated version: \verb=\greremoveclef=
 
 \subsubsection*{\textbackslash normalclef}
 %\verb=\normalclef=%tex-signs.tex
 Macro to restore clefs to a score (undoes the effects of
 \verb=\removeclef=).
 
-\smallskip\indent Deprecated version: \verb=\grenormalclef=
+\smallskip\hskip 15pt Deprecated version: \verb=\grenormalclef=
 
 \subsubsection*{\textbackslash removecusto}
 %\verb=\removecusto=%tex-signs.tex
