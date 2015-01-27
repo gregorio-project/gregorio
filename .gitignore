@@ -36,6 +36,9 @@
 *.out
 *.toc
 *.gaux
+*.idx
+*.ilg
+*.ind
 
 ## Intermediate documents:
 *.dvi

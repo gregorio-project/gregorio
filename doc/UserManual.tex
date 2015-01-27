@@ -5,9 +5,9 @@
 \usepackage{enumitem}
 \usepackage{xspace}
 \usepackage{multicol}
-\usepackage{hyperref}
 
-\hypersetup{colorlinks, citecolor=black, filecolor=black, linkcolor=green, urlcolor=green}
+\usepackage{makeidx}
+\makeindex
 
 \usepackage[table]{xcolor}
 \definecolor{lightgray}{gray}{0.9}
@@ -17,20 +17,24 @@
 \usepackage{minted} % must be after xcolor
 \newminted{latex}{gobble=2,bgcolor=lightgray}
 
+\usepackage{hyperref}
+\hypersetup{colorlinks, citecolor=black, filecolor=black, linkcolor=green, urlcolor=green}
+
 \newcommand*{\eg}{e.g.\@\xspace}
 \newcommand*{\nb}{n.b.\@\xspace}
 \newcommand*{\ie}{i.e.\@\xspace}
 
-\makeatletter
-\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{\z@}%
-                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
-                                     {1.5ex \@plus .2ex}%
-                                     {\normalsize\ttfamily\bfseries}}
-\makeatother
+\newcommand{\macroname}[2]{\vspace{3.25ex plus 1ex minus .2ex}%
+                           \makebox[\linewidth]{\ttfamily\bfseries #1%
+                             \hspace{\fill}\normalfont\itshape #2}%
+                         \vspace{1.5ex plus .2ex}%
+                         \index{#1}}
+                       %\addcontentsline{toc}{subsubsection}{#1}}
+
 
 \newenvironment{argtable}{\bigskip\rowcolors{1}{lightgray}{lightgray}
-                           \begin{tabular}{clp{10cm}}
-                             Argument & Value & Description \\
+                           \begin{tabular}{clp{10cm plus .5cm}}
+                             Arg & Value & Description \\
                              \hline}%
                           {\end{tabular}\bigskip}
 
@@ -58,7 +62,9 @@
 
 \input{Command_Index_User}
 % \input{Command_Index_internal}
-% \input{Command_Index_gregorio}
+\input{Command_Index_gregorio}
 
+\addcontentsline{toc}{section}{Index}
+\printindex
 
 \end{document}
