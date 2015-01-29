@@ -19,7 +19,7 @@ Macro for typesetting an accentus.
 
 \begin{argtable}
   \#1 & character & height of episemus\\
-  \#2 & integer   & Type of glyph the episemus is attached to. See episemus special argument for description of options.\\
+  \#2 & integer   & Type of glyph the episemus is attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash greacticeatechironomy}{gregoriotex.tex}
@@ -31,7 +31,7 @@ Macro called at the beginning of the score to enable chironomy.
 Macro to typeset the additional line above or below the staff.
 
 \begin{argtable}
-  \#1 & special & See Episemus special.\\
+  \#1 & special & See \nameref{EpisemusSpecial}.\\
   \#2 & integer & The ambitus of the porrectus or porrectus flexes if the first argument is 9, 10, 11, 21, 22, 23; ignored otherwise.\\
   \#3 & integer & Set horizontal episemus (0), horizontal episemus under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4).\\
 \end{argtable}
@@ -59,7 +59,7 @@ Macro for typesetting an augmentum duplex (a pair of punctum mora)
 Macro for typesetting a bar brace.
 
 \begin{argtable}
-  \#1 & integer & Type of glyph the episemus is attached to.  See episemus special argument for description of options.\\
+  \#1 & integer & Type of glyph the episemus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash grebarsyllable}{gregoriotex-syllable.tex}
@@ -70,7 +70,7 @@ Macro for typesetting a bar brace.
 Macro to typeset a vertical episemus around a bar.
 
 \begin{argtable}
-  \#1 & integer & Type of glyph the episemus is attached to.  See episemus special argument for description of options.\\
+  \#1 & integer & Type of glyph the episemus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash grebarvepisemusictusa\#1}{gregoriotex-signs.tex}
@@ -78,7 +78,7 @@ Macro to typeset a vertical episemus around a bar.
 Macro to typeset a vertical episemus and ictus (type a) around a bar.
 
 \begin{argtable}
-  \#1 & integer & Type of glyph the episemus is attached to.  See episemus special argument for description of options.\\
+  \#1 & integer & Type of glyph the episemus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash grebarvepisemusictust\#1}{gregoriotex-signs.tex}
@@ -86,7 +86,7 @@ Macro to typeset a vertical episemus and ictus (type a) around a bar.
 Macro to typeset a vertical episemus and ictus (type t) around a bar.
 
 \begin{argtable}
-  \#1 & integer & Type of glyph the episemus is attached to.  See episemus special argument for description of options.\\
+  \#1 & integer & Type of glyph the episemus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash grebeginnlbarea\#1\#2}{gregoriotex.tex}
@@ -130,7 +130,7 @@ Macro for typesetting a circulus.
 
 \begin{argtable}
   \#1 & character & Height of circulus.\\
-  \#2 & integer   & Type of glyph the circulus is attached to.  See episemus special argument for description of options.\\
+  \#2 & integer   & Type of glyph the circulus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash grecolored\#1}{gregoriotex.sty}
@@ -309,7 +309,7 @@ Macro to typeset a episemus.
 
 \begin{argtable}
   \#1 & character & Height of the episemus.\\
-  \#2 & special   & See episemus special.\\
+  \#2 & special   & See \nameref{EpisemusSpecial}.\\
   \#3 & integer   & The ambitus of the porrectus or porrectus flexes if the second argument is 9, 10, 11, 21, 22, 23; ignored otherwise..\\
   \#4 & character & Replacement for \#1 if a bridge causes a height substitution.\\
 \end{argtable}
@@ -320,7 +320,7 @@ Macro to typeset a episemus at the bottom of a note
 
 \begin{argtable}
   \#1 & character & Height of the episemus.\\
-  \#2 & special   & See episemus special.\\
+  \#2 & special   & See \nameref{EpisemusSpecial}.\\
   \#3 & integer   & The ambitus of the porrectus or porrectus flexes if the second argument is 9, 10, 11, 21, 22, 23; ignored otherwise.\\
 \end{argtable}
 
@@ -331,7 +331,7 @@ Macro to typeset a bridge episemus father the last note of a glyph
 
 \begin{argtable}
   \#1 & character & Height of the episemus.\\
-  \#2 & special   & See episemus special.\\
+  \#2 & special   & See \nameref{EpisemusSpecial}.\\
   \#3 & integer   & The ambitus of the porrectus or porrectus flexes if the second argument is 9, 10, 11, 21, 22, 23; ignored otherwise.\\
 \end{argtable}
 
@@ -355,7 +355,7 @@ Macro used for end of line hyphens.  Defaults to \verb=\grenormalhyph=.
 Macro for typesetting an ictus (type a)
 
 \begin{argtable}
-  \#1 & integer & Type of glyph the ictus is attached to.  See episemus special argument for description of options.\\
+  \#1 & integer & Type of glyph the ictus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash greictust\#1}{gregoriotex-signs.tex}
@@ -363,7 +363,7 @@ Macro for typesetting an ictus (type a)
 Macro for typesetting an ictus (type t)
 
 \begin{argtable}
-  \#1 & integer & Type of glyph the ictus is attached to.  See episemus special argument for description of options.\\
+  \#1 & integer & Type of glyph the ictus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash grein}{}
@@ -594,7 +594,7 @@ Macro for typesetting a reversed accentus.
 
 \begin{argtable}
   \#1 & character & Height of accentus.\\
-  \#2 & integer   & Type of glyph the accentus is attached to. See episemus special argument for description of options.\\
+  \#2 & integer   & Type of glyph the accentus is attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash grereversedsemicirculus\#1\#2}{gregoriotex-signs.tex}
@@ -603,7 +603,7 @@ Macro for typesetting a reversed semicirculus.
 
 \begin{argtable}
   \#1 & character & Height of semicirculus.\\
-  \#2 & integer   & Type of glyph the semicirculus is attached to. See episemus special argument for description of options.\\
+  \#2 & integer   & Type of glyph the semicirculus is attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash grescorereference}{gregoriotex.tex}
@@ -616,7 +616,7 @@ Macro for typesetting a semicirculus.
 
 \begin{argtable}
   \#1 & character & Height of semicirculus.\\
-  \#2 & integer   & Type of glyph the semicirculus is attached to. See episemus special argument for description of options.\\
+  \#2 & integer   & Type of glyph the semicirculus is attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash gresetbiginitial}{gregoriotex.tex}
@@ -713,7 +713,7 @@ Macro for typesetting the vertical episemus.
 
 \begin{argtable}
   \#1 & character & Height of episemus.\\
-  \#2 & integer   & Type of glyph the episemus is attached to. See episemus special argument for description of options.\\
+  \#2 & integer   & Type of glyph the episemus is attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash grevepisemusictusa\#1\#2}{gregoriotex-signs.tex}
@@ -723,7 +723,7 @@ same glyph.
 
 \begin{argtable}
   \#1 & character & Height of episemus.\\
-  \#2 & integer   & Type of glyph the episemus and ictus are attached to. See episemus special argument for description of options.\\
+  \#2 & integer   & Type of glyph the episemus and ictus are attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash grevepisemusictust\#1\#2}{gregoriotex-signs.tex}
@@ -733,7 +733,7 @@ same glyph.
 
 \begin{argtable}
   \#1 & character & Height of episemus.\\
-  \#2 & integer   & Type of glyph the episemus and ictus are attached to. See episemus special argument for description of options.\\
+  \#2 & integer   & Type of glyph the episemus and ictus are attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash grevirgula\#1}{gregoriotex-signs.tex}
