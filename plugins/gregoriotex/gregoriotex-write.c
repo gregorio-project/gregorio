@@ -287,11 +287,12 @@ gregoriotex_is_last_of_line (gregorio_syllable *syllable)
 gregorio_element *
 gregoriotex_syllable_is_clef_change (gregorio_syllable *syllable)
 {
+  gregorio_element *element;
   if (!syllable || !syllable->elements || !syllable->elements[0])
     {
       return NULL;
     }
-  gregorio_element *element = syllable->elements[0];
+  element = syllable->elements[0];
   // we just detect the foud cases
   if (element->type == GRE_CUSTO && element->next
       && (is_clef (element->next->type)) && !element->next->next)
@@ -534,13 +535,14 @@ gregoriotex_write_syllable (FILE *f,
     }
   if (syllable->next_syllable)
     {
-      gregoriotex_write_next_first_text (f, syllable->next_syllable->text);
-      fprintf (f, "{%d}{",
+      fprintf(f, "{\\gresetnextsyllable");
+      gregoriotex_write_text (f, syllable->next_syllable->text, NULL);
+      fprintf (f, "}{}{%d}{",
                gregoriotex_syllable_first_type (syllable->next_syllable));
     }
   else
     {
-      fprintf (f, "{}{}{0}{");
+      fprintf (f, "{\\gresetnextsyllable{}{}{}}{}{0}{");
     }
   if (syllable->translation)
     {
@@ -1234,11 +1236,15 @@ gtex_print_char (FILE *f, grewchar to_print)
 void
 gregoriotex_write_text (FILE *f, gregorio_character *text, char *first_syllable)
 {
+  char first_syllable_val = 0;
   if (text == NULL)
     {
       fprintf (f, "{}{}{}");
       return;
     }
+  if (first_syllable) {
+    first_syllable_val = *first_syllable;
+  }
   fprintf (f, "{");
   gregoriotex_ignore_style = gregoriotex_fix_style (text);
   if (gregoriotex_ignore_style != 0)
@@ -1247,12 +1253,12 @@ gregoriotex_write_text (FILE *f, gregorio_character *text, char *first_syllable)
                gregoriotex_internal_style_to_gregoriotex
                (gregoriotex_ignore_style));
     }
-  gregorio_write_text (*first_syllable, text, f,
+  gregorio_write_text (first_syllable_val, text, f,
                        (&gtex_write_verb),
                        (&gtex_print_char),
                        (&gtex_write_begin),
                        (&gtex_write_end), (&gtex_write_special_char));
-  if (*first_syllable)
+  if (first_syllable && *first_syllable)
     {
       *first_syllable = 0;
     }
@@ -1391,55 +1397,6 @@ gregoriotex_write_translation (FILE *f, gregorio_character *translation)
                        (&gtex_print_char),
                        (&gtex_write_begin),
                        (&gtex_write_end), (&gtex_write_special_char));
-}
-
-// a function to write only the two first syllables of the next syllables
-void
-gregoriotex_write_next_first_text (FILE *f,
-                                   gregorio_character *current_character)
-{
-  gregorio_character *first_character = current_character;
-  gregorio_character *next_character;
-  if (current_character == NULL)
-    {
-      fprintf (f, "{}{}");
-      return;
-    }
-  gregoriotex_ignore_style = gregoriotex_fix_style (current_character);
-  // big dirty hack to have only the first two syllables printed : we cut the
-  // thing just after the ST_CENTER closing
-  while (current_character)
-    {
-      if (current_character->is_character == 0
-          && (current_character->cos.s.style == ST_CENTER
-              || current_character->cos.s.style == ST_FORCED_CENTER)
-          && current_character->cos.s.type == ST_T_END)
-        {
-          next_character = current_character->next_character;
-          current_character->next_character = NULL;
-
-          fprintf (f, "{");
-          if (gregoriotex_ignore_style != 0)
-            {
-              fprintf (f, "\\gresetfixednexttextformat{%d}",
-                       gregoriotex_internal_style_to_gregoriotex
-                       (gregoriotex_ignore_style));
-            }
-          gregorio_write_text (0, first_character, f,
-                               (&gtex_write_verb),
-                               (&gtex_print_char),
-                               (&gtex_write_begin),
-                               (&gtex_write_end_for_two),
-                               (&gtex_write_special_char));
-          current_character->next_character = next_character;
-          gregoriotex_ignore_style = 0;
-          return;
-        }
-      else
-        {
-          current_character = current_character->next_character;
-        }
-    }
 }
 
 // here we absolutely need to pass the syllable as an argument, because we will 

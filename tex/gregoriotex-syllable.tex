@@ -502,16 +502,21 @@
 
 \let\grefixednexttextformat\gretextnormal %
 
+\def\gresetnextsyllable#1#2#3{%
+  \gdef\gre@nextfirstsyllablepart{#1}%
+  \gdef\gre@nextmiddlesyllablepart{#2}%
+  \gdef\gre@nextendsyllablepart{#3}%
+}
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : the first letters of the syllable, that don't count for the alignment
 % #2 : the middle letters of the syllable, we must align in the middle of them
 % #3 : the end letters, they don't count
 % #4 : end of word : if it is 0 it means it is not an end of word, if it is 1 it is
 % TODO: find another system for the end syllable
-%% #5 (not used anymore) : beggining of word : if it is 0 it means it is not a beginning of word, if it is 1 it is
 % #9 : glyphs : all the notes
 % the three next parameters are to put an hyphen if necessary, they can be empty for end of words
-% #5 : first letters of the next syllable 
+% #5 : macros setting next syllable letters of the next syllable 
 % #6 : middle letters of the next syllabel
 % #7 : alignment type of the first next glyph
 % #8 : other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments
@@ -581,7 +586,8 @@
   \fi %
   % by default, gregorioattr will be 2
   \gregorioattr=2\relax %
-  \gresetnextbegindifference{#5}{#6}{#7}%
+  #5%
+  \gresetnextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@endsyllablepart}{#7}%
   \greunsetfixednexttextformat %
   \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3}}%
   \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{1}%
@@ -746,7 +752,8 @@
   \grebegindifference=\grenotesaligncenter %
   \advance\grebegindifference by -\gretextaligncenter %
   \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{1}%
-  \gresetnextbegindifference{#5}{#6}{#7}%
+  #5%
+  \gresetnextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@endsyllablepart}{#7}%
   \greunsetfixednexttextformat %
   % for LuaTeX syllable counting in optimize_gabc, we put an empty syllable box with gregorioattr set to 2. With this we can count every syllable.
   \gregorioattr=2\relax %
@@ -871,15 +878,16 @@
 % macro to set \grenextbegindifference
 %% 1 : the first letters of the next syllable
 %% 2 : the middle letters of the next syllable
-%% 3 : the type of notes alignment
-\def\gresetnextbegindifference#1#2#3{%
+%% 3 : the end letters of the next syllable
+%% 4 : the type of notes alignment
+\def\gresetnextbegindifference#1#2#3#4{%
   %to prevent the pollution of the normal values, we stock them into a temp value
   \gretempdimskip=\gretextaligncenter %
   \grefindtextaligncenter{#1}{#2}{1}%
   \global\grenextbegindifference=-\gretextaligncenter %
   \global\gretextaligncenter=\gretempdimskip %
   \gretempdimskip=\grenotesaligncenter %
-  \grefindnextnotesaligncenter{#3}% idem
+  \grefindnextnotesaligncenter{#4}% idem
   \global\advance\grenextbegindifference by \the\grenotesaligncenter %
   \global\grenotesaligncenter=\gretempdimskip %
   \relax %
