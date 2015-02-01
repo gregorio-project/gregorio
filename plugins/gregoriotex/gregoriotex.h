@@ -217,9 +217,6 @@ void gregoriotex_write_rare (FILE *f, gregorio_glyph *current_glyph, int i,
 void gregoriotex_write_signs (FILE *f, char type, gregorio_glyph *glyph,
                               gregorio_element *element,
                               gregorio_note *current_note);
-
-void gregoriotex_write_next_first_text (FILE *f,
-                                        gregorio_character *current_character);
 int gregoriotex_syllable_first_type (gregorio_syllable *syllable);
 
 void gregoriotex_determine_note_number_and_type (gregorio_note *note,

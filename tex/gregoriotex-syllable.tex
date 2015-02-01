@@ -296,13 +296,14 @@
 %%%%% 11 : divisio minima, minor and maior
 %%%%% 12 : divisio finalis
 % there is a tricky here : if notesaligncenter is not 0, it means that there is a flat before, so we simply add notes aligncenter
-\def\grefindsimplenotesaligncenter#1{%
+% #2 is 0 if we are in the context of current syllable, 1 if we are in the context of next syllable
+\def\grefindsimplenotesaligncenter#1#2{%
   \ifcase#1%
     %case of punctum
     \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@punctum}%
   \or%
     %case of flexus
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@flexus}%
+    \grehandleclivisspecialalignment{\gregoriofont\char\gre@char@flexus}{\gregoriofont\char\gre@char@punctum}{#2}%
   \or%
     %case of porrectus (we consider it to have the same alignment as punctum)
     \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@punctum}%
@@ -323,10 +324,10 @@
     \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@stropha}%
   \or %
     % case of flexus with ambitus of one
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@flexusone}%
+    \grehandleclivisspecialalignment{\gregoriofont\char\gre@char@flexusone}{\gregoriofont\char\gre@char@punctum}{#2}%
   \or %
     % case of flexus deminutus
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@flexusdeminutus}%
+    \grehandleclivisspecialalignment{\gregoriofont\char\gre@char@flexusdeminutus}{\gregoriofont\char\gre@char@punctum}{#2}%
   \or %
     % case of virgula
     \global\setbox\GreTempwidth=\hbox{\gregoriofont\char\gre@char@virgula}%
@@ -340,10 +341,57 @@
   \relax%
 }
 
+% aux function to previous one: sets \GreTempwidth to \hbox{#1} or \hbox{#2}
+% according to special clivis alignemt scheme. See comments of
+% \gre@clivisalignment for more.
+% #1 is the glyph in case we align the clivis in the "clivis" way,
+% #2 is the glyph in case we align the clivis in the normal way
+% Conditionals can be summed up this way:
+% if wd(#1/2) > \gretextaligncenter then #2
+% else
+%   if \gre@englishcentering = 0:
+%       if wd(\gre@endsyllablepart) > \gre@clivisalignmentmin -> #2 else #1
+%   else:
+%      if (\gretextaligncenter) > \gre@clivisalignmentmin -> #2 else #1
+%
+% #3 is the same as #2 of previous function
+\def\grehandleclivisspecialalignment#1#2#3{
+  \ifcase\gre@clivisalignment%
+    \global\setbox\GreTempwidth=\hbox{#1}%
+  \or%
+    \global\setbox\GreTempwidth=\hbox{#2}%
+  \or%
+    \let\mygre@endsyllablepart\gre@nextendsyllablepart %
+    \ifcase#3%
+      \let\mygre@endsyllablepart\gre@endsyllablepart %
+    \fi%
+    \grewidthof{#1}%
+    \divide\gretempwidth by 2 %
+    \ifdim\gretempwidth >\gretextaligncenter %
+      \global\setbox\GreTempwidth=\hbox{#2}%
+    \else%
+      \ifcase\gre@englishcentering%
+        \grewidthof{\mygre@endsyllablepart}%
+        \ifdim\gretempwidth >\gre@clivisalignmentmin %
+          \global\setbox\GreTempwidth=\hbox{#2}%
+        \else%
+          \global\setbox\GreTempwidth=\hbox{#1}%
+        \fi%
+      \or%
+        \ifdim\gretextaligncenter >\gre@clivisalignmentmin %
+          \global\setbox\GreTempwidth=\hbox{#2}%
+        \else%
+          \global\setbox\GreTempwidth=\hbox{#1}%
+        \fi%
+      \fi%
+    \fi%
+  \fi%
+}
+
 % the "hat" function, that calls the simple function with the good argument, according to the fact that it's a flat, natural, etc.
 % warning: the behaviour of all this is quite difficult to understand: this function is called with simple arguments (between 0 and 20) by the glyph function. In this case we add the align center of the argument to notesaligncenter ; and notesaligncenter can be already set to something by flat and natural.
 \def\grefindnotesaligncenter#1{%
-  \grefindsimplenotesaligncenter{#1}%
+  \grefindsimplenotesaligncenter{#1}{0}%
   \gretempdim=\wd\GreTempwidth %
   \divide\gretempdim by 2\relax %
   \global\advance\grenotesaligncenter by \gretempdim %
@@ -353,7 +401,7 @@
 % this is the function that we call when we try to determine the next aligncenter of the notes. In this case we call this function with normal arguments if there is no flat nor natural ; we call it with argument + 20 if there is a flat and argument + 40 if there is a natural... I know this is dirty... but... this is TeX...
 \def\grefindnextnotesaligncenter#1{%
   \ifnum#1<20\relax %
-    \grefindsimplenotesaligncenter{#1}%
+    \grefindsimplenotesaligncenter{#1}{1}%
     \gretempdim=\wd\GreTempwidth %
     \divide\gretempdim by 2\relax %
     \global\grenotesaligncenter=\gretempdim %
@@ -361,13 +409,13 @@
     \gretempdimcount=#1 %
     \ifnum#1<40\relax%
       \advance\gretempdimcount by -20\relax %
-      \grefindsimplenotesaligncenter{\gretempdimcount}%
+      \grefindsimplenotesaligncenter{\gretempdimcount}{1}%
       \gretempdim=\wd\GreTempwidth %
       \divide\gretempdim by 2\relax %
       \setbox\GreTempwidth=\hbox{\gregoriofont \char 6}%
     \else%\ifnum#1<40
       \advance\gretempdimcount by -40\relax %
-      \grefindsimplenotesaligncenter{\gretempdimcount}%
+      \grefindsimplenotesaligncenter{\gretempdimcount}{1}%
       \gretempdim=\wd\GreTempwidth %
       \divide\gretempdim by 2\relax %
       \setbox\GreTempwidth=\hbox{\gregoriofont \char 7}%
@@ -502,6 +550,11 @@
 
 \let\grefixednexttextformat\gretextnormal %
 
+\def\gresetnextsyllable#1#2#3{%
+  \gdef\gre@nextfirstsyllablepart{#1}%
+  \gdef\gre@nextmiddlesyllablepart{#2}%
+  \gdef\gre@nextendsyllablepart{#3}%
+}
 
 \newcount\gre@englishcentering
 
@@ -515,16 +568,41 @@
 
 \defaultcentering
 
+%% options about clivis centering scheme. Clivis are usually aligned by their
+%% center, which is different from most neumes. Gregorio has three modes:
+%%   1. always align clivis this way
+%%   2. never align clivis this way, align on first punctum
+%%   3. align clivis this way, except if:
+%%        - notes would go left of text
+%%        - consonants after vowels are larger than \gre@clivisalignmentmin
+\newcount\gre@clivisalignment
+\newdimen\gre@clivisalignmentmin
+\setlength{\gre@clivisalignmentmin}{1mm}
+
+\def\clivisalignmentalways{
+  \global\gre@clivisalignment=0
+}
+
+\def\clivisalignmentnever{
+  \global\gre@clivisalignment=1
+}
+
+\def\clivisalignmentspecial{
+  \global\gre@clivisalignment=2
+}
+
+%% by default we use the 3rd mode, it seems closest to Solesmes books
+\clivisalignmentspecial
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : the first letters of the syllable, that don't count for the alignment
 % #2 : the middle letters of the syllable, we must align in the middle of them
 % #3 : the end letters, they don't count
 % #4 : end of word : if it is 0 it means it is not an end of word, if it is 1 it is
 % TODO: find another system for the end syllable
-%% #5 (not used anymore) : beggining of word : if it is 0 it means it is not a beginning of word, if it is 1 it is
 % #9 : glyphs : all the notes
 % the three next parameters are to put an hyphen if necessary, they can be empty for end of words
-% #5 : first letters of the next syllable 
+% #5 : macros setting next syllable letters of the next syllable 
 % #6 : middle letters of the next syllabel
 % #7 : alignment type of the first next glyph
 % #8 : other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments
@@ -532,13 +610,13 @@
 %% at the end we wall \greendofword or \greendofsyllable with #7, to reduce the space in case of a flat or natural
 \def\gresyllable#1#2#3#4#5#6#7#8#9{%
 	\ifnum\gre@englishcentering=1\relax
-		\def\gre@firstsyllablepart{}
-		\def\gre@middlesyllablepart{#1#2#3}
-		\def\gre@endsyllablepart{}
+		\gdef\gre@firstsyllablepart{}
+		\gdef\gre@middlesyllablepart{#1#2#3}
+		\gdef\gre@endsyllablepart{}
 	\else
-		\def\gre@firstsyllablepart{#1}
-		\def\gre@middlesyllablepart{#2}
-		\def\gre@endsyllablepart{#3}
+		\gdef\gre@firstsyllablepart{#1}
+		\gdef\gre@middlesyllablepart{#2}
+		\gdef\gre@endsyllablepart{#3}
 	\fi
   \grefirstglyph=1 %
   \grefindtextaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
@@ -603,7 +681,8 @@
   \fi %
   % by default, gregorioattr will be 2
   \gregorioattr=2\relax %
-  \gresetnextbegindifference{#5}{#6}{#7}%
+  #5%
+  \gresetnextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
   \greunsetfixednexttextformat %
   \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
   \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{1}%
@@ -768,7 +847,8 @@
   \grebegindifference=\grenotesaligncenter %
   \advance\grebegindifference by -\gretextaligncenter %
   \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{1}%
-  \gresetnextbegindifference{#5}{#6}{#7}%
+  #5%
+  \gresetnextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@endsyllablepart}{#7}%
   \greunsetfixednexttextformat %
   % for LuaTeX syllable counting in optimize_gabc, we put an empty syllable box with gregorioattr set to 2. With this we can count every syllable.
   \gregorioattr=2\relax %
@@ -893,15 +973,16 @@
 % macro to set \grenextbegindifference
 %% 1 : the first letters of the next syllable
 %% 2 : the middle letters of the next syllable
-%% 3 : the type of notes alignment
-\def\gresetnextbegindifference#1#2#3{%
+%% 3 : the end letters of the next syllable
+%% 4 : the type of notes alignment
+\def\gresetnextbegindifference#1#2#3#4{%
   %to prevent the pollution of the normal values, we stock them into a temp value
   \gretempdimskip=\gretextaligncenter %
   \grefindtextaligncenter{#1}{#2}{1}%
   \global\grenextbegindifference=-\gretextaligncenter %
   \global\gretextaligncenter=\gretempdimskip %
   \gretempdimskip=\grenotesaligncenter %
-  \grefindnextnotesaligncenter{#3}% idem
+  \grefindnextnotesaligncenter{#4}% idem
   \global\advance\grenextbegindifference by \the\grenotesaligncenter %
   \global\grenotesaligncenter=\gretempdimskip %
   \relax %
