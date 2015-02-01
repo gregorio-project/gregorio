@@ -558,12 +558,12 @@
 
 \newcount\gre@englishcentering
 
-\def\englishcentering{
-	\global\gre@englishcentering=1
+\def\englishcentering{%
+  \global\gre@englishcentering=1\relax %
 }
 
-\def\defaultcentering{
-	\global\gre@englishcentering=0
+\def\defaultcentering{%
+  \global\gre@englishcentering=0\relax %
 }
 
 \defaultcentering
@@ -579,16 +579,16 @@
 \newdimen\gre@clivisalignmentmin
 \setlength{\gre@clivisalignmentmin}{1mm}
 
-\def\clivisalignmentalways{
-  \global\gre@clivisalignment=0
+\def\clivisalignmentalways{%
+  \global\gre@clivisalignment=0\relax %
 }
 
-\def\clivisalignmentnever{
-  \global\gre@clivisalignment=1
+\def\clivisalignmentnever{%
+  \global\gre@clivisalignment=1\relax %
 }
 
-\def\clivisalignmentspecial{
-  \global\gre@clivisalignment=2
+\def\clivisalignmentspecial{%
+  \global\gre@clivisalignment=2\relax %
 }
 
 %% by default we use the 3rd mode, it seems closest to Solesmes books
@@ -609,15 +609,15 @@
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
 %% at the end we wall \greendofword or \greendofsyllable with #7, to reduce the space in case of a flat or natural
 \def\gresyllable#1#2#3#4#5#6#7#8#9{%
-	\ifnum\gre@englishcentering=1\relax
-		\gdef\gre@firstsyllablepart{}
-		\gdef\gre@middlesyllablepart{#1#2#3}
-		\gdef\gre@endsyllablepart{}
-	\else
-		\gdef\gre@firstsyllablepart{#1}
-		\gdef\gre@middlesyllablepart{#2}
-		\gdef\gre@endsyllablepart{#3}
-	\fi
+  \ifnum\gre@englishcentering=1\relax %
+    \gdef\gre@firstsyllablepart{}%
+    \gdef\gre@middlesyllablepart{#1#2#3}%
+    \gdef\gre@endsyllablepart{}%
+  \else %
+    \gdef\gre@firstsyllablepart{#1}%
+    \gdef\gre@middlesyllablepart{#2}%
+    \gdef\gre@endsyllablepart{#3}%
+  \fi %
   \grefirstglyph=1 %
   \grefindtextaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
   % we need to save lastoflinecount, because otherwise when a \newline appears inside a syllable, it is counted two times (once here and once later when #9 will be really output), so \grelastoflinecount has a wrong value. Thus
