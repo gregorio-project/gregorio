@@ -508,6 +508,18 @@
   \gdef\gre@nextendsyllablepart{#3}%
 }
 
+\newcount\gre@englishcentering
+
+\def\englishcentering{
+	\global\gre@englishcentering=1
+}
+
+\def\defaultcentering{
+	\global\gre@englishcentering=0
+}
+
+\defaultcentering
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : the first letters of the syllable, that don't count for the alignment
 % #2 : the middle letters of the syllable, we must align in the middle of them
@@ -523,8 +535,17 @@
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
 %% at the end we wall \greendofword or \greendofsyllable with #7, to reduce the space in case of a flat or natural
 \def\gresyllable#1#2#3#4#5#6#7#8#9{%
+	\ifnum\gre@englishcentering=1\relax
+		\gdef\gre@firstsyllablepart{}
+		\gdef\gre@middlesyllablepart{#1#2#3}
+		\gdef\gre@endsyllablepart{}
+	\else
+		\gdef\gre@firstsyllablepart{#1}
+		\gdef\gre@middlesyllablepart{#2}
+		\gdef\gre@endsyllablepart{#3}
+	\fi
   \grefirstglyph=1 %
-  \grefindtextaligncenter{#1}{#2}{0}% we first get the width between the alignment point and the end of the syllable
+  \grefindtextaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
   % we need to save lastoflinecount, because otherwise when a \newline appears inside a syllable, it is counted two times (once here and once later when #9 will be really output), so \grelastoflinecount has a wrong value. Thus
   \xdef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
   % a counter to know we are not really typesetting things (useful for end of lines)
@@ -589,7 +610,7 @@
   #5%
   \gresetnextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@endsyllablepart}{#7}%
   \greunsetfixednexttextformat %
-  \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3}}%
+  \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
   \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{1}%
   \ifcase#4 %
     % we enter here if the end of word is 0, so we must determine if we need to type a dash here
@@ -616,15 +637,15 @@
     \ifdim\gretempdim>\gremaximumspacewithoutdash %
       % if it's the last syllable of line, the hyphen will be \grehyph
       \ifnum\grelastoflinecount=1\relax %
-        \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3\grehyph\relax}}%
+        \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart\grehyph\relax}}%
       \else %
-        \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3-}}%
+        \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart-}}%
       \fi %
       \gresetenddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gretextaligncenter}{\grenotesaligncenter}{0}%
     \else %
       \gregorioattr=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
-      \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3}}%
+      \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
     \fi%
   \fi% ficase#4
   % then we reuse temp, we assign to it the \grebegindifference, but only if it is positive, else it is 0
