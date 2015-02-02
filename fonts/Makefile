@@ -4,7 +4,7 @@
 SRCFILES = Makefile
 DOCFILES = INSTALL FONTLOG 
 TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf gresym.ttf greextra.ttf
-FNTSRCFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd squarize.py greextra.sfd gresym.sfd
+FNTSRCFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd squarize.py greextra.sfd gresym.sfd convertsfdtottf.sh
 TEXFILES = $(wildcard ../tex/*.tex) $(wildcard ../tex/gregorio*.sty) $(wildcard ../tex/*.lua)
 ALLFILES = $(SRCFILES) $(DOCFILES) $(TEXFILES) $(TTFFILES) $(FNTSRCFILES)
 
@@ -83,6 +83,12 @@ parmesan.ttf: squarize.py parmesan-base.sfd
 	
 greciliae.ttf: squarize.py greciliae-base.sfd
 	python2 squarize.py greciliae
+
+gresym.ttf: convertsfdtottf.sh gresym.sfd
+	./convertsfdtottf.sh gresym.sfd
+
+greextra.ttf: convertsfdtottf.sh greextra.sfd
+	./convertsfdtottf.sh greextra.sfd
 
 all: gregorio.ttf parmesan.ttf greciliae.ttf
 
