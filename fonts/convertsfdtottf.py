@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # coding=utf-8
 
 from __future__ import print_function
@@ -34,9 +34,9 @@ def main():
     if len(args)==0:
         usage()
         sys.exit(2)
-    if args[0] == "gresym":
+    if args[0] == "gresym.sfd":
         font_name="gresym"
-    elif args[0] == "greextra":
+    elif args[0] == "greextra.sfd":
         font_name="greextra"
     else:
         usage()
@@ -44,3 +44,6 @@ def main():
     font = fontforge.open("%s.sfd" % font_name)
     font.generate("%s.ttf" % font_name)
     font.close()
+    
+if __name__ == "__main__":
+    main()
