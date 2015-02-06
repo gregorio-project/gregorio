@@ -688,10 +688,12 @@ def flexus():
         write_flexus(i, "base2", 'base7', 'flexus_nobar')
     for i in range(1,max_interval+1):
         write_flexus(i, "odbase", 'base7', 'flexus_oriscus')
-    for i in range(1,max_interval+1):
-        write_flexus(i, "vsbase", 'base7', 'flexus')
-    for i in range(1,max_interval+1):
-        write_flexus(i, "vlbase", 'base7', 'flexus_longqueue')
+    write_flexus(1, "vsbase", 'base7', 'flexus')
+    for i in range(2,max_interval+1):
+        write_flexus(i, "vbase"+str(i), 'base7', 'flexus')
+    write_flexus(1, "vlbase", 'base7', 'flexus_longqueue')
+    for i in range(2,max_interval+1):
+        write_flexus(i, "vbase"+str(i), 'base7', 'flexus_longqueue')
     precise_message("flexus deminutus")
     for i in range(1,max_interval+1):
         write_flexus(i, "mdeminutus", 'base7', 'flexus_nobar', 'deminutus')
@@ -706,19 +708,23 @@ def flexus():
         write_flexus(i, "base2", 'auctusa1', 'flexus_nobar', 'auctusascendens')
     for i in range(1,max_interval+1):
         write_flexus(i, "odbase", 'auctusa1', 'flexus_oriscus', 'auctusascendens')
-    for i in range(1,max_interval+1):
-        write_flexus(i, "vsbase", 'auctusa1', 'flexus', 'auctusascendens')
-    for i in range(1,max_interval+1):
-        write_flexus(i, "vlbase", 'auctusa1', 'flexus_longqueue', 'auctusascendens')
+    write_flexus(1, "vsbase", 'auctusa1', 'flexus', 'auctusascendens')
+    for i in range(2,max_interval+1):
+        write_flexus(i, "vbase"+str(i), 'auctusa1', 'flexus', 'auctusascendens')
+    write_flexus(1, "vlbase", 'auctusa1', 'flexus_longqueue', 'auctusascendens')
+    for i in range(2,max_interval+1):
+        write_flexus(i, "vbase"+str(i), 'auctusa1', 'flexus_longqueue', 'auctusascendens')
     precise_message("flexus auctus descendens")
     for i in range(1,max_interval+1):
         write_flexus(i, "base2", 'auctusd1', 'flexus_nobar', 'auctusdescendens')
     for i in range(1,max_interval+1):
         write_flexus(i, "odbase", 'auctusd1', 'flexus_oriscus', 'auctusdescendens')
-    for i in range(1,max_interval+1):
-        write_flexus(i, "vsbase", 'auctusd1', 'flexus', 'auctusdescendens')
-    for i in range(1,max_interval+1):
-        write_flexus(i, "vlbase", 'auctusd1', 'flexus_longqueue', 'auctusdescendens')
+    write_flexus(1, "vsbase", 'auctusd1', 'flexus', 'auctusdescendens')
+    for i in range(2,max_interval+1):
+        write_flexus(i, "vbase"+str(i), 'auctusd1', 'flexus', 'auctusdescendens')
+    write_flexus(1, "vlbase", 'auctusd1', 'flexus_longqueue', 'auctusdescendens')
+    for i in range(2,max_interval+1):
+        write_flexus(i, "vbase"+str(i), 'auctusd1', 'flexus_longqueue', 'auctusdescendens')
 
 def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
     glyphnumber=gnumber(i, 0, 0, shape, liquescentia)

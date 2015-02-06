@@ -19,11 +19,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-<<<<<<< HEAD
-ModificationTime: 1420567230
-=======
-ModificationTime: 1420483873
->>>>>>> fix-21
+ModificationTime: 1423032706
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -45,9 +41,9 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 0 8 2
+WinInfo: 38 19 8
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 375 375
+BeginChars: 379 379
 
 StartChar: _0017
 Encoding: 0 66 0
@@ -110,7 +106,7 @@ StartChar: _0026
 Encoding: 3 69 3
 Width: 166
 VWidth: 2496
-Flags: HWO
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore
@@ -2788,40 +2784,100 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: NameMe.203
+StartChar: vbase2
 Encoding: 121 -1 121
-Width: 2048
-VWidth: 2048
-Flags: W
+Width: 166
+VWidth: 2637
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
+Fore
+SplineSet
+11.7002 -353.8 m 1
+ 3.90039 -352.067 0 -345.133 0 -333 c 2
+ 0 121 l 2
+ 0 153.067 27.9502 169.1 83.8506 169.1 c 0
+ 139.75 169.1 166 153.067 166 121 c 2
+ 166 -53 l 1
+ 150.333 -53 157.989 -53.0137 148 -53 c 1
+ 147.989 -40.0137 148 -49.6667 148 -29.5322 c 1
+ 132 -18.9158 111.064 -11.0234 83.2002 -10.2998 c 0
+ 56.3421 -9.60235 25.333 -25.334 18.2002 -32.4004 c 1
+ 18.2002 -307 l 2
+ 18.2002 -352.24 16.9004 -353.8 11.7002 -353.8 c 1
+EndSplineSet
 EndChar
 
-StartChar: NameMe.204
+StartChar: vbase3
 Encoding: 122 -1 122
-Width: 2048
-VWidth: 2048
-Flags: W
+Width: 166
+VWidth: 2637
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
+Fore
+SplineSet
+11.7002 -510.8 m 5
+ 3.90039 -509.067 0 -502.133 0 -490 c 6
+ 0 121 l 2
+ 0 153.067 27.9502 169.1 83.8506 169.1 c 0
+ 139.75 169.1 166 153.067 166 121 c 2
+ 166 -53 l 1
+ 150.333 -53 157.989 -53.0137 148 -53 c 1
+ 147.989 -40.0137 148 -49.6667 148 -29.5322 c 1
+ 132 -18.9158 111.064 -11.0234 83.2002 -10.2998 c 0
+ 56.3421 -9.60235 25.333 -25.334 18.2002 -32.4004 c 1
+ 18.2002 -464 l 6
+ 18.2002 -509.24 16.9004 -510.8 11.7002 -510.8 c 5
+EndSplineSet
 EndChar
 
-StartChar: NameMe.205
+StartChar: vbase4
 Encoding: 123 -1 123
-Width: 2048
-VWidth: 2048
-Flags: W
+Width: 166
+VWidth: 2637
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
+Fore
+SplineSet
+11.7002 -668.8 m 1
+ 3.90039 -667.067 0 -660.133 0 -648 c 2
+ 0 121 l 2
+ 0 153.067 27.9502 169.1 83.8506 169.1 c 0
+ 139.75 169.1 166 153.067 166 121 c 2
+ 166 -53 l 1
+ 150.333 -53 157.989 -53.0137 148 -53 c 1
+ 147.989 -40.0137 148 -49.6667 148 -29.5322 c 1
+ 132 -18.9158 111.064 -11.0234 83.2002 -10.2998 c 0
+ 56.3421 -9.60235 25.333 -25.334 18.2002 -32.4004 c 1
+ 18.2002 -622 l 2
+ 18.2002 -667.24 16.9004 -668.8 11.7002 -668.8 c 1
+EndSplineSet
 EndChar
 
-StartChar: NameMe.206
+StartChar: vbase5
 Encoding: 124 -1 124
-Width: 2048
-VWidth: 2048
-Flags: W
+Width: 166
+VWidth: 2637
+Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
+Fore
+SplineSet
+11.7002 -825.8 m 5
+ 3.90039 -824.067 0 -817.133 0 -805 c 6
+ 0 121 l 2
+ 0 153.067 27.9502 169.1 83.8506 169.1 c 0
+ 139.75 169.1 166 153.067 166 121 c 2
+ 166 -53 l 1
+ 150.333 -53 157.989 -53.0137 148 -53 c 1
+ 147.989 -40.0137 148 -49.6667 148 -29.5322 c 1
+ 132 -18.9158 111.064 -11.0234 83.2002 -10.2998 c 0
+ 56.3421 -9.60235 25.333 -25.334 18.2002 -32.4004 c 1
+ 18.2002 -779 l 6
+ 18.2002 -824.24 16.9004 -825.8 11.7002 -825.8 c 5
+EndSplineSet
 EndChar
 
 StartChar: NameMe.207
@@ -5067,6 +5123,42 @@ EndChar
 
 StartChar: NameMe.456
 Encoding: 374 -1 374
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+EndChar
+
+StartChar: NameMe.457
+Encoding: 375 -1 375
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+EndChar
+
+StartChar: NameMe.458
+Encoding: 376 -1 376
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+EndChar
+
+StartChar: NameMe.459
+Encoding: 377 -1 377
+Width: 2048
+VWidth: 2048
+Flags: W
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+EndChar
+
+StartChar: NameMe.460
+Encoding: 378 -1 378
 Width: 2048
 VWidth: 2048
 Flags: W
