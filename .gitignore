@@ -84,3 +84,9 @@ plugins/gabc/gabc-score-determination-l*
 plugins/gabc/gabc-notes-determination-l*
 windows/Ouput
 completetest.gtex
+config.h
+config.h.in
+stamp-h1
+Makevars.template
+POTFILES
+stamp-po

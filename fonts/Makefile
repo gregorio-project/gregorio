@@ -4,7 +4,7 @@
 SRCFILES = Makefile
 DOCFILES = INSTALL FONTLOG 
 TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf gresym.ttf greextra.ttf
-FNTSRCFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd squarize.py greextra.sfd gresym.sfd
+FNTSRCFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd squarize.py greextra.sfd gresym.sfd convertsfdtottf.py
 TEXFILES = $(wildcard ../tex/*.tex) $(wildcard ../tex/gregorio*.sty) $(wildcard ../tex/*.lua)
 ALLFILES = $(SRCFILES) $(DOCFILES) $(TEXFILES) $(TTFFILES) $(FNTSRCFILES)
 
@@ -84,7 +84,13 @@ parmesan.ttf: squarize.py parmesan-base.sfd
 greciliae.ttf: squarize.py greciliae-base.sfd
 	python2 squarize.py greciliae
 
-all: gregorio.ttf parmesan.ttf greciliae.ttf
+gresym.ttf: convertsfdtottf.py gresym.sfd
+	python2 convertsfdtottf.py gresym.sfd
+
+greextra.ttf: convertsfdtottf.py greextra.sfd
+	python2 convertsfdtottf.py greextra.sfd
+
+all: gregorio.ttf parmesan.ttf greciliae.ttf gresym.ttf greextra.ttf
 
 gregorio: gregorio.ttf
 
@@ -94,6 +100,10 @@ parmesan: parmesan.ttf
 
 gregoria: Gregoria.otf Gregoria-Auctae.otf Gregoria-Deminutae.otf gregoria2gregorio.py
 	python2 gregoria2gregorio.py
+
+gresym: gresym.ttf
+
+greextra: greextra.ttf
 
 tds: $(TDS_ZIP)
 

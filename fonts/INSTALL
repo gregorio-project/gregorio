@@ -12,13 +12,27 @@ So for now the basic use is:
 
 It may require around one minute.
 
+gresym and greextra contain additional glyphs which are not part of the square notation, but which often appear in Gregorian chant scores.  Since there are so few glyphs in these fonts, they are simply converted to a ttf font with convertsfdtottf.py.  Usage for this script is:
+
+ python convertsfdtottf.py gresym.sfd
+
+
+Note: Both squarize.py and convertsfdtottf run on Python 2.7.  If that is not your default python installation, then replace "python" with the appropriate call to python 2.7 on your system (usually python2.7).
+
+Additionally, both scripts are executable on their own, so long as you have a "python2" pointer in your PATH which points to python 2.7.
+
+
 Font and TeX installation
 =========================
 To install the fonts, running
 
-make install TEXMFROOT=/path/to/texmf
+ make install TEXMFROOT=/path/to/texmf
 
 will install both font and TeX files. Warning: 'make install' without giving a TEXMFROOT will put files in TEXMFHOME, which might not be what you want. TEXMFHOME is typically $HOME/texmf/ under Debian or Ubuntu.
+
+Note: If you want make to recreate the fonts you need to have a "python2" pointer in your PATH which points to python 2.7.
+
+You may also need to execute this command as a superuser (i.e. with sudo), especially on a Mac.
 
 You can also copy the fonts in
 
