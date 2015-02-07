@@ -147,6 +147,10 @@ gregoriotex_write_score (FILE *f, gregorio_score *score)
           fprintf (f, "\\setgregoriofont{gregoria}%%\n");
         }
     }
+  if (score->mode != 0)
+    {
+      fprintf (f, "\\gregorianmode{%d}%%\n", score->mode);
+    }
   // first we draw the initial (first letter) and the initial key
   if (score->initial_style == NO_INITIAL)
     {
@@ -172,10 +176,6 @@ gregoriotex_write_score (FILE *f, gregorio_score *score)
           fprintf (f, "}%%\n");
           first_syllable = SKIP_FIRST_LETTER;
         }
-    }
-  if (score->mode != 0)
-    {
-      fprintf (f, "\\gregorianmode{%d}%%\n", score->mode);
     }
   if (score->si.manuscript_reference)
     {
