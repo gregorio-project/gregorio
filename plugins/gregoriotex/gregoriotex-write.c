@@ -1249,7 +1249,7 @@ gregoriotex_write_text (FILE *f, gregorio_character *text, char *first_syllable)
   gregoriotex_ignore_style = gregoriotex_fix_style (text);
   if (gregoriotex_ignore_style != 0)
     {
-      fprintf (f, "\\gresetfixedtextformat{%d}",
+      fprintf (f, "\\gresetfixednexttextformat{%d}",
                gregoriotex_internal_style_to_gregoriotex
                (gregoriotex_ignore_style));
     }
