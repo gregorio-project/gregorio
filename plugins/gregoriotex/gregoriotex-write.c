@@ -34,7 +34,7 @@
 
 #include "gregoriotex.h"
 
-typedef enum { NEXT_SYL, THIS_SYL } syllable;
+enum syllable { NEXT_SYL, THIS_SYL };
 
 #if ALL_STATIC == 0
 DECLARE_PLUGIN (gregoriotex)
@@ -1236,7 +1236,7 @@ gtex_print_char (FILE *f, grewchar to_print)
 }
 
 void
-gregoriotex_write_text (FILE *f, gregorio_character *text, char *first_syllable, syllable next_syl)
+gregoriotex_write_text (FILE *f, gregorio_character *text, char *first_syllable, int next_syl)
 {
   char first_syllable_val = 0;
   if (text == NULL)
