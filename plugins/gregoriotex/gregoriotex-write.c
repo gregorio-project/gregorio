@@ -34,7 +34,7 @@
 
 #include "gregoriotex.h"
 
-enum syllable { NEXT_SYL, THIS_SYL };
+enum syllable { THIS_SYL, NEXT_SYL };
 
 #if ALL_STATIC == 0
 DECLARE_PLUGIN (gregoriotex)
