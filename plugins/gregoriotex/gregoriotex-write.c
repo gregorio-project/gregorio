@@ -34,6 +34,8 @@
 
 #include "gregoriotex.h"
 
+enum syllable { THIS_SYL, NEXT_SYL };
+
 #if ALL_STATIC == 0
 DECLARE_PLUGIN (gregoriotex)
 {
@@ -520,7 +522,7 @@ gregoriotex_write_syllable (FILE *f,
     {
       fprintf (f, "\\gresyllable");
     }
-  gregoriotex_write_text (f, syllable->text, first_syllable);
+  gregoriotex_write_text (f, syllable->text, first_syllable, THIS_SYL);
   if (syllable->position == WORD_END
       || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
       || !syllable->next_syllable
@@ -536,7 +538,7 @@ gregoriotex_write_syllable (FILE *f,
   if (syllable->next_syllable)
     {
       fprintf(f, "{\\gresetnextsyllable");
-      gregoriotex_write_text (f, syllable->next_syllable->text, NULL);
+      gregoriotex_write_text (f, syllable->next_syllable->text, NULL, NEXT_SYL);
       fprintf (f, "}{}{%d}{",
                gregoriotex_syllable_first_type (syllable->next_syllable));
     }
@@ -1234,7 +1236,7 @@ gtex_print_char (FILE *f, grewchar to_print)
 }
 
 void
-gregoriotex_write_text (FILE *f, gregorio_character *text, char *first_syllable)
+gregoriotex_write_text (FILE *f, gregorio_character *text, char *first_syllable, int next_syl)
 {
   char first_syllable_val = 0;
   if (text == NULL)
@@ -1249,9 +1251,18 @@ gregoriotex_write_text (FILE *f, gregorio_character *text, char *first_syllable)
   gregoriotex_ignore_style = gregoriotex_fix_style (text);
   if (gregoriotex_ignore_style != 0)
     {
-      fprintf (f, "\\gresetfixedtextformat{%d}",
-               gregoriotex_internal_style_to_gregoriotex
-               (gregoriotex_ignore_style));
+      if (next_syl)
+        {
+          fprintf (f, "\\gresetfixednexttextformat{%d}",
+                   gregoriotex_internal_style_to_gregoriotex
+                   (gregoriotex_ignore_style));
+        }
+      else
+        {
+          fprintf (f, "\\gresetfixedtextformat{%d}",
+                   gregoriotex_internal_style_to_gregoriotex
+                   (gregoriotex_ignore_style));
+        }
     }
   gregorio_write_text (first_syllable_val, text, f,
                        (&gtex_write_verb),

@@ -173,7 +173,7 @@ void gregoriotex_write_syllable (FILE *f, gregorio_syllable *syllable,
                                  unsigned char *line_number,
                                  unsigned char first_of_disc);
 void gregoriotex_write_text (FILE *f, gregorio_character *first_character,
-                             char *first_syllable);
+			     char *first_syllable, int);
 unsigned char gregoriotex_fix_style (gregorio_character *first_character);
 void gregoriotex_write_translation (FILE *f, gregorio_character *translation);
 void gregoriotex_write_element (FILE *f, gregorio_syllable *syllable,
