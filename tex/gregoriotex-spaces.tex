@@ -278,21 +278,21 @@
 \newdimen\greaboveinitialseparation
 
 \def\GreSetAboveInitialSeparation#1{
-  \greaboveinitialseparation=#1%
+  \grechangedim{\greaboveinitialseparation}{#1}%
   \relax %
 }
 
 \let\setaboveinitialseparation\GreSetAboveInitialSeparation
 
 \def\GreSetSpaceAfterInitial#1{%
-  \greafterinitialshift=#1 %
+  \grechangesim{\greafterinitialshift}{#1} %
   \relax %
 }
 
 \let\setspaceafterinitial\GreSetSpaceAfterInitial
 
 \def\GreSetSpaceBeforeInitial#1{%
-  \grebeforeinitialshift=#1 %
+  \grechangedim{\grebeforeinitialshift}{#1} %
   \relax %
 }
 
@@ -567,5 +567,6 @@
   \grechangeonedimenfactor{\gremanualinitialwidth}{#1}{#2}%
   \grechangeonedimenfactor{\grebeforeinitialshift}{#1}{#2}%
   \grechangeonedimenfactor{\greafterinitialshift}{#1}{#2}%
+  \grechangeonedimenfactor{\greaboveinitialseparation}{#1}{#2}%
   \relax %
 }
