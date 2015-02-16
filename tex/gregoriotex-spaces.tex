@@ -300,6 +300,11 @@
 
 \def\setinitialspacing#1#2#3{
   \grechangedim{\grebeforeinitialshift}{#1}
+%  \ifnum\grebiginitial=0\relax %
+%    \greinitialformat{\global\grechangedim{\gremanualinitialwidth}{#2}}
+%  \else
+%    \grebiginitialformat{\global\grechangedim{\gremanualinitialwidth}{#2}}
+%  \fi
   \grechangedim{\gremanualinitialwidth}{#2}
   \grechangedim{\greafterinitialshift}{#3}%
   \relax
