@@ -211,8 +211,13 @@ local function check_version(greinternalversion)
     end
 end
 
+local function get_greversion()
+    return internalversion
+end
+
 gregoriotex.include_gabc_score = include_gabc_score
 gregoriotex.compile_gabc       = compile_gabc
 gregoriotex.atScoreEnd         = atScoreEnd
 gregoriotex.atScoreBeggining   = atScoreBeggining
 gregoriotex.check_version      = check_version
+gregoriotex.get_greversion     = get_greversion
