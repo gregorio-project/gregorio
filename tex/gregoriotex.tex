@@ -59,10 +59,10 @@
 
 % The general version of GregorioTeX (we mean by that the "API", the way
 % Gregorio will write things)
-\xdef\gregoriotexversion{20130616}
+\xdef\gregoriotexversion{\directlua{tex.write(gregoriotex.get_greversion())}}
 
 % the version of the internal files (all must have the same)
-\xdef\greinternalversion{20130616} % date format
+\xdef\greinternalversion{\directlua{tex.write(gregoriotex.get_greversion())}} % date format
 \directlua{gregoriotex.check_version(\number\greinternalversion)}
 
 % first some macros to allow checks for version:

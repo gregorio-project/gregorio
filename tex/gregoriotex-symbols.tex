@@ -16,7 +16,8 @@
 
 % this file contains definitions of the symbols
 
-\gredeclarefileversion{gregoriotex-symbols.tex}{20130616}
+\gredeclarefileversion{gregoriotex-symbols.tex}%
+ {\directlua{tex.write(gregoriotex.get_greversion())}}
 
 % a temp counter
 \newcount\gretempfactor %
