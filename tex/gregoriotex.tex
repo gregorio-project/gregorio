@@ -420,8 +420,12 @@
   % if it is a big initial we print it on the second line 
   \ifnum\grebiginitial=0\relax %
     \setbox\GreInitial=\hbox{\greinitialformat{#1}}%
-    \global\greinitialwidth=\the\wd\GreInitial %
-    \setbox\GreInitial=\hbox{\raise -\gretempdim\hbox{\greinitialformat{#1}}}%
+    \ifnum\number\gremanualinitialwidth=0\relax%
+      \global\greinitialwidth=\the\wd\GreInitial %
+    \else%
+      \global\greinitialwidth=\the\gremanualinitialwidth%
+    \fi
+    \setbox\GreInitial=\hbox to \greinitialwidth {\hss\raise -\gretempdim\hbox{\greinitialformat{#1}}\hss}%
   \else %
     \advance\gretempdim by \greadditionalbottomspace %
     \advance\gretempdim by \grespacebeneathtext %
@@ -430,8 +434,12 @@
     \advance\gretempdim by 4\grestafflineheight %
     \advance\gretempdim by \grecurrenttranslationheight %
     \setbox\GreInitial=\hbox{\grebiginitialformat{#1}}%
-    \global\greinitialwidth=\the\wd\GreInitial %
-    \setbox\GreInitial=\hbox{\vbox to 0pt{\hbox{\raise -\gretempdim\hbox{\grebiginitialformat{#1}}}\vss}}%
+    \ifnum\number\gremanualinitialwidth=0\relax%
+      \global\greinitialwidth=\the\wd\GreInitial %
+    \else%
+      \global\greinitialwidth=\the\gremanualinitialwidth%
+    \fi
+    \setbox\GreInitial=\hbox{\vbox to 0pt{\hbox to \greinitialwidth {\hss\raise -\gretempdim\hbox{\grebiginitialformat{#1}}\hss}\vss}}%
   \fi %
   \hskip\grebeforeinitialshift %
   \copy\GreInitial%

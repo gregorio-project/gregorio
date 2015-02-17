@@ -266,6 +266,9 @@
 % space before the initial and the beginning of the score
 \newskip\grebeforeinitialshift
 
+% forced size of the box for the initial.  Initial is centered in box.  Ignored if 0.
+\newskip\gremanualinitialwidth
+
 % space before the initial and the beginning of the score
 \newdimen\greminimalspaceatlinebeginning
 
@@ -275,25 +278,37 @@
 \newdimen\greaboveinitialseparation
 
 \def\GreSetAboveInitialSeparation#1{
-  \greaboveinitialseparation=#1%
+  \grechangedim{\greaboveinitialseparation}{#1}%
   \relax %
 }
 
 \let\setaboveinitialseparation\GreSetAboveInitialSeparation
 
 \def\GreSetSpaceAfterInitial#1{%
-  \greafterinitialshift=#1 %
+  \grechangesim{\greafterinitialshift}{#1} %
   \relax %
 }
 
 \let\setspaceafterinitial\GreSetSpaceAfterInitial
 
 \def\GreSetSpaceBeforeInitial#1{%
-  \grebeforeinitialshift=#1 %
+  \grechangedim{\grebeforeinitialshift}{#1} %
   \relax %
 }
 
 \let\setspacebeforeinitial\GreSetSpaceBeforeInitial
+
+\def\setinitialspacing#1#2#3{
+  \grechangedim{\grebeforeinitialshift}{#1}
+%  \ifnum\grebiginitial=0\relax %
+%    \greinitialformat{\global\grechangedim{\gremanualinitialwidth}{#2}}
+%  \else
+%    \grebiginitialformat{\global\grechangedim{\gremanualinitialwidth}{#2}}
+%  \fi
+  \grechangedim{\gremanualinitialwidth}{#2}
+  \grechangedim{\greafterinitialshift}{#3}%
+  \relax
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % staff line height changing
@@ -554,5 +569,9 @@
   \grechangeonedimenfactor{\grehighchoralsignshift}{#1}{#2}%
   \grechangeonedimenfactor{\grelowchoralsignshift}{#1}{#2}%
   \grechangeonedimenfactor{\grebeforechoralsignspace}{#1}{#2}%
+  \grechangeonedimenfactor{\gremanualinitialwidth}{#1}{#2}%
+  \grechangeonedimenfactor{\grebeforeinitialshift}{#1}{#2}%
+  \grechangeonedimenfactor{\greafterinitialshift}{#1}{#2}%
+  \grechangeonedimenfactor{\greaboveinitialseparation}{#1}{#2}%
   \relax %
 }
