@@ -220,4 +220,4 @@ gregoriotex.compile_gabc       = compile_gabc
 gregoriotex.atScoreEnd         = atScoreEnd
 gregoriotex.atScoreBeggining   = atScoreBeggining
 gregoriotex.check_version      = check_version
-gregoriotex.get_greapiversion     = get_greapiversion
+gregoriotex.get_greapiversion  = get_greapiversion
