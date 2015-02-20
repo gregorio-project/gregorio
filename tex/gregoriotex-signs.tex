@@ -17,7 +17,8 @@
 
 % this file contains definitions of signs (bar, episemus, punctum, alterations)
 
-\gredeclarefileversion{gregoriotex-signs.tex}{20130616}
+\gredeclarefileversion{gregoriotex-signs.tex}%
+ {\directlua{tex.write(gregoriotex.get_greapiversion())}}
 
 \def\greusestylecommon{%
   \ifnum\greusestylefont=0\relax %
