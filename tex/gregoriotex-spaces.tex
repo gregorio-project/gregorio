@@ -132,12 +132,6 @@
 %% macros for the typesetting of spaces
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% All the following values correspond to a grefactor of 1,
-%% so in most cases it will be much smaller that what you will finally
-%% get with an average factor (17 is the default value for the factor).
-%% We multiply all the columns by the factor when the factor changes,
-%% and it changes at the beginning of the first score by default.
-
 %%%%%%%%%%%%%%%%%%%%
 %% horizontal spaces
 %%%%%%%%%%%%%%%%%%%%
@@ -274,10 +268,21 @@
 
 % this space is the one between the bottom of the first anotation line and the top
 % of the second anotation line (above the initial)
-
 \newdimen\greaboveinitialseparation
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Some Macros for changing the spacing around the initial
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Seeing as these are the distances that people will want to change the most often,
+%we give them their own set of macros to make that easier.
+
+
 \def\GreSetAboveInitialSeparation#1{
+  \ifnum\grefactor=0\relax%
+    \setgrefactor{17}%
+  \fi%
   \grechangedim{\greaboveinitialseparation}{#1}%
   \relax %
 }
@@ -285,29 +290,45 @@
 \let\setaboveinitialseparation\GreSetAboveInitialSeparation
 
 \def\GreSetSpaceAfterInitial#1{%
-  \grechangesim{\greafterinitialshift}{#1} %
+  \ifnum\grefactor=0\relax%
+    \setgrefactor{17}%
+  \fi%
+  \ifnum\grebiginitial=0\relax%
+    \greinitialformat{\global\grechangedim{\greafterinitialshift}{#1}}%
+  \else%
+    \grebiginitialformat{\global\grechangedim{\greafterinitialshift}{#1}}%
+  \fi%
   \relax %
 }
 
 \let\setspaceafterinitial\GreSetSpaceAfterInitial
 
 \def\GreSetSpaceBeforeInitial#1{%
-  \grechangedim{\grebeforeinitialshift}{#1} %
+  \ifnum\grefactor=0\relax%
+    \setgrefactor{17}%
+  \fi%
+  \ifnum\grebiginitial=0\relax%
+    \greinitialformat{\global\grechangedim{\grebeforeinitialshift}{#1}}%
+  \else%
+    \grebiginitialformat{\global\grechangedim{\grebeforeinitialshift}{#1}}%
+  \fi%
   \relax %
 }
 
 \let\setspacebeforeinitial\GreSetSpaceBeforeInitial
 
 \def\setinitialspacing#1#2#3{
-  \grechangedim{\grebeforeinitialshift}{#1}
-%  \ifnum\grebiginitial=0\relax %
-%    \greinitialformat{\global\grechangedim{\gremanualinitialwidth}{#2}}
-%  \else
-%    \grebiginitialformat{\global\grechangedim{\gremanualinitialwidth}{#2}}
-%  \fi
-  \grechangedim{\gremanualinitialwidth}{#2}
+  \ifnum\grefactor=0\relax%
+    \setgrefactor{17}%
+  \fi%
+  \grechangedim{\grebeforeinitialshift}{#1}%
+  \ifnum\grebiginitial=0\relax %
+    \greinitialformat{\global\grechangedim{\gremanualinitialwidth}{#2}}%
+  \else%
+    \grebiginitialformat{\global\grechangedim{\gremanualinitialwidth}{#2}}%
+  \fi%
   \grechangedim{\greafterinitialshift}{#3}%
-  \relax
+  \relax%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -316,15 +337,12 @@
 
 % \grestafflineheight is the height of a staff line
 \newdimen\grestafflineheight
-\grestafflineheight=1500 sp
 
 % \greinterstafflinespace is the space between two lines of staff
 \newdimen\greinterstafflinespace
-\greinterstafflinespace=30000 sp
 
 % the value is (1500*stafflinefactor - 1500)/2
 \newdimen\grestafflinediff
-\grestafflinediff=0 sp
 
 % the default factor
 \xdef\grestafflinefactor{1}%

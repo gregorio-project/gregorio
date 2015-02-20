@@ -59,6 +59,13 @@
 
 %% And finally, all the spacings:
 
+%% All the following values correspond to a grefactor of 1,
+%% so in most cases it will be much smaller that what you will finally
+%% get with an average factor (17 is the default value for the factor).
+%% We multiply all the columns by the factor when the factor changes,
+%% and it changes at the beginning of the first score by default.
+
+
 % the additional width of the additional lines (compared to the width of the glyph they're associated with)
 \greadditionallineswidth = 16000sp
 % null space
@@ -169,12 +176,23 @@
 %the space between the lines and the bottom of the text
 \grespacelinestext = 66500 sp plus 0 sp minus 0 sp
 %the space beneath the text
-\global\grespacebeneathtext = 0 sp plus 0 sp minus 0 sp
+\grespacebeneathtext = 0 sp plus 0 sp minus 0 sp
 % height of the text above the note line
-\global\greabovelinestextraise=-1mm%
+\greabovelinestextraise=-1mm%
 % height that is added at the top of the lines if there is text above the lines (it must be bigger than the text for it to be taken into consideration)
-\global\greabovelinestextheight=3mm%
+\greabovelinestextheight=3mm%
 % an additional shift you can give to the brace above the bars if you don't like it
-\global\grebraceshift = 0pt
+\grebraceshift = 0pt
 % a shift you can give to the accentus above the curly brace
-\global\grecurlybraceaccentusshift = -0.5mm
+\grecurlybraceaccentusshift = -0.5mm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% staff line height changing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \grestafflineheight is the height of a staff line
+\grestafflineheight=1500 sp
+% \greinterstafflinespace is the space between two lines of staff
+\greinterstafflinespace=30000 sp
+% the value is (1500*stafflinefactor - 1500)/2
+\grestafflinediff=0 sp
