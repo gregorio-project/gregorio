@@ -4,7 +4,7 @@ post_upgrade() {
     echo "Updating package database..."
     texhash
     echo "Updating font map files..."
-    updmag-sys
+    updmap-sys
     echo "Run updmap as non-root user."
 }
 
