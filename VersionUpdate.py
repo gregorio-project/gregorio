@@ -20,8 +20,10 @@ GREGORIO_VERSION = ''
 
 def get_version(versionfile):
     with open(versionfile, 'r') as vfile:
-        ver = vfile.readlines()
-    return (ver[0].split(' = ')[1], ver[1].split(' = ')[1].strip('\n'))
+        apiver = vfile.readline()
+        grever = vfile.readline()
+    return (apiver.split(' = ')[1].strip('\n'),
+            grever.split(' = ')[1].strip('\n'))
 
 def fileinput(infile):
     with open(infile, 'r') as source:

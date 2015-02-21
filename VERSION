@@ -1,2 +1,16 @@
-gregoriotex_api_version = 20150216
+gregoriotex_api_version = 20150220
 gregorio_version = 2.4.1-git
+
+*** Do not add any lines above here. ***
+
+=======
+VERSION
+=======
+
+This file is used by VersionUpdate.py to change the version
+numbers of gregorio and the gregoriotex_api in the source code.
+
+Usage:
+  Change the version numbers found above.
+  Save this file.
+  run: python2 VersionUpdate.py
