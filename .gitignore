@@ -36,6 +36,9 @@
 *.out
 *.toc
 *.gaux
+*.idx
+*.ilg
+*.ind
 
 ## Intermediate documents:
 *.dvi
@@ -75,6 +78,10 @@ config.status
 lib/gregorio.pc
 src/gregorio
 
+#emacs auto gen files
+auto/
+
+!UserManual.pdf
 
 #gregorio specific
 
@@ -90,3 +97,4 @@ stamp-h1
 Makevars.template
 POTFILES
 stamp-po
+doc/_minted-UserManual
