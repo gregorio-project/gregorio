@@ -25,13 +25,17 @@
   \input luatexbase.sty
   \input luaotfload.sty
   \input graphicx.sty % for \resizebox
-  \def\greerror#1{GregorioTeX: \errmessage{#1}}
+  \input xstring.sty
+  \def\greerror#1{\errmessage{GregorioTeX error: #1}}
+  \def\gre@warning#1{\message{GregorioTeX warning: #1}}
 \else
   \RequirePackage{ifluatex}
   \RequirePackage{graphicx}% for \resizebox
   \RequirePackage{luatexbase}
   \RequirePackage{luaotfload}
+  \RequirePackage{xstring}
   \def\greerror#1{\PackageError{GregorioTeX}{#1}{}}
+  \def\gre@warning#1{\PackageWarning{GregorioTeX}{#1}}
 \fi
 
 \ifluatex\else
@@ -1357,22 +1361,43 @@
 %%%%%%%%%%%%%%%%%%
 
 % function that includes a score in TeX format
+\def\gre@includetexscore#1{%
+	\input #1%
+	\relax %
+}
+\ifdefined\includetexscore
+	\greerror{\protect\includetexscore\space is already defined.  Check for package conflicts.}
+\else
+	\def\includetexscore#1{%
+		\gre@includetexscore{#1}
+	}
+\fi
 \def\greincludetexscore#1{%
-  \input #1%
-  \relax %
+	\gre@warning{\protect\greincludedtexscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}
+	\gre@includetexscore{#1}
 }
 
-% function provided for backward compatibility
-\let\includetexscore\greincludetexscore
-\let\includescore\includetexscore
-
-% TODO: comment
+% function that includes scores in gabc format
+\def\gre@includegabcscore#1{%
+	\directlua{gregoriotex.include_gabc_score([[#1]])}%
+	\relax %
+}
+\ifdefined\includegabcscore
+	\greerror{\protect\includegabcscore\space is already defined.  Check for package conflicts.}
+\else
+	\def\includegabcscore#1{%
+		\gre@includegabcscore{#1}
+	}
+\fi
 \def\greincludegabcscore#1{%
-  \directlua{gregoriotex.include_gabc_score([[#1]])}%
-  \relax %
+	\gre@warning{\protect\greincludedgabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}
+	\gre@includegabcscore{#1}
 }
 
-\let\includegabcscore\greincludegabcscore
+% Wrapper function that can handle both file types.  This is done by checking the filename (using the string tests from the xstring package) to see if it ends with .gabc.  If it does, we assume the file is in gabc format and pass it to \ger@includegabcscore.  All other files are assumed to be in gtex format and are processed using \gre@includetexscore.
+\def\includescore#1{%
+	\IfEndWith{#1}{.gabc}{\gre@includegabcscore{#1}}{\gre@includetexscore{#1}}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% some hyphen definitions
