@@ -191,7 +191,7 @@ local function include_gabc_score(gabc_file)
         return
     end
     local gabc_timestamp = lfs.attributes(gabc_file).modification
-    local tex_file = gabc_file:gsub("%.gabc+$","-auto.tex")
+    local tex_file = gabc_file:gsub("%.gabc+$","-auto.gtex")
     if lfs.isfile(tex_file) then
         local tex_timestamp = lfs.attributes(tex_file).modification
         if tex_timestamp < gabc_timestamp then
