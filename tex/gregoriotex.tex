@@ -562,23 +562,27 @@
 }
 
 \def\gregorianmode#1{%
-  \ifcase#1%
-  \or%
-    \writemode{I}%
-  \or%
-    \writemode{II}%
-  \or%
-    \writemode{III}%
-  \or%
-    \writemode{IV}%
-  \or%
-    \writemode{V}%
-  \or%
-    \writemode{VI}%
-  \or%
-    \writemode{VII}%
-  \or%
-    \writemode{VIII}%
+  \ifhbox \GreAboveinitialfirstbox%
+    \relax%
+  \else%
+    \ifcase#1%
+    \or%
+      \writemode{I}%
+    \or%
+      \writemode{II}%
+    \or%
+      \writemode{III}%
+    \or%
+      \writemode{IV}%
+    \or%
+      \writemode{V}%
+    \or%
+      \writemode{VI}%
+    \or%
+      \writemode{VII}%
+    \or%
+      \writemode{VIII}%
+    \fi%
   \fi%
   \relax%
 }
