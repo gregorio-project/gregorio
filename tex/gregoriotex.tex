@@ -1366,7 +1366,7 @@
 
 % function that includes a score in TeX format
 \def\gre@includetexscore#1{%
-	\input #1%
+	\directlua{gregoriotex.include_gtex_score([[#1]])}%
 	\relax %
 }
 \ifdefined\includetexscore
