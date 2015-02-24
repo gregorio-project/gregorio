@@ -11,9 +11,13 @@ import re
 
 
 version_file = 'VERSION'
+
+gregorio_files = ["configure.ac",
+                  "windows/gregorio.iss"]
+
 gregoriotex_api_files = ["tex/gregoriotex.lua",
                          "plugins/gregoriotex/gregoriotex.h"]
-gregorio_files = ["configure.ac"]
+
 result = []
 GREGORIOTEX_API_VERSION = ''
 GREGORIO_VERSION = ''
@@ -44,6 +48,8 @@ def replace_gregorio_version(infile, newver):
         if re.search(r'AC_INIT\(\[', line):
             result.append(re.sub
                           (r'[0-9.]+-?[a-z]*(\],)', newver + r'\1', line))
+        elif re.search(r'AppVersion', line):
+            result.append(re.sub(r'[0-9.]+', newver, line))
         else:
             result.append(line)
 
