@@ -186,17 +186,18 @@ local function compile_gabc(gabc_file, tex_file)
 end
 
 local function test_gregoriotex_apiversion(tex_file)
-   local f = io.open(tex_file, "r")
-   local currentline = ""
-   repeat
-      currentline = f:read("*line")
-   until string.find(currentline, "gregoriotexapiversion")
-   f:close()
-   if string.find(currentline, internalversion) then
-      return true
-   else
-      return false
-   end
+    local f = io.open(tex_file, "r")
+    local wholefile = f:read("*all")
+    f:close()
+    for line in wholefile:gmatch("[^\n]*") do
+	if string.find(line, "gregoriotexapiversion") then
+	    if string.find(line, internalversion) then
+		return wholefile, true
+	    else
+		return wholefile, false
+	    end
+	end
+    end
 end
 
 local function include_gabc_score(gabc_file)
@@ -209,24 +210,27 @@ local function include_gabc_score(gabc_file)
     if lfs.isfile(tex_file) then
         local tex_timestamp = lfs.attributes(tex_file).modification
         if tex_timestamp < gabc_timestamp then
+            log("%s has changed since last compilation. Recompiling.", gabc_file)
             gregoriotex.compile_gabc(gabc_file, tex_file)
-        else
-            log("using the file %s without recompiling, as %s hasn't changed since last compilation.", tex_file, gabc_file)
         end
-	if not test_gregoriotex_apiversion(tex_file) then
-	   log("Recompiling %s because %s does not match the current gregoriotex api version.", gabc_file, tex_file)
-	   compile_gabc(gabc_file, tex_file)
-	end
+	local wholefile, sameapi = test_gregoriotex_apiversion(tex_file)
+	if not sameapi then 
+	    log("Recompiling %s because %s does not match the current gregoriotex api version.", gabc_file, tex_file)
+	    compile_gabc(gabc_file, tex_file)
+	    tex.print(string.format("\\input %s", tex_file))
+	    return
+	else
+	    tex.print(wholefile)
+	    return
     else
+	log("No %s file exists. Compiling %s", tex_file, gabc_file)
         compile_gabc(gabc_file, tex_file)
     end
-    tex.print(string.format("\\input %s", tex_file))
 end
 
 local function include_gtex_score(gtex_file)
     local file_root = gtex_file:gsub("%.gtex+$","")
     local gabc_file = gtex_file:gsub("%.gtex+$", ".gabc")
-
     if not lfs.isfile(gtex_file) then
        log("the file %s does not exist. Searching for a gabc file.", gtex_file)
         if lfs.isfile(file_root .. '.gabc') then
@@ -238,22 +242,20 @@ local function include_gtex_score(gtex_file)
 	    return
 	end
     end
-
     local gtex_timestamp = lfs.attributes(gtex_file).modification
     local gabc_timestamp = lfs.attributes(gabc_file).modification
     if gtex_timestamp < gabc_timestamp then
 	gregoriotex.compile_gabc(gabc_file, gtex_file)
-    else
-	log("using the file %s without recompiling, as %s hasn't changed since last compilation.", gtex_file, gabc_file)
     end
-    if not test_gregoriotex_apiversion(gtex_file) then
-	log("Recompiling %s because %s does not match the current gregoriotex api version.", gabc_file, gtex_file)
-	compile_gabc(gabc_file, gtex_file)
+    local wholefile, sameapi = test_gregoriotex_apiversion(gtex_file)
+    if not sameapi then
+    	log("Recompiling %s because %s does not match the current gregoriotex api version.", gabc_file, gtex_file)
+    	compile_gabc(gabc_file, gtex_file)
+	tex.print(string.format("\\input %s", gtex_file))
+	return
     end
-    tex.print(string.format("\\input %s", gtex_file))
+    tex.print(wholefile)
 end
-
-----------------------------------------
 
 local function check_version(greinternalversion)
     if greinternalversion ~= internalversion then
