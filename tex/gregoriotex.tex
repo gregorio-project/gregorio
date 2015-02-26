@@ -1364,7 +1364,12 @@
 %% score including
 %%%%%%%%%%%%%%%%%%
 
-% The primary macro that includes a score in gTeX or gabc format.
+% The primary macro that includes a score. The lua function check that:
+%  -- The gtex file exists.
+%  -- The gtex file is of the correct gregoriotexapi_version.
+%  -- The gtex file is 'newer' than it's corresponding gabc file.
+% If either test fails, the gabc file is (re)compiled.
+
 \def\gre@includescore#1{%
   \directlua{gregoriotex.include_score([[#1]])}%
   \relax%
@@ -1406,9 +1411,20 @@
     {\gre@includescore}%
 }
 
-% If called without the optional argument '\includescore{Antiphon}' the filename will be passed to the lua function 'include_score' which will check: whether the gtex file exists, if the API version of the gtex file, or if the gabc file is newer than the gtex file. If one of these tests fails, the gabc file will be (re)compiled.
+% If called without the optional argument: '\includescore{Antiphon}'
+% the filename will be passed to the lua function 'include_score'
+% which will check: whether the gtex file exists, if the API version
+% of the gtex file, or if the gabc file is newer than the gtex
+% file. If one of these tests fails, the gabc file will be
+% (re)compiled.
+% The argument may or may not include a file extension. These are all valid:
+% '\includescore{Antiphon}' or '\includescore{Antiphon.gabc}' or
+% '\includescore{Antiphon.gtex}'
 
-% If called with the optional argument '\includescore[f]{Antiphon.gtex}' the gtex file will be forced into the document and will not be checked by the lua function 'include_score'. This does not bypass the API version test done by '\gregoriotexapiversion'.
+% If called with the optional argument: '\includescore[f]{Antiphon.gtex}'
+% the gtex file will be forced into the document and will not be
+% checked by the lua function 'include_score'. This does not bypass
+% the API version test done by '\gregoriotexapiversion'.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% some hyphen definitions

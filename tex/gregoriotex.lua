@@ -203,14 +203,14 @@ local function include_score(input_file)
 	if lfs.isfile(gabc_file) then
 	    compile_gabc(gabc_file, gtex_file)
 	else
-	    err("The %s file does not exist.", gabc_file)
+	    err("The file %s does not exist.", gabc_file)
 	    return
 	end
     end
     local gtex_timestamp = lfs.attributes(gtex_file).modification
     local gabc_timestamp = lfs.attributes(gabc_file).modification
     if gtex_timestamp < gabc_timestamp then
-	log("%s has been modified and %s needs to be updates. Recompiling the gabc file.", gabc_file, gtex_file)
+	log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
 	compile_gabc(gabc_file, gtex_file)
     end
     tex.print(string.format("\\input %s", gtex_file))
