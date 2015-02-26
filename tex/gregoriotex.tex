@@ -1364,44 +1364,51 @@
 %% score including
 %%%%%%%%%%%%%%%%%%
 
-% function that includes a score in TeX format
-\def\gre@includetexscore#1{%
-	\directlua{gregoriotex.include_gtex_score([[#1]])}%
-	\relax %
+% The primary macro that includes a score in gTeX or gabc format.
+\def\gre@includescore#1{%
+  \directlua{gregoriotex.include_score([[#1]])}%
+  \relax%
 }
+
 \ifdefined\includetexscore
-	\greerror{\protect\includetexscore\space is already defined.  Check for package conflicts.}
+	\gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore\space instead.}
 \else
 	\def\includetexscore#1{%
-		\gre@includetexscore{#1}
+		\gre@includescore{#1}
 	}
 \fi
 \def\greincludetexscore#1{%
 	\gre@warning{\protect\greincludedtexscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}
-	\gre@includetexscore{#1}
+	\gre@includescore{#1}
 }
 
-% function that includes scores in gabc format
-\def\gre@includegabcscore#1{%
-	\directlua{gregoriotex.include_gabc_score([[#1]])}%
-	\relax %
-}
 \ifdefined\includegabcscore
-	\greerror{\protect\includegabcscore\space is already defined.  Check for package conflicts.}
+	\gre@warning{\protect\includegabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}
 \else
 	\def\includegabcscore#1{%
-		\gre@includegabcscore{#1}
+		\gre@includescore{#1}
 	}
 \fi
 \def\greincludegabcscore#1{%
 	\gre@warning{\protect\greincludedgabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}
-	\gre@includegabcscore{#1}
+	\gre@includescore{#1}
 }
 
-% Wrapper function that can handle both file types.  This is done by checking the filename (using the string tests from the xstring package) to see if it ends with .gabc.  If it does, we assume the file is in gabc format and pass it to \ger@includegabcscore.  All other files are assumed to be in gtex format and are processed using \gre@includetexscore.
-\def\includescore#1{%
-	\IfEndWith{#1}{.gabc}{\gre@includegabcscore{#1}}{\gre@includetexscore{#1}}
+% A macro that passes the score directly to TeX without performing the API version check or if the gabc was modified since the creation of the gtex file.
+\def\gre@includescorewithoption[#1]#2{%
+  \input #2%
+  \relax%
 }
+
+% The main macro used by the user to input scores into the document.
+
+\def\includescore{\@ifnextchar[{\gre@includescorewithoption}%
+    {\gre@includescore}%
+}
+
+% If called without the optional argument '\includescore{Antiphon}' the filename will be passed to the lua function 'include_score' which will check: whether the gtex file exists, if the API version of the gtex file, or if the gabc file is newer than the gtex file. If one of these tests fails, the gabc file will be (re)compiled.
+
+% If called with the optional argument '\includescore[f]{Antiphon.gtex}' the gtex file will be forced into the document and will not be checked by the lua function 'include_score'. This does not bypass the API version test done by '\gregoriotexapiversion'.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% some hyphen definitions

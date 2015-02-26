@@ -174,47 +174,33 @@ local function atScoreEnd ()
     end
 end
 
-local function compile_gabc(gabc_file, tex_file)
+local function compile_gabc(gabc_file, gtex_file)
     info("compiling the score %s...", gabc_file)
-    res = os.execute(string.format("gregorio -o %s %s", tex_file, gabc_file))
+    res = os.execute(string.format("gregorio -o %s %s", gtex_file, gabc_file))
     if res == nil then
         err("\nSomething went wrong when executing\n    'gregorio -o %s %s'.\n"
-        .."shell-escape mode may not be activated. Try\n    '%s --shell-escape %s.tex'\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", tex_file, gabc_file, tex.formatname, tex.jobname)
+        .."shell-escape mode may not be activated. Try\n    '%s --shell-escape %s.tex'\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", gtex_file, gabc_file, tex.formatname, tex.jobname)
     elseif res ~= 0 then
         err("\nAn error occured when compiling the score file\n'%s' with gregorio.\nPlease check your score file.", gabc_file)
     end
 end
 
-local function include_gabc_score(gabc_file)
-    if not lfs.isfile(gabc_file) then
-        err("the file %s does not exist.", gabc_file)
-        return
-    end
-    local gabc_timestamp = lfs.attributes(gabc_file).modification
-    local tex_file = gabc_file:gsub("%.gabc+$","-auto.gtex")
-    if lfs.isfile(tex_file) then
-        local tex_timestamp = lfs.attributes(tex_file).modification
-        if tex_timestamp < gabc_timestamp then
-            log("%s has changed since last compilation. Recompiling.", gabc_file)
-            gregoriotex.compile_gabc(gabc_file, tex_file)
-        end
-	if tonumber(os.date("%Y%m%d", tex_timestamp)) < internalversion then
-	    log("Recompiling %s because %s does not match the current gregoriotex api version.", gabc_file, tex_file)
-	    compile_gabc(gabc_file, tex_file)
-	end
+local function include_score(input_file)
+    local file_root = ""
+    if input_file:gmatch("%.gtex+$") then
+	file_root = input_file:gsub("%.gtex+$", "")
+    elseif input_file:gmatch("%.tex+$") then
+	file_root = input_file:gsub("%.tex+$", "")
+    elseif input_file:gmatch("%.gabc+$") then
+	file_root = input_file:gsub("%.gabc+$", "")
     else
-	log("No %s file exists. Compiling %s", tex_file, gabc_file)
-        compile_gabc(gabc_file, tex_file)
+	file_root = input_file
     end
-    tex.print(string.format("\\input %s", tex_file))
-end
-
-local function include_gtex_score(gtex_file)
-    local file_root = gtex_file:gsub("%.gtex+$","")
-    local gabc_file = gtex_file:gsub("%.gtex+$", ".gabc")
+    local gtex_file = file_root.."-"..internalversion..".gtex"
+    local gabc_file = file_root..".gabc"
     if not lfs.isfile(gtex_file) then
-       log("the file %s does not exist. Searching for a gabc file.", gtex_file)
-        if lfs.isfile(gabc_file) then
+	log("The file %s does not exist. Searching for a gabc file", gtex_file)
+	if lfs.isfile(gabc_file) then
 	    compile_gabc(gabc_file, gtex_file)
 	else
 	    err("The %s file does not exist.", gabc_file)
@@ -224,13 +210,11 @@ local function include_gtex_score(gtex_file)
     local gtex_timestamp = lfs.attributes(gtex_file).modification
     local gabc_timestamp = lfs.attributes(gabc_file).modification
     if gtex_timestamp < gabc_timestamp then
-	gregoriotex.compile_gabc(gabc_file, gtex_file)
-    end
-    if tonumber(os.date("%Y%m%d", gtex_timestamp)) < internalversion then
-	log("Recompiling %s because %s does not match the current gregoriotex api version.", gabc_file, gtex_file)
+	log("%s has been modified and %s needs to be updates. Recompiling the gabc file.", gabc_file, gtex_file)
 	compile_gabc(gabc_file, gtex_file)
     end
     tex.print(string.format("\\input %s", gtex_file))
+    return
 end
 
 local function check_version(greinternalversion)
@@ -243,8 +227,7 @@ local function get_greapiversion()
     return internalversion
 end
 
-gregoriotex.include_gabc_score = include_gabc_score
-gregoriotex.include_gtex_score = include_gtex_score
+gregoriotex.include_score      = include_score
 gregoriotex.compile_gabc       = compile_gabc
 gregoriotex.atScoreEnd         = atScoreEnd
 gregoriotex.atScoreBeggining   = atScoreBeggining
