@@ -125,55 +125,9 @@
 
 \input gregoriotex-spaces.tex
 
-% \grestafflinewidth is the width of a line of staff, this can vary, for example at the first line
-\newdimen\grestafflinewidth
-
-% \grelinewidth is the width of a line of a score (including the initial)
-\newdimen\grelinewidth
-\grelinewidth=\hsize 
-\grestafflinewidth=\grelinewidth 
-
-% to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at grespacelinestext + grespacebeneathtext + 2*greinterstafflinespace + 2*grestafflineheight + translationheight
-\def\grecalculateconstantglyphraise{%
-  \global\greconstantglyphraise = -22000 sp%
-  \global\multiply\greconstantglyphraise by \the\grefactor %
-  \global\advance\greconstantglyphraise by \greadditionalbottomspace %
-  \global\advance\greconstantglyphraise by \grespacebeneathtext %
-  \global\advance\greconstantglyphraise by \grespacelinestext %
-  \global\advance\greconstantglyphraise by \greinterstafflinespace %
-  \global\advance\greconstantglyphraise by \greinterstafflinespace %
-  \global\advance\greconstantglyphraise by \grestafflineheight %
-  \global\advance\greconstantglyphraise by \grestafflineheight %
-  \global\advance\greconstantglyphraise by \grecurrenttranslationheight %
-  % an adjustment in the case of big lines
-  \global\advance\greconstantglyphraise by \grestafflinediff %
-  \relax %
-}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for additionnal vertical spaces
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% temporary value for space for the translation, beneath the text
-\newdimen\grecurrenttranslationheight
-
-% macro to tell gregorio to set space for the translation
-\def\greaddtranslationspace{%
-  \global\grecurrenttranslationheight=\gretranslationheight %
-  \global\gretextlower=\grespacebeneathtext %
-  \global\advance\gretextlower by \gretranslationheight %
-  \gregeneratelines %
-  \grecalculateconstantglyphraise %
-  \relax %
-}
-
-\def\greremovetranslationspace{%
-  \global\grecurrenttranslationheight=0 sp%
-  \global\gretextlower=\grespacebeneathtext %
-  \gregeneratelines %
-  \grecalculateconstantglyphraise %
-  \relax %
-}
 
 %macro to call if you want to go to the next line simply
 \def\grenewline{%
@@ -247,83 +201,13 @@
   \relax %
 }
 
-% two dimensions for the additionalspaces
-\newdimen\greadditionalbottomspace
-\newdimen\greadditionaltopspace
-
-% same arguments as grenewlinewithspace
-\def\greupdateadditionalspaces#1#2{%
-  \ifcase#1\relax %
-    \global\greadditionalbottomspace=0 sp%
-  \or % case 1
-    \global\greadditionalbottomspace=0 sp%
-    % here we don't add any space... it's just in case...
-  \or % case 2
-    \global\greadditionaltopspace=15000 sp%
-    \global\multiply\greadditionaltopspace by \the\grefactor %
-  \or % case 3
-    \global\greadditionaltopspace=30000 sp%
-    \global\multiply\greadditionaltopspace by \the\grefactor %
-  \fi %
-  \ifcase#2\relax %
-    % case 0
-    \global\greadditionalbottomspace=0 sp%
-  \or % case 1
-    \global\greadditionalbottomspace=0 sp%
-  \or % case 2
-    \global\greadditionalbottomspace=15000 sp%
-    \global\multiply\greadditionalbottomspace by \the\grefactor %
-  \or % case 3
-    \global\greadditionalbottomspace=30000 sp%
-    \global\multiply\greadditionalbottomspace by \the\grefactor %
-  \or % case 4
-    \global\greadditionalbottomspace=45000 sp%
-    \global\multiply\greadditionalbottomspace by \the\grefactor %
-  \fi %
-  \gregeneratelines %
-  \grecalculateconstantglyphraise %
-  \relax %
-}
-
-%% macros for additional bottom space for the first line
-
-% #1 is 1, 2 or 3, with the same signification as in grenewlinewithspace
-\def\grefirstlinebottomspace#1#2{%
-  \ifcase#1\relax %
-    % case 0
-    \global\greadditionalbottomspace=0 sp%
-  \or % case 1
-    \global\greadditionalbottomspace=0 sp%
-  \or % case 2
-    \global\greadditionalbottomspace=15000 sp%
-    \global\multiply\greadditionalbottomspace by \the\grefactor %
-  \or % case 3
-    \global\greadditionalbottomspace=30000 sp%
-    \global\multiply\greadditionalbottomspace by \the\grefactor %
-  \fi %
-  \ifnum#2=1\relax %
-    \greaddtranslationspace %
-  \else %
-    \greremovetranslationspace %
-  \fi %
-  \gregeneratelines %
-  \grecalculateconstantglyphraise %
-  \relax %
-}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of text
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \gretextlower is the height of the separation between the bottom line (which is invisible : for the notes which are very low) and the bottom of the text
-\newdimen\gretextlower
-\gretextlower=\grespacebeneathtext
-%\advance\gretextlower by \translationheight
-
 %% macro that sets \gretempwidth to the width of its argument
 
 \newbox\GreTempwidth
-\newdimen\gretempwidth
 
 \def\grewidthof#1{%
   \setbox\GreTempwidth=\hbox{#1}%
@@ -331,41 +215,12 @@
   \relax%
 }
 
-%% macro that typesets the text of the syllable, and sets \gretextaligncenter to the middle of the middle letters, it is needed because we align the note (often the middle of the note) with the middle of the middle letters
-%% third argument is 0 if it's the current syllable, 1 if it's the alignment of the following one
-%% warning: gretextaligncenter is the width from the beginning of the letters to the middle of the middle letters
-%% warning: value is approximative when a ligature appears
-
-\newdimen\gretextaligncenter
-
-\def\grefindtextaligncenter#1#2#3{%
-  \ifnum#3=0\relax%
-    \grewidthof{\grefixedtextformat{#1#2}}%
-  \else %
-    \grewidthof{\grefixednexttextformat{#1#2}}%
-  \fi %
-  \global\gretextaligncenter=\the\gretempwidth %
-  \ifnum#3=0\relax%
-    \grewidthof{\grefixedtextformat{#2}}%
-  \else %
-    \grewidthof{\grefixednexttextformat{#2}}%
-  \fi %
-  \divide\gretempwidth by 2 %
-  \global\advance\gretextaligncenter by -\the\gretempwidth%
-  \relax%
-}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the initial
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%this dimention is the additional space that we have to add to the localleftbox sometimes. For now it is used only for the initials on two lines
-\newdimen\greadditionalleftspace
-
 %% box containing the initial, and dimen containing its width (and the width of the space after)
 \newbox\GreInitial
-\newdimen\greinitialwidth
-\greinitialwidth= 0 pt
 
 
 % grebiginitial means that the inital takes two lines
@@ -499,9 +354,7 @@
 % We set two boxes for the two lines above the initial
 
 \newbox\GreAboveinitialfirstbox
-\newdimen\greaboveinitialfirstraise
 \newbox\GreAboveinitialsecondbox
-\newdimen\greaboveinitialsecondraise
 % the height difference between the bottom of the first annotation line and the top of the second annotation line (above the initial) is controlled by the \greaboveinitialseparation space, in gregoriotex-spaces.tex
 
 \def\gresetfirstlineaboveinitial#1#2{%
@@ -534,17 +387,6 @@
 }
 
 \let\setsecondannotation\gresetsecondannotation
-
-%here we set the true raises of the two lines above the inital
-\def\gresetaboveinitialraise{%
-  \global\advance\greaboveinitialfirstraise by \grestaffheight %
-  \global\advance\greaboveinitialfirstraise by \grespacebeneathtext %
-  \global\advance\greaboveinitialfirstraise by \grecurrenttranslationheight %
-  \global\advance\greaboveinitialfirstraise by \grespacelinestext %
-  \global\advance\greaboveinitialfirstraise by \greadditionalbottomspace %
-  \global\advance\greaboveinitialsecondraise by \greaboveinitialfirstraise %
-  \relax %
-}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the score reference (unused)
@@ -610,9 +452,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macro for putting text above lines for annotations and the like
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\newdimen\grecurrentabovelinestextheight
-\grecurrentabovelinestextheight = 0pt
 
 % additional space for the text above lines
 \def\greabovelinestextstyle#1{%

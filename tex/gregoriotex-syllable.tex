@@ -23,12 +23,6 @@
 %% macros for the typesetting of the different glyphs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \greglyphraisevalue is the value of which we must raise one glyph (that will vary with every glyph)
-\newdimen\greglyphraisevalue 
-
-% \greaddedraisevalue is for the vertical episema and the puncta
-\newdimen\greaddedraisevalue
-
 % a temporary count
 \newcount\gretempdimcount
 
@@ -37,181 +31,6 @@
 
 % a little hack for the case where we do something like \grecalculateglyphraisevalue{\greclefflat}
 \gdef\grefirstcar#1#2\endgrefirstchar{#1}
-
-% a very useful macro : it determines the good height of a glyph : the argument is the "number" where the glyph should be : 4 for the first line, 6 for the second, etc.
-% the second argument is for the cases of signs: for example if the note is on a line, the punctummora will be above, and the auctus duplex beneath. the possible values are:
-%% 0: no modification
-%% 1: puts the value on the interline just above if it is on a line
-%% 2: puts the value on the interline just beneath if it is on a line
-%% 3: case of the vertical episemus, which is not placed at the same place if the corresponding note is on a line or not
-%% 4: case of the punctum mora, for the same reason
-%% 5: case of the horizontal episemus under a note, that must be placed a bit lower if the note is on a line
-%% 6: case of the signs above (accentus, etc.)
-%% 8: case of the punctum mora of the first note of a podatus or the 2nd note of a porrectus, etc.
-%% 9: case of the horizontal episemus, that must be placed a bit lower if the note is on a line
-%% 10: case of the choral sign
-\def\grecalculateglyphraisevalue#1#2{%
-\greglyphraisevalue=0pt%
-  \global\greisonaline=\number 0%
-  % z is the very special case of vertical episemus on the lowest note
-  \if z\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 0%
-  \fi%
-  \if a\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 1%
-    \fi%
-  \if b\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 2%
-    \ifnum#2=3\relax %
-    \else %
-      \global\greisonaline=1 % if it is a vertical episemus, we don't care if it is on a line or not... which may cause some problems...
-    \fi %
-  \fi%
-  \if c\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 3%
-  \fi%
-  \if d\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 4%
-    \global\greisonaline=1 %
-  \fi%
-  \if e\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 5%
-  \fi%
-  \if f\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 6%
-    \global\greisonaline=1 %
-  \fi%
-  \if g\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 7%
-  \fi%
-  \if h\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 8 %
-    \global\greisonaline=1 %
-  \fi%
-  \if i\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 9%
-  \fi%
-  \if j\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 10%
-    \global\greisonaline=1 %
-  \fi%
-  \if k\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 11%
-  \fi%
-  \if l\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 12%
-    \global\greisonaline=1 %
-  \fi%
-  \if m\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 13%
-  \fi%
-  % n is only useful for horizontal episemus and rare signs (signs below k have m as first argument, and above have n)
-  \if n\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 14%
-  \fi%
-  % if there is not line... we don't consider notes are on lines
-  \ifnum\greremovelinescount=1\relax %
-    \global\greisonaline=0 %
-  \fi %
-  % if the note is on a line, we change its height if necessary
-  \ifcase\greisonaline\or% isonaline = 1
-    \ifcase#2 %
-    \or% 1
-      \global\advance\gretempdimcount by 1%
-    \or% 2
-      \global\advance\gretempdimcount by -1%
-    \or% 3
-      \global\advance\gretempdimcount by -1%
-    \or% 4
-      \global\advance\gretempdimcount by 1%
-    \or% 5
-      \global\advance\gretempdimcount by -1%
-    \or\or\or % 8
-      \global\advance\gretempdimcount by -1%
-    \or % 9
-      \global\advance\gretempdimcount by 1%
-    \or % 10
-      \global\advance\gretempdimcount by 1%
-    \or % 11
-      \global\advance\gretempdimcount by 1%
-    \or % 12
-      \global\advance\gretempdimcount by -1%
-    \fi%
-  \fi%
-  \global\advance\gretempdimcount by -7 %
-  \global\greglyphraisevalue = 15750 sp %
-  \global\multiply\greglyphraisevalue by \the\grefactor %
-  \global\multiply\greglyphraisevalue by \the\gretempdimcount %
-  \greaddedraisevalue= 0 sp%
-  \ifcase#2 % 
-  \or\or\or%3: if it is a vertical episemus on a line, we shift it a bit higher, so that it's more beautiful
-    \ifnum\greisonaline=1%
-    \greaddedraisevalue=7250 sp%
-    \multiply\greaddedraisevalue by \the\grefactor %
-    \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
-    \else % if it is not on a line, we shift it a bit lower
-    \greaddedraisevalue=-1380 sp%
-    \multiply\greaddedraisevalue by \the\grefactor %
-    \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
-    \fi %
-  \or% 4: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
-    \ifnum\greisonaline=1%
-      \greaddedraisevalue=-6900 sp%
-      \multiply\greaddedraisevalue by \the\grefactor %
-      \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
-    \else % 
-      \greaddedraisevalue=-2200 sp%
-      \multiply\greaddedraisevalue by \the\grefactor %
-      \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
-    \fi%
-  \or% 5: if it is a horizontal episemus under a note which is on a line, we shift it lower
-    \ifnum\greisonaline=0%
-      \greaddedraisevalue=-4980 sp%
-      \multiply\greaddedraisevalue by \the\grefactor %
-      \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
-    \else % if it is under a note between two lines, we shift it higher
-      \greaddedraisevalue=4000 sp%
-      \multiply\greaddedraisevalue by \the\grefactor %
-      \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
-    \fi %
-  \or% 6: if it is a sign, we put it at an arbitrary height
-    \greaddedraisevalue=20000 sp%
-    \multiply\greaddedraisevalue by \the\grefactor %
-    \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
-  \or\or% 8: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
-    \ifnum\greisonaline=1%
-      \greaddedraisevalue=5000 sp%
-      \multiply\greaddedraisevalue by \the\grefactor %
-      \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
-    \fi %
-  \or% 9: if it is an horizontal episemus not on a line, we put it a bit lower
-    \ifnum\greisonaline=1%
-      \greaddedraisevalue=-5500 sp%
-    \else %
-      \greaddedraisevalue=3000 sp%
-    \fi %
-    \multiply\greaddedraisevalue by \the\grefactor %
-    \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
-  \or% 10: if it is a low choral sign, we shift it a bit lower, of a user-defined value
-    \global\advance\greglyphraisevalue by -\the\grelowchoralsignshift %
-  \or% 11: if it is a high choral sign, we shift it a bit lower, of a user-defined value
-    \ifnum\greisonaline=1%
-      \global\advance\greglyphraisevalue by -\the\grehighchoralsignshift %
-    \else %
-      \global\advance\greglyphraisevalue by -\the\grelowchoralsignshift %
-    \fi %
-  \or% 12: if it is a low choral sign that is lower than the note, we shift it a bit higher
-    \ifnum\greisonaline=1%
-      \global\advance\greglyphraisevalue by -\the\grehighchoralsignshift %
-    \else %
-      \global\advance\greglyphraisevalue by -\the\grelowchoralsignshift %
-    \fi %
-  \or% 12: if it is the brace above the bars, we shift it to a user-defined value
-      \global\advance\greglyphraisevalue by -\the\grebraceshift %
-  \fi%
-  \global\advance\greglyphraisevalue by \the\greconstantglyphraise %
-  \global\gretempdimcount=0%
-}
 
 % a macro to tell if the last seen glyph has a punctum mora
 \xdef\grelastispunctum{0}
@@ -231,9 +50,6 @@
 
 % count that tells us if the current glyph is the first glyph or not. It it is the case, we determine
 \newcount\grefirstglyph
-
-% the width of the last glyph
-\newdimen\grelastglyphwidth
 
 % macro to typeset the glyph. attributes are :
 % #1: character : the character that it must call
@@ -276,9 +92,6 @@
   #6\relax %
   \relax%
 }
-
-% notes align center is the point of alignment for the notes
-\newdimen\grenotesaligncenter
 
 % this function is quite simple, it just sets \GreTempwidth with a box of the good width, watch the next function for the complete thing
 % we define the different alignments possible, of course they depend on the font
@@ -439,18 +252,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of glyphs and notes together
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% a dimen that will contain the difference between the end of the text and the end of the notes for the previous syllable (if we are in the same word) : positive if notes go further than text. We will use it for space adjustment between syllables of the same word
-\newdimen\greenddifference
-
-% a dimen that will contain the enddifference of the previous glyph
-\newdimen\grepreviousenddifference
-
-% \grebegindifference is the difference between the begginning of the text and the beginning of the notes. Warning : it can be negative.
-\newdimen\grebegindifference
-
-% a temporary value used many times
-\newdimen\gretempdim
 
 % box that will contain the text of the syllable
 \newbox\GreSyllabletext
@@ -824,8 +625,6 @@
     \fi%
   \fi%
 }
-%skip needed for the barsyllable macro
-\newskip\greskipone
 
 %a macro to typeset a syllable with only a bar inside
 \def\grebarsyllable#1#2#3#4#5#6#7#8#9{%
@@ -964,47 +763,6 @@
   \ifnum\greblockcusto=1\relax\ifnum\greinsidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
-  \relax%
-}
-
-%nextbegindifference is the begindifference of the next syllable
-\newskip\grenextbegindifference
-\newskip\gretempdimskip % couldn't we use another existing temp* ? maybe not
-
-% macro to set \grenextbegindifference
-%% 1 : the first letters of the next syllable
-%% 2 : the middle letters of the next syllable
-%% 3 : the end letters of the next syllable
-%% 4 : the type of notes alignment
-\def\gresetnextbegindifference#1#2#3#4{%
-  %to prevent the pollution of the normal values, we stock them into a temp value
-  \gretempdimskip=\gretextaligncenter %
-  \grefindtextaligncenter{#1}{#2}{1}%
-  \global\grenextbegindifference=-\gretextaligncenter %
-  \global\gretextaligncenter=\gretempdimskip %
-  \gretempdimskip=\grenotesaligncenter %
-  \grefindnextnotesaligncenter{#4}% idem
-  \global\advance\grenextbegindifference by \the\grenotesaligncenter %
-  \global\grenotesaligncenter=\gretempdimskip %
-  \relax %
-}
-
-% macro to set \greenddifference (defined above) to \wd\GreSyllablenotes - (\wd\GreSyllabletext - \gretextaligncenter) - \grenotesaligncenter
-% \greenddifference will be positive if text go further than the notes, and negative in the other case
-% arguments are :
-% #1: \wd\GreSyllablenotes : the total width of the notes
-% #2: \wd\GreSyllabletext : the total width of the text
-% #3: \gretextaligncenter (defined above)
-% #4: \grenotesaligncenter (defined above too)
-% #5: if we have to set previousenddifference or not
-\def\gresetenddifference#1#2#3#4#5{%
-  \ifcase#5\or %
-    \global\grepreviousenddifference=\the\greenddifference %
-  \fi %
-  \global\greenddifference=#1%
-  \global\advance\greenddifference by -#2%
-  \global\advance\greenddifference by #3%
-  \global\advance\greenddifference by -#4%
   \relax%
 }
 

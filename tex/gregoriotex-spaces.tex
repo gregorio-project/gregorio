@@ -133,6 +133,15 @@
 %% macros for the typesetting of spaces
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Independent default distances are defined in gsp-default.tex.  The distances defined here are calculated from those distances.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
+%%  old code which will eventually be deleted
+%%%%%%%%%%%%%%%
+
 %%%%%%%%%%%%%%%%%%%%
 %% horizontal spaces
 %%%%%%%%%%%%%%%%%%%%
@@ -272,107 +281,6 @@
 \newdimen\greaboveinitialseparation
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Some Macros for changing the spacing around the initial
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%Seeing as these are the distances that people will want to change the most often,
-%we give them their own set of macros to make that easier.
-
-
-\def\GreSetAboveInitialSeparation#1{
-  \ifnum\grefactor=0\relax%
-    \setgrefactor{17}%
-  \fi%
-  \grechangedim{\greaboveinitialseparation}{#1}%
-  \relax %
-}
-
-\let\setaboveinitialseparation\GreSetAboveInitialSeparation
-
-\def\GreSetSpaceAfterInitial#1{%
-  \ifnum\grefactor=0\relax%
-    \setgrefactor{17}%
-  \fi%
-  \ifnum\grebiginitial=0\relax%
-    \greinitialformat{\global\grechangedim{\greafterinitialshift}{#1}}%
-  \else%
-    \grebiginitialformat{\global\grechangedim{\greafterinitialshift}{#1}}%
-  \fi%
-  \relax %
-}
-
-\let\setspaceafterinitial\GreSetSpaceAfterInitial
-
-\def\GreSetSpaceBeforeInitial#1{%
-  \ifnum\grefactor=0\relax%
-    \setgrefactor{17}%
-  \fi%
-  \ifnum\grebiginitial=0\relax%
-    \greinitialformat{\global\grechangedim{\grebeforeinitialshift}{#1}}%
-  \else%
-    \grebiginitialformat{\global\grechangedim{\grebeforeinitialshift}{#1}}%
-  \fi%
-  \relax %
-}
-
-\let\setspacebeforeinitial\GreSetSpaceBeforeInitial
-
-\def\setinitialspacing#1#2#3{
-  \ifnum\grefactor=0\relax%
-    \setgrefactor{17}%
-  \fi%
-  \grechangedim{\grebeforeinitialshift}{#1}%
-  \ifnum\grebiginitial=0\relax %
-    \greinitialformat{\global\grechangedim{\gremanualinitialwidth}{#2}}%
-  \else%
-    \grebiginitialformat{\global\grechangedim{\gremanualinitialwidth}{#2}}%
-  \fi%
-  \grechangedim{\greafterinitialshift}{#3}%
-  \relax%
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% staff line height changing
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \grestafflineheight is the height of a staff line
-\newdimen\grestafflineheight
-
-% \greinterstafflinespace is the space between two lines of staff
-\newdimen\greinterstafflinespace
-
-% the value is (1500*stafflinefactor - 1500)/2
-\newdimen\grestafflinediff
-
-% the default factor
-\xdef\grestafflinefactor{1}%
-
-% a macro to define a ratio on the default value
-\def\gresetstafflinefactor#1{%
-  \xdef\grestafflinefactor{#1}%
-  \gretempdimcount=#1\relax %
-  \global\grestafflineheight = 1500sp%
-  \global\multiply\grestafflineheight by \gretempdimcount\relax %
-  % for non-integer numbers... in fact #1 is 10 times the factor we really want
-  \global\divide\grestafflineheight by 10\relax %
-  % we have:
-  %   interstafflinespace = 30000 - (lineheight-1500) = 31500 - lineheight
-  %   primaryglyphraisevalue = interstafflinespace/2 + lineheight/2 + (1500 - lineheight) = 17250 - lineheight
-  \global\greinterstafflinespace=31500sp%
-  \global\advance\greinterstafflinespace by -\grestafflineheight %
-  \global\grestafflinediff=\grestafflineheight %
-  \global\advance\grestafflinediff by -1500sp%
-  \global\divide\grestafflinediff by 2\relax %
-  \ifnum\the\grefactor=0\else %
-    \global\multiply\grestafflinediff by \the\grefactor %
-    \global\multiply\greinterstafflinespace by \the\grefactor %
-    \global\multiply\grestafflineheight by \the\grefactor %
-    \gresetverticalspaces %
-  \fi %
-  \relax %
-}
-
 %%%%%%%%%%%%%%%%%%
 %% vertical spaces
 %%%%%%%%%%%%%%%%%%
@@ -422,6 +330,524 @@
 
 % a shift you can give to the accentus above the curly brace
 \newskip\grecurlybraceaccentusshift
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%
+%% Global distances
+%%%%%%%%%%%%%%%%
+
+% \gretextlower is the height of the separation between the bottom line (which is invisible : for the notes which are very low) and the bottom of the text
+\newdimen\gretextlower
+\gretextlower=\grespacebeneathtext
+%\advance\gretextlower by \translationheight
+
+% \grestafflinewidth is the width of a line of staff, this can vary, for example at the first line
+\newdimen\grestafflinewidth
+
+% \grelinewidth is the width of a line of a score (including the initial)
+\newdimen\grelinewidth
+\grelinewidth=\hsize 
+\grestafflinewidth=\grelinewidth 
+
+% Messing with the staff line thickness directly is messy, so we provide the following interface to make life easier on the user:
+% \grestafflineheight is the height of a staff line
+\newdimen\grestafflineheight
+\grestafflineheight=1500 sp
+
+% \greinterstafflinespace is the space between two lines of staff
+\newdimen\greinterstafflinespace
+\greinterstafflinespace=30000 sp
+
+% the value is (1500*stafflinefactor - 1500)/2
+\newdimen\grestafflinediff
+\grestafflinediff=0 sp
+
+% the default factor
+\xdef\grestafflinefactor{1}%
+
+% a macro to define a ratio on the default value
+\def\gresetstafflinefactor#1{%
+  \xdef\grestafflinefactor{#1}%
+  \gretempdimcount=#1\relax %
+  \global\grestafflineheight = 1500sp%
+  \global\multiply\grestafflineheight by \gretempdimcount\relax %
+  % for non-integer numbers... in fact #1 is 10 times the factor we really want
+  \global\divide\grestafflineheight by 10\relax %
+  % we have:
+  %   interstafflinespace = 30000 - (lineheight-1500) = 31500 - lineheight
+  %   primaryglyphraisevalue = interstafflinespace/2 + lineheight/2 + (1500 - lineheight) = 17250 - lineheight
+  \global\greinterstafflinespace=31500sp%
+  \global\advance\greinterstafflinespace by -\grestafflineheight %
+  \global\grestafflinediff=\grestafflineheight %
+  \global\advance\grestafflinediff by -1500sp%
+  \global\divide\grestafflinediff by 2\relax %
+  \ifnum\the\grefactor=0\else %
+    \global\multiply\grestafflinediff by \the\grefactor %
+    \global\multiply\greinterstafflinespace by \the\grefactor %
+    \global\multiply\grestafflineheight by \the\grefactor %
+    \gresetverticalspaces %
+  \fi %
+  \relax %
+}
+
+% to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at grespacelinestext + grespacebeneathtext + 2*greinterstafflinespace + 2*grestafflineheight + translationheight
+\def\grecalculateconstantglyphraise{%
+  \global\greconstantglyphraise = -22000 sp%
+  \global\multiply\greconstantglyphraise by \the\grefactor %
+  \global\advance\greconstantglyphraise by \greadditionalbottomspace %
+  \global\advance\greconstantglyphraise by \grespacebeneathtext %
+  \global\advance\greconstantglyphraise by \grespacelinestext %
+  \global\advance\greconstantglyphraise by \greinterstafflinespace %
+  \global\advance\greconstantglyphraise by \greinterstafflinespace %
+  \global\advance\greconstantglyphraise by \grestafflineheight %
+  \global\advance\greconstantglyphraise by \grestafflineheight %
+  \global\advance\greconstantglyphraise by \grecurrenttranslationheight %
+  % an adjustment in the case of big lines
+  \global\advance\greconstantglyphraise by \grestafflinediff %
+  \relax %
+}
+
+%% Here is the function to compute some more vertical spaces from the basic values
+\def\gresetverticalspaces{%
+  \grestaffheight=4\grestafflineheight %
+  \advance\grestaffheight by 3\greinterstafflinespace %
+  %\global\multiply\grespacebeneathtext by \grefactor % uncomment it if you want
+  % something else than 0
+  \global\gretextlower=\grespacebeneathtext %
+  \global\grecalculateconstantglyphraise %
+  \relax %
+}
+
+
+
+%%%%%%%%%%%%%%%%%%
+%% Local Distances (computed as needed)
+%%%%%%%%%%%%%%%%%%
+
+% \greglyphraisevalue is the value of which we must raise one glyph (that will vary with every glyph)
+\newdimen\greglyphraisevalue 
+
+% \greaddedraisevalue is for the vertical episema and the puncta
+\newdimen\greaddedraisevalue
+
+% a very useful macro : it determines the good height of a glyph : the argument is the "number" where the glyph should be : 4 for the first line, 6 for the second, etc.
+% the second argument is for the cases of signs: for example if the note is on a line, the punctummora will be above, and the auctus duplex beneath. the possible values are:
+%% 0: no modification
+%% 1: puts the value on the interline just above if it is on a line
+%% 2: puts the value on the interline just beneath if it is on a line
+%% 3: case of the vertical episemus, which is not placed at the same place if the corresponding note is on a line or not
+%% 4: case of the punctum mora, for the same reason
+%% 5: case of the horizontal episemus under a note, that must be placed a bit lower if the note is on a line
+%% 6: case of the signs above (accentus, etc.)
+%% 8: case of the punctum mora of the first note of a podatus or the 2nd note of a porrectus, etc.
+%% 9: case of the horizontal episemus, that must be placed a bit lower if the note is on a line
+%% 10: case of the choral sign
+\def\grecalculateglyphraisevalue#1#2{%
+\greglyphraisevalue=0pt%
+  \global\greisonaline=\number 0%
+  % z is the very special case of vertical episemus on the lowest note
+  \if z\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 0%
+  \fi%
+  \if a\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 1%
+    \fi%
+  \if b\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 2%
+    \ifnum#2=3\relax %
+    \else %
+      \global\greisonaline=1 % if it is a vertical episemus, we don't care if it is on a line or not... which may cause some problems...
+    \fi %
+  \fi%
+  \if c\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 3%
+  \fi%
+  \if d\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 4%
+    \global\greisonaline=1 %
+  \fi%
+  \if e\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 5%
+  \fi%
+  \if f\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 6%
+    \global\greisonaline=1 %
+  \fi%
+  \if g\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 7%
+  \fi%
+  \if h\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 8 %
+    \global\greisonaline=1 %
+  \fi%
+  \if i\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 9%
+  \fi%
+  \if j\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 10%
+    \global\greisonaline=1 %
+  \fi%
+  \if k\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 11%
+  \fi%
+  \if l\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 12%
+    \global\greisonaline=1 %
+  \fi%
+  \if m\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 13%
+  \fi%
+  % n is only useful for horizontal episemus and rare signs (signs below k have m as first argument, and above have n)
+  \if n\grefirstcar#1\endgrefirstchar %
+    \global\gretempdimcount=\number 14%
+  \fi%
+  % if there is not line... we don't consider notes are on lines
+  \ifnum\greremovelinescount=1\relax %
+    \global\greisonaline=0 %
+  \fi %
+  % if the note is on a line, we change its height if necessary
+  \ifcase\greisonaline\or% isonaline = 1
+    \ifcase#2 %
+    \or% 1
+      \global\advance\gretempdimcount by 1%
+    \or% 2
+      \global\advance\gretempdimcount by -1%
+    \or% 3
+      \global\advance\gretempdimcount by -1%
+    \or% 4
+      \global\advance\gretempdimcount by 1%
+    \or% 5
+      \global\advance\gretempdimcount by -1%
+    \or\or\or % 8
+      \global\advance\gretempdimcount by -1%
+    \or % 9
+      \global\advance\gretempdimcount by 1%
+    \or % 10
+      \global\advance\gretempdimcount by 1%
+    \or % 11
+      \global\advance\gretempdimcount by 1%
+    \or % 12
+      \global\advance\gretempdimcount by -1%
+    \fi%
+  \fi%
+  \global\advance\gretempdimcount by -7 %
+  \global\greglyphraisevalue = 15750 sp %
+  \global\multiply\greglyphraisevalue by \the\grefactor %
+  \global\multiply\greglyphraisevalue by \the\gretempdimcount %
+  \greaddedraisevalue= 0 sp%
+  \ifcase#2 % 
+  \or\or\or%3: if it is a vertical episemus on a line, we shift it a bit higher, so that it's more beautiful
+    \ifnum\greisonaline=1%
+    \greaddedraisevalue=7250 sp%
+    \multiply\greaddedraisevalue by \the\grefactor %
+    \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
+    \else % if it is not on a line, we shift it a bit lower
+    \greaddedraisevalue=-1380 sp%
+    \multiply\greaddedraisevalue by \the\grefactor %
+    \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
+    \fi %
+  \or% 4: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
+    \ifnum\greisonaline=1%
+      \greaddedraisevalue=-6900 sp%
+      \multiply\greaddedraisevalue by \the\grefactor %
+      \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
+    \else % 
+      \greaddedraisevalue=-2200 sp%
+      \multiply\greaddedraisevalue by \the\grefactor %
+      \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
+    \fi%
+  \or% 5: if it is a horizontal episemus under a note which is on a line, we shift it lower
+    \ifnum\greisonaline=0%
+      \greaddedraisevalue=-4980 sp%
+      \multiply\greaddedraisevalue by \the\grefactor %
+      \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
+    \else % if it is under a note between two lines, we shift it higher
+      \greaddedraisevalue=4000 sp%
+      \multiply\greaddedraisevalue by \the\grefactor %
+      \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
+    \fi %
+  \or% 6: if it is a sign, we put it at an arbitrary height
+    \greaddedraisevalue=20000 sp%
+    \multiply\greaddedraisevalue by \the\grefactor %
+    \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
+  \or\or% 8: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
+    \ifnum\greisonaline=1%
+      \greaddedraisevalue=5000 sp%
+      \multiply\greaddedraisevalue by \the\grefactor %
+      \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
+    \fi %
+  \or% 9: if it is an horizontal episemus not on a line, we put it a bit lower
+    \ifnum\greisonaline=1%
+      \greaddedraisevalue=-5500 sp%
+    \else %
+      \greaddedraisevalue=3000 sp%
+    \fi %
+    \multiply\greaddedraisevalue by \the\grefactor %
+    \global\advance\greglyphraisevalue by \the\greaddedraisevalue %
+  \or% 10: if it is a low choral sign, we shift it a bit lower, of a user-defined value
+    \global\advance\greglyphraisevalue by -\the\grelowchoralsignshift %
+  \or% 11: if it is a high choral sign, we shift it a bit lower, of a user-defined value
+    \ifnum\greisonaline=1%
+      \global\advance\greglyphraisevalue by -\the\grehighchoralsignshift %
+    \else %
+      \global\advance\greglyphraisevalue by -\the\grelowchoralsignshift %
+    \fi %
+  \or% 12: if it is a low choral sign that is lower than the note, we shift it a bit higher
+    \ifnum\greisonaline=1%
+      \global\advance\greglyphraisevalue by -\the\grehighchoralsignshift %
+    \else %
+      \global\advance\greglyphraisevalue by -\the\grelowchoralsignshift %
+    \fi %
+  \or% 12: if it is the brace above the bars, we shift it to a user-defined value
+      \global\advance\greglyphraisevalue by -\the\grebraceshift %
+  \fi%
+  \global\advance\greglyphraisevalue by \the\greconstantglyphraise %
+  \global\gretempdimcount=0%
+}
+
+% two dimensions for the additionalspaces
+\newdimen\greadditionalbottomspace
+\newdimen\greadditionaltopspace
+
+% same arguments as grenewlinewithspace
+\def\greupdateadditionalspaces#1#2{%
+  \ifcase#1\relax %
+    \global\greadditionalbottomspace=0 sp%
+  \or % case 1
+    \global\greadditionalbottomspace=0 sp%
+    % here we don't add any space... it's just in case...
+  \or % case 2
+    \global\greadditionaltopspace=15000 sp%
+    \global\multiply\greadditionaltopspace by \the\grefactor %
+  \or % case 3
+    \global\greadditionaltopspace=30000 sp%
+    \global\multiply\greadditionaltopspace by \the\grefactor %
+  \fi %
+  \ifcase#2\relax %
+    % case 0
+    \global\greadditionalbottomspace=0 sp%
+  \or % case 1
+    \global\greadditionalbottomspace=0 sp%
+  \or % case 2
+    \global\greadditionalbottomspace=15000 sp%
+    \global\multiply\greadditionalbottomspace by \the\grefactor %
+  \or % case 3
+    \global\greadditionalbottomspace=30000 sp%
+    \global\multiply\greadditionalbottomspace by \the\grefactor %
+  \or % case 4
+    \global\greadditionalbottomspace=45000 sp%
+    \global\multiply\greadditionalbottomspace by \the\grefactor %
+  \fi %
+  \gregeneratelines %
+  \grecalculateconstantglyphraise %
+  \relax %
+}
+
+%% macros for additional bottom space for the first line
+
+% #1 is 1, 2 or 3, with the same signification as in grenewlinewithspace
+\def\grefirstlinebottomspace#1#2{%
+  \ifcase#1\relax %
+    % case 0
+    \global\greadditionalbottomspace=0 sp%
+  \or % case 1
+    \global\greadditionalbottomspace=0 sp%
+  \or % case 2
+    \global\greadditionalbottomspace=15000 sp%
+    \global\multiply\greadditionalbottomspace by \the\grefactor %
+  \or % case 3
+    \global\greadditionalbottomspace=30000 sp%
+    \global\multiply\greadditionalbottomspace by \the\grefactor %
+  \fi %
+  \ifnum#2=1\relax %
+    \greaddtranslationspace %
+  \else %
+    \greremovetranslationspace %
+  \fi %
+  \gregeneratelines %
+  \grecalculateconstantglyphraise %
+  \relax %
+}
+
+%% macro that typesets the text of the syllable, and sets \gretextaligncenter to the middle of the middle letters, it is needed because we align the note (often the middle of the note) with the middle of the middle letters
+%% third argument is 0 if it's the current syllable, 1 if it's the alignment of the following one
+%% warning: gretextaligncenter is the width from the beginning of the letters to the middle of the middle letters
+%% warning: value is approximative when a ligature appears
+
+\newdimen\gretextaligncenter
+
+\def\grefindtextaligncenter#1#2#3{%
+  \ifnum#3=0\relax%
+    \grewidthof{\grefixedtextformat{#1#2}}%
+  \else %
+    \grewidthof{\grefixednexttextformat{#1#2}}%
+  \fi %
+  \global\gretextaligncenter=\the\gretempwidth %
+  \ifnum#3=0\relax%
+    \grewidthof{\grefixedtextformat{#2}}%
+  \else %
+    \grewidthof{\grefixednexttextformat{#2}}%
+  \fi %
+  \divide\gretempwidth by 2 %
+  \global\advance\gretextaligncenter by -\the\gretempwidth%
+  \relax%
+}
+
+% a dimen that will contain the difference between the end of the text and the end of the notes for the previous syllable (if we are in the same word) : positive if notes go further than text. We will use it for space adjustment between syllables of the same word
+\newdimen\greenddifference
+
+% a dimen that will contain the enddifference of the previous glyph
+\newdimen\grepreviousenddifference
+
+% macro to set \greenddifference (defined above) to \wd\GreSyllablenotes - (\wd\GreSyllabletext - \gretextaligncenter) - \grenotesaligncenter
+% \greenddifference will be positive if text go further than the notes, and negative in the other case
+% arguments are :
+% #1: \wd\GreSyllablenotes : the total width of the notes
+% #2: \wd\GreSyllabletext : the total width of the text
+% #3: \gretextaligncenter (defined above)
+% #4: \grenotesaligncenter (defined above too)
+% #5: if we have to set previousenddifference or not
+\def\gresetenddifference#1#2#3#4#5{%
+  \ifcase#5\or %
+    \global\grepreviousenddifference=\the\greenddifference %
+  \fi %
+  \global\greenddifference=#1%
+  \global\advance\greenddifference by -#2%
+  \global\advance\greenddifference by #3%
+  \global\advance\greenddifference by -#4%
+  \relax%
+}
+
+%%%%%%%%%%%%%%%%%%
+%% other spaces calculated elsewhere
+%%%%%%%%%%%%%%%%%%
+
+% These distances are calculated at time of use because they depend on what’s going on around them (something only known at time of use) or they are dynamically set and adjusted based on certain events.
+
+
+% temporary value for space for the translation, beneath the text
+\newdimen\grecurrenttranslationheight
+
+% macro to tell gregorio to set space for the translation
+\def\greaddtranslationspace{%
+  \global\grecurrenttranslationheight=\gretranslationheight %
+  \global\gretextlower=\grespacebeneathtext %
+  \global\advance\gretextlower by \gretranslationheight %
+  \gregeneratelines %
+  \grecalculateconstantglyphraise %
+  \relax %
+}
+
+\def\greremovetranslationspace{%
+  \global\grecurrenttranslationheight=0 sp%
+  \global\gretextlower=\grespacebeneathtext %
+  \gregeneratelines %
+  \grecalculateconstantglyphraise %
+  \relax %
+}
+
+% the width of the clef
+\newdimen\greclefwidth
+
+% the width of the last glyph
+\newdimen\grelastglyphwidth
+
+% notes align center is the point of alignment for the notes
+\newdimen\grenotesaligncenter
+
+% \grebegindifference is the difference between the begginning of the text and the beginning of the notes. Warning : it can be negative.
+\newdimen\grebegindifference
+%nextbegindifference is the begindifference of the next syllable
+\newskip\grenextbegindifference
+
+% macro to set \grenextbegindifference
+%% 1 : the first letters of the next syllable
+%% 2 : the middle letters of the next syllable
+%% 3 : the end letters of the next syllable
+%% 4 : the type of notes alignment
+\def\gresetnextbegindifference#1#2#3#4{%
+  %to prevent the pollution of the normal values, we stock them into a temp value
+  \gretempdimskip=\gretextaligncenter %
+  \grefindtextaligncenter{#1}{#2}{1}%
+  \global\grenextbegindifference=-\gretextaligncenter %
+  \global\gretextaligncenter=\gretempdimskip %
+  \gretempdimskip=\grenotesaligncenter %
+  \grefindnextnotesaligncenter{#4}% idem
+  \global\advance\grenextbegindifference by \the\grenotesaligncenter %
+  \global\grenotesaligncenter=\gretempdimskip %
+  \relax %
+}
+
+%this dimention is the additional space that we have to add to the localleftbox sometimes. For now it is used only for the initials on two lines
+\newdimen\greadditionalleftspace
+
+% the calculated width of the initial (may be actual width of letter or be forced wider under certain conditions)
+\newdimen\greinitialwidth
+\greinitialwidth= 0 pt
+
+%The distance from the baseline of the line to the baseline of the annotations
+\newdimen\greaboveinitialfirstraise
+\newdimen\greaboveinitialsecondraise
+% When text is placed in the annotation boxes these dimensions are initialized with values based on the contents and the user parameters
+%This function sets the true raises of the two lines above the inital (it has to be called just as the boxes are placed in order to make sure that the values are all correct)
+\def\gresetaboveinitialraise{%
+  \global\advance\greaboveinitialfirstraise by \grestaffheight %
+  \global\advance\greaboveinitialfirstraise by \grespacebeneathtext %
+  \global\advance\greaboveinitialfirstraise by \grecurrenttranslationheight %
+  \global\advance\greaboveinitialfirstraise by \grespacelinestext %
+  \global\advance\greaboveinitialfirstraise by \greadditionalbottomspace %
+  \global\advance\greaboveinitialsecondraise by \greaboveinitialfirstraise %
+  \relax %
+}
+
+\newdimen\grecurrentabovelinestextheight
+\grecurrentabovelinestextheight = 0pt
+
+%% TODO: try localizing all temporary variables
+% temporary spaces used in calculations
+\newdimen\gretempwidth
+\newdimen\gretempdimsignwidth
+\newdimen\gretempdimtwo
+\newdimen\gretempdim
+\newskip\gretempdimskip % couldn't we use another existing temp* ? maybe not
+\newskip\greskipone
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% dimension changing macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% This macro changes one dim (#1) to the value #2, with the current factor.
+%% If the factor is 0, it takes the default value (17), but warning: this
+%% means that you have to set your personal grefactor before changing the values,
+%% or use the next macro.
+\def\grechangedim#1#2{%
+  \ifnum\grefactor=0\relax %
+    \grechangedimatfactor{#1}{#2}{17}%
+  \else %
+    \grechangedimatfactor{#1}{#2}{\grefactor}%
+  \fi %
+  \relax %
+}
+
+%% This macro changes one dimen (#1) to the value #2, at the factor specified
+%% in #3.
+\def\grechangedimatfactor#1#2#3{%
+  #1=#2%
+  \ifnum #3=\grefactor\else %
+    \divide #1 by \number #3%
+    \ifnum\grefactor=0\else % 
+      % if grefactor = 0 it means that we must consider it's 1,
+      % as we are before the beginning of the first score.
+      \multiply #1 by \grefactor %
+    \fi %
+  \fi %
+  \gresetverticalspaces %
+  \relax %
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % space configuration loading
@@ -490,49 +916,9 @@
   \relax %
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% dimension changing macros
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% This macro changes one dim (#1) to the value #2, with the current factor.
-%% If the factor is 0, it takes the default value (17), but warning: this
-%% means that you have to set your personal grefactor before changing the values,
-%% or use the next macro.
-\def\grechangedim#1#2{%
-  \ifnum\grefactor=0\relax %
-    \grechangedimatfactor{#1}{#2}{17}%
-  \else %
-    \grechangedimatfactor{#1}{#2}{\grefactor}%
-  \fi %
-  \relax %
-}
-
-%% This macro changes one dimen (#1) to the value #2, at the factor specified
-%% in #3.
-\def\grechangedimatfactor#1#2#3{%
-  #1=#2%
-  \ifnum #3=\grefactor\else %
-    \divide #1 by \number #3%
-    \ifnum\grefactor=0\else % 
-      % if grefactor = 0 it means that we must consider it's 1,
-      % as we are before the beginning of the first score.
-      \multiply #1 by \grefactor %
-    \fi %
-  \fi %
-  \gresetverticalspaces %
-  \relax %
-}
-
-%% Here is the function to compute some more vertical spaces from the basic values
-\def\gresetverticalspaces{%
-  \grestaffheight=4\grestafflineheight %
-  \advance\grestaffheight by 3\greinterstafflinespace %
-  %\global\multiply\grespacebeneathtext by \grefactor % uncomment it if you want
-  % something else than 0
-  \global\gretextlower=\grespacebeneathtext %
-  \global\grecalculateconstantglyphraise %
-  \relax %
-}
+%%%%%%%%%%%%%
+%% Rescaling dimensions (for when \grefactor changes)
+%%%%%%%%%%%%%
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
 \def\grechangeonedimenfactor#1#2#3{%
@@ -594,3 +980,64 @@
   \grechangeonedimenfactor{\greaboveinitialseparation}{#1}{#2}%
   \relax %
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Some Macros for changing the spacing around the initial
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Seeing as these are the distances that people will want to change the most often,
+%we give them their own set of macros to make that easier.
+
+
+\def\GreSetAboveInitialSeparation#1{
+  \ifnum\grefactor=0\relax%
+    \setgrefactor{17}%
+  \fi%
+  \grechangedim{\greaboveinitialseparation}{#1}%
+  \relax %
+}
+
+\let\setaboveinitialseparation\GreSetAboveInitialSeparation
+
+\def\GreSetSpaceAfterInitial#1{%
+  \ifnum\grefactor=0\relax%
+    \setgrefactor{17}%
+  \fi%
+  \ifnum\grebiginitial=0\relax%
+    \greinitialformat{\global\grechangedim{\greafterinitialshift}{#1}}%
+  \else%
+    \grebiginitialformat{\global\grechangedim{\greafterinitialshift}{#1}}%
+  \fi%
+  \relax %
+}
+
+\let\setspaceafterinitial\GreSetSpaceAfterInitial
+
+\def\GreSetSpaceBeforeInitial#1{%
+  \ifnum\grefactor=0\relax%
+    \setgrefactor{17}%
+  \fi%
+  \ifnum\grebiginitial=0\relax%
+    \greinitialformat{\global\grechangedim{\grebeforeinitialshift}{#1}}%
+  \else%
+    \grebiginitialformat{\global\grechangedim{\grebeforeinitialshift}{#1}}%
+  \fi%
+  \relax %
+}
+
+\let\setspacebeforeinitial\GreSetSpaceBeforeInitial
+
+\def\setinitialspacing#1#2#3{
+  \ifnum\grefactor=0\relax%
+    \setgrefactor{17}%
+  \fi%
+  \grechangedim{\grebeforeinitialshift}{#1}%
+  \ifnum\grebiginitial=0\relax %
+    \greinitialformat{\global\grechangedim{\gremanualinitialwidth}{#2}}%
+  \else%
+    \grebiginitialformat{\global\grechangedim{\gremanualinitialwidth}{#2}}%
+  \fi%
+  \grechangedim{\greafterinitialshift}{#3}%
+  \relax%
+}
+

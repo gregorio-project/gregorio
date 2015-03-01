@@ -86,9 +86,6 @@
 % a count describing the clef line and pitch : 1 for c on the first (bottom) line, 2 for c on the second line, 5 for f on the first, etc.
 \newcount\greclefnum
 
-% the width of the clef
-\newdimen\greclefwidth
-
 %% marcro to define the clef that will appear at the beginning of the lines
 % the first argument is the type : f or c, and the second is the height
 % the third argument is whether we must type a space after or not (0 if not, 1 if yes)
@@ -641,7 +638,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newbox\GreTempsign
-\newdimen\gretempdimsignwidth
 
 % a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. If it is 2, it means that we must go back first of width #1, and then forward of #2. If it is 1, it means that we only need to go back of #2. if it is 3, we go to the beginning of the glyph, then forward of #1 then back of #2
 % #4 is a shift that we want to get applied, useful for punctum inclinatum for example
@@ -1307,7 +1303,6 @@
   \relax%
 }
 
-\newdimen\gretempdimtwo
 
 \def\greindivisiofinalis#1{%
   \ifcase\greendofscore %
