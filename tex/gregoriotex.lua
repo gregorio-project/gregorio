@@ -189,11 +189,14 @@ local function include_score(input_file)
     local file_root = ""
     if input_file:gmatch("%.gtex+$") then
 	file_root = input_file:gsub("%.gtex+$", "")
-    elseif input_file:gmatch("%.tex+$") then
+    end
+    if input_file:gmatch("%.tex+$") then
 	file_root = input_file:gsub("%.tex+$", "")
-    elseif input_file:gmatch("%.gabc+$") then
+    end
+    if input_file:gmatch("%.gabc+$") then
 	file_root = input_file:gsub("%.gabc+$", "")
-    else
+    end
+    if file_root == "" then
 	file_root = input_file
     end
     local gtex_file = file_root.."-"..internalversion..".gtex"
