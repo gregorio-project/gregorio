@@ -207,19 +207,17 @@
   % it makes no sense to change the clef when there is no clef...
   \grenormalclef %
   \grecalculateclefnum{#1}{#2}{#4}%
-  \greclefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
-  \multiply\greclefchangespace by \the\grefactor %
   \ifnum\greinsidediscretionary=0\relax %
     \gresetlinesclef{#1}{#2}{1}{#4}%
   \fi %
   \ifnum#3=1\relax %
-    \grehskip\greclefchangespace %
+    \grehskip\gre@clefchangespace %
   \else %
     % here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
     \grehskip -\gre@spacearoundclefbars %
   \fi %
   \gretypekey{#1}{#2}{1}{0}{#4}%
-  \grehskip\greclefchangespace %
+  \grehskip\gre@clefchangespace %
   \relax%
 }
 
@@ -231,14 +229,12 @@
   \ifnum\grelastoflinecount=2\relax %
     \global\grelastoflinecount=0\relax %
   \fi %
-  \greclefchangespace = 16500 sp plus 1650 sp minus 16500 sp%
-  \multiply\greclefchangespace by \grefactor %
   \ifnum\greinsidediscretionary=0\relax %
     \gresetlinesclef{#1}{#2}{0}{#3}%
   \fi %
-  \hskip\greclefchangespace %
+  \hskip\gre@clefchangespace %
   \gretypekey{#1}{#2}{1}{0}{#3}%
-  \hskip\greclefchangespace %
+  \hskip\gre@clefchangespace %
   \relax%
 }
 
