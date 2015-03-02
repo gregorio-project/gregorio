@@ -430,9 +430,10 @@
 }
 
 %% Here is the function to compute some more vertical spaces from the basic values
+\newdimen\gre@staffheight
 \def\gre@calculate@staffheight{%
-  \gre@staffheight = 4\gre@stafflineheight %
-  \advance\gre@staffheight by 3\gre@interstafflinespace %
+  \global\gre@staffheight = 4\gre@stafflineheight %
+  \global\advance\gre@staffheight by 3\gre@interstafflinespace %
   %\global\multiply\gre@spacebeneathtext by \grefactor % uncomment it if you want
   % something else than 0
   \relax %
@@ -488,59 +489,74 @@
   \global\greisonaline=\number 0%
   % z is the very special case of vertical episemus on the lowest note
   \if z\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 0%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 0%
   \fi%
   \if a\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 1%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 1%
     \fi%
   \if b\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 2%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 2%
     \ifnum#2=3\relax %
     \else %
       \global\greisonaline=1 % if it is a vertical episemus, we don't care if it is on a line or not... which may cause some problems...
     \fi %
   \fi%
   \if c\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 3%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 3%
   \fi%
   \if d\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 4%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 4%
     \global\greisonaline=1 %
   \fi%
   \if e\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 5%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 5%
   \fi%
   \if f\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 6%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 6%
     \global\greisonaline=1 %
   \fi%
   \if g\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 7%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 7%
   \fi%
   \if h\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 8 %
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 8 %
     \global\greisonaline=1 %
   \fi%
   \if i\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 9%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 9%
   \fi%
   \if j\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 10%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 10%
     \global\greisonaline=1 %
   \fi%
   \if k\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 11%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 11%
   \fi%
   \if l\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 12%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 12%
     \global\greisonaline=1 %
   \fi%
   \if m\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 13%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 13%
   \fi%
   % n is only useful for horizontal episemus and rare signs (signs below k have m as first argument, and above have n)
   \if n\grefirstcar#1\endgrefirstchar %
-    \global\gretempdimcount=\number 14%
+    \newcount\gretempdimcount
+    \gretempdimcount=\number 14%
   \fi%
   % if there is not line... we don't consider notes are on lines
   \ifnum\greremovelinescount=1\relax %
@@ -643,7 +659,6 @@
       \global\advance\gre@glyphraisevalue by -\the\gre@braceshift %
   \fi%
   \global\advance\gre@glyphraisevalue by \the\gre@constantglyphraise %
-  \global\gretempdimcount=0%
 }
 
 % two dimensions for the additionalspaces
@@ -790,10 +805,12 @@
 %% 4 : the type of notes alignment
 \def\gre@calculate@nextbegindifference#1#2#3#4{%
   %to prevent the pollution of the normal values, we stock them into a temp value
+  \newskip\gre@tempdimskip
   \gre@tempdimskip=\gre@textaligncenter %
   \gre@calculate@textaligncenter{#1}{#2}{1}%
   \global\gre@nextbegindifference=-\gre@textaligncenter %
   \global\gre@textaligncenter=\gre@tempdimskip %
+  \newskip\gre@tempdimskip
   \gre@tempdimskip=\gre@notesaligncenter %
   \grefindnextnotesaligncenter{#4}% idem
   \global\advance\gre@nextbegindifference by \the\gre@notesaligncenter %
@@ -848,12 +865,12 @@
 
 %% TODO: try localizing all temporary variables
 % temporary spaces used in calculations
-\newdimen\gre@tempwidth
-\newdimen\gre@tempdimsignwidth
-\newdimen\gre@tempdimtwo
-\newdimen\gre@tempdim
-\newskip\gre@tempdimskip % couldn't we use another existing temp* ? maybe not
-\newskip\gre@skipone
+%\newdimen\gre@tempwidth
+%\newdimen\gre@tempdimsignwidth
+%\newdimen\gre@tempdimtwo
+%\newdimen\gre@tempdim
+%\newskip\gre@tempdimskip % couldn't we use another existing temp* ? maybe not
+%\newskip\gre@skipone
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% dimension changing macros

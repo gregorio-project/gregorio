@@ -211,6 +211,7 @@
 
 \def\grewidthof#1{%
   \setbox\GreTempwidth=\hbox{#1}%
+  \newskip\gre@tempwidth
   \global\gre@tempwidth=\wd\GreTempwidth%
   \relax%
 }
@@ -263,6 +264,7 @@
 \def\greupdatelinewidth{%
   \ifdim\gre@additionalleftspace=0pt%
   \else %
+    \newskip\gre@tempdim
     \gre@tempdim=\gre@stafflinewidth %
     \global\advance\gre@stafflinewidth by -\gre@additionalleftspace %
     \gregeneratelines %
@@ -275,6 +277,7 @@
   \gre@calculate@aboveinitialraise %
   % we print the initial always at the same place, and the we print the GreAboveinitialfirstbox  centered
   % first we print the initial
+  \newskip\gre@tempdim
   \gre@tempdim=-\gre@textlower %
   % if it is a big initial we print it on the second line 
   \ifnum\grebiginitial=0\relax %
@@ -320,6 +323,7 @@
   % then we center the first box above the initial, if there is one
   \ifdim\wd\GreAboveinitialfirstbox=0 pt\relax %
   \else %
+    \newskip\gre@tempdim
     \gre@tempdim=\gre@initialwidth %
     \advance\gre@tempdim by -\wd\GreAboveinitialfirstbox  %
     \divide\gre@tempdim by 2 %
@@ -332,6 +336,7 @@
   % then we center the second box above the initial, if there is one
   \ifdim\wd\GreAboveinitialsecondbox=0 pt\relax %
   \else %
+    \newskip\gre@tempdim
     \gre@tempdim=\gre@initialwidth %
     \advance\gre@tempdim by -\wd\GreAboveinitialsecondbox %
     \divide\gre@tempdim by 2 %
@@ -482,13 +487,14 @@
 
 % typesets the text above the line
 \def\gretypesettextabovelines#1{%
-  \global\gre@tempdim=\gre@abovelinestextraise %
-  \global\advance\gre@tempdim by 4\gre@stafflineheight %
-  \global\advance\gre@tempdim by 4\gre@interstafflinespace %
-  \global\advance\gre@tempdim by \gre@spacebeneathtext %
-  \global\advance\gre@tempdim by \gre@currenttranslationheight %
-  \global\advance\gre@tempdim by \gre@spacelinestext %
-  \global\advance\gre@tempdim by \gre@additionalbottomspace %
+  \newskip\gre@tempdim
+  \gre@tempdim=\gre@abovelinestextraise %
+  \advance\gre@tempdim by 4\gre@stafflineheight %
+  \advance\gre@tempdim by 4\gre@interstafflinespace %
+  \advance\gre@tempdim by \gre@spacebeneathtext %
+  \advance\gre@tempdim by \gre@currenttranslationheight %
+  \advance\gre@tempdim by \gre@spacelinestext %
+  \advance\gre@tempdim by \gre@additionalbottomspace %
   \leavevmode\raise\gre@tempdim\hbox to 0pt{\greabovelinestextstyle{#1}\hss}%
   \relax %
 }
@@ -598,6 +604,7 @@
 
 % macro called when the initial is big, and so when the second line is at the same level as the first
 \def\gresmallsecondline{%
+  \newskip\gre@tempdim
   \gre@tempdim=\gre@stafflinewidth %
   \global\advance\gre@stafflinewidth by -\gre@initialwidth %
   \gregeneratelines %
@@ -638,6 +645,7 @@
   \ifnum\gretranslationcenteringscheme=0\relax %
     \raise\gre@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
   \else %
+    \newskip\gre@tempdim
     \gre@tempdim=\wd\GreSyllabletext %
     \setbox\GreTempwidth=\hbox{#1}%
     \advance\gre@tempdim by -\wd\GreTempwidth %
@@ -1125,6 +1133,7 @@
 
 \def\setgregoriofont#1{%
   \xdef\gregoriofontname{#1}%
+  \newcount\gretempdimcount
   \gretempdimcount = \the\grefactor %
   \multiply\gretempdimcount by 100000 %
   \global\font\gregoriofont="name:#1" at \the\gretempdimcount sp%
@@ -1135,6 +1144,7 @@
 
 % gregoriostylefont is the font used for additional glyphs
 \def\gresetstylefont{%
+  \newcount\gretempdimcount
   \gretempdimcount = \the\grefactor %
   \multiply\gretempdimcount by 100000\relax %
   \global\font\gregoriostylefont="name:greextra" at \the\gretempdimcount sp%

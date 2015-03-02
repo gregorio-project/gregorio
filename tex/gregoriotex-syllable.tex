@@ -23,9 +23,6 @@
 %% macros for the typesetting of the different glyphs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% a temporary count
-\newcount\gretempdimcount
-
 % a boolean : 0 if the note is not a line, else 1
 \newcount\greisonaline
 
@@ -71,6 +68,7 @@
 \def\greglyph#1#2#3#4#5#6{%
   \grenewglyphcommon %
   \setbox\GreTempwidth=\hbox{\gregoriofont #1}%
+  \newskip\gre@tempwidth
   \gre@tempwidth=\wd\GreTempwidth %
   \global\gre@lastglyphwidth=\gre@tempwidth %
   % the three next lines are a trick to get the additional lines below the glyphs
@@ -206,6 +204,7 @@
 % warning: the behaviour of all this is quite difficult to understand: this function is called with simple arguments (between 0 and 20) by the glyph function. In this case we add the align center of the argument to notesaligncenter ; and notesaligncenter can be already set to something by flat and natural.
 \def\grefindnotesaligncenter#1{%
   \grefindsimplenotesaligncenter{#1}{0}%
+  \newskip\gre@tempdim
   \gre@tempdim=\wd\GreTempwidth %
   \divide\gre@tempdim by 2\relax %
   \global\advance\gre@notesaligncenter by \gre@tempdim %
@@ -216,27 +215,30 @@
 \def\grefindnextnotesaligncenter#1{%
   \ifnum#1<20\relax %
     \grefindsimplenotesaligncenter{#1}{1}%
+    \newskip\gre@tempdim
     \gre@tempdim=\wd\GreTempwidth %
     \divide\gre@tempdim by 2\relax %
     \global\gre@notesaligncenter=\gre@tempdim %
   \else %\ifnum#1<20
+    \newcount\gretempdimcount
     \gretempdimcount=#1 %
     \ifnum#1<40\relax%
       \advance\gretempdimcount by -20\relax %
       \grefindsimplenotesaligncenter{\gretempdimcount}{1}%
+      \newskip\gre@tempdim
       \gre@tempdim=\wd\GreTempwidth %
       \divide\gre@tempdim by 2\relax %
       \setbox\GreTempwidth=\hbox{\gregoriofont \char 6}%
     \else%\ifnum#1<40
       \advance\gretempdimcount by -40\relax %
       \grefindsimplenotesaligncenter{\gretempdimcount}{1}%
+      \newskip\gre@tempdim
       \gre@tempdim=\wd\GreTempwidth %
       \divide\gre@tempdim by 2\relax %
       \setbox\GreTempwidth=\hbox{\gregoriofont \char 7}%
     \fi %
     \advance\gre@tempdim by \wd\GreTempwidth %
     \global\gre@notesaligncenter=\gre@tempdim %
-    \global\gretempdimcount=0\relax %
   \fi %
   \relax %
 }
@@ -435,17 +437,20 @@
   % there must be at least a certain space between the key and the first note. The first letter can be beneath the key, but not to the left
   \ifnum\grelastoflinecount=2\relax %
     \ifnum\gredisableeolshifts=0\relax%
+      \newskip\gre@tempdim
       \gre@tempdim=\gre@intersyllablespace %
       \advance\gre@tempdim by \gre@begindifference %
       % a little trick... we don't want to kern more than clefwidth minus minimalspaceatlinebeginning
       \advance\gre@clefwidth by -\gre@minimalspaceatlinebeginning %
       \ifdim\gre@tempdim <-\gre@clefwidth %
+        \newskip\gre@tempdim
         \gre@tempdim=-\gre@clefwidth %
       \fi %
       \advance\gre@clefwidth by \gre@minimalspaceatlinebeginning %
       \hbox{}%
       \advance\gre@tempdim by -\gre@spaceafterlineclef %
       \ifdim\the\gre@tempdim < \the\gre@begindifference %
+        \newskip\gre@tempdim
         \gre@tempdim=\the\gre@begindifference %
       \fi %
       % Don't allow kern past the beginning of the first line with no initial
@@ -465,6 +470,7 @@
     % and we do it only if it is not the first syllable of a word
     % but we must not do it when there is a bar before... so when there is a bar enddifference = 0
     \ifnum\grefirstsyllableofword=0 %
+      \newskip\gre@tempdim
       \gre@tempdim=\gre@intersyllablespace %
       \advance\gre@tempdim by \gre@begindifference %
       \ifdim\gre@enddifference<0pt%
@@ -489,6 +495,7 @@
   \ifcase#4 %
     % we enter here if the end of word is 0, so we must determine if we need to type a dash here
     % we set gretempdim to the actual space between the text of the two syllables. The algorithm is quite complex, but quite similar to the one computing the space between the two syllables several lines above.
+    \newskip\gre@tempdim
     \gre@tempdim=\gre@intersyllablespace %
     \advance\gre@tempdim by \gre@nextbegindifference %
     \ifdim\gre@enddifference<0pt%
@@ -497,6 +504,7 @@
     % there is a small """feature""" here: if the first glyph is an alteration, the algorithm will be quite pessimistic
     % about the space, so an hyphen may be added when it's not really necessary.
     \ifdim\gre@tempdim<0pt%
+      \newskip\gre@tempdim
       \gre@tempdim=0pt%
     \fi %
     \ifdim\gre@enddifference >0pt%
@@ -541,11 +549,13 @@
   % For the kern in this case, the base is to kern -\gre@enddifference if it's negative, but we can kern a bit more for the text to get a bit more to the right, but not after the end of the scores minus \gre@minimalspaceatlinebeginning
   \ifnum\grelastoflinecount=1\relax %
     \ifdim\the\gre@enddifference <0pt%
+      \newskip\gre@tempdim
       \gre@tempdim=-\gre@enddifference %
       % we don't do it if it's the last syllable of a score or if the user disabled it
       \ifnum\gredisableeolshifts=0\relax %
         \ifnum\greblockcusto=1\else %
           \setbox\GreTempwidth=\hbox{\grecustochar{g}}%
+          \newskip\gre@tempwidth
           \gre@tempwidth=\wd\GreTempwidth %
           \advance\gre@tempdim by -\gre@tempwidth %
           \advance\gre@tempdim by -\gre@spacebeforecusto %
@@ -553,6 +563,7 @@
         \advance\gre@tempdim by \gre@minimalspaceatlinebeginning %
       \fi %
       \ifdim\the\gre@tempdim <-\the\gre@enddifference %
+        \newskip\gre@tempdim
         \gre@tempdim=-\the\gre@enddifference %
       \fi %
       \xdef\grekernbeforeeol{\the\gre@tempdim\relax}%
@@ -658,13 +669,16 @@
     % first we need to determine the real space that there will be between the notes. Here again it is not so simple... let's consider these two kinds of spaces : 
     %% 1/ the minimal space between a note and the bar + the width of the bar + the minimal space between the bar and the note (that's the global idea, in fact there are nuances) : we assign skipone to it
     %% 2/ enddifference + begindifference + space between notes and word : we assign temp to it
+    \newskip\gre@skipone
     \gre@skipone=\gre@notebarspace %
     \advance\gre@skipone by \gre@notebarspace %
     \advance\gre@skipone by \wd\GreSyllablenotes %
     % now let's get temp
     \ifdim\gre@nextbegindifference < 0 pt%
+      \newskip\gre@tempdim
       \gre@tempdim=-\gre@nextbegindifference %
     \else %
+      \newskip\gre@tempdim
       \gre@tempdim=0 pt%
     \fi %
     \ifdim\gre@previousenddifference < 0 pt%
@@ -675,13 +689,16 @@
     \fi%
     % we take the max of it, then we divide it by two and we substract half of the width of the bar
     \ifdim\gre@skipone <\gre@tempdim %
+      \newskip\gre@skipone
       \gre@skipone=\gre@tempdim %
     \fi %
     \divide\gre@skipone by 2\relax %
+    \newskip\gre@tempdim
     \gre@tempdim=\wd\GreSyllablenotes %
     \divide\gre@tempdim by 2\relax %
     \advance\gre@skipone by -\gre@tempdim %
     % now we have our skipone
+    \newskip\gre@tempdim
     \gre@tempdim=\gre@skipone %
     \ifdim\gre@previousenddifference < 0 pt%
       \advance\gre@tempdim by \gre@previousenddifference %
@@ -711,6 +728,7 @@
       %\gre@tempdim=\wd\GreSyllablenotes %
       %\divide\gre@tempdim by 2\relax %
       %\kern -\gre@tempdim %
+      \newskip\gre@tempdim
       \gre@tempdim=\gre@skipone %
       \ifdim\gre@nextbegindifference < 0 pt%
         \advance\gre@tempdim by \gre@nextbegindifference %
@@ -724,8 +742,10 @@
   % then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
   \else %ifdim\wd\GreSyllabletext = 0 pt %
     % I'm a little lazy for now, I won't make the usual mountain of ifs... TODO: use different spaces
+    \newskip\gre@skipone
     \gre@skipone=\gre@textbartextspace %
     % same code as in syllable
+    \newskip\gre@tempdim
     \gre@tempdim=\gre@begindifference %
     \ifdim\gre@tempdim > 0 pt%
       \advance\gre@skipone by \gre@tempdim %
