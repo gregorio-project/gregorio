@@ -117,7 +117,7 @@
 % factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
 % at the beginning it is set to 0, but if it is still 0 when begingregorianscore is called, it is set to the default value : 17 (the value that makes it look like a standard graduale)
 \newcount\grefactor
-\grefactor=0
+\grefactor=17
 
 %%%%%%%%%%%%%%%%%%
 %% vertical spaces
@@ -358,9 +358,6 @@
 % the height difference between the bottom of the first annotation line and the top of the second annotation line (above the initial) is controlled by the \gre@aboveinitialseparation space, in gregoriotex-spaces.tex
 
 \def\gresetfirstlineaboveinitial#1#2{%
-  \ifnum\grefactor=0\relax %
-    \setgrefactor{17}%
-  \fi %
   % we align the top of the box with the top of the line
   % here the variables are a bit strange... we can calculate the final value of greaboveinitialfirstraise only after the beginning of the score, after the call to this macro. So we just set greaboveinitialfirstraise to the negative value the #2 will add, and then, after the beginning of the score, we'll add gresetaboveinitialraise that will... set greaboveinitialfirstraise.
   \setbox\GreAboveinitialfirstbox=\hbox{#2}%
@@ -377,9 +374,6 @@
 \let\setfirstannotation\gresetfirstannotation
 
 \def\gresetsecondannotation#1{%
-  \ifnum\grefactor=0\relax %
-    \setgrefactor{17}%
-  \fi %
   \setbox\GreAboveinitialsecondbox=\hbox{#1}%
   \global\gre@aboveinitialsecondraise=-\ht\GreAboveinitialsecondbox %
   \global\advance\gre@aboveinitialsecondraise by -\gre@aboveinitialseparation %
@@ -747,10 +741,6 @@
   \exhyphenchar=-1\relax %
   \global\gre@stafflinewidth=\gre@linewidth %
   \gregeneratelines %
-  \ifnum\grefactor=0\relax %
-    \setgrefactor{17}%
-    \gre@calculate@verticalspaces %
-  \fi %
   \noindent%
   \directlua{gregoriotex.atScoreBeggining()}%
   %TODO do something like LaTeX's AtBeginDocument
@@ -1132,11 +1122,9 @@
 
 \def\setgregoriofont#1{%
   \xdef\gregoriofontname{#1}%
-  \ifnum\grefactor=0\else %
-    \gretempdimcount = \the\grefactor %
-    \multiply\gretempdimcount by 100000 %
-    \global\font\gregoriofont="name:#1" at \the\gretempdimcount sp%
-  \fi %
+  \gretempdimcount = \the\grefactor %
+  \multiply\gretempdimcount by 100000 %
+  \global\font\gregoriofont="name:#1" at \the\gretempdimcount sp%
   \relax%
 }
 
@@ -1144,11 +1132,9 @@
 
 % gregoriostylefont is the font used for additional glyphs
 \def\gresetstylefont{%
-  \ifnum\grefactor=0\else %
-    \gretempdimcount = \the\grefactor %
-    \multiply\gretempdimcount by 100000\relax %
-    \global\font\gregoriostylefont="name:greextra" at \the\gretempdimcount sp%
-  \fi %
+  \gretempdimcount = \the\grefactor %
+  \multiply\gretempdimcount by 100000\relax %
+  \global\font\gregoriostylefont="name:greextra" at \the\gretempdimcount sp%
   \relax%
 }
 
@@ -1184,19 +1170,19 @@
 }
 
 \def\setgrefactor#1{%
-  \ifnum\grefactor=0\relax %
-    \changedimenfactor{1}{#1}%
-  \else %
-    \changedimenfactor{\grefactor}{#1}%
-  \fi %
-  \global\grefactor=#1\relax %
-  \gre@calculate@verticalspaces %
-  \gregeneratelines %
-  \setgregoriofont{\gregoriofontname}%
-  \ifnum\greusestylefont=1\relax %
-  \gresetstylefont %
-  \fi %
-  \relax %
+	\ifnum#1<0\relax
+		\greerror{\protect\grefactor\space must be a positive integer.}
+	\else
+		\changedimenfactor{\grefactor}{#1}%
+		\global\grefactor=#1\relax %
+		\gre@calculate@verticalspaces %
+		\gregeneratelines %
+		\setgregoriofont{\gregoriofontname}%
+		\ifnum\greusestylefont=1\relax %
+			\gresetstylefont %
+		\fi %
+	\fi
+	\relax %
 }
 
 %%%%%%%%%%%%%%%%%%

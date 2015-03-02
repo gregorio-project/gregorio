@@ -280,6 +280,7 @@
 % of the second anotation line (above the initial)
 \newdimen\gre@aboveinitialseparation
 
+\newdimen\gre@clivisalignmentmin
 
 %%%%%%%%%%%%%%%%%%
 %% vertical spaces
@@ -354,17 +355,20 @@
 % stafflineheight is the height of a staff line
 \newdimen\gre@stafflineheight
 \gre@stafflineheight=1500 sp
+\multiply\gre@stafflineheight by \grefactor
 
 % interstafflinespace is the space between two lines of staff
 \newdimen\gre@interstafflinespace
 \gre@interstafflinespace=30000 sp
+\multiply\gre@interstafflinespace by \grefactor
 
 % the value is (1500*stafflinefactor - 1500)/2
 \newdimen\gre@stafflinediff
 \gre@stafflinediff=0 sp
+\multiply\gre@stafflinediff by \grefactor
 
 % the default factor
-\xdef\gre@stafflinefactor{1}%
+\xdef\gre@stafflinefactor{10}%
 
 % a macro to define a ratio on the default value
 \def\gre@setstafflinefactor#1{%
@@ -382,12 +386,10 @@
   \global\gre@stafflinediff=\gre@stafflineheight %
   \global\advance\gre@stafflinediff by -1500sp%
   \global\divide\gre@stafflinediff by 2\relax %
-  \ifnum\the\grefactor=0\else %
-    \global\multiply\gre@stafflinediff by \the\grefactor %
-    \global\multiply\gre@interstafflinespace by \the\grefactor %
-    \global\multiply\gre@stafflineheight by \the\grefactor %
-    \gre@calculate@verticalspaces %
-  \fi %
+  \global\multiply\gre@stafflinediff by \the\grefactor %
+  \global\multiply\gre@interstafflinespace by \the\grefactor %
+  \global\multiply\gre@stafflineheight by \the\grefactor %
+  \gre@calculate@verticalspaces %
   \relax %
 }
 
@@ -826,11 +828,7 @@
 %% means that you have to set your personal grefactor before changing the values,
 %% or use the next macro.
 \def\grechangedim#1#2{%
-  \ifnum\grefactor=0\relax %
-    \grechangedimatfactor{#1}{#2}{17}%
-  \else %
-    \grechangedimatfactor{#1}{#2}{\grefactor}%
-  \fi %
+  \grechangedimatfactor{#1}{#2}{\grefactor}%
   \relax %
 }
 
@@ -840,11 +838,7 @@
   #1=#2%
   \ifnum #3=\grefactor\else %
     \divide #1 by \number #3%
-    \ifnum\grefactor=0\else % 
-      % if grefactor = 0 it means that we must consider it's 1,
-      % as we are before the beginning of the first score.
-      \multiply #1 by \grefactor %
-    \fi %
+    \multiply #1 by \grefactor %
   \fi %
   \gre@calculate@verticalspaces %
   \relax %
@@ -859,10 +853,8 @@
 
 \def\GreLoadSpaceConf#1{%
   \input gsp-#1.tex\relax %
-  \ifnum\the\grefactor=0\else %
-    \greadaptconfvalues %
-    \gre@calculate@verticalspaces %
-  \fi %
+  \greadaptconfvalues %
+  \gre@calculate@verticalspaces %
   \relax %
 }
 
@@ -994,9 +986,6 @@
 
 
 \def\GreSetAboveInitialSeparation#1{
-  \ifnum\grefactor=0\relax%
-    \setgrefactor{17}%
-  \fi%
   \grechangedim{\gre@aboveinitialseparation}{#1}%
   \relax %
 }
@@ -1004,9 +993,6 @@
 \let\setaboveinitialseparation\GreSetAboveInitialSeparation
 
 \def\GreSetSpaceAfterInitial#1{%
-  \ifnum\grefactor=0\relax%
-    \setgrefactor{17}%
-  \fi%
   \ifnum\grebiginitial=0\relax%
     \greinitialformat{\global\grechangedim{\gre@afterinitialshift}{#1}}%
   \else%
@@ -1018,9 +1004,6 @@
 \let\setspaceafterinitial\GreSetSpaceAfterInitial
 
 \def\GreSetSpaceBeforeInitial#1{%
-  \ifnum\grefactor=0\relax%
-    \setgrefactor{17}%
-  \fi%
   \ifnum\grebiginitial=0\relax%
     \greinitialformat{\global\grechangedim{\gre@beforeinitialshift}{#1}}%
   \else%
@@ -1032,9 +1015,6 @@
 \let\setspacebeforeinitial\GreSetSpaceBeforeInitial
 
 \def\setinitialspacing#1#2#3{
-  \ifnum\grefactor=0\relax%
-    \setgrefactor{17}%
-  \fi%
   \grechangedim{\gre@beforeinitialshift}{#1}%
   \ifnum\grebiginitial=0\relax %
     \greinitialformat{\global\grechangedim{\gre@manualinitialwidth}{#2}}%
