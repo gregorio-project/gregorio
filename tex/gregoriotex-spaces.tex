@@ -340,57 +340,74 @@
 
 % textlower is the height of the separation between the bottom line (which is invisible : for the notes which are very low) and the bottom of the text
 \newdimen\gre@textlower
-\gre@textlower=\gre@spacebeneathtext
-%\advance\gre@textlower by \translationheight
+\def\gre@calculate@textlower{%
+	\gre@textlower=\gre@spacebeneathtext
+	%\advance\gre@textlower by \translationheight
+}
 
 % stafflinewidth is the width of a line of staff, this can vary, for example at the first line
 \newdimen\gre@stafflinewidth
+\def\gre@calculate@stafflinewidth{%
+	\gre@stafflinewidth=\gre@linewidth 
+}
+
 
 % linewidth is the width of a line of a score (including the initial)
 \newdimen\gre@linewidth
-\gre@linewidth=\hsize 
-\gre@stafflinewidth=\gre@linewidth 
+\def\gre@calculate@linewidth{%
+	\gre@linewidth=\hsize 
+}
 
 % Messing with the staff line thickness directly is messy, so we provide the following interface to make life easier on the user:
 % stafflineheight is the height of a staff line
+% = 1500 * grefactor * stafflinefactor / 17
 \newdimen\gre@stafflineheight
-\gre@stafflineheight=1500 sp
-\multiply\gre@stafflineheight by \grefactor
+\def\gre@calculate@stafflineheight{%
+	\global\gre@stafflineheight=1500 sp
+	\global\multiply\gre@stafflineheight by \grefactor
+	\global\multiply\gre@stafflineheight by \gre@stafflinefactor\relax %
+	\global\divide\gre@stafflineheight by 17\relax %
+}
 
 % interstafflinespace is the space between two lines of staff
+% = (30000 - (stafflineheight/grefactor - 1500)) * grefactor = 31500 * grefactor - stafflineheight
 \newdimen\gre@interstafflinespace
-\gre@interstafflinespace=30000 sp
-\multiply\gre@interstafflinespace by \grefactor
+\def\gre@calculate@interstafflinespace{
+	\global\gre@interstafflinespace=31500sp%
+	\global\multiply\gre@interstafflinespace by \grefactor
+	\global\advance\gre@interstafflinespace by -\gre@stafflineheight %
+}
 
-% the value is (1500*stafflinefactor - 1500)/2
+% a distance to help place glyphs when the lines are not their default thickness
+% = (stafflineheight/grefactor - 1500sp)/2 * grefactor
 \newdimen\gre@stafflinediff
-\gre@stafflinediff=0 sp
-\multiply\gre@stafflinediff by \grefactor
+\def\gre@calculate@stafflinediff{%
+	\global\gre@stafflinediff = \gre@stafflineheight %
+	\global\divide\gre@stafflinediff by \grefactor\relax
+	\global\advance\gre@stafflinediff by -1500sp%
+	\global\divide\gre@stafflinediff by 2\relax %
+	\global\multiply\gre@stafflinediff by \the\grefactor %
+}
 
 % the default factor
-\xdef\gre@stafflinefactor{10}%
+% the stafflinefactor follows the same scale as the grefactor, i.e. a stafflinefactor corresponds to the default staff line thickness for grefactor 17, stafflinefactor 34 corresponds to the default staff line thickness for grefactor 34, etc.
+\xdef\gre@stafflinefactor{17}%
 
-% a macro to define a ratio on the default value
-\def\gre@setstafflinefactor#1{%
-  \xdef\gre@stafflinefactor{#1}%
-  \gretempdimcount=#1\relax %
-  \global\gre@stafflineheight = 1500sp%
-  \global\multiply\gre@stafflineheight by \gretempdimcount\relax %
-  % for non-integer numbers... in fact #1 is 10 times the factor we really want
-  \global\divide\gre@stafflineheight by 10\relax %
-  % we have:
-  %   interstafflinespace = 30000 - (lineheight-1500) = 31500 - lineheight
-  %   primaryglyphraisevalue = interstafflinespace/2 + lineheight/2 + (1500 - lineheight) = 17250 - lineheight
-  \global\gre@interstafflinespace=31500sp%
-  \global\advance\gre@interstafflinespace by -\gre@stafflineheight %
-  \global\gre@stafflinediff=\gre@stafflineheight %
-  \global\advance\gre@stafflinediff by -1500sp%
-  \global\divide\gre@stafflinediff by 2\relax %
-  \global\multiply\gre@stafflinediff by \the\grefactor %
-  \global\multiply\gre@interstafflinespace by \the\grefactor %
-  \global\multiply\gre@stafflineheight by \the\grefactor %
-  \gre@calculate@verticalspaces %
-  \relax %
+% a macro for setting the thickness of the staff lines.  This changes the stafflinefactor and then adjusts the spaces that are affected by the thicker staff lines.
+\ifdefined\setstafflinethickness%
+	\greerror{\protect\setstafflinethickness\space is already defined.  Check for package conflicts.}
+\else
+	\def\setstafflinethickness#1{%
+		\xdef\gre@stafflinefactor{#1}%
+		\gre@computespaces %
+		%% TODO: make smarter
+		\relax %
+	}
+\fi
+
+\def\gresetstafflinefactor#1{
+	\gre@warning{\protect\gresetstafflinefactor\space is deprecated.\MessageBreak Use \protect\setstafflinethickness\space instead.}
+	\setstafflinethickness{#1}	
 }
 
 %constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
@@ -413,16 +430,35 @@
 }
 
 %% Here is the function to compute some more vertical spaces from the basic values
-\def\gre@calculate@verticalspaces{%
-  \gre@staffheight=4\gre@stafflineheight %
+\def\gre@calculate@staffheight{%
+  \gre@staffheight = 4\gre@stafflineheight %
   \advance\gre@staffheight by 3\gre@interstafflinespace %
   %\global\multiply\gre@spacebeneathtext by \grefactor % uncomment it if you want
   % something else than 0
-  \global\gre@textlower=\gre@spacebeneathtext %
-  \global\gre@calculate@constantglyphraise %
   \relax %
 }
 
+% A routine that simply aggregates the above global space calculating routines so we can easily update all when needed.
+%% Note: It used to be that some distance calculating functions called others.  Since this can create problems with circularity if one is not careful, this is no longer the case.  Now all distance calculating functions simply calculate their respective distance.  This means that dependent distances are not necessarily recalculated when an individual distance is recalculated.  This function updates all global calculated distances and in the order needed for the dependencies.
+%% Dependencies:
+%% textlower: spacebeneathtext
+%% linewidth: hsize
+%% stafflinewidth: linewidth
+%% stafflineheight: stafflinefactor & grefactor
+%% interstafflinespace: stafflineheight & grefactor
+%% stafflinediff: stafflineheight & grefactor
+%% staffheight: stafflineheight & interstafflinespace
+%% constantglyphraise: grefactor, additionalbottomspace, spacebeneathtext, spacelinestext, interstafflinespace, stafflineheight, currenttranslationheight, stafflinediff
+\def\gre@computespaces{
+	\gre@calculate@textlower
+	\gre@calculate@linewidth
+	\gre@calculate@stafflinewidth
+	\gre@calculate@stafflineheight
+	\gre@calculate@interstafflinespace
+	\gre@calculate@stafflinediff
+	\gre@calculate@staffheight
+	\gre@calculate@constantglyphraise
+}
 
 
 %%%%%%%%%%%%%%%%%%
@@ -840,7 +876,7 @@
     \divide #1 by \number #3%
     \multiply #1 by \grefactor %
   \fi %
-  \gre@calculate@verticalspaces %
+  \gre@computespaces %
   \relax %
 }
 
@@ -854,7 +890,7 @@
 \def\GreLoadSpaceConf#1{%
   \input gsp-#1.tex\relax %
   \greadaptconfvalues %
-  \gre@calculate@verticalspaces %
+  \gre@computespaces %
   \relax %
 }
 
