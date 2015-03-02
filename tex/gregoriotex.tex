@@ -733,22 +733,25 @@
 %macro called at the beginning of a score
 \def\begingregorioscore{%
   % not sure it's perfect to put that here, but it's the only way I found to make it work....
-  \grecancelpenalties %
-  \gredofinetuning %
-  \global\gre@linewidth=\hsize %
-  \gregorioattr=0\relax %
-  \xdef\greexhyphencharsave{\the\exhyphenchar}%
-  \exhyphenchar=-1\relax %
-  \global\gre@stafflinewidth=\gre@linewidth %
-  \gregeneratelines %
-  \noindent%
-  \directlua{gregoriotex.atScoreBeggining()}%
-  %TODO do something like LaTeX's AtBeginDocument
-  \ifdefined\optgabcAtScoreBeginning %
-    \optgabcAtScoreBeginning %
-  \fi %
-  \global\greknownline=1\relax %
-  \relax%
+	\setgregoriofont{\gregoriofontname}%
+	\ifnum\greusestylefont=1\relax %
+		\gresetstylefont %
+	\fi %
+	\grecancelpenalties %
+	\gredofinetuning %
+	\gregorioattr=0\relax %
+	\xdef\greexhyphencharsave{\the\exhyphenchar}%
+	\exhyphenchar=-1\relax %
+	\global\gre@stafflinewidth=\gre@linewidth %
+	\gregeneratelines %
+	\noindent%
+	\directlua{gregoriotex.atScoreBeggining()}%
+	%TODO do something like LaTeX's AtBeginDocument
+	\ifdefined\optgabcAtScoreBeginning %
+		\optgabcAtScoreBeginning %
+	\fi %
+	\global\greknownline=1\relax %
+	\relax%
 }
 
 %macro called at the end of a score
@@ -1173,7 +1176,7 @@
 	\ifnum#1<0\relax
 		\greerror{\protect\grefactor\space must be a positive integer.}
 	\else
-		\changedimenfactor{\grefactor}{#1}%
+		\gre@changedimenfactor{\grefactor}{#1}%
 		\global\grefactor=#1\relax %
 		\gre@computespaces %
 		\gregeneratelines %

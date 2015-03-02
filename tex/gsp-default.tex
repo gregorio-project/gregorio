@@ -57,17 +57,26 @@
 \def\grewidowpenalty{0}
 \def\greclubpenalty{0}
 
+
+
+%%%%%%%%%%%%%%%%%%
 %% And finally, all the spacings:
+%%%%%%%%%%%%%%%%%%
 
-%% All the following values correspond to a grefactor of 1,
-%% so in most cases it will be much smaller that what you will finally
-%% get with an average factor (17 is the default value for the factor).
-%% We multiply all the columns by the factor when the factor changes,
-%% and it changes at the beginning of the first score by default.
+%This count tells gregoriotex what \grefactor the below values correspond to.
+%% All the following values correspond to a grefactor of 17.  At this size the scores should be approximately the size usually seen in a gradual.
+%% If you’re creating your own space configuration file, you may set this to some other value, should you so desire.
+\newcount\greconffactor
+\greconffactor=17
 
+\makeatletter %needed temporarily until \gresetdimen is added.
 
 % the additional width of the additional lines (compared to the width of the glyph they're associated with)
 \gre@additionallineswidth = 0.14584 cm
+% width of the additional lines, used only for the custos (maybe should depend on the width of the custo...)
+% the width is the one for the custos at end of lines, the line for custos in the middle of a score is the same
+% multiplied by 2.
+\gre@additionalcustoslineswidth = 0.09114 cm
 % null space
 \gre@zerowidthspace = 0 cm plus 0 cm minus 0 cm
 % space between glyphs in the same element
@@ -141,10 +150,6 @@
 \gre@maximumspacewithoutdash = 0.02005 cm
 % an extensible space for the beginning of lines
 \gre@afterclefnospace = 0 cm plus 0.27345 cm minus 0 cm
-% width of the additional lines, used only for the custos (maybe should depend on the width of the custo...)
-% the width is the one for the custos at end of lines, the line for custos in the middle of a score is the same
-% multiplied by 2.
-\gre@additionalcustoslineswidth = 0.09114 cm
 % space between the initial and the beginning of the score
 \gre@afterinitialshift = 0.2457 cm plus 0 cm minus 0 cm
 % space before the initial
@@ -193,3 +198,4 @@
 % a shift you can give to the accentus above the curly brace
 \gre@curlybraceaccentusshift = -0.05 cm
 
+\makeatother
