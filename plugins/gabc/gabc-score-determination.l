@@ -353,6 +353,12 @@ semicolon. */
   BEGIN(score);
 	return ALT_END;
 	}
+<score><eu>  {
+	return EUOUAE_B;
+	}
+<score><\/eu>  {
+	return EUOUAE_E;
+	}
 <score>\[\/]  {
 	return TRANSLATION_CENTER_END;
 	}

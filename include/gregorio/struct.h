@@ -189,6 +189,14 @@ Nothing, beginning or end of area without linebreak
 #define NLBA_END 2
 
 /*
+Same for EUOUAE area
+*/
+
+#define EUOUAE_NORMAL 0
+#define EUOUAE_BEGINNING 1
+#define EUOUAE_END 2
+
+/*
 
 gregorio_characters are a bit specials. As there can be styles in the text, I had to find a structure mode adapted that just grewchar *. So basically a gregorio_character is a double-chained list of things that can be grewchar or gregorio_styles. For example if you type (in gabc) p<i>o</i>t, the corresponding gregorio_character list will be P->style(type: beginning, style italic) -> o -> style(type:end, style: italic). But for this list to be coherent, it is mandatory that it is xml-compliant, that is to say that a<b>c<i>d</b>e</i> will be interpreted as a<b>c<i>d</i></b><i>e</i>. This MUST be done when reading a file, so that the structure in memory is coherent. It makes input modules more comple, but output modules muche more simpler. The last particularity is that center must also be determined in the input modules, so that it is already defined in memory. But it is a bit more complex, because for TeX-like output modules, we need to close all styles before the center style: if the user types <i>pot</i> it must be represented as <i>p</i>{<i>o</i>}<i>t</i>.
 
@@ -244,6 +252,8 @@ Then the two pointers to build the double chained list, and finally the union. S
     unsigned char translation_type;
 // beginning or end of area without linebreak?
     unsigned char no_linebreak_area;
+// beginning or end of euouae area?
+    unsigned char euouae;
 // pointer to a gregorio_text structure corresponding to the text.
     struct gregorio_character *text;
 // pointer to a gregorio_text structure corresponding to the translation
@@ -378,7 +388,8 @@ representation on the score).
                               gregorio_character *first_translation_character,
                               char position, char *abovelinestext,
                               unsigned char translation_type,
-                              unsigned char no_linebreak_area);
+                              unsigned char no_linebreak_area,
+                              unsigned char euouae);
 
   void gregorio_set_signs (gregorio_note *current_note, char signs);
   void gregorio_add_special_sign (gregorio_note *current_note, char sign);
