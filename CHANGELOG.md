@@ -26,6 +26,6 @@ This project does not currently adhere to [Semantic Versioning](http://semver.or
 - Rare form of scandicus.
 - Added `<c>` markup in gabc to denote a change of color.
 - Added `<nlba>` markup in gabc to get areas with no line breaks.
-- Added `<eu>` markup in gabc to delimit /E u o u a e/ areas (changes spaces slightly).
+- Added `<eu>` markup in gabc to delimit _E u o u a e_ areas (changes spaces slightly).
 - Possibility to center translation syllable by syllable, see [here](https://www.mail-archive.com/gregorio-users@gna.org/msg01760.html) and [here](https://www.mail-archive.com/gregorio-users@gna.org/msg01783.html).
 - Possibility not to scale spaces but specify them in units proportional to main text font (e.g. `em`).
