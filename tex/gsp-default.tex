@@ -57,142 +57,145 @@
 \def\grewidowpenalty{0}
 \def\greclubpenalty{0}
 
+
+
+%%%%%%%%%%%%%%%%%%
 %% And finally, all the spacings:
+%%%%%%%%%%%%%%%%%%
 
-%% All the following values correspond to a grefactor of 1,
-%% so in most cases it will be much smaller that what you will finally
-%% get with an average factor (17 is the default value for the factor).
-%% We multiply all the columns by the factor when the factor changes,
-%% and it changes at the beginning of the first score by default.
+%This count tells gregoriotex what \grefactor the below values correspond to.
+%% All the following values correspond to a grefactor of 17.  At this size the scores should be approximately the size usually seen in a gradual.
+%% If you’re creating your own space configuration file, you may set this to some other value, should you so desire.
+\newcount\greconffactor
+\greconffactor=17
 
+\makeatletter %needed temporarily until \gresetdimen is added.
 
 % the additional width of the additional lines (compared to the width of the glyph they're associated with)
-\greadditionallineswidth = 16000sp
-% null space
-\grezerowidthspace=0pt plus 0pt minus 0pt
-% space between glyphs in the same element
-\greinterglyphspace = 7600 sp plus 400 sp minus 400 sp
-% space between an alteration (flat or natural) and the next glyph
-\grealterationspace = 8500 sp plus 1400 sp minus 500 sp
-% space between a clef and a flat (for clefs with flat)
-\greclefflatspace = 6000 sp plus 700 sp minus 700 sp
-% space before a choral sign
-\grebeforechoralsignspace = 5000 sp plus 700 sp minus 700 sp
-% negative space, difference between the normal space between two notes and the space between a note and a flat
-\grebeforealterationspace = -36000 sp plus 1200 sp minus 1200 sp
-% space between elements
-\greinterelementspace = 7600 sp plus 200 sp minus 400 sp
-% larger space between elements
-\grelargerspace = 12000 sp plus 2000 sp minus 1000 sp
-% space between elements which has the size of a note
-\greglyphspace = 24000 sp plus 2000 sp minus 2000 sp
-% minimum space between two notes of different syllables
-\greintersyllablespace= 28000 sp plus 35000 sp minus 0 sp
-% space before custo
-\grespacebeforecusto = 20000 sp plus 35000 sp minus 7000 sp
-% space before punctum mora and augmentum duplex
-\grespacebeforesigns= 6000 sp plus 500 sp minus 500 sp
-% space after punctum mora and augmentum duplex
-\grespaceaftersigns= 9000 sp plus 900 sp minus 900 sp
-% space after a clef at the beginning of a line
-\grespaceafterlineclef = 30000 sp plus 16000 sp minus 1500 sp
-% space after at the end of a word when the last written symbol is a note and the first is a note
-\greinterwordspacenotes = 32000 sp plus 9600 sp minus 6000 sp
-% space after at the end of a word when the last written symbol is a note and the first is text
-\greinterwordspacenotestext = 30000 sp plus 30000 sp minus 8000 sp
-% space after at the end of a word when the last written symbol is text and the first is a note
-\greinterwordspacetextnotes = 30000 sp plus 30000 sp minus 8000 sp
-% space after at the end of a word when the last written symbol is text and the first is text
-\greinterwordspacetext = 25000 sp plus 45000 sp minus 8000 sp
-% space between notes of a bivirga or trivirga
-\grebitrivirspace = 7600 sp plus 200 sp minus 600 sp
-% space between notes of a bistropha or tristrophae
-\grebitristrospace = 7600 sp plus 200 sp minus 600 sp
-% space between two punctum inclinatum
-\grepunctuminclinatumshift= -4300 sp plus 100 sp minus 100 sp
-% space before puncta inclinata
-\grebeforepunctainclinatashift= 5800 sp plus 800 sp minus 500 sp
-% space between a punctum inclinatum and a punctum inclinatum deminutus
-\grepunctuminclinatumanddebilisshift= -2500 sp plus 100 sp minus 100 sp
-% space between two punctum inclinatum deminutus
-\grepunctuminclinatumdebilisshift= -800 sp plus 100 sp minus 100 sp
-% space between puncta inclinata, larger ambitus (range=3rd)
-\grepunctuminclinatumbigshift= 8300 sp plus 100 sp minus 100 sp
-% space between puncta inclinata, larger ambitus (range=4th -or more?-)
-\grepunctuminclinatummaxshift= 19600 sp plus 100 sp minus 100 sp
-% space for the bars (inside syllables)
-%first for virgula and divisio minima
-\grespacearoundsmallbar = 20000 sp plus 25000 sp minus 6000 sp
-%then divisio minor
-\grespacearoundminor = 20000 sp plus 25000 sp minus 6000 sp
-%divisio major
-\grespacearoundmaior = 20000 sp plus 25000 sp minus 6000 sp
-%divisio finalis
-\grespacearoundfinalis = 20000 sp plus 20000 sp minus 6000 sp
-%a special space for finalis, for when it is the last glyph
-\grespacebeforefinalfinalis= 32000 sp plus 8000 sp minus 30000 sp
-% the space that will appear around bars that are preceded by a custo and followed by a key.
-% well... actually it's the difference between the normal space around bars and the space described previously.
-\grespacearoundclefbars= 4000 sp plus 500 sp minus 100 sp
-% space between the text and the text of the bar
-\gretextbartextspace = 27000 sp plus 15000 sp minus 5400 sp
-% minimal space between a note and a bar
-\grenotebarspace = 35000 sp plus 30000 sp minus 3100 sp
-% maximal space between two syllables for which we consider a dash is not needed
-\gremaximumspacewithoutdash = 2200 sp
-% an extensible space for the beginning of lines
-\greafterclefnospace = 0 pt plus 30000 sp minus 0 pt
+\gre@additionallineswidth = 0.14584 cm
 % width of the additional lines, used only for the custos (maybe should depend on the width of the custo...)
 % the width is the one for the custos at end of lines, the line for custos in the middle of a score is the same
 % multiplied by 2.
-\greadditionallineswidth = 10000 sp
+\gre@additionalcustoslineswidth = 0.09114 cm
+% null space
+\gre@zerowidthspace = 0 cm plus 0 cm minus 0 cm
+% space between glyphs in the same element
+\gre@interglyphspace = 0.06927 cm plus 0.00363 cm minus 0.00363 cm
+% space between an alteration (flat or natural) and the next glyph
+\gre@alterationspace = 0.07747 cm plus 0.01276 cm minus 0.00455 cm
+% space between a clef and a flat (for clefs with flat)
+\gre@clefflatspace = 0.05469 cm plus 0.00638 cm minus 0.00638 cm
+% space before a choral sign
+\gre@beforechoralsignspace = 0.04556 cm plus 0.00638 cm minus 0.00638 cm
+% negative space, difference between the normal space between two notes and the space between a note and a flat
+\gre@beforealterationspace = -0.32816 cm plus 0.01093 cm minus 0.01093 cm
+% space between elements
+\gre@interelementspace = 0.06927 cm plus 0.00182 cm minus 0.00363 cm
+% larger space between elements
+\gre@largerspace = 0.10938 cm plus 0.01822 cm minus 0.00911 cm
+% space between elements which has the size of a note
+\gre@glyphspace = 0.21877 cm plus 0.01822 cm minus 0.01822 cm
+% minimum space between two notes of different syllables
+\gre@intersyllablespace= 0.25523 cm plus 0.31903 cm minus 0 cm
+% space before custo
+\gre@spacebeforecusto = 0.1823 cm plus 0.31903 cm minus 0.0638 cm
+% space before punctum mora and augmentum duplex
+\gre@spacebeforesigns= 0.05469 cm plus 0.00455 cm minus 0.00455 cm
+% space after punctum mora and augmentum duplex
+\gre@spaceaftersigns= 0.08203 cm plus 0.0082 cm minus 0.0082 cm
+% space after a clef at the beginning of a line
+\gre@spaceafterlineclef = 0.27345 cm plus 0.14584 cm minus 0.01367 cm
+% space after at the end of a word when the last written symbol is a note and the first is a note
+\gre@interwordspacenotes = 0.29169 cm plus 0.08751 cm minus 0.05469 cm
+% space after at the end of a word when the last written symbol is a note and the first is text
+\gre@interwordspacenotestext = 0.27345 cm plus 0.27345 cm minus 0.07292 cm
+% space after at the end of a word when the last written symbol is text and the first is a note
+\gre@interwordspacetextnotes = 0.27345 cm plus 0.27345 cm minus 0.07292 cm
+% space after at the end of a word when the last written symbol is text and the first is text
+\gre@interwordspacetext = 0.22787 cm plus 0.41019 cm minus 0.07292 cm
+% space between notes of a bivirga or trivirga
+\gre@bitrivirspace = 0.06927 cm plus 0.00182 cm minus 0.00546 cm
+% space between notes of a bistropha or tristrophae
+\gre@bitristrospace = 0.06927 cm plus 0.00182 cm minus 0.00546 cm
+% space between two punctum inclinatum
+\gre@punctuminclinatumshift= -0.03918 cm plus 0.0009 cm minus 0.0009 cm
+% space before puncta inclinata
+\gre@beforepunctainclinatashift= 0.05286 cm plus 0.00728 cm minus 0.00455 cm
+% space between a punctum inclinatum and a punctum inclinatum deminutus
+\gre@punctuminclinatumanddebilisshift= -0.02278 cm plus 0.0009 cm minus 0.0009 cm
+% space between two punctum inclinatum deminutus
+\gre@punctuminclinatumdebilisshift= -0.00728 cm plus 0.0009 cm minus 0.0009 cm
+% space between puncta inclinata, larger ambitus (range=3rd)
+\gre@punctuminclinatumbigshift= 0.07565 cm plus 0.0009 cm minus 0.0009 cm
+% space between puncta inclinata, larger ambitus (range=4th -or more?-)
+\gre@punctuminclinatummaxshift= 0.17865 cm plus 0.0009 cm minus 0.0009 cm
+% space for the bars (inside syllables)
+%first for virgula and divisio minima
+\gre@spacearoundsmallbar = 0.1823 cm plus 0.22787 cm minus 0.05469 cm
+%then divisio minor
+\gre@spacearoundminor = 0.1823 cm plus 0.22787 cm minus 0.05469 cm
+%divisio major
+\gre@spacearoundmaior = 0.1823 cm plus 0.22787 cm minus 0.05469 cm
+%divisio finalis
+\gre@spacearoundfinalis = 0.1823 cm plus 0.22787 cm minus 0.05469 cm
+%a special space for finalis, for when it is the last glyph
+\gre@spacebeforefinalfinalis= 0.29169 cm plus 0.07292 cm minus 0.27345 cm
+% additional space that will appear around bars that are preceded by a custo and followed by a key.
+\gre@spacearoundclefbars= 0.03645 cm plus 0.00455 cm minus 0.0009 cm
+% space between the text and the text of the bar
+\gre@textbartextspace = 0.24611 cm plus 0.13672 cm minus 0.04921 cm
+% minimal space between a note and a bar
+\gre@notebarspace = 0.31903 cm plus 0.27345 cm minus 0.02824 cm
+% maximal space between two syllables for which we consider a dash is not needed
+\gre@maximumspacewithoutdash = 0.02005 cm
+% an extensible space for the beginning of lines
+\gre@afterclefnospace = 0 cm plus 0.27345 cm minus 0 cm
 % space between the initial and the beginning of the score
-\greafterinitialshift=0.035 em plus 0em minus 0em
-% space before the initial and the beginning of the score
-\greminimalspaceatlinebeginning=1mm
+\gre@afterinitialshift = 0.2457 cm plus 0 cm minus 0 cm
+% space before the initial
+\gre@beforeinitialshift = 0.2457 cm plus 0 cm minus 0 cm
+% minimum space before each line (except those preceded by the initial)
+\gre@minimalspaceatlinebeginning = 0.1 cm
 % space to force the initial width to.  Ignored when 0.
-\gremanualinitialwidth=0pt
+\gre@manualinitialwidth = 0 cm
 % this space is the one between the bottom of the first anotation line and the top
 % of the second anotation line (above the initial)
-\greaboveinitialseparation = 0.5mm
+\gre@aboveinitialseparation = 0.05 cm
 % space at the beginning of the lines if there is no clef
-\grenoclefspace = 1mm
+\gre@noclefspace = 0.1 cm
+% space around a clef change
+\gre@clefchangespace = 0.01768 cm plus 0.00175 cm minus 0.01768 cm%
+%When \gre@clivisalignment is 2, this distance is the maximum length of the consonants after vowels for which the clivis will be aligned on its center.
+\gre@clivisalignmentmin = 0.3 cm
+
+
 
 %%%%%%%%%%%%%%%%%
 % vertical spaces
 %%%%%%%%%%%%%%%%%
 
 % first, we have two spaces for the chironomic signs
-\greabovesignsspace = 8mm
-\grebelowsignsspace = 0mm
+\gre@abovesignsspace = 0.8 cm
+\gre@belowsignsspace = 0 cm
 % the shift for the low choral sign and the high choral signs on totally free interlines
-\grelowchoralsignshift = 1000sp
+\gre@lowchoralsignshift = 0.00911 cm
 % the shift for the high choral sign
-\grehighchoralsignshift = -5000sp
+\gre@highchoralsignshift = -0.04556 cm
 % the space for the translation
-\gretranslationheight = 0.5cm
+\gre@translationheight = 0.5 cm
 %the space above the lines
-\grespaceabovelines = 50000 sp plus 40000 sp minus 10000 sp
+\gre@spaceabovelines = 0.45576 cm plus 0.36461 cm minus 0.09114 cm
 %the space between the lines and the bottom of the text
-\grespacelinestext = 66500 sp plus 0 sp minus 0 sp
+\gre@spacelinestext = 0.60617 cm plus 0 cm minus 0 cm
 %the space beneath the text
-\grespacebeneathtext = 0 sp plus 0 sp minus 0 sp
+\gre@spacebeneathtext = 0 cm plus 0 cm minus 0 cm
 % height of the text above the note line
-\greabovelinestextraise=-1mm%
+\gre@abovelinestextraise = -1.7 cm%
 % height that is added at the top of the lines if there is text above the lines (it must be bigger than the text for it to be taken into consideration)
-\greabovelinestextheight=3mm%
+\gre@abovelinestextheight = 0.3 cm%
 % an additional shift you can give to the brace above the bars if you don't like it
-\grebraceshift = 0pt
+\gre@braceshift = 0 cm
 % a shift you can give to the accentus above the curly brace
-\grecurlybraceaccentusshift = -0.5mm
+\gre@curlybraceaccentusshift = -0.05 cm
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% staff line height changing
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \grestafflineheight is the height of a staff line
-\grestafflineheight=1500 sp
-% \greinterstafflinespace is the space between two lines of staff
-\greinterstafflinespace=30000 sp
-% the value is (1500*stafflinefactor - 1500)/2
-\grestafflinediff=0 sp
+\makeatother

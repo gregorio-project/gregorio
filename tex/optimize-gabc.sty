@@ -40,7 +40,7 @@ require("optimize_gabc_style")
 }
 
 \def\setmaxpos{%
-\directlua{optimize_gabc_style.setstaffwidth("\the\grestafflinewidth")}%
+\directlua{optimize_gabc_style.setstaffwidth("\the\gre@stafflinewidth")}%
 \pdfsavepos %
 \luatexlatelua{optimize_gabc_style.setinitpos(\number\pdflastxpos)}%
 }
