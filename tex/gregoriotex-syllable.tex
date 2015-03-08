@@ -72,9 +72,11 @@
   \gre@tempwidth=\wd\GreTempwidth %
   \global\gre@lastglyphwidth=\gre@tempwidth %
   % the three next lines are a trick to get the additional lines below the glyphs
-  \kern\gre@lastglyphwidth %
+  \newskip\gre@temp
+  \gre@temp = \gre@lastglyphwidth
+  \kern\gre@temp %
   #5\relax %
-  \kern-\gre@lastglyphwidth %
+  \kern-\gre@temp %
   \gre@calculate@glyphraisevalue{#2}{0}%
   \raise\gre@glyphraisevalue %
   \copy\GreTempwidth%
@@ -449,7 +451,7 @@
       \advance\gre@clefwidth by \gre@minimalspaceatlinebeginning %
       \hbox{}%
       \advance\gre@tempdim by -\gre@spaceafterlineclef %
-      \ifdim\the\gre@tempdim < \the\gre@begindifference %
+      \ifdim\gre@tempdim < \gre@begindifference %
         \newskip\gre@tempdim
         \gre@tempdim=\the\gre@begindifference %
       \fi %
@@ -459,8 +461,8 @@
           \advance\gre@tempdim by \gre@clefwidth %
         \fi %
       \fi %
-      \ifdim\the\gre@tempdim < 0pt%
-        \kern\the\gre@tempdim %
+      \ifdim\gre@tempdim < 0pt%
+        \kern\gre@tempdim %
       \fi %
       %\hskip\gre@afterclefnospace %
     \fi %
@@ -532,7 +534,9 @@
   \fi% ficase#4
   % then we reuse temp, we assign to it the \gre@begindifference, but only if it is positive, else it is 0
   \ifdim\gre@begindifference > 0 pt%
-    \kern \gre@begindifference %
+    \newskip\gre@temp
+    \gre@temp = \gre@begindifference
+    \kern\gre@temp %
   \fi%
   #8\relax %
   \raise\gre@textlower \copy\GreSyllabletext %
@@ -541,8 +545,12 @@
     \gredotranslationcenterend %
     \xdef\gremustdotranslationcenterend{0}%
   \fi %
-  \kern -\wd\GreSyllabletext %
-  \kern -\gre@begindifference %
+  \newskip\gre@temp
+  \gre@temp = -\wd\GreSyllabletext %
+  \kern\gre@temp
+  \newskip\gre@temp
+  \gre@temp = -\gre@begindifference
+  \kern\gre@temp %
   % here we need to unset \gregorioattr for the typesetting of notes
   \gregorioattr=0\relax %
   % trick: we want to kern -enddifference if necessary before any change of line, which we can achieve only with this trick if the end of line is the last thing of the notes (it's the case of \grelastoflinecount is 1).
@@ -575,9 +583,13 @@
     %% important, else we are not really at the end of the syllable
     \grenobreak %
     \ifnum\grelastoflinecount=1\relax %
-      \kern\grekernbeforeeol %
+      \newskip\gre@temp
+      \gre@temp = \grekernbeforeeol
+      \kern\gre@temp %
     \else %
-      \kern -\gre@enddifference %
+      \newskip\gre@temp
+      \gre@temp = -\gre@enddifference
+      \kern\gre@temp %
     \fi %
     \grenobreak %
   \fi%
@@ -707,7 +719,9 @@
     \ifdim\gre@tempdim > -\wd\GreSyllablenotes %
       \kern\gre@tempdim %
     \else %
-      \kern -\wd\GreSyllablenotes %
+      \newskip\gre@temp
+      \gre@temp = -\wd\GreSyllablenotes %
+      \kern\gre@temp
     \fi %
     \grenobreak %
     #8\relax %
@@ -720,9 +734,13 @@
     \grepenalty{\greendafterbaraltpenalty }% TODO: isn't it a bit buggy?
     \ifdim\gre@tempdim < -\wd\GreSyllablenotes %
       \ifdim\gre@nextbegindifference > 0 pt%
-        \hskip\gre@interwordspacetextnotes %
+        \newskip\gre@temp
+        \gre@temp = \gre@interwordspacetextnotes
+        \hskip\gre@temp %
       \else % \ifdim\gre@nextbegindifference > 0 pt
-        \hskip\gre@interwordspacetext %
+        \newskip\gre@temp
+        \gre@temp = \gre@interwordspacetext
+        \hskip\gre@temp %
       \fi %
     \else % \ifdim\gre@tempdim < -\wd\GreSyllablenotes
       %\gre@tempdim=\wd\GreSyllablenotes %
@@ -736,7 +754,9 @@
       \ifdim\gre@tempdim > -\wd\GreSyllablenotes %
         \kern\gre@tempdim %
       \else % \ifdim\gre@tempdim > -\wd\GreSyllablenotes %
-        \grehskip -\wd\GreSyllablenotes %
+        \newskip\gre@temp
+        \gre@temp = -\wd\GreSyllablenotes %
+        \grehskip\gre@temp
       \fi %
     \fi %
   % then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
@@ -758,12 +778,18 @@
       \gredotranslationcenterend %
       \xdef\gremustdotranslationcenterend{0}%
     \fi %
-    \kern -\wd\GreSyllabletext %
-    \kern -\gre@begindifference %
+    \newskip\gre@temp
+    \gre@temp = -\wd\GreSyllabletext %
+    \kern\gre@temp
+    \newskip\gre@temp
+    \gre@temp = -\gre@begindifference
+    \kern\gre@temp %
     #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
     \ifdim\the\gre@enddifference <0pt%
       %% important, else we are not really at the end of the syllable
-      \kern -\gre@enddifference %
+      \newskip\gre@temp
+      \gre@temp = -\gre@enddifference
+      \kern\gre@temp %
     \fi%
     % end of same code as syllable
     \ifnum\grelastoflinecount=1\relax %

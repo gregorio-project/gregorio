@@ -69,104 +69,102 @@
 \newcount\greconffactor
 \greconffactor=17
 
-\makeatletter %needed temporarily until \gresetdimen is added.
-
 % the additional width of the additional lines (compared to the width of the glyph they're associated with)
-\gre@additionallineswidth = 0.14584 cm
+\gresetdim{additionallineswidth}{0.14584 cm}{1}
 % width of the additional lines, used only for the custos (maybe should depend on the width of the custo...)
 % the width is the one for the custos at end of lines, the line for custos in the middle of a score is the same
 % multiplied by 2.
-\gre@additionalcustoslineswidth = 0.09114 cm
+\gresetdim{additionalcustoslineswidth}{0.09114 cm}{1}
 % null space
-\gre@zerowidthspace = 0 cm plus 0 cm minus 0 cm
+\gresetdim{zerowidthspace}{0 cm}{1}
 % space between glyphs in the same element
-\gre@interglyphspace = 0.06927 cm plus 0.00363 cm minus 0.00363 cm
+\gresetdim{interglyphspace}{0.06927 cm plus 0.00363 cm minus 0.00363 cm}{1}
 % space between an alteration (flat or natural) and the next glyph
-\gre@alterationspace = 0.07747 cm plus 0.01276 cm minus 0.00455 cm
+\gresetdim{alterationspace}{0.07747 cm plus 0.01276 cm minus 0.00455 cm}{1}
 % space between a clef and a flat (for clefs with flat)
-\gre@clefflatspace = 0.05469 cm plus 0.00638 cm minus 0.00638 cm
+\gresetdim{clefflatspace}{0.05469 cm plus 0.00638 cm minus 0.00638 cm}{1}
 % space before a choral sign
-\gre@beforechoralsignspace = 0.04556 cm plus 0.00638 cm minus 0.00638 cm
+\gresetdim{beforechoralsignspace}{0.04556 cm plus 0.00638 cm minus 0.00638 cm}{1}
 % negative space, difference between the normal space between two notes and the space between a note and a flat
-\gre@beforealterationspace = -0.32816 cm plus 0.01093 cm minus 0.01093 cm
+\gresetdim{beforealterationspace}{-0.32816 cm plus 0.01093 cm minus 0.01093 cm}{1}
 % space between elements
-\gre@interelementspace = 0.06927 cm plus 0.00182 cm minus 0.00363 cm
+\gresetdim{interelementspace}{0.06927 cm plus 0.00182 cm minus 0.00363 cm}{1}
 % larger space between elements
-\gre@largerspace = 0.10938 cm plus 0.01822 cm minus 0.00911 cm
+\gresetdim{largerspace}{0.10938 cm plus 0.01822 cm minus 0.00911 cm}{1}
 % space between elements which has the size of a note
-\gre@glyphspace = 0.21877 cm plus 0.01822 cm minus 0.01822 cm
+\gresetdim{glyphspace}{0.21877 cm plus 0.01822 cm minus 0.01822 cm}{1}
 % minimum space between two notes of different syllables
-\gre@intersyllablespace= 0.25523 cm plus 0.31903 cm minus 0 cm
+\gresetdim{intersyllablespace}{0.25523 cm plus 0.31903 cm minus 0 cm}{1}
 % space before custo
-\gre@spacebeforecusto = 0.1823 cm plus 0.31903 cm minus 0.0638 cm
+\gresetdim{spacebeforecusto}{0.1823 cm plus 0.31903 cm minus 0.0638 cm}{1}
 % space before punctum mora and augmentum duplex
-\gre@spacebeforesigns= 0.05469 cm plus 0.00455 cm minus 0.00455 cm
+\gresetdim{spacebeforesigns}{0.05469 cm plus 0.00455 cm minus 0.00455 cm}{1}
 % space after punctum mora and augmentum duplex
-\gre@spaceaftersigns= 0.08203 cm plus 0.0082 cm minus 0.0082 cm
+\gresetdim{spaceaftersigns}{0.08203 cm plus 0.0082 cm minus 0.0082 cm}{1}
 % space after a clef at the beginning of a line
-\gre@spaceafterlineclef = 0.27345 cm plus 0.14584 cm minus 0.01367 cm
+\gresetdim{spaceafterlineclef}{0.27345 cm plus 0.14584 cm minus 0.01367 cm}{1}
 % space after at the end of a word when the last written symbol is a note and the first is a note
-\gre@interwordspacenotes = 0.29169 cm plus 0.08751 cm minus 0.05469 cm
+\gresetdim{interwordspacenotes}{0.29169 cm plus 0.08751 cm minus 0.05469 cm}{1}
 % space after at the end of a word when the last written symbol is a note and the first is text
-\gre@interwordspacenotestext = 0.27345 cm plus 0.27345 cm minus 0.07292 cm
+\gresetdim{interwordspacenotestext}{0.27345 cm plus 0.27345 cm minus 0.07292 cm}{1}
 % space after at the end of a word when the last written symbol is text and the first is a note
-\gre@interwordspacetextnotes = 0.27345 cm plus 0.27345 cm minus 0.07292 cm
+\gresetdim{interwordspacetextnotes}{0.27345 cm plus 0.27345 cm minus 0.07292 cm}{1}
 % space after at the end of a word when the last written symbol is text and the first is text
-\gre@interwordspacetext = 0.22787 cm plus 0.41019 cm minus 0.07292 cm
+\gresetdim{interwordspacetext}{0.22787 cm plus 0.41019 cm minus 0.07292 cm}{1}
 % space between notes of a bivirga or trivirga
-\gre@bitrivirspace = 0.06927 cm plus 0.00182 cm minus 0.00546 cm
+\gresetdim{bitrivirspace}{0.06927 cm plus 0.00182 cm minus 0.00546 cm}{1}
 % space between notes of a bistropha or tristrophae
-\gre@bitristrospace = 0.06927 cm plus 0.00182 cm minus 0.00546 cm
+\gresetdim{bitristrospace}{0.06927 cm plus 0.00182 cm minus 0.00546 cm}{1}
 % space between two punctum inclinatum
-\gre@punctuminclinatumshift= -0.03918 cm plus 0.0009 cm minus 0.0009 cm
+\gresetdim{punctuminclinatumshift}{-0.03918 cm plus 0.0009 cm minus 0.0009 cm}{1}
 % space before puncta inclinata
-\gre@beforepunctainclinatashift= 0.05286 cm plus 0.00728 cm minus 0.00455 cm
+\gresetdim{beforepunctainclinatashift}{0.05286 cm plus 0.00728 cm minus 0.00455 cm}{1}
 % space between a punctum inclinatum and a punctum inclinatum deminutus
-\gre@punctuminclinatumanddebilisshift= -0.02278 cm plus 0.0009 cm minus 0.0009 cm
+\gresetdim{punctuminclinatumanddebilisshift}{-0.02278 cm plus 0.0009 cm minus 0.0009 cm}{1}
 % space between two punctum inclinatum deminutus
-\gre@punctuminclinatumdebilisshift= -0.00728 cm plus 0.0009 cm minus 0.0009 cm
+\gresetdim{punctuminclinatumdebilisshift}{-0.00728 cm plus 0.0009 cm minus 0.0009 cm}{1}
 % space between puncta inclinata, larger ambitus (range=3rd)
-\gre@punctuminclinatumbigshift= 0.07565 cm plus 0.0009 cm minus 0.0009 cm
+\gresetdim{punctuminclinatumbigshift}{0.07565 cm plus 0.0009 cm minus 0.0009 cm}{1}
 % space between puncta inclinata, larger ambitus (range=4th -or more?-)
-\gre@punctuminclinatummaxshift= 0.17865 cm plus 0.0009 cm minus 0.0009 cm
+\gresetdim{punctuminclinatummaxshift}{0.17865 cm plus 0.0009 cm minus 0.0009 cm}{1}
 % space for the bars (inside syllables)
 %first for virgula and divisio minima
-\gre@spacearoundsmallbar = 0.1823 cm plus 0.22787 cm minus 0.05469 cm
+\gresetdim{spacearoundsmallbar}{0.1823 cm plus 0.22787 cm minus 0.05469 cm}{1}
 %then divisio minor
-\gre@spacearoundminor = 0.1823 cm plus 0.22787 cm minus 0.05469 cm
+\gresetdim{spacearoundminor}{0.1823 cm plus 0.22787 cm minus 0.05469 cm}{1}
 %divisio major
-\gre@spacearoundmaior = 0.1823 cm plus 0.22787 cm minus 0.05469 cm
+\gresetdim{spacearoundmaior}{0.1823 cm plus 0.22787 cm minus 0.05469 cm}{1}
 %divisio finalis
-\gre@spacearoundfinalis = 0.1823 cm plus 0.22787 cm minus 0.05469 cm
+\gresetdim{spacearoundfinalis}{0.1823 cm plus 0.22787 cm minus 0.05469 cm}{1}
 %a special space for finalis, for when it is the last glyph
-\gre@spacebeforefinalfinalis= 0.29169 cm plus 0.07292 cm minus 0.27345 cm
+\gresetdim{spacebeforefinalfinalis}{0.29169 cm plus 0.07292 cm minus 0.27345 cm}{1}
 % additional space that will appear around bars that are preceded by a custo and followed by a key.
-\gre@spacearoundclefbars= 0.03645 cm plus 0.00455 cm minus 0.0009 cm
+\gresetdim{spacearoundclefbars}{0.03645 cm plus 0.00455 cm minus 0.0009 cm}{1}
 % space between the text and the text of the bar
-\gre@textbartextspace = 0.24611 cm plus 0.13672 cm minus 0.04921 cm
+\gresetdim{textbartextspace}{0.24611 cm plus 0.13672 cm minus 0.04921 cm}{1}
 % minimal space between a note and a bar
-\gre@notebarspace = 0.31903 cm plus 0.27345 cm minus 0.02824 cm
+\gresetdim{notebarspace}{0.31903 cm plus 0.27345 cm minus 0.02824 cm}{1}
 % maximal space between two syllables for which we consider a dash is not needed
-\gre@maximumspacewithoutdash = 0.02005 cm
+\gresetdim{maximumspacewithoutdash}{0.02005 cm}{1}
 % an extensible space for the beginning of lines
-\gre@afterclefnospace = 0 cm plus 0.27345 cm minus 0 cm
+\gresetdim{afterclefnospace}{0 cm plus 0.27345 cm minus 0 cm}{1}
 % space between the initial and the beginning of the score
-\gre@afterinitialshift = 0.2457 cm plus 0 cm minus 0 cm
+\gresetdim{afterinitialshift}{0.2457 cm}{1}
 % space before the initial
-\gre@beforeinitialshift = 0.2457 cm plus 0 cm minus 0 cm
+\gresetdim{beforeinitialshift}{0.2457 cm}{1}
 % minimum space before each line (except those preceded by the initial)
-\gre@minimalspaceatlinebeginning = 0.1 cm
+\gresetdim{minimalspaceatlinebeginning}{0.1 cm}{1}
 % space to force the initial width to.  Ignored when 0.
-\gre@manualinitialwidth = 0 cm
+\gresetdim{manualinitialwidth}{0 cm}{1}
 % this space is the one between the bottom of the first anotation line and the top
 % of the second anotation line (above the initial)
-\gre@aboveinitialseparation = 0.05 cm
+\gresetdim{aboveinitialseparation}{0.05 cm}{1}
 % space at the beginning of the lines if there is no clef
-\gre@noclefspace = 0.1 cm
+\gresetdim{noclefspace}{0.1 cm}{1}
 % space around a clef change
-\gre@clefchangespace = 0.01768 cm plus 0.00175 cm minus 0.01768 cm%
+\gresetdim{clefchangespace}{0.01768 cm plus 0.00175 cm minus 0.01768 cm}{1}%
 %When \gre@clivisalignment is 2, this distance is the maximum length of the consonants after vowels for which the clivis will be aligned on its center.
-\gre@clivisalignmentmin = 0.3 cm
+\gresetdim{clivisalignmentmin}{0.3 cm}{1}
 
 
 
@@ -175,27 +173,26 @@
 %%%%%%%%%%%%%%%%%
 
 % first, we have two spaces for the chironomic signs
-\gre@abovesignsspace = 0.8 cm
-\gre@belowsignsspace = 0 cm
+\gresetdim{abovesignsspace}{0.8 cm}{1}
+\gresetdim{belowsignsspace}{0 cm}{1}
 % the shift for the low choral sign and the high choral signs on totally free interlines
-\gre@lowchoralsignshift = 0.00911 cm
+\gresetdim{lowchoralsignshift}{0.00911 cm}{1}
 % the shift for the high choral sign
-\gre@highchoralsignshift = -0.04556 cm
+\gresetdim{highchoralsignshift}{-0.04556 cm}{1}
 % the space for the translation
-\gre@translationheight = 0.5 cm
+\gresetdim{translationheight}{0.5 cm}{1}
 %the space above the lines
-\gre@spaceabovelines = 0.45576 cm plus 0.36461 cm minus 0.09114 cm
+\gresetdim{spaceabovelines}{0.45576 cm plus 0.36461 cm minus 0.09114 cm}{1}
 %the space between the lines and the bottom of the text
-\gre@spacelinestext = 0.60617 cm plus 0 cm minus 0 cm
+\gresetdim{spacelinestext}{0.60617 cm}{1}
 %the space beneath the text
-\gre@spacebeneathtext = 0 cm plus 0 cm minus 0 cm
+\gresetdim{spacebeneathtext}{0 cm}{1}
 % height of the text above the note line
-\gre@abovelinestextraise = -1.7 cm%
+\gresetdim{abovelinestextraise}{-0.1 cm}{1}%
 % height that is added at the top of the lines if there is text above the lines (it must be bigger than the text for it to be taken into consideration)
-\gre@abovelinestextheight = 0.3 cm%
+\gresetdim{abovelinestextheight}{0.3 cm}{1}%
 % an additional shift you can give to the brace above the bars if you don't like it
-\gre@braceshift = 0 cm
+\gresetdim{braceshift}{0 cm}{1}
 % a shift you can give to the accentus above the curly brace
-\gre@curlybraceaccentusshift = -0.05 cm
+\gresetdim{curlybraceaccentusshift}{-0.05 cm}{1}
 
-\makeatother
