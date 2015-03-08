@@ -8,23 +8,7 @@ also need the .tds.zip archive. To compile it, execute make tds in the fonts
 directory.
 
 To build the installer, you must first have Windows and InnoSetup (free) 
-installed. Then build a folder under windows with the following files:
-  |
-  + gregorio.exe
-  + gregorio.iss
-  + gregorio.ico
-  + gregorio-32.bmp
-  + gregorio-image.bmp
-  + license.txt
-  + README.txt of this folder
-  + install.lua
-  + gregoriotex.tds.zip
-  + contrib\
-  + + all the files of the contrib/ directory of the svn
-  + examples\
-  + + all the files of the examples/ directory of the svn
-
-Then simply compile the gregorio.iss file with InnoSetup and you're done.
+installed.  Then simply compile the gregorio.iss file with InnoSetup and you're done.
 
 The installer works a quite complex (but necessary) way: it installs everything
 somewhere the user wants (like C:\Program Files\Gregorio) and then executes
