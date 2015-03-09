@@ -39,6 +39,7 @@ AC_PROG_CPP
 AM_PROG_LEX
 AC_PROG_YACC
 AC_PROG_LIBTOOL
+AC_CHECK_TOOL([RC], [windres], [no])
 
 ## a dirty patch for cygwin, who needs the -lintl explicit option, that doesn't work under linux
 AC_CHECK_PROGS(UNAME, uname, :)
