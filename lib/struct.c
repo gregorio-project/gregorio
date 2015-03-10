@@ -1580,10 +1580,19 @@ gregorio_determine_good_bottom_notes (gregorio_note * current_note)
     }
   prev_note = current_note->previous;
   current_note->h_episemus_bottom_note = current_note->pitch;
-  if (!prev_note || !has_bottom(prev_note->h_episemus_type))
+  if (!prev_note)
     {
       return;
     }
+  if (prev_note->type == GRE_SPACE && prev_note->pitch == SP_ZERO_WIDTH && prev_note->previous) {
+    prev_note = prev_note->previous;
+    if (!prev_note || !has_bottom(prev_note->h_episemus_type)) {
+      return;
+    }
+  }
+  if (!has_bottom(prev_note->h_episemus_type)) {
+    return;
+  }
   if (current_note->h_episemus_bottom_note >= prev_note->h_episemus_bottom_note)
     {
       current_note->h_episemus_bottom_note = prev_note->h_episemus_bottom_note;
@@ -1591,8 +1600,16 @@ gregorio_determine_good_bottom_notes (gregorio_note * current_note)
   else
     {
       bottom_note = current_note->h_episemus_bottom_note;
-      while (prev_note && has_bottom(prev_note->h_episemus_type))
+      while (prev_note)
 	{
+	  if (!has_bottom(prev_note->h_episemus_type)) {
+      if (prev_note->type == GRE_SPACE && prev_note->pitch == SP_ZERO_WIDTH && prev_note->previous) {
+         prev_note = prev_note->previous;
+         continue;
+       } else {
+	      return;
+	    }
+	  }
 	  prev_note->h_episemus_bottom_note = bottom_note;
 	  prev_note = prev_note->previous;
 	}
