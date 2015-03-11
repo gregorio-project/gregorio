@@ -16,7 +16,7 @@ dnl along with this program; if not, write to the Free Software
 dnl Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 AC_INIT([gregorio],[2.4.2],[gregorio-devel@gna.org])
-AC_PREREQ(2.53)
+AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR([src/gregorio-utils.c])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
@@ -39,6 +39,7 @@ AC_PROG_CPP
 AM_PROG_LEX
 AC_PROG_YACC
 AC_PROG_LIBTOOL
+AC_CHECK_TOOL([RC], [windres], [no])
 
 ## a dirty patch for cygwin, who needs the -lintl explicit option, that doesn't work under linux
 AC_CHECK_PROGS(UNAME, uname, :)
