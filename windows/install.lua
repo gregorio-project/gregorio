@@ -249,7 +249,7 @@ showPdf=true]]
 
 full_tools_ini[4] = [[name=LuaLaTeX
 program=lualatex.exe
-arguments=$synctexoption, $fullname
+arguments=--shell-escape, $synctexoption, $fullname
 showPdf=true]]
 
 full_tools_ini[5] = [[name=XeTeX
@@ -289,13 +289,12 @@ showPdf=false]]
 
 function texworks_conf_tools(filename, install_dir)
 	local lualatexfound = 0
-	local gregoriofound = 0
-	local gregbookfound = 0
 	-- by default, there is no tools.ini in the recent versions of TeXWorks
 	if not lfs.isfile(filename) then 
 		print(filename.." does not exist, creating it...\n")
 		local toolstable = full_tools_ini
 		current = 11
+		lualatexfound = 1
 	else
 		-- let's remove the read-only attribute
         remove_read_only(filename)
@@ -309,10 +308,6 @@ function texworks_conf_tools(filename, install_dir)
            elseif l ~= "" then
                if string.lower(l) == "name=lualatex" then
                    lualatexfound = 1
-               elseif string.lower(l) == "name=gregorio" then
-                   gregoriofound = 1
-               elseif string.lower(l) == "name=greg-book" then
-                   gregbookfound = 1
                end
                if toolstable[current] == nil then
                    toolstable[current] = l
@@ -326,24 +321,9 @@ function texworks_conf_tools(filename, install_dir)
 		current = current + 1
 		toolstable[current] = "name=LuaLaTeX"
         toolstable[current] = toolstable[current]..'\n'..'program=lualatex'
-        toolstable[current] = toolstable[current]..'\n'..'arguments=$synctexoption, $fullname'
+        toolstable[current] = toolstable[current]..'\n'..'arguments=--shell-escape, $synctexoption, $fullname'
         toolstable[current] = toolstable[current]..'\n'..'showPdf=true'
-	end
-	if gregoriofound == 0 then
-		current = current + 1
-		toolstable[current] = "name=gregorio"
-        toolstable[current] = toolstable[current]..'\n'..'program='..install_dir..'/contrib/TeXworks/gregorio.bat'
-        toolstable[current] = toolstable[current]..'\n'..'arguments=$fullname, $basename'
-        toolstable[current] = toolstable[current]..'\n'..'showPdf=false'
-	end
-	if gregbookfound == 0 then
-		current = current + 1
-		toolstable[current] = 'name=greg-book'
-        toolstable[current] = toolstable[current]..'\n'..'program='..install_dir..'/contrib/TeXworks/greg-book.bat'
-        toolstable[current] = toolstable[current]..'\n'..'arguments=$fullname'
-        toolstable[current] = toolstable[current]..'\n'..'showPdf=true'
-	end
-	if gregbookfound == 1 and gregoriofound == 1 and lualatexfound == 1 then
+	else
 		return
 	end
 	local data = ""
