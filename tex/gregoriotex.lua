@@ -174,6 +174,34 @@ local function atScoreEnd ()
     end
 end
 
+local function clean_old_gtex_files(file_withdir)
+    local filename = ""
+    local dirpath = ""
+    local sep = ""
+    local onwindows = os.type == "windows" or
+	string.find(os.getenv("PATH"),";",1,true)
+    if onwindows then
+	sep = "\\"
+	dirpath = string.match(file_withdir, "(.*)"..sep)
+    else
+	sep = "/"
+	dirpath = string.match(file_withdir, "(.*)"..sep)
+    end
+    if dirpath then -- dirpath is nil if current directory
+	filename = "^"..file_withdir:match(".*/".."(.*)").."%-[0-9].*%.gtex$"
+	for a in lfs.dir(dirpath) do
+	    if a:match(filename) then
+		os.remove(dirpath..sep..a)
+	    end
+	end
+    else
+	filename = "^"..file_withdir.."%-[0-9].*%.gtex$"
+	for a in lfs.dir(lfs.currentdir()) do
+	    if a:match(filename) then os.remove(a) end
+	end
+    end
+end
+
 local function compile_gabc(gabc_file, gtex_file)
     info("compiling the score %s...", gabc_file)
     res = os.execute(string.format("gregorio -o %s %s", gtex_file, gabc_file))
@@ -202,6 +230,7 @@ local function include_score(input_file)
     local gtex_file = file_root.."-"..internalversion..".gtex"
     local gabc_file = file_root..".gabc"
     if not lfs.isfile(gtex_file) then
+	clean_old_gtex_files(file_root)
 	log("The file %s does not exist. Searching for a gabc file", gtex_file)
 	if lfs.isfile(gabc_file) then
 	    compile_gabc(gabc_file, gtex_file)
