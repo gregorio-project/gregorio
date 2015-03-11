@@ -1,149 +1,149 @@
-%GregorioTeX file.
-%Copyright (C) 2008-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
+%GregorioTeX file.%
+%Copyright (C) 2008-2009 Elie Roux <elie.roux@telecom-bretagne.eu>%
 %
-%This program is free software: you can redistribute it and/or modify
-%it under the terms of the GNU General Public License as published by
-%the Free Software Foundation, either version 3 of the License, or
-%(at your option) any later version.
+%This program is free software: you can redistribute it and/or modify%
+%it under the terms of the GNU General Public License as published by%
+%the Free Software Foundation, either version 3 of the License, or%
+%(at your option) any later version.%
 %
-%This program is distributed in the hope that it will be useful,
-%but WITHOUT ANY WARRANTY; without even the implied warranty of
-%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-%GNU General Public License for more details.
+%This program is distributed in the hope that it will be useful,%
+%but WITHOUT ANY WARRANTY; without even the implied warranty of%
+%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the%
+%GNU General Public License for more details.%
 %
-%You should have received a copy of the GNU General Public License
-%along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%You should have received a copy of the GNU General Public License%
+%along with this program.  If not, see <http://www.gnu.org/licenses/>.%
 
-% this file contains definitions of the symbols
+% this file contains definitions of the symbols%
 
-\gredeclarefileversion{gregoriotex-symbols.tex}%
- {\directlua{tex.write(gregoriotex.get_greapiversion())}}
+\gredeclarefileversion{gregoriotex-symbols.tex}%%
+ {\directlua{tex.write(gregoriotex.get_greapiversion())}}%
 
-% a temp counter
-\newcount\gretempfactor %
+% a temp counter%
+\newcount\gretempfactor %%
 
 
-% First we load the font at the current font size and remember the size it's been loaded at
-\font\gregoriosymbolfont="name:gresym" at \f@size pt
-\let\current\f@size
+% First we load the font at the current font size and remember the size it's been loaded at%
+\font\gregoriosymbolfont="name:gresym" at \f@size pt%
+\let\current\f@size%
 
-% This macro checks to see if the symbol font is loaded at the current font size and reloads it if it is not.  We'll run it at the beginning of each symbol command.
-\def\gre@reloadgresym{
-	\ifx\f@size\current\relax%
-		\relax
-	\else
-		\font\gregoriosymbolfont="name:gresym" at \f@size pt
-		\let\current\f@size
-	\fi
-}
+% This macro checks to see if the symbol font is loaded at the current font size and reloads it if it is not.  We'll run it at the beginning of each symbol command.%
+\def\gre@reloadgresym{%
+	\ifx\f@size\current\relax%%
+		\relax%
+	\else%
+		\font\gregoriosymbolfont="name:gresym" at \f@size pt%
+		\let\current\f@size%
+	\fi%
+}%
 
 %%%%%%%%%%
-%% symbols
+%% symbols%
 %%%%%%%%%%
 
-% the macros to typeset the A, R and V with bar
-\def\Abar{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 64}%
-	\relax%
-}
+% the macros to typeset the A, R and V with bar%
+\def\Abar{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 64}%%
+	\relax%%
+}%
 
-\def\Rbar{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 65}%
-	\relax%
-}
+\def\Rbar{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 65}%%
+	\relax%%
+}%
 
-\def\Vbar{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 66}%
-	\relax%
-}
+\def\Vbar{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 66}%%
+	\relax%%
+}%
 
-% a V with bar more adapted to small text
-\def\Vbarsmall{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 72}%
-	\relax%
-}
+% a V with bar more adapted to small text%
+\def\Vbarsmall{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 72}%%
+	\relax%%
+}%
 
-% bars for the letters
+% bars for the letters%
 
-\def\greletterbar{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 73}%
-	\relax%
-}
+\def\greletterbar{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 73}%%
+	\relax%%
+}%
 
-\def\greletteraltbar{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 74}%
-	\relax%
-}
+\def\greletteraltbar{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 74}%%
+	\relax%%
+}%
 
-% the gothic R and V
-\def\gothRbar{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 77}%
-	\relax%
-}
+% the gothic R and V%
+\def\gothRbar{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 77}%%
+	\relax%%
+}%
 
-\def\gothVbar{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 78}%
-	\relax%
-}
+\def\gothVbar{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 78}%%
+	\relax%%
+}%
 
-% the macro to typeset a dagger
-\def\gredagger{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 43}%
-	\relax%
-}
+% the macro to typeset a dagger%
+\def\gredagger{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 43}%%
+	\relax%%
+}%
 
-% macro to typeset a (malt) cross
-\def\grecross{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 70}%
-	\relax%
-}
+% macro to typeset a (malt) cross%
+\def\grecross{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 70}%%
+	\relax%%
+}%
 
-\def\grealtcross{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 84}%
-	\relax%
-}
+\def\grealtcross{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 84}%%
+	\relax%%
+}%
 
-%stars
-\def\greheightstar{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 69}%
-	\relax %
-}
+%stars%
+\def\greheightstar{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 69}%%
+	\relax %%
+}%
 
-\def\gresixstar{%
-	\gre@reloadgresym
-	{\gregoriosymbolfont \char 42}%
-	\relax %
-}
+\def\gresixstar{%%
+	\gre@reloadgresym%
+	{\gregoriosymbolfont \char 42}%%
+	\relax %%
+}%
 
-\def\grestar{%
-	\gre@reloadgresym
-	\gresixstar %
-	\relax%
-}
+\def\grestar{%%
+	\gre@reloadgresym%
+	\gresixstar %%
+	\relax%%
+}%
 
 %%%%%%%%%
-%	Lines	%
+%	Lines	%%
 %%%%%%%%%
-%Unlike the character symbols above, we require that the font size be specified when using the lines.
+%Unlike the character symbols above, we require that the font size be specified when using the lines.%
 
-%lines
-%#1 is the type of line (1-5)
-%#2 is the number of pt of the font it will use
-\def\gresep#1#2{%
-	\gretempfactor=#1% we're reusing tempfactor
-	\advance \gretempfactor by 78\relax %
-	{\font\grelinefont="name:gresym" at #2pt\grelinefont \char \gretempfactor}%
-	\relax%
-}
+%lines%
+%#1 is the type of line (1-5)%
+%#2 is the number of pt of the font it will use%
+\def\gresep#1#2{%%
+	\gretempfactor=#1% we're reusing tempfactor%
+	\advance \gretempfactor by 78\relax %%
+	{\font\grelinefont="name:gresym" at #2pt\grelinefont \char \gretempfactor}%%
+	\relax%%
+}%

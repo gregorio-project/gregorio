@@ -16,124 +16,124 @@
 
 % this file contains definitions for lines, initial, fonts, etc.
 
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
 %% engine checking
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
 
-\expandafter\ifx\csname RequirePackage\endcsname\relax
-  \input ifluatex.sty
-  \input luatexbase.sty
-  \input luaotfload.sty
+\expandafter\ifx\csname RequirePackage\endcsname\relax%
+  \input ifluatex.sty%
+  \input luatexbase.sty%
+  \input luaotfload.sty%
   \input graphicx.sty % for \resizebox
-  \input xstring.sty
-  \def\greerror#1{\errmessage{GregorioTeX error: #1}}
-  \def\gre@warning#1{\message{GregorioTeX warning: #1}}
-\else
-  \RequirePackage{ifluatex}
+  \input xstring.sty%
+  \def\greerror#1{\errmessage{GregorioTeX error: #1}}%
+  \def\gre@warning#1{\message{GregorioTeX warning: #1}}%
+\else%
+  \RequirePackage{ifluatex}%
   \RequirePackage{graphicx}% for \resizebox
-  \RequirePackage{luatexbase}
-  \RequirePackage{luaotfload}
-  \RequirePackage{xstring}
-  \def\greerror#1{\PackageError{GregorioTeX}{#1}{}}
-  \def\gre@warning#1{\PackageWarning{GregorioTeX}{#1}}
-\fi
+  \RequirePackage{luatexbase}%
+  \RequirePackage{luaotfload}%
+  \RequirePackage{xstring}%
+  \def\greerror#1{\PackageError{GregorioTeX}{#1}{}}%
+  \def\gre@warning#1{\PackageWarning{GregorioTeX}{#1}}%
+\fi%
 
-\ifluatex\else
-  \greerror{Error: this document must be compiled with LuaTeX (lualatex)}
-\fi
+\ifluatex\else%
+  \greerror{Error: this document must be compiled with LuaTeX (lualatex)}%
+\fi%
 
 % Since TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
 % available without prefix. We mostly rely on \directlua that is still available
 % without prefix, but we also rely on the Omega primitives, that have a luatex 
 % prefix in TeXLive 2009.
 
-\let\grelocalleftbox\luatexlocalleftbox
-\let\grelocalrightbox\luatexlocalrightbox
+\let\grelocalleftbox\luatexlocalleftbox%
+\let\grelocalrightbox\luatexlocalrightbox%
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
 % if it is 2, it means that it's never useful to typeset a dash
 % if it is 0, it just means that we are in a score...
-\newluatexattribute\gregorioattr
-\def\greunsetattribute{\unsetluatexattribute{\gregorioattr}}
+\newluatexattribute\gregorioattr%
+\def\greunsetattribute{\unsetluatexattribute{\gregorioattr}}%
 
 % an attribute used for translation centering
-\newluatexattribute\gregoriocenterattr
+\newluatexattribute\gregoriocenterattr%
 
-\RequireLuaModule{gregoriotex}
+\RequireLuaModule{gregoriotex}%
 
 % The general version of GregorioTeX (we mean by that the "API", the way
 % Gregorio will write things)
-\xdef\gregoriotexversion{\directlua{tex.write(gregoriotex.get_greapiversion())}}
+\xdef\gregoriotexversion{\directlua{tex.write(gregoriotex.get_greapiversion())}}%
 
 % the version of the internal files (all must have the same)
 \xdef\greinternalversion{\directlua{tex.write(gregoriotex.get_greapiversion())}} % date format
-\directlua{gregoriotex.check_version(\number\greinternalversion)}
+\directlua{gregoriotex.check_version(\number\greinternalversion)}%
 
 % first some macros to allow checks for version:
 % #1 is the name of the file
 % #2 is the version
 \def\gredeclarefileversion#1#2{%
   \ifnum\number#2=\number\greinternalversion\else %
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\greinternalversion \space\space while #1 is in version \number#2}
+    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\greinternalversion \space\space while #1 is in version \number#2}%
   \fi %
-}
+}%
 
 % macro called by scores
 % #1 is the version of GregorioTeX the score is made for.
 \def\gregoriotexapiversion#1{%
   \ifnum\number#1=\number\gregoriotexversion\else %
-    \greerror{GregorioTeX is in version \number\gregoriotexversion \space\space while a score you included requires version \number#1. Please recompile your scores}
+    \greerror{GregorioTeX is in version \number\gregoriotexversion \space\space while a score you included requires version \number#1. Please recompile your scores}%
   \fi %
-}
+}%
 
-%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
 %% aux file definitions
-%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
 
 % for now, we only use an aux file with LuaTeX
 
-\ifluatex
-  \newwrite\Greaux
-\fi
+\ifluatex%
+  \newwrite\Greaux%
+\fi%
 
 \def\grewriteaux#1{%
   \write\Greaux{#1}%
   \relax %
-}
+}%
 
 \def\opengreaux{%
   \openout\Greaux \jobname .gaux\relax%
-}
+}%
 
 \def\closegreaux{%
   \closeout\Greaux %
-}
+}%
 
 
-%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
 %% basic start
-%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
 
 % factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
 % at the beginning it is set to 0, but if it is still 0 when begingregorianscore is called, it is set to the default value : 17 (the value that makes it look like a standard graduale)
-\newcount\grefactor
-\grefactor=17
+\newcount\grefactor%
+\grefactor=17%
 
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
 %% vertical spaces
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
 
-\input gregoriotex-spaces.tex
+\input gregoriotex-spaces.tex%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for additionnal vertical spaces
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %macro to call if you want to go to the next line simply
 \def\grenewline{%
   \grenewlinecommon{0}{0}{0}{0}{0}%
   \relax%
-}
+}%
 
 % macro called to go to the next line but when there are additional vertical spaces to add
 %% 1: can be 0, 1 or 2 or 3. 1 is when there is a note above the 4th line, 2 when there is a note on the 5th line, and 3 when there is a note above the 5th line
@@ -143,7 +143,7 @@
 \def\grenewlinewithspace#1#2#3#4{%
   \grenewlinecommon{#1}{#2}{#3}{0}{#4}%
   \relax%
-}
+}%
 
 
 % basically same macros as above, but these one do a \hfill, the lines are not justified
@@ -151,14 +151,14 @@
 \def\grenewparline{%
   \grenewlinecommon{0}{0}{0}{1}{0}%
   \relax%
-}
+}%
 
 \def\grenewparlinewithspace#1#2#3#4{%
   \grenewlinecommon{#1}{#2}{#3}{1}{#4}%
-}
+}%
 
 % a macro describing a kern to make before ending the line, which we sometimes want (see \syllable)
-\xdef\grekernbeforeeol{0pt\relax}
+\xdef\grekernbeforeeol{0pt\relax}%
 
 % the macro we call each time we force a changing of line, it automatically sets \greknownline, and adjusts left spaces
 \def\grenewlinecommon#1#2#3#4#5{%
@@ -166,8 +166,7 @@
      \grelocalrightbox{}%
   \fi\fi %
   % sometimes we need to add a space before ending the line:
-  \newskip\gre@temp
-  \gre@temp = \grekernbeforeeol\relax
+  \gre@temp = \grekernbeforeeol\relax%
   \kern\gre@temp %
   \ifnum\greboxing=0\relax %
     \ifnum\grebiginitial=1\relax %
@@ -201,85 +200,82 @@
     \grepenalty{-10001}%
   \fi %
   \relax %
-}
+}%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of text
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% macro that sets \gre@tempwidth to the width of its argument
 
-\newbox\GreTempwidth
+\newbox\GreTempwidth%
 
 \def\grewidthof#1{%
   \setbox\GreTempwidth=\hbox{#1}%
-  \newskip\gre@tempwidth
   \global\gre@tempwidth=\wd\GreTempwidth%
   \relax%
-}
+}%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the initial
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% box containing the initial, and dimen containing its width (and the width of the space after)
-\newbox\GreInitial
+\newbox\GreInitial%
 
 
 % grebiginitial means that the inital takes two lines
-\newcount\grebiginitial
+\newcount\grebiginitial%
 
 % greknownline is the line we think we are in
-\newcount\greknownline
+\newcount\greknownline%
 
 % macro to call before the call of \initial
 \def\gresetbiginitial{%
   \global\grebiginitial=1\relax %
   \relax %
-}
+}%
 
 % macro to cancel before the call of \initial
 \def\grenormalinitial{%
   \global\grebiginitial=0\relax %
   \relax %
-}
+}%
 
 % macro to call before the first syllable, but after setinitialclef
 \def\greadjustsecondline{%
   \gre@additionalleftspace=\gre@initialwidth %
   \greupdateleftbox %
   \relax %
-}
+}%
 
 % macro to call during the second line
 \def\greadjustthirdline{%
   \gre@additionalleftspace= 0 pt%
   \greupdateleftbox %
   \relax %
-}
+}%
 
 \def\greupdateleftbox{%
   \greupdatelinewidth %
   \greupdatelinesclef %
-}
+}%
 
 \def\greupdatelinewidth{%
   \ifdim\gre@additionalleftspace=0pt%
   \else %
-    \newskip\gre@tempdim
     \gre@tempdim=\gre@stafflinewidth %
     \global\advance\gre@stafflinewidth by -\gre@additionalleftspace %
     \gregeneratelines %
     \global\gre@stafflinewidth=\gre@tempdim %
   \fi %
-}
+}%
 
 \def\greinitial#1{%
   % see comments on this function to see what it does
   \gre@calculate@aboveinitialraise %
   % we print the initial always at the same place, and the we print the GreAboveinitialfirstbox  centered
   % first we print the initial
-  \newskip\gre@tempdim
   \gre@tempdim=-\gre@textlower %
   % if it is a big initial we print it on the second line 
   \ifnum\grebiginitial=0\relax %
@@ -288,13 +284,13 @@
       \global\gre@initialwidth=\wd\GreInitial %
     \else%
       \greinitialformat{\global\gre@initialwidth=\gre@manualinitialwidth}%
-    \fi
+    \fi%
     \ifdim\wd\GreAboveinitialfirstbox>\gre@initialwidth\relax%
-      \global\gre@initialwidth=\wd\GreAboveinitialfirstbox
-    \fi
+      \global\gre@initialwidth=\wd\GreAboveinitialfirstbox%
+    \fi%
     \ifdim\wd\GreAboveinitialsecondbox>\gre@initialwidth\relax%
-      \global\gre@initialwidth=\wd\GreAboveinitialsecondbox
-    \fi
+      \global\gre@initialwidth=\wd\GreAboveinitialsecondbox%
+    \fi%
     \setbox\GreInitial=\hbox to \gre@initialwidth {\hss\raise -\gre@tempdim\hbox{\greinitialformat{#1}}\hss}%
   \else %
     \advance\gre@tempdim by \gre@additionalbottomspace %
@@ -308,16 +304,15 @@
       \global\gre@initialwidth=\wd\GreInitial %
     \else%
       \grebiginitialformat{\global\gre@initialwidth=\gre@manualinitialwidth}%
-    \fi
+    \fi%
     \ifdim\wd\GreAboveinitialfirstbox>\gre@initialwidth\relax%
-      \global\gre@initialwidth=\wd\GreAboveinitialfirstbox
-    \fi
+      \global\gre@initialwidth=\wd\GreAboveinitialfirstbox%
+    \fi%
     \ifdim\wd\GreAboveinitialsecondbox>\gre@initialwidth\relax%
-      \global\gre@initialwidth=\wd\GreAboveinitialsecondbox
-    \fi
+      \global\gre@initialwidth=\wd\GreAboveinitialsecondbox%
+    \fi%
     \setbox\GreInitial=\hbox{\vbox to 0pt{\hbox to \gre@initialwidth {\hss\raise -\gre@tempdim\hbox{\grebiginitialformat{#1}}\hss}\vss}}%
   \fi %
-  \newskip\gre@temp%
   \ifnum\grebiginitial=0\relax%
     \greinitialformat{\global\gre@temp = \gre@beforeinitialshift}%
   \else%
@@ -326,7 +321,6 @@
   \hskip\gre@temp %
   \global\advance\gre@initialwidth by \gre@temp %
   \copy\GreInitial%
-  \newskip\gre@temp%
   \ifnum\grebiginitial=0\relax%
     \greinitialformat{\global\gre@temp = \gre@afterinitialshift}%
   \else%
@@ -337,12 +331,10 @@
   % then we center the first box above the initial, if there is one
   \ifdim\wd\GreAboveinitialfirstbox=0 pt\relax %
   \else %
-    \newskip\gre@tempdim
     \gre@tempdim=\gre@initialwidth %
     \advance\gre@tempdim by -\wd\GreAboveinitialfirstbox  %
     \divide\gre@tempdim by 2 %
-    \newskip\gre@temp
-    \gre@temp = -\gre@initialwidth
+    \gre@temp = -\gre@initialwidth%
     \hskip\gre@temp %
     \kern\gre@tempdim %
     \raise\gre@aboveinitialfirstraise\copy\GreAboveinitialfirstbox  %
@@ -352,12 +344,11 @@
   % then we center the second box above the initial, if there is one
   \ifdim\wd\GreAboveinitialsecondbox=0 pt\relax %
   \else %
-    \newskip\gre@tempdim
+    \newskip\gre@tempdim%
     \gre@tempdim=\gre@initialwidth %
     \advance\gre@tempdim by -\wd\GreAboveinitialsecondbox %
     \divide\gre@tempdim by 2 %
-    \newskip\gre@temp
-    \gre@temp = -\gre@initialwidth
+    \gre@temp = -\gre@initialwidth%
     \hskip\gre@temp %
     \kern\gre@tempdim %
     \raise\gre@aboveinitialsecondraise\copy\GreAboveinitialsecondbox %
@@ -365,19 +356,19 @@
     \setbox\GreAboveinitialsecondbox=\hbox{}%
   \fi %
   \relax %
-}
+}%
 
 \def\grenoinitial{%
   \setbox\GreInitial=\hbox{}%
   \global\gre@initialwidth=0pt %
   \global\grelastoflinecount=2\relax %
   \relax %
-}
+}%
 
 % We set two boxes for the two lines above the initial
 
-\newbox\GreAboveinitialfirstbox
-\newbox\GreAboveinitialsecondbox
+\newbox\GreAboveinitialfirstbox%
+\newbox\GreAboveinitialsecondbox%
 % the height difference between the bottom of the first annotation line and the top of the second annotation line (above the initial) is controlled by the \gre@aboveinitialseparation space, in gregoriotex-spaces.tex
 
 \def\gresetfirstlineaboveinitial#1#2{%
@@ -387,38 +378,38 @@
   \global\gre@aboveinitialfirstraise=-\ht\GreAboveinitialfirstbox %
   \global\setbox\GreAboveinitialfirstbox=\hbox{#1}%
   \relax %
-}
+}%
 
 \def\gresetfirstannotation#1{%
   \gresetfirstlineaboveinitial{#1}{#1}%
   \relax %
-}
+}%
 
-\let\setfirstannotation\gresetfirstannotation
+\let\setfirstannotation\gresetfirstannotation%
 
 \def\gresetsecondannotation#1{%
   \setbox\GreAboveinitialsecondbox=\hbox{#1}%
   \global\gre@aboveinitialsecondraise=-\ht\GreAboveinitialsecondbox %
   \global\advance\gre@aboveinitialsecondraise by -\gre@aboveinitialseparation %
   \relax %
-}
+}%
 
-\let\setsecondannotation\gresetsecondannotation
+\let\setsecondannotation\gresetsecondannotation%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the score reference (unused)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\grescorereference#1{}
+\def\grescorereference#1{}%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting the things above the initial
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\writemode#1{%
   \gresetfirstlineaboveinitial{\sc{\bf{#1}}}{\sc{\bf{#1}}}%
   \relax %
-}
+}%
 
 \def\gregorianmode#1{%
   \ifhbox \GreAboveinitialfirstbox%
@@ -444,11 +435,11 @@
     \fi%
   \fi%
   \relax%
-}
+}%
 
 \def\scorereference#1{%
   \relax%
-}
+}%
 
 %% macro that draws the lines : starts by the first and then draws the lines of every line.
 %% has to be called before drawing the key, after drawing the initial
@@ -459,43 +450,43 @@
     \copy\GreLines %
   }%
   \relax %
-}
+}%
 
 \def\commentary#1{%
   \vbox{\hfill\hbox{#1}}%
   \relax %
-}
+}%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macro for putting text above lines for annotations and the like
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % format for text above the lines
 \def\greabovelinestextstyle#1{%
 #1\relax %
-}
+}%
 
 % set space above the text lines - almost the same as for the translation
 \def\greaddspaceabove{%
-	\greabovelinestextstyle{
+	\greabovelinestextstyle{%
 		\global\gre@currentabovelinestextheight=\gre@abovelinestextheight %
 		\gregeneratelines %
-	}
+	}%
 	\relax %
-}
+}%
 
 % we don't need space above any more
 \def\greremovespaceabove{%
   \global\gre@currentabovelinestextheight=0 sp%
   \gregeneratelines %
   \relax %
-}
+}%
 
 % the code is a bit strange here: we always execute \gre@spaceabovelines at the beginning of a glyph. This will:
 %  - typeset the text above the lines if relevant, and making sure we execute it only once
 %  - not do anything else
 
-\xdef\grecurrenttextabovelines{}
+\xdef\grecurrenttextabovelines{}%
 
 \def\gresettextabovelines#1{%
   \gdef\grecurrenttextabovelines{%
@@ -503,11 +494,10 @@
     \gdef\grecurrenttextabovelines{}%
     \relax %
   }%
-}
+}%
 
 % typesets the text above the line
 \def\gretypesettextabovelines#1{%
-  \newskip\gre@tempdim
   \greabovelinestextstyle{\gre@tempdim=\gre@abovelinestextraise} %
   \advance\gre@tempdim by 4\gre@stafflineheight %
   \advance\gre@tempdim by 4\gre@interstafflinespace %
@@ -517,30 +507,30 @@
   \advance\gre@tempdim by \gre@additionalbottomspace %
   \leavevmode\raise\gre@tempdim\hbox to 0pt{\greabovelinestextstyle{#1}\hss}%
   \relax %
-}
+}%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the lines
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% first a macro to prevent the typesetting of the lines (useful for some people)
-\xdef\greremovelinescount{0}
+\xdef\greremovelinescount{0}%
 
 \def\greremovelines{%
   \xdef\greremovelinescount{1}%
   \relax %
-}
+}%
 
 \def\gredonotremovelines{%
   \xdef\greremovelinescount{0}%
   \relax %
-}
+}%
 
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
 \def\gredrawfirstlines{%
   \advance\gre@stafflinewidth by -\gre@initialwidth%
 %  \advance\gre@stafflinewidth by -\gre@minimalspaceatlinebeginning
-  %\gre@initialwidth=0pt%
+  %\gre@initialwidth=0pt
   \hbox to 0pt{%
     \vbox{%
       \grenormalstafflinesformat %
@@ -551,24 +541,21 @@
       \else %
         \vskip\gre@stafflineheight %
       \fi %
-      \newskip\gre@temp
-      \gre@temp = \gre@interstafflinespace
+      \gre@temp = \gre@interstafflinespace%
       \kern\gre@temp %
       \ifnum\greremovelinescount=0\relax %
         \hrule height \gre@stafflineheight width \gre@stafflinewidth %
       \else %
         \vskip\gre@stafflineheight %
       \fi %
-      \newskip\gre@temp
-      \gre@temp = \gre@interstafflinespace
+      \gre@temp = \gre@interstafflinespace%
       \kern\gre@temp %
       \ifnum\greremovelinescount=0\relax %
         \hrule height \gre@stafflineheight width \gre@stafflinewidth %
       \else %
         \vskip\gre@stafflineheight %
       \fi %
-      \newskip\gre@temp
-      \gre@temp = \gre@interstafflinespace
+      \gre@temp = \gre@interstafflinespace%
       \kern\gre@temp %
       \ifnum\greremovelinescount=0\relax %
         \hrule height \gre@stafflineheight width \gre@stafflinewidth %
@@ -584,10 +571,10 @@
   }%
   \gre@stafflinewidth=\gre@linewidth%
   \relax%
-}
+}%
 
 %% box containing the stafflines for other lines than the first
-\newbox\GreLines
+\newbox\GreLines%
 
 % macro that must be called at each change of linewidth and grefactor
 \def\gregeneratelines{%
@@ -601,24 +588,21 @@
       \else %
         \vskip\gre@stafflineheight %
       \fi %
-      \newskip\gre@temp
-      \gre@temp = \gre@interstafflinespace
+      \gre@temp = \gre@interstafflinespace%
       \kern\gre@temp %
       \ifnum\greremovelinescount=0\relax %
         \hrule height \gre@stafflineheight width \gre@stafflinewidth %
       \else %
         \vskip\gre@stafflineheight %
       \fi %
-      \newskip\gre@temp
-      \gre@temp = \gre@interstafflinespace
+      \gre@temp = \gre@interstafflinespace%
       \kern\gre@temp %
       \ifnum\greremovelinescount=0\relax %
         \hrule height \gre@stafflineheight width \gre@stafflinewidth %
       \else %
         \vskip\gre@stafflineheight %
       \fi %
-      \newskip\gre@temp
-      \gre@temp = \gre@interstafflinespace
+      \gre@temp = \gre@interstafflinespace%
       \kern\gre@temp %
       \ifnum\greremovelinescount=0\relax %
         \hrule height \gre@stafflineheight width \gre@stafflinewidth %
@@ -633,52 +617,50 @@
     \hss%
   }%
   \relax %
-}
+}%
 
 % macro called when the initial is big, and so when the second line is at the same level as the first
 \def\gresmallsecondline{%
-  \newskip\gre@tempdim
   \gre@tempdim=\gre@stafflinewidth %
   \global\advance\gre@stafflinewidth by -\gre@initialwidth %
   \gregeneratelines %
   \global\gre@stafflinewidth=\gre@tempdim %
   \relax %
-}
+}%
 
 % macro called when we are after the second line of a big initial, to have normal lines back
 \def\grenormallines{%
   \global\gre@stafflinewidth=\gre@linewidth %
   \gregeneratelines %
   \relax %
-}
+}%
 
-\input gregoriotex-chars.tex
+\input gregoriotex-chars.tex%
 
-\input gregoriotex-signs.tex
+\input gregoriotex-signs.tex%
 
-\input gregoriotex-syllable.tex
+\input gregoriotex-syllable.tex%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the translations
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\xdef\gretranslationcenteringscheme{0}
+\xdef\gretranslationcenteringscheme{0}%
 
-\def\setgretranslationcenteringscheme#1{
+\def\setgretranslationcenteringscheme#1{%
   \xdef\gretranslationcenteringscheme{\number #1}%
-}
+}%
 
-\xdef\grenlbintranslation{0}
+\xdef\grenlbintranslation{0}%
 
 \def\gresetnlbintranslation#1{%
   \xdef\grenlbintranslation{\number #1}%
-}
+}%
 
 \def\grewritetranslation#1{%
   \ifnum\gretranslationcenteringscheme=0\relax %
     \raise\gre@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
   \else %
-    \newskip\gre@tempdim
     \gre@tempdim=\wd\GreSyllabletext %
     \setbox\GreTempwidth=\hbox{#1}%
     \advance\gre@tempdim by -\wd\GreTempwidth %
@@ -687,7 +669,7 @@
     \raise\gre@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
     \kern-\gre@tempdim %
   \fi %
-}
+}%
 
 \def\grewritetranslationwithcenterbeginning#1{%
   \ifnum\grenlbintranslation=1\relax %
@@ -697,14 +679,14 @@
   \raise\gre@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}\kern 0pt}%
   \unsetluatexattribute{\gregoriocenterattr}%
   \relax %
-}
+}%
 
-\xdef\gremustdotranslationcenterend{0}
+\xdef\gremustdotranslationcenterend{0}%
 
 \def\gretranslationcenterend{%
   \xdef\gremustdotranslationcenterend{1}%
   \relax %
-}
+}%
 
 \def\gredotranslationcenterend{%
   \ifnum\grenlbintranslation=1\relax %
@@ -714,11 +696,11 @@
   \raise\gre@spacebeneathtext\hbox to 0pt{}%
   \unsetluatexattribute{\gregoriocenterattr}%
   \relax %
-}
+}%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the chironomic signs lines
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % here is a quite special macro called at beggining of lines, that inserts a line of chironomic signs
 \def\greinsertchiroline{%
@@ -728,32 +710,29 @@
     \hbox{\directlua{grechiro.printLine()}}%
     \par %
     % TODO: this line bugs with my version of LuaTeX
-    %\grenobreak %
-    \newskip\gre@temp
-    \gre@temp = \gre@belowsignsspace
+    %\grenobreak 
+    \gre@temp = \gre@belowsignsspace%
     \kern\gre@temp %
-    %\grenobreak %
+    %\grenobreak 
     \noindent %
   \else %
     % not very beaufiful, I don't like to make a new par inside a score, but....
     \grelocalleftbox{}%
     \grelocalrightbox{}%
     \par %
-    \newskip\gre@temp
-    \gre@temp = \gre@abovesignsspace
+    \gre@temp = \gre@abovesignsspace%
     \kern\gre@temp %
     \noindent\hbox{\directlua{grechiro.printLine()}}%
     \greupdateleftbox %
     \par %
     \grenobreak%
-    \newskip\gre@temp
-    \gre@temp = \gre@belowsignsspace
+    \gre@temp = \gre@belowsignsspace%
     \kern\gre@temp %
     \grenobreak %
     \noindent %
   \fi %
   \relax %
-}
+}%
 
 %macro to call just after begingregorioscore, if there are some chironomic signs
 \def\greactivatechironomy{%
@@ -764,16 +743,16 @@
   \RequireLuaModule{gregoriotex-ictus}%
   \directlua{grechiro.atBeginScore()}%
 \fi %
-}
+}%
 
 % count that is 1 or 0 if we need to print the small vertical bars in the chironomic line
-\newcount\printchirovbars
-\printchirovbars=1
+\newcount\printchirovbars%
+\printchirovbars=1%
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% other macros
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % gregorioattr (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
@@ -798,7 +777,7 @@
 	\fi %
 	\global\greknownline=1\relax %
 	\relax%
-}
+}%
 
 %macro called at the end of a score
 \def\endgregorioscore{%
@@ -830,7 +809,7 @@
   \exhyphenchar=\greexhyphencharsave %
   \directlua{gregoriotex.atScoreEnd()}%
   \relax%
-}
+}%
 
 % macro to call when there is just a little thing that will go to the last line,
 % when it is not necessary
@@ -838,22 +817,18 @@
 \def\grenolastline{%
   \ifdim\gre@enddifference > 0 pt %
     \ifdim\gre@nextbegindifference > 0 pt %
-      \newskip\gre@temp
-      \gre@temp = \gre@interwordspacenotes
+      \gre@temp = \gre@interwordspacenotes%
       \hskip\gre@temp %
     \else % (next begin difference >0pt)
-      \newskip\gre@temp
-      \gre@temp = \gre@interwordspacenotestext
+      \gre@temp = \gre@interwordspacenotestext%
       \hskip\gre@temp %
     \fi %
   \else%(enddifference < Opt)
     \ifdim\gre@nextbegindifference < 0 pt %
-      \newskip\gre@temp
-      \gre@temp = \gre@interwordspacetext
+      \gre@temp = \gre@interwordspacetext%
       \hskip\gre@temp %
     \else %(next begin difference < 0 pt)
-      \newskip\gre@temp
-      \gre@temp = \gre@interwordspacetextnotes
+      \gre@temp = \gre@interwordspacetextnotes%
       \hskip\gre@temp %
     \fi %
   \fi %
@@ -862,7 +837,7 @@
   \grelocalleftbox{}%
   \penalty{\grenolastlinepenalty }%
   \relax%
-}
+}%
 
 % macro called at each end of word
 \def\greendofword#1{%
@@ -870,29 +845,25 @@
   \ifnum#1=1\relax %
     \ifdim\gre@enddifference > 0 pt %
       \ifdim\gre@nextbegindifference > 0 pt %
-        \newskip\gre@temp
-        \gre@temp = \gre@interwordspacenotes
+        \gre@temp = \gre@interwordspacenotes%
         \grehskip\gre@temp %
       \else % (next begin difference >0pt)
-        \newskip\gre@temp
-        \gre@temp = \gre@interwordspacenotestext
+        \gre@temp = \gre@interwordspacenotestext%
         \grehskip\gre@temp %
       \fi %
     \else %(enddifference < Opt)
       \ifdim\gre@nextbegindifference < 0 pt %
-        \newskip\gre@temp
-        \gre@temp = \gre@interwordspacetext
+        \gre@temp = \gre@interwordspacetext%
         \grehskip\gre@temp %
       \else %(next begin difference < 0 pt)
-        \newskip\gre@temp
-        \gre@temp = \gre@interwordspacetextnotes
+        \gre@temp = \gre@interwordspacetextnotes%
         \grehskip\gre@temp %
       \fi %
     \fi %
   \fi %
-  %\global\gre@enddifference=0pt %
+  %\global\gre@enddifference=0pt 
   \relax%
-}
+}%
 
 % macro called at the end of a word or syllable when the next thing is a bar
 \def\greendbeforebar#1{%
@@ -900,30 +871,26 @@
   \ifnum#1=1\relax %
     \ifdim\gre@enddifference > 0 pt %
       \ifdim\gre@nextbegindifference > 0 pt %
-        \newskip\gre@temp
-        \gre@temp = \gre@notebarspace
+        \gre@temp = \gre@notebarspace%
         \grehskip\gre@temp %
       \else % (next begin difference >0pt)
-        \newskip\gre@temp
-        \gre@temp = \gre@textbartextspace
+        \gre@temp = \gre@textbartextspace%
         \grehskip\gre@temp %
       \fi %
     \else%(enddifference < Opt)
       \ifdim\gre@nextbegindifference < 0 pt %
-        \newskip\gre@temp
-        \gre@temp = \gre@textbartextspace
+        \gre@temp = \gre@textbartextspace%
         \grehskip\gre@temp %
       \else %(next begin difference < 0 pt)
-        \newskip\gre@temp
-        \gre@temp = \gre@interwordspacetextnotes
+        \gre@temp = \gre@interwordspacetextnotes%
         \grehskip\gre@temp %
       \fi %
     \fi %
   \fi %
   \grenobreak %
-  %\global\gre@enddifference=0pt %
+  %\global\gre@enddifference=0pt 
   \relax %
-}
+}%
 
 % macro called at the end of a bar. Almost the same, but not for the penalties
 \def\greendafterbar#1{%
@@ -931,32 +898,28 @@
   \ifnum#1=1\relax %
     \ifdim\gre@enddifference > 0 pt %
       \ifdim\gre@nextbegindifference > 0 pt %
-        \newskip\gre@temp
-        \gre@temp = \gre@notebarspace
+        \gre@temp = \gre@notebarspace%
         \grehskip\gre@temp %
       \else % (next begin difference >0pt)
-        \newskip\gre@temp
-        \gre@temp = \gre@textbartextspace
+        \gre@temp = \gre@textbartextspace%
         \grehskip\gre@temp %
       \fi %
     \else%(enddifference < Opt)
       \ifdim\gre@nextbegindifference < 0 pt %
-        \newskip\gre@temp
-        \gre@temp = \gre@textbartextspace
+        \gre@temp = \gre@textbartextspace%
         \grehskip\gre@temp %
       \else %(next begin difference < 0 pt)
-        \newskip\gre@temp
-        \gre@temp = \gre@interwordspacetextnotes
+        \gre@temp = \gre@interwordspacetextnotes%
         \grehskip\gre@temp %
       \fi %
     \fi %
   \fi %
-  %\grepenalty{\greendafterbarpenalty }\relax %
-  %\global\gre@enddifference=0pt %
+  %\grepenalty{\greendafterbarpenalty }\relax 
+  %\global\gre@enddifference=0pt 
   \relax %
-}
+}%
 
-\newcount\grelastoflinecount
+\newcount\grelastoflinecount%
 
 % TODO: case where we're at the beginning *and* end of a line... quite rare case though...
 % macro to tell gregorioTeX no to put a space after the current syllable (otherwise it may cause annoying black boxes in the pdf if written in plainTeX)
@@ -966,7 +929,7 @@
 \def\grelastofline{%
   \global\grelastoflinecount=1\relax%
   \relax%
-}
+}%
 
 % same as above, but for the score. For now it is the same behaviour.
 \def\grelastofscore{%
@@ -976,34 +939,34 @@
   \greblockcustos %
   \global\grelastoflinecount=1\relax%
   \relax%
-}
+}%
 
 % a macro to disable (or reenable) the left shift for first syllables of scores
-\edef\gredisableeolshifts{0}
+\edef\gredisableeolshifts{0}%
 
 \def\GreDisableEOLShifts{%
   \xdef\gredisableeolshifts{1}%
-}
+}%
 
 \def\GreEnableEOLShifts{%
   \xdef\gredisableeolshifts{0}%
-}
+}%
 
 % a count that is 1 if we block the custo, and 0 if we don't. We just block custos at the end of a score, to prevent a bug.
-\newcount\greblockcusto
+\newcount\greblockcusto%
 
 % macro to suppress the custos
 \def\greblockcustos{%
   \global\greblockcusto=1\relax %
   \grelocalrightbox{}%
   \relax %
-}
+}%
 
 % macro called at each end of syllable which is not an end of word
 \def\greendofsyllable{%
   \grepenalty{\greendofsyllablepenalty }%
   \relax%
-}
+}%
 
 % macro to end elements, #1 is the type of space, it can be : 
 %% 0: default space 
@@ -1019,23 +982,20 @@
     \grenobreak %
   \fi %
   \ifcase#1%
-    \newskip\gre@temp
-    \gre@temp = \gre@interelementspace
+    \gre@temp = \gre@interelementspace%
     \grehskip\gre@temp %
   \or% case 1
-    \newskip\gre@temp
-    \gre@temp = \gre@largerspace
+    \gre@temp = \gre@largerspace%
     \grehskip\gre@temp %
   \or% case 2
-    \newskip\gre@temp
-    \gre@temp = \gre@glyphspace
+    \gre@temp = \gre@glyphspace%
     \grehskip\gre@temp %
   \fi%
   \ifnum #2=1\relax %
     \grenobreak %
   \fi %
 \relax%
-}
+}%
 
 % macro to end a glyph without ending the element, argument is the type of space, it can be : 
 %% 0: default space 
@@ -1055,63 +1015,51 @@
 \def\greendofglyph#1{%
   \grenobreak %
   \ifcase#1%
-    \newskip\gre@temp
-    \gre@temp = \gre@interglyphspace
+    \gre@temp = \gre@interglyphspace%
     \grehskip\gre@temp %
   \or% case 1
-    \newskip\gre@temp
-    \gre@temp = \gre@zerowidthspace
+    \gre@temp = \gre@zerowidthspace%
     \grehskip\gre@temp %
   \or% case 2
-    \newskip\gre@temp
-    \gre@temp = \gre@alterationspace
+    \gre@temp = \gre@alterationspace%
     \grehskip\gre@temp %
   \or% case 3
-    \newskip\gre@temp
-    \gre@temp = \gre@punctuminclinatumshift
+    \gre@temp = \gre@punctuminclinatumshift%
     \grehskip\gre@temp %
   \or% case 4
-    \newskip\gre@temp
-    \gre@temp = \gre@bitrivirspace
+    \gre@temp = \gre@bitrivirspace%
     \grehskip\gre@temp %
   \or% case 5
-    \newskip\gre@temp
-    \gre@temp = \gre@bitristrospace
+    \gre@temp = \gre@bitristrospace%
     \grehskip\gre@temp %
   \or% case 6
-    \newskip\gre@temp
-    \gre@temp = \gre@spaceaftersigns
+    \gre@temp = \gre@spaceaftersigns%
     \grehskip\gre@temp %
   \or% case 7
-    \newskip\gre@temp
-    \gre@temp = \gre@punctuminclinatumanddebilisshift
+    \gre@temp = \gre@punctuminclinatumanddebilisshift%
     \grehskip\gre@temp %
   \or% case 8
-    \newskip\gre@temp
-    \gre@temp = \gre@punctuminclinatumdebilisshift
+    \gre@temp = \gre@punctuminclinatumdebilisshift%
     \grehskip\gre@temp %
   \or% case 9
-    \newskip\gre@temp
-    \gre@temp = \gre@beforepunctainclinatashift
+    \gre@temp = \gre@beforepunctainclinatashift%
     \grehskip\gre@temp %
   \or% case 10
-    \newskip\gre@temp
-    \gre@temp = \gre@punctuminclinatumbigshift
+    \gre@temp = \gre@punctuminclinatumbigshift%
     \grehskip\gre@temp %
   \or% case 11
-    \newskip\gre@temp
-    \gre@temp = \gre@punctuminclinatummaxshift
+    \gre@temp = \gre@punctuminclinatummaxshift%
     \grehskip\gre@temp %
   \fi%
   \grenobreak %
   \relax%
-}
+}%
 
 % The different states of line break areas:
 % 0: not currently in a no line break area
 % 1: no line break area due tu translation centering
 % 2: no line break area due to <nlba> tag
-\xdef\grenlbstate{0}
+\xdef\grenlbstate{0}%
 
 % first argument is if if the nlba is starting in neumes or not
 % second argument is if it is called from translation centering or not
@@ -1146,7 +1094,7 @@
       \xdef\grehyphenpenaltysave{\grehyphenpenalty }%
       \xdef\grehyphenpenalty{10001}%
   \fi %
-}
+}%
 
 \def\greendnlbarea#1#2{%
   \xdef\grenlbinitialstate{\grenlbstate}%
@@ -1181,111 +1129,109 @@
       \fi %
     \fi %
   \fi %
-}
+}%
 
-\input gregoriotex-symbols.tex
+\input gregoriotex-symbols.tex%
 
-%%%%%%%%
+%%%%%%%%%
 %% fonts
-%%%%%%%%
+%%%%%%%%%
 
 \def\gretilde{%
   \ensuremath{\sim}%
   \relax %
-}
+}%
 
 \def\greitalic#1{%
   {\it #1}%
-%  \relax %
-}
+%  \relax 
+}%
 
 \def\gresmallcaps#1{%
   {\sc #1}%
   \relax %
-}
+}%
 
 \def\grebold#1{%
   {\bf #1}%
   \relax %
-}
+}%
 
-\let\greboldfont\grebold
+\let\greboldfont\grebold%
 
 \def\grett#1{%
   {\tt #1}%
   \relax %
-}
+}%
 
 \def\greul#1{%
   {#1}%
   \relax %
-}
+}%
 
 \def\grecolored#1{%
   {#1}%
   \relax %
-}
+}%
 
 
 
 % the default gregorio font
-\xdef\gregoriofontname{greciliae}
+\xdef\gregoriofontname{greciliae}%
 
 \def\setgregoriofont#1{%
   \xdef\gregoriofontname{#1}%
-  \newcount\gretempdimcount
   \gretempdimcount = \the\grefactor %
   \multiply\gretempdimcount by 100000 %
   \global\font\gregoriofont="name:#1" at \the\gretempdimcount sp%
   \relax%
-}
+}%
 
-\xdef\greusestylefont{0}
+\xdef\greusestylefont{0}%
 
 % gregoriostylefont is the font used for additional glyphs
 \def\gresetstylefont{%
-  \newcount\gretempdimcount
   \gretempdimcount = \the\grefactor %
   \multiply\gretempdimcount by 100000\relax %
   \global\font\gregoriostylefont="name:greextra" at \the\gretempdimcount sp%
   \relax%
-}
+}%
 
 \def\gretranslationformat#1{%
   \greitalic{#1}%
   \relax %
-}
+}%
 
 \def\grenormalstafflinesformat{%
   \relax %
-}
+}%
 
 \def\greadditionalstafflinesformat{%
   \relax %
-}
+}%
 
 \def\GreSetStaffLinesFormat#1{%
   \global\def\greadditionalstafflinesformat{#1\relax }%
   \global\def\grenormalstafflinesformat{#1\relax }%
   \relax %
-}
+}%
 
 \def\greinitialformat#1{%
   \font\grefontofinitial=pncr at 40pt%
   {\grefontofinitial #1}%
   \relax %
-}
+}%
 
 \def\grebiginitialformat#1{%
   \font\grefontofgrebiginitial=pncr at 80pt%
   {\grefontofgrebiginitial #1}%
   \relax %
-}
+}%
 
 \def\setgrefactor#1{%
-	\ifnum#1<0\relax
-		\greerror{\protect\grefactor\space must be a positive integer.}
-	\else
+	\ifnum#1<0\relax%
+		\greerror{\protect\grefactor\space must be a positive integer.}%
+	\else%
 		\gre@changedimenfactor{\grefactor}{#1}%
 		\global\grefactor=#1\relax %
 		\gre@computespaces %
@@ -1294,13 +1240,13 @@
 		\ifnum\greusestylefont=1\relax %
 			\gresetstylefont %
 		\fi %
-	\fi
+	\fi%
 	\relax %
-}
+}%
 
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
 %% score including
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
 
 % The primary macro that includes a score. The lua function check that:
 %  -- The gtex file exists.
@@ -1311,43 +1257,43 @@
 \def\gre@includescore#1{%
   \directlua{gregoriotex.include_score([[#1]])}%
   \relax%
-}
+}%
 
-\ifdefined\includetexscore
-	\gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore\space instead.}
-\else
+\ifdefined\includetexscore%
+	\gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore\space instead.}%
+\else%
 	\def\includetexscore#1{%
-		\gre@includescore{#1}
-	}
-\fi
+		\gre@includescore{#1}%
+	}%
+\fi%
 \def\greincludetexscore#1{%
-	\gre@warning{\protect\greincludedtexscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}
-	\gre@includescore{#1}
-}
+	\gre@warning{\protect\greincludedtexscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
+	\gre@includescore{#1}%
+}%
 
-\ifdefined\includegabcscore
-	\gre@warning{\protect\includegabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}
-\else
+\ifdefined\includegabcscore%
+	\gre@warning{\protect\includegabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
+\else%
 	\def\includegabcscore#1{%
-		\gre@includescore{#1}
-	}
-\fi
+		\gre@includescore{#1}%
+	}%
+\fi%
 \def\greincludegabcscore#1{%
-	\gre@warning{\protect\greincludedgabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}
-	\gre@includescore{#1}
-}
+	\gre@warning{\protect\greincludedgabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
+	\gre@includescore{#1}%
+}%
 
 % A macro that passes the score directly to TeX without performing the API version check or if the gabc was modified since the creation of the gtex file.
 \def\gre@includescorewithoption[#1]#2{%
   \input #2%
   \relax%
-}
+}%
 
 % The main macro used by the user to input scores into the document.
 
 \def\includescore{\@ifnextchar[{\gre@includescorewithoption}%
     {\gre@includescore}%
-}
+}%
 
 % If called without the optional argument: '\includescore{Antiphon}'
 % the filename will be passed to the lua function 'include_score'
@@ -1364,33 +1310,33 @@
 % checked by the lua function 'include_score'. This does not bypass
 % the API version test done by '\gregoriotexapiversion'.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% some hyphen definitions
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % a zero-width hyphen, useful for fine tuning line endings. To input in gabc verb for example.
 \def\grezerhyph{%
   \hbox to 0pt{%
-  %-%
+  %-
   \char\the\hyphenchar\font %
   \hss %
   }%
-}
+}%
 
 % a normal hyphen
 \def\grenormalhyph{%
-  %-%
+  %-
   \char\the\hyphenchar\font %
-}
+}%
 
 % the definition that will be always used for end of lines hyphens in gregorio, except if one of the two before is explicitely used
-\let\grehyph\grenormalhyph 
+\let\grehyph\grenormalhyph %
 
 % two macros to change the definition of the hyphen:
 \def\GreUseNormalHyphen{%
   \global\let\grehyph\grenormalhyph %
-}
+}%
 
-\def\GreUseZeroHyphen{
+\def\GreUseZeroHyphen{%
   \global\let\grehyph\grezerhyph %
-}
+}%
