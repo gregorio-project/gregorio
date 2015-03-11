@@ -21,7 +21,7 @@ local hpack, traverse_id, has_attribute, count, remove, insert_after, copy = nod
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = 20150220
+local internalversion = 20150311
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
