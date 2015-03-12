@@ -42,6 +42,14 @@
   \greerror{Error: this document must be compiled with LuaTeX (lualatex)}%
 \fi%
 
+\newif\ifdebug\debugfalse
+\def\gre@debug#1{%
+	\ifdebug%
+		\typeout{GregorioTex debug: #1}%
+	\fi%
+}%
+\AtBeginDocument{\gre@debug{GregorioTeX is in debug mode.  Debug messages will be printed to the log.}}%
+
 % Since TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
 % available without prefix. We mostly rely on \directlua that is still available
 % without prefix, but we also rely on the Omega primitives, that have a luatex 
@@ -181,9 +189,9 @@
     \global\advance\greknownline by 1\relax %
     \gre@calculate@additionalspaces{#1}{#2}%
     \ifnum#3 = 1\relax %
-      \greaddtranslationspace %
+      \gre@addtranslationspace %
     \else %
-      \greremovetranslationspace %
+      \gre@removetranslationspace %
     \fi %
     \ifnum#5 = 1\relax %
       \greaddspaceabove %
@@ -262,6 +270,7 @@
 }%
 
 \def\greupdatelinewidth{%
+  \gre@debug{ifdim additionalleftspace = 0pt}%
   \ifdim\gre@additionalleftspace=0pt%
   \else %
     \gre@tempdim=\gre@stafflinewidth %
@@ -280,14 +289,17 @@
   % if it is a big initial we print it on the second line 
   \ifnum\grebiginitial=0\relax %
     \setbox\GreInitial=\hbox{\greinitialformat{#1}}%
+    \gre@debug{ifdim manualinitialwidth = 0pt}%
     \ifdim\gre@manualinitialwidth=0 pt\relax%
       \global\gre@initialwidth=\wd\GreInitial %
     \else%
       \greinitialformat{\global\gre@initialwidth=\gre@manualinitialwidth}%
     \fi%
+    \gre@debug{ifdim wd(GreAboveinitialfirstbox) > initialwidth}%
     \ifdim\wd\GreAboveinitialfirstbox>\gre@initialwidth\relax%
       \global\gre@initialwidth=\wd\GreAboveinitialfirstbox%
     \fi%
+    \gre@debug{ifdim wd(GreAboveinitialsecondbox) > initialwidth}%
     \ifdim\wd\GreAboveinitialsecondbox>\gre@initialwidth\relax%
       \global\gre@initialwidth=\wd\GreAboveinitialsecondbox%
     \fi%
@@ -300,14 +312,17 @@
     \advance\gre@tempdim by 4\gre@stafflineheight %
     \advance\gre@tempdim by \gre@currenttranslationheight %
     \setbox\GreInitial=\hbox{\grebiginitialformat{#1}}%
+    \gre@debug{ifdim manualinitialwidth = 0pt}%
     \ifdim\gre@manualinitialwidth=0 pt\relax%
       \global\gre@initialwidth=\wd\GreInitial %
     \else%
       \grebiginitialformat{\global\gre@initialwidth=\gre@manualinitialwidth}%
     \fi%
+    \gre@debug{ifdim wd(GreAboveinitialfirstbox) > initialwidth}%
     \ifdim\wd\GreAboveinitialfirstbox>\gre@initialwidth\relax%
       \global\gre@initialwidth=\wd\GreAboveinitialfirstbox%
     \fi%
+    \gre@debug{ifdim wd(GreAboveinitialsecondbox) > initialwidth}%
     \ifdim\wd\GreAboveinitialsecondbox>\gre@initialwidth\relax%
       \global\gre@initialwidth=\wd\GreAboveinitialsecondbox%
     \fi%
@@ -329,6 +344,7 @@
   \hskip\gre@temp %
   \global\advance\gre@initialwidth by \gre@temp%
   % then we center the first box above the initial, if there is one
+  \gre@debug{ifdim wd(GreAboveinitialfirstbox) = 0pt}%
   \ifdim\wd\GreAboveinitialfirstbox=0 pt\relax %
   \else %
     \gre@tempdim=\gre@initialwidth %
@@ -342,6 +358,7 @@
     \setbox\GreAboveinitialfirstbox=\hbox{}%
   \fi %
   % then we center the second box above the initial, if there is one
+  \gre@debug{ifdim wd(GreAboveinitialsecondbox) = 0pt}%
   \ifdim\wd\GreAboveinitialsecondbox=0 pt\relax %
   \else %
     \newskip\gre@tempdim%
@@ -802,7 +819,7 @@
   \setbox\GreAboveinitialfirstbox=\hbox{}%
   \gre@calculate@additionalspaces{0}{0}%
   \global\gre@currentabovelinestextheight=0 sp%
-  \greremovetranslationspace %
+  \gre@removetranslationspace %
   \grenormalinitial %
   \grerestorepenalties %
   \greendfinetuning %
@@ -815,7 +832,9 @@
 % when it is not necessary
 % It doesn't seem to be used, so it's a good candidate for deprecation!
 \def\grenolastline{%
+  \gre@debug{ifdim enddifference > 0pt}%
   \ifdim\gre@enddifference > 0 pt %
+    \gre@debug{ifdim nextbegindifference > 0pt}%
     \ifdim\gre@nextbegindifference > 0 pt %
       \gre@temp = \gre@interwordspacenotes%
       \hskip\gre@temp %
@@ -824,6 +843,7 @@
       \hskip\gre@temp %
     \fi %
   \else%(enddifference < Opt)
+    \gre@debug{ifdim nextbegindifference < 0pt}%
     \ifdim\gre@nextbegindifference < 0 pt %
       \gre@temp = \gre@interwordspacetext%
       \hskip\gre@temp %
@@ -843,7 +863,9 @@
 \def\greendofword#1{%
   \grepenalty{\greendofwordpenalty }%
   \ifnum#1=1\relax %
+    \gre@debug{ifdim enddifference > 0pt}%
     \ifdim\gre@enddifference > 0 pt %
+      \gre@debug{ifdim nextbegindifference > 0pt}%
       \ifdim\gre@nextbegindifference > 0 pt %
         \gre@temp = \gre@interwordspacenotes%
         \grehskip\gre@temp %
@@ -852,6 +874,7 @@
         \grehskip\gre@temp %
       \fi %
     \else %(enddifference < Opt)
+      \gre@debug{ifdim nextbegindifference < 0pt}%
       \ifdim\gre@nextbegindifference < 0 pt %
         \gre@temp = \gre@interwordspacetext%
         \grehskip\gre@temp %
@@ -869,7 +892,9 @@
 \def\greendbeforebar#1{%
   \grenobreak %
   \ifnum#1=1\relax %
+    \gre@debug{ifdim enddifference > 0pt}%
     \ifdim\gre@enddifference > 0 pt %
+      \gre@debug{ifdim nextbegindifference > 0pt}%
       \ifdim\gre@nextbegindifference > 0 pt %
         \gre@temp = \gre@notebarspace%
         \grehskip\gre@temp %
@@ -878,6 +903,7 @@
         \grehskip\gre@temp %
       \fi %
     \else%(enddifference < Opt)
+      \gre@debug{ifdim nextbegindifference < 0pt}%
       \ifdim\gre@nextbegindifference < 0 pt %
         \gre@temp = \gre@textbartextspace%
         \grehskip\gre@temp %
@@ -896,7 +922,9 @@
 \def\greendafterbar#1{%
   \grepenalty{\greendafterbarpenalty }\relax %
   \ifnum#1=1\relax %
+    \gre@debug{ifdim enddifference > 0pt}%
     \ifdim\gre@enddifference > 0 pt %
+      \gre@debug{ifdim nextbegindifference > 0pt}%
       \ifdim\gre@nextbegindifference > 0 pt %
         \gre@temp = \gre@notebarspace%
         \grehskip\gre@temp %
@@ -905,6 +933,7 @@
         \grehskip\gre@temp %
       \fi %
     \else%(enddifference < Opt)
+      \gre@debug{ifdim nextbegindifference < 0pt}%
       \ifdim\gre@nextbegindifference < 0 pt %
         \gre@temp = \gre@textbartextspace%
         \grehskip\gre@temp %
@@ -1181,9 +1210,9 @@
 
 \def\setgregoriofont#1{%
   \xdef\gregoriofontname{#1}%
-  \gretempdimcount = \the\grefactor %
-  \multiply\gretempdimcount by 100000 %
-  \global\font\gregoriofont="name:#1" at \the\gretempdimcount sp%
+  \gre@tempdimcount = \the\grefactor %
+  \multiply\gre@tempdimcount by 100000 %
+  \global\font\gregoriofont="name:#1" at \the\gre@tempdimcount sp%
   \relax%
 }%
 
@@ -1191,9 +1220,9 @@
 
 % gregoriostylefont is the font used for additional glyphs
 \def\gresetstylefont{%
-  \gretempdimcount = \the\grefactor %
-  \multiply\gretempdimcount by 100000\relax %
-  \global\font\gregoriostylefont="name:greextra" at \the\gretempdimcount sp%
+  \gre@tempdimcount = \the\grefactor %
+  \multiply\gre@tempdimcount by 100000\relax %
+  \global\font\gregoriostylefont="name:greextra" at \the\gre@tempdimcount sp%
   \relax%
 }%
 

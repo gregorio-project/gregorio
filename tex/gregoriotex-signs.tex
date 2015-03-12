@@ -123,9 +123,9 @@
 %% macro redrawing a key from clefnum, useful for vertical space changes
 \def\greupdatelinesclef{%
   \ifnum\greclefnum > 5\relax%
-    \gretempdimcount=\greclefnum %
-    \advance\gretempdimcount by -4\relax %
-    \gresetlinesclef{f}{\gretempdimcount}{1}{\greclefflat}%
+    \gre@tempdimcount=\greclefnum %
+    \advance\gre@tempdimcount by -4\relax %
+    \gresetlinesclef{f}{\gre@tempdimcount}{1}{\greclefflat}%
   \else %
     \gresetlinesclef{c}{\greclefnum}{1}{\greclefflat}%
   \fi %

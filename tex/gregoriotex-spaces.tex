@@ -160,7 +160,7 @@
 }%
 
 % Messing with the staff line thickness directly is messy, so we provide the following interface to make life easier on the user:
-% stafflineheight is the height of a staff line (in arbitrary units)
+% stafflineheight is the height of a staff line
 % = 1500 * stafflinefactor
 \newdimen\gre@stafflineheight%
 \def\gre@calculate@stafflineheight{%
@@ -286,63 +286,62 @@
 %% 9: case of the horizontal episemus, that must be placed a bit lower if the note is on a line
 %% 10: case of the choral sign
 \def\gre@calculate@glyphraisevalue#1#2{%
-\gre@glyphraisevalue=0pt%
   \global\greisonaline=\number 0%
   % z is the very special case of vertical episemus on the lowest note
   \if z\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 0%
+    \gre@tempdimcount=\number 0%
   \fi%
   \if a\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 1%
+    \gre@tempdimcount=\number 1%
     \fi%
   \if b\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 2%
+    \gre@tempdimcount=\number 2%
     \ifnum#2=3\relax %
     \else %
       \global\greisonaline=1 % if it is a vertical episemus, we don't care if it is on a line or not... which may cause some problems...
     \fi %
   \fi%
   \if c\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 3%
+    \gre@tempdimcount=\number 3%
   \fi%
   \if d\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 4%
+    \gre@tempdimcount=\number 4%
     \global\greisonaline=1 %
   \fi%
   \if e\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 5%
+    \gre@tempdimcount=\number 5%
   \fi%
   \if f\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 6%
+    \gre@tempdimcount=\number 6%
     \global\greisonaline=1 %
   \fi%
   \if g\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 7%
+    \gre@tempdimcount=\number 7%
   \fi%
   \if h\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 8 %
+    \gre@tempdimcount=\number 8 %
     \global\greisonaline=1 %
   \fi%
   \if i\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 9%
+    \gre@tempdimcount=\number 9%
   \fi%
   \if j\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 10%
+    \gre@tempdimcount=\number 10%
     \global\greisonaline=1 %
   \fi%
   \if k\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 11%
+    \gre@tempdimcount=\number 11%
   \fi%
   \if l\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 12%
+    \gre@tempdimcount=\number 12%
     \global\greisonaline=1 %
   \fi%
   \if m\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 13%
+    \gre@tempdimcount=\number 13%
   \fi%
   % n is only useful for horizontal episemus and rare signs (signs below k have m as first argument, and above have n)
   \if n\grefirstcar#1\endgrefirstchar %
-    \gretempdimcount=\number 14%
+    \gre@tempdimcount=\number 14%
   \fi%
   % if there is not line... we don't consider notes are on lines
   \ifnum\greremovelinescount=1\relax %
@@ -352,31 +351,31 @@
   \ifcase\greisonaline\or% isonaline = 1
     \ifcase#2 %
     \or% 1
-      \global\advance\gretempdimcount by 1%
+      \global\advance\gre@tempdimcount by 1%
     \or% 2
-      \global\advance\gretempdimcount by -1%
+      \global\advance\gre@tempdimcount by -1%
     \or% 3
-      \global\advance\gretempdimcount by -1%
+      \global\advance\gre@tempdimcount by -1%
     \or% 4
-      \global\advance\gretempdimcount by 1%
+      \global\advance\gre@tempdimcount by 1%
     \or% 5
-      \global\advance\gretempdimcount by -1%
+      \global\advance\gre@tempdimcount by -1%
     \or\or\or % 8
-      \global\advance\gretempdimcount by -1%
+      \global\advance\gre@tempdimcount by -1%
     \or % 9
-      \global\advance\gretempdimcount by 1%
+      \global\advance\gre@tempdimcount by 1%
     \or % 10
-      \global\advance\gretempdimcount by 1%
+      \global\advance\gre@tempdimcount by 1%
     \or % 11
-      \global\advance\gretempdimcount by 1%
+      \global\advance\gre@tempdimcount by 1%
     \or % 12
-      \global\advance\gretempdimcount by -1%
+      \global\advance\gre@tempdimcount by -1%
     \fi%
   \fi%
-  \global\advance\gretempdimcount by -7 %
+  \global\advance\gre@tempdimcount by -7 %
   \global\gre@glyphraisevalue = 15750 sp %
   \global\multiply\gre@glyphraisevalue by \the\grefactor %
-  \global\multiply\gre@glyphraisevalue by \the\gretempdimcount %
+  \global\multiply\gre@glyphraisevalue by \the\gre@tempdimcount %
   \gre@addedraisevalue= 0 sp%
   \ifcase#2 % 
   \or\or\or%3: if it is a vertical episemus on a line, we shift it a bit higher, so that it's more beautiful
@@ -502,9 +501,9 @@
     \global\multiply\gre@additionalbottomspace by \the\grefactor %
   \fi %
   \ifnum#2=1\relax %
-    \greaddtranslationspace %
+    \gre@addtranslationspace %
   \else %
-    \greremovetranslationspace %
+    \gre@removetranslationspace %
   \fi %
   \gregeneratelines %
   \gre@calculate@constantglyphraise %
@@ -564,7 +563,7 @@
 \newdimen\gre@currenttranslationheight%
 
 % macro to tell gregorio to set space for the translation
-\def\greaddtranslationspace{%
+\def\gre@addtranslationspace{%
 	\gretranslationformat{%
 		\global\gre@currenttranslationheight=\gre@translationheight %
 		\global\gre@textlower=\gre@spacebeneathtext %
@@ -575,7 +574,7 @@
 	\relax %
 }%
 
-\def\greremovetranslationspace{%
+\def\gre@removetranslationspace{%
   \global\gre@currenttranslationheight=0 sp%
   \global\gre@textlower=\gre@spacebeneathtext %
   \gregeneratelines %
@@ -658,7 +657,7 @@
 \newskip\gre@tempdimskip % couldn't we use another existing temp* ? maybe not
 \newskip\gre@skipone%
 \newskip\gre@temp%
-\newcount\gretempdimcount%
+\newcount\gre@tempdimcount%
 % Register allocation is an inherently global process in TeX.  Below are the registers used within calculations on a temporary basis.
 \newdimen\gre@temp@dimen@one%
 \newdimen\gre@temp@skip@one%
@@ -796,6 +795,7 @@
 \newcount\gre@basefactor%
 \newcount\gre@temp@count@one%
 \def\gre@convertto#1#2{%
+	\gre@debug{ifdim #2 = 0pt}
 	\ifdim#2=0pt\relax%
 		\edef\gre@converted{0 #1}%
 	\else%
