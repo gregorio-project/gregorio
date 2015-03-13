@@ -729,9 +729,9 @@
     \fi %
     #9\relax %
     \grepenalty{\greendafterbaraltpenalty }% TODO: isn't it a bit buggy?
-    \gre@degub{ifdim tempdim < -wd(GreSyllablenotes)}
+    \gre@debug{ifdim tempdim < -wd(GreSyllablenotes)}
     \ifdim\gre@tempdim < -\wd\GreSyllablenotes %
-      \gre@degub{ifdim nextbegindifference > 0pt}
+      \gre@debug{ifdim nextbegindifference > 0pt}
       \ifdim\gre@nextbegindifference > 0 pt%
         \gre@temp@skip@one = \gre@interwordspacetextnotes%
         \hskip\gre@temp@skip@one %
