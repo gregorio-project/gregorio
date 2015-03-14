@@ -1685,9 +1685,8 @@
     % we try to avoid line breaking after a flat or a natural
     \grenobreak %
     \ifnum\the\grefirstglyph=1\relax %
-      \gre@temp@dimen@five=\wd\GreTempwidth %
-      \advance\gre@temp@dimen@five by \gre@alterationspace %
-      \global\advance\gre@notesaligncenter by \gre@temp@dimen@five %
+      \global\advance\gre@notesaligncenter by \wd\GreTempwidth %
+      \global\advance\gre@notesaligncenter by \gre@alterationspace %
       \gre@temp@skip@four = \gre@alterationspace%
       \kern\gre@temp@skip@four %
     \else %

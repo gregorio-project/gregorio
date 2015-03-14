@@ -1,0 +1,19 @@
+% !TEX TS-program = LuaLaTeX
+\documentclass[11pt]{article}
+
+\usepackage[debug]{gregoriotex}
+\usepackage[T1]{fontenc}
+
+\begin{document}
+This document is a compilation of all the MWEs for bugs which have been reported.  If the bugs have been fixed, then it should compile without problems.
+
+\textbf{Please do not remove tests from this file.}  If you've found another bug, add another score which demonstrates it.  This way we can easily tell if later fixes are causing old problems to resurface.
+
+
+\section{Issue \#75: New lines causing glues to print}
+\includescore{test75a}
+
+
+\includescore{test75b}
+
+\end{document}

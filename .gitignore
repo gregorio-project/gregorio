@@ -98,3 +98,4 @@ Makevars.template
 POTFILES
 stamp-po
 doc/_minted-UserManual
+*.gtex
