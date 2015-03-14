@@ -174,8 +174,8 @@
      \grelocalrightbox{}%
   \fi\fi %
   % sometimes we need to add a space before ending the line:
-  \gre@temp = \grekernbeforeeol\relax%
-  \kern\gre@temp %
+  \gre@temp@skip@four = \grekernbeforeeol\relax%
+  \kern\gre@temp@skip@four %
   \ifnum\greboxing=0\relax %
     \ifnum\grebiginitial=1\relax %
       \ifcase\greknownline %
@@ -214,13 +214,13 @@
 %% macros for the typesetting of text
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% macro that sets \gre@tempwidth to the width of its argument
+%% macro that sets \gre@temp@dimen@three to the width of its argument
 
 \newbox\GreTempwidth%
 
 \def\grewidthof#1{%
   \setbox\GreTempwidth=\hbox{#1}%
-  \global\gre@tempwidth=\wd\GreTempwidth%
+  \global\gre@temp@dimen@three=\wd\GreTempwidth%
   \relax%
 }%
 
@@ -273,10 +273,10 @@
   \gre@debug{ifdim additionalleftspace = 0pt}%
   \ifdim\gre@additionalleftspace=0pt%
   \else %
-    \gre@tempdim=\gre@stafflinewidth %
+    \gre@temp@dimen@five=\gre@stafflinewidth %
     \global\advance\gre@stafflinewidth by -\gre@additionalleftspace %
     \gregeneratelines %
-    \global\gre@stafflinewidth=\gre@tempdim %
+    \global\gre@stafflinewidth=\gre@temp@dimen@five %
   \fi %
 }%
 
@@ -285,7 +285,7 @@
   \gre@calculate@aboveinitialraise %
   % we print the initial always at the same place, and the we print the GreAboveinitialfirstbox  centered
   % first we print the initial
-  \gre@tempdim=-\gre@textlower %
+  \gre@temp@dimen@five=-\gre@textlower %
   % if it is a big initial we print it on the second line 
   \ifnum\grebiginitial=0\relax %
     \setbox\GreInitial=\hbox{\greinitialformat{#1}}%
@@ -303,14 +303,14 @@
     \ifdim\wd\GreAboveinitialsecondbox>\gre@initialwidth\relax%
       \global\gre@initialwidth=\wd\GreAboveinitialsecondbox%
     \fi%
-    \setbox\GreInitial=\hbox to \gre@initialwidth {\hss\raise -\gre@tempdim\hbox{\greinitialformat{#1}}\hss}%
+    \setbox\GreInitial=\hbox to \gre@initialwidth {\hss\raise -\gre@temp@dimen@five\hbox{\greinitialformat{#1}}\hss}%
   \else %
-    \advance\gre@tempdim by \gre@additionalbottomspace %
-    \advance\gre@tempdim by \gre@spacebeneathtext %
-    \advance\gre@tempdim by \gre@spacelinestext %
-    \advance\gre@tempdim by 4\gre@interstafflinespace %
-    \advance\gre@tempdim by 4\gre@stafflineheight %
-    \advance\gre@tempdim by \gre@currenttranslationheight %
+    \advance\gre@temp@dimen@five by \gre@additionalbottomspace %
+    \advance\gre@temp@dimen@five by \gre@spacebeneathtext %
+    \advance\gre@temp@dimen@five by \gre@spacelinestext %
+    \advance\gre@temp@dimen@five by 4\gre@interstafflinespace %
+    \advance\gre@temp@dimen@five by 4\gre@stafflineheight %
+    \advance\gre@temp@dimen@five by \gre@currenttranslationheight %
     \setbox\GreInitial=\hbox{\grebiginitialformat{#1}}%
     \gre@debug{ifdim manualinitialwidth = 0pt}%
     \ifdim\gre@manualinitialwidth=0 pt\relax%
@@ -326,50 +326,49 @@
     \ifdim\wd\GreAboveinitialsecondbox>\gre@initialwidth\relax%
       \global\gre@initialwidth=\wd\GreAboveinitialsecondbox%
     \fi%
-    \setbox\GreInitial=\hbox{\vbox to 0pt{\hbox to \gre@initialwidth {\hss\raise -\gre@tempdim\hbox{\grebiginitialformat{#1}}\hss}\vss}}%
+    \setbox\GreInitial=\hbox{\vbox to 0pt{\hbox to \gre@initialwidth {\hss\raise -\gre@temp@dimen@five\hbox{\grebiginitialformat{#1}}\hss}\vss}}%
   \fi %
   \ifnum\grebiginitial=0\relax%
-    \greinitialformat{\global\gre@temp = \gre@beforeinitialshift}%
+    \greinitialformat{\global\gre@temp@skip@four = \gre@beforeinitialshift}%
   \else%
-    \grebiginitialformat{\global\gre@temp = \gre@beforeinitialshift}%
+    \grebiginitialformat{\global\gre@temp@skip@four = \gre@beforeinitialshift}%
   \fi%
-  \hskip\gre@temp %
-  \global\advance\gre@initialwidth by \gre@temp %
+  \hskip\gre@temp@skip@four %
+  \global\advance\gre@initialwidth by \gre@temp@skip@four %
   \copy\GreInitial%
   \ifnum\grebiginitial=0\relax%
-    \greinitialformat{\global\gre@temp = \gre@afterinitialshift}%
+    \greinitialformat{\global\gre@temp@skip@four = \gre@afterinitialshift}%
   \else%
-    \grebiginitialformat{\global\gre@temp = \gre@afterinitialshift}%
+    \grebiginitialformat{\global\gre@temp@skip@four = \gre@afterinitialshift}%
   \fi%
-  \hskip\gre@temp %
-  \global\advance\gre@initialwidth by \gre@temp%
+  \hskip\gre@temp@skip@four %
+  \global\advance\gre@initialwidth by \gre@temp@skip@four%
   % then we center the first box above the initial, if there is one
   \gre@debug{ifdim wd(GreAboveinitialfirstbox) = 0pt}%
   \ifdim\wd\GreAboveinitialfirstbox=0 pt\relax %
   \else %
-    \gre@tempdim=\gre@initialwidth %
-    \advance\gre@tempdim by -\wd\GreAboveinitialfirstbox  %
-    \divide\gre@tempdim by 2 %
-    \gre@temp = -\gre@initialwidth%
-    \hskip\gre@temp %
-    \kern\gre@tempdim %
+    \gre@temp@dimen@five=\gre@initialwidth %
+    \advance\gre@temp@dimen@five by -\wd\GreAboveinitialfirstbox  %
+    \divide\gre@temp@dimen@five by 2 %
+    \gre@temp@skip@four = -\gre@initialwidth%
+    \hskip\gre@temp@skip@four %
+    \kern\gre@temp@dimen@five %
     \raise\gre@aboveinitialfirstraise\copy\GreAboveinitialfirstbox  %
-    \kern\gre@tempdim %
+    \kern\gre@temp@dimen@five %
     \setbox\GreAboveinitialfirstbox=\hbox{}%
   \fi %
   % then we center the second box above the initial, if there is one
   \gre@debug{ifdim wd(GreAboveinitialsecondbox) = 0pt}%
   \ifdim\wd\GreAboveinitialsecondbox=0 pt\relax %
   \else %
-    \newskip\gre@tempdim%
-    \gre@tempdim=\gre@initialwidth %
-    \advance\gre@tempdim by -\wd\GreAboveinitialsecondbox %
-    \divide\gre@tempdim by 2 %
-    \gre@temp = -\gre@initialwidth%
-    \hskip\gre@temp %
-    \kern\gre@tempdim %
+    \gre@temp@dimen@five=\gre@initialwidth %
+    \advance\gre@temp@dimen@five by -\wd\GreAboveinitialsecondbox %
+    \divide\gre@temp@dimen@five by 2 %
+    \gre@temp@skip@four = -\gre@initialwidth%
+    \hskip\gre@temp@skip@four %
+    \kern\gre@temp@dimen@five %
     \raise\gre@aboveinitialsecondraise\copy\GreAboveinitialsecondbox %
-    \kern\gre@tempdim %
+    \kern\gre@temp@dimen@five %
     \setbox\GreAboveinitialsecondbox=\hbox{}%
   \fi %
   \relax %
@@ -515,14 +514,14 @@
 
 % typesets the text above the line
 \def\gretypesettextabovelines#1{%
-  \greabovelinestextstyle{\gre@tempdim=\gre@abovelinestextraise} %
-  \advance\gre@tempdim by 4\gre@stafflineheight %
-  \advance\gre@tempdim by 4\gre@interstafflinespace %
-  \advance\gre@tempdim by \gre@spacebeneathtext %
-  \advance\gre@tempdim by \gre@currenttranslationheight %
-  \advance\gre@tempdim by \gre@spacelinestext %
-  \advance\gre@tempdim by \gre@additionalbottomspace %
-  \leavevmode\raise\gre@tempdim\hbox to 0pt{\greabovelinestextstyle{#1}\hss}%
+  \greabovelinestextstyle{\gre@temp@dimen@five=\gre@abovelinestextraise} %
+  \advance\gre@temp@dimen@five by 4\gre@stafflineheight %
+  \advance\gre@temp@dimen@five by 4\gre@interstafflinespace %
+  \advance\gre@temp@dimen@five by \gre@spacebeneathtext %
+  \advance\gre@temp@dimen@five by \gre@currenttranslationheight %
+  \advance\gre@temp@dimen@five by \gre@spacelinestext %
+  \advance\gre@temp@dimen@five by \gre@additionalbottomspace %
+  \leavevmode\raise\gre@temp@dimen@five\hbox to 0pt{\greabovelinestextstyle{#1}\hss}%
   \relax %
 }%
 
@@ -558,22 +557,22 @@
       \else %
         \vskip\gre@stafflineheight %
       \fi %
-      \gre@temp = \gre@interstafflinespace%
-      \kern\gre@temp %
+      \gre@temp@skip@four = \gre@interstafflinespace%
+      \kern\gre@temp@skip@four %
       \ifnum\greremovelinescount=0\relax %
         \hrule height \gre@stafflineheight width \gre@stafflinewidth %
       \else %
         \vskip\gre@stafflineheight %
       \fi %
-      \gre@temp = \gre@interstafflinespace%
-      \kern\gre@temp %
+      \gre@temp@skip@four = \gre@interstafflinespace%
+      \kern\gre@temp@skip@four %
       \ifnum\greremovelinescount=0\relax %
         \hrule height \gre@stafflineheight width \gre@stafflinewidth %
       \else %
         \vskip\gre@stafflineheight %
       \fi %
-      \gre@temp = \gre@interstafflinespace%
-      \kern\gre@temp %
+      \gre@temp@skip@four = \gre@interstafflinespace%
+      \kern\gre@temp@skip@four %
       \ifnum\greremovelinescount=0\relax %
         \hrule height \gre@stafflineheight width \gre@stafflinewidth %
       \else %
@@ -605,22 +604,22 @@
       \else %
         \vskip\gre@stafflineheight %
       \fi %
-      \gre@temp = \gre@interstafflinespace%
-      \kern\gre@temp %
+      \gre@temp@skip@four = \gre@interstafflinespace%
+      \kern\gre@temp@skip@four %
       \ifnum\greremovelinescount=0\relax %
         \hrule height \gre@stafflineheight width \gre@stafflinewidth %
       \else %
         \vskip\gre@stafflineheight %
       \fi %
-      \gre@temp = \gre@interstafflinespace%
-      \kern\gre@temp %
+      \gre@temp@skip@four = \gre@interstafflinespace%
+      \kern\gre@temp@skip@four %
       \ifnum\greremovelinescount=0\relax %
         \hrule height \gre@stafflineheight width \gre@stafflinewidth %
       \else %
         \vskip\gre@stafflineheight %
       \fi %
-      \gre@temp = \gre@interstafflinespace%
-      \kern\gre@temp %
+      \gre@temp@skip@four = \gre@interstafflinespace%
+      \kern\gre@temp@skip@four %
       \ifnum\greremovelinescount=0\relax %
         \hrule height \gre@stafflineheight width \gre@stafflinewidth %
       \else %
@@ -638,10 +637,10 @@
 
 % macro called when the initial is big, and so when the second line is at the same level as the first
 \def\gresmallsecondline{%
-  \gre@tempdim=\gre@stafflinewidth %
+  \gre@temp@dimen@five=\gre@stafflinewidth %
   \global\advance\gre@stafflinewidth by -\gre@initialwidth %
   \gregeneratelines %
-  \global\gre@stafflinewidth=\gre@tempdim %
+  \global\gre@stafflinewidth=\gre@temp@dimen@five %
   \relax %
 }%
 
@@ -678,13 +677,13 @@
   \ifnum\gretranslationcenteringscheme=0\relax %
     \raise\gre@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
   \else %
-    \gre@tempdim=\wd\GreSyllabletext %
+    \gre@temp@dimen@five=\wd\GreSyllabletext %
     \setbox\GreTempwidth=\hbox{#1}%
-    \advance\gre@tempdim by -\wd\GreTempwidth %
-    \divide\gre@tempdim by 2\relax %
-    \kern\gre@tempdim %
+    \advance\gre@temp@dimen@five by -\wd\GreTempwidth %
+    \divide\gre@temp@dimen@five by 2\relax %
+    \kern\gre@temp@dimen@five %
     \raise\gre@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
-    \kern-\gre@tempdim %
+    \kern-\gre@temp@dimen@five %
   \fi %
 }%
 
@@ -728,8 +727,8 @@
     \par %
     % TODO: this line bugs with my version of LuaTeX
     %\grenobreak 
-    \gre@temp = \gre@belowsignsspace%
-    \kern\gre@temp %
+    \gre@temp@skip@four = \gre@belowsignsspace%
+    \kern\gre@temp@skip@four %
     %\grenobreak 
     \noindent %
   \else %
@@ -737,14 +736,14 @@
     \grelocalleftbox{}%
     \grelocalrightbox{}%
     \par %
-    \gre@temp = \gre@abovesignsspace%
-    \kern\gre@temp %
+    \gre@temp@skip@four = \gre@abovesignsspace%
+    \kern\gre@temp@skip@four %
     \noindent\hbox{\directlua{grechiro.printLine()}}%
     \greupdateleftbox %
     \par %
     \grenobreak%
-    \gre@temp = \gre@belowsignsspace%
-    \kern\gre@temp %
+    \gre@temp@skip@four = \gre@belowsignsspace%
+    \kern\gre@temp@skip@four %
     \grenobreak %
     \noindent %
   \fi %
@@ -836,20 +835,20 @@
   \ifdim\gre@enddifference > 0 pt %
     \gre@debug{ifdim nextbegindifference > 0pt}%
     \ifdim\gre@nextbegindifference > 0 pt %
-      \gre@temp = \gre@interwordspacenotes%
-      \hskip\gre@temp %
+      \gre@temp@skip@four = \gre@interwordspacenotes%
+      \hskip\gre@temp@skip@four %
     \else % (next begin difference >0pt)
-      \gre@temp = \gre@interwordspacenotestext%
-      \hskip\gre@temp %
+      \gre@temp@skip@four = \gre@interwordspacenotestext%
+      \hskip\gre@temp@skip@four %
     \fi %
   \else%(enddifference < Opt)
     \gre@debug{ifdim nextbegindifference < 0pt}%
     \ifdim\gre@nextbegindifference < 0 pt %
-      \gre@temp = \gre@interwordspacetext%
-      \hskip\gre@temp %
+      \gre@temp@skip@four = \gre@interwordspacetext%
+      \hskip\gre@temp@skip@four %
     \else %(next begin difference < 0 pt)
-      \gre@temp = \gre@interwordspacetextnotes%
-      \hskip\gre@temp %
+      \gre@temp@skip@four = \gre@interwordspacetextnotes%
+      \hskip\gre@temp@skip@four %
     \fi %
   \fi %
   \global\greendofscore=1 %
@@ -867,20 +866,20 @@
     \ifdim\gre@enddifference > 0 pt %
       \gre@debug{ifdim nextbegindifference > 0pt}%
       \ifdim\gre@nextbegindifference > 0 pt %
-        \gre@temp = \gre@interwordspacenotes%
-        \grehskip\gre@temp %
+        \gre@temp@skip@four = \gre@interwordspacenotes%
+        \grehskip\gre@temp@skip@four %
       \else % (next begin difference >0pt)
-        \gre@temp = \gre@interwordspacenotestext%
-        \grehskip\gre@temp %
+        \gre@temp@skip@four = \gre@interwordspacenotestext%
+        \grehskip\gre@temp@skip@four %
       \fi %
     \else %(enddifference < Opt)
       \gre@debug{ifdim nextbegindifference < 0pt}%
       \ifdim\gre@nextbegindifference < 0 pt %
-        \gre@temp = \gre@interwordspacetext%
-        \grehskip\gre@temp %
+        \gre@temp@skip@four = \gre@interwordspacetext%
+        \grehskip\gre@temp@skip@four %
       \else %(next begin difference < 0 pt)
-        \gre@temp = \gre@interwordspacetextnotes%
-        \grehskip\gre@temp %
+        \gre@temp@skip@four = \gre@interwordspacetextnotes%
+        \grehskip\gre@temp@skip@four %
       \fi %
     \fi %
   \fi %
@@ -896,20 +895,20 @@
     \ifdim\gre@enddifference > 0 pt %
       \gre@debug{ifdim nextbegindifference > 0pt}%
       \ifdim\gre@nextbegindifference > 0 pt %
-        \gre@temp = \gre@notebarspace%
-        \grehskip\gre@temp %
+        \gre@temp@skip@four = \gre@notebarspace%
+        \grehskip\gre@temp@skip@four %
       \else % (next begin difference >0pt)
-        \gre@temp = \gre@textbartextspace%
-        \grehskip\gre@temp %
+        \gre@temp@skip@four = \gre@textbartextspace%
+        \grehskip\gre@temp@skip@four %
       \fi %
     \else%(enddifference < Opt)
       \gre@debug{ifdim nextbegindifference < 0pt}%
       \ifdim\gre@nextbegindifference < 0 pt %
-        \gre@temp = \gre@textbartextspace%
-        \grehskip\gre@temp %
+        \gre@temp@skip@four = \gre@textbartextspace%
+        \grehskip\gre@temp@skip@four %
       \else %(next begin difference < 0 pt)
-        \gre@temp = \gre@interwordspacetextnotes%
-        \grehskip\gre@temp %
+        \gre@temp@skip@four = \gre@interwordspacetextnotes%
+        \grehskip\gre@temp@skip@four %
       \fi %
     \fi %
   \fi %
@@ -926,20 +925,20 @@
     \ifdim\gre@enddifference > 0 pt %
       \gre@debug{ifdim nextbegindifference > 0pt}%
       \ifdim\gre@nextbegindifference > 0 pt %
-        \gre@temp = \gre@notebarspace%
-        \grehskip\gre@temp %
+        \gre@temp@skip@four = \gre@notebarspace%
+        \grehskip\gre@temp@skip@four %
       \else % (next begin difference >0pt)
-        \gre@temp = \gre@textbartextspace%
-        \grehskip\gre@temp %
+        \gre@temp@skip@four = \gre@textbartextspace%
+        \grehskip\gre@temp@skip@four %
       \fi %
     \else%(enddifference < Opt)
       \gre@debug{ifdim nextbegindifference < 0pt}%
       \ifdim\gre@nextbegindifference < 0 pt %
-        \gre@temp = \gre@textbartextspace%
-        \grehskip\gre@temp %
+        \gre@temp@skip@four = \gre@textbartextspace%
+        \grehskip\gre@temp@skip@four %
       \else %(next begin difference < 0 pt)
-        \gre@temp = \gre@interwordspacetextnotes%
-        \grehskip\gre@temp %
+        \gre@temp@skip@four = \gre@interwordspacetextnotes%
+        \grehskip\gre@temp@skip@four %
       \fi %
     \fi %
   \fi %
@@ -1011,14 +1010,14 @@
     \grenobreak %
   \fi %
   \ifcase#1%
-    \gre@temp = \gre@interelementspace%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@interelementspace%
+    \grehskip\gre@temp@skip@four %
   \or% case 1
-    \gre@temp = \gre@largerspace%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@largerspace%
+    \grehskip\gre@temp@skip@four %
   \or% case 2
-    \gre@temp = \gre@glyphspace%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@glyphspace%
+    \grehskip\gre@temp@skip@four %
   \fi%
   \ifnum #2=1\relax %
     \grenobreak %
@@ -1044,41 +1043,41 @@
 \def\greendofglyph#1{%
   \grenobreak %
   \ifcase#1%
-    \gre@temp = \gre@interglyphspace%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@interglyphspace%
+    \grehskip\gre@temp@skip@four %
   \or% case 1
-    \gre@temp = \gre@zerowidthspace%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@zerowidthspace%
+    \grehskip\gre@temp@skip@four %
   \or% case 2
-    \gre@temp = \gre@alterationspace%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@alterationspace%
+    \grehskip\gre@temp@skip@four %
   \or% case 3
-    \gre@temp = \gre@punctuminclinatumshift%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@punctuminclinatumshift%
+    \grehskip\gre@temp@skip@four %
   \or% case 4
-    \gre@temp = \gre@bitrivirspace%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@bitrivirspace%
+    \grehskip\gre@temp@skip@four %
   \or% case 5
-    \gre@temp = \gre@bitristrospace%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@bitristrospace%
+    \grehskip\gre@temp@skip@four %
   \or% case 6
-    \gre@temp = \gre@spaceaftersigns%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@spaceaftersigns%
+    \grehskip\gre@temp@skip@four %
   \or% case 7
-    \gre@temp = \gre@punctuminclinatumanddebilisshift%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@punctuminclinatumanddebilisshift%
+    \grehskip\gre@temp@skip@four %
   \or% case 8
-    \gre@temp = \gre@punctuminclinatumdebilisshift%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@punctuminclinatumdebilisshift%
+    \grehskip\gre@temp@skip@four %
   \or% case 9
-    \gre@temp = \gre@beforepunctainclinatashift%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@beforepunctainclinatashift%
+    \grehskip\gre@temp@skip@four %
   \or% case 10
-    \gre@temp = \gre@punctuminclinatumbigshift%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@punctuminclinatumbigshift%
+    \grehskip\gre@temp@skip@four %
   \or% case 11
-    \gre@temp = \gre@punctuminclinatummaxshift%
-    \grehskip\gre@temp %
+    \gre@temp@skip@four = \gre@punctuminclinatummaxshift%
+    \grehskip\gre@temp@skip@four %
   \fi%
   \grenobreak %
   \relax%
@@ -1210,9 +1209,9 @@
 
 \def\setgregoriofont#1{%
   \xdef\gregoriofontname{#1}%
-  \gre@tempdimcount = \the\grefactor %
-  \multiply\gre@tempdimcount by 100000 %
-  \global\font\gregoriofont="name:#1" at \the\gre@tempdimcount sp%
+  \gre@temp@count@three = \the\grefactor %
+  \multiply\gre@temp@count@three by 100000 %
+  \global\font\gregoriofont="name:#1" at \the\gre@temp@count@three sp%
   \relax%
 }%
 
@@ -1220,9 +1219,9 @@
 
 % gregoriostylefont is the font used for additional glyphs
 \def\gresetstylefont{%
-  \gre@tempdimcount = \the\grefactor %
-  \multiply\gre@tempdimcount by 100000\relax %
-  \global\font\gregoriostylefont="name:greextra" at \the\gre@tempdimcount sp%
+  \gre@temp@count@three = \the\grefactor %
+  \multiply\gre@temp@count@three by 100000\relax %
+  \global\font\gregoriostylefont="name:greextra" at \the\gre@temp@count@three sp%
   \relax%
 }%
 

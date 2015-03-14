@@ -289,59 +289,59 @@
   \global\greisonaline=\number 0%
   % z is the very special case of vertical episemus on the lowest note
   \if z\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 0%
+    \gre@temp@count@three=\number 0%
   \fi%
   \if a\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 1%
+    \gre@temp@count@three=\number 1%
     \fi%
   \if b\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 2%
+    \gre@temp@count@three=\number 2%
     \ifnum#2=3\relax %
     \else %
       \global\greisonaline=1 % if it is a vertical episemus, we don't care if it is on a line or not... which may cause some problems...
     \fi %
   \fi%
   \if c\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 3%
+    \gre@temp@count@three=\number 3%
   \fi%
   \if d\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 4%
+    \gre@temp@count@three=\number 4%
     \global\greisonaline=1 %
   \fi%
   \if e\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 5%
+    \gre@temp@count@three=\number 5%
   \fi%
   \if f\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 6%
+    \gre@temp@count@three=\number 6%
     \global\greisonaline=1 %
   \fi%
   \if g\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 7%
+    \gre@temp@count@three=\number 7%
   \fi%
   \if h\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 8 %
+    \gre@temp@count@three=\number 8 %
     \global\greisonaline=1 %
   \fi%
   \if i\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 9%
+    \gre@temp@count@three=\number 9%
   \fi%
   \if j\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 10%
+    \gre@temp@count@three=\number 10%
     \global\greisonaline=1 %
   \fi%
   \if k\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 11%
+    \gre@temp@count@three=\number 11%
   \fi%
   \if l\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 12%
+    \gre@temp@count@three=\number 12%
     \global\greisonaline=1 %
   \fi%
   \if m\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 13%
+    \gre@temp@count@three=\number 13%
   \fi%
   % n is only useful for horizontal episemus and rare signs (signs below k have m as first argument, and above have n)
   \if n\grefirstcar#1\endgrefirstchar %
-    \gre@tempdimcount=\number 14%
+    \gre@temp@count@three=\number 14%
   \fi%
   % if there is not line... we don't consider notes are on lines
   \ifnum\greremovelinescount=1\relax %
@@ -351,31 +351,31 @@
   \ifcase\greisonaline\or% isonaline = 1
     \ifcase#2 %
     \or% 1
-      \global\advance\gre@tempdimcount by 1%
+      \global\advance\gre@temp@count@three by 1%
     \or% 2
-      \global\advance\gre@tempdimcount by -1%
+      \global\advance\gre@temp@count@three by -1%
     \or% 3
-      \global\advance\gre@tempdimcount by -1%
+      \global\advance\gre@temp@count@three by -1%
     \or% 4
-      \global\advance\gre@tempdimcount by 1%
+      \global\advance\gre@temp@count@three by 1%
     \or% 5
-      \global\advance\gre@tempdimcount by -1%
+      \global\advance\gre@temp@count@three by -1%
     \or\or\or % 8
-      \global\advance\gre@tempdimcount by -1%
+      \global\advance\gre@temp@count@three by -1%
     \or % 9
-      \global\advance\gre@tempdimcount by 1%
+      \global\advance\gre@temp@count@three by 1%
     \or % 10
-      \global\advance\gre@tempdimcount by 1%
+      \global\advance\gre@temp@count@three by 1%
     \or % 11
-      \global\advance\gre@tempdimcount by 1%
+      \global\advance\gre@temp@count@three by 1%
     \or % 12
-      \global\advance\gre@tempdimcount by -1%
+      \global\advance\gre@temp@count@three by -1%
     \fi%
   \fi%
-  \global\advance\gre@tempdimcount by -7 %
+  \global\advance\gre@temp@count@three by -7 %
   \global\gre@glyphraisevalue = 15750 sp %
   \global\multiply\gre@glyphraisevalue by \the\grefactor %
-  \global\multiply\gre@glyphraisevalue by \the\gre@tempdimcount %
+  \global\multiply\gre@glyphraisevalue by \the\gre@temp@count@three %
   \gre@addedraisevalue= 0 sp%
   \ifcase#2 % 
   \or\or\or%3: if it is a vertical episemus on a line, we shift it a bit higher, so that it's more beautiful
@@ -523,14 +523,14 @@
   \else %
     \grewidthof{\grefixednexttextformat{#1#2}}%
   \fi %
-  \global\gre@textaligncenter=\the\gre@tempwidth %
+  \global\gre@textaligncenter=\the\gre@temp@dimen@three %
   \ifnum#3=0\relax%
     \grewidthof{\grefixedtextformat{#2}}%
   \else %
     \grewidthof{\grefixednexttextformat{#2}}%
   \fi %
-  \divide\gre@tempwidth by 2 %
-  \global\advance\gre@textaligncenter by -\the\gre@tempwidth%
+  \divide\gre@temp@dimen@three by 2 %
+  \global\advance\gre@textaligncenter by -\the\gre@temp@dimen@three%
   \relax%
 }%
 
@@ -592,14 +592,14 @@
 %% 4 : the type of notes alignment
 \def\gre@calculate@nextbegindifference#1#2#3#4{%
   %to prevent the pollution of the normal values, we stock them into a temp value
-  \gre@tempdimskip=\gre@textaligncenter %
+  \gre@temp@skip@two=\gre@textaligncenter %
   \gre@calculate@textaligncenter{#1}{#2}{1}%
   \global\gre@nextbegindifference=-\gre@textaligncenter %
-  \global\gre@textaligncenter=\gre@tempdimskip %
-  \gre@tempdimskip=\gre@notesaligncenter %
+  \global\gre@textaligncenter=\gre@temp@skip@two %
+  \gre@temp@skip@two=\gre@notesaligncenter %
   \grefindnextnotesaligncenter{#4}% idem
   \global\advance\gre@nextbegindifference by \the\gre@notesaligncenter %
-  \global\gre@notesaligncenter=\gre@tempdimskip %
+  \global\gre@notesaligncenter=\gre@temp@skip@two %
   \relax %
 }%
 
@@ -649,18 +649,21 @@
 \gre@currentabovelinestextheight = 0pt%
 
 %% TODO: perhaps create a pair of functions which “reserve” and “release” the temporary registers in order to keep track of which ones are in use when.  There would also need to be a list of the registers currently in use.  The reserve function would then check the list to make sure the requested register isn’t already in use, throwing an error if it is and adding its name to the list if it isn’t.  It might also provide for an alias (via \let).  The release function would simply remove the register from the list of those in use.
-% temporary spaces used in calculations (unrevised)
-\newdimen\gre@tempwidth%
-\newdimen\gre@tempdimsignwidth%
-\newdimen\gre@tempdimtwo%
-\newdimen\gre@tempdim%
-\newskip\gre@tempdimskip % couldn't we use another existing temp* ? maybe not
-\newskip\gre@skipone%
-\newskip\gre@temp%
-\newcount\gre@tempdimcount%
 % Register allocation is an inherently global process in TeX.  Below are the registers used within calculations on a temporary basis.
 \newdimen\gre@temp@dimen@one%
-\newdimen\gre@temp@skip@one%
+\newdimen\gre@temp@dimen@two%
+\newdimen\gre@temp@dimen@three%
+\newdimen\gre@temp@dimen@four%
+\newdimen\gre@temp@dimen@five%
+
+\newskip\gre@temp@skip@one%
+\newskip\gre@temp@skip@two %
+\newskip\gre@temp@skip@three%
+\newskip\gre@temp@skip@four%
+
+\newcount\gre@temp@count@one%
+\newcount\gre@temp@count@two%
+\newcount\gre@temp@count@three%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% dimension changing macros
@@ -793,7 +796,6 @@
 \newdimen\gre@maxlen%
 \newcount\gre@unitfactor%
 \newcount\gre@basefactor%
-\newcount\gre@temp@count@one%
 \def\gre@convertto#1#2{%
 	\gre@debug{ifdim #2 = 0pt}
 	\ifdim#2=0pt\relax%
@@ -877,7 +879,6 @@
 %% this function changes all the values of the spaces (vertical and horizontal) from one factor to another
 %% simply by dividing them by the old factor, and multiplying them by the new one.
 % #1 is the old grefactor, #2 is the new one
-\newcount\gre@temp@count@two%
 \def\gre@changedimenfactor#1#2{%
 	\gre@changeonedimenfactor{additionallineswidth}{#1}{#2}%
 	\gre@changeonedimenfactor{additionalcustoslineswidth}{#1}{#2}%
