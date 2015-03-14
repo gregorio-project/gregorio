@@ -1016,3 +1016,15 @@
 	}%
 \fi%
 
+
+% #1: penalty
+% #2: space if in middle of a line
+% #3: space if line cuts at penalty
+\def\grepenaltyandspace#1#2#3{%
+  \grepenalty{#1}%
+  \ifdim#3=0pt%
+    \grehskip{#2}%
+  \else %
+    \grediscretionary{#2}{#3}%
+  \fi %
+}

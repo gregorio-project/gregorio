@@ -391,6 +391,35 @@
 %% by default we use the 3rd mode, it seems closest to Solesmes books
 \clivisalignmentspecial%
 
+% dimen keeping the shift computed with next function
+\newskip\gre@bolshift
+
+\def\gre@compute@bolshift#1#2{%
+  \global\gre@bolshift=\gre@spaceafterlineclef % TODO: or 0pt?
+  \global\advance\gre@bolshift by #1%
+  % a little trick... we don't want to kern more than clefwidth minus minimalspaceatlinebeginning
+  \advance\gre@clefwidth by -\gre@minimalspaceatlinebeginning %
+  \ifdim\gre@bolshift <-\gre@clefwidth %
+    \global\gre@bolshift=-\gre@clefwidth %
+  \fi %
+  \advance\gre@clefwidth by \gre@minimalspaceatlinebeginning %
+  \global\advance\gre@bolshift by -\gre@spaceafterlineclef %
+  \ifdim\gre@bolshift < #1%
+    \global\gre@bolshift=\the #1%
+  \fi %
+  % Don't allow kern past the beginning of the first line with no initial
+  \ifnum#2=1%
+    \ifdim\gre@initialwidth = 0pt %
+      \ifnum\greknownline=1 %
+        \global\advance\gre@bolshift by \gre@clefwidth %
+      \fi %
+    \fi %
+  \fi %
+  \ifdim\gre@bolshift > 0pt%
+    \global\gre@bolshift=0pt%
+  \fi %
+}
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : the first letters of the syllable, that don't count for the alignment
 % #2 : the middle letters of the syllable, we must align in the middle of them
@@ -432,49 +461,30 @@
   % there must be at least a certain space between the key and the first note. The first letter can be beneath the key, but not to the left
   \ifnum\grelastoflinecount=2\relax %
     \ifnum\gredisableeolshifts=0\relax%
-      \gre@tempdim=\gre@intersyllablespace %
-      \advance\gre@tempdim by \gre@begindifference %
-      % a little trick... we don't want to kern more than clefwidth minus minimalspaceatlinebeginning
-      \advance\gre@clefwidth by -\gre@minimalspaceatlinebeginning %
-      \ifdim\gre@tempdim <-\gre@clefwidth %
-        \gre@tempdim=-\gre@clefwidth %
-      \fi %
-      \advance\gre@clefwidth by \gre@minimalspaceatlinebeginning %
-      \hbox{}%
-      \advance\gre@tempdim by -\gre@spaceafterlineclef %
-      \ifdim\gre@tempdim < \gre@begindifference %
-        \gre@tempdim=\the\gre@begindifference %
-      \fi %
-      % Don't allow kern past the beginning of the first line with no initial
-      \ifdim\gre@initialwidth = 0pt %
-        \ifnum\greknownline=1 %
-          \advance\gre@tempdim by \gre@clefwidth %
-        \fi %
-      \fi %
-      \ifdim\gre@tempdim < 0pt%
-        \kern\gre@tempdim %
-      \fi %
-      %\hskip\gre@afterclefnospace 
+      \gre@compute@bolshift{\gre@begindifference}{1}%
+      \showthe\gre@bolshift %
+      \kern\gre@bolshift %
     \fi %
   \else %\ifnum\grelastoflinecount=2
     % then we do a kind of trick to separate more the notes of two different syllables : we put a space if we are in the same word (enddifference!=0) if necessary
     % there are two cases according to the sign of enddifference
     % and we do it only if it is not the first syllable of a word
     % but we must not do it when there is a bar before... so when there is a bar enddifference = 0
-    \ifnum\grefirstsyllableofword=0 %
-      \gre@tempdim=\gre@intersyllablespace %
-      \advance\gre@tempdim by \gre@begindifference %
-      \ifdim\gre@enddifference<0pt%
-        \advance\gre@tempdim by \gre@enddifference %
-      \fi % \ifdim\gre@enddifference>0pt
-      \ifnum\grefirstisalteration=1\relax %
-        \advance\gre@tempdim by \gre@beforealterationspace %
-        \global\grefirstisalteration=0\relax %
-      \fi % \ifnum\grefirstisalteration=1
-      \ifdim\gre@tempdim>0pt %
-        \hskip\gre@tempdim %
-      \fi %
-    \fi %
+    % XXX NO IDEA WHAT THIS IS!
+%    \ifnum\grefirstsyllableofword=0 %
+%      \gre@tempdim=\gre@intersyllablespace %
+%      \advance\gre@tempdim by \gre@begindifference %
+%      \ifdim\gre@enddifference<0pt%
+%        \advance\gre@tempdim by \gre@enddifference %
+%      \fi % \ifdim\gre@enddifference>0pt
+%      \ifnum\grefirstisalteration=1\relax %
+%        \advance\gre@tempdim by \gre@beforealterationspace %
+%        \global\grefirstisalteration=0\relax %
+%      \fi % \ifnum\grefirstisalteration=1
+%      \ifdim\gre@tempdim>0pt %
+%        \hskip\gre@tempdim %
+%      \fi %
+%    \fi %
   \fi %
   % by default, gregorioattr will be 2
   \gregorioattr=2\relax %
