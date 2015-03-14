@@ -435,31 +435,31 @@
   % there must be at least a certain space between the key and the first note. The first letter can be beneath the key, but not to the left
   \ifnum\grelastoflinecount=2\relax %
     \ifnum\gredisableeolshifts=0\relax%
-      \gre@temp@dimen@five=\gre@intersyllablespace %
-      \advance\gre@temp@dimen@five by \gre@begindifference %
+      \gre@temp@skip@one=\gre@intersyllablespace %
+      \advance\gre@temp@skip@one by \gre@begindifference %
       % a little trick... we don't want to kern more than clefwidth minus minimalspaceatlinebeginning
       \advance\gre@clefwidth by -\gre@minimalspaceatlinebeginning %
-      \gre@debug{ifdim tempdim < -clefwidth}%
-      \ifdim\gre@temp@dimen@five <-\gre@clefwidth %
-        \gre@temp@dimen@five=-\gre@clefwidth %
+      \gre@debug{ifdim temp@skip@one < -clefwidth}%
+      \ifdim\gre@temp@skip@one <-\gre@clefwidth %
+        \gre@temp@skip@one=-\gre@clefwidth %
       \fi %
       \advance\gre@clefwidth by \gre@minimalspaceatlinebeginning %
       \hbox{}%
-      \advance\gre@temp@dimen@five by -\gre@spaceafterlineclef %
-      \gre@debug{ifdim gre@temp@dimen@five < gre@begindifference}%
-      \ifdim\gre@temp@dimen@five < \gre@begindifference %
-        \gre@temp@dimen@five=\the\gre@begindifference %
+      \advance\gre@temp@skip@one by -\gre@spaceafterlineclef %
+      \gre@debug{ifdim gre@temp@skip@one < gre@begindifference}%
+      \ifdim\gre@temp@skip@one < \gre@begindifference %
+        \gre@temp@skip@one=\the\gre@begindifference %
       \fi %
       % Don't allow kern past the beginning of the first line with no initial
       \gre@debug{ifdim initialwidth < 0pt}%
       \ifdim\gre@initialwidth = 0pt %
         \ifnum\greknownline=1 %
-          \advance\gre@temp@dimen@five by \gre@clefwidth %
+          \advance\gre@temp@skip@one by \gre@clefwidth %
         \fi %
       \fi %
-      \gre@debug{ifdim tempdim < 0pt}%
-      \ifdim\gre@temp@dimen@five < 0pt%
-        \kern\gre@temp@dimen@five %
+      \gre@debug{ifdim temp@skip@one < 0pt}%
+      \ifdim\gre@temp@skip@one < 0pt%
+        \kern\gre@temp@skip@one %
       \fi %
       %\hskip\gre@afterclefnospace 
     \fi %
@@ -469,19 +469,19 @@
     % and we do it only if it is not the first syllable of a word
     % but we must not do it when there is a bar before... so when there is a bar enddifference = 0
     \ifnum\grefirstsyllableofword=0 %
-      \gre@temp@dimen@five=\gre@intersyllablespace %
-      \advance\gre@temp@dimen@five by \gre@begindifference %
+      \gre@temp@skip@one=\gre@intersyllablespace %
+      \advance\gre@temp@skip@one by \gre@begindifference %
       \gre@debug{ifdim enddifference < 0pt}%
       \ifdim\gre@enddifference<0pt%
-        \advance\gre@temp@dimen@five by \gre@enddifference %
+        \advance\gre@temp@skip@one by \gre@enddifference %
       \fi % \ifdim\gre@enddifference>0pt
       \ifnum\grefirstisalteration=1\relax %
-        \advance\gre@temp@dimen@five by \gre@beforealterationspace %
+        \advance\gre@temp@skip@one by \gre@beforealterationspace %
         \global\grefirstisalteration=0\relax %
       \fi % \ifnum\grefirstisalteration=1
-      \gre@debug{ifdim tempdim > 0pt}%
-      \ifdim\gre@temp@dimen@five>0pt %
-        \hskip\gre@temp@dimen@five %
+      \gre@debug{ifdim temp@skip@one > 0pt}%
+      \ifdim\gre@temp@skip@one>0pt %
+        \hskip\gre@temp@skip@one %
       \fi %
     \fi %
   \fi %
@@ -495,31 +495,31 @@
   \ifcase#4 %
     % we enter here if the end of word is 0, so we must determine if we need to type a dash here
     % we set gretempdim to the actual space between the text of the two syllables. The algorithm is quite complex, but quite similar to the one computing the space between the two syllables several lines above.
-    \gre@temp@dimen@five=\gre@intersyllablespace %
-    \advance\gre@temp@dimen@five by \gre@nextbegindifference %
+    \gre@temp@skip@one=\gre@intersyllablespace %
+    \advance\gre@temp@skip@one by \gre@nextbegindifference %
     \gre@debug{ifdim enddifference < 0pt}%
     \ifdim\gre@enddifference<0pt%
-      \advance\gre@temp@dimen@five by \gre@enddifference %
+      \advance\gre@temp@skip@one by \gre@enddifference %
     \fi % \ifdim\gre@enddifference>0pt
     % there is a small """feature""" here: if the first glyph is an alteration, the algorithm will be quite pessimistic
     % about the space, so an hyphen may be added when it's not really necessary.
-    \gre@debug{ifdim tempdim < 0pt}%
-    \ifdim\gre@temp@dimen@five<0pt%
-      \gre@temp@dimen@five=0pt%
+    \gre@debug{ifdim temp@skip@one < 0pt}%
+    \ifdim\gre@temp@skip@one<0pt%
+      \gre@temp@skip@one=0pt%
     \fi %
     \gre@debug{ifdim enddifference > 0pt}%
     \ifdim\gre@enddifference >0pt%
-      \advance\gre@temp@dimen@five by \gre@enddifference %
+      \advance\gre@temp@skip@one by \gre@enddifference %
     \fi %
     \gre@debug{ifdim nextbegindifference > 0pt}%
     \ifdim\gre@nextbegindifference >0pt%
-      \advance\gre@temp@dimen@five by \gre@nextbegindifference %
+      \advance\gre@temp@skip@one by \gre@nextbegindifference %
     \fi %
     %
     % then we compare it with \gre@maximumspacewithoutdash, if it is larger, we add a dash
     %
-    \gre@debug{ifdim tempdim > maximumspacewithoutdash}%
-    \ifdim\gre@temp@dimen@five>\gre@maximumspacewithoutdash %
+    \gre@debug{ifdim temp@skip@one > maximumspacewithoutdash}%
+    \ifdim\gre@temp@skip@one>\gre@maximumspacewithoutdash %
       % if it's the last syllable of line, the hyphen will be \grehyph
       \ifnum\grelastoflinecount=1\relax %
         \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart\grehyph\relax}}%
@@ -557,22 +557,22 @@
   \ifnum\grelastoflinecount=1\relax %
     \gre@debug{ifdim enddifference < 0pt}%
     \ifdim\gre@enddifference <0pt%
-      \gre@temp@dimen@five=-\gre@enddifference %
+      \gre@temp@skip@one=-\gre@enddifference %
       % we don't do it if it's the last syllable of a score or if the user disabled it
       \ifnum\gredisableeolshifts=0\relax %
         \ifnum\greblockcusto=1\else %
           \setbox\GreTempwidth=\hbox{\grecustochar{g}}%
           \gre@temp@dimen@three=\wd\GreTempwidth %
-          \advance\gre@temp@dimen@five by -\gre@temp@dimen@three %
-          \advance\gre@temp@dimen@five by -\gre@spacebeforecusto %
+          \advance\gre@temp@skip@one by -\gre@temp@dimen@three %
+          \advance\gre@temp@skip@one by -\gre@spacebeforecusto %
         \fi %
-        \advance\gre@temp@dimen@five by \gre@minimalspaceatlinebeginning %
+        \advance\gre@temp@skip@one by \gre@minimalspaceatlinebeginning %
       \fi %
-      \gre@debug{ifdim tempdim < -enddifference}%
-      \ifdim\gre@temp@dimen@five <-\gre@enddifference %
-        \gre@temp@dimen@five=-\the\gre@enddifference %
+      \gre@debug{ifdim temp@skip@one < -enddifference}%
+      \ifdim\gre@temp@skip@one <-\gre@enddifference %
+        \gre@temp@skip@one=-\the\gre@enddifference %
       \fi %
-      \xdef\grekernbeforeeol{\the\gre@temp@dimen@five\relax}%
+      \xdef\grekernbeforeeol{\the\gre@temp@skip@one\relax}%
     \fi %
   \fi%
   \grenobreak % no line breaks between text and notes
