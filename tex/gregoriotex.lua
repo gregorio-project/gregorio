@@ -214,17 +214,14 @@ local function compile_gabc(gabc_file, gtex_file)
 end
 
 local function include_score(input_file)
-    local file_root = ""
-    if input_file:gmatch("%.gtex+$") then
-	file_root = input_file:gsub("%.gtex+$", "")
-    end
-    if input_file:gmatch("%.tex+$") then
-	file_root = input_file:gsub("%.tex+$", "")
-    end
-    if input_file:gmatch("%.gabc+$") then
-	file_root = input_file:gsub("%.gabc+$", "")
-    end
-    if file_root == "" then
+    local file_root
+    if string.match(input_file:sub(-5), '%.gtex') then
+	file_root = input_file:sub(1,-6)
+    elseif string.match(input_file:sub(-4), '%.tex') then
+	file_root = input_file:sub(1,-5)
+    elseif string.match(input_file:sub(-5), '%.gabc') then
+	file_root = input_file:sub(1,-6)
+    elseif not file_root then
 	file_root = input_file
     end
     local gtex_file = file_root.."-"..internalversion..".gtex"
