@@ -1248,14 +1248,36 @@
 %% score including
 %%%%%%%%%%%%%%%%%%%
 
+% BOOL to track whether to force the recompiling of gabc files or not.
+\newif\if@gabcforcecompile%
+
+% User macro to force gregriotex to recompile gabc files. Useful for when there
+% are changes to gregoriotex but the GREGORIOTEX API VERSION is not changed.
+\def\forcegabccompile{%
+  \@gabcforcecompiletrue%
+}%
+
+% User macro to let gregoriotex auto recompile gabc files as necessary.
+% Intended to be used in the main tex file to revert the previous macro.
+\def\normalgabccompile{%
+  \@gabcforcecompilefalse%
+}%
+
 % The primary macro that includes a score. The lua function check that:
 %  -- The gtex file exists.
 %  -- The gtex file is of the correct gregoriotexapi_version.
 %  -- The gtex file is 'newer' than it's corresponding gabc file.
 % If either test fails, the gabc file is (re)compiled.
+%
+% If the \recompilegabc macro is in effect, pass true to the lua function.
+% This forces gregoriotex to recompile the gabc file.
 
 \def\gre@includescore#1{%
-  \directlua{gregoriotex.include_score([[#1]])}%
+  \if@gabcforcecompile%
+    \directlua{gregoriotex.include_score([[#1]], true)}%
+  \else%
+    \directlua{gregoriotex.include_score([[#1]], nil)}%
+  \fi%
   \relax%
 }%
 
