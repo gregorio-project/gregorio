@@ -21,6 +21,10 @@
 
 \input gregoriotex.tex
 
+\DeclareOption{debug}{\debugtrue}
+\ExecuteOptions{}
+\ProcessOptions\relax
+
 % we hide lines only under LaTeX
 \GreHideAltLines
 \GreHidePCLines

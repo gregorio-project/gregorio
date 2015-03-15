@@ -1,0 +1,445 @@
+% !TEX root = UserManual.tex
+\section{User Controls}
+
+These functions are available to the user to customize elements of the
+score which cannot be controlled from the gabc file. They can be added
+to any \verb=.tex= file. Do not add them to any \verb=.gtex= or
+\verb=.gabc= file.
+
+\subsection{Commands}
+
+In general, commands should not be modified.  Exceptions are noted below.
+
+\macroname{\textbackslash includescore[\#1]\{\#2\}}{gregoriotex.tex}
+%\verb=\includescore#1=%tex.tex
+Macro for including scores.  Works on both gabc and tex files.
+
+\begin{argtable}
+  \#1 & character& Optional.  Should be ``\texttt{f}''.  Bypasses compilation checks.\\
+  \#2 & string & Relative or absolute path to the score.\\
+\end{argtable}
+
+Example:\par\medskip
+\begin{latexcode}
+  \includescore[f]{TecumPrincipium.tex}
+  \includescore{Chant/VirgoVirginum.gabc}
+  \includescore{/home/user/chant/AdTeLevavi}
+
+  %The following lines include the same score:
+  \includescore{Christus}
+  \includescore{Christus.gtex}
+  \includescore{./Christus}
+  \includescore{./Christus.gabc}
+\end{latexcode}
+
+\macroname{\textbackslash englishcentering}{gregoriotex-syllable.tex}
+Changes settings to align syllables in the English style (center of syllable aligns with center of first glyph in neume).  Will only affect scores which do not have “centering-scheme: english;” in their gabc header.
+
+\macroname{\textbackslash defaultcentering}{gregoriotex-syllable.tex}
+Changes settings to align syllables in the Latin style (center of vowel aligns with center of first glyph in neume).  Will only affect scores which do not have “centering-scheme: english;” in their gabc header.  
+
+Default.
+
+\macroname{\textbackslash gresetdim\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-spaces.tex}
+Macro to set one of gregoriotex’s distances.  Does not update dependent distances.  Used primarily to initialize distances in a space configuration file.  This function if \texttt{gre} prefixed to highlight that it should not be used for distances not defined in Gregorio\TeX.
+
+\begin{argtable}
+\#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
+\#2 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+\#3 & 0 & Distance will not scale when staff size is changed.\\
+& 1 & Distance will scale when staff size is changed.
+\end{argtable}
+
+\macroname{\textbackslash grechangedim\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-spaces.tex}
+Macro to change one of gregoriotex’s distances and update any dependent distances.  This function if \texttt{gre} prefixed to highlight that it should not be used for distances not defined in Gregorio\TeX.
+
+\begin{argtable}
+\#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
+\#2 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+\#3 & 0 & Distance will not scale when staff size is changed.\\
+& 1 & Distance will scale when staff size is changed.
+\end{argtable}
+
+\macroname{\textbackslash grenoscaledim\{\#1\}}{gregoriotex-spaces.tex}
+Macro to turn off scaling for a particular distance.  This function if \texttt{gre} prefixed to highlight that it should not be used for distances not defined in Gregorio\TeX.
+
+\begin{argtable}
+  \#1 & string & The name of the distance for which scaling it to be turned off.  See \nameref{distances} below.
+\end{argtable}
+
+\macroname{\textbackslash grescaledim\{\#1\}}{gregoriotex-spaces.tex}
+Macro to turn on scaling for a particular distance.  This function if \texttt{gre} prefixed to highlight that it should not be used for distances not defined in Gregorio\TeX.
+
+\begin{argtable}
+  \#1 & string & The name of the distance for which scaling it to be turned on.  See \nameref{distances} below.
+\end{argtable}
+
+\macroname{\textbackslash GreLoadSpaceConf\{\#1\}}{gregoriotex-spaces.tex}
+Macro to load a space configuration file.  Space configuration file names have the format \verb=gsp-identifier.tex= and must be in the same directory as your project or in your texmf directory.  This function if \texttt{gre} prefixed to highlight that it only loads distances for Gregorio\TeX.
+
+\begin{argtable}
+\#1 & string & The identifier of the space configuration file.
+\end{argtable}
+
+Example:\par\medskip
+\begin{latexcode}
+  % loads gsp-default.tex, the default configuration file
+  \GreLoadSpaceConf{default}
+  % loads a custom configuration called gsp-myspaces.tex
+  \GreLoadSpaceConf{myspaces}
+\end{latexcode}
+
+\macroname{\textbackslash setaboveinitialseparation\{\#1\}\{\#2\}}{gregoriotex-spaces.tex}
+Macro to set the spacing between the annotations.
+
+\begin{argtable}
+\#1 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+\#2 & 0 & Distance will not scale when staff size is changed.\\
+& 1 & Distance will scale when staff size is changed.
+\end{argtable}
+
+\textbf{Warning:} This function formerly had only one arguments.  It now takes 2.
+
+Deprecated version: \verb=\GreSetAboveInitialSeparation= which only took the first argument.  If you use the deprecated command the second argument will be assumed to be 1.
+
+\macroname{\textbackslash setspaceafterinitial\{\#1\}\{\#2\}}{gregoriotex-spaces.tex}
+Macro to set the spacing after the initial (and before the staff lines).
+
+\begin{argtable}
+\#1 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+\#2 & 0 & Distance will not scale when staff size is changed.\\
+& 1 & Distance will scale when staff size is changed.
+\end{argtable}
+
+\textbf{Warning:} This function formerly had only one arguments.  It now takes 2.
+
+Deprecated version: \verb=\GreSetSpaceAfterInitial= which only took the first argument.  If you use the deprecated command the second argument will be assumed to be 1.
+
+\macroname{\textbackslash setspacebeforeinitial\{\#1\}\{\#2\}}{gregoriotex-spaces.tex}
+Macro to set the spacing before the initial.
+
+\begin{argtable}
+\#1 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+\#2 & 0 & Distance will not scale when staff size is changed.\\
+& 1 & Distance will scale when staff size is changed.
+\end{argtable}
+
+\textbf{Warning:} This function formerly had only one arguments.  It now takes 2.
+
+Deprecated version: \verb=\GreSetSpaceBeforeInitial= which only took the first argument.  If you use the deprecated command the second argument will be assumed to be 1.
+
+\macroname{\textbackslash setinitialspacing\{\#1\}\{\#2\}\{\#3\}\{\#4\}}{gregoriotex-spaces.tex}
+Macro to set the spacing around and for the initial.
+
+\begin{argtable}
+\#1 & string & The distance before the initial in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+\#2 & string & The distance for the initial in string format.  This distance is ignored if set to 0pt.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+\#3 & string & The distance after the initial in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+\#4 & 0 & Distance will not scale when staff size is changed.\\
+& 1 & Distance will scale when staff size is changed.
+\end{argtable}
+
+\textbf{Warning:} This function formerly had only three arguments.  It now takes 4.
+
+\macroname{\textbackslash setstafflinethickness\{\#1\}}{gregoriotex-spaces.tex}
+Macro to adjust the thickness of the staff lines.
+
+\begin{argtable}
+\#1 & integer & The relative thickness of the staff lines.  The default value is 10.  Higher numbers yield thicker staff lines.
+\end{argtable}
+
+Deprecated version: \verb=\gresetstafflinefactor=.
+
+
+
+
+\subsection{Distances}\label{distances}
+
+Each of the following distances controls some aspect of the spacing of the Gregorio score.  They are changed using commands documented above (\eg \verb=\changedim=).  If the distance permits a rubber value then the default value will indicate the stretch and shrink (even if they are zero by default).  Distances whose default value does not include a stretch or shrink may not take a rubber value.
+
+\emph{Note:} Because of the way Gregorio handles distances these cannot be manipulated as if they were normal \TeX\ dimensions or skips.  As a result they should only be changed using the commands defined by gregoriotex for this purpose.
+
+\macroname{additionallineswidth}{gsp-default.tex}
+The additional width of the additional lines (compared to the width of the glyph they're associated with).  
+
+Default: \unit[0.14584]{cm}
+
+\macroname{alterationspace}{gsp-default.tex}
+Space between an alteration (flat or natural) and the next glyph. 
+
+Default: \unit[0.07747]{cm} plus \unit[0.01276]{cm} minus \unit[0.00455]{cm}
+
+\macroname{beforealterationspace}{gsp-default.tex}
+Negative space, difference between the normal space between two notes and the space between a note and a flat.  
+
+Default: $\unit[-0.32816]{cm}$ plus \unit[0.01093]{cm} minus \unit[0.01093]{cm}
+
+\macroname{beforechoralsignspace}{gsp-default.tex}
+Space before a choral sign. 
+
+Default: \unit[0.04556]{cm} plus \unit[0.00638]{cm} minus \unit[0.00638]{cm}
+
+\macroname{clefflatspace}{gsp-default.tex}
+Space between a clef and a flat (for clefs with flat).  
+
+Default: \unit[0.05469]{cm} plus \unit[0.00638]{cm} minus \unit[0.00638]{cm}
+
+\macroname{interglyphspace}{gsp-default.tex}
+Space between glyphs in the same element. 
+
+Default: \unit[0.06927]{cm} plus \unit[0.00363]{cm} minus \unit[0.00363]{cm}
+
+\macroname{zerowidthspace}{gsp-default.tex}
+Null space.  
+
+Default: \unit[0]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
+
+\macroname{interelementspace}{gsp-default.tex}
+Space between elements.  
+
+Default: \unit[0.06927]{cm} plus \unit[0.00182]{cm} minus \unit[0.00363]{cm}
+
+\macroname{largerspace}{gsp-default.tex}
+Larger space between elements.  
+
+Default: \unit[0.10938]{cm} plus \unit[0.01822]{cm} minus \unit[0.00911]{cm}
+
+\macroname{glyphspace}{gsp-default.tex}
+Space between elements which has the size of a note.  
+
+Default: \unit[0.21877]{cm} plus \unit[0.01822]{cm} minus \unit[0.01822]{cm}
+
+\macroname{intersyllablespace}{gsp-default.tex}
+Minimum space between two notes of different syllables.  
+
+Default: \unit[0.25523]{cm} plus \unit[0.31903]{cm} minus \unit[0]{cm}
+
+\macroname{spacebeforecusto}{gsp-default.tex}
+Space before custo.  
+
+Default: \unit[0.1823]{cm} plus \unit[0.31903]{cm} minus \unit[0.0638]{cm}
+
+\macroname{spacebeforesigns}{gsp-default.tex}
+Space before punctum mora and augmentum duplex.  
+
+Default: \unit[0.05469]{cm} plus \unit[0.00455]{cm} minus \unit[0.00455]{cm}
+
+\macroname{spaceaftersigns}{gsp-default.tex}
+Space after punctum mora and augmentum duplex.  
+
+Default: \unit[0.08203]{cm} plus \unit[0.0082]{cm} minus \unit[0.0082]{cm}
+
+\macroname{spaceafterlineclef}{gsp-default.tex}
+Space after a clef at the beginning of a line.  
+
+Default: \unit[0.27345]{cm} plus \unit[0.14584]{cm} minus \unit[0.01367]{cm}
+
+\macroname{interwordspacenotes}{gsp-default.tex}
+Space after at the end of a word when the last written symbol is a note and the first is a note.  
+
+Default: \unit[0.29169]{cm} plus \unit[0.08751]{cm} minus \unit[0.05469]{cm}
+
+\macroname{interwordspacenotestext}{gsp-default.tex}
+Space after at the end of a word when the last written symbol is a note and the first is text.  
+
+Default: \unit[0.27345]{cm} plus \unit[0.27345]{cm} minus \unit[0.07292]{cm}
+
+\macroname{interwordspacetextnotes}{gsp-default.tex}
+Space after at the end of a word when the last written symbol is text and the first is a note.  
+
+Default: \unit[0.27345]{cm} plus \unit[0.27345]{cm} minus \unit[0.07292]{cm}
+
+\macroname{interwordspacetext}{gsp-default.tex}
+Space after at the end of a word when the last written symbol is text and the first is text.  
+
+Default: \unit[0.22787]{cm} plus \unit[0.41019]{cm} minus \unit[0.07292]{cm}
+
+\macroname{bitrivirspace}{gsp-default.tex}
+Space between notes of a bivirga or trivirga.  
+
+Default: \unit[0.06927]{cm} plus \unit[0.00182]{cm} minus \unit[0.00546]{cm}
+
+\macroname{bitristrospace}{gsp-default.tex}
+Space between notes of a bistropha or tristrophae.  
+
+Default: \unit[0.06927]{cm} plus \unit[0.00182]{cm} minus \unit[0.00546]{cm}
+
+\macroname{punctuminclinatumshift}{gsp-default.tex}
+Space between two punctum inclinatum.  
+
+Default: \unit[-0.03918]{cm} plus \unit[0.0009]{cm} minus \unit[0.0009]{cm}
+
+\macroname{beforepunctainclinatashift}{gsp-default.tex}
+Space before puncta inclinata.  
+
+Default: \unit[0.05286]{cm} plus \unit[0.00728]{cm} minus \unit[0.00455]{cm}
+
+\macroname{punctuminclinatumanddebilisshift}{gsp-default.tex}
+Space between a punctum inclinatum and a punctum inclinatum deminutus.  
+
+Default: \unit[-0.02278]{cm} plus \unit[0.0009]{cm} minus \unit[0.0009]{cm}
+
+\macroname{punctuminclinatumdebilisshift}{gsp-default.tex}
+Space between two punctum inclinatum deminutus.  
+
+Default: \unit[-0.00728]{cm} plus \unit[0.0009]{cm} minus \unit[0.0009]{cm}
+
+\macroname{punctuminclinatumbigshift}{gsp-default.tex}
+Space between puncta inclinata, larger ambitus (range=3rd).  
+
+Default: \unit[0.07565]{cm} plus \unit[0.0009]{cm} minus \unit[0.0009]{cm}
+
+\macroname{punctuminclinatummaxshift}{gsp-default.tex}
+Space between puncta inclinata, larger ambitus (range=4th -or more?-).  
+
+Default: \unit[0.17865]{cm} plus \unit[0.0009]{cm} minus \unit[0.0009]{cm}
+
+\macroname{spacearoundsmallbar}{gsp-default.tex}
+Space around virgula and divisio minima.  
+
+Default: \unit[0.1823]{cm} plus \unit[0.22787]{cm} minus \unit[0.05469]{cm}
+
+\macroname{spacearoundminor}{gsp-default.tex}
+Space around divisio minor.  
+
+Default: \unit[0.1823]{cm} plus \unit[0.22787]{cm} minus \unit[0.05469]{cm}
+
+\macroname{spacearoundmaior}{gsp-default.tex}
+Space around divisio maior.  
+
+Default: \unit[0.1823]{cm} plus \unit[0.22787]{cm} minus \unit[0.05469]{cm}
+
+\macroname{spacearoundfinalis}{gsp-default.tex}
+Space around divisio finalis.  
+
+Default: \unit[0.1823]{cm} plus \unit[0.1823]{cm} minus \unit[0.05469]{cm}
+
+\macroname{spacebeforefinalfinalis}{gsp-default.tex}
+A special space for finalis, for when it is the last glyph.  
+
+Default: \unit[0.29169]{cm} plus \unit[0.07292]{cm} minus \unit[0.27345]{cm}
+
+\macroname{spacearoundclefbars}{gsp-default.tex}
+Additional space that will appear around bars that are preceded by a custo and followed by a key.  
+
+Default: \unit[0.03645]{cm} plus \unit[0.00455]{cm} minus \unit[0.0009]{cm}
+
+\macroname{textbartextspace}{gsp-default.tex}
+Space between the text and the text of the bar.  
+
+Default: \unit[0.24611]{cm} plus \unit[0.13672]{cm} minus \unit[0.04921]{cm}
+
+\macroname{notebarspace}{gsp-default.tex}
+Minimal space between a note and a bar.  
+
+Default: \unit[0.31903]{cm} plus \unit[0.27345]{cm} minus \unit[0.02824]{cm}
+
+\macroname{maximumspacewithoutdash}{gsp-default.tex}
+Maximal space between two syllables for which we consider a dash is not needed.  
+
+Default: \unit[0.02005]{cm}
+
+\macroname{afterclefnospace}{gsp-default.tex}
+An extensible space for the beginning of lines.  
+
+Default: \unit[0]{cm} plus \unit[0.27345]{cm} minus \unit[0]{cm}
+
+\macroname{additionalcustoslineswidth}{gsp-default.tex}
+Width of the additional lines, used only for the custos.  The width is the one for the custos at end of lines, the line for custos in the middle of a score is the same multiplied by 2.  
+
+Default: \unit[0.09114]{cm}
+
+\macroname{afterinitialshift}{gsp-default.tex}
+Space between the initial and the beginning of the score.  
+
+Default: \unit[0.2457]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
+
+\macroname{beforeinitialshift}{gsp-default.tex}
+Space between the initial and the beginning of the score.  
+
+Default: \unit[0.2457]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
+
+\macroname{minimalspaceatlinebeginning}{gsp-default.tex}
+Minimal space at the beginning of a line.
+
+Default: \unit[1.7]{cm}
+
+\macroname{manualinitialwidth}{gsp-default.tex}
+Space to force the initial width to.  Ignored when 0.  
+
+Default: \unit[0]{cm}
+
+\macroname{aboveinitialseparation}{gsp-default.tex}
+This space is the one between the bottom of the first annotation line and the top of the second annotation line (above the initial).  
+
+Default: \unit[0.85]{cm}
+
+\macroname{noclefspace}{gsp-default.tex}
+Space at the beginning of the lines if there is no clef.  
+
+Default: \unit[0.1]{cm}
+
+\macroname{abovesignsspace}{gsp-default.tex}
+Space above the chironomic signs.  
+
+Default: \unit[0.8]{cm}
+
+\macroname{belowsignsspace}{gsp-default.tex}
+Space below the chironomic signs.  
+
+Default: \unit[0]{cm}
+
+\macroname{lowchoralsignshift}{gsp-default.tex}
+The shift for the low choral sign and the high choral signs on totally free interlines.  
+
+Default: \unit[0.00911]{cm}
+
+\macroname{highchoralsignshift}{gsp-default.tex}
+The shift for the high choral sign.  
+
+Default: $\unit[-0.04556]{cm}$
+
+\macroname{translationheight}{gsp-default.tex}
+The space for the translation.  
+
+Default: \unit[0.5]{cm}
+
+\macroname{spaceabovelines}{gsp-default.tex}
+The space above the lines.  
+
+Default: \unit[0.45576]{cm} plus \unit[0.36461]{cm} minus \unit[0.09114]{cm}
+
+\macroname{spacelinestext}{gsp-default.tex}
+The space between the lines and the bottom of the text.  
+
+Default: \unit[0.60617]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
+
+\macroname{spacebeneathtext}{gsp-default.tex}
+The space beneath the text.  
+
+Default: \unit[0]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
+
+\macroname{abovelinestextraise}{gsp-default.tex}
+Height of the text above the note line.  
+
+Default: \unit[1.7]{cm}
+
+\macroname{abovelinestextheight}{gsp-default.tex}
+Height that is added at the top of the lines if there is text above the lines (it must be bigger than the text for it to be taken into consideration).  
+
+Default: \unit[0.3]{cm}
+
+\macroname{braceshift}{gsp-default.tex}
+An additional shift you can give to the brace above the bars.  
+
+Default: \unit[0]{cm}
+
+\macroname{curlybraceaccentusshift}{gsp-default.tex}
+A shift you can give to the accentus above the curly brace.  
+
+Default: $\unit[-0.05]{cm}$
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "UserManual"
+%%% End:
