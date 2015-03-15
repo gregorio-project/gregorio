@@ -1684,13 +1684,12 @@
   \ifnum#4=0\relax %
     % we try to avoid line breaking after a flat or a natural
     \grenobreak %
+    \gre@skip@temp@four = \gre@skip@alterationspace%
     \ifnum\the\grefirstglyph=1\relax %
       \global\advance\gre@dimen@notesaligncenter by \wd\GreTempwidth %
-      \global\advance\gre@dimen@notesaligncenter by \gre@skip@alterationspace %
-      \gre@skip@temp@four = \gre@skip@alterationspace%
+      \global\advance\gre@dimen@notesaligncenter by \dimexpr\gre@skip@temp@four\relax %
       \kern\gre@skip@temp@four %
     \else %
-      \gre@skip@temp@four = \gre@skip@alterationspace%
       \grehskip\gre@skip@temp@four %
     \fi %
     \grenobreak %

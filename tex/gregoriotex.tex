@@ -329,20 +329,20 @@
     \setbox\GreInitial=\hbox{\vbox to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\grebiginitialformat{#1}}\hss}\vss}}%
   \fi %
   \ifnum\grebiginitial=0\relax%
-    \greinitialformat{\global\gre@skip@temp@four = \gre@dimen@beforeinitialshift}%
+    \greinitialformat{\global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift}%
   \else%
-    \grebiginitialformat{\global\gre@skip@temp@four = \gre@dimen@beforeinitialshift}%
+    \grebiginitialformat{\global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift}%
   \fi%
-  \hskip\gre@skip@temp@four %
-  \global\advance\gre@dimen@initialwidth by \gre@skip@temp@four %
+  \hskip\gre@dimen@temp@four %
+  \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
   \copy\GreInitial%
   \ifnum\grebiginitial=0\relax%
-    \greinitialformat{\global\gre@skip@temp@four = \gre@dimen@afterinitialshift}%
+    \greinitialformat{\global\gre@dimen@temp@four = \gre@dimen@afterinitialshift}%
   \else%
-    \grebiginitialformat{\global\gre@skip@temp@four = \gre@dimen@afterinitialshift}%
+    \grebiginitialformat{\global\gre@dimen@temp@four = \gre@dimen@afterinitialshift}%
   \fi%
-  \hskip\gre@skip@temp@four %
-  \global\advance\gre@dimen@initialwidth by \gre@skip@temp@four%
+  \hskip\gre@dimen@temp@four %
+  \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
   % then we center the first box above the initial, if there is one
   \gre@debug{ifdim wd(GreAboveinitialfirstbox) = 0pt}%
   \ifdim\wd\GreAboveinitialfirstbox=0 pt\relax %
@@ -823,6 +823,15 @@
   \grerestorepenalties %
   \greendfinetuning %
   \exhyphenchar=\greexhyphencharsave %
+  \gre@dimen@temp@one=0pt%
+  \gre@dimen@temp@two=0pt%
+  \gre@dimen@temp@three=0pt%
+  \gre@dimen@temp@four=0pt%
+  \gre@dimen@temp@five=0pt%
+  \gre@skip@temp@one=0pt%
+  \gre@skip@temp@two=0pt%
+  \gre@skip@temp@three=0pt%
+  \gre@skip@temp@four=0pt%
   \directlua{gregoriotex.atScoreEnd()}%
   \relax%
 }%

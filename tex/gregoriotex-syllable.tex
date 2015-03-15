@@ -699,15 +699,15 @@
 		\fi%
 		% we take the max of it, then we divide it by two and we substract half of the width of the bar
 		\gre@debug{ifdim temp@skip@three < temp@skip@two}%
-		\ifdim\gre@skip@temp@three <\gre@temp@skip@two %
-			\gre@skip@temp@three=\gre@temp@skip@two %
+		\ifdim\gre@skip@temp@three <\gre@skip@temp@two %
+			\gre@skip@temp@three=\gre@skip@temp@two %
 		\fi %
 		\divide\gre@skip@temp@three by 2\relax %
 		\gre@dimen@temp@five=\wd\GreSyllablenotes %
 		\divide\gre@dimen@temp@five by 2\relax %
 		\advance\gre@skip@temp@three by -\gre@dimen@temp@five %
 		% now we have our skipone
-		\gre@skip@temp@two=\gre@temp@skip@three %
+		\gre@skip@temp@two=\gre@skip@temp@three %
 		\gre@debug{ifdim previousenddifference < 0pt}%
 		\ifdim\gre@dimen@previousenddifference < 0 pt%
 			\advance\gre@skip@temp@two by \gre@dimen@previousenddifference %
@@ -744,7 +744,7 @@
 				%\gre@skip@temp@two=\wd\GreSyllablenotes 
 				%\divide\gre@skip@temp@two by 2\relax 
 				%\kern -\gre@skip@temp@two 
-			\gre@skip@temp@two=\gre@temp@skip@three %
+			\gre@skip@temp@two=\gre@skip@temp@three %
 			\gre@debug{ifdim nextbegindifference < 0pt}%
 			\ifdim\gre@skip@nextbegindifference < 0 pt%
 				\advance\gre@skip@temp@two by \gre@skip@nextbegindifference %

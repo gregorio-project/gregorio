@@ -592,14 +592,14 @@
 %% 4 : the type of notes alignment
 \def\gre@calculate@nextbegindifference#1#2#3#4{%
   %to prevent the pollution of the normal values, we stock them into a temp value
-  \gre@skip@temp@two=\gre@dimen@textaligncenter %
+  \gre@dimen@temp@two=\gre@dimen@textaligncenter %
   \gre@calculate@textaligncenter{#1}{#2}{1}%
   \global\gre@skip@nextbegindifference=-\gre@dimen@textaligncenter %
-  \global\gre@dimen@textaligncenter=\gre@skip@temp@two %
-  \gre@skip@temp@two=\gre@dimen@notesaligncenter %
+  \global\gre@dimen@textaligncenter=\gre@dimen@temp@two %
+  \gre@dimen@temp@two=\gre@dimen@notesaligncenter %
   \grefindnextnotesaligncenter{#4}% idem
   \global\advance\gre@skip@nextbegindifference by \the\gre@dimen@notesaligncenter %
-  \global\gre@dimen@notesaligncenter=\gre@skip@temp@two %
+  \global\gre@dimen@notesaligncenter=\gre@dimen@temp@two %
   \relax %
 }%
 
@@ -673,7 +673,6 @@
 \newif\ifchecklength%
 \def\gresetdim#1#2#3{%
 	\checklengthfalse%
-	\badlengthfalse%
 	%check if #2 is a rubber length (contains plus and/or minus)
 	\IfSubStr{#2}{plus}{\checklengthtrue}{\relax}%
 	\IfSubStr{#2}{minus}{\checklengthtrue}{\relax}%
