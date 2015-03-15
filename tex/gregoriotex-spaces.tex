@@ -771,7 +771,12 @@
 		\let\gre@scaledist\gre@dimen@temp@one%
 	\fi%
 	% Math
-	\edef\gre@convert{\csname gre@#1\endcsname}%
+	\gre@rubberpermit{#1}%
+	\ifrubber%
+		\edef\gre@convert{\csname gre@skip@#1\endcsname}%
+	\else%
+		\edef\gre@convert{\csname gre@dimen@#1\endcsname}%
+	\fi%
 	\gre@scaledist=\gre@convert%
 	\multiply \gre@scaledist by \number #3%
 	\divide \gre@scaledist by \number #2%
@@ -792,6 +797,7 @@
 \newcount\gre@unitfactor%
 \newcount\gre@basefactor%
 \def\gre@convertto#1#2{%
+	\gre@debug{convertto (#1) (#2)}
 	\gre@debug{ifdim #2 = 0pt}
 	\ifdim#2=0pt\relax%
 		\edef\gre@converted{0 #1}%
@@ -801,9 +807,17 @@
 		% Code to increase precision
 		\gre@maxlen = 16383.99999pt%
 		\gre@unitfactor = \number\gre@maxlen%
-		\divide\gre@unitfactor by \number\gre@unit%
+		\divide\gre@unitfactor by \number\gre@unit\relax%
+		\ifnum\gre@unitfactor < 0\relax%
+			\gre@unitfactor = -\gre@unitfactor%
+		\fi%
+		\gre@debug{unit: \the\gre@unit ; factor: \the\gre@unitfactor}
 		\gre@basefactor = \number\gre@maxlen%
-		\divide\gre@basefactor by \number\gre@base%
+		\divide\gre@basefactor by \number\gre@base\relax%
+		\ifnum\gre@basefactor < 0\relax%
+			\gre@basefactor = -\gre@basefactor%
+		\fi%
+		\gre@debug{base: \the\gre@base ; factor: \the\gre@basefactor}
 		\ifnum\gre@basefactor<\gre@unitfactor%
 			\multiply\gre@unit by \gre@basefactor%
 			\multiply\gre@base by \gre@basefactor%

@@ -178,7 +178,7 @@
 			\let\mygre@endsyllablepart\gre@endsyllablepart %
 		\fi%
 		\grewidthof{#1}%
-		\divide\gre@dimen@temp@three by 2 %
+		\divide\gre@dimen@temp@three by 2\relax %
 		\gre@debug{ifdim tempwidth > textaligncenter}%
 		\ifdim\gre@dimen@temp@three >\gre@dimen@textaligncenter %
 			\global\setbox\GreTempwidth=\hbox{#2}%

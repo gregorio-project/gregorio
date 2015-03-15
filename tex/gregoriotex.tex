@@ -46,6 +46,8 @@
 \def\gre@debug#1{%
 	\ifdebug%
 		\typeout{GregorioTex debug: #1}%
+	\else%
+		\relax%
 	\fi%
 }%
 \AtBeginDocument{\gre@debug{GregorioTeX is in debug mode.  Debug messages will be printed to the log.}}%
