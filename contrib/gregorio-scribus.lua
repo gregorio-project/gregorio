@@ -79,7 +79,7 @@ end
 
 local format = string.format
 
-texfile:write(format("\n\\includescore{%s-score.tex}\n\\end{document}\n", pathbase))
+texfile:write(format("\n\\includescore[f]{%s-score.tex}\n\\end{document}\n", pathbase))
 texfile:close()
 gabcfile:close()
 
