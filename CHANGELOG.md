@@ -3,21 +3,28 @@ All notable changes to this project will be documented in this file.
 This project does not currently adhere to [Semantic Versioning](http://semver.org/), but should one day.
 
 
-## [Unrelased][ongoing]
+## 3.0.beta - 2015-03-15
 ### Changed
+- All distances renamed to identify the kind of distance they are.  They now follow the pattern `\gre@skip@...` or `\gre@dimen@...`.  This was to make tracking down the glue leaks easier.
+- Temporary distance registers renamed to follow the pattern `\gre@skip@temp@...` or `\gre@dimen@temp@...` as appropriate.  Issue [#80](https://github.com/gregorio-project/gregorio/issues/80) indicates this wasn't done completely the first time and had to be corrected.
 
 ### Fixed
+- Syllables were not being spaced correctly (see [#79](https://github.com/gregorio-project/gregorio/issues/79)).  This appears to result from the space calculations not terminating properly.  There's a need for a `\relax` somewhere.  Since the problem didn't show up in debug mode, I simply added a `\else\relax` to `\gre@debug` to eliminate the problem.  We may need to go back and fix this better later.
+- Some glues were leaking into the document because there were places where a dimension was being set to a skip or incremented by one.  See [#65](https://github.com/gregorio-project/gregorio/issues/65), [#75](https://github.com/gregorio-project/gregorio/issues/75), and [#78](https://github.com/gregorio-project/gregorio/issues/78)
 
 ### Added
 
 
-## 2.4.3 - 2015-03-14
+## 2.4.3 - 2015-03-14 - YANKED
+
+!!!!! - The feature listed below proved to be too buggy for production use.  They will be included in the next release following some bug fixing.
+
 ### Changed
 - Temporary distance registers systematized
 - `\setinitalspacing` now takes four arguments.  New arguments specifies value for `\gre@scale@...` for the three distances.
 - User settable distances now have `\gre@scale@...` property which determines if they scale or not when `\grefactor` changes.  Property is controlled by `\gresetdim`, `\grechangedim`, `\grenoscaledim`, and `\grescaledim`
 - `\grechangedim` updated to reflect string storage of distances
-- User settable distances now stored as strings (see #50)
+- User settable distances now stored as strings (see [#50](https://github.com/gregorio-project/gregorio/issues/50))
 - `\gre@stafflinefactor` now uses same scale as `\grefactor`
 - Improved `\includescore` to remove outdated files ([#61](https://github.com/gregorio-project/gregorio/issues/61)).
 - TeXworks configuration script for Windows updated
