@@ -1326,23 +1326,26 @@
 
 \def\gre@includescore#1{%
 	\ifcase\gre@compilegabc% case 0, never compile
+		\gre@debug{Refusing to compile #1}%
 		\input #1%
 	\or% case 1, auto compile
+		\gre@debug{Auto compile #1}%
 		\directlua{gregoriotex.include_score([[#1]], nil)}%
 	\or% case 2, force compile
+		\gre@debug{Forced to compile #1}%
 		\directlua{gregoriotex.include_score([[#1]], true)}%
 	\fi%
 	\relax%
 }%
 
 \def\includetexscore#1{%
-	\gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore[f]\space instead.}%
-	\gre@includescorewithoption[f]{#1}%
+	\gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore[n]\space instead.}%
+	\gre@includescorewithoption[n]{#1}%
 }%
 
 \def\greincludetexscore#1{%
-	\gre@warning{\protect\greincludetexscore\space is deprecated.\MessageBreak Use \protect\includescore[f]\space instead.}%
-	\gre@includescorewithoption[f]{#1}%
+	\gre@warning{\protect\greincludetexscore\space is deprecated.\MessageBreak Use \protect\includescore[n]\space instead.}%
+	\gre@includescorewithoption[n]{#1}%
 }%
 
 \def\includegabcscore#1{%
@@ -1357,13 +1360,15 @@
 
 % A macro that passes the score directly to TeX without performing the API version check or if the gabc was modified since the creation of the gtex file.
 \def\gre@includescorewithoption[#1]#2{%
-	\ifx #1f\relax%
+	\ifx #1n\relax%
+		\gre@debug{Override not compiling #2}%
 		\input #2%
 	\else%
 		\ifx #1c\relax%
-			\directlua{gregoriotex.include_score([[#1]], true)}%
+			\gre@debug{Override compiling #2}%
+			\directlua{gregoriotex.include_score([[#2]], true)}%
 		\else%
-			\gre@error{Unrecognized option for \protect\includescore}%
+			\greerror{Unrecognized option [#1] for \protect\includescore}%
 		\fi%
 	\fi%
 	\relax%
