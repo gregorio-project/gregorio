@@ -6,13 +6,14 @@ score which cannot be controlled from the gabc file. They can be added
 to any \verb=.tex= file. Do not add them to any \verb=.gtex= or
 \verb=.gabc= file.
 
-\subsection{Commands}
+\subsection{Using the Package}
 
-In general, commands should not be modified.  Exceptions are noted below.
+To use the gregoriotex package include \verb=\usepackage{gregoriotex}=
+in the document preamble. This macro has the following form:
 
 \macroname{\textbackslash usepackage[\textit{(options)}]\{gregoriotex\}}{gregoriotex.sty}
 
-Usepackage macro for gregoriotex. Has the following optional arguments:
+The optional arguments are:
 
 \bigskip\rowcolors{1}{lightgray}{lightgray}
 \begin{tabular}{lp{10cm plus .5cm}}
@@ -26,6 +27,14 @@ Usepackage macro for gregoriotex. Has the following optional arguments:
                 THEN gregoriotex will compile a new gtex file.\\
   forcecompile & Gregoriotex will compile all scores from their gabc files.\\
 \end{tabular}\bigskip
+
+\textbf{Note:} \verb=nevercompile=, \verb=autocompile=, and
+\verb=forcecompile= conflict with eachother. Only one should be
+specified in the options list.
+
+\subsection{Commands}
+
+In general, commands should not be modified.  Exceptions are noted below.
 
 \macroname{\textbackslash includescore[\textit{\#1}]\{\#2\}}{gregoriotex.tex}
 %\verb=\includescore#1=%tex.tex
