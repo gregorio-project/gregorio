@@ -21,7 +21,7 @@ local hpack, traverse_id, has_attribute, count, remove, insert_after, copy = nod
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = 20150315
+local internalversion = '3.0.beta'
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
@@ -224,7 +224,8 @@ local function include_score(input_file)
     elseif not file_root then
 	file_root = input_file
     end
-    local gtex_file = file_root.."-"..internalversion..".gtex"
+    --    local gtex_file = file_root.."-"..internalversion..".gtex"
+    local gtex_file = file_root.."-"..internalversion:gsub("%.", "_")..".gtex"
     local gabc_file = file_root..".gabc"
     if not lfs.isfile(gtex_file) then
 	clean_old_gtex_files(file_root)
@@ -252,13 +253,13 @@ local function check_version(greinternalversion)
     end
 end
 
-local function get_greapiversion()
+local function get_gregorioversion()
     return internalversion
 end
 
-gregoriotex.include_score      = include_score
-gregoriotex.compile_gabc       = compile_gabc
-gregoriotex.atScoreEnd         = atScoreEnd
-gregoriotex.atScoreBeggining   = atScoreBeggining
-gregoriotex.check_version      = check_version
-gregoriotex.get_greapiversion  = get_greapiversion
+gregoriotex.include_score        = include_score
+gregoriotex.compile_gabc         = compile_gabc
+gregoriotex.atScoreEnd           = atScoreEnd
+gregoriotex.atScoreBeggining     = atScoreBeggining
+gregoriotex.check_version        = check_version
+gregoriotex.get_gregorioversion  = get_gregorioversion

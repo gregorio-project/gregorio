@@ -73,27 +73,26 @@
 
 % The general version of GregorioTeX (we mean by that the "API", the way
 % Gregorio will write things)
-\xdef\gregoriotexversion{\directlua{tex.write(gregoriotex.get_greapiversion())}}%
+\xdef\gregoriotexversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
 
 % the version of the internal files (all must have the same)
-\xdef\greinternalversion{\directlua{tex.write(gregoriotex.get_greapiversion())}} % date format
-\directlua{gregoriotex.check_version(\number\greinternalversion)}%
+\xdef\greinternalversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
 
 % first some macros to allow checks for version:
 % #1 is the name of the file
 % #2 is the version
+
 \def\gredeclarefileversion#1#2{%
-  \ifnum\number#2=\number\greinternalversion\else %
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\greinternalversion \space\space while #1 is in version \number#2}%
-  \fi %
+  \IfStrEq*{#2}{\greinternalversion}{}{%else
+    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\greinternalversion \space\space while #1 is in version \number#2}}%
 }%
 
 % macro called by scores
 % #1 is the version of GregorioTeX the score is made for.
+
 \def\gregoriotexapiversion#1{%
-  \ifnum\number#1=\number\gregoriotexversion\else %
-    \greerror{GregorioTeX is in version \number\gregoriotexversion \space\space while a score you included requires version \number#1. Please recompile your scores}%
-  \fi %
+  \IfStrEq*{#1}{\gregoriotexversion}{}{%else
+    \greerror{GregorioTeX is in version \gregoriotexversion \space\space while a score you included requires version #1. Please recompile your scores}}%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%
