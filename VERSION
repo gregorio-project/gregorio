@@ -1,4 +1,3 @@
-gregoriotex_api_version = 20150315
 gregorio_version = 3.0.beta
 
 *** Do not add any lines above here. ***
@@ -7,8 +6,8 @@ gregorio_version = 3.0.beta
 VERSION
 =======
 
-This file is used by VersionUpdate.py to change the version
-numbers of gregorio and the gregoriotex_api in the source code.
+This file is used by VersionUpdate.py to change the version number of
+gregorio in the source code.
 
 Usage:
   Change the version numbers found above.
