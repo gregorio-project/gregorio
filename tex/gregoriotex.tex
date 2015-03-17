@@ -1311,7 +1311,7 @@
 }
 
 
-% The primary macro that includes a score.
+% Internal marco which includes a score when \includescore is called without the optional argument.  Behavior is determined by the value of \gre@compilegabc flag.
 %
 % If \gre@compilegabc is 0, then we simply try to include the file as it is given to us.  This is the old behavior.
 %
@@ -1358,17 +1358,25 @@
 	\gre@includescorewithoption[c]{#1}%
 }%
 
-% A macro that passes the score directly to TeX without performing the API version check or if the gabc was modified since the creation of the gtex file.
+% The internal macro called when \includescore is called with the optional argument.  Behavior is determined by the value of the argument:
+% n - do not attempt to compile the score.  Simply include it as is.
+% a - perform the checks to see if the score needs to be recompiled and do so only if necessary
+% f - force the compilation of the score before including it
 \def\gre@includescorewithoption[#1]#2{%
 	\ifx #1n\relax%
 		\gre@debug{Override not compiling #2}%
 		\input #2%
 	\else%
-		\ifx #1c\relax%
-			\gre@debug{Override compiling #2}%
+		\ifx #1f\relax%
+			\gre@debug{Override force compiling #2}%
 			\directlua{gregoriotex.include_score([[#2]], true)}%
 		\else%
-			\greerror{Unrecognized option [#1] for \protect\includescore}%
+			\ifx  #1a\relax%
+				\gre@debug{Override auto compiling #2}%
+				\directlua{gregoriotex.include_score([[#2]], nil)}%
+			\else%
+				\greerror{Unrecognized option [#1] for \protect\includescore}%
+			\fi%
 		\fi%
 	\fi%
 	\relax%

@@ -9,16 +9,16 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/).
 - Temporary distance registers renamed to follow the pattern `\gre@skip@temp@...` or `\gre@dimen@temp@...` as appropriate.  Issue [#80](https://github.com/gregorio-project/gregorio/issues/80) indicates this wasn't done completely the first time and had to be corrected.
 
 ### Fixed
-- Improved `\includescore` backwards compatibility.  There are now three modes available via LaTeX package options or macros: nevercompile (`\nevercompilegabc`, default), autocompile (`\autocompilegabc`), and forcecompile (`\forcecompilegabc`).
+- Improved `\includescore` backwards compatibility.  There are now three modes available via LaTeX package options, macros, or by an optional argument to `\includescore`: `nevercompile` (`\nevercompilegabc`, `n`, default), `autocompile` (`\autocompilegabc`, `a`), and `forcecompile` (`\forcecompilegabc`, `f`).
 - Missed renaming `bitristrospace`.  See [#84](https://github.com/gregorio-project/gregorio/issues/84)
 - Syllables were not being spaced correctly (see [#79](https://github.com/gregorio-project/gregorio/issues/79)).  This appears to result from the space calculations not terminating properly.  There's a need for a `\relax` somewhere.  Since the problem didn't show up in debug mode, I simply added a `\else\relax` to `\gre@debug` to eliminate the problem.  We may need to go back and fix this better later.
 - Some glues were leaking into the document because there were places where a dimension was being set to a skip or incremented by one.  See [#65](https://github.com/gregorio-project/gregorio/issues/65), [#75](https://github.com/gregorio-project/gregorio/issues/75), and [#78](https://github.com/gregorio-project/gregorio/issues/78)
 
 ### Deprecated
-- `\includetexscore`, supplanted by `\includescore[f]`
-- `\greincludetexscore`, supplanted by `\includescore[f]`
-- `\includegabcscore`, supplanted by `\includescore[c]`
-- `\greincludegabcscore`, supplanted by `\includescore[c]`
+- `\includetexscore`, supplanted by `\includescore[n]`
+- `\greincludetexscore`, supplanted by `\includescore[n]`
+- `\includegabcscore`, supplanted by `\includescore[f]`
+- `\greincludegabcscore`, supplanted by `\includescore[f]`
 
 ## 2.4.3 - 2015-03-14 - YANKED
 
