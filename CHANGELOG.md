@@ -5,58 +5,52 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ## 3.0.0-beta - 2015-03-15
 ### Changed
-- All distances renamed to identify the kind of distance they are.  They now follow the pattern `\gre@skip@...` or `\gre@dimen@...`.  This was to make tracking down the glue leaks easier.
-- Temporary distance registers renamed to follow the pattern `\gre@skip@temp@...` or `\gre@dimen@temp@...` as appropriate.  Issue [#80](https://github.com/gregorio-project/gregorio/issues/80) indicates this wasn't done completely the first time and had to be corrected.
+- Distances in default space configuration (`gsp-default.tex`) have been changed so that they represent the actual printed dimension at the default staff size (see [#50](https://github.com/gregorio-project/gregorio/issues/50)).
+- All distances now scale with staff size changes by default.  Further, any distance set by the user can have this behavior changed by use of `\grenoscaledim`, and `\grescaledim`.  (Previously some distances always scaled, others never did, and there was no systematic way of knowing which was which.)
+- `\grechangedim` now takes three arguments: the name of the distance, value to change the distance to, and whether or not this value should be scaled with changes in the staff size.
+- `\setinitalspacing` now takes four arguments.  New argument specifies whether distances should scale when the staff size changes.
+- `\setspacebeforeinitial`, `\setspaceafterinitial`, and `\setaboveinitialseparation` now take two arguments.  The new argument specifies whether the distance should scale when the staff size changes.
+- Improved `\includescore` capabilities.  There are now three modes available via LaTeX package options, macros, or by an optional argument to `\includescore`: `nevercompile` (`\nevercompilegabc`, `n`, default), `autocompile` (`\autocompilegabc`, `a`), and `forcecompile` (`\forcecompilegabc`, `f`).  If asked to compile scores `\includescore` will remove outdated files as part of the process.
+- `\gre@stafflinefactor` (the internal control for the thickness of the stafflines) now uses same scale as `\grefactor`.
+- Windows installer documentation updated
+- Clivis stem length now follow Solesme's books conventions (see [#31](https://github.com/gregorio-project/gregorio/issues/31)).
+- TeXworks configuration script for Windows updated.  `greg-book` and `gregorio` engines will no longer be added.
 
 ### Fixed
-- Improved `\includescore` backwards compatibility.  There are now three modes available via LaTeX package options, macros, or by an optional argument to `\includescore`: `nevercompile` (`\nevercompilegabc`, `n`, default), `autocompile` (`\autocompilegabc`, `a`), and `forcecompile` (`\forcecompilegabc`, `f`).
-- Missed renaming `bitristrospace`.  See [#84](https://github.com/gregorio-project/gregorio/issues/84)
-- Syllables were not being spaced correctly (see [#79](https://github.com/gregorio-project/gregorio/issues/79)).  This appears to result from the space calculations not terminating properly.  There's a need for a `\relax` somewhere.  Since the problem didn't show up in debug mode, I simply added a `\else\relax` to `\gre@debug` to eliminate the problem.  We may need to go back and fix this better later.
-- Some glues were leaking into the document because there were places where a dimension was being set to a skip or incremented by one.  See [#65](https://github.com/gregorio-project/gregorio/issues/65), [#75](https://github.com/gregorio-project/gregorio/issues/75), and [#78](https://github.com/gregorio-project/gregorio/issues/78)
+- Fixed bug with spacing of bistroph and tristroph.  See [#84](https://github.com/gregorio-project/gregorio/issues/84)
+- Syllables were not being spaced correctly (see [#79](https://github.com/gregorio-project/gregorio/issues/79)).
+- `\includescore` not finding files for autocompile under certain circumstances.  (see http://www.mail-archive.com/gregorio-users@gna.org/msg02346.html and following)
+
+### Added
+- `\gresetdim` for setting distances in space configuration files.  The TeX primitive notation (`\somedistance = 3cm`) can no longer be used.  Takes three arguments: the name of the distance, the desired value, and whether the distance should scale with changes in the staff size or not.
+- `\setstafflinethickness` controls the thickness of the staff lines.
+- `\gre@debug`.  Enables the printing of debug messages with debug flag is set to true (can be done manually via `\debugtrue`, or via the `debug` option when loading the gregoriotex package in LaTeX)
+- doc folder and beginnings of User Manual.  Only contains spaces documentation at this point.
 
 ### Deprecated
 - `\includetexscore`, supplanted by `\includescore[n]`
 - `\greincludetexscore`, supplanted by `\includescore[n]`
 - `\includegabcscore`, supplanted by `\includescore[f]`
 - `\greincludegabcscore`, supplanted by `\includescore[f]`
+- `\GreSetSpaceBeforeInitial`, supplanted by `\setspacebeforeinitial`
+- `\GreSetSpaceAfterInitial`, supplanted by `\setspaceafterinitial`
+- `\GreSetAboveInitialSeparation`, supplanted by `\setaboveinitialseparation`
+- `\gresetstafflinefactor`, supplanted by `\setstafflinethickness`
+- `greg-book` and `greg-lily-book` engines, supplanted by improved capabilities of `\includescore` for compiling gabc files at time of document compilation.
 
 ## 2.4.3 - 2015-03-14 - YANKED
 
 !!!!! - The feature listed below proved to be too buggy for production use.  They will be included in the next release following some bug fixing.
 
 ### Changed
-- Temporary distance registers systematized
-- `\setinitalspacing` now takes four arguments.  New arguments specifies value for `\gre@scale@...` for the three distances.
-- User settable distances now have `\gre@scale@...` property which determines if they scale or not when `\grefactor` changes.  Property is controlled by `\gresetdim`, `\grechangedim`, `\grenoscaledim`, and `\grescaledim`
-- `\grechangedim` updated to reflect string storage of distances
-- User settable distances now stored as strings (see [#50](https://github.com/gregorio-project/gregorio/issues/50))
-- `\gre@stafflinefactor` now uses same scale as `\grefactor`
-- Improved `\includescore` to remove outdated files ([#61](https://github.com/gregorio-project/gregorio/issues/61)).
-- TeXworks configuration script for Windows updated
-- Windows installer documentation updated
-- Clivis stem length now follow Solesme's books conventions (see [#31](https://github.com/gregorio-project/gregorio/issues/31)).
-- Space Configuration Loading code refactored
-- Most distance calculations disentangled so that each calculate functions do not call each other (helps to avoid circularity)
-- `\grefactor` is now initialized at 17 (the default value).  Necessitated that most distances be rescaled (see [#50](https://github.com/gregorio-project/gregorio/issues/50)).
-- Distances renamed to `\gre@...`  Functions which calculate distances renamed to `\gre@calculate@...`
-- All code which defines or calculates a space (and nothing else) now reside in gregoriotex-spaces.tex
 
 ### Fixed
 - Fixed deprecated code in autoconfig.ac (see [#57](https://github.com/gregorio-project/gregorio/issues/57)).
-- `\includescore` not finding files for autocompile under certain circumstances.
 
 ### Added
-- `\gre@debug`.  Enables the printing of debug messages with debug flag is set to true (can be done manually via `\debugtrue`, or via the `debug` option when loading the gregoriotex package in LaTeX)
-- doc folder and beginnings of User Manual.  Only contains spaces documentation at this point.
-- `\setstafflinethickness` changes the thickness of the staff lines
-- Distances now set with `\gresetdim`
 - This CHANGELOG
 
 ### Deprecated
-- `\GreSetSpaceBeforeInitial`, supplanted by `\setspacebeforeinitial`
-- `\GreSetSpaceAfterInitial`, supplanted by `\setspaceafterinitial`
-- `\GreSetAboveInitialSeparation`, supplanted by `\setaboveinitialseparation`
-- `\gresetstafflinefactor`, supplanted by `\setstafflinethickness`
 
 ## 2.4.2 - 2015-02-27
 ### Changed
