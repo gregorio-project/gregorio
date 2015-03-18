@@ -162,6 +162,8 @@ main (int argc, char **argv)
   char *output_file_name = NULL;
   char *output_basename = NULL;
   char *error_file_name = NULL;
+  char *real_input_file_name = NULL;
+  char *real_output_file_name = NULL;
   FILE *input_file = NULL;
   FILE *output_file = NULL;
   FILE *error_file = NULL;
@@ -522,6 +524,17 @@ main (int argc, char **argv)
                 }
 #endif
             }
+          real_input_file_name = realpath(input_file_name, NULL);
+          real_output_file_name = realpath(output_file_name, NULL);
+          if (strcmp(real_input_file_name, real_output_file_name) == 0)
+            {
+              fprintf (stderr, "error: refusing to overwrite the input file\n");
+              exit (-1);
+            }
+          free(real_input_file_name);
+          real_input_file_name = NULL;
+          free(real_output_file_name);
+          real_output_file_name = NULL;
           output_file = fopen (output_file_name, "w");
           if (!output_file)
             {
