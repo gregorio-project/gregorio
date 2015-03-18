@@ -6,19 +6,18 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## 3.0.0-beta - 2015-03-15
 ### Changed
 - Distances in default space configuration (`gsp-default.tex`) have been changed so that they represent the actual printed dimension at the default staff size (see [#50](https://github.com/gregorio-project/gregorio/issues/50)).
+- User setable distance names have been simplified by removing the `\gre` prefix.  See doc/UserManual.pdf section ?? for a full list of the distance names.
 - All distances now scale with staff size changes by default.  Further, any distance set by the user can have this behavior changed by use of `\grenoscaledim`, and `\grescaledim`.  (Previously some distances always scaled, others never did, and there was no systematic way of knowing which was which.)
 - `\grechangedim` now takes three arguments: the name of the distance, value to change the distance to, and whether or not this value should be scaled with changes in the staff size.
 - `\setinitalspacing` now takes four arguments.  New argument specifies whether distances should scale when the staff size changes.
 - `\setspacebeforeinitial`, `\setspaceafterinitial`, and `\setaboveinitialseparation` now take two arguments.  The new argument specifies whether the distance should scale when the staff size changes.
-- Improved `\includescore` capabilities.  There are now three modes available via LaTeX package options, macros, or by an optional argument to `\includescore`: `nevercompile` (`\nevercompilegabc`, `n`, default), `autocompile` (`\autocompilegabc`, `a`), and `forcecompile` (`\forcecompilegabc`, `f`).  If asked to compile scores `\includescore` will remove outdated files as part of the process.
+- Improved `\includescore` capabilities.  See doc/UserManual.pdf section ?? for full details.
 - `\gre@stafflinefactor` (the internal control for the thickness of the stafflines) now uses same scale as `\grefactor`.
 - Windows installer documentation updated
-- Clivis stem length now follow Solesme's books conventions (see [#31](https://github.com/gregorio-project/gregorio/issues/31)).
+- Clivis stem length now follow Solesmes' books conventions (see [#31](https://github.com/gregorio-project/gregorio/issues/31)).
 - TeXworks configuration script for Windows updated.  `greg-book` and `gregorio` engines will no longer be added.
 
 ### Fixed
-- Fixed bug with spacing of bistroph and tristroph.  See [#84](https://github.com/gregorio-project/gregorio/issues/84)
-- Syllables were not being spaced correctly (see [#79](https://github.com/gregorio-project/gregorio/issues/79)).
 - `\includescore` not finding files for autocompile under certain circumstances.  (see http://www.mail-archive.com/gregorio-users@gna.org/msg02346.html and following)
 
 ### Added
@@ -26,6 +25,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\setstafflinethickness` controls the thickness of the staff lines.
 - `\gre@debug`.  Enables the printing of debug messages with debug flag is set to true (can be done manually via `\debugtrue`, or via the `debug` option when loading the gregoriotex package in LaTeX)
 - doc folder and beginnings of User Manual.  Only contains spaces documentation at this point.
+- This CHANGELOG
 
 ### Deprecated
 - `\includetexscore`, supplanted by `\includescore[n]`
@@ -38,19 +38,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\gresetstafflinefactor`, supplanted by `\setstafflinethickness`
 - `greg-book` and `greg-lily-book` engines, supplanted by improved capabilities of `\includescore` for compiling gabc files at time of document compilation.
 
-## 2.4.3 - 2015-03-14 - YANKED
-
-!!!!! - The feature listed below proved to be too buggy for production use.  They will be included in the next release following some bug fixing.
-
-### Changed
-
-### Fixed
-- Fixed deprecated code in autoconfig.ac (see [#57](https://github.com/gregorio-project/gregorio/issues/57)).
-
-### Added
-- This CHANGELOG
-
-### Deprecated
+## 2.4.3 - 2015-03-14 [YANKED]
 
 ## 2.4.2 - 2015-02-27
 ### Changed
