@@ -213,7 +213,7 @@ local function compile_gabc(gabc_file, gtex_file)
     end
 end
 
-local function include_score(input_file)
+local function include_score(input_file, force_gabccompile)
     local file_root
     if string.match(input_file:sub(-5), '%.gtex') then
 	file_root = input_file:sub(1,-6)
@@ -231,6 +231,8 @@ local function include_score(input_file)
 	log("The file %s does not exist. Searching for a gabc file", gtex_file)
 	if lfs.isfile(gabc_file) then
 	    compile_gabc(gabc_file, gtex_file)
+	    tex.print(string.format("\\input %s", gtex_file))
+	    return
 	else
 	    err("The file %s does not exist.", gabc_file)
 	    return
@@ -240,6 +242,8 @@ local function include_score(input_file)
     local gabc_timestamp = lfs.attributes(gabc_file).modification
     if gtex_timestamp < gabc_timestamp then
 	log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
+	compile_gabc(gabc_file, gtex_file)
+    elseif force_gabccompile then
 	compile_gabc(gabc_file, gtex_file)
     end
     tex.print(string.format("\\input %s", gtex_file))
