@@ -1287,45 +1287,99 @@
 %% score including
 %%%%%%%%%%%%%%%%%%%
 
-% The primary macro that includes a score. The lua function check that:
+% Flag to track compilation behavior
+% 0 = never compile (default)
+% 1 = auto compile (compile outdated scores and those lacking a compiled version)
+% 2 = compile all scores
+\def\gre@compilegabc{0}
+
+% User macro to force gregriotex to recompile gabc files. Useful for when there
+% are changes to gregoriotex but the GREGORIOTEX API VERSION is not changed.
+\def\forcecompilegabc{%
+	\gdef\gre@compilegabc{2}%
+}%
+
+% User macro to let gregoriotex auto recompile gabc files as necessary.
+% Intended to be used in the main tex file to revert the previous macro.
+\def\autocompilegabc{%
+	\gdef\gre@compilegabc{1}
+}%
+
+% User macro to force score inclusion without compilation.
+\def\nevercompilegabc{%
+	\gdef\gre@compilegabc{0}
+}
+
+
+% Internal marco which includes a score when \includescore is called without the optional argument.  Behavior is determined by the value of \gre@compilegabc flag.
+%
+% If \gre@compilegabc is 0, then we simply try to include the file as it is given to us.  This is the old behavior.
+%
+% If \gre@compilegabc is 1, tell the lua function to check that:
 %  -- The gtex file exists.
 %  -- The gtex file is of the correct gregoriotexapi_version.
 %  -- The gtex file is 'newer' than it's corresponding gabc file.
-% If either test fails, the gabc file is (re)compiled.
+% If any test fails, the gabc file is (re)compiled.
+%
+% If \gre@compilegabc is 2, pass true to the lua function.
+% This forces gregoriotex to recompile the gabc file.
 
 \def\gre@includescore#1{%
-  \directlua{gregoriotex.include_score([[#1]])}%
-  \relax%
+	\ifcase\gre@compilegabc% case 0, never compile
+		\gre@debug{Refusing to compile #1}%
+		\input #1%
+	\or% case 1, auto compile
+		\gre@debug{Auto compile #1}%
+		\directlua{gregoriotex.include_score([[#1]], nil)}%
+	\or% case 2, force compile
+		\gre@debug{Forced to compile #1}%
+		\directlua{gregoriotex.include_score([[#1]], true)}%
+	\fi%
+	\relax%
 }%
 
-\ifdefined\includetexscore%
-	\gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore\space instead.}%
-\else%
-	\def\includetexscore#1{%
-		\gre@includescore{#1}%
-	}%
-\fi%
+\def\includetexscore#1{%
+	\gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore[n]\space instead.}%
+	\gre@includescorewithoption[n]{#1}%
+}%
+
 \def\greincludetexscore#1{%
-	\gre@warning{\protect\greincludedtexscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
-	\gre@includescore{#1}%
+	\gre@warning{\protect\greincludetexscore\space is deprecated.\MessageBreak Use \protect\includescore[n]\space instead.}%
+	\gre@includescorewithoption[n]{#1}%
 }%
 
-\ifdefined\includegabcscore%
-	\gre@warning{\protect\includegabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
-\else%
-	\def\includegabcscore#1{%
-		\gre@includescore{#1}%
-	}%
-\fi%
+\def\includegabcscore#1{%
+	\gre@warning{\protect\includegabcscore\space is deprecated.\MessageBreak Use \protect\includescore[c]\space instead.}%
+	\gre@includescorewithoption[c]{#1}%
+}%
+
 \def\greincludegabcscore#1{%
-	\gre@warning{\protect\greincludedgabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
-	\gre@includescore{#1}%
+	\gre@warning{\protect\greincludegabcscore\space is deprecated.\MessageBreak Use \protect\includescore[c]\space instead.}%
+	\gre@includescorewithoption[c]{#1}%
 }%
 
-% A macro that passes the score directly to TeX without performing the API version check or if the gabc was modified since the creation of the gtex file.
+% The internal macro called when \includescore is called with the optional argument.  Behavior is determined by the value of the argument:
+% n - do not attempt to compile the score.  Simply include it as is.
+% a - perform the checks to see if the score needs to be recompiled and do so only if necessary
+% f - force the compilation of the score before including it
 \def\gre@includescorewithoption[#1]#2{%
-  \input #2%
-  \relax%
+	\ifx #1n\relax%
+		\gre@debug{Override not compiling #2}%
+		\input #2%
+	\else%
+		\ifx #1f\relax%
+			\gre@debug{Override force compiling #2}%
+			\directlua{gregoriotex.include_score([[#2]], true)}%
+		\else%
+			\ifx  #1a\relax%
+				\gre@debug{Override auto compiling #2}%
+				\directlua{gregoriotex.include_score([[#2]], nil)}%
+			\else%
+				\greerror{Unrecognized option [#1] for \protect\includescore}%
+			\fi%
+		\fi%
+	\fi%
+	\relax%
 }%
 
 % The main macro used by the user to input scores into the document.
