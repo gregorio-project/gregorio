@@ -19,6 +19,8 @@ The optional arguments are:
 \begin{tabular}{lp{10cm plus .5cm}}
   Argument & Description \\
   \hline
+  debug & Debug messages will be printed to the output log. \\
+  \hline
   nevercompile & Default. The classic behavior of gregoriotex. The user is
                  responsible for compiling gabc scores into gtex files.\\
   autocompile & Gregoriotex will automatically compile gtex files from gabc
@@ -41,8 +43,9 @@ In general, commands should not be modified.  Exceptions are noted below.
 Macro for including scores.  Works on both gabc and tex files.
 
 \begin{argtable}
-  \#1 & \texttt{n} & Optional. Bypasses compilation checks.\\
-      & \texttt{c} & Optional. Forces gregoriotex to compile the gabc file.\\
+  \#1 & \texttt{n} & Optional. \#2 will be included as is. \\
+      & \texttt{a} & Optional. Gregoriotex will automatically compile gabc files if necessary.\\
+      & \texttt{f} & Optional. Forces gregoriotex to compile the gabc file.\\
   \#2 & string & Relative or absolute path to the score.\\
 \end{argtable}
 
@@ -51,7 +54,7 @@ Example:\par\medskip
   \includescore[n]{TecumPrincipium.tex}
   \includescore{Chant/VirgoVirginum.gabc}
   \includescore{/home/user/chant/AdTeLevavi}
-  \includescore[c]{AveMaria}
+  \includescore[a]{AveMaria}
 
   %The following lines include the same score:
   \includescore{Christus}
@@ -59,21 +62,39 @@ Example:\par\medskip
   \includescore{./Christus}
   \includescore{./Christus.gabc}
 
-  %With the optional arg, #2 must be a file usable by TeX.
-  \includescore[n]{TecumPrincipium.gabc} % Wrong
+  %With the optional arg [f], #2 must be a file usable by TeX.
+  \includescore[f]{TecumPrincipium.gabc} % Wrong
 \end{latexcode}
 
-For the sake of clarity it is suggested that the file extension be
-omitted from \texttt{\#2}.
+\textbf{Important:} For the sake of clarity it is recommended that the
+file extension be omitted from \texttt{\#2}. When the nevercompile
+option is in effect (either via package option
+\texttt{[nevercompile]}, or \verb=\nevercompilegabc=, or
+\verb=\includescore[n]=) \#2 must be a \TeX\ file that exists and
+\texttt{.tex} is the only extension that may be omitted.
 
-When called with the optional argument \texttt{[c]} gregoriotex will
+When called with the optional argument \texttt{[a]} gregoriotex will
 automatically generate a \texttt{gtex} file in this format:
 \texttt{\textit{scorename}-x\_x\_x.gtex} where \texttt{x\_x\_x} is the
-gregotio version.
+gregorio version. This resulting file is not intended to be modified
+by the user and will be removed when the gabc file is recompiled. The
+rules that gregoriotex uses to determine if a gabc file needs to be
+compiled are:
+
+\begin{itemize}
+\item If a gtex file does not exist.
+\item If the modification time of the gabc file is newer than its
+  corresponding gtex file.
+\item If the version of the gtex file is outdated.
+\end{itemize}
 
 When called with the optional argument \texttt{[n]} gregoriotex will
 include the score without doing anything else. This is the same as the
 old behavior of gregoriotex and the default behavior.
+
+When called with the optional argument \texttt{[f]} gregoriotex will
+compile the gabc file into a gtex file. This is similar to
+\texttt{[a]} except the gabc is compiled every time.
 
 \macroname{\textbackslash forcecompilegabc}{gregoriotex.tex} A switch
 to change the behavior of the way gregoriotex includes scores. When
@@ -96,21 +117,23 @@ without doing anything else. This is the same as the traditional
 behavior of gregoriotex. It is the package default.
 
 \medskip The three previous macros can be combined in the same document to
-switch between the different includescore behaviors: \par\medskip
+switch between different includescore behaviors: \par\medskip
 \begin{latexcode}
-  \usepackage{gregoriotex}
+  \usepackage{gregoriotex} % [nevercompile] is the default.
   ----
   \includescore{TecumPrincipium} % gabc never compiled.
-  \includescore[c]{TecumPrincipium} % gabc always compiled.
+  \includescore[f]{TecumPrincipium} % gabc always compiled.
+  \includescore[a]{TecumPrincipium} % gabc auto compiled.
 
-  \autocompile
+  \autocompilegabc
   \includescore{TecumPrincipium} % gabc auto compiled.
   \includescore[n]{TecumPrincipium} % gabc never compiled.
-  \includescore[c]{TecumPrincipium} % gabc always compiled.
+  \includescore[f]{TecumPrincipium} % gabc always compiled.
 
-  \forcecompile
-  \includescore{TecumPrincipium} % gabc auways compiled.
+  \forcecompilegabc
+  \includescore{TecumPrincipium} % gabc always compiled.
   \includescore[n]{TecumPrincipium} % gabc never compiled.
+  \includescore[a]{TecumPrincipium} % gabc auto compiled.
 \end{latexcode}
 
 \macroname{\textbackslash englishcentering}{gregoriotex-syllable.tex}
