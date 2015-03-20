@@ -6,7 +6,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## 3.0.0-beta - 2015-03-15
 ### Changed
 - All distances renamed to identify the kind of distance they are.  They now follow the pattern `\gre@skip@...` or `\gre@dimen@...`.  This was to make tracking down the glue leaks easier.
-- Temporary distance registers renamed to follow the pattern `\gre@skip@temp@...` or `\gre@dimen@temp@...` as appropriate.  Issue [#80](https://github.com/gregorio-project/gregorio/issues/80) indicates this wasn't done completely the first time and had to be corrected.
+	- Temporary distance registers renamed to follow the pattern `\gre@skip@temp@...` or `\gre@dimen@temp@...` as appropriate.  Issue [#80](https://github.com/gregorio-project/gregorio/issues/80) indicates this wasn't done completely the first time and had to be corrected.
+	- Unify version numbers. The `gregoriotex_api_version` has been deprecated. The only version number is the gregorio release version. This simplifies the versioning process and should make bug reports easier to address.
 
 ### Fixed
 - Improved `\includescore` backwards compatibility.  There are now three modes available via LaTeX package options, macros, or by an optional argument to `\includescore`: `nevercompile` (`\nevercompilegabc`, `n`, default), `autocompile` (`\autocompilegabc`, `a`), and `forcecompile` (`\forcecompilegabc`, `f`).

@@ -3,8 +3,8 @@
 #################################################################
 # A script that inserts the Version into the the necessary files.
 #
-# GREGORIOTEX_API_VERSION is the version of gregoriotex.
-# GREGORIO_VERSION is the version of gregorio.
+# GREGORIO_VERSION is the version of gregorio. Fetched from the
+# file VERSION.
 #################################################################
 
 import re
@@ -15,31 +15,30 @@ version_file = 'VERSION'
 gregorio_files = ["configure.ac",
                   "windows/gregorio.iss"]
 
-gregoriotex_api_files = ["tex/gregoriotex.lua",
-                         "plugins/gregoriotex/gregoriotex.h"]
+gregoriotex_files = ["tex/gregoriotex.lua",
+                     "plugins/gregoriotex/gregoriotex.h"]
 
 result = []
-GREGORIOTEX_API_VERSION = ''
 GREGORIO_VERSION = ''
 
 def get_version(versionfile):
     with open(versionfile, 'r') as vfile:
-        apiver = vfile.readline()
         grever = vfile.readline()
-    return (apiver.split(' = ')[1].strip('\n'),
-            grever.split(' = ')[1].strip('\n'))
+    return grever.split(' = ')[1].strip('\n')
 
 def fileinput(infile):
     with open(infile, 'r') as source:
         filein = source.readlines()
     return filein
 
-def replace_api_version(infile, newver):
+def replace_gregoriotex_version(infile, newver):
     for line in infile:
         if re.search(r'internalversion =', line):
-            result.append(re.sub(r'[0-9.]+$', newver, line))
-        elif re.search(r'GREGORIOTEX_API_VERSION', line):
-            result.append(re.sub(r'[0-9.]+$', newver, line))
+            result.append(re.sub(r'\'[\d.]+-?\w*\'$', '\'' + newver + '\'',
+                                 line))
+        elif re.search(r'GREGORIO_VERSION', line):
+            result.append(re.sub(r'\"[\d.]+-?\w*\"$', '\"' + newver + '\"',
+                                 line))
         else:
             result.append(line)
 
@@ -47,9 +46,9 @@ def replace_gregorio_version(infile, newver):
     for line in infile:
         if re.search(r'AC_INIT\(\[', line):
             result.append(re.sub
-                          (r'[0-9.]+-?[a-z]*(\],)', newver + r'\1', line))
+                          (r'[\d.]+-?\w*(\],)', newver + r'\1', line))
         elif re.search(r'AppVersion', line):
-            result.append(re.sub(r'[0-9.]+', newver, line))
+            result.append(re.sub(r'[\d.]+-?\w*', newver, line))
         else:
             result.append(line)
 
@@ -59,12 +58,11 @@ def writeout(filename):
             
 def main():
     global result
-    global GREGORIOTEX_API_VERSION
     global GREGORIO_VERSION
-    GREGORIOTEX_API_VERSION, GREGORIO_VERSION = get_version(version_file)
-    for f in gregoriotex_api_files:
+    GREGORIO_VERSION = get_version(version_file)
+    for f in gregoriotex_files:
         src = fileinput(f)
-        replace_api_version(src, GREGORIOTEX_API_VERSION)
+        replace_gregoriotex_version(src, GREGORIO_VERSION)
         writeout(f)
         result = []
     for f in gregorio_files:
