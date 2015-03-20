@@ -188,8 +188,7 @@ local function clean_old_gtex_files(file_withdir)
 	dirpath = string.match(file_withdir, "(.*)"..sep)
     end
     if dirpath then -- dirpath is nil if current directory
-	filename = "^"..file_withdir:match
-	           (".*/".."(.*)").."%-%d+_%d+_%d+_?%a*%.gtex$"
+	filename = "^"..file_withdir:match(".*/".."(.*)").."%-%d+_%d+_%d+_?%a*%.gtex$"
 	for a in lfs.dir(dirpath) do
 	    if a:match(filename) then
 		os.remove(dirpath..sep..a)
