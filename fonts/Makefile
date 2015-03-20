@@ -39,4 +39,15 @@ greextra: greextra.ttf
 clean:
 	$(RM) $(TTFFILES)
 
+install:
+	@echo 'The Makefile in the fonts directory is no longer used for installing'
+	@echo 'GregorioTeX.  Please use install-gtex.sh from the parent directory'
+	@echo 'to install GregorioTeX.'
+	@echo
+	@echo 'If you were using "make install" before, now use'
+	@echo '    install-gtex.sh var:TEXMFLOCAL'
+	@echo
+	@echo 'If you were using "make localinstall" before, now use'
+	@echo '    install-gtex.sh var:TEXMFHOME'
+
 .DEFAULT_GOAL := all
