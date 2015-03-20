@@ -7,7 +7,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Changed
 - Distances in default space configuration (`gsp-default.tex`) have been changed so that they represent the actual printed dimension at the default staff size (see [#50](https://github.com/gregorio-project/gregorio/issues/50)).
 - User setable distance names have been simplified by removing the `\gre` prefix.  See doc/UserManual.pdf section ?? for a full list of the distance names.
-- All distances now scale with staff size changes by default.  Further, any distance set by the user can have this behavior changed by use of `\grenoscaledim`, and `\grescaledim`.  (Previously some distances always scaled, others never did, and there was no systematic way of knowing which was which.)
+- Possibility to switch on/off scaling of distances with staff size, as a consequence, it is now possible to define distances in em units (scaling with text font), see doc/UserManual.pdf section ?? for details.
 - `\grechangedim` now takes three arguments: the name of the distance, value to change the distance to, and whether or not this value should be scaled with changes in the staff size.
 - `\setinitalspacing` now takes four arguments.  New argument specifies whether distances should scale when the staff size changes.
 - `\setspacebeforeinitial`, `\setspaceafterinitial`, and `\setaboveinitialseparation` now take two arguments.  The new argument specifies whether the distance should scale when the staff size changes.
