@@ -79,6 +79,7 @@
 \xdef\greinternalversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
 
 % first some macros to allow checks for version:
+% Tests that all gregoriotex files are of the same version.
 % #1 is the name of the file
 % #2 is the version
 
@@ -87,11 +88,14 @@
     \greerror{uncoherent file versions: gregoriotex.tex is in version \number\greinternalversion \space\space while #1 is in version \number#2}}%
 }%
 
-% macro called by scores
+% Macro called by scores.
+% Tests the major version of gregorio (X.0.0) against the score. Fails
+% if the major version (X) does not match.
 % #1 is the version of GregorioTeX the score is made for.
 
 \def\gregoriotexapiversion#1{%
-  \IfStrEq*{#1}{\gregoriotexversion}{}{%else
+  \StrBefore{\gregoriotexversion}{.}[\gre@temp]%
+  \IfBeginWith{#1}{\gre@temp}{\relax}{%else
     \greerror{GregorioTeX is in version \gregoriotexversion \space\space while a score you included requires version #1. Please recompile your scores}}%
 }%
 
