@@ -516,15 +516,20 @@
 
 % typesets the text above the line
 \def\gretypesettextabovelines#1{%
-  \greabovelinestextstyle{\gre@dimen@temp@five=\gre@dimen@abovelinestextraise} %
-  \advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight %
-  \advance\gre@dimen@temp@five by 4\gre@dimen@interstafflinespace %
-  \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
-  \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
-  \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
-  \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
-  \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\greabovelinestextstyle{#1}\hss}%
-  \relax %
+	\greabovelinestextstyle{%
+		\gre@debug{Raise alt text: \gre@dimen@abovelinestextraise}%
+		\global\gre@dimen@temp@five=\gre@dimen@abovelinestextraise\relax%
+	} %
+	\gre@debug{Raise alt text: \the\gre@dimen@temp@five}%
+	\advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight %
+	\advance\gre@dimen@temp@five by 4\gre@dimen@interstafflinespace %
+	\advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
+	\advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
+	\advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
+	\advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
+	\gre@debug{Raise alt text: \the\gre@dimen@temp@five}%
+	\leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\greabovelinestextstyle{#1}\hss}%
+	\relax %
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
