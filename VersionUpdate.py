@@ -34,10 +34,10 @@ def fileinput(infile):
 def replace_gregoriotex_version(infile, newver):
     for line in infile:
         if re.search(r'internalversion =', line):
-            result.append(re.sub(r'\'[0-9.]+\w*\'$', '\'' + newver + '\'',
+            result.append(re.sub(r'\'[\d.]+-?\w*\'$', '\'' + newver + '\'',
                                  line))
         elif re.search(r'GREGORIO_VERSION', line):
-            result.append(re.sub(r'\"[0-9.]+\w*\"$', '\"' + newver + '\"',
+            result.append(re.sub(r'\"[\d.]+-?\w*\"$', '\"' + newver + '\"',
                                  line))
         else:
             result.append(line)
@@ -46,9 +46,9 @@ def replace_gregorio_version(infile, newver):
     for line in infile:
         if re.search(r'AC_INIT\(\[', line):
             result.append(re.sub
-                          (r'[0-9.]+-?[a-z]*(\],)', newver + r'\1', line))
+                          (r'[\d.]+-?\w*(\],)', newver + r'\1', line))
         elif re.search(r'AppVersion', line):
-            result.append(re.sub(r'[0-9.]+\w*', newver, line))
+            result.append(re.sub(r'[\d.]+-?\w*', newver, line))
         else:
             result.append(line)
 
