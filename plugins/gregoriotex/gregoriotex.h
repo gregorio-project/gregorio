@@ -19,7 +19,7 @@
 #ifndef GREGORIOTEX_H
 #define GREGORIOTEX_H
 
-#define GREGORIOTEX_API_VERSION 20150315
+#define GREGORIO_VERSION "3.0.0-beta"
 
 #define NO_FUSION 0
 #define FUSION 1
