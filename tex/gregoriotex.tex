@@ -94,8 +94,8 @@
 % #1 is the version of GregorioTeX the score is made for.
 
 \def\gregoriotexapiversion#1{%
-  \StrBefore{\gregoriotexversion}{.}[\gre@temp]%
-  \IfBeginWith{#1}{\gre@temp}{\relax}{%else
+  \StrBefore{\gregoriotexversion}{.}[\gre@gregoriomajorversion]%
+  \IfBeginWith{#1}{\gre@gregoriomajorversion}{\relax}{%else
     \greerror{GregorioTeX is in version \gregoriotexversion \space\space while a score you included requires version #1. Please recompile your scores}}%
 }%
 
