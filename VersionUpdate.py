@@ -13,6 +13,7 @@ import re
 version_file = 'VERSION'
 
 gregorio_files = ["configure.ac",
+                  "windows/gregorio-resources.rc",
                   "windows/gregorio.iss"]
 
 gregoriotex_api_files = ["tex/gregoriotex.lua",
@@ -49,6 +50,8 @@ def replace_gregorio_version(infile, newver):
             result.append(re.sub
                           (r'[0-9.]+-?[a-z]*(\],)', newver + r'\1', line))
         elif re.search(r'AppVersion', line):
+            result.append(re.sub(r'[0-9.]+', newver, line))
+        elif re.search(r'FileVersion', line):
             result.append(re.sub(r'[0-9.]+', newver, line))
         else:
             result.append(line)
