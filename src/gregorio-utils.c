@@ -151,6 +151,28 @@ available formats are:\n\
 \n"));
 }
 
+void
+check_input_clobber (char *input_file_name, char *output_file_name)
+{
+  char *real_input_file_name = realpath(input_file_name, NULL);
+  char *real_output_file_name = realpath(output_file_name, NULL);
+
+  if (real_input_file_name && real_output_file_name
+	  && strcmp(real_input_file_name, real_output_file_name) == 0)
+    {
+      fprintf (stderr, "error: refusing to overwrite the input file\n");
+      exit (-1);
+    }
+  if (real_input_file_name)
+	{
+	  free(real_input_file_name);
+	}
+  if (real_output_file_name)
+	{
+	  free(real_output_file_name);
+	}
+}
+
 int
 main (int argc, char **argv)
 {
@@ -162,8 +184,6 @@ main (int argc, char **argv)
   char *output_file_name = NULL;
   char *output_basename = NULL;
   char *error_file_name = NULL;
-  char *real_input_file_name = NULL;
-  char *real_output_file_name = NULL;
   FILE *input_file = NULL;
   FILE *output_file = NULL;
   FILE *error_file = NULL;
@@ -524,17 +544,7 @@ main (int argc, char **argv)
                 }
 #endif
             }
-          real_input_file_name = realpath(input_file_name, NULL);
-          real_output_file_name = realpath(output_file_name, NULL);
-          if (strcmp(real_input_file_name, real_output_file_name) == 0)
-            {
-              fprintf (stderr, "error: refusing to overwrite the input file\n");
-              exit (-1);
-            }
-          free(real_input_file_name);
-          real_input_file_name = NULL;
-          free(real_output_file_name);
-          real_output_file_name = NULL;
+		  check_input_clobber(input_file_name, output_file_name);
           output_file = fopen (output_file_name, "w");
           if (!output_file)
             {
@@ -548,6 +558,10 @@ main (int argc, char **argv)
     {
       if (!output_file)
         {
+          if (!input_file)
+            {
+              check_input_clobber(input_file_name, output_file_name);
+            }
           output_file = fopen (output_file_name, "w");
           if (!output_file)
             {
