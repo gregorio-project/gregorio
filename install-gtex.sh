@@ -7,7 +7,7 @@
 # install-gtex.sh var:{tex-variable}
 #
 #   Installs GregorioTeX into the directory named by the given {tex-variable}.
-#   If the PREFIX environment variable is set, it will be prepended.
+#   If the DESTDIR environment variable is set, it will be prepended.
 #
 #   Example: install-gtex.sh var:TEXMFLOCAL
 #   - Installs GregorioTeX into the system-wide TEXMF directory
@@ -18,7 +18,7 @@
 # install-gtex.sh system|user
 #
 #   Installs GregorioTeX into one of two common install locations.  If the
-#   PREFIX environment variable is set, it will be prepended.
+#   DESTDIR environment variable is set, it will be prepended.
 #
 #   Example: install-gtex.sh system
 #   - Installs GregorioTeX into the system-wide TEXMF directory; an alias for
@@ -78,7 +78,7 @@ case "$arg" in
 			echo "Invalid TeX variable: '${arg#var:}'"
 			echo
 		else
-			TEXMFROOT="${PREFIX}${TEXMFROOT}"
+			TEXMFROOT="${DESTDIR}${TEXMFROOT}"
 		fi
 		;;
 	dir:*)
