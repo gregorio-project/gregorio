@@ -21,7 +21,7 @@ local hpack, traverse_id, has_attribute, count, remove, insert_after, copy = nod
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = 20150315
+local internalversion = '3.0.0-beta'
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
@@ -188,14 +188,14 @@ local function clean_old_gtex_files(file_withdir)
 	dirpath = string.match(file_withdir, "(.*)"..sep)
     end
     if dirpath then -- dirpath is nil if current directory
-	filename = "^"..file_withdir:match(".*/".."(.*)").."%-[0-9].*%.gtex$"
+	filename = "^"..file_withdir:match(".*/".."(.*)").."%-%d+_%d+_%d+_?%a*%.gtex$"
 	for a in lfs.dir(dirpath) do
 	    if a:match(filename) then
 		os.remove(dirpath..sep..a)
 	    end
 	end
     else
-	filename = "^"..file_withdir.."%-[0-9].*%.gtex$"
+	filename = "^"..file_withdir.."%-%d+_%d+_%d+_?%a*%.gtex$"
 	for a in lfs.dir(lfs.currentdir()) do
 	    if a:match(filename) then os.remove(a) end
 	end
@@ -213,7 +213,7 @@ local function compile_gabc(gabc_file, gtex_file)
     end
 end
 
-local function include_score(input_file)
+local function include_score(input_file, force_gabccompile)
     local file_root
     if string.match(input_file:sub(-5), '%.gtex') then
 	file_root = input_file:sub(1,-6)
@@ -224,13 +224,16 @@ local function include_score(input_file)
     elseif not file_root then
 	file_root = input_file
     end
-    local gtex_file = file_root.."-"..internalversion..".gtex"
+    --    local gtex_file = file_root.."-"..internalversion..".gtex"
+    local gtex_file = file_root.."-"..internalversion:gsub("%.", "_")..".gtex"
     local gabc_file = file_root..".gabc"
     if not lfs.isfile(gtex_file) then
 	clean_old_gtex_files(file_root)
 	log("The file %s does not exist. Searching for a gabc file", gtex_file)
 	if lfs.isfile(gabc_file) then
 	    compile_gabc(gabc_file, gtex_file)
+	    tex.print(string.format("\\input %s", gtex_file))
+	    return
 	else
 	    err("The file %s does not exist.", gabc_file)
 	    return
@@ -240,6 +243,8 @@ local function include_score(input_file)
     local gabc_timestamp = lfs.attributes(gabc_file).modification
     if gtex_timestamp < gabc_timestamp then
 	log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
+	compile_gabc(gabc_file, gtex_file)
+    elseif force_gabccompile then
 	compile_gabc(gabc_file, gtex_file)
     end
     tex.print(string.format("\\input %s", gtex_file))
@@ -252,13 +257,13 @@ local function check_version(greinternalversion)
     end
 end
 
-local function get_greapiversion()
+local function get_gregorioversion()
     return internalversion
 end
 
-gregoriotex.include_score      = include_score
-gregoriotex.compile_gabc       = compile_gabc
-gregoriotex.atScoreEnd         = atScoreEnd
-gregoriotex.atScoreBeggining   = atScoreBeggining
-gregoriotex.check_version      = check_version
-gregoriotex.get_greapiversion  = get_greapiversion
+gregoriotex.include_score        = include_score
+gregoriotex.compile_gabc         = compile_gabc
+gregoriotex.atScoreEnd           = atScoreEnd
+gregoriotex.atScoreBeggining     = atScoreBeggining
+gregoriotex.check_version        = check_version
+gregoriotex.get_gregorioversion  = get_gregorioversion
