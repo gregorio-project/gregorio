@@ -38,9 +38,9 @@ def fileinput(infile):
 def replace_api_version(infile, newver):
     for line in infile:
         if re.search(r'internalversion =', line):
-            result.append(re.sub(r'[0-9.]+$', newver, line))
+            result.append(re.sub(r'[0-9.]+[a-zA-Z0-9.\-]*$', newver, line))
         elif re.search(r'GREGORIOTEX_API_VERSION', line):
-            result.append(re.sub(r'[0-9.]+$', newver, line))
+            result.append(re.sub(r'[0-9.]+[a-zA-Z0-9.\-]*$', newver, line))
         else:
             result.append(line)
 
@@ -48,11 +48,13 @@ def replace_gregorio_version(infile, newver):
     for line in infile:
         if re.search(r'AC_INIT\(\[', line):
             result.append(re.sub
-                          (r'[0-9.]+-?[a-z]*(\],)', newver + r'\1', line))
+                          (r'[0-9.]+[a-zA-Z0-9.\-]*(\],)', newver + r'\1', line))
         elif re.search(r'AppVersion', line):
-            result.append(re.sub(r'[0-9.]+', newver, line))
+            result.append(re.sub(r'[0-9.]+[a-zA-Z0-9.\-]*', newver, line))
         elif re.search(r'FileVersion', line):
-            result.append(re.sub(r'[0-9.]+', newver, line))
+            result.append(re.sub(r'[0-9.]+[a-zA-Z0-9.\-]*', newver, line))
+        elif re.search(r'ProductVersion', line):
+            result.append(re.sub(r'[0-9.]+[a-zA-Z0-9.\-]*', newver, line))
         else:
             result.append(line)
 
