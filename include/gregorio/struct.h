@@ -418,6 +418,7 @@ representation on the score).
                                      char pitch);
   void gregorio_add_texverb_as_note (gregorio_note **current_note, char *str,
                                      char type);
+  void gregorio_add_nlba_as_note (gregorio_note ** current_note, char type);
   void gregorio_add_texverb_to_note (gregorio_note **current_note, char *str);
   void gregorio_add_cs_to_note (gregorio_note **current_note, char *str);
   void gregorio_add_special_as_element (gregorio_element **current_element,
