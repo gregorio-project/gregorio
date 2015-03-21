@@ -45,9 +45,9 @@ install:
 	@echo 'to install GregorioTeX.'
 	@echo
 	@echo 'If you were using "make install" before, now use'
-	@echo '    install-gtex.sh var:TEXMFLOCAL'
+	@echo '    install-gtex.sh system'
 	@echo
 	@echo 'If you were using "make localinstall" before, now use'
-	@echo '    install-gtex.sh var:TEXMFHOME'
+	@echo '    install-gtex.sh user'
 
 .DEFAULT_GOAL := all
