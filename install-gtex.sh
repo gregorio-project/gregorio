@@ -2,7 +2,7 @@
 
 # This script installs the GregorioTeX portion of Gregorio.
 #
-# There are three ways to use this script:
+# There are four ways to use this script:
 #
 # install-gtex.sh var:{tex-variable}
 #
@@ -10,10 +10,23 @@
 #   If the PREFIX environment variable is set, it will be prepended.
 #
 #   Example: install-gtex.sh var:TEXMFLOCAL
-#   - Installs GregorioTeX into the local TEXMF directory
+#   - Installs GregorioTeX into the system-wide TEXMF directory
 #
 #   Example: install-gtex.sh var:TEXMFHOME
 #   - Installs GregorioTeX into the user's personal TEXMF directory
+#
+# install-gtex.sh system|user
+#
+#   Installs GregorioTeX into one of two common install locations.  If the
+#   PREFIX environment variable is set, it will be prepended.
+#
+#   Example: install-gtex.sh system
+#   - Installs GregorioTeX into the system-wide TEXMF directory; an alias for
+#     install-gtex.sh var:TEXMFLOCAL
+#
+#   Example: install-gtex.sh user
+#   - Installs GregorioTeX into the user's personal TEXMF directory; an alias
+#     for install-gtex.sh var:TEXMFHOME
 #
 # install-gtex.sh dir:{directory}
 #
@@ -41,7 +54,17 @@ KPSEWHICH=${KPSEWHICH:-kpsewhich}
 TTFFILES=("${TTFFILES[@]/#/fonts/}")
 FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
 
-case "$1" in
+arg="$1"
+case "$arg" in
+	system)
+		arg='var:TEXMFLOCAL'
+		;;
+	user)
+		arg='var:TEXMFHOME'
+		;;
+esac
+
+case "$arg" in
 	"")
 		;;
 	tds)
@@ -49,20 +72,20 @@ case "$1" in
 		TEXMFROOT=./tmp-texmf
 		;;
 	var:*)
-		TEXMFROOT=`${KPSEWHICH} -var-value "${1#var:}"`
+		TEXMFROOT=`${KPSEWHICH} -var-value "${arg#var:}"`
 		if [ "$TEXMFROOT" = "" ]
 		then
-			echo "Invalid TeX variable: '${1#var:}'"
+			echo "Invalid TeX variable: '${arg#var:}'"
 			echo
 		else
 			TEXMFROOT="${PREFIX}${TEXMFROOT}"
 		fi
 		;;
 	dir:*)
-		TEXMFROOT="${1#dir:}"
+		TEXMFROOT="${arg#dir:}"
 		;;
 	*)
-		echo "Invalid argument: '$1'"
+		echo "Invalid argument: '$arg'"
 		echo
 		;;
 esac
@@ -71,7 +94,7 @@ if [ "$TEXMFROOT" = "" ]
 then
 	echo "Usage: $0 var:{tex-variable}"
 	echo "       $0 dir:{directory}"
-	echo "       $0 tds"
+	echo "       $0 system|user|tds"
 	exit 1
 fi
 
@@ -93,7 +116,7 @@ install_to "${TEXMFROOT}/fonts/truetype/public/${NAME}" "${TTFFILES[@]}"
 install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}" "${DOCFILES[@]}"
 install_to "${TEXMFROOT}/fonts/source/${NAME}" "${FONTSRCFILES[@]}"
 
-if [ "$1" = 'tds' ]
+if [ "$arg" = 'tds' ]
 then
 	echo "Making TDS-ready archive ${TDS_ZIP}."
 	rm -f ${TDS_ZIP}
