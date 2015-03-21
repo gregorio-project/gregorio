@@ -11,6 +11,7 @@
 #      --host=     : target system for mingw32 cross-compilation
 #      --build=    : build system for mingw32 cross-compilation
 #      --arch=     : crosscompile for ARCH on OS X
+#      {other)     : anything else is passed to configure verbatim
       
 # try to find bash, in case the standard shell is not capable of
 # handling the generated configure's += variable assignments
@@ -25,18 +26,19 @@ MINGWCROSS=FALSE
 CONFHOST=
 CONFBUILD=
 MACCROSS=FALSE
+OTHERARGS=
 
 CFLAGS="$CFLAGS -Wdeclaration-after-statement"
 
 until [ -z "$1" ]; do
   case "$1" in
-    --mingw     ) MINGWCROSS=TRUE    ;;
-    --static    ) STATIC=TRUE    ;;
-    --warn      ) WARN=TRUE    ;;
-    --host=*    ) CONFHOST="$1"      ;;
-    --build=*   ) CONFBUILD="$1"     ;;
+    --mingw     ) MINGWCROSS=TRUE ;;
+    --static    ) STATIC=TRUE ;;
+    --warn      ) WARN=TRUE ;;
+    --host=*    ) CONFHOST="$1" ;;
+    --build=*   ) CONFBUILD="$1" ;;
     --arch=*    ) MACCROSS=TRUE; ARCH=`echo $1 | sed 's/--arch=\(.*\)/\1/' ` ;;
-    *           ) echo "ERROR: invalid build.sh parameter: $1"; exit 1       ;;
+    *           ) OTHERARGS="$OTHERARGS $1" ;;
   esac
   shift
 done
@@ -104,12 +106,34 @@ fi
 
 export CFLAGS LDFLAGS
 
-./configure  $CONFHOST $CONFBUILD $STATICFLAGS $ARCHFLAGS
+function die {
+	echo "Failed to $1."
+	exit 1
+}
 
-make
+CPUS=`nproc 2>/dev/null || echo 1`
+
+echo "Creating build files using Autotools"
+autoreconf -f -i || die "create build files"
+echo
+
+CONFIGURE_ARGS="$CONFHOST $CONFBUILD $STATICFLAGS $ARCHFLAGS $OTHERARGS"
+echo "Configuring using options: $CONFIGURE_ARGS"
+./configure $CONFIGURE_ARGS || die "configure Gregorio"
+echo
+
+echo "Building"
+make -j${CPUS} || die "build Gregorio"
+echo
 
 if [ "$MINGWCROSS" = "TRUE" ]
 then
   PATH=$OLDPATH
 fi
 
+echo "Build complete.  Next, you may want to run ./install.sh to install."
+echo
+echo "Depending on installation directory, you probably need to run"
+echo "./install.sh using sudo or as root."
+
+exit 0
