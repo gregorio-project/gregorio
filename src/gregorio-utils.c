@@ -154,7 +154,7 @@ available formats are:\n\
 
 // realpath is not in mingw32
 #ifdef __MINGW32__
-  #define realpath(path,resolved_path) _fullpath(resolved_path, path, 260)
+  #define realpath(path,resolved_path) _fullpath(resolved_path, path, _MAX_PATH)
 #endif
 
 void
