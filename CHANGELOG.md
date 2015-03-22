@@ -8,23 +8,20 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Unify version numbers. The `gregoriotex_api_version` has been deprecated. The only version number is the gregorio release version. This simplifies the versioning process and should make bug reports easier to address.
 - Distances in default space configuration (`gsp-default.tex`) have been changed so that they represent the actual printed dimension at the default staff size (see [#50](https://github.com/gregorio-project/gregorio/issues/50)).
 - User settable distance names have been simplified by removing the `\gre` prefix.  See doc/UserManual.pdf section ?? for a full list of the distance names.
-- Possibility to switch on/off scaling of distances with staff size, as a consequence, it is now possible to define distances in em units (scaling with text font), see doc/UserManual.pdf section ?? for details.
-- `\grechangedim` now takes three arguments: the name of the distance, value to change the distance to, and whether or not this value should be scaled with changes in the staff size.
-- `\setinitalspacing` now takes four arguments.  New argument specifies whether distances should scale when the staff size changes.
-- `\setspacebeforeinitial`, `\setspaceafterinitial`, and `\setaboveinitialseparation` now take two arguments.  The new argument specifies whether the distance should scale when the staff size changes.
+- Space configuration files (`gsp-xxx.tex`) have been reformated.  You now need to use `\gresetdim` for setting distances.  The TeX primitive notation (`\somedistance = 3cm`) can no longer be used.  `\gresetdim` takes three arguments: the name of the distance, the desired value, and whether the distance should scale with changes in the staff size or not.  See `gsp-default.tex` for an example.
+- All distances can now be set to scale with staff size, as a consequence `\grechangedim` now takes three arguments: the name of the distance, value to change the distance to (which now supports em and ex units), and whether or not this value should be scaled with changes in the staff size.  See doc/UserManual.pdf section ?? for details.
+- `\setinitalspacing` , `\setspacebeforeinitial`, `\setspaceafterinitial`, and `\setaboveinitialseparation` now take an additional argument.  The new argument specifies whether the distance should scale when the staff size changes.
 - Improved `\includescore` capabilities.  See doc/UserManual.pdf section ?? for full details.
-- `\gre@stafflinefactor` (the internal control for the thickness of the stafflines) now uses same scale as `\grefactor`.
 - Windows installer documentation updated
 - Clivis stem length now follow Solesmes' books conventions (see [#31](https://github.com/gregorio-project/gregorio/issues/31)).
-- TeXworks configuration script for Windows updated.  `greg-book` and `gregorio` engines will no longer be added.
+- TeXworks configuration script for Windows updated.  `greg-book` and `gregorio` engines will no longer be added since their functionality is considered Deprecated (see below).
 
 ### Fixed
-- `\includescore` not finding files for autocompile under certain circumstances.  (see http://www.mail-archive.com/gregorio-users@gna.org/msg02346.html and following)
+- `\includescore` not finding files for autocompile under certain circumstances.  (see [this thread](http://www.mail-archive.com/gregorio-users@gna.org/msg02346.html))
 
 ### Added
-- `\gresetdim` for setting distances in space configuration files.  The TeX primitive notation (`\somedistance = 3cm`) can no longer be used.  Takes three arguments: the name of the distance, the desired value, and whether the distance should scale with changes in the staff size or not.
-- `\setstafflinethickness` controls the thickness of the staff lines.
-- `\gre@debug`.  Enables the printing of debug messages with debug flag is set to true (can be done manually via `\debugtrue`, or via the `debug` option when loading the gregoriotex package in LaTeX)
+- `\setstafflinethickness` controls the thickness of the staff lines.  See doc/UserManual.pdf section ?? for full details.
+- `\gre@debug`.  Writes messages to the log file when the debug flag is set to true (can be done manually via `\debugtrue`, or via the `debug` option when loading the gregoriotex package in LaTeX).
 - doc folder and beginnings of User Manual.  Only contains spaces documentation at this point.
 - This CHANGELOG
 
