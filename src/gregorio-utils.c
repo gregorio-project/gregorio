@@ -151,6 +151,12 @@ available formats are:\n\
 \n"));
 }
 
+
+// realpath is not in mingw32
+#ifdef __MINGW32__
+  #define realpath(path,resolved_path) _fullpath(resolved_path, path, _MAX_PATH)
+#endif
+
 void
 check_input_clobber (char *input_file_name, char *output_file_name)
 {
