@@ -11,6 +11,7 @@
 #      --host=     : target system for mingw32 cross-compilation
 #      --build=    : build system for mingw32 cross-compilation
 #      --arch=     : crosscompile for ARCH on OS X
+#      --jobs=     : the number of jobs to run simultaneously in the make step
 #      {other)     : anything else is passed to configure verbatim
       
 # try to find bash, in case the standard shell is not capable of
@@ -26,6 +27,7 @@ MINGWCROSS=FALSE
 CONFHOST=
 CONFBUILD=
 MACCROSS=FALSE
+MAKEOPTS=
 OTHERARGS=
 
 CFLAGS="$CFLAGS -Wdeclaration-after-statement"
@@ -38,6 +40,7 @@ until [ -z "$1" ]; do
     --host=*    ) CONFHOST="$1" ;;
     --build=*   ) CONFBUILD="$1" ;;
     --arch=*    ) MACCROSS=TRUE; ARCH=`echo $1 | sed 's/--arch=\(.*\)/\1/' ` ;;
+    --jobs=*    ) MAKEOPTS="$MAKEOPTS $1" ;;
     *           ) OTHERARGS="$OTHERARGS $1" ;;
   esac
   shift
@@ -110,19 +113,17 @@ function die {
 	exit 1
 }
 
-CPUS=`nproc 2>/dev/null || echo 1`
-
 echo "Creating build files using Autotools"
 autoreconf -f -i || die "create build files"
 echo
 
 CONFIGURE_ARGS="$CONFHOST $CONFBUILD $STATICFLAGS $ARCHFLAGS $OTHERARGS"
-echo "Configuring using options: $CONFIGURE_ARGS"
+echo "Configuring build files; options: $CONFIGURE_ARGS"
 ./configure $CONFIGURE_ARGS || die "configure Gregorio"
 echo
 
-echo "Building"
-make -j${CPUS} || die "build Gregorio"
+echo "Building Gregorio; options:$MAKEOPTS"
+make ${MAKEOPTS} || die "build Gregorio"
 echo
 
 if [ "$MINGWCROSS" = "TRUE" ]
