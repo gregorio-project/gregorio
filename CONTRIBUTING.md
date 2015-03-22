@@ -41,7 +41,7 @@ are the same under GNU/Linux and Mac OSX:
 
 The code uses two spaces for indentation. The C code follows the [GNU coding standards](https://www.gnu.org/prep/standards/html_node/Writing-C.html).
 
-Use indent on your code before commiting it, with the `.indent.pro` file in repository's root folder.
+Use indent on your code before commiting it, with the `.indent.pro` file in repository's root folder: run `indent path/to/my/file.c` from the root directory.
 
 ### Tests
 
