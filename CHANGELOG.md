@@ -65,3 +65,81 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Added `<eu>` markup in gabc to delimit _E u o u a e_ areas (changes spaces slightly).
 - Possibility to center translation syllable by syllable, see [here](https://www.mail-archive.com/gregorio-users@gna.org/msg01760.html) and [here](https://www.mail-archive.com/gregorio-users@gna.org/msg01783.html).
 - Possibility not to scale spaces but specify them in units proportional to main text font (e.g. `em`).
+
+## 2.0 - 2010-09-27
+### Changed
+- gregorio API changed and GregorioTeX macros prepended with `\gre`, to avoid potential name conflicts
+- updated greciliae font
+- fine-tuning the spacing, and making it easier for users to change the defaults
+- GregorioXML reading is now optional (via `--enable-xml-read` flag)
+
+### Fixed
+- as always, fixing a lot of bugs
+
+### Added
+- Automatic Windows installer
+- adding requested features: Dominican bars, choral signs, text above staff lines
+- enabling comments in gabc files
+- adding ability to write verbatim TeX at {note, glyph, element} level
+- introducing horizontal episemus bridges
+- default output is now utf8 directly; the `-O`  option allows old-style TeX output, i.e. `\char XXXX`
+- new static build system for packaged distributions
+
+
+## 1.0 - 2009-10-19
+### Changed
+- changing the number of arguments of some TeX function
+- changing the glyph names
+- improving the spacings
+- better management of the penalty in TeX so that the line changes are more consistent
+- changing the markup system in gabc to be more natural
+
+### Fixed
+- fixing a lot of bugs
+
+### Added
+- adding the possibility to put a flat after the clef
+- adding the possibility to put a custo before a clef change
+
+
+## 0.9.2 - 2008-12-27
+### Changed
+- changing the number of arguments of some TeX function
+- changing the glyph names
+
+### Fixed
+- fixing a lot of bugs
+
+### Added
+- LuaTeX additional functionalities
+
+
+## 0.9.1 - 2008-11-23
+### Changed
+- changing the number of arguments of some TeX functions
+
+### Fixed
+- fixing a lot of small bugs
+
+
+## 0.9 - 2008-07-25
+### Changed
+- stabilizing the TeX API
+
+### Added
+- adding support for Cygwin compilation
+- adding too many new features to be listed
+
+
+## 0.3 - 2008-01-18
+### Changed
+- changing the architecture of libraries and plugins
+
+### Added
+- adding support for end of lines
+- adding support for compilation on MAC OSX
+
+     
+## 0.2.2 - 2007-06-14
+### Added
+- adding styles and centering in text
