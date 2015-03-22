@@ -22,8 +22,6 @@ AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([foreign])
-AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.15])
 
 # libgregorio versioning
 LIBGREGORIO_CURRENT=0
@@ -132,6 +130,5 @@ AC_CONFIG_FILES([
     examples/Makefile
     contrib/Makefile
     tex/Makefile
-    po/Makefile.in
 ])
 AC_OUTPUT

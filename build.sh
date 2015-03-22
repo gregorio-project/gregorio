@@ -82,7 +82,6 @@ then
   LDFLAGS="-Wl,--large-address-aware $CFLAGS"
   ARCHFLAGS="--target=\"$MINGWSTR\" \
     --with-gnu-ld \
-    --disable-nls \
     --host=$MINGWSTR \
     --build=$MINGWBUILD \
     --prefix=/usr/$MINGWSTR"
