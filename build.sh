@@ -40,7 +40,7 @@ until [ -z "$1" ]; do
     --host=*    ) CONFHOST="$1" ;;
     --build=*   ) CONFBUILD="$1" ;;
     --arch=*    ) MACCROSS=TRUE; ARCH=`echo $1 | sed 's/--arch=\(.*\)/\1/' ` ;;
-    --jobs=*    ) MAKEOPTS="$MAKEOPTS $1" ;;
+    -j*|--jobs=*) MAKEOPTS="$MAKEOPTS $1" ;;
     *           ) OTHERARGS="$OTHERARGS $1" ;;
   esac
   shift
