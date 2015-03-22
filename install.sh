@@ -18,7 +18,7 @@ make install || die "install Gregorio"
 echo
 
 echo "Installing GregorioTeX"
-install-gtex.sh "${1:-system}" || die "install GregorioTeX"
+./install-gtex.sh "${1:-system}" || die "install GregorioTeX"
 echo
 
 echo "Installation complete."
