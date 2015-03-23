@@ -38,6 +38,7 @@ AM_PROG_LEX
 AC_PROG_YACC
 AC_PROG_LIBTOOL
 AC_CHECK_TOOL([RC], [windres], [no])
+AM_CONDITIONAL([HAVE_RC], [test x$RC != xno])
 
 ## a dirty patch for cygwin, who needs the -lintl explicit option, that doesn't work under linux
 AC_CHECK_PROGS(UNAME, uname, :)
