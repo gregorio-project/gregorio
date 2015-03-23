@@ -88,7 +88,6 @@ auto/
 *.deb
 
 #gregorio specific
-doc/UserManual.pdf
 doc/_minted-UserManual
 fonts/*.ttf
 *.exe
