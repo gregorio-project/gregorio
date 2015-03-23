@@ -41,16 +41,13 @@ are the same under GNU/Linux and Mac OSX:
 
 ##### C files
 
-The C code follows the [GNU coding standards](https://www.gnu.org/prep/standards/html_node/Writing-C.html). 
-
 Use indent on your code before commiting it, with the `.indent.pro` file in repository's root folder: run `indent path/to/my/file.c` from the root directory.
 
 ##### Other files
 
-The rest of the code uses four spaces for indentation.
+The rest of the code uses two spaces for indentation of `.tex`, `.lua` and other files, and four spaces for `.py` files.
 
 Gregorio provides an [`.editorconfig` file](../.editorconfig), using an [editorconfig plugin](http://editorconfig.org/#download) for your editor will configure it automatically.
-
 
 ### Tests
 
