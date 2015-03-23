@@ -32,25 +32,25 @@ local dirs = {
 }
 
 function io.loaddata(filename,textmode)
-    local f = io.open(filename,(textmode and 'r') or 'rb')
-    if f then
-        local data = f:read('*all')
-        f:close()
-        return data
-    else
-        return nil
-    end
+  local f = io.open(filename,(textmode and 'r') or 'rb')
+  if f then
+    local data = f:read('*all')
+    f:close()
+    return data
+  else
+    return nil
+  end
 end
 
 function io.savedata(filename,data,joiner)
-    local f = io.open(filename,"wb")
-    if f then
-        f:write(data or "")
-        f:close()
-        return true
-    else
-        return false
-    end
+  local f = io.open(filename,"wb")
+  if f then
+    f:write(data or "")
+    f:close()
+    return true
+  else
+    return false
+  end
 end
 
 function copy_one_file(src, dest)
@@ -102,7 +102,7 @@ function remove_possible_old_install()
   for _, d in pairs(old_base_dirs) do
     if lfs.isdir(d) then
       old_install_was_present = true
-	  print("Removing directory "..d)
+      print("Removing directory "..d)
       lfs.rmdir(d)
     end
   end
@@ -112,48 +112,48 @@ function remove_possible_old_install()
 end
 
 function main_install()
-	remove_possible_old_install()
-	create_dirs()
-	copy_files()
-	run_texcommands()
+  remove_possible_old_install()
+  create_dirs()
+  copy_files()
+  run_texcommands()
 end
 
 -- lfs.isdir doesn't allow trailing slashes
 function format_dirpath(p)
-    return p:gsub("/$", "")
+  return p:gsub("/$", "")
 end
 
 function texworks_conf()
-	local filesdir = texworksdir
-	if not lfs.isdir(format_dirpath(texworksdir)) then
-	   print("TeXWorks not found, skipping.\n"..texworksdir)
-	   return
-	end
-	print("Modifying tools.ini...\n")
-	texworks_conf_tools(filesdir.."configuration/tools.ini")
-	print("Modifying TeXWorks.ini...\n")
-	texworks_conf_ini(filesdir.."TUG/TeXWorks.ini")
-	print("Modifying texworks-config.txt...\n")
-	texworks_conf_config(filesdir.."configuration/texworks-config.txt")
+  local filesdir = texworksdir
+  if not lfs.isdir(format_dirpath(texworksdir)) then
+    print("TeXWorks not found, skipping.\n"..texworksdir)
+    return
+  end
+  print("Modifying tools.ini...\n")
+  texworks_conf_tools(filesdir.."configuration/tools.ini")
+  print("Modifying TeXWorks.ini...\n")
+  texworks_conf_ini(filesdir.."TUG/TeXWorks.ini")
+  print("Modifying texworks-config.txt...\n")
+  texworks_conf_config(filesdir.."configuration/texworks-config.txt")
 end
 
 function remove_read_only(filename)
-    os.spawn(string.format("attrib -r \"%s\"", filename))
+  os.spawn(string.format("attrib -r \"%s\"", filename))
 end
 
 function texworks_conf_config(filename)
-    remove_read_only(filename)
-	local data = ""
-	local f = io.open(filename, 'r')
-	for l in f:lines() do
-		-- we consider that if someone has already modified it (or a previous intall of gregorio), we don't do anything
-		local m = l:find("^file%-open%-filter")
-	    if m then
-		    return
-		end
-		data = data..l.."\n"
+  remove_read_only(filename)
+  local data = ""
+  local f = io.open(filename, 'r')
+  for l in f:lines() do
+    -- we consider that if someone has already modified it (or a previous intall of gregorio), we don't do anything
+    local m = l:find("^file%-open%-filter")
+    if m then
+      return
     end
-	data = data..[[
+    data = data..l.."\n"
+  end
+  data = data..[[
 file-open-filter:	TeX documents (*.tex)
 file-open-filter:	Gabc score (*.gabc)
 file-open-filter:	LaTeX documents (*.ltx)
@@ -166,21 +166,21 @@ file-open-filter:	Text files (*.txt)
 file-open-filter:	PDF documents (*.pdf)
 file-open-filter:	All files (*.* *)
 ]]
-	io.savedata(filename, data)
+  io.savedata(filename, data)
 end
 
 function texworks_conf_ini(filename)
-    remove_read_only(filename)
-	local f = io.open(filename, 'r')
-	local data = ""
-	for l in f:lines() do
-	    if l:match("defaultEngine") then
-		    data = data.."defaultEngine=LuaLaTeX\n"
-		else
-			data = data..l.."\n"
-		end
+  remove_read_only(filename)
+  local f = io.open(filename, 'r')
+  local data = ""
+  for l in f:lines() do
+    if l:match("defaultEngine") then
+      data = data.."defaultEngine=LuaLaTeX\n"
+    else
+      data = data..l.."\n"
     end
-	io.savedata(filename, data)
+  end
+  io.savedata(filename, data)
 end
 
 local full_tools_ini = [[[001]
@@ -256,73 +256,73 @@ arguments=$basename
 showPdf=false]]
 
 function texworks_conf_tools(filename)
-	-- by default, there is no tools.ini in the recent versions of TeXWorks
-	if not lfs.isfile(filename) then 
-	  print(filename.." does not exist, creating it...\n")
-	  io.savedata(filename, full_tools_ini)
-	  return
-	end
-   	-- let's remove the read-only attribute
-	remove_read_only(filename)
-	local f = io.open(filename, 'r')
-	local toolstable = {}
-	local current = 0
-	local lualatexfound = 0
-	local gregoriofound = 0
-	for l in f:lines() do
-	    local num = tonumber(l:match("(%d+)%]"))
-		if num then
-		  current = num
-		else
-		  if l == "" then
-		  elseif string.lower(l) == "name=lualatex" then
-		    lualatexfound = 1
-		  elseif string.lower(l) == "name=gregorio" then
-		    gregoriofound = 1
-		  elseif toolstable[current] == nil then
-		    toolstable[current] = l
-	      else
-		    toolstable[current] = toolstable[current]..'\n'..l
-		  end
-		end
-	end
-	if lualatexfound == 0 then
-		local tmp = toolstable[1]
-		toolstable[1] = [[name=LuaLaTeX
+  -- by default, there is no tools.ini in the recent versions of TeXWorks
+  if not lfs.isfile(filename) then 
+    print(filename.." does not exist, creating it...\n")
+    io.savedata(filename, full_tools_ini)
+    return
+  end
+  -- let's remove the read-only attribute
+  remove_read_only(filename)
+  local f = io.open(filename, 'r')
+  local toolstable = {}
+  local current = 0
+  local lualatexfound = 0
+  local gregoriofound = 0
+  for l in f:lines() do
+    local num = tonumber(l:match("(%d+)%]"))
+    if num then
+      current = num
+    else
+      if l == "" then
+      elseif string.lower(l) == "name=lualatex" then
+	lualatexfound = 1
+      elseif string.lower(l) == "name=gregorio" then
+	gregoriofound = 1
+      elseif toolstable[current] == nil then
+	toolstable[current] = l
+      else
+	toolstable[current] = toolstable[current]..'\n'..l
+      end
+    end
+  end
+  if lualatexfound == 0 then
+    local tmp = toolstable[1]
+    toolstable[1] = [[name=LuaLaTeX
 program=lualatex
 arguments=$synctexoption, $fullname
 showPdf=true]]
-		toolstable[current+1] = tmp
-	end
-	if gregoriofound == 0 then
-		local tmp = toolstable[2]
-		toolstable[2] = [[name=Gregorio
+    toolstable[current+1] = tmp
+  end
+  if gregoriofound == 0 then
+    local tmp = toolstable[2]
+    toolstable[2] = [[name=Gregorio
 program=gregorio
 arguments=$fullname
 showPdf=false]]
-		toolstable[current+2] = tmp
-	end
-	if gregoriofound == 1 and lualatexfound == 1 then
-		return
-	end
-	local data = ""
-	for i,s in ipairs(toolstable) do
-	  data = data..string.format("[%03d]\n", i)..s..'\n\n'
-	end
-	io.savedata(filename, data)
+    toolstable[current+2] = tmp
+  end
+  if gregoriofound == 1 and lualatexfound == 1 then
+    return
+  end
+  local data = ""
+  for i,s in ipairs(toolstable) do
+    data = data..string.format("[%03d]\n", i)..s..'\n\n'
+  end
+  io.savedata(filename, data)
 end
 
 function scribus_config()
-	local f = io.open('contrib/900_gregorio.xml', 'r')
-	local data = ""
-	for l in f:lines() do
-	    if l:match("executable command") then
-		    data = data..string.format("	<executable command='texlua \"%s\" \"%%file\" \"%%dir\"'/>\n", lfs.currentdir().."/contrib/gregorio-scribus.lua")
-		else
-			data = data..l.."\n"
-		end
+  local f = io.open('contrib/900_gregorio.xml', 'r')
+  local data = ""
+  for l in f:lines() do
+    if l:match("executable command") then
+      data = data..string.format("	<executable command='texlua \"%s\" \"%%file\" \"%%dir\"'/>\n", lfs.currentdir().."/contrib/gregorio-scribus.lua")
+    else
+      data = data..l.."\n"
     end
-	io.savedata('contrib/900_gregorio.xml', data)
+  end
+  io.savedata('contrib/900_gregorio.xml', data)
 end
 
 if arg[1] == nil or arg[1] ~= '--conf' then 	 
