@@ -81,7 +81,8 @@ src/gregorio
 #emacs auto gen files
 auto/
 
-!UserManual.pdf
+#tarball
+*.tar.gz
 
 #gregorio specific
 
@@ -99,3 +100,4 @@ POTFILES
 stamp-po
 doc/_minted-UserManual
 *.gtex
+*.ttf
