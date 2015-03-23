@@ -44,11 +44,11 @@
 
 \newif\ifdebug\debugfalse
 \def\gre@debug#1{%
-	\ifdebug%
-		\typeout{GregorioTex debug: #1}%
-	\else%
-		\relax%
-	\fi%
+  \ifdebug%
+    \typeout{GregorioTex debug: #1}%
+  \else%
+    \relax%
+  \fi%
 }%
 \AtBeginDocument{\gre@debug{GregorioTeX is in debug mode.  Debug messages will be printed to the log.}}%
 
@@ -486,11 +486,11 @@
 
 % set space above the text lines - almost the same as for the translation
 \def\greaddspaceabove{%
-	\greabovelinestextstyle{%
-		\global\gre@dimen@currentabovelinestextheight=\gre@dimen@abovelinestextheight %
-		\gregeneratelines %
-	}%
-	\relax %
+  \greabovelinestextstyle{%
+    \global\gre@dimen@currentabovelinestextheight=\gre@dimen@abovelinestextheight %
+    \gregeneratelines %
+  }%
+  \relax %
 }%
 
 % we don't need space above any more
@@ -777,24 +777,24 @@
 %macro called at the beginning of a score
 \def\begingregorioscore{%
   % not sure it's perfect to put that here, but it's the only way I found to make it work....
-	\setgregoriofont{\gregoriofontname}%
-	\ifnum\greusestylefont=1\relax %
-		\gresetstylefont %
-	\fi %
-	\grecancelpenalties %
-	\gredofinetuning %
-	\gregorioattr=0\relax %
-	\xdef\greexhyphencharsave{\the\exhyphenchar}%
-	\exhyphenchar=-1\relax %
-	\gregeneratelines %
-	\noindent%
-	\directlua{gregoriotex.atScoreBeggining()}%
-	%TODO do something like LaTeX's AtBeginDocument
-	\ifdefined\optgabcAtScoreBeginning %
-		\optgabcAtScoreBeginning %
-	\fi %
-	\global\greknownline=1\relax %
-	\relax%
+  \setgregoriofont{\gregoriofontname}%
+  \ifnum\greusestylefont=1\relax %
+    \gresetstylefont %
+  \fi %
+  \grecancelpenalties %
+  \gredofinetuning %
+  \gregorioattr=0\relax %
+  \xdef\greexhyphencharsave{\the\exhyphenchar}%
+  \exhyphenchar=-1\relax %
+  \gregeneratelines %
+  \noindent%
+  \directlua{gregoriotex.atScoreBeggining()}%
+  %TODO do something like LaTeX's AtBeginDocument
+  \ifdefined\optgabcAtScoreBeginning %
+    \optgabcAtScoreBeginning %
+  \fi %
+  \global\greknownline=1\relax %
+  \relax%
 }%
 
 %macro called at the end of a score
@@ -1268,19 +1268,19 @@
 }%
 
 \def\setgrefactor#1{%
-	\ifnum#1<0\relax%
-		\greerror{\protect\grefactor\space must be a positive integer.}%
-	\else%
-		\gre@changedimenfactor{\grefactor}{#1}%
-		\global\grefactor=#1\relax %
-		\gre@computespaces %
-		\gregeneratelines %
-		\setgregoriofont{\gregoriofontname}%
-		\ifnum\greusestylefont=1\relax %
-			\gresetstylefont %
-		\fi %
-	\fi%
-	\relax %
+  \ifnum#1<0\relax%
+    \greerror{\protect\grefactor\space must be a positive integer.}%
+  \else%
+    \gre@changedimenfactor{\grefactor}{#1}%
+    \global\grefactor=#1\relax %
+    \gre@computespaces %
+    \gregeneratelines %
+    \setgregoriofont{\gregoriofontname}%
+    \ifnum\greusestylefont=1\relax %
+      \gresetstylefont %
+    \fi %
+  \fi%
+  \relax %
 }%
 
 %%%%%%%%%%%%%%%%%%%
@@ -1299,27 +1299,27 @@
 }%
 
 \ifdefined\includetexscore%
-	\gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore\space instead.}%
+  \gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore\space instead.}%
 \else%
-	\def\includetexscore#1{%
-		\gre@includescore{#1}%
-	}%
+  \def\includetexscore#1{%
+    \gre@includescore{#1}%
+  }%
 \fi%
 \def\greincludetexscore#1{%
-	\gre@warning{\protect\greincludedtexscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
-	\gre@includescore{#1}%
+  \gre@warning{\protect\greincludedtexscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
+  \gre@includescore{#1}%
 }%
 
 \ifdefined\includegabcscore%
-	\gre@warning{\protect\includegabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
+  \gre@warning{\protect\includegabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
 \else%
-	\def\includegabcscore#1{%
-		\gre@includescore{#1}%
-	}%
+  \def\includegabcscore#1{%
+    \gre@includescore{#1}%
+  }%
 \fi%
 \def\greincludegabcscore#1{%
-	\gre@warning{\protect\greincludedgabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
-	\gre@includescore{#1}%
+  \gre@warning{\protect\greincludedgabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
+  \gre@includescore{#1}%
 }%
 
 % A macro that passes the score directly to TeX without performing the API version check or if the gabc was modified since the creation of the gtex file.
