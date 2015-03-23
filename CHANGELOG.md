@@ -5,59 +5,38 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ## 3.0.0-beta - 2015-03-15
 ### Changed
-- All distances renamed to identify the kind of distance they are.  They now follow the pattern `\gre@skip@...` or `\gre@dimen@...`.  This was to make tracking down the glue leaks easier.
-	- Temporary distance registers renamed to follow the pattern `\gre@skip@temp@...` or `\gre@dimen@temp@...` as appropriate.  Issue [#80](https://github.com/gregorio-project/gregorio/issues/80) indicates this wasn't done completely the first time and had to be corrected.
-	- Unify version numbers. The `gregoriotex_api_version` has been deprecated. The only version number is the gregorio release version. This simplifies the versioning process and should make bug reports easier to address.
+- Unify version numbers. The `gregoriotex_api_version` has been deprecated. The only version number is the gregorio release version. This simplifies the versioning process and should make bug reports easier to address.
+- Distances in default space configuration (`gsp-default.tex`) have been changed so that they represent the actual printed dimension at the default staff size (see [#50](https://github.com/gregorio-project/gregorio/issues/50)).
+- User settable distance names have been simplified by removing the `\gre` prefix.  See doc/UserManual.pdf section ?? for a full list of the distance names.
+- Space configuration files (`gsp-xxx.tex`) have been reformated.  You now need to use `\gresetdim` for setting distances.  The TeX primitive notation (`\somedistance = 3cm`) can no longer be used.  `\gresetdim` takes three arguments: the name of the distance, the desired value, and whether the distance should scale with changes in the staff size or not.  See `gsp-default.tex` for an example.
+- All distances can now be set to scale with staff size, as a consequence `\grechangedim` now takes three arguments: the name of the distance, value to change the distance to (which now supports em and ex units), and whether or not this value should be scaled with changes in the staff size.  See doc/UserManual.pdf section ?? for details.
+- `\setinitalspacing` , `\setspacebeforeinitial`, `\setspaceafterinitial`, and `\setaboveinitialseparation` now take an additional argument.  The new argument specifies whether the distance should scale when the staff size changes.
+- Improved `\includescore` capabilities.  See doc/UserManual.pdf section ?? for full details.
+- Windows installer documentation updated
+- Clivis stem length now follow Solesmes' books conventions (see [#31](https://github.com/gregorio-project/gregorio/issues/31)).
+- TeXworks configuration script for Windows updated.  `greg-book` and `gregorio` engines will no longer be added since their functionality is considered Deprecated (see below).
 
 ### Fixed
-- Improved `\includescore` backwards compatibility.  There are now three modes available via LaTeX package options, macros, or by an optional argument to `\includescore`: `nevercompile` (`\nevercompilegabc`, `n`, default), `autocompile` (`\autocompilegabc`, `a`), and `forcecompile` (`\forcecompilegabc`, `f`).
-- Missed renaming `bitristrospace`.  See [#84](https://github.com/gregorio-project/gregorio/issues/84)
-- Syllables were not being spaced correctly (see [#79](https://github.com/gregorio-project/gregorio/issues/79)).  This appears to result from the space calculations not terminating properly.  There's a need for a `\relax` somewhere.  Since the problem didn't show up in debug mode, I simply added a `\else\relax` to `\gre@debug` to eliminate the problem.  We may need to go back and fix this better later.
-- Some glues were leaking into the document because there were places where a dimension was being set to a skip or incremented by one.  See [#65](https://github.com/gregorio-project/gregorio/issues/65), [#75](https://github.com/gregorio-project/gregorio/issues/75), and [#78](https://github.com/gregorio-project/gregorio/issues/78)
+- `\includescore` not finding files for autocompile under certain circumstances.  (see [this thread](http://www.mail-archive.com/gregorio-users@gna.org/msg02346.html))
+
+### Added
+- `\setstafflinethickness` controls the thickness of the staff lines.  See doc/UserManual.pdf section ?? for full details.
+- `\gre@debug`.  Writes messages to the log file when the debug flag is set to true (can be done manually via `\debugtrue`, or via the `debug` option when loading the gregoriotex package in LaTeX).
+- doc folder and beginnings of User Manual.  Only contains spaces documentation at this point.
+- This CHANGELOG
 
 ### Deprecated
 - `\includetexscore`, supplanted by `\includescore[n]`
 - `\greincludetexscore`, supplanted by `\includescore[n]`
 - `\includegabcscore`, supplanted by `\includescore[f]`
 - `\greincludegabcscore`, supplanted by `\includescore[f]`
-
-## 2.4.3 - 2015-03-14 - YANKED
-
-!!!!! - The feature listed below proved to be too buggy for production use.  They will be included in the next release following some bug fixing.
-
-### Changed
-- Temporary distance registers systematized
-- `\setinitalspacing` now takes four arguments.  New arguments specifies value for `\gre@scale@...` for the three distances.
-- User settable distances now have `\gre@scale@...` property which determines if they scale or not when `\grefactor` changes.  Property is controlled by `\gresetdim`, `\grechangedim`, `\grenoscaledim`, and `\grescaledim`
-- `\grechangedim` updated to reflect string storage of distances
-- User settable distances now stored as strings (see [#50](https://github.com/gregorio-project/gregorio/issues/50))
-- `\gre@stafflinefactor` now uses same scale as `\grefactor`
-- Improved `\includescore` to remove outdated files ([#61](https://github.com/gregorio-project/gregorio/issues/61)).
-- TeXworks configuration script for Windows updated
-- Windows installer documentation updated
-- Clivis stem length now follow Solesme's books conventions (see [#31](https://github.com/gregorio-project/gregorio/issues/31)).
-- Space Configuration Loading code refactored
-- Most distance calculations disentangled so that each calculate functions do not call each other (helps to avoid circularity)
-- `\grefactor` is now initialized at 17 (the default value).  Necessitated that most distances be rescaled (see [#50](https://github.com/gregorio-project/gregorio/issues/50)).
-- Distances renamed to `\gre@...`  Functions which calculate distances renamed to `\gre@calculate@...`
-- All code which defines or calculates a space (and nothing else) now reside in gregoriotex-spaces.tex
-
-### Fixed
-- Fixed deprecated code in autoconfig.ac (see [#57](https://github.com/gregorio-project/gregorio/issues/57)).
-- `\includescore` not finding files for autocompile under certain circumstances.
-
-### Added
-- `\gre@debug`.  Enables the printing of debug messages with debug flag is set to true (can be done manually via `\debugtrue`, or via the `debug` option when loading the gregoriotex package in LaTeX)
-- doc folder and beginnings of User Manual.  Only contains spaces documentation at this point.
-- `\setstafflinethickness` changes the thickness of the staff lines
-- Distances now set with `\gresetdim`
-- This CHANGELOG
-
-### Deprecated
 - `\GreSetSpaceBeforeInitial`, supplanted by `\setspacebeforeinitial`
 - `\GreSetSpaceAfterInitial`, supplanted by `\setspaceafterinitial`
 - `\GreSetAboveInitialSeparation`, supplanted by `\setaboveinitialseparation`
 - `\gresetstafflinefactor`, supplanted by `\setstafflinethickness`
+- `greg-book` and `greg-lily-book` engines, supplanted by improved capabilities of `\includescore` for compiling gabc files at time of document compilation.
+
+## 2.4.3 - 2015-03-14 [YANKED]
 
 ## 2.4.2 - 2015-02-27
 ### Changed
@@ -86,3 +65,81 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Added `<eu>` markup in gabc to delimit _E u o u a e_ areas (changes spaces slightly).
 - Possibility to center translation syllable by syllable, see [here](https://www.mail-archive.com/gregorio-users@gna.org/msg01760.html) and [here](https://www.mail-archive.com/gregorio-users@gna.org/msg01783.html).
 - Possibility not to scale spaces but specify them in units proportional to main text font (e.g. `em`).
+
+## 2.0 - 2010-09-27
+### Changed
+- gregorio API changed and GregorioTeX macros prepended with `\gre`, to avoid potential name conflicts
+- updated greciliae font
+- fine-tuning the spacing, and making it easier for users to change the defaults
+- GregorioXML reading is now optional (via `--enable-xml-read` flag)
+
+### Fixed
+- as always, fixing a lot of bugs
+
+### Added
+- Automatic Windows installer
+- adding requested features: Dominican bars, choral signs, text above staff lines
+- enabling comments in gabc files
+- adding ability to write verbatim TeX at {note, glyph, element} level
+- introducing horizontal episemus bridges
+- default output is now utf8 directly; the `-O`  option allows old-style TeX output, i.e. `\char XXXX`
+- new static build system for packaged distributions
+
+
+## 1.0 - 2009-10-19
+### Changed
+- changing the number of arguments of some TeX function
+- changing the glyph names
+- improving the spacings
+- better management of the penalty in TeX so that the line changes are more consistent
+- changing the markup system in gabc to be more natural
+
+### Fixed
+- fixing a lot of bugs
+
+### Added
+- adding the possibility to put a flat after the clef
+- adding the possibility to put a custo before a clef change
+
+
+## 0.9.2 - 2008-12-27
+### Changed
+- changing the number of arguments of some TeX function
+- changing the glyph names
+
+### Fixed
+- fixing a lot of bugs
+
+### Added
+- LuaTeX additional functionalities
+
+
+## 0.9.1 - 2008-11-23
+### Changed
+- changing the number of arguments of some TeX functions
+
+### Fixed
+- fixing a lot of small bugs
+
+
+## 0.9 - 2008-07-25
+### Changed
+- stabilizing the TeX API
+
+### Added
+- adding support for Cygwin compilation
+- adding too many new features to be listed
+
+
+## 0.3 - 2008-01-18
+### Changed
+- changing the architecture of libraries and plugins
+
+### Added
+- adding support for end of lines
+- adding support for compilation on MAC OSX
+
+     
+## 0.2.2 - 2007-06-14
+### Added
+- adding styles and centering in text
