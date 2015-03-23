@@ -84,8 +84,6 @@ auto/
 #tarball
 *.tar.gz
 
-!UserManual.pdf
-
 #gregorio specific
 
 *.zip
@@ -102,3 +100,4 @@ POTFILES
 stamp-po
 doc/_minted-UserManual
 *.gtex
+*.ttf
