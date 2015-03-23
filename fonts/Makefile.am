@@ -2,6 +2,9 @@
 ## the average user.
 
 TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf gresym.ttf greextra.ttf
+SOURCEFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd gresym.sfd greextra.sfd
+
+EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py FONTLOG INSTALL gregoria2gregorio.py
 
 PYTHON = python2
 RM = rm
@@ -21,7 +24,7 @@ gresym.ttf: convertsfdtottf.py gresym.sfd
 greextra.ttf: convertsfdtottf.py greextra.sfd
 	$(PYTHON) convertsfdtottf.py greextra.sfd
 
-all: $(TTFFILES)
+fonts: $(TTFFILES)
 
 gregorio: gregorio.ttf
 
@@ -37,7 +40,7 @@ gresym: gresym.ttf
 greextra: greextra.ttf
 
 clean:
-	$(RM) $(TTFFILES)
+	$(RM) -f $(TTFFILES)
 
 install:
 	@echo 'The Makefile in the fonts directory is no longer used for installing'
@@ -49,5 +52,3 @@ install:
 	@echo
 	@echo 'If you were using "make localinstall" before, now use'
 	@echo '    install-gtex.sh user'
-
-.DEFAULT_GOAL := all

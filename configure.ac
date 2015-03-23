@@ -131,5 +131,6 @@ AC_CONFIG_FILES([
     examples/Makefile
     contrib/Makefile
     tex/Makefile
+    fonts/Makefile
 ])
 AC_OUTPUT
