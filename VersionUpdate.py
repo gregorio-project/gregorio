@@ -1,16 +1,23 @@
 #! /usr/bin/env python2
 
 #################################################################
-# A script that inserts the Version into the the necessary files.
+# A script that inserts the VERSION into the source code files.
 #
-# GREGORIO_VERSION is the version of gregorio. Fetched from the
-# file VERSION.
+# GREGORIO_VERSION is the version of gregorio.
+#
+# To update the version: Modify the GREGORIO_VERSION.
+#                        Save this file.
+#                        $ python2 VersionUpdate.py
+#
+# Build scripts can extract the VERSION with:
+# grep -oE '[0-9]+\.[0-9]+\.[0-9]+-?[[:alnum:]]*' VersionUpdate.py
+#
 #################################################################
 
 import re
 
 
-version_file = 'VERSION.md'
+GREGORIO_VERSION = '3.0.0-beta'
 
 gregorio_files = ["configure.ac",
                   "windows/gregorio-resources.rc",
@@ -20,13 +27,7 @@ gregoriotex_files = ["tex/gregoriotex.lua",
                      "plugins/gregoriotex/gregoriotex.h"]
 
 result = []
-GREGORIO_VERSION = ''
 
-def get_version(versionfile):
-    with open(versionfile, 'r') as vfile:
-        vfile.seek(13)
-        grever = vfile.readline().strip('\n')
-    return grever
 
 def fileinput(infile):
     with open(infile, 'r') as source:
@@ -64,8 +65,6 @@ def writeout(filename):
             
 def main():
     global result
-    global GREGORIO_VERSION
-    GREGORIO_VERSION = get_version(version_file)
     for f in gregoriotex_files:
         src = fileinput(f)
         replace_gregoriotex_version(src, GREGORIO_VERSION)
