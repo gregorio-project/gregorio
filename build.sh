@@ -126,6 +126,12 @@ echo "Building Gregorio; options:$MAKEOPTS"
 make ${MAKEOPTS} || die "build Gregorio"
 echo
 
+echo "Building fonts; options:$MAKEOPTS"
+cd fonts
+make ${MAKEOPTS} fonts || die "build fonts"
+cd ..
+echo
+
 if [ "$MINGWCROSS" = "TRUE" ]
 then
   PATH=$OLDPATH
