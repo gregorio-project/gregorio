@@ -35,13 +35,22 @@ are the same under GNU/Linux and Mac OSX:
  * [git](http://git-scm.com/)
  * the [GNU Build System](http://airs.com/ian/configure/) (often referred to as "Autotools")
  * [gcc](https://gcc.gnu.org/) (and associated tools)
- * [GNU indent](https://www.gnu.org/software/indent/)
+ * [GNU indent](https://www.gnu.org/software/indent/) (OSX default indent won't work)
 
-### Coding style
+### Coding standards
 
-The code uses two spaces for indentation. The C code follows the [GNU coding standards](https://www.gnu.org/prep/standards/html_node/Writing-C.html).
+##### C files
+
+The C code follows the [GNU coding standards](https://www.gnu.org/prep/standards/html_node/Writing-C.html). 
 
 Use indent on your code before commiting it, with the `.indent.pro` file in repository's root folder: run `indent path/to/my/file.c` from the root directory.
+
+##### Other files
+
+The rest of the code uses four spaces for indentation.
+
+Gregorio provides an [`.editorconfig` file](../.editorconfig), using an [editorconfig plugin](http://editorconfig.org/#download) for your editor will configure it automatically.
+
 
 ### Tests
 
