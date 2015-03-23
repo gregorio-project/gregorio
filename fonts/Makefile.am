@@ -4,7 +4,7 @@
 TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf gresym.ttf greextra.ttf
 SOURCEFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd gresym.sfd greextra.sfd
 
-EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py FONTLOG INSTALL gregoria2gregorio.py
+EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py FONTLOG README.md gregoria2gregorio.py
 
 PYTHON = python2
 RM = rm
