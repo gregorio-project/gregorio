@@ -7,8 +7,11 @@ should not expect to find an indepth guide on using gregorio.
 Developers can use this manual as a reference for information on the
 internal workings of gregorio.
 
-To update the pdf:
-    $ latex --shell-escape UserManual.tex
+## Building
 
-Read the [UserManual](https://github.com/gregorio-project/gregorio/raw/doc/doc/UserManual.pdf).
+To compile the pdf you must have
+ * an up-to-date [TeXLive](https://www.tug.org/texlive/) system, with at least the `luatex` bundle and `latexmk`
+ * the [Linux Libertine](http://www.linuxlibertine.org/index.php?id=1&L=1) and [Inconsolata](http://www.levien.com/type/myfonts/inconsolata.html) fonts (distributed by TeXLive too)
+ * the [`pygments` library](http://pygments.org/)
 
+Once you have run `./configure` in the main directory, run `make doc` in this directory.

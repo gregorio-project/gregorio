@@ -103,3 +103,4 @@ config.h.in
 stamp-h1
 Makevars.template
 *.gtex
+*.ttf

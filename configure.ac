@@ -130,6 +130,7 @@ AC_CONFIG_FILES([
     include/gregorio/Makefile
     examples/Makefile
     contrib/Makefile
+    doc/Makefile
     tex/Makefile
     fonts/Makefile
 ])

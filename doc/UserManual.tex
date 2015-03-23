@@ -1,7 +1,23 @@
 \documentclass[12pt]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont[
+    BoldFont=LinLibertineOZ,
+    BoldItalicFont=LinLibertineOZI,
+    SmallCapsFont=LinLibertineO,
+    SmallCapsFeatures={Letters=SmallCaps},
+]{LinuxLibertineO}
+\setsansfont[Extension=.otf, 
+    BoldFont=LinBiolinum_RB,
+    ItalicFont=LinBiolinum_RI,
+    BoldItalicFont=LinBiolinum_RB,% fake
+    SmallCapsFont=LinBiolinum_R,
+    SmallCapsFeatures={Letters=SmallCaps},
+    ]{LinBiolinum_R}
+\setmonofont[Extension=.otf,
+    AutoFakeSlant,
+    BoldItalicFeatures={FakeSlant},
+    ]{Inconsolata}
 \usepackage{enumitem}
 \usepackage{xspace}
 \usepackage{multicol}
@@ -47,9 +63,9 @@
 \begin{titlepage}
   \begin{center}
     \Huge
-    \textcolor{myred}{Gregorio} and \textcolor{myred}{gregoriotex}:
+    \textcolor{myred}{Gregorio} and \textcolor{myred}{Gregorio\TeX}:
 
-    A project which provides tools for gregorian score engraving.
+    Tools for gregorian score engraving.
 
     \vspace{1cm}\large\href{http://home.gna.org/gregorio/}{Homepage}
 
@@ -63,8 +79,8 @@
   \end{multicols}
 \end{titlepage}
 
-\section{Gregoriotex Macros}
-The following sections document the macros available in the gregoriotex package. The format is as follows:
+\section{Gregorio\TeX{} Macros}
+The following sections document the macros available in the Gregorio\TeX{} package. The format is as follows:
 
 \macroname{Macroname}{source file}
 

@@ -1,4 +1,4 @@
-SUBDIRS= include lib plugins src examples tex contrib fonts
+SUBDIRS= include lib plugins src examples tex contrib doc fonts
 
 ACLOCAL_AMFLAGS = -I m4
 
