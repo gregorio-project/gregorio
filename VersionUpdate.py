@@ -10,7 +10,7 @@
 import re
 
 
-version_file = 'VERSION'
+version_file = 'VERSION.md'
 
 gregorio_files = ["configure.ac",
                   "windows/gregorio-resources.rc",
@@ -24,8 +24,9 @@ GREGORIO_VERSION = ''
 
 def get_version(versionfile):
     with open(versionfile, 'r') as vfile:
-        grever = vfile.readline()
-    return grever.split(' = ')[1].strip('\n')
+        vfile.seek(13)
+        grever = vfile.readline().strip('\n')
+    return grever
 
 def fileinput(infile):
     with open(infile, 'r') as source:
