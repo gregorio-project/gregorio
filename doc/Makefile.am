@@ -1,7 +1,7 @@
 SRCFILES= Command_Index_gregorio.tex  Command_Index_internal.tex  Command_Index_User.tex UserManual.tex
 
 UserManual.pdf: $(SRCFILES)
-	latexmk -lualatex -e '$$pdflatex=q/lualatex %O --shell-escape %S/' UserManual.tex
+	latexmk -pdf -pdflatex='lualatex --shell-escape %O %S' UserManual.tex
 
 doc: UserManual.pdf
 
