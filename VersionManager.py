@@ -3,11 +3,7 @@
 #################################################################
 # A script that eventually will manage the VERSION of gregorio.
 #
-# TODO: Add options to manage the version.
-#
-#
-# Build scripts can get the VERSION with:
-# VersionUpdate.py --get-current
+# See VersionUpdate.py -h for help
 #
 #################################################################
 
@@ -19,27 +15,29 @@ import argparse
 import subprocess
 import time
 
-version_file = '.gregorio-version'
-gregorio_files = ["configure.ac",
+VERSION_FILE = '.gregorio-version'
+GREGORIO_FILES = ["configure.ac",
                   "windows/gregorio-resources.rc",
                   "windows/gregorio.iss"]
 
-gregoriotex_files = ["tex/gregoriotex.lua",
+GREGORIOTEX_FILES = ["tex/gregoriotex.lua",
                      "plugins/gregoriotex/gregoriotex.h"]
 
 result = []
 
-parser = argparse.ArgumentParser(
-    description='A script to manage the VERSION of gregorio.')
-parser.add_argument('-c', '--get-current',
-                    help='Prints the current gregorio version',
-                    action='store_true')
-parser.add_argument('-d', '--get-debian-main',
-                    help='Prints the version converted for Debian package',
-                    action='store_true')
-parser.add_argument('-dg', '--get-debian-git',
-                    help='Prints the version converted for Debian git package',
-                    action='store_true')
+def get_parser():
+    parser = argparse.ArgumentParser(
+        description='A script to manage the VERSION of gregorio.')
+    parser.add_argument('-c', '--get-current',
+                        help='Prints the current gregorio version',
+                        action='store_true')
+    parser.add_argument('-d', '--get-debian-main',
+                        help='Prints the version converted for Debian package',
+                        action='store_true')
+    parser.add_argument('-dg', '--get-debian-git',
+                        help='Prints the version converted for Debian git package',
+                        action='store_true')
+    return parser
 
 def fetch_version(versionfile):
     with open(versionfile, 'r') as vfile:
@@ -53,7 +51,8 @@ def fetch_version_debian(versionfile):
 
 def fetch_version_debian_git(versionfile):
     main_version = fetch_version_debian(versionfile)
-    short_tag = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip('\n')
+    short_tag = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'])
+    short_tag = short_tag.strip('\n')
     #short_tag = git_process.strip('\n')
     date = time.strftime("%Y%m%d")
     return "%s+git%s+%s" % (main_version, date, short_tag)
@@ -101,32 +100,33 @@ def current_version(version):
     print(version)
 
 def main():
-    GREGORIO_VERSION = None
+    gregorio_version = None
+    parser = get_parser()
     args = parser.parse_args()
     if args.get_current:
-        GREGORIO_VERSION = fetch_version(version_file)
-        current_version(GREGORIO_VERSION)
+        gregorio_version = fetch_version(VERSION_FILE)
+        current_version(gregorio_version)
         sys.exit(0)
     elif args.get_debian_main:
-        GREGORIO_VERSION_DEBIAN = fetch_version_debian(version_file)
-        current_version(GREGORIO_VERSION_DEBIAN)
+        gregorio_version_debian = fetch_version_debian(VERSION_FILE)
+        current_version(gregorio_version_debian)
         sys.exit(0)
     elif args.get_debian_git:
-        GREGORIO_VERSION_DEBIAN_GIT = fetch_version_debian_git(version_file)
-        current_version(GREGORIO_VERSION_DEBIAN_GIT)
+        gregorio_version_debian_git = fetch_version_debian_git(VERSION_FILE)
+        current_version(gregorio_version_debian_git)
         sys.exit(0)
 
     global result
-    GREGORIO_VERSION = fetch_version(version_file)
-    for f in gregoriotex_files:
-        src = fileinput(f)
-        replace_gregoriotex_version(src, GREGORIO_VERSION)
-        writeout(f)
+    gregorio_version = fetch_version(VERSION_FILE)
+    for myfile in GREGORIOTEX_FILES:
+        src = fileinput(myfile)
+        replace_gregoriotex_version(src, gregorio_version)
+        writeout(myfile)
         result = []
-    for f in gregorio_files:
-        src = fileinput(f)
-        replace_gregorio_version(src, GREGORIO_VERSION)
-        writeout(f)
+    for myfile in GREGORIO_FILES:
+        src = fileinput(myfile)
+        replace_gregorio_version(src, gregorio_version)
+        writeout(myfile)
         result = []
 
 if __name__ == "__main__":
