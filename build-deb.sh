@@ -8,13 +8,19 @@ until [ -z "$1" ]; do
   case "$1" in
     --clean     ) CLEAN=TRUE    ;;
     --lint      ) LINT=TRUE    ;;
+    --git       ) GIT=TRUE    ;;
     *           ) echo "ERROR: invalid build.sh parameter: $1"; exit 1       ;;
   esac
   shift
 done
 
-VERSION=`head -1 VERSION | rev | cut -f1 -d' ' | rev`
-DEBIAN_VERSION=`echo $VERSION | sed 's/-/~/g'`
+VERSION=`./VersionManager.py --get-current`
+if [ "$GIT" = "TRUE" ]
+then
+  DEBIAN_VERSION=`./VersionManager.py --get-debian-git`
+else
+  DEBIAN_VERSION=`./VersionManager.py --get-debian-stable`
+fi
 
 if [ "$CLEAN" = "TRUE" ]
 then
