@@ -988,6 +988,7 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
   // so, here we start: we go to the first_character
   gregorio_go_to_first_character (&current_character);
   // first we look at the styles, to see if there is a FORCED_CENTER somewhere
+  // and we also remove the CENTER styles if the syllable starts at CENTER
   if (!param_character)
     {
       return;
@@ -1001,6 +1002,17 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
 	      forced_center = 1;
 	      // we can break here, as there won't be forced center plus center
 	      break;
+	    }
+	  if (current_character->cos.s.style == ST_CENTER)
+	    {
+	      // we have to do it in case param_character (the first character) is a ST_CENTER beginning
+	      if (!current_character->previous_character
+		  && current_character == *param_character)
+		{
+		  *param_character = (*param_character)->next_character;
+		}
+	      gregorio_suppress_current_character (&current_character);
+	      continue;
 	    }
 	}
       current_character = current_character->next_character;
