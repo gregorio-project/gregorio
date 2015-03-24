@@ -7,12 +7,12 @@ SetupIconFile=gregorio.ico
 Compression=lzma2
 SolidCompression=yes
 LicenseFile=license.txt
-AppCopyright=Copyright (C) 2006-2014 Elie Roux
-AppComments=Gregorian chant typesetting software.
+AppCopyright=Copyright (C) 2006-2015 Gregorio project
+AppComments=Software for engraving Gregorian Chant scores.
 AppContact=gregorio-devel@gna.org
-AppPublisher=Elie Roux
-AppPublisherURL=http://home.gna.org/gregorio/
-AppReadmeFile=http://home.gna.org/gregorio/
+AppPublisher=Gregorio Project
+AppPublisherURL=https://github.com/gregorio-project/gregorio
+AppReadmeFile=https://github.com/gregorio-project/gregorio
 BackColor=$D4AE65
 BackColor2=$FDF7EB
 WizardSmallImageFile=gregorio-32.bmp
@@ -42,8 +42,9 @@ Source: "../doc/UserManual.pdf"; DestDir: "{app}";
 Source: "license.txt"; DestDir: "{app}";
 Source: "../contrib\*"; DestDir: "{app}\contrib";
 Source: "../examples\*"; DestDir: "{app}\examples";
-Source: "../fonts/gregoriotex.tds.zip"; DestDir: "{app}";
-Source: "../contrib\TeXworks\Windows\*"; DestDir: "{app}\contrib\TeXworks";
+Source: "../gregoriotex.tds.zip"; DestDir: "{app}";
+Source: "../fonts/FONTLOG"; DestDir: "{app}";
+Source: "../contrib/TeXworks/Windows/*"; DestDir: "{app}\contrib\TeXworks";
 
 [Run]
 Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";
@@ -54,7 +55,7 @@ procedure URLLabelOnClickOne(Sender: TObject);
 var
   ErrorCode: Integer;
 begin
-  ShellExec('open', 'http://www.tug.org/texlive/acquire.html', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+  ShellExec('open', 'https://www.tug.org/texlive/acquire.html', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
 
 procedure URLLabelOnClickTwo(Sender: TObject);
@@ -110,7 +111,7 @@ begin
 
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(145);;
-  StaticText.Caption := 'http://www.tug.org/texlive/acquire.html';
+  StaticText.Caption := 'https://www.tug.org/texlive/acquire.html';
   StaticText.Cursor := crHand;
   StaticText.OnClick := @URLLabelOnClickOne;
   StaticText.Parent := Page.Surface;
