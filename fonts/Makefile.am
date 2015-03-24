@@ -43,12 +43,12 @@ clean:
 	$(RM) -f $(TTFFILES)
 
 install:
-	@echo 'The Makefile in the fonts directory is no longer used for installing'
-	@echo 'GregorioTeX.  Please use install-gtex.sh from the parent directory'
-	@echo 'to install GregorioTeX.'
-	@echo
-	@echo 'If you were using "make install" before, now use'
-	@echo '    install-gtex.sh system'
-	@echo
-	@echo 'If you were using "make localinstall" before, now use'
-	@echo '    install-gtex.sh user'
+	@$(TOP_LEVEL_MAKE) echo 'The Makefile in the fonts directory is no longer used for installing'
+	@$(TOP_LEVEL_MAKE) echo 'GregorioTeX.  Please use install-gtex.sh from the parent directory'
+	@$(TOP_LEVEL_MAKE) echo 'to install GregorioTeX.'
+	@$(TOP_LEVEL_MAKE) echo
+	@$(TOP_LEVEL_MAKE) echo 'If you were using "make install" before, now use'
+	@$(TOP_LEVEL_MAKE) echo '    ./install-gtex.sh system'
+	@$(TOP_LEVEL_MAKE) echo
+	@$(TOP_LEVEL_MAKE) echo 'If you were using "make localinstall" before, now use'
+	@$(TOP_LEVEL_MAKE) echo '    ./install-gtex.sh user'
