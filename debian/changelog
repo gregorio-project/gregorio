@@ -1,8 +1,28 @@
-gregorio (3.0.0~beta-1) unstable; urgency=low
+gregorio (3.0.0-1) UNRELEASED; urgency=low
 
   * New upstream version:
-     - see CHANGELOG.md
+     - New incompatible format of space configuration files (`gsp-xxx.tex`)
+     - Possibility to scale or not distances with staff size
+     - Clivis stem length follow Solesmes' books conventions
+     - \setstafflinethickness controls the thickness of the staff lines
+     - New PDF documentation for GregorioTeX (UserManual.pdf)
+     - \includescore has super powers deprecating previous score include macros
+     - Added <nlba> markup in gabc to get areas with no line breaks
+     - Added <c> markup in gabc to denote a change of color
+     - Pressus maior liquescens: `hof~`
+     - Torculus liquescent deminutus and quilisma version, gabc dfec~ and dwfec~
+     - Virga aucta (for liquescent salicus), gabc "iv>"
+     - \gremanualinitialwidth` macro to specify width of all initials
+     - English centering scheme now available as GregorioTeX option
+     - Fixing glyphs disapearing when importing into Illustrator
+     - Quilisma was melting too much with next note when in a second interval
+     - Low episemus ("_0") under consecutive notes are now aligned correctly
+     - gabc "mode" and "anotation-line" now do their job
+     - Reducing flat stem length
+     - Reducing horizontal episemus width
+     - Clivis alignment follows Solesmes' conventions more closely
   * New watch file for github
+  * New documentation files
   * Bump Standards-Version to 3.9.6
   * Update gregorio.docs
   * Updating Vcs-Browser and Vcs-Git (formerly Vcs-Svn) fields
