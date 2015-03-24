@@ -36,6 +36,7 @@ are the same under GNU/Linux and Mac OSX:
  * the [GNU Build System](http://airs.com/ian/configure/) (often referred to as "Autotools")
  * [gcc](https://gcc.gnu.org/) (and associated tools)
  * [GNU indent](https://www.gnu.org/software/indent/) (OSX default indent won't work)
+ * [pylint](http://www.pylint.org/) if you work on Python files
 
 ### Coding standards
 
@@ -48,6 +49,8 @@ Use indent on your code before commiting it, with the `.indent.pro` file in repo
 The rest of the code uses two spaces for indentation of `.tex`, `.lua` and other files, and four spaces for `.py` files.
 
 Gregorio provides an [`.editorconfig` file](../.editorconfig), using an [editorconfig plugin](http://editorconfig.org/#download) for your editor will configure it automatically.
+
+Python files must output no error when inspected by `pylint`.
 
 ### Tests
 
