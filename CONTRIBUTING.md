@@ -56,6 +56,15 @@ Python files must output no error when inspected by `pylint`.
 
 When your changes are significant, please provide a test demonstrating the change. See [test documentation](tests/).
 
+### Documentation
+
+If your code has an impact on the user, you must add it to the [changelog file](CHANGELOG.md).
+
+You must also document it in the right places:
+
+ * [User manual](doc/) for changes in GregorioTeX
+ * the [website](http://home.gna.org/gregorio) if relevant (ask the [developer mailing list](mailto:gregorio-devel@gna.org) for access).
+
 ### Git Workflow
 
 The Gregorio team is following the [classical Github workflow](https://guides.github.com/introduction/flow/). More precisely it follows what is sometimes described as "[Gitflow Worflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)", keeping the same branch naming convention.
