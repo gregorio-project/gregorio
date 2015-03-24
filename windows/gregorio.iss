@@ -35,6 +35,10 @@ Source: "../src/gregorio.exe"; DestDir: "{app}";
 Source: "gregorio.ico"; DestDir: "{app}";
 Source: "install.lua"; DestDir: "{app}";
 Source: "README.txt"; DestDir: "{app}"; Flags: isreadme
+Source: "../CHANGELOG.md"; DestDir: "{app}";
+Source: "../README.md"; DestDir: "{app}";
+Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
+Source: "../doc/UserManual.pdf"; DestDir: "{app}";
 Source: "license.txt"; DestDir: "{app}";
 Source: "../contrib\*"; DestDir: "{app}\contrib";
 Source: "../examples\*"; DestDir: "{app}\examples";
