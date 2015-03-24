@@ -1109,4 +1109,3 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
   gregorio_go_to_first_character (&current_character);
   (*param_character) = current_character;
 }
-/* vim: set ts=8 sts=2 sw=2 noet: */
