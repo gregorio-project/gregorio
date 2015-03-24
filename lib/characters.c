@@ -718,6 +718,10 @@ gregorio_go_to_end_initial (gregorio_character ** param_character)
 {
   int has_initial = 0;
   gregorio_character *current_character = *param_character;
+  if (!current_character)
+	{
+	  return 0;
+	}
   gregorio_go_to_first_character (&current_character);
   // skip past any initial
   if (!current_character->is_character
