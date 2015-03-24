@@ -1,11 +1,10 @@
 The program Gregorio is under the GPLv3 license, printed below.
 
 The GPLv3 license applies to all files except the fonts (the files
-with the extension .pfb, .tfm, .ofm, and .ovp. These files are under
-the GPLv3 with the font exception for the gregorio.* files and
-parmesan.* files. The greciliae.* are under the SIL Open Font License,
-printed below. See the FONTLOG file in the Gregorio installation folder
-for more details about the fonts.
+with the extension .ttf. These files are under the GPLv3 with the font exception
+for the gregorio.* files and parmesan.* files. The greciliae.* are under the SIL
+Open Font License, printed below. See the FONTLOG file in the Gregorio
+installation folder for more details about the fonts.
 
 The GPLv3 font exception is:
 "
