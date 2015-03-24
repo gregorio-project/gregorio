@@ -38,6 +38,7 @@ Source: "README.txt"; DestDir: "{app}"; Flags: isreadme
 Source: "../CHANGELOG.md"; DestDir: "{app}";
 Source: "../README.md"; DestDir: "{app}";
 Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
+Source: "../UPGRADE.md"; DestDir: "{app}";
 Source: "../doc/UserManual.pdf"; DestDir: "{app}";
 Source: "license.txt"; DestDir: "{app}";
 Source: "../contrib\*"; DestDir: "{app}\contrib";
