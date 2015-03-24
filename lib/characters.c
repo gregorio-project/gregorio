@@ -714,6 +714,30 @@ Another difficulty is the fact that we must consider characters in verbatim and 
 */
 
 void
+gregorio_go_to_end_initial (gregorio_character ** param_character)
+{
+  gregorio_character *current_character = *param_character;
+  gregorio_go_to_first_character (&current_character);
+  // skip past any initial
+  if (!current_character->is_character
+      && current_character->cos.s.type == ST_T_BEGIN
+      && current_character->cos.s.style == ST_INITIAL)
+    {
+      while (current_character)
+	{
+	  if (!current_character->is_character
+	      && current_character->cos.s.type == ST_T_END
+	      && current_character->cos.s.style == ST_INITIAL)
+	    {
+	      break;
+	    }
+	  current_character = current_character->next_character;
+	}
+    }
+  (*param_character) = current_character;
+}
+
+void
 gregorio_rebuild_characters (gregorio_character ** param_character,
 			     char center_is_determined, unsigned char centering_scheme)
 {
@@ -728,7 +752,17 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
   det_style *first_style = NULL;
   unsigned char center_type = 0;	// determining the type of centering (forced or not)
   // so, here we start: we go to the first_character
-  gregorio_go_to_first_character (&current_character);
+  gregorio_go_to_end_initial (&current_character);
+  if (!current_character->next_character)
+    {
+      // nothing else to rebuild, but we have to fake an empty ST_CENTER
+      gregorio_insert_style_after (ST_T_BEGIN, ST_CENTER, &current_character);
+      gregorio_insert_style_after (ST_T_END, ST_CENTER, &current_character);
+      gregorio_go_to_first_character (&current_character);
+      (*param_character) = current_character;
+      return;
+    }
+  current_character = current_character->next_character;
   // first we see if there is already a center determined
   if (center_is_determined == 0)
     {
@@ -949,7 +983,8 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
   // these three lines are for the case where the user didn't tell anything about the middle and there aren't any vowel in the syllable, so we begin the center before the first character (you can notice that there is no problem of style).
   if (!center_is_determined)
     {
-      gregorio_go_to_first_character (&current_character);
+      gregorio_go_to_end_initial (&current_character);
+      current_character = current_character->next_character;
       gregorio_insert_style_before (ST_T_BEGIN, ST_CENTER, current_character);
     }
   if (centering_scheme == SCHEME_ENGLISH && center_type == ST_CENTER)
@@ -1074,3 +1109,4 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
   gregorio_go_to_first_character (&current_character);
   (*param_character) = current_character;
 }
+/* vim: set ts=8 sts=2 sw=2 noet: */
