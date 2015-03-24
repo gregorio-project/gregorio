@@ -142,21 +142,21 @@
 % textlower is the height of the separation between the bottom line (which is invisible : for the notes which are very low) and the bottom of the text
 \newdimen\gre@dimen@textlower%
 \def\gre@calculate@textlower{%
-	\gre@dimen@textlower=\gre@dimen@spacebeneathtext%
-	%\advance\gre@dimen@textlower by \translationheight
+  \gre@dimen@textlower=\gre@dimen@spacebeneathtext%
+  %\advance\gre@dimen@textlower by \translationheight
 }%
 
 % stafflinewidth is the width of a line of staff, this can vary, for example at the first line
 \newdimen\gre@dimen@stafflinewidth%
 \def\gre@calculate@stafflinewidth{%
-	\gre@dimen@stafflinewidth=\gre@dimen@linewidth %
+  \gre@dimen@stafflinewidth=\gre@dimen@linewidth %
 }%
 
 
 % linewidth is the width of a line of a score (including the initial)
 \newdimen\gre@dimen@linewidth%
 \def\gre@calculate@linewidth{%
-	\gre@dimen@linewidth=\hsize %
+  \gre@dimen@linewidth=\hsize %
 }%
 
 % Messing with the staff line thickness directly is messy, so we provide the following interface to make life easier on the user:
@@ -164,28 +164,28 @@
 % = 1500 * stafflinefactor
 \newdimen\gre@dimen@stafflineheight%
 \def\gre@calculate@stafflineheight{%
-	\global\gre@dimen@stafflineheight=1500 sp%
-	\global\multiply\gre@dimen@stafflineheight by \gre@stafflinefactor\relax %
+  \global\gre@dimen@stafflineheight=1500 sp%
+  \global\multiply\gre@dimen@stafflineheight by \gre@stafflinefactor\relax %
 }%
 
 % interstafflinespace is the space between two lines of staff
 % = (30000 - (stafflineheight/grefactor - 1500)) * grefactor = 31500 * grefactor - stafflineheight
 \newdimen\gre@dimen@interstafflinespace%
 \def\gre@calculate@interstafflinespace{%
-	\global\gre@dimen@interstafflinespace=31500sp%
-	\global\multiply\gre@dimen@interstafflinespace by \grefactor%
-	\global\advance\gre@dimen@interstafflinespace by -\gre@dimen@stafflineheight %
+  \global\gre@dimen@interstafflinespace=31500sp%
+  \global\multiply\gre@dimen@interstafflinespace by \grefactor%
+  \global\advance\gre@dimen@interstafflinespace by -\gre@dimen@stafflineheight %
 }%
 
 % a distance to help place glyphs when the lines are not their default thickness
 % = (stafflineheight/grefactor - 1500sp)/2 * grefactor
 \newdimen\gre@dimen@stafflinediff%
 \def\gre@calculate@stafflinediff{%
-	\global\gre@dimen@stafflinediff = \gre@dimen@stafflineheight %
-	\global\divide\gre@dimen@stafflinediff by \grefactor\relax%
-	\global\advance\gre@dimen@stafflinediff by -1500sp%
-	\global\divide\gre@dimen@stafflinediff by 2\relax %
-	\global\multiply\gre@dimen@stafflinediff by \the\grefactor %
+  \global\gre@dimen@stafflinediff = \gre@dimen@stafflineheight %
+  \global\divide\gre@dimen@stafflinediff by \grefactor\relax%
+  \global\advance\gre@dimen@stafflinediff by -1500sp%
+  \global\divide\gre@dimen@stafflinediff by 2\relax %
+  \global\multiply\gre@dimen@stafflinediff by \the\grefactor %
 }%
 
 % the default factor
@@ -196,19 +196,19 @@
 
 % a macro for setting the thickness of the staff lines.  This changes the stafflinefactor and then adjusts the spaces that are affected by the thicker staff lines.
 \ifdefined\setstafflinethickness%
-	\greerror{\protect\setstafflinethickness\space is already defined.  Check for package conflicts.}%
+  \greerror{\protect\setstafflinethickness\space is already defined.  Check for package conflicts.}%
 \else%
-	\def\setstafflinethickness#1{%
-		\xdef\gre@stafflinefactor{#1}%
-		\gre@computespaces %
-		%% TODO: make smarter
-		\relax %
-	}%
+  \def\setstafflinethickness#1{%
+    \xdef\gre@stafflinefactor{#1}%
+    \gre@computespaces %
+    %% TODO: make smarter
+    \relax %
+  }%
 \fi%
 
 \def\gresetstafflinefactor#1{%
-	\gre@warning{\protect\gresetstafflinefactor\space is deprecated.\MessageBreak Use \protect\setstafflinethickness\space instead.}%
-	\setstafflinethickness{#1}	%
+  \gre@warning{\protect\gresetstafflinefactor\space is deprecated.\MessageBreak Use \protect\setstafflinethickness\space instead.}%
+  \setstafflinethickness{#1}	%
 }%
 
 %constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
@@ -252,14 +252,14 @@
 %% staffheight: stafflineheight & interstafflinespace
 %% constantglyphraise: grefactor, additionalbottomspace, spacebeneathtext, spacelinestext, interstafflinespace, stafflineheight, currenttranslationheight, stafflinediff
 \def\gre@computespaces{%
-	\gre@calculate@textlower%
-	\gre@calculate@linewidth%
-	\gre@calculate@stafflinewidth%
-	\gre@calculate@stafflineheight%
-	\gre@calculate@interstafflinespace%
-	\gre@calculate@stafflinediff%
-	\gre@calculate@staffheight%
-	\gre@calculate@constantglyphraise%
+  \gre@calculate@textlower%
+  \gre@calculate@linewidth%
+  \gre@calculate@stafflinewidth%
+  \gre@calculate@stafflineheight%
+  \gre@calculate@interstafflinespace%
+  \gre@calculate@stafflinediff%
+  \gre@calculate@staffheight%
+  \gre@calculate@constantglyphraise%
 }%
 
 
@@ -564,14 +564,14 @@
 
 % macro to tell gregorio to set space for the translation
 \def\gre@addtranslationspace{%
-	\gretranslationformat{%
-		\global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight %
-		\global\gre@dimen@textlower=\gre@dimen@spacebeneathtext %
-		\global\advance\gre@dimen@textlower by \gre@dimen@translationheight %
-		\gregeneratelines %
-		\gre@calculate@constantglyphraise %
-	}%
-	\relax %
+  \gretranslationformat{%
+    \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight %
+    \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext %
+    \global\advance\gre@dimen@textlower by \gre@dimen@translationheight %
+    \gregeneratelines %
+    \gre@calculate@constantglyphraise %
+  }%
+  \relax %
 }%
 
 \def\gre@removetranslationspace{%
@@ -672,42 +672,42 @@
 %% This macro sets one dim (#1) to the value #2 and sets whether it should scale when the \grefactor changes (#3, 1 if yes, 0 if no).  While it does check that #1 can accept the kind of distance given in #2, it does not propagate the changes through the calculated distances.
 \newif\ifchecklength%
 \def\gresetdim#1#2#3{%
-	\checklengthfalse%
-	%check if #2 is a rubber length (contains plus and/or minus)
-	\IfSubStr{#2}{plus}{\checklengthtrue}{\relax}%
-	\IfSubStr{#2}{minus}{\checklengthtrue}{\relax}%
-	%if #1 is one of the distances which cannot be rubber.
-	\gre@rubberpermit{#1}%
-	% do we try to assign a rubber to one where it's not permitted?
-	\ifrubber%
-		\def\gre@prefix{skip}%
-	\else%
-		\ifchecklength%
-			\greerror{#1 cannot be a rubber length.}%
-		\else%
-			\def\gre@prefix{dimen}%
-		\fi
-	\fi
-	\expandafter\xdef\csname gre@scale@#1\endcsname{#3}%
-	\expandafter\xdef\csname gre@\gre@prefix @#1\endcsname{#2}%
-	\relax %
+  \checklengthfalse%
+  %check if #2 is a rubber length (contains plus and/or minus)
+  \IfSubStr{#2}{plus}{\checklengthtrue}{\relax}%
+  \IfSubStr{#2}{minus}{\checklengthtrue}{\relax}%
+  %if #1 is one of the distances which cannot be rubber.
+  \gre@rubberpermit{#1}%
+  % do we try to assign a rubber to one where it's not permitted?
+  \ifrubber%
+    \def\gre@prefix{skip}%
+  \else%
+    \ifchecklength%
+      \greerror{#1 cannot be a rubber length.}%
+    \else%
+      \def\gre@prefix{dimen}%
+    \fi
+  \fi
+  \expandafter\xdef\csname gre@scale@#1\endcsname{#3}%
+  \expandafter\xdef\csname gre@\gre@prefix @#1\endcsname{#2}%
+  \relax %
 }%
 
 % a macro for changing a dimension and making sure that the change cascades through.
 % TODO: make smarter so that it knows the dependency tree and only recalculates distances affected by the change
 \def\grechangedim#1#2#3{%
-	\gresetdim{#1}{#2}{#3}%
-	\gre@computespaces%
+  \gresetdim{#1}{#2}{#3}%
+  \gre@computespaces%
 }%
 
 %a macro to use if all you want to do is turn off the scaling for a particular distance
 \def\grenoscaledim#1{%
-	\expandafter\gdef\csname gre@scale@#1\endcsname{0}%
+  \expandafter\gdef\csname gre@scale@#1\endcsname{0}%
 }%
 
 %a macro to use if all you want to do is turn on the scaling for a particular distance
 \def\grescaledim#1{%
-	\expandafter\gdef\csname gre@scale@#1\endcsname{1}%
+  \expandafter\gdef\csname gre@scale@#1\endcsname{1}%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -715,12 +715,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\GreLoadSpaceConf#1{%
-	\input gsp-#1.tex\relax %
-	\ifnum\the\grefactor=\greconffactor\else %If the space configuration file is designed for a \grefactor other than the current one, then we need to rescale the distances.
-		\gre@changedimenfactor{\greconffactor}{\grefactor} %
-	\fi%
-	\gre@computespaces %
-	\relax %
+  \input gsp-#1.tex\relax %
+  \ifnum\the\grefactor=\greconffactor\else %If the space configuration file is designed for a \grefactor other than the current one, then we need to rescale the distances.
+    \gre@changedimenfactor{\greconffactor}{\grefactor} %
+  \fi%
+  \gre@computespaces %
+  \relax %
 }%
 
 
@@ -735,54 +735,54 @@
 % This function checks to see if the length is one of the ones which cannot be a rubber length
 \newif\ifrubber%
 \def\gre@rubberpermit#1{%
-	\rubbertrue%
-	% is length one that cannot be rubber?
-	\IfStrEq{#1}{additionallineswidth}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{additionalcustoslineswidth}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{zerowidthspace}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{maximumspacewithoutdash}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{afterinitialshift}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{beforeinitialshift}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{minimalspaceatlinebeginning}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{manualinitialwidth}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{aboveinitialseparation}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{noclefspace}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{clivisalignmentmin}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{abovesignsspace}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{belowsignsspace}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{lowchoralsignsshift}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{highchoralsignsshift}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{translationheight}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{spacelinestext}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{spacebeneathtext}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{abovelinestextraise}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{abovelinestextheight}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{braceshift}{\rubberfalse}{\relax}%
-	\IfStrEq{#1}{curlybraceaccentusshift}{\rubberfalse}{\relax}%
+  \rubbertrue%
+  % is length one that cannot be rubber?
+  \IfStrEq{#1}{additionallineswidth}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{additionalcustoslineswidth}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{zerowidthspace}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{maximumspacewithoutdash}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{afterinitialshift}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{beforeinitialshift}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{minimalspaceatlinebeginning}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{manualinitialwidth}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{aboveinitialseparation}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{noclefspace}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{clivisalignmentmin}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{abovesignsspace}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{belowsignsspace}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{lowchoralsignsshift}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{highchoralsignsshift}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{translationheight}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{spacelinestext}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{spacebeneathtext}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{abovelinestextraise}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{abovelinestextheight}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{braceshift}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{curlybraceaccentusshift}{\rubberfalse}{\relax}%
 }	
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
 %% Note: This function is assumed to touch only dimensions which are meant to scale with the \grefactor (i.e. if it acts on distance x, \gre@scale@x is 1)
 \def\gre@changeonedimenfactor#1#2#3{%
-	\gre@rubberpermit{#1}%
-	\ifrubber% if we have a rubber allowed length we create a temporary skip
-		\let\gre@scaledist\gre@skip@temp@one%
-	\else% otherwise we create a temporary dimen
-		\let\gre@scaledist\gre@dimen@temp@one%
-	\fi%
-	% Math
-	\gre@rubberpermit{#1}%
-	\ifrubber%
-		\edef\gre@convert{\csname gre@skip@#1\endcsname}%
-	\else%
-		\edef\gre@convert{\csname gre@dimen@#1\endcsname}%
-	\fi%
-	\gre@scaledist=\gre@convert%
-	\multiply \gre@scaledist by \number #3%
-	\divide \gre@scaledist by \number #2%
-	\gre@consistentunits{\gre@convert}{\gre@scaledist}%
-	\gresetdim{#1}{\gre@stringdist}{1}%
-	\relax %
+  \gre@rubberpermit{#1}%
+  \ifrubber% if we have a rubber allowed length we create a temporary skip
+    \let\gre@scaledist\gre@skip@temp@one%
+  \else% otherwise we create a temporary dimen
+    \let\gre@scaledist\gre@dimen@temp@one%
+  \fi%
+  % Math
+  \gre@rubberpermit{#1}%
+  \ifrubber%
+    \edef\gre@convert{\csname gre@skip@#1\endcsname}%
+  \else%
+    \edef\gre@convert{\csname gre@dimen@#1\endcsname}%
+  \fi%
+  \gre@scaledist=\gre@convert%
+  \multiply \gre@scaledist by \number #3%
+  \divide \gre@scaledist by \number #2%
+  \gre@consistentunits{\gre@convert}{\gre@scaledist}%
+  \gresetdim{#1}{\gre@stringdist}{1}%
+  \relax %
 }%
 
 
@@ -797,91 +797,91 @@
 \newcount\gre@unitfactor%
 \newcount\gre@basefactor%
 \def\gre@convertto#1#2{%
-	\gre@debug{convertto (#1) (#2)}
-	\gre@debug{ifdim #2 = 0pt}
-	\ifdim#2=0pt\relax%
-		\edef\gre@converted{0 #1}%
-	\else%
-		\gre@unit = 1 #1%
-		\gre@base = #2%
-		% Code to increase precision
-		\gre@maxlen = 16383.99999pt%
-		\gre@unitfactor = \number\gre@maxlen%
-		\divide\gre@unitfactor by \number\gre@unit\relax%
-		\ifnum\gre@unitfactor < 0\relax%
-			\gre@unitfactor = -\gre@unitfactor%
-		\fi%
-		\gre@debug{unit: \the\gre@unit ; factor: \the\gre@unitfactor}
-		\gre@basefactor = \number\gre@maxlen%
-		\divide\gre@basefactor by \number\gre@base\relax%
-		\ifnum\gre@basefactor < 0\relax%
-			\gre@basefactor = -\gre@basefactor%
-		\fi%
-		\gre@debug{base: \the\gre@base ; factor: \the\gre@basefactor}
-		\ifnum\gre@basefactor<\gre@unitfactor%
-			\multiply\gre@unit by \gre@basefactor%
-			\multiply\gre@base by \gre@basefactor%
-		\else%
-			\multiply\gre@unit by \gre@unitfactor%
-			\multiply\gre@base by \gre@unitfactor%
-		\fi%
-		\gre@count@temp@one = \expandafter\gre@makein\the\gre@unit%
-		\divide\gre@base by \gre@count@temp@one%
-		\edef\gre@converted{%
-			\expandafter\gre@makenum\the\gre@base #1%
-		}%
-	\fi%
+  \gre@debug{convertto (#1) (#2)}
+  \gre@debug{ifdim #2 = 0pt}
+  \ifdim#2=0pt\relax%
+    \edef\gre@converted{0 #1}%
+  \else%
+    \gre@unit = 1 #1%
+    \gre@base = #2%
+    % Code to increase precision
+    \gre@maxlen = 16383.99999pt%
+    \gre@unitfactor = \number\gre@maxlen%
+    \divide\gre@unitfactor by \number\gre@unit\relax%
+    \ifnum\gre@unitfactor < 0\relax%
+      \gre@unitfactor = -\gre@unitfactor%
+    \fi%
+    \gre@debug{unit: \the\gre@unit ; factor: \the\gre@unitfactor}
+    \gre@basefactor = \number\gre@maxlen%
+    \divide\gre@basefactor by \number\gre@base\relax%
+    \ifnum\gre@basefactor < 0\relax%
+      \gre@basefactor = -\gre@basefactor%
+    \fi%
+    \gre@debug{base: \the\gre@base ; factor: \the\gre@basefactor}
+    \ifnum\gre@basefactor<\gre@unitfactor%
+      \multiply\gre@unit by \gre@basefactor%
+      \multiply\gre@base by \gre@basefactor%
+    \else%
+      \multiply\gre@unit by \gre@unitfactor%
+      \multiply\gre@base by \gre@unitfactor%
+    \fi%
+    \gre@count@temp@one = \expandafter\gre@makein\the\gre@unit%
+    \divide\gre@base by \gre@count@temp@one%
+    \edef\gre@converted{%
+      \expandafter\gre@makenum\the\gre@base #1%
+    }%
+  \fi%
 }%
 
 % This function takes a distance (#2) and formats it as a string so that its units conform to the pattern set by a string representation of a distance (#1)
 \newif\ifstretch%
 \newif\ifshrink%
 \def\gre@consistentunits#1#2{%
-	\stretchfalse%
-	\shrinkfalse%
-	\IfSubStr{#1}{plus}{\stretchtrue}{\relax}%
-	\IfSubStr{#1}{minus}{\shrinktrue}{\relax}%
-	\ifstretch%
-		\ifshrink%
-			%rubber with both stretch and shrink
-			\StrBefore{#1}{plus}[\gre@baseunit]%
-			\StrBetween{#1}{plus}{minus}[\gre@stretchunit]%
-			\StrBehind{#1}{minus}[\gre@shrinkunit]%
-		\else%
-			%rubber with stretch only
-			\StrBefore{#1}{plus}[\gre@baseunit]%
-			\StrBehind{#1}{plus}[\gre@stretchunit]%
-			\def\gre@shrinkunit{\relax}%
-		\fi%
-	\else%
-		\ifshrink%
-			%rubber with shrink only
-			\StrBefore{#1}{minus}[\gre@baseunit]%
-			\def\gre@stretchunit{\relax}%
-			\StrBehind{#1}{minus}[\gre@shrinkunit]%
-		\else%
-			%non-rubber
-			\def\gre@baseunit{#1}%
-			\def\gre@stretchunit{\relax}%
-			\def\gre@shrinkunit{\relax}%
-		\fi%
-	\fi%
-	\StrDel{\gre@baseunit}{ }[\gre@baseunit]%
-	\StrRight{\gre@baseunit}{2}[\gre@baseunit]%
-	\StrDel{\gre@stretchunit}{ }[\gre@stretchunit]%
-	\StrRight{\gre@stretchunit}{2}[\gre@stretchunit]%
-	\StrDel{\gre@shrinkunit}{ }[\gre@shrinkunit]%
-	\StrRight{\gre@shrinkunit}{2}[\gre@shrinkunit]%
-	\gre@convertto{\gre@baseunit}{\dimexpr#2\relax}%
-	\edef\gre@stringdist{\gre@converted}%
-	\if\relax\gre@stretchunit\else%
-		\gre@convertto{\gre@stretchunit}{\gluestretch#2}%
-		\edef\gre@stringdist{\gre@stringdist plus \gre@converted}%
-	\fi%
-	\if\relax\gre@shrinkunit\else%
-		\gre@convertto{\gre@shrinkunit}{\glueshrink#2}%
-		\edef\gre@stringdist{\gre@stringdist minus \gre@converted}%
-	\fi%
+  \stretchfalse%
+  \shrinkfalse%
+  \IfSubStr{#1}{plus}{\stretchtrue}{\relax}%
+  \IfSubStr{#1}{minus}{\shrinktrue}{\relax}%
+  \ifstretch%
+    \ifshrink%
+      %rubber with both stretch and shrink
+      \StrBefore{#1}{plus}[\gre@baseunit]%
+      \StrBetween{#1}{plus}{minus}[\gre@stretchunit]%
+      \StrBehind{#1}{minus}[\gre@shrinkunit]%
+    \else%
+      %rubber with stretch only
+      \StrBefore{#1}{plus}[\gre@baseunit]%
+      \StrBehind{#1}{plus}[\gre@stretchunit]%
+      \def\gre@shrinkunit{\relax}%
+    \fi%
+  \else%
+    \ifshrink%
+      %rubber with shrink only
+      \StrBefore{#1}{minus}[\gre@baseunit]%
+      \def\gre@stretchunit{\relax}%
+      \StrBehind{#1}{minus}[\gre@shrinkunit]%
+    \else%
+      %non-rubber
+      \def\gre@baseunit{#1}%
+      \def\gre@stretchunit{\relax}%
+      \def\gre@shrinkunit{\relax}%
+    \fi%
+  \fi%
+  \StrDel{\gre@baseunit}{ }[\gre@baseunit]%
+  \StrRight{\gre@baseunit}{2}[\gre@baseunit]%
+  \StrDel{\gre@stretchunit}{ }[\gre@stretchunit]%
+  \StrRight{\gre@stretchunit}{2}[\gre@stretchunit]%
+  \StrDel{\gre@shrinkunit}{ }[\gre@shrinkunit]%
+  \StrRight{\gre@shrinkunit}{2}[\gre@shrinkunit]%
+  \gre@convertto{\gre@baseunit}{\dimexpr#2\relax}%
+  \edef\gre@stringdist{\gre@converted}%
+  \if\relax\gre@stretchunit\else%
+    \gre@convertto{\gre@stretchunit}{\gluestretch#2}%
+    \edef\gre@stringdist{\gre@stringdist plus \gre@converted}%
+  \fi%
+  \if\relax\gre@shrinkunit\else%
+    \gre@convertto{\gre@shrinkunit}{\glueshrink#2}%
+    \edef\gre@stringdist{\gre@stringdist minus \gre@converted}%
+  \fi%
 }%
 
 
@@ -889,72 +889,72 @@
 %% simply by dividing them by the old factor, and multiplying them by the new one.
 % #1 is the old grefactor, #2 is the new one
 \def\gre@changedimenfactor#1#2{%
-	\gre@changeonedimenfactor{additionallineswidth}{#1}{#2}%
-	\gre@changeonedimenfactor{additionalcustoslineswidth}{#1}{#2}%
-	\gre@changeonedimenfactor{zerowidthspace}{#1}{#2}%
-	\gre@changeonedimenfactor{interglyphspace}{#1}{#2}%
-	\gre@changeonedimenfactor{alterationspace}{#1}{#2}%
-	\gre@changeonedimenfactor{clefflatspace}{#1}{#2}%
-	\gre@changeonedimenfactor{beforechoralsignspace}{#1}{#2}%
-	\gre@changeonedimenfactor{beforealterationspace}{#1}{#2}%
-	\gre@changeonedimenfactor{interelementspace}{#1}{#2}%
-	\gre@changeonedimenfactor{largerspace}{#1}{#2}%
-	\gre@changeonedimenfactor{glyphspace}{#1}{#2}%
-	\gre@changeonedimenfactor{intersyllablespace}{#1}{#2}%
-	\gre@changeonedimenfactor{spacebeforecusto}{#1}{#2}%
-	\gre@changeonedimenfactor{spacebeforesigns}{#1}{#2}%
-	\gre@changeonedimenfactor{spaceaftersigns}{#1}{#2}%
-	\gre@changeonedimenfactor{spaceafterlineclef}{#1}{#2}%
-	\gre@changeonedimenfactor{interwordspacenotes}{#1}{#2}%
-	\gre@changeonedimenfactor{interwordspacenotestext}{#1}{#2}%
-	\gre@changeonedimenfactor{interwordspacetextnotes}{#1}{#2}%
-	\gre@changeonedimenfactor{interwordspacetext}{#1}{#2}%
-	\gre@changeonedimenfactor{bitrivirspace}{#1}{#2}%
-	\gre@changeonedimenfactor{bitristrospace}{#1}{#2}%
-	\gre@changeonedimenfactor{punctuminclinatumshift}{#1}{#2}%
-	\gre@changeonedimenfactor{beforepunctainclinatashift}{#1}{#2}%
-	\gre@changeonedimenfactor{punctuminclinatumanddebilisshift}{#1}{#2}%
-	\gre@changeonedimenfactor{punctuminclinatumdebilisshift}{#1}{#2}%
-	\gre@changeonedimenfactor{punctuminclinatumbigshift}{#1}{#2}%
-	\gre@changeonedimenfactor{punctuminclinatummaxshift}{#1}{#2}%
-	\gre@changeonedimenfactor{spacearoundsmallbar}{#1}{#2}%
-	\gre@changeonedimenfactor{spacearoundminor}{#1}{#2}%
-	\gre@changeonedimenfactor{spacearoundmaior}{#1}{#2}%
-	\gre@changeonedimenfactor{spacearoundfinalis}{#1}{#2}%
-	\gre@changeonedimenfactor{spacebeforefinalfinalis}{#1}{#2}%
-	\gre@changeonedimenfactor{spacearoundclefbars}{#1}{#2}%
-	\gre@changeonedimenfactor{textbartextspace}{#1}{#2}%
-	\gre@changeonedimenfactor{notebarspace}{#1}{#2}%
-	\gre@changeonedimenfactor{maximumspacewithoutdash}{#1}{#2}%
-	\gre@changeonedimenfactor{afterclefnospace}{#1}{#2}%
-	\gre@changeonedimenfactor{afterinitialshift}{#1}{#2}%
-	\gre@changeonedimenfactor{beforeinitialshift}{#1}{#2}%
-	\gre@changeonedimenfactor{minimalspaceatlinebeginning}{#1}{#2}%
-	\gre@changeonedimenfactor{manualinitialwidth}{#1}{#2}%
-	\gre@changeonedimenfactor{aboveinitialseparation}{#1}{#2}%
-	\gre@changeonedimenfactor{noclefspace}{#1}{#2}%
-	\gre@changeonedimenfactor{clefchangespace}{#1}{#2}%
-	\gre@changeonedimenfactor{clivisalignmentmin}{#1}{#2}%
-	\gre@changeonedimenfactor{abovesignsspace}{#1}{#2}%
-	\gre@changeonedimenfactor{belowsignsspace}{#1}{#2}%
-	\gre@changeonedimenfactor{lowchoralsignshift}{#1}{#2}%
-	\gre@changeonedimenfactor{highchoralsignshift}{#1}{#2}%
-	\gre@changeonedimenfactor{translationheight}{#1}{#2}%
-	\gre@changeonedimenfactor{spaceabovelines}{#1}{#2}%
-	\gre@changeonedimenfactor{spacelinestext}{#1}{#2}%
-	\gre@changeonedimenfactor{spacebeneathtext}{#1}{#2}%
-	\gre@changeonedimenfactor{abovelinestextraise}{#1}{#2}%
-	\gre@changeonedimenfactor{abovelinestextheight}{#1}{#2}%
-	\gre@changeonedimenfactor{braceshift}{#1}{#2}%
-	\gre@changeonedimenfactor{curlybraceaccentusshift}{#1}{#2}%
-	\ifnum\gre@scale@stafflinefactor=1\relax%
-		\gre@count@temp@two = \gre@stafflinefactor%
-		\multiply\gre@count@temp@two by #2\relax%
-		\divide\gre@count@temp@two by #1\relax%
-		\xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
-	\fi%
-	\gre@computespaces%
-	\relax %
+  \gre@changeonedimenfactor{additionallineswidth}{#1}{#2}%
+  \gre@changeonedimenfactor{additionalcustoslineswidth}{#1}{#2}%
+  \gre@changeonedimenfactor{zerowidthspace}{#1}{#2}%
+  \gre@changeonedimenfactor{interglyphspace}{#1}{#2}%
+  \gre@changeonedimenfactor{alterationspace}{#1}{#2}%
+  \gre@changeonedimenfactor{clefflatspace}{#1}{#2}%
+  \gre@changeonedimenfactor{beforechoralsignspace}{#1}{#2}%
+  \gre@changeonedimenfactor{beforealterationspace}{#1}{#2}%
+  \gre@changeonedimenfactor{interelementspace}{#1}{#2}%
+  \gre@changeonedimenfactor{largerspace}{#1}{#2}%
+  \gre@changeonedimenfactor{glyphspace}{#1}{#2}%
+  \gre@changeonedimenfactor{intersyllablespace}{#1}{#2}%
+  \gre@changeonedimenfactor{spacebeforecusto}{#1}{#2}%
+  \gre@changeonedimenfactor{spacebeforesigns}{#1}{#2}%
+  \gre@changeonedimenfactor{spaceaftersigns}{#1}{#2}%
+  \gre@changeonedimenfactor{spaceafterlineclef}{#1}{#2}%
+  \gre@changeonedimenfactor{interwordspacenotes}{#1}{#2}%
+  \gre@changeonedimenfactor{interwordspacenotestext}{#1}{#2}%
+  \gre@changeonedimenfactor{interwordspacetextnotes}{#1}{#2}%
+  \gre@changeonedimenfactor{interwordspacetext}{#1}{#2}%
+  \gre@changeonedimenfactor{bitrivirspace}{#1}{#2}%
+  \gre@changeonedimenfactor{bitristrospace}{#1}{#2}%
+  \gre@changeonedimenfactor{punctuminclinatumshift}{#1}{#2}%
+  \gre@changeonedimenfactor{beforepunctainclinatashift}{#1}{#2}%
+  \gre@changeonedimenfactor{punctuminclinatumanddebilisshift}{#1}{#2}%
+  \gre@changeonedimenfactor{punctuminclinatumdebilisshift}{#1}{#2}%
+  \gre@changeonedimenfactor{punctuminclinatumbigshift}{#1}{#2}%
+  \gre@changeonedimenfactor{punctuminclinatummaxshift}{#1}{#2}%
+  \gre@changeonedimenfactor{spacearoundsmallbar}{#1}{#2}%
+  \gre@changeonedimenfactor{spacearoundminor}{#1}{#2}%
+  \gre@changeonedimenfactor{spacearoundmaior}{#1}{#2}%
+  \gre@changeonedimenfactor{spacearoundfinalis}{#1}{#2}%
+  \gre@changeonedimenfactor{spacebeforefinalfinalis}{#1}{#2}%
+  \gre@changeonedimenfactor{spacearoundclefbars}{#1}{#2}%
+  \gre@changeonedimenfactor{textbartextspace}{#1}{#2}%
+  \gre@changeonedimenfactor{notebarspace}{#1}{#2}%
+  \gre@changeonedimenfactor{maximumspacewithoutdash}{#1}{#2}%
+  \gre@changeonedimenfactor{afterclefnospace}{#1}{#2}%
+  \gre@changeonedimenfactor{afterinitialshift}{#1}{#2}%
+  \gre@changeonedimenfactor{beforeinitialshift}{#1}{#2}%
+  \gre@changeonedimenfactor{minimalspaceatlinebeginning}{#1}{#2}%
+  \gre@changeonedimenfactor{manualinitialwidth}{#1}{#2}%
+  \gre@changeonedimenfactor{aboveinitialseparation}{#1}{#2}%
+  \gre@changeonedimenfactor{noclefspace}{#1}{#2}%
+  \gre@changeonedimenfactor{clefchangespace}{#1}{#2}%
+  \gre@changeonedimenfactor{clivisalignmentmin}{#1}{#2}%
+  \gre@changeonedimenfactor{abovesignsspace}{#1}{#2}%
+  \gre@changeonedimenfactor{belowsignsspace}{#1}{#2}%
+  \gre@changeonedimenfactor{lowchoralsignshift}{#1}{#2}%
+  \gre@changeonedimenfactor{highchoralsignshift}{#1}{#2}%
+  \gre@changeonedimenfactor{translationheight}{#1}{#2}%
+  \gre@changeonedimenfactor{spaceabovelines}{#1}{#2}%
+  \gre@changeonedimenfactor{spacelinestext}{#1}{#2}%
+  \gre@changeonedimenfactor{spacebeneathtext}{#1}{#2}%
+  \gre@changeonedimenfactor{abovelinestextraise}{#1}{#2}%
+  \gre@changeonedimenfactor{abovelinestextheight}{#1}{#2}%
+  \gre@changeonedimenfactor{braceshift}{#1}{#2}%
+  \gre@changeonedimenfactor{curlybraceaccentusshift}{#1}{#2}%
+  \ifnum\gre@scale@stafflinefactor=1\relax%
+    \gre@count@temp@two = \gre@stafflinefactor%
+    \multiply\gre@count@temp@two by #2\relax%
+    \divide\gre@count@temp@two by #1\relax%
+    \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
+  \fi%
+  \gre@computespaces%
+  \relax %
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -967,62 +967,62 @@
 % To change the spacing between annotations.  
 %First argument is distance, second is whether it should scale when \grefactor changes.
 \ifdefined\setaboveinitialseparation%
-	\greerror{\protect\setaboveinitialseparation\space is already defined.  Check for package conflicts.}%
+  \greerror{\protect\setaboveinitialseparation\space is already defined.  Check for package conflicts.}%
 \else%
-	\def\setaboveinitialseparation#1#2{%
-		\grechangedim{aboveinitialseparation}{#1}{#2}%
-		\relax %
-	}%
+  \def\setaboveinitialseparation#1#2{%
+    \grechangedim{aboveinitialseparation}{#1}{#2}%
+    \relax %
+  }%
 \fi%
 
 \def\GreSetAboveInitialSeparation#1{%
-	\gre@warning{\protect\GreSetAboveInitialSeparation\space is deprecated.\MessageBreak Use \protect\setaboveiniitalseparation\space instead.}%
-	\setaboveinitialseparation#1{1}%
+  \gre@warning{\protect\GreSetAboveInitialSeparation\space is deprecated.\MessageBreak Use \protect\setaboveiniitalseparation\space instead.}%
+  \setaboveinitialseparation#1{1}%
 }%
 
 %To change the space after the initial
 %First argument is distance, second is whether it should scale when \grefactor changes.
 \ifdefined\setspaceafterinitial%
-	\greerror{\protect\setspaceafterinitial\space is already defined.  Check for package conflicts.}%
+  \greerror{\protect\setspaceafterinitial\space is already defined.  Check for package conflicts.}%
 \else%
-	\def\setspaceafterinitial#1#2{%
-		\grechangedim{afterinitialshift}{#1}{#2}%
-		\relax %
-	}%
+  \def\setspaceafterinitial#1#2{%
+    \grechangedim{afterinitialshift}{#1}{#2}%
+    \relax %
+  }%
 \fi%
 
 \def\GreSetSpaceAfterInitial#1{%
-	\gre@warning{\protect\GreSetSpaceAfterInitial\space is deprecated.\MessageBreak Use \protect\setspaceafteriniital\space instead.}%
-	\setspaceafterinitial#1{1}	%
+  \gre@warning{\protect\GreSetSpaceAfterInitial\space is deprecated.\MessageBreak Use \protect\setspaceafteriniital\space instead.}%
+  \setspaceafterinitial#1{1}	%
 }%
 
 %To change the space before the initial
 %First argument is distance, second is whether it should scale when \grefactor changes.
 \ifdefined\setspacebeforeinitial%
-	\greerror{\protect\setspacebeforeinitial\space is already defined.  Check for package conflicts.}%
+  \greerror{\protect\setspacebeforeinitial\space is already defined.  Check for package conflicts.}%
 \else%
-	\def\setspacebeforeinitial#1#2{%
-		\grechangedim{beforeinitialshift}{#1}{#2}%
-		\relax %
-	}%
+  \def\setspacebeforeinitial#1#2{%
+    \grechangedim{beforeinitialshift}{#1}{#2}%
+    \relax %
+  }%
 \fi%
 
 \def\GreSetSpaceBeforeInitial#1{%
-	\gre@warning{\protect\GreSetSpaceBeforeInitial\space is deprecated.\MessageBreak Use \protect\setspacebeforeiniital\space instead.}%
-	\setspacebeforeinitial#1{1}	%
+  \gre@warning{\protect\GreSetSpaceBeforeInitial\space is deprecated.\MessageBreak Use \protect\setspacebeforeiniital\space instead.}%
+  \setspacebeforeinitial#1{1}	%
 }%
 
 
 %To change all the distances associated with the initial.
 %First three arguments are distances, last is whether they should scale when \grefactor changes.
 \ifdefined\setinitialspacing%
-	\greerror{\protect\setinitialspacing\space is already defined.  Check for package conflicts.}%
+  \greerror{\protect\setinitialspacing\space is already defined.  Check for package conflicts.}%
 \else%
-	\def\setinitialspacing#1#2#3#4{%
-		\grechangedim{beforeinitialshift}{#1}{#4}%
-		\grechangedim{manualinitialwidth}{#2}{#4}%
-		\grechangedim{afterinitialshift}{#3}{#4}%
-		\relax%
-	}%
+  \def\setinitialspacing#1#2#3#4{%
+    \grechangedim{beforeinitialshift}{#1}{#4}%
+    \grechangedim{manualinitialwidth}{#2}{#4}%
+    \grechangedim{afterinitialshift}{#3}{#4}%
+    \relax%
+  }%
 \fi%
 
