@@ -11,6 +11,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Improved `\includescore` capabilities.  See doc/UserManual.pdf for full details.
 - Clivis stem length now follow Solesmes' books conventions (see [#31](https://github.com/gregorio-project/gregorio/issues/31)).
 - Windows TeXworks configuration script no longer adds deprecated `greg-book` and `gregorio` engines (see below).
+- Installation of the TeX portion of Gregorio is now done by the `install-gtex.sh` script rather than by running `make` in the fonts directory.  `build.sh` and `install.sh` are available to build and install the entire application after checkout from GitHub, using common defaults.
 
 ### Fixed
 - `\includescore` not finding files for autocompile under certain circumstances.  (see [this thread](http://www.mail-archive.com/gregorio-users@gna.org/msg02346.html)).
