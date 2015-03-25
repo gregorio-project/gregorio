@@ -90,7 +90,6 @@ auto/
 #gregorio specific
 doc/_minted-UserManual
 fonts/*.ttf
-*.exe
 *.gz
 *.zip
 plugins/gabc/gabc-score-determination-y*
@@ -103,4 +102,3 @@ config.h.in
 stamp-h1
 Makevars.template
 *.gtex
-*.ttf
