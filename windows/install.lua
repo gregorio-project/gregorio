@@ -1,7 +1,7 @@
 #!/usr/bin/env texlua
 --[[
-Gregorio gabc optimization script.
-Copyright (C) 2010 Elie Roux <elie.roux@telecom-bretagne.eu>
+Gregorio Windows automatic installation script.
+Copyright (C) 2010-2015 Gregorio Project authors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.	If not, see <http://www.gnu.org/licenses/>.
 
-You must run this program with texlua, if possible under a TeXLive 2010.
-This program installs gregorio under Windows.
+This texlua script is called in Windows automatic installer (see gregorio.iss),
+it installs GregorioTeX under Windows, and configures TeXworks.
 --]]
 
 require("lfs")
@@ -38,7 +38,7 @@ local function basename(path)
   return path:gsub("^[^/]+/" ,"")
 end
 
-if os_type == "windows" or os_type == "msdos" then
+if os.type == "windows" or os.type == "msdos" then
   pathsep = '\\'
   fixpath = function(path)
     return path:gsub("/", "\\")
@@ -287,9 +287,9 @@ arguments=$basename
 showPdf=false]]
 
 full_tools_ini[11] = [[name=MakeIndex
-		       program=makeindex.exe
-		       arguments=$basename
-		       showPdf=false]]
+program=makeindex.exe
+arguments=$basename
+showPdf=false]]
 
 function texworks_conf_tools(filename, install_dir)
   local lualatexfound = 0
@@ -308,16 +308,16 @@ function texworks_conf_tools(filename, install_dir)
     for l in f:lines() do
       local num = tonumber(l:match("%[(%d+)%]"))
       if num then
-	current = num
+        current = num
       elseif l ~= "" then
-	if string.lower(l) == "name=lualatex" then
-	  lualatexfound = 1
-	end
-	if toolstable[current] == nil then
-	  toolstable[current] = l
-	else
-	  toolstable[current] = toolstable[current]..'\n'..l
-	end
+        if string.lower(l) == "name=lualatex" then
+          lualatexfound = 1
+        end
+        if toolstable[current] == nil then
+          toolstable[current] = l
+        else
+          toolstable[current] = toolstable[current]..'\n'..l
+        end
       end
     end
   end
@@ -350,7 +350,7 @@ function scribus_config()
   io.savedata('contrib'..pathsep..'900_gregorio.xml', data)
 end
 
-if arg[1] == nil or arg[1] ~= '--conf' then		 
+if arg[1] == nil or arg[1] ~= '--conf' then
   main_install()
   scribus_config()
 else
