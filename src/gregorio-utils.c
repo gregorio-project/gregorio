@@ -1,6 +1,5 @@
 /*
- * Gregorio command line interface. Copyright (C) 2006-2009 Elie Roux
- * <elie.roux@telecom-bretagne.eu>
+ * Gregorio command line interface. Copyright (C) 2006-2015 Gregorio project
  * 
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -109,7 +108,7 @@ print_licence ()
 {
   printf ("\n\
 Tools for manipulation of gregorian chant files\n\
-Copyright (C) 2006-2008 Elie Roux <elie.roux@telecom-bretagne.eu>\n\
+Copyright (C) 2006-2015 Gregorio project authors (see CONTRIBUTORS.md)\n\
 \n\
 This program is free software: you can redistribute it and/or modify\n\
 it under the terms of the GNU General Public License as published by\n\
@@ -131,10 +130,10 @@ print_usage (char *name)
   printf (_("\nUsage :\n%s [OPTION] {file}\n  where OPTION is :\n\
 \t-o file    writes output to specified file\n\
 \t-S         writes output to stdout\n\
-\t-F format  specifies output file format, default is gtex\n\
-\t-O         write two-bytes characters as \\char %%d instead of utf8 in TeX\n\
-\t-l file    writes messages output to specified file (default stderr)\n\
-\t-f format  specifies input file format, default is gabc\n\
+\t-F format  specifies output file format (default: gtex)\n\
+\t-O         write two-bytes characters as \\char %%d instead of utf8 in TeX (deprecated)\n\
+\t-l file    writes messages output to specified file (default: stderr)\n\
+\t-f format  specifies input file format (default: gabc)\n\
 \t-s         reads input from stdin\n\
 \t-h         displays this message\n\
 \t-V         displays %s version\n"), name, name);
@@ -144,10 +143,10 @@ print_usage (char *name)
 \n\
 available formats are:\n\
 \t gabc      gabc\n\
-\t xml       GregorioXML\n\
+\t xml       GregorioXML (deprecated)\n\
 \t gtex      GregorioTeX\n\
-\t otex      OpusTeX\n\
-\t dump      simple text dump\n\
+\t otex      OpusTeX (deprecated)\n\
+\t dump      simple text dump (for debugging purpose)\n\
 \n"));
 }
 
@@ -155,7 +154,7 @@ int
 main (int argc, char **argv)
 {
   const char *copyright =
-    "Copyright (C) 2006-2010 Elie Roux <elie.roux@telecom-bretagne.eu>";
+    "Copyright (C) 2006-2015 Gregorio project authors (see CONTRIBUTORS.md)";
   int c;
 
   char *input_file_name = NULL;
@@ -266,6 +265,7 @@ main (int argc, char **argv)
           output_file = stdout;
           break;
         case 'O':
+          fprintf(stderr, "Warning: -O option is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.");
           gregorio_set_tex_write (WRITE_OLD_TEX);
           break;
         case 'F':
@@ -369,7 +369,7 @@ main (int argc, char **argv)
           exit (0);
           break;
         case 'V':
-          printf ("%s version %s.\n%s\n", argv[0], VERSION, copyright);
+          printf ("Gregorio version %s.\n%s\n", VERSION, copyright);
           exit (0);
           break;
         case 'v':
@@ -596,6 +596,7 @@ main (int argc, char **argv)
       break;
 #if ENABLE_XML == 1
     case XML:
+      fprintf(stderr, "Warning: GregorioXML is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.");
       score = xml_read_score (input_file);
       break;
 #endif
@@ -628,6 +629,7 @@ main (int argc, char **argv)
   switch (output_format)
     {
     case XML:
+      fprintf(stderr, "Warning: GregorioXML is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.");
       xml_write_score (output_file, score);
       break;
     case GABC:
@@ -637,6 +639,7 @@ main (int argc, char **argv)
       gregoriotex_write_score (output_file, score);
       break;
     case OTEX:
+      fprintf(stderr, "Warning: OpusTeX support is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.");
       opustex_write_score (output_file, score);
       break;
     case DUMP:
