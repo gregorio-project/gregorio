@@ -1,11 +1,8 @@
-//
-// .indent.pro file for GNU Indent.
-
---gnu-style
---no-tabs
--ts2
+-kr
+-nut
+-ts4
 -sob
---line-length80
+-l80
 -lc80
 -d0
 -fca
@@ -14,11 +11,8 @@
 -sc
 
 -T FILE
-
 -T det_style
-
 -T grewchar
-
 -T gregorio_note
 -T gregorio_glyph
 -T gregorio_element
@@ -29,6 +23,5 @@
 -T source_info
 -T gregorio_score
 -T gregorio_voice_info
-
 -T gregoriotex_status
 -T gregorio_line
