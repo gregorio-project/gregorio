@@ -265,7 +265,7 @@ main (int argc, char **argv)
           output_file = stdout;
           break;
         case 'O':
-          fprintf(stderr, "Warning: -O option is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.");
+          fprintf(stderr, "Warning: -O option is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.\n");
           gregorio_set_tex_write (WRITE_OLD_TEX);
           break;
         case 'F':
@@ -596,7 +596,7 @@ main (int argc, char **argv)
       break;
 #if ENABLE_XML == 1
     case XML:
-      fprintf(stderr, "Warning: GregorioXML is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.");
+      fprintf(stderr, "Warning: GregorioXML is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.\n");
       score = xml_read_score (input_file);
       break;
 #endif
@@ -629,7 +629,7 @@ main (int argc, char **argv)
   switch (output_format)
     {
     case XML:
-      fprintf(stderr, "Warning: GregorioXML is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.");
+      fprintf(stderr, "Warning: GregorioXML is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.\n");
       xml_write_score (output_file, score);
       break;
     case GABC:
