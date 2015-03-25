@@ -31,6 +31,12 @@ You can use `gabc.xml` for syntax highlighting in kate (and Kedit, etc.). To
 install it, copy the file in `/usr/share/apps/katepart/syntax`. This path
 may vary according to your distribution.
 
+## Gnome editors (Gedit)
+
+You can use `gabc.lang` for syntax highlighting in GtkSourceView (Gedit, etc.). To 
+install it, copy the file in `/usr/share/gtksourceview-3.0/language-specs`. This path
+may vary according to your distribution.
+
 ## Emacs
 
 To use gregorio in [Emacs](https://www.gnu.org/software/emacs/), see [this script](https://github.com/cajetanus/gregorio-mode.el).
