@@ -36,6 +36,7 @@ are the same under GNU/Linux and Mac OSX:
  * the [GNU Build System](http://airs.com/ian/configure/) (often referred to as "Autotools")
  * [gcc](https://gcc.gnu.org/) (and associated tools)
  * [GNU indent](https://www.gnu.org/software/indent/) (OSX default indent won't work)
+ * [pylint](http://www.pylint.org/) if you work on Python files
 
 ### Coding standards
 
@@ -49,9 +50,20 @@ The rest of the code uses two spaces for indentation of `.tex`, `.lua` and other
 
 Gregorio provides an [`.editorconfig` file](../.editorconfig), using an [editorconfig plugin](http://editorconfig.org/#download) for your editor will configure it automatically.
 
+Python files must output no error when inspected by `pylint`.
+
 ### Tests
 
 When your changes are significant, please provide a test demonstrating the change. See [test documentation](tests/).
+
+### Documentation
+
+If your code has an impact on the user, you must add it to the [changelog file](CHANGELOG.md).
+
+You must also document it in the right places:
+
+ * [User manual](doc/) for changes in GregorioTeX
+ * the [website](http://home.gna.org/gregorio) if relevant (ask the [developer mailing list](mailto:gregorio-devel@gna.org) for access).
 
 ### Git Workflow
 
