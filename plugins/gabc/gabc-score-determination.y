@@ -91,6 +91,7 @@ void set_clef (char *str);
 void reajust_voice_infos (gregorio_voice_info * voice_info, int final_count);
 void end_definitions ();
 void suppress_useless_styles ();
+void check_rebuild_first_syllable ();
 void close_syllable ();
 void gregorio_gabc_add_text (char *mbcharacters);
 void gregorio_gabc_add_style(unsigned char style);
@@ -494,15 +495,20 @@ gregorio_set_translation_center_beginning(gregorio_syllable *current_syllable)
  */
 
 void
-close_syllable ()
+check_rebuild_first_syllable ()
 {
   // we rebuild the first syllable text if it is the first syllable, or if it is the second when the first has no text.
   // it is a patch for cases like (c4) Al(ab)le(ab)
-  if ((!score -> first_syllable && score->initial_style != NO_INITIAL && first_text_character)
-       || (current_syllable && !current_syllable->previous_syllable && !current_syllable->text && first_text_character))
+  if ((!score -> first_syllable && score->initial_style != NO_INITIAL && current_character)
+       || (current_syllable && !current_syllable->previous_syllable && !current_syllable->text && current_character))
     {
-       gregorio_rebuild_first_syllable (&first_text_character);
+       gregorio_rebuild_first_syllable (&current_character);
     }
+}
+
+void
+close_syllable ()
+{
   gregorio_add_syllable (&current_syllable, number_of_voices, elements,
 			    first_text_character, first_translation_character, position, abovelinestext, translation_type, no_linebreak_area);
   if (!score->first_syllable)
@@ -1190,8 +1196,9 @@ above_line_text:
 
 syllable_with_notes:
 	text OPENING_BRACKET notes {
+	check_rebuild_first_syllable();
 	gregorio_rebuild_characters (&current_character, center_is_determined, centering_scheme);
-    first_text_character = current_character;
+	first_text_character = current_character;
 	close_syllable();
 	}
 	|
