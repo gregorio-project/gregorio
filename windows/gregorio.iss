@@ -28,7 +28,6 @@ Root: HKCR; Subkey: "Gregorio\shell\open\command"; ValueType: string; ValueName:
 [Dirs]
 Name: "{app}\contrib"
 Name: "{app}\examples"
-Name: "{app}\contrib\TeXworks"
 
 [Files]
 Source: "../src/gregorio.exe"; DestDir: "{app}";
@@ -41,11 +40,13 @@ Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
 Source: "../UPGRADE.md"; DestDir: "{app}";
 Source: "../doc/UserManual.pdf"; DestDir: "{app}";
 Source: "license.txt"; DestDir: "{app}";
-Source: "../contrib\*"; DestDir: "{app}\contrib";
-Source: "../examples\*"; DestDir: "{app}\examples";
+Source: "../contrib/900_gregorio.xml"; DestDir: "{app}\contrib";
+Source: "../contrib/gregorio-scribus.lua"; DestDir: "{app}\contrib";
+Source: "../contrib/*"; DestDir: "{app}\contrib";
+Source: "../examples/PopulusSion.gabc"; DestDir: "{app}\examples";
+Source: "../examples/main-lualatex.tex"; DestDir: "{app}\examples";
 Source: "../gregoriotex.tds.zip"; DestDir: "{app}";
 Source: "../fonts/FONTLOG"; DestDir: "{app}";
-Source: "../contrib/TeXworks/Windows/*"; DestDir: "{app}\contrib\TeXworks";
 
 [Run]
 Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";
