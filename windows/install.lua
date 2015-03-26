@@ -192,6 +192,8 @@ function texworks_conf(install_dir)
   texworks_conf_ini(filesdir.."TUG"..pathsep.."TeXWorks.ini")
   print("Modifying texworks-config.txt...\n")
   texworks_conf_config(filesdir.."configuration"..pathsep.."texworks-config.txt")
+  print("Process finished.  Press return to exit.")
+  answer=io.read()
 end
 
 function texworks_conf_config(filename)
@@ -293,6 +295,8 @@ showPdf=false]]
 
 function texworks_conf_tools(filename, install_dir)
   local lualatexfound = 0
+  local current = 0
+  local toolstable = {}
   -- by default, there is no tools.ini in the recent versions of TeXWorks
   if not lfs.isfile(filename) then 
     print(filename.." does not exist, creating it...\n")
@@ -303,8 +307,6 @@ function texworks_conf_tools(filename, install_dir)
     -- let's remove the read-only attribute
     remove_read_only(filename)
     local f = io.open(filename, 'r')
-    local toolstable = {}
-    local current = 0
     for l in f:lines() do
       local num = tonumber(l:match("%[(%d+)%]"))
       if num then
@@ -322,12 +324,14 @@ function texworks_conf_tools(filename, install_dir)
     end
   end
   if lualatexfound == 0 then
+    print("Didn't find LuaLaTeX.  Adding it.")
     current = current + 1
     toolstable[current] = "name=LuaLaTeX"
     toolstable[current] = toolstable[current]..'\n'..'program=lualatex'
     toolstable[current] = toolstable[current]..'\n'..'arguments=--shell-escape, $synctexoption, $fullname'
     toolstable[current] = toolstable[current]..'\n'..'showPdf=true'
   else
+    print("Found LuaLaTeX.  Aborting modification.")
     return
   end
   local data = ""
@@ -335,6 +339,7 @@ function texworks_conf_tools(filename, install_dir)
     data = data..string.format("[%03d]\n", i)..s..'\n\n'
   end
   io.savedata(filename, data)
+  print("Added LuaLaTeX to file.")
 end
 
 function scribus_config()
@@ -359,3 +364,4 @@ else
   install_dir = arg[2]:gsub("\\","/")
   texworks_conf(install_dir)
 end
+
