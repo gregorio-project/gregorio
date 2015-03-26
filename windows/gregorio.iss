@@ -46,7 +46,6 @@ Source: "../contrib/*"; DestDir: "{app}\contrib";
 Source: "../examples/PopulusSion.gabc"; DestDir: "{app}\examples";
 Source: "../examples/main-lualatex.tex"; DestDir: "{app}\examples";
 Source: "../gregoriotex.tds.zip"; DestDir: "{app}";
-Source: "../fonts/FONTLOG"; DestDir: "{app}";
 
 [Run]
 Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";
