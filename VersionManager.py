@@ -16,10 +16,10 @@ import time
 
 VERSION_FILE = '.gregorio-version'
 GREGORIO_FILES = ["configure.ac",
-#                  "windows/gregorio-resources.rc",
-#                  "windows/gregorio.iss",
-#                  "tex/gregoriotex.lua",
-#                  "plugins/gregoriotex/gregoriotex.h"
+                  "windows/gregorio-resources.rc",
+                  "windows/gregorio.iss",
+                  "tex/gregoriotex.lua",
+                  "plugins/gregoriotex/gregoriotex.h"
                  ]
 
 def get_parser():
@@ -28,34 +28,81 @@ def get_parser():
         description='A script to manage the VERSION of gregorio.')
     parser.add_argument('-c', '--get-current',
                         help='Prints the current gregorio version',
-                        action='store_true')
+                        action='store_true', default=False)
     parser.add_argument('-d', '--get-debian-stable',
                         help='Prints the version for Debian stable package',
-                        action='store_true')
+                        action='store_true', default=False)
     parser.add_argument('-dg', '--get-debian-git',
                         help='Prints the version for Debian git package',
-                        action='store_true')
+                        action='store_true', default=False)
+    parser.add_argument('-gc', '--git-commit',
+                        help='Commit the version change',
+                        action='store_true', default=False)
+    parser.add_argument('-gt', '--git-tag',
+                        help='Commit the version change and add a git tag',
+                        action='store_true', default=False)
+    
+    modversion = parser.add_mutually_exclusive_group()
+    modversion.add_argument('-m', '--major',
+                            help='Increment the major version',
+                            action='store_true', default=False,
+                            dest='major')
+    modversion.add_argument('-e', '--enhancement',
+                            help='Increment the minor version',
+                            action='store_true', default=False,
+                            dest='minor')
+    modversion.add_argument('-b', '--bugfix',
+                            help='Increment the patch version',
+                            action='store_true', default=False,
+                            dest='patch')
+    modversion.add_argument('--manual=',
+                            help='Manually set the version.',
+                            action='store',
+                            dest='manual_version')
     return parser
 
-def fetch_version(versionfile):
-    "Return version"
-    with open(versionfile, 'r') as vfile:
-        grever = vfile.readline()
-    return grever.strip('\n')
+class Version(object):
+    "Class for version manipulation."
 
-def fetch_version_debian_stable(versionfile):
-    "Return version for Debian stable package"
-    with open(versionfile, 'r') as vfile:
-        grever = vfile.readline()
-    return grever.strip('\n').replace('-', '~')
 
-def fetch_version_debian_git(versionfile):
-    "Return version for Debian git package"
-    main_version = fetch_version_debian_stable(versionfile)
-    short_tag = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'])
-    short_tag = short_tag.strip('\n')
-    date = time.strftime("%Y%m%d")
-    return "%s+git%s+%s" % (main_version, date, short_tag)
+    def __init__(self, versionfile, xyz):
+        self.versionfile = versionfile
+        self.major, self.minor, self.patch = xyz
+        self.version = self.read_version(self.versionfile)
+
+    def read_version(self, versionfile):
+        "Return version"
+        with open(versionfile, 'r') as vfile:
+            self.grever = vfile.readline()
+        return self.grever.strip('\n')
+
+    def fetch_version(self):
+        print(self.version)
+        sys.exit(0)
+
+    def fetch_version_debian_stable(self):
+        "Return version for Debian stable package"
+        print(self.version.replace('-', '~'))
+        sys.exit(0)
+
+    def fetch_version_debian_git(self):
+        "Return version for Debian git package"
+        self.short_tag = subprocess.check_output(
+            ['git', 'rev-parse', '--short', 'HEAD'])
+        self.short_tag = self.short_tag.strip('\n')
+        self.date = time.strftime("%Y%m%d")
+        print("{0}+git{1}+{2}".format(self.version.replace('-', '~'),
+                                self.date, self.short_tag))
+        sys.exit(0)
+
+    def update_version(self, newversion):
+        "Update self.version and .gregorio-version with the new version."
+        self.version = newversion
+        with open(self.versionfile, 'w') as verfile:
+            verfile.write(self.version)
+            verfile.write('\n*** Do not modify this file. ***\n')
+            verfile.write('Use VersionManager.py to change the version.')
+
 
 def replace_version(infilename, newver):
     "Change version in file according to heuristics."
@@ -81,25 +128,36 @@ def replace_version(infilename, newver):
     with open(infilename, 'w') as outfile:
         outfile.write(''.join(result))
 
+
 def main():
     "Main function"
     parser = get_parser()
+    if len(sys.argv)==1:
+        parser.print_help()
+        sys.exit(1)
     args = parser.parse_args()
+    gregorio_version = Version(VERSION_FILE,
+                               (args.major, args.minor, args.patch))
     if args.get_current:
-        gregorio_version = fetch_version(VERSION_FILE)
-        print(gregorio_version)
-        sys.exit(0)
+        gregorio_version.fetch_version()
     elif args.get_debian_stable:
-        gregorio_version = fetch_version_debian_stable(VERSION_FILE)
-        print(gregorio_version)
-        sys.exit(0)
+        gregorio_version.fetch_version_debian_stable()
     elif args.get_debian_git:
-        gregorio_version = fetch_version_debian_git(VERSION_FILE)
-        print(gregorio_version)
-        sys.exit(0)
-    gregorio_version = fetch_version(VERSION_FILE)
-    for myfile in GREGORIO_FILES:
-        replace_version(myfile, gregorio_version)
+        gregorio_version.fetch_version_debian_git()
+
+    elif args.major or args.minor or args.patch:
+        print('rstrstr')
+        print(gregorio_version.version)
+
+    elif args.manual_version:
+        print(args.manual_version)
+        if not re.match(r'[\d.]{5,}-?\w*$', args.manual_version):
+            print('Bad version string. Use this style: x.y.z or x.y.z-beta')
+        new_version = args.manual_version
+        gregorio_version.update_version(new_version)
+
+    # for myfile in GREGORIO_FILES:
+    #     replace_version(myfile, gregorio_version.version)
 
 if __name__ == "__main__":
     main()
