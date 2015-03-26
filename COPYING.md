@@ -1,13 +1,16 @@
 #License of Gregorio
 
-The program Gregorio is distributed under the GPLv3 license, printed below.
+The program Gregorio is (C) 2007-2015 the Gregorio project, see
+[CONTRIBUTORS.md](CONTRIBUTORS.md) for authors. It is distributed under
+the GPLv3 license, printed below.
 
-This license applies to all files in the Gregorio sources and repository,
-except:
+The GPLv3 license applies to all files in the Gregorio sources and
+repository, except:
 
- * the _greciliae_ font, under the
-   [SIL Open Font License](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
- * the other fonts, under the GPLv3 license with font exception.
+-   the *greciliae* font (C) 2007 Matthew Spencer, under the
+    [SIL Open Font
+    License](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
+-   the other fonts, under the GPLv3 license with font exception.
 
 The font exception reads:
 
@@ -20,7 +23,9 @@ The font exception reads:
     to your version of the font, but you are not obligated to do so. If you
     do not wish to do so, delete this exception statement from your version.
 
-*** END NOTE
+Some files in fonts/ or contrib/ have individual copyright, but are
+distributed under the GPLv3.
+
 
 GNU GENERAL PUBLIC LICENSE
 ==========================
