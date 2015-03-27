@@ -40,6 +40,10 @@ AC_PROG_LIBTOOL
 AC_CHECK_TOOL([RC], [windres], [no])
 AM_CONDITIONAL([HAVE_RC], [test x$RC != xno])
 
+CFLAGS+=" -fstack-protector-strong -Wformat -Werror=format-security -fPIE "
+CPPFLAGS+=" -D_FORTIFY_SOURCE=2 "
+LDFLAGS+=" -Wl,-z,relro -Wl,-z,now -fPIE -pie "
+
 ## a dirty patch for cygwin, who needs the -lintl explicit option, that doesn't work under linux
 AC_CHECK_PROGS(UNAME, uname, :)
 if test "$UNAME" = :; then
