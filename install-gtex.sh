@@ -42,7 +42,7 @@
 
 TEXFILES=(tex/*.tex tex/gregorio*.sty tex/*.lua)
 TTFFILES=(gregorio.ttf greciliae.ttf parmesan.ttf gresym.ttf greextra.ttf)
-DOCFILES=(fonts/FONTLOG)
+DOCFILES=(fonts/README.md)
 FONTSRCFILES=(Makefile gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd
               greextra.sfd gresym.sfd squarize.py convertsfdtottf.py)
 
