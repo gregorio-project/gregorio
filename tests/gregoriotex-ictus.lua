@@ -1,0 +1,1 @@
+../tex/gregoriotex-ictus.lua
