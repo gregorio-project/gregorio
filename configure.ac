@@ -40,6 +40,16 @@ AC_PROG_LIBTOOL
 AC_CHECK_TOOL([RC], [windres], [no])
 AM_CONDITIONAL([HAVE_RC], [test x$RC != xno])
 
+AX_CHECK_COMPILE_FLAG([-fstack-protector-strong], [CFLAGS+=" -fstack-protector-strong"])
+AX_CHECK_COMPILE_FLAG([-fPIE], [CFLAGS+=" -fPIE"])
+AX_CHECK_COMPILE_FLAG([-Wformat], [CFLAGS+=" -Wformat"])
+AX_CHECK_COMPILE_FLAG([-Werror=format-security], [CFLAGS+=" -Werror=format-security"])
+CPPFLAGS+=" -D_FORTIFY_SOURCE=2 "
+AX_CHECK_LINK_FLAG([-Wl,-z,relro], [LDFLAGS+=" -Wl,-z,relro"])
+AX_CHECK_LINK_FLAG([-Wl,-z,now], [LDFLAGS+=" -Wl,-z,now"])
+AX_CHECK_LINK_FLAG([-fPIE], [LDFLAGS+=" -fPIE"])
+AX_CHECK_LINK_FLAG([-pie], [LDFLAGS+=" -pie"])
+
 ## a dirty patch for cygwin, who needs the -lintl explicit option, that doesn't work under linux
 AC_CHECK_PROGS(UNAME, uname, :)
 if test "$UNAME" = :; then
