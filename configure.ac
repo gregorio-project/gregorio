@@ -49,7 +49,6 @@ AX_CHECK_LINK_FLAG([-Wl,-z,relro], [LDFLAGS+=" -Wl,-z,relro"])
 AX_CHECK_LINK_FLAG([-Wl,-z,now], [LDFLAGS+=" -Wl,-z,now"])
 AX_CHECK_LINK_FLAG([-fPIE], [LDFLAGS+=" -fPIE"])
 AX_CHECK_LINK_FLAG([-pie], [LDFLAGS+=" -pie"])
-#LDFLAGS+=" -Wl,-z,relro -Wl,-z,now -fPIE -pie "
 
 ## a dirty patch for cygwin, who needs the -lintl explicit option, that doesn't work under linux
 AC_CHECK_PROGS(UNAME, uname, :)
