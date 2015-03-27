@@ -208,7 +208,7 @@
 
 \def\gresetstafflinefactor#1{%
   \gre@warning{\protect\gresetstafflinefactor\space is deprecated.\MessageBreak Use \protect\setstafflinethickness\space instead.}%
-  \setstafflinethickness{#1}	%
+  \setstafflinethickness{#1}%
 }%
 
 %constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
@@ -759,7 +759,7 @@
   \IfStrEq{#1}{abovelinestextheight}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{braceshift}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{curlybraceaccentusshift}{\rubberfalse}{\relax}%
-}	
+}%
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
 %% Note: This function is assumed to touch only dimensions which are meant to scale with the \grefactor (i.e. if it acts on distance x, \gre@scale@x is 1)
@@ -1080,7 +1080,7 @@
 %Seeing as these are the distances that people will want to change the most often,
 %we give them their own set of macros to make that easier.
 
-% To change the spacing between annotations.  
+% To change the spacing between annotations.
 %First argument is distance, second is whether it should scale when \grefactor changes.
 \ifdefined\setaboveinitialseparation%
   \greerror{\protect\setaboveinitialseparation\space is already defined.  Check for package conflicts.}%
@@ -1109,7 +1109,7 @@
 
 \def\GreSetSpaceAfterInitial#1{%
   \gre@warning{\protect\GreSetSpaceAfterInitial\space is deprecated.\MessageBreak Use \protect\setspaceafteriniital\space instead.}%
-  \setspaceafterinitial#1{1}	%
+  \setspaceafterinitial#1{1}%
 }%
 
 %To change the space before the initial
@@ -1125,7 +1125,7 @@
 
 \def\GreSetSpaceBeforeInitial#1{%
   \gre@warning{\protect\GreSetSpaceBeforeInitial\space is deprecated.\MessageBreak Use \protect\setspacebeforeiniital\space instead.}%
-  \setspacebeforeinitial#1{1}	%
+  \setspacebeforeinitial#1{1}%
 }%
 
 

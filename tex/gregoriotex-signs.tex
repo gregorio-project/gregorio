@@ -38,7 +38,7 @@
 % with discretionaries is that:
 % - you cannot use \hskip (but you can use kern)
 % - you cannot use \penalty (which is useless indeed)
-%  
+%
 % To remedy that, we define \grehskip to be \hskip outside a discretionary, and
 % \kern inside a discretionary. This is what these macros do:
 
@@ -1568,7 +1568,7 @@
 \def\grefinaldivisiofinalis#1{%
   \ifcase#1% case 0
     \grelocalrightbox{}%
-%    \grelocalleftbox{}
+    %\grelocalleftbox{}
     \grenobreak %
     \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis%
     \grehskip\gre@skip@temp@four %

@@ -1,3 +1,4 @@
+% !TEX program = LuaLaTeX
 \documentclass[12pt]{article}
 \usepackage{fontspec}
 \defaultfontfeatures{Ligatures=TeX}
@@ -42,19 +43,21 @@
 \newcommand*{\ie}{i.e.\@\xspace}
 \newcommand*{\etc}{etc.\@\xspace}
 
-\newcommand{\macroname}[2]{\vspace{3.25ex plus 1ex minus .2ex}%
-                           \makebox[\linewidth]{\ttfamily\bfseries #1%
-                             \hspace{\fill}\normalfont\itshape #2}%
-                         \vspace{1.5ex plus .2ex}%
-                         \index{#1}}
-                       %\addcontentsline{toc}{subsubsection}{#1}}
+\newcommand{\macroname}[2]{%
+  \vspace{3.25ex plus 1ex minus .2ex}%
+  \makebox[\linewidth]{\ttfamily\bfseries #1%
+  \hspace{\fill}\normalfont\itshape #2}%
+  \vspace{1.5ex plus .2ex}%
+  \index{#1}}
+  %\addcontentsline{toc}{subsubsection}{#1}}
 
 
-\newenvironment{argtable}{\bigskip\rowcolors{1}{lightgray}{lightgray}
-                           \begin{tabular}{clp{10cm plus .5cm}}
-                             Arg & Value & Description \\
-                             \hline}%
-                          {\end{tabular}\bigskip}
+\newenvironment{argtable}{%
+  \bigskip\rowcolors{1}{lightgray}{lightgray}
+  \begin{tabular}{clp{10cm plus .5cm}}
+    Arg & Value & Description \\
+    \hline}%
+  {\end{tabular}\bigskip}
 
 \setlength{\parindent}{0mm} % Default is 15pt
 
