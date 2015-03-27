@@ -1,4 +1,5 @@
 % !TEX root = UserManual.tex
+% !TEX program = LuaLaTeX
 \section{User Controls}
 
 These functions are available to the user to customize elements of the
@@ -44,20 +45,20 @@ Default.
 Macro to set one of gregoriotex’s distances.  Does not update dependent distances.  Used primarily to initialize distances in a space configuration file.  This function if \texttt{gre} prefixed to highlight that it should not be used for distances not defined in Gregorio\TeX.
 
 \begin{argtable}
-\#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
-\#2 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
-\#3 & 0 & Distance will not scale when staff size is changed.\\
-& 1 & Distance will scale when staff size is changed.
+  \#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
+  \#2 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+  \#3 & 0 & Distance will not scale when staff size is changed.\\
+  & 1 & Distance will scale when staff size is changed.
 \end{argtable}
 
 \macroname{\textbackslash grechangedim\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-spaces.tex}
 Macro to change one of gregoriotex’s distances and update any dependent distances.  This function if \texttt{gre} prefixed to highlight that it should not be used for distances not defined in Gregorio\TeX.
 
 \begin{argtable}
-\#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
-\#2 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
-\#3 & 0 & Distance will not scale when staff size is changed.\\
-& 1 & Distance will scale when staff size is changed.
+  \#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
+  \#2 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+  \#3 & 0 & Distance will not scale when staff size is changed.\\
+  & 1 & Distance will scale when staff size is changed.
 \end{argtable}
 
 \macroname{\textbackslash grenoscaledim\{\#1\}}{gregoriotex-spaces.tex}
@@ -78,7 +79,7 @@ Macro to turn on scaling for a particular distance.  This function if \texttt{gr
 Macro to load a space configuration file.  Space configuration file names have the format \verb=gsp-identifier.tex= and must be in the same directory as your project or in your texmf directory.  This function if \texttt{gre} prefixed to highlight that it only loads distances for Gregorio\TeX.
 
 \begin{argtable}
-\#1 & string & The identifier of the space configuration file.
+  \#1 & string & The identifier of the space configuration file.
 \end{argtable}
 
 Example:\par\medskip
@@ -93,9 +94,9 @@ Example:\par\medskip
 Macro to set the spacing between the annotations.
 
 \begin{argtable}
-\#1 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
-\#2 & 0 & Distance will not scale when staff size is changed.\\
-& 1 & Distance will scale when staff size is changed.
+  \#1 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+  \#2 & 0 & Distance will not scale when staff size is changed.\\
+  & 1 & Distance will scale when staff size is changed.
 \end{argtable}
 
 \textbf{Warning:} This function formerly had only one arguments.  It now takes 2.
@@ -106,9 +107,9 @@ Deprecated version: \verb=\GreSetAboveInitialSeparation= which only took the fir
 Macro to set the spacing after the initial (and before the staff lines).
 
 \begin{argtable}
-\#1 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
-\#2 & 0 & Distance will not scale when staff size is changed.\\
-& 1 & Distance will scale when staff size is changed.
+  \#1 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+  \#2 & 0 & Distance will not scale when staff size is changed.\\
+  & 1 & Distance will scale when staff size is changed.
 \end{argtable}
 
 \textbf{Warning:} This function formerly had only one arguments.  It now takes 2.
@@ -119,9 +120,9 @@ Deprecated version: \verb=\GreSetSpaceAfterInitial= which only took the first ar
 Macro to set the spacing before the initial.
 
 \begin{argtable}
-\#1 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
-\#2 & 0 & Distance will not scale when staff size is changed.\\
-& 1 & Distance will scale when staff size is changed.
+  \#1 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+  \#2 & 0 & Distance will not scale when staff size is changed.\\
+  & 1 & Distance will scale when staff size is changed.
 \end{argtable}
 
 \textbf{Warning:} This function formerly had only one arguments.  It now takes 2.
@@ -132,11 +133,11 @@ Deprecated version: \verb=\GreSetSpaceBeforeInitial= which only took the first a
 Macro to set the spacing around and for the initial.
 
 \begin{argtable}
-\#1 & string & The distance before the initial in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
-\#2 & string & The distance for the initial in string format.  This distance is ignored if set to 0pt.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
-\#3 & string & The distance after the initial in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
-\#4 & 0 & Distance will not scale when staff size is changed.\\
-& 1 & Distance will scale when staff size is changed.
+  \#1 & string & The distance before the initial in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+  \#2 & string & The distance for the initial in string format.  This distance is ignored if set to 0pt.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+  \#3 & string & The distance after the initial in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that gregoriotex handles spaces.\\
+  \#4 & 0 & Distance will not scale when staff size is changed.\\
+  & 1 & Distance will scale when staff size is changed.
 \end{argtable}
 
 \textbf{Warning:} This function formerly had only three arguments.  It now takes 4.
@@ -145,7 +146,7 @@ Macro to set the spacing around and for the initial.
 Macro to adjust the thickness of the staff lines.
 
 \begin{argtable}
-\#1 & integer & The relative thickness of the staff lines.  The default value is 10.  Higher numbers yield thicker staff lines.
+  \#1 & integer & The relative thickness of the staff lines.  The default value is 10.  Higher numbers yield thicker staff lines.
 \end{argtable}
 
 Deprecated version: \verb=\gresetstafflinefactor=.

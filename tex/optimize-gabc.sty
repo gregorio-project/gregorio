@@ -14,62 +14,62 @@
 %You should have received a copy of the GNU General Public License
 %along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-\expandafter\ifx\csname ProvidesPackage\endcsname\relax
-  \input luatextra.sty
-  \input gregoriotex.sty
-\else
-  \NeedsTeXFormat{LaTeX2e}
+\expandafter\ifx\csname ProvidesPackage\endcsname\relax%
+  \input luatextra.sty%
+  \input gregoriotex.sty%
+\else%
+  \NeedsTeXFormat{LaTeX2e}%
   \ProvidesPackage{optimize-gabc}%
-    [2010/06/06 v1.0 Gregorio gabc optimization style]
-  \RequirePackage{luatextra}
-  \RequirePackage{gregoriotex}
-\fi
+    [2010/06/06 v1.0 Gregorio gabc optimization style]%
+  \RequirePackage{luatextra}%
+  \RequirePackage{gregoriotex}%
+\fi%
 
-\directlua{
-require("optimize_gabc_style")
+\directlua{%
+  require("optimize_gabc_style")%
 }
 
 \def\goptpos{%
-\pdfsavepos %
-\luatexlatelua{optimize_gabc_style.getpos(\number\pdflastxpos)}%
+  \pdfsavepos %
+  \luatexlatelua{optimize_gabc_style.getpos(\number\pdflastxpos)}%
 }
 
 \def\goptforcedeol{%
-\pdfsavepos %
-\luatexlatelua{optimize_gabc_style.forcedeol(\number\pdflastxpos)}%
+  \pdfsavepos %
+  \luatexlatelua{optimize_gabc_style.forcedeol(\number\pdflastxpos)}%
 }
 
 \def\setmaxpos{%
-\directlua{optimize_gabc_style.setstaffwidth("\the\gre@dimen@stafflinewidth")}%
-\pdfsavepos %
-\luatexlatelua{optimize_gabc_style.setinitpos(\number\pdflastxpos)}%
+  \directlua{optimize_gabc_style.setstaffwidth("\the\gre@dimen@stafflinewidth")}%
+  \pdfsavepos %
+  \luatexlatelua{optimize_gabc_style.setinitpos(\number\pdflastxpos)}%
 }
 
 \def\settolerance#1{%
-\directlua{optimize_gabc_style.settolerance(#1)}%
+  \directlua{optimize_gabc_style.settolerance(#1)}%
 }
 
 % default tolerance: 0
-\settolerance{0}
+\settolerance{0}%
 
 \def\sethyphenwidth{%
-\setbox\GreTempwidth=\hbox{-}%
-\directlua{optimize_gabc_style.sethyphenwidth("\the\wd\GreTempwidth")}%
+  \setbox\GreTempwidth=\hbox{-}%
+  \directlua{optimize_gabc_style.sethyphenwidth("\the\wd\GreTempwidth")}%
 }
 
 \def\optgabcAtScoreBeginning{%
-\setmaxpos %
-\sethyphenwidth %
-\global\def\grezerhyph{%
-\hbox to 0em{%
-%-%
-\char\the\hyphenchar\font %
-\pdfsavepos\luatexlatelua{optimize_gabc_style.getpos(\number\pdflastxpos)}%
-\hss %
-}%
-}%
+  \setmaxpos %
+  \sethyphenwidth %
+  \global\def\grezerhyph{%
+    \hbox to 0em{%
+      %-%
+      \char\the\hyphenchar\font %
+      \pdfsavepos\luatexlatelua{optimize_gabc_style.getpos(\number\pdflastxpos)}%
+      \hss %
+    }%
+  }%
 }
 
-\AtEndDocument{
-\luatexlatelua{optimize_gabc_style.write_file()}
+\AtEndDocument{%
+  \luatexlatelua{optimize_gabc_style.write_file()}%
 }
