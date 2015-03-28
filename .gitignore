@@ -81,21 +81,24 @@ src/gregorio
 #emacs auto gen files
 auto/
 
-!UserManual.pdf
+#Debian files
+*.changes
+*.xz
+*.dsc
+*.deb
 
 #gregorio specific
-
+doc/_minted-UserManual
+fonts/*.ttf
+*.gz
 *.zip
 plugins/gabc/gabc-score-determination-y*
 plugins/gabc/gabc-score-determination-l*
 plugins/gabc/gabc-notes-determination-l*
 windows/Ouput
-completetest.gtex
+*.dirstamp
 config.h
 config.h.in
 stamp-h1
 Makevars.template
-POTFILES
-stamp-po
-doc/_minted-UserManual
 *.gtex

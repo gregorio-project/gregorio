@@ -113,9 +113,12 @@ function die {
 	exit 1
 }
 
-echo "Creating build files using Autotools"
-autoreconf -f -i || die "create build files"
-echo
+if [ ! -e Makefile.in ]
+then
+  echo "Creating build files using Autotools"
+  autoreconf -f -i || die "create build files"
+  echo
+fi
 
 CONFIGURE_ARGS="$CONFHOST $CONFBUILD $STATICFLAGS $ARCHFLAGS $OTHERARGS"
 echo "Configuring build files; options: $CONFIGURE_ARGS"
@@ -125,6 +128,15 @@ echo
 echo "Building Gregorio; options:$MAKEOPTS"
 make ${MAKEOPTS} || die "build Gregorio"
 echo
+
+if [ ! -e fonts/greciliae.ttf ]
+then
+  echo "Building fonts; options:$MAKEOPTS"
+  cd fonts
+  make ${MAKEOPTS} fonts || die "build fonts"
+  cd ..
+  echo
+fi
 
 if [ "$MINGWCROSS" = "TRUE" ]
 then

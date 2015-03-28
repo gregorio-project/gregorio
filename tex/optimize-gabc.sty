@@ -14,7 +14,7 @@
 %You should have received a copy of the GNU General Public License
 %along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-\expandafter\ifx\csname ProvidesPackage\endcsname\relax%
+\expandafter\ifx\csname ProvidesPackage\endcsname\relax
   \input luatextra.sty%
   \input gregoriotex.sty%
 \else%
@@ -61,11 +61,11 @@
   \setmaxpos %
   \sethyphenwidth %
   \global\def\grezerhyph{%
-    \hbox to 0em{%
-      %-%
-      \char\the\hyphenchar\font %
-      \pdfsavepos\luatexlatelua{optimize_gabc_style.getpos(\number\pdflastxpos)}%
-      \hss %
+  \hbox to 0em{%
+    %-%
+    \char\the\hyphenchar\font %
+    \pdfsavepos\luatexlatelua{optimize_gabc_style.getpos(\number\pdflastxpos)}%
+    \hss %
     }%
   }%
 }

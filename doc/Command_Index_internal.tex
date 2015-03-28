@@ -235,10 +235,33 @@ Macro holding result of last call to \verb=\gre@consistentunits=.
 \macroname{\textbackslash gre@temp@count@two}{gregoriotex-spaces.tex}
 Temporary count used by \verb=\gre@changedimenfactor=.
 
+\macroname{\textbackslash gre@includescore\#1}{gregoriotex.tex}
+Macro that handles \verb=\includescore= calls when they do not have an
+optional argument.
+
+\begin{argtable}
+  \#1 & string & Relative or absolute path to the score.\\
+\end{argtable}
+
+\macroname{\textbackslash gre@includescorewithoption[\#1]\#2}{gregoriotex.tex}
+Macro that handles \verb=\includescore= calls when they have an optional
+argument.
+
+\begin{argtable}
+  \#1 & \texttt{n} & Optional. \#2 will be included as is. \\
+      & \texttt{a} & Optional. Gregoriotex will automatically compile gabc files if necessary.\\
+      & \texttt{f} & Optional. Forces gregoriotex to compile the gabc file.\\
+  \#2 & string & Relative or absolute path to the score.\\
+\end{argtable}
 
 
 \subsection{Distances}
-All of the distances listed in \nameref{distances} have two internals associated with them.  These take the form of \verb=\gre@*= and \verb=\gre@scale@*=.  The first stores the value of the distance (in string representation).  The second is a numerical flag which indicates if the distance should scale when the staff size changes (1) or not (0). 
+All of the distances listed in \nameref{distances} have two internals
+associated with them.  These take the form of \verb=\gre@*= and
+\verb=\gre@scale@*=.  The first stores the value of the distance (in
+string representation).  The second is a numerical flag which
+indicates if the distance should scale when the staff size changes (1)
+or not (0).
 
 These additional distances are calculated by Gregorio based on the values for the user customizable distances and what may be going on in the score at the time of their use.
 

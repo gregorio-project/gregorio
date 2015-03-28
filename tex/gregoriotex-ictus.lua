@@ -24,17 +24,17 @@ else
 grechiro = {}
 
 grechiro.module = {
-    name          = "gregoriotex-ictus",
-    version       = 2.1,
-    date          = "2010/09/27",
-    description   = "GregorioTeX module for chironomy.",
-    author        = "Elie Roux",
-    copyright     = "Elie Roux",
-    license       = "GPLv3"  
+  name          = "gregoriotex-ictus",
+  version       = 2.1,
+  date          = "2010/09/27",
+  description   = "GregorioTeX module for chironomy.",
+  author        = "Elie Roux",
+  copyright     = "Elie Roux",
+  license       = "GPLv3"  
 }
 
 if luatextra and luatextra.provides_module then
-    luatextra.provides_module(grechiro.module)
+  luatextra.provides_module(grechiro.module)
 end
 
 grechiro.version  = 2.1
@@ -49,8 +49,8 @@ grechiro.smallBarPen = grechiro.smallBarPen or "pencircle xscaled 0.5 yscaled 0.
 local normalPen = grechiro.normalPen
 local smallBarPen = grechiro.smallBarPen
 
-local ia=0
-local it=1
+local ia = 0
+local it = 1
 
 --[[
 
