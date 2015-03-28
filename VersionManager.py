@@ -1,7 +1,7 @@
 #! /usr/bin/env python2
 
 """
-    A script that eventually will manage the VERSION of gregorio.
+    A script that manages the VERSION of gregorio.
 
     See VersionUpdate.py -h for help
 """
@@ -37,10 +37,6 @@ def get_parser():
     parser.add_argument('-dg', '--get-debian-git',
                         help='Prints the version for Debian git package',
                         action='store_true', default=False)
-    parser.add_argument('-gt', '--git-tag',
-                        help='Add a git tag with the current version',
-                        action='store_true', default=False,
-                        dest='git_tag')
 
     modify = parser.add_mutually_exclusive_group()
     modify.add_argument('--manual=',
@@ -112,13 +108,12 @@ class Version(object):
         with open(self.versionfile, 'w') as verfile:
             verfile.write(self.version)
             verfile.write('\n\n*** Do not modify this file. ***\n')
-            verfile.write('Use VersionManager.py to change the version.')
-
+            verfile.write('Use VersionManager.py to change the version.\n')
 
 def replace_version(version_obj):
     "Change version in file according to heuristics."
-    print('Replacing the version in the source files.\n')
     newver = version_obj.version
+    print('Updating source files to version {0}\n'.format(newver))
     for myfile in GREGORIO_FILES:
         result = []
         with open(myfile, 'r') as infile:
@@ -142,12 +137,19 @@ def replace_version(version_obj):
                     result.append(line)
         with open(myfile, 'w') as outfile:
             outfile.write(''.join(result))
+    sys.exit(0)
 
 def confirm_replace(oldver, newver):
     "Query the user to confirm action"
     query = 'Update version from {0} --> {1} [y/n]?'.format(oldver, newver)
     print(query)
-    consent = strtobool(raw_input().lower())
+    consent = None
+    while True:
+        try:
+            consent = strtobool(raw_input().lower())
+            break
+        except ValueError:
+            print('Answer with y or n.')
     if not consent:
         print('Aborting.')
         sys.exit(1)
@@ -202,6 +204,14 @@ def set_manual_version(version_obj, user_version):
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
+def do_release(version_obj):
+    "Strips extra characters from the version leaving x.y.z"
+    oldversion = version_obj.version
+    newversion = re.sub(r'([\d.]+)-?.*', r'\1', oldversion)
+    confirm_replace(oldversion, newversion)
+    version_obj.update_version(newversion)
+    replace_version(version_obj)
+
 def main():
     "Main function"
     parser = get_parser()
@@ -225,9 +235,8 @@ def main():
     elif args.release_candidate:
         release_candidate(gregorio_version)
     elif args.release:
-        pass
+        do_release(gregorio_version)
     elif args.manual_version:
-        print(args.manual_version)
         set_manual_version(gregorio_version, args.manual_version)
 
 if __name__ == "__main__":
