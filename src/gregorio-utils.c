@@ -23,10 +23,10 @@
 #include <libgen.h>             /* for basename */
 #include <string.h>             /* for strcmp */
 #include <locale.h>
-#include <gregorio/struct.h>
-#include <gregorio/plugins.h>
-#include <gregorio/messages.h>
-#include <gregorio/characters.h>
+#include "struct.h"
+#include "plugins.h"
+#include "messages.h"
+#include "characters.h"
 
 #ifndef MODULE_PATH_ENV
 #define MODULE_PATH_ENV        "MODULE_PATH"

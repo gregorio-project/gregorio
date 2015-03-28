@@ -26,10 +26,10 @@ This file is certainly not the most easy to understand, it is a bison file. See 
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <gregorio/struct.h>
-#include <gregorio/unicode.h>
-#include <gregorio/messages.h>
-#include <gregorio/characters.h>
+#include "struct.h"
+#include "unicode.h"
+#include "messages.h"
+#include "characters.h"
 
 #include "gabc.h"
 #include "gabc-score-determination-l.h"

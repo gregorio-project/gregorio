@@ -19,9 +19,9 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <gregorio/struct.h>
-#include <gregorio/unicode.h>
-#include <gregorio/messages.h>
+#include "struct.h"
+#include "unicode.h"
+#include "messages.h"
 
 #include "dump.h"
 

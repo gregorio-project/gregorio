@@ -18,8 +18,8 @@
 
 #include "config.h"
 #include <stdio.h>
-#include <gregorio/struct.h>
-#include <gregorio/messages.h>
+#include "struct.h"
+#include "messages.h"
 
 #include "gabc.h"
 

@@ -20,9 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <string.h> // for strlen
 #include <stdlib.h>
-#include <gregorio/struct.h>
-#include <gregorio/unicode.h>
-#include <gregorio/messages.h>
+#include "struct.h"
+#include "unicode.h"
+#include "messages.h"
 
 /*
 

@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * understanding, read it carefully.
  */
 
-#include <gregorio/unicode.h>
+#include "unicode.h"
 
 #ifndef STRUCT_H
 #define STRUCT_H

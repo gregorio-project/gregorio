@@ -24,9 +24,9 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>             // for strchr
-#include <gregorio/struct.h>
-#include <gregorio/unicode.h>
-#include <gregorio/messages.h>
+#include "struct.h"
+#include "unicode.h"
+#include "messages.h"
 
 #include "gabc.h"
 

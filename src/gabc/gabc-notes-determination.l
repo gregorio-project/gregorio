@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include <stdio.h>
 #include <ctype.h> /*for tolower*/
-#include <gregorio/struct.h>
-#include <gregorio/messages.h>
+#include "struct.h"
+#include "messages.h"
 
 #include "gabc.h"
 

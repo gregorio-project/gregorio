@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gregorio/struct.h>
-#include <gregorio/messages.h>
+#include "struct.h"
+#include "messages.h"
 
 #include "gabc.h"
 #include "gabc-score-determination-y.h"
