@@ -713,6 +713,37 @@ Another difficulty is the fact that we must consider characters in verbatim and 
 
 */
 
+int
+gregorio_go_to_end_initial (gregorio_character ** param_character)
+{
+  int has_initial = 0;
+  gregorio_character *current_character = *param_character;
+  if (!current_character)
+	{
+	  return 0;
+	}
+  gregorio_go_to_first_character (&current_character);
+  // skip past any initial
+  if (!current_character->is_character
+      && current_character->cos.s.type == ST_T_BEGIN
+      && current_character->cos.s.style == ST_INITIAL)
+    {
+      has_initial = 1;
+      while (current_character)
+	{
+	  if (!current_character->is_character
+	      && current_character->cos.s.type == ST_T_END
+	      && current_character->cos.s.style == ST_INITIAL)
+	    {
+	      break;
+	    }
+	  current_character = current_character->next_character;
+	}
+    }
+  (*param_character) = current_character;
+  return has_initial;
+}
+
 void
 gregorio_rebuild_characters (gregorio_character ** param_character,
 			     char center_is_determined, unsigned char centering_scheme)
@@ -728,7 +759,19 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
   det_style *first_style = NULL;
   unsigned char center_type = 0;	// determining the type of centering (forced or not)
   // so, here we start: we go to the first_character
-  gregorio_go_to_first_character (&current_character);
+  if (gregorio_go_to_end_initial (&current_character)) {
+    if (!current_character->next_character)
+      {
+	// nothing else to rebuild, but we have to fake an empty ST_CENTER
+	gregorio_insert_style_after (ST_T_BEGIN, ST_CENTER, &current_character);
+	gregorio_insert_style_after (ST_T_END, ST_CENTER, &current_character);
+	gregorio_go_to_first_character (&current_character);
+	(*param_character) = current_character;
+	return;
+      }
+    // move to the character after the initial
+    current_character = current_character->next_character;
+  }
   // first we see if there is already a center determined
   if (center_is_determined == 0)
     {
@@ -949,7 +992,10 @@ gregorio_rebuild_characters (gregorio_character ** param_character,
   // these three lines are for the case where the user didn't tell anything about the middle and there aren't any vowel in the syllable, so we begin the center before the first character (you can notice that there is no problem of style).
   if (!center_is_determined)
     {
-      gregorio_go_to_first_character (&current_character);
+      if (gregorio_go_to_end_initial (&current_character))
+	{
+	  current_character = current_character->next_character;
+	}
       gregorio_insert_style_before (ST_T_BEGIN, ST_CENTER, current_character);
     }
   if (centering_scheme == SCHEME_ENGLISH && center_type == ST_CENTER)
@@ -988,7 +1034,7 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
   // so, here we start: we go to the first_character
   gregorio_go_to_first_character (&current_character);
   // first we look at the styles, to see if there is a FORCED_CENTER somewhere
-  // and we also remove the CENTER styles
+  // and we also remove the CENTER styles if the syllable starts at CENTER
   if (!param_character)
     {
       return;
@@ -1041,40 +1087,23 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
 	  || current_character->cos.s.style == ST_SPECIAL_CHAR))
 	  
 	{
-      if (letter == 0)
-	{
-	  letter = 1;
-	  gregorio_insert_style_before (ST_T_BEGIN, ST_INITIAL,
-					current_character);
-	  if (current_character->next_character)
+          if (letter == 0)
 	    {
-	      current_character = current_character->next_character;
+	      letter = 1;
+	      gregorio_insert_style_before (ST_T_BEGIN, ST_INITIAL,
+					    current_character);
+	      if (current_character->next_character)
+		{
+		  current_character = current_character->next_character;
+		}
+	      while(current_character->next_character && current_character->is_character)
+		{
+		  current_character = current_character->next_character;
+		}
+	      gregorio_insert_style_after (ST_T_END, ST_INITIAL,
+					   &current_character);
+	      break;
 	    }
-	  while(current_character->next_character && current_character->is_character)
-	    {
-	      current_character = current_character->next_character;
-	    }
-	  gregorio_insert_style_after (ST_T_END, ST_INITIAL,
-				       &current_character);
-	  continue;
-	}
-      if (letter == 1 && forced_center == 0)
-	{
-	  gregorio_insert_style_before (ST_T_BEGIN, ST_CENTER,
-					current_character);
-	  if (current_character->next_character)
-	    {
-	      current_character = current_character->next_character;
-	    }
-	  while(current_character->next_character && current_character->is_character)
-	    {
-	      current_character = current_character->next_character;
-	    }
-	  gregorio_insert_style_after (ST_T_END, ST_CENTER,
-				       &current_character);
-	  // and we're done
-	  break;
-	}
 	}
       if (current_character->is_character && letter == 0)
 	{
@@ -1083,30 +1112,6 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
 					current_character);
 	  gregorio_insert_style_after (ST_T_END, ST_INITIAL,
 				       &current_character);
-	  continue;
-	}
-      // then we're going to set the center styles
-      if (current_character->is_character && letter == 1
-	  && forced_center == 0)
-	{
-	  gregorio_insert_style_before (ST_T_BEGIN, ST_CENTER,
-					current_character);
-	  gregorio_insert_style_after (ST_T_END, ST_CENTER,
-				       &current_character);
-	  // and we're done
-	  break;
-	}
-      // case where there is only one letter
-      if (!current_character->next_character && forced_center == 0)
-	{
-	  gregorio_insert_style_after (ST_T_BEGIN, ST_CENTER,
-				       &current_character);
-	  // not such a good idea: some people might want nothing here
-	  //gregorio_insert_char_after (L'-',
-		//		       &current_character);
-	  gregorio_insert_style_after (ST_T_END, ST_CENTER,
-				       &current_character);
-	  // and we're done
 	  break;
 	}
       current_character = current_character->next_character;
@@ -1114,6 +1119,4 @@ gregorio_rebuild_first_syllable (gregorio_character ** param_character)
   current_character = *param_character;
   gregorio_go_to_first_character (&current_character);
   (*param_character) = current_character;
-  // this is not working, so people have to mind the way they put text styles on the initial.
-  //gregorio_rebuild_characters (&current_character, CENTER_FULLY_DETERMINED);
 }
