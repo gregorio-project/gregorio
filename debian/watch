@@ -1,4 +1,4 @@
 version=3
-http://download.gna.org/gregorio/releases/current/ \
-(?:.*/|.*=|)gregorio[\-\._](\d\S*)-src\.(?:tar\.xz|txz|tar\.bz2|tbz2|tar\.gz|tgz)(?:/\S*)?
-# Elie Roux <elie.roux@telecom-bretagne.eu>  Mon, 24 Jun 2013 09:25:47 +0200
+opts=filenamemangle=s/.+\/v?(\d\S*)\.tar\.gz/gregorio-$1\.tar\.gz/ \
+  https://github.com/gregorio-project/gregorio/tags .*/v?(\d\S*)\.tar\.gz
+# Elie Roux <elie.roux@telecom-bretagne.eu>  Mon, 23 Mar 2015 16:25:47 +0200

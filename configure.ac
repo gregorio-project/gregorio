@@ -15,7 +15,7 @@ dnl You should have received a copy of the GNU General Public License
 dnl along with this program; if not, write to the Free Software
 dnl Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-AC_INIT([gregorio],[2.4.3],[gregorio-devel@gna.org])
+AC_INIT([gregorio],[3.0.0-beta],[gregorio-devel@gna.org])
 AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR([src/gregorio-utils.c])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -38,6 +38,17 @@ AM_PROG_LEX
 AC_PROG_YACC
 AC_PROG_LIBTOOL
 AC_CHECK_TOOL([RC], [windres], [no])
+AM_CONDITIONAL([HAVE_RC], [test x$RC != xno])
+
+AX_CHECK_COMPILE_FLAG([-fstack-protector-strong], [CFLAGS+=" -fstack-protector-strong"])
+AX_CHECK_COMPILE_FLAG([-fPIE], [CFLAGS+=" -fPIE"])
+AX_CHECK_COMPILE_FLAG([-Wformat], [CFLAGS+=" -Wformat"])
+AX_CHECK_COMPILE_FLAG([-Werror=format-security], [CFLAGS+=" -Werror=format-security"])
+CPPFLAGS+=" -D_FORTIFY_SOURCE=2 "
+AX_CHECK_LINK_FLAG([-Wl,-z,relro], [LDFLAGS+=" -Wl,-z,relro"])
+AX_CHECK_LINK_FLAG([-Wl,-z,now], [LDFLAGS+=" -Wl,-z,now"])
+AX_CHECK_LINK_FLAG([-fPIE], [LDFLAGS+=" -fPIE"])
+AX_CHECK_LINK_FLAG([-pie], [LDFLAGS+=" -pie"])
 
 ## a dirty patch for cygwin, who needs the -lintl explicit option, that doesn't work under linux
 AC_CHECK_PROGS(UNAME, uname, :)
@@ -129,6 +140,8 @@ AC_CONFIG_FILES([
     include/gregorio/Makefile
     examples/Makefile
     contrib/Makefile
+    doc/Makefile
     tex/Makefile
+    fonts/Makefile
 ])
 AC_OUTPUT

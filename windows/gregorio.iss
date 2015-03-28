@@ -1,18 +1,18 @@
 [Setup]
 AppName=gregorio
-AppVersion=2.4.3
+AppVersion=3.0.0-beta
 DefaultDirName={pf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
 Compression=lzma2
 SolidCompression=yes
-LicenseFile=license.txt
-AppCopyright=Copyright (C) 2006-2014 Elie Roux
-AppComments=Gregorian chant typesetting software.
+LicenseFile=../COPYING.md
+AppCopyright=Copyright (C) 2006-2015 Gregorio project
+AppComments=Software for engraving Gregorian Chant scores.
 AppContact=gregorio-devel@gna.org
-AppPublisher=Elie Roux
-AppPublisherURL=http://home.gna.org/gregorio/
-AppReadmeFile=http://home.gna.org/gregorio/
+AppPublisher=Gregorio Project
+AppPublisherURL=https://github.com/gregorio-project/gregorio
+AppReadmeFile=https://github.com/gregorio-project/gregorio
 BackColor=$D4AE65
 BackColor2=$FDF7EB
 WizardSmallImageFile=gregorio-32.bmp
@@ -28,18 +28,24 @@ Root: HKCR; Subkey: "Gregorio\shell\open\command"; ValueType: string; ValueName:
 [Dirs]
 Name: "{app}\contrib"
 Name: "{app}\examples"
-Name: "{app}\contrib\TeXworks"
 
 [Files]
 Source: "../src/gregorio.exe"; DestDir: "{app}";
 Source: "gregorio.ico"; DestDir: "{app}";
 Source: "install.lua"; DestDir: "{app}";
 Source: "README.txt"; DestDir: "{app}"; Flags: isreadme
-Source: "license.txt"; DestDir: "{app}";
-Source: "../contrib\*"; DestDir: "{app}\contrib";
-Source: "../examples\*"; DestDir: "{app}\examples";
-Source: "../fonts/gregoriotex.tds.zip"; DestDir: "{app}";
-Source: "../contrib\TeXworks\Windows\*"; DestDir: "{app}\contrib\TeXworks";
+Source: "../CHANGELOG.md"; DestDir: "{app}";
+Source: "../README.md"; DestDir: "{app}";
+Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
+Source: "../UPGRADE.md"; DestDir: "{app}";
+Source: "../doc/UserManual.pdf"; DestDir: "{app}";
+Source: "../COPYING.md"; DestDir: "{app}";
+Source: "../contrib/900_gregorio.xml"; DestDir: "{app}\contrib";
+Source: "../contrib/gregorio-scribus.lua"; DestDir: "{app}\contrib";
+Source: "../contrib/*"; DestDir: "{app}\contrib";
+Source: "../examples/PopulusSion.gabc"; DestDir: "{app}\examples";
+Source: "../examples/main-lualatex.tex"; DestDir: "{app}\examples";
+Source: "../gregoriotex.tds.zip"; DestDir: "{app}";
 
 [Run]
 Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";
@@ -50,7 +56,7 @@ procedure URLLabelOnClickOne(Sender: TObject);
 var
   ErrorCode: Integer;
 begin
-  ShellExec('open', 'http://www.tug.org/texlive/acquire.html', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+  ShellExec('open', 'https://www.tug.org/texlive/acquire.html', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
 
 procedure URLLabelOnClickTwo(Sender: TObject);
@@ -106,7 +112,7 @@ begin
 
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(145);;
-  StaticText.Caption := 'http://www.tug.org/texlive/acquire.html';
+  StaticText.Caption := 'https://www.tug.org/texlive/acquire.html';
   StaticText.Cursor := crHand;
   StaticText.OnClick := @URLLabelOnClickOne;
   StaticText.Parent := Page.Surface;
