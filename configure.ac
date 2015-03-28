@@ -70,36 +70,6 @@ AC_HEADER_STDC
 # linux has integer types in stdint.h, solaris, vms in inttypes.h
 AC_CHECK_HEADERS([stdint.h])
 
-AC_ARG_ENABLE(xml-read, 
-    [  --enable-xml-read         link with libxml2 to read GregorioXML.\
-                            Note that you cannot read GregorioXML without this.], 
-    [gre_no_xml="no"
-    AC_CHECK_PROGS(XML2_CONFIG, xml2-config, :)
-    if test "$XML2_CONFIG" = :; then
-      AC_MSG_ERROR([Could not find xml2-config.])
-    else
-      AC_DEFINE(HAVE_LIBXML2, 1, [Define if you have libxml2])
-      AC_DEFINE(ENABLE_XML, 1, [Define if you enable build with GregorioXML.])
-      # xml2-config in some versions erroneously includes -I/include
-      # in the --cflags output.
-      XML_CFLAGS="$CFLAGS `$XML2_CONFIG --cflags | sed 's|-I/include||g'`"
-      XML_LIBS="$LIBS `$XML2_CONFIG --libs | sed 's|-L/usr/lib||g'`"  
-    fi
-    ], [
-    gre_no_xml=yes
-    XML_CFLAGS=
-    XML_LIBS=
-    AC_DEFINE(HAVE_LIBXML2, 0, [Define if you have libxml2])
-    AC_DEFINE(ENABLE_XML, 0, [Define if you enable build with GregorioXML.])
-    ]
-)
-
-AM_CONDITIONAL([WITH_XML], [test "$gre_no_xml" = "no"])
-
-AC_SUBST(XML_LIBS)
-AC_SUBST(XML_CFLAGS)
-AC_SUBST(gre_no_xml)
-
 AC_ARG_ENABLE(static-ltdl, 
     [  --enable-static-ltdl    statical linking with libltdl (useful for MacOSX).], 
     [LIBTOOL_LIB=$LIBTOOL_LIB_STATIC], 
@@ -116,9 +86,7 @@ AC_CONFIG_FILES([
     src/Makefile
     src/dump/Makefile
     src/gabc/Makefile
-    src/xml/Makefile
     src/gregoriotex/Makefile
-    src/opustex/Makefile
     examples/Makefile
     contrib/Makefile
     doc/Makefile

@@ -33,14 +33,10 @@
 #endif
 
 #define GABC 1
-#define XML 2
 #define GTEX 3
-#define OTEX 4
 #define DUMP 5
 #define GABC_STR "gabc"
-#define XML_STR "xml"
 #define GTEX_STR "gtex"
-#define OTEX_STR "otex"
 #define DUMP_STR "dump"
 #define DEFAULT_INPUT_FORMAT    GABC
 #define DEFAULT_OUTPUT_FORMAT   GTEX
@@ -134,9 +130,7 @@ print_usage (char *name)
 \n\
 available formats are:\n\
 \t gabc      gabc\n\
-\t xml       GregorioXML (deprecated)\n\
 \t gtex      GregorioTeX\n\
-\t otex      OpusTeX (deprecated)\n\
 \t dump      simple text dump (for debugging purpose)\n\
 \n"));
 }
@@ -275,11 +269,6 @@ main (int argc, char **argv)
                        "warning: several output formats declared, first taken\n");
               break;
             }
-          if (!strcmp (optarg, XML_STR))
-            {
-              output_format = XML;
-              break;
-            }
           if (!strcmp (optarg, GABC_STR))
             {
               output_format = GABC;
@@ -288,11 +277,6 @@ main (int argc, char **argv)
           if (!strcmp (optarg, GTEX_STR))
             {
               output_format = GTEX;
-              break;
-            }
-          if (!strcmp (optarg, OTEX_STR))
-            {
-              output_format = OTEX;
               break;
             }
           if (!strcmp (optarg, DUMP_STR))
@@ -328,13 +312,6 @@ main (int argc, char **argv)
               input_format = GABC;
               break;
             }
-#if ENABLE_XML == 1
-          if (!strcmp (optarg, XML_STR))
-            {
-              input_format = XML;
-              break;
-            }
-#endif
           else
             {
               fprintf (stderr, "error: unknown input format: %s\n", optarg);
@@ -452,16 +429,11 @@ main (int argc, char **argv)
             {
               switch (output_format)
                 {
-                case XML:
-                  output_file_name =
-                    get_output_filename (output_basename, "xml");
-                  break;
                 case GABC:
                   output_file_name =
                     get_output_filename (output_basename, "gabc");
                   break;
                 case GTEX:
-                case OTEX:
                   output_file_name =
                     get_output_filename (output_basename, "tex");
                   break;
@@ -544,12 +516,6 @@ main (int argc, char **argv)
     case GABC:
       score = gabc_read_score (input_file);
       break;
-#if ENABLE_XML == 1
-    case XML:
-      fprintf(stderr, "Warning: GregorioXML is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.\n");
-      score = xml_read_score (input_file);
-      break;
-#endif
     default:
       fprintf (stderr, "error : invalid input format\n");
       fclose (input_file);
@@ -570,19 +536,11 @@ main (int argc, char **argv)
 
   switch (output_format)
     {
-    case XML:
-      fprintf(stderr, "Warning: GregorioXML is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.\n");
-      xml_write_score (output_file, score);
-      break;
     case GABC:
       gabc_write_score (output_file, score);
       break;
     case GTEX:
       gregoriotex_write_score (output_file, score);
-      break;
-    case OTEX:
-      fprintf(stderr, "Warning: OpusTeX support is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.");
-      opustex_write_score (output_file, score);
       break;
     case DUMP:
       dump_write_score (output_file, score);
