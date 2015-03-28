@@ -20,24 +20,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#if ALL_STATIC == 0
-#include <gregorio/plugin.h>
-#endif
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
 #include <gregorio/characters.h>
 #include <gregorio/messages.h>
 
 #include "opustex.h"
-
-#if ALL_STATIC == 0
-DECLARE_PLUGIN (opustex)
-{
-.id = "otex",.name = "opustex",.description =
-    "OpusTeX output plugin",.author =
-    "Elie Roux <elie.roux@enst-bretagne.fr>",.file_extension = "tex",.type =
-    GREGORIO_PLUGIN_OUTPUT,.write = write_score};
-#endif
 
 int i;
 int otexclef;
@@ -47,13 +35,8 @@ char italic = 0;
 char key_change = 0;
 char new_line = 0;
 
-#if ALL_STATIC == 0
-void
-write_score (FILE *f, gregorio_score *score)
-#else
 void
 opustex_write_score (FILE *f, gregorio_score *score)
-#endif
 {
   char first_syllable = 0;
   char clef_letter;

@@ -21,28 +21,12 @@
 #include <stdlib.h>
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
-#if ALL_STATIC == 0
-#include <gregorio/plugin.h>
-#endif
 #include <gregorio/messages.h>
 
 #include "dump.h"
 
-#if ALL_STATIC == 0
-DECLARE_PLUGIN (dump)
-{
-.id = "dump",.name = "dump",.description = "Raw dump plugin",.author =
-    "Elie Roux <elie.roux@enst-bretagne.fr>",.type =
-    GREGORIO_PLUGIN_OUTPUT,.file_extension = "dump",.write = write_score};
-#endif
-
-#if ALL_STATIC == 0
-void
-write_score (FILE *f, gregorio_score *score)
-#else
 void
 dump_write_score (FILE *f, gregorio_score *score)
-#endif
 {
   gregorio_syllable *syllable = score->first_syllable;
   gregorio_voice_info *voice_info = score->first_voice_info;

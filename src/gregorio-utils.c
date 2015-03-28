@@ -24,11 +24,7 @@
 #include <string.h>             /* for strcmp */
 #include <locale.h>
 #include <gregorio/struct.h>
-#if ALL_STATIC == 1
 #include <gregorio/plugins.h>
-#else
-#include <gregorio/plugin_loader.h>
-#endif
 #include <gregorio/messages.h>
 #include <gregorio/characters.h>
 
@@ -36,10 +32,6 @@
 #define MODULE_PATH_ENV        "MODULE_PATH"
 #endif
 
-#if ALL_STATIC == 0
-#define DEFAULT_INPUT_FORMAT    "gabc"
-#define DEFAULT_OUTPUT_FORMAT   "gtex"
-#else
 #define GABC 1
 #define XML 2
 #define GTEX 3
@@ -52,7 +44,6 @@
 #define DUMP_STR "dump"
 #define DEFAULT_INPUT_FORMAT    GABC
 #define DEFAULT_OUTPUT_FORMAT   GTEX
-#endif
 
 #define define_path(file_name,string) \
 		/*we first test if path is absolute */\
@@ -192,18 +183,8 @@ main (int argc, char **argv)
   FILE *input_file = NULL;
   FILE *output_file = NULL;
   FILE *error_file = NULL;
-#if ALL_STATIC == 0
-  char *input_format = NULL;
-  char *output_format = NULL;
-  gregorio_plugin *input_plugin = NULL;
-  gregorio_plugin_info *input_plugin_info = NULL;
-  gregorio_plugin *output_plugin = NULL;
-  gregorio_plugin_info *output_plugin_info = NULL;
-  int error = 0;
-#else
   unsigned char input_format = 0;
   unsigned char output_format = 0;
-#endif
   char verb_mode = 0;
   char *current_directory = malloc (150 * sizeof (char));
   int number_of_options = 0;
@@ -245,15 +226,6 @@ main (int argc, char **argv)
       exit (-1);
     }
 
-#if ALL_STATIC == 0
-  error = gregorio_plugin_loader_init ();
-  if (error)
-    {
-      fprintf (stderr, _("can't initalize libtool"));
-      free (current_directory);
-      exit (-1);
-    }
-#endif
   while (1)
     {
       c = getopt_long (argc, argv, "o:SF:l:f:shOLVvW",
@@ -303,9 +275,6 @@ main (int argc, char **argv)
                        "warning: several output formats declared, first taken\n");
               break;
             }
-#if ALL_STATIC == 0
-          output_format = optarg;
-#else
           if (!strcmp (optarg, XML_STR))
             {
               output_format = XML;
@@ -336,7 +305,6 @@ main (int argc, char **argv)
               fprintf (stderr, "error: unknown output format: %s\n", optarg);
               exit (0);
             }
-#endif
           break;
         case 'l':
           if (error_file_name)
@@ -355,9 +323,6 @@ main (int argc, char **argv)
                        "warning: several output formats declared, first taken\n");
               break;
             }
-#if ALL_STATIC == 0
-          input_format = optarg;
-#else
           if (!strcmp (optarg, GABC_STR))
             {
               input_format = GABC;
@@ -375,7 +340,6 @@ main (int argc, char **argv)
               fprintf (stderr, "error: unknown input format: %s\n", optarg);
               exit (0);
             }
-#endif
           break;
         case 's':
           if (input_file_name)
@@ -476,43 +440,6 @@ main (int argc, char **argv)
 
   // then we act...
 
-#if ALL_STATIC == 0
-  /*
-   * Load plugins 
-   */
-  output_plugin = gregorio_plugin_load (PLUGINDIR, output_format);
-  if (output_plugin == NULL)
-    {
-      fprintf (stderr, "error: invalid output plugin %s\n", output_format);
-      free (current_directory);
-      exit (1);
-    }
-  output_plugin_info = gregorio_plugin_get_info (output_plugin);
-  if ((output_plugin_info->type & GREGORIO_PLUGIN_OUTPUT) == 0)
-    {
-      gregorio_plugin_unload (output_plugin);
-      fprintf (stderr, "error: invalid output plugin %s\n", output_format);
-      free (current_directory);
-      exit (1);
-    }
-  input_plugin = gregorio_plugin_load (PLUGINDIR, input_format);
-  if (input_plugin == NULL)
-    {
-      gregorio_plugin_unload (output_plugin);
-      fprintf (stderr, "error: invalid input plugin %s\n", input_format);
-      free (current_directory);
-      exit (1);
-    }
-  input_plugin_info = gregorio_plugin_get_info (input_plugin);
-  if ((input_plugin_info->type & GREGORIO_PLUGIN_INPUT) == 0)
-    {
-      gregorio_plugin_unload (output_plugin);
-      gregorio_plugin_unload (input_plugin);
-      fprintf (stderr, "error: invalid input plugin %s\n", input_format);
-      free (current_directory);
-      exit (1);
-    }
-#endif
   if (!output_file_name && !output_file)
     {
       if (!output_basename)
@@ -523,11 +450,6 @@ main (int argc, char **argv)
         {
           if (input_format != output_format)
             {
-#if ALL_STATIC == 0
-              output_file_name =
-                get_output_filename (output_basename,
-                                     output_plugin_info->file_extension);
-#else
               switch (output_format)
                 {
                 case XML:
@@ -548,7 +470,6 @@ main (int argc, char **argv)
                     get_output_filename (output_basename, "dump");
                   break;
                 }
-#endif
             }
           check_input_clobber(input_file_name, output_file_name);
           output_file = fopen (output_file_name, "w");
@@ -618,10 +539,6 @@ main (int argc, char **argv)
 
   gregorio_set_verbosity_mode (verb_mode);
 
-#if ALL_STATIC == 0
-  score = (input_plugin_info->read) (input_file);
-  gregorio_plugin_unload (input_plugin);
-#else
   switch (input_format)
     {
     case GABC:
@@ -640,14 +557,10 @@ main (int argc, char **argv)
       exit (-1);
       break;
     }
-#endif
 
   fclose (input_file);
   if (score == NULL)
     {
-#if ALL_STATIC == 0
-      gregorio_plugin_unload (output_plugin);
-#endif
       fclose (output_file);
       fprintf (stderr, "error in file parsing\n");
       exit (-1);
@@ -655,10 +568,6 @@ main (int argc, char **argv)
 
   gregorio_fix_initial_keys (score, DEFAULT_KEY);
 
-#if ALL_STATIC == 0
-  (output_plugin_info->write) (output_file, score);
-  gregorio_plugin_unload (output_plugin);
-#else
   switch (output_format)
     {
     case XML:
@@ -685,12 +594,8 @@ main (int argc, char **argv)
       exit (-1);
       break;
     }
-#endif
   fclose (output_file);
   gregorio_free_score (score);
 
-#if ALL_STATIC == 0
-  gregorio_plugin_loader_exit ();
-#endif
   exit (gregorio_get_return_value ());
 }

@@ -106,38 +106,19 @@ AC_ARG_ENABLE(static-ltdl,
     [LIBTOOL_LIB=-lltdl]
 )
 
-AC_ARG_ENABLE(all-static, 
-    [  --enable-all-static     Produce only one binary containing everything.], 
-    [AC_DEFINE(ALL_STATIC, 1, [Define if you want to produce only one binary containing everything.])
-     gre_all_static=yes
-     LIBTOOL_LIB=
-     ],[
-     AC_DEFINE(ALL_STATIC, 0, [Define if you want to produce only one binary containing everything.])
-     gre_all_static=no
-     AC_DISABLE_STATIC
-     ]
-)
-
 AC_SUBST(LIBTOOL_LIB)
-
-AM_CONDITIONAL([ALL_STATIC], [test "$gre_all_static" = "yes"])
 
 AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
 
-AM_CONFIG_HEADER([include/config.h])
+AM_CONFIG_HEADER([src/config.h])
 AC_CONFIG_FILES([
     Makefile
     src/Makefile
-    plugins/Makefile
-    plugins/dump/Makefile
-    plugins/gabc/Makefile
-    plugins/xml/Makefile
-    plugins/gregoriotex/Makefile
-    plugins/opustex/Makefile
-    lib/Makefile
-    lib/gregorio.pc
-    include/Makefile
-    include/gregorio/Makefile
+    src/dump/Makefile
+    src/gabc/Makefile
+    src/xml/Makefile
+    src/gregoriotex/Makefile
+    src/opustex/Makefile
     examples/Makefile
     contrib/Makefile
     doc/Makefile

@@ -23,25 +23,8 @@
 #include <gregorio/unicode.h>
 #include <gregorio/characters.h>
 #include <gregorio/messages.h>
-#if ALL_STATIC == 0
-#include <gregorio/plugin.h>
-#endif
 
 #include "xml.h"
-
-#if ALL_STATIC == 0
-DECLARE_PLUGIN (xml)
-{
-  .id = "xml",.name = "GregorioXML",.description =
-    "GregorioXML input/output plugin",.author =
-    "Elie Roux <elie.roux@enst-bretagne.fr>",.file_extension = "xml",
-#if ENABLE_XML == 1
-    .type = GREGORIO_PLUGIN_BOTH,.read = read_score,
-#else
-    .type = GREGORIO_PLUGIN_OUTPUT,
-#endif
-.write = write_score};
-#endif
 
 #define write_note(shape) xml_write_note(f, note->signs, step, octave, shape, note->h_episemus_type, alteration, note->rare_sign, note->texverb)
 
@@ -669,13 +652,8 @@ xml_write_specials_as_neumes (FILE *f,
     }
 }
 
-#if ALL_STATIC == 0
-void
-write_score (FILE *f, gregorio_score *score)
-#else
 void
 xml_write_score (FILE *f, gregorio_score *score)
-#endif
 {
   int i;
   gregorio_voice_info *voice_info;

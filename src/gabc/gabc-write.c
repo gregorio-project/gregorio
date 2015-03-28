@@ -26,24 +26,12 @@
 #include <string.h>             // for strchr
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
-#if ALL_STATIC == 0
-#include <gregorio/plugin.h>
-#endif
 #include <gregorio/messages.h>
 
 #include "gabc.h"
 
 static void gabc_write_str_attribute (FILE *f, const char *name,
                                       const char *attr);
-
-#if ALL_STATIC == 0
-DECLARE_PLUGIN (gabc)
-{
-.id = "gabc",.name = "gabc",.description =
-    "GABC input/output plugin",.author =
-    "Elie Roux <elie.roux@enst-bretagne.fr>",.file_extension = "gabc",.type =
-    GREGORIO_PLUGIN_BOTH,.read = read_score,.write = write_score};
-#endif
 
 /*
  * 
@@ -52,13 +40,8 @@ DECLARE_PLUGIN (gabc)
  * 
  */
 
-#if ALL_STATIC == 0
-void
-write_score (FILE *f, gregorio_score *score)
-#else
 void
 gabc_write_score (FILE *f, gregorio_score *score)
-#endif
 {
   char step;
   int line;

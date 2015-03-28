@@ -28,13 +28,8 @@
 
 #include "xml.h"
 
-#if ALL_STATIC == 0
-gregorio_score *
-read_score (FILE *f)
-#else
 gregorio_score *
 xml_read_score (FILE *f)
-#endif
 {
 
   xmlDocPtr doc;

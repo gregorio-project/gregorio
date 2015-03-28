@@ -26,9 +26,6 @@
 #include <string.h>
 #include <gregorio/struct.h>
 #include <gregorio/unicode.h>
-#if ALL_STATIC == 0
-#include <gregorio/plugin.h>
-#endif
 #include <gregorio/messages.h>
 #include <gregorio/characters.h>
 
@@ -36,27 +33,13 @@
 
 enum syllable { THIS_SYL, NEXT_SYL };
 
-#if ALL_STATIC == 0
-DECLARE_PLUGIN (gregoriotex)
-{
-.id = "gtex",.name = "gregoriotex",.description =
-    "GregorioTeX output plugin",.author =
-    "Elie Roux <elie.roux@telecom-bretagne.eu>",.file_extension =
-    "tex",.type = GREGORIO_PLUGIN_OUTPUT,.write = write_score};
-#endif
-
 // / the value indicating to GregorioTeX that there is no flat
 #define NO_KEY_FLAT 'a'
 
 gregoriotex_status *status = NULL;
 
-#if ALL_STATIC == 0
-void
-write_score (FILE *f, gregorio_score *score)
-#else
 void
 gregoriotex_write_score (FILE *f, gregorio_score *score)
-#endif
 {
   gregorio_character *first_text;
   // a char that will contain 1 if it is the first syllable and 0 if not. It is 

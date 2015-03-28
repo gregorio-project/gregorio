@@ -92,9 +92,9 @@ doc/_minted-UserManual
 fonts/*.ttf
 *.gz
 *.zip
-plugins/gabc/gabc-score-determination-y*
-plugins/gabc/gabc-score-determination-l*
-plugins/gabc/gabc-notes-determination-l*
+src/gabc/gabc-score-determination-y*
+src/gabc/gabc-score-determination-l*
+src/gabc/gabc-notes-determination-l*
 windows/Ouput
 *.dirstamp
 config.h

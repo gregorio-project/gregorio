@@ -110,13 +110,8 @@ gregorio_message (error_str, (const char *)"gabc_score_determination_parse", ERR
  */
 
 
-#if ALL_STATIC == 0
-gregorio_score *
-read_score (FILE * f_in)
-#else
 gregorio_score *
 gabc_read_score (FILE * f_in)
-#endif
 {
   // the input file that flex will parse
   gabc_score_determination_in = f_in;
