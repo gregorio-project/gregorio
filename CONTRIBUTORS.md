@@ -21,10 +21,12 @@ Gregorio has been developped with valuable help and support from:
  * Yannis Haralambous
  * [The Abbey Ste Madeleine du Barroux (FR)](http://www.barroux.org/)
  * [The Monastery of St Benedict in Norcia (IT)](http://osbnorcia.org/)
+ * Matthew Spencer (author of [Caeciliae](http://marello.org/caeciliae/))
+ * Juergen Reuter (author of Parmesan font from [Lilypond](http://www.lilypond.org/index.html))
  * Nicolas Aupetit
  * Bertrand Grelot
  * Patrick Roux
- * Fr. Jacques Perron
+ * Fr. Jacques Peron
  * Br. Innocent Smith
  * [Illuminare Publications](https://www.illuminarepublications.com/)
  * Richard Chonak

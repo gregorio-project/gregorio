@@ -1,6 +1,6 @@
 # Gregorio
 
-Gregorio is a software for engraving Gregorian Chant scores on a computer. Gregorio's main job is to convert a [gabc file](http://home.gna.org/gregorio/gabc/) (simple text representation of a score) into a [GregorioTeX file](http://home.gna.org/gregorio/gregoriotex/), which makes [TeX](http://home.gna.org/gregorio/gregoriotex/tex) able to create a PDF of your score.
+Gregorio is a software application for engraving Gregorian Chant scores on a computer. Gregorio's main job is to convert a [gabc file](http://home.gna.org/gregorio/gabc/) (simple text representation of a score) into a [GregorioTeX file](http://home.gna.org/gregorio/gregoriotex/), which makes [TeX](http://home.gna.org/gregorio/gregoriotex/tex) able to create a PDF of your score.
 
 ## Usage
 
@@ -34,4 +34,4 @@ See [CONTRIBUTING.md](CONRIBUTING.md).
 
 ## License
 
-The code is mainly under the [GPLv3](https://www.gnu.org/licenses/quick-guide-gplv3.en.html) license, with fonts under the [Open Font License](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL). See [COPYING](COPYING) for more details.
+The code is mainly under the [GPLv3](https://www.gnu.org/licenses/quick-guide-gplv3.en.html) license, with fonts under the [Open Font License](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL). See [complete license](COPYING.md) for more details.
