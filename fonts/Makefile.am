@@ -52,3 +52,6 @@ install:
 	@$(TOP_LEVEL_MAKE) echo
 	@$(TOP_LEVEL_MAKE) echo 'If you were using "make localinstall" before, now use'
 	@$(TOP_LEVEL_MAKE) echo '    ./install-gtex.sh user'
+
+all:
+	@$(TOP_LEVEL_MAKE) echo 'Please use "make fonts" if you wish to build the GregorioTeX fonts'
