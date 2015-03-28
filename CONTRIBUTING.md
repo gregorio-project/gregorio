@@ -33,7 +33,7 @@ It is not currently possible to compile Gregorio under Windows. The build requir
 are the same under GNU/Linux and Mac OSX:
 
  * [git](http://git-scm.com/)
- * the [GNU Build System](http://airs.com/ian/configure/) (often referred to as "Autotools")
+ * the [GNU Build System](http://www.gnu.org/software/automake/manual/html_node/GNU-Build-System.html#GNU-Build-System) (often referred to as "Autotools")
  * [gcc](https://gcc.gnu.org/) (and associated tools)
  * [GNU indent](https://www.gnu.org/software/indent/) (OSX default indent won't work)
  * [pylint](http://www.pylint.org/) if you work on Python files
