@@ -42,6 +42,8 @@ are the same under GNU/Linux and Mac OSX:
 
 ##### C files
 
+C uses [ISO C99 Standard](http://en.wikipedia.org/wiki/C99), and targets the [gcc](https://gcc.gnu.org/) and [clang](http://clang.llvm.org/) compilers only. Patches for other compilers can be accepted if they are clean, small and non-intrusive.
+
 Use indent on your code before commiting it, with the `.indent.pro` file in repository's root folder: run `indent path/to/my/file.c` from the root directory.
 
 ##### Other files
