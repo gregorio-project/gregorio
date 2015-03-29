@@ -29,6 +29,8 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 #define ENUM_BITFIELD(TYPE) enum TYPE
 #elif defined(__GNUC__) && __GNUC__ >= 2
@@ -260,7 +262,7 @@ typedef union character_or_style {
  */
 
 typedef struct gregorio_character {
-    _Bool is_character;
+    bool is_character;
     struct gregorio_character *next_character;
     struct gregorio_character *previous_character;
     union character_or_style cos;
