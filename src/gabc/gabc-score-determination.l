@@ -52,7 +52,6 @@ unsigned char style_stack = 0;
 %option noalways-interactive
 %option nonever-interactive
 %option prefix="gabc_score_determination_"
-%option outfile="gabc-score-determination-l.c"
 %option noyywrap
 %option bison-bridge
 %option 8bit

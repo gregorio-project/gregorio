@@ -21,14 +21,13 @@ AC_CONFIG_SRCDIR([src/gregorio-utils.c])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([subdir-objects foreign])
 
 AC_PROG_CC
 AC_PROG_CC_STDC
 AC_PROG_CPP
 AM_PROG_LEX
 AC_PROG_YACC
-AC_PROG_LIBTOOL
 AC_CHECK_TOOL([RC], [windres], [no])
 AM_CONDITIONAL([HAVE_RC], [test x$RC != xno])
 
@@ -47,23 +46,12 @@ AC_HEADER_STDC
 # linux has integer types in stdint.h, solaris, vms in inttypes.h
 AC_CHECK_HEADERS([stdint.h])
 
-AC_ARG_ENABLE(static-ltdl, 
-    [  --enable-static-ltdl    statical linking with libltdl (useful for MacOSX).], 
-    [LIBTOOL_LIB=$LIBTOOL_LIB_STATIC], 
-    [LIBTOOL_LIB=-lltdl]
-)
-
-AC_SUBST(LIBTOOL_LIB)
-
 AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
 
 AM_CONFIG_HEADER([src/config.h])
 AC_CONFIG_FILES([
     Makefile
     src/Makefile
-    src/dump/Makefile
-    src/gabc/Makefile
-    src/gregoriotex/Makefile
     examples/Makefile
     contrib/Makefile
     doc/Makefile

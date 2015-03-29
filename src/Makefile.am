@@ -1,18 +1,40 @@
-SUBDIRS = dump gregoriotex gabc
-
-AM_CPPFLAGS = -I$(top_srcdir)/src
+AM_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/src/gabc  -I$(top_srcdir)/src/dump  -I$(top_srcdir)/src/gregoriotex
 AM_CFLAGS =
-
-.rc.o:
-	$(RC) $(RCFLAGS) $< -o $@
 
 bin_PROGRAMS = gregorio
 gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
 				   unicode.c struct.h messages.h unicode.h characters.h \
-				   plugins.h
+				   plugins.h dump/dump.c dump/dump.h gregoriotex/gregoriotex-write.c \
+				   gregoriotex/gregoriotex.h
+
+# Windows resources (see windows/README.md)
+.rc.o:
+	$(RC) $(RCFLAGS) $< -o $@
 
 if HAVE_RC
 gregorio_SOURCES += ../windows/gregorio-resources.rc
 endif
-gregorio_LDADD = $(LIBINTL) $(LIBTOOL_LIB) dump/dump.la \
-				 gregoriotex/gregoriotex.la gabc/gabc.la
+
+# gabc files
+gregorio_SOURCES += gabc/gabc-elements-determination.c gabc/gabc-write.c \
+				  gabc/gabc-glyphs-determination.c gabc/gabc.h \
+				  gabc/gabc-score-determination-l.h gabc/gabc-score-determination.h
+nodist_gregorio_SOURCES = gabc/gabc-score-determination-l.c \
+						 gabc/gabc-notes-determination-l.c \
+						 gabc/gabc-score-determination-y.c
+gregorio_LDADD = @LEXLIB@
+
+EXTRA_DIST = gabc/gabc-score-determination.l gabc/gabc-score-determination.y \
+			 gabc/gabc-notes-determination.l
+
+gabc/gabc-score-determination-l.c: gabc/gabc-score-determination.l gabc/gabc-score-determination-y.c
+	$(LEX) -o $@ $<
+
+gabc/gabc-score-determination-y.c: gabc/gabc-score-determination.y
+	$(YACC) -d -p "gabc_score_determination_" -o $@ $<
+
+gabc/gabc-notes-determination-l.c: gabc/gabc-notes-determination.l
+	$(LEX) -o $@ $<
+
+CLEANFILES = gabc/gabc-score-determination-l.c gabc/gabc-score-determination-y.c \
+	gabc/gabc-notes-determination-l.c gabc/gabc-score-determination-y.h

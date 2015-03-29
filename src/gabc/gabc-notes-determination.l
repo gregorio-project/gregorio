@@ -64,7 +64,6 @@ static inline void error()
 %option align
 %option noyylineno
 %option prefix="gabc_notes_determination_"
-%option outfile="gabc-notes-determination-l.c"
 %option noyywrap
 
 %x texverbnote
