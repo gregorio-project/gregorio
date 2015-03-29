@@ -42,9 +42,16 @@ are the same under GNU/Linux and Mac OSX:
 
 ##### C files
 
-Gregorio uses the [ISO C99 Standard](http://en.wikipedia.org/wiki/C99), and targets the [gcc](https://gcc.gnu.org/) and [clang](http://clang.llvm.org/) compilers only. C extensions working on both `gcc` and `clang`, as well as C11 extension are allowed on a case-by-case basis. Patches for other compilers can be accepted if they are clean, small and non-intrusive.
+Gregorio targets the following:
 
-Use indent on your code before commiting it, with the `.indent.pro` file in repository's root folder: run `indent path/to/my/file.c` from the root directory.
+ * C stadard: [ISO C99 Standard](http://en.wikipedia.org/wiki/C99)
+ * compilers: [gcc](https://gcc.gnu.org/) and [clang](http://clang.llvm.org/)
+ * architectures: `i586`, `amd64`, `arm`, `arm64`
+ * libraries: [`glibc`](http://www.gnu.org/software/libc/)
+
+Specific C extensions (GNU extensions, C11, etc.) working for all the above targets are allowed on a case-by-case basis. Patches for other compilers, architectures or libraries can be accepted if they are clean, small and non-intrusive.
+
+Use indent on your code before commiting it, with the `.indent.pro` file in the repository: `indent path/to/my/file.c`.
 
 ##### Other files
 
