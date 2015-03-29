@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
@@ -35,6 +36,28 @@ enum syllable { THIS_SYL, NEXT_SYL };
 
 // / the value indicating to GregorioTeX that there is no flat
 #define NO_KEY_FLAT 'a'
+
+// inline functions that we will use to determine if we need a short bar or not
+
+// we define d to be short instead of long... may induce errors, but fixes
+// some too
+static inline bool is_short(char pitch, gregorio_glyph *glyph,
+                            gregorio_element *element)
+{
+    return gregoriotex_is_long(pitch, glyph, element) == 0;
+}
+
+static inline bool is_on_a_line(char pitch)
+{
+    return pitch == 'b' || pitch == 'd' || pitch == 'f' || pitch == 'h'
+        || pitch == 'j' || pitch == 'l';
+}
+
+static inline bool is_between_lines(char pitch)
+{
+    return pitch == 'a' || pitch == 'c' || pitch == 'e' || pitch == 'g'
+        || pitch == 'i' || pitch == 'k' || pitch == 'm';
+}
 
 gregoriotex_status *status = NULL;
 
@@ -220,8 +243,11 @@ unsigned char gregoriotex_is_last_of_line(gregorio_syllable *syllable)
  * A small helper for the following function 
  */
 
-#define is_clef(x) (x == GRE_C_KEY_CHANGE || x == GRE_F_KEY_CHANGE || \
-                    x == GRE_C_KEY_CHANGE_FLATED || x == GRE_F_KEY_CHANGE_FLATED)
+static inline bool is_clef(char x)
+{
+    return x == GRE_C_KEY_CHANGE || x == GRE_F_KEY_CHANGE ||
+        x == GRE_C_KEY_CHANGE_FLATED || x == GRE_F_KEY_CHANGE_FLATED;
+}
 
 /*
  * This function is used in write_syllable, it detects if the syllable is like
