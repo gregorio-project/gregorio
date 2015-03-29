@@ -42,13 +42,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 /*
  * ! We start with the most precise structure, the note structure. The
  * note is always a real note (we'll see that glyphs and elements can be
  * other things). 
  */
-typedef struct gregorio_note {
+    typedef struct gregorio_note {
     // we have seen that notes are always real notes, that is to say
     // GRE_NOTE. the type is always that in the final structure. But there
     // is however this field in the structure because of the temporary
@@ -162,14 +161,15 @@ typedef enum grestyle_style {
     ST_NO_STYLE,
     ST_ITALIC,
     ST_CENTER,
-    ST_FORCED_CENTER,   // when the user types a {}, basically the same 
-                        // behaviour, except for the initial
+    ST_FORCED_CENTER,           // when the user types a {}, basically the same 
+                                // 
+    // behaviour, except for the initial
     ST_BOLD,
     ST_TT,
     ST_SMALL_CAPS,
     ST_SPECIAL_CHAR,
     ST_VERBATIM,
-    ST_INITIAL,         // a style used to determine the initial
+    ST_INITIAL,                 // a style used to determine the initial
     ST_UNDERLINED,
     ST_COLORED,
 } grestyle_style;
@@ -233,8 +233,8 @@ typedef enum gregorio_nlba {
  */
 
 typedef struct gregorio_style {
-    ENUM_BITFIELD (grestyle_style) style : 8;
-    ENUM_BITFIELD (grestyle_type) type : 8;
+    ENUM_BITFIELD(grestyle_style) style:8;
+     ENUM_BITFIELD(grestyle_type) type:8;
 } gregorio_style;
 
 /*
@@ -279,9 +279,9 @@ typedef struct gregorio_syllable {
     // again, an additional field to put some signs or other things...
     char additional_infos;
     // type of translation (with center beginning or only center end)
-    ENUM_BITFIELD (gregorio_tr_centering) translation_type;
+     ENUM_BITFIELD(gregorio_tr_centering) translation_type;
     // beginning or end of area without linebreak?
-    ENUM_BITFIELD (gregorio_nlba) no_linebreak_area : 8;
+     ENUM_BITFIELD(gregorio_nlba) no_linebreak_area:8;
     // pointer to a gregorio_text structure corresponding to the text.
     struct gregorio_character *text;
     // pointer to a gregorio_text structure corresponding to the
@@ -396,10 +396,8 @@ void gregorio_source_info_init(source_info *si);
 
 void gregorio_determine_h_episemus_type(gregorio_note *note);
 
-void gregorio_activate_isolated_h_episemus(gregorio_note *current_note,
-                                           int n);
-void gregorio_mix_h_episemus(gregorio_note *current_note,
-                             unsigned char type);
+void gregorio_activate_isolated_h_episemus(gregorio_note *current_note, int n);
+void gregorio_mix_h_episemus(gregorio_note *current_note, unsigned char type);
 char gregorio_det_shape(char pitch);
 
 void gregorio_add_note(gregorio_note **current_note, char pitch, char shape,
@@ -472,21 +470,18 @@ void gregorio_reinitialize_one_voice_alterations(char alterations[13]);
 
 void gregorio_set_score_name(gregorio_score *score, char *name);
 void
- gregorio_set_score_gabc_copyright(gregorio_score *score,
-                                   char *gabc_copyright);
+gregorio_set_score_gabc_copyright(gregorio_score *score, char *gabc_copyright);
 void gregorio_set_score_score_copyright(gregorio_score *score,
                                         char *score_copyright);
-void gregorio_set_score_office_part(gregorio_score *score,
-                                    char *office_part);
+void gregorio_set_score_office_part(gregorio_score *score, char *office_part);
 void gregorio_set_score_occasion(gregorio_score *score, char *occasion);
 void gregorio_set_score_meter(gregorio_score *score, char *meter);
 void gregorio_set_score_commentary(gregorio_score *score, char *commentary);
 void gregorio_set_score_arranger(gregorio_score *score, char *arranger);
+void gregorio_set_score_gabc_version(gregorio_score *score, char *gabc_version);
 void
- gregorio_set_score_gabc_version(gregorio_score *score, char *gabc_version);
-void
- gregorio_set_score_number_of_voices(gregorio_score *score,
-                                     int number_of_voices);
+gregorio_set_score_number_of_voices(gregorio_score *score,
+                                    int number_of_voices);
 void gregorio_set_score_lilypond_preamble(gregorio_score *score,
                                           char *lilypond_preamble);
 void gregorio_set_score_opustex_preamble(gregorio_score *score,
@@ -500,19 +495,17 @@ void gregorio_set_score_date(gregorio_score *score, char *date);
 void gregorio_set_score_manuscript(gregorio_score *score, char *manuscript);
 void gregorio_set_score_book(gregorio_score *score, char *book);
 void
- gregorio_set_score_manuscript_reference(gregorio_score *score,
-                                         char *reference);
+gregorio_set_score_manuscript_reference(gregorio_score *score, char *reference);
 void gregorio_set_score_manuscript_storage_place(gregorio_score *score,
                                                  char *storage_place);
-void gregorio_set_score_transcriber(gregorio_score *score,
-                                    char *transcriber);
+void gregorio_set_score_transcriber(gregorio_score *score, char *transcriber);
 void gregorio_set_score_transcription_date(gregorio_score *score,
                                            char *transcription_date);
 void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes);
 void gregorio_set_voice_style(gregorio_voice_info *voice_info, char *style);
 void
- gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
-                                     char *virgula_position);
+gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
+                                    char *virgula_position);
 void gregorio_set_voice_annotation(gregorio_voice_info *voice_info,
                                    char *annotation);
 
@@ -534,16 +527,12 @@ int gregorio_calculate_new_key(char step, int line);
 char gregorio_det_pitch(int key, char step, int octave);
 
 void
- gregorio_set_octave_and_step_from_pitch(char *step,
-                                         int *octave, char pitch, int clef);
+gregorio_set_octave_and_step_from_pitch(char *step,
+                                        int *octave, char pitch, int clef);
 
 // the maximum number of voices, more than this is total nonsense in
 // gregorian chant.
 #define MAX_NUMBER_OF_VOICES 10
-
-#define max(a, b) (a > b ? a : b)
-
-#define is_alteration(type) type==GRE_FLAT||type==GRE_NATURAL
 
 #define MAX_TEXT_LENGTH 200
 
@@ -641,9 +630,20 @@ void
 // this H_EPISEMUS can be mixed with another one:
 #define H_BOTTOM 16
 
-#define simple_htype(h) ((h) & (255-H_BOTTOM))
-#define has_bottom(arg)  (((arg) & H_BOTTOM) == H_BOTTOM)
-#define is_multi(h_episemus) (simple_htype(h_episemus)) > H_ALONE
+inline unsigned char simple_htype(unsigned char h)
+{
+    return h & (255 - H_BOTTOM);
+}
+
+inline bool has_bottom(unsigned char arg)
+{
+    return (arg & H_BOTTOM) == H_BOTTOM;
+}
+
+inline bool is_multi(unsigned char h_episemus)
+{
+    return (simple_htype(h_episemus)) > H_ALONE;
+}
 
 // the different kind of bars
 
@@ -746,7 +746,10 @@ void
 #define G_SALICUS_FIRST_PART 40
 #define G_TORCULUS_LIQUESCENS 41
 
-#define is_puncta_inclinata(glyph) glyph<=G_5_PUNCTA_INCLINATA_ASCENDENS
+inline bool is_puncta_inclinata(char glyph)
+{
+    return glyph <= G_5_PUNCTA_INCLINATA_ASCENDENS;
+}
 
 // the different spaces
 
@@ -759,10 +762,6 @@ void
 #define SP_NEUMATIC_CUT_NB '7'
 #define SP_LARGER_SPACE_NB '8'
 #define SP_GLYPH_SPACE_NB '9'
-
-#define is_liquescentia(liquescentia) liquescentia==L_DEMINUTUS||liquescentia==L_AUCTUS_ASCENDENS||liquescentia==L_AUCTUS_DESCENDENS||liquescentia==L_AUCTA
-
-#define is_initio_debilis(liquescentia) liquescentia>=L_INITIO_DEBILIS
 
 // the different liquescences, like for the signs, have special
 // values: to say that something is initio_debilis, just do
@@ -784,6 +783,17 @@ void
 #define NO_INITIO_DEBILIS 0
 
 #define SKIP_FIRST_LETTER 1
+
+inline bool is_liquescentia(char liquescentia)
+{
+    return liquescentia == L_DEMINUTUS || liquescentia == L_AUCTUS_ASCENDENS
+        || liquescentia == L_AUCTUS_DESCENDENS || liquescentia == L_AUCTA;
+}
+
+inline bool is_initio_debilis(char liquescentia)
+{
+    return liquescentia >= L_INITIO_DEBILIS;
+}
 
 // the centering schemes for gabc:
 #define SCHEME_LATINE 1
