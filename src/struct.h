@@ -72,6 +72,46 @@ typedef enum gregorio_type {
     GRE_NLBA,
 } gregorio_type;
 
+// the different shapes, only for notes
+
+typedef enum gregorio_shape {
+    S_UNDETERMINED = 0,
+    S_PUNCTUM,
+    S_PUNCTUM_END_OF_GLYPH,
+    S_PUNCTUM_INCLINATUM,
+    S_PUNCTUM_INCLINATUM_DEMINUTUS,
+    S_PUNCTUM_INCLINATUM_AUCTUS,
+    S_VIRGA,
+    S_VIRGA_REVERSA,
+    S_BIVIRGA,
+    S_TRIVIRGA,
+    S_ORISCUS,
+    S_ORISCUS_AUCTUS,
+    S_ORISCUS_DEMINUTUS,
+    S_QUILISMA,
+    S_STROPHA,
+    S_STROPHA_AUCTA,
+    S_DISTROPHA,
+    S_DISTROPHA_AUCTA,
+    S_TRISTROPHA,
+    S_TRISTROPHA_AUCTA,
+    S_PUNCTUM_CAVUM,
+    S_LINEA_PUNCTUM,
+    S_LINEA_PUNCTUM_CAVUM,
+    // special shapes that must not appear in the final form of the score :
+    // quadratum is the shape of the first note of a punctum quadratum
+    // and quilisma quadratum is the shape of the first note of a pes
+    // quislisma quadratum
+    S_QUADRATUM,
+    // those shapes are for now used only in gregoriotex
+    S_QUILISMA_QUADRATUM,
+    S_ORISCUS_QUADRATUM,
+    S_PUNCTUM_AUCTUS_ASCENDENS,
+    S_PUNCTUM_AUCTUS_DESCENDENS,
+    S_PUNCTUM_DEMINUTUS,
+    S_LINEA,
+} gregorio_shape;
+
 /*
  * ! We start with the most precise structure, the note structure. The
  * note is always a real note (we'll see that glyphs and elements can be
@@ -91,8 +131,8 @@ typedef struct gregorio_note {
     // the letter it is represented by in gabc.
     char pitch;
     // shape is the shape of the note... if you want to know the different
-    // possible shapes, see below.
-    char shape;
+    // possible shapes, see above.
+    ENUM_BITFIELD(gregorio_shape) shape:8;
     // signs is the signs on the notes, see below for all possible values
     char signs;
     // rare_sign is the sign we sometimes encounter on punctum cavum, like
@@ -435,10 +475,11 @@ void gregorio_determine_h_episemus_type(gregorio_note *note);
 
 void gregorio_activate_isolated_h_episemus(gregorio_note *current_note, int n);
 void gregorio_mix_h_episemus(gregorio_note *current_note, unsigned char type);
-char gregorio_det_shape(char pitch);
+gregorio_shape gregorio_det_shape(char pitch);
 
-void gregorio_add_note(gregorio_note **current_note, char pitch, char shape,
-                       char signs, char liquescentia, char h_episemus);
+void gregorio_add_note(gregorio_note **current_note, char pitch,
+                       gregorio_shape shape, char signs, char liquescentia,
+                       char h_episemus);
 void gregorio_add_glyph(gregorio_glyph **current_glyph, char type,
                         gregorio_note *first_note, char liquescentia);
 void gregorio_add_element(gregorio_element **current_element,
@@ -454,7 +495,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
 
 void gregorio_set_signs(gregorio_note *current_note, char signs);
 void gregorio_add_special_sign(gregorio_note *current_note, char sign);
-void gregorio_change_shape(gregorio_note *note, char shape);
+void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
 void gregorio_add_h_episemus(gregorio_note *note, unsigned char type,
                              unsigned int *nbof_isolated_episemus);
 void gregorio_set_h_episemus(gregorio_note *note, unsigned char type);
@@ -663,44 +704,6 @@ inline bool is_multi(unsigned char h_episemus)
 #define B_DIVISIO_MINOR_D4 9
 #define B_DIVISIO_MINOR_D5 10
 #define B_DIVISIO_MINOR_D6 11
-
-// the different shapes, only for notes
-
-#define S_UNDETERMINED 0
-#define S_PUNCTUM 1
-#define S_PUNCTUM_END_OF_GLYPH 2
-#define S_PUNCTUM_INCLINATUM 3
-#define S_PUNCTUM_INCLINATUM_DEMINUTUS 20
-#define S_PUNCTUM_INCLINATUM_AUCTUS 21
-#define S_VIRGA 4
-#define S_VIRGA_REVERSA 33
-#define S_BIVIRGA 5
-#define S_TRIVIRGA 6
-#define S_ORISCUS 7
-#define S_ORISCUS_AUCTUS 8
-#define S_ORISCUS_DEMINUTUS 32
-#define S_QUILISMA 9
-#define S_STROPHA 10
-#define S_STROPHA_AUCTA 11
-#define S_DISTROPHA 12
-#define S_DISTROPHA_AUCTA 13
-#define S_TRISTROPHA 14
-#define S_TRISTROPHA_AUCTA 15
-#define S_PUNCTUM_CAVUM 28
-#define S_LINEA_PUNCTUM 29
-#define S_LINEA_PUNCTUM_CAVUM 30
-// special shapes that must not appear in the final form of the score :
-// quadratum is the shape of the first note of a punctum quadratum
-// and quilisma quadratum is the shape of the first note of a pes
-// quislisma quadratum
-#define S_QUADRATUM 16
-// those shapes are for now used only in gregoriotex
-#define S_QUILISMA_QUADRATUM 17
-#define S_ORISCUS_QUADRATUM 34
-#define S_PUNCTUM_AUCTUS_ASCENDENS 25
-#define S_PUNCTUM_AUCTUS_DESCENDENS 26
-#define S_PUNCTUM_DEMINUTUS 27
-#define S_LINEA 31
 
 // The different types of glyph
 

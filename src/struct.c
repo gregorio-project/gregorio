@@ -58,8 +58,9 @@ static inline char max(char a, char b)
 }
 
 void
-gregorio_add_note(gregorio_note **current_note, char pitch, char shape,
-                  char signs, char liquescentia, char h_episemus_type)
+gregorio_add_note(gregorio_note **current_note, char pitch,
+                  gregorio_shape shape, char signs, char liquescentia,
+                  char h_episemus_type)
 {
 
     gregorio_note *element = malloc(sizeof(gregorio_note));
@@ -219,7 +220,7 @@ void gregorio_set_signs(gregorio_note *note, char signs)
     note->signs = signs;
 }
 
-void gregorio_change_shape(gregorio_note *note, char shape)
+void gregorio_change_shape(gregorio_note *note, gregorio_shape shape)
 {
     if (!note || note->type != GRE_NOTE) {
         gregorio_message(_
@@ -1533,7 +1534,7 @@ void gregorio_determine_h_episemus_type(gregorio_note *note)
  *
  *********************************/
 
-char gregorio_det_shape(char pitch)
+gregorio_shape gregorio_det_shape(char pitch)
 {
     if (pitch < 'a') {
         return S_PUNCTUM_INCLINATUM;
