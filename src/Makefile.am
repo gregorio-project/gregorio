@@ -1,16 +1,18 @@
-AM_CPPFLAGS=-I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/plugins -DLOCALEDIR=\"$(localedir)\" -DPLUGINDIR=\"$(libdir)/gregorio\"
-AM_CFLAGS=
+SUBDIRS = dump gregoriotex gabc
+
+AM_CPPFLAGS = -I$(top_srcdir)/src -DLOCALEDIR=\"$(localedir)\"
+AM_CFLAGS =
 
 .rc.o:
 	$(RC) $(RCFLAGS) $< -o $@
 
-bin_PROGRAMS=gregorio
+bin_PROGRAMS = gregorio
+gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
+				   unicode.c struct.h messages.h unicode.h characters.h \
+				   plugins.h
+
 if HAVE_RC
-gregorio_SOURCES=gregorio-utils.c  ../windows/gregorio-resources.rc
-else
-gregorio_SOURCES=gregorio-utils.c
+gregorio_SOURCES += ../windows/gregorio-resources.rc
 endif
-gregorio_LDADD=$(LIBINTL) $(LIBTOOL_LIB) ../lib/libgregorio.la
-if ALL_STATIC
-gregorio_LDADD+= ../plugins/dump/dump.la ../plugins/opustex/opustex.la ../plugins/gregoriotex/gregoriotex.la ../plugins/gabc/gabc.la ../plugins/xml/xml.la
-endif
+gregorio_LDADD = $(LIBINTL) $(LIBTOOL_LIB) dump/dump.la \
+				 gregoriotex/gregoriotex.la gabc/gabc.la
