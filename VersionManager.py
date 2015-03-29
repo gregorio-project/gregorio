@@ -71,8 +71,13 @@ class Version(object):
     def __init__(self, versionfile):
         self.versionfile = versionfile
         self.version = self.read_version()
+        self.filename_version = self.filename_version_from_version(self.version)
         self.short_tag = None
         self.date = None
+
+    def filename_version_from_version(self, version):
+        "Return filename-compatible version"
+        return version.replace('.', '_')
 
     def read_version(self):
         "Return version for instance variable"
@@ -81,17 +86,17 @@ class Version(object):
         return self.grever.strip('\n')
 
     def fetch_version(self):
-        "Return version"
+        "Prints version"
         print(self.version)
         sys.exit(0)
 
     def fetch_version_debian_stable(self):
-        "Return version for Debian stable package"
+        "Prints version for Debian stable package and exits"
         print(self.version.replace('-', '~'))
         sys.exit(0)
 
     def fetch_version_debian_git(self):
-        "Return version for Debian git package"
+        "Prints version for Debian git package and exits"
         self.short_tag = subprocess.check_output(
             ['git', 'rev-parse', '--short', 'HEAD'])
         self.short_tag = self.short_tag.strip('\n')
@@ -113,26 +118,26 @@ class Version(object):
 def replace_version(version_obj):
     "Change version in file according to heuristics."
     newver = version_obj.version
+    newver_filename = version_obj.filename_version
     print('Updating source files to version {0}\n'.format(newver))
     for myfile in GREGORIO_FILES:
         result = []
         with open(myfile, 'r') as infile:
             for line in infile:
                 if 'AC_INIT([' in line:
-                    result.append(re.sub(r'[\d.]+-?\w*(\],)', newver + r'\1',
-                                         line))
+                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
                 elif 'AppVersion' in line:
-                    result.append(re.sub(r'[\d.]+-?\w*', newver, line))
+                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
+                elif 'FILENAME_VERSION' in line:
+                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
                 elif 'FileVersion' in line:
-                    result.append(re.sub(r'[\d.]+-?\w*', newver, line))
+                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
                 elif 'ProductVersion' in line:
-                    result.append(re.sub(r'[\d.]+-?\w*', newver, line))
+                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
                 elif 'GREGORIO_VERSION' in line:
-                    result.append(re.sub(r'\"[\d.]+-?\w*\"$', '\"' + newver
-                                         + '\"', line))
+                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
                 elif 'internalversion =' in line:
-                    result.append(re.sub(r'\'[\d.]+-?\w*\'$', '\'' + newver
-                                         + '\'', line))
+                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
                 else:
                     result.append(line)
         with open(myfile, 'w') as outfile:
