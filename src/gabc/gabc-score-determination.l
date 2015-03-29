@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "config.h"
-#define YYSTYPE char *
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "messages.h"
 
 #include "gabc.h"
+#include "gabc-score-determination.h"
 #include "gabc-score-determination-y.h"
 
 unsigned char style_stack = 0;
@@ -84,7 +84,7 @@ semicolon. */
 	 return COLON;
 	}
 <attribute>[^;\n\r]*(;[^;\n\r]+)*([\n\r]+[^;]*(;[^;]+)*)? {
-	 gabc_score_determination_lval = strdup(gabc_score_determination_text);
+	 gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
          return ATTRIBUTE;
       }
 <attribute>;(;|[\n\r]+)    {
@@ -92,7 +92,7 @@ semicolon. */
          return SEMICOLON;
       }
 <INITIAL>def-m[0-9] {
-         gabc_score_determination_lval=gabc_score_determination_text[5];
+         gabc_score_determination_lval.character = gabc_score_determination_text[5];
          return DEF_MACRO;
       }
 <INITIAL>number-of-voices {
@@ -199,7 +199,7 @@ semicolon. */
 		      "det_score", ERROR, 0);
 	}
 <score>[^\{\}\(\[\]<%]+ {
-	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
 <score,style><i> {
@@ -300,7 +300,7 @@ semicolon. */
 	return SP_END;
 	}
 <style>[^<\{\}]* {
-	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
 <score>\%  {
@@ -328,11 +328,11 @@ semicolon. */
 	return VERB_END;
 	}
 <verb>[^<]* {
-	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
 <verb,style,score,alt>< {
-	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
 <score,style>\{  {
@@ -346,7 +346,7 @@ semicolon. */
 	return ALT_BEGIN;
 	}
 <alt>[^<]* {
-	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
 	return CHARACTERS;
 	}
 <alt><\/alt>  {
@@ -367,7 +367,7 @@ semicolon. */
 	return OPENING_BRACKET;
 	}
 <notes>[^&\)]* {
-	gabc_score_determination_lval=strdup(gabc_score_determination_text);
+	gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
 	return NOTES;
 	}
 <notes>& {

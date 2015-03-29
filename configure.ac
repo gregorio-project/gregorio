@@ -44,7 +44,7 @@ AX_CHECK_COMPILE_FLAG([-fstack-protector-strong], [CFLAGS+=" -fstack-protector-s
 AX_CHECK_COMPILE_FLAG([-fPIE], [CFLAGS+=" -fPIE"])
 AX_CHECK_COMPILE_FLAG([-Wformat], [CFLAGS+=" -Wformat"])
 AX_CHECK_COMPILE_FLAG([-Werror=format-security], [CFLAGS+=" -Werror=format-security"])
-CPPFLAGS+=" -D_FORTIFY_SOURCE=2 "
+CPPFLAGS+=" -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 "
 AX_CHECK_LINK_FLAG([-Wl,-z,relro], [LDFLAGS+=" -Wl,-z,relro"])
 AX_CHECK_LINK_FLAG([-Wl,-z,now], [LDFLAGS+=" -Wl,-z,now"])
 AX_CHECK_LINK_FLAG([-fPIE], [LDFLAGS+=" -fPIE"])
