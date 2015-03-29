@@ -42,18 +42,48 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+// all the different types of things a gregorio_* can be
+
+typedef enum gregorio_type {
+    GRE_NOTE = 1,
+    GRE_GLYPH,
+    GRE_ELEMENT,
+    GRE_FLAT,
+    GRE_SHARP,
+    GRE_NATURAL,
+    GRE_C_KEY_CHANGE,
+    GRE_C_KEY_CHANGE_FLATED,
+    GRE_SYLLABLE,
+    GRE_F_KEY_CHANGE,
+    GRE_F_KEY_CHANGE_FLATED,
+    GRE_END_OF_LINE,
+    GRE_SPACE,
+    GRE_BAR,
+    GRE_END_OF_PAR,
+    GRE_CUSTO,
+    // I don't really know how I could use the a TEXVERB_NOTE in gregoriotex,
+    // as we don't write note by note...
+    // GRE_TEXVERB_NOTE,
+    GRE_TEXVERB_GLYPH,
+    GRE_TEXVERB_ELEMENT,
+    // above lines text, quite the same as GRE_TEXVERB_ELEMENT, but counted
+    // differently for the spaces above the lines
+    GRE_ALT,
+    GRE_NLBA,
+} gregorio_type;
+
 /*
  * ! We start with the most precise structure, the note structure. The
  * note is always a real note (we'll see that glyphs and elements can be
  * other things). 
  */
-    typedef struct gregorio_note {
+typedef struct gregorio_note {
     // we have seen that notes are always real notes, that is to say
     // GRE_NOTE. the type is always that in the final structure. But there
     // is however this field in the structure because of the temporary
     // states that can appear in the determination, where notes can be
     // other things. This is the case for example in gabc reading.
-    char type;
+    ENUM_BITFIELD(gregorio_type) type:8;
     // then two pointer to other notes, to make a chained list.
     struct gregorio_note *previous;
     struct gregorio_note *next;
@@ -102,7 +132,7 @@ extern "C" {
  */
 typedef struct gregorio_glyph {
     // type can have the values explained in the comment just above.
-    char type;
+    ENUM_BITFIELD(gregorio_type) type:8;
     // two pointer to make a chained list
     struct gregorio_glyph *previous;
     struct gregorio_glyph *next;
@@ -131,7 +161,7 @@ typedef struct gregorio_element {
     // type can have the values GRE_ELEMENT, GRE_BAR, GRE_C_KEY_CHANGE,
     // GRE_F_KEY_CHANGE, GRE_END_OF_LINE, GRE_SPACE, GRE_TEXVERB_ELEMENT
     // or GRE_NLBA
-    char type;
+    ENUM_BITFIELD(gregorio_type) type:8;
     // pointers to the next and previous elements.
     struct gregorio_element *previous;
     struct gregorio_element *next;
@@ -158,7 +188,7 @@ typedef struct gregorio_element {
  */
 
 typedef enum grestyle_style {
-    ST_NO_STYLE,
+    ST_NO_STYLE = 0,
     ST_ITALIC,
     ST_CENTER,
     ST_FORCED_CENTER,           // when the user types a {}, basically the same 
@@ -180,7 +210,7 @@ typedef enum grestyle_style {
  */
 
 typedef enum grestyle_type {
-    ST_T_NOTHING,
+    ST_T_NOTHING = 0,
     ST_T_BEGIN,
     ST_T_END,
 } grestyle_type;
@@ -190,7 +220,7 @@ typedef enum grestyle_type {
  */
 
 typedef enum gregorio_tr_centering {
-    TR_NORMAL,
+    TR_NORMAL = 0,
     TR_WITH_CENTER_BEGINNING,
     TR_WITH_CENTER_END,
 } gregorio_tr_centering;
@@ -200,7 +230,7 @@ typedef enum gregorio_tr_centering {
  */
 
 typedef enum gregorio_nlba {
-    NLBA_NORMAL,
+    NLBA_NORMAL = 0,
     NLBA_BEGINNING,
     NLBA_END,
 } gregorio_nlba;
@@ -241,7 +271,7 @@ typedef enum gregorio_word_position {
 
 typedef struct gregorio_style {
     ENUM_BITFIELD(grestyle_style) style:8;
-     ENUM_BITFIELD(grestyle_type) type:8;
+    ENUM_BITFIELD(grestyle_type) type:8;
 } gregorio_style;
 
 /*
@@ -454,17 +484,17 @@ void gregorio_add_text(char *mbcharacters,
                        gregorio_character **current_character);
 
 void gregorio_add_special_as_glyph(gregorio_glyph **current_glyph,
-                                   char type, char pitch,
+                                   gregorio_type type, char pitch,
                                    char additional_infos, char *texverb);
-void gregorio_add_special_as_note(gregorio_note **current_note, char type,
-                                  char pitch);
+void gregorio_add_special_as_note(gregorio_note **current_note,
+                                  gregorio_type type, char pitch);
 void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
-                                  char type);
+                                  gregorio_type type);
 void gregorio_add_nlba_as_note(gregorio_note **current_note, char type);
 void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str);
 void gregorio_add_cs_to_note(gregorio_note **current_note, char *str);
 void gregorio_add_special_as_element(gregorio_element **current_element,
-                                     char type, char pitch,
+                                     gregorio_type type, char pitch,
                                      char additional_infos, char *texverb);
 
 void gregorio_determine_good_top_notes(gregorio_note *current_note);
@@ -542,34 +572,6 @@ gregorio_set_octave_and_step_from_pitch(char *step,
 #define MAX_NUMBER_OF_VOICES 10
 
 #define MAX_TEXT_LENGTH 200
-
-// all the different types of things a gregorio_* can be
-
-#define GRE_NOTE 1
-#define GRE_GLYPH 2
-#define GRE_ELEMENT 3
-#define GRE_FLAT 4
-#define GRE_SHARP 19
-#define GRE_NATURAL 5
-#define GRE_C_KEY_CHANGE 6
-#define GRE_C_KEY_CHANGE_FLATED 14
-#define GRE_SYLLABLE 11
-#define GRE_F_KEY_CHANGE 7
-#define GRE_F_KEY_CHANGE_FLATED 15
-#define GRE_END_OF_LINE 8
-#define GRE_SPACE 9
-#define GRE_BAR 10
-#define GRE_END_OF_PAR 13
-#define GRE_CUSTO 12
-// I don't really know how I could use the a TEXVERB_NOTE in gregoriotex,
-// as we don't write note by note...
-// #define GRE_TEXVERB_NOTE 16
-#define GRE_TEXVERB_GLYPH 17
-#define GRE_TEXVERB_ELEMENT 18
-// above lines text, quite the same as GRE_TEXVERB_ELEMENT, but counted
-// differently for the spaces above the lines
-#define GRE_ALT 20
-#define GRE_NLBA 21
 
 #define C_KEY 'c'
 #define F_KEY 'f'

@@ -31,3 +31,4 @@
 -T gregorio_nlba
 -T gregorio_word_position
 -T gregorio_lyric_centering
+-T gregorio_type

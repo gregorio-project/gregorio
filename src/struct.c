@@ -89,7 +89,7 @@ gregorio_add_note(gregorio_note **current_note, char pitch, char shape,
 }
 
 void
-gregorio_add_special_as_note(gregorio_note **current_note, char type,
+gregorio_add_special_as_note(gregorio_note **current_note, gregorio_type type,
                              char pitch)
 {
     gregorio_note *element = malloc(sizeof(gregorio_note));
@@ -115,7 +115,8 @@ gregorio_add_special_as_note(gregorio_note **current_note, char type,
 }
 
 void
-gregorio_add_texverb_as_note(gregorio_note **current_note, char *str, char type)
+gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
+                             gregorio_type type)
 {
     gregorio_note *element;
     if (str == NULL) {
@@ -474,8 +475,9 @@ gregorio_add_glyph(gregorio_glyph **current_glyph, char type,
 }
 
 void
-gregorio_add_special_as_glyph(gregorio_glyph **current_glyph, char type,
-                              char pitch, char additional_infos, char *texverb)
+gregorio_add_special_as_glyph(gregorio_glyph **current_glyph,
+                              gregorio_type type, char pitch,
+                              char additional_infos, char *texverb)
 {
     gregorio_glyph *next_glyph = malloc(sizeof(gregorio_glyph));
     if (!next_glyph) {
@@ -567,8 +569,8 @@ gregorio_add_element(gregorio_element **current_element,
 
 void
 gregorio_add_special_as_element(gregorio_element **current_element,
-                                char type, char pitch, char additional_infos,
-                                char *texverb)
+                                gregorio_type type, char pitch,
+                                char additional_infos, char *texverb)
 {
     gregorio_element *special = malloc(sizeof(gregorio_element));
     if (!special) {
