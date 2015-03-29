@@ -27,24 +27,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "gabc.h"
 
-#define lex_add_note(i,shape,signs,liquescentia,h_episemus)\
-	nbof_isolated_episemus=0;\
-	gregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]), shape, signs, liquescentia,h_episemus)
-
-#define else_error_macro()\
-      else\
-      {\
-        char *tempstr = malloc(71*sizeof(char));\
-	      snprintf(tempstr,70,_("undefined macro used: m%d"),gabc_notes_determination_text[3]-48);\
-	      gregorio_message (tempstr,\
-		      "gabc_notes_determination", ERROR, 0);\
-      }
-
 gregorio_note *current_note;
 char char_for_brace;
 unsigned int nbof_isolated_episemus;
 char * notesmacros[10];
 char *tempstr=NULL;
+
+static inline void
+lex_add_note(int i, char shape, char signs, char liquescentia, char h_episemus)
+{
+	nbof_isolated_episemus=0;
+	gregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]),
+                      shape, signs, liquescentia, h_episemus);
+}
+
+static inline void error()
+{
+    char *tempstr = malloc(71*sizeof(char));
+    snprintf(tempstr, 70, _("undefined macro used: m%d"),
+             gabc_notes_determination_text[3]-48);
+    gregorio_message (tempstr, "gabc_notes_determination", ERROR, 0);
+}
 
 %}
 
@@ -104,28 +107,28 @@ char *tempstr=NULL;
       {
         gregorio_add_texverb_to_note(&current_note, strdup(notesmacros[gabc_notes_determination_text[3]-48]));
       }
-    else_error_macro();
+    else error();
     }
 <INITIAL>\[gm[1-9]\] {
     if (notesmacros[gabc_notes_determination_text[3]-48])
       {
         gregorio_add_texverb_as_note(&current_note, strdup(notesmacros[gabc_notes_determination_text[3]-48]), GRE_TEXVERB_GLYPH);
       }
-    else_error_macro();
+    else error();
     }
 <INITIAL>\[em[1-9]\] {
     if (notesmacros[gabc_notes_determination_text[3]-48])
       {
         gregorio_add_texverb_as_note(&current_note, strdup(notesmacros[gabc_notes_determination_text[3]-48]), GRE_TEXVERB_ELEMENT);
       }
-    else_error_macro();
+    else error();
     }
 <INITIAL>\[altm[1-9]\] {
     if (notesmacros[gabc_notes_determination_text[5]-48])
       {
         gregorio_add_texverb_as_note(&current_note, strdup(notesmacros[gabc_notes_determination_text[5]-48]), GRE_TEXVERB_ELEMENT);
       }
-    else_error_macro();
+    else error();
     }
 <INITIAL>\[nv: {
     BEGIN(texverbnote);
