@@ -69,9 +69,9 @@ static char *define_path(char *current_directory, char *string)
     file_name = malloc(PATH_MAX * sizeof(char));
 
     strcpy(temp_name, string);
-    base_name = rindex(temp_name, '/');
+    base_name = strrchr(temp_name, '/');
 #ifdef __MINGW32__
-    last_backslash = rindex(temp_name, '\\');
+    last_backslash = strrchr(temp_name, '\\');
     if (last_backslash > base_name) {
         base_name = last_backslash;
     }
