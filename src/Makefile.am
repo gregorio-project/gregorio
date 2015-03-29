@@ -1,6 +1,6 @@
 SUBDIRS = dump gregoriotex gabc
 
-AM_CPPFLAGS = -I$(top_srcdir)/src -DLOCALEDIR=\"$(localedir)\"
+AM_CPPFLAGS = -I$(top_srcdir)/src
 AM_CFLAGS =
 
 .rc.o:
