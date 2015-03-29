@@ -100,8 +100,8 @@ then
     * ) echo "ERROR: architecture $ARCH is not supported"; exit 1;;
   esac
   ARCHFLAGS="$ARCHFLAGS --enable-static-ltdl"
-  CFLAGS="-arch $ARCH -g -O2 $CFLAGS"
-  LDFLAGS="-arch $ARCH $LDFLAGS" 
+  CFLAGS="-arch $ARCH -g -O2 -I/opt/local/include $CFLAGS"
+  LDFLAGS="-arch $ARCH -L/opt/local/lib $LDFLAGS" 
 fi  
 fi
 
