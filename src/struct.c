@@ -742,7 +742,7 @@ gregorio_add_syllable(gregorio_syllable **current_syllable,
                       int number_of_voices, gregorio_element *elements[],
                       gregorio_character *first_character,
                       gregorio_character *first_translation_character,
-                      char position, char *abovelinestext,
+                      gregorio_word_position position, char *abovelinestext,
                       gregorio_tr_centering translation_type,
                       gregorio_nlba no_linebreak_area)
 {

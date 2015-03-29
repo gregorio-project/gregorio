@@ -205,6 +205,13 @@ typedef enum gregorio_nlba {
     NLBA_END,
 } gregorio_nlba;
 
+typedef enum gregorio_word_position {
+    WORD_BEGINNING = 1,
+    WORD_MIDDLE,
+    WORD_END,
+    WORD_ONE_SYLLABLE,
+} gregorio_word_position;
+
 /*
  * 
  * gregorio_characters are a bit specials. As there can be styles in the
@@ -275,13 +282,13 @@ typedef struct gregorio_syllable {
     // position is WORD_BEGINNING for the beginning of a multi-syllable
     // word, WORD_ONE_SYLLABLE for syllable that are alone in their word,
     // and i let you gess what are WORD_MIDDLE and WORD_END.
-    char position;
+    ENUM_BITFIELD(gregorio_word_position) position:8;
     // again, an additional field to put some signs or other things...
     char additional_infos;
     // type of translation (with center beginning or only center end)
-     ENUM_BITFIELD(gregorio_tr_centering) translation_type;
+    ENUM_BITFIELD(gregorio_tr_centering) translation_type;
     // beginning or end of area without linebreak?
-     ENUM_BITFIELD(gregorio_nlba) no_linebreak_area:8;
+    ENUM_BITFIELD(gregorio_nlba) no_linebreak_area:8;
     // pointer to a gregorio_text structure corresponding to the text.
     struct gregorio_character *text;
     // pointer to a gregorio_text structure corresponding to the
@@ -411,7 +418,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
                            gregorio_element *elements[],
                            gregorio_character *first_character,
                            gregorio_character *first_translation_character,
-                           char position, char *abovelinestext,
+                           gregorio_word_position position, char *abovelinestext,
                            gregorio_tr_centering translation_type,
                            gregorio_nlba no_linebreak_area);
 
@@ -582,11 +589,6 @@ gregorio_set_octave_and_step_from_pitch(char *step,
 #define NO_ALTERATION USELESS_VALUE
 #define FLAT GRE_FLAT
 #define NATURAL GRE_NATURAL
-
-#define WORD_BEGINNING 1
-#define WORD_MIDDLE 2
-#define WORD_END 3
-#define WORD_ONE_SYLLABLE 4
 
 #define USELESS_VALUE 0
 
@@ -796,8 +798,11 @@ inline bool is_initio_debilis(char liquescentia)
 }
 
 // the centering schemes for gabc:
-#define SCHEME_LATINE 1
-#define SCHEME_ENGLISH 2
+typedef enum gregorio_lyric_centering {
+    SCHEME_LATINE = 1,
+    SCHEME_ENGLISH,
+} gregorio_lyric_centering;
+
 #define SCHEME_DEFAULT SCHEME_LATINE
 
 void gregorio_add_character(gregorio_character **current_character,

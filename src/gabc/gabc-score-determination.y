@@ -89,7 +89,7 @@ void gregorio_gabc_add_text (char *mbcharacters);
 void gregorio_gabc_add_style(unsigned char style);
 void gregorio_gabc_end_style(unsigned char style);
 void complete_with_nulls (int voice);
-unsigned char centering_scheme;
+gregorio_lyric_centering centering_scheme;
 
 void gabc_score_determination_error(char *error_str) {
 gregorio_message (error_str, (const char *)"gabc_score_determination_parse", ERROR, 0);
