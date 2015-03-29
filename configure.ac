@@ -42,21 +42,6 @@ AX_CHECK_LINK_FLAG([-Wl,-z,now], [LDFLAGS+=" -Wl,-z,now"])
 AX_CHECK_LINK_FLAG([-fPIE], [LDFLAGS+=" -fPIE"])
 AX_CHECK_LINK_FLAG([-pie], [LDFLAGS+=" -pie"])
 
-## a dirty patch for cygwin, who needs the -lintl explicit option, that doesn't work under linux
-AC_CHECK_PROGS(UNAME, uname, :)
-if test "$UNAME" = :; then
-  AC_MSG_ERROR([Could not find uname.])
-else
-  HOST_OS=`$UNAME -o`
-  if test "$HOST_OS" = "Cygwin"; then
-    LIBINTL=-lintl
-    LEXLIB=''
-    AC_SUBST(LIBINTL)
-  fi
-  LIBTOOL_LIB_STATIC="-lltdl -static"
-  AC_SUBST(LIBTOOL_LIB_STATIC)
-fi
-
 AC_HEADER_STDC
 
 # linux has integer types in stdint.h, solaris, vms in inttypes.h
