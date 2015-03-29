@@ -746,7 +746,7 @@ int gregorio_go_to_end_initial(gregorio_character **param_character)
 void
 gregorio_rebuild_characters(gregorio_character **param_character,
                             char center_is_determined,
-                            unsigned char centering_scheme)
+                            gregorio_lyric_centering centering_scheme)
 {
     // a det_style, to walk through the list
     det_style *current_style = NULL;

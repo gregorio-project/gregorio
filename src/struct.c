@@ -58,8 +58,9 @@ static inline char max(char a, char b)
 }
 
 void
-gregorio_add_note(gregorio_note **current_note, char pitch, char shape,
-                  char signs, char liquescentia, char h_episemus_type)
+gregorio_add_note(gregorio_note **current_note, char pitch,
+                  gregorio_shape shape, char signs, char liquescentia,
+                  char h_episemus_type)
 {
 
     gregorio_note *element = malloc(sizeof(gregorio_note));
@@ -89,7 +90,7 @@ gregorio_add_note(gregorio_note **current_note, char pitch, char shape,
 }
 
 void
-gregorio_add_special_as_note(gregorio_note **current_note, char type,
+gregorio_add_special_as_note(gregorio_note **current_note, gregorio_type type,
                              char pitch)
 {
     gregorio_note *element = malloc(sizeof(gregorio_note));
@@ -115,7 +116,8 @@ gregorio_add_special_as_note(gregorio_note **current_note, char type,
 }
 
 void
-gregorio_add_texverb_as_note(gregorio_note **current_note, char *str, char type)
+gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
+                             gregorio_type type)
 {
     gregorio_note *element;
     if (str == NULL) {
@@ -218,7 +220,7 @@ void gregorio_set_signs(gregorio_note *note, char signs)
     note->signs = signs;
 }
 
-void gregorio_change_shape(gregorio_note *note, char shape)
+void gregorio_change_shape(gregorio_note *note, gregorio_shape shape)
 {
     if (!note || note->type != GRE_NOTE) {
         gregorio_message(_
@@ -474,8 +476,9 @@ gregorio_add_glyph(gregorio_glyph **current_glyph, char type,
 }
 
 void
-gregorio_add_special_as_glyph(gregorio_glyph **current_glyph, char type,
-                              char pitch, char additional_infos, char *texverb)
+gregorio_add_special_as_glyph(gregorio_glyph **current_glyph,
+                              gregorio_type type, char pitch,
+                              char additional_infos, char *texverb)
 {
     gregorio_glyph *next_glyph = malloc(sizeof(gregorio_glyph));
     if (!next_glyph) {
@@ -567,8 +570,8 @@ gregorio_add_element(gregorio_element **current_element,
 
 void
 gregorio_add_special_as_element(gregorio_element **current_element,
-                                char type, char pitch, char additional_infos,
-                                char *texverb)
+                                gregorio_type type, char pitch,
+                                char additional_infos, char *texverb)
 {
     gregorio_element *special = malloc(sizeof(gregorio_element));
     if (!special) {
@@ -742,7 +745,7 @@ gregorio_add_syllable(gregorio_syllable **current_syllable,
                       int number_of_voices, gregorio_element *elements[],
                       gregorio_character *first_character,
                       gregorio_character *first_translation_character,
-                      char position, char *abovelinestext,
+                      gregorio_word_position position, char *abovelinestext,
                       gregorio_tr_centering translation_type,
                       gregorio_nlba no_linebreak_area)
 {
@@ -1531,7 +1534,7 @@ void gregorio_determine_h_episemus_type(gregorio_note *note)
  *
  *********************************/
 
-char gregorio_det_shape(char pitch)
+gregorio_shape gregorio_det_shape(char pitch)
 {
     if (pitch < 'a') {
         return S_PUNCTUM_INCLINATUM;

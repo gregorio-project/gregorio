@@ -352,13 +352,13 @@ dump_write_score (FILE *f, gregorio_score *score)
                                dump_glyph_type (glyph->glyph_type));
                     }
                 }
-              if (glyph->liquescentia && glyph->glyph_type != GRE_BAR)
+              if (glyph->liquescentia && glyph->type != GRE_BAR)
                 {
                   fprintf (f, "       liquescentia          %d (%s)\n",
                            glyph->liquescentia,
                            dump_liquescentia (glyph->liquescentia));
                 }
-              if (glyph->liquescentia && glyph->glyph_type == GRE_BAR)
+              if (glyph->liquescentia && glyph->type == GRE_BAR)
                 {
                   fprintf (f, "       liquescentia          %d (%s)\n",
                            glyph->liquescentia,
