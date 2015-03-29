@@ -44,7 +44,7 @@ are the same under GNU/Linux and Mac OSX:
 
 Gregorio targets the following:
 
- * C stadard: [ISO C99 Standard](http://en.wikipedia.org/wiki/C99)
+ * C standard: [ISO C99 Standard](http://en.wikipedia.org/wiki/C99)
  * compilers: [gcc](https://gcc.gnu.org/) and [clang](http://clang.llvm.org/)
  * architectures: `i586`, `amd64`, `arm`, `arm64`
  * libraries: [`glibc`](http://www.gnu.org/software/libc/)
