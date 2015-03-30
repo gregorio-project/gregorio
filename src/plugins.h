@@ -23,16 +23,16 @@
 #ifndef PLUGINS_H
 #define PLUGINS_H
 
-void dump_write_score (FILE *f, gregorio_score *score);
+void dump_write_score(FILE *f, gregorio_score *score);
 
-gregorio_score *gabc_read_score (FILE *f_in);
-void gabc_write_score (FILE *f, gregorio_score *score);
+gregorio_score *gabc_read_score(FILE *f_in);
+void gabc_write_score(FILE *f, gregorio_score *score);
 
-void gregoriotex_write_score (FILE *f, gregorio_score *score);
+void gregoriotex_write_score(FILE *f, gregorio_score *score);
 
-void opustex_write_score (FILE *f, gregorio_score *score);
+void opustex_write_score(FILE *f, gregorio_score *score);
 
-gregorio_score *xml_read_score (FILE *f);
-void xml_write_score (FILE *f, gregorio_score *score);
+gregorio_score *xml_read_score(FILE *f);
+void xml_write_score(FILE *f, gregorio_score *score);
 
 #endif

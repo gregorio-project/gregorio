@@ -39,9 +39,6 @@
 #define ENUM_BITFIELD(TYPE) unsigned int
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 // all the different types of things a gregorio_* can be
 
 typedef enum gregorio_type {
@@ -132,7 +129,7 @@ typedef struct gregorio_note {
     char pitch;
     // shape is the shape of the note... if you want to know the different
     // possible shapes, see above.
-    ENUM_BITFIELD(gregorio_shape) shape:8;
+     ENUM_BITFIELD(gregorio_shape) shape:8;
     // signs is the signs on the notes, see below for all possible values
     char signs;
     // rare_sign is the sign we sometimes encounter on punctum cavum, like
@@ -231,9 +228,9 @@ typedef enum grestyle_style {
     ST_NO_STYLE = 0,
     ST_ITALIC,
     ST_CENTER,
-    ST_FORCED_CENTER,           // when the user types a {}, basically the same 
-                                // 
-    // behaviour, except for the initial
+    // when the user types a {}, basically the same behaviour, except for
+    // the initial
+    ST_FORCED_CENTER,
     ST_BOLD,
     ST_TT,
     ST_SMALL_CAPS,
@@ -311,7 +308,7 @@ typedef enum gregorio_word_position {
 
 typedef struct gregorio_style {
     ENUM_BITFIELD(grestyle_style) style:8;
-    ENUM_BITFIELD(grestyle_type) type:8;
+     ENUM_BITFIELD(grestyle_type) type:8;
 } gregorio_style;
 
 /*
@@ -352,13 +349,13 @@ typedef struct gregorio_syllable {
     // position is WORD_BEGINNING for the beginning of a multi-syllable
     // word, WORD_ONE_SYLLABLE for syllable that are alone in their word,
     // and i let you gess what are WORD_MIDDLE and WORD_END.
-    ENUM_BITFIELD(gregorio_word_position) position:8;
+     ENUM_BITFIELD(gregorio_word_position) position:8;
     // again, an additional field to put some signs or other things...
     char additional_infos;
     // type of translation (with center beginning or only center end)
-    ENUM_BITFIELD(gregorio_tr_centering) translation_type;
+     ENUM_BITFIELD(gregorio_tr_centering) translation_type;
     // beginning or end of area without linebreak?
-    ENUM_BITFIELD(gregorio_nlba) no_linebreak_area:8;
+     ENUM_BITFIELD(gregorio_nlba) no_linebreak_area:8;
     // pointer to a gregorio_text structure corresponding to the text.
     struct gregorio_character *text;
     // pointer to a gregorio_text structure corresponding to the
@@ -489,7 +486,8 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
                            gregorio_element *elements[],
                            gregorio_character *first_character,
                            gregorio_character *first_translation_character,
-                           gregorio_word_position position, char *abovelinestext,
+                           gregorio_word_position position,
+                           char *abovelinestext,
                            gregorio_tr_centering translation_type,
                            gregorio_nlba no_linebreak_area);
 
@@ -843,7 +841,4 @@ void gregorio_free_characters(gregorio_character *current_character);
 void gregorio_free_one_character(gregorio_character *current_character);
 void gregorio_suppress_one_character(gregorio_character *current_character);
 
-#ifdef __cplusplus
-}
-#endif
 #endif

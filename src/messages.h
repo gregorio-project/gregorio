@@ -34,17 +34,12 @@
 #define ngt_(str, strtwo, count) str
 #endif
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-  void gregorio_message (const char *string, const char *function_name,
-                         char verbosity, int line_number);
-  void gregorio_set_verbosity_mode (char new_mode);
-  void gregorio_set_file_name (char *new_name);
-  void gregorio_set_error_out (FILE *f);
-  int gregorio_get_return_value ();
+void gregorio_message(const char *string, const char *function_name,
+                      char verbosity, int line_number);
+void gregorio_set_verbosity_mode(char new_mode);
+void gregorio_set_file_name(char *new_name);
+void gregorio_set_error_out(FILE *f);
+int gregorio_get_return_value();
 
 #define VERB_VERBOSE 1
 #define VERB_WARNINGS 2
@@ -53,9 +48,5 @@ extern "C"
 #define WARNING VERB_WARNINGS
 #define ERROR VERB_ERRORS
 #define FATAL_ERROR 4
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
