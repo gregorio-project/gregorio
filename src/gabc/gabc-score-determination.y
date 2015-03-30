@@ -477,8 +477,8 @@ void rebuild_characters(gregorio_character **param_character,
                         char center_is_determined,
                         gregorio_lyric_centering centering_scheme)
 {
-    // we rebuild the first syllable text if it is the first syllable, or if it 
-    // is the second when the first has no text.
+    // we rebuild the first syllable text if it is the first syllable, or if
+    // it is the second when the first has no text.
     // it is a patch for cases like (c4) Al(ab)le(ab)
     if ((!score->first_syllable && score->initial_style != NO_INITIAL
          && current_character)
@@ -607,612 +607,551 @@ void gregorio_gabc_end_style(unsigned char style)
 %%
 
 score:
-	all_definitions syllables
-	;
+    all_definitions syllables
+    ;
 
 all_definitions:
-	definitions END_OF_DEFINITIONS {
-	end_definitions();
-	}
-	;
+    definitions END_OF_DEFINITIONS {
+        end_definitions();
+    }
+    ;
 
 definitions:
-	| definitions definition
-	;
+    | definitions definition
+    ;
 
 number_of_voices_definition:
-	NUMBER_OF_VOICES attribute {
-	number_of_voices=atoi($2.text);
-	if (number_of_voices > MAX_NUMBER_OF_VOICES) {
-	snprintf(error, 40, _("can't define %d voices, maximum is %d"), number_of_voices, MAX_NUMBER_OF_VOICES);
-	gregorio_message(error,"det_score",WARNING,0);
-	}
-	gregorio_set_score_number_of_voices (score, number_of_voices);
-	}
-	;
+    NUMBER_OF_VOICES attribute {
+        number_of_voices=atoi($2.text);
+        if (number_of_voices > MAX_NUMBER_OF_VOICES) {
+            snprintf(error, 40, _("can't define %d voices, maximum is %d"), number_of_voices, MAX_NUMBER_OF_VOICES);
+            gregorio_message(error,"det_score",WARNING,0);
+        }
+        gregorio_set_score_number_of_voices (score, number_of_voices);
+    }
+    ;
 
 macro_definition:
-	DEF_MACRO attribute {
-	macros[$1.character - '0'] = $2.text;
-	}
-	;
+    DEF_MACRO attribute {
+        macros[$1.character - '0'] = $2.text;
+    }
+    ;
 
 name_definition:
-	NAME attribute {
-	if ($2.text==NULL) {
-	gregorio_message("name can't be empty","det_score", WARNING, 0);
-	}
-	if (score->name) {
-	gregorio_message(_("several name definitions found, only the last will be taken into consideration"), "det_score",WARNING, 0);
-	}
-	gregorio_set_score_name (score, $2.text);
-	}
-	;
+    NAME attribute {
+        if ($2.text==NULL) {
+            gregorio_message("name can't be empty","det_score", WARNING, 0);
+        }
+        if (score->name) {
+            gregorio_message(_("several name definitions found, only the last will be taken into consideration"), "det_score",WARNING, 0);
+        }
+        gregorio_set_score_name (score, $2.text);
+    }
+    ;
 
 lilypond_preamble_definition:
-	LILYPOND_PREAMBLE attribute {
-	if (score->lilypond_preamble) {
-	gregorio_message(_("several lilypond preamble definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
-	}
-	gregorio_set_score_lilypond_preamble (score, $2.text);
-	}
-	;
-	
+    LILYPOND_PREAMBLE attribute {
+        if (score->lilypond_preamble) {
+            gregorio_message(_("several lilypond preamble definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+        }
+        gregorio_set_score_lilypond_preamble (score, $2.text);
+    }
+    ;
+    
 centering_scheme_definition:
-	CENTERING_SCHEME attribute {
-	set_centering_scheme($2.text);
-	}
-	;
+    CENTERING_SCHEME attribute {
+        set_centering_scheme($2.text);
+    }
+    ;
 
 gabc_copyright_definition:
-	GABC_COPYRIGHT attribute {
-	if (score->gabc_copyright) {
-	gregorio_message(_("several gabc-copyright fields found, only the last will be taken into consideration"), "det_score",WARNING,0);
-	}
-	gregorio_set_score_gabc_copyright (score, $2.text);
-	}
-	;
+    GABC_COPYRIGHT attribute {
+        if (score->gabc_copyright) {
+            gregorio_message(_("several gabc-copyright fields found, only the last will be taken into consideration"), "det_score",WARNING,0);
+        }
+        gregorio_set_score_gabc_copyright (score, $2.text);
+    }
+    ;
 
 score_copyright_definition:
-	SCORE_COPYRIGHT attribute {
-	if (score->score_copyright) {
-	gregorio_message(_("several score_copyright fields found, only the last will be taken into consideration"), "det_score",WARNING,0);
-	}
-	gregorio_set_score_score_copyright (score, $2.text);
-	}
-	;
+    SCORE_COPYRIGHT attribute {
+        if (score->score_copyright) {
+            gregorio_message(_("several score_copyright fields found, only the last will be taken into consideration"), "det_score",WARNING,0);
+        }
+        gregorio_set_score_score_copyright (score, $2.text);
+    }
+    ;
 
 opustex_preamble_definition:
-	OPUSTEX_PREAMBLE attribute {
-	if (score->opustex_preamble) {
-	gregorio_message(_("several OpusTeX preamble definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
-	}
-	gregorio_set_score_opustex_preamble (score, $2.text);
-	}
-	;
+    OPUSTEX_PREAMBLE attribute {
+        if (score->opustex_preamble) {
+            gregorio_message(_("several OpusTeX preamble definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+        }
+        gregorio_set_score_opustex_preamble (score, $2.text);
+    }
+    ;
 
 musixtex_preamble_definition:
-	MUSIXTEX_PREAMBLE attribute {
-	if (score->musixtex_preamble) {
-	gregorio_message(_("several MusiXTeX preamble definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
-	}
-	gregorio_set_score_musixtex_preamble (score, $2.text);
-	}
-	;
+    MUSIXTEX_PREAMBLE attribute {
+        if (score->musixtex_preamble) {
+            gregorio_message(_("several MusiXTeX preamble definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+        }
+        gregorio_set_score_musixtex_preamble (score, $2.text);
+    }
+    ;
 
 gregoriotex_font_definition:
-	GREGORIOTEX_FONT attribute {
-	if (score->gregoriotex_font) {
-	gregorio_message(_("several GregorioTeX font definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
-	}
-	score->gregoriotex_font=$2.text;
-	}
-	;
+    GREGORIOTEX_FONT attribute {
+        if (score->gregoriotex_font) {
+            gregorio_message(_("several GregorioTeX font definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+        }
+        score->gregoriotex_font=$2.text;
+    }
+    ;
 
 office_part_definition:
-	OFFICE_PART attribute {
-	if (score->office_part) {
-	gregorio_message(_("several office part definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
-	}
-	gregorio_set_score_office_part (score, $2.text);
-	}
-	;
+    OFFICE_PART attribute {
+        if (score->office_part) {
+            gregorio_message(_("several office part definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+        }
+        gregorio_set_score_office_part (score, $2.text);
+    }
+    ;
 
 occasion_definition:
-	OCCASION attribute {
-	if (score->occasion) {
-	gregorio_message(_("several occasion definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
-	}
-	gregorio_set_score_occasion (score, $2.text);
-	}
-	;
+    OCCASION attribute {
+        if (score->occasion) {
+            gregorio_message(_("several occasion definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+        }
+        gregorio_set_score_occasion (score, $2.text);
+    }
+    ;
 
 meter_definition:
-	METER attribute {
-	if (score->meter) {
-	gregorio_message(_("several meter definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
-	}
-	gregorio_set_score_meter (score, $2.text);
-	}
-	;
+    METER attribute {
+        if (score->meter) {
+            gregorio_message(_("several meter definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+        }
+        gregorio_set_score_meter (score, $2.text);
+    }
+    ;
 
 commentary_definition:
-	COMMENTARY attribute {
-	if (score->commentary) {
-	gregorio_message(_("several commentary definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
-	}
-	gregorio_set_score_commentary (score, $2.text);
-	}
-	;
+    COMMENTARY attribute {
+        if (score->commentary) {
+            gregorio_message(_("several commentary definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+        }
+        gregorio_set_score_commentary (score, $2.text);
+    }
+    ;
 
 arranger_definition:
-	ARRANGER attribute {
-	if (score->arranger) {
-	gregorio_message(_("several arranger definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
-	}
-	gregorio_set_score_arranger (score, $2.text);
-	}
-	;
+    ARRANGER attribute {
+        if (score->arranger) {
+            gregorio_message(_("several arranger definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+        }
+        gregorio_set_score_arranger (score, $2.text);
+    }
+    ;
 
 gabc_version_definition:
-	GABC_VERSION attribute {
-	// So far this handling of the version is rudimentary.  When
-	// we start supporting multiple input versions, it will become
-	// more complex.  For the moment, just issue a warning.
-	if (strcmp ($2.text, GABC_CURRENT_VERSION) != 0) {
-	gregorio_message(_("gabc-version is not the current one " GABC_CURRENT_VERSION " ; there may be problems"), "det_score",WARNING,0);
-	}
-	}
-	;
+    GABC_VERSION attribute {
+        // So far this handling of the version is rudimentary.  When
+        // we start supporting multiple input versions, it will become
+        // more complex.  For the moment, just issue a warning.
+        if (strcmp ($2.text, GABC_CURRENT_VERSION) != 0) {
+            gregorio_message(_("gabc-version is not the current one " GABC_CURRENT_VERSION " ; there may be problems"), "det_score",WARNING,0);
+        }
+    }
+    ;
 
 mode_definition:
-	MODE attribute {
-	if (score->mode) {
-	gregorio_message(_("several mode definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
-	}
-	if ($2.text)
-	  {
-	    score->mode=atoi($2.text);
-	    free($2.text);
-	  }
-	}
-	;
+    MODE attribute {
+        if (score->mode) {
+            gregorio_message(_("several mode definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+        }
+        if ($2.text) {
+            score->mode=atoi($2.text);
+            free($2.text);
+        }
+    }
+    ;
 
 initial_style_definition:
-	INITIAL_STYLE attribute {
-	if ($2.text)
-	  {
-	    score->initial_style=atoi($2.text);
-	    free($2.text);
-	  }
-	}
-	;
+    INITIAL_STYLE attribute {
+        if ($2.text) {
+            score->initial_style=atoi($2.text);
+            free($2.text);
+        }
+    }
+    ;
 
 annotation_definition:
-	ANNOTATION attribute {
-	if (current_voice_info->annotation [NUM_ANNOTATIONS - 1]) {
-	snprintf(error,99,_("too many definitions of annotation found for voice %d, only the first %d will be taken into consideration"),voice, NUM_ANNOTATIONS);
-	gregorio_message(error, "det_score",WARNING,0);
-	}
-	gregorio_set_voice_annotation (current_voice_info, $2.text);
-	}
-	;
+    ANNOTATION attribute {
+        if (current_voice_info->annotation [NUM_ANNOTATIONS - 1]) {
+            snprintf(error,99,_("too many definitions of annotation found for voice %d, only the first %d will be taken into consideration"),voice, NUM_ANNOTATIONS);
+            gregorio_message(error, "det_score",WARNING,0);
+        }
+        gregorio_set_voice_annotation (current_voice_info, $2.text);
+    }
+    ;
 
 author_definition:
-	AUTHOR attribute {
-	if (score->si.author) {
-	snprintf(error,99,_("several definitions of author found, only the last will be taken into consideration"));
-	gregorio_message(error, "det_score",WARNING,0);
-	}
-	gregorio_set_score_author (score, $2.text);
-	}
-	;
+    AUTHOR attribute {
+        if (score->si.author) {
+            snprintf(error,99,_("several definitions of author found, only the last will be taken into consideration"));
+            gregorio_message(error, "det_score",WARNING,0);
+        }
+        gregorio_set_score_author (score, $2.text);
+    }
+    ;
 
 date_definition:
-	DATE attribute {
-	if (score->si.date) {
-	snprintf(error,99,_("several definitions of date found, only the last will be taken into consideration"));
-	gregorio_message(error, "det_score",WARNING,0);
-	}
-	gregorio_set_score_date (score, $2.text);
-	}
-	;
+    DATE attribute {
+        if (score->si.date) {
+            snprintf(error,99,_("several definitions of date found, only the last will be taken into consideration"));
+            gregorio_message(error, "det_score",WARNING,0);
+        }
+        gregorio_set_score_date (score, $2.text);
+    }
+    ;
 
 manuscript_definition:
-	MANUSCRIPT attribute {
-	if (score->si.manuscript) {
-	snprintf(error,99,_("several definitions of manuscript found, only the last will be taken into consideration"));
-	gregorio_message(error, "det_score",WARNING,0);
-	}
-	gregorio_set_score_manuscript (score, $2.text);
-	}
-	;
+    MANUSCRIPT attribute {
+        if (score->si.manuscript) {
+            snprintf(error,99,_("several definitions of manuscript found, only the last will be taken into consideration"));
+            gregorio_message(error, "det_score",WARNING,0);
+        }
+        gregorio_set_score_manuscript (score, $2.text);
+    }
+    ;
 
 manuscript_reference_definition:
-	MANUSCRIPT_REFERENCE attribute {
-	if (score->si.manuscript_reference) {
-	snprintf(error,99,_("several definitions of manuscript-reference found, only the last will be taken into consideration"));
-	gregorio_message(error, "det_score",WARNING,0);
-	}
-	gregorio_set_score_manuscript_reference (score, $2.text);
-	}
-	;
+    MANUSCRIPT_REFERENCE attribute {
+        if (score->si.manuscript_reference) {
+            snprintf(error,99,_("several definitions of manuscript-reference found, only the last will be taken into consideration"));
+            gregorio_message(error, "det_score",WARNING,0);
+        }
+        gregorio_set_score_manuscript_reference (score, $2.text);
+    }
+    ;
 
 manuscript_storage_place_definition:
-	MANUSCRIPT_STORAGE_PLACE attribute {
-	if (score->si.manuscript_storage_place) {
-	snprintf(error,105,_("several definitions of manuscript-storage-place found, only the last will be taken into consideration"));
-	gregorio_message(error, "det_score",WARNING,0);
-	}
-	gregorio_set_score_manuscript_storage_place (score, $2.text);
-	}
-	;
+    MANUSCRIPT_STORAGE_PLACE attribute {
+        if (score->si.manuscript_storage_place) {
+            snprintf(error,105,_("several definitions of manuscript-storage-place found, only the last will be taken into consideration"));
+            gregorio_message(error, "det_score",WARNING,0);
+        }
+        gregorio_set_score_manuscript_storage_place (score, $2.text);
+    }
+    ;
 
 book_definition:
-	BOOK attribute {
-	if (score->si.book) {
-	snprintf(error,99,_("several definitions of book found, only the last will be taken into consideration"));
-	gregorio_message(error, "det_score",WARNING,0);
-	}
-	gregorio_set_score_book (score, $2.text);
-	}
-	;
+    BOOK attribute {
+        if (score->si.book) {
+            snprintf(error,99,_("several definitions of book found, only the last will be taken into consideration"));
+            gregorio_message(error, "det_score",WARNING,0);
+        }
+        gregorio_set_score_book (score, $2.text);
+    }
+    ;
 
 transcriber_definition:
-	TRANSCRIBER attribute {
-	if (score->si.transcriber) {
-	snprintf(error,99,_("several definitions of transcriber found, only the last will be taken into consideration"));
-	gregorio_message(error, "det_score",WARNING,0);
-	}
-	gregorio_set_score_transcriber (score, $2.text);
-	//free($2.text);
-	}
-	;
+    TRANSCRIBER attribute {
+        if (score->si.transcriber) {
+            snprintf(error,99,_("several definitions of transcriber found, only the last will be taken into consideration"));
+            gregorio_message(error, "det_score",WARNING,0);
+        }
+        gregorio_set_score_transcriber (score, $2.text);
+        //free($2.text);
+    }
+    ;
 
 transcription_date_definition:
-	TRANSCRIPTION_DATE attribute {
-	if (score->si.transcription_date) {
-	snprintf(error,105,_("several definitions of transcription date found, only the last will be taken into consideration"));
-	gregorio_message(error, "det_score",WARNING,0);
-	}
-	gregorio_set_score_transcription_date (score, $2.text);
-	}
-	;
+    TRANSCRIPTION_DATE attribute {
+        if (score->si.transcription_date) {
+            snprintf(error,105,_("several definitions of transcription date found, only the last will be taken into consideration"));
+            gregorio_message(error, "det_score",WARNING,0);
+        }
+        gregorio_set_score_transcription_date (score, $2.text);
+    }
+    ;
 
 style_definition:
-	STYLE attribute {
-	if (current_voice_info->style) {
-	snprintf(error,99,_("several definitions of style found for voice %d, only the last will be taken into consideration"),voice);
-	gregorio_message(error, "det_score",WARNING,0);
-	}
-	gregorio_set_voice_style (current_voice_info, $2.text);
-	}
-	;
+    STYLE attribute {
+        if (current_voice_info->style) {
+            snprintf(error,99,_("several definitions of style found for voice %d, only the last will be taken into consideration"),voice);
+            gregorio_message(error, "det_score",WARNING,0);
+        }
+        gregorio_set_voice_style (current_voice_info, $2.text);
+    }
+    ;
 
 virgula_position_definition:
-	VIRGULA_POSITION attribute {
-	if (current_voice_info->virgula_position) {
-	snprintf(error,105,_("several definitions of virgula position found for voice %d, only the last will be taken into consideration"),voice);
-	gregorio_message(error, "det_score",WARNING,0);
-	}
-	gregorio_set_voice_virgula_position (current_voice_info, $2.text);
-	}
-	;
+    VIRGULA_POSITION attribute {
+        if (current_voice_info->virgula_position) {
+            snprintf(error,105,_("several definitions of virgula position found for voice %d, only the last will be taken into consideration"),voice);
+            gregorio_message(error, "det_score",WARNING,0);
+        }
+        gregorio_set_voice_virgula_position (current_voice_info, $2.text);
+    }
+    ;
 
 
 generated_by_definition:
-	GENERATED_BY attribute {
-	//set_voice_generated_by (current_voice_info, $2.text);
-	}
-	;
+    GENERATED_BY attribute {
+        //set_voice_generated_by (current_voice_info, $2.text);
+    }
+    ;
 
 user_notes_definition:
-	USER_NOTES attribute {
-	  gregorio_set_score_user_notes (score, $2.text);
-	}
-	;
+    USER_NOTES attribute {
+        gregorio_set_score_user_notes (score, $2.text);
+    }
+    ;
 
 attribute:
-	COLON ATTRIBUTE SEMICOLON {
-	$$.text = $2.text;
-	}
-	|
-	COLON SEMICOLON {
-	$$.text = NULL;
-	}
-	;
+    COLON ATTRIBUTE SEMICOLON {
+        $$.text = $2.text;
+    }
+    |
+    COLON SEMICOLON {
+        $$.text = NULL;
+    }
+    ;
 
 definition:
-	number_of_voices_definition
-	|
-	name_definition
-	|
-	macro_definition
-	|
-	gabc_copyright_definition
-	|
-	score_copyright_definition
-	|
-	generated_by_definition
-	|
-	musixtex_preamble_definition
-	|
-	opustex_preamble_definition
-	|
-	lilypond_preamble_definition
-	|
-	virgula_position_definition
-	|
-	style_definition
-	|
-	transcription_date_definition
-	|
-	transcriber_definition
-	|
-	manuscript_storage_place_definition
-	|
-	manuscript_reference_definition
-	|
-	manuscript_definition
-	|
-	book_definition
-	|
-	date_definition
-	|
-	author_definition
-	|
-	annotation_definition
-	|
-	office_part_definition
-	|
-	occasion_definition
-	|
-	meter_definition
-	|
-	commentary_definition
-	|
-	arranger_definition
-	|
-	gabc_version_definition
-	|
-	initial_style_definition
-	|
-	mode_definition
-	|
-	gregoriotex_font_definition
-	|
-	user_notes_definition
-	|
-	centering_scheme_definition
-	|
-	VOICE_CHANGE {
-	next_voice_info ();
-	}
-	;
+    number_of_voices_definition
+    | name_definition
+    | macro_definition
+    | gabc_copyright_definition
+    | score_copyright_definition
+    | generated_by_definition
+    | musixtex_preamble_definition
+    | opustex_preamble_definition
+    | lilypond_preamble_definition
+    | virgula_position_definition
+    | style_definition
+    | transcription_date_definition
+    | transcriber_definition
+    | manuscript_storage_place_definition
+    | manuscript_reference_definition
+    | manuscript_definition
+    | book_definition
+    | date_definition
+    | author_definition
+    | annotation_definition
+    | office_part_definition
+    | occasion_definition
+    | meter_definition
+    | commentary_definition
+    | arranger_definition
+    | gabc_version_definition
+    | initial_style_definition
+    | mode_definition
+    | gregoriotex_font_definition
+    | user_notes_definition
+    | centering_scheme_definition
+    | VOICE_CHANGE {
+        next_voice_info();
+    }
+    ;
 
 notes:
-	|notes note
-	;
+    | notes note
+    ;
 
 note:
-	NOTES CLOSING_BRACKET {
-	if (voice<number_of_voices) {
-	elements[voice]=gabc_det_elements_from_string($1.text, &current_key, macros);
-	free($1.text);
-	}
-	else {
-	snprintf(error,105,ngt_("too many voices in note : %d foud, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
-	gregorio_message(error, "det_score",ERROR,0);
-	}
-	if (voice<number_of_voices-1) {
-	snprintf(error,105,ngt_("not enough voices in note : %d foud, %d expected, completing with empty neume","not enough voices in note : %d foud, %d expected, completing with empty neume",voice+1),voice+1, number_of_voices);
-	gregorio_message(error, "det_score",VERBOSE,0);
-	complete_with_nulls(voice);
-	}
-	voice=0;
-	}
-	|
-	NOTES CLOSING_BRACKET_WITH_SPACE {
-	if (voice<number_of_voices) {
-	elements[voice]=gabc_det_elements_from_string($1.text, &current_key, macros);
-	free($1.text);
-	}
-	else {
-	snprintf(error,105,ngt_("too many voices in note : %d foud, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
-	gregorio_message(error, "det_score",ERROR,0);
-	}
-	if (voice<number_of_voices-1) {
-	snprintf(error,105,ngt_("not enough voices in note : %d foud, %d expected, completing with empty neume","not enough voices in note : %d foud, %d expected, completing with empty neume",voice+1),voice+1, number_of_voices);
-	gregorio_message(error, "det_score",VERBOSE,0);
-	complete_with_nulls(voice);
-	}
-	voice=0;
-	update_position_with_space();
-	}
-	|
-	NOTES VOICE_CUT{
-	if (voice<number_of_voices) {
-	elements[voice]=gabc_det_elements_from_string($1.text, &current_key, macros);
-	free($1.text);
-	voice++;
-	}
-	else {
-	snprintf(error,105,ngt_("too many voices in note : %d found, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
-	gregorio_message(error, "det_score",ERROR,0);
-	}
-	}
-	|
-	CLOSING_BRACKET {
-	elements[voice]=NULL;
-	voice=0;
-	}
-	|
-	CLOSING_BRACKET_WITH_SPACE {
-	elements[voice]=NULL;
-	voice=0;
-	update_position_with_space();
-	}
-	;
+    NOTES CLOSING_BRACKET {
+        if (voice<number_of_voices) {
+            elements[voice]=gabc_det_elements_from_string($1.text, &current_key, macros);
+            free($1.text);
+        }
+        else {
+            snprintf(error,105,ngt_("too many voices in note : %d foud, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
+            gregorio_message(error, "det_score",ERROR,0);
+        }
+        if (voice<number_of_voices-1) {
+            snprintf(error,105,ngt_("not enough voices in note : %d foud, %d expected, completing with empty neume","not enough voices in note : %d foud, %d expected, completing with empty neume",voice+1),voice+1, number_of_voices);
+            gregorio_message(error, "det_score",VERBOSE,0);
+            complete_with_nulls(voice);
+        }
+        voice=0;
+    }
+    | NOTES CLOSING_BRACKET_WITH_SPACE {
+        if (voice<number_of_voices) {
+            elements[voice]=gabc_det_elements_from_string($1.text, &current_key, macros);
+            free($1.text);
+        }
+        else {
+            snprintf(error,105,ngt_("too many voices in note : %d foud, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
+            gregorio_message(error, "det_score",ERROR,0);
+        }
+        if (voice<number_of_voices-1) {
+            snprintf(error,105,ngt_("not enough voices in note : %d foud, %d expected, completing with empty neume","not enough voices in note : %d foud, %d expected, completing with empty neume",voice+1),voice+1, number_of_voices);
+            gregorio_message(error, "det_score",VERBOSE,0);
+            complete_with_nulls(voice);
+        }
+        voice=0;
+        update_position_with_space();
+    }
+    | NOTES VOICE_CUT {
+        if (voice<number_of_voices) {
+            elements[voice]=gabc_det_elements_from_string($1.text, &current_key, macros);
+            free($1.text);
+            voice++;
+        }
+        else {
+            snprintf(error,105,ngt_("too many voices in note : %d found, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
+            gregorio_message(error, "det_score",ERROR,0);
+        }
+    }
+    | CLOSING_BRACKET {
+        elements[voice]=NULL;
+        voice=0;
+    }
+    | CLOSING_BRACKET_WITH_SPACE {
+        elements[voice]=NULL;
+        voice=0;
+        update_position_with_space();
+    }
+    ;
 
 style_beginning:
-	I_BEGINNING {
-	gregorio_gabc_add_style(ST_ITALIC);
-	}
-	|
-	TT_BEGINNING {
-	gregorio_gabc_add_style(ST_TT);
-	}
-	|
-	UL_BEGINNING {
-	gregorio_gabc_add_style(ST_UNDERLINED);
-	}
-	|
-	C_BEGINNING {
-	gregorio_gabc_add_style(ST_COLORED);
-	}
-	|
-	B_BEGINNING {
-	gregorio_gabc_add_style(ST_BOLD);
-	}
-	|
-	SC_BEGINNING {
-	gregorio_gabc_add_style(ST_SMALL_CAPS);
-	}
-	|
-	VERB_BEGINNING {
-	gregorio_gabc_add_style(ST_VERBATIM);
-	}
-	|
-	SP_BEGINNING {
-	gregorio_gabc_add_style(ST_SPECIAL_CHAR);
-	}
-	|
-	CENTER_BEGINNING {if (!center_is_determined) {
-	gregorio_gabc_add_style(ST_FORCED_CENTER);
-	center_is_determined=CENTER_HALF_DETERMINED;
-	}
-	}
-	;
+    I_BEGINNING {
+        gregorio_gabc_add_style(ST_ITALIC);
+    }
+    | TT_BEGINNING {
+        gregorio_gabc_add_style(ST_TT);
+    }
+    | UL_BEGINNING {
+        gregorio_gabc_add_style(ST_UNDERLINED);
+    }
+    | C_BEGINNING {
+        gregorio_gabc_add_style(ST_COLORED);
+    }
+    | B_BEGINNING {
+        gregorio_gabc_add_style(ST_BOLD);
+    }
+    | SC_BEGINNING {
+        gregorio_gabc_add_style(ST_SMALL_CAPS);
+    }
+    | VERB_BEGINNING {
+        gregorio_gabc_add_style(ST_VERBATIM);
+    }
+    | SP_BEGINNING {
+        gregorio_gabc_add_style(ST_SPECIAL_CHAR);
+    }
+    | CENTER_BEGINNING {
+        if (!center_is_determined) {
+            gregorio_gabc_add_style(ST_FORCED_CENTER);
+            center_is_determined=CENTER_HALF_DETERMINED;
+        }
+    }
+    ;
 
 style_end:
-	I_END {
-	gregorio_gabc_end_style(ST_ITALIC);
-	}
-	|
-	TT_END {
-	gregorio_gabc_end_style(ST_TT);
-	}
-	|
-	UL_END {
-	gregorio_gabc_end_style(ST_UNDERLINED);
-	}
-	|
-	C_END {
-	gregorio_gabc_end_style(ST_COLORED);
-	}
-	|
-	B_END {
-	gregorio_gabc_end_style(ST_BOLD);
-	}
-	|
-	SC_END {
-	gregorio_gabc_end_style(ST_SMALL_CAPS);
-	}
-	|
-	VERB_END {
-	gregorio_gabc_end_style(ST_VERBATIM);
-	}
-	|
-	SP_END {
-	gregorio_gabc_end_style(ST_SPECIAL_CHAR);
-	}
-	|
-	CENTER_END {
-	if (center_is_determined==CENTER_HALF_DETERMINED) {
-	  gregorio_gabc_end_style(ST_FORCED_CENTER);
-	  center_is_determined=CENTER_FULLY_DETERMINED;
-	}
-	}
-	;
+    I_END {
+        gregorio_gabc_end_style(ST_ITALIC);
+    }
+    | TT_END {
+        gregorio_gabc_end_style(ST_TT);
+    }
+    | UL_END {
+        gregorio_gabc_end_style(ST_UNDERLINED);
+    }
+    | C_END {
+        gregorio_gabc_end_style(ST_COLORED);
+    }
+    | B_END {
+        gregorio_gabc_end_style(ST_BOLD);
+    }
+    | SC_END {
+        gregorio_gabc_end_style(ST_SMALL_CAPS);
+    }
+    | VERB_END {
+        gregorio_gabc_end_style(ST_VERBATIM);
+    }
+    | SP_END {
+        gregorio_gabc_end_style(ST_SPECIAL_CHAR);
+    }
+    | CENTER_END {
+        if (center_is_determined==CENTER_HALF_DETERMINED) {
+            gregorio_gabc_end_style(ST_FORCED_CENTER);
+            center_is_determined=CENTER_FULLY_DETERMINED;
+        }
+    }
+    ;
 
 linebreak_area:
-  BNLBA {
-    no_linebreak_area = NLBA_BEGINNING;
-  }
-  |
-  ENLBA {
-    no_linebreak_area = NLBA_END;
-  }
-  ;
+    BNLBA {
+        no_linebreak_area = NLBA_BEGINNING;
+    }
+    | ENLBA {
+        no_linebreak_area = NLBA_END;
+    }
+    ;
 
 character:
-  above_line_text
-  |
-	CHARACTERS {
-	gregorio_gabc_add_text($1.text);
-	}
-	|
-	style_beginning
-	|
-	style_end
-	|
-	linebreak_area
-	;
+    above_line_text
+    | CHARACTERS {
+        gregorio_gabc_add_text($1.text);
+    }
+    | style_beginning
+    | style_end
+    | linebreak_area
+    ;
 
 text:
-	|text character
-	;
+    | text character
+    ;
 
 translation_beginning:
     TRANSLATION_BEGINNING {
-    start_translation(TR_NORMAL);
+        start_translation(TR_NORMAL);
     }
     ;
 
 translation:
     translation_beginning text TRANSLATION_END {
-    end_translation();
+        end_translation();
     }
-    |
-    TRANSLATION_CENTER_END {
-    start_translation(TR_WITH_CENTER_END);
+    | TRANSLATION_CENTER_END {
+        start_translation(TR_WITH_CENTER_END);
     }
     ;
 
 above_line_text:
     ALT_BEGIN CHARACTERS ALT_END {
-      abovelinestext = $2.text;
+        abovelinestext = $2.text;
     }
     ;
 
 syllable_with_notes:
-	text OPENING_BRACKET notes {
-	rebuild_characters (&current_character, center_is_determined, centering_scheme);
-	first_text_character = current_character;
-	close_syllable();
-	}
-	|
-	text translation OPENING_BRACKET notes {
-	close_syllable();
-	}
-	;
+    text OPENING_BRACKET notes {
+        rebuild_characters (&current_character, center_is_determined, centering_scheme);
+        first_text_character = current_character;
+        close_syllable();
+    }
+    | text translation OPENING_BRACKET notes {
+        close_syllable();
+    }
+    ;
 
 notes_without_word:
-	OPENING_BRACKET notes {
-	close_syllable();
-	}
-	|
-	translation OPENING_BRACKET notes {
-	close_syllable();
-	}
-	;
+    OPENING_BRACKET notes {
+        close_syllable();
+    }
+    | translation OPENING_BRACKET notes {
+        close_syllable();
+    }
+    ;
 
 syllable:
-	syllable_with_notes
-	|
-	notes_without_word
-	;
+    syllable_with_notes
+    | notes_without_word
+    ;
 
 syllables:
-	|syllables syllable
-	;
+    | syllables syllable
+    ;

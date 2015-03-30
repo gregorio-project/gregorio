@@ -105,9 +105,9 @@ close_element(gregorio_element **current_element, gregorio_glyph *first_glyph)
  * 
  */
 static inline void cut_before(gregorio_glyph *current_glyph,
-                               gregorio_glyph **first_glyph,
-                               gregorio_glyph **previous_glyph,
-                               gregorio_element **current_element)
+                              gregorio_glyph **first_glyph,
+                              gregorio_glyph **previous_glyph,
+                              gregorio_element **current_element)
 {
     if (*first_glyph != current_glyph) {
         close_element(current_element, *first_glyph);
@@ -183,7 +183,8 @@ gregorio_element *gabc_det_elements_from_glyphs(gregorio_glyph *current_glyph)
                 continue;
             }
             // clef change or space or end of line
-            cut_before(current_glyph, &first_glyph, &previous_glyph, &current_element);
+            cut_before(current_glyph, &first_glyph, &previous_glyph,
+                       &current_element);
             // if statement to make neumatic cuts not appear in elements, as
             // there is always one between elements 
             if (current_glyph->type != GRE_SPACE
@@ -220,7 +221,8 @@ gregorio_element *gabc_det_elements_from_glyphs(gregorio_glyph *current_glyph)
         switch (current_glyph_type) {
         case G_PUNCTA_ASCENDENS:
             if (!do_not_cut) {
-                cut_before(current_glyph, &first_glyph, &previous_glyph, &current_element);
+                cut_before(current_glyph, &first_glyph, &previous_glyph,
+                           &current_element);
                 do_not_cut = 1;
             } else {
                 previous_glyph = current_glyph;
@@ -255,7 +257,8 @@ gregorio_element *gabc_det_elements_from_glyphs(gregorio_glyph *current_glyph)
             if (do_not_cut) {
                 do_not_cut = 0;
             } else {
-                cut_before(current_glyph, &first_glyph, &previous_glyph, &current_element);
+                cut_before(current_glyph, &first_glyph, &previous_glyph,
+                           &current_element);
             }
         }
         /*
