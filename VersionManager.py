@@ -28,6 +28,9 @@ def get_parser():
     "Return command line parser"
     parser = argparse.ArgumentParser(
         description='A script to manage the VERSION of gregorio.')
+    parser.add_argument('-ni', '--not-interactive',
+                        help='Do not ask confirmation',
+                        action='store_true', default=False)
     parser.add_argument('-c', '--get-current',
                         help='Prints the current gregorio version',
                         action='store_true', default=False)
@@ -160,7 +163,7 @@ def confirm_replace(oldver, newver):
         print('Aborting.')
         sys.exit(1)
 
-def release_candidate(version_obj):
+def release_candidate(version_obj, not_interactive):
     "Changes x.y.z-beta to x.y.z-rc1 OR increments x.y.z-rcx+1"
     oldversion = version_obj.version
     if '-rc' in oldversion:
@@ -168,53 +171,59 @@ def release_candidate(version_obj):
                             oldversion)
     elif '-' in oldversion:
         newversion = re.sub(r'-.*', '-rc1', oldversion)
-    confirm_replace(oldversion, newversion)
+    if (not not_interactive):
+        confirm_replace(oldversion, newversion)
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
-def bump_major(version_obj):
+def bump_major(version_obj, not_interactive):
     "Changed the major version number: x.y.z --> x+1.0.0-beta"
     oldversion = version_obj.version
     nums = re.search(r'(\d+)(\.\d+)(\.\d+)', oldversion)
     newversion = str(int(nums.group(1)) +1) + '.0.0-beta'
-    confirm_replace(oldversion, newversion)
+    if (not not_interactive):
+        confirm_replace(oldversion, newversion)
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
-def bump_minor(version_obj):
+def bump_minor(version_obj, not_interactive):
     "Changed the minor version number: x.y.z --> x.y+1.0-beta"
     oldversion = version_obj.version
     nums = re.search(r'(\d+\.)(\d+)(\.\d+)', oldversion)
     newversion = nums.group(1) + str(int(nums.group(2)) +1) + '.0-beta'
-    confirm_replace(oldversion, newversion)
+    if (not not_interactive):
+        confirm_replace(oldversion, newversion)
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
-def bump_patch(version_obj):
+def bump_patch(version_obj, not_interactive):
     "Changed the patch version number: x.y.z --> x.y.z+1"
     oldversion = version_obj.version
     nums = re.search(r'(\d+\.\d+\.)(\d+)', oldversion)
     newversion = nums.group(1) + str(int(nums.group(2)) +1)
-    confirm_replace(oldversion, newversion)
+    if (not not_interactive):
+        confirm_replace(oldversion, newversion)
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
-def set_manual_version(version_obj, user_version):
+def set_manual_version(version_obj, user_version, not_interactive):
     "Changed the version number to a user supplied value"
     oldversion = version_obj.version
     if not re.match(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)$', user_version):
         print('Bad version string. Use this style: x.y.z or x.y.z-beta')
         sys.exit(1)
     newversion = user_version
-    confirm_replace(oldversion, newversion)
+    if (not not_interactive):
+        confirm_replace(oldversion, newversion)
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
-def do_release(version_obj):
+def do_release(version_obj, not_interactive):
     "Strips extra characters from the version leaving x.y.z"
     oldversion = version_obj.version
     newversion = re.sub(r'([\d.]+)-?.*', r'\1', oldversion)
-    confirm_replace(oldversion, newversion)
+    if (not not_interactive):
+        confirm_replace(oldversion, newversion)
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
@@ -226,6 +235,9 @@ def main():
         sys.exit(1)
     args = parser.parse_args()
     gregorio_version = Version(VERSION_FILE)
+    not_interactive = False
+    if args.not_interactive:
+        not_interactive = True
     if args.get_current:
         gregorio_version.fetch_version()
     elif args.get_debian_stable:
@@ -233,17 +245,17 @@ def main():
     elif args.get_debian_git:
         gregorio_version.fetch_version_debian_git()
     elif args.major:
-        bump_major(gregorio_version)
+        bump_major(gregorio_version, not_interactive)
     elif args.minor:
-        bump_minor(gregorio_version)
+        bump_minor(gregorio_version, not_interactive)
     elif args.patch:
-        bump_patch(gregorio_version)
+        bump_patch(gregorio_version, not_interactive)
     elif args.release_candidate:
-        release_candidate(gregorio_version)
+        release_candidate(gregorio_version, not_interactive)
     elif args.release:
-        do_release(gregorio_version)
+        do_release(gregorio_version, not_interactive)
     elif args.manual_version:
-        set_manual_version(gregorio_version, args.manual_version)
+        set_manual_version(gregorio_version, args.manual_version, not_interactive)
 
 if __name__ == "__main__":
     main()
