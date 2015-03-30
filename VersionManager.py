@@ -13,6 +13,7 @@ import re
 import argparse
 import subprocess
 import time
+from datetime import date
 
 from distutils.util import strtobool
 
@@ -21,6 +22,7 @@ GREGORIO_FILES = ["configure.ac",
                   "windows/gregorio-resources.rc",
                   "windows/gregorio.iss",
                   "tex/gregoriotex.lua",
+                  "doc/GregorioRef.tex",
                   "plugins/gregoriotex/gregoriotex.h"
                  ]
 
@@ -123,6 +125,7 @@ def replace_version(version_obj):
     "Change version in file according to heuristics."
     newver = version_obj.version
     newver_filename = version_obj.filename_version
+    today = date.today()
     print('Updating source files to version {0}\n'.format(newver))
     for myfile in GREGORIO_FILES:
         result = []
@@ -142,6 +145,9 @@ def replace_version(version_obj):
                     result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
                 elif 'internalversion =' in line:
                     result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
+                elif 'PARSE_VERSION_DATE' in line:
+                    newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
+                    result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%d/%m/%y"), newline, 1))
                 else:
                     result.append(line)
         with open(myfile, 'w') as outfile:
