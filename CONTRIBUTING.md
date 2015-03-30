@@ -47,7 +47,8 @@ Gregorio targets the following:
  * C standard: [ISO C99 Standard](http://en.wikipedia.org/wiki/C99)
  * compilers: [gcc](https://gcc.gnu.org/) and [clang](http://clang.llvm.org/)
  * architectures: `i586`, `amd64`, `arm`, `arm64`
- * libraries: [`glibc`](http://www.gnu.org/software/libc/)
+ * under Linux, only [`glibc`](http://www.gnu.org/software/libc/)
+ * must compile under Mac OSX natively, and under [mingw32](http://www.mingw.org/) and [mingw_w64](https://sourceforge.net/projects/mingw-w64/)
 
 Specific C extensions (GNU extensions, C11, etc.) working for all the above targets are allowed on a case-by-case basis. Patches for other compilers, architectures or libraries can be accepted if they are clean, small and non-intrusive.
 
