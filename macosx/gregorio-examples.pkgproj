@@ -434,7 +434,7 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>contrib/900_gregorio.xml</string>
+														<string>examples/main-lualatex.tex</string>
 														<key>PATH_TYPE</key>
 														<integer>3</integer>
 														<key>PERMISSIONS</key>
@@ -450,289 +450,11 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>contrib/gabc-syntax.plist</string>
+														<string>examples/PopulusSion.gabc</string>
 														<key>PATH_TYPE</key>
 														<integer>3</integer>
 														<key>PERMISSIONS</key>
 														<integer>438</integer>
-														<key>TYPE</key>
-														<integer>3</integer>
-														<key>UID</key>
-														<integer>0</integer>
-													</dict>
-													<dict>
-														<key>CHILDREN</key>
-														<array/>
-														<key>GID</key>
-														<integer>0</integer>
-														<key>PATH</key>
-														<string>contrib/gabc.lang</string>
-														<key>PATH_TYPE</key>
-														<integer>3</integer>
-														<key>PERMISSIONS</key>
-														<integer>438</integer>
-														<key>TYPE</key>
-														<integer>3</integer>
-														<key>UID</key>
-														<integer>0</integer>
-													</dict>
-													<dict>
-														<key>CHILDREN</key>
-														<array/>
-														<key>GID</key>
-														<integer>0</integer>
-														<key>PATH</key>
-														<string>contrib/gabc.vim</string>
-														<key>PATH_TYPE</key>
-														<integer>3</integer>
-														<key>PERMISSIONS</key>
-														<integer>438</integer>
-														<key>TYPE</key>
-														<integer>3</integer>
-														<key>UID</key>
-														<integer>0</integer>
-													</dict>
-													<dict>
-														<key>CHILDREN</key>
-														<array/>
-														<key>GID</key>
-														<integer>0</integer>
-														<key>PATH</key>
-														<string>contrib/gabc.xml</string>
-														<key>PATH_TYPE</key>
-														<integer>3</integer>
-														<key>PERMISSIONS</key>
-														<integer>438</integer>
-														<key>TYPE</key>
-														<integer>3</integer>
-														<key>UID</key>
-														<integer>0</integer>
-													</dict>
-													<dict>
-														<key>CHILDREN</key>
-														<array/>
-														<key>GID</key>
-														<integer>0</integer>
-														<key>PATH</key>
-														<string>contrib/gprocess</string>
-														<key>PATH_TYPE</key>
-														<integer>3</integer>
-														<key>PERMISSIONS</key>
-														<integer>511</integer>
-														<key>TYPE</key>
-														<integer>3</integer>
-														<key>UID</key>
-														<integer>0</integer>
-													</dict>
-													<dict>
-														<key>CHILDREN</key>
-														<array/>
-														<key>GID</key>
-														<integer>0</integer>
-														<key>PATH</key>
-														<string>contrib/gregorio-scribus.lua</string>
-														<key>PATH_TYPE</key>
-														<integer>3</integer>
-														<key>PERMISSIONS</key>
-														<integer>438</integer>
-														<key>TYPE</key>
-														<integer>3</integer>
-														<key>UID</key>
-														<integer>0</integer>
-													</dict>
-													<dict>
-														<key>CHILDREN</key>
-														<array/>
-														<key>GID</key>
-														<integer>0</integer>
-														<key>PATH</key>
-														<string>contrib/gregorio.png</string>
-														<key>PATH_TYPE</key>
-														<integer>3</integer>
-														<key>PERMISSIONS</key>
-														<integer>438</integer>
-														<key>TYPE</key>
-														<integer>3</integer>
-														<key>UID</key>
-														<integer>0</integer>
-													</dict>
-													<dict>
-														<key>CHILDREN</key>
-														<array/>
-														<key>GID</key>
-														<integer>0</integer>
-														<key>PATH</key>
-														<string>contrib/README.md</string>
-														<key>PATH_TYPE</key>
-														<integer>3</integer>
-														<key>PERMISSIONS</key>
-														<integer>438</integer>
-														<key>TYPE</key>
-														<integer>3</integer>
-														<key>UID</key>
-														<integer>0</integer>
-													</dict>
-													<dict>
-														<key>CHILDREN</key>
-														<array>
-															<dict>
-																<key>CHILDREN</key>
-																<array/>
-																<key>GID</key>
-																<integer>0</integer>
-																<key>PATH</key>
-																<string>contrib/TeXShop/greg-book.engine</string>
-																<key>PATH_TYPE</key>
-																<integer>3</integer>
-																<key>PERMISSIONS</key>
-																<integer>493</integer>
-																<key>TYPE</key>
-																<integer>3</integer>
-																<key>UID</key>
-																<integer>0</integer>
-															</dict>
-															<dict>
-																<key>CHILDREN</key>
-																<array/>
-																<key>GID</key>
-																<integer>0</integer>
-																<key>PATH</key>
-																<string>contrib/TeXShop/greg-lily-book.engine</string>
-																<key>PATH_TYPE</key>
-																<integer>3</integer>
-																<key>PERMISSIONS</key>
-																<integer>493</integer>
-																<key>TYPE</key>
-																<integer>3</integer>
-																<key>UID</key>
-																<integer>0</integer>
-															</dict>
-															<dict>
-																<key>CHILDREN</key>
-																<array/>
-																<key>GID</key>
-																<integer>0</integer>
-																<key>PATH</key>
-																<string>contrib/TeXShop/gregorio.engine</string>
-																<key>PATH_TYPE</key>
-																<integer>3</integer>
-																<key>PERMISSIONS</key>
-																<integer>493</integer>
-																<key>TYPE</key>
-																<integer>3</integer>
-																<key>UID</key>
-																<integer>0</integer>
-															</dict>
-															<dict>
-																<key>CHILDREN</key>
-																<array/>
-																<key>GID</key>
-																<integer>0</integer>
-																<key>PATH</key>
-																<string>contrib/TeXShop/gregorio.scpt</string>
-																<key>PATH_TYPE</key>
-																<integer>3</integer>
-																<key>PERMISSIONS</key>
-																<integer>420</integer>
-																<key>TYPE</key>
-																<integer>3</integer>
-																<key>UID</key>
-																<integer>0</integer>
-															</dict>
-															<dict>
-																<key>CHILDREN</key>
-																<array/>
-																<key>GID</key>
-																<integer>0</integer>
-																<key>PATH</key>
-																<string>contrib/TeXShop/LuaLaTeX+se.engine</string>
-																<key>PATH_TYPE</key>
-																<integer>3</integer>
-																<key>PERMISSIONS</key>
-																<integer>493</integer>
-																<key>TYPE</key>
-																<integer>3</integer>
-																<key>UID</key>
-																<integer>0</integer>
-															</dict>
-														</array>
-														<key>EXPANDED</key>
-														<true/>
-														<key>GID</key>
-														<integer>0</integer>
-														<key>PATH</key>
-														<string>contrib/TeXShop</string>
-														<key>PATH_TYPE</key>
-														<integer>3</integer>
-														<key>PERMISSIONS</key>
-														<integer>511</integer>
-														<key>TYPE</key>
-														<integer>3</integer>
-														<key>UID</key>
-														<integer>0</integer>
-													</dict>
-													<dict>
-														<key>CHILDREN</key>
-														<array>
-															<dict>
-																<key>CHILDREN</key>
-																<array/>
-																<key>GID</key>
-																<integer>0</integer>
-																<key>PATH</key>
-																<string>contrib/TeXworks/Mac OSX/greg-book.engine</string>
-																<key>PATH_TYPE</key>
-																<integer>3</integer>
-																<key>PERMISSIONS</key>
-																<integer>493</integer>
-																<key>TYPE</key>
-																<integer>3</integer>
-																<key>UID</key>
-																<integer>0</integer>
-															</dict>
-															<dict>
-																<key>CHILDREN</key>
-																<array/>
-																<key>GID</key>
-																<integer>0</integer>
-																<key>PATH</key>
-																<string>contrib/TeXworks/Mac OSX/greg-lily-book.engine</string>
-																<key>PATH_TYPE</key>
-																<integer>3</integer>
-																<key>PERMISSIONS</key>
-																<integer>493</integer>
-																<key>TYPE</key>
-																<integer>3</integer>
-																<key>UID</key>
-																<integer>0</integer>
-															</dict>
-															<dict>
-																<key>CHILDREN</key>
-																<array/>
-																<key>GID</key>
-																<integer>0</integer>
-																<key>PATH</key>
-																<string>contrib/TeXworks/Mac OSX/gregorio.engine</string>
-																<key>PATH_TYPE</key>
-																<integer>3</integer>
-																<key>PERMISSIONS</key>
-																<integer>493</integer>
-																<key>TYPE</key>
-																<integer>3</integer>
-																<key>UID</key>
-																<integer>0</integer>
-															</dict>
-														</array>
-														<key>EXPANDED</key>
-														<true/>
-														<key>GID</key>
-														<integer>0</integer>
-														<key>PATH</key>
-														<string>contrib/TeXworks</string>
-														<key>PATH_TYPE</key>
-														<integer>3</integer>
-														<key>PERMISSIONS</key>
-														<integer>511</integer>
 														<key>TYPE</key>
 														<integer>3</integer>
 														<key>UID</key>
@@ -744,7 +466,7 @@
 												<key>GID</key>
 												<integer>0</integer>
 												<key>PATH</key>
-												<string>contrib</string>
+												<string>examples</string>
 												<key>PATH_TYPE</key>
 												<integer>3</integer>
 												<key>PERMISSIONS</key>
@@ -822,7 +544,7 @@
 			<key>CONCLUSION_ACTION</key>
 			<integer>0</integer>
 			<key>IDENTIFIER</key>
-			<string>com.gregorio.pkg.gregorio-contrib</string>
+			<string>com.gregorio.pkg.gregorio-examples</string>
 			<key>OVERWRITE_PERMISSIONS</key>
 			<false/>
 			<key>RELOCATABLE</key>
@@ -846,12 +568,12 @@
 			eXBlPSJ0ZXh0L2NzcyI+CnAucDEge21hcmdpbjogMC4wcHggMC4w
 			cHggMC4wcHggMC4wcHg7IGZvbnQ6IDEyLjBweCBIZWx2ZXRpY2F9
 			Cjwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+CjxwIGNsYXNzPSJwMSI+
-			VGhpcyBwYWNrYWdlIGluc3RhbGxzIHRoZSB2YXJpb3VzIGNvbnRy
-			aWJ1dGVkIGFkZC1vbnMgdG8gR3JlZ29yaW8uPHNwYW4gY2xhc3M9
-			IkFwcGxlLWNvbnZlcnRlZC1zcGFjZSI+wqAgPC9zcGFuPllvdSds
-			bCBmaW5kIHN0dWZmIHRvIGhlbHAgeW91IGNvbmZpZ3VyZSB5b3Vy
-			IGZhdm9yaXRlIFRlWCBlZGl0b3IgdG8gdXNlIEdyZWdvcmlvIGhl
-			cmUuPC9wPgo8L2JvZHk+CjwvaHRtbD4K
+			VGhpcyBwYWNrYWdlIGluc3RhbGxzIHRoZSBleGFtcGxlcyBkaXJl
+			Y3RvcnkgZm9yIEdyZWdvcmlvLjxzcGFuIGNsYXNzPSJBcHBsZS1j
+			b252ZXJ0ZWQtc3BhY2UiPsKgIDwvc3Bhbj5Zb3UnbGwgZmluZCBh
+			IHNhbXBsZSBwcm9qZWN0IGhlcmUsIGluY2x1ZGluZyBib3RoIHRo
+			ZSBnYWJjIGZpbGUgYW5kIHRoZSBMdWFMYVRlWCBwcm9qZWN0IGZp
+			bGUuPC9wPgo8L2JvZHk+CjwvaHRtbD4K
 			</data>
 		</dict>
 		<key>PROJECT_SETTINGS</key>
@@ -1032,7 +754,7 @@
 				</dict>
 			</array>
 			<key>NAME</key>
-			<string>gregorio-contrib</string>
+			<string>gregorio-examples</string>
 			<key>REFERENCE_FOLDER_PATH</key>
 			<string>/Users/RPS/Documents/Programming/gregorio</string>
 		</dict>

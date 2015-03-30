@@ -593,9 +593,9 @@
 												<key>GID</key>
 												<integer>0</integer>
 												<key>PATH</key>
-												<string>build/usr/local/bin/gregorio</string>
+												<string>macosx/build/usr/local/bin/gregorio</string>
 												<key>PATH_TYPE</key>
-												<integer>1</integer>
+												<integer>3</integer>
 												<key>PERMISSIONS</key>
 												<integer>493</integer>
 												<key>TYPE</key>
@@ -629,9 +629,9 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>build/usr/local/include/gregorio/characters.h</string>
+														<string>macosx/build/usr/local/include/gregorio/characters.h</string>
 														<key>PATH_TYPE</key>
-														<integer>1</integer>
+														<integer>3</integer>
 														<key>PERMISSIONS</key>
 														<integer>420</integer>
 														<key>TYPE</key>
@@ -645,9 +645,9 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>build/usr/local/include/gregorio/messages.h</string>
+														<string>macosx/build/usr/local/include/gregorio/messages.h</string>
 														<key>PATH_TYPE</key>
-														<integer>1</integer>
+														<integer>3</integer>
 														<key>PERMISSIONS</key>
 														<integer>420</integer>
 														<key>TYPE</key>
@@ -661,9 +661,9 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>build/usr/local/include/gregorio/plugin.h</string>
+														<string>macosx/build/usr/local/include/gregorio/plugin.h</string>
 														<key>PATH_TYPE</key>
-														<integer>1</integer>
+														<integer>3</integer>
 														<key>PERMISSIONS</key>
 														<integer>420</integer>
 														<key>TYPE</key>
@@ -677,9 +677,9 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>build/usr/local/include/gregorio/plugin_loader.h</string>
+														<string>macosx/build/usr/local/include/gregorio/plugin_loader.h</string>
 														<key>PATH_TYPE</key>
-														<integer>1</integer>
+														<integer>3</integer>
 														<key>PERMISSIONS</key>
 														<integer>420</integer>
 														<key>TYPE</key>
@@ -693,9 +693,9 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>build/usr/local/include/gregorio/plugins.h</string>
+														<string>macosx/build/usr/local/include/gregorio/plugins.h</string>
 														<key>PATH_TYPE</key>
-														<integer>1</integer>
+														<integer>3</integer>
 														<key>PERMISSIONS</key>
 														<integer>420</integer>
 														<key>TYPE</key>
@@ -709,9 +709,9 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>build/usr/local/include/gregorio/struct.h</string>
+														<string>macosx/build/usr/local/include/gregorio/struct.h</string>
 														<key>PATH_TYPE</key>
-														<integer>1</integer>
+														<integer>3</integer>
 														<key>PERMISSIONS</key>
 														<integer>420</integer>
 														<key>TYPE</key>
@@ -725,9 +725,9 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>build/usr/local/include/gregorio/unicode.h</string>
+														<string>macosx/build/usr/local/include/gregorio/unicode.h</string>
 														<key>PATH_TYPE</key>
-														<integer>1</integer>
+														<integer>3</integer>
 														<key>PERMISSIONS</key>
 														<integer>420</integer>
 														<key>TYPE</key>
@@ -741,9 +741,9 @@
 												<key>GID</key>
 												<integer>0</integer>
 												<key>PATH</key>
-												<string>build/usr/local/include/gregorio</string>
+												<string>macosx/build/usr/local/include/gregorio</string>
 												<key>PATH_TYPE</key>
-												<integer>1</integer>
+												<integer>3</integer>
 												<key>PERMISSIONS</key>
 												<integer>493</integer>
 												<key>TYPE</key>
@@ -757,9 +757,9 @@
 										<key>GID</key>
 										<integer>0</integer>
 										<key>PATH</key>
-										<string>build/usr/local/include</string>
+										<string>macosx/build/usr/local/include</string>
 										<key>PATH_TYPE</key>
-										<integer>1</integer>
+										<integer>3</integer>
 										<key>PERMISSIONS</key>
 										<integer>493</integer>
 										<key>TYPE</key>
@@ -779,9 +779,9 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>build/usr/local/lib/pkgconfig/gregorio.pc</string>
+														<string>macosx/build/usr/local/lib/pkgconfig/gregorio.pc</string>
 														<key>PATH_TYPE</key>
-														<integer>1</integer>
+														<integer>3</integer>
 														<key>PERMISSIONS</key>
 														<integer>420</integer>
 														<key>TYPE</key>
@@ -795,9 +795,9 @@
 												<key>GID</key>
 												<integer>0</integer>
 												<key>PATH</key>
-												<string>build/usr/local/lib/pkgconfig</string>
+												<string>macosx/build/usr/local/lib/pkgconfig</string>
 												<key>PATH_TYPE</key>
-												<integer>1</integer>
+												<integer>3</integer>
 												<key>PERMISSIONS</key>
 												<integer>493</integer>
 												<key>TYPE</key>
@@ -811,9 +811,9 @@
 										<key>GID</key>
 										<integer>0</integer>
 										<key>PATH</key>
-										<string>build/usr/local/lib</string>
+										<string>macosx/build/usr/local/lib</string>
 										<key>PATH_TYPE</key>
-										<integer>1</integer>
+										<integer>3</integer>
 										<key>PERMISSIONS</key>
 										<integer>493</integer>
 										<key>TYPE</key>
@@ -842,9 +842,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/doc/luatex/gregoriotex/README.md</string>
+																				<string>macosx/build/doc/luatex/gregoriotex/README.md</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -858,9 +858,9 @@
 																		<key>GID</key>
 																		<integer>0</integer>
 																		<key>PATH</key>
-																		<string>build/doc/luatex/gregoriotex</string>
+																		<string>macosx/build/doc/luatex/gregoriotex</string>
 																		<key>PATH_TYPE</key>
-																		<integer>1</integer>
+																		<integer>3</integer>
 																		<key>PERMISSIONS</key>
 																		<integer>493</integer>
 																		<key>TYPE</key>
@@ -874,9 +874,9 @@
 																<key>GID</key>
 																<integer>0</integer>
 																<key>PATH</key>
-																<string>build/doc/luatex</string>
+																<string>macosx/build/doc/luatex</string>
 																<key>PATH_TYPE</key>
-																<integer>1</integer>
+																<integer>3</integer>
 																<key>PERMISSIONS</key>
 																<integer>493</integer>
 																<key>TYPE</key>
@@ -890,9 +890,9 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>build/doc</string>
+														<string>macosx/build/doc</string>
 														<key>PATH_TYPE</key>
-														<integer>1</integer>
+														<integer>3</integer>
 														<key>PERMISSIONS</key>
 														<integer>493</integer>
 														<key>TYPE</key>
@@ -915,9 +915,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/fonts/source/gregoriotex/convertsfdtottf.py</string>
+																				<string>macosx/build/fonts/source/gregoriotex/convertsfdtottf.py</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>493</integer>
 																				<key>TYPE</key>
@@ -931,9 +931,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/fonts/source/gregoriotex/greciliae-base.sfd</string>
+																				<string>macosx/build/fonts/source/gregoriotex/greciliae-base.sfd</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -947,9 +947,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/fonts/source/gregoriotex/greextra.sfd</string>
+																				<string>macosx/build/fonts/source/gregoriotex/greextra.sfd</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -963,9 +963,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/fonts/source/gregoriotex/gregorio-base.sfd</string>
+																				<string>macosx/build/fonts/source/gregoriotex/gregorio-base.sfd</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -979,9 +979,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/fonts/source/gregoriotex/gresym.sfd</string>
+																				<string>macosx/build/fonts/source/gregoriotex/gresym.sfd</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -995,9 +995,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/fonts/source/gregoriotex/Makefile</string>
+																				<string>macosx/build/fonts/source/gregoriotex/Makefile</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1011,9 +1011,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/fonts/source/gregoriotex/parmesan-base.sfd</string>
+																				<string>macosx/build/fonts/source/gregoriotex/parmesan-base.sfd</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1027,9 +1027,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/fonts/source/gregoriotex/squarize.py</string>
+																				<string>macosx/build/fonts/source/gregoriotex/squarize.py</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>493</integer>
 																				<key>TYPE</key>
@@ -1043,9 +1043,9 @@
 																		<key>GID</key>
 																		<integer>0</integer>
 																		<key>PATH</key>
-																		<string>build/fonts/source/gregoriotex</string>
+																		<string>macosx/build/fonts/source/gregoriotex</string>
 																		<key>PATH_TYPE</key>
-																		<integer>1</integer>
+																		<integer>3</integer>
 																		<key>PERMISSIONS</key>
 																		<integer>493</integer>
 																		<key>TYPE</key>
@@ -1059,9 +1059,9 @@
 																<key>GID</key>
 																<integer>0</integer>
 																<key>PATH</key>
-																<string>build/fonts/source</string>
+																<string>macosx/build/fonts/source</string>
 																<key>PATH_TYPE</key>
-																<integer>1</integer>
+																<integer>3</integer>
 																<key>PERMISSIONS</key>
 																<integer>493</integer>
 																<key>TYPE</key>
@@ -1084,9 +1084,9 @@
 																						<key>GID</key>
 																						<integer>0</integer>
 																						<key>PATH</key>
-																						<string>build/fonts/truetype/public/gregoriotex/greciliae.ttf</string>
+																						<string>macosx/build/fonts/truetype/public/gregoriotex/greciliae.ttf</string>
 																						<key>PATH_TYPE</key>
-																						<integer>1</integer>
+																						<integer>3</integer>
 																						<key>PERMISSIONS</key>
 																						<integer>420</integer>
 																						<key>TYPE</key>
@@ -1100,9 +1100,9 @@
 																						<key>GID</key>
 																						<integer>0</integer>
 																						<key>PATH</key>
-																						<string>build/fonts/truetype/public/gregoriotex/greextra.ttf</string>
+																						<string>macosx/build/fonts/truetype/public/gregoriotex/greextra.ttf</string>
 																						<key>PATH_TYPE</key>
-																						<integer>1</integer>
+																						<integer>3</integer>
 																						<key>PERMISSIONS</key>
 																						<integer>420</integer>
 																						<key>TYPE</key>
@@ -1116,9 +1116,9 @@
 																						<key>GID</key>
 																						<integer>0</integer>
 																						<key>PATH</key>
-																						<string>build/fonts/truetype/public/gregoriotex/gregorio.ttf</string>
+																						<string>macosx/build/fonts/truetype/public/gregoriotex/gregorio.ttf</string>
 																						<key>PATH_TYPE</key>
-																						<integer>1</integer>
+																						<integer>3</integer>
 																						<key>PERMISSIONS</key>
 																						<integer>420</integer>
 																						<key>TYPE</key>
@@ -1132,9 +1132,9 @@
 																						<key>GID</key>
 																						<integer>0</integer>
 																						<key>PATH</key>
-																						<string>build/fonts/truetype/public/gregoriotex/gresym.ttf</string>
+																						<string>macosx/build/fonts/truetype/public/gregoriotex/gresym.ttf</string>
 																						<key>PATH_TYPE</key>
-																						<integer>1</integer>
+																						<integer>3</integer>
 																						<key>PERMISSIONS</key>
 																						<integer>420</integer>
 																						<key>TYPE</key>
@@ -1148,9 +1148,9 @@
 																						<key>GID</key>
 																						<integer>0</integer>
 																						<key>PATH</key>
-																						<string>build/fonts/truetype/public/gregoriotex/parmesan.ttf</string>
+																						<string>macosx/build/fonts/truetype/public/gregoriotex/parmesan.ttf</string>
 																						<key>PATH_TYPE</key>
-																						<integer>1</integer>
+																						<integer>3</integer>
 																						<key>PERMISSIONS</key>
 																						<integer>420</integer>
 																						<key>TYPE</key>
@@ -1164,9 +1164,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/fonts/truetype/public/gregoriotex</string>
+																				<string>macosx/build/fonts/truetype/public/gregoriotex</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>493</integer>
 																				<key>TYPE</key>
@@ -1180,9 +1180,9 @@
 																		<key>GID</key>
 																		<integer>0</integer>
 																		<key>PATH</key>
-																		<string>build/fonts/truetype/public</string>
+																		<string>macosx/build/fonts/truetype/public</string>
 																		<key>PATH_TYPE</key>
-																		<integer>1</integer>
+																		<integer>3</integer>
 																		<key>PERMISSIONS</key>
 																		<integer>493</integer>
 																		<key>TYPE</key>
@@ -1196,9 +1196,9 @@
 																<key>GID</key>
 																<integer>0</integer>
 																<key>PATH</key>
-																<string>build/fonts/truetype</string>
+																<string>macosx/build/fonts/truetype</string>
 																<key>PATH_TYPE</key>
-																<integer>1</integer>
+																<integer>3</integer>
 																<key>PERMISSIONS</key>
 																<integer>493</integer>
 																<key>TYPE</key>
@@ -1212,9 +1212,9 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>build/fonts</string>
+														<string>macosx/build/fonts</string>
 														<key>PATH_TYPE</key>
-														<integer>1</integer>
+														<integer>3</integer>
 														<key>PERMISSIONS</key>
 														<integer>493</integer>
 														<key>TYPE</key>
@@ -1237,9 +1237,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/gregoriosyms.sty</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/gregoriosyms.sty</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1253,9 +1253,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/gregoriotex-chars-translate.lua</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/gregoriotex-chars-translate.lua</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>493</integer>
 																				<key>TYPE</key>
@@ -1269,9 +1269,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/gregoriotex-chars.tex</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/gregoriotex-chars.tex</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1285,9 +1285,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/gregoriotex-ictus.lua</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/gregoriotex-ictus.lua</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1301,9 +1301,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/gregoriotex-signs.tex</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/gregoriotex-signs.tex</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1317,9 +1317,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/gregoriotex-spaces.tex</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/gregoriotex-spaces.tex</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1333,9 +1333,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/gregoriotex-syllable.tex</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/gregoriotex-syllable.tex</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1349,9 +1349,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/gregoriotex-symbols.tex</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/gregoriotex-symbols.tex</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1365,9 +1365,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/gregoriotex.lua</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/gregoriotex.lua</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1381,9 +1381,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/gregoriotex.sty</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/gregoriotex.sty</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1397,9 +1397,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/gregoriotex.tex</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/gregoriotex.tex</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1413,9 +1413,9 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/gsp-default.tex</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/gsp-default.tex</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>420</integer>
 																				<key>TYPE</key>
@@ -1429,27 +1429,27 @@
 																				<key>GID</key>
 																				<integer>0</integer>
 																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/optimize_gabc_style.lua</string>
+																				<string>macosx/build/tex/luatex/gregoriotex/optimize_gabc.lua</string>
 																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
+																				<integer>3</integer>
+																				<key>PERMISSIONS</key>
+																				<integer>420</integer>
+																				<key>TYPE</key>
+																				<integer>3</integer>
+																				<key>UID</key>
+																				<integer>0</integer>
+																			</dict>
+																			<dict>
+																				<key>CHILDREN</key>
+																				<array/>
+																				<key>GID</key>
+																				<integer>0</integer>
+																				<key>PATH</key>
+																				<string>macosx/build/tex/luatex/gregoriotex/optimize_gabc_style.lua</string>
+																				<key>PATH_TYPE</key>
+																				<integer>3</integer>
 																				<key>PERMISSIONS</key>
 																				<integer>493</integer>
-																				<key>TYPE</key>
-																				<integer>3</integer>
-																				<key>UID</key>
-																				<integer>0</integer>
-																			</dict>
-																			<dict>
-																				<key>CHILDREN</key>
-																				<array/>
-																				<key>GID</key>
-																				<integer>0</integer>
-																				<key>PATH</key>
-																				<string>build/tex/luatex/gregoriotex/optimize_gabc.lua</string>
-																				<key>PATH_TYPE</key>
-																				<integer>1</integer>
-																				<key>PERMISSIONS</key>
-																				<integer>420</integer>
 																				<key>TYPE</key>
 																				<integer>3</integer>
 																				<key>UID</key>
@@ -1461,9 +1461,9 @@
 																		<key>GID</key>
 																		<integer>0</integer>
 																		<key>PATH</key>
-																		<string>build/tex/luatex/gregoriotex</string>
+																		<string>macosx/build/tex/luatex/gregoriotex</string>
 																		<key>PATH_TYPE</key>
-																		<integer>1</integer>
+																		<integer>3</integer>
 																		<key>PERMISSIONS</key>
 																		<integer>493</integer>
 																		<key>TYPE</key>
@@ -1477,9 +1477,9 @@
 																<key>GID</key>
 																<integer>0</integer>
 																<key>PATH</key>
-																<string>build/tex/luatex</string>
+																<string>macosx/build/tex/luatex</string>
 																<key>PATH_TYPE</key>
-																<integer>1</integer>
+																<integer>3</integer>
 																<key>PERMISSIONS</key>
 																<integer>493</integer>
 																<key>TYPE</key>
@@ -1493,9 +1493,9 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>build/tex</string>
+														<string>macosx/build/tex</string>
 														<key>PATH_TYPE</key>
-														<integer>1</integer>
+														<integer>3</integer>
 														<key>PERMISSIONS</key>
 														<integer>493</integer>
 														<key>TYPE</key>
@@ -1837,6 +1837,8 @@
 			</array>
 			<key>NAME</key>
 			<string>gregorio-base</string>
+			<key>REFERENCE_FOLDER_PATH</key>
+			<string>/Users/RPS/Documents/Programming/gregorio</string>
 		</dict>
 	</dict>
 	<key>TYPE</key>
