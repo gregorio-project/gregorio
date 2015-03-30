@@ -108,6 +108,7 @@ class Version(object):
     def update_version(self, newversion):
         "Update self.version and .gregorio-version with the new version."
         self.version = newversion
+        self.filename_version = self.filename_version_from_version(newversion)
         print('Updating {0} with the new version: {1}\n'.format(
             self.versionfile, self.version))
         with open(self.versionfile, 'w') as verfile:
@@ -125,19 +126,19 @@ def replace_version(version_obj):
         with open(myfile, 'r') as infile:
             for line in infile:
                 if 'AC_INIT([' in line:
-                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
+                    result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
                 elif 'AppVersion' in line:
-                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
+                    result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
                 elif 'FILENAME_VERSION' in line:
-                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
+                    result.append(re.sub(r'(\d+\_\d+\_\d+(?:[-+~]\w+)*)', newver_filename, line, 1))
                 elif 'FileVersion' in line:
-                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
+                    result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
                 elif 'ProductVersion' in line:
-                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
+                    result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
                 elif 'GREGORIO_VERSION' in line:
-                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
+                    result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
                 elif 'internalversion =' in line:
-                    result.append(re.sub(r'(\d+(?:\.\d+)+(?:-?\+?\w+)*)', newver, line, 1))
+                    result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
                 else:
                     result.append(line)
         with open(myfile, 'w') as outfile:
@@ -201,7 +202,7 @@ def bump_patch(version_obj):
 def set_manual_version(version_obj, user_version):
     "Changed the version number to a user supplied value"
     oldversion = version_obj.version
-    if not re.match(r'[\d.]{5,}-?\w*$', user_version):
+    if not re.match(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)$', user_version):
         print('Bad version string. Use this style: x.y.z or x.y.z-beta')
         sys.exit(1)
     newversion = user_version
