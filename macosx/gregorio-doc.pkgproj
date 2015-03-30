@@ -7,7 +7,7 @@
 		<key>PACKAGE_FILES</key>
 		<dict>
 			<key>DEFAULT_INSTALL_LOCATION</key>
-			<string>/</string>
+			<string>/Users/Shared</string>
 			<key>HIERARCHY</key>
 			<dict>
 				<key>CHILDREN</key>
@@ -689,7 +689,7 @@
 		<key>PACKAGE_SETTINGS</key>
 		<dict>
 			<key>AUTHENTICATION</key>
-			<integer>1</integer>
+			<false/>
 			<key>CONCLUSION_ACTION</key>
 			<integer>0</integer>
 			<key>IDENTIFIER</key>
