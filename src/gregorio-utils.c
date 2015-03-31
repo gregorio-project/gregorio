@@ -60,12 +60,6 @@ static char *define_path(char *current_directory, char *string)
     char *last_backslash;
 #endif
 
-    // case 1: file exists
-    file_name = realpath(string, NULL);
-    if (file_name) {
-        return file_name;
-    }
-    // case 2: file doesn't exist
     file_name = malloc(PATH_MAX * sizeof(char));
 
     strcpy(temp_name, string);
