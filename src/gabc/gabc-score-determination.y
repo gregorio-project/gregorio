@@ -39,6 +39,8 @@
 // request translation to the user native language for bison
 #define YYENABLE_NLS ENABLE_NLS
 
+#define YYLEX_PARAM &yylval
+
 // uncomment it if you want to have an interactive shell to understand the
 // details on how bison works for a certain input
 // int gabc_score_determination_debug=1;

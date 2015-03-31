@@ -17,24 +17,39 @@ endif
 
 # gabc files
 gregorio_SOURCES += gabc/gabc-elements-determination.c gabc/gabc-write.c \
-				  gabc/gabc-glyphs-determination.c gabc/gabc.h \
-				  gabc/gabc-score-determination-l.h gabc/gabc-score-determination.h
+					gabc/gabc-glyphs-determination.c gabc/gabc.h \
+					gabc/gabc-score-determination.h
 nodist_gregorio_SOURCES = gabc/gabc-score-determination-l.c \
 						 gabc/gabc-notes-determination-l.c \
-						 gabc/gabc-score-determination-y.c
+						 gabc/gabc-score-determination-l.h \
+						 gabc/gabc-score-determination-y.c \
+						 gabc/gabc-score-determination-y.h
 gregorio_LDADD = @LEXLIB@
 
 EXTRA_DIST = gabc/gabc-score-determination.l gabc/gabc-score-determination.y \
 			 gabc/gabc-notes-determination.l
 
-gabc/gabc-score-determination-l.c: gabc/gabc-score-determination.l gabc/gabc-score-determination-y.c
-	$(LEX) -o $@ $<
+gabc/gabc-score-determination-l.o: gabc/gabc-score-determination-l.c \
+								   gabc/gabc-score-determination.h \
+								   gabc/gabc-score-determination-y.h
 
+gabc/gabc-score-determination-l.h: gabc/gabc-score-determination-l.c
+gabc/gabc-score-determination-l.c: gabc/gabc-score-determination.l
+	$(LEX) -o $@ --header-file=gabc/gabc-score-determination-l.h $<
+
+gabc/gabc-score-determination-y.o: gabc/gabc-score-determination-y.c \
+								   gabc/gabc-score-determination.h \
+								   gabc/gabc-score-determination-l.h
+
+gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
 gabc/gabc-score-determination-y.c: gabc/gabc-score-determination.y
 	$(YACC) -d -p "gabc_score_determination_" -o $@ $<
 
 gabc/gabc-notes-determination-l.c: gabc/gabc-notes-determination.l
 	$(LEX) -o $@ $<
 
-CLEANFILES = gabc/gabc-score-determination-l.c gabc/gabc-score-determination-y.c \
-	gabc/gabc-notes-determination-l.c gabc/gabc-score-determination-y.h
+CLEANFILES = gabc/gabc-score-determination-l.c \
+			 gabc/gabc-notes-determination-l.c \
+			 gabc/gabc-score-determination-l.h \
+			 gabc/gabc-score-determination-y.c \
+			 gabc/gabc-score-determination-y.h
