@@ -716,11 +716,12 @@ gregorio_rebuild_characters(gregorio_character **param_character,
     // so, here we start: we go to the first_character
     if (gregorio_go_to_end_initial(&current_character)) {
         if (!current_character->next_character) {
-            // nothing else to rebuild, but we have to fake an empty ST_CENTER
-            gregorio_insert_style_after(ST_T_BEGIN, ST_CENTER,
-                                        &current_character);
+            // nothing else to rebuild, but the initial needs to be ST_CENTER
             gregorio_insert_style_after(ST_T_END, ST_CENTER,
                                         &current_character);
+            gregorio_go_to_first_character(&current_character);
+            gregorio_insert_style_before(ST_T_BEGIN, ST_CENTER,
+                                        current_character);
             gregorio_go_to_first_character(&current_character);
             (*param_character) = current_character;
             return;
