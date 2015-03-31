@@ -546,7 +546,7 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>doc/README.md</string>
+														<string>doc/GregorioRef-3_0_0-beta.pdf</string>
 														<key>PATH_TYPE</key>
 														<integer>3</integer>
 														<key>PERMISSIONS</key>
@@ -562,7 +562,23 @@
 														<key>GID</key>
 														<integer>0</integer>
 														<key>PATH</key>
-														<string>doc/UserManual.tex</string>
+														<string>doc/GregorioRef.tex</string>
+														<key>PATH_TYPE</key>
+														<integer>3</integer>
+														<key>PERMISSIONS</key>
+														<integer>438</integer>
+														<key>TYPE</key>
+														<integer>3</integer>
+														<key>UID</key>
+														<integer>0</integer>
+													</dict>
+													<dict>
+														<key>CHILDREN</key>
+														<array/>
+														<key>GID</key>
+														<integer>0</integer>
+														<key>PATH</key>
+														<string>doc/README.md</string>
 														<key>PATH_TYPE</key>
 														<integer>3</integer>
 														<key>PERMISSIONS</key>

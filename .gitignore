@@ -90,7 +90,7 @@ auto/
 *.deb
 
 #gregorio specific
-doc/_minted-UserManual
+doc/_minted-*
 fonts/*.ttf
 *.gz
 *.zip
