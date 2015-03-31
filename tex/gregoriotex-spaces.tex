@@ -486,7 +486,7 @@
 
 %% macros for additional bottom space for the first line
 
-% #1 is 1, 2 or 3, with the same signification as in grenewlinewithspace
+% #1 is 1, 2, 3, or 4, with the same signification as in grenewlinewithspace
 \def\grefirstlinebottomspace#1#2{%
   \ifcase#1\relax %
     % case 0
@@ -498,6 +498,9 @@
     \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
   \or % case 3
     \global\gre@dimen@additionalbottomspace=30000 sp%
+    \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
+  \or % case 4
+    \global\gre@dimen@additionalbottomspace=45000 sp%
     \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
   \fi %
   \ifnum#2=1\relax %
