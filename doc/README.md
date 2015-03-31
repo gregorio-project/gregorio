@@ -1,8 +1,10 @@
 Documentation for gregorio and gregoriotex
 ==========================================
 
-Currently this manual is primarily intended for developers. Users
-should not expect to find an indepth guide on using gregorio.
+This folder contains the source files of a manual is primarily intended for
+developers. Users should not expect to find an indepth guide on using gregorio.
+
+You can find a compiled PDF version in the files of each [Gregorio release](https://github.com/gregorio-project/gregorio/releases).
 
 Developers can use this manual as a reference for information on the
 internal workings of gregorio.
