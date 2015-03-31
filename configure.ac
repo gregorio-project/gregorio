@@ -23,7 +23,7 @@ AC_CONFIG_SRCDIR([src/gregorio-utils.c])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([subdir-objects foreign])
+AM_INIT_AUTOMAKE([subdir-objects foreign dist-xz no-dist-gzip])
 
 AC_PROG_CC
 AC_PROG_CC_STDC
