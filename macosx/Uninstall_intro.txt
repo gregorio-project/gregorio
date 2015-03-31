@@ -1,0 +1,1 @@
+This package will remove the system components of Gregorio.  It will not remove any project files, nor will it remove the optional items (contributed add-ons, documentation, and example project) which may have been installed at the same time.
