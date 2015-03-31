@@ -92,12 +92,4 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
 
 void gregorio_rebuild_first_syllable(gregorio_character **param_character);
 
-void gregorio_write_one_tex_char_old(FILE *f, grewchar to_print);
-
-void gregorio_write_one_tex_char(FILE *f, grewchar to_print);
-
-void gregorio_write_one_tex_char_utf(FILE *f, grewchar to_print);
-
-void gregorio_set_tex_write(unsigned char new);
-
 #endif

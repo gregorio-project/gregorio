@@ -168,7 +168,6 @@ static void print_usage(char *name)
 \t-o file    writes output to specified file\n\
 \t-S         writes output to stdout\n\
 \t-F format  specifies output file format (default: gtex)\n\
-\t-O         write two-bytes characters as \\char %%d instead of utf8 in TeX (deprecated)\n\
 \t-l file    writes messages output to specified file (default: stderr)\n\
 \t-f format  specifies input file format (default: gabc)\n\
 \t-s         reads input from stdin\n\
@@ -220,7 +219,6 @@ int main(int argc, char **argv)
         {"messages-file", 1, 0, 'l'},
         {"input-format", 1, 0, 'f'},
         {"stdin", 0, 0, 's'},
-        {"old-style-tex", 0, 0, 'O'},
         {"help", 0, 0, 'h'},
         {"version", 0, 0, 'V'},
         {"licence", 0, 0, 'L'},
@@ -235,12 +233,6 @@ int main(int argc, char **argv)
     }
     setlocale(LC_CTYPE, "C");
     current_directory = getcwd(current_directory, PATH_MAX);
-
-#if ENABLE_NLS == 1
-    bindtextdomain(PACKAGE, LOCALEDIR);
-    bind_textdomain_codeset(PACKAGE, "UTF-8");
-    textdomain(PACKAGE);
-#endif
 
     if (current_directory == NULL) {
         fprintf(stderr, _("can't determine current directory"));
@@ -280,11 +272,6 @@ int main(int argc, char **argv)
                 break;
             }
             output_file = stdout;
-            break;
-        case 'O':
-            fprintf(stderr,
-                    "Warning: -O option is deprecated, it will be removed in next release.\nIf you use it, please tell the mailing list.\n");
-            gregorio_set_tex_write(WRITE_OLD_TEX);
             break;
         case 'F':
             if (output_format) {

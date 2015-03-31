@@ -1037,7 +1037,7 @@ void gtex_print_char(FILE *f, grewchar to_print)
         fprintf(f, "\\grehyph{}");
         break;
     default:
-        gregorio_write_one_tex_char(f, to_print);
+        gregorio_print_unichar(f, to_print);
         break;
     }
     return;
