@@ -33,11 +33,12 @@
 #include "characters.h"
 
 #include "gabc.h"
+
+int gabc_score_determination_lex();
+#define YY_DECL int gabc_score_determination_lex()
+
 #include "gabc-score-determination.h"
 #include "gabc-score-determination-l.h"
-
-// request translation to the user native language for bison
-#define YYENABLE_NLS ENABLE_NLS
 
 #define YYLEX_PARAM &yylval
 
