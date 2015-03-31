@@ -282,13 +282,15 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                 dump_bar_type(glyph->glyph_type));
                     }
                     if ((glyph->type == GRE_FLAT)
-                        || (glyph->type == GRE_NATURAL)) {
+                        || (glyph->type == GRE_NATURAL)
+                        || (glyph->type == GRE_SHARP)) {
                         fprintf(f, "       glyph_type            %d (%c)\n",
                                 glyph->glyph_type, glyph->glyph_type);
                     }
                     if ((glyph->type != GRE_SPACE) && (glyph->type != GRE_BAR)
                         && (glyph->type != GRE_FLAT)
-                        && (glyph->type != GRE_NATURAL)) {
+                        && (glyph->type != GRE_NATURAL)
+                        && (glyph->type != GRE_SHARP)) {
                         fprintf(f, "       glyph_type            %d (%s)\n",
                                 glyph->glyph_type,
                                 dump_glyph_type(glyph->glyph_type));
