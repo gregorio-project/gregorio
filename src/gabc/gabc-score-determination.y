@@ -116,7 +116,8 @@ gregorio_score *gabc_read_score(FILE *f_in)
     // the input file that flex will parse
     gabc_score_determination_in = f_in;
     if (!f_in) {
-        gregorio_message(_("can't read stream from argument, returning NULL pointer"),
+        gregorio_message(_
+                         ("can't read stream from argument, returning NULL pointer"),
                          "det_score", ERROR, 0);
         return NULL;
     }
@@ -168,8 +169,8 @@ void gabc_fix_custos(gregorio_score *score_to_check)
                                                           NULL);
                         newkey =
                             gregorio_calculate_new_key(C_KEY,
-                                                       current_element->
-                                                       element_type - 48);
+                                                       current_element->element_type
+                                                       - 48);
                         pitch_difference = (char) newkey - (char) current_key;
                         custo_element->element_type = pitch - pitch_difference;
                         current_key = newkey;
@@ -182,8 +183,8 @@ void gabc_fix_custos(gregorio_score *score_to_check)
                                                           NULL);
                         newkey =
                             gregorio_calculate_new_key(F_KEY,
-                                                       current_element->
-                                                       element_type - 48);
+                                                       current_element->element_type
+                                                       - 48);
                         pitch_difference = (char) newkey - (char) current_key;
                         custo_element->element_type = pitch - pitch_difference;
                         current_key = newkey;
@@ -196,7 +197,9 @@ void gabc_fix_custos(gregorio_score *score_to_check)
                      */
                     if (custo_element->element_type < 97
                         || custo_element->element_type > 109) {
-                        gregorio_message(_("pitch difference too high to set automatic custo (z0), please check your score"),
+                        gregorio_message(_("pitch difference too high to set "
+                                           "automatic custo (z0), please "
+                                           "check your score"),
                                          "gabc_fix_custos", ERROR, 0);
                         custo_element->element_type = 'g';
                     }
@@ -208,15 +211,15 @@ void gabc_fix_custos(gregorio_score *score_to_check)
                     || current_element->type == GRE_C_KEY_CHANGE_FLATED) {
                     current_key =
                         gregorio_calculate_new_key(C_KEY,
-                                                   current_element->
-                                                   element_type - 48);
+                                                   current_element->element_type
+                                                   - 48);
                 }
                 if (current_element->type == GRE_F_KEY_CHANGE
                     || current_element->type == GRE_F_KEY_CHANGE_FLATED) {
                     current_key =
                         gregorio_calculate_new_key(F_KEY,
-                                                   current_element->
-                                                   element_type - 48);
+                                                   current_element->element_type
+                                                   - 48);
                 }
                 current_element = current_element->next;
             }
@@ -245,7 +248,9 @@ int check_score_integrity(gregorio_score *score_to_check)
 int check_infos_integrity(gregorio_score *score_to_check)
 {
     if (!score_to_check->name) {
-        gregorio_message(_("no name specified, put `name:...;' at the beginning of the file, can be dangerous with some output formats"),
+        gregorio_message(_("no name specified, put `name:...;' at the "
+                           "beginning of the file, can be dangerous "
+                           "with some output formats"),
                          "det_score", WARNING, 0);
     }
     return 1;
@@ -321,25 +326,26 @@ void next_voice_info()
 void set_clef(char *str)
 {
     if (!str || !str[0] || !str[1]) {
-        gregorio_message(_("unknown clef format in initial-key definition : format is `(c|f)[1-4]'"),
-                         "det_score", ERROR, 0);
+        gregorio_message(_("unknown clef format in initial-key definition : "
+                           "format is `(c|f)[1-4]'"), "det_score", ERROR, 0);
     }
     if (str[0] != 'c' && str[0] != 'f') {
-        gregorio_message(_("unknown clef format in initial-key definition : format is `(c|f)[1-4]'"),
-                         "det_score", ERROR, 0);
+        gregorio_message(_("unknown clef format in initial-key definition : "
+                           "format is `(c|f)[1-4]'"), "det_score", ERROR, 0);
         return;
     }
     // here is something than could be changed : the format of the inital_key
     // attribute
     if (str[1] != '1' && str[1] != '2' && str[1] != '3' && str[1] != '4') {
-        gregorio_message(_("unknown clef format in initial-key definition : format is `(c|f)[1-4]'"),
-                         "det_score", ERROR, 0);
+        gregorio_message(_("unknown clef format in initial-key definition : "
+                           "format is `(c|f)[1-4]'"), "det_score", ERROR, 0);
         return;
     }
 
     clef = gregorio_calculate_new_key(str[0], str[1] - 48);
     if (str[2]) {
-        gregorio_message(_("in initial_key definition, only two characters are needed : format is`(c|f)[1-4]'"),
+        gregorio_message(_("in initial_key definition, only two characters are "
+                           "needed : format is`(c|f)[1-4]'"),
                          "det_score", WARNING, 0);
     }
     current_key = clef;
@@ -381,7 +387,8 @@ void end_definitions()
     } else {
         if (number_of_voices > voice) {
             snprintf(error, 62,
-                     ngt_("not enough voice infos found: %d found, %d waited, %d assumed",
+                     ngt_
+                     ("not enough voice infos found: %d found, %d waited, %d assumed",
                       "not enough voice infos found: %d found, %d waited, %d assumed",
                       voice), voice, number_of_voices, voice);
             gregorio_message(error, "det_score", WARNING, 0);
@@ -390,7 +397,8 @@ void end_definitions()
         } else {
             if (number_of_voices < voice) {
                 snprintf(error, 62,
-                         ngt_("too many voice infos found: %d found, %d waited, %d assumed",
+                         ngt_
+                         ("too many voice infos found: %d found, %d waited, %d assumed",
                           "not enough voice infos found: %d found, %d waited, %d assumed",
                           number_of_voices), voice, number_of_voices,
                          number_of_voices);
@@ -399,7 +407,7 @@ void end_definitions()
         }
     }
     voice = 0;                  // voice is now voice-1, so that it can be the
-                                // index of elements
+    // index of elements
     elements =
         (gregorio_element **) malloc(number_of_voices *
                                      sizeof(gregorio_element *));
@@ -455,7 +463,8 @@ gregorio_set_translation_center_beginning(gregorio_syllable *current_syllable)
     while (syllable) {
         if (syllable->translation_type == TR_WITH_CENTER_END) {
             gregorio_message
-                ("encountering translation centering end but cannot find translation centering beginning...",
+                ("encountering translation centering end but cannot find "
+                 "translation centering beginning...",
                  "set_translation_center_beginning", ERROR, 0);
             current_syllable->translation_type = TR_NORMAL;
             return;
@@ -468,8 +477,8 @@ gregorio_set_translation_center_beginning(gregorio_syllable *current_syllable)
     }
     // we didn't find any beginning...
     gregorio_message
-        ("encountering translation centering end but cannot find translation centering beginning...",
-         "set_translation_center_beginning", ERROR, 0);
+        ("encountering translation centering end but cannot find translation "
+         "centering beginning...", "set_translation_center_beginning", ERROR, 0);
     current_syllable->translation_type = TR_NORMAL;
 }
 
@@ -529,11 +538,11 @@ void close_syllable()
 void start_translation(unsigned char asked_translation_type)
 {
     rebuild_characters(&current_character, center_is_determined,
-                                centering_scheme);
+                       centering_scheme);
     first_text_character = current_character;
     center_is_determined = CENTER_FULLY_DETERMINED; // the middle letters of
-                                                    // the translation have no
-                                                    // sense
+    // the translation have no
+    // sense
     current_character = NULL;
     translation_type = asked_translation_type;
 }
@@ -541,7 +550,7 @@ void start_translation(unsigned char asked_translation_type)
 void end_translation()
 {
     rebuild_characters(&current_character, center_is_determined,
-                                centering_scheme);
+                       centering_scheme);
     first_translation_character = current_character;
 }
 
@@ -602,7 +611,19 @@ void gregorio_gabc_end_style(unsigned char style)
 }
 %}
 
-%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END C_BEGINNING C_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME TRANSLATION_CENTER_END BNLBA ENLBA
+%token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE 
+%token MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER
+%token TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE
+%token OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT
+%token GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT
+%token CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE
+%token CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END
+%token C_BEGINNING C_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING
+%token SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END
+%token CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END
+%token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
+%token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
+%token TRANSLATION_CENTER_END BNLBA ENLBA
 
 %%
 
@@ -624,7 +645,8 @@ number_of_voices_definition:
     NUMBER_OF_VOICES attribute {
         number_of_voices=atoi($2.text);
         if (number_of_voices > MAX_NUMBER_OF_VOICES) {
-            snprintf(error, 40, _("can't define %d voices, maximum is %d"), number_of_voices, MAX_NUMBER_OF_VOICES);
+            snprintf(error, 40, _("can't define %d voices, maximum is %d"),
+                     number_of_voices, MAX_NUMBER_OF_VOICES);
             gregorio_message(error,"det_score",WARNING,0);
         }
         gregorio_set_score_number_of_voices (score, number_of_voices);
@@ -643,7 +665,9 @@ name_definition:
             gregorio_message("name can't be empty","det_score", WARNING, 0);
         }
         if (score->name) {
-            gregorio_message(_("several name definitions found, only the last will be taken into consideration"), "det_score",WARNING, 0);
+            gregorio_message(_("several name definitions found, only the "
+                               "last will be taken into consideration"),
+                             "det_score",WARNING, 0);
         }
         gregorio_set_score_name (score, $2.text);
     }
@@ -652,7 +676,9 @@ name_definition:
 lilypond_preamble_definition:
     LILYPOND_PREAMBLE attribute {
         if (score->lilypond_preamble) {
-            gregorio_message(_("several lilypond preamble definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+            gregorio_message(_("several lilypond preamble definitions found, "
+                               "only the last will be taken into consideration"),
+                             "det_score",WARNING,0);
         }
         gregorio_set_score_lilypond_preamble (score, $2.text);
     }
@@ -667,7 +693,9 @@ centering_scheme_definition:
 gabc_copyright_definition:
     GABC_COPYRIGHT attribute {
         if (score->gabc_copyright) {
-            gregorio_message(_("several gabc-copyright fields found, only the last will be taken into consideration"), "det_score",WARNING,0);
+            gregorio_message(_("several gabc-copyright fields found, only the "
+                               "last will be taken into consideration"),
+                             "det_score",WARNING,0);
         }
         gregorio_set_score_gabc_copyright (score, $2.text);
     }
@@ -676,7 +704,9 @@ gabc_copyright_definition:
 score_copyright_definition:
     SCORE_COPYRIGHT attribute {
         if (score->score_copyright) {
-            gregorio_message(_("several score_copyright fields found, only the last will be taken into consideration"), "det_score",WARNING,0);
+            gregorio_message(_("several score_copyright fields found, only "
+                               "the last will be taken into consideration"),
+                             "det_score",WARNING,0);
         }
         gregorio_set_score_score_copyright (score, $2.text);
     }
@@ -685,7 +715,9 @@ score_copyright_definition:
 opustex_preamble_definition:
     OPUSTEX_PREAMBLE attribute {
         if (score->opustex_preamble) {
-            gregorio_message(_("several OpusTeX preamble definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+            gregorio_message(_("several OpusTeX preamble definitions found, "
+                               "only the last will be taken into consideration"),
+                             "det_score",WARNING,0);
         }
         gregorio_set_score_opustex_preamble (score, $2.text);
     }
@@ -694,7 +726,9 @@ opustex_preamble_definition:
 musixtex_preamble_definition:
     MUSIXTEX_PREAMBLE attribute {
         if (score->musixtex_preamble) {
-            gregorio_message(_("several MusiXTeX preamble definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+            gregorio_message(_("several MusiXTeX preamble definitions found, "
+                               "only the last will be taken into consideration"),
+                             "det_score",WARNING,0);
         }
         gregorio_set_score_musixtex_preamble (score, $2.text);
     }
@@ -703,7 +737,9 @@ musixtex_preamble_definition:
 gregoriotex_font_definition:
     GREGORIOTEX_FONT attribute {
         if (score->gregoriotex_font) {
-            gregorio_message(_("several GregorioTeX font definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+            gregorio_message(_("several GregorioTeX font definitions found, "
+                               "only the last will be taken into consideration"),
+                             "det_score",WARNING,0);
         }
         score->gregoriotex_font=$2.text;
     }
@@ -712,7 +748,9 @@ gregoriotex_font_definition:
 office_part_definition:
     OFFICE_PART attribute {
         if (score->office_part) {
-            gregorio_message(_("several office part definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+            gregorio_message(_("several office part definitions found, only "
+                               "the last will be taken into consideration"),
+                             "det_score",WARNING,0);
         }
         gregorio_set_score_office_part (score, $2.text);
     }
@@ -721,7 +759,9 @@ office_part_definition:
 occasion_definition:
     OCCASION attribute {
         if (score->occasion) {
-            gregorio_message(_("several occasion definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+            gregorio_message(_("several occasion definitions found, only the "
+                               "last will be taken into consideration"),
+                             "det_score",WARNING,0);
         }
         gregorio_set_score_occasion (score, $2.text);
     }
@@ -730,7 +770,9 @@ occasion_definition:
 meter_definition:
     METER attribute {
         if (score->meter) {
-            gregorio_message(_("several meter definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+            gregorio_message(_("several meter definitions found, only the "
+                               "last will be taken into consideration"),
+                             "det_score",WARNING,0);
         }
         gregorio_set_score_meter (score, $2.text);
     }
@@ -739,7 +781,9 @@ meter_definition:
 commentary_definition:
     COMMENTARY attribute {
         if (score->commentary) {
-            gregorio_message(_("several commentary definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+            gregorio_message(_("several commentary definitions found, only "
+                               "the last will be taken into consideration"),
+                             "det_score",WARNING,0);
         }
         gregorio_set_score_commentary (score, $2.text);
     }
@@ -748,7 +792,9 @@ commentary_definition:
 arranger_definition:
     ARRANGER attribute {
         if (score->arranger) {
-            gregorio_message(_("several arranger definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+            gregorio_message(_("several arranger definitions found, only the "
+                               "last will be taken into consideration"),
+                             "det_score",WARNING,0);
         }
         gregorio_set_score_arranger (score, $2.text);
     }
@@ -760,7 +806,9 @@ gabc_version_definition:
         // we start supporting multiple input versions, it will become
         // more complex.  For the moment, just issue a warning.
         if (strcmp ($2.text, GABC_CURRENT_VERSION) != 0) {
-            gregorio_message(_("gabc-version is not the current one " GABC_CURRENT_VERSION " ; there may be problems"), "det_score",WARNING,0);
+            gregorio_message(_("gabc-version is not the current one "
+                               GABC_CURRENT_VERSION " ; there may be problems"),
+                             "det_score",WARNING,0);
         }
     }
     ;
@@ -768,7 +816,9 @@ gabc_version_definition:
 mode_definition:
     MODE attribute {
         if (score->mode) {
-            gregorio_message(_("several mode definitions found, only the last will be taken into consideration"), "det_score",WARNING,0);
+            gregorio_message(_("several mode definitions found, only the last "
+                               "will be taken into consideration"),
+                             "det_score",WARNING,0);
         }
         if ($2.text) {
             score->mode=atoi($2.text);
@@ -789,7 +839,9 @@ initial_style_definition:
 annotation_definition:
     ANNOTATION attribute {
         if (current_voice_info->annotation [NUM_ANNOTATIONS - 1]) {
-            snprintf(error,99,_("too many definitions of annotation found for voice %d, only the first %d will be taken into consideration"),voice, NUM_ANNOTATIONS);
+            snprintf(error,99,_("too many definitions of annotation found for "
+                                "voice %d, only the first %d will be taken "
+                                "into consideration"), voice, NUM_ANNOTATIONS);
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_voice_annotation (current_voice_info, $2.text);
@@ -799,7 +851,8 @@ annotation_definition:
 author_definition:
     AUTHOR attribute {
         if (score->si.author) {
-            snprintf(error,99,_("several definitions of author found, only the last will be taken into consideration"));
+            snprintf(error,99,_("several definitions of author found, only "
+                                "the last will be taken into consideration"));
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_score_author (score, $2.text);
@@ -809,7 +862,8 @@ author_definition:
 date_definition:
     DATE attribute {
         if (score->si.date) {
-            snprintf(error,99,_("several definitions of date found, only the last will be taken into consideration"));
+            snprintf(error,99,_("several definitions of date found, only the "
+                                "last will be taken into consideration"));
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_score_date (score, $2.text);
@@ -819,7 +873,8 @@ date_definition:
 manuscript_definition:
     MANUSCRIPT attribute {
         if (score->si.manuscript) {
-            snprintf(error,99,_("several definitions of manuscript found, only the last will be taken into consideration"));
+            snprintf(error,99,_("several definitions of manuscript found, only "
+                                "the last will be taken into consideration"));
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_score_manuscript (score, $2.text);
@@ -829,7 +884,9 @@ manuscript_definition:
 manuscript_reference_definition:
     MANUSCRIPT_REFERENCE attribute {
         if (score->si.manuscript_reference) {
-            snprintf(error,99,_("several definitions of manuscript-reference found, only the last will be taken into consideration"));
+            snprintf(error,99,_("several definitions of manuscript-reference "
+                                "found, only the last will be taken into "
+                                "consideration"));
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_score_manuscript_reference (score, $2.text);
@@ -839,7 +896,9 @@ manuscript_reference_definition:
 manuscript_storage_place_definition:
     MANUSCRIPT_STORAGE_PLACE attribute {
         if (score->si.manuscript_storage_place) {
-            snprintf(error,105,_("several definitions of manuscript-storage-place found, only the last will be taken into consideration"));
+            snprintf(error,105,_("several definitions of "
+                                 "manuscript-storage-place found, only the "
+                                 "last will be taken into consideration"));
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_score_manuscript_storage_place (score, $2.text);
@@ -849,7 +908,8 @@ manuscript_storage_place_definition:
 book_definition:
     BOOK attribute {
         if (score->si.book) {
-            snprintf(error,99,_("several definitions of book found, only the last will be taken into consideration"));
+            snprintf(error,99,_("several definitions of book found, only the "
+                                "last will be taken into consideration"));
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_score_book (score, $2.text);
@@ -859,7 +919,8 @@ book_definition:
 transcriber_definition:
     TRANSCRIBER attribute {
         if (score->si.transcriber) {
-            snprintf(error,99,_("several definitions of transcriber found, only the last will be taken into consideration"));
+            snprintf(error,99,_("several definitions of transcriber found, only "
+                                "the last will be taken into consideration"));
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_score_transcriber (score, $2.text);
@@ -870,7 +931,9 @@ transcriber_definition:
 transcription_date_definition:
     TRANSCRIPTION_DATE attribute {
         if (score->si.transcription_date) {
-            snprintf(error,105,_("several definitions of transcription date found, only the last will be taken into consideration"));
+            snprintf(error,105,_("several definitions of transcription date "
+                                 "found, only the last will be taken into "
+                                 "consideration"));
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_score_transcription_date (score, $2.text);
@@ -880,7 +943,9 @@ transcription_date_definition:
 style_definition:
     STYLE attribute {
         if (current_voice_info->style) {
-            snprintf(error,99,_("several definitions of style found for voice %d, only the last will be taken into consideration"),voice);
+            snprintf(error,99,_("several definitions of style found for voice "
+                                "%d, only the last will be taken into "
+                                "consideration"), voice);
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_voice_style (current_voice_info, $2.text);
@@ -890,7 +955,9 @@ style_definition:
 virgula_position_definition:
     VIRGULA_POSITION attribute {
         if (current_voice_info->virgula_position) {
-            snprintf(error,105,_("several definitions of virgula position found for voice %d, only the last will be taken into consideration"),voice);
+            snprintf(error,105,_("several definitions of virgula position "
+                                 "found for voice %d, only the last will be "
+                                 "taken into consideration"), voice);
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_voice_virgula_position (current_voice_info, $2.text);
@@ -968,11 +1035,17 @@ note:
             free($1.text);
         }
         else {
-            snprintf(error,105,ngt_("too many voices in note : %d foud, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
+            snprintf(error,105,ngt_("too many voices in note : %d foud, %d expected",
+                                    "too many voices in note : %d foud, %d expected",
+                                    number_of_voices), voice+1, number_of_voices);
             gregorio_message(error, "det_score",ERROR,0);
         }
         if (voice<number_of_voices-1) {
-            snprintf(error,105,ngt_("not enough voices in note : %d foud, %d expected, completing with empty neume","not enough voices in note : %d foud, %d expected, completing with empty neume",voice+1),voice+1, number_of_voices);
+            snprintf(error,105,ngt_("not enough voices in note : %d foud, %d "
+                                    "expected, completing with empty neume",
+                                    "not enough voices in note : %d foud, "
+                                    "%d expected, completing with empty neume",
+                                    voice+1), voice+1, number_of_voices);
             gregorio_message(error, "det_score",VERBOSE,0);
             complete_with_nulls(voice);
         }
@@ -984,11 +1057,17 @@ note:
             free($1.text);
         }
         else {
-            snprintf(error,105,ngt_("too many voices in note : %d foud, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
+            snprintf(error,105,ngt_("too many voices in note : %d foud, %d expected",
+                                    "too many voices in note : %d foud, %d expected",
+                                    number_of_voices), voice+1, number_of_voices);
             gregorio_message(error, "det_score",ERROR,0);
         }
         if (voice<number_of_voices-1) {
-            snprintf(error,105,ngt_("not enough voices in note : %d foud, %d expected, completing with empty neume","not enough voices in note : %d foud, %d expected, completing with empty neume",voice+1),voice+1, number_of_voices);
+            snprintf(error,105,ngt_("not enough voices in note : %d foud, %d "
+                                    "expected, completing with empty neume",
+                                    "not enough voices in note : %d foud, %d "
+                                    "expected, completing with empty neume",
+                                    voice+1), voice+1, number_of_voices);
             gregorio_message(error, "det_score",VERBOSE,0);
             complete_with_nulls(voice);
         }
@@ -1002,7 +1081,9 @@ note:
             voice++;
         }
         else {
-            snprintf(error,105,ngt_("too many voices in note : %d found, %d expected","too many voices in note : %d foud, %d expected",number_of_voices),voice+1, number_of_voices);
+            snprintf(error,105,ngt_("too many voices in note : %d found, %d expected",
+                                    "too many voices in note : %d found, %d expected",
+                                    number_of_voices), voice+1, number_of_voices);
             gregorio_message(error, "det_score",ERROR,0);
         }
     }
