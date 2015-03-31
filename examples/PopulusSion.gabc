@@ -1,5 +1,5 @@
-% !TEX TS-program = gregorio
-% !TEX encoding = UTF-8
+% !TEX TS-program = LuaLaTeX+se
+% !TEX root = main-lualatex.tex
 
 % The first part of the score is called the header, you can input some useful informations here:
 
