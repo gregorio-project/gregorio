@@ -32,3 +32,14 @@
 -T gregorio_word_position
 -T gregorio_lyric_centering
 -T gregorio_type
+-T gregorio_shape
+-T gregorio_bar
+-T gregorio_sign
+-T gregorio_space
+-T gregorio_liquescentia
+-T gregorio_h_episemus
+-T gregorio_glyph_type
+-T gregorio_word_position
+-T gregorio_lyric_centering
+-T gregorio_extra_info
+-T gregorio_misc_element_info

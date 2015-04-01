@@ -187,9 +187,11 @@ void gtex_write_special_char(FILE *f, grewchar *special_char);
 void gtex_write_verb(FILE *f, grewchar *verb_str);
 void gtex_print_char(FILE *f, grewchar to_print);
 
-unsigned int gregoriotex_determine_liquescentia_number(unsigned int factor,
-                                                       unsigned char type,
-                                                       char liquescentia);
+unsigned int
+gregoriotex_determine_liquescentia_number(unsigned int factor,
+                                          gregorio_liquescentia
+                                          type,
+                                          gregorio_liquescentia liquescentia);
 void gregoriotex_write_vepisemus(FILE *f, gregorio_glyph *current_glyph, int i,
                                  char type, gregorio_note *current_note);
 void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph, char type,

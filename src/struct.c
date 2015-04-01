@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
@@ -57,62 +58,109 @@ static inline char max(char a, char b)
     return a > b ? a : b;
 }
 
-void
-gregorio_add_note(gregorio_note **current_note, char pitch,
-                  gregorio_shape shape, char signs, char liquescentia,
-                  char h_episemus_type)
+static gregorio_note *create_and_link_note(gregorio_note **current_note)
 {
-
-    gregorio_note *element = malloc(sizeof(gregorio_note));
-    if (!element) {
+    gregorio_note *note = calloc(1, sizeof(gregorio_note));
+    if (!note) {
         gregorio_message(_("error in memory allocation"),
-                         "add_note", FATAL_ERROR, 0);
-        return;
+                         "create_and_link_note", FATAL_ERROR, 0);
+        return NULL;
     }
-    element->type = GRE_NOTE;
-    element->pitch = pitch;
-    element->shape = shape;
-    element->signs = signs;
-    element->rare_sign = _NO_SIGN;
-    element->liquescentia = liquescentia;
-    element->previous = *current_note;
-    element->h_episemus_type = H_NO_EPISEMUS;
-    element->h_episemus_top_note = 0;
-    element->h_episemus_bottom_note = 0;
-    element->next = NULL;
-    element->texverb = NULL;
-    element->choral_sign = NULL;
+
+    note->previous = *current_note;
+    note->next = NULL;
     if (*current_note) {
-        (*current_note)->next = element;
+        (*current_note)->next = note;
     }
-    *current_note = element;
-    gregorio_mix_h_episemus(*current_note, h_episemus_type);
+    *current_note = note;
+
+    return note;
 }
 
 void
-gregorio_add_special_as_note(gregorio_note **current_note, gregorio_type type,
-                             char pitch)
+gregorio_add_note(gregorio_note **current_note, char pitch,
+                  gregorio_shape shape, gregorio_sign signs,
+                  gregorio_liquescentia liquescentia, char h_episemus_type)
 {
-    gregorio_note *element = malloc(sizeof(gregorio_note));
-    if (!element) {
-        gregorio_message(_("error in memory allocation"),
-                         "add_special_as_note", FATAL_ERROR, 0);
-        return;
+    gregorio_note *element = create_and_link_note(current_note);
+    if (element) {
+        element->type = GRE_NOTE;
+        element->u.note.pitch = pitch;
+        element->u.note.shape = shape;
+        element->signs = signs;
+        element->special_sign = _NO_SIGN;
+        element->u.note.liquescentia = liquescentia;
+        element->h_episemus_type = H_NO_EPISEMUS;
+        element->h_episemus_top_note = 0;
+        element->h_episemus_bottom_note = 0;
+        element->texverb = NULL;
+        element->choral_sign = NULL;
+        gregorio_mix_h_episemus(element, h_episemus_type);
     }
-    element->type = type;
-    element->pitch = pitch;
-    element->signs = _NO_SIGN;
-    element->previous = *current_note;
-    element->next = NULL;
-    element->texverb = NULL;
-    element->h_episemus_type = H_NO_EPISEMUS;
-    element->h_episemus_top_note = 0;
-    element->h_episemus_bottom_note = 0;
-    element->choral_sign = NULL;
-    if (*current_note) {
-        (*current_note)->next = element;
+}
+
+void
+gregorio_add_end_of_line_as_note(gregorio_note **current_note,
+                                 gregorio_type sub_type)
+{
+    gregorio_note *element = create_and_link_note(current_note);
+    if (element) {
+        element->type = GRE_END_OF_LINE;
+        element->u.other.sub_type = sub_type;
     }
-    *current_note = element;
+}
+
+void gregorio_add_custo_as_note(gregorio_note **current_note)
+{
+    gregorio_note *element = create_and_link_note(current_note);
+    if (element) {
+        element->type = GRE_CUSTO;
+    }
+}
+
+void
+gregorio_add_clef_change_as_note(gregorio_note **current_note,
+                                 gregorio_type type, char clef_line)
+{
+    gregorio_note *element = create_and_link_note(current_note);
+    assert(type == GRE_C_KEY_CHANGE || type == GRE_F_KEY_CHANGE
+           || type == GRE_C_KEY_CHANGE_FLATED
+           || type == GRE_F_KEY_CHANGE_FLATED);
+    if (element) {
+        element->type = type;
+        element->u.note.pitch = clef_line;
+    }
+}
+
+void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar)
+{
+    gregorio_note *element = create_and_link_note(current_note);
+    if (element) {
+        element->type = GRE_BAR;
+        element->u.other.bar = bar;
+    }
+}
+
+void
+gregorio_add_alteration_as_note(gregorio_note **current_note,
+                                gregorio_type type, char pitch)
+{
+    gregorio_note *element = create_and_link_note(current_note);
+    assert(type == GRE_FLAT || type == GRE_SHARP || type == GRE_NATURAL);
+    if (element) {
+        element->type = type;
+        element->u.note.pitch = pitch;
+    }
+}
+
+void
+gregorio_add_space_as_note(gregorio_note **current_note, gregorio_space space)
+{
+    gregorio_note *element = create_and_link_note(current_note);
+    if (element) {
+        element->type = GRE_SPACE;
+        element->u.other.space = space;
+    }
 }
 
 void
@@ -123,51 +171,21 @@ gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
     if (str == NULL) {
         return;
     }
-    element = malloc(sizeof(gregorio_note));
-    if (!element) {
-        gregorio_message(_("error in memory allocation"),
-                         "add_special_as_note", FATAL_ERROR, 0);
-        return;
+    element = create_and_link_note(current_note);
+    assert(type == GRE_TEXVERB_GLYPH || type == GRE_TEXVERB_ELEMENT);
+    if (element) {
+        element->type = type;
+        element->texverb = str;
     }
-    element->type = type;
-    element->pitch = 0;
-    element->signs = _NO_SIGN;
-    element->previous = *current_note;
-    element->h_episemus_type = H_NO_EPISEMUS;
-    element->h_episemus_top_note = 0;
-    element->h_episemus_bottom_note = 0;
-    element->next = NULL;
-    element->texverb = str;
-    element->choral_sign = NULL;
-    if (*current_note) {
-        (*current_note)->next = element;
-    }
-    *current_note = element;
 }
 
-void gregorio_add_nlba_as_note(gregorio_note **current_note, char type)
+void gregorio_add_nlba_as_note(gregorio_note **current_note, gregorio_nlba type)
 {
-    gregorio_note *element;
-    element = malloc(sizeof(gregorio_note));
-    if (!element) {
-        gregorio_message(_("error in memory allocation"),
-                         "add_special_as_note", FATAL_ERROR, 0);
-        return;
+    gregorio_note *element = create_and_link_note(current_note);
+    if (element) {
+        element->type = GRE_NLBA;
+        element->u.other.nlba = type;
     }
-    element->type = GRE_NLBA;
-    element->pitch = type;
-    element->signs = _NO_SIGN;
-    element->previous = *current_note;
-    element->h_episemus_type = H_NO_EPISEMUS;
-    element->h_episemus_top_note = 0;
-    element->h_episemus_bottom_note = 0;
-    element->next = NULL;
-    element->texverb = NULL;
-    element->choral_sign = NULL;
-    if (*current_note) {
-        (*current_note)->next = element;
-    }
-    *current_note = element;
 }
 
 void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str)
@@ -182,10 +200,7 @@ void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str)
         if ((*current_note)->texverb) {
             len = strlen((*current_note)->texverb) + strlen(str) + 1;
             res = malloc(len * sizeof(char));
-            len = strlen((*current_note)->texverb);
-            for (i = 0; i <= len; i++) {
-                res[i] = ((*current_note)->texverb)[i];
-            }
+            strcpy(res, (*current_note)->texverb);
             strcat(res, str);
             free((*current_note)->texverb);
             (*current_note)->texverb = res;
@@ -202,13 +217,13 @@ void gregorio_add_cs_to_note(gregorio_note **current_note, char *str)
     }
 }
 
-void gregorio_add_special_sign(gregorio_note *note, char sign)
+void gregorio_add_special_sign(gregorio_note *note, gregorio_sign sign)
 {
     if (!note) {
         // error
         return;
     }
-    note->rare_sign = sign;
+    note->special_sign = sign;
 }
 
 void gregorio_set_signs(gregorio_note *note, char signs)
@@ -223,38 +238,35 @@ void gregorio_set_signs(gregorio_note *note, char signs)
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape)
 {
     if (!note || note->type != GRE_NOTE) {
-        gregorio_message(_
-                         ("trying to change the shape of something that is not a note"),
-                         "change_shape", ERROR, 0);
+        gregorio_message(_("trying to change the shape of something that is "
+                           "not a note"), "change_shape", ERROR, 0);
         return;
     }
-    note->shape = shape;
-    if (note->shape == S_STROPHA || note->shape == S_DISTROPHA
-        || note->shape == S_TRISTROPHA) {
-        switch (note->liquescentia) {
+    note->u.note.shape = shape;
+    if (shape == S_STROPHA || shape == S_DISTROPHA || shape == S_TRISTROPHA) {
+        switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
         case L_AUCTUS_DESCENDENS:
-            note->liquescentia = L_AUCTA;
+            note->u.note.liquescentia = L_AUCTA;
             break;
         case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
         case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
-            note->liquescentia = L_AUCTA_INITIO_DEBILIS;
+            note->u.note.liquescentia = L_AUCTA_INITIO_DEBILIS;
             break;
         default:
             break;
         }
-    }
-    if (note->shape == S_ORISCUS) {
-        switch (note->liquescentia) {
+    } else if (shape == S_ORISCUS) {
+        switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
         case L_AUCTUS_DESCENDENS:
         case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
         case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
-            note->shape = S_ORISCUS_AUCTUS;
+            note->u.note.shape = S_ORISCUS_AUCTUS;
             break;
         case L_DEMINUTUS:
         case L_DEMINUTUS_INITIO_DEBILIS:
-            note->shape = S_ORISCUS_DEMINUTUS;
+            note->u.note.shape = S_ORISCUS_DEMINUTUS;
             break;
         default:
             break;
@@ -262,58 +274,57 @@ void gregorio_change_shape(gregorio_note *note, gregorio_shape shape)
     }
 }
 
-void gregorio_add_liquescentia(gregorio_note *note, char liq)
+void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
 {
     if (!note || note->type != GRE_NOTE) {
-        gregorio_message(_
-                         ("trying to make a liquescence on something that is not a note"),
-                         "add_liquescentia", ERROR, 0);
+        gregorio_message(_("trying to make a liquescence on something that "
+                           "is not a note"), "add_liquescentia", ERROR, 0);
         return;
     }
     if (is_initio_debilis(liq)) {
         switch (liq) {
         case L_DEMINUTUS:
-            note->liquescentia = L_DEMINUTUS_INITIO_DEBILIS;
+            note->u.note.liquescentia = L_DEMINUTUS_INITIO_DEBILIS;
             break;
         case L_AUCTUS_ASCENDENS:
-            note->liquescentia = L_AUCTUS_ASCENDENS_INITIO_DEBILIS;
+            note->u.note.liquescentia = L_AUCTUS_ASCENDENS_INITIO_DEBILIS;
             break;
         case L_AUCTUS_DESCENDENS:
-            note->liquescentia = L_AUCTUS_DESCENDENS_INITIO_DEBILIS;
+            note->u.note.liquescentia = L_AUCTUS_DESCENDENS_INITIO_DEBILIS;
             break;
         case L_AUCTA:
-            note->liquescentia = L_AUCTA_INITIO_DEBILIS;
+            note->u.note.liquescentia = L_AUCTA_INITIO_DEBILIS;
             break;
         }
     } else {
-        note->liquescentia = liq;
+        note->u.note.liquescentia = liq;
     }
-    if (note->shape == S_STROPHA || note->shape == S_DISTROPHA
-        || note->shape == S_TRISTROPHA) {
-        switch (note->liquescentia) {
+    if (note->u.note.shape == S_STROPHA || note->u.note.shape == S_DISTROPHA
+        || note->u.note.shape == S_TRISTROPHA) {
+        switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
         case L_AUCTUS_DESCENDENS:
-            note->liquescentia = L_AUCTA;
+            note->u.note.liquescentia = L_AUCTA;
             break;
         case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
         case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
-            note->liquescentia = L_AUCTA_INITIO_DEBILIS;
+            note->u.note.liquescentia = L_AUCTA_INITIO_DEBILIS;
             break;
         default:
             break;
         }
     }
-    if (note->shape == S_ORISCUS) {
-        switch (note->liquescentia) {
+    if (note->u.note.shape == S_ORISCUS) {
+        switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
         case L_AUCTUS_DESCENDENS:
         case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
         case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
-            note->shape = S_ORISCUS_AUCTUS;
+            note->u.note.shape = S_ORISCUS_AUCTUS;
             break;
         case L_DEMINUTUS:
         case L_DEMINUTUS_INITIO_DEBILIS:
-            note->shape = S_ORISCUS_DEMINUTUS;
+            note->u.note.shape = S_ORISCUS_DEMINUTUS;
             break;
         default:
             break;
@@ -322,13 +333,12 @@ void gregorio_add_liquescentia(gregorio_note *note, char liq)
 }
 
 void
-gregorio_add_h_episemus(gregorio_note *note, unsigned char type,
+gregorio_add_h_episemus(gregorio_note *note, gregorio_h_episemus type,
                         unsigned int *nbof_isolated_episemus)
 {
     if (!note || (note->type != GRE_NOTE && note->type != GRE_BAR)) {
-        gregorio_message(_
-                         ("trying to add an horizontal episemus on something that is not a note"),
-                         "add_h_episemus", ERROR, 0);
+        gregorio_message(_("trying to add an horizontal episemus on something "
+                           "that is not a note"), "add_h_episemus", ERROR, 0);
         return;
     }
     if (!nbof_isolated_episemus) {
@@ -351,12 +361,11 @@ gregorio_add_h_episemus(gregorio_note *note, unsigned char type,
 }
 
 // a helper function
-void gregorio_set_h_episemus(gregorio_note *note, unsigned char type)
+void gregorio_set_h_episemus(gregorio_note *note, gregorio_h_episemus type)
 {
     if (!note || (note->type != GRE_NOTE && note->type != GRE_BAR)) {
-        gregorio_message(_
-                         ("trying to add an horizontal episemus on something that is not a note"),
-                         "set_h_episemus", ERROR, 0);
+        gregorio_message(_("trying to add an horizontal episemus on something "
+                           "that is not a note"), "set_h_episemus", ERROR, 0);
         return;
     }
     if (type == H_BOTTOM) {
@@ -366,7 +375,7 @@ void gregorio_set_h_episemus(gregorio_note *note, unsigned char type)
     }
 }
 
-void gregorio_add_sign(gregorio_note *note, char sign)
+void gregorio_add_sign(gregorio_note *note, gregorio_sign sign)
 {
     if (!note) {
         // error
@@ -423,11 +432,16 @@ void gregorio_go_to_first_note(gregorio_note **note)
     *note = tmp;
 }
 
+static inline void free_one_note(gregorio_note *note)
+{
+    free(note->texverb);
+    free(note->choral_sign);
+    free(note);
+}
+
 void gregorio_free_one_note(gregorio_note **note)
 {
     gregorio_note *next = NULL;
-    free((*note)->texverb);
-    free((*note)->choral_sign);
     if (!note || !*note) {
         return;
     }
@@ -438,7 +452,7 @@ void gregorio_free_one_note(gregorio_note **note)
     if ((*note)->previous) {
         (*note)->previous->next = NULL;
     }
-    free(*note);
+    free_one_note(*note);
     *note = next;
 }
 
@@ -447,56 +461,80 @@ void gregorio_free_notes(gregorio_note **note)
     gregorio_note *tmp;
     while (*note) {
         tmp = (*note)->next;
-        free(*note);
+        free_one_note(*note);
         *note = tmp;
     }
 }
 
-void
-gregorio_add_glyph(gregorio_glyph **current_glyph, char type,
-                   gregorio_note *first_note, char liquescentia)
+static gregorio_glyph *create_and_link_glyph(gregorio_glyph **current_glyph)
 {
-    gregorio_glyph *next_glyph = malloc(sizeof(gregorio_glyph));
-    if (!next_glyph) {
+    gregorio_glyph *glyph = calloc(1, sizeof(gregorio_glyph));
+    if (!glyph) {
         gregorio_message(_("error in memory allocation"),
-                         "add_glyph", FATAL_ERROR, 0);
-        return;
+                         "create_and_link_glyph", FATAL_ERROR, 0);
+        return NULL;
     }
-    next_glyph->type = GRE_GLYPH;
-    next_glyph->glyph_type = type;
-    next_glyph->liquescentia = liquescentia;
-    next_glyph->first_note = first_note;
-    next_glyph->next = NULL;
-    next_glyph->texverb = NULL;
-    next_glyph->previous = *current_glyph;
+
+    glyph->previous = *current_glyph;
+    glyph->next = NULL;
     if (*current_glyph) {
-        (*current_glyph)->next = next_glyph;
+        (*current_glyph)->next = glyph;
     }
-    *current_glyph = next_glyph;
+    *current_glyph = glyph;
+
+    return glyph;
 }
 
 void
-gregorio_add_special_as_glyph(gregorio_glyph **current_glyph,
-                              gregorio_type type, char pitch,
-                              char additional_infos, char *texverb)
+gregorio_add_glyph(gregorio_glyph **current_glyph, gregorio_glyph_type type,
+                   gregorio_note *first_note,
+                   gregorio_liquescentia liquescentia)
 {
-    gregorio_glyph *next_glyph = malloc(sizeof(gregorio_glyph));
-    if (!next_glyph) {
-        gregorio_message(_("error in memory allocation"),
-                         "add_special_as_glyph", FATAL_ERROR, 0);
-        return;
+    gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
+    if (next_glyph) {
+        next_glyph->type = GRE_GLYPH;
+        next_glyph->u.notes.glyph_type = type;
+        next_glyph->u.notes.liquescentia = liquescentia;
+        next_glyph->u.notes.first_note = first_note;
     }
-    next_glyph->type = type;
-    next_glyph->glyph_type = pitch;
-    next_glyph->liquescentia = additional_infos;
-    next_glyph->first_note = NULL;
-    next_glyph->next = NULL;
-    next_glyph->texverb = texverb;
-    next_glyph->previous = *current_glyph;
-    if (*current_glyph) {
-        (*current_glyph)->next = next_glyph;
+}
+
+void
+gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
+                                      gregorio_type type, char pitch,
+                                      bool flatted_key, char *texverb)
+{
+    gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
+    assert(type == GRE_C_KEY_CHANGE || type == GRE_F_KEY_CHANGE
+           || type == GRE_C_KEY_CHANGE_FLATED || type == GRE_F_KEY_CHANGE_FLATED
+           || type == GRE_CUSTO || type == GRE_FLAT || type == GRE_NATURAL
+           || type == GRE_SHARP);
+    if (next_glyph) {
+        next_glyph->type = type;
+        next_glyph->u.misc.pitched.pitch = pitch;
+        next_glyph->u.misc.pitched.flatted_key = flatted_key;
+        next_glyph->texverb = texverb;
     }
-    *current_glyph = next_glyph;
+}
+
+void
+gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
+                                        gregorio_type type,
+                                        gregorio_extra_info info,
+                                        gregorio_sign sign, char *texverb)
+{
+    gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
+    assert(type != GRE_NOTE && type != GRE_GLYPH && type != GRE_ELEMENT
+           && type != GRE_C_KEY_CHANGE && type != GRE_F_KEY_CHANGE
+           && type != GRE_C_KEY_CHANGE_FLATED && type != GRE_F_KEY_CHANGE_FLATED
+           && type != GRE_CUSTO && type != GRE_FLAT && type != GRE_NATURAL
+           && type != GRE_SHARP);
+    if (next_glyph) {
+        next_glyph->type = type;
+        next_glyph->u.misc.unpitched.info = info;
+        next_glyph->u.misc.unpitched.special_sign = sign;
+        next_glyph->texverb = texverb;
+    }
 }
 
 void gregorio_go_to_first_glyph(gregorio_glyph **glyph)
@@ -512,6 +550,15 @@ void gregorio_go_to_first_glyph(gregorio_glyph **glyph)
     *glyph = tmp;
 }
 
+static inline void free_one_glyph(gregorio_glyph *glyph)
+{
+    free(glyph->texverb);
+    if (glyph->type == GRE_GLYPH) {
+        gregorio_free_notes(&glyph->u.notes.first_note);
+    }
+    free(glyph);
+}
+
 void gregorio_free_one_glyph(gregorio_glyph **glyph)
 {
     gregorio_glyph *next = NULL;
@@ -525,9 +572,7 @@ void gregorio_free_one_glyph(gregorio_glyph **glyph)
     if ((*glyph)->previous) {
         (*glyph)->previous->next = NULL;
     }
-    free((*glyph)->texverb);
-    gregorio_free_notes(&(*glyph)->first_note);
-    free(*glyph);
+    free_one_glyph(*glyph);
     *glyph = next;
 }
 
@@ -539,69 +584,78 @@ void gregorio_free_glyphs(gregorio_glyph **glyph)
     }
     while (*glyph) {
         next_glyph = (*glyph)->next;
-        gregorio_free_notes(&(*glyph)->first_note);
-        free(*glyph);
+        free_one_glyph(*glyph);
         *glyph = next_glyph;
     }
+}
+
+static gregorio_element *create_and_link_element(gregorio_element
+                                                 **current_element)
+{
+    gregorio_element *element = calloc(1, sizeof(gregorio_element));
+    if (!element) {
+        gregorio_message(_("error in memory allocation"),
+                         "create_and_link_element", FATAL_ERROR, 0);
+        return NULL;
+    }
+
+    element->previous = *current_element;
+    element->next = NULL;
+    if (*current_element) {
+        (*current_element)->next = element;
+    }
+    *current_element = element;
+
+    return element;
 }
 
 void
 gregorio_add_element(gregorio_element **current_element,
                      gregorio_glyph *first_glyph)
 {
-    gregorio_element *next = malloc(sizeof(gregorio_element));
-    if (!next) {
-        gregorio_message(_("error in memory allocation"),
-                         "add_element", FATAL_ERROR, 0);
-        return;
+    gregorio_element *next = create_and_link_element(current_element);
+    if (next) {
+        next->type = GRE_ELEMENT;
+        next->u.glyphs.first_glyph = first_glyph;
     }
-    next->type = GRE_ELEMENT;
-    next->element_type = 0;
-    next->additional_infos = 0;
-    next->first_glyph = first_glyph;
-    next->previous = *current_element;
-    next->next = NULL;
-    next->texverb = NULL;
-    if (*current_element) {
-        (*current_element)->next = next;
-    }
-    *current_element = next;
 }
 
 void
-gregorio_add_special_as_element(gregorio_element **current_element,
-                                gregorio_type type, char pitch,
-                                char additional_infos, char *texverb)
+gregorio_add_misc_element(gregorio_element **current_element,
+                          gregorio_type type, gregorio_misc_element_info info,
+                          char *texverb)
 {
-    gregorio_element *special = malloc(sizeof(gregorio_element));
-    if (!special) {
-        gregorio_message(_("error in memory allocation"),
-                         "add_special_as_element", FATAL_ERROR, 0);
-        return;
+    gregorio_element *special = create_and_link_element(current_element);
+    if (special) {
+        special->type = type;
+        special->u.misc = info;
+        special->texverb = texverb;
     }
-    special->type = type;
-    special->element_type = pitch;
-    special->additional_infos = additional_infos;
-    special->first_glyph = NULL;
-    special->next = NULL;
-    special->texverb = texverb;
-    special->previous = *current_element;
-    if (*current_element) {
-        (*current_element)->next = special;
+}
+
+static inline void free_one_element(gregorio_element *element)
+{
+    free(element->texverb);
+    if (element->type == GRE_ELEMENT) {
+        gregorio_free_glyphs(&element->u.glyphs.first_glyph);
     }
-    *current_element = special;
+    free(element);
 }
 
 void gregorio_free_one_element(gregorio_element **element)
 {
-    gregorio_element *next;
+    gregorio_element *next = NULL;
     if (!element || !*element) {
         return;
     }
-    free((*element)->texverb);
-    next = (*element)->next;
-    gregorio_free_glyphs(&(*element)->first_glyph);
-    free(*element);
+    if ((*element)->next) {
+        (*element)->next->previous = NULL;
+        next = (*element)->next;
+    }
+    if ((*element)->previous) {
+        (*element)->previous->next = NULL;
+    }
+    free_one_element(*element);
     *element = next;
 }
 
@@ -613,8 +667,7 @@ void gregorio_free_elements(gregorio_element **element)
     }
     while (*element) {
         next = (*element)->next;
-        gregorio_free_glyphs(&(*element)->first_glyph);
-        free(*element);
+        free_one_element(*element);
         *element = next;
     }
 }
@@ -650,7 +703,7 @@ gregorio_add_character(gregorio_character **current_character,
                        grewchar wcharacter)
 {
     gregorio_character *element =
-        (gregorio_character *) malloc(sizeof(gregorio_character));
+        (gregorio_character *) calloc(1, sizeof(gregorio_character));
     if (!element) {
         gregorio_message(_("error in memory allocation"),
                          "gregorio_add_character", FATAL_ERROR, 0);
@@ -702,7 +755,7 @@ gregorio_begin_style(gregorio_character **current_character,
                      grestyle_style style)
 {
     gregorio_character *element =
-        (gregorio_character *) malloc(sizeof(gregorio_character));
+        (gregorio_character *) calloc(1, sizeof(gregorio_character));
     if (!element) {
         gregorio_message(_("error in memory allocation"),
                          "add_note", FATAL_ERROR, 0);
@@ -723,7 +776,7 @@ void
 gregorio_end_style(gregorio_character **current_character, grestyle_style style)
 {
     gregorio_character *element =
-        (gregorio_character *) malloc(sizeof(gregorio_character));
+        (gregorio_character *) calloc(1, sizeof(gregorio_character));
     if (!element) {
         gregorio_message(_("error in memory allocation"),
                          "add_note", FATAL_ERROR, 0);
@@ -756,14 +809,14 @@ gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_message(_("too many voices"), "add_syllable", FATAL_ERROR, 0);
         return;
     }
-    next = malloc(sizeof(gregorio_syllable));
+    next = calloc(1, sizeof(gregorio_syllable));
     if (!next) {
         gregorio_message(_("error in memory allocation"),
                          "add_syllable", FATAL_ERROR, 0);
         return;
     }
     next->type = GRE_SYLLABLE;
-    next->additional_infos = 0;
+    next->special_sign = _NO_SIGN;
     next->position = position;
     next->no_linebreak_area = no_linebreak_area;
     next->text = first_character;
@@ -831,7 +884,7 @@ void gregorio_free_syllables(gregorio_syllable **syllable, int number_of_voices)
 
 gregorio_score *gregorio_new_score(void)
 {
-    gregorio_score *new_score = malloc(sizeof(gregorio_score));
+    gregorio_score *new_score = calloc(1, sizeof(gregorio_score));
     new_score->first_syllable = NULL;
     new_score->number_of_voices = 1;
     new_score->name = NULL;
@@ -1020,9 +1073,9 @@ void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes)
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info)
 {
     int annotation_num;
-    gregorio_voice_info *next = malloc(sizeof(gregorio_voice_info));
+    gregorio_voice_info *next = calloc(1, sizeof(gregorio_voice_info));
     next->initial_key = NO_KEY;
-    next->flatted_key = NO_FLAT_KEY;
+    next->flatted_key = false;
     for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num) {
         next->annotation[annotation_num] = NULL;
     }
@@ -1294,7 +1347,7 @@ void gregorio_activate_isolated_h_episemus(gregorio_note *current_note, int n)
      * we make the first iteration by hand,in the case where something would be 
      * in highest_pitch 
      */
-    top_note = current_note->pitch;
+    top_note = current_note->u.note.pitch;
     tmp = tmp->previous;
     if (!tmp) {
         // case of b___
@@ -1303,12 +1356,12 @@ void gregorio_activate_isolated_h_episemus(gregorio_note *current_note, int n)
                          "activate_h_isolated_episemus", WARNING, 0);
         return;
     }
-    top_note = max(top_note, tmp->pitch);
+    top_note = max(top_note, tmp->u.note.pitch);
     for (i = 0; i < n - 1; i++) {
-        top_note = max(top_note, tmp->pitch);
+        top_note = max(top_note, tmp->u.note.pitch);
         if (tmp->previous && tmp->previous->type == GRE_NOTE) {
             tmp = tmp->previous;
-            top_note = max(top_note, tmp->pitch);
+            top_note = max(top_note, tmp->u.note.pitch);
         } else {
             gregorio_message(_
                              ("found more horizontal episemus than notes able to be under"),
@@ -1320,7 +1373,7 @@ void gregorio_activate_isolated_h_episemus(gregorio_note *current_note, int n)
     // the top note. TODO: we should consider also the next note, but we cannot
     // do it at this stage.
     if (tmp->previous && tmp->previous->type == GRE_NOTE) {
-        top_note = max(top_note, tmp->previous->pitch);
+        top_note = max(top_note, tmp->previous->u.note.pitch);
     }
     while (tmp) {
         gregorio_set_h_episemus(tmp, H_MULTI);
@@ -1382,12 +1435,13 @@ void gregorio_determine_good_bottom_notes(gregorio_note *current_note)
         return;
     }
     prev_note = current_note->previous;
-    current_note->h_episemus_bottom_note = current_note->pitch;
+    if (current_note->type == GRE_NOTE) {
+        current_note->h_episemus_bottom_note = current_note->u.note.pitch;
+    }
     if (!prev_note) {
         return;
     }
-    if (prev_note->type == GRE_SPACE && prev_note->pitch == SP_ZERO_WIDTH
-        && prev_note->previous) {
+    if (prev_note->type == GRE_SPACE && prev_note->previous) {
         prev_note = prev_note->previous;
         if (!prev_note || !has_bottom(prev_note->h_episemus_type)) {
             return;
@@ -1404,9 +1458,7 @@ void gregorio_determine_good_bottom_notes(gregorio_note *current_note)
         bottom_note = current_note->h_episemus_bottom_note;
         while (prev_note) {
             if (!has_bottom(prev_note->h_episemus_type)) {
-                if (prev_note->type == GRE_SPACE
-                    && prev_note->pitch == SP_ZERO_WIDTH
-                    && prev_note->previous) {
+                if (prev_note->type == GRE_SPACE && prev_note->previous) {
                     prev_note = prev_note->previous;
                     continue;
                 } else {
@@ -1446,10 +1498,14 @@ void gregorio_mix_h_episemus(gregorio_note *current_note, unsigned char type)
         current_note->h_episemus_top_note = 0;
     } else {
         if (prev_note && prev_note->type == GRE_NOTE) {
-            current_note->h_episemus_top_note =
-                max(prev_note->pitch, current_note->pitch);
-        } else {
-            current_note->h_episemus_top_note = current_note->pitch;
+            if (current_note->type == GRE_NOTE) {
+                current_note->h_episemus_top_note =
+                    max(prev_note->u.note.pitch, current_note->u.note.pitch);
+            } else {
+                current_note->h_episemus_top_note = prev_note->u.note.pitch;
+            }
+        } else if (current_note->type == GRE_NOTE) {
+            current_note->h_episemus_top_note = current_note->u.note.pitch;
         }
         if (!prev_note || prev_note->type != GRE_NOTE
             || simple_htype(prev_note->h_episemus_type) == H_NO_EPISEMUS) {
@@ -1708,8 +1764,9 @@ char
     if (glyph) {
         glyph = glyph->next;
         while (glyph) {
-            if (glyph->type == GRE_GLYPH && glyph->first_note) {
-                return glyph->first_note->pitch;
+            if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
+                assert(glyph->u.notes.first_note->type == GRE_NOTE);
+                return glyph->u.notes.first_note->u.note.pitch;
             }
             glyph = glyph->next;
         }
@@ -1717,11 +1774,12 @@ char
     // then we do the same with the elements
     element = element->next;
     while (element) {
-        if (element->type == GRE_ELEMENT && element->first_glyph) {
-            glyph = element->first_glyph;
+        if (element->type == GRE_ELEMENT && element->u.glyphs.first_glyph) {
+            glyph = element->u.glyphs.first_glyph;
             while (glyph) {
-                if (glyph->type == GRE_GLYPH && glyph->first_note) {
-                    return glyph->first_note->pitch;
+                if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
+                    assert(glyph->u.notes.first_note->type == GRE_NOTE);
+                    return glyph->u.notes.first_note->u.note.pitch;
                 }
                 glyph = glyph->next;
             }
@@ -1756,10 +1814,10 @@ gregorio_glyph *gregorio_first_glyph(gregorio_syllable *syllable)
     }
     element = syllable->elements[0];
     while (element) {
-        if (element->type == GRE_ELEMENT && element->first_glyph) {
-            glyph = element->first_glyph;
+        if (element->type == GRE_ELEMENT && element->u.glyphs.first_glyph) {
+            glyph = element->u.glyphs.first_glyph;
             while (glyph) {
-                if (glyph->type == GRE_GLYPH && glyph->first_note) {
+                if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
                     return glyph;
                 }
                 glyph = glyph->next;
@@ -1777,7 +1835,8 @@ char gregorio_syllable_first_note(gregorio_syllable *syllable)
     if (glyph == NULL) {
         return 0;
     } else {
-        return glyph->first_note->pitch;
+        assert(glyph->u.notes.first_note->type == GRE_NOTE);
+        return glyph->u.notes.first_note->u.note.pitch;
     }
 }
 
@@ -1861,32 +1920,24 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
         }
         if (element->type == GRE_C_KEY_CHANGE) {
             clef =
-                gregorio_calculate_new_key(C_KEY, element->element_type - 48);
+                gregorio_calculate_new_key(C_KEY,
+                                           element->u.misc.pitched.pitch - '0');
             voice_info->initial_key = clef;
-            if (element->additional_infos == FLAT_KEY) {
-                voice_info->flatted_key = FLAT_KEY;
-            }
+            voice_info->flatted_key = element->u.misc.pitched.flatted_key;
             gregorio_free_one_element(&(score->first_syllable->elements[i]));
-            voice_info = voice_info->next_voice_info;
-            snprintf(error, 80,
-                     _
-                     ("in voice %d the first element is a key definition, considered as initial key"),
+            snprintf(error, 80, _("in voice %d the first element is a key "
+                                  "definition, considered as initial key"),
                      i + 1);
             gregorio_message(error, "gregorio_fix_initial_keys", VERBOSE, 0);
-
-            continue;
-        }
-        if (element->type == GRE_F_KEY_CHANGE) {
+        } else if (element->type == GRE_F_KEY_CHANGE) {
             clef =
-                gregorio_calculate_new_key(F_KEY, element->element_type - 48);
+                gregorio_calculate_new_key(F_KEY,
+                                           element->u.misc.pitched.pitch - '0');
             voice_info->initial_key = clef;
-            if (element->additional_infos == FLAT_KEY) {
-                voice_info->flatted_key = FLAT_KEY;
-            }
+            voice_info->flatted_key = element->u.misc.pitched.flatted_key;
             gregorio_free_one_element(&(score->first_syllable->elements[i]));
-            snprintf(error, 80,
-                     _
-                     ("in voice %d the first element is a key definition, considered as initial key"),
+            snprintf(error, 80, _("in voice %d the first element is a key "
+                                  "definition, considered as initial key"),
                      i + 1);
             gregorio_message(error, "gregorio_fix_initial_keys", VERBOSE, 0);
         }

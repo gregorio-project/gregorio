@@ -109,113 +109,149 @@ typedef enum gregorio_shape {
     S_LINEA,
 } gregorio_shape;
 
-/*
- * ! We start with the most precise structure, the note structure. The
- * note is always a real note (we'll see that glyphs and elements can be
- * other things). 
- */
-typedef struct gregorio_note {
-    // we have seen that notes are always real notes, that is to say
-    // GRE_NOTE. the type is always that in the final structure. But there
-    // is however this field in the structure because of the temporary
-    // states that can appear in the determination, where notes can be
-    // other things. This is the case for example in gabc reading.
-    ENUM_BITFIELD(gregorio_type) type:8;
-    // then two pointer to other notes, to make a chained list.
-    struct gregorio_note *previous;
-    struct gregorio_note *next;
-    // / the pitch is the height of the note on the score, that is to say
-    // the letter it is represented by in gabc.
-    char pitch;
-    // shape is the shape of the note... if you want to know the different
-    // possible shapes, see above.
-     ENUM_BITFIELD(gregorio_shape) shape:8;
-    // signs is the signs on the notes, see below for all possible values
-    char signs;
-    // rare_sign is the sign we sometimes encounter on punctum cavum, like
-    // accentus, semi-circulus, etc. can also be the ictus
-    char rare_sign;
-    // choral sign is a letter that appears next to a note in some choral
-    // scores
-    // we put it as char* because sometimes two letters appear
-    char *choral_sign;
-    // liquescentia is the liquescence on the note, it is not really used
-    // in the final score, but it is, like type, used in the determination
-    // of glyphs.
-    char liquescentia;
-    // h_episemus_type is the type of horizontal episemus, possible values
-    // are H_ALONE for an isolated horizontal episemus, H_MULTI_BEGINNING
-    // if the note is the first note of an episemus on several notes,
-    // H_MULTI_MIDDLE if it is inside an episemus on several notes. I let
-    // you guess what could be the use of H_MULTI_END. Other values are
-    // temporary values used in determination, they must not appear in the
-    // final structure.
-    unsigned char h_episemus_type;
-    // h_episemus_top_note is the highest pitch of the notes that are
-    // under the same horizontal episemus of the note. If the note is not
-    // under an episemus, it is 0.
-    char h_episemus_top_note;
-    // same for bottom_note
-    char h_episemus_bottom_note;
-    // a string containing a possible TeX verbatim; necessary during
-    // structure generation.
-    char *texverb;
-} gregorio_note;
+// the different kind of bars
 
-/*
- * ! @brief The gregorio glyph structure Unlike gregorio_note,
- * gregorio_glyph can be other things besides \c GRE_GLYPH: it can also be 
- * \c GRE_FLAT, \c GRE_NATURAL or \c GRE_SPACE 
- */
-typedef struct gregorio_glyph {
-    // type can have the values explained in the comment just above.
-    ENUM_BITFIELD(gregorio_type) type:8;
-    // two pointer to make a chained list
-    struct gregorio_glyph *previous;
-    struct gregorio_glyph *next;
-    // in the case of a GRE_GLYPH, glyph_type is the type of the glyph
-    // (porrectus, pes, etc.), they are all listed below. If it is a
-    // GRE_FLAT or a GRE_NATURAL, it is the height of the flat or natural
-    // that will be represented. If it is GRE_SPACE, it is the kind of
-    // space it is (they are listed below). As a matter of fact, a
-    // GRE_SPACE in a gregorio_glyph can have only one value:
-    // SP_ZERO_WIDTH, as other spaces would break the glyphs into
-    // different elements.
-    char glyph_type;
-    // liquescentia is really used, because that will determine the shape
-    // we will have to use.
-    // it may also contain additional informations (a bit hacky)
-    char liquescentia;
-    // a pointer to a (chained list of) gregorio_notes, the first of the
-    // glyph.
-    struct gregorio_note *first_note;
-    // a string containing a possible TeX verbatim; necessary during
-    // structure generation.
-    char *texverb;
-} gregorio_glyph;
+typedef enum gregorio_bar {
+    B_NO_BAR = 0,
+    B_VIRGULA,
+    B_DIVISIO_MINIMA,
+    B_DIVISIO_MINOR,
+    B_DIVISIO_MAIOR,
+    B_DIVISIO_FINALIS,
+    B_DIVISIO_MINOR_D1,
+    B_DIVISIO_MINOR_D2,
+    B_DIVISIO_MINOR_D3,
+    B_DIVISIO_MINOR_D4,
+    B_DIVISIO_MINOR_D5,
+    B_DIVISIO_MINOR_D6,
+} gregorio_bar;
 
-typedef struct gregorio_element {
-    // type can have the values GRE_ELEMENT, GRE_BAR, GRE_C_KEY_CHANGE,
-    // GRE_F_KEY_CHANGE, GRE_END_OF_LINE, GRE_SPACE, GRE_TEXVERB_ELEMENT
-    // or GRE_NLBA
-    ENUM_BITFIELD(gregorio_type) type:8;
-    // pointers to the next and previous elements.
-    struct gregorio_element *previous;
-    struct gregorio_element *next;
-    // in the case of a GRE_ELEMENT, element_type is the kind of element
-    // it is (but it is very blur.. don't watch this value). In the case
-    // of a GRE_BAR it is the type of bar (listed below). If it is
-    // GRE_*_KEY_CHANGE, it is 0. If it is GRE_SPACE, it is the kind of
-    // space (it can't be SP_ZERO_WIDTH).
-    char element_type;
-    // contain additional informations, like for example bar signs, or if
-    // the key has a flat or not
-    char additional_infos;
-    // a pointer to the first glyph of the element.
-    struct gregorio_glyph *first_glyph;
-    // a string containing a possible TeX verbatim.
-    char *texverb;
-} gregorio_element;
+// definition of the signs. You can notice that the values are made so
+// that if you wan to add a vertical episemus to a note, you juste
+// make note->signs+=_V_EPISEMUS, so please don't change the value as
+// this tricky is used.
+
+typedef enum gregorio_sign {
+    _NO_SIGN = 0,
+    _PUNCTUM_MORA = 1,
+    _AUCTUM_DUPLEX = 2,
+    _V_EPISEMUS = 5,
+    _V_EPISEMUS_PUNCTUM_MORA = 6,
+    _V_EPISEMUS_AUCTUM_DUPLEX = 7,
+    // more rare signs, for now they can't be used with the others
+    _ACCENTUS = 8,
+    _ACCENTUS_REVERSUS = 9,
+    _CIRCULUS = 10,
+    _SEMI_CIRCULUS = 11,
+    _SEMI_CIRCULUS_REVERSUS = 12,
+    _ICTUS_A = 13,
+    _ICTUS_T = 14,
+    // signs of a bar
+    _V_EPISEMUS_ICTUS_A = 15,
+    _V_EPISEMUS_ICTUS_T = 16,
+    _V_EPISEMUS_H_EPISEMUS = 17,
+    _V_EPISEMUS_H_EPISEMUS_ICTUS_A = 18,
+    _V_EPISEMUS_H_EPISEMUS_ICTUS_T = 19,
+    _H_EPISEMUS_ICTUS_A = 20,
+    _H_EPISEMUS_ICTUS_T = 21,
+    _H_EPISEMUS = 22,
+} gregorio_sign;
+
+// the different spaces
+
+typedef enum gregorio_space {
+    SP_DEFAULT = 1,
+    SP_NO_SPACE,
+    SP_ZERO_WIDTH,
+    SP_NEUMATIC_CUT,
+    SP_LARGER_SPACE,
+    SP_GLYPH_SPACE,
+    SP_NEUMATIC_CUT_NB,
+    SP_LARGER_SPACE_NB,
+    SP_GLYPH_SPACE_NB,
+} gregorio_space;
+
+// the different liquescences, like for the signs, have special
+// values: to say that something is initio_debilis, just do
+// glyph->liquescentia+=L_INITIO_DEBILIS. So don't change the value,
+// the tricky is much used
+
+typedef enum gregorio_liquescentia {
+    L_NO_LIQUESCENTIA = 0,
+    L_DEMINUTUS = 1,
+    L_AUCTUS_ASCENDENS = 2,
+    L_AUCTUS_DESCENDENS = 3,
+    L_AUCTA = 4,
+    L_INITIO_DEBILIS = 5,
+    L_DEMINUTUS_INITIO_DEBILIS = 6,
+    L_AUCTUS_ASCENDENS_INITIO_DEBILIS = 7,
+    L_AUCTUS_DESCENDENS_INITIO_DEBILIS = 8,
+    L_AUCTA_INITIO_DEBILIS = 9,
+} gregorio_liquescentia;
+
+typedef enum gregorio_h_episemus {
+    H_NO_EPISEMUS = 0,
+    H_ONE = 1,
+    H_ALONE = 2,
+    H_MULTI = 3,
+    H_MULTI_BEGINNING = 4,
+    H_MULTI_MIDDLE = 5,
+    H_MULTI_END = 6,
+    H_UNDETERMINED = 7,
+    // this H_EPISEMUS can be mixed with another one:
+    H_BOTTOM = 16,
+} gregorio_h_episemus;
+
+// The different types of glyph
+
+#define G_NO_GLYPH G_UNDETERMINED
+#define G_PES G_PODATUS
+#define G_FLEXUS G_FLEXA
+typedef enum gregorio_glyph_type {
+    G_PUNCTUM_INCLINATUM = 1,
+    G_2_PUNCTA_INCLINATA_DESCENDENS,
+    G_3_PUNCTA_INCLINATA_DESCENDENS,
+    G_4_PUNCTA_INCLINATA_DESCENDENS,
+    G_5_PUNCTA_INCLINATA_DESCENDENS,
+    G_2_PUNCTA_INCLINATA_ASCENDENS,
+    G_3_PUNCTA_INCLINATA_ASCENDENS,
+    G_4_PUNCTA_INCLINATA_ASCENDENS,
+    G_5_PUNCTA_INCLINATA_ASCENDENS,
+    G_TRIGONUS,
+    G_PUNCTA_INCLINATA,
+    // !!! DO NOT CHANGE THE ENUM ORDERING BEFORE THIS LINE !!!
+    G_UNDETERMINED,
+    G_VIRGA,
+    G_STROPHA,
+    G_STROPHA_AUCTA,
+    G_PUNCTUM,
+    G_PODATUS,
+    G_PES_QUADRATUM,
+    G_FLEXA,
+    G_TORCULUS,
+    G_TORCULUS_RESUPINUS,
+    G_TORCULUS_RESUPINUS_FLEXUS,
+    G_PORRECTUS,
+    G_PORRECTUS_FLEXUS,
+    G_BIVIRGA,
+    G_TRIVIRGA,
+    G_DISTROPHA,
+    G_DISTROPHA_AUCTA,
+    G_TRISTROPHA,
+    G_TRISTROPHA_AUCTA,
+    G_PES_QUADRATUM_FIRST_PART,
+    G_SCANDICUS,
+    G_PES_QUILISMA_QUADRATUM_FIRST_PART,
+    G_PES_ORISCUS_QUADRATUM_FIRST_PART,
+    G_ANCUS,
+    G_ONE_NOTE,
+    G_PUNCTA_ASCENDENS,
+    G_PUNCTA_DESCENDENS,
+    G_VIRGA_REVERSA,
+    G_SALICUS,
+    G_SALICUS_FIRST_PART,
+    G_TORCULUS_LIQUESCENS,
+} gregorio_glyph_type;
 
 /*
  * 
@@ -279,6 +315,166 @@ typedef enum gregorio_word_position {
     WORD_ONE_SYLLABLE,
 } gregorio_word_position;
 
+// the centering schemes for gabc:
+typedef enum gregorio_lyric_centering {
+    SCHEME_LATINE = 1,
+    SCHEME_ENGLISH,
+} gregorio_lyric_centering;
+
+typedef struct gregorio_extra_info {
+    // the sub-type of GRE_END_OF_LINE
+    ENUM_BITFIELD(gregorio_type) sub_type:8;
+    ENUM_BITFIELD(gregorio_bar) bar:8;
+    ENUM_BITFIELD(gregorio_space) space:8;
+    ENUM_BITFIELD(gregorio_nlba) nlba:8;
+} gregorio_extra_info;
+
+typedef union gregorio_misc_element_info {
+    // pitched is used for GRE_CUSTO, GRE_FLAT, GRE_SHARP, GRE_NATURAL,
+    // GRE_C_KEY_CHANGE, GRE_F_KEY_CHANGE, GRE_C_KEY_CHANGE_FLATED, and
+    // GRE_F_KEY_CHANGE_FLATED
+    struct {
+        // The pitch of the glyph for GRE_FLAT, GRE_NATURAL, GRE_SHARP.
+        // If a clef change, pitch will be a number indicating the line of
+        // the clef.
+        char pitch;
+        // boolean indicating a clef with a B-flat
+        bool flatted_key:1;
+    } pitched;
+    // unpitched is used for everything else
+    struct {
+        struct gregorio_extra_info info;
+        // an element might carry a sign.
+        ENUM_BITFIELD(gregorio_sign) special_sign:8;
+    } unpitched;
+} gregorio_misc_element_info;
+
+/*
+ * ! We start with the most precise structure, the note structure. The
+ * note is always a real note (we'll see that glyphs and elements can be
+ * other things). 
+ */
+typedef struct gregorio_note {
+    // then two pointer to other notes, to make a chained list.
+    struct gregorio_note *previous;
+    struct gregorio_note *next;
+    // choral sign is a letter that appears next to a note in some choral
+    // scores we put it as char* because sometimes two letters appear
+    char *choral_sign;
+    // a string containing a possible TeX verbatim; necessary during
+    // structure generation.
+    char *texverb;
+    union {
+        // note is used for GRE_NOTE, GRE_FLAT, GRE_SHARP, GRE_NATURAL,
+        // GRE_C_KEY_CHANGE, GRE_F_KEY_CHANGE, GRE_C_KEY_CHANGE_FLATED, and
+        // GRE_F_KEY_CHANGE_FLATED
+        struct {
+            // the pitch is the height of the note on the score, that is to
+            // say the letter it is represented by in gabc.  If a clef
+            // change, pitch will be a number indicating the line of the clef.
+            char pitch;
+            // shape is the shape of the note... if you want to know the
+            // different possible shapes, see above.
+            ENUM_BITFIELD(gregorio_shape) shape:8;
+            // liquescentia is the liquescence on the note, it is not really
+            // used in the final score, but it is, like type, used in the
+            // determination of glyphs.
+            ENUM_BITFIELD(gregorio_liquescentia) liquescentia:8;
+        } note;
+        // other is used for everything else
+        struct gregorio_extra_info other;
+    } u;
+
+    //// characters go to the end for structure alignment
+
+    // we have seen that notes are always real notes, that is to say
+    // GRE_NOTE. the type is always that in the final structure. But there
+    // is however this field in the structure because of the temporary
+    // states that can appear in the determination, where notes can be
+    // other things. This is the case for example in gabc reading.
+    ENUM_BITFIELD(gregorio_type) type:8;
+    // signs is the signs on the notes, see above for all possible values
+    ENUM_BITFIELD(gregorio_sign) signs:8;
+    // special_sign is the sign we sometimes encounter on punctum cavum, like
+    // accentus, semi-circulus, etc. can also be the ictus
+    // h_episemus_type is the type of horizontal episemus, possible values
+    // are H_ALONE for an isolated horizontal episemus, H_MULTI_BEGINNING
+    // if the note is the first note of an episemus on several notes,
+    // H_MULTI_MIDDLE if it is inside an episemus on several notes. I let
+    // you guess what could be the use of H_MULTI_END. Other values are
+    // temporary values used in determination, they must not appear in the
+    // final structure.
+    ENUM_BITFIELD(gregorio_h_episemus) h_episemus_type;
+    // h_episemus_top_note is the highest pitch of the notes that are
+    // under the same horizontal episemus of the note. If the note is not
+    // under an episemus, it is 0.
+    char h_episemus_top_note;
+    // same for bottom_note
+    char h_episemus_bottom_note;
+    ENUM_BITFIELD(gregorio_sign) special_sign:8;
+} gregorio_note;
+
+/*
+ * ! @brief The gregorio glyph structure Unlike gregorio_note,
+ * gregorio_glyph can be other things besides \c GRE_GLYPH: it can also be 
+ * \c GRE_FLAT, \c GRE_NATURAL or \c GRE_SPACE 
+ */
+typedef struct gregorio_glyph {
+    // two pointer to make a chained list
+    struct gregorio_glyph *previous;
+    struct gregorio_glyph *next;
+    // a string containing a possible TeX verbatim; necessary during structure
+    // generation.
+    char *texverb;
+    union {
+        // glyph is used for GRE_GLYPH
+        struct {
+            // a pointer to a (chained list of) gregorio_notes, the first of
+            // the glyph.
+            struct gregorio_note *first_note;
+            // The glyph type for a GRE_GLYPH (porrectus, pes, etc.).  They
+            // are all listed above.
+            ENUM_BITFIELD(gregorio_glyph_type) glyph_type:8;
+            // liquescentia is really used, because that will determine the
+            // shape we will have to use.
+            ENUM_BITFIELD(gregorio_liquescentia) liquescentia:8;
+        } notes;
+        union gregorio_misc_element_info misc;
+    } u;
+
+    //// characters go to the end for structure alignment
+
+    // type can have the values explained in the comment just above.
+    ENUM_BITFIELD(gregorio_type) type:8;
+
+    // There is no additional parameter for GRE_SPACE in a gregorio_glyph
+    // because gregorio_space in this case can have only one value:
+    // SP_ZERO_WIDTH, as other spaces would break the glyphs into
+    // different elements.
+} gregorio_glyph;
+
+typedef struct gregorio_element {
+    // pointers to the next and previous elements.
+    struct gregorio_element *previous;
+    struct gregorio_element *next;
+    // a string containing a possible TeX verbatim; necessary during structure
+    // generation.
+    char *texverb;
+    union {
+        // element is used for GRE_ELEMENT
+        struct {
+            // a pointer to the first glyph of the element.
+            struct gregorio_glyph *first_glyph;
+        } glyphs;
+        union gregorio_misc_element_info misc;
+    } u;
+
+    // type can have the values GRE_ELEMENT, GRE_BAR, GRE_C_KEY_CHANGE,
+    // GRE_F_KEY_CHANGE, GRE_END_OF_LINE, GRE_SPACE, GRE_TEXVERB_ELEMENT
+    // or GRE_NLBA
+    ENUM_BITFIELD(gregorio_type) type:8;
+} gregorio_element;
+
 /*
  * 
  * gregorio_characters are a bit specials. As there can be styles in the
@@ -308,7 +504,7 @@ typedef enum gregorio_word_position {
 
 typedef struct gregorio_style {
     ENUM_BITFIELD(grestyle_style) style:8;
-     ENUM_BITFIELD(grestyle_type) type:8;
+    ENUM_BITFIELD(grestyle_type) type:8;
 } gregorio_style;
 
 /*
@@ -349,13 +545,13 @@ typedef struct gregorio_syllable {
     // position is WORD_BEGINNING for the beginning of a multi-syllable
     // word, WORD_ONE_SYLLABLE for syllable that are alone in their word,
     // and i let you gess what are WORD_MIDDLE and WORD_END.
-     ENUM_BITFIELD(gregorio_word_position) position:8;
+    ENUM_BITFIELD(gregorio_word_position) position:8;
     // again, an additional field to put some signs or other things...
-    char additional_infos;
+    ENUM_BITFIELD(gregorio_sign) special_sign:8;
     // type of translation (with center beginning or only center end)
-     ENUM_BITFIELD(gregorio_tr_centering) translation_type;
+    ENUM_BITFIELD(gregorio_tr_centering) translation_type:8;
     // beginning or end of area without linebreak?
-     ENUM_BITFIELD(gregorio_nlba) no_linebreak_area:8;
+    ENUM_BITFIELD(gregorio_nlba) no_linebreak_area:8;
     // pointer to a gregorio_text structure corresponding to the text.
     struct gregorio_character *text;
     // pointer to a gregorio_text structure corresponding to the
@@ -456,13 +652,13 @@ typedef struct gregorio_voice_info {
     // special representation for the key. See comments on
     // src/struct-utils.c for further reading.
     int initial_key;
-    char flatted_key;
     // There is one annotation for each line above the initial letter
     char *annotation[NUM_ANNOTATIONS];
     // See source_info above for comments about the move of author etc.
     char *style;
     char *virgula_position;
     struct gregorio_voice_info *next_voice_info;
+    bool flatted_key;
 } gregorio_voice_info;
 
 gregorio_score *gregorio_new_score(void);
@@ -475,10 +671,11 @@ void gregorio_mix_h_episemus(gregorio_note *current_note, unsigned char type);
 gregorio_shape gregorio_det_shape(char pitch);
 
 void gregorio_add_note(gregorio_note **current_note, char pitch,
-                       gregorio_shape shape, char signs, char liquescentia,
-                       char h_episemus);
-void gregorio_add_glyph(gregorio_glyph **current_glyph, char type,
-                        gregorio_note *first_note, char liquescentia);
+                       gregorio_shape shape, gregorio_sign signs,
+                       gregorio_liquescentia liquescentia, char h_episemus);
+void gregorio_add_glyph(gregorio_glyph **current_glyph, gregorio_glyph_type type,
+                        gregorio_note *first_note,
+                        gregorio_liquescentia liquescentia);
 void gregorio_add_element(gregorio_element **current_element,
                           gregorio_glyph *first_glyph);
 void gregorio_add_syllable(gregorio_syllable **current_syllable,
@@ -492,13 +689,14 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
                            gregorio_nlba no_linebreak_area);
 
 void gregorio_set_signs(gregorio_note *current_note, char signs);
-void gregorio_add_special_sign(gregorio_note *current_note, char sign);
+void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
-void gregorio_add_h_episemus(gregorio_note *note, unsigned char type,
+void gregorio_add_h_episemus(gregorio_note *note, gregorio_h_episemus type,
                              unsigned int *nbof_isolated_episemus);
-void gregorio_set_h_episemus(gregorio_note *note, unsigned char type);
-void gregorio_add_sign(gregorio_note *note, char sign);
-void gregorio_add_liquescentia(gregorio_note *note, char liquescentia);
+void gregorio_set_h_episemus(gregorio_note *note, gregorio_h_episemus type);
+void gregorio_add_sign(gregorio_note *note, gregorio_sign sign);
+void gregorio_add_liquescentia(gregorio_note *note,
+                               gregorio_liquescentia liquescentia);
 
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info);
 
@@ -522,19 +720,34 @@ void gregorio_go_to_first_character(gregorio_character **character);
 void gregorio_add_text(char *mbcharacters,
                        gregorio_character **current_character);
 
-void gregorio_add_special_as_glyph(gregorio_glyph **current_glyph,
-                                   gregorio_type type, char pitch,
-                                   char additional_infos, char *texverb);
-void gregorio_add_special_as_note(gregorio_note **current_note,
-                                  gregorio_type type, char pitch);
+void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
+                                           gregorio_type type, char pitch,
+                                           bool flatted_key, char *texverb);
+void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
+                                             gregorio_type type,
+                                             gregorio_extra_info info,
+                                             gregorio_sign sign, char *texverb);
+
+void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
+                                      gregorio_type sub_type);
+void gregorio_add_custo_as_note(gregorio_note **current_note);
+void gregorio_add_clef_change_as_note(gregorio_note **current_note,
+                                      gregorio_type type, char clef_line);
+void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar);
+void gregorio_add_alteration_as_note(gregorio_note **current_note,
+                                     gregorio_type type, char pitch);
+void gregorio_add_space_as_note(gregorio_note **current_note,
+                                gregorio_space space);
+// void gregorio_add_special_as_note(gregorio_note **current_note,
+// gregorio_type type, char pitch);
 void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
                                   gregorio_type type);
-void gregorio_add_nlba_as_note(gregorio_note **current_note, char type);
+void gregorio_add_nlba_as_note(gregorio_note **current_note, gregorio_nlba type);
 void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str);
 void gregorio_add_cs_to_note(gregorio_note **current_note, char *str);
-void gregorio_add_special_as_element(gregorio_element **current_element,
-                                     gregorio_type type, char pitch,
-                                     char additional_infos, char *texverb);
+void gregorio_add_misc_element(gregorio_element **current_element,
+                               gregorio_type type,
+                               gregorio_misc_element_info info, char *texverb);
 
 void gregorio_determine_good_top_notes(gregorio_note *current_note);
 void gregorio_determine_good_bottom_notes(gregorio_note *current_note);
@@ -582,8 +795,6 @@ void gregorio_set_voice_style(gregorio_voice_info *voice_info, char *style);
 void
 gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
                                     char *virgula_position);
-void gregorio_set_voice_annotation(gregorio_voice_info *voice_info,
-                                   char *annotation);
 
 void gregorio_fix_initial_keys(gregorio_score *score, int default_key);
 
@@ -616,8 +827,8 @@ gregorio_set_octave_and_step_from_pitch(char *step,
 #define F_KEY 'f'
 #define NO_KEY -5
 #define DEFAULT_KEY 5
-#define FLAT_KEY 25
-#define NO_FLAT_KEY 0
+//#define FLAT_KEY 25
+//#define NO_FLAT_KEY 0
 
 #define MONOPHONY 0
 
@@ -632,46 +843,6 @@ gregorio_set_octave_and_step_from_pitch(char *step,
 #define NATURAL GRE_NATURAL
 
 #define USELESS_VALUE 0
-
-// definition of the signs. You can notice that the values are made so
-// that if you wan to add a vertical episemus to a note, you juste
-// make note->signs+=_V_EPISEMUS, so please don't change the value as
-// this tricky is used.
-
-#define _NO_SIGN 0
-#define _PUNCTUM_MORA 1
-#define _AUCTUM_DUPLEX 2
-#define _V_EPISEMUS 5
-#define _V_EPISEMUS_PUNCTUM_MORA 6
-#define _V_EPISEMUS_AUCTUM_DUPLEX 7
-// more rare signs, for now they can't be used with the others
-#define _ACCENTUS 8
-#define _ACCENTUS_REVERSUS 9
-#define _CIRCULUS 10
-#define _SEMI_CIRCULUS 11
-#define _SEMI_CIRCULUS_REVERSUS 12
-#define _ICTUS_A 13
-#define _ICTUS_T 14
-// signs of a bar
-#define _V_EPISEMUS_ICTUS_A 15
-#define _V_EPISEMUS_ICTUS_T 16
-#define _V_EPISEMUS_H_EPISEMUS 17
-#define _V_EPISEMUS_H_EPISEMUS_ICTUS_A 18
-#define _V_EPISEMUS_H_EPISEMUS_ICTUS_T 19
-#define _H_EPISEMUS_ICTUS_A 20
-#define _H_EPISEMUS_ICTUS_T 21
-#define _H_EPISEMUS 22
-
-#define H_NO_EPISEMUS 0
-#define H_ONE 1
-#define H_ALONE 2
-#define H_MULTI 3
-#define H_MULTI_BEGINNING 4
-#define H_MULTI_MIDDLE 5
-#define H_MULTI_END 6
-#define H_UNDETERMINED 7
-// this H_EPISEMUS can be mixed with another one:
-#define H_BOTTOM 16
 
 inline unsigned char simple_htype(unsigned char h)
 {
@@ -688,101 +859,10 @@ inline bool is_multi(unsigned char h_episemus)
     return (simple_htype(h_episemus)) > H_ALONE;
 }
 
-// the different kind of bars
-
-#define B_NO_BAR 0
-#define B_VIRGULA 1
-#define B_DIVISIO_MINIMA 2
-#define B_DIVISIO_MINOR 3
-#define B_DIVISIO_MAIOR 4
-#define B_DIVISIO_FINALIS 5
-#define B_DIVISIO_MINOR_D1 6
-#define B_DIVISIO_MINOR_D2 7
-#define B_DIVISIO_MINOR_D3 8
-#define B_DIVISIO_MINOR_D4 9
-#define B_DIVISIO_MINOR_D5 10
-#define B_DIVISIO_MINOR_D6 11
-
-// The different types of glyph
-
-#define G_PUNCTUM_INCLINATUM 1
-#define G_2_PUNCTA_INCLINATA_DESCENDENS 2
-#define G_3_PUNCTA_INCLINATA_DESCENDENS 3
-#define G_4_PUNCTA_INCLINATA_DESCENDENS 4
-#define G_5_PUNCTA_INCLINATA_DESCENDENS 5
-#define G_2_PUNCTA_INCLINATA_ASCENDENS 6
-#define G_3_PUNCTA_INCLINATA_ASCENDENS 7
-#define G_4_PUNCTA_INCLINATA_ASCENDENS 8
-#define G_5_PUNCTA_INCLINATA_ASCENDENS 9
-#define G_TRIGONUS 10
-#define G_PUNCTA_INCLINATA 11
-#define G_NO_GLYPH G_UNDETERMINED
-#define G_UNDETERMINED 12
-#define G_VIRGA 13
-#define G_STROPHA 14
-#define G_STROPHA_AUCTA 15
-#define G_PUNCTUM 16
-#define G_PES G_PODATUS
-#define G_PODATUS 17
-#define G_PES_QUADRATUM 18
-#define G_FLEXA 19
-#define G_FLEXUS G_FLEXA
-#define G_TORCULUS 20
-#define G_TORCULUS_RESUPINUS 21
-#define G_TORCULUS_RESUPINUS_FLEXUS 22
-#define G_PORRECTUS 23
-#define G_PORRECTUS_FLEXUS 24
-#define G_BIVIRGA 25
-#define G_TRIVIRGA 26
-#define G_DISTROPHA 27
-#define G_DISTROPHA_AUCTA 28
-#define G_TRISTROPHA 29
-#define G_TRISTROPHA_AUCTA 30
-#define G_PES_QUADRATUM_FIRST_PART 31
-#define G_SCANDICUS 32
-#define G_PES_QUILISMA_QUADRATUM_FIRST_PART 33
-#define G_PES_ORISCUS_QUADRATUM_FIRST_PART 38
-#define G_ANCUS 34
-#define G_ONE_NOTE 36
-#define G_PUNCTA_ASCENDENS 34
-#define G_PUNCTA_DESCENDENS 35
-#define G_VIRGA_REVERSA 37
-#define G_SALICUS 39
-#define G_SALICUS_FIRST_PART 40
-#define G_TORCULUS_LIQUESCENS 41
-
 inline bool is_puncta_inclinata(char glyph)
 {
     return glyph <= G_5_PUNCTA_INCLINATA_ASCENDENS;
 }
-
-// the different spaces
-
-#define SP_DEFAULT '1'
-#define SP_NO_SPACE '2'
-#define SP_ZERO_WIDTH '3'
-#define SP_NEUMATIC_CUT '4'
-#define SP_LARGER_SPACE '5'
-#define SP_GLYPH_SPACE '6'
-#define SP_NEUMATIC_CUT_NB '7'
-#define SP_LARGER_SPACE_NB '8'
-#define SP_GLYPH_SPACE_NB '9'
-
-// the different liquescences, like for the signs, have special
-// values: to say that something is initio_debilis, just do
-// glyph->liquescentia+=L_INITIO_DEBILIS. So don't change the value,
-// the tricky is much used
-
-#define L_NO_LIQUESCENTIA 0
-#define L_DEMINUTUS 1
-#define L_AUCTUS_ASCENDENS 2
-#define L_AUCTUS_DESCENDENS 3
-#define L_AUCTA 4
-#define L_INITIO_DEBILIS 5
-#define L_DEMINUTUS_INITIO_DEBILIS 6
-#define L_AUCTUS_ASCENDENS_INITIO_DEBILIS 7
-#define L_AUCTUS_DESCENDENS_INITIO_DEBILIS 8
-#define L_AUCTA_INITIO_DEBILIS 9
 
 #define IS_INITIO_DEBILIS 5
 #define NO_INITIO_DEBILIS 0
@@ -799,12 +879,6 @@ inline bool is_initio_debilis(char liquescentia)
 {
     return liquescentia >= L_INITIO_DEBILIS;
 }
-
-// the centering schemes for gabc:
-typedef enum gregorio_lyric_centering {
-    SCHEME_LATINE = 1,
-    SCHEME_ENGLISH,
-} gregorio_lyric_centering;
 
 #define SCHEME_DEFAULT SCHEME_LATINE
 
