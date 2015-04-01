@@ -46,7 +46,7 @@ static inline void error()
 {
     char *tempstr = malloc(71 * sizeof(char));
     snprintf(tempstr, 70, _("undefined macro used: m%d"),
-             gabc_notes_determination_text[3] - 48);
+             gabc_notes_determination_text[3] - '0');
     gregorio_message(tempstr, "gabc_notes_determination", ERROR, 0);
 }
 %}
@@ -90,41 +90,41 @@ static inline void error()
         BEGIN(choralsign);
     }
 <INITIAL>\[ob:[01]; {
-        char_for_brace = gabc_notes_determination_text[4]-48;
+        char_for_brace = gabc_notes_determination_text[4]-'0';
         BEGIN(overbrace);
     }
 <INITIAL>\[ocb:[01]; {
-        char_for_brace = gabc_notes_determination_text[5]-48;
+        char_for_brace = gabc_notes_determination_text[5]-'0';
         BEGIN(overcurlybrace);
     }
 <INITIAL>\[ocba:[01]; {
-        char_for_brace = gabc_notes_determination_text[6]-48;
+        char_for_brace = gabc_notes_determination_text[6]-'0';
         BEGIN(overcurlyaccentusbrace);
     }
 <INITIAL>\[nm[1-9]\] {
-        if (notesmacros[gabc_notes_determination_text[3]-48]) {
+        if (notesmacros[gabc_notes_determination_text[3]-'0']) {
             gregorio_add_texverb_to_note(&current_note,
-            strdup(notesmacros[gabc_notes_determination_text[3]-48]));
+            strdup(notesmacros[gabc_notes_determination_text[3]-'0']));
         } else error();
     }
 <INITIAL>\[gm[1-9]\] {
-        if (notesmacros[gabc_notes_determination_text[3]-48]) {
+        if (notesmacros[gabc_notes_determination_text[3]-'0']) {
             gregorio_add_texverb_as_note(&current_note,
-            strdup(notesmacros[gabc_notes_determination_text[3]-48]),
+            strdup(notesmacros[gabc_notes_determination_text[3]-'0']),
             GRE_TEXVERB_GLYPH);
         } else error();
     }
 <INITIAL>\[em[1-9]\] {
-        if (notesmacros[gabc_notes_determination_text[3]-48]) {
+        if (notesmacros[gabc_notes_determination_text[3]-'0']) {
             gregorio_add_texverb_as_note(&current_note,
-            strdup(notesmacros[gabc_notes_determination_text[3]-48]),
+            strdup(notesmacros[gabc_notes_determination_text[3]-'0']),
             GRE_TEXVERB_ELEMENT);
         } else error();
     }
 <INITIAL>\[altm[1-9]\] {
-        if (notesmacros[gabc_notes_determination_text[5]-48]) {
+        if (notesmacros[gabc_notes_determination_text[5]-'0']) {
             gregorio_add_texverb_as_note(&current_note,
-            strdup(notesmacros[gabc_notes_determination_text[5]-48]),
+            strdup(notesmacros[gabc_notes_determination_text[5]-'0']),
             GRE_TEXVERB_ELEMENT);
         } else error();
     }
