@@ -172,7 +172,8 @@ gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
         return;
     }
     element = create_and_link_note(current_note);
-    assert(type == GRE_TEXVERB_GLYPH || type == GRE_TEXVERB_ELEMENT);
+    assert(type == GRE_TEXVERB_GLYPH || type == GRE_TEXVERB_ELEMENT
+           || type == GRE_ALT);
     if (element) {
         element->type = type;
         element->texverb = str;
