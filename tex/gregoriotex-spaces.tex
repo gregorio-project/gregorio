@@ -727,8 +727,7 @@
 }%
 
 
-% We input the default config, for everything to work fine it has to be done after the gregoriotex package is completely loaded (so that all functions are well defined).  As a result we delay the loading to the beginning of the document.
-\AtBeginDocument{\GreLoadSpaceConf{default}}%
+% For everything to work fine the default configuration has to loaded after the gregoriotex package is completely loaded (so that all functions are well defined).  As a result you'll find that as the last line in gregoriotex.tex
 
 
 %%%%%%%%%%%%%%
