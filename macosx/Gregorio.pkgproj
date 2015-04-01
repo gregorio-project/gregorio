@@ -1806,7 +1806,9 @@
 										<key>LANGUAGE</key>
 										<string>English</string>
 										<key>VALUE</key>
-										<string>The various contributed add-ons to Gregorio.  You'll find stuff to help you configure your favorite TeX editor to use Gregorio here.</string>
+										<string>The various contributed add-ons to Gregorio.  You'll find stuff to help you configure your favorite TeX editor to use Gregorio here.
+
+These files will be installed to /Users/Shared/Gregorio/contrib.</string>
 									</dict>
 								</array>
 								<key>OPTIONS</key>
@@ -1843,7 +1845,9 @@
 										<key>LANGUAGE</key>
 										<string>English</string>
 										<key>VALUE</key>
-										<string>The documentation for Gregorio.  While you won't find a full documentation set here yet, many of the newer features are documented.  We're working on making this more complete.</string>
+										<string>The documentation for Gregorio.  While you won't find a full documentation set here yet, many of the newer features are documented.  We're working on making this more complete.
+
+These files will be installed to /Users/Shared/Gregorio.</string>
 									</dict>
 								</array>
 								<key>OPTIONS</key>
@@ -1880,7 +1884,9 @@
 										<key>LANGUAGE</key>
 										<string>English</string>
 										<key>VALUE</key>
-										<string>A sample project, including both the gabc file and the LuaLaTeX project file.</string>
+										<string>A sample project, including both the gabc file and the LuaLaTeX project file.
+
+These files will be installed to /Users/Shared/Gregorio/examples.</string>
 									</dict>
 								</array>
 								<key>OPTIONS</key>

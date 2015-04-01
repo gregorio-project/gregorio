@@ -27,6 +27,7 @@
 *.x86_64
 *.hex
 *.pkg
+*.mpkg
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

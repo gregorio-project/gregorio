@@ -20,7 +20,3 @@ rm -rf $GREFONTDIR
 rm -rf $GREFONTSOURCE
 rm -rf $GREDOCDIR
 
-#rm -dR $RECEIPTDIR/gregorio-2.0.pkg
-
-echo "Gregorio uninstalled. You may now delete the Gregorio folder\ncontaining this script and \
-the example files if you wish.\nThanks!"
