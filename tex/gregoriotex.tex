@@ -810,7 +810,7 @@
   \global\grelastoflinecount=0\relax %
   \global\greblockcusto=0\relax %
   \ifnum\grenlbstate=0\else %
-    \greendnlbarea{2}%
+    \greendnlbarea{2}{0}%
   \fi %
   \grelocalleftbox{}%
   \ifnum\keeprightbox=0\relax %
@@ -1441,3 +1441,7 @@
 \def\GreUseZeroHyphen{%
   \global\let\grehyph\grezerhyph %
 }%
+
+
+% We load the default space configuration.
+\GreLoadSpaceConf{default}%
