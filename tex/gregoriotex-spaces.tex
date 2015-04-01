@@ -200,8 +200,6 @@
 \else%
   \def\setstafflinethickness#1{%
     \xdef\gre@stafflinefactor{#1}%
-    \gre@computespaces %
-    %% TODO: make smarter
     \relax %
   }%
 \fi%
@@ -700,7 +698,6 @@
 % TODO: make smarter so that it knows the dependency tree and only recalculates distances affected by the change
 \def\grechangedim#1#2#3{%
   \gresetdim{#1}{#2}{#3}%
-  \gre@computespaces%
 }%
 
 %a macro to use if all you want to do is turn off the scaling for a particular distance
@@ -722,7 +719,6 @@
   \ifnum\the\grefactor=\greconffactor\else %If the space configuration file is designed for a \grefactor other than the current one, then we need to rescale the distances.
     \gre@changedimenfactor{\greconffactor}{\grefactor} %
   \fi%
-  \gre@computespaces %
   \relax %
 }%
 
@@ -1071,7 +1067,6 @@
     \divide\gre@count@temp@two by #1\relax%
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
   \fi%
-  \gre@computespaces%
   \relax %
 }%
 
