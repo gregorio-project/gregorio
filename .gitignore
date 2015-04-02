@@ -98,8 +98,8 @@ src/gabc/gabc-score-determination-l*
 src/gabc/gabc-notes-determination-l*
 windows/Ouput
 *.dirstamp
-config.h
-config.h.in
+config_.h
+config_.h.in
 stamp-h1
 Makevars.template
 *.gtex

@@ -4,14 +4,29 @@ AM_CFLAGS =
 bin_PROGRAMS = gregorio
 gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
 				   unicode.c struct.h messages.h unicode.h characters.h \
-				   plugins.h dump/dump.c dump/dump.h gregoriotex/gregoriotex-write.c \
-				   gregoriotex/gregoriotex.h
+				   plugins.h config.h dump/dump.c dump/dump.h \
+				   gregoriotex/gregoriotex-write.c gregoriotex/gregoriotex.h
 
+@MK@ifneq ($(wildcard ../.git),)
+@MK@  _tag_ = $(shell git describe --exact-match HEAD 2>/dev/null)
+@MK@  ifeq ($(_tag_),)
+@MK@    DEFS += -DBRANCH_VERSION='"b$(shell git rev-parse --abbrev-ref HEAD)-$(shell date +%Y%m%d_%H%M)-$(shell git rev-parse --short HEAD)"'
+@MK@  endif
+@MK@else
+@MK@  ifneq ($(wildcard ../.hg/git),)
+@MK@    _gitnode_ = $(shell hg log --template='{gitnode}' -r .)
+@MK@    _tag_ = $(shell git --git-dir=../.hg/git describe --exact-match $(_gitnode_) 2>/dev/null)
+@MK@    ifeq ($(_tag_),)
+@MK@      DEFS += -DBRANCH_VERSION='"b$(shell cat ../.hg/bookmarks.current)-$(shell date +%Y%m%d_%H%M)-$(shell git --git-dir=../.hg/git rev-parse --short '$(_gitnode_)')"'
+@MK@    endif
+@MK@  endif
+@MK@endif
+
+if HAVE_RC
 # Windows resources (see windows/README.md)
 .rc.o:
 	$(RC) $(RCFLAGS) $< -o $@
 
-if HAVE_RC
 gregorio_SOURCES += ../windows/gregorio-resources.rc
 endif
 

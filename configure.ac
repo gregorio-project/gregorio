@@ -18,6 +18,8 @@ dnl Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, U
 AC_INIT([gregorio],[3.0.0-beta],[gregorio-devel@gna.org])
 FILENAME_VERSION="3_0_0-beta"
 AC_SUBST(FILENAME_VERSION)
+MK=""
+AC_SUBST(MK)
 AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR([src/gregorio-utils.c])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -52,7 +54,7 @@ AC_CHECK_HEADERS([stdint.h])
 
 AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
 
-AM_CONFIG_HEADER([src/config.h])
+AC_CONFIG_HEADERS([src/config_.h])
 AC_CONFIG_FILES([
     Makefile
     src/Makefile
