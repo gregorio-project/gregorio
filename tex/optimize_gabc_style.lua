@@ -1,6 +1,7 @@
 --[[
 Gregorio gabc optimization style file.
-Copyright (C) 2010 Elie Roux <elie.roux@telecom-bretagne.eu>
+
+Copyright (C) 2010 The Gregorio Project (see CONTRIBUTORS.md)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

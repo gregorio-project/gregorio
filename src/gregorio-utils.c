@@ -1,5 +1,7 @@
 /*
- * Gregorio command line interface. Copyright (C) 2006-2015 Gregorio project
+ * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ *
+ * This file is part of Gregorio.
  * 
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
