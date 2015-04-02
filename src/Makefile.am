@@ -10,7 +10,7 @@ gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
 @MK@ifneq ($(wildcard ../.git),)
 @MK@  _tag_ = $(shell git describe --exact-match HEAD 2>/dev/null)
 @MK@  ifeq ($(_tag_),)
-@MK@    DEFS += -DBRANCH_VERSION='"b$(_branch_)-$(shell date +%Y%m%d_%H%M)-$(shell git rev-parse --short HEAD)"'
+@MK@    DEFS += -DBRANCH_VERSION='"b$(shell git rev-parse --abbrev-ref HEAD)-$(shell date +%Y%m%d_%H%M)-$(shell git rev-parse --short HEAD)"'
 @MK@  endif
 @MK@else
 @MK@  ifneq ($(wildcard ../.hg/git),)
