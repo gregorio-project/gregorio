@@ -100,29 +100,6 @@
     \greerror{GregorioTeX is in version \gregoriotexversion \space\space while a score you included requires version #1. Please recompile your scores}}%
 }%
 
-%%%%%%%%%%%%%%%%%%%%%%%%
-%% aux file definitions
-%%%%%%%%%%%%%%%%%%%%%%%%
-
-% for now, we only use an aux file with LuaTeX
-
-\ifluatex%
-  \newwrite\Greaux%
-\fi%
-
-\def\grewriteaux#1{%
-  \write\Greaux{#1}%
-  \relax %
-}%
-
-\def\opengreaux{%
-  \openout\Greaux \jobname .gaux\relax%
-}%
-
-\def\closegreaux{%
-  \closeout\Greaux %
-}%
-
 
 %%%%%%%%%%%%%%%
 %% basic start
@@ -724,57 +701,6 @@
   \unsetluatexattribute{\gregoriocenterattr}%
   \relax %
 }%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the chironomic signs lines
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% here is a quite special macro called at beggining of lines, that inserts a line of chironomic signs
-\def\greinsertchiroline{%
-  % the first line is a special case
-  \ifnum\greknownline=1\relax %
-    % some bugs appear if we don't box it
-    \hbox{\directlua{grechiro.printLine()}}%
-    \par %
-    % TODO: this line bugs with my version of LuaTeX
-    %\grenobreak 
-    \gre@skip@temp@four = \gre@dimen@belowsignsspace%
-    \kern\gre@skip@temp@four %
-    %\grenobreak 
-    \noindent %
-  \else %
-    % not very beaufiful, I don't like to make a new par inside a score, but....
-    \grelocalleftbox{}%
-    \grelocalrightbox{}%
-    \par %
-    \gre@skip@temp@four = \gre@dimen@abovesignsspace%
-    \kern\gre@skip@temp@four %
-    \noindent\hbox{\directlua{grechiro.printLine()}}%
-    \greupdateleftbox %
-    \par %
-    \grenobreak%
-    \gre@skip@temp@four = \gre@dimen@belowsignsspace%
-    \kern\gre@skip@temp@four %
-    \grenobreak %
-    \noindent %
-  \fi %
-  \relax %
-}%
-
-%macro to call just after begingregorioscore, if there are some chironomic signs
-\def\greactivatechironomy{%
-  % we print the absolute position of the beginning of the score, and the width of a line, to get the absolute positions of the begginning and end of lines
-  \pdfsavepos %
-  \grewriteaux{begin:\number\pdflastxpos}%
-  \grewriteaux{width:\number\gre@dimen@stafflinewidth}%
-  \RequireLuaModule{gregoriotex-ictus}%
-  \directlua{grechiro.atBeginScore()}%
-\fi %
-}%
-
-% count that is 1 or 0 if we need to print the small vertical bars in the chironomic line
-\newcount\printchirovbars%
-\printchirovbars=1%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
