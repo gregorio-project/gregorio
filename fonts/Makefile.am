@@ -39,10 +39,10 @@ gresym: gresym.ttf
 
 greextra: greextra.ttf
 
-clean:
-	@$(TOP_LEVEL_MAKE) $(RM) -f $(TTFFILES)
+clean-local:
+	$(RM) -f $(TTFFILES)
 
-install:
+install-data-local:
 	@$(TOP_LEVEL_MAKE) echo 'The Makefile in the fonts directory is no longer used for installing'
 	@$(TOP_LEVEL_MAKE) echo 'GregorioTeX.  Please use install-gtex.sh from the parent directory'
 	@$(TOP_LEVEL_MAKE) echo 'to install GregorioTeX.'

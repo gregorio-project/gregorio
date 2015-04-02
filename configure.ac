@@ -23,9 +23,11 @@ AC_CONFIG_SRCDIR([src/gregorio-utils.c])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([subdir-objects foreign dist-bzip2 no-dist-gzip])
+AM_INIT_AUTOMAKE([-Wall subdir-objects foreign dist-bzip2 no-dist-gzip])
 
 AC_PROG_CC
+dnl AM_PROG_CC_C_O is deprecated since Automake 1.14, to be removed in the future
+AM_PROG_CC_C_O
 AC_PROG_CC_STDC
 AC_PROG_CPP
 AM_PROG_LEX
