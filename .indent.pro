@@ -5,10 +5,10 @@
 -l80
 -lc80
 -d0
--fca
--fc1
 -cdb
 -sc
+-nlp
+-ci8
 
 -T FILE
 -T det_style
