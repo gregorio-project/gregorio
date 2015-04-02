@@ -22,6 +22,7 @@ GREGORIO_FILES = ["configure.ac",
                   "windows/gregorio-resources.rc",
                   "windows/gregorio.iss",
                   "tex/gregoriotex.lua",
+                  "tex/gregoriotex.sty",
                   "doc/GregorioRef.tex",
                   "plugins/gregoriotex/gregoriotex.h"
                  ]
@@ -145,6 +146,9 @@ def replace_version(version_obj):
                     result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
                 elif 'internalversion =' in line:
                     result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
+                elif 'PARSE_VERSION_DATE_LTX' in line:
+                    newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
+                    result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%Y/%m/%d"), newline, 1))
                 elif 'PARSE_VERSION_DATE' in line:
                     newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
                     result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%d/%m/%y"), newline, 1))
