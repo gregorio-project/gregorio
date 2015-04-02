@@ -23,7 +23,7 @@ GREGORIO_FILES = ["configure.ac",
                   "windows/gregorio.iss",
                   "tex/gregoriotex.lua",
                   "doc/GregorioRef.tex",
-                  "plugins/gregoriotex/gregoriotex.h"
+                  "src/gregoriotex/gregoriotex.h"
                  ]
 
 def get_parser():
