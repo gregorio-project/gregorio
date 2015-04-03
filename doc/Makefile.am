@@ -25,7 +25,7 @@ doc: GregorioRef-$(FILENAME_VERSION).pdf
 pdf-local: doc
 
 clean-local:
-	latexmk -quiet -C -jobname=GregorioRef-$(FILENAME_VERSION) GregorioRef.tex
+	latexmk -f -quiet -C -jobname=GregorioRef-$(FILENAME_VERSION) GregorioRef.tex
 	$(RM) -rf _minted*
 
 EXTRA_DIST = $(SRCFILES) GregorioRef-$(FILENAME_VERSION).pdf
