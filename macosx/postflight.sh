@@ -8,7 +8,7 @@
 TEXHASH=${TEXHASH:-texhash}
 TEXMFLOCAL=`kpsewhich -var-value TEXMFLOCAL`
 
-mv /tmp/ $TEXMFLOCAL
-rm -rf /tmp
+mv /tmp/greogorio/* $TEXMFLOCAL
+rm -rf /tmp/gregorio
 
 ${TEXHASH}
