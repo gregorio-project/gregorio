@@ -33,7 +33,8 @@ char *notesmacros[10];
 char *tempstr = NULL;
 
 static inline void
-lex_add_note(int i, char shape, char signs, char liquescentia, char h_episemus)
+lex_add_note(int i, gregorio_shape shape, char signs, char liquescentia,
+             char h_episemus)
 {
     nbof_isolated_episemus = 0;
     gregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]),
@@ -44,7 +45,7 @@ static inline void error()
 {
     char *tempstr = malloc(71 * sizeof(char));
     snprintf(tempstr, 70, _("undefined macro used: m%d"),
-             gabc_notes_determination_text[3] - 48);
+             gabc_notes_determination_text[3] - '0');
     gregorio_message(tempstr, "gabc_notes_determination", ERROR, 0);
 }
 %}
@@ -88,41 +89,41 @@ static inline void error()
         BEGIN(choralsign);
     }
 <INITIAL>\[ob:[01]; {
-        char_for_brace = gabc_notes_determination_text[4]-48;
+        char_for_brace = gabc_notes_determination_text[4]-'0';
         BEGIN(overbrace);
     }
 <INITIAL>\[ocb:[01]; {
-        char_for_brace = gabc_notes_determination_text[5]-48;
+        char_for_brace = gabc_notes_determination_text[5]-'0';
         BEGIN(overcurlybrace);
     }
 <INITIAL>\[ocba:[01]; {
-        char_for_brace = gabc_notes_determination_text[6]-48;
+        char_for_brace = gabc_notes_determination_text[6]-'0';
         BEGIN(overcurlyaccentusbrace);
     }
 <INITIAL>\[nm[1-9]\] {
-        if (notesmacros[gabc_notes_determination_text[3]-48]) {
+        if (notesmacros[gabc_notes_determination_text[3]-'0']) {
             gregorio_add_texverb_to_note(&current_note,
-            strdup(notesmacros[gabc_notes_determination_text[3]-48]));
+            strdup(notesmacros[gabc_notes_determination_text[3]-'0']));
         } else error();
     }
 <INITIAL>\[gm[1-9]\] {
-        if (notesmacros[gabc_notes_determination_text[3]-48]) {
+        if (notesmacros[gabc_notes_determination_text[3]-'0']) {
             gregorio_add_texverb_as_note(&current_note,
-            strdup(notesmacros[gabc_notes_determination_text[3]-48]),
+            strdup(notesmacros[gabc_notes_determination_text[3]-'0']),
             GRE_TEXVERB_GLYPH);
         } else error();
     }
 <INITIAL>\[em[1-9]\] {
-        if (notesmacros[gabc_notes_determination_text[3]-48]) {
+        if (notesmacros[gabc_notes_determination_text[3]-'0']) {
             gregorio_add_texverb_as_note(&current_note,
-            strdup(notesmacros[gabc_notes_determination_text[3]-48]),
+            strdup(notesmacros[gabc_notes_determination_text[3]-'0']),
             GRE_TEXVERB_ELEMENT);
         } else error();
     }
 <INITIAL>\[altm[1-9]\] {
-        if (notesmacros[gabc_notes_determination_text[5]-48]) {
+        if (notesmacros[gabc_notes_determination_text[5]-'0']) {
             gregorio_add_texverb_as_note(&current_note,
-            strdup(notesmacros[gabc_notes_determination_text[5]-48]),
+            strdup(notesmacros[gabc_notes_determination_text[5]-'0']),
             GRE_TEXVERB_ELEMENT);
         } else error();
     }
@@ -203,84 +204,82 @@ static inline void error()
     }
 [\t\r\n]+ /* ignore ends of line and tabs */;
 z   {
-        gregorio_add_special_as_note(&current_note, GRE_END_OF_LINE,
-                                     GRE_END_OF_LINE);
+        gregorio_add_end_of_line_as_note(&current_note, GRE_END_OF_LINE);
     }
 z0  {
-        gregorio_add_special_as_note(&current_note, GRE_CUSTO, USELESS_VALUE);
+        gregorio_add_custo_as_note(&current_note);
     }
 Z   {
-        gregorio_add_special_as_note(&current_note, GRE_END_OF_LINE,
-                                     GRE_END_OF_PAR);
+        gregorio_add_end_of_line_as_note(&current_note, GRE_END_OF_PAR);
     }
 (c|f)[1-4] {
         if (gabc_notes_determination_text[0]=='c') {
-            gregorio_add_special_as_note(&current_note, GRE_C_KEY_CHANGE,
-                                         gabc_notes_determination_text[1]);
+            gregorio_add_clef_change_as_note(&current_note, GRE_C_KEY_CHANGE,
+                                             gabc_notes_determination_text[1]);
         } else {
-            gregorio_add_special_as_note(&current_note, GRE_F_KEY_CHANGE,
-                                         gabc_notes_determination_text[1]);
+            gregorio_add_clef_change_as_note(&current_note, GRE_F_KEY_CHANGE,
+                                             gabc_notes_determination_text[1]);
         }
     }
 (cb|fb)[1-4] {
         if (gabc_notes_determination_text[0]=='c') {
-            gregorio_add_special_as_note(&current_note, GRE_C_KEY_CHANGE_FLATED,
-                                         gabc_notes_determination_text[2]);
+            gregorio_add_clef_change_as_note(&current_note, GRE_C_KEY_CHANGE_FLATED,
+                                             gabc_notes_determination_text[2]);
         } else {
-            gregorio_add_special_as_note(&current_note, GRE_F_KEY_CHANGE_FLATED,
-                                         gabc_notes_determination_text[2]);
+            gregorio_add_clef_change_as_note(&current_note, GRE_F_KEY_CHANGE_FLATED,
+                                             gabc_notes_determination_text[2]);
         }
     }
 `   {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_VIRGULA);
+        gregorio_add_bar_as_note(&current_note, B_VIRGULA);
     }
 ,   {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINIMA);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINIMA);
     }
 ,1  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR_D1);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D1);
     }
 ,2  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR_D2);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D2);
     }
 ,3  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR_D3);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D3);
     }
 ,4  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR_D4);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D4);
     }
 ,5  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR_D5);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D5);
     }
 ,6  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR_D6);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D6);
     }
 ;   {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR);
     }
 ;1  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR_D1);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D1);
     }
 ;2  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR_D2);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D2);
     }
 ;3  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR_D3);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D3);
     }
 ;4  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR_D4);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D4);
     }
 ;5  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR_D5);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D5);
     }
 ;6  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MINOR_D6);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D6);
     }
 :   {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_MAIOR);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MAIOR);
     }
 ::  {
-        gregorio_add_special_as_note(&current_note, GRE_BAR, B_DIVISIO_FINALIS);
+        gregorio_add_bar_as_note(&current_note, B_DIVISIO_FINALIS);
     }
 U   {
         gregorio_add_special_sign(current_note, _ICTUS_A);
@@ -313,75 +312,72 @@ r5  {
         gregorio_add_special_sign(current_note, _SEMI_CIRCULUS_REVERSUS);
     }
 [a-mA-M]x {
-        gregorio_add_special_as_note(&current_note, GRE_FLAT,
-                                     gabc_notes_determination_text[0]);
+        gregorio_add_alteration_as_note(&current_note, GRE_FLAT,
+                                        gabc_notes_determination_text[0]);
     }
 [a-mA-M]# {
-        gregorio_add_special_as_note(&current_note, GRE_SHARP,
-                                     gabc_notes_determination_text[0]);
+        gregorio_add_alteration_as_note(&current_note, GRE_SHARP,
+                                        gabc_notes_determination_text[0]);
     }
 [a-mA-M]y {
-        gregorio_add_special_as_note(&current_note, GRE_NATURAL,
-                                     gabc_notes_determination_text[0]);
+        gregorio_add_alteration_as_note(&current_note, GRE_NATURAL,
+                                        gabc_notes_determination_text[0]);
     }
 \/  {
-        gregorio_add_special_as_note(&current_note, GRE_SPACE, SP_NEUMATIC_CUT);
+        gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT);
     }
 \/\/ {
-        gregorio_add_special_as_note(&current_note, GRE_SPACE, SP_LARGER_SPACE);
+        gregorio_add_space_as_note(&current_note, SP_LARGER_SPACE);
     }
 \   {
-        gregorio_add_special_as_note(&current_note, GRE_SPACE, SP_GLYPH_SPACE);
+        gregorio_add_space_as_note(&current_note, SP_GLYPH_SPACE);
     }
 !\/ {
-        gregorio_add_special_as_note(&current_note, GRE_SPACE,
-                                     SP_NEUMATIC_CUT_NB);
+        gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT_NB);
     }
 !\/\/ {
-        gregorio_add_special_as_note(&current_note, GRE_SPACE,
-                                     SP_LARGER_SPACE_NB);
+        gregorio_add_space_as_note(&current_note, SP_LARGER_SPACE_NB);
     }
 !\  {
-        gregorio_add_special_as_note(&current_note, GRE_SPACE,
-                                     SP_GLYPH_SPACE_NB);
+        gregorio_add_space_as_note(&current_note, SP_GLYPH_SPACE_NB);
     }
 !/[^\/ ] {
-        gregorio_add_special_as_note(&current_note, GRE_SPACE, SP_ZERO_WIDTH);
+        gregorio_add_space_as_note(&current_note, SP_ZERO_WIDTH);
     }
 =   {
         gregorio_change_shape(current_note, S_LINEA);
     }
 [a-mA-M]vv {
-        lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+        lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
     }
 [a-mA-M]vvv {
-        lex_add_note(0, S_TRIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+        lex_add_note(0, S_TRIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
     }
 [a-mA-M]VV {
-        lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+        lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
     }
 [a-mA-M]VVV {
-        lex_add_note(0, S_TRIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+        lex_add_note(0, S_TRIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
     }
 [a-mA-M]ss {
-        lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+        lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
     }
 [a-mA-M]ss(\<|\>) {
         lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_AUCTA,H_NO_EPISEMUS);
     }
 [a-mA-M]sss {
-        lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+        lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
     }
 [a-mA-M]sss(\<|\>) {
-        lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTA,H_NO_EPISEMUS);
+        lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTA, H_NO_EPISEMUS);
     }
 [a-mA-M] {
         lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]),
-                     _NO_SIGN, L_NO_LIQUESCENTIA,H_NO_EPISEMUS);
+                     _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
     }
 -[a-mA-M] { 
         lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]),
-                     _NO_SIGN, L_INITIO_DEBILIS,H_NO_EPISEMUS);
+                     _NO_SIGN, L_INITIO_DEBILIS, H_NO_EPISEMUS);
     }
 \'  {
         gregorio_add_sign(current_note, _V_EPISEMUS);

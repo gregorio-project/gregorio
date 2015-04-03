@@ -20,38 +20,39 @@
 #ifndef DUMP_H
 #define DUMP_H
 
-void write_score (FILE *f, gregorio_score *score);
+#include <struct.h>
 
-const char *dump_key_to_char (int key);
+void write_score(FILE *f, gregorio_score *score);
 
-const char *dump_syllable_position (char pos);
+const char *dump_key_to_char(int key);
 
-const char *dump_type (char type);
+const char *dump_syllable_position(gregorio_word_position pos);
 
-const char *dump_bar_type (char element_type);
+const char *dump_type(gregorio_type type);
 
-const char *dump_space_type (char element_type);
+const char *dump_bar_type(gregorio_bar element_type);
 
-const char *dump_element_type (char element_type);
+const char *dump_space_type(gregorio_space element_type);
 
-const char *dump_liquescentia (char liquescentia);
+const char *dump_liquescentia(gregorio_liquescentia liquescentia);
 
-const char *dump_glyph_type (char glyph_type);
+const char *dump_glyph_type(gregorio_glyph_type glyph_type);
 
-const char *dump_shape (char shape);
+const char *dump_shape(gregorio_shape shape);
 
-const char *dump_signs (char signs);
+const char *dump_signs(gregorio_sign signs);
 
-const char *dump_rare_sign (char rare_sign);
+const char *dump_special_sign(gregorio_sign rare_sign);
 
-const char *dump_h_episemus_type (unsigned char h_episemus_type);
+const char *dump_h_episemus_type(gregorio_h_episemus h_episemus_type);
 
-void dump_write_characters (FILE *f, gregorio_character *current_character);
+void dump_write_characters(FILE *f, gregorio_character *current_character);
 
-const char *dump_style_to_string (unsigned char style);
+const char *dump_style_to_string(grestyle_style style);
 
-const char *dump_translation_type_to_string (unsigned char translation_type);
+const char *dump_translation_type_to_string(gregorio_tr_centering
+                                            translation_type);
 
-const char * dump_nlba_to_string (unsigned char no_linebreak_area);
+const char *dump_nlba_to_string(gregorio_nlba no_linebreak_area);
 
 #endif
