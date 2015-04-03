@@ -4,6 +4,23 @@
     A script that manages the VERSION of gregorio.
 
     See VersionUpdate.py -h for help
+
+    Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
+
+    This file is part of Gregorio.
+
+    Gregorio is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Gregorio is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from __future__ import print_function
@@ -22,8 +39,9 @@ GREGORIO_FILES = ["configure.ac",
                   "windows/gregorio-resources.rc",
                   "windows/gregorio.iss",
                   "tex/gregoriotex.lua",
+                  "tex/gregoriotex.sty",
                   "doc/GregorioRef.tex",
-                  "plugins/gregoriotex/gregoriotex.h"
+                  "src/gregoriotex/gregoriotex.h"
                  ]
 
 def get_parser():
@@ -145,6 +163,9 @@ def replace_version(version_obj):
                     result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
                 elif 'internalversion =' in line:
                     result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
+                elif 'PARSE_VERSION_DATE_LTX' in line:
+                    newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
+                    result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%Y/%m/%d"), newline, 1))
                 elif 'PARSE_VERSION_DATE' in line:
                     newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
                     result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%d/%m/%y"), newline, 1))

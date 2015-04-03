@@ -1,6 +1,7 @@
 /*
- * Gregorio gabc output format. Copyright (C) 2006-2009 Elie Roux
- * <elie.roux@telecom-bretagne.eu>
+ * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ *
+ * This file is part of Gregorio.
  * 
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -17,7 +18,6 @@
  * 
  * This is a simple and easyly understandable output module. If you want to
  * write a module, you can consider it as a model.
- * 
  */
 
 #include "config.h"
