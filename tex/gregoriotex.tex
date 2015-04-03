@@ -288,7 +288,7 @@
 \def\greinitial#1{%
   % see comments on this function to see what it does
   \gre@calculate@aboveinitialraise %
-  % we print the initial always at the same place, and the we print the GreAboveinitialfirstbox  centered
+  % we print the initial always at the same place, and the we print the GreAboveinitialfirstbox, centered
   % first we print the initial
   \gre@dimen@temp@five=-\gre@dimen@textlower %
   % if it is a big initial we print it on the second line 
@@ -353,12 +353,12 @@
   \ifdim\wd\GreAboveinitialfirstbox=0 pt\relax %
   \else %
     \gre@dimen@temp@five=\gre@dimen@initialwidth %
-    \advance\gre@dimen@temp@five by -\wd\GreAboveinitialfirstbox  %
+    \advance\gre@dimen@temp@five by -\wd\GreAboveinitialfirstbox%
     \divide\gre@dimen@temp@five by 2 %
     \gre@skip@temp@four = -\gre@dimen@initialwidth%
     \hskip\gre@skip@temp@four %
     \kern\gre@dimen@temp@five %
-    \raise\gre@dimen@aboveinitialfirstraise\copy\GreAboveinitialfirstbox  %
+    \raise\gre@dimen@aboveinitialfirstraise\copy\GreAboveinitialfirstbox%
     \kern\gre@dimen@temp@five %
     \setbox\GreAboveinitialfirstbox=\hbox{}%
   \fi %
@@ -504,8 +504,8 @@
 }%
 
 % the code is a bit strange here: we always execute \gre@skip@spaceabovelines at the beginning of a glyph. This will:
-%  - typeset the text above the lines if relevant, and making sure we execute it only once
-%  - not do anything else
+% - typeset the text above the lines if relevant, and making sure we execute it only once
+% - not do anything else
 
 \xdef\grecurrenttextabovelines{}%
 
@@ -555,7 +555,7 @@
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
 \def\gredrawfirstlines{%
   \advance\gre@dimen@stafflinewidth by -\gre@dimen@initialwidth%
-%  \advance\gre@dimen@stafflinewidth by -\gre@dimen@minimalspaceatlinebeginning
+  %\advance\gre@dimen@stafflinewidth by -\gre@dimen@minimalspaceatlinebeginning
   %\gre@dimen@initialwidth=0pt
   \hbox to 0pt{%
     \vbox{%
@@ -810,7 +810,7 @@
   \global\grelastoflinecount=0\relax %
   \global\greblockcusto=0\relax %
   \ifnum\grenlbstate=0\else %
-    \greendnlbarea{2}%
+    \greendnlbarea{2}{0}%
   \fi %
   \grelocalleftbox{}%
   \ifnum\keeprightbox=0\relax %
@@ -980,9 +980,9 @@
 
 % same as above, but for the score. For now it is the same behaviour.
 \def\grelastofscore{%
-%  \grelocalleftbox{}% For an unknown reason, if I uncomment this line, the
-%  blank line removing algorithm (in lua) will let some blank space after the
-%  last line... (see bug #20953)
+  %\grelocalleftbox{}% For an unknown reason, if I uncomment this line, the
+  %blank line removing algorithm (in lua) will let some blank space after the
+  %last line... (see bug #20953)
   \greblockcustos %
   \global\grelastoflinecount=1\relax%
   \relax%
@@ -1191,7 +1191,7 @@
 
 \def\greitalic#1{%
   {\it #1}%
-%  \relax 
+  %\relax 
 }%
 
 \def\gresmallcaps#1{%
@@ -1324,9 +1324,9 @@
 % If \gre@compilegabc is 0, then we simply try to include the file as it is given to us.  This is the old behavior.
 %
 % If \gre@compilegabc is 1, tell the lua function to check that:
-%  -- The gtex file exists.
-%  -- The gtex file is of the correct gregoriotexapi_version.
-%  -- The gtex file is 'newer' than it's corresponding gabc file.
+%	-- The gtex file exists.
+%	-- The gtex file is of the correct gregoriotexapi_version.
+%	-- The gtex file is 'newer' than it's corresponding gabc file.
 % If any test fails, the gabc file is (re)compiled.
 %
 % If \gre@compilegabc is 2, pass true to the lua function.
@@ -1379,7 +1379,7 @@
       \gre@debug{Override force compiling #2}%
       \directlua{gregoriotex.include_score([[#2]], true)}%
     \else%
-      \ifx  #1a\relax%
+      \ifx #1a\relax%
         \gre@debug{Override auto compiling #2}%
         \directlua{gregoriotex.include_score([[#2]], nil)}%
       \else%
@@ -1441,3 +1441,7 @@
 \def\GreUseZeroHyphen{%
   \global\let\grehyph\grezerhyph %
 }%
+
+
+% We load the default space configuration.
+\GreLoadSpaceConf{default}%

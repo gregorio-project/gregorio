@@ -208,7 +208,7 @@
 
 \def\gresetstafflinefactor#1{%
   \gre@warning{\protect\gresetstafflinefactor\space is deprecated.\MessageBreak Use \protect\setstafflinethickness\space instead.}%
-  \setstafflinethickness{#1}	%
+  \setstafflinethickness{#1}%
 }%
 
 %constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
@@ -486,7 +486,7 @@
 
 %% macros for additional bottom space for the first line
 
-% #1 is 1, 2 or 3, with the same signification as in grenewlinewithspace
+% #1 is 1, 2, 3, or 4, with the same signification as in grenewlinewithspace
 \def\grefirstlinebottomspace#1#2{%
   \ifcase#1\relax %
     % case 0
@@ -498,6 +498,9 @@
     \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
   \or % case 3
     \global\gre@dimen@additionalbottomspace=30000 sp%
+    \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
+  \or % case 4
+    \global\gre@dimen@additionalbottomspace=45000 sp%
     \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
   \fi %
   \ifnum#2=1\relax %
@@ -724,8 +727,7 @@
 }%
 
 
-% We input the default config, for everything to work fine it has to be done after the gregoriotex package is completely loaded (so that all functions are well defined).  As a result we delay the loading to the beginning of the document.
-\AtBeginDocument{\GreLoadSpaceConf{default}}%
+% For everything to work fine the default configuration has to loaded after the gregoriotex package is completely loaded (so that all functions are well defined).  As a result you'll find that as the last line in gregoriotex.tex
 
 
 %%%%%%%%%%%%%%
@@ -759,7 +761,7 @@
   \IfStrEq{#1}{abovelinestextheight}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{braceshift}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{curlybraceaccentusshift}{\rubberfalse}{\relax}%
-}	
+}%
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
 %% Note: This function is assumed to touch only dimensions which are meant to scale with the \grefactor (i.e. if it acts on distance x, \gre@scale@x is 1)
@@ -1080,7 +1082,7 @@
 %Seeing as these are the distances that people will want to change the most often,
 %we give them their own set of macros to make that easier.
 
-% To change the spacing between annotations.  
+% To change the spacing between annotations.
 %First argument is distance, second is whether it should scale when \grefactor changes.
 \ifdefined\setaboveinitialseparation%
   \greerror{\protect\setaboveinitialseparation\space is already defined.  Check for package conflicts.}%
@@ -1109,7 +1111,7 @@
 
 \def\GreSetSpaceAfterInitial#1{%
   \gre@warning{\protect\GreSetSpaceAfterInitial\space is deprecated.\MessageBreak Use \protect\setspaceafteriniital\space instead.}%
-  \setspaceafterinitial#1{1}	%
+  \setspaceafterinitial#1{1}%
 }%
 
 %To change the space before the initial
@@ -1125,7 +1127,7 @@
 
 \def\GreSetSpaceBeforeInitial#1{%
   \gre@warning{\protect\GreSetSpaceBeforeInitial\space is deprecated.\MessageBreak Use \protect\setspacebeforeiniital\space instead.}%
-  \setspacebeforeinitial#1{1}	%
+  \setspacebeforeinitial#1{1}%
 }%
 
 

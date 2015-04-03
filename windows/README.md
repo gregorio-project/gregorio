@@ -19,4 +19,4 @@ To be able to install GregorioTeX, the installer will need a `.tds.zip` file con
 
 ### Building the installer
 
-You need [InnoSetup](http://www.jrsoftware.org/isinfo.php) to be able to compile the installer. It runs fine under [Wine](https://www.winehq.org/). Once you have it installed: run InnoSetup.exe, open the `windows/gregorio.iss` file and compile it, it will produce `windows/Output/setup.exe`. You can also run it from command line: `wine32 'C:\\Program Files\Inno Setup 5\ISCC.exe gregorio.iss'` in the `windows` directory (replace the `ISCC.exe` path with yours if different).
+You need [InnoSetup](http://www.jrsoftware.org/isinfo.php) to be able to compile the installer. It runs fine under [Wine](https://www.winehq.org/). Once you have it installed: run InnoSetup.exe, open the `windows/gregorio.iss` file and compile it, it will produce `windows/Output/setup.exe`. You can also run it from command line: `wine32 'C:\\Program Files\Inno Setup 5\ISCC.exe' gregorio.iss` in the `windows` directory (replace the `ISCC.exe` path with yours if different).

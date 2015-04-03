@@ -1,7 +1,7 @@
 #!/usr/bin/env texlua
 --[[
-Gregorio gabc optimization script.
-Copyright (C) 2010 Elie Roux <elie.roux@telecom-bretagne.eu>
+Gregorio Windows automatic installation script.
+Copyright (C) 2010-2015 Gregorio Project authors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -14,10 +14,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.	If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-You must run this program with texlua, if possible under a TeXLive 2010.
-This program installs gregorio under Windows.
+This texlua script is called in Windows automatic installer (see gregorio.iss),
+it installs GregorioTeX under Windows.
 --]]
 
 require("lfs")
@@ -38,7 +38,7 @@ local function basename(path)
   return path:gsub("^[^/]+/" ,"")
 end
 
-if os_type == "windows" or os_type == "msdos" then
+if os.type == "windows" or os.type == "msdos" then
   pathsep = '\\'
   fixpath = function(path)
     return path:gsub("/", "\\")
@@ -51,14 +51,7 @@ if os_type == "windows" or os_type == "msdos" then
   end
 end
 
-local texmflocal = fixpath(kpse.expand_var("$TEXMFLOCAL"))..pathsep
-local texworksdir = fixpath(kpse.expand_var("$TEXMFCONFIG"))..pathsep..'texworks'..pathsep
-
 local suffix = "gregoriotex"..pathsep
-local dirs = {
-  templatemain = texworksdir.."templates"..pathsep.."Gregorio Main File"..pathsep,
-  templatescore = texworksdir.."templates"..pathsep.."Gregorio Score"..pathsep,
-}
 
 function io.loaddata(filename,textmode)
   local f = io.open(filename,(textmode and 'r') or 'rb')
@@ -180,163 +173,6 @@ function main_install()
   run_texcommands()
 end
 
-function texworks_conf(install_dir)
-  local filesdir = texworksdir
-  if not lfs.isdir(remove_trailing_slash(texworksdir)) then
-    print("TeXWorks not found, skipping.\n"..texworksdir)
-    return
-  end
-  print("Modifying tools.ini...\n")
-  texworks_conf_tools(filesdir.."configuration"..pathsep.."tools.ini", install_dir)
-  print("Modifying TeXWorks.ini...\n")
-  texworks_conf_ini(filesdir.."TUG"..pathsep.."TeXWorks.ini")
-  print("Modifying texworks-config.txt...\n")
-  texworks_conf_config(filesdir.."configuration"..pathsep.."texworks-config.txt")
-end
-
-function texworks_conf_config(filename)
-  remove_read_only(filename)
-  local data = ""
-  local f = io.open(filename, 'r')
-  for l in f:lines() do
-    -- we consider that if someone has already modified it (or a previous intall of gregorio), we don't do anything
-    local m = l:find("^file%-open%-filter")
-    if m then
-      return
-    end
-    data = data..l.."\n"
-  end
-  data = data..[[
-file-open-filter: TeX documents (*.tex)
-file-open-filter: Gabc score (*.gabc)
-file-open-filter: LaTeX documents (*.ltx)
-file-open-filter: BibTeX databases (*.bib)
-file-open-filter: Style files (*.sty)
-file-open-filter: Class files (*.cls)
-file-open-filter: Documented macros (*.dtx)
-file-open-filter: Auxiliary files (*.aux *.toc *.lot *.lof *.nav *.out *.snm *.ind *.idx *.bbl *.log)
-file-open-filter: Text files (*.txt)
-file-open-filter: PDF documents (*.pdf)
-file-open-filter: All files (*.* *)
-]]
-  io.savedata(filename, data)
-end
-
-function texworks_conf_ini(filename)
-  remove_read_only(filename)
-  local f = io.open(filename, 'r')
-  local data = ""
-  for l in f:lines() do
-    if l:match("defaultEngine") then
-      data = data.."defaultEngine=LuaLaTeX\n"
-    else
-      data = data..l.."\n"
-    end
-  end
-  io.savedata(filename, data)
-end
-
-local full_tools_ini = {[[name=pdfTeX
-program=pdftex.exe
-arguments=$synctexoption, $fullname
-showPdf=true]]}
-
-full_tools_ini[2] = [[name=pdfLaTeX
-program=pdflatex.exe
-arguments=$synctexoption, $fullname
-showPdf=true]]
-
-full_tools_ini[3] = [[name=LuaTeX
-program=luatex.exe
-arguments=$synctexoption, $fullname
-showPdf=true]]
-
-full_tools_ini[4] = [[name=LuaLaTeX
-program=lualatex.exe
-arguments=--shell-escape, $synctexoption, $fullname
-showPdf=true]]
-
-full_tools_ini[5] = [[name=XeTeX
-program=xetex.exe
-arguments=$synctexoption, $fullname
-showPdf=true]]
-
-full_tools_ini[6] = [[name=XeLaTeX
-program=xelatex.exe
-arguments=$synctexoption, $fullname
-showPdf=true]]
-
-full_tools_ini[7] = [[name=ConTeXt (LuaTeX)
-program=context.exe
-arguments=--synctex, $fullname
-showPdf=true]]
-
-full_tools_ini[8] = [[name=ConTeXt (pdfTeX)
-program=texexec.exe
-arguments=--synctex, $fullname
-showPdf=true]]
-
-full_tools_ini[9] = [[name=ConTeXt (XeTeX)
-program=texexec.exe
-arguments=--synctex, --xtx, $fullname
-showPdf=true]]
-
-full_tools_ini[10] = [[name=BibTeX
-program=bibtex.exe
-arguments=$basename
-showPdf=false]]
-
-full_tools_ini[11] = [[name=MakeIndex
-		       program=makeindex.exe
-		       arguments=$basename
-		       showPdf=false]]
-
-function texworks_conf_tools(filename, install_dir)
-  local lualatexfound = 0
-  -- by default, there is no tools.ini in the recent versions of TeXWorks
-  if not lfs.isfile(filename) then 
-    print(filename.." does not exist, creating it...\n")
-    local toolstable = full_tools_ini
-    current = 11
-    lualatexfound = 1
-  else
-    -- let's remove the read-only attribute
-    remove_read_only(filename)
-    local f = io.open(filename, 'r')
-    local toolstable = {}
-    local current = 0
-    for l in f:lines() do
-      local num = tonumber(l:match("%[(%d+)%]"))
-      if num then
-	current = num
-      elseif l ~= "" then
-	if string.lower(l) == "name=lualatex" then
-	  lualatexfound = 1
-	end
-	if toolstable[current] == nil then
-	  toolstable[current] = l
-	else
-	  toolstable[current] = toolstable[current]..'\n'..l
-	end
-      end
-    end
-  end
-  if lualatexfound == 0 then
-    current = current + 1
-    toolstable[current] = "name=LuaLaTeX"
-    toolstable[current] = toolstable[current]..'\n'..'program=lualatex'
-    toolstable[current] = toolstable[current]..'\n'..'arguments=--shell-escape, $synctexoption, $fullname'
-    toolstable[current] = toolstable[current]..'\n'..'showPdf=true'
-  else
-    return
-  end
-  local data = ""
-  for i,s in ipairs(toolstable) do
-    data = data..string.format("[%03d]\n", i)..s..'\n\n'
-  end
-  io.savedata(filename, data)
-end
-
 function scribus_config()
   local f = io.open('contrib'..pathsep..'900_gregorio.xml', 'r')
   local data = ""
@@ -350,12 +186,6 @@ function scribus_config()
   io.savedata('contrib'..pathsep..'900_gregorio.xml', data)
 end
 
-if arg[1] == nil or arg[1] ~= '--conf' then		 
-  main_install()
-  scribus_config()
-else
-  --even though windows uses \ as the path seperator, TeXworks uses / so we
-  --need to change that in the installation directory name we've been passed
-  install_dir = arg[2]:gsub("\\","/")
-  texworks_conf(install_dir)
-end
+main_install()
+scribus_config()
+

@@ -2,13 +2,17 @@
 All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
+## [Unreleased][unreleased]
+### Removed
+- GregorioXML and OpusTeX output
 
 ## 3.0.0-beta - 2015-03-15
 ### Changed
+- [New website](http://gregorio-project.github.io) containing instructions only for new versions of Gregorio starting with this release, in English only.
 - New incompatible format of space configuration files (`gsp-xxx.tex`).  Values are now scaled to the default staff size (see [#50](https://github.com/gregorio-project/gregorio/issues/50).  You now need to use `\gresetdim` for setting distances (`\somedistance = 3cm`) can no longer be used).  `\gresetdim` takes three arguments: the name of the distance, the desired value, and whether the distance should scale with changes in the staff size or not.  See `gsp-default.tex` for an example.
 - All distances can now be set to scale with staff size, as a consequence `\grechangedim` now takes three arguments: the name of the distance, value to change the distance to (which now supports em and ex units), and whether or not this value should be scaled with changes in the staff size.  See doc/UserManual.pdf for details.
 - `\setinitalspacing` , `\setspacebeforeinitial`, `\setspaceafterinitial`, and `\setaboveinitialseparation` now take an additional argument.  The new argument specifies whether the distance should scale when the staff size changes.
-- Improved `\includescore` capabilities.  See doc/UserManual.pdf for full details.
+- Improved `\includescore` capabilities.  The `\includescore[f]` parameter has changed to `\includescore[n]` compared to version 2.4.2.  See doc/UserManual.pdf for full details and UPGRADING.md for instructions on how to upgrade your score from 2.4.2.
 - Clivis stem length now follow Solesmes' books conventions (see [#31](https://github.com/gregorio-project/gregorio/issues/31)).
 - Windows TeXworks configuration script no longer adds deprecated `greg-book` and `gregorio` engines (see below).
 - `build.sh` and `install.sh` scripts are now used to build and install Gregorio with common options.
@@ -23,7 +27,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - This CHANGELOG.
 
 ### Deprecated
-- OpusTeX writing and GregorioXML reading and writing features will disappear in next minor release.
+- OpusTeX writing and GregorioXML reading and writing features will disappear in next minor release
+- The [old website](http://home.gna.org/gregorio/) contains instructions for old versions of Gregorio only, and will not be updated anymore.
+- the `-O` option
 - `\includetexscore`, supplanted by `\includescore[n]`
 - `\greincludetexscore`, supplanted by `\includescore[n]`
 - `\includegabcscore`, supplanted by `\includescore[f]`

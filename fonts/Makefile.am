@@ -4,7 +4,7 @@
 TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf gresym.ttf greextra.ttf
 SOURCEFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd gresym.sfd greextra.sfd
 
-EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py FONTLOG README.md gregoria2gregorio.py
+EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py README.md gregoria2gregorio.py
 
 PYTHON = python2
 RM = rm
@@ -40,7 +40,7 @@ gresym: gresym.ttf
 greextra: greextra.ttf
 
 clean:
-	$(RM) -f $(TTFFILES)
+	@$(TOP_LEVEL_MAKE) $(RM) -f $(TTFFILES)
 
 install:
 	@$(TOP_LEVEL_MAKE) echo 'The Makefile in the fonts directory is no longer used for installing'
@@ -52,3 +52,6 @@ install:
 	@$(TOP_LEVEL_MAKE) echo
 	@$(TOP_LEVEL_MAKE) echo 'If you were using "make localinstall" before, now use'
 	@$(TOP_LEVEL_MAKE) echo '    ./install-gtex.sh user'
+
+all:
+	@$(TOP_LEVEL_MAKE) echo 'Please use "make fonts" if you wish to build the GregorioTeX fonts'

@@ -1,11 +1,12 @@
-SRCFILES= Command_Index_gregorio.tex  Command_Index_internal.tex  Command_Index_User.tex UserManual.tex
+SRCFILES= Command_Index_gregorio.tex  Command_Index_internal.tex  Command_Index_User.tex GregorioRef.tex
 
-UserManual.pdf: $(SRCFILES)
-	latexmk -pdf -pdflatex='lualatex --shell-escape %O %S' UserManual.tex
+GregorioRef-$(FILENAME_VERSION).pdf: $(SRCFILES)
+	latexmk -pdf -pdflatex='lualatex --shell-escape %O %S' -jobname=GregorioRef-$(FILENAME_VERSION) GregorioRef.tex
 
-doc: UserManual.pdf
+doc: GregorioRef-$(FILENAME_VERSION).pdf
 
 clean:
-	latexmk -quiet -C
+	latexmk -quiet -C -jobname=GregorioRef-$(FILENAME_VERSION) GregorioRef.tex
+	rm -rf _minted*
 
-EXTRA_DIST = $(SRCFILES) UserManual.pdf
+EXTRA_DIST = $(SRCFILES) GregorioRef-$(FILENAME_VERSION).pdf
