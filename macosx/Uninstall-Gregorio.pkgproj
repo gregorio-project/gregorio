@@ -42,6 +42,17 @@
 		<dict>
 			<key>NOTES</key>
 			<data>
+			PCFET0NUWVBFIGh0bWwgUFVCTElDICItLy9XM0MvL0RURCBIVE1M
+			IDQuMDEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvVFIvaHRtbDQv
+			c3RyaWN0LmR0ZCI+CjxodG1sPgo8aGVhZD4KPG1ldGEgaHR0cC1l
+			cXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7
+			IGNoYXJzZXQ9VVRGLTgiPgo8bWV0YSBodHRwLWVxdWl2PSJDb250
+			ZW50LVN0eWxlLVR5cGUiIGNvbnRlbnQ9InRleHQvY3NzIj4KPHRp
+			dGxlPjwvdGl0bGU+CjxtZXRhIG5hbWU9IkdlbmVyYXRvciIgY29u
+			dGVudD0iQ29jb2EgSFRNTCBXcml0ZXIiPgo8bWV0YSBuYW1lPSJD
+			b2NvYVZlcnNpb24iIGNvbnRlbnQ9IjEzNDQuNzIiPgo8c3R5bGUg
+			dHlwZT0idGV4dC9jc3MiPgo8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5
+			Pgo8L2JvZHk+CjwvaHRtbD4K
 			</data>
 		</dict>
 		<key>PROJECT_PRESENTATION</key>
@@ -170,12 +181,26 @@
 						<key>VALUE</key>
 						<dict>
 							<key>PATH</key>
-							<string>macosx/Uninstall_intro.txt</string>
+							<string>macosx/Uninstall_intro.rtf</string>
 							<key>PATH_TYPE</key>
 							<integer>3</integer>
 						</dict>
 					</dict>
 				</array>
+			</dict>
+			<key>LICENSE</key>
+			<dict>
+				<key>KEYWORDS</key>
+				<dict/>
+				<key>LOCALIZATIONS</key>
+				<array/>
+				<key>MODE</key>
+				<integer>0</integer>
+			</dict>
+			<key>README</key>
+			<dict>
+				<key>LOCALIZATIONS</key>
+				<array/>
 			</dict>
 			<key>SUMMARY</key>
 			<dict>
@@ -187,7 +212,7 @@
 						<key>VALUE</key>
 						<dict>
 							<key>PATH</key>
-							<string>macosx/Uninstall_summary.txt</string>
+							<string>macosx/Uninstall_summary.rtf</string>
 							<key>PATH_TYPE</key>
 							<integer>3</integer>
 						</dict>
@@ -206,6 +231,19 @@
 					</dict>
 				</array>
 			</dict>
+		</dict>
+		<key>PROJECT_REQUIREMENTS</key>
+		<dict>
+			<key>LIST</key>
+			<array/>
+			<key>POSTINSTALL_PATH</key>
+			<dict/>
+			<key>PREINSTALL_PATH</key>
+			<dict/>
+			<key>RESOURCES</key>
+			<array/>
+			<key>ROOT_VOLUME_ONLY</key>
+			<false/>
 		</dict>
 		<key>PROJECT_SETTINGS</key>
 		<dict>
