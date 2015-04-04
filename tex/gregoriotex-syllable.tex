@@ -395,31 +395,71 @@
 \clivisalignmentspecial%
 
 % dimen keeping the shift computed with next function
-\newskip\gre@bolshift
+\newskip\gre@skip@bolshift
 
+%% @desc Macro used in \gresyllable. Sets \gre@skip@bolshift to the left kern that
+%%       should appear at the beginning of a line in case of a forced linebreak.
+%%       The goal of this left kern is to have all lines aligned on notes. See
+%%       TODO for details.
+%%
+%% @arg#1 \gre@dimen@begindifference of the first syllable of the line
+%% @arg#2 not sure about it... to be removed?
 \def\gre@compute@bolshift#1#2{%
-  \global\gre@bolshift=\gre@spaceafterlineclef % TODO: or 0pt?
-  \global\advance\gre@bolshift by #1%
+  \global\gre@skip@bolshift=\gre@skip@spaceafterlineclef % TODO: or 0pt?
+  \global\advance\gre@skip@bolshift by #1%
   % a little trick... we don't want to kern more than clefwidth minus minimalspaceatlinebeginning
-  \advance\gre@clefwidth by -\gre@minimalspaceatlinebeginning %
-  \ifdim\gre@bolshift <-\gre@clefwidth %
-    \global\gre@bolshift=-\gre@clefwidth %
+  \advance\gre@dimen@clefwidth by -\gre@dimen@minimalspaceatlinebeginning %
+  \ifdim\gre@skip@bolshift <-\gre@dimen@clefwidth %
+    \global\gre@skip@bolshift=-\gre@dimen@clefwidth %
   \fi %
-  \advance\gre@clefwidth by \gre@minimalspaceatlinebeginning %
-  \global\advance\gre@bolshift by -\gre@spaceafterlineclef %
-  \ifdim\gre@bolshift < #1%
-    \global\gre@bolshift=\the #1%
+  %% TODO: is following line really safe?
+  \advance\gre@dimen@clefwidth by \gre@dimen@minimalspaceatlinebeginning %
+  \global\advance\gre@skip@bolshift by -\gre@skip@spaceafterlineclef %
+  \ifdim\gre@skip@bolshift < #1%
+    \global\gre@skip@bolshift=\the #1%
   \fi %
   % Don't allow kern past the beginning of the first line with no initial
   \ifnum#2=1%
-    \ifdim\gre@initialwidth = 0pt %
+    \ifdim\gre@dimen@initialwidth = 0pt %
       \ifnum\greknownline=1 %
-        \global\advance\gre@bolshift by \gre@clefwidth %
+        \global\advance\gre@skip@bolshift by \gre@dimen@clefwidth %
       \fi %
     \fi %
   \fi %
-  \ifdim\gre@bolshift > 0pt%
-    \global\gre@bolshift=0pt%
+  \ifdim\gre@skip@bolshift > 0pt%
+    \global\gre@skip@bolshift=0pt%
+  \fi %
+}
+
+% dimen keeping the shift computed with next function
+\newskip\gre@skip@eolshift
+
+%% @desc Macro used in \gresyllable. Sets \gre@skip@eolshift to the left kern that
+%%       should appear before an end of line. The improvement is tiny: when
+%%       text go further than notes in the last syllable of a line, the idea
+%%       is to allow text to go a bit further right, under the custo.
+%%       \gre@skip@eolshift should be called at the end of the last syllable of the
+%%       line, just before the linebreak penalty, so that LaTeX believes the
+%%       line is a bit shorter, and expands it more.
+%%
+%% @arg#1 The \gre@dimen@enddifference of the corresponding syllable
+\def\gre@compute@eolshift#1{%
+  \global\gre@skip@eolshift=0pt%
+  \ifdim#1 <0pt%
+    \global\gre@eolshift=-#1 %
+    % we don't do it if it's the last syllable of a score or if the user
+    % disabled custos
+    \ifnum\gredisableeolshifts=0\relax %
+      \ifnum\greblockcusto=1\else %
+        \setbox\GreTempwidth=\hbox{\grecustochar{g}}%
+        \global\advance\gre@eolshift by -\wd\GreTempwidth %
+        \global\advance\gre@eolshift by -\gre@skip@spacebeforecusto %
+      \fi %
+      \global\advance\gre@eolshift by \gre@dimen@minimalspaceatlinebeginning %
+    \fi %
+    \ifdim\gre@eolshift <-#1 %
+      \global\gre@eolshift=-#1%
+    \fi %
   \fi %
 }
 
@@ -464,8 +504,8 @@
   % there must be at least a certain space between the key and the first note. The first letter can be beneath the key, but not to the left
   \ifnum\grelastoflinecount=2\relax %
     \ifnum\gredisableeolshifts=0\relax%
-      \gre@compute@bolshift{\gre@begindifference}{1}%
-      \kern\gre@bolshift %
+      \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
+      \kern\gre@skip@bolshift %
     \fi %
   \else %\ifnum\grelastoflinecount=2
     % then we do a kind of trick to separate more the notes of two different syllables : we put a space if we are in the same word (enddifference!=0) if necessary
@@ -558,25 +598,7 @@
   % trick: we want to kern -enddifference if necessary before any change of line, which we can achieve only with this trick if the end of line is the last thing of the notes (it's the case of \grelastoflinecount is 1).
   % For the kern in this case, the base is to kern -\gre@dimen@enddifference if it's negative, but we can kern a bit more for the text to get a bit more to the right, but not after the end of the scores minus \gre@dimen@minimalspaceatlinebeginning
   \ifnum\grelastoflinecount=1\relax %
-    \gre@debug{ifdim enddifference < 0pt}%
-    \ifdim\gre@dimen@enddifference <0pt%
-      \gre@skip@temp@one=-\gre@dimen@enddifference %
-      % we don't do it if it's the last syllable of a score or if the user disabled it
-      \ifnum\gredisableeolshifts=0\relax %
-        \ifnum\greblockcusto=1\else %
-          \setbox\GreTempwidth=\hbox{\grecustochar{g}}%
-          \gre@dimen@temp@three=\wd\GreTempwidth %
-          \advance\gre@skip@temp@one by -\gre@dimen@temp@three %
-          \advance\gre@skip@temp@one by -\gre@skip@spacebeforecusto %
-        \fi %
-        \advance\gre@skip@temp@one by \gre@dimen@minimalspaceatlinebeginning %
-      \fi %
-      \gre@debug{ifdim temp@skip@one < -enddifference}%
-      \ifdim\gre@skip@temp@one <-\gre@dimen@enddifference %
-        \gre@skip@temp@one=-\the\gre@dimen@enddifference %
-      \fi %
-      \xdef\grekernbeforeeol{\the\gre@skip@temp@one\relax}%
-    \fi %
+    \gre@compute@eolshift{\gre@dimen@enddifference}%
   \fi%
   \grenobreak % no line breaks between text and notes
   #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
@@ -585,15 +607,14 @@
     %% important, else we are not really at the end of the syllable
     \grenobreak %
     \ifnum\grelastoflinecount=1\relax %
-      \gre@skip@temp@one = \grekernbeforeeol%
-      \kern\gre@skip@temp@one %
+      \kern\gre@skip@eolshift %
     \else %
       \gre@skip@temp@one = -\gre@dimen@enddifference%
       \kern\gre@skip@temp@one %
     \fi %
     \grenobreak %
   \fi%
-  \xdef\grekernbeforeeol{0pt\relax}%
+  \global\gre@skip@eolshift=0pt%
   % we call end of syllable
   %% then we call end of syllable or end of word, but only if the next syllable is not a bar, that is to say, the number is between 10 and 19. TeX is a ****** language, so we do a dirty workaround to make a and in the if.
   \ifnum#7>9\relax %
