@@ -877,35 +877,6 @@
   \relax%
 }%
 
-% macro called at each end of word
-\def\greendofword#1{%
-  \grepenalty{\greendofwordpenalty }%
-  \ifnum#1=1\relax %
-    \gre@debug{ifdim enddifference > 0pt}%
-    \ifdim\gre@dimen@enddifference > 0 pt %
-      \gre@debug{ifdim nextbegindifference > 0pt}%
-      \ifdim\gre@skip@nextbegindifference > 0 pt %
-        \gre@skip@temp@four = \gre@skip@interwordspacenotes%
-        \grehskip\gre@skip@temp@four %
-      \else % (next begin difference >0pt)
-        \gre@skip@temp@four = \gre@skip@interwordspacenotestext%
-        \grehskip\gre@skip@temp@four %
-      \fi %
-    \else %(enddifference < Opt)
-      \gre@debug{ifdim nextbegindifference < 0pt}%
-      \ifdim\gre@skip@nextbegindifference < 0 pt %
-        \gre@skip@temp@four = \gre@skip@interwordspacetext%
-        \grehskip\gre@skip@temp@four %
-      \else %(next begin difference < 0 pt)
-        \gre@skip@temp@four = \gre@skip@interwordspacetextnotes%
-        \grehskip\gre@skip@temp@four %
-      \fi %
-    \fi %
-  \fi %
-  %\global\gre@dimen@enddifference=0pt 
-  \relax%
-}%
-
 % macro called at the end of a word or syllable when the next thing is a bar
 \def\greendbeforebar#1{%
   \grenobreak %
@@ -1007,12 +978,6 @@
   \global\greblockcusto=1\relax %
   \grelocalrightbox{}%
   \relax %
-}%
-
-% macro called at each end of syllable which is not an end of word
-\def\greendofsyllable{%
-  \grepenalty{\greendofsyllablepenalty }%
-  \relax%
 }%
 
 % macro to end elements, #1 is the type of space, it can be : 
