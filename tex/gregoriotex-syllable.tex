@@ -464,46 +464,14 @@
   % there must be at least a certain space between the key and the first note. The first letter can be beneath the key, but not to the left
   \ifnum\grelastoflinecount=2\relax %
     \ifnum\gredisableeolshifts=0\relax%
-<<<<<<< HEAD
       \gre@compute@bolshift{\gre@begindifference}{1}%
-      \showthe\gre@bolshift %
       \kern\gre@bolshift %
-=======
-      \gre@skip@temp@one=\gre@skip@intersyllablespace %
-      \advance\gre@skip@temp@one by \gre@dimen@begindifference %
-      % a little trick... we don't want to kern more than clefwidth minus minimalspaceatlinebeginning
-      \advance\gre@dimen@clefwidth by -\gre@dimen@minimalspaceatlinebeginning %
-      \gre@debug{ifdim temp@skip@one < -clefwidth}%
-      \ifdim\gre@skip@temp@one <-\gre@dimen@clefwidth %
-        \gre@skip@temp@one=-\gre@dimen@clefwidth %
-      \fi %
-      \advance\gre@dimen@clefwidth by \gre@dimen@minimalspaceatlinebeginning %
-      \hbox{}%
-      \advance\gre@skip@temp@one by -\gre@skip@spaceafterlineclef %
-      \gre@debug{ifdim gre@skip@temp@one < gre@begindifference}%
-      \ifdim\gre@skip@temp@one < \gre@dimen@begindifference %
-        \gre@skip@temp@one=\the\gre@dimen@begindifference %
-      \fi %
-      % Don't allow kern past the beginning of the first line with no initial
-      \gre@debug{ifdim initialwidth < 0pt}%
-      \ifdim\gre@dimen@initialwidth = 0pt %
-        \ifnum\greknownline=1 %
-          \advance\gre@skip@temp@one by \gre@dimen@clefwidth %
-        \fi %
-      \fi %
-      \gre@debug{ifdim temp@skip@one < 0pt}%
-      \ifdim\gre@skip@temp@one < 0pt%
-        \kern\gre@skip@temp@one %
-      \fi %
-      %\hskip\gre@skip@afterclefnospace 
->>>>>>> release-3.0
     \fi %
   \else %\ifnum\grelastoflinecount=2
     % then we do a kind of trick to separate more the notes of two different syllables : we put a space if we are in the same word (enddifference!=0) if necessary
     % there are two cases according to the sign of enddifference
     % and we do it only if it is not the first syllable of a word
     % but we must not do it when there is a bar before... so when there is a bar enddifference = 0
-<<<<<<< HEAD
     % XXX NO IDEA WHAT THIS IS!
 %    \ifnum\grefirstsyllableofword=0 %
 %      \gre@tempdim=\gre@intersyllablespace %
@@ -519,24 +487,6 @@
 %        \hskip\gre@tempdim %
 %      \fi %
 %    \fi %
-=======
-    \ifnum\grefirstsyllableofword=0 %
-      \gre@skip@temp@one=\gre@skip@intersyllablespace %
-      \advance\gre@skip@temp@one by \gre@dimen@begindifference %
-      \gre@debug{ifdim enddifference < 0pt}%
-      \ifdim\gre@dimen@enddifference<0pt%
-        \advance\gre@skip@temp@one by \gre@dimen@enddifference %
-      \fi % \ifdim\gre@dimen@enddifference>0pt
-      \ifnum\grefirstisalteration=1\relax %
-        \advance\gre@skip@temp@one by \gre@skip@beforealterationspace %
-        \global\grefirstisalteration=0\relax %
-      \fi % \ifnum\grefirstisalteration=1
-      \gre@debug{ifdim temp@skip@one > 0pt}%
-      \ifdim\gre@skip@temp@one>0pt %
-        \hskip\gre@skip@temp@one %
-      \fi %
-    \fi %
->>>>>>> release-3.0
   \fi %
   % by default, gregorioattr will be 2
   \gregorioattr=2\relax %
