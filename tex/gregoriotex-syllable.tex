@@ -634,15 +634,15 @@
   \fi %
   \ifnum\gre@count@temp@one=1\relax %
     \ifnum\grelastoflinecount=1\relax %
-      \greendbeforebar{0}%
+      \greendofsyllable{0}{1}{1}%
     \else %
       % otherwise we call it with 1 only if there is no letters after (we can see it with nextbegindifference)
       \setbox\GreTempwidth=\hbox{#2}%
       \gre@debug{ifdim wd(GreTempwidth) = 0pt}%
       \ifdim\wd\GreTempwidth=0pt%
-        \greendbeforebar{0}%
+        \greendofsyllable{0}{1}{1}%
       \else %
-        \greendbeforebar{1}%
+        \greendofsyllable{1}{1}{1}%
       \fi %
     \fi %
     \global\grefirstsyllableofword=1\relax %
@@ -652,55 +652,115 @@
       \ifcase#3 %
         \global\grefirstsyllableofword=0\relax %
       \or%
-        \greendofword{0}%
+        \greendofsyllable{1}{0}{0}%
         \global\grefirstsyllableofword=1\relax %
       \fi%
     \else %\ifnum\grelastoflinecount=1
       \ifcase#3 %
-        \greendofsyllable%
+        \greendofsyllable{0}{1}{0}%
         \global\grefirstsyllableofword=0\relax %
       \or%
-        \greendofword{1}%
+        \greendofsyllable{1}{1}{0}%
         \global\grefirstsyllableofword=1\relax %
       \fi%
     \fi%
   \fi %
 }
 
+\newif\ifgre@notextprev
+\gre@notextprevfalse
 
 %% @desc Macro called at end of a syllable, adds a penalty and a space
 %% @arg#1 0 to only add the penalty, 1 otherwise
+%% @arg#2 0 if end of syllable, 1 if end of word
+%% @arg#3 1 if next syllable is a bar, 0 otherwise
+%%
+%% @uses \gre@dimen@enddifference
+%% @uses \gre@dimen@nextbegindifference
+%%
+%% Pseudo-code: 
+%%  min_text_dist = prev_cur_word ? 0 : space_inter_words
+%%  if (no_txt_under_prev) :
+%%     tmp = cur_end_diff > 0 ? 0 : -cur_end_diff
+%%     min_text_dist = max(min_text_dist, tmp)
+%%  min_notes_dist = space_between_notes
+%%  if (barres sur cur ou barres sur next):
+%%     min_notes_dist = space_between_bars
+%%  % space between end of syllable and current point for previous note
+%%  cur_dist_notes = cur_dist_text = 0
+%%  if (cur_end_diff < 0):
+%%     cur_dist_text += -cur_end_diff
+%%  else:
+%%     cur_dist_notes += cur_end_diff
+%%  if (next_begin_diff < 0):
+%%     cur_dist_notes += -next_begin_diff
+%%  else:
+%%     cur_dist_text += next_begin_diff
+%%  min_shift_text = min_dist_text - cur_dist_text
+%%  min_shift_notes = min_dist_notes - cur_dist_notes
+%%  shift = max(min_shift_text, min_shift_notes)
 
-\def\greendofword#1{%
-  \grepenalty{\greendofwordpenalty}%
+\def\greendofsyllable#1#2#3{%
+  \ifnum#2=1\relax %
+    \grepenalty{\greendofwordpenalty}%
+  \else %
+    \grepenalty{\greendofsyllablepenalty}%
+  \fi %
   \ifnum#1=1\relax %
-    \gre@debug{ifdim enddifference > 0pt}%
-    \ifdim\gre@dimen@enddifference > 0 pt %
-      \gre@debug{ifdim nextbegindifference > 0pt}%
-      \ifdim\gre@skip@nextbegindifference > 0 pt %
-        \gre@skip@temp@four = \gre@skip@interwordspacenotes%
-        \grehskip\gre@skip@temp@four %
-      \else % (next begin difference >0pt)
-        \gre@skip@temp@four = \gre@skip@interwordspacenotestext%
-        \grehskip\gre@skip@temp@four %
+    \let\gre@minTextDistance\gre@skip@temp@one %
+    \let\gre@minNotesDistance\gre@skip@temp@two %
+    \let\gre@curTextDistance\gre@skip@temp@three %
+    \let\gre@curNotesDistance\gre@skip@temp@four %
+%%  min_text_dist = prev_cur_word ? 0 : space_inter_words
+    \ifnum#2=1\relax %
+      \gre@minTextDistance=\gre@skip@intersyllablespace %
+    \else %
+      \gre@minTextDistance=0pt%
+    \fi %
+%%  if (no_txt_under_prev) :
+%%     tmp = -cur_end_diff < 0 ? 0 : -cur_end_diff
+%%     min_text_dist = max(min_text_dist, tmp)
+    \ifgre@notextprev %
+      \gre@skip@temp@two=-\gre@dimen@enddifference %
+      \ifdim\gre@skip@temp@two < 0pt%
+        \gre@skip@temp@two = 0pt%
       \fi %
-    \else %(enddifference < Opt)
-      \gre@debug{ifdim nextbegindifference < 0pt}%
-      \ifdim\gre@skip@nextbegindifference < 0 pt %
-        \gre@skip@temp@four = \gre@skip@interwordspacetext%
-        \grehskip\gre@skip@temp@four %
-      \else %(next begin difference < 0 pt)
-        \gre@skip@temp@four = \gre@skip@interwordspacetextnotes%
-        \grehskip\gre@skip@temp@four %
+      \ifdim\gre@skip@temp@two > \gre@minTextDistance %
+        \gre@minTextDistance = \gre@skip@temp@two %
       \fi %
     \fi %
+    % setting minNotesDistance (quite simple)
+    \ifnum#3=1\relax %
+      \gre@minNotesDistance=\gre@skip@notebarspace %
+    \else %
+      \ifnum#2=1\relax %
+        \gre@minNotesDistance=\gre@skip@interwordspacenotes %
+      \else %
+        \gre@minNotesDistance=\gre@skip@intersyllablespacenotes %
+      \fi %
+    \fi %
+    % determining current distance between notes and
+    % next notes, and current distance between text and next text
+    \gre@curTextDistance=0pt%
+    \gre@curNotesDistance=0pt%
+%    \ifdim\gre@dimen@enddifference > 0 pt %
+%      \ifdim\gre@skip@nextbegindifference > 0 pt %
+%        \gre@skip@temp@four = \gre@skip@interwordspacenotes%
+%        \grehskip\gre@skip@temp@four %
+%      \else % (next begin difference >0pt)
+%        \gre@skip@temp@four = \gre@skip@interwordspacenotestext%
+%        \grehskip\gre@skip@temp@four %
+%      \fi %
+%    \else %(enddifference < Opt)
+%      \ifdim\gre@skip@nextbegindifference < 0 pt %
+%        \gre@skip@temp@four = \gre@skip@interwordspacetext%
+%        \grehskip\gre@skip@temp@four %
+%      \else %(next begin difference < 0 pt)
+%        \gre@skip@temp@four = \gre@skip@interwordspacetextnotes%
+%        \grehskip\gre@skip@temp@four %
+%      \fi %
+%    \fi %
   \fi %
-  \relax%
-}%
-
-% macro called at each end of syllable which is not an end of word
-\def\greendofsyllable{%
-  \grepenalty{\greendofsyllablepenalty }%
   \relax%
 }%
 
