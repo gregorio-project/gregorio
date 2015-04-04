@@ -395,7 +395,7 @@
 \clivisalignmentspecial%
 
 % dimen keeping the shift computed with next function
-\newskip\gre@skip@bolshift
+\newdimen\gre@dimen@bolshift
 
 %% @desc Macro used in \gresyllable. Sets \gre@skip@bolshift to the left kern that
 %%       should appear at the beginning of a line in case of a forced linebreak.
@@ -405,29 +405,33 @@
 %% @arg#1 \gre@dimen@begindifference of the first syllable of the line
 %% @arg#2 not sure about it... to be removed?
 \def\gre@compute@bolshift#1#2{%
-  \global\gre@skip@bolshift=\gre@skip@spaceafterlineclef % TODO: or 0pt?
-  \global\advance\gre@skip@bolshift by #1%
+  % as the \gre@dimen@bolshift is computed from skips, we compute it in a
+  % skip temp registry, and then "cast" it into a dimen
+  \gre@skip@temp@three=\gre@skip@spaceafterlineclef % TODO: or 0pt?
+  \advance\gre@skip@temp@three by #1%
   % a little trick... we don't want to kern more than clefwidth minus minimalspaceatlinebeginning
   \advance\gre@dimen@clefwidth by -\gre@dimen@minimalspaceatlinebeginning %
-  \ifdim\gre@skip@bolshift <-\gre@dimen@clefwidth %
-    \global\gre@skip@bolshift=-\gre@dimen@clefwidth %
+  \ifdim\gre@skip@temp@three <-\gre@dimen@clefwidth %
+    \gre@skip@temp@three=-\gre@dimen@clefwidth %
   \fi %
   %% TODO: is following line really safe?
   \advance\gre@dimen@clefwidth by \gre@dimen@minimalspaceatlinebeginning %
-  \global\advance\gre@skip@bolshift by -\gre@skip@spaceafterlineclef %
-  \ifdim\gre@skip@bolshift < #1%
-    \global\gre@skip@bolshift=\the #1%
+  \advance\gre@skip@temp@three by -\gre@skip@spaceafterlineclef %
+  \ifdim\gre@skip@temp@three < #1%
+    \gre@skip@temp@three=\the #1%
   \fi %
   % Don't allow kern past the beginning of the first line with no initial
   \ifnum#2=1%
     \ifdim\gre@dimen@initialwidth = 0pt %
       \ifnum\greknownline=1 %
-        \global\advance\gre@skip@bolshift by \gre@dimen@clefwidth %
+        \advance\gre@skip@temp@three by \gre@dimen@clefwidth %
       \fi %
     \fi %
   \fi %
-  \ifdim\gre@skip@bolshift > 0pt%
-    \global\gre@skip@bolshift=0pt%
+  \ifdim\gre@skip@temp@three > 0pt%
+    \global\gre@dimen@bolshift=0pt%
+  \else %
+    \global\gre@dimen@bolshift=\gre@skip@temp@three %
   \fi %
 }
 
@@ -462,6 +466,7 @@
     \fi %
   \fi %
 }
+
 
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : the first letters of the syllable, that don't count for the alignment
@@ -502,17 +507,17 @@
   \advance\gre@dimen@begindifference by -\gre@dimen@textaligncenter %
   % first we check if it is the first syllable of a line. If it is we apply the following algorithm : 
   % there must be at least a certain space between the key and the first note. The first letter can be beneath the key, but not to the left
-  \ifnum\grelastoflinecount=2\relax %
-    \ifnum\gredisableeolshifts=0\relax%
-      \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
-      \kern\gre@skip@bolshift %
-    \fi %
-  \else %\ifnum\grelastoflinecount=2
+  \ifnum\gredisableeolshifts=0\relax%
+    \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
+    \kern -\gre@dimen@bolshift %
+    \grenobreak %
+    \hbox to 0pt{}%
+    \grenobreak %
+    \kern\gre@dimen@bolshift %
     % then we do a kind of trick to separate more the notes of two different syllables : we put a space if we are in the same word (enddifference!=0) if necessary
     % there are two cases according to the sign of enddifference
     % and we do it only if it is not the first syllable of a word
     % but we must not do it when there is a bar before... so when there is a bar enddifference = 0
-    % XXX NO IDEA WHAT THIS IS!
 %    \ifnum\grefirstsyllableofword=0 %
 %      \gre@tempdim=\gre@intersyllablespace %
 %      \advance\gre@tempdim by \gre@begindifference %

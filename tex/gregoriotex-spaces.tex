@@ -1150,9 +1150,9 @@
 % #3: space if line cuts at penalty
 \def\grepenaltyandspace#1#2#3{%
   \grepenalty{#1}%
-  \ifdim#3=0pt%
+  %\ifdim#3=0pt%
     \grehskip{#2}%
-  \else %
-    \grediscretionary{#2}{#3}%
-  \fi %
+  %\else %
+  %  \grediscretionary{#2}{#3}%
+  %\fi %
 }
