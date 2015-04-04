@@ -477,7 +477,7 @@
 % #9 : glyphs : all the notes
 % the three next parameters are to put an hyphen if necessary, they can be empty for end of words
 % #5 : macros setting next syllable letters of the next syllable 
-% #6 : middle letters of the next syllabel
+% #6 : nothing
 % #7 : alignment type of the first next glyph
 % #8 : other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
@@ -505,8 +505,17 @@
   % now we calculate the begin difference, that is to say \gre@dimen@notesaligncenter - \gre@dimen@textaligncenter
   \gre@dimen@begindifference=\gre@dimen@notesaligncenter %
   \advance\gre@dimen@begindifference by -\gre@dimen@textaligncenter %
-  % first we check if it is the first syllable of a line. If it is we apply the following algorithm : 
-  % there must be at least a certain space between the key and the first note. The first letter can be beneath the key, but not to the left
+  % Now, let's go for something I took years to figure out: we want to align
+  % scores on the notes (see https://github.com/gregorio-project/gregorio/issues/221)
+  % but it means we have to shift lines starting by text by \gre@dimen@bolshift
+  % sadly, we cannot do that in TeX, we can't just say that. But, the way TeX
+  % handles this with usual spaces, is that it ignores all spaces at beginning
+  % of lines. To use this, we just \kern\gre@dimen@bolshift right, this will be
+  % ignored at beginning of line, then \hbox{} that will break the "ignorance"
+  % of spaces, then \kern\gre@dimen@bolshift left, which will not be ignored.
+  % So, at beginning of lines, we will have shifted left, and in middle of lines
+  % we will have shifted right and left, thus cancelling... Very easy trick, but
+  % took me years to find it!
   \ifnum\gredisableeolshifts=0\relax%
     \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
     \kern -\gre@dimen@bolshift %
@@ -514,24 +523,6 @@
     \hbox to 0pt{}%
     \grenobreak %
     \kern\gre@dimen@bolshift %
-    % then we do a kind of trick to separate more the notes of two different syllables : we put a space if we are in the same word (enddifference!=0) if necessary
-    % there are two cases according to the sign of enddifference
-    % and we do it only if it is not the first syllable of a word
-    % but we must not do it when there is a bar before... so when there is a bar enddifference = 0
-%    \ifnum\grefirstsyllableofword=0 %
-%      \gre@tempdim=\gre@intersyllablespace %
-%      \advance\gre@tempdim by \gre@begindifference %
-%      \ifdim\gre@enddifference<0pt%
-%        \advance\gre@tempdim by \gre@enddifference %
-%      \fi % \ifdim\gre@enddifference>0pt
-%      \ifnum\grefirstisalteration=1\relax %
-%        \advance\gre@tempdim by \gre@beforealterationspace %
-%        \global\grefirstisalteration=0\relax %
-%      \fi % \ifnum\grefirstisalteration=1
-%      \ifdim\gre@tempdim>0pt %
-%        \hskip\gre@tempdim %
-%      \fi %
-%    \fi %
   \fi %
   % by default, gregorioattr will be 2
   \gregorioattr=2\relax %
@@ -600,8 +591,6 @@
   \kern\gre@skip@temp@one %
   % here we need to unset \gregorioattr for the typesetting of notes
   \gregorioattr=0\relax %
-  % trick: we want to kern -enddifference if necessary before any change of line, which we can achieve only with this trick if the end of line is the last thing of the notes (it's the case of \grelastoflinecount is 1).
-  % For the kern in this case, the base is to kern -\gre@dimen@enddifference if it's negative, but we can kern a bit more for the text to get a bit more to the right, but not after the end of the scores minus \gre@dimen@minimalspaceatlinebeginning
   \ifnum\grelastoflinecount=1\relax %
     \gre@compute@eolshift{\gre@dimen@enddifference}%
   \fi%
@@ -621,29 +610,7 @@
   \fi%
   \global\gre@skip@eolshift=0pt%
   % we call end of syllable
-  %% then we call end of syllable or end of word, but only if the next syllable is not a bar, that is to say, the number is between 10 and 19. TeX is a ****** language, so we do a dirty workaround to make a and in the if.
-  \ifnum#7>9\relax %
-    \ifnum#7<20\relax %
-      \ifnum\grelastoflinecount=1\relax %
-        \greendbeforebar{0}%
-      \else %
-        % otherwise we call it with 1 only if there is no letters after (we can see it with nextbegindifference)
-        \setbox\GreTempwidth=\hbox{#5#6}%
-        % /!\ warning: can be buggy...
-        \gre@debug{ifdim wd(GreTempwidth) = 0pt}%
-        \ifdim\wd\GreTempwidth=0pt%
-          \greendbeforebar{0}%
-        \else %
-          \greendbeforebar{1}%
-        \fi %
-      \fi %
-      \global\grefirstsyllableofword=1\relax %
-    \else %
-      \gretexworkaround{#4}%
-    \fi %
-  \else %
-    \gretexworkaround{#4}%
-  \fi %
+  \gre@syllable@end{#7}{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}{#4}%
   \global\gre@dimen@notesaligncenter=0pt% very important, see flat and natural
   \greunsetfixedtextformat %
   \ifnum\greblockcusto=1\relax\ifnum\greinsidediscretionary=0\relax %
@@ -652,27 +619,54 @@
   \relax %
 }%
 
-% The only reason of this function is that TeX can't have and in if
-% #1 is the #4 of syllable
-\def\gretexworkaround#1{%
-  \ifnum\grelastoflinecount=1\relax %
-    \global\grelastoflinecount=2\relax %
-    \ifcase#1 %
-      \global\grefirstsyllableofword=0\relax %
-    \or%
-      \greendofword{0}%
-      \global\grefirstsyllableofword=1\relax %
+%% @desc Macro to make a few checks and call the right macros between
+%%       \endbeforebar, \endofword, \endofsyllable
+%% @arg#1 next syllable type (#7 of \gresyllable)
+%% @arg#2 next syllable text
+%% @arg#3 end of word or not (#4 of \gresyllable)
+\def\gre@syllable@end#1#2#3{%
+  % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
+  \gre@count@temp@one=0%
+  \ifnum#1>9\relax %
+    \ifnum#1<20\relax %
+      \gre@count@temp@one=1%
+    \fi %
+  \fi %
+  \ifnum\gre@count@temp@one=1\relax %
+    \ifnum\grelastoflinecount=1\relax %
+      \greendbeforebar{0}%
+    \else %
+      % otherwise we call it with 1 only if there is no letters after (we can see it with nextbegindifference)
+      \setbox\GreTempwidth=\hbox{#2}%
+      \gre@debug{ifdim wd(GreTempwidth) = 0pt}%
+      \ifdim\wd\GreTempwidth=0pt%
+        \greendbeforebar{0}%
+      \else %
+        \greendbeforebar{1}%
+      \fi %
+    \fi %
+    \global\grefirstsyllableofword=1\relax %
+  \else %
+    \ifnum\grelastoflinecount=1\relax %
+      \global\grelastoflinecount=2\relax %
+      \ifcase#3 %
+        \global\grefirstsyllableofword=0\relax %
+      \or%
+        \greendofword{0}%
+        \global\grefirstsyllableofword=1\relax %
+      \fi%
+    \else %\ifnum\grelastoflinecount=1
+      \ifcase#3 %
+        \greendofsyllable%
+        \global\grefirstsyllableofword=0\relax %
+      \or%
+        \greendofword{1}%
+        \global\grefirstsyllableofword=1\relax %
+      \fi%
     \fi%
-  \else %\ifnum\grelastoflinecount=1 
-    \ifcase#1 %
-      \greendofsyllable%
-      \global\grefirstsyllableofword=0\relax %
-    \or%
-      \greendofword{1}%
-      \global\grefirstsyllableofword=1\relax %
-    \fi%
-  \fi%
-}%
+  \fi %
+}
+
 
 %a macro to typeset a syllable with only a bar inside
 \def\grebarsyllable#1#2#3#4#5#6#7#8#9{%
