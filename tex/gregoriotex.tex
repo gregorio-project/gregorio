@@ -718,6 +718,7 @@
   \ifnum\greusestylefont=1\relax %
     \gresetstylefont %
   \fi %
+  \gre@computespaces
   \grecancelpenalties %
   \gredofinetuning %
   \gregorioattr=0\relax %
@@ -1210,12 +1211,6 @@
   \else%
     \gre@changedimenfactor{\grefactor}{#1}%
     \global\grefactor=#1\relax %
-    \gre@computespaces %
-    \gregeneratelines %
-    \setgregoriofont{\gregoriofontname}%
-    \ifnum\greusestylefont=1\relax %
-      \gresetstylefont %
-    \fi %
   \fi%
   \relax %
 }%
