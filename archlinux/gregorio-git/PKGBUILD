@@ -1,5 +1,4 @@
-# Maintainer: TBD
-# Contributor: Br Anthony VanBerkum <anthonyvbop AT gmail DOT com>
+# Maintainer: Br Anthony VanBerkum <anthonyvbop AT gmail DOT com>
 # Contributor: Br. Elijah Schwab (github - eschwab)
 _pkgbase=gregorio
 pkgbase=$_pkgbase-git
@@ -7,10 +6,10 @@ pkgname=$pkgbase
 pkgver=3.0.0beta.r1398.7c5aa0a
 pkgrel=1
 pkgdesc="Command-line tool to typeset Gregorian chant"
-url=http://home.gna.org/gregorio
+url=http://gregorio-project.github.io
 arch=("i686" "x86_64")
 license=("GPL")
-makedepends=("git" "python" "libxml2" "fontforge")
+makedepends=("git" "python" "fontforge")
 depends=("texlive-fontsextra" "texlive-bin" "texlive-formatsextra" "texlive-latexextra")
 conflicts=("gregorio-svn" "gregorio" "gregoriotex")
 provides=("gregorio")
@@ -22,7 +21,7 @@ sha256sums=("SKIP")
 
 pkgver() {
   cd "$srcdir/$_gitdir"
-  _version=$(python2 VersionManager.py -c | sed -e "s/-//g")
+  _version=$(python2 VersionManager.py -c | sed -e "s/-/_/g")
   echo $_version.r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
 }
 

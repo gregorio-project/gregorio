@@ -1,25 +1,20 @@
-# Maintainer: David Gippner davidgippner at googlemail dot com
-# Contributor: Anthony VanBerkum <anthonyvbop at gmail dot com>
+# Maintainer: Anthony VanBerkum <anthonyvbop AT gmail DOT com>
+# Contributor: David Gippner davidgippner at googlemail dot com
 
 post_install() {
-  tex_update
+  _tex_update
 }
 
 post_upgrade() {
-  tex_update
+  _tex_update
   echo "Be sure to check the gregorio website for any changes required in your TeX files."
 }
 
 post_remove() {
-  tex_update
+  _tex_update
 }
 
-tex_update() {
-  echo "Updating package database..."
-  mktexlsr
-  echo "Updating font map files..."
-  updmap-sys
-  echo "Run updmap as non-root user."
+_tex_update() {
+  echo "Updating TeX database..."
+  texhash
 }
-
-# vim:set ts=2 sw=2 et:

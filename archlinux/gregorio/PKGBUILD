@@ -1,6 +1,6 @@
-# Maintainer: Laércio de Sousa <lbsousajr AT gmail DOT com>
+# Maintainer: Br Anthony VanBerkum <anthonyvbop AT gmail DOT com>
+# Contributor: Laércio de Sousa <lbsousajr AT gmail DOT com>
 # Contributor: David Gippner davidgippner at googlemail dot com
-# Contributor: Anthony VanBerkum <anthonyvbop AT gmail DOT com>
 pkgbase=gregorio
 pkgname=$pkgbase
 pkgver=2.4.2
@@ -13,6 +13,7 @@ depends=("texlive-fontsextra" "texlive-bin" "texlive-formatsextra" "texlive-late
 conflicts=("gregorio-svn" "gregorio-git" "gregoriotex")
 provides=("gregorio")
 install=gregorio.install
+# Release tarball extracts to gregorio-x.y.z = $pkgbase-$pkgver.
 source=("http://github.com/gregorio-project/gregorio/archive/v$pkgver.tar.gz")
 sha256sums=("aa40ad963aa7eec828ba614f1dd4b01e01f60333638b961d68700ead13cff71a")
 
