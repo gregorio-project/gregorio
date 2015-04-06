@@ -1,6 +1,6 @@
 [Setup]
 AppName=gregorio
-AppVersion=3.0.0-beta
+AppVersion=3.0.0-rc1
 DefaultDirName={pf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico

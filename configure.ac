@@ -15,8 +15,8 @@ dnl You should have received a copy of the GNU General Public License
 dnl along with this program; if not, write to the Free Software
 dnl Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-AC_INIT([gregorio],[3.0.0-beta],[gregorio-devel@gna.org])
-FILENAME_VERSION="3_0_0-beta"
+AC_INIT([gregorio],[3.0.0-rc1],[gregorio-devel@gna.org])
+FILENAME_VERSION="3_0_0-rc1"
 AC_SUBST(FILENAME_VERSION)
 AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR([src/gregorio-utils.c])
