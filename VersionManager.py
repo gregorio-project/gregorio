@@ -131,6 +131,7 @@ def replace_version(version_obj):
     print('Updating source files to version {0}\n'.format(newver))
     for myfile in GREGORIO_FILES:
         result = []
+        following_file = False
         with open(myfile, 'r') as infile:
             for line in infile:
                 if 'AC_INIT([' in line:
@@ -153,6 +154,12 @@ def replace_version(version_obj):
                 elif 'PARSE_VERSION_DATE' in line:
                     newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
                     result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%d/%m/%y"), newline, 1))
+                elif 'ISS_DOC_FILENAME' in line:
+                    result.append(line)
+                    following_file = True
+                elif following_file:
+                    result.append(re.sub(r'(\d+\_\d+\_\d+(?:[-+~]\w+)*)', newver_filename, line, 1))
+                    following_file = False
                 else:
                     result.append(line)
         with open(myfile, 'w') as outfile:
