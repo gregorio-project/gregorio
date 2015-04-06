@@ -6,7 +6,10 @@ PREFIX="/usr/local"
 BINDIR="$PREFIX/bin"
 PKGCONFIGDIR="$PREFIX/lib/pkgconfig"
 GREINCLUDEDIR="$PREFIX/include/gregorio"
-TEXMFLOCAL=`/usr/texbin/kpsewhich -var-value TEXMFLOCAL`
+TEXMFLOCAL=`kpsewhich -var-value TEXMFLOCAL`
+if [ -z "$TEXMFLOCAL" ]; then
+    TEXMFLOCAL=`/usr/texbin/kpsewhich -var-value TEXMFLOCAL`
+fi
 GRETEXDIR="$TEXMFLOCAL/tex/luatex/gregoriotex/"
 GREFONTDIR="$TEXMFLOCAL/fonts/truetype/public/gregoriotex/"
 GREFONTSOURCE="$TEXMFLOCAL/source/gregoriotex/"

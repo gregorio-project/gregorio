@@ -5,9 +5,17 @@
 # aware of the changes.
 
 
-TEXMFLOCAL=`/usr/texbin/kpsewhich -var-value TEXMFLOCAL`
+TEXMFLOCAL=`kpsewhich -var-value TEXMFLOCAL`
+if [ -z "$TEXMFLOCAL" ]; then
+    TEXMFLOCAL=`/usr/texbin/kpsewhich -var-value TEXMFLOCAL`
+fi
+
+TEXHASH=`which texhash`
+if [ -z "$TEXHASH" ]; then
+    TEXHASH="/usr/texbin/texhash"
+fi
 
 cp -r /tmp/gregorio/* $TEXMFLOCAL
 rm -rf /tmp/gregorio
 
-/usr/texbin/texhash
+$TEXHASH
