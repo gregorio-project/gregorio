@@ -7,7 +7,6 @@
 # Options:
 #      --mingw     : crosscompile for mingw32 from i-386linux
 #      --warn      : enables all sorts of warnings
-#      --static    : compiles one binary containing everything
 #      --host=     : target system for mingw32 cross-compilation
 #      --build=    : build system for mingw32 cross-compilation
 #      --arch=     : crosscompile for ARCH on OS X
