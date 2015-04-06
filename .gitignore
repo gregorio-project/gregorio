@@ -27,6 +27,8 @@
 *.i*86
 *.x86_64
 *.hex
+*.pkg
+*.mpkg
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
@@ -43,6 +45,7 @@
 
 ## Intermediate documents:
 *.dvi
+*.gtex
 # these rules might exclude image files for figures etc.
 *.ps
 *.eps
@@ -89,7 +92,7 @@ auto/
 *.deb
 
 #gregorio specific
-doc/_minted-UserManual
+doc/_minted-*
 fonts/*.ttf
 *.gz
 *.zip
@@ -102,4 +105,5 @@ config_.h
 config_.h.in
 stamp-h1
 Makevars.template
-*.gtex
+macosx/build
+macosx/Resources
