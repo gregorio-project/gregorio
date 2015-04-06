@@ -16,8 +16,8 @@ dnl
 dnl You should have received a copy of the GNU General Public License
 dnl along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-AC_INIT([gregorio],[3.0.0-beta],[gregorio-devel@gna.org])
-FILENAME_VERSION="3_0_0-beta"
+AC_INIT([gregorio],[3.0.0-rc1],[gregorio-devel@gna.org])
+FILENAME_VERSION="3_0_0-rc1"
 AC_SUBST(FILENAME_VERSION)
 MK=""
 AC_SUBST(MK)

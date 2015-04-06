@@ -18,7 +18,7 @@
 # along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
 # This script installs Gregorio and GregorioTeX as cloned from GitHub and built
-# using git-build.sh for a GNU system (like GNU/Linux), using default options.
+# using build.sh for a GNU system (like GNU/Linux), using default options.
 #
 # For now, it passes its argument to install-gtex.sh, defaulting to system.
 #
