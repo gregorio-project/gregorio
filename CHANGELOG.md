@@ -19,9 +19,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\includescore` not finding files for autocompile under certain circumstances.  (see [this thread](http://www.mail-archive.com/gregorio-users@gna.org/msg02346.html)).
 
 ### Added
-- `\setstafflinethickness` controls the thickness of the staff lines.  See doc/UserManual.pdf for full details.
+- `\setstafflinethickness` controls the thickness of the staff lines.  See GregrioRef.pdf for full details.
 - `\gre@debug`.  Writes messages to the log file when the debug flag is set to true (can be done manually via `\debugtrue`, or via the `debug` option when loading the gregoriotex package in LaTeX).
-- doc folder and beginnings of User Manual.  Only contains spaces documentation at this point.
+- New documentation in PDF: GregorioRef.pdf. You can find it in the [release files](https://github.com/gregorio-project/gregorio/releases).
+- A migration guide ([UPGRADE.md](UPGRADE.md))
 - This CHANGELOG.
 
 ### Deprecated
@@ -143,3 +144,5 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## 0.2.2 - 2007-06-14
 ### Added
 - adding styles and centering in text
+
+[3.0.0-rc1]: https://github.com/gregorio-project/gregorio/compare/v2.4.2...v3.0.0-rc1
