@@ -2,6 +2,12 @@
 
 # Test to see if we have a valid TeX installation
 
-kpsewhich -var-value TEXMFLOCAL
+TEXMFLOCAL=`/usr/texbin/kpsewhich -var-value TEXMFLOCAL`
 
-exit $?
+if [ -n "$TEXMFLOCAL" ]; then
+    echo "Passed"
+    exit 0
+else
+    echo "Failed"
+    exit 1
+fi

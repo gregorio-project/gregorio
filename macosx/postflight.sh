@@ -5,10 +5,9 @@
 # aware of the changes.
 
 
-TEXHASH=${TEXHASH:-texhash}
-TEXMFLOCAL=`kpsewhich -var-value TEXMFLOCAL`
+TEXMFLOCAL=`/usr/texbin/kpsewhich -var-value TEXMFLOCAL`
 
-mv /tmp/greogorio/* $TEXMFLOCAL
+cp -r /tmp/gregorio/* $TEXMFLOCAL
 rm -rf /tmp/gregorio
 
-${TEXHASH}
+/usr/texbin/texhash

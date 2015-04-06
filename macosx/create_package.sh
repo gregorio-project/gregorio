@@ -43,8 +43,8 @@ cp *.md $EXTRASDIR
 # Installer Resources
 RESOURCEDIR=$HERE/Resources
 mkdir $RESOURCEDIR
-pandoc ./README.md -f markdown -t html -o $RESOURCEDIR/README.html
-pandoc ./COPYING.md -f markdown -t html -o $RESOURCEDIR/COPYING.html
+pandoc -s ./README.md -f markdown -t html -o $RESOURCEDIR/README.html
+pandoc -s ./COPYING.md -f markdown -t html -o $RESOURCEDIR/COPYING.html
 # We redirect the relative links in the above files to point to particular
 # file versions in the repository.
 VERSION=`./VersionManager.py --get-current`
@@ -72,12 +72,13 @@ packagesbuild Uninstall-Gregorio.pkgproj
 # The uninstall pacakge doesn't need the version number because it doesn't
 # care about the version of gregorio.
 VERSION=`echo $VERSION | sed s:[.]:_:g`
-mv $BUILDDIR/Gregorio.mpkg ../Gregorio-$VERSION.mpkg
+mv $BUILDDIR/Gregorio.pkg ../Gregorio-$VERSION.pkg
 mv $BUILDDIR/Uninstall-Gregorio.pkg ../
 
 # Now we clean up
-#make clean
-#make distclean
-#cd macosx
-#rm -rf build/
-#rm -rf Resources/
+cd ..
+make clean
+make distclean
+cd $HERE
+rm -rf build/
+rm -rf Resources/
