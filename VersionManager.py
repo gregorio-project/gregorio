@@ -21,6 +21,7 @@ VERSION_FILE = '.gregorio-version'
 GREGORIO_FILES = ["configure.ac",
                   "windows/gregorio-resources.rc",
                   "windows/gregorio.iss",
+                  "macosx/Gregorio.pkgproj",
                   "tex/gregoriotex.lua",
                   "tex/gregoriotex.sty",
                   "doc/GregorioRef.tex",

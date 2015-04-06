@@ -246,8 +246,8 @@ of section 4, provided that you also meet all of these conditions:
 -   **a)** The work must carry prominent notices stating that you
     modified it, and giving a relevant date.
 -   **b)** The work must carry prominent notices stating that it is
-    released under this License and any conditions added under section
-    7. This requirement modifies the requirement in section 4 to “keep
+    released under this License and any conditions added under section 7.
+    This requirement modifies the requirement in section 4 to “keep
     intact all notices”.
 -   **c)** You must license the entire work, as a whole, under this
     License to anyone who comes into possession of a copy. This License
