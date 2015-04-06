@@ -16,7 +16,7 @@ In version 2.4.2, an early version of the feature to auto-compile gabc score was
 
 ### Custom dimension changes
 
-If you use custom space definitions (`gsp-foo.tex`), the format have changed, and you must rewrite it completely. See the new `gsp-default.tex` for an example, and UserManual.pdf for documentation.
+If you use custom space definitions (`gsp-foo.tex`), the format have changed, and you must rewrite it completely. See the new `gsp-default.tex` for an example, and GregorioRef.pdf for documentation.
 
 ### Color definition
 
