@@ -72,13 +72,20 @@ case "$arg" in
 		TEXMFROOT=./tmp-texmf
 		;;
 	var:*)
-		TEXMFROOT=`${KPSEWHICH} -var-value "${arg#var:}"`
+		TEXMFROOT=`${KPSEWHICH} -expand-path "\$${arg#var:}"`
+		if [ "$TEXMFROOT" = "" ]
+        then
+            TEXMFROOT=`${KPSEWHICH} -var-value "${arg#var:}"`
+        fi
 		if [ "$TEXMFROOT" = "" ]
 		then
 			echo "Invalid TeX variable: '${arg#var:}'"
 			echo
 		else
-			TEXMFROOT="${DESTDIR}${TEXMFROOT}"
+            sep=`${KPSEWHICH} -expand-path "{.,.}"`
+            sep="${sep#.}"
+            sep="${sep%.}"
+            TEXMFROOT="${DESTDIR}${TEXMFROOT/${sep}*/}"
 		fi
 		;;
 	dir:*)
