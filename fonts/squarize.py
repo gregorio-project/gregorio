@@ -219,7 +219,7 @@ def initialize_lengths():
         # some width, necessary to know where to draw lines, squares, etc.
         # first the width of the lines that link notes, like in a pes for example
         line_width = 22
-        # then the width of a punctum, we assume that it is the same width for oriscus, quilisma, punctum auctum descendens and punctum auctum ascendens 
+        # then the width of a punctum, we assume that it is the same width for oriscus, quilisma, punctum auctum descendens and punctum auctum ascendens
         width_punctum = 164
         # width_oriscus is the width of an oriscus, idem for quilisma
         width_oriscus = 164
@@ -242,7 +242,7 @@ def initialize_lengths():
         # the widths of the torculus resupinus, there are five, one per note difference between the two first notes (for example the first is the width of the first two notes of baba
         porrectusflexuswidths = (340, 428, 586, 670, 931)
         porrectuswidths = (490, 575, 650, 740, 931)
-        # width that will be added to the standard width when we will build horizontal episemus. for example, if a punctum has the length 164, the episemus will have the width 244 and will be centered on the center of the punctum 
+        # width that will be added to the standard width when we will build horizontal episemus. for example, if a punctum has the length 164, the episemus will have the width 244 and will be centered on the center of the punctum
         hepisemus_additional_width = 5
     elif (font_name == "parmesan"):
         base_height = 157.5
@@ -397,8 +397,8 @@ def set_width(glyphnumber, width):
 # a function that writes a line in glyphnumber, with length and height offsets
 def write_line(i, glyphnumber, length, height):
     if (i > 1):
-        linename = "line%d" % i 
-        paste_and_move(linename, glyphnumber, length, height)    
+        linename = "line%d" % i
+        paste_and_move(linename, glyphnumber, length, height)
 
 # a function to write the first bar of a glyph. Used for porrectus flexus, porrectus and flexus.
 def write_first_bar(i, glyphnumber):
@@ -433,7 +433,7 @@ def hepisemus():
         write_hepisemus(porrectuswidths[i], int(46+i))
     for i in range(MAX_INTERVAL):
         write_hepisemus(porrectusflexuswidths[i], int(51+i))
-    
+
 def write_hepisemus(shape_width, glyphnumber):
     global unicode_char_start
     glyphnumber = glyphnumber + unicode_char_start
@@ -502,7 +502,7 @@ def write_pes(i, first_glyph, shape, liquescentia='nothing'):
         set_width(glyphnumber, width_punctum)
     else:
         set_width(glyphnumber, width_quilisma)
-    end_glyph(glyphnumber)    
+    end_glyph(glyphnumber)
 
 def write_pes_debilis(i, shape, liquescentia='nothing'):
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
@@ -512,7 +512,7 @@ def write_pes_debilis(i, shape, liquescentia='nothing'):
     simplify(glyphnumber)
     paste_and_move("base4", glyphnumber, width_debilis, i*base_height)
     set_width(glyphnumber, width_punctum+width_debilis)
-    end_glyph(glyphnumber) 
+    end_glyph(glyphnumber)
 
 def write_pes_deminutus(i, first_glyph, shape, liquescentia='nothing'):
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
@@ -603,7 +603,7 @@ def write_pes_quadratum(i, first_glyph, last_glyph, shape, liquescentia='nothing
         first_width = width_quilisma-line_width
     simple_paste(first_glyph, glyphnumber)
     if (i != 1):
-        linename = "line%d" % i 
+        linename = "line%d" % i
         paste_and_move(linename, glyphnumber, first_width, base_height)
     paste_and_move(last_glyph, glyphnumber, first_width, i*base_height)
     set_width(glyphnumber, first_width+width_punctum)
@@ -624,7 +624,7 @@ def write_salicus_first(i, first_glyph, last_glyph, shape, liquescentia='nothing
         first_width = width_punctum-line_width
     simple_paste(first_glyph, glyphnumber)
     if (i != 1):
-        linename = "line%d" % i 
+        linename = "line%d" % i
         paste_and_move(linename, glyphnumber, first_width, base_height)
     paste_and_move(last_glyph, glyphnumber, first_width, i*base_height)
     set_width(glyphnumber, first_width+width_oriscus)
@@ -764,7 +764,7 @@ def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
             elif last_glyph == 'auctusa1':
                 last_glyph = '_0072'
             elif last_glyph == 'auctusd1':
-                last_glyph = '_0073' 
+                last_glyph = '_0073'
             if first_glyph == 'base2':
                 first_glyph = '_0017'
             elif first_glyph == 'odbase':
@@ -1049,7 +1049,7 @@ def write_torculus(i, j, first_glyph, last_glyph, shape, liquescentia='nothing')
             elif last_glyph == 'auctusa1':
                 last_glyph = '_0072'
             elif last_glyph == 'auctusd1':
-                last_glyph = '_0073'   
+                last_glyph = '_0073'
         else:
             if i == 1:
                 paste_and_move("base2", glyphnumber, length, i*base_height)
@@ -1168,7 +1168,7 @@ def write_torculusresupinus(i, j, k, first_glyph, last_glyph, shape, liquescenti
         else:
             middle_glyph = "porrectusflexus%d" % j
     paste_and_move(middle_glyph, glyphnumber, length, i*base_height)
-    if (last_glyph == 'auctusa2' or last_glyph == 'auctusd2'): 	 
+    if (last_glyph == 'auctusa2' or last_glyph == 'auctusd2'):
         length = length + porrectusflexuswidths[j-1]
     else:
         length = length + porrectuswidths[j-1]
@@ -1240,7 +1240,7 @@ def scandicus():
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             write_scandicus(i, j, 'rdeminutus', 'deminutus')
-            
+
 def write_scandicus(i, j, last_glyph, liquescentia='nothing'):
     glyphnumber = gnumber(i, j, 0, 'scandicus', liquescentia)
     # special case of i=j=1, we use glyph 1025 directly
