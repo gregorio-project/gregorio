@@ -5,7 +5,7 @@ This file contains instructions to upgrade to a new release of Gregorio.
 ## 3.0
 ### Score inclusion
 
-When migrating to this release, you should start to use the new `\includescore` system, as other ways of score inclusion are deprecated and will start disapear soon. See UserManual.pdf for details.
+When migrating to this release, you should start to use the new `\includescore` system, as other ways of score inclusion are deprecated and will start disapear soon. See GregorioRef.pdf for details.
 
 #### For users of version 2.4.2
 
@@ -16,7 +16,7 @@ In version 2.4.2, an early version of the feature to auto-compile gabc score was
 
 ### Custom dimension changes
 
-If you use custom space definitions (`gsp-foo.tex`), the format have changed, and you must rewrite it completely. See the new `gsp-default.tex` for an example, and UserManual.pdf for documentation.
+If you use custom space definitions (`gsp-foo.tex`), the format have changed, and you must rewrite it completely. See the new `gsp-default.tex` for an example, and GregorioRef.pdf for documentation.
 
 ### Color definition
 
