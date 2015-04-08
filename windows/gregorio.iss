@@ -38,7 +38,8 @@ Source: "../CHANGELOG.md"; DestDir: "{app}";
 Source: "../README.md"; DestDir: "{app}";
 Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
 Source: "../UPGRADE.md"; DestDir: "{app}";
-Source: "../doc/UserManual.pdf"; DestDir: "{app}";
+; PARSE_VERSION_FILE_NEXTLINE
+Source: "../doc/GregorioRef-3_0_0-rc1.pdf"; DestDir: "{app}";
 Source: "../COPYING.md"; DestDir: "{app}";
 Source: "../contrib/900_gregorio.xml"; DestDir: "{app}\contrib";
 Source: "../contrib/gregorio-scribus.lua"; DestDir: "{app}\contrib";
