@@ -5,7 +5,15 @@
 # aware of the changes.
 
 
-TEXMFLOCAL=`kpsewhich -var-value TEXMFLOCAL`
+TEXMFLOCAL=`kpsewhich -expand-path \$TEXMFLOCAL`
+sep=`kpsewhich -expand-path "{.,.}"`
+if [ -z "$TEXMFLOCAL" ]; then
+    TEXMFLOCAL=`kpsewhich -var-value TEXMFLOCAL`
+fi
+if [ -z "$TEXMFLOCAL" ]; then
+    TEXMFLOCAL=`/usr/texbin/kpsewhich -expand-path $TEXMFLOCAL`
+    sep=`/usr/texbin/kpsewhich -expand-path "{.,.}"`
+fi
 if [ -z "$TEXMFLOCAL" ]; then
     TEXMFLOCAL=`/usr/texbin/kpsewhich -var-value TEXMFLOCAL`
 fi
@@ -14,6 +22,10 @@ TEXHASH=`which texhash`
 if [ -z "$TEXHASH" ]; then
     TEXHASH="/usr/texbin/texhash"
 fi
+
+sep="${sep#.}"
+sep="${sep%.}"
+TEXMFLOCAL="${TEXMFLOCAL%${sep}}"
 
 cp -r /tmp/gregorio/* $TEXMFLOCAL
 rm -rf /tmp/gregorio
