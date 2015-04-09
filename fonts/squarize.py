@@ -89,7 +89,6 @@ UNICODE_CHAR_START = 161
 oldfont = None
 newfont = None
 font_name = None
-current_glyph_number = None
 shortglyphs = None
 BASE_HEIGHT = None
 LINE_WIDTH = None
@@ -110,6 +109,10 @@ WIDTH_QUILISMA = None
 WIDTH_HIGH_PES = None
 WIDTH_ORISCUS_REV = None
 
+oldfont = None
+newfont = None
+font_name = None
+
 def usage():
     "Prints the help message."
     print(""" Python script to convert a small set of glyphs into a complete
@@ -124,18 +127,15 @@ generates fontname.pe which is a fontforge script.  """)
 
 def main():
     "Main function"
-    global oldfont, newfont, font_name
-    global current_glyph_number, shortglyphs
+    global oldfont, newfont, font_name, shortglyphs
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], "h", ["help"])
     except getopt.GetoptError:
         # print help information and exit:
         usage()
         sys.exit(2)
-    output = None
-    verbose = False
-    for o, a in opts:
-        if o in ("-h", "--help"):
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
             usage()
             sys.exit()
     if len(args) == 0:
@@ -221,7 +221,8 @@ initial_glyphs = [1, 2, 17, 19, 20, 26, 27, 28, 6, 32, 11, 8, 23, 25,
                   88, 89, 90, 91, 92, 93]
 
 def initialize_glyphs():
-    global initial_glyphs, initialcount, count, newfont, oldfont, UNICODE_CHAR_START
+    global initialcount, count, newfont, oldfont
+#    global initial_glyphs
     names = []
     unislots = []
     for number in initial_glyphs:
@@ -393,13 +394,13 @@ def gnumber(i, j, k, shape, liquescentia):
     and the name of the different ambitus.
 
     """
-    global UNICODE_CHAR_START
     if SHORTGLYPHS == 0:
         return i+(5*j)+(25*k)+(256*liquescentiae[liquescentia])+(512*shapes[shape])+UNICODE_CHAR_START
     else:
         return i+(5*j)+(25*k)+(64*liquescentiae[liquescentia])+(512*shapes[shape])+UNICODE_CHAR_START
 
 def simple_paste(src, dstnum):
+    "Copy and past a glyph."
     global oldfont, newfont
     oldfont.selection.select(("singletons",), src)
     oldfont.copy()
@@ -408,6 +409,7 @@ def simple_paste(src, dstnum):
     #newfont.paste()
 
 def simplify(glyphnumber):
+    "Simplify a glyph."
     newfont[glyphnumber].simplify()
     newfont[glyphnumber].removeOverlap()
     newfont[glyphnumber].simplify()
@@ -497,7 +499,6 @@ def hepisemus():
 
 def write_hepisemus(shape_width, glyphnumber):
     "Makes the horizontal episemus."
-    global UNICODE_CHAR_START
     glyphnumber = glyphnumber + UNICODE_CHAR_START
     simple_paste("hepisemus_base", glyphnumber)
     scale(glyphnumber, shape_width + 2*HEPISEMUS_ADDITIONAL_WIDTH, 1)
@@ -878,7 +879,6 @@ def porrectus():
 
 def write_porrectus(i, j, last_glyph, with_bar, shape, liquescentia='nothing'):
     glyphnumber = gnumber(i, j, 0, shape, liquescentia)
-    descendens = 0
     length = PORRECTUSWIDTHS[i-1]
     if (with_bar):
         write_first_bar(i, glyphnumber)
