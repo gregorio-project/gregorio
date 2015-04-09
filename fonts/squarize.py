@@ -21,20 +21,11 @@
 #complete square notation font. See gregorio-base.sfd for naming conventions
 #of these symbols.
 #
-#This python script generates a fontforge native script (.pe). In the future, 
-#python will also work (better than .pe) to control fontforge with scripts, but
-#it is not yet implemented. The .pe script will build foo-0.pfb (and also .tfm,
-#.afm and .enc) to foo-8.pfb.
-#
 #To build your own font, look at gregorio-base.sfd, and build your own glyphs from
 #it.
 #
 #Basic use :
 # ./squarize.py fontname
-# chmod +x fontname.pe
-# ./fontname.pe
-#where fontname = gregorio, parmesan, or greciliae 
-# the last step may take a few minutes
 
 from __future__ import print_function
 
@@ -56,8 +47,7 @@ see gregorio-base.sfd for this convention.
 Usage:
         squarize.py fontname
 
-with fontname=gregorio, parmesan or greciliae for now. The script generates
-fontname.pe which is a fontforge script.
+with fontname=gregorio, parmesan or greciliae for now.
 """)
 
 gplv3="""This program is free software: you can redistribute it and/or modify
@@ -83,10 +73,8 @@ version of the font, but you are not obligated to do so. If you do not wish
 to do so, delete this exception statement from your version."""
 
 # the unicode character at which we start our numbering
-# 161 prevents gregorio chars to be control characters
-# but U+F0000 Supplemental Private Use Area-A might be better...
-# set to 0 for now, GregorioTeX should be heavily changed before it's usable
-unicode_char_start = 161
+# Use the U+F0000 Supplemental Private Use Area-A.
+unicode_char_start = 0xf0000
 
 def main():
     global oldfont, newfont, font_name
@@ -120,7 +108,7 @@ def main():
     # the fonts
     oldfont = fontforge.open("%s-base.sfd" % font_name)
     newfont = fontforge.font()
-    newfont.encoding="ISO10646-1"
+    newfont.encoding="UnicodeFull"
     newfont.fontname="%s" % font_name
     newfont.fullname="%s" % font_name
     newfont.fontlog="See file FONTLOG you should have received with the software"
@@ -185,6 +173,7 @@ def initialize_glyphs():
 #        initial_glyphs.remove(number)
         names.append("_00%02d" % int(number))
         unislots.append("u%05x" % (int(number)+unicode_char_start))
+        #unislots.append(int(number)+unicode_char_start)
     if font_name=="gregorio":
         glyphs_to_append=(1025, 2561)
         initialcount=192
@@ -201,8 +190,9 @@ def initialize_glyphs():
 #        initial_glyphs.append(glyphnumber)
         names.append("_%04d" % int(glyphnumber))
         unislots.append("u%05x" % (int(glyphnumber)+unicode_char_start))
+        #unislots.append(int(glyphnumber)+unicode_char_start)
     count=initialcount
-    #print unislots
+    #print(unislots)
     for i in range(len(names)):
         oldfont.selection.select(("singletons",), names[i])
         oldfont.copy()

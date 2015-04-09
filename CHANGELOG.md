@@ -9,6 +9,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Removed
 - GregorioXML and OpusTeX output
 
+## [Unreleased][unreleased]
+### Changed
+- The glyphs in the fonts have been moved to the Universal Character Set Private Use Area to future-proof the fonts.  This means dropping support for TeX Live older than 2013 and LuaTeX older than 0.76.  Please upgrade to at least TeX Live 2013 to use Gregorio.
+
 ## [3.0.0-rc1] - 2015-04-06
 ### Changed
 - [New website](http://gregorio-project.github.io) containing instructions only for new versions of Gregorio starting with this release, in English only.
