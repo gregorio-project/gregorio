@@ -20,6 +20,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>             /* for exit() */
+#include <stdarg.h>             /* for exit() */
 #include "messages.h"
 
 static FILE *error_out;
@@ -66,17 +67,18 @@ static const char *verbosity_to_str(char verbosity)
     case FATAL_ERROR:
         str = _("fatal error:");
         break;
-    default:                   // VERBOSE, for example
+    default:
+        // VERBOSE, for example
         str = " ";
         break;
     }
     return str;
 }
 
-void
-gregorio_message(const char *string, const char *function_name, char verbosity,
-                 int line_number)
+void gregorio_messagef(const char *function_name, char verbosity,
+        int line_number, const char *format, ...)
 {
+    va_list args;
     const char *verbosity_str;
 
     if (debug_messages == 0) {
@@ -85,15 +87,13 @@ gregorio_message(const char *string, const char *function_name, char verbosity,
     }
 
     if (!error_out) {
-        fprintf(stderr,
-                _
-                ("warning: error_out not set in gregorio_messages, assumed stderr\n"));
+        fprintf(stderr, _("warning: error_out not set in gregorio_messages, "
+                    "assumed stderr\n"));
         error_out = stderr;
     }
     if (!verbosity_mode) {
-        fprintf(stderr,
-                _
-                ("warning: verbosity mode not set in gregorio_messages, assumed warnings\n"));
+        fprintf(stderr, _("warning: verbosity mode not set in "
+                    "gregorio_messages, assumed warnings\n"));
         verbosity_mode = VERB_WARNINGS;
     }
     if (verbosity < verbosity_mode) {
@@ -103,39 +103,49 @@ gregorio_message(const char *string, const char *function_name, char verbosity,
     if (line_number) {
         if (function_name) {
             if (!file_name) {
-                fprintf(error_out, "line %d: in function `%s': %s %s\n",
-                        line_number, function_name, verbosity_str, string);
-                return;
+                fprintf(error_out, "line %d: in function `%s': %s",
+                        line_number, function_name, verbosity_str);
             } else {
-                fprintf(error_out, "%d: in function `%s':%s %s\n",
-                        line_number, function_name, verbosity_str, string);
+                fprintf(error_out, "%d: in function `%s': %s", line_number,
+                        function_name, verbosity_str);
             }
-        } else {                // no function_name specified
+        } else {
+            // no function_name specified
             if (!file_name) {
-                fprintf(error_out, "line %d: %s %s\n", line_number,
-                        verbosity_str, string);
-                return;
+                fprintf(error_out, "line %d: %s", line_number, verbosity_str);
             } else {
-                fprintf(error_out, "%d: %s %s\n", line_number,
-                        verbosity_str, string);
+                fprintf(error_out, "%d: %s", line_number, verbosity_str);
             }
         }
     } else {
         if (function_name) {
             /*
-             * if (!file_name) { fprintf (error_out, "in function `%s':%s
-             * %s\n", function_name, verbosity_str, string); return; } else {
+             * if (!file_name) {
+             *     fprintf (error_out, "in function `%s': %s",
+             *     function_name, verbosity_str);
+             *     return;
+             * } else {
              */
-            fprintf(error_out, "in function `%s': %s %s\n",
-                    function_name, verbosity_str, string);
+            fprintf(error_out, "in function `%s': %s", function_name,
+                    verbosity_str);
             // }
-        } else {                /* //no function_name specified if (!file_name)
-                                 * { fprintf (error_out, "%s %s\n",
-                                 * verbosity_str, string); return; } else { */
-            fprintf(error_out, "%s %s\n", verbosity_str, string);
+        } else {
+            // no function_name specified
+            /*
+             * if (!file_name) {
+             *     fprintf (error_out, "%s", verbosity_str);
+             *     return;
+             * } else {
+             */
+            fprintf(error_out, "%s", verbosity_str);
             // }
         }
     }
+    va_start(args, format);
+    vfprintf(error_out, format, args);
+    va_end(args);
+    fprintf(error_out, "\n");
+
     switch (verbosity) {
     case ERROR:
         return_value = 1;
@@ -147,3 +157,10 @@ gregorio_message(const char *string, const char *function_name, char verbosity,
         break;
     }
 }
+
+void gregorio_message(const char *string, const char *function_name,
+        char verbosity, int line_number)
+{
+    gregorio_messagef(function_name, verbosity, line_number, "%s", string);
+}
+
