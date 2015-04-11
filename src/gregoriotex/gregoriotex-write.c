@@ -3375,6 +3375,18 @@ gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
             temp = TYPE_FACTOR * T_FLEXUS_ORISCUS +
                     gregoriotex_determine_liquescentia_number(S_LIQ_FACTOR,
                     L_NO_INITIO, glyph->u.notes.liquescentia);
+        } else if (glyph->u.notes.first_note->u.note.shape == S_ORISCUS_SCAPUS) {
+            if (is_short(pitch, glyph, element)) {
+                *gtype = T_FLEXUS_ORISCUS_SCAPUS;
+                temp = TYPE_FACTOR * T_FLEXUS_ORISCUS_SCAPUS +
+                        gregoriotex_determine_liquescentia_number(S_LIQ_FACTOR,
+                        L_NO_INITIO, glyph->u.notes.liquescentia);
+            } else {
+                *gtype = T_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE;
+                temp = TYPE_FACTOR * T_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE +
+                        gregoriotex_determine_liquescentia_number(S_LIQ_FACTOR,
+                        L_NO_INITIO, glyph->u.notes.liquescentia);
+            }
         } else {
             if (is_short(pitch, glyph, element)) {
                 *gtype = T_FLEXUS;
