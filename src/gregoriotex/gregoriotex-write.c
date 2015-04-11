@@ -3287,6 +3287,7 @@ gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
                     L_NO_INITIO, glyph->u.notes.liquescentia);
             break;
         case S_ORISCUS:
+        case S_ORISCUS_SCAPUS:
             *type = AT_ORISCUS;
             // TODO: we could factorize this code
             if (glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA
