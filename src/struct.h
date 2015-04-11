@@ -85,6 +85,7 @@ typedef enum gregorio_shape {
     S_ORISCUS,
     S_ORISCUS_AUCTUS,
     S_ORISCUS_DEMINUTUS,
+    S_ORISCUS_SCAPUS,
     S_QUILISMA,
     S_STROPHA,
     S_STROPHA_AUCTA,
@@ -102,7 +103,6 @@ typedef enum gregorio_shape {
     S_QUADRATUM,
     // those shapes are for now used only in gregoriotex
     S_QUILISMA_QUADRATUM,
-    S_ORISCUS_QUADRATUM,
     S_PUNCTUM_AUCTUS_ASCENDENS,
     S_PUNCTUM_AUCTUS_DESCENDENS,
     S_PUNCTUM_DEMINUTUS,
@@ -242,7 +242,6 @@ typedef enum gregorio_glyph_type {
     G_PES_QUADRATUM_FIRST_PART,
     G_SCANDICUS,
     G_PES_QUILISMA_QUADRATUM_FIRST_PART,
-    G_PES_ORISCUS_QUADRATUM_FIRST_PART,
     G_ANCUS,
     G_ONE_NOTE,
     G_PUNCTA_ASCENDENS,
