@@ -230,13 +230,21 @@
       \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
       \gre@dimen@temp@five=\wd\GreTempwidth %
       \divide\gre@dimen@temp@five by 2\relax %
-      \setbox\GreTempwidth=\hbox{\gregoriofont \char 6}%
+      \setbox\GreTempwidth=\hbox{\greflatchar}%
     \else%\ifnum#1<40
-      \advance\gre@count@temp@three by -40\relax %
-      \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
-      \gre@dimen@temp@five=\wd\GreTempwidth %
-      \divide\gre@dimen@temp@five by 2\relax %
-      \setbox\GreTempwidth=\hbox{\gregoriofont \char 7}%
+      \ifnum#1<60\relax%
+        \advance\gre@count@temp@three by -40\relax %
+        \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
+        \gre@dimen@temp@five=\wd\GreTempwidth %
+        \divide\gre@dimen@temp@five by 2\relax %
+        \setbox\GreTempwidth=\hbox{\grenaturalchar}%
+      \else%\ifnum#1<60
+        \advance\gre@count@temp@three by -60\relax %
+        \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
+        \gre@dimen@temp@five=\wd\GreTempwidth %
+        \divide\gre@dimen@temp@five by 2\relax %
+        \setbox\GreTempwidth=\hbox{\gresharpchar}%
+      \fi%
     \fi %
     \advance\gre@dimen@temp@five by \wd\GreTempwidth %
     \global\gre@dimen@notesaligncenter=\gre@dimen@temp@five %
