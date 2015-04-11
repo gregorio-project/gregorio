@@ -3359,6 +3359,14 @@ gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
             break;
         }
         break;
+    case G_VIRGA_STRATA:
+        pitch = glyph->u.notes.first_note->next->u.note.pitch;
+        *type = AT_ONE_NOTE;
+        *gtype = T_VIRGA_STRATA;
+        temp = TYPE_FACTOR * (*gtype) +
+                gregoriotex_determine_liquescentia_number(S_LIQ_FACTOR,
+                L_ALL, glyph->u.notes.liquescentia);
+        break;
     case G_FLEXA:
         pitch = glyph->u.notes.first_note->u.note.pitch;
         if (glyph->u.notes.liquescentia == L_DEMINUTUS) {

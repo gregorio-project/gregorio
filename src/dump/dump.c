@@ -878,8 +878,8 @@ const char *dump_glyph_type(gregorio_glyph_type glyph_type)
     case G_SALICUS:
         str = "G_SALICUS";
         break;
-    case G_SALICUS_FIRST_PART:
-        str = "G_SALICUS_FIRST_PART";
+    case G_VIRGA_STRATA:
+        str = "G_VIRGA_STRATA";
         break;
     case G_TORCULUS_LIQUESCENS:
         str = "G_TORCULUS_LIQUESCENS";

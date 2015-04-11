@@ -64,10 +64,6 @@ close_glyph(gregorio_glyph **last_glyph, gregorio_glyph_type glyph_type,
         glyph_type = G_PUNCTUM;
     }
 
-    if (glyph_type == G_SALICUS_FIRST_PART) {
-        glyph_type = G_PUNCTUM;
-    }
-
     gregorio_add_glyph(last_glyph, glyph_type, *first_note, liquescentia);
     if (current_note->next) {
         current_note->next->previous = NULL;
@@ -315,7 +311,7 @@ gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
                 *end_of_glyph = DET_END_OF_PREVIOUS;
             }
             break;
-        case G_SALICUS_FIRST_PART:
+        case G_VIRGA_STRATA:
             if (current_pitch > last_pitch) {
                 next_glyph_type = G_SALICUS;
                 *end_of_glyph = DET_END_OF_CURRENT;
@@ -418,7 +414,7 @@ gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         break;
     case S_ORISCUS_SCAPUS:
         if (current_glyph_type == G_PUNCTUM && last_pitch < current_pitch) {
-            next_glyph_type = G_SALICUS_FIRST_PART;
+            next_glyph_type = G_VIRGA_STRATA;
         } else {
             *end_of_glyph = DET_END_OF_PREVIOUS;
             next_glyph_type = G_PUNCTUM;
