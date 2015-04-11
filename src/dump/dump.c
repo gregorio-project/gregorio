@@ -934,6 +934,9 @@ const char *dump_shape(gregorio_shape shape)
     case S_ORISCUS_DEMINUTUS:
         str = "S_ORISCUS_DEMINUTUS";
         break;
+    case S_ORISCUS_SCAPUS:
+        str = "S_ORISCUS_SCAPUS";
+        break;
     case S_QUILISMA:
         str = "S_QUILISMA";
         break;
