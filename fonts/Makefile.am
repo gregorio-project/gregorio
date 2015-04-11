@@ -57,7 +57,7 @@ gresym: gresym.ttf
 greextra: greextra.ttf
 
 clean-local:
-	$(RM) -f $(TTFFILES)
+	@$(TOP_LEVEL_MAKE) $(RM) -f $(TTFFILES)
 
 install-data-local:
 	@$(TOP_LEVEL_MAKE) echo 'The Makefile in the fonts directory is no longer used for installing'

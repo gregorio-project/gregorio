@@ -45,6 +45,8 @@
 #define T_FLEXUS_NOBAR 11
 #define T_FLEXUS_LONGQUEUE 12
 #define T_FLEXUS_ORISCUS 13
+#define T_FLEXUS_ORISCUS_SCAPUS 62
+#define T_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE 63
 // the next are the long ones
 #define T_PORRECTUSFLEXUS 14
 #define T_PORRECTUSFLEXUS_NOBAR 18
@@ -53,15 +55,15 @@
 #define T_TORCULUS 30
 #define T_TORCULUS_RESUPINUS 34
 #define T_TORCULUS_QUILISMA 38
+#define T_TORCULUS_LIQUESCENS 54
+#define T_TORCULUS_LIQUESCENS_QUILISMA 58
 // only deminutus are generated for the next two
 #define T_SCANDICUS 42
 #define T_ANCUS 44
 #define T_ANCUS_LONGQUEUE 46
-#define T_SALICUS_FIRST 48
+#define T_VIRGA_STRATA 48
 #define T_SALICUS 50
 #define T_SALICUS_LONGQUEUE 52
-#define T_TORCULUS_LIQUESCENS 54
-#define T_TORCULUS_LIQUESCENS_QUILISMA 58
 // this is a special type for the first note of a torculus resupinus flexus
 #define T_ONE_NOTE_TRF 72
 

@@ -878,8 +878,8 @@ const char *dump_glyph_type(gregorio_glyph_type glyph_type)
     case G_SALICUS:
         str = "G_SALICUS";
         break;
-    case G_SALICUS_FIRST_PART:
-        str = "G_SALICUS_FIRST_PART";
+    case G_VIRGA_STRATA:
+        str = "G_VIRGA_STRATA";
         break;
     case G_TORCULUS_LIQUESCENS:
         str = "G_TORCULUS_LIQUESCENS";
@@ -933,6 +933,9 @@ const char *dump_shape(gregorio_shape shape)
         break;
     case S_ORISCUS_DEMINUTUS:
         str = "S_ORISCUS_DEMINUTUS";
+        break;
+    case S_ORISCUS_SCAPUS:
+        str = "S_ORISCUS_SCAPUS";
         break;
     case S_QUILISMA:
         str = "S_QUILISMA";

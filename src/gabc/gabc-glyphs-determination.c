@@ -60,8 +60,7 @@ close_glyph(gregorio_glyph **last_glyph, gregorio_glyph_type glyph_type,
     // patch to have good glyph type in the case where a glyph ends by a note
     // with shape S_QUADRATUM
     if (glyph_type == G_PES_QUADRATUM_FIRST_PART
-        || glyph_type == G_PES_QUILISMA_QUADRATUM_FIRST_PART
-        || glyph_type == G_PES_ORISCUS_QUADRATUM_FIRST_PART) {
+        || glyph_type == G_PES_QUILISMA_QUADRATUM_FIRST_PART) {
         glyph_type = G_PUNCTUM;
     }
 
@@ -304,7 +303,6 @@ gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
             }
             break;
         case G_PES_QUILISMA_QUADRATUM_FIRST_PART:
-        case G_PES_ORISCUS_QUADRATUM_FIRST_PART:
             if (current_pitch > last_pitch) {
                 next_glyph_type = G_PES_QUADRATUM;
                 *end_of_glyph = DET_END_OF_CURRENT;
@@ -313,7 +311,7 @@ gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
                 *end_of_glyph = DET_END_OF_PREVIOUS;
             }
             break;
-        case G_SALICUS_FIRST_PART:
+        case G_VIRGA_STRATA:
             if (current_pitch > last_pitch) {
                 next_glyph_type = G_SALICUS;
                 *end_of_glyph = DET_END_OF_CURRENT;
@@ -414,12 +412,12 @@ gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         *end_of_glyph = DET_END_OF_PREVIOUS;
         next_glyph_type = G_PES_QUILISMA_QUADRATUM_FIRST_PART;
         break;
-    case S_ORISCUS_QUADRATUM:
+    case S_ORISCUS_SCAPUS:
         if (current_glyph_type == G_PUNCTUM && last_pitch < current_pitch) {
-            next_glyph_type = G_SALICUS_FIRST_PART;
+            next_glyph_type = G_VIRGA_STRATA;
         } else {
             *end_of_glyph = DET_END_OF_PREVIOUS;
-            next_glyph_type = G_PES_ORISCUS_QUADRATUM_FIRST_PART;
+            next_glyph_type = G_PUNCTUM;
         }
         break;
     case S_PUNCTUM_INCLINATUM:
@@ -787,10 +785,6 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
 
         case S_QUILISMA_QUADRATUM:
             current_note->u.note.shape = S_QUILISMA;
-            break;
-
-        case S_ORISCUS_QUADRATUM:
-            current_note->u.note.shape = S_ORISCUS;
             break;
         }
 

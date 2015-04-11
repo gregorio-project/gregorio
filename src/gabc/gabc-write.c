@@ -751,7 +751,7 @@ void gabc_write_gregorio_note(FILE *f, gregorio_note *note, char glyph_type)
     case S_QUILISMA_QUADRATUM:
         fprintf(f, "%cW", note->u.note.pitch);
         break;
-    case S_ORISCUS_QUADRATUM:
+    case S_ORISCUS_SCAPUS:
         fprintf(f, "%cO", note->u.note.pitch);
         break;
     case S_STROPHA:

@@ -35,7 +35,10 @@
 #endif
 
 void gregorio_message(const char *string, const char *function_name,
-                      char verbosity, int line_number);
+        char verbosity, int line_number);
+void gregorio_messagef(const char *function_name, char verbosity,
+        int line_number, const char *format, ...)
+        __attribute__ ((__format__ (__printf__, 4, 5)));
 void gregorio_set_verbosity_mode(char new_mode);
 void gregorio_set_file_name(char *new_name);
 void gregorio_set_error_out(FILE *f);
