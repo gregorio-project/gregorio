@@ -6,7 +6,7 @@ Gregorio is a software application for engraving Gregorian Chant scores on a com
 
 Create a `.gabc` file representing your score (see our [tutorial](http://gregorio-project.github.io/tutorial/tutorial-gabc-01.html)), or fetch one from [the database](http://gregobase.selapa.net/).
 
-Create a [LaTeX](http://fr.wikipedia.org/wiki/LaTeX) file that will produce the final pdf, and include your score. See [the example](examples/main-lualatex.tex).
+Create a [LaTeX](http://en.wikipedia.org/wiki/LaTeX) file that will produce the final pdf, and include your score. See [the example](examples/main-lualatex.tex).
 
 Compile the LaTeX file with LuaLaTeX, you get your score in PDF! You can change the LaTeX file to include other scores, create booklets, books, etc.
 
@@ -30,7 +30,7 @@ See [CONTRIBUTORS.md](CONTRIBUTORS.md).
 
 ## Contributing and bug reporting
 
-See [CONTRIBUTING.md](CONRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
