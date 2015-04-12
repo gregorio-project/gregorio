@@ -51,6 +51,7 @@ if os.type == "windows" or os.type == "msdos" then
   end
 end
 
+local texmflocal = fixpath(kpse.expand_var("$TEXMFLOCAL"))..pathsep
 local suffix = "gregoriotex"..pathsep
 
 function io.loaddata(filename,textmode)
@@ -84,24 +85,17 @@ function copy_files()
   if not lfs.isdir(texmflocal) then
     lfs.mkdir(texmflocal)
   end
-  print("copying files...\n")
+  print("Copying files...\n")
   local texmfbin = kpse.expand_var("$TEXMFDIST")
   texmfbin = fixpath(texmfbin.."/../bin/win32/")
+  print("gregorio.exe...")
   copy_one_file("gregorio.exe", texmfbin)
   print("unzipping TDS zip file...\n")
   os.spawn("unzip.exe -o gregoriotex.tds.zip -d "..texmflocal:gsub("\\", "/")) -- TeXLive provides unzip!
-  copy_one_file(fixpath('examples/main-lualatex.tex'), dirs.templatemain)
-  copy_one_file(fixpath('examples/PopulusSion.gabc'), dirs.templatescore)
-end
-
-function create_dirs()
-  for _, d in pairs(dirs) do
-    lfs.mkdir(d)
-  end
 end
 
 function run_texcommands()
-  print("running mktexlsr\n")
+  print("Running mktexlsr\n")
   local p = os.spawn("mktexlsr "..texmflocal)
 end
 
@@ -153,11 +147,13 @@ end
 -- gregorio used to be installed in other directories which have precedence
 -- over the new ones
 function remove_possible_old_install()
-  print("Removing possible old GregorioTeX files...\n")
+  print("Looking for old GregorioTeX files...\n")
   local old_install_was_present = false
   for _, d in pairs(old_base_dirs) do
+    print("Looking for "..d.."...")
     if lfs.isdir(d) then
       old_install_was_present = true
+      print("Found "..d..", removing...")
       rmdirrecursive(d)
     end
   end
@@ -168,9 +164,11 @@ end
 
 function main_install()
   remove_possible_old_install()
-  create_dirs()
   copy_files()
   run_texcommands()
+  print("Post-install script complete.")
+  print("Press return to continue...")
+  answer=io.read()
 end
 
 function scribus_config()
