@@ -20,6 +20,7 @@
 #ifndef CHARACTERS_H
 #define CHARACTERS_H
 
+#include <stdbool.h>
 #include "struct.h"
 
 /*
@@ -89,7 +90,8 @@ void gregorio_insert_char_after(grewchar c,
 
 void gregorio_rebuild_characters(gregorio_character **param_character,
                                  char center_is_determined,
-                                 gregorio_lyric_centering centering_scheme);
+                                 gregorio_lyric_centering centering_scheme,
+                                 bool skip_initial);
 
 void gregorio_rebuild_first_syllable(gregorio_character **param_character);
 

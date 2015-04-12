@@ -701,7 +701,8 @@ int gregorio_go_to_end_initial(gregorio_character **param_character)
 void
 gregorio_rebuild_characters(gregorio_character **param_character,
                             char center_is_determined,
-                            gregorio_lyric_centering centering_scheme)
+                            gregorio_lyric_centering centering_scheme,
+                            bool skip_initial)
 {
     // a det_style, to walk through the list
     det_style *current_style = NULL;
@@ -727,8 +728,12 @@ gregorio_rebuild_characters(gregorio_character **param_character,
             (*param_character) = current_character;
             return;
         }
-        // move to the character after the initial
-        current_character = current_character->next_character;
+        if (skip_initial) {
+            // move to the character after the initial
+            current_character = current_character->next_character;
+        } else {
+            gregorio_go_to_first_character(&current_character);
+        }
     }
     // first we see if there is already a center determined
     if (center_is_determined == 0) {
