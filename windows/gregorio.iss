@@ -49,7 +49,7 @@ Source: "../examples/main-lualatex.tex"; DestDir: "{app}\examples";
 Source: "../gregoriotex.tds.zip"; DestDir: "{app}";
 
 [Run]
-Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";
+Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Configuring texmf..."; Description: "Add files to texmf tree"; Flags: postinstall ; WorkingDir: "{app}";
 
 [Code]
 procedure URLLabelOnClickOne(Sender: TObject);
@@ -63,7 +63,7 @@ procedure URLLabelOnClickTwo(Sender: TObject);
 var
   ErrorCode: Integer;
 begin
-  ShellExec('open', 'http://home.gna.org/gregorio/installation-windows', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+  ShellExec('open', 'http://gregorio-project.github.io/installation-windows.html', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
 
 procedure CreateTheWizardPages;
@@ -121,7 +121,7 @@ begin
   
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(165);;
-  StaticText.Caption := 'http://home.gna.org/gregorio/installation-windows';
+  StaticText.Caption := 'http://gregorio-project.github.io/installation-windows.html';
   StaticText.Cursor := crHand;
   StaticText.OnClick := @URLLabelOnClickTwo;
   StaticText.Parent := Page.Surface;
