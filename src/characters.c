@@ -939,8 +939,10 @@ gregorio_rebuild_characters(gregorio_character **param_character,
     // begin the center before the first character (you can notice that there
     // is no problem of style).
     if (!center_is_determined) {
-        if (gregorio_go_to_end_initial(&current_character)) {
+        if (skip_initial && gregorio_go_to_end_initial(&current_character)) {
             current_character = current_character->next_character;
+        } else {
+            gregorio_go_to_first_character(&current_character);
         }
         gregorio_insert_style_before(ST_T_BEGIN, ST_CENTER, current_character);
     }
