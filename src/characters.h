@@ -62,16 +62,16 @@ int gregorio_is_vowel(grewchar letter);
 void gregorio_write_text(char type, gregorio_character *current_character,
                          FILE *f, void (*printverb) (FILE *, grewchar *),
                          void (*printchar) (FILE *, grewchar),
-                         void (*begin) (FILE *, unsigned char),
-                         void (*end) (FILE *, unsigned char),
+                         void (*begin) (FILE *, grestyle_style),
+                         void (*end) (FILE *, grestyle_style),
                          void (*printspchar) (FILE *, grewchar *));
 
 void gregorio_write_initial(gregorio_character *current_character,
                             FILE *f, void (*printverb) (FILE *,
                                                         grewchar *),
                             void (*printchar) (FILE *, grewchar),
-                            void (*begin) (FILE *, unsigned char),
-                            void (*end) (FILE *, unsigned char),
+                            void (*begin) (FILE *, grestyle_style),
+                            void (*end) (FILE *, grestyle_style),
                             void (*printspchar) (FILE *, grewchar *));
 
 gregorio_character *gregorio_first_text(gregorio_score *score);
