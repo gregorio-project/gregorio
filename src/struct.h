@@ -250,6 +250,10 @@ typedef enum gregorio_glyph_type {
     G_SALICUS,
     G_VIRGA_STRATA,
     G_TORCULUS_LIQUESCENS,
+    // additional glyph types, necessary for determination
+    G_PORRECTUS_NO_BAR,
+    G_PORRECTUS_FLEXUS_NO_BAR,
+    G_PES_QUILISMA,
 } gregorio_glyph_type;
 
 /*
@@ -890,20 +894,6 @@ void gregorio_end_style(gregorio_character **current_character,
 
 int gregorio_is_vowel(grewchar letter);
 
-void gregorio_write_text(char type, gregorio_character *text, FILE *f,
-                         void (*printverb) (FILE *, grewchar *),
-                         void (*printchar) (FILE *, grewchar),
-                         void (*begin) (FILE *, unsigned char),
-                         void (*end) (FILE *, unsigned char),
-                         void (*printspchar) (FILE *, grewchar *));
-
-void gregorio_write_first_letter(gregorio_character *current_character,
-                                 FILE *f, void (*printverb) (FILE *,
-                                                             grewchar *),
-                                 void (*printchar) (FILE *, grewchar),
-                                 void (*begin) (FILE *, unsigned char),
-                                 void (*end) (FILE *, unsigned char),
-                                 void (*printspchar) (FILE *, grewchar *));
 char gregorio_determine_next_pitch(gregorio_syllable *syllable,
                                    gregorio_element *element,
                                    gregorio_glyph *glyph);

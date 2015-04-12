@@ -24,6 +24,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>             // for strchr
+#include "characters.h"
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
@@ -180,7 +181,7 @@ void gabc_write_voice_info(FILE *f, gregorio_voice_info *voice_info)
  * 
  */
 
-void gabc_write_begin(FILE *f, unsigned char style)
+void gabc_write_begin(FILE *f, grestyle_style style)
 {
     switch (style) {
     case ST_ITALIC:
@@ -215,7 +216,7 @@ void gabc_write_begin(FILE *f, unsigned char style)
  * 
  */
 
-void gabc_write_end(FILE *f, unsigned char style)
+void gabc_write_end(FILE *f, grestyle_style style)
 {
     switch (style) {
     case ST_ITALIC:
