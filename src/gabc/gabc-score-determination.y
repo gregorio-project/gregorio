@@ -490,7 +490,7 @@ void rebuild_characters(gregorio_character **param_character,
     if ((!score->first_syllable && has_initial && current_character)
         || (current_syllable && !current_syllable->previous_syllable
             && !current_syllable->text && current_character)) {
-        gregorio_rebuild_first_syllable(&current_character);
+        gregorio_rebuild_first_syllable(&current_character, has_initial);
     }
 
     gregorio_rebuild_characters(param_character, center_is_determined,

@@ -93,6 +93,7 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
                                  gregorio_lyric_centering centering_scheme,
                                  bool skip_initial);
 
-void gregorio_rebuild_first_syllable(gregorio_character **param_character);
+void gregorio_rebuild_first_syllable(gregorio_character **param_character,
+                                     bool separate_initial);
 
 #endif
