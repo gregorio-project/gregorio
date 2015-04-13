@@ -27,6 +27,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
@@ -482,18 +483,18 @@ void rebuild_characters(gregorio_character **param_character,
                         char center_is_determined,
                         gregorio_lyric_centering centering_scheme)
 {
+    bool has_initial = score->initial_style != NO_INITIAL;
     // we rebuild the first syllable text if it is the first syllable, or if
     // it is the second when the first has no text.
     // it is a patch for cases like (c4) Al(ab)le(ab)
-    if ((!score->first_syllable && score->initial_style != NO_INITIAL
-         && current_character)
+    if ((!score->first_syllable && has_initial && current_character)
         || (current_syllable && !current_syllable->previous_syllable
             && !current_syllable->text && current_character)) {
-        gregorio_rebuild_first_syllable(&current_character);
+        gregorio_rebuild_first_syllable(&current_character, has_initial);
     }
 
     gregorio_rebuild_characters(param_character, center_is_determined,
-                                centering_scheme);
+                                centering_scheme, has_initial);
 }
 
 /*
