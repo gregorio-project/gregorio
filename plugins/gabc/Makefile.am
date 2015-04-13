@@ -10,7 +10,7 @@ gabc_la_LDFLAGS = -no-undefined -module -avoid-version
 
 gabc_la_SOURCES = gabc-elements-determination.c gabc-write.c \
 	gabc-glyphs-determination.c gabc.h gabc-score-determination-l.h \
-	gabc-score-determination-l.c \
+	gabc-score-determination-l.c  gabc-score-determination-y.h \
 	gabc-notes-determination-l.c gabc-score-determination-y.c
 gabc_la_LIBADD = @LEXLIB@ $(LIBINTL) -lgregorio
 
@@ -25,6 +25,9 @@ gabc-score-determination-y.c: gabc-score-determination.y
 
 gabc-notes-determination-l.c: gabc-notes-determination.l
 	$(LEX) $<
+
+%-y.h: %-y.c
+%-l.h: %-l.c
 
 CLEANFILES = gabc-score-determination-l.c gabc-score-determination-y.c \
 	gabc-notes-determination-l.c gabc-score-determination-y.h
