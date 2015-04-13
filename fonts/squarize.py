@@ -145,7 +145,10 @@ Copyright (C) 2002--2006 Juergen Reuter <reuter@ipd.uka.de>
 """+GPLV3
     newfont.weight = "regular"
     initialize_glyphs()
-    glyph_widths = initialize_lengths()
+
+    font_width = get_lengths(font_name)
+    
+
     hepisemus()
     shortglyphs = 1
     pes()
@@ -179,12 +182,11 @@ def precise_message(glyph_name):
 # initial glyphs are the names of the glyphs that are already in
 # gregorio_base, mostly one-note glyphs. see initialize_glyphs()
 # for more details.
-initial_glyphs = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16 , 17,
+initial_glyphs = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17,
                   19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-                  32 , 33, 34, 35, 36, 37, 38, 39, 60, 61, 62, 63, 64,
+                  32, 33, 34, 35, 36, 37, 38, 39, 60, 61, 62, 63, 64,
                   65, 69, 70, 72, 73, 74, 77, 79, 81, 82, 83, 84, 85,
                   86, 87, 88, 89, 90, 91, 92, 93]
-
 
 initialcount = None
 count = None
@@ -227,10 +229,11 @@ def initialize_glyphs():
         newfont.selection.select(("singletons",), unislots[i])
         newfont.paste()
 
-def initialize_lengths():
+def get_lengths(fontname):
     "Initialize widths depending on the font."
-    if font_name == "gregorio":
-        WIDTHS = dict(LINE_WIDTH=22,
+    lengths = {}
+    if fontname == "gregorio":
+        lengths = dict(LINE_WIDTH=22,
         # some width, necessary to know where to draw lines, squares, etc.
         # first the width of the lines that link notes, like in a pes for example
 
@@ -271,8 +274,8 @@ def initialize_lengths():
         # center of the punctum
                       HEPISEMUS_ADDITIONAL_WIDTH=5,
                       )
-    elif font_name == "parmesan":
-        WIDTHS = dict(LINE_WIDTH=22,
+    elif fontname == "parmesan":
+        lengths = dict(LINE_WIDTH=22,
                       WIDTH_PUNCTUM=161,
                       WIDTH_ORISCUS=192,
                       WIDTH_ORISCUS_REV=192,
@@ -288,8 +291,8 @@ def initialize_lengths():
                       PORRECTUSWIDTHS=(490, 575, 650, 740, 931),
                       HEPISEMUS_ADDITIONAL_WIDTH=5,
                   )
-    elif font_name == "greciliae":
-        WIDTHS = dict(LINE_WIDTH=18,
+    elif fontname == "greciliae":
+        lengths = dict(LINE_WIDTH=18,
                       WIDTH_PUNCTUM=166,
                       WIDTH_ORISCUS=166,
                       WIDTH_ORISCUS_REV=168,
@@ -305,8 +308,8 @@ def initialize_lengths():
                       PORRECTUSWIDTHS=(503, 629, 628, 628, 931),
                       HEPISEMUS_ADDITIONAL_WIDTH=5,
         )
-    if font_name == "gregoria":
-        WIDTHS = dict(LINE_WIDTH=22,
+    elif fontname == "gregoria":
+        lengths = dict(LINE_WIDTH=22,
                       WIDTH_PUNCTUM=164,,
                       WIDTH_ORISCUS=164,
                       WIDTH_ORISCUS_REV=164,
@@ -322,7 +325,7 @@ def initialize_lengths():
                       PORRECTUSWIDTHS=(490, 575, 650, 740, 931),
                       HEPISEMUS_ADDITIONAL_WIDTH=5,
                   )
-    return WIDTHS
+    return lengths
 
 # Dictionary of glyphs and their numbers.
 SHAPES = {
@@ -521,6 +524,7 @@ def pes():
 
 def write_pes(i, first_glyph, shape, liquescentia='nothing'):
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
+    temp_width = 0
     #begin_glyph(glyphnumber)
     # the difference of width of the two shapes, that will change a thing or two...
     if (first_glyph == "qbase"):
@@ -562,6 +566,7 @@ def write_pes_debilis(i, shape, liquescentia='nothing'):
 
 def write_pes_deminutus(i, first_glyph, shape, liquescentia='nothing'):
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
+    temp_width = 0
     simple_paste(first_glyph, glyphnumber)
     if (first_glyph == "qbase"):
         temp_width = WIDTH_QUILISMA-LINE_WIDTH
