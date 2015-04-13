@@ -369,7 +369,7 @@ SHAPES = {
     'scandicus':42,
     'ancus':44,
     'ancus_longqueue':46,
-    'salicus_first':48,
+    'virga_strata':48,
     'salicus':50,
     'salicus_longqueue':52,
     'torculus_liquescens': 54,
@@ -681,9 +681,9 @@ def write_pes_quadratum(i, first_glyph, last_glyph, shape, liquescentia='nothing
 def virga_strata():
     precise_message("first part of salicus")
     for i in range(1, MAX_INTERVAL+1):
-        write_salicus_first(i, "base5", "obase4", 'salicus_first')
+        write_virga_strata(i, "base5", "obase4", 'virga_strata')
 
-def write_salicus_first(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
+def write_virga_strata(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
     if i == 1:
         first_glyph = '_0017'
