@@ -20,7 +20,7 @@ deb:
 config.status:
 	dh_testdir
 	dh_autoreconf
-	dh_auto_configure -- --enable-all-static --enable-xml-read
+	dh_auto_configure
 
 build: build-stamp
 

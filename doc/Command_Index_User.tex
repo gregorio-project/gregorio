@@ -1,4 +1,4 @@
-% !TEX root = UserManual.tex
+% !TEX root = GregorioRef.tex
 % !TEX program = LuaLaTeX
 \section{User Controls}
 
@@ -7,37 +7,147 @@ score which cannot be controlled from the gabc file. They can be added
 to any \verb=.tex= file. Do not add them to any \verb=.gtex= or
 \verb=.gabc= file.
 
+\subsection{Using the Package}
+
+To use the gregoriotex package include \verb=\usepackage{gregoriotex}=
+in the document preamble. This macro has the following form:
+
+\macroname{\textbackslash usepackage[\textit{(options)}]\{gregoriotex\}}{gregoriotex.sty}
+
+The optional arguments are:
+
+\bigskip\rowcolors{1}{lightgray}{lightgray}
+\begin{tabular}{lp{10cm plus .5cm}}
+  Argument & Description \\
+  \hline
+  debug & Debug messages will be printed to the output log. \\
+  \hline
+  nevercompile & Default. The classic behavior of gregoriotex. The user is %
+    responsible for compiling gabc scores into gtex files.\\
+  autocompile & Gregoriotex will automatically compile gtex files from gabc %
+    files when necessary. If the gabc has been modified, or the %
+    gtex has an outdated version, or the gtex file does not exist, %
+    THEN gregoriotex will compile a new gtex file.\\
+  forcecompile & Gregoriotex will compile all scores from their gabc files.\\
+\end{tabular}\bigskip
+
+\textbf{Note:} \verb=nevercompile=, \verb=autocompile=, and
+\verb=forcecompile= conflict with eachother. Only one should be
+specified in the options list.
+
 \subsection{Commands}
 
 In general, commands should not be modified.  Exceptions are noted below.
 
-\macroname{\textbackslash includescore[\#1]\{\#2\}}{gregoriotex.tex}
+\macroname{\textbackslash includescore[\textit{\#1}]\{\#2\}}{gregoriotex.tex}
 %\verb=\includescore#1=%tex.tex
 Macro for including scores.  Works on both gabc and tex files.
 
 \begin{argtable}
-  \#1 & character& Optional.  Should be ``\texttt{f}''.  Bypasses compilation checks.\\
+  \#1 & \texttt{n} & Optional. \#2 will be included as is. \\
+      & \texttt{a} & Optional. Gregoriotex will automatically compile gabc files if necessary.\\
+      & \texttt{f} & Optional. Forces gregoriotex to compile the gabc file.\\
   \#2 & string & Relative or absolute path to the score.\\
 \end{argtable}
 
 Example:\par\medskip
 \begin{latexcode}
-  \includescore[f]{TecumPrincipium.tex}
+  \includescore[n]{TecumPrincipium.tex}
   \includescore{Chant/VirgoVirginum.gabc}
   \includescore{/home/user/chant/AdTeLevavi}
+  \includescore[a]{AveMaria}
 
   %The following lines include the same score:
   \includescore{Christus}
   \includescore{Christus.gtex}
   \includescore{./Christus}
   \includescore{./Christus.gabc}
+
+  %With the optional arg [f], #2 must be a file usable by TeX.
+  \includescore[f]{TecumPrincipium.gabc} % Wrong
+\end{latexcode}
+
+\textbf{Important:} For the sake of clarity it is recommended that the
+file extension be omitted from \texttt{\#2}. When the nevercompile
+option is in effect (either via package option
+\texttt{[nevercompile]}, or \verb=\nevercompilegabc=, or
+\verb=\includescore[n]=) \#2 must be a \TeX\ file that exists and
+\texttt{.tex} is the only extension that may be omitted.
+
+When called with the optional argument \texttt{[a]} gregoriotex will
+automatically generate a \texttt{gtex} file in this format:
+\texttt{\textit{scorename}-x\_x\_x.gtex} where \texttt{x\_x\_x} is the
+gregorio version. This resulting file is not intended to be modified
+by the user and will be removed when the gabc file is recompiled. The
+rules that gregoriotex uses to determine if a gabc file needs to be
+compiled are:
+
+\begin{itemize}
+\item If a gtex file does not exist.
+\item If the modification time of the gabc file is newer than its
+  corresponding gtex file.
+\item If the version of the gtex file is outdated.
+\end{itemize}
+
+When called with the optional argument \texttt{[n]} gregoriotex will
+include the score without doing anything else. This is the same as the
+old behavior of gregoriotex and the default behavior.
+
+When called with the optional argument \texttt{[f]} gregoriotex will
+compile the gabc file into a gtex file. This is similar to
+\texttt{[a]} except the gabc is compiled every time.
+
+\macroname{\textbackslash forcecompilegabc}{gregoriotex.tex} A switch
+to change the behavior of the way gregoriotex includes scores. When
+used, all later calls of \verb=\includescore= will compile the gabc
+file into a gtex file. This is similar to using the package option
+\verb=[forcecompile]=, but does not necessarly apply to the entire
+document.
+
+\macroname{\textbackslash autocompilegabc}{gregoriotex.tex} A switch
+to change the behavior of the way gregoriotex includes scores. When
+used, all later calls of \verb=\includescore= will use gregoriotex's
+automatic compilation of gabc files. This is similar to using the
+packape option \verb=[autocompile]=, but does not necessarly apply to
+the entire document.
+
+\macroname{\textbackslash nevercompilegabc}{gregoriotex.tex} A switch
+to change the behavior of the way gregoriotex includes scores. When
+used, all later calls of \verb=\includescore= will include the score
+without doing anything else. This is the same as the traditional
+behavior of gregoriotex. It is the package default.
+
+\medskip The three previous macros can be combined in the same document to
+switch between different includescore behaviors: \par\medskip
+\begin{latexcode}
+  \usepackage{gregoriotex} % [nevercompile] is the default.
+  ----
+  \includescore{TecumPrincipium} % gabc never compiled.
+  \includescore[f]{TecumPrincipium} % gabc always compiled.
+  \includescore[a]{TecumPrincipium} % gabc auto compiled.
+
+  \autocompilegabc
+  \includescore{TecumPrincipium} % gabc auto compiled.
+  \includescore[n]{TecumPrincipium} % gabc never compiled.
+  \includescore[f]{TecumPrincipium} % gabc always compiled.
+
+  \forcecompilegabc
+  \includescore{TecumPrincipium} % gabc always compiled.
+  \includescore[n]{TecumPrincipium} % gabc never compiled.
+  \includescore[a]{TecumPrincipium} % gabc auto compiled.
 \end{latexcode}
 
 \macroname{\textbackslash englishcentering}{gregoriotex-syllable.tex}
-Changes settings to align syllables in the English style (center of syllable aligns with center of first glyph in neume).  Will only affect scores which do not have “centering-scheme: english;” in their gabc header.
+Changes settings to align syllables in the English style (center of
+syllable aligns with center of first glyph in neume).  Will only
+affect scores which do not have “centering-scheme: english;” in their
+gabc header.
 
 \macroname{\textbackslash defaultcentering}{gregoriotex-syllable.tex}
-Changes settings to align syllables in the Latin style (center of vowel aligns with center of first glyph in neume).  Will only affect scores which do not have “centering-scheme: english;” in their gabc header.  
+Changes settings to align syllables in the Latin style (center of
+vowel aligns with center of first glyph in neume).  Will only affect
+scores which do not have “centering-scheme: english;” in their gabc
+header.
 
 Default.
 
@@ -442,5 +552,5 @@ Default: $\unit[-0.05]{cm}$
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: "UserManual"
+%%% TeX-master: "GregorioRef"
 %%% End:

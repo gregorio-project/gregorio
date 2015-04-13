@@ -1,18 +1,21 @@
-%GregorioTeX file.
-%Copyright (C) 2007-2013 Elie Roux <elie.roux@telecom-bretagne.eu>
+%GregorioTeX main file.
 %
-%This program is free software: you can redistribute it and/or modify
-%it under the terms of the GNU General Public License as published by
-%the Free Software Foundation, either version 3 of the License, or
-%(at your option) any later version.
+% Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
 %
-%This program is distributed in the hope that it will be useful,
-%but WITHOUT ANY WARRANTY; without even the implied warranty of
-%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-%GNU General Public License for more details.
+% This file is part of Gregorio.
 %
-%You should have received a copy of the GNU General Public License
-%along with this program.  If not, see <http://www.gnu.org/licenses/>.
+% Gregorio is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Gregorio is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
 % this file contains definitions for lines, initial, fonts, etc.
 
@@ -38,7 +41,11 @@
   \def\gre@warning#1{\PackageWarning{GregorioTeX}{#1}}%
 \fi%
 
-\ifluatex\else%
+\ifluatex%
+  \ifnum\luatexversion<76%
+    \greerror{Error: this document must be compiled with LuaTeX (lualatex) 0.76 or later}%
+  \fi%
+\else%
   \greerror{Error: this document must be compiled with LuaTeX (lualatex)}%
 \fi%
 
@@ -73,50 +80,30 @@
 
 % The general version of GregorioTeX (we mean by that the "API", the way
 % Gregorio will write things)
-\xdef\gregoriotexversion{\directlua{tex.write(gregoriotex.get_greapiversion())}}%
+\xdef\gregoriotexversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
 
 % the version of the internal files (all must have the same)
-\xdef\greinternalversion{\directlua{tex.write(gregoriotex.get_greapiversion())}} % date format
-\directlua{gregoriotex.check_version(\number\greinternalversion)}%
+\xdef\greinternalversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
 
 % first some macros to allow checks for version:
+% Tests that all gregoriotex files are of the same version.
 % #1 is the name of the file
 % #2 is the version
+
 \def\gredeclarefileversion#1#2{%
-  \ifnum\number#2=\number\greinternalversion\else %
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\greinternalversion \space\space while #1 is in version \number#2}%
-  \fi %
+  \IfStrEq*{#2}{\greinternalversion}{}{%else
+    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\greinternalversion \space\space while #1 is in version \number#2}}%
 }%
 
-% macro called by scores
+% Macro called by scores.
+% Tests the major version of gregorio (X.0.0) against the score. Fails
+% if the major version (X) does not match.
 % #1 is the version of GregorioTeX the score is made for.
+
 \def\gregoriotexapiversion#1{%
-  \ifnum\number#1=\number\gregoriotexversion\else %
-    \greerror{GregorioTeX is in version \number\gregoriotexversion \space\space while a score you included requires version \number#1. Please recompile your scores}%
-  \fi %
-}%
-
-%%%%%%%%%%%%%%%%%%%%%%%%
-%% aux file definitions
-%%%%%%%%%%%%%%%%%%%%%%%%
-
-% for now, we only use an aux file with LuaTeX
-
-\ifluatex%
-  \newwrite\Greaux%
-\fi%
-
-\def\grewriteaux#1{%
-  \write\Greaux{#1}%
-  \relax %
-}%
-
-\def\opengreaux{%
-  \openout\Greaux \jobname .gaux\relax%
-}%
-
-\def\closegreaux{%
-  \closeout\Greaux %
+  \StrBefore{\gregoriotexversion}{.}[\gre@gregoriomajorversion]%
+  \IfBeginWith{#1}{\gre@gregoriomajorversion}{\relax}{%else
+    \greerror{GregorioTeX is in version \gregoriotexversion \space\space while a score you included requires version #1. Please recompile your scores}}%
 }%
 
 
@@ -285,7 +272,7 @@
 \def\greinitial#1{%
   % see comments on this function to see what it does
   \gre@calculate@aboveinitialraise %
-  % we print the initial always at the same place, and the we print the GreAboveinitialfirstbox  centered
+  % we print the initial always at the same place, and the we print the GreAboveinitialfirstbox, centered
   % first we print the initial
   \gre@dimen@temp@five=-\gre@dimen@textlower %
   % if it is a big initial we print it on the second line 
@@ -350,12 +337,12 @@
   \ifdim\wd\GreAboveinitialfirstbox=0 pt\relax %
   \else %
     \gre@dimen@temp@five=\gre@dimen@initialwidth %
-    \advance\gre@dimen@temp@five by -\wd\GreAboveinitialfirstbox  %
+    \advance\gre@dimen@temp@five by -\wd\GreAboveinitialfirstbox%
     \divide\gre@dimen@temp@five by 2 %
     \gre@skip@temp@four = -\gre@dimen@initialwidth%
     \hskip\gre@skip@temp@four %
     \kern\gre@dimen@temp@five %
-    \raise\gre@dimen@aboveinitialfirstraise\copy\GreAboveinitialfirstbox  %
+    \raise\gre@dimen@aboveinitialfirstraise\copy\GreAboveinitialfirstbox%
     \kern\gre@dimen@temp@five %
     \setbox\GreAboveinitialfirstbox=\hbox{}%
   \fi %
@@ -501,8 +488,8 @@
 }%
 
 % the code is a bit strange here: we always execute \gre@skip@spaceabovelines at the beginning of a glyph. This will:
-%  - typeset the text above the lines if relevant, and making sure we execute it only once
-%  - not do anything else
+% - typeset the text above the lines if relevant, and making sure we execute it only once
+% - not do anything else
 
 \xdef\grecurrenttextabovelines{}%
 
@@ -516,13 +503,18 @@
 
 % typesets the text above the line
 \def\gretypesettextabovelines#1{%
-  \greabovelinestextstyle{\gre@dimen@temp@five=\gre@dimen@abovelinestextraise} %
+  \greabovelinestextstyle{%
+    \gre@debug{Raise alt text: \gre@dimen@abovelinestextraise}%
+    \global\gre@dimen@temp@five=\gre@dimen@abovelinestextraise\relax%
+  } %
+  \gre@debug{Raise alt text: \the\gre@dimen@temp@five}%
   \advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight %
   \advance\gre@dimen@temp@five by 4\gre@dimen@interstafflinespace %
   \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
   \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
   \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
   \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
+  \gre@debug{Raise alt text: \the\gre@dimen@temp@five}%
   \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\greabovelinestextstyle{#1}\hss}%
   \relax %
 }%
@@ -547,7 +539,7 @@
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
 \def\gredrawfirstlines{%
   \advance\gre@dimen@stafflinewidth by -\gre@dimen@initialwidth%
-%  \advance\gre@dimen@stafflinewidth by -\gre@dimen@minimalspaceatlinebeginning
+  %\advance\gre@dimen@stafflinewidth by -\gre@dimen@minimalspaceatlinebeginning
   %\gre@dimen@initialwidth=0pt
   \hbox to 0pt{%
     \vbox{%
@@ -716,57 +708,6 @@
   \relax %
 }%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the chironomic signs lines
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% here is a quite special macro called at beggining of lines, that inserts a line of chironomic signs
-\def\greinsertchiroline{%
-  % the first line is a special case
-  \ifnum\greknownline=1\relax %
-    % some bugs appear if we don't box it
-    \hbox{\directlua{grechiro.printLine()}}%
-    \par %
-    % TODO: this line bugs with my version of LuaTeX
-    %\grenobreak 
-    \gre@skip@temp@four = \gre@dimen@belowsignsspace%
-    \kern\gre@skip@temp@four %
-    %\grenobreak 
-    \noindent %
-  \else %
-    % not very beaufiful, I don't like to make a new par inside a score, but....
-    \grelocalleftbox{}%
-    \grelocalrightbox{}%
-    \par %
-    \gre@skip@temp@four = \gre@dimen@abovesignsspace%
-    \kern\gre@skip@temp@four %
-    \noindent\hbox{\directlua{grechiro.printLine()}}%
-    \greupdateleftbox %
-    \par %
-    \grenobreak%
-    \gre@skip@temp@four = \gre@dimen@belowsignsspace%
-    \kern\gre@skip@temp@four %
-    \grenobreak %
-    \noindent %
-  \fi %
-  \relax %
-}%
-
-%macro to call just after begingregorioscore, if there are some chironomic signs
-\def\greactivatechironomy{%
-  % we print the absolute position of the beginning of the score, and the width of a line, to get the absolute positions of the begginning and end of lines
-  \pdfsavepos %
-  \grewriteaux{begin:\number\pdflastxpos}%
-  \grewriteaux{width:\number\gre@dimen@stafflinewidth}%
-  \RequireLuaModule{gregoriotex-ictus}%
-  \directlua{grechiro.atBeginScore()}%
-\fi %
-}%
-
-% count that is 1 or 0 if we need to print the small vertical bars in the chironomic line
-\newcount\printchirovbars%
-\printchirovbars=1%
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% other macros
@@ -781,6 +722,7 @@
   \ifnum\greusestylefont=1\relax %
     \gresetstylefont %
   \fi %
+  \gre@computespaces
   \grecancelpenalties %
   \gredofinetuning %
   \gregorioattr=0\relax %
@@ -972,9 +914,9 @@
 
 % same as above, but for the score. For now it is the same behaviour.
 \def\grelastofscore{%
-%  \grelocalleftbox{}% For an unknown reason, if I uncomment this line, the
-%  blank line removing algorithm (in lua) will let some blank space after the
-%  last line... (see bug #20953)
+  %\grelocalleftbox{}% For an unknown reason, if I uncomment this line, the
+  %blank line removing algorithm (in lua) will let some blank space after the
+  %last line... (see bug #20953)
   \greblockcustos %
   \global\grelastoflinecount=1\relax%
   \relax%
@@ -1069,7 +1011,7 @@
     \gre@skip@temp@four = \gre@skip@bitrivirspace%
     \grehskip\gre@skip@temp@four %
   \or% case 5
-    \gre@skip@temp@four = \gre@bitristrospace%
+    \gre@skip@temp@four = \gre@skip@bitristrospace%
     \grehskip\gre@skip@temp@four %
   \or% case 6
     \gre@skip@temp@four = \gre@skip@spaceaftersigns%
@@ -1183,7 +1125,7 @@
 
 \def\greitalic#1{%
   {\it #1}%
-%  \relax 
+  %\relax 
 }%
 
 \def\gresmallcaps#1{%
@@ -1273,12 +1215,6 @@
   \else%
     \gre@changedimenfactor{\grefactor}{#1}%
     \global\grefactor=#1\relax %
-    \gre@computespaces %
-    \gregeneratelines %
-    \setgregoriofont{\gregoriofontname}%
-    \ifnum\greusestylefont=1\relax %
-      \gresetstylefont %
-    \fi %
   \fi%
   \relax %
 }%
@@ -1287,66 +1223,98 @@
 %% score including
 %%%%%%%%%%%%%%%%%%%
 
-% BOOL to track whether to force the recompiling of gabc files or not.
-\newif\if@gabcforcecompile%
+% Flag to track compilation behavior
+% 0 = never compile (default)
+% 1 = auto compile (compile outdated scores and those lacking a compiled version)
+% 2 = compile all scores
+\def\gre@compilegabc{0}
 
 % User macro to force gregriotex to recompile gabc files. Useful for when there
 % are changes to gregoriotex but the GREGORIOTEX API VERSION is not changed.
-\def\forcegabccompile{%
-  \@gabcforcecompiletrue%
+\def\forcecompilegabc{%
+  \gdef\gre@compilegabc{2}%
 }%
 
 % User macro to let gregoriotex auto recompile gabc files as necessary.
 % Intended to be used in the main tex file to revert the previous macro.
-\def\normalgabccompile{%
-  \@gabcforcecompilefalse%
+\def\autocompilegabc{%
+  \gdef\gre@compilegabc{1}
 }%
 
-% The primary macro that includes a score. The lua function check that:
-%  -- The gtex file exists.
-%  -- The gtex file is of the correct gregoriotexapi_version.
-%  -- The gtex file is 'newer' than it's corresponding gabc file.
-% If either test fails, the gabc file is (re)compiled.
+% User macro to force score inclusion without compilation.
+\def\nevercompilegabc{%
+  \gdef\gre@compilegabc{0}
+}
+
+
+% Internal marco which includes a score when \includescore is called without the optional argument.  Behavior is determined by the value of \gre@compilegabc flag.
 %
-% If the \recompilegabc macro is in effect, pass true to the lua function.
+% If \gre@compilegabc is 0, then we simply try to include the file as it is given to us.  This is the old behavior.
+%
+% If \gre@compilegabc is 1, tell the lua function to check that:
+%	-- The gtex file exists.
+%	-- The gtex file is of the correct gregoriotexapi_version.
+%	-- The gtex file is 'newer' than it's corresponding gabc file.
+% If any test fails, the gabc file is (re)compiled.
+%
+% If \gre@compilegabc is 2, pass true to the lua function.
 % This forces gregoriotex to recompile the gabc file.
 
 \def\gre@includescore#1{%
-  \if@gabcforcecompile%
-    \directlua{gregoriotex.include_score([[#1]], true)}%
-  \else%
+  \ifcase\gre@compilegabc% case 0, never compile
+    \gre@debug{Refusing to compile #1}%
+    \input #1%
+  \or% case 1, auto compile
+    \gre@debug{Auto compile #1}%
     \directlua{gregoriotex.include_score([[#1]], nil)}%
+  \or% case 2, force compile
+    \gre@debug{Forced to compile #1}%
+    \directlua{gregoriotex.include_score([[#1]], true)}%
   \fi%
   \relax%
 }%
 
-\ifdefined\includetexscore%
-  \gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore\space instead.}%
-\else%
-  \def\includetexscore#1{%
-    \gre@includescore{#1}%
-  }%
-\fi%
+\def\includetexscore#1{%
+  \gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore[n]\space instead.}%
+  \gre@includescorewithoption[n]{#1}%
+}%
+
 \def\greincludetexscore#1{%
-  \gre@warning{\protect\greincludedtexscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
-  \gre@includescore{#1}%
+  \gre@warning{\protect\greincludetexscore\space is deprecated.\MessageBreak Use \protect\includescore[n]\space instead.}%
+  \gre@includescorewithoption[n]{#1}%
 }%
 
-\ifdefined\includegabcscore%
-  \gre@warning{\protect\includegabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
-\else%
-  \def\includegabcscore#1{%
-    \gre@includescore{#1}%
-  }%
-\fi%
+\def\includegabcscore#1{%
+  \gre@warning{\protect\includegabcscore\space is deprecated.\MessageBreak Use \protect\includescore[c]\space instead.}%
+  \gre@includescorewithoption[c]{#1}%
+}%
+
 \def\greincludegabcscore#1{%
-  \gre@warning{\protect\greincludedgabcscore\space is deprecated.\MessageBreak Use \protect\includescore\space instead.}%
-  \gre@includescore{#1}%
+  \gre@warning{\protect\greincludegabcscore\space is deprecated.\MessageBreak Use \protect\includescore[c]\space instead.}%
+  \gre@includescorewithoption[c]{#1}%
 }%
 
-% A macro that passes the score directly to TeX without performing the API version check or if the gabc was modified since the creation of the gtex file.
+% The internal macro called when \includescore is called with the optional argument.  Behavior is determined by the value of the argument:
+% n - do not attempt to compile the score.  Simply include it as is.
+% a - perform the checks to see if the score needs to be recompiled and do so only if necessary
+% f - force the compilation of the score before including it
 \def\gre@includescorewithoption[#1]#2{%
-  \input #2%
+  \ifx #1n\relax%
+    \gre@debug{Override not compiling #2}%
+    \input #2%
+  \else%
+    \ifx #1f\relax%
+      \gre@debug{Override force compiling #2}%
+      \directlua{gregoriotex.include_score([[#2]], true)}%
+    \else%
+      \ifx #1a\relax%
+        \gre@debug{Override auto compiling #2}%
+        \directlua{gregoriotex.include_score([[#2]], nil)}%
+      \else%
+        \greerror{Unrecognized option [#1] for \protect\includescore}%
+      \fi%
+    \fi%
+  \fi%
   \relax%
 }%
 
@@ -1401,3 +1369,7 @@
 \def\GreUseZeroHyphen{%
   \global\let\grehyph\grezerhyph %
 }%
+
+
+% We load the default space configuration.
+\GreLoadSpaceConf{default}%

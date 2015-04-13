@@ -1,17 +1,26 @@
 #!/bin/bash
-# Script to uninstall the gregorio Mac OS X distribution.
-# Perhaps we should also uninstall the GregorioTeX stuff...
-# But that is a problem for another day
+
+# Script to uninstall the Gregorio Mac OS X distribution.
 
 PREFIX="/usr/local"
 BINDIR="$PREFIX/bin"
-#LIBDIR="$PREFIX/lib"
-#GRELIBDIR="$LIBDIR/gregorio"
-#GREINCLUDEDIR="$PREFIX/include/gregorio"
-RECEIPTDIR="/Library/Receipts"
+PKGCONFIGDIR="$PREFIX/lib/pkgconfig"
+GREINCLUDEDIR="$PREFIX/include/gregorio"
+GRETEXDIR=`kpsewhich gregoriotex.tex`
+if [ -z "$GRETEXDIR" ]; then
+    GRETEXDIR=`/usr/texbin/kpsewhich gregoriotex.tex`
+fi
+GRETEXDIR="${GRETEXDIR%/gregoriotex.tex}"
+TEXMFLOCAL="${GRETEXDIR%/tex/luatex/gregoriotex}"
+GREFONTDIR="$TEXMFLOCAL/fonts/truetype/public/gregoriotex"
+GREFONTSOURCE="$TEXMFLOCAL/source/gregoriotex"
+GREDOCDIR="$TEXMFLOCAL/doc/luatex/gregoriotex"
 
 rm $BINDIR/gregorio
-rm -dR $RECEIPTDIR/gregorio-2.0.pkg
-
-echo "Gregorio uninstalled. You may now delete the Gregorio folder\ncontaining this script and \
-the example files if you wish.\nThanks!"
+rm $PKGCONFIGDIR/gregorio.pc
+rm -rf $GREINCLUDEDIR
+rm -rf $GRETEXDIR
+rm -rf $GREFONTDIR
+rm -rf $GREFONTSOURCE
+rm -rf $GREDOCDIR
+pkgutil --forget com.gregorio.pkg.Gregorio

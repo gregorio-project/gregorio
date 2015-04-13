@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 # coding=utf-8
 
+
 """
     Python fontforge script to build a square notation font.
 
@@ -233,7 +234,6 @@ def initialize_lengths():
         WIDTHS = dict(LINE_WIDTH=22,
         # some width, necessary to know where to draw lines, squares, etc.
         # first the width of the lines that link notes, like in a pes for example
-
         # then the width of a punctum, we assume that it is the same width for
         # oriscus, quilisma, punctum auctum descendens and punctum auctum ascendens
                       WIDTH_PUNCTUM=164,

@@ -1,23 +1,26 @@
 %GregorioTeX file.
-%Copyright (C) 2007-2010 Elie Roux <elie.roux@telecom-bretagne.eu>
 %
-%This program is free software: you can redistribute it and/or modify
-%it under the terms of the GNU General Public License as published by
-%the Free Software Foundation, either version 3 of the License, or
-%(at your option) any later version.
+% Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
 %
-%This program is distributed in the hope that it will be useful,
-%but WITHOUT ANY WARRANTY; without even the implied warranty of
-%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-%GNU General Public License for more details.
+% This file is part of Gregorio.
 %
-%You should have received a copy of the GNU General Public License
-%along with this program.  If not, see <http://www.gnu.org/licenses/>.
+% Gregorio is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Gregorio is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
 % this file contains definitions of spaces
 
 \gredeclarefileversion{gregoriotex-spaces.tex}%
- {\directlua{tex.write(gregoriotex.get_greapiversion())}}%
+ {\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for tuning penalties
@@ -200,15 +203,13 @@
 \else%
   \def\setstafflinethickness#1{%
     \xdef\gre@stafflinefactor{#1}%
-    \gre@computespaces %
-    %% TODO: make smarter
     \relax %
   }%
 \fi%
 
 \def\gresetstafflinefactor#1{%
   \gre@warning{\protect\gresetstafflinefactor\space is deprecated.\MessageBreak Use \protect\setstafflinethickness\space instead.}%
-  \setstafflinethickness{#1}	%
+  \setstafflinethickness{#1}%
 }%
 
 %constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
@@ -486,7 +487,7 @@
 
 %% macros for additional bottom space for the first line
 
-% #1 is 1, 2 or 3, with the same signification as in grenewlinewithspace
+% #1 is 1, 2, 3, or 4, with the same signification as in grenewlinewithspace
 \def\grefirstlinebottomspace#1#2{%
   \ifcase#1\relax %
     % case 0
@@ -498,6 +499,9 @@
     \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
   \or % case 3
     \global\gre@dimen@additionalbottomspace=30000 sp%
+    \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
+  \or % case 4
+    \global\gre@dimen@additionalbottomspace=45000 sp%
     \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
   \fi %
   \ifnum#2=1\relax %
@@ -697,7 +701,6 @@
 % TODO: make smarter so that it knows the dependency tree and only recalculates distances affected by the change
 \def\grechangedim#1#2#3{%
   \gresetdim{#1}{#2}{#3}%
-  \gre@computespaces%
 }%
 
 %a macro to use if all you want to do is turn off the scaling for a particular distance
@@ -719,13 +722,11 @@
   \ifnum\the\grefactor=\greconffactor\else %If the space configuration file is designed for a \grefactor other than the current one, then we need to rescale the distances.
     \gre@changedimenfactor{\greconffactor}{\grefactor} %
   \fi%
-  \gre@computespaces %
   \relax %
 }%
 
 
-% We input the default config, for everything to work fine it has to be done after the gregoriotex package is completely loaded (so that all functions are well defined).  As a result we delay the loading to the beginning of the document.
-\AtBeginDocument{\GreLoadSpaceConf{default}}%
+% For everything to work fine the default configuration has to loaded after the gregoriotex package is completely loaded (so that all functions are well defined).  As a result you'll find that as the last line in gregoriotex.tex
 
 
 %%%%%%%%%%%%%%
@@ -750,8 +751,8 @@
   \IfStrEq{#1}{clivisalignmentmin}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{abovesignsspace}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{belowsignsspace}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{lowchoralsignsshift}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{highchoralsignsshift}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{lowchoralsignshift}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{highchoralsignshift}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{translationheight}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{spacelinestext}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{spacebeneathtext}{\rubberfalse}{\relax}%
@@ -759,7 +760,7 @@
   \IfStrEq{#1}{abovelinestextheight}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{braceshift}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{curlybraceaccentusshift}{\rubberfalse}{\relax}%
-}	
+}%
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
 %% Note: This function is assumed to touch only dimensions which are meant to scale with the \grefactor (i.e. if it acts on distance x, \gre@scale@x is 1)
@@ -889,71 +890,186 @@
 %% simply by dividing them by the old factor, and multiplying them by the new one.
 % #1 is the old grefactor, #2 is the new one
 \def\gre@changedimenfactor#1#2{%
-  \gre@changeonedimenfactor{additionallineswidth}{#1}{#2}%
-  \gre@changeonedimenfactor{additionalcustoslineswidth}{#1}{#2}%
-  \gre@changeonedimenfactor{zerowidthspace}{#1}{#2}%
-  \gre@changeonedimenfactor{interglyphspace}{#1}{#2}%
-  \gre@changeonedimenfactor{alterationspace}{#1}{#2}%
-  \gre@changeonedimenfactor{clefflatspace}{#1}{#2}%
-  \gre@changeonedimenfactor{beforechoralsignspace}{#1}{#2}%
-  \gre@changeonedimenfactor{beforealterationspace}{#1}{#2}%
-  \gre@changeonedimenfactor{interelementspace}{#1}{#2}%
-  \gre@changeonedimenfactor{largerspace}{#1}{#2}%
-  \gre@changeonedimenfactor{glyphspace}{#1}{#2}%
-  \gre@changeonedimenfactor{intersyllablespace}{#1}{#2}%
-  \gre@changeonedimenfactor{spacebeforecusto}{#1}{#2}%
-  \gre@changeonedimenfactor{spacebeforesigns}{#1}{#2}%
-  \gre@changeonedimenfactor{spaceaftersigns}{#1}{#2}%
-  \gre@changeonedimenfactor{spaceafterlineclef}{#1}{#2}%
-  \gre@changeonedimenfactor{interwordspacenotes}{#1}{#2}%
-  \gre@changeonedimenfactor{interwordspacenotestext}{#1}{#2}%
-  \gre@changeonedimenfactor{interwordspacetextnotes}{#1}{#2}%
-  \gre@changeonedimenfactor{interwordspacetext}{#1}{#2}%
-  \gre@changeonedimenfactor{bitrivirspace}{#1}{#2}%
-  \gre@changeonedimenfactor{bitristrospace}{#1}{#2}%
-  \gre@changeonedimenfactor{punctuminclinatumshift}{#1}{#2}%
-  \gre@changeonedimenfactor{beforepunctainclinatashift}{#1}{#2}%
-  \gre@changeonedimenfactor{punctuminclinatumanddebilisshift}{#1}{#2}%
-  \gre@changeonedimenfactor{punctuminclinatumdebilisshift}{#1}{#2}%
-  \gre@changeonedimenfactor{punctuminclinatumbigshift}{#1}{#2}%
-  \gre@changeonedimenfactor{punctuminclinatummaxshift}{#1}{#2}%
-  \gre@changeonedimenfactor{spacearoundsmallbar}{#1}{#2}%
-  \gre@changeonedimenfactor{spacearoundminor}{#1}{#2}%
-  \gre@changeonedimenfactor{spacearoundmaior}{#1}{#2}%
-  \gre@changeonedimenfactor{spacearoundfinalis}{#1}{#2}%
-  \gre@changeonedimenfactor{spacebeforefinalfinalis}{#1}{#2}%
-  \gre@changeonedimenfactor{spacearoundclefbars}{#1}{#2}%
-  \gre@changeonedimenfactor{textbartextspace}{#1}{#2}%
-  \gre@changeonedimenfactor{notebarspace}{#1}{#2}%
-  \gre@changeonedimenfactor{maximumspacewithoutdash}{#1}{#2}%
-  \gre@changeonedimenfactor{afterclefnospace}{#1}{#2}%
-  \gre@changeonedimenfactor{afterinitialshift}{#1}{#2}%
-  \gre@changeonedimenfactor{beforeinitialshift}{#1}{#2}%
-  \gre@changeonedimenfactor{minimalspaceatlinebeginning}{#1}{#2}%
-  \gre@changeonedimenfactor{manualinitialwidth}{#1}{#2}%
-  \gre@changeonedimenfactor{aboveinitialseparation}{#1}{#2}%
-  \gre@changeonedimenfactor{noclefspace}{#1}{#2}%
-  \gre@changeonedimenfactor{clefchangespace}{#1}{#2}%
-  \gre@changeonedimenfactor{clivisalignmentmin}{#1}{#2}%
-  \gre@changeonedimenfactor{abovesignsspace}{#1}{#2}%
-  \gre@changeonedimenfactor{belowsignsspace}{#1}{#2}%
-  \gre@changeonedimenfactor{lowchoralsignshift}{#1}{#2}%
-  \gre@changeonedimenfactor{highchoralsignshift}{#1}{#2}%
-  \gre@changeonedimenfactor{translationheight}{#1}{#2}%
-  \gre@changeonedimenfactor{spaceabovelines}{#1}{#2}%
-  \gre@changeonedimenfactor{spacelinestext}{#1}{#2}%
-  \gre@changeonedimenfactor{spacebeneathtext}{#1}{#2}%
-  \gre@changeonedimenfactor{abovelinestextraise}{#1}{#2}%
-  \gre@changeonedimenfactor{abovelinestextheight}{#1}{#2}%
-  \gre@changeonedimenfactor{braceshift}{#1}{#2}%
-  \gre@changeonedimenfactor{curlybraceaccentusshift}{#1}{#2}%
+  \ifnum\gre@scale@additionallineswidth=1\relax%
+    \gre@changeonedimenfactor{additionallineswidth}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@additionalcustoslineswidth=1\relax%
+    \gre@changeonedimenfactor{additionalcustoslineswidth}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@zerowidthspace=1\relax%
+    \gre@changeonedimenfactor{zerowidthspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@interglyphspace=1\relax%
+    \gre@changeonedimenfactor{interglyphspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@alterationspace=1\relax%
+    \gre@changeonedimenfactor{alterationspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@clefflatspace=1\relax%
+    \gre@changeonedimenfactor{clefflatspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@beforechoralsignspace=1\relax%
+    \gre@changeonedimenfactor{beforechoralsignspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@beforealterationspace=1\relax%
+    \gre@changeonedimenfactor{beforealterationspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@interelementspace=1\relax%
+    \gre@changeonedimenfactor{interelementspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@largerspace=1\relax%
+    \gre@changeonedimenfactor{largerspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@glyphspace=1\relax%
+    \gre@changeonedimenfactor{glyphspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@intersyllablespace=1\relax%
+    \gre@changeonedimenfactor{intersyllablespace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spacebeforecusto=1\relax%
+    \gre@changeonedimenfactor{spacebeforecusto}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spacebeforesigns=1\relax%
+    \gre@changeonedimenfactor{spacebeforesigns}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spaceaftersigns=1\relax%
+    \gre@changeonedimenfactor{spaceaftersigns}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spaceafterlineclef=1\relax%
+    \gre@changeonedimenfactor{spaceafterlineclef}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@interwordspacenotes=1\relax%
+    \gre@changeonedimenfactor{interwordspacenotes}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@interwordspacenotestext=1\relax%
+    \gre@changeonedimenfactor{interwordspacenotestext}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@interwordspacetextnotes=1\relax%
+    \gre@changeonedimenfactor{interwordspacetextnotes}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@interwordspacetext=1\relax%
+    \gre@changeonedimenfactor{interwordspacetext}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@bitrivirspace=1\relax%
+    \gre@changeonedimenfactor{bitrivirspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@bitristrospace=1\relax%
+    \gre@changeonedimenfactor{bitristrospace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@punctuminclinatumshift=1\relax%
+    \gre@changeonedimenfactor{punctuminclinatumshift}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@beforepunctainclinatashift=1\relax%
+    \gre@changeonedimenfactor{beforepunctainclinatashift}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@punctuminclinatumanddebilisshift=1\relax%
+    \gre@changeonedimenfactor{punctuminclinatumanddebilisshift}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@punctuminclinatumdebilisshift=1\relax%
+    \gre@changeonedimenfactor{punctuminclinatumdebilisshift}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@punctuminclinatumbigshift=1\relax%
+    \gre@changeonedimenfactor{punctuminclinatumbigshift}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@punctuminclinatummaxshift=1\relax%
+    \gre@changeonedimenfactor{punctuminclinatummaxshift}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spacearoundsmallbar=1\relax%
+    \gre@changeonedimenfactor{spacearoundsmallbar}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spacearoundminor=1\relax%
+    \gre@changeonedimenfactor{spacearoundminor}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spacearoundmaior=1\relax%
+    \gre@changeonedimenfactor{spacearoundmaior}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spacearoundfinalis=1\relax%
+    \gre@changeonedimenfactor{spacearoundfinalis}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spacebeforefinalfinalis=1\relax%
+    \gre@changeonedimenfactor{spacebeforefinalfinalis}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spacearoundclefbars=1\relax%
+    \gre@changeonedimenfactor{spacearoundclefbars}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@textbartextspace=1\relax%
+    \gre@changeonedimenfactor{textbartextspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@notebarspace=1\relax%
+    \gre@changeonedimenfactor{notebarspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@maximumspacewithoutdash=1\relax%
+    \gre@changeonedimenfactor{maximumspacewithoutdash}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@afterclefnospace=1\relax%
+    \gre@changeonedimenfactor{afterclefnospace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@afterinitialshift=1\relax%
+    \gre@changeonedimenfactor{afterinitialshift}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@beforeinitialshift=1\relax%
+    \gre@changeonedimenfactor{beforeinitialshift}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@minimalspaceatlinebeginning=1\relax%
+    \gre@changeonedimenfactor{minimalspaceatlinebeginning}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@manualinitialwidth=1\relax%
+    \gre@changeonedimenfactor{manualinitialwidth}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@aboveinitialseparation=1\relax%
+    \gre@changeonedimenfactor{aboveinitialseparation}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@noclefspace=1\relax%
+    \gre@changeonedimenfactor{noclefspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@clefchangespace=1\relax%
+    \gre@changeonedimenfactor{clefchangespace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@clivisalignmentmin=1\relax%
+    \gre@changeonedimenfactor{clivisalignmentmin}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@abovesignsspace=1\relax%
+    \gre@changeonedimenfactor{abovesignsspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@belowsignsspace=1\relax%
+    \gre@changeonedimenfactor{belowsignsspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@lowchoralsignshift=1\relax%
+    \gre@changeonedimenfactor{lowchoralsignshift}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@highchoralsignshift=1\relax%
+    \gre@changeonedimenfactor{highchoralsignshift}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@translationheight=1\relax%
+    \gre@changeonedimenfactor{translationheight}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spaceabovelines=1\relax%
+    \gre@changeonedimenfactor{spaceabovelines}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spacelinestext=1\relax%
+    \gre@changeonedimenfactor{spacelinestext}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@spacebeneathtext=1\relax%
+    \gre@changeonedimenfactor{spacebeneathtext}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@abovelinestextraise=1\relax%
+    \gre@changeonedimenfactor{abovelinestextraise}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@abovelinestextheight=1\relax%
+    \gre@changeonedimenfactor{abovelinestextheight}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@braceshift=1\relax%
+    \gre@changeonedimenfactor{braceshift}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@curlybraceaccentusshift=1\relax%
+    \gre@changeonedimenfactor{curlybraceaccentusshift}{#1}{#2}%
+  \fi%
   \ifnum\gre@scale@stafflinefactor=1\relax%
     \gre@count@temp@two = \gre@stafflinefactor%
     \multiply\gre@count@temp@two by #2\relax%
     \divide\gre@count@temp@two by #1\relax%
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
   \fi%
-  \gre@computespaces%
   \relax %
 }%
 
@@ -964,7 +1080,7 @@
 %Seeing as these are the distances that people will want to change the most often,
 %we give them their own set of macros to make that easier.
 
-% To change the spacing between annotations.  
+% To change the spacing between annotations.
 %First argument is distance, second is whether it should scale when \grefactor changes.
 \ifdefined\setaboveinitialseparation%
   \greerror{\protect\setaboveinitialseparation\space is already defined.  Check for package conflicts.}%
@@ -993,7 +1109,7 @@
 
 \def\GreSetSpaceAfterInitial#1{%
   \gre@warning{\protect\GreSetSpaceAfterInitial\space is deprecated.\MessageBreak Use \protect\setspaceafteriniital\space instead.}%
-  \setspaceafterinitial#1{1}	%
+  \setspaceafterinitial#1{1}%
 }%
 
 %To change the space before the initial
@@ -1009,7 +1125,7 @@
 
 \def\GreSetSpaceBeforeInitial#1{%
   \gre@warning{\protect\GreSetSpaceBeforeInitial\space is deprecated.\MessageBreak Use \protect\setspacebeforeiniital\space instead.}%
-  \setspacebeforeinitial#1{1}	%
+  \setspacebeforeinitial#1{1}%
 }%
 
 

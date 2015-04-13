@@ -1,33 +1,46 @@
-%GregorioTeX file.
-%Copyright (C) 2007 Elie Roux <elie.roux@telecom-bretagne.eu>
+%GregorioTeX LaTeX style.
 %
-%This program is free software: you can redistribute it and/or modify
-%it under the terms of the GNU General Public License as published by
-%the Free Software Foundation, either version 3 of the License, or
-%(at your option) any later version.
+% Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
 %
-%This program is distributed in the hope that it will be useful,
-%but WITHOUT ANY WARRANTY; without even the implied warranty of
-%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-%GNU General Public License for more details.
+% This file is part of Gregorio.
 %
-%You should have received a copy of the GNU General Public License
-%along with this program.  If not, see <http://www.gnu.org/licenses/>.
+% Gregorio is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Gregorio is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{gregoriotex}%
-    [2010/09/27 v2.1 GregorioTeX system.]
+    [2015/04/06 v3.0.0-rc1 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
 \RequirePackage{xcolor}
 
 \input gregoriotex.tex
 
+%% We declare and process the options after loading the package (instead of at the beginning) because the options manipulate flags which are declared in the package.
+
 \DeclareOption{debug}{\debugtrue}
-\ExecuteOptions{}
+
+% These options control the global behavior of \includescore.  The default, forceinclude, is the old behavior (no attempt to compile the score with gregorio is made, it is simply included as is).  forcecompile is at the opposite end of the spectrum: all scores are compiled through gregorio at time of inclusion.  autocompile strikes a balance by checking to see if the score needs to be recompiled and only doing so if it needs it (see the definition of \includescore in gregoriotex.tex for more details).
+\DeclareOption{nevercompile}{\nevercompilegabc}
+\DeclareOption{forcecompile}{\forcecompilegabc}
+\DeclareOption{autocompile}{\autocompilegabc}
+
+\ExecuteOptions{nevercompile}
 \ProcessOptions\relax
 
 % we hide lines only under LaTeX
 \GreHideAltLines
 \GreHidePCLines
+
+%% We now redefine some things in a more LaTeX friendly way.
 
 \definecolor{grebackgroundcolor}{RGB}{255,255,255}%
 
@@ -68,7 +81,7 @@
 
 \definecolor{gregoriocolor}{RGB}{229,53,44}
 
-\def\grecolored#1{
+\def\grecolored#1{%
   {%
     \color{gregoriocolor}#1%
   }%
@@ -78,7 +91,7 @@
   \definecolor{gretempcolor}{RGB}{#1,#2,#3}%
   \GreSetStaffLinesFormat{%
   \color{gretempcolor}%
-  }%  
+  }%
   \relax %
 }
 
@@ -106,8 +119,3 @@
   \gresetfirstlineaboveinitial{\textsc{\textbf{#1}}}{\textsc{\textbf{#1}}}%
   \relax %
 }
-
-% opening and closing of the aux file. We can't do it another way,
-% because of the case of several scores.
-\AtBeginDocument{\opengreaux }
-\AtEndDocument{\closegreaux }

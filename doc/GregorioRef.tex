@@ -1,0 +1,112 @@
+% !TEX program = LuaLaTeX+se
+\documentclass[12pt]{article}
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont[
+    BoldFont=LinLibertineOZ,
+    BoldItalicFont=LinLibertineOZI,
+    SmallCapsFont=LinLibertineO,
+    SmallCapsFeatures={Letters=SmallCaps},
+]{LinuxLibertineO}
+\setsansfont[Extension=.otf,
+    BoldFont=LinBiolinum_RB,
+    ItalicFont=LinBiolinum_RI,
+    BoldItalicFont=LinBiolinum_RB,% fake
+    SmallCapsFont=LinBiolinum_R,
+    SmallCapsFeatures={Letters=SmallCaps},
+    ]{LinBiolinum_R}
+\setmonofont[Extension=.otf,
+    AutoFakeSlant,
+    BoldItalicFeatures={FakeSlant},
+    ]{Inconsolata}
+\usepackage{enumitem}
+\usepackage{xspace}
+\usepackage{multicol}
+\usepackage{units}
+
+\usepackage{makeidx}
+\makeindex
+
+\usepackage[table]{xcolor}
+\definecolor{lightgray}{gray}{0.9}
+\definecolor{green}{HTML}{0c700c}
+\definecolor{myred}{HTML}{FF3333}
+
+\usepackage{minted} % must be after xcolor
+\newminted{latex}{gobble=2,bgcolor=lightgray}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks, citecolor=black, filecolor=black, linkcolor=green, urlcolor=green}
+
+\newcommand*{\eg}{e.g.\@\xspace}
+\newcommand*{\nb}{n.b.\@\xspace}
+\newcommand*{\ie}{i.e.\@\xspace}
+\newcommand*{\etc}{etc.\@\xspace}
+
+\newcommand{\macroname}[2]{%
+  \vspace{3.25ex plus 1ex minus .2ex}%
+  \makebox[\linewidth]{\ttfamily\bfseries #1%
+  \hspace{\fill}\normalfont\itshape #2}%
+  \vspace{1.5ex plus .2ex}%
+  \index{#1}}
+  %\addcontentsline{toc}{subsubsection}{#1}}
+
+
+\newenvironment{argtable}{%
+  \bigskip\rowcolors{1}{lightgray}{lightgray}
+  \begin{tabular}{clp{10cm plus .5cm}}
+    Arg & Value & Description \\
+    \hline}%
+  {\end{tabular}\bigskip}
+
+\setlength{\parindent}{0mm} % Default is 15pt
+
+\begin{document}
+
+\begin{titlepage}
+  \begin{center}
+    \Huge
+    \textcolor{myred}{Gregorio} and \textcolor{myred}{Gregorio\TeX}:
+
+    Tools for gregorian score engraving.
+
+    \vspace{1cm}
+
+    \large Version \textbf{3.0.0-rc1}, 06/04/15 %% PARSE_VERSION_DATE
+
+    \vspace{1cm}
+
+    \href{http://gregorio-project.github.io/}{Homepage}
+
+    Source code available on
+    \href{http://github.com/gregorio-project/gregorio}{GitHub}.
+  \end{center}
+  \vspace{2cm}
+  This is a draft document which does not reflect the whole of the package.  We are working on making a more complete version.
+  \begin{multicols}{2}
+    \tableofcontents
+  \end{multicols}
+\end{titlepage}
+
+\section{Gregorio\TeX{} Macros}
+The following sections document the macros available in the Gregorio\TeX{} package. The format is as follows:
+
+\macroname{Macroname}{source file}
+
+\begin{argtable}
+  Arg \# & Data type & Descriptor\\
+\end{argtable}
+
+The source file where the macro is defined is included for developers
+who wish to consult it.\\
+Some of the macros intended for inclusion in the main.tex file by the user
+include usage examples.
+
+\input{Command_Index_User}
+\input{Command_Index_gregorio}
+\input{Command_Index_internal}
+
+\addcontentsline{toc}{section}{Index}
+\printindex
+
+\end{document}

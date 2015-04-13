@@ -1,5 +1,22 @@
 #!/bin/bash
 
+# Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
+# 
+# This file is part of Gregorio.
+#
+# Gregorio is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Gregorio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
+
 # This script installs the GregorioTeX portion of Gregorio.
 #
 # There are four ways to use this script:
@@ -42,7 +59,7 @@
 
 TEXFILES=(tex/*.tex tex/gregorio*.sty tex/*.lua)
 TTFFILES=(gregorio.ttf greciliae.ttf parmesan.ttf gresym.ttf greextra.ttf)
-DOCFILES=(fonts/INSTALL fonts/FONTLOG)
+DOCFILES=(fonts/README.md)
 FONTSRCFILES=(Makefile gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd
               greextra.sfd gresym.sfd squarize.py convertsfdtottf.py)
 
@@ -56,58 +73,65 @@ FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
 
 arg="$1"
 case "$arg" in
-	system)
-		arg='var:TEXMFLOCAL'
-		;;
-	user)
-		arg='var:TEXMFHOME'
-		;;
+    system)
+        arg='var:TEXMFLOCAL'
+        ;;
+    user)
+        arg='var:TEXMFHOME'
+        ;;
 esac
 
 case "$arg" in
-	"")
-		;;
-	tds)
-		TDS_ZIP="${NAME}.tds.zip"
-		TEXMFROOT=./tmp-texmf
-		;;
-	var:*)
-		TEXMFROOT=`${KPSEWHICH} -var-value "${arg#var:}"`
-		if [ "$TEXMFROOT" = "" ]
-		then
-			echo "Invalid TeX variable: '${arg#var:}'"
-			echo
-		else
-			TEXMFROOT="${DESTDIR}${TEXMFROOT}"
-		fi
-		;;
-	dir:*)
-		TEXMFROOT="${arg#dir:}"
-		;;
-	*)
-		echo "Invalid argument: '$arg'"
-		echo
-		;;
+    "")
+        ;;
+    tds)
+        TDS_ZIP="${NAME}.tds.zip"
+        TEXMFROOT=./tmp-texmf
+        ;;
+    var:*)
+        TEXMFROOT=`${KPSEWHICH} -expand-path "\$${arg#var:}"`
+        if [ "$TEXMFROOT" = "" ]
+        then
+            TEXMFROOT=`${KPSEWHICH} -var-value "${arg#var:}"`
+        fi
+        if [ "$TEXMFROOT" = "" ]
+        then
+            echo "Invalid TeX variable: '${arg#var:}'"
+            echo
+        else
+            sep=`${KPSEWHICH} -expand-path "{.,.}"`
+            sep="${sep#.}"
+            sep="${sep%.}"
+            TEXMFROOT="${DESTDIR}${TEXMFROOT/${sep}*/}"
+        fi
+        ;;
+    dir:*)
+        TEXMFROOT="${arg#dir:}"
+        ;;
+    *)
+        echo "Invalid argument: '$arg'"
+        echo
+        ;;
 esac
 
 if [ "$TEXMFROOT" = "" ]
 then
-	echo "Usage: $0 var:{tex-variable}"
-	echo "       $0 dir:{directory}"
-	echo "       $0 system|user|tds"
-	exit 1
+    echo "Usage: $0 var:{tex-variable}"
+    echo "       $0 dir:{directory}"
+    echo "       $0 system|user|tds"
+    exit 1
 fi
 
 function die {
-	echo 'Failed.'
-	exit 1
+    echo 'Failed.'
+    exit 1
 }
 
 function install_to {
-	dir="$1"
-	shift
-	mkdir -p "$dir" || die
-	cp "$@" "$dir" || die
+    dir="$1"
+    shift
+    mkdir -p "$dir" || die
+    cp "$@" "$dir" || die
 }
 
 echo "Installing in '${TEXMFROOT}'."
@@ -118,10 +142,10 @@ install_to "${TEXMFROOT}/fonts/source/${NAME}" "${FONTSRCFILES[@]}"
 
 if [ "$arg" = 'tds' ]
 then
-	echo "Making TDS-ready archive ${TDS_ZIP}."
-	rm -f ${TDS_ZIP}
-	(cd ${TEXMFROOT} && zip -9 ../${TDS_ZIP} -q -r .) || die
-	rm -r ${TEXMFROOT} || die
+    echo "Making TDS-ready archive ${TDS_ZIP}."
+    rm -f ${TDS_ZIP}
+    (cd ${TEXMFROOT} && zip -9 ../${TDS_ZIP} -q -r .) || die
+    rm -r ${TEXMFROOT} || die
 else
-	${TEXHASH} || die
+    ${TEXHASH} || die
 fi

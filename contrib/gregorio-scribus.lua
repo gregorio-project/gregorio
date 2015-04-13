@@ -26,7 +26,7 @@ local gregoriobin = 'gregorio'
 local lualatexbin = "lualatex"
 
 local function basename(name)
-    return name and string.match(name,"^.+[/\\](.-)$") or name
+  return name and string.match(name,"^.+[/\\](.-)$") or name
 end
 
 local f = arg[1]
@@ -35,32 +35,32 @@ local current = ""
 
 -- first we need to rebuild the arguments that are lost in pieces
 for i, a in ipairs(arg) do
-	if a:sub(1,1) == '"' then
-	    if a:sub(-1,-1) == '"' then
-			current = a:sub(2, -2)
-			if not f then
-				f = current
-			else
-				dir = current
-			end
-		else
-	        current = a:sub(2, -1)
-		end
-	elseif a:sub(-1,-1) == '"' then
-		current = current..' '..a:sub(1, -2)
-		if not f then
-			f = current
-		else
-			dir = current
-		end
-		current = ""
-	else
-		current = current..' '..a
-	end
+  if a:sub(1,1) == '"' then
+    if a:sub(-1,-1) == '"' then
+      current = a:sub(2, -2)
+      if not f then
+	f = current
+      else
+	dir = current
+      end
+    else
+      current = a:sub(2, -1)
+    end
+  elseif a:sub(-1,-1) == '"' then
+    current = current..' '..a:sub(1, -2)
+    if not f then
+      f = current
+    else
+      dir = current
+    end
+    current = ""
+  else
+    current = current..' '..a
+  end
 end
 
 if dir then
-    lfs.chdir(dir)
+  lfs.chdir(dir)
 end
 
 local pathbase = basename(f)
@@ -69,12 +69,12 @@ local fd = io.open(f, "r")
 local texfile = io.open(f..".tex", "w")
 local gabcfile = io.open(f.."-score.gabc", "w")
 for l in fd:lines() do
-    if string.match(l, "^\\") then
-		texfile:write(l..'\n')
-    elseif l=="\n" then
-    else
-        gabcfile:write(l..'\n')
-	end
+  if string.match(l, "^\\") then
+    texfile:write(l..'\n')
+  elseif l=="\n" then
+  else
+    gabcfile:write(l..'\n')
+  end
 end
 
 local format = string.format
@@ -87,8 +87,8 @@ print(format("calling 'gregorio %s-score.gabc'\n", f))
 os.remove(format("%s-score.tex", f))
 os.spawn(format("%s %s-score.gabc", gregoriobin, pathbase))
 if not lfs.isfile(format("%s-score.gabc", pathbase)) then
-    print("error: gregorio did not work as expected\n")
-	exit(1)
+  print("error: gregorio did not work as expected\n")
+  exit(1)
 end
 
 print(format("calling 'lualatex --interaction nonstopmode %s.tex'\n", pathbase))
