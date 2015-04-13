@@ -46,9 +46,9 @@
   \greerror{Error: this document must be compiled with LuaTeX (lualatex)}%
 \fi%
 
-\newif\ifdebug\debugfalse
+\newif\ifgredebug\gredebugfalse
 \def\gre@debug#1{%
-  \ifdebug%
+  \ifgredebug%
     \typeout{GregorioTex debug: #1}%
   \else%
     \relax%
