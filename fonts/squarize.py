@@ -38,13 +38,6 @@ from __future__ import print_function
 import getopt, sys
 import fontforge, psMat
 
-#defines the maximal interval between two notes, the bigger this number is,
-#the more glyphs you'll have to generate
-MAX_INTERVAL = 5
-
-# the numerotation of the glyphs are not the same between short and long
-#types, here is the indicator
-shortglyphs = 0
 
 GPLV3 = """This program is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as
@@ -69,30 +62,21 @@ extend this exception to your version of the font, but you are not
 obligated to do so. If you do not wish to do so, delete this exception
 statement from your version."""
 
+# defines the maximal interval between two notes, the bigger this number is,
+# the more glyphs you'll have to generate
+MAX_INTERVAL = 5
+
+# the numerotation of the glyphs are not the same between short and long
+# types, here is the indicator
+shortglyphs = 0
+
 # Use the U+F0000 Supplemental Private Use Area-A.
 UNICODE_CHAR_START = 0xf0000
 
+BASE_HEIGHT = 157.5
 oldfont = None
 newfont = None
 font_name = None
-BASE_HEIGHT = None
-LINE_WIDTH = None
-WIDTH_PUNCTUM = None
-width1 = None
-width2 = None
-WIDTH_DEBILIS = None
-WIDTH_DEMINUTUS = None
-WIDTH_INCLINATUM_DEMINUTUS = None
-WIDTH_FLEXUSDEMINUTUS = None
-PORRECTUSFLEXUSWIDTHS = None
-PORRECTUSWIDTHS = None
-WIDTH_INCLINATUM = None
-WIDTH_STROPHA = None
-HEPISEMUS_ADDITIONAL_WIDTH = None
-WIDTH_ORISCUS = None
-WIDTH_QUILISMA = None
-WIDTH_HIGH_PES = None
-WIDTH_ORISCUS_REV = None
 
 
 def usage():
@@ -161,7 +145,7 @@ Copyright (C) 2002--2006 Juergen Reuter <reuter@ipd.uka.de>
 """+GPLV3
     newfont.weight = "regular"
     initialize_glyphs()
-    initialize_lengths()
+    glyph_widths = initialize_lengths()
     hepisemus()
     shortglyphs = 1
     pes()
@@ -244,108 +228,103 @@ def initialize_glyphs():
         newfont.paste()
 
 def initialize_lengths():
-    "Initialize the lenghts, depending on the font"
-    global BASE_HEIGHT, LINE_WIDTH, WIDTH_PUNCTUM, width1, width2
-    global WIDTH_DEBILIS, WIDTH_DEMINUTUS, WIDTH_INCLINATUM_DEMINUTUS
-    global WIDTH_FLEXUSDEMINUTUS, PORRECTUSFLEXUSWIDTHS, PORRECTUSWIDTHS
-    global WIDTH_INCLINATUM, WIDTH_STROPHA, HEPISEMUS_ADDITIONAL_WIDTH
-    global WIDTH_ORISCUS, WIDTH_QUILISMA, WIDTH_HIGH_PES, WIDTH_ORISCUS_REV
-    if (font_name == "gregorio"):
-        # the base heigth is half the space between two lines plus half the heigth of a line
-        BASE_HEIGHT = 157.5
+    "Initialize widths depending on the font."
+    if font_name == "gregorio":
+        WIDTHS = dict(LINE_WIDTH=22,
         # some width, necessary to know where to draw lines, squares, etc.
         # first the width of the lines that link notes, like in a pes for example
-        LINE_WIDTH = 22
+
         # then the width of a punctum, we assume that it is the same width for
         # oriscus, quilisma, punctum auctum descendens and punctum auctum ascendens
-        WIDTH_PUNCTUM = 164
+                      WIDTH_PUNCTUM=164,
         # WIDTH_ORISCUS is the width of an oriscus, idem for quilisma
-        WIDTH_ORISCUS = 164
-        WIDTH_QUILISMA = 164
+                      WIDTH_ORISCUS=164,
+                      WIDTH_QUILISMA=164,
         # WIDTH_ORISCUS_REV is the width of an oriscus reversus
-        WIDTH_ORISCUS_REV = 164
+                      WIDTH_ORISCUS_REV=164,
         # the width of the first note of an initio debilis, and the one of the
         # last note of a deminutus. Warning, in GregorioTeX they must be the
         # same! you must (almost always) add the width of a line to have the real width.
-        WIDTH_DEBILIS = 88
-        WIDTH_DEMINUTUS = 88
+                      WIDTH_DEBILIS=88,
+                      WIDTH_DEMINUTUS=88,
         # width of a punctum inclinatum (we consider that the punctum
         # inclinatum auctus has the same width
-        WIDTH_INCLINATUM = 164
+                      WIDTH_INCLINATUM=164,
         # width of a stropha (idem for the stropha aucta)
-        WIDTH_STROPHA = 164
-        # with of the second (highest) note of a pes
-        WIDTH_HIGH_PES = 154
-        # the width of the punctum inclinatum deminutus (no need to add the
+                      WIDTH_STROPHA=164,
+        # width of the second (highest) note of a pes
+                      WIDTH_HIGH_PES=154,
+        # width of the punctum inclinatum deminutus (no need to add the
         # width of a line)
-        WIDTH_INCLINATUM_DEMINUTUS = 82
-        # the width of the note which is just before a deminutus, in some
+                      WIDTH_INCLINATUM_DEMINUTUS=82,
+        # width of the note which is just before a deminutus, in some
         # fonts it is not the same width as a punctum
-        WIDTH_FLEXUSDEMINUTUS = 186
-        # the widths of the torculus resupinus, there are five, one per note
+                      WIDTH_FLEXUSDEMINUTUS=186,
+        # the width of the torculus resupinus, five in total, one per note
         # difference between the two first notes (for example the first is the
         # width of the first two notes of baba
-        PORRECTUSFLEXUSWIDTHS = (340, 428, 586, 670, 931)
-        PORRECTUSWIDTHS = (490, 575, 650, 740, 931)
+                      PORRECTUSFLEXUSWIDTHS=(340, 428, 586, 670, 931),
+                      PORRECTUSWIDTHS=(490, 575, 650, 740, 931),
         # width that will be added to the standard width when we will build
         # horizontal episemus. for example, if a punctum has the length 164,
         # the episemus will have the width 244 and will be centered on the
         # center of the punctum
-        HEPISEMUS_ADDITIONAL_WIDTH = 5
-    elif (font_name == "parmesan"):
-        BASE_HEIGHT = 157.5
-        LINE_WIDTH = 22
-        WIDTH_PUNCTUM = 161
-        WIDTH_ORISCUS = 192
-        WIDTH_ORISCUS_REV = 192
-        WIDTH_QUILISMA = 161
-        WIDTH_DEBILIS = 75
-        WIDTH_DEMINUTUS = 75
-        WIDTH_INCLINATUM = 178
-        WIDTH_STROPHA = 169
-        WIDTH_HIGH_PES = 151
-        WIDTH_INCLINATUM_DEMINUTUS = 112
-        WIDTH_FLEXUSDEMINUTUS = 161
-        PORRECTUSFLEXUSWIDTHS = (340, 428, 586, 670, 931)
-        PORRECTUSWIDTHS = (490, 575, 650, 740, 931)
-        HEPISEMUS_ADDITIONAL_WIDTH = 5
-    elif (font_name == "greciliae"):
-        BASE_HEIGHT = 157.5
-        LINE_WIDTH = 18
-        WIDTH_PUNCTUM = 166
-        WIDTH_ORISCUS = 166
-        WIDTH_ORISCUS_REV = 168
-        WIDTH_QUILISMA = 166
-        WIDTH_DEBILIS = 65
-        WIDTH_DEMINUTUS = 65
-        WIDTH_INCLINATUM = 185
-        WIDTH_STROPHA = 163
-        WIDTH_HIGH_PES = 155
-        WIDTH_INCLINATUM_DEMINUTUS = 139
-        WIDTH_FLEXUSDEMINUTUS = 168
-        PORRECTUSFLEXUSWIDTHS = (503, 629, 628, 628, 931)
-        PORRECTUSWIDTHS = (503, 629, 628, 628, 931)
-        HEPISEMUS_ADDITIONAL_WIDTH = 5
-    if (font_name == "gregoria"):
-        BASE_HEIGHT = 157.5
-        LINE_WIDTH = 22
-        WIDTH_PUNCTUM = 164
-        WIDTH_ORISCUS = 164
-        WIDTH_ORISCUS_REV = 164
-        WIDTH_QUILISMA = 164
-        WIDTH_DEBILIS = 88
-        WIDTH_DEMINUTUS = 88
-        WIDTH_INCLINATUM = 173
-        WIDTH_STROPHA = 164
-        WIDTH_HIGH_PES = 154
-        WIDTH_INCLINATUM_DEMINUTUS = 128
-        WIDTH_FLEXUSDEMINUTUS = 186
-        PORRECTUSFLEXUSWIDTHS = (340, 428, 586, 670, 931)
-        PORRECTUSWIDTHS = (490, 575, 650, 740, 931)
-        HEPISEMUS_ADDITIONAL_WIDTH = 5
+                      HEPISEMUS_ADDITIONAL_WIDTH=5,
+                      )
+    elif font_name == "parmesan":
+        WIDTHS = dict(LINE_WIDTH=22,
+                      WIDTH_PUNCTUM=161,
+                      WIDTH_ORISCUS=192,
+                      WIDTH_ORISCUS_REV=192,
+                      WIDTH_QUILISMA=161,
+                      WIDTH_DEBILIS=75,
+                      WIDTH_DEMINUTUS=75,
+                      WIDTH_INCLINATUM=178,
+                      WIDTH_STROPHA=169,
+                      WIDTH_HIGH_PES=151,
+                      WIDTH_INCLINATUM_DEMINUTUS=112,
+                      WIDTH_FLEXUSDEMINUTUS=161,
+                      PORRECTUSFLEXUSWIDTHS=(340, 428, 586, 670, 931),
+                      PORRECTUSWIDTHS=(490, 575, 650, 740, 931),
+                      HEPISEMUS_ADDITIONAL_WIDTH=5,
+                  )
+    elif font_name == "greciliae":
+        WIDTHS = dict(LINE_WIDTH=18,
+                      WIDTH_PUNCTUM=166,
+                      WIDTH_ORISCUS=166,
+                      WIDTH_ORISCUS_REV=168,
+                      WIDTH_QUILISMA=166,
+                      WIDTH_DEBILIS=65,
+                      WIDTH_DEMINUTUS=65,
+                      WIDTH_INCLINATUM=185,
+                      WIDTH_STROPHA=163,
+                      WIDTH_HIGH_PES=155,
+                      WIDTH_INCLINATUM_DEMINUTUS=139,
+                      WIDTH_FLEXUSDEMINUTUS=168,
+                      PORRECTUSFLEXUSWIDTHS=(503, 629, 628, 628, 931),
+                      PORRECTUSWIDTHS=(503, 629, 628, 628, 931),
+                      HEPISEMUS_ADDITIONAL_WIDTH=5,
+        )
+    if font_name == "gregoria":
+        WIDTHS = dict(LINE_WIDTH=22,
+                      WIDTH_PUNCTUM=164,,
+                      WIDTH_ORISCUS=164,
+                      WIDTH_ORISCUS_REV=164,
+                      WIDTH_QUILISMA=164,
+                      WIDTH_DEBILIS=88,
+                      WIDTH_DEMINUTUS=88,,
+                      WIDTH_INCLINATUM=173,
+                      WIDTH_STROPHA=164,
+                      WIDTH_HIGH_PES=154,
+                      WIDTH_INCLINATUM_DEMINUTUS=128,
+                      WIDTH_FLEXUSDEMINUTUS=186,
+                      PORRECTUSFLEXUSWIDTHS=(340, 428, 586, 670, 931),
+                      PORRECTUSWIDTHS=(490, 575, 650, 740, 931),
+                      HEPISEMUS_ADDITIONAL_WIDTH=5,
+                  )
+    return WIDTHS
 
-# the list of the number of the glyphs
-
+# Dictionary of glyphs and their numbers.
 SHAPES = {
     'pes':2,
     'pesquadratum':3,
@@ -425,6 +404,7 @@ def paste_and_move(src, dst, xdimen, ydimen):
     oldfont[src].transform(psMat.translate(-xdimen, -ydimen))
 
 def end_glyph(glyphnumber):
+    "Final function to call when building a glyph."
     global newfont
     newfont[glyphnumber].simplify()
     newfont[glyphnumber].simplify()
@@ -554,12 +534,12 @@ def write_pes(i, first_glyph, shape, liquescentia='nothing'):
     else:
         simple_paste(first_glyph, glyphnumber)
     if (first_glyph == "qbase"):
-        width1 = WIDTH_QUILISMA-LINE_WIDTH
+        temp_width = WIDTH_QUILISMA-LINE_WIDTH
     else:
-        width1 = WIDTH_PUNCTUM-LINE_WIDTH
+        temp_width = WIDTH_PUNCTUM-LINE_WIDTH
     if (width_difference < 0):
-        width1 = width1-width_difference
-    write_line(i, glyphnumber, width1, BASE_HEIGHT)
+        temp_width = temp_width-width_difference
+    write_line(i, glyphnumber, temp_width, BASE_HEIGHT)
     if (width_difference != 0):
         paste_and_move('phigh', glyphnumber, width_difference, i*BASE_HEIGHT)
     else:
@@ -584,10 +564,10 @@ def write_pes_deminutus(i, first_glyph, shape, liquescentia='nothing'):
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
     simple_paste(first_glyph, glyphnumber)
     if (first_glyph == "qbase"):
-        width1 = WIDTH_QUILISMA-LINE_WIDTH
+        temp_width = WIDTH_QUILISMA-LINE_WIDTH
     else:
-        width1 = WIDTH_PUNCTUM-LINE_WIDTH
-    write_line(i, glyphnumber, WIDTH_PUNCTUM-LINE_WIDTH, BASE_HEIGHT)
+        temp_width = WIDTH_PUNCTUM-LINE_WIDTH
+    write_line(i, glyphnumber, temp_width, BASE_HEIGHT)
     paste_and_move("rdeminutus", glyphnumber, WIDTH_PUNCTUM-LINE_WIDTH-WIDTH_DEMINUTUS,
                    i*BASE_HEIGHT)
     set_width(glyphnumber, WIDTH_PUNCTUM)
