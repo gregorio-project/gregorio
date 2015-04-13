@@ -50,12 +50,12 @@ endif
 # gabc files
 gregorio_SOURCES += gabc/gabc-elements-determination.c gabc/gabc-write.c \
 					gabc/gabc-glyphs-determination.c gabc/gabc.h \
-					gabc/gabc-score-determination.h
-nodist_gregorio_SOURCES = gabc/gabc-score-determination-l.c \
-						 gabc/gabc-notes-determination-l.c \
-						 gabc/gabc-score-determination-l.h \
-						 gabc/gabc-score-determination-y.c \
-						 gabc/gabc-score-determination-y.h
+					gabc/gabc-score-determination.h \
+					gabc/gabc-score-determination-l.c \
+					gabc/gabc-notes-determination-l.c \
+					gabc/gabc-score-determination-l.h \
+					gabc/gabc-score-determination-y.c \
+					gabc/gabc-score-determination-y.h
 gregorio_LDADD = @LEXLIB@
 
 EXTRA_DIST = gabc/gabc-score-determination.l gabc/gabc-score-determination.y \
