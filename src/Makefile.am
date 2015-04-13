@@ -79,7 +79,7 @@ gabc/gabc-score-determination-y.c: gabc/gabc-score-determination.y
 gabc/gabc-notes-determination-l.c: gabc/gabc-notes-determination.l
 	$(LEX) -o $@ $<
 
-CLEANFILES = gabc/gabc-score-determination-l.c \
+DISTCLEANFILES = gabc/gabc-score-determination-l.c \
 			 gabc/gabc-notes-determination-l.c \
 			 gabc/gabc-score-determination-l.h \
 			 gabc/gabc-score-determination-y.c \
