@@ -374,6 +374,8 @@ SHAPES = {
     'salicus_longqueue':52,
     'torculus_liquescens': 54,
     'torculus_liquescens_quilisma': 58,
+    'flexus_oriscus_scapus':62,
+    'flexus_oriscus_scapus_longqueue':63,
 }
 
 LIQUESCENTIAE = {
@@ -760,11 +762,12 @@ def flexus():
     write_flexus(1, "vlbase", 'base7', 'flexus_longqueue')
     for i in range(2, MAX_INTERVAL+1):
         write_flexus(i, "vbase"+str(i), 'base7', 'flexus_longqueue')
-    for i in range(1,max_interval+1):
+    for i in range(1, max_interval+1):
         write_flexus(i, "osbase"+str(i), 'base7', 'flexus_oriscus_scapus')
     write_flexus(1, "oslbase", 'base7', 'flexus_oriscus_scapus_longqueue')
-    for i in range(2,max_interval+1):
-        write_flexus(i, "osbase"+str(i), 'base7', 'flexus_oriscus_scapus_longqueue')
+    for i in range(2, max_interval+1):
+        write_flexus(i, "osbase"+str(i), 'base7',
+                     'flexus_oriscus_scapus_longqueue')
     precise_message("flexus deminutus")
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "mdeminutus", 'base7', 'flexus_nobar', 'deminutus')
@@ -784,11 +787,14 @@ def flexus():
     write_flexus(1, "vlbase", 'auctusa1', 'flexus_longqueue', 'auctusascendens')
     for i in range(2, MAX_INTERVAL+1):
         write_flexus(i, "vbase"+str(i), 'auctusa1', 'flexus_longqueue', 'auctusascendens')
-    for i in range(1,max_interval+1):
-        write_flexus(i, "osbase"+str(i), 'auctusa1', 'flexus_oriscus_scapus', 'auctusascendens')
-    write_flexus(1, "oslbase", 'auctusa1', 'flexus_oriscus_scapus_longqueue', 'auctusascendens')
-    for i in range(2,max_interval+1):
-        write_flexus(i, "osbase"+str(i), 'auctusa1', 'flexus_oriscus_scapus_longqueue', 'auctusascendens')
+    for i in range(1, max_interval+1):
+        write_flexus(i, "osbase"+str(i), 'auctusa1', 'flexus_oriscus_scapus',
+                     'auctusascendens')
+    write_flexus(1, "oslbase", 'auctusa1', 'flexus_oriscus_scapus_longqueue',
+                 'auctusascendens')
+    for i in range(2, max_interval+1):
+        write_flexus(i, "osbase"+str(i), 'auctusa1', 'flexus_oriscus_scapus_longqueue',
+                     'auctusascendens')
     precise_message("flexus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "base2", 'auctusd1', 'flexus_nobar', 'auctusdescendens')
@@ -799,11 +805,14 @@ def flexus():
     write_flexus(1, "vlbase", 'auctusd1', 'flexus_longqueue', 'auctusdescendens')
     for i in range(2, MAX_INTERVAL+1):
         write_flexus(i, "vbase"+str(i), 'auctusd1', 'flexus_longqueue', 'auctusdescendens')
-    for i in range(1,max_interval+1):
-        write_flexus(i, "osbase"+str(i), 'auctusd1', 'flexus_oriscus_scapus', 'auctusdescendens')
-    write_flexus(1, "oslbase", 'auctusd1', 'flexus_oriscus_scapus_longqueue', 'auctusdescendens')
-    for i in range(2,max_interval+1):
-        write_flexus(i, "osbase"+str(i), 'auctusd1', 'flexus_oriscus_scapus_longqueue', 'auctusdescendens')
+    for i in range(1, max_interval+1):
+        write_flexus(i, "osbase"+str(i), 'auctusd1', 'flexus_oriscus_scapus',
+                     'auctusdescendens')
+    write_flexus(1, "oslbase", 'auctusd1', 'flexus_oriscus_scapus_longqueue',
+                 'auctusdescendens')
+    for i in range(2, max_interval+1):
+        write_flexus(i, "osbase"+str(i), 'auctusd1', 'flexus_oriscus_scapus_longqueue',
+                     'auctusdescendens')
 
 def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
@@ -841,9 +850,13 @@ def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
                 first_glyph = '_0025'
             elif first_glyph == 'vlbase':
                 first_glyph = '_0024'
+            elif first_glyph == 'oslbase':
+                first_glyph = '_0029'
         simple_paste(first_glyph, glyphnumber)
         if first_glyph == 'odbase':
             length = WIDTH_ORISCUS_REV
+        elif first_glyph == '_0029' or first_glyph.startswith('osbase'):
+            length = width_oriscus
         else:
             length = WIDTH_PUNCTUM
         if i != 1:
@@ -852,6 +865,8 @@ def write_flexus(i, first_glyph, last_glyph, shape, liquescentia='nothing'):
         paste_and_move(last_glyph, glyphnumber, length, (-i)*BASE_HEIGHT)
         if first_glyph == 'odbase':
             length = WIDTH_ORISCUS_REV
+        elif first_glyph == '_0029' or first_glyph.startswith('osbase'):
+            length = width_oriscus
         else:
             length = WIDTH_PUNCTUM
         if i == 1:
