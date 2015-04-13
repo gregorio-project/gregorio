@@ -195,11 +195,12 @@ def precise_message(glyph_name):
 # initial glyphs are the names of the glyphs that are already in
 # gregorio_base, mostly one-note glyphs. see initialize_glyphs()
 # for more details.
-initial_glyphs = [1, 2, 17, 19, 20, 26, 27, 28, 6, 32, 11, 8, 23, 25,
-                  9, 10, 24, 7, 4, 3, 21, 31, 22, 14, 15, 33, 13, 62,
-                  65, 39, 69, 70, 38, 37, 60, 61, 63, 64, 16, 34, 35,
-                  36, 72, 73, 74, 77, 79, 81, 82, 83, 84, 85, 86, 87,
-                  88, 89, 90, 91, 92, 93]
+initial_glyphs = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16 , 17,
+                  19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+                  32 , 33, 34, 35, 36, 37, 38, 39, 60, 61, 62, 63, 64,
+                  65, 69, 70, 72, 73, 74, 77, 79, 81, 82, 83, 84, 85,
+                  86, 87, 88, 89, 90, 91, 92, 93]
+
 
 initialcount = None
 count = None
