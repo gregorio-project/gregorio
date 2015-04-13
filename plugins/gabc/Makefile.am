@@ -26,8 +26,9 @@ gabc-score-determination-y.c: gabc-score-determination.y
 gabc-notes-determination-l.c: gabc-notes-determination.l
 	$(LEX) $<
 
-%-y.h: %-y.c
-%-l.h: %-l.c
+gabc-score-determination-y.h: gabc-score-determination-y.c
+gabc-notes-determination-l.h: gabc-notes-determination-l.c
+gabc-score-determination-l.c: gabc-score-determination-l.c
 
 CLEANFILES = gabc-score-determination-l.c gabc-score-determination-y.c \
 	gabc-notes-determination-l.c gabc-score-determination-y.h
