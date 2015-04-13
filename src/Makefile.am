@@ -56,7 +56,6 @@ gregorio_SOURCES += gabc/gabc-elements-determination.c gabc/gabc-write.c \
 					gabc/gabc-score-determination-l.h \
 					gabc/gabc-score-determination-y.c \
 					gabc/gabc-score-determination-y.h
-gregorio_LDADD = @LEXLIB@
 
 EXTRA_DIST = gabc/gabc-score-determination.l gabc/gabc-score-determination.y \
 			 gabc/gabc-notes-determination.l
