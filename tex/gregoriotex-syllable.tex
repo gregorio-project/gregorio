@@ -430,6 +430,7 @@
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
 %% at the end we wall \greendofword or \greendofsyllable with #7, to reduce the space in case of a flat or natural
 \def\gresyllable#1#2#3#4#5#6#7#8#9{%
+  \gre@debug{New syllable}%
   \ifnum\gre@englishcentering=1\relax %
     \gdef\gre@firstsyllablepart{}%
     \gdef\gre@middlesyllablepart{#1#2#3}%
@@ -661,6 +662,7 @@
 
 %a macro to typeset a syllable with only a bar inside
 \def\grebarsyllable#1#2#3#4#5#6#7#8#9{%
+  \gre@debug{New bar syllable}%
   % the algorithm of this function is *extremely* complex, and has been much painful to write... good luck to understand.
   % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the prefious syllable and the first note of the next syllable. But there are limits : a bar cant go very far above text. For example if there is nuncncncncn with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
   % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
@@ -676,10 +678,6 @@
   #5%
   \gre@calculate@nextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
   \greunsetfixednexttextformat %
-  % for LuaTeX syllable counting in optimize_gabc, we put an empty syllable box with gregorioattr set to 2. With this we can count every syllable.
-  \gregorioattr=2\relax %
-  \hbox to 0pt{}%
-  \gregorioattr=0\relax %
   % then we check if there is something to write
   \gre@debug{ifdim wd(GreSyllabletext) = 0pt}%
   \ifdim\wd\GreSyllabletext = 0 pt\relax %
