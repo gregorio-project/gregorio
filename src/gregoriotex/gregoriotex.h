@@ -22,7 +22,7 @@
 
 #include <stdbool.h>
 
-#define GREGORIO_VERSION "3.0.0-rc1"
+#define GREGORIO_VERSION "3.0.0-rc2"
 
 #define NO_FUSION 0
 #define FUSION 1

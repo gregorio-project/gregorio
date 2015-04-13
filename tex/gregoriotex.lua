@@ -24,17 +24,17 @@ local hpack, traverse_id, has_attribute, count, remove, insert_after, copy = nod
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = '3.0.0-rc1'
+local internalversion = '3.0.0-rc2' -- GREGORIO_VERSION (comment used by VersionManager.py)
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
-    version            = 2.4,
+    version            = '3.0.0-rc2', -- GREGORIO_VERSION
     greinternalversion = internalversion,
-    date               = "2013/12/29",
+    date               = "2015/04/13", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
-    author             = "Elie Roux",
-    copyright          = "Elie Roux",
-    license            = "GPLv3",
+    author             = "The Gregorio Project (see CONTRIBUTORS.md)",
+    copyright          = "2008-2015 - The Gregorio Project",
+    license            = "GPLv3+",
 })
 
 local hlist = node.id('hlist')
