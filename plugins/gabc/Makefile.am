@@ -9,8 +9,8 @@ endif
 gabc_la_LDFLAGS = -no-undefined -module -avoid-version
 
 gabc_la_SOURCES = gabc-elements-determination.c gabc-write.c \
-	gabc-glyphs-determination.c gabc.h gabc-score-determination-l.h
-nodist_gabc_la_SOURCES = gabc-score-determination-l.c \
+	gabc-glyphs-determination.c gabc.h gabc-score-determination-l.h \
+	gabc-score-determination-l.c \
 	gabc-notes-determination-l.c gabc-score-determination-y.c
 gabc_la_LIBADD = @LEXLIB@ $(LIBINTL) -lgregorio
 
