@@ -67,10 +67,6 @@ statement from your version."""
 # the more glyphs you'll have to generate
 MAX_INTERVAL = 5
 
-# the numerotation of the glyphs are not the same between short and long
-# types, here is the indicator
-shortglyphs = 0
-
 # Use the U+F0000 Supplemental Private Use Area-A.
 UNICODE_CHAR_START = 0xf0000
 
@@ -93,7 +89,7 @@ with fontname=gregorio, parmesan or greciliae for now.""")
 
 def main():
     "Main function"
-    global oldfont, newfont, font_name, shortglyphs
+    global oldfont, newfont, font_name
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], "h", ["help"])
     except getopt.GetoptError:
@@ -148,7 +144,9 @@ Copyright (C) 2002--2006 Juergen Reuter <reuter@ipd.uka.de>
     initialize_glyphs()
     font_width = get_lengths(font_name)
     hepisemus(font_width)
-    shortglyphs = 1
+    # the numerotation of the glyphs are not the same between short and long
+    # types, here is the indicator:
+    shortglyphs = True
     pes(font_width)
     pes_quadratum(font_width)
     virga_strata(font_width)
@@ -156,7 +154,7 @@ Copyright (C) 2002--2006 Juergen Reuter <reuter@ipd.uka.de>
     scandicus(font_width)
     ancus(font_width)
     salicus(font_width)
-    shortglyphs = 0
+    shortglyphs = False
     torculus(font_width)
     torculus_liquescens(font_width)
     porrectus(font_width)
@@ -373,10 +371,11 @@ def gnumber(i, j, k, shape, liquescentia):
     and the name of the different ambitus.
 
     """
-    if shortglyphs == 0:
-        return i+(5*j)+(25*k)+(256*LIQUESCENTIAE[liquescentia])+(512*SHAPES[shape])+UNICODE_CHAR_START
-    else:
+    if shortglyphs:
         return i+(5*j)+(25*k)+(64*LIQUESCENTIAE[liquescentia])+(512*SHAPES[shape])+UNICODE_CHAR_START
+    else:
+        return i+(5*j)+(25*k)+(256*LIQUESCENTIAE[liquescentia])+(512*SHAPES[shape])+UNICODE_CHAR_START
+
 
 def simple_paste(src, destnum):
     "Copy and past a glyph."
