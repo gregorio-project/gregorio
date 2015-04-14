@@ -481,7 +481,7 @@ def hepisemus(widths):
         write_hepisemus(widths, widths['porrectusflexuswidths'][i], int(51+i))
 
 def write_hepisemus(widths, shape_width, glyphnumber):
-    "Makes the horizontal episemus."
+    "Writes the horizontal episemus glyphs."
     glyphnumber = glyphnumber + UNICODE_CHAR_START
     simple_paste("hepisemus_base", glyphnumber)
     scale(glyphnumber, shape_width + 2*widths['hepisemus_additional_width'], 1)
@@ -523,6 +523,7 @@ def pes(widths):
         write_pes_debilis_deminutus(widths, i, 'pes', 'initiodebilisdeminutus')
 
 def write_pes(widths, i, first_glyph, shape, liquescentia='nothing'):
+    "Writes the pes glyphs."
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
     temp_width = 0
     #begin_glyph(glyphnumber)
@@ -555,6 +556,7 @@ def write_pes(widths, i, first_glyph, shape, liquescentia='nothing'):
     end_glyph(glyphnumber)
 
 def write_pes_debilis(widths, i, shape, liquescentia='nothing'):
+    "Writes the pes debilis glyphs."
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
     # with a deminutus it is much more beautiful than with a idebilis
     paste_and_move("deminutus", glyphnumber, 0, 0)
@@ -565,6 +567,7 @@ def write_pes_debilis(widths, i, shape, liquescentia='nothing'):
     end_glyph(glyphnumber)
 
 def write_pes_deminutus(widths, i, first_glyph, shape, liquescentia='nothing'):
+    "Writes the pes deminutus glyphs."
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
     temp_width = 0
     simple_paste(first_glyph, glyphnumber)
@@ -580,6 +583,7 @@ def write_pes_deminutus(widths, i, first_glyph, shape, liquescentia='nothing'):
     end_glyph(glyphnumber)
 
 def write_pes_debilis_deminutus(widths, i, shape, liquescentia='nothing'):
+    "Writes the pes debilis deminutus glyphs."
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
     simple_paste("deminutus", glyphnumber)
     write_line(i, glyphnumber, widths['width_debilis'], BASE_HEIGHT)
@@ -589,6 +593,7 @@ def write_pes_debilis_deminutus(widths, i, shape, liquescentia='nothing'):
     end_glyph(glyphnumber)
 
 def pes_quadratum(widths):
+    "Makes the pes quadratum."
     message("pes quadratum")
     precise_message("pes quadratum")
     for i in range(1, MAX_INTERVAL+1):
@@ -635,6 +640,7 @@ def pes_quadratum(widths):
                             'auctusdescendens')
 
 def write_pes_quadratum(widths, i, first_glyph, last_glyph, shape, liquescentia='nothing'):
+    "Writes the pes quadratum glyphs."
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
     if (first_glyph == "idebilis"):
         first_width = widths['width_deminutus']
@@ -667,11 +673,13 @@ def write_pes_quadratum(widths, i, first_glyph, last_glyph, shape, liquescentia=
     end_glyph(glyphnumber)
 
 def virga_strata(widths):
+    "Creates the virga strata."
     precise_message("first part of salicus")
     for i in range(1, MAX_INTERVAL+1):
         write_virga_strata(widths, i, "base5", "obase4", 'virga_strata')
 
 def write_virga_strata(widths, i, first_glyph, last_glyph, shape, liquescentia='nothing'):
+    "Writes the virga strata glyphs."
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
     if i == 1:
         first_glyph = '_0017'
@@ -688,6 +696,7 @@ def write_virga_strata(widths, i, first_glyph, last_glyph, shape, liquescentia='
     end_glyph(glyphnumber)
 
 def salicus(widths):
+    "Creates the salicus."
     message("salicus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
@@ -697,6 +706,7 @@ def salicus(widths):
             write_salicus(widths, i, j, "rvlbase", 'salicus_longqueue')
 
 def write_salicus(widths, i, j, last_glyph, shape, liquescentia='nothing'):
+    "Writes the salicus glyphs."
     glyphnumber = gnumber(i, j, 0, shape, liquescentia)
     if j == 1:
         if last_glyph == 'rvsbase':
@@ -739,6 +749,7 @@ def write_salicus(widths, i, j, last_glyph, shape, liquescentia='nothing'):
     end_glyph(glyphnumber)
 
 def flexus(widths):
+    "Creates the flexus."
     message("flexus")
     precise_message("flexus")
     for i in range(1, MAX_INTERVAL+1):
@@ -803,6 +814,7 @@ def flexus(widths):
                      'auctusdescendens')
 
 def write_flexus(widths, i, first_glyph, last_glyph, shape, liquescentia='nothing'):
+    "Writes the flexus glyphs."
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
     # we add a queue if it is a deminutus
     if (first_glyph == "mdeminutus"):
@@ -868,6 +880,7 @@ def write_flexus(widths, i, first_glyph, last_glyph, shape, liquescentia='nothin
     end_glyph(glyphnumber)
 
 def porrectus(widths):
+    "Creates the porrectus."
     message("porrectus")
     precise_message("porrectus")
     for i in range(1, MAX_INTERVAL+1):
@@ -903,6 +916,7 @@ def porrectus(widths):
             write_alternate_porrectus_deminutus(widths, i, j)
 
 def write_porrectus(widths, i, j, last_glyph, with_bar, shape, liquescentia='nothing'):
+    "Writes the porrectus glyphs."
     glyphnumber = gnumber(i, j, 0, shape, liquescentia)
     length = widths['porrectuswidths'][i-1]
     if (with_bar):
@@ -939,6 +953,7 @@ def write_porrectus(widths, i, j, last_glyph, with_bar, shape, liquescentia='not
     end_glyph(glyphnumber)
 
 def write_alternate_porrectus_deminutus(widths, i, j):
+    "Writes the alternate porrectur deminutus glyphs."
     glyphnumber = gnumber(i, j, 0, 'porrectus', 'deminutus')
     write_first_bar(i, glyphnumber)
     if i == 1:
@@ -963,6 +978,7 @@ def write_alternate_porrectus_deminutus(widths, i, j):
 
 
 def porrectusflexus(widths):
+    "Creates the porrectusflexus."
     message("porrectus flexus")
     precise_message("porrectus flexus")
     for i in range(1, MAX_INTERVAL+1):
@@ -1008,6 +1024,7 @@ def porrectusflexus(widths):
                                       'deminutus')
 
 def write_porrectusflexus(widths, i, j, k, last_glyph, with_bar, shape, liquescentia='nothing'):
+    "Writes the porrectusflexus glyphs."
     glyphnumber = gnumber(i, j, k, shape, liquescentia)
     length = widths['porrectusflexuswidths'][i-1]
     if j == 1:
@@ -1057,6 +1074,7 @@ def write_porrectusflexus(widths, i, j, k, last_glyph, with_bar, shape, liquesce
     end_glyph(glyphnumber)
 
 def torculus(widths):
+    "Creates the torculus."
     message("torculus")
     precise_message("torculus")
     for i in range(1, MAX_INTERVAL+1):
@@ -1110,6 +1128,7 @@ def torculus(widths):
                            'initiodebilisdeminutus')
 
 def write_torculus(widths, i, j, first_glyph, last_glyph, shape, liquescentia='nothing'):
+    "Writes the torculus glyphs."
     glyphnumber = gnumber(i, j, 0, shape, liquescentia)
     length = widths['width_punctum']-widths['line_width']
     if (first_glyph == "idebilis"):
@@ -1157,6 +1176,7 @@ def write_torculus(widths, i, j, first_glyph, last_glyph, shape, liquescentia='n
     end_glyph(glyphnumber)
 
 def torculus_liquescens(widths):
+    "Creates the torculus liquescens."
     precise_message("torculus liquescens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
@@ -1172,6 +1192,7 @@ def torculus_liquescens(widths):
 
 def write_torculus_liquescens(widths, i, j, k, first_glyph, shape,
                               liquescentia='deminutus'):
+    "Writes the torculus liquescens glyphs."
     glyphnumber = gnumber(i, j, k, shape, liquescentia)
     length = widths['width_punctum']-widths['line_width']
     if first_glyph == "qbase":
@@ -1206,6 +1227,7 @@ def write_torculus_liquescens(widths, i, j, k, first_glyph, shape,
     end_glyph(glyphnumber)
 
 def torculusresupinus(widths):
+    "Creates the torculusresupinus."
     message("torculus resupinus")
     precise_message("torculus resupinus")
     for i in range(1, MAX_INTERVAL+1):
@@ -1259,6 +1281,7 @@ def torculusresupinus(widths):
 
 def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
                             liquescentia='nothing'):
+    "Writes the torculusresupinus glyphs."
     glyphnumber = gnumber(i, j, k, shape, liquescentia)
     if first_glyph == "idebilis":
         length = widths['width_debilis']
@@ -1305,6 +1328,7 @@ def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
     end_glyph(glyphnumber)
 
 def write_torculusresupinusdeminutus(widths, i, j, k, first_glyph, shape, liquescentia='nothing'):
+    "Writes the torculusresupinusdeminutus glyphs."
     glyphnumber = gnumber(i, j, k, shape, liquescentia)
     length = widths['width_punctum']-widths['line_width']
     if (first_glyph == "idebilis"):
@@ -1347,6 +1371,7 @@ def write_torculusresupinusdeminutus(widths, i, j, k, first_glyph, shape, liques
     end_glyph(glyphnumber)
 
 def scandicus(widths):
+    "Creates the scandicus."
     message("scandicus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
@@ -1356,6 +1381,7 @@ def scandicus(widths):
             write_scandicus(widths, i, j, 'rdeminutus', 'deminutus')
 
 def write_scandicus(widths, i, j, last_glyph, liquescentia='nothing'):
+    "Writes the scandicus glyphs."
     glyphnumber = gnumber(i, j, 0, 'scandicus', liquescentia)
     # special case of i=j=1, we use glyph 1025 directly
     if i == 1 and j == 1 and liquescentia == 'nothing':
@@ -1394,6 +1420,7 @@ def write_scandicus(widths, i, j, last_glyph, liquescentia='nothing'):
     end_glyph(glyphnumber)
 
 def ancus(widths):
+    "Creates the ancus."
     message("ancus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
@@ -1403,6 +1430,7 @@ def ancus(widths):
             write_ancus(widths, i, j, 'vlbase', 'ancus_longqueue')
 
 def write_ancus(widths, i, j, first_glyph, glyph_type):
+    "Writes the ancus glyphs."
     glyphnumber = gnumber(i, j, 0, glyph_type, 'deminutus')
     if i == 1:
         length = widths['width_punctum']
