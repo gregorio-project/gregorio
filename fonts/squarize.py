@@ -744,10 +744,10 @@ def flexus(widths):
     write_flexus(widths, 1, "vlbase", 'base7', 'flexus_longqueue')
     for i in range(2, MAX_INTERVAL+1):
         write_flexus(widths, i, "vbase"+str(i), 'base7', 'flexus_longqueue')
-    for i in range(1, max_interval+1):
+    for i in range(1, MAX_INTERVAL+1):
         write_flexus(widths, i, "osbase"+str(i), 'base7', 'flexus_oriscus_scapus')
     write_flexus(widths, 1, "oslbase", 'base7', 'flexus_oriscus_scapus_longqueue')
-    for i in range(2, max_interval+1):
+    for i in range(2, MAX_INTERVAL+1):
         write_flexus(widths, i, "osbase"+str(i), 'base7',
                      'flexus_oriscus_scapus_longqueue')
     precise_message("flexus deminutus")
