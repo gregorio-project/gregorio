@@ -915,9 +915,7 @@
 \def\greendbeforebar#1{%
   \grenobreak %
   \ifnum#1=1\relax %
-    \gre@debug{ifdim enddifference > 0pt}%
     \ifdim\gre@dimen@enddifference > 0 pt %
-      \gre@debug{ifdim nextbegindifference > 0pt}%
       \ifdim\gre@skip@nextbegindifference > 0 pt %
         \gre@skip@temp@four = \gre@skip@notebarspace%
         \grehskip\gre@skip@temp@four %
@@ -925,8 +923,8 @@
         \gre@skip@temp@four = \gre@skip@textbartextspace%
         \grehskip\gre@skip@temp@four %
       \fi %
+      \gre@debug{  endbeforebar: hskip \gre@skip@temp@four }%
     \else%(enddifference < Opt)
-      \gre@debug{ifdim nextbegindifference < 0pt}%
       \ifdim\gre@skip@nextbegindifference < 0 pt %
         \gre@skip@temp@four = \gre@skip@textbartextspace%
         \grehskip\gre@skip@temp@four %
@@ -934,7 +932,10 @@
         \gre@skip@temp@four = \gre@skip@interwordspacetextnotes%
         \grehskip\gre@skip@temp@four %
       \fi %
+      \gre@debug{  endbeforebar: hskip \gre@skip@temp@four }%
     \fi %
+  \else %
+    \gre@debug{  endbeforebar: no hskip}%
   \fi %
   \grenobreak %
   %\global\gre@dimen@enddifference=0pt 

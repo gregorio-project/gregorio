@@ -614,7 +614,7 @@
         \greendbeforebar{0}%
       \else %
         % otherwise we call it with 1 only if there is no letters after (we can see it with nextbegindifference)
-        \setbox\GreTempwidth=\hbox{#5#6}%
+        \setbox\GreTempwidth=\hbox{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart }%
         % /!\ warning: can be buggy...
         \gre@debug{ifdim wd(GreTempwidth) = 0pt}%
         \ifdim\wd\GreTempwidth=0pt%
