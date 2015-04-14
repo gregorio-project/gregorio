@@ -430,7 +430,7 @@ def set_width(glyphnumber, width):
 
 def write_line(i, glyphnumber, length, height):
     "Writes a line in glyphnumber, with length and height offsets"
-    if (i > 1):
+    if i > 1:
         linename = "line%d" % i
         paste_and_move(linename, glyphnumber, length, height)
 
@@ -457,7 +457,7 @@ def write_deminutus(widths, i, j, glyphnumber, length=0, tosimplify=0, firstbar=
         paste_and_move("mademinutus", glyphnumber, length, i*BASE_HEIGHT)
     write_line(j, glyphnumber, length+widths['width_flexusdeminutus']-widths['line_width'],
                (i-j+1)*BASE_HEIGHT)
-    if (tosimplify):
+    if tosimplify:
         simplify(glyphnumber)
     paste_and_move("deminutus", glyphnumber,
                    length+widths['width_flexusdeminutus']-widths['width_deminutus']-
@@ -528,28 +528,28 @@ def write_pes(widths, i, first_glyph, shape, liquescentia='nothing'):
     temp_width = 0
     #begin_glyph(glyphnumber)
     # the difference of width of the two shapes, that will change a thing or two...
-    if (first_glyph == "qbase"):
+    if first_glyph == "qbase":
         width_difference = widths['width_quilisma']-widths['width_high_pes']
-    elif (first_glyph == "pbase" or first_glyph == "p2base"):
+    elif first_glyph == "pbase" or first_glyph == "p2base":
         width_difference = widths['width_punctum']-widths['width_high_pes']
     else:
         width_difference = 0
-    if (width_difference < 0):
+    if width_difference < 0:
         paste_and_move(first_glyph, glyphnumber, -width_difference, 0)
     else:
         simple_paste(first_glyph, glyphnumber)
-    if (first_glyph == "qbase"):
+    if first_glyph == "qbase":
         temp_width = widths['width_quilisma']-widths['line_width']
     else:
         temp_width = widths['width_punctum']-widths['line_width']
-    if (width_difference < 0):
+    if width_difference < 0:
         temp_width = temp_width-width_difference
     write_line(i, glyphnumber, temp_width, BASE_HEIGHT)
-    if (width_difference != 0):
+    if width_difference != 0:
         paste_and_move('phigh', glyphnumber, width_difference, i*BASE_HEIGHT)
     else:
         paste_and_move('phigh', glyphnumber, 0, i*BASE_HEIGHT)
-    if (width_difference < 0):
+    if width_difference < 0:
         set_width(glyphnumber, widths['width_punctum'])
     else:
         set_width(glyphnumber, widths['width_quilisma'])
@@ -571,7 +571,7 @@ def write_pes_deminutus(widths, i, first_glyph, shape, liquescentia='nothing'):
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
     temp_width = 0
     simple_paste(first_glyph, glyphnumber)
-    if (first_glyph == "qbase"):
+    if first_glyph == "qbase":
         temp_width = widths['width_quilisma']-widths['line_width']
     else:
         temp_width = widths['width_punctum']-widths['line_width']
@@ -642,9 +642,9 @@ def pes_quadratum(widths):
 def write_pes_quadratum(widths, i, first_glyph, last_glyph, shape, liquescentia='nothing'):
     "Writes the pes quadratum glyphs."
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
-    if (first_glyph == "idebilis"):
+    if first_glyph == "idebilis":
         first_width = widths['width_deminutus']
-    elif (first_glyph == "base5"):
+    elif first_glyph == "base5":
         if i == 1:
             first_glyph = '_0017'
             if last_glyph == 'base7':
@@ -660,12 +660,12 @@ def write_pes_quadratum(widths, i, first_glyph, last_glyph, shape, liquescentia=
             first_width = widths['width_punctum']
         else:
             first_width = widths['width_punctum']-widths['line_width']
-    elif(first_glyph == "obase"):
+    elif first_glyph == "obase":
         first_width = widths['width_oriscus']-widths['line_width']
     else:
         first_width = widths['width_quilisma']-widths['line_width']
     simple_paste(first_glyph, glyphnumber)
-    if (i != 1):
+    if i != 1:
         linename = "line%d" % i
         paste_and_move(linename, glyphnumber, first_width, BASE_HEIGHT)
     paste_and_move(last_glyph, glyphnumber, first_width, i*BASE_HEIGHT)
@@ -688,7 +688,7 @@ def write_virga_strata(widths, i, first_glyph, last_glyph, shape, liquescentia='
     else:
         first_width = widths['width_punctum']-widths['line_width']
     simple_paste(first_glyph, glyphnumber)
-    if (i != 1):
+    if i != 1:
         linename = "line%d" % i
         paste_and_move(linename, glyphnumber, first_width, BASE_HEIGHT)
     paste_and_move(last_glyph, glyphnumber, first_width, i*BASE_HEIGHT)
@@ -734,12 +734,12 @@ def write_salicus(widths, i, j, last_glyph, shape, liquescentia='nothing'):
         middle_glyph = 'obase8'
         middle_width = widths['width_oriscus']-widths['line_width']
     simple_paste(first_glyph, glyphnumber)
-    if (i != 1):
+    if i != 1:
         linename = "line%d" % i
         paste_and_move(linename, glyphnumber, first_width, BASE_HEIGHT)
     paste_and_move(middle_glyph, glyphnumber, first_width, i*BASE_HEIGHT)
     length = first_width+middle_width
-    if (j != 1):
+    if j != 1:
         linename = "line%d" % j
         paste_and_move(linename, glyphnumber, length, (i+1)*BASE_HEIGHT)
     else:
@@ -817,11 +817,11 @@ def write_flexus(widths, i, first_glyph, last_glyph, shape, liquescentia='nothin
     "Writes the flexus glyphs."
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
     # we add a queue if it is a deminutus
-    if (first_glyph == "mdeminutus"):
+    if first_glyph == "mdeminutus":
         if shape == 'flexus_nobar':
             write_deminutus(widths, 0, i, glyphnumber, length=0, tosimplify=1, firstbar=0)
         elif shape == 'flexus':
-            _first_bar(1, glyphnumber)
+            write_first_bar(1, glyphnumber)
             write_deminutus(widths, 0, i, glyphnumber, length=0, tosimplify=1, firstbar=1)
         else:
             write_first_bar(2, glyphnumber)
@@ -838,7 +838,7 @@ def write_flexus(widths, i, first_glyph, last_glyph, shape, liquescentia='nothin
                        widths['line_width'], (-i)*BASE_HEIGHT)
         length = widths['width_oriscus_rev']
     else:
-        if i == 1:#we remove the bar aspect
+        if i == 1: #we remove the bar aspect
             if last_glyph == 'base7':
                 last_glyph = '_0017'
             elif last_glyph == 'auctusa1':
@@ -919,28 +919,28 @@ def write_porrectus(widths, i, j, last_glyph, with_bar, shape, liquescentia='not
     "Writes the porrectus glyphs."
     glyphnumber = gnumber(i, j, 0, shape, liquescentia)
     length = widths['porrectuswidths'][i-1]
-    if (with_bar):
+    if with_bar:
         write_first_bar(i, glyphnumber)
     first_glyph = "porrectus%d" % i
-    if (last_glyph == 'auctusa2' or last_glyph == 'auctusd2'):
+    if last_glyph == 'auctusa2' or last_glyph == 'auctusd2':
         length = widths['porrectusflexuswidths'][i-1]
-        if (j == 1):
+        if j == 1:
             first_glyph = "porrectusflexusnb%d" % i
         else:
             first_glyph = "porrectusflexus%d" % i
     simple_paste(first_glyph, glyphnumber)
-    if (j != 1 or (last_glyph != 'auctusa2' and last_glyph != 'auctusd2')):
+    if j != 1 or (last_glyph != 'auctusa2' and last_glyph != 'auctusd2'):
         write_line(j, glyphnumber, length-widths['line_width'], (-i+1)*BASE_HEIGHT)
         length = length-widths['line_width']
-    if (with_bar):
+    if with_bar:
         simplify(glyphnumber)
-    if (last_glyph == "rdeminutus"):
+    if last_glyph == "rdeminutus":
         paste_and_move(last_glyph, glyphnumber, (length-widths['width_deminutus']),
                        (j-i)*BASE_HEIGHT)
-    elif (last_glyph == 'auctusa2' or last_glyph == 'auctusd2'):
-        if (last_glyph == 'auctusa2' and j == 1):
+    elif last_glyph == 'auctusa2' or last_glyph == 'auctusd2':
+        if last_glyph == 'auctusa2' and j == 1:
             last_glyph = '_0072'
-        elif (last_glyph == 'auctusd2' and j == 1):
+        elif last_glyph == 'auctusd2' and j == 1:
             last_glyph = '_0073'
         paste_and_move(last_glyph, glyphnumber, (length), (j-i)*BASE_HEIGHT)
         length = length + widths['width_punctum']
@@ -1031,11 +1031,11 @@ def write_porrectusflexus(widths, i, j, k, last_glyph, with_bar, shape, liquesce
         first_glyph = "porrectusflexusnb%d" % i
     else:
         first_glyph = "porrectusflexus%d" % i
-    if (with_bar):
+    if with_bar:
         write_first_bar(i, glyphnumber)
     simple_paste(first_glyph, glyphnumber)
     write_line(j, glyphnumber, length-widths['line_width'], (-i+1)*BASE_HEIGHT)
-    if (last_glyph == "deminutus"):
+    if last_glyph == "deminutus":
         if j == 1:
             write_deminutus(widths, j-i, k, glyphnumber, length, with_bar, firstbar=0)
             length = length+widths['width_flexusdeminutus']
@@ -1131,7 +1131,7 @@ def write_torculus(widths, i, j, first_glyph, last_glyph, shape, liquescentia='n
     "Writes the torculus glyphs."
     glyphnumber = gnumber(i, j, 0, shape, liquescentia)
     length = widths['width_punctum']-widths['line_width']
-    if (first_glyph == "idebilis"):
+    if first_glyph == "idebilis":
         length = widths['width_debilis']
     elif first_glyph == "qbase":
         length = widths['width_quilisma']-widths['line_width']
@@ -1144,7 +1144,7 @@ def write_torculus(widths, i, j, first_glyph, last_glyph, shape, liquescentia='n
     simple_paste(first_glyph, glyphnumber)
     if i != 1:
         write_line(i, glyphnumber, length, BASE_HEIGHT)
-    if (last_glyph == "deminutus"):
+    if last_glyph == "deminutus":
         if i == 1:
             write_deminutus(widths, i, j, glyphnumber, length, firstbar=0)
         else:
@@ -1296,28 +1296,28 @@ def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
     if i != 1:
         write_line(i, glyphnumber, length, BASE_HEIGHT)
     middle_glyph = "porrectus%d" % j
-    if (last_glyph == 'auctusa2' or last_glyph == 'auctusd2'):
-        if (k == 1):
+    if last_glyph == 'auctusa2' or last_glyph == 'auctusd2':
+        if k == 1:
             middle_glyph = "porrectusflexusnb%d" % j
         else:
             middle_glyph = "porrectusflexus%d" % j
     paste_and_move(middle_glyph, glyphnumber, length, i*BASE_HEIGHT)
-    if (last_glyph == 'auctusa2' or last_glyph == 'auctusd2'):
+    if last_glyph == 'auctusa2' or last_glyph == 'auctusd2':
         length = length + widths['porrectusflexuswidths'][j-1]
     else:
         length = length + widths['porrectuswidths'][j-1]
-    if ((last_glyph != 'auctusa2' and last_glyph != 'auctusd2') or k != 1):
+    if (last_glyph != 'auctusa2' and last_glyph != 'auctusd2') or k != 1:
         write_line(k, glyphnumber, length-widths['line_width'], (i-j+1)*BASE_HEIGHT)
     simplify(glyphnumber)
-    if (last_glyph == "rdeminutus"):
+    if last_glyph == "rdeminutus":
         paste_and_move(last_glyph, glyphnumber,
                        (length-widths['width_deminutus']-widths['line_width']), (i-j+k)*BASE_HEIGHT)
-    elif (last_glyph == 'auctusa2' or last_glyph == 'auctusd2'):
-        if (last_glyph == 'auctusa2' and k == 1):
+    elif last_glyph == 'auctusa2' or last_glyph == 'auctusd2':
+        if last_glyph == 'auctusa2' and k == 1:
             last_glyph = '_0072'
-        elif (last_glyph == 'auctusd2' and k == 1):
+        elif last_glyph == 'auctusd2' and k == 1:
             last_glyph = '_0073'
-        if (k == 1):
+        if k == 1:
             length = length+widths['line_width']
         paste_and_move(last_glyph, glyphnumber, (length-widths['line_width']), (i-j+k)*BASE_HEIGHT)
         length = length - widths['line_width'] + widths['width_punctum']
@@ -1331,7 +1331,7 @@ def write_torculusresupinusdeminutus(widths, i, j, k, first_glyph, shape, liques
     "Writes the torculusresupinusdeminutus glyphs."
     glyphnumber = gnumber(i, j, k, shape, liquescentia)
     length = widths['width_punctum']-widths['line_width']
-    if (first_glyph == "idebilis"):
+    if first_glyph == "idebilis":
         length = widths['width_debilis']
     elif i == 1:
         first_glyph = '_0017'
