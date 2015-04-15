@@ -39,7 +39,7 @@ gresym: gresym.ttf
 
 greextra: greextra.ttf
 
-DISTCLEANFILES = $(TTFFILES)
+MAINTAINERCLEANFILES = $(TTFFILES)
 
 install:
 	@$(TOP_LEVEL_MAKE) echo 'The Makefile in the fonts directory is no longer used for installing'
