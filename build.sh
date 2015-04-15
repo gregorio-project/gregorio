@@ -12,7 +12,7 @@
 #      --build=    : build system for mingw32 cross-compilation
 #      --arch=     : crosscompile for ARCH on OS X
 #      --jobs=     : the number of jobs to run simultaneously in the make step
-#      --force=    : force autoreconf or font bulding
+#      --force=    : force autoreconf or font building
 #      {other)     : anything else is passed to configure verbatim
       
 # try to find bash, in case the standard shell is not capable of
