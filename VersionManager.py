@@ -19,13 +19,19 @@ from distutils.util import strtobool
 
 VERSION_FILE = '.gregorio-version'
 GREGORIO_FILES = ["configure.ac",
+                  "plugins/gregoriotex/gregoriotex.h",
                   "windows/gregorio-resources.rc",
-                  "windows/gregorio.iss",
                   "macosx/Gregorio.pkgproj",
-                  "tex/gregoriotex.lua",
-                  "tex/gregoriotex.sty",
+                  "windows/gregorio.iss",
                   "doc/GregorioRef.tex",
-                  "plugins/gregoriotex/gregoriotex.h"
+                  "tex/gregoriotex.sty",
+                  "tex/gregoriotex.lua",
+                  "tex/gregoriotex.tex",
+                  "tex/gregoriotex-chars.tex",
+                  "tex/gregoriotex-signs.tex",
+                  "tex/gregoriotex-spaces.tex",
+                  "tex/gregoriotex-symbols.tex",
+                  "tex/gregoriotex-syllable.tex",
                  ]
 
 def get_parser():
