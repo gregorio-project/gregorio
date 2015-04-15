@@ -27,10 +27,6 @@
 #define NO_FUSION 0
 #define FUSION 1
 
-#define GLYPH_NUMBERING_START 0xf0000
-
-// NOTE: enums with defined values are external (used directly in GregorioTeX)
-
 /*
  * Here are the different types, they must be the same as in squarize.py 
  */

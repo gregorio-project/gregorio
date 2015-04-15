@@ -254,9 +254,22 @@
 
 % box that we will use to determine the width of the notes, to determine wether we typeset a - or not after the letters
 \newbox\GreSyllablenotes%
+
+% Macro used to fill \GreSyllablenotes with everything contained in #1. This
+% saves and restores a few values so that when really typesetting #1 in \gresyllable,
+% the result is identical.
 \def\gresyllablenotes#1{%
+  \global\grefirstglyph=1\relax %
+  \xdef\grelastispunctumsauv{\grelastispunctum}%
+  \xdef\greboxing{1}%
+  \xdef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
   \setbox\GreSyllablenotes=\hbox{#1}%
-  \relax%
+  \gre@debug{Width of notes: \the\wd\GreSyllablenotes}%
+  \xdef\grelastispunctum{\grelastispunctumsauv}%
+  \xdef\greboxing{0}%
+  \global\grelastoflinecount=\gresavedlastoflinecount\relax %
+  \global\grefirstglyph=1\relax %
+  \relax %
 }%
 
 
@@ -420,6 +433,7 @@
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
 %% at the end we wall \greendofword or \greendofsyllable with #7, to reduce the space in case of a flat or natural
 \def\gresyllable#1#2#3#4#5#6#7#8#9{%
+  \gre@debug{New syllable}%
   \ifnum\gre@englishcentering=1\relax %
     \gdef\gre@firstsyllablepart{}%
     \gdef\gre@middlesyllablepart{#1#2#3}%
@@ -429,16 +443,9 @@
     \gdef\gre@middlesyllablepart{#2}%
     \gdef\gre@endsyllablepart{#3}%
   \fi %
-  \grefirstglyph=1 %
+  \grefirstglyph=1\relax %
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
-  % we need to save lastoflinecount, because otherwise when a \newline appears inside a syllable, it is counted two times (once here and once later when #9 will be really output), so \grelastoflinecount has a wrong value. Thus
-  \xdef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
-  % a counter to know we are not really typesetting things (useful for end of lines)
-  \xdef\greboxing{1}%
   \gresyllablenotes{#9}% we put the notes in a box, so that we have the width of it
-  \xdef\greboxing{0}%
-  \grefirstglyph=1 %
-  \global\grelastoflinecount=\gresavedlastoflinecount\relax %
   % now we calculate the begin difference, that is to say \gre@dimen@notesaligncenter - \gre@dimen@textaligncenter
   \gre@dimen@begindifference=\gre@dimen@notesaligncenter %
   \advance\gre@dimen@begindifference by -\gre@dimen@textaligncenter %
@@ -610,7 +617,7 @@
         \greendbeforebar{0}%
       \else %
         % otherwise we call it with 1 only if there is no letters after (we can see it with nextbegindifference)
-        \setbox\GreTempwidth=\hbox{#5#6}%
+        \setbox\GreTempwidth=\hbox{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart }%
         % /!\ warning: can be buggy...
         \gre@debug{ifdim wd(GreTempwidth) = 0pt}%
         \ifdim\wd\GreTempwidth=0pt%
@@ -658,20 +665,25 @@
 
 %a macro to typeset a syllable with only a bar inside
 \def\grebarsyllable#1#2#3#4#5#6#7#8#9{%
+  \gre@debug{New bar syllable}%
   % the algorithm of this function is *extremely* complex, and has been much painful to write... good luck to understand.
-  % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the prefious syllable and the first note of the next syllable. But there are limits : a bar cant go very far above text. For example if there is nuncncncncn with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
+  % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the previous syllable and the first note of the next syllable. But there are limits : a bar can't go very far above text. For example if there is "nuncncncncn" with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
   % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
   % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
-  \gre@calculate@textaligncenter{#1}{#2}{0}%
-  \setbox\GreSyllabletext=\hbox{\grefixedtextformat{#1#2#3}}%
-  % we need to save lastoflinecount, because otherwise when a \newline appears inside a syllable, it is counted two times (once here and once later when #9 will be really output), so \grelastoflinecount has a wrong value. Thus
-  \xdef\gresavedlastoflinecount{\number\grelastoflinecount\relax}%
-  % a counter to know we are not really typesetting things (useful for end of lines)
-  \xdef\greboxing{1}%
+  \ifnum\gre@englishcentering=1\relax %
+    \gdef\gre@firstsyllablepart{}%
+    \gdef\gre@middlesyllablepart{#1#2#3}%
+    \gdef\gre@endsyllablepart{}%
+  \else %
+    \gdef\gre@firstsyllablepart{#1}%
+    \gdef\gre@middlesyllablepart{#2}%
+    \gdef\gre@endsyllablepart{#3}%
+  \fi %
+  \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
+  \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
+  \gre@debug{Width of bar text: \the\wd\GreSyllabletext}%
   \gresyllablenotes{#9}%
-  \xdef\greboxing{0}%
-  \grefirstglyph=1\relax %
-  \global\grelastoflinecount=\gresavedlastoflinecount\relax %
+  \gre@debug{Width of bar line: \the\wd\GreSyllablenotes}%
   \gre@dimen@notesaligncenter=\wd\GreSyllablenotes%
   \divide\gre@dimen@notesaligncenter by 2\relax %
   \gre@dimen@begindifference=\gre@dimen@notesaligncenter %
@@ -680,21 +692,17 @@
   #5%
   \gre@calculate@nextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
   \greunsetfixednexttextformat %
-  % for LuaTeX syllable counting in optimize_gabc, we put an empty syllable box with gregorioattr set to 2. With this we can count every syllable.
-  \gregorioattr=2\relax %
-  \hbox to 0pt{}%
-  \gregorioattr=0\relax %
   % then we check if there is something to write
   \gre@debug{ifdim wd(GreSyllabletext) = 0pt}%
   \ifdim\wd\GreSyllabletext = 0 pt\relax %
     % the most difficult case : when there is nothing to write
     % first we need to determine the real space that there will be between the notes. Here again it is not so simple... let's consider these two kinds of spaces : 
-    %% 1/ the minimal space between a note and the bar + the width of the bar + the minimal space between the bar and the note (that's the global idea, in fact there are nuances) : we assign skipone to it
-    %% 2/ enddifference + begindifference + space between notes and word : we assign temp to it
+    %% 1/ the minimal space between a note and the bar + the width of the bar + the minimal space between the bar and the note (that's the global idea, in fact there are nuances) : we assign skip@temp@three to it
+    %% 2/ enddifference + begindifference + space between notes and word : we assign skip@temp@two to it
     \gre@skip@temp@three=\gre@skip@notebarspace %
     \advance\gre@skip@temp@three by \gre@skip@notebarspace %
     \advance\gre@skip@temp@three by \wd\GreSyllablenotes %
-    % now let's get temp
+    % now let's get skip@temp@two
     \gre@debug{ifdim nextbegindifference < 0pt}%
     \ifdim\gre@skip@nextbegindifference < 0 pt%
       \gre@skip@temp@two=-\gre@skip@nextbegindifference %
@@ -770,15 +778,6 @@
     \fi %
   % then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
   \else %ifdim\wd\GreSyllabletext = 0 pt 
-    % I'm a little lazy for now, I won't make the usual mountain of ifs... TODO: use different spaces
-    \gre@skip@temp@three=\gre@skip@textbartextspace %
-    % same code as in syllable
-    \gre@dimen@temp@five=\gre@dimen@begindifference %
-    \gre@debug{ifdim tempdim > 0pt}%
-    \ifdim\gre@dimen@temp@five > 0 pt%
-      \advance\gre@skip@temp@three by \gre@dimen@temp@five %
-    \fi%
-    %\kern\gre@skip@temp@three 
     #8\relax %
     \raise\gre@dimen@textlower \copy\GreSyllabletext %
     \ifnum\gremustdotranslationcenterend=1\relax %
@@ -790,7 +789,7 @@
     \kern\gre@skip@temp@one%
     \gre@skip@temp@one = -\gre@dimen@begindifference%
     \kern\gre@skip@temp@one %
-    #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
+    #9%
     \gre@debug{ifdim enddifference < 0pt}%
     \ifdim\gre@dimen@enddifference <0pt%
       %% important, else we are not really at the end of the syllable
