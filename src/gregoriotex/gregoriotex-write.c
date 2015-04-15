@@ -1502,7 +1502,7 @@ gregoriotex_write_glyph(FILE *f,
                 || glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA) {
             gregoriotex_determine_number_and_type(glyph, element, &type,
                     &gtype, &glyph_number);
-            fprintf(f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
+            fprintf(f, "\\greglyph{\\char\\gregoriocharoffset{%d}}{%c}{%c}{%d}", glyph_number,
                     glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
                     type);
             gregoriotex_write_signs(f, gtype, glyph, element,
@@ -1522,7 +1522,7 @@ gregoriotex_write_glyph(FILE *f,
                 || glyph->u.notes.liquescentia == L_DEMINUTUS_INITIO_DEBILIS) {
             gregoriotex_determine_number_and_type(glyph, element, &type,
                     &gtype, &glyph_number);
-            fprintf(f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
+            fprintf(f, "\\greglyph{\\char\\gregoriocharoffset{%d}}{%c}{%c}{%d}", glyph_number,
                     glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
                     type);
             gregoriotex_write_signs(f, gtype, glyph, element,
@@ -1548,7 +1548,7 @@ gregoriotex_write_glyph(FILE *f,
         gregoriotex_determine_number_and_type(glyph, element, &type,
                 &gtype, &glyph_number);
         // TODO : fusion functions
-        fprintf(f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
+        fprintf(f, "\\greglyph{\\char\\gregoriocharoffset{%d}}{%c}{%c}{%d}", glyph_number,
                 glyph->u.notes.first_note->u.note.pitch, next_note_pitch, type);
         gregoriotex_write_signs(f, gtype, glyph, element,
                 glyph->u.notes.first_note);
@@ -1632,7 +1632,7 @@ gregoriotex_write_glyph(FILE *f,
             gregoriotex_determine_number_and_type(glyph, element, &type,
                     &gtype, &glyph_number);
             // TODO : fusion functions
-            fprintf(f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
+            fprintf(f, "\\greglyph{\\char\\gregoriocharoffset{%d}}{%c}{%c}{%d}", glyph_number,
                     glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
                     type);
             gregoriotex_write_signs(f, gtype, glyph, element,
@@ -1642,7 +1642,7 @@ gregoriotex_write_glyph(FILE *f,
         } else {
             gregoriotex_determine_number_and_type(glyph, element, &type,
                     &gtype, &glyph_number);
-            fprintf(f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
+            fprintf(f, "\\greglyph{\\char\\gregoriocharoffset{%d}}{%c}{%c}{%d}", glyph_number,
                     glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
                     type);
             gregoriotex_write_signs(f, gtype, glyph, element,
@@ -3550,7 +3550,7 @@ gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
         break;
     }
     *glyph_number = gregoriotex_determine_interval(glyph);
-    *glyph_number = temp + (*glyph_number) + GLYPH_NUMBERING_START;
+    *glyph_number = temp + (*glyph_number);
     // we change to the original liquescentia
     glyph->u.notes.liquescentia = liquescentia;
     // we fix *type with initio_debilis
@@ -3826,7 +3826,7 @@ gregoriotex_write_note(FILE *f, gregorio_note *note,
                 next_note_pitch, type);
         break;
     default:
-        fprintf(f, "\\greglyph{\\char %d}{%c}{%c}{%d}",
+        fprintf(f, "\\greglyph{\\char\\gregoriocharoffset{%d}}{%c}{%c}{%d}",
                 glyph_number, note->u.note.pitch, next_note_pitch, type);
         break;
     }
@@ -3941,7 +3941,6 @@ void gregoriotex_determine_note_number_and_type(gregorio_note *note,
         return;
         break;
     }
-    *glyph_number = *glyph_number + GLYPH_NUMBERING_START;
 }
 
 int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
