@@ -73,23 +73,18 @@
 % an attribute used for translation centering
 \newluatexattribute\gregoriocenterattr%
 
-\RequireLuaModule{gregoriotex}%
-
-% The general version of GregorioTeX (we mean by that the "API", the way
-% Gregorio will write things)
-\xdef\gregoriotexversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
-
-% the version of the internal files (all must have the same)
-\xdef\greinternalversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
+% The version of gregorio. All gregoriotex*.tex files must have the same.
+% All gtex files must also have the same version.
+\xdef\gre@gregorioversion{3.0.0-rc2}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
 % #1 is the name of the file
 % #2 is the version
 
-\def\gredeclarefileversion#1#2{%
-  \IfStrEq*{#2}{\greinternalversion}{}{%else
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\greinternalversion \space\space while #1 is in version \number#2}}%
+\def\gre@declarefileversion#1#2{%
+  \IfStrEq*{#2}{\gre@gregorioversion}{}{%else
+    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\gre@gregorioversion \space\space while #1 is in version \number#2}}%
 }%
 
 % Macro called by scores.
@@ -98,10 +93,19 @@
 % #1 is the version of GregorioTeX the score is made for.
 
 \def\gregoriotexapiversion#1{%
-  \StrBefore{\gregoriotexversion}{.}[\gre@gregoriomajorversion]%
+  \StrBefore{\gre@gregorioversion}{.}[\gre@gregoriomajorversion]%
   \IfBeginWith{#1}{\gre@gregoriomajorversion}{\relax}{%else
-    \greerror{GregorioTeX is in version \gregoriotexversion \space\space while a score you included requires version #1. Please recompile your scores}}%
+    \greerror{GregorioTeX is in version \gre@gregorioversion \space\space while a score you included requires version #1. Please recompile your scores}}%
 }%
+
+\RequireLuaModule{gregoriotex}%
+
+\xdef\gre@gregoriotexluaversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
+
+% Test to make sure that gregoriotex.lua is of the same version.
+\IfStrEq*{\gre@gregoriotexluaversion}{\gre@gregorioversion}{}{%else
+    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %% aux file definitions
