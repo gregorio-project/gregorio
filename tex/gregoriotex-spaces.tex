@@ -97,7 +97,7 @@
 \def\gretolerance{\tolerance}%
 % Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
 % see http://tug.org/pipermail/luatex/2013-July/004516.html
-\ifnum\the\luatexversion < 78\relax %
+\ifnum\the\luatexversion < 80\relax %
   \global\def\grepretolerance{-1}%
 \else %
   \global\def\grepretolerance{\pretolerance}%
@@ -674,6 +674,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% This macro sets one dim (#1) to the value #2 and sets whether it should scale when the \grefactor changes (#3, 1 if yes, 0 if no).  While it does check that #1 can accept the kind of distance given in #2, it does not propagate the changes through the calculated distances.
+%% Note: the distances created by this function are stored as strings, not skip or dimension registers.  This allows the user to specify a distance in em or ex units even though the font parameters may not be the same at the time the distance is specified and the time the distance is used.
 \newif\ifchecklength%
 \def\gresetdim#1#2#3{%
   \checklengthfalse%
@@ -697,10 +698,23 @@
   \relax %
 }%
 
-% a macro for changing a dimension and making sure that the change cascades through.
-% TODO: make smarter so that it knows the dependency tree and only recalculates distances affected by the change
+% a macro for changing a dimension.  Unlike \gresetdim, this function won’t create a new distance, just change an existing one.
 \def\grechangedim#1#2#3{%
-  \gresetdim{#1}{#2}{#3}%
+  \gre@rubberpermit{#1}%
+  % figure out our prefix
+  \ifrubber%
+    \gre@debug{Changing a skip.}
+    \def\gre@prefix{skip}%
+  \else%
+    \gre@debug{Changing a dimen.}
+    \def\gre@prefix{dimen}%
+  \fi
+  \ifcsname gre@\gre@prefix @#1\endcsname%
+    \gre@debug{It does exist.}
+    \gresetdim{#1}{#2}{#3}%
+  \else
+    \greerror{#1 is not a recognized distance.}
+  \fi
 }%
 
 %a macro to use if all you want to do is turn off the scaling for a particular distance

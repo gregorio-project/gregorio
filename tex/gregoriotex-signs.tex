@@ -1293,17 +1293,21 @@
 %a macro to write a bar
 %% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis
 %% 2: is % for now we don't use it
-%%%%%% 0 if it is outside a syllable
-%%%%%% 1 if it is in a syllable
+%%%%%% 0 if it is in a syllable containing only this bar
+%%%%%% 1 if it is in a syllable containing other notes
 %% 3: macros that may happen before the skip after the bar (typically grevepisemus)
 \def\grewritebar#1#2#3{%
-  % first, for the bar to be really centered, if the last glyph has a punctum mora, we kern of the corresponding space (we could also have done it in the gregorio core)
+  % first, for the bar to be really centered, if the last glyph has a punctum
+  % mora, we kern of the corresponding space. We do it only in the case
+  % of a bar in the middle of other notes.
   \ifnum\grelastispunctum=1\relax %
-    \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctummorachar}%
-    \gre@skip@temp@four = -\wd\GreTempwidth %
-    \kern\gre@skip@temp@four%
-    \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
-    \kern\gre@skip@temp@four %
+    \ifnum#2=1\relax %
+      \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctummorachar}%
+      \gre@skip@temp@four = -\wd\GreTempwidth %
+      \kern\gre@skip@temp@four%
+      \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
+      \kern\gre@skip@temp@four %
+    \fi %
   \fi %
   \grenewglyphcommon %
   \gre@calculate@glyphraisevalue{g}{0}% bar glyphs are made to be at this height
@@ -1476,6 +1480,7 @@
       \grehskip\gre@skip@temp@four %
     \fi %
   \fi %
+  \gre@debug{Width of bar just printed: \the\wd\GreTempwidth}%
   \global\gre@dimen@lastglyphwidth=\wd\GreTempwidth %
   \relax%
 }%
