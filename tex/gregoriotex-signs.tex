@@ -1354,7 +1354,6 @@
   % first, for the bar to be really centered, if the last glyph has a punctum
   % mora, we kern of the corresponding space. We do it only in the case
   % of a bar in the middle of other notes.
-  % TODO: generalize it for use in special bar syllables
   \ifnum\grelastispunctum=1\relax %
     \ifnum#2=1\relax %
       \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctummorachar}%
