@@ -27,6 +27,5 @@ gabc-score-determination-y.c: gabc-score-determination.y
 gabc-notes-determination-l.c: gabc-notes-determination.l
 	$(LEX) $<
 
-DISTCLEANFILES = gabc-score-determination-l.c gabc-score-determination-y.c \
+MAINTAINERCLEANFILES = gabc-score-determination-l.c gabc-score-determination-y.c \
 	gabc-notes-determination-l.c gabc-score-determination-y.h
-
