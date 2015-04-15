@@ -440,7 +440,7 @@
     \gdef\gre@middlesyllablepart{#2}%
     \gdef\gre@endsyllablepart{#3}%
   \fi %
-  \grefirstglyph=1 %
+  \grefirstglyph=1\relax %
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
   \gresyllablenotes{#9}% we put the notes in a box, so that we have the width of it
   % now we calculate the begin difference, that is to say \gre@dimen@notesaligncenter - \gre@dimen@textaligncenter
@@ -775,15 +775,6 @@
     \fi %
   % then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
   \else %ifdim\wd\GreSyllabletext = 0 pt 
-    % I'm a little lazy for now, I won't make the usual mountain of ifs... TODO: use different spaces
-    \gre@skip@temp@three=\gre@skip@textbartextspace %
-    % same code as in syllable
-    \gre@dimen@temp@five=\gre@dimen@begindifference %
-    \gre@debug{ifdim tempdim > 0pt}%
-    \ifdim\gre@dimen@temp@five > 0 pt%
-      \advance\gre@skip@temp@three by \gre@dimen@temp@five %
-    \fi%
-    \kern\gre@skip@temp@three %
     #8\relax %
     \raise\gre@dimen@textlower \copy\GreSyllabletext %
     \ifnum\gremustdotranslationcenterend=1\relax %
