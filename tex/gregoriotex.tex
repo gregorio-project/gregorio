@@ -39,8 +39,8 @@
 \fi%
 
 \ifluatex%
-  \ifnum\luatexversion<76%
-    \greerror{Error: this document must be compiled with LuaTeX (lualatex) 0.76 or later}%
+  \ifnum\luatexversion<79%
+    \greerror{Error: this document must be compiled with LuaTeX (lualatex) 0.79 or later}%
   \fi%
 \else%
   \greerror{Error: this document must be compiled with LuaTeX (lualatex)}%
