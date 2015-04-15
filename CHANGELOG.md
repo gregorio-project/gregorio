@@ -3,8 +3,6 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [3.0.0-rc2] - 2015-04-14
-### Changed
-- The glyphs in the fonts have been moved to the Universal Character Set Private Use Area to future-proof the fonts.  This means dropping support for TeX Live older than 2013 and LuaTeX older than 0.76.  Please upgrade to at least TeX Live 2013 to use Gregorio.
 - Clarified post installation options for Windows installer.  What was the "Install Fonts" option is now labeled to indicate that this also adds GregorioTeX files to the texmf tree.
 
 ### Fixed
