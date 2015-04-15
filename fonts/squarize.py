@@ -74,7 +74,7 @@ to do so, delete this exception statement from your version."""
 
 # the unicode character at which we start our numbering
 # Use the U+F0000 Supplemental Private Use Area-A.
-unicode_char_start = 0xf0000
+unicode_char_start = 161
 
 def main():
     global oldfont, newfont, font_name
@@ -108,7 +108,8 @@ def main():
     # the fonts
     oldfont = fontforge.open("%s-base.sfd" % font_name)
     newfont = fontforge.font()
-    newfont.encoding="UnicodeFull"
+    #newfont.encoding="UnicodeFull"
+    newfont.encoding="ISO10646-1"
     newfont.fontname="%s" % font_name
     newfont.fullname="%s" % font_name
     newfont.fontlog="See file FONTLOG you should have received with the software"

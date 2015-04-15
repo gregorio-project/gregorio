@@ -1731,7 +1731,7 @@ gregoriotex_write_glyph (FILE *f,
         {
           gregoriotex_determine_number_and_type (glyph, element, &type,
                                                  &gtype, &glyph_number);
-          fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
+          fprintf (f, "\\greglyph{\\char\\gregoriocharoffset{%d}}{%c}{%c}{%d}", glyph_number,
                    glyph->first_note->pitch, next_note_pitch, type);
           gregoriotex_write_signs (f, gtype, glyph, element, glyph->first_note);
         }
@@ -1753,7 +1753,7 @@ gregoriotex_write_glyph (FILE *f,
         {
           gregoriotex_determine_number_and_type (glyph, element, &type,
                                                  &gtype, &glyph_number);
-          fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
+          fprintf (f, "\\greglyph{\\char\\gregoriocharoffset{%d}}{%c}{%c}{%d}", glyph_number,
                    glyph->first_note->pitch, next_note_pitch, type);
           gregoriotex_write_signs (f, gtype, glyph, element, glyph->first_note);
         }
@@ -1779,7 +1779,7 @@ gregoriotex_write_glyph (FILE *f,
       gregoriotex_determine_number_and_type (glyph, element, &type,
                                              &gtype, &glyph_number);
       // TODO : fusion functions
-      fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
+      fprintf (f, "\\greglyph{\\char\\gregoriocharoffset{%d}}{%c}{%c}{%d}", glyph_number,
                glyph->first_note->pitch, next_note_pitch, type);
       gregoriotex_write_signs (f, gtype, glyph, element, glyph->first_note);
       glyph->first_note = current_note;
@@ -1861,7 +1861,7 @@ gregoriotex_write_glyph (FILE *f,
           gregoriotex_determine_number_and_type (glyph, element, &type,
                                                  &gtype, &glyph_number);
           // TODO : fusion functions
-          fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
+          fprintf (f, "\\greglyph{\\char\\gregoriocharoffset{%d}}{%c}{%c}{%d}", glyph_number,
                    glyph->first_note->pitch, next_note_pitch, type);
           gregoriotex_write_signs (f, gtype, glyph, element, glyph->first_note);
           glyph->glyph_type = G_TORCULUS_RESUPINUS;
@@ -1871,7 +1871,7 @@ gregoriotex_write_glyph (FILE *f,
         {
           gregoriotex_determine_number_and_type (glyph, element, &type,
                                                  &gtype, &glyph_number);
-          fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}", glyph_number,
+          fprintf (f, "\\greglyph{\\char\\gregoriocharoffset{%d}}{%c}{%c}{%d}", glyph_number,
                    glyph->first_note->pitch, next_note_pitch, type);
           gregoriotex_write_signs (f, gtype, glyph, element, glyph->first_note);
           break;
@@ -4050,7 +4050,7 @@ void
       break;
     }
   *glyph_number = gregoriotex_determine_interval (glyph);
-  *glyph_number = temp + (*glyph_number) + GLYPH_NUMBERING_START;
+  *glyph_number = temp + (*glyph_number);
   // we change to the original liquescentia
   glyph->liquescentia = liquescentia;
   // we fix *type with initio_debilis
@@ -4165,44 +4165,25 @@ gregoriotex_determine_interval (gregorio_glyph *glyph)
 
 // and the different types of horizontal episemus:
 // * 40: horizontal episemus, width of a punctum
-#define H_PUNCTUM 40+GLYPH_NUMBERING_START
 // * 41: horizontal episemus, width of a flexus debilis
-#define H_FLEXUS 41+GLYPH_NUMBERING_START
 // * 42: horizontal episemus, width of an initio debilis
-#define H_INITIO 42+GLYPH_NUMBERING_START
 // * 43: horizontal episemus, width of a punctum inclinatum
-#define H_INCLINATUM 43+GLYPH_NUMBERING_START
 // * 44: horizontal episemus, width of a punctum inclinatum deminutus
-#define H_INCLINATUM_DEMINUTUS 44+GLYPH_NUMBERING_START
 // * 45: horizontal episemus, width of a stropha
-#define H_STROPHA 45+GLYPH_NUMBERING_START
 // * 46: horizontal episemus, width of a porrectus with ambitus of 1
-#define H_PORRECTUS1 46+GLYPH_NUMBERING_START
 // * 47: horizontal episemus, width of a porrectus with ambitus of 2
-#define H_PORRECTUS2 47+GLYPH_NUMBERING_START
 // * 48: horizontal episemus, width of a porrectus with ambitus of 3
-#define H_PORRECTUS3 48+GLYPH_NUMBERING_START
 // * 49: horizontal episemus, width of a porrectus with ambitus of 4
-#define H_PORRECTUS4 49+GLYPH_NUMBERING_START
 // * 50: horizontal episemus, width of a porrectus with ambitus of 5
-#define H_PORRECTUS5 50+GLYPH_NUMBERING_START
 // * 51: horizontal episemus, width of a porrectus flexus with ambitus of 1
-#define H_PORRECTUS_FLEXUS1 51+GLYPH_NUMBERING_START
 // * 52: horizontal episemus, width of a porrectus flexus with ambitus of 2
-#define H_PORRECTUS_FLEXUS2 52+GLYPH_NUMBERING_START
 // * 53: horizontal episemus, width of a porrectus flexus with ambitus of 3
-#define H_PORRECTUS_FLEXUS3 53+GLYPH_NUMBERING_START
 // * 54: horizontal episemus, width of a porrectus flexus with ambitus of 4
-#define H_PORRECTUS_FLEXUS4 54+GLYPH_NUMBERING_START
 // * 55: horizontal episemus, width of a porrectus flexus with ambitus of 5
-#define H_PORRECTUS_FLEXUS5 55+GLYPH_NUMBERING_START
 // * 56: horizontal episemus, width of a quilisma
-#define H_QUILISMA 56+GLYPH_NUMBERING_START
 // * 57: horizontal episemus, width of an oriscus
-#define H_ORISCUS 57+GLYPH_NUMBERING_START
 // * 58: horizontal episemus width of a small punctum for pes, porrectus and
 // torculus resupinus
-#define H_SMALL_PUNCTUM 58+GLYPH_NUMBERING_START
 
 void
 gregoriotex_write_note (FILE *f, gregorio_note *note,
@@ -4338,7 +4319,7 @@ gregoriotex_write_note (FILE *f, gregorio_note *note,
       fprintf (f, "\\grelinea{%c}{%c}{%d}", note->pitch, next_note_pitch, type);
       break;
     default:
-      fprintf (f, "\\greglyph{\\char %d}{%c}{%c}{%d}",
+      fprintf (f, "\\greglyph{\\char\\gregoriocharoffset{%d}}{%c}{%c}{%d}",
                glyph_number, note->pitch, next_note_pitch, type);
       break;
     }
@@ -4463,7 +4444,6 @@ void
       return;
       break;
     }
-    *glyph_number = *glyph_number+GLYPH_NUMBERING_START;
 }
 
 int
