@@ -94,7 +94,7 @@
 \def\gretolerance{\tolerance}%
 % Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
 % see http://tug.org/pipermail/luatex/2013-July/004516.html
-\ifnum\the\luatexversion < 78\relax %
+\ifnum\the\luatexversion < 80\relax %
   \global\def\grepretolerance{-1}%
 \else %
   \global\def\grepretolerance{\pretolerance}%
