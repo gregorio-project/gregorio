@@ -68,8 +68,9 @@ statement from your version."""
 # the more glyphs you'll have to generate
 MAX_INTERVAL = 5
 
-# Use the U+F0000 Supplemental Private Use Area-A.
-UNICODE_CHAR_START = 0xf0000
+# The unicode character at which we start our numbering:
+# To use the U+F0000 Supplemental Private Use Area-A set as: 0xf0000
+UNICODE_CHAR_START = 161
 
 BASE_HEIGHT = 157.5
 oldfont = None
@@ -119,7 +120,8 @@ def main():
     # the fonts
     oldfont = fontforge.open("%s-base.sfd" % font_name)
     newfont = fontforge.font()
-    newfont.encoding = "UnicodeFull"
+    # newfont.encoding = "UnicodeFull"
+    newfont.encoding = "ISO10646-1"
     newfont.fontname = "%s" % font_name
     newfont.fullname = "%s" % font_name
     newfont.fontlog = "See file FONTLOG you should have received with the software"
