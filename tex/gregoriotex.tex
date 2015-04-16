@@ -49,9 +49,9 @@
   \greerror{Error: this document must be compiled with LuaTeX (lualatex)}%
 \fi%
 
-\newif\ifdebug\debugfalse
+\newif\ifgredebug\gredebugfalse
 \def\gre@debug#1{%
-  \ifdebug%
+  \ifgredebug%
     \typeout{GregorioTex debug: #1}%
   \else%
     \relax%
@@ -76,23 +76,18 @@
 % an attribute used for translation centering
 \newluatexattribute\gregoriocenterattr%
 
-\RequireLuaModule{gregoriotex}%
-
-% The general version of GregorioTeX (we mean by that the "API", the way
-% Gregorio will write things)
-\xdef\gregoriotexversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
-
-% the version of the internal files (all must have the same)
-\xdef\greinternalversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
+% The version of gregorio. All gregoriotex*.tex files must have the same.
+% All gtex files must also have the same version.
+\xdef\gre@gregorioversion{3.0.0-rc2}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
 % #1 is the name of the file
 % #2 is the version
 
-\def\gredeclarefileversion#1#2{%
-  \IfStrEq*{#2}{\greinternalversion}{}{%else
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\greinternalversion \space\space while #1 is in version \number#2}}%
+\def\gre@declarefileversion#1#2{%
+  \IfStrEq*{#2}{\gre@gregorioversion}{}{%else
+    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\gre@gregorioversion \space\space while #1 is in version \number#2}}%
 }%
 
 % Macro called by scores.
@@ -101,9 +96,41 @@
 % #1 is the version of GregorioTeX the score is made for.
 
 \def\gregoriotexapiversion#1{%
-  \StrBefore{\gregoriotexversion}{.}[\gre@gregoriomajorversion]%
+  \StrBefore{\gre@gregorioversion}{.}[\gre@gregoriomajorversion]%
   \IfBeginWith{#1}{\gre@gregoriomajorversion}{\relax}{%else
-    \greerror{GregorioTeX is in version \gregoriotexversion \space\space while a score you included requires version #1. Please recompile your scores}}%
+    \greerror{GregorioTeX is in version \gre@gregorioversion \space\space while a score you included requires version #1. Please recompile your scores}}%
+}%
+
+\RequireLuaModule{gregoriotex}%
+
+\xdef\gre@gregoriotexluaversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
+
+% Test to make sure that gregoriotex.lua is of the same version.
+\IfStrEq*{\gre@gregoriotexluaversion}{\gre@gregorioversion}{}{%else
+    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% aux file definitions
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+% for now, we only use an aux file with LuaTeX
+
+\ifluatex%
+  \newwrite\Greaux%
+\fi%
+
+\def\grewriteaux#1{%
+  \write\Greaux{#1}%
+  \relax %
+}%
+
+\def\opengreaux{%
+  \openout\Greaux \jobname .gaux\relax%
+}%
+
+\def\closegreaux{%
+  \closeout\Greaux %
 }%
 
 
@@ -844,26 +871,41 @@
 \def\greendbeforebar#1{%
   \grenobreak %
   \ifnum#1=1\relax %
-    \gre@debug{ifdim enddifference > 0pt}%
+    \gre@skip@temp@four = 0pt\relax %
+    % Case where there is a punctum at the end of a syllable before a bar, we
+    % do as if there was none, in order for the bar to be more correctly
+    % centered
+    \ifnum\grelastispunctum=1\relax %
+      \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctummorachar }%
+      \global\advance\gre@dimen@enddifference by -\wd\GreTempwidth %
+      \advance\gre@skip@temp@four by -\wd\GreTempwidth %
+      % Here we want to put a skip string (\gre@skip@spacebeforesigns) into a
+      % dimen (\gre@dimen@enddifference). The only way to do it without breaking
+      % everything is to put this skip string into a real skip register
+      % (\gre@skip@temp@one) and the cast this real skip register in the dimen
+      % register... This is quite ugly... TODO: make \gre@skip@* to be real 
+      % skip registers.
+      \gre@skip@temp@one = \gre@skip@spacebeforesigns %
+      \global\advance\gre@dimen@enddifference by -\gre@dimen@temp@one %
+      \advance\gre@skip@temp@four by -\gre@skip@spacebeforesigns %
+    \fi %
     \ifdim\gre@dimen@enddifference > 0 pt %
-      \gre@debug{ifdim nextbegindifference > 0pt}%
       \ifdim\gre@skip@nextbegindifference > 0 pt %
-        \gre@skip@temp@four = \gre@skip@notebarspace%
-        \grehskip\gre@skip@temp@four %
+        \advance\gre@skip@temp@four by \gre@skip@notebarspace%
       \else % (next begin difference >0pt)
-        \gre@skip@temp@four = \gre@skip@textbartextspace%
-        \grehskip\gre@skip@temp@four %
+        \advance\gre@skip@temp@four by \gre@skip@textbartextspace%
       \fi %
     \else%(enddifference < Opt)
-      \gre@debug{ifdim nextbegindifference < 0pt}%
       \ifdim\gre@skip@nextbegindifference < 0 pt %
-        \gre@skip@temp@four = \gre@skip@textbartextspace%
-        \grehskip\gre@skip@temp@four %
+        \advance\gre@skip@temp@four by \gre@skip@textbartextspace%
       \else %(next begin difference < 0 pt)
-        \gre@skip@temp@four = \gre@skip@interwordspacetextnotes%
-        \grehskip\gre@skip@temp@four %
+        \advance\gre@skip@temp@four by \gre@skip@interwordspacetextnotes%
       \fi %
     \fi %
+    \grehskip\gre@skip@temp@four %
+    \gre@debug{  endbeforebar: hskip \gre@skip@temp@four }%
+  \else %
+    \gre@debug{  endbeforebar: no hskip}%
   \fi %
   \grenobreak %
   %\global\gre@dimen@enddifference=0pt 

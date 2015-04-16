@@ -36,13 +36,19 @@ from distutils.util import strtobool
 
 VERSION_FILE = '.gregorio-version'
 GREGORIO_FILES = ["configure.ac",
+                  "plugins/gregoriotex/gregoriotex.h",
                   "windows/gregorio-resources.rc",
-                  "windows/gregorio.iss",
                   "macosx/Gregorio.pkgproj",
-                  "tex/gregoriotex.lua",
-                  "tex/gregoriotex.sty",
+                  "windows/gregorio.iss",
                   "doc/GregorioRef.tex",
-                  "src/gregoriotex/gregoriotex.h"
+                  "tex/gregoriotex.sty",
+                  "tex/gregoriotex.lua",
+                  "tex/gregoriotex.tex",
+                  "tex/gregoriotex-chars.tex",
+                  "tex/gregoriotex-signs.tex",
+                  "tex/gregoriotex-spaces.tex",
+                  "tex/gregoriotex-symbols.tex",
+                  "tex/gregoriotex-syllable.tex",
                  ]
 
 def get_parser():
@@ -163,8 +169,8 @@ def replace_version(version_obj):
                     result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
                 elif 'GREGORIO_VERSION' in line:
                     result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
-                elif 'internalversion =' in line:
-                    result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
+                elif 'GREGORIO_DATE_LTX' in line:
+                    result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%Y/%m/%d"), line, 1))
                 elif 'PARSE_VERSION_DATE_LTX' in line:
                     newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
                     result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%Y/%m/%d"), newline, 1))
