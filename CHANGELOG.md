@@ -2,14 +2,19 @@
 All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
-## [3.0.0-rc2] - 2015-04-14
-- Clarified post installation options for Windows installer.  What was the "Install Fonts" option is now labeled to indicate that this also adds GregorioTeX files to the texmf tree.
-- `\grechangedim` now checks to make sure it only operates on existing distances and doesn't create a new one.
-
+## [Unreleased][unreleased]
 ### Fixed
-- Windows post install script wasn't adding files to texmf tree.  Bug introduced by 3.0.0-rc1.
-- Tarball distribution was missing `gregoriotex-chars.tex` file.
-- Spacing between a syllable and a syllable with text and only a bar was too short.
+- Handling of the first syllable in gabc is now more consistent with the all other syllables.  This centers the syllable correctly when using latin syllable centering (see [#42](https://github.com/gregorio-project/gregorio/issues/42)) and makes the use of styles less surprising in the first syllable (see [#135](https://github.com/gregorio-project/gregorio/issues/135)).
+
+### Changed
+- The `O` modifier in gabc now has expanded uses beyond the salicus `(egOi)`.  A stemmed oriscus will appear on a lone pitch `(gO)` or a followed by a lower pitch `(gOe)` (see [#76](https://github.com/gregorio-project/gregorio/issues/76)).  A virga strata will appear on the second note of two ascending pitches `(giO)`.
+
+### Removed
+- GregorioXML and OpusTeX output
+
+## [Unreleased][unreleased]
+### Changed
+- The glyphs in the fonts have been moved to the Universal Character Set Private Use Area to future-proof the fonts.  This means dropping support for TeX Live older than 2013 and LuaTeX older than 0.76.  Please upgrade to at least TeX Live 2013 to use Gregorio.
 
 ## [3.0.0-rc1] - 2015-04-06
 ### Changed
@@ -151,9 +156,3 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## 0.2.2 - 2007-06-14
 ### Added
 - adding styles and centering in text
-<<<<<<< HEAD
-=======
-
-[3.0.0-rc1]: https://github.com/gregorio-project/gregorio/compare/v2.4.2...v3.0.0-rc1
-[3.0.0-rc2]: https://github.com/gregorio-project/gregorio/compare/v3.0.0-rc1...v3.0.0-rc2
->>>>>>> refs/remotes/upstream/release-3.0

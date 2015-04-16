@@ -19,14 +19,14 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{gregoriotex}%
-    [2015/04/13 v3.0.0-rc2 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
+    [2015/04/06 v3.0.0-rc1 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
 \RequirePackage{xcolor}
 
 \input gregoriotex.tex
 
 %% We declare and process the options after loading the package (instead of at the beginning) because the options manipulate flags which are declared in the package.
 
-\DeclareOption{debug}{\gredebugtrue}
+\DeclareOption{debug}{\debugtrue}
 
 % These options control the global behavior of \includescore.  The default, forceinclude, is the old behavior (no attempt to compile the score with gregorio is made, it is simply included as is).  forcecompile is at the opposite end of the spectrum: all scores are compiled through gregorio at time of inclusion.  autocompile strikes a balance by checking to see if the score needs to be recompiled and only doing so if it needs it (see the definition of \includescore in gregoriotex.tex for more details).
 \DeclareOption{nevercompile}{\nevercompilegabc}
