@@ -147,22 +147,18 @@ Copyright (C) 2002--2006 Juergen Reuter <reuter@ipd.uka.de>
     initialize_glyphs()
     font_width = get_lengths(font_name)
     hepisemus(font_width)
-    # the numerotation of the glyphs are not the same between short and long
-    # types, here is the indicator:
-    shortglyphs = True
-    pes(font_width, shortglyphs)
-    pes_quadratum(font_width, shortglyphs)
-    virga_strata(font_width, shortglyphs)
-    flexus(font_width, shortglyphs)
-    scandicus(font_width, shortglyphs)
-    ancus(font_width, shortglyphs)
-    salicus(font_width, shortglyphs)
-    shortglyphs = False
-    torculus(font_width, shortglyphs)
-    torculus_liquescens(font_width, shortglyphs)
-    porrectus(font_width, shortglyphs)
-    porrectusflexus(font_width, shortglyphs)
-    torculusresupinus(font_width, shortglyphs)
+    pes(font_width)
+    pes_quadratum(font_width)
+    virga_strata(font_width)
+    flexus(font_width)
+    scandicus(font_width)
+    ancus(font_width)
+    salicus(font_width)
+    torculus(font_width)
+    torculus_liquescens(font_width)
+    porrectus(font_width)
+    porrectusflexus(font_width)
+    torculusresupinus(font_width)
     newfont.generate("%s.ttf" % font_name)
     oldfont.close()
     newfont.close()
@@ -230,131 +226,143 @@ def get_lengths(fontname):
     "Initialize widths depending on the font."
     lengths = {}
     if fontname == "gregorio":
-        lengths = dict(line_width=22,
-        # some width, necessary to know where to draw lines, squares, etc.
-        # first the width of the lines that link notes, like in a pes for example
-
-        # then the width of a punctum, we assume that it is the same width for
-        # oriscus, quilisma, punctum auctum descendens and punctum auctum ascendens
-                      width_punctum=164,
-        # width_oriscus is the width of an oriscus, idem for quilisma
-                      width_oriscus=164,
-                      width_quilisma=164,
-        # width_oriscus_rev is the width of an oriscus reversus
-                      width_oriscus_rev=164,
-        # the width of the first note of an initio debilis, and the one of the
-        # last note of a deminutus. Warning, in GregorioTeX they must be the
-        # same! you must (almost always) add the width of a line to have the real width.
-                      width_debilis=88,
-                      width_deminutus=88,
-        # width of a punctum inclinatum (we consider that the punctum
-        # inclinatum auctus has the same width
-                      width_inclinatum=164,
-        # width of a stropha (idem for the stropha aucta)
-                      width_stropha=164,
-        # width of the second (highest) note of a pes
-                      width_high_pes=154,
-        # width of the punctum inclinatum deminutus (no need to add the
-        # width of a line)
-                      width_inclinatum_deminutus=82,
-        # width of the note which is just before a deminutus, in some
-        # fonts it is not the same width as a punctum
-                      width_flexusdeminutus=186,
-        # the width of the torculus resupinus, five in total, one per note
-        # difference between the two first notes (for example the first is the
-        # width of the first two notes of baba
-                      porrectusflexuswidths=(340, 428, 586, 670, 931),
-                      porrectuswidths=(490, 575, 650, 740, 931),
-        # width that will be added to the standard width when we will build
-        # horizontal episemus. for example, if a punctum has the length 164,
-        # the episemus will have the width 244 and will be centered on the
-        # center of the punctum
-                      hepisemus_additional_width=5,
-                      )
+        lengths = dict(line_width=22, # some width, necessary to know
+                       # where to draw lines, squares, etc. first the
+                       # width of the lines that link notes, like in a
+                       # pes for example
+                       #
+                       # then the width of a punctum, we assume that
+                       # it is the same width for oriscus, quilisma,
+                       # punctum auctum descendens and punctum auctum
+                       # ascendens
+                       width_punctum=164,
+                       # width_oriscus is the width of an oriscus,
+                       # idem for quilisma
+                       width_oriscus=164,
+                       width_quilisma=164,
+                       # width_oriscus_rev is the width of an oriscus
+                       # reversus
+                       width_oriscus_rev=164,
+                       # the width of the first note of an initio
+                       # debilis, and the one of the last note of a
+                       # deminutus. Warning, in GregorioTeX they must
+                       # be the same! you must (almost always) add the
+                       # width of a line to have the real width.
+                       width_debilis=88,
+                       width_deminutus=88,
+                       # width of a punctum inclinatum (we consider
+                       # that the punctum inclinatum auctus has the
+                       # same width
+                       width_inclinatum=164,
+                       # width of a stropha (idem for the stropha aucta)
+                       width_stropha=164,
+                       # width of the second (highest) note of a pes
+                       width_high_pes=154,
+                       # width of the punctum inclinatum deminutus (no
+                       # need to add the width of a line)
+                       width_inclinatum_deminutus=82,
+                       # width of the note which is just before a
+                       # deminutus, in some fonts it is not the same
+                       # width as a punctum
+                       width_flexusdeminutus=186,
+                       # the width of the torculus resupinus, five in
+                       # total, one per note difference between the
+                       # two first notes (for example the first is the
+                       # width of the first two notes of baba
+                       porrectusflexuswidths=(340, 428, 586, 670, 931),
+                       porrectuswidths=(490, 575, 650, 740, 931),
+                       # width that will be added to the standard
+                       # width when we will build horizontal
+                       # episemus. for example, if a punctum has the
+                       # length 164, the episemus will have the width
+                       # 244 and will be centered on the center of the
+                       # punctum
+                       hepisemus_additional_width=5)
     elif fontname == "parmesan":
         lengths = dict(line_width=22,
-                      width_punctum=161,
-                      width_oriscus=192,
-                      width_oriscus_rev=192,
-                      width_quilisma=161,
-                      width_debilis=75,
-                      width_deminutus=75,
-                      width_inclinatum=178,
-                      width_stropha=169,
-                      width_high_pes=151,
-                      width_inclinatum_deminutus=112,
-                      width_flexusdeminutus=161,
-                      porrectusflexuswidths=(340, 428, 586, 670, 931),
-                      porrectuswidths=(490, 575, 650, 740, 931),
-                      hepisemus_additional_width=5,
-                  )
+                       width_punctum=161,
+                       width_oriscus=192,
+                       width_oriscus_rev=192,
+                       width_quilisma=161,
+                       width_debilis=75,
+                       width_deminutus=75,
+                       width_inclinatum=178,
+                       width_stropha=169,
+                       width_high_pes=151,
+                       width_inclinatum_deminutus=112,
+                       width_flexusdeminutus=161,
+                       porrectusflexuswidths=(340, 428, 586, 670, 931),
+                       porrectuswidths=(490, 575, 650, 740, 931),
+                       hepisemus_additional_width=5)
     elif fontname == "greciliae":
         lengths = dict(line_width=18,
-                      width_punctum=166,
-                      width_oriscus=166,
-                      width_oriscus_rev=168,
-                      width_quilisma=166,
-                      width_debilis=65,
-                      width_deminutus=65,
-                      width_inclinatum=185,
-                      width_stropha=163,
-                      width_high_pes=155,
-                      width_inclinatum_deminutus=139,
-                      width_flexusdeminutus=168,
-                      porrectusflexuswidths=(503, 629, 628, 628, 931),
-                      porrectuswidths=(503, 629, 628, 628, 931),
-                      hepisemus_additional_width=5,
-        )
+                       width_punctum=166,
+                       width_oriscus=166,
+                       width_oriscus_rev=168,
+                       width_quilisma=166,
+                       width_debilis=65,
+                       width_deminutus=65,
+                       width_inclinatum=185,
+                       width_stropha=163,
+                       width_high_pes=155,
+                       width_inclinatum_deminutus=139,
+                       width_flexusdeminutus=168,
+                       porrectusflexuswidths=(503, 629, 628, 628, 931),
+                       porrectuswidths=(503, 629, 628, 628, 931),
+                       hepisemus_additional_width=5)
     elif fontname == "gregoria":
         lengths = dict(line_width=22,
-                      width_punctum=164,
-                      width_oriscus=164,
-                      width_oriscus_rev=164,
-                      width_quilisma=164,
-                      width_debilis=88,
-                      width_deminutus=88,
-                      width_inclinatum=173,
-                      width_stropha=164,
-                      width_high_pes=154,
-                      width_inclinatum_deminutus=128,
-                      width_flexusdeminutus=186,
-                      porrectusflexuswidths=(340, 428, 586, 670, 931),
-                      porrectuswidths=(490, 575, 650, 740, 931),
-                      hepisemus_additional_width=5,
-                  )
+                       width_punctum=164,
+                       width_oriscus=164,
+                       width_oriscus_rev=164,
+                       width_quilisma=164,
+                       width_debilis=88,
+                       width_deminutus=88,
+                       width_inclinatum=173,
+                       width_stropha=164,
+                       width_high_pes=154,
+                       width_inclinatum_deminutus=128,
+                       width_flexusdeminutus=186,
+                       porrectusflexuswidths=(340, 428, 586, 670, 931),
+                       porrectuswidths=(490, 575, 650, 740, 931),
+                       hepisemus_additional_width=5)
     return lengths
 
-# Dictionary of glyphs and their numbers.
+# Dictionary of glyphs.
+# Glyph_name : [glyph_number, shortglyph]
+#
+# The numerotation of the glyphs are not the same between short and long
+# types. True or False indicates whether a glyph is short or long.
 SHAPES = {
-    'pes':2,
-    'pesquadratum':3,
-    'pesquadratum_longqueue':4,
-    'pesquilisma':5,
-    'pesquassus':6,
-    'pesquassus_longqueue':7,
-    'pesquilismaquadratum':8,
-    'pesquilismaquadratum_longqueue':9,
-    'flexus':10,
-    'flexus_nobar':11,
-    'flexus_longqueue':12,
-    'flexus_oriscus':13,
-    'porrectusflexus':14,
-    'porrectusflexus_nobar':18,
-    'porrectus':22,
-    'porrectus_nobar':26,
-    'torculus':30,
-    'torculusresupinus':34,
-    'torculusquilisma':38,
-    'scandicus':42,
-    'ancus':44,
-    'ancus_longqueue':46,
-    'virga_strata':48,
-    'salicus':50,
-    'salicus_longqueue':52,
-    'torculus_liquescens': 54,
-    'torculus_liquescens_quilisma': 58,
-    'flexus_oriscus_scapus':62,
-    'flexus_oriscus_scapus_longqueue':63,
+    'pes':[2, True],
+    'pesquadratum':[3, True],
+    'pesquadratum_longqueue':[4, True],
+    'pesquilisma':[5, True],
+    'pesquassus':[6, True],
+    'pesquassus_longqueue':[7, True],
+    'pesquilismaquadratum':[8, True],
+    'pesquilismaquadratum_longqueue':[9, True],
+    'flexus':[10, True],
+    'flexus_nobar':[11, True],
+    'flexus_longqueue':[12, True],
+    'flexus_oriscus':[13, True],
+    'porrectusflexus':[14, False],
+    'porrectusflexus_nobar':[18, False],
+    'porrectus':[22, False],
+    'porrectus_nobar':[26, False],
+    'torculus':[30, False],
+    'torculusresupinus':[34, False],
+    'torculusquilisma':[38, False],
+    'scandicus':[42, True],
+    'ancus':[44, True],
+    'ancus_longqueue':[46, True],
+    'virga_strata':[48, True],
+    'salicus':[50, True],
+    'salicus_longqueue':[52, True],
+    'torculus_liquescens':[54, False],
+    'torculus_liquescens_quilisma':[58, False],
+    'flexus_oriscus_scapus':[62, True],
+    'flexus_oriscus_scapus_longqueue':[63, True]
 }
 
 LIQUESCENTIAE = {
@@ -368,15 +376,15 @@ LIQUESCENTIAE = {
     'initiodebilisauctusdescendens':7,
 }
 
-def gnumber(shortglyphs, i, j, k, shape, lique):
+def gnumber(i, j, k, shape, lique):
     """Get the number of the glyph, with the name of the general shape,
     and the name of the different ambitus.
 
     """
-    if shortglyphs:
-        return i+(5*j)+(25*k)+(64*LIQUESCENTIAE[lique])+(512*SHAPES[shape])+UNICODE_CHAR_START
+    if SHAPES[shape][1]: # Test for shortglyph
+        return i+(5*j)+(25*k)+(64*LIQUESCENTIAE[lique])+(512*SHAPES[shape][0])+UNICODE_CHAR_START
     else:
-        return i+(5*j)+(25*k)+(256*LIQUESCENTIAE[lique])+(512*SHAPES[shape])+UNICODE_CHAR_START
+        return i+(5*j)+(25*k)+(256*LIQUESCENTIAE[lique])+(512*SHAPES[shape][0])+UNICODE_CHAR_START
 
 
 def simple_paste(src, destnum):
@@ -493,7 +501,7 @@ def write_hepisemus(widths, shape_width, glyphnumber):
     set_width(glyphnumber, shape_width)
     end_glyph(glyphnumber)
 
-def pes(widths, shortglyphs):
+def pes(widths):
     "Creates the pes."
     message("pes")
     precise_message("pes")
@@ -501,31 +509,31 @@ def pes(widths, shortglyphs):
     if font_name in standard_fonts:
     # we prefer drawing the pes with ambitus of one by hand, it is more beautiful
         for i in range(2, MAX_INTERVAL+1):
-            write_pes(widths, shortglyphs, i, "p2base", 'pes')
+            write_pes(widths, i, "p2base", 'pes')
     else:
         for i in range(1, MAX_INTERVAL+1):
-            write_pes(widths, shortglyphs, i, "pbase", 'pes')
+            write_pes(widths, i, "pbase", 'pes')
     # idem for the pes quilisma
     precise_message("pes quilisma")
     if font_name in standard_fonts:
         for i in range(2, MAX_INTERVAL+1):
-            write_pes(widths, shortglyphs, i, "qbase", 'pesquilisma')
+            write_pes(widths, i, "qbase", 'pesquilisma')
     else:
         for i in range(1, MAX_INTERVAL+1):
-            write_pes(widths, shortglyphs, i, "qbase", 'pesquilisma')
+            write_pes(widths, i, "qbase", 'pesquilisma')
     precise_message("pes deminutus")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(widths, shortglyphs, i, "pesdeminutus", 'pes', 'deminutus')
+        write_pes_deminutus(widths, i, "pesdeminutus", 'pes', 'deminutus')
     precise_message("pes initio debilis")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_debilis(widths, shortglyphs, i, 'pes', 'initiodebilis')
+        write_pes_debilis(widths, i, 'pes', 'initiodebilis')
     precise_message("pes initio debilis deminutus")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_debilis_deminutus(widths, shortglyphs, i, 'pes', 'initiodebilisdeminutus')
+        write_pes_debilis_deminutus(widths, i, 'pes', 'initiodebilisdeminutus')
 
-def write_pes(widths, shortglyphs, i, first_glyph, shape, lique='nothing'):
+def write_pes(widths, i, first_glyph, shape, lique='nothing'):
     "Writes the pes glyphs."
-    glyphnumber = gnumber(shortglyphs, i, 0, 0, shape, lique)
+    glyphnumber = gnumber(i, 0, 0, shape, lique)
     temp_width = 0
     #begin_glyph(glyphnumber)
     # the difference of width of the two shapes, that will change a thing or two...
@@ -556,9 +564,9 @@ def write_pes(widths, shortglyphs, i, first_glyph, shape, lique='nothing'):
         set_width(glyphnumber, widths['width_quilisma'])
     end_glyph(glyphnumber)
 
-def write_pes_debilis(widths, shortglyphs, i, shape, lique='nothing'):
+def write_pes_debilis(widths, i, shape, lique='nothing'):
     "Writes the pes debilis glyphs."
-    glyphnumber = gnumber(shortglyphs, i, 0, 0, shape, lique)
+    glyphnumber = gnumber(i, 0, 0, shape, lique)
     # with a deminutus it is much more beautiful than with a idebilis
     paste_and_move("deminutus", glyphnumber, 0, 0)
     write_line(i, glyphnumber, widths['width_debilis'], BASE_HEIGHT)
@@ -567,9 +575,9 @@ def write_pes_debilis(widths, shortglyphs, i, shape, lique='nothing'):
     set_width(glyphnumber, widths['width_punctum']+widths['width_debilis'])
     end_glyph(glyphnumber)
 
-def write_pes_deminutus(widths, shortglyphs, i, first_glyph, shape, lique='nothing'):
+def write_pes_deminutus(widths, i, first_glyph, shape, lique='nothing'):
     "Writes the pes deminutus glyphs."
-    glyphnumber = gnumber(shortglyphs, i, 0, 0, shape, lique)
+    glyphnumber = gnumber(i, 0, 0, shape, lique)
     temp_width = 0
     simple_paste(first_glyph, glyphnumber)
     if first_glyph == "qbase":
@@ -583,9 +591,9 @@ def write_pes_deminutus(widths, shortglyphs, i, first_glyph, shape, lique='nothi
     set_width(glyphnumber, widths['width_punctum'])
     end_glyph(glyphnumber)
 
-def write_pes_debilis_deminutus(widths, shortglyphs, i, shape, lique='nothing'):
+def write_pes_debilis_deminutus(widths, i, shape, lique='nothing'):
     "Writes the pes debilis deminutus glyphs."
-    glyphnumber = gnumber(shortglyphs, i, 0, 0, shape, lique)
+    glyphnumber = gnumber(i, 0, 0, shape, lique)
     simple_paste("deminutus", glyphnumber)
     write_line(i, glyphnumber, widths['width_debilis'], BASE_HEIGHT)
     simplify(glyphnumber)
@@ -593,64 +601,64 @@ def write_pes_debilis_deminutus(widths, shortglyphs, i, shape, lique='nothing'):
     set_width(glyphnumber, widths['width_debilis']+widths['line_width'])
     end_glyph(glyphnumber)
 
-def pes_quadratum(widths, shortglyphs):
+def pes_quadratum(widths):
     "Makes the pes quadratum."
     message("pes quadratum")
     precise_message("pes quadratum")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "base5", "rvsbase", 'pesquadratum')
+        write_pes_quadratum(widths, i, "base5", "rvsbase", 'pesquadratum')
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "base5", "rvlbase", 'pesquadratum_longqueue')
+        write_pes_quadratum(widths, i, "base5", "rvlbase", 'pesquadratum_longqueue')
     precise_message("pes quassus")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "obase", "rvsbase", 'pesquassus')
+        write_pes_quadratum(widths, i, "obase", "rvsbase", 'pesquassus')
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "obase", "rvlbase", 'pesquassus_longqueue')
+        write_pes_quadratum(widths, i, "obase", "rvlbase", 'pesquassus_longqueue')
     precise_message("pes quilisma quadratum")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "qbase", "rvsbase", 'pesquilismaquadratum')
+        write_pes_quadratum(widths, i, "qbase", "rvsbase", 'pesquilismaquadratum')
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "qbase",
+        write_pes_quadratum(widths, i, "qbase",
                             "rvlbase", 'pesquilismaquadratum_longqueue')
     precise_message("pes auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "base5",
+        write_pes_quadratum(widths, i, "base5",
                             "auctusa2", 'pesquadratum', 'auctusascendens')
     precise_message("pes initio debilis auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "idebilis",
+        write_pes_quadratum(widths, i, "idebilis",
                             "auctusa2", 'pesquadratum',
                             'initiodebilisauctusascendens')
     precise_message("pes quassus auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "obase",
+        write_pes_quadratum(widths, i, "obase",
                             "auctusa2", 'pesquassus', 'auctusascendens')
     precise_message("pes quilisma auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "qbase",
+        write_pes_quadratum(widths, i, "qbase",
                             "auctusa2", 'pesquilismaquadratum',
                             'auctusascendens')
     precise_message("pes auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "base5",
+        write_pes_quadratum(widths, i, "base5",
                             "auctusd2", 'pesquadratum', 'auctusdescendens')
     precise_message("pes initio debilis auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "idebilis",
+        write_pes_quadratum(widths, i, "idebilis",
                             "auctusd2", 'pesquadratum',
                             'initiodebilisauctusdescendens')
     precise_message("pes quassus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "obase",
+        write_pes_quadratum(widths, i, "obase",
                             "auctusd2", 'pesquassus', 'auctusdescendens')
     precise_message("pes quilisma auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, shortglyphs, i, "qbase", "auctusd2", 'pesquilismaquadratum',
+        write_pes_quadratum(widths, i, "qbase", "auctusd2", 'pesquilismaquadratum',
                             'auctusdescendens')
 
-def write_pes_quadratum(widths, shortglyphs, i, first_glyph, last_glyph, shape, lique='nothing'):
+def write_pes_quadratum(widths, i, first_glyph, last_glyph, shape, lique='nothing'):
     "Writes the pes quadratum glyphs."
-    glyphnumber = gnumber(shortglyphs, i, 0, 0, shape, lique)
+    glyphnumber = gnumber(i, 0, 0, shape, lique)
     if first_glyph == "idebilis":
         first_width = widths['width_deminutus']
     elif first_glyph == "base5":
@@ -681,15 +689,15 @@ def write_pes_quadratum(widths, shortglyphs, i, first_glyph, last_glyph, shape, 
     set_width(glyphnumber, first_width+widths['width_punctum'])
     end_glyph(glyphnumber)
 
-def virga_strata(widths, shortglyphs):
+def virga_strata(widths):
     "Creates the virga strata."
     precise_message("first part of salicus")
     for i in range(1, MAX_INTERVAL+1):
-        write_virga_strata(widths, shortglyphs, i, "base5", "obase4", 'virga_strata')
+        write_virga_strata(widths, i, "base5", "obase4", 'virga_strata')
 
-def write_virga_strata(widths, shortglyphs, i, first_glyph, last_glyph, shape, lique='nothing'):
+def write_virga_strata(widths, i, first_glyph, last_glyph, shape, lique='nothing'):
     "Writes the virga strata glyphs."
-    glyphnumber = gnumber(shortglyphs, i, 0, 0, shape, lique)
+    glyphnumber = gnumber(i, 0, 0, shape, lique)
     if i == 1:
         first_glyph = '_0017'
         first_width = widths['width_punctum']
@@ -704,19 +712,19 @@ def write_virga_strata(widths, shortglyphs, i, first_glyph, last_glyph, shape, l
     set_width(glyphnumber, first_width+widths['width_oriscus'])
     end_glyph(glyphnumber)
 
-def salicus(widths, shortglyphs):
+def salicus(widths):
     "Creates the salicus."
     message("salicus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_salicus(widths, shortglyphs, i, j, "rvsbase", 'salicus')
+            write_salicus(widths, i, j, "rvsbase", 'salicus')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_salicus(widths, shortglyphs, i, j, "rvlbase", 'salicus_longqueue')
+            write_salicus(widths, i, j, "rvlbase", 'salicus_longqueue')
 
-def write_salicus(widths, shortglyphs, i, j, last_glyph, shape, lique='nothing'):
+def write_salicus(widths, i, j, last_glyph, shape, lique='nothing'):
     "Writes the salicus glyphs."
-    glyphnumber = gnumber(shortglyphs, i, j, 0, shape, lique)
+    glyphnumber = gnumber(i, j, 0, shape, lique)
     if j == 1:
         if last_glyph == 'rvsbase':
             last_glyph = '_0023'
@@ -757,94 +765,94 @@ def write_salicus(widths, shortglyphs, i, j, last_glyph, shape, lique='nothing')
     set_width(glyphnumber, length+widths['width_punctum'])
     end_glyph(glyphnumber)
 
-def flexus(widths, shortglyphs):
+def flexus(widths):
     "Creates the flexus."
     message("flexus")
     precise_message("flexus")
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "base2", 'base7', 'flexus_nobar')
+        write_flexus(widths, i, "base2", 'base7', 'flexus_nobar')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "odbase", 'base7', 'flexus_oriscus')
+        write_flexus(widths, i, "odbase", 'base7', 'flexus_oriscus')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "vbase"+str(i), 'base7', 'flexus')
-    write_flexus(widths, shortglyphs, 1, "vlbase", 'base7', 'flexus_longqueue')
+        write_flexus(widths, i, "vbase"+str(i), 'base7', 'flexus')
+    write_flexus(widths, 1, "vlbase", 'base7', 'flexus_longqueue')
     for i in range(2, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "vbase"+str(i), 'base7', 'flexus_longqueue')
+        write_flexus(widths, i, "vbase"+str(i), 'base7', 'flexus_longqueue')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "osbase"+str(i), 'base7', 'flexus_oriscus_scapus')
-    write_flexus(widths, shortglyphs, 1, "oslbase", 'base7', 'flexus_oriscus_scapus_longqueue')
+        write_flexus(widths, i, "osbase"+str(i), 'base7', 'flexus_oriscus_scapus')
+    write_flexus(widths, 1, "oslbase", 'base7', 'flexus_oriscus_scapus_longqueue')
     for i in range(2, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "osbase"+str(i), 'base7',
+        write_flexus(widths, i, "osbase"+str(i), 'base7',
                      'flexus_oriscus_scapus_longqueue')
     precise_message("flexus deminutus")
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "mdeminutus", 'base7',
+        write_flexus(widths, i, "mdeminutus", 'base7',
                      'flexus_nobar', 'deminutus')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "odbase", 'deminutus',
+        write_flexus(widths, i, "odbase", 'deminutus',
                      'flexus_oriscus', 'deminutus')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "mdeminutus", 'base7',
+        write_flexus(widths, i, "mdeminutus", 'base7',
                      'flexus', 'deminutus')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "mdeminutus", 'base7',
+        write_flexus(widths, i, "mdeminutus", 'base7',
                      'flexus_longqueue', 'deminutus')
     precise_message("flexus auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "base2", 'auctusa1',
+        write_flexus(widths, i, "base2", 'auctusa1',
                      'flexus_nobar', 'auctusascendens')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "odbase", 'auctusa1',
+        write_flexus(widths, i, "odbase", 'auctusa1',
                      'flexus_oriscus', 'auctusascendens')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "vbase"+str(i),
+        write_flexus(widths, i, "vbase"+str(i),
                      'auctusa1', 'flexus', 'auctusascendens')
-    write_flexus(widths, shortglyphs, 1, "vlbase", 'auctusa1',
+    write_flexus(widths, 1, "vlbase", 'auctusa1',
                  'flexus_longqueue', 'auctusascendens')
     for i in range(2, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "vbase"+str(i),
+        write_flexus(widths, i, "vbase"+str(i),
                      'auctusa1', 'flexus_longqueue', 'auctusascendens')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "osbase"+str(i),
+        write_flexus(widths, i, "osbase"+str(i),
                      'auctusa1', 'flexus_oriscus_scapus',
                      'auctusascendens')
-    write_flexus(widths, shortglyphs, 1, "oslbase", 'auctusa1',
+    write_flexus(widths, 1, "oslbase", 'auctusa1',
                  'flexus_oriscus_scapus_longqueue', 'auctusascendens')
     for i in range(2, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "osbase"+str(i),
+        write_flexus(widths, i, "osbase"+str(i),
                      'auctusa1', 'flexus_oriscus_scapus_longqueue',
                      'auctusascendens')
     precise_message("flexus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "base2", 'auctusd1', 'flexus_nobar',
+        write_flexus(widths, i, "base2", 'auctusd1', 'flexus_nobar',
                      'auctusdescendens')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "odbase", 'auctusd1', 'flexus_oriscus',
+        write_flexus(widths, i, "odbase", 'auctusd1', 'flexus_oriscus',
                      'auctusdescendens')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "vbase"+str(i), 'auctusd1', 'flexus',
+        write_flexus(widths, i, "vbase"+str(i), 'auctusd1', 'flexus',
                      'auctusdescendens')
-    write_flexus(widths, shortglyphs, 1, "vlbase", 'auctusd1', 'flexus_longqueue',
+    write_flexus(widths, 1, "vlbase", 'auctusd1', 'flexus_longqueue',
                  'auctusdescendens')
     for i in range(2, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "vbase"+str(i),
+        write_flexus(widths, i, "vbase"+str(i),
                      'auctusd1', 'flexus_longqueue', 'auctusdescendens')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "osbase"+str(i),
+        write_flexus(widths, i, "osbase"+str(i),
                      'auctusd1', 'flexus_oriscus_scapus',
                      'auctusdescendens')
-    write_flexus(widths, shortglyphs, 1, "oslbase", 'auctusd1',
+    write_flexus(widths, 1, "oslbase", 'auctusd1',
                  'flexus_oriscus_scapus_longqueue',
                  'auctusdescendens')
     for i in range(2, MAX_INTERVAL+1):
-        write_flexus(widths, shortglyphs, i, "osbase"+str(i),
+        write_flexus(widths, i, "osbase"+str(i),
                      'auctusd1', 'flexus_oriscus_scapus_longqueue',
                      'auctusdescendens')
 
-def write_flexus(widths, shortglyphs, i, first_glyph, last_glyph, shape, lique='nothing'):
+def write_flexus(widths, i, first_glyph, last_glyph, shape, lique='nothing'):
     # pylint: disable=too-many-statements
     "Writes the flexus glyphs."
-    glyphnumber = gnumber(shortglyphs, i, 0, 0, shape, lique)
+    glyphnumber = gnumber(i, 0, 0, shape, lique)
     # we add a queue if it is a deminutus
     if first_glyph == "mdeminutus":
         if shape == 'flexus_nobar':
@@ -908,50 +916,50 @@ def write_flexus(widths, shortglyphs, i, first_glyph, last_glyph, shape, lique='
     set_width(glyphnumber, length)
     end_glyph(glyphnumber)
 
-def porrectus(widths, shortglyphs):
+def porrectus(widths):
     "Creates the porrectus."
     message("porrectus")
     precise_message("porrectus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(widths, shortglyphs, i, j, 'phigh', 1, 'porrectus')
+            write_porrectus(widths, i, j, 'phigh', 1, 'porrectus')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(widths, shortglyphs, i, j, 'phigh', 0, 'porrectus_nobar')
+            write_porrectus(widths, i, j, 'phigh', 0, 'porrectus_nobar')
     precise_message("porrectus auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(widths, shortglyphs, i, j, "auctusa2", 1, 'porrectus',
+            write_porrectus(widths, i, j, "auctusa2", 1, 'porrectus',
                             'auctusascendens')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(widths, shortglyphs, i, j, "auctusa2", 0, 'porrectus_nobar',
+            write_porrectus(widths, i, j, "auctusa2", 0, 'porrectus_nobar',
                             'auctusascendens')
     precise_message("porrectus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(widths, shortglyphs, i, j, "auctusd2", 1, 'porrectus',
+            write_porrectus(widths, i, j, "auctusd2", 1, 'porrectus',
                             'auctusdescendens')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(widths, shortglyphs, i, j, "auctusd2", 0, 'porrectus_nobar',
+            write_porrectus(widths, i, j, "auctusd2", 0, 'porrectus_nobar',
                             'auctusdescendens')
     #precise_message("porrectus deminutus")
     #for i in range(1, MAX_INTERVAL+1):
     #    for j in range(1, MAX_INTERVAL+1):
-    #        write_porrectus(widths, shortglyphs, i, j, "rdeminutus", 1, 'porrectus', 'deminutus')
+    #        write_porrectus(widths, i, j, "rdeminutus", 1, 'porrectus', 'deminutus')
     #for i in range(1, MAX_INTERVAL+1):
     #    for j in range(1, MAX_INTERVAL+1):
-    #        write_porrectus(widths, shortglyphs, i, j, "rdeminutus", 0,
+    #        write_porrectus(widths, i, j, "rdeminutus", 0,
     #                        'porrectus_nobar', 'deminutus')
     precise_message("porrectus deminutus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_alt_porrectus_deminutus(widths, shortglyphs, i, j)
+            write_alt_porrectus_deminutus(widths, i, j)
 
-def write_porrectus(widths, shortglyphs, i, j, last_glyph, with_bar, shape, lique='nothing'):
+def write_porrectus(widths, i, j, last_glyph, with_bar, shape, lique='nothing'):
     "Writes the porrectus glyphs."
-    glyphnumber = gnumber(shortglyphs, i, j, 0, shape, lique)
+    glyphnumber = gnumber(i, j, 0, shape, lique)
     length = widths['porrectuswidths'][i-1]
     if with_bar:
         write_first_bar(i, glyphnumber)
@@ -986,9 +994,9 @@ def write_porrectus(widths, shortglyphs, i, j, last_glyph, with_bar, shape, liqu
     set_width(glyphnumber, length)
     end_glyph(glyphnumber)
 
-def write_alt_porrectus_deminutus(widths, shortglyphs, i, j):
+def write_alt_porrectus_deminutus(widths, i, j):
     "Writes the alternate porrectur deminutus glyphs."
-    glyphnumber = gnumber(shortglyphs, i, j, 0, 'porrectus', 'deminutus')
+    glyphnumber = gnumber(i, j, 0, 'porrectus', 'deminutus')
     write_first_bar(i, glyphnumber)
     if i == 1:
         simple_paste('base2', glyphnumber)
@@ -1011,32 +1019,32 @@ def write_alt_porrectus_deminutus(widths, shortglyphs, i, j):
     end_glyph(glyphnumber)
 
 
-def porrectusflexus(widths, shortglyphs):
+def porrectusflexus(widths):
     "Creates the porrectusflexus."
     message("porrectus flexus")
     precise_message("porrectus flexus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(widths, shortglyphs, i, j, k,
-                                      "base7", 0, 'porrectusflexus_nobar')
+                write_porrectusflexus(widths, i, j, k, "base7", 0,
+                                      'porrectusflexus_nobar')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(widths, shortglyphs, i, j, k,
-                                      "base7", 1, 'porrectusflexus')
+                write_porrectusflexus(widths, i, j, k, "base7", 1,
+                                      'porrectusflexus')
     precise_message("porrectus flexus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(widths, shortglyphs, i, j, k,
+                write_porrectusflexus(widths, i, j, k,
                                       "auctusd1", 0,
                                       'porrectusflexus_nobar',
                                       'auctusdescendens')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(widths, shortglyphs, i, j, k,
+                write_porrectusflexus(widths, i, j, k,
                                       "auctusd1", 1,
                                       'porrectusflexus',
                                       'auctusdescendens')
@@ -1044,14 +1052,14 @@ def porrectusflexus(widths, shortglyphs):
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(widths, shortglyphs, i, j, k,
+                write_porrectusflexus(widths, i, j, k,
                                       "auctusa1", 0,
                                       'porrectusflexus_nobar',
                                       'auctusascendens')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(widths, shortglyphs, i, j, k,
+                write_porrectusflexus(widths, i, j, k,
                                       "auctusa1", 1,
                                       'porrectusflexus',
                                       'auctusascendens')
@@ -1059,21 +1067,21 @@ def porrectusflexus(widths, shortglyphs):
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(widths, shortglyphs, i, j, k,
+                write_porrectusflexus(widths, i, j, k,
                                       "deminutus", 0,
                                       'porrectusflexus_nobar',
                                       'deminutus')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(widths, shortglyphs, i, j, k,
+                write_porrectusflexus(widths, i, j, k,
                                       "deminutus", 1,
                                       'porrectusflexus', 'deminutus')
 
-def write_porrectusflexus(widths, shortglyphs, i, j, k, last_glyph, with_bar,
+def write_porrectusflexus(widths, i, j, k, last_glyph, with_bar,
                           shape, lique='nothing'):
     "Writes the porrectusflexus glyphs."
-    glyphnumber = gnumber(shortglyphs, i, j, k, shape, lique)
+    glyphnumber = gnumber(i, j, k, shape, lique)
     length = widths['porrectusflexuswidths'][i-1]
     if j == 1:
         first_glyph = "porrectusflexusnb%d" % i
@@ -1121,67 +1129,67 @@ def write_porrectusflexus(widths, shortglyphs, i, j, k, last_glyph, with_bar,
     set_width(glyphnumber, length)
     end_glyph(glyphnumber)
 
-def torculus(widths, shortglyphs):
+def torculus(widths):
     "Creates the torculus."
     message("torculus")
     precise_message("torculus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, shortglyphs, i, j, "base5", "base7", 'torculus')
+            write_torculus(widths, i, j, "base5", "base7", 'torculus')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, shortglyphs, i, j, "qbase", "base7", 'torculusquilisma')
+            write_torculus(widths, i, j, "qbase", "base7", 'torculusquilisma')
     precise_message("torculus initio debilis")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, shortglyphs, i, j, "idebilis", "base7", 'torculus',
+            write_torculus(widths, i, j, "idebilis", "base7", 'torculus',
                            'initiodebilis')
     precise_message("torculus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, shortglyphs, i, j, "base5", "auctusd1", 'torculus',
+            write_torculus(widths, i, j, "base5", "auctusd1", 'torculus',
                            'auctusdescendens')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, shortglyphs, i, j, "qbase", "auctusd1", 'torculusquilisma',
+            write_torculus(widths, i, j, "qbase", "auctusd1", 'torculusquilisma',
                            'auctusdescendens')
     precise_message("torculus initio debilis auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, shortglyphs, i, j, "idebilis", "auctusd1", 'torculus',
+            write_torculus(widths, i, j, "idebilis", "auctusd1", 'torculus',
                            'initiodebilisauctusdescendens')
     precise_message("torculus auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, shortglyphs, i, j, "base5", "auctusa1",
+            write_torculus(widths, i, j, "base5", "auctusa1",
                            'torculus', 'auctusascendens')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, shortglyphs, i, j, "qbase", "auctusa1", 'torculusquilisma',
+            write_torculus(widths, i, j, "qbase", "auctusa1", 'torculusquilisma',
                            'auctusascendens')
     precise_message("torculus initio debilis auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, shortglyphs, i, j, "idebilis", "auctusa1", 'torculus',
+            write_torculus(widths, i, j, "idebilis", "auctusa1", 'torculus',
                            'initiodebilisauctusascendens')
     precise_message("torculus deminutus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, shortglyphs, i, j, "base5", "deminutus", 'torculus',
+            write_torculus(widths, i, j, "base5", "deminutus", 'torculus',
                            'deminutus')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, shortglyphs, i, j, "qbase", "deminutus", 'torculusquilisma',
+            write_torculus(widths, i, j, "qbase", "deminutus", 'torculusquilisma',
                            'deminutus')
     precise_message("torculus initio debilis deminutus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, shortglyphs, i, j, "idebilis", "deminutus", 'torculus',
+            write_torculus(widths, i, j, "idebilis", "deminutus", 'torculus',
                            'initiodebilisdeminutus')
 
-def write_torculus(widths, shortglyphs, i, j, first_glyph, last_glyph, shape, lique='nothing'):
+def write_torculus(widths, i, j, first_glyph, last_glyph, shape, lique='nothing'):
     "Writes the torculus glyphs."
-    glyphnumber = gnumber(shortglyphs, i, j, 0, shape, lique)
+    glyphnumber = gnumber(i, j, 0, shape, lique)
     length = widths['width_punctum']-widths['line_width']
     if first_glyph == "idebilis":
         length = widths['width_debilis']
@@ -1227,25 +1235,25 @@ def write_torculus(widths, shortglyphs, i, j, first_glyph, last_glyph, shape, li
     set_width(glyphnumber, length)
     end_glyph(glyphnumber)
 
-def torculus_liquescens(widths, shortglyphs):
+def torculus_liquescens(widths):
     "Creates the torculus liquescens."
     precise_message("torculus liquescens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculus_liquescens(widths, shortglyphs, i, j, k, 'base5',
+                write_torculus_liquescens(widths, i, j, k, 'base5',
                                           'torculus_liquescens', 'deminutus')
     precise_message("torculus liquescens quilisma")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculus_liquescens(widths, shortglyphs, i, j, k, 'qbase',
+                write_torculus_liquescens(widths, i, j, k, 'qbase',
                                           'torculus_liquescens_quilisma', 'deminutus')
 
-def write_torculus_liquescens(widths, shortglyphs, i, j, k, first_glyph, shape,
+def write_torculus_liquescens(widths, i, j, k, first_glyph, shape,
                               lique='deminutus'):
     "Writes the torculus liquescens glyphs."
-    glyphnumber = gnumber(shortglyphs, i, j, k, shape, lique)
+    glyphnumber = gnumber(i, j, k, shape, lique)
     length = widths['width_punctum']-widths['line_width']
     if first_glyph == "qbase":
         length = widths['width_quilisma']-widths['line_width']
@@ -1278,63 +1286,63 @@ def write_torculus_liquescens(widths, shortglyphs, i, j, k, first_glyph, shape,
     set_width(glyphnumber, length)
     end_glyph(glyphnumber)
 
-def torculusresupinus(widths, shortglyphs):
+def torculusresupinus(widths):
     "Creates the torculusresupinus."
     message("torculus resupinus")
     precise_message("torculus resupinus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(widths, shortglyphs, i, j, k, 'base5', 'phigh',
+                write_torculusresupinus(widths, i, j, k, 'base5', 'phigh',
                                         'torculusresupinus')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(widths, shortglyphs, i, j, k, 'idebilis', 'phigh',
+                write_torculusresupinus(widths, i, j, k, 'idebilis', 'phigh',
                                         'torculusresupinus', 'initiodebilis')
     precise_message("torculus resupinus deminutus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinusdeminutus(widths, shortglyphs, i, j, k, 'base5',
+                write_torculusresupinusdeminutus(widths, i, j, k, 'base5',
                                                  'torculusresupinus', 'deminutus')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinusdeminutus(widths, shortglyphs, i, j, k, 'idebilis',
+                write_torculusresupinusdeminutus(widths, i, j, k, 'idebilis',
                                                  'torculusresupinus',
                                                  'initiodebilisdeminutus')
     precise_message("torculus resupinus auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(widths, shortglyphs, i, j, k, 'base5', "auctusa2",
+                write_torculusresupinus(widths, i, j, k, 'base5', "auctusa2",
                                         'torculusresupinus', 'auctusascendens')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(widths, shortglyphs, i, j, k, 'idebilis', "auctusa2",
+                write_torculusresupinus(widths, i, j, k, 'idebilis', "auctusa2",
                                         'torculusresupinus',
                                         'initiodebilisauctusascendens')
     precise_message("torculus resupinus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(widths, shortglyphs, i, j, k, 'base5', "auctusd2",
+                write_torculusresupinus(widths, i, j, k, 'base5', "auctusd2",
                                         'torculusresupinus',
                                         'auctusdescendens')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(widths, shortglyphs, i, j, k, 'idebilis',
+                write_torculusresupinus(widths, i, j, k, 'idebilis',
                                         "auctusd2",
                                         'torculusresupinus',
                                         'initiodebilisauctusdescendens')
 
-def write_torculusresupinus(widths, shortglyphs, i, j, k, first_glyph, last_glyph, shape,
+def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
                             lique='nothing'):
     "Writes the torculusresupinus glyphs."
-    glyphnumber = gnumber(shortglyphs, i, j, k, shape, lique)
+    glyphnumber = gnumber(i, j, k, shape, lique)
     if first_glyph == "idebilis":
         length = widths['width_debilis']
     elif i == 1:
@@ -1380,11 +1388,11 @@ def write_torculusresupinus(widths, shortglyphs, i, j, k, first_glyph, last_glyp
     set_width(glyphnumber, length)
     end_glyph(glyphnumber)
 
-def write_torculusresupinusdeminutus(widths, shortglyphs, i, j, k, first_glyph,
+def write_torculusresupinusdeminutus(widths, i, j, k, first_glyph,
                                      shape, lique='nothing'):
     # pylint: disable=invalid-name
     "Writes the torculusresupinusdeminutus glyphs."
-    glyphnumber = gnumber(shortglyphs, i, j, k, shape, lique)
+    glyphnumber = gnumber(i, j, k, shape, lique)
     length = widths['width_punctum']-widths['line_width']
     if first_glyph == "idebilis":
         length = widths['width_debilis']
@@ -1425,19 +1433,19 @@ def write_torculusresupinusdeminutus(widths, shortglyphs, i, j, k, first_glyph,
     set_width(glyphnumber, length)
     end_glyph(glyphnumber)
 
-def scandicus(widths, shortglyphs):
+def scandicus(widths):
     "Creates the scandicus."
     message("scandicus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_scandicus(widths, shortglyphs, i, j, 'phigh')
+            write_scandicus(widths, i, j, 'phigh')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_scandicus(widths, shortglyphs, i, j, 'rdeminutus', 'deminutus')
+            write_scandicus(widths, i, j, 'rdeminutus', 'deminutus')
 
-def write_scandicus(widths, shortglyphs, i, j, last_glyph, lique='nothing'):
+def write_scandicus(widths, i, j, last_glyph, lique='nothing'):
     "Writes the scandicus glyphs."
-    glyphnumber = gnumber(shortglyphs, i, j, 0, 'scandicus', lique)
+    glyphnumber = gnumber(i, j, 0, 'scandicus', lique)
     # special case of i=j=1, we use glyph 1025 directly
     if i == 1 and j == 1 and lique == 'nothing':
         simple_paste('_0017', glyphnumber)
@@ -1474,19 +1482,19 @@ def write_scandicus(widths, shortglyphs, i, j, last_glyph, lique='nothing'):
     set_width(glyphnumber, length)
     end_glyph(glyphnumber)
 
-def ancus(widths, shortglyphs):
+def ancus(widths):
     "Creates the ancus."
     message("ancus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_ancus(widths, shortglyphs, i, j, 'vsbase', 'ancus')
+            write_ancus(widths, i, j, 'vsbase', 'ancus')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_ancus(widths, shortglyphs, i, j, 'vlbase', 'ancus_longqueue')
+            write_ancus(widths, i, j, 'vlbase', 'ancus_longqueue')
 
-def write_ancus(widths, shortglyphs, i, j, first_glyph, glyph_type):
+def write_ancus(widths, i, j, first_glyph, glyph_type):
     "Writes the ancus glyphs."
-    glyphnumber = gnumber(shortglyphs, i, j, 0, glyph_type, 'deminutus')
+    glyphnumber = gnumber(i, j, 0, glyph_type, 'deminutus')
     if i == 1:
         length = widths['width_punctum']
         second_glyph = 'mnbdeminutus'
