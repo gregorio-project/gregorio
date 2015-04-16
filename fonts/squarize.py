@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 # coding=utf-8
-
+# pylint: disable=too-many-branches, too-many-arguments, too-many-lines
+# pylintY disable=import-error
 
 """
     Python fontforge script to build a square notation font.
@@ -88,6 +89,7 @@ Usage:
 with fontname=gregorio, parmesan or greciliae for now.""")
 
 def main():
+    # pylint: disable=too-many-statements
     "Main function"
     global oldfont, newfont, font_name
     try:
@@ -229,97 +231,106 @@ def get_lengths(fontname):
     "Initialize widths depending on the font."
     lengths = {}
     if fontname == "gregorio":
-        lengths = dict(line_width=22,
-        # some width, necessary to know where to draw lines, squares, etc.
-        # first the width of the lines that link notes, like in a pes for example
-        # then the width of a punctum, we assume that it is the same width for
-        # oriscus, quilisma, punctum auctum descendens and punctum auctum ascendens
-                      width_punctum=164,
-        # width_oriscus is the width of an oriscus, idem for quilisma
-                      width_oriscus=164,
-                      width_quilisma=164,
-        # width_oriscus_rev is the width of an oriscus reversus
-                      width_oriscus_rev=164,
-        # the width of the first note of an initio debilis, and the one of the
-        # last note of a deminutus. Warning, in GregorioTeX they must be the
-        # same! you must (almost always) add the width of a line to have the real width.
-                      width_debilis=88,
-                      width_deminutus=88,
-        # width of a punctum inclinatum (we consider that the punctum
-        # inclinatum auctus has the same width
-                      width_inclinatum=164,
-        # width of a stropha (idem for the stropha aucta)
-                      width_stropha=164,
-        # width of the second (highest) note of a pes
-                      width_high_pes=154,
-        # width of the punctum inclinatum deminutus (no need to add the
-        # width of a line)
-                      width_inclinatum_deminutus=82,
-        # width of the note which is just before a deminutus, in some
-        # fonts it is not the same width as a punctum
-                      width_flexusdeminutus=186,
-        # the width of the torculus resupinus, five in total, one per note
-        # difference between the two first notes (for example the first is the
-        # width of the first two notes of baba
-                      porrectusflexuswidths=(340, 428, 586, 670, 931),
-                      porrectuswidths=(490, 575, 650, 740, 931),
-        # width that will be added to the standard width when we will build
-        # horizontal episemus. for example, if a punctum has the length 164,
-        # the episemus will have the width 244 and will be centered on the
-        # center of the punctum
-                      hepisemus_additional_width=5,
-                      )
+        lengths = dict(line_width=22, # some width, necessary to know
+                       # where to draw lines, squares, etc.  first the
+                       # width of the lines that link notes, like in a
+                       # pes for # example
+                       #
+                       # then the width of a punctum, we assume that
+                       # it is the same width for oriscus, quilisma,
+                       # punctum auctum descendens and punctum auctum
+                       # ascendens
+                       width_punctum=164,
+                       # width_oriscus is the width of an oriscus,
+                       # idem for quilisma
+                       width_oriscus=164,
+                       width_quilisma=164,
+                       # width_oriscus_rev is the width of an oriscus
+                       # reversus
+                       width_oriscus_rev=164,
+                       # the width of the first note of an initio
+                       # debilis, and the one of the last note of a
+                       # deminutus. Warning, in GregorioTeX they must
+                       # be the same! you must (almost always) add the
+                       # width of a line to have the real width.
+                       width_debilis=88,
+                       width_deminutus=88,
+                       # width of a punctum inclinatum (we consider
+                       # that the punctum inclinatum auctus has the
+                       # same width
+                       width_inclinatum=164,
+                       # width of a stropha (idem for the stropha aucta)
+                       width_stropha=164,
+                       # width of the second (highest) note of a pes
+                       width_high_pes=154,
+                       # width of the punctum inclinatum deminutus (no
+                       # need to add the width of a line)
+                       width_inclinatum_deminutus=82,
+                       # width of the note which is just before a
+                       # deminutus, in some fonts it is not the same
+                       # width as a punctum
+                       width_flexusdeminutus=186,
+                       # the width of the torculus resupinus, five in
+                       # total, one per note difference between the
+                       # two first notes (for example the first is the
+                       # width of the first two notes of baba
+                       porrectusflexuswidths=(340, 428, 586, 670, 931),
+                       porrectuswidths=(490, 575, 650, 740, 931),
+                       # width that will be added to the standard
+                       # width when we will build horizontal
+                       # episemus. for example, if a punctum has the
+                       # length 164, the episemus will have the width
+                       # 244 and will be centered on the center of the
+                       # punctum
+                       hepisemus_additional_width=5)
     elif fontname == "parmesan":
         lengths = dict(line_width=22,
-                      width_punctum=161,
-                      width_oriscus=192,
-                      width_oriscus_rev=192,
-                      width_quilisma=161,
-                      width_debilis=75,
-                      width_deminutus=75,
-                      width_inclinatum=178,
-                      width_stropha=169,
-                      width_high_pes=151,
-                      width_inclinatum_deminutus=112,
-                      width_flexusdeminutus=161,
-                      porrectusflexuswidths=(340, 428, 586, 670, 931),
-                      porrectuswidths=(490, 575, 650, 740, 931),
-                      hepisemus_additional_width=5,
-                  )
+                       width_punctum=161,
+                       width_oriscus=192,
+                       width_oriscus_rev=192,
+                       width_quilisma=161,
+                       width_debilis=75,
+                       width_deminutus=75,
+                       width_inclinatum=178,
+                       width_stropha=169,
+                       width_high_pes=151,
+                       width_inclinatum_deminutus=112,
+                       width_flexusdeminutus=161,
+                       porrectusflexuswidths=(340, 428, 586, 670, 931),
+                       porrectuswidths=(490, 575, 650, 740, 931),
+                       hepisemus_additional_width=5)
     elif fontname == "greciliae":
         lengths = dict(line_width=18,
-                      width_punctum=166,
-                      width_oriscus=166,
-                      width_oriscus_rev=168,
-                      width_quilisma=166,
-                      width_debilis=65,
-                      width_deminutus=65,
-                      width_inclinatum=185,
-                      width_stropha=163,
-                      width_high_pes=155,
-                      width_inclinatum_deminutus=139,
-                      width_flexusdeminutus=168,
-                      porrectusflexuswidths=(503, 629, 628, 628, 931),
-                      porrectuswidths=(503, 629, 628, 628, 931),
-                      hepisemus_additional_width=5,
-        )
+                       width_punctum=166,
+                       width_oriscus=166,
+                       width_oriscus_rev=168,
+                       width_quilisma=166,
+                       width_debilis=65,
+                       width_deminutus=65,
+                       width_inclinatum=185,
+                       width_stropha=163,
+                       width_high_pes=155,
+                       width_inclinatum_deminutus=139,
+                       width_flexusdeminutus=168,
+                       porrectusflexuswidths=(503, 629, 628, 628, 931),
+                       porrectuswidths=(503, 629, 628, 628, 931),
+                       hepisemus_additional_width=5)
     elif fontname == "gregoria":
         lengths = dict(line_width=22,
-                      width_punctum=164,
-                      width_oriscus=164,
-                      width_oriscus_rev=164,
-                      width_quilisma=164,
-                      width_debilis=88,
-                      width_deminutus=88,
-                      width_inclinatum=173,
-                      width_stropha=164,
-                      width_high_pes=154,
-                      width_inclinatum_deminutus=128,
-                      width_flexusdeminutus=186,
-                      porrectusflexuswidths=(340, 428, 586, 670, 931),
-                      porrectuswidths=(490, 575, 650, 740, 931),
-                      hepisemus_additional_width=5,
-                  )
+                       width_punctum=164,
+                       width_oriscus=164,
+                       width_oriscus_rev=164,
+                       width_quilisma=164,
+                       width_debilis=88,
+                       width_deminutus=88,
+                       width_inclinatum=173,
+                       width_stropha=164,
+                       width_high_pes=154,
+                       width_inclinatum_deminutus=128,
+                       width_flexusdeminutus=186,
+                       porrectusflexuswidths=(340, 428, 586, 670, 931),
+                       porrectuswidths=(490, 575, 650, 740, 931),
+                       hepisemus_additional_width=5)
     return lengths
 
 # Dictionary of glyphs and their numbers.
@@ -813,6 +824,7 @@ def flexus(widths):
                      'auctusdescendens')
 
 def write_flexus(widths, i, first_glyph, last_glyph, shape, liquescentia='nothing'):
+    # pylint: disable=too-many-statements
     "Writes the flexus glyphs."
     glyphnumber = gnumber(i, 0, 0, shape, liquescentia)
     # we add a queue if it is a deminutus
