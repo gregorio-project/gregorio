@@ -31,7 +31,7 @@ gregorio.ttf: squarize.py gregorio-base.sfd
 
 parmesan.ttf: squarize.py parmesan-base.sfd
 	$(FONTFORGE) -script squarize.py parmesan
-	
+
 greciliae.ttf: squarize.py greciliae-base.sfd
 	$(FONTFORGE) -script squarize.py greciliae
 
@@ -56,8 +56,7 @@ gresym: gresym.ttf
 
 greextra: greextra.ttf
 
-clean-local:
-	@$(TOP_LEVEL_MAKE) $(RM) -f $(TTFFILES)
+MAINTAINERCLEANFILES = $(TTFFILES)
 
 install-data-local:
 	@$(TOP_LEVEL_MAKE) echo 'The Makefile in the fonts directory is no longer used for installing'
