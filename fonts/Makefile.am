@@ -31,7 +31,7 @@ gregorio.ttf: squarize.py gregorio-base.sfd
 
 parmesan.ttf: squarize.py parmesan-base.sfd
 	$(FONTFORGE) -script squarize.py parmesan
-	
+
 greciliae.ttf: squarize.py greciliae-base.sfd
 	$(FONTFORGE) -script squarize.py greciliae
 
