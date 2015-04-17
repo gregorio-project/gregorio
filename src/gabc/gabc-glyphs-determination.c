@@ -331,9 +331,12 @@ gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         case G_TORCULUS:
             if (current_pitch > last_pitch) {
                 next_glyph_type = G_TORCULUS_RESUPINUS;
-            } else {
+            } else if (liquescentia == L_DEMINUTUS) {
                 *end_of_glyph = DET_END_OF_CURRENT;
                 next_glyph_type = G_TORCULUS_LIQUESCENS;
+            } else {
+                *end_of_glyph = DET_END_OF_PREVIOUS;
+                next_glyph_type = G_PUNCTUM;
             }
             break;
         case G_TORCULUS_RESUPINUS:
