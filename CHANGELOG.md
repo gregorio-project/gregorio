@@ -12,6 +12,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Removed
 - GregorioXML and OpusTeX output
 
+## [Unreleased][ureleased]
+### Fixed
+- Torculus followed by a non-liquescent note is now parsed correctly (see [#284](https://github.com/gregorio-project/gregorio/issues/284).
+
 ## [3.0.0-rc2] - 2015-04-14
 ### Changed
 - Clarified post installation options for Windows installer.  What was the "Install Fonts" option is now labeled to indicate that this also adds GregorioTeX files to the texmf tree.
