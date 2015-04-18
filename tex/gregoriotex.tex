@@ -1264,8 +1264,11 @@
 }%
 
 \catcode`\_=11%
+\def\gre@char#1{%
+  \csname gre@g@\gregoriofontname @#1\endcsname\relax %
+}%
 \def\gregoriochar#1{%
-  \gregoriofont\csname gre@g@\gregoriofontname @#1\endcsname\relax %
+  \gregoriofont\gre@char{#1}%
 }%
 \catcode`\_=12%
 
