@@ -21,6 +21,8 @@
 
 local hpack, traverse_id, has_attribute, count, remove, insert_after, copy = node.hpack, node.traverse_id, node.has_attribute, node.count, node.remove, node.insert_after, node.copy
 
+local font_mappings = {}
+
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
@@ -263,9 +265,50 @@ local function get_gregorioversion()
   return internalversion
 end
 
+local function get_font_mapping()
+  local font_number = font.current()
+  local font_mapping = font_mappings[font_number]
+  if font_mapping == nil then
+    font_mapping = {}
+    local current_font = font.getfont(font_number)
+    local font_info = fontloader.open(current_font.filename)
+    -- font_info.glyphs is a virtual array, so it must be iterated
+    local i = 0
+    while i < font_info.glyphmax do
+      local glyph = font_info.glyphs[i]
+      if glyph then
+        font_mapping[glyph.name] = glyph.unicode
+      end
+      i = i + 1
+    end
+    font_mappings[font_number] = font_mapping
+  end
+  return font_mapping
+end
+
+local function char_number(name)
+  local id = get_font_mapping()[name]
+  if (id ~= nil) then
+    tex.print(id)
+  else
+    tex.error('missing glyph : ' .. name)
+  end
+end
+
+local function char(name)
+  local id = get_font_mapping()[name]
+  if (id ~= nil) then
+    tex.print('\\char' .. id .. '\relax{}')
+  else
+    tex.error('missing glyph : ' .. name)
+  end
+end
+
 gregoriotex.include_score        = include_score
 gregoriotex.compile_gabc         = compile_gabc
 gregoriotex.atScoreEnd           = atScoreEnd
 gregoriotex.atScoreBeggining     = atScoreBeggining
 gregoriotex.check_version        = check_version
 gregoriotex.get_gregorioversion  = get_gregorioversion
+gregoriotex.char                 = char
+gregoriotex.char_number          = char_number
