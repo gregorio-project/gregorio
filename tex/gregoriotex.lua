@@ -286,15 +286,6 @@ local function get_font_mapping()
   return font_mapping
 end
 
-local function char_number(name)
-  local id = get_font_mapping()[name]
-  if (id ~= nil) then
-    tex.print(id)
-  else
-    tex.error('missing glyph : ' .. name)
-  end
-end
-
 local function char(name)
   local id = get_font_mapping()[name]
   if (id ~= nil) then
@@ -311,4 +302,3 @@ gregoriotex.atScoreBeggining     = atScoreBeggining
 gregoriotex.check_version        = check_version
 gregoriotex.get_gregorioversion  = get_gregorioversion
 gregoriotex.char                 = char
-gregoriotex.char_number          = char_number
