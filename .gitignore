@@ -107,3 +107,4 @@ stamp-h1
 Makevars.template
 macosx/build
 macosx/Resources
+fonts/gregoriotex-fontmapping.tex

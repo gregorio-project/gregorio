@@ -37,6 +37,11 @@
 
 enum syllable { THIS_SYL, NEXT_SYL };
 
+#define MAX_AMBITUS 5
+static char *tex_ambitus[] = {
+    NULL, "one", "two", "three", "four", "five"
+};
+
 // / the value indicating to GregorioTeX that there is no flat
 #define NO_KEY_FLAT 'a'
 
@@ -237,6 +242,23 @@ static char *gregoriotex_determine_liquescentia(gtex_glyph_liquescentia type,
     return "nothing";
 }
 
+static inline int compute_ambitus(gregorio_note *current_note) {
+    int first = current_note->u.note.pitch;
+    int second = current_note->next->u.note.pitch;
+    int ambitus;
+    if (first < second) {
+        ambitus = second - first;
+    } else {
+        ambitus = first - second;
+    }
+    if (ambitus < 1 || ambitus > MAX_AMBITUS) {
+        gregorio_messagef("gregoriotex_determine_interval", ERROR, 0,
+                _("unsupported ambitus: %d"), ambitus);
+        return 0;
+    }
+    return ambitus;
+}
+
 static char *gregoriotex_determine_glyph_name(gregorio_glyph *glyph,
         char *shape, gtex_glyph_liquescentia ltype)
 {
@@ -265,40 +287,29 @@ static char *gregoriotex_determine_glyph_name(gregorio_glyph *glyph,
                 "one note"), "gregoriotex_determine_interval", ERROR, 0);
         return "";
     }
-    first = current_note->u.note.pitch;
-    second = current_note->next->u.note.pitch;
-    if (first < second) {
-        ambitus1 = second - first;
-    } else {
-        ambitus1 = first - second;
+    if (!(ambitus1 = compute_ambitus(current_note))) {
+        return "";
     }
     current_note = current_note->next;
     if (!current_note->next) {
-        snprintf(buf, BUFSIZE, "%s_%d_%s", shape, ambitus1, liquescentia);
-        return buf;
-    }
-    first = current_note->u.note.pitch;
-    second = current_note->next->u.note.pitch;
-    if (first < second) {
-        ambitus2 = second - first;
-    } else {
-        ambitus2 = first - second;
-    }
-    current_note = current_note->next;
-    if (!current_note->next) {
-        snprintf(buf, BUFSIZE, "%s_%d_%d_%s", shape, ambitus1, ambitus2,
+        snprintf(buf, BUFSIZE, "%s_%s_%s", shape, tex_ambitus[ambitus1],
                 liquescentia);
         return buf;
     }
-    first = current_note->u.note.pitch;
-    second = current_note->next->u.note.pitch;
-    if (first < second) {
-        ambitus3 = second - first;
-    } else {
-        ambitus3 = first - second;
+    if (!(ambitus2 = compute_ambitus(current_note))) {
+        return "";
     }
-    snprintf(buf, BUFSIZE, "%s_%d_%d_%d_%s", shape, ambitus1, ambitus2,
-            ambitus3, liquescentia);
+    current_note = current_note->next;
+    if (!current_note->next) {
+        snprintf(buf, BUFSIZE, "%s_%s_%s_%s", shape, tex_ambitus[ambitus1],
+                tex_ambitus[ambitus2], liquescentia);
+        return buf;
+    }
+    if (!(ambitus3 = compute_ambitus(current_note))) {
+        return "";
+    }
+    snprintf(buf, BUFSIZE, "%s_%s_%s_%s_%s", shape, tex_ambitus[ambitus1],
+            tex_ambitus[ambitus2], tex_ambitus[ambitus3], liquescentia);
     return buf;
 }
 

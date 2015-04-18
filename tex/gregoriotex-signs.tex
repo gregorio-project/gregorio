@@ -462,8 +462,8 @@
 %% macros for the typesetting of braces and other things above the score
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\gdef\grecurlybracechar{\gregoriofont\gregoriochar\gre@char@curlybrace}%
-\gdef\grebracechar{\gregoriofont\gregoriochar\gre@char@brace}%
+\gdef\grecurlybracechar{\gregoriochar\gre@char@curlybrace}%
+\gdef\grebracechar{\gregoriochar\gre@char@brace}%
 
 % the command to resize a box, \resizebox is provided by graphicx
 \global\let\greresizebox\resizebox %
@@ -493,7 +493,7 @@
       \gre@calculate@glyphraisevalue{m}{13}%
       \advance\gre@dimen@glyphraisevalue by \gre@dimen@curlybraceaccentusshift %
       \raise\gre@dimen@glyphraisevalue\hbox{%
-        \gregoriofont\gregoriochar\gre@char@accentus\relax %
+        \gregoriochar\gre@char@accentus\relax %
       }%
       \hss %
     \fi %
@@ -549,15 +549,15 @@
     \kern\gre@skip@temp@four %
   \or %
     % to get the widht of a punctum minus a line, we calculate the width of a flexus (with ambitus of two) minus the width of a punctum
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@flexus}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@flexus}%
     \gre@dimen@temp@five=\wd\GreTempwidth %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@punctum}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@punctum}%
     \advance\gre@dimen@temp@five by -\wd\GreTempwidth %
     \kern-\gre@dimen@temp@five %
     \gre@skip@temp@four = \gre@skip@spacebeforesigns%
     \kern\gre@skip@temp@four %
   \or %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@punctum}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@punctum}%
     \gre@dimen@temp@five=\wd\GreTempwidth %
     \kern-\gre@dimen@temp@five %
     \gre@skip@temp@four = \gre@skip@spacebeforesigns%
@@ -693,7 +693,7 @@
     % vertical episemus
     \setbox\GreTempsign=\hbox{\greverticalepisemuschar}%
   \or % rare sign
-    \setbox\GreTempsign=\hbox{\gregoriofont \gregoriochar#5}%
+    \setbox\GreTempsign=\hbox{\gregoriochar#5}%
   \or % choral sign
     \setbox\GreTempsign=\hbox{#7}%
   \or % brace above bar
@@ -928,7 +928,7 @@
   \fi%
   \kern-\gre@dimen@temp@three %
   % then we draw the sign, and go back to the beginning of the sign
-  \setbox\GreTempsign=\hbox{\gregoriofont\gregoriochar{#2}}%
+  \setbox\GreTempsign=\hbox{\gregoriochar{#2}}%
   % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
   \gre@dimen@temp@two=\wd\GreTempsign %
   \ifnum#4<2\relax % case of the lines
@@ -1172,7 +1172,7 @@
 \def\grehepisemusbridge#1#2#3{%
   \ifnum\greaddhepisemusbridges=1\relax %
     \gre@calculate@glyphraisevalue{#1}{9}%
-    \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gregoriofont\gregoriochar\gre@char@he@punctum\hss}%
+    \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gregoriochar\gre@char@he@punctum\hss}%
   \fi %
   \relax %
 }%
@@ -1317,8 +1317,8 @@
       \grehskip\gre@skip@temp@four %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@virgula}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont \gregoriochar\gre@char@virgula}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@virgula}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriochar\gre@char@virgula}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundsmallbar%
@@ -1330,8 +1330,8 @@
       \grehskip\gre@skip@temp@four %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@divisiominima}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont \gregoriochar\gre@char@divisiominima}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@divisiominima}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriochar\gre@char@divisiominima}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundsmallbar%
@@ -1343,8 +1343,8 @@
       \grehskip\gre@skip@temp@four %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@divisiominor}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont \gregoriochar\gre@char@divisiominor}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@divisiominor}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriochar\gre@char@divisiominor}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1356,7 +1356,7 @@
       \grehskip\gre@skip@temp@four %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@divisiomaior}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@divisiomaior}%
     \gredivisiomaiorsymbol %
     #3\relax %
     \ifnum#2=1\relax %
@@ -1398,8 +1398,8 @@
       \grehskip\gre@skip@temp@four %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@divisiodominican}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont \gregoriochar\gre@char@divisiodominican}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@divisiodominican}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriochar\gre@char@divisiodominican}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1413,8 +1413,8 @@
       \grehskip\gre@skip@temp@four %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@divisiodominicanalt}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont \gregoriochar\gre@char@divisiodominicanalt}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@divisiodominicanalt}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriochar\gre@char@divisiodominicanalt}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1427,8 +1427,8 @@
       \grenobreak %
     \fi %
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@divisiodominican}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont \gregoriochar\gre@char@divisiodominican}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@divisiodominican}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriochar\gre@char@divisiodominican}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1441,8 +1441,8 @@
       \grenobreak %
     \fi %
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@divisiodominicanalt}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont \gregoriochar\gre@char@divisiodominicanalt}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@divisiodominicanalt}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriochar\gre@char@divisiodominicanalt}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1456,8 +1456,8 @@
       \grehskip\gre@skip@temp@four %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@divisiodominican}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont \gregoriochar\gre@char@divisiodominican}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@divisiodominican}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriochar\gre@char@divisiodominican}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1471,8 +1471,8 @@
       \grehskip\gre@skip@temp@four %
       \grenobreak %
     \fi %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@divisiodominicanalt}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont \gregoriochar\gre@char@divisiodominicanalt}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@divisiodominicanalt}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriochar\gre@char@divisiodominicanalt}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1487,9 +1487,9 @@
 \def\gredivisiomaiorsymbol{%
   \ifnum\gre@stafflinefactor=17\relax %
     %\gre@calculate@glyphraisevalue{g}{0}% bar glyphs are made to be at this height
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont \gregoriochar\gre@char@divisiomaior}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriochar\gre@char@divisiomaior}%
   \else %
-    \setbox\GreTempwidth=\hbox{\gregoriofont \gregoriochar\gre@char@divisiomaior}%
+    \setbox\GreTempwidth=\hbox{\gregoriochar\gre@char@divisiomaior}%
     % we calculate the raise of the bar
     \gre@dimen@temp@five=\gre@dimen@additionalbottomspace %
     \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
@@ -1553,7 +1553,7 @@
     \global\keeprightbox=1 %
     \grelocalrightbox{%
       \gre@calculate@glyphraisevalue{g}{0}% bar glyphs are made to be at this height
-      \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\gregoriochar\gre@char@divisiomaior}%
+      \raise\gre@dimen@glyphraisevalue\hbox{\gregoriochar\gre@char@divisiomaior}%
     }%
   \fi %
   \relax%
@@ -1676,18 +1676,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\UseAlternatePunctumCavum{%
-\gdef\grepunctumcavumchar{\gregoriofont\gregoriochar\gre@char@punctumcavumalt}%
-\gdef\grelineapunctumcavumchar{\gregoriofont\gregoriochar\gre@char@lineapunctumcavumalt}%
-\gdef\grepunctumcavumholechar{\gregoriofont\gregoriochar\gre@char@punctumcavumholealt}%
-\gdef\grelineapunctumcavumholechar{\gregoriofont\gregoriochar\gre@char@lineapunctumcavumholealt}%
+\gdef\grepunctumcavumchar{\gregoriochar\gre@char@punctumcavumalt}%
+\gdef\grelineapunctumcavumchar{\gregoriochar\gre@char@lineapunctumcavumalt}%
+\gdef\grepunctumcavumholechar{\gregoriochar\gre@char@punctumcavumholealt}%
+\gdef\grelineapunctumcavumholechar{\gregoriochar\gre@char@lineapunctumcavumholealt}%
 \relax %
 }%
 
 \def\UseNormalPunctumCavum{%
-\gdef\grepunctumcavumchar{\gregoriofont\gregoriochar\gre@char@punctumcavum}%
-\gdef\grelineapunctumcavumchar{\gregoriofont\gregoriochar\gre@char@lineapunctumcavum}%
-\gdef\grepunctumcavumholechar{\gregoriofont\gregoriochar\gre@char@punctumcavumhole}%
-\gdef\grelineapunctumcavumholechar{\gregoriofont\gregoriochar\gre@char@lineapunctumcavumhole}%
+\gdef\grepunctumcavumchar{\gregoriochar\gre@char@punctumcavum}%
+\gdef\grelineapunctumcavumchar{\gregoriochar\gre@char@lineapunctumcavum}%
+\gdef\grepunctumcavumholechar{\gregoriochar\gre@char@punctumcavumhole}%
+\gdef\grelineapunctumcavumholechar{\gregoriochar\gre@char@lineapunctumcavumhole}%
 \relax %
 }%
 

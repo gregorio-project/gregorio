@@ -20,7 +20,6 @@
 \gre@declarefileversion{gregoriotex-chars.tex}{3.0.0-rc2}% GREGORIO_VERSION
 
 \def\gregoriostylecharoffset#1{\the\numexpr 66 + #1 \relax}
-\def\gregoriochar#1{\directlua{gregoriotex.char('#1')}}
 
 % bars
 \xdef\gre@char@divisiomaior{divisio_maior}%
@@ -51,20 +50,20 @@
 \xdef\gre@char@punctuminclinatumdem{punctum_inclinatum_auctus}%
 \xdef\gre@char@lineapunctum{linea_punctum}%
 \xdef\gre@char@peshigh{punctum_for_measurement}%
-\xdef\gre@char@pesinitauctus{pesquadratum_2_initiodebilisauctusdescendens}%
-\xdef\gre@char@pesinitauctusone{pesquadratum_1_initiodebilisauctusdescendens}%
-\xdef\gre@char@flexus{pesquadratum_longqueue_3_nothing}%
-\xdef\gre@char@flexusone{pesquadratum_longqueue_1_nothing}%
-\xdef\gre@char@flexusdeminutus{flexus_2_deminutus}%
-\xdef\gre@char@flexusaltone{flexus_nobar_1_nothing}%
-\xdef\gre@char@flexusalt{flexus_nobar_2_nothing}%
-\xdef\gre@char@torculus{torculus_1_2_nothing}%
-\xdef\gre@char@torculusdeminutus{torculus_2_2_deminutus}%
-\xdef\gre@char@porrectus@one{porrectus_1_1_nothing}%
-\xdef\gre@char@porrectus@two{porrectus_2_1_nothing}%
-\xdef\gre@char@porrectus@three{porrectus_3_1_nothing}%
-\xdef\gre@char@porrectus@four{porrectus_4_1_nothing}%
-\xdef\gre@char@porrectus@five{porrectus_5_1_nothing}%
+\xdef\gre@char@pesinitauctus{pesquadratum_two_initiodebilisauctusdescendens}%
+\xdef\gre@char@pesinitauctusone{pesquadratum_one_initiodebilisauctusdescendens}%
+\xdef\gre@char@flexus{pesquadratum_longqueue_three_nothing}%
+\xdef\gre@char@flexusone{pesquadratum_longqueue_one_nothing}%
+\xdef\gre@char@flexusdeminutus{flexus_two_deminutus}%
+\xdef\gre@char@flexusaltone{flexus_nobar_one_nothing}%
+\xdef\gre@char@flexusalt{flexus_nobar_two_nothing}%
+\xdef\gre@char@torculus{torculus_one_two_nothing}%
+\xdef\gre@char@torculusdeminutus{torculus_two_two_deminutus}%
+\xdef\gre@char@porrectus@one{porrectus_one_one_nothing}%
+\xdef\gre@char@porrectus@two{porrectus_two_one_nothing}%
+\xdef\gre@char@porrectus@three{porrectus_three_one_nothing}%
+\xdef\gre@char@porrectus@four{porrectus_four_one_nothing}%
+\xdef\gre@char@porrectus@five{porrectus_five_one_nothing}%
 
 % signs
 \xdef\gre@char@curlybrace{curly_brace}%
@@ -85,16 +84,16 @@
 \xdef\gre@char@he@inclinatum{hepisemus_inclinatum}%
 \xdef\gre@char@he@inclinatumdem{hepisemus_inclinatum_deminutus}%
 \xdef\gre@char@he@stropha{hepisemus_stropha}%
-\xdef\gre@char@he@porrectus@one{hepisemus_porrectus_1}%
-\xdef\gre@char@he@porrectus@two{hepisemus_porrectus_2}%
-\xdef\gre@char@he@porrectus@three{hepisemus_porrectus_3}%
-\xdef\gre@char@he@porrectus@four{hepisemus_porrectus_4}%
-\xdef\gre@char@he@porrectus@five{hepisemus_porrectus_5}%
-\xdef\gre@char@he@porrectusfl@one{hepisemus_porrectusflexus_1}%
-\xdef\gre@char@he@porrectusfl@two{hepisemus_porrectusflexus_2}%
-\xdef\gre@char@he@porrectusfl@three{hepisemus_porrectusflexus_3}%
-\xdef\gre@char@he@porrectusfl@four{hepisemus_porrectusflexus_4}%
-\xdef\gre@char@he@porrectusfl@five{hepisemus_porrectusflexus_5}%
+\xdef\gre@char@he@porrectus@one{hepisemus_porrectus_one}%
+\xdef\gre@char@he@porrectus@two{hepisemus_porrectus_two}%
+\xdef\gre@char@he@porrectus@three{hepisemus_porrectus_three}%
+\xdef\gre@char@he@porrectus@four{hepisemus_porrectus_four}%
+\xdef\gre@char@he@porrectus@five{hepisemus_porrectus_five}%
+\xdef\gre@char@he@porrectusfl@one{hepisemus_porrectusflexus_one}%
+\xdef\gre@char@he@porrectusfl@two{hepisemus_porrectusflexus_two}%
+\xdef\gre@char@he@porrectusfl@three{hepisemus_porrectusflexus_three}%
+\xdef\gre@char@he@porrectusfl@four{hepisemus_porrectusflexus_four}%
+\xdef\gre@char@he@porrectusfl@five{hepisemus_porrectusflexus_five}%
 \xdef\gre@char@he@quilisma{hepisemus_quilisma}%
 \xdef\gre@char@he@oriscus{hepisemus_oriscus}%
 \xdef\gre@char@he@smallpunctum{hepisemus_high_pes}% seems wrong
@@ -106,26 +105,26 @@
 %%%%%%%%%%%%%%%%%
 
 \def\greusedefaultstyle{%
-\gdef\greflatchar{\gregoriofont\gregoriochar{flat}}%
-\gdef\greflatholechar{\gregoriofont\gregoriochar{flat_hole}}%
-\gdef\grenaturalchar{\gregoriofont\gregoriochar{natural}}%
-\gdef\grenaturalholechar{\gregoriofont\gregoriochar{natural_hole}}%
-\gdef\gresharpchar{\gregoriofont\gregoriochar{sharp}}%
-\gdef\gresharpholechar{\gregoriofont\gregoriochar{sharp_hole}}%
-\gdef\grecclefchar{\gregoriofont\gregoriochar{c_clef}}%
-\gdef\grefclefchar{\gregoriofont\gregoriochar{f_clef}}%
-\gdef\greincclefchar{\gregoriofont\gregoriochar{c_clef_change}}%
-\gdef\greinfclefchar{\gregoriofont\gregoriochar{f_clef_change}}%
-\gdef\grepunctummorachar{\gregoriofont\gregoriochar{auctum_mora}}%
-\gdef\greverticalepisemuschar{\gregoriofont\gregoriochar{vepisemus}}%
-\gdef\grecustotoplongchar{\gregoriofont\gregoriochar{custos_up_long}}%
-\gdef\grecustotopshortchar{\gregoriofont\gregoriochar{custos_up_short}}%
-\gdef\grecustotopmiddlechar{\gregoriofont\gregoriochar{custos_up_medium}}%
-\gdef\grecustobottomlongchar{\gregoriofont\gregoriochar{custos_down_long}}%
-\gdef\grecustobottomshortchar{\gregoriofont\gregoriochar{custos_down_short}}%
-\gdef\grecustobottommiddlechar{\gregoriofont\gregoriochar{custos_down_medium}}%
-\gdef\greabovebarbracechar{\gregoriofont\gregoriochar{bar_brace}}%
-\gdef\grepunctumchar{\gregoriofont\gregoriochar{punctum}}%
+\gdef\greflatchar{\gregoriochar{flat}}%
+\gdef\greflatholechar{\gregoriochar{flat_hole}}%
+\gdef\grenaturalchar{\gregoriochar{natural}}%
+\gdef\grenaturalholechar{\gregoriochar{natural_hole}}%
+\gdef\gresharpchar{\gregoriochar{sharp}}%
+\gdef\gresharpholechar{\gregoriochar{sharp_hole}}%
+\gdef\grecclefchar{\gregoriochar{c_clef}}%
+\gdef\grefclefchar{\gregoriochar{f_clef}}%
+\gdef\greincclefchar{\gregoriochar{c_clef_change}}%
+\gdef\greinfclefchar{\gregoriochar{f_clef_change}}%
+\gdef\grepunctummorachar{\gregoriochar{auctum_mora}}%
+\gdef\greverticalepisemuschar{\gregoriochar{vepisemus}}%
+\gdef\grecustotoplongchar{\gregoriochar{custos_up_long}}%
+\gdef\grecustotopshortchar{\gregoriochar{custos_up_short}}%
+\gdef\grecustotopmiddlechar{\gregoriochar{custos_up_medium}}%
+\gdef\grecustobottomlongchar{\gregoriochar{custos_down_long}}%
+\gdef\grecustobottomshortchar{\gregoriochar{custos_down_short}}%
+\gdef\grecustobottommiddlechar{\gregoriochar{custos_down_medium}}%
+\gdef\greabovebarbracechar{\gregoriochar{bar_brace}}%
+\gdef\grepunctumchar{\gregoriochar{punctum}}%
 \relax %
 }%
 
