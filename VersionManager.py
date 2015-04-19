@@ -30,9 +30,12 @@ import re
 import argparse
 import subprocess
 import time
+import os
 from datetime import date
 
 from distutils.util import strtobool
+
+os.chdir(sys.path[0])
 
 VERSION_FILE = '.gregorio-version'
 GREGORIO_FILES = ["configure.ac",
