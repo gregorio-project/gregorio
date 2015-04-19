@@ -255,7 +255,17 @@ end
 
 local function check_version(greinternalversion)
   if greinternalversion ~= internalversion then
-    err("uncoherent file versions: gregoriotex.tex is version %i while gregoriotex.lua is version "..internalversion, greinternalversion)
+    err("uncoherent file versions: gregoriotex.tex is version %s while gregoriotex.lua is version "..internalversion, greinternalversion)
+  end
+end
+
+local function check_font_version()
+  local gregoriofont = font.getfont(font.id('gregoriofont'))
+  local fontversion = gregoriofont.shared.rawdata.metadata.version
+  if fontversion ~= internalversion then
+    fontname = gregoriofont.shared.rawdata.metadata.fontname
+    fontfile = gregoriofont.shared.rawdata.metadata.origname
+    err("\nUncoherent file versions!\ngregoriotex.tex is version %s\nwhile %s.ttf is version %s\nplease update file\n%s", internalversion, fontname, fontversion, fontfile)
   end
 end
 
@@ -268,4 +278,5 @@ gregoriotex.compile_gabc         = compile_gabc
 gregoriotex.atScoreEnd           = atScoreEnd
 gregoriotex.atScoreBeggining     = atScoreBeggining
 gregoriotex.check_version        = check_version
+gregoriotex.check_font_version   = check_font_version
 gregoriotex.get_gregorioversion  = get_gregorioversion
