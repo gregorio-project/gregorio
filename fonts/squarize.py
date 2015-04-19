@@ -97,7 +97,7 @@ def main():
     "Main function"
     global oldfont, newfont, font_name
     proc = subprocess.Popen(['../VersionManager.py', '-c'], stdout=subprocess.PIPE)
-    version = proc.stdout.read()
+    version = proc.stdout.read().strip('\n')
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], "h", ["help"])
     except getopt.GetoptError:
