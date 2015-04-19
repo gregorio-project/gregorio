@@ -18,18 +18,29 @@ copyright = [[
 % along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 ]]
 
-local function emit_font_mapping(font)
-    local font_info = fontloader.open(font .. '.ttf')
-    local i = 0
-    while i < font_info.glyphmax do
-      local glyph = font_info.glyphs[i]
-      if glyph and glyph.unicode >= 0 then
-        file:write(string.format([[\edef\gre@g@%s@%s{\char%d}]], font, glyph.name, glyph.unicode), '\n')
-      end
-      i = i + 1
-    end
+local function capitalize(first, rest)
+  return first:upper() .. rest
 end
 
+local function emit_font_mapping(font)
+  local font_info = fontloader.open(font .. '.ttf')
+  local i = 0
+  while i < font_info.glyphmax do
+    local glyph = font_info.glyphs[i]
+    if glyph and glyph.unicode >= 0 then
+      if glyph_names[glyph.unicode] == nil then
+        file:write(string.format([[\chardef\grecp%s=%d\relax ]], glyph.name, glyph.unicode), '%\n')
+        glyph_names[glyph.unicode] = glyph.name
+      elseif glyph_names[glyph.unicode] ~= glyph.name then
+        io.stderr:write(string.format('mismatched glyph %s:%s\n', font, glyph.name))
+        os.exit(false)
+      end
+    end
+    i = i + 1
+  end
+end
+
+glyph_names = {}
 file = io.open('gregoriotex-fontmapping.tex', 'w')
 
 file:write('% Glyph mapping for GregorioTeX\n')
@@ -39,8 +50,8 @@ file:write('\n')
 file:write([[\gre@declarefileversion{gregoriotex-fontmapping.tex}{3.0.0-rc2}]], '\n') -- GREGORIO_VERSION
 file:write('\n')
 
-file:write([[\catcode`\_=11]], '\n')
 emit_font_mapping('greciliae')
 emit_font_mapping('gregorio')
 emit_font_mapping('parmesan')
-file:write([[\catcode`\_=12]], '\n')
+
+os.exit(true)

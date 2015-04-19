@@ -672,13 +672,13 @@
   \relax %
 }%
 
+\input gregoriotex-fontmapping.tex%
+
 \input gregoriotex-chars.tex%
 
 \input gregoriotex-signs.tex%
 
 \input gregoriotex-syllable.tex%
-
-\input gregoriotex-fontmapping.tex%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the translations
@@ -1262,15 +1262,6 @@
   \fi%
   \relax %
 }%
-
-\catcode`\_=11%
-\def\gre@char#1{%
-  \csname gre@g@\gregoriofontname @#1\endcsname\relax %
-}%
-\def\gregoriochar#1{%
-  \gregoriofont\gre@char{#1}%
-}%
-\catcode`\_=12%
 
 %%%%%%%%%%%%%%%%%%%
 %% score including

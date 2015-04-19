@@ -39,7 +39,7 @@ enum syllable { THIS_SYL, NEXT_SYL };
 
 #define MAX_AMBITUS 5
 static char *tex_ambitus[] = {
-    NULL, "one", "two", "three", "four", "five"
+    NULL, "One", "Two", "Three", "Four", "Five"
 };
 
 // / the value indicating to GregorioTeX that there is no flat
@@ -83,75 +83,75 @@ static char *gregoriotex_determine_note_number_and_type(gregorio_note *note,
     switch (note->u.note.shape) {
     case S_PUNCTUM_INCLINATUM:
         *type = AT_PUNCTUM_INCLINATUM;
-        return "punctum_inclinatum";
+        return "PunctumInclinatum";
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
-        return "punctum_inclinatum_deminutus";
+        return "PunctumInclinatumDeminutus";
     case S_PUNCTUM_INCLINATUM_AUCTUS:
-        return "punctum_inclinatum_auctus";
+        return "PunctumInclinatumAuctus";
     case S_PUNCTUM:
-        return "punctum";
+        return "Punctum";
     case S_PUNCTUM_AUCTUS_ASCENDENS:
-        return "punctum_ascendens";
+        return "PunctumAscendens";
     case S_PUNCTUM_AUCTUS_DESCENDENS:
-        return "punctum_descendens";
+        return "PunctumDescendens";
     case S_PUNCTUM_DEMINUTUS:
-        return "punctum_deminutus";
+        return "PunctumDeminutus";
     case S_PUNCTUM_CAVUM:
-        return "punctum_cavum";
+        return "PunctumCavum";
     case S_LINEA:
-        return "linea";
+        return "Linea";
     case S_LINEA_PUNCTUM:
-        return "linea_punctum";
+        return "LineaPunctum";
     case S_LINEA_PUNCTUM_CAVUM:
-        return "linea_punctum_cavum";
+        return "LineaPunctumCavum";
     case S_VIRGA:
         if (is_short(note->u.note.pitch, glyph, element)) {
-            return "virga";
+            return "Virga";
         } else {
-            return "virga_longqueue";
+            return "VirgaLongqueue";
         }
     case S_VIRGA_REVERSA:
         if (note->u.note.liquescentia == L_AUCTUS_DESCENDENS) {
             if (is_short(note->u.note.pitch, glyph, element)) {
-                return "virga_reversa_descendens";
+                return "VirgaReversaDescendens";
             } else {
-                return "virga_reversa_descendens_longqueue";
+                return "VirgaReversaDescendensLongqueue";
             }
         } else {
             if (is_short(note->u.note.pitch, glyph, element)) {
-                return "virga_reversa";
+                return "VirgaReversa";
             } else {
-                return "virga_reversa_longqueue";
+                return "VirgaReversaLongqueue";
             }
         }
     case S_ORISCUS:
         *type = AT_ORISCUS;
-        return "oriscus";
+        return "Oriscus";
     case S_ORISCUS_AUCTUS:
         *type = AT_ORISCUS;
-        return "oriscus_reversus";
+        return "OriscusReversus";
     case S_ORISCUS_DEMINUTUS:
         *type = AT_ORISCUS;
-        return "oriscus_deminutus";
+        return "OriscusDeminutus";
     case S_QUILISMA:
         *type = AT_QUILISMA;
-        return "quilisma";
+        return "Quilisma";
     case S_ORISCUS_SCAPUS:
         if (is_short(note->u.note.pitch, glyph, element)) {
-            return "oriscus_scapus";
+            return "OriscusScapus";
         } else {
-            return "oriscus_scapus_longqueue";
+            return "OriscusScapusLongqueue";
         }
     case S_STROPHA:
         *type = AT_STROPHA;
         if (glyph->u.notes.liquescentia == L_AUCTA) {
-            return "stropha_aucta";
+            return "StrophaAucta";
         } else {
-            return "stropha";
+            return "Stropha";
         }
     case S_STROPHA_AUCTA:
         *type = AT_STROPHA;
-        return "stropha_aucta";
+        return "StrophaAucta";
     default:
         gregorio_messagef("gregoriotex_determine_note_number_and_type", ERROR,
                 0, _("called with unknown shape: %d"), note->u.note.shape);
@@ -161,14 +161,14 @@ static char *gregoriotex_determine_note_number_and_type(gregorio_note *note,
 
 /*
  * The different liquescentiae are:
- * 'nothing'
- * 'initiodebilis'
- * 'deminutus
- * 'auctusascendens'
- * 'auctusdescendens'
- * 'initiodebilisdeminutus'
- * 'initiodebilisauctusascendens'
- * 'initiodebilisauctusdescendens'
+ * 'Nothing'
+ * 'InitioDebilis'
+ * 'Deminutus
+ * 'Ascendens'
+ * 'Descendens'
+ * 'InitioDebilisDeminutus'
+ * 'InitioDebilisAscendens'
+ * 'InitioDebilisDescendens'
  * 
  * If it is an auctus, which may be ascendens or descendens, by default we
  * consider it as an ascendens
@@ -222,24 +222,24 @@ static char *gregoriotex_determine_liquescentia(gtex_glyph_liquescentia type,
 
     switch (liquescentia) {
     case L_DEMINUTUS:
-        return "deminutus";
+        return "Deminutus";
     case L_AUCTUS_ASCENDENS:
-        return "auctusascendens";
+        return "Ascendens";
     case L_AUCTA:
     case L_AUCTUS_DESCENDENS:
-        return "auctusdescendens";
+        return "Descendens";
     case L_INITIO_DEBILIS:
-        return "initiodebilis";
+        return "InitioDebilis";
     case L_DEMINUTUS_INITIO_DEBILIS:
-        return "initiodebilisdeminutus";
+        return "InitioDebilisDeminutus";
     case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
-        return "initiodebilisauctusascendens";
+        return "InitioDebilisAscendens";
     case L_AUCTA_INITIO_DEBILIS:
     case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
-        return "initiodebilisauctusdescendens";
+        return "InitioDebilisDescendens";
     }
 
-    return "nothing";
+    return "Nothing";
 }
 
 static inline int compute_ambitus(gregorio_note *current_note) {
@@ -292,7 +292,7 @@ static char *gregoriotex_determine_glyph_name(gregorio_glyph *glyph,
     }
     current_note = current_note->next;
     if (!current_note->next) {
-        snprintf(buf, BUFSIZE, "%s_%s_%s", shape, tex_ambitus[ambitus1],
+        snprintf(buf, BUFSIZE, "%s%s%s", shape, tex_ambitus[ambitus1],
                 liquescentia);
         return buf;
     }
@@ -301,14 +301,14 @@ static char *gregoriotex_determine_glyph_name(gregorio_glyph *glyph,
     }
     current_note = current_note->next;
     if (!current_note->next) {
-        snprintf(buf, BUFSIZE, "%s_%s_%s_%s", shape, tex_ambitus[ambitus1],
+        snprintf(buf, BUFSIZE, "%s%s%s%s", shape, tex_ambitus[ambitus1],
                 tex_ambitus[ambitus2], liquescentia);
         return buf;
     }
     if (!(ambitus3 = compute_ambitus(current_note))) {
         return "";
     }
-    snprintf(buf, BUFSIZE, "%s_%s_%s_%s_%s", shape, tex_ambitus[ambitus1],
+    snprintf(buf, BUFSIZE, "%s%s%s%s%s", shape, tex_ambitus[ambitus1],
             tex_ambitus[ambitus2], tex_ambitus[ambitus3], liquescentia);
     return buf;
 }
@@ -359,10 +359,10 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
                     || glyph->u.notes.liquescentia ==
                     L_AUCTUS_ASCENDENS_INITIO_DEBILIS) {
                 *gtype = T_PESQUILISMAQUADRATUM;
-                shape = "pesquilismaquadratum";
+                shape = "PesQuilismaQuadratum";
             } else {
                 *gtype = T_PESQUILISMA;
-                shape = "pesquilisma";
+                shape = "PesQuilisma";
             }
             ltype = LG_NO_INITIO;
             break;
@@ -373,10 +373,10 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
             if (glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA
                     && gregoriotex_is_long(pitch, glyph, element) == 1) {
                 *gtype = T_PESQUASSUS_LONGQUEUE;
-                shape = "pesquassus_longqueue";
+                shape = "PesQuassusLongqueue";
             } else {
                 *gtype = T_PESQUASSUS;
-                shape = "pesquassus";
+                shape = "PesQuassus";
             }
             ltype = LG_NO_INITIO;
             break;
@@ -389,10 +389,10 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
                     || glyph->u.notes.liquescentia ==
                     L_AUCTUS_ASCENDENS_INITIO_DEBILIS) {
                 *gtype = T_PESQUADRATUM;
-                shape = "pesquadratum";
+                shape = "PesQuadratum";
             } else {
                 *gtype = T_PES;
-                shape = "pes";
+                shape = "Pes";
             }
             ltype = LG_ALL;
             break;
@@ -406,10 +406,10 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
             if (glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA
                     && gregoriotex_is_long(pitch, glyph, element) == 1) {
                 *gtype = T_PESQUILISMAQUADRATUM_LONGQUEUE;
-                shape = "pesquilismaquadratum_longqueue";
+                shape = "PesQuilismaQuadratumLongqueue";
             } else {
                 *gtype = T_PESQUILISMAQUADRATUM;
-                shape = "pesquilismaquadratum";
+                shape = "PesQuilismaQuadratum";
             }
             ltype = LG_NO_INITIO;
             break;
@@ -418,10 +418,10 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
             if (glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA
                     && gregoriotex_is_long(pitch, glyph, element) == 1) {
                 *gtype = T_PESQUASSUS_LONGQUEUE;
-                shape = "pesquadratum_longqueue";
+                shape = "PesQuadratumLongqueue";
             } else {
                 *gtype = T_PESQUASSUS;
-                shape = "pesquassus";
+                shape = "PesQuassus";
             }
             ltype = LG_NO_INITIO;
             break;
@@ -430,10 +430,10 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
             if (glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA
                     && gregoriotex_is_long(pitch, glyph, element) == 1) {
                 *gtype = T_PESQUADRATUM_LONGQUEUE;
-                shape = "pesquadratum_longqueue";
+                shape = "PesQuadratumLongqueue";
             } else {
                 *gtype = T_PESQUADRATUM;
-                shape = "pesquadratum";
+                shape = "PesQuadratum";
             }
             ltype = LG_ALL;
             break;
@@ -443,7 +443,7 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
         pitch = glyph->u.notes.first_note->next->u.note.pitch;
         *type = AT_ONE_NOTE;
         *gtype = T_VIRGA_STRATA;
-        shape = "virga_strata";
+        shape = "VirgaStrata";
         ltype = LG_ALL;
         break;
     case G_FLEXA:
@@ -459,24 +459,24 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
         }
         if (glyph->u.notes.first_note->u.note.shape == S_ORISCUS) {
             *gtype = T_FLEXUS_ORISCUS;
-            shape = "flexus_oriscus";
+            shape = "FlexusOriscus";
             ltype = LG_NO_INITIO;
         } else if (glyph->u.notes.first_note->u.note.shape == S_ORISCUS_SCAPUS) {
             if (is_short(pitch, glyph, element)) {
                 *gtype = T_FLEXUS_ORISCUS_SCAPUS;
-                shape = "flexus_oriscus_scapus";
+                shape = "FlexusOriscusScapus";
             } else {
                 *gtype = T_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE;
-                shape = "flexus_oriscus_scapus_longqueue";
+                shape = "FlexusOriscusScapusLongqueue";
             }
             ltype = LG_NO_INITIO;
         } else {
             if (is_short(pitch, glyph, element)) {
                 *gtype = T_FLEXUS;
-                shape = "flexus";
+                shape = "Flexus";
             } else {
                 *gtype = T_FLEXUS_LONGQUEUE;
-                shape = "flexus_longqueue";
+                shape = "FlexusLongqueue";
             }
             ltype = LG_NO_INITIO;
         }
@@ -485,12 +485,12 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
         if (glyph->u.notes.first_note->u.note.shape == S_QUILISMA) {
             *type = AT_QUILISMA;
             *gtype = T_TORCULUS_QUILISMA;
-            shape = "torculusquilisma";
+            shape = "TorculusQuilisma";
             ltype = LG_NO_INITIO;
         } else {
             *type = AT_ONE_NOTE;
             *gtype = T_TORCULUS;
-            shape = "torculus";
+            shape = "Torculus";
             ltype = LG_ALL;
         }
         break;
@@ -498,11 +498,11 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
         if (glyph->u.notes.first_note->u.note.shape == S_QUILISMA) {
             *type = AT_QUILISMA;
             *gtype = T_TORCULUS_LIQUESCENS_QUILISMA;
-            shape = "torculus_liquescens_quilisma";
+            shape = "TorculusLiquescensQuilisma";
         } else {
             *type = AT_ONE_NOTE;
             *gtype = T_TORCULUS_LIQUESCENS;
-            shape = "torculus_liquescens";
+            shape = "TorculusLiquescens";
         }
         ltype = LG_ONLY_DEMINUTUS;
         break;
@@ -514,31 +514,31 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
     case G_PORRECTUS:
         *type = AT_PORRECTUS;
         *gtype = T_PORRECTUS;
-        shape = "porrectus";
+        shape = "Porrectus";
         ltype = LG_NO_INITIO;
         break;
     case G_TORCULUS_RESUPINUS:
         *type = AT_ONE_NOTE;
         *gtype = T_TORCULUS_RESUPINUS;
-        shape = "torculusresupinus";
+        shape = "TorculusResupinus";
         ltype = LG_ALL;
         break;
     case G_PORRECTUS_FLEXUS:
         *type = AT_PORRECTUS;
         *gtype = T_PORRECTUSFLEXUS;
-        shape = "porrectusflexus";
+        shape = "PorrectusFlexus";
         ltype = LG_NO_INITIO;
         break;
     case G_PORRECTUS_NO_BAR:
         *type = AT_PORRECTUS;
         *gtype = T_PORRECTUS_NOBAR;
-        shape = "porrectus_nobar";
+        shape = "PorrectusNobar";
         ltype = LG_NO_INITIO;
         break;
     case G_PORRECTUS_FLEXUS_NO_BAR:
         *type = AT_PORRECTUS;
         *gtype = T_PORRECTUSFLEXUS_NOBAR;
-        shape = "porrectusflexus_nobar";
+        shape = "PorrectusFlexusNobar";
         ltype = LG_NO_INITIO;
         break;
     case G_ANCUS:
@@ -551,10 +551,10 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
             }
             if (is_short(pitch, glyph, element)) {
                 *gtype = T_ANCUS;
-                shape = "ancus";
+                shape = "Ancus";
             } else {
                 *gtype = T_ANCUS_LONGQUEUE;
-                shape = "ancus_longqueue";
+                shape = "AncusLongqueue";
             }
             ltype = LG_ONLY_DEMINUTUS;
         } else {
@@ -565,7 +565,7 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
     case G_SCANDICUS:
         *type = AT_ONE_NOTE;
         *gtype = T_SCANDICUS;
-        shape = "scandicus";
+        shape = "Scandicus";
         ltype = LG_NO_INITIO;
         break;
     case G_SALICUS:
@@ -573,10 +573,10 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
         pitch = glyph->u.notes.first_note->next->next->u.note.pitch;
         if (gregoriotex_is_long(pitch, glyph, element) == 1) {
             *gtype = T_SALICUS_LONGQUEUE;
-            shape = "salicus_longqueue";
+            shape = "SalicusLongqueue";
         } else {
             *gtype = T_SALICUS;
-            shape = "salicus";
+            shape = "Salicus";
         }
         ltype = LG_NO_INITIO;
         break;
@@ -2063,7 +2063,7 @@ void gregoriotex_write_glyph(FILE *f,
                 || glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA) {
             shape = gregoriotex_determine_number_and_type(glyph, element, &type,
                     &gtype);
-            fprintf(f, "\\greglyph{\\gregoriochar{%s}}{%c}{%c}{%d}", shape,
+            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
                     glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
                     type);
             gregoriotex_write_signs(f, gtype, glyph, element,
@@ -2083,7 +2083,7 @@ void gregoriotex_write_glyph(FILE *f,
                 || glyph->u.notes.liquescentia == L_DEMINUTUS_INITIO_DEBILIS) {
             shape = gregoriotex_determine_number_and_type(glyph, element, &type,
                     &gtype);
-            fprintf(f, "\\greglyph{\\gregoriochar{%s}}{%c}{%c}{%d}", shape,
+            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
                     glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
                     type);
             gregoriotex_write_signs(f, gtype, glyph, element,
@@ -2109,7 +2109,7 @@ void gregoriotex_write_glyph(FILE *f,
         shape = gregoriotex_determine_number_and_type(glyph, element, &type,
                 &gtype);
         // TODO : fusion functions
-        fprintf(f, "\\greglyph{\\gregoriochar{%s}}{%c}{%c}{%d}", shape,
+        fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
                 glyph->u.notes.first_note->u.note.pitch, next_note_pitch, type);
         gregoriotex_write_signs(f, gtype, glyph, element,
                 glyph->u.notes.first_note);
@@ -2193,7 +2193,7 @@ void gregoriotex_write_glyph(FILE *f,
             shape = gregoriotex_determine_number_and_type(glyph, element, &type,
                     &gtype);
             // TODO : fusion functions
-            fprintf(f, "\\greglyph{\\gregoriochar{%s}}{%c}{%c}{%d}", shape,
+            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
                     glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
                     type);
             gregoriotex_write_signs(f, gtype, glyph, element,
@@ -2203,7 +2203,7 @@ void gregoriotex_write_glyph(FILE *f,
         } else {
             shape = gregoriotex_determine_number_and_type(glyph, element, &type,
                     &gtype);
-            fprintf(f, "\\greglyph{\\gregoriochar{%s}}{%c}{%c}{%d}", shape,
+            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
                     glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
                     type);
             gregoriotex_write_signs(f, gtype, glyph, element,
@@ -3884,7 +3884,7 @@ gregoriotex_write_note(FILE *f, gregorio_note *note,
                 next_note_pitch, type);
         break;
     default:
-        fprintf(f, "\\greglyph{\\gregoriochar{%s}}{%c}{%c}{%d}",
+        fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}",
                 shape, note->u.note.pitch, next_note_pitch, type);
         break;
     }
