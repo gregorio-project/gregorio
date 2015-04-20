@@ -23,6 +23,10 @@ gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
 				   unicode.c struct.h messages.h unicode.h characters.h \
 				   plugins.h config.h dump/dump.c dump/dump.h \
 				   gregoriotex/gregoriotex-write.c gregoriotex/gregoriotex.h
+nodist_gregorio_SOURCES = gregoriotex/gregoriotex-fontmapping.c \
+						  gregoriotex/gregoriotex-fontmapping.h
+BUILT_SOURCES = gregoriotex/gregoriotex-fontmapping.c \
+				gregoriotex/gregoriotex-fontmapping.h
 
 @MK@ifneq ($(wildcard ../.git),)
 @MK@  _tag_ = $(shell git describe --exact-match HEAD 2>/dev/null)
@@ -78,6 +82,15 @@ gabc/gabc-score-determination-y.c: gabc/gabc-score-determination.y
 
 gabc/gabc-notes-determination-l.c: gabc/gabc-notes-determination.l
 	$(LEX) -o $@ $<
+
+gregoriotex/gregoriotex-fontmapping.c: ../fonts/gregoriotex-fontmapping.c
+	cp $< $@
+
+gregoriotex/gregoriotex-fontmapping.h: ../fonts/gregoriotex-fontmapping.h
+	cp $< $@
+
+CLEANFILES = gregoriotex/gregoriotex-fontmapping.c \
+			 gregoriotex/gregoriotex-fontmapping.h
 
 DISTCLEANFILES = gabc/gabc-score-determination-l.c \
 			 gabc/gabc-notes-determination-l.c \

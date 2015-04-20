@@ -21,6 +21,7 @@
 #define GREGORIOTEX_H
 
 #include <stdbool.h>
+#include "struct.h"
 
 #define GREGORIO_VERSION "3.0.0-rc2"
 
@@ -125,7 +126,6 @@ typedef struct gregoriotex_status {
 } gregoriotex_status;
 
 // a structure containing the result of seekadditionalspaces
-
 typedef struct gregorio_line {
     // 0, 1, 2 or 3. it is the argument of grenewlinewithspaces in
     // gregoriotex.tex
@@ -136,6 +136,30 @@ typedef struct gregorio_line {
     unsigned char ictus;        // idem
     unsigned char abovelinestext;   // idem
 } gregorio_line;
+
+// glyph structures
+
+#define MAX_AMBITUS 5
+
+typedef union gtex_glyph_table {
+    const int (* const two_note);
+    const int (* const three_note)[MAX_AMBITUS];
+    const int (* const four_note)[MAX_AMBITUS][MAX_AMBITUS];
+} gtex_glyph_table;
+
+// Note: gtex_multinote_shape is a POINTER to struct gtex_multinote_shape
+typedef struct gtex_multinote_shape {
+    const int notes;
+    const char * const name;
+    const union gtex_glyph_table Nothing;
+    const union gtex_glyph_table InitioDebilis;
+    const union gtex_glyph_table Deminutus;
+    const union gtex_glyph_table Ascendens;
+    const union gtex_glyph_table Descendens;
+    const union gtex_glyph_table InitioDebilisDeminutus;
+    const union gtex_glyph_table InitioDebilisAscendens;
+    const union gtex_glyph_table InitioDebilisDescendens;
+} const *gtex_multinote_shape;
 
 void write_score(FILE *f, gregorio_score *score);
 void gregoriotex_write_voice_info(FILE *f, gregorio_voice_info *voice_info);
@@ -212,6 +236,6 @@ gregorio_element *gregoriotex_syllable_is_clef_change(gregorio_syllable
 // a global variable... could be good to remove it, but the structure of
 // gregorio is really flawed, and there are many many things to fix before
 // that!
-unsigned char gregoriotex_ignore_style = 0;
+unsigned char gregoriotex_ignore_style;
 
 #endif

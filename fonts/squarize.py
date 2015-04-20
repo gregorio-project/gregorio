@@ -68,15 +68,6 @@ statement from your version."""
 # the more glyphs you'll have to generate
 MAX_INTERVAL = 5
 
-# this dictionary must have a value for 1 up to MAX_INTERVAL
-AMBITUS = {
-    1: 'One',
-    2: 'Two',
-    3: 'Three',
-    4: 'Four',
-    5: 'Five',
-}
-
 # The unicode character at which we start our numbering:
 # U+E000 is the start of the BMP Private Use Area
 glyphnumber = 0xe000 - 1
@@ -200,7 +191,7 @@ def precise_message(glyph_name):
     "Prints more information to entertain the user."
     print("  *", glyph_name)
 
-# These names must consist wholly of ASCII letters
+# These names must consist wholly of ASCII letters, unless precomposed
 DIRECT_GLYPH_NAMES = {
     1: 'CClef',
     2: 'FClef',
@@ -268,8 +259,8 @@ DIRECT_GLYPH_NAMES = {
     91: 'OriscusDeminutus',
     92: 'VirgaReversaDescendens',
     93: 'VirgaReversaDescendensLongqueue',
-    1025: 'PesOneNothing',
-    2561: 'PesQuilismaOneNothing',
+    1025: 'Pes_1_Nothing',
+    2561: 'PesQuilisma_1_Nothing',
 }
 
 DIRECT_GLYPH_SKIP = {
@@ -546,9 +537,9 @@ def hepisemus(widths):
     write_hepisemus(widths, widths['width_high_pes'], 'HEpisemusHighPes')
     write_hepisemus(widths, widths['width_oriscus'], 'HEpisemusOriscus')
     for i in range(MAX_INTERVAL):
-        write_hepisemus(widths, widths['porrectuswidths'][i], 'HEpisemusPorrectus%s' % AMBITUS[i + 1])
+        write_hepisemus(widths, widths['porrectuswidths'][i], 'HEpisemusPorrectus_%d' % (i + 1))
     for i in range(MAX_INTERVAL):
-        write_hepisemus(widths, widths['porrectusflexuswidths'][i], 'HEpisemusPorrectusFlexus%s' % AMBITUS[i + 1])
+        write_hepisemus(widths, widths['porrectusflexuswidths'][i], 'HEpisemusPorrectusFlexus_%d' % (i + 1))
 
 def write_hepisemus(widths, shape_width, glyphname):
     "Writes the horizontal episemus glyphs."
@@ -613,7 +604,7 @@ def write_pes(widths, i, first_glyph, shape, lique=L_NOTHING):
         set_width(widths['width_punctum'])
     else:
         set_width(widths['width_quilisma'])
-    end_glyph('%s%s%s' % (shape, AMBITUS[i], lique))
+    end_glyph('%s_%d_%s' % (shape, i, lique))
 
 def write_pes_debilis(widths, i, shape, lique=L_NOTHING):
     "Writes the pes debilis glyphs."
@@ -624,7 +615,7 @@ def write_pes_debilis(widths, i, shape, lique=L_NOTHING):
     simplify()
     paste_and_move("base4", widths['width_debilis'], i*BASE_HEIGHT)
     set_width(widths['width_punctum']+widths['width_debilis'])
-    end_glyph('%s%s%s' % (shape, AMBITUS[i], lique))
+    end_glyph('%s_%d_%s' % (shape, i, lique))
 
 def write_pes_deminutus(widths, i, first_glyph, shape, lique=L_NOTHING):
     "Writes the pes deminutus glyphs."
@@ -640,7 +631,7 @@ def write_pes_deminutus(widths, i, first_glyph, shape, lique=L_NOTHING):
                    widths['width_punctum']-widths['line_width']-widths['width_deminutus'],
                    i*BASE_HEIGHT)
     set_width(widths['width_punctum'])
-    end_glyph('%s%s%s' % (shape, AMBITUS[i], lique))
+    end_glyph('%s_%d_%s' % (shape, i, lique))
 
 def write_pes_debilis_deminutus(widths, i, shape, lique=L_NOTHING):
     "Writes the pes debilis deminutus glyphs."
@@ -650,7 +641,7 @@ def write_pes_debilis_deminutus(widths, i, shape, lique=L_NOTHING):
     simplify()
     paste_and_move("rdeminutus", 0, i*BASE_HEIGHT)
     set_width(widths['width_debilis']+widths['line_width'])
-    end_glyph('%s%s%s' % (shape, AMBITUS[i], lique))
+    end_glyph('%s_%d_%s' % (shape, i, lique))
 
 def pes_quadratum(widths):
     "Makes the pes quadratum."
@@ -738,7 +729,7 @@ def write_pes_quadratum(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHI
         paste_and_move(linename, first_width, BASE_HEIGHT)
     paste_and_move(last_glyph, first_width, i*BASE_HEIGHT)
     set_width(first_width+widths['width_punctum'])
-    end_glyph('%s%s%s' % (shape, AMBITUS[i], lique))
+    end_glyph('%s_%d_%s' % (shape, i, lique))
 
 def virga_strata(widths):
     "Creates the virga strata."
@@ -761,7 +752,7 @@ def write_virga_strata(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHIN
         paste_and_move(linename, first_width, BASE_HEIGHT)
     paste_and_move(last_glyph, first_width, i*BASE_HEIGHT)
     set_width(first_width+widths['width_oriscus'])
-    end_glyph('%s%s%s' % (shape, AMBITUS[i], lique))
+    end_glyph('%s_%d_%s' % (shape, i, lique))
 
 def salicus(widths):
     "Creates the salicus."
@@ -814,7 +805,7 @@ def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
         length = length-0.01
     paste_and_move(last_glyph, length, (i+j)*BASE_HEIGHT)
     set_width(length+widths['width_punctum'])
-    end_glyph('%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], lique))
+    end_glyph('%s_%d_%d_%s' % (shape, i, j, lique))
 
 def flexus(widths):
     "Creates the flexus."
@@ -965,7 +956,7 @@ def write_flexus(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHING):
         else:
             length = 2 * length - widths['line_width']
     set_width(length)
-    end_glyph('%s%s%s' % (shape, AMBITUS[i], lique))
+    end_glyph('%s_%d_%s' % (shape, i, lique))
 
 def porrectus(widths):
     "Creates the porrectus."
@@ -1043,7 +1034,7 @@ def write_porrectus(widths, i, j, last_glyph, with_bar, shape, lique=L_NOTHING):
                        (j-i)*BASE_HEIGHT)
         length = length+widths['line_width']
     set_width(length)
-    end_glyph('%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], lique))
+    end_glyph('%s_%d_%d_%s' % (shape, i, j, lique))
 
 def write_alt_porrectus_deminutus(widths, i, j):
     "Writes the alternate porrectur deminutus glyphs."
@@ -1066,7 +1057,7 @@ def write_alt_porrectus_deminutus(widths, i, j):
                                                widths['width_deminutus']), (j-i)*BASE_HEIGHT)
     set_width(widths['width_punctum']+widths['width_flexusdeminutus']-
               widths['line_width'])
-    end_glyph('Porrectus%s%sDeminutus' % (AMBITUS[i], AMBITUS[j]))
+    end_glyph('%s_%d_%d_%s' % (S_PORRECTUS, i, j, L_DEMINUTUS))
 
 
 def porrectusflexus(widths):
@@ -1177,7 +1168,7 @@ def write_porrectusflexus(widths, i, j, k, last_glyph, with_bar,
         paste_and_move(last_glyph, length, (j-i-k)*BASE_HEIGHT)
         length = length+ widths['width_punctum']
     set_width(length)
-    end_glyph('%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique))
+    end_glyph('%s_%d_%d_%d_%s' % (shape, i, j, k, lique))
 
 def torculus(widths):
     "Creates the torculus."
@@ -1283,7 +1274,7 @@ def write_torculus(widths, i, j, first_glyph, last_glyph, shape, lique=L_NOTHING
         paste_and_move(last_glyph, length, (i-j)*BASE_HEIGHT)
         length = length+widths['width_punctum']
     set_width(length)
-    end_glyph('%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], lique))
+    end_glyph('%s_%d_%d_%s' % (shape, i, j, lique))
 
 def torculus_liquescens(widths):
     "Creates the torculus liquescens."
@@ -1334,7 +1325,7 @@ def write_torculus_liquescens(widths, i, j, k, first_glyph, shape,
     write_deminutus(widths, i-j, k, length, firstbar=flexus_firstbar)
     length = length+widths['width_flexusdeminutus']
     set_width(length)
-    end_glyph('%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique))
+    end_glyph('%s_%d_%d_%d_%s' % (shape, i, j, k, lique))
 
 def torculusresupinus(widths):
     "Creates the torculusresupinus."
@@ -1436,7 +1427,7 @@ def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
         paste_and_move(last_glyph, (length-widths['width_high_pes']),
                        (i-j+k)*BASE_HEIGHT)
     set_width(length)
-    end_glyph('%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique))
+    end_glyph('%s_%d_%d_%d_%s' % (shape, i, j, k, lique))
 
 def write_torculusresupinusdeminutus(widths, i, j, k, first_glyph,
                                      shape, lique=L_NOTHING):
@@ -1481,7 +1472,7 @@ def write_torculusresupinusdeminutus(widths, i, j, k, first_glyph,
     paste_and_move('rdeminutus',
                    length-widths['width_deminutus']-widths['line_width'], (i-j+k)*BASE_HEIGHT)
     set_width(length)
-    end_glyph('%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique))
+    end_glyph('%s_%d_%d_%d_%s' % (shape, i, j, k, lique))
 
 def scandicus(widths):
     "Creates the scandicus."
@@ -1502,7 +1493,7 @@ def write_scandicus(widths, i, j, last_glyph, lique=L_NOTHING):
         second_glyph = '_1025'
         paste_and_move(second_glyph, widths['width_punctum'], BASE_HEIGHT)
         set_width(2*widths['width_punctum'])
-        end_glyph('%s%s%s%s' % (S_SCANDICUS, AMBITUS[i], AMBITUS[j], lique))
+        end_glyph('%s_%d_%d_%s' % (S_SCANDICUS, i, j, lique))
         return
     if i == 1:
         simple_paste('_0017')
@@ -1530,7 +1521,7 @@ def write_scandicus(widths, i, j, last_glyph, lique=L_NOTHING):
         paste_and_move(last_glyph, length - widths['width_high_pes'],
                        (i+j)*BASE_HEIGHT)
     set_width(length)
-    end_glyph('%s%s%s%s' % (S_SCANDICUS, AMBITUS[i], AMBITUS[j], lique))
+    end_glyph('%s_%d_%d_%s' % (S_SCANDICUS, i, j, lique))
 
 def ancus(widths):
     "Creates the ancus."
@@ -1565,7 +1556,7 @@ def write_ancus(widths, i, j, first_glyph, glyph_type):
     paste_and_move('deminutus',
                    length - widths['width_deminutus'] - widths['line_width'], (-i-j)*BASE_HEIGHT)
     set_width(length)
-    end_glyph('%s%s%s%s' % (glyph_type, AMBITUS[i], AMBITUS[j], L_DEMINUTUS))
+    end_glyph('%s_%d_%d_%s' % (glyph_type, i, j, L_DEMINUTUS))
 
 if __name__ == "__main__":
     main()

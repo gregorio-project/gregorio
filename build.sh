@@ -119,10 +119,6 @@ echo "Configuring build files; options: $CONFIGURE_ARGS"
 ./configure $CONFIGURE_ARGS || die "configure Gregorio"
 echo
 
-echo "Building Gregorio; options:$MAKEOPTS"
-make ${MAKEOPTS} || die "build Gregorio"
-echo
-
 if [ "$FORCE_FONTS" = "TRUE" -o ! -e fonts/greciliae.ttf ]
 then
   echo "Building fonts; options:$MAKEOPTS"
@@ -131,6 +127,10 @@ then
   cd ..
   echo
 fi
+
+echo "Building Gregorio; options:$MAKEOPTS"
+make ${MAKEOPTS} || die "build Gregorio"
+echo
 
 if [ "$MINGWCROSS" = "TRUE" ]
 then
