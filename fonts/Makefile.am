@@ -20,13 +20,11 @@
 
 GLYPHFONTS = gregorio.ttf greciliae.ttf parmesan.ttf
 OTHERFONTS = gresym.ttf greextra.ttf
-MAPFILES = gregoriotex-fontmapping.tex \
-		   gregoriotex-fontmapping.c \
-		   gregoriotex-fontmapping.h
+TEXFILES = gregoriotex-fontmapping.tex
 SOURCEFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd \
 			  gresym.sfd greextra.sfd
 
-EXTRA_DIST = $(GLYPHFONTS) $(OTHERFONTS) $(MAPFILES) $(SOURCEFILES) \
+EXTRA_DIST = $(GLYPHFONTS) $(OTHERFONTS) $(TEXFILES) $(SOURCEFILES) \
 			 squarize.py convertsfdtottf.py README.md gregoria2gregorio.py \
 			 mapfonts.lua
 
@@ -49,10 +47,8 @@ gresym.ttf: convertsfdtottf.py gresym.sfd
 greextra.ttf: convertsfdtottf.py greextra.sfd
 	$(FONTFORGE) -script convertsfdtottf.py greextra.sfd
 
-fonts: $(MAPFILES) $(OTHERFONTS)
+fonts: $(TEXFILES) $(OTHERFONTS)
 
-gregoriotex-fontmapping.h: gregoriotex-fontmapping.tex
-gregoriotex-fontmapping.c: gregoriotex-fontmapping.tex
 gregoriotex-fontmapping.tex: mapfonts.lua $(GLYPHFONTS)
 	$(LUA) mapfonts.lua
 
@@ -69,7 +65,7 @@ gresym: gresym.ttf
 
 greextra: greextra.ttf
 
-MAINTAINERCLEANFILES = $(GLYPHFONTS) $(OTHERFONTS) $(MAPFILES)
+MAINTAINERCLEANFILES = $(GLYPHFONTS) $(OTHERFONTS) $(TEXFILES)
 
 install-data-local:
 	@$(TOP_LEVEL_MAKE) echo 'The Makefile in the fonts directory is no longer used for installing'

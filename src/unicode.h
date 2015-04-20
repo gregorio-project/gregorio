@@ -21,7 +21,6 @@
 #define UNICODE_H_FIRST_PART
 #define UNICODE_H
 
-#include <stdio.h>
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #else
