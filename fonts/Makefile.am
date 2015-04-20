@@ -18,18 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-GLYPHFONTS = gregorio.ttf greciliae.ttf parmesan.ttf
-OTHERFONTS = gresym.ttf greextra.ttf
-TEXFILES = gregoriotex-fontmapping.tex
-SOURCEFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd \
-			  gresym.sfd greextra.sfd
+TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf gresym.ttf greextra.ttf
+SOURCEFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd gresym.sfd greextra.sfd
 
-EXTRA_DIST = $(GLYPHFONTS) $(OTHERFONTS) $(TEXFILES) $(SOURCEFILES) \
-			 squarize.py convertsfdtottf.py README.md gregoria2gregorio.py \
-			 mapfonts.lua
+EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py README.md gregoria2gregorio.py
 
 FONTFORGE = fontforge
-LUA = texlua
 RM = rm
 
 gregorio.ttf: squarize.py gregorio-base.sfd
@@ -47,10 +41,7 @@ gresym.ttf: convertsfdtottf.py gresym.sfd
 greextra.ttf: convertsfdtottf.py greextra.sfd
 	$(FONTFORGE) -script convertsfdtottf.py greextra.sfd
 
-fonts: $(TEXFILES) $(OTHERFONTS)
-
-gregoriotex-fontmapping.tex: mapfonts.lua $(GLYPHFONTS)
-	$(LUA) mapfonts.lua
+fonts: $(TTFFILES)
 
 gregorio: gregorio.ttf
 
@@ -65,7 +56,7 @@ gresym: gresym.ttf
 
 greextra: greextra.ttf
 
-MAINTAINERCLEANFILES = $(GLYPHFONTS) $(OTHERFONTS) $(TEXFILES)
+MAINTAINERCLEANFILES = $(TTFFILES)
 
 install-data-local:
 	@$(TOP_LEVEL_MAKE) echo 'The Makefile in the fonts directory is no longer used for installing'
