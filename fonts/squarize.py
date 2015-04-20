@@ -39,14 +39,18 @@ from __future__ import print_function
 
 import getopt, sys
 import fontforge, psMat
+import subprocess
+import os
+
+os.chdir(sys.path[0])
 
 
-GPLV3 = """This program is free software: you can redistribute it and/or
+GPLV3 = """Gregorio is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful, but
+Gregorio is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 General Public License for more details.
@@ -87,11 +91,13 @@ convention, see gregorio-base.sfd for this convention.
 Usage:
         squarize.py fontname
 
-with fontname=gregorio, parmesan or greciliae for now.""")
+with fontname=gregorio, parmesan or greciliae.""")
 
 def main():
     "Main function"
     global oldfont, newfont, font_name
+    proc = subprocess.Popen(['../VersionManager.py', '-c'], stdout=subprocess.PIPE)
+    version = proc.stdout.read().strip('\n')
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], "h", ["help"])
     except getopt.GetoptError:
@@ -123,24 +129,28 @@ def main():
     newfont.encoding = "ISO10646-1"
     newfont.fontname = "%s" % font_name
     newfont.fullname = "%s" % font_name
-    newfont.fontlog = "See file FONTLOG you should have received with the software"
     newfont.familyname = "%s" % font_name
+    newfont.version = version
     if font_name == "greciliae":
-        newfont.copyright = """Greciliae font, adapted with fontforge by Elie Roux
-Copyright (C) 2007 Matthew Spencer
-with Reserved Font Name Caeciliae
+        newfont.copyright = """Greciliae font
+Copyright (C) 2007 Matthew Spencer with Reserved Font Name "Caeciliae",
+Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
+with Reserved Font Name "Greciliae".
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is also available with a FAQ at:
 http://scripts.sil.org/OFL"""
     elif font_name == "gregorio":
-        newfont.copyright = """gregorio font, created with FontForge.
-Copyright (C) 2007 Elie Roux <elie.roux@telecom-bretagne.eu>
+        newfont.copyright = """Font named "gregorio"
+Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
+This file is part of Gregorio.
 
 """+GPLV3
     elif font_name == "parmesan":
-        newfont.copyright = """LilyPond's pretty-but-neat music font.
-Copyright (C) 2002--2006 Juergen Reuter <reuter@ipd.uka.de>
+        newfont.copyright = """LilyPond's pretty-but-neat music font, adapted to the Gregorio Project.
+Copyright (C) 2002-2006 Juergen Reuter <reuter@ipd.uka.de>
+Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
+This file is part of Gregorio.
 
 """+GPLV3
     newfont.weight = "regular"
