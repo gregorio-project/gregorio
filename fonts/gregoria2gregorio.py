@@ -66,12 +66,11 @@ PITCH_LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
 
 newfont = None
 oldfont = None
-font_name = None
 
 
 def main():
     "Main function."
-    global newfont, oldfont, font_name
+    global newfont, oldfont
     newfont = fontforge.font()
 #    newfont.em = 2048
     oldfont = fontforge.open("Gregoria.otf")
@@ -82,17 +81,17 @@ def main():
     newfont.familyname = "gregoriao"
     newfont.weight = oldfont.weight
     newfont.copyright = oldfont.copyright
-    first_step()
+    first_step(font_name)
     adjust_additional_glyphs()
     oldfont.close()
     oldfont = fontforge.open("Gregoria-Deminutae.otf")
     font_name = "gregoria-deminutae"
-    first_step()
+    first_step(font_name)
     adjust_additional_glyphs()
     oldfont.close()
     oldfont = fontforge.open("Gregoria-Auctae.otf")
     font_name = "gregoria-auctae"
-    first_step()
+    first_step(font_name)
     adjust_additional_glyphs()
     oldfont.close()
     newfont.em = 2048
@@ -104,7 +103,7 @@ def main():
     # number, only with names, so we have to hardcode a correspondance
     # table between the glyphnumber and the name... happily only for
     # some value:
-cT = {
+C_TABLE = {
     0:16759,
     255:17788,
     256:60,
@@ -126,15 +125,15 @@ cT = {
     2303:17819,
     2133:17819}
 
-def first_step():
+def first_step(font_name):
     "First thing to do."
-    adjust_two_notes_glyphs()
+    adjust_two_notes_glyphs(font_name)
     adjust_three_notes_glyphs()
-    adjust_four_notes_glyphs()
-    rename_base_glyphs()
+    adjust_four_notes_glyphs(font_name)
+    rename_base_glyphs(font_name)
 
 
-def give_liquescentia(debilis):
+def give_liquescentia(font_name, debilis):
     "A simple function giving the liquescentia."
     if font_name == "gregoria":
         if debilis == 'initiodebilis':
@@ -152,38 +151,37 @@ def give_liquescentia(debilis):
         else:
             return "deminutus"
 
-
-def adjust_two_notes_glyphs():
+def adjust_two_notes_glyphs(font_name):
     "Adjust the height and renames two notes glyphs."
     # glyphs with the first note under the second
     # twoNotesGlyphs = ['flexa', 'flexus'] # there is a . in the name of the 3 and 4
     # case of pes
     for i in range(1, 5):
-        name = glyph_num(i, 0, 0, 'pes', give_liquescentia('nothing'), 1)
+        name = glyph_num(i, 0, 0, 'pes', give_liquescentia(font_name, 'nothing'), 1)
         rename_glyph("pes%d" % i, name)
         adjust_glyph_height(name, i-1)
     # case of pesDebilis
     for i in range(1, 5):
         if font_name == "gregoria":
-            name = glyph_num(i, 0, 0, 'pes', give_liquescentia('initiodebilis'), 1)
+            name = glyph_num(i, 0, 0, 'pes', give_liquescentia(font_name, 'initiodebilis'), 1)
             rename_glyph("pesDebilis%d" % i, name)
             adjust_glyph_height(name, i-1)
     # case of pes.quadratum
     for i in range(1, 5):
         if font_name == "gregoria":
-            name = glyph_num(i, 0, 0, 'pesquadratum', give_liquescentia('nothing'), 1)
+            name = glyph_num(i, 0, 0, 'pesquadratum', give_liquescentia(font_name, 'nothing'), 1)
             rename_glyph("pes.quadratum%d" % i, name)
             adjust_glyph_height(name, i-1)
             adjust_glyph_width(name, 329)
     # case of pes.quassus
     for i in range(1, 5):
         if font_name == "gregoria":
-            name = glyph_num(i, 0, 0, 'pesquassus', give_liquescentia('nothing'), 1)
+            name = glyph_num(i, 0, 0, 'pesquassus', give_liquescentia(font_name, 'nothing'), 1)
             rename_glyph("pes.quassus%d" % i, name)
             adjust_glyph_height(name, i-1)
     # case of flexus
     for i in range(1, 5):
-        name = glyph_num(i, 0, 0, 'flexus_nobar', give_liquescentia('nothing'), 1)
+        name = glyph_num(i, 0, 0, 'flexus_nobar', give_liquescentia(font_name, 'nothing'), 1)
         glyphname = "flexus%db" %i
         if i < 3:
             glyphname = "flexus%d.b" % i
@@ -191,7 +189,7 @@ def adjust_two_notes_glyphs():
         adjust_glyph_height(name, -1)
     # case of flexa
     for i in range(1, 5):
-        name = glyph_num(i, 0, 0, 'flexus', give_liquescentia('nothing'), 1)
+        name = glyph_num(i, 0, 0, 'flexus', give_liquescentia(font_name, 'nothing'), 1)
         glyphname = "flexa%d" % i
         if font_name == "gregoria":
             if i < 3:
@@ -241,28 +239,29 @@ def adjust_three_notes_glyphs():
         '4b.':(2, 4, 40),
         '4c.':(1, 4, 40)}
     #threeNotesGlyphs
-    tNG = {'torcDebilis':('torculus', 'initiodebilis'),
-           'torculus':('torculus', 'nothing'),
-           'porrectus':('porrectus', 'nothing'),
-           'tor.resupinus':('porrectus_nobar', 'nothing')}
-    for base in tNG.keys():
-        if tNG[base][0] == 'torculus':
+    t_ng = {'torcDebilis':('torculus', 'initiodebilis'),
+            'torculus':('torculus', 'nothing'),
+            'porrectus':('porrectus', 'nothing'),
+            'tor.resupinus':('porrectus_nobar', 'nothing')}
+    for base in t_ng.keys():
+        if t_ng[base][0] == 'torculus':
             for suffix in cTT.keys():
                 adjust_three_notes_glyphs_aux("%s%s" % (base, suffix),
                                               cTT[suffix][0],
                                               cTT[suffix][1],
-                                              tNG[base][0],
-                                              give_liquescentia(tNG[base][1]))
+                                              t_ng[base][0],
+                                              give_liquescentia(font_name, t_ng[base][1]))
         else:
             for suffix in c_tp.keys():
                 adjust_three_notes_glyphs_aux("%s%s" % (base, suffix),
                                               c_tp[suffix][0],
                                               c_tp[suffix][1],
-                                              tNG[base][0],
-                                              give_liquescentia(tNG[base][1]))
+                                              t_ng[base][0],
+                                              give_liquescentia(font_name, t_ng[base][1]))
 
 
 def adjust_three_notes_glyphs_aux(oldname, i, j, glyph_type, liquescentia):
+    "Make adjustments for three note glyphs."
     newname = glyph_num(i, j, 0, glyph_type, liquescentia, 0)
     rename_glyph(oldname, newname)
     # the constant thing is that the second note is on the good height
@@ -272,10 +271,10 @@ def adjust_three_notes_glyphs_aux(oldname, i, j, glyph_type, liquescentia):
         adjust_glyph_height(newname, -i)
     center_glyph(newname)
 
-def adjust_four_notes_glyphs():
+def adjust_four_notes_glyphs(font_name):
     "Adjust the height and renames four notes glyphs."
     # the table is basically the same as before, the 4th number is the shift we have to apply
-    cT = {
+    c_table = {
         '1':(1, 1, 1, 1),
         '2':(2, 2, 2, 2),
         '2a':(2, 2, 1, 1),
@@ -328,19 +327,19 @@ def adjust_four_notes_glyphs():
         '4b.':(2, 3, 4, 2),
         '4c.':(1, 2, 4, 2),
         '4d.':(1, 3, 4, 2)}
-    for suffix in cT.keys():
+    for suffix in c_table.keys():
         adjust_four_notes_glyphs_aux("por.flexus%s" % suffix,
-                                     cT[suffix][0], cT[suffix][1],
-                                     cT[suffix][2], 'porrectusflexus',
-                                     give_liquescentia('nothing'),
-                                     cT[suffix][3])
+                                     c_table[suffix][0], c_table[suffix][1],
+                                     c_table[suffix][2], 'porrectusflexus',
+                                     give_liquescentia(font_name, 'nothing'),
+                                     c_table[suffix][3])
         if font_name != "gregoria-auctae":
             adjust_four_notes_glyphs_aux("por.flexus%s.001" % suffix,
-                                         cT[suffix][0], cT[suffix][1],
-                                         cT[suffix][2],
+                                         c_table[suffix][0], c_table[suffix][1],
+                                         c_table[suffix][2],
                                          'porrectusflexus_nobar',
-                                         give_liquescentia('nothing'),
-                                         cT[suffix][3])
+                                         give_liquescentia(font_name, 'nothing'),
+                                         c_table[suffix][3])
 
 def adjust_four_notes_glyphs_aux(oldname, i, j, k, glyph_type, liquescentia, shift):
     "Make adjustments for four note glyphs."
@@ -399,6 +398,7 @@ def adjust_auctae_additional_glyphs():
         center_glyph(key)
 
 def adjust_deminutae_additional_glyphs():
+    # pylint: disable=invalid-name
     "The height of the porrectus without bar are messed up in gregoria-deminutae..."
     c_tp = {
         12818:1,
@@ -415,7 +415,7 @@ def adjust_deminutae_additional_glyphs():
     for (key, value) in c_tp.items():
         adjust_glyph_height(key, value)
 
-def rename_base_glyphs():
+def rename_base_glyphs(font_name):
     "Renames the base glyphs."
     if font_name == "gregoria":
         for oldname in BASE_GLYPHS:
