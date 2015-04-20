@@ -72,19 +72,6 @@ typedef enum gtex_type {
     T_NEXT_TYPE = 64,
 } gtex_type;
 
-// the liquescentia number of GregorioTeX (different because they have to be
-// between 0 and 7)
-typedef enum gtex_liquescentia {
-    GL_NO_LIQUESCENTIA = 0,
-    GL_INITIO_DEBILIS = 1,
-    GL_DEMINUTUS = 2,
-    GL_AUCTUS_ASCENDENS = 3,
-    GL_AUCTUS_DESCENDENS = 4,
-    GL_DEMINUTUS_INITIO_DEBILIS = 5,
-    GL_AUCTUS_ASCENDENS_INITIO_DEBILIS = 6,
-    GL_AUCTUS_DESCENDENS_INITIO_DEBILIS = 7,
-} gtex_liquescentia;
-
 // the different types for the alignment of the notes in GregorioTeX
 typedef enum gtex_alignment {
     AT_ONE_NOTE = 0,
@@ -122,11 +109,6 @@ typedef enum gtex_sign_type {
     ST_H_EPISEMUS = 0,
     ST_V_EPISEMUS = 1,
 } gtex_sign_type;
-
-// the definitions of the type and liquescentia factors
-#define TYPE_FACTOR 512
-#define LONG_LIQ_FACTOR 256
-#define SHORT_LIQ_FACTOR 64
 
 #define HEPISEMUS_FIRST_TWO 12
 
@@ -170,11 +152,7 @@ void gregoriotex_write_bar(FILE *f, gregorio_bar type, gregorio_sign signs,
         bool is_inside_bar);
 void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph);
-void gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
-        gregorio_element *element, gtex_alignment *type, gtex_type *gtype,
-        unsigned int *glyph_number);
 
-unsigned int gregoriotex_determine_interval(gregorio_glyph *glyph);
 void gregoriotex_write_note(FILE *f, gregorio_note *note,
         gregorio_glyph *glyph, gregorio_element *element, char next_note_pitch);
 
@@ -184,9 +162,6 @@ void gtex_write_special_char(FILE *f, grewchar *special_char);
 void gtex_write_verb(FILE *f, grewchar *verb_str);
 void gtex_print_char(FILE *f, grewchar to_print);
 
-unsigned int
-gregoriotex_determine_liquescentia_number(unsigned int factor,
-        gtex_glyph_liquescentia type, gregorio_liquescentia liquescentia);
 void gregoriotex_write_vepisemus(FILE *f, gregorio_glyph *current_glyph, int i,
         gtex_type type, gregorio_note *current_note);
 void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
@@ -202,10 +177,6 @@ void gregoriotex_write_rare(FILE *f, gregorio_glyph *current_glyph, int i,
 void gregoriotex_write_signs(FILE *f, gtex_type type, gregorio_glyph *glyph,
         gregorio_element *element, gregorio_note *current_note);
 int gregoriotex_syllable_first_type(gregorio_syllable *syllable);
-
-void gregoriotex_determine_note_number_and_type(gregorio_note *note,
-        gregorio_glyph *glyph, gregorio_element *element, gtex_alignment *type,
-        unsigned int *glyph_number);
 
 void gtex_write_end_for_two(FILE *f, grestyle_style style);
 

@@ -267,9 +267,23 @@ local function get_gregorioversion()
   return internalversion
 end
 
+local function map_fonts()
+  -- use greciliae because it is the most complete font
+  local font_info = fontloader.open(kpse.find_file('greciliae', 'truetype fonts'))
+  local i = 0
+  while i < font_info.glyphmax do
+    local glyph = font_info.glyphs[i]
+    if glyph and glyph.unicode >= 0 then
+      tex.print(string.format([[\chardef\grecp%s=%d\relax ]], glyph.name, glyph.unicode))
+    end
+    i = i + 1
+  end
+end
+
 gregoriotex.include_score        = include_score
 gregoriotex.compile_gabc         = compile_gabc
 gregoriotex.atScoreEnd           = atScoreEnd
 gregoriotex.atScoreBeggining     = atScoreBeggining
 gregoriotex.check_font_version   = check_font_version
 gregoriotex.get_gregorioversion  = get_gregorioversion
+gregoriotex.map_fonts            = map_fonts
