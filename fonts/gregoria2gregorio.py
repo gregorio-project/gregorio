@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env fontforge -script
 # coding=utf-8
 # pylint: disable=import-error, too-many-arguments, too-many-branches
 
