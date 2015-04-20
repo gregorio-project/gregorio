@@ -52,7 +52,6 @@ GREGORIO_FILES = ["configure.ac",
                   "tex/gregoriotex-spaces.tex",
                   "tex/gregoriotex-symbols.tex",
                   "tex/gregoriotex-syllable.tex",
-                  "fonts/mapfonts.lua",
                  ]
 
 def get_parser():
