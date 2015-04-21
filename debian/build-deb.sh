@@ -21,32 +21,37 @@ until [ -z "$1" ]; do
   shift
 done
 
-VERSION=`./VersionManager.py --get-current`
+VERSION=`cd .. && ./VersionManager.py --get-current`
 if [ "$GIT" = "TRUE" ]
 then
-  DEBIAN_VERSION=`./VersionManager.py --get-debian-git`
+  DEBIAN_VERSION=`cd .. && ./VersionManager.py --get-debian-git`
 else
-  DEBIAN_VERSION=`./VersionManager.py --get-debian-stable`
+  DEBIAN_VERSION=`cd .. && ./VersionManager.py --get-debian-stable`
 fi
 
 if [ "$CLEAN" = "TRUE" ]
 then
-  rm -f gregorio_$DEBIAN_VERSION*
-  rm -f gregoriotex_$DEBIAN_VERSION*
-  rm -rf gregorio-$VERSION
+  rm -rf build/
 else
   if [ "$LINT" = "TRUE" ]
   then
     lintian gregorio_$DEBIAN_VERSION*.changes
   else
+    mkdir -p build
+    cd ..
     autoreconf -f -i
     ./configure
     make dist
+    mv gregorio-$VERSION.tar.gz debian/build/
+    cd debian/build
     tar xzf gregorio-$VERSION.tar.gz
     mv gregorio-$VERSION.tar.gz gregorio_$DEBIAN_VERSION.orig.tar.gz
     cd gregorio-$VERSION
     ./configure
-    cp -R ../debian .
+    mkdir -p debian/
+    cp ../../../debian/* debian/
+    cp -R ../../../debian/source debian/
+    rm debian/README.md debian/build-deb.sh
     sed -i "s/UNRELEASED/$DEBVERSION/g" debian/changelog
     echo "gregorio ($DEBIAN_VERSION-1) $DEBVERSION; urgency=low
 
