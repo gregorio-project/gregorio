@@ -126,8 +126,6 @@ def main():
         font_name = "parmesan"
     elif args[0] == "greciliae":
         font_name = "greciliae"
-    elif args[0] == "gregoria":
-        font_name = "gregoria"
     else:
         usage()
         sys.exit(2)
@@ -286,7 +284,6 @@ DIRECT_GLYPH_SKIP = {
     'greciliae': [],
     'gregorio': [75, 76, 78, 80],
     'parmesan': [75, 76, 78, 80],
-    'gregoria': [75, 76, 78, 80],
 }
 
 def initialize_glyphs():
@@ -396,22 +393,6 @@ def get_lengths(fontname):
                        width_flexusdeminutus=168,
                        porrectusflexuswidths=(503, 629, 628, 628, 931),
                        porrectuswidths=(503, 629, 628, 628, 931),
-                       hepisemus_additional_width=5)
-    elif fontname == "gregoria":
-        lengths = dict(line_width=22,
-                       width_punctum=164,
-                       width_oriscus=164,
-                       width_oriscus_rev=164,
-                       width_quilisma=164,
-                       width_debilis=88,
-                       width_deminutus=88,
-                       width_inclinatum=173,
-                       width_stropha=164,
-                       width_high_pes=154,
-                       width_inclinatum_deminutus=128,
-                       width_flexusdeminutus=186,
-                       porrectusflexuswidths=(340, 428, 586, 670, 931),
-                       porrectuswidths=(490, 575, 650, 740, 931),
                        hepisemus_additional_width=5)
     return lengths
 
