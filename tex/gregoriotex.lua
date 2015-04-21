@@ -268,7 +268,6 @@ local function get_gregorioversion()
 end
 
 local function map_font(name, prefix)
-  -- use greciliae because it is the most complete font
   local font_info = fontloader.open(kpse.find_file(name, 'truetype fonts'))
   local i = 0
   while i < font_info.glyphmax do
@@ -283,6 +282,7 @@ local function map_font(name, prefix)
 end
 
 local function map_fonts()
+  -- use greciliae because it is the most complete font
   map_font('greciliae', 'cp')
   map_font('greextra', 'sp')
 end
