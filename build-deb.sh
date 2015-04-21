@@ -12,9 +12,10 @@ until [ -z "$1" ]; do
     --clean      ) CLEAN=TRUE    ;;
     --lint       ) LINT=TRUE    ;;
     --git        ) GIT=TRUE    ;;
-    --fullname=* ) DEBFULLNAME="$1" ;;
-    --version=*  ) DEBVERSION="$1" ;;
-    --email=*    ) DEBFULLNAME="$1" ;;
+    --source     ) SOURCE=TRUE    ;;
+    --fullname=* ) DEBFULLNAME=`echo $1 | sed 's/--fullname=\(.*\)/\1/' ` ;;
+    --version=*  ) DEBVERSION=`echo $1 | sed 's/--version=\(.*\)/\1/' ` ;;
+    --email=*    ) DEBEMAIL=`echo $1 | sed 's/--email=\(.*\)/\1/' ` ;;
     *            ) echo "ERROR: invalid build.sh parameter: $1"; exit 1       ;;
   esac
   shift
@@ -46,12 +47,18 @@ else
     cd gregorio-$VERSION
     ./configure
     cp -R ../debian .
+    sed -i "s/UNRELEASED/$DEBVERSION/g" debian/changelog
     echo "gregorio ($DEBIAN_VERSION-1) $DEBVERSION; urgency=low
 
   * Auto build.
  -- $DEBFULLNAME <$DEBEMAIL>  $(date -R)
 
 $(cat debian/changelog)" > debian/changelog
-    dpkg-buildpackage
+    if [ "$SOURCE" = "TRUE" ]
+    then
+      dpkg-buildpackage -S
+    else
+      dpkg-buildpackage
+    fi
   fi
 fi
