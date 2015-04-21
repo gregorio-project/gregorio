@@ -37,6 +37,7 @@ else
   then
     lintian gregorio_$DEBIAN_VERSION*.changes
   else
+    rm -rf build/
     mkdir -p build
     cd ..
     autoreconf -f -i
