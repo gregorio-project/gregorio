@@ -22,7 +22,7 @@ To prepare packages for Launchpad you need some specific settings:
 
  * Launchpad automatically builds the binary packages, so only source packages has to be uploaded
  * it doesn't accept non-Ubuntu distribution, so you have to put an Ubuntu version in the source package
- * you need to sign the package; for this, you need to have a GPG key (`gpg --gen-key` shoud be enough), and 
+ * you need to sign the package; for this, you need to have a GPG key (`gpg --gen-key` shoud be enough), and have it uploaded on your launchpad account
 
 Once you know what you're doing, run
 
