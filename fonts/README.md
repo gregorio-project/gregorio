@@ -15,4 +15,6 @@ The most important is that they must be found by [fontconfig](http://www.freedes
 
 # The case of Gregoria
 
-[Gregoria](http://www.anatoletype.net/projects/gregoria) cannot be used by Gregorio directly (although it was the primary goal of Gregorio when it was created). As the font is not free, it's not possible to use the same process as [caeciliae](http://marello.org/caeciliae/), because it would require to distribute a modified version. The script [gregoria2gregorio.py](gregoria2gregorio.py) is supposed to make these modifications, but it certainly contains bugs and is a bit outdated. So expect some work if you want to use it.
+Support for Gregoria has be dropped.
+
+[Gregoria](http://www.anatoletype.net/projects/gregoria) cannot be used by Gregorio directly (although it was the primary goal of Gregorio when it was created). As the font is not free, it's not possible to use the same process as [caeciliae](http://marello.org/caeciliae/), because it would require to distribute a modified version.

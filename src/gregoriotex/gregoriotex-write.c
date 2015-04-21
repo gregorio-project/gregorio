@@ -336,14 +336,6 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
         return "";
     }
     liquescentia = glyph->u.notes.liquescentia;
-    /*
-     * commented, but must be there for the font gregoria (as there is no auctus
-     * descendens). TODO : having a variable telling the font if (liquescentia == 
-     * * L_AUCTUS_ASCENDENS) { glyph->liquescentia = L_AUCTUS_DESCENDENS; } if
-     * (liquescentia == L_AUCTUS_ASCENDENS_INITIO_DEBILIS) { glyph->liquescentia
-     * = L_AUCTUS_DESCENDENS_INITIO_DEBILIS; } 
-     */
-
     switch (glyph->u.notes.glyph_type) {
     case G_PODATUS:
         pitch = glyph->u.notes.first_note->next->u.note.pitch;
@@ -699,9 +691,6 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
         }
         if (!strcmp(score->gregoriotex_font, "greciliae")) {
             fprintf(f, "\\setgregoriofont{greciliae}%%\n");
-        }
-        if (!strcmp(score->gregoriotex_font, "gregoria")) {
-            fprintf(f, "\\setgregoriofont{gregoria}%%\n");
         }
     }
     if (score->mode != 0) {
