@@ -279,6 +279,7 @@ local function map_font(name, prefix)
     end
     i = i + 1
   end
+  fontloader.close(font_info)
 end
 
 local function map_fonts()
