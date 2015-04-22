@@ -2392,7 +2392,7 @@ gregoriotex_write_choral_sign(FILE *f,
     bool kind_of_pes = false;
     gregorio_note *tmpnote = NULL;
     switch (glyph->u.notes.glyph_type) {
-    case G_FLEXUS:
+    case G_FLEXA:
     case G_TORCULUS:
     case G_TORCULUS_LIQUESCENS:
     case G_TORCULUS_RESUPINUS_FLEXUS:
@@ -2401,7 +2401,7 @@ gregoriotex_write_choral_sign(FILE *f,
             low_sign = 1;
         }
         break;
-    case G_PES:
+    case G_PODATUS:
     case G_PORRECTUS:
     case G_TORCULUS_RESUPINUS:
         if (!current_note->next) {
@@ -2580,7 +2580,7 @@ gregoriotex_write_punctum_mora(FILE *f,
     // we go into this switch only if it is the note before the last note
     if (current_note->next) {
         switch (glyph->u.notes.glyph_type) {
-        case G_FLEXUS:
+        case G_FLEXA:
         case G_TORCULUS:
         case G_TORCULUS_RESUPINUS_FLEXUS:
         case G_PORRECTUS_FLEXUS:
@@ -2590,7 +2590,7 @@ gregoriotex_write_punctum_mora(FILE *f,
                 shift_before = true;
             }
             break;
-        case G_PES:
+        case G_PODATUS:
             if ((current_note->u.note.shape != S_PUNCTUM
                             && current_note->u.note.shape != S_QUILISMA)
                     || glyph->u.notes.liquescentia == L_AUCTUS_DESCENDENS
@@ -2855,7 +2855,7 @@ gregoriotex_find_next_hepisemus_height(gregorio_glyph *glyph,
         }
         glyph = glyph->next;
         note = glyph->u.notes.first_note;
-        if (glyph->u.notes.glyph_type == G_PES) {
+        if (glyph->u.notes.glyph_type == G_PODATUS) {
             note = note->next;
             i = 2;
             gtype = T_PES;
@@ -2897,7 +2897,7 @@ gregoriotex_find_next_hepisemus_height(gregorio_glyph *glyph,
         return -1;
     }
     note = glyph->u.notes.first_note;
-    if (glyph->u.notes.glyph_type == G_PES) {
+    if (glyph->u.notes.glyph_type == G_PODATUS) {
         note = note->next;
         i = 2;
         gtype = T_PES;
