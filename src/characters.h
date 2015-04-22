@@ -1,24 +1,26 @@
 /*
- * Gregorio structure manipulation file. Copyright (C) 2008 Elie Roux
- * <elie.roux@telecom-bretagne.eu>
- * 
- * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option)
- * any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
- * more details.
- * 
- * You should have received a copy of the GNU General Public License along with 
- * this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * Copyright (C) 2008-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ *
+ * This file is part of Gregorio.
+ *
+ * Gregorio is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Gregorio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef CHARACTERS_H
 #define CHARACTERS_H
 
+#include <stdbool.h>
 #include "struct.h"
 
 /*
@@ -61,16 +63,16 @@ int gregorio_is_vowel(grewchar letter);
 void gregorio_write_text(char type, gregorio_character *current_character,
                          FILE *f, void (*printverb) (FILE *, grewchar *),
                          void (*printchar) (FILE *, grewchar),
-                         void (*begin) (FILE *, unsigned char),
-                         void (*end) (FILE *, unsigned char),
+                         void (*begin) (FILE *, grestyle_style),
+                         void (*end) (FILE *, grestyle_style),
                          void (*printspchar) (FILE *, grewchar *));
 
 void gregorio_write_initial(gregorio_character *current_character,
                             FILE *f, void (*printverb) (FILE *,
                                                         grewchar *),
                             void (*printchar) (FILE *, grewchar),
-                            void (*begin) (FILE *, unsigned char),
-                            void (*end) (FILE *, unsigned char),
+                            void (*begin) (FILE *, grestyle_style),
+                            void (*end) (FILE *, grestyle_style),
                             void (*printspchar) (FILE *, grewchar *));
 
 gregorio_character *gregorio_first_text(gregorio_score *score);
@@ -88,8 +90,10 @@ void gregorio_insert_char_after(grewchar c,
 
 void gregorio_rebuild_characters(gregorio_character **param_character,
                                  char center_is_determined,
-                                 gregorio_lyric_centering centering_scheme);
+                                 gregorio_lyric_centering centering_scheme,
+                                 bool skip_initial);
 
-void gregorio_rebuild_first_syllable(gregorio_character **param_character);
+void gregorio_rebuild_first_syllable(gregorio_character **param_character,
+                                     bool separate_initial);
 
 #endif

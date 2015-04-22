@@ -1,24 +1,26 @@
 %GregorioTeX file.
-%Copyright (C) 2007-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
 %
-%This program is free software: you can redistribute it and/or modify
-%it under the terms of the GNU General Public License as published by
-%the Free Software Foundation, either version 3 of the License, or
-%(at your option) any later version.
+% Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
 %
-%This program is distributed in the hope that it will be useful,
-%but WITHOUT ANY WARRANTY; without even the implied warranty of
-%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-%GNU General Public License for more details.
+% This file is part of Gregorio.
 %
-%You should have received a copy of the GNU General Public License
-%along with this program.  If not, see <http://www.gnu.org/licenses/>.
+% Gregorio is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Gregorio is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
 
 % this file contains definitions of signs (bar, episemus, punctum, alterations)
 
-\gredeclarefileversion{gregoriotex-signs.tex}%
- {\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
+\gre@declarefileversion{gregoriotex-signs.tex}{3.0.0-rc2}% GREGORIO_VERSION
 
 \def\greusestylecommon{%
   \ifnum\greusestylefont=0\relax %
@@ -686,33 +688,28 @@
     \advance\gre@dimen@temp@three by \gre@dimen@temp@two %
   \fi%
   \kern-\gre@dimen@temp@three % we do it here because of the ictus
-  % here we save the position of the ictus or we draw the glyph
-  \ifnum#5<3\relax %
-    \greictus{#5}%
-  \else %
   % then we draw the sign
-    \ifcase#6\or %
-      % vertical episemus
-      \setbox\GreTempsign=\hbox{\greverticalepisemuschar}%
-    \or % rare sign
-      \setbox\GreTempsign=\hbox{\gregoriofont \char #5}%
-    \or % choral sign
-      \setbox\GreTempsign=\hbox{#7}%
-    \or % brace above bar
-      \setbox\GreTempsign=\hbox{\greabovebarbracechar}%
-    \fi %
-    % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
-    \gre@dimen@temp@two=\wd\GreTempsign %
-    \divide\gre@dimen@temp@two by 2 %
-    \advance\gre@dimen@temp@three by \gre@dimen@temp@two %
-    \kern-\gre@dimen@temp@two%
-    \gre@skip@temp@four = #4sp%
-    \kern \gre@skip@temp@four%
-    \raise \gre@dimen@glyphraisevalue \copy\GreTempsign %
-    \kern -\gre@skip@temp@four%
-    % and finally we go back to the end of the glyph, where we were first
-    \advance\gre@dimen@temp@three by -2\gre@dimen@temp@two %
+  \ifcase#6\or %
+    % vertical episemus
+    \setbox\GreTempsign=\hbox{\greverticalepisemuschar}%
+  \or % rare sign
+    \setbox\GreTempsign=\hbox{\gregoriofont \char #5}%
+  \or % choral sign
+    \setbox\GreTempsign=\hbox{#7}%
+  \or % brace above bar
+    \setbox\GreTempsign=\hbox{\greabovebarbracechar}%
   \fi %
+  % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
+  \gre@dimen@temp@two=\wd\GreTempsign %
+  \divide\gre@dimen@temp@two by 2 %
+  \advance\gre@dimen@temp@three by \gre@dimen@temp@two %
+  \kern-\gre@dimen@temp@two%
+  \gre@skip@temp@four = #4sp%
+  \kern \gre@skip@temp@four%
+  \raise \gre@dimen@glyphraisevalue \copy\GreTempsign %
+  \kern -\gre@skip@temp@four%
+  % and finally we go back to the end of the glyph, where we were first
+  \advance\gre@dimen@temp@three by -2\gre@dimen@temp@two %
   \kern\gre@dimen@temp@three%
   \relax%
 }%
@@ -888,41 +885,6 @@
   \relax %
 }%
 
-\def\greictusa#1{%
-  \grevepisemusorrare{a}{#1}{1}{2}{}%
-  \relax %
-}%
-
-\def\greictust#1{%
-  \grevepisemusorrare{a}{#1}{2}{2}{}%
-  \relax %
-}%
-
-% maybe these four should be optimized
-\def\grevepisemusictusa#1#2{%
-  \grevepisemusorrare{#1}{#2}{\gre@char@vepisemus}{1}{}%
-  \greictusa{#2}%
-  \relax %
-}%
-
-\def\grebarvepisemusictusa#1{%
-  \grevepisemusorrare{c}{#1}{\gre@char@vepisemus}{1}{}%
-  \greictusa{#1}%
-  \relax %
-}%
-
-\def\grevepisemusictust#1#2{%
-  \grevepisemusorrare{#1}{#2}{\gre@char@vepisemus}{1}{}%
-  \greictust{#2}%
-  \relax %
-}%
-
-\def\grebarvepisemusictust#1{%
-  \grevepisemusorrare{c}{#1}{\gre@char@vepisemus}{1}{}%
-  \greictust{#1}%
-  \relax %
-}%
-
 \def\greaccentus#1#2{%
   \grevepisemusorrare{#1}{#2}{\gre@char@accentus}{2}{}%
   \relax %
@@ -945,23 +907,6 @@
 
 \def\grereversedsemicirculus#1#2{%
   \grevepisemusorrare{#1}{#2}{\gre@char@reversedsemicirculus}{2}{}%
-  \relax %
-}%
-
-%% the macros to save the absolute positions of ictus a and t in the aux file
-
-% macro called at the place of an ictus
-% #1 is 1 if ictus a, 2 if ictus t
-\def\greictus#1{%
-  \pdfsavepos %
-  \ifcase#1\or %
-    \grewriteaux{ia:\number\pdflastxpos}%
-  \or %
-    \grewriteaux{it:\number\pdflastxpos}%
-  \fi %
-  \gregorioattr=4\relax %
-  \hbox to 0pt{}%
-  \gregorioattr=0\relax %
   \relax %
 }%
 
@@ -1347,17 +1292,21 @@
 %a macro to write a bar
 %% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis
 %% 2: is % for now we don't use it
-%%%%%% 0 if it is outside a syllable
-%%%%%% 1 if it is in a syllable
+%%%%%% 0 if it is in a syllable containing only this bar
+%%%%%% 1 if it is in a syllable containing other notes
 %% 3: macros that may happen before the skip after the bar (typically grevepisemus)
 \def\grewritebar#1#2#3{%
-  % first, for the bar to be really centered, if the last glyph has a punctum mora, we kern of the corresponding space (we could also have done it in the gregorio core)
+  % first, for the bar to be really centered, if the last glyph has a punctum
+  % mora, we kern of the corresponding space. We do it only in the case
+  % of a bar in the middle of other notes.
   \ifnum\grelastispunctum=1\relax %
-    \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctummorachar}%
-    \gre@skip@temp@four = -\wd\GreTempwidth %
-    \kern\gre@skip@temp@four%
-    \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
-    \kern\gre@skip@temp@four %
+    \ifnum#2=1\relax %
+      \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctummorachar}%
+      \gre@skip@temp@four = -\wd\GreTempwidth %
+      \kern\gre@skip@temp@four%
+      \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
+      \kern\gre@skip@temp@four %
+    \fi %
   \fi %
   \grenewglyphcommon %
   \gre@calculate@glyphraisevalue{g}{0}% bar glyphs are made to be at this height
@@ -1530,6 +1479,7 @@
       \grehskip\gre@skip@temp@four %
     \fi %
   \fi %
+  \gre@debug{Width of bar just printed: \the\wd\GreTempwidth}%
   \global\gre@dimen@lastglyphwidth=\wd\GreTempwidth %
   \relax%
 }%

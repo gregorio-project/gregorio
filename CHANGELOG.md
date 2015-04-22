@@ -3,12 +3,33 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+### Fixed
+- Handling of the first syllable in gabc is now more consistent with the all other syllables.  This centers the syllable correctly when using latin syllable centering (see [#42](https://github.com/gregorio-project/gregorio/issues/42)) and makes the use of styles less surprising in the first syllable (see [#135](https://github.com/gregorio-project/gregorio/issues/135)).
+
+### Changed
+- The `O` modifier in gabc now has expanded uses beyond the salicus `(egOi)`.  A stemmed oriscus will appear on a lone pitch `(gO)` or a followed by a lower pitch `(gOe)` (see [#76](https://github.com/gregorio-project/gregorio/issues/76)).  A virga strata will appear on the second note of two ascending pitches `(giO)`.
+
 ### Removed
 - GregorioXML and OpusTeX output
 
-## 3.0.0-beta - 2015-03-15
+## [Unreleased][ureleased]
+### Fixed
+- Torculus followed by a non-liquescent note is now parsed correctly (see [#284](https://github.com/gregorio-project/gregorio/issues/284).
+
+## [3.0.0-rc2] - 2015-04-14
+### Changed
+- Clarified post installation options for Windows installer.  What was the "Install Fonts" option is now labeled to indicate that this also adds GregorioTeX files to the texmf tree.
+- `\grechangedim` now checks to make sure it only operates on existing distances and doesn't create a new one.
+
+### Fixed
+- Windows post install script wasn't adding files to texmf tree.  Bug introduced by 3.0.0-rc1.
+- Tarball distribution was missing `gregoriotex-chars.tex` file.
+- Spacing between a syllable and a syllable with text and only a bar was too short.
+
+## [3.0.0-rc1] - 2015-04-06
 ### Changed
 - [New website](http://gregorio-project.github.io) containing instructions only for new versions of Gregorio starting with this release, in English only.
+- New clean Mac OSX installer (intel only).
 - New incompatible format of space configuration files (`gsp-xxx.tex`).  Values are now scaled to the default staff size (see [#50](https://github.com/gregorio-project/gregorio/issues/50).  You now need to use `\gresetdim` for setting distances (`\somedistance = 3cm`) can no longer be used).  `\gresetdim` takes three arguments: the name of the distance, the desired value, and whether the distance should scale with changes in the staff size or not.  See `gsp-default.tex` for an example.
 - All distances can now be set to scale with staff size, as a consequence `\grechangedim` now takes three arguments: the name of the distance, value to change the distance to (which now supports em and ex units), and whether or not this value should be scaled with changes in the staff size.  See doc/UserManual.pdf for details.
 - `\setinitalspacing` , `\setspacebeforeinitial`, `\setspaceafterinitial`, and `\setaboveinitialseparation` now take an additional argument.  The new argument specifies whether the distance should scale when the staff size changes.
@@ -21,9 +42,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\includescore` not finding files for autocompile under certain circumstances.  (see [this thread](http://www.mail-archive.com/gregorio-users@gna.org/msg02346.html)).
 
 ### Added
-- `\setstafflinethickness` controls the thickness of the staff lines.  See doc/UserManual.pdf for full details.
+- `\setstafflinethickness` controls the thickness of the staff lines.  See GregorioRef.pdf for full details.
 - `\gre@debug`.  Writes messages to the log file when the debug flag is set to true (can be done manually via `\debugtrue`, or via the `debug` option when loading the gregoriotex package in LaTeX).
-- doc folder and beginnings of User Manual.  Only contains spaces documentation at this point.
+- New documentation in PDF: GregorioRef.pdf. You can find it in the [release files](https://github.com/gregorio-project/gregorio/releases).
+- A migration guide ([UPGRADE.md](UPGRADE.md))
 - This CHANGELOG.
 
 ### Deprecated

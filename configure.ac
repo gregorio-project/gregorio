@@ -1,31 +1,36 @@
 dnl Gregorio
-dnl Copyright (C) 2006 Elie Roux
+dnl Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
 dnl
-dnl This program is free software; you can redistribute it and/or
-dnl modify it under the terms of the GNU General Public License
-dnl as published by the Free Software Foundation; either version 2
-dnl of the License, or (at your option) any later version.
+dnl This file is part of Gregorio.
 dnl 
-dnl This program is distributed in the hope that it will be useful,
+dnl Gregorio is free software: you can redistribute it and/or modify
+dnl it under the terms of the GNU General Public License as published by
+dnl the Free Software Foundation, either version 3 of the License, or
+dnl (at your option) any later version.
+dnl
+dnl Gregorio is distributed in the hope that it will be useful,
 dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
 dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 dnl GNU General Public License for more details.
-dnl 
+dnl
 dnl You should have received a copy of the GNU General Public License
-dnl along with this program; if not, write to the Free Software
-dnl Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+dnl along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-AC_INIT([gregorio],[3.0.0-beta],[gregorio-devel@gna.org])
-FILENAME_VERSION="3_0_0-beta"
+AC_INIT([gregorio],[3.0.0-rc2],[gregorio-devel@gna.org])
+FILENAME_VERSION="3_0_0-rc2"
 AC_SUBST(FILENAME_VERSION)
+MK=""
+AC_SUBST(MK)
 AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR([src/gregorio-utils.c])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([subdir-objects foreign dist-bzip2 no-dist-gzip])
+AM_INIT_AUTOMAKE([-Wall -Wno-portability subdir-objects foreign dist-bzip2 no-dist-gzip])
 
 AC_PROG_CC
+dnl AM_PROG_CC_C_O is deprecated since Automake 1.14, to be removed in the future
+AM_PROG_CC_C_O
 AC_PROG_CC_STDC
 AC_PROG_CPP
 AM_PROG_LEX
@@ -50,7 +55,7 @@ AC_CHECK_HEADERS([stdint.h])
 
 AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
 
-AM_CONFIG_HEADER([src/config.h])
+AC_CONFIG_HEADERS([src/config_.h])
 AC_CONFIG_FILES([
     Makefile
     src/Makefile

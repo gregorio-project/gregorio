@@ -1,6 +1,7 @@
 /*
- * Gregorio element determination in gabc input. Copyright (C) 2006 Elie
- * Roux-2009 Elie Roux <elie.roux@telecom-bretagne.eu>
+ * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ *
+ * This file is part of Gregorio.
  * 
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -166,7 +167,7 @@ gregorio_element *gabc_det_elements_from_glyphs(gregorio_glyph *current_glyph)
             }
             // we must not cut after a zero_width_space
             if (current_glyph->type == GRE_SPACE
-                && current_glyph->glyph_type == SP_ZERO_WIDTH) {
+                && current_glyph->u.misc.unpitched.info.space == SP_ZERO_WIDTH) {
                 if (!current_glyph->next) {
                     close_element(&current_element, first_glyph);
                 }
@@ -188,19 +189,15 @@ gregorio_element *gabc_det_elements_from_glyphs(gregorio_glyph *current_glyph)
             // if statement to make neumatic cuts not appear in elements, as
             // there is always one between elements 
             if (current_glyph->type != GRE_SPACE
-                || current_glyph->glyph_type != SP_NEUMATIC_CUT)
+                || current_glyph->u.misc.unpitched.info.space != SP_NEUMATIC_CUT)
                 // clef change or space other thant neumatic cut
             {
                 if (!first_element) {
                     first_element = current_element;
                 }
-                gregorio_add_special_as_element(&current_element,
-                                                current_glyph->type,
-                                                current_glyph->glyph_type,
-                                                current_glyph->liquescentia,
-                                                current_glyph->texverb);
-            } else {
-
+                gregorio_add_misc_element(&current_element, current_glyph->type,
+                                          current_glyph->u.misc,
+                                          current_glyph->texverb);
             }
             first_glyph = current_glyph->next;
             previous_glyph = current_glyph->next;
@@ -235,19 +232,19 @@ gregorio_element *gabc_det_elements_from_glyphs(gregorio_glyph *current_glyph)
             }
             break;
         case G_ONE_NOTE:
-            if (current_glyph->first_note
-                && (current_glyph->first_note->shape == S_STROPHA
-                    || current_glyph->first_note->shape == S_VIRGA
-                    || current_glyph->first_note->shape == S_VIRGA_REVERSA)) {
+            if (current_glyph->u.notes.first_note
+                && (current_glyph->u.notes.first_note->u.note.shape == S_STROPHA
+                    || current_glyph->u.notes.first_note->u.note.shape == S_VIRGA
+                    || current_glyph->u.notes.first_note->u.note.shape == S_VIRGA_REVERSA)) {
                 // we determine the last pitch
                 char last_pitch;
                 gregorio_note *tmp_note;
-                tmp_note = previous_glyph->first_note;
+                tmp_note = previous_glyph->u.notes.first_note;
                 while (tmp_note->next) {
                     tmp_note = tmp_note->next;
                 }
-                last_pitch = tmp_note->pitch;
-                if (current_glyph->first_note->pitch == last_pitch) {
+                last_pitch = tmp_note->u.note.pitch;
+                if (current_glyph->u.notes.first_note->u.note.pitch == last_pitch) {
                     previous_glyph = current_glyph;
                     break;
                 }

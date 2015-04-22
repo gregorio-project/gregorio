@@ -7,11 +7,11 @@
 # Options:
 #      --mingw     : crosscompile for mingw32 from i-386linux
 #      --warn      : enables all sorts of warnings
-#      --static    : compiles one binary containing everything
 #      --host=     : target system for mingw32 cross-compilation
 #      --build=    : build system for mingw32 cross-compilation
 #      --arch=     : crosscompile for ARCH on OS X
 #      --jobs=     : the number of jobs to run simultaneously in the make step
+#      --force=    : force autoreconf or font building
 #      {other)     : anything else is passed to configure verbatim
       
 # try to find bash, in case the standard shell is not capable of
@@ -29,6 +29,8 @@ CONFBUILD=
 MACCROSS=FALSE
 MAKEOPTS=
 OTHERARGS=
+FORCE_AUTORECONF=
+FORCE_FONTS=
 
 CFLAGS="$CFLAGS -Wdeclaration-after-statement"
 
@@ -40,6 +42,8 @@ until [ -z "$1" ]; do
     --build=*   ) CONFBUILD="$1" ;;
     --arch=*    ) MACCROSS=TRUE; ARCH=`echo $1 | sed 's/--arch=\(.*\)/\1/' ` ;;
     -j*|--jobs=*) MAKEOPTS="$MAKEOPTS $1" ;;
+    --force=autoreconf) FORCE_AUTORECONF=TRUE ;;
+    --force=fonts) FORCE_FONTS=TRUE ;;
     *           ) OTHERARGS="$OTHERARGS $1" ;;
   esac
   shift
@@ -103,7 +107,7 @@ function die {
 	exit 1
 }
 
-if [ ! -e Makefile.in ]
+if [ "$FORCE_AUTORECONF" = "TRUE" -o ! -e Makefile.in ]
 then
   echo "Creating build files using Autotools"
   autoreconf -f -i || die "create build files"
@@ -119,7 +123,7 @@ echo "Building Gregorio; options:$MAKEOPTS"
 make ${MAKEOPTS} || die "build Gregorio"
 echo
 
-if [ ! -e fonts/greciliae.ttf ]
+if [ "$FORCE_FONTS" = "TRUE" -o ! -e fonts/greciliae.ttf ]
 then
   echo "Building fonts; options:$MAKEOPTS"
   cd fonts

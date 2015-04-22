@@ -1,18 +1,21 @@
 --GregorioTeX Lua file.
---Copyright (C) 2008-2013 Elie Roux <elie.roux@telecom-bretagne.eu>
 --
---This program is free software: you can redistribute it and/or modify
+--Copyright (C) 2008-2015 The Gregorio Project (see CONTRIBUTORS.md)
+--
+--This file is part of Gregorio.
+--
+--Gregorio is free software: you can redistribute it and/or modify
 --it under the terms of the GNU General Public License as published by
 --the Free Software Foundation, either version 3 of the License, or
 --(at your option) any later version.
 --
---This program is distributed in the hope that it will be useful,
+--Gregorio is distributed in the hope that it will be useful,
 --but WITHOUT ANY WARRANTY; without even the implied warranty of
 --MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --GNU General Public License for more details.
 --
 --You should have received a copy of the GNU General Public License
---along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
 -- this file contains lua functions used by GregorioTeX when called with LuaTeX.
 
@@ -21,17 +24,17 @@ local hpack, traverse_id, has_attribute, count, remove, insert_after, copy = nod
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = '3.0.0-beta'
+local internalversion = '3.0.0-rc2' -- GREGORIO_VERSION (comment used by VersionManager.py)
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
-    version            = 2.4,
+    version            = '3.0.0-rc2', -- GREGORIO_VERSION
     greinternalversion = internalversion,
-    date               = "2013/12/29",
+    date               = "2015/04/13", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
-    author             = "Elie Roux",
-    copyright          = "Elie Roux",
-    license            = "GPLv3",
+    author             = "The Gregorio Project (see CONTRIBUTORS.md)",
+    copyright          = "2008-2015 - The Gregorio Project",
+    license            = "GPLv3+",
 })
 
 local hlist = node.id('hlist')
@@ -188,14 +191,14 @@ local function clean_old_gtex_files(file_withdir)
     dirpath = string.match(file_withdir, "(.*)"..sep)
   end
   if dirpath then -- dirpath is nil if current directory
-    filename = "^"..file_withdir:match(".*/".."(.*)").."%-%d+_%d+_%d+_?%a*%.gtex$"
+    filename = "^"..file_withdir:match(".*/".."(.*)").."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
     for a in lfs.dir(dirpath) do
       if a:match(filename) then
 	os.remove(dirpath..sep..a)
       end
     end
   else
-    filename = "^"..file_withdir.."%-%d+_%d+_%d+_?%a*%.gtex$"
+    filename = "^"..file_withdir.."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
     for a in lfs.dir(lfs.currentdir()) do
       if a:match(filename) then os.remove(a) end
     end

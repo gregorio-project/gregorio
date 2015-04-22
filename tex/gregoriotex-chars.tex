@@ -1,79 +1,103 @@
-% bars
-\xdef\gre@char@divisiomaior{172}%
-\xdef\gre@char@virgula{169}%
-\xdef\gre@char@divisiominima{170}%
-\xdef\gre@char@divisiominor{171}%
-\xdef\gre@char@divisiodominican{244}%
-\xdef\gre@char@divisiodominicanalt{245}%
+%GregorioTeX file.
+%
+% Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
+%
+% This file is part of Gregorio.
+%
+% Gregorio is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Gregorio is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-\xdef\gre@char@punctumcavum{195}%
-\xdef\gre@char@lineapunctumcavum{197}%
-\xdef\gre@char@punctumcavumhole{238}%
-\xdef\gre@char@lineapunctumcavumhole{240}%
-\xdef\gre@char@punctumcavumalt{236}%
-\xdef\gre@char@lineapunctumcavumalt{237}%
-\xdef\gre@char@punctumcavumholealt{239}%
-\xdef\gre@char@lineapunctumcavumholealt{241}%
+\gre@declarefileversion{gregoriotex-chars.tex}{3.0.0-rc2}% GREGORIO_VERSION
+
+\def\gregoriocharoffset#1{\the\numexpr 161 + #1 \relax}
+\def\gregoriostylecharoffset#1{\the\numexpr 66 + #1 \relax}
+
+% bars
+\xdef\gre@char@divisiomaior{\gregoriocharoffset{11}}%
+\xdef\gre@char@virgula{\gregoriocharoffset{8}}%
+\xdef\gre@char@divisiominima{\gregoriocharoffset{9}}%
+\xdef\gre@char@divisiominor{\gregoriocharoffset{10}}%
+\xdef\gre@char@divisiodominican{\gregoriocharoffset{83}}%
+\xdef\gre@char@divisiodominicanalt{\gregoriocharoffset{84}}%
+
+\xdef\gre@char@punctumcavum{\gregoriocharoffset{34}}%
+\xdef\gre@char@lineapunctumcavum{\gregoriocharoffset{36}}%
+\xdef\gre@char@punctumcavumhole{\gregoriocharoffset{77}}%
+\xdef\gre@char@lineapunctumcavumhole{\gregoriocharoffset{79}}%
+\xdef\gre@char@punctumcavumalt{\gregoriocharoffset{75}}%
+\xdef\gre@char@lineapunctumcavumalt{\gregoriocharoffset{76}}%
+\xdef\gre@char@punctumcavumholealt{\gregoriocharoffset{78}}%
+\xdef\gre@char@lineapunctumcavumholealt{\gregoriocharoffset{80}}%
 
 % notes (to compute different widths)
-\xdef\gre@char@smallpunctum{174}%
-\xdef\gre@char@punctum{178}%
-\xdef\gre@char@punctuminclinatum{180}%
-\xdef\gre@char@stropha{181}%
-\xdef\gre@char@strophaaucta{182}%
-\xdef\gre@char@quilisma{187}%
-\xdef\gre@char@oriscus{188}%
-\xdef\gre@char@oriscusauctus{189}%
-\xdef\gre@char@punctuminclinatumdem{193}%
-\xdef\gre@char@lineapunctum{196}%
-\xdef\gre@char@peshigh{235}%
-\xdef\gre@char@pesinitauctus{2147}%
-\xdef\gre@char@pesinitauctusone{2146}%
-\xdef\gre@char@flexus{2212}%
-\xdef\gre@char@flexusone{2210}%
-\xdef\gre@char@flexusdeminutus{5411}%
-\xdef\gre@char@flexusaltone{5794}%
-\xdef\gre@char@flexusalt{5795}%
-\xdef\gre@char@torculus{15532}%
-\xdef\gre@char@torculusdeminutus{16045}%
-\xdef\gre@char@porrectus@one{11431}%
-\xdef\gre@char@porrectus@two{11432}%
-\xdef\gre@char@porrectus@three{11433}%
-\xdef\gre@char@porrectus@four{11434}%
-\xdef\gre@char@porrectus@five{11435}%
+\xdef\gre@char@smallpunctum{\gregoriocharoffset{13}}%
+\xdef\gre@char@punctum{\gregoriocharoffset{17}}%
+\xdef\gre@char@punctuminclinatum{\gregoriocharoffset{19}}%
+\xdef\gre@char@stropha{\gregoriocharoffset{20}}%
+\xdef\gre@char@strophaaucta{\gregoriocharoffset{21}}%
+\xdef\gre@char@quilisma{\gregoriocharoffset{26}}%
+\xdef\gre@char@oriscus{\gregoriocharoffset{27}}%
+\xdef\gre@char@oriscusauctus{\gregoriocharoffset{28}}%
+\xdef\gre@char@punctuminclinatumdem{\gregoriocharoffset{32}}%
+\xdef\gre@char@lineapunctum{\gregoriocharoffset{35}}%
+\xdef\gre@char@peshigh{\gregoriocharoffset{74}}%
+\xdef\gre@char@pesinitauctus{\gregoriocharoffset{1986}}%
+\xdef\gre@char@pesinitauctusone{\gregoriocharoffset{1985}}%
+\xdef\gre@char@flexus{\gregoriocharoffset{2051}}%
+\xdef\gre@char@flexusone{\gregoriocharoffset{2049}}%
+\xdef\gre@char@flexusdeminutus{\gregoriocharoffset{5250}}%
+\xdef\gre@char@flexusaltone{\gregoriocharoffset{5633}}%
+\xdef\gre@char@flexusalt{\gregoriocharoffset{5634}}%
+\xdef\gre@char@torculus{\gregoriocharoffset{15371}}%
+\xdef\gre@char@torculusdeminutus{\gregoriocharoffset{15884}}%
+\xdef\gre@char@porrectus@one{\gregoriocharoffset{11270}}%
+\xdef\gre@char@porrectus@two{\gregoriocharoffset{11271}}%
+\xdef\gre@char@porrectus@three{\gregoriocharoffset{11272}}%
+\xdef\gre@char@porrectus@four{\gregoriocharoffset{11273}}%
+\xdef\gre@char@porrectus@five{\gregoriocharoffset{11274}}%
 
 % signs
-\xdef\gre@char@curlybrace{250}%
-\xdef\gre@char@barbrace{251}%
-\xdef\gre@char@brace{249}%
-\xdef\gre@char@linea{248}%
-\xdef\gre@char@vepisemus{194}%
-\xdef\gre@char@accentus{200}%
-\xdef\gre@char@semicirculus{199}%
-\xdef\gre@char@circulus{198}%
-\xdef\gre@char@reversedaccentus{230}%
-\xdef\gre@char@reversedsemicirculus{231}%
+\xdef\gre@char@curlybrace{\gregoriocharoffset{89}}%
+\xdef\gre@char@barbrace{\gregoriocharoffset{90}}%
+\xdef\gre@char@brace{\gregoriocharoffset{88}}%
+\xdef\gre@char@linea{\gregoriocharoffset{87}}%
+\xdef\gre@char@vepisemus{\gregoriocharoffset{33}}%
+\xdef\gre@char@accentus{\gregoriocharoffset{39}}%
+\xdef\gre@char@semicirculus{\gregoriocharoffset{38}}%
+\xdef\gre@char@circulus{\gregoriocharoffset{37}}%
+\xdef\gre@char@reversedaccentus{\gregoriocharoffset{69}}%
+\xdef\gre@char@reversedsemicirculus{\gregoriocharoffset{70}}%
 
 % horizontal episemus
-\xdef\gre@char@he@punctum{201}%
-\xdef\gre@char@he@flexus{202}%
-\xdef\gre@char@he@initio{203}%
-\xdef\gre@char@he@inclinatum{204}%
-\xdef\gre@char@he@inclinatumdem{205}%
-\xdef\gre@char@he@stropha{206}%
-\xdef\gre@char@he@porrectus@one{207}%
-\xdef\gre@char@he@porrectus@two{208}%
-\xdef\gre@char@he@porrectus@three{209}%
-\xdef\gre@char@he@porrectus@four{210}%
-\xdef\gre@char@he@porrectus@five{211}%
-\xdef\gre@char@he@porrectusfl@one{212}%
-\xdef\gre@char@he@porrectusfl@two{213}%
-\xdef\gre@char@he@porrectusfl@three{214}%
-\xdef\gre@char@he@porrectusfl@four{215}%
-\xdef\gre@char@he@porrectusfl@five{216}%
-\xdef\gre@char@he@quilisma{217}%
-\xdef\gre@char@he@oriscus{218}%
-\xdef\gre@char@he@smallpunctum{219}%
+\xdef\gre@char@he@punctum{\gregoriocharoffset{40}}%
+\xdef\gre@char@he@flexus{\gregoriocharoffset{41}}%
+\xdef\gre@char@he@initio{\gregoriocharoffset{42}}%
+\xdef\gre@char@he@inclinatum{\gregoriocharoffset{43}}%
+\xdef\gre@char@he@inclinatumdem{\gregoriocharoffset{44}}%
+\xdef\gre@char@he@stropha{\gregoriocharoffset{45}}%
+\xdef\gre@char@he@porrectus@one{\gregoriocharoffset{46}}%
+\xdef\gre@char@he@porrectus@two{\gregoriocharoffset{47}}%
+\xdef\gre@char@he@porrectus@three{\gregoriocharoffset{48}}%
+\xdef\gre@char@he@porrectus@four{\gregoriocharoffset{49}}%
+\xdef\gre@char@he@porrectus@five{\gregoriocharoffset{50}}%
+\xdef\gre@char@he@porrectusfl@one{\gregoriocharoffset{51}}%
+\xdef\gre@char@he@porrectusfl@two{\gregoriocharoffset{52}}%
+\xdef\gre@char@he@porrectusfl@three{\gregoriocharoffset{53}}%
+\xdef\gre@char@he@porrectusfl@four{\gregoriocharoffset{54}}%
+\xdef\gre@char@he@porrectusfl@five{\gregoriocharoffset{55}}%
+\xdef\gre@char@he@quilisma{\gregoriocharoffset{56}}%
+\xdef\gre@char@he@oriscus{\gregoriocharoffset{57}}%
+\xdef\gre@char@he@smallpunctum{\gregoriocharoffset{58}}%
 
 
 
@@ -82,72 +106,72 @@
 %%%%%%%%%%%%%%%%%
 
 \def\greusedefaultstyle{%
-\gdef\greflatchar{\gregoriofont\char 167}%
-\gdef\greflatholechar{\gregoriofont\char 242}%
-\gdef\grenaturalchar{\gregoriofont\char 168}%
-\gdef\grenaturalholechar{\gregoriofont\char 243}%
-\gdef\gresharpchar{\gregoriofont\char 246}%
-\gdef\gresharpholechar{\gregoriofont\char 247}%
-\gdef\grecclefchar{\gregoriofont\char 162}%
-\gdef\grefclefchar{\gregoriofont\char 163}%
-\gdef\greincclefchar{\gregoriofont\char 164}%
-\gdef\greinfclefchar{\gregoriofont\char 165}%
-\gdef\grepunctummorachar{\gregoriofont\char 175}%
-\gdef\greverticalepisemuschar{\gregoriofont\char 194}%
-\gdef\grecustotoplongchar{\gregoriofont\char 221}%
-\gdef\grecustotopshortchar{\gregoriofont\char 222}%
-\gdef\grecustotopmiddlechar{\gregoriofont\char 223}%
-\gdef\grecustobottomlongchar{\gregoriofont\char 224}%
-\gdef\grecustobottomshortchar{\gregoriofont\char 225}%
-\gdef\grecustobottommiddlechar{\gregoriofont\char 226}%
-\gdef\greabovebarbracechar{\gregoriofont\char 251}%
-\gdef\grepunctumchar{\gregoriofont\char 178}%
+\gdef\greflatchar{\gregoriofont\char \gregoriocharoffset{6}}%
+\gdef\greflatholechar{\gregoriofont\char \gregoriocharoffset{81}}%
+\gdef\grenaturalchar{\gregoriofont\char \gregoriocharoffset{7}}%
+\gdef\grenaturalholechar{\gregoriofont\char \gregoriocharoffset{82}}%
+\gdef\gresharpchar{\gregoriofont\char \gregoriocharoffset{85}}%
+\gdef\gresharpholechar{\gregoriofont\char \gregoriocharoffset{86}}%
+\gdef\grecclefchar{\gregoriofont\char \gregoriocharoffset{1}}%
+\gdef\grefclefchar{\gregoriofont\char \gregoriocharoffset{2}}%
+\gdef\greincclefchar{\gregoriofont\char \gregoriocharoffset{3}}%
+\gdef\greinfclefchar{\gregoriofont\char \gregoriocharoffset{4}}%
+\gdef\grepunctummorachar{\gregoriofont\char \gregoriocharoffset{14}}%
+\gdef\greverticalepisemuschar{\gregoriofont\char \gregoriocharoffset{33}}%
+\gdef\grecustotoplongchar{\gregoriofont\char \gregoriocharoffset{60}}%
+\gdef\grecustotopshortchar{\gregoriofont\char \gregoriocharoffset{61}}%
+\gdef\grecustotopmiddlechar{\gregoriofont\char \gregoriocharoffset{62}}%
+\gdef\grecustobottomlongchar{\gregoriofont\char \gregoriocharoffset{63}}%
+\gdef\grecustobottomshortchar{\gregoriofont\char \gregoriocharoffset{64}}%
+\gdef\grecustobottommiddlechar{\gregoriofont\char \gregoriocharoffset{65}}%
+\gdef\greabovebarbracechar{\gregoriofont\char \gregoriocharoffset{90}}%
+\gdef\grepunctumchar{\gregoriofont\char \gregoriocharoffset{17}}%
 \relax %
 }%
 
 \def\greusemedicaeastyle{%
 \greusestylecommon %
-\gdef\grecustotoplongchar{\gregoriostylefont\char 169}%
-\gdef\grecustotopshortchar{\gregoriostylefont\char 168}%
-\gdef\grecustotopmiddlechar{\gregoriostylefont\char 170}%
-\gdef\grecustobottomlongchar{\gregoriostylefont\char 172}%
-\gdef\grecustobottomshortchar{\gregoriostylefont\char 171}%
-\gdef\grecustobottommiddlechar{\gregoriostylefont\char 173}%
-\gdef\grecclefchar{\gregoriostylefont\char 182}%
-\gdef\grefclefchar{\gregoriostylefont\char 184}%
-\gdef\greincclefchar{\gregoriostylefont\char 183}%
-\gdef\greinfclefchar{\gregoriostylefont\char 185}%
-\gdef\greflatchar{\gregoriostylefont\char 161}%
-\gdef\greflatholechar{\gregoriostylefont\char 194}%
+\gdef\grecustotoplongchar{\gregoriostylefont\char \gregoriostylecharoffset{8}}%
+\gdef\grecustotopshortchar{\gregoriostylefont\char \gregoriostylecharoffset{7}}%
+\gdef\grecustotopmiddlechar{\gregoriostylefont\char \gregoriostylecharoffset{9}}%
+\gdef\grecustobottomlongchar{\gregoriostylefont\char \gregoriostylecharoffset{11}}%
+\gdef\grecustobottomshortchar{\gregoriostylefont\char \gregoriostylecharoffset{10}}%
+\gdef\grecustobottommiddlechar{\gregoriostylefont\char \gregoriostylecharoffset{12}}%
+\gdef\grecclefchar{\gregoriostylefont\char \gregoriostylecharoffset{21}}%
+\gdef\grefclefchar{\gregoriostylefont\char \gregoriostylecharoffset{23}}%
+\gdef\greincclefchar{\gregoriostylefont\char \gregoriostylecharoffset{22}}%
+\gdef\greinfclefchar{\gregoriostylefont\char \gregoriostylecharoffset{24}}%
+\gdef\greflatchar{\gregoriostylefont\char \gregoriostylecharoffset{0}}%
+\gdef\greflatholechar{\gregoriostylefont\char \gregoriostylecharoffset{33}}%
 \relax %
 }%
 
 \def\greusehufnagelstyle{%
 \greusestylecommon %
-\gdef\grecustotoplongchar{\gregoriostylefont\char 163}%
-\gdef\grecustotopshortchar{\gregoriostylefont\char 162}%
-\gdef\grecustotopmiddlechar{\gregoriostylefont\char 164}%
-\gdef\grecustobottomlongchar{\gregoriostylefont\char 166}%
-\gdef\grecustobottomshortchar{\gregoriostylefont\char 165}%
-\gdef\grecustobottommiddlechar{\gregoriostylefont\char 167}%
-\gdef\grecclefchar{\gregoriostylefont\char 186}%
-\gdef\grefclefchar{\gregoriostylefont\char 187}%
-\gdef\greincclefchar{\gregoriostylefont\char 188}%
-\gdef\greinfclefchar{\gregoriostylefont\char 189}%
-\gdef\greflatchar{\gregoriostylefont\char 181}%
-\gdef\greflatholechar{\gregoriostylefont\char 193}%
+\gdef\grecustotoplongchar{\gregoriostylefont\char \gregoriostylecharoffset{2}}%
+\gdef\grecustotopshortchar{\gregoriostylefont\char \gregoriostylecharoffset{1}}%
+\gdef\grecustotopmiddlechar{\gregoriostylefont\char \gregoriostylecharoffset{3}}%
+\gdef\grecustobottomlongchar{\gregoriostylefont\char \gregoriostylecharoffset{5}}%
+\gdef\grecustobottomshortchar{\gregoriostylefont\char \gregoriostylecharoffset{4}}%
+\gdef\grecustobottommiddlechar{\gregoriostylefont\char \gregoriostylecharoffset{6}}%
+\gdef\grecclefchar{\gregoriostylefont\char \gregoriostylecharoffset{25}}%
+\gdef\grefclefchar{\gregoriostylefont\char \gregoriostylecharoffset{26}}%
+\gdef\greincclefchar{\gregoriostylefont\char \gregoriostylecharoffset{27}}%
+\gdef\greinfclefchar{\gregoriostylefont\char \gregoriostylecharoffset{28}}%
+\gdef\greflatchar{\gregoriostylefont\char \gregoriostylecharoffset{20}}%
+\gdef\greflatholechar{\gregoriostylefont\char \gregoriostylecharoffset{32}}%
 \relax %
 }%
 
 \def\greusemensuralstyle{%
 \greusestylecommon %
-\gdef\grecustotoplongchar{\gregoriostylefont\char 175}%
-\gdef\grecustotopshortchar{\gregoriostylefont\char 174}%
-\gdef\grecustotopmiddlechar{\gregoriostylefont\char 176}%
-\gdef\grecustobottomlongchar{\gregoriostylefont\char 178}%
-\gdef\grecustobottomshortchar{\gregoriostylefont\char 177}%
-\gdef\grecustobottommiddlechar{\gregoriostylefont\char 179}%
-\gdef\greflatchar{\gregoriostylefont\char 180}%
-\gdef\greflatholechar{\gregoriostylefont\char 192}%
+\gdef\grecustotoplongchar{\gregoriostylefont\char \gregoriostylecharoffset{14}}%
+\gdef\grecustotopshortchar{\gregoriostylefont\char \gregoriostylecharoffset{13}}%
+\gdef\grecustotopmiddlechar{\gregoriostylefont\char \gregoriostylecharoffset{15}}%
+\gdef\grecustobottomlongchar{\gregoriostylefont\char \gregoriostylecharoffset{17}}%
+\gdef\grecustobottomshortchar{\gregoriostylefont\char \gregoriostylecharoffset{16}}%
+\gdef\grecustobottommiddlechar{\gregoriostylefont\char \gregoriostylecharoffset{18}}%
+\gdef\greflatchar{\gregoriostylefont\char \gregoriostylecharoffset{19}}%
+\gdef\greflatholechar{\gregoriostylefont\char \gregoriostylecharoffset{31}}%
 \relax %
 }%

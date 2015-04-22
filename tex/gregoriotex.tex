@@ -1,18 +1,21 @@
-%GregorioTeX file.
-%Copyright (C) 2007-2013 Elie Roux <elie.roux@telecom-bretagne.eu>
+%GregorioTeX main file.
 %
-%This program is free software: you can redistribute it and/or modify
-%it under the terms of the GNU General Public License as published by
-%the Free Software Foundation, either version 3 of the License, or
-%(at your option) any later version.
+% Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
 %
-%This program is distributed in the hope that it will be useful,
-%but WITHOUT ANY WARRANTY; without even the implied warranty of
-%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-%GNU General Public License for more details.
+% This file is part of Gregorio.
 %
-%You should have received a copy of the GNU General Public License
-%along with this program.  If not, see <http://www.gnu.org/licenses/>.
+% Gregorio is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Gregorio is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
 % this file contains definitions for lines, initial, fonts, etc.
 
@@ -38,13 +41,17 @@
   \def\gre@warning#1{\PackageWarning{GregorioTeX}{#1}}%
 \fi%
 
-\ifluatex\else%
+\ifluatex%
+  \ifnum\luatexversion<76%
+    \greerror{Error: this document must be compiled with LuaTeX (lualatex) 0.76 or later}%
+  \fi%
+\else%
   \greerror{Error: this document must be compiled with LuaTeX (lualatex)}%
 \fi%
 
-\newif\ifdebug\debugfalse
+\newif\ifgredebug\gredebugfalse
 \def\gre@debug#1{%
-  \ifdebug%
+  \ifgredebug%
     \typeout{GregorioTex debug: #1}%
   \else%
     \relax%
@@ -69,23 +76,18 @@
 % an attribute used for translation centering
 \newluatexattribute\gregoriocenterattr%
 
-\RequireLuaModule{gregoriotex}%
-
-% The general version of GregorioTeX (we mean by that the "API", the way
-% Gregorio will write things)
-\xdef\gregoriotexversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
-
-% the version of the internal files (all must have the same)
-\xdef\greinternalversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
+% The version of gregorio. All gregoriotex*.tex files must have the same.
+% All gtex files must also have the same version.
+\xdef\gre@gregorioversion{3.0.0-rc2}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
 % #1 is the name of the file
 % #2 is the version
 
-\def\gredeclarefileversion#1#2{%
-  \IfStrEq*{#2}{\greinternalversion}{}{%else
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\greinternalversion \space\space while #1 is in version \number#2}}%
+\def\gre@declarefileversion#1#2{%
+  \IfStrEq*{#2}{\gre@gregorioversion}{}{%else
+    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\gre@gregorioversion \space\space while #1 is in version \number#2}}%
 }%
 
 % Macro called by scores.
@@ -94,10 +96,19 @@
 % #1 is the version of GregorioTeX the score is made for.
 
 \def\gregoriotexapiversion#1{%
-  \StrBefore{\gregoriotexversion}{.}[\gre@gregoriomajorversion]%
+  \StrBefore{\gre@gregorioversion}{.}[\gre@gregoriomajorversion]%
   \IfBeginWith{#1}{\gre@gregoriomajorversion}{\relax}{%else
-    \greerror{GregorioTeX is in version \gregoriotexversion \space\space while a score you included requires version #1. Please recompile your scores}}%
+    \greerror{GregorioTeX is in version \gre@gregorioversion \space\space while a score you included requires version #1. Please recompile your scores}}%
 }%
+
+\RequireLuaModule{gregoriotex}%
+
+\xdef\gre@gregoriotexluaversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
+
+% Test to make sure that gregoriotex.lua is of the same version.
+\IfStrEq*{\gre@gregoriotexluaversion}{\gre@gregorioversion}{}{%else
+    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %% aux file definitions
@@ -724,57 +735,6 @@
   \relax %
 }%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the chironomic signs lines
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% here is a quite special macro called at beggining of lines, that inserts a line of chironomic signs
-\def\greinsertchiroline{%
-  % the first line is a special case
-  \ifnum\greknownline=1\relax %
-    % some bugs appear if we don't box it
-    \hbox{\directlua{grechiro.printLine()}}%
-    \par %
-    % TODO: this line bugs with my version of LuaTeX
-    %\grenobreak 
-    \gre@skip@temp@four = \gre@dimen@belowsignsspace%
-    \kern\gre@skip@temp@four %
-    %\grenobreak 
-    \noindent %
-  \else %
-    % not very beaufiful, I don't like to make a new par inside a score, but....
-    \grelocalleftbox{}%
-    \grelocalrightbox{}%
-    \par %
-    \gre@skip@temp@four = \gre@dimen@abovesignsspace%
-    \kern\gre@skip@temp@four %
-    \noindent\hbox{\directlua{grechiro.printLine()}}%
-    \greupdateleftbox %
-    \par %
-    \grenobreak%
-    \gre@skip@temp@four = \gre@dimen@belowsignsspace%
-    \kern\gre@skip@temp@four %
-    \grenobreak %
-    \noindent %
-  \fi %
-  \relax %
-}%
-
-%macro to call just after begingregorioscore, if there are some chironomic signs
-\def\greactivatechironomy{%
-  % we print the absolute position of the beginning of the score, and the width of a line, to get the absolute positions of the begginning and end of lines
-  \pdfsavepos %
-  \grewriteaux{begin:\number\pdflastxpos}%
-  \grewriteaux{width:\number\gre@dimen@stafflinewidth}%
-  \RequireLuaModule{gregoriotex-ictus}%
-  \directlua{grechiro.atBeginScore()}%
-\fi %
-}%
-
-% count that is 1 or 0 if we need to print the small vertical bars in the chironomic line
-\newcount\printchirovbars%
-\printchirovbars=1%
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% other macros
@@ -789,6 +749,7 @@
   \ifnum\greusestylefont=1\relax %
     \gresetstylefont %
   \fi %
+  \gre@computespaces
   \grecancelpenalties %
   \gredofinetuning %
   \gregorioattr=0\relax %
@@ -881,26 +842,41 @@
 \def\greendbeforebar#1{%
   \grenobreak %
   \ifnum#1=1\relax %
-    \gre@debug{ifdim enddifference > 0pt}%
+    \gre@skip@temp@four = 0pt\relax %
+    % Case where there is a punctum at the end of a syllable before a bar, we
+    % do as if there was none, in order for the bar to be more correctly
+    % centered
+    \ifnum\grelastispunctum=1\relax %
+      \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctummorachar }%
+      \global\advance\gre@dimen@enddifference by -\wd\GreTempwidth %
+      \advance\gre@skip@temp@four by -\wd\GreTempwidth %
+      % Here we want to put a skip string (\gre@skip@spacebeforesigns) into a
+      % dimen (\gre@dimen@enddifference). The only way to do it without breaking
+      % everything is to put this skip string into a real skip register
+      % (\gre@skip@temp@one) and the cast this real skip register in the dimen
+      % register... This is quite ugly... TODO: make \gre@skip@* to be real 
+      % skip registers.
+      \gre@skip@temp@one = \gre@skip@spacebeforesigns %
+      \global\advance\gre@dimen@enddifference by -\gre@dimen@temp@one %
+      \advance\gre@skip@temp@four by -\gre@skip@spacebeforesigns %
+    \fi %
     \ifdim\gre@dimen@enddifference > 0 pt %
-      \gre@debug{ifdim nextbegindifference > 0pt}%
       \ifdim\gre@skip@nextbegindifference > 0 pt %
-        \gre@skip@temp@four = \gre@skip@notebarspace%
-        \grehskip\gre@skip@temp@four %
+        \advance\gre@skip@temp@four by \gre@skip@notebarspace%
       \else % (next begin difference >0pt)
-        \gre@skip@temp@four = \gre@skip@textbartextspace%
-        \grehskip\gre@skip@temp@four %
+        \advance\gre@skip@temp@four by \gre@skip@textbartextspace%
       \fi %
     \else%(enddifference < Opt)
-      \gre@debug{ifdim nextbegindifference < 0pt}%
       \ifdim\gre@skip@nextbegindifference < 0 pt %
-        \gre@skip@temp@four = \gre@skip@textbartextspace%
-        \grehskip\gre@skip@temp@four %
+        \advance\gre@skip@temp@four by \gre@skip@textbartextspace%
       \else %(next begin difference < 0 pt)
-        \gre@skip@temp@four = \gre@skip@interwordspacetextnotes%
-        \grehskip\gre@skip@temp@four %
+        \advance\gre@skip@temp@four by \gre@skip@interwordspacetextnotes%
       \fi %
     \fi %
+    \grehskip\gre@skip@temp@four %
+    \gre@debug{  endbeforebar: hskip \gre@skip@temp@four }%
+  \else %
+    \gre@debug{  endbeforebar: no hskip}%
   \fi %
   \grenobreak %
   %\global\gre@dimen@enddifference=0pt 
@@ -1246,12 +1222,6 @@
   \else%
     \gre@changedimenfactor{\grefactor}{#1}%
     \global\grefactor=#1\relax %
-    \gre@computespaces %
-    \gregeneratelines %
-    \setgregoriofont{\gregoriofontname}%
-    \ifnum\greusestylefont=1\relax %
-      \gresetstylefont %
-    \fi %
   \fi%
   \relax %
 }%

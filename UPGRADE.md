@@ -3,9 +3,13 @@
 This file contains instructions to upgrade to a new release of Gregorio.
 
 ## 3.0
+### TeX Live 2013
+
+Because of changes necessary to future-proof the fonts, please upgrade to at least TeX Live 2013 if you are using an older version.  If the neumes do not appear or look strange in the output, you may also need to clear your LuaTeX font cache by using `luaotfload-tool --cache=erase`.
+
 ### Score inclusion
 
-When migrating to this release, you should start to use the new `\includescore` system, as other ways of score inclusion are deprecated and will start disapear soon. See UserManual.pdf for details.
+When migrating to this release, you should start to use the new `\includescore` system, as other ways of score inclusion are deprecated and will start disapear soon. See GregorioRef.pdf for details.
 
 #### For users of version 2.4.2
 
@@ -16,7 +20,7 @@ In version 2.4.2, an early version of the feature to auto-compile gabc score was
 
 ### Custom dimension changes
 
-If you use custom space definitions (`gsp-foo.tex`), the format have changed, and you must rewrite it completely. See the new `gsp-default.tex` for an example, and UserManual.pdf for documentation.
+If you use custom space definitions (`gsp-foo.tex`), the format have changed, and you must rewrite it completely. See the new `gsp-default.tex` for an example, and GregorioRef.pdf for documentation.
 
 ### Color definition
 

@@ -1,16 +1,16 @@
 [Setup]
 AppName=gregorio
-AppVersion=3.0.0-beta
+AppVersion=3.0.0-rc2
 DefaultDirName={pf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
 Compression=lzma2
 SolidCompression=yes
 LicenseFile=../COPYING.md
-AppCopyright=Copyright (C) 2006-2015 Gregorio project
+AppCopyright=Copyright (C) 2006-2015 The Gregorio Project
 AppComments=Software for engraving Gregorian Chant scores.
 AppContact=gregorio-devel@gna.org
-AppPublisher=Gregorio Project
+AppPublisher=The Gregorio Project
 AppPublisherURL=https://github.com/gregorio-project/gregorio
 AppReadmeFile=https://github.com/gregorio-project/gregorio
 BackColor=$D4AE65
@@ -38,7 +38,8 @@ Source: "../CHANGELOG.md"; DestDir: "{app}";
 Source: "../README.md"; DestDir: "{app}";
 Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
 Source: "../UPGRADE.md"; DestDir: "{app}";
-Source: "../doc/UserManual.pdf"; DestDir: "{app}";
+; PARSE_VERSION_FILE_NEXTLINE
+Source: "../doc/GregorioRef-3_0_0-rc2.pdf"; DestDir: "{app}";
 Source: "../COPYING.md"; DestDir: "{app}";
 Source: "../contrib/900_gregorio.xml"; DestDir: "{app}\contrib";
 Source: "../contrib/gregorio-scribus.lua"; DestDir: "{app}\contrib";
@@ -48,7 +49,7 @@ Source: "../examples/main-lualatex.tex"; DestDir: "{app}\examples";
 Source: "../gregoriotex.tds.zip"; DestDir: "{app}";
 
 [Run]
-Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Installing Fonts..."; Description: "Font installation"; Flags: postinstall ; WorkingDir: "{app}";
+Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Configuring texmf..."; Description: "Add files to texmf tree"; Flags: postinstall ; WorkingDir: "{app}";
 
 [Code]
 procedure URLLabelOnClickOne(Sender: TObject);
@@ -62,7 +63,7 @@ procedure URLLabelOnClickTwo(Sender: TObject);
 var
   ErrorCode: Integer;
 begin
-  ShellExec('open', 'http://home.gna.org/gregorio/installation-windows', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+  ShellExec('open', 'http://gregorio-project.github.io/installation-windows.html', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
 
 procedure CreateTheWizardPages;
@@ -120,7 +121,7 @@ begin
   
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(165);;
-  StaticText.Caption := 'http://home.gna.org/gregorio/installation-windows';
+  StaticText.Caption := 'http://gregorio-project.github.io/installation-windows.html';
   StaticText.Cursor := crHand;
   StaticText.OnClick := @URLLabelOnClickTwo;
   StaticText.Parent := Page.Surface;

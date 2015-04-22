@@ -27,6 +27,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
@@ -172,10 +173,9 @@ void gabc_fix_custos(gregorio_score *score_to_check)
                                                           NULL);
                         newkey =
                             gregorio_calculate_new_key(C_KEY,
-                                                       current_element->element_type
-                                                       - 48);
+                                                       current_element->u.misc.pitched.pitch - '0');
                         pitch_difference = (char) newkey - (char) current_key;
-                        custo_element->element_type = pitch - pitch_difference;
+                        custo_element->u.misc.pitched.pitch = pitch - pitch_difference;
                         current_key = newkey;
                         break;
                     case GRE_F_KEY_CHANGE:
@@ -186,25 +186,21 @@ void gabc_fix_custos(gregorio_score *score_to_check)
                                                           NULL);
                         newkey =
                             gregorio_calculate_new_key(F_KEY,
-                                                       current_element->element_type
-                                                       - 48);
+                                                       current_element->u.misc.pitched.pitch - '0');
                         pitch_difference = (char) newkey - (char) current_key;
-                        custo_element->element_type = pitch - pitch_difference;
+                        custo_element->u.misc.pitched.pitch = pitch - pitch_difference;
                         current_key = newkey;
                         break;
                     default:
                         break;
                     }
-                    /*
-                     * in ASCII, 97 is a and 109 is m 
-                     */
-                    if (custo_element->element_type < 97
-                        || custo_element->element_type > 109) {
+                    if (custo_element->u.misc.pitched.pitch < 'a'
+                        || custo_element->u.misc.pitched.pitch > 'm') {
                         gregorio_message(_("pitch difference too high to set "
                                            "automatic custo (z0), please "
                                            "check your score"),
                                          "gabc_fix_custos", ERROR, 0);
-                        custo_element->element_type = 'g';
+                        custo_element->u.misc.pitched.pitch = 'g';
                     }
                     current_element = current_element->next;
                 }
@@ -214,15 +210,13 @@ void gabc_fix_custos(gregorio_score *score_to_check)
                     || current_element->type == GRE_C_KEY_CHANGE_FLATED) {
                     current_key =
                         gregorio_calculate_new_key(C_KEY,
-                                                   current_element->element_type
-                                                   - 48);
+                                                   current_element->u.misc.pitched.pitch - '0');
                 }
                 if (current_element->type == GRE_F_KEY_CHANGE
                     || current_element->type == GRE_F_KEY_CHANGE_FLATED) {
                     current_key =
                         gregorio_calculate_new_key(F_KEY,
-                                                   current_element->element_type
-                                                   - 48);
+                                                   current_element->u.misc.pitched.pitch - '0');
                 }
                 current_element = current_element->next;
             }
@@ -489,18 +483,18 @@ void rebuild_characters(gregorio_character **param_character,
                         char center_is_determined,
                         gregorio_lyric_centering centering_scheme)
 {
+    bool has_initial = score->initial_style != NO_INITIAL;
     // we rebuild the first syllable text if it is the first syllable, or if
     // it is the second when the first has no text.
     // it is a patch for cases like (c4) Al(ab)le(ab)
-    if ((!score->first_syllable && score->initial_style != NO_INITIAL
-         && current_character)
+    if ((!score->first_syllable && has_initial && current_character)
         || (current_syllable && !current_syllable->previous_syllable
             && !current_syllable->text && current_character)) {
-        gregorio_rebuild_first_syllable(&current_character);
+        gregorio_rebuild_first_syllable(&current_character, has_initial);
     }
 
     gregorio_rebuild_characters(param_character, center_is_determined,
-                                centering_scheme);
+                                centering_scheme, has_initial);
 }
 
 /*

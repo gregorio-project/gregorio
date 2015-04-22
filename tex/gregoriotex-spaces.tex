@@ -1,23 +1,25 @@
 %GregorioTeX file.
-%Copyright (C) 2007-2010 Elie Roux <elie.roux@telecom-bretagne.eu>
 %
-%This program is free software: you can redistribute it and/or modify
-%it under the terms of the GNU General Public License as published by
-%the Free Software Foundation, either version 3 of the License, or
-%(at your option) any later version.
+% Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
 %
-%This program is distributed in the hope that it will be useful,
-%but WITHOUT ANY WARRANTY; without even the implied warranty of
-%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-%GNU General Public License for more details.
+% This file is part of Gregorio.
 %
-%You should have received a copy of the GNU General Public License
-%along with this program.  If not, see <http://www.gnu.org/licenses/>.
+% Gregorio is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Gregorio is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
 % this file contains definitions of spaces
 
-\gredeclarefileversion{gregoriotex-spaces.tex}%
- {\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
+\gre@declarefileversion{gregoriotex-spaces.tex}{3.0.0-rc2}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for tuning penalties
@@ -94,7 +96,7 @@
 \def\gretolerance{\tolerance}%
 % Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
 % see http://tug.org/pipermail/luatex/2013-July/004516.html
-\ifnum\the\luatexversion < 78\relax %
+\ifnum\the\luatexversion < 80\relax %
   \global\def\grepretolerance{-1}%
 \else %
   \global\def\grepretolerance{\pretolerance}%
@@ -200,8 +202,6 @@
 \else%
   \def\setstafflinethickness#1{%
     \xdef\gre@stafflinefactor{#1}%
-    \gre@computespaces %
-    %% TODO: make smarter
     \relax %
   }%
 \fi%
@@ -673,6 +673,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% This macro sets one dim (#1) to the value #2 and sets whether it should scale when the \grefactor changes (#3, 1 if yes, 0 if no).  While it does check that #1 can accept the kind of distance given in #2, it does not propagate the changes through the calculated distances.
+%% Note: the distances created by this function are stored as strings, not skip or dimension registers.  This allows the user to specify a distance in em or ex units even though the font parameters may not be the same at the time the distance is specified and the time the distance is used.
 \newif\ifchecklength%
 \def\gresetdim#1#2#3{%
   \checklengthfalse%
@@ -696,11 +697,23 @@
   \relax %
 }%
 
-% a macro for changing a dimension and making sure that the change cascades through.
-% TODO: make smarter so that it knows the dependency tree and only recalculates distances affected by the change
+% a macro for changing a dimension.  Unlike \gresetdim, this function won’t create a new distance, just change an existing one.
 \def\grechangedim#1#2#3{%
-  \gresetdim{#1}{#2}{#3}%
-  \gre@computespaces%
+  \gre@rubberpermit{#1}%
+  % figure out our prefix
+  \ifrubber%
+    \gre@debug{Changing a skip.}
+    \def\gre@prefix{skip}%
+  \else%
+    \gre@debug{Changing a dimen.}
+    \def\gre@prefix{dimen}%
+  \fi
+  \ifcsname gre@\gre@prefix @#1\endcsname%
+    \gre@debug{It does exist.}
+    \gresetdim{#1}{#2}{#3}%
+  \else
+    \greerror{#1 is not a recognized distance.}
+  \fi
 }%
 
 %a macro to use if all you want to do is turn off the scaling for a particular distance
@@ -722,7 +735,6 @@
   \ifnum\the\grefactor=\greconffactor\else %If the space configuration file is designed for a \grefactor other than the current one, then we need to rescale the distances.
     \gre@changedimenfactor{\greconffactor}{\grefactor} %
   \fi%
-  \gre@computespaces %
   \relax %
 }%
 
@@ -942,6 +954,9 @@
   \ifnum\gre@scale@interwordspacenotes=1\relax%
     \gre@changeonedimenfactor{interwordspacenotes}{#1}{#2}%
   \fi%
+  \ifnum\gre@scale@intersyllablespacenotes=1\relax%
+    \gre@changeonedimenfactor{intersyllablespacenotes}{#1}{#2}%
+  \fi%
   \ifnum\gre@scale@interwordspacenotestext=1\relax%
     \gre@changeonedimenfactor{interwordspacenotestext}{#1}{#2}%
   \fi%
@@ -1071,7 +1086,6 @@
     \divide\gre@count@temp@two by #1\relax%
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
   \fi%
-  \gre@computespaces%
   \relax %
 }%
 
@@ -1143,16 +1157,3 @@
     \relax%
   }%
 \fi%
-
-
-% #1: penalty
-% #2: space if in middle of a line
-% #3: space if line cuts at penalty
-\def\grepenaltyandspace#1#2#3{%
-  \grepenalty{#1}%
-  %\ifdim#3=0pt%
-    \grehskip{#2}%
-  %\else %
-  %  \grediscretionary{#2}{#3}%
-  %\fi %
-}

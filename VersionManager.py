@@ -4,6 +4,23 @@
     A script that manages the VERSION of gregorio.
 
     See VersionUpdate.py -h for help
+
+    Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
+
+    This file is part of Gregorio.
+
+    Gregorio is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Gregorio is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from __future__ import print_function
@@ -19,11 +36,19 @@ from distutils.util import strtobool
 
 VERSION_FILE = '.gregorio-version'
 GREGORIO_FILES = ["configure.ac",
+                  "src/gregoriotex/gregoriotex.h",
                   "windows/gregorio-resources.rc",
+                  "macosx/Gregorio.pkgproj",
                   "windows/gregorio.iss",
-                  "tex/gregoriotex.lua",
                   "doc/GregorioRef.tex",
-                  "plugins/gregoriotex/gregoriotex.h"
+                  "tex/gregoriotex.sty",
+                  "tex/gregoriotex.lua",
+                  "tex/gregoriotex.tex",
+                  "tex/gregoriotex-chars.tex",
+                  "tex/gregoriotex-signs.tex",
+                  "tex/gregoriotex-spaces.tex",
+                  "tex/gregoriotex-symbols.tex",
+                  "tex/gregoriotex-syllable.tex",
                  ]
 
 def get_parser():
@@ -129,6 +154,7 @@ def replace_version(version_obj):
     print('Updating source files to version {0}\n'.format(newver))
     for myfile in GREGORIO_FILES:
         result = []
+        following_line_filename = False
         with open(myfile, 'r') as infile:
             for line in infile:
                 if 'AC_INIT([' in line:
@@ -143,11 +169,20 @@ def replace_version(version_obj):
                     result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
                 elif 'GREGORIO_VERSION' in line:
                     result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
-                elif 'internalversion =' in line:
-                    result.append(re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1))
+                elif 'GREGORIO_DATE_LTX' in line:
+                    result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%Y/%m/%d"), line, 1))
+                elif 'PARSE_VERSION_DATE_LTX' in line:
+                    newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
+                    result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%Y/%m/%d"), newline, 1))
                 elif 'PARSE_VERSION_DATE' in line:
                     newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
                     result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%d/%m/%y"), newline, 1))
+                elif 'PARSE_VERSION_FILE_NEXTLINE' in line:
+                    result.append(line)
+                    following_line_filename = True
+                elif following_line_filename:
+                    result.append(re.sub(r'(\d+\_\d+\_\d+(?:[-+~]\w+)*)', newver_filename, line, 1))
+                    following_line_filename = False
                 else:
                     result.append(line)
         with open(myfile, 'w') as outfile:
