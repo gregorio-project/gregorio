@@ -535,7 +535,7 @@ gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     }
     // end of the main switch
 
-    if (current_glyph_type == G_NO_GLYPH) {
+    if (current_glyph_type == G_UNDETERMINED) {
         /*
          * means that this is the first glyph or that the previous glyph has
          * already been added 

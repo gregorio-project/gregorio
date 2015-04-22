@@ -32,58 +32,55 @@
  */
 
 typedef enum gtex_type {
-    // the first are the short ones (see squarize.py)
     T_ONE_NOTE = 1,
-    T_PES = 2,
-    T_PESQUADRATUM = 3,
-    T_PESQUADRATUM_LONGQUEUE = 4,
-    T_PESQUILISMA = 5,
-    T_PESQUASSUS = 6,
-    T_PESQUASSUS_LONGQUEUE = 7,
-    T_PESQUILISMAQUADRATUM = 8,
-    T_PESQUILISMAQUADRATUM_LONGQUEUE = 9,
-    T_FLEXUS = 10,
-    T_FLEXUS_NOBAR = 11,
-    T_FLEXUS_LONGQUEUE = 12,
-    T_FLEXUS_ORISCUS = 13,
-    T_FLEXUS_ORISCUS_SCAPUS = 62,
-    T_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE = 63,
-    // the next are the long ones
-    T_PORRECTUSFLEXUS = 14,
-    T_PORRECTUSFLEXUS_NOBAR = 18,
-    T_PORRECTUS = 22,
-    T_PORRECTUS_NOBAR = 26,
-    T_TORCULUS = 30,
-    T_TORCULUS_RESUPINUS = 34,
-    T_TORCULUS_QUILISMA = 38,
-    T_TORCULUS_LIQUESCENS = 54,
-    T_TORCULUS_LIQUESCENS_QUILISMA = 58,
-    // only deminutus are generated for the next two
-    T_SCANDICUS = 42,
-    T_ANCUS = 44,
-    T_ANCUS_LONGQUEUE = 46,
-    T_VIRGA_STRATA = 48,
-    T_SALICUS = 50,
-    T_SALICUS_LONGQUEUE = 52,
+    // two note neumes
+    T_PES,
+    T_PESQUADRATUM,
+    T_PESQUADRATUM_LONGQUEUE,
+    T_PESQUILISMA,
+    T_PESQUASSUS,
+    T_PESQUASSUS_LONGQUEUE,
+    T_PESQUILISMAQUADRATUM,
+    T_PESQUILISMAQUADRATUM_LONGQUEUE,
+    T_FLEXUS,
+    T_FLEXUS_NOBAR,
+    T_FLEXUS_LONGQUEUE,
+    T_FLEXUS_ORISCUS,
+    T_FLEXUS_ORISCUS_SCAPUS,
+    T_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
+    T_VIRGA_STRATA,
+    // three note neumes
+    T_PORRECTUS,
+    T_PORRECTUS_NOBAR,
+    T_TORCULUS,
+    T_TORCULUS_QUILISMA,
+    T_SCANDICUS, // only deminutus
+    T_ANCUS, // only deminutus
+    T_ANCUS_LONGQUEUE, // only deminutus
+    T_SALICUS,
+    T_SALICUS_LONGQUEUE,
+    // four note neumes
+    T_PORRECTUSFLEXUS,
+    T_PORRECTUSFLEXUS_NOBAR,
+    T_TORCULUS_RESUPINUS,
+    T_TORCULUS_LIQUESCENS,
+    T_TORCULUS_LIQUESCENS_QUILISMA,
     // this is a special type for the first note of a torculus resupinus flexus
-    T_ONE_NOTE_TRF = 72,
-    // the next type value; don't use this directly, but keep it updated
-    // as types are added to this enum
-    T_NEXT_TYPE = 64,
+    T_ONE_NOTE_TRF,
 } gtex_type;
 
 // the different types for the alignment of the notes in GregorioTeX
 typedef enum gtex_alignment {
     AT_ONE_NOTE = 0,
-    AT_FLEXUS = 1,
-    AT_PORRECTUS = 2,
-    AT_INITIO_DEBILIS = 3,
-    AT_QUILISMA = 4,
-    AT_ORISCUS = 5,
-    AT_PUNCTUM_INCLINATUM = 6,
-    AT_STROPHA = 7,
-    AT_FLEXUS_1 = 8,
-    AT_FLEXUS_DEMINUTUS = 9,
+    AT_FLEXUS,
+    AT_PORRECTUS,
+    AT_INITIO_DEBILIS,
+    AT_QUILISMA,
+    AT_ORISCUS,
+    AT_PUNCTUM_INCLINATUM,
+    AT_STROPHA,
+    AT_FLEXUS_1,
+    AT_FLEXUS_DEMINUTUS,
 } gtex_alignment;
 
 // Here we define a function that will determine the number of the
