@@ -674,8 +674,8 @@
 
 {%
   % use greciliae because it is the most complete font
-  \font\local@greciliae = {greciliae}\relax %
-  \font\local@greextra = {greextra}\relax %
+  \font\local@greciliae = "name:greciliae" at 17 sp\relax %
+  \font\local@greextra = "name:greextra" at 17 sp\relax %
   \directlua{gregoriotex.map_font('local@greciliae', 'cp')
              gregoriotex.map_font('local@greextra', 'sp')}%
 }%
