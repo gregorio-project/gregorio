@@ -672,6 +672,14 @@
   \relax %
 }%
 
+{%
+  % use greciliae because it is the most complete font
+  \font\local@greciliae = {greciliae}\relax %
+  \font\local@greextra = {greextra}\relax %
+  \directlua{gregoriotex.map_font('local@greciliae', 'cp')
+             gregoriotex.map_font('local@greextra', 'sp')}%
+}%
+
 \input gregoriotex-chars.tex%
 
 \input gregoriotex-signs.tex%
@@ -1172,6 +1180,7 @@
   \gre@count@temp@three = \the\grefactor %
   \multiply\gre@count@temp@three by 100000 %
   \global\font\gregoriofont="name:#1" at \the\gre@count@temp@three sp%
+  {\gregoriofont\directlua{gregoriotex.check_font_version()}}%
   \relax%
 }%
 

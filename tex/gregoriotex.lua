@@ -253,9 +253,13 @@ local function include_score(input_file, force_gabccompile)
   return
 end
 
-local function check_version(greinternalversion)
-  if greinternalversion ~= internalversion then
-    err("uncoherent file versions: gregoriotex.tex is version %i while gregoriotex.lua is version "..internalversion, greinternalversion)
+local function check_font_version()
+  local gregoriofont = font.getfont(font.id('gregoriofont'))
+  local fontversion = gregoriofont.shared.rawdata.metadata.version
+  if fontversion ~= internalversion then
+    fontname = gregoriofont.shared.rawdata.metadata.fontname
+    fontfile = gregoriofont.shared.rawdata.metadata.origname
+    err("\nUncoherent file versions!\ngregoriotex.tex is version %s\nwhile %s.ttf is version %s\nplease update file\n%s", internalversion, fontname, fontversion, fontfile)
   end
 end
 
@@ -263,9 +267,20 @@ local function get_gregorioversion()
   return internalversion
 end
 
+local function map_font(csname, prefix)
+  log("Mapping font %s", csname)
+  local glyph, unicode
+  for glyph, unicode in pairs(font.fonts[font.id(csname)].resources.unicodes) do
+    if unicode >= 0 then
+      tex.sprint(string.format([[\xdef\gre%s%s{\char%d}]], prefix, glyph, unicode))
+    end
+  end
+end
+
 gregoriotex.include_score        = include_score
 gregoriotex.compile_gabc         = compile_gabc
 gregoriotex.atScoreEnd           = atScoreEnd
 gregoriotex.atScoreBeggining     = atScoreBeggining
-gregoriotex.check_version        = check_version
+gregoriotex.check_font_version   = check_font_version
 gregoriotex.get_gregorioversion  = get_gregorioversion
+gregoriotex.map_font             = map_font

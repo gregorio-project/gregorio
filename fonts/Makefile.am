@@ -21,7 +21,7 @@
 TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf gresym.ttf greextra.ttf
 SOURCEFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd gresym.sfd greextra.sfd
 
-EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py README.md gregoria2gregorio.py
+EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py README.md
 
 FONTFORGE = fontforge
 RM = rm
@@ -31,7 +31,7 @@ gregorio.ttf: squarize.py gregorio-base.sfd
 
 parmesan.ttf: squarize.py parmesan-base.sfd
 	$(FONTFORGE) -script squarize.py parmesan
-	
+
 greciliae.ttf: squarize.py greciliae-base.sfd
 	$(FONTFORGE) -script squarize.py greciliae
 
@@ -48,9 +48,6 @@ gregorio: gregorio.ttf
 greciliae: greciliae.ttf
 
 parmesan: parmesan.ttf
-
-gregoria: Gregoria.otf Gregoria-Auctae.otf Gregoria-Deminutae.otf gregoria2gregorio.py
-	$(FONTFORGE) -script gregoria2gregorio.py
 
 gresym: gresym.ttf
 

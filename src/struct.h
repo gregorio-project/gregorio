@@ -204,9 +204,6 @@ typedef enum gregorio_h_episemus {
 
 // The different types of glyph
 
-#define G_NO_GLYPH G_UNDETERMINED
-#define G_PES G_PODATUS
-#define G_FLEXUS G_FLEXA
 typedef enum gregorio_glyph_type {
     G_PUNCTUM_INCLINATUM = 1,
     G_2_PUNCTA_INCLINATA_DESCENDENS,
