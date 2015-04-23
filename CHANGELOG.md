@@ -14,6 +14,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Support for the font Gregoria.
 
 ## [Unreleased][ureleased]
+### Changed
+- `gregoriosyms.sty` is no more, its functionalities have been integrated in GregorioTeX.
+
 ### Fixed
 - Torculus followed by a non-liquescent note is now parsed correctly (see [#284](https://github.com/gregorio-project/gregorio/issues/284).
 
