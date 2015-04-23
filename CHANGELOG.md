@@ -8,6 +8,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ### Changed
 - The `O` modifier in gabc now has expanded uses beyond the salicus `(egOi)`.  A stemmed oriscus will appear on a lone pitch `(gO)` or a followed by a lower pitch `(gOe)` (see [#76](https://github.com/gregorio-project/gregorio/issues/76)).  A virga strata will appear on the second note of two ascending pitches `(giO)`.
+- With thanks to *Abbazia Mater Ecclesiae (IT)* for drawing the new shapes, the strophicus in greciliae has changed to better differentiate from the punctum inclinatum.  Use `\grechangeglyph{Stropha}{greciliae}{.caeciliae}\grechangeglyph{StrophaAucta}{greciliae}{.caeciliae}` if you prefer the old shape.
+
+### Added
+- The ability to substitute an arbitrary glyph for one used by GregorioTeX.  This adds three macros: `\grechangeglyph` to make the substitution, `\greresetglyph` to remove the substitution, and `\gredefvariant`, a lower-level macro for (re-)defining a control sequence with an arbitrary glyph.  See GregorioRef.pdf for full details.
 
 ### Removed
 - GregorioXML and OpusTeX output
