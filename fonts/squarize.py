@@ -176,6 +176,8 @@ This file is part of Gregorio.
     porrectus(font_width)
     porrectusflexus(font_width)
     torculusresupinus(font_width)
+    # variants must be copied last!
+    copy_variant_glyphs()
     newfont.generate("%s.ttf" % font_name)
     oldfont.close()
     newfont.close()
@@ -186,7 +188,7 @@ def new_glyph():
     if glyphnumber > 0xf8ff:
         print("WARNING: exceeded private use area")
 
-    newfont.selection.select(("singletons",), 'u%05x' % glyphnumber)
+    newfont.selection.select('u%05x' % glyphnumber)
 
 def set_glyph_name(name):
     global all_glyph_names, newfont, glyphnumber
@@ -257,12 +259,8 @@ DIRECT_GLYPH_NAMES = {
     72: 'PunctumAscendens',
     73: 'PunctumDescendens',
     74: 'PunctumForMeasurement',
-    75: 'PunctumCavumAlt',
-    76: 'LineaPunctumCavumAlt',
     77: 'PunctumCavumHole',
-    78: 'PunctumCavumAltHole',
     79: 'LineaPunctumCavumHole',
-    80: 'LineaPunctumCavumAltHole',
     81: 'FlatHole',
     82: 'NaturalHole',
     83: 'DivisioDominican',
@@ -280,12 +278,6 @@ DIRECT_GLYPH_NAMES = {
     2561: 'PesQuilismaOneNothing',
 }
 
-DIRECT_GLYPH_SKIP = {
-    'greciliae': [],
-    'gregorio': [75, 76, 78, 80],
-    'parmesan': [75, 76, 78, 80],
-}
-
 def initialize_glyphs():
     "Builds the first glyphs."
     global newfont, oldfont, font_name
@@ -294,17 +286,23 @@ def initialize_glyphs():
     glyphs = DIRECT_GLYPH_NAMES.keys()
     glyphs.sort()
 
-    skip = {}
-    for number in DIRECT_GLYPH_SKIP[font_name]:
-        skip[number] = True
-
     for number in glyphs:
         new_glyph()
-        if not number in skip:
-            oldfont.selection.select(("singletons",), '_%04d' % number)
+        oldfont.selection.select('_%04d' % number)
+        oldfont.copy()
+        newfont.paste()
+        set_glyph_name(DIRECT_GLYPH_NAMES[number])
+
+def copy_variant_glyphs():
+    "Copies the variant glyphs."
+    global newfont, oldfont
+    for glyph in oldfont.glyphs():
+        if glyph.isWorthOutputting() and glyph.glyphname.find(".") > 0:
+            new_glyph()
+            oldfont.selection.select(glyph)
             oldfont.copy()
             newfont.paste()
-            set_glyph_name(DIRECT_GLYPH_NAMES[number])
+            set_glyph_name(glyph.glyphname)
 
 def get_lengths(fontname):
     "Initialize widths depending on the font."
@@ -440,9 +438,9 @@ L_INITIO_DEBILIS_DESCENDENS = 'InitioDebilisDescendens'
 def simple_paste(src):
     "Copy and past a glyph."
     global oldfont, newfont, glyphnumber
-    oldfont.selection.select(("singletons",), src)
+    oldfont.selection.select(src)
     oldfont.copy()
-    newfont.selection.select(("singletons",), "u%05x" % glyphnumber)
+    newfont.selection.select('u%05x' % glyphnumber)
     newfont.pasteInto()
     #newfont.paste()
 
@@ -457,9 +455,9 @@ def paste_and_move(src, xdimen, ydimen):
     "Pastes the src glyph into dst, and moves it with horiz and vert offsets."
     global oldfont, newfont, glyphnumber
     oldfont[src].transform(psMat.translate(xdimen, ydimen))
-    oldfont.selection.select(("singletons",), src)
+    oldfont.selection.select(src)
     oldfont.copy()
-    newfont.selection.select(("singletons",), "u%05x" % glyphnumber)
+    newfont.selection.select('u%05x' % glyphnumber)
     newfont.pasteInto()
     oldfont[src].transform(psMat.translate(-xdimen, -ydimen))
 
