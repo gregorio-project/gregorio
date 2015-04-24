@@ -33,10 +33,6 @@
 \let\gre@char@lineapunctumcavum=\grecpLineaPunctumCavum\relax %
 \let\gre@char@punctumcavumhole=\grecpPunctumCavumHole\relax %
 \let\gre@char@lineapunctumcavumhole=\grecpLineaPunctumCavumHole\relax %
-\let\gre@char@punctumcavumalt=\grecpPunctumCavumAlt\relax %
-\let\gre@char@lineapunctumcavumalt=\grecpLineaPunctumCavumAlt\relax %
-\let\gre@char@punctumcavumholealt=\grecpPunctumCavumAltHole\relax %
-\let\gre@char@lineapunctumcavumholealt=\grecpLineaPunctumCavumAltHole\relax %
 
 % notes (to compute different widths)
 \let\gre@char@smallpunctum=\grecpPunctumDeminutus\relax %
@@ -130,47 +126,47 @@
 
 \def\greusemedicaeastyle{%
 \greusestylecommon %
-\xdef\grecustotoplongchar{\noexpand\gregoriostylefont\grespMedicaeaCustosUpLong}%
-\xdef\grecustotopshortchar{\noexpand\gregoriostylefont\grespMedicaeaCustosUpShort}%
-\xdef\grecustotopmiddlechar{\noexpand\gregoriostylefont\grespMedicaeaCustosUpMedium}%
-\xdef\grecustobottomlongchar{\noexpand\gregoriostylefont\grespMedicaeaCustosDownLong}%
-\xdef\grecustobottomshortchar{\noexpand\gregoriostylefont\grespMedicaeaCustosDownShort}%
-\xdef\grecustobottommiddlechar{\noexpand\gregoriostylefont\grespMedicaeaCustosDownMedium}%
-\xdef\grecclefchar{\noexpand\gregoriostylefont\grespMedicaeaCClef}%
-\xdef\grefclefchar{\noexpand\gregoriostylefont\grespMedicaeaFClef}%
-\xdef\greincclefchar{\noexpand\gregoriostylefont\grespMedicaeaCClefChange}%
-\xdef\greinfclefchar{\noexpand\gregoriostylefont\grespMedicaeaFClefChange}%
-\xdef\greflatchar{\noexpand\gregoriostylefont\grespMedicaeaFlat}%
-\xdef\greflatholechar{\noexpand\gregoriostylefont\grespMedicaeaFlatHole}%
+\gredefvariant{grecustotoplongchar}{greextra}{MedicaeaCustosUpLong}%
+\gredefvariant{grecustotopshortchar}{greextra}{MedicaeaCustosUpShort}%
+\gredefvariant{grecustotopmiddlechar}{greextra}{MedicaeaCustosUpMedium}%
+\gredefvariant{grecustobottomlongchar}{greextra}{MedicaeaCustosDownLong}%
+\gredefvariant{grecustobottomshortchar}{greextra}{MedicaeaCustosDownShort}%
+\gredefvariant{grecustobottommiddlechar}{greextra}{MedicaeaCustosDownMedium}%
+\gredefvariant{grecclefchar}{greextra}{MedicaeaCClef}%
+\gredefvariant{grefclefchar}{greextra}{MedicaeaFClef}%
+\gredefvariant{greincclefchar}{greextra}{MedicaeaCClefChange}%
+\gredefvariant{greinfclefchar}{greextra}{MedicaeaFClefChange}%
+\gredefvariant{greflatchar}{greextra}{MedicaeaFlat}%
+\gredefvariant{greflatholechar}{greextra}{MedicaeaFlatHole}%
 \relax %
 }%
 
 \def\greusehufnagelstyle{%
 \greusestylecommon %
-\xdef\grecustotoplongchar{\noexpand\gregoriostylefont\grespHufnagelCustosUpLong}%
-\xdef\grecustotopshortchar{\noexpand\gregoriostylefont\grespHufnagelCustosUpShort}%
-\xdef\grecustotopmiddlechar{\noexpand\gregoriostylefont\grespHufnagelCustosUpMedium}%
-\xdef\grecustobottomlongchar{\noexpand\gregoriostylefont\grespHufnagelCustosDownLong}%
-\xdef\grecustobottomshortchar{\noexpand\gregoriostylefont\grespHufnagelCustosDownShort}%
-\xdef\grecustobottommiddlechar{\noexpand\gregoriostylefont\grespHufnagelCustosDownMedium}%
-\xdef\grecclefchar{\noexpand\gregoriostylefont\grespHufnagelCClef}%
-\xdef\grefclefchar{\noexpand\gregoriostylefont\grespHufnagelFClef}%
-\xdef\greincclefchar{\noexpand\gregoriostylefont\grespHufnagelCClefChange}%
-\xdef\greinfclefchar{\noexpand\gregoriostylefont\grespHufnagelFClefChange}%
-\xdef\greflatchar{\noexpand\gregoriostylefont\grespHufnagelFlat}%
-\xdef\greflatholechar{\noexpand\gregoriostylefont\grespHufnagelFlatHole}%
+\gredefvariant{grecustotoplongchar}{greextra}{HufnagelCustosUpLong}%
+\gredefvariant{grecustotopshortchar}{greextra}{HufnagelCustosUpShort}%
+\gredefvariant{grecustotopmiddlechar}{greextra}{HufnagelCustosUpMedium}%
+\gredefvariant{grecustobottomlongchar}{greextra}{HufnagelCustosDownLong}%
+\gredefvariant{grecustobottomshortchar}{greextra}{HufnagelCustosDownShort}%
+\gredefvariant{grecustobottommiddlechar}{greextra}{HufnagelCustosDownMedium}%
+\gredefvariant{grecclefchar}{greextra}{HufnagelCClef}%
+\gredefvariant{grefclefchar}{greextra}{HufnagelFClef}%
+\gredefvariant{greincclefchar}{greextra}{HufnagelCClefChange}%
+\gredefvariant{greinfclefchar}{greextra}{HufnagelFClefChange}%
+\gredefvariant{greflatchar}{greextra}{HufnagelFlat}%
+\gredefvariant{greflatholechar}{greextra}{HufnagelFlatHole}%
 \relax %
 }%
 
 \def\greusemensuralstyle{%
 \greusestylecommon %
-\xdef\grecustotoplongchar{\noexpand\gregoriostylefont\grespMensuralCustosUpLong}%
-\xdef\grecustotopshortchar{\noexpand\gregoriostylefont\grespMensuralCustosUpShort}%
-\xdef\grecustotopmiddlechar{\noexpand\gregoriostylefont\grespMensuralCustosUpMedium}%
-\xdef\grecustobottomlongchar{\noexpand\gregoriostylefont\grespMensuralCustosDownLong}%
-\xdef\grecustobottomshortchar{\noexpand\gregoriostylefont\grespMensuralCustosDownShort}%
-\xdef\grecustobottommiddlechar{\noexpand\gregoriostylefont\grespMensuralCustosDownMedium}%
-\xdef\greflatchar{\noexpand\gregoriostylefont\grespMensuralFlat}%
-\xdef\greflatholechar{\noexpand\gregoriostylefont\grespMensuralFlatHole}%
+\gredefvariant{grecustotoplongchar}{greextra}{MensuralCustosUpLong}%
+\gredefvariant{grecustotopshortchar}{greextra}{MensuralCustosUpShort}%
+\gredefvariant{grecustotopmiddlechar}{greextra}{MensuralCustosUpMedium}%
+\gredefvariant{grecustobottomlongchar}{greextra}{MensuralCustosDownLong}%
+\gredefvariant{grecustobottomshortchar}{greextra}{MensuralCustosDownShort}%
+\gredefvariant{grecustobottommiddlechar}{greextra}{MensuralCustosDownMedium}%
+\gredefvariant{greflatchar}{greextra}{MensuralFlat}%
+\gredefvariant{greflatholechar}{greextra}{MensuralFlatHole}%
 \relax %
 }%

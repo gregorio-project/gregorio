@@ -1677,10 +1677,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\UseAlternatePunctumCavum{%
-\gdef\grepunctumcavumchar{\gregoriofont\gre@char@punctumcavumalt}%
-\gdef\grelineapunctumcavumchar{\gregoriofont\gre@char@lineapunctumcavumalt}%
-\gdef\grepunctumcavumholechar{\gregoriofont\gre@char@punctumcavumholealt}%
-\gdef\grelineapunctumcavumholechar{\gregoriofont\gre@char@lineapunctumcavumholealt}%
+\gredefvariant{grepunctumcavumchar}{greciliae}{PunctumCavum.caeciliae}%
+\gredefvariant{grelineapunctumcavumchar}{greciliae}{LineaPunctumCavum.caeciliae}%
+\gredefvariant{grepunctumcavumholechar}{greciliae}{PunctumCavumHole.caeciliae}%
+\gredefvariant{grelineapunctumcavumholechar}{greciliae}{LineaPunctumCavumHole.caeciliae}%
 \relax %
 }%
 
@@ -1695,7 +1695,7 @@
 \UseNormalPunctumCavum%
 
 \def\grepunctumcavum#1#2#3#4#5{%
-  \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctumcavumchar}%
+  \setbox\GreTempwidth=\hbox{\grepunctumcavumchar}%
   \global\gre@dimen@lastglyphwidth=\wd\GreTempwidth %
   \gre@skip@temp@four = \gre@dimen@lastglyphwidth%
   \kern\gre@skip@temp@four %
@@ -1710,7 +1710,7 @@
 }%
 
 \def\grelineapunctumcavum#1#2#3#4#5{%
-  \setbox\GreTempwidth=\hbox{\gregoriofont\grelineapunctumcavumchar}%
+  \setbox\GreTempwidth=\hbox{\grelineapunctumcavumchar}%
   \global\gre@dimen@lastglyphwidth=\wd\GreTempwidth %
   \gre@skip@temp@four = \gre@dimen@lastglyphwidth%
   \kern\gre@skip@temp@four %
