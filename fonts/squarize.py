@@ -176,6 +176,8 @@ This file is part of Gregorio.
     porrectus(font_width)
     porrectusflexus(font_width)
     torculusresupinus(font_width)
+    # variants must be copied last!
+    copy_variant_glyphs()
     newfont.generate("%s.ttf" % font_name)
     oldfont.close()
     newfont.close()
@@ -186,7 +188,7 @@ def new_glyph():
     if glyphnumber > 0xf8ff:
         print("WARNING: exceeded private use area")
 
-    newfont.selection.select(("singletons",), 'u%05x' % glyphnumber)
+    newfont.selection.select('u%05x' % glyphnumber)
 
 def set_glyph_name(name):
     global all_glyph_names, newfont, glyphnumber
@@ -209,102 +211,97 @@ def precise_message(glyph_name):
     print("  *", glyph_name)
 
 # These names must consist wholly of ASCII letters
-DIRECT_GLYPH_NAMES = {
-    1: 'CClef',
-    2: 'FClef',
-    3: 'CClefChange',
-    4: 'FClefChange',
-    6: 'Flat',
-    7: 'Natural',
-    8: 'Virgula',
-    9: 'DivisioMinima',
-    10: 'DivisioMinor',
-    11: 'DivisioMaior',
-    13: 'PunctumDeminutus',
-    14: 'AuctumMora',
-    15: 'AuctumDuplex',
-    16: 'Circumflexus',
-    17: 'Punctum',
-    19: 'PunctumInclinatum',
-    20: 'Stropha',
-    21: 'StrophaAucta',
-    22: 'VirgaLongqueue',
-    23: 'Virga',
-    24: 'VirgaReversaLongqueue',
-    25: 'VirgaReversa',
-    26: 'Quilisma',
-    27: 'Oriscus',
-    28: 'OriscusReversus',
-    29: 'OriscusScapusLongqueue',
-    30: 'OriscusScapus',
-    31: 'PunctumInclinatumAuctus',
-    32: 'PunctumInclinatumDeminutus',
-    33: 'VEpisemus',
-    34: 'PunctumCavum',
-    35: 'LineaPunctum',
-    36: 'LineaPunctumCavum',
-    37: 'Circulus',
-    38: 'Semicirculus',
-    39: 'Accentus',
-    60: 'CustosUpLong',
-    61: 'CustosUpShort',
-    62: 'CustosUpMedium',
-    63: 'CustosDownLong',
-    64: 'CustosDownShort',
-    65: 'CustosDownMedium',
-    69: 'AccentusReversus',
-    70: 'SemicirculusReversus',
-    72: 'PunctumAscendens',
-    73: 'PunctumDescendens',
-    74: 'PunctumForMeasurement',
-    75: 'PunctumCavumAlt',
-    76: 'LineaPunctumCavumAlt',
-    77: 'PunctumCavumHole',
-    78: 'PunctumCavumAltHole',
-    79: 'LineaPunctumCavumHole',
-    80: 'LineaPunctumCavumAltHole',
-    81: 'FlatHole',
-    82: 'NaturalHole',
-    83: 'DivisioDominican',
-    84: 'DivisioDominicanAlt',
-    85: 'Sharp',
-    86: 'SharpHole',
-    87: 'Linea',
-    88: 'RoundBrace',
-    89: 'CurlyBrace',
-    90: 'BarBrace',
-    91: 'OriscusDeminutus',
-    92: 'VirgaReversaDescendens',
-    93: 'VirgaReversaDescendensLongqueue',
-    1025: 'PesOneNothing',
-    2561: 'PesQuilismaOneNothing',
-}
-
-DIRECT_GLYPH_SKIP = {
-    'greciliae': [],
-    'gregorio': [75, 76, 78, 80],
-    'parmesan': [75, 76, 78, 80],
-}
+DIRECT_GLYPH_NAMES = [
+    'CClef',
+    'FClef',
+    'CClefChange',
+    'FClefChange',
+    'Flat',
+    'Natural',
+    'Virgula',
+    'DivisioMinima',
+    'DivisioMinor',
+    'DivisioMaior',
+    'PunctumDeminutus',
+    'AuctumMora',
+    'AuctumDuplex',
+    'Circumflexus',
+    'Punctum',
+    'PunctumInclinatum',
+    'Stropha',
+    'StrophaAucta',
+    'VirgaLongqueue',
+    'Virga',
+    'VirgaReversaLongqueue',
+    'VirgaReversa',
+    'Quilisma',
+    'Oriscus',
+    'OriscusReversus',
+    'OriscusScapusLongqueue',
+    'OriscusScapus',
+    'PunctumInclinatumAuctus',
+    'PunctumInclinatumDeminutus',
+    'VEpisemus',
+    'PunctumCavum',
+    'LineaPunctum',
+    'LineaPunctumCavum',
+    'Circulus',
+    'Semicirculus',
+    'Accentus',
+    'CustosUpLong',
+    'CustosUpShort',
+    'CustosUpMedium',
+    'CustosDownLong',
+    'CustosDownShort',
+    'CustosDownMedium',
+    'AccentusReversus',
+    'SemicirculusReversus',
+    'PunctumAscendens',
+    'PunctumDescendens',
+    'PunctumForMeasurement',
+    'PunctumCavumHole',
+    'LineaPunctumCavumHole',
+    'FlatHole',
+    'NaturalHole',
+    'DivisioDominican',
+    'DivisioDominicanAlt',
+    'Sharp',
+    'SharpHole',
+    'Linea',
+    'RoundBrace',
+    'CurlyBrace',
+    'BarBrace',
+    'OriscusDeminutus',
+    'VirgaReversaDescendens',
+    'VirgaReversaDescendensLongqueue',
+    'PesOneNothing',
+    'PesQuilismaOneNothing',
+]
 
 def initialize_glyphs():
     "Builds the first glyphs."
     global newfont, oldfont, font_name
-    # initial_glyphs are the names of the glyphs that are already in
+    # DIRECT_GLYPH_NAMES are the names of the glyphs that are already in
     # gregorio_base, mostly one-note glyphs.
-    glyphs = DIRECT_GLYPH_NAMES.keys()
-    glyphs.sort()
+    DIRECT_GLYPH_NAMES.sort()
 
-    skip = {}
-    for number in DIRECT_GLYPH_SKIP[font_name]:
-        skip[number] = True
-
-    for number in glyphs:
+    for name in DIRECT_GLYPH_NAMES:
         new_glyph()
-        if not number in skip:
-            oldfont.selection.select(("singletons",), '_%04d' % number)
+        oldfont.selection.select(name)
+        oldfont.copy()
+        newfont.paste()
+        set_glyph_name(name)
+
+def copy_variant_glyphs():
+    "Copies the variant glyphs."
+    global newfont, oldfont
+    for glyph in oldfont.glyphs():
+        if glyph.isWorthOutputting() and glyph.glyphname.find(".") > 0:
+            new_glyph()
+            oldfont.selection.select(glyph)
             oldfont.copy()
             newfont.paste()
-            set_glyph_name(DIRECT_GLYPH_NAMES[number])
+            set_glyph_name(glyph.glyphname)
 
 def get_lengths(fontname):
     "Initialize widths depending on the font."
@@ -440,9 +437,9 @@ L_INITIO_DEBILIS_DESCENDENS = 'InitioDebilisDescendens'
 def simple_paste(src):
     "Copy and past a glyph."
     global oldfont, newfont, glyphnumber
-    oldfont.selection.select(("singletons",), src)
+    oldfont.selection.select(src)
     oldfont.copy()
-    newfont.selection.select(("singletons",), "u%05x" % glyphnumber)
+    newfont.selection.select('u%05x' % glyphnumber)
     newfont.pasteInto()
     #newfont.paste()
 
@@ -457,9 +454,9 @@ def paste_and_move(src, xdimen, ydimen):
     "Pastes the src glyph into dst, and moves it with horiz and vert offsets."
     global oldfont, newfont, glyphnumber
     oldfont[src].transform(psMat.translate(xdimen, ydimen))
-    oldfont.selection.select(("singletons",), src)
+    oldfont.selection.select(src)
     oldfont.copy()
-    newfont.selection.select(("singletons",), "u%05x" % glyphnumber)
+    newfont.selection.select('u%05x' % glyphnumber)
     newfont.pasteInto()
     oldfont[src].transform(psMat.translate(-xdimen, -ydimen))
 
@@ -705,17 +702,17 @@ def write_pes_quadratum(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHI
         first_width = widths['width_deminutus']
     elif first_glyph == "base5":
         if i == 1:
-            first_glyph = '_0017'
+            first_glyph = 'Punctum'
             if last_glyph == 'base7':
-                last_glyph = '_0017'
+                last_glyph = 'Punctum'
             elif last_glyph == 'auctusa2':
-                last_glyph = '_0072'
+                last_glyph = 'PunctumAscendens'
             elif last_glyph == 'auctusd2':
-                last_glyph = '_0073'
+                last_glyph = 'PunctumDescendens'
             elif last_glyph == 'rvsbase':
-                last_glyph = '_0023'
+                last_glyph = 'Virga'
             elif last_glyph == 'rvlbase':
-                last_glyph = '_0022'
+                last_glyph = 'VirgaLongqueue'
             first_width = widths['width_punctum']
         else:
             first_width = widths['width_punctum']-widths['line_width']
@@ -741,9 +738,9 @@ def write_virga_strata(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHIN
     "Writes the virga strata glyphs."
     new_glyph()
     if i == 1:
-        first_glyph = '_0017'
+        first_glyph = 'Punctum'
         first_width = widths['width_punctum']
-        last_glyph = '_0027'
+        last_glyph = 'Oriscus'
     else:
         first_width = widths['width_punctum']-widths['line_width']
     simple_paste(first_glyph)
@@ -769,16 +766,16 @@ def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
     new_glyph()
     if j == 1:
         if last_glyph == 'rvsbase':
-            last_glyph = '_0023'
+            last_glyph = 'Virga'
         elif last_glyph == 'rvlbase':
-            last_glyph = '_0022'
+            last_glyph = 'VirgaLongqueue'
     if i == 1 and j == 1:
-        first_glyph = '_0017'
+        first_glyph = 'Punctum'
         first_width = widths['width_punctum']
-        middle_glyph = '_0027'
+        middle_glyph = 'Oriscus'
         middle_width = widths['width_oriscus']
     elif i == 1:
-        first_glyph = '_0017'
+        first_glyph = 'Punctum'
         first_width = widths['width_punctum']
         middle_glyph = 'obase'
         middle_width = widths['width_oriscus']-widths['line_width']
@@ -919,25 +916,25 @@ def write_flexus(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHING):
     else:
         if i == 1: #we remove the bar aspect
             if last_glyph == 'base7':
-                last_glyph = '_0017'
+                last_glyph = 'Punctum'
             elif last_glyph == 'auctusa1':
-                last_glyph = '_0072'
+                last_glyph = 'PunctumAscendens'
             elif last_glyph == 'auctusd1':
-                last_glyph = '_0073'
+                last_glyph = 'PunctumDescendens'
             if first_glyph == 'base2':
-                first_glyph = '_0017'
+                first_glyph = 'Punctum'
             elif first_glyph == 'odbase':
-                first_glyph = '_0028'
+                first_glyph = 'OriscusReversus'
             elif first_glyph == 'vsbase':
-                first_glyph = '_0025'
+                first_glyph = 'VirgaReversa'
             elif first_glyph == 'vlbase':
-                first_glyph = '_0024'
+                first_glyph = 'VirgaReversaLongqueue'
             elif first_glyph == 'oslbase':
-                first_glyph = '_0029'
+                first_glyph = 'OriscusScapusLongqueue'
         simple_paste(first_glyph)
         if first_glyph == 'odbase':
             length = widths['width_oriscus_rev']
-        elif first_glyph == '_0029' or first_glyph.startswith('osbase'):
+        elif first_glyph == 'OriscusScapusLongqueue' or first_glyph.startswith('osbase'):
             length = widths['width_oriscus']
         else:
             length = widths['width_punctum']
@@ -947,7 +944,7 @@ def write_flexus(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHING):
         paste_and_move(last_glyph, length, (-i)*BASE_HEIGHT)
         if first_glyph == 'odbase':
             length = widths['width_oriscus_rev']
-        elif first_glyph == '_0029' or first_glyph.startswith('osbase'):
+        elif first_glyph == 'OriscusScapusLongqueue' or first_glyph.startswith('osbase'):
             length = widths['width_oriscus']
         else:
             length = widths['width_punctum']
@@ -1023,9 +1020,9 @@ def write_porrectus(widths, i, j, last_glyph, with_bar, shape, lique=L_NOTHING):
                        (j-i)*BASE_HEIGHT)
     elif last_glyph == 'auctusa2' or last_glyph == 'auctusd2':
         if last_glyph == 'auctusa2' and j == 1:
-            last_glyph = '_0072'
+            last_glyph = 'PunctumAscendens'
         elif last_glyph == 'auctusd2' and j == 1:
-            last_glyph = '_0073'
+            last_glyph = 'PunctumDescendens'
         paste_and_move(last_glyph, (length), (j-i)*BASE_HEIGHT)
         length = length + widths['width_punctum']
     else:
@@ -1145,7 +1142,7 @@ def write_porrectusflexus(widths, i, j, k, last_glyph, with_bar,
         middle_glyph = 'base3'
         if j == 1:
             if k == 1:
-                middle_glyph = '_0017'
+                middle_glyph = 'Punctum'
             else:
                 middle_glyph = 'base2'
         else:
@@ -1155,11 +1152,11 @@ def write_porrectusflexus(widths, i, j, k, last_glyph, with_bar,
         paste_and_move(middle_glyph, length, (j-i)*BASE_HEIGHT)
         if k == 1:
             if last_glyph == 'base7':
-                last_glyph = '_0017'
+                last_glyph = 'Punctum'
             elif last_glyph == 'auctusa1':
-                last_glyph = '_0072'
+                last_glyph = 'PunctumAscendens'
             elif last_glyph == 'auctusd1':
-                last_glyph = '_0073'
+                last_glyph = 'PunctumDescendens'
             length = length+widths['width_punctum']
         else:
             write_line(k, length + widths['width_punctum'] - widths['line_width'],
@@ -1237,10 +1234,10 @@ def write_torculus(widths, i, j, first_glyph, last_glyph, shape, lique=L_NOTHING
     elif first_glyph == "qbase":
         length = widths['width_quilisma']-widths['line_width']
         if i == 1:
-            first_glyph = '_0026'
+            first_glyph = 'Quilisma'
             length = widths['width_quilisma']
     elif i == 1:
-        first_glyph = '_0017'
+        first_glyph = 'Punctum'
         length = widths['width_punctum']+0.1
     simple_paste(first_glyph)
     if i != 1:
@@ -1254,16 +1251,16 @@ def write_torculus(widths, i, j, first_glyph, last_glyph, shape, lique=L_NOTHING
     else:
         if j == 1:
             if i == 1:
-                paste_and_move("_0017", length, i*BASE_HEIGHT)
+                paste_and_move("Punctum", length, i*BASE_HEIGHT)
             else:
                 paste_and_move("base4", length, i*BASE_HEIGHT)
             length = length+widths['width_punctum']
             if last_glyph == 'base7':
-                last_glyph = '_0017'
+                last_glyph = 'Punctum'
             elif last_glyph == 'auctusa1':
-                last_glyph = '_0072'
+                last_glyph = 'PunctumAscendens'
             elif last_glyph == 'auctusd1':
-                last_glyph = '_0073'
+                last_glyph = 'PunctumDescendens'
         else:
             if i == 1:
                 paste_and_move("base2", length, i*BASE_HEIGHT)
@@ -1299,10 +1296,10 @@ def write_torculus_liquescens(widths, i, j, k, first_glyph, shape,
     if first_glyph == "qbase":
         length = widths['width_quilisma']-widths['line_width']
         if i == 1:
-            first_glyph = '_0026'
+            first_glyph = 'Quilisma'
             length = widths['width_quilisma']
     elif i == 1:
-        first_glyph = '_0017'
+        first_glyph = 'Punctum'
         length = widths['width_punctum']+0.1
     simple_paste(first_glyph)
     if i != 1:
@@ -1311,7 +1308,7 @@ def write_torculus_liquescens(widths, i, j, k, first_glyph, shape,
     if j == 1:
         flexus_firstbar = 0
         if i == 1:
-            paste_and_move("_0017", length, i*BASE_HEIGHT)
+            paste_and_move("Punctum", length, i*BASE_HEIGHT)
         else:
             paste_and_move("base4", length, i*BASE_HEIGHT)
         length = length+widths['width_punctum']
@@ -1388,7 +1385,7 @@ def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
         length = widths['width_debilis']
     elif i == 1:
         if first_glyph == 'base5':
-            first_glyph = '_0017'
+            first_glyph = 'Punctum'
             length = widths['width_punctum']+0.1
     else:
         if first_glyph == 'base5':
@@ -1416,9 +1413,9 @@ def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
                        (i-j+k)*BASE_HEIGHT)
     elif last_glyph == 'auctusa2' or last_glyph == 'auctusd2':
         if last_glyph == 'auctusa2' and k == 1:
-            last_glyph = '_0072'
+            last_glyph = 'PunctumAscendens'
         elif last_glyph == 'auctusd2' and k == 1:
-            last_glyph = '_0073'
+            last_glyph = 'PunctumDescendens'
         if k == 1:
             length = length+widths['line_width']
         paste_and_move(last_glyph, (length-widths['line_width']), (i-j+k)*BASE_HEIGHT)
@@ -1438,7 +1435,7 @@ def write_torculusresupinusdeminutus(widths, i, j, k, first_glyph,
     if first_glyph == "idebilis":
         length = widths['width_debilis']
     elif i == 1:
-        first_glyph = '_0017'
+        first_glyph = 'Punctum'
         length = widths['width_punctum']+0.1
     simple_paste(first_glyph)
     if i != 1:
@@ -1449,7 +1446,7 @@ def write_torculusresupinusdeminutus(widths, i, j, k, first_glyph,
             length = length+widths['width_punctum']
             last_glyph = 'mnbpdeminutus'
         else:
-            paste_and_move("_0017", length, i*BASE_HEIGHT)
+            paste_and_move("Punctum", length, i*BASE_HEIGHT)
             length = length+widths['width_punctum']
             last_glyph = 'mnbpdeminutus'
     elif j == 1:
@@ -1489,14 +1486,14 @@ def write_scandicus(widths, i, j, last_glyph, lique=L_NOTHING):
     new_glyph()
     # special case of i=j=1, we use glyph 1025 directly
     if i == 1 and j == 1 and lique == L_NOTHING:
-        simple_paste('_0017')
-        second_glyph = '_1025'
+        simple_paste('Punctum')
+        second_glyph = 'PesOneNothing'
         paste_and_move(second_glyph, widths['width_punctum'], BASE_HEIGHT)
         set_width(2*widths['width_punctum'])
         end_glyph('%s%s%s%s' % (S_SCANDICUS, AMBITUS[i], AMBITUS[j], lique))
         return
     if i == 1:
-        simple_paste('_0017')
+        simple_paste('Punctum')
         length = widths['width_punctum']
         second_glyph = 'p2base'
         if lique == L_DEMINUTUS:
@@ -1540,9 +1537,9 @@ def write_ancus(widths, i, j, first_glyph, glyph_type):
         length = widths['width_punctum']
         second_glyph = 'mnbdeminutus'
         if first_glyph == 'vsbase':
-            first_glyph = '_0025'
+            first_glyph = 'VirgaReversa'
         else:
-            first_glyph = '_0024'
+            first_glyph = 'VirgaReversaLongqueue'
     else:
         length = widths['width_punctum'] - widths['line_width']
         second_glyph = 'mademinutus'

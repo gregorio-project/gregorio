@@ -52,6 +52,15 @@ local gregoriocenterattr = luatexbase.attributes['gregoriocenterattr']
 local startcenter = 1
 local endcenter   = 2
 
+local variant_fonts = {}
+local loaded_font_sizes = {}
+local next_variant = 0
+local variant_prefix = 'greVariantFont'
+local number_to_letter = {
+    ['0'] = 'A', ['1'] = 'B', ['2'] = 'C', ['3'] = 'D', ['4'] = 'E',
+    ['5'] = 'F', ['6'] = 'G', ['7'] = 'H', ['8'] = 'I', ['9'] = 'J',
+}
+
 -- node factory
 local tmpnode = node.new(glyph, 0)
 tmpnode.font = 0
@@ -267,12 +276,68 @@ local function get_gregorioversion()
   return internalversion
 end
 
-local function map_font(csname, prefix)
-  log("Mapping font %s", csname)
+local function map_font(name, prefix)
+  log("Mapping font %s", name)
   local glyph, unicode
-  for glyph, unicode in pairs(font.fonts[font.id(csname)].resources.unicodes) do
-    if unicode >= 0 then
+  for glyph, unicode in pairs(font.fonts[font.id(variant_fonts[name])].resources.unicodes) do
+    if unicode >= 0 and not string.match(glyph, '%.') then
       tex.sprint(string.format([[\xdef\gre%s%s{\char%d}]], prefix, glyph, unicode))
+    end
+  end
+end
+
+local function init_variant_font(name)
+  if variant_fonts[name] == nil then
+    local variant = variant_prefix..string.gsub(tostring(next_variant), '[0-9]', number_to_letter)
+    variant_fonts[name] = variant
+    log("Registering variant font %s as %s.", name, variant)
+    tex.print(string.format([[\global\font\%s = "name:%s" at 10 sp\relax ]], variant, name))
+    loaded_font_sizes[name] = '10'
+    next_variant = next_variant + 1
+  end
+end
+
+local function set_glyph(target, name, replacement)
+  local variant = variant_fonts[name]
+  local char
+  if string.match(replacement, '^%d+$') then
+    char = tonumber(replacement)
+  else
+    local font_id = font.id(variant)
+    if font_id < 0 then
+      err('\nFont %s is not defined.', name)
+    end
+    char = font.fonts[font_id].resources.unicodes[replacement]
+    if char == nil then
+      err('\nGlyph %s in font %s was not found.', replacement, name)
+    end
+  end
+  log([[Setting \%s to \%s\char%d]], target, variant, char)
+  tex.print(string.format([[\edef\%s{{\noexpand\%s\char%d}}]], target, variant, char))
+end
+
+local function change_glyph(target, name, replacement)
+  if string.match(replacement, '^%.') then
+    replacement = target..replacement
+  end
+  set_glyph([[grecp]]..target, name, replacement)
+end
+
+local function reset_glyph(target)
+  local variant = variant_fonts['greciliae']
+  local char = font.fonts[font.id(variant)].resources.unicodes[target]
+  if char == nil then
+    err('\nGlyph %s in font %s was not found.', target, name)
+  end
+  log([[Restoring \grecp%s with \char%d]], target, char)
+  tex.print(string.format([[\edef\grecp%s{\char%d}]], target, char))
+end
+
+local function scale_variant_fonts(size)
+  for name, variant in pairs(variant_fonts) do
+    if loaded_font_sizes[name] ~= size then
+      tex.print(string.format([[\global\font\%s = "name:%s" at %s sp\relax ]], variant, name, size))
+      loaded_font_sizes[name] = size
     end
   end
 end
@@ -284,3 +349,8 @@ gregoriotex.atScoreBeggining     = atScoreBeggining
 gregoriotex.check_font_version   = check_font_version
 gregoriotex.get_gregorioversion  = get_gregorioversion
 gregoriotex.map_font             = map_font
+gregoriotex.init_variant_font    = init_variant_font
+gregoriotex.set_glyph            = set_glyph
+gregoriotex.change_glyph         = change_glyph
+gregoriotex.reset_glyph          = reset_glyph
+gregoriotex.scale_variant_fonts  = scale_variant_fonts
