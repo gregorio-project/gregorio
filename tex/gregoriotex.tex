@@ -673,7 +673,7 @@
 }%
 
 {%
-  \directlua{gregoriotex.init_variant_font('greciliae')}%
+  \directlua{gregoriotex.init_variant_font('greciliae', true)}%
   \directlua{gregoriotex.map_font('greciliae', 'cp')}%
 }%
 
@@ -1212,7 +1212,7 @@
   \gre@count@temp@three = \the\grefactor %
   \multiply\gre@count@temp@three by 100000 %
   \global\font\gregoriofont="name:#1" at \the\gre@count@temp@three sp%
-  {\gregoriofont\directlua{gregoriotex.check_font_version() gregoriotex.scale_variant_fonts([[\the\gre@count@temp@three]])}}%
+  {\gregoriofont\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
   \relax%
 }%
 
@@ -1394,8 +1394,8 @@
 % #2 = font name
 % #3 = glyph name or code point
 \def\gredefvariant#1#2#3{%
-  \directlua{gregoriotex.init_variant_font([[#2]])}%
-  \directlua{gregoriotex.set_glyph([[#1]],[[#2]],[[#3]])}%
+  \directlua{gregoriotex.init_variant_font([[#2]],true)}%
+  \directlua{gregoriotex.def_score_glyph([[#1]],[[#2]],[[#3]])}%
 }%
 
 % Changes a gregorio code point to a variant glyph
@@ -1403,14 +1403,14 @@
 % #2 = font name
 % #3 = glyph name, glyph variant name (preceded by .), or code point
 \def\grechangeglyph#1#2#3{%
-  \directlua{gregoriotex.init_variant_font([[#2]])}%
-  \directlua{gregoriotex.change_glyph([[#1]],[[#2]],[[#3]])}%
+  \directlua{gregoriotex.init_variant_font([[#2]],true)}%
+  \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]])}%
 }%
 
 % Resets a gregorio code point to its default setting
 % #1 = the name of the gregorio code point
 \def\greresetglyph#1{%
-  \directlua{gregoriotex.reset_glyph([[#1]])}%
+  \directlua{gregoriotex.reset_score_glyph([[#1]])}%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -11,7 +11,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - With thanks to *Abbazia Mater Ecclesiae (IT)* for drawing the new shapes, the strophicus in greciliae has changed to better differentiate from the punctum inclinatum.  Use `\grechangeglyph{Stropha}{greciliae}{.caeciliae}\grechangeglyph{StrophaAucta}{greciliae}{.caeciliae}` if you prefer the old shape.
 
 ### Added
-- The ability to substitute an arbitrary glyph for one used by GregorioTeX.  This adds three macros: `\grechangeglyph` to make the substitution, `\greresetglyph` to remove the substitution, and `\gredefvariant`, a lower-level macro for (re-)defining a control sequence with an arbitrary glyph.  See GregorioRef.pdf for full details.
+- The ability to substitute an arbitrary glyph for one used by GregorioTeX.  This adds five macros: `\grechangeglyph` to make a score glyph substitution, `\greresetglyph` to remove a score glyph substitution, `\gredefvariant` for (re-)defining an arbitrary score glyph, `\gredefsymbol` for (re-)defining an arbitrary non-score glyph that scales with the text, and `\gredefsizedsymbol` for (re-)defining an arbitary non-score glyph that requires a point-size to be specified.  See GregorioRef.pdf for full details.
 
 ### Removed
 - GregorioXML and OpusTeX output
