@@ -53,6 +53,7 @@ local startcenter = 1
 local endcenter   = 2
 
 local variant_fonts = {}
+local loaded_font_sizes = {}
 local next_variant = 0
 local variant_prefix = 'greVariantFont'
 local number_to_letter = {
@@ -291,6 +292,7 @@ local function init_variant_font(name)
     variant_fonts[name] = variant
     log("Registering variant font %s as %s.", name, variant)
     tex.print(string.format([[\global\font\%s = "name:%s" at 10 sp\relax ]], variant, name))
+    loaded_font_sizes[name] = '10'
     next_variant = next_variant + 1
   end
 end
@@ -333,7 +335,10 @@ end
 
 local function scale_variant_fonts(size)
   for name, variant in pairs(variant_fonts) do
-    tex.print(string.format([[\global\font\%s = "name:%s" at %s sp\relax ]], variant, name, size))
+    if loaded_font_sizes[name] ~= size then
+      tex.print(string.format([[\global\font\%s = "name:%s" at %s sp\relax ]], variant, name, size))
+      loaded_font_sizes[name] = size
+    end
   end
 end
 
