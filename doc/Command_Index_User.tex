@@ -173,8 +173,31 @@ use the following:\par\medskip
 
 \macroname{\textbackslash gredefvariant\{\#1\}\{\#2\}\{\#3\}}{gregoriotex.tex}
 Defines (or redefines) a TeX control sequence to be a GregorioTeX-like
-glyph substitution.  This is a lower-level macro whose purpose is to
-redefine GregorioTeX control sequences with variant glyphs.
+score glyph.  This is a lower-level macro whose purpose is to redefine
+GregorioTeX control sequences with variant glyphs.
+
+\begin{argtable}
+  \#1 & string & The name of the TeX control sequence (without leading backslash).\\
+  \#2 & string & The name of the font to use.\\
+  \#3 & number & The code point of the glyph to use.\\
+  & string & The name of the glyph to use.
+\end{argtable}
+
+\macroname{\textbackslash gredefsymbol\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-symbols.tex}
+Defines (or redefines) a TeX control sequence to be a non-score symbol.
+If defined this way, the symbol will scale with the text font.
+
+\begin{argtable}
+  \#1 & string & The name of the TeX control sequence (without leading backslash).\\
+  \#2 & string & The name of the font to use.\\
+  \#3 & number & The code point of the glyph to use.\\
+  & string & The name of the glyph to use.
+\end{argtable}
+
+\macroname{\textbackslash gredefsizedsymbol\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-symbols.tex}
+Defines (or redefines) a TeX control sequence to be a non-score symbol
+which requires a single numeric argument (in points) to which the symbol
+will be scaled.
 
 \begin{argtable}
   \#1 & string & The name of the TeX control sequence (without leading backslash).\\

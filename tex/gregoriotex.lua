@@ -52,7 +52,8 @@ local gregoriocenterattr = luatexbase.attributes['gregoriocenterattr']
 local startcenter = 1
 local endcenter   = 2
 
-local variant_fonts = {}
+local score_fonts = {}
+local symbol_fonts = {}
 local loaded_font_sizes = {}
 local next_variant = 0
 local variant_prefix = 'greVariantFont'
@@ -279,67 +280,101 @@ end
 local function map_font(name, prefix)
   log("Mapping font %s", name)
   local glyph, unicode
-  for glyph, unicode in pairs(font.fonts[font.id(variant_fonts[name])].resources.unicodes) do
+  for glyph, unicode in pairs(font.fonts[font.id(score_fonts[name])].resources.unicodes) do
     if unicode >= 0 and not string.match(glyph, '%.') then
       tex.sprint(string.format([[\xdef\gre%s%s{\char%d}]], prefix, glyph, unicode))
     end
   end
 end
 
-local function init_variant_font(name)
-  if variant_fonts[name] == nil then
-    local variant = variant_prefix..string.gsub(tostring(next_variant), '[0-9]', number_to_letter)
-    variant_fonts[name] = variant
-    log("Registering variant font %s as %s.", name, variant)
-    tex.print(string.format([[\global\font\%s = "name:%s" at 10 sp\relax ]], variant, name))
-    loaded_font_sizes[name] = '10'
+local function init_variant_font(font_name, for_score)
+  local font_table = for_score and score_fonts or symbol_fonts
+  if font_table[font_name] == nil then
+    local font_csname = variant_prefix..string.gsub(tostring(next_variant), '[0-9]', number_to_letter)
+    font_table[font_name] = font_csname
+    log("Registering variant font %s as %s.", font_name, font_csname)
+    if for_score then
+      tex.print(string.format([[\global\font\%s = "name:%s" at 10 sp\relax ]], font_csname, font_name))
+      -- loaded_font_sizes will only be given a value if the font is for_score
+      loaded_font_sizes[font_name] = '10'
+    else
+      -- is there a nice way to make this string readable?
+      tex.print(string.format(
+          [[\gdef\%sSymReload#1{{\edef\localsize{#1}\ifx\localsize\%sSymSize\relax\relax\else\global\font\%s = "name:%s" at \localsize pt\relax\xdef\%sSymSize{\localsize}\fi}}\xdef\%sSymSize{0}\%sSymReload{\gresymbolfontsize}]],
+          font_csname, font_csname, font_csname, font_name, font_csname,
+          font_csname, font_csname))
+    end
     next_variant = next_variant + 1
   end
 end
 
-local function set_glyph(target, name, replacement)
-  local variant = variant_fonts[name]
+local function set_score_glyph(csname, font_csname, char)
+  log([[Setting \%s to \%s\char%d]], csname, font_csname, char)
+  tex.print(string.format([[\edef\%s{{\noexpand\%s\char%d}}]], csname, font_csname, char))
+end
+
+local function set_symbol_glyph(csname, font_csname, char)
+  tex.print(string.format([[\def\%s{\%sSymReload{\gresymbolfontsize}{\%s\char%d}\relax}]],
+      csname, font_csname, font_csname, char))
+end
+
+local function set_sized_symbol_glyph(csname, font_csname, char)
+  tex.print(string.format([[\gdef\%s#1{\%sSymReload{#1}{\%s\char%d}\relax}]],
+      csname, font_csname, font_csname, char))
+end
+
+local function def_glyph(csname, font_name, glyph, font_table, setter)
+  local font_csname = font_table[font_name]
   local char
-  if string.match(replacement, '^%d+$') then
-    char = tonumber(replacement)
+  if string.match(glyph, '^%d+$') then
+    char = tonumber(glyph)
   else
-    local font_id = font.id(variant)
+    local font_id = font.id(font_csname)
     if font_id < 0 then
-      err('\nFont %s is not defined.', name)
+      err('\nFont %s is not defined.', font_name)
     end
-    char = font.fonts[font_id].resources.unicodes[replacement]
+    char = font.fonts[font_id].resources.unicodes[glyph]
     if char == nil then
-      err('\nGlyph %s in font %s was not found.', replacement, name)
+      err('\nGlyph %s in font %s was not found.', glyph, font_name)
     end
   end
-  log([[Setting \%s to \%s\char%d]], target, variant, char)
-  tex.print(string.format([[\edef\%s{{\noexpand\%s\char%d}}]], target, variant, char))
+  setter(csname, font_csname, char)
 end
 
-local function change_glyph(target, name, replacement)
+local function def_score_glyph(csname, font_name, glyph)
+  def_glyph(csname, font_name, glyph, score_fonts, set_score_glyph)
+end
+
+local function change_score_glyph(glyph_name, font_name, replacement)
   if string.match(replacement, '^%.') then
-    replacement = target..replacement
+    replacement = glyph_name..replacement
   end
-  set_glyph([[grecp]]..target, name, replacement)
+  def_score_glyph([[grecp]]..glyph_name, font_name, replacement)
 end
 
-local function reset_glyph(target)
-  local variant = variant_fonts['greciliae']
-  local char = font.fonts[font.id(variant)].resources.unicodes[target]
+local function reset_score_glyph(glyph_name)
+  local font_csname = score_fonts['greciliae']
+  local char = font.fonts[font.id(font_csname)].resources.unicodes[glyph_name]
   if char == nil then
-    err('\nGlyph %s in font %s was not found.', target, name)
+    err('\nGlyph %s was not found.', glyph_name)
   end
-  log([[Restoring \grecp%s with \char%d]], target, char)
-  tex.print(string.format([[\edef\grecp%s{\char%d}]], target, char))
+  log([[Restoring \grecp%s with \char%d]], glyph_name, char)
+  tex.print(string.format([[\edef\grecp%s{\char%d}]], glyph_name, char))
 end
 
-local function scale_variant_fonts(size)
-  for name, variant in pairs(variant_fonts) do
-    if loaded_font_sizes[name] ~= size then
-      tex.print(string.format([[\global\font\%s = "name:%s" at %s sp\relax ]], variant, name, size))
-      loaded_font_sizes[name] = size
+local function scale_score_fonts(size)
+  for font_name, font_csname in pairs(score_fonts) do
+    if loaded_font_sizes[font_name] and loaded_font_sizes[font_name] ~= size then
+      tex.print(string.format([[\global\font\%s = "name:%s" at %s sp\relax ]],
+          font_csname, font_name, size))
+      loaded_font_sizes[font_name] = size
     end
   end
+end
+
+local function def_symbol(csname, font_name, glyph, sized)
+  def_glyph(csname, font_name, glyph, symbol_fonts,
+      sized and set_sized_symbol_glyph or set_symbol_glyph)
 end
 
 gregoriotex.include_score        = include_score
@@ -350,7 +385,8 @@ gregoriotex.check_font_version   = check_font_version
 gregoriotex.get_gregorioversion  = get_gregorioversion
 gregoriotex.map_font             = map_font
 gregoriotex.init_variant_font    = init_variant_font
-gregoriotex.set_glyph            = set_glyph
-gregoriotex.change_glyph         = change_glyph
-gregoriotex.reset_glyph          = reset_glyph
-gregoriotex.scale_variant_fonts  = scale_variant_fonts
+gregoriotex.def_score_glyph      = def_score_glyph
+gregoriotex.change_score_glyph   = change_score_glyph
+gregoriotex.reset_score_glyph    = reset_score_glyph
+gregoriotex.scale_score_fonts    = scale_score_fonts
+gregoriotex.def_symbol           = def_symbol
