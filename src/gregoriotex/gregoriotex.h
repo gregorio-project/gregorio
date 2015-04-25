@@ -63,6 +63,7 @@ typedef enum gtex_type {
     T_PORRECTUSFLEXUS,
     T_PORRECTUSFLEXUS_NOBAR,
     T_TORCULUS_RESUPINUS,
+    T_TORCULUS_RESUPINUS_QUILISMA,
     T_TORCULUS_LIQUESCENS,
     T_TORCULUS_LIQUESCENS_QUILISMA,
     // this is a special type for the first note of a torculus resupinus flexus

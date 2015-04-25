@@ -510,9 +510,15 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
         ltype = LG_NO_INITIO;
         break;
     case G_TORCULUS_RESUPINUS:
-        *type = AT_ONE_NOTE;
-        *gtype = T_TORCULUS_RESUPINUS;
-        shape = "TorculusResupinus";
+        if (glyph->u.notes.first_note->u.note.shape == S_QUILISMA) {
+            *type = AT_QUILISMA;
+            *gtype = T_TORCULUS_RESUPINUS_QUILISMA;
+            shape = "TorculusResupinusQuilisma";
+        } else {
+            *type = AT_ONE_NOTE;
+            *gtype = T_TORCULUS_RESUPINUS;
+            shape = "TorculusResupinus";
+        }
         ltype = LG_ALL;
         break;
     case G_PORRECTUS_FLEXUS:
@@ -2112,7 +2118,8 @@ void gregoriotex_write_glyph(FILE *f,
         // special case of the torculus resupinus which first note is not a
         // punctum
         if (glyph->u.notes.glyph_type == G_TORCULUS_RESUPINUS
-                && current_note->u.note.shape != S_PUNCTUM) {
+                && current_note->u.note.shape != S_PUNCTUM
+                && current_note->u.note.shape != S_QUILISMA) {
             gregoriotex_write_note(f, current_note, glyph, element,
                     next_note_pitch);
             gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
@@ -2249,7 +2256,9 @@ gregoriotex_write_signs(FILE *f, gtex_type type,
                         HEPISEMUS_FIRST_TWO, type, current_note);
                 block_hepisemus = 1;
             } else {
-                if (type == T_TORCULUS_RESUPINUS && current_note->next
+                if ((type == T_TORCULUS_RESUPINUS
+                                || type == T_TORCULUS_RESUPINUS_QUILISMA)
+                        && current_note->next
                         && simple_htype(current_note->next->h_episemus_type) !=
                         H_NO_EPISEMUS && i == 2) {
                     gregoriotex_write_hepisemus(f, glyph, element,
@@ -2898,6 +2907,7 @@ gregoriotex_write_additional_line(FILE *f,
         }
         break;
     case T_TORCULUS_RESUPINUS:
+    case T_TORCULUS_RESUPINUS_QUILISMA:
         if (i == 2) {
             i = HEPISEMUS_FIRST_TWO;
         }
@@ -3304,6 +3314,7 @@ gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
         }
         break;
     case T_TORCULUS_RESUPINUS:
+    case T_TORCULUS_RESUPINUS_QUILISMA:
         switch (i) {
         case HEPISEMUS_FIRST_TWO:
             // special case, called when the horizontal episemus is on the
