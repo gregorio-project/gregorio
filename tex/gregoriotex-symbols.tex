@@ -27,7 +27,7 @@
 
 % First we load the font at the current font size and remember the size it's been loaded at
 \font\gregoriosymbolfont="name:gresym" at \f@size pt%
-\let\current\f@size%
+\xdef\current{\f@size}%
 
 % This macro checks to see if the symbol font is loaded at the current font size and reloads it if it is not.  We'll run it at the beginning of each symbol command.
 \def\gre@reloadgresym{%
@@ -35,7 +35,7 @@
     \relax%
   \else%
     \font\gregoriosymbolfont="name:gresym" at \f@size pt%
-    \let\current\f@size%
+    \xdef\current{\f@size}%
   \fi%
 }%
 

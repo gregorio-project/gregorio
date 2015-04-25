@@ -281,12 +281,6 @@ Z   {
 ::  {
         gregorio_add_bar_as_note(&current_note, B_DIVISIO_FINALIS);
     }
-U   {
-        gregorio_add_special_sign(current_note, _ICTUS_A);
-    }
-u   {
-        gregorio_add_special_sign(current_note, _ICTUS_T);
-    }
 r   {
         gregorio_change_shape(current_note, S_PUNCTUM_CAVUM);
     }

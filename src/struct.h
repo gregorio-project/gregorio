@@ -144,16 +144,8 @@ typedef enum gregorio_sign {
     _CIRCULUS = 10,
     _SEMI_CIRCULUS = 11,
     _SEMI_CIRCULUS_REVERSUS = 12,
-    _ICTUS_A = 13,
-    _ICTUS_T = 14,
     // signs of a bar
-    _V_EPISEMUS_ICTUS_A = 15,
-    _V_EPISEMUS_ICTUS_T = 16,
     _V_EPISEMUS_H_EPISEMUS = 17,
-    _V_EPISEMUS_H_EPISEMUS_ICTUS_A = 18,
-    _V_EPISEMUS_H_EPISEMUS_ICTUS_T = 19,
-    _H_EPISEMUS_ICTUS_A = 20,
-    _H_EPISEMUS_ICTUS_T = 21,
     _H_EPISEMUS = 22,
 } gregorio_sign;
 
@@ -396,7 +388,7 @@ typedef struct gregorio_note {
     // signs is the signs on the notes, see above for all possible values
     ENUM_BITFIELD(gregorio_sign) signs:8;
     // special_sign is the sign we sometimes encounter on punctum cavum, like
-    // accentus, semi-circulus, etc. can also be the ictus
+    // accentus, semi-circulus, etc.
     // h_episemus_type is the type of horizontal episemus, possible values
     // are H_ALONE for an isolated horizontal episemus, H_MULTI_BEGINNING
     // if the note is the first note of an episemus on several notes,
