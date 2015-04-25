@@ -9,6 +9,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Changed
 - The `O` modifier in gabc now has expanded uses beyond the salicus `(egOi)`.  A stemmed oriscus will appear on a lone pitch `(gO)` or a followed by a lower pitch `(gOe)` (see [#76](https://github.com/gregorio-project/gregorio/issues/76)).  A virga strata will appear on the second note of two ascending pitches `(giO)`.
 - With thanks to *Abbazia Mater Ecclesiae (IT)* for drawing the new shapes, the strophicus in greciliae has changed to better differentiate from the punctum inclinatum.  Use `\grechangeglyph{Stropha}{greciliae}{.caeciliae}\grechangeglyph{StrophaAucta}{greciliae}{.caeciliae}` if you prefer the old shape.
+- Porrectus deminutus and torculus resupinus deminutus glyphs have been updated to more closely match the current Solesmes books (see [#143](https://github.com/gregorio-project/gregorio/issues/143)).  If you prefer the old forms, use `\grechangeglyph{Porrectus*}{*}{.alt}\grechangeglyph{TorculusResupinus*}{*}{.alt}`.
 
 ### Added
 - The ability to substitute an arbitrary glyph for one used by GregorioTeX.  This adds five macros: `\grechangeglyph` to make a score glyph substitution, `\greresetglyph` to remove a score glyph substitution, `\gredefvariant` for (re-)defining an arbitrary score glyph, `\gredefsymbol` for (re-)defining an arbitrary non-score glyph that scales with the text, and `\gredefsizedsymbol` for (re-)defining an arbitary non-score glyph that requires a point-size to be specified.  See GregorioRef.pdf for full details.
@@ -16,6 +17,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Removed
 - GregorioXML and OpusTeX output
 - Support for the font Gregoria.
+- Chironomy markings (gabc `u` and `U`), which were not working correctly in the first place.
 - `gregoriosyms.sty` is no more, its functionalities have been integrated into GregorioTeX.
 
 ## [Unreleased][ureleased]

@@ -138,8 +138,8 @@ switch between different includescore behaviors: \par\medskip
 \end{latexcode}
 
 \macroname{\textbackslash grechangeglyph\{\#1\}\{\#2\}\{\#3\}}{gregoriotex.tex}
-Substitutes the given GregorioTeX glyph with the specified glyph from
-the specified font.
+Substitutes the given GregorioTeX score glyph with the specified glyph
+from the specified font.
 
 \begin{argtable}
   \#1 & string & The name of the GregorioTeX glyph to replace.\\
@@ -149,6 +149,14 @@ the specified font.
   & string & (any other string) The name of the glyph to use.
 \end{argtable}
 
+\medskip If \texttt{\#1} has a wildcard (a \texttt{*}) in it, then
+\texttt{\#3} must start with a dot and all glyphs matching \texttt{\#1}
+will be replaced with corresponding glyphs whose names have \texttt{\#3}
+appended.
+
+\medskip If \texttt{\#2} is \texttt{*}, then the substitution is assumed
+to be available in all score fonts.
+
 \medskip For example, to use the old glyphs (from Caeciliae) for the
 strophicus, use the following:\par\medskip
 \begin{latexcode}
@@ -156,19 +164,34 @@ strophicus, use the following:\par\medskip
   \grechangeglyph{StrophaAucta}{greciliae}{.caeciliae}
 \end{latexcode}
 
+\medskip To replace all torculus resupinus glyphs with their alternate
+versions, use the following:\par\medskip
+\begin{latexcode}
+  \grechangeglyph{TorculusResupinus*}{*}{.alt}
+\end{latexcode}
+
 \macroname{\textbackslash greresetglyph\{\#1\}}{gregoriotex.tex}
-Removes a GregorioTeX glyph substitution, restoring it back to its
-original form.
+Removes a GregorioTeX score glyph substitution, restoring it back to
+its original form.
 
 \begin{argtable}
   \#1 & string & The name of the GregorioTeX glyph to restore.\\
 \end{argtable}
+
+\medskip If \texttt{\#1} has a wildcard (a \texttt{*}) in it, then
+all glyphs matching \texttt{\#1} will be restored.
 
 \medskip For example, to restore the strophicus back to the new glyphs,
 use the following:\par\medskip
 \begin{latexcode}
   \greresetglyph{Stropha}
   \greresetglyph{StrophaAucta}
+\end{latexcode}
+
+\medskip To restore all torculus resupinus glyphs to their original
+form, use the following:\par\medskip
+\begin{latexcode}
+  \greresetglyph{TorculusResupinus*}
 \end{latexcode}
 
 \macroname{\textbackslash gredefvariant\{\#1\}\{\#2\}\{\#3\}}{gregoriotex.tex}

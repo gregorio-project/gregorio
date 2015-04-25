@@ -63,6 +63,7 @@ typedef enum gtex_type {
     T_PORRECTUSFLEXUS,
     T_PORRECTUSFLEXUS_NOBAR,
     T_TORCULUS_RESUPINUS,
+    T_TORCULUS_RESUPINUS_QUILISMA,
     T_TORCULUS_LIQUESCENS,
     T_TORCULUS_LIQUESCENS_QUILISMA,
     // this is a special type for the first note of a torculus resupinus flexus
@@ -128,9 +129,8 @@ typedef struct gregorio_line {
     // gregoriotex.tex
     unsigned char additional_top_space;
     unsigned char additional_bottom_space;
-    // O or 1, indicates if there is a translation on the line
+    // 0 or 1, indicates if there is a translation on the line
     unsigned char translation;
-    unsigned char ictus;        // idem
     unsigned char abovelinestext;   // idem
 } gregorio_line;
 
