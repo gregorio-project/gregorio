@@ -21,20 +21,22 @@
 \ProvidesPackage{gregoriotex}%
     [2015/04/13 v3.0.0-rc2 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
 \RequirePackage{xcolor}
+\RequirePackage{kvoptions}
+
+\SetupKeyvalOptions{prefix=gre@}
+\DeclareStringOption{debug}[all]
 
 \input gregoriotex.tex
 
-%% We declare and process the options after loading the package (instead of at the beginning) because the options manipulate flags which are declared in the package.
-
-\DeclareOption{debug}{\gredebugtrue}
+%% We declare and process some additional options after loading the package (instead of at the beginning) because the options manipulate flags which are declared in the package.
 
 % These options control the global behavior of \includescore.  The default, forceinclude, is the old behavior (no attempt to compile the score with gregorio is made, it is simply included as is).  forcecompile is at the opposite end of the spectrum: all scores are compiled through gregorio at time of inclusion.  autocompile strikes a balance by checking to see if the score needs to be recompiled and only doing so if it needs it (see the definition of \includescore in gregoriotex.tex for more details).
-\DeclareOption{nevercompile}{\nevercompilegabc}
-\DeclareOption{forcecompile}{\forcecompilegabc}
-\DeclareOption{autocompile}{\autocompilegabc}
+\DeclareVoidOption{nevercompile}{\nevercompilegabc}
+\DeclareVoidOption{forcecompile}{\forcecompilegabc}
+\DeclareVoidOption{autocompile}{\autocompilegabc}
 
 \ExecuteOptions{nevercompile}
-\ProcessOptions\relax
+\ProcessKeyvalOptions*
 
 % we hide lines only under LaTeX
 \GreHideAltLines
@@ -45,12 +47,12 @@
 \definecolor{grebackgroundcolor}{RGB}{255,255,255}%
 
 \def\greinitialformat#1{%
-  \begin{huge}#1\end{huge}%
+  {\fontsize{40}{40}\selectfont #1}%
   \relax %
 }
 
 \def\grebiginitialformat#1{%
-  \begin{Huge}#1\end{Huge}%
+  {\fontsize{80}{80}\selectfont #1}%
   \relax %
 }
 
