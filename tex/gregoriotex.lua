@@ -46,7 +46,6 @@ local hyphen = tex.defaulthyphenchar or 45
 local gregorioattr         = luatexbase.attributes['gregorioattr']
 local potentialdashvalue   = 1
 local nopotentialdashvalue = 2
-local ictus                = 4
 
 local gregoriocenterattr = luatexbase.attributes['gregoriocenterattr']
 local startcenter = 1

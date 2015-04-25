@@ -413,6 +413,7 @@ S_PORRECTUS_NOBAR                  = 'PorrectusNobar'
 S_TORCULUS                         = 'Torculus'
 S_TORCULUS_RESUPINUS               = 'TorculusResupinus'
 S_TORCULUS_QUILISMA                = 'TorculusQuilisma'
+S_TORCULUS_RESUPINUS_QUILISMA      = 'TorculusResupinusQuilisma'
 S_SCANDICUS                        = 'Scandicus'
 S_ANCUS                            = 'Ancus'
 S_ANCUS_LONGQUEUE                  = 'AncusLongqueue'
@@ -968,30 +969,25 @@ def porrectus(widths):
     precise_message("porrectus auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(widths, i, j, "auctusa2", 1, S_PORRECTUS,
-                            L_ASCENDENS)
+            write_porrectus(widths, i, j, "auctusa2", 1, S_PORRECTUS, L_ASCENDENS)
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(widths, i, j, "auctusa2", 0, S_PORRECTUS_NOBAR,
-                            L_ASCENDENS)
+            write_porrectus(widths, i, j, "auctusa2", 0, S_PORRECTUS_NOBAR, L_ASCENDENS)
     precise_message("porrectus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(widths, i, j, "auctusd2", 1, S_PORRECTUS,
-                            L_DESCENDENS)
+            write_porrectus(widths, i, j, "auctusd2", 1, S_PORRECTUS, L_DESCENDENS)
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(widths, i, j, "auctusd2", 0, S_PORRECTUS_NOBAR,
-                            L_DESCENDENS)
-    #precise_message("porrectus deminutus")
-    #for i in range(1, MAX_INTERVAL+1):
-    #    for j in range(1, MAX_INTERVAL+1):
-    #        write_porrectus(widths, i, j, "rdeminutus", 1, S_PORRECTUS, L_DEMINUTUS)
-    #for i in range(1, MAX_INTERVAL+1):
-    #    for j in range(1, MAX_INTERVAL+1):
-    #        write_porrectus(widths, i, j, "rdeminutus", 0,
-    #                        S_PORRECTUS_NOBAR, L_DEMINUTUS)
+            write_porrectus(widths, i, j, "auctusd2", 0, S_PORRECTUS_NOBAR, L_DESCENDENS)
     precise_message("porrectus deminutus")
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            write_porrectus(widths, i, j, "rdeminutus", 1, S_PORRECTUS, L_DEMINUTUS)
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            write_porrectus(widths, i, j, "rdeminutus", 0, S_PORRECTUS_NOBAR, L_DEMINUTUS)
+    precise_message("porrectus deminutus alt")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             write_alt_porrectus_deminutus(widths, i, j)
@@ -1054,7 +1050,7 @@ def write_alt_porrectus_deminutus(widths, i, j):
                                                widths['width_deminutus']), (j-i)*BASE_HEIGHT)
     set_width(widths['width_punctum']+widths['width_flexusdeminutus']-
               widths['line_width'])
-    end_glyph('Porrectus%s%sDeminutus' % (AMBITUS[i], AMBITUS[j]))
+    end_glyph('Porrectus%s%sDeminutus.alt' % (AMBITUS[i], AMBITUS[j]))
 
 
 def porrectusflexus(widths):
@@ -1338,18 +1334,48 @@ def torculusresupinus(widths):
             for k in range(1, MAX_INTERVAL+1):
                 write_torculusresupinus(widths, i, j, k, 'idebilis', 'phigh',
                                         S_TORCULUS_RESUPINUS, L_INITIO_DEBILIS)
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            for k in range(1, MAX_INTERVAL+1):
+                write_torculusresupinus(widths, i, j, k, 'qbase', 'phigh',
+                                        S_TORCULUS_RESUPINUS_QUILISMA)
     precise_message("torculus resupinus deminutus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinusdeminutus(widths, i, j, k, 'base5',
-                                                 S_TORCULUS_RESUPINUS, L_DEMINUTUS)
+                write_torculusresupinus(widths, i, j, k, 'base5', 'rdeminutus',
+                                        S_TORCULUS_RESUPINUS, L_DEMINUTUS)
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinusdeminutus(widths, i, j, k, 'idebilis',
-                                                 S_TORCULUS_RESUPINUS,
-                                                 L_INITIO_DEBILIS_DEMINUTUS)
+                write_torculusresupinus(widths, i, j, k, 'idebilis', 'rdeminutus',
+                                        S_TORCULUS_RESUPINUS,
+                                        L_INITIO_DEBILIS_DEMINUTUS)
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            for k in range(1, MAX_INTERVAL+1):
+                write_torculusresupinus(widths, i, j, k, 'qbase', 'rdeminutus',
+                                        S_TORCULUS_RESUPINUS_QUILISMA,
+                                        L_DEMINUTUS)
+    precise_message("torculus resupinus deminutus alt")
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            for k in range(1, MAX_INTERVAL+1):
+                write_alt_torculusresupinusdeminutus(widths, i, j, k, 'base5',
+                                                     S_TORCULUS_RESUPINUS,
+                                                     L_DEMINUTUS)
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            for k in range(1, MAX_INTERVAL+1):
+                write_alt_torculusresupinusdeminutus(widths, i, j, k, 'idebilis',
+                                                     S_TORCULUS_RESUPINUS,
+                                                     L_INITIO_DEBILIS_DEMINUTUS)
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            for k in range(1, MAX_INTERVAL+1):
+                write_alt_torculusresupinusdeminutus(widths, i, j, k, 'qbase',
+                                                     S_TORCULUS_RESUPINUS_QUILISMA,
+                                                     L_DEMINUTUS)
     precise_message("torculus resupinus auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
@@ -1362,6 +1388,12 @@ def torculusresupinus(widths):
                 write_torculusresupinus(widths, i, j, k, 'idebilis', "auctusa2",
                                         S_TORCULUS_RESUPINUS,
                                         L_INITIO_DEBILIS_ASCENDENS)
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            for k in range(1, MAX_INTERVAL+1):
+                write_torculusresupinus(widths, i, j, k, 'qbase', "auctusa2",
+                                        S_TORCULUS_RESUPINUS_QUILISMA,
+                                        L_ASCENDENS)
     precise_message("torculus resupinus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
@@ -1372,10 +1404,15 @@ def torculusresupinus(widths):
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(widths, i, j, k, 'idebilis',
-                                        "auctusd2",
+                write_torculusresupinus(widths, i, j, k, 'idebilis', "auctusd2",
                                         S_TORCULUS_RESUPINUS,
                                         L_INITIO_DEBILIS_DESCENDENS)
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            for k in range(1, MAX_INTERVAL+1):
+                write_torculusresupinus(widths, i, j, k, 'qbase', "auctusd2",
+                                        S_TORCULUS_RESUPINUS_QUILISMA,
+                                        L_DESCENDENS)
 
 def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
                             lique=L_NOTHING):
@@ -1387,9 +1424,14 @@ def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
         if first_glyph == 'base5':
             first_glyph = 'Punctum'
             length = widths['width_punctum']+0.1
+        elif first_glyph == 'qbase':
+            first_glyph = 'Quilisma'
+            length = widths['width_quilisma']+0.1
     else:
         if first_glyph == 'base5':
             length = widths['width_punctum']-widths['line_width']
+        elif first_glyph == 'qbase':
+            length = widths['width_quilisma']-widths['line_width']
     simple_paste(first_glyph)
     if i != 1:
         write_line(i, length, BASE_HEIGHT)
@@ -1426,7 +1468,7 @@ def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
     set_width(length)
     end_glyph('%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique))
 
-def write_torculusresupinusdeminutus(widths, i, j, k, first_glyph,
+def write_alt_torculusresupinusdeminutus(widths, i, j, k, first_glyph,
                                      shape, lique=L_NOTHING):
     # pylint: disable=invalid-name
     "Writes the torculusresupinusdeminutus glyphs."
@@ -1435,8 +1477,12 @@ def write_torculusresupinusdeminutus(widths, i, j, k, first_glyph,
     if first_glyph == "idebilis":
         length = widths['width_debilis']
     elif i == 1:
-        first_glyph = 'Punctum'
-        length = widths['width_punctum']+0.1
+        if first_glyph == 'base5':
+            first_glyph = 'Punctum'
+            length = widths['width_punctum']+0.1
+        elif first_glyph == 'qbase':
+            first_glyph = 'Quilisma'
+            length = widths['width_quilisma']+0.1
     simple_paste(first_glyph)
     if i != 1:
         write_line(i, length, BASE_HEIGHT)
@@ -1469,7 +1515,7 @@ def write_torculusresupinusdeminutus(widths, i, j, k, first_glyph,
     paste_and_move('rdeminutus',
                    length-widths['width_deminutus']-widths['line_width'], (i-j+k)*BASE_HEIGHT)
     set_width(length)
-    end_glyph('%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique))
+    end_glyph('%s%s%s%s%s.alt' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique))
 
 def scandicus(widths):
     "Creates the scandicus."

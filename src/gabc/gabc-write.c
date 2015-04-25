@@ -625,35 +625,11 @@ void gabc_write_bar(FILE *f, char type)
 void gabc_write_bar_signs(FILE *f, char type)
 {
     switch (type) {
-    case _ICTUS_A:
-        fprintf(f, "U");
-        break;
-    case _ICTUS_T:
-        fprintf(f, "u");
-        break;
-    case _V_EPISEMUS_ICTUS_A:
-        fprintf(f, "'U");
-        break;
-    case _V_EPISEMUS_ICTUS_T:
-        fprintf(f, "'u");
-        break;
     case _V_EPISEMUS:
         fprintf(f, "'");
         break;
     case _V_EPISEMUS_H_EPISEMUS:
         fprintf(f, "'_");
-        break;
-    case _V_EPISEMUS_H_EPISEMUS_ICTUS_A:
-        fprintf(f, "_'U");
-        break;
-    case _V_EPISEMUS_H_EPISEMUS_ICTUS_T:
-        fprintf(f, "_'u");
-        break;
-    case _H_EPISEMUS_ICTUS_A:
-        fprintf(f, "_U");
-        break;
-    case _H_EPISEMUS_ICTUS_T:
-        fprintf(f, "_u");
         break;
     case _H_EPISEMUS:
         fprintf(f, "_");

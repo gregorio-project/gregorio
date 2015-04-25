@@ -1029,35 +1029,11 @@ const char *dump_special_sign(gregorio_sign special_sign)
     case _SEMI_CIRCULUS_REVERSUS:
         str = "_SEMI_CIRCULUS_REVERSUS";
         break;
-    case _ICTUS_A:
-        str = "_ICTUS_A";
-        break;
-    case _ICTUS_T:
-        str = "_ICTUS_T";
-        break;
-    case _V_EPISEMUS_ICTUS_A:
-        str = "_V_EPISEMUS_ICTUS_A";
-        break;
-    case _V_EPISEMUS_ICTUS_T:
-        str = "_V_EPISEMUS_ICTUS_T";
-        break;
     case _V_EPISEMUS:
         str = "_V_EPISEMUS";
         break;
     case _V_EPISEMUS_H_EPISEMUS:
         str = "_V_EPISEMUS_H_EPISEMUS";
-        break;
-    case _V_EPISEMUS_H_EPISEMUS_ICTUS_A:
-        str = "_V_EPISEMUS_H_EPISEMUS_ICTUS_A";
-        break;
-    case _V_EPISEMUS_H_EPISEMUS_ICTUS_T:
-        str = "_V_EPISEMUS_H_EPISEMUS_ICTUS_T";
-        break;
-    case _H_EPISEMUS_ICTUS_A:
-        str = "_H_EPISEMUS_ICTUS_A";
-        break;
-    case _H_EPISEMUS_ICTUS_T:
-        str = "_H_EPISEMUS_ICTUS_T";
         break;
     case _H_EPISEMUS:
         str = "_H_EPISEMUS";

@@ -665,7 +665,7 @@
 
 % a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. If it is 2, it means that we must go back first of width #1, and then forward of #2. If it is 1, it means that we only need to go back of #2. if it is 3, we go to the beginning of the glyph, then forward of #1 then back of #2
 % #4 is a shift that we want to get applied, useful for punctum inclinatum for example
-% #5 is the glyph number. If it is 1 it is an ictus arsicus (?) and 2 for an ictus theticus
+% #5 is the glyph number.
 % #6 is the type of sign (1: vertical episemus, 2: rare sign, 3: choral sign)
 % #7 is the choral sign if relevant
 \def\grevepisemusorrareaux#1#2#3#4#5#6#7{%
@@ -688,7 +688,7 @@
     \advance\gre@dimen@temp@three by -\wd\GreTempsign %
     \advance\gre@dimen@temp@three by \gre@dimen@temp@two %
   \fi%
-  \kern-\gre@dimen@temp@three % we do it here because of the ictus
+  \kern-\gre@dimen@temp@three % we do it here because of the now-removed ictus (chironomy)
   % then we draw the sign
   \ifcase#6\or %
     % vertical episemus
