@@ -287,29 +287,37 @@ local function map_font(name, prefix)
 end
 
 local function init_variant_font(font_name, for_score)
-  local font_table = for_score and score_fonts or symbol_fonts
-  if font_table[font_name] == nil then
-    local font_csname = variant_prefix..string.gsub(tostring(next_variant), '[0-9]', number_to_letter)
-    font_table[font_name] = font_csname
-    log("Registering variant font %s as %s.", font_name, font_csname)
-    if for_score then
-      tex.print(string.format([[\global\font\%s = "name:%s" at 10 sp\relax ]], font_csname, font_name))
-      -- loaded_font_sizes will only be given a value if the font is for_score
-      loaded_font_sizes[font_name] = '10'
-    else
-      -- is there a nice way to make this string readable?
-      tex.print(string.format(
-          [[\gdef\%sSymReload#1{{\edef\localsize{#1}\ifx\localsize\%sSymSize\relax\relax\else\global\font\%s = "name:%s" at \localsize pt\relax\xdef\%sSymSize{\localsize}\fi}}\xdef\%sSymSize{0}\%sSymReload{\gresymbolfontsize}]],
-          font_csname, font_csname, font_csname, font_name, font_csname,
-          font_csname, font_csname))
+  if font_name ~= '*' then
+    local font_table = for_score and score_fonts or symbol_fonts
+    if font_table[font_name] == nil then
+      local font_csname = variant_prefix..string.gsub(tostring(next_variant), '[0-9]', number_to_letter)
+      font_table[font_name] = font_csname
+      log("Registering variant font %s as %s.", font_name, font_csname)
+      if for_score then
+        tex.print(string.format([[\global\font\%s = "name:%s" at 10 sp\relax ]], font_csname, font_name))
+        -- loaded_font_sizes will only be given a value if the font is for_score
+        loaded_font_sizes[font_name] = '10'
+      else
+        -- is there a nice way to make this string readable?
+        tex.print(string.format(
+            [[\gdef\%sSymReload#1{{\edef\localsize{#1}\ifx\localsize\%sSymSize\relax\relax\else\global\font\%s = "name:%s" at \localsize pt\relax\xdef\%sSymSize{\localsize}\fi}}\xdef\%sSymSize{0}\%sSymReload{\gresymbolfontsize}]],
+            font_csname, font_csname, font_csname, font_name, font_csname,
+            font_csname, font_csname))
+      end
+      next_variant = next_variant + 1
     end
-    next_variant = next_variant + 1
   end
 end
 
 local function set_score_glyph(csname, font_csname, char)
   log([[Setting \%s to \%s\char%d]], csname, font_csname, char)
   tex.print(string.format([[\edef\%s{{\noexpand\%s\char%d}}]], csname, font_csname, char))
+end
+
+local function set_common_score_glyph(csname, font_csname, char)
+  -- font_csname is ignored
+  log([[Setting \%s to \char%d]], csname, char)
+  tex.print(string.format([[\edef\%s{{\char%d}}]], csname, char))
 end
 
 local function set_symbol_glyph(csname, font_csname, char)
@@ -344,21 +352,62 @@ local function def_score_glyph(csname, font_name, glyph)
   def_glyph(csname, font_name, glyph, score_fonts, set_score_glyph)
 end
 
-local function change_score_glyph(glyph_name, font_name, replacement)
-  if string.match(replacement, '^%.') then
-    replacement = glyph_name..replacement
+local function change_single_score_glyph(glyph_name, font_name, replacement)
+  if font_name == '*' then
+    def_glyph('grecp'..glyph_name, 'greciliae', replacement, score_fonts,
+        set_common_score_glyph)
+  else
+    def_score_glyph('grecp'..glyph_name, font_name, replacement)
   end
-  def_score_glyph([[grecp]]..glyph_name, font_name, replacement)
+end
+
+local function change_score_glyph(glyph_name, font_name, replacement)
+  if string.match(glyph_name, '%*') then
+    glyph_name = '^'..glyph_name:gsub('%*', '.*')..'$'
+    if not string.match(replacement, '^%.') then
+      err('If a wildcard is supplied for glyph name, replacement must start with a dot.')
+    end
+    local greciliae = font.fonts[font.id(score_fonts['greciliae'])].resources.unicodes
+    local other_font
+    if font_name == '*' then
+      other_font = greciliae
+    else
+      other_font = font.fonts[font.id(score_fonts[font_name])].resources.unicodes
+    end
+    local name, char
+    for name, char in pairs(greciliae) do
+      if not string.match(name, '%.') and char >= 0 and string.match(name, glyph_name) then
+        local matched_replacement = name..replacement
+        if other_font[matched_replacement] ~= nil and other_font[matched_replacement] >= 0 then
+          change_single_score_glyph(name, font_name, matched_replacement)
+        end
+      end
+    end
+  else
+    if string.match(replacement, '^%.') then
+      replacement = glyph_name..replacement
+    end
+    change_single_score_glyph(glyph_name, font_name, replacement)
+  end
 end
 
 local function reset_score_glyph(glyph_name)
-  local font_csname = score_fonts['greciliae']
-  local char = font.fonts[font.id(font_csname)].resources.unicodes[glyph_name]
-  if char == nil then
-    err('\nGlyph %s was not found.', glyph_name)
+  if string.match(glyph_name, '%*') then
+    glyph_name = '^'..glyph_name:gsub('%*', '.*')..'$'
+    local name, char
+    for name, char in pairs(font.fonts[font.id(score_fonts['greciliae'])].resources.unicodes) do
+      if not string.match(name, '%.') and char >= 0 and string.match(name, glyph_name) then
+        set_common_score_glyph('grecp'..name, nil, char)
+      end
+    end
+  else
+    local font_csname = score_fonts['greciliae']
+    local char = font.fonts[font.id(font_csname)].resources.unicodes[glyph_name]
+    if char == nil then
+      err('\nGlyph %s was not found.', glyph_name)
+    end
+    set_common_score_glyph('grecp'..glyph_name, nil, char)
   end
-  log([[Restoring \grecp%s with \char%d]], glyph_name, char)
-  tex.print(string.format([[\edef\grecp%s{\char%d}]], glyph_name, char))
 end
 
 local function scale_score_fonts(size)
