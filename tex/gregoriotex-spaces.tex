@@ -702,14 +702,14 @@
   \gre@rubberpermit{#1}%
   % figure out our prefix
   \ifrubber%
-    \gre@debugmsg{Changing a skip.}
+    \gre@debugmsg{spacing}{Changing a skip.}
     \def\gre@prefix{skip}%
   \else%
-    \gre@debugmsg{Changing a dimen.}
+    \gre@debugmsg{spacing}{Changing a dimen.}
     \def\gre@prefix{dimen}%
   \fi
   \ifcsname gre@\gre@prefix @#1\endcsname%
-    \gre@debugmsg{It does exist.}
+    \gre@debugmsg{spacing}{It does exist.}
     \gresetdim{#1}{#2}{#3}%
   \else
     \greerror{#1 is not a recognized distance.}
@@ -811,8 +811,8 @@
 \newcount\gre@unitfactor%
 \newcount\gre@basefactor%
 \def\gre@convertto#1#2{%
-  \gre@debugmsg{convertto (#1) (#2)}
-  \gre@debugmsg[ifdim]{ #2 = 0pt}
+  \gre@debugmsg{general}{convertto (#1) (#2)}
+  \gre@debugmsg{ifdim}{ #2 = 0pt}
   \ifdim#2=0pt\relax%
     \edef\gre@converted{0 #1}%
   \else%
@@ -825,13 +825,13 @@
     \ifnum\gre@unitfactor < 0\relax%
       \gre@unitfactor = -\gre@unitfactor%
     \fi%
-    \gre@debugmsg{unit: \the\gre@unit ; factor: \the\gre@unitfactor}
+    \gre@debugmsg{spacing}{unit: \the\gre@unit ; factor: \the\gre@unitfactor}
     \gre@basefactor = \number\gre@maxlen%
     \divide\gre@basefactor by \number\gre@base\relax%
     \ifnum\gre@basefactor < 0\relax%
       \gre@basefactor = -\gre@basefactor%
     \fi%
-    \gre@debugmsg{base: \the\gre@base ; factor: \the\gre@basefactor}
+    \gre@debugmsg{spacing}{base: \the\gre@base ; factor: \the\gre@basefactor}
     \ifnum\gre@basefactor<\gre@unitfactor%
       \multiply\gre@unit by \gre@basefactor%
       \multiply\gre@base by \gre@basefactor%
