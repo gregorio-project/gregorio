@@ -669,12 +669,6 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     // if necessary, we add some bottom space to the first line
     first_line = (gregorio_line *) malloc(sizeof(gregorio_line));
     gregoriotex_getlineinfos(score->first_syllable, first_line);
-    // here we assume that if there is chironomy somewhere, there will be
-    // chironomy on the first line
-    if (first_line->ictus) {
-        fprintf(f, "\\greactivatechironomy %%\n");
-        fprintf(f, "\\greinsertchiroline %%\n");
-    }
     if (first_line->additional_bottom_space != 0
             || first_line->translation != 0) {
         fprintf(f, "\\grefirstlinebottomspace{%u}{%u}%%\n",
@@ -935,9 +929,6 @@ gregoriotex_write_syllable(FILE *f,
                             line->abovelinestext);
                 }
 
-            }
-            if (line->ictus) {
-                fprintf(f, "\\greinsertchiroline %%\n%%\n");
             }
             free(line);
             if (*line_number == 1) {
@@ -1228,9 +1219,6 @@ gregoriotex_write_syllable(FILE *f,
                             line->abovelinestext);
                 }
             }
-            if (line->ictus) {
-                fprintf(f, "\\greinsertchiroline %%\n%%\n");
-            }
             free(line);
             if (*line_number == 1) {
                 fprintf(f, "\\greadjustthirdline %%\n");
@@ -1297,7 +1285,6 @@ void gregoriotex_getlineinfos(gregorio_syllable *syllable, gregorio_line *line)
     line->additional_top_space = 0;
     line->additional_bottom_space = 0;
     line->translation = 0;
-    line->ictus = 0;
     line->abovelinestext = 0;
 
     if (syllable == NULL) {
@@ -1321,20 +1308,6 @@ void gregoriotex_getlineinfos(gregorio_syllable *syllable, gregorio_line *line)
             if (element->type == GRE_ALT) {
                 line->abovelinestext = 1;
             }
-            if (element->type == GRE_BAR) {
-                switch (element->u.misc.unpitched.special_sign) {
-                case _ICTUS_A:
-                case _ICTUS_T:
-                case _V_EPISEMUS_ICTUS_A:
-                case _V_EPISEMUS_ICTUS_T:
-                    line->ictus = 1;
-                    break;
-                default:
-                    break;
-                }
-                element = element->next;
-                continue;
-            }
             if (element->type != GRE_ELEMENT) {
                 element = element->next;
                 continue;
@@ -1348,10 +1321,6 @@ void gregoriotex_getlineinfos(gregorio_syllable *syllable, gregorio_line *line)
                 note = glyph->u.notes.first_note;
                 while (note) {
                     i = i + 1;
-                    if (note->special_sign == _ICTUS_A
-                            || note->special_sign == _ICTUS_T) {
-                        line->ictus = 1;
-                    }
                     switch (note->u.note.pitch) {
                     case 'a':
                         if (line->additional_bottom_space < 3
@@ -1955,40 +1924,12 @@ void gregoriotex_write_bar(FILE *f, gregorio_bar type, gregorio_sign signs,
     case _V_EPISEMUS:
         fprintf(f, "{\\grebarvepisemus{%d}}%%\n", typenumber);
         break;
-    case _ICTUS_A:
-        fprintf(f, "{\\greictusa{%d}}%%\n", typenumber);
-        break;
-    case _ICTUS_T:
-        fprintf(f, "{\\greictust{%d}}%%\n", typenumber);
-        break;
-    case _V_EPISEMUS_ICTUS_A:
-        fprintf(f, "{\\grebarvepisemusictusa{%d}}%%\n", typenumber);
-        break;
-    case _V_EPISEMUS_ICTUS_T:
-        fprintf(f, "{\\grebarvepisemusictust{%d}}%%\n", typenumber);
-        break;
     case _H_EPISEMUS:
         fprintf(f, "{\\grebarbrace{%d}}%%\n", typenumber);
         break;
     case _V_EPISEMUS_H_EPISEMUS:
         fprintf(f, "{\\grebarbrace{%d}\\grebarvepisemus{%d}}%%\n", typenumber,
                 typenumber);
-        break;
-    case _H_EPISEMUS_ICTUS_A:
-        fprintf(f, "{\\grebarbrace{%d}\\greictusa{%d}}%%\n", typenumber,
-                typenumber);
-        break;
-    case _H_EPISEMUS_ICTUS_T:
-        fprintf(f, "{\\grebarbrace{%d}\\greictust{%d}}%%\n", typenumber,
-                typenumber);
-        break;
-    case _V_EPISEMUS_H_EPISEMUS_ICTUS_A:
-        fprintf(f, "{\\grebarbrace{%d}\\grebarvepisemusictusa{%d}}%%\n",
-                typenumber, typenumber);
-        break;
-    case _V_EPISEMUS_H_EPISEMUS_ICTUS_T:
-        fprintf(f, "{\\grebarbrace{%d}\\grebarvepisemusictust{%d}}%%\n",
-                typenumber, typenumber);
         break;
     default:
         fprintf(f, "{}%%\n");
@@ -2289,7 +2230,7 @@ gregoriotex_write_signs(FILE *f, gtex_type type,
         }
         _end_loop();
     }
-    // a loop for rare signs, vertical episemus, horizontal episemus and ictus
+    // a loop for rare signs, vertical episemus, and horizontal episemus
     i = 1;
     current_note = note;
     while (current_note) {
@@ -2333,12 +2274,7 @@ gregoriotex_write_signs(FILE *f, gtex_type type,
         case _V_EPISEMUS:
         case _V_EPISEMUS_PUNCTUM_MORA:
         case _V_EPISEMUS_AUCTUM_DUPLEX:
-            if (current_note->special_sign != _ICTUS_A
-                    && current_note->special_sign != _ICTUS_T) {
-                gregoriotex_write_vepisemus(f, glyph, i, type, current_note);
-            }
-            break;
-        default:
+            gregoriotex_write_vepisemus(f, glyph, i, type, current_note);
             break;
         }
         // why is this if there?...
@@ -3067,30 +3003,6 @@ gregoriotex_write_rare(FILE *f, gregorio_glyph *current_glyph,
                 current_note->u.note.pitch, number);
         break;
         // the cases of the bar signs are dealt in another function (write_bar)
-    case _ICTUS_A:
-        switch (current_note->signs) {
-        case _V_EPISEMUS:
-        case _V_EPISEMUS_PUNCTUM_MORA:
-        case _V_EPISEMUS_AUCTUM_DUPLEX:
-            fprintf(f, "\\grevepisemusictusa{%c}{%d}%%\n", height, number);
-            break;
-        default:
-            fprintf(f, "\\greictusa{%d}%%\n", number);
-            break;
-        }
-        break;
-    case _ICTUS_T:
-        switch (current_note->signs) {
-        case _V_EPISEMUS:
-        case _V_EPISEMUS_PUNCTUM_MORA:
-        case _V_EPISEMUS_AUCTUM_DUPLEX:
-            fprintf(f, "\\grevepisemusictust{%c}{%d}%%\n", height, number);
-            break;
-        default:
-            fprintf(f, "\\greictust{%d}%%\n", number);
-            break;
-        }
-        break;
     default:
         break;
     }
