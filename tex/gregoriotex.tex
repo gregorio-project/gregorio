@@ -49,15 +49,28 @@
   \greerror{Error: this document must be compiled with LuaTeX (lualatex)}%
 \fi%
 
-\newif\ifgredebug\gredebugfalse
-\def\gre@debug#1{%
-  \ifgredebug%
-    \typeout{GregorioTex debug: #1}%
-  \else%
-    \relax%
-  \fi%
+\def\gre@debugmsg#1#2{%
+  \IfStrEq{\gre@debug}{}{}
+    %false
+    {\IfStrEq{#1}{all}%
+      %true
+      {\greerror{Debug error: ‘all’ is not a permitted keyword}}%
+      %false
+      {\IfStrEq{\gre@debug}{all}%
+        %true
+        {\typeout{GregorioTeX debug: (#1) #2}}%
+        %false
+        {\IfSubStr{\gre@debug}{#1}%
+          %true
+          {\typeout{GregorioTeX debug: (#1) #2}}%
+          %false
+          {\relax}%
+        }%
+      }%
+    }%
 }%
-\AtBeginDocument{\gre@debug{GregorioTeX is in debug mode.  Debug messages will be printed to the log.}}%
+    
+\AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
 % Since TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
 % available without prefix. We mostly rely on \directlua that is still available
@@ -286,7 +299,7 @@
 }%
 
 \def\greupdatelinewidth{%
-  \gre@debug{ifdim additionalleftspace = 0pt}%
+  \gre@debugmsg{ifdim}{ additionalleftspace = 0pt}%
   \ifdim\gre@dimen@additionalleftspace=0pt%
   \else %
     \gre@dimen@temp@five=\gre@dimen@stafflinewidth %
@@ -305,17 +318,17 @@
   % if it is a big initial we print it on the second line 
   \ifnum\grebiginitial=0\relax %
     \setbox\GreInitial=\hbox{\greinitialformat{#1}}%
-    \gre@debug{ifdim manualinitialwidth = 0pt}%
+    \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\GreInitial %
     \else%
       \greinitialformat{\global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth}%
     \fi%
-    \gre@debug{ifdim wd(GreAboveinitialfirstbox) > initialwidth}%
+    \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) > initialwidth}%
     \ifdim\wd\GreAboveinitialfirstbox>\gre@dimen@initialwidth\relax%
       \global\gre@dimen@initialwidth=\wd\GreAboveinitialfirstbox%
     \fi%
-    \gre@debug{ifdim wd(GreAboveinitialsecondbox) > initialwidth}%
+    \gre@debugmsg{ifdim}{ wd(GreAboveinitialsecondbox) > initialwidth}%
     \ifdim\wd\GreAboveinitialsecondbox>\gre@dimen@initialwidth\relax%
       \global\gre@dimen@initialwidth=\wd\GreAboveinitialsecondbox%
     \fi%
@@ -328,17 +341,17 @@
     \advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight %
     \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
     \setbox\GreInitial=\hbox{\grebiginitialformat{#1}}%
-    \gre@debug{ifdim manualinitialwidth = 0pt}%
+    \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\GreInitial %
     \else%
       \grebiginitialformat{\global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth}%
     \fi%
-    \gre@debug{ifdim wd(GreAboveinitialfirstbox) > initialwidth}%
+    \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) > initialwidth}%
     \ifdim\wd\GreAboveinitialfirstbox>\gre@dimen@initialwidth\relax%
       \global\gre@dimen@initialwidth=\wd\GreAboveinitialfirstbox%
     \fi%
-    \gre@debug{ifdim wd(GreAboveinitialsecondbox) > initialwidth}%
+    \gre@debugmsg{ifdim}{ wd(GreAboveinitialsecondbox) > initialwidth}%
     \ifdim\wd\GreAboveinitialsecondbox>\gre@dimen@initialwidth\relax%
       \global\gre@dimen@initialwidth=\wd\GreAboveinitialsecondbox%
     \fi%
@@ -360,7 +373,7 @@
   \hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
   % then we center the first box above the initial, if there is one
-  \gre@debug{ifdim wd(GreAboveinitialfirstbox) = 0pt}%
+  \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) = 0pt}%
   \ifdim\wd\GreAboveinitialfirstbox=0 pt\relax %
   \else %
     \gre@dimen@temp@five=\gre@dimen@initialwidth %
@@ -374,7 +387,7 @@
     \setbox\GreAboveinitialfirstbox=\hbox{}%
   \fi %
   % then we center the second box above the initial, if there is one
-  \gre@debug{ifdim wd(GreAboveinitialsecondbox) = 0pt}%
+  \gre@debugmsg{ifdim}{ wd(GreAboveinitialsecondbox) = 0pt}%
   \ifdim\wd\GreAboveinitialsecondbox=0 pt\relax %
   \else %
     \gre@dimen@temp@five=\gre@dimen@initialwidth %
@@ -531,17 +544,17 @@
 % typesets the text above the line
 \def\gretypesettextabovelines#1{%
   \greabovelinestextstyle{%
-    \gre@debug{Raise alt text: \gre@dimen@abovelinestextraise}%
+    \gre@debugmsg{spacing}{Raise alt text: \gre@dimen@abovelinestextraise}%
     \global\gre@dimen@temp@five=\gre@dimen@abovelinestextraise\relax%
   } %
-  \gre@debug{Raise alt text: \the\gre@dimen@temp@five}%
+  \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
   \advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight %
   \advance\gre@dimen@temp@five by 4\gre@dimen@interstafflinespace %
   \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
   \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
   \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
   \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
-  \gre@debug{Raise alt text: \the\gre@dimen@temp@five}%
+  \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
   \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\greabovelinestextstyle{#1}\hss}%
   \relax %
 }%
@@ -816,9 +829,9 @@
 % when it is not necessary
 % It doesn't seem to be used, so it's a good candidate for deprecation!
 \def\grenolastline{%
-  \gre@debug{ifdim enddifference > 0pt}%
+  \gre@debugmsg{ifdim}{ enddifference > 0pt}%
   \ifdim\gre@dimen@enddifference > 0 pt %
-    \gre@debug{ifdim nextbegindifference > 0pt}%
+    \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
     \ifdim\gre@skip@nextbegindifference > 0 pt %
       \gre@skip@temp@four = \gre@skip@interwordspacenotes%
       \hskip\gre@skip@temp@four %
@@ -827,7 +840,7 @@
       \hskip\gre@skip@temp@four %
     \fi %
   \else%(enddifference < Opt)
-    \gre@debug{ifdim nextbegindifference < 0pt}%
+    \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
     \ifdim\gre@skip@nextbegindifference < 0 pt %
       \gre@skip@temp@four = \gre@skip@interwordspacetext%
       \hskip\gre@skip@temp@four %
@@ -847,9 +860,9 @@
 \def\greendofword#1{%
   \grepenalty{\greendofwordpenalty }%
   \ifnum#1=1\relax %
-    \gre@debug{ifdim enddifference > 0pt}%
+    \gre@debugmsg{ifdim}{ enddifference > 0pt}%
     \ifdim\gre@dimen@enddifference > 0 pt %
-      \gre@debug{ifdim nextbegindifference > 0pt}%
+      \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
       \ifdim\gre@skip@nextbegindifference > 0 pt %
         \gre@skip@temp@four = \gre@skip@interwordspacenotes%
         \grehskip\gre@skip@temp@four %
@@ -858,7 +871,7 @@
         \grehskip\gre@skip@temp@four %
       \fi %
     \else %(enddifference < Opt)
-      \gre@debug{ifdim nextbegindifference < 0pt}%
+      \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
       \ifdim\gre@skip@nextbegindifference < 0 pt %
         \gre@skip@temp@four = \gre@skip@interwordspacetext%
         \grehskip\gre@skip@temp@four %
@@ -908,9 +921,9 @@
       \fi %
     \fi %
     \grehskip\gre@skip@temp@four %
-    \gre@debug{  endbeforebar: hskip \gre@skip@temp@four }%
+    \gre@debugmsg{spacing}{  endbeforebar: hskip \gre@skip@temp@four }%
   \else %
-    \gre@debug{  endbeforebar: no hskip}%
+    \gre@debugmsg{spacing}{  endbeforebar: no hskip}%
   \fi %
   \grenobreak %
   %\global\gre@dimen@enddifference=0pt 
@@ -921,9 +934,9 @@
 \def\greendafterbar#1{%
   \grepenalty{\greendafterbarpenalty }\relax %
   \ifnum#1=1\relax %
-    \gre@debug{ifdim enddifference > 0pt}%
+    \gre@debugmsg{ifdim}{ enddifference > 0pt}%
     \ifdim\gre@dimen@enddifference > 0 pt %
-      \gre@debug{ifdim nextbegindifference > 0pt}%
+      \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
       \ifdim\gre@skip@nextbegindifference > 0 pt %
         \gre@skip@temp@four = \gre@skip@notebarspace%
         \grehskip\gre@skip@temp@four %
@@ -932,7 +945,7 @@
         \grehskip\gre@skip@temp@four %
       \fi %
     \else%(enddifference < Opt)
-      \gre@debug{ifdim nextbegindifference < 0pt}%
+      \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
       \ifdim\gre@skip@nextbegindifference < 0 pt %
         \gre@skip@temp@four = \gre@skip@textbartextspace%
         \grehskip\gre@skip@temp@four %
@@ -1310,13 +1323,13 @@
 
 \def\gre@includescore#1{%
   \ifcase\gre@compilegabc% case 0, never compile
-    \gre@debug{Refusing to compile #1}%
+    \gre@debugmsg{compile}{Refusing to compile #1}%
     \input #1%
   \or% case 1, auto compile
-    \gre@debug{Auto compile #1}%
+    \gre@debugmsg{compile}{Auto compile #1}%
     \directlua{gregoriotex.include_score([[#1]], nil)}%
   \or% case 2, force compile
-    \gre@debug{Forced to compile #1}%
+    \gre@debugmsg{compile}{Forced to compile #1}%
     \directlua{gregoriotex.include_score([[#1]], true)}%
   \fi%
   \relax%
@@ -1348,15 +1361,15 @@
 % f - force the compilation of the score before including it
 \def\gre@includescorewithoption[#1]#2{%
   \ifx #1n\relax%
-    \gre@debug{Override not compiling #2}%
+    \gre@debugmsg{compile}{Override not compiling #2}%
     \input #2%
   \else%
     \ifx #1f\relax%
-      \gre@debug{Override force compiling #2}%
+      \gre@debugmsg{compile}{Override force compiling #2}%
       \directlua{gregoriotex.include_score([[#2]], true)}%
     \else%
       \ifx #1a\relax%
-        \gre@debug{Override auto compiling #2}%
+        \gre@debugmsg{compile}{Override auto compiling #2}%
         \directlua{gregoriotex.include_score([[#2]], nil)}%
       \else%
         \greerror{Unrecognized option [#1] for \protect\includescore}%
