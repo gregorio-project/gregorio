@@ -10,12 +10,14 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The `O` modifier in gabc now has expanded uses beyond the salicus `(egOi)`.  A stemmed oriscus will appear on a lone pitch `(gO)` or a followed by a lower pitch `(gOe)` (see [#76](https://github.com/gregorio-project/gregorio/issues/76)).  A virga strata will appear on the second note of two ascending pitches `(giO)`.
 - With thanks to *Abbazia Mater Ecclesiae (IT)* for drawing the new shapes, the strophicus in greciliae has changed to better differentiate from the punctum inclinatum.  Use `\grechangeglyph{Stropha}{greciliae}{.caeciliae}\grechangeglyph{StrophaAucta}{greciliae}{.caeciliae}` if you prefer the old shape.
 - Default initial sizes have been chosen so that they are more appropriate when an infinitely scaling font is loaded.  LaTeX will make an automatic substitution of the closest avaialble size when such a font is not used.
+- Porrectus deminutus and torculus resupinus deminutus glyphs have been updated to more closely match the current Solesmes books (see [#143](https://github.com/gregorio-project/gregorio/issues/143)).  If you prefer the old forms, use `\grechangeglyph{Porrectus*}{*}{.alt}\grechangeglyph{TorculusResupinus*}{*}{.alt}`.
+- New (much) improved drawings for letter bars (for Versicle, Antiphon, etc.). You must fine-tune them if you use a text font other than Linux Libertine, see [UPGRADE.md](upgrade guide) for details.
 
 ### Added
-- The ability to substitute an arbitrary glyph for one used by GregorioTeX.  This adds three macros: `\grechangeglyph` to make the substitution, `\greresetglyph` to remove the substitution, and `\gredefvariant`, a lower-level macro for (re-)defining a control sequence with an arbitrary glyph.  See GregorioRef.pdf for full details.
+- The ability to substitute an arbitrary glyph for one used by GregorioTeX.  This adds five macros: `\grechangeglyph` to make a score glyph substitution, `\greresetglyph` to remove a score glyph substitution, `\gredefvariant` for (re-)defining an arbitrary score glyph, `\gredefsymbol` for (re-)defining an arbitrary non-score glyph that scales with the text, and `\gredefsizedsymbol` for (re-)defining an arbitary non-score glyph that requires a point-size to be specified.  See GregorioRef.pdf for full details.
 
 ### Removed
-- GregorioXML and OpusTeX output.
+- GregorioXML and OpusTeX output
 - Support for the font Gregoria.
 - Chironomy markings (gabc `u` and `U`), which were not working correctly in the first place.
 
