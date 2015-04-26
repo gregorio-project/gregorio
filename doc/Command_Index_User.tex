@@ -229,6 +229,62 @@ will be scaled.
   & string & The name of the glyph to use.
 \end{argtable}
 
+\subsection[Barred letters (A/, etc.)]{Barred letters (\ABar, etc.)}
+
+\macroname{\textbackslash gresimpledefbarglyph\{\#1\}\{\#2\}}{gregoriotex-symbols.tex}
+Redefines a TeX control sequence to be a a barred glyph.
+
+\begin{argtable}
+  \#1 & character & must be A, R or V.\\
+  \#2 & dimension & how much the bar will be shifted left.\\
+\end{argtable}
+
+Gregorio does not have precomposed barred letters, instead, it has bars that you
+can you to composed barred letters in your text font. This command is the most
+simple version.
+
+For example:
+
+\begin{latexcode}
+  \gresimpledefbarglyph{A}{-0.375em}
+\end{latexcode}
+
+Will define \texttt{\textbackslash ABar} to be a A with the bar shifted left
+of \texttt{-0.375em} from the end of the glyph. This is the default definition
+and fits well with the Linux Libertine font. If you use another font, you'll
+certainly have to change this value by calling the \texttt{gresimpledefbarglyph} command.
+
+\macroname{\textbackslash greexpldefbarglyph\{\#1\}\{\#2\}\{\#3\}\{\#4\}\{\#5\}\{\#6\}}{gregoriotex-symbols.tex}
+Redefines a TeX control sequence to be a a barred glyph.
+
+\begin{argtable}
+  \#1 & string & the name of the command you want to define.\\
+  \#2 & string & command to typeset the text.\\
+  \#3 & string & symbol of the bar (must be defined through \texttt{gredefsizedsymbol}).\\
+  \#4 & number & the size of greextra to use (in pt).\\
+  \#5 & dimension & horizontal shift of the bar glyph.\\
+  \#6 & dimension & vertical shift of the bar glyph.\\
+\end{argtable}
+
+This is a more complete version of the previous command, it allows you to define
+barred letters with a different style. For example you can choose another bar
+drawing, or take a bar more adapted to small font size.
+
+For example:
+
+\begin{footnotesize}
+\begin{latexcode}
+  \greexpldefbarglyph{RBarBold}{\textbf{R}}{greRBarSmall}{13}{-0.225em}{0.05em}
+\end{latexcode}
+\end{footnotesize}
+
+\greexpldefbarglyph{RBarBold}{\textbf{R}}{greRBarSmall}{13}{-0.225em}{0.05em}
+
+Will define \texttt{\textbackslash RBarBold} to be a bold \textbf{R} with 
+the bar made for small text (a bit bolder, named \texttt{RBarSmall} in greextra)
+, at 12pt, shifted left of \texttt{-0.375 em} from the end of the glyph, and lowered down
+by \texttt{0.1em}. The result is: \RBarBold .
+
 \macroname{\textbackslash englishcentering}{gregoriotex-syllable.tex}
 Changes settings to align syllables in the English style (center of
 syllable aligns with center of first glyph in neume).  Will only
