@@ -246,11 +246,11 @@ simple version.
 For example:
 
 \begin{latexcode}
-  \gresimpledefbarglyph{A}{-0.375em}
+  \gresimpledefbarglyph{A}{0.3em}
 \end{latexcode}
 
-Will define \texttt{\textbackslash ABar} to be a A with the bar shifted left
-of \texttt{-0.375em} from the end of the glyph. This is the default definition
+Will define \texttt{\textbackslash ABar} to be a A with a bar shifted right
+of \texttt{0.3em} from the beginning of the glyph. This is the default definition
 and fits well with the Linux Libertine font. If you use another font, you'll
 certainly have to change this value by calling the \texttt{gresimpledefbarglyph} command.
 
@@ -262,7 +262,7 @@ Redefines a TeX control sequence to be a a barred glyph.
   \#2 & string & command to typeset the text.\\
   \#3 & string & symbol of the bar (must be defined through \texttt{gredefsizedsymbol}).\\
   \#4 & number & the size of greextra to use (in pt).\\
-  \#5 & dimension & horizontal shift of the bar glyph.\\
+  \#5 & dimension & horizontal right shift of the bar.\\
   \#6 & dimension & vertical shift of the bar glyph.\\
 \end{argtable}
 
@@ -274,16 +274,18 @@ For example:
 
 \begin{footnotesize}
 \begin{latexcode}
-  \greexpldefbarglyph{RBarBold}{\textbf{R}}{greRBarSmall}{13}{-0.225em}{0.05em}
+  \greexpldefbarglyph{RBarBold}{\textbf{R}}{greRBarSmall}{13}{1.7mm}{0.1mm}
 \end{latexcode}
 \end{footnotesize}
 
-\greexpldefbarglyph{RBarBold}{\textbf{R}}{greRBarSmall}{13}{-0.225em}{0.05em}
+\greexpldefbarglyph{RBarBold}{\textbf{R}}{greRBarSmall}{13}{1.7mm}{0.1mm}
 
 Will define \texttt{\textbackslash RBarBold} to be a bold \textbf{R} with 
 the bar made for small text (a bit bolder, named \texttt{RBarSmall} in greextra)
-, at 12pt, shifted left of \texttt{-0.375 em} from the end of the glyph, and lowered down
-by \texttt{0.1em}. The result is: \RBarBold .
+, at 12pt, shifted right of \texttt{1.7mm} from the beginning of the glyph, and lowered down
+by \texttt{0.1mm}. The result is that \texttt{\textbackslash RBarBold} will typeset \RBarBold .
+
+See Annex ?? for a list of bars and other symbols present in the greextra font.
 
 \macroname{\textbackslash englishcentering}{gregoriotex-syllable.tex}
 Changes settings to align syllables in the English style (center of
