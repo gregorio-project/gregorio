@@ -22,7 +22,7 @@
 
 #include <stdbool.h>
 
-#define GREGORIO_VERSION "3.0.0-rc2"
+#define GREGORIO_VERSION "4.0.0-rc1"
 
 #define NO_FUSION 0
 #define FUSION 1
@@ -63,6 +63,7 @@ typedef enum gtex_type {
     T_PORRECTUSFLEXUS,
     T_PORRECTUSFLEXUS_NOBAR,
     T_TORCULUS_RESUPINUS,
+    T_TORCULUS_RESUPINUS_QUILISMA,
     T_TORCULUS_LIQUESCENS,
     T_TORCULUS_LIQUESCENS_QUILISMA,
     // this is a special type for the first note of a torculus resupinus flexus
