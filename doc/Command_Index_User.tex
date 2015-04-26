@@ -39,6 +39,8 @@ specified in the options list.
 
 In general, commands should not be modified.  Exceptions are noted below.
 
+\subsubsection{Including scores}
+
 \macroname{\textbackslash includescore[\textit{\#1}]\{\#2\}}{gregoriotex.tex}
 %\verb=\includescore#1=%tex.tex
 Macro for including scores.  Works on both gabc and tex files.
@@ -137,6 +139,8 @@ switch between different includescore behaviors: \par\medskip
   \includescore[a]{TecumPrincipium} % gabc auto compiled.
 \end{latexcode}
 
+\subsubsection{Alternate glyph drawings}
+
 \macroname{\textbackslash grechangeglyph\{\#1\}\{\#2\}\{\#3\}}{gregoriotex.tex}
 Substitutes the given GregorioTeX score glyph with the specified glyph
 from the specified font.
@@ -229,7 +233,7 @@ will be scaled.
   & string & The name of the glyph to use.
 \end{argtable}
 
-\subsection[Barred letters (A/, etc.)]{Barred letters (\ABar, etc.)}
+\subsubsection[Barred letters (A/, etc.)]{Barred letters (\ABar, etc.)}
 
 \macroname{\textbackslash gresimpledefbarglyph\{\#1\}\{\#2\}}{gregoriotex-symbols.tex}
 Redefines a TeX control sequence to be a a barred glyph.
@@ -245,7 +249,7 @@ simple version.
 
 For example:
 
-\begin{latexcode}
+\medskip \begin{latexcode}
   \gresimpledefbarglyph{A}{0.3em}
 \end{latexcode}
 
@@ -287,6 +291,8 @@ by \texttt{0.1mm}. The result is that \texttt{\textbackslash RBarBold} will type
 
 See Annex ?? for a list of bars and other symbols present in the greextra font.
 
+\subsubsection{Text centering}
+
 \macroname{\textbackslash englishcentering}{gregoriotex-syllable.tex}
 Changes settings to align syllables in the English style (center of
 syllable aligns with center of first glyph in neume).  Will only
@@ -299,7 +305,7 @@ vowel aligns with center of first glyph in neume).  Will only affect
 scores which do not have “centering-scheme: english;” in their gabc
 header.
 
-Default.
+\subsubsection{Spacings}
 
 \macroname{\textbackslash gresetdim\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-spaces.tex}
 Macro to set one of gregoriotex’s distances.  Does not update dependent distances.  Used primarily to initialize distances in a space configuration file.  This function if \texttt{gre} prefixed to highlight that it should not be used for distances not defined in Gregorio\TeX.
