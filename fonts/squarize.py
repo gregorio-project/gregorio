@@ -1,4 +1,4 @@
-#!/usr/bin/env fontforge -script
+#!/usr/bin/env fontforge -lang=py -script
 # coding=utf-8
 # pylint: disable=too-many-branches, too-many-arguments, too-many-lines
 # pylint: disable=import-error, no-member
