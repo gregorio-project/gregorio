@@ -95,6 +95,7 @@ auto/
 doc/_minted-*
 fonts/*.ttf
 *.gz
+*.bz2
 *.zip
 src/gabc/gabc-score-determination-y*
 src/gabc/gabc-score-determination-l*
