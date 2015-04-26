@@ -294,13 +294,13 @@ local function init_variant_font(font_name, for_score)
       font_table[font_name] = font_csname
       log("Registering variant font %s as %s.", font_name, font_csname)
       if for_score then
-        tex.print(string.format([[\global\font\%s = "name:%s" at 10 sp\relax ]], font_csname, font_name))
+        tex.print(string.format([[\global\font\%s = {name:%s} at 10 sp\relax ]], font_csname, font_name))
         -- loaded_font_sizes will only be given a value if the font is for_score
         loaded_font_sizes[font_name] = '10'
       else
         -- is there a nice way to make this string readable?
         tex.print(string.format(
-            [[\gdef\%sSymReload#1{{\edef\localsize{#1}\ifx\localsize\%sSymSize\relax\relax\else\global\font\%s = "name:%s" at \localsize pt\relax\xdef\%sSymSize{\localsize}\fi}}\xdef\%sSymSize{0}\%sSymReload{\gresymbolfontsize}]],
+            [[\gdef\%sSymReload#1{{\edef\localsize{#1}\ifx\localsize\%sSymSize\relax\relax\else\global\font\%s = {name:%s} at \localsize pt\relax\xdef\%sSymSize{\localsize}\fi}}\xdef\%sSymSize{0}\%sSymReload{\gresymbolfontsize}]],
             font_csname, font_csname, font_csname, font_name, font_csname,
             font_csname, font_csname))
       end
@@ -413,7 +413,7 @@ end
 local function scale_score_fonts(size)
   for font_name, font_csname in pairs(score_fonts) do
     if loaded_font_sizes[font_name] and loaded_font_sizes[font_name] ~= size then
-      tex.print(string.format([[\global\font\%s = "name:%s" at %s sp\relax ]],
+      tex.print(string.format([[\global\font\%s = {name:%s} at %s sp\relax ]],
           font_csname, font_name, size))
       loaded_font_sizes[font_name] = size
     end
