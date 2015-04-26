@@ -15,4 +15,4 @@
 # You should have received a copy of the GNU General Public License
 # along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-EXTRA_DIST=gregoriotex.tex gregoriotex.lua gregoriotex.sty gregoriotex-syllable.tex gregoriotex-symbols.tex gregoriotex-spaces.tex gregoriotex-signs.tex gsp-default.tex gregoriotex-chars.tex
+EXTRA_DIST=gregoriotex.tex gregoriotex.lua gregoriotex.sty gregoriotex-syllable.tex gregoriotex-symbols.tex gregoriotex-spaces.tex gregoriotex-signs.tex gregoriosyms.sty gsp-default.tex gregoriotex-chars.tex

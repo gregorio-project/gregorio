@@ -19,7 +19,12 @@
 
 % this file contains definitions of the symbols
 
+\ifcsname gregoriotex@symbols@loaded\endcsname\endinput\fi%
+\def\gregoriotex@symbols@loaded{}%
+
 \gre@declarefileversion{gregoriotex-symbols.tex}{3.0.0-rc2}% GREGORIO_VERSION
+
+\RequireLuaModule{gregoriotex}%
 
 \def\gresymbolfontsize{\f@size}%
 
