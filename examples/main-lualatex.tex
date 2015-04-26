@@ -10,12 +10,15 @@
 \usepackage{geometry} % See geometry.pdf to learn the layout options. There are lots.
 \geometry{a4paper} % or letterpaper (US) or a5paper or....
 \usepackage{gregoriotex} % for gregorio score inclusion
+\usepackage{gregoriosyms} % to be able to define \ABar, \VBar, etc.
 \usepackage{fullpage} % to reduce the margins
+\usepackage{libertine} % Decent (free) font for Gregorian, but should be changed if you have high standards
 
-% to change the font to something better, you can install the kpfonts package (if not already installed). To do so
-% go open the "TeX Live Manager" in the Menu Start->All Programs->TeX Live 2010
+% defining \ABar, \VBar and \RBar for libertine font, see documentation for details.
+\greDefBarGlyph{ABar}{A}{greABar}{-.375em}
+\greDefBarGlyph{RBar}{R}{greRBar}{-.225em}
+\greDefBarGlyph{VBar}{V}{greVBar}{-.550em}
 
-% here we begin the document
 \begin{document}
 
 % The title:
