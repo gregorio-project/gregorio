@@ -31,9 +31,12 @@ import argparse
 import subprocess
 import time
 import os
+import locale
 from datetime import date
 
 from distutils.util import strtobool
+
+locale.setlocale(locale.LC_TIME, 'C')
 
 os.chdir(sys.path[0])
 
@@ -179,7 +182,7 @@ def replace_version(version_obj):
                     result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%Y/%m/%d"), newline, 1))
                 elif 'PARSE_VERSION_DATE' in line:
                     newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
-                    result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%d/%m/%y"), newline, 1))
+                    result.append(re.sub(r'(\d+\-[A-Z][a-z][a-z]-\d+)', today.strftime("%d-%b-%Y"), newline, 1))
                 elif 'PARSE_VERSION_FILE_NEXTLINE' in line:
                     result.append(line)
                     following_line_filename = True
