@@ -41,53 +41,46 @@
   \directlua{gregoriotex.def_symbol([[#1]],[[#2]],[[#3]],true)}
 }%
 
-%%%%%%%%%%
-%% symbols        %
-%%%%%%%%%%
+%%%%%%%%%%%%%
+%% symbols %%
+%%%%%%%%%%%%%
 
-% the macros to typeset the A, R and V with bar
-\gredefsymbol{greAbar}{greextra}{ABar}%
-\def\Abar{%
-  % TODO kern and compose with A
-  \greAbar%
-}%
+\gredefsizedsymbol{greABar}{greextra}{ABar}
+\gredefsizedsymbol{greRBar}{greextra}{RBar}
+\gredefsizedsymbol{greVBar}{greextra}{VBar}
+\gredefsizedsymbol{greABarSC}{greextra}{ABarSC}
+\gredefsizedsymbol{greRBarSC}{greextra}{RBarSC}
+\gredefsizedsymbol{greVBarSC}{greextra}{VBarSC}
+\gredefsizedsymbol{greABarSmall}{greextra}{ABarSmall}
+\gredefsizedsymbol{greRBarSmall}{greextra}{RBarSmall}
+\gredefsizedsymbol{greVBarSmall}{greextra}{VBarSmall}
+\gredefsizedsymbol{greABarSmallSC}{greextra}{ABarSmallSC}
+\gredefsizedsymbol{greRBarSmallSC}{greextra}{RBarSmallSC}
+\gredefsizedsymbol{greVBarSmallSC}{greextra}{VBarSmallSC}
+\gredefsizedsymbol{greABarCaption}{greextra}{ABarCaption}
+\gredefsizedsymbol{greRBarCaption}{greextra}{RBarCaption}
+\gredefsizedsymbol{greVBarCaption}{greextra}{VBarCaption}
+\gredefsizedsymbol{greABarCaptionSC}{greextra}{ABarCaptionSC}
+\gredefsizedsymbol{greRBarCaptionSC}{greextra}{RBarCaptionSC}
+\gredefsizedsymbol{greVBarCaptionSC}{greextra}{VBarCaptionSC}
+\gredefsizedsymbol{greABarAlt}{greextra}{RBar.alt}
+\gredefsizedsymbol{greRBarAlt}{greextra}{RBar.alt}
+\gredefsizedsymbol{greVBarAlt}{greextra}{VBar.alt}
 
-\gredefsymbol{greRbar}{greextra}{RBar}%
-\def\Rbar{%
-  % TODO kern and compose with R
-  \greRbar%
-}%
+\def\greExplDefBarGlyph#1#2#3#4#5#6#7#8{%
+  \expandafter\gdef\csname #1\endcsname {%
+    #3\kern #6\lower#7\hbox{\csname #4\endcsname{#5}}\kern -#6%
+    \kern #8%
+  }%
+}
 
-\gredefsymbol{greVbar}{greextra}{VBar}%
-\def\Vbar{%
-  % TODO kern and compose with V
-  \greVbar%
-}%
-
-% a V with bar more adapted to small text
-\gredefsymbol{greVbarsmall}{greextra}{VBarSmall}%
-\def\Vbarsmall{%
-  % TODO kern and compose with V
-  \greVbarsmall%
-}%
-
-% bars for the letters
-
-%\def\greletterbar{%
-%  \gre@reloadgresym%
-%  {\gregoriosymbolfont \char 73}%
-%  \relax%
-%}%
-
-%\def\greletteraltbar{%
-%  \gre@reloadgresym%
-%  {\gregoriosymbolfont \char 74}%
-%  \relax%
-%}%
+\def\greDefBarGlyph#1#2#3#4{%
+  \greExplDefBarGlyph{#1}{#2}{#2}{#3}{\f@size}{#4}{0pt}{0pt}%
+}
 
 % the gothic R and V
-\gredefsymbol{gothRbar}{greextra}{RWithBarGoth}%
-\gredefsymbol{gothVbar}{greextra}{VWithBarGoth}%
+\gredefsymbol{gothRBar}{greextra}{RWithBarGoth}%
+\gredefsymbol{gothVBar}{greextra}{VWithBarGoth}%
 
 % the macro to typeset a dagger
 \gredefsymbol{gredagger}{greextra}{Dagger}%
@@ -101,9 +94,9 @@
 \gredefsymbol{gresixstar}{greextra}{StarSix}%
 \let\grestar\gresixstar%
 
-%%%%%%%%%
-%  Lines        %%
-%%%%%%%%%
+%%%%%%%%%%%%
+%%  Lines %%
+%%%%%%%%%%%%
 %Unlike the character symbols above, we require that the font size be specified when using the lines.
 
 \gredefsizedsymbol{greLineOne}{greextra}{Line1}%
