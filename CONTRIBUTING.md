@@ -75,7 +75,7 @@ If your code has an impact on the user, you must add it to the [changelog file](
 You must also document it in the right places:
 
  * [User manual](doc/) for changes in GregorioTeX
- * the [website](http://home.gna.org/gregorio) if relevant (ask the [developer mailing list](mailto:gregorio-devel@gna.org) for access).
+ * the [website](http://gregorio-project.github.io/) (in [another repository](https://github.com/gregorio-project/gregorio-project.github.io)) if relevant.
 
 ### Git Workflow
 
