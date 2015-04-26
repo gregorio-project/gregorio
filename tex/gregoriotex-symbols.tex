@@ -75,13 +75,13 @@
 %% Intermediate version or barred glyph definition
 %% #1: the csname you want to define
 %% #2: the letter you'll typeset (you can use bold, italic, etc.)
-%% #3: the symbol corresponding to the glyph in greextra. Must be defined with \gredefsizedsymbol.
+%% #3: the symbol corresponding to the glyph in greextra. Must be defined with \gredefsizedsymbol
 %% #4: the size of greextra
-%% #5: the negative kern
+%% #5: the kern of the bar from the beggining of the glyph
 %% #6: greextra glyph lowering
 \def\greexpldefbarglyph#1#2#3#4#5#6{%
   \expandafter\gdef\csname #1\endcsname {%
-    #2\kern #5\lower#6\hbox{\csname #3\endcsname{#4}}\kern -#5%
+    \leavevmode\hbox to 0pt{}\kern #5\lower#6\hbox{\csname #3\endcsname{#4}}\kern -#5\relax #2%
   }%
 }
 
@@ -93,9 +93,9 @@
 }
 
 % defining \ABar, \VBar and \RBar for libertine font, define yours for your font
-\gresimpledefbarglyph{A}{-.375em}
-\gresimpledefbarglyph{R}{-.225em}
-\gresimpledefbarglyph{R}{-.550em}
+\gresimpledefbarglyph{A}{.3em}
+\gresimpledefbarglyph{R}{.35em}
+\gresimpledefbarglyph{V}{.1em}
 
 % the gothic R and V
 \gredefsymbol{gothRBar}{greextra}{RWithBarGoth}%
