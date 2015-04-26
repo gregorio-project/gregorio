@@ -12,7 +12,7 @@ to any \verb=.tex= file. Do not add them to any \verb=.gtex= or
 To use the gregoriotex package include \verb=\usepackage{gregoriotex}=
 in the document preamble. This macro has the following form:
 
-\macroname{\textbackslash usepackage[\textit{(options)}]\{gregoriotex\}}{gregoriotex.sty}
+\macroname{\textbackslash usepackage}{[\textit{(options)}]\{gregoriotex\}}{gregoriotex.sty}
 
 The optional arguments are:
 
@@ -41,7 +41,7 @@ In general, commands should not be modified.  Exceptions are noted below.
 
 \subsubsection{Including scores}
 
-\macroname{\textbackslash includescore[\textit{\#1}]\{\#2\}}{gregoriotex.tex}
+\macroname{\textbackslash includescore}{[\textit{\#1}]\{\#2\}}{gregoriotex.tex}
 %\verb=\includescore#1=%tex.tex
 Macro for including scores.  Works on both gabc and tex files.
 
@@ -99,21 +99,21 @@ When called with the optional argument \texttt{[f]} gregoriotex will
 compile the gabc file into a gtex file. This is similar to
 \texttt{[a]} except the gabc is compiled every time.
 
-\macroname{\textbackslash forcecompilegabc}{gregoriotex.tex} A switch
+\macroname{\textbackslash forcecompilegabc}{}{gregoriotex.tex} A switch
 to change the behavior of the way gregoriotex includes scores. When
 used, all later calls of \verb=\includescore= will compile the gabc
 file into a gtex file. This is similar to using the package option
 \verb=[forcecompile]=, but does not necessarly apply to the entire
 document.
 
-\macroname{\textbackslash autocompilegabc}{gregoriotex.tex} A switch
+\macroname{\textbackslash autocompilegabc}{}{gregoriotex.tex} A switch
 to change the behavior of the way gregoriotex includes scores. When
 used, all later calls of \verb=\includescore= will use gregoriotex's
 automatic compilation of gabc files. This is similar to using the
 packape option \verb=[autocompile]=, but does not necessarly apply to
 the entire document.
 
-\macroname{\textbackslash nevercompilegabc}{gregoriotex.tex} A switch
+\macroname{\textbackslash nevercompilegabc}{}{gregoriotex.tex} A switch
 to change the behavior of the way gregoriotex includes scores. When
 used, all later calls of \verb=\includescore= will include the score
 without doing anything else. This is the same as the traditional
@@ -233,7 +233,7 @@ will be scaled.
   & string & The name of the glyph to use.
 \end{argtable}
 
-\subsubsection[Barred letters (A/, etc.)]{Barred letters (\ABar, etc.)}
+\subsubsection[Barred letters (A/, etc.)]{Barred letters (\Abar, etc.)}
 
 \macroname{\textbackslash gresimpledefbarglyph}{\{\#1\}\{\#2\}}{gregoriotex-symbols.tex}
 Redefines a TeX control sequence to be a a barred glyph.
