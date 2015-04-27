@@ -223,6 +223,8 @@ local function compile_gabc(gabc_file, gtex_file)
   elseif res ~= 0 then
     err("\nAn error occured when compiling the score file\n'%s' with gregorio.\nPlease check your score file.", gabc_file)
   else
+    -- open the gtex file for writing so that LuaTeX records output to it
+    -- when the -recorder option is used
     local gtex = io.open(gtex_file, 'a')
     if gtex == nil then
       err("\n Unable to open %s", gtex_file)
@@ -266,7 +268,9 @@ local function include_score(input_file, force_gabccompile)
   end
   local gtex_timestamp = lfs.attributes(gtex_file).modification
   local gabc_timestamp = lfs.attributes(gabc_file).modification
-  -- always read the file to record it
+  -- open the gabc file for reading so that LuaTeX records input from it
+  -- when the -recorder option is used; do this here so that this happens
+  -- on every run
   local gabc = io.open(gabc_file, 'r')
   if gabc == nil then
     err("\n Unable to open %s", gabc_file)
