@@ -27,16 +27,16 @@ FONTFORGE = fontforge
 RM = rm
 
 gregorio.ttf: squarize.py gregorio-base.sfd
-	$(FONTFORGE) -script squarize.py gregorio
+	$(FONTFORGE) -lang=py -script squarize.py gregorio
 
 parmesan.ttf: squarize.py parmesan-base.sfd
-	$(FONTFORGE) -script squarize.py parmesan
+	$(FONTFORGE) -lang=py -script squarize.py parmesan
 
 greciliae.ttf: squarize.py greciliae-base.sfd
-	$(FONTFORGE) -script squarize.py greciliae
+	$(FONTFORGE) -lang=py -script squarize.py greciliae
 
 greextra.ttf: convertsfdtottf.py greextra.sfd
-	$(FONTFORGE) -script convertsfdtottf.py greextra.sfd
+	$(FONTFORGE) -lang=py -script convertsfdtottf.py greextra.sfd
 
 fonts: $(TTFFILES)
 

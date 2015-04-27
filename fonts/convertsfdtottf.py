@@ -1,4 +1,4 @@
-#!/usr/bin/env fontforge -script
+#!./fontforge_python.sh
 # coding=utf-8
 # pylint: disable=import-error
 
