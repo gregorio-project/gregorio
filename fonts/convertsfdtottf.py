@@ -1,4 +1,4 @@
-# This is a fontforge python script; use fontforge -lang-py -script to run it
+# This is a fontforge python script; use fontforge -lang=py -script to run it
 # coding=utf-8
 # pylint: disable=import-error
 
