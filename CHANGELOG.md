@@ -20,6 +20,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - GregorioXML and OpusTeX output
 - Support for the font Gregoria.
 - Chironomy markings (gabc `u` and `U`), which were not working correctly in the first place.
+- `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, supplanted by the new glyph system, see [UPGRADE.md](upgrade guide).
 
 ## [Unreleased][ureleased]
 ### Fixed
