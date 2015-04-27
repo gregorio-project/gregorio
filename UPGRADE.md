@@ -2,7 +2,7 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.
 
-#4.0
+##4.0
 ### Barred letters
 
 If you are using barred letters in your document and if you use a font other than libertine, you must adjust the horizontal placement of the bar on the letter. To do so, use the `\gresimpledefbarglyph` macro. For example, use `\gresimpledefbarglyph{A}{0.3em}` in your preamble, tweaking the second argument to have a good result (same for R and V). See the documentation of `\gresimpledefbarglyph` in the PDF documentation for more details.
