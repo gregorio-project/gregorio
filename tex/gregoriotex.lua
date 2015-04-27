@@ -222,6 +222,15 @@ local function compile_gabc(gabc_file, gtex_file)
 	  .."shell-escape mode may not be activated. Try\n    '%s --shell-escape %s.tex'\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", gtex_file, gabc_file, tex.formatname, tex.jobname)
   elseif res ~= 0 then
     err("\nAn error occured when compiling the score file\n'%s' with gregorio.\nPlease check your score file.", gabc_file)
+  else
+    -- open the gtex file for writing so that LuaTeX records output to it
+    -- when the -recorder option is used
+    local gtex = io.open(gtex_file, 'a')
+    if gtex == nil then
+      err("\n Unable to open %s", gtex_file)
+    else
+      gtex:close()
+    end
   end
 end
 
@@ -242,6 +251,13 @@ local function include_score(input_file, force_gabccompile)
     clean_old_gtex_files(file_root)
     log("The file %s does not exist. Searching for a gabc file", gtex_file)
     if lfs.isfile(gabc_file) then
+      local gabc = io.open(gabc_file, 'r')
+      if gabc == nil then
+        err("\n Unable to open %s", gabc_file)
+        return
+      else
+        gabc:close()
+      end
       compile_gabc(gabc_file, gtex_file)
       tex.print(string.format("\\input %s", gtex_file))
       return
@@ -252,6 +268,15 @@ local function include_score(input_file, force_gabccompile)
   end
   local gtex_timestamp = lfs.attributes(gtex_file).modification
   local gabc_timestamp = lfs.attributes(gabc_file).modification
+  -- open the gabc file for reading so that LuaTeX records input from it
+  -- when the -recorder option is used; do this here so that this happens
+  -- on every run
+  local gabc = io.open(gabc_file, 'r')
+  if gabc == nil then
+    err("\n Unable to open %s", gabc_file)
+  else
+    gabc:close()
+  end
   if gtex_timestamp < gabc_timestamp then
     log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
     compile_gabc(gabc_file, gtex_file)
