@@ -182,7 +182,7 @@ def replace_version(version_obj):
                     result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%Y/%m/%d"), newline, 1))
                 elif 'PARSE_VERSION_DATE' in line:
                     newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
-                    result.append(re.sub(r'(\d+\-[A-Z][a-z][a-z]-\d+)', today.strftime("%d-%b-%Y"), newline, 1))
+                    result.append(re.sub(r'([ \d]\d [A-Z][a-z]+ \d{4})', today.strftime("%e %B %Y"), newline, 1))
                 elif 'PARSE_VERSION_FILE_NEXTLINE' in line:
                     result.append(line)
                     following_line_filename = True
