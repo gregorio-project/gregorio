@@ -289,7 +289,9 @@ gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
             break;
         case G_PODATUS:
             if (current_pitch > last_pitch) {
-                if (current_glyph_first_note->u.note.shape == S_PUNCTUM) {
+                if (current_glyph_first_note->u.note.shape == S_PUNCTUM &&
+                        current_glyph_first_note->u.note.liquescentia !=
+                        L_INITIO_DEBILIS) {
                     next_glyph_type = G_SCANDICUS;
                     *end_of_glyph = DET_END_OF_CURRENT;
                 } else {
