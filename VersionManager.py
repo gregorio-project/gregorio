@@ -42,7 +42,6 @@ os.chdir(sys.path[0])
 
 VERSION_FILE = '.gregorio-version'
 GREGORIO_FILES = ["configure.ac",
-                  "src/gregoriotex/gregoriotex.h",
                   "windows/gregorio-resources.rc",
                   "macosx/Gregorio.pkgproj",
                   "windows/gregorio.iss",

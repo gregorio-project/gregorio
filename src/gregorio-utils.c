@@ -333,7 +333,7 @@ int main(int argc, char **argv)
             exit(0);
             break;
         case 'V':
-            printf("Gregorio version %s.\n%s\n", VERSION, copyright);
+            printf("Gregorio version %s.\n%s\n", GREGORIO_VERSION, copyright);
             exit(0);
             break;
         case 'v':
