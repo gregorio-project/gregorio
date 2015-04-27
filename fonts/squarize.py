@@ -1,4 +1,4 @@
-#!/usr/bin/env fontforge -lang=py -script
+# This is a fontforge python script; use fontforge -lang=py -script to run it
 # coding=utf-8
 # pylint: disable=too-many-branches, too-many-arguments, too-many-lines
 # pylint: disable=import-error, no-member
