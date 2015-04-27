@@ -15,10 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-SRCFILES= Command_Index_gregorio.tex  Command_Index_internal.tex  Command_Index_User.tex GregorioRef.tex
+SRCFILES = Command_Index_gregorio.tex Command_Index_internal.tex \
+		   Command_Index_User.tex GregorioRef.tex factus.gabc
 
 GregorioRef-$(FILENAME_VERSION).pdf: $(SRCFILES)
-	latexmk -pdf -pdflatex='lualatex --shell-escape %O %S' -jobname=GregorioRef-$(FILENAME_VERSION) GregorioRef.tex
+	latexmk -recorder -pdf -pdflatex='lualatex --shell-escape %O %S' -jobname=GregorioRef-$(FILENAME_VERSION) GregorioRef.tex
 
 doc: GregorioRef-$(FILENAME_VERSION).pdf
 
