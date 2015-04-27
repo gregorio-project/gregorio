@@ -71,17 +71,18 @@ typedef enum gtex_type {
 } gtex_type;
 
 // the different types for the alignment of the notes in GregorioTeX
+// these values are numbers coded into GregorioTeX
 typedef enum gtex_alignment {
     AT_ONE_NOTE = 0,
-    AT_FLEXUS,
-    AT_PORRECTUS,
-    AT_INITIO_DEBILIS,
-    AT_QUILISMA,
-    AT_ORISCUS,
-    AT_PUNCTUM_INCLINATUM,
-    AT_STROPHA,
-    AT_FLEXUS_1,
-    AT_FLEXUS_DEMINUTUS,
+    AT_FLEXUS = 1,
+    AT_PORRECTUS = 2,
+    AT_INITIO_DEBILIS = 3,
+    AT_QUILISMA = 4,
+    AT_ORISCUS = 5,
+    AT_PUNCTUM_INCLINATUM = 6,
+    AT_STROPHA = 7,
+    AT_FLEXUS_1 = 8,
+    AT_FLEXUS_DEMINUTUS = 9,
 } gtex_alignment;
 
 // Here we define a function that will determine the number of the
