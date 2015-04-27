@@ -22,8 +22,6 @@
 
 #include <stdbool.h>
 
-#define GREGORIO_VERSION "4.0.0-rc1"
-
 #define NO_FUSION 0
 #define FUSION 1
 

@@ -25,8 +25,9 @@
 #include "config_.h"
 
 #ifdef BRANCH_VERSION
-#undef VERSION
-#define VERSION BRANCH_VERSION
+#define GREGORIO_VERSION VERSION "-" BRANCH_VERSION
+#else
+#define GREGORIO_VERSION VERSION
 #endif
 
 #endif
