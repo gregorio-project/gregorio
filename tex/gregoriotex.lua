@@ -172,18 +172,11 @@ end
 local function atScoreBeggining ()
   luatexbase.add_to_callback('post_linebreak_filter', process, 'gregoriotex.callback', 1)
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
-  -- we call the optimize_gabc functions here
-  if optimize_gabc_style then
-    optimize_gabc_style.add_callback()
-  end
 end
 
 local function atScoreEnd ()
   luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.callback')
   luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
-  if optimize_gabc_style then
-    optimize_gabc_style.remove_callback()
-  end
 end
 
 local function clean_old_gtex_files(file_withdir)
