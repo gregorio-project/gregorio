@@ -430,6 +430,7 @@
 %% at the end we wall \greendofword or \greendofsyllable with #7, to reduce the space in case of a flat or natural
 \def\gresyllable#1#2#3#4#5#6#7#8#9{%
   \gre@debug{New syllable}%
+  \global\grefirstisalteration=0\relax %
   \ifnum\gre@englishcentering=1\relax %
     \gdef\gre@firstsyllablepart{}%
     \gdef\gre@middlesyllablepart{#1#2#3}%
@@ -491,7 +492,6 @@
       \fi % \ifdim\gre@dimen@enddifference>0pt
       \ifnum\grefirstisalteration=1\relax %
         \advance\gre@skip@temp@one by \gre@skip@beforealterationspace %
-        \global\grefirstisalteration=0\relax %
       \fi % \ifnum\grefirstisalteration=1
       \gre@debug{ifdim temp@skip@one > 0pt}%
       \ifdim\gre@skip@temp@one>0pt %
