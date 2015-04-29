@@ -412,7 +412,7 @@ int main(int argc, char **argv)
                     break;
                 case GTEX:
                     output_file_name =
-                        get_output_filename(output_basename, "tex");
+                        get_output_filename(output_basename, "gtex");
                     break;
                 case DUMP:
                     output_file_name =
