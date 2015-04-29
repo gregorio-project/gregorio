@@ -1,0 +1,45 @@
+% GregorioTeX boostrap file for Plain TeX
+%
+% Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
+%
+% This file is part of Gregorio.
+%
+% Gregorio is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Gregorio is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
+
+% this file contains definitions for lines, initial, fonts, etc.
+
+\edef\greoldcatcode{\the\catcode`@}
+\catcode`\@=11
+
+\input ifluatex.sty%
+\input luatexbase.sty%
+\input luaotfload.sty%
+\input graphicx.tex % for \resizebox
+\input xstring.sty%
+\def\greerror#1{\errmessage{GregorioTeX error: #1}}%
+\def\gre@warning#1{\message{GregorioTeX warning: #1}}%
+
+\ifx\csname gre@debug\endcsname\relax%
+\else%
+  \def\gre@debug{}%
+\fi%
+
+\ifx\csname f@size\endcsname\relax%
+\else%
+  \def\f@size{\directlua{gregoriotex.font_size()}}%
+\fi%
+
+\input gregoriotex-main.tex
+
+\catcode`\@=\greoldcatcode
