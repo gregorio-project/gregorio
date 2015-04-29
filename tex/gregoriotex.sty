@@ -17,16 +17,24 @@
 % You should have received a copy of the GNU General Public License
 % along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-\NeedsTeXFormat{LaTeX2e}
+\NeedsTeXFormat{LaTeX2e}%
 \ProvidesPackage{gregoriotex}%
     [2015/04/26 v4.0.0-rc1 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
-\RequirePackage{xcolor}
-\RequirePackage{kvoptions}
+\RequirePackage{xcolor}%
+\RequirePackage{kvoptions}%
+\RequirePackage{ifluatex}%
+\RequirePackage{graphicx}% for \resizebox
+\RequirePackage{luatexbase}%
+\RequirePackage{luaotfload}%
+\RequirePackage{xstring}%
+
+\def\greerror#1{\PackageError{GregorioTeX}{#1}{}}%
+\def\gre@warning#1{\PackageWarning{GregorioTeX}{#1}}%
 
 \SetupKeyvalOptions{prefix=gre@}
 \DeclareStringOption{debug}[all]
 
-\input gregoriotex.tex
+\input gregoriotex-main.tex
 
 %% We declare and process some additional options after loading the package (instead of at the beginning) because the options manipulate flags which are declared in the package.
 

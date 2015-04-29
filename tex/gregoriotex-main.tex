@@ -19,28 +19,6 @@
 
 % this file contains definitions for lines, initial, fonts, etc.
 
-%%%%%%%%%%%%%%%%%%%
-%% engine checking
-%%%%%%%%%%%%%%%%%%%
-
-\expandafter\ifx\csname RequirePackage\endcsname\relax%
-  \input ifluatex.sty%
-  \input luatexbase.sty%
-  \input luaotfload.sty%
-  \input graphicx.sty % for \resizebox
-  \input xstring.sty%
-  \def\greerror#1{\errmessage{GregorioTeX error: #1}}%
-  \def\gre@warning#1{\message{GregorioTeX warning: #1}}%
-\else%
-  \RequirePackage{ifluatex}%
-  \RequirePackage{graphicx}% for \resizebox
-  \RequirePackage{luatexbase}%
-  \RequirePackage{luaotfload}%
-  \RequirePackage{xstring}%
-  \def\greerror#1{\PackageError{GregorioTeX}{#1}{}}%
-  \def\gre@warning#1{\PackageWarning{GregorioTeX}{#1}}%
-\fi%
-
 \ifluatex%
   \ifnum\luatexversion<76%
     \greerror{Error: this document must be compiled with LuaTeX (lualatex) 0.76 or later}%
@@ -50,7 +28,7 @@
 \fi%
 
 \def\gre@debugmsg#1#2{%
-  \IfStrEq{\gre@debug}{}{}
+  \IfStrEq{\gre@debug}{}{}%
     %false
     {\IfStrEq{#1}{all}%
       %true
