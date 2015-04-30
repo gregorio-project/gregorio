@@ -901,6 +901,9 @@ gregoriotex_write_syllable(FILE *f,
     if (syllable->no_linebreak_area == NLBA_BEGINNING) {
         fprintf(f, "\\grebeginnlbarea{1}{0}%%\n");
     }
+    if (syllable->euouae == EUOUAE_BEGINNING) {
+        fprintf (f, "\\grebegineuouae{}%%\n");
+    }
     /*
      * first we check if the syllable is only a end of line. If it is the case,
      * we don't print anything but a comment (to be able to read it if we read
@@ -1255,6 +1258,9 @@ gregoriotex_write_syllable(FILE *f,
     // Very last, if the syllable is the end of a no-linebreak area:
     if (syllable->no_linebreak_area == NLBA_END) {
         fprintf(f, "\\greendnlbarea{1}{0}%%\n");
+    }
+    if (syllable->euouae == EUOUAE_END) {
+        fprintf (f, "\\greendeuouae{}%%\n");
     }
 }
 
