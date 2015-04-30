@@ -443,6 +443,10 @@ local function def_symbol(csname, font_name, glyph, sized)
       sized and set_sized_symbol_glyph or set_symbol_glyph)
 end
 
+local function font_size()
+  tex.print(string.format('%.2f', (font.fonts[font.current()].size / 65536.0)))
+end
+
 gregoriotex.include_score        = include_score
 gregoriotex.compile_gabc         = compile_gabc
 gregoriotex.atScoreEnd           = atScoreEnd
@@ -456,3 +460,4 @@ gregoriotex.change_score_glyph   = change_score_glyph
 gregoriotex.reset_score_glyph    = reset_score_glyph
 gregoriotex.scale_score_fonts    = scale_score_fonts
 gregoriotex.def_symbol           = def_symbol
+gregoriotex.font_size            = font_size
