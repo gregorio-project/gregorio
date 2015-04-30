@@ -37,10 +37,12 @@
  * 
  */
 
-#define CENTER_NOT_DETERMINED 0
-#define CENTER_HALF_DETERMINED 1
-#define CENTER_FULLY_DETERMINED 2
-#define CENTER_DETERMINING_MIDDLE 3
+typedef enum gregorio_center_determination {
+    CENTER_NOT_DETERMINED = 0,
+    CENTER_HALF_DETERMINED,
+    CENTER_FULLY_DETERMINED,
+    CENTER_DETERMINING_MIDDLE,
+} gregorio_center_determination;
 
 // two constants to know if we write old style TeX or modern utf TeX.
 #define WRITE_OLD_TEX 1
@@ -61,19 +63,19 @@ gregorio_character *gregorio_first_text(gregorio_score *score);
 int gregorio_is_vowel(grewchar letter);
 
 void gregorio_write_text(char type, gregorio_character *current_character,
-                         FILE *f, void (*printverb) (FILE *, grewchar *),
-                         void (*printchar) (FILE *, grewchar),
-                         void (*begin) (FILE *, grestyle_style),
-                         void (*end) (FILE *, grestyle_style),
-                         void (*printspchar) (FILE *, grewchar *));
+        FILE *f, void (*printverb) (FILE *, grewchar *),
+        void (*printchar) (FILE *, grewchar),
+        void (*begin) (FILE *, grestyle_style),
+        void (*end) (FILE *, grestyle_style),
+        void (*printspchar) (FILE *, grewchar *));
 
 void gregorio_write_initial(gregorio_character *current_character,
-                            FILE *f, void (*printverb) (FILE *,
-                                                        grewchar *),
-                            void (*printchar) (FILE *, grewchar),
-                            void (*begin) (FILE *, grestyle_style),
-                            void (*end) (FILE *, grestyle_style),
-                            void (*printspchar) (FILE *, grewchar *));
+        FILE *f, void (*printverb) (FILE *,
+                grewchar *),
+        void (*printchar) (FILE *, grewchar),
+        void (*begin) (FILE *, grestyle_style),
+        void (*end) (FILE *, grestyle_style),
+        void (*printspchar) (FILE *, grewchar *));
 
 gregorio_character *gregorio_first_text(gregorio_score *score);
 
@@ -81,19 +83,17 @@ grewchar gregorio_first_letter(gregorio_score *score);
 
 void gregorio_free_styles(det_style **first_style);
 
-void
-gregorio_insert_style_before(unsigned char type, unsigned char style,
-                             gregorio_character *current_character);
+void gregorio_insert_style_before(unsigned char type, unsigned char style,
+        gregorio_character *current_character);
 
 void gregorio_insert_char_after(grewchar c,
-                                gregorio_character **current_character);
+        gregorio_character **current_character);
 
 void gregorio_rebuild_characters(gregorio_character **param_character,
-                                 char center_is_determined,
-                                 gregorio_lyric_centering centering_scheme,
-                                 bool skip_initial);
+        gregorio_center_determination center_is_determined,
+        gregorio_lyric_centering centering_scheme, bool skip_initial);
 
 void gregorio_rebuild_first_syllable(gregorio_character **param_character,
-                                     bool separate_initial);
+        bool separate_initial);
 
 #endif

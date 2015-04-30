@@ -66,7 +66,7 @@ int gregorio_is_vowel(grewchar letter)
  */
 static inline void
 verb_or_sp(gregorio_character **ptr_character, grestyle_style style,
-           FILE *f, void (*function) (FILE *, grewchar *))
+        FILE *f, void (*function) (FILE *, grewchar *))
 {
     int i, j;
     grewchar *text;
@@ -80,7 +80,7 @@ verb_or_sp(gregorio_character **ptr_character, grestyle_style style,
     begin_character = current_character;
     while (current_character) {
         if (current_character->cos.s.type == ST_T_END
-            && current_character->cos.s.style == style) {
+                && current_character->cos.s.style == style) {
             break;
         } else {
             if (current_character->is_character) {
@@ -120,11 +120,11 @@ verb_or_sp(gregorio_character **ptr_character, grestyle_style style,
  */
 void
 gregorio_write_text(char type, gregorio_character *current_character,
-                    FILE *f, void (*printverb) (FILE *, grewchar *),
-                    void (*printchar) (FILE *, grewchar),
-                    void (*begin) (FILE *, grestyle_style),
-                    void (*end) (FILE *, grestyle_style),
-                    void (*printspchar) (FILE *, grewchar *))
+        FILE *f, void (*printverb) (FILE *, grewchar *),
+        void (*printchar) (FILE *, grewchar),
+        void (*begin) (FILE *, grestyle_style),
+        void (*end) (FILE *, grestyle_style),
+        void (*printspchar) (FILE *, grewchar *))
 {
     grewchar *text;
     gregorio_character *begin_character;
@@ -143,19 +143,19 @@ gregorio_write_text(char type, gregorio_character *current_character,
                     break;
                 case ST_SPECIAL_CHAR:
                     verb_or_sp(&current_character, ST_SPECIAL_CHAR, f,
-                               printspchar);
+                            printspchar);
                     break;
                 case ST_INITIAL:
                     if (type == SKIP_FIRST_LETTER) {
                         while (current_character) {
                             if (!current_character->is_character
-                                && current_character->cos.s.type == ST_T_END
-                                && current_character->cos.s.style == ST_INITIAL)
-                            {
+                                    && current_character->cos.s.type == ST_T_END
+                                    && current_character->cos.s.style ==
+                                    ST_INITIAL) {
                                 break;
                             }
                             current_character =
-                                current_character->next_character;
+                                    current_character->next_character;
                         }
                     } else {
                         begin(f, ST_INITIAL);
@@ -178,12 +178,12 @@ gregorio_write_text(char type, gregorio_character *current_character,
 // between the styles ST_INITIAL
 void
 gregorio_write_initial(gregorio_character *current_character,
-                       FILE *f, void (*printverb) (FILE *,
-                                                   grewchar *),
-                       void (*printchar) (FILE *, grewchar),
-                       void (*begin) (FILE *, grestyle_style),
-                       void (*end) (FILE *, grestyle_style),
-                       void (*printspchar) (FILE *, grewchar *))
+        FILE *f, void (*printverb) (FILE *,
+                grewchar *),
+        void (*printchar) (FILE *, grewchar),
+        void (*begin) (FILE *, grestyle_style),
+        void (*end) (FILE *, grestyle_style),
+        void (*printspchar) (FILE *, grewchar *))
 {
     grewchar *text;
     gregorio_character *begin_character;
@@ -191,8 +191,8 @@ gregorio_write_initial(gregorio_character *current_character,
     gregorio_go_to_first_character(&current_character);
     while (current_character) {
         if (!current_character->is_character
-            && current_character->cos.s.type == ST_T_BEGIN
-            && current_character->cos.s.style == ST_INITIAL) {
+                && current_character->cos.s.type == ST_T_BEGIN
+                && current_character->cos.s.style == ST_INITIAL) {
             current_character = current_character->next_character;
             break;
         }
@@ -211,7 +211,7 @@ gregorio_write_initial(gregorio_character *current_character,
                     break;
                 case ST_SPECIAL_CHAR:
                     verb_or_sp(&current_character, ST_SPECIAL_CHAR, f,
-                               printspchar);
+                            printspchar);
                     break;
                 default:
                     begin(f, current_character->cos.s.style);
@@ -241,7 +241,7 @@ gregorio_character *gregorio_first_text(gregorio_score *score)
     gregorio_syllable *current_syllable;
     if (!score || !score->first_syllable) {
         gregorio_message(_("unable to find the first letter of the score"),
-                         "gregorio_first_text", ERROR, 0);
+                "gregorio_first_text", ERROR, 0);
         return NULL;
     }
     current_syllable = score->first_syllable;
@@ -253,7 +253,7 @@ gregorio_character *gregorio_first_text(gregorio_score *score)
     }
 
     gregorio_message(_("unable to find the first letter of the score"),
-                     "gregorio_first_text", ERROR, 0);
+            "gregorio_first_text", ERROR, 0);
     return NULL;
 }
 
@@ -265,7 +265,7 @@ grewchar gregorio_first_letter(gregorio_score *score)
     gregorio_character *current_character;
     if (!score || !score->first_syllable) {
         gregorio_message(_("unable to find the first letter of the score"),
-                         "gregorio_first_letter", ERROR, 0);
+                "gregorio_first_letter", ERROR, 0);
         return L'\0';
     }
     current_syllable = score->first_syllable;
@@ -281,7 +281,7 @@ grewchar gregorio_first_letter(gregorio_score *score)
     }
 
     gregorio_message(_("unable to find the first letter of the score"),
-                     "gregorio_first_letter", ERROR, 0);
+            "gregorio_first_letter", ERROR, 0);
     return L'\0';
 }
 
@@ -405,11 +405,11 @@ void gregorio_suppress_this_character(gregorio_character *to_suppress)
     }
     if (to_suppress->previous_character) {
         to_suppress->previous_character->next_character =
-            to_suppress->next_character;
+                to_suppress->next_character;
     }
     if (to_suppress->next_character) {
         to_suppress->next_character->previous_character =
-            to_suppress->previous_character;
+                to_suppress->previous_character;
     }
     free(to_suppress);
 }
@@ -424,11 +424,11 @@ void gregorio_suppress_this_character(gregorio_character *to_suppress)
  */
 
 static inline void close_style(gregorio_character *current_character,
-                               det_style *current_style)
+        det_style *current_style)
 {
     if (!current_character->previous_character->is_character
-        && current_character->previous_character->cos.s.style ==
-        current_style->style) {
+            && current_character->previous_character->cos.s.style ==
+            current_style->style) {
         /*
          * we suppose that there is a previous_character, because there is a
          * current_style
@@ -436,7 +436,7 @@ static inline void close_style(gregorio_character *current_character,
         gregorio_suppress_this_character(current_character->previous_character);
     } else {
         gregorio_insert_style_before(ST_T_END, current_style->style,
-                                     current_character);
+                current_character);
     }
 }
 
@@ -449,8 +449,7 @@ static inline void close_style(gregorio_character *current_character,
 
 // type is ST_CENTER or ST_FORCED_CENTER
 static inline void end_center(grestyle_style type,
-                              gregorio_character *current_character,
-                              det_style **ptr_style)
+        gregorio_character *current_character, det_style **ptr_style)
 {
     det_style *current_style;
     current_style = *ptr_style;
@@ -466,7 +465,7 @@ static inline void end_center(grestyle_style type,
     gregorio_insert_style_before(ST_T_END, type, current_character);
     while (current_style) {
         gregorio_insert_style_before(ST_T_BEGIN, current_style->style,
-                                     current_character);
+                current_character);
         if (current_style->previous_style) {
             current_style = current_style->previous_style;
         } else {
@@ -482,8 +481,7 @@ static inline void end_center(grestyle_style type,
  */
 
 static inline void begin_center(grestyle_style type,
-                                gregorio_character *current_character,
-                                det_style **ptr_style)
+        gregorio_character *current_character, det_style **ptr_style)
 {
     det_style *current_style;
     current_style = *ptr_style;
@@ -499,7 +497,7 @@ static inline void begin_center(grestyle_style type,
     gregorio_insert_style_before(ST_T_BEGIN, type, current_character);
     while (current_style) {
         gregorio_insert_style_before(ST_T_BEGIN, current_style->style,
-                                     current_character);
+                current_character);
         if (current_style->previous_style) {
             current_style = current_style->previous_style;
         } else {
@@ -567,10 +565,10 @@ static inline bool _suppress_char_and_end_c(gregorio_character **ptr_character)
 
 void
 gregorio_insert_style_before(unsigned char type, unsigned char style,
-                             gregorio_character *current_character)
+        gregorio_character *current_character)
 {
     gregorio_character *element =
-        (gregorio_character *) malloc(sizeof(gregorio_character));
+            (gregorio_character *) malloc(sizeof(gregorio_character));
     element->is_character = 0;
     element->cos.s.type = type;
     element->cos.s.style = style;
@@ -592,10 +590,10 @@ gregorio_insert_style_before(unsigned char type, unsigned char style,
 
 void
 gregorio_insert_style_after(unsigned char type, unsigned char style,
-                            gregorio_character **current_character)
+        gregorio_character **current_character)
 {
     gregorio_character *element =
-        (gregorio_character *) malloc(sizeof(gregorio_character));
+            (gregorio_character *) malloc(sizeof(gregorio_character));
     element->is_character = 0;
     element->cos.s.type = type;
     element->cos.s.style = style;
@@ -612,7 +610,7 @@ void
 gregorio_insert_char_after(grewchar c, gregorio_character **current_character)
 {
     gregorio_character *element =
-        (gregorio_character *) malloc(sizeof(gregorio_character));
+            (gregorio_character *) malloc(sizeof(gregorio_character));
     element->is_character = 1;
     element->cos.character = c;
     element->next_character = (*current_character)->next_character;
@@ -640,11 +638,11 @@ void gregorio_suppress_current_character(gregorio_character **current_character)
     thischaracter = *current_character;
     if ((*current_character)->previous_character) {
         (*current_character)->previous_character->next_character =
-            (*current_character)->next_character;
+                (*current_character)->next_character;
     }
     if ((*current_character)->next_character) {
         (*current_character)->next_character->previous_character =
-            (*current_character)->previous_character;
+                (*current_character)->previous_character;
     }
     (*current_character) = (*current_character)->next_character;
     free(thischaracter);
@@ -660,13 +658,13 @@ bool gregorio_go_to_end_initial(gregorio_character **param_character)
     gregorio_go_to_first_character(&current_character);
     // skip past any initial
     if (!current_character->is_character
-        && current_character->cos.s.type == ST_T_BEGIN
-        && current_character->cos.s.style == ST_INITIAL) {
+            && current_character->cos.s.type == ST_T_BEGIN
+            && current_character->cos.s.style == ST_INITIAL) {
         has_initial = true;
         while (current_character) {
             if (!current_character->is_character
-                && current_character->cos.s.type == ST_T_END
-                && current_character->cos.s.style == ST_INITIAL) {
+                    && current_character->cos.s.type == ST_T_END
+                    && current_character->cos.s.style == ST_INITIAL) {
                 break;
             }
             current_character = current_character->next_character;
@@ -698,11 +696,9 @@ bool gregorio_go_to_end_initial(gregorio_character **param_character)
  * 
  */
 
-void
-gregorio_rebuild_characters(gregorio_character **param_character,
-                            char center_is_determined,
-                            gregorio_lyric_centering centering_scheme,
-                            bool skip_initial)
+void gregorio_rebuild_characters(gregorio_character **param_character,
+        gregorio_center_determination center_is_determined,
+        gregorio_lyric_centering centering_scheme, bool skip_initial)
 {
     // a det_style, to walk through the list
     det_style *current_style = NULL;
@@ -720,10 +716,10 @@ gregorio_rebuild_characters(gregorio_character **param_character,
         if (!current_character->next_character) {
             // nothing else to rebuild, but the initial needs to be ST_CENTER
             gregorio_insert_style_after(ST_T_END, ST_CENTER,
-                                        &current_character);
+                    &current_character);
             gregorio_go_to_first_character(&current_character);
             gregorio_insert_style_before(ST_T_BEGIN, ST_CENTER,
-                                        current_character);
+                    current_character);
             gregorio_go_to_first_character(&current_character);
             (*param_character) = current_character;
             return;
@@ -757,10 +753,10 @@ gregorio_rebuild_characters(gregorio_character **param_character,
             // would be DETERMINING_MIDDLE). The current_character is the
             // first vowel, so we start the center here. 
             if (!center_is_determined
-                && gregorio_is_vowel(current_character->cos.character)) {
+                    && gregorio_is_vowel(current_character->cos.character)) {
                 if (current_character->cos.character == L'i'
-                    || current_character->cos.character == L'I'
-                    || current_character->cos.character == L'u') {
+                        || current_character->cos.character == L'I'
+                        || current_character->cos.character == L'u') {
                     // did you really think it would be that easy?... we have
                     // to deal with iota and digamma, that are not aligned the
                     // same way... So if the current character is i or u, we
@@ -768,7 +764,7 @@ gregorio_rebuild_characters(gregorio_character **param_character,
                     // it is the case we just pass, else we start the center
                     // there.
                     gregorio_character *temp =
-                        current_character->next_character;
+                            current_character->next_character;
                     while (temp) {
                         if (temp->is_character) {
                             if (gregorio_is_vowel(temp->cos.character)) {
@@ -796,7 +792,7 @@ gregorio_rebuild_characters(gregorio_character **param_character,
             // encounter something that is not a vowel, so the center ends
             // there.
             if (center_is_determined == CENTER_DETERMINING_MIDDLE
-                && !gregorio_is_vowel(current_character->cos.character)) {
+                    && !gregorio_is_vowel(current_character->cos.character)) {
                 end_center(center_type, current_character, &current_style);
                 center_is_determined = CENTER_FULLY_DETERMINED;
             }
@@ -807,13 +803,13 @@ gregorio_rebuild_characters(gregorio_character **param_character,
         // there starts the second part of the function that deals with the
         // styles characters
         if (current_character->cos.s.type == ST_T_BEGIN
-            && current_character->cos.s.style != ST_CENTER
-            && current_character->cos.s.style != ST_FORCED_CENTER) {
+                && current_character->cos.s.style != ST_CENTER
+                && current_character->cos.s.style != ST_FORCED_CENTER) {
             // first, if it it the beginning of a style, which is not center.
             // We check if the style is not already in the stack. If it is the
             // case, we suppress the character and pass (with the good macro)
             while (current_style
-                   && current_style->style != current_character->cos.s.style) {
+                    && current_style->style != current_character->cos.s.style) {
                 current_style = current_style->next_style;
             }
             if (current_style) {
@@ -823,8 +819,9 @@ gregorio_rebuild_characters(gregorio_character **param_character,
             // if we are determining the end of the middle and we have a
             // VERBATIM or SPECIAL_CHAR style, we end the center determination
             if ((current_character->cos.s.style == ST_VERBATIM
-                 || current_character->cos.s.style == ST_SPECIAL_CHAR)
-                && center_is_determined == CENTER_DETERMINING_MIDDLE) {
+                            || current_character->cos.s.style ==
+                            ST_SPECIAL_CHAR)
+                    && center_is_determined == CENTER_DETERMINING_MIDDLE) {
                 end_center(center_type, current_character, &current_style);
                 center_is_determined = CENTER_FULLY_DETERMINED;
             }
@@ -835,12 +832,12 @@ gregorio_rebuild_characters(gregorio_character **param_character,
             // Here we pass all the characters after a verbatim (or special
             // char) beginning, until we find a style (begin or end)
             if (current_character->cos.s.style == ST_VERBATIM
-                || current_character->cos.s.style == ST_SPECIAL_CHAR) {
+                    || current_character->cos.s.style == ST_SPECIAL_CHAR) {
                 if (current_character->next_character) {
                     current_character = current_character->next_character;
                 }
                 while (current_character->next_character
-                       && current_character->is_character) {
+                        && current_character->is_character) {
                     current_character = current_character->next_character;
                 }
             } else {
@@ -849,8 +846,9 @@ gregorio_rebuild_characters(gregorio_character **param_character,
         }
         // if it is a beginning of a center, we call the good macro and end.
         if (current_character->cos.s.type == ST_T_BEGIN
-            && (current_character->cos.s.style == ST_CENTER
-                || current_character->cos.s.style == ST_FORCED_CENTER)) {
+                && (current_character->cos.s.style == ST_CENTER
+                        || current_character->cos.s.style ==
+                        ST_FORCED_CENTER)) {
             if (current_character->cos.s.style == ST_CENTER) {
                 center_type = ST_CENTER;
             } else {
@@ -865,8 +863,8 @@ gregorio_rebuild_characters(gregorio_character **param_character,
             end_c();
         }
         if (current_character->cos.s.type == ST_T_END
-            && current_character->cos.s.style != ST_CENTER
-            && current_character->cos.s.style != ST_FORCED_CENTER) {
+                && current_character->cos.s.style != ST_CENTER
+                && current_character->cos.s.style != ST_FORCED_CENTER) {
             // the case of the end of a style (the most complex). First, we
             // have to see if the style is in the stack. If there is no stack,
             // we just suppress and continue.
@@ -878,8 +876,8 @@ gregorio_rebuild_characters(gregorio_character **param_character,
             // to the character that we are trating (still there ?)
             if (current_style->style != current_character->cos.s.style) {
                 while (current_style->next_style
-                       && current_style->next_style->style !=
-                       current_character->cos.s.style) {
+                        && current_style->next_style->style !=
+                        current_character->cos.s.style) {
                     current_style = current_style->next_style;
                 }
                 if (current_style->next_style) {
@@ -888,8 +886,7 @@ gregorio_rebuild_characters(gregorio_character **param_character,
                         // if there are styles before in the stack, we close
                         // them
                         gregorio_insert_style_before(ST_T_END,
-                                                     current_style->style,
-                                                     current_character);
+                                current_style->style, current_character);
                         current_style = current_style->previous_style;
                     }
                     current_style = first_style;
@@ -897,8 +894,7 @@ gregorio_rebuild_characters(gregorio_character **param_character,
                     // and then we reopen them
                     while (current_style && current_style->style != this_style) {
                         gregorio_insert_style_after(ST_T_BEGIN,
-                                                    current_style->style,
-                                                    &current_character);
+                                current_style->style, &current_character);
                         current_style = current_style->next_style;
                     }
                     // we delete the style in the stack
@@ -926,7 +922,7 @@ gregorio_rebuild_characters(gregorio_character **param_character,
     // we terminate all the styles that are still in the stack
     while (current_style) {
         gregorio_insert_style_after(ST_T_END, current_style->style,
-                                    &current_character);
+                &current_character);
         current_style = current_style->next_style;
     }
     // current_character is at the end of the list now, so if we havn't closed
@@ -972,7 +968,7 @@ gregorio_rebuild_characters(gregorio_character **param_character,
  * @param param_character is a pointer to the (pointer to the) first character, it will be modified so that it points to the new first character.
  */
 void gregorio_rebuild_first_syllable(gregorio_character **param_character,
-                                     bool separate_initial)
+        bool separate_initial)
 {
     // the current_character
     gregorio_character *current_character = *param_character;
@@ -999,7 +995,7 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
                 // we have to do it in case param_character (the first
                 // character) is a ST_CENTER beginning
                 if (!current_character->previous_character
-                    && current_character == *param_character) {
+                        && current_character == *param_character) {
                     *param_character = (*param_character)->next_character;
                 }
                 gregorio_suppress_current_character(&current_character);
@@ -1014,25 +1010,25 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
     // now we are going to place the two INITIAL styles (begin and end)
     while (current_character) {
         if (!current_character->is_character
-            && current_character->cos.s.style == ST_FORCED_CENTER) {
+                && current_character->cos.s.style == ST_FORCED_CENTER) {
             // we don't touch anything after a FORCED_CENTER, so we put an
             // empty INITIAL style just before
             current_character = first_character;
             gregorio_insert_style_before(ST_T_BEGIN, ST_INITIAL,
-                                         current_character);
+                    current_character);
             current_character = current_character->previous_character;
             gregorio_insert_style_after(ST_T_END, ST_INITIAL,
-                                        &current_character);
+                    &current_character);
             break;
         }
         // this if is a hack to make gregorio consider verbatim blocks and
         // special chars like one block, not a sequence of letters
         if (!current_character->is_character
-            && current_character->cos.s.type == ST_T_BEGIN
-            && (current_character->cos.s.style == ST_VERBATIM
-                || current_character->cos.s.style == ST_SPECIAL_CHAR)) {
+                && current_character->cos.s.type == ST_T_BEGIN
+                && (current_character->cos.s.style == ST_VERBATIM
+                        || current_character->cos.s.style == ST_SPECIAL_CHAR)) {
             gregorio_insert_style_before(ST_T_BEGIN, ST_INITIAL,
-                                         current_character);
+                    current_character);
             start_of_special = current_character->previous_character;
             // ... which is now the begin-initial style
 
@@ -1040,11 +1036,11 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
                 current_character = current_character->next_character;
             }
             while (current_character->next_character
-                   && current_character->is_character) {
+                    && current_character->is_character) {
                 current_character = current_character->next_character;
             }
             gregorio_insert_style_after(ST_T_END, ST_INITIAL,
-                                        &current_character);
+                    &current_character);
             if (separate_initial && start_of_special->previous_character) {
                 // we need to move the initial to the front
                 start_of_special->previous_character->next_character =
@@ -1055,8 +1051,8 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
                 current_character->next_character = first_character;
                 first_character->previous_character = start_of_special;
 
-                gregorio_message(
-                        _("Any style applied to the initial will be ignored."),
+                gregorio_message(_
+                        ("Any style applied to the initial will be ignored."),
                         NULL, WARNING, 0);
             }
             break;
@@ -1072,14 +1068,14 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
                 current_character->next_character = first_character;
                 first_character->previous_character = current_character;
 
-                gregorio_message(
-                        _("Any style applied to the initial will be ignored."),
+                gregorio_message(_
+                        ("Any style applied to the initial will be ignored."),
                         NULL, WARNING, 0);
             }
             gregorio_insert_style_before(ST_T_BEGIN, ST_INITIAL,
-                                         current_character);
+                    current_character);
             gregorio_insert_style_after(ST_T_END, ST_INITIAL,
-                                        &current_character);
+                    &current_character);
             break;
         }
         current_character = current_character->next_character;

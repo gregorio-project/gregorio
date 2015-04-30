@@ -80,9 +80,8 @@ int number_of_voices;
 int voice;
 // can't remember what it is...
 int clef;
-// a char that will take some useful values see comments on text to understand
-// it
-char center_is_determined;
+// see comments on text to understand this
+gregorio_center_determination center_is_determined;
 // current_key is... the current key... updated by each notes determination
 // (for key changes)
 int current_key = DEFAULT_KEY;
@@ -94,7 +93,7 @@ void reajust_voice_infos(gregorio_voice_info *voice_info, int final_count);
 void end_definitions();
 void suppress_useless_styles();
 void rebuild_characters(gregorio_character **param_character,
-                        char center_is_determined,
+                        gregorio_center_determination center_is_determined,
                         gregorio_lyric_centering centering_scheme);
 void close_syllable();
 void gregorio_gabc_add_text(char *mbcharacters);
@@ -480,7 +479,7 @@ gregorio_set_translation_center_beginning(gregorio_syllable *current_syllable)
 }
 
 void rebuild_characters(gregorio_character **param_character,
-                        char center_is_determined,
+                        gregorio_center_determination center_is_determined,
                         gregorio_lyric_centering centering_scheme)
 {
     bool has_initial = score->initial_style != NO_INITIAL;
@@ -537,9 +536,8 @@ void start_translation(unsigned char asked_translation_type)
     rebuild_characters(&current_character, center_is_determined,
                        centering_scheme);
     first_text_character = current_character;
-    center_is_determined = CENTER_FULLY_DETERMINED; // the middle letters of
-    // the translation have no
-    // sense
+    // the middle letters of the translation have no sense
+    center_is_determined = CENTER_FULLY_DETERMINED;
     current_character = NULL;
     translation_type = asked_translation_type;
 }
