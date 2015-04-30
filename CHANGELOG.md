@@ -2,34 +2,7 @@
 All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
-## [Unreleased][unreleased]
-### Fixed
-- Handling of the first syllable in gabc is now more consistent with the all other syllables.  This centers the syllable correctly when using latin syllable centering (see [#42](https://github.com/gregorio-project/gregorio/issues/42)) and makes the use of styles less surprising in the first syllable (see [#135](https://github.com/gregorio-project/gregorio/issues/135)).
-
-### Changed
-- The `O` modifier in gabc now has expanded uses beyond the salicus `(egOi)`.  A stemmed oriscus will appear on a lone pitch `(gO)` or a followed by a lower pitch `(gOe)` (see [#76](https://github.com/gregorio-project/gregorio/issues/76)).  A virga strata will appear on the second note of two ascending pitches `(giO)`.
-- With thanks to *Abbazia Mater Ecclesiae (IT)* for drawing the new shapes, the strophicus in greciliae has changed to better differentiate from the punctum inclinatum.  Use `\grechangeglyph{Stropha}{greciliae}{.caeciliae}\grechangeglyph{StrophaAucta}{greciliae}{.caeciliae}` if you prefer the old shape.
-- Default initial sizes have been chosen so that they are more appropriate when an infinitely scaling font is loaded.  LaTeX will make an automatic substitution of the closest avaialble size when such a font is not used.
-- Porrectus deminutus and torculus resupinus deminutus glyphs have been updated to more closely match the current Solesmes books (see [#143](https://github.com/gregorio-project/gregorio/issues/143)).  If you prefer the old forms, use `\grechangeglyph{Porrectus*}{*}{.alt}\grechangeglyph{TorculusResupinus*}{*}{.alt}`.
-- New (much) improved drawings for letter bars (for Versicle, Antiphon, etc.). You must fine-tune them if you use a text font other than Linux Libertine, see [UPGRADE.md](upgrade guide) for details.
-- The default extension `gregorio` (the executable program) will use when it produces GregorioTeX files has been changed from `.tex` to `.gtex`.  Any calls to `\includescore` that use the old extension should be changed appropriately.
-
-### Added
-- The ability to substitute an arbitrary glyph for one used by GregorioTeX.  This adds five macros: `\grechangeglyph` to make a score glyph substitution, `\greresetglyph` to remove a score glyph substitution, `\gredefvariant` for (re-)defining an arbitrary score glyph, `\gredefsymbol` for (re-)defining an arbitrary non-score glyph that scales with the text, and `\gredefsizedsymbol` for (re-)defining an arbitary non-score glyph that requires a point-size to be specified.  See GregorioRef.pdf for full details.
-- Support for `lualatex -recorder`.  Autocompiled gabc and gtex files will now be properly recorded so that programs like `latexmk -recorder` can detect the need to rebuild the PDF when a gabc file changes.
-
-### Removed
-- GregorioXML and OpusTeX output
-- Support for the font Gregoria.
-- Chironomy markings (gabc `u` and `U`), which were not working correctly in the first place.
-- `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, supplanted by the new glyph system, see [UPGRADE.md](upgrade guide).
-
-## [Unreleased][ureleased]
-### Fixed
-- Torculus followed by a non-liquescent note is now parsed correctly (see [#284](https://github.com/gregorio-project/gregorio/issues/284).
-
 ## [3.0.0-rc2] - 2015-04-14
-### Changed
 - Clarified post installation options for Windows installer.  What was the "Install Fonts" option is now labeled to indicate that this also adds GregorioTeX files to the texmf tree.
 - `\grechangedim` now checks to make sure it only operates on existing distances and doesn't create a new one.
 
@@ -179,3 +152,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## 0.2.2 - 2007-06-14
 ### Added
 - adding styles and centering in text
+
+[3.0.0-rc1]: https://github.com/gregorio-project/gregorio/compare/v2.4.2...v3.0.0-rc1
+[3.0.0-rc2]: https://github.com/gregorio-project/gregorio/compare/v3.0.0-rc1...v3.0.0-rc2

@@ -2,7 +2,7 @@ Source: gregorio
 Section: x11
 Priority: optional
 Maintainer: Elie Roux <elie.roux@telecom-bretagne.eu>
-Build-Depends: dpkg-dev (>= 1.16.2), debhelper (>= 9), dh-autoreconf, autotools-dev, libxml2-dev, flex, bison, docbook-to-man, xsltproc, tex-common, docbook-xsl, autopoint, python-fontforge
+Build-Depends: dpkg-dev (>= 1.16.2), debhelper (>= 9), dh-autoreconf, autotools-dev, libxml2-dev, flex, bison, docbook-to-man, xsltproc, libltdl7-dev, tex-common, docbook-xsl, autopoint, python-fontforge
 Standards-Version: 3.9.6
 Homepage: http://gregorio-project.github.io/
 Vcs-Browser: https://github.com/gregorio-project/gregorio/

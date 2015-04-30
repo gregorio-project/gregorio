@@ -1,5 +1,4 @@
 *~
-*.swp
 
 # Object files
 *.o
@@ -95,15 +94,14 @@ auto/
 doc/_minted-*
 fonts/*.ttf
 *.gz
-*.bz2
 *.zip
-src/gabc/gabc-score-determination-y*
-src/gabc/gabc-score-determination-l*
-src/gabc/gabc-notes-determination-l*
+plugins/gabc/gabc-score-determination-y*
+plugins/gabc/gabc-score-determination-l*
+plugins/gabc/gabc-notes-determination-l*
 windows/Ouput
 *.dirstamp
-config_.h
-config_.h.in
+config.h
+config.h.in
 stamp-h1
 Makevars.template
 macosx/build

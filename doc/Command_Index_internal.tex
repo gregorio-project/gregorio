@@ -7,20 +7,20 @@ process the commands listed above.  They should not appear in any user
 document and are listed here for programmer documentation purposes
 only.
 
-\macroname{\textbackslash gre@calculate@constantglyphraise}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@constantglyphraise}{gregoriotex-spaces.tex}
 %\verb=\gre@calculateconstantglyphraise=%tex.tex
 Macro to caluclate \verb=\gre@constantglyphraise=
 
-\macroname{\textbackslash gre@addtranslationspace}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@addtranslationspace}{gregoriotex-spaces.tex}
 %\verb=\gre@addtranslationspace=%tex.tex
 Macro to tell Gregorio to set space for the translation.
 
-\macroname{\textbackslash gre@removetranslationspace}{}{gregoriotexspaces.tex}
+\macroname{\textbackslash gre@removetranslationspace}{gregoriotexspaces.tex}
 %\verb=\gre@removetranslationspace=%tex.tex
 Macro to tell Gregorio to remove the space allocated to the translation.
 
 
-\macroname{\textbackslash gre@calculate@additionalspaces}{\#1\#2}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@additionalspaces\#1\#2}{gregoriotex-spaces.tex}
 %\verb=\gre@updateadditionalspaces#1#2=%tex.tex
 Macro which calculates \verb=\gre@additionalbottomspace= and\\
 \verb=\gre@additionaltopspace=
@@ -37,7 +37,7 @@ Macro which calculates \verb=\gre@additionalbottomspace= and\\
   & 4 & note below 0th line (position a) with vertical episemus
  \end{argtable}
 
-\macroname{\textbackslash gre@calculate@textaligncenter}{\#1\#2\#3}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@textaligncenter\#1\#2\#3}{gregoriotex-spaces.tex}
 %\verb=\gre@findtextaligncenter#1#2#3=%tex.tex
 Macro for calculating \verb=\gre@textaligncenter=.
 
@@ -48,42 +48,42 @@ Macro for calculating \verb=\gre@textaligncenter=.
       & 1 & Calculation is being performed for the next syllable.\\
 \end{argtable}
 
-\macroname{\textbackslash gre@calculate@aboveinitialraise}{}{gregoriotex.tex}
+\macroname{\textbackslash gre@calculate@aboveinitialraise}{gregoriotex.tex}
 %\verb=\gre@setaboveinitialrais=%tex.tex
 Macro to give \verb=\gre@aboveinitialfirstraise= and\\
 \verb=\gre@aboveinitialsecondraise= their working values.
 
-\macroname{\textbackslash gre@englishcentering}{}{gregoriotex-syllable.tex}
+\macroname{\textbackslash gre@englishcentering}{gregoriotex-syllable.tex}
 Count to track if we are using english centering scheme (1), or not (0).
 
-\macroname{\textbackslash gre@calculate@textlower}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@textlower}{gregoriotex-spaces.tex}
 Calculates the default value of \texttt{textlower}.  Default is \texttt{spacebeneathtext}.
 
-\macroname{\textbackslash gre@calculate@linewidth}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@linewidth}{gregoriotex-spaces.tex}
 Calculates the default line width.  Default is the width of the printable space (\verb=\hsize=).
 
-\macroname{\textbackslash gre@calculate@stafflinewidth}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@stafflinewidth}{gregoriotex-spaces.tex}
 Calculates the default width of the staff lines.  Default is \texttt{linewidth}.
 
-\macroname{\textbackslash gre@calculate@stafflineheight}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@stafflineheight}{gregoriotex-spaces.tex}
 Calculates the height (thickness) of the staff lines.  Dependent on \texttt{stafflineheightfactor} and \texttt{grefactor}.
 
-\macroname{\textbackslash gre@calculate@interstafflinespace}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@interstafflinespace}{gregoriotex-spaces.tex}
 Calculates the distance between the staff lines.  Dependent on \texttt{stafflineheight} and \texttt{grefactor}
 
-\macroname{\textbackslash gre@calculate@stafflinediff}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@stafflinediff}{gregoriotex-spaces.tex}
 Calculates a correction factor for when the staff lines are not their default thickness.  Dependent on \texttt{stafflineheight} and \texttt{grefactor}.
 
-\macroname{\textbackslash gre@calculate@staffheight}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@staffheight}{gregoriotex-spaces.tex}
 Calculates the total height of the staff.  Dependent on \texttt{stafflineheight} and \texttt{interstafflinespace}.
 
-\macroname{\textbackslash gre@calculate@constantglyphraise}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@constantglyphraise}{gregoriotex-spaces.tex}
 Calculates the baseline correction for the glyphs.  Dependent on \texttt{grefactor}, \texttt{additionalbottomspace}, \texttt{spacebeneathtext}, \texttt{spacelinestext}, \texttt{interstafflinespace}, \texttt{stafflineheight}, \texttt{currenttranslationheight}, and \texttt{stafflinediff}.
 
-\macroname{\textbackslash gre@computespaces}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@computespaces}{gregoriotex-spaces.tex}
 Aggregates all of the global distance calculations and calls them in the order needed to respect dependencies.
 
-\macroname{\textbackslash gre@calculate@glyphraisevalue}{\#1\#2}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@glyphraisevalue\#1\#2}{gregoriotex-spaces.tex}
 Calculates the raise values for a glyph (glyphraisevalue and addedraisevalue) based on where it is to be placed and what kind of a glyph it is.  This is a time of use calculation.
 
 \begin{argtable}
@@ -103,13 +103,13 @@ Calculates the raise values for a glyph (glyphraisevalue and addedraisevalue) ba
   & 13 & case of the brace above the bars
 \end{argtable}
 
-\macroname{\textbackslash gre@stafflinefactor}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@stafflinefactor}{gregoriotex-spaces.tex}
 A number indicating the thickness of the staff lines.
 
-\macroname{\textbackslash gre@scale@stafflinefactor}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@scale@stafflinefactor}{gregoriotex-spaces.tex}
 Flag indicating whether the stafflinefactor should scale with changes of grefactor (1), or not (0).
 
-\macroname{\textbackslash gre@calculate@additionalspaces}{\#1\#2}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@additionalspaces\#1\#2}{gregoriotex-spaces.tex}
 Calculates the extra spaces above and below the staff lines.  This is a time of use calculation.
 
 \begin{argtable}
@@ -124,7 +124,7 @@ Calculates the extra spaces above and below the staff lines.  This is a time of 
   & 4 & there is a note below the 0th line with a vertical episemus attached
 \end{argtable}
 
-\macroname{\textbackslash gre@calculate@textaligncenter}{\#1\#2\#3}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@textaligncenter\#1\#2\#3}{gregoriotex-spaces.tex}
 Macro to calculate the distance from the beginning of the text of a syllable to its alignment point (the center of the vowel for Latin centering, the center of the syllable for English centering).  This is a time of use calculation.
 
 \begin{argtable}
@@ -134,7 +134,7 @@ Macro to calculate the distance from the beginning of the text of a syllable to 
   & 1 & perform this calculation for the next syllable
 \end{argtable}
 
-\macroname{\textbackslash gre@calculate@enddifference}{\#1\#2\#3\#4\#5}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@enddifference\#1\#2\#3\#4\#5}{gregoriotex-spaces.tex}
 Calculates the difference between the end of the notes and the end of the syllable text.  Also stores the value for the previous syllable if needed.  This is a time of use calculation.
 
 \begin{argtable}
@@ -146,7 +146,7 @@ Calculates the difference between the end of the notes and the end of the syllab
   & 1 & save the value for the previous syllable before calculating the new value
 \end{argtable}
 
-\macroname{\textbackslash gre@changeonedimenfactor}{\#1\#2\#3}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@changeonedimenfactor\#1\#2\#3}{gregoriotex-spaces.tex}
 Change the scale of a single distance from one factor to another.
 
 \begin{argtable}
@@ -155,7 +155,7 @@ Change the scale of a single distance from one factor to another.
   \#3 & integer & the factor the distance is to be put into\\
 \end{argtable}
 
-\macroname{\textbackslash gre@changedimenfactor}{\#1\#2}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@changedimenfactor\#1\#2}{gregoriotex-spaces.tex}
 Rescales all the distances (and stafflinefactor) which are supposed to scale with a change in factor.
 
 \begin{argtable}
@@ -163,7 +163,7 @@ Rescales all the distances (and stafflinefactor) which are supposed to scale wit
   \#2 & integer & the factor the distance is to be put into\\
 \end{argtable}
 
-\macroname{\textbackslash gre@calculate@nextbegindifference}{\#1\#2\#3\#4}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@nextbegindifference\#1\#2\#3\#4}{gregoriotex-spaces.tex}
 Macro to calculate \texttt{nextbegindifference}.
 
 \begin{argtable}
@@ -175,42 +175,42 @@ Macro to calculate \texttt{nextbegindifference}.
   & $40 <$ integer $< 59$ & Same as below 20 except there is a natural before the notes.  Subtract 40 to get the type of notes alignment.
 \end{argtable}
 
-\macroname{\textbackslash gre@tempdimcount}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@tempdimcount}{gregoriotex-spaces.tex}
 Temporary count used in calculations.
 
-\macroname{\textbackslash ifchecklength}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash ifchecklength}{gregoriotex-spaces.tex}
 Boolean flag used in \verb=\gresetdim= to indicate if we are attempting to set a rubber length.
 
-\macroname{\textbackslash ifbadlength}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash ifbadlength}{gregoriotex-spaces.tex}
 Boolean flag used in \verb=\gresetdim= to indicate that we are attempting to assign a rubber length to a distance which cannot accept a rubber value.
 
-\macroname{\textbackslash ifrubber}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash ifrubber}{gregoriotex-spaces.tex}
 Boolean flag used in \verb=\gre@changeonedimenfactor= to indicate if we are dealing with one of the distances which can accept a rubber length.
 
-\macroname{\textbackslash gre@makein}{\#1}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@makein\#1}{gregoriotex-spaces.tex}
 Strips the decimals and units from a distance.
 
 \begin{argtable}
   \#1 & distance & should be in the form ``[0-9]+.[0-9]+pt''. (\ie the result of applying \verb=\the= to a distance register)
 \end{argtable}
 
-\macroname{\textbackslash gre@makenum}{\#1}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@makenum\#1}{gregoriotex-spaces.tex}
 Strips the units from a distance. 
 
 \begin{argtable}
   \#1 & distance & should be in the form ``[0-9]+.[0-9]+pt''. (\ie the result of applying \verb=\the= to a distance register)
 \end{argtable}
 
-\macroname{\textbackslash gre@unitfactor}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@unitfactor}{gregoriotex-spaces.tex}
 Temporary count used by \verb=\gre@convertto=.
 
-\macroname{\textbackslash gre@basefactor}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@basefactor}{gregoriotex-spaces.tex}
 Temporary count used by \verb=\gre@convertto=.
 
-\macroname{\textbackslash gre@temp@count@one}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@temp@count@one}{gregoriotex-spaces.tex}
 Temporary count used by \verb=\gre@convertto=.
 
-\macroname{\textbackslash gre@convertto}{\#1\#2}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@convertto\#1\#2}{gregoriotex-spaces.tex}
 Macro which converts a distance into a particular set of units.  Result is placed in \verb=\gre@converted= as a string.
 
 \begin{argtable}
@@ -218,10 +218,10 @@ Macro which converts a distance into a particular set of units.  Result is place
   \#2 & distance & Distance to be converted.
 \end{argtable}
 
-\macroname{\textbackslash gre@converted}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@converted}{gregoriotex-spaces.tex}
 Macro holding result of last call to \verb=\gre@convertto=.
 
-\macroname{\textbackslash gre@consistentunits}{\#1\#2}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@consistentunits\#1\#2}{gregoriotex-spaces.tex}
 This function takes a distance and formats it as a string so that its units conform to the pattern set by a string representation of a distance.  Result is placed in \verb=\gre@stringdist=.
 
 \begin{argtable}
@@ -229,13 +229,13 @@ This function takes a distance and formats it as a string so that its units conf
   \#2 & distance & the distance to be adjusted.
 \end{argtable}
 
-\macroname{\textbackslash gre@stringdist}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@stringdist}{gregoriotex-spaces.tex}
 Macro holding result of last call to \verb=\gre@consistentunits=.
 
-\macroname{\textbackslash gre@temp@count@two}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@temp@count@two}{gregoriotex-spaces.tex}
 Temporary count used by \verb=\gre@changedimenfactor=.
 
-\macroname{\textbackslash gre@includescore}{\#1}{gregoriotex.tex}
+\macroname{\textbackslash gre@includescore\#1}{gregoriotex.tex}
 Macro that handles \verb=\includescore= calls when they do not have an
 optional argument.
 
@@ -243,7 +243,7 @@ optional argument.
   \#1 & string & Relative or absolute path to the score.\\
 \end{argtable}
 
-\macroname{\textbackslash gre@includescorewithoption}{[\#1]\#2}{gregoriotex.tex}
+\macroname{\textbackslash gre@includescorewithoption[\#1]\#2}{gregoriotex.tex}
 Macro that handles \verb=\includescore= calls when they have an optional
 argument.
 
@@ -265,141 +265,141 @@ or not (0).
 
 These additional distances are calculated by Gregorio based on the values for the user customizable distances and what may be going on in the score at the time of their use.
 
-\macroname{\textbackslash gre@clefwidth}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@clefwidth}{gregoriotex-spaces.tex}
 %\verb=\gre@clefwidth=%tex-signs.tex
 Width of the clef.
 
-\macroname{\textbackslash gre@tempdimsignwidth}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@tempdimsignwidth}{gregoriotex-spaces.tex}
 %\verb=\gre@tempdimsignwidth=%tex-signs.tex
 Temporary dimension used to calculate placement of signs.
 
-\macroname{gre@tempdimtwo}{}{gregoriotex-spaces.tex}
+\macroname{gre@tempdimtwo}{gregoriotex-spaces.tex}
 %\verb=\gre@tempdimtwo=%tex-signs.tex
 A temporary dimension used in calculations.
 
-\macroname{\textbackslash gre@constantglyphraise}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@constantglyphraise}{gregoriotex-spaces.tex}
 %\verb=\gre@constantglyphraise=%tex.tex
 Dimension representing the space between the 0 of the gregorian fonts and the effective 0 of the TeX score.
 
-\macroname{\textbackslash gre@currenttranslationheight}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@currenttranslationheight}{gregoriotex-spaces.tex}
 %\verb=\gre@currenttranslationheight=%tex.tex
 Dimension representing the space for the translation beneath the text.
 
-\macroname{\textbackslash gre@stafflinewidth}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@stafflinewidth}{gregoriotex-spaces.tex}
 %\verb=\gre@stafflinewidth=%tex.tex
 Dimension representing the width of a line of staff.  Can vary, for
 example, at the first line.
 
-\macroname{\textbackslash gre@linewidth}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@linewidth}{gregoriotex-spaces.tex}
 %\verb=\gre@linewidth=%tex.tex
 Dimension representing the width of the score (including initial).
 
-\macroname{\textbackslash gre@additionalbottomspace}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@additionalbottomspace}{gregoriotex-spaces.tex}
 %\verb=\gre@additionalbottomspace=%tex.tex
 Dimension representing extra space below the staff needed for low notes.
 
-\macroname{\textbackslash gre@additionaltopspace}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@additionaltopspace}{gregoriotex-spaces.tex}
 %\verb=\gre@additionaltopspace=%tex.tex
 Dimension representing extra space above the staff needed for high notes.
 
-\macroname{\textbackslash gre@textlower}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@textlower}{gregoriotex-spaces.tex}
 %\verb=\gre@textlower=%tex.tex
 Dimension representing the height of the separation between the 0th
 line (which is invisible except for notes in the a or b position) and
 the bottom of the text.
 
-\macroname{\textbackslash gre@tempwidth}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@tempwidth}{gregoriotex-spaces.tex}
 %\verb=\gre@tempwidth=%tex.tex
 Dimension representing width of some element.
 
-\macroname{\textbackslash gre@textaligncenter}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@textaligncenter}{gregoriotex-spaces.tex}
 %\verb=\gre@textaligncenter=%tex.tex
 Dimension representing the width from the beginning of the letters in
 a syllable to the middle of the middle letters.  Used for lining up
 neumes and syllables.
 
-\macroname{\textbackslash gre@additionalleftspace}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@additionalleftspace}{gregoriotex-spaces.tex}
 %\verb=\gre@additionalleftspace=%tex.tex
 Dimension representing the additional space that has to be added to
 the localleftbox for a big initial (one taking two lines).
 
-\macroname{\textbackslash gre@initialwidth}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@initialwidth}{gregoriotex-spaces.tex}
 %\verb=\gre@initialwidth=%tex.tex
 Dimension representing the width of the initial (and the space after).
 
-\macroname{\textbackslash gre@aboveinitialfirstraise}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@aboveinitialfirstraise}{gregoriotex-spaces.tex}
 %\verb=\gre@aboveinitialfirstraise=%tex.tex
 Dimension representing the space allocated to the first annotation.
 
-\macroname{\textbackslash gre@aboveinitialsecondraise}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@aboveinitialsecondraise}{gregoriotex-spaces.tex}
 %\verb=\gre@aboveinitialsecondraise=%tex.tex
 Dimension representing the space allocated to the second annotation.
 
-\macroname{\textbackslash gre@currentabovelinestextheight}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@currentabovelinestextheight}{gregoriotex-spaces.tex}
 %\verb=\gre@currentabovelinestextheight=%tex.tex
 Dimension representing the space allocated above the lines for text.	
 
-\macroname{\textbackslash gre@staffheight}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@staffheight}{gregoriotex-spaces.tex}
 The total height of the staff including the width of the lines and the spaces between them.
 
-\macroname{\textbackslash gre@stafflinediff}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@stafflinediff}{gregoriotex-spaces.tex}
 Distance representing the difference between the actual size of the staff lines and the ``standard'' size.
 
-\macroname{\textbackslash gre@stafflineheight}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@stafflineheight}{gregoriotex-spaces.tex}
 The height of the staff line.
 
-\macroname{\textbackslash gre@interstafflinespace}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@interstafflinespace}{gregoriotex-spaces.tex}
 The space between the lines.
 
-\macroname{\textbackslash gre@glyphraisevalue}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@glyphraisevalue}{gregoriotex-spaces.tex}
 The value that a particular glyph must be raised to be set in the correct position.
 
-\macroname{\textbackslash gre@addedraisevalue}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@addedraisevalue}{gregoriotex-spaces.tex}
 The additional raise needed for the vertical episema and the puncta.
 
-\macroname{\textbackslash gre@enddifference}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@enddifference}{gregoriotex-spaces.tex}
 Distance from the end of the notes to the end of the text for the previous syllable.  Positive values when notes go further than text, negative in the other case.
 
-\macroname{\textbackslash gre@previousenddifference}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@previousenddifference}{gregoriotex-spaces.tex}
 Stored value of enddifference prior to the current one.
 
-\macroname{\textbackslash gre@nextbegindifference}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@nextbegindifference}{gregoriotex-spaces.tex}
 The difference between the start of the notes and the start of the text for the next syllable.  Positive when when text begins first, negative in other case.
 
-\macroname{\textbackslash gre@begindifference}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@begindifference}{gregoriotex-spaces.tex}
 The difference between the start of the notes and the start of the text for the current syllable.  Positive when when text begins first, negative in other case.
 
-\macroname{\textbackslash gre@lastglyphwidth}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@lastglyphwidth}{gregoriotex-spaces.tex}
 The width of the last glyph.
 
-\macroname{\textbackslash gre@notesaligncenter}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@notesaligncenter}{gregoriotex-spaces.tex}
 Distance from beginning of notes to their point of alignment.
 
-\macroname{\textbackslash gre@tempdim}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@tempdim}{gregoriotex-spaces.tex}
 Temporary dimension used in calculations.
 
-\macroname{\textbackslash gre@tempdimskip}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@tempdimskip}{gregoriotex-spaces.tex}
 Temporary skip used in calculations.
 
-\macroname{\textbackslash gre@skipone}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@skipone}{gregoriotex-spaces.tex}
 Temporary skip used in calculations.
 
-\macroname{\textbackslash gre@temp}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@temp}{gregoriotex-spaces.tex}
 Temporary skip used in calculations.
 
-\macroname{\textbackslash gre@temp@dimen@one}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@temp@dimen@one}{gregoriotex-spaces.tex}
 Temporary dimension used in calculations.
 
-\macroname{\textbackslash gre@temp@skip@one}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@temp@skip@one}{gregoriotex-spaces.tex}
 Temporary skip used in calculations.
 
-\macroname{\textbackslash gre@unit}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@unit}{gregoriotex-spaces.tex}
 Temporary dimension used by \verb=\gre@convertto=.
 
-\macroname{\textbackslash gre@base}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@base}{gregoriotex-spaces.tex}
 Temporary dimension used by \verb=\gre@convertto=.
 
-\macroname{\textbackslash gre@maxlen}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@maxlen}{gregoriotex-spaces.tex}
 Distance holding the maximum legal length in TeX.
 
 

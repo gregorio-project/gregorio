@@ -1,25 +1,22 @@
 %GregorioTeX file.
+%Copyright (C) 2007-2010 Elie Roux <elie.roux@telecom-bretagne.eu>
 %
-% Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
+%This program is free software: you can redistribute it and/or modify
+%it under the terms of the GNU General Public License as published by
+%the Free Software Foundation, either version 3 of the License, or
+%(at your option) any later version.
 %
-% This file is part of Gregorio.
+%This program is distributed in the hope that it will be useful,
+%but WITHOUT ANY WARRANTY; without even the implied warranty of
+%MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%GNU General Public License for more details.
 %
-% Gregorio is free software: you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-%
-% Gregorio is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
+%You should have received a copy of the GNU General Public License
+%along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 % this file contains definitions of spaces
 
-\gre@declarefileversion{gregoriotex-spaces.tex}{4.0.0-rc1}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-spaces.tex}{3.0.0-rc2}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for tuning penalties
@@ -702,14 +699,14 @@
   \gre@rubberpermit{#1}%
   % figure out our prefix
   \ifrubber%
-    \gre@debugmsg{spacing}{Changing a skip.}
+    \gre@debug{Changing a skip.}
     \def\gre@prefix{skip}%
   \else%
-    \gre@debugmsg{spacing}{Changing a dimen.}
+    \gre@debug{Changing a dimen.}
     \def\gre@prefix{dimen}%
   \fi
   \ifcsname gre@\gre@prefix @#1\endcsname%
-    \gre@debugmsg{spacing}{It does exist.}
+    \gre@debug{It does exist.}
     \gresetdim{#1}{#2}{#3}%
   \else
     \greerror{#1 is not a recognized distance.}
@@ -811,8 +808,8 @@
 \newcount\gre@unitfactor%
 \newcount\gre@basefactor%
 \def\gre@convertto#1#2{%
-  \gre@debugmsg{general}{convertto (#1) (#2)}
-  \gre@debugmsg{ifdim}{ #2 = 0pt}
+  \gre@debug{convertto (#1) (#2)}
+  \gre@debug{ifdim #2 = 0pt}
   \ifdim#2=0pt\relax%
     \edef\gre@converted{0 #1}%
   \else%
@@ -825,13 +822,13 @@
     \ifnum\gre@unitfactor < 0\relax%
       \gre@unitfactor = -\gre@unitfactor%
     \fi%
-    \gre@debugmsg{spacing}{unit: \the\gre@unit ; factor: \the\gre@unitfactor}
+    \gre@debug{unit: \the\gre@unit ; factor: \the\gre@unitfactor}
     \gre@basefactor = \number\gre@maxlen%
     \divide\gre@basefactor by \number\gre@base\relax%
     \ifnum\gre@basefactor < 0\relax%
       \gre@basefactor = -\gre@basefactor%
     \fi%
-    \gre@debugmsg{spacing}{base: \the\gre@base ; factor: \the\gre@basefactor}
+    \gre@debug{base: \the\gre@base ; factor: \the\gre@basefactor}
     \ifnum\gre@basefactor<\gre@unitfactor%
       \multiply\gre@unit by \gre@basefactor%
       \multiply\gre@base by \gre@basefactor%

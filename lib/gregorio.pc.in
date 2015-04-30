@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: Gregorio
+Version: @VERSION@
+Description: Gregorio core library
+Requires:
+Libs: -L${libdir} -lgregorio
+Cflags: -I${includedir}

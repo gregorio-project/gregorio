@@ -1,0 +1,64 @@
+
+0. Introduction
+   ------------
+
+Gregorio plugins are dynamically loaded shared libraries.  So as to limit their
+usage to what they were designed for as much as possible, they should only
+export predefined symbols.
+
+1. How to declare a gregorio plugin
+   --------------------------------
+
+Basically, a plugin should include "plugin.h" and provide at least one of two
+functions:
+
+ - a function which purpose is to read a Gregorian chant score in a given file
+   format and to translate it into the gregorio internal structure using
+   libgregorio functions
+
+    typedef gregorio_score *(*gregorio_read_func)(FILE *);
+
+ - a function which purpose is to write a Gregorian chant score in a given
+   output file format using its in-memory representation
+
+    typedef void (*gregorio_write_func)(FILE *, gregorio_score *);
+
+A plugin can of course provide both functions.
+
+It is strongly advised to make this or these functions static so they are not
+directly exported.  They are accessed through the exported gregorio_plugin_info
+structure you must define using the following syntax:
+
+DECLARE_PLUGIN(plugin_id)
+{
+  .id = "plugin_id",
+  .name = "plugin name",
+  .description = "a lenghty description of what the plugin can do",
+  .author = "plugin author contact information",
+
+  .type = GREGORIO_PLUGIN_BOTH,
+
+  .file_extension = "xxx",
+
+  .read = plugin_read_score,
+  .write = plugin_write_score
+};
+
+The important fields are:
+
+ - id: this plugin id is what the user has to pass to gregorio as a command line
+   argument to activate this particular plugin
+ - name: a nicer plugin name than the id.  Could be used in GUI applications
+ - type: must be set to GREGORIO_PLUGIN_INPUT, GREGORIO_PLUGIN_OUTPUT or
+   GREGORIO_PLUGIN_BOTH depending on whether the plugin provides input, output
+   or both capabilities
+ - file_extension: only used for output capabilities.  Allows gregorio to
+   compute a default output filename
+ - read: pointer to the gregorio_read_func function
+ - write: pointer to the gregorio_write_func function
+
+2. Example
+   -------
+
+You can find a gregorio plugin skeleton in the main gregorio tarball, in
+plugins/skel.

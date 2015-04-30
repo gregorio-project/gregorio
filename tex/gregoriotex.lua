@@ -1,21 +1,18 @@
 --GregorioTeX Lua file.
+--Copyright (C) 2008-2013 Elie Roux <elie.roux@telecom-bretagne.eu>
 --
---Copyright (C) 2008-2015 The Gregorio Project (see CONTRIBUTORS.md)
---
---This file is part of Gregorio.
---
---Gregorio is free software: you can redistribute it and/or modify
+--This program is free software: you can redistribute it and/or modify
 --it under the terms of the GNU General Public License as published by
 --the Free Software Foundation, either version 3 of the License, or
 --(at your option) any later version.
 --
---Gregorio is distributed in the hope that it will be useful,
+--This program is distributed in the hope that it will be useful,
 --but WITHOUT ANY WARRANTY; without even the implied warranty of
 --MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --GNU General Public License for more details.
 --
 --You should have received a copy of the GNU General Public License
---along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
+--along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -- this file contains lua functions used by GregorioTeX when called with LuaTeX.
 
@@ -24,13 +21,13 @@ local hpack, traverse_id, has_attribute, count, remove, insert_after, copy = nod
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = '4.0.0-rc1' -- GREGORIO_VERSION (comment used by VersionManager.py)
+local internalversion = '3.0.0-rc2' -- GREGORIO_VERSION (comment used by VersionManager.py)
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
-    version            = '4.0.0-rc1', -- GREGORIO_VERSION
+    version            = '3.0.0-rc2', -- GREGORIO_VERSION
     greinternalversion = internalversion,
-    date               = "2015/04/26", -- GREGORIO_DATE_LTX
+    date               = "2015/04/13", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
     author             = "The Gregorio Project (see CONTRIBUTORS.md)",
     copyright          = "2008-2015 - The Gregorio Project",
@@ -46,20 +43,11 @@ local hyphen = tex.defaulthyphenchar or 45
 local gregorioattr         = luatexbase.attributes['gregorioattr']
 local potentialdashvalue   = 1
 local nopotentialdashvalue = 2
+local ictus                = 4
 
 local gregoriocenterattr = luatexbase.attributes['gregoriocenterattr']
 local startcenter = 1
 local endcenter   = 2
-
-local score_fonts = {}
-local symbol_fonts = {}
-local loaded_font_sizes = {}
-local next_variant = 0
-local variant_prefix = 'greVariantFont'
-local number_to_letter = {
-    ['0'] = 'A', ['1'] = 'B', ['2'] = 'C', ['3'] = 'D', ['4'] = 'E',
-    ['5'] = 'F', ['6'] = 'G', ['7'] = 'H', ['8'] = 'I', ['9'] = 'J',
-}
 
 -- node factory
 local tmpnode = node.new(glyph, 0)
@@ -172,11 +160,18 @@ end
 local function atScoreBeggining ()
   luatexbase.add_to_callback('post_linebreak_filter', process, 'gregoriotex.callback', 1)
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
+  -- we call the optimize_gabc functions here
+  if optimize_gabc_style then
+    optimize_gabc_style.add_callback()
+  end
 end
 
 local function atScoreEnd ()
   luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.callback')
   luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
+  if optimize_gabc_style then
+    optimize_gabc_style.remove_callback()
+  end
 end
 
 local function clean_old_gtex_files(file_withdir)
@@ -215,15 +210,6 @@ local function compile_gabc(gabc_file, gtex_file)
 	  .."shell-escape mode may not be activated. Try\n    '%s --shell-escape %s.tex'\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", gtex_file, gabc_file, tex.formatname, tex.jobname)
   elseif res ~= 0 then
     err("\nAn error occured when compiling the score file\n'%s' with gregorio.\nPlease check your score file.", gabc_file)
-  else
-    -- open the gtex file for writing so that LuaTeX records output to it
-    -- when the -recorder option is used
-    local gtex = io.open(gtex_file, 'a')
-    if gtex == nil then
-      err("\n Unable to open %s", gtex_file)
-    else
-      gtex:close()
-    end
   end
 end
 
@@ -244,13 +230,6 @@ local function include_score(input_file, force_gabccompile)
     clean_old_gtex_files(file_root)
     log("The file %s does not exist. Searching for a gabc file", gtex_file)
     if lfs.isfile(gabc_file) then
-      local gabc = io.open(gabc_file, 'r')
-      if gabc == nil then
-        err("\n Unable to open %s", gabc_file)
-        return
-      else
-        gabc:close()
-      end
       compile_gabc(gabc_file, gtex_file)
       tex.print(string.format("\\input %s", gtex_file))
       return
@@ -261,15 +240,6 @@ local function include_score(input_file, force_gabccompile)
   end
   local gtex_timestamp = lfs.attributes(gtex_file).modification
   local gabc_timestamp = lfs.attributes(gabc_file).modification
-  -- open the gabc file for reading so that LuaTeX records input from it
-  -- when the -recorder option is used; do this here so that this happens
-  -- on every run
-  local gabc = io.open(gabc_file, 'r')
-  if gabc == nil then
-    err("\n Unable to open %s", gabc_file)
-  else
-    gabc:close()
-  end
   if gtex_timestamp < gabc_timestamp then
     log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
     compile_gabc(gabc_file, gtex_file)
@@ -280,13 +250,9 @@ local function include_score(input_file, force_gabccompile)
   return
 end
 
-local function check_font_version()
-  local gregoriofont = font.getfont(font.id('gregoriofont'))
-  local fontversion = gregoriofont.shared.rawdata.metadata.version
-  if fontversion ~= internalversion then
-    fontname = gregoriofont.shared.rawdata.metadata.fontname
-    fontfile = gregoriofont.shared.rawdata.metadata.origname
-    err("\nUncoherent file versions!\ngregoriotex.tex is version %s\nwhile %s.ttf is version %s\nplease update file\n%s", internalversion, fontname, fontversion, fontfile)
+local function check_version(greinternalversion)
+  if greinternalversion ~= internalversion then
+    err("uncoherent file versions: gregoriotex.tex is version %i while gregoriotex.lua is version "..internalversion, greinternalversion)
   end
 end
 
@@ -294,170 +260,9 @@ local function get_gregorioversion()
   return internalversion
 end
 
-local function map_font(name, prefix)
-  log("Mapping font %s", name)
-  local glyph, unicode
-  for glyph, unicode in pairs(font.fonts[font.id(score_fonts[name])].resources.unicodes) do
-    if unicode >= 0 and not string.match(glyph, '%.') then
-      tex.sprint(string.format([[\xdef\gre%s%s{\char%d}]], prefix, glyph, unicode))
-    end
-  end
-end
-
-local function init_variant_font(font_name, for_score)
-  if font_name ~= '*' then
-    local font_table = for_score and score_fonts or symbol_fonts
-    if font_table[font_name] == nil then
-      local font_csname = variant_prefix..string.gsub(tostring(next_variant), '[0-9]', number_to_letter)
-      font_table[font_name] = font_csname
-      log("Registering variant font %s as %s.", font_name, font_csname)
-      if for_score then
-        tex.print(string.format([[\global\font\%s = {name:%s} at 10 sp\relax ]], font_csname, font_name))
-        -- loaded_font_sizes will only be given a value if the font is for_score
-        loaded_font_sizes[font_name] = '10'
-      else
-        -- is there a nice way to make this string readable?
-        tex.print(string.format(
-            [[\gdef\%sSymReload#1{{\edef\localsize{#1}\ifx\localsize\%sSymSize\relax\relax\else\global\font\%s = {name:%s} at \localsize pt\relax\xdef\%sSymSize{\localsize}\fi}}\xdef\%sSymSize{0}\%sSymReload{\gresymbolfontsize}]],
-            font_csname, font_csname, font_csname, font_name, font_csname,
-            font_csname, font_csname))
-      end
-      next_variant = next_variant + 1
-    end
-  end
-end
-
-local function set_score_glyph(csname, font_csname, char)
-  log([[Setting \%s to \%s\char%d]], csname, font_csname, char)
-  tex.print(string.format([[\edef\%s{{\noexpand\%s\char%d}}]], csname, font_csname, char))
-end
-
-local function set_common_score_glyph(csname, font_csname, char)
-  -- font_csname is ignored
-  log([[Setting \%s to \char%d]], csname, char)
-  tex.print(string.format([[\edef\%s{{\char%d}}]], csname, char))
-end
-
-local function set_symbol_glyph(csname, font_csname, char)
-  tex.print(string.format([[\def\%s{\%sSymReload{\gresymbolfontsize}{\%s\char%d}\relax}]],
-      csname, font_csname, font_csname, char))
-end
-
-local function set_sized_symbol_glyph(csname, font_csname, char)
-  tex.print(string.format([[\gdef\%s#1{\%sSymReload{#1}{\%s\char%d}\relax}]],
-      csname, font_csname, font_csname, char))
-end
-
-local function def_glyph(csname, font_name, glyph, font_table, setter)
-  local font_csname = font_table[font_name]
-  local char
-  if string.match(glyph, '^%d+$') then
-    char = tonumber(glyph)
-  else
-    local font_id = font.id(font_csname)
-    if font_id < 0 then
-      err('\nFont %s is not defined.', font_name)
-    end
-    char = font.fonts[font_id].resources.unicodes[glyph]
-    if char == nil then
-      err('\nGlyph %s in font %s was not found.', glyph, font_name)
-    end
-  end
-  setter(csname, font_csname, char)
-end
-
-local function def_score_glyph(csname, font_name, glyph)
-  def_glyph(csname, font_name, glyph, score_fonts, set_score_glyph)
-end
-
-local function change_single_score_glyph(glyph_name, font_name, replacement)
-  if font_name == '*' then
-    def_glyph('grecp'..glyph_name, 'greciliae', replacement, score_fonts,
-        set_common_score_glyph)
-  else
-    def_score_glyph('grecp'..glyph_name, font_name, replacement)
-  end
-end
-
-local function change_score_glyph(glyph_name, font_name, replacement)
-  if string.match(glyph_name, '%*') then
-    glyph_name = '^'..glyph_name:gsub('%*', '.*')..'$'
-    if not string.match(replacement, '^%.') then
-      err('If a wildcard is supplied for glyph name, replacement must start with a dot.')
-    end
-    local greciliae = font.fonts[font.id(score_fonts['greciliae'])].resources.unicodes
-    local other_font
-    if font_name == '*' then
-      other_font = greciliae
-    else
-      other_font = font.fonts[font.id(score_fonts[font_name])].resources.unicodes
-    end
-    local name, char
-    for name, char in pairs(greciliae) do
-      if not string.match(name, '%.') and char >= 0 and string.match(name, glyph_name) then
-        local matched_replacement = name..replacement
-        if other_font[matched_replacement] ~= nil and other_font[matched_replacement] >= 0 then
-          change_single_score_glyph(name, font_name, matched_replacement)
-        end
-      end
-    end
-  else
-    if string.match(replacement, '^%.') then
-      replacement = glyph_name..replacement
-    end
-    change_single_score_glyph(glyph_name, font_name, replacement)
-  end
-end
-
-local function reset_score_glyph(glyph_name)
-  if string.match(glyph_name, '%*') then
-    glyph_name = '^'..glyph_name:gsub('%*', '.*')..'$'
-    local name, char
-    for name, char in pairs(font.fonts[font.id(score_fonts['greciliae'])].resources.unicodes) do
-      if not string.match(name, '%.') and char >= 0 and string.match(name, glyph_name) then
-        set_common_score_glyph('grecp'..name, nil, char)
-      end
-    end
-  else
-    local font_csname = score_fonts['greciliae']
-    local char = font.fonts[font.id(font_csname)].resources.unicodes[glyph_name]
-    if char == nil then
-      err('\nGlyph %s was not found.', glyph_name)
-    end
-    set_common_score_glyph('grecp'..glyph_name, nil, char)
-  end
-end
-
-local function scale_score_fonts(size)
-  for font_name, font_csname in pairs(score_fonts) do
-    if loaded_font_sizes[font_name] and loaded_font_sizes[font_name] ~= size then
-      tex.print(string.format([[\global\font\%s = {name:%s} at %s sp\relax ]],
-          font_csname, font_name, size))
-      loaded_font_sizes[font_name] = size
-    end
-  end
-end
-
-local function def_symbol(csname, font_name, glyph, sized)
-  def_glyph(csname, font_name, glyph, symbol_fonts,
-      sized and set_sized_symbol_glyph or set_symbol_glyph)
-end
-
-local function font_size()
-  tex.print(string.format('%.2f', (font.fonts[font.current()].size / 65536.0)))
-end
-
 gregoriotex.include_score        = include_score
 gregoriotex.compile_gabc         = compile_gabc
 gregoriotex.atScoreEnd           = atScoreEnd
 gregoriotex.atScoreBeggining     = atScoreBeggining
-gregoriotex.check_font_version   = check_font_version
+gregoriotex.check_version        = check_version
 gregoriotex.get_gregorioversion  = get_gregorioversion
-gregoriotex.map_font             = map_font
-gregoriotex.init_variant_font    = init_variant_font
-gregoriotex.def_score_glyph      = def_score_glyph
-gregoriotex.change_score_glyph   = change_score_glyph
-gregoriotex.reset_score_glyph    = reset_score_glyph
-gregoriotex.scale_score_fonts    = scale_score_fonts
-gregoriotex.def_symbol           = def_symbol
-gregoriotex.font_size            = font_size

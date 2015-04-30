@@ -4,23 +4,6 @@
     A script that manages the VERSION of gregorio.
 
     See VersionUpdate.py -h for help
-
-    Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
-
-    This file is part of Gregorio.
-
-    Gregorio is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Gregorio is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from __future__ import print_function
@@ -30,18 +13,13 @@ import re
 import argparse
 import subprocess
 import time
-import os
-import locale
 from datetime import date
 
 from distutils.util import strtobool
 
-locale.setlocale(locale.LC_TIME, 'C')
-
-os.chdir(sys.path[0])
-
 VERSION_FILE = '.gregorio-version'
 GREGORIO_FILES = ["configure.ac",
+                  "plugins/gregoriotex/gregoriotex.h",
                   "windows/gregorio-resources.rc",
                   "macosx/Gregorio.pkgproj",
                   "windows/gregorio.iss",
@@ -181,7 +159,7 @@ def replace_version(version_obj):
                     result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%Y/%m/%d"), newline, 1))
                 elif 'PARSE_VERSION_DATE' in line:
                     newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
-                    result.append(re.sub(r'([ \d]\d [A-Z][a-z]+ \d{4})', today.strftime("%e %B %Y"), newline, 1))
+                    result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%d/%m/%y"), newline, 1))
                 elif 'PARSE_VERSION_FILE_NEXTLINE' in line:
                     result.append(line)
                     following_line_filename = True
