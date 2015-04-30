@@ -1,16 +1,16 @@
 [Setup]
 AppName=gregorio
-AppVersion=3.0.0-rc2
+AppVersion=4.0.0-rc1
 DefaultDirName={pf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
 Compression=lzma2
 SolidCompression=yes
 LicenseFile=../COPYING.md
-AppCopyright=Copyright (C) 2006-2015 Gregorio project
+AppCopyright=Copyright (C) 2006-2015 The Gregorio Project
 AppComments=Software for engraving Gregorian Chant scores.
 AppContact=gregorio-devel@gna.org
-AppPublisher=Gregorio Project
+AppPublisher=The Gregorio Project
 AppPublisherURL=https://github.com/gregorio-project/gregorio
 AppReadmeFile=https://github.com/gregorio-project/gregorio
 BackColor=$D4AE65
@@ -39,7 +39,7 @@ Source: "../README.md"; DestDir: "{app}";
 Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
 Source: "../UPGRADE.md"; DestDir: "{app}";
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../doc/GregorioRef-3_0_0-rc2.pdf"; DestDir: "{app}";
+Source: "../doc/GregorioRef-4_0_0-rc1.pdf"; DestDir: "{app}";
 Source: "../COPYING.md"; DestDir: "{app}";
 Source: "../contrib/900_gregorio.xml"; DestDir: "{app}\contrib";
 Source: "../contrib/gregorio-scribus.lua"; DestDir: "{app}\contrib";
