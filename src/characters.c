@@ -41,7 +41,7 @@
  * accented and not. \param letter The letter being tested \return returns \c 1 
  * if a vowel; otherwise returns \c 0 
  */
-int gregorio_is_vowel(grewchar letter)
+static int gregorio_is_vowel(grewchar letter)
 {
     grewchar vowels[] = { L'a', L'e', L'i', L'o', L'u', L'y', L'A', L'E',
         L'I', 'O', 'U', 'Y', L'œ', L'Œ', L'æ', L'Æ', L'ó', L'À', L'È',
@@ -64,9 +64,8 @@ int gregorio_is_vowel(grewchar letter)
  * special-character. It places current_character to the character next to the
  * end of the verbatim or special_char charachters.
  */
-static inline void
-verb_or_sp(gregorio_character **ptr_character, grestyle_style style,
-        FILE *f, void (*function) (FILE *, grewchar *))
+static inline void verb_or_sp(gregorio_character **ptr_character,
+        grestyle_style style, FILE *f, void (*function) (FILE *, grewchar *))
 {
     int i, j;
     grewchar *text;
@@ -184,10 +183,8 @@ void gregorio_write_text(bool skip_initial,
 
 // the default behaviour is to write only the initial, that is to say things
 // between the styles ST_INITIAL
-void
-gregorio_write_initial(gregorio_character *current_character,
-        FILE *f, void (*printverb) (FILE *,
-                grewchar *),
+void gregorio_write_initial(gregorio_character *current_character,
+        FILE *f, void (*printverb) (FILE *, grewchar *),
         void (*printchar) (FILE *, grewchar),
         void (*begin) (FILE *, grestyle_style),
         void (*end) (FILE *, grestyle_style),
@@ -267,7 +264,7 @@ gregorio_character *gregorio_first_text(gregorio_score *score)
 
 // gives the first letter of a score.
 
-grewchar gregorio_first_letter(gregorio_score *score)
+static grewchar gregorio_first_letter(gregorio_score *score)
 {
     gregorio_syllable *current_syllable;
     gregorio_character *current_character;
@@ -342,7 +339,7 @@ grewchar gregorio_first_letter(gregorio_score *score)
  * this element. 
  */
 
-void gregorio_style_push(det_style **current_style, unsigned char style)
+static void gregorio_style_push(det_style **current_style, unsigned char style)
 {
     det_style *element;
     if (!current_style) {
@@ -362,7 +359,7 @@ void gregorio_style_push(det_style **current_style, unsigned char style)
  * Pop deletes an style in the stack (the style to delete is the parameter) 
  */
 
-void gregorio_style_pop(det_style **first_style, det_style *element)
+static void gregorio_style_pop(det_style **first_style, det_style *element)
 {
     if (!element || !first_style || !*first_style) {
         return;
@@ -385,7 +382,7 @@ void gregorio_style_pop(det_style **first_style, det_style *element)
  * in a normal functionment. But we never know... 
  */
 
-void gregorio_free_styles(det_style **first_style)
+static void gregorio_free_styles(det_style **first_style)
 {
     det_style *current_style;
     if (!first_style) {
@@ -399,6 +396,98 @@ void gregorio_free_styles(det_style **first_style)
     }
 }
 
+
+/*
+ * 
+ * This function inserts a style before current_character, updating the double
+ * chained list.
+ * 
+ */
+
+static void gregorio_insert_style_before(unsigned char type,
+        unsigned char style, gregorio_character *current_character)
+{
+    gregorio_character *element =
+            (gregorio_character *) malloc(sizeof(gregorio_character));
+    element->is_character = 0;
+    element->cos.s.type = type;
+    element->cos.s.style = style;
+    element->next_character = current_character;
+    if (current_character->previous_character) {
+        current_character->previous_character->next_character = element;
+    }
+    element->previous_character = current_character->previous_character;
+    current_character->previous_character = element;
+}
+
+/*
+ * 
+ * This function puts a style after current_character, and updates
+ * current_character to the gregorio_character it created. It updates the
+ * double chained list. It does not touche to the det_styles list.
+ * 
+ */
+
+static void gregorio_insert_style_after(unsigned char type, unsigned char style,
+        gregorio_character **current_character)
+{
+    gregorio_character *element =
+            (gregorio_character *) malloc(sizeof(gregorio_character));
+    element->is_character = 0;
+    element->cos.s.type = type;
+    element->cos.s.style = style;
+    element->next_character = (*current_character)->next_character;
+    if ((*current_character)->next_character) {
+        (*current_character)->next_character->previous_character = element;
+    }
+    element->previous_character = (*current_character);
+    (*current_character)->next_character = element;
+    (*current_character) = element;
+}
+
+static void gregorio_insert_char_after(grewchar c,
+        gregorio_character **current_character)
+{
+    gregorio_character *element =
+            (gregorio_character *) malloc(sizeof(gregorio_character));
+    element->is_character = 1;
+    element->cos.character = c;
+    element->next_character = (*current_character)->next_character;
+    if ((*current_character)->next_character) {
+        (*current_character)->next_character->previous_character = element;
+    }
+    element->previous_character = (*current_character);
+    (*current_character)->next_character = element;
+    (*current_character) = element;
+}
+
+/*
+ * 
+ * This function suppresses the current character, updates the double chained
+ * list, and updates current_character to the character after, if there is one.
+ * 
+ */
+
+static void gregorio_suppress_current_character(
+        gregorio_character **current_character)
+{
+    gregorio_character *thischaracter;
+    if (!current_character || !*current_character) {
+        return;
+    }
+    thischaracter = *current_character;
+    if ((*current_character)->previous_character) {
+        (*current_character)->previous_character->next_character =
+                (*current_character)->next_character;
+    }
+    if ((*current_character)->next_character) {
+        (*current_character)->next_character->previous_character =
+                (*current_character)->previous_character;
+    }
+    (*current_character) = (*current_character)->next_character;
+    free(thischaracter);
+}
+
 /*
  * 
  * This function suppresses the corresponding character, updates the double
@@ -406,7 +495,7 @@ void gregorio_free_styles(det_style **first_style)
  * 
  */
 
-void gregorio_suppress_this_character(gregorio_character *to_suppress)
+static void gregorio_suppress_this_character(gregorio_character *to_suppress)
 {
     if (!to_suppress) {
         return;
@@ -564,99 +653,7 @@ static inline bool _suppress_char_and_end_c(gregorio_character **ptr_character)
     }
 }
 
-/*
- * 
- * This function inserts a style before current_character, updating the double
- * chained list.
- * 
- */
-
-void
-gregorio_insert_style_before(unsigned char type, unsigned char style,
-        gregorio_character *current_character)
-{
-    gregorio_character *element =
-            (gregorio_character *) malloc(sizeof(gregorio_character));
-    element->is_character = 0;
-    element->cos.s.type = type;
-    element->cos.s.style = style;
-    element->next_character = current_character;
-    if (current_character->previous_character) {
-        current_character->previous_character->next_character = element;
-    }
-    element->previous_character = current_character->previous_character;
-    current_character->previous_character = element;
-}
-
-/*
- * 
- * This function puts a style after current_character, and updates
- * current_character to the gregorio_character it created. It updates the
- * double chained list. It does not touche to the det_styles list.
- * 
- */
-
-void
-gregorio_insert_style_after(unsigned char type, unsigned char style,
-        gregorio_character **current_character)
-{
-    gregorio_character *element =
-            (gregorio_character *) malloc(sizeof(gregorio_character));
-    element->is_character = 0;
-    element->cos.s.type = type;
-    element->cos.s.style = style;
-    element->next_character = (*current_character)->next_character;
-    if ((*current_character)->next_character) {
-        (*current_character)->next_character->previous_character = element;
-    }
-    element->previous_character = (*current_character);
-    (*current_character)->next_character = element;
-    (*current_character) = element;
-}
-
-void
-gregorio_insert_char_after(grewchar c, gregorio_character **current_character)
-{
-    gregorio_character *element =
-            (gregorio_character *) malloc(sizeof(gregorio_character));
-    element->is_character = 1;
-    element->cos.character = c;
-    element->next_character = (*current_character)->next_character;
-    if ((*current_character)->next_character) {
-        (*current_character)->next_character->previous_character = element;
-    }
-    element->previous_character = (*current_character);
-    (*current_character)->next_character = element;
-    (*current_character) = element;
-}
-
-/*
- * 
- * This function suppresses the current character, updates the double chained
- * list, and updates current_character to the character after, if there is one.
- * 
- */
-
-void gregorio_suppress_current_character(gregorio_character **current_character)
-{
-    gregorio_character *thischaracter;
-    if (!current_character || !*current_character) {
-        return;
-    }
-    thischaracter = *current_character;
-    if ((*current_character)->previous_character) {
-        (*current_character)->previous_character->next_character =
-                (*current_character)->next_character;
-    }
-    if ((*current_character)->next_character) {
-        (*current_character)->next_character->previous_character =
-                (*current_character)->previous_character;
-    }
-    (*current_character) = (*current_character)->next_character;
-    free(thischaracter);
-}
-
-bool gregorio_go_to_end_initial(gregorio_character **param_character)
+static bool gregorio_go_to_end_initial(gregorio_character **param_character)
 {
     bool has_initial = false;
     gregorio_character *current_character = *param_character;

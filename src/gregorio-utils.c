@@ -185,7 +185,7 @@ available formats are:\n\
 \n"));
 }
 
-void check_input_clobber(char *input_file_name, char *output_file_name)
+static void check_input_clobber(char *input_file_name, char *output_file_name)
 {
     if (input_file_name && output_file_name &&
         strcmp(input_file_name, output_file_name) == 0) {
