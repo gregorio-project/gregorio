@@ -112,14 +112,22 @@ verb_or_sp(gregorio_character **ptr_character, grestyle_style style,
 }
 
 /**
- * This function is made to simplify the output modules : they just have to declare some simple functions (what to do when meeting a beginning of style, a character, etc.) and to call this function with pointer to these functions, and that will automatically write the good ouput. This function does not test at all the gregorio_character list, if it is wrong, then the ouput will be wrong. It is very simple to understand, even if it is a bit long.
- * type may be 0, or SKIP_FIRST_LETTER
+ * This function is made to simplify the output modules : they just have to
+ * declare some simple functions (what to do when meeting a beginning of style,
+ * a character, etc.) and to call this function with pointer to these
+ * functions, and that will automatically write the good ouput. This function
+ * does not test at all the gregorio_character list, if it is wrong, then the
+ * ouput will be wrong. It is very simple to understand, even if it is a bit
+ * long.
  * 
- * @warning The difficulty comes when we have to write the first syllable text, without the first letter.
- * The behaviour can have some bugs is this case if the first syllable has some complex styles. It would be a bit stupid to do such a thing, but users are usually very creative when it comes to inventing twisted things...
+ * @warning The difficulty comes when we have to write the first syllable text,
+ * without the first letter.
+ * The behaviour can have some bugs in this case if the first syllable has some
+ * complex styles. It would be a bit stupid to do such a thing, but users are
+ * usually very creative when it comes to inventing twisted things...
  */
-void
-gregorio_write_text(char type, gregorio_character *current_character,
+void gregorio_write_text(bool skip_initial,
+        gregorio_character *current_character,
         FILE *f, void (*printverb) (FILE *, grewchar *),
         void (*printchar) (FILE *, grewchar),
         void (*begin) (FILE *, grestyle_style),
@@ -146,7 +154,7 @@ gregorio_write_text(char type, gregorio_character *current_character,
                             printspchar);
                     break;
                 case ST_INITIAL:
-                    if (type == SKIP_FIRST_LETTER) {
+                    if (skip_initial) {
                         while (current_character) {
                             if (!current_character->is_character
                                     && current_character->cos.s.type == ST_T_END

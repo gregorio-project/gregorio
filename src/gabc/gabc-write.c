@@ -24,6 +24,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>             // for strchr
+#include <stdbool.h>
 #include "characters.h"
 #include "struct.h"
 #include "unicode.h"
@@ -304,7 +305,7 @@ gabc_write_gregorio_syllable(FILE *f,
     if (syllable->text) {
         // we call the magic function (defined in struct_utils.c), that will
         // write our text.
-        gregorio_write_text(0, syllable->text, f,
+        gregorio_write_text(false, syllable->text, f,
                             (&gabc_write_verb),
                             (&gabc_print_char),
                             (&gabc_write_begin),
@@ -312,7 +313,7 @@ gabc_write_gregorio_syllable(FILE *f,
     }
     if (syllable->translation) {
         fprintf(f, "[");
-        gregorio_write_text(0, syllable->translation, f,
+        gregorio_write_text(false, syllable->translation, f,
                             (&gabc_write_verb),
                             (&gabc_print_char),
                             (&gabc_write_begin),

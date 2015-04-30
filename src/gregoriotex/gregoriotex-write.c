@@ -627,9 +627,9 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
 void gregoriotex_write_score(FILE *f, gregorio_score *score)
 {
     gregorio_character *first_text;
-    // a char that will contain 1 if it is the first syllable and 0 if not.
+    // true if it is the first syllable and false if not.
     // It is for the initial.
-    char first_syllable = 0;
+    bool first_syllable = false;
     char clef_letter;
     int clef_line;
     char clef_flat = NO_KEY_FLAT;
@@ -715,7 +715,7 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
                     (&gtex_write_begin),
                     (&gtex_write_end), (&gtex_write_special_char));
             fprintf(f, "}%%\n");
-            first_syllable = SKIP_FIRST_LETTER;
+            first_syllable = true;
         }
     }
     if (score->si.manuscript_reference) {
@@ -884,10 +884,8 @@ gregoriotex_print_change_line_clef(FILE *f, gregorio_element *current_element)
  *   1 in case of the first argument of a \grediscretionary
  *   2 if we are in the second argument (necessary in order to avoid infinite loops)
  */
-void
-gregoriotex_write_syllable(FILE *f,
-        gregorio_syllable *syllable,
-        char *first_syllable, unsigned char *line_number,
+void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
+        bool *first_syllable, unsigned char *line_number,
         unsigned char first_of_disc)
 {
     gregorio_element *current_element;
@@ -1391,10 +1389,6 @@ void gregoriotex_getlineinfos(gregorio_syllable *syllable, gregorio_line *line)
     }
 }
 
-// / @todo: What is this comment -here- for? --> we will need type for one
-// thing for the moment : type=first_syllable=1 when it is the first syllable
-// (for the initial).
-
 /*
  * ! @brief Prints the beginning of each text style 
  */
@@ -1582,16 +1576,12 @@ void gtex_print_char(FILE *f, grewchar to_print)
 }
 
 void
-gregoriotex_write_text(FILE *f, gregorio_character *text, char *first_syllable,
+gregoriotex_write_text(FILE *f, gregorio_character *text, bool *first_syllable,
         int next_syl)
 {
-    char first_syllable_val = 0;
     if (text == NULL) {
         fprintf(f, "{}{}{}");
         return;
-    }
-    if (first_syllable) {
-        first_syllable_val = *first_syllable;
     }
     fprintf(f, "{");
     gregoriotex_ignore_style = gregoriotex_fix_style(text);
@@ -1606,12 +1596,11 @@ gregoriotex_write_text(FILE *f, gregorio_character *text, char *first_syllable,
                     (gregoriotex_ignore_style));
         }
     }
-    gregorio_write_text(first_syllable_val, text, f,
-            (&gtex_write_verb),
-            (&gtex_print_char),
-            (&gtex_write_begin), (&gtex_write_end), (&gtex_write_special_char));
-    if (first_syllable && *first_syllable) {
-        *first_syllable = 0;
+    gregorio_write_text(first_syllable && *first_syllable, text, f,
+            (&gtex_write_verb), (&gtex_print_char), (&gtex_write_begin),
+            (&gtex_write_end), (&gtex_write_special_char));
+    if (first_syllable) {
+        *first_syllable = false;
     }
     gregoriotex_ignore_style = 0;
     fprintf(f, "}");
@@ -1728,7 +1717,7 @@ void gregoriotex_write_translation(FILE *f, gregorio_character *translation)
     if (translation == NULL) {
         return;
     }
-    gregorio_write_text(0, translation, f,
+    gregorio_write_text(false, translation, f,
             (&gtex_write_verb),
             (&gtex_print_char),
             (&gtex_write_begin), (&gtex_write_end), (&gtex_write_special_char));

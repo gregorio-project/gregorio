@@ -859,8 +859,6 @@ inline bool is_puncta_inclinata(char glyph)
 #define IS_INITIO_DEBILIS 5
 #define NO_INITIO_DEBILIS 0
 
-#define SKIP_FIRST_LETTER 1
-
 inline bool is_liquescentia(char liquescentia)
 {
     return liquescentia == L_DEMINUTUS || liquescentia == L_AUCTUS_ASCENDENS

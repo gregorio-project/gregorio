@@ -136,10 +136,10 @@ typedef struct gregorio_line {
 void write_score(FILE *f, gregorio_score *score);
 void gregoriotex_write_voice_info(FILE *f, gregorio_voice_info *voice_info);
 void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
-        char *first_syllable,
-        unsigned char *line_number, unsigned char first_of_disc);
+        bool *first_syllable, unsigned char *line_number,
+        unsigned char first_of_disc);
 void gregoriotex_write_text(FILE *f, gregorio_character *first_character,
-        char *first_syllable, int);
+        bool *first_syllable, int);
 grestyle_style gregoriotex_fix_style(gregorio_character *first_character);
 void gregoriotex_write_translation(FILE *f, gregorio_character *translation);
 void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
