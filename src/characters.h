@@ -44,10 +44,6 @@ typedef enum gregorio_center_determination {
     CENTER_DETERMINING_MIDDLE,
 } gregorio_center_determination;
 
-// two constants to know if we write old style TeX or modern utf TeX.
-#define WRITE_OLD_TEX 1
-#define WRITE_UTF_TEX 2
-
 // this is a temporary structure that will be used for style determination
 
 typedef struct det_style {
