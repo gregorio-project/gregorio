@@ -1,0 +1,26 @@
+% !TEX root = GregorioRef.tex
+% !TEX program = LuaLaTeX
+\section{Gregorio Controls}
+
+These functions are the ones written by Gregorio to the gtex file.
+While one could, in theory, use/change them to alter the appearance of
+elements of the score, it is far better to make your changes in the
+gabc file and let Gregorio make the changes to the gtex file.
+
+\macroname{\textbackslash grefirstlinebottomspace}{\#1\#2}{gregoriotex-spaces.tex}
+Macro for calculating the additional space needed below the first line of the score.
+
+\begin{argtable}
+  \#1 & 0 & no notes below the staff\\
+  & 1 & note below the first staff line (c position)\\
+  & 2 & note on the 0 staff line (b position)\\
+  & 3 & note below the 0 staff line (a position)\\
+%  & 4 & note below the 0 staff line with a vertical episemus attached\\
+  \#2 & 1 & there is a translation below the text\\
+  & 0 & there is no translation below the text
+\end{argtable}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "GregorioRef"
+%%% End:
