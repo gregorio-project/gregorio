@@ -35,12 +35,17 @@
 #define MODULE_PATH_ENV        "MODULE_PATH"
 #endif
 
-#define GABC 1
-#define GTEX 3
-#define DUMP 5
+typedef enum gregorio_file_format {
+    FORMAT_UNSET = 0,
+    GABC,
+    GTEX,
+    DUMP,
+} gregorio_file_format;
+
 #define GABC_STR "gabc"
 #define GTEX_STR "gtex"
 #define DUMP_STR "dump"
+
 #define DEFAULT_INPUT_FORMAT    GABC
 #define DEFAULT_OUTPUT_FORMAT   GTEX
 
@@ -202,8 +207,8 @@ int main(int argc, char **argv)
     FILE *input_file = NULL;
     FILE *output_file = NULL;
     FILE *error_file = NULL;
-    unsigned char input_format = 0;
-    unsigned char output_format = 0;
+    gregorio_file_format input_format = FORMAT_UNSET;
+    gregorio_file_format output_format = FORMAT_UNSET;
     char verb_mode = 0;
     char *current_directory = malloc(PATH_MAX * sizeof(char));
     int number_of_options = 0;
