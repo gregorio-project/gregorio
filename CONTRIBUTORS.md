@@ -1,6 +1,6 @@
 ## Authors
 
-Gregorio is developped by:
+Gregorio is developed by:
 
  * [Elie Roux](mailto:elie.roux@telecom-bretagne.eu)
  * [Olivier Berten](mailto:olivier.berten@gmail.com)
@@ -16,7 +16,7 @@ The following people also contributed in the past:
 
 ## Thanks
 
-Gregorio has been developped with valuable help and support from:
+Gregorio has been developed with valuable help and support from:
 
  * Yannis Haralambous
  * [The Abbey Ste Madeleine du Barroux (FR)](http://www.barroux.org/)

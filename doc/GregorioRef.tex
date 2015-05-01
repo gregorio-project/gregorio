@@ -35,6 +35,10 @@
 \usepackage{minted} % must be after xcolor
 \newminted{latex}{gobble=2,bgcolor=lightgray}
 
+\usepackage{gregoriotex}
+
+\usepackage{carolmin}
+
 \usepackage{hyperref}
 \hypersetup{colorlinks, citecolor=black, filecolor=black, linkcolor=green, urlcolor=green}
 
@@ -43,10 +47,10 @@
 \newcommand*{\ie}{i.e.\@\xspace}
 \newcommand*{\etc}{etc.\@\xspace}
 
-\newcommand{\macroname}[2]{%
+\newcommand{\macroname}[3]{%
   \vspace{3.25ex plus 1ex minus .2ex}%
-  \makebox[\linewidth]{\ttfamily\bfseries #1%
-  \hspace{\fill}\normalfont\itshape #2}%
+  \makebox[\linewidth]{\ttfamily\bfseries #1#2%
+  \hspace{\fill}\normalfont\itshape #3}%
   \vspace{1.5ex plus .2ex}%
   \index{#1}}
   %\addcontentsline{toc}{subsubsection}{#1}}
@@ -72,29 +76,57 @@
 
     \vspace{1cm}
 
-    \large Version \textbf{3.0.0-rc2}, 13/04/15 %% PARSE_VERSION_DATE
+    \large Version \textbf{4.0.0-rc1}, 26 April 2015 %% PARSE_VERSION_DATE
 
-    \vspace{1cm}
+    \vspace{1.5cm}
+    \begingroup%
+      \redlines
+      \def\grelowchoralsignstyle#1{{\cminfamily\small\kern-0.2em#1}}
+      \def\grehighchoralsignstyle#1{{\cminfamily\small\kern-0.2em#1}}
+      \def\grestar{\greheightstar}
+      \gresetfirstannotation{\scriptsize{Comm.}}
+      \gresetsecondannotation{\scriptsize{VII}}
+      \color{black!60}
+      \setmainfont[SmallCapsFont=AlegreyaSC]{Alegreya}%
+      \addtolength{\hsize}{-4cm}%
+      \setlength{\fboxsep}{5mm}%
+      \begin{list}{}{%
+        \setlength{\topsep}{0pt}%
+        \setlength{\leftmargin}{1.5cm}%
+        \setlength{\rightmargin}{1.5cm}%
+        \setlength{\listparindent}{0pt}%
+        \setlength{\itemindent}{0pt}%
+        \setlength{\parsep}{0pt}%
+      }\item[]{\fbox{\parbox{\hsize}{\includescore[a]{factus}}}}%
+      \end{list}%
+    \endgroup%
 
+    \vspace{1.5cm}%
     \href{http://gregorio-project.github.io/}{Homepage}
 
     Source code available on
     \href{http://github.com/gregorio-project/gregorio}{GitHub}.
   \end{center}
+
   \vspace{2cm}
-  This is a draft document which does not reflect the whole of the package.  We are working on making a more complete version.
-  \begin{multicols}{2}
-    \tableofcontents
-  \end{multicols}
+  This is a draft document which does not reflect the whole of the package.
+  We are working on making a more complete version.
 \end{titlepage}
+
+\cleardoublepage
+
+\tableofcontents
+
+\cleardoublepage
 
 \section{Gregorio\TeX{} Macros}
 The following sections document the macros available in the Gregorio\TeX{} package. The format is as follows:
 
-\macroname{Macroname}{source file}
+\macroname{MacroName}{\{Args\}}{Source File}
+Description of macro.
 
 \begin{argtable}
-  Arg \# & Data type & Descriptor\\
+  Arg \# & Data type & Description of argument\\
 \end{argtable}
 
 The source file where the macro is defined is included for developers
