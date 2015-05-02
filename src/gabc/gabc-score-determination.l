@@ -29,7 +29,7 @@
 #include "gabc-score-determination.h"
 #include "gabc-score-determination-y.h"
 
-unsigned char style_stack = 0;
+static unsigned char style_stack = 0;
 %}
 
 %x attribute

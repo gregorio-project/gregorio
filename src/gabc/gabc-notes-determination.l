@@ -26,15 +26,14 @@
 
 #include "gabc.h"
 
-gregorio_note *current_note;
-char char_for_brace;
-unsigned int nbof_isolated_episemus;
-char *notesmacros[10];
-char *tempstr = NULL;
+static gregorio_note *current_note;
+static char char_for_brace;
+static unsigned int nbof_isolated_episemus;
+static char *notesmacros[10];
+static char *tempstr = NULL;
 
-static inline void
-lex_add_note(int i, gregorio_shape shape, char signs, char liquescentia,
-             char h_episemus)
+static inline void lex_add_note(int i, gregorio_shape shape, char signs,
+        char liquescentia, char h_episemus)
 {
     nbof_isolated_episemus = 0;
     gregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]),
@@ -426,7 +425,7 @@ s   {
 
 %%
 
-void gabc_notes_determination_error(const char *str)
+static void gabc_notes_determination_error(const char *str)
 {
     char *tempstrtwo = strdup(str);
     gregorio_message(tempstrtwo, "det_notes_from_string", ERROR, 0);
