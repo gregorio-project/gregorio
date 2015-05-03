@@ -3238,66 +3238,62 @@ static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
         gregorio_element *element)
 {
     if (element->type == GRE_ELEMENT) {
-        gregorio_glyph *current_glyph = element->u.glyphs.first_glyph;
-        while (current_glyph) {
-            if (current_glyph->type == GRE_SPACE) {
+        for (gregorio_glyph *glyph = element->u.glyphs.first_glyph; glyph;
+            glyph = glyph->next) {
+            switch (glyph->type) {
+            case GRE_SPACE:
                 // we assume here that it is a SP_ZERO_WIDTH, the only one a
                 // glyph can be
                 fprintf(f, "\\greendofglyph{1}%%\n");
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            if (current_glyph->type == GRE_TEXVERB_GLYPH
-                    && current_glyph->texverb) {
-                fprintf(f,
-                        "%% verbatim text at glyph level:\n%s%%\n%% end of verbatim text\n",
-                        current_glyph->texverb);
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            if (current_glyph->type == GRE_FLAT) {
-                fprintf(f, "\\greflat{%c}{0}%%\n",
-                        current_glyph->u.misc.pitched.pitch);
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            if (current_glyph->type == GRE_NATURAL) {
-                fprintf(f, "\\grenatural{%c}{0}%%\n",
-                        current_glyph->u.misc.pitched.pitch);
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            if (current_glyph->type == GRE_SHARP) {
-                fprintf(f, "\\gresharp{%c}{0}%%\n",
-                        current_glyph->u.misc.pitched.pitch);
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            if (current_glyph->type == GRE_BAR) {
-                gregoriotex_write_bar(f,
-                        current_glyph->u.misc.unpitched.info.bar,
-                        current_glyph->u.misc.unpitched.special_sign, true);
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            if (current_glyph->type == GRE_TEXVERB_GLYPH
-                    && current_glyph->texverb) {
-                fprintf(f, "%s", current_glyph->texverb);
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            // at this point glyph->type is GRE_GLYPH
-            gregoriotex_write_glyph(f, syllable, element, current_glyph);
-            if (current_glyph->next && current_glyph->next->type == GRE_GLYPH) {
-                if (is_puncta_inclinata(current_glyph->next->u.notes.glyph_type)
-                        || current_glyph->next->u.notes.glyph_type ==
-                        G_PUNCTA_INCLINATA) {
-                    fprintf(f, "\\greendofglyph{9}%%\n");
-                } else {
-                    fprintf(f, "\\greendofglyph{0}%%\n");
+                break;
+
+            case GRE_TEXVERB_GLYPH:
+                if (glyph->texverb) {
+                    fprintf(f, "%% verbatim text at glyph level:\n%s%%\n"
+                            "%% end of verbatim text\n", glyph->texverb);
                 }
+                break;
+
+            case GRE_FLAT:
+                fprintf(f, "\\greflat{%c}{0}%%\n",
+                        glyph->u.misc.pitched.pitch);
+                break;
+
+            case GRE_NATURAL:
+                fprintf(f, "\\grenatural{%c}{0}%%\n",
+                        glyph->u.misc.pitched.pitch);
+                break;
+
+            case GRE_SHARP:
+                fprintf(f, "\\gresharp{%c}{0}%%\n",
+                        glyph->u.misc.pitched.pitch);
+                break;
+
+            case GRE_BAR:
+                gregoriotex_write_bar(f,
+                        glyph->u.misc.unpitched.info.bar,
+                        glyph->u.misc.unpitched.special_sign, true);
+                break;
+
+            case GRE_MANUAL_CUSTOS:
+                fprintf(f, "\\gremanualcusto{%c}%%\n",
+                        glyph->u.misc.pitched.pitch);
+                break;
+
+            default:
+                // at this point glyph->type is GRE_GLYPH
+                gregoriotex_write_glyph(f, syllable, element, glyph);
+                if (glyph->next && glyph->next->type == GRE_GLYPH) {
+                    if (is_puncta_inclinata(glyph->next->u.notes.glyph_type)
+                            || glyph->next->u.notes.glyph_type ==
+                            G_PUNCTA_INCLINATA) {
+                        fprintf(f, "\\greendofglyph{9}%%\n");
+                    } else {
+                        fprintf(f, "\\greendofglyph{0}%%\n");
+                    }
+                }
+                break;
             }
-            current_glyph = current_glyph->next;
         }
     }
 }
@@ -3363,6 +3359,34 @@ static void gregoriotex_print_change_line_clef(FILE *f,
         } else {
             fprintf(f, "\\gresetlinesclef{f}{%d}{1}{%c}%%\n",
                     current_element->u.misc.pitched.pitch - '0', NO_KEY_FLAT);
+        }
+    }
+}
+
+static void handle_final_bar(FILE *f, char *type, gregorio_syllable *syllable) {
+    fprintf(f, "\\grefinal%s{0}%%\n", type);
+    // first element will be the bar, which we just handled, so skip it
+    for (gregorio_element *element = (*syllable->elements)->next; element;
+            element = element->next) {
+        switch (element->type) {
+        case GRE_TEXVERB_ELEMENT:
+            if (element->texverb) {
+                fprintf(f, "%% verbatim text at element level:\n%s%%\n"
+                        "%% end of verbatim text\n", element->texverb);
+            }
+            break;
+
+        case GRE_ELEMENT:
+            for (gregorio_glyph *glyph = element->u.glyphs.first_glyph; glyph;
+                    glyph = glyph->next) {
+                switch (glyph->type) {
+                case GRE_MANUAL_CUSTOS:
+                    fprintf(f, "\\gremanualcusto{%c}%%\n",
+                            glyph->u.misc.pitched.pitch);
+                    break;
+                }
+            }
+            break;
         }
     }
 }
@@ -3466,29 +3490,13 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             if (!syllable->next_syllable && !syllable->text
                     && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
                     B_DIVISIO_FINALIS) {
-                fprintf(f, "\\grefinaldivisiofinalis{0}%%\n");
-                if ((syllable->elements)[0]->next
-                        && (syllable->elements)[0]->next->type ==
-                        GRE_TEXVERB_ELEMENT
-                        && (syllable->elements)[0]->next->texverb) {
-                    fprintf(f,
-                            "%% verbatim text at element level:\n%s%%\n%% end of verbatim text\n",
-                            (syllable->elements)[0]->next->texverb);
-                }
+                handle_final_bar(f, "divisiofinalis", syllable);
                 return;
             }
             if (!syllable->next_syllable && !syllable->text
                     && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
                     B_DIVISIO_MAIOR) {
-                fprintf(f, "\\grefinaldivisiomaior{0}%%\n");
-                if ((syllable->elements)[0]->next
-                        && (syllable->elements)[0]->next->type ==
-                        GRE_TEXVERB_ELEMENT
-                        && (syllable->elements)[0]->next->texverb) {
-                    fprintf(f,
-                            "%% verbatim text at element level:\n%s%%\n%% end of verbatim text\n",
-                            (syllable->elements)[0]->next->texverb);
-                }
+                handle_final_bar(f, "divisiomaior", syllable);
                 return;
             } else {
                 fprintf(f, "\\grebarsyllable");

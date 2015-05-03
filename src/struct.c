@@ -253,6 +253,16 @@ void gregorio_add_note(gregorio_note **current_note, char pitch,
     }
 }
 
+static void add_pitched_item_as_note(gregorio_note **current_note,
+        gregorio_type type, char pitch)
+{
+    gregorio_note *element = create_and_link_note(current_note);
+    if (element) {
+        element->type = type;
+        element->u.note.pitch = pitch;
+    }
+}
+
 void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
         gregorio_type sub_type)
 {
@@ -271,17 +281,19 @@ void gregorio_add_custo_as_note(gregorio_note **current_note)
     }
 }
 
+void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
+        char pitch)
+{
+    add_pitched_item_as_note(current_note, GRE_MANUAL_CUSTOS, pitch);
+}
+
 void gregorio_add_clef_change_as_note(gregorio_note **current_note,
         gregorio_type type, char clef_line)
 {
-    gregorio_note *element = create_and_link_note(current_note);
     assert(type == GRE_C_KEY_CHANGE || type == GRE_F_KEY_CHANGE
            || type == GRE_C_KEY_CHANGE_FLATED
            || type == GRE_F_KEY_CHANGE_FLATED);
-    if (element) {
-        element->type = type;
-        element->u.note.pitch = clef_line;
-    }
+    add_pitched_item_as_note(current_note, type, clef_line);
 }
 
 void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar)
@@ -296,12 +308,8 @@ void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar)
 void gregorio_add_alteration_as_note(gregorio_note **current_note,
         gregorio_type type, char pitch)
 {
-    gregorio_note *element = create_and_link_note(current_note);
     assert(type == GRE_FLAT || type == GRE_SHARP || type == GRE_NATURAL);
-    if (element) {
-        element->type = type;
-        element->u.note.pitch = pitch;
-    }
+    add_pitched_item_as_note(current_note, type, pitch);
 }
 
 void gregorio_add_space_as_note(gregorio_note **current_note,
@@ -1573,8 +1581,7 @@ static gregorio_glyph *gregorio_first_glyph(gregorio_syllable *syllable)
     gregorio_glyph *glyph;
     gregorio_element *element;
     if (!syllable) {
-        gregorio_message(_
-                         ("called with a NULL argument"),
+        gregorio_message(_("called with a NULL argument"),
                          "gregorio_first_glyph", ERROR, 0);
     }
     element = syllable->elements[0];
@@ -1582,7 +1589,9 @@ static gregorio_glyph *gregorio_first_glyph(gregorio_syllable *syllable)
         if (element->type == GRE_ELEMENT && element->u.glyphs.first_glyph) {
             glyph = element->u.glyphs.first_glyph;
             while (glyph) {
-                if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
+                if ((glyph->type == GRE_GLYPH
+                        || glyph->type == GRE_MANUAL_CUSTOS)
+                        && glyph->u.notes.first_note) {
                     return glyph;
                 }
                 glyph = glyph->next;
@@ -1599,10 +1608,13 @@ static char gregorio_syllable_first_note(gregorio_syllable *syllable)
     glyph = gregorio_first_glyph(syllable);
     if (glyph == NULL) {
         return 0;
-    } else {
-        assert(glyph->u.notes.first_note->type == GRE_NOTE);
-        return glyph->u.notes.first_note->u.note.pitch;
     }
+    if (glyph->type == GRE_MANUAL_CUSTOS) {
+        return glyph->u.misc.pitched.pitch;
+    }
+    assert(glyph->type == GRE_GLYPH);
+    assert(glyph->u.notes.first_note->type == GRE_NOTE);
+    return glyph->u.notes.first_note->u.note.pitch;
 }
 
 char gregorio_determine_next_pitch(gregorio_syllable *syllable,
@@ -1610,8 +1622,7 @@ char gregorio_determine_next_pitch(gregorio_syllable *syllable,
 {
     char temp;
     if (!element || !syllable) {
-        gregorio_message(_
-                         ("called with a NULL argument"),
+        gregorio_message(_("called with a NULL argument"),
                          "gregorio_determine_next_pitch", ERROR, 0);
         return 'g';
     }
@@ -1619,6 +1630,9 @@ char gregorio_determine_next_pitch(gregorio_syllable *syllable,
     if (glyph) {
         glyph = glyph->next;
         while (glyph) {
+            if (glyph->type == GRE_MANUAL_CUSTOS) {
+                return glyph->u.misc.pitched.pitch;
+            }
             if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
                 assert(glyph->u.notes.first_note->type == GRE_NOTE);
                 return glyph->u.notes.first_note->u.note.pitch;
@@ -1632,6 +1646,9 @@ char gregorio_determine_next_pitch(gregorio_syllable *syllable,
         if (element->type == GRE_ELEMENT && element->u.glyphs.first_glyph) {
             glyph = element->u.glyphs.first_glyph;
             while (glyph) {
+                if (glyph->type == GRE_MANUAL_CUSTOS) {
+                    return glyph->u.misc.pitched.pitch;
+                }
                 if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
                     assert(glyph->u.notes.first_note->type == GRE_NOTE);
                     return glyph->u.notes.first_note->u.note.pitch;

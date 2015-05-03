@@ -544,6 +544,9 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
                              "gabc_write_gregorio_glyph", ERROR, 0);
         }
         break;
+    case GRE_MANUAL_CUSTOS:
+        fprintf(f, "%c+", glyph->u.misc.pitched.pitch);
+        break;
     case GRE_GLYPH:
         if (is_initio_debilis(glyph->u.notes.liquescentia)) {
             fprintf(f, "-");
