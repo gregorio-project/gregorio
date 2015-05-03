@@ -192,7 +192,7 @@ static char *gregoriotex_determine_note_number_and_type(gregorio_note *note,
             if (is_short(note->u.note.pitch, glyph, element)) {
                 return "VirgaReversaDescendens";
             } else {
-                return "VirgaReversaDescendensLongqueue";
+                return "VirgaReversaLongqueueDescendens";
             }
         } else {
             if (is_short(note->u.note.pitch, glyph, element)) {

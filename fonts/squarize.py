@@ -273,7 +273,7 @@ DIRECT_GLYPH_NAMES = [
     'BarBrace',
     'OriscusDeminutus',
     'VirgaReversaDescendens',
-    'VirgaReversaDescendensLongqueue',
+    'VirgaReversaLongqueueDescendens',
     'PesOneNothing',
     'PesQuilismaOneNothing',
 ]
