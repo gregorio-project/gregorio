@@ -366,16 +366,13 @@ local function def_glyph(csname, font_name, glyph, font_table, setter)
   setter(csname, font_csname, char)
 end
 
-local function def_score_glyph(csname, font_name, glyph)
-  def_glyph(csname, font_name, glyph, score_fonts, set_score_glyph)
-end
-
 local function change_single_score_glyph(glyph_name, font_name, replacement)
   if font_name == '*' then
     def_glyph('grecp'..glyph_name, 'greciliae', replacement, score_fonts,
         set_common_score_glyph)
   else
-    def_score_glyph('grecp'..glyph_name, font_name, replacement)
+    def_glyph('grecp'..glyph_name, font_name, replacement, score_fonts,
+        set_score_glyph)
   end
 end
 
@@ -455,7 +452,6 @@ gregoriotex.check_font_version   = check_font_version
 gregoriotex.get_gregorioversion  = get_gregorioversion
 gregoriotex.map_font             = map_font
 gregoriotex.init_variant_font    = init_variant_font
-gregoriotex.def_score_glyph      = def_score_glyph
 gregoriotex.change_score_glyph   = change_score_glyph
 gregoriotex.reset_score_glyph    = reset_score_glyph
 gregoriotex.scale_score_fonts    = scale_score_fonts

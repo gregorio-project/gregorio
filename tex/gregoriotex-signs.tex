@@ -1676,23 +1676,26 @@
 %% macros for typesetting punctum cavum
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\def\grepunctumcavumchar{\gregoriofont\gre@char@punctumcavum}%
+\def\grelineapunctumcavumchar{\gregoriofont\gre@char@lineapunctumcavum}%
+\def\grepunctumcavumholechar{\gregoriofont\gre@char@punctumcavumhole}%
+\def\grelineapunctumcavumholechar{\gregoriofont\gre@char@lineapunctumcavumhole}%
+
 \def\UseAlternatePunctumCavum{%
-\gredefvariant{grepunctumcavumchar}{greciliae}{PunctumCavum.caeciliae}%
-\gredefvariant{grelineapunctumcavumchar}{greciliae}{LineaPunctumCavum.caeciliae}%
-\gredefvariant{grepunctumcavumholechar}{greciliae}{PunctumCavumHole.caeciliae}%
-\gredefvariant{grelineapunctumcavumholechar}{greciliae}{LineaPunctumCavumHole.caeciliae}%
+\grechangeglyph{PunctumCavum}{greciliae}{PunctumCavum.caeciliae}%
+\grechangeglyph{LineaPunctumCavum}{greciliae}{LineaPunctumCavum.caeciliae}%
+\grechangeglyph{PunctumCavumHole}{greciliae}{PunctumCavumHole.caeciliae}%
+\grechangeglyph{LineaPunctumCavumHole}{greciliae}{LineaPunctumCavumHole.caeciliae}%
 \relax %
 }%
 
 \def\UseNormalPunctumCavum{%
-\gdef\grepunctumcavumchar{\gregoriofont\gre@char@punctumcavum}%
-\gdef\grelineapunctumcavumchar{\gregoriofont\gre@char@lineapunctumcavum}%
-\gdef\grepunctumcavumholechar{\gregoriofont\gre@char@punctumcavumhole}%
-\gdef\grelineapunctumcavumholechar{\gregoriofont\gre@char@lineapunctumcavumhole}%
+\greresetglyph{PunctumCavum}%
+\greresetglyph{LineaPunctumCavum}%
+\greresetglyph{PunctumCavumHole}%
+\greresetglyph{LineaPunctumCavumHole}%
 \relax %
 }%
-
-\UseNormalPunctumCavum%
 
 \def\grepunctumcavum#1#2#3#4#5{%
   \setbox\GreTempwidth=\hbox{\grepunctumcavumchar}%

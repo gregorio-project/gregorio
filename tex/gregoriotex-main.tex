@@ -663,6 +663,23 @@
   \relax %
 }%
 
+% Macros for using variant glyphs
+
+% Changes a gregorio code point to a variant glyph
+% #1 = the name of the gregorio code point
+% #2 = font name
+% #3 = glyph name, glyph variant name (preceded by .), or code point
+\def\grechangeglyph#1#2#3{%
+  \directlua{gregoriotex.init_variant_font([[#2]],true)}%
+  \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]])}%
+}%
+
+% Resets a gregorio code point to its default setting
+% #1 = the name of the gregorio code point
+\def\greresetglyph#1{%
+  \directlua{gregoriotex.reset_score_glyph([[#1]])}%
+}%
+
 {%
   \directlua{gregoriotex.init_variant_font('greciliae', true)}%
   \directlua{gregoriotex.map_font('greciliae', 'cp')}%
@@ -1377,32 +1394,6 @@
 % the gtex file will be forced into the document and will not be
 % checked by the lua function 'include_score'. This does not bypass
 % the API version test done by '\gregoriotexapiversion'.
-
-% Macros for using variant glyphs
-
-% Defines a variant into the given control sequence name
-% #1 = control sequence name
-% #2 = font name
-% #3 = glyph name or code point
-\def\gredefvariant#1#2#3{%
-  \directlua{gregoriotex.init_variant_font([[#2]],true)}%
-  \directlua{gregoriotex.def_score_glyph([[#1]],[[#2]],[[#3]])}%
-}%
-
-% Changes a gregorio code point to a variant glyph
-% #1 = the name of the gregorio code point
-% #2 = font name
-% #3 = glyph name, glyph variant name (preceded by .), or code point
-\def\grechangeglyph#1#2#3{%
-  \directlua{gregoriotex.init_variant_font([[#2]],true)}%
-  \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]])}%
-}%
-
-% Resets a gregorio code point to its default setting
-% #1 = the name of the gregorio code point
-\def\greresetglyph#1{%
-  \directlua{gregoriotex.reset_score_glyph([[#1]])}%
-}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% some hyphen definitions
