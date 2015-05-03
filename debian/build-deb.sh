@@ -43,10 +43,10 @@ else
     autoreconf -f -i
     ./configure
     make dist
-    mv gregorio-$VERSION.tar.gz debian/build/
+    mv gregorio-$VERSION.tar.bz2 debian/build/
     cd debian/build
-    tar xzf gregorio-$VERSION.tar.gz
-    mv gregorio-$VERSION.tar.gz gregorio_$DEBIAN_VERSION.orig.tar.gz
+    tar xjf gregorio-$VERSION.tar.bz2
+    mv gregorio-$VERSION.tar.bz2 gregorio_$DEBIAN_VERSION.orig.tar.bz2
     cd gregorio-$VERSION
     ./configure
     mkdir -p debian/
