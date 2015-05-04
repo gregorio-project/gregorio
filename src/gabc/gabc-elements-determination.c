@@ -53,35 +53,6 @@ static inline bool is_puncta_descendens(char glyph)
 
 /*
  * 
- * Two "hat" functions, they permit to have a good API. They amost don't do
- * anything except calling the det_elements_from_glyphs.
- * 
- * All those functions change the current_key, according to the possible new
- * values (with key changes)
- * 
- */
-
-gregorio_element *gabc_det_elements_from_string(char *str, int *current_key,
-                                                char *macros[10])
-{
-    gregorio_element *final;
-    gregorio_note *tmp;
-    tmp = gabc_det_notes_from_string(str, macros);
-    final = gabc_det_elements_from_notes(tmp, current_key);
-    return final;
-}
-
-gregorio_element *gabc_det_elements_from_notes(gregorio_note *current_note,
-                                               int *current_key)
-{
-    gregorio_element *final = NULL;
-    gregorio_glyph *tmp = gabc_det_glyphs_from_notes(current_note, current_key);
-    final = gabc_det_elements_from_glyphs(tmp);
-    return final;
-}
-
-/*
- * 
  * A function that will be called several times: it adds an element to the
  * current element current_element: the current_element in the determination,
  * it will be updated to the element that we will add first_glyph: the
@@ -90,8 +61,8 @@ gregorio_element *gabc_det_elements_from_notes(gregorio_note *current_note,
  * 
  */
 
-void
-close_element(gregorio_element **current_element, gregorio_glyph *first_glyph)
+static void close_element(gregorio_element **current_element,
+        gregorio_glyph *first_glyph)
 {
     gregorio_add_element(current_element, first_glyph);
     if (first_glyph && first_glyph->previous) {
@@ -123,7 +94,8 @@ static inline void cut_before(gregorio_glyph *current_glyph,
  * 
  */
 
-gregorio_element *gabc_det_elements_from_glyphs(gregorio_glyph *current_glyph)
+static gregorio_element *gabc_det_elements_from_glyphs(
+        gregorio_glyph *current_glyph)
 {
     // the last element we have successfully added to the list of elements
     gregorio_element *current_element = NULL;
@@ -278,3 +250,33 @@ gregorio_element *gabc_det_elements_from_glyphs(gregorio_glyph *current_glyph)
     }
     return first_element;
 }
+
+/*
+ * 
+ * Two "hat" functions, they permit to have a good API. They amost don't do
+ * anything except calling the det_elements_from_glyphs.
+ * 
+ * All those functions change the current_key, according to the possible new
+ * values (with key changes)
+ * 
+ */
+
+static gregorio_element *gabc_det_elements_from_notes(
+        gregorio_note *current_note, int *current_key)
+{
+    gregorio_element *final = NULL;
+    gregorio_glyph *tmp = gabc_det_glyphs_from_notes(current_note, current_key);
+    final = gabc_det_elements_from_glyphs(tmp);
+    return final;
+}
+
+gregorio_element *gabc_det_elements_from_string(char *str, int *current_key,
+        char *macros[10])
+{
+    gregorio_element *final;
+    gregorio_note *tmp;
+    tmp = gabc_det_notes_from_string(str, macros);
+    final = gabc_det_elements_from_notes(tmp, current_key);
+    return final;
+}
+

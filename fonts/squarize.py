@@ -41,9 +41,7 @@ import getopt, sys
 import fontforge, psMat
 import subprocess
 import os
-
-os.chdir(sys.path[0])
-
+import os.path
 
 GPLV3 = """Gregorio is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as
@@ -100,29 +98,32 @@ convention, see gregorio-base.sfd for this convention.
 
 Usage:
         squarize.py fontname
-
-with fontname=gregorio, parmesan or greciliae.""")
+""")
 
 def main():
     "Main function"
     global oldfont, newfont, font_name
-    #proc = subprocess.Popen(['../VersionManager.py', '-c'], stdout=subprocess.PIPE)
-    #version = proc.stdout.read().strip('\n')
-    version ='myversion'
+    version_script_file = os.path.join(sys.path[0], '../VersionManager.py')
+    proc = subprocess.Popen([version_script_file, '-c'], stdout=subprocess.PIPE)
+    version = proc.stdout.read().strip('\n')
     try:
-        opts, args = getopt.gnu_getopt(sys.argv[1:], "h", ["help"])
+        opts, args = getopt.gnu_getopt(sys.argv[1:], "o:h", ["outfile","help"])
     except getopt.GetoptError:
         # print help information and exit:
         usage()
         sys.exit(2)
+    font_name = args[0]
+    outfile = "%s.ttf" % font_name
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             usage()
             sys.exit()
+        elif opt in ("-o", "--outfile"):
+            outfile = arg
+            print(outfile)
     if len(args) == 0:
         usage()
         sys.exit(2)
-    font_name = args[0]
     # the fonts
     oldfont = fontforge.open("%s-base.sfd" % font_name)
     newfont = fontforge.font()
@@ -172,7 +173,7 @@ This file is part of Gregorio.
     torculusresupinus(font_width)
     # variants must be copied last!
     copy_variant_glyphs()
-    newfont.generate("%s.ttf" % font_name)
+    newfont.generate(outfile)
     oldfont.close()
     newfont.close()
 

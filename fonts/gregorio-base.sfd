@@ -41,6 +41,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
+WinInfo: 112 8 2
 Grid
 142 1300 m 0
  142 -700 l 0
@@ -2683,7 +2684,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: VirgaReversaDescendensLongqueue
+StartChar: VirgaReversaLongqueueDescendens
 Encoding: 116 -1 116
 Width: 164
 VWidth: 2048
