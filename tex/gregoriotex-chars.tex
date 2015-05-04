@@ -19,154 +19,171 @@
 
 \gre@declarefileversion{gregoriotex-chars.tex}{4.0.0-rc1}% GREGORIO_VERSION
 
-\def\gregoriostylecharoffset#1{\the\numexpr 66 + #1 \relax}
-
 % bars
-\let\gre@char@divisiomaior=\grecpDivisioMaior\relax %
-\let\gre@char@virgula=\grecpVirgula\relax %
-\let\gre@char@divisiominima=\grecpDivisioMinima\relax %
-\let\gre@char@divisiominor=\grecpDivisioMinor\relax %
-\let\gre@char@divisiodominican=\grecpDivisioDominican\relax %
-\let\gre@char@divisiodominicanalt=\grecpDivisioDominicanAlt\relax %
+\def\gre@char@divisiomaior{\grecpDivisioMaior}%
+\def\gre@char@virgula{\grecpVirgula}%
+\def\gre@char@divisiominima{\grecpDivisioMinima}%
+\def\gre@char@divisiominor{\grecpDivisioMinor}%
+\def\gre@char@divisiodominican{\grecpDivisioDominican}%
+\def\gre@char@divisiodominicanalt{\grecpDivisioDominicanAlt}%
 
-\let\gre@char@punctumcavum=\grecpPunctumCavum\relax %
-\let\gre@char@lineapunctumcavum=\grecpLineaPunctumCavum\relax %
-\let\gre@char@punctumcavumhole=\grecpPunctumCavumHole\relax %
-\let\gre@char@lineapunctumcavumhole=\grecpLineaPunctumCavumHole\relax %
+\def\gre@char@punctumcavum{\grecpPunctumCavum}%
+\def\gre@char@lineapunctumcavum{\grecpLineaPunctumCavum}%
+\def\gre@char@punctumcavumhole{\grecpPunctumCavumHole}%
+\def\gre@char@lineapunctumcavumhole{\grecpLineaPunctumCavumHole}%
 
 % notes (to compute different widths)
-\let\gre@char@smallpunctum=\grecpPunctumDeminutus\relax %
-\let\gre@char@punctum=\grecpPunctum\relax %
-\let\gre@char@punctuminclinatum=\grecpPunctumInclinatum\relax %
-\let\gre@char@stropha=\grecpStropha\relax %
-\let\gre@char@strophaaucta=\grecpStrophaAucta\relax %
-\let\gre@char@quilisma=\grecpQuilisma\relax %
-\let\gre@char@oriscus=\grecpOriscus\relax %
-\let\gre@char@oriscusauctus=\grecpOriscusReversus\relax %
-\let\gre@char@punctuminclinatumdem=\grecpPunctumInclinatumAuctus\relax %
-\let\gre@char@lineapunctum=\grecpLineaPunctum\relax %
-\let\gre@char@peshigh=\grecpPunctumForMeasurement\relax %
-\let\gre@char@pesinitauctus=\grecpPesQuadratumTwoInitioDebilisDescendens\relax %
-\let\gre@char@pesinitauctusone=\grecpPesQuadratumOneInitioDebilisDescendens\relax %
-\let\gre@char@flexus=\grecpPesQuadratumLongqueueThreeNothing\relax %
-\let\gre@char@flexusone=\grecpPesQuadratumLongqueueOneNothing\relax %
-\let\gre@char@flexusdeminutus=\grecpFlexusTwoDeminutus\relax %
-\let\gre@char@flexusaltone=\grecpFlexusNobarOneNothing\relax %
-\let\gre@char@flexusalt=\grecpFlexusNobarTwoNothing\relax %
-\let\gre@char@torculus=\grecpTorculusOneTwoNothing\relax %
-\let\gre@char@torculusdeminutus=\grecpTorculusTwoTwoDeminutus\relax %
-\let\gre@char@porrectus@one=\grecpPorrectusOneOneNothing\relax %
-\let\gre@char@porrectus@two=\grecpPorrectusTwoOneNothing\relax %
-\let\gre@char@porrectus@three=\grecpPorrectusThreeOneNothing\relax %
-\let\gre@char@porrectus@four=\grecpPorrectusFourOneNothing\relax %
-\let\gre@char@porrectus@five=\grecpPorrectusFiveOneNothing\relax %
+\def\gre@char@smallpunctum{\grecpPunctumDeminutus}%
+\def\gre@char@punctum{\grecpPunctum}%
+\def\gre@char@punctuminclinatum{\grecpPunctumInclinatum}%
+\def\gre@char@stropha{\grecpStropha}%
+\def\gre@char@strophaaucta{\grecpStrophaAucta}%
+\def\gre@char@quilisma{\grecpQuilisma}%
+\def\gre@char@oriscus{\grecpOriscus}%
+\def\gre@char@oriscusauctus{\grecpOriscusReversus}%
+\def\gre@char@punctuminclinatumdem{\grecpPunctumInclinatumAuctus}%
+\def\gre@char@lineapunctum{\grecpLineaPunctum}%
+\def\gre@char@peshigh{\grecpPunctumForMeasurement}%
+\def\gre@char@pesinitauctus{\grecpPesQuadratumTwoInitioDebilisDescendens}%
+\def\gre@char@pesinitauctusone{\grecpPesQuadratumOneInitioDebilisDescendens}%
+\def\gre@char@flexus{\grecpPesQuadratumLongqueueThreeNothing}%
+\def\gre@char@flexusone{\grecpPesQuadratumLongqueueOneNothing}%
+\def\gre@char@flexusdeminutus{\grecpFlexusTwoDeminutus}%
+\def\gre@char@flexusaltone{\grecpFlexusNobarOneNothing}%
+\def\gre@char@flexusalt{\grecpFlexusNobarTwoNothing}%
+\def\gre@char@torculus{\grecpTorculusOneTwoNothing}%
+\def\gre@char@torculusdeminutus{\grecpTorculusTwoTwoDeminutus}%
+\def\gre@char@porrectus@one{\grecpPorrectusOneOneNothing}%
+\def\gre@char@porrectus@two{\grecpPorrectusTwoOneNothing}%
+\def\gre@char@porrectus@three{\grecpPorrectusThreeOneNothing}%
+\def\gre@char@porrectus@four{\grecpPorrectusFourOneNothing}%
+\def\gre@char@porrectus@five{\grecpPorrectusFiveOneNothing}%
 
 % signs
-\let\gre@char@curlybrace=\grecpCurlyBrace\relax %
-\let\gre@char@barbrace=\grecpBarBrace\relax %
-\let\gre@char@brace=\grecpRoundBrace\relax %
-\let\gre@char@linea=\grecpLinea\relax %
-\let\gre@char@vepisemus=\grecpVEpisemus\relax %
-\let\gre@char@accentus=\grecpAccentus\relax %
-\let\gre@char@semicirculus=\grecpSemicirculus\relax %
-\let\gre@char@circulus=\grecpCirculus\relax %
-\let\gre@char@reversedaccentus=\grecpAccentusReversus\relax %
-\let\gre@char@reversedsemicirculus=\grecpSemicirculusReversus\relax %
+\def\gre@char@curlybrace{\grecpCurlyBrace}%
+\def\gre@char@barbrace{\grecpBarBrace}%
+\def\gre@char@brace{\grecpRoundBrace}%
+\def\gre@char@linea{\grecpLinea}%
+\def\gre@char@vepisemus{\grecpVEpisemus}%
+\def\gre@char@accentus{\grecpAccentus}%
+\def\gre@char@semicirculus{\grecpSemicirculus}%
+\def\gre@char@circulus{\grecpCirculus}%
+\def\gre@char@reversedaccentus{\grecpAccentusReversus}%
+\def\gre@char@reversedsemicirculus{\grecpSemicirculusReversus}%
 
 % horizontal episemus
-\let\gre@char@he@punctum=\grecpHEpisemusPunctum\relax %
-\let\gre@char@he@flexus=\grecpHEpisemusFlexusDeminutus\relax %
-\let\gre@char@he@initio=\grecpHEpisemusDebilis\relax %
-\let\gre@char@he@inclinatum=\grecpHEpisemusInclinatum\relax %
-\let\gre@char@he@inclinatumdem=\grecpHEpisemusInclinatumDeminutus\relax %
-\let\gre@char@he@stropha=\grecpHEpisemusStropha\relax %
-\let\gre@char@he@porrectus@one=\grecpHEpisemusPorrectusOne\relax %
-\let\gre@char@he@porrectus@two=\grecpHEpisemusPorrectusTwo\relax %
-\let\gre@char@he@porrectus@three=\grecpHEpisemusPorrectusThree\relax %
-\let\gre@char@he@porrectus@four=\grecpHEpisemusPorrectusFour\relax %
-\let\gre@char@he@porrectus@five=\grecpHEpisemusPorrectusFive\relax %
-\let\gre@char@he@porrectusfl@one=\grecpHEpisemusPorrectusFlexusOne\relax %
-\let\gre@char@he@porrectusfl@two=\grecpHEpisemusPorrectusFlexusTwo\relax %
-\let\gre@char@he@porrectusfl@three=\grecpHEpisemusPorrectusFlexusThree\relax %
-\let\gre@char@he@porrectusfl@four=\grecpHEpisemusPorrectusFlexusFour\relax %
-\let\gre@char@he@porrectusfl@five=\grecpHEpisemusPorrectusFlexusFive\relax %
-\let\gre@char@he@quilisma=\grecpHEpisemusQuilisma\relax %
-\let\gre@char@he@oriscus=\grecpHEpisemusOriscus\relax %
-\let\gre@char@he@smallpunctum=\grecpHEpisemusHighPes\relax % seems wrong
+\def\gre@char@he@punctum{\grecpHEpisemusPunctum}%
+\def\gre@char@he@flexus{\grecpHEpisemusFlexusDeminutus}%
+\def\gre@char@he@initio{\grecpHEpisemusDebilis}%
+\def\gre@char@he@inclinatum{\grecpHEpisemusInclinatum}%
+\def\gre@char@he@inclinatumdem{\grecpHEpisemusInclinatumDeminutus}%
+\def\gre@char@he@stropha{\grecpHEpisemusStropha}%
+\def\gre@char@he@porrectus@one{\grecpHEpisemusPorrectusOne}%
+\def\gre@char@he@porrectus@two{\grecpHEpisemusPorrectusTwo}%
+\def\gre@char@he@porrectus@three{\grecpHEpisemusPorrectusThree}%
+\def\gre@char@he@porrectus@four{\grecpHEpisemusPorrectusFour}%
+\def\gre@char@he@porrectus@five{\grecpHEpisemusPorrectusFive}%
+\def\gre@char@he@porrectusfl@one{\grecpHEpisemusPorrectusFlexusOne}%
+\def\gre@char@he@porrectusfl@two{\grecpHEpisemusPorrectusFlexusTwo}%
+\def\gre@char@he@porrectusfl@three{\grecpHEpisemusPorrectusFlexusThree}%
+\def\gre@char@he@porrectusfl@four{\grecpHEpisemusPorrectusFlexusFour}%
+\def\gre@char@he@porrectusfl@five{\grecpHEpisemusPorrectusFlexusFive}%
+\def\gre@char@he@quilisma{\grecpHEpisemusQuilisma}%
+\def\gre@char@he@oriscus{\grecpHEpisemusOriscus}%
+\def\gre@char@he@smallpunctum{\grecpHEpisemusHighPes}% seems wrong
 
-
+\def\greflatchar{\gregoriofont\grecpFlat}%
+\def\greflatholechar{\gregoriofont\grecpFlatHole}%
+\def\grenaturalchar{\gregoriofont\grecpNatural}%
+\def\grenaturalholechar{\gregoriofont\grecpNaturalHole}%
+\def\gresharpchar{\gregoriofont\grecpSharp}%
+\def\gresharpholechar{\gregoriofont\grecpSharpHole}%
+\def\grecclefchar{\gregoriofont\grecpCClef}%
+\def\grefclefchar{\gregoriofont\grecpFClef}%
+\def\greincclefchar{\gregoriofont\grecpCClefChange}%
+\def\greinfclefchar{\gregoriofont\grecpFClefChange}%
+\def\grepunctummorachar{\gregoriofont\grecpAuctumMora}%
+\def\greverticalepisemuschar{\gregoriofont\grecpVEpisemus}%
+\def\grecustotoplongchar{\gregoriofont\grecpCustosUpLong}%
+\def\grecustotopshortchar{\gregoriofont\grecpCustosUpShort}%
+\def\grecustotopmiddlechar{\gregoriofont\grecpCustosUpMedium}%
+\def\grecustobottomlongchar{\gregoriofont\grecpCustosDownLong}%
+\def\grecustobottomshortchar{\gregoriofont\grecpCustosDownShort}%
+\def\grecustobottommiddlechar{\gregoriofont\grecpCustosDownMedium}%
+\def\greabovebarbracechar{\gregoriofont\grecpBarBrace}%
+\def\grepunctumchar{\gregoriofont\grecpPunctum}%
 
 %%%%%%%%%%%%%%%%%
 % macros for the different styles%
 %%%%%%%%%%%%%%%%%
 
 \def\greusedefaultstyle{%
-\xdef\greflatchar{\noexpand\gregoriofont\grecpFlat}%
-\xdef\greflatholechar{\noexpand\gregoriofont\grecpFlatHole}%
-\xdef\grenaturalchar{\noexpand\gregoriofont\grecpNatural}%
-\xdef\grenaturalholechar{\noexpand\gregoriofont\grecpNaturalHole}%
-\xdef\gresharpchar{\noexpand\gregoriofont\grecpSharp}%
-\xdef\gresharpholechar{\noexpand\gregoriofont\grecpSharpHole}%
-\xdef\grecclefchar{\noexpand\gregoriofont\grecpCClef}%
-\xdef\grefclefchar{\noexpand\gregoriofont\grecpFClef}%
-\xdef\greincclefchar{\noexpand\gregoriofont\grecpCClefChange}%
-\xdef\greinfclefchar{\noexpand\gregoriofont\grecpFClefChange}%
-\xdef\grepunctummorachar{\noexpand\gregoriofont\grecpAuctumMora}%
-\xdef\greverticalepisemuschar{\noexpand\gregoriofont\grecpVEpisemus}%
-\xdef\grecustotoplongchar{\noexpand\gregoriofont\grecpCustosUpLong}%
-\xdef\grecustotopshortchar{\noexpand\gregoriofont\grecpCustosUpShort}%
-\xdef\grecustotopmiddlechar{\noexpand\gregoriofont\grecpCustosUpMedium}%
-\xdef\grecustobottomlongchar{\noexpand\gregoriofont\grecpCustosDownLong}%
-\xdef\grecustobottomshortchar{\noexpand\gregoriofont\grecpCustosDownShort}%
-\xdef\grecustobottommiddlechar{\noexpand\gregoriofont\grecpCustosDownMedium}%
-\xdef\greabovebarbracechar{\noexpand\gregoriofont\grecpBarBrace}%
-\xdef\grepunctumchar{\noexpand\gregoriofont\grecpPunctum}%
+\greresetglyph{Flat}%
+\greresetglyph{FlatHole}%
+\greresetglyph{Natural}%
+\greresetglyph{NaturalHole}%
+\greresetglyph{Sharp}%
+\greresetglyph{SharpHole}%
+\greresetglyph{CClef}%
+\greresetglyph{FClef}%
+\greresetglyph{CClefChange}%
+\greresetglyph{FClefChange}%
+\greresetglyph{AuctumMora}%
+\greresetglyph{VEpisemus}%
+\greresetglyph{CustosUpLong}%
+\greresetglyph{CustosUpShort}%
+\greresetglyph{CustosUpMedium}%
+\greresetglyph{CustosDownLong}%
+\greresetglyph{CustosDownShort}%
+\greresetglyph{CustosDownMedium}%
+\greresetglyph{BarBrace}%
+\greresetglyph{Punctum}%
 \relax %
 }%
 
 \def\greusemedicaeastyle{%
-\greusestylecommon %
-\gredefvariant{grecustotoplongchar}{greextra}{MedicaeaCustosUpLong}%
-\gredefvariant{grecustotopshortchar}{greextra}{MedicaeaCustosUpShort}%
-\gredefvariant{grecustotopmiddlechar}{greextra}{MedicaeaCustosUpMedium}%
-\gredefvariant{grecustobottomlongchar}{greextra}{MedicaeaCustosDownLong}%
-\gredefvariant{grecustobottomshortchar}{greextra}{MedicaeaCustosDownShort}%
-\gredefvariant{grecustobottommiddlechar}{greextra}{MedicaeaCustosDownMedium}%
-\gredefvariant{grecclefchar}{greextra}{MedicaeaCClef}%
-\gredefvariant{grefclefchar}{greextra}{MedicaeaFClef}%
-\gredefvariant{greincclefchar}{greextra}{MedicaeaCClefChange}%
-\gredefvariant{greinfclefchar}{greextra}{MedicaeaFClefChange}%
-\gredefvariant{greflatchar}{greextra}{MedicaeaFlat}%
-\gredefvariant{greflatholechar}{greextra}{MedicaeaFlatHole}%
+\greusedefaultstyle\greusestylecommon %
+\grechangeglyph{CustosUpLong}{greextra}{MedicaeaCustosUpLong}%
+\grechangeglyph{CustosUpShort}{greextra}{MedicaeaCustosUpShort}%
+\grechangeglyph{CustosUpMedium}{greextra}{MedicaeaCustosUpMedium}%
+\grechangeglyph{CustosDownLong}{greextra}{MedicaeaCustosDownLong}%
+\grechangeglyph{CustosDownShort}{greextra}{MedicaeaCustosDownShort}%
+\grechangeglyph{CustosDownMedium}{greextra}{MedicaeaCustosDownMedium}%
+\grechangeglyph{CClef}{greextra}{MedicaeaCClef}%
+\grechangeglyph{FClef}{greextra}{MedicaeaFClef}%
+\grechangeglyph{CClefChange}{greextra}{MedicaeaCClefChange}%
+\grechangeglyph{FClefChange}{greextra}{MedicaeaFClefChange}%
+\grechangeglyph{Flat}{greextra}{MedicaeaFlat}%
+\grechangeglyph{FlatHole}{greextra}{MedicaeaFlatHole}%
 \relax %
 }%
 
 \def\greusehufnagelstyle{%
-\greusestylecommon %
-\gredefvariant{grecustotoplongchar}{greextra}{HufnagelCustosUpLong}%
-\gredefvariant{grecustotopshortchar}{greextra}{HufnagelCustosUpShort}%
-\gredefvariant{grecustotopmiddlechar}{greextra}{HufnagelCustosUpMedium}%
-\gredefvariant{grecustobottomlongchar}{greextra}{HufnagelCustosDownLong}%
-\gredefvariant{grecustobottomshortchar}{greextra}{HufnagelCustosDownShort}%
-\gredefvariant{grecustobottommiddlechar}{greextra}{HufnagelCustosDownMedium}%
-\gredefvariant{grecclefchar}{greextra}{HufnagelCClef}%
-\gredefvariant{grefclefchar}{greextra}{HufnagelFClef}%
-\gredefvariant{greincclefchar}{greextra}{HufnagelCClefChange}%
-\gredefvariant{greinfclefchar}{greextra}{HufnagelFClefChange}%
-\gredefvariant{greflatchar}{greextra}{HufnagelFlat}%
-\gredefvariant{greflatholechar}{greextra}{HufnagelFlatHole}%
+\greusedefaultstyle\greusestylecommon %
+\grechangeglyph{CustosUpLong}{greextra}{HufnagelCustosUpLong}%
+\grechangeglyph{CustosUpShort}{greextra}{HufnagelCustosUpShort}%
+\grechangeglyph{CustosUpMedium}{greextra}{HufnagelCustosUpMedium}%
+\grechangeglyph{CustosDownLong}{greextra}{HufnagelCustosDownLong}%
+\grechangeglyph{CustosDownShort}{greextra}{HufnagelCustosDownShort}%
+\grechangeglyph{CustosDownMedium}{greextra}{HufnagelCustosDownMedium}%
+\grechangeglyph{CClef}{greextra}{HufnagelCClef}%
+\grechangeglyph{FClef}{greextra}{HufnagelFClef}%
+\grechangeglyph{CClefChange}{greextra}{HufnagelCClefChange}%
+\grechangeglyph{FClefChange}{greextra}{HufnagelFClefChange}%
+\grechangeglyph{Flat}{greextra}{HufnagelFlat}%
+\grechangeglyph{FlatHole}{greextra}{HufnagelFlatHole}%
 \relax %
 }%
 
 \def\greusemensuralstyle{%
-\greusestylecommon %
-\gredefvariant{grecustotoplongchar}{greextra}{MensuralCustosUpLong}%
-\gredefvariant{grecustotopshortchar}{greextra}{MensuralCustosUpShort}%
-\gredefvariant{grecustotopmiddlechar}{greextra}{MensuralCustosUpMedium}%
-\gredefvariant{grecustobottomlongchar}{greextra}{MensuralCustosDownLong}%
-\gredefvariant{grecustobottomshortchar}{greextra}{MensuralCustosDownShort}%
-\gredefvariant{grecustobottommiddlechar}{greextra}{MensuralCustosDownMedium}%
-\gredefvariant{greflatchar}{greextra}{MensuralFlat}%
-\gredefvariant{greflatholechar}{greextra}{MensuralFlatHole}%
+\greusedefaultstyle\greusestylecommon %
+\grechangeglyph{CustosUpLong}{greextra}{MensuralCustosUpLong}%
+\grechangeglyph{CustosUpShort}{greextra}{MensuralCustosUpShort}%
+\grechangeglyph{CustosUpMedium}{greextra}{MensuralCustosUpMedium}%
+\grechangeglyph{CustosDownLong}{greextra}{MensuralCustosDownLong}%
+\grechangeglyph{CustosDownShort}{greextra}{MensuralCustosDownShort}%
+\grechangeglyph{CustosDownMedium}{greextra}{MensuralCustosDownMedium}%
+\grechangeglyph{Flat}{greextra}{MensuralFlat}%
+\grechangeglyph{FlatHole}{greextra}{MensuralFlatHole}%
 \relax %
 }%
