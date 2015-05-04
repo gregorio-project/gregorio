@@ -67,6 +67,7 @@ typedef enum gregorio_type {
     // differently for the spaces above the lines
     GRE_ALT,
     GRE_NLBA,
+    GRE_MANUAL_CUSTOS,
 } gregorio_type;
 
 // the different shapes, only for notes
@@ -691,6 +692,8 @@ void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
 void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
         gregorio_type sub_type);
 void gregorio_add_custo_as_note(gregorio_note **current_note);
+void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
+                                        char pitch);
 void gregorio_add_clef_change_as_note(gregorio_note **current_note,
         gregorio_type type, char clef_line);
 void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar);

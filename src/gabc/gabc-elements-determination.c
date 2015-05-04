@@ -123,6 +123,12 @@ static gregorio_element *gabc_det_elements_from_glyphs(
 
     while (current_glyph) {
         if (current_glyph->type != GRE_GLYPH) {
+            if (current_glyph->type == GRE_MANUAL_CUSTOS) {
+                first_element = current_element;
+                close_element(&current_element, first_glyph);
+                current_glyph = current_glyph->next;
+                continue;
+            }
             // we ignore flats and naturals, except if they are alone
             if (current_glyph->type == GRE_NATURAL
                 || current_glyph->type == GRE_FLAT

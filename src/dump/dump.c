@@ -245,6 +245,9 @@ static const char *dump_type(gregorio_type type)
     case GRE_ALT:
         str = "GRE_ALT";
         break;
+    case GRE_MANUAL_CUSTOS:
+        str = "GRE_MANUAL_CUSTOS";
+        break;
     default:
         str = "unknown";
         break;
@@ -963,8 +966,8 @@ void dump_write_score(FILE *f, gregorio_score *score)
                     case GRE_FLAT:
                     case GRE_NATURAL:
                     case GRE_SHARP:
-                        fprintf(f, "       glyph_type            %d (%c)\n",
-                                glyph->u.misc.pitched.pitch,
+                    case GRE_MANUAL_CUSTOS:
+                        fprintf(f, "       pitch                 %c\n",
                                 glyph->u.misc.pitched.pitch);
                         break;
 
