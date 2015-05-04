@@ -294,7 +294,6 @@ def initialize_glyphs():
     DIRECT_GLYPH_NAMES.sort()
     for name in DIRECT_GLYPH_NAMES:
         new_glyph()
-<<<<<<< HEAD
         if glyph_exists(name, oldfont):
             oldfont.selection.select(name)
             oldfont.copy()
