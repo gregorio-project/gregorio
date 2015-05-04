@@ -474,15 +474,15 @@ def hepisemus(widths):
     write_hepisemus(widths, get_width(widths, 'PunctumLineTR'), 'HEpisemusPunctumLineTR')
     write_hepisemus(widths, get_width(widths, 'PunctumLineBLBR'), 'HEpisemusPunctumLineBLBR')
     write_hepisemus(widths, get_width(widths, 'PunctumAuctusLineBL'), 'HEpisemusPunctumAuctusLineBL')
-    for i in range(MAX_INTERVAL):
-        write_hepisemus(widths, get_width(widths, "porrectus%d"%i), 'HEpisemusPorrectus%s' % AMBITUS[i + 1])
-    for i in range(MAX_INTERVAL):
+    for i in range(1, MAX_INTERVAL+1):
+        write_hepisemus(widths, get_width(widths, "porrectus%d"%i), 'HEpisemusPorrectus%s' % AMBITUS[i])
+    for i in range(1, MAX_INTERVAL+1):
         if glyph_exists("porrectusam1%d"%i, oldfont):
-            write_hepisemus(widths, get_width(widths, "porrectusam1%d"%i), 'HEpisemusPorrectusAmOne%s' % AMBITUS[i + 1])
+            write_hepisemus(widths, get_width(widths, "porrectusam1%d"%i), 'HEpisemusPorrectusAmOne%s' % AMBITUS[i])
         else:
-            write_hepisemus(widths, get_width(widths, "porrectusa%d"%i), 'HEpisemusPorrectusAmOne%s' % AMBITUS[i + 1])
-    for i in range(MAX_INTERVAL):
-        write_hepisemus(widths, get_width(widths, "porrectusflexus%d"%i), 'HEpisemusPorrectusFlexus%s' % AMBITUS[i + 1])
+            write_hepisemus(widths, get_width(widths, "porrectus%d"%i), 'HEpisemusPorrectusAmOne%s' % AMBITUS[i])
+    for i in range(1, MAX_INTERVAL+1):
+        write_hepisemus(widths, get_width(widths, "porrectusflexus%d"%i), 'HEpisemusPorrectusFlexus%s' % AMBITUS[i])
 
 def write_hepisemus(widths, shape_width, glyphname):
     "Writes the horizontal episemus glyphs."
