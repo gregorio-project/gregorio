@@ -19,7 +19,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1428766125
+ModificationTime: 1430759146
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -41,7 +41,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 112 8 2
+WinInfo: 0 19 8
 Grid
 142 1300 m 0
  142 -700 l 0
@@ -49,7 +49,7 @@ Grid
  22 -700 l 0
 EndSplineSet
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 375 130
+BeginChars: 375 129
 
 StartChar: Punctum
 Encoding: 0 -1 0
@@ -658,7 +658,7 @@ EndSplineSet
 Validated: 41
 EndChar
 
-StartChar: base2
+StartChar: PunctumLineBR
 Encoding: 27 -1 27
 Width: 164
 VWidth: 2048
@@ -679,7 +679,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: base4
+StartChar: PunctumLineBL
 Encoding: 28 -1 28
 Width: 164
 VWidth: 2048
@@ -700,7 +700,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: base7
+StartChar: PunctumLineTL
 Encoding: 29 -1 29
 Width: 164
 VWidth: 2048
@@ -721,7 +721,7 @@ EndSplineSet
 Validated: 33
 EndChar
 
-StartChar: base5
+StartChar: PunctumLineTR
 Encoding: 30 -1 30
 Width: 164
 VWidth: 2048
@@ -742,7 +742,7 @@ EndSplineSet
 Validated: 33
 EndChar
 
-StartChar: base3
+StartChar: PunctumLineBLBR
 Encoding: 31 -1 31
 Width: 164
 VWidth: 2048
@@ -1071,7 +1071,7 @@ EndSplineSet
 Validated: 33
 EndChar
 
-StartChar: auctusd2
+StartChar: PunctumAuctusLineBL
 Encoding: 46 -1 46
 Width: 164
 VWidth: 2048
@@ -1894,7 +1894,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: phigh
+StartChar: PunctumSmall
 Encoding: 81 -1 81
 Width: 154
 VWidth: 2048
@@ -2157,27 +2157,8 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: PunctumForMeasurement
-Encoding: 94 -1 94
-Width: 154
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-76 2 m 1
- 55 2 11.2529 0.0615234 0 -14 c 1
- 0 142 l 1
- 19 153 46.3281 158 77 158 c 24
- 107.672 158 135 150 154 142 c 9
- 154 -16 l 17
- 140 -7.5 132 1.5 76 2 c 1
-EndSplineSet
-EndChar
-
 StartChar: p2base
-Encoding: 95 -1 95
+Encoding: 95 -1 94
 Width: 164
 VWidth: 2048
 Flags: W
@@ -2197,7 +2178,7 @@ EndSplineSet
 EndChar
 
 StartChar: rvlbase
-Encoding: 96 -1 96
+Encoding: 96 -1 95
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2220,7 +2201,7 @@ EndSplineSet
 EndChar
 
 StartChar: msdeminutus
-Encoding: 97 -1 97
+Encoding: 97 -1 96
 Width: 186
 VWidth: 2048
 Flags: HW
@@ -2243,7 +2224,7 @@ EndSplineSet
 EndChar
 
 StartChar: mademinutus
-Encoding: 98 -1 98
+Encoding: 98 -1 97
 Width: 186
 VWidth: 2048
 Flags: HW
@@ -2266,7 +2247,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumCavumHole
-Encoding: 99 -1 99
+Encoding: 99 -1 98
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2285,7 +2266,7 @@ EndSplineSet
 EndChar
 
 StartChar: LineaPunctumCavumHole
-Encoding: 100 -1 100
+Encoding: 100 -1 99
 Width: 266
 VWidth: 2048
 Flags: HW
@@ -2304,7 +2285,7 @@ EndSplineSet
 EndChar
 
 StartChar: FlatHole
-Encoding: 101 -1 101
+Encoding: 101 -1 100
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2321,7 +2302,7 @@ EndSplineSet
 EndChar
 
 StartChar: NaturalHole
-Encoding: 102 -1 102
+Encoding: 102 -1 101
 Width: 201
 VWidth: 2048
 Flags: HW
@@ -2338,7 +2319,7 @@ EndSplineSet
 EndChar
 
 StartChar: odbase
-Encoding: 103 -1 103
+Encoding: 103 -1 102
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2365,7 +2346,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioDominican
-Encoding: 104 -1 104
+Encoding: 104 -1 103
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -2382,7 +2363,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioDominicanAlt
-Encoding: 105 -1 105
+Encoding: 105 -1 104
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -2399,7 +2380,7 @@ EndSplineSet
 EndChar
 
 StartChar: Sharp
-Encoding: 106 -1 106
+Encoding: 106 -1 105
 Width: 258
 VWidth: 2048
 Flags: W
@@ -2461,7 +2442,7 @@ EndSplineSet
 EndChar
 
 StartChar: SharpHole
-Encoding: 107 -1 107
+Encoding: 107 -1 106
 Width: 258
 VWidth: 2048
 Flags: W
@@ -2478,7 +2459,7 @@ EndSplineSet
 EndChar
 
 StartChar: Linea
-Encoding: 108 -1 108
+Encoding: 108 -1 107
 Width: 431
 VWidth: 2612
 Flags: W
@@ -2505,7 +2486,7 @@ EndSplineSet
 EndChar
 
 StartChar: RoundBrace
-Encoding: 109 -1 109
+Encoding: 109 -1 108
 Width: 937
 VWidth: 2048
 Flags: W
@@ -2530,7 +2511,7 @@ EndSplineSet
 EndChar
 
 StartChar: CurlyBrace
-Encoding: 110 -1 110
+Encoding: 110 -1 109
 Width: 1006
 VWidth: 2048
 Flags: W
@@ -2557,7 +2538,7 @@ EndSplineSet
 EndChar
 
 StartChar: BarBrace
-Encoding: 111 -1 111
+Encoding: 111 -1 110
 Width: 591
 VWidth: 2048
 Flags: W
@@ -2582,7 +2563,7 @@ EndSplineSet
 EndChar
 
 StartChar: OriscusDeminutus
-Encoding: 112 -1 112
+Encoding: 112 -1 111
 Width: 187
 VWidth: 2048
 Flags: HW
@@ -2610,7 +2591,7 @@ EndSplineSet
 EndChar
 
 StartChar: obase4
-Encoding: 113 -1 113
+Encoding: 113 -1 112
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2637,7 +2618,7 @@ EndSplineSet
 EndChar
 
 StartChar: obase8
-Encoding: 114 -1 114
+Encoding: 114 -1 113
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2663,7 +2644,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaDescendens
-Encoding: 115 -1 115
+Encoding: 115 -1 114
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2685,7 +2666,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaLongqueueDescendens
-Encoding: 116 -1 116
+Encoding: 116 -1 115
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2707,7 +2688,7 @@ EndSplineSet
 EndChar
 
 StartChar: vbase2
-Encoding: 117 -1 117
+Encoding: 117 -1 116
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2730,7 +2711,7 @@ EndSplineSet
 EndChar
 
 StartChar: vbase3
-Encoding: 118 -1 118
+Encoding: 118 -1 117
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2753,7 +2734,7 @@ EndSplineSet
 EndChar
 
 StartChar: vbase4
-Encoding: 119 -1 119
+Encoding: 119 -1 118
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2776,7 +2757,7 @@ EndSplineSet
 EndChar
 
 StartChar: vbase5
-Encoding: 120 -1 120
+Encoding: 120 -1 119
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2799,7 +2780,7 @@ EndSplineSet
 EndChar
 
 StartChar: vbase1
-Encoding: 121 -1 121
+Encoding: 121 -1 120
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2820,7 +2801,7 @@ EndSplineSet
 EndChar
 
 StartChar: OriscusScapusLongqueue
-Encoding: 122 -1 122
+Encoding: 122 -1 121
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2847,7 +2828,7 @@ EndSplineSet
 EndChar
 
 StartChar: OriscusScapus
-Encoding: 123 -1 123
+Encoding: 123 -1 122
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2875,7 +2856,7 @@ EndSplineSet
 EndChar
 
 StartChar: osbase1
-Encoding: 124 -1 124
+Encoding: 124 -1 123
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2902,7 +2883,7 @@ EndSplineSet
 EndChar
 
 StartChar: osbase2
-Encoding: 125 -1 125
+Encoding: 125 -1 124
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2930,7 +2911,7 @@ EndSplineSet
 EndChar
 
 StartChar: osbase3
-Encoding: 126 -1 126
+Encoding: 126 -1 125
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2958,7 +2939,7 @@ EndSplineSet
 EndChar
 
 StartChar: osbase4
-Encoding: 127 -1 127
+Encoding: 127 -1 126
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2986,7 +2967,7 @@ EndSplineSet
 EndChar
 
 StartChar: osbase5
-Encoding: 128 -1 128
+Encoding: 128 -1 127
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -3014,7 +2995,7 @@ EndSplineSet
 EndChar
 
 StartChar: oslbase
-Encoding: 129 -1 129
+Encoding: 129 -1 128
 Width: 164
 VWidth: 2048
 Flags: HW
