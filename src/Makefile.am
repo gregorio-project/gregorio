@@ -21,7 +21,7 @@ AM_CFLAGS =
 bin_PROGRAMS = gregorio
 gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
 				   unicode.c struct.h messages.h unicode.h characters.h \
-				   plugins.h config.h dump/dump.c dump/dump.h \
+				   plugins.h config.h dump/dump.c \
 				   gregoriotex/gregoriotex-write.c gregoriotex/gregoriotex.h
 
 @MK@ifneq ($(wildcard ../.git),)

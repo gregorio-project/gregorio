@@ -9,6 +9,10 @@ If you are using barred letters in your document and if you use a font other tha
 
 If you were using `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, you must use `\gresimpledefbarglyph` to redefine your barred letters (see PDF documentation for details).
 
+### .gtex extension
+
+The `gregorio` executable now uses the `.gtex` extension by default (instead of `.tex`, formerly) for GregorioTeX files that it produces.  If you use `\includescore{file.tex}`, then you should change this to `\includescore{file.gtex}` or use the newer autocompilation feature.
+
 ## 3.0
 ### TeX Live 2013
 

@@ -224,8 +224,6 @@ DIRECT_GLYPH_NAMES = [
     'DivisioMaior',
     'PunctumDeminutus',
     'AuctumMora',
-    'AuctumDuplex',
-    'Circumflexus',
     'Punctum',
     'PunctumInclinatum',
     'Stropha',
@@ -242,6 +240,7 @@ DIRECT_GLYPH_NAMES = [
     'PunctumInclinatumAuctus',
     'PunctumInclinatumDeminutus',
     'VEpisemus',
+    'VEpisemus.circumflexus',
     'PunctumCavum',
     'LineaPunctum',
     'LineaPunctumCavum',
@@ -273,10 +272,13 @@ DIRECT_GLYPH_NAMES = [
     'BarBrace',
     'OriscusDeminutus',
     'VirgaReversaDescendens',
-    'VirgaReversaDescendensLongqueue',
+    'VirgaReversaLongqueueDescendens',
     'PesOneNothing',
     'PesQuilismaOneNothing',
 ]
+
+# This will be populated by initialize_glyphs
+COMMON_DIRECT_VARIANTS = {}
 
 def initialize_glyphs():
     "Builds the first glyphs."
@@ -291,17 +293,21 @@ def initialize_glyphs():
         oldfont.copy()
         newfont.paste()
         set_glyph_name(name)
+        if name.find('.') > 0:
+            COMMON_DIRECT_VARIANTS[name] = True
 
 def copy_variant_glyphs():
     "Copies the variant glyphs."
     global newfont, oldfont
     for glyph in oldfont.glyphs():
-        if glyph.isWorthOutputting() and glyph.glyphname.find(".") > 0:
+        name = glyph.glyphname
+        if (glyph.isWorthOutputting() and name.find(".") > 0 and
+                name not in COMMON_DIRECT_VARIANTS):
             new_glyph()
             oldfont.selection.select(glyph)
             oldfont.copy()
             newfont.paste()
-            set_glyph_name(glyph.glyphname)
+            set_glyph_name(name)
 
 def get_lengths(fontname):
     "Initialize widths depending on the font."
@@ -436,7 +442,7 @@ L_INITIO_DEBILIS_ASCENDENS  = 'InitioDebilisAscendens'
 L_INITIO_DEBILIS_DESCENDENS = 'InitioDebilisDescendens'
 
 def simple_paste(src):
-    "Copy and past a glyph."
+    "Copy and paste a glyph."
     global oldfont, newfont, glyphnumber
     oldfont.selection.select(src)
     oldfont.copy()

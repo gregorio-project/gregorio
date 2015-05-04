@@ -67,6 +67,7 @@ typedef enum gregorio_type {
     // differently for the spaces above the lines
     GRE_ALT,
     GRE_NLBA,
+    GRE_MANUAL_CUSTOS,
 } gregorio_type;
 
 // the different shapes, only for notes
@@ -654,104 +655,65 @@ typedef struct gregorio_voice_info {
 } gregorio_voice_info;
 
 gregorio_score *gregorio_new_score(void);
-void gregorio_source_info_init(source_info *si);
-
-void gregorio_determine_h_episemus_type(gregorio_note *note);
-
-void gregorio_activate_isolated_h_episemus(gregorio_note *current_note, int n);
-void gregorio_mix_h_episemus(gregorio_note *current_note, unsigned char type);
 gregorio_shape gregorio_det_shape(char pitch);
-
 void gregorio_add_note(gregorio_note **current_note, char pitch,
-                       gregorio_shape shape, gregorio_sign signs,
-                       gregorio_liquescentia liquescentia, char h_episemus);
-void gregorio_add_glyph(gregorio_glyph **current_glyph, gregorio_glyph_type type,
-                        gregorio_note *first_note,
-                        gregorio_liquescentia liquescentia);
+        gregorio_shape shape, gregorio_sign signs,
+        gregorio_liquescentia liquescentia, char h_episemus);
+void gregorio_add_glyph(gregorio_glyph **current_glyph,
+        gregorio_glyph_type type, gregorio_note *first_note,
+        gregorio_liquescentia liquescentia);
 void gregorio_add_element(gregorio_element **current_element,
-                          gregorio_glyph *first_glyph);
+        gregorio_glyph *first_glyph);
 void gregorio_add_syllable(gregorio_syllable **current_syllable,
-                           int number_of_voices,
-                           gregorio_element *elements[],
-                           gregorio_character *first_character,
-                           gregorio_character *first_translation_character,
-                           gregorio_word_position position,
-                           char *abovelinestext,
-                           gregorio_tr_centering translation_type,
-                           gregorio_nlba no_linebreak_area);
-
-void gregorio_set_signs(gregorio_note *current_note, char signs);
+        int number_of_voices, gregorio_element *elements[],
+        gregorio_character *first_character,
+        gregorio_character *first_translation_character,
+        gregorio_word_position position, char *abovelinestext,
+        gregorio_tr_centering translation_type,
+        gregorio_nlba no_linebreak_area);
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
 void gregorio_add_h_episemus(gregorio_note *note, gregorio_h_episemus type,
-                             unsigned int *nbof_isolated_episemus);
-void gregorio_set_h_episemus(gregorio_note *note, gregorio_h_episemus type);
+        unsigned int *nbof_isolated_episemus);
 void gregorio_add_sign(gregorio_note *note, gregorio_sign sign);
 void gregorio_add_liquescentia(gregorio_note *note,
-                               gregorio_liquescentia liquescentia);
-
+        gregorio_liquescentia liquescentia);
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info);
-
-void gregorio_free_notes(gregorio_note **first_note);
-void gregorio_free_glyphs(gregorio_glyph **glyph);
-void gregorio_free_elements(gregorio_element **element);
-void gregorio_free_syllables(gregorio_syllable **syllable,
-                             int number_of_voices);
-void gregorio_free_score_infos(gregorio_score *score);
 void gregorio_free_voice_infos(gregorio_voice_info *voice_info);
-void gregorio_free_source_info(source_info *si);
-
 void gregorio_free_one_note(gregorio_note **note);
 void gregorio_free_one_glyph(gregorio_glyph **glyph);
-void gregorio_free_one_element(gregorio_element **element);
-void gregorio_free_one_syllable(gregorio_syllable **syllable,
-                                int number_of_voices);
 void gregorio_free_score(gregorio_score *score);
-
 void gregorio_go_to_first_character(gregorio_character **character);
-void gregorio_add_text(char *mbcharacters,
-                       gregorio_character **current_character);
-
 void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
-                                           gregorio_type type, char pitch,
-                                           bool flatted_key, char *texverb);
+        gregorio_type type, char pitch, bool flatted_key, char *texverb);
 void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
-                                             gregorio_type type,
-                                             gregorio_extra_info info,
-                                             gregorio_sign sign, char *texverb);
-
+        gregorio_type type, gregorio_extra_info info, gregorio_sign sign,
+        char *texverb);
 void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
-                                      gregorio_type sub_type);
+        gregorio_type sub_type);
 void gregorio_add_custo_as_note(gregorio_note **current_note);
+void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
+                                        char pitch);
 void gregorio_add_clef_change_as_note(gregorio_note **current_note,
-                                      gregorio_type type, char clef_line);
+        gregorio_type type, char clef_line);
 void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar);
 void gregorio_add_alteration_as_note(gregorio_note **current_note,
-                                     gregorio_type type, char pitch);
+        gregorio_type type, char pitch);
 void gregorio_add_space_as_note(gregorio_note **current_note,
-                                gregorio_space space);
-// void gregorio_add_special_as_note(gregorio_note **current_note,
-// gregorio_type type, char pitch);
+        gregorio_space space);
 void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
-                                  gregorio_type type);
-void gregorio_add_nlba_as_note(gregorio_note **current_note, gregorio_nlba type);
+        gregorio_type type);
+void gregorio_add_nlba_as_note(gregorio_note **current_note,
+        gregorio_nlba type);
 void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str);
 void gregorio_add_cs_to_note(gregorio_note **current_note, char *str);
 void gregorio_add_misc_element(gregorio_element **current_element,
-                               gregorio_type type,
-                               gregorio_misc_element_info info, char *texverb);
-
-void gregorio_determine_good_top_notes(gregorio_note *current_note);
-void gregorio_determine_good_bottom_notes(gregorio_note *current_note);
-
+        gregorio_type type, gregorio_misc_element_info info, char *texverb);
 void gregorio_reinitialize_alterations(char alterations[][13],
-                                       int number_of_voices);
-
+        int number_of_voices);
 void gregorio_reinitialize_one_voice_alterations(char alterations[13]);
-
 void gregorio_set_score_name(gregorio_score *score, char *name);
-void
-gregorio_set_score_gabc_copyright(gregorio_score *score, char *gabc_copyright);
+void gregorio_set_score_gabc_copyright(gregorio_score *score, char *gabc_copyright);
 void gregorio_set_score_score_copyright(gregorio_score *score,
                                         char *score_copyright);
 void gregorio_set_score_office_part(gregorio_score *score, char *office_part);
@@ -760,54 +722,37 @@ void gregorio_set_score_meter(gregorio_score *score, char *meter);
 void gregorio_set_score_commentary(gregorio_score *score, char *commentary);
 void gregorio_set_score_arranger(gregorio_score *score, char *arranger);
 void gregorio_set_score_gabc_version(gregorio_score *score, char *gabc_version);
-void
-gregorio_set_score_number_of_voices(gregorio_score *score,
-                                    int number_of_voices);
+void gregorio_set_score_number_of_voices(gregorio_score *score,
+        int number_of_voices);
 void gregorio_set_score_lilypond_preamble(gregorio_score *score,
-                                          char *lilypond_preamble);
+        char *lilypond_preamble);
 void gregorio_set_score_opustex_preamble(gregorio_score *score,
-                                         char *opustex_preamble);
+        char *opustex_preamble);
 void gregorio_set_score_musixtex_preamble(gregorio_score *score,
-                                          char *musixtex_preamble);
+        char *musixtex_preamble);
 void gregorio_set_voice_annotation(gregorio_voice_info *voice_info,
-                                   char *annotation);
+        char *annotation);
 void gregorio_set_score_author(gregorio_score *score, char *author);
 void gregorio_set_score_date(gregorio_score *score, char *date);
 void gregorio_set_score_manuscript(gregorio_score *score, char *manuscript);
 void gregorio_set_score_book(gregorio_score *score, char *book);
-void
-gregorio_set_score_manuscript_reference(gregorio_score *score, char *reference);
+void gregorio_set_score_manuscript_reference(gregorio_score *score,
+        char *reference);
 void gregorio_set_score_manuscript_storage_place(gregorio_score *score,
-                                                 char *storage_place);
+        char *storage_place);
 void gregorio_set_score_transcriber(gregorio_score *score, char *transcriber);
 void gregorio_set_score_transcription_date(gregorio_score *score,
-                                           char *transcription_date);
+        char *transcription_date);
 void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes);
 void gregorio_set_voice_style(gregorio_voice_info *voice_info, char *style);
-void
-gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
-                                    char *virgula_position);
-
+void gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
+        char *virgula_position);
 void gregorio_fix_initial_keys(gregorio_score *score, int default_key);
-
-/*
- * void gregorio_fix_positions (gregorio_score * score);
- */
-
 void gregorio_go_to_first_note(gregorio_note **note);
 void gregorio_go_to_first_glyph(gregorio_glyph **glyph);
-
 void gregorio_det_step_and_line_from_key(int key, char *step, int *line);
-
 char gregorio_is_only_special(gregorio_element *element);
-
 int gregorio_calculate_new_key(char step, int line);
-
-char gregorio_det_pitch(int key, char step, int octave);
-
-void
-gregorio_set_octave_and_step_from_pitch(char *step,
-                                        int *octave, char pitch, int clef);
 
 // the maximum number of voices, more than this is total nonsense in
 // gregorian chant.
@@ -859,8 +804,6 @@ inline bool is_puncta_inclinata(char glyph)
 #define IS_INITIO_DEBILIS 5
 #define NO_INITIO_DEBILIS 0
 
-#define SKIP_FIRST_LETTER 1
-
 inline bool is_liquescentia(char liquescentia)
 {
     return liquescentia == L_DEMINUTUS || liquescentia == L_AUCTUS_ASCENDENS
@@ -875,22 +818,12 @@ inline bool is_initio_debilis(char liquescentia)
 #define SCHEME_DEFAULT SCHEME_LATINE
 
 void gregorio_add_character(gregorio_character **current_character,
-                            grewchar wcharacter);
+        grewchar wcharacter);
 void gregorio_begin_style(gregorio_character **current_character,
-                          grestyle_style style);
+        grestyle_style style);
 void gregorio_end_style(gregorio_character **current_character,
-                        grestyle_style style);
-
-int gregorio_is_vowel(grewchar letter);
-
+        grestyle_style style);
 char gregorio_determine_next_pitch(gregorio_syllable *syllable,
-                                   gregorio_element *element,
-                                   gregorio_glyph *glyph);
-gregorio_glyph *gregorio_first_glyph(gregorio_syllable *syllable);
-char gregorio_syllable_first_note(gregorio_syllable *syllable);
-
-void gregorio_free_characters(gregorio_character *current_character);
-void gregorio_free_one_character(gregorio_character *current_character);
-void gregorio_suppress_one_character(gregorio_character *current_character);
+        gregorio_element *element, gregorio_glyph *glyph);
 
 #endif

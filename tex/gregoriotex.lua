@@ -172,18 +172,11 @@ end
 local function atScoreBeggining ()
   luatexbase.add_to_callback('post_linebreak_filter', process, 'gregoriotex.callback', 1)
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
-  -- we call the optimize_gabc functions here
-  if optimize_gabc_style then
-    optimize_gabc_style.add_callback()
-  end
 end
 
 local function atScoreEnd ()
   luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.callback')
   luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
-  if optimize_gabc_style then
-    optimize_gabc_style.remove_callback()
-  end
 end
 
 local function clean_old_gtex_files(file_withdir)
@@ -373,16 +366,13 @@ local function def_glyph(csname, font_name, glyph, font_table, setter)
   setter(csname, font_csname, char)
 end
 
-local function def_score_glyph(csname, font_name, glyph)
-  def_glyph(csname, font_name, glyph, score_fonts, set_score_glyph)
-end
-
 local function change_single_score_glyph(glyph_name, font_name, replacement)
   if font_name == '*' then
     def_glyph('grecp'..glyph_name, 'greciliae', replacement, score_fonts,
         set_common_score_glyph)
   else
-    def_score_glyph('grecp'..glyph_name, font_name, replacement)
+    def_glyph('grecp'..glyph_name, font_name, replacement, score_fonts,
+        set_score_glyph)
   end
 end
 
@@ -450,6 +440,10 @@ local function def_symbol(csname, font_name, glyph, sized)
       sized and set_sized_symbol_glyph or set_symbol_glyph)
 end
 
+local function font_size()
+  tex.print(string.format('%.2f', (font.fonts[font.current()].size / 65536.0)))
+end
+
 gregoriotex.include_score        = include_score
 gregoriotex.compile_gabc         = compile_gabc
 gregoriotex.atScoreEnd           = atScoreEnd
@@ -458,8 +452,8 @@ gregoriotex.check_font_version   = check_font_version
 gregoriotex.get_gregorioversion  = get_gregorioversion
 gregoriotex.map_font             = map_font
 gregoriotex.init_variant_font    = init_variant_font
-gregoriotex.def_score_glyph      = def_score_glyph
 gregoriotex.change_score_glyph   = change_score_glyph
 gregoriotex.reset_score_glyph    = reset_score_glyph
 gregoriotex.scale_score_fonts    = scale_score_fonts
 gregoriotex.def_symbol           = def_symbol
+gregoriotex.font_size            = font_size
