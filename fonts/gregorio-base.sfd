@@ -41,7 +41,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 0 19 8
+WinInfo: 64 8 2
 Grid
 142 1300 m 0
  142 -700 l 0
@@ -1455,30 +1455,8 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: AuctumDuplex
-Encoding: 63 -1 63
-Width: 71
-VWidth: 2679
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-35.75 16.25 m 4
- 17.7314 16.25 0 31.3789 0 52 c 4
- 0 72.6553 17.7227 87.75 35.75 87.75 c 4
- 53.7686 87.75 71.5 72.6211 71.5 52 c 4
- 71.5 31.3447 53.7773 16.25 35.75 16.25 c 4
-35.75 346.25 m 4
- 17.7314 346.25 0 361.379 0 382 c 4
- 0 402.655 17.7227 417.75 35.75 417.75 c 4
- 53.7686 417.75 71.5 402.621 71.5 382 c 4
- 71.5 361.345 53.7773 346.25 35.75 346.25 c 4
-EndSplineSet
-EndChar
-
 StartChar: VEpisemus
-Encoding: 64 -1 64
+Encoding: 64 -1 63
 Width: 40
 VWidth: 2048
 Flags: HW
@@ -1497,7 +1475,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumDeminutus
-Encoding: 65 -1 65
+Encoding: 65 -1 64
 Width: 110
 VWidth: 2048
 Flags: HW
@@ -1517,7 +1495,7 @@ Validated: 33
 EndChar
 
 StartChar: hepisemus_base
-Encoding: 66 -1 66
+Encoding: 66 -1 65
 Width: 1
 VWidth: 2048
 Flags: HW
@@ -1534,7 +1512,7 @@ EndSplineSet
 EndChar
 
 StartChar: PesOneNothing
-Encoding: 67 -1 67
+Encoding: 67 -1 66
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -1559,7 +1537,7 @@ Validated: 33
 EndChar
 
 StartChar: CustosUpMedium
-Encoding: 68 -1 68
+Encoding: 68 -1 67
 Width: 85
 VWidth: 2048
 Flags: HW
@@ -1578,7 +1556,7 @@ EndSplineSet
 EndChar
 
 StartChar: CustosDownMedium
-Encoding: 69 -1 69
+Encoding: 69 -1 68
 Width: 85
 VWidth: 2048
 Flags: HW
@@ -1598,7 +1576,7 @@ Validated: 33
 EndChar
 
 StartChar: Accentus
-Encoding: 70 -1 70
+Encoding: 70 -1 69
 Width: 99
 VWidth: 1594
 Flags: W
@@ -1620,7 +1598,7 @@ Validated: 1
 EndChar
 
 StartChar: AccentusReversus
-Encoding: 71 -1 71
+Encoding: 71 -1 70
 Width: 99
 VWidth: 1594
 Flags: W
@@ -1642,7 +1620,7 @@ Validated: 1
 EndChar
 
 StartChar: SemicirculusReversus
-Encoding: 72 -1 72
+Encoding: 72 -1 71
 Width: 125
 VWidth: 1583
 Flags: W
@@ -1662,7 +1640,7 @@ Validated: 1
 EndChar
 
 StartChar: Semicirculus
-Encoding: 73 -1 73
+Encoding: 73 -1 72
 Width: 124
 VWidth: 1606
 Flags: W
@@ -1682,7 +1660,7 @@ Validated: 1
 EndChar
 
 StartChar: Circulus
-Encoding: 74 -1 74
+Encoding: 74 -1 73
 Width: 124
 VWidth: 1594
 Flags: W
@@ -1705,7 +1683,7 @@ Validated: 1
 EndChar
 
 StartChar: CClefChange
-Encoding: 75 -1 75
+Encoding: 75 -1 74
 Width: 140
 VWidth: 2048
 Flags: HW
@@ -1734,7 +1712,7 @@ Validated: 1
 EndChar
 
 StartChar: FClefChange
-Encoding: 76 -1 76
+Encoding: 76 -1 75
 Width: 321
 VWidth: 2048
 Flags: HW
@@ -1768,8 +1746,8 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: Circumflexus
-Encoding: 77 -1 77
+StartChar: VEpisemus.circumflexus
+Encoding: 77 -1 76
 Width: 108
 VWidth: 2048
 Flags: W
@@ -1793,7 +1771,7 @@ Validated: 33
 EndChar
 
 StartChar: PunctumCavum
-Encoding: 78 -1 78
+Encoding: 78 -1 77
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -1820,7 +1798,7 @@ Validated: 1
 EndChar
 
 StartChar: LineaPunctum
-Encoding: 79 -1 79
+Encoding: 79 -1 78
 Width: 266
 VWidth: 2048
 Flags: HW
@@ -1854,7 +1832,7 @@ Validated: 1
 EndChar
 
 StartChar: LineaPunctumCavum
-Encoding: 80 -1 80
+Encoding: 80 -1 79
 Width: 266
 VWidth: 2048
 Flags: HW
@@ -1915,7 +1893,7 @@ EndSplineSet
 EndChar
 
 StartChar: hepisemusleft
-Encoding: 82 -1 82
+Encoding: 82 -1 81
 Width: 1
 VWidth: 2048
 Flags: HW
@@ -1932,7 +1910,7 @@ EndSplineSet
 EndChar
 
 StartChar: hepisemusright
-Encoding: 83 -1 83
+Encoding: 83 -1 82
 Width: 2
 VWidth: 2048
 Flags: HW
@@ -1949,7 +1927,7 @@ EndSplineSet
 EndChar
 
 StartChar: mpdeminutus
-Encoding: 84 -1 84
+Encoding: 84 -1 83
 Width: 186
 VWidth: 2048
 Flags: HW
@@ -1972,7 +1950,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumDescendens
-Encoding: 85 -1 85
+Encoding: 85 -1 84
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -1994,7 +1972,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumAscendens
-Encoding: 86 -1 86
+Encoding: 86 -1 85
 Width: 164
 VWidth: 2048
 Flags: HW
@@ -2016,7 +1994,7 @@ EndSplineSet
 EndChar
 
 StartChar: mnbdeminutus
-Encoding: 87 -1 87
+Encoding: 87 -1 86
 Width: 186
 VWidth: 2048
 Flags: HW
@@ -2037,7 +2015,7 @@ EndSplineSet
 EndChar
 
 StartChar: mnbpdeminutus
-Encoding: 88 -1 88
+Encoding: 88 -1 87
 Width: 186
 VWidth: 2048
 Flags: HW
@@ -2058,7 +2036,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb1
-Encoding: 89 -1 89
+Encoding: 89 -1 88
 Width: 340
 VWidth: 2048
 Flags: HW
@@ -2078,7 +2056,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb2
-Encoding: 90 -1 90
+Encoding: 90 -1 89
 Width: 428
 VWidth: 2048
 Flags: HW
@@ -2098,7 +2076,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb3
-Encoding: 91 -1 91
+Encoding: 91 -1 90
 Width: 586
 VWidth: 2048
 Flags: HW
@@ -2118,7 +2096,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb4
-Encoding: 92 -1 92
+Encoding: 92 -1 91
 Width: 670
 VWidth: 2048
 Flags: HW
@@ -2138,7 +2116,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb5
-Encoding: 93 -1 93
+Encoding: 93 -1 92
 Width: 931
 VWidth: 2048
 Flags: HW

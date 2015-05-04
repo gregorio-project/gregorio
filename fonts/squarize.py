@@ -217,8 +217,6 @@ DIRECT_GLYPH_NAMES = [
     'DivisioMaior',
     'PunctumDeminutus',
     'AuctumMora',
-    'AuctumDuplex',
-    'Circumflexus',
     'Punctum',
     'PunctumInclinatum',
     'Stropha',
@@ -235,6 +233,7 @@ DIRECT_GLYPH_NAMES = [
     'PunctumInclinatumAuctus',
     'PunctumInclinatumDeminutus',
     'VEpisemus',
+    'VEpisemus.circumflexus',
     'PunctumCavum',
     'LineaPunctum',
     'LineaPunctumCavum',
@@ -275,7 +274,6 @@ DIRECT_GLYPH_NAMES = [
     'PunctumAuctusLineBL',
 ]
 
-
 def glyph_exists(glyphName, font):
     "returns if glyph named glyphName exists in font (boolean)"
     result = True
@@ -285,6 +283,9 @@ def glyph_exists(glyphName, font):
         result = False
     return result
 
+# This will be populated by initialize_glyphs
+COMMON_DIRECT_VARIANTS = {}
+
 def initialize_glyphs():
     "Builds the first glyphs."
     global newfont, oldfont, font_name
@@ -293,11 +294,14 @@ def initialize_glyphs():
     DIRECT_GLYPH_NAMES.sort()
     for name in DIRECT_GLYPH_NAMES:
         new_glyph()
+<<<<<<< HEAD
         if glyph_exists(name, oldfont):
             oldfont.selection.select(name)
             oldfont.copy()
             newfont.paste()
             set_glyph_name(name)
+            if name.find('.') > 0:
+                COMMON_DIRECT_VARIANTS[name] = True
         else:
             print('Warning: glyph '+name+' missing from '+font_name)
 
@@ -305,12 +309,14 @@ def copy_variant_glyphs():
     "Copies the variant glyphs."
     global newfont, oldfont
     for glyph in oldfont.glyphs():
-        if glyph.isWorthOutputting() and glyph.glyphname.find(".") > 0:
+        name = glyph.glyphname
+        if (glyph.isWorthOutputting() and name.find(".") > 0 and
+                name not in COMMON_DIRECT_VARIANTS):
             new_glyph()
             oldfont.selection.select(glyph)
             oldfont.copy()
             newfont.paste()
-            set_glyph_name(glyph.glyphname)
+            set_glyph_name(name)
 
 def get_width(widths, glyphName):
     "Get length of glyph glyphName in the base font."
@@ -365,7 +371,7 @@ L_INITIO_DEBILIS_ASCENDENS  = 'InitioDebilisAscendens'
 L_INITIO_DEBILIS_DESCENDENS = 'InitioDebilisDescendens'
 
 def simple_paste(src):
-    "Copy and past a glyph."
+    "Copy and paste a glyph."
     global oldfont, newfont, glyphnumber
     oldfont.selection.select(src)
     oldfont.copy()

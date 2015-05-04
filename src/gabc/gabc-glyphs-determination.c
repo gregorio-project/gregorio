@@ -227,10 +227,11 @@ static char gabc_determine_custo_pitch(gregorio_note *current_note,
  * 
 ****************************/
 
-static char gregorio_add_note_to_a_glyph(
-        gregorio_glyph_type current_glyph_type, char current_pitch,
-        char last_pitch, gregorio_shape shape,
-        gregorio_liquescentia liquescentia, gabc_determination * end_of_glyph)
+static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
+        char current_pitch, char last_pitch, gregorio_shape shape,
+        gregorio_liquescentia liquescentia,
+        gregorio_note *current_glyph_first_note,
+        gabc_determination * end_of_glyph)
 {
 
     // next glyph type is the type of the glyph that will be returned (the
@@ -276,8 +277,15 @@ static char gregorio_add_note_to_a_glyph(
             break;
         case G_PODATUS:
             if (current_pitch > last_pitch) {
-                next_glyph_type = G_SCANDICUS;
-                *end_of_glyph = DET_END_OF_CURRENT;
+                if (current_glyph_first_note->u.note.shape == S_PUNCTUM &&
+                        current_glyph_first_note->u.note.liquescentia !=
+                        L_INITIO_DEBILIS) {
+                    next_glyph_type = G_SCANDICUS;
+                    *end_of_glyph = DET_END_OF_CURRENT;
+                } else {
+                    next_glyph_type = G_PUNCTUM;
+                    *end_of_glyph = DET_END_OF_PREVIOUS;
+                }
             } else {
                 next_glyph_type = G_TORCULUS;
             }
@@ -740,6 +748,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                                          current_note->u.note.pitch, last_pitch,
                                          current_note->u.note.shape,
                                          current_note->u.note.liquescentia,
+                                         current_glyph_first_note,
                                          &end_of_glyph);
 
         // patch to have good shapes in the special cases of pes quadratum and
