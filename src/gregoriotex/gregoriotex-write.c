@@ -257,12 +257,15 @@ static char *gregoriotex_determine_note_number_and_type(gregorio_note *note,
 static char *gregoriotex_determine_liquescentia(gtex_glyph_liquescentia type,
         gregorio_liquescentia liquescentia)
 {
-    if (liquescentia == L_AUCTA) {
+    switch (liquescentia) {
+    case L_AUCTA:
         liquescentia = L_AUCTUS_ASCENDENS;
-    }
-    if (liquescentia == L_AUCTA_INITIO_DEBILIS) {
+        break;
+    case L_AUCTA_INITIO_DEBILIS:
         liquescentia = L_AUCTUS_ASCENDENS_INITIO_DEBILIS;
+        break;
     }
+
     switch (type) {
     case LG_ALL:
         break;
@@ -838,7 +841,7 @@ static void gregoriotex_getlineinfos(gregorio_syllable *syllable,
         if (syllable->abovelinestext) {
             line->abovelinestext = 1;
         }
-        element = (syllable->elements)[0];
+        element = *syllable->elements;
         while (element) {
             if (element->type == GRE_END_OF_LINE) {
                 return;
@@ -2691,14 +2694,18 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
         if (element->type == GRE_ELEMENT && element->u.glyphs.first_glyph) {
             glyph = element->u.glyphs.first_glyph;
             while (glyph) {
-                if (glyph->type == GRE_FLAT && alteration == 0) {
-                    alteration = 20;
-                }
-                if (glyph->type == GRE_NATURAL && alteration == 0) {
-                    alteration = 40;
-                }
-                if (glyph->type == GRE_SHARP && alteration == 0) {
-                    alteration = 60;
+                if (alteration == 0) {
+                    switch (glyph->type) {
+                    case GRE_FLAT:
+                        alteration = 20;
+                        break;
+                    case GRE_NATURAL:
+                        alteration = 40;
+                        break;
+                    case GRE_SHARP:
+                        alteration = 60;
+                        break;
+                    }
                 }
                 if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
                     switch (glyph->u.notes.glyph_type) {
