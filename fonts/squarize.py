@@ -584,6 +584,7 @@ def write_pes_debilis_deminutus(widths, i, shape, lique=L_NOTHING):
     glyph_name = '%s%s%s' % (shape, AMBITUS[i], lique)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     simple_paste("deminutus")
     write_line(i, get_width(widths, 'deminutus')-get_width(widths, 'line2'), BASE_HEIGHT)
@@ -653,6 +654,7 @@ def write_pes_quadratum(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHI
     glyph_name = '%s%s%s' % (shape, AMBITUS[i], lique)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     if first_glyph == "idebilis":
         first_width = get_width(widths, 'idebilis')-get_width(widths, 'line2')
@@ -694,6 +696,7 @@ def write_virga_strata(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHIN
     glyph_name = '%s%s%s' % (shape, AMBITUS[i], lique)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     if i == 1:
         first_glyph = 'Punctum'
@@ -725,6 +728,7 @@ def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
     glyph_name = '%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], lique)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     if j == 1:
         if last_glyph == 'rvsbase':
@@ -857,6 +861,7 @@ def write_flexus(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHING):
     glyph_name = '%s%s%s' % (shape, AMBITUS[i], lique)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     # we add a queue if it is a deminutus
     if first_glyph == "mdeminutus":
@@ -951,6 +956,7 @@ def write_porrectus(widths, i, j, last_glyph, with_bar, shape, lique=L_NOTHING):
     glyph_name = '%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], lique)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     first_glyph = "porrectus%d" % i
     if j == 1 and glyph_exists("porrectusam1%d" % i, oldfont):
@@ -996,6 +1002,7 @@ def write_alt_porrectus_deminutus(widths, i, j):
     glyph_name = 'Porrectus%s%sDeminutus.alt' % (AMBITUS[i], AMBITUS[j])
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     write_first_bar(i)
     if i == 1:
@@ -1086,6 +1093,7 @@ def write_porrectusflexus(widths, i, j, k, last_glyph, with_bar,
     glyph_name = '%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     if j == 1:
         first_glyph = "porrectusflexusnb%d" % i
@@ -1200,6 +1208,7 @@ def write_torculus(widths, i, j, first_glyph, last_glyph, shape, lique=L_NOTHING
     glyph_name = '%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], lique)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     length = get_width(widths, first_glyph)-get_width(widths, 'line2')
     if first_glyph == "qbase":
@@ -1267,6 +1276,7 @@ def write_torculus_liquescens(widths, i, j, k, first_glyph, shape,
     glyph_name = '%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     length = get_width(widths, first_glyph)-get_width(widths, 'line2')
     if first_glyph == "qbase":
@@ -1403,6 +1413,7 @@ def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
     glyph_name = '%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     middle_glyph = "porrectus%d" % j
     if k == 1 and glyph_exists("porrectusam1%d" % j, oldfont):
@@ -1457,6 +1468,7 @@ def write_alt_torculusresupinusdeminutus(widths, i, j, k, first_glyph,
     glyph_name = '%s%s%s%s%s.alt' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     length = get_width(widths, first_glyph)-get_width(widths, 'line2')
     if i == 1:
@@ -1519,6 +1531,7 @@ def write_scandicus(widths, i, j, last_glyph, lique=L_NOTHING):
     glyph_name = '%s%s%s%s' % (S_SCANDICUS, AMBITUS[i], AMBITUS[j], lique)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     # special case of i=j=1, we use glyph 1025 directly
     if i == 1 and j == 1 and lique == L_NOTHING:
@@ -1571,6 +1584,7 @@ def write_ancus(widths, i, j, first_glyph, glyph_type):
     glyph_name = '%s%s%s%s' % (glyph_type, AMBITUS[i], AMBITUS[j], L_DEMINUTUS)
     if glyph_exists(glyph_name, oldfont):
         simple_paste(glyph_name)
+        set_glyph_name(glyph_name)
         return
     if i == 1:
         second_glyph = 'mnbdeminutus'
