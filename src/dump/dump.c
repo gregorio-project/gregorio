@@ -24,399 +24,7 @@
 #include "unicode.h"
 #include "messages.h"
 
-#include "dump.h"
-
-void dump_write_score(FILE *f, gregorio_score *score)
-{
-    gregorio_syllable *syllable = score->first_syllable;
-    gregorio_voice_info *voice_info = score->first_voice_info;
-    int i;
-    gregorio_element *element;
-    gregorio_glyph *glyph;
-    gregorio_note *note;
-    int annotation_num;
-
-    if (!f) {
-        gregorio_message(_
-                         ("call with NULL file"),
-                         "gregoriotex_write_score", ERROR, 0);
-        return;
-    }
-    fprintf(f,
-            "=====================================================================\n SCORE INFOS\n=====================================================================\n");
-    if (score->number_of_voices) {
-        fprintf(f, "   number_of_voices          %d\n",
-                score->number_of_voices);
-    }
-    if (score->name) {
-        fprintf(f, "   name                      %s\n", score->name);
-    }
-    if (score->gabc_copyright) {
-        fprintf(f, "   gabc_copyright            %s\n", score->gabc_copyright);
-    }
-    if (score->score_copyright) {
-        fprintf(f, "   score_copyright           %s\n", score->score_copyright);
-    }
-    if (score->office_part) {
-        fprintf(f, "   office_part               %s\n", score->office_part);
-    }
-    if (score->occasion) {
-        fprintf(f, "   occasion                  %s\n", score->occasion);
-    }
-    if (score->meter) {
-        fprintf(f, "   meter                     %s\n", score->meter);
-    }
-    if (score->commentary) {
-        fprintf(f, "   commentary                %s\n", score->commentary);
-    }
-    if (score->arranger) {
-        fprintf(f, "   arranger                  %s\n", score->arranger);
-    }
-    if (score->si.author) {
-        fprintf(f, "   author                    %s\n", score->si.author);
-    }
-    if (score->si.date) {
-        fprintf(f, "   date                      %s\n", score->si.date);
-    }
-    if (score->si.manuscript) {
-        fprintf(f, "   manuscript                %s\n", score->si.manuscript);
-    }
-    if (score->si.manuscript_reference) {
-        fprintf(f, "   manuscript_reference      %s\n",
-                score->si.manuscript_reference);
-    }
-    if (score->si.manuscript_storage_place) {
-        fprintf(f, "   manuscript_storage_place  %s\n",
-                score->si.manuscript_storage_place);
-    }
-    if (score->si.book) {
-        fprintf(f, "   book                      %s\n", score->si.book);
-    }
-    if (score->si.transcriber) {
-        fprintf(f, "   transcriber               %s\n", score->si.transcriber);
-    }
-    if (score->si.transcription_date) {
-        fprintf(f, "   transcription_date        %s\n",
-                score->si.transcription_date);
-    }
-    if (score->lilypond_preamble) {
-        fprintf(f, "   lilypond_preamble         %s\n",
-                score->lilypond_preamble);
-    }
-    if (score->opustex_preamble) {
-        fprintf(f, "   opustex_preamble          %s\n",
-                score->opustex_preamble);
-    }
-    if (score->musixtex_preamble) {
-        fprintf(f, "   musixtex_preamble         %s\n",
-                score->musixtex_preamble);
-    }
-    if (score->gregoriotex_font) {
-        fprintf(f, "   gregoriotex_font          %s\n",
-                score->gregoriotex_font);
-    }
-    if (score->mode) {
-        fprintf(f, "   mode                      %d\n", score->mode);
-    }
-    if (score->initial_style) {
-        fprintf(f, "   initial_style             %d\n", score->initial_style);
-    }
-    if (score->user_notes) {
-        fprintf(f, "   user_notes                %s\n", score->user_notes);
-    }
-    fprintf(f,
-            "\n\n=====================================================================\n VOICES INFOS\n=====================================================================\n");
-    for (i = 0; i < score->number_of_voices; i++) {
-        fprintf(f, "  Voice %d\n", i + 1);
-        if (voice_info->initial_key) {
-            fprintf(f, "   initial_key               %d (%s)\n",
-                    voice_info->initial_key,
-                    dump_key_to_char(voice_info->initial_key));
-            if (voice_info->flatted_key) {
-                fprintf(f, "   flatted_key               true\n");
-            }
-        }
-        for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS;
-             ++annotation_num) {
-            if (voice_info->annotation[annotation_num]) {
-                fprintf(f, "   annotation                %s\n",
-                        voice_info->annotation[annotation_num]);
-            }
-        }
-        if (voice_info->style) {
-            fprintf(f, "   style                     %s\n", voice_info->style);
-        }
-        if (voice_info->virgula_position) {
-            fprintf(f, "   virgula_position          %s\n",
-                    voice_info->virgula_position);
-        }
-        voice_info = voice_info->next_voice_info;
-    }
-    fprintf(f,
-            "\n\n=====================================================================\n SCORE\n=====================================================================\n");
-    while (syllable) {
-        if (syllable->type) {
-            fprintf(f, "   type                      %d (%s)\n",
-                    syllable->type, dump_type(syllable->type));
-        }
-        if (syllable->position) {
-            fprintf(f, "   position                  %d (%s)\n",
-                    syllable->position,
-                    dump_syllable_position(syllable->position));
-        }
-        if (syllable->special_sign) {
-            fprintf(f, "   special sign                       %s\n",
-                    dump_special_sign(syllable->special_sign));
-        }
-        if (syllable->no_linebreak_area != NLBA_NORMAL) {
-            fprintf(f, "   no line break area        %s\n",
-                    dump_nlba_to_string(syllable->no_linebreak_area));
-        }
-        if (syllable->text) {
-            if (syllable->translation) {
-                fprintf(f, "\n  Text\n");
-            }
-            dump_write_characters(f, syllable->text);
-        }
-        if ((syllable->translation
-             && syllable->translation_type != TR_WITH_CENTER_END)
-            || syllable->translation_type == TR_WITH_CENTER_END) {
-            fprintf(f, "\n  Translation type             %s",
-                    dump_translation_type_to_string
-                    (syllable->translation_type));
-            if (syllable->translation_type == TR_WITH_CENTER_END) {
-                fprintf(f, "\n");
-            }
-        }
-        if (syllable->translation) {
-            fprintf(f, "\n  Translation\n");
-            dump_write_characters(f, syllable->translation);
-        }
-        if (syllable->abovelinestext) {
-            fprintf(f, "\n  Abovelinestext\n    %s", syllable->abovelinestext);
-        }
-        element = syllable->elements[0];
-        while (element) {
-            fprintf(f,
-                    "---------------------------------------------------------------------\n");
-            if (element->type) {
-                fprintf(f, "     type                    %d (%s)\n",
-                        element->type, dump_type(element->type));
-            }
-            if (element->type == GRE_CUSTO && element->u.misc.pitched.pitch) {
-                fprintf(f, "     pitch                   %c     \n",
-                        element->u.misc.pitched.pitch);
-            }
-            if (element->type == GRE_SPACE
-                && element->u.misc.unpitched.info.space) {
-                fprintf(f, "     space                   %d (%s)\n",
-                        element->u.misc.unpitched.info.space,
-                        dump_space_type(element->u.misc.unpitched.info.space));
-            }
-            if (element->type == GRE_TEXVERB_ELEMENT) {
-                fprintf(f, "     TeX string              \"%s\"\n",
-                        element->texverb);
-            }
-            if (element->type == GRE_NLBA) {
-                fprintf(f, "     nlba                    %d (%s)\n",
-                        element->u.misc.unpitched.info.nlba,
-                        dump_nlba_to_string(element->u.misc.unpitched.info.
-                                            nlba));
-            }
-            if (element->type == GRE_ALT) {
-                fprintf(f, "     Above lines text        \"%s\"\n",
-                        element->texverb);
-            }
-            if (element->type == GRE_BAR && element->u.misc.unpitched.info.bar) {
-                fprintf(f, "     bar                     %d (%s)\n",
-                        element->u.misc.unpitched.info.bar,
-                        dump_bar_type(element->u.misc.unpitched.info.bar));
-                if (element->u.misc.unpitched.special_sign) {
-                    fprintf(f, "     special sign            %d (%s)\n",
-                            element->u.misc.unpitched.special_sign,
-                            dump_special_sign(element->u.misc.unpitched.
-                                              special_sign));
-                }
-            }
-            if (element->type == GRE_C_KEY_CHANGE
-                && element->u.misc.pitched.pitch) {
-                fprintf(f, "     clef                    %d (c%d)\n",
-                        element->u.misc.pitched.pitch,
-                        element->u.misc.pitched.pitch - '0');
-                if (element->u.misc.pitched.flatted_key) {
-                    fprintf(f, "     flatted_key             true\n");
-                }
-            }
-            if (element->type == GRE_F_KEY_CHANGE
-                && element->u.misc.pitched.pitch) {
-                fprintf(f, "     clef                    %d (f%d)\n",
-                        element->u.misc.pitched.pitch,
-                        element->u.misc.pitched.pitch - '0');
-                if (element->u.misc.pitched.flatted_key) {
-                    fprintf(f, "     flatted_key             true\n");
-                }
-            }
-            if (element->type == GRE_END_OF_LINE
-                && element->u.misc.unpitched.info.sub_type) {
-                fprintf(f, "     sub_type                %d (%s)\n",
-                        element->u.misc.unpitched.info.sub_type,
-                        dump_type(element->u.misc.unpitched.info.sub_type));
-            }
-            if (element->type == GRE_ELEMENT) {
-                glyph = element->u.glyphs.first_glyph;
-                while (glyph) {
-                    fprintf(f,
-                            "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-                    if (glyph->type) {
-                        fprintf(f, "       type                  %d (%s)\n",
-                                glyph->type, dump_type(glyph->type));
-                    }
-                    switch (glyph->type) {
-                    case GRE_TEXVERB_GLYPH:
-                        fprintf(f, "       TeX string            \"%s\"\n",
-                                glyph->texverb);
-                        break;
-
-                    case GRE_SPACE:
-                        fprintf(f, "       space                 %d (%s)\n",
-                                glyph->u.misc.unpitched.info.space,
-                                dump_space_type(glyph->u.misc.unpitched.info.
-                                                space));
-                        break;
-
-                    case GRE_BAR:
-                        fprintf(f, "       glyph_type            %d (%s)\n",
-                                glyph->u.misc.unpitched.info.bar,
-                                dump_bar_type(glyph->u.misc.unpitched.info.
-                                              bar));
-                        if (glyph->u.misc.unpitched.special_sign) {
-                            fprintf(f, "       special sign          %d (%s)\n",
-                                    glyph->u.misc.unpitched.special_sign,
-                                    dump_special_sign(glyph->u.misc.unpitched.
-                                                      special_sign));
-                        }
-                        break;
-
-                    case GRE_FLAT:
-                    case GRE_NATURAL:
-                    case GRE_SHARP:
-                        fprintf(f, "       glyph_type            %d (%c)\n",
-                                glyph->u.misc.pitched.pitch,
-                                glyph->u.misc.pitched.pitch);
-                        break;
-
-                    case GRE_GLYPH:
-                        fprintf(f, "       glyph_type            %d (%s)\n",
-                                glyph->u.notes.glyph_type,
-                                dump_glyph_type(glyph->u.notes.glyph_type));
-                        if (glyph->u.notes.liquescentia) {
-                            fprintf(f, "       liquescentia          %d (%s)\n",
-                                    glyph->u.notes.liquescentia,
-                                    dump_liquescentia(glyph->u.notes.
-                                                      liquescentia));
-                        }
-                        break;
-
-                    default:
-                        fprintf(f, "       !!! UNKNOWN !!!       !!!\n");
-                        break;
-                    }
-                    if (glyph->type == GRE_GLYPH) {
-                        note = glyph->u.notes.first_note;
-                        while (note) {
-                            fprintf(f,
-                                    "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  \n");
-                            if (note->type) {
-                                fprintf(f,
-                                        "         type                   %d (%s)\n",
-                                        note->type, dump_type(note->type));
-                            }
-                            switch (note->type) {
-                            case GRE_NOTE:
-                                if (note->u.note.pitch) {
-                                    fprintf(f,
-                                            "         pitch                  %c\n",
-                                            note->u.note.pitch);
-                                }
-                                if (note->u.note.shape) {
-                                    fprintf(f,
-                                            "         shape                  %d (%s)\n",
-                                            note->u.note.shape,
-                                            dump_shape(note->u.note.shape));
-                                }
-                                if (note->u.note.liquescentia) {
-                                    fprintf(f,
-                                            "         liquescentia           %d (%s)\n",
-                                            note->u.note.liquescentia,
-                                            dump_liquescentia(note->u.note.
-                                                              liquescentia));
-                                }
-                                break;
-
-                            default:
-                                fprintf(f,
-                                        "         !!! NOT ALLOWED !!!    !!!\n");
-                                break;
-                            }
-                            if (note->texverb) {
-                                fprintf(f,
-                                        "         TeX string             \"%s\"\n",
-                                        note->texverb);
-                            }
-                            if (note->choral_sign) {
-                                fprintf(f,
-                                        "         Choral Sign            \"%s\"\n",
-                                        note->choral_sign);
-                            }
-                            if (note->signs) {
-                                fprintf(f,
-                                        "         signs                  %d (%s)\n",
-                                        note->signs, dump_signs(note->signs));
-                            }
-                            if (note->special_sign) {
-                                fprintf(f,
-                                        "         special sign           %d (%s)\n",
-                                        note->special_sign,
-                                        dump_special_sign(note->special_sign));
-                            }
-                            if (note->h_episemus_type) {
-                                fprintf(f,
-                                        "         h_episemus_type        %d (",
-                                        note->h_episemus_type);
-                                fprintf(f, "%s",
-                                        dump_h_episemus_type(simple_htype
-                                                             (note->
-                                                              h_episemus_type)));
-                                if (has_bottom(note->h_episemus_type)) {
-                                    fprintf(f, " & H_BOTTOM");
-                                }
-                                fprintf(f, ")\n");
-                            }
-                            if (note->h_episemus_top_note) {
-                                fprintf(f,
-                                        "         h_episemus_top_note    %c\n",
-                                        note->h_episemus_top_note);
-                            }
-                            if (note->h_episemus_bottom_note) {
-                                fprintf(f,
-                                        "         h_episemus_bottom_note %c\n",
-                                        note->h_episemus_bottom_note);
-                            }
-                            note = note->next;
-                        }
-                    }
-                    glyph = glyph->next;
-                }
-            }
-            element = element->next;
-        }
-        fprintf(f,
-                "=====================================================================\n");
-        syllable = syllable->next_syllable;
-    }
-}
-
-const char *dump_translation_type_to_string(gregorio_tr_centering
+static const char *dump_translation_type_to_string(gregorio_tr_centering
                                             translation_type)
 {
     switch (translation_type) {
@@ -435,7 +43,7 @@ const char *dump_translation_type_to_string(gregorio_tr_centering
     }
 }
 
-const char *dump_nlba_to_string(gregorio_nlba no_linebreak_area)
+static const char *dump_nlba_to_string(gregorio_nlba no_linebreak_area)
 {
     switch (no_linebreak_area) {
     case NLBA_NORMAL:
@@ -453,7 +61,7 @@ const char *dump_nlba_to_string(gregorio_nlba no_linebreak_area)
     }
 }
 
-const char *dump_style_to_string(grestyle_style style)
+static const char *dump_style_to_string(grestyle_style style)
 {
     switch (style) {
     case ST_NO_STYLE:
@@ -498,7 +106,8 @@ const char *dump_style_to_string(grestyle_style style)
     }
 }
 
-void dump_write_characters(FILE *f, gregorio_character *current_character)
+static void dump_write_characters(FILE *f,
+        gregorio_character *current_character)
 {
     while (current_character) {
         fprintf(f,
@@ -520,7 +129,7 @@ void dump_write_characters(FILE *f, gregorio_character *current_character)
     }
 }
 
-const char *dump_key_to_char(int key)
+static const char *dump_key_to_char(int key)
 {
     const char *str;
     switch (key) {
@@ -555,7 +164,7 @@ const char *dump_key_to_char(int key)
     return str;
 }
 
-const char *dump_syllable_position(gregorio_word_position pos)
+static const char *dump_syllable_position(gregorio_word_position pos)
 {
     const char *str;
     switch (pos) {
@@ -578,7 +187,7 @@ const char *dump_syllable_position(gregorio_word_position pos)
     return str;
 }
 
-const char *dump_type(gregorio_type type)
+static const char *dump_type(gregorio_type type)
 {
     const char *str;
     switch (type) {
@@ -636,6 +245,9 @@ const char *dump_type(gregorio_type type)
     case GRE_ALT:
         str = "GRE_ALT";
         break;
+    case GRE_MANUAL_CUSTOS:
+        str = "GRE_MANUAL_CUSTOS";
+        break;
     default:
         str = "unknown";
         break;
@@ -643,7 +255,7 @@ const char *dump_type(gregorio_type type)
     return str;
 }
 
-const char *dump_bar_type(gregorio_bar element_type)
+static const char *dump_bar_type(gregorio_bar element_type)
 {
     const char *str;
     switch (element_type) {
@@ -690,7 +302,7 @@ const char *dump_bar_type(gregorio_bar element_type)
     return str;
 }
 
-const char *dump_space_type(gregorio_space element_type)
+static const char *dump_space_type(gregorio_space element_type)
 {
     const char *str;
     switch (element_type) {
@@ -728,7 +340,7 @@ const char *dump_space_type(gregorio_space element_type)
     return str;
 }
 
-const char *dump_liquescentia(gregorio_liquescentia liquescentia)
+static const char *dump_liquescentia(gregorio_liquescentia liquescentia)
 {
     const char *str;
     switch (liquescentia) {
@@ -769,7 +381,7 @@ const char *dump_liquescentia(gregorio_liquescentia liquescentia)
     return str;
 }
 
-const char *dump_glyph_type(gregorio_glyph_type glyph_type)
+static const char *dump_glyph_type(gregorio_glyph_type glyph_type)
 {
     const char *str;
     switch (glyph_type) {
@@ -891,7 +503,7 @@ const char *dump_glyph_type(gregorio_glyph_type glyph_type)
     return str;
 }
 
-const char *dump_shape(gregorio_shape shape)
+static const char *dump_shape(gregorio_shape shape)
 {
     const char *str;
     switch (shape) {
@@ -980,7 +592,7 @@ const char *dump_shape(gregorio_shape shape)
     return str;
 }
 
-const char *dump_signs(gregorio_sign signs)
+static const char *dump_signs(gregorio_sign signs)
 {
     const char *str;
     switch (signs) {
@@ -1010,7 +622,7 @@ const char *dump_signs(gregorio_sign signs)
 }
 
 // a function dumping special signs
-const char *dump_special_sign(gregorio_sign special_sign)
+static const char *dump_special_sign(gregorio_sign special_sign)
 {
     const char *str;
     switch (special_sign) {
@@ -1045,7 +657,7 @@ const char *dump_special_sign(gregorio_sign special_sign)
     return str;
 }
 
-const char *dump_h_episemus_type(gregorio_h_episemus h_episemus_type)
+static const char *dump_h_episemus_type(gregorio_h_episemus h_episemus_type)
 {
     const char *str;
     switch (h_episemus_type) {
@@ -1078,4 +690,386 @@ const char *dump_h_episemus_type(gregorio_h_episemus h_episemus_type)
         break;
     }
     return str;
+}
+
+void dump_write_score(FILE *f, gregorio_score *score)
+{
+    gregorio_voice_info *voice_info = score->first_voice_info;
+    int i;
+    int annotation_num;
+
+    if (!f) {
+        gregorio_message(_
+                         ("call with NULL file"),
+                         "gregoriotex_write_score", ERROR, 0);
+        return;
+    }
+    fprintf(f,
+            "=====================================================================\n"
+            " SCORE INFOS\n"
+            "=====================================================================\n");
+    if (score->number_of_voices) {
+        fprintf(f, "   number_of_voices          %d\n",
+                score->number_of_voices);
+    }
+    if (score->name) {
+        fprintf(f, "   name                      %s\n", score->name);
+    }
+    if (score->gabc_copyright) {
+        fprintf(f, "   gabc_copyright            %s\n", score->gabc_copyright);
+    }
+    if (score->score_copyright) {
+        fprintf(f, "   score_copyright           %s\n", score->score_copyright);
+    }
+    if (score->office_part) {
+        fprintf(f, "   office_part               %s\n", score->office_part);
+    }
+    if (score->occasion) {
+        fprintf(f, "   occasion                  %s\n", score->occasion);
+    }
+    if (score->meter) {
+        fprintf(f, "   meter                     %s\n", score->meter);
+    }
+    if (score->commentary) {
+        fprintf(f, "   commentary                %s\n", score->commentary);
+    }
+    if (score->arranger) {
+        fprintf(f, "   arranger                  %s\n", score->arranger);
+    }
+    if (score->si.author) {
+        fprintf(f, "   author                    %s\n", score->si.author);
+    }
+    if (score->si.date) {
+        fprintf(f, "   date                      %s\n", score->si.date);
+    }
+    if (score->si.manuscript) {
+        fprintf(f, "   manuscript                %s\n", score->si.manuscript);
+    }
+    if (score->si.manuscript_reference) {
+        fprintf(f, "   manuscript_reference      %s\n",
+                score->si.manuscript_reference);
+    }
+    if (score->si.manuscript_storage_place) {
+        fprintf(f, "   manuscript_storage_place  %s\n",
+                score->si.manuscript_storage_place);
+    }
+    if (score->si.book) {
+        fprintf(f, "   book                      %s\n", score->si.book);
+    }
+    if (score->si.transcriber) {
+        fprintf(f, "   transcriber               %s\n", score->si.transcriber);
+    }
+    if (score->si.transcription_date) {
+        fprintf(f, "   transcription_date        %s\n",
+                score->si.transcription_date);
+    }
+    if (score->lilypond_preamble) {
+        fprintf(f, "   lilypond_preamble         %s\n",
+                score->lilypond_preamble);
+    }
+    if (score->opustex_preamble) {
+        fprintf(f, "   opustex_preamble          %s\n",
+                score->opustex_preamble);
+    }
+    if (score->musixtex_preamble) {
+        fprintf(f, "   musixtex_preamble         %s\n",
+                score->musixtex_preamble);
+    }
+    if (score->gregoriotex_font) {
+        fprintf(f, "   gregoriotex_font          %s\n",
+                score->gregoriotex_font);
+    }
+    if (score->mode) {
+        fprintf(f, "   mode                      %d\n", score->mode);
+    }
+    if (score->initial_style) {
+        fprintf(f, "   initial_style             %d\n", score->initial_style);
+    }
+    if (score->user_notes) {
+        fprintf(f, "   user_notes                %s\n", score->user_notes);
+    }
+    fprintf(f, "\n\n"
+            "=====================================================================\n"
+            " VOICES INFOS\n"
+            "=====================================================================\n");
+    for (i = 0; i < score->number_of_voices; i++) {
+        fprintf(f, "  Voice %d\n", i + 1);
+        if (voice_info->initial_key) {
+            fprintf(f, "   initial_key               %d (%s)\n",
+                    voice_info->initial_key,
+                    dump_key_to_char(voice_info->initial_key));
+            if (voice_info->flatted_key) {
+                fprintf(f, "   flatted_key               true\n");
+            }
+        }
+        for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS;
+             ++annotation_num) {
+            if (voice_info->annotation[annotation_num]) {
+                fprintf(f, "   annotation                %s\n",
+                        voice_info->annotation[annotation_num]);
+            }
+        }
+        if (voice_info->style) {
+            fprintf(f, "   style                     %s\n", voice_info->style);
+        }
+        if (voice_info->virgula_position) {
+            fprintf(f, "   virgula_position          %s\n",
+                    voice_info->virgula_position);
+        }
+        voice_info = voice_info->next_voice_info;
+    }
+    fprintf(f, "\n\n"
+            "=====================================================================\n"
+            " SCORE\n"
+            "=====================================================================\n");
+    for (gregorio_syllable *syllable = score->first_syllable; syllable;
+            syllable = syllable->next_syllable) {
+        if (syllable->type) {
+            fprintf(f, "   type                      %d (%s)\n",
+                    syllable->type, dump_type(syllable->type));
+        }
+        if (syllable->position) {
+            fprintf(f, "   position                  %d (%s)\n",
+                    syllable->position,
+                    dump_syllable_position(syllable->position));
+        }
+        if (syllable->special_sign) {
+            fprintf(f, "   special sign                       %s\n",
+                    dump_special_sign(syllable->special_sign));
+        }
+        if (syllable->no_linebreak_area != NLBA_NORMAL) {
+            fprintf(f, "   no line break area        %s\n",
+                    dump_nlba_to_string(syllable->no_linebreak_area));
+        }
+        if (syllable->text) {
+            if (syllable->translation) {
+                fprintf(f, "\n  Text\n");
+            }
+            dump_write_characters(f, syllable->text);
+        }
+        if ((syllable->translation
+             && syllable->translation_type != TR_WITH_CENTER_END)
+            || syllable->translation_type == TR_WITH_CENTER_END) {
+            fprintf(f, "\n  Translation type             %s",
+                    dump_translation_type_to_string
+                    (syllable->translation_type));
+            if (syllable->translation_type == TR_WITH_CENTER_END) {
+                fprintf(f, "\n");
+            }
+        }
+        if (syllable->translation) {
+            fprintf(f, "\n  Translation\n");
+            dump_write_characters(f, syllable->translation);
+        }
+        if (syllable->abovelinestext) {
+            fprintf(f, "\n  Abovelinestext\n    %s", syllable->abovelinestext);
+        }
+        for (gregorio_element *element = *syllable->elements; element;
+                element = element->next) {
+            fprintf(f, "---------------------------------------------------------------------\n");
+            if (element->type) {
+                fprintf(f, "     type                    %d (%s)\n",
+                        element->type, dump_type(element->type));
+            }
+            switch (element->type) {
+            case GRE_CUSTO:
+                if (element->u.misc.pitched.pitch) {
+                    fprintf(f, "     pitch                   %c     \n",
+                            element->u.misc.pitched.pitch);
+                }
+                break;
+            case GRE_SPACE:
+                if (element->u.misc.unpitched.info.space) {
+                    fprintf(f, "     space                   %d (%s)\n",
+                            element->u.misc.unpitched.info.space,
+                            dump_space_type(element->u.misc.unpitched.info.
+                                space));
+                }
+                break;
+            case GRE_TEXVERB_ELEMENT:
+                fprintf(f, "     TeX string              \"%s\"\n",
+                        element->texverb);
+                break;
+            case GRE_NLBA:
+                fprintf(f, "     nlba                    %d (%s)\n",
+                        element->u.misc.unpitched.info.nlba,
+                        dump_nlba_to_string(element->u.misc.unpitched.info.
+                            nlba));
+                break;
+            case GRE_ALT:
+                fprintf(f, "     Above lines text        \"%s\"\n",
+                        element->texverb);
+                break;
+            case GRE_BAR:
+                if (element->u.misc.unpitched.info.bar) {
+                    fprintf(f, "     bar                     %d (%s)\n",
+                            element->u.misc.unpitched.info.bar,
+                            dump_bar_type(element->u.misc.unpitched.info.bar));
+                    if (element->u.misc.unpitched.special_sign) {
+                        fprintf(f, "     special sign            %d (%s)\n",
+                                element->u.misc.unpitched.special_sign,
+                                dump_special_sign(element->u.misc.unpitched.
+                                                  special_sign));
+                    }
+                }
+                break;
+            case GRE_C_KEY_CHANGE:
+                if (element->u.misc.pitched.pitch) {
+                    fprintf(f, "     clef                    %d (c%d)\n",
+                            element->u.misc.pitched.pitch,
+                            element->u.misc.pitched.pitch - '0');
+                    if (element->u.misc.pitched.flatted_key) {
+                        fprintf(f, "     flatted_key             true\n");
+                    }
+                }
+                break;
+            case GRE_F_KEY_CHANGE:
+                if (element->u.misc.pitched.pitch) {
+                    fprintf(f, "     clef                    %d (f%d)\n",
+                            element->u.misc.pitched.pitch,
+                            element->u.misc.pitched.pitch - '0');
+                    if (element->u.misc.pitched.flatted_key) {
+                        fprintf(f, "     flatted_key             true\n");
+                    }
+                }
+                break;
+            case GRE_END_OF_LINE:
+                if (element->u.misc.unpitched.info.sub_type) {
+                    fprintf(f, "     sub_type                %d (%s)\n",
+                            element->u.misc.unpitched.info.sub_type,
+                            dump_type(element->u.misc.unpitched.info.sub_type));
+                }
+                break;
+            case GRE_ELEMENT:
+                for (gregorio_glyph *glyph = element->u.glyphs.first_glyph;
+                        glyph; glyph = glyph->next) {
+                    fprintf(f, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+                    if (glyph->type) {
+                        fprintf(f, "       type                  %d (%s)\n",
+                                glyph->type, dump_type(glyph->type));
+                    }
+                    switch (glyph->type) {
+                    case GRE_TEXVERB_GLYPH:
+                        fprintf(f, "       TeX string            \"%s\"\n",
+                                glyph->texverb);
+                        break;
+
+                    case GRE_SPACE:
+                        fprintf(f, "       space                 %d (%s)\n",
+                                glyph->u.misc.unpitched.info.space,
+                                dump_space_type(glyph->u.misc.unpitched.info.
+                                                space));
+                        break;
+
+                    case GRE_BAR:
+                        fprintf(f, "       glyph_type            %d (%s)\n",
+                                glyph->u.misc.unpitched.info.bar,
+                                dump_bar_type(glyph->u.misc.unpitched.info.
+                                              bar));
+                        if (glyph->u.misc.unpitched.special_sign) {
+                            fprintf(f, "       special sign          %d (%s)\n",
+                                    glyph->u.misc.unpitched.special_sign,
+                                    dump_special_sign(glyph->u.misc.unpitched.
+                                                      special_sign));
+                        }
+                        break;
+
+                    case GRE_FLAT:
+                    case GRE_NATURAL:
+                    case GRE_SHARP:
+                    case GRE_MANUAL_CUSTOS:
+                        fprintf(f, "       pitch                 %c\n",
+                                glyph->u.misc.pitched.pitch);
+                        break;
+
+                    case GRE_GLYPH:
+                        fprintf(f, "       glyph_type            %d (%s)\n",
+                                glyph->u.notes.glyph_type,
+                                dump_glyph_type(glyph->u.notes.glyph_type));
+                        if (glyph->u.notes.liquescentia) {
+                            fprintf(f, "       liquescentia          %d (%s)\n",
+                                    glyph->u.notes.liquescentia,
+                                    dump_liquescentia(glyph->u.notes.
+                                                      liquescentia));
+                        }
+                        break;
+
+                    default:
+                        fprintf(f, "       !!! UNKNOWN !!!       !!!\n");
+                        break;
+                    }
+                    if (glyph->type == GRE_GLYPH) {
+                        for (gregorio_note *note = glyph->u.notes.first_note;
+                                note; note = note->next) {
+                            fprintf(f, "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  \n");
+                            if (note->type) {
+                                fprintf(f, "         type                   %d (%s)\n",
+                                        note->type, dump_type(note->type));
+                            }
+                            switch (note->type) {
+                            case GRE_NOTE:
+                                if (note->u.note.pitch) {
+                                    fprintf(f, "         pitch                  %c\n",
+                                            note->u.note.pitch);
+                                }
+                                if (note->u.note.shape) {
+                                    fprintf(f, "         shape                  %d (%s)\n",
+                                            note->u.note.shape,
+                                            dump_shape(note->u.note.shape));
+                                }
+                                if (note->u.note.liquescentia) {
+                                    fprintf(f, "         liquescentia           %d (%s)\n",
+                                            note->u.note.liquescentia,
+                                            dump_liquescentia(note->u.note.
+                                                              liquescentia));
+                                }
+                                break;
+
+                            default:
+                                fprintf(f, "         !!! NOT ALLOWED !!!    !!!\n");
+                                break;
+                            }
+                            if (note->texverb) {
+                                fprintf(f, "         TeX string             \"%s\"\n",
+                                        note->texverb);
+                            }
+                            if (note->choral_sign) {
+                                fprintf(f, "         Choral Sign            \"%s\"\n",
+                                        note->choral_sign);
+                            }
+                            if (note->signs) {
+                                fprintf(f, "         signs                  %d (%s)\n",
+                                        note->signs, dump_signs(note->signs));
+                            }
+                            if (note->special_sign) {
+                                fprintf(f, "         special sign           %d (%s)\n",
+                                        note->special_sign,
+                                        dump_special_sign(note->special_sign));
+                            }
+                            if (note->h_episemus_type) {
+                                fprintf(f, "         h_episemus_type        %d (",
+                                        note->h_episemus_type);
+                                fprintf(f, "%s", dump_h_episemus_type(
+                                            simple_htype (note->h_episemus_type)));
+                                if (has_bottom(note->h_episemus_type)) {
+                                    fprintf(f, " & H_BOTTOM");
+                                }
+                                fprintf(f, ")\n");
+                            }
+                            if (note->h_episemus_top_note) {
+                                fprintf(f, "         h_episemus_top_note    %c\n",
+                                        note->h_episemus_top_note);
+                            }
+                            if (note->h_episemus_bottom_note) {
+                                fprintf(f, "         h_episemus_bottom_note %c\n",
+                                        note->h_episemus_bottom_note);
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        fprintf(f, "=====================================================================\n");
+    }
 }

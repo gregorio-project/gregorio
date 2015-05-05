@@ -5,8 +5,11 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][unreleased]
 ### Fixed
 - Handling of the first syllable in gabc is now more consistent with the all other syllables.  This centers the syllable correctly when using latin syllable centering (see [#42](https://github.com/gregorio-project/gregorio/issues/42)) and makes the use of styles less surprising in the first syllable (see [#135](https://github.com/gregorio-project/gregorio/issues/135)).
+- Handling of manually-placed custos is improved.  In particular, a manual custos at the end of the score should no longer be lost when the bar happens to be at the end of the line.
 
 ### Changed
+- The spacing algorithm has completely changed, expect your scores to look quite different (better we hope).
+- Lines are now aligned on the leftmost note instead of the leftmost letter.
 - The `O` modifier in gabc now has expanded uses beyond the salicus `(egOi)`.  A stemmed oriscus will appear on a lone pitch `(gO)` or a followed by a lower pitch `(gOe)` (see [#76](https://github.com/gregorio-project/gregorio/issues/76)).  A virga strata will appear on the second note of two ascending pitches `(giO)`.
 - With thanks to *Abbazia Mater Ecclesiae (IT)* for drawing the new shapes, the strophicus in greciliae has changed to better differentiate from the punctum inclinatum.  Use `\grechangeglyph{Stropha}{greciliae}{.caeciliae}\grechangeglyph{StrophaAucta}{greciliae}{.caeciliae}` if you prefer the old shape.
 - Default initial sizes have been chosen so that they are more appropriate when an infinitely scaling font is loaded.  LaTeX will make an automatic substitution of the closest avaialble size when such a font is not used.
@@ -15,8 +18,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The default extension `gregorio` (the executable program) will use when it produces GregorioTeX files has been changed from `.tex` to `.gtex`.  Any calls to `\includescore` that use the old extension should be changed appropriately.
 
 ### Added
-- The ability to substitute an arbitrary glyph for one used by GregorioTeX.  This adds five macros: `\grechangeglyph` to make a score glyph substitution, `\greresetglyph` to remove a score glyph substitution, `\gredefvariant` for (re-)defining an arbitrary score glyph, `\gredefsymbol` for (re-)defining an arbitrary non-score glyph that scales with the text, and `\gredefsizedsymbol` for (re-)defining an arbitary non-score glyph that requires a point-size to be specified.  See GregorioRef.pdf for full details.
+- The ability to substitute an arbitrary glyph for one used by GregorioTeX.  This adds four macros: `\grechangeglyph` to make a score glyph substitution, `\greresetglyph` to remove a score glyph substitution, `\gredefsymbol` for (re-)defining an arbitrary non-score glyph that scales with the text, and `\gredefsizedsymbol` for (re-)defining an arbitary non-score glyph that requires a point-size to be specified.  See GregorioRef.pdf for full details.
 - Support for `lualatex -recorder`.  Autocompiled gabc and gtex files will now be properly recorded so that programs like `latexmk -recorder` can detect the need to rebuild the PDF when a gabc file changes.
+- With thanks to Fr. Jacques Peron, it is now possible to embed short gabc snippets directly into a TeX document.  The command is `\gabcsnippet`.  See GregorioRef.pdf for full details.
 
 ### Removed
 - GregorioXML and OpusTeX output
@@ -27,6 +31,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][ureleased]
 ### Fixed
 - Torculus followed by a non-liquescent note is now parsed correctly (see [#284](https://github.com/gregorio-project/gregorio/issues/284).
+- Spacing after a syllable with an flat, sharp, or natural is now correct (see [#246](https://github.com/gregorio-project/gregorio/issues/246).
 
 ## [3.0.0-rc2] - 2015-04-14
 ### Changed

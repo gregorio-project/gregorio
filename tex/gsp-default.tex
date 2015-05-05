@@ -96,8 +96,6 @@
 \gresetdim{largerspace}{0.10938 cm plus 0.01822 cm minus 0.00911 cm}{1}%
 % space between elements which has the size of a note
 \gresetdim{glyphspace}{0.21877 cm plus 0.01822 cm minus 0.01822 cm}{1}%
-% minimum space between two notes of different syllables
-\gresetdim{intersyllablespace}{0.25523 cm plus 0.31903 cm minus 0 cm}{1}%
 % space before custo
 \gresetdim{spacebeforecusto}{0.1823 cm plus 0.31903 cm minus 0.0638 cm}{1}%
 % space before punctum mora and augmentum duplex
@@ -106,14 +104,14 @@
 \gresetdim{spaceaftersigns}{0.08203 cm plus 0.0082 cm minus 0.0082 cm}{1}%
 % space after a clef at the beginning of a line
 \gresetdim{spaceafterlineclef}{0.27345 cm plus 0.14584 cm minus 0.01367 cm}{1}%
-% space after at the end of a word when the last written symbol is a note and the first is a note
-\gresetdim{interwordspacenotes}{0.29169 cm plus 0.08751 cm minus 0.05469 cm}{1}%
-% space after at the end of a word when the last written symbol is a note and the first is text
-\gresetdim{interwordspacenotestext}{0.27345 cm plus 0.27345 cm minus 0.07292 cm}{1}%
-% space after at the end of a word when the last written symbol is text and the first is a note
-\gresetdim{interwordspacetextnotes}{0.27345 cm plus 0.27345 cm minus 0.07292 cm}{1}%
-% space after at the end of a word when the last written symbol is text and the first is text
-\gresetdim{interwordspacetext}{0.22787 cm plus 0.41019 cm minus 0.07292 cm}{1}%
+% minimal space between notes of different words
+\gresetdim{interwordspacenotes}{0.27 cm plus 0.15 cm minus 0.05 cm}{1}%
+% minimal space between notes of the same syllable.
+% Warning: always keep minus to 0; also keep plus very low, or some words won't be hyphenated
+\gresetdim{intersyllablespacenotes}{0.17 cm plus 0.04cm minus 0cm}{1}%
+% minimal space between letters of different words. Makes sense to have
+% the same plus and minus as interwordspacenotes.
+\gresetdim{interwordspacetext}{0.38 cm plus 0.15 cm minus 0.05 cm}{1}%
 % space between notes of a bivirga or trivirga
 \gresetdim{bitrivirspace}{0.06927 cm plus 0.00182 cm minus 0.00546 cm}{1}%
 % space between notes of a bistropha or tristrophae
@@ -148,15 +146,15 @@
 % minimal space between a note and a bar
 \gresetdim{notebarspace}{0.31903 cm plus 0.27345 cm minus 0.02824 cm}{1}%
 % maximal space between two syllables for which we consider a dash is not needed
-\gresetdim{maximumspacewithoutdash}{0.02005 cm}{1}%
+\gresetdim{maximumspacewithoutdash}{0.02 cm}{1}%
 % an extensible space for the beginning of lines
 \gresetdim{afterclefnospace}{0 cm plus 0.27345 cm minus 0 cm}{1}%
 % space between the initial and the beginning of the score
 \gresetdim{afterinitialshift}{0.2457 cm}{1}%
 % space before the initial
 \gresetdim{beforeinitialshift}{0.2457 cm}{1}%
-% minimum space before each line (except those preceded by the initial)
-\gresetdim{minimalspaceatlinebeginning}{0.1 cm}{1}%
+% minimum space between beginning of line and first syllable text
+\gresetdim{minimalspaceatlinebeginning}{0.05 cm}{1}%
 % space to force the initial width to.  Ignored when 0.
 \gresetdim{manualinitialwidth}{0 cm}{1}%
 % this space is the one between the bottom of the first anotation line and the top

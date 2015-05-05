@@ -25,16 +25,6 @@
 
 #include "gabc.h"
 
-gregorio_glyph *gabc_det_glyphs_from_string(char *str, int *initial_key,
-                                            char *macros[10])
-{
-    gregorio_note *tmp;
-    gregorio_glyph *final;
-    tmp = gabc_det_notes_from_string(str, macros);
-    final = gabc_det_glyphs_from_notes(tmp, initial_key);
-    return final;
-}
-
 /****************************
  * 
  * First see the comments of
@@ -49,10 +39,9 @@ gregorio_glyph *gabc_det_glyphs_from_string(char *str, int *initial_key,
  * 
 ****************************/
 
-void
-close_glyph(gregorio_glyph **last_glyph, gregorio_glyph_type glyph_type,
-            gregorio_note **first_note, gregorio_liquescentia liquescentia,
-            gregorio_note *current_note)
+static void close_glyph(gregorio_glyph **last_glyph,
+        gregorio_glyph_type glyph_type, gregorio_note **first_note,
+        gregorio_liquescentia liquescentia, gregorio_note *current_note)
 {
     // a variable necessary for the patch for G_BIVIRGA & co.
     gregorio_note *added_notes = NULL;
@@ -162,7 +151,8 @@ close_glyph(gregorio_glyph **last_glyph, gregorio_glyph_type glyph_type,
 // custo are (normally and for now) only present before clef changes.
 // TODO: there may be a side effect with the flated keys...
 
-char gabc_determine_custo_pitch(gregorio_note *current_note, int current_key)
+static char gabc_determine_custo_pitch(gregorio_note *current_note,
+        int current_key)
 {
     int pitch_difference = 0;
     int newkey;
@@ -237,12 +227,11 @@ char gabc_determine_custo_pitch(gregorio_note *current_note, int current_key)
  * 
 ****************************/
 
-char
-gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
-                             char current_pitch, char last_pitch,
-                             gregorio_shape shape,
-                             gregorio_liquescentia liquescentia,
-                             gabc_determination * end_of_glyph)
+static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
+        char current_pitch, char last_pitch, gregorio_shape shape,
+        gregorio_liquescentia liquescentia,
+        gregorio_note *current_glyph_first_note,
+        gabc_determination * end_of_glyph)
 {
 
     // next glyph type is the type of the glyph that will be returned (the
@@ -288,8 +277,15 @@ gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
             break;
         case G_PODATUS:
             if (current_pitch > last_pitch) {
-                next_glyph_type = G_SCANDICUS;
-                *end_of_glyph = DET_END_OF_CURRENT;
+                if (current_glyph_first_note->u.note.shape == S_PUNCTUM &&
+                        current_glyph_first_note->u.note.liquescentia !=
+                        L_INITIO_DEBILIS) {
+                    next_glyph_type = G_SCANDICUS;
+                    *end_of_glyph = DET_END_OF_CURRENT;
+                } else {
+                    next_glyph_type = G_PUNCTUM;
+                    *end_of_glyph = DET_END_OF_PREVIOUS;
+                }
             } else {
                 next_glyph_type = G_TORCULUS;
             }
@@ -611,7 +607,7 @@ gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
 // this function updates current_key with the new values (with clef changes)
 
 gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
-                                           int *current_key)
+        int *current_key)
 {
     // the first note of the current glyph, to be able to close it well:
     // later we will cut the link (next_notes and previous_note) between
@@ -752,6 +748,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                                          current_note->u.note.pitch, last_pitch,
                                          current_note->u.note.shape,
                                          current_note->u.note.liquescentia,
+                                         current_glyph_first_note,
                                          &end_of_glyph);
 
         // patch to have good shapes in the special cases of pes quadratum and

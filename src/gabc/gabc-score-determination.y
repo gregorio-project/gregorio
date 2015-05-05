@@ -54,40 +54,42 @@ int gabc_score_determination_lex();
  * 
  */
 
+/*
 // the two functions to initialize and free the file variables
 void initialize_variables();
 void gabc_fix_custos(gregorio_score *score_to_check);
 void free_variables();
+*/
 // the error string
-char error[200];
+static char error[200];
 // the score that we will determine and return
-gregorio_score *score;
+static gregorio_score *score;
 // an array of elements that we will use for each syllable
-gregorio_element **elements;
+static gregorio_element **elements;
 // a table containing the macros to use in gabc file
-char *macros[10];
+static char *macros[10];
 // declaration of some functions, the first is the one initializing the
 // flex/bison process
-int gabc_score_determination_parse();
+static int gabc_score_determination_parse();
 // other variables that we will have to use
-gregorio_character *current_character;
-gregorio_character *first_text_character;
-gregorio_character *first_translation_character;
-unsigned char translation_type;
-unsigned char no_linebreak_area;
-gregorio_euouae  euouae;
-gregorio_voice_info *current_voice_info;
-int number_of_voices;
-int voice;
+static gregorio_character *current_character;
+static gregorio_character *first_text_character;
+static gregorio_character *first_translation_character;
+static gregorio_tr_centering translation_type;
+static gregorio_nlba no_linebreak_area;
+static gregorio_euouae euouae;
+static gregorio_voice_info *current_voice_info;
+static int number_of_voices;
+static int voice;
 // can't remember what it is...
-int clef;
-// a char that will take some useful values see comments on text to understand
-// it
-char center_is_determined;
+static int clef;
+// see comments on text to understand this
+static gregorio_center_determination center_is_determined;
 // current_key is... the current key... updated by each notes determination
 // (for key changes)
-int current_key = DEFAULT_KEY;
+static int current_key = DEFAULT_KEY;
 
+/*
 int check_score_integrity(gregorio_score *score);
 void next_voice_info();
 void set_clef(char *str);
@@ -95,55 +97,23 @@ void reajust_voice_infos(gregorio_voice_info *voice_info, int final_count);
 void end_definitions();
 void suppress_useless_styles();
 void rebuild_characters(gregorio_character **param_character,
-                        char center_is_determined,
+                        gregorio_center_determination center_is_determined,
                         gregorio_lyric_centering centering_scheme);
 void close_syllable();
 void gregorio_gabc_add_text(char *mbcharacters);
 void gregorio_gabc_add_style(unsigned char style);
 void gregorio_gabc_end_style(unsigned char style);
 void complete_with_nulls(int voice);
-gregorio_lyric_centering centering_scheme;
+*/
+static gregorio_lyric_centering centering_scheme;
 
-void gabc_score_determination_error(char *error_str)
+static void gabc_score_determination_error(char *error_str)
 {
     gregorio_message(error_str, (const char *) "gabc_score_determination_parse",
                      ERROR, 0);
 }
 
-/*
- * The "main" function. It is the function that is called when we have to read
- * a gabc file. It takes a file descriptor, that is to say a file that is
- * aleady open. It returns a valid gregorio_score 
- */
-
-gregorio_score *gabc_read_score(FILE *f_in)
-{
-    // the input file that flex will parse
-    gabc_score_determination_in = f_in;
-    if (!f_in) {
-        gregorio_message(_
-                         ("can't read stream from argument, returning NULL pointer"),
-                         "det_score", ERROR, 0);
-        return NULL;
-    }
-    initialize_variables();
-    // the flex/bison main call, it will build the score (that we have
-    // initialized)
-    gabc_score_determination_parse();
-    gregorio_fix_initial_keys(score, DEFAULT_KEY);
-    gabc_fix_custos(score);
-    free_variables();
-    // the we check the validity and integrity of the score we have built.
-    if (!check_score_integrity(score)) {
-        gregorio_free_score(score);
-        score = NULL;
-        gregorio_message(_("unable to determine a valid score from file"),
-                         "det_score", FATAL_ERROR, 0);
-    }
-    return score;
-}
-
-void gabc_fix_custos(gregorio_score *score_to_check)
+static void gabc_fix_custos(gregorio_score *score_to_check)
 {
     gregorio_syllable *current_syllable;
     gregorio_element *current_element;
@@ -231,7 +201,7 @@ void gabc_fix_custos(gregorio_score *score_to_check)
  * ridiculous... but it might be improved in the future. 
  */
 
-int check_score_integrity(gregorio_score *score_to_check)
+static int check_score_integrity(gregorio_score *score_to_check)
 {
     if (!score_to_check) {
         return 0;
@@ -243,7 +213,7 @@ int check_score_integrity(gregorio_score *score_to_check)
  * Another function to be improved: this one checks the validity of the voice_infos.
  */
 
-int check_infos_integrity(gregorio_score *score_to_check)
+static int check_infos_integrity(gregorio_score *score_to_check)
 {
     if (!score_to_check->name) {
         gregorio_message(_("no name specified, put `name:...;' at the "
@@ -258,7 +228,7 @@ int check_infos_integrity(gregorio_score *score_to_check)
  * The function that will initialize the variables. 
  */
 
-void initialize_variables()
+static void initialize_variables()
 {
     int i;
     // build a brand new empty score
@@ -288,7 +258,7 @@ void initialize_variables()
  * determine the score 
  */
 
-void free_variables()
+static void free_variables()
 {
     int i;
     free(elements);
@@ -298,7 +268,7 @@ void free_variables()
 }
 
 // see whether a voice_info is empty
-int voice_info_is_not_empty(const gregorio_voice_info *voice_info)
+static int voice_info_is_not_empty(const gregorio_voice_info *voice_info)
 {
     return (voice_info->initial_key != 5 ||
             voice_info->annotation[0] ||
@@ -309,7 +279,7 @@ int voice_info_is_not_empty(const gregorio_voice_info *voice_info)
 /*
  * a function called when we see "--\n" that end the infos for a certain voice 
  */
-void next_voice_info()
+static void next_voice_info()
 {
     // we must do this test in the case where there would be a "--" before
     // first_declarations
@@ -322,7 +292,7 @@ void next_voice_info()
 /*
  * Function that updates the clef variable, intepreting the char *str argument 
  */
-void set_clef(char *str)
+static void set_clef(char *str)
 {
     if (!str || !str[0] || !str[1]) {
         gregorio_message(_("unknown clef format in initial-key definition : "
@@ -355,7 +325,8 @@ void set_clef(char *str)
  * there are too many voice_infos 
  */
 
-void reajust_voice_infos(gregorio_voice_info *voice_info, int final_count)
+static void reajust_voice_infos(gregorio_voice_info *voice_info,
+        int final_count)
 {
     int i = 1;
     while (voice_info && i <= final_count) {
@@ -368,7 +339,7 @@ void reajust_voice_infos(gregorio_voice_info *voice_info, int final_count)
  * Function called when we have reached the end of the definitions, it tries to 
  * make the voice_infos coherent. 
  */
-void end_definitions()
+static void end_definitions()
 {
     int i;
 
@@ -420,16 +391,16 @@ void end_definitions()
  * precisely determined here, we separate the text describing the notes of each 
  * voice, and we call determine_elements_from_string to really determine them. 
  */
-char position = WORD_BEGINNING;
-gregorio_syllable *current_syllable = NULL;
-char *abovelinestext = NULL;
+static char position = WORD_BEGINNING;
+static gregorio_syllable *current_syllable = NULL;
+static char *abovelinestext = NULL;
 
 /*
  * Function called when we see a ")", it completes the gregorio_element array
  * of the syllable with NULL pointers. Usefull in the cases where for example
  * you have two voices, but a voice that is silent on a certain syllable. 
  */
-void complete_with_nulls(int last_voice)
+static void complete_with_nulls(int last_voice)
 {
     int i;
     for (i = last_voice + 1; i < number_of_voices; i++) {
@@ -440,7 +411,7 @@ void complete_with_nulls(int last_voice)
 /*
  * Function called each time we find a space, it updates the current position. 
  */
-void update_position_with_space()
+static void update_position_with_space()
 {
     if (position == WORD_MIDDLE) {
         position = WORD_END;
@@ -455,8 +426,8 @@ void update_position_with_space()
  * sets translation_type = TR_WITH_CENTER_BEGINNING on previous syllable with
  * translation 
  */
-void
-gregorio_set_translation_center_beginning(gregorio_syllable *current_syllable)
+static void gregorio_set_translation_center_beginning(
+        gregorio_syllable *current_syllable)
 {
     gregorio_syllable *syllable = current_syllable->previous_syllable;
     while (syllable) {
@@ -481,9 +452,9 @@ gregorio_set_translation_center_beginning(gregorio_syllable *current_syllable)
     current_syllable->translation_type = TR_NORMAL;
 }
 
-void rebuild_characters(gregorio_character **param_character,
-                        char center_is_determined,
-                        gregorio_lyric_centering centering_scheme)
+static void rebuild_characters(gregorio_character **param_character,
+        gregorio_center_determination center_is_determined,
+        gregorio_lyric_centering centering_scheme)
 {
     bool has_initial = score->initial_style != NO_INITIAL;
     // we rebuild the first syllable text if it is the first syllable, or if
@@ -503,7 +474,7 @@ void rebuild_characters(gregorio_character **param_character,
  * Function to close a syllable and update the position. 
  */
 
-void close_syllable()
+static void close_syllable()
 {
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
                           first_text_character, first_translation_character,
@@ -535,19 +506,18 @@ void close_syllable()
 
 // a function called when we see a [, basically, all characters are added to
 // the translation pointer instead of the text pointer
-void start_translation(unsigned char asked_translation_type)
+static void start_translation(unsigned char asked_translation_type)
 {
     rebuild_characters(&current_character, center_is_determined,
                        centering_scheme);
     first_text_character = current_character;
-    center_is_determined = CENTER_FULLY_DETERMINED; // the middle letters of
-    // the translation have no
-    // sense
+    // the middle letters of the translation have no sense
+    center_is_determined = CENTER_FULLY_DETERMINED;
     current_character = NULL;
     translation_type = asked_translation_type;
 }
 
-void end_translation()
+static void end_translation()
 {
     rebuild_characters(&current_character, center_is_determined,
                        centering_scheme);
@@ -560,7 +530,7 @@ void end_translation()
  * gregorio_characters in the list of gregorio_characters. 
  */
 
-void gregorio_gabc_add_text(char *mbcharacters)
+static void gregorio_gabc_add_text(char *mbcharacters)
 {
     if (current_character) {
         current_character->next_character =
@@ -578,7 +548,7 @@ void gregorio_gabc_add_text(char *mbcharacters)
 /*
  * the function called when centering_scheme is seen in gabc 
  */
-void set_centering_scheme(char *sc)
+static void set_centering_scheme(char *sc)
 {
     if (strncmp((const char *) sc, "latine", 6) == 0) {
         centering_scheme = SCHEME_LATINE;
@@ -600,14 +570,47 @@ void set_centering_scheme(char *sc)
  * 
  */
 
-void gregorio_gabc_add_style(unsigned char style)
+static void gregorio_gabc_add_style(unsigned char style)
 {
     gregorio_begin_style(&current_character, style);
 }
 
-void gregorio_gabc_end_style(unsigned char style)
+static void gregorio_gabc_end_style(unsigned char style)
 {
     gregorio_end_style(&current_character, style);
+}
+
+/*
+ * The "main" function. It is the function that is called when we have to read
+ * a gabc file. It takes a file descriptor, that is to say a file that is
+ * aleady open. It returns a valid gregorio_score 
+ */
+
+gregorio_score *gabc_read_score(FILE *f_in)
+{
+    // the input file that flex will parse
+    gabc_score_determination_in = f_in;
+    if (!f_in) {
+        gregorio_message(_
+                         ("can't read stream from argument, returning NULL pointer"),
+                         "det_score", ERROR, 0);
+        return NULL;
+    }
+    initialize_variables();
+    // the flex/bison main call, it will build the score (that we have
+    // initialized)
+    gabc_score_determination_parse();
+    gregorio_fix_initial_keys(score, DEFAULT_KEY);
+    gabc_fix_custos(score);
+    free_variables();
+    // the we check the validity and integrity of the score we have built.
+    if (!check_score_integrity(score)) {
+        gregorio_free_score(score);
+        score = NULL;
+        gregorio_message(_("unable to determine a valid score from file"),
+                         "det_score", FATAL_ERROR, 0);
+    }
+    return score;
 }
 %}
 

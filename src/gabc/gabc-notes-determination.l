@@ -26,15 +26,14 @@
 
 #include "gabc.h"
 
-gregorio_note *current_note;
-char char_for_brace;
-unsigned int nbof_isolated_episemus;
-char *notesmacros[10];
-char *tempstr = NULL;
+static gregorio_note *current_note;
+static char char_for_brace;
+static unsigned int nbof_isolated_episemus;
+static char *notesmacros[10];
+static char *tempstr = NULL;
 
-static inline void
-lex_add_note(int i, gregorio_shape shape, char signs, char liquescentia,
-             char h_episemus)
+static inline void lex_add_note(int i, gregorio_shape shape, char signs,
+        char liquescentia, char h_episemus)
 {
     nbof_isolated_episemus = 0;
     gregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]),
@@ -196,11 +195,8 @@ static inline void error()
                                      GRE_TEXVERB_ELEMENT);
     }
 [a-m]\+ {
-        // waiting for a cleaner solution...
-        snprintf(tempstr, 70, "\\gremanualcusto{%c}",
-                 gabc_notes_determination_text[0]);
-        gregorio_add_texverb_as_note(&current_note, strdup(tempstr),
-                                     GRE_TEXVERB_ELEMENT);
+        gregorio_add_manual_custos_as_note(&current_note,
+                gabc_notes_determination_text[0]);
     }
 [\t\r\n]+ /* ignore ends of line and tabs */;
 z   {
@@ -426,7 +422,7 @@ s   {
 
 %%
 
-void gabc_notes_determination_error(const char *str)
+static void gabc_notes_determination_error(const char *str)
 {
     char *tempstrtwo = strdup(str);
     gregorio_message(tempstrtwo, "det_notes_from_string", ERROR, 0);

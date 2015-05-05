@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <assert.h>
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
@@ -44,6 +45,82 @@ static char *tex_ambitus[] = {
 
 // / the value indicating to GregorioTeX that there is no flat
 #define NO_KEY_FLAT 'a'
+
+// a helper macro for the following function
+#define whileglyph(prevornext) \
+        while(glyph)\
+          {\
+            if (glyph->type == GRE_GLYPH)\
+              {\
+                note = glyph->u.notes.first_note;\
+                while (note)\
+                  {\
+                    if (note->u.note.pitch < 'c')\
+                      {\
+                        return 1;\
+                      }\
+                    note = note->next;\
+                  }\
+              }\
+            glyph = glyph->prevornext;\
+          }
+
+// a function that determines if we must use a long queue or not (less easy
+// that it might seem)
+
+static unsigned char gregoriotex_is_long(char pitch,
+        gregorio_glyph *current_glyph, gregorio_element *current_element)
+{
+    gregorio_note *note;
+    gregorio_glyph *glyph = current_glyph->next;
+    gregorio_element *element = current_element->next;
+    switch (pitch) {
+    case 'b':
+    case 'f':
+    case 'h':
+    case 'j':
+    case 'l':
+        return 1;
+    case 'd':
+        // we first look forward to see if there is a note underneath c
+        whileglyph(next);
+        if (element && element->type == GRE_SPACE
+                && (element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT
+                        || element->u.misc.unpitched.info.space ==
+                        SP_LARGER_SPACE
+                        || element->u.misc.unpitched.info.space ==
+                        SP_NEUMATIC_CUT_NB
+                        || element->u.misc.unpitched.info.space ==
+                        SP_LARGER_SPACE_NB)) {
+            element = element->next;
+        }
+        if (element && element->type == GRE_ELEMENT) {
+            glyph = element->u.glyphs.first_glyph;
+            whileglyph(next);
+        }
+        // and now something completely different
+        glyph = current_glyph->previous;
+        element = current_element->previous;
+        whileglyph(previous);
+        if (element && element->type == GRE_SPACE
+                && (element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT
+                        || element->u.misc.unpitched.info.space ==
+                        SP_LARGER_SPACE
+                        || element->u.misc.unpitched.info.space ==
+                        SP_NEUMATIC_CUT_NB
+                        || element->u.misc.unpitched.info.space ==
+                        SP_LARGER_SPACE_NB)) {
+            element = element->previous;
+        }
+        if (element && element->type == GRE_ELEMENT) {
+            glyph = element->u.glyphs.first_glyph;
+            whileglyph(next);
+        }
+        return 0;
+    default:
+        return 0;
+    }
+}
 
 // inline functions that we will use to determine if we need a short bar or not
 
@@ -67,7 +144,8 @@ static inline bool is_between_lines(char pitch)
             || pitch == 'i' || pitch == 'k' || pitch == 'm';
 }
 
-gregoriotex_status *status = NULL;
+static gregoriotex_status *status = NULL;
+static grestyle_style gregoriotex_ignore_style = ST_NO_STYLE;
 
 static char *gregoriotex_determine_note_number_and_type(gregorio_note *note,
         gregorio_glyph *glyph, gregorio_element *element,
@@ -115,7 +193,7 @@ static char *gregoriotex_determine_note_number_and_type(gregorio_note *note,
             if (is_short(note->u.note.pitch, glyph, element)) {
                 return "VirgaReversaDescendens";
             } else {
-                return "VirgaReversaDescendensLongqueue";
+                return "VirgaReversaLongqueueDescendens";
             }
         } else {
             if (is_short(note->u.note.pitch, glyph, element)) {
@@ -179,12 +257,15 @@ static char *gregoriotex_determine_note_number_and_type(gregorio_note *note,
 static char *gregoriotex_determine_liquescentia(gtex_glyph_liquescentia type,
         gregorio_liquescentia liquescentia)
 {
-    if (liquescentia == L_AUCTA) {
+    switch (liquescentia) {
+    case L_AUCTA:
         liquescentia = L_AUCTUS_ASCENDENS;
-    }
-    if (liquescentia == L_AUCTA_INITIO_DEBILIS) {
+        break;
+    case L_AUCTA_INITIO_DEBILIS:
         liquescentia = L_AUCTUS_ASCENDENS_INITIO_DEBILIS;
+        break;
     }
+
     switch (type) {
     case LG_ALL:
         break;
@@ -624,133 +705,6 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
     return shape;
 }
 
-void gregoriotex_write_score(FILE *f, gregorio_score *score)
-{
-    gregorio_character *first_text;
-    // a char that will contain 1 if it is the first syllable and 0 if not.
-    // It is for the initial.
-    char first_syllable = 0;
-    char clef_letter;
-    int clef_line;
-    char clef_flat = NO_KEY_FLAT;
-    gregorio_syllable *current_syllable;
-    // the current line (as far as we know), it is always 0, it can be 1 in the
-    // case of the first line of a score with a two lines initial
-    unsigned char line = 0;
-
-    gregorio_line *first_line;
-    status = malloc(sizeof(gregoriotex_status));
-    status->bottom_line = 0;
-    status->to_modify_note = NULL;
-
-    if (!f) {
-        gregorio_message(_
-                ("call with NULL file"), "gregoriotex_write_score", ERROR, 0);
-        return;
-    }
-
-    if (score->number_of_voices != 1) {
-        gregorio_message(_
-                ("gregoriotex only works in monophony (for the moment)"),
-                "gregoriotex_write_score", ERROR, 0);
-    }
-
-    fprintf(f, "%% File generated by gregorio %s\n", GREGORIO_VERSION);
-    fprintf(f, "\\gregoriotexapiversion{%s}%%\n", VERSION);
-
-    if (score->name) {
-        fprintf(f, "%% Name: %s\n", score->name);
-    }
-    if (score->si.author) {
-        fprintf(f, "%% Author: %s\n", score->si.author);
-    }
-    if (score->gabc_copyright) {
-        fprintf(f, "%% The copyright of this gabc is: %s\n",
-                score->gabc_copyright);
-    }
-    if (score->score_copyright) {
-        fprintf(f, "%% The copyright of the score is: %s\n",
-                score->score_copyright);
-    }
-
-    fprintf(f, "\\begingregorioscore%%\n");
-    // if necessary, we add some bottom space to the first line
-    first_line = (gregorio_line *) malloc(sizeof(gregorio_line));
-    gregoriotex_getlineinfos(score->first_syllable, first_line);
-    if (first_line->additional_bottom_space != 0
-            || first_line->translation != 0) {
-        fprintf(f, "\\grefirstlinebottomspace{%u}{%u}%%\n",
-                first_line->additional_bottom_space, first_line->translation);
-    }
-    free(first_line);
-    // we select the good font
-    if (score->gregoriotex_font) {
-        if (!strcmp(score->gregoriotex_font, "gregorio")) {
-            fprintf(f, "\\setgregoriofont{gregorio}%%\n");
-        }
-        if (!strcmp(score->gregoriotex_font, "parmesan")) {
-            fprintf(f, "\\setgregoriofont{parmesan}%%\n");
-        }
-        if (!strcmp(score->gregoriotex_font, "greciliae")) {
-            fprintf(f, "\\setgregoriofont{greciliae}%%\n");
-        }
-    }
-    if (score->mode != 0) {
-        fprintf(f, "\\gregorianmode{%d}%%\n", score->mode);
-    }
-    // first we draw the initial (first letter) and the initial key
-    if (score->initial_style == NO_INITIAL) {
-        fprintf(f, "\\grenoinitial %%\n");
-    } else {
-        if (score->initial_style == BIG_INITIAL) {
-            fprintf(f, "\\gresetbiginitial %%\n");
-            line = 1;
-        }
-        first_text = gregorio_first_text(score);
-        if (first_text) {
-            fprintf(f, "\\greinitial{");
-            gregorio_write_initial(first_text, f,
-                    (&gtex_write_verb),
-                    (&gtex_print_char),
-                    (&gtex_write_begin),
-                    (&gtex_write_end), (&gtex_write_special_char));
-            fprintf(f, "}%%\n");
-            first_syllable = SKIP_FIRST_LETTER;
-        }
-    }
-    if (score->si.manuscript_reference) {
-        fprintf(f, "\\grescorereference{%s}%%\n",
-                score->si.manuscript_reference);
-    }
-    if (score->first_voice_info) {
-        gregoriotex_write_voice_info(f, score->first_voice_info);
-    }
-    fprintf(f, "\\grebeginnotes %%\n");
-    if (score->first_voice_info) {
-        gregorio_det_step_and_line_from_key(score->first_voice_info->
-                initial_key, &clef_letter, &clef_line);
-        if (score->first_voice_info->flatted_key) {
-            clef_flat = gregoriotex_clef_flat_height(clef_letter, clef_line);
-        } else {
-            clef_flat = NO_KEY_FLAT;
-        }
-    } else {
-        clef_letter = 'c';
-        clef_line = 3;
-        clef_flat = NO_KEY_FLAT;
-    }
-    fprintf(f, "\\gresetinitialclef{%c}{%d}{%c}%%\n", clef_letter, clef_line,
-            clef_flat);
-    current_syllable = score->first_syllable;
-    while (current_syllable) {
-        gregoriotex_write_syllable(f, current_syllable, &first_syllable, &line,
-                0);
-        current_syllable = current_syllable->next_syllable;
-    }
-    fprintf(f, "\\endgregorioscore %%\n\\endinput %%\n");
-    free(status);
-}
-
 /**
  * This now does nothing useful, since the manuscript_reference is
  * now part of the score info.  But we keep it here in case it may
@@ -765,7 +719,7 @@ void gregoriotex_write_voice_info(FILE *f, gregorio_voice_info *voice_info)
 
 // this function indicates if the syllable is the last of the line. If it's the
 // last of the score it returns false, as it's handled another way
-bool gregoriotex_is_last_of_line(gregorio_syllable *syllable)
+static bool gregoriotex_is_last_of_line(gregorio_syllable *syllable)
 {
     gregorio_element *current_element = NULL;
     if (!(syllable->next_syllable)) {
@@ -807,8 +761,8 @@ static inline bool is_clef(gregorio_type x)
  * (c4), (::c4), (z0c4) or (z0::c4). It returns the gregorio_element of the
  * clef change. 
  */
-gregorio_element *gregoriotex_syllable_is_clef_change(gregorio_syllable
-        *syllable)
+static gregorio_element *gregoriotex_syllable_is_clef_change(
+        gregorio_syllable *syllable)
 {
     gregorio_element *element;
     if (!syllable || !syllable->elements || !syllable->elements[0]) {
@@ -837,434 +791,6 @@ gregorio_element *gregoriotex_syllable_is_clef_change(gregorio_syllable
 }
 
 /*
- * Function printing the line clef change (only updating \localleftbox, not
- * printing the key). Useful for \grediscretionary.
- * TODO: I'm not sure about the third argument, but that's how it's called in
- * \grechangeclef.
- */
-void
-gregoriotex_print_change_line_clef(FILE *f, gregorio_element *current_element)
-{
-    if (current_element->type == GRE_C_KEY_CHANGE) {
-        if (current_element->u.misc.pitched.flatted_key) {
-            fprintf(f, "\\gresetlinesclef{c}{%d}{1}{%c}%%\n",
-                    current_element->u.misc.pitched.pitch - '0',
-                    gregoriotex_clef_flat_height('c',
-                            current_element->u.misc.pitched.pitch - '0'));
-        } else {
-            fprintf(f, "\\gresetlinesclef{c}{%d}{1}{%c}%%\n",
-                    current_element->u.misc.pitched.pitch - 48, NO_KEY_FLAT);
-        }
-    }
-    if (current_element->type == GRE_F_KEY_CHANGE) {
-        if (current_element->u.misc.pitched.flatted_key) {
-            // the third argument is 0 or 1 according to the need for a
-            // space before the clef
-            fprintf(f, "\\gresetlinesclef{f}{%d}{1}{%c}%%\n",
-                    current_element->u.misc.pitched.pitch - '0',
-                    gregoriotex_clef_flat_height('f',
-                            current_element->u.misc.pitched.pitch - '0'));
-        } else {
-            fprintf(f, "\\gresetlinesclef{f}{%d}{1}{%c}%%\n",
-                    current_element->u.misc.pitched.pitch - '0', NO_KEY_FLAT);
-        }
-    }
-}
-
-/*
- * Arguments are relatively obvious. The most obscure is certainly first_of_disc
- * which is 0 all the time, except in the case of a "clef change syllable". In
- * this case we make a \grediscretionary with two arguments: 
- *   1.what should be printed if the syllable is the last of its line (which
- *   basically means everything but clefs and custos), and 
- *   2. what should be printed if it's in a middle of a line (which means
- *   everything)
- * So the first_of_disc argument is:
- *   0 if we don't know (general case)
- *   1 in case of the first argument of a \grediscretionary
- *   2 if we are in the second argument (necessary in order to avoid infinite loops)
- */
-void
-gregoriotex_write_syllable(FILE *f,
-        gregorio_syllable *syllable,
-        char *first_syllable, unsigned char *line_number,
-        unsigned char first_of_disc)
-{
-    gregorio_element *current_element;
-    gregorio_line *line;
-    gregorio_element *clef_change_element = NULL;
-    if (!syllable) {
-        return;
-    }
-    // Very first: before anything, if the syllable is the beginning of a
-    // no-linebreak area:
-    if (syllable->no_linebreak_area == NLBA_BEGINNING) {
-        fprintf(f, "\\grebeginnlbarea{1}{0}%%\n");
-    }
-    if (syllable->euouae == EUOUAE_BEGINNING) {
-        fprintf (f, "\\grebegineuouae{}%%\n");
-    }
-    /*
-     * first we check if the syllable is only a end of line. If it is the case,
-     * we don't print anything but a comment (to be able to read it if we read
-     * GregorioTeX). The end of lines are treated separately in GregorioTeX, it
-     * is buit inside the TeX structure. 
-     */
-    if ((syllable->elements) && (syllable->elements)[0]) {
-
-        if ((syllable->elements)[0]->type == GRE_END_OF_LINE) {
-            line = (gregorio_line *) malloc(sizeof(gregorio_line));
-            gregoriotex_getlineinfos(syllable->next_syllable, line);
-            if (line->additional_bottom_space == 0
-                    && line->additional_top_space == 0 && line->translation == 0
-                    && line->abovelinestext == 0) {
-                if ((syllable->elements)[0]->u.misc.unpitched.info.sub_type !=
-                        GRE_END_OF_PAR) {
-                    fprintf(f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
-                } else {
-                    fprintf(f, "%%\n%%\n\\grenewparline %%\n%%\n%%\n");
-                }
-            } else {
-                if ((syllable->elements)[0]->u.misc.unpitched.info.sub_type !=
-                        GRE_END_OF_PAR) {
-                    fprintf(f,
-                            "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
-                            line->additional_top_space,
-                            line->additional_bottom_space, line->translation,
-                            line->abovelinestext);
-                } else {
-                    fprintf(f,
-                            "%%\n%%\n\\grenewparlinewithspace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
-                            line->additional_top_space,
-                            line->additional_bottom_space, line->translation,
-                            line->abovelinestext);
-                }
-
-            }
-            free(line);
-            if (*line_number == 1) {
-                fprintf(f, "\\greadjustthirdline %%\n");
-                *line_number = 0;
-            }
-            return;
-        }
-        /*
-         * This case is not simple: if the syllable contains a clef change,
-         * whether it is (c4) or (::c4) or (z0::c4), we put it in a
-         * discretionary. Warning: only these three cases will have the expected
-         * effect. So first we detect it: 
-         */
-        if (first_of_disc == 0) {   /* to avoid infinite loops */
-            clef_change_element = gregoriotex_syllable_is_clef_change(syllable);
-            if (clef_change_element) {
-                /*
-                 * In this case, the first thing to do is to change the line clef 
-                 */
-                gregoriotex_print_change_line_clef(f, clef_change_element);
-                fprintf(f, "\\grediscretionary{%%\n");
-                gregoriotex_write_syllable(f, syllable, first_syllable,
-                        line_number, 1);
-                fprintf(f, "}{%%\n");
-                gregoriotex_write_syllable(f, syllable, first_syllable,
-                        line_number, 2);
-                fprintf(f, "}%%\n");
-                return;
-            }
-        }
-        if ((syllable->elements)[0]->type == GRE_BAR) {
-            if (!syllable->next_syllable && !syllable->text
-                    && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
-                    B_DIVISIO_FINALIS) {
-                fprintf(f, "\\grefinaldivisiofinalis{0}%%\n");
-                if ((syllable->elements)[0]->next
-                        && (syllable->elements)[0]->next->type ==
-                        GRE_TEXVERB_ELEMENT
-                        && (syllable->elements)[0]->next->texverb) {
-                    fprintf(f,
-                            "%% verbatim text at element level:\n%s%%\n%% end of verbatim text\n",
-                            (syllable->elements)[0]->next->texverb);
-                }
-                return;
-            }
-            if (!syllable->next_syllable && !syllable->text
-                    && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
-                    B_DIVISIO_MAIOR) {
-                fprintf(f, "\\grefinaldivisiomaior{0}%%\n");
-                if ((syllable->elements)[0]->next
-                        && (syllable->elements)[0]->next->type ==
-                        GRE_TEXVERB_ELEMENT
-                        && (syllable->elements)[0]->next->texverb) {
-                    fprintf(f,
-                            "%% verbatim text at element level:\n%s%%\n%% end of verbatim text\n",
-                            (syllable->elements)[0]->next->texverb);
-                }
-                return;
-            } else {
-                fprintf(f, "\\grebarsyllable");
-            }
-        } else {
-            fprintf(f, "\\gresyllable");
-        }
-    } else {
-        fprintf(f, "\\gresyllable");
-    }
-    gregoriotex_write_text(f, syllable->text, first_syllable, THIS_SYL);
-    if (syllable->position == WORD_END
-            || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
-            || !syllable->next_syllable
-            || !syllable->next_syllable->type == GRE_END_OF_LINE
-            || !syllable->next_syllable->type == GRE_END_OF_PAR) {
-        fprintf(f, "{1}");
-    } else {
-        fprintf(f, "{0}");
-    }
-    if (syllable->next_syllable) {
-        fprintf(f, "{\\gresetnextsyllable");
-        gregoriotex_write_text(f, syllable->next_syllable->text, NULL,
-                NEXT_SYL);
-        fprintf(f, "}{}{%d}{",
-                gregoriotex_syllable_first_type(syllable->next_syllable));
-    } else {
-        fprintf(f, "{\\gresetnextsyllable{}{}{}}{}{0}{");
-    }
-    if (syllable->translation) {
-        if (syllable->translation_type == TR_WITH_CENTER_BEGINNING) {
-            fprintf(f, "%%\n\\grewritetranslationwithcenterbeginning{");
-        } else {
-            fprintf(f, "%%\n\\grewritetranslation{");
-        }
-        gregoriotex_write_translation(f, syllable->translation);
-        fprintf(f, "}%%\n");
-    }
-    if (syllable->translation_type) {
-        if (syllable->translation_type == TR_WITH_CENTER_END)
-            fprintf(f, "%%\n\\gretranslationcenterend %%\n");
-    }
-    if (syllable->abovelinestext) {
-        fprintf(f, "%%\n\\gresettextabovelines{%s}%%\n",
-                syllable->abovelinestext);
-    }
-    if (gregoriotex_is_last_of_line(syllable)) {
-        fprintf(f, "%%\n\\grelastofline %%\n");
-    }
-    if (!syllable->next_syllable) {
-        fprintf(f, "%%\n\\grelastofscore %%\n");
-    }
-    fprintf(f, "}{%%\n");
-
-    current_element = (syllable->elements)[0];
-    while (current_element) {
-        if (current_element->type == GRE_SPACE) {
-            switch (current_element->u.misc.unpitched.info.space) {
-            case SP_ZERO_WIDTH:
-                fprintf(f, "\\greendofelement{3}{1}%%\n");
-                break;
-            case SP_LARGER_SPACE:
-                fprintf(f, "\\greendofelement{1}{0}%%\n");
-                break;
-            case SP_GLYPH_SPACE:
-                fprintf(f, "\\greendofelement{2}{0}%%\n");
-                break;
-            case SP_GLYPH_SPACE_NB:
-                fprintf(f, "\\greendofelement{2}{1}%%\n");
-                break;
-            case SP_LARGER_SPACE_NB:
-                fprintf(f, "\\greendofelement{1}{1}%%\n");
-                break;
-            case SP_NEUMATIC_CUT_NB:
-                fprintf(f, "\\greendofelement{0}{1}%%\n");
-                break;
-            default:
-                break;
-            }
-            current_element = current_element->next;
-            continue;
-        }
-        if (current_element->type == GRE_TEXVERB_ELEMENT
-                && current_element->texverb) {
-            fprintf(f,
-                    "%% verbatim text at element level:\n%s%%\n%% end of verbatim text\n",
-                    current_element->texverb);
-            current_element = current_element->next;
-            continue;
-        }
-        if (current_element->type == GRE_NLBA) {
-            if (current_element->u.misc.unpitched.info.nlba == NLBA_BEGINNING) {
-                fprintf(f, "\\grebeginnlbarea{0}{0}%%\n");
-            } else {
-                fprintf(f, "\\greendnlbarea{0}{0}%%\n");
-            }
-            current_element = current_element->next;
-            continue;
-        }
-        if (current_element->type == GRE_ALT && current_element->texverb) {
-            fprintf(f,
-                    "\\gresettextabovelines{%s}%%\n", current_element->texverb);
-            current_element = current_element->next;
-            continue;
-        }
-        /*
-         * We don't print clef changes at the end of a line 
-         */
-        if (current_element->type == GRE_C_KEY_CHANGE && first_of_disc != 1) {
-            if (current_element->previous &&
-                    current_element->previous->type == GRE_BAR) {
-                if (current_element->u.misc.pitched.flatted_key) {
-                    // the third argument is 0 or 1 according to the need for a
-                    // space before the clef
-                    fprintf(f, "\\grechangeclef{c}{%d}{0}{%c}%%\n",
-                            current_element->u.misc.pitched.pitch - '0',
-                            gregoriotex_clef_flat_height('c',
-                                    current_element->u.misc.pitched.pitch -
-                                    '0'));
-                } else {
-                    fprintf(f, "\\grechangeclef{c}{%d}{0}{%c}%%\n",
-                            current_element->u.misc.pitched.pitch - '0',
-                            NO_KEY_FLAT);
-                }
-            } else {
-                if (current_element->u.misc.pitched.flatted_key) {
-                    // the third argument is 0 or 1 according to the need for a
-                    // space before the clef
-                    fprintf(f, "\\grechangeclef{c}{%d}{1}{%c}%%\n",
-                            current_element->u.misc.pitched.pitch - '0',
-                            gregoriotex_clef_flat_height('c',
-                                    current_element->u.misc.pitched.pitch -
-                                    48));
-                } else {
-                    fprintf(f, "\\grechangeclef{c}{%d}{1}{%c}%%\n",
-                            current_element->u.misc.pitched.pitch - '0',
-                            NO_KEY_FLAT);
-                }
-            }
-            current_element = current_element->next;
-            continue;
-        }
-        /*
-         * We don't print clef changes at the end of a line 
-         */
-        if (current_element->type == GRE_F_KEY_CHANGE && first_of_disc != 1) {
-            if (current_element->previous &&
-                    current_element->previous->type == GRE_BAR) {
-                if (current_element->u.misc.pitched.flatted_key) {
-                    // the third argument is 0 or 1 according to the need for a
-                    // space before the clef
-                    fprintf(f, "\\grechangeclef{f}{%d}{0}{%c}%%\n",
-                            current_element->u.misc.pitched.pitch - '0',
-                            gregoriotex_clef_flat_height('f',
-                                    current_element->u.misc.pitched.pitch -
-                                    '0'));
-                } else {
-                    fprintf(f, "\\grechangeclef{f}{%d}{0}{%c}%%\n",
-                            current_element->u.misc.pitched.pitch - '0',
-                            NO_KEY_FLAT);
-                }
-            } else {
-                if (current_element->u.misc.pitched.flatted_key) {
-                    // the third argument is 0 or 1 according to the need for a
-                    // space before the clef
-                    fprintf(f, "\\grechangeclef{f}{%d}{1}{%c}%%\n",
-                            current_element->u.misc.pitched.pitch - '0',
-                            gregoriotex_clef_flat_height('f',
-                                    current_element->u.misc.pitched.pitch -
-                                    '0'));
-                } else {
-                    fprintf(f, "\\grechangeclef{f}{%d}{1}{%c}%%\n",
-                            current_element->u.misc.pitched.pitch - '0',
-                            NO_KEY_FLAT);
-                }
-            }
-            current_element = current_element->next;
-            continue;
-        }
-        /*
-         * We don't print custos before a bar at the end of a line 
-         */
-        if (current_element->type == GRE_CUSTO && first_of_disc != 1) {
-            // we also print an unbreakable larger space before the custo
-            fprintf(f, "\\greendofelement{1}{1}%%\n\\grecusto{%c}%%\n",
-                    current_element->u.misc.pitched.pitch);
-            current_element = current_element->next;
-            continue;
-        }
-        if (current_element->type == GRE_BAR) {
-            if (current_element->next) {
-                gregoriotex_write_bar(f,
-                        current_element->u.misc.unpitched.info.bar,
-                        current_element->u.misc.unpitched.special_sign, true);
-            } else {
-                gregoriotex_write_bar(f,
-                        current_element->u.misc.unpitched.info.bar,
-                        current_element->u.misc.unpitched.special_sign, false);
-            }
-            current_element = current_element->next;
-            continue;
-        }
-        if (current_element->type == GRE_END_OF_LINE) {
-            line = (gregorio_line *) malloc(sizeof(gregorio_line));
-            // here we suppose we don't have two linebreaks in the same
-            // syllable
-            gregoriotex_getlineinfos(syllable->next_syllable, line);
-            if (line->additional_bottom_space == 0
-                    && line->additional_top_space == 0 && line->translation == 0
-                    && line->abovelinestext == 0) {
-                if (current_element->u.misc.unpitched.info.sub_type !=
-                        GRE_END_OF_PAR) {
-                    fprintf(f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
-                } else {
-                    fprintf(f, "%%\n%%\n\\grenewparline %%\n%%\n%%\n");
-                }
-            } else {
-                if (current_element->u.misc.unpitched.info.sub_type !=
-                        GRE_END_OF_PAR) {
-                    fprintf(f,
-                            "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
-                            line->additional_top_space,
-                            line->additional_bottom_space, line->translation,
-                            line->abovelinestext);
-                } else {
-                    fprintf(f,
-                            "%%\n%%\n\\grenewparlinewithspace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
-                            line->additional_top_space,
-                            line->additional_bottom_space, line->translation,
-                            line->abovelinestext);
-                }
-            }
-            free(line);
-            if (*line_number == 1) {
-                fprintf(f, "\\greadjustthirdline %%\n");
-                *line_number = 0;
-            }
-            current_element = current_element->next;
-            continue;
-        }
-        // there current_element->type is GRE_ELEMENT
-        gregoriotex_write_element(f, syllable, current_element);
-        if (current_element->next
-                && (current_element->next->type == GRE_ELEMENT
-                        || (current_element->next->next
-                                && current_element->next->type == GRE_ALT
-                                && current_element->next->next->type ==
-                                GRE_ELEMENT))) {
-            fprintf(f, "\\greendofelement{0}{0}%%\n");
-        }
-        current_element = current_element->next;
-    }
-    fprintf(f, "}%%\n");
-    if (syllable->position == WORD_END
-            || syllable->position == WORD_ONE_SYLLABLE || !syllable->text) {
-        fprintf(f, "%%\n");
-    }
-    // Very last, if the syllable is the end of a no-linebreak area:
-    if (syllable->no_linebreak_area == NLBA_END) {
-        fprintf(f, "\\greendnlbarea{1}{0}%%\n");
-    }
-    if (syllable->euouae == EUOUAE_END) {
-        fprintf (f, "\\greendeuouae{}%%\n");
-    }
-}
-
-/*
  * ! @brief This is an arbitrary maximum of notes we consider to affect the
  * syllable's text. We automatically lower the textline if the chant notes are
  * below the staff, so that they do not overlap. However, after a certain point
@@ -1278,7 +804,8 @@ gregoriotex_write_syllable(FILE *f,
  * ! @brief function filling the gregorio_line (see gregoriotex.h) struct with
  * the infos on the line following syllable 
  */
-void gregoriotex_getlineinfos(gregorio_syllable *syllable, gregorio_line *line)
+static void gregoriotex_getlineinfos(gregorio_syllable *syllable,
+        gregorio_line *line)
 {
     gregorio_element *element;
     gregorio_glyph *glyph;
@@ -1295,7 +822,12 @@ void gregoriotex_getlineinfos(gregorio_syllable *syllable, gregorio_line *line)
                 "gregoriotex_write_score", ERROR, 0);
         return;
     }
-
+    /*
+     * first we check if the syllable is only a end of line. If it is the case,
+     * we don't print anything but a comment (to be able to read it if we read
+     * GregorioTeX). The end of lines are treated separately in GregorioTeX, it
+     * is buit inside the TeX structure. 
+     */
     line->additional_top_space = 0;
     line->additional_bottom_space = 0;
     line->translation = 0;
@@ -1314,7 +846,7 @@ void gregoriotex_getlineinfos(gregorio_syllable *syllable, gregorio_line *line)
         if (syllable->abovelinestext) {
             line->abovelinestext = 1;
         }
-        element = (syllable->elements)[0];
+        element = *syllable->elements;
         while (element) {
             if (element->type == GRE_END_OF_LINE) {
                 return;
@@ -1397,14 +929,10 @@ void gregoriotex_getlineinfos(gregorio_syllable *syllable, gregorio_line *line)
     }
 }
 
-// / @todo: What is this comment -here- for? --> we will need type for one
-// thing for the moment : type=first_syllable=1 when it is the first syllable
-// (for the initial).
-
 /*
  * ! @brief Prints the beginning of each text style 
  */
-void gtex_write_begin(FILE *f, grestyle_style style)
+static void gtex_write_begin(FILE *f, grestyle_style style)
 {
     if (style == gregoriotex_ignore_style) {
         return;
@@ -1440,7 +968,7 @@ void gtex_write_begin(FILE *f, grestyle_style style)
 /**
  * @brief Ends each text style
  */
-void gtex_write_end(FILE *f, grestyle_style style)
+static void gtex_write_end(FILE *f, grestyle_style style)
 {
     if (style == gregoriotex_ignore_style) {
         return;
@@ -1460,7 +988,7 @@ void gtex_write_end(FILE *f, grestyle_style style)
 
 // a specific function for writing ends of the two first parts of the text of 
 // the next syllable
-void gtex_write_end_for_two(FILE *f, grestyle_style style)
+static void gtex_write_end_for_two(FILE *f, grestyle_style style)
 {
     if (style != gregoriotex_ignore_style) {
         fprintf(f, "}");
@@ -1472,7 +1000,7 @@ void gtex_write_end_for_two(FILE *f, grestyle_style style)
  * special characters as input (i.e. from gabc representation), and writes them 
  * * in GregorioTeX form. 
  */
-void gtex_write_special_char(FILE *f, grewchar *special_char)
+static void gtex_write_special_char(FILE *f, grewchar *special_char)
 {
     if (!gregorio_wcsbufcmp(special_char, "A/")) {
         fprintf(f, "\\Abar{}");
@@ -1548,12 +1076,12 @@ void gtex_write_special_char(FILE *f, grewchar *special_char)
     }
 }
 
-void gtex_write_verb(FILE *f, grewchar *first_char)
+static void gtex_write_verb(FILE *f, grewchar *first_char)
 {
     gregorio_print_unistring(f, first_char);
 }
 
-void gtex_print_char(FILE *f, grewchar to_print)
+static void gtex_print_char(FILE *f, grewchar to_print)
 {
     switch (to_print) {
     case L'*':
@@ -1587,45 +1115,10 @@ void gtex_print_char(FILE *f, grewchar to_print)
     return;
 }
 
-void
-gregoriotex_write_text(FILE *f, gregorio_character *text, char *first_syllable,
-        int next_syl)
-{
-    char first_syllable_val = 0;
-    if (text == NULL) {
-        fprintf(f, "{}{}{}");
-        return;
-    }
-    if (first_syllable) {
-        first_syllable_val = *first_syllable;
-    }
-    fprintf(f, "{");
-    gregoriotex_ignore_style = gregoriotex_fix_style(text);
-    if (gregoriotex_ignore_style != 0) {
-        if (next_syl) {
-            fprintf(f, "\\gresetfixednexttextformat{%d}",
-                    gregoriotex_internal_style_to_gregoriotex
-                    (gregoriotex_ignore_style));
-        } else {
-            fprintf(f, "\\gresetfixedtextformat{%d}",
-                    gregoriotex_internal_style_to_gregoriotex
-                    (gregoriotex_ignore_style));
-        }
-    }
-    gregorio_write_text(first_syllable_val, text, f,
-            (&gtex_write_verb),
-            (&gtex_print_char),
-            (&gtex_write_begin), (&gtex_write_end), (&gtex_write_special_char));
-    if (first_syllable && *first_syllable) {
-        *first_syllable = 0;
-    }
-    gregoriotex_ignore_style = 0;
-    fprintf(f, "}");
-}
-
 // a function to map the internal ST_* styles to gregoriotex styles as defined
 // in gregoriotex-syllables.tex
-unsigned char gregoriotex_internal_style_to_gregoriotex(grestyle_style style)
+static unsigned char gregoriotex_internal_style_to_gregoriotex(
+        grestyle_style style)
 {
     switch (style) {
     case ST_ITALIC:
@@ -1657,7 +1150,7 @@ unsigned char gregoriotex_internal_style_to_gregoriotex(grestyle_style style)
  * when this style is on all the parts, then we return this style.
  *
  */
-grestyle_style gregoriotex_fix_style(gregorio_character *first_character)
+static grestyle_style gregoriotex_fix_style(gregorio_character *first_character)
 {
     grestyle_style possible_fixed_style = ST_NO_STYLE;
     unsigned char state = 0;
@@ -1726,96 +1219,26 @@ grestyle_style gregoriotex_fix_style(gregorio_character *first_character)
 /*
  * @brief Writes the translation.
  *
- * There is no special handling of translation text; that is, we just print the entire string of text
- * under the normal text line, without considering any special centering or linebreaks.
+ * There is no special handling of translation text; that is, we just print the
+ * entire string of text under the normal text line, without considering any
+ * special centering or linebreaks.
  */
-void gregoriotex_write_translation(FILE *f, gregorio_character *translation)
+static void gregoriotex_write_translation(FILE *f,
+        gregorio_character *translation)
 {
     if (translation == NULL) {
         return;
     }
-    gregorio_write_text(0, translation, f,
+    gregorio_write_text(false, translation, f,
             (&gtex_write_verb),
             (&gtex_print_char),
             (&gtex_write_begin), (&gtex_write_end), (&gtex_write_special_char));
 }
 
-// here we absolutely need to pass the syllable as an argument, because we
-// will need the next note, that may be contained in the next syllable
-
-void
-gregoriotex_write_element(FILE *f,
-        gregorio_syllable *syllable, gregorio_element *element)
-{
-    if (element->type == GRE_ELEMENT) {
-        gregorio_glyph *current_glyph = element->u.glyphs.first_glyph;
-        while (current_glyph) {
-            if (current_glyph->type == GRE_SPACE) {
-                // we assume here that it is a SP_ZERO_WIDTH, the only one a
-                // glyph can be
-                fprintf(f, "\\greendofglyph{1}%%\n");
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            if (current_glyph->type == GRE_TEXVERB_GLYPH
-                    && current_glyph->texverb) {
-                fprintf(f,
-                        "%% verbatim text at glyph level:\n%s%%\n%% end of verbatim text\n",
-                        current_glyph->texverb);
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            if (current_glyph->type == GRE_FLAT) {
-                fprintf(f, "\\greflat{%c}{0}%%\n",
-                        current_glyph->u.misc.pitched.pitch);
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            if (current_glyph->type == GRE_NATURAL) {
-                fprintf(f, "\\grenatural{%c}{0}%%\n",
-                        current_glyph->u.misc.pitched.pitch);
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            if (current_glyph->type == GRE_SHARP) {
-                fprintf(f, "\\gresharp{%c}{0}%%\n",
-                        current_glyph->u.misc.pitched.pitch);
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            if (current_glyph->type == GRE_BAR) {
-                gregoriotex_write_bar(f,
-                        current_glyph->u.misc.unpitched.info.bar,
-                        current_glyph->u.misc.unpitched.special_sign, true);
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            if (current_glyph->type == GRE_TEXVERB_GLYPH
-                    && current_glyph->texverb) {
-                fprintf(f, "%s", current_glyph->texverb);
-                current_glyph = current_glyph->next;
-                continue;
-            }
-            // at this point glyph->type is GRE_GLYPH
-            gregoriotex_write_glyph(f, syllable, element, current_glyph);
-            if (current_glyph->next && current_glyph->next->type == GRE_GLYPH) {
-                if (is_puncta_inclinata(current_glyph->next->u.notes.glyph_type)
-                        || current_glyph->next->u.notes.glyph_type ==
-                        G_PUNCTA_INCLINATA) {
-                    fprintf(f, "\\greendofglyph{9}%%\n");
-                } else {
-                    fprintf(f, "\\greendofglyph{0}%%\n");
-                }
-            }
-            current_glyph = current_glyph->next;
-        }
-    }
-}
-
 // a function to compute the height of the flat of a key
 // the flat is always on the line of the
 
-char gregoriotex_clef_flat_height(char step, int line)
+static char gregoriotex_clef_flat_height(char step, int line)
 {
     switch (step) {
     case C_KEY:
@@ -1868,8 +1291,8 @@ char gregoriotex_clef_flat_height(char step, int line)
     }
 }
 
-void gregoriotex_write_bar(FILE *f, gregorio_bar type, gregorio_sign signs,
-        bool is_inside_bar)
+static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
+        gregorio_sign signs, bool is_inside_bar)
 {
     // the type number of function vepisemusorrare
     char typenumber = 26;
@@ -1951,500 +1374,6 @@ void gregoriotex_write_bar(FILE *f, gregorio_bar type, gregorio_sign signs,
     }
 }
 
-void gregoriotex_write_glyph(FILE *f,
-        gregorio_syllable *syllable,
-        gregorio_element *element, gregorio_glyph *glyph)
-{
-    // glyph number is the number of the glyph in the fonte, it is discussed in
-    // later comments
-    // type is the type of the glyph. Understand the type of the glyph for
-    // gregoriotex, for the alignement between text and notes. (AT_ONE_NOTE,
-    // etc.)
-    gtex_alignment type = 0;
-    // the type of the glyph, in the sense of the shape (T_PES, etc.)
-    gtex_type gtype = 0;
-    char next_note_pitch = 0;
-    gregorio_note *current_note;
-    char *shape;
-    if (!glyph) {
-        gregorio_message(_("called with NULL pointer"),
-                "gregoriotex_write_glyph", ERROR, 0);
-        return;
-    }
-    if (glyph->type != GRE_GLYPH || !glyph->u.notes.first_note) {
-        gregorio_message(_("called with glyph without note"),
-                "gregoriotex_write_glyph", ERROR, 0);
-        return;
-    }
-    next_note_pitch = gregorio_determine_next_pitch(syllable, element, glyph);
-    current_note = glyph->u.notes.first_note;
-    // first we check if it is really a unique glyph in gregoriotex... the
-    // glyphs that are not a unique glyph are : trigonus and pucta inclinata
-    // in general, and torculus resupinus and torculus resupinus flexus, so
-    // we first divide the glyph into real gregoriotex glyphs
-    switch (glyph->u.notes.glyph_type) {
-    case G_TRIGONUS:
-    case G_PUNCTA_INCLINATA:
-    case G_2_PUNCTA_INCLINATA_DESCENDENS:
-    case G_3_PUNCTA_INCLINATA_DESCENDENS:
-    case G_4_PUNCTA_INCLINATA_DESCENDENS:
-    case G_5_PUNCTA_INCLINATA_DESCENDENS:
-    case G_2_PUNCTA_INCLINATA_ASCENDENS:
-    case G_3_PUNCTA_INCLINATA_ASCENDENS:
-    case G_4_PUNCTA_INCLINATA_ASCENDENS:
-    case G_5_PUNCTA_INCLINATA_ASCENDENS:
-        while (current_note) {
-            gregoriotex_write_note(f, current_note, glyph, element,
-                    next_note_pitch);
-            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
-                    current_note);
-            current_note = current_note->next;
-        }
-        break;
-    case G_SCANDICUS:
-        if (glyph->u.notes.liquescentia == L_DEMINUTUS
-                || glyph->u.notes.liquescentia == L_DEMINUTUS_INITIO_DEBILIS
-                || glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA) {
-            shape = gregoriotex_determine_number_and_type(glyph, element, &type,
-                    &gtype);
-            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
-                    glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
-                    type);
-            gregoriotex_write_signs(f, gtype, glyph, element,
-                    glyph->u.notes.first_note);
-        } else {
-            while (current_note) {
-                gregoriotex_write_note(f, current_note, glyph, element,
-                        next_note_pitch);
-                gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
-                        current_note);
-                current_note = current_note->next;
-            }
-        }
-        break;
-    case G_ANCUS:
-        if (glyph->u.notes.liquescentia == L_DEMINUTUS
-                || glyph->u.notes.liquescentia == L_DEMINUTUS_INITIO_DEBILIS) {
-            shape = gregoriotex_determine_number_and_type(glyph, element, &type,
-                    &gtype);
-            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
-                    glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
-                    type);
-            gregoriotex_write_signs(f, gtype, glyph, element,
-                    glyph->u.notes.first_note);
-        } else {
-            while (current_note) {
-                gregoriotex_write_note(f, current_note, glyph, element,
-                        next_note_pitch);
-                gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
-                        current_note);
-                current_note = current_note->next;
-            }
-        }
-        break;
-    case G_TORCULUS_RESUPINUS_FLEXUS:
-        gregoriotex_write_note(f, current_note, glyph, element,
-                next_note_pitch);
-        gregoriotex_write_signs(f, T_ONE_NOTE_TRF, glyph, element,
-                glyph->u.notes.first_note);
-        glyph->u.notes.glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
-        // tricky to have the good position for these glyphs
-        glyph->u.notes.first_note = current_note->next;
-        shape = gregoriotex_determine_number_and_type(glyph, element, &type,
-                &gtype);
-        // TODO : fusion functions
-        fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
-                glyph->u.notes.first_note->u.note.pitch, next_note_pitch, type);
-        gregoriotex_write_signs(f, gtype, glyph, element,
-                glyph->u.notes.first_note);
-        glyph->u.notes.first_note = current_note;
-        glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
-        break;
-    case G_BIVIRGA:
-    case G_TRIVIRGA:
-        while (current_note) {
-            gregoriotex_write_note(f, current_note, glyph, element,
-                    next_note_pitch);
-            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
-                    current_note);
-            current_note = current_note->next;
-            if (current_note) {
-                fprintf(f, "\\greendofglyph{4}%%\n");
-            }
-        }
-        break;
-    case G_TRISTROPHA:
-    case G_TRISTROPHA_AUCTA:
-    case G_DISTROPHA:
-    case G_DISTROPHA_AUCTA:
-        while (current_note) {
-            gregoriotex_write_note(f, current_note, glyph, element,
-                    next_note_pitch);
-            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
-                    current_note);
-            current_note = current_note->next;
-            if (current_note) {
-                fprintf(f, "\\greendofglyph{5}%%\n");
-            }
-        }
-        break;
-    case G_PUNCTUM:
-        if (glyph->u.notes.first_note->u.note.shape != S_ORISCUS
-                && glyph->u.notes.first_note->u.note.shape != S_ORISCUS_AUCTUS
-                && glyph->u.notes.first_note->u.note.shape !=
-                S_ORISCUS_DEMINUTUS
-                && glyph->u.notes.first_note->u.note.shape !=
-                S_ORISCUS_SCAPUS) {
-            switch (glyph->u.notes.liquescentia) {
-            case L_AUCTUS_ASCENDENS:
-                glyph->u.notes.first_note->u.note.shape =
-                        S_PUNCTUM_AUCTUS_ASCENDENS;
-                break;
-            case L_AUCTUS_DESCENDENS:
-            case L_AUCTA:
-                glyph->u.notes.first_note->u.note.shape =
-                        S_PUNCTUM_AUCTUS_DESCENDENS;
-                break;
-            case L_DEMINUTUS:
-            case L_INITIO_DEBILIS:
-                glyph->u.notes.first_note->u.note.shape = S_PUNCTUM_DEMINUTUS;
-            default:
-                break;
-            }
-        }
-        // else fall into the next case
-    case G_PUNCTUM_INCLINATUM:
-    case G_VIRGA:
-    case G_VIRGA_REVERSA:
-    case G_STROPHA:
-    case G_STROPHA_AUCTA:
-        gregoriotex_write_note(f, glyph->u.notes.first_note, glyph, element,
-                next_note_pitch);
-        gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element, current_note);
-        break;
-    default:
-        // special case of the torculus resupinus which first note is not a
-        // punctum
-        if (glyph->u.notes.glyph_type == G_TORCULUS_RESUPINUS
-                && current_note->u.note.shape != S_PUNCTUM
-                && current_note->u.note.shape != S_QUILISMA) {
-            gregoriotex_write_note(f, current_note, glyph, element,
-                    next_note_pitch);
-            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
-                    glyph->u.notes.first_note);
-            // tricky to have the good position for these glyphs
-            glyph->u.notes.first_note = current_note->next;
-            glyph->u.notes.glyph_type = G_PORRECTUS_NO_BAR;
-            shape = gregoriotex_determine_number_and_type(glyph, element, &type,
-                    &gtype);
-            // TODO : fusion functions
-            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
-                    glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
-                    type);
-            gregoriotex_write_signs(f, gtype, glyph, element,
-                    glyph->u.notes.first_note);
-            glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS;
-            glyph->u.notes.first_note = current_note;
-        } else {
-            shape = gregoriotex_determine_number_and_type(glyph, element, &type,
-                    &gtype);
-            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
-                    glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
-                    type);
-            gregoriotex_write_signs(f, gtype, glyph, element,
-                    glyph->u.notes.first_note);
-            break;
-        }
-    }
-}
-
-/*
- * 
- * A function that write the signs of a glyph, which has the type type (T_*,
- * not G_*, which is in the glyph->glyph_type), and (important), we start only
- * at the note current_note. It is due to the way we call it : if type is
- * T_ONE_NOTE, we just do the signs on current_note, not all. This is the case
- * for example for the first note of the torculus resupinus, or the
- * G_*_PUNCTA_INCLINATA.
- * 
- */
-
-// small helper
-#define _found()\
-	  if (!found)\
-	    {\
-	      found = true;\
-	      fprintf (f, "%%\n");\
-	    }
-
-#define _end_loop()\
-      if (type == T_ONE_NOTE || type == T_ONE_NOTE_TRF)\
-	{\
-	  break;\
-	}\
-      else\
-	{\
-	  current_note = current_note->next;\
-	  i++;\
-	}
-
-void
-gregoriotex_write_signs(FILE *f, gtex_type type,
-        gregorio_glyph *glyph, gregorio_element *element, gregorio_note *note)
-{
-    // i is the number of the note for which we are typesetting the sign.
-    int i = 1;
-    // a dumb char
-    char block_hepisemus = 0;
-    bool found = false;
-    gregorio_note *current_note = note;
-    while (current_note) {
-        // we start by the additional lines
-        if (current_note->u.note.pitch < 'c') {
-            if (!found) {
-                found = true;
-                fprintf(f, "%%\n{%%\n");
-            }
-            gregoriotex_write_additional_line(f, glyph, i, type,
-                    true, current_note);
-            status->bottom_line = 1;
-        }
-        if (current_note->u.note.pitch > 'k') {
-            if (!found) {
-                found = true;
-                fprintf(f, "%%\n{%%\n");
-            }
-            gregoriotex_write_additional_line(f, glyph, i, type,
-                    false, current_note);
-        }
-        if (current_note->texverb) {
-            if (!found) {
-                found = true;
-                fprintf(f, "%%\n{%%\n");
-            }
-            fprintf(f,
-                    "%% verbatim text at note level:\n%s%%\n%% end of verbatim text\n",
-                    current_note->texverb);
-        }
-        _end_loop();
-    }
-    if (!found) {
-        fprintf(f, "{}{");
-    } else {
-        fprintf(f, "}{");
-    }
-    found = false;
-    i = 1;
-    current_note = note;
-    // now a first loop for the choral signs, because high signs must be taken
-    // into account before any hepisemus
-    while (current_note) {
-        if (current_note->choral_sign) {
-            _found();
-            gregoriotex_write_choral_sign(f, glyph, type, i, current_note, 0);
-        }
-        _end_loop();
-    }
-    // a loop for rare signs, vertical episemus, and horizontal episemus
-    i = 1;
-    current_note = note;
-    while (current_note) {
-        // we continue with the hepisemus
-        if (current_note->h_episemus_type != H_NO_EPISEMUS
-                && block_hepisemus == 0) {
-            // if it is a porrectus or a porrectus flexus, we check if the
-            // episemus is on the two first notes:
-            _found();
-            if ((type == T_PORRECTUS || type == T_PORRECTUSFLEXUS
-                            || type == T_PORRECTUSFLEXUS_NOBAR
-                            || type == T_PORRECTUS_NOBAR) && current_note->next
-                    && simple_htype(current_note->next->h_episemus_type) !=
-                    H_NO_EPISEMUS && i == 1) {
-                gregoriotex_write_hepisemus(f, glyph, element,
-                        HEPISEMUS_FIRST_TWO, type, current_note);
-                block_hepisemus = 1;
-            } else {
-                if ((type == T_TORCULUS_RESUPINUS
-                                || type == T_TORCULUS_RESUPINUS_QUILISMA)
-                        && current_note->next
-                        && simple_htype(current_note->next->h_episemus_type) !=
-                        H_NO_EPISEMUS && i == 2) {
-                    gregoriotex_write_hepisemus(f, glyph, element,
-                            HEPISEMUS_FIRST_TWO, type, current_note);
-                    block_hepisemus = 1;
-                } else {
-                    gregoriotex_write_hepisemus(f, glyph, element, i,
-                            type, current_note);
-                }
-            }
-        }
-        // write_rare also writes the vepisemus
-        if (current_note->special_sign) {
-            _found();
-            gregoriotex_write_rare(f, glyph, i, type,
-                    current_note, current_note->special_sign);
-        }
-        if (current_note->signs != _NO_SIGN) {
-            _found();
-        }
-        switch (current_note->signs) {
-        case _V_EPISEMUS:
-        case _V_EPISEMUS_PUNCTUM_MORA:
-        case _V_EPISEMUS_AUCTUM_DUPLEX:
-            gregoriotex_write_vepisemus(f, glyph, i, type, current_note);
-            break;
-        }
-        // why is this if there?...
-        if (!current_note->special_sign) {
-            if (block_hepisemus == 2) {
-                block_hepisemus = 0;
-            }
-            if (block_hepisemus == 1) {
-                block_hepisemus = 2;
-            }
-        }
-        _end_loop()
-                // final loop for choral signs and punctum mora
-    }
-    i = 1;
-    current_note = note;
-    while (current_note) {
-        switch (current_note->signs) {
-        case _PUNCTUM_MORA:
-        case _V_EPISEMUS_PUNCTUM_MORA:
-            gregoriotex_write_punctum_mora(f, glyph, type, current_note);
-            break;
-        case _AUCTUM_DUPLEX:
-        case _V_EPISEMUS_AUCTUM_DUPLEX:
-            gregoriotex_write_auctum_duplex(f, current_note);
-            break;
-        default:
-            break;
-        }
-        if (current_note->choral_sign) {
-            _found();
-            gregoriotex_write_choral_sign(f, glyph, type, i, current_note, 1);
-        }
-        _end_loop();
-    }
-    fprintf(f, "}%%\n");
-}
-
-void
-gregoriotex_write_choral_sign(FILE *f,
-        gregorio_glyph *glyph, gtex_type type, int i,
-        gregorio_note *current_note, char low)
-{
-    // 0 in the normal case (sign above the note), 1 in the case of it's next
-    // to
-    // the note (same height as a punctum)
-    unsigned char low_sign = 0;
-    char number = 0;
-    char height = 0;
-    // a temp value
-    bool kind_of_pes = false;
-    gregorio_note *tmpnote = NULL;
-    switch (glyph->u.notes.glyph_type) {
-    case G_FLEXA:
-    case G_TORCULUS:
-    case G_TORCULUS_LIQUESCENS:
-    case G_TORCULUS_RESUPINUS_FLEXUS:
-    case G_PORRECTUS_FLEXUS:
-        if (!current_note->next) {
-            low_sign = 1;
-        }
-        break;
-    case G_PODATUS:
-    case G_PORRECTUS:
-    case G_TORCULUS_RESUPINUS:
-        if (!current_note->next) {
-            break;
-        }
-        kind_of_pes = true;
-        if (current_note->u.note.shape != S_QUILISMA) {
-            low_sign = 1;
-        }
-        break;
-    default:
-        break;
-    }
-
-    // the low choral signs must be typeset after the punctum, whereas the high
-    // must be typeset before the h episemus
-    if ((low_sign == 1 && low == 0) || (low_sign == 0 && low == 1)) {
-        return;
-    }
-
-    if (low_sign == 0) {
-        // let's cheat a little
-        current_note->h_episemus_top_note = current_note->u.note.pitch;
-        gregoriotex_find_sign_number(glyph, i,
-                type, ST_H_EPISEMUS, current_note, &number, &height, NULL);
-        if (is_on_a_line(current_note->u.note.pitch)) {
-            fprintf(f, "\\grehighchoralsign{%c}{%s}{%d}%%\n",
-                    current_note->u.note.pitch, current_note->choral_sign,
-                    number);
-        } else {
-            fprintf(f, "\\grehighchoralsign{%c}{%s}{%d}%%\n",
-                    current_note->u.note.pitch + 2, current_note->choral_sign,
-                    number);
-        }
-        if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS) {
-            tmpnote = current_note;
-            while (tmpnote) {
-                if (simple_htype(current_note->h_episemus_type) !=
-                        H_NO_EPISEMUS) {
-                    if (is_on_a_line(tmpnote->h_episemus_top_note)) {
-                        tmpnote->h_episemus_top_note =
-                                tmpnote->h_episemus_top_note + 1;
-                    } else {
-                        tmpnote->h_episemus_top_note =
-                                tmpnote->h_episemus_top_note + 2;
-                    }
-                }
-                tmpnote = tmpnote->next;
-            }
-            tmpnote = current_note->previous;
-            while (tmpnote) {
-                if (simple_htype(current_note->h_episemus_type) !=
-                        H_NO_EPISEMUS) {
-                    if (is_on_a_line(tmpnote->h_episemus_top_note)) {
-                        tmpnote->h_episemus_top_note =
-                                tmpnote->h_episemus_top_note + 1;
-                    } else {
-                        tmpnote->h_episemus_top_note =
-                                tmpnote->h_episemus_top_note + 2;
-                    }
-                }
-                tmpnote = tmpnote->previous;
-            }
-        }
-    } else {
-        // very approximative euristic, some things may have to be adapted
-        // here...
-        if (is_on_a_line(current_note->u.note.pitch)) {
-            if (kind_of_pes
-                    && current_note->u.note.pitch -
-                    current_note->next->u.note.pitch == -1) {
-                fprintf(f, "\\grelowchoralsign{%c}{%s}{1}%%\n",
-                        current_note->u.note.pitch, current_note->choral_sign);
-                return;
-            }
-            if (current_note->previous
-                    && (current_note->previous->signs == _PUNCTUM_MORA
-                            || current_note->previous->signs ==
-                            _V_EPISEMUS_PUNCTUM_MORA)) {
-                fprintf(f, "\\grelowchoralsign{%c}{%s}{1}%%\n",
-                        current_note->u.note.pitch, current_note->choral_sign);
-                return;
-            }
-        }
-
-        fprintf(f, "\\grelowchoralsign{%c}{%s}{0}%%\n",
-                current_note->u.note.pitch, current_note->choral_sign);
-    }
-}
-
 /*
  * ! @brief Writes augmentum duplexes (double dots) We suppose we are on the
  * last note. \n The algorithm is the following: if there is a previous note,
@@ -2453,7 +1382,8 @@ gregoriotex_write_choral_sign(FILE *f,
  * glyph, which would be weird but sure why not, we just typeset two puncta
  * spaced of 2. 
  */
-void gregoriotex_write_auctum_duplex(FILE *f, gregorio_note *current_note)
+static void gregoriotex_write_auctum_duplex(FILE *f,
+        gregorio_note *current_note)
 {
     char pitch = current_note->u.note.pitch;
     char previous_pitch = 0;
@@ -2502,9 +1432,8 @@ void gregoriotex_write_auctum_duplex(FILE *f, gregorio_note *current_note)
  * Writes \c \\grepunctummora in the gtex file, with the appropriate arguments. You might think this function
  * more straightforward than it actually is...
  */
-void
-gregoriotex_write_punctum_mora(FILE *f,
-        gregorio_glyph *glyph, gtex_type type, gregorio_note *current_note)
+static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
+        gtex_type type, gregorio_note *current_note)
 {
     // in this if we consider that the puncta are only on the last two notes
     // (maybe it would be useful to consider it more entirely, but it would be
@@ -2679,353 +1608,6 @@ gregoriotex_write_punctum_mora(FILE *f,
             special_punctum, punctum_inclinatum);
 }
 
-/**
- * @brief A function that writes the good \c \\hepisemus in GregorioTeX.
- * @param i The position of the note in the glyph.
- */
-void
-gregoriotex_write_hepisemus(FILE *f,
-        gregorio_glyph *current_glyph,
-        gregorio_element *current_element,
-        int i, gtex_type type, gregorio_note *current_note)
-{
-
-    char height = 0;
-    char no_bridge_height = 0;
-    char number = 0;
-    char ambitus = 0;
-    bool bottom = false;
-    char next_height = -1;
-    // a helper value containing 0 if we must not change the height (case of
-    // the height already modified by a previous hepisemus bridge
-    char do_not_change_height = 0;
-    gregorio_note *next_note = NULL;
-
-    if (!current_note || current_note->h_episemus_type == H_NO_EPISEMUS) {
-        return;
-    }
-
-    gregoriotex_find_sign_number(current_glyph, i,
-            type, ST_H_EPISEMUS, current_note, &number, &height, &bottom);
-
-    no_bridge_height = height;
-
-    if (status->to_modify_note && status->to_modify_note == current_note) {
-        do_not_change_height = 1;
-        height = status->to_modify_h_episemus;
-        // we also modify the next note if necessary
-        if (current_note->next
-                && simple_htype(current_note->next->h_episemus_type) !=
-                H_NO_EPISEMUS) {
-            status->to_modify_note = current_note->next;
-        } else {
-            status->to_modify_note = NULL;
-        }
-    }
-
-    next_height = gregoriotex_find_next_hepisemus_height(current_glyph,
-            current_note, current_element, &next_note);
-
-    if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS
-            && (!current_note->next
-                    || current_note->next->u.note.shape == S_PUNCTUM_INCLINATUM
-                    || current_note->next->u.note.shape ==
-                    S_PUNCTUM_INCLINATUM_DEMINUTUS
-                    || current_note->next->u.note.shape ==
-                    S_PUNCTUM_INCLINATUM_AUCTUS)
-            && (!current_note->previous
-                    || simple_htype(current_note->previous->h_episemus_type) ==
-                    H_NO_EPISEMUS) && !bottom && next_height != -1) {
-        /*
-         * TODO: remove conditional ambiguity 
-         */
-        if (height == next_height || do_not_change_height == 0
-                && (height == next_height - 1 && is_on_a_line(height))) {
-            fprintf(f, "\\grehepisemusbridge{%c}{}{}%%\n", next_height);
-        } else {
-            if (height == next_height + 1 && is_on_a_line(next_height)) {
-                status->to_modify_h_episemus = height;
-                status->to_modify_note = next_note;
-                fprintf(f, "\\grehepisemusbridge{%c}{}{}%%\n", height);
-            }
-            next_height = height;
-        }
-    } else {
-        next_height = height;
-    }
-
-    if (current_note->next) {
-        ambitus = current_note->u.note.pitch - current_note->next->u.note.pitch;
-    }
-    if (has_bottom(current_note->h_episemus_type)) {
-        fprintf(f, "\\grehepisemusbottom{%c}{%d}{%d}%%\n",
-                current_note->h_episemus_bottom_note - 1, number, ambitus);
-        if (!bottom
-                && simple_htype(current_note->h_episemus_type) !=
-                H_NO_EPISEMUS) {
-            fprintf(f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n", no_bridge_height,
-                    number, ambitus, next_height);
-        }
-        return;
-    }
-    if (bottom) {
-        fprintf(f, "\\grehepisemusbottom{%c}{%d}{%d}%%\n", no_bridge_height,
-                number, ambitus);
-    } else {
-        fprintf(f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n", no_bridge_height,
-                number, ambitus, next_height);
-    }
-}
-
-// a function to find the next horizontal episemus height (returns -1 if none
-// interesting)
-
-char
-gregoriotex_find_next_hepisemus_height(gregorio_glyph *glyph,
-        gregorio_note *note, gregorio_element *element,
-        gregorio_note **final_note)
-{
-    char i = 1;
-    char height = 0;
-    char number = 0;
-    bool bottom = false;
-    gtex_alignment type = 0;
-    gtex_type gtype = 0;
-    if (note && note->u.note.shape == S_PUNCTUM_INCLINATUM && note->next &&
-            (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
-                    || note->next->u.note.shape ==
-                    S_PUNCTUM_INCLINATUM_DEMINUTUS
-                    || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_AUCTUS)
-            && simple_htype(note->next->h_episemus_type) != H_NO_EPISEMUS) {
-        return note->next->h_episemus_top_note + 1;
-    }
-    note = NULL;
-    if ((glyph->next && glyph->next->type == GRE_GLYPH)
-            || (glyph->next && glyph->next->next
-                    && glyph->next->next->type == GRE_GLYPH)) {
-        if (glyph->next->type != GRE_GLYPH) {
-            glyph = glyph->next;
-        }
-        glyph = glyph->next;
-        note = glyph->u.notes.first_note;
-        if (glyph->u.notes.glyph_type == G_PODATUS) {
-            note = note->next;
-            i = 2;
-            gtype = T_PES;
-        } else {
-            gregoriotex_determine_number_and_type(glyph, element, &type,
-                    &gtype);
-        }
-        if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS) {
-            gregoriotex_find_sign_number(glyph, i,
-                    gtype, ST_H_EPISEMUS, note, &number, &height, &bottom);
-            if (!bottom) {
-                *final_note = note;
-                return height;
-            } else {
-                return -1;
-            }
-        } else {
-            return -1;
-        }
-    }
-    element = element->next;
-    if (!element) {
-        return -1;
-    }
-    if (element->type == GRE_SPACE
-            && (element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT
-                    || element->u.misc.unpitched.info.space == SP_LARGER_SPACE
-                    || element->u.misc.unpitched.info.space ==
-                    SP_NEUMATIC_CUT_NB
-                    || element->u.misc.unpitched.info.space ==
-                    SP_LARGER_SPACE_NB)) {
-        element = element->next;
-    }
-    if (!element || element->type != GRE_ELEMENT) {
-        return -1;
-    }
-    glyph = element->u.glyphs.first_glyph;
-    if (!glyph || !glyph->u.notes.first_note) {
-        return -1;
-    }
-    note = glyph->u.notes.first_note;
-    if (glyph->u.notes.glyph_type == G_PODATUS) {
-        note = note->next;
-        i = 2;
-        gtype = T_PES;
-    } else {
-        gregoriotex_determine_number_and_type(glyph, element, &type,
-                &gtype);
-    }
-    if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS) {
-        gregoriotex_find_sign_number(glyph, i,
-                gtype, ST_H_EPISEMUS, note, &number, &height, &bottom);
-        if (!bottom) {
-            *final_note = note;
-            return height;
-        } else {
-            return -1;
-        }
-    } else {
-        return -1;
-    }
-}
-
-// a macro to write an additional line
-
-void
-gregoriotex_write_additional_line(FILE *f,
-        gregorio_glyph *current_glyph,
-        int i, gtex_type type, bool bottom, gregorio_note *current_note)
-{
-
-    char height = 0;
-    char number = 0;
-    char ambitus = 0;
-    if (!current_note) {
-        gregorio_message(_
-                ("called with no note"),
-                "gregoriotex_write_additional_line", ERROR, 0);
-        return;
-    }
-    // patch to get a line under the full glyph in the case of dbc (for
-    // example)
-    switch (type) {
-    case T_PORRECTUSFLEXUS:
-    case T_PORRECTUSFLEXUS_NOBAR:
-    case T_PORRECTUS:
-    case T_PORRECTUS_NOBAR:
-        if (i == 1) {
-            i = HEPISEMUS_FIRST_TWO;
-        }
-        if (i == 2) {
-            if (current_note->previous->u.note.pitch > 'b'
-                    && current_note->previous->u.note.pitch < 'l') {
-                i = HEPISEMUS_FIRST_TWO;
-            } else {
-                return;
-            }
-        }
-        if (i == 3) {
-            if (bottom || current_note->previous->u.note.pitch > 'k') {
-                // we don't need to add twice the same line
-                return;
-            }
-        }
-        break;
-    case T_TORCULUS_RESUPINUS:
-    case T_TORCULUS_RESUPINUS_QUILISMA:
-        if (i == 2) {
-            i = HEPISEMUS_FIRST_TWO;
-        }
-        if (i == 3) {
-            if (current_note->previous->u.note.pitch > 'b') {
-                i = HEPISEMUS_FIRST_TWO;
-            } else {
-                return;
-            }
-        }
-        if (i == 4) {
-            if (bottom || current_note->previous->u.note.pitch > 'k') {
-                // we don't need to add twice the same line
-                return;
-            }
-        }
-        break;
-    default:
-        break;
-    }
-
-    gregoriotex_find_sign_number(current_glyph, i,
-            type, ST_H_EPISEMUS, current_note, &number, &height, NULL);
-    if (i == HEPISEMUS_FIRST_TWO) {
-        // here we must compare the first note of the big bar with the second
-        // one
-        // but it may be tricky sometimes, because of the previous patch
-        if (current_note->previous &&
-                current_note->previous->u.note.pitch >
-                current_note->u.note.pitch) {
-            ambitus =
-                    current_note->previous->u.note.pitch -
-                    current_note->u.note.pitch;
-        } else {
-            ambitus =
-                    current_note->u.note.pitch -
-                    current_note->next->u.note.pitch;
-        }
-    }
-    fprintf(f, "\\greadditionalline{%d}{%d}{%d}%%\n", number, ambitus,
-            bottom ? 3 : 2);
-}
-
-/*
- * 
- * a function that writes the good value of \vepisemus in GregorioTeX. i is the 
- * position of the note in the glyph
- * 
- */
-
-void
-gregoriotex_write_vepisemus(FILE *f, gregorio_glyph *current_glyph,
-        int i, gtex_type type, gregorio_note *current_note)
-{
-
-    char height = 0;
-    char number = 0;
-    gregoriotex_find_sign_number(current_glyph, i,
-            type, ST_V_EPISEMUS, current_note, &number, &height, NULL);
-    if (current_note->u.note.pitch == 'a') {
-        height = 'z';
-    }
-    fprintf(f, "\\grevepisemus{%c}{%d}%%\n", height, number);
-}
-
-/*
- * a function that writes the rare signs in GregorioTeX. i is the position of
- * the note in the glyph */
-
-void
-gregoriotex_write_rare(FILE *f, gregorio_glyph *current_glyph,
-        int i, gtex_type type, gregorio_note *current_note, gregorio_sign rare)
-{
-
-    char height = 0;
-    char number = 0;
-
-    // we set ST_V_EPISEMUS because the only height we have to calculate is
-    // this
-    // one
-    gregoriotex_find_sign_number(current_glyph, i,
-            type, ST_V_EPISEMUS, current_note, &number, &height, NULL);
-
-    switch (rare) {
-    case _ACCENTUS:
-        fprintf(f, "\\greaccentus{%c}{%d}%%\n", current_note->u.note.pitch,
-                number);
-        break;
-    case _ACCENTUS_REVERSUS:
-        fprintf(f, "\\grereversedaccentus{%c}{%d}%%\n",
-                current_note->u.note.pitch, number);
-        break;
-    case _CIRCULUS:
-        fprintf(f, "\\grecirculus{%c}{%d}%%\n", current_note->u.note.pitch,
-                number);
-        break;
-    case _SEMI_CIRCULUS:
-        fprintf(f, "\\gresemicirculus{%c}{%d}%%\n", current_note->u.note.pitch,
-                number);
-        break;
-    case _SEMI_CIRCULUS_REVERSUS:
-        fprintf(f, "\\grereversedsemicirculus{%c}{%d}%%\n",
-                current_note->u.note.pitch, number);
-        break;
-        // the cases of the bar signs are dealt in another function (write_bar)
-    default:
-        break;
-    }
-}
-
 static inline void number_note_before_last_note(gregorio_glyph *current_glyph,
         gregorio_note *current_note, char *number)
 {
@@ -3178,8 +1760,7 @@ static inline void normal_height_bottom_pes(gtex_sign_type sign_type,
 // hepisemus) number, according to the gregoriotex convention (described in
 // gregoriotex.tex)
 // this function is REALLY a pain in the ass, but it is sadly necessary
-void
-gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
+static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
         int i, gtex_type type, gtex_sign_type sign_type,
         gregorio_note *current_note, char *number, char *height, bool * bottom)
 {
@@ -3518,80 +2099,344 @@ gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
 
 }
 
-// a helper macro for the following function
-#define whileglyph(prevornext) \
-        while(glyph)\
-          {\
-            if (glyph->type == GRE_GLYPH)\
-              {\
-                note = glyph->u.notes.first_note;\
-                while (note)\
-                  {\
-                    if (note->u.note.pitch < 'c')\
-                      {\
-                        return 1;\
-                      }\
-                    note = note->next;\
-                  }\
-              }\
-            glyph = glyph->prevornext;\
-          }
+// a function to find the next horizontal episemus height (returns -1 if none
+// interesting)
 
-// a function that determines if we must use a long queue or not (less easy
-// that it might seem)
-
-unsigned char
-gregoriotex_is_long(char pitch, gregorio_glyph *current_glyph,
-        gregorio_element *current_element)
+static char gregoriotex_find_next_hepisemus_height(gregorio_glyph *glyph,
+        gregorio_note *note, gregorio_element *element,
+        gregorio_note **final_note)
 {
-    gregorio_note *note;
-    gregorio_glyph *glyph = current_glyph->next;
-    gregorio_element *element = current_element->next;
-    switch (pitch) {
-    case 'b':
-    case 'f':
-    case 'h':
-    case 'j':
-    case 'l':
-        return 1;
-    case 'd':
-        // we first look forward to see if there is a note underneath c
-        whileglyph(next);
-        if (element && element->type == GRE_SPACE
-                && (element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT
-                        || element->u.misc.unpitched.info.space ==
-                        SP_LARGER_SPACE
-                        || element->u.misc.unpitched.info.space ==
-                        SP_NEUMATIC_CUT_NB
-                        || element->u.misc.unpitched.info.space ==
-                        SP_LARGER_SPACE_NB)) {
-            element = element->next;
+    char i = 1;
+    char height = 0;
+    char number = 0;
+    bool bottom = false;
+    gtex_alignment type = 0;
+    gtex_type gtype = 0;
+    if (note && note->u.note.shape == S_PUNCTUM_INCLINATUM && note->next &&
+            (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
+                    || note->next->u.note.shape ==
+                    S_PUNCTUM_INCLINATUM_DEMINUTUS
+                    || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_AUCTUS)
+            && simple_htype(note->next->h_episemus_type) != H_NO_EPISEMUS) {
+        return note->next->h_episemus_top_note + 1;
+    }
+    note = NULL;
+    if ((glyph->next && glyph->next->type == GRE_GLYPH)
+            || (glyph->next && glyph->next->next
+                    && glyph->next->next->type == GRE_GLYPH)) {
+        if (glyph->next->type != GRE_GLYPH) {
+            glyph = glyph->next;
         }
-        if (element && element->type == GRE_ELEMENT) {
-            glyph = element->u.glyphs.first_glyph;
-            whileglyph(next);
+        glyph = glyph->next;
+        note = glyph->u.notes.first_note;
+        if (glyph->u.notes.glyph_type == G_PODATUS) {
+            note = note->next;
+            i = 2;
+            gtype = T_PES;
+        } else {
+            gregoriotex_determine_number_and_type(glyph, element, &type,
+                    &gtype);
         }
-        // and now something completely different
-        glyph = current_glyph->previous;
-        element = current_element->previous;
-        whileglyph(previous);
-        if (element && element->type == GRE_SPACE
-                && (element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT
-                        || element->u.misc.unpitched.info.space ==
-                        SP_LARGER_SPACE
-                        || element->u.misc.unpitched.info.space ==
-                        SP_NEUMATIC_CUT_NB
-                        || element->u.misc.unpitched.info.space ==
-                        SP_LARGER_SPACE_NB)) {
-            element = element->previous;
+        if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS) {
+            gregoriotex_find_sign_number(glyph, i,
+                    gtype, ST_H_EPISEMUS, note, &number, &height, &bottom);
+            if (!bottom) {
+                *final_note = note;
+                return height;
+            } else {
+                return -1;
+            }
+        } else {
+            return -1;
         }
-        if (element && element->type == GRE_ELEMENT) {
-            glyph = element->u.glyphs.first_glyph;
-            whileglyph(next);
+    }
+    element = element->next;
+    if (!element) {
+        return -1;
+    }
+    if (element->type == GRE_SPACE
+            && (element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT
+                    || element->u.misc.unpitched.info.space == SP_LARGER_SPACE
+                    || element->u.misc.unpitched.info.space ==
+                    SP_NEUMATIC_CUT_NB
+                    || element->u.misc.unpitched.info.space ==
+                    SP_LARGER_SPACE_NB)) {
+        element = element->next;
+    }
+    if (!element || element->type != GRE_ELEMENT) {
+        return -1;
+    }
+    glyph = element->u.glyphs.first_glyph;
+    if (!glyph || !glyph->u.notes.first_note) {
+        return -1;
+    }
+    note = glyph->u.notes.first_note;
+    if (glyph->u.notes.glyph_type == G_PODATUS) {
+        note = note->next;
+        i = 2;
+        gtype = T_PES;
+    } else {
+        gregoriotex_determine_number_and_type(glyph, element, &type,
+                &gtype);
+    }
+    if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS) {
+        gregoriotex_find_sign_number(glyph, i,
+                gtype, ST_H_EPISEMUS, note, &number, &height, &bottom);
+        if (!bottom) {
+            *final_note = note;
+            return height;
+        } else {
+            return -1;
         }
-        return 0;
+    } else {
+        return -1;
+    }
+}
+
+/**
+ * @brief A function that writes the good \c \\hepisemus in GregorioTeX.
+ * @param i The position of the note in the glyph.
+ */
+static void gregoriotex_write_hepisemus(FILE *f, gregorio_glyph *current_glyph,
+        gregorio_element *current_element, int i, gtex_type type,
+        gregorio_note *current_note)
+{
+
+    char height = 0;
+    char no_bridge_height = 0;
+    char number = 0;
+    char ambitus = 0;
+    bool bottom = false;
+    char next_height = -1;
+    // a helper value containing 0 if we must not change the height (case of
+    // the height already modified by a previous hepisemus bridge
+    char do_not_change_height = 0;
+    gregorio_note *next_note = NULL;
+
+    if (!current_note || current_note->h_episemus_type == H_NO_EPISEMUS) {
+        return;
+    }
+
+    gregoriotex_find_sign_number(current_glyph, i,
+            type, ST_H_EPISEMUS, current_note, &number, &height, &bottom);
+
+    no_bridge_height = height;
+
+    if (status->to_modify_note && status->to_modify_note == current_note) {
+        do_not_change_height = 1;
+        height = status->to_modify_h_episemus;
+        // we also modify the next note if necessary
+        if (current_note->next
+                && simple_htype(current_note->next->h_episemus_type) !=
+                H_NO_EPISEMUS) {
+            status->to_modify_note = current_note->next;
+        } else {
+            status->to_modify_note = NULL;
+        }
+    }
+
+    next_height = gregoriotex_find_next_hepisemus_height(current_glyph,
+            current_note, current_element, &next_note);
+
+    if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS
+            && (!current_note->next
+                    || current_note->next->u.note.shape == S_PUNCTUM_INCLINATUM
+                    || current_note->next->u.note.shape ==
+                    S_PUNCTUM_INCLINATUM_DEMINUTUS
+                    || current_note->next->u.note.shape ==
+                    S_PUNCTUM_INCLINATUM_AUCTUS)
+            && (!current_note->previous
+                    || simple_htype(current_note->previous->h_episemus_type) ==
+                    H_NO_EPISEMUS) && !bottom && next_height != -1) {
+        /*
+         * TODO: remove conditional ambiguity 
+         */
+        if (height == next_height || do_not_change_height == 0
+                && (height == next_height - 1 && is_on_a_line(height))) {
+            fprintf(f, "\\grehepisemusbridge{%c}{}{}%%\n", next_height);
+        } else {
+            if (height == next_height + 1 && is_on_a_line(next_height)) {
+                status->to_modify_h_episemus = height;
+                status->to_modify_note = next_note;
+                fprintf(f, "\\grehepisemusbridge{%c}{}{}%%\n", height);
+            }
+            next_height = height;
+        }
+    } else {
+        next_height = height;
+    }
+
+    if (current_note->next) {
+        ambitus = current_note->u.note.pitch - current_note->next->u.note.pitch;
+    }
+    if (has_bottom(current_note->h_episemus_type)) {
+        fprintf(f, "\\grehepisemusbottom{%c}{%d}{%d}%%\n",
+                current_note->h_episemus_bottom_note - 1, number, ambitus);
+        if (!bottom
+                && simple_htype(current_note->h_episemus_type) !=
+                H_NO_EPISEMUS) {
+            fprintf(f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n", no_bridge_height,
+                    number, ambitus, next_height);
+        }
+        return;
+    }
+    if (bottom) {
+        fprintf(f, "\\grehepisemusbottom{%c}{%d}{%d}%%\n", no_bridge_height,
+                number, ambitus);
+    } else {
+        fprintf(f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n", no_bridge_height,
+                number, ambitus, next_height);
+    }
+}
+
+// a macro to write an additional line
+
+static void gregoriotex_write_additional_line(FILE *f,
+        gregorio_glyph *current_glyph, int i, gtex_type type, bool bottom,
+        gregorio_note *current_note)
+{
+
+    char height = 0;
+    char number = 0;
+    char ambitus = 0;
+    if (!current_note) {
+        gregorio_message(_
+                ("called with no note"),
+                "gregoriotex_write_additional_line", ERROR, 0);
+        return;
+    }
+    // patch to get a line under the full glyph in the case of dbc (for
+    // example)
+    switch (type) {
+    case T_PORRECTUSFLEXUS:
+    case T_PORRECTUSFLEXUS_NOBAR:
+    case T_PORRECTUS:
+    case T_PORRECTUS_NOBAR:
+        if (i == 1) {
+            i = HEPISEMUS_FIRST_TWO;
+        }
+        if (i == 2) {
+            if (current_note->previous->u.note.pitch > 'b'
+                    && current_note->previous->u.note.pitch < 'l') {
+                i = HEPISEMUS_FIRST_TWO;
+            } else {
+                return;
+            }
+        }
+        if (i == 3) {
+            if (bottom || current_note->previous->u.note.pitch > 'k') {
+                // we don't need to add twice the same line
+                return;
+            }
+        }
+        break;
+    case T_TORCULUS_RESUPINUS:
+    case T_TORCULUS_RESUPINUS_QUILISMA:
+        if (i == 2) {
+            i = HEPISEMUS_FIRST_TWO;
+        }
+        if (i == 3) {
+            if (current_note->previous->u.note.pitch > 'b') {
+                i = HEPISEMUS_FIRST_TWO;
+            } else {
+                return;
+            }
+        }
+        if (i == 4) {
+            if (bottom || current_note->previous->u.note.pitch > 'k') {
+                // we don't need to add twice the same line
+                return;
+            }
+        }
+        break;
     default:
-        return 0;
+        break;
+    }
+
+    gregoriotex_find_sign_number(current_glyph, i,
+            type, ST_H_EPISEMUS, current_note, &number, &height, NULL);
+    if (i == HEPISEMUS_FIRST_TWO) {
+        // here we must compare the first note of the big bar with the second
+        // one
+        // but it may be tricky sometimes, because of the previous patch
+        if (current_note->previous &&
+                current_note->previous->u.note.pitch >
+                current_note->u.note.pitch) {
+            ambitus =
+                    current_note->previous->u.note.pitch -
+                    current_note->u.note.pitch;
+        } else {
+            ambitus =
+                    current_note->u.note.pitch -
+                    current_note->next->u.note.pitch;
+        }
+    }
+    fprintf(f, "\\greadditionalline{%d}{%d}{%d}%%\n", number, ambitus,
+            bottom ? 3 : 2);
+}
+
+/*
+ * 
+ * a function that writes the good value of \vepisemus in GregorioTeX. i is the 
+ * position of the note in the glyph
+ * 
+ */
+
+static void gregoriotex_write_vepisemus(FILE *f, gregorio_glyph *current_glyph,
+        int i, gtex_type type, gregorio_note *current_note)
+{
+
+    char height = 0;
+    char number = 0;
+    gregoriotex_find_sign_number(current_glyph, i,
+            type, ST_V_EPISEMUS, current_note, &number, &height, NULL);
+    if (current_note->u.note.pitch == 'a') {
+        height = 'z';
+    }
+    fprintf(f, "\\grevepisemus{%c}{%d}%%\n", height, number);
+}
+
+/*
+ * a function that writes the rare signs in GregorioTeX. i is the position of
+ * the note in the glyph */
+
+static void gregoriotex_write_rare(FILE *f, gregorio_glyph *current_glyph,
+        int i, gtex_type type, gregorio_note *current_note, gregorio_sign rare)
+{
+
+    char height = 0;
+    char number = 0;
+
+    // we set ST_V_EPISEMUS because the only height we have to calculate is
+    // this
+    // one
+    gregoriotex_find_sign_number(current_glyph, i,
+            type, ST_V_EPISEMUS, current_note, &number, &height, NULL);
+
+    switch (rare) {
+    case _ACCENTUS:
+        fprintf(f, "\\greaccentus{%c}{%d}%%\n", current_note->u.note.pitch,
+                number);
+        break;
+    case _ACCENTUS_REVERSUS:
+        fprintf(f, "\\grereversedaccentus{%c}{%d}%%\n",
+                current_note->u.note.pitch, number);
+        break;
+    case _CIRCULUS:
+        fprintf(f, "\\grecirculus{%c}{%d}%%\n", current_note->u.note.pitch,
+                number);
+        break;
+    case _SEMI_CIRCULUS:
+        fprintf(f, "\\gresemicirculus{%c}{%d}%%\n", current_note->u.note.pitch,
+                number);
+        break;
+    case _SEMI_CIRCULUS_REVERSUS:
+        fprintf(f, "\\grereversedsemicirculus{%c}{%d}%%\n",
+                current_note->u.note.pitch, number);
+        break;
+        // the cases of the bar signs are dealt in another function (write_bar)
+    default:
+        break;
     }
 }
 
@@ -3689,8 +2534,7 @@ gregoriotex_is_long(char pitch, gregorio_glyph *current_glyph,
  * 93: virga aucta
  */
 
-void
-gregoriotex_write_note(FILE *f, gregorio_note *note,
+static void gregoriotex_write_note(FILE *f, gregorio_note *note,
         gregorio_glyph *glyph, gregorio_element *element, char next_note_pitch)
 {
     unsigned int initial_shape = note->u.note.shape;
@@ -3810,7 +2654,7 @@ gregoriotex_write_note(FILE *f, gregorio_note *note,
     }
 }
 
-int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
+static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
 {
     int result = 0;
     gtex_alignment type = AT_ONE_NOTE;
@@ -3855,14 +2699,18 @@ int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
         if (element->type == GRE_ELEMENT && element->u.glyphs.first_glyph) {
             glyph = element->u.glyphs.first_glyph;
             while (glyph) {
-                if (glyph->type == GRE_FLAT && alteration == 0) {
-                    alteration = 20;
-                }
-                if (glyph->type == GRE_NATURAL && alteration == 0) {
-                    alteration = 40;
-                }
-                if (glyph->type == GRE_SHARP && alteration == 0) {
-                    alteration = 60;
+                if (alteration == 0) {
+                    switch (glyph->type) {
+                    case GRE_FLAT:
+                        alteration = 20;
+                        break;
+                    case GRE_NATURAL:
+                        alteration = 40;
+                        break;
+                    case GRE_SHARP:
+                        alteration = 60;
+                        break;
+                    }
                 }
                 if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
                     switch (glyph->u.notes.glyph_type) {
@@ -3904,4 +2752,1144 @@ int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
         element = element->next;
     }
     return 0;
+}
+
+static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
+        gtex_type type, int i, gregorio_note *current_note, char low)
+{
+    // 0 in the normal case (sign above the note), 1 in the case of it's next
+    // to
+    // the note (same height as a punctum)
+    unsigned char low_sign = 0;
+    char number = 0;
+    char height = 0;
+    // a temp value
+    bool kind_of_pes = false;
+    gregorio_note *tmpnote = NULL;
+    switch (glyph->u.notes.glyph_type) {
+    case G_FLEXA:
+    case G_TORCULUS:
+    case G_TORCULUS_LIQUESCENS:
+    case G_TORCULUS_RESUPINUS_FLEXUS:
+    case G_PORRECTUS_FLEXUS:
+        if (!current_note->next) {
+            low_sign = 1;
+        }
+        break;
+    case G_PODATUS:
+    case G_PORRECTUS:
+    case G_TORCULUS_RESUPINUS:
+        if (!current_note->next) {
+            break;
+        }
+        kind_of_pes = true;
+        if (current_note->u.note.shape != S_QUILISMA) {
+            low_sign = 1;
+        }
+        break;
+    default:
+        break;
+    }
+
+    // the low choral signs must be typeset after the punctum, whereas the high
+    // must be typeset before the h episemus
+    if ((low_sign == 1 && low == 0) || (low_sign == 0 && low == 1)) {
+        return;
+    }
+
+    if (low_sign == 0) {
+        // let's cheat a little
+        current_note->h_episemus_top_note = current_note->u.note.pitch;
+        gregoriotex_find_sign_number(glyph, i,
+                type, ST_H_EPISEMUS, current_note, &number, &height, NULL);
+        if (is_on_a_line(current_note->u.note.pitch)) {
+            fprintf(f, "\\grehighchoralsign{%c}{%s}{%d}%%\n",
+                    current_note->u.note.pitch, current_note->choral_sign,
+                    number);
+        } else {
+            fprintf(f, "\\grehighchoralsign{%c}{%s}{%d}%%\n",
+                    current_note->u.note.pitch + 2, current_note->choral_sign,
+                    number);
+        }
+        if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS) {
+            tmpnote = current_note;
+            while (tmpnote) {
+                if (simple_htype(current_note->h_episemus_type) !=
+                        H_NO_EPISEMUS) {
+                    if (is_on_a_line(tmpnote->h_episemus_top_note)) {
+                        tmpnote->h_episemus_top_note =
+                                tmpnote->h_episemus_top_note + 1;
+                    } else {
+                        tmpnote->h_episemus_top_note =
+                                tmpnote->h_episemus_top_note + 2;
+                    }
+                }
+                tmpnote = tmpnote->next;
+            }
+            tmpnote = current_note->previous;
+            while (tmpnote) {
+                if (simple_htype(current_note->h_episemus_type) !=
+                        H_NO_EPISEMUS) {
+                    if (is_on_a_line(tmpnote->h_episemus_top_note)) {
+                        tmpnote->h_episemus_top_note =
+                                tmpnote->h_episemus_top_note + 1;
+                    } else {
+                        tmpnote->h_episemus_top_note =
+                                tmpnote->h_episemus_top_note + 2;
+                    }
+                }
+                tmpnote = tmpnote->previous;
+            }
+        }
+    } else {
+        // very approximative euristic, some things may have to be adapted
+        // here...
+        if (is_on_a_line(current_note->u.note.pitch)) {
+            if (kind_of_pes
+                    && current_note->u.note.pitch -
+                    current_note->next->u.note.pitch == -1) {
+                fprintf(f, "\\grelowchoralsign{%c}{%s}{1}%%\n",
+                        current_note->u.note.pitch, current_note->choral_sign);
+                return;
+            }
+            if (current_note->previous
+                    && (current_note->previous->signs == _PUNCTUM_MORA
+                            || current_note->previous->signs ==
+                            _V_EPISEMUS_PUNCTUM_MORA)) {
+                fprintf(f, "\\grelowchoralsign{%c}{%s}{1}%%\n",
+                        current_note->u.note.pitch, current_note->choral_sign);
+                return;
+            }
+        }
+
+        fprintf(f, "\\grelowchoralsign{%c}{%s}{0}%%\n",
+                current_note->u.note.pitch, current_note->choral_sign);
+    }
+}
+
+/*
+ * 
+ * A function that write the signs of a glyph, which has the type type (T_*,
+ * not G_*, which is in the glyph->glyph_type), and (important), we start only
+ * at the note current_note. It is due to the way we call it : if type is
+ * T_ONE_NOTE, we just do the signs on current_note, not all. This is the case
+ * for example for the first note of the torculus resupinus, or the
+ * G_*_PUNCTA_INCLINATA.
+ * 
+ */
+
+// small helper
+#define _found()\
+	  if (!found)\
+	    {\
+	      found = true;\
+	      fprintf (f, "%%\n");\
+	    }
+
+#define _end_loop()\
+      if (type == T_ONE_NOTE || type == T_ONE_NOTE_TRF)\
+	{\
+	  break;\
+	}\
+      else\
+	{\
+	  current_note = current_note->next;\
+	  i++;\
+	}
+
+static void gregoriotex_write_signs(FILE *f, gtex_type type,
+        gregorio_glyph *glyph, gregorio_element *element, gregorio_note *note)
+{
+    // i is the number of the note for which we are typesetting the sign.
+    int i = 1;
+    // a dumb char
+    char block_hepisemus = 0;
+    bool found = false;
+    gregorio_note *current_note = note;
+    while (current_note) {
+        // we start by the additional lines
+        if (current_note->u.note.pitch < 'c') {
+            if (!found) {
+                found = true;
+                fprintf(f, "%%\n{%%\n");
+            }
+            gregoriotex_write_additional_line(f, glyph, i, type,
+                    true, current_note);
+            status->bottom_line = 1;
+        }
+        if (current_note->u.note.pitch > 'k') {
+            if (!found) {
+                found = true;
+                fprintf(f, "%%\n{%%\n");
+            }
+            gregoriotex_write_additional_line(f, glyph, i, type,
+                    false, current_note);
+        }
+        if (current_note->texverb) {
+            if (!found) {
+                found = true;
+                fprintf(f, "%%\n{%%\n");
+            }
+            fprintf(f,
+                    "%% verbatim text at note level:\n%s%%\n%% end of verbatim text\n",
+                    current_note->texverb);
+        }
+        _end_loop();
+    }
+    if (!found) {
+        fprintf(f, "{}{");
+    } else {
+        fprintf(f, "}{");
+    }
+    found = false;
+    i = 1;
+    current_note = note;
+    // now a first loop for the choral signs, because high signs must be taken
+    // into account before any hepisemus
+    while (current_note) {
+        if (current_note->choral_sign) {
+            _found();
+            gregoriotex_write_choral_sign(f, glyph, type, i, current_note, 0);
+        }
+        _end_loop();
+    }
+    // a loop for rare signs, vertical episemus, and horizontal episemus
+    i = 1;
+    current_note = note;
+    while (current_note) {
+        // we continue with the hepisemus
+        if (current_note->h_episemus_type != H_NO_EPISEMUS
+                && block_hepisemus == 0) {
+            // if it is a porrectus or a porrectus flexus, we check if the
+            // episemus is on the two first notes:
+            _found();
+            if ((type == T_PORRECTUS || type == T_PORRECTUSFLEXUS
+                            || type == T_PORRECTUSFLEXUS_NOBAR
+                            || type == T_PORRECTUS_NOBAR) && current_note->next
+                    && simple_htype(current_note->next->h_episemus_type) !=
+                    H_NO_EPISEMUS && i == 1) {
+                gregoriotex_write_hepisemus(f, glyph, element,
+                        HEPISEMUS_FIRST_TWO, type, current_note);
+                block_hepisemus = 1;
+            } else {
+                if ((type == T_TORCULUS_RESUPINUS
+                                || type == T_TORCULUS_RESUPINUS_QUILISMA)
+                        && current_note->next
+                        && simple_htype(current_note->next->h_episemus_type) !=
+                        H_NO_EPISEMUS && i == 2) {
+                    gregoriotex_write_hepisemus(f, glyph, element,
+                            HEPISEMUS_FIRST_TWO, type, current_note);
+                    block_hepisemus = 1;
+                } else {
+                    gregoriotex_write_hepisemus(f, glyph, element, i,
+                            type, current_note);
+                }
+            }
+        }
+        // write_rare also writes the vepisemus
+        if (current_note->special_sign) {
+            _found();
+            gregoriotex_write_rare(f, glyph, i, type,
+                    current_note, current_note->special_sign);
+        }
+        if (current_note->signs != _NO_SIGN) {
+            _found();
+        }
+        switch (current_note->signs) {
+        case _V_EPISEMUS:
+        case _V_EPISEMUS_PUNCTUM_MORA:
+        case _V_EPISEMUS_AUCTUM_DUPLEX:
+            gregoriotex_write_vepisemus(f, glyph, i, type, current_note);
+            break;
+        }
+        // why is this if there?...
+        if (!current_note->special_sign) {
+            if (block_hepisemus == 2) {
+                block_hepisemus = 0;
+            }
+            if (block_hepisemus == 1) {
+                block_hepisemus = 2;
+            }
+        }
+        _end_loop()
+                // final loop for choral signs and punctum mora
+    }
+    i = 1;
+    current_note = note;
+    while (current_note) {
+        switch (current_note->signs) {
+        case _PUNCTUM_MORA:
+        case _V_EPISEMUS_PUNCTUM_MORA:
+            gregoriotex_write_punctum_mora(f, glyph, type, current_note);
+            break;
+        case _AUCTUM_DUPLEX:
+        case _V_EPISEMUS_AUCTUM_DUPLEX:
+            gregoriotex_write_auctum_duplex(f, current_note);
+            break;
+        default:
+            break;
+        }
+        if (current_note->choral_sign) {
+            _found();
+            gregoriotex_write_choral_sign(f, glyph, type, i, current_note, 1);
+        }
+        _end_loop();
+    }
+    fprintf(f, "}%%\n");
+}
+
+static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
+        gregorio_element *element, gregorio_glyph *glyph)
+{
+    // glyph number is the number of the glyph in the fonte, it is discussed in
+    // later comments
+    // type is the type of the glyph. Understand the type of the glyph for
+    // gregoriotex, for the alignement between text and notes. (AT_ONE_NOTE,
+    // etc.)
+    gtex_alignment type = 0;
+    // the type of the glyph, in the sense of the shape (T_PES, etc.)
+    gtex_type gtype = 0;
+    char next_note_pitch = 0;
+    gregorio_note *current_note;
+    char *shape;
+    if (!glyph) {
+        gregorio_message(_("called with NULL pointer"),
+                "gregoriotex_write_glyph", ERROR, 0);
+        return;
+    }
+    if (glyph->type != GRE_GLYPH || !glyph->u.notes.first_note) {
+        gregorio_message(_("called with glyph without note"),
+                "gregoriotex_write_glyph", ERROR, 0);
+        return;
+    }
+    next_note_pitch = gregorio_determine_next_pitch(syllable, element, glyph);
+    current_note = glyph->u.notes.first_note;
+    // first we check if it is really a unique glyph in gregoriotex... the
+    // glyphs that are not a unique glyph are : trigonus and pucta inclinata
+    // in general, and torculus resupinus and torculus resupinus flexus, so
+    // we first divide the glyph into real gregoriotex glyphs
+    switch (glyph->u.notes.glyph_type) {
+    case G_TRIGONUS:
+    case G_PUNCTA_INCLINATA:
+    case G_2_PUNCTA_INCLINATA_DESCENDENS:
+    case G_3_PUNCTA_INCLINATA_DESCENDENS:
+    case G_4_PUNCTA_INCLINATA_DESCENDENS:
+    case G_5_PUNCTA_INCLINATA_DESCENDENS:
+    case G_2_PUNCTA_INCLINATA_ASCENDENS:
+    case G_3_PUNCTA_INCLINATA_ASCENDENS:
+    case G_4_PUNCTA_INCLINATA_ASCENDENS:
+    case G_5_PUNCTA_INCLINATA_ASCENDENS:
+        while (current_note) {
+            gregoriotex_write_note(f, current_note, glyph, element,
+                    next_note_pitch);
+            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
+                    current_note);
+            current_note = current_note->next;
+        }
+        break;
+    case G_SCANDICUS:
+        if (glyph->u.notes.liquescentia == L_DEMINUTUS
+                || glyph->u.notes.liquescentia == L_DEMINUTUS_INITIO_DEBILIS
+                || glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA) {
+            shape = gregoriotex_determine_number_and_type(glyph, element, &type,
+                    &gtype);
+            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
+                    glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
+                    type);
+            gregoriotex_write_signs(f, gtype, glyph, element,
+                    glyph->u.notes.first_note);
+        } else {
+            while (current_note) {
+                gregoriotex_write_note(f, current_note, glyph, element,
+                        next_note_pitch);
+                gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
+                        current_note);
+                current_note = current_note->next;
+            }
+        }
+        break;
+    case G_ANCUS:
+        if (glyph->u.notes.liquescentia == L_DEMINUTUS
+                || glyph->u.notes.liquescentia == L_DEMINUTUS_INITIO_DEBILIS) {
+            shape = gregoriotex_determine_number_and_type(glyph, element, &type,
+                    &gtype);
+            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
+                    glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
+                    type);
+            gregoriotex_write_signs(f, gtype, glyph, element,
+                    glyph->u.notes.first_note);
+        } else {
+            while (current_note) {
+                gregoriotex_write_note(f, current_note, glyph, element,
+                        next_note_pitch);
+                gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
+                        current_note);
+                current_note = current_note->next;
+            }
+        }
+        break;
+    case G_TORCULUS_RESUPINUS_FLEXUS:
+        gregoriotex_write_note(f, current_note, glyph, element,
+                next_note_pitch);
+        gregoriotex_write_signs(f, T_ONE_NOTE_TRF, glyph, element,
+                glyph->u.notes.first_note);
+        glyph->u.notes.glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
+        // tricky to have the good position for these glyphs
+        glyph->u.notes.first_note = current_note->next;
+        shape = gregoriotex_determine_number_and_type(glyph, element, &type,
+                &gtype);
+        // TODO : fusion functions
+        fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
+                glyph->u.notes.first_note->u.note.pitch, next_note_pitch, type);
+        gregoriotex_write_signs(f, gtype, glyph, element,
+                glyph->u.notes.first_note);
+        glyph->u.notes.first_note = current_note;
+        glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
+        break;
+    case G_BIVIRGA:
+    case G_TRIVIRGA:
+        while (current_note) {
+            gregoriotex_write_note(f, current_note, glyph, element,
+                    next_note_pitch);
+            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
+                    current_note);
+            current_note = current_note->next;
+            if (current_note) {
+                fprintf(f, "\\greendofglyph{4}%%\n");
+            }
+        }
+        break;
+    case G_TRISTROPHA:
+    case G_TRISTROPHA_AUCTA:
+    case G_DISTROPHA:
+    case G_DISTROPHA_AUCTA:
+        while (current_note) {
+            gregoriotex_write_note(f, current_note, glyph, element,
+                    next_note_pitch);
+            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
+                    current_note);
+            current_note = current_note->next;
+            if (current_note) {
+                fprintf(f, "\\greendofglyph{5}%%\n");
+            }
+        }
+        break;
+    case G_PUNCTUM:
+        if (glyph->u.notes.first_note->u.note.shape != S_ORISCUS
+                && glyph->u.notes.first_note->u.note.shape != S_ORISCUS_AUCTUS
+                && glyph->u.notes.first_note->u.note.shape !=
+                S_ORISCUS_DEMINUTUS
+                && glyph->u.notes.first_note->u.note.shape !=
+                S_ORISCUS_SCAPUS) {
+            switch (glyph->u.notes.liquescentia) {
+            case L_AUCTUS_ASCENDENS:
+                glyph->u.notes.first_note->u.note.shape =
+                        S_PUNCTUM_AUCTUS_ASCENDENS;
+                break;
+            case L_AUCTUS_DESCENDENS:
+            case L_AUCTA:
+                glyph->u.notes.first_note->u.note.shape =
+                        S_PUNCTUM_AUCTUS_DESCENDENS;
+                break;
+            case L_DEMINUTUS:
+            case L_INITIO_DEBILIS:
+                glyph->u.notes.first_note->u.note.shape = S_PUNCTUM_DEMINUTUS;
+            default:
+                break;
+            }
+        }
+        // else fall into the next case
+    case G_PUNCTUM_INCLINATUM:
+    case G_VIRGA:
+    case G_VIRGA_REVERSA:
+    case G_STROPHA:
+    case G_STROPHA_AUCTA:
+        gregoriotex_write_note(f, glyph->u.notes.first_note, glyph, element,
+                next_note_pitch);
+        gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element, current_note);
+        break;
+    default:
+        // special case of the torculus resupinus which first note is not a
+        // punctum
+        if (glyph->u.notes.glyph_type == G_TORCULUS_RESUPINUS
+                && current_note->u.note.shape != S_PUNCTUM
+                && current_note->u.note.shape != S_QUILISMA) {
+            gregoriotex_write_note(f, current_note, glyph, element,
+                    next_note_pitch);
+            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
+                    glyph->u.notes.first_note);
+            // tricky to have the good position for these glyphs
+            glyph->u.notes.first_note = current_note->next;
+            glyph->u.notes.glyph_type = G_PORRECTUS_NO_BAR;
+            shape = gregoriotex_determine_number_and_type(glyph, element, &type,
+                    &gtype);
+            // TODO : fusion functions
+            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
+                    glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
+                    type);
+            gregoriotex_write_signs(f, gtype, glyph, element,
+                    glyph->u.notes.first_note);
+            glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS;
+            glyph->u.notes.first_note = current_note;
+        } else {
+            shape = gregoriotex_determine_number_and_type(glyph, element, &type,
+                    &gtype);
+            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
+                    glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
+                    type);
+            gregoriotex_write_signs(f, gtype, glyph, element,
+                    glyph->u.notes.first_note);
+            break;
+        }
+    }
+}
+
+// here we absolutely need to pass the syllable as an argument, because we
+// will need the next note, that may be contained in the next syllable
+
+static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
+        gregorio_element *element)
+{
+    if (element->type == GRE_ELEMENT) {
+        for (gregorio_glyph *glyph = element->u.glyphs.first_glyph; glyph;
+            glyph = glyph->next) {
+            switch (glyph->type) {
+            case GRE_SPACE:
+                // we assume here that it is a SP_ZERO_WIDTH, the only one a
+                // glyph can be
+                fprintf(f, "\\greendofglyph{1}%%\n");
+                break;
+
+            case GRE_TEXVERB_GLYPH:
+                if (glyph->texverb) {
+                    fprintf(f, "%% verbatim text at glyph level:\n%s%%\n"
+                            "%% end of verbatim text\n", glyph->texverb);
+                }
+                break;
+
+            case GRE_FLAT:
+                fprintf(f, "\\greflat{%c}{0}%%\n",
+                        glyph->u.misc.pitched.pitch);
+                break;
+
+            case GRE_NATURAL:
+                fprintf(f, "\\grenatural{%c}{0}%%\n",
+                        glyph->u.misc.pitched.pitch);
+                break;
+
+            case GRE_SHARP:
+                fprintf(f, "\\gresharp{%c}{0}%%\n",
+                        glyph->u.misc.pitched.pitch);
+                break;
+
+            case GRE_MANUAL_CUSTOS:
+                fprintf(f, "\\gremanualcusto{%c}%%\n",
+                        glyph->u.misc.pitched.pitch);
+                break;
+
+            default:
+                // at this point glyph->type is GRE_GLYPH
+                assert(glyph->type == GRE_GLYPH);
+                gregoriotex_write_glyph(f, syllable, element, glyph);
+                if (glyph->next && glyph->next->type == GRE_GLYPH) {
+                    if (is_puncta_inclinata(glyph->next->u.notes.glyph_type)
+                            || glyph->next->u.notes.glyph_type ==
+                            G_PUNCTA_INCLINATA) {
+                        fprintf(f, "\\greendofglyph{9}%%\n");
+                    } else {
+                        fprintf(f, "\\greendofglyph{0}%%\n");
+                    }
+                }
+                break;
+            }
+        }
+    }
+}
+
+static void gregoriotex_write_text(FILE *f, gregorio_character *text,
+        bool *first_syllable, int next_syl)
+{
+    if (text == NULL) {
+        fprintf(f, "{}{}{}");
+        return;
+    }
+    fprintf(f, "{");
+    gregoriotex_ignore_style = gregoriotex_fix_style(text);
+    if (gregoriotex_ignore_style != 0) {
+        if (next_syl) {
+            fprintf(f, "\\gresetfixednexttextformat{%d}",
+                    gregoriotex_internal_style_to_gregoriotex
+                    (gregoriotex_ignore_style));
+        } else {
+            fprintf(f, "\\gresetfixedtextformat{%d}",
+                    gregoriotex_internal_style_to_gregoriotex
+                    (gregoriotex_ignore_style));
+        }
+    }
+    gregorio_write_text(first_syllable && *first_syllable, text, f,
+            (&gtex_write_verb), (&gtex_print_char), (&gtex_write_begin),
+            (&gtex_write_end), (&gtex_write_special_char));
+    if (first_syllable) {
+        *first_syllable = false;
+    }
+    gregoriotex_ignore_style = 0;
+    fprintf(f, "}");
+}
+
+/*
+ * Function printing the line clef change (only updating \localleftbox, not
+ * printing the key). Useful for \grediscretionary.
+ * TODO: I'm not sure about the third argument, but that's how it's called in
+ * \grechangeclef.
+ */
+static void gregoriotex_print_change_line_clef(FILE *f,
+        gregorio_element *current_element)
+{
+    if (current_element->type == GRE_C_KEY_CHANGE) {
+        if (current_element->u.misc.pitched.flatted_key) {
+            fprintf(f, "\\gresetlinesclef{c}{%d}{1}{%c}%%\n",
+                    current_element->u.misc.pitched.pitch - '0',
+                    gregoriotex_clef_flat_height('c',
+                            current_element->u.misc.pitched.pitch - '0'));
+        } else {
+            fprintf(f, "\\gresetlinesclef{c}{%d}{1}{%c}%%\n",
+                    current_element->u.misc.pitched.pitch - 48, NO_KEY_FLAT);
+        }
+    }
+    if (current_element->type == GRE_F_KEY_CHANGE) {
+        if (current_element->u.misc.pitched.flatted_key) {
+            // the third argument is 0 or 1 according to the need for a
+            // space before the clef
+            fprintf(f, "\\gresetlinesclef{f}{%d}{1}{%c}%%\n",
+                    current_element->u.misc.pitched.pitch - '0',
+                    gregoriotex_clef_flat_height('f',
+                            current_element->u.misc.pitched.pitch - '0'));
+        } else {
+            fprintf(f, "\\gresetlinesclef{f}{%d}{1}{%c}%%\n",
+                    current_element->u.misc.pitched.pitch - '0', NO_KEY_FLAT);
+        }
+    }
+}
+
+static void handle_final_bar(FILE *f, char *type, gregorio_syllable *syllable) {
+    fprintf(f, "\\grefinal%s{%%\n", type);
+    // first element will be the bar, which we just handled, so skip it
+    for (gregorio_element *element = (*syllable->elements)->next; element;
+            element = element->next) {
+        switch (element->type) {
+        case GRE_TEXVERB_ELEMENT:
+            if (element->texverb) {
+                fprintf(f, "%% verbatim text at element level:\n%s%%\n"
+                        "%% end of verbatim text\n", element->texverb);
+            }
+            break;
+
+        case GRE_ELEMENT:
+            for (gregorio_glyph *glyph = element->u.glyphs.first_glyph; glyph;
+                    glyph = glyph->next) {
+                switch (glyph->type) {
+                case GRE_MANUAL_CUSTOS:
+                    fprintf(f, "\\gremanualcusto{%c}%%\n",
+                            glyph->u.misc.pitched.pitch);
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    fprintf(f, "}%%\n");
+}
+
+static inline bool is_manual_custos(gregorio_element *element) {
+    return element->type == GRE_ELEMENT
+        && element->u.glyphs.first_glyph
+        && element->u.glyphs.first_glyph->type == GRE_MANUAL_CUSTOS;
+}
+
+/*
+ * Arguments are relatively obvious. The most obscure is certainly first_of_disc
+ * which is 0 all the time, except in the case of a "clef change syllable". In
+ * this case we make a \grediscretionary with two arguments: 
+ *   1.what should be printed if the syllable is the last of its line (which
+ *   basically means everything but clefs and custos), and 
+ *   2. what should be printed if it's in a middle of a line (which means
+ *   everything)
+ * So the first_of_disc argument is:
+ *   0 if we don't know (general case)
+ *   1 in case of the first argument of a \grediscretionary
+ *   2 if we are in the second argument (necessary in order to avoid infinite loops)
+ */
+static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
+        bool *first_syllable, unsigned char *line_number,
+        unsigned char first_of_disc)
+{
+    gregorio_line *line;
+    gregorio_element *clef_change_element = NULL;
+    if (!syllable) {
+        return;
+    }
+    // Very first: before anything, if the syllable is the beginning of a
+    // no-linebreak area:
+    if (syllable->no_linebreak_area == NLBA_BEGINNING) {
+        fprintf(f, "\\grebeginnlbarea{1}{0}%%\n");
+    }
+    if (syllable->euouae == EUOUAE_BEGINNING) {
+        fprintf (f, "\\grebegineuouae{}%%\n");
+    }
+    /*
+     * first we check if the syllable is only a end of line. If it is the case,
+     * we don't print anything but a comment (to be able to read it if we read
+     * GregorioTeX). The end of lines are treated separately in GregorioTeX, it
+     * is buit inside the TeX structure. 
+     */
+    if ((syllable->elements) && (syllable->elements)[0]) {
+
+        if ((syllable->elements)[0]->type == GRE_END_OF_LINE) {
+            line = (gregorio_line *) malloc(sizeof(gregorio_line));
+            gregoriotex_getlineinfos(syllable->next_syllable, line);
+            if (line->additional_bottom_space == 0
+                    && line->additional_top_space == 0 && line->translation == 0
+                    && line->abovelinestext == 0) {
+                if ((syllable->elements)[0]->u.misc.unpitched.info.sub_type !=
+                        GRE_END_OF_PAR) {
+                    fprintf(f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
+                } else {
+                    fprintf(f, "%%\n%%\n\\grenewparline %%\n%%\n%%\n");
+                }
+            } else {
+                if ((syllable->elements)[0]->u.misc.unpitched.info.sub_type !=
+                        GRE_END_OF_PAR) {
+                    fprintf(f,
+                            "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
+                            line->additional_top_space,
+                            line->additional_bottom_space, line->translation,
+                            line->abovelinestext);
+                } else {
+                    fprintf(f,
+                            "%%\n%%\n\\grenewparlinewithspace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
+                            line->additional_top_space,
+                            line->additional_bottom_space, line->translation,
+                            line->abovelinestext);
+                }
+
+            }
+            free(line);
+            if (*line_number == 1) {
+                fprintf(f, "\\greadjustthirdline %%\n");
+                *line_number = 0;
+            }
+            return;
+        }
+        /*
+         * This case is not simple: if the syllable contains a clef change,
+         * whether it is (c4) or (::c4) or (z0::c4), we put it in a
+         * discretionary. Warning: only these three cases will have the expected
+         * effect. So first we detect it: 
+         */
+        if (first_of_disc == 0) {   /* to avoid infinite loops */
+            clef_change_element = gregoriotex_syllable_is_clef_change(syllable);
+            if (clef_change_element) {
+                /*
+                 * In this case, the first thing to do is to change the line clef 
+                 */
+                gregoriotex_print_change_line_clef(f, clef_change_element);
+                fprintf(f, "\\grediscretionary{%%\n");
+                gregoriotex_write_syllable(f, syllable, first_syllable,
+                        line_number, 1);
+                fprintf(f, "}{%%\n");
+                gregoriotex_write_syllable(f, syllable, first_syllable,
+                        line_number, 2);
+                fprintf(f, "}%%\n");
+                return;
+            }
+        }
+        if ((syllable->elements)[0]->type == GRE_BAR) {
+            if (!syllable->next_syllable && !syllable->text
+                    && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
+                    B_DIVISIO_FINALIS) {
+                handle_final_bar(f, "divisiofinalis", syllable);
+                return;
+            }
+            if (!syllable->next_syllable && !syllable->text
+                    && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
+                    B_DIVISIO_MAIOR) {
+                handle_final_bar(f, "divisiomaior", syllable);
+                return;
+            } else {
+                fprintf(f, "\\grebarsyllable");
+            }
+        } else {
+            fprintf(f, "\\gresyllable");
+        }
+    } else {
+        fprintf(f, "\\gresyllable");
+    }
+    gregoriotex_write_text(f, syllable->text, first_syllable, THIS_SYL);
+    if (syllable->position == WORD_END
+            || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
+            || !syllable->next_syllable
+            || !syllable->next_syllable->type == GRE_END_OF_LINE
+            || !syllable->next_syllable->type == GRE_END_OF_PAR) {
+        fprintf(f, "{1}");
+    } else {
+        fprintf(f, "{0}");
+    }
+    if (syllable->next_syllable) {
+        fprintf(f, "{\\gresetnextsyllable");
+        gregoriotex_write_text(f, syllable->next_syllable->text, NULL,
+                NEXT_SYL);
+        fprintf(f, "}{}{%d}{",
+                gregoriotex_syllable_first_type(syllable->next_syllable));
+    } else {
+        fprintf(f, "{\\gresetnextsyllable{}{}{}}{}{0}{");
+    }
+    if (syllable->translation) {
+        if (syllable->translation_type == TR_WITH_CENTER_BEGINNING) {
+            fprintf(f, "%%\n\\grewritetranslationwithcenterbeginning{");
+        } else {
+            fprintf(f, "%%\n\\grewritetranslation{");
+        }
+        gregoriotex_write_translation(f, syllable->translation);
+        fprintf(f, "}%%\n");
+    }
+    if (syllable->translation_type) {
+        if (syllable->translation_type == TR_WITH_CENTER_END)
+            fprintf(f, "%%\n\\gretranslationcenterend %%\n");
+    }
+    if (syllable->abovelinestext) {
+        fprintf(f, "%%\n\\gresettextabovelines{%s}%%\n",
+                syllable->abovelinestext);
+    }
+    if (gregoriotex_is_last_of_line(syllable)) {
+        fprintf(f, "%%\n\\grelastofline %%\n");
+    }
+    if (!syllable->next_syllable) {
+        fprintf(f, "%%\n\\grelastofscore %%\n");
+    }
+    fprintf(f, "}{%%\n");
+
+    for (gregorio_element *element = *syllable->elements; element;
+            element = element->next) {
+        switch (element->type) {
+        case GRE_SPACE:
+            switch (element->u.misc.unpitched.info.space) {
+            case SP_ZERO_WIDTH:
+                fprintf(f, "\\greendofelement{3}{1}%%\n");
+                break;
+            case SP_LARGER_SPACE:
+                fprintf(f, "\\greendofelement{1}{0}%%\n");
+                break;
+            case SP_GLYPH_SPACE:
+                fprintf(f, "\\greendofelement{2}{0}%%\n");
+                break;
+            case SP_GLYPH_SPACE_NB:
+                fprintf(f, "\\greendofelement{2}{1}%%\n");
+                break;
+            case SP_LARGER_SPACE_NB:
+                fprintf(f, "\\greendofelement{1}{1}%%\n");
+                break;
+            case SP_NEUMATIC_CUT_NB:
+                fprintf(f, "\\greendofelement{0}{1}%%\n");
+                break;
+            default:
+                break;
+            }
+            break;
+
+        case GRE_TEXVERB_ELEMENT:
+            if (element->texverb) {
+                fprintf(f, "%% verbatim text at element level:\n%s%%\n"
+                        "%% end of verbatim text\n", element->texverb);
+            }
+            break;
+
+        case GRE_NLBA:
+            if (element->u.misc.unpitched.info.nlba == NLBA_BEGINNING) {
+                fprintf(f, "\\grebeginnlbarea{0}{0}%%\n");
+            } else {
+                fprintf(f, "\\greendnlbarea{0}{0}%%\n");
+            }
+            break;
+
+        case GRE_ALT:
+            if (element->texverb) {
+                fprintf(f, "\\gresettextabovelines{%s}%%\n", element->texverb);
+            }
+            break;
+
+        case GRE_C_KEY_CHANGE:
+            if (first_of_disc != 1) {
+                /*
+                 * We don't print clef changes at the end of a line 
+                 */
+                if (element->previous && element->previous->type == GRE_BAR) {
+                    if (element->u.misc.pitched.flatted_key) {
+                        // the third argument is 0 or 1 according to the need for a
+                        // space before the clef
+                        fprintf(f, "\\grechangeclef{c}{%d}{0}{%c}%%\n",
+                                element->u.misc.pitched.pitch - '0',
+                                gregoriotex_clef_flat_height('c',
+                                        element->u.misc.pitched.pitch - '0'));
+                    } else {
+                        fprintf(f, "\\grechangeclef{c}{%d}{0}{%c}%%\n",
+                                element->u.misc.pitched.pitch - '0',
+                                NO_KEY_FLAT);
+                    }
+                } else {
+                    if (element->u.misc.pitched.flatted_key) {
+                        // the third argument is 0 or 1 according to the need for a
+                        // space before the clef
+                        fprintf(f, "\\grechangeclef{c}{%d}{1}{%c}%%\n",
+                                element->u.misc.pitched.pitch - '0',
+                                gregoriotex_clef_flat_height('c',
+                                        element->u.misc.pitched.pitch - '0'));
+                    } else {
+                        fprintf(f, "\\grechangeclef{c}{%d}{1}{%c}%%\n",
+                                element->u.misc.pitched.pitch - '0',
+                                NO_KEY_FLAT);
+                    }
+                }
+            }
+            break;
+
+        case GRE_F_KEY_CHANGE:
+            if (first_of_disc != 1) {
+                /*
+                 * We don't print clef changes at the end of a line 
+                 */
+                if (element->previous && element->previous->type == GRE_BAR) {
+                    if (element->u.misc.pitched.flatted_key) {
+                        // the third argument is 0 or 1 according to the need for a
+                        // space before the clef
+                        fprintf(f, "\\grechangeclef{f}{%d}{0}{%c}%%\n",
+                                element->u.misc.pitched.pitch - '0',
+                                gregoriotex_clef_flat_height('f',
+                                        element->u.misc.pitched.pitch - '0'));
+                    } else {
+                        fprintf(f, "\\grechangeclef{f}{%d}{0}{%c}%%\n",
+                                element->u.misc.pitched.pitch - '0',
+                                NO_KEY_FLAT);
+                    }
+                } else {
+                    if (element->u.misc.pitched.flatted_key) {
+                        // the third argument is 0 or 1 according to the need for a
+                        // space before the clef
+                        fprintf(f, "\\grechangeclef{f}{%d}{1}{%c}%%\n",
+                                element->u.misc.pitched.pitch - '0',
+                                gregoriotex_clef_flat_height('f',
+                                        element->u.misc.pitched.pitch - '0'));
+                    } else {
+                        fprintf(f, "\\grechangeclef{f}{%d}{1}{%c}%%\n",
+                                element->u.misc.pitched.pitch - '0',
+                                NO_KEY_FLAT);
+                    }
+                }
+            }
+            break;
+
+        case GRE_CUSTO:
+            if (first_of_disc != 1) {
+                /*
+                 * We don't print custos before a bar at the end of a line 
+                 */
+                // we also print an unbreakable larger space before the custo
+                fprintf(f, "\\greendofelement{1}{1}%%\n\\grecusto{%c}%%\n",
+                        element->u.misc.pitched.pitch);
+            }
+            break;
+
+        case GRE_BAR:
+            gregoriotex_write_bar(f,
+                    element->u.misc.unpitched.info.bar,
+                    element->u.misc.unpitched.special_sign,
+                    element->next && !is_manual_custos(element->next));
+            break;
+
+        case GRE_END_OF_LINE:
+            line = (gregorio_line *) malloc(sizeof(gregorio_line));
+            // here we suppose we don't have two linebreaks in the same
+            // syllable
+            gregoriotex_getlineinfos(syllable->next_syllable, line);
+            if (line->additional_bottom_space == 0
+                    && line->additional_top_space == 0 && line->translation == 0
+                    && line->abovelinestext == 0) {
+                if (element->u.misc.unpitched.info.sub_type != GRE_END_OF_PAR) {
+                    fprintf(f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
+                } else {
+                    fprintf(f, "%%\n%%\n\\grenewparline %%\n%%\n%%\n");
+                }
+            } else {
+                if (element->u.misc.unpitched.info.sub_type != GRE_END_OF_PAR) {
+                    fprintf(f, "%%\n%%\n\\grenewlinewithspace"
+                            "{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
+                            line->additional_top_space,
+                            line->additional_bottom_space, line->translation,
+                            line->abovelinestext);
+                } else {
+                    fprintf(f, "%%\n%%\n\\grenewparlinewithspace"
+                            "{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
+                            line->additional_top_space,
+                            line->additional_bottom_space, line->translation,
+                            line->abovelinestext);
+                }
+            }
+            free(line);
+            if (*line_number == 1) {
+                fprintf(f, "\\greadjustthirdline %%\n");
+                *line_number = 0;
+            }
+            break;
+
+        default:
+            // there current_element->type is GRE_ELEMENT
+            assert(element->type == GRE_ELEMENT);
+            gregoriotex_write_element(f, syllable, element);
+            if (element->next && (element->next->type == GRE_ELEMENT || (
+                            element->next->next
+                            && element->next->type == GRE_ALT
+                            && element->next->next->type == GRE_ELEMENT))) {
+                fprintf(f, "\\greendofelement{0}{0}%%\n");
+            }
+            break;
+        }
+    }
+    fprintf(f, "}%%\n");
+    if (syllable->position == WORD_END
+            || syllable->position == WORD_ONE_SYLLABLE || !syllable->text) {
+        fprintf(f, "%%\n");
+    }
+    // Very last, if the syllable is the end of a no-linebreak area:
+    if (syllable->no_linebreak_area == NLBA_END) {
+        fprintf(f, "\\greendnlbarea{1}{0}%%\n");
+    }
+    if (syllable->euouae == EUOUAE_END) {
+        fprintf (f, "\\greendeuouae{}%%\n");
+    }
+}
+
+void gregoriotex_write_score(FILE *f, gregorio_score *score)
+{
+    gregorio_character *first_text;
+    // true if it is the first syllable and false if not.
+    // It is for the initial.
+    bool first_syllable = false;
+    char clef_letter;
+    int clef_line;
+    char clef_flat = NO_KEY_FLAT;
+    gregorio_syllable *current_syllable;
+    // the current line (as far as we know), it is always 0, it can be 1 in the
+    // case of the first line of a score with a two lines initial
+    unsigned char line = 0;
+
+    gregorio_line *first_line;
+    status = malloc(sizeof(gregoriotex_status));
+    status->bottom_line = 0;
+    status->to_modify_note = NULL;
+
+    if (!f) {
+        gregorio_message(_
+                ("call with NULL file"), "gregoriotex_write_score", ERROR, 0);
+        return;
+    }
+
+    if (score->number_of_voices != 1) {
+        gregorio_message(_
+                ("gregoriotex only works in monophony (for the moment)"),
+                "gregoriotex_write_score", ERROR, 0);
+    }
+
+    fprintf(f, "%% File generated by gregorio %s\n", GREGORIO_VERSION);
+    fprintf(f, "\\gregoriotexapiversion{%s}%%\n", VERSION);
+
+    if (score->name) {
+        fprintf(f, "%% Name: %s\n", score->name);
+    }
+    if (score->si.author) {
+        fprintf(f, "%% Author: %s\n", score->si.author);
+    }
+    if (score->gabc_copyright) {
+        fprintf(f, "%% The copyright of this gabc is: %s\n",
+                score->gabc_copyright);
+    }
+    if (score->score_copyright) {
+        fprintf(f, "%% The copyright of the score is: %s\n",
+                score->score_copyright);
+    }
+
+    fprintf(f, "\\begingregorioscore%%\n");
+    // if necessary, we add some bottom space to the first line
+    first_line = (gregorio_line *) malloc(sizeof(gregorio_line));
+    gregoriotex_getlineinfos(score->first_syllable, first_line);
+    if (first_line->additional_bottom_space != 0
+            || first_line->translation != 0) {
+        fprintf(f, "\\grefirstlinebottomspace{%u}{%u}%%\n",
+                first_line->additional_bottom_space, first_line->translation);
+    }
+    free(first_line);
+    // we select the good font
+    if (score->gregoriotex_font) {
+        if (!strcmp(score->gregoriotex_font, "gregorio")) {
+            fprintf(f, "\\setgregoriofont{gregorio}%%\n");
+        }
+        if (!strcmp(score->gregoriotex_font, "parmesan")) {
+            fprintf(f, "\\setgregoriofont{parmesan}%%\n");
+        }
+        if (!strcmp(score->gregoriotex_font, "greciliae")) {
+            fprintf(f, "\\setgregoriofont{greciliae}%%\n");
+        }
+    }
+    if (score->mode != 0) {
+        fprintf(f, "\\gregorianmode{%d}%%\n", score->mode);
+    }
+    // first we draw the initial (first letter) and the initial key
+    if (score->initial_style == NO_INITIAL) {
+        fprintf(f, "\\grenoinitial %%\n");
+    } else {
+        if (score->initial_style == BIG_INITIAL) {
+            fprintf(f, "\\gresetbiginitial %%\n");
+            line = 1;
+        }
+        first_text = gregorio_first_text(score);
+        if (first_text) {
+            fprintf(f, "\\greinitial{");
+            gregorio_write_initial(first_text, f,
+                    (&gtex_write_verb),
+                    (&gtex_print_char),
+                    (&gtex_write_begin),
+                    (&gtex_write_end), (&gtex_write_special_char));
+            fprintf(f, "}%%\n");
+            first_syllable = true;
+        }
+    }
+    if (score->si.manuscript_reference) {
+        fprintf(f, "\\grescorereference{%s}%%\n",
+                score->si.manuscript_reference);
+    }
+    if (score->first_voice_info) {
+        gregoriotex_write_voice_info(f, score->first_voice_info);
+    }
+    fprintf(f, "\\grebeginnotes %%\n");
+    if (score->first_voice_info) {
+        gregorio_det_step_and_line_from_key(score->first_voice_info->
+                initial_key, &clef_letter, &clef_line);
+        if (score->first_voice_info->flatted_key) {
+            clef_flat = gregoriotex_clef_flat_height(clef_letter, clef_line);
+        } else {
+            clef_flat = NO_KEY_FLAT;
+        }
+    } else {
+        clef_letter = 'c';
+        clef_line = 3;
+        clef_flat = NO_KEY_FLAT;
+    }
+    fprintf(f, "\\gresetinitialclef{%c}{%d}{%c}%%\n", clef_letter, clef_line,
+            clef_flat);
+    current_syllable = score->first_syllable;
+    while (current_syllable) {
+        gregoriotex_write_syllable(f, current_syllable, &first_syllable, &line,
+                0);
+        current_syllable = current_syllable->next_syllable;
+    }
+    fprintf(f, "\\endgregorioscore %%\n\\endinput %%\n");
+    free(status);
 }

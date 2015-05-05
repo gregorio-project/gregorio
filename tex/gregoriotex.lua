@@ -24,13 +24,13 @@ local hpack, traverse_id, has_attribute, count, remove, insert_after, copy = nod
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = '4.0.0-rc1' -- GREGORIO_VERSION (comment used by VersionManager.py)
+local internalversion = '3.0.0-rc2' -- GREGORIO_VERSION (comment used by VersionManager.py)
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
-    version            = '4.0.0-rc1', -- GREGORIO_VERSION
+    version            = '3.0.0-rc2', -- GREGORIO_VERSION
     greinternalversion = internalversion,
-    date               = "2015/04/26", -- GREGORIO_DATE_LTX
+    date               = "2015/05/04", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
     author             = "The Gregorio Project (see CONTRIBUTORS.md)",
     copyright          = "2008-2015 - The Gregorio Project",
@@ -212,7 +212,7 @@ local function compile_gabc(gabc_file, gtex_file)
   res = os.execute(string.format("gregorio -o %s %s", gtex_file, gabc_file))
   if res == nil then
     err("\nSomething went wrong when executing\n    'gregorio -o %s %s'.\n"
-	  .."shell-escape mode may not be activated. Try\n    '%s --shell-escape %s.tex'\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", gtex_file, gabc_file, tex.formatname, tex.jobname)
+    .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", gtex_file, gabc_file, tex.formatname, tex.jobname)
   elseif res ~= 0 then
     err("\nAn error occured when compiling the score file\n'%s' with gregorio.\nPlease check your score file.", gabc_file)
   else
@@ -278,6 +278,16 @@ local function include_score(input_file, force_gabccompile)
   end
   tex.print(string.format("\\input %s", gtex_file))
   return
+end
+
+local function direct_gabc(gabc, header)
+  local f = io.popen('echo "name:direct-gabc;\n'..(header or '')..'\n%%%%\n'..gabc..'" | gregorio -sS', 'r')
+  if f == nil then
+    err("\nSomething went wrong when executing\n    'gregorio -sS'.\n"
+    .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", tex.formatname, tex.jobname)
+  end
+  tex.print(f:read("*a"):explode('\n'))
+  f:close()
 end
 
 local function check_font_version()
@@ -366,16 +376,13 @@ local function def_glyph(csname, font_name, glyph, font_table, setter)
   setter(csname, font_csname, char)
 end
 
-local function def_score_glyph(csname, font_name, glyph)
-  def_glyph(csname, font_name, glyph, score_fonts, set_score_glyph)
-end
-
 local function change_single_score_glyph(glyph_name, font_name, replacement)
   if font_name == '*' then
     def_glyph('grecp'..glyph_name, 'greciliae', replacement, score_fonts,
         set_common_score_glyph)
   else
-    def_score_glyph('grecp'..glyph_name, font_name, replacement)
+    def_glyph('grecp'..glyph_name, font_name, replacement, score_fonts,
+        set_score_glyph)
   end
 end
 
@@ -455,9 +462,9 @@ gregoriotex.check_font_version   = check_font_version
 gregoriotex.get_gregorioversion  = get_gregorioversion
 gregoriotex.map_font             = map_font
 gregoriotex.init_variant_font    = init_variant_font
-gregoriotex.def_score_glyph      = def_score_glyph
 gregoriotex.change_score_glyph   = change_score_glyph
 gregoriotex.reset_score_glyph    = reset_score_glyph
 gregoriotex.scale_score_fonts    = scale_score_fonts
 gregoriotex.def_symbol           = def_symbol
 gregoriotex.font_size            = font_size
+gregoriotex.direct_gabc          = direct_gabc

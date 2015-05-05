@@ -69,7 +69,7 @@
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
-\xdef\gre@gregorioversion{4.0.0-rc1}% GREGORIO_VERSION - VersionManager.py
+\xdef\gre@gregorioversion{3.0.0-rc2}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
@@ -78,7 +78,7 @@
 
 \def\gre@declarefileversion#1#2{%
   \IfStrEq*{#2}{\gre@gregorioversion}{}{%else
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\gre@gregorioversion \space\space while #1 is in version \number#2}}%
+    \greerror{uncoherent file versions: gregoriotex-main.tex is in version \number\gre@gregorioversion \space\space while #1 is in version \number#2}}%
 }%
 
 % Macro called by scores.
@@ -98,7 +98,7 @@
 
 % Test to make sure that gregoriotex.lua is of the same version.
 \IfStrEq*{\gre@gregoriotexluaversion}{\gre@gregorioversion}{}{%else
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
+    \greerror{uncoherent file versions: gregoriotex-main.tex is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -524,7 +524,7 @@
   \greabovelinestextstyle{%
     \gre@debugmsg{spacing}{Raise alt text: \gre@dimen@abovelinestextraise}%
     \global\gre@dimen@temp@five=\gre@dimen@abovelinestextraise\relax%
-  } %
+  }%
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
   \advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight %
   \advance\gre@dimen@temp@five by 4\gre@dimen@interstafflinespace %
@@ -661,6 +661,23 @@
   \global\gre@dimen@stafflinewidth=\gre@dimen@linewidth %
   \gregeneratelines %
   \relax %
+}%
+
+% Macros for using variant glyphs
+
+% Changes a gregorio code point to a variant glyph
+% #1 = the name of the gregorio code point
+% #2 = font name
+% #3 = glyph name, glyph variant name (preceded by .), or code point
+\def\grechangeglyph#1#2#3{%
+  \directlua{gregoriotex.init_variant_font([[#2]],true)}%
+  \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]])}%
+}%
+
+% Resets a gregorio code point to its default setting
+% #1 = the name of the gregorio code point
+\def\greresetglyph#1{%
+  \directlua{gregoriotex.reset_score_glyph([[#1]])}%
 }%
 
 {%
@@ -803,111 +820,6 @@
   \relax%
 }%
 
-% macro to call when there is just a little thing that will go to the last line,
-% when it is not necessary
-% It doesn't seem to be used, so it's a good candidate for deprecation!
-\def\grenolastline{%
-  \gre@debugmsg{ifdim}{ enddifference > 0pt}%
-  \ifdim\gre@dimen@enddifference > 0 pt %
-    \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
-    \ifdim\gre@skip@nextbegindifference > 0 pt %
-      \gre@skip@temp@four = \gre@skip@interwordspacenotes%
-      \hskip\gre@skip@temp@four %
-    \else % (next begin difference >0pt)
-      \gre@skip@temp@four = \gre@skip@interwordspacenotestext%
-      \hskip\gre@skip@temp@four %
-    \fi %
-  \else%(enddifference < Opt)
-    \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
-    \ifdim\gre@skip@nextbegindifference < 0 pt %
-      \gre@skip@temp@four = \gre@skip@interwordspacetext%
-      \hskip\gre@skip@temp@four %
-    \else %(next begin difference < 0 pt)
-      \gre@skip@temp@four = \gre@skip@interwordspacetextnotes%
-      \hskip\gre@skip@temp@four %
-    \fi %
-  \fi %
-  \global\greendofscore=1 %
-  \grelocalrightbox{}%
-  \grelocalleftbox{}%
-  \penalty{\grenolastlinepenalty }%
-  \relax%
-}%
-
-% macro called at each end of word
-\def\greendofword#1{%
-  \grepenalty{\greendofwordpenalty }%
-  \ifnum#1=1\relax %
-    \gre@debugmsg{ifdim}{ enddifference > 0pt}%
-    \ifdim\gre@dimen@enddifference > 0 pt %
-      \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
-      \ifdim\gre@skip@nextbegindifference > 0 pt %
-        \gre@skip@temp@four = \gre@skip@interwordspacenotes%
-        \grehskip\gre@skip@temp@four %
-      \else % (next begin difference >0pt)
-        \gre@skip@temp@four = \gre@skip@interwordspacenotestext%
-        \grehskip\gre@skip@temp@four %
-      \fi %
-    \else %(enddifference < Opt)
-      \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
-      \ifdim\gre@skip@nextbegindifference < 0 pt %
-        \gre@skip@temp@four = \gre@skip@interwordspacetext%
-        \grehskip\gre@skip@temp@four %
-      \else %(next begin difference < 0 pt)
-        \gre@skip@temp@four = \gre@skip@interwordspacetextnotes%
-        \grehskip\gre@skip@temp@four %
-      \fi %
-    \fi %
-  \fi %
-  %\global\gre@dimen@enddifference=0pt 
-  \relax%
-}%
-
-% macro called at the end of a word or syllable when the next thing is a bar
-\def\greendbeforebar#1{%
-  \grenobreak %
-  \ifnum#1=1\relax %
-    \gre@skip@temp@four = 0pt\relax %
-    % Case where there is a punctum at the end of a syllable before a bar, we
-    % do as if there was none, in order for the bar to be more correctly
-    % centered
-    \ifnum\grelastispunctum=1\relax %
-      \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctummorachar }%
-      \global\advance\gre@dimen@enddifference by -\wd\GreTempwidth %
-      \advance\gre@skip@temp@four by -\wd\GreTempwidth %
-      % Here we want to put a skip string (\gre@skip@spacebeforesigns) into a
-      % dimen (\gre@dimen@enddifference). The only way to do it without breaking
-      % everything is to put this skip string into a real skip register
-      % (\gre@skip@temp@one) and the cast this real skip register in the dimen
-      % register... This is quite ugly... TODO: make \gre@skip@* to be real 
-      % skip registers.
-      \gre@skip@temp@one = \gre@skip@spacebeforesigns %
-      \global\advance\gre@dimen@enddifference by -\gre@dimen@temp@one %
-      \advance\gre@skip@temp@four by -\gre@skip@spacebeforesigns %
-    \fi %
-    \ifdim\gre@dimen@enddifference > 0 pt %
-      \ifdim\gre@skip@nextbegindifference > 0 pt %
-        \advance\gre@skip@temp@four by \gre@skip@notebarspace%
-      \else % (next begin difference >0pt)
-        \advance\gre@skip@temp@four by \gre@skip@textbartextspace%
-      \fi %
-    \else%(enddifference < Opt)
-      \ifdim\gre@skip@nextbegindifference < 0 pt %
-        \advance\gre@skip@temp@four by \gre@skip@textbartextspace%
-      \else %(next begin difference < 0 pt)
-        \advance\gre@skip@temp@four by \gre@skip@interwordspacetextnotes%
-      \fi %
-    \fi %
-    \grehskip\gre@skip@temp@four %
-    \gre@debugmsg{spacing}{  endbeforebar: hskip \gre@skip@temp@four }%
-  \else %
-    \gre@debugmsg{spacing}{  endbeforebar: no hskip}%
-  \fi %
-  \grenobreak %
-  %\global\gre@dimen@enddifference=0pt 
-  \relax %
-}%
-
 % macro called at the end of a bar. Almost the same, but not for the penalties
 \def\greendafterbar#1{%
   \grepenalty{\greendafterbarpenalty }\relax %
@@ -928,7 +840,7 @@
         \gre@skip@temp@four = \gre@skip@textbartextspace%
         \grehskip\gre@skip@temp@four %
       \else %(next begin difference < 0 pt)
-        \gre@skip@temp@four = \gre@skip@interwordspacetextnotes%
+        \gre@skip@temp@four = \gre@skip@interwordspacetext%
         \grehskip\gre@skip@temp@four %
       \fi %
     \fi %
@@ -981,19 +893,12 @@
   \relax %
 }%
 
-% macro called at each end of syllable which is not an end of word
-\def\greendofsyllable{%
-  \grepenalty{\greendofsyllablepenalty }%
-  \relax%
-}%
-
 % macro to end elements, #1 is the type of space, it can be : 
 %% 0: default space 
 %% 1: larger space
 %% 2: glyph space
 %% 3: zero-width space
 % #2 is if the space is unbreakable (1) or not (0)
-
 \def\greendofelement#1#2{%
   \ifnum #2=0\relax %
     \grepenalty{\greendofelementpenalty}%
@@ -1384,31 +1289,17 @@
 % checked by the lua function 'include_score'. This does not bypass
 % the API version test done by '\gregoriotexapiversion'.
 
-% Macros for using variant glyphs
+% Macros for compiling short snippets of GABC directly expressed in TeX
 
-% Defines a variant into the given control sequence name
-% #1 = control sequence name
-% #2 = font name
-% #3 = glyph name or code point
-\def\gredefvariant#1#2#3{%
-  \directlua{gregoriotex.init_variant_font([[#2]],true)}%
-  \directlua{gregoriotex.def_score_glyph([[#1]],[[#2]],[[#3]])}%
+\long\def\gre@gabcsnippet@option[#1]#2{%
+  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#2}}", "initial-style: #1;")}%
 }%
 
-% Changes a gregorio code point to a variant glyph
-% #1 = the name of the gregorio code point
-% #2 = font name
-% #3 = glyph name, glyph variant name (preceded by .), or code point
-\def\grechangeglyph#1#2#3{%
-  \directlua{gregoriotex.init_variant_font([[#2]],true)}%
-  \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]])}%
+\long\def\gre@gabcsnippet#1{%
+  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#1}}")}%
 }%
 
-% Resets a gregorio code point to its default setting
-% #1 = the name of the gregorio code point
-\def\greresetglyph#1{%
-  \directlua{gregoriotex.reset_score_glyph([[#1]])}%
-}%
+\def\gabcsnippet{\@ifnextchar[{\gre@gabcsnippet@option}{\gre@gabcsnippet}}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% some hyphen definitions
@@ -1417,7 +1308,6 @@
 % a zero-width hyphen, useful for fine tuning line endings. To input in gabc verb for example.
 \def\grezerhyph{%
   \hbox to 0pt{%
-  %-
   \char\the\hyphenchar\font %
   \hss %
   }%

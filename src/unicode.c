@@ -35,64 +35,9 @@
  * 
  */
 
-// the function to build a gregorio_character list from a buffer.
-
-gregorio_character *gregorio_build_char_list_from_buf(char *buf)
-{
-    int i = 0;
-    size_t len;
-    grewchar *gwstring;
-    gregorio_character *current_character = NULL;
-    if (buf == NULL) {
-        return NULL;
-    }
-    len = strlen(buf);          // to get the length of the syllable in ASCII
-    gwstring = (grewchar *) malloc((len + 1) * sizeof(grewchar));
-    gregorio_mbstowcs(gwstring, buf, len);  // converting into wchar_t
-    // we add the corresponding characters in the list of gregorio_characters
-    while (gwstring[i]) {
-        gregorio_add_character(&current_character, gwstring[i]);
-        i++;
-    }
-    free(gwstring);
-    gregorio_go_to_first_character(&current_character);
-    return current_character;
-}
-
-// the function to compare a grewchar * and a buf. Returns 1 if different, 0
-// if not.
-
-unsigned char gregorio_wcsbufcmp(grewchar *wstr, char *buf)
-{
-    int i = 0;
-    size_t len;
-    grewchar *gwbuf;
-    if (!buf || !wstr) {
-        return 1;
-    }
-    len = strlen(buf);          // to get the length of the syllable in ASCII
-    gwbuf = (grewchar *) malloc((len + 1) * sizeof(grewchar));
-    gregorio_mbstowcs(gwbuf, buf, len); // converting into wchar_t
-    // we add the corresponding characters in the list of gregorio_characters
-    while (gwbuf[i] && wstr[i]) {
-        if (gwbuf[i] != wstr[i]) {
-            free(gwbuf);
-            return 1;
-        }
-        i = i + 1;
-    }
-    // we finished the two strings
-    if (gwbuf[i] == 0 && wstr[i] == 0) {
-        free(gwbuf);
-        return 0;
-    }
-    free(gwbuf);
-    return 1;
-}
-
 // an utf8 version of mbstowcs
 
-size_t gregorio_mbstowcs(grewchar *dest, char *src, int n)
+static size_t gregorio_mbstowcs(grewchar *dest, char *src, int n)
 {
     unsigned char bytes_to_come;
     grewchar result = 0;
@@ -155,6 +100,61 @@ size_t gregorio_mbstowcs(grewchar *dest, char *src, int n)
     return res;
 }
 
+// the function to build a gregorio_character list from a buffer.
+
+gregorio_character *gregorio_build_char_list_from_buf(char *buf)
+{
+    int i = 0;
+    size_t len;
+    grewchar *gwstring;
+    gregorio_character *current_character = NULL;
+    if (buf == NULL) {
+        return NULL;
+    }
+    len = strlen(buf);          // to get the length of the syllable in ASCII
+    gwstring = (grewchar *) malloc((len + 1) * sizeof(grewchar));
+    gregorio_mbstowcs(gwstring, buf, len);  // converting into wchar_t
+    // we add the corresponding characters in the list of gregorio_characters
+    while (gwstring[i]) {
+        gregorio_add_character(&current_character, gwstring[i]);
+        i++;
+    }
+    free(gwstring);
+    gregorio_go_to_first_character(&current_character);
+    return current_character;
+}
+
+// the function to compare a grewchar * and a buf. Returns 1 if different, 0
+// if not.
+
+unsigned char gregorio_wcsbufcmp(grewchar *wstr, char *buf)
+{
+    int i = 0;
+    size_t len;
+    grewchar *gwbuf;
+    if (!buf || !wstr) {
+        return 1;
+    }
+    len = strlen(buf);          // to get the length of the syllable in ASCII
+    gwbuf = (grewchar *) malloc((len + 1) * sizeof(grewchar));
+    gregorio_mbstowcs(gwbuf, buf, len); // converting into wchar_t
+    // we add the corresponding characters in the list of gregorio_characters
+    while (gwbuf[i] && wstr[i]) {
+        if (gwbuf[i] != wstr[i]) {
+            free(gwbuf);
+            return 1;
+        }
+        i = i + 1;
+    }
+    // we finished the two strings
+    if (gwbuf[i] == 0 && wstr[i] == 0) {
+        free(gwbuf);
+        return 0;
+    }
+    free(gwbuf);
+    return 1;
+}
+
 void gregorio_print_unichar(FILE *f, grewchar to_print)
 {
     if (to_print <= 0x7F) {
@@ -185,47 +185,3 @@ void gregorio_print_unistring(FILE *f, grewchar *first_char)
         first_char++;
     }
 }
-
-#if 0
-
-/*
- * 
- * This file contains some functions to handle UTF-8 correctly. We chose to
- * embed them instead of relying on locale or glib, for simplification: with
- * these functions we don't rely on anything locale-dependant (such as
- * wchar_t). The reason is that Windows XP (...) is not UTF-8 and thus would
- * need the glib in oder to run, which make dependencies much bigger.
- * 
- */
-
-typedef uint32 gregorio_unichar_t;
-
-gregorio_print_unichar(FILE *f, gregorio_unichar_t to_print);
-
-gregorio_character *gregorio_build_char_list_from_buf(char *buf)
-{
-    int i = 0;
-    size_t len;
-    grewchar *gwstring;
-    gregorio_character *current_character = NULL;
-    if (buf == NULL) {
-        return NULL;
-    }
-    len = strlen(buf);          // to get the length of the syllable in ASCII
-    gwstring = (grewchar *) malloc((len + 1) * sizeof(grewchar));
-    mbstowcs(gwstring, buf, (sizeof(grewchar) * (len + 1)));    // converting
-    // into wchar_t
-    // then we get the real length of the syllable, in letters
-    len = wcslen(gwstring);
-    gwstring[len] = L'\0';
-    // we add the corresponding characters in the list of gregorio_characters
-    while (gwstring[i]) {
-        gregorio_add_character(&current_character, gwstring[i]);
-        i++;
-    }
-    free(gwstring);
-    gregorio_go_to_first_character(&current_character);
-    return current_character;
-}
-
-#endif
