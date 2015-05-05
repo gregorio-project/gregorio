@@ -24,9 +24,9 @@ GregorioRef-@FILENAME_VERSION@.pdf: $(SRCFILES)
 	make -C ../src gregorio
 	../src/gregorio -o factus.gtex $(<D)/factus.gabc
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
-			  TEXFONTS=$(<D)/../fonts: latexmk -recorder -pdf \
-			  -pdflatex='lualatex --shell-escape %O %S' \
-			  -jobname=GregorioRef-@FILENAME_VERSION@ $<
+		 TEXFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
+		 -pdflatex='lualatex --shell-escape %O %S' \
+		 -jobname=GregorioRef-@FILENAME_VERSION@ $<
 
 doc: GregorioRef-$(FILENAME_VERSION).pdf
 

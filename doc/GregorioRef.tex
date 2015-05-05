@@ -17,9 +17,13 @@
     SmallCapsFeatures={Letters=SmallCaps},
     ]{LinBiolinum_R}
 \setmonofont[Extension=.otf,
+    ItalicFont=Inconsolatazi4-Regular,
+    BoldFont=Inconsolatazi4-Bold,
+    BoldItalicFont=Inconsolatazi4-Bold,
     AutoFakeSlant,
-    BoldItalicFeatures={FakeSlant},
-    ]{Inconsolata}
+    ItalicFeatures={FakeSlant},
+    BoldItalicFeatures={FakeSlant}
+    ]{Inconsolatazi4-Regular}
 \usepackage{enumitem}
 \usepackage{xspace}
 \usepackage{multicol}
@@ -61,6 +65,8 @@
   \vspace{1.5ex plus .2ex}%
   \index{#1}}
   %\addcontentsline{toc}{subsubsection}{#1}}
+
+\newcommand{\optional}[1]{{\itshape #1}}
 
 % for the character tables
 \font\greciliae = {name:greciliae} at 1000000 sp\relax
@@ -112,6 +118,8 @@
         \setlength{\parsep}{0pt}%
       }\item[]{\fbox{\parbox{\hsize}{\includescore{factus.gtex}}}}%
       \end{list}%
+      \gresetfirstannotation{}
+      \gresetsecondannotation{}
     \endgroup%
 
     \vspace{1.5cm}%
