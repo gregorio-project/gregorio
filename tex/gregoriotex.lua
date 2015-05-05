@@ -212,7 +212,7 @@ local function compile_gabc(gabc_file, gtex_file)
   res = os.execute(string.format("gregorio -o %s %s", gtex_file, gabc_file))
   if res == nil then
     err("\nSomething went wrong when executing\n    'gregorio -o %s %s'.\n"
-	  .."shell-escape mode may not be activated. Try\n    '%s --shell-escape %s.tex'\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", gtex_file, gabc_file, tex.formatname, tex.jobname)
+    .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", gtex_file, gabc_file, tex.formatname, tex.jobname)
   elseif res ~= 0 then
     err("\nAn error occured when compiling the score file\n'%s' with gregorio.\nPlease check your score file.", gabc_file)
   else
@@ -278,6 +278,16 @@ local function include_score(input_file, force_gabccompile)
   end
   tex.print(string.format("\\input %s", gtex_file))
   return
+end
+
+local function direct_gabc(gabc, header)
+  local f = io.popen('echo "name:direct-gabc;\n'..(header or '')..'\n%%%%\n'..gabc..'" | gregorio -sS', 'r')
+  if f == nil then
+    err("\nSomething went wrong when executing\n    'gregorio -sS'.\n"
+    .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", tex.formatname, tex.jobname)
+  end
+  tex.print(f:read("*a"):explode('\n'))
+  f:close()
 end
 
 local function check_font_version()
@@ -457,3 +467,4 @@ gregoriotex.reset_score_glyph    = reset_score_glyph
 gregoriotex.scale_score_fonts    = scale_score_fonts
 gregoriotex.def_symbol           = def_symbol
 gregoriotex.font_size            = font_size
+gregoriotex.direct_gabc          = direct_gabc

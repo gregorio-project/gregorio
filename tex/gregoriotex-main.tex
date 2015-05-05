@@ -78,7 +78,7 @@
 
 \def\gre@declarefileversion#1#2{%
   \IfStrEq*{#2}{\gre@gregorioversion}{}{%else
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\gre@gregorioversion \space\space while #1 is in version \number#2}}%
+    \greerror{uncoherent file versions: gregoriotex-main.tex is in version \number\gre@gregorioversion \space\space while #1 is in version \number#2}}%
 }%
 
 % Macro called by scores.
@@ -98,7 +98,7 @@
 
 % Test to make sure that gregoriotex.lua is of the same version.
 \IfStrEq*{\gre@gregoriotexluaversion}{\gre@gregorioversion}{}{%else
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
+    \greerror{uncoherent file versions: gregoriotex-main.tex is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -1395,6 +1395,18 @@
 % checked by the lua function 'include_score'. This does not bypass
 % the API version test done by '\gregoriotexapiversion'.
 
+% Macros for compiling short snippets of GABC directly expressed in TeX
+
+\long\def\gre@gabcsnippet@option[#1]#2{%
+  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#2}}", "initial-style: #1;")}%
+}%
+
+\long\def\gre@gabcsnippet#1{%
+  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#1}}")}%
+}%
+
+\def\gabcsnippet{\@ifnextchar[{\gre@gabcsnippet@option}{\gre@gabcsnippet}}%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% some hyphen definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1402,7 +1414,6 @@
 % a zero-width hyphen, useful for fine tuning line endings. To input in gabc verb for example.
 \def\grezerhyph{%
   \hbox to 0pt{%
-  %-
   \char\the\hyphenchar\font %
   \hss %
   }%
