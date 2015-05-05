@@ -357,7 +357,7 @@ S_SALICUS_LONGQUEUE                = 'SalicusLongqueue'
 S_TORCULUS_LIQUESCENS              = 'TorculusLiquescens'
 S_TORCULUS_LIQUESCENS_QUILISMA     = 'TorculusLiquescensQuilisma'
 S_FLEXUS_ORISCUS_SCAPUS            = 'FlexusOriscusScapus'
-S_FLEXUS_ORISCUS_SCAPIS_LONGQUEUE  = 'FlexusOriscusScapusLongqueue'
+S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE  = 'FlexusOriscusScapusLongqueue'
 
 # Liquescentiae
 L_NOTHING                   = 'Nothing'
@@ -565,7 +565,7 @@ def write_pes_debilis(widths, i, shape, lique=L_NOTHING):
     write_line(i, get_width(widths, 'deminutus')-get_width(widths, 'line2'), BASE_HEIGHT)
     simplify()
     paste_and_move("PunctumLineBL", get_width(widths, 'deminutus')-get_width(widths, 'line2'), i*BASE_HEIGHT)
-    set_width(get_width(widths, 'deminutus')+get_width(widths, 'PunctumLineBL'))
+    set_width(get_width(widths, 'deminutus')+get_width(widths, 'PunctumLineBL')-get_width(widths, 'line2'))
     end_glyph(glyph_name)
 
 def write_pes_deminutus(widths, i, first_glyph, shape, lique=L_NOTHING):
@@ -792,10 +792,10 @@ def flexus(widths):
         write_flexus(widths, i, "vbase"+str(i), 'PunctumLineTL', S_FLEXUS_LONGQUEUE)
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(widths, i, "osbase"+str(i), 'PunctumLineTL', S_FLEXUS_ORISCUS_SCAPUS)
-    write_flexus(widths, 1, "oslbase", 'PunctumLineTL', S_FLEXUS_ORISCUS_SCAPIS_LONGQUEUE)
+    write_flexus(widths, 1, "oslbase", 'PunctumLineTL', S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE)
     for i in range(2, MAX_INTERVAL+1):
         write_flexus(widths, i, "osbase"+str(i), 'PunctumLineTL',
-                     S_FLEXUS_ORISCUS_SCAPIS_LONGQUEUE)
+                     S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE)
     precise_message("flexus deminutus")
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(widths, i, "mdeminutus", 'PunctumLineTL',
@@ -829,10 +829,10 @@ def flexus(widths):
                      'auctusa1', S_FLEXUS_ORISCUS_SCAPUS,
                      L_ASCENDENS)
     write_flexus(widths, 1, "oslbase", 'auctusa1',
-                 S_FLEXUS_ORISCUS_SCAPIS_LONGQUEUE, L_ASCENDENS)
+                 S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE, L_ASCENDENS)
     for i in range(2, MAX_INTERVAL+1):
         write_flexus(widths, i, "osbase"+str(i),
-                     'auctusa1', S_FLEXUS_ORISCUS_SCAPIS_LONGQUEUE,
+                     'auctusa1', S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
                      L_ASCENDENS)
     precise_message("flexus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
@@ -854,11 +854,11 @@ def flexus(widths):
                      'auctusd1', S_FLEXUS_ORISCUS_SCAPUS,
                      L_DESCENDENS)
     write_flexus(widths, 1, "oslbase", 'auctusd1',
-                 S_FLEXUS_ORISCUS_SCAPIS_LONGQUEUE,
+                 S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
                  L_DESCENDENS)
     for i in range(2, MAX_INTERVAL+1):
         write_flexus(widths, i, "osbase"+str(i),
-                     'auctusd1', S_FLEXUS_ORISCUS_SCAPIS_LONGQUEUE,
+                     'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
                      L_DESCENDENS)
 
 def write_flexus(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHING):
@@ -888,11 +888,10 @@ def write_flexus(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHING):
         simplify()
         paste_and_move("deminutus",
                        get_width(widths, first_glyph) -
-                       get_width(widths, last_glyph) -
-                       get_width(widths, 'line2'), (-i)*BASE_HEIGHT)
+                       get_width(widths, last_glyph), (-i)*BASE_HEIGHT)
         length = get_width(widths, first_glyph)
     else:
-        if i == 1 and first_glyph != 'oslbase' and first_glyph != 'osbase' and first_glyph != 'odbase':
+        if i == 1 and first_glyph != 'odbase':
             if last_glyph == 'PunctumLineTL':
                 last_glyph = 'Punctum'
             elif last_glyph == 'auctusa1':
@@ -903,6 +902,10 @@ def write_flexus(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHING):
                 first_glyph = 'Punctum'
             elif first_glyph == 'odbase':
                 first_glyph = 'OriscusReversus'
+            elif first_glyph == 'osbase':
+                first_glyph = 'OriscusScapus'
+            elif first_glyph == 'oslbase':
+                first_glyph = 'OriscusScapusLongqueue'
             elif first_glyph == 'vsbase':
                 first_glyph = 'VirgaReversa'
             elif first_glyph == 'vlbase':
