@@ -13,6 +13,10 @@ If you were using `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, you mus
 
 The `gregorio` executable now uses the `.gtex` extension by default (instead of `.tex`, formerly) for GregorioTeX files that it produces.  If you use `\includescore{file.tex}`, then you should change this to `\includescore{file.gtex}` or use the newer autocompilation feature.
 
+### Custom spacings
+
+If you are using custom spacings, please update the values of `interwordspacetext`, `intersyllablespacenotes` and `interwordspacenotes` to match their new definitions (in the comments in `gsp-default.tex`).
+
 ## 3.0
 ### TeX Live 2013
 

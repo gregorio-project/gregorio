@@ -8,6 +8,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Handling of manually-placed custos is improved.  In particular, a manual custos at the end of the score should no longer be lost when the bar happens to be at the end of the line.
 
 ### Changed
+- The spacing algorithm has completely changed, expect your scores to look quite different (better we hope).
+- Lines are now aligned on the leftmost note instead of the leftmost letter.
 - The `O` modifier in gabc now has expanded uses beyond the salicus `(egOi)`.  A stemmed oriscus will appear on a lone pitch `(gO)` or a followed by a lower pitch `(gOe)` (see [#76](https://github.com/gregorio-project/gregorio/issues/76)).  A virga strata will appear on the second note of two ascending pitches `(giO)`.
 - With thanks to *Abbazia Mater Ecclesiae (IT)* for drawing the new shapes, the strophicus in greciliae has changed to better differentiate from the punctum inclinatum.  Use `\grechangeglyph{Stropha}{greciliae}{.caeciliae}\grechangeglyph{StrophaAucta}{greciliae}{.caeciliae}` if you prefer the old shape.
 - Default initial sizes have been chosen so that they are more appropriate when an infinitely scaling font is loaded.  LaTeX will make an automatic substitution of the closest avaialble size when such a font is not used.
