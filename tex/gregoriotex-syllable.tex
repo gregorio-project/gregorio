@@ -628,7 +628,7 @@
     \fi %
   \fi %
   \ifnum#1=1\relax %
-    \hskip\gre@skip@syllablefinalskip %
+    \grehskip\gre@skip@syllablefinalskip %
     \ifnum#3=1\relax %
       \grenobreak %
     \fi %
@@ -685,9 +685,9 @@
     \gre@debugmsg{ifdim}{ previousenddifference < 0pt}%
     \ifdim\gre@dimen@previousenddifference < 0 pt%
       \advance\gre@skip@temp@two by -\gre@dimen@previousenddifference %
-      \advance\gre@skip@temp@two by \gre@skip@interwordspacetext % in fact it is the max between interwordspacetext and interwordspacetextnotes
+      \advance\gre@skip@temp@two by \gre@skip@interwordspacetext %
     \else %
-      \advance\gre@skip@temp@two by \gre@skip@interwordspacenotes % in fact it is the max between interwordspacenotestext and interwordspacenotes
+      \advance\gre@skip@temp@two by \gre@skip@interwordspacenotes %
     \fi%
     % we take the max of it, then we divide it by two and we substract half of the width of the bar
     \gre@debugmsg{ifdim}{ temp@skip@three < temp@skip@two}%
@@ -725,11 +725,11 @@
     \ifdim\gre@skip@temp@two < -\wd\GreSyllablenotes %
       \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}
       \ifdim\gre@skip@nextbegindifference > 0 pt%
-        \gre@skip@temp@one = \gre@skip@interwordspacetextnotes%
-        \hskip\gre@skip@temp@one %
+        \gre@skip@temp@one = \gre@skip@interwordspacetext%
+        \grehskip\gre@skip@temp@one %
       \else % \ifdim\gre@skip@nextbegindifference > 0 pt
         \gre@skip@temp@one = \gre@skip@interwordspacetext%
-        \hskip\gre@skip@temp@one %
+        \grehskip\gre@skip@temp@one %
       \fi %
     \else 
       %\ifdim\gre@skip@temp@two < -\wd\GreSyllablenotes
