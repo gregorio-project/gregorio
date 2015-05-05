@@ -104,7 +104,7 @@ def main():
     "Main function"
     global oldfont, newfont, font_name
     version_script_file = os.path.join(sys.path[0], '../VersionManager.py')
-    proc = subprocess.Popen([version_script_file, '-c'], stdout=subprocess.PIPE)
+    proc = subprocess.Popen([version_script_file, '-c'], stdout=subprocess.PIPE, universal_newlines=True)
     version = proc.stdout.read().strip('\n')
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], "o:h", ["outfile","help"])
