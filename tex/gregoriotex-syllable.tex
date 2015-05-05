@@ -551,10 +551,17 @@
   \greunsetfixednexttextformat %
   \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
   \gre@calculate@enddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
+    % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
+  \gre@count@temp@one=0%
+  \ifnum#7>9\relax %
+    \ifnum#7<20\relax %
+      \gre@count@temp@one=1%
+    \fi %
+  \fi %
+  \gre@compute@syllablefinalskip{#4}{\gre@count@temp@one}%
   \ifcase#4 %
     % we enter here if the end of word is 0, so we must determine if we need to type a dash here
-    % we set gretempdim to the actual space between the text of the two syllables. The algorithm is quite complex, but quite similar to the one computing the space between the two syllables several lines above.
-    \gre@skip@temp@one = 0pt%
+    \gre@skip@temp@one = \gre@skip@syllablefinalskip %
     \gre@debugmsg{ifdim}{ enddifference > 0pt}%
     \ifdim\gre@dimen@enddifference >0pt%
       \advance\gre@skip@temp@one by \gre@dimen@enddifference %
@@ -574,7 +581,9 @@
       \else %
         \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart-}}%
       \fi %
+      % recomputing end difference and final skip with the final hyphen
       \gre@calculate@enddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
+      \gre@compute@syllablefinalskip{0}{0}%
     \else %
       \gregorioattr=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
@@ -678,6 +687,34 @@
 %% @arg#2 0 if end of syllable, 1 if end of word
 %% @arg#3 1 if next syllable is a bar, 0 otherwise
 %%
+\def\greendofsyllable#1#2#3{%
+  \gre@debugmsg{syllablespacing}{ endofsyllable with #2}%
+  \ifnum#3=1\relax %
+    \grenobreak %
+    \gre@debugmsg{syllablespacing}{ set penalty \grenobreakpenalty}%
+  \else %
+    \ifnum#2=1\relax %
+      \grepenalty{\greendofwordpenalty}%
+      \gre@debugmsg{syllablespacing}{ set penalty \greendofwordpenalty}%
+    \else %
+      \grepenalty{\greendofsyllablepenalty}%
+      \gre@debugmsg{syllablespacing}{ set penalty \greendofsyllablepenalty}%
+    \fi %
+  \fi %
+  \ifnum#1=1\relax %
+    \hskip\gre@skip@syllablefinalskip %
+    \ifnum#3=1\relax %
+      \grenobreak %
+    \fi %
+  \fi %
+  \relax%
+}%
+
+\newskip\gre@skip@syllablefinalskip
+
+%% @desc Macro called at end of a syllable, adds a penalty and a space
+%% @arg#1 0 if end of syllable, 1 if end of word
+%%
 %% @uses \gre@dimen@enddifference
 %% @uses \gre@dimen@nextbegindifference
 %%
@@ -702,57 +739,48 @@
 %%  min_shift_text = min_dist_text - cur_dist_text
 %%  min_shift_notes = min_dist_notes - cur_dist_notes
 %%  shift = max(min_shift_text, min_shift_notes)
-\def\greendofsyllable#1#2#3{%
-  \gre@debugmsg{syllablespacing}{ endofsyllable with #2}%
-  \ifnum#2=1\relax %
-    \grepenalty{\greendofwordpenalty}%
-    \gre@debugmsg{syllablespacing}{ set penalty \greendofwordpenalty}%
-  \else %
-    \grepenalty{\greendofsyllablepenalty}%
-    \gre@debugmsg{syllablespacing}{ set penalty \greendofsyllablepenalty}%
-  \fi %
-  \ifnum#1=1\relax %
-    \let\gre@minTextDistance\gre@skip@temp@one %
-    \let\gre@minNotesDistance\gre@skip@temp@two %
-    \let\gre@curTextDistance\gre@dimen@temp@three %
-    \let\gre@curNotesDistance\gre@dimen@temp@four %
-    \let\gre@minShiftText\gre@skip@temp@three %
-    \let\gre@minShiftNotes\gre@skip@temp@four %
+\def\gre@compute@syllablefinalskip#1#2{%
+  \let\gre@minTextDistance\gre@skip@temp@one %
+  \let\gre@minNotesDistance\gre@skip@temp@two %
+  \let\gre@curTextDistance\gre@dimen@temp@three %
+  \let\gre@curNotesDistance\gre@dimen@temp@four %
+  \let\gre@minShiftText\gre@skip@temp@three %
+  \let\gre@minShiftNotes\gre@skip@temp@four %
 %%  min_text_dist = prev_cur_word ? 0 : space_inter_words
-    \ifnum#2=1\relax %
-      \gre@minTextDistance=\gre@skip@interwordspacetext %
-    \else %
-      \gre@minTextDistance=0pt%
-    \fi %
-    \gre@debugmsg{syllablespacing}{ minTextDistance = \the\gre@minTextDistance}%
+  \ifnum#1=1\relax %
+    \gre@minTextDistance=\gre@skip@interwordspacetext %
+  \else %
+    \gre@minTextDistance=0pt%
+  \fi %
+  \gre@debugmsg{syllablespacing}{ minTextDistance = \the\gre@minTextDistance}%
 %%  if (no_txt_under_prev) :
 %%     tmp = -cur_end_diff < 0 ? 0 : -cur_end_diff
 %%     min_text_dist = max(min_text_dist, tmp)
-    \ifgre@notextprev %
-      \gre@skip@temp@two=-\gre@dimen@enddifference %
-      \ifdim\gre@skip@temp@two < 0pt%
-        \gre@skip@temp@two = 0pt%
-      \fi %
-      \ifdim\gre@skip@temp@two > \gre@minTextDistance %
-        \gre@minTextDistance = \gre@skip@temp@two %
-      \fi %
+  \ifgre@notextprev %
+    \gre@skip@temp@two=-\gre@dimen@enddifference %
+    \ifdim\gre@skip@temp@two < 0pt%
+      \gre@skip@temp@two = 0pt%
     \fi %
-    \gre@debugmsg{syllablespacing}{ minTextDistance = \the\gre@minTextDistance}%
-    % setting minNotesDistance (quite simple)
-    \ifnum#3=1\relax %
-      \gre@minNotesDistance=\gre@skip@notebarspace %
+    \ifdim\gre@skip@temp@two > \gre@minTextDistance %
+      \gre@minTextDistance = \gre@skip@temp@two %
+    \fi %
+  \fi %
+  \gre@debugmsg{syllablespacing}{ minTextDistance = \the\gre@minTextDistance}%
+  % setting minNotesDistance (quite simple)
+  \ifnum#2=1\relax %
+    \gre@minNotesDistance=\gre@skip@notebarspace %
+  \else %
+    \ifnum#1=1\relax %
+      \gre@minNotesDistance=\gre@skip@interwordspacenotes %
     \else %
-      \ifnum#2=1\relax %
-        \gre@minNotesDistance=\gre@skip@interwordspacenotes %
-      \else %
-        \gre@minNotesDistance=\gre@skip@intersyllablespacenotes %
-      \fi %
+      \gre@minNotesDistance=\gre@skip@intersyllablespacenotes %
     \fi %
-    \gre@debugmsg{syllablespacing}{ minNotesDistance = \the\gre@minNotesDistance}%
-    % determining current distance between notes and
-    % next notes, and current distance between text and next text
-    \gre@curTextDistance=0pt%
-    \gre@curNotesDistance=0pt%
+  \fi %
+  \gre@debugmsg{syllablespacing}{ minNotesDistance = \the\gre@minNotesDistance}%
+  % determining current distance between notes and
+  % next notes, and current distance between text and next text
+  \gre@curTextDistance=0pt%
+  \gre@curNotesDistance=0pt%
 %%  cur_dist_notes = cur_dist_text = 0
 %%  if (cur_end_diff < 0):
 %%     cur_dist_notes += -cur_end_diff
@@ -762,41 +790,38 @@
 %%     cur_dist_notes += -next_begin_diff
 %%  else:
 %%     cur_dist_text += next_begin_diff
-    \gre@debugmsg{syllablespacing}{ enddifference = \the\gre@dimen@enddifference}%
-    \gre@debugmsg{syllablespacing}{ nextbegindifference = \the\gre@skip@nextbegindifference}%
-    \ifdim\gre@dimen@enddifference < 0 pt%
-      \gre@curNotesDistance = -\gre@dimen@enddifference %
-    \else %
-      \gre@curTextDistance = \gre@dimen@enddifference %
-    \fi %
-    \ifdim\gre@skip@nextbegindifference < 0 pt%
-      \advance\gre@curNotesDistance by -\gre@skip@nextbegindifference %
-    \else %
-      \advance\gre@curTextDistance by \gre@skip@nextbegindifference %
-    \fi %
-    \gre@debugmsg{syllablespacing}{ curNotesDistance = \the\gre@curNotesDistance}%
-    \gre@debugmsg{syllablespacing}{ curTextDistance = \the\gre@curTextDistance}%
+  \gre@debugmsg{syllablespacing}{ enddifference = \the\gre@dimen@enddifference}%
+  \gre@debugmsg{syllablespacing}{ nextbegindifference = \the\gre@skip@nextbegindifference}%
+  \ifdim\gre@dimen@enddifference < 0 pt%
+    \gre@curNotesDistance = -\gre@dimen@enddifference %
+  \else %
+    \gre@curTextDistance = \gre@dimen@enddifference %
+  \fi %
+  \ifdim\gre@skip@nextbegindifference < 0 pt%
+    \advance\gre@curNotesDistance by -\gre@skip@nextbegindifference %
+  \else %
+    \advance\gre@curTextDistance by \gre@skip@nextbegindifference %
+  \fi %
+  \gre@debugmsg{syllablespacing}{ curNotesDistance = \the\gre@curNotesDistance}%
+  \gre@debugmsg{syllablespacing}{ curTextDistance = \the\gre@curTextDistance}%
 %%  min_shift_text = min_dist_text - cur_dist_text
 %%  min_shift_notes = min_dist_notes - cur_dist_notes
 %%  shift = max(min_shift_text, min_shift_notes)
-    \gre@minShiftText = \gre@minTextDistance %
-    \advance\gre@minShiftText by - \gre@curTextDistance %
-    \gre@minShiftNotes = \gre@minNotesDistance %
-    \advance\gre@minShiftNotes by - \gre@curNotesDistance %
-    \gre@debugmsg{syllablespacing}{ minShiftNotes = \the\gre@minShiftNotes}%
-    \gre@debugmsg{syllablespacing}{ minShiftText = \the\gre@minShiftText}%
-%    \hbox to 0pt{a\hss}%
-    \ifdim\gre@minShiftNotes < \gre@minShiftText %
-      \hskip\gre@minShiftText %
-      \gre@debugmsg{syllablespacing}{ hskip \the\gre@minShiftText}%
-    \else %
-      \hskip\gre@minShiftNotes %
-      \gre@debugmsg{syllablespacing}{ hskip \the\gre@minShiftNotes}%
-    \fi %
-%    \hbox to 0pt{b\hss}%
+  \gre@minShiftText = \gre@minTextDistance %
+  \advance\gre@minShiftText by - \gre@curTextDistance %
+  \gre@minShiftNotes = \gre@minNotesDistance %
+  \advance\gre@minShiftNotes by - \gre@curNotesDistance %
+  \gre@debugmsg{syllablespacing}{ minShiftNotes = \the\gre@minShiftNotes}%
+  \gre@debugmsg{syllablespacing}{ minShiftText = \the\gre@minShiftText}%
+  \ifdim\gre@minShiftNotes < \gre@minShiftText %
+    \global\gre@skip@syllablefinalskip = \gre@minShiftText %
+    \gre@debugmsg{syllablespacing}{ syllablefinalskip = \the\gre@minShiftText}%
+  \else %
+    \global\gre@skip@syllablefinalskip = \gre@minShiftNotes %
+    \gre@debugmsg{syllablespacing}{ syllablefinalskip = \the\gre@minShiftNotes}%
   \fi %
-  \relax%
-}%
+  \relax %
+}
 
 %a macro to typeset a syllable with only a bar inside
 \def\grebarsyllable#1#2#3#4#5#6#7#8#9{%
