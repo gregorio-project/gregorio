@@ -69,7 +69,7 @@
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
-\xdef\gre@gregorioversion{4.0.0-rc1}% GREGORIO_VERSION - VersionManager.py
+\xdef\gre@gregorioversion{3.0.0-rc2}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
@@ -78,7 +78,7 @@
 
 \def\gre@declarefileversion#1#2{%
   \IfStrEq*{#2}{\gre@gregorioversion}{}{%else
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\gre@gregorioversion \space\space while #1 is in version \number#2}}%
+    \greerror{uncoherent file versions: gregoriotex-main.tex is in version \number\gre@gregorioversion \space\space while #1 is in version \number#2}}%
 }%
 
 % Macro called by scores.
@@ -98,7 +98,7 @@
 
 % Test to make sure that gregoriotex.lua is of the same version.
 \IfStrEq*{\gre@gregoriotexluaversion}{\gre@gregorioversion}{}{%else
-    \greerror{uncoherent file versions: gregoriotex.tex is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
+    \greerror{uncoherent file versions: gregoriotex-main.tex is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -1350,6 +1350,10 @@
   \gre@includescorewithoption[c]{#1}%
 }%
 
+\long\def\grequickcompilegabc#1{%
+  \directlua{gregoriotex.quick_compile("\luatexluaescapestring{\unexpanded\expandafter{#1}}")}%
+}
+
 % The internal macro called when \includescore is called with the optional argument.  Behavior is determined by the value of the argument:
 % n - do not attempt to compile the score.  Simply include it as is.
 % a - perform the checks to see if the score needs to be recompiled and do so only if necessary
@@ -1402,7 +1406,6 @@
 % a zero-width hyphen, useful for fine tuning line endings. To input in gabc verb for example.
 \def\grezerhyph{%
   \hbox to 0pt{%
-  %-
   \char\the\hyphenchar\font %
   \hss %
   }%
