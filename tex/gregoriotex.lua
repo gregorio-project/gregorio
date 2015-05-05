@@ -281,13 +281,20 @@ local function include_score(input_file, force_gabccompile)
 end
 
 local function direct_gabc(gabc, header)
-  local f = io.popen('echo "name:direct-gabc;\n'..(header or '')..'\n%%%%\n'..gabc..'" | gregorio -sS', 'r')
+  local gabccode = 'name:direct-gabc;\n'..(header or '')..'\n%%%%\n'..gabc
+  local f = io.popen('echo "'..gabccode..'" | gregorio -sS', 'r')
+  -- In shell-restricted mode, with gregorio (and even echo) allowed,
+  -- the previous command doesn't work ; in that case, use a temporary file.
   if f == nil then
-    err("\nSomething went wrong when executing\n    'gregorio -sS'.\n"
-    .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", tex.formatname, tex.jobname)
+    local tmpname = os.tmpname()..'.gabc'
+    local tmp = io.open(tmpname, 'w')
+    tmp:write(gabccode)
+    tmp:close()
+    tex.print('\\input{|"gregorio -S '..tmpname..'"}')
+  else
+    tex.print(f:read("*a"):explode('\n'))
+    f:close()
   end
-  tex.print(f:read("*a"):explode('\n'))
-  f:close()
 end
 
 local function check_font_version()
