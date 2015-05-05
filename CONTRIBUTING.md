@@ -62,6 +62,8 @@ Gregorio provides an [`.editorconfig` file](../.editorconfig), using an [editorc
 
 Python files must output no error when inspected by `pylint`.
 
+TeX code must use LuaTeX (more than TeX + eTeX + Omega + PDFTeX) primitives as much as possible, and, when not possible, use code compiling under PlainTeX.
+
 ### Tests
 
 When your changes are significant, please provide a test demonstrating the change. See [test documentation](tests/).
@@ -73,7 +75,7 @@ If your code has an impact on the user, you must add it to the [changelog file](
 You must also document it in the right places:
 
  * [User manual](doc/) for changes in GregorioTeX
- * the [website](http://home.gna.org/gregorio) if relevant (ask the [developer mailing list](mailto:gregorio-devel@gna.org) for access).
+ * the [website](http://gregorio-project.github.io/) (in [another repository](https://github.com/gregorio-project/gregorio-project.github.io)) if relevant.
 
 ### Git Workflow
 

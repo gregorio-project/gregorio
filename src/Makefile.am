@@ -21,20 +21,20 @@ AM_CFLAGS =
 bin_PROGRAMS = gregorio
 gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
 				   unicode.c struct.h messages.h unicode.h characters.h \
-				   plugins.h config.h dump/dump.c dump/dump.h \
+				   plugins.h config.h dump/dump.c \
 				   gregoriotex/gregoriotex-write.c gregoriotex/gregoriotex.h
 
 @MK@ifneq ($(wildcard ../.git),)
 @MK@  _tag_ = $(shell git describe --exact-match HEAD 2>/dev/null)
 @MK@  ifeq ($(_tag_),)
-@MK@    DEFS += -DBRANCH_VERSION='"b$(shell git rev-parse --abbrev-ref HEAD)-$(shell date +%Y%m%d_%H%M)-$(shell git rev-parse --short HEAD)"'
+@MK@    DEFS += -DBRANCH_VERSION='"$(shell git rev-parse --abbrev-ref HEAD)-$(shell git rev-parse --short HEAD)-$(shell git rev-list HEAD --count)"'
 @MK@  endif
 @MK@else
 @MK@  ifneq ($(wildcard ../.hg/git),)
 @MK@    _gitnode_ = $(shell hg log --template='{gitnode}' -r .)
 @MK@    _tag_ = $(shell git --git-dir=../.hg/git describe --exact-match $(_gitnode_) 2>/dev/null)
 @MK@    ifeq ($(_tag_),)
-@MK@      DEFS += -DBRANCH_VERSION='"b$(shell cat ../.hg/bookmarks.current)-$(shell date +%Y%m%d_%H%M)-$(shell git --git-dir=../.hg/git rev-parse --short '$(_gitnode_)')"'
+@MK@      DEFS += -DBRANCH_VERSION='"$(shell cat ../.hg/bookmarks.current)-$(shell git --git-dir=../.hg/git rev-parse --short '$(_gitnode_)')-$(shell git --git-dir=../.hg/git rev-list '$(_gitnode_)' --count)"'
 @MK@    endif
 @MK@  endif
 @MK@endif

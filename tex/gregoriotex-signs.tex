@@ -665,7 +665,7 @@
 
 % a macro to help typesetting vertical episemus. The third argument is 0 when we go back to the beginning of the glyph. If it is 2, it means that we must go back first of width #1, and then forward of #2. If it is 1, it means that we only need to go back of #2. if it is 3, we go to the beginning of the glyph, then forward of #1 then back of #2
 % #4 is a shift that we want to get applied, useful for punctum inclinatum for example
-% #5 is the glyph number. If it is 1 it is an ictus arsicus (?) and 2 for an ictus theticus
+% #5 is the glyph number.
 % #6 is the type of sign (1: vertical episemus, 2: rare sign, 3: choral sign)
 % #7 is the choral sign if relevant
 \def\grevepisemusorrareaux#1#2#3#4#5#6#7{%
@@ -688,7 +688,7 @@
     \advance\gre@dimen@temp@three by -\wd\GreTempsign %
     \advance\gre@dimen@temp@three by \gre@dimen@temp@two %
   \fi%
-  \kern-\gre@dimen@temp@three % we do it here because of the ictus
+  \kern-\gre@dimen@temp@three % we do it here because of the now-removed ictus (chironomy)
   % then we draw the sign
   \ifcase#6\or %
     % vertical episemus
@@ -1480,7 +1480,7 @@
       \grehskip\gre@skip@temp@four %
     \fi %
   \fi %
-  \gre@debug{Width of bar just printed: \the\wd\GreTempwidth}%
+  \gre@debugmsg{spacing}{Width of bar just printed: \the\wd\GreTempwidth}%
   \global\gre@dimen@lastglyphwidth=\wd\GreTempwidth %
   \relax%
 }%
@@ -1517,46 +1517,27 @@
 
 %macro to end a line with a divisio finalis
 \def\grefinaldivisiofinalis#1{%
-  \ifcase#1% case 0
-    \grelocalrightbox{}%
-    %\grelocalleftbox{}
-    \grenobreak %
-    \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis%
-    \grehskip\gre@skip@temp@four %
-    \grenobreak %
-    \grebarsyllable{}{}{}{1}{}{}{0}{\grelastofline}{%
-      \gredivisiofinalis{}%
-    }%
-  \or % case 1
-    \global\keeprightbox=1 %
-    \grelocalrightbox{%
-      \hbox{%
-        \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis%
-        \hskip\gre@skip@temp@four %
-      }%
-      \gredivisiofinalissymbol %
-    }%
-  \fi %
+  \grelocalrightbox{}%
+  %\grelocalleftbox{}
+  \grenobreak %
+  \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis%
+  \grehskip\gre@skip@temp@four %
+  \grenobreak %
+  \grebarsyllable{}{}{}{1}{}{}{0}{\grelastofline}{%
+    \gredivisiofinalis{}%
+    #1%
+  }%
   \relax%
 }%
 
 %macro to end a line with a divisio maior
 \def\grefinaldivisiomaior#1{%
-  \ifcase#1% case 0
-    \grelocalrightbox{}%
-    \grelocalleftbox{}%
-      \grebarsyllable{}{}{}{1}{}{}{0}{}{%
-      \gredivisiomaior{}%
-    }%
-  \or % case 1
-    \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis%
-    \grehskip\gre@skip@temp@four %
-    \global\keeprightbox=1 %
-    \grelocalrightbox{%
-      \gre@calculate@glyphraisevalue{g}{0}% bar glyphs are made to be at this height
-      \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\gre@char@divisiomaior}%
-    }%
-  \fi %
+  \grelocalrightbox{}%
+  \grelocalleftbox{}%
+    \grebarsyllable{}{}{}{1}{}{}{0}{}{%
+    \gredivisiomaior{}%
+    #1%
+  }%
   \relax%
 }%
 
@@ -1676,26 +1657,29 @@
 %% macros for typesetting punctum cavum
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\def\grepunctumcavumchar{\gregoriofont\gre@char@punctumcavum}%
+\def\grelineapunctumcavumchar{\gregoriofont\gre@char@lineapunctumcavum}%
+\def\grepunctumcavumholechar{\gregoriofont\gre@char@punctumcavumhole}%
+\def\grelineapunctumcavumholechar{\gregoriofont\gre@char@lineapunctumcavumhole}%
+
 \def\UseAlternatePunctumCavum{%
-\gdef\grepunctumcavumchar{\gregoriofont\gre@char@punctumcavumalt}%
-\gdef\grelineapunctumcavumchar{\gregoriofont\gre@char@lineapunctumcavumalt}%
-\gdef\grepunctumcavumholechar{\gregoriofont\gre@char@punctumcavumholealt}%
-\gdef\grelineapunctumcavumholechar{\gregoriofont\gre@char@lineapunctumcavumholealt}%
+\grechangeglyph{PunctumCavum}{greciliae}{.caeciliae}%
+\grechangeglyph{LineaPunctumCavum}{greciliae}{.caeciliae}%
+\grechangeglyph{PunctumCavumHole}{greciliae}{.caeciliae}%
+\grechangeglyph{LineaPunctumCavumHole}{greciliae}{.caeciliae}%
 \relax %
 }%
 
 \def\UseNormalPunctumCavum{%
-\gdef\grepunctumcavumchar{\gregoriofont\gre@char@punctumcavum}%
-\gdef\grelineapunctumcavumchar{\gregoriofont\gre@char@lineapunctumcavum}%
-\gdef\grepunctumcavumholechar{\gregoriofont\gre@char@punctumcavumhole}%
-\gdef\grelineapunctumcavumholechar{\gregoriofont\gre@char@lineapunctumcavumhole}%
+\greresetglyph{PunctumCavum}%
+\greresetglyph{LineaPunctumCavum}%
+\greresetglyph{PunctumCavumHole}%
+\greresetglyph{LineaPunctumCavumHole}%
 \relax %
 }%
 
-\UseNormalPunctumCavum%
-
 \def\grepunctumcavum#1#2#3#4#5{%
-  \setbox\GreTempwidth=\hbox{\gregoriofont\grepunctumcavumchar}%
+  \setbox\GreTempwidth=\hbox{\grepunctumcavumchar}%
   \global\gre@dimen@lastglyphwidth=\wd\GreTempwidth %
   \gre@skip@temp@four = \gre@dimen@lastglyphwidth%
   \kern\gre@skip@temp@four %
@@ -1710,7 +1694,7 @@
 }%
 
 \def\grelineapunctumcavum#1#2#3#4#5{%
-  \setbox\GreTempwidth=\hbox{\gregoriofont\grelineapunctumcavumchar}%
+  \setbox\GreTempwidth=\hbox{\grelineapunctumcavumchar}%
   \global\gre@dimen@lastglyphwidth=\wd\GreTempwidth %
   \gre@skip@temp@four = \gre@dimen@lastglyphwidth%
   \kern\gre@skip@temp@four %
