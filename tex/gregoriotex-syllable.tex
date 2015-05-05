@@ -786,35 +786,4 @@
      \grelocalrightbox{}%
   \fi\fi %
   \relax%
-}%
-
-%% Finally we don't use it, because syllables never cross, I keep it, just in case...
-% macro that will calculate the shift that we apply at the beginning, to combine two syllables of the same note
-% arguments are :
-% #1: \begindifferrence, defined above
-% but the macro also uses \gre@dimen@previousenddifference, \previousdash (not yet)
-%\def\setsyllableshift#1{
-%\the\gre@dimen@previousenddifference 
-%\ifdim\gre@dimen@previousenddifference >0pt 
-%\hskip\intersyllablenotesspace 
-%\ifdim-#1<\gre@dimen@previousenddifference 
-%\kern #1
-%test1 
-%\else
-%\kern -\gre@dimen@previousenddifference 
-%test2
-%\fi
-%\else
-% we test if begin > end - intersyllablespace
-%\gre@dimen@temp@five=\gre@dimen@previousenddifference 
-%\advance\gre@dimen@temp@five by \intersyllablenotesspace 
-%\ifdim#1 >\gre@dimen@temp@five 
-%\kern #1 
-%test3
-%\else
-%\kern\gre@dimen@temp@five
-%test4
-%\fi
-%\fi
-%}
-
+}
