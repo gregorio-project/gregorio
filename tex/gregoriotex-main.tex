@@ -1350,10 +1350,6 @@
   \gre@includescorewithoption[c]{#1}%
 }%
 
-\long\def\grequickcompilegabc#1{%
-  \directlua{gregoriotex.quick_compile("\luatexluaescapestring{\unexpanded\expandafter{#1}}")}%
-}
-
 % The internal macro called when \includescore is called with the optional argument.  Behavior is determined by the value of the argument:
 % n - do not attempt to compile the score.  Simply include it as is.
 % a - perform the checks to see if the score needs to be recompiled and do so only if necessary
@@ -1398,6 +1394,18 @@
 % the gtex file will be forced into the document and will not be
 % checked by the lua function 'include_score'. This does not bypass
 % the API version test done by '\gregoriotexapiversion'.
+
+% Macros for compiling short snippets of GABC directly expressed in TeX
+
+\long\def\gre@gabcsnippet@option[#1]#2{%
+  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#2}}", "initial-style: #1;")}%
+}%
+
+\long\def\gre@gabcsnippet#1{%
+  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#1}}")}%
+}%
+
+\def\gabcsnippet{\@ifnextchar[{\gre@gabcsnippet@option}{\gre@gabcsnippet}}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% some hyphen definitions

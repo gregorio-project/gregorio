@@ -98,9 +98,8 @@
 }
 
 \def\grecoloredlines#1#2#3{%
-  \definecolor{gretempcolor}{RGB}{#1,#2,#3}%
   \GreSetStaffLinesFormat{%
-  \color{gretempcolor}%
+    \color[RGB]{#1,#2,#3}%
   }%
   \relax %
 }

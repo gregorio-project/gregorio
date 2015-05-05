@@ -12,7 +12,7 @@ to any \verb=.tex= file. Do not add them to any \verb=.gtex= or
 To use the gregoriotex package include \verb=\usepackage{gregoriotex}=
 in the document preamble. This macro has the following form:
 
-\macroname{\textbackslash usepackage}{[\textit{(options)}]\{gregoriotex\}}{gregoriotex.sty}
+\macroname{\textbackslash usepackage}{[\optional{(options)}]\{gregoriotex\}}{gregoriotex.sty}
 
 The optional arguments are:
 
@@ -41,7 +41,7 @@ In general, commands should not be modified.  Exceptions are noted below.
 
 \subsubsection{Including scores}
 
-\macroname{\textbackslash includescore}{[\textit{\#1}]\{\#2\}}{gregoriotex.tex}
+\macroname{\textbackslash includescore}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
 %\verb=\includescore#1=%tex.tex
 Macro for including scores.  Works on both gabc and tex files.
 
@@ -99,21 +99,21 @@ When called with the optional argument \texttt{[f]} gregoriotex will
 compile the gabc file into a gtex file. This is similar to
 \texttt{[a]} except the gabc is compiled every time.
 
-\macroname{\textbackslash forcecompilegabc}{}{gregoriotex.tex} A switch
+\macroname{\textbackslash forcecompilegabc}{}{gregoriotex-main.tex} A switch
 to change the behavior of the way gregoriotex includes scores. When
 used, all later calls of \verb=\includescore= will compile the gabc
 file into a gtex file. This is similar to using the package option
 \verb=[forcecompile]=, but does not necessarly apply to the entire
 document.
 
-\macroname{\textbackslash autocompilegabc}{}{gregoriotex.tex} A switch
+\macroname{\textbackslash autocompilegabc}{}{gregoriotex-main.tex} A switch
 to change the behavior of the way gregoriotex includes scores. When
 used, all later calls of \verb=\includescore= will use gregoriotex's
 automatic compilation of gabc files. This is similar to using the
 packape option \verb=[autocompile]=, but does not necessarly apply to
 the entire document.
 
-\macroname{\textbackslash nevercompilegabc}{}{gregoriotex.tex} A switch
+\macroname{\textbackslash nevercompilegabc}{}{gregoriotex-main.tex} A switch
 to change the behavior of the way gregoriotex includes scores. When
 used, all later calls of \verb=\includescore= will include the score
 without doing anything else. This is the same as the traditional
@@ -139,9 +139,25 @@ switch between different includescore behaviors: \par\medskip
   \includescore[a]{TecumPrincipium} % gabc auto compiled.
 \end{latexcode}
 
+\macroname{\textbackslash gabcsnippet}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
+Converts the gabc notation specified in \texttt{\#2} to GregorioTeX and
+includes it directly in the document.  The optional argument \texttt{[\#1]}
+may be used to specify a gabc \texttt{initial-style}, which defaults to
+\texttt{1}.
+
+\begin{argtable}
+  \#1 & number & Optional.  The gabc \texttt{initial-style} value to use.\\
+  \#2 & string & The gabc to insert into the document.\\
+\end{argtable}
+
+\medskip For example:\par\medskip
+\begin{latexcode}
+  \gabcsnippet[0]{(c3) Al(eg~)le(gv.fhg)lu(efe___)ia(e.) (::)}
+\end{latexcode}
+
 \subsubsection{Alternate glyph drawings}
 
-\macroname{\textbackslash grechangeglyph}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex.tex}
+\macroname{\textbackslash grechangeglyph}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-main.tex}
 Substitutes the given GregorioTeX score glyph with the specified glyph
 from the specified font.
 
@@ -174,7 +190,7 @@ versions, use the following:\par\medskip
   \grechangeglyph{TorculusResupinus*}{*}{.alt}
 \end{latexcode}
 
-\macroname{\textbackslash greresetglyph}{\{\#1\}}{gregoriotex.tex}
+\macroname{\textbackslash greresetglyph}{\{\#1\}}{gregoriotex-main.tex}
 Removes a GregorioTeX score glyph substitution, restoring it back to
 its original form.
 
