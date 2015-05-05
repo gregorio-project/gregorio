@@ -104,12 +104,14 @@
 \gresetdim{spaceaftersigns}{0.08203 cm plus 0.0082 cm minus 0.0082 cm}{1}%
 % space after a clef at the beginning of a line
 \gresetdim{spaceafterlineclef}{0.27345 cm plus 0.14584 cm minus 0.01367 cm}{1}%
-% space after at the end of a word when the last written symbol is a note and the first is a note
-\gresetdim{interwordspacenotes}{0.27 cm plus 0.09 cm minus 0.06 cm}{1}%
-% space after at the end of a word when the last written symbol is a note and the first is a note
+% minimal space between notes of different words
+\gresetdim{interwordspacenotes}{0.27 cm plus 0.15 cm minus 0.05 cm}{1}%
+% minimal space between notes of the same syllable.
+% Warning: always keep minus to 0; also keep plus very low, or some words won't be hyphenated
 \gresetdim{intersyllablespacenotes}{0.17 cm plus 0.04cm minus 0cm}{1}%
-% space after at the end of a word when the last written symbol is text and the first is text
-\gresetdim{interwordspacetext}{0.38 cm plus 0.20 cm minus 0.1 cm}{1}%
+% minimal space between letters of different words. Makes sense to have
+% the same plus and minus as interwordspacenotes.
+\gresetdim{interwordspacetext}{0.38 cm plus 0.15 cm minus 0.05 cm}{1}%
 % space between notes of a bivirga or trivirga
 \gresetdim{bitrivirspace}{0.06927 cm plus 0.00182 cm minus 0.00546 cm}{1}%
 % space between notes of a bistropha or tristrophae
