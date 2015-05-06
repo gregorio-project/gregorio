@@ -23,4 +23,8 @@ EXTRA_DIST = README.md CHANGELOG.md CONTRIBUTING.md CONTRIBUTORS.md \
 			 UPGRADE.md COPYING.md .gregorio-version VersionManager.py \
 			 build.sh install.sh install-gtex.sh
 
+fonts: make-fonts
+make-fonts:
+	make -C fonts fonts
+
 export TOP_LEVEL_MAKE = true

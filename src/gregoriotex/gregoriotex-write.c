@@ -3038,6 +3038,41 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
     fprintf(f, "}%%\n");
 }
 
+static char *determine_leading_shape(gregorio_glyph *glyph) {
+    static char buf[BUFSIZE];
+    int ambitus = compute_ambitus(glyph->u.notes.first_note);
+    char *head, *head_liquescence;
+
+    switch (glyph->u.notes.first_note->u.note.shape) {
+    case S_QUILISMA:
+        head = "Quilisma";
+        break;
+    case S_ORISCUS:
+    case S_ORISCUS_SCAPUS:
+        head = "Oriscus";
+        break;
+    default:
+        head = "Punctum";
+        break;
+    }
+
+    switch (glyph->u.notes.liquescentia) {
+    case L_DEMINUTUS_INITIO_DEBILIS:
+    case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
+    case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
+    case L_AUCTA_INITIO_DEBILIS:
+        head_liquescence = "InitioDebilis";
+        break;
+    default:
+        head_liquescence = "";
+        break;
+    }
+
+    snprintf(buf, BUFSIZE, "Leading%s%s%s", head, tex_ambitus[ambitus],
+            head_liquescence);
+    return buf;
+}
+
 static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph)
 {
@@ -3051,7 +3086,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
     gtex_type gtype = 0;
     char next_note_pitch = 0;
     gregorio_note *current_note;
-    char *shape;
+    char *leading_shape, *shape;
     if (!glyph) {
         gregorio_message(_("called with NULL pointer"),
                 "gregoriotex_write_glyph", ERROR, 0);
@@ -3129,22 +3164,19 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
         }
         break;
     case G_TORCULUS_RESUPINUS_FLEXUS:
-        gregoriotex_write_note(f, current_note, glyph, element,
-                next_note_pitch);
-        gregoriotex_write_signs(f, T_ONE_NOTE_TRF, glyph, element,
-                glyph->u.notes.first_note);
+        leading_shape = determine_leading_shape(glyph);
+        // trick to have the good position for these glyphs
         glyph->u.notes.glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
-        // tricky to have the good position for these glyphs
         glyph->u.notes.first_note = current_note->next;
         shape = gregoriotex_determine_number_and_type(glyph, element, &type,
                 &gtype);
-        // TODO : fusion functions
-        fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
+        fprintf(f, "\\greglyph{\\grefusetwo{\\grecp%s}{\\grecp%s}}{%c}{%c}{%d}",
+                leading_shape, shape,
                 glyph->u.notes.first_note->u.note.pitch, next_note_pitch, type);
-        gregoriotex_write_signs(f, gtype, glyph, element,
-                glyph->u.notes.first_note);
         glyph->u.notes.first_note = current_note;
         glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
+        gregoriotex_write_signs(f, gtype, glyph, element,
+                glyph->u.notes.first_note);
         break;
     case G_BIVIRGA:
     case G_TRIVIRGA:
@@ -3214,23 +3246,20 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
         if (glyph->u.notes.glyph_type == G_TORCULUS_RESUPINUS
                 && current_note->u.note.shape != S_PUNCTUM
                 && current_note->u.note.shape != S_QUILISMA) {
-            gregoriotex_write_note(f, current_note, glyph, element,
-                    next_note_pitch);
-            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, element,
-                    glyph->u.notes.first_note);
+            leading_shape = determine_leading_shape(glyph);
             // tricky to have the good position for these glyphs
-            glyph->u.notes.first_note = current_note->next;
             glyph->u.notes.glyph_type = G_PORRECTUS_NO_BAR;
+            glyph->u.notes.first_note = current_note->next;
             shape = gregoriotex_determine_number_and_type(glyph, element, &type,
                     &gtype);
-            // TODO : fusion functions
-            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
-                    glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
-                    type);
+            fprintf(f, "\\greglyph{\\grefusetwo{\\grecp%s}{\\grecp%s}}{%c}{%c}{%d}",
+                    leading_shape, shape,
+                    glyph->u.notes.first_note->u.note.pitch, next_note_pitch, type);
+            glyph->u.notes.first_note = current_note;
+            glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS;
             gregoriotex_write_signs(f, gtype, glyph, element,
                     glyph->u.notes.first_note);
-            glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS;
-            glyph->u.notes.first_note = current_note;
+            break;
         } else {
             shape = gregoriotex_determine_number_and_type(glyph, element, &type,
                     &gtype);
