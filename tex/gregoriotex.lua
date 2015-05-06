@@ -292,7 +292,7 @@ local function direct_gabc(gabc, header)
       err("\nSomething went wrong when executing\n    gregorio -s -o "..tmpname".\n"
       .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", tex.formatname, tex.jobname)
     end
-    p:write('name:tmp;\n%%%%\n'..entree)
+    p:write('name:tmp;\n%%%%\n'..gabccode)
     p:close()
     f = io.open(tmpname)
   end
