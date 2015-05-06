@@ -746,6 +746,8 @@
 %% 25: the last note, if it is a bar
 %% 26: the last note, if it is a virgula
 %% 27: the last note, if it is a divisio finalis
+%% 28: the two first notes, if it is a porrectus with second ambitus of 1
+%% 29: the two first notes, if it is a torculus resupinus with third ambitus of 1
 
 % a function to typeset a vertical episemus or a rare accent (like accentus, circulus, etc.). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \greglyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The values are described in the commentary just above.
 % the third argument is the glyph number in the font
@@ -1054,15 +1056,15 @@
     %case 11
     \ifcase#3%
     \or%
-      \grehepisorlineaux{\gre@char@porrectus@one}{\gre@char@he@porrectusfl@one}{1}{#4}%
+      \grehepisorlineaux{\gre@char@porrectus@one}{\gre@char@he@porrectus@one}{1}{#4}%
     \or%
-      \grehepisorlineaux{\gre@char@porrectus@two}{\gre@char@he@porrectusfl@two}{1}{#4}%
+      \grehepisorlineaux{\gre@char@porrectus@two}{\gre@char@he@porrectus@two}{1}{#4}%
     \or%
-      \grehepisorlineaux{\gre@char@porrectus@three}{\gre@char@he@porrectusfl@three}{1}{#4}%
+      \grehepisorlineaux{\gre@char@porrectus@three}{\gre@char@he@porrectus@three}{1}{#4}%
     \or%
-      \grehepisorlineaux{\gre@char@porrectus@four}{\gre@char@he@porrectusfl@four}{1}{#4}%
+      \grehepisorlineaux{\gre@char@porrectus@four}{\gre@char@he@porrectus@four}{1}{#4}%
     \or%
-      \grehepisorlineaux{\gre@char@porrectus@five}{\gre@char@he@porrectusfl@five}{1}{#4}%
+      \grehepisorlineaux{\gre@char@porrectus@five}{\gre@char@he@porrectus@five}{1}{#4}%
     \fi%
   \or%
     %case 12
@@ -1136,6 +1138,36 @@
   \or%
     %case 24
     \grehepisorlineaux{\gre@char@pesinitauctusone}{\gre@char@he@punctum}{1}{#4}%the episemus is not quite long enough so I assumed a different width for now...
+  \or%
+    % 25-27 make no sense for horizontal episemus
+  \or\or\or%
+    %case 28
+    \ifcase#3%
+    \or%
+      \grehepisorlineaux{0}{\gre@char@he@porrectus@amone@one}{0}{#4}%
+    \or%
+      \grehepisorlineaux{0}{\gre@char@he@porrectus@amone@two}{0}{#4}%
+    \or%
+      \grehepisorlineaux{0}{\gre@char@he@porrectus@amone@three}{0}{#4}%
+    \or%
+      \grehepisorlineaux{0}{\gre@char@he@porrectus@amone@four}{0}{#4}%
+    \or%
+      \grehepisorlineaux{0}{\gre@char@he@porrectus@amone@five}{0}{#4}%
+    \fi%
+  \or%
+    %case 29
+    \ifcase#3%
+    \or%
+      \grehepisorlineaux{\gre@char@porrectus@amone@one}{\gre@char@he@porrectus@amone@one}{1}{#4}%
+    \or%
+      \grehepisorlineaux{\gre@char@porrectus@amone@two}{\gre@char@he@porrectus@amone@two}{1}{#4}%
+    \or%
+      \grehepisorlineaux{\gre@char@porrectus@amone@three}{\gre@char@he@porrectus@amone@three}{1}{#4}%
+    \or%
+      \grehepisorlineaux{\gre@char@porrectus@amone@four}{\gre@char@he@porrectus@amone@four}{1}{#4}%
+    \or%
+      \grehepisorlineaux{\gre@char@porrectus@amone@five}{\gre@char@he@porrectus@amone@five}{1}{#4}%
+    \fi%
   \fi%
   \relax%
 }%
