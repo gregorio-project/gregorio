@@ -3057,6 +3057,7 @@ static char *determine_leading_shape(gregorio_glyph *glyph) {
     }
 
     switch (glyph->u.notes.liquescentia) {
+    case L_INITIO_DEBILIS:
     case L_DEMINUTUS_INITIO_DEBILIS:
     case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
     case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
@@ -3247,7 +3248,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
                 && current_note->u.note.shape != S_PUNCTUM
                 && current_note->u.note.shape != S_QUILISMA) {
             leading_shape = determine_leading_shape(glyph);
-            // tricky to have the good position for these glyphs
+            // trick to have the good position for these glyphs
             glyph->u.notes.glyph_type = G_PORRECTUS_NO_BAR;
             glyph->u.notes.first_note = current_note->next;
             shape = gregoriotex_determine_number_and_type(glyph, element, &type,
