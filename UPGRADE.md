@@ -17,6 +17,18 @@ The `gregorio` executable now uses the `.gtex` extension by default (instead of 
 
 If you are using custom spacings, please update the values of `interwordspacetext`, `intersyllablespacenotes` and `interwordspacenotes` to match their new definitions (in the comments in `gsp-default.tex`).
 
+### Euouae blocks
+
+You are advised to surround you *Euouae* blocks by the new `<eu>` tag. For instance, 
+
+    E(i) u(i) o(i) u(h) a(h) e(fe..)
+
+can become
+
+    <eu>E(i) u(i) o(i) u(h) a(h) e</eu>(fe..)
+
+This will prevent line breaking, so if you were using so called *no linebreak areas* (with `{` in gabc) just for Euouae blocks, you can switch to this new tag, it will make things clearer and allow further spacing customization.
+
 ## 3.0
 ### TeX Live 2013
 

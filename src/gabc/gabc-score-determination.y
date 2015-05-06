@@ -77,6 +77,7 @@ static gregorio_character *first_text_character;
 static gregorio_character *first_translation_character;
 static gregorio_tr_centering translation_type;
 static gregorio_nlba no_linebreak_area;
+static gregorio_euouae euouae;
 static gregorio_voice_info *current_voice_info;
 static int number_of_voices;
 static int voice;
@@ -244,6 +245,7 @@ static void initialize_variables()
     first_text_character = NULL;
     translation_type = TR_NORMAL;
     no_linebreak_area = NLBA_NORMAL;
+    euouae = EUOUAE_NORMAL;
     centering_scheme = SCHEME_DEFAULT;
     center_is_determined = 0;
     for (i = 0; i < 10; i++) {
@@ -477,7 +479,7 @@ static void close_syllable()
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
                           first_text_character, first_translation_character,
                           position, abovelinestext, translation_type,
-                          no_linebreak_area);
+                          no_linebreak_area, euouae);
     if (!score->first_syllable) {
         // we rebuild the first syllable if we have to
         score->first_syllable = current_syllable;
@@ -498,6 +500,7 @@ static void close_syllable()
     first_translation_character = NULL;
     translation_type = TR_NORMAL;
     no_linebreak_area = NLBA_NORMAL;
+    euouae = EUOUAE_NORMAL;
     abovelinestext = NULL;
 }
 
@@ -623,7 +626,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
 %token CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
-%token TRANSLATION_CENTER_END BNLBA ENLBA
+%token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E
 
 %%
 
@@ -1164,6 +1167,15 @@ style_end:
     }
     ;
 
+euouae:
+    EUOUAE_B {
+        euouae = EUOUAE_BEGINNING;
+    }
+    | EUOUAE_E {
+        euouae = EUOUAE_END;
+    }
+    ;
+
 linebreak_area:
     BNLBA {
         no_linebreak_area = NLBA_BEGINNING;
@@ -1181,6 +1193,7 @@ character:
     | style_beginning
     | style_end
     | linebreak_area
+    | euouae
     ;
 
 text:

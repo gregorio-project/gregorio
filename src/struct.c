@@ -965,7 +965,8 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_character *first_character,
         gregorio_character *first_translation_character,
         gregorio_word_position position, char *abovelinestext,
-        gregorio_tr_centering translation_type, gregorio_nlba no_linebreak_area)
+        gregorio_tr_centering translation_type, gregorio_nlba no_linebreak_area,
+        gregorio_euouae euouae)
 {
     gregorio_syllable *next;
     gregorio_element **tab;
@@ -984,6 +985,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
     next->special_sign = _NO_SIGN;
     next->position = position;
     next->no_linebreak_area = no_linebreak_area;
+    next->euouae = euouae;
     next->text = first_character;
     next->translation = first_translation_character;
     next->translation_type = translation_type;

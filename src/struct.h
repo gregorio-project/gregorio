@@ -301,6 +301,12 @@ typedef enum gregorio_nlba {
     NLBA_END,
 } gregorio_nlba;
 
+typedef enum gregorio_euouae {
+    EUOUAE_NORMAL = 0,
+    EUOUAE_BEGINNING,
+    EUOUAE_END,
+} gregorio_euouae;
+
 typedef enum gregorio_word_position {
     WORD_BEGINNING = 1,
     WORD_MIDDLE,
@@ -545,6 +551,8 @@ typedef struct gregorio_syllable {
     ENUM_BITFIELD(gregorio_tr_centering) translation_type:8;
     // beginning or end of area without linebreak?
     ENUM_BITFIELD(gregorio_nlba) no_linebreak_area:8;
+    // beginning or end of euouae area
+    ENUM_BITFIELD(gregorio_euouae) euouae;
     // pointer to a gregorio_text structure corresponding to the text.
     struct gregorio_character *text;
     // pointer to a gregorio_text structure corresponding to the
@@ -670,7 +678,8 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_character *first_translation_character,
         gregorio_word_position position, char *abovelinestext,
         gregorio_tr_centering translation_type,
-        gregorio_nlba no_linebreak_area);
+        gregorio_nlba no_linebreak_area,
+        gregorio_euouae euouae);
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
 void gregorio_add_h_episemus(gregorio_note *note, gregorio_h_episemus type,

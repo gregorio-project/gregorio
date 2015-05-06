@@ -783,6 +783,7 @@
 \def\endgregorioscore{%
   \global\grelastoflinecount=0\relax %
   \global\greblockcusto=0\relax %
+  \greendeuouae{}%
   \ifnum\grenlbstate=0\else %
     \greendnlbarea{2}{0}%
   \fi %
@@ -1054,6 +1055,34 @@
     \fi %
   \fi %
 }%
+
+\newif\ifgre@euouae@implies@nlba
+\gre@euouae@implies@nlbatrue
+
+\def\GreNoBreakInEuouae{%
+  \gre@euouae@implies@nlbatrue %
+}
+
+\def\GreAllowBreakInEuouae{%
+  \gre@euouae@implies@nlbafalse %
+}
+
+\newif\ifgre@in@euouae
+\gre@in@euouaefalse
+
+\def\grebegineuouae{%
+  \ifgre@euouae@implies@nlba %
+    \grebeginnlbarea{0}{0}%
+  \fi %
+  \gre@in@euouaetrue %
+}
+
+\def\greendeuouae{%
+  \ifgre@euouae@implies@nlba %
+    \greendnlbarea{0}{0}%
+  \fi %
+  \gre@in@euouaefalse %
+}
 
 \input gregoriotex-symbols.tex%
 

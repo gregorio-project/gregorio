@@ -301,7 +301,11 @@
   \let\gre@minShiftNotes\gre@skip@temp@four %
 %%  min_text_dist = prev_cur_word ? 0 : space_inter_words
   \ifnum#1=1\relax %
-    \gre@minTextDistance=\gre@skip@interwordspacetext %
+    \ifgre@in@euouae %
+      \gre@minTextDistance=\gre@skip@interwordspacetext@euouae %
+    \else %
+      \gre@minTextDistance=\gre@skip@interwordspacetext %
+    \fi %
   \else %
     \gre@minTextDistance=0pt%
   \fi %
@@ -324,7 +328,11 @@
     \gre@minNotesDistance=\gre@skip@notebarspace %
   \else %
     \ifnum#1=1\relax %
-      \gre@minNotesDistance=\gre@skip@interwordspacenotes %
+      \ifgre@in@euouae %
+        \gre@minNotesDistance=\gre@skip@interwordspacenotes@euouae %
+      \else %
+        \gre@minNotesDistance=\gre@skip@interwordspacenotes %
+      \fi %
     \else %
       \gre@minNotesDistance=\gre@skip@intersyllablespacenotes %
     \fi %
@@ -1142,6 +1150,12 @@
   \fi%
   \ifnum\gre@scale@interwordspacetext=1\relax%
     \gre@changeonedimenfactor{interwordspacetext}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@interwordspacenotes@euouae=1\relax%
+    \gre@changeonedimenfactor{interwordspacenotes@euouae}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@interwordspacetext@euouae=1\relax%
+    \gre@changeonedimenfactor{interwordspacetext@euouae}{#1}{#2}%
   \fi%
   \ifnum\gre@scale@bitrivirspace=1\relax%
     \gre@changeonedimenfactor{bitrivirspace}{#1}{#2}%
