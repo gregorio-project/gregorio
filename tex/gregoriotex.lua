@@ -286,15 +286,15 @@ local function direct_gabc(gabc, header)
   -- In shell-restricted mode, with gregorio (and even echo) allowed,
   -- the previous command doesn't work ; in that case, use a temporary file.
   if f == nil then
-    local tmpname = os.tmpname()..'.gabc'
-    local tmp = io.open(tmpname, 'w')
-    tmp:write(gabccode)
-    tmp:close()
-    tex.print('\\input{|"gregorio -S '..tmpname..'"}')
-  else
-    tex.print(f:read("*a"):explode('\n'))
-    f:close()
+    tmpname = os.tmpname()
+    local p = io.popen('gregorio -s -o '..tmpname, 'w')
+    p:write('name:tmp;\n%%%%\n'..entree)
+    p:close()
+    f = io.open(tmpname)
   end
+  tex.print(f:read("*a"):explode('\n'))
+  f:close()
+  if tmpname then os.remove(tmpname) end
 end
 
 local function check_font_version()
