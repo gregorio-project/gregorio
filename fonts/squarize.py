@@ -85,6 +85,7 @@ glyphnumber = 0xe000 - 1
 
 BASE_HEIGHT = 157.5
 HEPISEMUS_ADDITIONAL_WIDTH=5
+DEMINUTUS_VERTICAL_SHIFT=10
 oldfont = None
 newfont = None
 font_name = None
@@ -447,9 +448,12 @@ def write_deminutus(widths, i, j, length=0, tosimplify=0, firstbar=1):
     time. Sometimes we have to simplify before building the last glyph
     (tosimplify=1), and length is the offset.
     """
+    global oldfont
     first_glyph = 'mademinutus'
     if firstbar == 1:
         first_glyph = 'mdeminutus'
+        if j == 1 and glyph_exists('mdeminutusam1', oldfont):
+            first_glyph = 'mdeminutusam1'
     elif firstbar == 0:
         first_glyph = 'mnbdeminutus'
     paste_and_move(first_glyph, length, i*BASE_HEIGHT)
@@ -972,19 +976,15 @@ def write_porrectus(widths, i, j, last_glyph, with_bar, shape, lique=L_NOTHING):
     if j == 1 and glyph_exists("porrectusam1%d" % i, oldfont):
         first_glyph = "porrectusam1%d" % i
     if last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL':
-        if j == 1:
-            first_glyph = "porrectusflexusnb%d" % i
-        else:
-            first_glyph = "porrectusflexus%d" % i
+        first_glyph = "porrectusflexus%d" % i
     if not glyph_exists(first_glyph, oldfont):
         return
     if with_bar:
         write_first_bar(i)
     length = get_width(widths, first_glyph)
     simple_paste(first_glyph)
-    if j != 1 or (last_glyph != 'auctusa2' and last_glyph != 'PunctumAuctusLineBL'):
-        write_line(j, length-get_width(widths, 'line2'), (-i+1)*BASE_HEIGHT)
-        length = length-get_width(widths, 'line2')
+    write_line(j, length-get_width(widths, 'line2'), (-i+1)*BASE_HEIGHT)
+    length = length-get_width(widths, 'line2')
     if with_bar:
         simplify()
     if last_glyph == "rdeminutus":
@@ -992,10 +992,6 @@ def write_porrectus(widths, i, j, last_glyph, with_bar, shape, lique=L_NOTHING):
         paste_and_move(last_glyph, (length-get_width(widths, last_glyph)),
                        (j-i)*BASE_HEIGHT)
     elif last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL':
-        if last_glyph == 'auctusa2' and j == 1:
-            last_glyph = 'PunctumAscendens'
-        elif last_glyph == 'PunctumAuctusLineBL' and j == 1:
-            last_glyph = 'PunctumDescendens'
         paste_and_move(last_glyph, (length), (j-i)*BASE_HEIGHT)
         length = length + get_width(widths, last_glyph)
     else:
@@ -1117,13 +1113,9 @@ def write_porrectusflexus(widths, i, j, k, last_glyph, with_bar,
     simple_paste(first_glyph)
     write_line(j, length-get_width(widths, 'line2'), (-i+1)*BASE_HEIGHT)
     if last_glyph == "deminutus":
-        if j == 1:
-            width_dem = write_deminutus(widths, j-i, k, length, with_bar, firstbar=0)
-            length = length+width_dem
-        else:
-            width_dem = write_deminutus(widths, j-i, k, length-get_width(widths, 'line2'),
-                            with_bar, firstbar=1)
-            length = length+width_dem-get_width(widths, 'line2')
+        width_dem = write_deminutus(widths, j-i, k, length-get_width(widths, 'line2'),
+                        with_bar, firstbar=1)
+        length = length+width_dem-get_width(widths, 'line2')
     else:
         simplify()
         middle_glyph = 'PunctumLineBLBR'
@@ -1429,10 +1421,7 @@ def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
     if k == 1 and glyph_exists("porrectusam1%d" % j, oldfont):
         middle_glyph = "porrectusam1%d" % j
     if last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL':
-        if k == 1:
-            middle_glyph = "porrectusflexusnb%d" % j
-        else:
-            middle_glyph = "porrectusflexus%d" % j
+        middle_glyph = "porrectusflexus%d" % j
     if not glyph_exists(middle_glyph, oldfont):
         return
     if i == 1 and first_glyph != 'idebilis':
@@ -1448,7 +1437,7 @@ def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
         write_line(i, length, BASE_HEIGHT)
     paste_and_move(middle_glyph, length, i*BASE_HEIGHT)
     length = length + get_width(widths, middle_glyph)
-    if (last_glyph != 'auctusa2' and last_glyph != 'PunctumAuctusLineBL') or k != 1:
+    if k != 1:
         write_line(k, length-get_width(widths, 'line2'), (i-j+1)*BASE_HEIGHT)
     simplify()
     if last_glyph == "rdeminutus":
@@ -1456,12 +1445,6 @@ def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
                        (length-get_width(widths, 'rdeminutus')),
                        (i-j+k)*BASE_HEIGHT)
     elif last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL':
-        if last_glyph == 'auctusa2' and k == 1:
-            last_glyph = 'PunctumAscendens'
-        elif last_glyph == 'PunctumAuctusLineBL' and k == 1:
-            last_glyph = 'PunctumDescendens'
-        if k == 1:
-            length = length+get_width(widths, 'line2')
         paste_and_move(last_glyph, (length-get_width(widths, 'line2')), (i-j+k)*BASE_HEIGHT)
         length = length - get_width(widths, 'line2') + get_width(widths, last_glyph)
     else:
@@ -1537,7 +1520,9 @@ def scandicus(widths):
 
 def write_scandicus(widths, i, j, last_glyph, lique=L_NOTHING):
     "Writes the scandicus glyphs."
+    global oldfont
     new_glyph()
+    final_vertical_shift = 0
     glyph_name = '%s%s%s%s' % (S_SCANDICUS, AMBITUS[i], AMBITUS[j], lique)
     if glyph_exists(glyph_name, oldfont):
         complete_paste(glyph_name)
@@ -1557,24 +1542,30 @@ def write_scandicus(widths, i, j, last_glyph, lique=L_NOTHING):
         second_glyph = 'p2base'
         if lique == L_DEMINUTUS:
             second_glyph = 'mnbpdeminutus'
+        if j == 1:
+            final_vertical_shift = DEMINUTUS_VERTICAL_SHIFT
     else:
         simple_paste('PunctumLineTR')
         length = get_width(widths, 'PunctumLineTR') - get_width(widths, 'line2')
         write_line(i, length, BASE_HEIGHT)
         second_glyph = 'msdeminutus'
+        if j == 1 and glyph_exists('msdeminutusam1', oldfont):
+            second_glyph = 'msdeminutusam1'
+        if j == 1:
+            final_vertical_shift = DEMINUTUS_VERTICAL_SHIFT
     paste_and_move(second_glyph, length, i*BASE_HEIGHT)
     if (i == 1) and lique == L_NOTHING:
         length = length + get_width(widths, 'Punctum')
     else:
-        length = length + get_width(widths, 'msdeminutus')
+        length = length + get_width(widths, second_glyph)
     if j != 1:
         write_line(j, length - get_width(widths, 'line2'), (i+1) * BASE_HEIGHT)
     if last_glyph == 'rdeminutus':
         paste_and_move('rdeminutus', length -
-                       get_width(widths, 'rdeminutus'), (i+j)*BASE_HEIGHT)
+                       get_width(widths, 'rdeminutus'), (i+j)*BASE_HEIGHT+final_vertical_shift)
     else:
         paste_and_move(last_glyph, length - get_width(widths, last_glyph),
-                       (i+j)*BASE_HEIGHT)
+                       (i+j)*BASE_HEIGHT+final_vertical_shift)
     set_width(length)
     end_glyph(glyph_name)
 
