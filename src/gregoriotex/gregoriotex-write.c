@@ -557,7 +557,7 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
     case G_TORCULUS:
         if (glyph->u.notes.first_note->u.note.shape == S_QUILISMA) {
             *type = AT_QUILISMA;
-            *gtype = T_TORCULUS_QUILISMA;
+            *gtype = T_TORCULUS;
             shape = "TorculusQuilisma";
             ltype = LG_NO_INITIO;
         } else {
@@ -570,7 +570,7 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
     case G_TORCULUS_LIQUESCENS:
         if (glyph->u.notes.first_note->u.note.shape == S_QUILISMA) {
             *type = AT_QUILISMA;
-            *gtype = T_TORCULUS_LIQUESCENS_QUILISMA;
+            *gtype = T_TORCULUS_LIQUESCENS;
             shape = "TorculusLiquescensQuilisma";
         } else {
             *type = AT_ONE_NOTE;
@@ -580,9 +580,8 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
         ltype = LG_ONLY_DEMINUTUS;
         break;
     case G_TORCULUS_RESUPINUS_FLEXUS:
-        // not sure about that... TODO: check
         *type = AT_ONE_NOTE;
-        *gtype = T_TORCULUS_RESUPINUS;
+        *gtype = T_TORCULUS_RESUPINUS_FLEXUS;
         break;
     case G_PORRECTUS:
         *type = AT_PORRECTUS;
@@ -593,7 +592,7 @@ static char *gregoriotex_determine_number_and_type(gregorio_glyph *glyph,
     case G_TORCULUS_RESUPINUS:
         if (glyph->u.notes.first_note->u.note.shape == S_QUILISMA) {
             *type = AT_QUILISMA;
-            *gtype = T_TORCULUS_RESUPINUS_QUILISMA;
+            *gtype = T_TORCULUS_RESUPINUS;
             shape = "TorculusResupinusQuilisma";
         } else {
             *type = AT_ONE_NOTE;
@@ -1452,13 +1451,14 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
     unsigned char punctum_inclinatum = 0;
     // a temp variable
     gregorio_note *tmpnote;
+    // TODO: ensure the first note of a T_ONE_NOTE_TRF is handled correctly
     // first: the very special case where type == T_ONE_NOTE_TRF, the punctum
     // is
     // at a strange place:
-    if (type == T_ONE_NOTE_TRF) {
-        fprintf(f, "\\grepunctummora{%c}{1}{0}{0}%%\n",
-                current_note->u.note.pitch);
-    }
+    //if (type == T_ONE_NOTE_TRF) {
+    //    fprintf(f, "\\grepunctummora{%c}{1}{0}{0}%%\n",
+    //            current_note->u.note.pitch);
+    //}
     // we go into this switch only if it is the note before the last note
     if (current_note->next) {
         switch (glyph->u.notes.glyph_type) {
@@ -1903,7 +1903,6 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
         }
         break;
     case T_TORCULUS_RESUPINUS:
-    case T_TORCULUS_RESUPINUS_QUILISMA:
         switch (i) {
         case HEPISEMUS_FIRST_TWO:
             // special case, called when the horizontal episemus is on the
@@ -2032,13 +2031,12 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
         }
         break;
     case T_TORCULUS:
-    case T_TORCULUS_QUILISMA:
         switch (i) {
         case 1:
             if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
                 *number = 7;
             } else {
-                if (type == T_TORCULUS_QUILISMA) {
+                if (current_note->u.note.shape == S_QUILISMA) {
                     *number = 20;
                 } else {
                     *number = 6;
@@ -2331,7 +2329,6 @@ static void gregoriotex_write_additional_line(FILE *f,
         }
         break;
     case T_TORCULUS_RESUPINUS:
-    case T_TORCULUS_RESUPINUS_QUILISMA:
         if (i == 2) {
             i = HEPISEMUS_FIRST_TWO;
         }
@@ -2887,7 +2884,7 @@ static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
 	    }
 
 #define _end_loop()\
-      if (type == T_ONE_NOTE || type == T_ONE_NOTE_TRF)\
+      if (type == T_ONE_NOTE)\
 	{\
 	  break;\
 	}\
@@ -2972,9 +2969,7 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
                         HEPISEMUS_FIRST_TWO, type, current_note);
                 block_hepisemus = 1;
             } else {
-                if ((type == T_TORCULUS_RESUPINUS
-                                || type == T_TORCULUS_RESUPINUS_QUILISMA)
-                        && current_note->next
+                if (type == T_TORCULUS_RESUPINUS && current_note->next
                         && simple_htype(current_note->next->h_episemus_type) !=
                         H_NO_EPISEMUS && i == 2) {
                     gregoriotex_write_hepisemus(f, glyph, element,
