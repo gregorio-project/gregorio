@@ -2022,7 +2022,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
                         }
                     }
                 }
-            } else if (current_note->u.note.pitch -
+            } else if (current_note->next->next->u.note.pitch -
                     current_note->next->u.note.pitch == 1) {
                 // non-auctus with a second ambitus of 1
                 if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
@@ -2131,7 +2131,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
                     (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
                 // auctus
                 *number = 10;
-            } else if (current_note->u.note.pitch -
+            } else if (current_note->next->next->u.note.pitch -
                     current_note->next->u.note.pitch == 1) {
                 // non-auctus with a second ambitus of 1
                 *number = 9;
@@ -2483,6 +2483,8 @@ static void gregoriotex_write_additional_line(FILE *f,
             if (current_note->previous->u.note.pitch > 'b'
                     && current_note->previous->u.note.pitch < 'l') {
                 i = HEPISEMUS_FIRST_TWO;
+                // HEPISEMUS_FIRST_TWO works only for first note
+                current_note = current_note->previous;
             } else {
                 return;
             }
@@ -2500,8 +2502,11 @@ static void gregoriotex_write_additional_line(FILE *f,
             i = HEPISEMUS_FIRST_TWO;
         }
         if (i == 3) {
-            if (current_note->previous->u.note.pitch > 'b') {
+            if (current_note->previous->u.note.pitch > 'b'
+                    && current_note->previous->u.note.pitch < 'l') {
                 i = HEPISEMUS_FIRST_TWO;
+                // HEPISEMUS_FIRST_TWO works only for first note
+                current_note = current_note->previous;
             } else {
                 return;
             }
