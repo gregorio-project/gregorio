@@ -759,7 +759,7 @@ def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
     elif i == 1:
         first_glyph = 'Punctum'
         first_width = get_width(widths, first_glyph)
-        middle_glyph = 'OriscusBaseTR'
+        middle_glyph = 'OriscusLineTR'
         middle_width = get_width(widths, middle_glyph)-get_width(widths, 'line2')
     elif j == 1:
         first_glyph = 'PunctumLineTR'

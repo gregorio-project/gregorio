@@ -939,7 +939,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: QuilismaBaseTR
+StartChar: QuilismaLineTR
 Encoding: 40 -1 40
 Width: 161
 Flags: HW
@@ -974,7 +974,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: OriscusBaseTR
+StartChar: OriscusLineTR
 Encoding: 41 -1 41
 Width: 192
 Flags: HW

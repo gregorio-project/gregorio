@@ -930,7 +930,7 @@ EndSplineSet
 Validated: 33
 EndChar
 
-StartChar: QuilismaBaseTR
+StartChar: QuilismaLineTR
 Encoding: 40 -1 40
 Width: 164
 VWidth: 2048
@@ -959,7 +959,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: OriscusBaseTR
+StartChar: OriscusLineTR
 Encoding: 41 -1 41
 Width: 164
 VWidth: 2048
