@@ -69,6 +69,22 @@
 \def\gre@char@porrectus@amone@three{\grecpPorrectusThreeOneNothing}%
 \def\gre@char@porrectus@amone@four{\grecpPorrectusFourOneNothing}%
 \def\gre@char@porrectus@amone@five{\grecpPorrectusFiveOneNothing}%
+\def\gre@char@leading@punctum@one{\grecpLeadingPunctumOne}%
+\def\gre@char@leading@debilis@one{\grecpLeadingPunctumOneInitioDebilis}%
+\def\gre@char@leading@quilisma@one{\grecpLeadingQuilismaOne}%
+\def\gre@char@leading@oriscus@one{\grecpLeadingOriscusOne}%
+\def\gre@char@leading@punctum@two{\grecpLeadingPunctumTwo}%
+\def\gre@char@leading@debilis@two{\grecpLeadingPunctumTwoInitioDebilis}%
+\def\gre@char@leading@quilisma@two{\grecpLeadingQuilismaTwo}%
+\def\gre@char@leading@oriscus@two{\grecpLeadingOriscusTwo}%
+\def\gre@char@fuse@punctum@one{\grefusetwo{\grecpLeadingPunctumOne}{\grecpPunctum}}%
+\def\gre@char@fuse@debilis@one{\grefusetwo{\grecpLeadingPunctumOneInitioDebilis}{\grecpPunctum}}%
+\def\gre@char@fuse@quilisma@one{\grefusetwo{\grecpLeadingQuilismaOne}{\grecpPunctum}}%
+\def\gre@char@fuse@oriscus@one{\grefusetwo{\grecpLeadingOriscusOne}{\grecpPunctum}}%
+\def\gre@char@fuse@punctum@two{\grefusetwo{\grecpLeadingPunctumTwo}{\grecpPunctum}}%
+\def\gre@char@fuse@debilis@two{\grefusetwo{\grecpLeadingPunctumTwoInitioDebilis}{\grecpPunctum}}%
+\def\gre@char@fuse@quilisma@two{\grefusetwo{\grecpLeadingQuilismaTwo}{\grecpPunctum}}%
+\def\gre@char@fuse@oriscus@two{\grefusetwo{\grecpLeadingOriscusTwo}{\grecpPunctum}}%
 
 % signs
 \def\gre@char@curlybrace{\grecpCurlyBrace}%
@@ -89,21 +105,32 @@
 \def\gre@char@he@inclinatum{\grecpHEpisemusInclinatum}%
 \def\gre@char@he@inclinatumdem{\grecpHEpisemusInclinatumDeminutus}%
 \def\gre@char@he@stropha{\grecpHEpisemusStropha}%
-\def\gre@char@he@porrectus@one{\grecpHEpisemusPorrectusOne}%
-\def\gre@char@he@porrectus@two{\grecpHEpisemusPorrectusTwo}%
-\def\gre@char@he@porrectus@three{\grecpHEpisemusPorrectusThree}%
-\def\gre@char@he@porrectus@four{\grecpHEpisemusPorrectusFour}%
-\def\gre@char@he@porrectus@five{\grecpHEpisemusPorrectusFive}%
-\def\gre@char@he@porrectus@amone@one{\grecpHEpisemusPorrectusAmOneOne}%
-\def\gre@char@he@porrectus@amone@two{\grecpHEpisemusPorrectusAmOneTwo}%
-\def\gre@char@he@porrectus@amone@three{\grecpHEpisemusPorrectusAmOneThree}%
-\def\gre@char@he@porrectus@amone@four{\grecpHEpisemusPorrectusAmOneFour}%
-\def\gre@char@he@porrectus@amone@five{\grecpHEpisemusPorrectusAmOneFive}%
-\def\gre@char@he@porrectusfl@one{\grecpHEpisemusPorrectusFlexusOne}%
-\def\gre@char@he@porrectusfl@two{\grecpHEpisemusPorrectusFlexusTwo}%
-\def\gre@char@he@porrectusfl@three{\grecpHEpisemusPorrectusFlexusThree}%
-\def\gre@char@he@porrectusfl@four{\grecpHEpisemusPorrectusFlexusFour}%
-\def\gre@char@he@porrectusfl@five{\grecpHEpisemusPorrectusFlexusFive}%
+\def\gre@char@he@porrectus#1{%
+  \ifcase#1\grecpPunctum%
+  \or\grecpHEpisemusPorrectusOne%
+  \or\grecpHEpisemusPorrectusTwo%
+  \or\grecpHEpisemusPorrectusThree%
+  \or\grecpHEpisemusPorrectusFour%
+  \or\grecpHEpisemusPorrectusFive
+  \fi%
+}%
+\def\gre@char@he@porrectus@amone@one#1{%
+  \ifcase#1\grecpPunctum%
+  \or\grecpHEpisemusPorrectusAmOneOne%
+  \or\grecpHEpisemusPorrectusAmOneTwo%
+  \or\grecpHEpisemusPorrectusAmOneThree%
+  \or\grecpHEpisemusPorrectusAmOneFour%
+  \or\grecpHEpisemusPorrectusAmOneFive%
+  \fi%
+}%
+\def\gre@char@he@porrectusfl@one#1{%
+  \ifcase#1\grecpHEpisemusPorrectusFlexusOne%
+  \or\grecpHEpisemusPorrectusFlexusTwo%
+  \or\grecpHEpisemusPorrectusFlexusThree%
+  \or\grecpHEpisemusPorrectusFlexusFour%
+  \or\grecpHEpisemusPorrectusFlexusFive%
+  \fi%
+}%
 \def\gre@char@he@quilisma{\grecpHEpisemusQuilisma}%
 \def\gre@char@he@oriscus{\grecpHEpisemusOriscus}%
 \def\gre@char@he@smallpunctum{\grecpHEpisemusHighPes}% "smallpunctum" is the top punctum in a pes
