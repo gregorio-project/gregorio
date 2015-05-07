@@ -1602,9 +1602,9 @@ def leading(widths):
     for i in range(1, MAX_INTERVAL+1):
         write_leading(widths, i, 'idebilis', S_LEADING_PUNCTUM, L_INITIO_DEBILIS)
     for i in range(1, MAX_INTERVAL+1):
-        write_leading(widths, i, 'qbase', S_LEADING_QUILISMA)
+        write_leading(widths, i, 'QuilismaLineTR', S_LEADING_QUILISMA)
     for i in range(1, MAX_INTERVAL+1):
-        write_leading(widths, i, 'obase', S_LEADING_ORISCUS)
+        write_leading(widths, i, 'OriscusLineTR', S_LEADING_ORISCUS)
 
 def write_leading_spacer(widths, glyph_name, width):
     "Writes the leading fusion spacer glyph."
@@ -1628,9 +1628,9 @@ def write_leading(widths, i, first_glyph, glyph_type, lique=''):
         length = 0.1
         if first_glyph == 'PunctumLineTR':
             first_glyph = 'Punctum'
-        elif first_glyph == 'qbase':
+        elif first_glyph == 'QuilismaLineTR':
             first_glyph = 'Quilisma'
-        elif first_glyph == 'obase':
+        elif first_glyph == 'OriscusLineTR':
             first_glyph = 'Oriscus'
     length = get_width(widths,first_glyph) + length
     paste_and_move(first_glyph, 0, -i * BASE_HEIGHT)

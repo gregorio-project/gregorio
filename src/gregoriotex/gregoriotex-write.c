@@ -1875,36 +1875,32 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             }
             // fall through
         case 2:
-            if (current_note->u.note.pitch -
-                    current_note->previous->u.note.pitch == 1) {
-                if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
-                    *number = 29;
-                } else {
-                    switch (current_note->u.note.shape) {
+            if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
+                *number = 40;
+            } else {
+                if (current_note->u.note.pitch -
+                        current_note->previous->u.note.pitch == 1) {
+                    switch (current_note->previous->u.note.shape) {
                     case S_QUILISMA:
-                        *number = 30;
+                        *number = 44;
                         break;
                     case S_ORISCUS:
-                        *number = 31;
+                        *number = 45;
                         break;
                     default:
-                        *number = 28;
+                        *number = 43;
                         break;
                     }
-                }
-            } else {
-                if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
-                    *number = 33;
                 } else {
-                    switch (current_note->u.note.shape) {
+                    switch (current_note->previous->u.note.shape) {
                     case S_QUILISMA:
-                        *number = 34;
+                        *number = 41;
                         break;
                     case S_ORISCUS:
-                        *number = 35;
+                        *number = 42;
                         break;
                     default:
-                        *number = 32;
+                        *number = 39;
                         break;
                     }
                 }
@@ -1936,12 +1932,12 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             }
             // fall through
         case 1:
-            *number = 8;
+            *number = 10;
             if (i == HEPISEMUS_FIRST_TWO) {
-            normal_height(sign_type, current_note, height);
+                normal_height(sign_type, current_note, height);
             }
             else {
-            normal_height_long_first(sign_type, current_note, height);
+                normal_height_long_first(sign_type, current_note, height);
             }
             break;
         case 2:
@@ -1988,19 +1984,109 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             // second and third notes of a torculus resupinus. We consider
             // current_note to be the second note.  Warning, this MUST NOT be
             // called if the porrectus is deminutus.
+
+            // fall through
+        case 2:
             if (!current_note->next) {
                 return;
             }
-            // fall through
-        case 2:
-            if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
-                *number = 23;
-            } else {
-                if (current_note->u.note.pitch -
-                        current_note->previous->u.note.pitch == 1) {
-                    *number = 22;
+            if (current_glyph->u.notes.liquescentia &
+                    (L_AUCTUS_ASCENDENS|L_AUCTUS_DESCENDENS|L_AUCTA)) {
+                // auctus
+                if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
+                    *number = 40;
                 } else {
-                    *number = 21;
+                    if (current_note->u.note.pitch -
+                            current_note->previous->u.note.pitch == 1) {
+                        switch (current_note->previous->u.note.shape) {
+                        case S_QUILISMA:
+                            *number = 44;
+                            break;
+                        case S_ORISCUS:
+                            *number = 45;
+                            break;
+                        default:
+                            *number = 43;
+                            break;
+                        }
+                    } else {
+                        switch (current_note->previous->u.note.shape) {
+                        case S_QUILISMA:
+                            *number = 41;
+                            break;
+                        case S_ORISCUS:
+                            *number = 42;
+                            break;
+                        default:
+                            *number = 39;
+                            break;
+                        }
+                    }
+                }
+            } else if (current_note->u.note.pitch -
+                    current_note->next->u.note.pitch == 1) {
+                // non-auctus with a second ambitus of 1
+                if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
+                    *number = 33;
+                } else {
+                    if (current_note->u.note.pitch -
+                            current_note->previous->u.note.pitch == 1) {
+                        switch (current_note->previous->u.note.shape) {
+                        case S_QUILISMA:
+                            *number = 34;
+                            break;
+                        case S_ORISCUS:
+                            *number = 35;
+                            break;
+                        default:
+                            *number = 32;
+                            break;
+                        }
+                    } else {
+                        switch (current_note->previous->u.note.shape) {
+                        case S_QUILISMA:
+                            *number = 37;
+                            break;
+                        case S_ORISCUS:
+                            *number = 38;
+                            break;
+                        default:
+                            *number = 36;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                // non-auctus with a second ambitus of at least 2
+                if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
+                    *number = 23;
+                } else {
+                    if (current_note->u.note.pitch -
+                            current_note->previous->u.note.pitch == 1) {
+                        switch (current_note->previous->u.note.shape) {
+                        case S_QUILISMA:
+                            *number = 28;
+                            break;
+                        case S_ORISCUS:
+                            *number = 29;
+                            break;
+                        default:
+                            *number = 21;
+                            break;
+                        }
+                    } else {
+                        switch (current_note->previous->u.note.shape) {
+                        case S_QUILISMA:
+                            *number = 30;
+                            break;
+                        case S_ORISCUS:
+                            *number = 31;
+                            break;
+                        default:
+                            *number = 22;
+                            break;
+                        }
+                    }
                 }
             }
             if (i == HEPISEMUS_FIRST_TWO) {
@@ -2036,12 +2122,24 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             // two notes of a glyph. We consider current_note to be the first
             // note. Warning, this MUST NOT be called if the porrectus is
             // deminutus.
+
+            // fall through
+        case 1:
             if (!current_note->next) {
                 return;
             }
-            // fall through
-        case 1:
-            *number = 8;
+            if (current_glyph->u.notes.liquescentia &
+                    (L_AUCTUS_ASCENDENS|L_AUCTUS_DESCENDENS|L_AUCTA)) {
+                // auctus
+                *number = 10;
+            } else if (current_note->u.note.pitch -
+                    current_note->next->u.note.pitch == 1) {
+                // non-auctus with a second ambitus of 1
+                *number = 9;
+            } else {
+                // non-auctus with a second ambitus of at least 2
+                *number = 8;
+            }
             if (i == HEPISEMUS_FIRST_TWO) {
                 normal_height(sign_type, current_note, height);
             } else {
