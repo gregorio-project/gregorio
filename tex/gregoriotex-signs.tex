@@ -729,6 +729,7 @@
   \relax%
 }%
 
+% Note position cases:
 % here are the common values for both hepisemus (and consequently also for additional lines) and vepisemus
 % this indicates the note
 %% 0: last note, which is a standard punctum (works with pes)
@@ -740,10 +741,6 @@
 %% 6: the first note, if it is a standard punctum
 %% 7: the first note, if it is an initio debilis
 %% 8: the first note, if it is a porrectus
-%%%%%% the three next arguments make no sense for a vepisemus
-%% 9: the two first notes, if it is a porrectus
-%% 10: the two first notes, if it is a porrectus flexus
-%% 11: the notes two and three of a torculus resupinus
 %% 12: the last note, if it is a punctum inclinatum
 %% 13: idem, if it is a punctum inclinatum deminutus
 %% 14: idem, if it is a stropha
@@ -771,8 +768,12 @@
 %% 34: idem, if the first note is a quilisma
 %% 35: idem, if the first note is an oriscus
 
-% a function to typeset a vertical episemus or a rare accent (like accentus, circulus, etc.). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \greglyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The values are described in the commentary just above.
-% the third argument is the glyph number in the font
+% a function to typeset a vertical episemus or a rare accent (like accentus,
+% circulus, etc.).  This function must be called after a call to \greglyph.
+% #1 is the letter of the height of the episemus (not the height of the note
+%    it corresponds to.
+% #2 is note position case as in the table above
+% #3 is the sign glyph
 % #4 is type (1: vertical episemus, 2: rare sign, 3: choral sign, 4: brace above the bar)
 % #5 is the choral sign if relevant
 \def\grevepisemusorrare#1#2#3#4#5{%
@@ -976,7 +977,6 @@
 %        width of #1; this starts the episemus at the glyph from the start that
 %        starts just after #1's width from the start
 % #4 argument is the same as in hepisorline
-% #5 is the choral sign if relevant
 \def\grehepisorlineaux#1#2#3#4{%
   \ifcase#3%
     % case 0
@@ -991,8 +991,8 @@
     \gre@dimen@temp@three=\wd\GreTempsign%
   \or
     % case 3
-    \setbox\GreTempsign=\hbox{\gregoriofont #1}%
     \gre@dimen@temp@three=\gre@dimen@lastglyphwidth %
+    \setbox\GreTempsign=\hbox{\gregoriofont #1}%
     \advance\gre@dimen@temp@three by -\wd\GreTempsign %
   \fi%
   \kern-\gre@dimen@temp@three %
@@ -1041,11 +1041,17 @@
   \relax%
 }%
 
-% a function to typeset a horizontal line (additional line or episemus). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \greglyph. 
-%The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The possible values are the common ones
-% the third argument is a bit particular, it is the ambitus of the porrectus or porrectus flexus if the second argument is 8 or 9, otherwise
-% #4 is 0 for an horizontal episemus, 1 for an horizontal episemus under a note, 3 for a line at the bottom, 2 for a line at the top
-\def\grehepisorline#1#2#3#4{%
+% a function to typeset a horizontal line (additional line or episemus).
+% This function must be called after a call to \greglyph.
+% #1 is the letter of the height of the episemus (not the height of the note
+% it corresponds to.
+% #2 is note position case as in the table above
+% #3 is the ambitus for a two note episemus at the diagonal stroke of a
+%    porrectus, porrectus flexus, orculus resupinus, or torculus resupinus
+%    flexus
+% #4 is 0 for an horizontal episemus, 1 for an horizontal episemus under a
+%    note, 3 for a line at the bottom, 2 for a line at the top
+\def\grehepisorline#1#2#3#4{{%
   \ifcase#4 %
     \gre@calculate@glyphraisevalue{#1}{9}%
   \or %
@@ -1058,6 +1064,13 @@
   \or %
     \gre@calculate@glyphraisevalue{#1}{11}%
   \fi %
+  \ifcase#3\let\ambitusepisemus=\gre@char@he@punctum%
+  \or\let\ambitusepisemus=\gre@char@he@porrectus@one%
+  \or\let\ambitusepisemus=\gre@char@he@porrectus@two%
+  \or\let\ambitusepisemus=\gre@char@he@porrectus@three%
+  \or\let\ambitusepisemus=\gre@char@he@porrectus@four%
+  \or\let\ambitusepisemus=\gre@char@he@porrectus@five%
+  \fi%
   \ifcase#2 %
     %case 0
     \grehepisorlineaux{\gre@char@punctum}{\gre@char@he@punctum}{2}{#4}%
@@ -1082,56 +1095,15 @@
     \grehepisorlineaux{\gre@char@torculusdeminutus}{\gre@char@he@punctum}{2}{#4}%
   \or%
     %case 6
-    \grehepisorlineaux{0}{\gre@char@he@punctum}{0}{#4}%
+    \grehepisorlineaux{0}{\ambitusepisemus}{0}{#4}%
   \or%
     %case 7
     %we assume that the initio-debilis has the same width as a punctum deminutus
     \grehepisorlineaux{0}{\gre@char@he@flexus}{0}{#4}%
   \or%
     %case 8
-    \grehepisorlineaux{0}{\gre@char@he@punctum}{0}{#4}%
-  \or%
-    %case 9
-    \ifcase#3%
-    \or%
-      \grehepisorlineaux{0}{\gre@char@he@porrectus@one}{0}{#4}%
-    \or%
-      \grehepisorlineaux{0}{\gre@char@he@porrectus@two}{0}{#4}%
-    \or%
-      \grehepisorlineaux{0}{\gre@char@he@porrectus@three}{0}{#4}%
-    \or%
-      \grehepisorlineaux{0}{\gre@char@he@porrectus@four}{0}{#4}%
-    \or%
-      \grehepisorlineaux{0}{\gre@char@he@porrectus@five}{0}{#4}%
-    \fi%
-  \or%
-    %case 10
-    \ifcase#3%
-    \or%
-      \grehepisorlineaux{0}{\gre@char@he@porrectusfl@one}{0}{#4}%
-    \or%
-      \grehepisorlineaux{0}{\gre@char@he@porrectusfl@two}{0}{#4}%
-    \or%
-      \grehepisorlineaux{0}{\gre@char@he@porrectusfl@three}{0}{#4}%
-    \or%
-      \grehepisorlineaux{0}{\gre@char@he@porrectusfl@four}{0}{#4}%
-    \or%
-      \grehepisorlineaux{0}{\gre@char@he@porrectusfl@five}{0}{#4}%
-    \fi%
-  \or %
-    %case 11
-    \ifcase#3%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@one}{\gre@char@he@porrectusfl@one}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@two}{\gre@char@he@porrectusfl@two}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@three}{\gre@char@he@porrectusfl@three}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@four}{\gre@char@he@porrectusfl@four}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@five}{\gre@char@he@porrectusfl@five}{2}{#4}%
-    \fi%
+    \grehepisorlineaux{0}{\ambitusepisemus}{0}{#4}%
+  \or\or\or% case 9, 10, 11
   \or%
     %case 12
     \grehepisorlineaux{\gre@char@punctuminclinatum}{\gre@char@he@inclinatum}{2}{#4}%
@@ -1150,63 +1122,55 @@
   \or%
     %case 17
     \grehepisorlineaux{\gre@char@flexusaltone}{\gre@char@he@punctum}{2}{#4}%
-  \or %
+  \or%
     %case 18
     \grehepisorlineaux{\gre@char@peshigh}{\gre@char@he@smallpunctum}{2}{#4}%
-  \or %
+  \or%
     %case 19
     \grehepisorlineaux{0}{\gre@char@he@oriscus}{0}{#4}%
-  \or %
+  \or%
     %case 20
     \grehepisorlineaux{0}{\gre@char@he@quilisma}{0}{#4}%
-  \or %
+  \or%
     %case 21
-    \ifcase#3%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@one}{\gre@char@he@punctum}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@two}{\gre@char@he@punctum}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@three}{\gre@char@he@punctum}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@four}{\gre@char@he@punctum}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@five}{\gre@char@he@punctum}{2}{#4}%
-    \fi%
-  \or %
+    \grehepisorlineaux{\gre@char@leading@punctum@two}{\ambitusepisemus}{3}{#4}%
+  \or%
     %case 22
-    \ifcase#3%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@one}{\gre@char@he@punctum}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@two}{\gre@char@he@punctum}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@three}{\gre@char@he@punctum}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@four}{\gre@char@he@punctum}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@five}{\gre@char@he@punctum}{2}{#4}%
-    \fi%
-  \or %
+    \grehepisorlineaux{\gre@char@leading@punctum@one}{\ambitusepisemus}{3}{#4}%
+  \or%
     %case 23
-    \ifcase#3%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@one}{\gre@char@he@punctum}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@two}{\gre@char@he@punctum}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@three}{\gre@char@he@punctum}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@four}{\gre@char@he@punctum}{2}{#4}%
-    \or%
-      \grehepisorlineaux{\gre@char@porrectus@five}{\gre@char@he@punctum}{2}{#4}%
-    \fi%
+    \grehepisorlineaux{\gre@char@leading@debilis@one}{\ambitusepisemus}{3}{#4}%
   \or%
     %case 24
     \grehepisorlineaux{\gre@char@pesinitauctusone}{\gre@char@he@punctum}{2}{#4}%the episemus is not quite long enough so I assumed a different width for now...
+  \or\or\or% case 25, 26, 27
+  \or%
+    %case 28
+    \grehepisorlineaux{\gre@char@leading@punctum@one}{\ambitusepisemus}{3}{#4}%
+  \or%
+    %case 29
+    \grehepisorlineaux{\gre@char@leading@debilis@one}{\ambitusepisemus}{3}{#4}%
+  \or%
+    %case 30
+    \grehepisorlineaux{\gre@char@leading@quilisma@one}{\ambitusepisemus}{3}{#4}%
+  \or%
+    %case 31
+    \grehepisorlineaux{\gre@char@leading@oriscus@one}{\ambitusepisemus}{3}{#4}%
+  \or%
+    %case 32
+    \grehepisorlineaux{\gre@char@leading@punctum@two}{\ambitusepisemus}{3}{#4}%
+  \or%
+    %case 33
+    \grehepisorlineaux{\gre@char@leading@debilis@two}{\ambitusepisemus}{3}{#4}%
+  \or%
+    %case 34
+    \grehepisorlineaux{\gre@char@leading@quilisma@two}{\ambitusepisemus}{3}{#4}%
+  \or%
+    %case 35
+    \grehepisorlineaux{\gre@char@leading@oriscus@two}{\ambitusepisemus}{3}{#4}%
   \fi%
   \relax%
-}%
+}}%
 
 % dumb top function
 % #4 is a trick for bridges: if we must use a different height because of a bridge, it's #4, otherwise #4=#1
