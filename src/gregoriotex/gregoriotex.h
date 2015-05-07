@@ -41,6 +41,7 @@ typedef enum gtex_type {
     T_PESQUILISMAQUADRATUM,
     T_PESQUILISMAQUADRATUM_LONGQUEUE,
     T_FLEXUS,
+    T_FLEXUS_NOBAR,
     T_FLEXUS_LONGQUEUE,
     T_FLEXUS_ORISCUS,
     T_FLEXUS_ORISCUS_SCAPUS,
@@ -48,6 +49,7 @@ typedef enum gtex_type {
     T_VIRGA_STRATA,
     // three note neumes
     T_PORRECTUS,
+    T_PORRECTUS_NOBAR,
     T_TORCULUS,
     T_TORCULUS_QUILISMA,
     T_SCANDICUS, // only deminutus
@@ -56,10 +58,14 @@ typedef enum gtex_type {
     T_SALICUS,
     T_SALICUS_LONGQUEUE,
     // four note neumes
-    T_PORRECTUS_FLEXUS,
+    T_PORRECTUSFLEXUS,
+    T_PORRECTUSFLEXUS_NOBAR,
     T_TORCULUS_RESUPINUS,
+    T_TORCULUS_RESUPINUS_QUILISMA,
     T_TORCULUS_LIQUESCENS,
-    T_TORCULUS_RESUPINUS_FLEXUS,
+    T_TORCULUS_LIQUESCENS_QUILISMA,
+    // this is a special type for the first note of a torculus resupinus flexus
+    T_ONE_NOTE_TRF,
 } gtex_type;
 
 // the different types for the alignment of the notes in GregorioTeX
