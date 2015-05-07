@@ -47,6 +47,8 @@
       }%
     }%
 }%
+
+\def\gre@nothing{}
     
 \AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
@@ -661,6 +663,11 @@
   \global\gre@dimen@stafflinewidth=\gre@dimen@linewidth %
   \gregeneratelines %
   \relax %
+}%
+
+% Macro for fustion of larger neumes
+\def\grefusetwo#1#2{%
+  \grenobreak#1\grenobreak\grenobreak#2\grenobreak\relax %
 }%
 
 % Macros for using variant glyphs
