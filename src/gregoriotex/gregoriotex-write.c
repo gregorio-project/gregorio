@@ -1914,7 +1914,11 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             if (!current_note->next) {
                 return;
             }
-            *number = 11;
+            if (current_note->next->next->u.note.pitch - current_note->next->u.note.pitch == 1) {
+                *number = 29;
+            } else {
+                *number = 11;
+            }
             normal_height(sign_type, current_note, height);
             break;
         case 1:
@@ -1969,7 +1973,11 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             if (!current_note->next) {
                 *number = 0;
             }
-            *number = 9;
+            if (current_note->next->next->u.note.pitch - current_note->next->u.note.pitch == 1) {
+                *number = 28;
+            } else {
+                *number = 9;
+            }
             normal_height(sign_type, current_note, height);
             break;
         case 1:
@@ -2968,6 +2976,11 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
                             || type == T_PORRECTUS_NOBAR) && current_note->next
                     && simple_htype(current_note->next->h_episemus_type) !=
                     H_NO_EPISEMUS && i == 1) {
+                // adjustment of h_episemus_top_note for g_f_i
+                if (current_note->next->next && current_note->next->next->u.note.pitch > current_note->u.note.pitch) {
+                    current_note->h_episemus_top_note = current_note->next->next->u.note.pitch;
+                    current_note->next->h_episemus_top_note = current_note->next->next->u.note.pitch;
+                }
                 gregoriotex_write_hepisemus(f, glyph, element,
                         HEPISEMUS_FIRST_TWO, type, current_note);
                 block_hepisemus = 1;
@@ -2977,6 +2990,11 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
                         && current_note->next
                         && simple_htype(current_note->next->h_episemus_type) !=
                         H_NO_EPISEMUS && i == 2) {
+                    // adjustment of h_episemus_top_note for eg_f_i
+                    if (current_note->next->next && current_note->next->next->u.note.pitch > current_note->u.note.pitch) {
+                        current_note->h_episemus_top_note = current_note->next->next->u.note.pitch;
+                        current_note->next->h_episemus_top_note = current_note->next->next->u.note.pitch;
+                    }
                     gregoriotex_write_hepisemus(f, glyph, element,
                             HEPISEMUS_FIRST_TWO, type, current_note);
                     block_hepisemus = 1;
