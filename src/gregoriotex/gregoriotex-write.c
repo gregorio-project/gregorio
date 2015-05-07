@@ -1616,9 +1616,19 @@ static inline void number_note_before_last_note(gregorio_glyph *current_glyph,
         if ((current_note->u.note.pitch - current_note->next->u.note.pitch) == 1
                 || (current_note->u.note.pitch -
                         current_note->next->u.note.pitch) == -1) {
-            *number = 17;
+            if (!current_note->previous || current_note->u.note.pitch -
+                    current_note->previous->u.note.pitch > 1) {
+                *number = 47;
+            } else {
+                *number = 17;
+            }
         } else {
-            *number = 2;
+            if (!current_note->previous || current_note->u.note.pitch -
+                    current_note->previous->u.note.pitch > 1) {
+                *number = 46;
+            } else {
+                *number = 2;
+            }
         }
     }
 }
@@ -1979,11 +1989,6 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             normal_height_bottom(sign_type, current_note, height, bottom);
             break;
         case HEPISEMUS_FIRST_TWO:
-            // special case, called when the horizontal episemus is on the
-            // second and third notes of a torculus resupinus. We consider
-            // current_note to be the second note.  Warning, this MUST NOT be
-            // called if the porrectus is deminutus.
-
             // fall through
         case 2:
             if (!current_note->next) {

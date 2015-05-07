@@ -734,7 +734,7 @@
 % this indicates the note
 %% 0: last note, which is a standard punctum (works with pes)
 %% 1: same, but the last note is a deminutus
-%% 2: the note before the last note, which is a standard punctum
+%% 2: the note before the last note, which is a standard punctum (like the second note of hig)
 %% 3: idem, but the note is the note preceding a deminutus
 %% 4: the note before the note before the last note (for porrectus flexus)
 %% 5: idem, but when the two last notes are a deminutus
@@ -748,7 +748,7 @@
 %% 14: idem, if it is a stropha
 %% 15: idem, with a quilisma
 %% 16: idem, with an oriscus
-%% 17: same of 2 but for ambitus of one
+%% 17: same of 2 but for ambitus of one (like the second note of ghg)
 %% 18: same of 0, but the last note is a smaller punctum (concerning simple podatus, podatus, and torculus resupinus)
 %% 19: the first note, if it is an oriscus
 %% 20: the first note, if it is a quilisma
@@ -781,7 +781,8 @@
 %%     auctus liquescence
 %% 37: idem, with a quilisma
 %% 38: idem, with an oriscus
-%%
+%% 46: idem 17, with the note having two line on the bottom corners (like second note of gig)
+%% 47: idem 46, with the note having a line on the bottom left (like second note of gih)
 
 % a function to typeset a vertical episemus or a rare accent (like accentus,
 % circulus, etc.).  This function must be called after a call to \greglyph.
@@ -962,6 +963,12 @@
   \or%
     %case 45
     \grevepisemusorrareaux{\gre@char@fuse@oriscus@one}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
+  \or%
+    %case 46
+    \grevepisemusorrareaux{\gre@char@flexusalt}{\gre@char@punctum}{2}{0}{#3}{#4}{#5}%
+  \or%
+    %case 47
+    \grevepisemusorrareaux{\gre@char@flexusalt}{\gre@char@punctum}{2}{0}{#3}{#4}{#5}%
   \fi%
   \relax%
 }%
@@ -1244,6 +1251,12 @@
   \or%
     %case 45
     \grehepisorlineaux{\gre@char@leading@oriscus@one}{\gre@char@he@porrectusfl{#3}}{3}{#4}%
+  \or%
+    %case 46
+    \grehepisorlineaux{\gre@char@flexusalt}{\gre@char@he@punctum}{2}{#4}%
+  \or%
+    %case 47
+    \grehepisorlineaux{\gre@char@flexusalt}{\gre@char@he@punctum}{2}{#4}%
   \fi%
   \relax%
 }}%
