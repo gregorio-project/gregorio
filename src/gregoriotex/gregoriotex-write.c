@@ -2981,6 +2981,7 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
                     current_note->h_episemus_top_note = current_note->next->next->u.note.pitch;
                     current_note->next->h_episemus_top_note = current_note->next->next->u.note.pitch;
                 }
+                current_note->next->next->h_episemus_type = H_NO_EPISEMUS; // I don't think a check for a bottom episemus makes sense here...
                 gregoriotex_write_hepisemus(f, glyph, element,
                         HEPISEMUS_FIRST_TWO, type, current_note);
                 block_hepisemus = 1;
@@ -2995,6 +2996,7 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
                         current_note->h_episemus_top_note = current_note->next->next->u.note.pitch;
                         current_note->next->h_episemus_top_note = current_note->next->next->u.note.pitch;
                     }
+                    current_note->next->next->h_episemus_type = H_NO_EPISEMUS; // I don't think a check for a bottom episemus makes sense here...
                     gregoriotex_write_hepisemus(f, glyph, element,
                             HEPISEMUS_FIRST_TWO, type, current_note);
                     block_hepisemus = 1;
