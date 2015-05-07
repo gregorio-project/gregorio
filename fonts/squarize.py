@@ -477,8 +477,10 @@ def hepisemus(widths):
     write_hepisemus(widths, get_width(widths, 'PunctumInclinatumDeminutus'), 'HEpisemusInclinatumDeminutus')
     write_hepisemus(widths, get_width(widths, 'Stropha'), 'HEpisemusStropha')
     write_hepisemus(widths, get_width(widths, 'Quilisma'), 'HEpisemusQuilisma')
+    write_hepisemus(widths, get_width(widths, 'QuilismaLineTR'), 'HEpisemusQuilismaLineTR')
     write_hepisemus(widths, get_width(widths, 'PunctumSmall'), 'HEpisemusHighPes')
     write_hepisemus(widths, get_width(widths, 'Oriscus'), 'HEpisemusOriscus')
+    write_hepisemus(widths, get_width(widths, 'OriscusLineTR'), 'HEpisemusOriscusLineTR')
     write_hepisemus(widths, get_width(widths, 'PunctumLineBR'), 'HEpisemusPunctumLineBR')
     write_hepisemus(widths, get_width(widths, 'PunctumLineBL'), 'HEpisemusPunctumLineBL')
     write_hepisemus(widths, get_width(widths, 'PunctumLineTL'), 'HEpisemusPunctumLineTL')
@@ -516,7 +518,7 @@ def pes(widths):
         write_pes(widths, i, "p2base", S_PES)
     precise_message("pes quilisma")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes(widths, i, "qbase", S_PES_QUILISMA)
+        write_pes(widths, i, "QuilismaLineTR", S_PES_QUILISMA)
     precise_message("pes deminutus")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_deminutus(widths, i, "pesdeminutus", S_PES, L_DEMINUTUS)
@@ -536,7 +538,7 @@ def write_pes(widths, i, first_glyph, shape, lique=L_NOTHING):
         complete_paste(glyph_name)
         set_glyph_name(glyph_name)
         return
-    get_width(widths, 'qbase')
+    get_width(widths, 'QuilismaLineTR')
     temp_width = 0
     width_difference = get_width(widths, first_glyph)-get_width(widths, 'PunctumSmall')
     if width_difference < 0:
@@ -614,14 +616,14 @@ def pes_quadratum(widths):
         write_pes_quadratum(widths, i, "PunctumLineTR", "rvlbase", S_PES_QUADRATUM_LONGQUEUE)
     precise_message("pes quassus")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, i, "obase", "rvsbase", S_PES_QUASSUS)
+        write_pes_quadratum(widths, i, "OriscusLineTR", "rvsbase", S_PES_QUASSUS)
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, i, "obase", "rvlbase", S_PES_QUASSUS_LONGQUEUE)
+        write_pes_quadratum(widths, i, "OriscusLineTR", "rvlbase", S_PES_QUASSUS_LONGQUEUE)
     precise_message("pes quilisma quadratum")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, i, "qbase", "rvsbase", S_PES_QUILISMA_QUADRATUM)
+        write_pes_quadratum(widths, i, "QuilismaLineTR", "rvsbase", S_PES_QUILISMA_QUADRATUM)
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, i, "qbase",
+        write_pes_quadratum(widths, i, "QuilismaLineTR",
                             "rvlbase", S_PES_QUILISMA_QUADRATUM_LONGQUEUE)
     precise_message("pes auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
@@ -634,11 +636,11 @@ def pes_quadratum(widths):
                             L_INITIO_DEBILIS_ASCENDENS)
     precise_message("pes quassus auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, i, "obase",
+        write_pes_quadratum(widths, i, "OriscusLineTR",
                             "auctusa2", S_PES_QUASSUS, L_ASCENDENS)
     precise_message("pes quilisma auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, i, "qbase",
+        write_pes_quadratum(widths, i, "QuilismaLineTR",
                             "auctusa2", S_PES_QUILISMA_QUADRATUM,
                             L_ASCENDENS)
     precise_message("pes auctus descendens")
@@ -652,11 +654,11 @@ def pes_quadratum(widths):
                             L_INITIO_DEBILIS_DESCENDENS)
     precise_message("pes quassus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, i, "obase",
+        write_pes_quadratum(widths, i, "OriscusLineTR",
                             "PunctumAuctusLineBL", S_PES_QUASSUS, L_DESCENDENS)
     precise_message("pes quilisma auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, i, "qbase", "PunctumAuctusLineBL", S_PES_QUILISMA_QUADRATUM,
+        write_pes_quadratum(widths, i, "QuilismaLineTR", "PunctumAuctusLineBL", S_PES_QUILISMA_QUADRATUM,
                             L_DESCENDENS)
 
 def write_pes_quadratum(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHING):
@@ -754,7 +756,7 @@ def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
     elif i == 1:
         first_glyph = 'Punctum'
         first_width = get_width(widths, first_glyph)
-        middle_glyph = 'obase'
+        middle_glyph = 'OriscusBaseTR'
         middle_width = get_width(widths, middle_glyph)-get_width(widths, 'line2')
     elif j == 1:
         first_glyph = 'PunctumLineTR'
@@ -1155,7 +1157,7 @@ def torculus(widths):
             write_torculus(widths, i, j, "PunctumLineTR", "PunctumLineTL", S_TORCULUS)
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, i, j, "qbase", "PunctumLineTL", S_TORCULUS_QUILISMA)
+            write_torculus(widths, i, j, "QuilismaLineTR", "PunctumLineTL", S_TORCULUS_QUILISMA)
     precise_message("torculus initio debilis")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
@@ -1168,7 +1170,7 @@ def torculus(widths):
                            L_DESCENDENS)
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, i, j, "qbase", "auctusd1", S_TORCULUS_QUILISMA,
+            write_torculus(widths, i, j, "QuilismaLineTR", "auctusd1", S_TORCULUS_QUILISMA,
                            L_DESCENDENS)
     precise_message("torculus initio debilis auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
@@ -1182,7 +1184,7 @@ def torculus(widths):
                            S_TORCULUS, L_ASCENDENS)
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, i, j, "qbase", "auctusa1", S_TORCULUS_QUILISMA,
+            write_torculus(widths, i, j, "QuilismaLineTR", "auctusa1", S_TORCULUS_QUILISMA,
                            L_ASCENDENS)
     precise_message("torculus initio debilis auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
@@ -1196,7 +1198,7 @@ def torculus(widths):
                            L_DEMINUTUS)
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_torculus(widths, i, j, "qbase", "deminutus", S_TORCULUS_QUILISMA,
+            write_torculus(widths, i, j, "QuilismaLineTR", "deminutus", S_TORCULUS_QUILISMA,
                            L_DEMINUTUS)
     precise_message("torculus initio debilis deminutus")
     for i in range(1, MAX_INTERVAL+1):
@@ -1213,7 +1215,7 @@ def write_torculus(widths, i, j, first_glyph, last_glyph, shape, lique=L_NOTHING
         set_glyph_name(glyph_name)
         return
     length = get_width(widths, first_glyph)-get_width(widths, 'line2')
-    if first_glyph == "qbase":
+    if first_glyph == "QuilismaLineTR":
         if i == 1:
             first_glyph = 'Quilisma'
             length = get_width(widths, first_glyph)
@@ -1268,7 +1270,7 @@ def torculus_liquescens(widths):
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculus_liquescens(widths, i, j, k, 'qbase',
+                write_torculus_liquescens(widths, i, j, k, 'QuilismaLineTR',
                                           S_TORCULUS_LIQUESCENS_QUILISMA, L_DEMINUTUS)
 
 def write_torculus_liquescens(widths, i, j, k, first_glyph, shape,
@@ -1281,7 +1283,7 @@ def write_torculus_liquescens(widths, i, j, k, first_glyph, shape,
         set_glyph_name(glyph_name)
         return
     length = get_width(widths, first_glyph)-get_width(widths, 'line2')
-    if first_glyph == "qbase":
+    if first_glyph == "QuilismaLineTR":
         if i == 1:
             first_glyph = 'Quilisma'
             length = get_width(widths, first_glyph)
@@ -1330,7 +1332,7 @@ def torculusresupinus(widths):
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(widths, i, j, k, 'qbase', 'PunctumSmall',
+                write_torculusresupinus(widths, i, j, k, 'QuilismaLineTR', 'PunctumSmall',
                                         S_TORCULUS_RESUPINUS_QUILISMA)
     precise_message("torculus resupinus deminutus")
     for i in range(1, MAX_INTERVAL+1):
@@ -1347,7 +1349,7 @@ def torculusresupinus(widths):
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(widths, i, j, k, 'qbase', 'rdeminutus',
+                write_torculusresupinus(widths, i, j, k, 'QuilismaLineTR', 'rdeminutus',
                                         S_TORCULUS_RESUPINUS_QUILISMA,
                                         L_DEMINUTUS)
     precise_message("torculus resupinus deminutus alt")
@@ -1366,7 +1368,7 @@ def torculusresupinus(widths):
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_alt_torculusresupinusdeminutus(widths, i, j, k, 'qbase',
+                write_alt_torculusresupinusdeminutus(widths, i, j, k, 'QuilismaLineTR',
                                                      S_TORCULUS_RESUPINUS_QUILISMA,
                                                      L_DEMINUTUS)
     precise_message("torculus resupinus auctus ascendens")
@@ -1384,7 +1386,7 @@ def torculusresupinus(widths):
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(widths, i, j, k, 'qbase', "auctusa2",
+                write_torculusresupinus(widths, i, j, k, 'QuilismaLineTR', "auctusa2",
                                         S_TORCULUS_RESUPINUS_QUILISMA,
                                         L_ASCENDENS)
     precise_message("torculus resupinus auctus descendens")
@@ -1403,7 +1405,7 @@ def torculusresupinus(widths):
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(widths, i, j, k, 'qbase', "PunctumAuctusLineBL",
+                write_torculusresupinus(widths, i, j, k, 'QuilismaLineTR', "PunctumAuctusLineBL",
                                         S_TORCULUS_RESUPINUS_QUILISMA,
                                         L_DESCENDENS)
 
@@ -1427,7 +1429,7 @@ def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
     if i == 1 and first_glyph != 'idebilis':
         if first_glyph == 'PunctumLineTR':
             first_glyph = 'Punctum'
-        elif first_glyph == 'qbase':
+        elif first_glyph == 'QuilismaLineTR':
             first_glyph = 'Quilisma'
         length = get_width(widths, first_glyph)+0.1
     else:
@@ -1468,7 +1470,7 @@ def write_alt_torculusresupinusdeminutus(widths, i, j, k, first_glyph,
         if first_glyph == 'PunctumLineTR':
             first_glyph = 'Punctum'
             length = get_width(widths, first_glyph)+0.1
-        elif first_glyph == 'qbase':
+        elif first_glyph == 'QuilismaLineTR':
             first_glyph = 'Quilisma'
             length = get_width(widths, first_glyph)+0.1
     simple_paste(first_glyph)
