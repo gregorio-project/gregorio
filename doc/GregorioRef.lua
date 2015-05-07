@@ -27,6 +27,20 @@ local EXCLUDE = {
   ['.notdef'] = true,
   ['.null'] = true,
   nonmarkingreturn = true,
+  PunctumAuctusLineBL = true,
+  PunctumLineBL = true,
+  PunctumLineBLBR = true,
+  PunctumLineBR = true,
+  PunctumLineTL = true,
+  PunctumLineTR = true,
+  PunctumSmall = true,
+  FlexusNobar = true,
+  HEpisemusPunctumAuctusLineBL = true,
+  HEpisemusPunctumLineBL = true,
+  HEpisemusPunctumLineBLBR = true,
+  HEpisemusPunctumLineBR = true,
+  HEpisemusPunctumLineTL = true,
+  HEpisemusPunctumLineTR = true,
 }
 
 local GABC = {
@@ -71,6 +85,9 @@ local GABC = {
   HEpisemusPunctum = [[\excluded{g}\_]],
   HEpisemusQuilisma = [[\excluded{gw}\_]],
   HEpisemusStropha = [[\excluded{gs}\_]],
+  LeadingOriscus = [[go\excluded{igig}]],
+  LeadingPunctum = [[g\excluded{igig}]],
+  LeadingQuilisma = [[gw\excluded{igig}]],
   Linea = [[g=]],
   LineaPunctum = [[gR]],
   LineaPunctumCavum = [[gr0]],
@@ -124,12 +141,12 @@ local GABC = {
   Virgula = [[^^^^0060]],
 }
 
-DEBILIS = {
+local DEBILIS = {
   InitioDebilis = [[-]],
   [''] = [[]],
 }
 
-LIQUESCENCE = {
+local LIQUESCENCE = {
   Ascendens = [[<]],
   Descendens = [[>]],
   Deminutus = [[\~{}]],
@@ -254,13 +271,15 @@ function GregorioRef.emit_score_glyphs(cs_greciliae, cs_gregorio, cs_parmesan)
   local first = true
   local i, name
   for i, name in ipairs(glyph_names) do
-    if (name[2] == '' and name[4] == '') or name[2] == '' or only_twos:match(name[2]) then
-      if first then
-        first = false
-      else
-        tex.print([[\hline]])
+    if not EXCLUDE[name[1]] then
+      if (name[2] == '' and name[4] == '') or name[2] == '' or only_twos:match(name[2]) then
+        if first then
+          first = false
+        else
+          tex.print([[\hline]])
+        end
+        emit_score_glyph(name[1], name[2], name[3], name[4])
       end
-      emit_score_glyph(name[1], name[2], name[3], name[4])
     end
   end
 end
