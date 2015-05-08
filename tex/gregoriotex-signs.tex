@@ -791,6 +791,7 @@
 %% 53: the last note, if it's an auctus with a bar on the bottom-left corner (~0)
 %% 54: the last note, if it's a virga aucta
 %% 55: the last note, if it's a "virga" with a bar on the bottom-left corner (~0)
+%% 56: the first note, if it's a virga
 
 % a function to typeset a vertical episemus or a rare accent (like accentus,
 % circulus, etc.).  This function must be called after a call to \greglyph.
@@ -1001,6 +1002,9 @@
   \or%
     %case 55
     \grevepisemusorrareaux{0}{\gre@char@virga@line@br}{1}{0}{#3}{#4}{#5}%
+  \or%
+    %case 56
+    \grevepisemusorrareaux{0}{\gre@char@virga}{0}{0}{#3}{#4}{#5}%
   \fi%
   \relax%
 }%
@@ -1313,6 +1317,9 @@
   \or %
     %case 55
     \grehepisorlineaux{\gre@char@virga@line@br}{\gre@char@he@virga@line@br}{2}{#4}%
+  \or%
+    %case 56
+    \grehepisorlineaux{0}{\gre@char@he@virga}{0}{#4}%
   \fi%
   \relax%
 }}%
