@@ -503,7 +503,7 @@ def hepisemus(widths):
     write_hepisemus(widths, get_width(widths, 'PunctumLineTR'), 'HEpisemusPunctumLineTR')
     write_hepisemus(widths, get_width(widths, 'PunctumLineBLBR'), 'HEpisemusPunctumLineBLBR')
     write_hepisemus(widths, get_width(widths, 'PunctumAuctusLineBL'), 'HEpisemusPunctumAuctusLineBL')
-    reduction = 0.75 * get_width(widths, 'Punctum')
+    reduction = get_width(widths, 'PunctumSmall')
     for i in range(1, MAX_INTERVAL+1):
         write_hepisemus(widths, get_width(widths, "porrectus%d"%i),
                 'HEpisemusPorrectus%s' % AMBITUS[i], reduction)
