@@ -525,26 +525,34 @@ def hepisemus(widths):
     write_hepisemus(widths, get_width(widths, 'PunctumLineTR'), 'HEpisemusPunctumLineTR')
     write_hepisemus(widths, get_width(widths, 'PunctumLineBLBR'), 'HEpisemusPunctumLineBLBR')
     write_hepisemus(widths, get_width(widths, 'PunctumAuctusLineBL'), 'HEpisemusPunctumAuctusLineBL')
+    reduction = get_width(widths, 'PunctumSmall')
     for i in range(1, MAX_INTERVAL+1):
-        write_hepisemus(widths, get_width(widths, "porrectus%d"%i), 'HEpisemusPorrectus%s' % AMBITUS[i])
+        write_hepisemus(widths, get_width(widths, "porrectus%d"%i),
+                'HEpisemusPorrectus%s' % AMBITUS[i], reduction)
     for i in range(1, MAX_INTERVAL+1):
         if glyph_exists("porrectusam1%d"%i, oldfont):
-            write_hepisemus(widths, get_width(widths, "porrectusam1%d"%i), 'HEpisemusPorrectusAmOne%s' % AMBITUS[i])
+            write_hepisemus(widths, get_width(widths, "porrectusam1%d"%i),
+                    'HEpisemusPorrectusAmOne%s' % AMBITUS[i], reduction)
         else:
-            write_hepisemus(widths, get_width(widths, "porrectus%d"%i), 'HEpisemusPorrectusAmOne%s' % AMBITUS[i])
+            write_hepisemus(widths, get_width(widths, "porrectus%d"%i),
+                    'HEpisemusPorrectusAmOne%s' % AMBITUS[i], reduction)
+    # porrectus flexus does not get reduced because the note after is to the right
     for i in range(1, MAX_INTERVAL+1):
-        write_hepisemus(widths, get_width(widths, "porrectusflexus%d"%i), 'HEpisemusPorrectusFlexus%s' % AMBITUS[i])
+        write_hepisemus(widths, get_width(widths, "porrectusflexus%d"%i),
+                'HEpisemusPorrectusFlexus%s' % AMBITUS[i])
 
-def write_hepisemus(widths, shape_width, glyphname):
+def write_hepisemus(widths, shape_width, glyphname, reduction=0):
     "Writes the horizontal episemus glyphs."
     global HEPISEMUS_ADDITIONAL_WIDTH
     new_glyph()
     simple_paste("hepisemus_base")
-    scale(shape_width + 2*HEPISEMUS_ADDITIONAL_WIDTH, 1)
+    drawn_width = shape_width - reduction
+    scale(drawn_width + 2*HEPISEMUS_ADDITIONAL_WIDTH, 1)
     move(-HEPISEMUS_ADDITIONAL_WIDTH, 0)
     paste_and_move("hepisemusleft", -HEPISEMUS_ADDITIONAL_WIDTH, 0)
     paste_and_move("hepisemusright",
-                   shape_width + HEPISEMUS_ADDITIONAL_WIDTH, 0)
+                   drawn_width + HEPISEMUS_ADDITIONAL_WIDTH, 0)
+    # use the original width for the glyph for the sake of ledger lines
     set_width(shape_width)
     end_glyph(glyphname)
 
