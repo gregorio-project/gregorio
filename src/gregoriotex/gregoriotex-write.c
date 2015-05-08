@@ -1646,9 +1646,9 @@ static inline void number_last_note(gregorio_glyph *current_glyph, char *number,
         *number = 1;
         return;
     }
-    if (!no_ambitus_one && (num == 18 || !current_note->previous || current_note->previous->u.note.pitch -
+    if (!current_note->previous || (!no_ambitus_one && (num == 18 || current_note->previous->u.note.pitch -
             current_note->u.note.pitch == 1 ||
-            current_note->u.note.pitch - current_note->previous->u.note.pitch == 1)) {
+            current_note->u.note.pitch - current_note->previous->u.note.pitch == 1))) {
         *number = num;
         return;
     }
