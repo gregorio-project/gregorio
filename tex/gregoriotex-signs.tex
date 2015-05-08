@@ -789,8 +789,8 @@
 %% 51: the first note, if it's an oriscus with a bar on the top-right corner (~19)
 %% 52: the last note, if it's a punctum with a bar on the top-left corner (~0)
 %% 53: the last note, if it's an auctus with a bar on the bottom-left corner (~0)
-%% 54: the last note, if it's an oriscus with a bar (~0)
-%% 55: the last note, if it's a virga aucta
+%% 54: the last note, if it's a virga aucta
+%% 55: the last note, if it's a "virga" with a bar on the bottom-left corner (~0)
 
 % a function to typeset a vertical episemus or a rare accent (like accentus,
 % circulus, etc.).  This function must be called after a call to \greglyph.
@@ -982,7 +982,7 @@
     \grevepisemusorrareaux{0}{\gre@char@punctum@line@tr}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 49
-    \grevepisemusorrareaux{0}{\gre@char@virga@line@bl}{0}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\gre@char@virga@line@br}{0}{0}{#3}{#4}{#5}%
   \or%
     %case 50
     \grevepisemusorrareaux{0}{\gre@char@quilisma@line@tr}{0}{0}{#3}{#4}{#5}%
@@ -997,10 +997,10 @@
     \grevepisemusorrareaux{0}{\gre@char@punctumauctus@line@bl}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 54
-    \grevepisemusorrareaux{0}{\gre@char@oriscus@line@tr}{1}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\gre@char@virgaaucta}{1}{0}{#3}{#4}{#5}%
   \or%
     %case 55
-    \grevepisemusorrareaux{0}{\gre@char@virgaaucta}{1}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{0}{\gre@char@virga@line@br}{1}{0}{#3}{#4}{#5}%
   \fi%
   \relax%
 }%
@@ -1291,10 +1291,10 @@
     \grehepisorlineaux{\gre@char@flexusaltone@line@bl}{\gre@char@he@punctum@line@bl}{2}{#4}%
   \or%
     %case 48
-    \grehepisorlineaux{0}{\gre@char@he@punctum}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@punctum@line@tr}{0}{#4}%
   \or%
     %case 49
-    \grehepisorlineaux{0}{\gre@char@he@punctum}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@virga@line@br}{0}{#4}%
   \or %
     %case 50
     \grehepisorlineaux{0}{\gre@char@he@quilisma@line@tr}{0}{#4}%
@@ -1309,10 +1309,10 @@
     \grehepisorlineaux{\gre@char@punctumauctus@line@bl}{\gre@char@he@punctumauctus@line@bl}{2}{#4}%
   \or %
     %case 54
-    \grehepisorlineaux{\gre@char@orisus@line@tr}{\gre@char@he@oriscus@line@tr}{2}{#4}%
+    \grehepisorlineaux{\gre@char@virgaaucta}{\gre@char@he@punctumauctus@line@bl}{2}{#4}%
   \or %
     %case 55
-    \grehepisorlineaux{\gre@char@virgaaucta}{\gre@char@he@punctumauctus@line@bl}{2}{#4}%
+    \grehepisorlineaux{\gre@char@virga@line@br}{\gre@char@he@virga@line@br}{2}{#4}%
   \fi%
   \relax%
 }}%

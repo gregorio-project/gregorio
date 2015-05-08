@@ -1636,7 +1636,7 @@ static inline void number_note_before_last_note(gregorio_glyph *current_glyph,
 // num can be 0 or 18 according if the last note is a standard punctum or a
 // smaller punctum (for pes, porrectus and torculus resupinus
 static inline void number_last_note(gregorio_glyph *current_glyph, char *number,
-        char num)
+        char num, gregorio_note *current_note)
 {
     if (current_glyph->u.notes.liquescentia == L_DEMINUTUS_INITIO_DEBILIS
             || current_glyph->u.notes.liquescentia == L_DEMINUTUS) {
@@ -1645,8 +1645,55 @@ static inline void number_last_note(gregorio_glyph *current_glyph, char *number,
          * episemus at the end of a flexus deminutus 
          */
         *number = 1;
-    } else {
+        return;
+    }
+    if (!current_note->previous || current_note->previous->u.note.pitch -
+            current_note->u.note.pitch == 1 ||
+            current_note->u.note.pitch - current_note->previous->u.note.pitch == 1) {
         *number = num;
+        return;
+    }
+    if (current_note->previous->u.note.pitch > current_note->u.note.pitch) {
+        if (current_glyph->u.notes.liquescentia &
+                (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
+            *number = 53;
+        } else {
+            *number = 55;
+        }
+    } else {
+        *number = 52;
+    }
+}
+
+static inline void number_first_note(char *number,
+        gregorio_note *current_note, gregorio_glyph *current_glyph)
+{
+    bool ambitus_one = true;
+    if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
+        *number = 7;
+    } else {
+        if (current_note->next && current_note->next->u.note.pitch -
+                current_note->u.note.pitch != 1 &&
+                current_note->u.note.pitch - current_note->next->u.note.pitch != 1) {
+            ambitus_one = false;
+        }
+        if (current_note->u.note.shape == S_ORISCUS) {
+            *number = ambitus_one ? 19 : 51;
+            return;
+        }
+        if (current_note->u.note.shape == S_QUILISMA) {
+            *number = ambitus_one ? 20 : 52;
+            return;
+        }
+        if (ambitus_one) {
+            *number = 6;
+            return;
+        }
+        if (current_note->u.note.shape > current_note->next->u.note.shape) {
+            *number = 49;
+        } else {
+            *number = 48;
+        }
     }
 }
 
@@ -1807,18 +1854,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
     case T_PESQUASSUS:
     case T_PESQUILISMAQUADRATUM:
         if (i == 1) {
-            if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
-                *number = 7;
-            } else {
-                if (current_note->u.note.shape == S_ORISCUS) {
-                    *number = 19;
-                }
-                if (current_note->u.note.shape == S_QUILISMA) {
-                    *number = 20;
-                } else {
-                    *number = 6;
-                }
-            }
+            number_first_note(number, current_note, current_glyph);
             normal_height_bottom(sign_type, current_note, height, bottom);
         } else {
             /*
@@ -1829,7 +1865,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
                     || current_glyph->u.notes.liquescentia == L_DEMINUTUS) {
                 *number = 7;
             } else {
-                *number = 0;
+                number_last_note(current_glyph, number, 0, current_note);
             }
             normal_height(sign_type, current_note, height);
         }
@@ -1849,7 +1885,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             }
             break;
         default:               /* i>=2 */
-            number_last_note(current_glyph, number, 0);
+            number_last_note(current_glyph, number, 0, current_note);
             normal_height_bottom(sign_type, current_note, height, bottom);
             break;
         }
@@ -1858,21 +1894,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
         done = true;
         switch (i) {
         case 1:
-            if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
-                *number = 7;
-            } else {
-                switch (current_note->u.note.shape) {
-                case S_QUILISMA:
-                    *number = 20;
-                    break;
-                case S_ORISCUS:
-                    *number = 19;
-                    break;
-                default:
-                    *number = 6;
-                    break;
-                }
-            }
+            number_first_note(number, current_note, current_glyph);
             normal_height_bottom(sign_type, current_note, height, bottom);
             break;
         case HEPISEMUS_FIRST_TWO:
@@ -1973,7 +1995,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             }
             break;
         default:
-            number_last_note(current_glyph, number, 0);
+            number_last_note(current_glyph, number, 0, current_note);
             normal_height_bottom(sign_type, current_note, height, bottom);
             break;
         }
@@ -1981,11 +2003,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
     case T_TORCULUS_RESUPINUS:
         switch (i) {
         case 1:
-            if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
-                *number = 7;
-            } else {
-                *number = 6;
-            }
+            number_first_note(number, current_note, current_glyph);
             normal_height_bottom(sign_type, current_note, height, bottom);
             break;
         case HEPISEMUS_FIRST_TWO:
@@ -2104,7 +2122,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             // but 
             // in the current fonts the third note of the torculus resupinus
             // is v aligned with the last note
-            number_last_note(current_glyph, number, 18);
+            number_last_note(current_glyph, number, 18, current_note);
             if (current_glyph->u.notes.liquescentia ==
                     L_DEMINUTUS_INITIO_DEBILIS
                     || current_glyph->u.notes.liquescentia == L_DEMINUTUS) {
@@ -2114,7 +2132,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             }
             break;
         default:
-            number_last_note(current_glyph, number, 18);
+            number_last_note(current_glyph, number, 18, current_note);
             normal_height_top(sign_type, current_note, height);
             break;
         }
@@ -2163,7 +2181,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             normal_height_bottom(sign_type, current_note, height, bottom);
             break;
         default:               // case 3
-            number_last_note(current_glyph, number, 18);
+            number_last_note(current_glyph, number, 18, current_note);
             normal_height_top(sign_type, current_note, height);
             break;
         }
@@ -2171,11 +2189,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
     case T_SCANDICUS:
         switch (i) {
         case 1:
-            if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
-                *number = 7;
-            } else {
-                *number = 6;
-            }
+            number_first_note(number, current_note, current_glyph);
             normal_height(sign_type, current_note, height);
             break;
         case 2:
@@ -2183,7 +2197,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             normal_height(sign_type, current_note, height);
             break;
         default:
-            number_last_note(current_glyph, number, 0);
+            number_last_note(current_glyph, number, 0, current_note);
             normal_height_top(sign_type, current_note, height);
             break;
         }
@@ -2192,7 +2206,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
     case T_ANCUS_LONGQUEUE:
         switch (i) {
         case 1:
-            *number = 6;
+            number_first_note(number, current_note, current_glyph);
             normal_height(sign_type, current_note, height);
             break;
         case 2:
@@ -2200,7 +2214,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             height_layered_notes(sign_type, current_note, height);
             break;
         default:
-            number_last_note(current_glyph, number, 0);
+            number_last_note(current_glyph, number, 0, current_note);
             normal_height(sign_type, current_note, height);
             break;
         }
@@ -2208,15 +2222,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
     case T_TORCULUS:
         switch (i) {
         case 1:
-            if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
-                *number = 7;
-            } else {
-                if (current_note->u.note.shape == S_QUILISMA) {
-                    *number = 20;
-                } else {
-                    *number = 6;
-                }
-            }
+            number_first_note(number, current_note, current_glyph);
             normal_height_bottom(sign_type, current_note, height, bottom);
             break;
         case 2:
@@ -2230,7 +2236,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             }
             break;
         default:
-            number_last_note(current_glyph, number, 0);
+            number_last_note(current_glyph, number, 0, current_note);
             normal_height_bottom(sign_type, current_note, height, bottom);
             break;
         }
@@ -2256,6 +2262,13 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
         case S_ORISCUS_DEMINUTUS:
             *number = 16;
             break;
+        case S_VIRGA_REVERSA:
+            if (current_glyph->u.notes.liquescentia == L_AUCTUS_DESCENDENS) {
+                *number = 54;
+            } else {
+                *number = 0;
+            }
+            break;
         case S_LINEA_PUNCTUM:
         case S_LINEA_PUNCTUM_CAVUM:
             *number = 24;
@@ -2264,7 +2277,7 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
             *number = 0;
             break;
         default:
-            number_last_note(current_glyph, number, 0);
+            number_last_note(current_glyph, number, 0, current_note);
             break;
         }
         break;
