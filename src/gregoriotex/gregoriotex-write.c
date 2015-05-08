@@ -1803,6 +1803,37 @@ static inline void normal_height_bottom_pes(gtex_sign_type sign_type,
 // hepisemus) number, according to the gregoriotex convention (described in
 // gregoriotex.tex)
 // this function is REALLY a pain in the ass, but it is sadly necessary
+/*
+ *
+ * For the first note of a porrectus (flexus), this table summarizes the sign
+ * number (amb2 is the ambitus after the diagonal stroke):
+ *
+ *  Porrectus  | Porrectus  | Porrectus | Porrectus
+ *  non-auctus | non-auctus | auctus    | Flexus
+ *  amb2=1     | amb2>1     |           |
+ * ------------+------------+-----------+-----------
+ *  9          | 8          | 10        | 10
+ *
+ * For the second note of a torculus resupinus (flexus), this table summarizes
+ * the number (amb1 is the ambitus before the diagonal stroke and amb2 is the
+ * ambitus after the diagonal stroke):
+ *
+ *                      | Torculus   | Torculus   | Torculus  | Torculus
+ *                      | Resupinus  | Resupinus  | Resupinus | Resupinus
+ *                      | non-auctus | non-auctus | auctus    | Flexus
+ *                      | amb2=1     | amb2>1     |           |
+ * --------+------------+------------+------------+-----------+-----------
+ *  amb1=1 | Punctum    | 36         | 22         | 43        | 43
+ *  amb1=1 | I. Debilis | 33         | 23         | 40        | 40
+ *  amb1=1 | Quilisma   | 37         | 30         | 44        | 44
+ *  amb1=1 | Oriscus    | 38         | 31         | 45        | 45
+ * --------+------------+------------+------------+-----------+-----------
+ *  amb1>1 | Punctum    | 32         | 21         | 39        | 39
+ *  amb1>1 | I. Debilis | 33         | 23         | 40        | 40
+ *  amb1>1 | Quilisma   | 34         | 28         | 41        | 41
+ *  amb1>1 | Oriscus    | 35         | 29         | 42        | 42
+ *
+ */
 static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
         int i, gtex_type type, gtex_sign_type sign_type,
         gregorio_note *current_note, char *number, char *height, bool * bottom)
