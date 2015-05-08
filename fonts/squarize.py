@@ -933,7 +933,7 @@ def write_flexus(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHING):
                 first_glyph = 'OriscusScapus'
             elif first_glyph == 'oslbase':
                 first_glyph = 'OriscusScapusLongqueue'
-            elif first_glyph == 'vsbase':
+            elif first_glyph == 'VirgaLineBR':
                 first_glyph = 'VirgaReversa'
             elif first_glyph == 'vlbase':
                 first_glyph = 'VirgaReversaLongqueue'
@@ -1581,7 +1581,7 @@ def ancus(widths):
     message("ancus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_ancus(widths, i, j, 'vsbase', S_ANCUS)
+            write_ancus(widths, i, j, 'VirgaLineBR', S_ANCUS)
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             write_ancus(widths, i, j, 'vlbase', S_ANCUS_LONGQUEUE)
@@ -1594,7 +1594,7 @@ def write_ancus(widths, i, j, first_glyph, glyph_type):
         return
     if i == 1:
         second_glyph = 'mnbdeminutus'
-        if first_glyph == 'vsbase':
+        if first_glyph == 'VirgaLineBR':
             first_glyph = 'VirgaReversa'
         else:
             first_glyph = 'VirgaReversaLongqueue'
