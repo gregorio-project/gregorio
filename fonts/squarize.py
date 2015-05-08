@@ -228,6 +228,7 @@ DIRECT_GLYPH_NAMES = [
     'Virga',
     'VirgaReversaLongqueue',
     'VirgaReversa',
+    'VirgaLineBR',
     'Quilisma',
     'Oriscus',
     'OriscusReversus',
