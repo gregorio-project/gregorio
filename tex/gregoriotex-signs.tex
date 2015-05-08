@@ -783,6 +783,14 @@
 %% 38: idem, with an oriscus
 %% 46: idem 17, with the note having two line on the bottom corners (like second note of gig)
 %% 47: idem 46, with the note having a line on the bottom left (like second note of gih)
+%% 48: the first note, if it's a punctum with a bar on the top-right corner (~6)
+%% 49: the first note, if it's a "virga" with a bar on the bottom-right corner (~6)
+%% 50: the first note, if it's a quilisma with a bar on the top-right corner (~20)
+%% 51: the first note, if it's an oriscus with a bar on the top-right corner (~19)
+%% 52: the last note, if it's a punctum with a bar on the top-left corner (~0)
+%% 53: the last note, if it's an auctus with a bar on the bottom-left corner (~0)
+%% 54: the last note, if it's an oriscus with a bar (~0)
+%% 55: the last note, if it's a virga aucta
 
 % a function to typeset a vertical episemus or a rare accent (like accentus,
 % circulus, etc.).  This function must be called after a call to \greglyph.
@@ -965,10 +973,34 @@
     \grevepisemusorrareaux{\gre@char@fuse@oriscus@one}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
   \or%
     %case 46
-    \grevepisemusorrareaux{\gre@char@flexusalt@linebl}{\gre@char@punctum@line@blbr}{2}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{\gre@char@flexusalt@line@bl}{\gre@char@punctum@line@blbr}{2}{0}{#3}{#4}{#5}%
   \or%
     %case 47
-    \grevepisemusorrareaux{\gre@char@flexusaltone@linebl}{\gre@char@punctum@line@bl}{2}{0}{#3}{#4}{#5}%
+    \grevepisemusorrareaux{\gre@char@flexusaltone@line@bl}{\gre@char@punctum@line@bl}{2}{0}{#3}{#4}{#5}%
+  \or%
+    %case 48
+    \grevepisemusorrareaux{0}{\gre@char@punctum@line@tr}{0}{0}{#3}{#4}{#5}%
+  \or%
+    %case 49
+    \grevepisemusorrareaux{0}{\gre@char@virga@line@bl}{0}{0}{#3}{#4}{#5}%
+  \or%
+    %case 50
+    \grevepisemusorrareaux{0}{\gre@char@quilisma@line@tr}{0}{0}{#3}{#4}{#5}%
+  \or%
+    %case 51
+    \grevepisemusorrareaux{0}{\gre@char@oriscus@line@tr}{0}{0}{#3}{#4}{#5}%
+  \or%
+    %case 52
+    \grevepisemusorrareaux{0}{\gre@char@punctum}{1}{0}{#3}{#4}{#5}%
+  \or%
+    %case 53
+    \grevepisemusorrareaux{0}{\gre@char@punctumauctus@line@bl}{1}{0}{#3}{#4}{#5}%
+  \or%
+    %case 54
+    \grevepisemusorrareaux{0}{\gre@char@oriscus@line@tr}{1}{0}{#3}{#4}{#5}%
+  \or%
+    %case 55
+    \grevepisemusorrareaux{0}{\gre@char@virgaaucta}{1}{0}{#3}{#4}{#5}%
   \fi%
   \relax%
 }%
@@ -1253,10 +1285,34 @@
     \grehepisorlineaux{\gre@char@leading@oriscus@one}{\gre@char@he@porrectusfl{#3}}{3}{#4}%
   \or%
     %case 46
-    \grehepisorlineaux{\gre@char@flexusalt@linebl}{\gre@char@he@punctum@line@blbr}{2}{#4}%
+    \grehepisorlineaux{\gre@char@flexusalt@line@bl}{\gre@char@he@punctum@line@blbr}{2}{#4}%
   \or%
     %case 47
-    \grehepisorlineaux{\gre@char@flexusaltone@linebl}{\gre@char@he@punctum@line@bl}{2}{#4}%
+    \grehepisorlineaux{\gre@char@flexusaltone@line@bl}{\gre@char@he@punctum@line@bl}{2}{#4}%
+  \or%
+    %case 48
+    \grehepisorlineaux{0}{\gre@char@he@punctum}{0}{#4}%
+  \or%
+    %case 49
+    \grehepisorlineaux{0}{\gre@char@he@punctum}{0}{#4}%
+  \or %
+    %case 50
+    \grehepisorlineaux{0}{\gre@char@he@quilisma@line@tr}{0}{#4}%
+  \or %
+    %case 51
+    \grehepisorlineaux{0}{\gre@char@he@oriscus@line@tr}{0}{#4}%
+  \or %
+    %case 52
+    \grehepisorlineaux{\gre@char@punctum@line@tl}{\gre@char@he@punctum@line@tl}{2}{#4}%
+  \or %
+    %case 53
+    \grehepisorlineaux{\gre@char@punctumauctus@line@bl}{\gre@char@he@punctumauctus@line@bl}{2}{#4}%
+  \or %
+    %case 54
+    \grehepisorlineaux{\gre@char@orisus@line@tr}{\gre@char@he@oriscus@line@tr}{2}{#4}%
+  \or %
+    %case 55
+    \grehepisorlineaux{\gre@char@virgaaucta}{\gre@char@he@punctumauctus@line@bl}{2}{#4}%
   \fi%
   \relax%
 }}%
