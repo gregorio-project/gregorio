@@ -160,6 +160,7 @@ This file is part of Gregorio.
     initialize_glyphs()
     font_width = {}
     hepisemus(font_width)
+    measures(font_width)
     pes(font_width)
     pes_quadratum(font_width)
     virga_strata(font_width)
@@ -481,6 +482,25 @@ def write_deminutus(widths, i, j, length=0, tosimplify=0, firstbar=1):
                    length+get_width(widths, first_glyph)-get_width(widths, 'deminutus'),
                    (i-j)*BASE_HEIGHT)
     return get_width(widths, first_glyph)
+
+def measures(widths):
+    "Creates glyphs used only for measurement."
+    message("glyphs for measurement")
+    new_glyph()
+    first_glyph = 'PunctumLineBLBR'
+    second_glyph = 'PunctumLineTL'
+    simple_paste(first_glyph)
+    write_line(1, get_width(widths, first_glyph) - get_width(widths, 'line2'), -BASE_HEIGHT)
+    paste_and_move(second_glyph, get_width(widths, first_glyph) - get_width(widths, 'line2'), -BASE_HEIGHT)
+    set_width(get_width(widths, first_glyph)+get_width(widths, second_glyph)-get_width(widths, 'line2'))
+    end_glyph('FlexusLineBL')
+    new_glyph()
+    first_glyph = 'PunctumLineBL'
+    second_glyph = 'Punctum'
+    simple_paste(first_glyph)
+    paste_and_move(second_glyph, get_width(widths, first_glyph), -BASE_HEIGHT)
+    set_width(get_width(widths, first_glyph)+get_width(widths, second_glyph))
+    end_glyph('FlexusAmOneLineBL')
 
 def hepisemus(widths):
     "Creates horizontal episemae."
