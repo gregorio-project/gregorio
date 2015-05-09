@@ -298,7 +298,7 @@ end
 local function check_font_version()
   local gregoriofont = font.getfont(font.id('gregoriofont'))
   local fontversion = gregoriofont.shared.rawdata.metadata.version
-  if fontversion ~= internalversion then
+  if string.find(fontversion, internalversion) then
     fontname = gregoriofont.shared.rawdata.metadata.fontname
     fontfile = gregoriofont.shared.rawdata.metadata.origname
     err("\nUncoherent file versions!\ngregoriotex.tex is version %s\nwhile %s.ttf is version %s\nplease update file\n%s", internalversion, fontname, fontversion, fontfile)

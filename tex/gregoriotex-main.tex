@@ -1134,12 +1134,46 @@
   \relax %
 }%
 
+\def\greGregoriaSubstitutions#1{%
+  \grechangeglyph{Sharp}{#1}{Sharp}%
+  \grechangeglyph{SharpHole}{#1}{SharpHole}%
+  \grechangeglyph{Linea}{#1}{Linea}%
+  \grechangeglyph{Accentus}{#1}{Accentus}%
+  \grechangeglyph{AccentusReversus}{#1}{AccentusReversus}%
+  \grechangeglyph{BarBrace}{#1}{BarBrace}%
+  \grechangeglyph{Circulus}{#1}{Circulus}%
+  \grechangeglyph{CurlyBrace}{#1}{CurlyBrace}%
+  \grechangeglyph{RoundBrace}{#1}{RoundBrace}%
+  \grechangeglyph{Semicirculus}{#1}{Semicirculus}%
+  \grechangeglyph{SemicirculusReversus}{#1}{SemicirculusReversus}%
+}
+
+\def\greresetGregoriaSubstitutions{%
+  \greresetglyph{Sharp}%
+  \greresetglyph{SharpHole}%
+  \greresetglyph{Linea}%
+  \greresetglyph{Accentus}%
+  \greresetglyph{AccentusReversus}%
+  \greresetglyph{BarBrace}%
+  \greresetglyph{Circulus}%
+  \greresetglyph{CurlyBrace}%
+  \greresetglyph{RoundBrace}%
+  \greresetglyph{Semicirculus}%
+  \greresetglyph{SemicirculusReversus}%
+}
 
 
 % the default gregorio font
 \xdef\gregoriofontname{greciliae}%
 
 \def\setgregoriofont#1{%
+  \IfStrEq{Gregoria-Gregorio}{#1}{%
+    \IfStrEq{Gregoria-Gregorio}{\gregoriofontname}{}{%
+      \greGregoriaSubstitutions{\gregoriofontname}}%
+  }{%
+    \IfStrEq{Gregoria-Gregorio}{\gregoriofontname}{%
+      \greresetGregoriaSubstitutions}{}%
+  }%
   \xdef\gregoriofontname{#1}%
   \gre@count@temp@three = \the\grefactor %
   \multiply\gre@count@temp@three by 100000 %
@@ -1360,7 +1394,6 @@
 \def\GreUseZeroHyphen{%
   \global\let\grehyph\grezerhyph %
 }%
-
 
 % We load the default space configuration.
 \GreLoadSpaceConf{default}%
