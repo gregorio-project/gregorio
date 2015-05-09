@@ -171,15 +171,15 @@ typedef enum gregorio_space {
 
 typedef enum gregorio_liquescentia {
     L_NO_LIQUESCENTIA = 0,
-    L_DEMINUTUS = 1,
-    L_AUCTUS_ASCENDENS = 2,
-    L_AUCTUS_DESCENDENS = 3,
-    L_AUCTA = 4,
-    L_INITIO_DEBILIS = 5,
-    L_DEMINUTUS_INITIO_DEBILIS = 6,
-    L_AUCTUS_ASCENDENS_INITIO_DEBILIS = 7,
-    L_AUCTUS_DESCENDENS_INITIO_DEBILIS = 8,
-    L_AUCTA_INITIO_DEBILIS = 9,
+    L_DEMINUTUS = 0x01,
+    L_AUCTUS_ASCENDENS = 0x02,
+    L_AUCTUS_DESCENDENS = 0x04,
+    L_AUCTA = 0x08,
+    L_INITIO_DEBILIS = 0x10,
+    L_DEMINUTUS_INITIO_DEBILIS = 0x11,
+    L_AUCTUS_ASCENDENS_INITIO_DEBILIS = 0x12,
+    L_AUCTUS_DESCENDENS_INITIO_DEBILIS = 0x14,
+    L_AUCTA_INITIO_DEBILIS = 0x18,
 } gregorio_liquescentia;
 
 typedef enum gregorio_h_episemus {
