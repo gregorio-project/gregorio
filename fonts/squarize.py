@@ -519,6 +519,7 @@ def hepisemus(widths):
     write_hepisemus(widths, get_width(widths, 'QuilismaLineTR'), 'HEpisemusQuilismaLineTR')
     write_hepisemus(widths, get_width(widths, 'PunctumSmall'), 'HEpisemusHighPes')
     write_hepisemus(widths, get_width(widths, 'Oriscus'), 'HEpisemusOriscus')
+    write_hepisemus(widths, get_width(widths, 'Virga'), 'HEpisemusVirga')
     write_hepisemus(widths, get_width(widths, 'VirgaLineBR'), 'HEpisemusVirgaLineBR')
     write_hepisemus(widths, get_width(widths, 'OriscusLineTR'), 'HEpisemusOriscusLineTR')
     write_hepisemus(widths, get_width(widths, 'PunctumLineBR'), 'HEpisemusPunctumLineBR')
