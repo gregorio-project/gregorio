@@ -3804,6 +3804,15 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
 
     for (gregorio_element *element = *syllable->elements; element;
             element = element->next) {
+        if (element->nabc_lines && element->nabc) {
+            size_t i;
+            for (i = 0; i < element->nabc_lines; i++) {
+                if (element->nabc[i]) {
+                    fprintf(f, "\\nabcneumes{%d}{%s}%%\n", (int)(i+1),
+                            element->nabc[i]);
+                }
+            }
+        }
         switch (element->type) {
         case GRE_SPACE:
             switch (element->u.misc.unpitched.info.space) {
@@ -4052,6 +4061,9 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     }
 
     fprintf(f, "\\begingregorioscore%%\n");
+    if (score->nabc_lines) {
+        fprintf(f, "\\scorenabclines{%d}", (int)score->nabc_lines);
+    }
     // if necessary, we add some bottom space to the first line
     first_line = (gregorio_line *) malloc(sizeof(gregorio_line));
     gregoriotex_getlineinfos(score->first_syllable, first_line);

@@ -182,6 +182,9 @@ semicolon. */
 <INITIAL>gregoriotex-font {
         return GREGORIOTEX_FONT;
     }
+<INITIAL>nabc-lines {
+        return NABC_LINES;
+    }
 <INITIAL>user-notes {
         return USER_NOTES;
     }
@@ -362,12 +365,15 @@ semicolon. */
         BEGIN(notes);
         return OPENING_BRACKET;
     }
-<notes>[^&\)]* {
+<notes>[^&|\)]* {
         gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
         return NOTES;
     }
 <notes>& {
         return VOICE_CUT;
+    }
+<notes>\| {
+        return NABC_CUT;
     }
 <notes>\) {
         BEGIN(score);

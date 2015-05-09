@@ -1127,6 +1127,12 @@
   \ifnum\gre@scale@largerspace=1\relax%
     \gre@changeonedimenfactor{largerspace}{#1}{#2}%
   \fi%
+  \ifnum\gre@scale@nabcinterelementspace=1\relax%
+    \gre@changeonedimenfactor{nabcinterelementspace}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@nabclargerspace=1\relax%
+    \gre@changeonedimenfactor{nabclargerspace}{#1}{#2}%
+  \fi%
   \ifnum\gre@scale@glyphspace=1\relax%
     \gre@changeonedimenfactor{glyphspace}{#1}{#2}%
   \fi%

@@ -830,7 +830,11 @@ void gregorio_add_misc_element(gregorio_element **current_element,
 
 static inline void free_one_element(gregorio_element *element)
 {
+    size_t i;
     free(element->texverb);
+    for (i = 0; i < element->nabc_lines; i++) {
+        free(element->nabc[i]);
+    }
     if (element->type == GRE_ELEMENT) {
         gregorio_free_glyphs(&element->u.glyphs.first_glyph);
     }

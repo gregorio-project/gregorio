@@ -19,4 +19,4 @@ EXTRA_DIST = gregoriotex.tex gregoriotex.lua gregoriotex.sty \
 			 gregoriotex-syllable.tex gregoriotex-symbols.tex \
 			 gregoriotex-spaces.tex gregoriotex-signs.tex \
 			 gregoriosyms.sty gsp-default.tex gregoriotex-chars.tex \
-			 gregoriotex-main.tex
+			 gregoriotex-main.tex gregall.tex gregall.lua
