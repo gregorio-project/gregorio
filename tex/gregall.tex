@@ -1,0 +1,51 @@
+%GregorioTeX file.
+%
+% Copyright (C) 2014-2015 The Gregorio Project (see CONTRIBUTORS.md)
+%
+% This file is part of Gregorio.
+%
+% Gregorio is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Gregorio is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
+
+% this file contains macros for St. Gall ancient neume support
+
+\newfontface\GreGall{gregall.ttf}
+\newfontface\GreGallModern{gresgmodern.ttf}
+\directlua{dofile('gregall.lua')}
+\newcommand{\gregallcharno}[3]{{\directlua{
+  tex.sprint(gregallparse_neumes("\luaescapestring{#1}", "\luaescapestring{#2}", \luaescapestring{#3}))
+}}}
+\def\gregallchar{%
+  \begingroup %
+    \catcode`\~=12{}%
+    \catcode`\@=11{}%
+    \fontsize{8}{8}%
+    \color{red}%
+    \dogregallchar%
+}
+\def\dogregallchar#1{%
+    \gregallcharno{#1}{gregall}{0.8}%
+  \endgroup %
+}
+\def\gregallmodchar{%
+  \begingroup %
+    \catcode`\~=12{}%
+    \catcode`\@=11{}%
+    \fontsize{16}{16}%
+    \color{red}%
+    \dogregallmodchar%
+}
+\def\dogregallmodchar#1{%
+    \gregallcharno{#1}{gregallmod}{1.6}%
+  \endgroup %
+}

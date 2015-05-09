@@ -66,6 +66,7 @@ static char error[200];
 static gregorio_score *score;
 // an array of elements that we will use for each syllable
 static gregorio_element **elements;
+gregorio_element *current_element;
 // a table containing the macros to use in gabc file
 static char *macros[10];
 // declaration of some functions, the first is the one initializing the
@@ -476,6 +477,7 @@ static void rebuild_characters(gregorio_character **param_character,
 
 static void close_syllable()
 {
+    int i;
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
                           first_text_character, first_translation_character,
                           position, abovelinestext, translation_type,
@@ -502,6 +504,10 @@ static void close_syllable()
     no_linebreak_area = NLBA_NORMAL;
     euouae = EUOUAE_NORMAL;
     abovelinestext = NULL;
+    for (i = 0; i < number_of_voices; i++) {
+        elements[i] = NULL;
+    }
+    current_element = NULL;
 }
 
 // a function called when we see a [, basically, all characters are added to
@@ -612,6 +618,48 @@ gregorio_score *gabc_read_score(FILE *f_in)
     }
     return score;
 }
+
+unsigned char nabc_state = 0;
+size_t nabc_lines = 0;
+
+void
+gabc_y_add_notes(char *notes) {
+    gregorio_element *new_elements;
+    gregorio_element *last_element;
+    if (nabc_state == 0) {
+        if (!elements[voice]) {
+            elements[voice] =
+                gabc_det_elements_from_string(notes, &current_key, macros);
+            current_element = elements[voice];
+        } else {
+            new_elements =
+                gabc_det_elements_from_string(notes, &current_key, macros);
+            last_element = elements[voice];
+            while(last_element->next) {
+                last_element = last_element->next;
+            }
+            last_element->next = new_elements;
+            new_elements->previous = last_element;
+            current_element = new_elements;
+        }
+    } else {
+        if (!elements[voice]) {
+            gregorio_add_element(&elements[voice], NULL);
+            current_element = elements[voice];
+        }
+        if (!current_element) {
+            gregorio_message(_("current_element is null, this "
+                               "shouldn't happen!"),
+                             "gabc_y_add_notes",FATAL_ERROR,0);
+        }
+        if (!current_element->nabc) {
+            current_element->nabc =
+                (char **) calloc (nabc_lines, sizeof (char *));
+        }
+        current_element->nabc[nabc_state-1] = strdup(notes);
+        current_element->nabc_lines = nabc_state;
+    }
+}
 %}
 
 %token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE 
@@ -626,7 +674,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
 %token CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
-%token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E
+%token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES
 
 %%
 
@@ -830,6 +878,21 @@ mode_definition:
     }
     ;
 
+nabc_lines_definition:
+    NABC_LINES attribute {
+        if (score->nabc_lines) {
+            gregorio_message(_("several nabc lines definitions found, only the "
+                               "last will be taken into consideration"),
+                             "det_score",WARNING,0);
+        }
+        if ($2.text) {
+            nabc_lines=atoi($2.text);
+            score->nabc_lines=nabc_lines;
+            free($2.text);
+        }
+    }
+    ;
+
 initial_style_definition:
     INITIAL_STYLE attribute {
         if ($2.text) {
@@ -1008,6 +1071,7 @@ definition:
     | manuscript_reference_definition
     | manuscript_definition
     | book_definition
+    | nabc_lines_definition
     | date_definition
     | author_definition
     | annotation_definition
@@ -1034,7 +1098,7 @@ notes:
 note:
     NOTES CLOSING_BRACKET {
         if (voice<number_of_voices) {
-            elements[voice]=gabc_det_elements_from_string($1.text, &current_key, macros);
+            gabc_y_add_notes($1.text);
             free($1.text);
         }
         else {
@@ -1053,10 +1117,11 @@ note:
             complete_with_nulls(voice);
         }
         voice=0;
+        nabc_state=0;
     }
     | NOTES CLOSING_BRACKET_WITH_SPACE {
         if (voice<number_of_voices) {
-            elements[voice]=gabc_det_elements_from_string($1.text, &current_key, macros);
+            gabc_y_add_notes($1.text);
             free($1.text);
         }
         else {
@@ -1075,11 +1140,12 @@ note:
             complete_with_nulls(voice);
         }
         voice=0;
+        nabc_state=0;
         update_position_with_space();
     }
     | NOTES VOICE_CUT {
         if (voice<number_of_voices) {
-            elements[voice]=gabc_det_elements_from_string($1.text, &current_key, macros);
+            gabc_y_add_notes($1.text);
             free($1.text);
             voice++;
         }
@@ -1090,13 +1156,28 @@ note:
             gregorio_message(error, "det_score",ERROR,0);
         }
     }
+    | NOTES NABC_CUT {
+        if (!nabc_lines) {
+            gregorio_message(_("You used character \"|\" in gabc without "
+                               "setting \"nabc-lines\" parameter. Please "
+                               "set it in your gabc header."),
+                             "det_score",FATAL_ERROR,0);
+        }
+        if (voice<number_of_voices) {
+            gabc_y_add_notes($1.text);
+            free($1.text);
+            nabc_state = (nabc_state + 1) % (nabc_lines+1);
+        }
+    }
     | CLOSING_BRACKET {
         elements[voice]=NULL;
         voice=0;
+        nabc_state=0;
     }
     | CLOSING_BRACKET_WITH_SPACE {
         elements[voice]=NULL;
         voice=0;
+        nabc_state=0;
         update_position_with_space();
     }
     ;

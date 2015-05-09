@@ -18,7 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf greextra.ttf
+TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf greextra.ttf \
+	   gregall.ttf gresgmodern.ttf
 SOURCEFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd greextra.sfd
 
 EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py README.md
@@ -38,6 +39,12 @@ greciliae.ttf: squarize.py greciliae-base.sfd
 greextra.ttf: convertsfdtottf.py greextra.sfd
 	$(FONTFORGE) -script convertsfdtottf.py greextra.sfd
 
+gregall.ttf: convertsfdtottf.py gregall.sfd
+	$(FONTFORGE) -script convertsfdtottf.py gregall.sfd
+
+gresgmodern.ttf: convertsfdtottf.py gresgmodern.sfd
+	$(FONTFORGE) -script convertsfdtottf.py gresgmodern.sfd
+
 fonts: $(TTFFILES)
 
 gregorio: gregorio.ttf
@@ -47,6 +54,10 @@ greciliae: greciliae.ttf
 parmesan: parmesan.ttf
 
 greextra: greextra.ttf
+
+gregall: gregall.ttf
+
+gresgmodern: gresgmodern.ttf
 
 MAINTAINERCLEANFILES = $(TTFFILES)
 

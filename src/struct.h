@@ -459,6 +459,9 @@ typedef struct gregorio_element {
     // a string containing a possible TeX verbatim; necessary during structure
     // generation.
     char *texverb;
+    // The nabc string
+    char **nabc;
+    size_t nabc_lines; // we put it here to get the length of the array here too
     union {
         // element is used for GRE_ELEMENT
         struct {
@@ -628,6 +631,7 @@ typedef struct gregorio_score {
     char *musixtex_preamble;
     // the font to use in gregoriotex
     char *gregoriotex_font;
+    size_t nabc_lines;
     char *user_notes;
     // the determination method (maximal ambitus, etc.)
     unsigned char det_method;
