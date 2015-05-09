@@ -2345,11 +2345,14 @@ static void gregoriotex_find_sign_number(gregorio_glyph *current_glyph,
         case S_ORISCUS_DEMINUTUS:
             *number = 16;
             break;
+        case S_VIRGA:
+            *number = 56;
+            break;
         case S_VIRGA_REVERSA:
             if (current_glyph->u.notes.liquescentia == L_AUCTUS_DESCENDENS) {
                 *number = 54;
             } else {
-                *number = 0;
+                *number = 56;
             }
             break;
         case S_LINEA_PUNCTUM:
