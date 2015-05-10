@@ -505,29 +505,35 @@ def measures(widths):
     set_width(get_width(widths, first_glyph)+get_width(widths, second_glyph))
     end_glyph('FlexusAmOneLineBL')
 
+HEPISEMUS_GLYPHS = {
+    'HEpisemusPunctum': 'Punctum',
+    'HEpisemusFlexusDeminutus': 'mpdeminutus',
+    'HEpisemusDebilis': 'idebilis',
+    'HEpisemusInclinatum': 'PunctumInclinatum',
+    'HEpisemusInclinatumDeminutus': 'PunctumInclinatumDeminutus',
+    'HEpisemusStropha': 'Stropha',
+    'HEpisemusQuilisma': 'Quilisma',
+    'HEpisemusQuilismaLineTR': 'QuilismaLineTR',
+    'HEpisemusHighPes': 'PunctumSmall',
+    'HEpisemusOriscus': 'Oriscus',
+    'HEpisemusVirga': 'Virga',
+    'HEpisemusVirgaLineBR': 'VirgaLineBR',
+    'HEpisemusOriscusLineTR': 'OriscusLineTR',
+    'HEpisemusPunctumLineBR': 'PunctumLineBR',
+    'HEpisemusPunctumLineBL': 'PunctumLineBL',
+    'HEpisemusPunctumLineTL': 'PunctumLineTL',
+    'HEpisemusPunctumLineTR': 'PunctumLineTR',
+    'HEpisemusPunctumLineBLBR': 'PunctumLineBLBR',
+    'HEpisemusPunctumAuctusLineBL': 'PunctumAuctusLineBL',
+}
+
 def hepisemus(widths):
     "Creates horizontal episemae."
     global oldfont
     message("horizontal episemus")
-    write_hepisemus(widths, get_width(widths, 'Punctum'), 'HEpisemusPunctum')
-    write_hepisemus(widths, get_width(widths, 'mpdeminutus'), 'HEpisemusFlexusDeminutus')
-    write_hepisemus(widths, get_width(widths, 'idebilis'), 'HEpisemusDebilis')
-    write_hepisemus(widths, get_width(widths, 'PunctumInclinatum'), 'HEpisemusInclinatum')
-    write_hepisemus(widths, get_width(widths, 'PunctumInclinatumDeminutus'), 'HEpisemusInclinatumDeminutus')
-    write_hepisemus(widths, get_width(widths, 'Stropha'), 'HEpisemusStropha')
-    write_hepisemus(widths, get_width(widths, 'Quilisma'), 'HEpisemusQuilisma')
-    write_hepisemus(widths, get_width(widths, 'QuilismaLineTR'), 'HEpisemusQuilismaLineTR')
-    write_hepisemus(widths, get_width(widths, 'PunctumSmall'), 'HEpisemusHighPes')
-    write_hepisemus(widths, get_width(widths, 'Oriscus'), 'HEpisemusOriscus')
-    write_hepisemus(widths, get_width(widths, 'Virga'), 'HEpisemusVirga')
-    write_hepisemus(widths, get_width(widths, 'VirgaLineBR'), 'HEpisemusVirgaLineBR')
-    write_hepisemus(widths, get_width(widths, 'OriscusLineTR'), 'HEpisemusOriscusLineTR')
-    write_hepisemus(widths, get_width(widths, 'PunctumLineBR'), 'HEpisemusPunctumLineBR')
-    write_hepisemus(widths, get_width(widths, 'PunctumLineBL'), 'HEpisemusPunctumLineBL')
-    write_hepisemus(widths, get_width(widths, 'PunctumLineTL'), 'HEpisemusPunctumLineTL')
-    write_hepisemus(widths, get_width(widths, 'PunctumLineTR'), 'HEpisemusPunctumLineTR')
-    write_hepisemus(widths, get_width(widths, 'PunctumLineBLBR'), 'HEpisemusPunctumLineBLBR')
-    write_hepisemus(widths, get_width(widths, 'PunctumAuctusLineBL'), 'HEpisemusPunctumAuctusLineBL')
+    for target, source in HEPISEMUS_GLYPHS.items():
+        write_hepisemus(widths, get_width(widths, source), target)
+        write_hepisemus(widths, get_width(widths, source) * 2.0 / 3.0, target + "Reduced")
     reduction = get_width(widths, 'PunctumSmall')
     for i in range(1, MAX_INTERVAL+1):
         write_hepisemus(widths, get_width(widths, "porrectus%d"%i),
