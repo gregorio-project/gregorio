@@ -97,12 +97,12 @@ local gregallmetrics = {}
 gregalltab.gregall, gregallmetrics.gregall = gregallreadfont("GreGall", name_id["gregall"])
 gregalltab.gregallmod, gregallmetrics.gregallmod = gregallreadfont("GreGallModern", name_id["gresgmodern"])
 local gregallneumekinds = { vi = 1, pu = 1, ta = 1, gr = 1, cl = 1, un = 1, pv = 1, pe = 1, po = 1, to = 1, ci = 1, sc = 1, pf = 1, sf = 1, tr = 1,
-		      st = 1, ds = 1, ts = 1, tg = 1, bv = 1, tv = 1, pr = 1, pi = 1, vs = 1, ["or"] = 1, sa = 1, pq = 1, qi = 1, ql = 1, pt = 1 }
+          st = 1, ds = 1, ts = 1, tg = 1, bv = 1, tv = 1, pr = 1, pi = 1, vs = 1, ["or"] = 1, sa = 1, pq = 1, qi = 1, ql = 1, pt = 1 }
 local gregalllskinds = { c = 1, t = 1, s = 1, l = 1, x = 1, ["+"] = 1, a = 1, al = 1, am = 1, b = 1, cm = 1, co = 1, cw = 1, d = 1, e = 1, eq = 1,
-		   ew = 1, f = 1, fid = 1, fr = 1, g = 1, h = 1, hp = 1, hn = 1, i = 1, im = 1, iv = 1, k = 1, lb = 1, lc = 1, len = 1,
-		   lm = 1, lp = 1, lt = 1, m = 1, md = 1, moll = 1, n = 1, nl = 1, nt = 1, p = 1, par = 1, pfec = 1, pm = 1, q = 1,
-		   sb = 1, sc = 1, sc = 1, simil = 1, simul = 1, sj = 1, sjc = 1, sjcm = 1, sm = 1, st = 1, sta = 1, su = 1, tb = 1,
-		   th = 1, tm = 1, tw = 1, v = 1, ve = 1, vol = 1 }
+       ew = 1, f = 1, fid = 1, fr = 1, g = 1, h = 1, hp = 1, hn = 1, i = 1, im = 1, iv = 1, k = 1, lb = 1, lc = 1, len = 1,
+       lm = 1, lp = 1, lt = 1, m = 1, md = 1, moll = 1, n = 1, nl = 1, nt = 1, p = 1, par = 1, pfec = 1, pm = 1, q = 1,
+       sb = 1, sc = 1, sc = 1, simil = 1, simul = 1, sj = 1, sjc = 1, sjcm = 1, sm = 1, st = 1, sta = 1, su = 1, tb = 1,
+       th = 1, tm = 1, tw = 1, v = 1, ve = 1, vol = 1 }
 
 -- Parse a single base neume
 local gregallparse_base = function (str, idx, len)
@@ -163,7 +163,7 @@ local gregallparse_neume = function (str, idx, len)
     if v == "ls" then
       local idx2 = idx + 2
       while idx2 <= len and not string.find("12346789", str:sub(idx2, idx2)) do
-	idx2 = idx2 + 1
+  idx2 = idx2 + 1
       end
       if idx2 > len or not gregalllskinds[str:sub(idx + 2, idx2 - 1)] then return 1 end
       ls[lsidx] = str:sub(idx, idx2)
@@ -174,9 +174,9 @@ local gregallparse_neume = function (str, idx, len)
       idx = idx + 2
       local c = str:sub(idx, idx)
       if idx <= len and string.find("tuvwxy", c) then
-	mod = mod .. c
-	idx = idx + 1
-	c = str:sub(idx, idx)
+  mod = mod .. c
+  idx = idx + 1
+  c = str:sub(idx, idx)
       end
       -- Pre/subpuncta with height not supported yet
       -- the heights would need to be adjusted relatively to heights[0]
@@ -284,12 +284,12 @@ gregallparse_neumes = function(str, kind, scale)
       base = base .. "!" .. bases[i]
       local h = heights[i] - heights[0]
       if h ~= 0 then
-	h = h + 5
-	if h < 0 or h > 12 then
-	  base = "ERR"
-	  break
-	end
-	base = base .. string.sub("abcdefghijklm", h + 1, h + 1)
+  h = h + 5
+  if h < 0 or h > 12 then
+    base = "ERR"
+    break
+  end
+  base = base .. string.sub("abcdefghijklm", h + 1, h + 1)
       end
       i = i + 1
     end
@@ -301,14 +301,14 @@ gregallparse_neumes = function(str, kind, scale)
     if base ~= "ERR" then
       local l = {}
       function l.try (kind, base, parts, pp, su, ls)
-	if parts == 2 and pp ~= '' and su ~= '' and gregalltab[kind][base .. pp .. su .. ls] then return base .. pp .. su .. ls, '', '' end
-	-- Prefer subpunctis over prepunctis.
-	if parts == 1 and su ~= '' and gregalltab[kind][base .. su .. ls] then return base .. su .. ls, pp, '' end
-	if parts == 1 and pp ~= '' and gregalltab[kind][base .. pp .. ls] then return base .. pp .. ls, '', su end
-	-- Prefer subpunctis over significative letters.
-	if parts == 0 and su ~= '' and ls ~= '' and gregalltab[kind][base .. su] then return nil, pp, su end
-	if parts == 0 and gregalltab[kind][base .. ls] then return base .. ls, pp, su end
-	return nil, pp, su
+  if parts == 2 and pp ~= '' and su ~= '' and gregalltab[kind][base .. pp .. su .. ls] then return base .. pp .. su .. ls, '', '' end
+  -- Prefer subpunctis over prepunctis.
+  if parts == 1 and su ~= '' and gregalltab[kind][base .. su .. ls] then return base .. su .. ls, pp, '' end
+  if parts == 1 and pp ~= '' and gregalltab[kind][base .. pp .. ls] then return base .. pp .. ls, '', su end
+  -- Prefer subpunctis over significative letters.
+  if parts == 0 and su ~= '' and ls ~= '' and gregalltab[kind][base .. su] then return nil, pp, su end
+  if parts == 0 and gregalltab[kind][base .. ls] then return base .. ls, pp, su end
+  return nil, pp, su
       end
       local r = nil
       local ppsuparts = 0
@@ -321,78 +321,78 @@ gregallparse_neumes = function(str, kind, scale)
       -- Try to match as many parts (ls sequences, pp string, su string) as possible
       -- except that for ls accept any of ls sequences only if we have all of them.
       for parts = allparts, 0, -1 do
-	if lscount == 2 and parts >= 2 and parts <= 2 + ppsuparts then
-	  r, pp, su = l.try(kind, base, parts - 2, pp, su, ls[0] .. ls[1])
-	  if not r then
-	    r, pp, su = l.try(kind, base, parts - 2, pp, su, ls[1] .. ls[0])
-	  end
-	  if r then
-	    ls[0] = ''
-	    ls[1] = ''
-	    break
-	  end
-	  if r then break end
-	end
-	if lscount == 1 and parts >= 1 and parts <= 1 + ppsuparts then
-	  r, pp, su = l.try(kind, base, parts - 1, pp, su, ls[0])
-	  if r then
-	    ls[0] = ''
-	    break
-	  end
-	end
-	r, pp, su = l.try(kind, base, parts, pp, su, '')
-	if r then break end
+  if lscount == 2 and parts >= 2 and parts <= 2 + ppsuparts then
+    r, pp, su = l.try(kind, base, parts - 2, pp, su, ls[0] .. ls[1])
+    if not r then
+      r, pp, su = l.try(kind, base, parts - 2, pp, su, ls[1] .. ls[0])
+    end
+    if r then
+      ls[0] = ''
+      ls[1] = ''
+      break
+    end
+    if r then break end
+  end
+  if lscount == 1 and parts >= 1 and parts <= 1 + ppsuparts then
+    r, pp, su = l.try(kind, base, parts - 1, pp, su, ls[0])
+    if r then
+      ls[0] = ''
+      break
+    end
+  end
+  r, pp, su = l.try(kind, base, parts, pp, su, '')
+  if r then break end
       end
       if not r or (pp ~= '' and not gregalltab[kind][pp]) or (su ~= '' and not gregalltab[kind][su]) then
-	base = "ERR"
+  base = "ERR"
       else
-	base = gregalltab[kind][r]
-	local above = ''
-	local below = ''
-	local rmetrics = { width = gregallmetrics[kind][r].width,
-			   height = gregallmetrics[kind][r].height,
-			   depth = gregallmetrics[kind][r].depth }
-	-- Should the pre and subpuncta be somehow specially positioned
-	-- against the base neume?
-	if pp ~= '' then
-	  base = gregalltab[kind][pp] .. base
-	  rmetrics.width = rmetrics.width + gregallmetrics[kind][pp].width
-	  rmetrics.height = math.max (rmetrics.height, gregallmetrics[kind][pp].height)
-	  rmetrics.depth = math.max (rmetrics.height, gregallmetrics[kind][pp].depth)
-	end
-	if su ~= '' then
-	  base = base .. gregalltab[kind][su]
-	  rmetrics.width = rmetrics.width + gregallmetrics[kind][su].width
-	  rmetrics.height = math.max (rmetrics.height, gregallmetrics[kind][su].height)
-	  rmetrics.depth = math.max (rmetrics.height, gregallmetrics[kind][su].depth)
-	end
-	local baseraise = 0
-	if heights[0] ~= 5 then
-	  baseraise = (heights[0] - 5) * gregallmetrics[kind].cl.height / 4
-	  base = '\\raise '..(baseraise * scale)..'sp\\hbox{'..base..'}'
-	end
-	local lwidths = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-	local curlwidths = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-	for i = 0, lscount - 1 do
-	  if ls[i] ~= '' then
-	    local p = tonumber(ls[i]:sub(-1, -1))
-	    local l = ls[i]:sub(1, -2)
-	    lwidths[p] = lwidths[p] + gregallmetrics[kind][l].width
-	  end
-	end
-	lwidths[10] = math.max (lwidths[1], lwidths[4], lwidths[7])
-	lwidths[11] = math.max (lwidths[2], lwidths[8])
-	lwidths[12] = math.max (lwidths[3], lwidths[6], lwidths[9])
-	local pre = ''
-	for i = 0, lscount - 1 do
-	  if ls[i] ~= '' then
-	    local p = tonumber(ls[i]:sub(-1, -1))
-	    local l = ls[i]:sub(1, -2)
-	    local lstr = gregalltab[kind][l]
-	    base, pre = add_ls(base, pre, lstr, p, rmetrics, gregallmetrics[kind][l], baseraise, lwidths, curlwidths, scale)
-	  end
-	end
-	base = pre..base
+  base = gregalltab[kind][r]
+  local above = ''
+  local below = ''
+  local rmetrics = { width = gregallmetrics[kind][r].width,
+         height = gregallmetrics[kind][r].height,
+         depth = gregallmetrics[kind][r].depth }
+  -- Should the pre and subpuncta be somehow specially positioned
+  -- against the base neume?
+  if pp ~= '' then
+    base = gregalltab[kind][pp] .. base
+    rmetrics.width = rmetrics.width + gregallmetrics[kind][pp].width
+    rmetrics.height = math.max (rmetrics.height, gregallmetrics[kind][pp].height)
+    rmetrics.depth = math.max (rmetrics.height, gregallmetrics[kind][pp].depth)
+  end
+  if su ~= '' then
+    base = base .. gregalltab[kind][su]
+    rmetrics.width = rmetrics.width + gregallmetrics[kind][su].width
+    rmetrics.height = math.max (rmetrics.height, gregallmetrics[kind][su].height)
+    rmetrics.depth = math.max (rmetrics.height, gregallmetrics[kind][su].depth)
+  end
+  local baseraise = 0
+  if heights[0] ~= 5 then
+    baseraise = (heights[0] - 5) * gregallmetrics[kind].cl.height / 4
+    base = '\\raise '..(baseraise * scale)..'sp\\hbox{'..base..'}'
+  end
+  local lwidths = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+  local curlwidths = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+  for i = 0, lscount - 1 do
+    if ls[i] ~= '' then
+      local p = tonumber(ls[i]:sub(-1, -1))
+      local l = ls[i]:sub(1, -2)
+      lwidths[p] = lwidths[p] + gregallmetrics[kind][l].width
+    end
+  end
+  lwidths[10] = math.max (lwidths[1], lwidths[4], lwidths[7])
+  lwidths[11] = math.max (lwidths[2], lwidths[8])
+  lwidths[12] = math.max (lwidths[3], lwidths[6], lwidths[9])
+  local pre = ''
+  for i = 0, lscount - 1 do
+    if ls[i] ~= '' then
+      local p = tonumber(ls[i]:sub(-1, -1))
+      local l = ls[i]:sub(1, -2)
+      local lstr = gregalltab[kind][l]
+      base, pre = add_ls(base, pre, lstr, p, rmetrics, gregallmetrics[kind][l], baseraise, lwidths, curlwidths, scale)
+    end
+  end
+  base = pre..base
       end
     end
     ret = ret .. base
