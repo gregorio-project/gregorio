@@ -21,10 +21,13 @@
 
 \newfontface\GreGall{gregall.ttf}
 \newfontface\GreGallModern{gresgmodern.ttf}
-\directlua{gregoriotex.init_nabc_font('GreGall')}
+\directlua{gregoriotex.init_nabc_font("GreGall")}%
+\directlua{gregoriotex.init_nabc_font("GreGallModern")}%
+
 \newcommand{\gregallcharno}[3]{{\directlua{
-  tex.sprint(gregoriotex.parse_nabc("\luaescapestring{#1}", "\luaescapestring{#2}", \luaescapestring{#3}))
+  tex.sprint(gregoriotex.parse_nabc("\luatexluaescapestring{#1}", "\luatexluaescapestring{#2}", \luatexluaescapestring{#3}))
 }}}
+
 \def\gregallchar{%
   \begingroup %
     \catcode`\~=12{}%
@@ -41,12 +44,12 @@
   \begingroup %
     \catcode`\~=12{}%
     \catcode`\@=11{}%
-    \fontsize{16}{16}%
+    \fontsize{8}{8}%
     \color{red}%
     \dogregallmodchar%
 }
 \def\dogregallmodchar#1{%
-    \gregallcharno{#1}{gregallmod}{1.6}%
+    \gregallcharno{#1}{gregallmod}{0.8}%
   \endgroup %
 }
 
