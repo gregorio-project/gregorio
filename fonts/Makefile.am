@@ -20,7 +20,7 @@
 
 TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf greextra.ttf \
 	   gregall.ttf gresgmodern.ttf
-SOURCEFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd greextra.sfd
+SOURCEFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd greextra.sfd gregall.sfd gresgmodern.sfd
 
 EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py README.md
 

@@ -21,7 +21,7 @@
 
 \newfontface\GreGall{gregall.ttf}
 \newfontface\GreGallModern{gresgmodern.ttf}
-\directlua{dofile('gregall.lua')}
+\RequireLuaModule{gregoriotex-nabc}
 \newcommand{\gregallcharno}[3]{{\directlua{
   tex.sprint(gregallparse_neumes("\luaescapestring{#1}", "\luaescapestring{#2}", \luaescapestring{#3}))
 }}}
