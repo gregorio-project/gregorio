@@ -104,20 +104,35 @@
 \def\gre@char@reversedsemicirculus{\grecpSemicirculusReversus}%
 
 % horizontal episemus
-\def\gre@char@he@punctum{\grecpHEpisemusPunctum}%
-\def\gre@char@he@punctum@line@br{\grecpHEpisemusPunctumLineBR}%
-\def\gre@char@he@punctum@line@tr{\grecpHEpisemusPunctumLineTR}%
-\def\gre@char@he@punctum@line@tl{\grecpHEpisemusPunctumLineTL}%
-\def\gre@char@he@punctum@line@bl{\grecpHEpisemusPunctumLineBL}%
-\def\gre@char@he@punctum@line@blbr{\grecpHEpisemusPunctumLineBLBR}%
-\def\gre@char@he@punctumauctus@line@bl{\grecpHEpisemusPunctumAuctusLineBL}%
-\def\gre@char@he@flexus{\grecpHEpisemusFlexusDeminutus}%
-\def\gre@char@he@initio{\grecpHEpisemusDebilis}%
-\def\gre@char@he@virga{\grecpHEpisemusVirga}%
-\def\gre@char@he@virga@line@br{\grecpHEpisemusVirgaLineBR}%
-\def\gre@char@he@inclinatum{\grecpHEpisemusInclinatum}%
-\def\gre@char@he@inclinatumdem{\grecpHEpisemusInclinatumDeminutus}%
-\def\gre@char@he@stropha{\grecpHEpisemusStropha}%
+\newbox\gre@hep@box%
+\def\gre@def@char@he#1#2{%
+  \expandafter\def\csname gre@char@he@new@#1\endcsname##1{%
+    \ifx##1f\csname grecpHEpisemus#2\endcsname%
+    \else%
+      \setbox\gre@hep@box\hbox{\csname grecpHEpisemus#2\endcsname}%
+      \hbox to \wd\gre@hep@box{%
+        \ifx##1l\else\hfil\fi%
+        \csname grecpHEpisemus#2Reduced\endcsname%
+        \ifx##1r\else\hfil\fi%
+      }%
+    \fi%
+  }%
+  \expandafter\edef\csname gre@char@he@#1\endcsname{\csname gre@char@he@new@#1\endcsname{f}}%
+}%
+\gre@def@char@he{punctum}{Punctum}%
+\gre@def@char@he{punctum@line@br}{PunctumLineBR}%
+\gre@def@char@he{punctum@line@tr}{PunctumLineTR}%
+\gre@def@char@he{punctum@line@tl}{PunctumLineTL}%
+\gre@def@char@he{punctum@line@bl}{PunctumLineBL}%
+\gre@def@char@he{punctum@line@blbr}{PunctumLineBLBR}%
+\gre@def@char@he{punctumauctus@line@bl}{PunctumAuctusLineBL}%
+\gre@def@char@he{flexus}{FlexusDeminutus}%
+\gre@def@char@he{initio}{Debilis}%
+\gre@def@char@he{virga}{Virga}%
+\gre@def@char@he{virga@line@br}{VirgaLineBR}%
+\gre@def@char@he{inclinatum}{Inclinatum}%
+\gre@def@char@he{inclinatumdem}{InclinatumDeminutus}%
+\gre@def@char@he{stropha}{Stropha}%
 \def\gre@char@he@porrectus#1{%
   \ifcase#1\grecpHEpisemusPunctum%
   \or\grecpHEpisemusPorrectusOne%
