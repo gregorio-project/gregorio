@@ -1794,10 +1794,10 @@ static inline void normal_height_bottom(gtex_sign_type sign_type,
          * under the note
          */
         if ((!current_note->previous
-                        || simple_htype(current_note->previous->
-                                h_episemus_type) == H_NO_EPISEMUS)
+                        || current_note->previous->h_episemus_type ==
+                        H_NO_EPISEMUS)
                 && (!current_note->next
-                        || simple_htype(current_note->next->h_episemus_type) ==
+                        || current_note->next->h_episemus_type ==
                         H_NO_EPISEMUS)) {
             *height = current_note->u.note.pitch - 1;
             if (bottom) {
@@ -1817,8 +1817,8 @@ static inline void normal_height_bottom_porrectus(gtex_sign_type sign_type,
 {
     if (sign_type == ST_H_EPISEMUS) {
         if ((!current_note->previous
-                        || simple_htype(current_note->previous->
-                                h_episemus_type) == H_NO_EPISEMUS)) {
+                        || current_note->previous->h_episemus_type ==
+                        H_NO_EPISEMUS)) {
             *height = current_note->u.note.pitch - 1;
             if (bottom) {
                 *bottom = true;
@@ -2388,7 +2388,7 @@ static char gregoriotex_find_next_hepisemus_height(gregorio_glyph *glyph,
                     || note->next->u.note.shape ==
                     S_PUNCTUM_INCLINATUM_DEMINUTUS
                     || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_AUCTUS)
-            && simple_htype(note->next->h_episemus_type) != H_NO_EPISEMUS) {
+            && note->next->h_episemus_type != H_NO_EPISEMUS) {
         return note->next->h_episemus_top_note + 1;
     }
     note = NULL;
@@ -2408,7 +2408,7 @@ static char gregoriotex_find_next_hepisemus_height(gregorio_glyph *glyph,
             gregoriotex_determine_number_and_type(glyph, element, &type,
                     &gtype);
         }
-        if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS) {
+        if (note->h_episemus_type != H_NO_EPISEMUS) {
             gregoriotex_find_sign_number(glyph, i,
                     gtype, ST_H_EPISEMUS, note, &number, &height, &bottom);
             if (!bottom) {
@@ -2449,7 +2449,7 @@ static char gregoriotex_find_next_hepisemus_height(gregorio_glyph *glyph,
     } else {
         gregoriotex_determine_number_and_type(glyph, element, &type, &gtype);
     }
-    if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS) {
+    if (note->h_episemus_type != H_NO_EPISEMUS) {
         gregoriotex_find_sign_number(glyph, i,
                 gtype, ST_H_EPISEMUS, note, &number, &height, &bottom);
         if (!bottom) {
@@ -2497,7 +2497,7 @@ static void gregoriotex_write_hepisemus(FILE *f, gregorio_glyph *current_glyph,
         height = status->to_modify_h_episemus;
         // we also modify the next note if necessary
         if (current_note->next
-                && simple_htype(current_note->next->h_episemus_type) !=
+                && current_note->next->h_episemus_type !=
                 H_NO_EPISEMUS) {
             status->to_modify_note = current_note->next;
         } else {
@@ -2508,7 +2508,7 @@ static void gregoriotex_write_hepisemus(FILE *f, gregorio_glyph *current_glyph,
     next_height = gregoriotex_find_next_hepisemus_height(current_glyph,
             current_note, current_element, &next_note);
 
-    if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS
+    if (current_note->h_episemus_type != H_NO_EPISEMUS
             && (!current_note->next
                     || current_note->next->u.note.shape == S_PUNCTUM_INCLINATUM
                     || current_note->next->u.note.shape ==
@@ -2516,7 +2516,7 @@ static void gregoriotex_write_hepisemus(FILE *f, gregorio_glyph *current_glyph,
                     || current_note->next->u.note.shape ==
                     S_PUNCTUM_INCLINATUM_AUCTUS)
             && (!current_note->previous
-                    || simple_htype(current_note->previous->h_episemus_type) ==
+                    || current_note->previous->h_episemus_type ==
                     H_NO_EPISEMUS) && !bottom && next_height != -1) {
         /*
          * TODO: remove conditional ambiguity 
@@ -2539,12 +2539,10 @@ static void gregoriotex_write_hepisemus(FILE *f, gregorio_glyph *current_glyph,
     if (i == HEPISEMUS_FIRST_TWO && current_note->next) {
         ambitus = current_note->u.note.pitch - current_note->next->u.note.pitch;
     }
-    if (has_bottom(current_note->h_episemus_type)) {
+    if (current_note->h_episemus_vposition == VPOS_BELOW) {
         fprintf(f, "\\grehepisemusbottom{%c}{%d}{%d}%%\n",
                 current_note->h_episemus_bottom_note - 1, number, ambitus);
-        if (!bottom
-                && simple_htype(current_note->h_episemus_type) !=
-                H_NO_EPISEMUS) {
+        if (!bottom && current_note->h_episemus_type != H_NO_EPISEMUS) {
             fprintf(f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n", no_bridge_height,
                     number, ambitus, next_height);
         }
@@ -2994,11 +2992,10 @@ static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
                     current_note->u.note.pitch + 2, current_note->choral_sign,
                     number);
         }
-        if (simple_htype(current_note->h_episemus_type) != H_NO_EPISEMUS) {
+        if (current_note->h_episemus_type != H_NO_EPISEMUS) {
             tmpnote = current_note;
             while (tmpnote) {
-                if (simple_htype(current_note->h_episemus_type) !=
-                        H_NO_EPISEMUS) {
+                if (current_note->h_episemus_type != H_NO_EPISEMUS) {
                     if (is_on_a_line(tmpnote->h_episemus_top_note)) {
                         tmpnote->h_episemus_top_note =
                                 tmpnote->h_episemus_top_note + 1;
@@ -3011,8 +3008,7 @@ static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
             }
             tmpnote = current_note->previous;
             while (tmpnote) {
-                if (simple_htype(current_note->h_episemus_type) !=
-                        H_NO_EPISEMUS) {
+                if (current_note->h_episemus_type != H_NO_EPISEMUS) {
                     if (is_on_a_line(tmpnote->h_episemus_top_note)) {
                         tmpnote->h_episemus_top_note =
                                 tmpnote->h_episemus_top_note + 1;
@@ -3148,8 +3144,8 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
             _found();
             if ((type == T_PORRECTUS || type == T_PORRECTUS_FLEXUS)
                     && current_note->next
-                    && simple_htype(current_note->next->h_episemus_type) !=
-                    H_NO_EPISEMUS && i == 1) {
+                    && current_note->next->h_episemus_type != H_NO_EPISEMUS &&
+                    i == 1) {
                 // adjustment of h_episemus_top_note for g_f_i
                 if (current_note->next->next
                         && current_note->next->next->u.note.pitch >
@@ -3166,8 +3162,8 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
                 if ((type == T_TORCULUS_RESUPINUS
                                 || type == T_TORCULUS_RESUPINUS_FLEXUS)
                         && current_note->next
-                        && simple_htype(current_note->next->h_episemus_type) !=
-                        H_NO_EPISEMUS && i == 2) {
+                        && current_note->next->h_episemus_type != H_NO_EPISEMUS
+                        && i == 2) {
                     // adjustment of h_episemus_top_note for fg_f_i
                     if (current_note->next->next
                             && current_note->next->next->u.note.pitch >

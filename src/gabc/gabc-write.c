@@ -492,11 +492,30 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     default:
         break;
     }
-    if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS) {
+    if (note->h_episemus_type != H_NO_EPISEMUS) {
         fprintf(f, "_");
-    }
-    if (has_bottom(note->h_episemus_type)) {
-        fprintf(f, "_0");
+        switch (note->h_episemus_vposition) {
+        case VPOS_BELOW:
+            fprintf(f, "0");
+            break;
+        case VPOS_ABOVE:
+            fprintf(f, "1");
+            break;
+        }
+        if (note->h_episemus_no_bridge) {
+            fprintf(f, "2");
+        }
+        switch (note->h_episemus_size) {
+        case HS_SMALL_LEFT:
+            fprintf(f, "3");
+            break;
+        case HS_SMALL_CENTRE:
+            fprintf(f, "4");
+            break;
+        case HS_SMALL_RIGHT:
+            fprintf(f, "5");
+            break;
+        }
     }
     if (note->texverb) {
         fprintf(f, "[nv:%s]", note->texverb);

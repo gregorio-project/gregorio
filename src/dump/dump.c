@@ -20,6 +20,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
@@ -657,10 +658,10 @@ static const char *dump_special_sign(gregorio_sign special_sign)
     return str;
 }
 
-static const char *dump_h_episemus_type(gregorio_h_episemus h_episemus_type)
+static const char *dump_h_episemus_type(grehepisemus_type type)
 {
     const char *str;
-    switch (h_episemus_type) {
+    switch (type) {
     case H_NO_EPISEMUS:
         str = "H_NO_EPISEMUS";
         break;
@@ -673,23 +674,58 @@ static const char *dump_h_episemus_type(gregorio_h_episemus h_episemus_type)
     case H_MULTI:
         str = "H_MULTI";
         break;
-    case H_MULTI_BEGINNING:
-        str = "H_MULTI_BEGINNING";
+    default:
+        str = "unknown";
         break;
-    case H_MULTI_MIDDLE:
-        str = "H_MULTI_MIDDLE";
+    }
+    return str;
+}
+
+static const char *dump_h_episemus_vposition(gregorio_vposition vposition)
+{
+    const char *str;
+    switch (vposition) {
+    case VPOS_AUTO:
+        str = "VPOS_AUTO";
         break;
-    case H_MULTI_END:
-        str = "H_MULTI_END";
+    case VPOS_BELOW:
+        str = "VPOS_BELOW";
         break;
-    case H_UNDETERMINED:
-        str = "H_UNDETERMINED";
+    case VPOS_ABOVE:
+        str = "VPOS_ABOVE";
         break;
     default:
         str = "unknown";
         break;
     }
     return str;
+}
+
+static const char *dump_h_episemus_size(grehepisemus_size size)
+{
+    const char *str;
+    switch (size) {
+    case HS_NORMAL:
+        str = "HS_NORMAL";
+        break;
+    case HS_SMALL_LEFT:
+        str = "HS_SMALL_LEFT";
+        break;
+    case HS_SMALL_CENTRE:
+        str = "HS_SMALL_CENTRE";
+        break;
+    case HS_SMALL_RIGHT:
+        str = "HS_SMALL_RIGHT";
+        break;
+    default:
+        str = "unknown";
+        break;
+    }
+    return str;
+}
+
+static const char *dump_bool(bool value) {
+    return value? "true" : "false";
 }
 
 void dump_write_score(FILE *f, gregorio_score *score)
@@ -1050,14 +1086,23 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                         dump_special_sign(note->special_sign));
                             }
                             if (note->h_episemus_type) {
-                                fprintf(f, "         h_episemus_type        %d (",
-                                        note->h_episemus_type);
-                                fprintf(f, "%s", dump_h_episemus_type(
-                                            simple_htype (note->h_episemus_type)));
-                                if (has_bottom(note->h_episemus_type)) {
-                                    fprintf(f, " & H_BOTTOM");
-                                }
-                                fprintf(f, ")\n");
+                                fprintf(f, "         h_episemus_type        %d (%s)\n",
+                                        note->h_episemus_type,
+                                        dump_h_episemus_type(note->h_episemus_type));
+                            }
+                            if (note->h_episemus_type) {
+                                fprintf(f, "         h_episemus_vposition   %d (%s)\n",
+                                        note->h_episemus_vposition,
+                                        dump_h_episemus_vposition(note->h_episemus_vposition));
+                            }
+                            if (note->h_episemus_type) {
+                                fprintf(f, "         h_episemus_size        %d (%s)\n",
+                                        note->h_episemus_size,
+                                        dump_h_episemus_size(note->h_episemus_size));
+                            }
+                            if (note->h_episemus_type) {
+                                fprintf(f, "         h_episemus_no_bridge   %s\n",
+                                        dump_bool(note->h_episemus_no_bridge));
                             }
                             if (note->h_episemus_top_note) {
                                 fprintf(f, "         h_episemus_top_note    %c\n",

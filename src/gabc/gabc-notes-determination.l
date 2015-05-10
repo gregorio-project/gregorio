@@ -20,6 +20,7 @@
 
 #include "config.h"
 #include <stdio.h>
+#include <stdbool.h>
 #include <ctype.h>              /* for tolower */
 #include "struct.h"
 #include "messages.h"
@@ -33,20 +34,61 @@ static char *notesmacros[10];
 static char *tempstr = NULL;
 
 static inline void lex_add_note(int i, gregorio_shape shape, char signs,
-        char liquescentia, char h_episemus)
+        char liquescentia)
 {
     nbof_isolated_episemus = 0;
     gregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]),
-                      shape, signs, liquescentia, h_episemus);
+                      shape, signs, liquescentia, NULL);
 }
 
 static inline void error()
 {
-    char *tempstr = malloc(71 * sizeof(char));
-    snprintf(tempstr, 70, _("undefined macro used: m%d"),
-             gabc_notes_determination_text[3] - '0');
-    gregorio_message(tempstr, "gabc_notes_determination", ERROR, 0);
+    gregorio_messagef("gabc_notes_determination", ERROR, 0,
+            _("undefined macro used: m%d"),
+            gabc_notes_determination_text[3] - '0');
 }
+
+static void add_h_episemus(gregorio_note *note) {
+    grehepisemus_type type = H_ONE;
+    gregorio_vposition vposition = VPOS_AUTO;
+    grehepisemus_size size = HS_NORMAL;
+    bool no_bridge = false;
+
+    char *ptr = gabc_notes_determination_text;
+    char current;
+    // first character is the underscore
+    while (current = *(++ptr)) {
+        switch(current) {
+        case '0':
+            vposition = VPOS_BELOW;
+            break;
+        case '1':
+            vposition = VPOS_ABOVE;
+            break;
+        case '2':
+            no_bridge = true;
+            break;
+        case '3':
+            size = HS_SMALL_LEFT;
+            break;
+        case '4':
+            size = HS_SMALL_CENTRE;
+            break;
+        case '5':
+            size = HS_SMALL_RIGHT;
+            break;
+        default:
+            gregorio_messagef("gabc_notes_determination", ERROR, 0,
+                    _("unrecognized horizontal episemus modifier: %c"),
+                    current);
+            break;
+        };
+    }
+
+    gregorio_add_h_episemus(current_note, type, vposition, size, no_bridge,
+                &nbof_isolated_episemus);
+}
+
 %}
 
 %option stack
@@ -146,53 +188,50 @@ static inline void error()
     }
 <overbrace>[^\]]+ {
         snprintf(tempstr, 70, "\\greoverbrace{%s}{0pt}{0pt}{%d}",
-                 gabc_notes_determination_text, char_for_brace);
+                gabc_notes_determination_text, char_for_brace);
         gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
     }
 <overcurlybrace>[^\]]+ {
         snprintf(tempstr, 70, "\\greovercurlybrace{%s}{0}{0pt}{0pt}{%d}",
-                 gabc_notes_determination_text, char_for_brace);
+                gabc_notes_determination_text, char_for_brace);
         gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
     }
 <overcurlyaccentusbrace>[^\]]+ {
         snprintf(tempstr, 70, "\\greovercurlybrace{%s}{1}{0pt}{0pt}{%d}",
-                 gabc_notes_determination_text, char_for_brace);
+                gabc_notes_determination_text, char_for_brace);
         gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
     }
 <choralsign>[^\]]+ {
         gregorio_add_cs_to_note(&current_note,
-                                strdup(gabc_notes_determination_text));
+                strdup(gabc_notes_determination_text));
     }
 <texverbnote>[^\]]+ {
         gregorio_add_texverb_to_note(&current_note,
-                                     strdup(gabc_notes_determination_text));
+                strdup(gabc_notes_determination_text));
     }
 <texverbglyph>[^\]]+ {
         gregorio_add_texverb_as_note(&current_note,
-                                     strdup(gabc_notes_determination_text),
-                                     GRE_TEXVERB_GLYPH);
+                strdup(gabc_notes_determination_text), GRE_TEXVERB_GLYPH);
     }
 <texverbelement>[^\]]+ {
         gregorio_add_texverb_as_note(&current_note,
-                                     strdup(gabc_notes_determination_text),
-                                     GRE_TEXVERB_ELEMENT);
+                strdup(gabc_notes_determination_text), GRE_TEXVERB_ELEMENT);
     }
 <alt>[^\]]+ {
         gregorio_add_texverb_as_note(&current_note,
-                                     strdup(gabc_notes_determination_text),
-                                     GRE_ALT);
+                strdup(gabc_notes_determination_text), GRE_ALT);
     }
 <texverbnote,texverbglyph,texverbelement,choralsign,alt,overcurlyaccentusbrace,overcurlybrace,overbrace>\] {
         BEGIN(INITIAL);
     }
 \{  {
         gregorio_add_texverb_as_note(&current_note, strdup("\\hbox to 0pt{"),
-                                     GRE_TEXVERB_ELEMENT);
+                GRE_TEXVERB_ELEMENT);
     }
 \}  {
         gregorio_add_texverb_as_note(&current_note,
-                                     strdup("\\hss%\n}%\n\\grenobreak\\relax "),
-                                     GRE_TEXVERB_ELEMENT);
+                strdup("\\hss%\n}%\n\\grenobreak\\relax "),
+                GRE_TEXVERB_ELEMENT);
     }
 [a-m]\+ {
         gregorio_add_manual_custos_as_note(&current_note,
@@ -211,10 +250,10 @@ Z   {
 (c|f)[1-4] {
         if (gabc_notes_determination_text[0]=='c') {
             gregorio_add_clef_change_as_note(&current_note, GRE_C_KEY_CHANGE,
-                                             gabc_notes_determination_text[1]);
+                    gabc_notes_determination_text[1]);
         } else {
             gregorio_add_clef_change_as_note(&current_note, GRE_F_KEY_CHANGE,
-                                             gabc_notes_determination_text[1]);
+                    gabc_notes_determination_text[1]);
         }
     }
 (cb|fb)[1-4] {
@@ -338,45 +377,42 @@ r5  {
         gregorio_change_shape(current_note, S_LINEA);
     }
 [a-mA-M]vv {
-        lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
+        lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
 [a-mA-M]vvv {
-        lex_add_note(0, S_TRIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
+        lex_add_note(0, S_TRIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
 [a-mA-M]VV {
-        lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
+        lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
 [a-mA-M]VVV {
-        lex_add_note(0, S_TRIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
+        lex_add_note(0, S_TRIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
 [a-mA-M]ss {
-        lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
+        lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
 [a-mA-M]ss(\<|\>) {
-        lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_AUCTA,H_NO_EPISEMUS);
+        lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_AUCTA);
     }
 [a-mA-M]sss {
-        lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
+        lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
 [a-mA-M]sss(\<|\>) {
-        lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTA, H_NO_EPISEMUS);
+        lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTA);
     }
 [a-mA-M] {
         lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]),
-                     _NO_SIGN, L_NO_LIQUESCENTIA, H_NO_EPISEMUS);
+                _NO_SIGN, L_NO_LIQUESCENTIA);
     }
 -[a-mA-M] { 
         lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]),
-                     _NO_SIGN, L_INITIO_DEBILIS, H_NO_EPISEMUS);
+                _NO_SIGN, L_INITIO_DEBILIS);
     }
 \'  {
         gregorio_add_sign(current_note, _V_EPISEMUS);
     }
-_0  {
-        gregorio_add_h_episemus(current_note, H_BOTTOM, &nbof_isolated_episemus);
-    }
-_   {
-        gregorio_add_h_episemus(current_note, H_ONE, &nbof_isolated_episemus);
+_[0-5]* {
+        add_h_episemus(current_note);
     }
 \.  {
         gregorio_add_sign(current_note, _PUNCTUM_MORA);
@@ -416,7 +452,7 @@ s   {
     }
 .   {        
         snprintf(tempstr, 70, _("unrecognized character: \"%c\""),
-                 gabc_notes_determination_text[0]);
+                gabc_notes_determination_text[0]);
         gregorio_message (tempstr, "det_notes_from_string", ERROR, 0);
     }
 

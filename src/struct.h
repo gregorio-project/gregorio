@@ -182,18 +182,25 @@ typedef enum gregorio_liquescentia {
     L_AUCTA_INITIO_DEBILIS = 0x18,
 } gregorio_liquescentia;
 
-typedef enum gregorio_h_episemus {
+typedef enum grehepisemus_type {
     H_NO_EPISEMUS = 0,
-    H_ONE = 1,
-    H_ALONE = 2,
-    H_MULTI = 3,
-    H_MULTI_BEGINNING = 4,
-    H_MULTI_MIDDLE = 5,
-    H_MULTI_END = 6,
-    H_UNDETERMINED = 7,
-    // this H_EPISEMUS can be mixed with another one:
-    H_BOTTOM = 16,
-} gregorio_h_episemus;
+    H_ONE,
+    H_ALONE,
+    H_MULTI,
+} grehepisemus_type;
+
+typedef enum grehepisemus_size {
+    HS_NORMAL = 0,
+    HS_SMALL_LEFT,
+    HS_SMALL_CENTRE,
+    HS_SMALL_RIGHT,
+} grehepisemus_size;
+
+typedef enum gregorio_vposition {
+    VPOS_AUTO = 0,
+    VPOS_BELOW,
+    VPOS_ABOVE,
+} gregorio_vposition;
 
 // The different types of glyph
 
@@ -386,6 +393,13 @@ typedef struct gregorio_note {
 
     //// characters go to the end for structure alignment
 
+    // h_episemus_top_note is the highest pitch of the notes that are
+    // under the same horizontal episemus of the note. If the note is not
+    // under an episemus, it is 0.
+    char h_episemus_top_note;
+    // same for bottom_note
+    char h_episemus_bottom_note;
+
     // we have seen that notes are always real notes, that is to say
     // GRE_NOTE. the type is always that in the final structure. But there
     // is however this field in the structure because of the temporary
@@ -396,6 +410,7 @@ typedef struct gregorio_note {
     ENUM_BITFIELD(gregorio_sign) signs:8;
     // special_sign is the sign we sometimes encounter on punctum cavum, like
     // accentus, semi-circulus, etc.
+    ENUM_BITFIELD(gregorio_sign) special_sign:8;
     // h_episemus_type is the type of horizontal episemus, possible values
     // are H_ALONE for an isolated horizontal episemus, H_MULTI_BEGINNING
     // if the note is the first note of an episemus on several notes,
@@ -403,14 +418,11 @@ typedef struct gregorio_note {
     // you guess what could be the use of H_MULTI_END. Other values are
     // temporary values used in determination, they must not appear in the
     // final structure.
-    ENUM_BITFIELD(gregorio_h_episemus) h_episemus_type;
-    // h_episemus_top_note is the highest pitch of the notes that are
-    // under the same horizontal episemus of the note. If the note is not
-    // under an episemus, it is 0.
-    char h_episemus_top_note;
-    // same for bottom_note
-    char h_episemus_bottom_note;
-    ENUM_BITFIELD(gregorio_sign) special_sign:8;
+
+    ENUM_BITFIELD(grehepisemus_type) h_episemus_type:2;
+    ENUM_BITFIELD(gregorio_vposition) h_episemus_vposition:2;
+    ENUM_BITFIELD(grehepisemus_size) h_episemus_size:2;
+    bool h_episemus_no_bridge:1;
 } gregorio_note;
 
 /*
@@ -666,11 +678,76 @@ typedef struct gregorio_voice_info {
     bool flatted_key;
 } gregorio_voice_info;
 
+// the maximum number of voices, more than this is total nonsense in
+// gregorian chant.
+#define MAX_NUMBER_OF_VOICES 10
+
+#define MAX_TEXT_LENGTH 200
+
+#define C_KEY 'c'
+#define F_KEY 'f'
+#define NO_KEY -5
+#define DEFAULT_KEY 5
+//#define FLAT_KEY 25
+//#define NO_FLAT_KEY 0
+
+#define MONOPHONY 0
+
+// the different initial styles
+
+#define NO_INITIAL 0
+#define NORMAL_INITIAL 1
+#define BIG_INITIAL 2
+
+#define NO_ALTERATION USELESS_VALUE
+#define FLAT GRE_FLAT
+#define NATURAL GRE_NATURAL
+
+#define USELESS_VALUE 0
+
+/*
+inline unsigned char simple_htype(unsigned char h)
+{
+    return h & (255 - H_BOTTOM);
+}
+
+inline bool has_bottom(unsigned char arg)
+{
+    return (arg & H_BOTTOM) == H_BOTTOM;
+}
+
+inline bool is_multi(unsigned char h_episemus)
+{
+    return (simple_htype(h_episemus)) > H_ALONE;
+}
+*/
+
+inline bool is_puncta_inclinata(char glyph)
+{
+    return glyph <= G_5_PUNCTA_INCLINATA_ASCENDENS;
+}
+
+#define IS_INITIO_DEBILIS 5
+#define NO_INITIO_DEBILIS 0
+
+inline bool is_liquescentia(char liquescentia)
+{
+    return liquescentia == L_DEMINUTUS || liquescentia == L_AUCTUS_ASCENDENS
+        || liquescentia == L_AUCTUS_DESCENDENS || liquescentia == L_AUCTA;
+}
+
+inline bool is_initio_debilis(char liquescentia)
+{
+    return liquescentia >= L_INITIO_DEBILIS;
+}
+
+#define SCHEME_DEFAULT SCHEME_LATINE
+
 gregorio_score *gregorio_new_score(void);
 gregorio_shape gregorio_det_shape(char pitch);
 void gregorio_add_note(gregorio_note **current_note, char pitch,
         gregorio_shape shape, gregorio_sign signs,
-        gregorio_liquescentia liquescentia, char h_episemus);
+        gregorio_liquescentia liquescentia, gregorio_note* prototype);
 void gregorio_add_glyph(gregorio_glyph **current_glyph,
         gregorio_glyph_type type, gregorio_note *first_note,
         gregorio_liquescentia liquescentia);
@@ -686,7 +763,8 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_euouae euouae);
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
-void gregorio_add_h_episemus(gregorio_note *note, gregorio_h_episemus type,
+void gregorio_add_h_episemus(gregorio_note *note, grehepisemus_type type,
+        gregorio_vposition vposition, grehepisemus_size size, bool no_bridge,
         unsigned int *nbof_isolated_episemus);
 void gregorio_add_sign(gregorio_note *note, gregorio_sign sign);
 void gregorio_add_liquescentia(gregorio_note *note,
@@ -766,70 +844,6 @@ void gregorio_go_to_first_glyph(gregorio_glyph **glyph);
 void gregorio_det_step_and_line_from_key(int key, char *step, int *line);
 char gregorio_is_only_special(gregorio_element *element);
 int gregorio_calculate_new_key(char step, int line);
-
-// the maximum number of voices, more than this is total nonsense in
-// gregorian chant.
-#define MAX_NUMBER_OF_VOICES 10
-
-#define MAX_TEXT_LENGTH 200
-
-#define C_KEY 'c'
-#define F_KEY 'f'
-#define NO_KEY -5
-#define DEFAULT_KEY 5
-//#define FLAT_KEY 25
-//#define NO_FLAT_KEY 0
-
-#define MONOPHONY 0
-
-// the different initial styles
-
-#define NO_INITIAL 0
-#define NORMAL_INITIAL 1
-#define BIG_INITIAL 2
-
-#define NO_ALTERATION USELESS_VALUE
-#define FLAT GRE_FLAT
-#define NATURAL GRE_NATURAL
-
-#define USELESS_VALUE 0
-
-inline unsigned char simple_htype(unsigned char h)
-{
-    return h & (255 - H_BOTTOM);
-}
-
-inline bool has_bottom(unsigned char arg)
-{
-    return (arg & H_BOTTOM) == H_BOTTOM;
-}
-
-inline bool is_multi(unsigned char h_episemus)
-{
-    return (simple_htype(h_episemus)) > H_ALONE;
-}
-
-inline bool is_puncta_inclinata(char glyph)
-{
-    return glyph <= G_5_PUNCTA_INCLINATA_ASCENDENS;
-}
-
-#define IS_INITIO_DEBILIS 5
-#define NO_INITIO_DEBILIS 0
-
-inline bool is_liquescentia(char liquescentia)
-{
-    return liquescentia == L_DEMINUTUS || liquescentia == L_AUCTUS_ASCENDENS
-        || liquescentia == L_AUCTUS_DESCENDENS || liquescentia == L_AUCTA;
-}
-
-inline bool is_initio_debilis(char liquescentia)
-{
-    return liquescentia >= L_INITIO_DEBILIS;
-}
-
-#define SCHEME_DEFAULT SCHEME_LATINE
-
 void gregorio_add_character(gregorio_character **current_character,
         grewchar wcharacter);
 void gregorio_begin_style(gregorio_character **current_character,
