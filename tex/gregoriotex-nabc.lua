@@ -86,16 +86,9 @@ local function gregallreadfont(pfx, font_id)
   return tab, metrics
 end
 
--- only works for fonts loaded so far
-local name_id = {}
-for key, value in pairs(fonts.hashes.identifiers) do
-   name_id[value.shared.rawdata.metadata.fontname] = key
-end
-
-gregalltab = {}
+local gregalltab = {}
 local gregallmetrics = {}
-gregalltab.gregall, gregallmetrics.gregall = gregallreadfont("GreGall", name_id["gregall"])
-gregalltab.gregallmod, gregallmetrics.gregallmod = gregallreadfont("GreGallModern", name_id["gresgmodern"])
+
 local gregallneumekinds = { vi = 1, pu = 1, ta = 1, gr = 1, cl = 1, un = 1, pv = 1, pe = 1, po = 1, to = 1, ci = 1, sc = 1, pf = 1, sf = 1, tr = 1,
           st = 1, ds = 1, ts = 1, tg = 1, bv = 1, tv = 1, pr = 1, pi = 1, vs = 1, ["or"] = 1, sa = 1, pq = 1, qi = 1, ql = 1, pt = 1 }
 local gregalllskinds = { c = 1, t = 1, s = 1, l = 1, x = 1, ["+"] = 1, a = 1, al = 1, am = 1, b = 1, cm = 1, co = 1, cw = 1, d = 1, e = 1, eq = 1,
@@ -269,7 +262,7 @@ local add_spacing = function(str, len, idx, ret)
   return idx, ret
 end
 
-gregallparse_neumes = function(str, kind, scale)
+local gregallparse_neumes = function(str, kind, scale)
   local len = str:len()
   local idx = 1
   local ret = ''
@@ -400,3 +393,19 @@ gregallparse_neumes = function(str, kind, scale)
   end
   return ret
 end
+
+local function init_font(fontname)
+  -- only works for fonts loaded so far
+  local name_id = {}
+  for key, value in pairs(fonts.hashes.identifiers) do
+     name_id[value.shared.rawdata.metadata.fontname] = key
+  end
+  if fontname == 'GreGall' then
+    gregalltab.gregall, gregallmetrics.gregall = gregallreadfont("GreGall", name_id["gregall"])
+  else
+    gregalltab.gregallmod, gregallmetrics.gregallmod = gregallreadfont("GreGallModern", name_id["gresgmodern"])
+  end
+end
+
+gregoriotex.parse_nabc = gregallparse_neumes
+gregoriotex.init_nabc_font = init_font

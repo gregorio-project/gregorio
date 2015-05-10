@@ -21,9 +21,9 @@
 
 \newfontface\GreGall{gregall.ttf}
 \newfontface\GreGallModern{gresgmodern.ttf}
-\RequireLuaModule{gregoriotex-nabc}
+\directlua{gregoriotex.init_nabc_font('GreGall')}
 \newcommand{\gregallcharno}[3]{{\directlua{
-  tex.sprint(gregallparse_neumes("\luaescapestring{#1}", "\luaescapestring{#2}", \luaescapestring{#3}))
+  tex.sprint(gregoriotex.parse_nabc("\luaescapestring{#1}", "\luaescapestring{#2}", \luaescapestring{#3}))
 }}}
 \def\gregallchar{%
   \begingroup %
@@ -48,4 +48,23 @@
 \def\dogregallmodchar#1{%
     \gregallcharno{#1}{gregallmod}{1.6}%
   \endgroup %
+}
+
+
+% this uses gregallchar, not currently available. nabc can contain ~, so making
+% it inactive.
+\def\nabcneumes{%
+  \begingroup %
+    \catcode`\~=12{}%
+    \donabcneumes%
+}
+
+\def\donabcneumes#1#2{%
+  \gresettextabovelines{\gregallchar{#2}}%
+  \endgroup %
+}
+
+% TODO: load lua macros on demand
+\def\scorenabclines#1{%
+   %
 }
