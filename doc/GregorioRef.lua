@@ -41,6 +41,8 @@ local EXCLUDE = {
   HEpisemusPunctumLineBR = true,
   HEpisemusPunctumLineTL = true,
   HEpisemusPunctumLineTR = true,
+  FlexusLineBL = true,
+  FlexusAmOneLineBL = true,
 }
 
 local GABC = {

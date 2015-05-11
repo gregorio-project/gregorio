@@ -1,0 +1,73 @@
+%GregorioTeX file.
+%
+% Copyright (C) 2014-2015 The Gregorio Project (see CONTRIBUTORS.md)
+%
+% This file is part of Gregorio.
+%
+% Gregorio is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Gregorio is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
+
+% this file contains macros for St. Gall ancient neume support
+
+\xdef\gregorionabcfontname{gregall}
+\xdef\gregorionabcfontsize{8}
+
+\def\gregoriosetnabcfont#1#2{%
+  \xdef\grenabcfontloaded{1}%
+  \xdef\gregorionabcfontname{#1}%
+  \xdef\gregorionabcfontsize{#2}%
+  \global\font\gregorionabcfont={name:#1} at #2 pt\relax %
+  {%
+    \gregorionabcfont %
+    \directlua{gregoriotex.init_nabc_font("\luatexluaescapestring{#1}")}%
+  }%
+}
+
+\def\gregorionabcstyle{\color{red}}
+
+\newcommand{\grenabccharno}[3]{{\directlua{
+  tex.sprint(gregoriotex.parse_nabc("\luatexluaescapestring{#1}", "\luatexluaescapestring{#2}", \luatexluaescapestring{#3}))
+}}}
+
+\def\gregorionabcchar{%
+  \begingroup %
+    \catcode`\~=12{}%
+    \catcode`\@=11{}%
+    \gregorionabcfont %
+    \gregorionabcstyle %
+    \dogregorionabcchar%
+}
+\def\dogregorionabcchar#1{%
+    \grenabccharno{#1}{\gregorionabcfontname}{1}%
+  \endgroup %
+}
+
+% nabc can contain ~, so making it inactive.
+\def\nabcneumes{%
+  \begingroup %
+    \catcode`\~=12{}%
+    \donabcneumes%
+}
+
+\def\donabcneumes#1#2{%
+  \gresettextabovelines{\gregorionabcchar{#2}}%
+  \endgroup %
+}
+
+\xdef\grenabcfontloaded{0}
+
+\def\scorenabclines#1{%
+  \ifnum\grenabcfontloaded=0\relax %
+    \gregoriosetnabcfont{\gregorionabcfontname}{\gregorionabcfontsize}%
+  \fi %
+}

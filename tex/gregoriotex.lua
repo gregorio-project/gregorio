@@ -27,14 +27,14 @@ local gregoriotex = gregoriotex
 local internalversion = '3.0.0-rc2' -- GREGORIO_VERSION (comment used by VersionManager.py)
 
 local err, warn, info, log = luatexbase.provides_module({
-    name               = "gregoriotex",
-    version            = '3.0.0-rc2', -- GREGORIO_VERSION
-    greinternalversion = internalversion,
-    date               = "2015/05/04", -- GREGORIO_DATE_LTX
-    description        = "GregorioTeX module.",
-    author             = "The Gregorio Project (see CONTRIBUTORS.md)",
-    copyright          = "2008-2015 - The Gregorio Project",
-    license            = "GPLv3+",
+  name               = "gregoriotex",
+  version            = '3.0.0-rc2', -- GREGORIO_VERSION
+  greinternalversion = internalversion,
+  date               = "2015/05/04", -- GREGORIO_DATE_LTX
+  description        = "GregorioTeX module.",
+  author             = "The Gregorio Project (see CONTRIBUTORS.md)",
+  copyright          = "2008-2015 - The Gregorio Project",
+  license            = "GPLv3+",
 })
 
 local hlist = node.id('hlist')
@@ -57,8 +57,8 @@ local loaded_font_sizes = {}
 local next_variant = 0
 local variant_prefix = 'greVariantFont'
 local number_to_letter = {
-    ['0'] = 'A', ['1'] = 'B', ['2'] = 'C', ['3'] = 'D', ['4'] = 'E',
-    ['5'] = 'F', ['6'] = 'G', ['7'] = 'H', ['8'] = 'I', ['9'] = 'J',
+  ['0'] = 'A', ['1'] = 'B', ['2'] = 'C', ['3'] = 'D', ['4'] = 'E',
+  ['5'] = 'F', ['6'] = 'G', ['7'] = 'H', ['8'] = 'I', ['9'] = 'J',
 }
 
 -- node factory
@@ -112,47 +112,47 @@ local function process (h, groupcode, glyphes)
     if has_attribute(line, gregorioattr) then
       -- the next two lines are to remove the dumb lines
       if count(hlist, line.head) <= 2 then
-	h, line = remove(h, line)
+        h, line = remove(h, line)
       else
-	centerstartnode = nil
-	for n in traverse_id(hlist, line.head) do
-	  if has_attribute(n, gregoriocenterattr, startcenter) then
-	    centerstartnode = n
-	  elseif has_attribute(n, gregoriocenterattr, endcenter) then
-	    if not centerstartnode then
-	      warn("End of a translation centering area encountered on a\nline without translation centering beginning,\nskipping translation...")
-	    else
-	      center_translation(centerstartnode, n, line.glue_set, line.glue_sign, line.glue_order)
-	    end
-	  elseif has_attribute(n, gregorioattr, potentialdashvalue) then
-	    adddash=true
-	    lastseennode=n
-	    currentfont = 0
-	    -- we traverse the list, to detect the font to use,
-	    -- and also not to add an hyphen if there is already one
-	    for g in node.traverse_id(glyph, n.head) do
-	      if currentfont == 0 then
-		currentfont = g.font
-	      end
-	      if g.char == hyphen or g.char == 45 then
-		adddash = false
-	      end
-	    end
-	    if currentshift == 0 then
-	      currentshift = n.shift
-	    end
-	    -- if we encounter a text that doesn't need a dash, we acknowledge it
-	  elseif has_attribute(n, gregorioattr, nopotentialdashvalue) then
-	    adddash=false
-	  end
-	end
-	if adddash==true then
-	  local dashnode, hyphnode = getdashnnode()
-	  dashnode.shift = currentshift
-	  hyphnode.font = currentfont
-	  insert_after(line.head, lastseennode, dashnode)
-	  addash=false
-	end
+        centerstartnode = nil
+        for n in traverse_id(hlist, line.head) do
+          if has_attribute(n, gregoriocenterattr, startcenter) then
+            centerstartnode = n
+          elseif has_attribute(n, gregoriocenterattr, endcenter) then
+            if not centerstartnode then
+              warn("End of a translation centering area encountered on a\nline without translation centering beginning,\nskipping translation...")
+            else
+              center_translation(centerstartnode, n, line.glue_set, line.glue_sign, line.glue_order)
+            end
+          elseif has_attribute(n, gregorioattr, potentialdashvalue) then
+            adddash=true
+            lastseennode=n
+            currentfont = 0
+            -- we traverse the list, to detect the font to use,
+            -- and also not to add an hyphen if there is already one
+            for g in node.traverse_id(glyph, n.head) do
+              if currentfont == 0 then
+                currentfont = g.font
+              end
+              if g.char == hyphen or g.char == 45 then
+                adddash = false
+              end
+            end
+            if currentshift == 0 then
+              currentshift = n.shift
+            end
+            -- if we encounter a text that doesn't need a dash, we acknowledge it
+          elseif has_attribute(n, gregorioattr, nopotentialdashvalue) then
+            adddash=false
+          end
+        end
+        if adddash==true then
+          local dashnode, hyphnode = getdashnnode()
+          dashnode.shift = currentshift
+          hyphnode.font = currentfont
+          insert_after(line.head, lastseennode, dashnode)
+          addash=false
+        end
       end
       -- we reinitialize the shift value, because it may change according to the line
       currentshift=0
@@ -196,7 +196,7 @@ local function clean_old_gtex_files(file_withdir)
     filename = "^"..file_withdir:match(".*/".."(.*)").."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
     for a in lfs.dir(dirpath) do
       if a:match(filename) then
-	os.remove(dirpath..sep..a)
+        os.remove(dirpath..sep..a)
       end
     end
   else
@@ -458,6 +458,8 @@ end
 local function font_size()
   tex.print(string.format('%.2f', (font.fonts[font.current()].size / 65536.0)))
 end
+
+dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 
 gregoriotex.include_score        = include_score
 gregoriotex.compile_gabc         = compile_gabc
