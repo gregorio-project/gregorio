@@ -65,7 +65,7 @@ local gregallaliases = {
   ["clppt1"] = "toG"
 }
 
-local function gregallreadfont(pfx, font_id)
+local function gregallreadfont(font_id)
   local tab = {}
   local metrics = {}
   local fontdata = fonts.hashes.identifiers[font_id]
@@ -73,7 +73,7 @@ local function gregallreadfont(pfx, font_id)
     local g = fontdata.characters[value]
     local name = key:gsub("B", ">"):gsub("N", "-"):gsub("E", "!"):gsub("T", "~")
     if g and (value >= 0xe400) and (value < 0xf000) then
-      tab[name] = "{\\" .. pfx .. "\\char" .. value .. "}"
+      tab[name] = "\\char" .. value
       metrics[name] = { width = g.width, height = g.height, depth = (g.depth and g.depth or 0) }
     end
   end
@@ -395,15 +395,8 @@ local gregallparse_neumes = function(str, kind, scale)
 end
 
 local function init_font(fontname)
-  -- only works for fonts loaded so far
-  local name_id = {}
-  for key, value in pairs(fonts.hashes.identifiers) do
-     name_id[value.shared.rawdata.metadata.fontname] = key
-  end
-  if fontname == 'GreGall' then
-    gregalltab.gregall, gregallmetrics.gregall = gregallreadfont("GreGall", name_id["gregall"])
-  else
-    gregalltab.gregallmod, gregallmetrics.gregallmod = gregallreadfont("GreGallModern", name_id["gresgmodern"])
+  if not gregalltab[fontname] then
+    gregalltab[fontname], gregallmetrics[fontname] = gregallreadfont(font.current())
   end
 end
 

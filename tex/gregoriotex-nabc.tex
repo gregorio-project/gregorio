@@ -19,40 +19,38 @@
 
 % this file contains macros for St. Gall ancient neume support
 
-\newfontface\GreGall{gregall.ttf}
-\newfontface\GreGallModern{gresgmodern.ttf}
-\directlua{gregoriotex.init_nabc_font("GreGall")}%
-\directlua{gregoriotex.init_nabc_font("GreGallModern")}%
+\xdef\gregorionabcfontname{gregall}
+\xdef\gregorionabcfontsize{8}
 
-\newcommand{\gregallcharno}[3]{{\directlua{
+\def\gregoriosetnabcfont#1#2{%
+  \xdef\grenabcfontloaded{1}%
+  \xdef\gregorionabcfontname{#1}%
+  \xdef\gregorionabcfontsize{#2}%
+  \global\font\gregorionabcfont={name:#1} at #2 pt\relax %
+  {%
+    \gregorionabcfont %
+    \directlua{gregoriotex.init_nabc_font("\luatexluaescapestring{#1}")}%
+  }%
+}
+
+\def\gregorionabcstyle{\color{red}}
+
+\newcommand{\grenabccharno}[3]{{\directlua{
   tex.sprint(gregoriotex.parse_nabc("\luatexluaescapestring{#1}", "\luatexluaescapestring{#2}", \luatexluaescapestring{#3}))
 }}}
 
-\def\gregallchar{%
+\def\gregorionabcchar{%
   \begingroup %
     \catcode`\~=12{}%
     \catcode`\@=11{}%
-    \fontsize{8}{8}%
-    \color{red}%
-    \dogregallchar%
+    \gregorionabcfont %
+    \gregorionabcstyle %
+    \dogregorionabcchar%
 }
-\def\dogregallchar#1{%
-    \gregallcharno{#1}{gregall}{0.8}%
+\def\dogregorionabcchar#1{%
+    \grenabccharno{#1}{\gregorionabcfontname}{1}%
   \endgroup %
 }
-\def\gregallmodchar{%
-  \begingroup %
-    \catcode`\~=12{}%
-    \catcode`\@=11{}%
-    \fontsize{8}{8}%
-    \color{red}%
-    \dogregallmodchar%
-}
-\def\dogregallmodchar#1{%
-    \gregallcharno{#1}{gregallmod}{0.8}%
-  \endgroup %
-}
-
 
 % this uses gregallchar, not currently available. nabc can contain ~, so making
 % it inactive.
@@ -63,11 +61,14 @@
 }
 
 \def\donabcneumes#1#2{%
-  \gresettextabovelines{\gregallchar{#2}}%
+  \gresettextabovelines{\gregorionabcchar{#2}}%
   \endgroup %
 }
 
-% TODO: load lua macros on demand
+\xdef\grenabcfontloaded{0}
+
 \def\scorenabclines#1{%
-   %
+  \ifnum\grenabcfontloaded=0\relax %
+    \gregoriosetnabcfont{\gregorionabcfontname}{\gregorionabcfontsize}%
+  \fi %
 }
