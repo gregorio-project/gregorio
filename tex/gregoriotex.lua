@@ -459,7 +459,7 @@ local function font_size()
   tex.print(string.format('%.2f', (font.fonts[font.current()].size / 65536.0)))
 end
 
-dofile('gregoriotex-nabc.lua')
+dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 
 gregoriotex.include_score        = include_score
 gregoriotex.compile_gabc         = compile_gabc
