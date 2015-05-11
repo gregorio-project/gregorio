@@ -402,3 +402,4 @@ end
 
 gregoriotex.parse_nabc = gregallparse_neumes
 gregoriotex.init_nabc_font = init_font
+gregoriotex.nabc_font_tables = gregalltab
