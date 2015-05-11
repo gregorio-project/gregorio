@@ -44,7 +44,7 @@ Source: "../COPYING.md"; DestDir: "{app}";
 Source: "../contrib/900_gregorio.xml"; DestDir: "{app}\contrib";
 Source: "../contrib/gregorio-scribus.lua"; DestDir: "{app}\contrib";
 Source: "../contrib/*"; DestDir: "{app}\contrib";
-Source: "../examples/PopulusSion.gabc"; DestDir: "{app}\examples";
+Source: "../examples/*.gabc"; DestDir: "{app}\examples";
 Source: "../examples/main-lualatex.tex"; DestDir: "{app}\examples";
 Source: "../gregoriotex.tds.zip"; DestDir: "{app}";
 
