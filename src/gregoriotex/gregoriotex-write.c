@@ -1824,9 +1824,7 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
             /*
              * i=2 
              */
-            if (glyph->u.notes.liquescentia ==
-                    L_DEMINUTUS_INITIO_DEBILIS
-                    || glyph->u.notes.liquescentia == L_DEMINUTUS) {
+            if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
                 number = 7;
             } else {
                 number = number_last_note(glyph, 0, note, true);
@@ -1969,7 +1967,7 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
             if (glyph->u.notes.liquescentia &
                     (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
                 // auctus
-                if (glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
+                if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
                     number = 40;
                 } else {
                     if (note->u.note.pitch -
@@ -2002,7 +2000,7 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
             } else if (note->next->next->u.note.pitch -
                     note->next->u.note.pitch == 1) {
                 // non-auctus with a second ambitus of 1
-                if (glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
+                if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
                     number = 33;
                 } else {
                     if (note->u.note.pitch -
@@ -2034,7 +2032,7 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
                 }
             } else {
                 // non-auctus with a second ambitus of at least 2
-                if (glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
+                if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
                     number = 23;
                 } else {
                     if (note->u.note.pitch -
