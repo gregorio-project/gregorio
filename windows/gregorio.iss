@@ -42,6 +42,7 @@ Source: "../UPGRADE.md"; DestDir: "{app}";
 Source: "../doc/GregorioRef-3_0_0-rc2.pdf"; DestDir: "{app}";
 Source: "../COPYING.md"; DestDir: "{app}";
 Source: "../contrib/900_gregorio.xml"; DestDir: "{app}\contrib";
+Source: "../contrib/system-setup.bat"; DestDir: "{app}";
 Source: "../contrib/gregorio-scribus.lua"; DestDir: "{app}\contrib";
 Source: "../contrib/*"; DestDir: "{app}\contrib";
 Source: "../examples/PopulusSion.gabc"; DestDir: "{app}\examples";
