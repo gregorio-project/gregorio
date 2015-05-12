@@ -77,7 +77,12 @@ gregoriotex-symbols.tex ^
 gregoriotex-spaces.tex ^
 gregoriotex-syllable.tex ^
 gregoriotex.lua ^
-gsp-default.tex
+gsp-default.tex ^
+greciliae.ttf ^
+greextra.ttf ^
+gregorio.ttf ^
+gresym.ttf ^
+parmesan.ttf
 
 for %%G in (%files%) do (
 	echo ##### %%G >> %output%
