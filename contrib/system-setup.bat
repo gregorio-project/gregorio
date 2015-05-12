@@ -63,8 +63,9 @@ echo #### 	Location >> %output%
 echo. >> %output%
 @for %%e in (%PATHEXT%) do @for %%i in (gregorio%%e) do @if NOT "%%~$PATH:i"=="" echo %%~$PATH:i >> %output% 2>&1
 echo. >> %output%
-echo ####	GregorioTeX Location >> %output%
+echo ####	GregorioTeX Locations >> %output%
 echo. >> %output%
+
 set files=gregoriotex.sty ^
 gregoriosyms.sty ^
 gregoriotex.tex ^
@@ -77,6 +78,7 @@ gregoriotex-spaces.tex ^
 gregoriotex-syllable.tex ^
 gregoriotex.lua ^
 gsp-default.tex
+
 for %%G in (%files%) do (
 	echo ##### %%G >> %output%
 	kpsewhich -all %%G >> %output% 2>&1
