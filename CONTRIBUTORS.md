@@ -7,6 +7,7 @@ Gregorio is developed by:
  * [Henry So Jr](mailto:henryso@panix.com)
  * [Br. Samuel Springuel](mailto:rpspringuel@gmail.com)
  * [Br. Elijah Schwab](mailto:elijahschwab@gmail.com)
+ * [Jakub Jelínek](mailto:jakub@redhat.com)
  * [Br. Gabriel-Marie](mailto:brgabriel@sspx.com)
 
 The following people also contributed in the past:

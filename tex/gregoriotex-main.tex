@@ -1365,20 +1365,4 @@
 % We load the default space configuration.
 \GreLoadSpaceConf{default}%
 
-% this uses gregallchar, not currently available. nabc can contain ~, so making
-% it inactive.
-\def\nabcneumes{%
-  \begingroup %
-    \catcode`\~=12{}%
-    \donabcneumes%
-}
-
-\def\donabcneumes#1#2{%
-  \gresettextabovelines{\gregallchar{#2}}%
-  \endgroup %
-}
-
-% TODO: load lua macros on demand
-\def\scorenabclines#1{%
-   %
-}
+\input gregoriotex-nabc.tex
