@@ -325,10 +325,10 @@ static void gabc_write_bar_signs(FILE *f, char type)
     case _V_EPISEMUS:
         fprintf(f, "'");
         break;
-    case _V_EPISEMUS_H_EPISEMUS:
+    case _V_EPISEMUS_BAR_H_EPISEMUS:
         fprintf(f, "'_");
         break;
-    case _H_EPISEMUS:
+    case _BAR_H_EPISEMUS:
         fprintf(f, "_");
         break;
     default:
@@ -505,14 +505,14 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         if (note->h_episemus_no_bridge) {
             fprintf(f, "2");
         }
-        switch (note->h_episemus_size) {
-        case HS_SMALL_LEFT:
+        switch (note->h_episemus_type) {
+        case H_SMALL_LEFT:
             fprintf(f, "3");
             break;
-        case HS_SMALL_CENTRE:
+        case H_SMALL_CENTRE:
             fprintf(f, "4");
             break;
-        case HS_SMALL_RIGHT:
+        case H_SMALL_RIGHT:
             fprintf(f, "5");
             break;
         }
@@ -605,7 +605,7 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element)
                          "gabc_write_gregorio_element", ERROR, 0);
         return;
     }
-    current_glyph = element->u.glyphs.first_glyph;
+    current_glyph = element->u.first_glyph;
     switch (element->type) {
     case GRE_ELEMENT:
         while (current_glyph) {

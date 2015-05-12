@@ -41,6 +41,12 @@ static inline void lex_add_note(int i, gregorio_shape shape, char signs,
                       shape, signs, liquescentia, NULL);
 }
 
+static inline void add_bar_as_note(gregorio_bar bar)
+{
+    nbof_isolated_episemus = 0;
+    gregorio_add_bar_as_note(&current_note, bar);
+}
+
 static inline void error()
 {
     gregorio_messagef("gabc_notes_determination", ERROR, 0,
@@ -49,9 +55,8 @@ static inline void error()
 }
 
 static void add_h_episemus(gregorio_note *note) {
-    grehepisemus_type type = H_ONE;
+    grehepisemus_type type = H_NORMAL;
     gregorio_vposition vposition = VPOS_AUTO;
-    grehepisemus_size size = HS_NORMAL;
     bool no_bridge = false;
 
     char *ptr = gabc_notes_determination_text;
@@ -69,13 +74,13 @@ static void add_h_episemus(gregorio_note *note) {
             no_bridge = true;
             break;
         case '3':
-            size = HS_SMALL_LEFT;
+            type = H_SMALL_LEFT;
             break;
         case '4':
-            size = HS_SMALL_CENTRE;
+            type = H_SMALL_CENTRE;
             break;
         case '5':
-            size = HS_SMALL_RIGHT;
+            type = H_SMALL_RIGHT;
             break;
         default:
             gregorio_messagef("gabc_notes_determination", ERROR, 0,
@@ -85,7 +90,7 @@ static void add_h_episemus(gregorio_note *note) {
         };
     }
 
-    gregorio_add_h_episemus(current_note, type, vposition, size, no_bridge,
+    gregorio_add_h_episemus(current_note, type, vposition, no_bridge,
                 &nbof_isolated_episemus);
 }
 
@@ -266,55 +271,55 @@ Z   {
         }
     }
 `   {
-        gregorio_add_bar_as_note(&current_note, B_VIRGULA);
+        add_bar_as_note(B_VIRGULA);
     }
 ,   {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINIMA);
+        add_bar_as_note(B_DIVISIO_MINIMA);
     }
 ,1  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D1);
+        add_bar_as_note(B_DIVISIO_MINOR_D1);
     }
 ,2  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D2);
+        add_bar_as_note(B_DIVISIO_MINOR_D2);
     }
 ,3  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D3);
+        add_bar_as_note(B_DIVISIO_MINOR_D3);
     }
 ,4  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D4);
+        add_bar_as_note(B_DIVISIO_MINOR_D4);
     }
 ,5  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D5);
+        add_bar_as_note(B_DIVISIO_MINOR_D5);
     }
 ,6  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D6);
+        add_bar_as_note(B_DIVISIO_MINOR_D6);
     }
 ;   {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR);
+        add_bar_as_note(B_DIVISIO_MINOR);
     }
 ;1  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D1);
+        add_bar_as_note(B_DIVISIO_MINOR_D1);
     }
 ;2  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D2);
+        add_bar_as_note(B_DIVISIO_MINOR_D2);
     }
 ;3  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D3);
+        add_bar_as_note(B_DIVISIO_MINOR_D3);
     }
 ;4  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D4);
+        add_bar_as_note(B_DIVISIO_MINOR_D4);
     }
 ;5  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D5);
+        add_bar_as_note(B_DIVISIO_MINOR_D5);
     }
 ;6  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MINOR_D6);
+        add_bar_as_note(B_DIVISIO_MINOR_D6);
     }
 :   {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_MAIOR);
+        add_bar_as_note(B_DIVISIO_MAIOR);
     }
 ::  {
-        gregorio_add_bar_as_note(&current_note, B_DIVISIO_FINALIS);
+        add_bar_as_note(B_DIVISIO_FINALIS);
     }
 r   {
         gregorio_change_shape(current_note, S_PUNCTUM_CAVUM);

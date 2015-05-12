@@ -133,21 +133,21 @@ typedef enum gregorio_bar {
 // this tricky is used.
 
 typedef enum gregorio_sign {
-    _NO_SIGN = 0,
-    _PUNCTUM_MORA = 1,
-    _AUCTUM_DUPLEX = 2,
-    _V_EPISEMUS = 5,
-    _V_EPISEMUS_PUNCTUM_MORA = 6,
-    _V_EPISEMUS_AUCTUM_DUPLEX = 7,
+    _NO_SIGN = 0x00,
+    _PUNCTUM_MORA = 0x01,
+    _AUCTUM_DUPLEX = 0x02,
+    _V_EPISEMUS = 0x10,
+    _V_EPISEMUS_PUNCTUM_MORA = 0x11,
+    _V_EPISEMUS_AUCTUM_DUPLEX = 0x12,
     // more rare signs, for now they can't be used with the others
-    _ACCENTUS = 8,
-    _ACCENTUS_REVERSUS = 9,
-    _CIRCULUS = 10,
-    _SEMI_CIRCULUS = 11,
-    _SEMI_CIRCULUS_REVERSUS = 12,
+    _ACCENTUS = 0x03,
+    _ACCENTUS_REVERSUS = 0x04,
+    _CIRCULUS = 0x05,
+    _SEMI_CIRCULUS = 0x06,
+    _SEMI_CIRCULUS_REVERSUS = 0x07,
     // signs of a bar
-    _V_EPISEMUS_H_EPISEMUS = 17,
-    _H_EPISEMUS = 22,
+    _BAR_H_EPISEMUS = 0x08,
+    _V_EPISEMUS_BAR_H_EPISEMUS = 0x18,
 } gregorio_sign;
 
 // the different spaces
@@ -184,22 +184,17 @@ typedef enum gregorio_liquescentia {
 
 typedef enum grehepisemus_type {
     H_NO_EPISEMUS = 0,
-    H_ONE,
-    H_ALONE,
-    H_MULTI,
+    H_NORMAL,
+    H_SMALL_LEFT,
+    H_SMALL_CENTRE,
+    H_SMALL_RIGHT,
 } grehepisemus_type;
 
-typedef enum grehepisemus_size {
-    HS_NORMAL = 0,
-    HS_SMALL_LEFT,
-    HS_SMALL_CENTRE,
-    HS_SMALL_RIGHT,
-} grehepisemus_size;
-
+// values are chosen so BELOW/ABOVE can be added to a pitch
 typedef enum gregorio_vposition {
     VPOS_AUTO = 0,
-    VPOS_BELOW,
-    VPOS_ABOVE,
+    VPOS_BELOW = -1,
+    VPOS_ABOVE = 1,
 } gregorio_vposition;
 
 // The different types of glyph
@@ -393,13 +388,6 @@ typedef struct gregorio_note {
 
     //// characters go to the end for structure alignment
 
-    // h_episemus_top_note is the highest pitch of the notes that are
-    // under the same horizontal episemus of the note. If the note is not
-    // under an episemus, it is 0.
-    char h_episemus_top_note;
-    // same for bottom_note
-    char h_episemus_bottom_note;
-
     // we have seen that notes are always real notes, that is to say
     // GRE_NOTE. the type is always that in the final structure. But there
     // is however this field in the structure because of the temporary
@@ -419,10 +407,13 @@ typedef struct gregorio_note {
     // temporary values used in determination, they must not appear in the
     // final structure.
 
-    ENUM_BITFIELD(grehepisemus_type) h_episemus_type:2;
+    char gtex_offset_case;
+    char v_episemus_height;
+    char h_episemus_height;
+    ENUM_BITFIELD(grehepisemus_type) h_episemus_type:3;
     ENUM_BITFIELD(gregorio_vposition) h_episemus_vposition:2;
-    ENUM_BITFIELD(grehepisemus_size) h_episemus_size:2;
     bool h_episemus_no_bridge:1;
+    bool h_episemus_connect:1;
 } gregorio_note;
 
 /*
@@ -475,11 +466,9 @@ typedef struct gregorio_element {
     char **nabc;
     size_t nabc_lines; // we put it here to get the length of the array here too
     union {
-        // element is used for GRE_ELEMENT
-        struct {
-            // a pointer to the first glyph of the element.
-            struct gregorio_glyph *first_glyph;
-        } glyphs;
+        // first_glyph is used for GRE_ELEMENT
+        // a pointer to the first glyph of the element.
+        struct gregorio_glyph *first_glyph;
         union gregorio_misc_element_info misc;
     } u;
 
@@ -764,7 +753,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
 void gregorio_add_h_episemus(gregorio_note *note, grehepisemus_type type,
-        gregorio_vposition vposition, grehepisemus_size size, bool no_bridge,
+        gregorio_vposition vposition, bool no_bridge,
         unsigned int *nbof_isolated_episemus);
 void gregorio_add_sign(gregorio_note *note, gregorio_sign sign);
 void gregorio_add_liquescentia(gregorio_note *note,
