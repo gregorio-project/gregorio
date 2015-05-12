@@ -779,8 +779,8 @@
 %% 42: idem, with an oriscus
 %% 43: same as 36, for a torculus resupinus with second ambitus of one and not
 %%     auctus liquescence
-%% 37: idem, with a quilisma
-%% 38: idem, with an oriscus
+%% 44: idem, with a quilisma
+%% 45: idem, with an oriscus
 %% 46: idem 17, with the note having two line on the bottom corners (like second note of gig)
 %% 47: idem 46, with the note having a line on the bottom left (like second note of gih)
 %% 48: the first note, if it's a punctum with a bar on the top-right corner (~6)
@@ -869,7 +869,10 @@
   \or%
     %case 9
     \grevepisemusorrareaux{0}{\gre@char@punctum}{0}{0}{#3}{#4}{#5}%
-  \or\or% case 10 and 11
+  \or%
+    %case 10
+    \grevepisemusorrareaux{0}{\gre@char@punctum}{0}{0}{#3}{#4}{#5}%
+  \or% case 11 doesn't exist
   \or%
     %case 12
     \grevepisemusorrareaux{0}{\gre@char@punctuminclinatum}{0}{30\the\grefactor }{#3}{#4}{#5}%
