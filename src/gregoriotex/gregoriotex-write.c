@@ -1790,7 +1790,7 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
          */
         if (i == 1) {
             if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
-                number = 1;
+                number = 7;
             } else {
                 if (note->u.note.shape == S_QUILISMA) {
                     number = 15;
