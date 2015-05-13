@@ -886,6 +886,25 @@ inline static bool is_connected_right(const grehepisemus_size size) {
     return size == H_NORMAL || size == H_SMALL_RIGHT;
 }
 
+inline static bool is_connectable_interglyph_ambitus(
+        const gregorio_note *const first, const gregorio_note *const second)
+{
+    return first && second
+            && abs(first->u.note.pitch - second->u.note.pitch) < 3;
+}
+
+inline static bool has_space_to_left(const gregorio_note *const note) {
+    switch (note->u.note.shape) {
+    case S_PUNCTUM_INCLINATUM:
+    case S_PUNCTUM_INCLINATUM_DEMINUTUS:
+    case S_PUNCTUM_INCLINATUM_AUCTUS:
+        return !is_connectable_interglyph_ambitus(note->previous, note);
+
+    default:
+        return !note->previous;
+    }
+}
+
 inline static void end_h_episemus(height_computation *const h,
         gregorio_note *const end)
 {
@@ -896,16 +915,19 @@ inline static void end_h_episemus(height_computation *const h,
         if (is_connected_left(h->get_size(h->start_note))
                 && h->start_note->previous
                 && h->start_note->previous->type == GRE_NOTE
-                && is_connected_right(h->get_size(h->start_note->previous))) {
+                && is_connected_right(h->get_size(h->start_note->previous))
+                && !has_space_to_left(h->start_note)) {
             proposed_height = h->start_note->previous->u.note.pitch + h->vpos;
             if (h->is_better_height(proposed_height, h->height)) {
                 h->height = proposed_height;
             }
         }
-        if (h->last_connected_note
-                && is_connected_right(h->get_size(h->last_connected_note))
-                && end && end->type == GRE_NOTE
-                && is_connected_left(h->get_size(end))) {
+        // end->previous checks that it's within the same glyph
+        if (end && end->type == GRE_NOTE && end->previous
+                && end->previous->type == GRE_NOTE
+                && is_connected_left(h->get_size(end))
+                && !has_space_to_left(end) && h->last_connected_note
+                && is_connected_right(h->get_size(h->last_connected_note))) {
             proposed_height = end->u.note.pitch + h->vpos;
             if (h->is_better_height(proposed_height, h->height)) {
                 h->height = proposed_height;
@@ -938,8 +960,8 @@ inline static void compute_h_episemus(height_computation *const h,
 
             if (h->active) {
                 if (h->connected && is_connected_left(size)
-                        && (i != 1 || abs(note->u.note.pitch
-                                - h->last_connected_note->u.note.pitch) < 3)) {
+                        && (i != 1 || is_connectable_interglyph_ambitus(
+                                note, h->last_connected_note))) {
                     next_height = compute_h_episemus_height(glyph, note, i,
                             type, h->vpos);
                     if (h->is_better_height(next_height, h->height)) {
