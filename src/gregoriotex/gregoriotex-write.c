@@ -1592,14 +1592,50 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
             special_punctum, punctum_inclinatum);
 }
 
-static void write_hepisemus_bridge(FILE *const f, const gregorio_note *const note,
-        const bool connect, const char height)
+static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
+        const gregorio_note *const note, bool connect, const char height,
+        const grehepisemus_size size, const int i,
+        const int porrectus_long_episemus_index,
+        bool (*const is_episemus_shown)(const gregorio_note *))
 {
-    if (connect && (!note->next
-                || note->next->u.note.shape == S_PUNCTUM_INCLINATUM
-                || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_DEMINUTUS
-                || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_AUCTUS)) {
-        fprintf(f, "\\grehepisemusbridge{%c}{}{}%%\n", height);
+    char ambitus = 0;
+    char size_arg;
+
+    if (height) {
+        switch (size) {
+        case H_SMALL_LEFT:
+            size_arg = 'l';
+            connect = false;
+            break;
+        case H_SMALL_CENTRE:
+            size_arg = 'c';
+            connect = false;
+            break;
+        case H_SMALL_RIGHT:
+            size_arg = 'r';
+            break;
+        default:
+            size_arg = 'f';
+            break;
+        }
+
+        if (i == porrectus_long_episemus_index && note->next
+                && is_episemus_shown(note->next)) {
+            ambitus = compute_ambitus(note);
+        }
+
+        if (i - 1 != porrectus_long_episemus_index || !note->previous
+                || !is_episemus_shown(note->previous)) {
+            if (connect && (!note->next
+                    || note->next->u.note.shape == S_PUNCTUM_INCLINATUM
+                    || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_DEMINUTUS
+                    || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_AUCTUS)) {
+                fprintf(f, "\\grehepisemusbridge{%c}{}{}%%\n", height);
+            }
+            fprintf(f, "\\grehepisemus{%c}{%d}{%d}{%d}{%c}{%c}%%\n",
+                    height, note->gtex_offset_case, ambitus, hepisemus_case,
+                    size_arg, height);
+        }
     }
 }
 
@@ -1629,40 +1665,12 @@ static void gregoriotex_write_hepisemus(FILE *const f,
         break;
     }
 
-    // TODO: use note->h_episemus_size
-    if (note->h_episemus_below) {
-        ambitus = 0;
-
-        if (i == porrectus_long_episemus_index && note->next
-                && note->next->h_episemus_below) {
-            ambitus = compute_ambitus(note);
-        }
-
-        if (i - 1 != porrectus_long_episemus_index || !note->previous
-                || !note->previous->h_episemus_below) {
-            write_hepisemus_bridge(f, note, note->h_episemus_below_connect,
-                    note->h_episemus_below);
-            fprintf(f, "\\grehepisemusbottom{%c}{%d}{%d}%%\n",
-                    note->h_episemus_below, note->gtex_offset_case, ambitus);
-        }
-    }
-    if (note->h_episemus_above) {
-        ambitus = 0;
-
-        if (i == porrectus_long_episemus_index && note->next
-                && (note->next->h_episemus_below || note->next->h_episemus_above)) {
-            ambitus = compute_ambitus(note);
-        }
-
-        if (i - 1 != porrectus_long_episemus_index || !note->previous
-                || !note->previous->h_episemus_above) {
-            write_hepisemus_bridge(f, note, note->h_episemus_above_connect,
-                    note->h_episemus_above);
-            fprintf(f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n",
-                    note->h_episemus_above, note->gtex_offset_case, ambitus,
-                    note->h_episemus_above);
-        }
-    }
+    write_single_hepisemus(f, 1, note, note->h_episemus_below_connect,
+            note->h_episemus_below, note->h_episemus_below_size, i,
+            porrectus_long_episemus_index, &gtex_is_h_episemus_below_shown);
+    write_single_hepisemus(f, 0, note, note->h_episemus_above_connect,
+            note->h_episemus_above, note->h_episemus_above_size, i,
+            porrectus_long_episemus_index, &gtex_is_h_episemus_above_shown);
 }
 
 // a macro to write an additional line

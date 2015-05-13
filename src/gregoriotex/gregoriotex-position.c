@@ -781,12 +781,12 @@ static bool is_h_episemus_below_applicable(const gregorio_note *const note)
     return note->h_episemus_below || !note->is_upper_note;
 }
 
-static bool is_h_episemus_above_shown(const gregorio_note *const note)
+bool gtex_is_h_episemus_above_shown(const gregorio_note *const note)
 {
     return note->h_episemus_above;
 }
 
-static bool is_h_episemus_below_shown(const gregorio_note *const note)
+bool gtex_is_h_episemus_below_shown(const gregorio_note *const note)
 {
     return note->h_episemus_below;
 }
@@ -971,7 +971,7 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
     height_computation above = {
         .vpos = VPOS_ABOVE,
         .is_applicable = &is_h_episemus_above_applicable,
-        .is_shown = &is_h_episemus_above_shown,
+        .is_shown = &gtex_is_h_episemus_above_shown,
         .is_connected = &is_h_episemus_above_connected,
         .get_size = &get_h_episemus_above_size,
         .is_better_height = &is_h_episemus_above_better_height,
@@ -987,7 +987,7 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
     height_computation below = {
         .vpos = VPOS_BELOW,
         .is_applicable = &is_h_episemus_below_applicable,
-        .is_shown = &is_h_episemus_below_shown,
+        .is_shown = &gtex_is_h_episemus_below_shown,
         .is_connected = &is_h_episemus_below_connected,
         .get_size = &get_h_episemus_below_size,
         .is_better_height = &is_h_episemus_below_better_height,
