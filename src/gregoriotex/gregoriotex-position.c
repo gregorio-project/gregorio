@@ -17,6 +17,7 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "config.h"
+#include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
 #include "struct.h"
@@ -936,7 +937,9 @@ inline static void compute_h_episemus(height_computation *const h,
             size = h->get_size(note);
 
             if (h->active) {
-                if (h->connected && is_connected_left(size)) {
+                if (h->connected && is_connected_left(size)
+                        && (i != 1 || abs(note->u.note.pitch
+                                - h->last_connected_note->u.note.pitch) < 3)) {
                     next_height = compute_h_episemus_height(glyph, note, i,
                             type, h->vpos);
                     if (h->is_better_height(next_height, h->height)) {
