@@ -47,7 +47,10 @@ echo. >> %output%
 echo. >> %output%
 echo #### 	TEXMFLOCAL >> %output%
 echo. >> %output%
-kpsewhich --var-value TEXMFLOCAL >> %output% 2>&1
+for /f "delims=" %%i in ('kpsewhich --var-value TEXMFLOCAL') do set texmflocal=%%i
+echo %texmflocal% >> %output% 2>&1
+set texmflocal=%texmflocal:/=\%
+IF NOT EXIST %texmflocal% ECHO Folder does not exist >> %output% 2>&1
 echo. >> %output%
 echo. >> %output%
 echo ----------------------------------------------------------------------------- >> %output%
