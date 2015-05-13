@@ -336,6 +336,26 @@ static void gabc_write_bar_signs(FILE *f, char type)
     }
 }
 
+static void gabc_hepisemus(FILE *f, char *prefix, bool connect,
+        grehepisemus_size size)
+{
+    fprintf(f, "_%s", prefix);
+    if (!connect) {
+        fprintf(f, "2");
+    }
+    switch (size) {
+    case H_SMALL_LEFT:
+        fprintf(f, "3");
+        break;
+    case H_SMALL_CENTRE:
+        fprintf(f, "4");
+        break;
+    case H_SMALL_RIGHT:
+        fprintf(f, "5");
+        break;
+    }
+}
+
 /*
  * 
  * The function that writes one gregorio_note.
@@ -492,29 +512,18 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     default:
         break;
     }
-    if (note->h_episemus_type != H_NO_EPISEMUS) {
-        fprintf(f, "_");
-        switch (note->h_episemus_vposition) {
-        case VPOS_BELOW:
-            fprintf(f, "0");
-            break;
-        case VPOS_ABOVE:
-            fprintf(f, "1");
-            break;
+    if (note->h_episemus_above == HEPISEMUS_AUTO
+            && note->h_episemus_below == HEPISEMUS_AUTO) {
+        gabc_hepisemus(f, "", note->h_episemus_above_connect,
+                note->h_episemus_above_size);
+    } else {
+        if (note->h_episemus_below == HEPISEMUS_FORCED) {
+            gabc_hepisemus(f, "0", note->h_episemus_below_connect,
+                    note->h_episemus_below_size);
         }
-        if (note->h_episemus_no_bridge) {
-            fprintf(f, "2");
-        }
-        switch (note->h_episemus_type) {
-        case H_SMALL_LEFT:
-            fprintf(f, "3");
-            break;
-        case H_SMALL_CENTRE:
-            fprintf(f, "4");
-            break;
-        case H_SMALL_RIGHT:
-            fprintf(f, "5");
-            break;
+        if (note->h_episemus_above == HEPISEMUS_FORCED) {
+            gabc_hepisemus(f, "1", note->h_episemus_above_connect,
+                    note->h_episemus_above_size);
         }
     }
     if (note->texverb) {

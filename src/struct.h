@@ -182,13 +182,12 @@ typedef enum gregorio_liquescentia {
     L_AUCTA_INITIO_DEBILIS = 0x18,
 } gregorio_liquescentia;
 
-typedef enum grehepisemus_type {
-    H_NO_EPISEMUS = 0,
-    H_NORMAL,
+typedef enum grehepisemus_size {
+    H_NORMAL = 0,
     H_SMALL_LEFT,
     H_SMALL_CENTRE,
     H_SMALL_RIGHT,
-} grehepisemus_type;
+} grehepisemus_size;
 
 // values are chosen so BELOW/ABOVE can be added to a pitch
 typedef enum gregorio_vposition {
@@ -409,11 +408,14 @@ typedef struct gregorio_note {
 
     char gtex_offset_case;
     char v_episemus_height;
-    char h_episemus_height;
-    ENUM_BITFIELD(grehepisemus_type) h_episemus_type:3;
-    ENUM_BITFIELD(gregorio_vposition) h_episemus_vposition:2;
-    bool h_episemus_no_bridge:1;
-    bool h_episemus_connect:1;
+    char h_episemus_above;
+    char h_episemus_below;
+    ENUM_BITFIELD(grehepisemus_size) h_episemus_above_size:2;
+    ENUM_BITFIELD(grehepisemus_size) h_episemus_below_size:2;
+    bool h_episemus_above_connect:1;
+    bool h_episemus_below_connect:1;
+    bool is_lower_note:1;
+    bool is_upper_note:1;
 } gregorio_note;
 
 /*
@@ -732,6 +734,10 @@ inline bool is_initio_debilis(char liquescentia)
 
 #define SCHEME_DEFAULT SCHEME_LATINE
 
+#define HEPISEMUS_NONE 0
+#define HEPISEMUS_AUTO 1
+#define HEPISEMUS_FORCED 2
+
 gregorio_score *gregorio_new_score(void);
 gregorio_shape gregorio_det_shape(char pitch);
 void gregorio_add_note(gregorio_note **current_note, char pitch,
@@ -752,8 +758,12 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_euouae euouae);
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
-void gregorio_add_h_episemus(gregorio_note *note, grehepisemus_type type,
-        gregorio_vposition vposition, bool no_bridge,
+void gregorio_position_h_episemus_above(gregorio_note *note, char height,
+        bool connect);
+void gregorio_position_h_episemus_below(gregorio_note *note, char height,
+        bool connect);
+void gregorio_add_h_episemus(gregorio_note *note, grehepisemus_size size,
+        gregorio_vposition vposition, bool disable_bridge,
         unsigned int *nbof_isolated_episemus);
 void gregorio_add_sign(gregorio_note *note, gregorio_sign sign);
 void gregorio_add_liquescentia(gregorio_note *note,

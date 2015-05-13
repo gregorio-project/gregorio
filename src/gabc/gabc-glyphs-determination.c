@@ -689,7 +689,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                 } else {
                     sign = current_note->special_sign;
                 }
-                if (current_note->h_episemus_type != H_NO_EPISEMUS) {
+                if (current_note->h_episemus_above) {
                     if (sign == _V_EPISEMUS) {
                         sign = _V_EPISEMUS_BAR_H_EPISEMUS;
                     } else {

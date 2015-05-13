@@ -55,9 +55,9 @@ static inline void error()
 }
 
 static void add_h_episemus(gregorio_note *note) {
-    grehepisemus_type type = H_NORMAL;
+    grehepisemus_size size = H_NORMAL;
     gregorio_vposition vposition = VPOS_AUTO;
-    bool no_bridge = false;
+    bool disable_bridge = false;
 
     char *ptr = gabc_notes_determination_text;
     char current;
@@ -71,16 +71,16 @@ static void add_h_episemus(gregorio_note *note) {
             vposition = VPOS_ABOVE;
             break;
         case '2':
-            no_bridge = true;
+            disable_bridge = true;
             break;
         case '3':
-            type = H_SMALL_LEFT;
+            size = H_SMALL_LEFT;
             break;
         case '4':
-            type = H_SMALL_CENTRE;
+            size = H_SMALL_CENTRE;
             break;
         case '5':
-            type = H_SMALL_RIGHT;
+            size = H_SMALL_RIGHT;
             break;
         default:
             gregorio_messagef("gabc_notes_determination", ERROR, 0,
@@ -90,7 +90,7 @@ static void add_h_episemus(gregorio_note *note) {
         };
     }
 
-    gregorio_add_h_episemus(current_note, type, vposition, no_bridge,
+    gregorio_add_h_episemus(current_note, size, vposition, disable_bridge,
                 &nbof_isolated_episemus);
 }
 

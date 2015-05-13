@@ -658,13 +658,10 @@ static const char *dump_special_sign(gregorio_sign special_sign)
     return str;
 }
 
-static const char *dump_h_episemus_type(grehepisemus_type type)
+static const char *dump_h_episemus_size(grehepisemus_size size)
 {
     const char *str;
-    switch (type) {
-    case H_NO_EPISEMUS:
-        str = "H_NO_EPISEMUS";
-        break;
+    switch (size) {
     case H_NORMAL:
         str = "H_NORMAL";
         break;
@@ -1065,15 +1062,29 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                         note->special_sign,
                                         dump_special_sign(note->special_sign));
                             }
-                            if (note->h_episemus_type) {
-                                fprintf(f, "         h_episemus_type        %d (%s)\n",
-                                        note->h_episemus_type,
-                                        dump_h_episemus_type(note->h_episemus_type));
-                                fprintf(f, "         h_episemus_vposition   %d (%s)\n",
-                                        note->h_episemus_vposition,
-                                        dump_h_episemus_vposition(note->h_episemus_vposition));
-                                fprintf(f, "         h_episemus_no_bridge   %s\n",
-                                        dump_bool(note->h_episemus_no_bridge));
+                            if (note->h_episemus_above == HEPISEMUS_AUTO
+                                    && note->h_episemus_below == HEPISEMUS_AUTO) {
+                                fprintf(f, "         auto hepisemus size    %d (%s)\n",
+                                        note->h_episemus_above_size,
+                                        dump_h_episemus_size(note->h_episemus_above_size));
+                                fprintf(f, "         auto hepisemus bridge  %s\n",
+                                        dump_bool(note->h_episemus_above_connect));
+                            }
+                            else {
+                                if (note->h_episemus_above == HEPISEMUS_FORCED) {
+                                    fprintf(f, "         above hepisemus size   %d (%s)\n",
+                                            note->h_episemus_above_size,
+                                            dump_h_episemus_size(note->h_episemus_above_size));
+                                    fprintf(f, "         above hepisemus bridge %s\n",
+                                            dump_bool(note->h_episemus_above_connect));
+                                }
+                                if (note->h_episemus_below == HEPISEMUS_FORCED) {
+                                    fprintf(f, "         below hepisemus size   %d (%s)\n",
+                                            note->h_episemus_below_size,
+                                            dump_h_episemus_size(note->h_episemus_below_size));
+                                    fprintf(f, "         below hepisemus bridge %s\n",
+                                            dump_bool(note->h_episemus_below_connect));
+                                }
                             }
                         }
                     }

@@ -69,7 +69,8 @@ static char *tex_ambitus[] = {
 // that it might seem)
 
 static unsigned char gregoriotex_is_long(char pitch,
-        gregorio_glyph *current_glyph, gregorio_element *current_element)
+        const gregorio_glyph *const current_glyph,
+        const gregorio_element *const current_element)
 {
     gregorio_note *note;
     gregorio_glyph *glyph = current_glyph->next;
@@ -126,19 +127,19 @@ static unsigned char gregoriotex_is_long(char pitch,
 
 // we define d to be short instead of long... may induce errors, but fixes
 // some too
-static inline bool is_short(char pitch, gregorio_glyph *glyph,
-        gregorio_element *element)
+static inline bool is_short(const char pitch, const gregorio_glyph *const glyph,
+        const gregorio_element *const element)
 {
     return gregoriotex_is_long(pitch, glyph, element) == 0;
 }
 
-static inline bool is_on_a_line(char pitch)
+static inline bool is_on_a_line(const char pitch)
 {
     return pitch == 'b' || pitch == 'd' || pitch == 'f' || pitch == 'h'
             || pitch == 'j' || pitch == 'l';
 }
 
-static inline bool is_between_lines(char pitch)
+static inline bool is_between_lines(const char pitch)
 {
     return pitch == 'a' || pitch == 'c' || pitch == 'e' || pitch == 'g'
             || pitch == 'i' || pitch == 'k' || pitch == 'm';
@@ -323,7 +324,7 @@ static char *gregoriotex_determine_liquescentia(gtex_glyph_liquescentia type,
     return "Nothing";
 }
 
-static inline int compute_ambitus(gregorio_note *current_note)
+static inline int compute_ambitus(const gregorio_note *const current_note)
 {
     int first = current_note->u.note.pitch;
     int second = current_note->next->u.note.pitch;
@@ -341,8 +342,8 @@ static inline int compute_ambitus(gregorio_note *current_note)
     return ambitus;
 }
 
-static char *compute_glyph_name(gregorio_glyph *glyph, char *shape,
-        gtex_glyph_liquescentia ltype)
+static char *compute_glyph_name(const gregorio_glyph *const glyph,
+        char *const shape, const gtex_glyph_liquescentia ltype)
 {
     static char buf[BUFSIZE];
 
@@ -400,13 +401,13 @@ static char *compute_glyph_name(gregorio_glyph *glyph, char *shape,
 // calculates the type, used for determining the position of signs. Type is
 // very basic, it is only the global dimensions : torculus, one_note, etc.
 
-static char *gregoriotex_determine_glyph_name(gregorio_glyph *glyph,
-        gregorio_element *element, gtex_alignment * type, gtex_type * gtype)
+static char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
+        const gregorio_element *const element, gtex_alignment *const  type,
+        gtex_type *const gtype)
 {
     char *shape = NULL;
     gtex_glyph_liquescentia ltype;
     char pitch = 0;
-    gregorio_liquescentia liquescentia;
     if (!glyph) {
         gregorio_message(_("called with NULL pointer"),
                 "gregoriotex_determine_glyph_name", ERROR, 0);
@@ -417,7 +418,6 @@ static char *gregoriotex_determine_glyph_name(gregorio_glyph *glyph,
                 "gregorio_tex_determine_glyph_name", ERROR, 0);
         return "";
     }
-    liquescentia = glyph->u.notes.liquescentia;
     *gtype = T_ONE_NOTE;
     switch (glyph->u.notes.glyph_type) {
     case G_PODATUS:
@@ -690,11 +690,9 @@ static char *gregoriotex_determine_glyph_name(gregorio_glyph *glyph,
     if (shape) {
         shape = compute_glyph_name(glyph, shape, ltype);
     }
-    // we change to the original liquescentia
-    glyph->u.notes.liquescentia = liquescentia;
     // we fix *type with initio_debilis
     if (*type == AT_ONE_NOTE) {
-        if (is_initio_debilis(liquescentia)) {
+        if (is_initio_debilis(glyph->u.notes.liquescentia)) {
             *type = AT_INITIO_DEBILIS;
         }
     }
@@ -1606,8 +1604,9 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
             special_punctum, punctum_inclinatum);
 }
 
-static inline char number_note_before_last_note(gregorio_glyph *current_glyph,
-        gregorio_note *current_note)
+static inline char number_note_before_last_note(
+        const gregorio_glyph *const current_glyph,
+        const gregorio_note *const current_note)
 {
     if ((current_glyph->u.notes.liquescentia == L_DEMINUTUS_INITIO_DEBILIS
                     || current_glyph->u.notes.liquescentia == L_DEMINUTUS)
@@ -1636,7 +1635,7 @@ static inline char number_note_before_last_note(gregorio_glyph *current_glyph,
 
 // num can be 0 or 18 according if the last note is a standard punctum or a
 // smaller punctum (for pes, porrectus and torculus resupinus
-static inline char number_last_note(gregorio_glyph *current_glyph,
+static inline char number_last_note(const gregorio_glyph *const current_glyph,
         char num, gregorio_note *current_note, bool no_ambitus_one)
 {
     if (current_glyph->u.notes.liquescentia & L_DEMINUTUS) {
@@ -1663,8 +1662,8 @@ static inline char number_last_note(gregorio_glyph *current_glyph,
     }
 }
 
-static inline char number_first_note(gregorio_note *current_note,
-        gregorio_glyph *current_glyph)
+static inline char number_first_note(const gregorio_note *const current_note,
+        const gregorio_glyph *const current_glyph)
 {
     bool ambitus_one = true;
     if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
@@ -1692,7 +1691,8 @@ static inline char number_first_note(gregorio_note *current_note,
     }
 }
 
-static inline gregorio_vposition above_if_auctus(gregorio_glyph *glyph)
+static inline gregorio_vposition above_if_auctus(
+        const gregorio_glyph *const glyph)
 {
     if (glyph->u.notes.liquescentia &
             (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
@@ -1701,7 +1701,8 @@ static inline gregorio_vposition above_if_auctus(gregorio_glyph *glyph)
     return VPOS_BELOW;
 }
 
-static inline gregorio_vposition below_if_auctus(gregorio_glyph *glyph)
+static inline gregorio_vposition below_if_auctus(
+        const gregorio_glyph *const glyph)
 {
     if (glyph->u.notes.liquescentia &
             (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
@@ -1710,25 +1711,27 @@ static inline gregorio_vposition below_if_auctus(gregorio_glyph *glyph)
     return VPOS_ABOVE;
 }
 
-static inline gregorio_vposition above_if_h_episemus(gregorio_note *note)
+static inline gregorio_vposition above_if_h_episemus(
+        const gregorio_note *const note)
 {
-    if (note && note->h_episemus_type) {
+    if (note && note->h_episemus_above) {
         return VPOS_ABOVE;
     }
     return VPOS_BELOW;
 }
 
-static inline gregorio_vposition above_if_either_h_episemus(gregorio_note *note)
+static inline gregorio_vposition above_if_either_h_episemus(
+        const gregorio_note *const note)
 {
-    if (note->previous && note->previous->h_episemus_type
-            || note->next && note->next->h_episemus_type) {
+    if (note->previous && note->previous->h_episemus_above
+            || note->next && note->next->h_episemus_above) {
         return VPOS_ABOVE;
     }
     return VPOS_BELOW;
 }
 
 static inline gregorio_vposition below_if_next_ambitus_allows(
-        gregorio_note *note)
+        const gregorio_note *const note)
 {
     assert(note->next);
 
@@ -1773,14 +1776,11 @@ static inline gregorio_vposition below_if_next_ambitus_allows(
  *  amb1>1 | Oriscus    | 35         | 29         | 42        | 42
  *
  */
-static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
-        gtex_type type, gregorio_vposition *h_episemus,
-        gregorio_vposition *v_episemus, bool *v_episemus_below_is_lower)
+static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
+        gregorio_note *const note, int i, const gtex_type type)
 {
-    int number;
-    bool done;
-
-    *v_episemus_below_is_lower = false;
+    gregorio_vposition h_episemus = VPOS_AUTO, v_episemus = VPOS_AUTO;
+    bool v_episemus_below_is_lower = false, done;
 
     switch (type) {
     case T_PES:
@@ -1790,47 +1790,47 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
          */
         if (i == 1) {
             if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
-                number = 7;
+                note->gtex_offset_case = 7;
             } else {
                 if (note->u.note.shape == S_QUILISMA) {
-                    number = 15;
+                    note->gtex_offset_case = 15;
                 } else {
-                    number = 0;
+                    note->gtex_offset_case = 0;
                 }
             }
-            *h_episemus = above_if_auctus(glyph);
-            *v_episemus = VPOS_BELOW;
+            h_episemus = above_if_auctus(glyph);
+            v_episemus = VPOS_BELOW;
         } else {
             /*
              * i=2 
              */
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
-                number = 1;
+                note->gtex_offset_case = 1;
             } else {
-                number = 18;
+                note->gtex_offset_case = 18;
             }
-            *h_episemus = VPOS_ABOVE;
-            *v_episemus = below_if_auctus(glyph);
+            h_episemus = VPOS_ABOVE;
+            v_episemus = below_if_auctus(glyph);
         }
         break;
     case T_PESQUADRATUM:
     case T_PESQUASSUS:
     case T_PESQUILISMAQUADRATUM:
         if (i == 1) {
-            number = number_first_note(note, glyph);
-            *h_episemus = above_if_h_episemus(note->next);
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_first_note(note, glyph);
+            h_episemus = above_if_h_episemus(note->next);
+            v_episemus = VPOS_BELOW;
         } else {
             /*
              * i=2 
              */
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
-                number = 7;
+                note->gtex_offset_case = 7;
             } else {
-                number = number_last_note(glyph, 0, note, true);
+                note->gtex_offset_case = number_last_note(glyph, 0, note, true);
             }
-            *h_episemus = VPOS_ABOVE;
-            *v_episemus = VPOS_BELOW;
+            h_episemus = VPOS_ABOVE;
+            v_episemus = VPOS_BELOW;
         }
         break;
     case T_FLEXUS:
@@ -1839,30 +1839,30 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
         switch (i) {
         case 1:
             if (type == T_FLEXUS_ORISCUS) {
-                number = 51;
+                note->gtex_offset_case = 51;
             } else {
                 if (note->next && note->u.note.pitch - 
                         note->next->u.note.pitch == 1) {
-                    number = 56;
+                    note->gtex_offset_case = 56;
                 } else {
-                    number = 49;
+                    note->gtex_offset_case = 49;
                 }
             }
-            *h_episemus = VPOS_ABOVE;
+            h_episemus = VPOS_ABOVE;
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
-                *v_episemus = below_if_next_ambitus_allows(note);
+                v_episemus = below_if_next_ambitus_allows(note);
             } else {
-                *v_episemus = VPOS_BELOW;
+                v_episemus = VPOS_BELOW;
             }
             break;
         default: // i>=2
-            number = number_last_note(glyph, 0, note, false);
+            note->gtex_offset_case = number_last_note(glyph, 0, note, false);
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
-                *h_episemus = VPOS_BELOW;
+                h_episemus = VPOS_BELOW;
             } else {
-                *h_episemus = above_if_h_episemus(note->previous);
+                h_episemus = above_if_h_episemus(note->previous);
             }
-            *v_episemus = VPOS_BELOW;
+            v_episemus = VPOS_BELOW;
             break;
         }
         break;
@@ -1870,44 +1870,44 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
         done = true;
         switch (i) {
         case 1:
-            number = number_first_note(note, glyph);
-            *h_episemus = above_if_h_episemus(note->next);
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_first_note(note, glyph);
+            h_episemus = above_if_h_episemus(note->next);
+            v_episemus = VPOS_BELOW;
             break;
         case HEPISEMUS_FIRST_TWO:
         case 2:
             if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
-                number = 40;
+                note->gtex_offset_case = 40;
             } else {
                 if (note->u.note.pitch - note->previous->u.note.pitch == 1) {
                     switch (note->previous->u.note.shape) {
                     case S_QUILISMA:
-                        number = 44;
+                        note->gtex_offset_case = 44;
                         break;
                     case S_ORISCUS:
-                        number = 45;
+                        note->gtex_offset_case = 45;
                         break;
                     default:
-                        number = 43;
+                        note->gtex_offset_case = 43;
                         break;
                     }
                 } else {
                     switch (note->previous->u.note.shape) {
                     case S_QUILISMA:
-                        number = 41;
+                        note->gtex_offset_case = 41;
                         break;
                     case S_ORISCUS:
-                        number = 42;
+                        note->gtex_offset_case = 42;
                         break;
                     default:
-                        number = 39;
+                        note->gtex_offset_case = 39;
                         break;
                     }
                 }
             }
-            *h_episemus = VPOS_ABOVE;
-            *v_episemus = VPOS_BELOW;
-            *v_episemus_below_is_lower = true;
+            h_episemus = VPOS_ABOVE;
+            v_episemus = VPOS_BELOW;
+            v_episemus_below_is_lower = true;
             break;
         default:
             --i;
@@ -1923,34 +1923,35 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
         switch (i) {
         case HEPISEMUS_FIRST_TWO:
         case 1:
-            number = 10;
-            *h_episemus = VPOS_ABOVE;
-            *v_episemus = VPOS_BELOW;
-            *v_episemus_below_is_lower = true;
+            note->gtex_offset_case = 10;
+            h_episemus = VPOS_ABOVE;
+            v_episemus = VPOS_BELOW;
+            v_episemus_below_is_lower = true;
             break;
         case 2:
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
-                number = 5;
+                note->gtex_offset_case = 5;
             } else {
-                number = 4;
+                note->gtex_offset_case = 4;
             }
-            *h_episemus = above_if_either_h_episemus(note);
-            *v_episemus = VPOS_BELOW;
+            h_episemus = above_if_either_h_episemus(note);
+            v_episemus = VPOS_BELOW;
             break;
         case 3:
-            *h_episemus = VPOS_ABOVE;
+            h_episemus = VPOS_ABOVE;
             if ((glyph->u.notes.liquescentia & L_DEMINUTUS) && note->next) {
-                *v_episemus = below_if_next_ambitus_allows(note);
-                number = 3;
+                v_episemus = below_if_next_ambitus_allows(note);
+                note->gtex_offset_case = 3;
             } else {
-                *v_episemus = VPOS_BELOW;
-                number = number_note_before_last_note(glyph, note);
+                v_episemus = VPOS_BELOW;
+                note->gtex_offset_case = number_note_before_last_note(glyph,
+                        note);
             }
             break;
         default:
-            number = number_last_note(glyph, 0, note, false);
-            *h_episemus = above_if_h_episemus(note->previous);
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_last_note(glyph, 0, note, false);
+            h_episemus = above_if_h_episemus(note->previous);
+            v_episemus = VPOS_BELOW;
             break;
         }
         break;
@@ -1958,9 +1959,9 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
         done = true;
         switch (i) {
         case 1:
-            number = number_first_note(note, glyph);
-            *h_episemus = above_if_h_episemus(note->next);
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_first_note(note, glyph);
+            h_episemus = above_if_h_episemus(note->next);
+            v_episemus = VPOS_BELOW;
             break;
         case HEPISEMUS_FIRST_TWO:
         case 2:
@@ -1968,31 +1969,31 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
                     (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
                 // auctus
                 if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
-                    number = 40;
+                    note->gtex_offset_case = 40;
                 } else {
                     if (note->u.note.pitch -
                             note->previous->u.note.pitch == 1) {
                         switch (note->previous->u.note.shape) {
                         case S_QUILISMA:
-                            number = 44;
+                            note->gtex_offset_case = 44;
                             break;
                         case S_ORISCUS:
-                            number = 45;
+                            note->gtex_offset_case = 45;
                             break;
                         default:
-                            number = 43;
+                            note->gtex_offset_case = 43;
                             break;
                         }
                     } else {
                         switch (note->previous->u.note.shape) {
                         case S_QUILISMA:
-                            number = 41;
+                            note->gtex_offset_case = 41;
                             break;
                         case S_ORISCUS:
-                            number = 42;
+                            note->gtex_offset_case = 42;
                             break;
                         default:
-                            number = 39;
+                            note->gtex_offset_case = 39;
                             break;
                         }
                     }
@@ -2001,31 +2002,31 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
                     note->next->u.note.pitch == 1) {
                 // non-auctus with a second ambitus of 1
                 if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
-                    number = 33;
+                    note->gtex_offset_case = 33;
                 } else {
                     if (note->u.note.pitch -
                             note->previous->u.note.pitch == 1) {
                         switch (note->previous->u.note.shape) {
                         case S_QUILISMA:
-                            number = 34;
+                            note->gtex_offset_case = 34;
                             break;
                         case S_ORISCUS:
-                            number = 35;
+                            note->gtex_offset_case = 35;
                             break;
                         default:
-                            number = 32;
+                            note->gtex_offset_case = 32;
                             break;
                         }
                     } else {
                         switch (note->previous->u.note.shape) {
                         case S_QUILISMA:
-                            number = 37;
+                            note->gtex_offset_case = 37;
                             break;
                         case S_ORISCUS:
-                            number = 38;
+                            note->gtex_offset_case = 38;
                             break;
                         default:
-                            number = 36;
+                            note->gtex_offset_case = 36;
                             break;
                         }
                     }
@@ -2033,39 +2034,39 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
             } else {
                 // non-auctus with a second ambitus of at least 2
                 if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
-                    number = 23;
+                    note->gtex_offset_case = 23;
                 } else {
                     if (note->u.note.pitch -
                             note->previous->u.note.pitch == 1) {
                         switch (note->previous->u.note.shape) {
                         case S_QUILISMA:
-                            number = 28;
+                            note->gtex_offset_case = 28;
                             break;
                         case S_ORISCUS:
-                            number = 29;
+                            note->gtex_offset_case = 29;
                             break;
                         default:
-                            number = 21;
+                            note->gtex_offset_case = 21;
                             break;
                         }
                     } else {
                         switch (note->previous->u.note.shape) {
                         case S_QUILISMA:
-                            number = 30;
+                            note->gtex_offset_case = 30;
                             break;
                         case S_ORISCUS:
-                            number = 31;
+                            note->gtex_offset_case = 31;
                             break;
                         default:
-                            number = 22;
+                            note->gtex_offset_case = 22;
                             break;
                         }
                     }
                 }
             }
-            *h_episemus = VPOS_ABOVE;
-            *v_episemus = VPOS_BELOW;
-            *v_episemus_below_is_lower = true;
+            h_episemus = VPOS_ABOVE;
+            v_episemus = VPOS_BELOW;
+            v_episemus_below_is_lower = true;
             break;
         default:
             --i;
@@ -2084,54 +2085,54 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
             if (glyph->u.notes.liquescentia &
                     (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
                 // auctus
-                number = 10;
+                note->gtex_offset_case = 10;
             } else if (note->next->next->u.note.pitch -
                     note->next->u.note.pitch == 1) {
                 // non-auctus with a second ambitus of 1
-                number = 9;
+                note->gtex_offset_case = 9;
             } else {
                 // non-auctus with a second ambitus of at least 2
-                number = 8;
+                note->gtex_offset_case = 8;
             }
-            *h_episemus = VPOS_ABOVE;
-            *v_episemus = VPOS_BELOW;
-            *v_episemus_below_is_lower = true;
+            h_episemus = VPOS_ABOVE;
+            v_episemus = VPOS_BELOW;
+            v_episemus_below_is_lower = true;
             break;
         case 2:
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
-                number = 3;
+                note->gtex_offset_case = 3;
             } else if (glyph->u.notes.liquescentia
                     & (L_AUCTUS_ASCENDENS|L_AUCTUS_DESCENDENS|L_AUCTA)) {
-                number = 2;
+                note->gtex_offset_case = 2;
             } else {
-                number = 0;
+                note->gtex_offset_case = 0;
             }
-            *h_episemus = above_if_h_episemus(note->previous);
-            *v_episemus = VPOS_BELOW;
+            h_episemus = above_if_h_episemus(note->previous);
+            v_episemus = VPOS_BELOW;
             break;
         default: // case 3
-            number = number_last_note(glyph, 18, note, true);
-            *h_episemus = VPOS_ABOVE;
-            *v_episemus = below_if_auctus(glyph);
+            note->gtex_offset_case = number_last_note(glyph, 18, note, true);
+            h_episemus = VPOS_ABOVE;
+            v_episemus = below_if_auctus(glyph);
             break;
         }
         break;
     case T_SCANDICUS:
         switch (i) {
         case 1:
-            number = number_first_note(note, glyph);
-            *h_episemus = VPOS_BELOW;
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_first_note(note, glyph);
+            h_episemus = VPOS_BELOW;
+            v_episemus = VPOS_BELOW;
             break;
         case 2:
-            number = number_note_before_last_note(glyph, note);
-            *h_episemus = VPOS_BELOW;
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_note_before_last_note(glyph, note);
+            h_episemus = VPOS_BELOW;
+            v_episemus = VPOS_BELOW;
             break;
         default:
-            number = number_last_note(glyph, 0, note, true);
-            *h_episemus = VPOS_ABOVE;
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_last_note(glyph, 0, note, true);
+            h_episemus = VPOS_ABOVE;
+            v_episemus = VPOS_BELOW;
             break;
         }
         break;
@@ -2139,110 +2140,110 @@ static char get_positioning(gregorio_glyph *glyph, gregorio_note *note, int i,
     case T_ANCUS_LONGQUEUE:
         switch (i) {
         case 1:
-            number = number_first_note(note, glyph);
-            *h_episemus = above_if_h_episemus(note->next);
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_first_note(note, glyph);
+            h_episemus = above_if_h_episemus(note->next);
+            v_episemus = VPOS_BELOW;
             break;
         case 2:
-            number = number_note_before_last_note(glyph, note);
-            *h_episemus = VPOS_ABOVE;
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_note_before_last_note(glyph, note);
+            h_episemus = VPOS_ABOVE;
+            v_episemus = VPOS_BELOW;
             break;
         case 3:
-            number = number_last_note(glyph, 0, note, false);
-            *h_episemus = VPOS_ABOVE;
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_last_note(glyph, 0, note, false);
+            h_episemus = VPOS_ABOVE;
+            v_episemus = VPOS_BELOW;
             break;
         default:
-            number = number_last_note(glyph, 0, note, false);
-            *h_episemus = VPOS_BELOW;
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_last_note(glyph, 0, note, false);
+            h_episemus = VPOS_BELOW;
+            v_episemus = VPOS_BELOW;
             break;
         }
         break;
     case T_TORCULUS:
         switch (i) {
         case 1:
-            number = number_first_note(note, glyph);
-            *h_episemus = above_if_h_episemus(note->next);
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_first_note(note, glyph);
+            h_episemus = above_if_h_episemus(note->next);
+            v_episemus = VPOS_BELOW;
             break;
         case 2:
-            number = number_note_before_last_note(glyph, note);
-            *h_episemus = VPOS_ABOVE;
+            note->gtex_offset_case = number_note_before_last_note(glyph, note);
+            h_episemus = VPOS_ABOVE;
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
-                *v_episemus = below_if_next_ambitus_allows(note);
+                v_episemus = below_if_next_ambitus_allows(note);
             } else {
-                *v_episemus = VPOS_BELOW;
+                v_episemus = VPOS_BELOW;
             }
             break;
         default:
-            number = number_last_note(glyph, 0, note, false);
-            *h_episemus = above_if_h_episemus(note->previous);
-            *v_episemus = VPOS_BELOW;
+            note->gtex_offset_case = number_last_note(glyph, 0, note, false);
+            h_episemus = above_if_h_episemus(note->previous);
+            v_episemus = VPOS_BELOW;
             break;
         }
         break;
     default: // case T_ONE_NOTE
-        *h_episemus = VPOS_ABOVE;
-        *v_episemus = VPOS_BELOW;
+        h_episemus = VPOS_ABOVE;
+        v_episemus = VPOS_BELOW;
         switch (note->u.note.shape) {
         case S_PUNCTUM_INCLINATUM_DEMINUTUS:
-            number = 13;
+            note->gtex_offset_case = 13;
             break;
         case S_PUNCTUM_INCLINATUM_AUCTUS:
         case S_PUNCTUM_INCLINATUM:
-            number = 12;
+            note->gtex_offset_case = 12;
             break;
         case S_STROPHA:
-            number = 14;
+            note->gtex_offset_case = 14;
             break;
         case S_QUILISMA:
-            number = 15;
+            note->gtex_offset_case = 15;
             break;
         case S_ORISCUS:
         case S_ORISCUS_AUCTUS:
         case S_ORISCUS_DEMINUTUS:
-            number = 16;
+            note->gtex_offset_case = 16;
             break;
         case S_VIRGA:
-            number = 56;
+            note->gtex_offset_case = 56;
             break;
         case S_VIRGA_REVERSA:
             if (glyph->u.notes.liquescentia == L_AUCTUS_DESCENDENS) {
-                number = 54;
+                note->gtex_offset_case = 54;
             } else {
-                number = 56;
+                note->gtex_offset_case = 56;
             }
             break;
         case S_LINEA_PUNCTUM:
         case S_LINEA_PUNCTUM_CAVUM:
-            number = 24;
+            note->gtex_offset_case = 24;
             break;
         case S_LINEA:
-            number = 0;
+            note->gtex_offset_case = 0;
             break;
         default:
-            number = number_last_note(glyph, 0, note, true);
+            note->gtex_offset_case = number_last_note(glyph, 0, note, true);
             break;
         }
         break;
     }
 
-    return number;
-}
-
-inline static gregorio_vposition compute_h_episemus_vpos(gregorio_glyph *glyph,
-        gregorio_note *note, int i, gtex_type type, gregorio_vposition vpos)
-{
-    if (note->h_episemus_vposition) {
-        return note->h_episemus_vposition;
+    if (note->signs & _V_EPISEMUS) {
+        note->v_episemus_height = note->u.note.pitch + (int)v_episemus;
+        if (v_episemus == VPOS_BELOW && v_episemus_below_is_lower
+                || v_episemus == VPOS_ABOVE) {
+            // above is always higher because of GregorioTeX's design
+            note->v_episemus_height += (int)v_episemus;
+        }
     }
-    return vpos;
+
+    return h_episemus;
 }
 
-inline static bool choral_sign_here_is_low(gregorio_glyph *glyph,
-        gregorio_note *note, bool *kind_of_pes)
+inline static bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
+        const gregorio_note *const note, bool *const kind_of_pes)
 {
     bool low_sign = false;
     if (kind_of_pes) {
@@ -2281,15 +2282,15 @@ inline static bool choral_sign_here_is_low(gregorio_glyph *glyph,
     return low_sign;
 }
 
-inline static char compute_h_episemus_height(gregorio_glyph *glyph,
-        gregorio_note *note, int i, gtex_type type, gregorio_vposition vpos)
+inline static char compute_h_episemus_height(const gregorio_glyph *const glyph,
+        const gregorio_note *const note, const int i, const gtex_type type,
+        const gregorio_vposition vpos)
 {
     char height = note->u.note.pitch;
     gregorio_vposition v_episemus_vpos;
     bool v_episemus_is_lower;
 
     if (note->signs & _V_EPISEMUS) {
-        // TODO: check these values
         if (vpos == VPOS_ABOVE && note->v_episemus_height >= height
                 || vpos == VPOS_BELOW && note->v_episemus_height <= height) {
             height = note->v_episemus_height;
@@ -2307,7 +2308,7 @@ inline static char compute_h_episemus_height(gregorio_glyph *glyph,
     height += (int)vpos;
 }
 
-static bool is_bridgeable_space(gregorio_element *element)
+static bool is_bridgeable_space(const gregorio_element *const element)
 {
     if (element->type == GRE_SPACE) {
         switch (element->u.misc.unpitched.info.space) {
@@ -2323,33 +2324,85 @@ static bool is_bridgeable_space(gregorio_element *element)
 }
 
 typedef struct height_computation {
-    gregorio_vposition vpos; // if not VPOS_AUTO, an episemus is active
+    const gregorio_vposition vpos;
+    void (*const position)(gregorio_note *, char, bool);
+    bool (*const is_shown)(const gregorio_note *);
+    bool (*const is_connected)(const gregorio_note *);
+    grehepisemus_size (*const get_size)(const gregorio_note *);
+    bool (*const is_better_height)(char, char);
+
+    bool active;
     char height;
     bool connected;
-    gregorio_element *start_element;
-    gregorio_glyph *start_glyph;
+    const gregorio_element *start_element;
+    const gregorio_glyph *start_glyph;
     gregorio_note *start_note;
 } height_computation;
 
-inline static void start_h_episemus(height_computation *d,
-        gregorio_element *element, gregorio_glyph *glyph, gregorio_note *note,
-        int i, gtex_type type, gregorio_vposition vpos)
+static bool is_h_episemus_above_shown(const gregorio_note *const note)
 {
-    d->start_element = element;
-    d->start_glyph = glyph;
-    d->start_note = note;
-    d->vpos = compute_h_episemus_vpos(glyph, note, i, type, vpos);
-    d->height = compute_h_episemus_height(glyph, note, i, type, d->vpos);
+    return note->h_episemus_above;
 }
 
-inline static void set_h_episemus_height(height_computation *d,
-        gregorio_note *end)
+static bool is_h_episemus_below_shown(const gregorio_note *const note)
+{
+    return note->h_episemus_below;
+}
+
+static bool is_h_episemus_above_connected(const gregorio_note *const note)
+{
+    return note->h_episemus_above_connect;
+}
+
+static bool is_h_episemus_below_connected(const gregorio_note *const note)
+{
+    return note->h_episemus_below_connect;
+}
+
+static grehepisemus_size get_h_episemus_above_size(
+        const gregorio_note *const note)
+{
+    return note->h_episemus_above_size;
+}
+
+static grehepisemus_size get_h_episemus_below_size(
+        const gregorio_note *const note)
+{
+    return note->h_episemus_below_size;
+}
+
+static bool is_h_episemus_above_better_height(const char new_height,
+        const char old_height)
+{
+    return new_height > old_height;
+}
+
+static bool is_h_episemus_below_better_height(const char new_height,
+        const char old_height)
+{
+    return new_height < old_height;
+}
+
+inline static void start_h_episemus(height_computation *const h,
+        const gregorio_element *const element,
+        const gregorio_glyph *const glyph, gregorio_note *const note,
+        const int i, const gtex_type type)
+{
+    h->start_element = element;
+    h->start_glyph = glyph;
+    h->start_note = note;
+    h->active = true;
+    h->height = compute_h_episemus_height(glyph, note, i, type, h->vpos);
+}
+
+inline static void set_h_episemus_height(const height_computation *const h,
+        gregorio_note *const end)
 {
     gregorio_note *last_note = NULL;
 
-    gregorio_element *element = d->start_element;
-    gregorio_glyph *glyph = d->start_glyph;
-    gregorio_note *note = d->start_note;
+    const gregorio_element *element = h->start_element;
+    const gregorio_glyph *glyph = h->start_glyph;
+    gregorio_note *note = h->start_note;
 
     for ( ; element; element = element->next) {
         if (element->type == GRE_ELEMENT) {
@@ -2360,13 +2413,11 @@ inline static void set_h_episemus_height(height_computation *d,
                             note = note->next) {
                         if (end && note == end) {
                             if (last_note) {
-                                last_note->h_episemus_connect = false;
+                                h->position(last_note, h->height, false);
                             }
                             return;
                         }
-                        note->h_episemus_height = d->height;
-                        note->h_episemus_vposition = d->vpos;
-                        note->h_episemus_connect = true;
+                        h->position(note, h->height, true);
                         last_note = note;
                     }
                 }
@@ -2377,114 +2428,125 @@ inline static void set_h_episemus_height(height_computation *d,
     }
 
     if (last_note) {
-        last_note->h_episemus_connect = false;
+        h->position(last_note, h->height, false);
     }
 }
 
-inline static void end_h_episemus(height_computation *d, gregorio_note *end)
+inline static void end_h_episemus(height_computation *const h,
+        gregorio_note *const end)
 {
-    if (d->vpos) {
+    char proposed_height;
+
+    if (h->active) {
         // don't let the episemus clash with the note before or after
-        if (d->vpos == VPOS_ABOVE) {
-            if (d->start_note->previous
-                    && d->start_note->previous->type == GRE_NOTE
-                    && d->start_note->previous->u.note.pitch >= d->height) {
-                d->height = d->start_note->previous->u.note.pitch + d->vpos;
-            } else if (end && end->type == GRE_NOTE
-                    && end->u.note.pitch >= d->height) {
-                d->height = end->u.note.pitch + d->vpos;
+        if (h->start_note->previous
+                && h->start_note->previous->type == GRE_NOTE) {
+            proposed_height = h->start_note->previous->u.note.pitch + h->vpos;
+            if (h->is_better_height(proposed_height, h->height)) {
+                h->height = proposed_height;
             }
         }
-        else { // d->vpos == VPOS_BELOW
-            if (d->start_note->previous
-                    && d->start_note->previous->type == GRE_NOTE
-                    && d->start_note->previous->u.note.pitch <= d->height) {
-                d->height = d->start_note->previous->u.note.pitch + d->vpos;
-            } else if (end && end->type == GRE_NOTE
-                    && end->u.note.pitch <= d->height) {
-                d->height = end->u.note.pitch + d->vpos;
+        if (end && end->type == GRE_NOTE) {
+            proposed_height = end->u.note.pitch + h->vpos;
+            if (h->is_better_height(proposed_height, h->height)) {
+                h->height = proposed_height;
             }
         }
 
-        set_h_episemus_height(d, end);
+        set_h_episemus_height(h, end);
 
-        d->vpos = VPOS_AUTO;
-        d->height = 0;
-        d->connected = false;
-        d->start_element = NULL;
-        d->start_glyph = NULL;
-        d->start_note = NULL;
+        h->active = false;
+        h->height = 0;
+        h->connected = false;
+        h->start_element = NULL;
+        h->start_glyph = NULL;
+        h->start_note = NULL;
     }
 }
 
-inline static void compute_note_positioning(height_computation *d,
-        gregorio_element *element, gregorio_glyph *glyph, gregorio_note *note,
-        int i, gtex_type type)
+inline static void compute_h_episemus(height_computation *const h,
+        const gregorio_element *const element,
+        const gregorio_glyph *const glyph, gregorio_note *const note,
+        const int i, const gtex_type type)
 {
     char next_height;
-    gregorio_vposition h_episemus, v_episemus;
-    bool v_episemus_below_is_lower;
+    grehepisemus_size size;
 
-    note->gtex_offset_case = get_positioning(glyph, note, i, type, &h_episemus,
-            &v_episemus, &v_episemus_below_is_lower);
-    if (note->signs & _V_EPISEMUS) {
-        note->v_episemus_height = note->u.note.pitch + (int)v_episemus;
-        if (v_episemus == VPOS_BELOW && v_episemus_below_is_lower
-                || v_episemus == VPOS_ABOVE) {
-            // above is always higher because of GregorioTeX's design
-            note->v_episemus_height += (int)v_episemus;
-        }
-    }
-
-    if (note->h_episemus_type) {
-        if (d->vpos) {
-            if (d->vpos == VPOS_ABOVE) {
-                if (compute_h_episemus_vpos(glyph, note, i, type, h_episemus)
-                            == VPOS_ABOVE && d->connected) {
-                    next_height = compute_h_episemus_height(glyph, note, i,
-                            type, d->vpos);
-                    if (next_height > d->height) {
-                        d->height = next_height;
-                    }
-                }
-                else {
-                    end_h_episemus(d, note);
-                    start_h_episemus(d, element, glyph, note, i, type,
-                            h_episemus);
+    if (h->is_shown(note)) {
+        if (h->active) {
+            if (h->connected) {
+                next_height = compute_h_episemus_height(glyph, note, i,
+                        type, h->vpos);
+                if (h->is_better_height(next_height,
+                            h->height)) {
+                    h->height = next_height;
                 }
             }
-            else { // vpos == VPOS_BELOW
-                if (compute_h_episemus_vpos(glyph, note, i, type, h_episemus)
-                            == VPOS_BELOW && d->connected) {
-                    next_height = compute_h_episemus_height(glyph, note, i,
-                            type, d->vpos);
-                    if (next_height < d->height) {
-                        d->height = next_height;
-                    }
-                }
-                else {
-                    end_h_episemus(d, note);
-                    start_h_episemus(d, element, glyph, note, i, type,
-                            h_episemus);
-                }
+            else {
+                end_h_episemus(h, note);
+                start_h_episemus(h, element, glyph, note, i, type);
             }
+        } else {
+            start_h_episemus(h, element, glyph, note, i, type);
         }
-        else {
-            start_h_episemus(d, element, glyph, note, i, type, h_episemus);
-        }
-        d->connected = !note->h_episemus_no_bridge
-                && (note->h_episemus_type == H_NORMAL
-                        || note->h_episemus_type == H_SMALL_RIGHT);
-    }
-    else {
-        end_h_episemus(d, note);
+
+        size = h->get_size(note);
+        h->connected = h->is_connected(note)
+                && (size == H_NORMAL || size == H_SMALL_RIGHT);
+    } else {
+        end_h_episemus(h, note);
     }
 }
 
-static void compute_positioning(gregorio_element *element)
+inline static void compute_note_positioning(height_computation *const above,
+        height_computation *const below, const gregorio_element *const element,
+        const gregorio_glyph *const glyph, gregorio_note *const note,
+        const int i, const gtex_type type)
 {
-    height_computation d = {
-        .vpos = VPOS_AUTO,
+    char next_height;
+
+    gregorio_vposition default_vpos = advise_positioning(glyph, note, i, type);
+
+    if (note->h_episemus_above == HEPISEMUS_AUTO
+            && note->h_episemus_below == HEPISEMUS_AUTO) {
+        if (default_vpos == VPOS_BELOW) {
+            note->h_episemus_above = HEPISEMUS_NONE;
+        }
+        else { // default_vpos == VPOS_ABOVE
+            note->h_episemus_below = HEPISEMUS_NONE;
+        }
+    }
+
+    compute_h_episemus(above, element, glyph, note, i, type);
+    compute_h_episemus(below, element, glyph, note, i, type);
+}
+
+static void compute_positioning(const gregorio_element *element)
+{
+    height_computation above = {
+        .vpos = VPOS_ABOVE,
+        .position = &gregorio_position_h_episemus_above,
+        .is_shown = &is_h_episemus_above_shown,
+        .is_connected = &is_h_episemus_above_connected,
+        .get_size = &get_h_episemus_above_size,
+        .is_better_height = &is_h_episemus_above_better_height,
+
+        .active = false,
+        .height = 0,
+        .connected = false,
+        .start_element = NULL,
+        .start_glyph = NULL,
+        .start_note = NULL,
+    };
+    height_computation below = {
+        .vpos = VPOS_BELOW,
+        .position = &gregorio_position_h_episemus_below,
+        .is_shown = &is_h_episemus_below_shown,
+        .is_connected = &is_h_episemus_below_connected,
+        .get_size = &get_h_episemus_below_size,
+        .is_better_height = &is_h_episemus_below_better_height,
+
+        .active = false,
         .height = 0,
         .connected = false,
         .start_element = NULL,
@@ -2497,7 +2559,7 @@ static void compute_positioning(gregorio_element *element)
 
     for (; element; element = element->next) {
         if (element->type == GRE_ELEMENT) {
-            for (gregorio_glyph *glyph = element->u.first_glyph; glyph;
+            for (const gregorio_glyph *glyph = element->u.first_glyph; glyph;
                     glyph = glyph->next) {
                 if (glyph->type == GRE_GLYPH) {
                     i = 0;
@@ -2506,51 +2568,91 @@ static void compute_positioning(gregorio_element *element)
                     for (gregorio_note *note = glyph->u.notes.first_note;
                             note; note = note->next) {
                         if (note->type == GRE_NOTE) {
-                            compute_note_positioning(&d, element, glyph, note,
-                                    ++i, type);
+                            compute_note_positioning(&above, &below, element,
+                                    glyph, note, ++i, type);
                         }
                     }
                 }
             }
         } else if (!is_bridgeable_space(element)) {
-            end_h_episemus(&d, NULL);
+            end_h_episemus(&above, NULL);
+            end_h_episemus(&below, NULL);
         }
     }
-    end_h_episemus(&d, NULL);
+    end_h_episemus(&above, NULL);
+    end_h_episemus(&below, NULL);
+}
+
+static void write_hepisemus_bridge(FILE *const f, const gregorio_note *const note,
+        const bool connect, const char height)
+{
+    if (connect && (!note->next
+                || note->next->u.note.shape == S_PUNCTUM_INCLINATUM
+                || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_DEMINUTUS
+                || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_AUCTUS)) {
+        fprintf(f, "\\grehepisemusbridge{%c}{}{}%%\n", height);
+    }
 }
 
 /**
  * @brief A function that writes the good \c \\hepisemus in GregorioTeX.
  * @param i The position of the note in the glyph.
  */
-static void gregoriotex_write_hepisemus(FILE *f, gregorio_glyph *glyph,
-        gregorio_note *note, int i, gtex_type type)
+static void gregoriotex_write_hepisemus(FILE *const f,
+        const gregorio_glyph *const glyph,
+        const gregorio_note *const note, const int i, const gtex_type type)
 {
-    char ambitus = 0;
+    char ambitus;
+    int porrectus_long_episemus_index = -1;
 
-    if (!note || !note->h_episemus_type) {
+    if (!note) {
         return;
     }
 
-    if (note->h_episemus_connect && (!note->next
-                || note->next->u.note.shape == S_PUNCTUM_INCLINATUM
-                || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_DEMINUTUS
-                || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_AUCTUS)) {
-        fprintf(f, "\\grehepisemusbridge{%c}{}{}%%\n", note->h_episemus_height);
-    }
-
-    if (i == HEPISEMUS_FIRST_TWO && note->next) {
-        ambitus = note->u.note.pitch - note->next->u.note.pitch;
+    switch (type) {
+    case T_PORRECTUS:
+    case T_PORRECTUS_FLEXUS:
+        porrectus_long_episemus_index = 1;
+        break;
+    case T_TORCULUS_RESUPINUS:
+    case T_TORCULUS_RESUPINUS_FLEXUS:
+        porrectus_long_episemus_index = 2;
+        break;
     }
 
     // TODO: use note->h_episemus_size
-    if (note->h_episemus_vposition == VPOS_BELOW) {
-        fprintf(f, "\\grehepisemusbottom{%c}{%d}{%d}%%\n",
-                note->h_episemus_height, note->gtex_offset_case, ambitus);
-    } else {
-        fprintf(f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n",
-                note->h_episemus_height, note->gtex_offset_case, ambitus,
-                note->h_episemus_height);
+    if (note->h_episemus_below) {
+        ambitus = 0;
+
+        if (i == porrectus_long_episemus_index && note->next
+                && note->next->h_episemus_below) {
+            ambitus = compute_ambitus(note);
+        }
+
+        if (i - 1 != porrectus_long_episemus_index || !note->previous
+                || !note->previous->h_episemus_below) {
+            write_hepisemus_bridge(f, note, note->h_episemus_below_connect,
+                    note->h_episemus_below);
+            fprintf(f, "\\grehepisemusbottom{%c}{%d}{%d}%%\n",
+                    note->h_episemus_below, note->gtex_offset_case, ambitus);
+        }
+    }
+    if (note->h_episemus_above) {
+        ambitus = 0;
+
+        if (i == porrectus_long_episemus_index && note->next
+                && (note->next->h_episemus_below || note->next->h_episemus_above)) {
+            ambitus = compute_ambitus(note);
+        }
+
+        if (i - 1 != porrectus_long_episemus_index || !note->previous
+                || !note->previous->h_episemus_above) {
+            write_hepisemus_bridge(f, note, note->h_episemus_above_connect,
+                    note->h_episemus_above);
+            fprintf(f, "\\grehepisemus{%c}{%d}{%d}{%c}%%\n",
+                    note->h_episemus_above, note->gtex_offset_case, ambitus,
+                    note->h_episemus_above);
+        }
     }
 }
 
@@ -3055,29 +3157,9 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
     current_note = note;
     while (current_note) {
         // we continue with the hepisemus
-        if (current_note->h_episemus_type != H_NO_EPISEMUS
-                && block_hepisemus == 0) {
-            // if it is a porrectus or a porrectus flexus, we check if the
-            // episemus is on the two first notes:
+        if (current_note->h_episemus_above || current_note->h_episemus_below) {
             _found();
-            if ((type == T_PORRECTUS || type == T_PORRECTUS_FLEXUS)
-                    && current_note->next
-                    && current_note->next->h_episemus_type != H_NO_EPISEMUS &&
-                    i == 1) {
-                gregoriotex_write_hepisemus(f, glyph, current_note,
-                        HEPISEMUS_FIRST_TWO, type);
-                block_hepisemus = 1;
-            } else if ((type == T_TORCULUS_RESUPINUS
-                            || type == T_TORCULUS_RESUPINUS_FLEXUS)
-                    && current_note->next
-                    && current_note->next->h_episemus_type != H_NO_EPISEMUS
-                    && i == 2) {
-                gregoriotex_write_hepisemus(f, glyph, current_note,
-                        HEPISEMUS_FIRST_TWO, type);
-                block_hepisemus = 1;
-            } else {
-                gregoriotex_write_hepisemus(f, glyph, current_note, i, type);
-            }
+            gregoriotex_write_hepisemus(f, glyph, current_note, i, type);
         }
         // write_rare also writes the vepisemus
         if (current_note->special_sign) {
