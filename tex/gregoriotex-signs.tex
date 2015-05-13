@@ -779,8 +779,8 @@
 %% 42: idem, with an oriscus
 %% 43: same as 36, for a torculus resupinus with second ambitus of one and not
 %%     auctus liquescence
-%% 37: idem, with a quilisma
-%% 38: idem, with an oriscus
+%% 44: idem, with a quilisma
+%% 45: idem, with an oriscus
 %% 46: idem 17, with the note having two line on the bottom corners (like second note of gig)
 %% 47: idem 46, with the note having a line on the bottom left (like second note of gih)
 %% 48: the first note, if it's a punctum with a bar on the top-right corner (~6)
@@ -869,7 +869,10 @@
   \or%
     %case 9
     \grevepisemusorrareaux{0}{\gre@char@punctum}{0}{0}{#3}{#4}{#5}%
-  \or\or% case 10 and 11
+  \or%
+    %case 10
+    \grevepisemusorrareaux{0}{\gre@char@punctum}{0}{0}{#3}{#4}{#5}%
+  \or% case 11 doesn't exist
   \or%
     %case 12
     \grevepisemusorrareaux{0}{\gre@char@punctuminclinatum}{0}{30\the\grefactor }{#3}{#4}{#5}%
@@ -1141,7 +1144,10 @@
 %    flexus
 % #4 is 0 for an horizontal episemus, 1 for an horizontal episemus under a
 %    note, 3 for a line at the bottom, 2 for a line at the top
-\def\grehepisorline#1#2#3#4{{%
+% #5 is f for a normal episemus, l for a small episemus aligned left,
+%    c for a small episemus aligned center, or r for a small episemus
+%    aligned right
+\def\grehepisorline#1#2#3#4#5{{%
   \ifcase#4 %
     \gre@calculate@glyphraisevalue{#1}{9}%
   \or %
@@ -1156,188 +1162,183 @@
   \fi %
   \ifcase#2 %
     %case 0
-    \grehepisorlineaux{\gre@char@punctum}{\gre@char@he@punctum}{2}{#4}%
+    \grehepisorlineaux{\gre@char@punctum}{\gre@char@he@punctum{#5}}{2}{#4}%
   \or%
     %case 1
-    \grehepisorlineaux{\gre@char@smallpunctum}{\gre@char@he@initio}{2}{#4}%
+    \grehepisorlineaux{\gre@char@smallpunctum}{\gre@char@he@initio{#5}}{2}{#4}%
   \or%
     %case 2
     % a kind of flexus, it has the good width
-    \grehepisorlineaux{\gre@char@flexusalt}{\gre@char@he@punctum}{2}{#4}%
+    \grehepisorlineaux{\gre@char@flexusalt}{\gre@char@he@punctum{#5}}{2}{#4}%
   \or%
     %case 3
     % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
-    \grehepisorlineaux{\gre@char@flexusdeminutus}{\gre@char@he@punctum}{2}{#4}%
+    \grehepisorlineaux{\gre@char@flexusdeminutus}{\gre@char@he@punctum{#5}}{2}{#4}%
   \or%
     %case 4
     % a torculus, it has the good width
-    \grehepisorlineaux{\gre@char@torculus}{\gre@char@he@punctum}{2}{#4}%
+    \grehepisorlineaux{\gre@char@torculus}{\gre@char@he@punctum{#5}}{2}{#4}%
   \or%
     %case 5
     % torculus deminutus has the good width
-    \grehepisorlineaux{\gre@char@torculusdeminutus}{\gre@char@he@punctum}{2}{#4}%
+    \grehepisorlineaux{\gre@char@torculusdeminutus}{\gre@char@he@punctum{#5}}{2}{#4}%
   \or%
     %case 6
-    \grehepisorlineaux{0}{\gre@char@he@punctum}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@punctum{#5}}{0}{#4}%
   \or%
     %case 7
     %we assume that the initio-debilis has the same width as a punctum deminutus
-    \grehepisorlineaux{0}{\gre@char@he@flexus}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@flexus{#5}}{0}{#4}%
   \or%
     %case 8
-    \grehepisorlineaux{0}{\gre@char@he@porrectus{#3}}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@porrectus{#3}{#5}}{0}{#4}%
   \or%
     %case 9
-    \grehepisorlineaux{0}{\gre@char@he@porrectus@amone{#3}}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@porrectus@amone{#3}{#5}}{0}{#4}%
   \or%
     %case 10
-    \grehepisorlineaux{0}{\gre@char@he@porrectusfl{#3}}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@porrectusfl{#3}{#5}}{0}{#4}%
   \or% case 11 is gone
   \or%
     %case 12
-    \grehepisorlineaux{\gre@char@punctuminclinatum}{\gre@char@he@inclinatum}{2}{#4}%
+    \grehepisorlineaux{\gre@char@punctuminclinatum}{\gre@char@he@inclinatum{#5}}{2}{#4}%
   \or%
     %case 13
-    \grehepisorlineaux{\gre@char@punctuminclinatumdem}{\gre@char@he@inclinatumdem}{2}{#4}%
+    \grehepisorlineaux{\gre@char@punctuminclinatumdem}{\gre@char@he@inclinatumdem{#5}}{2}{#4}%
   \or%
     %case 14
-    \grehepisorlineaux{\gre@char@stropha}{\gre@char@he@stropha}{2}{#4}%
+    \grehepisorlineaux{\gre@char@stropha}{\gre@char@he@stropha{#5}}{2}{#4}%
   \or%
     %case 15
-    \grehepisorlineaux{\gre@char@quilisma}{\gre@char@he@quilisma}{2}{#4}%
+    \grehepisorlineaux{\gre@char@quilisma}{\gre@char@he@quilisma{#5}}{2}{#4}%
   \or%
     %case 16
-    \grehepisorlineaux{\gre@char@oriscus}{\gre@char@he@oriscus}{2}{#4}%
+    \grehepisorlineaux{\gre@char@oriscus}{\gre@char@he@oriscus{#5}}{2}{#4}%
   \or%
     %case 17
-    \grehepisorlineaux{\gre@char@flexusaltone}{\gre@char@he@punctum}{2}{#4}%
+    \grehepisorlineaux{\gre@char@flexusaltone}{\gre@char@he@punctum{#5}}{2}{#4}%
   \or %
     %case 18
-    \grehepisorlineaux{\gre@char@peshigh}{\gre@char@he@smallpunctum}{2}{#4}%
+    \grehepisorlineaux{\gre@char@peshigh}{\gre@char@he@smallpunctum{#5}}{2}{#4}%
   \or %
     %case 19
-    \grehepisorlineaux{0}{\gre@char@he@oriscus}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@oriscus{#5}}{0}{#4}%
   \or %
     %case 20
-    \grehepisorlineaux{0}{\gre@char@he@quilisma}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@quilisma{#5}}{0}{#4}%
   \or %
     %case 21
-    \grehepisorlineaux{\gre@char@leading@punctum@two}{\gre@char@he@porrectus{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@punctum@two}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
   \or %
     %case 22
-    \grehepisorlineaux{\gre@char@leading@punctum@one}{\gre@char@he@porrectus{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@punctum@one}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
   \or %
     %case 23
-    \grehepisorlineaux{\gre@char@leading@debilis}{\gre@char@he@porrectus{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@debilis}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
   \or%
     %case 24
-    \grehepisorlineaux{\gre@char@pesinitauctusone}{\gre@char@he@punctum}{2}{#4}%the episemus is not quite long enough so I assumed a different width for now...
+    \grehepisorlineaux{\gre@char@pesinitauctusone}{\gre@char@he@punctum{#5}}{2}{#4}%the episemus is not quite long enough so I assumed a different width for now...
   \or\or\or% case 25, 26, 27
   \or%
     %case 28
-    \grehepisorlineaux{\gre@char@leading@quilisma@two}{\gre@char@he@porrectus{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@quilisma@two}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
   \or%
     %case 29
-    \grehepisorlineaux{\gre@char@leading@oriscus@two}{\gre@char@he@porrectus{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@oriscus@two}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
   \or%
     %case 30
-    \grehepisorlineaux{\gre@char@leading@quilisma@one}{\gre@char@he@porrectus{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@quilisma@one}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
   \or%
     %case 31
-    \grehepisorlineaux{\gre@char@leading@oriscus@one}{\gre@char@he@porrectus{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@oriscus@one}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
   \or%
     %case 32
-    \grehepisorlineaux{\gre@char@leading@punctum@two}{\gre@char@he@porrectus@amone{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@punctum@two}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
   \or%
     %case 33
-    \grehepisorlineaux{\gre@char@leading@debilis}{\gre@char@he@porrectus@amone{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@debilis}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
   \or%
     %case 34
-    \grehepisorlineaux{\gre@char@leading@quilisma@two}{\gre@char@he@porrectus@amone{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@quilisma@two}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
   \or%
     %case 35
-    \grehepisorlineaux{\gre@char@leading@oriscus@two}{\gre@char@he@porrectus@amone{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@oriscus@two}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
   \or%
     %case 36
-    \grehepisorlineaux{\gre@char@leading@punctum@one}{\gre@char@he@porrectus@amone{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@punctum@one}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
   \or%
     %case 37
-    \grehepisorlineaux{\gre@char@leading@quilisma@one}{\gre@char@he@porrectus@amone{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@quilisma@one}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
   \or%
     %case 38
-    \grehepisorlineaux{\gre@char@leading@oriscus@one}{\gre@char@he@porrectus@amone{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@oriscus@one}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
   \or%
     %case 39
-    \grehepisorlineaux{\gre@char@leading@punctum@two}{\gre@char@he@porrectusfl{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@punctum@two}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
   \or%
     %case 40
-    \grehepisorlineaux{\gre@char@leading@debilis}{\gre@char@he@porrectusfl{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@debilis}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
   \or%
     %case 41
-    \grehepisorlineaux{\gre@char@leading@quilisma@two}{\gre@char@he@porrectusfl{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@quilisma@two}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
   \or%
     %case 42
-    \grehepisorlineaux{\gre@char@leading@oriscus@two}{\gre@char@he@porrectusfl{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@oriscus@two}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
   \or%
     %case 43
-    \grehepisorlineaux{\gre@char@leading@punctum@one}{\gre@char@he@porrectusfl{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@punctum@one}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
   \or%
     %case 44
-    \grehepisorlineaux{\gre@char@leading@quilisma@one}{\gre@char@he@porrectusfl{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@quilisma@one}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
   \or%
     %case 45
-    \grehepisorlineaux{\gre@char@leading@oriscus@one}{\gre@char@he@porrectusfl{#3}}{3}{#4}%
+    \grehepisorlineaux{\gre@char@leading@oriscus@one}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
   \or%
     %case 46
-    \grehepisorlineaux{\gre@char@flexusalt@line@bl}{\gre@char@he@punctum@line@blbr}{2}{#4}%
+    \grehepisorlineaux{\gre@char@flexusalt@line@bl}{\gre@char@he@punctum@line@blbr{#5}}{2}{#4}%
   \or%
     %case 47
-    \grehepisorlineaux{\gre@char@flexusaltone@line@bl}{\gre@char@he@punctum@line@bl}{2}{#4}%
+    \grehepisorlineaux{\gre@char@flexusaltone@line@bl}{\gre@char@he@punctum@line@bl{#5}}{2}{#4}%
   \or%
     %case 48
-    \grehepisorlineaux{0}{\gre@char@he@punctum@line@tr}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@punctum@line@tr{#5}}{0}{#4}%
   \or%
     %case 49
-    \grehepisorlineaux{0}{\gre@char@he@virga@line@br}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@virga@line@br{#5}}{0}{#4}%
   \or %
     %case 50
-    \grehepisorlineaux{0}{\gre@char@he@quilisma@line@tr}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@quilisma@line@tr{#5}}{0}{#4}%
   \or %
     %case 51
-    \grehepisorlineaux{0}{\gre@char@he@oriscus@line@tr}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@oriscus@line@tr{#5}}{0}{#4}%
   \or %
     %case 52
-    \grehepisorlineaux{\gre@char@punctum@line@tl}{\gre@char@he@punctum@line@tl}{2}{#4}%
+    \grehepisorlineaux{\gre@char@punctum@line@tl}{\gre@char@he@punctum@line@tl{#5}}{2}{#4}%
   \or %
     %case 53
-    \grehepisorlineaux{\gre@char@punctumauctus@line@bl}{\gre@char@he@punctumauctus@line@bl}{2}{#4}%
+    \grehepisorlineaux{\gre@char@punctumauctus@line@bl}{\gre@char@he@punctumauctus@line@bl{#5}}{2}{#4}%
   \or %
     %case 54
-    \grehepisorlineaux{\gre@char@virgaaucta}{\gre@char@he@punctumauctus@line@bl}{2}{#4}%
+    \grehepisorlineaux{\gre@char@virgaaucta}{\gre@char@he@punctumauctus@line@bl{#5}}{2}{#4}%
   \or %
     %case 55
-    \grehepisorlineaux{\gre@char@virga@line@br}{\gre@char@he@virga@line@br}{2}{#4}%
+    \grehepisorlineaux{\gre@char@virga@line@br}{\gre@char@he@virga@line@br{#5}}{2}{#4}%
   \or%
     %case 56
-    \grehepisorlineaux{0}{\gre@char@he@virga}{0}{#4}%
+    \grehepisorlineaux{0}{\gre@char@he@virga{#5}}{0}{#4}%
   \fi%
   \relax%
 }}%
 
 % dumb top function
-% #4 is a trick for bridges: if we must use a different height because of a bridge, it's #4, otherwise #4=#1
-\def\grehepisemus#1#2#3#4{%
+% #6 is a trick for bridges: if we must use a different height because of a
+%    bridge, use #4, otherwise use #1
+\def\grehepisemus#1#2#3#4#5#6{%
   \ifnum\greaddhepisemusbridges=1\relax %
-    \grehepisorline{#4}{#2}{#3}{0}%
+    \grehepisorline{#6}{#2}{#3}{#4}{#5}%
   \else %
-    \grehepisorline{#1}{#2}{#3}{0}%
+    \grehepisorline{#1}{#2}{#3}{#4}{#5}%
   \fi %
-  \relax %
-}%
-
-% same but for episema at the bottom of a note
-\def\grehepisemusbottom#1#2#3{%
-  \grehepisorline{#1}{#2}{#3}{1}%
   \relax %
 }%
 
@@ -1357,7 +1358,7 @@
 \def\grehepisemusbridge#1#2#3{%
   \ifnum\greaddhepisemusbridges=1\relax %
     \gre@calculate@glyphraisevalue{#1}{9}%
-    \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gregoriofont\gre@char@he@punctum\hss}%
+    \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gregoriofont\gre@char@he@punctum{f}\hss}%
   \fi %
   \relax %
 }%
@@ -1367,7 +1368,7 @@
   \ifnum\greremovelinescount=0\relax %
     \xdef\gresavedglyphraise{\the\gre@dimen@glyphraisevalue}%
     {\greadditionalstafflinesformat %
-    \grehepisorline{a}{#1}{#2}{#3}%
+    \grehepisorline{a}{#1}{#2}{#3}{f}%
     }%
     \gre@dimen@glyphraisevalue=\gresavedglyphraise %
   \fi %

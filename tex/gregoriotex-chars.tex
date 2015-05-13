@@ -104,52 +104,53 @@
 \def\gre@char@reversedsemicirculus{\grecpSemicirculusReversus}%
 
 % horizontal episemus
-\def\gre@char@he@punctum{\grecpHEpisemusPunctum}%
-\def\gre@char@he@punctum@line@br{\grecpHEpisemusPunctumLineBR}%
-\def\gre@char@he@punctum@line@tr{\grecpHEpisemusPunctumLineTR}%
-\def\gre@char@he@punctum@line@tl{\grecpHEpisemusPunctumLineTL}%
-\def\gre@char@he@punctum@line@bl{\grecpHEpisemusPunctumLineBL}%
-\def\gre@char@he@punctum@line@blbr{\grecpHEpisemusPunctumLineBLBR}%
-\def\gre@char@he@punctumauctus@line@bl{\grecpHEpisemusPunctumAuctusLineBL}%
-\def\gre@char@he@flexus{\grecpHEpisemusFlexusDeminutus}%
-\def\gre@char@he@initio{\grecpHEpisemusDebilis}%
-\def\gre@char@he@virga{\grecpHEpisemusVirga}%
-\def\gre@char@he@virga@line@br{\grecpHEpisemusVirgaLineBR}%
-\def\gre@char@he@inclinatum{\grecpHEpisemusInclinatum}%
-\def\gre@char@he@inclinatumdem{\grecpHEpisemusInclinatumDeminutus}%
-\def\gre@char@he@stropha{\grecpHEpisemusStropha}%
-\def\gre@char@he@porrectus#1{%
-  \ifcase#1\grecpHEpisemusPunctum%
-  \or\grecpHEpisemusPorrectusOne%
-  \or\grecpHEpisemusPorrectusTwo%
-  \or\grecpHEpisemusPorrectusThree%
-  \or\grecpHEpisemusPorrectusFour%
-  \or\grecpHEpisemusPorrectusFive
-  \fi%
+\newbox\gre@hep@box%
+\def\gre@def@char@he#1#2{%
+  \expandafter\def\csname gre@char@he@#1\endcsname##1{%
+    \ifx##1f\csname grecpHEpisemus#2\endcsname%
+    \else%
+      \setbox\gre@hep@box\hbox{\csname grecpHEpisemus#2\endcsname}%
+      \hbox to \wd\gre@hep@box{%
+        \ifx##1l\else\hfil\fi%
+        \csname grecpHEpisemus#2Reduced\endcsname%
+        \ifx##1r\else\hfil\fi%
+      }%
+    \fi%
+  }%
 }%
-\def\gre@char@he@porrectus@amone#1{%
-  \ifcase#1\grecpHEpisemusPunctum%
-  \or\grecpHEpisemusPorrectusAmOneOne%
-  \or\grecpHEpisemusPorrectusAmOneTwo%
-  \or\grecpHEpisemusPorrectusAmOneThree%
-  \or\grecpHEpisemusPorrectusAmOneFour%
-  \or\grecpHEpisemusPorrectusAmOneFive%
-  \fi%
+\def\gre@def@char@he@porr#1#2{
+  \expandafter\def\csname gre@char@he@#1\endcsname##1##2{%
+    \ifcase##1\gre@char@he@punctum{##2}%
+    \or\csname grecpHEpisemus#2One\endcsname%
+    \or\csname grecpHEpisemus#2Two\endcsname%
+    \or\csname grecpHEpisemus#2Three\endcsname%
+    \or\csname grecpHEpisemus#2Four\endcsname%
+    \or\csname grecpHEpisemus#2Five\endcsname%
+    \fi%
+  }%
 }%
-\def\gre@char@he@porrectusfl#1{%
-  \ifcase#1\grecpHEpisemusPunctum%
-  \or\grecpHEpisemusPorrectusFlexusOne%
-  \or\grecpHEpisemusPorrectusFlexusTwo%
-  \or\grecpHEpisemusPorrectusFlexusThree%
-  \or\grecpHEpisemusPorrectusFlexusFour%
-  \or\grecpHEpisemusPorrectusFlexusFive%
-  \fi%
-}%
-\def\gre@char@he@quilisma{\grecpHEpisemusQuilisma}%
-\def\gre@char@he@quilisma@line@tr{\grecpHEpisemusQuilismaLineTR}%
-\def\gre@char@he@oriscus{\grecpHEpisemusOriscus}%
-\def\gre@char@he@oriscus@line@tr{\grecpHEpisemusOriscusLineTR}%
-\def\gre@char@he@smallpunctum{\grecpHEpisemusHighPes}% "smallpunctum" is the top punctum in a pes
+\gre@def@char@he{punctum}{Punctum}%
+\gre@def@char@he{punctum@line@br}{PunctumLineBR}%
+\gre@def@char@he{punctum@line@tr}{PunctumLineTR}%
+\gre@def@char@he{punctum@line@tl}{PunctumLineTL}%
+\gre@def@char@he{punctum@line@bl}{PunctumLineBL}%
+\gre@def@char@he{punctum@line@blbr}{PunctumLineBLBR}%
+\gre@def@char@he{punctumauctus@line@bl}{PunctumAuctusLineBL}%
+\gre@def@char@he{flexus}{FlexusDeminutus}%
+\gre@def@char@he{initio}{Debilis}%
+\gre@def@char@he{virga}{Virga}%
+\gre@def@char@he{virga@line@br}{VirgaLineBR}%
+\gre@def@char@he{inclinatum}{Inclinatum}%
+\gre@def@char@he{inclinatumdem}{InclinatumDeminutus}%
+\gre@def@char@he{stropha}{Stropha}%
+\gre@def@char@he@porr{porrectus}{Porrectus}%
+\gre@def@char@he@porr{porrectus@amone}{PorrectusAmOne}%
+\gre@def@char@he@porr{porrectusfl}{PorrectusFlexus}%
+\gre@def@char@he{quilisma}{Quilisma}%
+\gre@def@char@he{quilisma@line@tr}{QuilismaLineTR}%
+\gre@def@char@he{oriscus}{Oriscus}%
+\gre@def@char@he{oriscus@line@tr}{OriscusLineTR}%
+\gre@def@char@he{smallpunctum}{HighPes}% "smallpunctum" is the top punctum in a pes
 
 \def\greflatchar{\gregoriofont\grecpFlat}%
 \def\greflatholechar{\gregoriofont\grecpFlatHole}%

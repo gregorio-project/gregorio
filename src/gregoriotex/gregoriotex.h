@@ -127,4 +127,63 @@ typedef struct gregorio_line {
     unsigned char abovelinestext;   // idem
 } gregorio_line;
 
+inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
+        const gregorio_note *const note, bool *const kind_of_pes)
+{
+    bool low_sign = false;
+    if (kind_of_pes) {
+        *kind_of_pes = false;
+    }
+
+    switch (glyph->u.notes.glyph_type) {
+    case G_FLEXA:
+    case G_TORCULUS:
+    case G_TORCULUS_LIQUESCENS:
+    case G_TORCULUS_RESUPINUS_FLEXUS:
+    case G_PORRECTUS_FLEXUS:
+        if (!note->next) {
+            return true;
+        }
+        break;
+
+    case G_PODATUS:
+    case G_PORRECTUS:
+    case G_TORCULUS_RESUPINUS:
+        if (!note->next) {
+            break;
+        }
+        if (kind_of_pes) {
+            *kind_of_pes = true;
+        }
+        if (note->u.note.shape != S_QUILISMA) {
+            return true;
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    return low_sign;
+}
+
+inline bool is_on_a_line(const char pitch)
+{
+    return pitch == 'b' || pitch == 'd' || pitch == 'f' || pitch == 'h'
+            || pitch == 'j' || pitch == 'l';
+}
+
+inline bool is_between_lines(const char pitch)
+{
+    return pitch == 'a' || pitch == 'c' || pitch == 'e' || pitch == 'g'
+            || pitch == 'i' || pitch == 'k' || pitch == 'm';
+}
+
+bool gtex_is_h_episemus_above_shown(const gregorio_note *const note);
+bool gtex_is_h_episemus_below_shown(const gregorio_note *const note);
+char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
+        const gregorio_element *const element, gtex_alignment *const  type,
+        gtex_type *const gtype);
+void gregoriotex_compute_positioning(const gregorio_element *element);
+
 #endif

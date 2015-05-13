@@ -22,7 +22,9 @@ bin_PROGRAMS = gregorio
 gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
 				   unicode.c struct.h messages.h unicode.h characters.h \
 				   plugins.h config.h dump/dump.c \
-				   gregoriotex/gregoriotex-write.c gregoriotex/gregoriotex.h
+				   gregoriotex/gregoriotex-write.c \
+				   gregoriotex/gregoriotex-position.c \
+				   gregoriotex/gregoriotex.h
 
 @MK@ifneq ($(wildcard ../.git),)
 @MK@  _tag_ = $(shell git describe --exact-match HEAD 2>/dev/null)

@@ -47,9 +47,9 @@
 #include "messages.h"
 #include "characters.h"
 
-extern inline unsigned char simple_htype(unsigned char h);
-extern inline bool has_bottom(unsigned char arg);
-extern inline bool is_multi(unsigned char h_episemus);
+//extern inline unsigned char simple_htype(unsigned char h);
+//extern inline bool has_bottom(unsigned char arg);
+//extern inline bool is_multi(unsigned char h_episemus);
 extern inline bool is_puncta_inclinata(char glyph);
 extern inline bool is_liquescentia(char liquescentia);
 extern inline bool is_initio_debilis(char liquescentia);
@@ -57,160 +57,6 @@ extern inline bool is_initio_debilis(char liquescentia);
 static inline char max(char a, char b)
 {
     return a > b ? a : b;
-}
-
-// a helper function
-static void gregorio_set_h_episemus(gregorio_note *note,
-        gregorio_h_episemus type)
-{
-    if (!note || (note->type != GRE_NOTE && note->type != GRE_BAR)) {
-        gregorio_message(_("trying to add an horizontal episemus on something "
-                           "that is not a note"), "set_h_episemus", ERROR, 0);
-        return;
-    }
-    if (type == H_BOTTOM) {
-        note->h_episemus_type = (note->h_episemus_type) | H_BOTTOM;
-    } else {
-        note->h_episemus_type = (note->h_episemus_type & H_BOTTOM) | type;
-    }
-}
-
-/**********************************
- *
- * Top notes are present in the score structure for the horizontal
- * episemus: if we type ab__ we must put the top notes of the two
- * notes to b, that's what is done with this function. It is a quite
- * complex process (see mix_h_episemus for details). This function
- * supposes that top notes of the previous notes of the episemus are
- * good. If the current_note is higher, it will set the previous
- * top-notes to this note, and if it is note it will set the top note
- * of the current note to the top note of the previous notes. Kind of
- * recursive process in fact.
- *
- *********************************/
-
-static void gregorio_determine_good_top_notes(gregorio_note *current_note)
-{
-    char top_note;
-    gregorio_note *prev_note;
-    if (!current_note) {
-        gregorio_message(_
-                         ("call with NULL argument"),
-                         "gregorio_determine_good_top_notes", ERROR, 0);
-        return;
-    }
-    prev_note = current_note->previous;
-    if (!prev_note) {
-        return;
-    }
-    if (current_note->h_episemus_top_note <= prev_note->h_episemus_top_note) {
-        current_note->h_episemus_top_note = prev_note->h_episemus_top_note;
-    } else {
-        top_note = current_note->h_episemus_top_note;
-        while (prev_note && simple_htype(prev_note->h_episemus_type) == H_MULTI) {
-            prev_note->h_episemus_top_note = top_note;
-            prev_note = prev_note->previous;
-        }
-    }
-}
-
-// same with bottom notes
-
-static void gregorio_determine_good_bottom_notes(gregorio_note *current_note)
-{
-    char bottom_note;
-    gregorio_note *prev_note;
-    if (!current_note) {
-        gregorio_message(_
-                         ("call with NULL argument"),
-                         "gregorio_determine_good_bottom_notes", ERROR, 0);
-        return;
-    }
-    prev_note = current_note->previous;
-    if (current_note->type == GRE_NOTE) {
-        current_note->h_episemus_bottom_note = current_note->u.note.pitch;
-    }
-    if (!prev_note) {
-        return;
-    }
-    if (prev_note->type == GRE_SPACE && prev_note->previous) {
-        prev_note = prev_note->previous;
-        if (!prev_note || !has_bottom(prev_note->h_episemus_type)) {
-            return;
-        }
-    }
-    if (!has_bottom(prev_note->h_episemus_type)) {
-        return;
-    }
-    if (current_note->h_episemus_bottom_note >=
-        prev_note->h_episemus_bottom_note) {
-        current_note->h_episemus_bottom_note =
-            prev_note->h_episemus_bottom_note;
-    } else {
-        bottom_note = current_note->h_episemus_bottom_note;
-        while (prev_note) {
-            if (!has_bottom(prev_note->h_episemus_type)) {
-                if (prev_note->type == GRE_SPACE && prev_note->previous) {
-                    prev_note = prev_note->previous;
-                    continue;
-                } else {
-                    return;
-                }
-            }
-            prev_note->h_episemus_bottom_note = bottom_note;
-            prev_note = prev_note->previous;
-        }
-    }
-}
-
-/**********************************
- *
- * mix_h_episemus is quite uneasy to understand. The basis is that: we
- * have determined well the previous h episemus until the current note
- * (even the top notes !), now we have a h episemus (argument type)
- * and we would like to integrate it. That's what we do there.
- *
- *********************************/
-
-static void gregorio_mix_h_episemus(gregorio_note *current_note,
-        unsigned char type)
-{
-    gregorio_note *prev_note = NULL;
-    if (!current_note) {
-        gregorio_message(_("function called with NULL argument"),
-                         "gregorio_mix_h_episemus", WARNING, 0);
-        return;
-    }
-    // case of the bar with a brace above it
-    if (current_note->type != GRE_NOTE) {
-        current_note->h_episemus_type = H_ALONE;
-    }
-    prev_note = current_note->previous;
-    if (type == H_NO_EPISEMUS) {
-        gregorio_set_h_episemus(current_note, H_NO_EPISEMUS);
-        current_note->h_episemus_top_note = 0;
-    } else {
-        if (prev_note && prev_note->type == GRE_NOTE) {
-            if (current_note->type == GRE_NOTE) {
-                current_note->h_episemus_top_note =
-                    max(prev_note->u.note.pitch, current_note->u.note.pitch);
-            } else {
-                current_note->h_episemus_top_note = prev_note->u.note.pitch;
-            }
-        } else if (current_note->type == GRE_NOTE) {
-            current_note->h_episemus_top_note = current_note->u.note.pitch;
-        }
-        if (!prev_note || prev_note->type != GRE_NOTE
-            || simple_htype(prev_note->h_episemus_type) == H_NO_EPISEMUS) {
-            gregorio_set_h_episemus(current_note, H_ALONE);
-        } else {
-            gregorio_set_h_episemus(current_note, H_MULTI);
-            if (simple_htype(prev_note->h_episemus_type) != H_MULTI) {
-                gregorio_set_h_episemus(prev_note, H_MULTI);
-            }
-            gregorio_determine_good_top_notes(current_note);
-        }
-    }
 }
 
 static gregorio_note *create_and_link_note(gregorio_note **current_note)
@@ -232,9 +78,39 @@ static gregorio_note *create_and_link_note(gregorio_note **current_note)
     return note;
 }
 
+void gregorio_position_h_episemus_above(gregorio_note *note, char height,
+        bool connect)
+{
+    assert(note && (note->type == GRE_NOTE || note->type == GRE_BAR));
+    note->h_episemus_above = height;
+    note->h_episemus_above_connect = connect;
+}
+
+static void set_h_episemus_above(gregorio_note *note, char height,
+        grehepisemus_size size, bool connect)
+{
+    gregorio_position_h_episemus_above(note, height, connect);
+    note->h_episemus_above_size = size;
+}
+
+void gregorio_position_h_episemus_below(gregorio_note *note, char height,
+        bool connect)
+{
+    assert(note && (note->type == GRE_NOTE || note->type == GRE_BAR));
+    note->h_episemus_below = height;
+    note->h_episemus_below_connect = connect;
+}
+
+static void set_h_episemus_below(gregorio_note *note, char height,
+        grehepisemus_size size, bool connect)
+{
+    gregorio_position_h_episemus_below(note, height, connect);
+    note->h_episemus_below_size = size;
+}
+
 void gregorio_add_note(gregorio_note **current_note, char pitch,
         gregorio_shape shape, gregorio_sign signs,
-        gregorio_liquescentia liquescentia, char h_episemus_type)
+        gregorio_liquescentia liquescentia, gregorio_note *prototype)
 {
     gregorio_note *element = create_and_link_note(current_note);
     if (element) {
@@ -244,12 +120,16 @@ void gregorio_add_note(gregorio_note **current_note, char pitch,
         element->signs = signs;
         element->special_sign = _NO_SIGN;
         element->u.note.liquescentia = liquescentia;
-        element->h_episemus_type = H_NO_EPISEMUS;
-        element->h_episemus_top_note = 0;
-        element->h_episemus_bottom_note = 0;
+        if (prototype) {
+            set_h_episemus_above(element, prototype->h_episemus_above,
+                    prototype->h_episemus_above_size,
+                    prototype->h_episemus_above_connect);
+            set_h_episemus_below(element, prototype->h_episemus_below,
+                    prototype->h_episemus_below_size,
+                    prototype->h_episemus_below_connect);
+        }
         element->texverb = NULL;
         element->choral_sign = NULL;
-        gregorio_mix_h_episemus(element, h_episemus_type);
     }
 }
 
@@ -482,6 +362,32 @@ void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
     }
 }
 
+static void apply_auto_h_episemus(gregorio_note *const note,
+        const grehepisemus_size size, const bool disable_bridge)
+{
+    if (note->h_episemus_above == HEPISEMUS_NONE
+            && note->h_episemus_below == HEPISEMUS_NONE) {
+        // if both are unset, set both to auto
+        set_h_episemus_above(note, HEPISEMUS_AUTO, size, !disable_bridge);
+        set_h_episemus_below(note, HEPISEMUS_AUTO, size, !disable_bridge);
+    } else if (note->h_episemus_above == HEPISEMUS_AUTO
+            && note->h_episemus_below == HEPISEMUS_AUTO) {
+        // if both are auto, then force both
+        // the upper episemus keeps its settings
+        note->h_episemus_above = HEPISEMUS_FORCED;
+
+        set_h_episemus_below(note, HEPISEMUS_FORCED, size, !disable_bridge);
+    } else {
+        // force whichever is not already forced
+        if (note->h_episemus_above != HEPISEMUS_FORCED) {
+            set_h_episemus_above(note, HEPISEMUS_FORCED, size, !disable_bridge);
+        }
+        if (note->h_episemus_below != HEPISEMUS_FORCED) {
+            set_h_episemus_below(note, HEPISEMUS_FORCED, size, !disable_bridge);
+        }
+    }
+}
+
 /**********************************
  *
  * Activate_isolated_h_episemus is used when we see an "isolated"
@@ -491,90 +397,76 @@ void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
  * the isolated episemus we found (can be up to 4).
  *
  *********************************/
-static void gregorio_activate_isolated_h_episemus(gregorio_note *current_note,
-        int n)
+static void gregorio_activate_isolated_h_episemus(gregorio_note *note,
+        const grehepisemus_size size, const bool disable_bridge, int n)
 {
-    int i;
-    gregorio_note *tmp = current_note;
-    char top_note;
-    if (!current_note) {
-        gregorio_message(ngt_
-                         ("isolated horizontal episemus at the beginning of a note sequence, ignored",
-                          "isolated horizontal episemus at the beginning of a note sequence, ignored",
-                          n), "activate_h_isolated_episemus", WARNING, 0);
+    if (!note) {
+        gregorio_message(ngt_("isolated horizontal episemus at the beginning "
+                    "of a note sequence, ignored",
+                    "isolated horizontal episemus at the beginning of a note "
+                    "sequence, ignored", n), "activate_h_isolated_episemus",
+                WARNING, 0);
         return;
     }
-    if (current_note->type != GRE_NOTE) {
-        gregorio_message(ngt_
-                         ("isolated horizontal episemus after something that is not a note, ignored",
-                          "isolated horizontal episemus after something that is not a note, ignored",
-                          n), "activate_h_isolated_episemus", WARNING, 0);
+    if (note->type != GRE_NOTE) {
+        gregorio_message(ngt_("isolated horizontal episemus after something "
+                    "that is not a note, ignored",
+                    "isolated horizontal episemus after something that is not "
+                    "a note, ignored", n), "activate_h_isolated_episemus",
+                WARNING, 0);
         return;
     }
-    /*
-     * we make the first iteration by hand,in the case where something would be 
-     * in highest_pitch 
-     */
-    top_note = current_note->u.note.pitch;
-    tmp = tmp->previous;
-    if (!tmp) {
-        // case of b___
-        gregorio_message(_
-                         ("found more horizontal episemus than notes able to be under"),
-                         "activate_h_isolated_episemus", WARNING, 0);
-        return;
-    }
-    top_note = max(top_note, tmp->u.note.pitch);
-    for (i = 0; i < n - 1; i++) {
-        top_note = max(top_note, tmp->u.note.pitch);
-        if (tmp->previous && tmp->previous->type == GRE_NOTE) {
-            tmp = tmp->previous;
-            top_note = max(top_note, tmp->u.note.pitch);
-        } else {
-            gregorio_message(_
-                             ("found more horizontal episemus than notes able to be under"),
-                             "activate_h_isolated_episemus", WARNING, 0);
-            break;
+    for (; n > 0; --n) {
+        note = note->previous;
+        if (!note || note->type != GRE_NOTE) {
+            gregorio_message(_("found more horizontal episemus than notes "
+                        "able to be under"), "activate_h_isolated_episemus",
+                    WARNING, 0);
+            return;
         }
     }
-    // improvement: we consider also the previous note (if it's a GRE_NOTE) for
-    // the top note. TODO: we should consider also the next note, but we cannot
-    // do it at this stage.
-    if (tmp->previous && tmp->previous->type == GRE_NOTE) {
-        top_note = max(top_note, tmp->previous->u.note.pitch);
-    }
-    while (tmp) {
-        gregorio_set_h_episemus(tmp, H_MULTI);
-        tmp->h_episemus_top_note = top_note;
-        tmp = tmp->next;
-    }
-
+    apply_auto_h_episemus(note, size, disable_bridge);
 }
 
-void gregorio_add_h_episemus(gregorio_note *note, gregorio_h_episemus type,
-        unsigned int *nbof_isolated_episemus)
+void gregorio_add_h_episemus(gregorio_note *note,
+        grehepisemus_size size, gregorio_vposition vposition,
+        bool disable_bridge, unsigned int *nbof_isolated_episemus)
 {
     if (!note || (note->type != GRE_NOTE && note->type != GRE_BAR)) {
-        gregorio_message(_("trying to add an horizontal episemus on something "
+        gregorio_message(_("trying to add a horizontal episemus on something "
                            "that is not a note"), "add_h_episemus", ERROR, 0);
         return;
     }
     if (!nbof_isolated_episemus) {
         gregorio_message(_("NULL argument nbof_isolated_episemus"),
-                         "add_h_episemus", FATAL_ERROR, 0);
+                           "add_h_episemus", FATAL_ERROR, 0);
         return;
     }
-    if (type == H_BOTTOM) {
-        note->h_episemus_type = note->h_episemus_type | H_BOTTOM;
-        gregorio_determine_good_bottom_notes(note);
+    if (vposition && *nbof_isolated_episemus) {
+        gregorio_message(_("trying to add a forced horizontal episemus on a "
+                           "note which already has an automatic horizontal "
+                           "episemus"), "add_h_episemus", ERROR, 0);
         return;
     }
-    if (!note->h_episemus_top_note || *nbof_isolated_episemus == 0) {
-        gregorio_mix_h_episemus(note, H_ONE);
-        *nbof_isolated_episemus = 1;
+
+    if (vposition || !*nbof_isolated_episemus) {
+        switch (vposition) {
+        case VPOS_ABOVE:
+            set_h_episemus_above(note, HEPISEMUS_FORCED, size, !disable_bridge);
+            break;
+
+        case VPOS_BELOW:
+            set_h_episemus_below(note, HEPISEMUS_FORCED, size, !disable_bridge);
+            break;
+
+        default: // VPOS_AUTO
+            apply_auto_h_episemus(note, size, disable_bridge);
+            *nbof_isolated_episemus = 1;
+            break;
+        }
     } else {
-        gregorio_activate_isolated_h_episemus(note, *nbof_isolated_episemus);
-        *nbof_isolated_episemus = *nbof_isolated_episemus + 1;
+        gregorio_activate_isolated_h_episemus(note, size, disable_bridge,
+                (*nbof_isolated_episemus)++);
     }
 }
 
@@ -813,7 +705,7 @@ void gregorio_add_element(gregorio_element **current_element,
     gregorio_element *next = create_and_link_element(current_element);
     if (next) {
         next->type = GRE_ELEMENT;
-        next->u.glyphs.first_glyph = first_glyph;
+        next->u.first_glyph = first_glyph;
     }
 }
 
@@ -836,7 +728,7 @@ static inline void free_one_element(gregorio_element *element)
         free(element->nabc[i]);
     }
     if (element->type == GRE_ELEMENT) {
-        gregorio_free_glyphs(&element->u.glyphs.first_glyph);
+        gregorio_free_glyphs(&element->u.first_glyph);
     }
     free(element);
 }
@@ -1592,8 +1484,8 @@ static gregorio_glyph *gregorio_first_glyph(gregorio_syllable *syllable)
     }
     element = syllable->elements[0];
     while (element) {
-        if (element->type == GRE_ELEMENT && element->u.glyphs.first_glyph) {
-            glyph = element->u.glyphs.first_glyph;
+        if (element->type == GRE_ELEMENT && element->u.first_glyph) {
+            glyph = element->u.first_glyph;
             while (glyph) {
                 if ((glyph->type == GRE_GLYPH
                         || glyph->type == GRE_MANUAL_CUSTOS)
@@ -1649,8 +1541,8 @@ char gregorio_determine_next_pitch(gregorio_syllable *syllable,
     // then we do the same with the elements
     element = element->next;
     while (element) {
-        if (element->type == GRE_ELEMENT && element->u.glyphs.first_glyph) {
-            glyph = element->u.glyphs.first_glyph;
+        if (element->type == GRE_ELEMENT && element->u.first_glyph) {
+            glyph = element->u.first_glyph;
             while (glyph) {
                 if (glyph->type == GRE_MANUAL_CUSTOS) {
                     return glyph->u.misc.pitched.pitch;

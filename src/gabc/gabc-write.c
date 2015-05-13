@@ -325,13 +325,33 @@ static void gabc_write_bar_signs(FILE *f, char type)
     case _V_EPISEMUS:
         fprintf(f, "'");
         break;
-    case _V_EPISEMUS_H_EPISEMUS:
+    case _V_EPISEMUS_BAR_H_EPISEMUS:
         fprintf(f, "'_");
         break;
-    case _H_EPISEMUS:
+    case _BAR_H_EPISEMUS:
         fprintf(f, "_");
         break;
     default:
+        break;
+    }
+}
+
+static void gabc_hepisemus(FILE *f, char *prefix, bool connect,
+        grehepisemus_size size)
+{
+    fprintf(f, "_%s", prefix);
+    if (!connect) {
+        fprintf(f, "2");
+    }
+    switch (size) {
+    case H_SMALL_LEFT:
+        fprintf(f, "3");
+        break;
+    case H_SMALL_CENTRE:
+        fprintf(f, "4");
+        break;
+    case H_SMALL_RIGHT:
+        fprintf(f, "5");
         break;
     }
 }
@@ -492,11 +512,19 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     default:
         break;
     }
-    if (simple_htype(note->h_episemus_type) != H_NO_EPISEMUS) {
-        fprintf(f, "_");
-    }
-    if (has_bottom(note->h_episemus_type)) {
-        fprintf(f, "_0");
+    if (note->h_episemus_above == HEPISEMUS_AUTO
+            && note->h_episemus_below == HEPISEMUS_AUTO) {
+        gabc_hepisemus(f, "", note->h_episemus_above_connect,
+                note->h_episemus_above_size);
+    } else {
+        if (note->h_episemus_below == HEPISEMUS_FORCED) {
+            gabc_hepisemus(f, "0", note->h_episemus_below_connect,
+                    note->h_episemus_below_size);
+        }
+        if (note->h_episemus_above == HEPISEMUS_FORCED) {
+            gabc_hepisemus(f, "1", note->h_episemus_above_connect,
+                    note->h_episemus_above_size);
+        }
     }
     if (note->texverb) {
         fprintf(f, "[nv:%s]", note->texverb);
@@ -586,7 +614,7 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element)
                          "gabc_write_gregorio_element", ERROR, 0);
         return;
     }
-    current_glyph = element->u.glyphs.first_glyph;
+    current_glyph = element->u.first_glyph;
     switch (element->type) {
     case GRE_ELEMENT:
         while (current_glyph) {
