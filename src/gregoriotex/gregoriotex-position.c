@@ -769,6 +769,7 @@ typedef struct height_computation {
     const gregorio_element *start_element;
     const gregorio_glyph *start_glyph;
     gregorio_note *start_note;
+    gregorio_note *last_connected_note;
 } height_computation;
 
 static bool is_h_episemus_above_applicable(const gregorio_note *const note)
@@ -876,6 +877,14 @@ inline static void set_h_episemus_height(const height_computation *const h,
     }
 }
 
+inline static bool is_connected_left(const grehepisemus_size size) {
+    return size == H_NORMAL || size == H_SMALL_LEFT;
+}
+
+inline static bool is_connected_right(const grehepisemus_size size) {
+    return size == H_NORMAL || size == H_SMALL_RIGHT;
+}
+
 inline static void end_h_episemus(height_computation *const h,
         gregorio_note *const end)
 {
@@ -883,14 +892,19 @@ inline static void end_h_episemus(height_computation *const h,
 
     if (h->active) {
         // don't let the episemus clash with the note before or after
-        if (h->start_note->previous
-                && h->start_note->previous->type == GRE_NOTE) {
+        if (is_connected_left(h->get_size(h->start_note))
+                && h->start_note->previous
+                && h->start_note->previous->type == GRE_NOTE
+                && is_connected_right(h->get_size(h->start_note->previous))) {
             proposed_height = h->start_note->previous->u.note.pitch + h->vpos;
             if (h->is_better_height(proposed_height, h->height)) {
                 h->height = proposed_height;
             }
         }
-        if (end && end->type == GRE_NOTE) {
+        if (h->last_connected_note
+                && is_connected_right(h->get_size(h->last_connected_note))
+                && end && end->type == GRE_NOTE
+                && is_connected_left(h->get_size(end))) {
             proposed_height = end->u.note.pitch + h->vpos;
             if (h->is_better_height(proposed_height, h->height)) {
                 h->height = proposed_height;
@@ -905,6 +919,7 @@ inline static void end_h_episemus(height_computation *const h,
         h->start_element = NULL;
         h->start_glyph = NULL;
         h->start_note = NULL;
+        h->last_connected_note = NULL;
     }
 }
 
@@ -918,8 +933,10 @@ inline static void compute_h_episemus(height_computation *const h,
 
     if (h->is_applicable(note)) {
         if (h->is_shown(note)) {
+            size = h->get_size(note);
+
             if (h->active) {
-                if (h->connected) {
+                if (h->connected && is_connected_left(size)) {
                     next_height = compute_h_episemus_height(glyph, note, i,
                             type, h->vpos);
                     if (h->is_better_height(next_height, h->height)) {
@@ -934,9 +951,8 @@ inline static void compute_h_episemus(height_computation *const h,
                 start_h_episemus(h, element, glyph, note, i, type);
             }
 
-            size = h->get_size(note);
-            h->connected = h->is_connected(note)
-                    && (size == H_NORMAL || size == H_SMALL_RIGHT);
+            h->connected = h->is_connected(note) && is_connected_right(size);
+            h->last_connected_note = note;
         } else {
             end_h_episemus(h, note);
         }
@@ -983,6 +999,7 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
         .start_element = NULL,
         .start_glyph = NULL,
         .start_note = NULL,
+        .last_connected_note = NULL,
     };
     height_computation below = {
         .vpos = VPOS_BELOW,
@@ -999,6 +1016,7 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
         .start_element = NULL,
         .start_glyph = NULL,
         .start_note = NULL,
+        .last_connected_note = NULL,
     };
     int i;
     gtex_alignment ignored;
@@ -1012,8 +1030,8 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
                     i = 0;
                     gregoriotex_determine_glyph_name(glyph, element, &ignored,
                             &type);
-                    for (gregorio_note *note = glyph->u.notes.first_note;
-                            note; note = note->next) {
+                    for (gregorio_note *note = glyph->u.notes.first_note; note;
+                            note = note->next) {
                         if (note->type == GRE_NOTE) {
                             compute_note_positioning(&above, &below, element,
                                     glyph, note, ++i, type);
