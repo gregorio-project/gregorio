@@ -1592,8 +1592,16 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
             special_punctum, punctum_inclinatum);
 }
 
+static inline char height_to_letter(char height)
+{
+    if (height < 'a') {
+        height += 'z' - 'a' + 1;
+    }
+    return height;
+}
+
 static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
-        const gregorio_note *const note, bool connect, const char height,
+        const gregorio_note *const note, bool connect, char height,
         const grehepisemus_size size, const int i,
         const int porrectus_long_episemus_index,
         bool (*const is_episemus_shown)(const gregorio_note *))
@@ -1626,6 +1634,7 @@ static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
 
         if (i - 1 != porrectus_long_episemus_index || !note->previous
                 || !is_episemus_shown(note->previous)) {
+            height = height_to_letter(height);
             if (connect && (!note->next
                     || note->next->u.note.shape == S_PUNCTUM_INCLINATUM
                     || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_DEMINUTUS
@@ -1767,10 +1776,7 @@ static void gregoriotex_write_vepisemus(FILE *f, gregorio_glyph *glyph, int i,
         gtex_type type, gregorio_note *note)
 {
 
-    char height = note->v_episemus_height;
-    if (height < 'a') {
-        height += 'z' - 'a' + 1;
-    }
+    char height = height_to_letter(note->v_episemus_height);
 
     fprintf(f, "\\grevepisemus{%c}{%d}%%\n", height, note->gtex_offset_case);
 }

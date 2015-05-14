@@ -22,9 +22,6 @@
 
 #include <stdbool.h>
 
-#define NO_FUSION 0
-#define FUSION 1
-
 /*
  * Here are the different types, they must be the same as in squarize.py 
  */
@@ -127,7 +124,7 @@ typedef struct gregorio_line {
     unsigned char abovelinestext;   // idem
 } gregorio_line;
 
-inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
+static inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
         const gregorio_note *const note, bool *const kind_of_pes)
 {
     bool low_sign = false;
@@ -167,13 +164,13 @@ inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
     return low_sign;
 }
 
-inline bool is_on_a_line(const char pitch)
+static inline bool is_on_a_line(const char pitch)
 {
     return pitch == 'b' || pitch == 'd' || pitch == 'f' || pitch == 'h'
             || pitch == 'j' || pitch == 'l';
 }
 
-inline bool is_between_lines(const char pitch)
+static inline bool is_between_lines(const char pitch)
 {
     return pitch == 'a' || pitch == 'c' || pitch == 'e' || pitch == 'g'
             || pitch == 'i' || pitch == 'k' || pitch == 'm';

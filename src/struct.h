@@ -696,24 +696,7 @@ typedef struct gregorio_voice_info {
 
 #define USELESS_VALUE 0
 
-/*
-inline unsigned char simple_htype(unsigned char h)
-{
-    return h & (255 - H_BOTTOM);
-}
-
-inline bool has_bottom(unsigned char arg)
-{
-    return (arg & H_BOTTOM) == H_BOTTOM;
-}
-
-inline bool is_multi(unsigned char h_episemus)
-{
-    return (simple_htype(h_episemus)) > H_ALONE;
-}
-*/
-
-inline bool is_puncta_inclinata(char glyph)
+static inline bool is_puncta_inclinata(char glyph)
 {
     return glyph <= G_5_PUNCTA_INCLINATA_ASCENDENS;
 }
@@ -721,13 +704,13 @@ inline bool is_puncta_inclinata(char glyph)
 #define IS_INITIO_DEBILIS 5
 #define NO_INITIO_DEBILIS 0
 
-inline bool is_liquescentia(char liquescentia)
+static inline bool is_liquescentia(char liquescentia)
 {
     return liquescentia == L_DEMINUTUS || liquescentia == L_AUCTUS_ASCENDENS
         || liquescentia == L_AUCTUS_DESCENDENS || liquescentia == L_AUCTA;
 }
 
-inline bool is_initio_debilis(char liquescentia)
+static inline bool is_initio_debilis(char liquescentia)
 {
     return liquescentia >= L_INITIO_DEBILIS;
 }
