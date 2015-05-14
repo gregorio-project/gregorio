@@ -465,7 +465,7 @@
 
 \gdef\grecurlybracechar{\gregoriofont\gre@char@curlybrace}%
 \gdef\grebracechar{\gregoriofont\gre@char@brace}%
-\gdef\grebelowbracechar{\gregoriofont\gre@char@bracedown}%
+\gdef\greunderbracechar{\gregoriofont\gre@char@bracedown}%
 
 % the command to resize a box, \resizebox is provided by graphicx
 \global\let\greresizebox\resizebox %
@@ -491,8 +491,8 @@
 % #2: a vertical shift
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
-\def\grebelowbrace#1#2#3#4{%
-  \grebracecommon{#1}{#2}{#3}{#4}{0}{b}{\grebelowbracechar}%
+\def\greunderbrace#1#2#3#4{%
+  \grebracecommon{#1}{#2}{#3}{#4}{0}{b}{\greunderbracechar}%
 }%
 
 % #1: the width
