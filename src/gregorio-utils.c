@@ -143,7 +143,7 @@ static char *get_output_filename(char *fbasename, char *extension)
  * write a score to a file. Necessary for the libtool stuff... 
  */
 
-static void print_licence()
+static void print_licence(void)
 {
     printf("\n\
 Tools for manipulation of gregorian chant files\n\
@@ -423,6 +423,9 @@ int main(int argc, char **argv)
                     output_file_name =
                         get_output_filename(output_basename, "dump");
                     break;
+                default:
+                    fprintf(stderr, "error: unsupported format");
+                    exit(-1);
                 }
             }
             check_input_clobber(input_file_name, output_file_name);

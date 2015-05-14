@@ -224,7 +224,6 @@ void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str)
 {
     size_t len;
     char *res;
-    unsigned int i;
     if (str == NULL) {
         return;
     }
@@ -317,6 +316,9 @@ void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
             break;
         case L_AUCTA:
             note->u.note.liquescentia = L_AUCTA_INITIO_DEBILIS;
+            break;
+        default:
+            // do nothing
             break;
         }
     } else {

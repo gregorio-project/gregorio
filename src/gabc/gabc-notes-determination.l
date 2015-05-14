@@ -27,6 +27,8 @@
 
 #include "gabc.h"
 
+#define YY_NO_INPUT
+
 static gregorio_note *current_note;
 static char char_for_brace;
 static unsigned int nbof_isolated_episemus;
@@ -47,14 +49,14 @@ static inline void add_bar_as_note(gregorio_bar bar)
     gregorio_add_bar_as_note(&current_note, bar);
 }
 
-static inline void error()
+static inline void error(void)
 {
     gregorio_messagef("gabc_notes_determination", ERROR, 0,
             _("undefined macro used: m%d"),
             gabc_notes_determination_text[3] - '0');
 }
 
-static void add_h_episemus(gregorio_note *note) {
+static void add_h_episemus(void) {
     grehepisemus_size size = H_NORMAL;
     gregorio_vposition vposition = VPOS_AUTO;
     bool disable_bridge = false;
@@ -62,7 +64,7 @@ static void add_h_episemus(gregorio_note *note) {
     char *ptr = gabc_notes_determination_text;
     char current;
     // first character is the underscore
-    while (current = *(++ptr)) {
+    while ((current = *(++ptr))) {
         switch(current) {
         case '0':
             vposition = VPOS_BELOW;
@@ -427,7 +429,7 @@ r5  {
         gregorio_add_sign(current_note, _V_EPISEMUS);
     }
 _[0-5]* {
-        add_h_episemus(current_note);
+        add_h_episemus();
     }
 \.  {
         gregorio_add_sign(current_note, _PUNCTUM_MORA);
@@ -472,13 +474,6 @@ s   {
     }
 
 %%
-
-static void gabc_notes_determination_error(const char *str)
-{
-    char *tempstrtwo = strdup(str);
-    gregorio_message(tempstrtwo, "det_notes_from_string", ERROR, 0);
-    free(tempstrtwo);
-}
 
 gregorio_note *gabc_det_notes_from_string(char *str, char *newmacros[10])
 {

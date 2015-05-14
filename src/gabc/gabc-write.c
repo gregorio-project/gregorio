@@ -353,6 +353,9 @@ static void gabc_hepisemus(FILE *f, char *prefix, bool connect,
     case H_SMALL_RIGHT:
         fprintf(f, "5");
         break;
+    case H_NORMAL:
+        // nothing to print
+        break;
     }
 }
 

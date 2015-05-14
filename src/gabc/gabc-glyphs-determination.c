@@ -703,6 +703,10 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             case GRE_NATURAL:
                 pitch = current_note->u.note.pitch;
                 break;
+
+            default:
+                // do nothing
+                break;
             }
 
             if (pitch == USELESS_VALUE) {

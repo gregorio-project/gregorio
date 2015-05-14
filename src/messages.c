@@ -29,7 +29,7 @@ static char verbosity_mode = 0;
 static char debug_messages = 0;
 static int return_value = 0;
 
-int gregorio_get_return_value()
+int gregorio_get_return_value(void)
 {
     return return_value;
 }
