@@ -23,3 +23,7 @@ typedef union gabc_score_determination_lval_t {
 
 #define YYSTYPE gabc_score_determination_lval_t
 #define YYSTYPE_IS_DECLARED 1
+
+int gabc_score_determination_lex(void);
+#define YY_DECL int gabc_score_determination_lex(void)
+

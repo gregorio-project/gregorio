@@ -42,7 +42,7 @@ void gregorio_messagef(const char *function_name, char verbosity,
 void gregorio_set_verbosity_mode(char new_mode);
 void gregorio_set_file_name(char *new_name);
 void gregorio_set_error_out(FILE *f);
-int gregorio_get_return_value();
+int gregorio_get_return_value(void);
 
 #define VERB_VERBOSE 1
 #define VERB_WARNINGS 2

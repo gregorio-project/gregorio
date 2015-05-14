@@ -119,6 +119,7 @@ local GABC = {
   PunctumInclinatumAuctus = [[G>]],
   Quilisma = [[gw]],
   RoundBrace = '[ob:1;6mm]',
+  RoundBraceDown = '[ub:1;6mm]',
   Salicus = [[giOk]],
   SalicusLongqueue = [[hjOl]],
   Scandicus = [[gik]],

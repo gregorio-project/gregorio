@@ -465,44 +465,18 @@
 
 \gdef\grecurlybracechar{\gregoriofont\gre@char@curlybrace}%
 \gdef\grebracechar{\gregoriofont\gre@char@brace}%
+\gdef\greunderbracechar{\gregoriofont\gre@char@bracedown}%
 
 % the command to resize a box, \resizebox is provided by graphicx
 \global\let\greresizebox\resizebox %
 
 % #1: the width
-% #2: 1 if we put an accentus above or not
-% #3: a vertical shift
-% #4: a horizontal shift
-% #5: 1 if we shift to the beginning of the last glyph, 0 otherwise
+% #2: a vertical shift
+% #3: a horizontal shift
+% #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
+% #5: 1 if we put an accentus above or not
 \def\greovercurlybrace#1#2#3#4#5{%
-  \ifnum#5=1\relax %
-    \setbox\GreTempsign=\hbox{\grepunctumchar}%
-    \gre@dimen@temp@five=\wd\GreTempsign %
-    \kern-\gre@dimen@temp@five %
-  \fi %
-  \gre@calculate@glyphraisevalue{g}{13}%
-  \advance\gre@dimen@glyphraisevalue by #3\relax %
-  \setbox\GreTempsign=\hbox{\grecurlybracechar}%
-  \hbox to 0pt{%
-    \gre@skip@temp@four = #4\relax%
-    \kern\gre@skip@temp@four %
-    \raise\gre@dimen@glyphraisevalue\hbox{%
-      \greresizebox{#1}{\ht\GreTempsign}{\grecurlybracechar}%
-    }%
-    \hss %
-    \ifnum#2=1\relax %
-      \gre@calculate@glyphraisevalue{m}{13}%
-      \advance\gre@dimen@glyphraisevalue by \gre@dimen@curlybraceaccentusshift %
-      \raise\gre@dimen@glyphraisevalue\hbox{%
-        \gregoriofont\gre@char@accentus\relax %
-      }%
-      \hss %
-    \fi %
-  }%
-  \ifnum#5=1\relax %
-    \kern\gre@dimen@temp@five %
-  \fi %
-  \relax %
+  \grebracecommon{#1}{#2}{#3}{#4}{#5}{g}{\grecurlybracechar}%
 }%
 
 % #1: the width
@@ -510,19 +484,49 @@
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\greoverbrace#1#2#3#4{%
+  \grebracecommon{#1}{#2}{#3}{#4}{0}{g}{\grebracechar}%
+}%
+
+% #1: the width
+% #2: a vertical shift
+% #3: a horizontal shift
+% #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
+\def\greunderbrace#1#2#3#4{%
+  \grebracecommon{#1}{#2}{#3}{#4}{0}{b}{\greunderbracechar}%
+}%
+
+% #1: the width
+% #2: a vertical shift
+% #3: a horizontal shift
+% #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
+% #5: 1 if we put an accentus above, 0 if not
+% #6: the pitch at which to compute the height
+% #7: the brace character
+\def\grebracecommon#1#2#3#4#5#6#7{%
   \ifnum#4=1\relax %
     \setbox\GreTempsign=\hbox{\grepunctumchar}%
     \gre@dimen@temp@five=\wd\GreTempsign %
     \kern-\gre@dimen@temp@five %
   \fi %
-  \gre@calculate@glyphraisevalue{g}{13}%
-  \setbox\GreTempsign=\hbox{\grebracechar}%
+  \gre@calculate@glyphraisevalue{#6}{13}%
   \advance\gre@dimen@glyphraisevalue by #2\relax %
-  \raise\gre@dimen@glyphraisevalue\hbox to 0pt{%
-    \gre@skip@temp@four = #3\relax%
-    \kern \gre@skip@temp@four %
-    \greresizebox{#1}{\ht\GreTempsign}{\grebracechar}%
+  \setbox\GreTempsign=\hbox{#7}%
+  \hbox to 0pt{%
+    \gre@skip@temp@four = #3\relax %
+    \kern\gre@skip@temp@four %
+    \raise\gre@dimen@glyphraisevalue\hbox{%
+%      \greresizebox{#1}{\dimexpr\ht\GreTempsign+\dp\GreTempsign}{#6}%
+      \greresizebox{#1}{\ht\GreTempsign}{#7}%
+    }%
     \hss %
+    \ifnum#5=1\relax %
+      \gre@calculate@glyphraisevalue{m}{13}%
+      \advance\gre@dimen@glyphraisevalue by \gre@dimen@curlybraceaccentusshift %
+      \raise\gre@dimen@glyphraisevalue\hbox{%
+        \gregoriofont\gre@char@accentus\relax %
+      }%
+      \hss %
+    \fi %
   }%
   \ifnum#4=1\relax %
     \kern\gre@dimen@temp@five %
