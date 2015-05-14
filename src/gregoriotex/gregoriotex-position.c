@@ -24,11 +24,6 @@
 
 #include "gregoriotex.h"
 
-extern inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
-        const gregorio_note *const note, bool *const kind_of_pes);
-extern inline bool is_on_a_line(const char pitch);
-extern inline bool is_between_lines(const char pitch);
-
 static inline char number_note_before_last_note(
         const gregorio_glyph *const current_glyph,
         const gregorio_note *const current_note)
@@ -714,7 +709,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
     return h_episemus;
 }
 
-inline static char compute_h_episemus_height(const gregorio_glyph *const glyph,
+static inline char compute_h_episemus_height(const gregorio_glyph *const glyph,
         const gregorio_note *const note, const int i, const gtex_type type,
         const gregorio_vposition vpos)
 {
@@ -827,7 +822,7 @@ static bool is_h_episemus_below_better_height(const char new_height,
     return new_height < old_height;
 }
 
-inline static void start_h_episemus(height_computation *const h,
+static inline void start_h_episemus(height_computation *const h,
         const gregorio_element *const element,
         const gregorio_glyph *const glyph, gregorio_note *const note,
         const int i, const gtex_type type)
@@ -839,7 +834,7 @@ inline static void start_h_episemus(height_computation *const h,
     h->height = compute_h_episemus_height(glyph, note, i, type, h->vpos);
 }
 
-inline static void set_h_episemus_height(const height_computation *const h,
+static inline void set_h_episemus_height(const height_computation *const h,
         gregorio_note *const end)
 {
     gregorio_note *last_note = NULL;
@@ -878,22 +873,22 @@ inline static void set_h_episemus_height(const height_computation *const h,
     }
 }
 
-inline static bool is_connected_left(const grehepisemus_size size) {
+static inline bool is_connected_left(const grehepisemus_size size) {
     return size == H_NORMAL || size == H_SMALL_LEFT;
 }
 
-inline static bool is_connected_right(const grehepisemus_size size) {
+static inline bool is_connected_right(const grehepisemus_size size) {
     return size == H_NORMAL || size == H_SMALL_RIGHT;
 }
 
-inline static bool is_connectable_interglyph_ambitus(
+static inline bool is_connectable_interglyph_ambitus(
         const gregorio_note *const first, const gregorio_note *const second)
 {
     return first && second
             && abs(first->u.note.pitch - second->u.note.pitch) < 3;
 }
 
-inline static bool has_space_to_left(const gregorio_note *const note) {
+static inline bool has_space_to_left(const gregorio_note *const note) {
     switch (note->u.note.shape) {
     case S_PUNCTUM_INCLINATUM:
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
@@ -905,7 +900,7 @@ inline static bool has_space_to_left(const gregorio_note *const note) {
     }
 }
 
-inline static void end_h_episemus(height_computation *const h,
+static inline void end_h_episemus(height_computation *const h,
         gregorio_note *const end)
 {
     char proposed_height;
@@ -946,7 +941,7 @@ inline static void end_h_episemus(height_computation *const h,
     }
 }
 
-inline static void compute_h_episemus(height_computation *const h,
+static inline void compute_h_episemus(height_computation *const h,
         const gregorio_element *const element,
         const gregorio_glyph *const glyph, gregorio_note *const note,
         const int i, const gtex_type type)
@@ -984,7 +979,7 @@ inline static void compute_h_episemus(height_computation *const h,
     }
 }
 
-inline static void compute_note_positioning(height_computation *const above,
+static inline void compute_note_positioning(height_computation *const above,
         height_computation *const below, const gregorio_element *const element,
         const gregorio_glyph *const glyph, gregorio_note *const note,
         const int i, const gtex_type type)

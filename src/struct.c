@@ -47,13 +47,6 @@
 #include "messages.h"
 #include "characters.h"
 
-//extern inline unsigned char simple_htype(unsigned char h);
-//extern inline bool has_bottom(unsigned char arg);
-//extern inline bool is_multi(unsigned char h_episemus);
-extern inline bool is_puncta_inclinata(char glyph);
-extern inline bool is_liquescentia(char liquescentia);
-extern inline bool is_initio_debilis(char liquescentia);
-
 static inline char max(char a, char b)
 {
     return a > b ? a : b;
