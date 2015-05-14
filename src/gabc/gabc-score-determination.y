@@ -82,8 +82,6 @@ static gregorio_euouae euouae;
 static gregorio_voice_info *current_voice_info;
 static int number_of_voices;
 static int voice;
-// can't remember what it is...
-static int clef;
 // see comments on text to understand this
 static gregorio_center_determination center_is_determined;
 // current_key is... the current key... updated by each notes determination
@@ -288,37 +286,6 @@ static void next_voice_info()
         gregorio_add_voice_info(&current_voice_info);
         voice++;
     }
-}
-
-/*
- * Function that updates the clef variable, intepreting the char *str argument 
- */
-static void set_clef(char *str)
-{
-    if (!str || !str[0] || !str[1]) {
-        gregorio_message(_("unknown clef format in initial-key definition : "
-                           "format is `(c|f)[1-4]'"), "det_score", ERROR, 0);
-    }
-    if (str[0] != 'c' && str[0] != 'f') {
-        gregorio_message(_("unknown clef format in initial-key definition : "
-                           "format is `(c|f)[1-4]'"), "det_score", ERROR, 0);
-        return;
-    }
-    // here is something than could be changed : the format of the inital_key
-    // attribute
-    if (str[1] != '1' && str[1] != '2' && str[1] != '3' && str[1] != '4') {
-        gregorio_message(_("unknown clef format in initial-key definition : "
-                           "format is `(c|f)[1-4]'"), "det_score", ERROR, 0);
-        return;
-    }
-
-    clef = gregorio_calculate_new_key(str[0], str[1] - 48);
-    if (str[2]) {
-        gregorio_message(_("in initial_key definition, only two characters are "
-                           "needed : format is`(c|f)[1-4]'"),
-                         "det_score", WARNING, 0);
-    }
-    current_key = clef;
 }
 
 /*

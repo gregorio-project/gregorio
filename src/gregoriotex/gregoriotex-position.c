@@ -144,8 +144,8 @@ static inline gregorio_vposition above_if_h_episemus(
 static inline gregorio_vposition above_if_either_h_episemus(
         const gregorio_note *const note)
 {
-    if (note->previous && note->previous->h_episemus_above
-            || note->next && note->next->h_episemus_above) {
+    if ((note->previous && note->previous->h_episemus_above)
+            || (note->next && note->next->h_episemus_above)) {
         return VPOS_ABOVE;
     }
     return VPOS_BELOW;
@@ -699,7 +699,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
 
     if (note->signs & _V_EPISEMUS) {
         note->v_episemus_height = note->u.note.pitch + (int)v_episemus;
-        if (v_episemus == VPOS_BELOW && v_episemus_below_is_lower
+        if ((v_episemus == VPOS_BELOW && v_episemus_below_is_lower)
                 || v_episemus == VPOS_ABOVE) {
             // above is always higher because of GregorioTeX's design
             note->v_episemus_height += (int)v_episemus;
@@ -710,14 +710,13 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
 }
 
 static inline char compute_h_episemus_height(const gregorio_glyph *const glyph,
-        const gregorio_note *const note, const int i, const gtex_type type,
-        const gregorio_vposition vpos)
+        const gregorio_note *const note, const gregorio_vposition vpos)
 {
     char height = note->u.note.pitch;
 
     if (note->signs & _V_EPISEMUS) {
-        if (vpos == VPOS_ABOVE && note->v_episemus_height >= height
-                || vpos == VPOS_BELOW && note->v_episemus_height <= height) {
+        if ((vpos == VPOS_ABOVE && note->v_episemus_height >= height)
+                || (vpos == VPOS_BELOW && note->v_episemus_height <= height)) {
             height = note->v_episemus_height;
         }
     }
@@ -822,14 +821,13 @@ static bool is_h_episemus_below_better_height(const char new_height,
 
 static inline void start_h_episemus(height_computation *const h,
         const gregorio_element *const element,
-        const gregorio_glyph *const glyph, gregorio_note *const note,
-        const int i, const gtex_type type)
+        const gregorio_glyph *const glyph, gregorio_note *const note)
 {
     h->start_element = element;
     h->start_glyph = glyph;
     h->start_note = note;
     h->active = true;
-    h->height = compute_h_episemus_height(glyph, note, i, type, h->vpos);
+    h->height = compute_h_episemus_height(glyph, note, h->vpos);
 }
 
 static inline void set_h_episemus_height(const height_computation *const h,
@@ -942,7 +940,7 @@ static inline void end_h_episemus(height_computation *const h,
 static inline void compute_h_episemus(height_computation *const h,
         const gregorio_element *const element,
         const gregorio_glyph *const glyph, gregorio_note *const note,
-        const int i, const gtex_type type)
+        const int i)
 {
     char next_height;
     grehepisemus_size size;
@@ -955,18 +953,18 @@ static inline void compute_h_episemus(height_computation *const h,
                 if (h->connected && is_connected_left(size)
                         && (i != 1 || is_connectable_interglyph_ambitus(
                                 note, h->last_connected_note))) {
-                    next_height = compute_h_episemus_height(glyph, note, i,
-                            type, h->vpos);
+                    next_height = compute_h_episemus_height(glyph, note,
+                            h->vpos);
                     if (h->is_better_height(next_height, h->height)) {
                         h->height = next_height;
                     }
                 }
                 else {
                     end_h_episemus(h, note);
-                    start_h_episemus(h, element, glyph, note, i, type);
+                    start_h_episemus(h, element, glyph, note);
                 }
             } else {
-                start_h_episemus(h, element, glyph, note, i, type);
+                start_h_episemus(h, element, glyph, note);
             }
 
             h->connected = h->is_connected(note) && is_connected_right(size);
@@ -982,8 +980,6 @@ static inline void compute_note_positioning(height_computation *const above,
         const gregorio_glyph *const glyph, gregorio_note *const note,
         const int i, const gtex_type type)
 {
-    char next_height;
-
     gregorio_vposition default_vpos = advise_positioning(glyph, note, i, type);
 
     if (note->h_episemus_above == HEPISEMUS_AUTO
@@ -996,8 +992,8 @@ static inline void compute_note_positioning(height_computation *const above,
         }
     }
 
-    compute_h_episemus(above, element, glyph, note, i, type);
-    compute_h_episemus(below, element, glyph, note, i, type);
+    compute_h_episemus(above, element, glyph, note, i);
+    compute_h_episemus(below, element, glyph, note, i);
 }
 
 void gregoriotex_compute_positioning(const gregorio_element *element)

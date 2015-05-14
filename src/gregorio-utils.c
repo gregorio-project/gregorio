@@ -423,6 +423,9 @@ int main(int argc, char **argv)
                     output_file_name =
                         get_output_filename(output_basename, "dump");
                     break;
+                default:
+                    fprintf(stderr, "error: unsupported format");
+                    exit(-1);
                 }
             }
             check_input_clobber(input_file_name, output_file_name);
