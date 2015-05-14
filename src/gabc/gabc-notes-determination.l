@@ -120,7 +120,7 @@ static void add_h_episemus() {
 %x alt
 %x comments
 %x overbrace
-%x belowbrace
+%x underbrace
 %x overcurlybrace
 %x overcurlyaccentusbrace
 
@@ -141,9 +141,9 @@ static void add_h_episemus() {
         char_for_brace = gabc_notes_determination_text[4]-'0';
         BEGIN(overbrace);
     }
-<INITIAL>\[bb:[01]; {
+<INITIAL>\[ub:[01]; {
         char_for_brace = gabc_notes_determination_text[4]-'0';
-        BEGIN(belowbrace);
+        BEGIN(underbrace);
     }
 <INITIAL>\[ocb:[01]; {
         char_for_brace = gabc_notes_determination_text[5]-'0';
@@ -203,8 +203,8 @@ static void add_h_episemus() {
                 gabc_notes_determination_text, char_for_brace);
         gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
     }
-<belowbrace>[^\]]+ {
-        snprintf(tempstr, 70, "\\grebelowbrace{%s}{0pt}{0pt}{%d}",
+<underbrace>[^\]]+ {
+        snprintf(tempstr, 70, "\\greunderbrace{%s}{0pt}{0pt}{%d}",
                 gabc_notes_determination_text, char_for_brace);
         gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
     }
@@ -238,7 +238,7 @@ static void add_h_episemus() {
         gregorio_add_texverb_as_note(&current_note,
                 strdup(gabc_notes_determination_text), GRE_ALT);
     }
-<texverbnote,texverbglyph,texverbelement,choralsign,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,belowbrace>\] {
+<texverbnote,texverbglyph,texverbelement,choralsign,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,underbrace>\] {
         BEGIN(INITIAL);
     }
 \{  {
