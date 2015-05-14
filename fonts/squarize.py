@@ -268,6 +268,7 @@ DIRECT_GLYPH_NAMES = [
     'RoundBrace',
     'CurlyBrace',
     'BarBrace',
+    'RoundBraceDown',
     'OriscusDeminutus',
     'VirgaReversaDescendens',
     'VirgaReversaLongqueueDescendens',

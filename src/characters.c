@@ -133,9 +133,6 @@ void gregorio_write_text(bool skip_initial,
         void (*end) (FILE *, grestyle_style),
         void (*printspchar) (FILE *, grewchar *))
 {
-    grewchar *text;
-    gregorio_character *begin_character;
-
     if (current_character == NULL) {
         return;
     }
@@ -190,8 +187,6 @@ void gregorio_write_initial(gregorio_character *current_character,
         void (*end) (FILE *, grestyle_style),
         void (*printspchar) (FILE *, grewchar *))
 {
-    grewchar *text;
-    gregorio_character *begin_character;
     // we loop until we see the beginning of the initial style
     gregorio_go_to_first_character(&current_character);
     while (current_character) {
@@ -260,34 +255,6 @@ gregorio_character *gregorio_first_text(gregorio_score *score)
     gregorio_message(_("unable to find the first letter of the score"),
             "gregorio_first_text", ERROR, 0);
     return NULL;
-}
-
-// gives the first letter of a score.
-
-static grewchar gregorio_first_letter(gregorio_score *score)
-{
-    gregorio_syllable *current_syllable;
-    gregorio_character *current_character;
-    if (!score || !score->first_syllable) {
-        gregorio_message(_("unable to find the first letter of the score"),
-                "gregorio_first_letter", ERROR, 0);
-        return L'\0';
-    }
-    current_syllable = score->first_syllable;
-    current_character = score->first_syllable->text;
-    while (current_syllable) {
-        while (current_character) {
-            if (current_character->is_character) {
-                return current_character->cos.character;
-            }
-            current_character = current_character->next_character;
-        }
-        current_syllable = current_syllable->next_syllable;
-    }
-
-    gregorio_message(_("unable to find the first letter of the score"),
-            "gregorio_first_letter", ERROR, 0);
-    return L'\0';
 }
 
 /*
@@ -445,6 +412,7 @@ static void gregorio_insert_style_after(unsigned char type, unsigned char style,
     (*current_character) = element;
 }
 
+#if 0
 static void gregorio_insert_char_after(grewchar c,
         gregorio_character **current_character)
 {
@@ -460,6 +428,7 @@ static void gregorio_insert_char_after(grewchar c,
     (*current_character)->next_character = element;
     (*current_character) = element;
 }
+#endif
 
 /*
  * 
@@ -979,7 +948,6 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
     gregorio_character *current_character = *param_character;
     gregorio_character *first_character;
     gregorio_character *start_of_special;
-    unsigned char forced_center = 0;
     // so, here we start: we go to the first_character
     gregorio_go_to_first_character(&current_character);
     // first we look at the styles, to see if there is a FORCED_CENTER
@@ -991,7 +959,6 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
     while (current_character) {
         if (!current_character->is_character) {
             if (current_character->cos.s.style == ST_FORCED_CENTER) {
-                forced_center = 1;
                 // we can break here, as there won't be forced center plus
                 // center
                 break;

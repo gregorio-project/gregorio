@@ -681,26 +681,6 @@ static const char *dump_h_episemus_size(grehepisemus_size size)
     return str;
 }
 
-static const char *dump_h_episemus_vposition(gregorio_vposition vposition)
-{
-    const char *str;
-    switch (vposition) {
-    case VPOS_AUTO:
-        str = "VPOS_AUTO";
-        break;
-    case VPOS_BELOW:
-        str = "VPOS_BELOW";
-        break;
-    case VPOS_ABOVE:
-        str = "VPOS_ABOVE";
-        break;
-    default:
-        str = "unknown";
-        break;
-    }
-    return str;
-}
-
 static const char *dump_bool(bool value) {
     return value? "true" : "false";
 }
@@ -1096,7 +1076,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
                         (int)element->nabc_lines);
             }
             if (element->nabc_lines && element->nabc) {
-                for (i = 0; i < element->nabc_lines; i++) {
+                for (i = 0; i < (int)element->nabc_lines; i++) {
                     if (element->nabc[i]) {
                         fprintf(f, "     nabc_line %d             \"%s\"\n",
                                 (int)(i+1), element->nabc[i]);

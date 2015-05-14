@@ -47,13 +47,6 @@
 #include "messages.h"
 #include "characters.h"
 
-//extern inline unsigned char simple_htype(unsigned char h);
-//extern inline bool has_bottom(unsigned char arg);
-//extern inline bool is_multi(unsigned char h_episemus);
-extern inline bool is_puncta_inclinata(char glyph);
-extern inline bool is_liquescentia(char liquescentia);
-extern inline bool is_initio_debilis(char liquescentia);
-
 static inline char max(char a, char b)
 {
     return a > b ? a : b;
@@ -231,7 +224,6 @@ void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str)
 {
     size_t len;
     char *res;
-    unsigned int i;
     if (str == NULL) {
         return;
     }
@@ -324,6 +316,9 @@ void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
             break;
         case L_AUCTA:
             note->u.note.liquescentia = L_AUCTA_INITIO_DEBILIS;
+            break;
+        default:
+            // do nothing
             break;
         }
     } else {
