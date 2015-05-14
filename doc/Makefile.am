@@ -21,7 +21,7 @@ SRCFILES = GregorioRef.tex Command_Index_gregorio.tex \
 		   Appendix_Font_Tables.tex GregorioRef.lua factus.gabc
 NABCSRCFILES = GregorioNabcRef.tex veni.gabc
 
-# I know these rules looks wrong, but they must not depend on anything that
+# I know these rules look wrong, but they must not depend on anything that
 # gets generated or make distcheck will fail.
 
 GregorioRef-@FILENAME_VERSION@.pdf: $(SRCFILES)
