@@ -84,7 +84,7 @@
     
 \def\dosneume#1{%
     \font\gregorionabcfont={name:gregall} at 6pt\gregorionabcfont\gregorionabcstyle%
-    \directlua{tex.sprint(gregoriotex.nabc_font_tables["gregall"]["\luatexluaescapestring{#1}"])}%
+    \directlua{tex.sprint(gregoriotex.nabc_font_tables["gregall"]["\luatexluaescapestring{#1}"] or "")}%
   \endgroup %
 }
 
