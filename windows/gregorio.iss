@@ -28,6 +28,19 @@ Root: HKCR; Subkey: "Gregorio\shell\open\command"; ValueType: string; ValueName:
 [Dirs]
 Name: "{app}\contrib"
 Name: "{app}\examples"
+Name: "{app}\texmf"
+Name: "{app}\texmf\tex"
+Name: "{app}\texmf\tex\luatex"
+Name: "{app}\texmf\tex\luatex\gregoriotex"
+Name: "{app}\texmf\fonts"
+Name: "{app}\texmf\fonts\truetype"
+Name: "{app}\texmf\fonts\truetype\public"
+Name: "{app}\texmf\fonts\truetype\public\gregoriotex"
+Name: "{app}\texmf\fonts\source"
+Name: "{app}\texmf\fonts\source\gregoriotex"
+Name: "{app}\texmf\doc"
+Name: "{app}\texmf\doc\luatex"
+Name: "{app}\texmf\doc\luatex\gregoriotex"
 
 [Files]
 Source: "../src/gregorio.exe"; DestDir: "{app}";
@@ -48,7 +61,31 @@ Source: "../contrib/gregorio-scribus.lua"; DestDir: "{app}\contrib";
 Source: "../contrib/*"; DestDir: "{app}\contrib";
 Source: "../examples/PopulusSion.gabc"; DestDir: "{app}\examples";
 Source: "../examples/main-lualatex.tex"; DestDir: "{app}\examples";
-Source: "../gregoriotex.tds.zip"; DestDir: "{app}";
+Source: "../tex/gregoriotex.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/gregoriotex.sty"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/gregoriotex.lua"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/gregoriotex-chars.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/gregoriotex-ictus.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/gregoriotex-signs.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/gregoriotex-spaces.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/gregoriotex-syllable.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/gregoriotex-symbols.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/gsp-default.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/gregoriosyms.sty"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../fonts/greciliae.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
+Source: "../fonts/gregorio.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
+Source: "../fonts/greextra.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
+Source: "../fonts/gresym.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
+Source: "../fonts/parmesan.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
+Source: "../fonts/convertsfrtottf.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/greciliae-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/greextra.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/gregorio-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/gresym.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/Makefile"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/parmesan-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/squarize.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 
 [Run]
 Filename: "texlua.exe"; Parameters: """{app}\install-tl.lua"" > ""{app}\install-tl.log"""; StatusMsg: "Configuring TeXLive texmf..."; Description: "Add files to TeXLive texmf tree"; Flags: postinstall ; WorkingDir: "{app}";

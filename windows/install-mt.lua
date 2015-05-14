@@ -83,7 +83,6 @@ end
 
 function copy_files()
   if not lfs.isdir(texmflocal) then
-    print("TEXMKLOCAL doesn't exist, making it...")
     lfs.mkdir(texmflocal)
   end
   print("Copying files...\n")
