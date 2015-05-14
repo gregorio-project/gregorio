@@ -19,7 +19,7 @@
 #ifndef GREGORIOTEX_H
 #define GREGORIOTEX_H
 
-#define GREGORIO_VERSION "3.0.0-rc2"
+#define GREGORIO_VERSION "3.0.0"
 
 #define NO_FUSION 0
 #define FUSION 1

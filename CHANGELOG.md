@@ -2,24 +2,7 @@
 All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
-## [Unreleased][ureleased]
-### Fixed
-- Torculus followed by a non-liquescent note is now parsed correctly (see [#284](https://github.com/gregorio-project/gregorio/issues/284).
-- Spacing after a syllable with an flat, sharp, or natural is now correct (see [#246](https://github.com/gregorio-project/gregorio/issues/246).
-
-### Added
-- A Windows batch file which will detect the system setup and create a report which can be useful in diagnosing installation problems.  Instructions for how to use it appear [under the installation instructions for Windows on the website.](http://gregorio-project.github.io/installation-windows.html)
-
-## [3.0.0-rc2] - 2015-04-14
-- Clarified post installation options for Windows installer.  What was the "Install Fonts" option is now labeled to indicate that this also adds GregorioTeX files to the texmf tree.
-- `\grechangedim` now checks to make sure it only operates on existing distances and doesn't create a new one.
-
-### Fixed
-- Windows post install script wasn't adding files to texmf tree.  Bug introduced by 3.0.0-rc1.
-- Tarball distribution was missing `gregoriotex-chars.tex` file.
-- Spacing between a syllable and a syllable with text and only a bar was too short.
-
-## [3.0.0-rc1] - 2015-04-06
+## [3.0.0] - 2015-05-14
 ### Changed
 - [New website](http://gregorio-project.github.io) containing instructions only for new versions of Gregorio starting with this release, in English only.
 - New clean Mac OSX installer (intel only).
@@ -30,9 +13,14 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Clivis stem length now follow Solesmes' books conventions (see [#31](https://github.com/gregorio-project/gregorio/issues/31)).
 - Windows TeXworks configuration script no longer adds deprecated `greg-book` and `gregorio` engines (see below).
 - `build.sh` and `install.sh` scripts are now used to build and install Gregorio with common options.
+- Clarified post installation options for Windows installer.  What was the "Install Fonts" option is now labeled to indicate that this also adds GregorioTeX files to the texmf tree.
+- `\grechangedim` now checks to make sure it only operates on existing distances and doesn't create a new one.
 
 ### Fixed
 - `\includescore` not finding files for autocompile under certain circumstances.  (see [this thread](http://www.mail-archive.com/gregorio-users@gna.org/msg02346.html)).
+- Spacing between a syllable and a syllable with text and only a bar was too short.
+- Torculus followed by a non-liquescent note is now parsed correctly (see [#284](https://github.com/gregorio-project/gregorio/issues/284).
+- Spacing after a syllable with an flat, sharp, or natural is now correct (see [#246](https://github.com/gregorio-project/gregorio/issues/246).
 
 ### Added
 - `\setstafflinethickness` controls the thickness of the staff lines.  See GregorioRef.pdf for full details.
@@ -40,6 +28,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - New documentation in PDF: GregorioRef.pdf. You can find it in the [release files](https://github.com/gregorio-project/gregorio/releases).
 - A migration guide ([UPGRADE.md](UPGRADE.md))
 - This CHANGELOG.
+- A Windows batch file which will detect the system setup and create a report which can be useful in diagnosing installation problems.  Instructions for how to use it appear [under the installation instructions for Windows on the website.](http://gregorio-project.github.io/installation-windows.html)
 
 ### Deprecated
 - OpusTeX writing and GregorioXML reading and writing features will disappear in next minor release
