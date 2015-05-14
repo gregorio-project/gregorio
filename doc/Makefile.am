@@ -18,23 +18,41 @@
 # GregorioRef.tex must be the first source file
 SRCFILES = GregorioRef.tex Command_Index_gregorio.tex \
 		   Command_Index_internal.tex Command_Index_User.tex \
-		   factus.gabc Appendix_Font_Tables.tex GregorioRef.lua
+		   Appendix_Font_Tables.tex GregorioRef.lua
+NABCSRCFILES = GregorioNabcRef.tex ../examples/FactusEst.gabc
 
-GregorioRef-@FILENAME_VERSION@.pdf: $(SRCFILES)
-	make -C ../src gregorio
-	../src/gregorio -o factus.gtex $(<D)/factus.gabc
+GregorioRef-@FILENAME_VERSION@.pdf: $(SRCFILES) factus.gtex
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
 		 TEXFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
 		 -pdflatex='lualatex --shell-escape %O %S' \
 		 -jobname=GregorioRef-@FILENAME_VERSION@ $<
 
-doc: GregorioRef-$(FILENAME_VERSION).pdf
+GregorioNabcRef-@FILENAME_VERSION@.pdf: $(NABCSRCFILES) veni.gtex
+	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
+		 TEXFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
+		 -pdflatex='lualatex --shell-escape %O %S' \
+		 -jobname=GregorioNabcRef-@FILENAME_VERSION@ $<
+
+../src/gregorio:
+	make -C ../src gregorio
+
+factus.gtex: factus.gabc ../src/gregorio
+	../src/gregorio -o $@ $<
+
+veni.gtex: veni.gabc ../src/gregorio
+	../src/gregorio -o $@ $<
+
+doc: GregorioRef-$(FILENAME_VERSION).pdf GregorioNabcRef-$(FILENAME_VERSION).pdf
 
 pdf-local: doc
 
 distclean-local:
 	latexmk -quiet -c -f -jobname=GregorioRef-@FILENAME_VERSION@ GregorioRef.tex
-	rm -rf _minted* factus.gtex
+	latexmk -quiet -c -f -jobname=GregorioNabcRef-@FILENAME_VERSION@ GregorioNabcRef.tex
+	rm -rf _minted* factus.gtex veni.gtex
 
-EXTRA_DIST = $(SRCFILES) factus.gabc GregorioRef-@FILENAME_VERSION@.pdf
-MAINTAINERCLEANFILES = GregorioRef-@FILENAME_VERSION@.pdf
+EXTRA_DIST = $(SRCFILES) $(NABCSRCFILES) factus.gabc veni.gabc \
+	     GregorioRef-@FILENAME_VERSION@.pdf \
+	     GregorioNabcRef-@FILENAME_VERSION@.pdf
+MAINTAINERCLEANFILES = GregorioRef-@FILENAME_VERSION@.pdf \
+		       GregorioNabcRef-@FILENAME_VERSION@.pdf
