@@ -35,13 +35,8 @@
 
 #include "gabc.h"
 
-int gabc_score_determination_lex();
-#define YY_DECL int gabc_score_determination_lex()
-
 #include "gabc-score-determination.h"
 #include "gabc-score-determination-l.h"
-
-#define YYLEX_PARAM &yylval
 
 // uncomment it if you want to have an interactive shell to understand the
 // details on how bison works for a certain input
@@ -54,12 +49,6 @@ int gabc_score_determination_lex();
  * 
  */
 
-/*
-// the two functions to initialize and free the file variables
-void initialize_variables();
-void gabc_fix_custos(gregorio_score *score_to_check);
-void free_variables();
-*/
 // the error string
 static char error[200];
 // the score that we will determine and return
@@ -71,7 +60,7 @@ gregorio_element *current_element;
 static char *macros[10];
 // declaration of some functions, the first is the one initializing the
 // flex/bison process
-static int gabc_score_determination_parse();
+static int gabc_score_determination_parse(void);
 // other variables that we will have to use
 static gregorio_character *current_character;
 static gregorio_character *first_text_character;
@@ -87,23 +76,6 @@ static gregorio_center_determination center_is_determined;
 // current_key is... the current key... updated by each notes determination
 // (for key changes)
 static int current_key = DEFAULT_KEY;
-
-/*
-int check_score_integrity(gregorio_score *score);
-void next_voice_info();
-void set_clef(char *str);
-void reajust_voice_infos(gregorio_voice_info *voice_info, int final_count);
-void end_definitions();
-void suppress_useless_styles();
-void rebuild_characters(gregorio_character **param_character,
-                        gregorio_center_determination center_is_determined,
-                        gregorio_lyric_centering centering_scheme);
-void close_syllable();
-void gregorio_gabc_add_text(char *mbcharacters);
-void gregorio_gabc_add_style(unsigned char style);
-void gregorio_gabc_end_style(unsigned char style);
-void complete_with_nulls(int voice);
-*/
 static gregorio_lyric_centering centering_scheme;
 
 static void gabc_score_determination_error(char *error_str)
@@ -227,7 +199,7 @@ static int check_infos_integrity(gregorio_score *score_to_check)
  * The function that will initialize the variables. 
  */
 
-static void initialize_variables()
+static void initialize_variables(void)
 {
     int i;
     // build a brand new empty score
@@ -257,7 +229,7 @@ static void initialize_variables()
  * determine the score 
  */
 
-static void free_variables()
+static void free_variables(void)
 {
     int i;
     free(elements);
@@ -278,7 +250,7 @@ static int voice_info_is_not_empty(const gregorio_voice_info *voice_info)
 /*
  * a function called when we see "--\n" that end the infos for a certain voice 
  */
-static void next_voice_info()
+static void next_voice_info(void)
 {
     // we must do this test in the case where there would be a "--" before
     // first_declarations
@@ -307,7 +279,7 @@ static void reajust_voice_infos(gregorio_voice_info *voice_info,
  * Function called when we have reached the end of the definitions, it tries to 
  * make the voice_infos coherent. 
  */
-static void end_definitions()
+static void end_definitions(void)
 {
     int i;
 
@@ -379,7 +351,7 @@ static void complete_with_nulls(int last_voice)
 /*
  * Function called each time we find a space, it updates the current position. 
  */
-static void update_position_with_space()
+static void update_position_with_space(void)
 {
     if (position == WORD_MIDDLE) {
         position = WORD_END;
@@ -442,7 +414,7 @@ static void rebuild_characters(gregorio_character **param_character,
  * Function to close a syllable and update the position. 
  */
 
-static void close_syllable()
+static void close_syllable(void)
 {
     int i;
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
@@ -490,7 +462,7 @@ static void start_translation(unsigned char asked_translation_type)
     translation_type = asked_translation_type;
 }
 
-static void end_translation()
+static void end_translation(void)
 {
     rebuild_characters(&current_character, center_is_determined,
                        centering_scheme);

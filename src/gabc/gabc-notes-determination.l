@@ -49,14 +49,14 @@ static inline void add_bar_as_note(gregorio_bar bar)
     gregorio_add_bar_as_note(&current_note, bar);
 }
 
-static inline void error()
+static inline void error(void)
 {
     gregorio_messagef("gabc_notes_determination", ERROR, 0,
             _("undefined macro used: m%d"),
             gabc_notes_determination_text[3] - '0');
 }
 
-static void add_h_episemus() {
+static void add_h_episemus(void) {
     grehepisemus_size size = H_NORMAL;
     gregorio_vposition vposition = VPOS_AUTO;
     bool disable_bridge = false;

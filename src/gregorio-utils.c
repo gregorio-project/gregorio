@@ -143,7 +143,7 @@ static char *get_output_filename(char *fbasename, char *extension)
  * write a score to a file. Necessary for the libtool stuff... 
  */
 
-static void print_licence()
+static void print_licence(void)
 {
     printf("\n\
 Tools for manipulation of gregorian chant files\n\
