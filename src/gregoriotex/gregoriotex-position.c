@@ -714,8 +714,6 @@ static inline char compute_h_episemus_height(const gregorio_glyph *const glyph,
         const gregorio_vposition vpos)
 {
     char height = note->u.note.pitch;
-    gregorio_vposition v_episemus_vpos;
-    bool v_episemus_is_lower;
 
     if (note->signs & _V_EPISEMUS) {
         if (vpos == VPOS_ABOVE && note->v_episemus_height >= height
@@ -732,7 +730,7 @@ static inline char compute_h_episemus_height(const gregorio_glyph *const glyph,
         }
     }
 
-    height += (int)vpos;
+    return height + (int)vpos;
 }
 
 static bool is_bridgeable_space(const gregorio_element *const element)
