@@ -406,7 +406,7 @@ typedef struct gregorio_note {
     // temporary values used in determination, they must not appear in the
     // final structure.
 
-    char gtex_offset_case;
+    const char *gtex_offset_case;
     char v_episemus_height;
     char h_episemus_above;
     char h_episemus_below;

@@ -24,90 +24,156 @@
 
 #include "gregoriotex.h"
 
-static inline char number_note_before_last_note(
+// TODO: The numbers in the comments are a vestige of the older code; I'm
+// leaving them here for now, in case the refactor missed an instance
+// somewhere, but the numbers should evenually be removed
+
+// (loose) naming convention, employing camel case to be TeX-csname-compliant:
+// {specific-glyph-shape}{note-position}{note-shape}{first-ambitus}{second-ambitus}
+OFFSET_CASE(FinalPunctum); // 0
+OFFSET_CASE(FinalDeminutus); // 1
+OFFSET_CASE(PenultBeforePunctumWide); // 2
+OFFSET_CASE(PenultBeforeDeminutus); // 3
+OFFSET_CASE(AntepenultBeforePunctum); // 4
+OFFSET_CASE(AntepenultBeforeDeminutus); // 5
+OFFSET_CASE(InitialPunctum); // 6
+OFFSET_CASE(InitioDebilis); // 7
+OFFSET_CASE(PorrNonAuctusInitialWide); // 8
+OFFSET_CASE(PorrNonAuctusInitialOne); // 9
+OFFSET_CASE(PorrAuctusInitialAny); // 10
+OFFSET_CASE(FinalInclinatum); // 12
+OFFSET_CASE(FinalInclinatumDeminutus); // 13
+OFFSET_CASE(FinalStropha); // 14
+OFFSET_CASE(FinalQuilisma); // 15
+OFFSET_CASE(FinalOriscus); // 16
+OFFSET_CASE(PenultBeforePunctumOne); // 17
+OFFSET_CASE(FinalUpperPunctum); // 18
+OFFSET_CASE(InitialOriscus); // 19
+OFFSET_CASE(InitialQuilisma); // 20
+OFFSET_CASE(TorcResNonAuctusSecondWideWide); // 21
+OFFSET_CASE(TorcResNonAuctusSecondOneWide); // 22
+OFFSET_CASE(TorcResDebilisNonAuctusSecondAnyWide); // 23
+OFFSET_CASE(FinalLineaPunctum); // 24
+OFFSET_CASE(TorcResQuilismaNonAuctusSecondWideWide); // 28
+OFFSET_CASE(TorcResOriscusNonAuctusSecondWideWide); // 29
+OFFSET_CASE(TorcResQuilismaNonAuctusSecondOneWide); // 30
+OFFSET_CASE(TorcResOriscusNonAuctusSecondOneWide); // 31
+OFFSET_CASE(TorcResNonAuctusSecondWideOne); // 32
+OFFSET_CASE(TorcResDebilisNonAuctusSecondAnyOne); // 33
+OFFSET_CASE(TorcResQuilismaNonAuctusSecondWideOne); // 34
+OFFSET_CASE(TorcResOriscusNonAuctusSecondWideOne); // 35
+OFFSET_CASE(TorcResNonAuctusSecondOneOne); // 36
+OFFSET_CASE(TorcResQuilismaNonAuctusSecondOneOne); // 37
+OFFSET_CASE(TorcResOriscusNonAuctusSecondOneOne); // 38
+OFFSET_CASE(TorcResAuctusSecondWideAny); // 39
+OFFSET_CASE(TorcResDebilisAuctusSecondAnyAny); // 40
+OFFSET_CASE(TorcResQuilismaAuctusSecondWideAny); // 41
+OFFSET_CASE(TorcResOriscusAuctusSecondWideAny); // 42
+OFFSET_CASE(TorcResAuctusSecondOneAny); // 43
+OFFSET_CASE(TorcResQuilismaAuctusSecondOneAny); // 44
+OFFSET_CASE(TorcResOriscusAuctusSecondOneAny); // 45
+OFFSET_CASE(ConnectedPenultBeforePunctumWide); // 46
+OFFSET_CASE(ConnectedPenultBeforePunctumOne); // 47
+OFFSET_CASE(InitialConnectedPunctum); // 48
+OFFSET_CASE(InitialConnectedVirga); // 49
+OFFSET_CASE(InitialConnectedQuilisma); // 50
+OFFSET_CASE(InitialConnectedOriscus); // 51
+OFFSET_CASE(FinalConnectedPunctum); // 52
+OFFSET_CASE(FinalConnectedAuctus); // 53
+OFFSET_CASE(FinalVirgaAuctus); // 54
+OFFSET_CASE(FinalConnectedVirga); // 55
+OFFSET_CASE(InitialVirga); // 56
+
+static inline const char *note_before_last_note_case(
         const gregorio_glyph *const current_glyph,
         const gregorio_note *const current_note)
 {
     if ((current_glyph->u.notes.liquescentia == L_DEMINUTUS_INITIO_DEBILIS
                     || current_glyph->u.notes.liquescentia == L_DEMINUTUS)
             && current_note->next) {
-        return 3;
+        return PenultBeforeDeminutus;
     } else {
         if ((current_note->u.note.pitch - current_note->next->u.note.pitch) == 1
                 || (current_note->u.note.pitch -
                         current_note->next->u.note.pitch) == -1) {
             if (!current_note->previous || current_note->u.note.pitch -
                     current_note->previous->u.note.pitch > 1) {
-                return 47;
+                return ConnectedPenultBeforePunctumOne;
             } else {
-                return 17;
+                return PenultBeforePunctumOne;
             }
         } else {
             if (!current_note->previous || current_note->u.note.pitch -
                     current_note->previous->u.note.pitch > 1) {
-                return 46;
+                return ConnectedPenultBeforePunctumWide;
             } else {
-                return 2;
+                return PenultBeforePunctumWide;
             }
         }
     }
 }
 
-// num can be 0 or 18 according if the last note is a standard punctum or a
-// smaller punctum (for pes, porrectus and torculus resupinus
-static inline char number_last_note(const gregorio_glyph *const current_glyph,
-        char num, gregorio_note *current_note, bool no_ambitus_one)
+// num can be FinalPunctum or FinalUpperPunctum according if the last note is a
+// standard punctum or a smaller punctum (for pes, porrectus and torculus
+// resupinus
+static inline const char *last_note_case(
+        const gregorio_glyph *const current_glyph, const char* offset_pos,
+        gregorio_note *current_note, bool no_ambitus_one)
 {
     if (current_glyph->u.notes.liquescentia & L_DEMINUTUS) {
         /*
          * may seem strange, but it is unlogical to typeset a small horizontal
          * episemus at the end of a flexus deminutus 
          */
-        return 1;
+        return FinalDeminutus;
     }
-    if (!current_note->previous || (!no_ambitus_one && (num == 18
+    if (!current_note->previous
+            || (!no_ambitus_one && (offset_pos == FinalUpperPunctum
                     || current_note->previous->u.note.pitch -
             current_note->u.note.pitch == 1 ||
-            current_note->u.note.pitch - current_note->previous->u.note.pitch == 1))) {
-        return num;
+            current_note->u.note.pitch - current_note->previous->u.note.pitch
+            == 1))) {
+        return offset_pos;
     }
     if (current_note->previous->u.note.pitch < current_note->u.note.pitch) {
         if (current_glyph->u.notes.liquescentia &
                 (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
-            return 53;
+            return FinalConnectedAuctus;
         } else {
-            return 55;
+            return FinalConnectedVirga;
         }
     } else {
-        return 52;
+        return FinalConnectedPunctum;
     }
 }
 
-static inline char number_first_note(const gregorio_note *const current_note,
+static inline const char *first_note_case(
+        const gregorio_note *const current_note,
         const gregorio_glyph *const current_glyph)
 {
     bool ambitus_one = true;
     if (current_glyph->u.notes.liquescentia >= L_INITIO_DEBILIS) {
-        return 7;
+        return InitioDebilis;
     } else {
         if (current_note->next && current_note->next->u.note.pitch -
                 current_note->u.note.pitch != 1 &&
-                current_note->u.note.pitch - current_note->next->u.note.pitch != 1) {
+                current_note->u.note.pitch - current_note->next->u.note.pitch
+                != 1) {
             ambitus_one = false;
         }
         if (current_note->u.note.shape == S_ORISCUS) {
-            return ambitus_one ? 19 : 51;
+            return ambitus_one ? InitialOriscus : InitialConnectedOriscus;
         }
         if (current_note->u.note.shape == S_QUILISMA) {
-            return ambitus_one ? 20 : 50;
+            return ambitus_one ? InitialQuilisma : InitialConnectedQuilisma;
         }
         if (ambitus_one) {
-            return 6;
+            return InitialPunctum;
         }
         if (current_note->u.note.shape > current_note->next->u.note.shape) {
-            return 49;
+            return InitialConnectedVirga;
         } else {
-            return 48;
+            return InitialConnectedPunctum;
         }
     }
 }
@@ -207,30 +273,67 @@ static inline void high_low_set_lower(const gregorio_glyph *const glyph,
  * For the first note of a porrectus (flexus), this table summarizes the sign
  * number (amb2 is the ambitus after the diagonal stroke):
  *
- *  Porrectus  | Porrectus  | Porrectus | Porrectus
- *  non-auctus | non-auctus | auctus    | Flexus
- *  amb2=1     | amb2>1     |           |
- * ------------+------------+-----------+-----------
- *  9          | 8          | 10        | 10
+ *  Porrectus       | Porrectus       | Porrectus    | Porrectus
+ *  non-auctus      | non-auctus      | auctus       | Flexus
+ *  amb2=1          | amb2>1          |              |
+ * =================|=================|==============|==============
+ *  PorrNonAuctus   | PorrNonAuctus   | PorrAuctus   | PorrAuctus
+ *   ~InitialOne    |  ~InitialWide   |  ~InitialAny |  ~InitialAny
  *
  * For the second note of a torculus resupinus (flexus), this table summarizes
  * the number (amb1 is the ambitus before the diagonal stroke and amb2 is the
  * ambitus after the diagonal stroke):
  *
- *                      | Torculus   | Torculus   | Torculus  | Torculus
- *                      | Resupinus  | Resupinus  | Resupinus | Resupinus
- *                      | non-auctus | non-auctus | auctus    | Flexus
- *                      | amb2=1     | amb2>1     |           |
- * --------+------------+------------+------------+-----------+-----------
- *  amb1=1 | Punctum    | 36         | 22         | 43        | 43
- *  amb1=1 | I. Debilis | 33         | 23         | 40        | 40
- *  amb1=1 | Quilisma   | 37         | 30         | 44        | 44
- *  amb1=1 | Oriscus    | 38         | 31         | 45        | 45
- * --------+------------+------------+------------+-----------+-----------
- *  amb1>1 | Punctum    | 32         | 21         | 39        | 39
- *  amb1>1 | I. Debilis | 33         | 23         | 40        | 40
- *  amb1>1 | Quilisma   | 34         | 28         | 41        | 41
- *  amb1>1 | Oriscus    | 35         | 29         | 42        | 42
+ *       |            | Torculus    | Torculus    | Torculus   | Torculus
+ *       |            | Resupinus   | Resupinus   | Resupinus  | Resupinus
+ *       | Initial    | non-auctus  | non-auctus  | auctus     | Flexus
+ *  amb1 | Note       | amb2=1      | amb2>1      |            |
+ * ======|============|=============|=============|============|============
+ *  1    | Punctum    | TorcRes     | TorcRes     | TorcRes    | TorcRes
+ *       |            |  ~NonAuctus |  ~NonAuctus |  ~Auctus   |  ~Auctus
+ *       |            |  ~Second    |  ~Second    |  ~Second   |  ~Second
+ *       |            |  ~OneOne    |  ~OneWide   |  ~OneAny   |  ~OneAny
+ * ------+------------+-------------+-------------+------------+------------
+ *  1    | I. Debilis | TorcRes     | TorcRes     | TorcRes    | TorcRes
+ *       |            |  ~Debilis   |  ~Debilis   |  ~Debilis  |  ~Debilis
+ *       |            |  ~NonAuctus |  ~NonAuctus |  ~Auctus   |  ~Auctus
+ *       |            |  ~Second    |  ~Second    |  ~Second   |  ~Second
+ *       |            |  ~AnyOne    |  ~AnyWide   |  ~AnyAny   |  ~AnyAny
+ * ------+------------+-------------+-------------+------------+------------
+ *  1    | Quilisma   | TorcRes     | TorcRes     | TorcRes    | TorcRes
+ *       |            |  ~Quilisma  |  ~Quilisma  |  ~Quilisma |  ~Quilisma
+ *       |            |  ~NonAuctus |  ~NonAuctus |  ~Auctus   |  ~Auctus
+ *       |            |  ~Second    |  ~Second    |  ~Second   |  ~Second
+ *       |            |  ~OneOne    |  ~OneWide   |  ~OneAny   |  ~OneAny
+ * ------+------------+-------------+-------------+------------+------------
+ *  1    | Oriscus    | TorcRes     | TorcRes     | TorcRes    | TorcRes
+ *       |            |  ~Oriscus   |  ~Oriscus   |  ~Oriscus  |  ~Oriscus
+ *       |            |  ~NonAuctus |  ~NonAuctus |  ~Auctus   |  ~Auctus
+ *       |            |  ~Second    |  ~Second    |  ~Second   |  ~Second
+ *       |            |  ~OneOne    |  ~OneWide   |  ~OneAny   |  ~OneAny
+ * ======|============|=============|=============|============|============
+ *  >1   | Punctum    | TorcRes     | TorcRes     | TorcRes    | TorcRes
+ *       |            |  ~NonAuctus |  ~NonAuctus |  ~Auctus   |  ~Auctus
+ *       |            |  ~Second    |  ~Second    |  ~Second   |  ~Second
+ *       |            |  ~WideOne   |  ~WideWide  |  ~WideAny  |  ~WideAny
+ * ------+------------+-------------+-------------+------------+------------
+ *  >1   | I. Debilis | TorcRes     | TorcRes     | TorcRes    | TorcRes
+ *       |            |  ~Debilis   |  ~Debilis   |  ~Debilis  |  ~Debilis
+ *       |            |  ~NonAuctus |  ~NonAuctus |  ~Auctus   |  ~Auctus
+ *       |            |  ~Second    |  ~Second    |  ~Second   |  ~Second
+ *       |            |  ~AnyOne    |  ~AnyWide   |  ~AnyAny   |  ~AnyAny
+ * ------+------------+-------------+-------------+------------+------------
+ *  >1   | Quilisma   | TorcRes     | TorcRes     | TorcRes    | TorcRes
+ *       |            |  ~Quilisma  |  ~Quilisma  |  ~Quilisma |  ~Quilisma
+ *       |            |  ~NonAuctus |  ~NonAuctus |  ~Auctus   |  ~Auctus
+ *       |            |  ~Second    |  ~Second    |  ~Second   |  ~Second
+ *       |            |  ~WideOne   |  ~WideWide  |  ~WideAny  |  ~WideAny
+ * ------+------------+-------------+-------------+------------+------------
+ *  >1   | Oriscus    | TorcRes     | TorcRes     | TorcRes    | TorcRes
+ *       |            |  ~Oriscus   |  ~Oriscus   |  ~Oriscus  |  ~Oriscus
+ *       |            |  ~NonAuctus |  ~NonAuctus |  ~Auctus   |  ~Auctus
+ *       |            |  ~Second    |  ~Second    |  ~Second   |  ~Second
+ *       |            |  ~WideOne   |  ~WideWide  |  ~WideAny  |  ~WideAny
  *
  */
 static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
@@ -249,14 +352,14 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
          */
         if (i == 1) {
             if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
-                note->gtex_offset_case = 7;
+                note->gtex_offset_case = InitioDebilis;
                 h_episemus = above_if_h_episemus(note->next);
             } else {
                 note->is_lower_note = true;
                 if (note->u.note.shape == S_QUILISMA) {
-                    note->gtex_offset_case = 15;
+                    note->gtex_offset_case = FinalQuilisma;
                 } else {
-                    note->gtex_offset_case = 0;
+                    note->gtex_offset_case = FinalPunctum;
                 }
                 h_episemus = above_if_auctus(glyph);
             }
@@ -266,9 +369,9 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                 note->is_upper_note = true;
             }
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
-                note->gtex_offset_case = 1;
+                note->gtex_offset_case = FinalDeminutus;
             } else {
-                note->gtex_offset_case = 18;
+                note->gtex_offset_case = FinalUpperPunctum;
             }
             h_episemus = VPOS_ABOVE;
             v_episemus = below_if_auctus(glyph);
@@ -278,14 +381,15 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
     case T_PESQUASSUS:
     case T_PESQUILISMAQUADRATUM:
         if (i == 1) {
-            note->gtex_offset_case = number_first_note(note, glyph);
+            note->gtex_offset_case = first_note_case(note, glyph);
             h_episemus = above_if_h_episemus(note->next);
             v_episemus = VPOS_BELOW;
         } else { // i=2
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
-                note->gtex_offset_case = 7;
+                note->gtex_offset_case = InitioDebilis;
             } else {
-                note->gtex_offset_case = number_last_note(glyph, 0, note, true);
+                note->gtex_offset_case = last_note_case(glyph, FinalPunctum,
+                        note, true);
             }
             h_episemus = VPOS_ABOVE;
             v_episemus = VPOS_BELOW;
@@ -297,13 +401,13 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         if (i == 1) {
             high_low_set_upper(glyph, note);
             if (type == T_FLEXUS_ORISCUS) {
-                note->gtex_offset_case = 51;
+                note->gtex_offset_case = InitialConnectedOriscus;
             } else {
                 if (note->next && note->u.note.pitch - 
                         note->next->u.note.pitch == 1) {
-                    note->gtex_offset_case = 56;
+                    note->gtex_offset_case = InitialVirga;
                 } else {
-                    note->gtex_offset_case = 49;
+                    note->gtex_offset_case = InitialConnectedVirga;
                 }
             }
             h_episemus = VPOS_ABOVE;
@@ -314,7 +418,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             }
         } else { // i=2
             high_low_set_lower(glyph, note);
-            note->gtex_offset_case = number_last_note(glyph, 0, note, false);
+            note->gtex_offset_case = last_note_case(glyph, FinalPunctum, note,
+                    false);
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
                 h_episemus = VPOS_BELOW;
             } else {
@@ -327,37 +432,41 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         done = true;
         switch (i) {
         case 1:
-            note->gtex_offset_case = number_first_note(note, glyph);
+            note->gtex_offset_case = first_note_case(note, glyph);
             h_episemus = above_if_h_episemus(note->next);
             v_episemus = VPOS_BELOW;
             break;
         case HEPISEMUS_FIRST_TWO:
         case 2:
             if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
-                note->gtex_offset_case = 40;
+                note->gtex_offset_case = TorcResDebilisAuctusSecondAnyAny;
             } else {
                 if (note->u.note.pitch - note->previous->u.note.pitch == 1) {
                     switch (note->previous->u.note.shape) {
                     case S_QUILISMA:
-                        note->gtex_offset_case = 44;
+                        note->gtex_offset_case =
+                                TorcResQuilismaAuctusSecondOneAny;
                         break;
                     case S_ORISCUS:
-                        note->gtex_offset_case = 45;
+                        note->gtex_offset_case =
+                                TorcResOriscusAuctusSecondOneAny;
                         break;
                     default:
-                        note->gtex_offset_case = 43;
+                        note->gtex_offset_case = TorcResAuctusSecondOneAny;
                         break;
                     }
                 } else {
                     switch (note->previous->u.note.shape) {
                     case S_QUILISMA:
-                        note->gtex_offset_case = 41;
+                        note->gtex_offset_case =
+                                TorcResQuilismaAuctusSecondWideAny;
                         break;
                     case S_ORISCUS:
-                        note->gtex_offset_case = 42;
+                        note->gtex_offset_case =
+                                TorcResOriscusAuctusSecondWideAny;
                         break;
                     default:
-                        note->gtex_offset_case = 39;
+                        note->gtex_offset_case = TorcResAuctusSecondWideAny;
                         break;
                     }
                 }
@@ -380,16 +489,16 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         switch (i) {
         case HEPISEMUS_FIRST_TWO:
         case 1:
-            note->gtex_offset_case = 10;
+            note->gtex_offset_case = PorrAuctusInitialAny;
             h_episemus = VPOS_ABOVE;
             v_episemus = VPOS_BELOW;
             v_episemus_below_is_lower = true;
             break;
         case 2:
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
-                note->gtex_offset_case = 5;
+                note->gtex_offset_case = AntepenultBeforeDeminutus;
             } else {
-                note->gtex_offset_case = 4;
+                note->gtex_offset_case = AntepenultBeforePunctum;
             }
             h_episemus = above_if_either_h_episemus(note);
             v_episemus = VPOS_BELOW;
@@ -399,16 +508,17 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             h_episemus = VPOS_ABOVE;
             if ((glyph->u.notes.liquescentia & L_DEMINUTUS) && note->next) {
                 v_episemus = below_if_next_ambitus_allows(note);
-                note->gtex_offset_case = 3;
+                note->gtex_offset_case = PenultBeforeDeminutus;
             } else {
                 v_episemus = VPOS_BELOW;
-                note->gtex_offset_case = number_note_before_last_note(glyph,
+                note->gtex_offset_case = note_before_last_note_case(glyph,
                         note);
             }
             break;
         default:
             high_low_set_lower(glyph, note);
-            note->gtex_offset_case = number_last_note(glyph, 0, note, false);
+            note->gtex_offset_case = last_note_case(glyph, FinalPunctum, note,
+                    false);
             h_episemus = above_if_h_episemus(note->previous);
             v_episemus = VPOS_BELOW;
             break;
@@ -418,7 +528,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         done = true;
         switch (i) {
         case 1:
-            note->gtex_offset_case = number_first_note(note, glyph);
+            note->gtex_offset_case = first_note_case(note, glyph);
             h_episemus = above_if_h_episemus(note->next);
             v_episemus = VPOS_BELOW;
             break;
@@ -428,31 +538,35 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                     (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
                 // auctus
                 if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
-                    note->gtex_offset_case = 40;
+                    note->gtex_offset_case = TorcResDebilisAuctusSecondAnyAny;
                 } else {
                     if (note->u.note.pitch -
                             note->previous->u.note.pitch == 1) {
                         switch (note->previous->u.note.shape) {
                         case S_QUILISMA:
-                            note->gtex_offset_case = 44;
+                            note->gtex_offset_case =
+                                    TorcResQuilismaAuctusSecondOneAny;
                             break;
                         case S_ORISCUS:
-                            note->gtex_offset_case = 45;
+                            note->gtex_offset_case =
+                                    TorcResOriscusAuctusSecondOneAny;
                             break;
                         default:
-                            note->gtex_offset_case = 43;
+                            note->gtex_offset_case = TorcResAuctusSecondOneAny;
                             break;
                         }
                     } else {
                         switch (note->previous->u.note.shape) {
                         case S_QUILISMA:
-                            note->gtex_offset_case = 41;
+                            note->gtex_offset_case =
+                                    TorcResQuilismaAuctusSecondWideAny;
                             break;
                         case S_ORISCUS:
-                            note->gtex_offset_case = 42;
+                            note->gtex_offset_case =
+                                    TorcResOriscusAuctusSecondWideAny;
                             break;
                         default:
-                            note->gtex_offset_case = 39;
+                            note->gtex_offset_case = TorcResAuctusSecondWideAny;
                             break;
                         }
                     }
@@ -461,31 +575,38 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                     note->next->u.note.pitch == 1) {
                 // non-auctus with a second ambitus of 1
                 if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
-                    note->gtex_offset_case = 33;
+                    note->gtex_offset_case =
+                            TorcResDebilisNonAuctusSecondAnyOne;
                 } else {
                     if (note->u.note.pitch -
                             note->previous->u.note.pitch == 1) {
                         switch (note->previous->u.note.shape) {
                         case S_QUILISMA:
-                            note->gtex_offset_case = 34;
+                            note->gtex_offset_case =
+                                    TorcResQuilismaNonAuctusSecondOneOne;
                             break;
                         case S_ORISCUS:
-                            note->gtex_offset_case = 35;
+                            note->gtex_offset_case =
+                                    TorcResOriscusNonAuctusSecondOneOne;
                             break;
                         default:
-                            note->gtex_offset_case = 32;
+                            note->gtex_offset_case =
+                                    TorcResNonAuctusSecondOneOne;
                             break;
                         }
                     } else {
                         switch (note->previous->u.note.shape) {
                         case S_QUILISMA:
-                            note->gtex_offset_case = 37;
+                            note->gtex_offset_case =
+                                    TorcResQuilismaNonAuctusSecondWideOne;
                             break;
                         case S_ORISCUS:
-                            note->gtex_offset_case = 38;
+                            note->gtex_offset_case =
+                                    TorcResOriscusNonAuctusSecondWideOne;
                             break;
                         default:
-                            note->gtex_offset_case = 36;
+                            note->gtex_offset_case =
+                                    TorcResNonAuctusSecondWideOne;
                             break;
                         }
                     }
@@ -493,31 +614,38 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             } else {
                 // non-auctus with a second ambitus of at least 2
                 if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
-                    note->gtex_offset_case = 23;
+                    note->gtex_offset_case =
+                            TorcResDebilisNonAuctusSecondAnyWide;
                 } else {
                     if (note->u.note.pitch -
                             note->previous->u.note.pitch == 1) {
                         switch (note->previous->u.note.shape) {
                         case S_QUILISMA:
-                            note->gtex_offset_case = 28;
+                            note->gtex_offset_case =
+                                    TorcResQuilismaNonAuctusSecondOneWide;
                             break;
                         case S_ORISCUS:
-                            note->gtex_offset_case = 29;
+                            note->gtex_offset_case =
+                                    TorcResOriscusNonAuctusSecondOneWide;
                             break;
                         default:
-                            note->gtex_offset_case = 21;
+                            note->gtex_offset_case =
+                                    TorcResNonAuctusSecondOneWide;
                             break;
                         }
                     } else {
                         switch (note->previous->u.note.shape) {
                         case S_QUILISMA:
-                            note->gtex_offset_case = 30;
+                            note->gtex_offset_case =
+                                    TorcResQuilismaNonAuctusSecondWideWide;
                             break;
                         case S_ORISCUS:
-                            note->gtex_offset_case = 31;
+                            note->gtex_offset_case =
+                                    TorcResOriscusNonAuctusSecondWideWide;
                             break;
                         default:
-                            note->gtex_offset_case = 22;
+                            note->gtex_offset_case =
+                                    TorcResNonAuctusSecondWideWide;
                             break;
                         }
                     }
@@ -544,14 +672,14 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             if (glyph->u.notes.liquescentia &
                     (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
                 // auctus
-                note->gtex_offset_case = 10;
+                note->gtex_offset_case = PorrAuctusInitialAny;
             } else if (note->next->next->u.note.pitch -
                     note->next->u.note.pitch == 1) {
                 // non-auctus with a second ambitus of 1
-                note->gtex_offset_case = 9;
+                note->gtex_offset_case = PorrNonAuctusInitialOne;
             } else {
                 // non-auctus with a second ambitus of at least 2
-                note->gtex_offset_case = 8;
+                note->gtex_offset_case = PorrNonAuctusInitialWide;
             }
             h_episemus = VPOS_ABOVE;
             v_episemus = VPOS_BELOW;
@@ -560,19 +688,20 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         case 2:
             low_high_set_lower(glyph, note);
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
-                note->gtex_offset_case = 3;
+                note->gtex_offset_case = PenultBeforeDeminutus;
             } else if (glyph->u.notes.liquescentia
                     & (L_AUCTUS_ASCENDENS|L_AUCTUS_DESCENDENS|L_AUCTA)) {
-                note->gtex_offset_case = 2;
+                note->gtex_offset_case = PenultBeforePunctumWide;
             } else {
-                note->gtex_offset_case = 0;
+                note->gtex_offset_case = FinalPunctum;
             }
             h_episemus = above_if_h_episemus(note->previous);
             v_episemus = VPOS_BELOW;
             break;
         default: // case 3
             low_high_set_upper(glyph, note);
-            note->gtex_offset_case = number_last_note(glyph, 18, note, true);
+            note->gtex_offset_case = last_note_case(glyph, FinalUpperPunctum,
+                    note, true);
             h_episemus = VPOS_ABOVE;
             v_episemus = below_if_auctus(glyph);
             break;
@@ -581,19 +710,20 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
     case T_SCANDICUS:
         switch (i) {
         case 1:
-            note->gtex_offset_case = number_first_note(note, glyph);
+            note->gtex_offset_case = first_note_case(note, glyph);
             h_episemus = VPOS_BELOW;
             v_episemus = VPOS_BELOW;
             break;
         case 2:
             low_high_set_lower(glyph, note);
-            note->gtex_offset_case = number_note_before_last_note(glyph, note);
+            note->gtex_offset_case = note_before_last_note_case(glyph, note);
             h_episemus = VPOS_BELOW;
             v_episemus = VPOS_BELOW;
             break;
         default:
             low_high_set_upper(glyph, note);
-            note->gtex_offset_case = number_last_note(glyph, 0, note, true);
+            note->gtex_offset_case = last_note_case(glyph, FinalPunctum, note,
+                    true);
             h_episemus = VPOS_ABOVE;
             v_episemus = VPOS_BELOW;
             break;
@@ -603,24 +733,26 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
     case T_ANCUS_LONGQUEUE:
         switch (i) {
         case 1:
-            note->gtex_offset_case = number_first_note(note, glyph);
+            note->gtex_offset_case = first_note_case(note, glyph);
             h_episemus = above_if_h_episemus(note->next);
             v_episemus = VPOS_BELOW;
             break;
         case 2:
-            note->gtex_offset_case = number_note_before_last_note(glyph, note);
+            note->gtex_offset_case = note_before_last_note_case(glyph, note);
             h_episemus = VPOS_ABOVE;
             v_episemus = VPOS_BELOW;
             break;
         case 3:
             note->is_upper_note = true;
-            note->gtex_offset_case = number_last_note(glyph, 0, note, false);
+            note->gtex_offset_case = last_note_case(glyph, FinalPunctum, note,
+                    false);
             h_episemus = VPOS_ABOVE;
             v_episemus = VPOS_BELOW;
             break;
         default:
             note->is_lower_note = true;
-            note->gtex_offset_case = number_last_note(glyph, 0, note, false);
+            note->gtex_offset_case = last_note_case(glyph, FinalPunctum, note,
+                    false);
             h_episemus = VPOS_BELOW;
             v_episemus = VPOS_BELOW;
             break;
@@ -629,13 +761,13 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
     case T_TORCULUS:
         switch (i) {
         case 1:
-            note->gtex_offset_case = number_first_note(note, glyph);
+            note->gtex_offset_case = first_note_case(note, glyph);
             h_episemus = above_if_h_episemus(note->next);
             v_episemus = VPOS_BELOW;
             break;
         case 2:
             high_low_set_upper(glyph, note);
-            note->gtex_offset_case = number_note_before_last_note(glyph, note);
+            note->gtex_offset_case = note_before_last_note_case(glyph, note);
             h_episemus = VPOS_ABOVE;
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
                 v_episemus = below_if_next_ambitus_allows(note);
@@ -645,7 +777,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             break;
         default:
             high_low_set_lower(glyph, note);
-            note->gtex_offset_case = number_last_note(glyph, 0, note, false);
+            note->gtex_offset_case = last_note_case(glyph, FinalPunctum, note,
+                    false);
             h_episemus = above_if_h_episemus(note->previous);
             v_episemus = VPOS_BELOW;
             break;
@@ -656,42 +789,43 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         v_episemus = VPOS_BELOW;
         switch (note->u.note.shape) {
         case S_PUNCTUM_INCLINATUM_DEMINUTUS:
-            note->gtex_offset_case = 13;
+            note->gtex_offset_case = FinalInclinatumDeminutus;
             break;
         case S_PUNCTUM_INCLINATUM_AUCTUS:
         case S_PUNCTUM_INCLINATUM:
-            note->gtex_offset_case = 12;
+            note->gtex_offset_case = FinalInclinatum;
             break;
         case S_STROPHA:
-            note->gtex_offset_case = 14;
+            note->gtex_offset_case = FinalStropha;
             break;
         case S_QUILISMA:
-            note->gtex_offset_case = 15;
+            note->gtex_offset_case = FinalQuilisma;
             break;
         case S_ORISCUS:
         case S_ORISCUS_AUCTUS:
         case S_ORISCUS_DEMINUTUS:
-            note->gtex_offset_case = 16;
+            note->gtex_offset_case = FinalOriscus;
             break;
         case S_VIRGA:
-            note->gtex_offset_case = 56;
+            note->gtex_offset_case = InitialVirga;
             break;
         case S_VIRGA_REVERSA:
             if (glyph->u.notes.liquescentia == L_AUCTUS_DESCENDENS) {
-                note->gtex_offset_case = 54;
+                note->gtex_offset_case = FinalVirgaAuctus;
             } else {
-                note->gtex_offset_case = 56;
+                note->gtex_offset_case = InitialVirga;
             }
             break;
         case S_LINEA_PUNCTUM:
         case S_LINEA_PUNCTUM_CAVUM:
-            note->gtex_offset_case = 24;
+            note->gtex_offset_case = FinalLineaPunctum;
             break;
         case S_LINEA:
-            note->gtex_offset_case = 0;
+            note->gtex_offset_case = FinalPunctum;
             break;
         default:
-            note->gtex_offset_case = number_last_note(glyph, 0, note, true);
+            note->gtex_offset_case = last_note_case(glyph, FinalPunctum, note,
+                    true);
             break;
         }
         break;
