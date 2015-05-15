@@ -20,6 +20,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
@@ -644,11 +645,11 @@ static const char *dump_special_sign(gregorio_sign special_sign)
     case _V_EPISEMUS:
         str = "_V_EPISEMUS";
         break;
-    case _V_EPISEMUS_H_EPISEMUS:
-        str = "_V_EPISEMUS_H_EPISEMUS";
+    case _V_EPISEMUS_BAR_H_EPISEMUS:
+        str = "_V_EPISEMUS_BAR_H_EPISEMUS";
         break;
-    case _H_EPISEMUS:
-        str = "_H_EPISEMUS";
+    case _BAR_H_EPISEMUS:
+        str = "_BAR_H_EPISEMUS";
         break;
     default:
         str = "unknown";
@@ -657,39 +658,31 @@ static const char *dump_special_sign(gregorio_sign special_sign)
     return str;
 }
 
-static const char *dump_h_episemus_type(gregorio_h_episemus h_episemus_type)
+static const char *dump_h_episemus_size(grehepisemus_size size)
 {
     const char *str;
-    switch (h_episemus_type) {
-    case H_NO_EPISEMUS:
-        str = "H_NO_EPISEMUS";
+    switch (size) {
+    case H_NORMAL:
+        str = "H_NORMAL";
         break;
-    case H_ONE:
-        str = "H_ONE";
+    case H_SMALL_LEFT:
+        str = "H_SMALL_LEFT";
         break;
-    case H_ALONE:
-        str = "H_ALONE";
+    case H_SMALL_CENTRE:
+        str = "H_SMALL_CENTRE";
         break;
-    case H_MULTI:
-        str = "H_MULTI";
-        break;
-    case H_MULTI_BEGINNING:
-        str = "H_MULTI_BEGINNING";
-        break;
-    case H_MULTI_MIDDLE:
-        str = "H_MULTI_MIDDLE";
-        break;
-    case H_MULTI_END:
-        str = "H_MULTI_END";
-        break;
-    case H_UNDETERMINED:
-        str = "H_UNDETERMINED";
+    case H_SMALL_RIGHT:
+        str = "H_SMALL_RIGHT";
         break;
     default:
         str = "unknown";
         break;
     }
     return str;
+}
+
+static const char *dump_bool(bool value) {
+    return value? "true" : "false";
 }
 
 void dump_write_score(FILE *f, gregorio_score *score)
@@ -944,7 +937,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 }
                 break;
             case GRE_ELEMENT:
-                for (gregorio_glyph *glyph = element->u.glyphs.first_glyph;
+                for (gregorio_glyph *glyph = element->u.first_glyph;
                         glyph; glyph = glyph->next) {
                     fprintf(f, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
                     if (glyph->type) {
@@ -1049,23 +1042,29 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                         note->special_sign,
                                         dump_special_sign(note->special_sign));
                             }
-                            if (note->h_episemus_type) {
-                                fprintf(f, "         h_episemus_type        %d (",
-                                        note->h_episemus_type);
-                                fprintf(f, "%s", dump_h_episemus_type(
-                                            simple_htype (note->h_episemus_type)));
-                                if (has_bottom(note->h_episemus_type)) {
-                                    fprintf(f, " & H_BOTTOM");
+                            if (note->h_episemus_above == HEPISEMUS_AUTO
+                                    && note->h_episemus_below == HEPISEMUS_AUTO) {
+                                fprintf(f, "         auto hepisemus size    %d (%s)\n",
+                                        note->h_episemus_above_size,
+                                        dump_h_episemus_size(note->h_episemus_above_size));
+                                fprintf(f, "         auto hepisemus bridge  %s\n",
+                                        dump_bool(note->h_episemus_above_connect));
+                            }
+                            else {
+                                if (note->h_episemus_above == HEPISEMUS_FORCED) {
+                                    fprintf(f, "         above hepisemus size   %d (%s)\n",
+                                            note->h_episemus_above_size,
+                                            dump_h_episemus_size(note->h_episemus_above_size));
+                                    fprintf(f, "         above hepisemus bridge %s\n",
+                                            dump_bool(note->h_episemus_above_connect));
                                 }
-                                fprintf(f, ")\n");
-                            }
-                            if (note->h_episemus_top_note) {
-                                fprintf(f, "         h_episemus_top_note    %c\n",
-                                        note->h_episemus_top_note);
-                            }
-                            if (note->h_episemus_bottom_note) {
-                                fprintf(f, "         h_episemus_bottom_note %c\n",
-                                        note->h_episemus_bottom_note);
+                                if (note->h_episemus_below == HEPISEMUS_FORCED) {
+                                    fprintf(f, "         below hepisemus size   %d (%s)\n",
+                                            note->h_episemus_below_size,
+                                            dump_h_episemus_size(note->h_episemus_below_size));
+                                    fprintf(f, "         below hepisemus bridge %s\n",
+                                            dump_bool(note->h_episemus_below_connect));
+                                }
                             }
                         }
                     }
@@ -1077,7 +1076,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
                         (int)element->nabc_lines);
             }
             if (element->nabc_lines && element->nabc) {
-                for (i = 0; i < element->nabc_lines; i++) {
+                for (i = 0; i < (int)element->nabc_lines; i++) {
                     if (element->nabc[i]) {
                         fprintf(f, "     nabc_line %d             \"%s\"\n",
                                 (int)(i+1), element->nabc[i]);

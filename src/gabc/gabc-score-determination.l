@@ -30,6 +30,8 @@
 #include "gabc-score-determination-y.h"
 
 static unsigned char style_stack = 0;
+
+#define YY_NO_INPUT
 %}
 
 %x attribute
@@ -54,7 +56,6 @@ static unsigned char style_stack = 0;
 %option nonever-interactive
 %option prefix="gabc_score_determination_"
 %option noyywrap
-%option bison-bridge
 %option 8bit
 
 

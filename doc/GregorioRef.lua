@@ -35,14 +35,11 @@ local EXCLUDE = {
   PunctumLineTR = true,
   PunctumSmall = true,
   FlexusNobar = true,
-  HEpisemusPunctumAuctusLineBL = true,
-  HEpisemusPunctumLineBL = true,
-  HEpisemusPunctumLineBLBR = true,
-  HEpisemusPunctumLineBR = true,
-  HEpisemusPunctumLineTL = true,
-  HEpisemusPunctumLineTR = true,
   FlexusLineBL = true,
   FlexusAmOneLineBL = true,
+  OriscusLineTR = true,
+  QuilismaLineTR = true,
+  VirgaLineBR = true,
 }
 
 local GABC = {
@@ -76,17 +73,6 @@ local GABC = {
   FlexusOriscus = [[goe]],
   FlexusOriscusScapus = [[gOe]],
   FlexusOriscusScapusLongqueue = [[hOf]],
-  HEpisemusDebilis = [[\excluded{-g}\_]],
-  HEpisemusFlexusDeminutus = [[\excluded{ge>}\_\_]],
-  HEpisemusHighPes = [[\excluded{gi}\_]],
-  HEpisemusInclinatum = [[\excluded{G}\_]],
-  HEpisemusInclinatumDeminutus = [[\excluded{G>}\_]],
-  HEpisemusOriscus = [[\excluded{go}\_]],
-  HEpisemusPorrectus = [[\excluded{geg}\_\_\_]],
-  HEpisemusPorrectusFlexus = [[\excluded{gege}\_\_\_\_]],
-  HEpisemusPunctum = [[\excluded{g}\_]],
-  HEpisemusQuilisma = [[\excluded{gw}\_]],
-  HEpisemusStropha = [[\excluded{gs}\_]],
   LeadingOriscus = [[go\excluded{igig}]],
   LeadingPunctum = [[g\excluded{igig}]],
   LeadingQuilisma = [[gw\excluded{igig}]],
@@ -119,6 +105,7 @@ local GABC = {
   PunctumInclinatumAuctus = [[G>]],
   Quilisma = [[gw]],
   RoundBrace = '[ob:1;6mm]',
+  RoundBraceDown = '[ub:1;6mm]',
   Salicus = [[giOk]],
   SalicusLongqueue = [[hjOl]],
   Scandicus = [[gik]],
@@ -168,7 +155,7 @@ function GregorioRef.emit_score_glyphs(cs_greciliae, cs_gregorio, cs_parmesan)
     local glyphs = font.fonts[font.id(csname)].resources.unicodes
     local glyph, cp
     for glyph, cp in pairs(glyphs) do
-      if cp >= 0xe000 and not EXCLUDE[glyph] then
+      if cp >= 0xe000 and not EXCLUDE[glyph] and not glyph:match('^HEpisemus') then
         local name, variant = glyph:match('^([^.]*)(%.%a*)$')
         if name then
           local glyph_variants = variants[name]
@@ -204,11 +191,6 @@ function GregorioRef.emit_score_glyphs(cs_greciliae, cs_gregorio, cs_parmesan)
   local function emit_score_glyph(shape, ambitus, debilis, liquescence)
     local name = shape..ambitus..debilis..liquescence
     local char = common_glyphs[name]
-    if shape:match('^HEpisemus') then
-      -- hack because HEpisemus are not built in thhe same way in gabc
-      shape = shape..liquescence
-      liquescence = ''
-    end
     local gabc = GABC[shape]
     if gabc then
       gabc = '('..DEBILIS[debilis]..gabc..LIQUESCENCE[liquescence]..')'
