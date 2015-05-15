@@ -18,6 +18,9 @@
 AM_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/src/gabc  -I$(top_srcdir)/src/dump  -I$(top_srcdir)/src/gregoriotex
 AM_CFLAGS =
 
+gregorio_CFLAGS = $(KPSE_CFLAGS)
+gregorio_LDADD = $(KPSE_LIBS)
+
 bin_PROGRAMS = gregorio
 gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
 				   unicode.c struct.h messages.h unicode.h characters.h \

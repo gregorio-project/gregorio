@@ -30,6 +30,9 @@
 #include "plugins.h"
 #include "messages.h"
 #include "characters.h"
+#ifdef USE_KPSE
+    #include <kpathsea/kpathsea.h>
+#endif
 
 #ifndef MODULE_PATH_ENV
 #define MODULE_PATH_ENV        "MODULE_PATH"
@@ -200,6 +203,9 @@ int main(int argc, char **argv)
         "Copyright (C) 2006-2015 Gregorio project authors (see CONTRIBUTORS.md)";
     int c;
 
+    #ifdef USE_KPSE
+        kpse_set_program_name("gregorio", "gregorio");
+    #endif
     char *input_file_name = NULL;
     char *output_file_name = NULL;
     char *output_basename = NULL;
@@ -403,6 +409,14 @@ int main(int argc, char **argv)
     if (!output_format) {
         output_format = DEFAULT_OUTPUT_FORMAT;
     }
+
+    #ifdef USE_KPSE
+        if (!kpse_in_name_ok(input_file_name)) {
+            fprintf(stderr, "Error: kpse doesn't allow to read from file  %s\n",
+                    input_file_name);
+        }
+    #endif
+
     // then we act...
 
     if (!output_file_name && !output_file) {
@@ -428,24 +442,24 @@ int main(int argc, char **argv)
                     exit(-1);
                 }
             }
-            check_input_clobber(input_file_name, output_file_name);
-            output_file = fopen(output_file_name, "w");
-            if (!output_file) {
-                fprintf(stderr, "error: can't write in file %s",
-                        output_file_name);
-            }
             free(output_basename);
         }
-    } else {
-        if (!output_file) {
-            if (!input_file) {
-                check_input_clobber(input_file_name, output_file_name);
-            }
-            output_file = fopen(output_file_name, "w");
-            if (!output_file) {
-                fprintf(stderr, "error: can't write in file %s",
+    }
+
+    if (!output_file) {
+        if (!input_file) {
+            check_input_clobber(input_file_name, output_file_name);
+        }
+        #ifdef USE_KPSE
+            if (!kpse_out_name_ok(output_file_name)) {
+                fprintf(stderr, "Error: kpse doesn't allow to write in file  %s\n",
                         output_file_name);
             }
+        #endif
+        output_file = fopen(output_file_name, "w");
+        if (!output_file) {
+            fprintf(stderr, "error: can't write in file %s",
+                    output_file_name);
         }
     }
 
