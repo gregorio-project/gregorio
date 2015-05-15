@@ -20,6 +20,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The default extension `gregorio` (the executable program) will use when it produces GregorioTeX files has been changed from `.tex` to `.gtex`.  Any calls to `\includescore` that use the old extension should be changed appropriately.
 
 ### Added
+- St. Gallen style adiastematic notation is now handled through [nabc syntax](http://gregoriochant.org/dokuwiki/doku.php/language) (see GregorioNabcRef.pdf for details and [the new example](examples/FactusEst.gabc)). Only one line above the notes is currently handled. This is a preview, backward incompatible change are possible in future releases.
 - `<eu>` tag in gabc to delimit *Euouae* block in the score. It prevents linebreaking and makes spaces tighter. See [UPGRADE.md](upgrade guide) for details.
 - With thanks to Fr. Jacques Peron, it is now possible to embed short gabc snippets directly into a TeX document.  The command is `\gabcsnippet`.  See GregorioRef.pdf for full details.
 - `[ub:x:y mm]` tag, similar to `[ob:x:y mm]`, but for braces under notes.
