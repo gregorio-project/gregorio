@@ -190,10 +190,30 @@ available formats are:\n\
 
 static void check_input_clobber(char *input_file_name, char *output_file_name)
 {
-    if (input_file_name && output_file_name &&
-        strcmp(input_file_name, output_file_name) == 0) {
-        fprintf(stderr, "error: refusing to overwrite the input file\n");
-        exit(-1);
+    char *absolute_input_file_name;
+    char *absolute_output_file_name;
+    char *current_directory;
+    int file_cmp;
+    if (input_file_name && output_file_name) {
+        current_directory = malloc(PATH_MAX * sizeof(char));
+        current_directory = getcwd(current_directory, PATH_MAX);
+        if (current_directory == NULL) {
+            fprintf(stderr, _("can't determine current directory"));
+            free(current_directory);
+            exit(-1);
+        }
+        absolute_input_file_name = define_path(current_directory, input_file_name);
+        absolute_output_file_name = define_path(current_directory, output_file_name);
+        file_cmp = strcmp(absolute_input_file_name, absolute_output_file_name);
+        if (file_cmp == 0) {
+            fprintf(stderr, "error: refusing to overwrite the input file\n");
+        }
+        free(current_directory);
+        free(absolute_input_file_name);
+        free(absolute_output_file_name);
+        if (file_cmp == 0) {
+            exit(-1);
+        }
     }
 }
 
@@ -216,7 +236,6 @@ int main(int argc, char **argv)
     gregorio_file_format input_format = FORMAT_UNSET;
     gregorio_file_format output_format = FORMAT_UNSET;
     char verb_mode = 0;
-    char *current_directory = malloc(PATH_MAX * sizeof(char));
     int number_of_options = 0;
     int option_index = 0;
     static struct option long_options[] = {
@@ -239,13 +258,6 @@ int main(int argc, char **argv)
         exit(0);
     }
     setlocale(LC_CTYPE, "C");
-    current_directory = getcwd(current_directory, PATH_MAX);
-
-    if (current_directory == NULL) {
-        fprintf(stderr, _("can't determine current directory"));
-        free(current_directory);
-        exit(-1);
-    }
 
     while (1) {
         c = getopt_long(argc, argv, "o:SF:l:f:shOLVvW",
@@ -265,7 +277,7 @@ int main(int argc, char **argv)
                         "warning: can't write to file and stdout, writing on stdout\n");
                 break;
             }
-            output_file_name = define_path(current_directory, optarg);
+            output_file_name = optarg;
             break;
         case 'S':
             if (output_file_name) {
@@ -309,7 +321,7 @@ int main(int argc, char **argv)
                         error_file_name);
                 break;
             }
-            error_file_name = define_path(current_directory, optarg);
+            error_file_name = optarg;
             break;
         case 'f':
             if (input_format) {
@@ -385,7 +397,7 @@ int main(int argc, char **argv)
             exit(-1);
         }
     } else {
-        input_file_name = define_path(current_directory, argv[optind]);
+        input_file_name = argv[optind];
         output_basename = get_base_filename(input_file_name);
         if (input_file) {
             fprintf(stderr,
@@ -414,6 +426,7 @@ int main(int argc, char **argv)
         if (!kpse_in_name_ok(input_file_name)) {
             fprintf(stderr, "Error: kpse doesn't allow to read from file  %s\n",
                     input_file_name);
+            exit(-1);
         }
     #endif
 
@@ -454,6 +467,7 @@ int main(int argc, char **argv)
             if (!kpse_out_name_ok(output_file_name)) {
                 fprintf(stderr, "Error: kpse doesn't allow to write in file  %s\n",
                         output_file_name);
+                exit(-1);
             }
         #endif
         output_file = fopen(output_file_name, "w");
@@ -486,10 +500,6 @@ int main(int argc, char **argv)
         }
         gregorio_set_error_out(error_file);
     }
-
-    free(current_directory);
-    free(input_file_name);
-    free(output_file_name);
 
     if (!verb_mode) {
         verb_mode = VERB_ERRORS;
