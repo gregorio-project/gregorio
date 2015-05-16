@@ -716,7 +716,11 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             break;
         case 2:
             low_high_set_lower(glyph, note);
-            note->gtex_offset_case = note_before_last_note_case(glyph, note);
+            if (note->u.note.pitch - note->previous->u.note.pitch == 1) {
+                note->gtex_offset_case = FinalPunctum;
+            } else {
+                note->gtex_offset_case = FinalConnectedPunctum;
+            }
             h_episemus = VPOS_BELOW;
             v_episemus = VPOS_BELOW;
             break;

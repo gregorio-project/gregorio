@@ -1580,6 +1580,7 @@ static inline char height_to_letter(char height)
 static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
         const gregorio_note *const note, bool connect, char height,
         const grehepisemus_size size, const int i,
+        const gregorio_glyph *const glyph,
         const int porrectus_long_episemus_index,
         bool (*const is_episemus_shown)(const gregorio_note *))
 {
@@ -1612,11 +1613,22 @@ static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
         if (i - 1 != porrectus_long_episemus_index || !note->previous
                 || !is_episemus_shown(note->previous)) {
             height = height_to_letter(height);
-            if (connect && (!note->next
-                    || note->next->u.note.shape == S_PUNCTUM_INCLINATUM
-                    || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_DEMINUTUS
-                    || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_AUCTUS)) {
-                fprintf(f, "\\grehepisemusbridge{%c}{}{}%%\n", height);
+            if (connect && (
+                        // not followed by a zero-width space
+                        (!note->next
+                            && (!glyph->next
+                                || glyph->next->type != GRE_SPACE
+                                || glyph->next->u.misc.unpitched.info.space
+                                        != SP_ZERO_WIDTH))
+                        // is a punctum inclinatum of some sort
+                        || (note->next
+                            && (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
+                                || note->next->u.note.shape
+                                        == S_PUNCTUM_INCLINATUM_DEMINUTUS
+                                || note->next->u.note.shape
+                                        == S_PUNCTUM_INCLINATUM_AUCTUS)))) {
+                fprintf(f, "\\grehepisemusbridge{%c}{%d}%%\n", height,
+                        hepisemus_case);
             }
             fprintf(f, "\\grehepisemus{%c}{\\greoCase%s}{%d}{%d}{%c}{%c}%%\n",
                     height, note->gtex_offset_case, ambitus, hepisemus_case,
@@ -1630,7 +1642,8 @@ static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
  * @param i The position of the note in the glyph.
  */
 static void gregoriotex_write_hepisemus(FILE *const f,
-        const gregorio_note *const note, const int i, const gtex_type type)
+        const gregorio_note *const note, const int i, const gtex_type type,
+        const gregorio_glyph *const glyph)
 {
     int porrectus_long_episemus_index = -1;
 
@@ -1653,10 +1666,10 @@ static void gregoriotex_write_hepisemus(FILE *const f,
     }
 
     write_single_hepisemus(f, 1, note, note->h_episemus_below_connect,
-            note->h_episemus_below, note->h_episemus_below_size, i,
+            note->h_episemus_below, note->h_episemus_below_size, i, glyph,
             porrectus_long_episemus_index, &gtex_is_h_episemus_below_shown);
     write_single_hepisemus(f, 0, note, note->h_episemus_above_connect,
-            note->h_episemus_above, note->h_episemus_above_size, i,
+            note->h_episemus_above, note->h_episemus_above_size, i, glyph,
             porrectus_long_episemus_index, &gtex_is_h_episemus_above_shown);
 }
 
@@ -2157,7 +2170,7 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
         // we continue with the hepisemus
         if (current_note->h_episemus_above || current_note->h_episemus_below) {
             _found();
-            gregoriotex_write_hepisemus(f, current_note, i, type);
+            gregoriotex_write_hepisemus(f, current_note, i, type, glyph);
         }
         // write_rare also writes the vepisemus
         if (current_note->special_sign) {
