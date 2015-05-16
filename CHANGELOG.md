@@ -25,6 +25,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - With thanks to Fr. Jacques Peron, it is now possible to embed short gabc snippets directly into a TeX document.  The command is `\gabcsnippet`.  See GregorioRef.pdf for full details.
 - `[ub:x:y mm]` tag, similar to `[ob:x:y mm]`, but for braces under notes.
 - The ability to substitute an arbitrary glyph for one used by GregorioTeX.  This adds four macros: `\grechangeglyph` to make a score glyph substitution, `\greresetglyph` to remove a score glyph substitution, `\gredefsymbol` for (re-)defining an arbitrary non-score glyph that scales with the text, and `\gredefsizedsymbol` for (re-)defining an arbitary non-score glyph that requires a point-size to be specified.  See GregorioRef.pdf for full details.
+- Added `--with-kpathsea` option to configure script, to check input and output file against `openout_any` and `openin_any` settings of texmf.cnf (TeXLive only). Necessary to be included in `shell_escape_commands` in TeXLive.
 - Support for `lualatex -recorder`.  Autocompiled gabc and gtex files will now be properly recorded so that programs like `latexmk -recorder` can detect the need to rebuild the PDF when a gabc file changes.
 
 ### Removed
