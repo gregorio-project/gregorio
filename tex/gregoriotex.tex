@@ -29,6 +29,8 @@
 \input xstring.sty%
 \def\greerror#1{\errmessage{GregorioTeX error: #1}}%
 \def\gre@warning#1{\message{GregorioTeX warning: #1}}%
+\def\gre@bug#1{\errmessage{GregorioTeX bug: #1 !! This is a bug in Gregorio.  Please report it at https://github.com/gregorio-project/gregorio/issues}}%
+
 
 \ifx\csname gre@debug\endcsname\relax%
 \else%

@@ -1269,11 +1269,15 @@ static char gregoriotex_clef_flat_height(char step, int line)
     }
 }
 
+OFFSET_CASE(BarStandard);
+OFFSET_CASE(BarVirgula);
+OFFSET_CASE(BarDivisioFinalis);
+
 static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
         gregorio_sign signs, bool is_inside_bar)
 {
     // the type number of function vepisemusorrare
-    char typenumber = 26;
+    const char *offset_case = BarStandard;
     if (is_inside_bar) {
         fprintf(f, "\\grein");
     } else {
@@ -1282,53 +1286,38 @@ static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
     switch (type) {
     case B_VIRGULA:
         fprintf(f, "virgula");
-        typenumber = 26;
+        offset_case = BarVirgula;
         break;
     case B_DIVISIO_MINIMA:
         fprintf(f, "divisiominima");
-        typenumber = 25;
         break;
     case B_DIVISIO_MINOR:
         fprintf(f, "divisiominor");
-        typenumber = 25;
         break;
     case B_DIVISIO_MAIOR:
         fprintf(f, "divisiomaior");
-        typenumber = 25;
         break;
     case B_DIVISIO_FINALIS:
         fprintf(f, "divisiofinalis");
-        typenumber = 27;
+        offset_case = BarDivisioFinalis;
         break;
     case B_DIVISIO_MINOR_D1:
         fprintf(f, "dominica{1}");
-        // TODO: a true typenumber
-        typenumber = 25;
         break;
     case B_DIVISIO_MINOR_D2:
         fprintf(f, "dominica{2}");
-        // TODO: a true typenumber
-        typenumber = 25;
         break;
     case B_DIVISIO_MINOR_D3:
         fprintf(f, "dominica{3}");
-        // TODO: a true typenumber
-        typenumber = 25;
         break;
     case B_DIVISIO_MINOR_D4:
         fprintf(f, "dominica{4}");
-        // TODO: a true typenumber
-        typenumber = 25;
         break;
     case B_DIVISIO_MINOR_D5:
         fprintf(f, "dominica{5}");
-        // TODO: a true typenumber
-        typenumber = 25;
         break;
     case B_DIVISIO_MINOR_D6:
         fprintf(f, "dominica{6}");
-        // TODO: a true typenumber
-        typenumber = 25;
         break;
     default:
         gregorio_messagef("gregoriotex_write_bar", ERROR, 0,
@@ -1337,14 +1326,15 @@ static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
     }
     switch (signs) {
     case _V_EPISEMUS:
-        fprintf(f, "{\\grebarvepisemus{%d}}%%\n", typenumber);
+        fprintf(f, "{\\grebarvepisemus{\\greoCase%s}}%%\n", offset_case);
         break;
     case _BAR_H_EPISEMUS:
-        fprintf(f, "{\\grebarbrace{%d}}%%\n", typenumber);
+        fprintf(f, "{\\grebarbrace{\\greoCase%s}}%%\n", offset_case);
         break;
     case _V_EPISEMUS_BAR_H_EPISEMUS:
-        fprintf(f, "{\\grebarbrace{%d}\\grebarvepisemus{%d}}%%\n", typenumber,
-                typenumber);
+        fprintf(f, "{\\grebarbrace{\\greoCase%s}"
+                "\\grebarvepisemus{\\greoCase%s}}%%\n",
+                offset_case, offset_case);
         break;
     default:
         fprintf(f, "{}%%\n");
@@ -1628,7 +1618,7 @@ static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
                     || note->next->u.note.shape == S_PUNCTUM_INCLINATUM_AUCTUS)) {
                 fprintf(f, "\\grehepisemusbridge{%c}{}{}%%\n", height);
             }
-            fprintf(f, "\\grehepisemus{%c}{%d}{%d}{%d}{%c}{%c}%%\n",
+            fprintf(f, "\\grehepisemus{%c}{\\greoCase%s}{%d}{%d}{%c}{%c}%%\n",
                     height, note->gtex_offset_case, ambitus, hepisemus_case,
                     size_arg, height);
         }
@@ -1749,7 +1739,7 @@ static void gregoriotex_write_additional_line(FILE *f,
                     current_note->next->u.note.pitch;
         }
     }
-    fprintf(f, "\\greadditionalline{%d}{%d}{%d}%%\n",
+    fprintf(f, "\\greadditionalline{\\greoCase%s}{%d}{%d}%%\n",
             current_note->gtex_offset_case, ambitus, bottom ? 3 : 2);
 }
 
@@ -1765,7 +1755,8 @@ static void gregoriotex_write_vepisemus(FILE *f, gregorio_note *note)
 
     char height = height_to_letter(note->v_episemus_height);
 
-    fprintf(f, "\\grevepisemus{%c}{%d}%%\n", height, note->gtex_offset_case);
+    fprintf(f, "\\grevepisemus{%c}{\\greoCase%s}%%\n", height,
+            note->gtex_offset_case);
 }
 
 /*
@@ -1777,23 +1768,23 @@ static void gregoriotex_write_rare(FILE *f, gregorio_note *current_note,
 {
     switch (rare) {
     case _ACCENTUS:
-        fprintf(f, "\\greaccentus{%c}{%d}%%\n", current_note->u.note.pitch,
-                current_note->gtex_offset_case);
+        fprintf(f, "\\greaccentus{%c}{\\greoCase%s}%%\n",
+                current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
     case _ACCENTUS_REVERSUS:
-        fprintf(f, "\\grereversedaccentus{%c}{%d}%%\n",
+        fprintf(f, "\\grereversedaccentus{%c}{\\greoCase%s}%%\n",
                 current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
     case _CIRCULUS:
-        fprintf(f, "\\grecirculus{%c}{%d}%%\n", current_note->u.note.pitch,
-                current_note->gtex_offset_case);
+        fprintf(f, "\\grecirculus{%c}{\\greoCase%s}%%\n",
+                current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
     case _SEMI_CIRCULUS:
-        fprintf(f, "\\gresemicirculus{%c}{%d}%%\n", current_note->u.note.pitch,
-                current_note->gtex_offset_case);
+        fprintf(f, "\\gresemicirculus{%c}{\\greoCase%s}%%\n",
+                current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
     case _SEMI_CIRCULUS_REVERSUS:
-        fprintf(f, "\\grereversedsemicirculus{%c}{%d}%%\n",
+        fprintf(f, "\\grereversedsemicirculus{%c}{\\greoCase%s}%%\n",
                 current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
         // the cases of the bar signs are dealt in another function (write_bar)
@@ -2064,11 +2055,11 @@ static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
     } else {
         // let's cheat a little
         if (is_on_a_line(current_note->u.note.pitch)) {
-            fprintf(f, "\\grehighchoralsign{%c}{%s}{%d}%%\n",
+            fprintf(f, "\\grehighchoralsign{%c}{%s}{\\greoCase%s}%%\n",
                     current_note->u.note.pitch, current_note->choral_sign,
                     current_note->gtex_offset_case);
         } else {
-            fprintf(f, "\\grehighchoralsign{%c}{%s}{%d}%%\n",
+            fprintf(f, "\\grehighchoralsign{%c}{%s}{\\greoCase%s}%%\n",
                     current_note->u.note.pitch + 2, current_note->choral_sign,
                     current_note->gtex_offset_case);
         }

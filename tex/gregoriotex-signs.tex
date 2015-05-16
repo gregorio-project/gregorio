@@ -733,69 +733,163 @@
   \relax%
 }%
 
-% Note position cases:
-% here are the common values for both hepisemus (and consequently also for additional lines) and vepisemus
+\newcount\gre@oCase@num%
+\gre@oCase@num=0\relax %
+\def\gre@def@oCase#1{%
+  \expandafter\edef\csname greoCase#1\endcsname{\the\gre@oCase@num}%
+  \advance\gre@oCase@num by 1\relax %
+}%
+% Note offset cases:
+% here are the common values for both hepisemus (and consequently also for
+% additional lines) and vepisemus
 % this indicates the note
-%% 0: last note, which is a standard punctum (works with pes)
-%% 1: same, but the last note is a deminutus
-%% 2: the note before the last note, which is a standard punctum (like the second note of hig)
-%% 3: idem, but the note is the note preceding a deminutus
-%% 4: the note before the note before the last note (for porrectus flexus)
-%% 5: idem, but when the two last notes are a deminutus
-%% 6: the first note, if it is a standard punctum
-%% 7: the first note, if it is an initio debilis
-%% 8: the first note, if it is a non-auctus porrectus with a second ambitus of at least two
-%% 9: idem, for a second ambitus of one
-%% 10: idem, for an auctus porrectus, regardless of second ambitus
-%% 12: the last note, if it is a punctum inclinatum
-%% 13: idem, if it is a punctum inclinatum deminutus
-%% 14: idem, if it is a stropha
-%% 15: idem, with a quilisma
-%% 16: idem, with an oriscus
-%% 17: same of 2 but for ambitus of one (like the second note of ghg)
-%% 18: same of 0, but the last note is a smaller punctum (concerning simple podatus, podatus, and torculus resupinus)
-%% 19: the first note, if it is an oriscus
-%% 20: the first note, if it is a quilisma
-%% 21: the second note of a non-auctus torculus resupinus with a first and
-%%     second ambitus of at least two
-%% 22: idem with first ambitus of one
-%% 23: idem with initio debilis (regardless of first ambitus)
-%% 24: the last note, if it is a linea punctum (or linea punctum cavum)
-%% 25: the last note, if it is a bar
-%% 26: the last note, if it is a virgula
-%% 27: the last note, if it is a divisio finalis
-%% 28: same as 21, with a quilisma
-%% 29: idem, with an oriscus
-%% 30: same as 22, with a quilisma
-%% 31: idem, with an oriscus
-%% 32: same as 21, for a non-auctus torculus resupinus
-%%     auctus liquescence
-%% 33: idem with initio debilis (regardless of first ambitus)
-%% 34: same as 32, with a quilisma
-%% 35: idem, with an oriscus
-%% 36: same as 22, for a non-auctus torculus resupinus
-%% 37: idem, with a quilisma
-%% 38: idem, with an oriscus
-%% 39: same as 32, for an auctus torculus resupinus or any torculus resupinus
-%%     flexus, regardless of second ambitus
-%% 40: idem with initio debilis (regardless of first ambitus)
-%% 41: same as 39, with a quilisma
-%% 42: idem, with an oriscus
-%% 43: same as 36, for a torculus resupinus with second ambitus of one and not
-%%     auctus liquescence
-%% 44: idem, with a quilisma
-%% 45: idem, with an oriscus
-%% 46: idem 17, with the note having two line on the bottom corners (like second note of gig)
-%% 47: idem 46, with the note having a line on the bottom left (like second note of gih)
-%% 48: the first note, if it's a punctum with a bar on the top-right corner (~6)
-%% 49: the first note, if it's a "virga" with a bar on the bottom-right corner (~6)
-%% 50: the first note, if it's a quilisma with a bar on the top-right corner (~20)
-%% 51: the first note, if it's an oriscus with a bar on the top-right corner (~19)
-%% 52: the last note, if it's a punctum with a bar on the top-left corner (~0)
-%% 53: the last note, if it's an auctus with a bar on the bottom-left corner (~0)
-%% 54: the last note, if it's a virga aucta
-%% 55: the last note, if it's a "virga" with a bar on the bottom-left corner (~0)
-%% 56: the first note, if it's a virga
+%% punctum as last note (works with pes)
+\gre@def@oCase{FinalPunctum}%
+%% deminutus as last note
+\gre@def@oCase{FinalDeminutus}%
+%% second-to-last note, disconnected from prior note, with a second ambitus of
+%% at least two, when last note is a standard punctum (like the second note of 
+%% hig)
+\gre@def@oCase{PenultBeforePunctumWide}%
+%% second-to-last note, when last note is a deminutus
+\gre@def@oCase{PenultBeforeDeminutus}%
+%% third-to-last note, when the last note is a punctum (for porrectus flexus)
+\gre@def@oCase{AntepenultBeforePunctum}%
+%% third-to-last note, when the last notes is a deminutus (for porrectus flexus)
+\gre@def@oCase{AntepenultBeforeDeminutus}%
+%% standard punctum as first note, disconnected from next note
+\gre@def@oCase{InitialPunctum}%
+%% initio debilis (always the first note)
+\gre@def@oCase{InitioDebilis}%
+%% first note of a non-auctus porrectus with a second ambitus of at least two
+\gre@def@oCase{PorrNonAuctusInitialWide}%
+%% first note of a non-auctus porrectus with a second ambitus of one
+\gre@def@oCase{PorrNonAuctusInitialOne}%
+%% first note of an auctus porrectus, regardless of second ambitus
+\gre@def@oCase{PorrAuctusInitialAny}%
+%% punctum inclinatum as last note
+\gre@def@oCase{FinalInclinatum}%
+%% punctum inclinatum deminutus as last note
+\gre@def@oCase{FinalInclinatumDeminutus}%
+%% stropha as last note
+\gre@def@oCase{FinalStropha}%
+%% quilisma as last note
+\gre@def@oCase{FinalQuilisma}%
+%% oriscus as last note
+\gre@def@oCase{FinalOriscus}%
+%% second-to-last note, with a second ambitus of one, when last note is a
+%% standard punctum (like the second note of ghg)
+\gre@def@oCase{PenultBeforePunctumOne}%
+%% "upper smaller punctum" as last note (concerning simple podatus, podatus,
+%% and torculus resupinus)
+\gre@def@oCase{FinalUpperPunctum}%
+%% oriscus as first note, disconnected from next note
+\gre@def@oCase{InitialOriscus}%
+% quilisma as first note, disconnected from next note
+\gre@def@oCase{InitialQuilisma}%
+%% second note of a non-auctus torculus resupinus starting with a punctum, with
+%% a first and second ambitus of at least two
+\gre@def@oCase{TorcResNonAuctusSecondWideWide}%
+%% second note of a non-auctus torculus resupinus starting with a punctum, with
+%% a first ambitus of one and a second ambitus of at least two
+\gre@def@oCase{TorcResNonAuctusSecondOneWide}%
+%% second note of a non-auctus torculus resupinus initio debilis with any first
+%% ambitus and a second ambitus of at least two
+\gre@def@oCase{TorcResDebilisNonAuctusSecondAnyWide}%
+%% linea punctum (cavum) as last note
+\gre@def@oCase{FinalLineaPunctum}%
+%% standard bar
+\gre@def@oCase{BarStandard}%
+%% virgula
+\gre@def@oCase{BarVirgula}%
+%% divisio finalis
+\gre@def@oCase{BarDivisioFinalis}%
+%% second note of a non-auctus torculus resupinus starting with a quilisma,
+%% with a first and second ambitus of at least two
+\gre@def@oCase{TorcResQuilismaNonAuctusSecondWideWide}%
+%% second note of a non-auctus torculus resupinus starting with an oriscus,
+%% with a first and second ambitus of at least two
+\gre@def@oCase{TorcResOriscusNonAuctusSecondWideWide}%
+%% second note of a non-auctus torculus resupinus starting with a quilisma,
+%% with a first ambitus of one and and second ambitus of at least two
+\gre@def@oCase{TorcResQuilismaNonAuctusSecondOneWide}%
+%% second note of a non-auctus torculus resupinus starting with an oriscus,
+%% with a first ambitus of one and and second ambitus of at least two
+\gre@def@oCase{TorcResOriscusNonAuctusSecondOneWide}%
+%% second note of a non-auctus torculus resupinus starting with a punctum, with
+%% a first ambitus of at least two and a second ambitus of one
+\gre@def@oCase{TorcResNonAuctusSecondWideOne}%
+%% second note of a non-auctus torculus resupinus initio debilis with any first
+%% ambitus and a second ambitus of one
+\gre@def@oCase{TorcResDebilisNonAuctusSecondAnyOne}%
+%% second note of a non-auctus torculus resupinus starting with a quilisma,
+%% with a first ambitus of at least two and a second ambitus of one
+\gre@def@oCase{TorcResQuilismaNonAuctusSecondWideOne}%
+%% second note of a non-auctus torculus resupinus starting with an oriscus,
+%% with a first ambitus of at least two and a second ambitus of one
+\gre@def@oCase{TorcResOriscusNonAuctusSecondWideOne}%
+%% second note of a non-auctus torculus resupinus starting with a punctum, with
+%% a first and second ambitus of one
+\gre@def@oCase{TorcResNonAuctusSecondOneOne}%
+%% second note of a non-auctus torculus resupinus starting with a quilisma,
+%% with a first and second ambitus of one
+\gre@def@oCase{TorcResQuilismaNonAuctusSecondOneOne}%
+%% second note of a non-auctus torculus resupinus starting with an oriscus,
+%% with a first and second ambitus of one
+\gre@def@oCase{TorcResOriscusNonAuctusSecondOneOne}%
+%% second note of an auctus torculus resupinus starting with a punctum, with a
+%% first ambitus of at least two and any second ambitus
+\gre@def@oCase{TorcResAuctusSecondWideAny}%
+%% second note of an auctus torculus resupinus initio debilis with any first
+%% and second ambitus
+\gre@def@oCase{TorcResDebilisAuctusSecondAnyAny}%
+%% second note of an auctus torculus resupinus starting with a quilisma, with a
+%% first ambitus of at least two and any second ambitus
+\gre@def@oCase{TorcResQuilismaAuctusSecondWideAny}%
+%% second note of an auctus torculus resupinus starting with an oriscus, with a
+%% first ambitus of at least two and any second ambitus
+\gre@def@oCase{TorcResOriscusAuctusSecondWideAny}%
+%% second note of an auctus torculus resupinus starting with a punctum, with a
+%% first ambitus of one and any second ambitus
+\gre@def@oCase{TorcResAuctusSecondOneAny}%
+%% second note of an auctus torculus resupinus starting with a quilisma, with a
+%% first ambitus of one and any second ambitus
+\gre@def@oCase{TorcResQuilismaAuctusSecondOneAny}%
+%% second note of an auctus torculus resupinus starting with an oriscus, with a
+%% first ambitus of one and any second ambitus
+\gre@def@oCase{TorcResOriscusAuctusSecondOneAny}%
+%% second-to-last note connected to prior note, with a second ambitus of at
+%% least two, when last note is a standard punctum (like the second note of gig)
+\gre@def@oCase{ConnectedPenultBeforePunctumWide}%
+%% second-to-last note connected to prior note, with a second ambitus of one,
+%% when last note is a standard punctum (like the second note of gih)
+\gre@def@oCase{ConnectedPenultBeforePunctumOne}%
+%% standard punctum as first note, connected to next higher note
+\gre@def@oCase{InitialConnectedPunctum}%
+%% "virga" as first note, connected to next lower note
+\gre@def@oCase{InitialConnectedVirga}%
+%% quilisma as first note, connected to next higher note
+\gre@def@oCase{InitialConnectedQuilisma}%
+%% oriscus as first note, connected to next higher note
+\gre@def@oCase{InitialConnectedOriscus}%
+%% punctum as last note, connected to prior higher note
+\gre@def@oCase{FinalConnectedPunctum}%
+%% auctus as last note, connected to prior lower note
+\gre@def@oCase{FinalConnectedAuctus}%
+%% virga aucta as last note
+\gre@def@oCase{FinalVirgaAuctus}%
+%% "virga" as last note, connected to prior lower note
+\gre@def@oCase{FinalConnectedVirga}%
+%% "virga" as first note, disconnected from next note
+\gre@def@oCase{InitialVirga}%
+
+% adapted from http://www.tug.org/TUGboat/Articles/tb13-1/tb34fine.pdf
+\let\gre@switchx@fi\fi%
+\def\gre@switchx#1#2#3{%
+  \ifx#1#2\gre@switchx@break#3\gre@switchx@fi%
+  \gre@switchx#1%
+}%
+\def\gre@switchx@break#1\gre@switchx@fi#2\gre@endswitchx{\fi#1}%
 
 % a function to typeset a vertical episemus or a rare accent (like accentus,
 % circulus, etc.).  This function must be called after a call to \greglyph.
@@ -839,181 +933,182 @@
   \or % if it's the brace above the bar
     \gre@calculate@glyphraisevalue{#1}{13}%
   \fi %
-  \ifcase#2 %
-    %case 0
-    \grevepisemusorrareaux{0}{\gre@char@punctum}{1}{0}{#3}{#4}{#5}%
-  \or%
-    %case 1
-    \grevepisemusorrareaux{0}{\gre@char@smallpunctum}{1}{0}{#3}{#4}{#5}%
-  \or%
-    %case 2
+  \gre@switchx#2%
+  \greoCaseFinalPunctum{\grevepisemusorrareaux{0}{%
+    \gre@char@punctum}{1}{0}{#3}{#4}{#5}%
+  }%
+  \greoCaseFinalDeminutus{\grevepisemusorrareaux{0}{%
+    \gre@char@smallpunctum}{1}{0}{#3}{#4}{#5}%
+  }%
+  \greoCasePenultBeforePunctumWide{%
     % a kind of flexus, it has the good width
     \grevepisemusorrareaux{\gre@char@flexusalt}{\gre@char@punctum}{2}{0}{#3}{#4}{#5}%
-  \or%
-    %case 3
+  }%
+  \greoCasePenultBeforeDeminutus{%
     % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
     \grevepisemusorrareaux{0}{\gre@char@flexusdeminutus}{1}{0}{#3}{#4}{#5}%
-  \or%
-    %case 4
+  }%
+  \greoCaseAntepenultBeforePunctum{%
     % is a torculus, it has the good width
     \grevepisemusorrareaux{\gre@char@torculus}{\gre@char@punctum}{2}{0}{#3}{#4}{#5}%
-  \or%
-    %case 5
-    % is a torculus deminutus, it has the good width
+  }%
+  \greoCaseAntepenultBeforeDeminutus{%
     \grevepisemusorrareaux{\gre@char@torculusdeminutus}{\gre@char@punctum}{2}{0}{#3}{#4}{#5}%
-  \or%
-    %case 6
+  }%
+  \greoCaseInitialPunctum{%
     \grevepisemusorrareaux{0}{\gre@char@punctum}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 7
+  }%
+  \greoCaseInitioDebilis{%
     \grevepisemusorrareaux{0}{\gre@char@smallpunctum}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 8, in which we do (for now) the same as case 6
+  }%
+  \greoCasePorrNonAuctusInitialWide{%
+    % we do (for now) the same as case 6
     \grevepisemusorrareaux{0}{\gre@char@punctum}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 9
+  }%
+  \greoCasePorrNonAuctusInitialOne{%
     \grevepisemusorrareaux{0}{\gre@char@punctum}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 10
+  }%
+  \greoCasePorrAuctusInitialAny{%
     \grevepisemusorrareaux{0}{\gre@char@punctum}{0}{0}{#3}{#4}{#5}%
-  \or% case 11 doesn't exist
-  \or%
-    %case 12
+  }%
+  \greoCaseFinalInclinatum{%
     \grevepisemusorrareaux{0}{\gre@char@punctuminclinatum}{0}{30\the\grefactor }{#3}{#4}{#5}%
-  \or%
-    %case 13
+  }%
+  \greoCaseFinalInclinatumDeminutus{%
     \grevepisemusorrareaux{0}{\gre@char@punctuminclinatumdem}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 14
+  }%
+  \greoCaseFinalStropha{%
     \grevepisemusorrareaux{0}{\gre@char@stropha}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 15
+  }%
+  \greoCaseFinalQuilisma{%
     \grevepisemusorrareaux{0}{\gre@char@quilisma}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 16
+  }%
+  \greoCaseFinalOriscus{%
     \grevepisemusorrareaux{0}{\gre@char@oriscus}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 17
+  }%
+  \greoCasePenultBeforePunctumOne{%
     \grevepisemusorrareaux{\gre@char@flexusaltone}{\gre@char@punctum}{2}{0}{#3}{#4}{#5}%
-  \or%
-    %case 18
+  }%
+  \greoCaseFinalUpperPunctum{%
     \grevepisemusorrareaux{0}{\gre@char@peshigh}{1}{-30\the\grefactor}{#3}{#4}{#5}%
-  \or%
-    %case 19
+  }%
+  \greoCaseInitialOriscus{%
     \grevepisemusorrareaux{0}{\gre@char@oriscusauctus}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 20
+  }%
+  \greoCaseInitialQuilisma{%
     \grevepisemusorrareaux{0}{\gre@char@quilisma}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 21
+  }%
+  \greoCaseTorcResNonAuctusSecondWideWide{%
     \grevepisemusorrareaux{\gre@char@fuse@punctum@two}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 22 
+  }%
+  \greoCaseTorcResNonAuctusSecondOneWide{%
     \grevepisemusorrareaux{\gre@char@fuse@punctum@one}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 23
+  }%
+  \greoCaseTorcResDebilisNonAuctusSecondAnyWide{%
     \grevepisemusorrareaux{\gre@char@fuse@debilis}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 24
+  }%
+  \greoCaseFinalLineaPunctum{%
     \grevepisemusorrareaux{0}{\gre@char@lineapunctum}{1}{0}{#3}{#4}{#5}%
-  \or%
-    %case 25
+  }%
+  \greoCaseBarStandard{%
     \grevepisemusorrareaux{0}{\gre@char@divisiominima}{1}{0}{#3}{#4}{#5}%
-  \or%
-    %case 26
+  }%
+  \greoCaseBarVirgula{%
     \grevepisemusorrareaux{0}{\gre@char@virgula}{1}{0}{#3}{#4}{#5}%
-  \or%
-    %case 27
+  }%
+  \greoCaseBarDivisioFinalis{%
     \grevepisemusorrareaux{0}{\gredivisiofinalissymbol}{1}{0}{#3}{#4}{#5}%
-  \or%
-    %case 28
+  }%
+  \greoCaseTorcResQuilismaNonAuctusSecondWideWide{%
     \grevepisemusorrareaux{\gre@char@fuse@quilisma@two}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 29
+  }%
+  \greoCaseTorcResOriscusNonAuctusSecondWideWide{%
     \grevepisemusorrareaux{\gre@char@fuse@oriscus@two}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 30
+  }%
+  \greoCaseTorcResQuilismaNonAuctusSecondOneWide{%
     \grevepisemusorrareaux{\gre@char@fuse@quilisma@one}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 31
+  }%
+  \greoCaseTorcResOriscusNonAuctusSecondOneWide{%
     \grevepisemusorrareaux{\gre@char@fuse@oriscus@one}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 32
+  }%
+  \greoCaseTorcResNonAuctusSecondWideOne{%
     \grevepisemusorrareaux{\gre@char@fuse@punctum@two}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 33
+  }%
+  \greoCaseTorcResDebilisNonAuctusSecondAnyOne{%
     \grevepisemusorrareaux{\gre@char@fuse@debilis}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 34
+  }%
+  \greoCaseTorcResQuilismaNonAuctusSecondWideOne{%
     \grevepisemusorrareaux{\gre@char@fuse@quilisma@two}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 35
+  }%
+  \greoCaseTorcResOriscusNonAuctusSecondWideOne{%
     \grevepisemusorrareaux{\gre@char@fuse@oriscus@two}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 36 
+  }%
+  \greoCaseTorcResNonAuctusSecondOneOne{%
     \grevepisemusorrareaux{\gre@char@fuse@punctum@one}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 37
+  }%
+  \greoCaseTorcResQuilismaNonAuctusSecondOneOne{%
     \grevepisemusorrareaux{\gre@char@fuse@quilisma@one}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 38
+  }%
+  \greoCaseTorcResOriscusNonAuctusSecondOneOne{%
     \grevepisemusorrareaux{\gre@char@fuse@oriscus@one}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 39
+  }%
+  \greoCaseTorcResAuctusSecondWideAny{%
     \grevepisemusorrareaux{\gre@char@fuse@punctum@two}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 40
+  }%
+  \greoCaseTorcResDebilisAuctusSecondAnyAny{%
     \grevepisemusorrareaux{\gre@char@fuse@debilis}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 41
+  }%
+  \greoCaseTorcResQuilismaAuctusSecondWideAny{%
     \grevepisemusorrareaux{\gre@char@fuse@quilisma@two}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 42
+  }%
+  \greoCaseTorcResOriscusAuctusSecondWideAny{%
     \grevepisemusorrareaux{\gre@char@fuse@oriscus@two}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 43 
+  }%
+  \greoCaseTorcResAuctusSecondOneAny{%
     \grevepisemusorrareaux{\gre@char@fuse@punctum@one}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 44
+  }%
+  \greoCaseTorcResQuilismaAuctusSecondOneAny{%
     \grevepisemusorrareaux{\gre@char@fuse@quilisma@one}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 45
+  }%
+  \greoCaseTorcResOriscusAuctusSecondOneAny{%
     \grevepisemusorrareaux{\gre@char@fuse@oriscus@one}{\gre@char@punctum}{3}{0}{#3}{#4}{#5}%
-  \or%
-    %case 46
+  }%
+  \greoCaseConnectedPenultBeforePunctumWide{%
     \grevepisemusorrareaux{\gre@char@flexusalt@line@bl}{\gre@char@punctum@line@blbr}{2}{0}{#3}{#4}{#5}%
-  \or%
-    %case 47
+  }%
+  \greoCaseConnectedPenultBeforePunctumOne{%
     \grevepisemusorrareaux{\gre@char@flexusaltone@line@bl}{\gre@char@punctum@line@bl}{2}{0}{#3}{#4}{#5}%
-  \or%
-    %case 48
+  }%
+  \greoCaseInitialConnectedPunctum{%
     \grevepisemusorrareaux{0}{\gre@char@punctum@line@tr}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 49
+  }%
+  \greoCaseInitialConnectedVirga{%
     \grevepisemusorrareaux{0}{\gre@char@virga@line@br}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 50
+  }%
+  \greoCaseInitialConnectedQuilisma{%
     \grevepisemusorrareaux{0}{\gre@char@quilisma@line@tr}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 51
+  }%
+  \greoCaseInitialConnectedOriscus{%
     \grevepisemusorrareaux{0}{\gre@char@oriscus@line@tr}{0}{0}{#3}{#4}{#5}%
-  \or%
-    %case 52
+  }%
+  \greoCaseFinalConnectedPunctum{%
     \grevepisemusorrareaux{0}{\gre@char@punctum}{1}{0}{#3}{#4}{#5}%
-  \or%
-    %case 53
+  }%
+  \greoCaseFinalConnectedAuctus{%
     \grevepisemusorrareaux{0}{\gre@char@punctumauctus@line@bl}{1}{0}{#3}{#4}{#5}%
-  \or%
-    %case 54
+  }%
+  \greoCaseFinalVirgaAuctus{%
     \grevepisemusorrareaux{0}{\gre@char@virgaaucta}{1}{0}{#3}{#4}{#5}%
-  \or%
-    %case 55
+  }%
+  \greoCaseFinalConnectedVirga{%
     \grevepisemusorrareaux{0}{\gre@char@virga@line@br}{1}{0}{#3}{#4}{#5}%
-  \or%
-    %case 56
+  }%
+  \greoCaseInitialVirga{%
     \grevepisemusorrareaux{0}{\gre@char@virga}{0}{0}{#3}{#4}{#5}%
-  \fi%
-  \relax%
+  }%
+  \undefined{\gre@bug{Invalid note offset case: \string#2}}%
+  #2{}% to match any unmatched case
+  \gre@endswitchx\relax%
 }%
 
 \def\grevepisemus#1#2{%
@@ -1164,174 +1259,174 @@
   \or %
     \gre@calculate@glyphraisevalue{#1}{11}%
   \fi %
-  \ifcase#2 %
-    %case 0
+  \gre@switchx#2%
+  \greoCaseFinalPunctum{%
     \grehepisorlineaux{\gre@char@punctum}{\gre@char@he@punctum{#5}}{2}{#4}%
-  \or%
-    %case 1
+  }%
+  \greoCaseFinalDeminutus{%
     \grehepisorlineaux{\gre@char@smallpunctum}{\gre@char@he@initio{#5}}{2}{#4}%
-  \or%
-    %case 2
+  }%
+  \greoCasePenultBeforePunctumWide{%
     % a kind of flexus, it has the good width
     \grehepisorlineaux{\gre@char@flexusalt}{\gre@char@he@punctum{#5}}{2}{#4}%
-  \or%
-    %case 3
+  }%
+  \greoCasePenultBeforeDeminutus{%
     % in order to go to the good place, we first make a kern of - the glyph before deminutus, which has the same width as a standard flexus deminutus
     \grehepisorlineaux{\gre@char@flexusdeminutus}{\gre@char@he@punctum{#5}}{2}{#4}%
-  \or%
-    %case 4
+  }%
+  \greoCaseAntepenultBeforePunctum{%
     % a torculus, it has the good width
     \grehepisorlineaux{\gre@char@torculus}{\gre@char@he@punctum{#5}}{2}{#4}%
-  \or%
-    %case 5
+  }%
+  \greoCaseAntepenultBeforeDeminutus{%
     % torculus deminutus has the good width
     \grehepisorlineaux{\gre@char@torculusdeminutus}{\gre@char@he@punctum{#5}}{2}{#4}%
-  \or%
-    %case 6
+  }%
+  \greoCaseInitialPunctum{%
     \grehepisorlineaux{0}{\gre@char@he@punctum{#5}}{0}{#4}%
-  \or%
-    %case 7
+  }%
+  \greoCaseInitioDebilis{%
     %we assume that the initio-debilis has the same width as a punctum deminutus
     \grehepisorlineaux{0}{\gre@char@he@flexus{#5}}{0}{#4}%
-  \or%
-    %case 8
+  }%
+  \greoCasePorrNonAuctusInitialWide{%
     \grehepisorlineaux{0}{\gre@char@he@porrectus{#3}{#5}}{0}{#4}%
-  \or%
-    %case 9
+  }%
+  \greoCasePorrNonAuctusInitialOne{%
     \grehepisorlineaux{0}{\gre@char@he@porrectus@amone{#3}{#5}}{0}{#4}%
-  \or%
-    %case 10
+  }%
+  \greoCasePorrAuctusInitialAny{%
     \grehepisorlineaux{0}{\gre@char@he@porrectusfl{#3}{#5}}{0}{#4}%
-  \or% case 11 is gone
-  \or%
-    %case 12
+  }%
+  \greoCaseFinalInclinatum{%
     \grehepisorlineaux{\gre@char@punctuminclinatum}{\gre@char@he@inclinatum{#5}}{2}{#4}%
-  \or%
-    %case 13
+  }%
+  \greoCaseFinalInclinatumDeminutus{%
     \grehepisorlineaux{\gre@char@punctuminclinatumdem}{\gre@char@he@inclinatumdem{#5}}{2}{#4}%
-  \or%
-    %case 14
+  }%
+  \greoCaseFinalStropha{%
     \grehepisorlineaux{\gre@char@stropha}{\gre@char@he@stropha{#5}}{2}{#4}%
-  \or%
-    %case 15
+  }%
+  \greoCaseFinalQuilisma{%
     \grehepisorlineaux{\gre@char@quilisma}{\gre@char@he@quilisma{#5}}{2}{#4}%
-  \or%
-    %case 16
+  }%
+  \greoCaseFinalOriscus{%
     \grehepisorlineaux{\gre@char@oriscus}{\gre@char@he@oriscus{#5}}{2}{#4}%
-  \or%
-    %case 17
+  }%
+  \greoCasePenultBeforePunctumOne{%
     \grehepisorlineaux{\gre@char@flexusaltone}{\gre@char@he@punctum{#5}}{2}{#4}%
-  \or %
-    %case 18
+  }%
+  \greoCaseFinalUpperPunctum{%
     \grehepisorlineaux{\gre@char@peshigh}{\gre@char@he@smallpunctum{#5}}{2}{#4}%
-  \or %
-    %case 19
+  }%
+  \greoCaseInitialOriscus{%
     \grehepisorlineaux{0}{\gre@char@he@oriscus{#5}}{0}{#4}%
-  \or %
-    %case 20
+  }%
+  \greoCaseInitialQuilisma{%
     \grehepisorlineaux{0}{\gre@char@he@quilisma{#5}}{0}{#4}%
-  \or %
-    %case 21
+  }%
+  \greoCaseTorcResNonAuctusSecondWideWide{%
     \grehepisorlineaux{\gre@char@leading@punctum@two}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
-  \or %
-    %case 22
+  }%
+  \greoCaseTorcResNonAuctusSecondOneWide{%
     \grehepisorlineaux{\gre@char@leading@punctum@one}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
-  \or %
-    %case 23
+  }%
+  \greoCaseTorcResDebilisNonAuctusSecondAnyWide{%
     \grehepisorlineaux{\gre@char@leading@debilis}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
-  \or%
-    %case 24
+  }%
+  \greoCaseFinalLineaPunctum{%
     \grehepisorlineaux{\gre@char@pesinitauctusone}{\gre@char@he@punctum{#5}}{2}{#4}%the episemus is not quite long enough so I assumed a different width for now...
-  \or\or\or% case 25, 26, 27
-  \or%
-    %case 28
+  }%
+  \greoCaseTorcResQuilismaNonAuctusSecondWideWide{%
     \grehepisorlineaux{\gre@char@leading@quilisma@two}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
-  \or%
-    %case 29
+  }%
+  \greoCaseTorcResOriscusNonAuctusSecondWideWide{%
     \grehepisorlineaux{\gre@char@leading@oriscus@two}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
-  \or%
-    %case 30
+  }%
+  \greoCaseTorcResQuilismaNonAuctusSecondOneWide{%
     \grehepisorlineaux{\gre@char@leading@quilisma@one}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
-  \or%
-    %case 31
+  }%
+  \greoCaseTorcResOriscusNonAuctusSecondOneWide{%
     \grehepisorlineaux{\gre@char@leading@oriscus@one}{\gre@char@he@porrectus{#3}{#5}}{3}{#4}%
-  \or%
-    %case 32
+  }%
+  \greoCaseTorcResNonAuctusSecondWideOne{%
     \grehepisorlineaux{\gre@char@leading@punctum@two}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
-  \or%
-    %case 33
+  }%
+  \greoCaseTorcResDebilisNonAuctusSecondAnyOne{%
     \grehepisorlineaux{\gre@char@leading@debilis}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
-  \or%
-    %case 34
+  }%
+  \greoCaseTorcResQuilismaNonAuctusSecondWideOne{%
     \grehepisorlineaux{\gre@char@leading@quilisma@two}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
-  \or%
-    %case 35
+  }%
+  \greoCaseTorcResOriscusNonAuctusSecondWideOne{%
     \grehepisorlineaux{\gre@char@leading@oriscus@two}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
-  \or%
-    %case 36
+  }%
+  \greoCaseTorcResNonAuctusSecondOneOne{%
     \grehepisorlineaux{\gre@char@leading@punctum@one}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
-  \or%
-    %case 37
+  }%
+  \greoCaseTorcResQuilismaNonAuctusSecondOneOne{%
     \grehepisorlineaux{\gre@char@leading@quilisma@one}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
-  \or%
-    %case 38
+  }%
+  \greoCaseTorcResOriscusNonAuctusSecondOneOne{%
     \grehepisorlineaux{\gre@char@leading@oriscus@one}{\gre@char@he@porrectus@amone{#3}{#5}}{3}{#4}%
-  \or%
-    %case 39
+  }%
+  \greoCaseTorcResAuctusSecondWideAny{%
     \grehepisorlineaux{\gre@char@leading@punctum@two}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
-  \or%
-    %case 40
+  }%
+  \greoCaseTorcResDebilisAuctusSecondAnyAny{%
     \grehepisorlineaux{\gre@char@leading@debilis}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
-  \or%
-    %case 41
+  }%
+  \greoCaseTorcResQuilismaAuctusSecondWideAny{%
     \grehepisorlineaux{\gre@char@leading@quilisma@two}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
-  \or%
-    %case 42
+  }%
+  \greoCaseTorcResOriscusAuctusSecondWideAny{%
     \grehepisorlineaux{\gre@char@leading@oriscus@two}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
-  \or%
-    %case 43
+  }%
+  \greoCaseTorcResAuctusSecondOneAny{%
     \grehepisorlineaux{\gre@char@leading@punctum@one}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
-  \or%
-    %case 44
+  }%
+  \greoCaseTorcResQuilismaAuctusSecondOneAny{%
     \grehepisorlineaux{\gre@char@leading@quilisma@one}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
-  \or%
-    %case 45
+  }%
+  \greoCaseTorcResOriscusAuctusSecondOneAny{%
     \grehepisorlineaux{\gre@char@leading@oriscus@one}{\gre@char@he@porrectusfl{#3}{#5}}{3}{#4}%
-  \or%
-    %case 46
+  }%
+  \greoCaseConnectedPenultBeforePunctumWide{%
     \grehepisorlineaux{\gre@char@flexusalt@line@bl}{\gre@char@he@punctum@line@blbr{#5}}{2}{#4}%
-  \or%
-    %case 47
+  }%
+  \greoCaseConnectedPenultBeforePunctumOne{%
     \grehepisorlineaux{\gre@char@flexusaltone@line@bl}{\gre@char@he@punctum@line@bl{#5}}{2}{#4}%
-  \or%
-    %case 48
+  }%
+  \greoCaseInitialConnectedPunctum{%
     \grehepisorlineaux{0}{\gre@char@he@punctum@line@tr{#5}}{0}{#4}%
-  \or%
-    %case 49
+  }%
+  \greoCaseInitialConnectedVirga{%
     \grehepisorlineaux{0}{\gre@char@he@virga@line@br{#5}}{0}{#4}%
-  \or %
-    %case 50
+  }%
+  \greoCaseInitialConnectedQuilisma{%
     \grehepisorlineaux{0}{\gre@char@he@quilisma@line@tr{#5}}{0}{#4}%
-  \or %
-    %case 51
+  }%
+  \greoCaseInitialConnectedOriscus{%
     \grehepisorlineaux{0}{\gre@char@he@oriscus@line@tr{#5}}{0}{#4}%
-  \or %
-    %case 52
+  }%
+  \greoCaseFinalConnectedPunctum{%
     \grehepisorlineaux{\gre@char@punctum@line@tl}{\gre@char@he@punctum@line@tl{#5}}{2}{#4}%
-  \or %
-    %case 53
+  }%
+  \greoCaseFinalConnectedAuctus{%
     \grehepisorlineaux{\gre@char@punctumauctus@line@bl}{\gre@char@he@punctumauctus@line@bl{#5}}{2}{#4}%
-  \or %
-    %case 54
+  }%
+  \greoCaseFinalVirgaAuctus{%
     \grehepisorlineaux{\gre@char@virgaaucta}{\gre@char@he@punctumauctus@line@bl{#5}}{2}{#4}%
-  \or %
-    %case 55
+  }%
+  \greoCaseFinalConnectedVirga{%
     \grehepisorlineaux{\gre@char@virga@line@br}{\gre@char@he@virga@line@br{#5}}{2}{#4}%
-  \or%
-    %case 56
+  }%
+  \greoCaseInitialVirga{%
     \grehepisorlineaux{0}{\gre@char@he@virga{#5}}{0}{#4}%
-  \fi%
-  \relax%
+  }%
+  \undefined{\gre@bug{Invalid note offset case: \string#2}}%
+  #2{}% to match any unmatched case
+  \gre@endswitchx\relax%
 }}%
 
 % dumb top function

@@ -22,6 +22,8 @@
 
 #include <stdbool.h>
 
+#define OFFSET_CASE(name) static const char *const name = #name
+
 /*
  * Here are the different types, they must be the same as in squarize.py 
  */
