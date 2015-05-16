@@ -67,6 +67,7 @@ NAME=${NAME:-gregoriotex}
 FORMAT=${FORMAT:-luatex}
 TEXHASH=${TEXHASH:-texhash}
 KPSEWHICH=${KPSEWHICH:-kpsewhich}
+CP=${CP:-cp}
 
 TTFFILES=("${TTFFILES[@]/#/fonts/}")
 FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
