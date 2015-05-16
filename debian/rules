@@ -46,7 +46,6 @@ install: build
 	dh_testroot
 	dh_prep
 	$(MAKE) DESTDIR=$(CURDIR)/debian/gregorio install
-#	sed -i "/dependency_libs/ s/'.*'/''/" `find $(CURDIR)/debian/gregorio -name '*.la'`
 
 # Build architecture-independent files here.
 binary-indep: build install
