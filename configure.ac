@@ -61,7 +61,8 @@ AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
 AC_ARG_WITH([kpathsea], AS_HELP_STRING([--with-kpathsea], [Build with kpathsea.]))
 
 AS_IF([test "x$with_kpathsea" = "xyes"], [
-   PKG_CHECK_MODULES([KPSE], [kpathsea], AC_DEFINE([USE_KPSE], [1], [Use kpathsea]))
+    PKG_PROG_PKG_CONFIG
+    PKG_CHECK_MODULES([KPSE], [kpathsea], AC_DEFINE([USE_KPSE], [1], [Use kpathsea]))
 ])
 
 AC_CONFIG_HEADERS([src/config_.h])
