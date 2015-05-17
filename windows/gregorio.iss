@@ -65,7 +65,6 @@ Source: "../tex/gregoriotex.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregoriotex.sty"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregoriotex.lua"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregoriotex-chars.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex-ictus.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregoriotex-signs.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregoriotex-spaces.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregoriotex-syllable.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
@@ -77,7 +76,7 @@ Source: "../fonts/gregorio.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gre
 Source: "../fonts/greextra.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
 Source: "../fonts/gresym.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
 Source: "../fonts/parmesan.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/convertsfrtottf.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/convertsfdtottf.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/greciliae-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/greextra.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/gregorio-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
@@ -89,7 +88,7 @@ Source: "../README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 
 [Run]
 Filename: "texlua.exe"; Parameters: """{app}\install-tl.lua"" > ""{app}\install-tl.log"""; StatusMsg: "Configuring TeXLive texmf..."; Description: "Add files to TeXLive texmf tree"; Flags: postinstall ; WorkingDir: "{app}";
-Filename: "texlua.exe"; Parameters: """{app}\install-mt.lua"" > ""{app}\install-mt.log"""; StatusMsg: "Configuring MiKTeX texmf..."; Description: "Add files to MiKTeK texmf tree"; Flags: postinstall ; WorkingDir: "{app}";
+Filename: "texlua.exe"; Parameters: """{app}\install-mt.lua"" > ""{app}\install-mt.log"""; StatusMsg: "Configuring MiKTeX texmf..."; Description: "Make files available to MiKTeK"; Flags: postinstall ; WorkingDir: "{app}";
 
 [Code]
 procedure URLLabelOnClickOne(Sender: TObject);

@@ -86,19 +86,24 @@ function copy_files()
     lfs.mkdir(texmflocal)
   end
   print("Copying files...\n")
-  local texmfbin = kpse.expand_var("$TEXMFDIST")
-  print(texmfbin)
-  texmfbin = fixpath(texmfbin.."/../bin/win32/")
-  print(texmfbin)
+  local texmfdist = kpse.expand_var("$TEXMFDIST")
+  --[[ MiKTeX uses slightly different paths for the location of it's bin
+  directory for 32 and 64 bit versions.  Since the copy command will fail
+  silently if the destination directory doesn't exist, the simplest way to deal
+  with this is to simply try copying to both locations.
+  --]]
+  texmfbin_32 = fixpath(texmfdist.."/miktex/bin/")
+  texmfbin_64 = fixpath(texmfdist.."/miktex/bin/x64/")
   print("gregorio.exe...")
-  copy_one_file("gregorio.exe", texmfbin)
-  print("unzipping TDS zip file...\n")
-  os.spawn("unzip.exe -o gregoriotex.tds.zip -d "..texmflocal:gsub("\\", "/")) -- TeXLive provides unzip!
+  copy_one_file("gregorio.exe", texmfbin_32)
+  copy_one_file("gregorio.exe", texmfbin_64)
+  print("GregorioTeX files...")
+  os.spawn("xcopy texmf "..texmflocal.." /e /f /y")
 end
 
 function run_texcommands()
   print("Running initexmf\n")
-  local p = os.spawn("initexmf -u")
+  local p = os.spawn("initexmf -u --admin")
 end
 
 function main_install()
