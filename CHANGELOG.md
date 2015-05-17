@@ -18,6 +18,13 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Porrectus deminutus and torculus resupinus deminutus glyphs have been updated to more closely match the current Solesmes books (see [#143](https://github.com/gregorio-project/gregorio/issues/143)).  If you prefer the old forms, use `\grechangeglyph{Porrectus*}{*}{.alt}\grechangeglyph{TorculusResupinus*}{*}{.alt}`.
 - New (much) improved drawings for letter bars (for Versicle, Antiphon, etc.). You must fine-tune them if you use a text font other than Linux Libertine, see [UPGRADE.md](upgrade guide) for details.
 - The default extension `gregorio` (the executable program) will use when it produces GregorioTeX files has been changed from `.tex` to `.gtex`.  Any calls to `\includescore` that use the old extension should be changed appropriately.
+- Horizontal episema improvements:
+  - A horizontal episema on the first two notes of a porrectus is now rendered differently than a horizontal episema on all three notes of a porrectus.  It will no longer reach to the right side of the porrectus  (see [#70](https://github.com/gregorio-project/gregorio/issues/70)).
+  - Similar to appending `0` to the `_` to force a horizontal episema to appear below a note, `1` may now be appended to the `_` to force a horizontal episema to appear above the note.  These may be used simutaneously, by adding both `_0` and `_1` to the same note (see ).
+  - It is now possible to render a small horizontal episema.  To use it, append `3` (for left-aligned), `4` (for center-aligned), or `5` (for right-aligned) to the `_` used for adding the horizontal episema in gabc (see [#40](https://github.com/gregorio-project/gregorio/issues/40)).
+  - Horizontal episema "bridging" has been made more consistent and is now possible on an episema that is below the note. (see [#389](https://github.com/gregorio-project/gregorio/issues/70)).
+  - It is now possible to suppress the automatic horizontal episema "bridging" across spaces within a syllable.  To use it, append `2` to the `_` on the note before the space you do not want bridged (see [#72](https://github.com/gregorio-project/gregorio/issues/72)).
+  - A horizontal episema will no longer overlap with a vertical episema on the same note (see [#395](https://github.com/gregorio-project/gregorio/issues/395)).
 
 ### Added
 - With thanks to Jakub Jelínek, St. Gallen style adiastematic notation is now handled through [nabc syntax](http://gregoriochant.org/dokuwiki/doku.php/language) (see GregorioNabcRef.pdf for details and [the new example](examples/FactusEst.gabc)). Only one line above the notes is currently handled. This is a preview, backward incompatible change are possible in future releases.
