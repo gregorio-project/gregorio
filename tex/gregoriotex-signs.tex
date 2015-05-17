@@ -966,9 +966,15 @@
 \AddHEpisemusBridges%
 
 % same but for a "bridge episemus" after the last note of a glyph (element, syllable) if the next episemus is at the same height
-\def\grehepisemusbridge#1#2#3{%
+% #1 is the height
+% #2 is 0 for episemus above, 1 for episemus below
+\def\grehepisemusbridge#1#2{%
   \ifnum\greaddhepisemusbridges=1\relax %
-    \gre@calculate@glyphraisevalue{#1}{9}%
+    \ifcase#2 %
+      \gre@calculate@glyphraisevalue{#1}{9}%
+    \or %
+      \gre@calculate@glyphraisevalue{#1}{5}%
+    \fi %
     \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gregoriofont\gre@char@he@punctum{f}\hss}%
   \fi %
   \relax %
