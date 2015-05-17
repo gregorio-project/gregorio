@@ -29,6 +29,19 @@ can become
 
 This will prevent line breaking, so if you were using so called *no linebreak areas* (with `{` in gabc) just for Euouae blocks, you can switch to this new tag, it will make things clearer and allow further spacing customization.
 
+### Horizontal episema improvements
+
+Changes to the way the horizontal episema is placed and "bridged" to other notes within the syllable may cause Gregorio to render things differently in the more esoteric (or bug-ridden) cases.  If you are depending on the old behavior, you might need to add suffixes to the `_` in gabc to get what you want:
+
+- Add `0` to force the episema to appear below the note.
+- Add `1` to force the episema to appear above the note.
+- Add `2` to prevent Gregorio from attempting to connect this episema to the next.
+- Add `3` to use a small episema, aligned to the left of the note.
+- Add `4` to use a small episema, centered in the middle of the note.
+- Add `5` to use a small episema, aligned to the right of the note.
+
+Note: `3`, `4`, and `5` encompass a new feature and are listed here only for completeness.
+
 ## 3.0
 ### TeX Live 2013
 
