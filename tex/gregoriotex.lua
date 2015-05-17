@@ -37,6 +37,8 @@ local err, warn, info, log = luatexbase.provides_module({
     license            = "GPLv3+",
 })
 
+gregoriotex.module = { err = err, warn = warn, info = info, log = log }
+
 local hlist = node.id('hlist')
 local vlist = node.id('vlist')
 local glyph = node.id('glyph')
@@ -460,6 +462,7 @@ local function font_size()
 end
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
+dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
 
 gregoriotex.include_score        = include_score
 gregoriotex.compile_gabc         = compile_gabc
