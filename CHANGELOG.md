@@ -7,6 +7,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Handling of the first syllable in gabc is now more consistent with the all other syllables.  This centers the syllable correctly when using latin syllable centering (see [#42](https://github.com/gregorio-project/gregorio/issues/42)) and makes the use of styles less surprising in the first syllable (see [#135](https://github.com/gregorio-project/gregorio/issues/135)).
 - Handling of manually-placed custos is improved.  In particular, a manual custos at the end of the score should no longer be lost when the bar happens to be at the end of the line.
 - Improved rendering of torculus resupinus flexus figures (see [#18](https://github.com/gregorio-project/gregorio/issues/18)).
+- Horizontal episema on the second note of a scandicus is now rendered in the correct place (see [#419](https://github.com/gregorio-project/gregorio/issues/419)).
 
 ### Changed
 - The spacing algorithm has completely changed, expect your scores to look quite different (better we hope).
