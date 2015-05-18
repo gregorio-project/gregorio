@@ -71,10 +71,6 @@ EXTRA_DIST = gabc/gabc-score-determination.l gabc/gabc-score-determination.y \
 					gabc/gabc-notes-determination-l.c \
 					gabc/gabc-score-determination-y.c
 
-gabc/gabc-score-determination-y.o: gabc/gabc-score-determination-y.c \
-					gabc/gabc-score-determination.h \
-					gabc/gabc-score-determination-l.h
-
 gabc/gabc-score-determination-y.c: gabc/gabc-score-determination.y
 	$(YACC) -d -p "gabc_score_determination_" -o $@ $<
 gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
@@ -85,11 +81,9 @@ gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
 		$(MAKE) $(AM_MAKEFLAGS) gabc/gabc-score-determination-y.c; \
 	fi
 
-gabc/gabc-score-determination-l.o: gabc/gabc-score-determination-l.c \
-					gabc/gabc-score-determination.h \
-					gabc/gabc-score-determination-y.h
-
-gabc/gabc-score-determination-l.c: gabc/gabc-score-determination.l
+## making score-determination-l.c depend on score-determination-y.h so that Make
+## doesn't try to compile score-determination-l.o without score-determination-y.h
+gabc/gabc-score-determination-l.c: gabc/gabc-score-determination.l gabc/gabc-score-determination-y.h
 	$(LEX) -o $@ --header-file=gabc/gabc-score-determination-l.h $<
 gabc/gabc-score-determination-l.h: gabc/gabc-score-determination-l.c
 	## Recover from the removal of gabc/gabc-score-determination-l.h, see 
