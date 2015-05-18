@@ -71,10 +71,6 @@ EXTRA_DIST = gabc/gabc-score-determination.l gabc/gabc-score-determination.y \
 					gabc/gabc-notes-determination-l.c \
 					gabc/gabc-score-determination-y.c
 
-gabc/gabc-score-determination-y.o: gabc/gabc-score-determination-y.c \
-					gabc/gabc-score-determination.h \
-					gabc/gabc-score-determination-l.h
-
 gabc/gabc-score-determination-y.c: gabc/gabc-score-determination.y
 	$(YACC) -d -p "gabc_score_determination_" -o $@ $<
 gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
@@ -84,10 +80,6 @@ gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
 		rm -f gabc/gabc-score-determination-y.c; \
 		$(MAKE) $(AM_MAKEFLAGS) gabc/gabc-score-determination-y.c; \
 	fi
-
-gabc/gabc-score-determination-l.o: gabc/gabc-score-determination-l.c \
-					gabc/gabc-score-determination.h \
-					gabc/gabc-score-determination-y.h
 
 gabc/gabc-score-determination-l.c: gabc/gabc-score-determination.l
 	$(LEX) -o $@ --header-file=gabc/gabc-score-determination-l.h $<
@@ -102,8 +94,9 @@ gabc/gabc-score-determination-l.h: gabc/gabc-score-determination-l.c
 gabc/gabc-notes-determination-l.c: gabc/gabc-notes-determination.l
 	$(LEX) -o $@ $<
 
-MAINTAINERCLEANFILES = gabc/gabc-score-determination-l.c \
+BUILT_SOURCES = gabc/gabc-score-determination-l.c \
 					gabc/gabc-notes-determination-l.c \
 					gabc/gabc-score-determination-l.h \
 					gabc/gabc-score-determination-y.c \
 					gabc/gabc-score-determination-y.h
+MAINTAINERCLEANFILES = $(BUILT_SOURCES)
