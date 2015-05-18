@@ -2597,7 +2597,6 @@ static void handle_final_bar(FILE *f, char *type, gregorio_syllable *syllable)
                 if (glyph->type == GRE_MANUAL_CUSTOS) {
                     fprintf(f, "\\gremanualcusto{%c}%%\n",
                             glyph->u.misc.pitched.pitch);
-                    break;
                 }
             }
             break;
