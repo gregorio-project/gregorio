@@ -81,9 +81,7 @@ gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
 		$(MAKE) $(AM_MAKEFLAGS) gabc/gabc-score-determination-y.c; \
 	fi
 
-## making score-determination-l.c depend on score-determination-y.h so that Make
-## doesn't try to compile score-determination-l.o without score-determination-y.h
-gabc/gabc-score-determination-l.c: gabc/gabc-score-determination.l gabc/gabc-score-determination-y.h
+gabc/gabc-score-determination-l.c: gabc/gabc-score-determination.l
 	$(LEX) -o $@ --header-file=gabc/gabc-score-determination-l.h $<
 gabc/gabc-score-determination-l.h: gabc/gabc-score-determination-l.c
 	## Recover from the removal of gabc/gabc-score-determination-l.h, see 
@@ -96,8 +94,9 @@ gabc/gabc-score-determination-l.h: gabc/gabc-score-determination-l.c
 gabc/gabc-notes-determination-l.c: gabc/gabc-notes-determination.l
 	$(LEX) -o $@ $<
 
-MAINTAINERCLEANFILES = gabc/gabc-score-determination-l.c \
+BUILT_SOURCES = gabc/gabc-score-determination-l.c \
 					gabc/gabc-notes-determination-l.c \
 					gabc/gabc-score-determination-l.h \
 					gabc/gabc-score-determination-y.c \
 					gabc/gabc-score-determination-y.h
+MAINTAINERCLEANFILES = $(BUILT_SOURCES)
