@@ -71,21 +71,23 @@ EXTRA_DIST = gabc/gabc-score-determination.l gabc/gabc-score-determination.y \
 					gabc/gabc-notes-determination-l.c \
 					gabc/gabc-score-determination-y.c
 
-gabc/gabc-score-determination-l.o: gabc/gabc-score-determination-l.c \
-					gabc/gabc-score-determination.h \
-					gabc/gabc-score-determination-y.h
-
-gabc/gabc-score-determination-l.h: gabc/gabc-score-determination-l.c
 gabc/gabc-score-determination-l.c: gabc/gabc-score-determination.l
 	$(LEX) -o $@ --header-file=gabc/gabc-score-determination-l.h $<
+gabc/gabc-score-determination-l.h: gabc/gabc-score-determination-l.c
+	## Recover from the removal of $@, see 
+	## https://www.gnu.org/software/automake/manual/html_node/Multiple-Outputs.html
+	@if test -f $@; then :; else \
+		rm -f gabc/gabc-score-determination-l.c; \
+		$(MAKE) $(AM_MAKEFLAGS) gabc/gabc-score-determination-l.c; \
+	fi
 
-gabc/gabc-score-determination-y.o: gabc/gabc-score-determination-y.c \
-					gabc/gabc-score-determination.h \
-					gabc/gabc-score-determination-l.h
-
-gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
 gabc/gabc-score-determination-y.c: gabc/gabc-score-determination.y
 	$(YACC) -d -p "gabc_score_determination_" -o $@ $<
+gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
+	@if test -f $@; then :; else \
+		rm -f gabc/gabc-score-determination-y.c; \
+		$(MAKE) $(AM_MAKEFLAGS) gabc/gabc-score-determination-y.c; \
+	fi
 
 gabc/gabc-notes-determination-l.c: gabc/gabc-notes-determination.l
 	$(LEX) -o $@ $<
