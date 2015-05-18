@@ -465,7 +465,8 @@ void gregorio_add_h_episemus(gregorio_note *note,
     }
 }
 
-void gregorio_add_sign(gregorio_note *note, gregorio_sign sign)
+void gregorio_add_sign(gregorio_note *note, gregorio_sign sign,
+        gregorio_vposition vposition)
 {
     if (!note) {
         // error
@@ -490,6 +491,7 @@ void gregorio_add_sign(gregorio_note *note, gregorio_sign sign)
             break;
         }
         break;
+
     case _V_EPISEMUS:
         switch (note->signs) {
         case _NO_SIGN:
@@ -504,6 +506,12 @@ void gregorio_add_sign(gregorio_note *note, gregorio_sign sign)
         default:
             break;
         }
+
+        if (note->type == GRE_NOTE && vposition) {
+            note->v_episemus_height = note->u.note.pitch + vposition;
+        }
+        break;
+
     default:
         break;
     }

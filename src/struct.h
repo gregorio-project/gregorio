@@ -748,7 +748,8 @@ void gregorio_position_h_episemus_below(gregorio_note *note, char height,
 void gregorio_add_h_episemus(gregorio_note *note, grehepisemus_size size,
         gregorio_vposition vposition, bool disable_bridge,
         unsigned int *nbof_isolated_episemus);
-void gregorio_add_sign(gregorio_note *note, gregorio_sign sign);
+void gregorio_add_sign(gregorio_note *note, gregorio_sign sign,
+        gregorio_vposition vposition);
 void gregorio_add_liquescentia(gregorio_note *note,
         gregorio_liquescentia liquescentia);
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info);
