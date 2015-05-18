@@ -47,11 +47,6 @@
 #include "messages.h"
 #include "characters.h"
 
-static inline char max(char a, char b)
-{
-    return a > b ? a : b;
-}
-
 static gregorio_note *create_and_link_note(gregorio_note **current_note)
 {
     gregorio_note *note = calloc(1, sizeof(gregorio_note));

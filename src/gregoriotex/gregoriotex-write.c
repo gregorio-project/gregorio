@@ -1981,6 +1981,8 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
                     case GRE_SHARP:
                         alteration = 60;
                         break;
+                    default:
+                        break;
                     }
                 }
                 if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
@@ -2181,6 +2183,8 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
         case _V_EPISEMUS_PUNCTUM_MORA:
         case _V_EPISEMUS_AUCTUM_DUPLEX:
             gregoriotex_write_vepisemus(f, current_note);
+            break;
+        default:
             break;
         }
         // why is this if there?...
@@ -2590,13 +2594,14 @@ static void handle_final_bar(FILE *f, char *type, gregorio_syllable *syllable)
         case GRE_ELEMENT:
             for (gregorio_glyph *glyph = element->u.first_glyph; glyph;
                     glyph = glyph->next) {
-                switch (glyph->type) {
-                case GRE_MANUAL_CUSTOS:
+                if (glyph->type == GRE_MANUAL_CUSTOS) {
                     fprintf(f, "\\gremanualcusto{%c}%%\n",
                             glyph->u.misc.pitched.pitch);
                     break;
                 }
             }
+            break;
+        default:
             break;
         }
     }
@@ -2730,11 +2735,11 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
         fprintf(f, "\\gresyllable");
     }
     gregoriotex_write_text(f, syllable->text, first_syllable, THIS_SYL);
-    if (syllable->position == WORD_END
-            || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
-            || !syllable->next_syllable
-            || !syllable->next_syllable->type == GRE_END_OF_LINE
-            || !syllable->next_syllable->type == GRE_END_OF_PAR) {
+    if (syllable->position == WORD_END ||
+            syllable->position == WORD_ONE_SYLLABLE || !syllable->text ||
+            !syllable->next_syllable ||
+            syllable->next_syllable->type == GRE_END_OF_LINE ||
+            syllable->next_syllable->type == GRE_END_OF_PAR) {
         fprintf(f, "{1}");
     } else {
         fprintf(f, "{0}");

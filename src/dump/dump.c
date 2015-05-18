@@ -1070,6 +1070,8 @@ void dump_write_score(FILE *f, gregorio_score *score)
                     }
                 }
                 break;
+            default:
+                break;
             }
             if (element->nabc_lines) {
                 fprintf(f, "     nabc_lines              %d\n",
