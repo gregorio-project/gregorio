@@ -96,6 +96,19 @@ static void add_h_episemus(void) {
                 &nbof_isolated_episemus);
 }
 
+static void add_v_episemus(void) {
+    gregorio_vposition vposition = VPOS_AUTO;
+    switch(gabc_notes_determination_text[1]) {
+    case '0':
+        vposition = VPOS_BELOW;
+        break;
+    case '1':
+        vposition = VPOS_ABOVE;
+        break;
+    }
+    gregorio_add_sign(current_note, _V_EPISEMUS, vposition);
+}
+
 %}
 
 %option stack
@@ -425,14 +438,14 @@ r5  {
         lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]),
                 _NO_SIGN, L_INITIO_DEBILIS);
     }
-\'  {
-        gregorio_add_sign(current_note, _V_EPISEMUS);
+\'[01]?  {
+        add_v_episemus();
     }
 _[0-5]* {
         add_h_episemus();
     }
 \.  {
-        gregorio_add_sign(current_note, _PUNCTUM_MORA);
+        gregorio_add_sign(current_note, _PUNCTUM_MORA, VPOS_AUTO);
     }
 ~   {
         gregorio_add_liquescentia(current_note, L_DEMINUTUS);

@@ -836,11 +836,19 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
     }
 
     if (note->signs & _V_EPISEMUS) {
-        note->v_episemus_height = note->u.note.pitch + (int)v_episemus;
-        if ((v_episemus == VPOS_BELOW && v_episemus_below_is_lower)
-                || v_episemus == VPOS_ABOVE) {
-            // above is always higher because of GregorioTeX's design
-            note->v_episemus_height += (int)v_episemus;
+        if (note->v_episemus_height) {
+            if (note->v_episemus_height > note->u.note.pitch) {
+                // above is always higher because of GregorioTeX's design
+                note->v_episemus_height += (int)VPOS_ABOVE;
+            }
+        }
+        else {
+            note->v_episemus_height = note->u.note.pitch + (int)v_episemus;
+            if ((v_episemus == VPOS_BELOW && v_episemus_below_is_lower)
+                    || v_episemus == VPOS_ABOVE) {
+                // above is always higher because of GregorioTeX's design
+                note->v_episemus_height += (int)v_episemus;
+            }
         }
     }
 

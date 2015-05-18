@@ -359,6 +359,17 @@ static void gabc_hepisemus(FILE *f, char *prefix, bool connect,
     }
 }
 
+static char *vepisemus_position(gregorio_note *note)
+{
+    if (!note->v_episemus_height) {
+        return "";
+    }
+    if (note->v_episemus_height < note->u.note.pitch) {
+        return "0";
+    }
+    return "1";
+}
+
 /*
  * 
  * The function that writes one gregorio_note.
@@ -485,13 +496,13 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         fprintf(f, "..");
         break;
     case _V_EPISEMUS:
-        fprintf(f, "'");
+        fprintf(f, "'%s", vepisemus_position(note));
         break;
     case _V_EPISEMUS_PUNCTUM_MORA:
-        fprintf(f, "'.");
+        fprintf(f, "'%s.", vepisemus_position(note));
         break;
     case _V_EPISEMUS_AUCTUM_DUPLEX:
-        fprintf(f, "'..");
+        fprintf(f, "'%s..", vepisemus_position(note));
         break;
     default:
         break;

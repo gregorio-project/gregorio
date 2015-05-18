@@ -1037,6 +1037,14 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                 fprintf(f, "         signs                  %d (%s)\n",
                                         note->signs, dump_signs(note->signs));
                             }
+                            if (note->signs & _V_EPISEMUS && note->v_episemus_height) {
+                                if (note->v_episemus_height < note->u.note.pitch) {
+                                    fprintf(f, "         v episemus forced      BELOW\n");
+                                }
+                                else {
+                                    fprintf(f, "         v episemus forced      ABOVE\n");
+                                }
+                            }
                             if (note->special_sign) {
                                 fprintf(f, "         special sign           %d (%s)\n",
                                         note->special_sign,

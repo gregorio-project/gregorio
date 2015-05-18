@@ -536,12 +536,15 @@
   \if m\grefirstcar#1\endgrefirstchar %
     \gre@count@temp@three=\number 14%
   \fi%
-  % n and o is only useful for horizontal episemus and rare signs (signs below k have m as first argument, and above have n)
+  % n, o, and p are only useful for horizontal episemus and rare signs (signs below k have m as first argument, and above have n)
   \if n\grefirstcar#1\endgrefirstchar %
     \gre@count@temp@three=\number 15%
   \fi%
-  \if n\grefirstcar#1\endgrefirstchar %
+  \if o\grefirstcar#1\endgrefirstchar %
     \gre@count@temp@three=\number 16%
+  \fi%
+  \if p\grefirstcar#1\endgrefirstchar %
+    \gre@count@temp@three=\number 17%
   \fi%
   % if there is not line... we don't consider notes are on lines
   \ifnum\greremovelinescount=1\relax %
