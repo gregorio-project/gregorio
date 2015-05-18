@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
+
+## [3.0.1] - 2015-05-17
+### Fixed
+- Windows Installer is now compatible with MiKTeX.  See [#355](https://github.com/gregorio-project/gregorio/issues/355).
+
+
 ## [3.0.0] - 2015-05-14
 ### Changed
 - [New website](http://gregorio-project.github.io) containing instructions only for new versions of Gregorio starting with this release, in English only.
