@@ -485,6 +485,8 @@ void gregorio_add_sign(gregorio_note *note, gregorio_sign sign,
         default:
             break;
         }
+
+        note->mora_vposition = vposition;
         break;
 
     case _V_EPISEMUS:

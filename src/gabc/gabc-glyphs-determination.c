@@ -759,6 +759,10 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         case S_QUILISMA_QUADRATUM:
             current_note->u.note.shape = S_QUILISMA;
             break;
+
+        default:
+            // do nothing
+            break;
         }
 
         // see comments on gregorio_add_note_to_a_glyph for the meaning of

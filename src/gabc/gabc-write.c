@@ -370,6 +370,20 @@ static char *vepisemus_position(gregorio_note *note)
     return "1";
 }
 
+static char *mora_vposition(gregorio_note *note)
+{
+    switch (note->mora_vposition) {
+    case VPOS_AUTO:
+        return "";
+    case VPOS_ABOVE:
+        return "1";
+    case VPOS_BELOW:
+        return "0";
+    default:
+        return "";
+    }
+}
+
 /*
  * 
  * The function that writes one gregorio_note.
@@ -490,7 +504,7 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     }
     switch (note->signs) {
     case _PUNCTUM_MORA:
-        fprintf(f, ".");
+        fprintf(f, ".%s", mora_vposition(note));
         break;
     case _AUCTUM_DUPLEX:
         fprintf(f, "..");
@@ -499,7 +513,7 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         fprintf(f, "'%s", vepisemus_position(note));
         break;
     case _V_EPISEMUS_PUNCTUM_MORA:
-        fprintf(f, "'%s.", vepisemus_position(note));
+        fprintf(f, "'%s.%s", vepisemus_position(note), mora_vposition(note));
         break;
     case _V_EPISEMUS_AUCTUM_DUPLEX:
         fprintf(f, "'%s..", vepisemus_position(note));

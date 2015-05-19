@@ -685,6 +685,19 @@ static const char *dump_bool(bool value) {
     return value? "true" : "false";
 }
 
+static const char *dump_vposition(gregorio_vposition vpos) {
+    switch (vpos) {
+    case VPOS_AUTO:
+        return "VPOS_AUTO";
+    case VPOS_ABOVE:
+        return "VPOS_ABOVE";
+    case VPOS_BELOW:
+        return "VPOS_BELOW";
+    default:
+        return "unknown";
+    }
+}
+
 void dump_write_score(FILE *f, gregorio_score *score)
 {
     gregorio_voice_info *voice_info = score->first_voice_info;
@@ -1045,6 +1058,12 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                     fprintf(f, "         v episemus forced      ABOVE\n");
                                 }
                             }
+                            if ((note->signs == _PUNCTUM_MORA
+                                        || note->signs == _V_EPISEMUS_PUNCTUM_MORA)
+                                    && note->mora_vposition) {
+                                fprintf(f, "         mora vposition         %s\n",
+                                        dump_vposition(note->mora_vposition));
+                            }
                             if (note->special_sign) {
                                 fprintf(f, "         special sign           %d (%s)\n",
                                         note->special_sign,
@@ -1078,7 +1097,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
                     }
                 }
                 break;
+
             default:
+                // do nothing
                 break;
             }
             if (element->nabc_lines) {

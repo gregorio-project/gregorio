@@ -478,7 +478,11 @@
 %% 6: case of the signs above (accentus, etc.)
 %% 8: case of the punctum mora of the first note of a podatus or the 2nd note of a porrectus, etc.
 %% 9: case of the horizontal episemus, that must be placed a bit lower if the note is on a line
-%% 10: case of the choral sign
+%% 10: low choral sign
+%% 11: high choral sign
+%% 12: low choral sign below the note
+%% 13: brace above the bars
+%% 14: punctum mora in a space with a note on the line below it
 \def\gre@calculate@glyphraisevalue#1#2{%
   \global\greisonaline=\number 0%
   % z and y are special cases for episemae on the lowest note
@@ -563,15 +567,15 @@
       \global\advance\gre@count@temp@three by 1%
     \or% 5
       \global\advance\gre@count@temp@three by -1%
-    \or\or\or % 8
+    \or\or\or% 8
       \global\advance\gre@count@temp@three by -1%
-    \or % 9
+    \or% 9
       \global\advance\gre@count@temp@three by 1%
-    \or % 10
+    \or% 10
       \global\advance\gre@count@temp@three by 1%
-    \or % 11
+    \or% 11
       \global\advance\gre@count@temp@three by 1%
-    \or % 12
+    \or% 12
       \global\advance\gre@count@temp@three by -1%
     \fi%
   \fi%
@@ -643,8 +647,12 @@
     \else %
       \grelowchoralsignstyle{\global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@lowchoralsignshift} %
     \fi %
-  \or% 12: if it is the brace above the bars, we shift it to a user-defined value
+  \or% 13: if it is the brace above the bars, we shift it to a user-defined value
       \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@braceshift %
+  \or% 14: raise the punctum mora in a space a bit higher than case 4
+    \gre@dimen@addedraisevalue=200 sp%
+    \multiply\gre@dimen@addedraisevalue by \the\grefactor %
+    \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
   \fi%
   \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@constantglyphraise %
 }%
