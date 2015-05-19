@@ -27,13 +27,13 @@ EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py README.md
 FONTFORGE = fontforge
 RM = rm
 
-gregorio.ttf: squarize.py gregorio-base.sfd
+gregorio.ttf: squarize.py gregorio-base.sfd ../.gregorio-version
 	$(FONTFORGE) -script squarize.py gregorio
 
-parmesan.ttf: squarize.py parmesan-base.sfd
+parmesan.ttf: squarize.py parmesan-base.sfd ../.gregorio-version
 	$(FONTFORGE) -script squarize.py parmesan
 
-greciliae.ttf: squarize.py greciliae-base.sfd
+greciliae.ttf: squarize.py greciliae-base.sfd ../.gregorio-version
 	$(FONTFORGE) -script squarize.py greciliae
 
 greextra.ttf: convertsfdtottf.py greextra.sfd
@@ -72,5 +72,4 @@ install-data-local:
 	@$(TOP_LEVEL_MAKE) echo 'If you were using "make localinstall" before, now use'
 	@$(TOP_LEVEL_MAKE) echo '    ./install-gtex.sh user'
 
-all:
-	@$(TOP_LEVEL_MAKE) echo 'Please use "make fonts" if you wish to build the GregorioTeX fonts'
+all: fonts
