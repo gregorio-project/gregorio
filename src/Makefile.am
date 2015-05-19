@@ -18,13 +18,16 @@
 AM_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/src/gabc  -I$(top_srcdir)/src/dump  -I$(top_srcdir)/src/gregoriotex
 AM_CFLAGS =
 
+gregorio_CFLAGS = $(KPSE_CFLAGS)
+gregorio_LDADD = $(KPSE_LIBS)
+
 bin_PROGRAMS = gregorio
 gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
-				   unicode.c struct.h messages.h unicode.h characters.h \
-				   plugins.h config.h dump/dump.c \
-				   gregoriotex/gregoriotex-write.c \
-				   gregoriotex/gregoriotex-position.c \
-				   gregoriotex/gregoriotex.h
+					unicode.c struct.h messages.h unicode.h characters.h \
+					plugins.h config.h dump/dump.c \
+					gregoriotex/gregoriotex-write.c \
+					gregoriotex/gregoriotex-position.c \
+					gregoriotex/gregoriotex.h
 
 @MK@ifneq ($(wildcard ../.git),)
 @MK@  _tag_ = $(shell git describe --exact-match HEAD 2>/dev/null)
@@ -53,36 +56,47 @@ endif
 gregorio_SOURCES += gabc/gabc-elements-determination.c gabc/gabc-write.c \
 					gabc/gabc-glyphs-determination.c gabc/gabc.h \
 					gabc/gabc-score-determination.h \
+					gabc/gabc-score-determination-y.h \
+					gabc/gabc-score-determination-l.h \
 					gabc/gabc-score-determination-l.c \
 					gabc/gabc-notes-determination-l.c \
-					gabc/gabc-score-determination-l.h \
-					gabc/gabc-score-determination-y.c \
-					gabc/gabc-score-determination-y.h
+					gabc/gabc-score-determination-y.c
 
 EXTRA_DIST = gabc/gabc-score-determination.l gabc/gabc-score-determination.y \
-			 gabc/gabc-notes-determination.l
+					gabc/gabc-notes-determination.l \
+					gabc/gabc-score-determination.h \
+					gabc/gabc-score-determination-y.h \
+					gabc/gabc-score-determination-l.h \
+					gabc/gabc-score-determination-l.c \
+					gabc/gabc-notes-determination-l.c \
+					gabc/gabc-score-determination-y.c
 
-gabc/gabc-score-determination-l.o: gabc/gabc-score-determination-l.c \
-								   gabc/gabc-score-determination.h \
-								   gabc/gabc-score-determination-y.h
-
-gabc/gabc-score-determination-l.h: gabc/gabc-score-determination-l.c
-gabc/gabc-score-determination-l.c: gabc/gabc-score-determination.l
-	$(LEX) -o $@ --header-file=gabc/gabc-score-determination-l.h $<
-
-gabc/gabc-score-determination-y.o: gabc/gabc-score-determination-y.c \
-								   gabc/gabc-score-determination.h \
-								   gabc/gabc-score-determination-l.h
-
-gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
 gabc/gabc-score-determination-y.c: gabc/gabc-score-determination.y
 	$(YACC) -d -p "gabc_score_determination_" -o $@ $<
+gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
+	## Recover from the removal of gabc/gabc-score-determination-y.h, see 
+	## https://www.gnu.org/software/automake/manual/html_node/Multiple-Outputs.html
+	@if test -f $@; then :; else \
+		rm -f gabc/gabc-score-determination-y.c; \
+		$(MAKE) $(AM_MAKEFLAGS) gabc/gabc-score-determination-y.c; \
+	fi
+
+gabc/gabc-score-determination-l.c: gabc/gabc-score-determination.l
+	$(LEX) -o $@ --header-file=gabc/gabc-score-determination-l.h $<
+gabc/gabc-score-determination-l.h: gabc/gabc-score-determination-l.c
+	## Recover from the removal of gabc/gabc-score-determination-l.h, see 
+	## https://www.gnu.org/software/automake/manual/html_node/Multiple-Outputs.html
+	@if test -f $@; then :; else \
+		rm -f gabc/gabc-score-determination-l.c; \
+		$(MAKE) $(AM_MAKEFLAGS) gabc/gabc-score-determination-l.c; \
+	fi
 
 gabc/gabc-notes-determination-l.c: gabc/gabc-notes-determination.l
 	$(LEX) -o $@ $<
 
-DISTCLEANFILES = gabc/gabc-score-determination-l.c \
-			 gabc/gabc-notes-determination-l.c \
-			 gabc/gabc-score-determination-l.h \
-			 gabc/gabc-score-determination-y.c \
-			 gabc/gabc-score-determination-y.h
+BUILT_SOURCES = gabc/gabc-score-determination-l.c \
+					gabc/gabc-notes-determination-l.c \
+					gabc/gabc-score-determination-l.h \
+					gabc/gabc-score-determination-y.c \
+					gabc/gabc-score-determination-y.h
+MAINTAINERCLEANFILES = $(BUILT_SOURCES)

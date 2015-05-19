@@ -20,7 +20,7 @@ deb:
 config.status:
 	dh_testdir
 	dh_autoreconf
-	dh_auto_configure
+	dh_auto_configure -- --with-kpathsea
 
 build: build-stamp
 
@@ -46,14 +46,13 @@ install: build
 	dh_testroot
 	dh_prep
 	$(MAKE) DESTDIR=$(CURDIR)/debian/gregorio install
-#	sed -i "/dependency_libs/ s/'.*'/''/" `find $(CURDIR)/debian/gregorio -name '*.la'`
 
 # Build architecture-independent files here.
 binary-indep: build install
 	dh_testdir -i
 	dh_testroot -i
 	dh_installchangelogs  -i
-	dh_installexamples -i examples/*.tex examples/PopulusSion.gabc
+	dh_installexamples -i examples/*.tex examples/*.gabc
 	dh_installtex -pgregoriotex -i
 	dh_install -i
 	dh_installdocs -i
@@ -69,7 +68,7 @@ binary-arch: build install
 	dh_testdir -a
 	dh_testroot -a
 	dh_installchangelogs -a
-	dh_installexamples -i examples/PopulusSion.gabc
+	dh_installexamples -i examples/*.gabc
 	dh_lintian -a
 	dh_installman -a gregorio.1
 	dh_installdocs -a
