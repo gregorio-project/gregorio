@@ -8,7 +8,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Handling of manually-placed custos is improved.  In particular, a manual custos at the end of the score should no longer be lost when the bar happens to be at the end of the line.
 - Improved rendering of torculus resupinus flexus figures (see [#18](https://github.com/gregorio-project/gregorio/issues/18)).
 - Horizontal episema on the second note of a scandicus is now rendered in the correct place (see [#419](https://github.com/gregorio-project/gregorio/issues/419)).
-- The dot in a space directly above a punctum in a descending neume is now placed slightly higher in the space (see [#386](https://github.com/gregorio-project/gregorio/issues/386 and [Gna! bug 21737](https://gna.org/bugs/?21737)).
+- The dot in a space directly above a punctum in a descending neume is now placed slightly higher in the space (see [#386](https://github.com/gregorio-project/gregorio/issues/386) and [Gna! bug 21737](https://gna.org/bugs/?21737)).
 
 ### Changed
 - The spacing algorithm has completely changed, expect your scores to look quite different (better we hope).
