@@ -45,6 +45,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Chironomy markings (gabc `u` and `U`), which were not working correctly in the first place.
 - `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, supplanted by the new glyph system, see [UPGRADE.md](upgrade guide).
 
+## [3.0.1] - 2015-05-17
+### Fixed
+- Windows Installer is now compatible with MiKTeX.  See [#355](https://github.com/gregorio-project/gregorio/issues/355).
+
 ## [3.0.0] - 2015-05-14
 ### Changed
 - [New website](http://gregorio-project.github.io) containing instructions only for new versions of Gregorio starting with this release, in English only.

@@ -90,8 +90,8 @@ function copy_files()
   texmfbin = fixpath(texmfbin.."/../bin/win32/")
   print("gregorio.exe...")
   copy_one_file("gregorio.exe", texmfbin)
-  print("unzipping TDS zip file...\n")
-  os.spawn("unzip.exe -o gregoriotex.tds.zip -d "..texmflocal:gsub("\\", "/")) -- TeXLive provides unzip!
+  print("GregorioTeX files...")
+  os.spawn("xcopy texmf "..texmflocal.." /e /f /y")
 end
 
 function run_texcommands()
