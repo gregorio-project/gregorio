@@ -1432,6 +1432,10 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
                     L_DEMINUTUS_INITIO_DEBILIS) {
                 shift_before = true;
             }
+            if (is_between_lines(pitch)
+                    && pitch - current_note->next->u.note.pitch == 1) {
+                special_punctum = 2;
+            }
             break;
         case G_PODATUS:
             if ((current_note->u.note.shape != S_PUNCTUM

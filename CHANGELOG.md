@@ -8,6 +8,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Handling of manually-placed custos is improved.  In particular, a manual custos at the end of the score should no longer be lost when the bar happens to be at the end of the line.
 - Improved rendering of torculus resupinus flexus figures (see [#18](https://github.com/gregorio-project/gregorio/issues/18)).
 - Horizontal episema on the second note of a scandicus is now rendered in the correct place (see [#419](https://github.com/gregorio-project/gregorio/issues/419)).
+- The dot in a space directly above a punctum in a descending neume is now placed slightly higher in the space (see [#386](https://github.com/gregorio-project/gregorio/issues/386 and [Gna! bug 21737](https://gna.org/bugs/?21737)).
 
 ### Changed
 - The spacing algorithm has completely changed, expect your scores to look quite different (better we hope).
@@ -26,7 +27,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
   - Horizontal episema "bridging" has been made more consistent and is now possible on an episema that is below the note. (see [#389](https://github.com/gregorio-project/gregorio/issues/70)).
   - It is now possible to suppress the automatic horizontal episema "bridging" across spaces within a syllable.  To use it, append `2` to the `_` on the note before the space you do not want bridged (see [#72](https://github.com/gregorio-project/gregorio/issues/72)).
   - A horizontal episema will no longer overlap with a vertical episema on the same note (see [#395](https://github.com/gregorio-project/gregorio/issues/395)).
-- The dot after a torculus whose last note is on a line will now appear below the line.  If you do not like the automatic placement of a dot after any note on a line (not just the torculus), you may specify a `0` or `1` after the `.` to force the dot to appear below or above the line, respectively.  See  [#386](https://github.com/gregorio-project/gregorio/issues/386).
+- The dot after a torculus whose last note is on a line will now appear below the line.  If you do not like the automatic placement of a dot after any note on a line (not just the torculus), you may specify a `0` or `1` after the `.` to force the dot to appear below or above the line, respectively.  See [#386](https://github.com/gregorio-project/gregorio/issues/386).
 
 ### Added
 - With thanks to Jakub Jelínek, St. Gallen style adiastematic notation is now handled through [nabc syntax](http://gregoriochant.org/dokuwiki/doku.php/language) (see GregorioNabcRef.pdf for details and [the new example](examples/FactusEst.gabc)). Only one line above the notes is currently handled. This is a preview, backward incompatible change are possible in future releases.

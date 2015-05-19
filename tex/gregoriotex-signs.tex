@@ -571,10 +571,12 @@
   \ifnum#2=1\else %
     \xdef\grelastispunctum{1}%
   \fi %
-  \ifnum #3=0 %
+  \ifcase#3\relax % 0
     \gre@calculate@glyphraisevalue{#1}{4}%
-  \else %
+  \or% 1
     \gre@calculate@glyphraisevalue{#1}{8}%
+  \or% 2
+    \gre@calculate@glyphraisevalue{#1}{14}%
   \fi %
   % here we shift a bit left in the case where we have a punctum inclinatum on a line
   \ifnum#4=1\relax %
