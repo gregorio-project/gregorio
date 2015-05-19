@@ -887,6 +887,9 @@ static bool is_bridgeable_space(const gregorio_element *const element)
         case SP_NEUMATIC_CUT_NB:
         case SP_LARGER_SPACE_NB:
             return true;
+        default:
+            // do nothing
+            break;
         }
     }
 
