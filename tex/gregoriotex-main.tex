@@ -190,9 +190,9 @@
       \ifcase\greknownline %
       % 0: should not happend...
       \or % 1
-        \greadjustsecondline %
+        \GreAdjustSecondLine %
       \or %2
-        \greadjustthirdline %
+        \GreAdjustThirdLine %
       \fi %
     \fi %
     \global\advance\greknownline by 1\relax %
@@ -260,14 +260,14 @@
 }%
 
 % macro to call before the first syllable, but after setinitialclef
-\def\greadjustsecondline{%
+\def\GreAdjustSecondLine{%
   \gre@dimen@additionalleftspace=\gre@dimen@initialwidth %
   \greupdateleftbox %
   \relax %
 }%
 
 % macro to call during the second line
-\def\greadjustthirdline{%
+\def\GreAdjustThirdLine{%
   \gre@dimen@additionalleftspace= 0 pt%
   \greupdateleftbox %
   \relax %
@@ -730,7 +730,7 @@
 
 \def\grewritetranslationwithcenterbeginning#1{%
   \ifnum\grenlbintranslation=1\relax %
-    \grebeginnlbarea{0}{1}%
+    \GreBeginNLBArea{0}{1}%
   \fi %
   \gregoriocenterattr=1\relax %
   \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}\kern 0pt}%
@@ -763,7 +763,7 @@
 % gregorioattr (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
 %macro called at the beginning of a score
-\def\begingregorioscore{%
+\def\GreBeginScore{%
   % not sure it's perfect to put that here, but it's the only way I found to make it work....
   \setgregoriofont{\gregoriofontname}%
   \ifnum\greusestylefont=1\relax %
@@ -787,7 +787,7 @@
 }%
 
 %macro called at the end of a score
-\def\endgregorioscore{%
+\def\GreEndScore{%
   \global\grelastoflinecount=0\relax %
   \global\greblockcusto=0\relax %
   \greendeuouae{}%
@@ -995,7 +995,7 @@
 
 % first argument is if if the nlba is starting in neumes or not
 % second argument is if it is called from translation centering or not
-\def\grebeginnlbarea#1#2{%
+\def\GreBeginNLBArea#1#2{%
   \xdef\grenlbinitialstate{\grenlbstate}%
   \ifnum#2=0\relax %
     \xdef\grenlbstate{2}%
@@ -1079,7 +1079,7 @@
 
 \def\grebegineuouae{%
   \ifgre@euouae@implies@nlba %
-    \grebeginnlbarea{0}{0}%
+    \GreBeginNLBArea{0}{0}%
   \fi %
   \gre@in@euouaetrue %
 }

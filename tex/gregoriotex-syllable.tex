@@ -637,7 +637,7 @@
 }%
 
 %a macro to typeset a syllable with only a bar inside
-\def\grebarsyllable#1#2#3#4#5#6#7#8#9{%
+\def\GreBarSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@debugmsg{general}{New bar syllable}%
   % the algorithm of this function is *extremely* complex, and has been much painful to write... good luck to understand.
   % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the previous syllable and the first note of the next syllable. But there are limits : a bar can't go very far above text. For example if there is "nuncncncncn" with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.

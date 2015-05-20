@@ -1,5 +1,5 @@
 % !TEX root = GregorioRef.tex
-% !TEX program = LuaLaTeX
+% !TEX program = LuaLaTeX+se
 \section{Gregoriotex Controls}
 
 These functions are the ones used by Gregoriotex internally as it
@@ -429,6 +429,42 @@ rather than have multiple definitions.
   11 & divisio minima, minor and maior\\
   12 & divisio finalis
  \end{tabular}
+
+\subsection{Episemus Special}\label{EpisemusSpecial}
+\rowcolors{1}{lightgray}{lightgray}
+\begin{tabular}{cp{10.5cm plus .5cm}}
+  \multicolumn{2}{c}{Integer with the following possibilities:} \\
+  \hline
+  0 & Last note, which is a standard punctum (works with pes).\\
+  1 & Same, but the last note is a deminutus.\\
+  2 & The note before the last note, which is a standard punctum.\\
+  3 & Idem, but the note is the note preceding a deminutus.\\
+  4 & The note before the note before the last note (for porrectus flexus).\\
+  5 & Idem, but when the two last notes are a deminutus.\\
+  6 & The first note, if it is a standard punctum.\\
+  7 & The first note, if it is an initio debilis.\\
+  8 & The first note, if it is a porrectus.\\
+  \multicolumn{2}{l}{The three next arguments make no sense for a vepisemus}\\
+  9 & The two first notes, if it is a porrectus.\\
+  10 & The two first notes, if it is a porrectus flexus.\\
+  11 & The notes two and three of a torculus resupinus.\\
+  12 & The last note, if it is a punctum inclinatum.\\
+  13 & Idem, if it is a punctum inclinatum deminutus.\\
+  14 & Idem, if it is a stropha.\\
+  15 & Idem, with a quilisma.\\
+  16 & Idem, with an oriscus.\\
+  17 & Same of 2 but for ambitus of one.\\
+  18 & Same of 0, but the last note is a smaller punctum (concerning simple podatus, podatus, and torculus resupinus).\\
+  19 & The first note, if it is an oriscus.\\
+  20 & The first note, if it is a quilisma.\\
+  21 & The second note of a torculus resupinus with first ambitus of at least two.\\
+  22 & Idem with ambitus of one.\\
+  23 & Idem with initio debilis.\\
+  24 & The last note, if it is a linea punctum (or linea punctum cavum).\\
+  25 & The last note, if it is a bar.\\
+  26 & The last note, if it is a virgula.\\
+  27 & The last note, if it is a divisio finalis.\\
+\end{tabular}
 
 %%% Local Variables:
 %%% mode: latex

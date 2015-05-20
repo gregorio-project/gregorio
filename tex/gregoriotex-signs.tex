@@ -201,7 +201,7 @@
   % if the initial is big, then we adjust the second line
   \ifnum\grebiginitial=0\relax %
   \else %
-    \greadjustsecondline %
+    \GreAdjustSecondLine %
   \fi %
   \relax%
 }%
@@ -622,7 +622,7 @@
 }%
 
 % a function to typeset an augmentum duplex, easy enough to be understood...
-\def\greaugmentumduplex#1#2#3{%
+\def\GreAugmentumDuplex#1#2#3{%
   \grepunctummora{#1}{1}{#3}{0}%
   \grepunctummora{#2}{0}{0}{0}%
   \relax %
@@ -796,17 +796,17 @@
   \relax %
 }%
 
-\def\grebarbrace#1{%
+\def\GreBarBrace#1{%
   \grevepisemusorrare{g}{#1}{\gre@char@barbrace}{4}{}%
   \relax %
 }%
 
-\def\grebarvepisemus#1{%
+\def\GreBarVEpisemus#1{%
   \grevepisemusorrare{c}{#1}{\gre@char@vepisemus}{1}{}%
   \relax %
 }%
 
-\def\greaccentus#1#2{%
+\def\GreAccentus#1#2{%
   \grevepisemusorrare{#1}{#2}{\gre@char@accentus}{2}{}%
   \relax %
 }%
@@ -983,7 +983,7 @@
 }%
 
 % another dumb top function
-\def\greadditionalline#1#2#3{%
+\def\GreAdditionalLine#1#2#3{%
   \ifnum\greremovelinescount=0\relax %
     \xdef\gresavedglyphraise{\the\gre@dimen@glyphraisevalue}%
     {\greadditionalstafflinesformat %
@@ -1327,7 +1327,7 @@
   \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis%
   \grehskip\gre@skip@temp@four %
   \grenobreak %
-  \grebarsyllable{}{}{}{1}{}{}{0}{\grelastofline}{%
+  \GreBarSyllable{}{}{}{1}{}{}{0}{\grelastofline}{%
     \gredivisiofinalis{}%
     #1%
   }%
@@ -1338,7 +1338,7 @@
 \def\grefinaldivisiomaior#1{%
   \grelocalrightbox{}%
   \grelocalleftbox{}%
-    \grebarsyllable{}{}{}{1}{}{}{0}{}{%
+    \GreBarSyllable{}{}{}{1}{}{}{0}{}{%
     \gredivisiomaior{}%
     #1%
   }%

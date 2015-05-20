@@ -1326,14 +1326,14 @@ static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
     }
     switch (signs) {
     case _V_EPISEMUS:
-        fprintf(f, "{\\grebarvepisemus{\\greoCase%s}}%%\n", offset_case);
+        fprintf(f, "{\\GreBarVEpisemus{\\greoCase%s}}%%\n", offset_case);
         break;
     case _BAR_H_EPISEMUS:
-        fprintf(f, "{\\grebarbrace{\\greoCase%s}}%%\n", offset_case);
+        fprintf(f, "{\\GreBarBrace{\\greoCase%s}}%%\n", offset_case);
         break;
     case _V_EPISEMUS_BAR_H_EPISEMUS:
-        fprintf(f, "{\\grebarbrace{\\greoCase%s}"
-                "\\grebarvepisemus{\\greoCase%s}}%%\n",
+        fprintf(f, "{\\GreBarBrace{\\greoCase%s}"
+                "\\GreBarVEpisemus{\\greoCase%s}}%%\n",
                 offset_case, offset_case);
         break;
     default:
@@ -1390,7 +1390,7 @@ static void gregoriotex_write_auctum_duplex(FILE *f,
         second_pitch = previous_pitch;
     }
     // maybe the third argument should be changed
-    fprintf(f, "\\greaugmentumduplex{%c}{%c}{%d}%%\n", pitch, second_pitch,
+    fprintf(f, "\\GreAugmentumDuplex{%c}{%c}{%d}%%\n", pitch, second_pitch,
             special_punctum);
 }
 
@@ -1761,7 +1761,7 @@ static void gregoriotex_write_additional_line(FILE *f,
                     current_note->next->u.note.pitch;
         }
     }
-    fprintf(f, "\\greadditionalline{\\greoCase%s}{%d}{%d}%%\n",
+    fprintf(f, "\\GreAdditionalLine{\\greoCase%s}{%d}{%d}%%\n",
             current_note->gtex_offset_case, ambitus, bottom ? 3 : 2);
 }
 
@@ -1790,7 +1790,7 @@ static void gregoriotex_write_rare(FILE *f, gregorio_note *current_note,
 {
     switch (rare) {
     case _ACCENTUS:
-        fprintf(f, "\\greaccentus{%c}{\\greoCase%s}%%\n",
+        fprintf(f, "\\GreAccentus{%c}{\\greoCase%s}%%\n",
                 current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
     case _ACCENTUS_REVERSUS:
@@ -2656,7 +2656,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
     // Very first: before anything, if the syllable is the beginning of a
     // no-linebreak area:
     if (syllable->no_linebreak_area == NLBA_BEGINNING) {
-        fprintf(f, "\\grebeginnlbarea{1}{0}%%\n");
+        fprintf(f, "\\GreBeginNLBArea{1}{0}%%\n");
     }
     if (syllable->euouae == EUOUAE_BEGINNING) {
         fprintf(f, "\\grebegineuouae{}%%\n");
@@ -2701,7 +2701,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             }
             free(line);
             if (*line_number == 1) {
-                fprintf(f, "\\greadjustthirdline %%\n");
+                fprintf(f, "\\GreAdjustThirdLine %%\n");
                 *line_number = 0;
             }
             return;
@@ -2742,7 +2742,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                 handle_final_bar(f, "divisiomaior", syllable);
                 return;
             } else {
-                fprintf(f, "\\grebarsyllable");
+                fprintf(f, "\\GreBarSyllable");
             }
         } else {
             fprintf(f, "\\gresyllable");
@@ -2840,7 +2840,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
 
         case GRE_NLBA:
             if (element->u.misc.unpitched.info.nlba == NLBA_BEGINNING) {
-                fprintf(f, "\\grebeginnlbarea{0}{0}%%\n");
+                fprintf(f, "\\GreBeginNLBArea{0}{0}%%\n");
             } else {
                 fprintf(f, "\\greendnlbarea{0}{0}%%\n");
             }
@@ -2970,7 +2970,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             }
             free(line);
             if (*line_number == 1) {
-                fprintf(f, "\\greadjustthirdline %%\n");
+                fprintf(f, "\\GreAdjustThirdLine %%\n");
                 *line_number = 0;
             }
             break;
@@ -3052,7 +3052,7 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
                 score->score_copyright);
     }
 
-    fprintf(f, "\\begingregorioscore%%\n");
+    fprintf(f, "\\GreBeginScore%%\n");
     if (score->nabc_lines) {
         fprintf(f, "\\scorenabclines{%d}", (int)score->nabc_lines);
     }
@@ -3129,6 +3129,6 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
                 0);
         current_syllable = current_syllable->next_syllable;
     }
-    fprintf(f, "\\endgregorioscore %%\n\\endinput %%\n");
+    fprintf(f, "\\GreEndScore %%\n\\endinput %%\n");
     free(status);
 }
