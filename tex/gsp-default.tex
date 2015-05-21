@@ -87,7 +87,7 @@
 % space between a clef and a flat (for clefs with flat)
 \gresetdim{clefflatspace}{0.05469 cm plus 0.00638 cm minus 0.00638 cm}{1}%
 % space before a choral sign
-\gresetdim{beforechoralsignspace}{0.04556 cm plus 0.00638 cm minus 0.00638 cm}{1}%
+\gresetdim{beforelowchoralsignspace}{0.04556 cm plus 0.00638 cm minus 0.00638 cm}{1}%
 % negative space, difference between the normal space between two notes and the space between a note and a flat
 \gresetdim{beforealterationspace}{-0.32816 cm plus 0.01093 cm minus 0.01093 cm}{1}%
 % space between elements
@@ -183,10 +183,16 @@
 % first, we have two spaces for the chironomic signs
 \gresetdim{abovesignsspace}{0.8 cm}{1}%
 \gresetdim{belowsignsspace}{0 cm}{1}%
-% the shift for the low choral sign and the high choral signs on totally free interlines
-\gresetdim{lowchoralsignshift}{0.00911 cm}{1}%
-% the shift for the high choral sign
-\gresetdim{highchoralsignshift}{-0.04556 cm}{1}%
+% the amount to shift down:
+% (a) low choral signs that are not lower than the note, regardless of whether
+%     it's on a line or in a space
+% (b) high choral signs and low choral signs that are lower than the note which
+%     are in a space
+\gresetdim{choralsigndownshift}{0.00911 cm}{1}%
+% the amount to shift up:
+% (a) high choral signs and low choral signs that are lower than the note which
+%     are on a line
+\gresetdim{choralsignupshift}{0.04556 cm}{1}%
 % the space for the translation
 \gresetdim{translationheight}{0.5 cm}{1}%
 %the space above the lines
