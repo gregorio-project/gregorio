@@ -129,7 +129,6 @@ typedef struct gregorio_line {
 static inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
         const gregorio_note *const note, bool *const kind_of_pes)
 {
-    bool low_sign = false;
     if (kind_of_pes) {
         *kind_of_pes = false;
     }
@@ -148,7 +147,7 @@ static inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
     case G_PODATUS:
     case G_PORRECTUS:
     case G_TORCULUS_RESUPINUS:
-        if (!note->next) {
+        if (!note->next || note->next->next) {
             break;
         }
         if (kind_of_pes) {
@@ -163,7 +162,7 @@ static inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
         break;
     }
 
-    return low_sign;
+    return false;
 }
 
 static inline bool is_on_a_line(const char pitch)

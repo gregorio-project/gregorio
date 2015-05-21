@@ -478,7 +478,7 @@
 %% 6: case of the signs above (accentus, etc.)
 %% 8: case of the punctum mora of the first note of a podatus or the 2nd note of a porrectus, etc.
 %% 9: case of the horizontal episemus, that must be placed a bit lower if the note is on a line
-%% 10: low choral sign
+%% 10: low choral sign not below the note
 %% 11: high choral sign
 %% 12: low choral sign below the note
 %% 13: brace above the bars
@@ -633,19 +633,19 @@
     \fi %
     \multiply\gre@dimen@addedraisevalue by \the\grefactor %
     \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
-  \or% 10: if it is a low choral sign, we shift it a bit lower, of a user-defined value
-    \grelowchoralsignstyle{\global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@lowchoralsignshift} %
-  \or% 11: if it is a high choral sign, we shift it a bit lower, of a user-defined value
+  \or% 10: low choral sign that is not lower than the note
+    \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@choralsigndownshift %
+  \or% 11: high choral sign
     \ifnum\greisonaline=1%
-      \grehighchoralsignstyle{\global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@highchoralsignshift} %
+      \global\advance\gre@dimen@glyphraisevalue by \gre@dimen@choralsignupshift %
     \else %
-      \grelowchoralsignstyle{\global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@lowchoralsignshift} %
+      \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@choralsigndownshift %
     \fi %
-  \or% 12: if it is a low choral sign that is lower than the note, we shift it a bit higher
+  \or% 12: low choral sign that is lower than the note
     \ifnum\greisonaline=1%
-      \grehighchoralsignstyle{\global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@highchoralsignshift} %
+      \global\advance\gre@dimen@glyphraisevalue by \gre@dimen@choralsignupshift %
     \else %
-      \grelowchoralsignstyle{\global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@lowchoralsignshift} %
+      \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@choralsigndownshift %
     \fi %
   \or% 13: if it is the brace above the bars, we shift it to a user-defined value
       \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@braceshift %
@@ -975,8 +975,8 @@
   \IfStrEq{#1}{clivisalignmentmin}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{abovesignsspace}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{belowsignsspace}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{lowchoralsignshift}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{highchoralsignshift}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{choralsigndownshift}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{choralsignupshift}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{translationheight}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{spacelinestext}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{spacebeneathtext}{\rubberfalse}{\relax}%
@@ -1132,8 +1132,8 @@
   \ifnum\gre@scale@clefflatspace=1\relax%
     \gre@changeonedimenfactor{clefflatspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@beforechoralsignspace=1\relax%
-    \gre@changeonedimenfactor{beforechoralsignspace}{#1}{#2}%
+  \ifnum\gre@scale@beforelowchoralsignspace=1\relax%
+    \gre@changeonedimenfactor{beforelowchoralsignspace}{#1}{#2}%
   \fi%
   \ifnum\gre@scale@beforealterationspace=1\relax%
     \gre@changeonedimenfactor{beforealterationspace}{#1}{#2}%
@@ -1264,11 +1264,11 @@
   \ifnum\gre@scale@belowsignsspace=1\relax%
     \gre@changeonedimenfactor{belowsignsspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@lowchoralsignshift=1\relax%
-    \gre@changeonedimenfactor{lowchoralsignshift}{#1}{#2}%
+  \ifnum\gre@scale@choralsigndownshift=1\relax%
+    \gre@changeonedimenfactor{choralsigndownshift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@highchoralsignshift=1\relax%
-    \gre@changeonedimenfactor{highchoralsignshift}{#1}{#2}%
+  \ifnum\gre@scale@choralsignupshift=1\relax%
+    \gre@changeonedimenfactor{choralsignupshift}{#1}{#2}%
   \fi%
   \ifnum\gre@scale@translationheight=1\relax%
     \gre@changeonedimenfactor{translationheight}{#1}{#2}%
