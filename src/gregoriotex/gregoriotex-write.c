@@ -2103,34 +2103,26 @@ static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
  */
 
 // small helper
-#define _found()\
-	  if (!found)\
-	    {\
-	      found = true;\
-	      fprintf (f, "%%\n");\
-	    }
-
-#define _end_loop()\
-      if (type == T_ONE_NOTE)\
-	{\
-	  break;\
-	}\
-      else\
-	{\
-	  current_note = current_note->next;\
-	  i++;\
-	}
+static inline bool _found(FILE *const f, const bool found)
+{
+    if (!found) {
+        fprintf (f, "%%\n");\
+        return true;
+    }
+    return found;
+}
 
 static void gregoriotex_write_signs(FILE *f, gtex_type type,
         gregorio_glyph *glyph, gregorio_note *note)
 {
     // i is the number of the note for which we are typesetting the sign.
-    int i = 1;
+    int i;
+    gregorio_note *current_note;
     // a dumb char
     char block_hepisemus = 0;
     bool found = false;
-    gregorio_note *current_note = note;
-    while (current_note) {
+    for (current_note = note, i = 1; current_note;
+            current_note = current_note->next, ++i) {
         // we start by the additional lines
         if (current_note->u.note.pitch < 'c') {
             if (!found) {
@@ -2156,7 +2148,9 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
                     "%% verbatim text at note level:\n%s%%\n%% end of verbatim text\n",
                     current_note->texverb);
         }
-        _end_loop();
+        if (type == T_ONE_NOTE) {
+            break;
+        }
     }
     if (!found) {
         fprintf(f, "{}{");
@@ -2164,33 +2158,33 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
         fprintf(f, "}{");
     }
     found = false;
-    i = 1;
-    current_note = note;
     // now a first loop for the choral signs, because high signs must be taken
     // into account before any hepisemus
-    while (current_note) {
+    for (current_note = note, i = 1; current_note;
+            current_note = current_note->next, ++i) {
         if (current_note->choral_sign) {
-            _found();
+            found = _found(f, found);
             gregoriotex_write_choral_sign(f, glyph, current_note, false);
         }
-        _end_loop();
+        if (type == T_ONE_NOTE) {
+            break;
+        }
     }
     // a loop for rare signs, vertical episemus, and horizontal episemus
-    i = 1;
-    current_note = note;
-    while (current_note) {
+    for (current_note = note, i = 1; current_note;
+            current_note = current_note->next, ++i) {
         // we continue with the hepisemus
         if (current_note->h_episemus_above || current_note->h_episemus_below) {
-            _found();
+            found = _found(f, found);
             gregoriotex_write_hepisemus(f, current_note, i, type, glyph);
         }
         // write_rare also writes the vepisemus
         if (current_note->special_sign) {
-            _found();
+            found = _found(f, found);
             gregoriotex_write_rare(f, current_note, current_note->special_sign);
         }
         if (current_note->signs != _NO_SIGN) {
-            _found();
+            found = _found(f, found);
         }
         switch (current_note->signs) {
         case _V_EPISEMUS:
@@ -2211,12 +2205,13 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
                 block_hepisemus = 2;
             }
         }
-        _end_loop()
-                // final loop for choral signs and punctum mora
+        if (type == T_ONE_NOTE) {
+            break;
+        }
     }
-    i = 1;
-    current_note = note;
-    while (current_note) {
+    // final loop for choral signs and punctum mora
+    for (current_note = note, i = 1; current_note;
+            current_note = current_note->next, ++i) {
         switch (current_note->signs) {
         case _PUNCTUM_MORA:
         case _V_EPISEMUS_PUNCTUM_MORA:
@@ -2230,10 +2225,12 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
             break;
         }
         if (current_note->choral_sign) {
-            _found();
+            found = _found(f, found);
             gregoriotex_write_choral_sign(f, glyph, current_note, true);
         }
-        _end_loop();
+        if (type == T_ONE_NOTE) {
+            break;
+        }
     }
     fprintf(f, "}%%\n");
 }

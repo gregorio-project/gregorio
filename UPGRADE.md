@@ -42,6 +42,12 @@ Changes to the way the horizontal episema is placed and "bridged" to other notes
 
 Note: `3`, `4`, and `5` encompass a new feature and are listed here only for completeness.
 
+### Choral sign dimension renames
+
+- `beforechoralsignspace` has been renamed to `beforelowchoralsignspace`.
+- `lowchoralsignshift` has been renamed to `choralsigndownshift`.
+- `highchoralsignshift` has been renamed to `choralsignupshift` and its sign inverted.
+
 ## 3.0
 ### TeX Live 2013
 

@@ -454,8 +454,8 @@ Negative space, difference between the normal space between two notes and the sp
 
 Default: $\unit[-0.32816]{cm}$ plus \unit[0.01093]{cm} minus \unit[0.01093]{cm}
 
-\macroname{beforechoralsignspace}{}{gsp-default.tex}
-Space before a choral sign. 
+\macroname{beforelowchoralsignspace}{}{gsp-default.tex}
+Space before a low choral sign. 
 
 Default: \unit[0.04556]{cm} plus \unit[0.00638]{cm} minus \unit[0.00638]{cm}
 
@@ -669,15 +669,26 @@ Space below the chironomic signs.
 
 Default: \unit[0]{cm}
 
-\macroname{lowchoralsignshift}{}{gsp-default.tex}
-The shift for the low choral sign and the high choral signs on totally free interlines.  
+\macroname{choralsigndownshift}{}{gsp-default.tex}
+The distance to shift choral signs down.  The following choral signs are shifted down:
+
+\begin{itemize}
+  \item Low choral signs that are not lower than the note
+  \item High choral signs which are in a space
+  \item Low choral signs that are lower than the note which are in a space
+\end{itemize}
 
 Default: \unit[0.00911]{cm}
 
-\macroname{highchoralsignshift}{}{gsp-default.tex}
-The shift for the high choral sign.  
+\macroname{choralsignupshift}{}{gsp-default.tex}
+The distance to shift choral signs up.  The following choral signs are shifted up:
 
-Default: $\unit[-0.04556]{cm}$
+\begin{itemize}
+  \item High choral signs which are on a line
+  \item Low choral signs that are lower than the note which are on a line
+\end{itemize}
+
+Default: \unit[0.04556]{cm}
 
 \macroname{translationheight}{}{gsp-default.tex}
 The space for the translation.  
