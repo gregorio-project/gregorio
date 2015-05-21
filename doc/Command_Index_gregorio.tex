@@ -90,6 +90,13 @@ Macro called at beginning of a no line break area.
 \macroname{\textbackslash GreBeginNotes}{}{gregoriotex.tex}
 Macro to draw the staff lines.  Comes after the initial but before the clef.
 
+\macroname{\textbackslash GreBold}{\#1}{gregoriotex.sty and gregoriotex.tex}
+Makes argument bold.  Accesses \LaTeX\ \verb=\textbf= (\textit{gregoriotex.sty}) or Plain\TeX\ \verb=\bf= (\textit{gregoriotex.tex}) as appropriate.  Corresponds to ``<b></b>'' tags in gabc.
+
+\begin{argtable}
+  \#1 & string & Text to be typeset in bold.\\
+\end{argtable}
+
 \macroname{\textbackslash GreGhangeClef}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
 Macro called when key changes
 
@@ -108,6 +115,9 @@ Macro for typesetting a circulus.
   \#1 & character & Height of circulus.\\
   \#2 & integer   & Type of glyph the circulus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
+
+\macroname{\textbackslash GreColored}{\#1}{gregoriotex.sty and gregoriotex.tex}
+Colors argument (a string) in \verb=gregoriocolor.=  Corresponds to ``<c></c>'' tags in gabc.  Does nothing in Plain\TeX\ because color is not supported there.
 
 \macroname{\textbackslash GreCusto}{\#1}{gregoriotex-signs.tex}
 Typesets a custo.

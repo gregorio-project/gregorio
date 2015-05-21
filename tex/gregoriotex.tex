@@ -44,4 +44,41 @@
 
 \input gregoriotex-main.tex
 
+%%%%%%%%%
+%% PlainTeX specific definitions for fonts
+%%%%%%%%%
+
+\def\GreBold#1{%
+  {\bf #1}%
+  \relax %
+}%
+
+\def\greitalic#1{%
+  {\it #1}%
+  %\relax 
+}%
+
+\def\gresmallcaps#1{%
+  {\sc #1}%
+  \relax %
+}%
+
+\def\grett#1{%
+  {\tt #1}%
+  \relax %
+}%
+
+% Note since underlining and coloring don’t exist in PlainTeX, but we need the following commands to maintain compatibility with LaTeX.
+\def\greul#1{%
+  {#1}%
+  \relax %
+}%
+
+\def\GreColored#1{%
+  {#1}%
+  \relax %
+}%
+
+
+
 \catcode`\@=\greoldcatcode

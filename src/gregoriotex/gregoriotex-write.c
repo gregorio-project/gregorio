@@ -932,7 +932,7 @@ static void gtex_write_begin(FILE *f, grestyle_style style)
         fprintf(f, "\\gresmallcaps{");
         break;
     case ST_BOLD:
-        fprintf(f, "\\greboldfont{");
+        fprintf(f, "\\GreBold{");
         break;
     case ST_FORCED_CENTER:
     case ST_CENTER:
@@ -945,7 +945,7 @@ static void gtex_write_begin(FILE *f, grestyle_style style)
         fprintf(f, "\\greul{");
         break;
     case ST_COLORED:
-        fprintf(f, "\\grecolored{");
+        fprintf(f, "\\GreColored{");
         break;
     default:
         break;
