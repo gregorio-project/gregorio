@@ -2120,44 +2120,38 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
     gregorio_note *current_note;
     // a dumb char
     char block_hepisemus = 0;
-    bool found = false;
+    char high_pitch = 0, low_pitch = 0;
+    // get the minima/maxima pitches
+    for (current_note = note; current_note; current_note = current_note->next) {
+        if (!high_pitch || current_note->u.note.pitch > high_pitch) {
+            high_pitch = current_note->u.note.pitch;
+        }
+        if (!low_pitch || current_note->u.note.pitch < low_pitch) {
+            low_pitch = current_note->u.note.pitch;
+        }
+    }
+    fprintf(f, "%%\n{%%\n\\GreGlyphHeights{%c}{%c}%%\n",
+            height_to_letter(high_pitch), height_to_letter(low_pitch));
     for (current_note = note, i = 1; current_note;
             current_note = current_note->next, ++i) {
         // we start by the additional lines
         if (current_note->u.note.pitch < 'c') {
-            if (!found) {
-                found = true;
-                fprintf(f, "%%\n{%%\n");
-            }
             gregoriotex_write_additional_line(f, i, type, true, current_note);
             status->bottom_line = 1;
         }
         if (current_note->u.note.pitch > 'k') {
-            if (!found) {
-                found = true;
-                fprintf(f, "%%\n{%%\n");
-            }
             gregoriotex_write_additional_line(f, i, type, false, current_note);
         }
         if (current_note->texverb) {
-            if (!found) {
-                found = true;
-                fprintf(f, "%%\n{%%\n");
-            }
-            fprintf(f,
-                    "%% verbatim text at note level:\n%s%%\n%% end of verbatim text\n",
-                    current_note->texverb);
+            fprintf(f, "%% verbatim text at note level:\n%s%%\n"
+                    "%% end of verbatim text\n", current_note->texverb);
         }
         if (type == T_ONE_NOTE) {
             break;
         }
     }
-    if (!found) {
-        fprintf(f, "{}{");
-    } else {
-        fprintf(f, "}{");
-    }
-    found = false;
+    fprintf(f, "}{");
+    bool found = false;
     // now a first loop for the choral signs, because high signs must be taken
     // into account before any hepisemus
     for (current_note = note, i = 1; current_note;
