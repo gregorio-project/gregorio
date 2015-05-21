@@ -179,7 +179,7 @@
   \else %
     \gre@skip@temp@four = \gre@skip@clefflatspace%
     \grehskip\gre@skip@temp@four %
-    \greflat{#5}{1}%
+    \GreFlat{#5}{1}%
     \grehskip\gre@skip@temp@two %
   \fi %
   \relax %
@@ -236,7 +236,7 @@
 
 \def\greinchangeclef#1#2#3{%
   \grenormalclef %
-  % to see why we reset \grelastoflinecount, see comments of \greglyph.
+  % to see why we reset \grelastoflinecount, see comments of \GreGlyph.
   \ifnum\grelastoflinecount=2\relax %
     \global\grelastoflinecount=0\relax %
   \fi %
@@ -659,7 +659,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grelinea#1#2#3{%
-  \greglyph{\gre@char@linea}{#1}{#2}{#3}{}{}%
+  \GreGlyph{\gre@char@linea}{#1}{#2}{#3}{}{}%
   \relax %
 }%
 
@@ -746,7 +746,7 @@
 \def\gre@switchx@break#1\gre@switchx@fi#2\gre@endswitchx{\fi#1}%
 
 % a function to typeset a vertical episemus or a rare accent (like accentus,
-% circulus, etc.).  This function must be called after a call to \greglyph.
+% circulus, etc.).  This function must be called after a call to \GreGlyph.
 % #1 is the letter of the height of the episemus (not the height of the note
 %    it corresponds to.
 % #2 is note position case as in the table above
@@ -914,7 +914,7 @@
 }%
 
 % a function to typeset a horizontal line (additional line or episemus).
-% This function must be called after a call to \greglyph.
+% This function must be called after a call to \GreGlyph.
 % #1 is the letter of the height of the episemus (not the height of the note
 % it corresponds to.
 % #2 is note position case as in the table above
@@ -1399,7 +1399,7 @@
 % #3 is the char of the alteration hole
 % #4 is 1 in the case of a flat for a key change, 0 otherwise
 \def\grealteration#1#2#3#4{%
-  % to see why we reset \grelastoflinecount, see comments of \greglyph.
+  % to see why we reset \grelastoflinecount, see comments of \GreGlyph.
   \ifnum#4=0\relax %
     \grenewglyphcommon %
     \ifnum\the\grefirstglyph=1\relax %
@@ -1436,9 +1436,9 @@
 }%
   %
 % This macro typesets a flat on the height provided by #1. #2 is not used yet, but it
-% will determine if the flat has zero width or not. #3 and #4 should be the same as greglyph's #5 and #6, but it's not really done nor useful...
+% will determine if the flat has zero width or not. #3 and #4 should be the same as GreGlyph's #5 and #6, but it's not really done nor useful...
 
-\def\greflat#1#2{%
+\def\GreFlat#1#2{%
   \grealteration{#1}{\greflatchar}{\greflatholechar}{#2}%
   \relax%
 }%
@@ -1493,7 +1493,7 @@
   \ifnum\grehidepclines=1\relax %
     \grefillhole{\grepunctumcavumholechar}%
   \fi %
-  \greglyph{\grepunctumcavumchar}{#1}{#2}{#3}{}{#5}%
+  \GreGlyph{\grepunctumcavumchar}{#1}{#2}{#3}{}{#5}%
   \relax %
 }%
 
@@ -1508,6 +1508,6 @@
   \ifnum\grehidepclines=1\relax %
     \grefillhole{\grelineapunctumcavumholechar}%
   \fi %
-  \greglyph{\grelineapunctumcavumchar}{#1}{#2}{#3}{}{#5}%
+  \GreGlyph{\grelineapunctumcavumchar}{#1}{#2}{#3}{}{#5}%
   \relax %
 }%

@@ -34,7 +34,7 @@
 % a macro to tell if the last seen glyph has a punctum mora
 \xdef\grelastispunctum{0}%
 
-% a macro called each time we start something looking like a glyph, but not mandatorily called through the \greglyph macro, for example bars, flats, etc.
+% a macro called each time we start something looking like a glyph, but not mandatorily called through the \GreGlyph macro, for example bars, flats, etc.
 
 \def\grenewglyphcommon{%
   % first there is something we must do: setting \grelastoflinecount to 0 if its value is 2. The reason of this is that in ab(abzcd), we cannot let \grelastoflinecount set to 2 after the end of line... the only way I found to achieve it is to reset \grelastoflinecount to 0 after each glyph or bar.
@@ -72,7 +72,7 @@
 %%%%%%%% 9 : flexus deminutus
 % #5 are the signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)
 % #6 are the signs to typeset after the glyph (almost all signs)
-\def\greglyph#1#2#3#4#5#6{%
+\def\GreGlyph#1#2#3#4#5#6{%
   \grenewglyphcommon %
   \setbox\GreTempwidth=\hbox{\gregoriofont #1}%
   \gre@dimen@temp@three=\wd\GreTempwidth %

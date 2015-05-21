@@ -1932,7 +1932,7 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
                 next_note_pitch, type);
         break;
     default:
-        fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}",
+        fprintf(f, "\\GreGlyph{\\grecp%s}{%c}{%c}{%d}",
                 shape, note->u.note.pitch, next_note_pitch, type);
         break;
     }
@@ -2320,7 +2320,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
                 || glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA) {
             shape = gregoriotex_determine_glyph_name(glyph, element, &type,
                     &gtype);
-            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
+            fprintf(f, "\\GreGlyph{\\grecp%s}{%c}{%c}{%d}", shape,
                     glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
                     type);
             gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note);
@@ -2338,7 +2338,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
                 || glyph->u.notes.liquescentia == L_DEMINUTUS_INITIO_DEBILIS) {
             shape = gregoriotex_determine_glyph_name(glyph, element, &type,
                     &gtype);
-            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
+            fprintf(f, "\\GreGlyph{\\grecp%s}{%c}{%c}{%d}", shape,
                     glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
                     type);
             gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note);
@@ -2357,7 +2357,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
         glyph->u.notes.glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
         glyph->u.notes.first_note = current_note->next;
         shape = gregoriotex_determine_glyph_name(glyph, element, &type, &gtype);
-        fprintf(f, "\\greglyph{\\grefusetwo{\\grecp%s}{\\grecp%s}}{%c}{%c}{%d}",
+        fprintf(f, "\\GreGlyph{\\grefusetwo{\\grecp%s}{\\grecp%s}}{%c}{%c}{%d}",
                 leading_shape, shape,
                 glyph->u.notes.first_note->u.note.pitch, next_note_pitch, type);
         glyph->u.notes.first_note = current_note;
@@ -2437,7 +2437,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
             shape = gregoriotex_determine_glyph_name(glyph, element, &type,
                     &gtype);
             fprintf(f,
-                    "\\greglyph{\\grefusetwo{\\grecp%s}{\\grecp%s}}{%c}{%c}{%d}",
+                    "\\GreGlyph{\\grefusetwo{\\grecp%s}{\\grecp%s}}{%c}{%c}{%d}",
                     leading_shape, shape,
                     glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
                     type);
@@ -2448,7 +2448,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
         } else {
             shape = gregoriotex_determine_glyph_name(glyph, element, &type,
                     &gtype);
-            fprintf(f, "\\greglyph{\\grecp%s}{%c}{%c}{%d}", shape,
+            fprintf(f, "\\GreGlyph{\\grecp%s}{%c}{%c}{%d}", shape,
                     glyph->u.notes.first_note->u.note.pitch, next_note_pitch,
                     type);
             gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note);
@@ -2481,7 +2481,7 @@ static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
                 break;
 
             case GRE_FLAT:
-                fprintf(f, "\\greflat{%c}{0}%%\n", glyph->u.misc.pitched.pitch);
+                fprintf(f, "\\GreFlat{%c}{0}%%\n", glyph->u.misc.pitched.pitch);
                 break;
 
             case GRE_NATURAL:

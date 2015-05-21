@@ -175,6 +175,37 @@ Macro for calculating the additional space needed below the first line of the sc
   & 0 & there is no translation below the text
 \end{argtable}
 
+\macroname{\textbackslash GreFlat}{\#1\#2}{gregoriotex-signs.tex}
+Macro to typeset a flat.
+
+\begin{argtable}
+  \#1 & character & Height of the flat.\\
+  \#2 & 0         & No a flat for a key change.\\
+      & 1         & Indicates the a flat for a key change.\\
+\end{argtable}
+
+\macroname{\textbackslash GreGlyph}{\#1\#2\#3\#4\#5\#6}{gregoriotex-syllable.tex}
+Macro to typeset a glyph.
+
+\begin{argtable}
+  \#1 & character & the character that it must call\\
+  \#2 & integer & The number for where the glyph is located.  \texttt{a} in gabc is 1, \texttt{b} is 2, \etc\\
+  \#3 & character & height of the next note\\
+  \#4 & 0 & One-note glyph or more than two notes glyph except porrectus: \ie,  we must put the aligncenter in the middle of the first note\\
+  & 1 & Two notes glyph (podatus is considered as a one-note glyph): \ie, we put the aligncenter in the middle of the glyph\\
+  & 2 & Porrectus: has a special align center.\\
+  & 3 & initio-debilis : same as 1 but the first note is much smaller\\
+  & 4 & case of a glyph starting with a quilisma\\
+  & 5 & case of a glyph starting with an oriscus\\
+  & 6 & case of a punctum inclinatum\\
+  & 7 & case of a stropha\\
+  & 8 & flexus with an ambitus of one\\
+  & 9 & flexus deminutus\\
+  \#5 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
+  \#6 & \TeX\ code & signs to typeset after the glyph (almost all signs)
+\end{argtable}
+
+
 
 
 %%% Local Variables:
