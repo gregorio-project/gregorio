@@ -52,7 +52,7 @@
 \let\grepenalty\gretruepenalty%
 \xdef\greinsidediscretionary{\number 0}%
 
-\def\grediscretionary#1#2{%
+\def\GreDiscretionary#1#2{%
   \global\let\grehskip\kern %
   \global\let\grepenalty\grefalsepenalty %
   \global\xdef\greinsidediscretionary{\number 1}%
@@ -211,7 +211,7 @@
 % #3 is 1 or 0 according to the need of a space before the clef. Useful for clefs after bars for example
 % if #4 is a, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
-\def\grechangeclef#1#2#3#4{%
+\def\GreChangeClef#1#2#3#4{%
   % it makes no sense to change the clef when there is no clef...
   \grenormalclef %
   \grecalculateclefnum{#1}{#2}{#4}%
@@ -251,7 +251,7 @@
 }%
 
 % custo just typesets a custo, useful for before the key changes for example
-\def\grecusto#1{%
+\def\GreCusto#1{%
   \gre@calculate@glyphraisevalue{#1}{0}%
   %here we need some tricks to draw the line before the custo (for the color)
   \setbox\GreTempwidth=\hbox{\grecustochar#1}%
@@ -323,7 +323,7 @@
 
 \def\gremanualcusto#1{%
   \gre@skip@temp@four = \gre@skip@spacebeforecusto%
-  \kern\gre@skip@temp@four\grecusto{#1}%
+  \kern\gre@skip@temp@four\GreCusto{#1}%
 }%
 
 % macro that typesets an additional line at the top for custos at end of line
@@ -816,7 +816,7 @@
   \relax %
 }%
 
-\def\grecirculus#1#2{%
+\def\GreCirculus#1#2{%
   \grevepisemusorrare{#1}{#2}{\gre@char@circulus}{2}{}%
   \relax %
 }%

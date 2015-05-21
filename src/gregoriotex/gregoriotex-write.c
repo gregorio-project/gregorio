@@ -1025,7 +1025,7 @@ static void gtex_write_special_char(FILE *f, grewchar *special_char)
         return;
     }
     if (!gregorio_wcsbufcmp(special_char, "+")) {
-        fprintf(f, "\\gredagger{}");
+        fprintf(f, "\\GreDagger{}");
         return;
     }
     if (!gregorio_wcsbufcmp(special_char, "-")) {
@@ -1078,7 +1078,7 @@ static void gtex_print_char(FILE *f, grewchar to_print)
         fprintf(f, "\\#{}");
         break;
     case L'+':
-        fprintf(f, "\\gredagger{}");
+        fprintf(f, "\\GreDagger{}");
         break;
     case L'_':
         fprintf(f, "\\_{}");
@@ -1798,7 +1798,7 @@ static void gregoriotex_write_rare(FILE *f, gregorio_note *current_note,
                 current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
     case _CIRCULUS:
-        fprintf(f, "\\grecirculus{%c}{\\greoCase%s}%%\n",
+        fprintf(f, "\\GreCirculus{%c}{\\greoCase%s}%%\n",
                 current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
     case _SEMI_CIRCULUS:
@@ -1865,19 +1865,19 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
                 // the second note should really shift differently
             case -2:
             case 2:
-                fprintf(f, "\\greendofglyph{10}%%\n");
+                fprintf(f, "\\GreEndOfGlyph{10}%%\n");
                 break;
             case -3:
             case 3:
-                fprintf(f, "\\greendofglyph{11}%%\n");
+                fprintf(f, "\\GreEndOfGlyph{11}%%\n");
                 break;
             case -4:
             case 4:            // not sure we ever need to consider a larger
                 // ambitus here
-                fprintf(f, "\\greendofglyph{11}%%\n");
+                fprintf(f, "\\GreEndOfGlyph{11}%%\n");
                 break;
             default:
-                fprintf(f, "\\greendofglyph{3}%%\n");
+                fprintf(f, "\\GreEndOfGlyph{3}%%\n");
                 break;
             }
         }
@@ -1887,7 +1887,7 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
             // means that it is the first note of the puncta inclinata sequence
             temp = note->previous->u.note.pitch - note->u.note.pitch;
             if (temp < -2 || temp > 2) {
-                fprintf(f, "\\greendofglyph{11}%%\n");
+                fprintf(f, "\\GreEndOfGlyph{11}%%\n");
             } else {
                 if (note->previous
                         && note->previous->u.note.shape ==
@@ -1895,13 +1895,13 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
                     if (temp < -1 || temp > 1)
                         // really if the ambitus = 3rd at this point
                     {
-                        fprintf(f, "\\greendofglyph{10}%%\n");
+                        fprintf(f, "\\GreEndOfGlyph{10}%%\n");
                     } else {
-                        fprintf(f, "\\greendofglyph{8}%%\n");
+                        fprintf(f, "\\GreEndOfGlyph{8}%%\n");
                     }
                 } else {
                     // puncta inclinatum followed by puncta inclinatum debilis
-                    fprintf(f, "\\greendofglyph{7}%%\n");
+                    fprintf(f, "\\GreEndOfGlyph{7}%%\n");
                 }
             }
         }
@@ -1911,10 +1911,10 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
             // means that it is the first note of the puncta inclinata sequence
             temp = note->previous->u.note.pitch - note->u.note.pitch;
             if (temp < -1 || temp > 1) {
-                fprintf(f, "\\greendofglyph{1}%%\n");
+                fprintf(f, "\\GreEndOfGlyph{1}%%\n");
             } else {
                 // we approximate that it is the same space
-                fprintf(f, "\\greendofglyph{3}%%\n");
+                fprintf(f, "\\GreEndOfGlyph{3}%%\n");
             }
         }
     }
@@ -2372,7 +2372,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
             gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note);
             current_note = current_note->next;
             if (current_note) {
-                fprintf(f, "\\greendofglyph{4}%%\n");
+                fprintf(f, "\\GreEndOfGlyph{4}%%\n");
             }
         }
         break;
@@ -2386,7 +2386,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
             gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note);
             current_note = current_note->next;
             if (current_note) {
-                fprintf(f, "\\greendofglyph{5}%%\n");
+                fprintf(f, "\\GreEndOfGlyph{5}%%\n");
             }
         }
         break;
@@ -2470,7 +2470,7 @@ static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
             case GRE_SPACE:
                 // we assume here that it is a SP_ZERO_WIDTH, the only one a
                 // glyph can be
-                fprintf(f, "\\greendofglyph{1}%%\n");
+                fprintf(f, "\\GreEndOfGlyph{1}%%\n");
                 break;
 
             case GRE_TEXVERB_GLYPH:
@@ -2507,9 +2507,9 @@ static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
                     if (is_puncta_inclinata(glyph->next->u.notes.glyph_type)
                             || glyph->next->u.notes.glyph_type ==
                             G_PUNCTA_INCLINATA) {
-                        fprintf(f, "\\greendofglyph{9}%%\n");
+                        fprintf(f, "\\GreEndOfGlyph{9}%%\n");
                     } else {
-                        fprintf(f, "\\greendofglyph{0}%%\n");
+                        fprintf(f, "\\GreEndOfGlyph{0}%%\n");
                     }
                 }
                 break;
@@ -2550,9 +2550,9 @@ static void gregoriotex_write_text(FILE *f, gregorio_character *text,
 
 /*
  * Function printing the line clef change (only updating \localleftbox, not
- * printing the key). Useful for \grediscretionary.
+ * printing the key). Useful for \GreDiscretionary.
  * TODO: I'm not sure about the third argument, but that's how it's called in
- * \grechangeclef.
+ * \GreChangeClef.
  */
 static void gregoriotex_print_change_line_clef(FILE *f,
         gregorio_element *current_element)
@@ -2625,14 +2625,14 @@ static inline bool is_manual_custos(gregorio_element *element)
 /*
  * Arguments are relatively obvious. The most obscure is certainly first_of_disc
  * which is 0 all the time, except in the case of a "clef change syllable". In
- * this case we make a \grediscretionary with two arguments: 
+ * this case we make a \GreDiscretionary with two arguments: 
  *   1.what should be printed if the syllable is the last of its line (which
  *   basically means everything but clefs and custos), and 
  *   2. what should be printed if it's in a middle of a line (which means
  *   everything)
  * So the first_of_disc argument is:
  *   0 if we don't know (general case)
- *   1 in case of the first argument of a \grediscretionary
+ *   1 in case of the first argument of a \GreDiscretionary
  *   2 if we are in the second argument (necessary in order to avoid infinite loops)
  */
 static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
@@ -2710,7 +2710,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                  * In this case, the first thing to do is to change the line clef 
                  */
                 gregoriotex_print_change_line_clef(f, clef_change_element);
-                fprintf(f, "\\grediscretionary{%%\n");
+                fprintf(f, "\\GreDiscretionary{%%\n");
                 gregoriotex_write_syllable(f, syllable, first_syllable,
                         line_number, 1);
                 fprintf(f, "}{%%\n");
@@ -2800,22 +2800,22 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
         case GRE_SPACE:
             switch (element->u.misc.unpitched.info.space) {
             case SP_ZERO_WIDTH:
-                fprintf(f, "\\greendofelement{3}{1}%%\n");
+                fprintf(f, "\\GreEndOfElement{3}{1}%%\n");
                 break;
             case SP_LARGER_SPACE:
-                fprintf(f, "\\greendofelement{1}{0}%%\n");
+                fprintf(f, "\\GreEndOfElement{1}{0}%%\n");
                 break;
             case SP_GLYPH_SPACE:
-                fprintf(f, "\\greendofelement{2}{0}%%\n");
+                fprintf(f, "\\GreEndOfElement{2}{0}%%\n");
                 break;
             case SP_GLYPH_SPACE_NB:
-                fprintf(f, "\\greendofelement{2}{1}%%\n");
+                fprintf(f, "\\GreEndOfElement{2}{1}%%\n");
                 break;
             case SP_LARGER_SPACE_NB:
-                fprintf(f, "\\greendofelement{1}{1}%%\n");
+                fprintf(f, "\\GreEndOfElement{1}{1}%%\n");
                 break;
             case SP_NEUMATIC_CUT_NB:
-                fprintf(f, "\\greendofelement{0}{1}%%\n");
+                fprintf(f, "\\GreEndOfElement{0}{1}%%\n");
                 break;
             default:
                 break;
@@ -2833,7 +2833,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             if (element->u.misc.unpitched.info.nlba == NLBA_BEGINNING) {
                 fprintf(f, "\\GreBeginNLBArea{0}{0}%%\n");
             } else {
-                fprintf(f, "\\greendnlbarea{0}{0}%%\n");
+                fprintf(f, "\\GreEndNLBArea{0}{0}%%\n");
             }
             break;
 
@@ -2852,12 +2852,12 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                     if (element->u.misc.pitched.flatted_key) {
                         // the third argument is 0 or 1 according to the need for a
                         // space before the clef
-                        fprintf(f, "\\grechangeclef{c}{%d}{0}{%c}%%\n",
+                        fprintf(f, "\\GreChangeClef{c}{%d}{0}{%c}%%\n",
                                 element->u.misc.pitched.pitch - '0',
                                 gregoriotex_clef_flat_height('c',
                                         element->u.misc.pitched.pitch - '0'));
                     } else {
-                        fprintf(f, "\\grechangeclef{c}{%d}{0}{%c}%%\n",
+                        fprintf(f, "\\GreChangeClef{c}{%d}{0}{%c}%%\n",
                                 element->u.misc.pitched.pitch - '0',
                                 NO_KEY_FLAT);
                     }
@@ -2865,12 +2865,12 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                     if (element->u.misc.pitched.flatted_key) {
                         // the third argument is 0 or 1 according to the need for a
                         // space before the clef
-                        fprintf(f, "\\grechangeclef{c}{%d}{1}{%c}%%\n",
+                        fprintf(f, "\\GreChangeClef{c}{%d}{1}{%c}%%\n",
                                 element->u.misc.pitched.pitch - '0',
                                 gregoriotex_clef_flat_height('c',
                                         element->u.misc.pitched.pitch - '0'));
                     } else {
-                        fprintf(f, "\\grechangeclef{c}{%d}{1}{%c}%%\n",
+                        fprintf(f, "\\GreChangeClef{c}{%d}{1}{%c}%%\n",
                                 element->u.misc.pitched.pitch - '0',
                                 NO_KEY_FLAT);
                     }
@@ -2887,12 +2887,12 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                     if (element->u.misc.pitched.flatted_key) {
                         // the third argument is 0 or 1 according to the need for a
                         // space before the clef
-                        fprintf(f, "\\grechangeclef{f}{%d}{0}{%c}%%\n",
+                        fprintf(f, "\\GreChangeClef{f}{%d}{0}{%c}%%\n",
                                 element->u.misc.pitched.pitch - '0',
                                 gregoriotex_clef_flat_height('f',
                                         element->u.misc.pitched.pitch - '0'));
                     } else {
-                        fprintf(f, "\\grechangeclef{f}{%d}{0}{%c}%%\n",
+                        fprintf(f, "\\GreChangeClef{f}{%d}{0}{%c}%%\n",
                                 element->u.misc.pitched.pitch - '0',
                                 NO_KEY_FLAT);
                     }
@@ -2900,12 +2900,12 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                     if (element->u.misc.pitched.flatted_key) {
                         // the third argument is 0 or 1 according to the need for a
                         // space before the clef
-                        fprintf(f, "\\grechangeclef{f}{%d}{1}{%c}%%\n",
+                        fprintf(f, "\\GreChangeClef{f}{%d}{1}{%c}%%\n",
                                 element->u.misc.pitched.pitch - '0',
                                 gregoriotex_clef_flat_height('f',
                                         element->u.misc.pitched.pitch - '0'));
                     } else {
-                        fprintf(f, "\\grechangeclef{f}{%d}{1}{%c}%%\n",
+                        fprintf(f, "\\GreChangeClef{f}{%d}{1}{%c}%%\n",
                                 element->u.misc.pitched.pitch - '0',
                                 NO_KEY_FLAT);
                     }
@@ -2919,7 +2919,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                  * We don't print custos before a bar at the end of a line 
                  */
                 // we also print an unbreakable larger space before the custo
-                fprintf(f, "\\greendofelement{1}{1}%%\n\\grecusto{%c}%%\n",
+                fprintf(f, "\\GreEndOfElement{1}{1}%%\n\\GreCusto{%c}%%\n",
                         element->u.misc.pitched.pitch);
             }
             break;
@@ -2975,7 +2975,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                                     && element->next->type == GRE_ALT
                                     && element->next->next->type ==
                                     GRE_ELEMENT))) {
-                fprintf(f, "\\greendofelement{0}{0}%%\n");
+                fprintf(f, "\\GreEndOfElement{0}{0}%%\n");
             }
             break;
         }
@@ -2987,7 +2987,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
     }
     // Very last, if the syllable is the end of a no-linebreak area:
     if (syllable->no_linebreak_area == NLBA_END) {
-        fprintf(f, "\\greendnlbarea{1}{0}%%\n");
+        fprintf(f, "\\GreEndNLBArea{1}{0}%%\n");
     }
     if (syllable->euouae == EUOUAE_END) {
         fprintf(f, "\\greendeuouae{}%%\n");
@@ -3052,7 +3052,7 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     gregoriotex_getlineinfos(score->first_syllable, first_line);
     if (first_line->additional_bottom_space != 0
             || first_line->translation != 0) {
-        fprintf(f, "\\grefirstlinebottomspace{%u}{%u}%%\n",
+        fprintf(f, "\\GreFirstLineBottomSpace{%u}{%u}%%\n",
                 first_line->additional_bottom_space, first_line->translation);
     }
     free(first_line);
@@ -3098,7 +3098,7 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     if (score->first_voice_info) {
         gregoriotex_write_voice_info(f, score->first_voice_info);
     }
-    fprintf(f, "\\grebeginnotes %%\n");
+    fprintf(f, "\\GreBeginNotes %%\n");
     if (score->first_voice_info) {
         gregorio_det_step_and_line_from_key(score->
                 first_voice_info->initial_key, &clef_letter, &clef_line);

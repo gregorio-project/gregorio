@@ -87,10 +87,72 @@ Macro called at beginning of a no line break area.
       & 1 & Call came from translation centering.
 \end{argtable}
 
+\macroname{\textbackslash GreBeginNotes}{}{gregoriotex.tex}
+Macro to draw the staff lines.  Comes after the initial but before the clef.
 
+\macroname{\textbackslash GreGhangeClef}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
+Macro called when key changes
 
+\begin{argtable}
+  \#1 & character & Type of new clef (c or f).\\
+  \#2 & integer   & Line of new clef.\\
+  \#3 & 0         & Print space before clef.\\
+      & 1         & Do not print space before clef.\\
+  \#4 & character & Height of flat in key (`a' for no flat).\\
+\end{argtable}
 
-\macroname{\textbackslash grefirstlinebottomspace}{\#1\#2}{gregoriotex-spaces.tex}
+\macroname{\textbackslash GreCirculus}{\#1\#2}{gregoriotex-signs.tex}
+Macro for typesetting a circulus.
+
+\begin{argtable}
+  \#1 & character & Height of circulus.\\
+  \#2 & integer   & Type of glyph the circulus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
+\end{argtable}
+
+\macroname{\textbackslash GreCusto}{\#1}{gregoriotex-signs.tex}
+Typesets a custo.
+
+\begin{argtable}
+  \#1 & character & Height of custo.\\
+\end{argtable}
+
+\macroname{\textbackslash GreDagger}{}{gregoriotex-symbols.tex}
+Macro to typeset a dagger (\GreDagger).
+
+\macroname{\textbackslash GreDiscretionary}{\#1\#2}{gregoriotex-signs.tex}
+A GregorioTeX specific discretionary used to avoid clef change at beginning or end of line, or even with more complex data (z0::c3 for instance).  We require a special function because in the normal discretionary function you cannot use \hskip (but you can use kern) and you cannot use \penalty (which is useless indeed).  This macro corrects for these two limitations.
+
+\macroname{\textbackslash GreEndOfElement}{\#1\#2}{gregoriotex-main.tex}
+Macro to end elements.
+
+\begin{argtable}
+  \#1 & 0 & Default space.\\
+      & 1 & Larger space.\\
+      & 2 & Glyph space.\\
+      & 3 & Zero-width space.\\
+  \#2 & 0 & Space is breakable.\\
+      & 1 & Space is unbreakable.\\
+\end{argtable}
+
+\macroname{\textbackslash greendofglyph\#1}{gregoriotex-main.tex}
+Macro to end a glyph without ending the element.
+
+\begin{argtable}
+  \#1 & 0 & Default space.\\
+      & 1 & Zero-width space.\\
+      & 2 & Space between flat or natural and a note.\\
+      & 3 & Space between two puncta inclinata.\\
+      & 4 & Space between bivirga or trivirga.\\
+      & 5 & space between bistropha or tristropha.\\
+      & 6 & Space after a punctum mora XXX: not used yet, not so sure it is a good idea\ldots\\
+      & 7 & Space between a punctum inclinatum and a punctum inclinatum debilis.\\
+      & 8 & Space between two puncta inclinata debilis.\\
+      & 9 & Space before a punctum (or something else) and a punctum inclinatum.\\
+      & 10 & Space between puncta inclinata (also debilis for now), larger ambitus (range=3rd).\\
+      & 11 & Space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more).\\
+\end{argtable}
+
+\macroname{\textbackslash GreFirstLineBottomSpace}{\#1\#2}{gregoriotex-spaces.tex}
 Macro for calculating the additional space needed below the first line of the score.
 
 \begin{argtable}
@@ -98,10 +160,12 @@ Macro for calculating the additional space needed below the first line of the sc
   & 1 & note below the first staff line (c position)\\
   & 2 & note on the 0 staff line (b position)\\
   & 3 & note below the 0 staff line (a position)\\
-%  & 4 & note below the 0 staff line with a vertical episemus attached\\
+  & 4 & note below the 0 staff line with a vertical episemus attached\\
   \#2 & 1 & there is a translation below the text\\
   & 0 & there is no translation below the text
 \end{argtable}
+
+
 
 %%% Local Variables:
 %%% mode: latex

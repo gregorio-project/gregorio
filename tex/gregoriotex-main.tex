@@ -468,7 +468,7 @@
 
 %% macro that draws the lines : starts by the first and then draws the lines of every line.
 %% has to be called before drawing the key, after drawing the initial
-\def\grebeginnotes{%
+\def\GreBeginNotes{%
   \gredrawfirstlines %
   %%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
   \grelocalleftbox{%
@@ -747,7 +747,7 @@
 
 \def\gredotranslationcenterend{%
   \ifnum\grenlbintranslation=1\relax %
-    \greendnlbarea{0}{1}%
+    \GreEndNLBArea{0}{1}%
   \fi %
   \gregoriocenterattr=2\relax %
   \raise\gre@dimen@spacebeneathtext\hbox to 0pt{}%
@@ -792,7 +792,7 @@
   \global\greblockcusto=0\relax %
   \greendeuouae{}%
   \ifnum\grenlbstate=0\else %
-    \greendnlbarea{2}{0}%
+    \GreEndNLBArea{2}{0}%
   \fi %
   \grelocalleftbox{}%
   \ifnum\keeprightbox=0\relax %
@@ -907,7 +907,7 @@
 %% 2: glyph space
 %% 3: zero-width space
 % #2 is if the space is unbreakable (1) or not (0)
-\def\greendofelement#1#2{%
+\def\GreEndOfElement#1#2{%
   \ifnum #2=0\relax %
     \grepenalty{\greendofelementpenalty}%
   \else %
@@ -944,7 +944,7 @@
 %% 9: space before a punctum (or something else) and a punctum inclinatum
 %% 10: space between puncta inclinata (also debilis for now), larger ambitus (range=3rd).
 %% 11: space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more)
-\def\greendofglyph#1{%
+\def\GreEndOfGlyph#1{%
   \grenobreak %
   \ifcase#1%
     \gre@skip@temp@four = \gre@skip@interglyphspace%
@@ -1028,7 +1028,7 @@
   \fi %
 }%
 
-\def\greendnlbarea#1#2{%
+\def\GreEndNLBArea#1#2{%
   \xdef\grenlbinitialstate{\grenlbstate}%
   \ifnum#2=0\relax %
     \xdef\grenlbstate{0}%
@@ -1086,7 +1086,7 @@
 
 \def\greendeuouae{%
   \ifgre@euouae@implies@nlba %
-    \greendnlbarea{0}{0}%
+    \GreEndNLBArea{0}{0}%
   \fi %
   \gre@in@euouaefalse %
 }
