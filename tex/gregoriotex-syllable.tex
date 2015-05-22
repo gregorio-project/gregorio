@@ -260,7 +260,7 @@
 \newbox\GreSyllablenotes%
 
 % Macro used to fill \GreSyllablenotes with everything contained in #1. This
-% saves and restores a few values so that when really typesetting #1 in \gresyllable,
+% saves and restores a few values so that when really typesetting #1 in \GreSyllable,
 % the result is identical.
 \def\gresyllablenotes#1{%
   \global\grefirstglyph=1\relax %
@@ -293,7 +293,7 @@
 % we specify if it is the last syllable of the score with that value
 \newcount\greendofscore%
 
-% a helper macro (see details in \gresyllable)
+% a helper macro (see details in \GreSyllable)
 \xdef\greboxing{0}%
 
 % 
@@ -307,7 +307,7 @@
 
 \let\gretextnormal\gretextformat%
 
-% macro to specify a text which is different from #1#2#3 (of \gresyllable). It is useful for
+% macro to specify a text which is different from #1#2#3 (of \GreSyllable). It is useful for
 % styles, for instance with
 %
 %  <i>ffj</i>(gh)
@@ -328,19 +328,19 @@
 % 3: small caps
 % 4: tt
 % 5: ul
-\def\gresetfixedtextformat#1{%
+\def\GreSetFixedTextFormat#1{%
   \ifcase#1\relax%
     \global\let\grefixedtextformat\gretextnormal %
   \or %
-    \global\let\grefixedtextformat\greitalic %
+    \global\let\grefixedtextformat\GreItalic %
   \or %
     \global\let\grefixedtextformat\GreBold %
   \or %
-    \global\let\grefixedtextformat\gresmallcaps %
+    \global\let\grefixedtextformat\GreSmallCaps %
   \or %
-    \global\let\grefixedtextformat\grett %
+    \global\let\grefixedtextformat\GreTypewriter %
   \or %
-    \global\let\grefixedtextformat\greul %
+    \global\let\grefixedtextformat\GreUnderline %
   \or %
     \global\let\grefixedtextformat\GreColored %
   \fi %
@@ -355,19 +355,19 @@
 
 % The same but for the next syllable
 
-\def\gresetfixednexttextformat#1{%
+\def\GreSetFixedNextTextFormat#1{%
   \ifcase#1\relax%
     \global\let\grefixednexttextformat\gretextnormal %
   \or %
-    \global\let\grefixednexttextformat\greitalic %
+    \global\let\grefixednexttextformat\GreItalic %
   \or %
     \global\let\grefixednexttextformat\GreBold %
   \or %
-    \global\let\grefixednexttextformat\gresmallcaps %
+    \global\let\grefixednexttextformat\GreSmallCaps %
   \or %
-    \global\let\grefixednexttextformat\grett %
+    \global\let\grefixednexttextformat\GreTypewriter %
   \or %
-    \global\let\grefixednexttextformat\greul %
+    \global\let\grefixednexttextformat\GreUnderline %
   \or %
     \global\let\grefixednexttextformat\GreColored %
   \fi %
@@ -436,7 +436,7 @@
 % #8 : other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
 %% at the end we wall \greendofword or \greendofsyllable with #7, to reduce the space in case of a flat or natural
-\def\gresyllable#1#2#3#4#5#6#7#8#9{%
+\def\GreSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: #1#2#3}%
   \gre@debugmsg{general}{}%
@@ -506,9 +506,9 @@
     %
     \gre@debugmsg{ifdim}{ temp@skip@one > maximumspacewithoutdash}%
     \ifdim\gre@skip@temp@one > \gre@dimen@maximumspacewithoutdash %
-      % if it's the last syllable of line, the hyphen will be \grehyph
+      % if it's the last syllable of line, the hyphen will be \GreHyph
       \ifnum\grelastoflinecount=1\relax %
-        \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart\grehyph\relax}}%
+        \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart\GreHyph\relax}}%
       \else %
         \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart-}}%
       \fi %
@@ -570,9 +570,9 @@
 
 %% @desc Macro to make a few checks and call the right macros between
 %%       \endbeforebar, \endofword, \endofsyllable
-%% @arg#1 next syllable type (#7 of \gresyllable)
+%% @arg#1 next syllable type (#7 of \GreSyllable)
 %% @arg#2 next syllable text
-%% @arg#3 end of word or not (#4 of \gresyllable)
+%% @arg#3 end of word or not (#4 of \GreSyllable)
 \def\gre@syllable@end#1#2#3{%
   \gre@debugmsg{syllablespacing}{ syllable@end with #1}%
   % gre@count@temp@one holds 0 if next is a not bar, 1 if it is

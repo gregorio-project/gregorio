@@ -94,7 +94,7 @@
 % the first argument is the type : f or c, and the second is the height
 % the third argument is whether we must type a space after or not (0 if not, 1 if yes)
 % if the fourth argument is a, it means that we must not put a flat after the key, otherwise it's the height of the flat
-\def\gresetlinesclef#1#2#3#4{%
+\def\GreSetLinesClef#1#2#3#4{%
   \grelocalleftbox{%
     \gre@skip@temp@four = \gre@dimen@additionalleftspace%
     \kern\gre@skip@temp@four %
@@ -128,9 +128,9 @@
   \ifnum\greclefnum > 5\relax%
     \gre@count@temp@three=\greclefnum %
     \advance\gre@count@temp@three by -4\relax %
-    \gresetlinesclef{f}{\gre@count@temp@three}{1}{\greclefflat}%
+    \GreSetLinesClef{f}{\gre@count@temp@three}{1}{\greclefflat}%
   \else %
-    \gresetlinesclef{c}{\greclefnum}{1}{\greclefflat}%
+    \GreSetLinesClef{c}{\greclefnum}{1}{\greclefflat}%
   \fi %
   \relax %
 }%
@@ -188,7 +188,7 @@
 % macro that writes the initial key, and sets the next keys to the same value
 % if #3 is a, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
-\def\gresetinitialclef#1#2#3{%
+\def\GreSetInitialClef#1#2#3{%
   \grecalculateclefnum{#1}{#2}{#3}%
   \ifnum\greremoveclefcount=0\relax %
     \ifnum\grelastoflinecount=2\relax % we must not type a space if there is no initial
@@ -197,7 +197,7 @@
       \gretypekey{#1}{#2}{0}{1}{#3}%
     \fi %
   \fi %
-  \gresetlinesclef{#1}{#2}{1}{#3}%
+  \GreSetLinesClef{#1}{#2}{1}{#3}%
   % if the initial is big, then we adjust the second line
   \ifnum\grebiginitial=0\relax %
   \else %
@@ -216,7 +216,7 @@
   \grenormalclef %
   \grecalculateclefnum{#1}{#2}{#4}%
   \ifnum\greinsidediscretionary=0\relax %
-    \gresetlinesclef{#1}{#2}{1}{#4}%
+    \GreSetLinesClef{#1}{#2}{1}{#4}%
   \fi %
   \ifnum#3=1\relax %
     \gre@skip@temp@four = \gre@skip@clefchangespace%
@@ -241,7 +241,7 @@
     \global\grelastoflinecount=0\relax %
   \fi %
   \ifnum\greinsidediscretionary=0\relax %
-    \gresetlinesclef{#1}{#2}{0}{#3}%
+    \GreSetLinesClef{#1}{#2}{0}{#3}%
   \fi %
   \gre@skip@temp@four = \gre@skip@clefchangespace%
   \hskip\gre@skip@temp@four %
@@ -544,7 +544,7 @@
 % if it is three, it means the same as when it is two, but with ambitus of one
 % #3 is 1 in case of a punctommora in the note before the last note of a podatus, porrectus or torculus resupinus, 0 otherwise.
 % #4 is 1 if we are at a punctum inclinatum, 0 otherwise
-\def\grepunctummora#1#2#3#4{%
+\def\GrePunctumMora#1#2#3#4{%
   \grenobreak %
   \ifcase#2\relax %
     \gre@skip@temp@four = \gre@skip@spacebeforesigns%
@@ -623,8 +623,8 @@
 
 % a function to typeset an augmentum duplex, easy enough to be understood...
 \def\GreAugmentumDuplex#1#2#3{%
-  \grepunctummora{#1}{1}{#3}{0}%
-  \grepunctummora{#2}{0}{0}{0}%
+  \GrePunctumMora{#1}{1}{#3}{0}%
+  \GrePunctumMora{#2}{0}{0}{0}%
   \relax %
 }%
 
@@ -633,7 +633,7 @@
 
 % quite simple function: #1 is the height, #2 is the string, #3 is #2 of punctum mora, #4 is #3 of punctum mora
 % #3 is 1 if it must be a bit higher
-\def\grelowchoralsign#1#2#3{%
+\def\GreLowChoralSign#1#2#3{%
   \grenobreak %
   \gre@skip@temp@four = \gre@skip@beforelowchoralsignspace%
   \hskip\gre@skip@temp@four %
@@ -647,7 +647,7 @@
   \relax %
 }%
 
-\def\grehighchoralsign#1#2#3{%
+\def\GreHighChoralSign#1#2#3{%
   \grenobreak %
   \grevepisemusorrare{#1}{#3}{}{3}{\grehighchoralsignstyle{#2}}%
   %\grehepisorline{#1}{#3}{0}{4}{\grehighchoralsignstyle{#2}}
@@ -658,7 +658,7 @@
 %% macros for the typesetting of linea
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\grelinea#1#2#3{%
+\def\GreLinea#1#2#3{%
   \GreGlyph{\gre@char@linea}{#1}{#2}{#3}{}{}%
   \relax %
 }%
@@ -791,7 +791,7 @@
   \relax%
 }%
 
-\def\grevepisemus#1#2{%
+\def\GreVEpisemus#1#2{%
   \grevepisemusorrare{#1}{#2}{\gre@char@vepisemus}{1}{}%
   \relax %
 }%
@@ -811,7 +811,7 @@
   \relax %
 }%
 
-\def\gresemicirculus#1#2{%
+\def\GreSemicirculus#1#2{%
   \grevepisemusorrare{#1}{#2}{\gre@char@semicirculus}{2}{}%
   \relax %
 }%
@@ -821,12 +821,12 @@
   \relax %
 }%
 
-\def\grereversedaccentus#1#2{%
+\def\GreReversedAccentus#1#2{%
   \grevepisemusorrare{#1}{#2}{\gre@char@reversedaccentus}{2}{}%
   \relax %
 }%
 
-\def\grereversedsemicirculus#1#2{%
+\def\GreReversedSemicirculus#1#2{%
   \grevepisemusorrare{#1}{#2}{\gre@char@reversedsemicirculus}{2}{}%
   \relax %
 }%
@@ -945,8 +945,8 @@
 
 % dumb top function
 % #6 is a trick for bridges: if we must use a different height because of a
-%    bridge, use #4, otherwise use #1
-\def\grehepisemus#1#2#3#4#5#6{%
+%    bridge, use #6, otherwise use #1
+\def\GreHEpisemus#1#2#3#4#5#6{%
   \ifnum\greaddhepisemusbridges=1\relax %
     \grehepisorline{#6}{#2}{#3}{#4}{#5}%
   \else %
@@ -970,7 +970,7 @@
 % same but for a "bridge episemus" after the last note of a glyph (element, syllable) if the next episemus is at the same height
 % #1 is the height
 % #2 is 0 for episemus above, 1 for episemus below
-\def\grehepisemusbridge#1#2{%
+\def\GreHEpisemusBridge#1#2{%
   \ifnum\greaddhepisemusbridges=1\relax %
     \ifcase#2 %
       \gre@calculate@glyphraisevalue{#1}{9}%
@@ -1001,12 +1001,12 @@
 
 % we define two types of macro for each four bar : when it is inside a syllable, and when it is not
 
-\def\greinvirgula#1{%
+\def\GreInVirgula#1{%
   \grewritebar{0}{1}{#1}%
   \relax%
 }%
 
-\def\grevirgula#1{%
+\def\GreVirgula#1{%
   \grewritebar{0}{0}{#1}%
   \relax%
 }%
@@ -1021,27 +1021,27 @@
   \relax%
 }%
 
-\def\greindivisiominor#1{%
+\def\GreInDivisioMinor#1{%
   \grewritebar{2}{1}{#1}%
   \relax%
 }%
 
-\def\gredivisiominor#1{%
+\def\GreDivisioMinor#1{%
   \grewritebar{2}{0}{#1}%
   \relax%
 }%
 
-\def\greindivisiomaior#1{%
+\def\GreInDivisioMaior#1{%
   \grewritebar{3}{1}{#1}%
   \relax%
 }%
 
-\def\gredivisiomaior#1{%
+\def\GreDivisioMaior#1{%
   \grewritebar{3}{0}{#1}%
   \relax%
 }%
 
-\def\gredominica#1#2{%
+\def\GreDominica#1#2{%
   \ifcase#1\or %
     \grewritebar{6}{0}{#2}%
   \or %
@@ -1058,7 +1058,7 @@
   \relax%
 }%
 
-\def\greindominica#1#2{%
+\def\GreInDominica#1#2{%
   \ifcase#1\or %
     \grewritebar{6}{1}{#2}%
   \or %
@@ -1076,7 +1076,7 @@
 }%
 
 
-\def\greindivisiofinalis#1{%
+\def\GreInDivisioFinalis#1{%
   \ifcase\greendofscore %
     \grewritebar{4}{1}{#1}%
   \or %
@@ -1085,7 +1085,7 @@
   \relax%
 }%
 
-\def\gredivisiofinalis#1{%
+\def\GreDivisioFinalis#1{%
   \ifcase\greendofscore %
     \grewritebar{4}{0}{#1}%
   \or %
@@ -1099,7 +1099,7 @@
 %% 2: is % for now we don't use it
 %%%%%% 0 if it is in a syllable containing only this bar
 %%%%%% 1 if it is in a syllable containing other notes
-%% 3: macros that may happen before the skip after the bar (typically grevepisemus)
+%% 3: macros that may happen before the skip after the bar (typically GreVEpisemus)
 \def\grewritebar#1#2#3{%
   % first, for the bar to be really centered, if the last glyph has a punctum
   % mora, we kern of the corresponding space. We do it only in the case
@@ -1327,8 +1327,8 @@
   \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis%
   \grehskip\gre@skip@temp@four %
   \grenobreak %
-  \GreBarSyllable{}{}{}{1}{}{}{0}{\grelastofline}{%
-    \gredivisiofinalis{}%
+  \GreBarSyllable{}{}{}{1}{}{}{0}{\GreLastOfLine}{%
+    \GreDivisioFinalis{}%
     #1%
   }%
   \relax%
@@ -1339,7 +1339,7 @@
   \grelocalrightbox{}%
   \grelocalleftbox{}%
     \GreBarSyllable{}{}{}{1}{}{}{0}{}{%
-    \gredivisiomaior{}%
+    \GreDivisioMaior{}%
     #1%
   }%
   \relax%
@@ -1445,14 +1445,14 @@
 
 % Same as the one before, but for naturals.
 
-\def\grenatural#1#2{%
+\def\GreNatural#1#2{%
   \grealteration{#1}{\grenaturalchar}{\grenaturalholechar}{#2}%
   \relax%
 }%
 
 % Same as the one before, but for sharps.
 
-\def\gresharp#1#2{%
+\def\GreSharp#1#2{%
   \grealteration{#1}{\gresharpchar}{\gresharpholechar}{#2}%
   \relax%
 }%
@@ -1482,7 +1482,7 @@
 \relax %
 }%
 
-\def\grepunctumcavum#1#2#3#4#5{%
+\def\GrePunctumCavum#1#2#3#4#5{%
   \setbox\GreTempwidth=\hbox{\grepunctumcavumchar}%
   \global\gre@dimen@lastglyphwidth=\wd\GreTempwidth %
   \gre@skip@temp@four = \gre@dimen@lastglyphwidth%
@@ -1497,7 +1497,7 @@
   \relax %
 }%
 
-\def\grelineapunctumcavum#1#2#3#4#5{%
+\def\GreLineaPunctumCavum#1#2#3#4#5{%
   \setbox\GreTempwidth=\hbox{\grelineapunctumcavumchar}%
   \global\gre@dimen@lastglyphwidth=\wd\GreTempwidth %
   \gre@skip@temp@four = \gre@dimen@lastglyphwidth%

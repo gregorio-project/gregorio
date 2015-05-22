@@ -117,8 +117,8 @@ typedef struct gregoriotex_status {
 // a structure containing the result of seekadditionalspaces
 
 typedef struct gregorio_line {
-    // 0, 1, 2 or 3. it is the argument of grenewlinewithspaces in
-    // gregoriotex.tex
+    // 0, 1, 2 or 3. it is the argument of GreNewLineWithSpace in
+    // gregoriotex-main.tex
     unsigned char additional_top_space;
     unsigned char additional_bottom_space;
     // 0 or 1, indicates if there is a translation on the line

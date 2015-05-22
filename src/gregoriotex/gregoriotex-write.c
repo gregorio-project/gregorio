@@ -926,10 +926,10 @@ static void gtex_write_begin(FILE *f, grestyle_style style)
     }
     switch (style) {
     case ST_ITALIC:
-        fprintf(f, "\\greitalic{");
+        fprintf(f, "\\GreItalic{");
         break;
     case ST_SMALL_CAPS:
-        fprintf(f, "\\gresmallcaps{");
+        fprintf(f, "\\GreSmallCaps{");
         break;
     case ST_BOLD:
         fprintf(f, "\\GreBold{");
@@ -939,10 +939,10 @@ static void gtex_write_begin(FILE *f, grestyle_style style)
         fprintf(f, "}{");
         break;
     case ST_TT:
-        fprintf(f, "\\grett{");
+        fprintf(f, "\\GreTypewriter{");
         break;
     case ST_UNDERLINED:
-        fprintf(f, "\\greul{");
+        fprintf(f, "\\GreUnderline{");
         break;
     case ST_COLORED:
         fprintf(f, "\\GreColored{");
@@ -1021,7 +1021,7 @@ static void gtex_write_special_char(FILE *f, grewchar *special_char)
         return;
     }
     if (!gregorio_wcsbufcmp(special_char, "*")) {
-        fprintf(f, "\\grestar{}");
+        fprintf(f, "\\GreStar{}");
         return;
     }
     if (!gregorio_wcsbufcmp(special_char, "+")) {
@@ -1029,7 +1029,7 @@ static void gtex_write_special_char(FILE *f, grewchar *special_char)
         return;
     }
     if (!gregorio_wcsbufcmp(special_char, "-")) {
-        fprintf(f, "\\grezerhyph{}");
+        fprintf(f, "\\GreZeroHyph{}");
         return;
     }
     if (!gregorio_wcsbufcmp(special_char, "\\")) {
@@ -1049,7 +1049,7 @@ static void gtex_write_special_char(FILE *f, grewchar *special_char)
         return;
     }
     if (!gregorio_wcsbufcmp(special_char, "~")) {
-        fprintf(f, "\\gretilde{}");
+        fprintf(f, "\\GreTilde{}");
         return;
     }
 }
@@ -1063,7 +1063,7 @@ static void gtex_print_char(FILE *f, grewchar to_print)
 {
     switch (to_print) {
     case L'*':
-        fprintf(f, "\\grestar{}");
+        fprintf(f, "\\GreStar{}");
         break;
     case L'%':
         fprintf(f, "\\%%{}");
@@ -1084,7 +1084,7 @@ static void gtex_print_char(FILE *f, grewchar to_print)
         fprintf(f, "\\_{}");
         break;
     case L'-':
-        fprintf(f, "\\grehyph{}");
+        fprintf(f, "\\GreHyph{}");
         break;
     default:
         gregorio_print_unichar(f, to_print);
@@ -1279,45 +1279,45 @@ static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
     // the type number of function vepisemusorrare
     const char *offset_case = BarStandard;
     if (is_inside_bar) {
-        fprintf(f, "\\grein");
+        fprintf(f, "\\GreIn");
     } else {
-        fprintf(f, "\\gre");
+        fprintf(f, "\\Gre");
     }
     switch (type) {
     case B_VIRGULA:
-        fprintf(f, "virgula");
+        fprintf(f, "Virgula");
         offset_case = BarVirgula;
         break;
     case B_DIVISIO_MINIMA:
-        fprintf(f, "divisiominima");
+        fprintf(f, "DivisioMinima");
         break;
     case B_DIVISIO_MINOR:
-        fprintf(f, "divisiominor");
+        fprintf(f, "DivisioMinor");
         break;
     case B_DIVISIO_MAIOR:
-        fprintf(f, "divisiomaior");
+        fprintf(f, "DivisioMaior");
         break;
     case B_DIVISIO_FINALIS:
-        fprintf(f, "divisiofinalis");
+        fprintf(f, "DivisioFinalis");
         offset_case = BarDivisioFinalis;
         break;
     case B_DIVISIO_MINOR_D1:
-        fprintf(f, "dominica{1}");
+        fprintf(f, "Dominica{1}");
         break;
     case B_DIVISIO_MINOR_D2:
-        fprintf(f, "dominica{2}");
+        fprintf(f, "Dominica{2}");
         break;
     case B_DIVISIO_MINOR_D3:
-        fprintf(f, "dominica{3}");
+        fprintf(f, "Dominica{3}");
         break;
     case B_DIVISIO_MINOR_D4:
-        fprintf(f, "dominica{4}");
+        fprintf(f, "Dominica{4}");
         break;
     case B_DIVISIO_MINOR_D5:
-        fprintf(f, "dominica{5}");
+        fprintf(f, "Dominica{5}");
         break;
     case B_DIVISIO_MINOR_D6:
-        fprintf(f, "dominica{6}");
+        fprintf(f, "Dominica{6}");
         break;
     default:
         gregorio_messagef("gregoriotex_write_bar", ERROR, 0,
@@ -1397,7 +1397,7 @@ static void gregoriotex_write_auctum_duplex(FILE *f,
 /**
  * @brief Adds a dot.
  *
- * Writes \c \\grepunctummora in the gtex file, with the appropriate arguments. You might think this function
+ * Writes \c \\GrePunctumMora in the gtex file, with the appropriate arguments. You might think this function
  * more straightforward than it actually is...
  */
 static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
@@ -1532,10 +1532,10 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
         if (current_note->next->u.note.pitch - current_note->u.note.pitch == -1
                 || current_note->next->u.note.pitch -
                 current_note->u.note.pitch == 1) {
-            fprintf(f, "\\grepunctummora{%c}{3}{%d}{%d}%%\n", pitch,
+            fprintf(f, "\\GrePunctumMora{%c}{3}{%d}{%d}%%\n", pitch,
                     special_punctum, punctum_inclinatum);
         } else {
-            fprintf(f, "\\grepunctummora{%c}{2}{%d}{%d}%%\n", pitch,
+            fprintf(f, "\\GrePunctumMora{%c}{2}{%d}{%d}%%\n", pitch,
                     special_punctum, punctum_inclinatum);
         }
         return;
@@ -1555,7 +1555,7 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
             && glyph->next->next->u.notes.first_note
             && (glyph->next->next->u.notes.first_note->u.note.pitch -
                     current_note->u.note.pitch > 1)) {
-        fprintf(f, "\\grepunctummora{%c}{1}{%d}{%d}%%\n", pitch,
+        fprintf(f, "\\GrePunctumMora{%c}{1}{%d}{%d}%%\n", pitch,
                 special_punctum, punctum_inclinatum);
         return;
     }
@@ -1574,7 +1574,7 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
     }
 
     // the normal operation
-    fprintf(f, "\\grepunctummora{%c}{%d}{%d}{%d}%%\n", pitch, no_space,
+    fprintf(f, "\\GrePunctumMora{%c}{%d}{%d}{%d}%%\n", pitch, no_space,
             special_punctum, punctum_inclinatum);
 }
 
@@ -1636,10 +1636,10 @@ static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
                                         == S_PUNCTUM_INCLINATUM_DEMINUTUS
                                 || note->next->u.note.shape
                                         == S_PUNCTUM_INCLINATUM_AUCTUS)))) {
-                fprintf(f, "\\grehepisemusbridge{%c}{%d}%%\n", height,
+                fprintf(f, "\\GreHEpisemusBridge{%c}{%d}%%\n", height,
                         hepisemus_case);
             }
-            fprintf(f, "\\grehepisemus{%c}{\\greoCase%s}{%d}{%d}{%c}{%c}%%\n",
+            fprintf(f, "\\GreHEpisemus{%c}{\\greoCase%s}{%d}{%d}{%c}{%c}%%\n",
                     height, note->gtex_offset_case, ambitus, hepisemus_case,
                     size_arg, height);
         }
@@ -1777,7 +1777,7 @@ static void gregoriotex_write_vepisemus(FILE *f, gregorio_note *note)
 
     char height = height_to_letter(note->v_episemus_height);
 
-    fprintf(f, "\\grevepisemus{%c}{\\greoCase%s}%%\n", height,
+    fprintf(f, "\\GreVEpisemus{%c}{\\greoCase%s}%%\n", height,
             note->gtex_offset_case);
 }
 
@@ -1794,7 +1794,7 @@ static void gregoriotex_write_rare(FILE *f, gregorio_note *current_note,
                 current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
     case _ACCENTUS_REVERSUS:
-        fprintf(f, "\\grereversedaccentus{%c}{\\greoCase%s}%%\n",
+        fprintf(f, "\\GreReversedAccentus{%c}{\\greoCase%s}%%\n",
                 current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
     case _CIRCULUS:
@@ -1802,11 +1802,11 @@ static void gregoriotex_write_rare(FILE *f, gregorio_note *current_note,
                 current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
     case _SEMI_CIRCULUS:
-        fprintf(f, "\\gresemicirculus{%c}{\\greoCase%s}%%\n",
+        fprintf(f, "\\GreSemicirculus{%c}{\\greoCase%s}%%\n",
                 current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
     case _SEMI_CIRCULUS_REVERSUS:
-        fprintf(f, "\\grereversedsemicirculus{%c}{\\greoCase%s}%%\n",
+        fprintf(f, "\\GreReversedSemicirculus{%c}{\\greoCase%s}%%\n",
                 current_note->u.note.pitch, current_note->gtex_offset_case);
         break;
         // the cases of the bar signs are dealt in another function (write_bar)
@@ -1920,15 +1920,15 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
     }
     switch (note->u.note.shape) {
     case S_PUNCTUM_CAVUM:
-        fprintf(f, "\\grepunctumcavum{%c}{%c}{%d}", note->u.note.pitch,
+        fprintf(f, "\\GrePunctumCavum{%c}{%c}{%d}", note->u.note.pitch,
                 next_note_pitch, type);
         break;
     case S_LINEA_PUNCTUM_CAVUM:
-        fprintf(f, "\\grelineapunctumcavum{%c}{%c}{%d}", note->u.note.pitch,
+        fprintf(f, "\\GreLineaPunctumCavum{%c}{%c}{%d}", note->u.note.pitch,
                 next_note_pitch, type);
         break;
     case S_LINEA:
-        fprintf(f, "\\grelinea{%c}{%c}{%d}", note->u.note.pitch,
+        fprintf(f, "\\GreLinea{%c}{%c}{%d}", note->u.note.pitch,
                 next_note_pitch, type);
         break;
     default:
@@ -2061,7 +2061,7 @@ static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
         if (is_on_a_line(current_note->u.note.pitch)) {
             if (kind_of_pes && current_note->u.note.pitch -
                     current_note->next->u.note.pitch == -1) {
-                fprintf(f, "\\grelowchoralsign{%c}{%s}{1}%%\n",
+                fprintf(f, "\\GreLowChoralSign{%c}{%s}{1}%%\n",
                         current_note->u.note.pitch, current_note->choral_sign);
                 return;
             }
@@ -2069,22 +2069,22 @@ static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
                     && (current_note->previous->signs == _PUNCTUM_MORA
                             || current_note->previous->signs ==
                             _V_EPISEMUS_PUNCTUM_MORA)) {
-                fprintf(f, "\\grelowchoralsign{%c}{%s}{1}%%\n",
+                fprintf(f, "\\GreLowChoralSign{%c}{%s}{1}%%\n",
                         current_note->u.note.pitch, current_note->choral_sign);
                 return;
             }
         }
 
-        fprintf(f, "\\grelowchoralsign{%c}{%s}{0}%%\n",
+        fprintf(f, "\\GreLowChoralSign{%c}{%s}{0}%%\n",
                 current_note->u.note.pitch, current_note->choral_sign);
     } else {
         // let's cheat a little
         if (is_on_a_line(current_note->u.note.pitch)) {
-            fprintf(f, "\\grehighchoralsign{%c}{%s}{\\greoCase%s}%%\n",
+            fprintf(f, "\\GreHighChoralSign{%c}{%s}{\\greoCase%s}%%\n",
                     current_note->u.note.pitch, current_note->choral_sign,
                     current_note->gtex_offset_case);
         } else {
-            fprintf(f, "\\grehighchoralsign{%c}{%s}{\\greoCase%s}%%\n",
+            fprintf(f, "\\GreHighChoralSign{%c}{%s}{\\greoCase%s}%%\n",
                     current_note->u.note.pitch + 2, current_note->choral_sign,
                     current_note->gtex_offset_case);
         }
@@ -2485,12 +2485,12 @@ static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
                 break;
 
             case GRE_NATURAL:
-                fprintf(f, "\\grenatural{%c}{0}%%\n",
+                fprintf(f, "\\GreNatural{%c}{0}%%\n",
                         glyph->u.misc.pitched.pitch);
                 break;
 
             case GRE_SHARP:
-                fprintf(f, "\\gresharp{%c}{0}%%\n",
+                fprintf(f, "\\GreSharp{%c}{0}%%\n",
                         glyph->u.misc.pitched.pitch);
                 break;
 
@@ -2529,11 +2529,11 @@ static void gregoriotex_write_text(FILE *f, gregorio_character *text,
     gregoriotex_ignore_style = gregoriotex_fix_style(text);
     if (gregoriotex_ignore_style != 0) {
         if (next_syl) {
-            fprintf(f, "\\gresetfixednexttextformat{%d}",
+            fprintf(f, "\\GreSetFixedNextTextFormat{%d}",
                     gregoriotex_internal_style_to_gregoriotex
                     (gregoriotex_ignore_style));
         } else {
-            fprintf(f, "\\gresetfixedtextformat{%d}",
+            fprintf(f, "\\GreSetFixedTextFormat{%d}",
                     gregoriotex_internal_style_to_gregoriotex
                     (gregoriotex_ignore_style));
         }
@@ -2559,12 +2559,12 @@ static void gregoriotex_print_change_line_clef(FILE *f,
 {
     if (current_element->type == GRE_C_KEY_CHANGE) {
         if (current_element->u.misc.pitched.flatted_key) {
-            fprintf(f, "\\gresetlinesclef{c}{%d}{1}{%c}%%\n",
+            fprintf(f, "\\GreSetLinesClef{c}{%d}{1}{%c}%%\n",
                     current_element->u.misc.pitched.pitch - '0',
                     gregoriotex_clef_flat_height('c',
                             current_element->u.misc.pitched.pitch - '0'));
         } else {
-            fprintf(f, "\\gresetlinesclef{c}{%d}{1}{%c}%%\n",
+            fprintf(f, "\\GreSetLinesClef{c}{%d}{1}{%c}%%\n",
                     current_element->u.misc.pitched.pitch - 48, NO_KEY_FLAT);
         }
     }
@@ -2572,12 +2572,12 @@ static void gregoriotex_print_change_line_clef(FILE *f,
         if (current_element->u.misc.pitched.flatted_key) {
             // the third argument is 0 or 1 according to the need for a
             // space before the clef
-            fprintf(f, "\\gresetlinesclef{f}{%d}{1}{%c}%%\n",
+            fprintf(f, "\\GreSetLinesClef{f}{%d}{1}{%c}%%\n",
                     current_element->u.misc.pitched.pitch - '0',
                     gregoriotex_clef_flat_height('f',
                             current_element->u.misc.pitched.pitch - '0'));
         } else {
-            fprintf(f, "\\gresetlinesclef{f}{%d}{1}{%c}%%\n",
+            fprintf(f, "\\GreSetLinesClef{f}{%d}{1}{%c}%%\n",
                     current_element->u.misc.pitched.pitch - '0', NO_KEY_FLAT);
         }
     }
@@ -2669,21 +2669,21 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                     && line->abovelinestext == 0) {
                 if ((syllable->elements)[0]->u.misc.unpitched.info.sub_type !=
                         GRE_END_OF_PAR) {
-                    fprintf(f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
+                    fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
                 } else {
-                    fprintf(f, "%%\n%%\n\\grenewparline %%\n%%\n%%\n");
+                    fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
                 }
             } else {
                 if ((syllable->elements)[0]->u.misc.unpitched.info.sub_type !=
                         GRE_END_OF_PAR) {
                     fprintf(f,
-                            "%%\n%%\n\\grenewlinewithspace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
+                            "%%\n%%\n\\GreNewLineWithSpace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
                             line->additional_top_space,
                             line->additional_bottom_space, line->translation,
                             line->abovelinestext);
                 } else {
                     fprintf(f,
-                            "%%\n%%\n\\grenewparlinewithspace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
+                            "%%\n%%\n\\GreNewParLineWithSpace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
                             line->additional_top_space,
                             line->additional_bottom_space, line->translation,
                             line->abovelinestext);
@@ -2736,10 +2736,10 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                 fprintf(f, "\\GreBarSyllable");
             }
         } else {
-            fprintf(f, "\\gresyllable");
+            fprintf(f, "\\GreSyllable");
         }
     } else {
-        fprintf(f, "\\gresyllable");
+        fprintf(f, "\\GreSyllable");
     }
     gregoriotex_write_text(f, syllable->text, first_syllable, THIS_SYL);
     if (syllable->position == WORD_END
@@ -2762,26 +2762,26 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
     }
     if (syllable->translation) {
         if (syllable->translation_type == TR_WITH_CENTER_BEGINNING) {
-            fprintf(f, "%%\n\\grewritetranslationwithcenterbeginning{");
+            fprintf(f, "%%\n\\GreWriteTranslationWithCenterBeginning{");
         } else {
-            fprintf(f, "%%\n\\grewritetranslation{");
+            fprintf(f, "%%\n\\GreWriteTranslation{");
         }
         gregoriotex_write_translation(f, syllable->translation);
         fprintf(f, "}%%\n");
     }
     if (syllable->translation_type) {
         if (syllable->translation_type == TR_WITH_CENTER_END)
-            fprintf(f, "%%\n\\gretranslationcenterend %%\n");
+            fprintf(f, "%%\n\\GreTranslationCenterEnd %%\n");
     }
     if (syllable->abovelinestext) {
-        fprintf(f, "%%\n\\gresettextabovelines{%s}%%\n",
+        fprintf(f, "%%\n\\GreSetTextAboveLines{%s}%%\n",
                 syllable->abovelinestext);
     }
     if (gregoriotex_is_last_of_line(syllable)) {
-        fprintf(f, "%%\n\\grelastofline %%\n");
+        fprintf(f, "%%\n\\GreLastOfLine %%\n");
     }
     if (!syllable->next_syllable) {
-        fprintf(f, "%%\n\\grelastofscore %%\n");
+        fprintf(f, "%%\n\\GreLastOfScore %%\n");
     }
     fprintf(f, "}{%%\n");
 
@@ -2839,7 +2839,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
 
         case GRE_ALT:
             if (element->texverb) {
-                fprintf(f, "\\gresettextabovelines{%s}%%\n", element->texverb);
+                fprintf(f, "\\GreSetTextAboveLines{%s}%%\n", element->texverb);
             }
             break;
 
@@ -2940,19 +2940,19 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                     && line->additional_top_space == 0 && line->translation == 0
                     && line->abovelinestext == 0) {
                 if (element->u.misc.unpitched.info.sub_type != GRE_END_OF_PAR) {
-                    fprintf(f, "%%\n%%\n\\grenewline %%\n%%\n%%\n");
+                    fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
                 } else {
-                    fprintf(f, "%%\n%%\n\\grenewparline %%\n%%\n%%\n");
+                    fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
                 }
             } else {
                 if (element->u.misc.unpitched.info.sub_type != GRE_END_OF_PAR) {
-                    fprintf(f, "%%\n%%\n\\grenewlinewithspace"
+                    fprintf(f, "%%\n%%\n\\GreNewLineWithSpace"
                             "{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
                             line->additional_top_space,
                             line->additional_bottom_space, line->translation,
                             line->abovelinestext);
                 } else {
-                    fprintf(f, "%%\n%%\n\\grenewparlinewithspace"
+                    fprintf(f, "%%\n%%\n\\GreNewParLineWithSpace"
                             "{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
                             line->additional_top_space,
                             line->additional_bottom_space, line->translation,
@@ -3059,29 +3059,29 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     // we select the good font
     if (score->gregoriotex_font) {
         if (!strcmp(score->gregoriotex_font, "gregorio")) {
-            fprintf(f, "\\setgregoriofont{gregorio}%%\n");
+            fprintf(f, "\\GreSetGregorioFont{gregorio}%%\n");
         }
         if (!strcmp(score->gregoriotex_font, "parmesan")) {
-            fprintf(f, "\\setgregoriofont{parmesan}%%\n");
+            fprintf(f, "\\GreSetGregorioFont{parmesan}%%\n");
         }
         if (!strcmp(score->gregoriotex_font, "greciliae")) {
-            fprintf(f, "\\setgregoriofont{greciliae}%%\n");
+            fprintf(f, "\\GreSetGregorioFont{greciliae}%%\n");
         }
     }
     if (score->mode != 0) {
-        fprintf(f, "\\gregorianmode{%d}%%\n", score->mode);
+        fprintf(f, "\\GreMode{%d}%%\n", score->mode);
     }
     // first we draw the initial (first letter) and the initial key
     if (score->initial_style == NO_INITIAL) {
-        fprintf(f, "\\grenoinitial %%\n");
+        fprintf(f, "\\GreNoInitial %%\n");
     } else {
         if (score->initial_style == BIG_INITIAL) {
-            fprintf(f, "\\gresetbiginitial %%\n");
+            fprintf(f, "\\GreSetBigInitial %%\n");
             line = 1;
         }
         first_text = gregorio_first_text(score);
         if (first_text) {
-            fprintf(f, "\\greinitial{");
+            fprintf(f, "\\GreSetInitial{");
             gregorio_write_initial(first_text, f,
                     (&gtex_write_verb),
                     (&gtex_print_char),
@@ -3092,7 +3092,7 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
         }
     }
     if (score->si.manuscript_reference) {
-        fprintf(f, "\\grescorereference{%s}%%\n",
+        fprintf(f, "\\GreScoreReference{%s}%%\n",
                 score->si.manuscript_reference);
     }
     if (score->first_voice_info) {
@@ -3112,7 +3112,7 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
         clef_line = 3;
         clef_flat = NO_KEY_FLAT;
     }
-    fprintf(f, "\\gresetinitialclef{%c}{%d}{%c}%%\n", clef_letter, clef_line,
+    fprintf(f, "\\GreSetInitialClef{%c}{%d}{%c}%%\n", clef_letter, clef_line,
             clef_flat);
     current_syllable = score->first_syllable;
     while (current_syllable) {

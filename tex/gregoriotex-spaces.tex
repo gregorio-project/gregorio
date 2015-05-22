@@ -387,7 +387,7 @@
 % dimen keeping the shift computed with next function
 \newdimen\gre@dimen@bolshift
 
-%% @desc Macro used in \gresyllable. Sets \gre@skip@bolshift to the left kern that
+%% @desc Macro used in \GreSyllable. Sets \gre@skip@bolshift to the left kern that
 %%       should appear at the beginning of a line in case of a forced linebreak.
 %%       The goal of this left kern is to have all lines aligned on notes. See
 %%       TODO for details.
@@ -428,7 +428,7 @@
 % dimen keeping the shift computed with next function
 \newskip\gre@skip@eolshift
 
-%% @desc Macro used in \gresyllable. Sets \gre@skip@eolshift to the left kern that
+%% @desc Macro used in \GreSyllable. Sets \gre@skip@eolshift to the left kern that
 %%       should appear before an end of line. The improvement is tiny: when
 %%       text go further than notes in the last syllable of a line, the idea
 %%       is to allow text to go a bit further right, under the custo.
@@ -661,7 +661,7 @@
 \newdimen\gre@dimen@additionalbottomspace%
 \newdimen\gre@dimen@additionaltopspace%
 
-% same arguments as grenewlinewithspace
+% same arguments as GreNewLineWithSpace
 \def\gre@calculate@additionalspaces#1#2{%
   \ifcase#1\relax %
     \global\gre@dimen@additionalbottomspace=0 sp%
@@ -697,7 +697,7 @@
 
 %% macros for additional bottom space for the first line
 
-% #1 is 1, 2, 3, or 4, with the same signification as in grenewlinewithspace
+% #1 is 1, 2, 3, or 4, with the same signification as in GreNewLineWithSpace
 \def\GreFirstLineBottomSpace#1#2{%
   \ifcase#1\relax %
     % case 0

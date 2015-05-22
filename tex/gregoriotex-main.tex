@@ -147,7 +147,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %macro to call if you want to go to the next line simply
-\def\grenewline{%
+\def\GreNewLine{%
   \grenewlinecommon{0}{0}{0}{0}{0}%
   \relax%
 }%
@@ -157,7 +157,7 @@
 %% 2: idem, but with the bottom line (-1th). It can be 4, in the case of a bottom note with a vertical episemus.
 %% 3: 1 if there is a translation somewhere
 % #4 is if 1 if we have space above the staff
-\def\grenewlinewithspace#1#2#3#4{%
+\def\GreNewLineWithSpace#1#2#3#4{%
   \grenewlinecommon{#1}{#2}{#3}{0}{#4}%
   \relax%
 }%
@@ -165,12 +165,12 @@
 
 % basically same macros as above, but these one do a \hfill, the lines are not justified
 %macro to call if you want to go to the next line simply
-\def\grenewparline{%
+\def\GreNewParLine{%
   \grenewlinecommon{0}{0}{0}{1}{0}%
   \relax%
 }%
 
-\def\grenewparlinewithspace#1#2#3#4{%
+\def\GreNewParLineWithSpace#1#2#3#4{%
   \grenewlinecommon{#1}{#2}{#3}{1}{#4}%
 }%
 
@@ -248,7 +248,7 @@
 \newcount\greknownline%
 
 % macro to call before the call of \initial
-\def\gresetbiginitial{%
+\def\GreSetBigInitial{%
   \global\grebiginitial=1\relax %
   \relax %
 }%
@@ -289,7 +289,7 @@
   \fi %
 }%
 
-\def\greinitial#1{%
+\def\GreSetInitial#1{%
   % see comments on this function to see what it does
   \gre@calculate@aboveinitialraise %
   % we print the initial always at the same place, and the we print the GreAboveinitialfirstbox, centered
@@ -383,7 +383,7 @@
   \relax %
 }%
 
-\def\grenoinitial{%
+\def\GreNoInitial{%
   \setbox\GreInitial=\hbox{}%
   \global\gre@dimen@initialwidth=0pt %
   \global\grelastoflinecount=2\relax %
@@ -425,7 +425,7 @@
 %% macros for the score reference (unused)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\grescorereference#1{}%
+\def\GreScoreReference#1{}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting the things above the initial
@@ -436,7 +436,7 @@
   \relax %
 }%
 
-\def\gregorianmode#1{%
+\def\GreMode#1{%
   \ifhbox \GreAboveinitialfirstbox%
     \relax%
   \else%
@@ -513,7 +513,7 @@
 
 \xdef\grecurrenttextabovelines{}%
 
-\def\gresettextabovelines#1{%
+\def\GreSetTextAboveLines#1{%
   \gdef\grecurrenttextabovelines{%
     \gretypesettextabovelines{#1}%
     \gdef\grecurrenttextabovelines{}%
@@ -714,7 +714,7 @@
   \xdef\grenlbintranslation{\number #1}%
 }%
 
-\def\grewritetranslation#1{%
+\def\GreWriteTranslation#1{%
   \ifnum\gretranslationcenteringscheme=0\relax %
     \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
   \else %
@@ -728,7 +728,7 @@
   \fi %
 }%
 
-\def\grewritetranslationwithcenterbeginning#1{%
+\def\GreWriteTranslationWithCenterBeginning#1{%
   \ifnum\grenlbintranslation=1\relax %
     \GreBeginNLBArea{0}{1}%
   \fi %
@@ -740,7 +740,7 @@
 
 \xdef\gremustdotranslationcenterend{0}%
 
-\def\gretranslationcenterend{%
+\def\GreTranslationCenterEnd{%
   \xdef\gremustdotranslationcenterend{1}%
   \relax %
 }%
@@ -765,7 +765,7 @@
 %macro called at the beginning of a score
 \def\GreBeginScore{%
   % not sure it's perfect to put that here, but it's the only way I found to make it work....
-  \setgregoriofont{\gregoriofontname}%
+  \GreSetGregorioFont{\gregoriofontname}%
   \ifnum\greusestylefont=1\relax %
     \gresetstylefont %
   \fi %
@@ -865,13 +865,13 @@
 % 0 if nothing
 % 1 if the syllable is the last of the line
 % 2 after it has finished the syllable, so when it is two it means that the syllable is the first of a line
-\def\grelastofline{%
+\def\GreLastOfLine{%
   \global\grelastoflinecount=1\relax%
   \relax%
 }%
 
 % same as above, but for the score. For now it is the same behaviour.
-\def\grelastofscore{%
+\def\GreLastOfScore{%
   %\grelocalleftbox{}% For an unknown reason, if I uncomment this line, the
   %blank line removing algorithm (in lua) will let some blank space after the
   %last line... (see bug #20953)
@@ -1097,7 +1097,7 @@
 %% fonts
 %%%%%%%%%
 
-\def\gretilde{%
+\def\GreTilde{%
   \ensuremath{\sim}%
   \relax %
 }%
@@ -1106,7 +1106,7 @@
 % the default gregorio font
 \xdef\gregoriofontname{greciliae}%
 
-\def\setgregoriofont#1{%
+\def\GreSetGregorioFont#1{%
   \xdef\gregoriofontname{#1}%
   \gre@count@temp@three = \the\grefactor %
   \multiply\gre@count@temp@three by 100000 %
@@ -1126,7 +1126,7 @@
 }%
 
 \def\gretranslationformat#1{%
-  \greitalic{#1}%
+  \GreItalic{#1}%
   \relax %
 }%
 
@@ -1303,7 +1303,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % a zero-width hyphen, useful for fine tuning line endings. To input in gabc verb for example.
-\def\grezerhyph{%
+\def\GreZeroHyph{%
   \hbox to 0pt{%
   \char\the\hyphenchar\font %
   \hss %
@@ -1317,15 +1317,15 @@
 }%
 
 % the definition that will be always used for end of lines hyphens in gregorio, except if one of the two before is explicitely used
-\let\grehyph\grenormalhyph %
+\let\GreHyph\grenormalhyph %
 
 % two macros to change the definition of the hyphen:
 \def\GreUseNormalHyphen{%
-  \global\let\grehyph\grenormalhyph %
+  \global\let\GreHyph\grenormalhyph %
 }%
 
 \def\GreUseZeroHyphen{%
-  \global\let\grehyph\grezerhyph %
+  \global\let\GreHyph\GreZeroHyph %
 }%
 
 
