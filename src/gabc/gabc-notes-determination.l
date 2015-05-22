@@ -35,12 +35,26 @@ static unsigned int nbof_isolated_episemus;
 static char *notesmacros[10];
 static char *tempstr = NULL;
 
+static inline char pitch_letter_to_height(const char pitch) {
+    return pitch - 'a' + LOWEST_PITCH;
+}
+
+gregorio_shape punctum(const char pitch)
+{
+    if (pitch < 'a') {
+        return S_PUNCTUM_INCLINATUM;
+    } else {
+        return S_PUNCTUM;
+    }
+}
+
 static inline void lex_add_note(int i, gregorio_shape shape, char signs,
         char liquescentia)
 {
     nbof_isolated_episemus = 0;
-    gregorio_add_note(&current_note, tolower(gabc_notes_determination_text[i]),
-                      shape, signs, liquescentia, NULL);
+    gregorio_add_note(&current_note,
+            pitch_letter_to_height(tolower(gabc_notes_determination_text[i])),
+            shape, signs, liquescentia, NULL);
 }
 
 static inline void add_bar_as_note(gregorio_bar bar)
@@ -107,6 +121,11 @@ static void add_sign(gregorio_sign sign) {
         break;
     }
     gregorio_add_sign(current_note, sign, vposition);
+}
+
+static inline void add_alteration(const gregorio_type type) {
+    gregorio_add_alteration_as_note(&current_note, type,
+            pitch_letter_to_height(gabc_notes_determination_text[0]));
 }
 
 %}
@@ -265,7 +284,7 @@ static void add_sign(gregorio_sign sign) {
     }
 [a-m]\+ {
         gregorio_add_manual_custos_as_note(&current_note,
-                gabc_notes_determination_text[0]);
+                pitch_letter_to_height(gabc_notes_determination_text[0]));
     }
 [\t\r\n]+ /* ignore ends of line and tabs */;
 z   {
@@ -371,16 +390,13 @@ r5  {
         gregorio_add_special_sign(current_note, _SEMI_CIRCULUS_REVERSUS);
     }
 [a-mA-M]x {
-        gregorio_add_alteration_as_note(&current_note, GRE_FLAT,
-                                        gabc_notes_determination_text[0]);
+        add_alteration(GRE_FLAT);
     }
 [a-mA-M]# {
-        gregorio_add_alteration_as_note(&current_note, GRE_SHARP,
-                                        gabc_notes_determination_text[0]);
+        add_alteration(GRE_SHARP);
     }
 [a-mA-M]y {
-        gregorio_add_alteration_as_note(&current_note, GRE_NATURAL,
-                                        gabc_notes_determination_text[0]);
+        add_alteration(GRE_NATURAL);
     }
 \/  {
         gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT);
@@ -431,12 +447,12 @@ r5  {
         lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTA);
     }
 [a-mA-M] {
-        lex_add_note(0, gregorio_det_shape(gabc_notes_determination_text[0]),
-                _NO_SIGN, L_NO_LIQUESCENTIA);
+        lex_add_note(0, punctum(gabc_notes_determination_text[0]), _NO_SIGN,
+                L_NO_LIQUESCENTIA);
     }
 -[a-mA-M] { 
-        lex_add_note(1, gregorio_det_shape(gabc_notes_determination_text[1]),
-                _NO_SIGN, L_INITIO_DEBILIS);
+        lex_add_note(1, punctum(gabc_notes_determination_text[1]), _NO_SIGN,
+                L_INITIO_DEBILIS);
     }
 \'[01]? {
         add_sign(_V_EPISEMUS);

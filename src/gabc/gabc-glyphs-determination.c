@@ -172,7 +172,8 @@ static char gabc_determine_custo_pitch(gregorio_note *current_note,
         if (current_note->type == GRE_NOTE) {
             pitch_difference =
                     (int) current_note->u.note.pitch - pitch_difference;
-            if (pitch_difference < (int) 'a' || pitch_difference > (int) 'm') {
+            if (pitch_difference < LOWEST_PITCH
+                    || pitch_difference > HIGHEST_PITCH) {
                 gregorio_message(_("pitch difference too high to set "
                                 "automatic custo (z0), please check your "
                                 "score"), "gabc_determine_custo_pitch",
@@ -182,7 +183,7 @@ static char gabc_determine_custo_pitch(gregorio_note *current_note,
         }
         current_note = current_note->next;
     }
-    return 'g';
+    return DUMMY_PITCH;
 }
 
 /****************************

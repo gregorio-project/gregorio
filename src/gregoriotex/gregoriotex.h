@@ -167,14 +167,12 @@ static inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
 
 static inline bool is_on_a_line(const char pitch)
 {
-    return pitch == 'b' || pitch == 'd' || pitch == 'f' || pitch == 'h'
-            || pitch == 'j' || pitch == 'l';
+    return pitch % 2 == 0;
 }
 
 static inline bool is_between_lines(const char pitch)
 {
-    return pitch == 'a' || pitch == 'c' || pitch == 'e' || pitch == 'g'
-            || pitch == 'i' || pitch == 'k' || pitch == 'm';
+    return pitch % 2 == 1;
 }
 
 bool gtex_is_h_episemus_above_shown(const gregorio_note *const note);
