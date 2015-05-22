@@ -77,6 +77,9 @@ Macro to typeset a vertical episemus around a bar.
   \#1 & integer & Type of glyph the episemus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
+\macroname{\textbackslash GreBeginEUOUAE}{}{gregoriotex-main.tex}
+Macro to mark the beginning of a EUOUAE block.  Alters spacings and prohibits a line break until the end of the block.
+
 \macroname{\textbackslash GreBeginNLBArea}{\#1\#2}{gregoriotex-main.tex}
 Macro called at beginning of a no line break area.
 
@@ -97,7 +100,7 @@ Makes argument bold.  Accesses \LaTeX\ \verb=\textbf= (\textit{gregoriotex.sty})
   \#1 & string & Text to be typeset in bold.\\
 \end{argtable}
 
-\macroname{\textbackslash GreGhangeClef}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreChangeClef}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
 Macro called when key changes
 
 \begin{argtable}
@@ -168,6 +171,9 @@ Macro to typeset a dominican bar.
   \#2 & code    & Macros which may happen before the skip but after the divisio dominica (typically \verb=\grevepisemus=).\\
 \end{argtable}
 
+\macroname{\textbackslash GreEndEUOUAE}{}{gregoriotex-main.tex}
+Macro to mark the end of a EUOUAE block.
+
 \macroname{\textbackslash GreEndOfElement}{\#1\#2}{gregoriotex-main.tex}
 Macro to end elements.
 
@@ -198,6 +204,22 @@ Macro to end a glyph without ending the element.
       & 11 & Space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more).\\
 \end{argtable}
 
+\macroname{\textbackslash GreFinalDivisioFinalis}{\#1}{gregoriotex-signs.tex}
+Macro to end a score with a divisio finalis.
+
+\begin{argtable}
+  \#1 & 0 & Something does not need to be placed after the divisio finalis.\\
+      & 1 & Something needs to be placed after the divisio finalis.\\
+\end{argtable}
+
+\macroname{\textbackslash GreFinalDivisioMaior}{\#1}{gregoriotex-signs.tex}
+Macro to end a score with a divisio maior.
+
+\begin{argtable}
+  \#1 & 0 & Something does not need to be placed after the divisio maior.\\
+      & 1 & Something needs to be placed after the divisio maior.\\
+\end{argtable}
+
 \macroname{\textbackslash GreFirstLineBottomSpace}{\#1\#2}{gregoriotex-spaces.tex}
 Macro for calculating the additional space needed below the first line of the score.
 
@@ -218,6 +240,14 @@ Macro to typeset a flat.
   \#1 & character & Height of the flat.\\
   \#2 & 0         & No a flat for a key change.\\
       & 1         & Indicates the a flat for a key change.\\
+\end{argtable}
+
+\macroname{\textbackslash GreFuseTwo}{\#1\#2}{gregoriotex-main.tex}
+Macro for fusing two glyphs to create a larger neume.
+
+\begin{argtable}
+  \#1 & Gregorio\TeX\ glyph & The first glyph in the sequence.\\
+  \#2 & Gregorio\TeX\ glyph & The second.
 \end{argtable}
 
 \macroname{\textbackslash GreGlyph}{\#1\#2\#3\#4\#5\#6}{gregoriotex-syllable.tex}
@@ -241,12 +271,12 @@ Macro to typeset a glyph.
   \#6 & \TeX\ code & signs to typeset after the glyph (almost all signs)
 \end{argtable}
 
-\macroname{\textbackslash GreMode}{\#1}{gregoriotex-main.tex}
-If the gabc file contains a mode in the header, then this function
-places said mode as the first (top) annotation.  If the user has manually added a first annotation in the \TeX\ file, then this function does nothing.
+\macroname{\textbackslash GreorioTeXAPIVersion}{\#1}{gregoriotex-main.tex}
+Checks to see if Gregorio\TeX\ API is version specified by argument (and
+therefore compatible with the score.
 
 \begin{argtable}
-  \#1 & 1--8 & The mode.  Other values are ignored.\\
+  \#1 & string & Version number for Gregorio\TeX.\\
 \end{argtable}
 
 \macroname{\textbackslash GreHEpisemus}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
@@ -354,6 +384,21 @@ Macro for typesetting low choral signs.
   \#2 & string    & The choral sign.\\
   \#3 & 0         & Choral sign does not occur before last note of podatus, porrectus, or torculus resupinus.\\
       & 1         & Choral sign occurs before last note of podatus, porrectus, or torculus resupinus.\\
+\end{argtable}
+
+\macroname{\textbackslash GreManualCusto}{\#1}{gregoriotex-signs.tex}
+Macro to typeset a custo manually.
+
+\begin{argtable}
+  \#1 & character & height of the custo
+\end{argtable}
+
+\macroname{\textbackslash GreMode}{\#1}{gregoriotex-main.tex}
+If the gabc file contains a mode in the header, then this function
+places said mode as the first (top) annotation.  If the user has manually added a first annotation in the \TeX\ file, then this function does nothing.
+
+\begin{argtable}
+  \#1 & 1--8 & The mode.  Other values are ignored.\\
 \end{argtable}
 
 \macroname{\textbackslash GreNatural}{\#1\#2}{gregoriotex-signs.tex}
@@ -507,7 +552,7 @@ Macro for writing initial key.
 \end{argtable}
 
 \macroname{\textbackslash GreSetLinesClef}{\#1\#2\#3\#4}{gregoriotex-main.tex}
-Marcro to define the clef that will appear at the beginning of the lines.
+Macro to define the clef that will appear at the beginning of the lines.
 
 \begin{argtable}
   \#1 & \texttt{c} or \texttt{f} & Type of clef.\\
@@ -515,6 +560,15 @@ Marcro to define the clef that will appear at the beginning of the lines.
   \#3 & 0 & No space after clef.\\
   & 1 & Space after clef.\\
   \#4 & character & Height of flat in key (\texttt{a} for no flat).\\
+\end{argtable}
+
+\macroname{\textbackslash GreSetNextSyllable}{\#1\#2\#3}{gregoriotex-syllable.tex}
+Macro to set the text of the next syllable for spacing purposes.
+
+\begin{argtable}
+  \#1 & string & the first letters of the syllable, that don't count for the alignment\\
+  \#2 & string & the middle letters of the syllable, we must align in the middle of them\\
+  \#3 & string & the end letters, they don't count for alignment\\
 \end{argtable}
 
 \macroname{\textbackslash GreSetTextAboveLines}{\#1}{gregoriotex-main.tex}

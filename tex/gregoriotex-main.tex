@@ -88,7 +88,7 @@
 % if the major version (X) does not match.
 % #1 is the version of GregorioTeX the score is made for.
 
-\def\gregoriotexapiversion#1{%
+\def\GregorioTeXAPIVersion#1{%
   \StrBefore{\gre@gregorioversion}{.}[\gre@gregoriomajorversion]%
   \IfBeginWith{#1}{\gre@gregoriomajorversion}{\relax}{%else
     \greerror{GregorioTeX is in version \gre@gregorioversion \space\space while a score you included requires version #1. Please recompile your scores}}%
@@ -666,7 +666,7 @@
 }%
 
 % Macro for fustion of larger neumes
-\def\grefusetwo#1#2{%
+\def\GreFuseTwo#1#2{%
   #1\grenobreak #2\relax %
 }%
 
@@ -790,7 +790,7 @@
 \def\GreEndScore{%
   \global\grelastoflinecount=0\relax %
   \global\greblockcusto=0\relax %
-  \greendeuouae{}%
+  \GreEndEUOUAE{}%
   \ifnum\grenlbstate=0\else %
     \GreEndNLBArea{2}{0}%
   \fi %
@@ -1077,14 +1077,14 @@
 \newif\ifgre@in@euouae
 \gre@in@euouaefalse
 
-\def\grebegineuouae{%
+\def\GreBeginEUOUAE{%
   \ifgre@euouae@implies@nlba %
     \GreBeginNLBArea{0}{0}%
   \fi %
   \gre@in@euouaetrue %
 }
 
-\def\greendeuouae{%
+\def\GreEndEUOUAE{%
   \ifgre@euouae@implies@nlba %
     \GreEndNLBArea{0}{0}%
   \fi %
@@ -1284,7 +1284,7 @@
 % If called with the optional argument: '\includescore[f]{Antiphon.gtex}'
 % the gtex file will be forced into the document and will not be
 % checked by the lua function 'include_score'. This does not bypass
-% the API version test done by '\gregoriotexapiversion'.
+% the API version test done by '\GregorioTeXAPIVersion'.
 
 % Macros for compiling short snippets of GABC directly expressed in TeX
 
