@@ -1374,22 +1374,6 @@ void gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
 
 /**********************************
  *
- * Very small function to determine if a punctum is a punctum
- * inclinatum or not.
- *
- *********************************/
-
-gregorio_shape gregorio_det_shape(char pitch)
-{
-    if (pitch < 'a') {
-        return S_PUNCTUM_INCLINATUM;
-    } else {
-        return S_PUNCTUM;
-    }
-}
-
-/**********************************
- *
  * A function to build an integer from a key, very useful to represent
  * it in the structure.
  *
@@ -1522,7 +1506,7 @@ char gregorio_determine_next_pitch(gregorio_syllable *syllable,
     if (!element || !syllable) {
         gregorio_message(_("called with a NULL argument"),
                          "gregorio_determine_next_pitch", ERROR, 0);
-        return 'g';
+        return DUMMY_PITCH;
     }
     // we first explore the next glyphs to find a note, if there is one
     if (glyph) {
@@ -1570,7 +1554,7 @@ char gregorio_determine_next_pitch(gregorio_syllable *syllable,
     }
     // here it means that there is no next note, so we return a stupid value,
     // but it won' t be used
-    return 'g';
+    return DUMMY_PITCH;
 }
 
 /**********************************
