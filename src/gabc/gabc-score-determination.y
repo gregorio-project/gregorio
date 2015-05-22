@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <assert.h>
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
@@ -136,15 +137,15 @@ static void gabc_fix_custos(gregorio_score *score_to_check)
                     default:
                         break;
                     }
-                    if (custo_element->u.misc.pitched.pitch < LOWEST_PITCH 
-                            || custo_element->u.misc.pitched.pitch
-                            > HIGHEST_PITCH) {
-                        gregorio_message(_("pitch difference too high to set "
-                                           "automatic custo (z0), please "
-                                           "check your score"),
-                                         "gabc_fix_custos", ERROR, 0);
-                        custo_element->u.misc.pitched.pitch = DUMMY_PITCH;
+                    while (custo_element->u.misc.pitched.pitch < LOWEST_PITCH) {
+                        custo_element->u.misc.pitched.pitch += 7;
                     }
+                    while (custo_element->u.misc.pitched.pitch > HIGHEST_PITCH) {
+                        custo_element->u.misc.pitched.pitch -= 7;
+                    }
+                    assert(custo_element->u.misc.pitched.pitch >= LOWEST_PITCH 
+                            && custo_element->u.misc.pitched.pitch
+                            <= HIGHEST_PITCH);
                     current_element = current_element->next;
                 }
             }
