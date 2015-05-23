@@ -59,8 +59,7 @@ static gregorio_element **elements;
 gregorio_element *current_element;
 // a table containing the macros to use in gabc file
 static char *macros[10];
-// declaration of some functions, the first is the one initializing the
-// flex/bison process
+// forward declaration of the flex/bison process function
 static int gabc_score_determination_parse(void);
 // other variables that we will have to use
 static gregorio_character *current_character;
@@ -538,7 +537,6 @@ gregorio_score *gabc_read_score(FILE *f_in)
     // initialized)
     gabc_score_determination_parse();
     gregorio_fix_initial_keys(score, DEFAULT_KEY);
-    //gabc_apply_first_syllable_style(score);
     gabc_fix_custos(score);
     free_variables();
     // the we check the validity and integrity of the score we have built.
