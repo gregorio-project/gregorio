@@ -110,20 +110,20 @@
 % for now, we only use an aux file with LuaTeX
 
 \ifluatex%
-  \newwrite\Greaux%
+  \newwrite\greaux%
 \fi%
 
 \def\grewriteaux#1{%
-  \write\Greaux{#1}%
+  \write\greaux{#1}%
   \relax %
 }%
 
 \def\opengreaux{%
-  \openout\Greaux \jobname .gaux\relax%
+  \openout\greaux \jobname .gaux\relax%
 }%
 
 \def\closegreaux{%
-  \closeout\Greaux %
+  \closeout\greaux %
 }%
 
 
@@ -242,11 +242,11 @@
 
 %% macro that sets \gre@dimen@temp@three to the width of its argument
 
-\newbox\GreTempwidth%
+\newbox\gre@box@temp@width%
 
 \def\grewidthof#1{%
-  \setbox\GreTempwidth=\hbox{#1}%
-  \global\gre@dimen@temp@three=\wd\GreTempwidth%
+  \setbox\gre@box@temp@width=\hbox{#1}%
+  \global\gre@dimen@temp@three=\wd\gre@box@temp@width%
   \relax%
 }%
 
@@ -255,7 +255,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% box containing the initial, and dimen containing its width (and the width of the space after)
-\newbox\GreInitial%
+\newbox\gre@box@initial%
 
 
 % grebiginitial means that the inital takes two lines
@@ -309,27 +309,27 @@
 \def\GreSetInitial#1{%
   % see comments on this function to see what it does
   \gre@calculate@aboveinitialraise %
-  % we print the initial always at the same place, and the we print the GreAboveinitialfirstbox, centered
+  % we print the initial always at the same place, and the we print the gre@box@firstaboveinitial, centered
   % first we print the initial
   \gre@dimen@temp@five=-\gre@dimen@textlower %
   % if it is a big initial we print it on the second line 
   \ifnum\grebiginitial=0\relax %
-    \setbox\GreInitial=\hbox{\greinitialformat{#1}}%
+    \setbox\gre@box@initial=\hbox{\greinitialformat{#1}}%
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@dimen@manualinitialwidth=0 pt\relax%
-      \global\gre@dimen@initialwidth=\wd\GreInitial %
+      \global\gre@dimen@initialwidth=\wd\gre@box@initial %
     \else%
       \greinitialformat{\global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth}%
     \fi%
-    \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) > initialwidth}%
-    \ifdim\wd\GreAboveinitialfirstbox>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\GreAboveinitialfirstbox%
+    \gre@debugmsg{ifdim}{ wd(gre@box@firstaboveinitial) > initialwidth}%
+    \ifdim\wd\gre@box@firstaboveinitial>\gre@dimen@initialwidth\relax%
+      \global\gre@dimen@initialwidth=\wd\gre@box@firstaboveinitial%
     \fi%
-    \gre@debugmsg{ifdim}{ wd(GreAboveinitialsecondbox) > initialwidth}%
-    \ifdim\wd\GreAboveinitialsecondbox>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\GreAboveinitialsecondbox%
+    \gre@debugmsg{ifdim}{ wd(gre@box@secondaboveinitial) > initialwidth}%
+    \ifdim\wd\gre@box@secondaboveinitial>\gre@dimen@initialwidth\relax%
+      \global\gre@dimen@initialwidth=\wd\gre@box@secondaboveinitial%
     \fi%
-    \setbox\GreInitial=\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\greinitialformat{#1}}\hss}%
+    \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\greinitialformat{#1}}\hss}%
   \else %
     \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
     \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
@@ -337,22 +337,22 @@
     \advance\gre@dimen@temp@five by 4\gre@dimen@interstafflinespace %
     \advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight %
     \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
-    \setbox\GreInitial=\hbox{\grebiginitialformat{#1}}%
+    \setbox\gre@box@initial=\hbox{\grebiginitialformat{#1}}%
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@dimen@manualinitialwidth=0 pt\relax%
-      \global\gre@dimen@initialwidth=\wd\GreInitial %
+      \global\gre@dimen@initialwidth=\wd\gre@box@initial %
     \else%
       \grebiginitialformat{\global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth}%
     \fi%
-    \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) > initialwidth}%
-    \ifdim\wd\GreAboveinitialfirstbox>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\GreAboveinitialfirstbox%
+    \gre@debugmsg{ifdim}{ wd(gre@box@firstaboveinitial) > initialwidth}%
+    \ifdim\wd\gre@box@firstaboveinitial>\gre@dimen@initialwidth\relax%
+      \global\gre@dimen@initialwidth=\wd\gre@box@firstaboveinitial%
     \fi%
-    \gre@debugmsg{ifdim}{ wd(GreAboveinitialsecondbox) > initialwidth}%
-    \ifdim\wd\GreAboveinitialsecondbox>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\GreAboveinitialsecondbox%
+    \gre@debugmsg{ifdim}{ wd(gre@box@secondaboveinitial) > initialwidth}%
+    \ifdim\wd\gre@box@secondaboveinitial>\gre@dimen@initialwidth\relax%
+      \global\gre@dimen@initialwidth=\wd\gre@box@secondaboveinitial%
     \fi%
-    \setbox\GreInitial=\hbox{\vbox to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\grebiginitialformat{#1}}\hss}\vss}}%
+    \setbox\gre@box@initial=\hbox{\vbox to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\grebiginitialformat{#1}}\hss}\vss}}%
   \fi %
   \ifnum\grebiginitial=0\relax%
     \greinitialformat{\global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift}%
@@ -361,7 +361,7 @@
   \fi%
   \hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
-  \copy\GreInitial%
+  \copy\gre@box@initial%
   \ifnum\grebiginitial=0\relax%
     \greinitialformat{\global\gre@dimen@temp@four = \gre@dimen@afterinitialshift}%
   \else%
@@ -370,38 +370,38 @@
   \hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
   % then we center the first box above the initial, if there is one
-  \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) = 0pt}%
-  \ifdim\wd\GreAboveinitialfirstbox=0 pt\relax %
+  \gre@debugmsg{ifdim}{ wd(gre@box@firstaboveinitial) = 0pt}%
+  \ifdim\wd\gre@box@firstaboveinitial=0 pt\relax %
   \else %
     \gre@dimen@temp@five=\gre@dimen@initialwidth %
-    \advance\gre@dimen@temp@five by -\wd\GreAboveinitialfirstbox%
+    \advance\gre@dimen@temp@five by -\wd\gre@box@firstaboveinitial%
     \divide\gre@dimen@temp@five by 2 %
     \gre@skip@temp@four = -\gre@dimen@initialwidth%
     \hskip\gre@skip@temp@four %
     \kern\gre@dimen@temp@five %
-    \raise\gre@dimen@aboveinitialfirstraise\copy\GreAboveinitialfirstbox%
+    \raise\gre@dimen@aboveinitialfirstraise\copy\gre@box@firstaboveinitial%
     \kern\gre@dimen@temp@five %
-    \setbox\GreAboveinitialfirstbox=\hbox{}%
+    \setbox\gre@box@firstaboveinitial=\hbox{}%
   \fi %
   % then we center the second box above the initial, if there is one
-  \gre@debugmsg{ifdim}{ wd(GreAboveinitialsecondbox) = 0pt}%
-  \ifdim\wd\GreAboveinitialsecondbox=0 pt\relax %
+  \gre@debugmsg{ifdim}{ wd(gre@box@secondaboveinitial) = 0pt}%
+  \ifdim\wd\gre@box@secondaboveinitial=0 pt\relax %
   \else %
     \gre@dimen@temp@five=\gre@dimen@initialwidth %
-    \advance\gre@dimen@temp@five by -\wd\GreAboveinitialsecondbox %
+    \advance\gre@dimen@temp@five by -\wd\gre@box@secondaboveinitial %
     \divide\gre@dimen@temp@five by 2 %
     \gre@skip@temp@four = -\gre@dimen@initialwidth%
     \hskip\gre@skip@temp@four %
     \kern\gre@dimen@temp@five %
-    \raise\gre@dimen@aboveinitialsecondraise\copy\GreAboveinitialsecondbox %
+    \raise\gre@dimen@aboveinitialsecondraise\copy\gre@box@secondaboveinitial %
     \kern\gre@dimen@temp@five %
-    \setbox\GreAboveinitialsecondbox=\hbox{}%
+    \setbox\gre@box@secondaboveinitial=\hbox{}%
   \fi %
   \relax %
 }%
 
 \def\GreNoInitial{%
-  \setbox\GreInitial=\hbox{}%
+  \setbox\gre@box@initial=\hbox{}%
   \global\gre@dimen@initialwidth=0pt %
   \global\grelastoflinecount=2\relax %
   \relax %
@@ -409,16 +409,16 @@
 
 % We set two boxes for the two lines above the initial
 
-\newbox\GreAboveinitialfirstbox%
-\newbox\GreAboveinitialsecondbox%
+\newbox\gre@box@firstaboveinitial%
+\newbox\gre@box@secondaboveinitial%
 % the height difference between the bottom of the first annotation line and the top of the second annotation line (above the initial) is controlled by the \gre@dimen@aboveinitialseparation space, in gregoriotex-spaces.tex
 
 \def\gresetfirstlineaboveinitial#1#2{%
   % we align the top of the box with the top of the line
   % here the variables are a bit strange... we can calculate the final value of greaboveinitialfirstraise only after the beginning of the score, after the call to this macro. So we just set greaboveinitialfirstraise to the negative value the #2 will add, and then, after the beginning of the score, we'll add gresetaboveinitialraise that will... set greaboveinitialfirstraise.
-  \setbox\GreAboveinitialfirstbox=\hbox{#2}%
-  \global\gre@dimen@aboveinitialfirstraise=-\ht\GreAboveinitialfirstbox %
-  \global\setbox\GreAboveinitialfirstbox=\hbox{#1}%
+  \setbox\gre@box@firstaboveinitial=\hbox{#2}%
+  \global\gre@dimen@aboveinitialfirstraise=-\ht\gre@box@firstaboveinitial %
+  \global\setbox\gre@box@firstaboveinitial=\hbox{#1}%
   \relax %
 }%
 
@@ -430,8 +430,8 @@
 \let\setfirstannotation\gresetfirstannotation%
 
 \def\gresetsecondannotation#1{%
-  \setbox\GreAboveinitialsecondbox=\hbox{#1}%
-  \global\gre@dimen@aboveinitialsecondraise=-\ht\GreAboveinitialsecondbox %
+  \setbox\gre@box@secondaboveinitial=\hbox{#1}%
+  \global\gre@dimen@aboveinitialsecondraise=-\ht\gre@box@secondaboveinitial %
   \global\advance\gre@dimen@aboveinitialsecondraise by -\gre@dimen@aboveinitialseparation %
   \relax %
 }%
@@ -454,7 +454,7 @@
 }%
 
 \def\GreMode#1{%
-  \ifhbox \GreAboveinitialfirstbox%
+  \ifhbox \gre@box@firstaboveinitial%
     \relax%
   \else%
     \ifcase#1%
@@ -489,7 +489,7 @@
   \gredrawfirstlines %
   %%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
   \grelocalleftbox{%
-    \copy\GreLines %
+    \copy\gre@box@lines %
   }%
   \relax %
 }%
@@ -621,11 +621,11 @@
 }%
 
 %% box containing the stafflines for other lines than the first
-\newbox\GreLines%
+\newbox\gre@box@lines%
 
 % macro that must be called at each change of linewidth and grefactor
 \def\gregeneratelines{%
-  \setbox\GreLines=\hbox to 0pt{%
+  \setbox\gre@box@lines=\hbox to 0pt{%
     \vbox{%
       \grenormalstafflinesformat %
       \vskip\gre@skip@spaceabovelines %
@@ -735,9 +735,9 @@
   \ifnum\gretranslationcenteringscheme=0\relax %
     \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
   \else %
-    \gre@dimen@temp@five=\wd\GreSyllabletext %
-    \setbox\GreTempwidth=\hbox{#1}%
-    \advance\gre@dimen@temp@five by -\wd\GreTempwidth %
+    \gre@dimen@temp@five=\wd\gre@box@syllabletext %
+    \setbox\gre@box@temp@width=\hbox{#1}%
+    \advance\gre@dimen@temp@five by -\wd\gre@box@temp@width %
     \divide\gre@dimen@temp@five by 2\relax %
     \kern\gre@dimen@temp@five %
     \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gretranslationformat{#1}\hss}}}%
@@ -824,7 +824,7 @@
   % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
   \grelocalleftbox{}%
   \grelocalrightbox{}%
-  \setbox\GreAboveinitialfirstbox=\hbox{}%
+  \setbox\gre@box@firstaboveinitial=\hbox{}%
   \gre@calculate@additionalspaces{0}{0}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@removetranslationspace %
@@ -897,15 +897,17 @@
   \relax%
 }%
 
-% a macro to disable (or reenable) the left shift for first syllables of scores
-\edef\gredisableeolshifts{0}%
+% a flag to disable (or reenable) the left shift for first syllables of scores
+\newif\ifgre@eolshiftsenabled%
+% default state is for them to be enabled
+\gre@eolshiftsenabledtrue
 
-\def\GreDisableEOLShifts{%
-  \xdef\gredisableeolshifts{1}%
+\def\gredisableeolshifts{%
+  \gre@eolshiftsenabledfalse%
 }%
 
-\def\GreEnableEOLShifts{%
-  \xdef\gredisableeolshifts{0}%
+\def\greenableeolshifts{%
+  \gre@eolshiftsenabledtrue%
 }%
 
 % a count that is 1 if we block the custo, and 0 if we don't. We just block custos at the end of a score, to prevent a bug.
@@ -1083,11 +1085,11 @@
 \newif\ifgre@euouae@implies@nlba
 \gre@euouae@implies@nlbatrue
 
-\def\GreNoBreakInEuouae{%
+\def\grenobreakineuouae{%
   \gre@euouae@implies@nlbatrue %
 }
 
-\def\GreAllowBreakInEuouae{%
+\def\greallowbreakineuouae{%
   \gre@euouae@implies@nlbafalse %
 }
 
@@ -1155,10 +1157,15 @@
   \relax %
 }%
 
-\def\GreSetStaffLinesFormat#1{%
+\def\gresetstafflinesformat#1{%
   \global\def\greadditionalstafflinesformat{#1\relax }%
   \global\def\grenormalstafflinesformat{#1\relax }%
   \relax %
+}%
+
+\def\GreSetStaffLinesFormat#1{%
+  \gre@warning{\protect\GreSetStaffLinesFormat\space is deprecated.\MessageBreak Use \protect\gresetstafflinesformat\space instead.}%
+  \gresetstafflinesformat{#1}%
 }%
 
 \def\greinitialformat#1{%
@@ -1337,16 +1344,26 @@
 \let\GreHyph\grenormalhyph %
 
 % two macros to change the definition of the hyphen:
-\def\GreUseNormalHyphen{%
+\def\greusenormalhyphen{%
   \global\let\GreHyph\grenormalhyph %
 }%
 
-\def\GreUseZeroHyphen{%
+\def\GreUseNormalHyphen{%
+  \gre@warning{\protect\GreUseNormalHyphen\space is deprecated.\MessageBreak Use \protect\greusenormalhyphen\space instead.}%
+  \greusenormalhyphen%
+}%
+
+\def\greusezerohyphen{%
   \global\let\GreHyph\GreZeroHyph %
+}%
+
+\def\GreUseZeroHyphen{%
+  \gre@warning{\protect\GreUseZeroHyphen\space is deprecated.\MessageBreak Use \protect\greusezerohyphen\space instead.}%
+  \greusezerohyphen%
 }%
 
 
 % We load the default space configuration.
-\GreLoadSpaceConf{default}%
+\greloadspaceconf{default}%
 
 \input gregoriotex-nabc.tex

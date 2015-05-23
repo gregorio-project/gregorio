@@ -67,7 +67,7 @@ Macro for typesetting a bar syllable.
   & $20 <$ integer $< 39$ & Same as below 20 except there is a flat before the notes.  Subtract 20 to get the type of notes alignment.\\
   & $40 <$ integer $< 59$ & Same as below 20 except there is a natural before the notes.  Subtract 40 to get the type of notes alignment.\\
   \#8 & \TeX\ code & Code to execute before  printing anything.\\
-  \#9 & \texttt{GreWriteBar} & The bar line.
+  \#9 & \TeX\ code & The bar line (usually a \textit{writebar} call).
 \end{argtable}
 
 \macroname{\textbackslash GreBarVEpisemus}{\#1}{gregoriotex-signs.tex}
@@ -186,6 +186,17 @@ Macro to end elements.
       & 1 & Space is unbreakable.\\
 \end{argtable}
 
+\macroname{\textbackslash GreEndNLBArea}{\#1\#2}{gregoriotex-main.tex}
+Macro to end a no line break area.
+
+\begin{argtable}
+  \#1 & 0 & ending element\\
+  & 1 & ending syllable\\
+  & 2 & ending score\\
+  \#2 & 0 & ??\\ %I can’t tell what this flag is for
+  & else & ??
+\end{argtable}
+
 \macroname{\textbackslash GreEndOfGlyph}{\#1}{gregoriotex-main.tex}
 Macro to end a glyph without ending the element.
 
@@ -271,7 +282,15 @@ Macro to typeset a glyph.
   \#6 & \TeX\ code & signs to typeset after the glyph (almost all signs)
 \end{argtable}
 
-\macroname{\textbackslash GreorioTeXAPIVersion}{\#1}{gregoriotex-main.tex}
+\macroname{\textbackslash GreGlyphHeights}{\#1\#2}{gregoriotex-syllable.tex}
+Passes the glyph height limits.  Currently does nothing, but will eventually be part of dynamic vertical spacing.
+
+\begin{argtable}
+  \#1 & integer & the high height\\
+  \#2 & integer & the low height
+end{argtable}
+
+\macroname{\textbackslash GregorioTeXAPIVersion}{\#1}{gregoriotex-main.tex}
 Checks to see if Gregorio\TeX\ API is version specified by argument (and
 therefore compatible with the score.
 

@@ -74,8 +74,8 @@
 % #6 are the signs to typeset after the glyph (almost all signs)
 \def\GreGlyph#1#2#3#4#5#6{%
   \grenewglyphcommon %
-  \setbox\GreTempwidth=\hbox{\gregoriofont #1}%
-  \gre@dimen@temp@three=\wd\GreTempwidth %
+  \setbox\gre@box@temp@width=\hbox{\gregoriofont #1}%
+  \gre@dimen@temp@three=\wd\gre@box@temp@width %
   \global\gre@dimen@lastglyphwidth=\gre@dimen@temp@three %
   % the three next lines are a trick to get the additional lines below the glyphs
   \gre@skip@temp@one = \gre@dimen@lastglyphwidth%
@@ -84,7 +84,7 @@
   \kern-\gre@skip@temp@one %
   \gre@calculate@glyphraisevalue{#2}{0}%
   \raise\gre@dimen@glyphraisevalue %
-  \copy\GreTempwidth%
+  \copy\gre@box@temp@width%
   \ifnum\the\greendofscore=0 %
     \gresetcusto{#3}%
   \fi %
@@ -98,7 +98,7 @@
   \relax%
 }%
 
-% this function is quite simple, it just sets \GreTempwidth with a box of the good width, watch the next function for the complete thing
+% this function is quite simple, it just sets \gre@box@temp@width with a box of the good width, watch the next function for the complete thing
 % we define the different alignments possible, of course they depend on the font
 % the first 10 (0-9) possible values are the same as in glyph
 %% 0 : one-note glyph or more than two notes glyph except porrectus : here we must put the aligncenter in the middle of the first note
@@ -119,28 +119,28 @@
 \def\grefindsimplenotesaligncenter#1#2{%
   \ifcase#1%
     %case of punctum
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont\gre@char@punctum}%
+    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@char@punctum}%
   \or%
     %case of flexus
     \grehandleclivisspecialalignment{\gregoriofont\gre@char@flexus}{\gregoriofont\gre@char@punctum}{#2}%
   \or%
     %case of porrectus (we consider it to have the same alignment as punctum)
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont\gre@char@punctum}%
+    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@char@punctum}%
   \or%
     %case of a initio debilis
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont\gre@char@smallpunctum}%
+    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@char@smallpunctum}%
   \or %
     %case of a quilisma
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont\gre@char@quilisma}%
+    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@char@quilisma}%
   \or %
     %case of an oriscus
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont\gre@char@oriscus}%
+    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@char@oriscus}%
   \or %
     %case of a punctum inclinatum
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont\gre@char@punctuminclinatum}%
+    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@char@punctuminclinatum}%
   \or %
     %case of a stropha
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont\gre@char@stropha}%
+    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@char@stropha}%
   \or %
     % case of flexus with ambitus of one
     \grehandleclivisspecialalignment{\gregoriofont\gre@char@flexusone}{\gregoriofont\gre@char@punctum}{#2}%
@@ -149,18 +149,18 @@
     \grehandleclivisspecialalignment{\gregoriofont\gre@char@flexusdeminutus}{\gregoriofont\gre@char@punctum}{#2}%
   \or %
     % case of virgula
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont\gre@char@virgula}%
+    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@char@virgula}%
   \or %
     % case of divisio minima, minor, maior
-    \global\setbox\GreTempwidth=\hbox{\gregoriofont\gre@char@smallpunctum}%
+    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@char@smallpunctum}%
   \or %
     % case of divisiofinalis
-    \global\setbox\GreTempwidth=\hbox{\gredivisiofinalissymbol}%
+    \global\setbox\gre@box@temp@width=\hbox{\gredivisiofinalissymbol}%
   \fi%
   \relax%
 }%
 
-% aux function to previous one: sets \GreTempwidth to \hbox{#1} or \hbox{#2}
+% aux function to previous one: sets \gre@box@temp@width to \hbox{#1} or \hbox{#2}
 % according to special clivis alignemt scheme. See comments of
 % \gre@clivisalignment for more.
 % #1 is the glyph in case we align the clivis in the "clivis" way,
@@ -176,9 +176,9 @@
 % #3 is the same as #2 of previous function
 \def\grehandleclivisspecialalignment#1#2#3{%
   \ifcase\gre@clivisalignment%
-    \global\setbox\GreTempwidth=\hbox{#1}%
+    \global\setbox\gre@box@temp@width=\hbox{#1}%
   \or%
-    \global\setbox\GreTempwidth=\hbox{#2}%
+    \global\setbox\gre@box@temp@width=\hbox{#2}%
   \or%
     \let\mygre@endsyllablepart\gre@nextendsyllablepart %
     \ifcase#3%
@@ -188,22 +188,22 @@
     \divide\gre@dimen@temp@three by 2\relax %
     \gre@debugmsg{ifdim}{ tempwidth > textaligncenter}%
     \ifdim\gre@dimen@temp@three >\gre@dimen@textaligncenter %
-      \global\setbox\GreTempwidth=\hbox{#2}%
+      \global\setbox\gre@box@temp@width=\hbox{#2}%
     \else%
       \ifcase\gre@englishcentering%
         \grewidthof{\mygre@endsyllablepart}%
         \gre@debugmsg{ifdim}{ tempwidth > clivisalignmentmin}%
         \ifdim\gre@dimen@temp@three >\gre@dimen@clivisalignmentmin %
-          \global\setbox\GreTempwidth=\hbox{#2}%
+          \global\setbox\gre@box@temp@width=\hbox{#2}%
         \else%
-          \global\setbox\GreTempwidth=\hbox{#1}%
+          \global\setbox\gre@box@temp@width=\hbox{#1}%
         \fi%
       \or%
         \gre@debugmsg{ifdim}{ textaligncenter > clivisalignmentmin}%
         \ifdim\gre@dimen@textaligncenter >\gre@dimen@clivisalignmentmin %
-          \global\setbox\GreTempwidth=\hbox{#2}%
+          \global\setbox\gre@box@temp@width=\hbox{#2}%
         \else%
-          \global\setbox\GreTempwidth=\hbox{#1}%
+          \global\setbox\gre@box@temp@width=\hbox{#1}%
         \fi%
       \fi%
     \fi%
@@ -214,7 +214,7 @@
 % warning: the behaviour of all this is quite difficult to understand: this function is called with simple arguments (between 0 and 20) by the glyph function. In this case we add the align center of the argument to notesaligncenter ; and notesaligncenter can be already set to something by flat and natural.
 \def\grefindnotesaligncenter#1{%
   \grefindsimplenotesaligncenter{#1}{0}%
-  \gre@dimen@temp@five=\wd\GreTempwidth %
+  \gre@dimen@temp@five=\wd\gre@box@temp@width %
   \divide\gre@dimen@temp@five by 2\relax %
   \global\advance\gre@dimen@notesaligncenter by \gre@dimen@temp@five %
   \relax %
@@ -224,7 +224,7 @@
 \def\grefindnextnotesaligncenter#1{%
   \ifnum#1<20\relax %
     \grefindsimplenotesaligncenter{#1}{1}%
-    \gre@dimen@temp@five=\wd\GreTempwidth %
+    \gre@dimen@temp@five=\wd\gre@box@temp@width %
     \divide\gre@dimen@temp@five by 2\relax %
     \global\gre@dimen@notesaligncenter=\gre@dimen@temp@five %
   \else %\ifnum#1<20
@@ -232,34 +232,34 @@
     \ifnum#1<40\relax%
       \advance\gre@count@temp@three by -20\relax %
       \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
-      \gre@dimen@temp@five=\wd\GreTempwidth %
+      \gre@dimen@temp@five=\wd\gre@box@temp@width %
       \divide\gre@dimen@temp@five by 2\relax %
-      \setbox\GreTempwidth=\hbox{\greflatchar}%
+      \setbox\gre@box@temp@width=\hbox{\greflatchar}%
     \else%\ifnum#1<40
       \ifnum#1<60\relax%
         \advance\gre@count@temp@three by -40\relax %
         \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
-        \gre@dimen@temp@five=\wd\GreTempwidth %
+        \gre@dimen@temp@five=\wd\gre@box@temp@width %
         \divide\gre@dimen@temp@five by 2\relax %
-        \setbox\GreTempwidth=\hbox{\grenaturalchar}%
+        \setbox\gre@box@temp@width=\hbox{\grenaturalchar}%
       \else%\ifnum#1<60
         \advance\gre@count@temp@three by -60\relax %
         \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
-        \gre@dimen@temp@five=\wd\GreTempwidth %
+        \gre@dimen@temp@five=\wd\gre@box@temp@width %
         \divide\gre@dimen@temp@five by 2\relax %
-        \setbox\GreTempwidth=\hbox{\gresharpchar}%
+        \setbox\gre@box@temp@width=\hbox{\gresharpchar}%
       \fi%
     \fi %
-    \advance\gre@dimen@temp@five by \wd\GreTempwidth %
+    \advance\gre@dimen@temp@five by \wd\gre@box@temp@width %
     \global\gre@dimen@notesaligncenter=\gre@dimen@temp@five %
   \fi %
   \relax %
 }%
 
 % box that we will use to determine the width of the notes, to determine wether we typeset a - or not after the letters
-\newbox\GreSyllablenotes%
+\newbox\gre@box@syllablenotes%
 
-% Macro used to fill \GreSyllablenotes with everything contained in #1. This
+% Macro used to fill \gre@box@syllablenotes with everything contained in #1. This
 % saves and restores a few values so that when really typesetting #1 in \GreSyllable,
 % the result is identical.
 \def\gresyllablenotes#1{%
@@ -267,8 +267,8 @@
   \xdef\grelastispunctumsauv{\grelastispunctum}%
   \xdef\greboxing{1}%
   \xdef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
-  \setbox\GreSyllablenotes=\hbox{#1}%
-  \gre@debugmsg{spacing}{Width of notes: \the\wd\GreSyllablenotes}%
+  \setbox\gre@box@syllablenotes=\hbox{#1}%
+  \gre@debugmsg{spacing}{Width of notes: \the\wd\gre@box@syllablenotes}%
   \xdef\grelastispunctum{\grelastispunctumsauv}%
   \xdef\greboxing{0}%
   \global\grelastoflinecount=\gresavedlastoflinecount\relax %
@@ -282,7 +282,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % box that will contain the text of the syllable
-\newbox\GreSyllabletext%
+\newbox\gre@box@syllabletext%
 
 % count that will be 0 if in the last text there was no dash (or if it is the beginning of a word, and 1 if there was
 %\newcount\previousdash
@@ -467,7 +467,7 @@
   % So, at beginning of lines, we will have shifted left, and in middle of lines
   % we will have shifted right and left, thus cancelling... Very easy trick, but
   % took me years to find it!
-  \ifnum\gredisableeolshifts=0\relax%
+  \ifgre@eolshiftsenabled%
     \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
     \kern -\gre@dimen@bolshift %
     \grenobreak %
@@ -480,8 +480,8 @@
   #5%
   \gre@calculate@nextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
   \greunsetfixednexttextformat %
-  \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
-  \gre@calculate@enddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
+  \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
+  \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
     % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
   \gre@count@temp@one=0%
   \ifnum#7>9\relax %
@@ -508,17 +508,17 @@
     \ifdim\gre@skip@temp@one > \gre@dimen@maximumspacewithoutdash %
       % if it's the last syllable of line, the hyphen will be \GreHyph
       \ifnum\grelastoflinecount=1\relax %
-        \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart\GreHyph\relax}}%
+        \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart\GreHyph\relax}}%
       \else %
-        \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart-}}%
+        \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart-}}%
       \fi %
       % recomputing end difference and final skip with the final hyphen
-      \gre@calculate@enddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
+      \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
       \gre@compute@syllablefinalskip{0}{0}%
     \else %
       \gregorioattr=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
-      \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
+      \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
     \fi%
   \fi% ficase#4
   % then we reuse temp, we assign to it the \gre@dimen@begindifference, but only if it is positive, else it is 0
@@ -528,13 +528,13 @@
     \kern\gre@skip@temp@one %
   \fi%
   #8\relax %
-  \raise\gre@dimen@textlower \copy\GreSyllabletext %
+  \raise\gre@dimen@textlower \copy\gre@box@syllabletext %
   \ifnum\gremustdotranslationcenterend=1\relax %
     % case of end of translation centering, we do it after the typesetting of the text
     \gredotranslationcenterend %
     \xdef\gremustdotranslationcenterend{0}%
   \fi %
-  \gre@skip@temp@one = -\wd\GreSyllabletext %
+  \gre@skip@temp@one = -\wd\gre@box@syllabletext %
   \kern\gre@skip@temp@one%
   \gre@skip@temp@one = -\gre@dimen@begindifference%
   \kern\gre@skip@temp@one %
@@ -588,8 +588,8 @@
       \greendofsyllable{0}{1}{1}%
     \else %
       % otherwise we call it with 1 only if there is no letters after (we can see it with nextbegindifference)
-      \setbox\GreTempwidth=\hbox{#2}%
-      \ifdim\wd\GreTempwidth=0pt%
+      \setbox\gre@box@temp@width=\hbox{#2}%
+      \ifdim\wd\gre@box@temp@width=0pt%
         \greendofsyllable{0}{1}{1}%
       \else %
         \greendofsyllable{1}{1}{1}%
@@ -658,28 +658,28 @@
     \gdef\gre@endsyllablepart{#3}%
   \fi %
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
-  \setbox\GreSyllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
-  \gre@debugmsg{spacing}{Width of bar text: \the\wd\GreSyllabletext}%
+  \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
+  \gre@debugmsg{spacing}{Width of bar text: \the\wd\gre@box@syllabletext}%
   \gresyllablenotes{#9}%
-  \gre@debugmsg{spacing}{Width of bar line: \the\wd\GreSyllablenotes}%
-  \gre@dimen@notesaligncenter=\wd\GreSyllablenotes%
+  \gre@debugmsg{spacing}{Width of bar line: \the\wd\gre@box@syllablenotes}%
+  \gre@dimen@notesaligncenter=\wd\gre@box@syllablenotes%
   \divide\gre@dimen@notesaligncenter by 2\relax %
   \gre@dimen@begindifference=\gre@dimen@notesaligncenter %
   \advance\gre@dimen@begindifference by -\gre@dimen@textaligncenter %
-  \gre@calculate@enddifference{\wd\GreSyllablenotes}{\wd\GreSyllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
+  \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   #5%
   \gre@calculate@nextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
   \greunsetfixednexttextformat %
   % then we check if there is something to write
-  \gre@debugmsg{ifdim}{ wd(GreSyllabletext) = 0pt}%
-  \ifdim\wd\GreSyllabletext = 0 pt\relax %
+  \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
+  \ifdim\wd\gre@box@syllabletext = 0 pt\relax %
     % the most difficult case : when there is nothing to write
     % first we need to determine the real space that there will be between the notes. Here again it is not so simple... let's consider these two kinds of spaces : 
     %% 1/ the minimal space between a note and the bar + the width of the bar + the minimal space between the bar and the note (that's the global idea, in fact there are nuances) : we assign skip@temp@three to it
     %% 2/ enddifference + begindifference + space between notes and word : we assign skip@temp@two to it
     \gre@skip@temp@three=\gre@skip@notebarspace %
     \advance\gre@skip@temp@three by \gre@skip@notebarspace %
-    \advance\gre@skip@temp@three by \wd\GreSyllablenotes %
+    \advance\gre@skip@temp@three by \wd\gre@box@syllablenotes %
     % now let's get skip@temp@two
     \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
     \ifdim\gre@skip@nextbegindifference < 0 pt%
@@ -700,7 +700,7 @@
       \gre@skip@temp@three=\gre@skip@temp@two %
     \fi %
     \divide\gre@skip@temp@three by 2\relax %
-    \gre@dimen@temp@five=\wd\GreSyllablenotes %
+    \gre@dimen@temp@five=\wd\gre@box@syllablenotes %
     \divide\gre@dimen@temp@five by 2\relax %
     \advance\gre@skip@temp@three by -\gre@dimen@temp@five %
     % now we have our skipone
@@ -710,11 +710,11 @@
       \advance\gre@skip@temp@two by \gre@dimen@previousenddifference %
     \fi %
     \grenobreak %
-    \gre@debugmsg{ifdim}{ temp@skip@two > -wd(GreSyllablenotes)}%
-    \ifdim\gre@skip@temp@two > -\wd\GreSyllablenotes %
+    \gre@debugmsg{ifdim}{ temp@skip@two > -wd(gre@box@syllablenotes)}%
+    \ifdim\gre@skip@temp@two > -\wd\gre@box@syllablenotes %
       \kern\gre@skip@temp@two %
     \else %
-      \gre@skip@temp@one = -\wd\GreSyllablenotes %
+      \gre@skip@temp@one = -\wd\gre@box@syllablenotes %
       \kern\gre@skip@temp@one%
     \fi %
     \grenobreak %
@@ -726,8 +726,8 @@
     \fi %
     #9\relax %
     \grepenalty{\greendafterbaraltpenalty }% TODO: isn't it a bit buggy?
-    \gre@debugmsg{ifdim}{ temp@skip@two < -wd(GreSyllablenotes)}
-    \ifdim\gre@skip@temp@two < -\wd\GreSyllablenotes %
+    \gre@debugmsg{ifdim}{ temp@skip@two < -wd(gre@box@syllablenotes)}
+    \ifdim\gre@skip@temp@two < -\wd\gre@box@syllablenotes %
       \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}
       \ifdim\gre@skip@nextbegindifference > 0 pt%
         \gre@skip@temp@one = \gre@skip@interwordspacetext%
@@ -737,8 +737,8 @@
         \grehskip\gre@skip@temp@one %
       \fi %
     \else 
-      %\ifdim\gre@skip@temp@two < -\wd\GreSyllablenotes
-        %\gre@skip@temp@two=\wd\GreSyllablenotes 
+      %\ifdim\gre@skip@temp@two < -\wd\gre@box@syllablenotes
+        %\gre@skip@temp@two=\wd\gre@box@syllablenotes 
         %\divide\gre@skip@temp@two by 2\relax 
         %\kern -\gre@skip@temp@two 
       \gre@skip@temp@two=\gre@skip@temp@three %
@@ -746,24 +746,24 @@
       \ifdim\gre@skip@nextbegindifference < 0 pt%
         \advance\gre@skip@temp@two by \gre@skip@nextbegindifference %
       \fi %
-      \gre@debugmsg{ifdim}{ temp@skip@two > -wd(GreSyllablenotes)}%
-      \ifdim\gre@skip@temp@two > -\wd\GreSyllablenotes %
+      \gre@debugmsg{ifdim}{ temp@skip@two > -wd(gre@box@syllablenotes)}%
+      \ifdim\gre@skip@temp@two > -\wd\gre@box@syllablenotes %
         \kern\gre@skip@temp@two %
-      \else % \ifdim\gre@dimen@temp@five > -\wd\GreSyllablenotes 
-        \gre@skip@temp@one = -\wd\GreSyllablenotes %
+      \else % \ifdim\gre@dimen@temp@five > -\wd\gre@box@syllablenotes 
+        \gre@skip@temp@one = -\wd\gre@box@syllablenotes %
         \grehskip\gre@skip@temp@one%
       \fi %
     \fi %
   % then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
-  \else %ifdim\wd\GreSyllabletext = 0 pt 
+  \else %ifdim\wd\gre@box@syllabletext = 0 pt 
     #8\relax %
-    \raise\gre@dimen@textlower \copy\GreSyllabletext %
+    \raise\gre@dimen@textlower \copy\gre@box@syllabletext %
     \ifnum\gremustdotranslationcenterend=1\relax %
       % case of end of translation centering, we do it after the typesetting of the text
       \gredotranslationcenterend %
       \xdef\gremustdotranslationcenterend{0}%
     \fi %
-    \gre@skip@temp@one = -\wd\GreSyllabletext %
+    \gre@skip@temp@one = -\wd\gre@box@syllabletext %
     \kern\gre@skip@temp@one%
     \gre@skip@temp@one = -\gre@dimen@begindifference%
     \kern\gre@skip@temp@one %

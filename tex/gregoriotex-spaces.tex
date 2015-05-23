@@ -443,10 +443,10 @@
     \global\gre@skip@eolshift=-#1 %
     % we don't do it if it's the last syllable of a score or if the user
     % disabled custos
-    \ifnum\gredisableeolshifts=0\relax %
+    \ifgre@eolshiftsenabled %
       \ifnum\greblockcusto=1\else %
-        \setbox\GreTempwidth=\hbox{\grecustochar{\gre@pitch@g}}%
-        \global\advance\gre@skip@eolshift by -\wd\GreTempwidth %
+        \setbox\gre@box@temp@width=\hbox{\grecustochar{\gre@pitch@g}}%
+        \global\advance\gre@skip@eolshift by -\wd\gre@box@temp@width %
         \global\advance\gre@skip@eolshift by -\gre@skip@spacebeforecusto %
       \fi %
       \global\advance\gre@skip@eolshift by \gre@dimen@minimalspaceatlinebeginning %
@@ -720,11 +720,11 @@
 % a dimen that will contain the enddifference of the previous glyph
 \newdimen\gre@dimen@previousenddifference%
 
-% macro to set enddifference (defined above) to \wd\GreSyllablenotes - (\wd\GreSyllabletext - textaligncenter) - notesaligncenter
+% macro to set enddifference (defined above) to \wd\gre@box@syllablenotes - (\wd\gre@box@syllabletext - textaligncenter) - notesaligncenter
 % enddifference will be positive if text go further than the notes, and negative in the other case
 % arguments are :
-% #1: \wd\GreSyllablenotes : the total width of the notes
-% #2: \wd\GreSyllabletext : the total width of the text
+% #1: \wd\gre@box@syllablenotes : the total width of the notes
+% #2: \wd\gre@box@syllabletext : the total width of the text
 % #3: textaligncenter (defined above)
 % #4: notesaligncenter (defined above too)
 % #5: if we have to set previousenddifference or not
@@ -908,6 +908,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\GreLoadSpaceConf#1{%
+  \gre@warning{\protect\GreLoadSpaceConf\space is deprecated.\MessageBreak Use \protect\greloadspaceconf\space instead.}%
+  \greloadspaceconf{#1}%
+}%
+
+\def\greloadspaceconf#1{%
   \input gsp-#1.tex\relax %
   \ifnum\the\grefactor=\greconffactor\else %If the space configuration file is designed for a \grefactor other than the current one, then we need to rescale the distances.
     \gre@changedimenfactor{\greconffactor}{\grefactor} %

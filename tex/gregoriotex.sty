@@ -48,8 +48,8 @@
 \ProcessKeyvalOptions*
 
 % we hide lines only under LaTeX
-\GreHideAltLines
-\GreHidePCLines
+\grehidealtlines
+\grehidepclines
 
 %% We now redefine some things in a more LaTeX friendly way.
 
@@ -103,7 +103,7 @@
 }
 
 \def\grecoloredlines#1#2#3{%
-  \GreSetStaffLinesFormat{%
+  \gresetstafflinesformat{%
     \color[RGB]{#1,#2,#3}%
   }%
   \relax %
