@@ -25,23 +25,24 @@
 #include "unicode.h"
 #include "messages.h"
 
+static const char *unknown(int value) {
+    static char buf[20];
+    snprintf(buf, 20, "?%d", value);
+    return buf;
+}
+
 static const char *dump_translation_type_to_string(gregorio_tr_centering
                                             translation_type)
 {
     switch (translation_type) {
     case TR_NORMAL:
         return "TR_NORMAL";
-        break;
     case TR_WITH_CENTER_BEGINNING:
         return "TR_WITH_CENTER_BEGINNING";
-        break;
     case TR_WITH_CENTER_END:
         return "TR_WITH_CENTER_END";
-        break;
-    default:
-        return "";
-        break;
     }
+    return unknown(translation_type);
 }
 
 static const char *dump_nlba_to_string(gregorio_nlba no_linebreak_area)
@@ -49,17 +50,12 @@ static const char *dump_nlba_to_string(gregorio_nlba no_linebreak_area)
     switch (no_linebreak_area) {
     case NLBA_NORMAL:
         return "NLBA_NORMAL";
-        break;
     case NLBA_BEGINNING:
         return "NLBA_BEGINNING";
-        break;
     case NLBA_END:
         return "NLBA_END";
-        break;
-    default:
-        return "";
-        break;
     }
+    return unknown(no_linebreak_area);
 }
 
 static const char *dump_style_to_string(grestyle_style style)
@@ -67,48 +63,34 @@ static const char *dump_style_to_string(grestyle_style style)
     switch (style) {
     case ST_NO_STYLE:
         return "     ST_NO_STYLE";
-        break;
     case ST_ITALIC:
         return "       ST_ITALIC";
-        break;
     case ST_CENTER:
         return "       ST_CENTER";
-        break;
     case ST_FORCED_CENTER:
         return " ST_FORCED_CENTER";
-        break;
     case ST_INITIAL:
         return "      ST_INITIAL";
-        break;
     case ST_BOLD:
         return "         ST_BOLD";
-        break;
     case ST_TT:
         return "           ST_TT";
-        break;
     case ST_UNDERLINED:
         return "   ST_UNDERLINED";
-        break;
     case ST_COLORED:
         return "      ST_COLORED";
-        break;
     case ST_SMALL_CAPS:
         return "   ST_SMALL_CAPS";
-        break;
     case ST_SPECIAL_CHAR:
         return " ST_SPECIAL_CHAR";
-        break;
     case ST_VERBATIM:
         return "     ST_VERBATIM";
-        break;
-    default:
-        return "";
-        break;
     }
+    return unknown(style);
 }
 
-static void dump_write_characters(FILE *f,
-        gregorio_character *current_character)
+static void dump_write_characters(FILE *const f,
+        const gregorio_character * current_character)
 {
     while (current_character) {
         fprintf(f,
@@ -130,555 +112,373 @@ static void dump_write_characters(FILE *f,
     }
 }
 
-static const char *dump_key_to_char(int key)
+static const char *dump_key_to_char(const int key)
 {
-    const char *str;
     switch (key) {
     case -2:
-        str = "f1";
-        break;
+        return "f1";
     case 0:
-        str = "f2";
-        break;
+        return "f2";
     case 2:
-        str = "f3";
-        break;
+        return "f3";
     case 4:
-        str = "f4";
-        break;
+        return "f4";
     case 1:
-        str = "c1";
-        break;
+        return "c1";
     case 3:
-        str = "c2";
-        break;
+        return "c2";
     case 5:
-        str = "c3";
-        break;
+        return "c3";
     case 7:
-        str = "c4";
-        break;
-    default:
-        str = "no key defined";
-        break;
+        return "c4";
     }
-    return str;
+    return "no key defined";
 }
 
 static const char *dump_syllable_position(gregorio_word_position pos)
 {
-    const char *str;
     switch (pos) {
     case WORD_BEGINNING:
-        str = "WORD_BEGINNING";
-        break;
+        return "WORD_BEGINNING";
     case WORD_MIDDLE:
-        str = "WORD_MIDDLE";
-        break;
+        return "WORD_MIDDLE";
     case WORD_END:
-        str = "WORD_END";
-        break;
+        return "WORD_END";
     case WORD_ONE_SYLLABLE:
-        str = "WORD_ONE_SYLLABLE";
-        break;
-    default:
-        str = "unknown";
-        break;
+        return "WORD_ONE_SYLLABLE";
     }
-    return str;
+    return "unknown";
 }
 
 static const char *dump_type(gregorio_type type)
 {
-    const char *str;
     switch (type) {
     case GRE_NOTE:
-        str = "GRE_NOTE";
-        break;
+        return "GRE_NOTE";
     case GRE_GLYPH:
-        str = "GRE_GLYPH";
-        break;
+        return "GRE_GLYPH";
     case GRE_ELEMENT:
-        str = "GRE_ELEMENT";
-        break;
+        return "GRE_ELEMENT";
     case GRE_FLAT:
-        str = "GRE_FLAT";
-        break;
+        return "GRE_FLAT";
     case GRE_SHARP:
-        str = "GRE_SHARP";
-        break;
+        return "GRE_SHARP";
     case GRE_NATURAL:
-        str = "GRE_NATURAL";
-        break;
+        return "GRE_NATURAL";
     case GRE_C_KEY_CHANGE:
-        str = "GRE_C_KEY_CHANGE";
-        break;
+        return "GRE_C_KEY_CHANGE";
     case GRE_F_KEY_CHANGE:
-        str = "GRE_F_KEY_CHANGE";
-        break;
+        return "GRE_F_KEY_CHANGE";
     case GRE_END_OF_LINE:
-        str = "GRE_END_OF_LINE";
-        break;
+        return "GRE_END_OF_LINE";
     case GRE_END_OF_PAR:
-        str = "GRE_END_OF_PAR";
-        break;
+        return "GRE_END_OF_PAR";
     case GRE_CUSTO:
-        str = "GRE_CUSTO";
-        break;
+        return "GRE_CUSTO";
     case GRE_SPACE:
-        str = "GRE_SPACE";
-        break;
+        return "GRE_SPACE";
     case GRE_BAR:
-        str = "GRE_BAR";
-        break;
+        return "GRE_BAR";
     case GRE_SYLLABLE:
-        str = "GRE_SYLLABLE";
-        break;
+        return "GRE_SYLLABLE";
     case GRE_TEXVERB_GLYPH:
-        str = "GRE_TEXVERB_GLYPH";
-        break;
+        return "GRE_TEXVERB_GLYPH";
     case GRE_TEXVERB_ELEMENT:
-        str = "GRE_TEXVERB_ELEMENT";
-        break;
+        return "GRE_TEXVERB_ELEMENT";
     case GRE_NLBA:
-        str = "GRE_NLBA";
-        break;
+        return "GRE_NLBA";
     case GRE_ALT:
-        str = "GRE_ALT";
-        break;
+        return "GRE_ALT";
     case GRE_MANUAL_CUSTOS:
-        str = "GRE_MANUAL_CUSTOS";
-        break;
+        return "GRE_MANUAL_CUSTOS";
     default:
-        str = "unknown";
-        break;
+        return "unknown";
     }
-    return str;
 }
 
 static const char *dump_bar_type(gregorio_bar element_type)
 {
-    const char *str;
     switch (element_type) {
     case B_NO_BAR:
-        str = "B_NO_BAR";
-        break;
+        return "B_NO_BAR";
     case B_VIRGULA:
-        str = "B_VIRGULA";
-        break;
+        return "B_VIRGULA";
     case B_DIVISIO_MINIMA:
-        str = "B_DIVISIO_MINIMA";
-        break;
+        return "B_DIVISIO_MINIMA";
     case B_DIVISIO_MINOR:
-        str = "B_DIVISIO_MINOR";
-        break;
+        return "B_DIVISIO_MINOR";
     case B_DIVISIO_MAIOR:
-        str = "B_DIVISIO_MAIOR";
-        break;
+        return "B_DIVISIO_MAIOR";
     case B_DIVISIO_FINALIS:
-        str = "B_DIVISIO_FINALIS";
-        break;
+        return "B_DIVISIO_FINALIS";
     case B_DIVISIO_MINOR_D1:
-        str = "B_DIVISIO_MINOR_D1";
-        break;
+        return "B_DIVISIO_MINOR_D1";
     case B_DIVISIO_MINOR_D2:
-        str = "B_DIVISIO_MINOR_D2";
-        break;
+        return "B_DIVISIO_MINOR_D2";
     case B_DIVISIO_MINOR_D3:
-        str = "B_DIVISIO_MINOR_D3";
-        break;
+        return "B_DIVISIO_MINOR_D3";
     case B_DIVISIO_MINOR_D4:
-        str = "B_DIVISIO_MINOR_D4";
-        break;
+        return "B_DIVISIO_MINOR_D4";
     case B_DIVISIO_MINOR_D5:
-        str = "B_DIVISIO_MINOR_D5";
-        break;
+        return "B_DIVISIO_MINOR_D5";
     case B_DIVISIO_MINOR_D6:
-        str = "B_DIVISIO_MINOR_D6";
-        break;
-    default:
-        str = "unknown";
-        break;
+        return "B_DIVISIO_MINOR_D6";
     }
-    return str;
+    return "unknown";
 }
 
 static const char *dump_space_type(gregorio_space element_type)
 {
-    const char *str;
     switch (element_type) {
     case SP_DEFAULT:
-        str = "SP_DEFAULT";
-        break;
+        return "SP_DEFAULT";
     case SP_NO_SPACE:
-        str = "SP_NO_SPACE";
-        break;
+        return "SP_NO_SPACE";
     case SP_ZERO_WIDTH:
-        str = "SP_ZERO_WIDTH";
-        break;
+        return "SP_ZERO_WIDTH";
     case SP_NEUMATIC_CUT:
-        str = "SP_NEUMATIC_CUT";
-        break;
+        return "SP_NEUMATIC_CUT";
     case SP_LARGER_SPACE:
-        str = "SP_LARGER_SPACE";
-        break;
+        return "SP_LARGER_SPACE";
     case SP_GLYPH_SPACE:
-        str = "SP_GLYPH_SPACE";
-        break;
+        return "SP_GLYPH_SPACE";
     case SP_GLYPH_SPACE_NB:
-        str = "SP_GLYPH_SPACE_NB";
-        break;
+        return "SP_GLYPH_SPACE_NB";
     case SP_LARGER_SPACE_NB:
-        str = "SP_LARGER_SPACE_NB";
-        break;
+        return "SP_LARGER_SPACE_NB";
     case SP_NEUMATIC_CUT_NB:
-        str = "SP_NEUMATIC_CUT_NB";
-        break;
-    default:
-        str = "unknown";
-        break;
+        return "SP_NEUMATIC_CUT_NB";
     }
-    return str;
+    return "unknown";
 }
 
 static const char *dump_liquescentia(gregorio_liquescentia liquescentia)
 {
-    const char *str;
     switch (liquescentia) {
     case L_NO_LIQUESCENTIA:
-        str = "L_NO_LIQUESCENTIA";
-        break;
+        return "L_NO_LIQUESCENTIA";
     case L_DEMINUTUS:
-        str = "L_DEMINUTUS";
-        break;
+        return "L_DEMINUTUS";
     case L_AUCTUS_ASCENDENS:
-        str = "L_AUCTUS_ASCENDENS";
-        break;
+        return "L_AUCTUS_ASCENDENS";
     case L_AUCTUS_DESCENDENS:
-        str = "L_AUCTUS_DESCENDENS";
-        break;
+        return "L_AUCTUS_DESCENDENS";
     case L_AUCTA:
-        str = "L_AUCTA";
-        break;
+        return "L_AUCTA";
     case L_INITIO_DEBILIS:
-        str = "L_INITIO_DEBILIS";
-        break;
+        return "L_INITIO_DEBILIS";
     case L_DEMINUTUS_INITIO_DEBILIS:
-        str = "L_DEMINUTUS_INITIO_DEBILIS";
-        break;
+        return "L_DEMINUTUS_INITIO_DEBILIS";
     case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
-        str = "L_AUCTUS_ASCENDENS_INITIO_DEBILIS";
-        break;
+        return "L_AUCTUS_ASCENDENS_INITIO_DEBILIS";
     case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
-        str = "L_AUCTUS_DESCENDENS_INITIO_DEBILIS";
-        break;
+        return "L_AUCTUS_DESCENDENS_INITIO_DEBILIS";
     case L_AUCTA_INITIO_DEBILIS:
-        str = "L_AUCTA_INITIO_DEBILIS";
-        break;
-    default:
-        str = "unknown";
-        break;
+        return "L_AUCTA_INITIO_DEBILIS";
     }
-    return str;
+    return "unknown";
 }
 
 static const char *dump_glyph_type(gregorio_glyph_type glyph_type)
 {
-    const char *str;
     switch (glyph_type) {
     case G_PUNCTUM_INCLINATUM:
-        str = "G_PUNCTUM_INCLINATUM";
-        break;
+        return "G_PUNCTUM_INCLINATUM";
     case G_2_PUNCTA_INCLINATA_DESCENDENS:
-        str = "G_2_PUNCTA_INCLINATA_DESCENDENS";
-        break;
+        return "G_2_PUNCTA_INCLINATA_DESCENDENS";
     case G_3_PUNCTA_INCLINATA_DESCENDENS:
-        str = "G_3_PUNCTA_INCLINATA_DESCENDENS";
-        break;
+        return "G_3_PUNCTA_INCLINATA_DESCENDENS";
     case G_4_PUNCTA_INCLINATA_DESCENDENS:
-        str = "G_4_PUNCTA_INCLINATA_DESCENDENS";
-        break;
+        return "G_4_PUNCTA_INCLINATA_DESCENDENS";
     case G_5_PUNCTA_INCLINATA_DESCENDENS:
-        str = "G_5_PUNCTA_INCLINATA_DESCENDENS";
-        break;
+        return "G_5_PUNCTA_INCLINATA_DESCENDENS";
     case G_2_PUNCTA_INCLINATA_ASCENDENS:
-        str = "G_2_PUNCTA_INCLINATA_ASCENDENS";
-        break;
+        return "G_2_PUNCTA_INCLINATA_ASCENDENS";
     case G_3_PUNCTA_INCLINATA_ASCENDENS:
-        str = "G_3_PUNCTA_INCLINATA_ASCENDENS";
-        break;
+        return "G_3_PUNCTA_INCLINATA_ASCENDENS";
     case G_4_PUNCTA_INCLINATA_ASCENDENS:
-        str = "G_4_PUNCTA_INCLINATA_ASCENDENS";
-        break;
+        return "G_4_PUNCTA_INCLINATA_ASCENDENS";
     case G_5_PUNCTA_INCLINATA_ASCENDENS:
-        str = "G_5_PUNCTA_INCLINATA_ASCENDENS";
-        break;
+        return "G_5_PUNCTA_INCLINATA_ASCENDENS";
     case G_TRIGONUS:
-        str = "G_TRIGONUS";
-        break;
+        return "G_TRIGONUS";
     case G_PUNCTA_INCLINATA:
-        str = "G_PUNCTA_INCLINATA";
-        break;
+        return "G_PUNCTA_INCLINATA";
     case G_UNDETERMINED:
-        str = "G_UNDETERMINED";
-        break;
+        return "G_UNDETERMINED";
     case G_VIRGA:
-        str = "G_VIRGA";
-        break;
+        return "G_VIRGA";
     case G_VIRGA_REVERSA:
-        str = "G_VIRGA_REVERSA";
-        break;
+        return "G_VIRGA_REVERSA";
     case G_STROPHA:
-        str = "G_STROPHA";
-        break;
+        return "G_STROPHA";
     case G_STROPHA_AUCTA:
-        str = "G_STROPHA_AUCTA";
-        break;
+        return "G_STROPHA_AUCTA";
     case G_PUNCTUM:
-        str = "G_PUNCTUM";
-        break;
+        return "G_PUNCTUM";
     case G_PODATUS:
-        str = "G_PODATUS";
-        break;
+        return "G_PODATUS";
     case G_PES_QUADRATUM:
-        str = "G_PES_QUADRATUM";
-        break;
+        return "G_PES_QUADRATUM";
     case G_FLEXA:
-        str = "G_FLEXA";
-        break;
+        return "G_FLEXA";
     case G_TORCULUS:
-        str = "G_TORCULUS";
-        break;
+        return "G_TORCULUS";
     case G_TORCULUS_RESUPINUS:
-        str = "G_TORCULUS_RESUPINUS";
-        break;
+        return "G_TORCULUS_RESUPINUS";
     case G_TORCULUS_RESUPINUS_FLEXUS:
-        str = "G_TORCULUS_RESUPINUS_FLEXUS";
-        break;
+        return "G_TORCULUS_RESUPINUS_FLEXUS";
     case G_PORRECTUS:
-        str = "G_PORRECTUS";
-        break;
+        return "G_PORRECTUS";
     case G_PORRECTUS_FLEXUS:
-        str = "G_PORRECTUS_FLEXUS";
-        break;
+        return "G_PORRECTUS_FLEXUS";
     case G_BIVIRGA:
-        str = "G_BIVIRGA";
-        break;
+        return "G_BIVIRGA";
     case G_TRIVIRGA:
-        str = "G_TRIVIRGA";
-        break;
+        return "G_TRIVIRGA";
     case G_DISTROPHA:
-        str = "G_DISTROPHA";
-        break;
+        return "G_DISTROPHA";
     case G_DISTROPHA_AUCTA:
-        str = "G_DISTROPHA_AUCTA";
-        break;
+        return "G_DISTROPHA_AUCTA";
     case G_TRISTROPHA:
-        str = "G_TRISTROPHA";
-        break;
+        return "G_TRISTROPHA";
     case G_ANCUS:
-        str = "G_ANCUS";
-        break;
+        return "G_ANCUS";
     case G_TRISTROPHA_AUCTA:
-        str = "G_TRISTROPHA_AUCTA";
-        break;
+        return "G_TRISTROPHA_AUCTA";
     case G_PES_QUADRATUM_FIRST_PART:
-        str = "G_PES_QUADRATUM_FIRST_PART";
-        break;
+        return "G_PES_QUADRATUM_FIRST_PART";
     case G_SCANDICUS:
-        str = "G_SCANDICUS";
-        break;
+        return "G_SCANDICUS";
     case G_SALICUS:
-        str = "G_SALICUS";
-        break;
+        return "G_SALICUS";
     case G_VIRGA_STRATA:
-        str = "G_VIRGA_STRATA";
-        break;
+        return "G_VIRGA_STRATA";
     case G_TORCULUS_LIQUESCENS:
-        str = "G_TORCULUS_LIQUESCENS";
-        break;
+        return "G_TORCULUS_LIQUESCENS";
     default:
-        str = "unknown";
-        break;
+        return "unknown";
     }
-    return str;
 }
 
 static const char *dump_shape(gregorio_shape shape)
 {
-    const char *str;
     switch (shape) {
     case S_UNDETERMINED:
-        str = "S_UNDETERMINED";
-        break;
+        return "S_UNDETERMINED";
     case S_PUNCTUM:
-        str = "S_PUNCTUM";
-        break;
+        return "S_PUNCTUM";
     case S_PUNCTUM_END_OF_GLYPH:
-        str = "S_PUNCTUM_END_OF_GLYPH";
-        break;
+        return "S_PUNCTUM_END_OF_GLYPH";
     case S_PUNCTUM_INCLINATUM:
-        str = "S_PUNCTUM_INCLINATUM";
-        break;
+        return "S_PUNCTUM_INCLINATUM";
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
-        str = "S_PUNCTUM_INCLINATUM_DEMINUTUS";
-        break;
+        return "S_PUNCTUM_INCLINATUM_DEMINUTUS";
     case S_PUNCTUM_INCLINATUM_AUCTUS:
-        str = "S_PUNCTUM_INCLINATUM_AUCTUS";
-        break;
+        return "S_PUNCTUM_INCLINATUM_AUCTUS";
     case S_VIRGA:
-        str = "S_VIRGA";
-        break;
+        return "S_VIRGA";
     case S_VIRGA_REVERSA:
-        str = "S_VIRGA_REVERSA";
-        break;
+        return "S_VIRGA_REVERSA";
     case S_BIVIRGA:
-        str = "S_BIVIRGA";
-        break;
+        return "S_BIVIRGA";
     case S_TRIVIRGA:
-        str = "S_TRIVIRGA";
-        break;
+        return "S_TRIVIRGA";
     case S_ORISCUS:
-        str = "S_ORISCUS";
-        break;
+        return "S_ORISCUS";
     case S_ORISCUS_AUCTUS:
-        str = "S_ORISCUS_AUCTUS";
-        break;
+        return "S_ORISCUS_AUCTUS";
     case S_ORISCUS_DEMINUTUS:
-        str = "S_ORISCUS_DEMINUTUS";
-        break;
+        return "S_ORISCUS_DEMINUTUS";
     case S_ORISCUS_SCAPUS:
-        str = "S_ORISCUS_SCAPUS";
-        break;
+        return "S_ORISCUS_SCAPUS";
     case S_QUILISMA:
-        str = "S_QUILISMA";
-        break;
+        return "S_QUILISMA";
     case S_STROPHA:
-        str = "S_STROPHA";
-        break;
+        return "S_STROPHA";
     case S_STROPHA_AUCTA:
-        str = "S_STROPHA_AUCTA";
-        break;
+        return "S_STROPHA_AUCTA";
     case S_DISTROPHA:
-        str = "S_DISTROPHA";
-        break;
+        return "S_DISTROPHA";
     case S_DISTROPHA_AUCTA:
-        str = "S_DISTROPHA_AUCTA";
-        break;
+        return "S_DISTROPHA_AUCTA";
     case S_TRISTROPHA:
-        str = "S_TRISTROPHA";
-        break;
+        return "S_TRISTROPHA";
     case S_TRISTROPHA_AUCTA:
-        str = "S_TRISTROPHA_AUCTA";
-        break;
+        return "S_TRISTROPHA_AUCTA";
     case S_QUADRATUM:
-        str = "S_QUADRATUM";
-        break;
+        return "S_QUADRATUM";
     case S_PUNCTUM_CAVUM:
-        str = "S_PUNCTUM_CAVUM";
-        break;
+        return "S_PUNCTUM_CAVUM";
     case S_LINEA_PUNCTUM:
-        str = "S_LINEA_PUNCTUM";
-        break;
+        return "S_LINEA_PUNCTUM";
     case S_LINEA_PUNCTUM_CAVUM:
-        str = "S_LINEA_PUNCTUM_CAVUM";
-        break;
+        return "S_LINEA_PUNCTUM_CAVUM";
     case S_LINEA:
-        str = "S_LINEA";
-        break;
+        return "S_LINEA";
     default:
-        str = "unknown";
-        break;
+        return "unknown";
     }
-    return str;
 }
 
 static const char *dump_signs(gregorio_sign signs)
 {
-    const char *str;
     switch (signs) {
     case _NO_SIGN:
-        str = "_NO_SIGN";
-        break;
+        return "_NO_SIGN";
     case _PUNCTUM_MORA:
-        str = "_PUNCTUM_MORA";
-        break;
+        return "_PUNCTUM_MORA";
     case _AUCTUM_DUPLEX:
-        str = "_AUCTUM_DUPLEX";
-        break;
+        return "_AUCTUM_DUPLEX";
     case _V_EPISEMUS:
-        str = "_V_EPISEMUS";
-        break;
+        return "_V_EPISEMUS";
     case _V_EPISEMUS_PUNCTUM_MORA:
-        str = "_V_EPISEMUS_PUNCTUM_MORA";
-        break;
+        return "_V_EPISEMUS_PUNCTUM_MORA";
     case _V_EPISEMUS_AUCTUM_DUPLEX:
-        str = "_V_EPISEMUS_AUCTUM_DUPLEX";
-        break;
+        return "_V_EPISEMUS_AUCTUM_DUPLEX";
     default:
-        str = "unknown";
-        break;
+        return "unknown";
     }
-    return str;
 }
 
 // a function dumping special signs
 static const char *dump_special_sign(gregorio_sign special_sign)
 {
-    const char *str;
     switch (special_sign) {
     case _ACCENTUS:
-        str = "_ACCENTUS";
-        break;
+        return "_ACCENTUS";
     case _ACCENTUS_REVERSUS:
-        str = "_ACCENTUS_REVERSUS";
-        break;
+        return "_ACCENTUS_REVERSUS";
     case _CIRCULUS:
-        str = "_CIRCULUS";
-        break;
+        return "_CIRCULUS";
     case _SEMI_CIRCULUS:
-        str = "_SEMI_CIRCULUS";
-        break;
+        return "_SEMI_CIRCULUS";
     case _SEMI_CIRCULUS_REVERSUS:
-        str = "_SEMI_CIRCULUS_REVERSUS";
-        break;
+        return "_SEMI_CIRCULUS_REVERSUS";
     case _V_EPISEMUS:
-        str = "_V_EPISEMUS";
-        break;
+        return "_V_EPISEMUS";
     case _V_EPISEMUS_BAR_H_EPISEMUS:
-        str = "_V_EPISEMUS_BAR_H_EPISEMUS";
-        break;
+        return "_V_EPISEMUS_BAR_H_EPISEMUS";
     case _BAR_H_EPISEMUS:
-        str = "_BAR_H_EPISEMUS";
-        break;
+        return "_BAR_H_EPISEMUS";
     default:
-        str = "unknown";
-        break;
+        return "unknown";
     }
-    return str;
 }
 
 static const char *dump_h_episemus_size(grehepisemus_size size)
 {
-    const char *str;
     switch (size) {
     case H_NORMAL:
-        str = "H_NORMAL";
-        break;
+        return "H_NORMAL";
     case H_SMALL_LEFT:
-        str = "H_SMALL_LEFT";
-        break;
+        return "H_SMALL_LEFT";
     case H_SMALL_CENTRE:
-        str = "H_SMALL_CENTRE";
-        break;
+        return "H_SMALL_CENTRE";
     case H_SMALL_RIGHT:
-        str = "H_SMALL_RIGHT";
-        break;
-    default:
-        str = "unknown";
-        break;
+        return "H_SMALL_RIGHT";
     }
-    return str;
+    return "unknown";
 }
 
 static const char *dump_bool(bool value) {
@@ -693,9 +493,8 @@ static const char *dump_vposition(gregorio_vposition vpos) {
         return "VPOS_ABOVE";
     case VPOS_BELOW:
         return "VPOS_BELOW";
-    default:
-        return "unknown";
     }
+    return "unknown";
 }
 
 static const char *dump_pitch(const char height) {

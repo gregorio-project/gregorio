@@ -50,22 +50,18 @@ static char *tex_ambitus[] = {
 
 // a helper macro for the following function
 #define WHILEGLYPH(prevornext) \
-        while(glyph)\
-          {\
-            if (glyph->type == GRE_GLYPH)\
-              {\
+        while(glyph) {\
+            if (glyph->type == GRE_GLYPH) {\
                 note = glyph->u.notes.first_note;\
-                while (note)\
-                  {\
-                    if (note->u.note.pitch < PITCH_BELOW_STAFF)\
-                      {\
+                while (note) {\
+                    if (note->u.note.pitch < PITCH_BELOW_STAFF) {\
                         return true;\
-                      }\
+                    }\
                     note = note->next;\
-                  }\
-              }\
+                }\
+            }\
             glyph = glyph->prevornext;\
-          }
+        }
 
 static inline char pitch_value(const char height) {
     // right now height == pitch, but this function allows us to change
@@ -954,6 +950,12 @@ static void gtex_write_begin(FILE *f, grestyle_style style)
         break;
     case ST_COLORED:
         fprintf(f, "\\grecolored{");
+        break;
+    case ST_FIRST_SYLLABLE:
+        fprintf(f, "\\GreFirstSyllable{");
+        break;
+    case ST_FIRST_SYLLABLE_INITIAL:
+        fprintf(f, "\\GreFirstSyllableInitial{");
         break;
     default:
         break;
