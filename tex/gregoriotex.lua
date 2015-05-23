@@ -316,7 +316,7 @@ local function map_font(name, prefix)
   local glyph, unicode
   for glyph, unicode in pairs(font.fonts[font.id(score_fonts[name])].resources.unicodes) do
     if unicode >= 0 and not string.match(glyph, '%.') then
-      tex.sprint(string.format([[\xdef\gre%s%s{\char%d}]], prefix, glyph, unicode))
+      tex.sprint(string.format([[\xdef\Gre%s%s{\char%d}]], prefix, glyph, unicode))
     end
   end
 end
@@ -385,10 +385,10 @@ end
 
 local function change_single_score_glyph(glyph_name, font_name, replacement)
   if font_name == '*' then
-    def_glyph('grecp'..glyph_name, 'greciliae', replacement, score_fonts,
+    def_glyph('GreCP'..glyph_name, 'greciliae', replacement, score_fonts,
         set_common_score_glyph)
   else
-    def_glyph('grecp'..glyph_name, font_name, replacement, score_fonts,
+    def_glyph('GreCP'..glyph_name, font_name, replacement, score_fonts,
         set_score_glyph)
   end
 end
@@ -429,7 +429,7 @@ local function reset_score_glyph(glyph_name)
     local name, char
     for name, char in pairs(font.fonts[font.id(score_fonts['greciliae'])].resources.unicodes) do
       if not string.match(name, '%.') and char >= 0 and string.match(name, glyph_name) then
-        set_common_score_glyph('grecp'..name, nil, char)
+        set_common_score_glyph('GreCP'..name, nil, char)
       end
     end
   else
@@ -438,7 +438,7 @@ local function reset_score_glyph(glyph_name)
     if char == nil then
       err('\nGlyph %s was not found.', glyph_name)
     end
-    set_common_score_glyph('grecp'..glyph_name, nil, char)
+    set_common_score_glyph('GreCP'..glyph_name, nil, char)
   end
 end
 

@@ -1334,14 +1334,14 @@ static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
     }
     switch (signs) {
     case _V_EPISEMUS:
-        fprintf(f, "{\\GreBarVEpisemus{\\greoCase%s}}%%\n", offset_case);
+        fprintf(f, "{\\GreBarVEpisemus{\\GreOCase%s}}%%\n", offset_case);
         break;
     case _BAR_H_EPISEMUS:
-        fprintf(f, "{\\GreBarBrace{\\greoCase%s}}%%\n", offset_case);
+        fprintf(f, "{\\GreBarBrace{\\GreOCase%s}}%%\n", offset_case);
         break;
     case _V_EPISEMUS_BAR_H_EPISEMUS:
-        fprintf(f, "{\\GreBarBrace{\\greoCase%s}"
-                "\\GreBarVEpisemus{\\greoCase%s}}%%\n",
+        fprintf(f, "{\\GreBarBrace{\\GreOCase%s}"
+                "\\GreBarVEpisemus{\\GreOCase%s}}%%\n",
                 offset_case, offset_case);
         break;
     default:
@@ -1638,7 +1638,7 @@ static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
                 fprintf(f, "\\GreHEpisemusBridge{%d}{%d}%%\n",
                         pitch_value(height), hepisemus_case);
             }
-            fprintf(f, "\\GreHEpisemus{%d}{\\greoCase%s}{%d}{%d}{%c}{%d}%%\n",
+            fprintf(f, "\\GreHEpisemus{%d}{\\GreOCase%s}{%d}{%d}{%c}{%d}%%\n",
                     pitch_value(height), note->gtex_offset_case, ambitus,
                     hepisemus_case, size_arg, pitch_value(height));
         }
@@ -1761,7 +1761,7 @@ static void gregoriotex_write_additional_line(FILE *f,
                     current_note->next->u.note.pitch;
         }
     }
-    fprintf(f, "\\GreAdditionalLine{\\greoCase%s}{%d}{%d}%%\n",
+    fprintf(f, "\\GreAdditionalLine{\\GreOCase%s}{%d}{%d}%%\n",
             current_note->gtex_offset_case, ambitus, bottom ? 3 : 2);
 }
 
@@ -1774,7 +1774,7 @@ static void gregoriotex_write_additional_line(FILE *f,
 
 static void gregoriotex_write_vepisemus(FILE *f, gregorio_note *note)
 {
-    fprintf(f, "\\GreVEpisemus{%d}{\\greoCase%s}%%\n",
+    fprintf(f, "\\GreVEpisemus{%d}{\\GreOCase%s}%%\n",
             pitch_value(note->v_episemus_height), note->gtex_offset_case);
 }
 
@@ -1787,27 +1787,27 @@ static void gregoriotex_write_rare(FILE *f, gregorio_note *current_note,
 {
     switch (rare) {
     case _ACCENTUS:
-        fprintf(f, "\\GreAccentus{%d}{\\greoCase%s}%%\n",
+        fprintf(f, "\\GreAccentus{%d}{\\GreOCase%s}%%\n",
                 pitch_value(current_note->u.note.pitch),
                 current_note->gtex_offset_case);
         break;
     case _ACCENTUS_REVERSUS:
-        fprintf(f, "\\GreReversedAccentus{%d}{\\greoCase%s}%%\n",
+        fprintf(f, "\\GreReversedAccentus{%d}{\\GreOCase%s}%%\n",
                 pitch_value(current_note->u.note.pitch),
                 current_note->gtex_offset_case);
         break;
     case _CIRCULUS:
-        fprintf(f, "\\GreCirculus{%d}{\\greoCase%s}%%\n",
+        fprintf(f, "\\GreCirculus{%d}{\\GreOCase%s}%%\n",
                 pitch_value(current_note->u.note.pitch),
                 current_note->gtex_offset_case);
         break;
     case _SEMI_CIRCULUS:
-        fprintf(f, "\\GreSemicirculus{%d}{\\greoCase%s}%%\n",
+        fprintf(f, "\\GreSemicirculus{%d}{\\GreOCase%s}%%\n",
                 pitch_value(current_note->u.note.pitch),
                 current_note->gtex_offset_case);
         break;
     case _SEMI_CIRCULUS_REVERSUS:
-        fprintf(f, "\\GreReversedSemicirculus{%d}{\\greoCase%s}%%\n",
+        fprintf(f, "\\GreReversedSemicirculus{%d}{\\GreOCase%s}%%\n",
                 pitch_value(current_note->u.note.pitch),
                 current_note->gtex_offset_case);
         break;
@@ -1936,7 +1936,7 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
                 pitch_value(next_note_pitch), type);
         break;
     default:
-        fprintf(f, "\\GreGlyph{\\grecp%s}{%d}{%d}{%d}", shape,
+        fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
                 pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
                 type);
         break;
@@ -2088,11 +2088,11 @@ static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
     } else {
         // let's cheat a little
         if (is_on_a_line(current_note->u.note.pitch)) {
-            fprintf(f, "\\GreHighChoralSign{%d}{%s}{\\greoCase%s}%%\n",
+            fprintf(f, "\\GreHighChoralSign{%d}{%s}{\\GreOCase%s}%%\n",
                     pitch_value(current_note->u.note.pitch),
                     current_note->choral_sign, current_note->gtex_offset_case);
         } else {
-            fprintf(f, "\\GreHighChoralSign{%d}{%s}{\\greoCase%s}%%\n",
+            fprintf(f, "\\GreHighChoralSign{%d}{%s}{\\GreOCase%s}%%\n",
                     pitch_value(current_note->u.note.pitch + 2),
                     current_note->choral_sign, current_note->gtex_offset_case);
         }
@@ -2328,7 +2328,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
                 || glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA) {
             shape = gregoriotex_determine_glyph_name(glyph, element, &type,
                     &gtype);
-            fprintf(f, "\\GreGlyph{\\grecp%s}{%d}{%d}{%d}", shape,
+            fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
                     pitch_value(next_note_pitch), type);
             gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note);
@@ -2346,7 +2346,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
                 || glyph->u.notes.liquescentia == L_DEMINUTUS_INITIO_DEBILIS) {
             shape = gregoriotex_determine_glyph_name(glyph, element, &type,
                     &gtype);
-            fprintf(f, "\\GreGlyph{\\grecp%s}{%d}{%d}{%d}", shape,
+            fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
                     pitch_value(next_note_pitch), type);
             gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note);
@@ -2365,7 +2365,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
         glyph->u.notes.glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
         glyph->u.notes.first_note = current_note->next;
         shape = gregoriotex_determine_glyph_name(glyph, element, &type, &gtype);
-        fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\grecp%s}{\\grecp%s}}{%d}{%d}{%d}",
+        fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\GreCP%s}{\\grecp%s}}{%d}{%d}{%d}",
                 leading_shape, shape,
                 pitch_value(glyph->u.notes.first_note->u.note.pitch),
                 pitch_value(next_note_pitch), type);
@@ -2445,7 +2445,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
             glyph->u.notes.first_note = current_note->next;
             shape = gregoriotex_determine_glyph_name(glyph, element, &type,
                     &gtype);
-            fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\grecp%s}{\\grecp%s}}"
+            fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\GreCP%s}{\\grecp%s}}"
                     "{%d}{%d}{%d}", leading_shape, shape,
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
                     pitch_value(next_note_pitch), type);
@@ -2456,7 +2456,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
         } else {
             shape = gregoriotex_determine_glyph_name(glyph, element, &type,
                     &gtype);
-            fprintf(f, "\\GreGlyph{\\grecp%s}{%d}{%d}{%d}", shape,
+            fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
                     pitch_value(next_note_pitch), type);
             gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note);
