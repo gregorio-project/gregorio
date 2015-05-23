@@ -20,6 +20,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdbool.h>
+#include <assert.h>
 #include "struct.h"
 #include "messages.h"
 
@@ -172,17 +173,19 @@ static char gabc_determine_custo_pitch(gregorio_note *current_note,
         if (current_note->type == GRE_NOTE) {
             pitch_difference =
                     (int) current_note->u.note.pitch - pitch_difference;
-            if (pitch_difference < (int) 'a' || pitch_difference > (int) 'm') {
-                gregorio_message(_("pitch difference too high to set "
-                                "automatic custo (z0), please check your "
-                                "score"), "gabc_determine_custo_pitch",
-                        ERROR, 0);
+            while (pitch_difference < LOWEST_PITCH) {
+                pitch_difference += 7;
             }
+            while (pitch_difference > HIGHEST_PITCH) {
+                pitch_difference -= 7;
+            }
+            assert(pitch_difference >= LOWEST_PITCH
+                    && pitch_difference <= HIGHEST_PITCH);
             return (char) pitch_difference;
         }
         current_note = current_note->next;
     }
-    return 'g';
+    return DUMMY_PITCH;
 }
 
 /****************************

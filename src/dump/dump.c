@@ -698,6 +698,16 @@ static const char *dump_vposition(gregorio_vposition vpos) {
     }
 }
 
+static const char *dump_pitch(const char height) {
+    static char buf[20];
+    if (height >= LOWEST_PITCH && height <= HIGHEST_PITCH) {
+        snprintf(buf, 20, "%c", height + 'a' - LOWEST_PITCH);
+    } else {
+        snprintf(buf, 20, "?%d", height);
+    }
+    return buf;
+}
+
 void dump_write_score(FILE *f, gregorio_score *score)
 {
     gregorio_voice_info *voice_info = score->first_voice_info;
@@ -883,8 +893,8 @@ void dump_write_score(FILE *f, gregorio_score *score)
             switch (element->type) {
             case GRE_CUSTO:
                 if (element->u.misc.pitched.pitch) {
-                    fprintf(f, "     pitch                   %c     \n",
-                            element->u.misc.pitched.pitch);
+                    fprintf(f, "     pitch                   %s\n",
+                            dump_pitch(element->u.misc.pitched.pitch));
                 }
                 break;
             case GRE_SPACE:
@@ -987,8 +997,8 @@ void dump_write_score(FILE *f, gregorio_score *score)
                     case GRE_NATURAL:
                     case GRE_SHARP:
                     case GRE_MANUAL_CUSTOS:
-                        fprintf(f, "       pitch                 %c\n",
-                                glyph->u.misc.pitched.pitch);
+                        fprintf(f, "       pitch                 %s\n",
+                                dump_pitch(glyph->u.misc.pitched.pitch));
                         break;
 
                     case GRE_GLYPH:
@@ -1018,8 +1028,8 @@ void dump_write_score(FILE *f, gregorio_score *score)
                             switch (note->type) {
                             case GRE_NOTE:
                                 if (note->u.note.pitch) {
-                                    fprintf(f, "         pitch                  %c\n",
-                                            note->u.note.pitch);
+                                    fprintf(f, "         pitch                  %s\n",
+                                            dump_pitch(note->u.note.pitch));
                                 }
                                 if (note->u.note.shape) {
                                     fprintf(f, "         shape                  %d (%s)\n",

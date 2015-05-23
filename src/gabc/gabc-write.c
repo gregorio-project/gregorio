@@ -32,6 +32,10 @@
 
 #include "gabc.h"
 
+static inline char pitch_letter(const char height) {
+    return height + 'a' - LOWEST_PITCH;
+}
+
 /*
  * Output one attribute, allowing for multi-line values 
  */
@@ -410,96 +414,95 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     } else {
         shape = note->u.note.shape;
     }
-    note->u.note.pitch = tolower(note->u.note.pitch);
     switch (shape) {
         // first we write the letters that determine the shapes
     case S_PUNCTUM:
-        fprintf(f, "%c", note->u.note.pitch);
+        fprintf(f, "%c", pitch_letter(note->u.note.pitch));
         break;
     case S_PUNCTUM_INCLINATUM:
-        fprintf(f, "%c", toupper(note->u.note.pitch));
+        fprintf(f, "%c", toupper(pitch_letter(note->u.note.pitch)));
         break;
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
         if (note->next) {
-            fprintf(f, "%c~", toupper(note->u.note.pitch));
+            fprintf(f, "%c~", toupper(pitch_letter(note->u.note.pitch)));
         } else {
-            fprintf(f, "%c", toupper(note->u.note.pitch));
+            fprintf(f, "%c", toupper(pitch_letter(note->u.note.pitch)));
         }
         break;
     case S_PUNCTUM_INCLINATUM_AUCTUS:
         if (note->next) {
-            fprintf(f, "%c<", toupper(note->u.note.pitch));
+            fprintf(f, "%c<", toupper(pitch_letter(note->u.note.pitch)));
         } else {
-            fprintf(f, "%c", toupper(note->u.note.pitch));
+            fprintf(f, "%c", toupper(pitch_letter(note->u.note.pitch)));
         }
         break;
     case S_VIRGA:
-        fprintf(f, "%cv", note->u.note.pitch);
+        fprintf(f, "%cv", pitch_letter(note->u.note.pitch));
         break;
     case S_VIRGA_REVERSA:
-        fprintf(f, "%cV", note->u.note.pitch);
+        fprintf(f, "%cV", pitch_letter(note->u.note.pitch));
         break;
     case S_BIVIRGA:
-        fprintf(f, "%cvv", note->u.note.pitch);
+        fprintf(f, "%cvv", pitch_letter(note->u.note.pitch));
         break;
     case S_TRIVIRGA:
-        fprintf(f, "%cvvv", note->u.note.pitch);
+        fprintf(f, "%cvvv", pitch_letter(note->u.note.pitch));
         break;
     case S_ORISCUS:
-        fprintf(f, "%co", note->u.note.pitch);
+        fprintf(f, "%co", pitch_letter(note->u.note.pitch));
         break;
     case S_ORISCUS_AUCTUS:
-        fprintf(f, "%co", note->u.note.pitch); // we consider that the AUCTUS is also
-        // in the liquescentia
+        fprintf(f, "%co", pitch_letter(note->u.note.pitch));
+        // we consider that the AUCTUS is also in the liquescentia
         break;
     case S_ORISCUS_DEMINUTUS:
-        fprintf(f, "%co", note->u.note.pitch); // we consider that the AUCTUS is also
-        // in the liquescentia
+        fprintf(f, "%co", pitch_letter(note->u.note.pitch));
+        // we consider that the AUCTUS is also in the liquescentia
         break;
     case S_QUILISMA:
-        fprintf(f, "%cw", note->u.note.pitch);
+        fprintf(f, "%cw", pitch_letter(note->u.note.pitch));
         break;
     case S_LINEA:
-        fprintf(f, "%c=", note->u.note.pitch);
+        fprintf(f, "%c=", pitch_letter(note->u.note.pitch));
         break;
     case S_PUNCTUM_CAVUM:
-        fprintf(f, "%cr", note->u.note.pitch);
+        fprintf(f, "%cr", pitch_letter(note->u.note.pitch));
         break;
     case S_LINEA_PUNCTUM:
-        fprintf(f, "%cR", note->u.note.pitch);
+        fprintf(f, "%cR", pitch_letter(note->u.note.pitch));
         break;
     case S_LINEA_PUNCTUM_CAVUM:
-        fprintf(f, "%cr0", note->u.note.pitch);
+        fprintf(f, "%cr0", pitch_letter(note->u.note.pitch));
         break;
     case S_QUILISMA_QUADRATUM:
-        fprintf(f, "%cW", note->u.note.pitch);
+        fprintf(f, "%cW", pitch_letter(note->u.note.pitch));
         break;
     case S_ORISCUS_SCAPUS:
-        fprintf(f, "%cO", note->u.note.pitch);
+        fprintf(f, "%cO", pitch_letter(note->u.note.pitch));
         break;
     case S_STROPHA:
-        fprintf(f, "%cs", note->u.note.pitch);
+        fprintf(f, "%cs", pitch_letter(note->u.note.pitch));
         break;
     case S_STROPHA_AUCTA:
-        fprintf(f, "%cs", note->u.note.pitch);
+        fprintf(f, "%cs", pitch_letter(note->u.note.pitch));
         break;
     case S_DISTROPHA:
-        fprintf(f, "%css", note->u.note.pitch);
+        fprintf(f, "%css", pitch_letter(note->u.note.pitch));
         break;
     case S_DISTROPHA_AUCTA:
-        fprintf(f, "%css", note->u.note.pitch);
+        fprintf(f, "%css", pitch_letter(note->u.note.pitch));
         break;
     case S_TRISTROPHA:
-        fprintf(f, "%csss", note->u.note.pitch);
+        fprintf(f, "%csss", pitch_letter(note->u.note.pitch));
         break;
     case S_TRISTROPHA_AUCTA:
-        fprintf(f, "%csss", note->u.note.pitch);
+        fprintf(f, "%csss", pitch_letter(note->u.note.pitch));
         break;
     case S_QUADRATUM:
-        fprintf(f, "%cq", note->u.note.pitch);
+        fprintf(f, "%cq", pitch_letter(note->u.note.pitch));
         break;
     default:
-        fprintf(f, "%c", note->u.note.pitch);
+        fprintf(f, "%c", pitch_letter(note->u.note.pitch));
         break;
     }
     switch (note->signs) {
@@ -579,7 +582,7 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
     }
     switch (glyph->type) {
     case GRE_FLAT:
-        fprintf(f, "%cx", glyph->u.misc.pitched.pitch);
+        fprintf(f, "%cx", pitch_letter(glyph->u.misc.pitched.pitch));
         break;
     case GRE_TEXVERB_GLYPH:
         if (glyph->texverb) {
@@ -587,10 +590,10 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
         }
         break;
     case GRE_NATURAL:
-        fprintf(f, "%cy", glyph->u.misc.pitched.pitch);
+        fprintf(f, "%cy", pitch_letter(glyph->u.misc.pitched.pitch));
         break;
     case GRE_SHARP:
-        fprintf(f, "%c#", glyph->u.misc.pitched.pitch);
+        fprintf(f, "%c#", pitch_letter(glyph->u.misc.pitched.pitch));
         break;
     case GRE_SPACE:
         if (glyph->u.misc.unpitched.info.space == SP_ZERO_WIDTH && glyph->next) {
@@ -601,7 +604,7 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
         }
         break;
     case GRE_MANUAL_CUSTOS:
-        fprintf(f, "%c+", glyph->u.misc.pitched.pitch);
+        fprintf(f, "%c+", pitch_letter(glyph->u.misc.pitched.pitch));
         break;
     case GRE_GLYPH:
         if (is_initio_debilis(glyph->u.notes.liquescentia)) {
@@ -618,9 +621,8 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
         break;
     default:
 
-        gregorio_message(_
-                         ("call with an argument which type is unknown"),
-                         "gabc_write_gregorio_glyph", ERROR, 0);
+        gregorio_message(_("call with an argument which type is unknown"),
+                "gabc_write_gregorio_glyph", ERROR, 0);
         break;
     }
 }

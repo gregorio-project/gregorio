@@ -719,11 +719,15 @@ static inline bool is_initio_debilis(char liquescentia)
 #define SCHEME_DEFAULT SCHEME_LATINE
 
 #define HEPISEMUS_NONE 0
-#define HEPISEMUS_AUTO 1
-#define HEPISEMUS_FORCED 2
+#define HEPISEMUS_AUTO -1
+#define HEPISEMUS_FORCED -2
+
+// The first pitch MUST be an odd number
+#define LOWEST_PITCH 3
+#define HIGHEST_PITCH (LOWEST_PITCH + 12)
+#define DUMMY_PITCH (LOWEST_PITCH + 6)
 
 gregorio_score *gregorio_new_score(void);
-gregorio_shape gregorio_det_shape(char pitch);
 void gregorio_add_note(gregorio_note **current_note, char pitch,
         gregorio_shape shape, gregorio_sign signs,
         gregorio_liquescentia liquescentia, gregorio_note* prototype);

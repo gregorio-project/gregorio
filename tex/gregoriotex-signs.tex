@@ -141,17 +141,17 @@
 %% #2: the line of the key (1 is the lowest)
 %% #3: if we must use small key characters (inside a line) or not 0: if not inside, 1 if inside
 %% #4: if we must type a space after or not
-%% #5: if a, it means that we must not put a flat after the key, otherwise it's the height of the flat
+%% #5: if 3, it means that we must not put a flat after the key, otherwise it's the height of the flat
 \def\gretypekey#1#2#3#4#5{%
   \ifcase#2 %
   \or%
-    \gre@calculate@glyphraisevalue{c}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@c}{0}%
   \or%
-    \gre@calculate@glyphraisevalue{e}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}%
   \or%
-    \gre@calculate@glyphraisevalue{g}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@g}{0}%
   \or%
-    \gre@calculate@glyphraisevalue{i}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}%
   \fi%
   \gre@skip@temp@two=\gre@skip@spaceafterlineclef %
   \ifnum#4=0\relax %
@@ -174,7 +174,7 @@
       \raise\gre@dimen@glyphraisevalue\hbox{\greinfclefchar}%\hskip\gre@skip@temp@two}
     \fi%
   \fi%
-  \if a#5%
+  \ifnum#5=3%
     \grehskip\gre@skip@temp@two %
   \else %
     \gre@skip@temp@four = \gre@skip@clefflatspace%
@@ -254,21 +254,18 @@
 \def\GreCusto#1{%
   \gre@calculate@glyphraisevalue{#1}{0}%
   %here we need some tricks to draw the line before the custo (for the color)
-  \setbox\GreTempwidth=\hbox{\grecustochar#1}%
+  \setbox\GreTempwidth=\hbox{\grecustochar{#1}}%
   \gre@dimen@temp@three=\wd\GreTempwidth %
   \ifnum\greremovelinescount=0\relax %
-    \ifx l#1%
-      \greadditionaltopcustolinemiddle %
-    \fi %
-    \ifx m#1%
-      \greadditionaltopcustolinemiddle %
-    \fi %
-    \ifx a#1%
+    \ifnum#1=\gre@pitch@a\relax %
       \greadditionalbottomcustolinemiddle %
-    \fi %
-    \ifx b#1%
+    \else\ifnum#1=\gre@pitch@b\relax %
       \greadditionalbottomcustolinemiddle %
-    \fi %
+    \else\ifnum#1=\gre@pitch@l\relax %
+      \greadditionaltopcustolinemiddle %
+    \else\ifnum#1=\gre@pitch@m\relax %
+      \greadditionaltopcustolinemiddle %
+    \fi\fi\fi\fi %
   \fi %
   \raise \gre@dimen@glyphraisevalue%
   \copy\GreTempwidth %
@@ -291,27 +288,24 @@
       % we type a hskip and the we type the custo
       \gre@skip@temp@four = \gre@skip@spacebeforecusto%
       \hskip\gre@skip@temp@four %
-      \grecustochar#1\relax %
+      \grecustochar{#1}\relax %
       }%
       \gre@dimen@temp@three=\wd\GreTempwidth %
       % we make \wd\GreTempsign contain the width of a custo
       \setbox\GreTempsign=\hbox{%
-      \grecustochar#1\relax %
+      \grecustochar{#1}\relax %
       }%
       \grelocalrightbox{%
       \ifnum\greremovelinescount=0\relax %
-        \ifx l#1%
-          \greadditionaltopcustolineend %
-        \fi %
-        \ifx m#1%
-          \greadditionaltopcustolineend %
-        \fi %
-        \ifx a#1%
+        \ifnum#1=\gre@pitch@a\relax %
           \greadditionalbottomcustolineend %
-        \fi %
-        \ifx b#1%
+        \else\ifnum#1=\gre@pitch@b\relax %
           \greadditionalbottomcustolineend %
-        \fi %
+        \else\ifnum#1=\gre@pitch@l\relax %
+          \greadditionaltopcustolineend %
+        \else\ifnum#1=\gre@pitch@m\relax %
+          \greadditionaltopcustolineend %
+        \fi\fi\fi\fi %
       \fi %
       \raise \gre@dimen@glyphraisevalue%
       \copy\GreTempwidth %
@@ -413,44 +407,21 @@
 }%
 
 \def\grecustochar#1{%
-  \ifx a#1%
-    \grecustotopmiddlechar %
-  \fi%
-  \ifx b#1%
-    \grecustotoplongchar %
-  \fi%
-  \ifx c#1%
-    \grecustotopshortchar %
-  \fi%
-  \ifx d#1%
-    \grecustotoplongchar %
-  \fi%
-  \ifx e#1%
-    \grecustotopshortchar %
-  \fi%
-  \ifx f#1%
-    \grecustotoplongchar %
-  \fi%
-  \ifx g#1%
-    \grecustotopshortchar %
-  \fi%
-  \ifx h#1%
-    \grecustotoplongchar %
-  \fi%
-  \ifx i#1%
-    \grecustotopshortchar %
-  \fi%
-  \ifx j#1%
-    \grecustobottomlongchar %
-  \fi%
-  \ifx k#1%
-    \grecustobottomshortchar %
-  \fi%
-  \ifx l#1%
-    \grecustobottomlongchar %
-  \fi%
-  \ifx m#1%
-    \grecustobottommiddlechar %
+  \ifcase#1%
+  \or\or%
+  \or\grecustotopmiddlechar %
+  \or\grecustotoplongchar %
+  \or\grecustotopshortchar %
+  \or\grecustotoplongchar %
+  \or\grecustotopshortchar %
+  \or\grecustotoplongchar %
+  \or\grecustotopshortchar %
+  \or\grecustotoplongchar %
+  \or\grecustotopshortchar %
+  \or\grecustobottomlongchar %
+  \or\grecustobottomshortchar %
+  \or\grecustobottomlongchar %
+  \or\grecustobottommiddlechar %
   \fi%
 }%
 
@@ -476,7 +447,7 @@
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 % #5: 1 if we put an accentus above or not
 \def\greovercurlybrace#1#2#3#4#5{%
-  \grebracecommon{#1}{#2}{#3}{#4}{#5}{g}{\grecurlybracechar}%
+  \grebracecommon{#1}{#2}{#3}{#4}{#5}{\gre@pitch@g}{\grecurlybracechar}%
 }%
 
 % #1: the width
@@ -484,7 +455,7 @@
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\greoverbrace#1#2#3#4{%
-  \grebracecommon{#1}{#2}{#3}{#4}{0}{g}{\grebracechar}%
+  \grebracecommon{#1}{#2}{#3}{#4}{0}{\gre@pitch@g}{\grebracechar}%
 }%
 
 % #1: the width
@@ -492,7 +463,7 @@
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\greunderbrace#1#2#3#4{%
-  \grebracecommon{#1}{#2}{#3}{#4}{0}{b}{\greunderbracechar}%
+  \grebracecommon{#1}{#2}{#3}{#4}{0}{\gre@pitch@b}{\greunderbracechar}%
 }%
 
 % #1: the width
@@ -520,7 +491,7 @@
     }%
     \hss %
     \ifnum#5=1\relax %
-      \gre@calculate@glyphraisevalue{m}{13}%
+      \gre@calculate@glyphraisevalue{\gre@pitch@m}{13}%
       \advance\gre@dimen@glyphraisevalue by \gre@dimen@curlybraceaccentusshift %
       \raise\gre@dimen@glyphraisevalue\hbox{%
         \gregoriofont\gre@char@accentus\relax %
@@ -759,28 +730,14 @@
     \gre@calculate@glyphraisevalue{#1}{3}%
   \or %
     % if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.) the first argument is m if the pitch is < k, otherwise it's n.
-    \edef\greisabovek{\number 0}%
-    \ifx m#1%
-      \edef\greisabovek{\number 1}%
-    \fi%
-    \ifx l#1%
-      \edef\greisabovek{\number 2}%
-    \fi%
-    \ifx k#1%
-      \edef\greisabovek{\number 3}%
-    \fi%
-    \ifnum\greisabovek=1\relax %
-      \gre@calculate@glyphraisevalue{n}{6}%
+    \ifnum#1<\gre@pitch@k\relax %
+      \gre@calculate@glyphraisevalue{\gre@pitch@k}{6}%
     \else %
-      \ifnum\greisabovek=2\relax %
-        \gre@calculate@glyphraisevalue{m}{6}%
-      \else %
-        \ifnum\greisabovek=3\relax %
-          \gre@calculate@glyphraisevalue{l}{6}%
-        \else %
-          \gre@calculate@glyphraisevalue{k}{6}%
-        \fi %
-      \fi %
+      {%
+        \gre@count@temp@three=#1%
+        \advance\gre@count@temp@three by 1\relax %
+        \gre@calculate@glyphraisevalue{\gre@count@temp@three}{6}%
+      }%
     \fi %
   \or % if it's a choral sign
     \gre@calculate@glyphraisevalue{#1}{11}%
@@ -797,12 +754,12 @@
 }%
 
 \def\GreBarBrace#1{%
-  \grevepisemusorrare{g}{#1}{\gre@char@barbrace}{4}{}%
+  \grevepisemusorrare{\gre@pitch@g}{#1}{\gre@char@barbrace}{4}{}%
   \relax %
 }%
 
 \def\GreBarVEpisemus#1{%
-  \grevepisemusorrare{c}{#1}{\gre@char@vepisemus}{1}{}%
+  \grevepisemusorrare{\gre@pitch@c}{#1}{\gre@char@vepisemus}{1}{}%
   \relax %
 }%
 
@@ -933,9 +890,9 @@
     \gre@calculate@glyphraisevalue{#1}{5}%
   \or %
     % the glyphraisevalue is ignored anyway... but it's just in case...
-    \gre@calculate@glyphraisevalue{l}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@l}{0}%
   \or %
-    \gre@calculate@glyphraisevalue{b}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@b}{0}%
   \or %
     \gre@calculate@glyphraisevalue{#1}{11}%
   \fi %
@@ -987,7 +944,7 @@
   \ifnum\greremovelinescount=0\relax %
     \xdef\gresavedglyphraise{\the\gre@dimen@glyphraisevalue}%
     {\greadditionalstafflinesformat %
-    \grehepisorline{a}{#1}{#2}{#3}{f}%
+    \grehepisorline{\gre@pitch@a}{#1}{#2}{#3}{f}%
     }%
     \gre@dimen@glyphraisevalue=\gresavedglyphraise %
   \fi %
@@ -1114,7 +1071,7 @@
     \fi %
   \fi %
   \grenewglyphcommon %
-  \gre@calculate@glyphraisevalue{g}{0}% bar glyphs are made to be at this height
+  \gre@calculate@glyphraisevalue{\gre@pitch@g}{0}% bar glyphs are made to be at this height
   \grenobreak %
   \ifcase#1 % 0 : virgula
     \ifnum#2=1\relax %
@@ -1195,7 +1152,7 @@
       \grehskip\gre@skip@temp@four %
     \fi %
   \or % 6 : dominican bar 1
-    \gre@calculate@glyphraisevalue{e}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}%
     % we need to adjust the height of the bar a little so that it is perfectly aligned with the bottom (or the top for some bars) of the staff line, which is not the case by default if \gre@stafflinefactor is not 10.
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff %
     \ifnum#2=1\relax %
@@ -1211,7 +1168,7 @@
       \grehskip\gre@skip@temp@four %
     \fi %
   \or % 7 : dominican bar 2
-    \gre@calculate@glyphraisevalue{e}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1254,7 +1211,7 @@
       \grehskip\gre@skip@temp@four %
     \fi %
   \or % 10 : dominican bar 5
-    \gre@calculate@glyphraisevalue{i}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}%
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1269,7 +1226,7 @@
       \grehskip\gre@skip@temp@four %
     \fi %
   \or % 11 : dominican bar 6
-    \gre@calculate@glyphraisevalue{i}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1291,7 +1248,7 @@
 
 \def\gredivisiomaiorsymbol{%
   \ifnum\gre@stafflinefactor=17\relax %
-    %\gre@calculate@glyphraisevalue{g}{0}% bar glyphs are made to be at this height
+    %\gre@calculate@glyphraisevalue{\gre@pitch@g}{0}% bar glyphs are made to be at this height
     \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\gre@char@divisiomaior}%
   \else %
     \setbox\GreTempwidth=\hbox{\gregoriofont\gre@char@divisiomaior}%
@@ -1307,7 +1264,7 @@
 }%
 
 \def\gredivisiofinalissymbol{%
-  \gre@calculate@glyphraisevalue{g}{0}% bar glyphs are made to be at this height
+  \gre@calculate@glyphraisevalue{\gre@pitch@g}{0}% bar glyphs are made to be at this height
   \gredivisiomaiorsymbol %
   \gre@dimen@temp@four = 12000 sp%
   \multiply\gre@dimen@temp@four by \the\grefactor%
