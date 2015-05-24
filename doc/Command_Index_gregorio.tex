@@ -244,6 +244,20 @@ Macro for calculating the additional space needed below the first line of the sc
   & 0 & there is no translation below the text
 \end{argtable}
 
+\macroname{\textbackslash GreFirstSyllable}{\#1}{gregoriotex-syllable.tex}
+Macro to impose styling on the first syllable of a score (except for the score initial).
+
+\begin{argtable}
+  \#1 & string & The syllable to be styled.
+\end{argtable}
+
+\macroname{\textbackslash GreFirstSyllableInitial}{\#1}{gregoriotex-syllable.tex}
+Macro to impose styling on the first letter of the first syllable of a score which is not the score initial (\ie, the second letter of the score for scores with initials, the first letter of the score for scores without them).
+
+\begin{argtable}
+  \#1 & character & The character to be styled.
+\end{argtable}
+
 \macroname{\textbackslash GreFlat}{\#1\#2}{gregoriotex-signs.tex}
 Macro to typeset a flat.
 
