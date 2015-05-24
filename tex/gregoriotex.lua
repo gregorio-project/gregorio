@@ -316,7 +316,7 @@ local function map_font(name, prefix)
   local glyph, unicode
   for glyph, unicode in pairs(font.fonts[font.id(score_fonts[name])].resources.unicodes) do
     if unicode >= 0 and not string.match(glyph, '%.') then
-      log("Setting \\Gre%s%s to \char%d", prefix, glyph, unicode)
+      log("Setting \\Gre%s%s to \\char%d", prefix, glyph, unicode)
       tex.sprint(string.format([[\xdef\Gre%s%s{\char%d}]], prefix, glyph, unicode))
     end
   end
