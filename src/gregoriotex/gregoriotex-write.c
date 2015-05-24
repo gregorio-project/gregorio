@@ -2367,7 +2367,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
         glyph->u.notes.glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
         glyph->u.notes.first_note = current_note->next;
         shape = gregoriotex_determine_glyph_name(glyph, element, &type, &gtype);
-        fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\GreCP%s}{\\grecp%s}}{%d}{%d}{%d}",
+        fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\GreCP%s}{\\GreCP%s}}{%d}{%d}{%d}",
                 leading_shape, shape,
                 pitch_value(glyph->u.notes.first_note->u.note.pitch),
                 pitch_value(next_note_pitch), type);
@@ -2447,7 +2447,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
             glyph->u.notes.first_note = current_note->next;
             shape = gregoriotex_determine_glyph_name(glyph, element, &type,
                     &gtype);
-            fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\GreCP%s}{\\grecp%s}}"
+            fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\GreCP%s}{\\GreCP%s}}"
                     "{%d}{%d}{%d}", leading_shape, shape,
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
                     pitch_value(next_note_pitch), type);
