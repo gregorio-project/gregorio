@@ -2735,13 +2735,13 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             if (!syllable->next_syllable && !syllable->text
                     && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
                     B_DIVISIO_FINALIS) {
-                handle_final_bar(f, "divisiofinalis", syllable);
+                handle_final_bar(f, "DivisioFinalis", syllable);
                 return;
             }
             if (!syllable->next_syllable && !syllable->text
                     && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
                     B_DIVISIO_MAIOR) {
-                handle_final_bar(f, "divisiomaior", syllable);
+                handle_final_bar(f, "DivisioMaior", syllable);
                 return;
             } else {
                 fprintf(f, "\\GreBarSyllable");
