@@ -59,8 +59,7 @@ static gregorio_element **elements;
 gregorio_element *current_element;
 // a table containing the macros to use in gabc file
 static char *macros[10];
-// declaration of some functions, the first is the one initializing the
-// flex/bison process
+// forward declaration of the flex/bison process function
 static int gabc_score_determination_parse(void);
 // other variables that we will have to use
 static gregorio_character *current_character;
@@ -79,10 +78,17 @@ static gregorio_center_determination center_is_determined;
 static int current_key = DEFAULT_KEY;
 static gregorio_lyric_centering centering_scheme;
 
+static inline void check_multiple(char *name, bool exists) {
+    if (exists) {
+        gregorio_messagef("det_score", WARNING, 0, _("several %s definitions "
+                "found, only the last will be taken into consideration"), name);
+    }
+}
+
 static void gabc_score_determination_error(char *error_str)
 {
     gregorio_message(error_str, (const char *) "gabc_score_determination_parse",
-                     ERROR, 0);
+            ERROR, 0);
 }
 
 static void gabc_fix_custos(gregorio_score *score_to_check)
@@ -95,7 +101,7 @@ static void gabc_fix_custos(gregorio_score *score_to_check)
     int newkey;
     int current_key;
     if (!score_to_check || !score_to_check->first_syllable
-        || !score_to_check->first_voice_info) {
+            || !score_to_check->first_voice_info) {
         return;
     }
     current_key = score_to_check->first_voice_info->initial_key;
@@ -110,26 +116,20 @@ static void gabc_fix_custos(gregorio_score *score_to_check)
                     switch (current_element->type) {
                     case GRE_C_KEY_CHANGE:
                     case GRE_C_KEY_CHANGE_FLATED:
-                        pitch =
-                            gregorio_determine_next_pitch(current_syllable,
-                                                          current_element,
-                                                          NULL);
-                        newkey =
-                            gregorio_calculate_new_key(C_KEY,
-                                                       current_element->u.misc.pitched.pitch - '0');
+                        pitch = gregorio_determine_next_pitch(current_syllable,
+                                current_element, NULL);
+                        newkey = gregorio_calculate_new_key(C_KEY,
+                                current_element->u.misc.pitched.pitch - '0');
                         pitch_difference = (char) newkey - (char) current_key;
                         custo_element->u.misc.pitched.pitch = pitch - pitch_difference;
                         current_key = newkey;
                         break;
                     case GRE_F_KEY_CHANGE:
                     case GRE_F_KEY_CHANGE_FLATED:
-                        pitch =
-                            gregorio_determine_next_pitch(current_syllable,
-                                                          current_element,
-                                                          NULL);
-                        newkey =
-                            gregorio_calculate_new_key(F_KEY,
-                                                       current_element->u.misc.pitched.pitch - '0');
+                        pitch = gregorio_determine_next_pitch(current_syllable,
+                                current_element, NULL);
+                        newkey = gregorio_calculate_new_key(F_KEY,
+                                current_element->u.misc.pitched.pitch - '0');
                         pitch_difference = (char) newkey - (char) current_key;
                         custo_element->u.misc.pitched.pitch = pitch - pitch_difference;
                         current_key = newkey;
@@ -152,15 +152,13 @@ static void gabc_fix_custos(gregorio_score *score_to_check)
             if (current_element) {
                 if (current_element->type == GRE_C_KEY_CHANGE
                     || current_element->type == GRE_C_KEY_CHANGE_FLATED) {
-                    current_key =
-                        gregorio_calculate_new_key(C_KEY,
-                                                   current_element->u.misc.pitched.pitch - '0');
+                    current_key = gregorio_calculate_new_key(C_KEY,
+                            current_element->u.misc.pitched.pitch - '0');
                 }
                 if (current_element->type == GRE_F_KEY_CHANGE
                     || current_element->type == GRE_F_KEY_CHANGE_FLATED) {
-                    current_key =
-                        gregorio_calculate_new_key(F_KEY,
-                                                   current_element->u.misc.pitched.pitch - '0');
+                    current_key = gregorio_calculate_new_key(F_KEY,
+                            current_element->u.misc.pitched.pitch - '0');
                 }
                 current_element = current_element->next;
             }
@@ -190,9 +188,8 @@ static int check_infos_integrity(gregorio_score *score_to_check)
 {
     if (!score_to_check->name) {
         gregorio_message(_("no name specified, put `name:...;' at the "
-                           "beginning of the file, can be dangerous "
-                           "with some output formats"),
-                         "det_score", WARNING, 0);
+                "beginning of the file, can be dangerous with some output "
+                "formats"), "det_score", WARNING, 0);
     }
     return 1;
 }
@@ -243,10 +240,9 @@ static void free_variables(void)
 // see whether a voice_info is empty
 static int voice_info_is_not_empty(const gregorio_voice_info *voice_info)
 {
-    return (voice_info->initial_key != 5 ||
-            voice_info->annotation[0] ||
-            voice_info->annotation[1] ||
-            voice_info->style || voice_info->virgula_position);
+    return (voice_info->initial_key != 5 || voice_info->annotation[0]
+            || voice_info->annotation[1] || voice_info->style
+            || voice_info->virgula_position);
 }
 
 /*
@@ -287,7 +283,7 @@ static void end_definitions(void)
 
     if (!check_infos_integrity(score)) {
         gregorio_message(_("can't determine valid infos on the score"),
-                         "det_score", ERROR, 0);
+                "det_score", ERROR, 0);
     }
     if (!number_of_voices) {
         if (voice > MAX_NUMBER_OF_VOICES) {
@@ -298,31 +294,28 @@ static void end_definitions(void)
         score->number_of_voices = voice;
     } else {
         if (number_of_voices > voice) {
-            snprintf(error, 62,
-                     ngt_
-                     ("not enough voice infos found: %d found, %d waited, %d assumed",
-                      "not enough voice infos found: %d found, %d waited, %d assumed",
-                      voice), voice, number_of_voices, voice);
+            snprintf(error, 62, ngt_("not enough voice infos found: %d found, "
+                    "%d waited, %d assumed", "not enough voice infos found: %d "
+                    "found, %d waited, %d assumed", voice), voice,
+                    number_of_voices, voice);
             gregorio_message(error, "det_score", WARNING, 0);
             score->number_of_voices = voice;
             number_of_voices = voice;
         } else {
             if (number_of_voices < voice) {
-                snprintf(error, 62,
-                         ngt_
-                         ("too many voice infos found: %d found, %d waited, %d assumed",
-                          "not enough voice infos found: %d found, %d waited, %d assumed",
-                          number_of_voices), voice, number_of_voices,
-                         number_of_voices);
+                snprintf(error, 62, ngt_("too many voice infos found: %d "
+                        "found, %d waited, %d assumed", "not enough voice "
+                        "infos found: %d found, %d waited, %d assumed",
+                        number_of_voices), voice, number_of_voices,
+                        number_of_voices);
                 gregorio_message(error, "det_score", WARNING, 0);
             }
         }
     }
     voice = 0;                  // voice is now voice-1, so that it can be the
     // index of elements
-    elements =
-        (gregorio_element **) malloc(number_of_voices *
-                                     sizeof(gregorio_element *));
+    elements = (gregorio_element **) malloc(number_of_voices *
+            sizeof(gregorio_element *));
     for (i = 0; i < number_of_voices; i++) {
         elements[i] = NULL;
     }
@@ -374,10 +367,9 @@ static void gregorio_set_translation_center_beginning(
     gregorio_syllable *syllable = current_syllable->previous_syllable;
     while (syllable) {
         if (syllable->translation_type == TR_WITH_CENTER_END) {
-            gregorio_message
-                ("encountering translation centering end but cannot find "
-                 "translation centering beginning...",
-                 "set_translation_center_beginning", ERROR, 0);
+            gregorio_message("encountering translation centering end but "
+                    "cannot find translation centering beginning...",
+                    "set_translation_center_beginning", ERROR, 0);
             current_syllable->translation_type = TR_NORMAL;
             return;
         }
@@ -388,9 +380,9 @@ static void gregorio_set_translation_center_beginning(
         syllable = syllable->previous_syllable;
     }
     // we didn't find any beginning...
-    gregorio_message
-        ("encountering translation centering end but cannot find translation "
-         "centering beginning...", "set_translation_center_beginning", ERROR, 0);
+    gregorio_message("encountering translation centering end but cannot find "
+            "translation centering beginning...",
+            "set_translation_center_beginning", ERROR, 0);
     current_syllable->translation_type = TR_NORMAL;
 }
 
@@ -403,7 +395,7 @@ static void rebuild_characters(gregorio_character **param_character,
     // it is the second when the first has no text.
     // it is a patch for cases like (c4) Al(ab)le(ab)
     if ((!score->first_syllable && has_initial && current_character)
-        || (current_syllable && !current_syllable->previous_syllable
+            || (current_syllable && !current_syllable->previous_syllable
             && !current_syllable->text && current_character)) {
         gregorio_rebuild_first_syllable(&current_character, has_initial);
     }
@@ -420,9 +412,8 @@ static void close_syllable(void)
 {
     int i;
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
-                          first_text_character, first_translation_character,
-                          position, abovelinestext, translation_type,
-                          no_linebreak_area, euouae);
+            first_text_character, first_translation_character, position,
+            abovelinestext, translation_type, no_linebreak_area, euouae);
     if (!score->first_syllable) {
         // we rebuild the first syllable if we have to
         score->first_syllable = current_syllable;
@@ -456,7 +447,7 @@ static void close_syllable(void)
 static void start_translation(unsigned char asked_translation_type)
 {
     rebuild_characters(&current_character, center_is_determined,
-                       centering_scheme);
+            centering_scheme);
     first_text_character = current_character;
     // the middle letters of the translation have no sense
     center_is_determined = CENTER_FULLY_DETERMINED;
@@ -467,7 +458,7 @@ static void start_translation(unsigned char asked_translation_type)
 static void end_translation(void)
 {
     rebuild_characters(&current_character, center_is_determined,
-                       centering_scheme);
+            centering_scheme);
     first_translation_character = current_character;
 }
 
@@ -480,10 +471,10 @@ static void end_translation(void)
 static void gregorio_gabc_add_text(char *mbcharacters)
 {
     if (current_character) {
-        current_character->next_character =
-            gregorio_build_char_list_from_buf(mbcharacters);
+        current_character->next_character = gregorio_build_char_list_from_buf(
+                mbcharacters);
         current_character->next_character->previous_character =
-            current_character;
+                current_character;
     } else {
         current_character = gregorio_build_char_list_from_buf(mbcharacters);
     }
@@ -505,9 +496,8 @@ static void set_centering_scheme(char *sc)
         centering_scheme = SCHEME_ENGLISH;
         return;
     }
-    gregorio_message
-        ("centering-scheme unknown value: must be \"latine\" or \"english\"",
-         "set_centering_scheme", WARNING, 0);
+    gregorio_message("centering-scheme unknown value: must be \"latine\" "
+            "or \"english\"", "set_centering_scheme", WARNING, 0);
 }
 
 /*
@@ -538,9 +528,8 @@ gregorio_score *gabc_read_score(FILE *f_in)
     // the input file that flex will parse
     gabc_score_determination_in = f_in;
     if (!f_in) {
-        gregorio_message(_
-                         ("can't read stream from argument, returning NULL pointer"),
-                         "det_score", ERROR, 0);
+        gregorio_message(_("can't read stream from argument, returning NULL "
+                "pointer"), "det_score", ERROR, 0);
         return NULL;
     }
     initialize_variables();
@@ -555,7 +544,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
         gregorio_free_score(score);
         score = NULL;
         gregorio_message(_("unable to determine a valid score from file"),
-                         "det_score", FATAL_ERROR, 0);
+                "det_score", FATAL_ERROR, 0);
     }
     return score;
 }
@@ -569,12 +558,12 @@ gabc_y_add_notes(char *notes) {
     gregorio_element *last_element;
     if (nabc_state == 0) {
         if (!elements[voice]) {
-            elements[voice] =
-                gabc_det_elements_from_string(notes, &current_key, macros);
+            elements[voice] = gabc_det_elements_from_string(notes,
+                    &current_key, macros);
             current_element = elements[voice];
         } else {
-            new_elements =
-                gabc_det_elements_from_string(notes, &current_key, macros);
+            new_elements = gabc_det_elements_from_string(notes,
+                    &current_key, macros);
             last_element = elements[voice];
             while(last_element->next) {
                 last_element = last_element->next;
@@ -589,13 +578,12 @@ gabc_y_add_notes(char *notes) {
             current_element = elements[voice];
         }
         if (!current_element) {
-            gregorio_message(_("current_element is null, this "
-                               "shouldn't happen!"),
-                             "gabc_y_add_notes",FATAL_ERROR,0);
+            gregorio_message(_("current_element is null, this shouldn't "
+                    "happen!"), "gabc_y_add_notes",FATAL_ERROR,0);
         }
         if (!current_element->nabc) {
-            current_element->nabc =
-                (char **) calloc (nabc_lines, sizeof (char *));
+            current_element->nabc = (char **) calloc (nabc_lines,
+                    sizeof (char *));
         }
         current_element->nabc[nabc_state-1] = strdup(notes);
         current_element->nabc_lines = nabc_state;
@@ -656,22 +644,14 @@ name_definition:
         if ($2.text==NULL) {
             gregorio_message("name can't be empty","det_score", WARNING, 0);
         }
-        if (score->name) {
-            gregorio_message(_("several name definitions found, only the "
-                               "last will be taken into consideration"),
-                             "det_score",WARNING, 0);
-        }
+        check_multiple("name", score->name);
         gregorio_set_score_name (score, $2.text);
     }
     ;
 
 lilypond_preamble_definition:
     LILYPOND_PREAMBLE attribute {
-        if (score->lilypond_preamble) {
-            gregorio_message(_("several lilypond preamble definitions found, "
-                               "only the last will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("lilypond preamble", score->lilypond_preamble);
         gregorio_set_score_lilypond_preamble (score, $2.text);
     }
     ;
@@ -684,110 +664,70 @@ centering_scheme_definition:
 
 gabc_copyright_definition:
     GABC_COPYRIGHT attribute {
-        if (score->gabc_copyright) {
-            gregorio_message(_("several gabc-copyright fields found, only the "
-                               "last will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("gabc-copyright", score->gabc_copyright);
         gregorio_set_score_gabc_copyright (score, $2.text);
     }
     ;
 
 score_copyright_definition:
     SCORE_COPYRIGHT attribute {
-        if (score->score_copyright) {
-            gregorio_message(_("several score_copyright fields found, only "
-                               "the last will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("score_copyright", score->score_copyright);
         gregorio_set_score_score_copyright (score, $2.text);
     }
     ;
 
 opustex_preamble_definition:
     OPUSTEX_PREAMBLE attribute {
-        if (score->opustex_preamble) {
-            gregorio_message(_("several OpusTeX preamble definitions found, "
-                               "only the last will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("OpusTeX preamble", score->opustex_preamble);
         gregorio_set_score_opustex_preamble (score, $2.text);
     }
     ;
 
 musixtex_preamble_definition:
     MUSIXTEX_PREAMBLE attribute {
-        if (score->musixtex_preamble) {
-            gregorio_message(_("several MusiXTeX preamble definitions found, "
-                               "only the last will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("MusiXTeX preamble", score->musixtex_preamble);
         gregorio_set_score_musixtex_preamble (score, $2.text);
     }
     ;
 
 gregoriotex_font_definition:
     GREGORIOTEX_FONT attribute {
-        if (score->gregoriotex_font) {
-            gregorio_message(_("several GregorioTeX font definitions found, "
-                               "only the last will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("GregorioTeX font", score->gregoriotex_font);
         score->gregoriotex_font=$2.text;
     }
     ;
 
 office_part_definition:
     OFFICE_PART attribute {
-        if (score->office_part) {
-            gregorio_message(_("several office part definitions found, only "
-                               "the last will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("office part", score->office_part);
         gregorio_set_score_office_part (score, $2.text);
     }
     ;
 
 occasion_definition:
     OCCASION attribute {
-        if (score->occasion) {
-            gregorio_message(_("several occasion definitions found, only the "
-                               "last will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("occasion", score->occasion);
         gregorio_set_score_occasion (score, $2.text);
     }
     ;
 
 meter_definition:
     METER attribute {
-        if (score->meter) {
-            gregorio_message(_("several meter definitions found, only the "
-                               "last will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("meter", score->meter);
         gregorio_set_score_meter (score, $2.text);
     }
     ;
 
 commentary_definition:
     COMMENTARY attribute {
-        if (score->commentary) {
-            gregorio_message(_("several commentary definitions found, only "
-                               "the last will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("commentary", score->commentary);
         gregorio_set_score_commentary (score, $2.text);
     }
     ;
 
 arranger_definition:
     ARRANGER attribute {
-        if (score->arranger) {
-            gregorio_message(_("several arranger definitions found, only the "
-                               "last will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("arranger", score->arranger);
         gregorio_set_score_arranger (score, $2.text);
     }
     ;
@@ -799,19 +739,15 @@ gabc_version_definition:
         // more complex.  For the moment, just issue a warning.
         if (strcmp ($2.text, GABC_CURRENT_VERSION) != 0) {
             gregorio_message(_("gabc-version is not the current one "
-                               GABC_CURRENT_VERSION " ; there may be problems"),
-                             "det_score",WARNING,0);
+                    GABC_CURRENT_VERSION " ; there may be problems"),
+                    "det_score", WARNING, 0);
         }
     }
     ;
 
 mode_definition:
     MODE attribute {
-        if (score->mode) {
-            gregorio_message(_("several mode definitions found, only the last "
-                               "will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("mode", score->mode);
         if ($2.text) {
             score->mode=atoi($2.text);
             free($2.text);
@@ -821,11 +757,7 @@ mode_definition:
 
 nabc_lines_definition:
     NABC_LINES attribute {
-        if (score->nabc_lines) {
-            gregorio_message(_("several nabc lines definitions found, only the "
-                               "last will be taken into consideration"),
-                             "det_score",WARNING,0);
-        }
+        check_multiple("nabc lines", score->nabc_lines);
         if ($2.text) {
             nabc_lines=atoi($2.text);
             score->nabc_lines=nabc_lines;
@@ -857,79 +789,50 @@ annotation_definition:
 
 author_definition:
     AUTHOR attribute {
-        if (score->si.author) {
-            snprintf(error,99,_("several definitions of author found, only "
-                                "the last will be taken into consideration"));
-            gregorio_message(error, "det_score",WARNING,0);
-        }
+        check_multiple("author", score->si.author);
         gregorio_set_score_author (score, $2.text);
     }
     ;
 
 date_definition:
     DATE attribute {
-        if (score->si.date) {
-            snprintf(error,99,_("several definitions of date found, only the "
-                                "last will be taken into consideration"));
-            gregorio_message(error, "det_score",WARNING,0);
-        }
+        check_multiple("date", score->si.date);
         gregorio_set_score_date (score, $2.text);
     }
     ;
 
 manuscript_definition:
     MANUSCRIPT attribute {
-        if (score->si.manuscript) {
-            snprintf(error,99,_("several definitions of manuscript found, only "
-                                "the last will be taken into consideration"));
-            gregorio_message(error, "det_score",WARNING,0);
-        }
+        check_multiple("manuscript", score->si.manuscript);
         gregorio_set_score_manuscript (score, $2.text);
     }
     ;
 
 manuscript_reference_definition:
     MANUSCRIPT_REFERENCE attribute {
-        if (score->si.manuscript_reference) {
-            snprintf(error,99,_("several definitions of manuscript-reference "
-                                "found, only the last will be taken into "
-                                "consideration"));
-            gregorio_message(error, "det_score",WARNING,0);
-        }
+        check_multiple("manuscript-reference", score->si.manuscript_reference);
         gregorio_set_score_manuscript_reference (score, $2.text);
     }
     ;
 
 manuscript_storage_place_definition:
     MANUSCRIPT_STORAGE_PLACE attribute {
-        if (score->si.manuscript_storage_place) {
-            snprintf(error,105,_("several definitions of "
-                                 "manuscript-storage-place found, only the "
-                                 "last will be taken into consideration"));
-            gregorio_message(error, "det_score",WARNING,0);
-        }
+        check_multiple("manuscript-storage-place",
+                score->si.manuscript_storage_place);
         gregorio_set_score_manuscript_storage_place (score, $2.text);
     }
     ;
 
 book_definition:
     BOOK attribute {
-        if (score->si.book) {
-            snprintf(error,99,_("several definitions of book found, only the "
-                                "last will be taken into consideration"));
-            gregorio_message(error, "det_score",WARNING,0);
-        }
+        check_multiple("book", score->si.book);
         gregorio_set_score_book (score, $2.text);
     }
     ;
 
 transcriber_definition:
     TRANSCRIBER attribute {
-        if (score->si.transcriber) {
-            snprintf(error,99,_("several definitions of transcriber found, only "
-                                "the last will be taken into consideration"));
-            gregorio_message(error, "det_score",WARNING,0);
-        }
+        check_multiple("transcriber", score->si.transcriber);
         gregorio_set_score_transcriber (score, $2.text);
         //free($2.text);
     }
@@ -937,12 +840,7 @@ transcriber_definition:
 
 transcription_date_definition:
     TRANSCRIPTION_DATE attribute {
-        if (score->si.transcription_date) {
-            snprintf(error,105,_("several definitions of transcription date "
-                                 "found, only the last will be taken into "
-                                 "consideration"));
-            gregorio_message(error, "det_score",WARNING,0);
-        }
+        check_multiple("transcription date", score->si.transcription_date);
         gregorio_set_score_transcription_date (score, $2.text);
     }
     ;
@@ -950,9 +848,9 @@ transcription_date_definition:
 style_definition:
     STYLE attribute {
         if (current_voice_info->style) {
-            snprintf(error,99,_("several definitions of style found for voice "
-                                "%d, only the last will be taken into "
-                                "consideration"), voice);
+            snprintf(error, 99, _("several definitions of style found for "
+                    "voice %d, only the last will be taken into consideration"),
+                    voice);
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_voice_style (current_voice_info, $2.text);
@@ -962,9 +860,9 @@ style_definition:
 virgula_position_definition:
     VIRGULA_POSITION attribute {
         if (current_voice_info->virgula_position) {
-            snprintf(error,105,_("several definitions of virgula position "
-                                 "found for voice %d, only the last will be "
-                                 "taken into consideration"), voice);
+            snprintf(error, 105, _("several definitions of virgula position "
+                    "found for voice %d, only the last will be taken into "
+                    "consideration"), voice);
             gregorio_message(error, "det_score",WARNING,0);
         }
         gregorio_set_voice_virgula_position (current_voice_info, $2.text);
@@ -1043,15 +941,15 @@ note:
             free($1.text);
         }
         else {
-            snprintf(error,105,ngt_("too many voices in note : %d foud, %d expected",
-                                    "too many voices in note : %d foud, %d expected",
+            snprintf(error,105,ngt_("too many voices in note : %d found, %d expected",
+                                    "too many voices in note : %d found, %d expected",
                                     number_of_voices), voice+1, number_of_voices);
             gregorio_message(error, "det_score",ERROR,0);
         }
         if (voice<number_of_voices-1) {
-            snprintf(error,105,ngt_("not enough voices in note : %d foud, %d "
+            snprintf(error,105,ngt_("not enough voices in note : %d found, %d "
                                     "expected, completing with empty neume",
-                                    "not enough voices in note : %d foud, "
+                                    "not enough voices in note : %d found, "
                                     "%d expected, completing with empty neume",
                                     voice+1), voice+1, number_of_voices);
             gregorio_message(error, "det_score",VERBOSE,0);
@@ -1066,15 +964,15 @@ note:
             free($1.text);
         }
         else {
-            snprintf(error,105,ngt_("too many voices in note : %d foud, %d expected",
-                                    "too many voices in note : %d foud, %d expected",
+            snprintf(error,105,ngt_("too many voices in note : %d found, %d expected",
+                                    "too many voices in note : %d found, %d expected",
                                     number_of_voices), voice+1, number_of_voices);
             gregorio_message(error, "det_score",ERROR,0);
         }
         if (voice<number_of_voices-1) {
-            snprintf(error,105,ngt_("not enough voices in note : %d foud, %d "
+            snprintf(error,105,ngt_("not enough voices in note : %d found, %d "
                                     "expected, completing with empty neume",
-                                    "not enough voices in note : %d foud, %d "
+                                    "not enough voices in note : %d found, %d "
                                     "expected, completing with empty neume",
                                     voice+1), voice+1, number_of_voices);
             gregorio_message(error, "det_score",VERBOSE,0);

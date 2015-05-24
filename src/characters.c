@@ -1021,7 +1021,7 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
                         start_of_special->previous_character;
                 start_of_special->previous_character = NULL;
                 current_character->next_character = first_character;
-                first_character->previous_character = start_of_special;
+                first_character->previous_character = current_character;
 
                 gregorio_message(_
                         ("Any style applied to the initial will be ignored."),
@@ -1052,6 +1052,43 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
         }
         current_character = current_character->next_character;
     }
+    // now apply the first syllable style
+    current_character = *param_character;
+    if (separate_initial) {
+        if (gregorio_go_to_end_initial(&current_character)) {
+            current_character = current_character->next_character;
+        }
+    } else {
+        gregorio_go_to_first_character(&current_character);
+    }
+    if (current_character) {
+        bool marked_syllable_iniital = false;
+        gregorio_insert_style_before(ST_T_BEGIN, ST_FIRST_SYLLABLE,
+                current_character);
+        do {
+            if (current_character->is_character && !marked_syllable_iniital) {
+                marked_syllable_iniital = true;
+                gregorio_insert_style_before(ST_T_BEGIN,
+                        ST_FIRST_SYLLABLE_INITIAL, current_character);
+                gregorio_insert_style_after(ST_T_END, ST_FIRST_SYLLABLE_INITIAL,
+                        &current_character);
+            } else {
+                if (current_character->cos.s.style == ST_CENTER
+                        || current_character->cos.s.style == ST_FORCED_CENTER) {
+                    gregorio_insert_style_before(ST_T_END, ST_FIRST_SYLLABLE,
+                            current_character);
+                    gregorio_insert_style_after(ST_T_BEGIN, ST_FIRST_SYLLABLE,
+                            &current_character);
+                }
+            }
+            if (!current_character->next_character) {
+                gregorio_insert_style_after(ST_T_END, ST_FIRST_SYLLABLE,
+                        &current_character);
+            }
+            current_character = current_character->next_character;
+        } while (current_character);
+    }
+
     current_character = *param_character;
     gregorio_go_to_first_character(&current_character);
     (*param_character) = current_character;

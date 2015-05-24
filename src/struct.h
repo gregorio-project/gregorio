@@ -266,9 +266,11 @@ typedef enum grestyle_style {
     ST_SMALL_CAPS,
     ST_SPECIAL_CHAR,
     ST_VERBATIM,
-    ST_INITIAL,                 // a style used to determine the initial
+    ST_INITIAL, // a style used to determine the initial
     ST_UNDERLINED,
     ST_COLORED,
+    ST_FIRST_SYLLABLE,
+    ST_FIRST_SYLLABLE_INITIAL,
 } grestyle_style;
 
 /*
@@ -416,7 +418,7 @@ typedef struct gregorio_note {
     bool h_episemus_below_connect:1;
     bool is_lower_note:1;
     bool is_upper_note:1;
-    gregorio_vposition mora_vposition:2;
+    ENUM_BITFIELD(gregorio_vposition) mora_vposition:2;
 } gregorio_note;
 
 /*
