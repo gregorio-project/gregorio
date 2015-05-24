@@ -418,7 +418,7 @@ typedef struct gregorio_note {
     bool h_episemus_below_connect:1;
     bool is_lower_note:1;
     bool is_upper_note:1;
-    gregorio_vposition mora_vposition:2;
+    ENUM_BITFIELD(gregorio_vposition) mora_vposition:2;
 } gregorio_note;
 
 /*
