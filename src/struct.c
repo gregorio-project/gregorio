@@ -236,10 +236,12 @@ void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str)
     }
 }
 
-void gregorio_add_cs_to_note(gregorio_note **current_note, char *str)
+void gregorio_add_cs_to_note(gregorio_note *const*const current_note,
+        char *const str, const bool nabc)
 {
     if (*current_note) {
         (*current_note)->choral_sign = str;
+        (*current_note)->choral_sign_is_nabc = nabc;
     }
 }
 
