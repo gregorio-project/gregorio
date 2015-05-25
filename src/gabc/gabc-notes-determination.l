@@ -149,6 +149,7 @@ static inline void add_alteration(const gregorio_type type) {
 %x texverbglyph
 %x texverbelement
 %x choralsign
+%x choralnabc
 %x alt
 %x comments
 %x overbrace
@@ -168,6 +169,9 @@ static inline void add_alteration(const gregorio_type type) {
     }
 <INITIAL>\[cs: {
         BEGIN(choralsign);
+    }
+<INITIAL>\[cn: {
+        BEGIN(choralnabc);
     }
 <INITIAL>\[ob:[01]; {
         char_for_brace = gabc_notes_determination_text[4]-'0';
@@ -252,7 +256,11 @@ static inline void add_alteration(const gregorio_type type) {
     }
 <choralsign>[^\]]+ {
         gregorio_add_cs_to_note(&current_note,
-                strdup(gabc_notes_determination_text));
+                strdup(gabc_notes_determination_text), false);
+    }
+<choralnabc>[^\]]+ {
+        gregorio_add_cs_to_note(&current_note,
+                strdup(gabc_notes_determination_text), true);
     }
 <texverbnote>[^\]]+ {
         gregorio_add_texverb_to_note(&current_note,
@@ -270,7 +278,7 @@ static inline void add_alteration(const gregorio_type type) {
         gregorio_add_texverb_as_note(&current_note,
                 strdup(gabc_notes_determination_text), GRE_ALT);
     }
-<texverbnote,texverbglyph,texverbelement,choralsign,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,underbrace>\] {
+<texverbnote,texverbglyph,texverbelement,choralsign,choralnabc,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,underbrace>\] {
         BEGIN(INITIAL);
     }
 \{  {

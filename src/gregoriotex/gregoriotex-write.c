@@ -2048,6 +2048,25 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
     return 0;
 }
 
+static inline void write_low_choral_sign(FILE *const f,
+        const gregorio_note *const note, int special)
+{
+    fprintf(f, "\\grelowchoralsign{%d}{%s%s%s}{%d}%%\n",
+            pitch_value(note->u.note.pitch),
+            note->choral_sign_is_nabc? "\\gregorionabcchar{" : "",
+            note->choral_sign, note->choral_sign_is_nabc? "}" : "", special);
+}
+
+static inline void write_high_choral_sign(FILE *const f,
+        const gregorio_note *const note, int pitch_offset)
+{
+    fprintf(f, "\\grehighchoralsign{%d}{%s%s%s}{\\greoCase%s}%%\n",
+            pitch_value(note->u.note.pitch + pitch_offset),
+            note->choral_sign_is_nabc? "\\gregorionabcchar{" : "",
+            note->choral_sign, note->choral_sign_is_nabc? "}" : "",
+            note->gtex_offset_case);
+}
+
 static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
         gregorio_note *current_note, bool low)
 {
@@ -2068,35 +2087,25 @@ static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
         if (is_on_a_line(current_note->u.note.pitch)) {
             if (kind_of_pes && current_note->u.note.pitch -
                     current_note->next->u.note.pitch == -1) {
-                fprintf(f, "\\grelowchoralsign{%d}{%s}{1}%%\n",
-                        pitch_value(current_note->u.note.pitch),
-                        current_note->choral_sign);
+                write_low_choral_sign(f, current_note, 1);
                 return;
             }
             if (current_note->previous
                     && (current_note->previous->signs == _PUNCTUM_MORA
                             || current_note->previous->signs ==
                             _V_EPISEMUS_PUNCTUM_MORA)) {
-                fprintf(f, "\\grelowchoralsign{%d}{%s}{1}%%\n",
-                        pitch_value(current_note->u.note.pitch),
-                        current_note->choral_sign);
+                write_low_choral_sign(f, current_note, 1);
                 return;
             }
         }
 
-        fprintf(f, "\\grelowchoralsign{%d}{%s}{0}%%\n",
-                pitch_value(current_note->u.note.pitch),
-                current_note->choral_sign);
+        write_low_choral_sign(f, current_note, 0);
     } else {
         // let's cheat a little
         if (is_on_a_line(current_note->u.note.pitch)) {
-            fprintf(f, "\\grehighchoralsign{%d}{%s}{\\greoCase%s}%%\n",
-                    pitch_value(current_note->u.note.pitch),
-                    current_note->choral_sign, current_note->gtex_offset_case);
+            write_high_choral_sign(f, current_note, 0);
         } else {
-            fprintf(f, "\\grehighchoralsign{%d}{%s}{\\greoCase%s}%%\n",
-                    pitch_value(current_note->u.note.pitch + 2),
-                    current_note->choral_sign, current_note->gtex_offset_case);
+            write_high_choral_sign(f, current_note, 2);
         }
     }
 }
