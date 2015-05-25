@@ -2053,7 +2053,7 @@ static inline void write_low_choral_sign(FILE *const f,
 {
     fprintf(f, "\\GreLowChoralSign{%d}{%s%s%s}{%d}%%\n",
             pitch_value(note->u.note.pitch),
-            note->choral_sign_is_nabc? "\\GregorioNABCCchar{" : "",
+            note->choral_sign_is_nabc? "\\gregorionabccchar{" : "",
             note->choral_sign, note->choral_sign_is_nabc? "}" : "", special);
 }
 
@@ -2062,7 +2062,7 @@ static inline void write_high_choral_sign(FILE *const f,
 {
     fprintf(f, "\\GreHighChoralSign{%d}{%s%s%s}{\\GreOCase%s}%%\n",
             pitch_value(note->u.note.pitch + pitch_offset),
-            note->choral_sign_is_nabc? "\\GregorioNABCChar{" : "",
+            note->choral_sign_is_nabc? "\\gregorionabcchar{" : "",
             note->choral_sign, note->choral_sign_is_nabc? "}" : "",
             note->gtex_offset_case);
 }
