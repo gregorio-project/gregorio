@@ -431,40 +431,72 @@ rather than have multiple definitions.
  \end{tabular}
 
 \subsection{Episemus Special}\label{EpisemusSpecial}
-\rowcolors{1}{lightgray}{lightgray}
-\begin{tabular}{cp{10.5cm plus .5cm}}
-  \multicolumn{2}{c}{Integer with the following possibilities:} \\
-  \hline
-  0 & Last note, which is a standard punctum (works with pes).\\
-  1 & Same, but the last note is a deminutus.\\
-  2 & The note before the last note, which is a standard punctum.\\
-  3 & Idem, but the note is the note preceding a deminutus.\\
-  4 & The note before the note before the last note (for porrectus flexus).\\
-  5 & Idem, but when the two last notes are a deminutus.\\
-  6 & The first note, if it is a standard punctum.\\
-  7 & The first note, if it is an initio debilis.\\
-  8 & The first note, if it is a porrectus.\\
-  \multicolumn{2}{l}{The three next arguments make no sense for a vepisemus}\\
-  9 & The two first notes, if it is a porrectus.\\
-  10 & The two first notes, if it is a porrectus flexus.\\
-  11 & The notes two and three of a torculus resupinus.\\
-  12 & The last note, if it is a punctum inclinatum.\\
-  13 & Idem, if it is a punctum inclinatum deminutus.\\
-  14 & Idem, if it is a stropha.\\
-  15 & Idem, with a quilisma.\\
-  16 & Idem, with an oriscus.\\
-  17 & Same of 2 but for ambitus of one.\\
-  18 & Same of 0, but the last note is a smaller punctum (concerning simple podatus, podatus, and torculus resupinus).\\
-  19 & The first note, if it is an oriscus.\\
-  20 & The first note, if it is a quilisma.\\
-  21 & The second note of a torculus resupinus with first ambitus of at least two.\\
-  22 & Idem with ambitus of one.\\
-  23 & Idem with initio debilis.\\
-  24 & The last note, if it is a linea punctum (or linea punctum cavum).\\
-  25 & The last note, if it is a bar.\\
-  26 & The last note, if it is a virgula.\\
-  27 & The last note, if it is a divisio finalis.\\
-\end{tabular}
+\definecolor{shadecolor}{named}{lightgray}%
+\begin{shaded*}%
+\vspace{-1.4\baselineskip}
+\begin{center}String with the following possibilities:\end{center}
+\vspace{-0.8\baselineskip}
+\hrule
+\vspace{-0.8\baselineskip}
+\begin{description}
+  \item[FinalPunctum] Last note, which is a standard punctum (works with pes).
+  \item[FinalDeminutus] Same, but the last note is a deminutus.
+  \item[PenultBeforePunctumWide] The note before the last note, which is a standard punctum.
+  \item[PenultBeforeDeminutus] Idem, but the note is the note preceding a deminutus.
+  \item[AntepenultBeforePunctum] The note before the note before the last note (for porrectus flexus).
+  \item[AntepenultBeforeDeminutus] Idem, but when the two last notes are a deminutus.
+  \item[InitialPunctum] The first note, if it is a standard punctum.
+  \item[InitioDebilis] The first note, if it is an initio debilis.
+  \item[PorrNonAuctusInitialWide] first note of a non-auctus porrectus with a second ambitus of at least two.
+  \item[PorrNonAuctusInitialOne] first note of a non-auctus porrectus with a second ambitus of one
+  \item[PorrAuctusInitialAny] first note of an auctus porrectus, regardless of second ambitus
+  \item[FinalInclinatum] punctum inclinatum as last note
+  \item[FinalInclinatumDeminutus] punctum inclinatum deminutus as last note
+  \item[FinalStropha] stropha as last note
+  \item[FinalQuilisma] quilisma as last note
+  \item[FinalOriscus] oriscus as last note
+  \item[PenultBeforePunctumOne] second-to-last note, with a second ambitus of one, when last note is a standard punctum (like the second note of ghg)
+  \item[FinalUpperPunctum] "upper smaller punctum" as last note (concerning simple podatus, podatus, and torculus resupinus)
+  \item[InitialOriscus] oriscus as first note, disconnected from next note
+  \item[InitialQuilisma] quilisma as first note, disconnected from next note
+  \item[TorcResNonAuctusSecondWideWide] second note of a non-auctus torculus resupinus starting with a punctum, with a first and second ambitus of at least two
+  \item[TorcResNonAuctusSecondOneWide] second note of a non-auctus torculus resupinus starting with a punctum, with a first ambitus of one and a second ambitus of at least two
+  \item[TorcResDebilisNonAuctusSecondAnyWide] second note of a non-auctus torculus resupinus initio debilis with any first ambitus and a second ambitus of at least two
+  \item[FinalLineaPunctum] linea punctum (cavum) as last note
+  \item[BarStandard] standard bar
+  \item[BarVirgula] virgula
+  \item[BarDivisioFinalis] divisio finalis
+  \item[TorcResQuilismaNonAuctusSecondWideWide] second note of a non-auctus torculus resupinus starting with a quilisma, with a first and second ambitus of at least two
+  \item[TorcResOriscusNonAuctusSecondWideWide] second note of a non-auctus torculus resupinus starting with an oriscus, with a first and second ambitus of at least two
+  \item[TorcResQuilismaNonAuctusSecondOneWide] second note of a non-auctus torculus resupinus starting with a quilisma, with a first ambitus of one and and second ambitus of at least two
+  \item[TorcResOriscusNonAuctusSecondOneWide] second note of a non-auctus torculus resupinus starting with an oriscus, with a first ambitus of one and and second ambitus of at least two
+  \item[TorcResNonAuctusSecondWideOne] second note of a non-auctus torculus resupinus starting with a punctum, with a first ambitus of at least two and a second ambitus of one
+  \item[TorcResDebilisNonAuctusSecondAnyOne] second note of a non-auctus torculus resupinus initio debilis with any first ambitus and a second ambitus of one
+  \item[TorcResQuilismaNonAuctusSecondWideOne] second note of a non-auctus torculus resupinus starting with a quilisma, with a first ambitus of at least two and a second ambitus of one
+  \item[TorcResOriscusNonAuctusSecondWideOne] second note of a non-auctus torculus resupinus starting with an oriscus, with a first ambitus of at least two and a second ambitus of one
+  \item[TorcResNonAuctusSecondOneOne] second note of a non-auctus torculus resupinus starting with a punctum, with a first and second ambitus of one
+  \item[TorcResQuilismaNonAuctusSecondOneOne] second note of a non-auctus torculus resupinus starting with a quilisma, with a first and second ambitus of one
+  \item[TorcResOriscusNonAuctusSecondOneOne] second note of a non-auctus torculus resupinus starting with an oriscus, with a first and second ambitus of one
+  \item[TorcResAuctusSecondWideAny] second note of an auctus torculus resupinus starting with a punctum, with a first ambitus of at least two and any second ambitus
+  \item[TorcResDebilisAuctusSecondAnyAny] second note of an auctus torculus resupinus initio debilis with any first and second ambitus
+  \item[TorcResQuilismaAuctusSecondWideAny] second note of an auctus torculus resupinus starting with a quilisma, with a first ambitus of at least two and any second ambitus
+  \item[TorcResOriscusAuctusSecondWideAny] second note of an auctus torculus resupinus starting with an oriscus, with a first ambitus of at least two and any second ambitus
+  \item[TorcResAuctusSecondOneAny] second note of an auctus torculus resupinus starting with a punctum, with a first ambitus of one and any second ambitus
+  \item[TorcResQuilismaAuctusSecondOneAny] second note of an auctus torculus resupinus starting with a quilisma, with a first ambitus of one and any second ambitus
+  \item[TorcResOriscusAuctusSecondOneAny] second note of an auctus torculus resupinus starting with an oriscus, with a first ambitus of one and any second ambitus
+  \item[ConnectedPenultBeforePunctumWide] second-to-last note connected to prior note, with a second ambitus of at least two, when last note is a standard punctum (like the second note of \textit{gig})
+  \item[ConnectedPenultBeforePunctumOne] second-to-last note connected to prior note, with a second ambitus of one, when last note is a standard punctum (like the second note of \textit{gih})
+  \item[InitialConnectedPunctum] standard punctum as first note, connected to next higher note
+  \item[InitialConnectedVirga] "virga" as first note, connected to next lower note
+  \item[InitialConnectedQuilisma] quilisma as first note, connected to next higher note
+  \item[InitialConnectedOriscus] oriscus as first note, connected to next higher note
+  \item[FinalConnectedPunctum] punctum as last note, connected to prior higher note
+  \item[FinalConnectedAuctus] auctus as last note, connected to prior lower note
+  \item[FinalVirgaAuctus] virga aucta as last note
+  \item[FinalConnectedVirga] "virga" as last note, connected to prior lower note
+  \item[InitialVirga] "virga" as first note, disconnected from next note
+\end{description}
+\end{shaded*}
 
 %%% Local Variables:
 %%% mode: latex
