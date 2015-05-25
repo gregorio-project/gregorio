@@ -54,6 +54,8 @@
 %% We now redefine some things in a more LaTeX friendly way.
 
 \definecolor{grebackgroundcolor}{RGB}{255,255,255}%
+\definecolor{gregoriocolor}{RGB}{229,53,44}
+
 
 \def\greinitialformat#1{%
   {\fontsize{40}{40}\selectfont #1}%
@@ -90,23 +92,21 @@
   \relax %
 }
 
-\definecolor{gregoriocolor}{RGB}{229,53,44}
-
 \def\grecolored#1{%
   {%
     \color{gregoriocolor}#1%
   }%
 }
 
-\def\grecoloredlines#1#2#3{%
+\def\grecoloredlines#1{%
   \GreSetStaffLinesFormat{%
-    \color[RGB]{#1,#2,#3}%
+    \color[named]{#1}%
   }%
   \relax %
 }
 
 \def\greredlines{%
-  \grecoloredlines{229}{53}{44}%
+  \grecoloredlines{gregoriocolor}%
   \relax %
 }
 
