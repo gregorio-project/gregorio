@@ -419,6 +419,7 @@ typedef struct gregorio_note {
     bool is_lower_note:1;
     bool is_upper_note:1;
     ENUM_BITFIELD(gregorio_vposition) mora_vposition:2;
+    bool choral_sign_is_nabc:1;
 } gregorio_note;
 
 /*
@@ -787,7 +788,8 @@ void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
 void gregorio_add_nlba_as_note(gregorio_note **current_note,
         gregorio_nlba type);
 void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str);
-void gregorio_add_cs_to_note(gregorio_note **current_note, char *str);
+void gregorio_add_cs_to_note(gregorio_note *const*current_note, char *str,
+        bool nabc);
 void gregorio_add_misc_element(gregorio_element **current_element,
         gregorio_type type, gregorio_misc_element_info info, char *texverb);
 void gregorio_reinitialize_alterations(char alterations[][13],
