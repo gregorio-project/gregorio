@@ -1066,10 +1066,27 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
         gregorio_insert_style_before(ST_T_BEGIN, ST_FIRST_SYLLABLE,
                 current_character);
         do {
-            if (current_character->is_character && !marked_syllable_iniital) {
+            if (!marked_syllable_iniital && (current_character->is_character
+                        || (current_character->cos.s.type == ST_T_BEGIN
+                            && (current_character->cos.s.style == ST_VERBATIM
+                                || current_character->cos.s.style
+                                == ST_SPECIAL_CHAR
+                                )
+                            )
+                    )) {
                 marked_syllable_iniital = true;
                 gregorio_insert_style_before(ST_T_BEGIN,
                         ST_FIRST_SYLLABLE_INITIAL, current_character);
+                if (!current_character->is_character) {
+                    // skip past the verbatim or special character
+                    if (current_character->next_character) {
+                        current_character = current_character->next_character;
+                    }
+                    while (current_character->next_character
+                            && current_character->is_character) {
+                        current_character = current_character->next_character;
+                    }
+                }
                 gregorio_insert_style_after(ST_T_END, ST_FIRST_SYLLABLE_INITIAL,
                         &current_character);
             } else {
