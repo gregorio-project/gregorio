@@ -2627,6 +2627,18 @@ static void handle_final_bar(FILE *f, char *type, gregorio_syllable *syllable)
             }
             break;
 
+        case GRE_END_OF_LINE:
+            switch (element->u.misc.unpitched.info.sub_type) {
+            case GRE_END_OF_PAR:
+                fprintf(f, "\\grenewparline %%\n");
+                break;
+
+            default:
+                fprintf(f, "\\grenewline %%\n");
+                break;
+            }
+            break;
+
         default:
             // do nothing
             break;
