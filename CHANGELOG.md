@@ -34,6 +34,18 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
   - `beforechoralsignspace` is now `beforelowchoralsignspace`.
   - `lowchoralsignshift` is now `choralsigndownshift`.
   - `highchoralsignshift` is now `choralsignupshift` and its sign is now inverted.
+- All formats can now be changed via the `\grechangeformat` command.  This command takes two or three arguments.  The first argument, required, is the format to be altered.  The defined formats are:
+    - `initial`: for formatting normal initials
+    - `biginitial`: for formatting big (2-line) initials
+    - `translation`: for formatting translation text
+    - `abovelinetext`: for formatting above line text (`alt` in gabc)
+    - `normalstafflines`: for formatting the full length staff lines
+    - `additionalstafflines`: for formatting the short lines behind notes above or below the staff.  This format defaults to inheriting changes to `normalstafflines`.
+    - `lowchoralsign`: for formatting low choral signs
+    - `highchoralsign`: for formatting high choral signs
+    - `firstsyllableinitial`: for formatting the first letter of the first syllable of a score which is not the score initial
+    - `firstsyllable`: for formatting the balance of the first syllable of the score
+    The second argument, also required, is the code necessary to turn on the formatting.  The third argument, optional and enclosed in square braces (`[` and `]`), is the code necessary to turn off the formatting (e.g. if the code to turn on the formatting contains a `\begin{environment}` then the code to turn it off must have the matching `\end{environment}`.  The third argument is optional because not all formatting commands have explicit off switches.
 
 ### Added
 - With thanks to Jakub Jelínek, St. Gallen style adiastematic notation is now handled through [nabc syntax](http://gregoriochant.org/dokuwiki/doku.php/language) (see GregorioNabcRef.pdf for details and [the new example](examples/FactusEst.gabc)). Only one line above the notes is currently handled. This is a preview, backward incompatible change are possible in future releases.
@@ -45,6 +57,15 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Support for `lualatex -recorder`.  Autocompiled gabc and gtex files will now be properly recorded so that programs like `latexmk -recorder` can detect the need to rebuild the PDF when a gabc file changes.
 - A vertical episema may now be forced to appear above or below a note.  In gabc, use `'0` for the vertical episema to appear below and `'1` for the vertical episema to appear above (see [#385](https://github.com/gregorio-project/gregorio/issues/385)).
 - The first syllable and first letter of the first syllable that is *not* interpreted as the initial of the score are now passed to macros that allow them to be styled from TeX.  The first syllable is passed to `\GreFirstSyllable#1` and the first letter of the first syllable is passed to `\GreFirstSyllableInitial#1`.
+
+### Deprecated
+- `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`
+- `\greinitialformat`, if you were redefining this command, use `\grechangeformat{initial}...` instead
+- `\grebiginitialformat`, if you were redefining this command, use `\grechangeformat{biginitial}...` instead
+- `\gretranslationformat`, if you were redefining this command, use `\grechangeformat{translation}...` instead
+- `\greabovelinestextstyle`, if you were redefining this command, use `\grechangeformat{abovelinestext}...` instead
+- `\grelowchoralsignstyle`, if you were redefining this command, use `\grechangeformat{lowchoralsign}...` instead
+- `\grehighchoralsignstyle`, if you were redefining this command, use `\grechangeformat{highchoralsign}...` instead
 
 ### Removed
 - GregorioXML and OpusTeX output

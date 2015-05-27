@@ -744,6 +744,7 @@
 
 % macro to tell gregorio to set space for the translation
 \def\gre@addtranslationspace{%
+  \gre@format@translation%
   \gretranslationformat{%
     \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight %
     \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext %
@@ -751,6 +752,7 @@
     \gregeneratelines %
     \gre@calculate@constantglyphraise %
   }%
+  \gre@format@endtranslation%
   \relax %
 }%
 

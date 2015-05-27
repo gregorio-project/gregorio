@@ -44,4 +44,75 @@
 
 \input gregoriotex-main.tex
 
+%% The following two functions are defined for backwards compatibility.  They will eventually be removed.
+\def\greinitialformat#1{%
+  {\grefontofinitial #1}%
+  \relax %
+}%
+
+\def\grebiginitialformat#1{%
+  {\grefontofgrebiginitial #1}%
+  \relax %
+}
+
+%%%%%%%%%%%%%%%%%%%%
+%% Formatting environments
+%%%%%%%%%%%%%%%%%%%%
+
+\font\gre@fontofbiginitial=pncr at 80pt%
+\font\gre@fontofinitial=pncr at 40pt%
+
+\def\gre@format@initial{%
+  \begingroup%
+  \gre@fontofinitial%
+  \relax %
+}%
+\def\endgre@format@initial{\endgroup}%
+
+\def\gre@format@biginitial{%
+  \begingroup%
+  \gre@fontofbiginitial%
+  \relax %
+}%
+\def\endgre@format@biginitial{\endgroup}%
+
+\def\gre@format@translation{%
+  \begingroup%
+  \it%
+}%
+\def\endgre@format@translation{\endgroup}%
+
+\def\gre@format@normalstafflines{%
+  \begingroup%
+  \relax%
+}%
+\def\endgre@format@normalstafflines{\endgroup}%
+
+\def\gre@format@additionalstafflines{%
+  \begingroup%
+  \gre@format@normalstafflines%
+}%
+\def\endgre@format@additionalstafflines{%
+  \endgre@format@normalstafflines%
+  \endgroup%
+}%
+
+\def\gre@format@lowchoralsign{%
+  \begingroup%
+  \relax%
+}%
+\def\endgre@format@lowchoralsign{\endgroup}%
+
+\def\gre@format@highchoralsign{%
+  \begingroup%
+  \relax%
+}%
+\def\endhighlowchoralsignformat{\endgroup}%
+
+\def\gre@changeformat#1#2[#3]{%
+  \gdef\csname gre@format@#1\endcsname{\begingroup#2}%
+  \gdef\csname endgre@format@#1\endcsname{#3\endgroup}%
+}%
+
+
 \catcode`\@=\greoldcatcode

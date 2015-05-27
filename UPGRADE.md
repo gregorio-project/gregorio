@@ -48,6 +48,20 @@ Note: `3`, `4`, and `5` encompass a new feature and are listed here only for com
 - `lowchoralsignshift` has been renamed to `choralsigndownshift`.
 - `highchoralsignshift` has been renamed to `choralsignupshift` and its sign inverted.
 
+### Formating environments
+
+Changing the formatting of text elements of the score (the initial, translations, etc.) formerly required the user to redefine a command which took an argument while changing the formatting of the staff lines had a command specialized to that purpose.  All formats can now be changed via the `\grechangeformat` command.  This command takes two or three arguments.  The first argument, required, is the format to be altered.  The defined formats are:
+    - `greinitial`: for formatting normal initials
+    - `grebiginitial`: for formatting big (2-line) initials
+    - `translation`: for formatting translation text
+    - `abovelinetext`: for formatting above line text (`alt` in gabc)
+    - `normalstafflines`: for formatting the full length staff lines
+    - `additionalstafflines`: for formatting the short lines behind notes above or below the staff.  This format defaults to inheriting changes to `normalstafflines`.
+    - `lowchoralsign`: for formatting low choral signs
+    - `highchoralsign`: for formatting high choral signs
+    The second argument, also required, is the code necessary to turn on the formatting.  The third argument, optional and enclosed in square braces (`[` and `]`), is the code necessary to turn off the formatting (e.g. if the code to turn on the formatting contains a `\begin{environment}` then the code to turn it off must have the matching `\end{environment}`.  The third argument is optional because not all formatting commands have explicit off switches.
+    While the old way of changing the formats is still supported, you should switch to this new method to future proof your scores. 
+
 ## 3.0
 ### TeX Live 2013
 

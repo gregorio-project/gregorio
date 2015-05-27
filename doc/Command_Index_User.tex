@@ -157,27 +157,32 @@ may be used to specify a gabc \texttt{initial-style}, which defaults to
 
 \subsubsection{Styling}
 
-\macroname{\textbackslash GreFirstSyllable}{\{\#1\}}{gregoriotex-syllble.tex}
-A macro which is called with the text of the first syllable, excluding the
-initial of the score.  This macro may be redefined to style the first syllable
-appropriately.  This macro may be called up to three times: for the letters
-before the centered letters, for the centered letters, and for the letters
-after the centered letters.
+Different elements of an include score have different styles applied.  These elements and their defaults are listed below:
+
+\bigskip\rowcolors{1}{lightgray}{lightgray}
+\begin{tabular}{lp{10cm plus .5cm}r}
+  Element Name & Description & Default\\
+  initial & Normal Initials & 40 pt font\\
+  biginitial & Big (2-Line) Initials & 80 pt font\\
+  translation & Translation text (appears below lyrics) & italics\\
+  abovelinetext & Above line text (\texttt{<alt></alt>} in gabc, appears above the staff) & normal\\
+  normalstafflines & Full length staff lines & none\\
+  additionalstafflines & short lines behind notes above or below the staff & inherit from `normalstafflines`.\\
+  lowchoralsign & low choral signs & none\\
+  highchoralsign & high choral signs & none\\
+  firstsyllableinitial & the first letter of the first syllable of a score which is not the score initial & none\\
+  firstsyllable & the balance of the first syllable of the score & none
+\end{tabular}
+
+\end{tabular}
+
+\macroname{\textbackslash grechangeformat}{\{\#1\}\{\#2\}[\#3]}{gregoriotex.sty and gregoriotex.tex}
+Command to change format (styling) of a score element.
 
 \begin{argtable}
-  \#1 & string & Text from the first syllable.
-\end{argtable}
-
-\macroname{\textbackslash GreFirstSyllableInitial}{\{\#1\}}{gregoriotex-syllble.tex}
-A macro which is called with the first letter of the first syllable which is
-not the initial of the score.  If the \texttt{initial-style} is \texttt{0}, the
-first letter of the syllable will be passed.  If the \texttt{initial-style} is
-\texttt{1} or \texttt{2}, the \emph{second} letter will be passed.  This macro
-may be redefined to style the first letter appropriately.
-
-\begin{argtable}
-  \#1 & string & The first letter of the first syllable which is not the
-                 initial of the score.
+  \#1 & string & element whose formatting is to be changed (see list above for options)\\
+  \#2 & \TeX\ code & the code necessary to turn on the formatting\\
+  \#3 & \TeX\ code & Optional.  The code necessary to turn off the formatting (e.g. if the code to turn on the formatting contains a `\begin{environment}` then the code to turn it off must have the matching `\end{environment}`.
 \end{argtable}
 
 \subsubsection{Alternate glyph drawings}

@@ -99,9 +99,7 @@
 }
 
 \def\grecoloredlines#1#2#3{%
-  \GreSetStaffLinesFormat{%
-    \color[RGB]{#1,#2,#3}%
-  }%
+  \gre@changeformat{normalstafflines}{\color[RGB]{#1,#2,#3}}[\relax]%
   \relax %
 }
 
@@ -113,7 +111,7 @@
 \let\redlines\greredlines
 
 \def\grenormallines{%
-  \global\def\grestafflinesformat{}
+  \gre@changeformat{normalstafflines}{\relax}[\relax]%
   \relax %
 }
 
@@ -123,6 +121,53 @@
   \small\textit{#1}%
   \relax %
 }
+%%%%%%%%%%%%%%%%%%%%
+%% Formatting environments
+%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{gre@format@initial}%
+  {\begingroup\fontsize{40}{40}\selectfont}%
+  {\endgroup}%
+
+\newenvironment{gre@format@biginitial}%
+  {\begingroup\fontsize{80}{80}\selectfont}%
+  {\endgroup}%
+
+\newenvironment{gre@format@translation}%
+  {\begingroup\begin{italic}}%
+  {\endgroup\end{italic}}%
+
+\newenvironment{gre@format@abovelinestext}%
+  {\begingroup\begin{small}\begin{italic}}%
+  {\endgroup\end{italic}\end{small}}%
+
+\newenvironment{gre@format@normalstafflines}%
+  {\begingroup}%
+  {\endgroup}%
+
+\newenvironment{gre@format@additionalstafflines}%
+  {\begingroup\begin{gre@format@normalstafflines}}%
+  {\endgroup\end{gre@format@normalstafflines}}%
+
+\newenvironment{gre@format@lowchoralsign}%
+  {\begingroup}%
+  {\endgroup}%
+
+\newenvironment{gre@format@highchoralsign}%
+  {\begingroup}%
+  {\endgroup}%
+
+\newenvironment{gre@format@firstsyllableinitial}%
+  {\begingroup}%
+  {\endgroup}%
+
+\newenvironment{gre@format@firstsyllable}%
+  {\begingroup}%
+  {\endgroup}%
+
+\def\gre@changeformat#1#2[#3]{%
+  \renewenvironment{gre@format@#1}{\begingroup#2}{#3\endgroup}%
+}%
 
 % keep this here, but \writemode may be deprecated at some point
 \def\writemode#1{%
