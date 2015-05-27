@@ -1378,6 +1378,10 @@
   \global\let\grehyph\grezerhyph %
 }%
 
+% macro to force hyphenation of all syllables.
+\def\greforcehyphen{
+  \global\grechangedim{maximumspacewithoutdash}{-16383.99999pt}{0}
+}
 
 % We load the default space configuration.
 \GreLoadSpaceConf{default}%
