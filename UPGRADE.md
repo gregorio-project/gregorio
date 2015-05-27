@@ -64,7 +64,15 @@ Changing the formatting of text elements of the score (the initial, translations
     - `lowchoralsign`: for formatting low choral signs
     - `highchoralsign`: for formatting high choral signs
     The second argument, also required, is the code necessary to turn on the formatting.  The third argument, optional and enclosed in square braces (`[` and `]`), is the code necessary to turn off the formatting (e.g. if the code to turn on the formatting contains a `\begin{environment}` then the code to turn it off must have the matching `\end{environment}`.  The third argument is optional because not all formatting commands have explicit off switches.
-    While the old way of changing the formats is still supported, you should switch to this new method to future proof your scores. 
+
+While the old way of changing the formats is still supported, you should switch to this new method to future proof your scores.
+
+Examples: Let's say you previously had the following in your LaTeX document:
+    \renewcommand{\greabovelinetextstyle}[1]{{\small\it #1}}
+This would have made the text which was wrapped with `<alt></alt>` in your gabc file appear small and italicized in your score.  To update this to the new system you would replace the above line with the following:
+    \grechangeformat{abovelinetext}{\small\it}
+
+    
 
 ## 3.0
 ### TeX Live 2013
