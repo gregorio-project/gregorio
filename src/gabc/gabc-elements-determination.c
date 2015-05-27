@@ -62,13 +62,15 @@ static inline bool is_puncta_descendens(char glyph)
  */
 
 static void close_element(gregorio_element **current_element,
-        gregorio_glyph *first_glyph)
+        gregorio_glyph **const first_glyph,
+        const gregorio_glyph *const current_glyph)
 {
-    gregorio_add_element(current_element, first_glyph);
-    if (first_glyph && first_glyph->previous) {
-        first_glyph->previous->next = NULL;
-        first_glyph->previous = NULL;
+    gregorio_add_element(current_element, *first_glyph);
+    if (*first_glyph && (*first_glyph)->previous) {
+        (*first_glyph)->previous->next = NULL;
+        (*first_glyph)->previous = NULL;
     }
+    *first_glyph = current_glyph->next;
 }
 
 /*
@@ -82,7 +84,8 @@ static inline void cut_before(gregorio_glyph *current_glyph,
                               gregorio_element **current_element)
 {
     if (*first_glyph != current_glyph) {
-        close_element(current_element, *first_glyph);
+        close_element(current_element, first_glyph, current_glyph);
+        // yes, this is changing value close_element sets for first_glyph
         *first_glyph = current_glyph;
         *previous_glyph = current_glyph;
     }
@@ -110,7 +113,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
     // first_glyph
     gregorio_glyph *previous_glyph = current_glyph;
     // a char that is necessary to determine some cases
-    char do_not_cut = 0;
+    bool do_not_cut = false;
     // a char that is necesarry to determine the type of the current_glyph
     char current_glyph_type;
 
@@ -125,7 +128,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
         if (current_glyph->type != GRE_GLYPH) {
             if (current_glyph->type == GRE_MANUAL_CUSTOS) {
                 first_element = current_element;
-                close_element(&current_element, first_glyph);
+                close_element(&current_element, &first_glyph, current_glyph);
                 current_glyph = current_glyph->next;
                 continue;
             }
@@ -133,30 +136,27 @@ static gregorio_element *gabc_det_elements_from_glyphs(
             if (current_glyph->type == GRE_NATURAL
                 || current_glyph->type == GRE_FLAT
                 || current_glyph->type == GRE_SHARP) {
-                if (current_glyph->next) {
-                    current_glyph = current_glyph->next;
-                    continue;
-                } else {
+                if (!current_glyph->next) {
                     first_element = current_element;
-                    close_element(&current_element, first_glyph);
-                    current_glyph = current_glyph->next;
-                    continue;
+                    close_element(&current_element, &first_glyph, current_glyph);
                 }
+                current_glyph = current_glyph->next;
+                continue;
             }
             // we must not cut after a zero_width_space
             if (current_glyph->type == GRE_SPACE
                 && current_glyph->u.misc.unpitched.info.space == SP_ZERO_WIDTH) {
                 if (!current_glyph->next) {
-                    close_element(&current_element, first_glyph);
+                    close_element(&current_element, &first_glyph, current_glyph);
                 }
                 current_glyph = current_glyph->next;
-                do_not_cut = 1;
+                do_not_cut = true;
                 continue;
             }
             // we must not cut after a zero_width_space
             if (current_glyph->type == GRE_TEXVERB_GLYPH) {
                 if (!current_glyph->next) {
-                    close_element(&current_element, first_glyph);
+                    close_element(&current_element, &first_glyph, current_glyph);
                 }
                 current_glyph = current_glyph->next;
                 continue;
@@ -198,7 +198,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
             if (!do_not_cut) {
                 cut_before(current_glyph, &first_glyph, &previous_glyph,
                            &current_element);
-                do_not_cut = 1;
+                do_not_cut = true;
             } else {
                 previous_glyph = current_glyph;
             }
@@ -206,7 +206,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
         case G_PUNCTA_DESCENDENS:
             // we don't cut before, so we don't do anything
             if (do_not_cut) {
-                do_not_cut = 0;
+                do_not_cut = false;
             }
             break;
         case G_ONE_NOTE:
@@ -230,7 +230,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
             // else we fall in the default case
         default:
             if (do_not_cut) {
-                do_not_cut = 0;
+                do_not_cut = false;
             } else {
                 cut_before(current_glyph, &first_glyph, &previous_glyph,
                            &current_element);
@@ -243,10 +243,10 @@ static gregorio_element *gabc_det_elements_from_glyphs(
             first_element = current_element;
         }
         if (!current_glyph->next) {
-            close_element(&current_element, first_glyph);
+            close_element(&current_element, &first_glyph, current_glyph);
         }
         current_glyph = current_glyph->next;
-    }                           // end of while
+    } // end of while
 
     /*
      * we must determine the first element, that we will return 
