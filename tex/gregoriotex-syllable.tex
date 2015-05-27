@@ -729,32 +729,33 @@
     \fi %
     #9\relax %
     \grepenalty{\greendafterbaraltpenalty }% TODO: isn't it a bit buggy?
-    \gre@debugmsg{ifdim}{ temp@skip@two < -wd(GreSyllablenotes)}
-    \ifdim\gre@skip@temp@two < -\wd\GreSyllablenotes %
-      \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}
-      \ifdim\gre@skip@nextbegindifference > 0 pt%
-        \gre@skip@temp@one = \gre@skip@interwordspacetext%
-        \grehskip\gre@skip@temp@one %
-      \else % \ifdim\gre@skip@nextbegindifference > 0 pt
-        \gre@skip@temp@one = \gre@skip@interwordspacetext%
-        \grehskip\gre@skip@temp@one %
-      \fi %
-    \else 
-      %\ifdim\gre@skip@temp@two < -\wd\GreSyllablenotes
-        %\gre@skip@temp@two=\wd\GreSyllablenotes 
-        %\divide\gre@skip@temp@two by 2\relax 
-        %\kern -\gre@skip@temp@two 
-      \gre@skip@temp@two=\gre@skip@temp@three %
-      \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
-      \ifdim\gre@skip@nextbegindifference < 0 pt%
-        \advance\gre@skip@temp@two by \gre@skip@nextbegindifference %
-      \fi %
-      \gre@debugmsg{ifdim}{ temp@skip@two > -wd(GreSyllablenotes)}%
-      \ifdim\gre@skip@temp@two > -\wd\GreSyllablenotes %
-        \kern\gre@skip@temp@two %
-      \else % \ifdim\gre@dimen@temp@five > -\wd\GreSyllablenotes 
-        \gre@skip@temp@one = -\wd\GreSyllablenotes %
-        \grehskip\gre@skip@temp@one%
+    \gre@debugmsg{ifdim}{ temp@skip@two < -wd(GreSyllablenotes)}%
+    % end of same code as syllable
+    \ifnum\grelastoflinecount=1\relax %
+      \global\grelastoflinecount=2\relax %
+    \else %
+      \ifdim\gre@skip@temp@two < -\wd\GreSyllablenotes %
+        \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
+        \ifdim\gre@skip@nextbegindifference > 0 pt%
+          \gre@skip@temp@one = \gre@skip@interwordspacetext %
+          \grehskip\gre@skip@temp@one %
+        \else % \ifdim\gre@skip@nextbegindifference > 0 pt
+          \gre@skip@temp@one = \gre@skip@interwordspacetext %
+          \grehskip\gre@skip@temp@one %
+        \fi %
+      \else %
+        \gre@skip@temp@two=\gre@skip@temp@three %
+        \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
+        \ifdim\gre@skip@nextbegindifference < 0 pt%
+          \advance\gre@skip@temp@two by \gre@skip@nextbegindifference %
+        \fi %
+        \gre@debugmsg{ifdim}{ temp@skip@two > -wd(GreSyllablenotes)}%
+        \ifdim\gre@skip@temp@two > -\wd\GreSyllablenotes %
+          \kern\gre@skip@temp@two %
+        \else % \ifdim\gre@dimen@temp@five > -\wd\GreSyllablenotes 
+          \gre@skip@temp@one = -\wd\GreSyllablenotes %
+          \grehskip\gre@skip@temp@one%
+        \fi %
       \fi %
     \fi %
   % then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
@@ -787,7 +788,7 @@
     \fi %
     %and that's it !!
   \fi %
-  \grefirstsyllableofword=1 %
+  \grefirstsyllableofword=1\relax %
   \global\gre@dimen@notesaligncenter= 0 pt\relax % very important, see flat and natural
   \greunsetfixedtextformat %
   \ifnum\greblockcusto=1\relax\ifnum\greinsidediscretionary=0\relax %
