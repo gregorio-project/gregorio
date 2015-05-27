@@ -39,7 +39,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
     - `initial`: for formatting normal initials
     - `biginitial`: for formatting big (2-line) initials
     - `translation`: for formatting translation text
-    - `abovelinetext`: for formatting above line text (`alt` in gabc)
+    - `abovelinestext`: for formatting above line text (`alt` in gabc)
     - `normalstafflines`: for formatting the full length staff lines
     - `additionalstafflines`: for formatting the short lines behind notes above or below the staff.  This format defaults to inheriting changes to `normalstafflines`.
     - `lowchoralsign`: for formatting low choral signs

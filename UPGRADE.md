@@ -58,7 +58,7 @@ Changing the formatting of text elements of the score (the initial, translations
     - `greinitial`: for formatting normal initials
     - `grebiginitial`: for formatting big (2-line) initials
     - `translation`: for formatting translation text
-    - `abovelinetext`: for formatting above line text (`alt` in gabc)
+    - `abovelinestext`: for formatting above line text (`alt` in gabc)
     - `normalstafflines`: for formatting the full length staff lines
     - `additionalstafflines`: for formatting the short lines behind notes above or below the staff.  This format defaults to inheriting changes to `normalstafflines`.
     - `lowchoralsign`: for formatting low choral signs
