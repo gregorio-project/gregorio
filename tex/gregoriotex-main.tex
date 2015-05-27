@@ -1383,6 +1383,11 @@
   \global\grechangedim{maximumspacewithoutdash}{-16383.99999pt}{0}
 }
 
+% macro to force hyphenation of all syllables.
+\def\greautohyphen{
+  \global\grechangedim{maximumspacewithoutdash}{0.02 cm}{0}
+}
+
 % We load the default space configuration.
 \GreLoadSpaceConf{default}%
 
