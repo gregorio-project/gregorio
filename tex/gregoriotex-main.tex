@@ -760,7 +760,7 @@
     \advance\gre@dimen@temp@five by -\wd\GreTempwidth %
     \divide\gre@dimen@temp@five by 2\relax %
     \kern\gre@dimen@temp@five %
-    \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@format@translation\gretranslationformat{#1}\endtranslationformat\hss}}}%
+    \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@format@translation\gretranslationformat{#1}\endgre@format@translation\hss}}}%
     \kern-\gre@dimen@temp@five %
   \fi %
 }%
@@ -770,7 +770,7 @@
     \grebeginnlbarea{0}{1}%
   \fi %
   \gregoriocenterattr=1\relax %
-  \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@format@translation\gretranslationformat{#1}\endtranslationformat\hss}}\kern 0pt}%
+  \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@format@translation\gretranslationformat{#1}\endgre@format@translation\hss}}\kern 0pt}%
   \unsetluatexattribute{\gregoriocenterattr}%
   \relax %
 }%
