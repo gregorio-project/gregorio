@@ -244,18 +244,27 @@ Macro for calculating the additional space needed below the first line of the sc
   & 0 & there is no translation below the text
 \end{argtable}
 
-\macroname{\textbackslash GreFirstSyllable}{\#1}{gregoriotex-syllable.tex}
-Macro to impose styling on the first syllable of a score (except for the score initial).
+\macroname{\textbackslash GreFirstSyllable}{\{\#1\}}{gregoriotex-syllble.tex}
+A macro which is called with the text of the first syllable, excluding the
+initial of the score.  This macro may be redefined to style the first syllable
+appropriately.  This macro may be called up to three times: for the letters
+before the centered letters, for the centered letters, and for the letters
+after the centered letters.
 
 \begin{argtable}
-  \#1 & string & The syllable to be styled.
+  \#1 & string & Text from the first syllable.
 \end{argtable}
 
-\macroname{\textbackslash GreFirstSyllableInitial}{\#1}{gregoriotex-syllable.tex}
-Macro to impose styling on the first letter of the first syllable of a score which is not the score initial (\ie, the second letter of the score for scores with initials, the first letter of the score for scores without them).
+\macroname{\textbackslash GreFirstSyllableInitial}{\{\#1\}}{gregoriotex-syllble.tex}
+A macro which is called with the first letter of the first syllable which is
+not the initial of the score.  If the \texttt{initial-style} is \texttt{0}, the
+first letter of the syllable will be passed.  If the \texttt{initial-style} is
+\texttt{1} or \texttt{2}, the \emph{second} letter will be passed.  This macro
+may be redefined to style the first letter appropriately.
 
 \begin{argtable}
-  \#1 & character & The character to be styled.
+  \#1 & string & The first letter of the first syllable which is not the
+                 initial of the score.
 \end{argtable}
 
 \macroname{\textbackslash GreFlat}{\#1\#2}{gregoriotex-signs.tex}
