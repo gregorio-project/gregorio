@@ -729,11 +729,11 @@
     \fi %
     #9\relax %
     \grepenalty{\greendafterbaraltpenalty }% TODO: isn't it a bit buggy?
-    \gre@debugmsg{ifdim}{ temp@skip@two < -wd(GreSyllablenotes)}%
     % end of same code as syllable
     \ifnum\grelastoflinecount=1\relax %
       \global\grelastoflinecount=2\relax %
     \else %
+      \gre@debugmsg{ifdim}{ temp@skip@two < -wd(GreSyllablenotes)}%
       \ifdim\gre@skip@temp@two < -\wd\GreSyllablenotes %
         \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
         \ifdim\gre@skip@nextbegindifference > 0 pt%
@@ -754,7 +754,7 @@
           \kern\gre@skip@temp@two %
         \else % \ifdim\gre@dimen@temp@five > -\wd\GreSyllablenotes 
           \gre@skip@temp@one = -\wd\GreSyllablenotes %
-          \grehskip\gre@skip@temp@one%
+          \grehskip\gre@skip@temp@one %
         \fi %
       \fi %
     \fi %
@@ -768,14 +768,14 @@
       \xdef\gremustdotranslationcenterend{0}%
     \fi %
     \gre@skip@temp@one = -\wd\GreSyllabletext %
-    \kern\gre@skip@temp@one%
-    \gre@skip@temp@one = -\gre@dimen@begindifference%
+    \kern\gre@skip@temp@one %
+    \gre@skip@temp@one = -\gre@dimen@begindifference %
     \kern\gre@skip@temp@one %
     #9%
     \gre@debugmsg{ifdim}{ enddifference < 0pt}%
     \ifdim\gre@dimen@enddifference <0pt%
       %% important, else we are not really at the end of the syllable
-      \gre@skip@temp@one = -\gre@dimen@enddifference%
+      \gre@skip@temp@one = -\gre@dimen@enddifference %
       \kern\gre@skip@temp@one %
     \fi%
     % end of same code as syllable
