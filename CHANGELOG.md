@@ -11,7 +11,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The dot in a space directly above a punctum in a descending neume is now placed slightly higher in the space (see [#386](https://github.com/gregorio-project/gregorio/issues/386) and [Gna! bug 21737](https://gna.org/bugs/?21737)).
 - Choral signs are now positioned correctly around porrectus and torculus resupinus (see [#387](https://github.com/gregorio-project/gregorio/issues/387) and [Gna! bug 22025](https://gna.org/bugs/?22025)).
 - Gregorio will now try harder to select an appropriate pitch for an automatic custos (`z0`) on a clef change (see [#446](https://github.com/gregorio-project/gregorio/issues/446)).  If results are not satisfactory, use a manual custos (`+`) to select a pitch manually.
-- The final line of a score may now be forced to be fully justified (rather than ragged) by appending a `z` to the final `:` or `::` of the score (see [#43](https://github.com/gregorio-project/gregorio/issues/43)).
 
 ### Changed
 - The spacing algorithm has completely changed, expect your scores to look quite different (better we hope).
@@ -46,6 +45,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Support for `lualatex -recorder`.  Autocompiled gabc and gtex files will now be properly recorded so that programs like `latexmk -recorder` can detect the need to rebuild the PDF when a gabc file changes.
 - A vertical episema may now be forced to appear above or below a note.  In gabc, use `'0` for the vertical episema to appear below and `'1` for the vertical episema to appear above (see [#385](https://github.com/gregorio-project/gregorio/issues/385)).
 - The first syllable and first letter of the first syllable that is *not* interpreted as the initial of the score are now passed to macros that allow them to be styled from TeX.  The first syllable is passed to `\GreFirstSyllable#1` and the first letter of the first syllable is passed to `\GreFirstSyllableInitial#1`.
+- The final line of a score may now be forced to be fully justified (rather than ragged) using `\grejustifiedlastline` before including the score.  Use `\greraggedlastline` to switch back to a ragged last line.  See [#43](https://github.com/gregorio-project/gregorio/issues/43).
 
 ### Removed
 - GregorioXML and OpusTeX output
