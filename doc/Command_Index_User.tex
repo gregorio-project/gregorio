@@ -185,6 +185,13 @@ Command to change format (styling) of a score element.
   \#3 & \TeX\ code & Optional.  The code necessary to turn off the formatting (e.g. if the code to turn on the formatting contains a `\begin{environment}` then the code to turn it off must have the matching `\end{environment}`.
 \end{argtable}
 
+Examples:\par\medskip
+\begin{latexcode}
+  \grechangeformat{translation}{\it\bf} % Works for both PlainTeX and LaTeX this would make the translations bold and italic
+  \grechangeformat{abovelinetext}{\begin{small}\begin{italic}}[\end{italic}\end{small}] % LaTeX only, this would make the above lines text small and italic
+  \grechangeformat{initial}{\fontsize{36}{36}\selectfont} % This would make the initial print in 36pt font.
+\end{latexcode}
+
 \subsubsection{Alternate glyph drawings}
 
 \macroname{\textbackslash grechangeglyph}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-main.tex}
