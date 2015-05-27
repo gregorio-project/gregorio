@@ -192,6 +192,8 @@ Examples:\par\medskip
   \grechangeformat{initial}{\fontsize{36}{36}\selectfont} % This would make the initial print in 36pt font.
 \end{latexcode}
 
+Each element will be typeset within an isolated group to prevent formatting commands from leaking from one element to the next.  As a result, if a formatting command has an ``on-switch'' but no ``off-switch'' (like \verb=\it= or \verb=\bf= in the first example above) it is not necessary to encapsulate them within a \verb=\begingroup= and \verb=\endgroup=.  As a result, the third argument is only necessary for formatting commands which come in pairs (like environments).
+
 \subsubsection{Alternate glyph drawings}
 
 \macroname{\textbackslash grechangeglyph}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-main.tex}
