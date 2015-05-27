@@ -135,11 +135,11 @@
 
 \newenvironment{gre@format@translation}%
   {\begingroup\begin{italic}}%
-  {\endgroup\end{italic}}%
+  {\end{italic}\endgroup}%
 
 \newenvironment{gre@format@abovelinestext}%
   {\begingroup\begin{small}\begin{italic}}%
-  {\endgroup\end{italic}\end{small}}%
+  {\end{italic}\end{small}\endgroup}%
 
 \newenvironment{gre@format@normalstafflines}%
   {\begingroup}%
@@ -147,7 +147,7 @@
 
 \newenvironment{gre@format@additionalstafflines}%
   {\begingroup\begin{gre@format@normalstafflines}}%
-  {\endgroup\end{gre@format@normalstafflines}}%
+  {\end{gre@format@normalstafflines}\endgroup}%
 
 \newenvironment{gre@format@lowchoralsign}%
   {\begingroup}%
