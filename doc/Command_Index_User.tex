@@ -156,17 +156,11 @@ may be used to specify a gabc \texttt{initial-style}, which defaults to
 
 \macroname{\textbackslash greforcehyphen}{}{gregoriotex.tex}
 Tell Gregorio\TeX\ to force the appearance of hyphens between all
-syllables in polysyllabic words.  This is done by overriding \texttt{maximumspacewithoutdash} so subsequent changes to this dimension will override this command.
-
-Note: This command only affects the hyphens within a score.  Hyphens
-elsewhere in a document are unaffected.
+syllables in polysyllabic words in a score.  This is done by overriding \texttt{maximumspacewithoutdash} so subsequent changes to this dimension will override this command.
 
 \macroname{\textbackslash greautohyphen}{}{gregoriotex.tex}
 Tell Gregorio\TeX\ to determine the appearance of hyphens between
-syllables in polysyllabic words based on spacing.  This is done by setting \texttt{maximumspacewithoutdash} back to the value found in \texttt{gsp-default.tex}.
-
-Note: This command only affects the hyphens within a score.  Hyphens
-elsewhere in a document are unaffected.
+syllables in polysyllabic words in a score based on spacing.  This is done by setting \texttt{maximumspacewithoutdash} back to the value found in \texttt{gsp-default.tex}.
 
 \subsubsection{Styling}
 
