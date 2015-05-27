@@ -48,6 +48,10 @@ Note: `3`, `4`, and `5` encompass a new feature and are listed here only for com
 - `lowchoralsignshift` has been renamed to `choralsigndownshift`.
 - `highchoralsignshift` has been renamed to `choralsignupshift` and its sign inverted.
 
+### Colored lines
+
+Since `\grecoloredlines` now takes a named color as it's argument, if you were using it to custom color your lines, you must now define a named color using `\definecolor{yourcolorname}{RGB}{#,#,#}` and then pass that color to the command: `\grecoloredlines{yourcolorname}`.  The `\redlines` command continues to work as it did before, but will now respond to a change to `gregoriocolor` the way colored text does.
+
 ### Formating environments
 
 Changing the formatting of text elements of the score (the initial, translations, etc.) formerly required the user to redefine a command which took an argument while changing the formatting of the staff lines had a command specialized to that purpose.  All formats can now be changed via the `\grechangeformat` command.  This command takes two or three arguments.  The first argument, required, is the format to be altered.  The defined formats are:
