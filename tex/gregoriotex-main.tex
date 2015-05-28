@@ -679,7 +679,7 @@
       \vskip\gre@dimen@additionalbottomspace %
       \vskip\gre@dimen@spacebeneathtext %
       \vskip\gre@dimen@currenttranslationheight %
-      \endgre@format@normalstafflines
+      \endgre@format@normalstafflines %
     }%
     \hss%
   }%
@@ -1222,7 +1222,7 @@
 }%
 
 \def\GreSetStaffLinesFormat#1{%
-  \gre@warning{\protect\GreSetStaffLinesFormat\space is deprecated.\MessageBreak Use \protect\grechangeformat{normalstafflines} instead.}
+  \gre@warning{\protect\GreSetStaffLinesFormat\space is deprecated.\MessageBreak Use \protect\grechangeformat{normalstafflines} instead.}%
   \gre@changeformat{normalstafflines}{#1}[\relax]%
   \relax %
 }%
