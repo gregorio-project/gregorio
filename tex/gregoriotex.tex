@@ -46,12 +46,12 @@
 
 %% The following two functions are defined for backwards compatibility.  They will eventually be removed.
 \def\greinitialformat#1{%
-  {\grefontofinitial #1}%
+  {\gre@fontofinitial #1}%
   \relax %
 }%
 
 \def\grebiginitialformat#1{%
-  {\grefontofgrebiginitial #1}%
+  {\gre@fontofbiginitial #1}%
   \relax %
 }
 
@@ -113,12 +113,23 @@
   \begingroup%
   \relax%
 }%
-\def\endhighlowchoralsignformat{\endgroup}%
+\def\endgre@format@highchoralsign{\endgroup}%
+
+\def\gre@format@firstsyllableinitial{%
+  \begingroup%
+  \relax%
+}%
+\def\endgre@format@firstsyllableinitial{\endgroup}%
+
+\def\gre@format@firstsyllable{%
+  \begingroup%
+  \relax%
+}%
+\def\endgre@format@firstsyllable{\endgroup}%
 
 \def\gre@changeformat#1#2[#3]{%
   \gdef\csname gre@format@#1\endcsname{\begingroup#2}%
   \gdef\csname endgre@format@#1\endcsname{#3\endgroup}%
 }%
-
 
 \catcode`\@=\greoldcatcode
