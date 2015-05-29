@@ -397,7 +397,7 @@
 \def\gre@compute@bolshift#1#2{%
   % as the \gre@dimen@bolshift is computed from skips, we compute it in a
   % skip temp registry, and then "cast" it into a dimen
-  \gre@skip@temp@three=\gre@skip@spaceafterlineclef % TODO: or 0pt?
+  \gre@skip@temp@three=\gre@skip@spaceafterlineclef %
   \advance\gre@skip@temp@three by #1%
   % a little trick... we don't want to kern more than clefwidth minus minimalspaceatlinebeginning
   \advance\gre@dimen@clefwidth by -\gre@dimen@minimalspaceatlinebeginning %
@@ -407,22 +407,18 @@
   %% TODO: is following line really safe?
   \advance\gre@dimen@clefwidth by \gre@dimen@minimalspaceatlinebeginning %
   \advance\gre@skip@temp@three by -\gre@skip@spaceafterlineclef %
-  \ifdim\gre@skip@temp@three < #1%
-    \gre@skip@temp@three=\the #1%
+  \ifdim\gre@skip@temp@three < #1\relax %
+    \gre@skip@temp@three=\the #1\relax %
   \fi %
-  % Don't allow kern past the beginning of the first line with no initial
-  \ifnum#2=1%
-    \ifdim\gre@dimen@initialwidth = 0pt %
-      \ifnum\greknownline=1 %
-        \advance\gre@skip@temp@three by \gre@dimen@clefwidth %
-      \fi %
-    \fi %
-  \fi %
-  \ifdim\gre@skip@temp@three > 0pt%
-    \global\gre@dimen@bolshift=0pt%
+  \ifnum#2=1\fi % keep it due to a luatex bug, fixed in TL2015, TODO: remove later
+  \gre@debugmsg{bolshift}{ temp@three = \the\gre@skip@temp@three}%
+  \ifdim\gre@skip@temp@three > 0pt\relax %
+    \global\gre@dimen@bolshift=0pt\relax %
   \else %
     \global\gre@dimen@bolshift=\gre@skip@temp@three %
   \fi %
+  \gre@debugmsg{bolshift}{ bolshift = \the\gre@dimen@bolshift}%
+  \relax %
 }
 
 % dimen keeping the shift computed with next function
