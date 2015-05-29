@@ -62,74 +62,74 @@
 \font\gre@fontofbiginitial=pncr at 80pt%
 \font\gre@fontofinitial=pncr at 40pt%
 
-\def\gre@format@initial{%
+\def\gre@style@initial{%
   \begingroup%
   \gre@fontofinitial%
   \relax %
 }%
-\def\endgre@format@initial{\endgroup}%
+\def\endgre@style@initial{\endgroup}%
 
-\def\gre@format@biginitial{%
+\def\gre@style@biginitial{%
   \begingroup%
   \gre@fontofbiginitial%
   \relax %
 }%
-\def\endgre@format@biginitial{\endgroup}%
+\def\endgre@style@biginitial{\endgroup}%
 
-\def\gre@format@translation{%
+\def\gre@style@translation{%
   \begingroup%
   \it%
 }%
-\def\endgre@format@translation{\endgroup}%
+\def\endgre@style@translation{\endgroup}%
 
-\def\gre@format@abovelinestext{%
+\def\gre@style@abovelinestext{%
   \begingroup%
   \it%
 }%
-\def\endgre@format@abovelinestext{\endgroup}%
+\def\endgre@style@abovelinestext{\endgroup}%
 
-\def\gre@format@normalstafflines{%
+\def\gre@style@normalstafflines{%
   \begingroup%
   \relax%
 }%
-\def\endgre@format@normalstafflines{\endgroup}%
+\def\endgre@style@normalstafflines{\endgroup}%
 
-\def\gre@format@additionalstafflines{%
+\def\gre@style@additionalstafflines{%
   \begingroup%
-  \gre@format@normalstafflines%
+  \gre@style@normalstafflines%
 }%
-\def\endgre@format@additionalstafflines{%
-  \endgre@format@normalstafflines%
+\def\endgre@style@additionalstafflines{%
+  \endgre@style@normalstafflines%
   \endgroup%
 }%
 
-\def\gre@format@lowchoralsign{%
+\def\gre@style@lowchoralsign{%
   \begingroup%
   \relax%
 }%
-\def\endgre@format@lowchoralsign{\endgroup}%
+\def\endgre@style@lowchoralsign{\endgroup}%
 
-\def\gre@format@highchoralsign{%
+\def\gre@style@highchoralsign{%
   \begingroup%
   \relax%
 }%
-\def\endgre@format@highchoralsign{\endgroup}%
+\def\endgre@style@highchoralsign{\endgroup}%
 
-\def\gre@format@firstsyllableinitial{%
+\def\gre@style@firstsyllableinitial{%
   \begingroup%
   \relax%
 }%
-\def\endgre@format@firstsyllableinitial{\endgroup}%
+\def\endgre@style@firstsyllableinitial{\endgroup}%
 
-\def\gre@format@firstsyllable{%
+\def\gre@style@firstsyllable{%
   \begingroup%
   \relax%
 }%
-\def\endgre@format@firstsyllable{\endgroup}%
+\def\endgre@style@firstsyllable{\endgroup}%
 
-\def\gre@changeformat#1#2[#3]{%
-  \gdef\csname gre@format@#1\endcsname{\begingroup#2}%
-  \gdef\csname endgre@format@#1\endcsname{#3\endgroup}%
+\def\gre@changestyle#1#2[#3]{%
+  \gdef\csname gre@style@#1\endcsname{\begingroup#2}%
+  \gdef\csname endgre@style@#1\endcsname{#3\endgroup}%
 }%
 
 \catcode`\@=\greoldcatcode

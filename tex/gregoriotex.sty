@@ -99,7 +99,7 @@
 }
 
 \def\grecoloredlines#1{%
-  \gre@changeformat{normalstafflines}{\color[named]{#1}}[\relax]%
+  \gre@changestyle{normalstafflines}{\color[named]{#1}}[\relax]%
   \relax %
 }
 
@@ -111,7 +111,7 @@
 \let\redlines\greredlines
 
 \def\grenormallines{%
-  \gre@changeformat{normalstafflines}{\relax}[\relax]%
+  \gre@changestyle{normalstafflines}{\relax}[\relax]%
   \relax %
 }
 
@@ -125,48 +125,48 @@
 %% Formatting environments
 %%%%%%%%%%%%%%%%%%%%
 
-\newenvironment{gre@format@initial}%
+\newenvironment{gre@style@initial}%
   {\begingroup\fontsize{40}{40}\selectfont}%
   {\endgroup}%
 
-\newenvironment{gre@format@biginitial}%
+\newenvironment{gre@style@biginitial}%
   {\begingroup\fontsize{80}{80}\selectfont}%
   {\endgroup}%
 
-\newenvironment{gre@format@translation}%
+\newenvironment{gre@style@translation}%
   {\begingroup\begin{itshape}}%
   {\end{itshape}\endgroup}%
 
-\newenvironment{gre@format@abovelinestext}%
+\newenvironment{gre@style@abovelinestext}%
   {\begingroup\begin{small}\begin{itshape}}%
   {\end{itshape}\end{small}\endgroup}%
 
-\newenvironment{gre@format@normalstafflines}%
+\newenvironment{gre@style@normalstafflines}%
   {\begingroup}%
   {\endgroup}%
 
-\newenvironment{gre@format@additionalstafflines}%
-  {\begingroup\begin{gre@format@normalstafflines}}%
-  {\end{gre@format@normalstafflines}\endgroup}%
+\newenvironment{gre@style@additionalstafflines}%
+  {\begingroup\begin{gre@style@normalstafflines}}%
+  {\end{gre@style@normalstafflines}\endgroup}%
 
-\newenvironment{gre@format@lowchoralsign}%
+\newenvironment{gre@style@lowchoralsign}%
   {\begingroup}%
   {\endgroup}%
 
-\newenvironment{gre@format@highchoralsign}%
+\newenvironment{gre@style@highchoralsign}%
   {\begingroup}%
   {\endgroup}%
 
-\newenvironment{gre@format@firstsyllableinitial}%
+\newenvironment{gre@style@firstsyllableinitial}%
   {\begingroup}%
   {\endgroup}%
 
-\newenvironment{gre@format@firstsyllable}%
+\newenvironment{gre@style@firstsyllable}%
   {\begingroup}%
   {\endgroup}%
 
-\def\gre@changeformat#1#2[#3]{%
-  \renewenvironment{gre@format@#1}{\begingroup#2}{#3\endgroup}%
+\def\gre@changestyle#1#2[#3]{%
+  \renewenvironment{gre@style@#1}{\begingroup#2}{#3\endgroup}%
 }%
 
 % keep this here, but \writemode may be deprecated at some point

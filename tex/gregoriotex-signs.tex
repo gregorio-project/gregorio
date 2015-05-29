@@ -331,14 +331,14 @@
   \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
-    \gre@format@additionalstafflines %
+    \gre@style@additionalstafflines %
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\wd\GreTempsign %
     \advance\gre@dimen@temp@five by \gre@dimen@additionalcustoslineswidth %
     \kern-\gre@dimen@temp@five %
     \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight%
     \hss %
-    \endgre@format@additionalstafflines%
+    \endgre@style@additionalstafflines%
   }%
   \relax %
 }%
@@ -352,14 +352,14 @@
   \advance\gre@dimen@temp@five by -\gre@dimen@stafflineheight %
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
-    \gre@format@additionalstafflines %
+    \gre@style@additionalstafflines %
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\wd\GreTempsign %
     \advance\gre@dimen@temp@five by \gre@dimen@additionalcustoslineswidth %
     \kern-\gre@dimen@temp@five %
     \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight%
     \hss %
-    \endgre@format@additionalstafflines %
+    \endgre@style@additionalstafflines %
   }%
   \relax %
 }%
@@ -375,7 +375,7 @@
   \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
-    \gre@format@additionalstafflines %
+    \gre@style@additionalstafflines %
     \hss %
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\gre@dimen@additionalcustoslineswidth %
@@ -383,7 +383,7 @@
     \advance\gre@dimen@temp@five by \wd\GreTempsign %
     \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight%
     \hss %
-    \endgre@format@additionalstafflines%
+    \endgre@style@additionalstafflines%
   }%
   \relax %
 }%
@@ -397,7 +397,7 @@
   \advance\gre@dimen@temp@five by -\gre@dimen@stafflineheight %
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
-    \gre@format@additionalstafflines %
+    \gre@style@additionalstafflines %
     \hss %
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\gre@dimen@additionalcustoslineswidth %
@@ -405,7 +405,7 @@
     \advance\gre@dimen@temp@five by \wd\GreTempsign %
     \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight%
     \hss %
-    \endgre@format@additionalstafflines%
+    \endgre@style@additionalstafflines%
   }%
   \relax %
 }%
@@ -618,14 +618,14 @@
   \else %
     \gre@calculate@glyphraisevalue{#1}{10}%
   \fi %
-  \raise\gre@dimen@glyphraisevalue\hbox{{\gre@format@lowchoralsign\grelowchoralsignstyle{#2}\endgre@format@lowchoralsign}}%
+  \raise\gre@dimen@glyphraisevalue\hbox{{\gre@style@lowchoralsign\grelowchoralsignstyle{#2}\endgre@style@lowchoralsign}}%
   \relax %
 }%
 
 \def\grehighchoralsign#1#2#3{%
   \grenobreak %
-  \grevepisemusorrare{#1}{#3}{}{3}{{\gre@format@highchoralsign\grehighchoralsignstyle{#2}\endgre@format@highchoralsign}}%
-  %\grehepisorline{#1}{#3}{0}{4}{{\gre@format@highchoralsign\grehighchoralsignstyle{#2}\endgre@format@highchoralsign}}
+  \grevepisemusorrare{#1}{#3}{}{3}{{\gre@style@highchoralsign\grehighchoralsignstyle{#2}\endgre@style@highchoralsign}}%
+  %\grehepisorline{#1}{#3}{0}{4}{{\gre@style@highchoralsign\grehighchoralsignstyle{#2}\endgre@style@highchoralsign}}
   \relax %
 }%
 
@@ -947,9 +947,9 @@
 \def\greadditionalline#1#2#3{%
   \ifnum\greremovelinescount=0\relax %
     \xdef\gresavedglyphraise{\the\gre@dimen@glyphraisevalue}%
-    \gre@format@additionalstafflines %
+    \gre@style@additionalstafflines %
     \grehepisorline{\gre@pitch@a}{#1}{#2}{#3}{f}%
-    \endgre@format@additionalstafflines%
+    \endgre@style@additionalstafflines%
     \gre@dimen@glyphraisevalue=\gresavedglyphraise %
   \fi %
   \relax %

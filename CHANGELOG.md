@@ -35,7 +35,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
   - `lowchoralsignshift` is now `choralsigndownshift`.
   - `highchoralsignshift` is now `choralsignupshift` and its sign is now inverted.
 - `\grecoloredlines` now takes a single argument, a named color, instead of the three components of an RGB color.  As a result, `\redlines` can now use `gregoriocolor`, making the red staff lines consistent with the text, even when the user teaks `gregoriocolor`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
-- All formats can now be changed via the `\grechangeformat` command.  This replaces the mixed system of styling commands which could be redefined for some elements and specialized commands for applying formatting to others.  See GregorioRef for details.
+- Style for score elements can now be changed via the `\grechangestyle` command.  This replaces the mixed system of styling commands which could be redefined for some elements and specialized commands for applying styles to others.  See GregorioRef for details.
 
 ### Added
 - With thanks to Jakub Jelínek, St. Gallen style adiastematic notation is now handled through [nabc syntax](http://gregoriochant.org/dokuwiki/doku.php/language) (see GregorioNabcRef.pdf for details and [the new example](examples/FactusEst.gabc)). Only one line above the notes is currently handled. This is a preview, backward incompatible change are possible in future releases.
