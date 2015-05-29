@@ -470,10 +470,12 @@
   % So, at beginning of lines, we will have shifted left, and in middle of lines
   % we will have shifted right and left, thus cancelling... Very easy trick, but
   % took me years to find it!
-  \ifnum\gredisableeolshifts=0\relax%
+  \ifnum\gredisableeolshifts=0\relax %
     \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
-    \kern -\gre@dimen@bolshift %
-    \grenobreak %
+    \ifnum\grelastoflinecount=2\else %
+      \kern -\gre@dimen@bolshift %
+      \grenobreak %
+    \fi %
     \hbox to 0pt{}%
     \grenobreak %
     \kern\gre@dimen@bolshift %
