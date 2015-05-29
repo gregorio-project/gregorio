@@ -55,7 +55,7 @@
     \catcode`\@=11{}%
     \doneume%
 }
-    
+
 \def\doneume#1{%
     \vbox{\hbox{\vspace{1mm}}\hbox{\noindent\gregorionabcchar{#1}\hspace{1mm}}%
     \hbox{\vspace{1mm}}\hbox{\noindent{\fontsize{6}{6}\texttt{#1}\hspace{1mm}}}}%
@@ -68,7 +68,7 @@
     \catcode`\@=11{}%
     \doneumer%
 }
-    
+
 \def\doneumer#1{%
     \vbox{\hbox{\vspace{1mm}}\hbox{\noindent\hspace{8mm}\gregorionabcchar{#1}\hspace{1mm}}%
     \hbox{\vspace{1mm}}\hbox{\noindent{\fontsize{6}{6}\texttt{#1}\hspace{1mm}}}}%
@@ -81,7 +81,7 @@
     \catcode`\@=11{}%
     \dosneume%
 }
-    
+
 \def\dosneume#1{%
     \font\gregorionabcfont={name:gregall} at 6pt\gregorionabcfont\gregorionabcstyle%
     \directlua{tex.sprint(gregoriotex.nabc_font_tables["gregall"]["\luatexluaescapestring{#1}"] or "")}%
@@ -123,7 +123,7 @@ pressus & \neume{pr}\neume{pi} & \neume{prlsc2}\neume{pr-lsc2}\neume{prlst2} & \
 & & \neume{pilsc2}\neume{pilst2} & & & & & & \neume{or>} \\
 \vbox{\hbox{virga}\hbox{strata}} & \neume{vs} & \neume{vslsc3}\neume{vslst2} & \neume{vs-} & & & & \neume{vs>} & \neume{ta>} \\
 oriscus & \neume{or} & & & & & & \neume{or>} & \\
-salicus & \neume{sa}\neume{sa1} & \neume{salsfr1}\neume{saM1lsfr1} & \neume{sa-}\neume{sa-1} & & \neume{saG} & \neume{saM1}\neume{saM2} & \neume{sa>}\neume{sa->1} & \neume{pe>2} \\
+salicus & \neume{sa}\neume{sa1} & \neume{salsfr1}\neume{saM1lsfr1} & \neume{sa-}\neume{sa-1} & & \neume{saG} & \neume{saM}\neume{saM1}\neume{saM2} & \neume{sa>}\neume{sa->1} & \neume{pe>2} \\
 pes quassus & \neume{pq} & \neume{pqlsfr1} & \neume{pq-} & & & & \neume{pq>} & \\
 quilisma & \neume{ql}\neume{qi} & & \neume{ql-}\neume{qi-} & & & & \neume{ql>}\neume{qi>} & \\ \hline
 \vbox{\hbox{pes}\hbox{stratus}} & \neume{pt} & & & & & & & \\ \hline
@@ -195,6 +195,13 @@ Romanum II, Solesmes, 2009 and \texttt{NR} for Nocturnale Romanum, Hartker
 Verlag, 2002, followed by page number which also contains the corresponding
 propers, antiphons or responsories.}
 
+\textit{Most of the glyphs taken from the e-codices Virtual Manuscript Library
+of Switzerland, \url{http://www.e-codices.unifr.ch/en}, with permission
+from Stiftsbibliothek, St. Gallen \url{http://www.stibi.ch/} and
+Stiftsbibliothek, Einsiedeln\\
+\url{http://kloster-einsiedeln.ch/}, the picture fragments from there are
+only present in the font source file to help drawing the glyphs.}
+
 {\footnotesize
 
 \begin{multicols}{2}
@@ -202,7 +209,7 @@ propers, antiphons or responsories.}
 \noindent\textbf{Cantatorium codex 359}
 
 \noindent
-\texttt{C1} = \url{http://www.e-codices.unifr.ch/en/csg/0359/1/x-large}\\
+\texttt{C1} = \url{http://www.e-codices.unifr.ch/en/download/csg-0359_001/max}\\
 \texttt{C25U} Universi \texttt{GT16}\\
 \texttt{C26A} Alleluia Ostende \texttt{GT16}\\
 \texttt{C26D} Dilexisti iustitiam \texttt{GT499}\\
@@ -285,12 +292,13 @@ propers, antiphons or responsories.}
 \noindent\textbf{Einsiedeln codex 121}
 
 \noindent
-\texttt{E1} = \url{http://www.e-codices.unifr.ch/en/sbe/0121/1/x-large}\\
+\texttt{E1} = \url{http://www.e-codices.unifr.ch/en/download/sbe-0121_001/max}\\
 \texttt{E2R} Respice in me \texttt{OT5}\\
 \texttt{E2D} Dominus dabit \texttt{GT17}\\
 \texttt{E3D} Deus tu convertens \texttt{GT20}\\
 \texttt{E10P} Prope est Dominus \texttt{GT35}\\
 \texttt{E11C} Confortamini \texttt{OT9}\\
+\texttt{E13P} Prope es tu \texttt{GT24}\\
 \texttt{E16B} Benedictus es\\
 \texttt{E20E} Exsulta satis \texttt{GT28}\\
 \texttt{E23T} Tollite portas \texttt{OT14}\\
@@ -323,6 +331,7 @@ propers, antiphons or responsories.}
 \texttt{E195D} Dominus Iesus \texttt{GT165}\\
 \texttt{E205R} Resurrexi \texttt{GT196}\\
 \texttt{E248V} Viri Galilaei \texttt{GT235}\\
+\texttt{E255S} Spiritus Domini \texttt{GT252}\\
 \texttt{E256C} Confirma hoc \texttt{OT79}\\
 \texttt{E262S} Sapientiam sanctorum \texttt{GT452}\\
 \texttt{E272M} Mihi autem nimis \texttt{OT128}\\
@@ -331,16 +340,27 @@ propers, antiphons or responsories.}
 \texttt{E327O} Oravi Deum meum \texttt{OT107}\\
 \texttt{E324R} Respice, Domine \texttt{GT320}\\
 \texttt{E336I} In voluntate tua \texttt{GT346}\\
-\texttt{E339S} Si iniquitates \texttt{GT350}
+\texttt{E339S} Si iniquitates \texttt{GT350}\\
+\texttt{E373B} Benedictus es \texttt{GT372}
 
 \noindent\textbf{Hartker codex 390/391}
 
 \noindent
-\texttt{H1} = \url{http://www.e-codices.unifr.ch/en/csg/0390/1/x-large}\\
-\texttt{H195} = \url{http://www.e-codices.unifr.ch/en/csg/0391/1/x-large}\\
+\texttt{H1} = \url{http://www.e-codices.unifr.ch/en/download/csg-0390_001/max}\\
+\texttt{H195} = \url{http://www.e-codices.unifr.ch/en/download/csg-0391_001/max}\\
+\texttt{H16A} Aspiciebam in visu \texttt{NR111}\\
+\texttt{H16M} Missus est Gabriel \texttt{NR111}\\
+\texttt{H16V} Ave Maria \texttt{NR113}\\
+\texttt{H23E} Egredietur Dominus de Samaria \texttt{NR129}\\
+\texttt{H25E} Ecce mitto Angelum \texttt{AM201}\\
+\texttt{H26G} Grata facta est \texttt{NR25*}\\
 \texttt{H28Q} Qui venturus est \texttt{NR134}\\
+\texttt{H29E} Ecce radix Jesse \texttt{NR137}\\
+\texttt{H32N} Nascetur nobis \texttt{NR149}\\
 \texttt{H33I} Iuravi dicit Dominus \texttt{NR151}\\
+\texttt{H35G} Germinaverunt campi \texttt{NR144}\\
 \texttt{H36A} Adnuntiatum est\\
+\texttt{H48B} Beata et venerabilis\\
 \texttt{H50Q} Quem vidistis pastores \texttt{AM240}\\
 \texttt{H72V} Venit lumen tuum \texttt{AM290}\\
 \texttt{H72H} Hodie in Iordane \texttt{NR229}\\
@@ -374,10 +394,10 @@ propers, antiphons or responsories.}
 \noindent\textbf{St. Gall codex 339}
 
 \noindent
-\texttt{G1} = \url{http://www.e-codices.unifr.ch/en/csg/0339/33/x-large}\\
-\texttt{G56} = \url{http://www.e-codices.unifr.ch/en/csg/0339/88/x-large}\\
-\texttt{G57} = \url{http://www.e-codices.unifr.ch/en/csg/0339/88a/x-large}\\
-\texttt{G58} = \url{http://www.e-codices.unifr.ch/en/csg/0339/89/x-large}\\
+\texttt{G1} = \url{http://www.e-codices.unifr.ch/en/download/csg-0339_033/max}\\
+\texttt{G56} = \url{http://www.e-codices.unifr.ch/en/download/csg-0339_088/max}\\
+\texttt{G57} = \url{http://www.e-codices.unifr.ch/en/download/csg-0339_088a/max}\\
+\texttt{G58} = \url{http://www.e-codices.unifr.ch/en/download/csg-0339_089/max}\\
 \texttt{G8E} Exulta satis \texttt{OT11}\\
 \texttt{G9A} Alleluia Veni Domine \texttt{GT36}\\
 \texttt{G11P} Puer natus est \texttt{GT47}\\
@@ -408,7 +428,7 @@ propers, antiphons or responsories.}
 \noindent\textbf{St. Gall codex 376}
 
 \noindent
-\texttt{N1} = \url{http://www.e-codices.unifr.ch/en/csg/0376/1/x-large}\\
+\texttt{N1} = \url{http://www.e-codices.unifr.ch/en/download/csg-0376_001/max}\\
 \texttt{N39H} Hodie cantandus est nobis\\
 \texttt{N53A} Audite fratres dilecti\\
 \texttt{N59N} Nativitatem venerandam\\
@@ -431,7 +451,7 @@ propers, antiphons or responsories.}
 \noindent\textbf{St. Gall codex 374}
 
 \noindent
-\texttt{A1} = \url{http://www.e-codices.unifr.ch/en/csg/0374/1/x-large}\\
+\texttt{A1} = \url{http://www.e-codices.unifr.ch/en/download/csg-0374_001/max}\\
 \texttt{A17T} Tui sunt caeli \texttt{OT18}\\
 \texttt{A22V} Vox in Rama \texttt{GT638}\\
 \texttt{A26F} Fili quid fecisti \texttt{GT51}\\
@@ -505,7 +525,8 @@ propers, antiphons or responsories.}
 \sneume{pe>1} & \texttt{pe>1} & \texttt{C27E} & eius\\
 \sneume{pe>2} & \texttt{pe>2} & \texttt{C71L} & misericordia\\
 \sneume{pe->} & \texttt{pe->} & \texttt{N296V} & tuorum\\
-\textit{Cf.} \sneume{ta>} & \texttt{ta>}\\ \hline
+\textit{Cf.} \sneume{ta>} & \texttt{ta>}\\
+\sneume{pe->1} & \texttt{pe->1} & \texttt{H35G} & Germinaverunt & \fbox{1.7x}\\ \hline
 & \multicolumn{3}{l}{\textbf{porrectus}} & \\
 \sneume{po} & \texttt{po} & \texttt{C139B} & super\\
 \sneume{polsc2} & \texttt{polsc2} & \texttt{C82R} & iudica\\
@@ -585,7 +606,12 @@ propers, antiphons or responsories.}
 \sneume{clSsut2} & \texttt{clSsut2} & \texttt{E51R} & suscipiant & \fbox{2.0x}\\
 \sneume{vi-sut3} & \texttt{vi-sut3} & \texttt{H269D} & dicentes\\
 \sneume{vi-su1sut1} & \texttt{vi-su1sut1} \textit{Cf.} \sneume{vi-su1sut1su2} & \multicolumn{3}{l}{\texttt{vi-su1sut1su2} minus subpunctis}\\
-\sneume{vi-su2sut1} & \texttt{vi-su2sut1} & \texttt{N296V} & alleluia\\ \hline
+\sneume{vi-su2sut1} & \texttt{vi-su2sut1} & \texttt{N296V} & alleluia\\
+\sneume{vi-su1sux1} & \texttt{vi-su1sux1} & \texttt{E373B} & Sanctum & \fbox{2.133x}\\
+\sneume{vi-sut4} & \texttt{vi-sut4} & \texttt{H16A} & servient & \fbox{1.7x}\\
+\sneume{vi-suu2} & \texttt{vi-suu2} & \texttt{H23E} & ecce & \fbox{1.7x}\\
+\sneume{vi-suu3} & \texttt{vi-suu3} & \texttt{H35G} & veniet & \fbox{1.7x}\\
+\sneume{visu2sux1} & \texttt{visu2sux1} & \texttt{H48B} & mater & \fbox{1.7x}\\ \hline
 & \multicolumn{3}{l}{\textbf{scandicus}} & \\
 \sneume{sc} & \texttt{sc} & \texttt{G11P} & imperium & \fbox{0.85x}\\
 \sneume{sc1} & \texttt{sc1} \textit{Cf.} \sneume{vipp4} & \multicolumn{3}{l}{\texttt{vipp4} minus first punctum}\\
@@ -648,6 +674,10 @@ propers, antiphons or responsories.}
 \sneume{pe-1sut1sux1} & \texttt{pe-1sut1sux1} & \texttt{H72V} & orta\\
 \sneume{peSsut3} & \texttt{peSsut3} & \texttt{C46O} & Jerusalem\\
 \sneume{pesut2} & \texttt{pesut2} & \texttt{H77S} & magi\\
+\sneume{peSsuw2} & \texttt{peSsuw2} & \texttt{E255S} & Domini & \fbox{2.133x}\\
+\sneume{peSsut1su2} & \texttt{peSsut1su2} & \texttt{E13P} & Domine & \fbox{2.133x}\\
+\sneume{pesu1sux1} & \texttt{pesu1sux1} & \texttt{H25E} & angelum & \fbox{1.7x}\\
+\sneume{pe-1su1suw1} & \texttt{pe-1su1suw1} & \texttt{H29E} & deprecabuntur & \fbox{1.7x}\\
 \sneume{pesu1sut1} & \texttt{pesu1sut1} \textit{Cf.} \sneume{pesu1sut3} & \multicolumn{3}{l}{\texttt{pesu1sut3} minus 2 tractulis}\\ \hline
 & \multicolumn{3}{l}{\textbf{scandicus flexus}} & \\
 \sneume{sf} & \texttt{sf} & \texttt{C64Q} & habitat\\
@@ -738,6 +768,7 @@ propers, antiphons or responsories.}
 \sneume{sa-} & \texttt{sa-} & \texttt{C25U} & tuas\\
 \sneume{sa-1} & \texttt{sa-1} & \texttt{G30E} & tribulationis\\
 \sneume{saG} & \texttt{saG} & \texttt{C107A} & Alleluia.\\
+\sneume{saM} & \texttt{saM} & \texttt{H16V} & venient & \fbox{1.7x}\\
 \sneume{saM1} & \texttt{saM1} & \texttt{E10P} & omnis & \fbox{2.166x}\\
 \sneume{saM2} & \texttt{saM2} & \texttt{C27Q} & regis\\
 \sneume{sa>} & \texttt{sa>} & \texttt{C27E} & sanctos\\
@@ -754,7 +785,8 @@ propers, antiphons or responsories.}
 \sneume{sa!cl-} & \texttt{sa!cl-} & \texttt{G132V} & Alleluia. & \fbox{0.85x}\\
 \sneume{saM3} & \texttt{saM3} & \texttt{N53A} & fratres\\
 \sneume{saM-4} & \texttt{saM-4} & \texttt{N296V} & amoris\\
-\sneume{sa>2} & \texttt{sa>2} & \texttt{H73S} & viderunt\\ \hline
+\sneume{sa>2} & \texttt{sa>2} & \texttt{H73S} & viderunt\\
+\sneume{sa1!cl->} & \texttt{sa1!cl->} & \texttt{H32N} & eius & \fbox{1.7x}\\ \hline
 & \multicolumn{3}{l}{\textbf{pes quassus}} & \\
 \sneume{pq} & \texttt{pq} & \texttt{C27E} & sacrificia.\\
 \sneume{pqlsfr1} & \texttt{pqlsfr1} & \texttt{C150L} & nostri\\
@@ -811,7 +843,10 @@ propers, antiphons or responsories.}
 \sneume{su3sut1} & \texttt{su3sut1} \textit{Cf.} \sneume{pe-su3sut1} & \multicolumn{2}{l}{\texttt{pe-su3sut1}}\\
 \sneume{suu2} & \texttt{suu2} \textit{Cf.} \sneume{ql-ppt1suu2} & \multicolumn{2}{l}{\texttt{ql-ppt1suu2}}\\
 \sneume{su2sut1} & \texttt{su2sut1} \textit{Cf.} \sneume{vi-su2sut1} & \multicolumn{2}{l}{\texttt{vi-su2sut1}}\\
-\sneume{su2suy1} & \texttt{su2suy1} \textit{Cf.} \sneume{pe-su2suy1} & \multicolumn{2}{l}{\texttt{pe-su2suy1}}\\ \hline
+\sneume{su2suy1} & \texttt{su2suy1} \textit{Cf.} \sneume{pe-su2suy1} & \multicolumn{2}{l}{\texttt{pe-su2suy1}}\\
+\sneume{suw2} & \texttt{suw2} \textit{Cf.} \sneume{peSsuw2} & \multicolumn{2}{l}{\texttt{peSsuw2}}\\
+\sneume{sut2suu1} & \texttt{sut2suu1} \textit{Cf.} \sneume{ql-ppt1sut2suu1} & \multicolumn{2}{l}{\texttt{ql-ppt1sut2suu1}}\\
+\sneume{suu3} & \texttt{suu3} \textit{Cf.} \sneume{vi-suu3} & \multicolumn{2}{l}{\texttt{vi-suu3}}\\ \hline
 \\
 & \multicolumn{3}{l}{\textbf{prepunctis}} & \\
 \sneume{pp2} & \texttt{pp2} \textit{Cf.} \sneume{vi-pp2} & \texttt{vi-pp2}\\
@@ -855,8 +890,10 @@ propers, antiphons or responsories.}
 \sneume{ql-su1sut2} & \texttt{ql-su1sut2} \textit{Cf.} \sneume{ql-ppt1su1sut2} & \multicolumn{3}{l}{\texttt{ql-ppt1su1sut2} minus tractulus}\\
 \sneume{ql-sut1sux1} & \texttt{ql-sut1sux1} & \texttt{H72H} & complacui\\
 \sneume{ql-suu2} & \texttt{ql-suu2} \textit{Cf.} \sneume{ql-ppt1suu2} & \multicolumn{3}{l}{\texttt{ql-ppt1suu2} minus tractulus}\\
+\sneume{ql-sut2suu1} & \texttt{ql-sut2suu1} \textit{Cf.} \sneume{ql-ppt1sut2suu1} & \multicolumn{3}{l}{\texttt{ql-ppt1sut2suu1} minus tractulus}\\
 \sneume{qi-su2} & \texttt{qi-su2} & \texttt{H73S} & cedebat\\
 \sneume{qi-su1sut2} & \texttt{qi-su1sut2} \textit{Cf.} \sneume{qi-ppt1su1sut2} & \multicolumn{3}{l}{\texttt{qi-ppt1su1sut2} minus tractulus}\\
+\sneume{qi-su1sux1} & \texttt{qi-su1sux1} & \texttt{H26G} & certamine & \fbox{1.7x}\\
 \sneume{qi!cl} & \texttt{qi!cl} & \texttt{C82B} & spiritu\\
 \sneume{qi!cl-} & \texttt{qi!cl-} & \texttt{C148A} & factus\\
 \sneume{qi!cl>} & \texttt{qi!cl>} & \texttt{H77S} & Magi\\
@@ -888,6 +925,7 @@ propers, antiphons or responsories.}
 \sneume{ql-ppt1su1sux1} & \texttt{ql-ppt1su1sux1} & \texttt{H73O} & Reges\\
 \sneume{ql-ppt1su1sut2} & \texttt{ql-ppt1su1sut2} & \texttt{H75I} & patris\\
 \sneume{ql-ppt1suu2} & \texttt{ql-ppt1suu2} & \texttt{H72H} & Hic\\
+\sneume{ql-ppt1sut2suu1} & \texttt{ql-ppt1sut2suu1} & \texttt{H16M} & altissimi & \fbox{1.7x}\\
 \sneume{ql!vsppt1su2} & \texttt{ql!vsppt1su2} & \texttt{H73O} & Domino\\
 \sneume{ql!vsppt1} & \texttt{ql!vsppt1} \textit{Cf.} \sneume{ql!vsppt1su2} & \multicolumn{3}{l}{\texttt{ql!vsppt1su2} minus subbipunctis}\\
 \sneume{ql!vsppt1sut2} & \texttt{ql!vsppt1sut2} & \texttt{H73S} & gaudio\\
