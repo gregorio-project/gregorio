@@ -191,11 +191,7 @@
 \def\GreSetInitialClef#1#2#3{%
   \grecalculateclefnum{#1}{#2}{#3}%
   \ifnum\greremoveclefcount=0\relax %
-    \ifnum\grelastoflinecount=2\relax % we must not type a space if there is no initial
-      \gretypekey{#1}{#2}{0}{0}{#3}%
-    \else %
-      \gretypekey{#1}{#2}{0}{1}{#3}%
-    \fi %
+    \gretypekey{#1}{#2}{0}{1}{#3}%
   \fi %
   \GreSetLinesClef{#1}{#2}{1}{#3}%
   % if the initial is big, then we adjust the second line

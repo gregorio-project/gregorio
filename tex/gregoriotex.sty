@@ -102,15 +102,15 @@
   }%
 }
 
-\def\grecoloredlines#1#2#3{%
+\def\grecoloredlines#1{%
   \gresetstafflinesformat{%
-    \color[RGB]{#1,#2,#3}%
+    \color[named]{#1}%
   }%
   \relax %
 }
 
 \def\greredlines{%
-  \grecoloredlines{229}{53}{44}%
+  \grecoloredlines{gregoriocolor}%
   \relax %
 }
 

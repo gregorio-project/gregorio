@@ -777,10 +777,20 @@
 %% other macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newif\ifgre@justifylastline%
+\gre@justifylastlinefalse%
+
+\def\grejustifiedlastline{\gre@justifylastlinetrue\relax}%
+\def\greraggedlastline{\gre@justifylastlinefalse\relax}%
+
 % gregorioattr (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
 %macro called at the beginning of a score
 \def\GreBeginScore{%
+  \ifgre@justifylastline%
+    \xdef\gre@save@parfillskip{\the\parfillskip}
+    \parfillskip=0pt plus 0pt minus 0pt\relax%
+  \fi %
   % not sure it's perfect to put that here, but it's the only way I found to make it work....
   \GreSetGregorioFont{\gregoriofontname}%
   \ifnum\greusestylefont=1\relax %
@@ -842,6 +852,9 @@
   \gre@skip@temp@three=0pt%
   \gre@skip@temp@four=0pt%
   \directlua{gregoriotex.atScoreEnd()}%
+  \ifgre@justifylastline%
+    \parfillskip=\gre@save@parfillskip\relax%
+  \fi %
   \relax%
 }%
 

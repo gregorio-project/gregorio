@@ -19,7 +19,7 @@
 
 -- this file contains lua functions used by GregorioTeX when called with LuaTeX.
 
-local hpack, traverse_id, has_attribute, count, remove, insert_after, copy = node.hpack, node.traverse_id, node.has_attribute, node.count, node.remove, node.insert_after, node.copy
+local hpack, traverse, traverse_id, has_attribute, count, remove, insert_after, copy = node.hpack, node.traverse, node.traverse_id, node.has_attribute, node.count, node.remove, node.insert_after, node.copy
 
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
@@ -42,6 +42,7 @@ gregoriotex.module = { err = err, warn = warn, info = info, log = log }
 local hlist = node.id('hlist')
 local vlist = node.id('vlist')
 local glyph = node.id('glyph')
+local glue = node.id('glue')
 
 local hyphen = tex.defaulthyphenchar or 45 
 
@@ -78,6 +79,23 @@ local function getdashnnode()
   return dashnode,hyphnode
 end
 
+-- a simple (for now) function to dump nodes for debugging
+local function dump_nodes(head)
+  local n, m
+  for n in traverse(head) do
+    log("node %s [%d]", node.type(n.id), n.subtype)
+    if n.id == hlist then
+      for m in traverse(n.head) do
+        if node.type(m.id) == 'penalty' then
+          log("..%s=%d", node.type(m.id), m.penalty)
+        else
+          log("..node %s [%d]", node.type(m.id), m.subtype)
+        end
+      end
+    end
+  end
+end
+
 local function center_translation(startnode, endnode, ratio, sign, order)
   -- total width between beginning the two centering points
   local total_width = node.dimensions(ratio, sign, order, startnode, endnode)
@@ -110,10 +128,18 @@ local function process (h, groupcode, glyphes)
   local currentshift    = 0
   local centerstartnode = nil
   -- we explore the lines
-  for line in traverse_id(hlist, h) do
-    if has_attribute(line, gregorioattr) then
+  for line in traverse(h) do
+    if line.id == glue then
+      if line.next ~= nil and line.next.id == hlist
+          and has_attribute(line.next, gregorioattr)
+          and count(hlist, line.next.head) <= 2 then
+        --log("eating glue")
+        h, line = remove(h, line)
+      end
+    elseif line.id == hlist and has_attribute(line, gregorioattr) then
       -- the next two lines are to remove the dumb lines
       if count(hlist, line.head) <= 2 then
+        --log("eating line")
         h, line = remove(h, line)
       else
         centerstartnode = nil
@@ -160,6 +186,7 @@ local function process (h, groupcode, glyphes)
       currentshift=0
     end
   end
+  --dump_nodes(h)
   -- due to special cases, we don't return h here (see comments in bug #20974)
   return true
 end 
