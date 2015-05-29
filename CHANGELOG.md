@@ -34,6 +34,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
   - `beforechoralsignspace` is now `beforelowchoralsignspace`.
   - `lowchoralsignshift` is now `choralsigndownshift`.
   - `highchoralsignshift` is now `choralsignupshift` and its sign is now inverted.
+- `\grecoloredlines` now takes a single argument, a named color, instead of the three components of an RGB color.  As a result, `\redlines` can now use `gregoriocolor`, making the red staff lines consistent with the text, even when the user teaks `gregoriocolor`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
 
 ### Added
 - With thanks to Jakub Jelínek, St. Gallen style adiastematic notation is now handled through [nabc syntax](http://gregoriochant.org/dokuwiki/doku.php/language) (see GregorioNabcRef.pdf for details and [the new example](examples/FactusEst.gabc)). Only one line above the notes is currently handled. This is a preview, backward incompatible change are possible in future releases.
@@ -45,6 +46,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Support for `lualatex -recorder`.  Autocompiled gabc and gtex files will now be properly recorded so that programs like `latexmk -recorder` can detect the need to rebuild the PDF when a gabc file changes.
 - A vertical episema may now be forced to appear above or below a note.  In gabc, use `'0` for the vertical episema to appear below and `'1` for the vertical episema to appear above (see [#385](https://github.com/gregorio-project/gregorio/issues/385)).
 - The first syllable and first letter of the first syllable that is *not* interpreted as the initial of the score are now passed to macros that allow them to be styled from TeX.  The first syllable is passed to `\GreFirstSyllable#1` and the first letter of the first syllable is passed to `\GreFirstSyllableInitial#1`.
+- The final line of a score may now be forced to be fully justified (rather than ragged) using `\grejustifiedlastline` before including the score.  Use `\greraggedlastline` to switch back to a ragged last line.  See [#43](https://github.com/gregorio-project/gregorio/issues/43).
 - `\greforcehyphen`: this function forces GregorioTeX to put a hyphen between each syllable in a polysyllabic word.
 
 ### Removed

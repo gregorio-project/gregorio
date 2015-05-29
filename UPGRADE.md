@@ -48,6 +48,10 @@ Note: `3`, `4`, and `5` encompass a new feature and are listed here only for com
 - `lowchoralsignshift` has been renamed to `choralsigndownshift`.
 - `highchoralsignshift` has been renamed to `choralsignupshift` and its sign inverted.
 
+### Colored lines
+
+Since `\grecoloredlines` now takes a named color as it's argument, if you were using it to custom color your lines, you must now define a named color using `\definecolor{yourcolorname}{RGB}{#,#,#}` and then pass that color to the command: `\grecoloredlines{yourcolorname}`.  The `\redlines` command continues to work as it did before, but will now respond to a change to `gregoriocolor` the way colored text does.
+
 ## 3.0
 ### TeX Live 2013
 
