@@ -42,7 +42,6 @@ In general, commands should not be modified.  Exceptions are noted below.
 \subsubsection{Including scores}
 
 \macroname{\textbackslash includescore}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
-%\verb=\includescore#1=%tex.tex
 Macro for including scores.  Works on both gabc and tex files.
 
 \begin{argtable}
@@ -154,6 +153,14 @@ may be used to specify a gabc \texttt{initial-style}, which defaults to
 \begin{latexcode}
   \gabcsnippet[0]{(c3) Al(eg~)le(gv.fhg)lu(efe___)ia(e.) (::)}
 \end{latexcode}
+
+\macroname{\textbackslash greforcehyphen}{}{gregoriotex.tex}
+Tell Gregorio\TeX\ to force the appearance of hyphens between all
+syllables in polysyllabic words in a score.  This is done by overriding \texttt{maximumspacewithoutdash} so subsequent changes to this dimension will override this command.
+
+\macroname{\textbackslash greautohyphen}{}{gregoriotex.tex}
+Tell Gregorio\TeX\ to determine the appearance of hyphens between
+syllables in polysyllabic words in a score based on spacing.  This is done by setting \texttt{maximumspacewithoutdash} back to the value found in \texttt{gsp-default.tex}.
 
 \subsubsection{Styling}
 
