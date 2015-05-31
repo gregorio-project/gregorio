@@ -35,6 +35,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
   - `lowchoralsignshift` is now `choralsigndownshift`.
   - `highchoralsignshift` is now `choralsignupshift` and its sign is now inverted.
 - `\grecoloredlines` now takes a single argument, a named color, instead of the three components of an RGB color.  As a result, `\redlines` can now use `gregoriocolor`, making the red staff lines consistent with the text, even when the user teaks `gregoriocolor`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
+- Style for score elements can now be changed via the `\grechangestyle` command.  This replaces the mixed system of styling commands which could be redefined for some elements and specialized commands for applying styles to others.  See GregorioRef for details.
 
 ### Added
 - With thanks to Jakub Jelínek, St. Gallen style adiastematic notation is now handled through [nabc syntax](http://gregoriochant.org/dokuwiki/doku.php/language) (see GregorioNabcRef.pdf for details and [the new example](examples/FactusEst.gabc)). Only one line above the notes is currently handled. This is a preview, backward incompatible change are possible in future releases.
@@ -48,6 +49,15 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The first syllable and first letter of the first syllable that is *not* interpreted as the initial of the score are now passed to macros that allow them to be styled from TeX.  The first syllable is passed to `\GreFirstSyllable#1` and the first letter of the first syllable is passed to `\GreFirstSyllableInitial#1`.
 - The final line of a score may now be forced to be fully justified (rather than ragged) using `\grejustifiedlastline` before including the score.  Use `\greraggedlastline` to switch back to a ragged last line.  See [#43](https://github.com/gregorio-project/gregorio/issues/43).
 - `\greforcehyphen`: this function forces GregorioTeX to put a hyphen between each syllable in a polysyllabic word.
+
+### Deprecated
+- `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`
+- `\greinitialformat`, if you were redefining this command, use `\grechangeformat{initial}...` instead
+- `\grebiginitialformat`, if you were redefining this command, use `\grechangeformat{biginitial}...` instead
+- `\gretranslationformat`, if you were redefining this command, use `\grechangeformat{translation}...` instead
+- `\greabovelinestextstyle`, if you were redefining this command, use `\grechangeformat{abovelinestext}...` instead
+- `\grelowchoralsignstyle`, if you were redefining this command, use `\grechangeformat{lowchoralsign}...` instead
+- `\grehighchoralsignstyle`, if you were redefining this command, use `\grechangeformat{highchoralsign}...` instead
 
 ### Removed
 - GregorioXML and OpusTeX output

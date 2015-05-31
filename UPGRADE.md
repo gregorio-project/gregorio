@@ -52,6 +52,30 @@ Note: `3`, `4`, and `5` encompass a new feature and are listed here only for com
 
 Since `\grecoloredlines` now takes a named color as it's argument, if you were using it to custom color your lines, you must now define a named color using `\definecolor{yourcolorname}{RGB}{#,#,#}` and then pass that color to the command: `\grecoloredlines{yourcolorname}`.  The `\redlines` command continues to work as it did before, but will now respond to a change to `gregoriocolor` the way colored text does.
 
+### Styling score elements
+
+Changing the styling of text elements of the score (the initial, translations, etc.) formerly required the user to redefine a command which took an argument while changing the styling of the staff lines had a command specialized to that purpose.  All formats can now be changed via the `\grechangestyle` command.  This command takes two or three arguments.  The first argument, required, is the format to be altered.  The defined formats are:
+
+- `greinitial`: normal initials
+- `grebiginitial`: big (2-line) initials
+- `translation`: translation text
+- `abovelinestext`: above lines text (`alt` in gabc)
+- `normalstafflines`: the full length staff lines
+- `additionalstafflines`: the short lines behind notes above or below the staff.  This style defaults to inheriting changes to `normalstafflines`.
+- `lowchoralsign`: low choral signs
+- `highchoralsign`: high choral signs
+
+    The second argument, also required, is the code necessary to turn on the styling.  The third argument, optional and enclosed in square braces (`[` and `]`), is the code necessary to turn off the styling (e.g. if the code to turn on the styling contains a `\begin{environment}` then the code to turn it off must have the matching `\end{environment}`.  The third argument is optional because not all styling commands have explicit off switches.
+
+While the old way of changing the styles is still supported, you should switch to this new method to future proof your scores.
+
+Examples: Let's say you previously had the following in your LaTeX document:
+    \renewcommand{\greabovelinetextstyle}[1]{{\small\it #1}}
+This would have made the text which was wrapped with `<alt></alt>` in your gabc file appear small and italicized in your score.  To update this to the new system you would replace the above line with the following:
+    \grechangestyle{abovelinetext}{\small\it}
+
+    
+
 ## 3.0
 ### TeX Live 2013
 
