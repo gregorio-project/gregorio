@@ -1,6 +1,6 @@
 [Setup]
 AppName=gregorio
-AppVersion=3.0.1
+AppVersion=3.0.2
 DefaultDirName={pf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
@@ -53,7 +53,7 @@ Source: "../README.md"; DestDir: "{app}";
 Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
 Source: "../UPGRADE.md"; DestDir: "{app}";
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../doc/GregorioRef-3_0_1.pdf"; DestDir: "{app}";
+Source: "../doc/GregorioRef-3_0_2.pdf"; DestDir: "{app}";
 Source: "../COPYING.md"; DestDir: "{app}";
 Source: "../contrib/900_gregorio.xml"; DestDir: "{app}\contrib";
 Source: "../contrib/system-setup.bat"; DestDir: "{app}";
