@@ -181,15 +181,13 @@ Different elements of an include score have different styles applied.  These ele
   firstsyllable & the balance of the first syllable of the score & none
 \end{tabular}
 
-\end{tabular}
-
 \macroname{\textbackslash grechangestyle}{\{\#1\}\{\#2\}[\#3]}{gregoriotex.sty and gregoriotex.tex}
 Command to change styling of a score element.
 
 \begin{argtable}
   \#1 & string & element whose styling is to be changed (see list above for options)\\
   \#2 & \TeX\ code & the code necessary to turn on the styling\\
-  \#3 & \TeX\ code & Optional.  The code necessary to turn off the styling (e.g. if the code to turn on the styling contains a `\begin{environment}` then the code to turn it off must have the matching `\end{environment}`.
+  \#3 & \TeX\ code & Optional.  The code necessary to turn off the styling (e.g. if the code to turn on the styling contains a \verb=\begin{environment}= then the code to turn it off must have the matching \verb=\end{environment}=.
 \end{argtable}
 
 Examples:\par\medskip
