@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
+## [3.0.2] - 2015-06-01
+### Fixed
+- Prevented the default small font of the above lines text from leaking into the lyrics.
 
 ## [3.0.1] - 2015-05-17
 ### Fixed
