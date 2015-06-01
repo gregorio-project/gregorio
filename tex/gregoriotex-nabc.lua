@@ -62,7 +62,9 @@ local gregallaliases = {
   ["cippt1lsc3"] = "vippt1su2lsc3",
   ["cippu1"] = "vippu1su2",
   ["cippu1lsc3"] = "vippu1su2lsc3",
-  ["clppt1"] = "toG"
+  ["clppt1"] = "toG",
+  ["pf!cl~"] = "cl!po>",
+  ["pf!cl~ppt1"] = "cl!po>ppt1"
 }
 
 local function gregallreadfont(font_id)

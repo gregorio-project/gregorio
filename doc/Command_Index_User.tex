@@ -162,6 +162,45 @@ syllables in polysyllabic words in a score.  This is done by overriding \texttt{
 Tell Gregorio\TeX\ to determine the appearance of hyphens between
 syllables in polysyllabic words in a score based on spacing.  This is done by setting \texttt{maximumspacewithoutdash} back to the value found in \texttt{gsp-default.tex}.
 
+\subsubsection{Styling}
+
+Different elements of an include score have different styles applied.  These elements and their defaults are listed below:
+
+\bigskip\rowcolors{1}{lightgray}{lightgray}
+\begin{tabular}{lp{10cm plus .5cm}r}
+  Element Name & Description & Default\\
+  initial & Normal Initials & 40 pt font\\
+  biginitial & Big (2-Line) Initials & 80 pt font\\
+  translation & Translation text (appears below lyrics) & italics\\
+  abovelinestext & Above line text (\texttt{<alt></alt>} in gabc, appears above the staff) & normal\\
+  normalstafflines & Full length staff lines & none\\
+  additionalstafflines & short lines behind notes above or below the staff & inherit from \texttt{normalstafflines}\\
+  lowchoralsign & low choral signs & none\\
+  highchoralsign & high choral signs & none\\
+  firstsyllableinitial & the first letter of the first syllable of a score which is not the score initial & none\\
+  firstsyllable & the balance of the first syllable of the score & none
+\end{tabular}
+
+\end{tabular}
+
+\macroname{\textbackslash grechangestyle}{\{\#1\}\{\#2\}[\#3]}{gregoriotex.sty and gregoriotex.tex}
+Command to change styling of a score element.
+
+\begin{argtable}
+  \#1 & string & element whose styling is to be changed (see list above for options)\\
+  \#2 & \TeX\ code & the code necessary to turn on the styling\\
+  \#3 & \TeX\ code & Optional.  The code necessary to turn off the styling (e.g. if the code to turn on the styling contains a `\begin{environment}` then the code to turn it off must have the matching `\end{environment}`.
+\end{argtable}
+
+Examples:\par\medskip
+\begin{latexcode}
+  \grechangestyle{translation}{\it\bf} % Works for both PlainTeX and LaTeX this would make the translations bold and italic
+  \grechangestyle{abovelinetext}{\begin{small}\begin{italic}}[\end{italic}\end{small}] % LaTeX only, this would make the above lines text small and italic
+  \grechangestyle{initial}{\fontsize{36}{36}\selectfont} % This would make the initial print in 36pt font.
+\end{latexcode}
+
+Each element will be typeset within an isolated group to prevent styling commands from leaking from one element to the next.  As a result, if a styling command has an ``on-switch'' but no ``off-switch'' (like \verb=\it= or \verb=\bf= in the first example above) it is not necessary to encapsulate them within a \verb=\begingroup= and \verb=\endgroup=.  As a result, the third argument is only necessary for styling commands which come in pairs (like the environments in the second example).
+
 \subsubsection{Alternate glyph drawings}
 
 \macroname{\textbackslash grechangeglyph}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-main.tex}

@@ -81,4 +81,92 @@
 
 
 
+%% The following two functions are defined for backwards compatibility.  They will eventually be removed.
+\def\greinitialformat#1{%
+  {\gre@fontofinitial #1}%
+  \relax %
+}%
+
+\def\grebiginitialformat#1{%
+  {\gre@fontofbiginitial #1}%
+  \relax %
+}
+
+%%%%%%%%%%%%%%%%%%%%
+%% Formatting environments
+%%%%%%%%%%%%%%%%%%%%
+
+\font\gre@fontofbiginitial=pncr at 80pt%
+\font\gre@fontofinitial=pncr at 40pt%
+
+\def\gre@style@initial{%
+  \begingroup%
+  \gre@fontofinitial%
+  \relax %
+}%
+\def\endgre@style@initial{\endgroup}%
+
+\def\gre@style@biginitial{%
+  \begingroup%
+  \gre@fontofbiginitial%
+  \relax %
+}%
+\def\endgre@style@biginitial{\endgroup}%
+
+\def\gre@style@translation{%
+  \begingroup%
+  \it%
+}%
+\def\endgre@style@translation{\endgroup}%
+
+\def\gre@style@abovelinestext{%
+  \begingroup%
+  \it%
+}%
+\def\endgre@style@abovelinestext{\endgroup}%
+
+\def\gre@style@normalstafflines{%
+  \begingroup%
+  \relax%
+}%
+\def\endgre@style@normalstafflines{\endgroup}%
+
+\def\gre@style@additionalstafflines{%
+  \begingroup%
+  \gre@style@normalstafflines%
+}%
+\def\endgre@style@additionalstafflines{%
+  \endgre@style@normalstafflines%
+  \endgroup%
+}%
+
+\def\gre@style@lowchoralsign{%
+  \begingroup%
+  \relax%
+}%
+\def\endgre@style@lowchoralsign{\endgroup}%
+
+\def\gre@style@highchoralsign{%
+  \begingroup%
+  \relax%
+}%
+\def\endgre@style@highchoralsign{\endgroup}%
+
+\def\gre@style@firstsyllableinitial{%
+  \begingroup%
+  \relax%
+}%
+\def\endgre@style@firstsyllableinitial{\endgroup}%
+
+\def\gre@style@firstsyllable{%
+  \begingroup%
+  \relax%
+}%
+\def\endgre@style@firstsyllable{\endgroup}%
+
+\def\gre@changestyle#1#2[#3]{%
+  \gdef\csname gre@style@#1\endcsname{\begingroup#2}%
+  \gdef\csname endgre@style@#1\endcsname{#3\endgroup}%
+}%
+
 \catcode`\@=\greoldcatcode
