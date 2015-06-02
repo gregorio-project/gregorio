@@ -105,13 +105,13 @@
 \def\gre@char@reversedsemicirculus{\GreCPSemicirculusReversus}%
 
 % horizontal episemus
-\newbox\gre@hep@box%
+\newbox\gre@box@hep%
 \def\gre@def@char@he#1#2{%
   \expandafter\def\csname gre@char@he@#1\endcsname##1{%
     \ifx##1f\csname GreCPHEpisemus#2\endcsname%
     \else%
-      \setbox\gre@hep@box\hbox{\csname GreCPHEpisemus#2\endcsname}%
-      \hbox to \wd\gre@hep@box{%
+      \setbox\gre@box@hep\hbox{\csname GreCPHEpisemus#2\endcsname}%
+      \hbox to \wd\gre@box@hep{%
         \ifx##1l\else\hfil\fi%
         \csname GreCPHEpisemus#2Reduced\endcsname%
         \ifx##1r\else\hfil\fi%
