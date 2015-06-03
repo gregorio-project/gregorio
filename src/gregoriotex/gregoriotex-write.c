@@ -3064,6 +3064,17 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     }
 
     fprintf(f, "\\begingregorioscore%%\n");
+    switch (score->centering) {
+    case SCHEME_SYLLABLE:
+        fprintf(f, "\\englishcentering%%\n");
+        break;
+    case SCHEME_VOWEL:
+        fprintf(f, "\\defaultcentering%%\n");
+        break;
+    default:
+        // don't set any centering
+        break;
+    }
     if (score->nabc_lines) {
         fprintf(f, "\\scorenabclines{%d}", (int)score->nabc_lines);
     }

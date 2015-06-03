@@ -76,7 +76,6 @@ static gregorio_center_determination center_is_determined;
 // current_key is... the current key... updated by each notes determination
 // (for key changes)
 static int current_key = DEFAULT_KEY;
-static gregorio_lyric_centering centering_scheme;
 
 static inline void check_multiple(char *name, bool exists) {
     if (exists) {
@@ -217,7 +216,6 @@ static void initialize_variables(void)
     translation_type = TR_NORMAL;
     no_linebreak_area = NLBA_NORMAL;
     euouae = EUOUAE_NORMAL;
-    centering_scheme = SCHEME_DEFAULT;
     center_is_determined = 0;
     for (i = 0; i < 10; i++) {
         macros[i] = NULL;
@@ -388,8 +386,7 @@ static void gregorio_set_translation_center_beginning(
 }
 
 static void rebuild_characters(gregorio_character **param_character,
-        gregorio_center_determination center_is_determined,
-        gregorio_lyric_centering centering_scheme)
+        gregorio_center_determination center_is_determined)
 {
     bool has_initial = score->initial_style != NO_INITIAL;
     // we rebuild the first syllable text if it is the first syllable, or if
@@ -402,7 +399,7 @@ static void rebuild_characters(gregorio_character **param_character,
     }
 
     gregorio_rebuild_characters(param_character, center_is_determined,
-                                centering_scheme, has_initial);
+            has_initial);
 }
 
 /*
@@ -447,8 +444,7 @@ static void close_syllable(void)
 // the translation pointer instead of the text pointer
 static void start_translation(unsigned char asked_translation_type)
 {
-    rebuild_characters(&current_character, center_is_determined,
-            centering_scheme);
+    rebuild_characters(&current_character, center_is_determined);
     first_text_character = current_character;
     // the middle letters of the translation have no sense
     center_is_determined = CENTER_FULLY_DETERMINED;
@@ -458,8 +454,7 @@ static void start_translation(unsigned char asked_translation_type)
 
 static void end_translation(void)
 {
-    rebuild_characters(&current_character, center_is_determined,
-            centering_scheme);
+    rebuild_characters(&current_character, center_is_determined);
     first_translation_character = current_character;
 }
 
@@ -493,11 +488,11 @@ static void set_centering_scheme(char *sc)
             "\\setlyriccentering in TeX instead.", "set_centering_scheme",
             VERBOSITY_DEPRECATION, 0);
     if (strncmp((const char *) sc, "latine", 6) == 0) {
-        centering_scheme = SCHEME_VOWEL;
+        score->centering = SCHEME_VOWEL;
         return;
     }
     if (strncmp((const char *) sc, "english", 6) == 0) {
-        centering_scheme = SCHEME_SYLLABLE;
+        score->centering = SCHEME_SYLLABLE;
         return;
     }
     gregorio_message("centering-scheme unknown value: must be \"latine\" "
@@ -1148,7 +1143,7 @@ above_line_text:
 
 syllable_with_notes:
     text OPENING_BRACKET notes {
-        rebuild_characters (&current_character, center_is_determined, centering_scheme);
+        rebuild_characters (&current_character, center_is_determined);
         first_text_character = current_character;
         close_syllable();
     }
