@@ -34,21 +34,21 @@
 #define ngt_(str, strtwo, count) str
 #endif
 
-typedef enum gregoriotex_verbosity {
+typedef enum gregorio_verbosity {
     VERBOSITY_INFO = 1,
     VERBOSITY_WARNING,
     VERBOSITY_DEPRECATION,
     VERBOSITY_ERROR,
     VERBOSITY_FATAL,
-} gregoriotex_verbosity;
+} gregorio_verbosity;
 
 void gregorio_message(const char *string, const char *function_name,
-        gregoriotex_verbosity verbosity, int line_number);
+        gregorio_verbosity verbosity, int line_number);
 void gregorio_messagef(const char *function_name,
-        gregoriotex_verbosity verbosity,
+        gregorio_verbosity verbosity,
         int line_number, const char *format, ...)
         __attribute__ ((__format__ (__printf__, 4, 5)));
-void gregorio_set_verbosity_mode(gregoriotex_verbosity verbosity);
+void gregorio_set_verbosity_mode(gregorio_verbosity verbosity);
 void gregorio_set_file_name(char *new_name);
 void gregorio_set_error_out(FILE *f);
 int gregorio_get_return_value(void);

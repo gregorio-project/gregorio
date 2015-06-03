@@ -26,7 +26,7 @@
 
 static FILE *error_out;
 static char *file_name = NULL;
-static gregoriotex_verbosity verbosity_mode = 0;
+static gregorio_verbosity verbosity_mode = 0;
 static bool debug_messages = false;
 static int return_value = 0;
 
@@ -45,7 +45,7 @@ void gregorio_set_file_name(char *const new_name)
     file_name = new_name;
 }
 
-void gregorio_set_verbosity_mode(const gregoriotex_verbosity verbosity)
+void gregorio_set_verbosity_mode(const gregorio_verbosity verbosity)
 {
     verbosity_mode = verbosity;
 }
@@ -55,7 +55,7 @@ void gregorio_set_debug_messages(bool debug)
     debug_messages = debug;
 }
 
-static const char *verbosity_to_str(const gregoriotex_verbosity verbosity)
+static const char *verbosity_to_str(const gregorio_verbosity verbosity)
 {
     const char *str;
     switch (verbosity) {
@@ -80,7 +80,7 @@ static const char *verbosity_to_str(const gregoriotex_verbosity verbosity)
 }
 
 void gregorio_messagef(const char *function_name,
-        gregoriotex_verbosity verbosity, int line_number,
+        gregorio_verbosity verbosity, int line_number,
         const char *format, ...)
 {
     va_list args;
@@ -164,7 +164,7 @@ void gregorio_messagef(const char *function_name,
 }
 
 void gregorio_message(const char *string, const char *function_name,
-        gregoriotex_verbosity verbosity, int line_number)
+        gregorio_verbosity verbosity, int line_number)
 {
     gregorio_messagef(function_name, verbosity, line_number, "%s", string);
 }
