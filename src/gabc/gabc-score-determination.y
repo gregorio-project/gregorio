@@ -592,9 +592,8 @@ gabc_y_add_notes(char *notes) {
 
 %token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE 
 %token MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER
-%token TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE
-%token OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT
-%token GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT
+%token TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION INITIAL_STYLE MODE
+%token GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT
 %token CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE
 %token CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END
 %token C_BEGINNING C_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING
@@ -649,13 +648,6 @@ name_definition:
     }
     ;
 
-lilypond_preamble_definition:
-    LILYPOND_PREAMBLE attribute {
-        check_multiple("lilypond preamble", score->lilypond_preamble);
-        gregorio_set_score_lilypond_preamble (score, $2.text);
-    }
-    ;
-    
 centering_scheme_definition:
     CENTERING_SCHEME attribute {
         set_centering_scheme($2.text);
@@ -673,20 +665,6 @@ score_copyright_definition:
     SCORE_COPYRIGHT attribute {
         check_multiple("score_copyright", score->score_copyright);
         gregorio_set_score_score_copyright (score, $2.text);
-    }
-    ;
-
-opustex_preamble_definition:
-    OPUSTEX_PREAMBLE attribute {
-        check_multiple("OpusTeX preamble", score->opustex_preamble);
-        gregorio_set_score_opustex_preamble (score, $2.text);
-    }
-    ;
-
-musixtex_preamble_definition:
-    MUSIXTEX_PREAMBLE attribute {
-        check_multiple("MusiXTeX preamble", score->musixtex_preamble);
-        gregorio_set_score_musixtex_preamble (score, $2.text);
     }
     ;
 
@@ -899,9 +877,6 @@ definition:
     | gabc_copyright_definition
     | score_copyright_definition
     | generated_by_definition
-    | musixtex_preamble_definition
-    | opustex_preamble_definition
-    | lilypond_preamble_definition
     | virgula_position_definition
     | style_definition
     | transcription_date_definition

@@ -816,9 +816,6 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     gabc_write_str_attribute(f, "transcriber", score->si.transcriber);
     gabc_write_str_attribute(f, "transcription-date",
                              score->si.transcription_date);
-    gabc_write_str_attribute(f, "lilypond-preamble", score->lilypond_preamble);
-    gabc_write_str_attribute(f, "opustex-preamble", score->opustex_preamble);
-    gabc_write_str_attribute(f, "musixtex-preamble", score->musixtex_preamble);
     gabc_write_str_attribute(f, "gregoriotex-font", score->gregoriotex_font);
     if (score->mode) {
         fprintf(f, "mode: %d;\n", score->mode);

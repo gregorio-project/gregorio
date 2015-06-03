@@ -171,15 +171,6 @@ semicolon. */
 <INITIAL>virgula-position {
         return VIRGULA_POSITION;
     }
-<INITIAL>lilypond-preamble {
-        return LILYPOND_PREAMBLE;
-    }
-<INITIAL>opustex-preamble {
-        return OPUSTEX_PREAMBLE;
-    }
-<INITIAL>musixtex-preamble {
-        return MUSIXTEX_PREAMBLE;
-    }
 <INITIAL>gregoriotex-font {
         return GREGORIOTEX_FONT;
     }
