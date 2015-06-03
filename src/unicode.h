@@ -48,6 +48,7 @@ unsigned char gregorio_wcsbufcmp(grewchar *wstr, char *buf);
 #ifndef UNICODE_H_SECOND_PART
 #define UNICODE_H_SECOND_PART
 
+grewchar *gregorio_build_grewchar_string_from_buf(char *buf);
 gregorio_character *gregorio_build_char_list_from_buf(char *buf);
 
 #endif

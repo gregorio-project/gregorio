@@ -318,6 +318,8 @@ static void end_definitions(void)
     for (i = 0; i < number_of_voices; i++) {
         elements[i] = NULL;
     }
+
+    gregorio_set_centering_language("latin");
 }
 
 /*
