@@ -489,11 +489,11 @@ static void gregorio_gabc_add_text(char *mbcharacters)
 static void set_centering_scheme(char *sc)
 {
     if (strncmp((const char *) sc, "latine", 6) == 0) {
-        centering_scheme = SCHEME_LATINE;
+        centering_scheme = SCHEME_VOWEL;
         return;
     }
     if (strncmp((const char *) sc, "english", 6) == 0) {
-        centering_scheme = SCHEME_ENGLISH;
+        centering_scheme = SCHEME_SYLLABLE;
         return;
     }
     gregorio_message("centering-scheme unknown value: must be \"latine\" "

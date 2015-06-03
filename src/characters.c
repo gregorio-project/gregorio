@@ -713,7 +713,7 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
     }
     // if there is no forced centering, we open the centering before the very
     // first letter
-    if (centering_scheme == SCHEME_ENGLISH && center_type == ST_CENTER) {
+    if (centering_scheme == SCHEME_SYLLABLE && center_type == ST_CENTER) {
         gregorio_insert_style_before(ST_T_BEGIN, ST_CENTER, current_character);
         center_is_determined = CENTER_FULLY_DETERMINED;
     }
@@ -916,7 +916,7 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
         }
         gregorio_insert_style_before(ST_T_BEGIN, ST_CENTER, current_character);
     }
-    if (centering_scheme == SCHEME_ENGLISH && center_type == ST_CENTER) {
+    if (centering_scheme == SCHEME_SYLLABLE && center_type == ST_CENTER) {
         gregorio_insert_style_after(ST_T_END, ST_CENTER, &current_character);
     }
     // well.. you're quite brave if you reach this comment.
