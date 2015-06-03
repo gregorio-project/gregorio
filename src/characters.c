@@ -241,7 +241,7 @@ gregorio_character *gregorio_first_text(gregorio_score *score)
     gregorio_syllable *current_syllable;
     if (!score || !score->first_syllable) {
         gregorio_message(_("unable to find the first letter of the score"),
-                "gregorio_first_text", ERROR, 0);
+                "gregorio_first_text", VERBOSITY_ERROR, 0);
         return NULL;
     }
     current_syllable = score->first_syllable;
@@ -253,7 +253,7 @@ gregorio_character *gregorio_first_text(gregorio_score *score)
     }
 
     gregorio_message(_("unable to find the first letter of the score"),
-            "gregorio_first_text", ERROR, 0);
+            "gregorio_first_text", VERBOSITY_ERROR, 0);
     return NULL;
 }
 
@@ -649,7 +649,6 @@ static bool gregorio_go_to_end_initial(gregorio_character **param_character)
 }
 
 /*
- * 
  * THE big function. Very long, using a lot of long macros, etc. I hope you
  * really want to understand it, 'cause it won't be easy.
  * 
@@ -663,16 +662,10 @@ static bool gregorio_go_to_end_initial(gregorio_character **param_character)
  * Another difficulty is the fact that we must consider characters in verbatim
  * and special character styles like only one block, we can't say the center is 
  * in the middle of a verbatim block.
- * 
- * 29/11/10: there is now the possibility to choose between two centering
- * schemes: - latine is the one used before - english is a new scheme where the 
- * whole syllable (except for forced centering) is centered
- * 
  */
 
 void gregorio_rebuild_characters(gregorio_character **param_character,
-        gregorio_center_determination center_is_determined,
-        gregorio_lyric_centering centering_scheme, bool skip_initial)
+        gregorio_center_determination center_is_determined, bool skip_initial)
 {
     // a det_style, to walk through the list
     det_style *current_style = NULL;
@@ -710,12 +703,6 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
         center_type = ST_CENTER;
     } else {
         center_type = ST_FORCED_CENTER;
-    }
-    // if there is no forced centering, we open the centering before the very
-    // first letter
-    if (centering_scheme == SCHEME_SYLLABLE && center_type == ST_CENTER) {
-        gregorio_insert_style_before(ST_T_BEGIN, ST_CENTER, current_character);
-        center_is_determined = CENTER_FULLY_DETERMINED;
     }
     // we loop until there isn't any character
     while (current_character) {
@@ -916,9 +903,6 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
         }
         gregorio_insert_style_before(ST_T_BEGIN, ST_CENTER, current_character);
     }
-    if (centering_scheme == SCHEME_SYLLABLE && center_type == ST_CENTER) {
-        gregorio_insert_style_after(ST_T_END, ST_CENTER, &current_character);
-    }
     // well.. you're quite brave if you reach this comment.
     gregorio_go_to_first_character(&current_character);
     (*param_character) = current_character;
@@ -1025,7 +1009,7 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
 
                 gregorio_message(_
                         ("Any style applied to the initial will be ignored."),
-                        NULL, WARNING, 0);
+                        NULL, VERBOSITY_WARNING, 0);
             }
             break;
         }
@@ -1042,7 +1026,7 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
 
                 gregorio_message(_
                         ("Any style applied to the initial will be ignored."),
-                        NULL, WARNING, 0);
+                        NULL, VERBOSITY_WARNING, 0);
             }
             gregorio_insert_style_before(ST_T_BEGIN, ST_INITIAL,
                     current_character);

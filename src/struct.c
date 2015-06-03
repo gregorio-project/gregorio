@@ -52,7 +52,7 @@ static gregorio_note *create_and_link_note(gregorio_note **current_note)
     gregorio_note *note = calloc(1, sizeof(gregorio_note));
     if (!note) {
         gregorio_message(_("error in memory allocation"),
-                         "create_and_link_note", FATAL_ERROR, 0);
+                         "create_and_link_note", VERBOSITY_FATAL, 0);
         return NULL;
     }
 
@@ -258,7 +258,7 @@ void gregorio_change_shape(gregorio_note *note, gregorio_shape shape)
 {
     if (!note || note->type != GRE_NOTE) {
         gregorio_message(_("trying to change the shape of something that is "
-                           "not a note"), "change_shape", ERROR, 0);
+                           "not a note"), "change_shape", VERBOSITY_ERROR, 0);
         return;
     }
     note->u.note.shape = shape;
@@ -297,7 +297,7 @@ void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
 {
     if (!note || note->type != GRE_NOTE) {
         gregorio_message(_("trying to make a liquescence on something that "
-                           "is not a note"), "add_liquescentia", ERROR, 0);
+                    "is not a note"), "add_liquescentia", VERBOSITY_ERROR, 0);
         return;
     }
     if (is_initio_debilis(liq)) {
@@ -397,7 +397,7 @@ static void gregorio_activate_isolated_h_episemus(gregorio_note *note,
                     "of a note sequence, ignored",
                     "isolated horizontal episemus at the beginning of a note "
                     "sequence, ignored", n), "activate_h_isolated_episemus",
-                WARNING, 0);
+                VERBOSITY_WARNING, 0);
         return;
     }
     if (note->type != GRE_NOTE) {
@@ -405,7 +405,7 @@ static void gregorio_activate_isolated_h_episemus(gregorio_note *note,
                     "that is not a note, ignored",
                     "isolated horizontal episemus after something that is not "
                     "a note, ignored", n), "activate_h_isolated_episemus",
-                WARNING, 0);
+                VERBOSITY_WARNING, 0);
         return;
     }
     for (; n > 0; --n) {
@@ -413,7 +413,7 @@ static void gregorio_activate_isolated_h_episemus(gregorio_note *note,
         if (!note || note->type != GRE_NOTE) {
             gregorio_message(_("found more horizontal episemus than notes "
                         "able to be under"), "activate_h_isolated_episemus",
-                    WARNING, 0);
+                    VERBOSITY_WARNING, 0);
             return;
         }
     }
@@ -426,18 +426,19 @@ void gregorio_add_h_episemus(gregorio_note *note,
 {
     if (!note || (note->type != GRE_NOTE && note->type != GRE_BAR)) {
         gregorio_message(_("trying to add a horizontal episemus on something "
-                           "that is not a note"), "add_h_episemus", ERROR, 0);
+                    "that is not a note"), "add_h_episemus",
+                VERBOSITY_ERROR, 0);
         return;
     }
     if (!nbof_isolated_episemus) {
         gregorio_message(_("NULL argument nbof_isolated_episemus"),
-                           "add_h_episemus", FATAL_ERROR, 0);
+                "add_h_episemus", VERBOSITY_FATAL, 0);
         return;
     }
     if (vposition && *nbof_isolated_episemus) {
         gregorio_message(_("trying to add a forced horizontal episemus on a "
-                           "note which already has an automatic horizontal "
-                           "episemus"), "add_h_episemus", ERROR, 0);
+                    "note which already has an automatic horizontal "
+                    "episemus"), "add_h_episemus", VERBOSITY_ERROR, 0);
         return;
     }
 
@@ -568,7 +569,7 @@ static gregorio_glyph *create_and_link_glyph(gregorio_glyph **current_glyph)
     gregorio_glyph *glyph = calloc(1, sizeof(gregorio_glyph));
     if (!glyph) {
         gregorio_message(_("error in memory allocation"),
-                         "create_and_link_glyph", FATAL_ERROR, 0);
+                         "create_and_link_glyph", VERBOSITY_FATAL, 0);
         return NULL;
     }
 
@@ -687,7 +688,7 @@ static gregorio_element *create_and_link_element(gregorio_element
     gregorio_element *element = calloc(1, sizeof(gregorio_element));
     if (!element) {
         gregorio_message(_("error in memory allocation"),
-                         "create_and_link_element", FATAL_ERROR, 0);
+                         "create_and_link_element", VERBOSITY_FATAL, 0);
         return NULL;
     }
 
@@ -772,7 +773,7 @@ void gregorio_add_character(gregorio_character **current_character,
         (gregorio_character *) calloc(1, sizeof(gregorio_character));
     if (!element) {
         gregorio_message(_("error in memory allocation"),
-                         "gregorio_add_character", FATAL_ERROR, 0);
+                         "gregorio_add_character", VERBOSITY_FATAL, 0);
         return;
     }
     element->is_character = 1;
@@ -823,7 +824,7 @@ void gregorio_begin_style(gregorio_character **current_character,
         (gregorio_character *) calloc(1, sizeof(gregorio_character));
     if (!element) {
         gregorio_message(_("error in memory allocation"),
-                         "add_note", FATAL_ERROR, 0);
+                         "add_note", VERBOSITY_FATAL, 0);
         return;
     }
     element->is_character = 0;
@@ -844,7 +845,7 @@ void gregorio_end_style(gregorio_character **current_character,
         (gregorio_character *) calloc(1, sizeof(gregorio_character));
     if (!element) {
         gregorio_message(_("error in memory allocation"),
-                         "add_note", FATAL_ERROR, 0);
+                         "add_note", VERBOSITY_FATAL, 0);
         return;
     }
     element->is_character = 0;
@@ -870,13 +871,14 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
     gregorio_element **tab;
     int i;
     if (number_of_voices > MAX_NUMBER_OF_VOICES) {
-        gregorio_message(_("too many voices"), "add_syllable", FATAL_ERROR, 0);
+        gregorio_message(_("too many voices"), "add_syllable", VERBOSITY_FATAL,
+                0);
         return;
     }
     next = calloc(1, sizeof(gregorio_syllable));
     if (!next) {
-        gregorio_message(_("error in memory allocation"),
-                         "add_syllable", FATAL_ERROR, 0);
+        gregorio_message(_("error in memory allocation"), "add_syllable",
+                VERBOSITY_FATAL, 0);
         return;
     }
     next->type = GRE_SYLLABLE;
@@ -915,7 +917,7 @@ static void gregorio_free_one_syllable(gregorio_syllable **syllable,
     gregorio_syllable *next;
     if (!syllable || !*syllable) {
         gregorio_message(_("function called with NULL argument"),
-                         "free_one_syllable", WARNING, 0);
+                "free_one_syllable", VERBOSITY_WARNING, 0);
         return;
     }
     for (i = 0; i < number_of_voices; i++) {
@@ -940,7 +942,7 @@ static void gregorio_free_syllables(gregorio_syllable **syllable,
 {
     if (!syllable || !*syllable) {
         gregorio_message(_("function called with NULL argument"),
-                         "free_syllables", WARNING, 0);
+                "free_syllables", VERBOSITY_WARNING, 0);
         return;
     }
     while (*syllable) {
@@ -1014,7 +1016,7 @@ static void gregorio_free_score_infos(gregorio_score *score)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_free_score_infos", WARNING, 0);
+                "gregorio_free_score_infos", VERBOSITY_WARNING, 0);
         return;
     }
     if (score->name) {
@@ -1057,7 +1059,7 @@ void gregorio_free_score(gregorio_score *score)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "free_one_syllable", WARNING, 0);
+                "free_one_syllable", VERBOSITY_WARNING, 0);
         return;
     }
     gregorio_free_syllables(&(score->first_syllable), score->number_of_voices);
@@ -1069,7 +1071,7 @@ void gregorio_set_score_name(gregorio_score *score, char *name)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_name", WARNING, 0);
+                "gregorio_set_score_name", VERBOSITY_WARNING, 0);
         return;
     }
     score->name = name;
@@ -1080,7 +1082,7 @@ void gregorio_set_score_gabc_copyright(gregorio_score *score,
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_gabc_copyright", WARNING, 0);
+                "gregorio_set_score_gabc_copyright", VERBOSITY_WARNING, 0);
         return;
     }
     score->gabc_copyright = gabc_copyright;
@@ -1091,7 +1093,7 @@ void gregorio_set_score_score_copyright(gregorio_score *score,
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_score_copyright", WARNING, 0);
+                "gregorio_set_score_score_copyright", VERBOSITY_WARNING, 0);
         return;
     }
     score->score_copyright = score_copyright;
@@ -1101,7 +1103,7 @@ void gregorio_set_score_office_part(gregorio_score *score, char *office_part)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_office_part", WARNING, 0);
+                "gregorio_set_score_office_part", VERBOSITY_WARNING, 0);
         return;
     }
     score->office_part = office_part;
@@ -1111,7 +1113,7 @@ void gregorio_set_score_occasion(gregorio_score *score, char *occasion)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_occasion", WARNING, 0);
+                "gregorio_set_score_occasion", VERBOSITY_WARNING, 0);
         return;
     }
     score->occasion = occasion;
@@ -1121,7 +1123,7 @@ void gregorio_set_score_meter(gregorio_score *score, char *meter)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_meter", WARNING, 0);
+                "gregorio_set_score_meter", VERBOSITY_WARNING, 0);
         return;
     }
     score->meter = meter;
@@ -1131,7 +1133,7 @@ void gregorio_set_score_commentary(gregorio_score *score, char *commentary)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_commentary", WARNING, 0);
+                "gregorio_set_score_commentary", VERBOSITY_WARNING, 0);
         return;
     }
     score->commentary = commentary;
@@ -1141,7 +1143,7 @@ void gregorio_set_score_arranger(gregorio_score *score, char *arranger)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_arranger", WARNING, 0);
+                "gregorio_set_score_arranger", VERBOSITY_WARNING, 0);
         return;
     }
     score->arranger = arranger;
@@ -1152,7 +1154,7 @@ void gregorio_set_score_number_of_voices(gregorio_score *score,
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_number_of_voices", WARNING, 0);
+                "gregorio_set_score_number_of_voices", VERBOSITY_WARNING, 0);
         return;
     }
     score->number_of_voices = number_of_voices;
@@ -1163,7 +1165,7 @@ void gregorio_set_score_lilypond_preamble(gregorio_score *score,
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_lilypond_preamble", WARNING, 0);
+                "gregorio_set_score_lilypond_preamble", VERBOSITY_WARNING, 0);
         return;
     }
     score->lilypond_preamble = lilypond_preamble;
@@ -1174,7 +1176,7 @@ void gregorio_set_score_opustex_preamble(gregorio_score *score,
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_opustex_preamble", WARNING, 0);
+                "gregorio_set_score_opustex_preamble", VERBOSITY_WARNING, 0);
         return;
     }
     score->opustex_preamble = opustex_preamble;
@@ -1185,7 +1187,7 @@ void gregorio_set_score_musixtex_preamble(gregorio_score *score,
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_musixtex_preamble", WARNING, 0);
+                "gregorio_set_score_musixtex_preamble", VERBOSITY_WARNING, 0);
         return;
     }
     score->musixtex_preamble = musixtex_preamble;
@@ -1195,7 +1197,7 @@ void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_name", WARNING, 0);
+                "gregorio_set_score_name", VERBOSITY_WARNING, 0);
         return;
     }
     score->user_notes = user_notes;
@@ -1225,7 +1227,7 @@ void gregorio_free_voice_infos(gregorio_voice_info *voice_info)
     gregorio_voice_info *next;
     if (!voice_info) {
         gregorio_message(_("function called with NULL argument"),
-                         "free_voice_info", WARNING, 0);
+                "free_voice_info", VERBOSITY_WARNING, 0);
         return;
     }
     while (voice_info) {
@@ -1257,7 +1259,7 @@ void gregorio_set_voice_annotation(gregorio_voice_info *voice_info,
     int annotation_num;
     if (!voice_info) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_voice_annotation", WARNING, 0);
+                "gregorio_set_voice_annotation", VERBOSITY_WARNING, 0);
         return;
     }
     // save the annotation in the first spare place.
@@ -1273,7 +1275,7 @@ void gregorio_set_score_author(gregorio_score *score, char *author)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_author", WARNING, 0);
+                "gregorio_set_score_author", VERBOSITY_WARNING, 0);
         return;
     }
     score->si.author = author;
@@ -1283,7 +1285,7 @@ void gregorio_set_score_date(gregorio_score *score, char *date)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_date", WARNING, 0);
+                "gregorio_set_score_date", VERBOSITY_WARNING, 0);
         return;
     }
     score->si.date = date;
@@ -1293,7 +1295,7 @@ void gregorio_set_score_manuscript(gregorio_score *score, char *manuscript)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_manuscript", WARNING, 0);
+                "gregorio_set_score_manuscript", VERBOSITY_WARNING, 0);
         return;
     }
     score->si.manuscript = manuscript;
@@ -1304,7 +1306,7 @@ void gregorio_set_score_manuscript_reference(gregorio_score *score,
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_reference", WARNING, 0);
+                "gregorio_set_score_reference", VERBOSITY_WARNING, 0);
         return;
     }
     score->si.manuscript_reference = manuscript_reference;
@@ -1315,8 +1317,8 @@ void gregorio_set_score_manuscript_storage_place(gregorio_score *score,
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_manuscript_storage_place", WARNING,
-                         0);
+                "gregorio_set_score_manuscript_storage_place",
+                VERBOSITY_WARNING, 0);
         return;
     }
     score->si.manuscript_storage_place = manuscript_storage_place;
@@ -1326,7 +1328,7 @@ void gregorio_set_score_book(gregorio_score *score, char *book)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_book", WARNING, 0);
+                "gregorio_set_score_book", VERBOSITY_WARNING, 0);
         return;
     }
     score->si.book = book;
@@ -1336,7 +1338,7 @@ void gregorio_set_score_transcriber(gregorio_score *score, char *transcriber)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_transcriber", WARNING, 0);
+                "gregorio_set_score_transcriber", VERBOSITY_WARNING, 0);
         return;
     }
     score->si.transcriber = transcriber;
@@ -1347,7 +1349,7 @@ void gregorio_set_score_transcription_date(gregorio_score *score,
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_score_transcription_date", WARNING, 0);
+                "gregorio_set_score_transcription_date", VERBOSITY_WARNING, 0);
         return;
     }
     score->si.transcription_date = transcription_date;
@@ -1357,7 +1359,7 @@ void gregorio_set_voice_style(gregorio_voice_info *voice_info, char *style)
 {
     if (!voice_info) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_voice_style", WARNING, 0);
+                "gregorio_set_voice_style", VERBOSITY_WARNING, 0);
         return;
     }
     voice_info->style = style;
@@ -1368,7 +1370,7 @@ void gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
 {
     if (!voice_info) {
         gregorio_message(_("function called with NULL argument"),
-                         "gregorio_set_voice_virgula_position", WARNING, 0);
+                "gregorio_set_voice_virgula_position", VERBOSITY_WARNING, 0);
         return;
     }
     voice_info->virgula_position = virgula_position;
@@ -1404,7 +1406,7 @@ int gregorio_calculate_new_key(char step, int line)
         break;
     default:
         gregorio_message(_("can't calculate key"),
-                         "gregorio_calculate_new_key", ERROR, 0);
+                "gregorio_calculate_new_key", VERBOSITY_ERROR, 0);
         return NO_KEY;
     }
 }
@@ -1455,7 +1457,7 @@ void gregorio_det_step_and_line_from_key(int key, char *step, int *line)
         *step = '?';
         *line = 0;
         gregorio_message(_("can't determine step and line of the key"),
-                         "gregorio_det_step_and_line_from_key", ERROR, 0);
+                "gregorio_det_step_and_line_from_key", VERBOSITY_ERROR, 0);
         return;
     }
 }
@@ -1466,7 +1468,7 @@ static gregorio_glyph *gregorio_first_glyph(gregorio_syllable *syllable)
     gregorio_element *element;
     if (!syllable) {
         gregorio_message(_("called with a NULL argument"),
-                         "gregorio_first_glyph", ERROR, 0);
+                "gregorio_first_glyph", VERBOSITY_ERROR, 0);
     }
     element = syllable->elements[0];
     while (element) {
@@ -1507,7 +1509,7 @@ char gregorio_determine_next_pitch(gregorio_syllable *syllable,
     char temp;
     if (!element || !syllable) {
         gregorio_message(_("called with a NULL argument"),
-                         "gregorio_determine_next_pitch", ERROR, 0);
+                "gregorio_determine_next_pitch", VERBOSITY_ERROR, 0);
         return DUMMY_PITCH;
     }
     // we first explore the next glyphs to find a note, if there is one
@@ -1617,7 +1619,7 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
 
     if (!score || !score->first_syllable || !score->first_voice_info) {
         gregorio_message(_("score is not available"),
-                         "gregorio_fix_initial_keys", WARNING, 0);
+                "gregorio_fix_initial_keys", VERBOSITY_WARNING, 0);
         return;
     }
     error = malloc(100 * sizeof(char));
@@ -1637,7 +1639,8 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
             snprintf(error, 80, _("in voice %d the first element is a key "
                                   "definition, considered as initial key"),
                      i + 1);
-            gregorio_message(error, "gregorio_fix_initial_keys", VERBOSE, 0);
+            gregorio_message(error, "gregorio_fix_initial_keys", VERBOSITY_INFO,
+                    0);
         } else if (element->type == GRE_F_KEY_CHANGE) {
             clef =
                 gregorio_calculate_new_key(F_KEY,
@@ -1648,7 +1651,8 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
             snprintf(error, 80, _("in voice %d the first element is a key "
                                   "definition, considered as initial key"),
                      i + 1);
-            gregorio_message(error, "gregorio_fix_initial_keys", VERBOSE, 0);
+            gregorio_message(error, "gregorio_fix_initial_keys", VERBOSITY_INFO,
+                    0);
         }
         voice_info = voice_info->next_voice_info;
     }
@@ -1675,11 +1679,10 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
     for (i = 0; i < score->number_of_voices; i++) {
         if (voice_info->initial_key == NO_KEY) {
             voice_info->initial_key = default_key;
-            snprintf(error, 75,
-                     _
-                     ("no initial key definition in voice %d, default key definition applied"),
-                     i + 1);
-            gregorio_message(error, "gregorio_fix_initial_keys", VERBOSE, 0);
+            snprintf(error, 75, _("no initial key definition in voice %d, "
+                        "default key definition applied"), i + 1);
+            gregorio_message(error, "gregorio_fix_initial_keys", VERBOSITY_INFO,
+                    0);
         }
         voice_info = voice_info->next_voice_info;
     }

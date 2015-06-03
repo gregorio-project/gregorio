@@ -65,7 +65,7 @@ static inline void add_bar_as_note(gregorio_bar bar)
 
 static inline void error(void)
 {
-    gregorio_messagef("gabc_notes_determination", ERROR, 0,
+    gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
             _("undefined macro used: m%d"),
             gabc_notes_determination_text[3] - '0');
 }
@@ -99,7 +99,7 @@ static void add_h_episemus(void) {
             size = H_SMALL_RIGHT;
             break;
         default:
-            gregorio_messagef("gabc_notes_determination", ERROR, 0,
+            gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
                     _("unrecognized horizontal episemus modifier: %c"),
                     current);
             break;
@@ -507,7 +507,7 @@ s   {
 .   {        
         snprintf(tempstr, 70, _("unrecognized character: \"%c\""),
                 gabc_notes_determination_text[0]);
-        gregorio_message (tempstr, "det_notes_from_string", ERROR, 0);
+        gregorio_message (tempstr, "det_notes_from_string", VERBOSITY_ERROR, 0);
     }
 
 %%

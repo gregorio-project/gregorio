@@ -319,7 +319,8 @@ typedef enum gregorio_word_position {
 
 // the centering schemes for gabc:
 typedef enum gregorio_lyric_centering {
-    SCHEME_VOWEL = 1,
+    SCHEME_DEFAULT = 0,
+    SCHEME_VOWEL,
     SCHEME_SYLLABLE,
 } gregorio_lyric_centering;
 
@@ -645,6 +646,7 @@ typedef struct gregorio_score {
     // then, as there are some metadata that are voice-specific, we add a
     // pointer to the first voice_info. (see comments below)
     struct gregorio_voice_info *first_voice_info;
+    gregorio_lyric_centering centering;
 } gregorio_score;
 
 /*
@@ -718,8 +720,6 @@ static inline bool is_initio_debilis(char liquescentia)
 {
     return liquescentia >= L_INITIO_DEBILIS;
 }
-
-#define SCHEME_DEFAULT SCHEME_VOWEL
 
 #define HEPISEMUS_NONE 0
 #define HEPISEMUS_AUTO -1

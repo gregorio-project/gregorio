@@ -518,9 +518,8 @@ void dump_write_score(FILE *f, gregorio_score *score)
     int annotation_num;
 
     if (!f) {
-        gregorio_message(_
-                         ("call with NULL file"),
-                         "gregoriotex_write_score", ERROR, 0);
+        gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
+                VERBOSITY_ERROR, 0);
         return;
     }
     fprintf(f,
