@@ -241,7 +241,7 @@ gregorio_character *gregorio_first_text(gregorio_score *score)
     gregorio_syllable *current_syllable;
     if (!score || !score->first_syllable) {
         gregorio_message(_("unable to find the first letter of the score"),
-                "gregorio_first_text", ERROR, 0);
+                "gregorio_first_text", VERBOSITY_ERROR, 0);
         return NULL;
     }
     current_syllable = score->first_syllable;
@@ -253,7 +253,7 @@ gregorio_character *gregorio_first_text(gregorio_score *score)
     }
 
     gregorio_message(_("unable to find the first letter of the score"),
-            "gregorio_first_text", ERROR, 0);
+            "gregorio_first_text", VERBOSITY_ERROR, 0);
     return NULL;
 }
 
@@ -1025,7 +1025,7 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
 
                 gregorio_message(_
                         ("Any style applied to the initial will be ignored."),
-                        NULL, WARNING, 0);
+                        NULL, VERBOSITY_WARNING, 0);
             }
             break;
         }
@@ -1042,7 +1042,7 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
 
                 gregorio_message(_
                         ("Any style applied to the initial will be ignored."),
-                        NULL, WARNING, 0);
+                        NULL, VERBOSITY_WARNING, 0);
             }
             gregorio_insert_style_before(ST_T_BEGIN, ST_INITIAL,
                     current_character);

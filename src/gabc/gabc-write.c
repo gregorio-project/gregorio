@@ -58,8 +58,8 @@ static void gabc_write_voice_info(FILE *f, gregorio_voice_info *voice_info)
     int annotation_num;
 
     if (!voice_info) {
-        gregorio_message(_("no voice info"),
-                         "gabc_write_voice_info", WARNING, 0);
+        gregorio_message(_("no voice info"), "gabc_write_voice_info",
+                VERBOSITY_WARNING, 0);
         return;
     }
     for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num) {
@@ -265,8 +265,8 @@ static void gabc_write_space(FILE *f, char type)
         // fprintf (f, "/");
         break;
     default:
-        gregorio_message(_("space type is unknown"),
-                         "gabc_write_space", ERROR, 0);
+        gregorio_message(_("space type is unknown"), "gabc_write_space",
+                VERBOSITY_ERROR, 0);
         break;
     }
 }
@@ -314,9 +314,8 @@ static void gabc_write_bar(FILE *f, char type)
         fprintf(f, ";6");
         break;
     default:
-        gregorio_message(_
-                         ("unknown bar type, nothing will be done"),
-                         "gabc_bar_to_str", ERROR, 0);
+        gregorio_message(_("unknown bar type, nothing will be done"),
+                "gabc_bar_to_str", VERBOSITY_ERROR, 0);
         break;
     }
 }
@@ -400,13 +399,13 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     char shape;
     if (!note) {
         gregorio_message(_("call with NULL argument"),
-                         "gabc_write_gregorio_note", ERROR, 0);
+                "gabc_write_gregorio_note", VERBOSITY_ERROR, 0);
         return;
     }
     if (note->type != GRE_NOTE) {
-        gregorio_message(_
-                         ("call with argument which type is not GRE_NOTE, wrote nothing"),
-                         "gabc_write_gregorio_note", ERROR, 0);
+        gregorio_message(_("call with argument which type is not GRE_NOTE, "
+                    "wrote nothing"), "gabc_write_gregorio_note",
+                VERBOSITY_ERROR, 0);
         return;
     }
     if (glyph_type == G_PES_QUADRATUM) {
@@ -577,7 +576,7 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
 
     if (!glyph) {
         gregorio_message(_("call with NULL argument"),
-                         "gabc_write_gregorio_glyph", ERROR, 0);
+                "gabc_write_gregorio_glyph", VERBOSITY_ERROR, 0);
         return;
     }
     switch (glyph->type) {
@@ -599,8 +598,8 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
         if (glyph->u.misc.unpitched.info.space == SP_ZERO_WIDTH && glyph->next) {
             fprintf(f, "!");
         } else {
-            gregorio_message(_("bad space"),
-                             "gabc_write_gregorio_glyph", ERROR, 0);
+            gregorio_message(_("bad space"), "gabc_write_gregorio_glyph",
+                    VERBOSITY_ERROR, 0);
         }
         break;
     case GRE_MANUAL_CUSTOS:
@@ -622,7 +621,7 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
     default:
 
         gregorio_message(_("call with an argument which type is unknown"),
-                "gabc_write_gregorio_glyph", ERROR, 0);
+                "gabc_write_gregorio_glyph", VERBOSITY_ERROR, 0);
         break;
     }
 }
@@ -641,7 +640,7 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element)
     gregorio_glyph *current_glyph;
     if (!element) {
         gregorio_message(_("call with NULL argument"),
-                         "gabc_write_gregorio_element", ERROR, 0);
+                "gabc_write_gregorio_element", VERBOSITY_ERROR, 0);
         return;
     }
     current_glyph = element->u.first_glyph;
@@ -683,9 +682,8 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element)
         fprintf(f, "z");
         break;
     default:
-        gregorio_message(_
-                         ("call with an argument which type is unknown"),
-                         "gabc_write_gregorio_element", ERROR, 0);
+        gregorio_message(_("call with an argument which type is unknown"),
+                "gabc_write_gregorio_element", VERBOSITY_ERROR, 0);
         break;
     }
 }
@@ -725,8 +723,8 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
 {
     int voice = 0;
     if (!syllable) {
-        gregorio_message(_("call with NULL argument"),
-                         "gabc_write_syllable", ERROR, 0);
+        gregorio_message(_("call with NULL argument"), "gabc_write_syllable",
+                VERBOSITY_ERROR, 0);
         return;
     }
     if (syllable->text) {
@@ -783,9 +781,8 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     gregorio_syllable *syllable;
 
     if (!f) {
-        gregorio_message(_
-                         ("call with NULL file"),
-                         "gregoriotex_write_score", ERROR, 0);
+        gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
+                VERBOSITY_ERROR, 0);
         return;
     }
 
@@ -793,7 +790,8 @@ void gabc_write_score(FILE *f, gregorio_score *score)
         gabc_write_str_attribute(f, "name", score->name);
     } else {
         fprintf(f, "name: unknown;\n");
-        gregorio_message(_("name is mandatory"), "gabc_write_score", ERROR, 0);
+        gregorio_message(_("name is mandatory"), "gabc_write_score",
+                VERBOSITY_ERROR, 0);
     }
     gabc_write_str_attribute(f, "gabc-copyright", score->gabc_copyright);
     gabc_write_str_attribute(f, "score-copyright", score->score_copyright);
@@ -831,7 +829,7 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     gabc_write_str_attribute(f, "user-notes", score->user_notes);
     if (score->number_of_voices == 0) {
         gregorio_message(_("gregorio_score seems to be empty"),
-                         "gabc_write_score", ERROR, 0);
+                "gabc_write_score", VERBOSITY_ERROR, 0);
         return;
     }
     if (score->number_of_voices == 1) {
