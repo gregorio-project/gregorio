@@ -319,8 +319,8 @@ typedef enum gregorio_word_position {
 
 // the centering schemes for gabc:
 typedef enum gregorio_lyric_centering {
-    SCHEME_LATINE = 1,
-    SCHEME_ENGLISH,
+    SCHEME_VOWEL = 1,
+    SCHEME_SYLLABLE,
 } gregorio_lyric_centering;
 
 typedef struct gregorio_extra_info {
@@ -719,7 +719,7 @@ static inline bool is_initio_debilis(char liquescentia)
     return liquescentia >= L_INITIO_DEBILIS;
 }
 
-#define SCHEME_DEFAULT SCHEME_LATINE
+#define SCHEME_DEFAULT SCHEME_VOWEL
 
 #define HEPISEMUS_NONE 0
 #define HEPISEMUS_AUTO -1
