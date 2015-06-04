@@ -76,6 +76,7 @@ static gregorio_center_determination center_is_determined;
 // current_key is... the current key... updated by each notes determination
 // (for key changes)
 static int current_key = DEFAULT_KEY;
+static bool got_language = false;
 
 static inline void check_multiple(char *name, bool exists) {
     if (exists) {
@@ -319,7 +320,9 @@ static void end_definitions(void)
         elements[i] = NULL;
     }
 
-    gregorio_set_centering_language("latin");
+    if (!got_language) {
+        gregorio_set_centering_language("latin");
+    }
 }
 
 /*
@@ -604,6 +607,7 @@ gabc_y_add_notes(char *notes) {
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
 %token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES
+%token LANGUAGE
 
 %%
 
@@ -653,6 +657,14 @@ name_definition:
 centering_scheme_definition:
     CENTERING_SCHEME attribute {
         set_centering_scheme($2.text);
+    }
+    ;
+
+language_definition:
+    LANGUAGE attribute {
+        check_multiple("language", got_language);
+        gregorio_set_centering_language($2.text);
+        got_language = true;
     }
     ;
 
@@ -902,6 +914,7 @@ definition:
     | gregoriotex_font_definition
     | user_notes_definition
     | centering_scheme_definition
+    | language_definition
     | VOICE_CHANGE {
         next_voice_info();
     }

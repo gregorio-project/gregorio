@@ -31,10 +31,23 @@
 #include <stdbool.h>
 #include <string.h>
 #include <pcre.h>
+#include <ctype.h>
+#include <errno.h>
+#include <limits.h>
+#include <sys/stat.h>
+#ifdef USE_KPSE
+    #include <kpathsea/kpathsea.h>
+#endif
 #include "struct.h"
 #include "unicode.h"
 #include "characters.h"
 #include "messages.h"
+
+#ifdef __MINGW32__
+#ifndef PATH_MAX
+#define PATH_MAX _MAX_PATH
+#endif
+#endif
 
 static char *latin_patterns[] = {
     "[^aàáAÀÁeèéëEÈÉËiìíIÌÍoòóOÒÓuùúUÙÚyỳýYỲÝæǽÆǼœŒ]*[iIuU]?([aàáAÀÁeèéëEÈÉËiìíIÌÍoòóOÒÓuùúUÙÚyỳýYỲÝæǽÆǼœŒ]+)",
@@ -46,6 +59,136 @@ static pcre32 **pcre_patterns = NULL;
 static pcre32_extra **pcre_extras = NULL;
 static int pcre_ovecsize = 0;
 static int *pcre_ovector = NULL;
+
+static inline void rtrim(char *buf)
+{
+    for (char *p = buf + strlen(buf) - 1; p >= buf && isspace(*p); --p) {
+        *p = '\0';
+    }
+}
+
+static char **read_patterns(const char *const language, char **databuf) {
+    char lang[strlen(language) + 1], buf[PATH_MAX];
+    char **result, **newresult, *token;
+    struct stat sb;
+    FILE *file;
+    size_t size, i;
+
+    *databuf = NULL;
+
+    // first we figure out the real filename using the kpse library or kpsewhich
+    strcpy(lang, language);
+    for (char *p = lang; *p; ++p) {
+        *p = tolower(*p);
+    }
+#ifdef USE_KPSE
+    snprintf(buf, PATH_MAX, "%s.vwl", lang);
+    token = kpse_find_file(buf, kpse_tex_format, true);
+    if (!token) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "kpse cannot find %s", buf);
+        return NULL;
+    }
+    snprintf(buf, PATH_MAX, "%s", token);
+    if (!kpse_in_name_ok(buf)) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "kpse disallows read from %s", buf);
+        return NULL;
+    }
+#else
+    snprintf(buf, PATH_MAX, "kpsewhich %s.vwl", lang);
+    file = popen(buf, "r");
+    if (!file) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "unable to run %s: %s", buf, strerror(errno));
+        return NULL;
+    }
+    if (!fgets(buf, PATH_MAX, file)) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "unable to read output of %s: %s", buf, strerror(errno));
+        if (file) {
+            pclose(file);
+        }
+        return NULL;
+    }
+    rtrim(buf);
+    pclose(file);
+#endif
+
+    // next we read the file into memory
+    if (stat(buf, &sb)) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "unable to stat %s: %s", buf, strerror(errno));
+        return NULL;
+    }
+    if (sb.st_size > 32 * 1024) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "file %s is too large (%lu)", buf, sb.st_size);
+        return NULL;
+    }
+    size = sb.st_size;
+    *databuf = malloc(size + 1);
+    if (!*databuf) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "unable to allocate %zu bytes", size + 1);
+        return NULL;
+    }
+    file = fopen(buf, "r");
+    if (!file) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "unable to open %s: %s", buf, strerror(errno));
+        return NULL;
+    }
+    if (fread(*databuf, sizeof(char), size, file) != size) {
+        if (ferror(file)) {
+            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                    "unable to read %s: %s", buf, strerror(errno));
+            return NULL;
+        }
+        else {
+            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                    "unexpected end-of-file reading %s", buf);
+            return NULL;
+        }
+    }
+    fclose(file);
+    (*databuf)[size] = '\0';
+
+    // next we break up the string into parts
+    size = 8;
+    result = (char **)malloc(size * sizeof(char *));
+    if (!result) {
+        free(*databuf);
+        *databuf = NULL;
+
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "unable to allocate %zu bytes", size * sizeof(char *));
+        return NULL;
+    }
+    i = 0;
+    for (token = strtok(*databuf, "\n"); token; token = strtok(NULL, "\n")) {
+        if (i + 1 >= size) {
+            size <<= 1;
+            newresult = (char **)realloc(result, size * sizeof(char *));
+            if (newresult) {
+                result = newresult;
+            } else {
+                free(result);
+                free(*databuf);
+                *databuf = NULL;
+
+                gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                        "unable to allocate %zu bytes", size * sizeof(char *));
+                return NULL;
+            }
+        }
+        rtrim(token);
+        result[i++] = token;
+    }
+    result[i] = NULL;
+
+    return result;
+}
 
 static inline void compile_pattern(const int i, char *utf8string) {
     const char *errptr;
@@ -79,15 +222,15 @@ static inline void compile_pattern(const int i, char *utf8string) {
 
 void gregorio_set_centering_language(const char *const language)
 {
-    char **patterns = NULL;
-
-    if (strcmp(language, "latin") == 0) {
+    char *databuf = NULL;
+    char **patterns = read_patterns(language, &databuf);
+    if (patterns == NULL) {
         patterns = latin_patterns;
-    }
-    else {
-        gregorio_message(_("unable to find the first letter of the score"),
-                "gregorio_set_centering_language", VERBOSITY_FATAL, 0);
-        return;
+        if (strcmp(language, "latin") != 0) {
+            gregorio_messagef("gregorio_set_centering_language",
+                    VERBOSITY_WARNING, 0, _("unable to find vowel files for "
+                        "%s; defaulting to latin rules"), language);
+        }
     }
 
     if (pcre_pattern_count) {
@@ -118,6 +261,13 @@ void gregorio_set_centering_language(const char *const language)
 
     for (int i = 0; i < pcre_pattern_count; i++) {
         compile_pattern(i, patterns[i]);
+    }
+
+    if (patterns != latin_patterns) {
+        free(patterns);
+    }
+    if (databuf) {
+        free(databuf);
     }
 }
 

@@ -20,4 +20,4 @@ EXTRA_DIST = gregoriotex.tex gregoriotex.lua gregoriotex.sty \
 			 gregoriotex-spaces.tex gregoriotex-signs.tex \
 			 gregoriosyms.sty gsp-default.tex gregoriotex-chars.tex \
 			 gregoriotex-main.tex gregoriotex-nabc.tex gregoriotex-nabc.lua \
-			 gregoriotex-signs.lua
+			 gregoriotex-signs.lua english.vwl

@@ -49,6 +49,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The first syllable and first letter of the first syllable that is *not* interpreted as the initial of the score are now passed to macros that allow them to be styled from TeX.  The first syllable is passed to `\GreFirstSyllable#1` and the first letter of the first syllable is passed to `\GreFirstSyllableInitial#1`.
 - The final line of a score may now be forced to be fully justified (rather than ragged) using `\grejustifiedlastline` before including the score.  Use `\greraggedlastline` to switch back to a ragged last line.  See [#43](https://github.com/gregorio-project/gregorio/issues/43).
 - `\greforcehyphen`: this function forces GregorioTeX to put a hyphen between each syllable in a polysyllabic word.
+- Support for custom vowel centering rules.  Put a file called *custom*.vwl into your project directory or into a directory accessible from TEXMF and add the header `language: custom;` to your gabc file.  The *custom*.vwl file is a list of PERL-like regular expressions which must match from the start of the syllable.  The first (or only) regular expression group should match the characters to be centered.
 
 ### Deprecated
 - `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`

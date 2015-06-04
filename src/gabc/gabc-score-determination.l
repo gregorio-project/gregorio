@@ -162,6 +162,9 @@ semicolon. */
 <INITIAL>centering-scheme {
         return CENTERING_SCHEME;
     }
+<INITIAL>language {
+        return LANGUAGE;
+    }
 <INITIAL>transcription-date {
         return TRANSCRIPTION_DATE;
     }
