@@ -34,22 +34,23 @@
 #define ngt_(str, strtwo, count) str
 #endif
 
+typedef enum gregorio_verbosity {
+    VERBOSITY_INFO = 1,
+    VERBOSITY_WARNING,
+    VERBOSITY_DEPRECATION,
+    VERBOSITY_ERROR,
+    VERBOSITY_FATAL,
+} gregorio_verbosity;
+
 void gregorio_message(const char *string, const char *function_name,
-        char verbosity, int line_number);
-void gregorio_messagef(const char *function_name, char verbosity,
+        gregorio_verbosity verbosity, int line_number);
+void gregorio_messagef(const char *function_name,
+        gregorio_verbosity verbosity,
         int line_number, const char *format, ...)
         __attribute__ ((__format__ (__printf__, 4, 5)));
-void gregorio_set_verbosity_mode(char new_mode);
+void gregorio_set_verbosity_mode(gregorio_verbosity verbosity);
 void gregorio_set_file_name(char *new_name);
 void gregorio_set_error_out(FILE *f);
 int gregorio_get_return_value(void);
-
-#define VERB_VERBOSE 1
-#define VERB_WARNINGS 2
-#define VERB_ERRORS 3
-#define VERBOSE VERB_VERBOSE
-#define WARNING VERB_WARNINGS
-#define ERROR VERB_ERRORS
-#define FATAL_ERROR 4
 
 #endif

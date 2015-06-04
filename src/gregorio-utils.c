@@ -360,20 +360,20 @@ int main(int argc, char **argv)
             exit(0);
             break;
         case 'v':
-            if (verb_mode && verb_mode != VERB_WARNINGS) {
+            if (verb_mode && verb_mode != VERBOSITY_WARNING) {
                 fprintf(stderr, "warning: verbose option passed two times\n");
                 break;
             }
-            verb_mode = VERB_VERBOSE;
+            verb_mode = VERBOSITY_INFO;
             break;
         case 'W':
-            if (verb_mode == VERB_WARNINGS) {
+            if (verb_mode == VERBOSITY_WARNING) {
                 fprintf(stderr,
                         "warning: all-warnings option passed two times\n");
                 break;
             }
-            if (verb_mode != VERB_VERBOSE) {
-                verb_mode = VERB_WARNINGS;
+            if (verb_mode != VERBOSITY_INFO) {
+                verb_mode = VERBOSITY_WARNING;
             }
             break;
         case 'L':
@@ -502,7 +502,7 @@ int main(int argc, char **argv)
     }
 
     if (!verb_mode) {
-        verb_mode = VERB_ERRORS;
+        verb_mode = VERBOSITY_DEPRECATION;
     }
 
     gregorio_set_verbosity_mode(verb_mode);
