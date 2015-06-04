@@ -76,19 +76,19 @@ static gregorio_center_determination center_is_determined;
 // current_key is... the current key... updated by each notes determination
 // (for key changes)
 static int current_key = DEFAULT_KEY;
-static gregorio_lyric_centering centering_scheme;
 
 static inline void check_multiple(char *name, bool exists) {
     if (exists) {
-        gregorio_messagef("det_score", WARNING, 0, _("several %s definitions "
-                "found, only the last will be taken into consideration"), name);
+        gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
+                _("several %s definitions found, only the last will be taken "
+                "into consideration"), name);
     }
 }
 
 static void gabc_score_determination_error(char *error_str)
 {
     gregorio_message(error_str, (const char *) "gabc_score_determination_parse",
-            ERROR, 0);
+            VERBOSITY_ERROR, 0);
 }
 
 static void gabc_fix_custos(gregorio_score *score_to_check)
@@ -189,7 +189,7 @@ static int check_infos_integrity(gregorio_score *score_to_check)
     if (!score_to_check->name) {
         gregorio_message(_("no name specified, put `name:...;' at the "
                 "beginning of the file, can be dangerous with some output "
-                "formats"), "det_score", WARNING, 0);
+                "formats"), "det_score", VERBOSITY_WARNING, 0);
     }
     return 1;
 }
@@ -216,7 +216,6 @@ static void initialize_variables(void)
     translation_type = TR_NORMAL;
     no_linebreak_area = NLBA_NORMAL;
     euouae = EUOUAE_NORMAL;
-    centering_scheme = SCHEME_DEFAULT;
     center_is_determined = 0;
     for (i = 0; i < 10; i++) {
         macros[i] = NULL;
@@ -283,7 +282,7 @@ static void end_definitions(void)
 
     if (!check_infos_integrity(score)) {
         gregorio_message(_("can't determine valid infos on the score"),
-                "det_score", ERROR, 0);
+                "det_score", VERBOSITY_ERROR, 0);
     }
     if (!number_of_voices) {
         if (voice > MAX_NUMBER_OF_VOICES) {
@@ -298,7 +297,7 @@ static void end_definitions(void)
                     "%d waited, %d assumed", "not enough voice infos found: %d "
                     "found, %d waited, %d assumed", voice), voice,
                     number_of_voices, voice);
-            gregorio_message(error, "det_score", WARNING, 0);
+            gregorio_message(error, "det_score", VERBOSITY_WARNING, 0);
             score->number_of_voices = voice;
             number_of_voices = voice;
         } else {
@@ -308,7 +307,7 @@ static void end_definitions(void)
                         "infos found: %d found, %d waited, %d assumed",
                         number_of_voices), voice, number_of_voices,
                         number_of_voices);
-                gregorio_message(error, "det_score", WARNING, 0);
+                gregorio_message(error, "det_score", VERBOSITY_WARNING, 0);
             }
         }
     }
@@ -369,7 +368,7 @@ static void gregorio_set_translation_center_beginning(
         if (syllable->translation_type == TR_WITH_CENTER_END) {
             gregorio_message("encountering translation centering end but "
                     "cannot find translation centering beginning...",
-                    "set_translation_center_beginning", ERROR, 0);
+                    "set_translation_center_beginning", VERBOSITY_ERROR, 0);
             current_syllable->translation_type = TR_NORMAL;
             return;
         }
@@ -382,13 +381,12 @@ static void gregorio_set_translation_center_beginning(
     // we didn't find any beginning...
     gregorio_message("encountering translation centering end but cannot find "
             "translation centering beginning...",
-            "set_translation_center_beginning", ERROR, 0);
+            "set_translation_center_beginning", VERBOSITY_ERROR, 0);
     current_syllable->translation_type = TR_NORMAL;
 }
 
 static void rebuild_characters(gregorio_character **param_character,
-        gregorio_center_determination center_is_determined,
-        gregorio_lyric_centering centering_scheme)
+        gregorio_center_determination center_is_determined)
 {
     bool has_initial = score->initial_style != NO_INITIAL;
     // we rebuild the first syllable text if it is the first syllable, or if
@@ -401,7 +399,7 @@ static void rebuild_characters(gregorio_character **param_character,
     }
 
     gregorio_rebuild_characters(param_character, center_is_determined,
-                                centering_scheme, has_initial);
+            has_initial);
 }
 
 /*
@@ -446,8 +444,7 @@ static void close_syllable(void)
 // the translation pointer instead of the text pointer
 static void start_translation(unsigned char asked_translation_type)
 {
-    rebuild_characters(&current_character, center_is_determined,
-            centering_scheme);
+    rebuild_characters(&current_character, center_is_determined);
     first_text_character = current_character;
     // the middle letters of the translation have no sense
     center_is_determined = CENTER_FULLY_DETERMINED;
@@ -457,8 +454,7 @@ static void start_translation(unsigned char asked_translation_type)
 
 static void end_translation(void)
 {
-    rebuild_characters(&current_character, center_is_determined,
-            centering_scheme);
+    rebuild_characters(&current_character, center_is_determined);
     first_translation_character = current_character;
 }
 
@@ -488,16 +484,19 @@ static void gregorio_gabc_add_text(char *mbcharacters)
  */
 static void set_centering_scheme(char *sc)
 {
+    gregorio_message("\"centering-scheme\" header is deprecated. Please use "
+            "\\setlyriccentering in TeX instead.", "set_centering_scheme",
+            VERBOSITY_DEPRECATION, 0);
     if (strncmp((const char *) sc, "latine", 6) == 0) {
-        centering_scheme = SCHEME_LATINE;
+        score->centering = SCHEME_VOWEL;
         return;
     }
     if (strncmp((const char *) sc, "english", 6) == 0) {
-        centering_scheme = SCHEME_ENGLISH;
+        score->centering = SCHEME_SYLLABLE;
         return;
     }
     gregorio_message("centering-scheme unknown value: must be \"latine\" "
-            "or \"english\"", "set_centering_scheme", WARNING, 0);
+            "or \"english\"", "set_centering_scheme", VERBOSITY_WARNING, 0);
 }
 
 /*
@@ -529,7 +528,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
     gabc_score_determination_in = f_in;
     if (!f_in) {
         gregorio_message(_("can't read stream from argument, returning NULL "
-                "pointer"), "det_score", ERROR, 0);
+                "pointer"), "det_score", VERBOSITY_ERROR, 0);
         return NULL;
     }
     initialize_variables();
@@ -544,7 +543,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
         gregorio_free_score(score);
         score = NULL;
         gregorio_message(_("unable to determine a valid score from file"),
-                "det_score", FATAL_ERROR, 0);
+                "det_score", VERBOSITY_FATAL, 0);
     }
     return score;
 }
@@ -579,7 +578,7 @@ gabc_y_add_notes(char *notes) {
         }
         if (!current_element) {
             gregorio_message(_("current_element is null, this shouldn't "
-                    "happen!"), "gabc_y_add_notes",FATAL_ERROR,0);
+                    "happen!"), "gabc_y_add_notes", VERBOSITY_FATAL, 0);
         }
         if (!current_element->nabc) {
             current_element->nabc = (char **) calloc (nabc_lines,
@@ -627,7 +626,7 @@ number_of_voices_definition:
         if (number_of_voices > MAX_NUMBER_OF_VOICES) {
             snprintf(error, 40, _("can't define %d voices, maximum is %d"),
                      number_of_voices, MAX_NUMBER_OF_VOICES);
-            gregorio_message(error,"det_score",WARNING,0);
+            gregorio_message(error,"det_score", VERBOSITY_WARNING, 0);
         }
         gregorio_set_score_number_of_voices (score, number_of_voices);
     }
@@ -642,7 +641,8 @@ macro_definition:
 name_definition:
     NAME attribute {
         if ($2.text==NULL) {
-            gregorio_message("name can't be empty","det_score", WARNING, 0);
+            gregorio_message("name can't be empty","det_score",
+                    VERBOSITY_WARNING, 0);
         }
         check_multiple("name", score->name);
         gregorio_set_score_name (score, $2.text);
@@ -740,7 +740,7 @@ gabc_version_definition:
         if (strcmp ($2.text, GABC_CURRENT_VERSION) != 0) {
             gregorio_message(_("gabc-version is not the current one "
                     GABC_CURRENT_VERSION " ; there may be problems"),
-                    "det_score", WARNING, 0);
+                    "det_score", VERBOSITY_WARNING, 0);
         }
     }
     ;
@@ -781,7 +781,7 @@ annotation_definition:
             snprintf(error,99,_("too many definitions of annotation found for "
                                 "voice %d, only the first %d will be taken "
                                 "into consideration"), voice, NUM_ANNOTATIONS);
-            gregorio_message(error, "det_score",WARNING,0);
+            gregorio_message(error, "det_score", VERBOSITY_WARNING, 0);
         }
         gregorio_set_voice_annotation (current_voice_info, $2.text);
     }
@@ -851,7 +851,7 @@ style_definition:
             snprintf(error, 99, _("several definitions of style found for "
                     "voice %d, only the last will be taken into consideration"),
                     voice);
-            gregorio_message(error, "det_score",WARNING,0);
+            gregorio_message(error, "det_score", VERBOSITY_WARNING, 0);
         }
         gregorio_set_voice_style (current_voice_info, $2.text);
     }
@@ -863,7 +863,7 @@ virgula_position_definition:
             snprintf(error, 105, _("several definitions of virgula position "
                     "found for voice %d, only the last will be taken into "
                     "consideration"), voice);
-            gregorio_message(error, "det_score",WARNING,0);
+            gregorio_message(error, "det_score", VERBOSITY_WARNING, 0);
         }
         gregorio_set_voice_virgula_position (current_voice_info, $2.text);
     }
@@ -944,7 +944,7 @@ note:
             snprintf(error,105,ngt_("too many voices in note : %d found, %d expected",
                                     "too many voices in note : %d found, %d expected",
                                     number_of_voices), voice+1, number_of_voices);
-            gregorio_message(error, "det_score",ERROR,0);
+            gregorio_message(error, "det_score", VERBOSITY_ERROR, 0);
         }
         if (voice<number_of_voices-1) {
             snprintf(error,105,ngt_("not enough voices in note : %d found, %d "
@@ -952,7 +952,7 @@ note:
                                     "not enough voices in note : %d found, "
                                     "%d expected, completing with empty neume",
                                     voice+1), voice+1, number_of_voices);
-            gregorio_message(error, "det_score",VERBOSE,0);
+            gregorio_message(error, "det_score", VERBOSITY_INFO, 0);
             complete_with_nulls(voice);
         }
         voice=0;
@@ -967,7 +967,7 @@ note:
             snprintf(error,105,ngt_("too many voices in note : %d found, %d expected",
                                     "too many voices in note : %d found, %d expected",
                                     number_of_voices), voice+1, number_of_voices);
-            gregorio_message(error, "det_score",ERROR,0);
+            gregorio_message(error, "det_score", VERBOSITY_ERROR, 0);
         }
         if (voice<number_of_voices-1) {
             snprintf(error,105,ngt_("not enough voices in note : %d found, %d "
@@ -975,7 +975,7 @@ note:
                                     "not enough voices in note : %d found, %d "
                                     "expected, completing with empty neume",
                                     voice+1), voice+1, number_of_voices);
-            gregorio_message(error, "det_score",VERBOSE,0);
+            gregorio_message(error, "det_score", VERBOSITY_INFO, 0);
             complete_with_nulls(voice);
         }
         voice=0;
@@ -992,7 +992,7 @@ note:
             snprintf(error,105,ngt_("too many voices in note : %d found, %d expected",
                                     "too many voices in note : %d found, %d expected",
                                     number_of_voices), voice+1, number_of_voices);
-            gregorio_message(error, "det_score",ERROR,0);
+            gregorio_message(error, "det_score", VERBOSITY_ERROR, 0);
         }
     }
     | NOTES NABC_CUT {
@@ -1000,7 +1000,7 @@ note:
             gregorio_message(_("You used character \"|\" in gabc without "
                                "setting \"nabc-lines\" parameter. Please "
                                "set it in your gabc header."),
-                             "det_score",FATAL_ERROR,0);
+                             "det_score", VERBOSITY_FATAL, 0);
         }
         if (voice<number_of_voices) {
             gabc_y_add_notes($1.text);
@@ -1143,7 +1143,7 @@ above_line_text:
 
 syllable_with_notes:
     text OPENING_BRACKET notes {
-        rebuild_characters (&current_character, center_is_determined, centering_scheme);
+        rebuild_characters (&current_character, center_is_determined);
         first_text_character = current_character;
         close_syllable();
     }

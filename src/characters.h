@@ -72,8 +72,7 @@ void gregorio_write_initial(gregorio_character *current_character,
 gregorio_character *gregorio_first_text(gregorio_score *score);
 
 void gregorio_rebuild_characters(gregorio_character **param_character,
-        gregorio_center_determination center_is_determined,
-        gregorio_lyric_centering centering_scheme, bool skip_initial);
+        gregorio_center_determination center_is_determined, bool skip_initial);
 
 void gregorio_rebuild_first_syllable(gregorio_character **param_character,
         bool separate_initial);

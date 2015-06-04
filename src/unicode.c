@@ -44,8 +44,8 @@ static size_t gregorio_mbstowcs(grewchar *dest, char *src, int n)
     unsigned char c;
     size_t res = 0;             // number of bytes we've done so far
     if (!src) {
-        gregorio_message(_("call with a NULL argument"),
-                         "gregorio_mbstowcs", ERROR, 0);
+        gregorio_message(_("call with a NULL argument"), "gregorio_mbstowcs",
+                VERBOSITY_ERROR, 0);
     }
     while (*src && ((int) res <= n || !dest)) {
         c = (unsigned char) (*src);
@@ -71,7 +71,7 @@ static size_t gregorio_mbstowcs(grewchar *dest, char *src, int n)
         } else {
             // printf("%s %d %d\n", src, res, c);
             gregorio_message(_("malformed UTF-8 sequence1"),
-                             "gregorio_mbstowcs", ERROR, 0);
+                    "gregorio_mbstowcs", VERBOSITY_ERROR, 0);
             return -1;
         }
         while (bytes_to_come > 0) {
@@ -83,7 +83,7 @@ static size_t gregorio_mbstowcs(grewchar *dest, char *src, int n)
                 result = (result << 6) | (c & 63);
             } else {
                 gregorio_message(_("malformed UTF-8 sequence2"),
-                                 "gregorio_mbstowcs", ERROR, 0);
+                        "gregorio_mbstowcs", VERBOSITY_ERROR, 0);
                 return -1;
             }
         }
