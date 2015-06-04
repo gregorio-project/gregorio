@@ -787,9 +787,6 @@
 %This function sets the true raises of the two lines above the inital (it has to be called just as the boxes are placed in order to make sure that the values are all correct)
 \def\gre@calculate@annotationtrueraise{%
   \gre@debugmsg{annotation}{Calculating the raise.}%
-  % This start point has been fudged manually to get the baseline of the first annotation to align with the top line of the staff.
-  \gre@debugmsg{annnotation}{Initial set point.}%
-  \global\gre@dimen@annotationtrueraise= 0.54em\relax%
   \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@staffheight %
   \gre@debugmsg{annnotation}{Added staff height.}%
   \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@spacebeneathtext %
