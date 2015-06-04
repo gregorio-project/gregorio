@@ -146,7 +146,7 @@ static char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
 {
     if (!note) {
         gregorio_message(_("called with NULL pointer"),
-                "gregoriotex_determine_note_glyph_name", ERROR, 0);
+                "gregoriotex_determine_note_glyph_name", VERBOSITY_ERROR, 0);
         return "";
     }
 
@@ -224,8 +224,9 @@ static char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         *type = AT_STROPHA;
         return "StrophaAucta";
     default:
-        gregorio_messagef("gregoriotex_determine_note_glyph_name", ERROR,
-                0, _("called with unknown shape: %d"), note->u.note.shape);
+        gregorio_messagef("gregoriotex_determine_note_glyph_name",
+                VERBOSITY_ERROR, 0, _("called with unknown shape: %d"),
+                note->u.note.shape);
         return "";
     }
 }
@@ -333,7 +334,7 @@ static inline int compute_ambitus(const gregorio_note *const current_note)
         ambitus = first - second;
     }
     if (ambitus < 1 || ambitus > MAX_AMBITUS) {
-        gregorio_messagef("compute_ambitus", ERROR, 0,
+        gregorio_messagef("compute_ambitus", VERBOSITY_ERROR, 0,
                 _("unsupported ambitus: %d"), ambitus);
         return 0;
     }
@@ -352,19 +353,18 @@ static char *compute_glyph_name(const gregorio_glyph *const glyph,
     int ambitus1, ambitus2, ambitus3;
     if (!glyph) {
         gregorio_message(_("called with NULL pointer"),
-                "compute_glyph_name", ERROR, 0);
+                "compute_glyph_name", VERBOSITY_ERROR, 0);
         return "";
     }
     if (!glyph->u.notes.first_note) {
         gregorio_message(_("called with a glyph that have no note"),
-                "compute_glyph_name", ERROR, 0);
+                "compute_glyph_name", VERBOSITY_ERROR, 0);
         return "";
     }
     current_note = glyph->u.notes.first_note;
     if (!current_note->next) {
         gregorio_message(_("called with a multi-note glyph that has only "
-                        "one note"), "compute_glyph_name", ERROR,
-                0);
+                    "one note"), "compute_glyph_name", VERBOSITY_ERROR, 0);
         return "";
     }
     if (!(ambitus1 = compute_ambitus(current_note))) {
@@ -406,12 +406,12 @@ char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
     char pitch = 0;
     if (!glyph) {
         gregorio_message(_("called with NULL pointer"),
-                "gregoriotex_determine_glyph_name", ERROR, 0);
+                "gregoriotex_determine_glyph_name", VERBOSITY_ERROR, 0);
         return "";
     }
     if (!glyph->u.notes.first_note) {
         gregorio_message(_("called with a glyph that has no note"),
-                "gregorio_tex_determine_glyph_name", ERROR, 0);
+                "gregorio_tex_determine_glyph_name", VERBOSITY_ERROR, 0);
         return "";
     }
     *gtype = T_ONE_NOTE;
@@ -679,8 +679,9 @@ char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         *type = AT_ONE_NOTE;
         break;
     default:
-        gregorio_messagef("gregoriotex_determine_glyph_name", ERROR, 0,
-                _("called with unknown glyph: %d"), glyph->u.notes.glyph_type);
+        gregorio_messagef("gregoriotex_determine_glyph_name", VERBOSITY_ERROR,
+                0, _("called with unknown glyph: %d"),
+                glyph->u.notes.glyph_type);
         break;
     }
     if (shape) {
@@ -810,7 +811,7 @@ static void gregoriotex_getlineinfos(gregorio_syllable *syllable,
     if (line == NULL) {
         gregorio_message(_
                 ("call with NULL pointer"),
-                "gregoriotex_write_score", ERROR, 0);
+                "gregoriotex_write_score", VERBOSITY_ERROR, 0);
         return;
     }
     /*
@@ -1245,8 +1246,8 @@ static char gregoriotex_clef_flat_height(char step, int line)
             offset = 8;
             break;
         default:
-            gregorio_messagef("gregoriotex_clef_flat_height", ERROR, 0,
-                    _("unknown line number: %d"), line);
+            gregorio_messagef("gregoriotex_clef_flat_height", VERBOSITY_ERROR,
+                    0, _("unknown line number: %d"), line);
             break;
         }
         break;
@@ -1265,13 +1266,13 @@ static char gregoriotex_clef_flat_height(char step, int line)
             offset = 5;
             break;
         default:
-            gregorio_messagef("gregoriotex_clef_flat_height", ERROR, 0,
-                    _("unknown line number: %d"), line);
+            gregorio_messagef("gregoriotex_clef_flat_height", VERBOSITY_ERROR,
+                    0, _("unknown line number: %d"), line);
             break;
         }
         break;
     default:
-        gregorio_messagef("gregoriotex_clef_flat_height", ERROR, 0,
+        gregorio_messagef("gregoriotex_clef_flat_height", VERBOSITY_ERROR, 0,
                 _("unknown clef type: %d"), step);
         break;
     }
@@ -1330,7 +1331,7 @@ static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
         fprintf(f, "dominica{6}");
         break;
     default:
-        gregorio_messagef("gregoriotex_write_bar", ERROR, 0,
+        gregorio_messagef("gregoriotex_write_bar", VERBOSITY_ERROR, 0,
                 _("unknown bar type: %d"), type);
         break;
     }
@@ -1692,7 +1693,7 @@ static void gregoriotex_write_additional_line(FILE *f,
     char ambitus = 0;
     if (!current_note) {
         gregorio_message(_("called with no note"),
-                "gregoriotex_write_additional_line", ERROR, 0);
+                "gregoriotex_write_additional_line", VERBOSITY_ERROR, 0);
         return;
     }
     // patch to get a line under the full glyph in the case of dbc (for
@@ -1834,7 +1835,7 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
     if (!note) {
         gregorio_message(_
                 ("called with NULL pointer"),
-                "gregoriotex_write_note", ERROR, 0);
+                "gregoriotex_write_note", VERBOSITY_ERROR, 0);
         return;
     }
     if (note->u.note.shape == S_PUNCTUM
@@ -1957,7 +1958,7 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
     gregorio_element *element;
     if (!syllable) {
         gregorio_message(_("called with a NULL argument"),
-                "gregoriotex_syllable_first_type", ERROR, 0);
+                "gregoriotex_syllable_first_type", VERBOSITY_ERROR, 0);
     }
     element = syllable->elements[0];
     while (element) {
@@ -2301,12 +2302,12 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
     char *leading_shape, *shape;
     if (!glyph) {
         gregorio_message(_("called with NULL pointer"),
-                "gregoriotex_write_glyph", ERROR, 0);
+                "gregoriotex_write_glyph", VERBOSITY_ERROR, 0);
         return;
     }
     if (glyph->type != GRE_GLYPH || !glyph->u.notes.first_note) {
         gregorio_message(_("called with glyph without note"),
-                "gregoriotex_write_glyph", ERROR, 0);
+                "gregoriotex_write_glyph", VERBOSITY_ERROR, 0);
         return;
     }
     next_note_pitch = gregorio_determine_next_pitch(syllable, element, glyph);
@@ -3034,15 +3035,14 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     status->to_modify_note = NULL;
 
     if (!f) {
-        gregorio_message(_
-                ("call with NULL file"), "gregoriotex_write_score", ERROR, 0);
+        gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
+                VERBOSITY_ERROR, 0);
         return;
     }
 
     if (score->number_of_voices != 1) {
-        gregorio_message(_
-                ("gregoriotex only works in monophony (for the moment)"),
-                "gregoriotex_write_score", ERROR, 0);
+        gregorio_message(_("gregoriotex only works in monophony (for the "
+                    "moment)"), "gregoriotex_write_score", VERBOSITY_ERROR, 0);
     }
 
     fprintf(f, "%% File generated by gregorio %s\n", GREGORIO_VERSION);
@@ -3064,6 +3064,17 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     }
 
     fprintf(f, "\\begingregorioscore%%\n");
+    switch (score->centering) {
+    case SCHEME_SYLLABLE:
+        fprintf(f, "\\englishcentering%%\n");
+        break;
+    case SCHEME_VOWEL:
+        fprintf(f, "\\defaultcentering%%\n");
+        break;
+    default:
+        // don't set any centering
+        break;
+    }
     if (score->nabc_lines) {
         fprintf(f, "\\scorenabclines{%d}", (int)score->nabc_lines);
     }

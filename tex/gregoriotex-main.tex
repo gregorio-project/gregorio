@@ -817,8 +817,11 @@
 
 % gregorioattr (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
+\newcount\gre@save@englishcentering% DEPRECATED
+
 %macro called at the beginning of a score
 \def\begingregorioscore{%
+  \global\gre@save@englishcentering=\gre@englishcentering\relax % DEPRECATED
   \ifgre@justifylastline%
     \xdef\gre@save@parfillskip{\the\parfillskip}
     \parfillskip=0pt plus 0pt minus 0pt\relax%
@@ -886,6 +889,7 @@
   \ifgre@justifylastline%
     \parfillskip=\gre@save@parfillskip\relax%
   \fi %
+  \global\gre@englishcentering=\gre@save@englishcentering\relax % DEPRECATED
   \relax%
 }%
 

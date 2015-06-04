@@ -21,12 +21,13 @@
 #include <stdio.h>
 #include <stdlib.h>             /* for exit() */
 #include <stdarg.h>             /* for exit() */
+#include <stdbool.h>
 #include "messages.h"
 
 static FILE *error_out;
 static char *file_name = NULL;
-static char verbosity_mode = 0;
-static char debug_messages = 0;
+static gregorio_verbosity verbosity_mode = 0;
+static bool debug_messages = false;
 static int return_value = 0;
 
 int gregorio_get_return_value(void)
@@ -34,54 +35,58 @@ int gregorio_get_return_value(void)
     return return_value;
 }
 
-void gregorio_set_error_out(FILE *f)
+void gregorio_set_error_out(FILE *const f)
 {
     error_out = f;
 }
 
-void gregorio_set_file_name(char *new_name)
+void gregorio_set_file_name(char *const new_name)
 {
     file_name = new_name;
 }
 
-void gregorio_set_verbosity_mode(char new_mode)
+void gregorio_set_verbosity_mode(const gregorio_verbosity verbosity)
 {
-    verbosity_mode = new_mode;
+    verbosity_mode = verbosity;
 }
 
-void gregorio_set_debug_messages(char new_mode)
+void gregorio_set_debug_messages(bool debug)
 {
-    debug_messages = new_mode;
+    debug_messages = debug;
 }
 
-static const char *verbosity_to_str(char verbosity)
+static const char *verbosity_to_str(const gregorio_verbosity verbosity)
 {
     const char *str;
     switch (verbosity) {
-    case WARNING:
+    case VERBOSITY_WARNING:
         str = _("warning:");
         break;
-    case ERROR:
+    case VERBOSITY_DEPRECATION:
+        str = _("deprecation:");
+        break;
+    case VERBOSITY_ERROR:
         str = _("error:");
         break;
-    case FATAL_ERROR:
+    case VERBOSITY_FATAL:
         str = _("fatal error:");
         break;
     default:
-        // VERBOSE, for example
+        // INFO, for example
         str = " ";
         break;
     }
     return str;
 }
 
-void gregorio_messagef(const char *function_name, char verbosity,
-        int line_number, const char *format, ...)
+void gregorio_messagef(const char *function_name,
+        gregorio_verbosity verbosity, int line_number,
+        const char *format, ...)
 {
     va_list args;
     const char *verbosity_str;
 
-    if (debug_messages == 0) {
+    if (!debug_messages) {
         line_number = 0;
         function_name = NULL;
     }
@@ -94,7 +99,7 @@ void gregorio_messagef(const char *function_name, char verbosity,
     if (!verbosity_mode) {
         fprintf(stderr, _("warning: verbosity mode not set in "
                     "gregorio_messages, assumed warnings\n"));
-        verbosity_mode = VERB_WARNINGS;
+        verbosity_mode = VERBOSITY_WARNING;
     }
     if (verbosity < verbosity_mode) {
         return;
@@ -147,10 +152,10 @@ void gregorio_messagef(const char *function_name, char verbosity,
     fprintf(error_out, "\n");
 
     switch (verbosity) {
-    case ERROR:
+    case VERBOSITY_ERROR:
         return_value = 1;
         break;
-    case FATAL_ERROR:
+    case VERBOSITY_FATAL:
         exit(1);
         break;
     default:
@@ -159,7 +164,7 @@ void gregorio_messagef(const char *function_name, char verbosity,
 }
 
 void gregorio_message(const char *string, const char *function_name,
-        char verbosity, int line_number)
+        gregorio_verbosity verbosity, int line_number)
 {
     gregorio_messagef(function_name, verbosity, line_number, "%s", string);
 }

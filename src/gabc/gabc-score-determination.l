@@ -200,7 +200,7 @@ semicolon. */
         char *dirtyvar = malloc(71*sizeof(char));
         snprintf(dirtyvar,70,_("unrecognized character: \"%c\" in definition part"),
                  gabc_score_determination_text[0]);
-        gregorio_message (dirtyvar, "det_score", ERROR, 0);
+        gregorio_message (dirtyvar, "det_score", VERBOSITY_ERROR, 0);
     }
 <score>[^\{\}\(\[\]<%]+ {
         gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
