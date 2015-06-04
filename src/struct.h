@@ -632,11 +632,6 @@ typedef struct gregorio_score {
     // field giving informations on the initial (no initial, normal initial 
     // or two lines initial)
     char initial_style;
-    // these preambles will be added (in the future) as preamble in case
-    // of OpusTeX, MusiXTeX or Lilypond output.
-    char *lilypond_preamble;
-    char *opustex_preamble;
-    char *musixtex_preamble;
     // the font to use in gregoriotex
     char *gregoriotex_font;
     size_t nabc_lines;
@@ -807,12 +802,6 @@ void gregorio_set_score_arranger(gregorio_score *score, char *arranger);
 void gregorio_set_score_gabc_version(gregorio_score *score, char *gabc_version);
 void gregorio_set_score_number_of_voices(gregorio_score *score,
         int number_of_voices);
-void gregorio_set_score_lilypond_preamble(gregorio_score *score,
-        char *lilypond_preamble);
-void gregorio_set_score_opustex_preamble(gregorio_score *score,
-        char *opustex_preamble);
-void gregorio_set_score_musixtex_preamble(gregorio_score *score,
-        char *musixtex_preamble);
 void gregorio_set_voice_annotation(gregorio_voice_info *voice_info,
         char *annotation);
 void gregorio_set_score_author(gregorio_score *score, char *author);

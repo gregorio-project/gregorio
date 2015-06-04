@@ -29,32 +29,307 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include <pcre.h>
+#include <ctype.h>
+#include <errno.h>
+#include <limits.h>
+#include <sys/stat.h>
+#ifdef USE_KPSE
+    #include <kpathsea/kpathsea.h>
+#endif
 #include "struct.h"
 #include "unicode.h"
 #include "characters.h"
 #include "messages.h"
 
-/*
- * ! @brief Tests if a letter is a vowel or not. Necessary for determining
- * proper centering, as we want the first neume centered over the vowel.
- * Simple, we just compare \c letter to a list of vowels used in Latin, both
- * accented and not. \param letter The letter being tested \return returns \c 1 
- * if a vowel; otherwise returns \c 0 
- */
-static int gregorio_is_vowel(grewchar letter)
+#ifdef __MINGW32__
+#ifndef PATH_MAX
+#define PATH_MAX _MAX_PATH
+#endif
+#endif
+
+static char *latin_patterns[] = {
+    "[^aàáAÀÁeèéëEÈÉËiìíIÌÍoòóOÒÓuùúUÙÚyỳýYỲÝæǽÆǼœŒ]*[iIuU]?([aàáAÀÁeèéëEÈÉËiìíIÌÍoòóOÒÓuùúUÙÚyỳýYỲÝæǽÆǼœŒ]+)",
+    "[^aàáAÀÁeèéëEÈÉËiìíIÌÍoòóOÒÓuùúUÙÚyỳýYỲÝæǽÆǼœŒ]*([iIuU])",
+    NULL,
+};
+static int pcre_pattern_count = 0;
+static pcre32 **pcre_patterns = NULL;
+static pcre32_extra **pcre_extras = NULL;
+static int pcre_ovecsize = 0;
+static int *pcre_ovector = NULL;
+
+static inline void rtrim(char *buf)
 {
-    grewchar vowels[] = { L'a', L'e', L'i', L'o', L'u', L'y', L'A', L'E',
-        L'I', 'O', 'U', 'Y', L'œ', L'Œ', L'æ', L'Æ', L'ó', L'À', L'È',
-        L'É', L'Ì', L'Í', L'Ý', L'Ò', L'Ó', L'è', L'é', L'ò', L'ú',
-        L'ù', L'ý', L'á', L'à', L'ǽ', L'Ǽ', L'í', L'ë', L'*'
-    };
-    int i;
-    for (i = 0; i < 37; i++) {
-        if (letter == vowels[i]) {
-            return 1;
+    for (char *p = buf + strlen(buf) - 1; p >= buf && isspace(*p); --p) {
+        *p = '\0';
+    }
+}
+
+static char **read_patterns(const char *const language, char **databuf) {
+    char lang[strlen(language) + 1], buf[PATH_MAX];
+    char **result, **newresult, *token;
+    struct stat sb;
+    FILE *file;
+    size_t size, i;
+
+    *databuf = NULL;
+
+    // first we figure out the real filename using the kpse library or kpsewhich
+    strcpy(lang, language);
+    for (char *p = lang; *p; ++p) {
+        *p = tolower(*p);
+    }
+#ifdef USE_KPSE
+    snprintf(buf, PATH_MAX, "%s.vwl", lang);
+    token = kpse_find_file(buf, kpse_tex_format, true);
+    if (!token) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "kpse cannot find %s", buf);
+        return NULL;
+    }
+    snprintf(buf, PATH_MAX, "%s", token);
+    if (!kpse_in_name_ok(buf)) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "kpse disallows read from %s", buf);
+        return NULL;
+    }
+#else
+    snprintf(buf, PATH_MAX, "kpsewhich %s.vwl", lang);
+    file = popen(buf, "r");
+    if (!file) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "unable to run %s: %s", buf, strerror(errno));
+        return NULL;
+    }
+    if (!fgets(buf, PATH_MAX, file)) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "unable to read output of %s: %s", buf, strerror(errno));
+        if (file) {
+            pclose(file);
+        }
+        return NULL;
+    }
+    rtrim(buf);
+    pclose(file);
+#endif
+
+    // next we read the file into memory
+    if (stat(buf, &sb)) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "unable to stat %s: %s", buf, strerror(errno));
+        return NULL;
+    }
+    if (sb.st_size > 32 * 1024) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "file %s is too large (%lu)", buf, sb.st_size);
+        return NULL;
+    }
+    size = sb.st_size;
+    *databuf = malloc(size + 1);
+    if (!*databuf) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "unable to allocate %zu bytes", size + 1);
+        return NULL;
+    }
+    file = fopen(buf, "r");
+    if (!file) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "unable to open %s: %s", buf, strerror(errno));
+        return NULL;
+    }
+    if (fread(*databuf, sizeof(char), size, file) != size) {
+        if (ferror(file)) {
+            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                    "unable to read %s: %s", buf, strerror(errno));
+            return NULL;
+        }
+        else {
+            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                    "unexpected end-of-file reading %s", buf);
+            return NULL;
         }
     }
-    return 0;
+    fclose(file);
+    (*databuf)[size] = '\0';
+
+    // next we break up the string into parts
+    size = 8;
+    result = (char **)malloc(size * sizeof(char *));
+    if (!result) {
+        free(*databuf);
+        *databuf = NULL;
+
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                "unable to allocate %zu bytes", size * sizeof(char *));
+        return NULL;
+    }
+    i = 0;
+    for (token = strtok(*databuf, "\n"); token; token = strtok(NULL, "\n")) {
+        if (i + 1 >= size) {
+            size <<= 1;
+            newresult = (char **)realloc(result, size * sizeof(char *));
+            if (newresult) {
+                result = newresult;
+            } else {
+                free(result);
+                free(*databuf);
+                *databuf = NULL;
+
+                gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                        "unable to allocate %zu bytes", size * sizeof(char *));
+                return NULL;
+            }
+        }
+        rtrim(token);
+        result[i++] = token;
+    }
+    result[i] = NULL;
+
+    return result;
+}
+
+static inline void compile_pattern(const int i, char *utf8string) {
+    const char *errptr;
+    int erroffset, result;
+    grewchar *pattern = gregorio_build_grewchar_string_from_buf(utf8string);
+    pcre_patterns[i] = pcre32_compile(pattern, PCRE_UTF32|PCRE_ANCHORED,
+            &errptr, &erroffset, NULL);
+    free(pattern);
+    if (!pcre_patterns[i]) {
+        gregorio_messagef("compile_pattern", VERBOSITY_FATAL, 0,
+                "failed to compile pattern: %s", errptr);
+        return;
+    }
+    pcre_extras[i] = pcre32_study(pcre_patterns[i], PCRE_STUDY_JIT_COMPILE,
+            &errptr);
+    if (errptr) {
+        gregorio_messagef("compile_pattern", VERBOSITY_WARNING, 0,
+                "failed to jit-compile pattern: %s", errptr);
+    }
+    if (pcre32_fullinfo(pcre_patterns[i], pcre_extras[i],
+                PCRE_INFO_CAPTURECOUNT, &result)) {
+        gregorio_messagef("compile_pattern", VERBOSITY_FATAL, 0,
+                "failed to retrieve pattern information");
+        return;
+    }
+    result = (result + 1) * 3;
+    if (result > pcre_ovecsize) {
+        pcre_ovecsize = result;
+    }
+}
+
+void gregorio_set_centering_language(const char *const language)
+{
+    char *databuf = NULL;
+    char **patterns = read_patterns(language, &databuf);
+    if (patterns == NULL) {
+        patterns = latin_patterns;
+        if (strcmp(language, "latin") != 0) {
+            gregorio_messagef("gregorio_set_centering_language",
+                    VERBOSITY_WARNING, 0, _("unable to find vowel files for "
+                        "%s; defaulting to latin rules"), language);
+        }
+    }
+
+    if (pcre_pattern_count) {
+        for (int i = 0; i < pcre_pattern_count; ++i) {
+            if (pcre_extras[i]) {
+                pcre32_free_study(pcre_extras[i]);
+            }
+            pcre32_free(pcre_patterns[i]);
+        }
+        free(pcre_ovector);
+        free(pcre_extras);
+        free(pcre_patterns);
+    }
+
+    pcre_pattern_count = 0;
+    for (; patterns[pcre_pattern_count]; ++pcre_pattern_count);
+
+    pcre_patterns = (pcre32 **)calloc(pcre_pattern_count, sizeof(pcre32 *));
+    pcre_extras = (pcre32_extra **)calloc(pcre_pattern_count, sizeof(pcre32_extra *));
+    pcre_ovecsize += 30; // give it extra space
+    pcre_ovector = (int *)calloc(pcre_ovecsize, sizeof(int));
+
+    if (!pcre_patterns || !pcre_extras) {
+        gregorio_message(_("unable to allocate memory"),
+                "gregorio_set_centering_language", VERBOSITY_FATAL, 0);
+        return;
+    }
+
+    for (int i = 0; i < pcre_pattern_count; i++) {
+        compile_pattern(i, patterns[i]);
+    }
+
+    if (patterns != latin_patterns) {
+        free(patterns);
+    }
+    if (databuf) {
+        free(databuf);
+    }
+}
+
+static inline gregorio_character *skip_verbatim_or_special(
+        gregorio_character *ch)
+{
+    // skip past verbatim and special characters
+    if (ch->cos.s.type == ST_T_BEGIN && (ch->cos.s.style == ST_VERBATIM
+                || ch->cos.s.style == ST_SPECIAL_CHAR)) {
+        if (ch->next_character) {
+            ch = ch->next_character;
+        }
+        while (ch->next_character && ch->is_character) {
+            ch = ch->next_character;
+        }
+    }
+    return ch;
+}
+
+static void determine_center(gregorio_character *character, int *start,
+        int *end) {
+    int count, index, result;
+    grewchar *subject;
+    gregorio_character *ch;
+
+    *start = *end = -1;
+
+    for (count = 0, ch = character; ch; ch = ch->next_character) {
+        if (ch->is_character) {
+            ++count;
+        } else {
+            ch = skip_verbatim_or_special(ch);
+        }
+    }
+    if (count == 0) {
+        return;
+    }
+    subject = (grewchar *)malloc((count + 1) * sizeof(grewchar));
+    for (count = 0, ch = character; ch; ch = ch->next_character) {
+        if (ch->is_character) {
+            subject[count ++] = ch->cos.character;
+        } else {
+            ch = skip_verbatim_or_special(ch);
+        }
+    }
+    subject[count] = (grewchar)0; // not needed for pcre, but do it to be safe
+
+    for (int i = 0; i < pcre_pattern_count; ++i) {
+        result = pcre32_exec(pcre_patterns[i], pcre_extras[i], subject, count,
+                0, 0, pcre_ovector, pcre_ovecsize);
+        if (result > 0) {
+            index = (result > 1)? 1 : 0;
+            index *= 2;
+            *start = pcre_ovector[index];
+            *end = pcre_ovector[index + 1];
+            //gregorio_print_unistring(stderr, subject);
+            //fprintf(stderr, " %d\n", i);
+            break;;
+        }
+    }
+
+    free(subject);
 }
 
 /*
@@ -672,11 +947,10 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
     // the current_character
     gregorio_character *current_character = *param_character;
     // a char that we will use in a very particular case
-    unsigned char this_style;
-    // a char that will be useful for the determination of iota and digamma
-    unsigned char false_middle = 0;
+    grestyle_style this_style;
     det_style *first_style = NULL;
-    unsigned char center_type = 0;  // determining the type of centering
+    grestyle_style center_type = ST_NO_STYLE;  // determining the type of centering
+    int start = -1, end = -1, index = -1; 
     // (forced or not)
     // so, here we start: we go to the first_character
     if (gregorio_go_to_end_initial(&current_character)) {
@@ -701,6 +975,7 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
     // first we see if there is already a center determined
     if (center_is_determined == 0) {
         center_type = ST_CENTER;
+        determine_center(current_character, &start, &end);
     } else {
         center_type = ST_FORCED_CENTER;
     }
@@ -709,41 +984,12 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
         // the first part of the function deals with real characters (not
         // styles)
         if (current_character->is_character) {
+            ++index;
             // the firstcase is if the user has'nt determined the middle, and
             // we have only seen vowels so far (else center_is_determined
             // would be DETERMINING_MIDDLE). The current_character is the
             // first vowel, so we start the center here. 
-            if (!center_is_determined
-                    && gregorio_is_vowel(current_character->cos.character)) {
-                if (current_character->cos.character == L'i'
-                        || current_character->cos.character == L'I'
-                        || current_character->cos.character == L'u') {
-                    // did you really think it would be that easy?... we have
-                    // to deal with iota and digamma, that are not aligned the
-                    // same way... So if the current character is i or u, we
-                    // check if the next character is also a vowel or not. If
-                    // it is the case we just pass, else we start the center
-                    // there.
-                    gregorio_character *temp =
-                            current_character->next_character;
-                    while (temp) {
-                        if (temp->is_character) {
-                            if (gregorio_is_vowel(temp->cos.character)) {
-                                false_middle = 1;
-                                break;
-                            } else {
-                                break;
-                            }
-                        }
-                        temp = temp->next_character;
-                    }
-                }
-                if (false_middle) {
-                    // the case of the iota or digamma
-                    false_middle = 0;
-                    // remember? this macro has a continue; in it
-                    end_c();
-                }
+            if (!center_is_determined && index == start) {
                 begin_center(center_type, current_character, &current_style);
                 center_is_determined = CENTER_DETERMINING_MIDDLE;
                 end_c();
@@ -753,7 +999,7 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
             // encounter something that is not a vowel, so the center ends
             // there.
             if (center_is_determined == CENTER_DETERMINING_MIDDLE
-                    && !gregorio_is_vowel(current_character->cos.character)) {
+                    && index == end) {
                 end_center(center_type, current_character, &current_style);
                 center_is_determined = CENTER_FULLY_DETERMINED;
             }

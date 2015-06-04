@@ -76,6 +76,7 @@ static gregorio_center_determination center_is_determined;
 // current_key is... the current key... updated by each notes determination
 // (for key changes)
 static int current_key = DEFAULT_KEY;
+static bool got_language = false;
 
 static inline void check_multiple(char *name, bool exists) {
     if (exists) {
@@ -317,6 +318,10 @@ static void end_definitions(void)
             sizeof(gregorio_element *));
     for (i = 0; i < number_of_voices; i++) {
         elements[i] = NULL;
+    }
+
+    if (!got_language) {
+        gregorio_set_centering_language("latin");
     }
 }
 
@@ -592,9 +597,8 @@ gabc_y_add_notes(char *notes) {
 
 %token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE 
 %token MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER
-%token TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION LILYPOND_PREAMBLE
-%token OPUSTEX_PREAMBLE MUSIXTEX_PREAMBLE INITIAL_STYLE MODE GREGORIOTEX_FONT
-%token GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT
+%token TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION INITIAL_STYLE MODE
+%token GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT
 %token CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE
 %token CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END
 %token C_BEGINNING C_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING
@@ -603,6 +607,7 @@ gabc_y_add_notes(char *notes) {
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
 %token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES
+%token LANGUAGE
 
 %%
 
@@ -649,16 +654,17 @@ name_definition:
     }
     ;
 
-lilypond_preamble_definition:
-    LILYPOND_PREAMBLE attribute {
-        check_multiple("lilypond preamble", score->lilypond_preamble);
-        gregorio_set_score_lilypond_preamble (score, $2.text);
-    }
-    ;
-    
 centering_scheme_definition:
     CENTERING_SCHEME attribute {
         set_centering_scheme($2.text);
+    }
+    ;
+
+language_definition:
+    LANGUAGE attribute {
+        check_multiple("language", got_language);
+        gregorio_set_centering_language($2.text);
+        got_language = true;
     }
     ;
 
@@ -673,20 +679,6 @@ score_copyright_definition:
     SCORE_COPYRIGHT attribute {
         check_multiple("score_copyright", score->score_copyright);
         gregorio_set_score_score_copyright (score, $2.text);
-    }
-    ;
-
-opustex_preamble_definition:
-    OPUSTEX_PREAMBLE attribute {
-        check_multiple("OpusTeX preamble", score->opustex_preamble);
-        gregorio_set_score_opustex_preamble (score, $2.text);
-    }
-    ;
-
-musixtex_preamble_definition:
-    MUSIXTEX_PREAMBLE attribute {
-        check_multiple("MusiXTeX preamble", score->musixtex_preamble);
-        gregorio_set_score_musixtex_preamble (score, $2.text);
     }
     ;
 
@@ -899,9 +891,6 @@ definition:
     | gabc_copyright_definition
     | score_copyright_definition
     | generated_by_definition
-    | musixtex_preamble_definition
-    | opustex_preamble_definition
-    | lilypond_preamble_definition
     | virgula_position_definition
     | style_definition
     | transcription_date_definition
@@ -925,6 +914,7 @@ definition:
     | gregoriotex_font_definition
     | user_notes_definition
     | centering_scheme_definition
+    | language_definition
     | VOICE_CHANGE {
         next_voice_info();
     }
