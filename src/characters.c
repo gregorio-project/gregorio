@@ -194,8 +194,8 @@ static inline void compile_pattern(const int i, char *utf8string) {
     const char *errptr;
     int erroffset, result;
     grewchar *pattern = gregorio_build_grewchar_string_from_buf(utf8string);
-    pcre_patterns[i] = pcre32_compile(pattern, PCRE_UTF32|PCRE_ANCHORED,
-            &errptr, &erroffset, NULL);
+    pcre_patterns[i] = pcre32_compile(pattern, PCRE_ANCHORED, &errptr,
+            &erroffset, NULL);
     free(pattern);
     if (!pcre_patterns[i]) {
         gregorio_messagef("compile_pattern", VERBOSITY_FATAL, 0,
