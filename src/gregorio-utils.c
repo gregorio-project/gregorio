@@ -30,6 +30,7 @@
 #include "plugins.h"
 #include "messages.h"
 #include "characters.h"
+#include "vowel/vowel.h"
 #ifdef USE_KPSE
     #include <kpathsea/kpathsea.h>
 #endif
@@ -547,6 +548,7 @@ int main(int argc, char **argv)
     }
     fclose(output_file);
     gregorio_free_score(score);
+    gregorio_vowel_tables_free();
 
     exit(gregorio_get_return_value());
 }

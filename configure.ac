@@ -60,12 +60,6 @@ AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
 
 AC_ARG_WITH([kpathsea], AS_HELP_STRING([--with-kpathsea], [Build with kpathsea.]))
 
-AC_CHECK_LIB([pcre32], [pcre32_compile], [
-    LIBS+=" -lpcre32"
-], [
-    AC_MSG_ERROR([unable to find the pcre32 library])
-])
-
 AS_IF([test "x$with_kpathsea" = "xyes"], [
     PKG_PROG_PKG_CONFIG
     PKG_CHECK_MODULES([KPSE], [kpathsea], AC_DEFINE([USE_KPSE], [1], [Use kpathsea]),

@@ -37,7 +37,7 @@
 
 // an utf8 version of mbstowcs
 
-static size_t gregorio_mbstowcs(grewchar *dest, char *src, int n)
+static size_t gregorio_mbstowcs(grewchar *dest, const char *src, int n)
 {
     unsigned char bytes_to_come;
     grewchar result = 0;
@@ -101,7 +101,7 @@ static size_t gregorio_mbstowcs(grewchar *dest, char *src, int n)
 }
 
 // the value returned by this function must be freed!
-grewchar *gregorio_build_grewchar_string_from_buf(char *buf)
+grewchar *gregorio_build_grewchar_string_from_buf(const char *const buf)
 {
     size_t len;
     grewchar *gwstring;
@@ -116,7 +116,7 @@ grewchar *gregorio_build_grewchar_string_from_buf(char *buf)
 
 // the function to build a gregorio_character list from a buffer.
 
-gregorio_character *gregorio_build_char_list_from_buf(char *buf)
+gregorio_character *gregorio_build_char_list_from_buf(const char *const buf)
 {
     int i = 0;
     grewchar *gwstring;
