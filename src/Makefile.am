@@ -57,24 +57,30 @@ gregorio_SOURCES += gabc/gabc-elements-determination.c gabc/gabc-write.c \
 					gabc/gabc-glyphs-determination.c gabc/gabc.h \
 					gabc/gabc-score-determination.h \
 					gabc/gabc-score-determination-y.h \
+					gabc/gabc-score-determination-y.c \
 					gabc/gabc-score-determination-l.h \
 					gabc/gabc-score-determination-l.c \
 					gabc/gabc-notes-determination-l.c \
-					gabc/gabc-score-determination-y.c
+					vowel/vowel.h vowel/vowel.c vowel/vowel-rules.h \
+					vowel/vowel-rules-l.h vowel/vowel-rules-l.c \
+					vowel/vowel-rules-y.h vowel/vowel-rules-y.c
 
 EXTRA_DIST = gabc/gabc-score-determination.l gabc/gabc-score-determination.y \
 					gabc/gabc-notes-determination.l \
 					gabc/gabc-score-determination.h \
 					gabc/gabc-score-determination-y.h \
+					gabc/gabc-score-determination-y.c \
 					gabc/gabc-score-determination-l.h \
 					gabc/gabc-score-determination-l.c \
 					gabc/gabc-notes-determination-l.c \
-					gabc/gabc-score-determination-y.c
+					vowel/vowel-rules.l vowel/vowel-rules.y \
+					vowel/vowel-rules-l.h vowel/vowel-rules-l.c \
+					vowel/vowel-rules-y.h vowel/vowel-rules-y.c
 
 gabc/gabc-score-determination-y.c: gabc/gabc-score-determination.y
 	$(YACC) -d -p "gabc_score_determination_" -o $@ $<
 gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
-	## Recover from the removal of gabc/gabc-score-determination-y.h, see 
+	## Recover from the removal of gabc/gabc-score-determination-y.h, see
 	## https://www.gnu.org/software/automake/manual/html_node/Multiple-Outputs.html
 	@if test -f $@; then :; else \
 		rm -f gabc/gabc-score-determination-y.c; \
@@ -84,7 +90,7 @@ gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
 gabc/gabc-score-determination-l.c: gabc/gabc-score-determination.l
 	$(LEX) -o $@ --header-file=gabc/gabc-score-determination-l.h $<
 gabc/gabc-score-determination-l.h: gabc/gabc-score-determination-l.c
-	## Recover from the removal of gabc/gabc-score-determination-l.h, see 
+	## Recover from the removal of gabc/gabc-score-determination-l.h, see
 	## https://www.gnu.org/software/automake/manual/html_node/Multiple-Outputs.html
 	@if test -f $@; then :; else \
 		rm -f gabc/gabc-score-determination-l.c; \
@@ -94,9 +100,33 @@ gabc/gabc-score-determination-l.h: gabc/gabc-score-determination-l.c
 gabc/gabc-notes-determination-l.c: gabc/gabc-notes-determination.l
 	$(LEX) -o $@ $<
 
+vowel/vowel-rules-y.c: vowel/vowel-rules.y
+	$(YACC) -d -o $@ $<
+vowel/vowel-rules-y.h: vowel/vowel-rules-y.c
+	## Recover from the removal of vowel/vowel-rules-y.h, see
+	## https://www.gnu.org/software/automake/manual/html_node/Multiple-Outputs.html
+	@if test -f $@; then :; else \
+		rm -f vowel/vowel-rules-y.c; \
+		$(MAKE) $(AM_MAKEFLAGS) vowel/vowel-rules-y.c; \
+	fi
+
+vowel/vowel-rules-l.c: vowel/vowel-rules.l
+	$(LEX) -o $@ --header-file=vowel/vowel-rules-l.h $<
+vowel/vowel-rules-l.h: vowel/vowel-rules-l.c
+	## Recover from the removal of vowel/vowel-rules-l.h, see
+	## https://www.gnu.org/software/automake/manual/html_node/Multiple-Outputs.html
+	@if test -f $@; then :; else \
+		rm -f vowel/vowel-rules-l.c; \
+		$(MAKE) $(AM_MAKEFLAGS) vowel/vowel-rules-l.c; \
+	fi
+
 BUILT_SOURCES = gabc/gabc-score-determination-l.c \
 					gabc/gabc-notes-determination-l.c \
 					gabc/gabc-score-determination-l.h \
 					gabc/gabc-score-determination-y.c \
-					gabc/gabc-score-determination-y.h
+					gabc/gabc-score-determination-y.h \
+					vowel/vowel-rules-l.c \
+					vowel/vowel-rules-l.h \
+					vowel/vowel-rules-y.c \
+					vowel/vowel-rules-y.h
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
