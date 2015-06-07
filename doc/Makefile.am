@@ -18,7 +18,7 @@
 # GregorioRef.tex must be the first source file
 SRCFILES = GregorioRef.tex Command_Index_gregorio.tex \
 		   Command_Index_internal.tex Command_Index_User.tex \
-		   Appendix_Font_Tables.tex GregorioRef.lua factus.gabc
+		   Gabc.tex Appendix_Font_Tables.tex GregorioRef.lua factus.gabc
 NABCSRCFILES = GregorioNabcRef.tex veni.gabc
 
 .NOTPARALLEL:
@@ -51,7 +51,7 @@ distclean-local:
 	latexmk -quiet -c -f -jobname=GregorioNabcRef-@FILENAME_VERSION@ GregorioNabcRef.tex
 	rm -rf _minted* factus.gtex veni.gtex
 
-EXTRA_DIST = $(SRCFILES) $(NABCSRCFILES) factus.gabc veni.gabc \
+EXTRA_DIST = $(SRCFILES) $(NABCSRCFILES) \
 	     GregorioRef-@FILENAME_VERSION@.pdf \
 	     GregorioNabcRef-@FILENAME_VERSION@.pdf
 MAINTAINERCLEANFILES = GregorioRef-@FILENAME_VERSION@.pdf \
