@@ -24,8 +24,12 @@
 #include <stdbool.h>
 #include "unicode.h"
 
-void gregorio_vowel_tables_init(FILE *f);
-void gregorio_vowel_tables_free();
+int gregorio_vowel_rulefile_parse(const char *filename, const char *language,
+        bool *found);
+void gregorio_vowel_tables_init(void);
+bool gregorio_vowel_tables_load(FILE *f, const char *filename,
+        const char *language);
+void gregorio_vowel_tables_free(void);
 void gregorio_vowel_table_add(const char *vowels);
 void gregorio_prefix_table_add(const char *prefix);
 void gregorio_suffix_table_add(const char *suffix);

@@ -57,7 +57,7 @@
 #   Creates a TDS-ready archive named gregoriotex.tds.zip
 #
 
-TEXFILES=(tex/*.tex tex/gregorio*.sty tex/*.lua tex/*.vwl)
+TEXFILES=(tex/*.tex tex/gregorio*.sty tex/*.lua tex/*.dat)
 TTFFILES=(gregorio.ttf greciliae.ttf parmesan.ttf greextra.ttf gregall.ttf gresgmodern.ttf)
 DOCFILES=(fonts/README.md)
 FONTSRCFILES=(Makefile gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd

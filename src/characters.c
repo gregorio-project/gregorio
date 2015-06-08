@@ -49,92 +49,99 @@
 #endif
 #endif
 
+#define VOWEL_FILE "gregorio-vowels.dat"
+
+#ifndef USE_KPSE
 static inline void rtrim(char *buf)
 {
     for (char *p = buf + strlen(buf) - 1; p >= buf && isspace(*p); --p) {
         *p = '\0';
     }
 }
+#endif
 
 static bool read_vowel_rules(const char *const language) {
-    char lang[strlen(language) + 1], buf[PATH_MAX];
     FILE *file;
-    bool is_not_latin = (strcmp(language, "latin") != 0);
+    bool found = false;
 #ifdef USE_KPSE
-    char *answer;
-#endif
-
-    // first we figure out the real filename using the kpse library or kpsewhich
-    strcpy(lang, language);
-    for (char *p = lang; *p; ++p) {
-        *p = tolower(*p);
-    }
-#ifdef USE_KPSE
-    snprintf(buf, PATH_MAX, "%s.vwl", lang);
-    answer = kpse_find_file(buf, kpse_tex_format, true);
-    if (!answer) {
-        if (is_not_latin) {
-            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
-                    _("kpse cannot find %s"), buf);
-        }
-        return false;
-    }
-    snprintf(buf, PATH_MAX, "%s", answer);
-    if (!kpse_in_name_ok(buf)) {
-        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
-                _("kpse disallows read from %s"), buf);
-        return false;
-    }
+    char **filenames;
+    char *filename;
 #else
-    snprintf(buf, PATH_MAX, "kpsewhich %s.vwl", lang);
-    file = popen(buf, "r");
-    if (!file) {
-        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
-                _("unable to run %s: %s"), buf, strerror(errno));
-        return false;
-    }
-    if (!fgets(buf, PATH_MAX, file)) {
-        if (is_not_latin) {
-            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
-                    _("kpse cannot find %s.vwl"), lang);
-        }
-        pclose(file);
-        return false;
-    }
-    rtrim(buf);
-    pclose(file);
-    if (strlen(buf) == 0) {
-        if (is_not_latin) {
-            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
-                    _("kpsewhich returned bad value for %s.vwl"), lang);
-        }
-        return false;
-    }
+    FILE *pipe;
+    char filename[PATH_MAX];
 #endif
 
-    // then we read and parse the file
-    file = fopen(buf, "r");
-    if (!file) {
-        gregorio_messagef("read_rules", VERBOSITY_WARNING, 0,
-                _("unable to open %s: %s"), buf, strerror(errno));
+#ifdef USE_KPSE
+    filenames = kpse_find_file_generic(VOWEL_FILE, kpse_tex_format, true, true);
+    if (!filenames) {
+        if (strcmp(language, "Latin") != 0) {
+            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                    _("kpse_find_file_generic cannot find %s"), VOWEL_FILE);
+        }
         return false;
     }
-    gregorio_vowel_tables_init(file);
-    fclose(file);
+    for (char **p = filenames; !found && (filename = *p); ++p) {
+        if (kpse_in_name_ok(filename)) {
+#else
+    pipe = popen("kpsewhich " VOWEL_FILE, "r");
+    if (!pipe) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                _("unable to run kpsewhich %s: %s"), VOWEL_FILE,
+                strerror(errno));
+        return false;
+    }
+    while (!found && !feof(pipe) && !ferror(pipe)
+            && fgets(filename, PATH_MAX, pipe)) {
+        rtrim(filename);
+        if (strlen(filename) > 0) {
+#endif
 
-    return true;
+            // read and parse the file
+            gregorio_messagef("read_rules", VERBOSITY_INFO, 0,
+                    _("Looking for %s in %s"), language, filename);
+            file = fopen(filename, "r");
+            if (file) {
+                gregorio_vowel_tables_init();
+                found = gregorio_vowel_tables_load(file, filename, language);
+                fclose(file);
+                gregorio_messagef("read_rules", VERBOSITY_INFO, 0,
+                        _("%s %s in %s"), found? "Found" : "Could not find",
+                        language, filename);
+            } else {
+                gregorio_messagef("read_rules", VERBOSITY_WARNING, 0,
+                        _("unable to open %s: %s"), filename, strerror(errno));
+            }
+
+#ifdef USE_KPSE
+        } else {
+            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                    _("kpse disallows read from %s"), filename);
+        }
+        free(filename);
+    }
+    free(filenames);
+#else
+        } else {
+            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                    _("kpsewhich returned bad value for %s"), VOWEL_FILE);
+        }
+    }
+    pclose(pipe);
+#endif
+
+    return found;
 }
 
 void gregorio_set_centering_language(const char *const language)
 {
     if (!read_vowel_rules(language)) {
-        if (strcmp(language, "latin") != 0) {
+        if (strcmp(language, "Latin") != 0) {
             gregorio_messagef("gregorio_set_centering_language",
                     VERBOSITY_WARNING, 0, _("unable to read vowel files for "
-                        "%s; defaulting to latin rules"), language);
+                        "%s; defaulting to Latin rules"), language);
         }
 
-        gregorio_vowel_tables_init(NULL);
+        gregorio_vowel_tables_init();
         gregorio_vowel_table_add(
                 "aàáAÀÁeèéëEÈÉËiìíIÌÍoòóOÒÓuùúUÙÚyỳýYỲÝæǽÆǼœŒ");
         gregorio_prefix_table_add("i");

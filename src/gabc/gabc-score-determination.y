@@ -323,7 +323,7 @@ static void end_definitions(void)
     }
 
     if (!got_language) {
-        gregorio_set_centering_language("latin");
+        gregorio_set_centering_language("Latin");
     }
 }
 
