@@ -23,6 +23,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
+#include "vowel.h"
 #include "unicode.h"
 #include "messages.h"
 
@@ -194,7 +195,6 @@ static size_t prefix_buffer_size;
 static size_t prefix_buffer_mask;
 
 extern FILE *gregorio_vowel_rulefile_in;
-extern int gregorio_vowel_rulefile_parse(void);
 
 static void prefix_buffer_grow(size_t required_size)
 {
@@ -213,7 +213,7 @@ static void prefix_buffer_grow(size_t required_size)
     }
 }
 
-void gregorio_vowel_tables_init(FILE *const f)
+void gregorio_vowel_tables_init(void)
 {
     if (vowel_table) {
         character_set_clear(vowel_table);
@@ -233,15 +233,20 @@ void gregorio_vowel_tables_init(FILE *const f)
                     "gregorio_vowel_tables_init", VERBOSITY_FATAL, 0);
         }
     }
-
-    if (f) {
-        gregorio_vowel_rulefile_in = f;
-        gregorio_vowel_rulefile_parse();
-        gregorio_vowel_rulefile_in = NULL;
-    }
 }
 
-void gregorio_vowel_tables_free()
+bool gregorio_vowel_tables_load(FILE *const f, const char *const filename,
+        const char *const language)
+{
+    bool found;
+    gregorio_vowel_rulefile_in = f;
+    found = gregorio_vowel_rulefile_parse(filename, language, &found) == 0
+            && found;
+    gregorio_vowel_rulefile_in = NULL;
+    return found;
+}
+
+void gregorio_vowel_tables_free(void)
 {
     if (vowel_table) {
         character_set_free(vowel_table);

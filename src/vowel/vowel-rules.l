@@ -29,9 +29,27 @@
 #include "vowel-rules-y.h"
 
 #define YY_NO_INPUT
+
+static inline void save_lval()
+{
+    gregorio_vowel_rulefile_lval =
+            malloc((gregorio_vowel_rulefile_leng + 1) * sizeof(char));
+    strncpy(gregorio_vowel_rulefile_lval, gregorio_vowel_rulefile_text,
+            gregorio_vowel_rulefile_leng);
+    gregorio_vowel_rulefile_lval[gregorio_vowel_rulefile_leng] = '\0';
+}
+
+static inline void invalid()
+{
+    gregorio_messagef("gregorio_vowel_rulefile_lex", VERBOSITY_WARNING, 0,
+            _("invalid character in vowel file: %c"),
+            *gregorio_vowel_rulefile_text);
+}
 %}
 
 %x chars
+%x lang
+%x langname
 
 %option stack
 %option pointer
@@ -50,24 +68,19 @@
 
 %%
 
-<INITIAL>vowel  { BEGIN(chars); return VOWEL; }
-<INITIAL>prefix { BEGIN(chars); return PREFIX; }
-<INITIAL>suffix { BEGIN(chars); return SUFFIX; }
-<chars>;        { BEGIN(INITIAL); return SEMICOLON; }
-<*>[\ \t\n\r]   ;
-<*>#[^\n\r]*    ;
-<INITIAL>\xEF\xBB\xBF ;
-<chars>[^;,# \t\n\r]+ {
-                    gregorio_vowel_rulefile_lval =
-                            strdup(gregorio_vowel_rulefile_text);
-                    return CHARACTERS;
-                }
-<*>.            {
-                    gregorio_messagef("gregorio_vowel_rulefile_lex",
-                            VERBOSITY_WARNING, 0,
-                            _("invalid character in vwl file: %c"),
-                            *gregorio_vowel_rulefile_text);
-                }
+<INITIAL>language               { BEGIN(lang); return LANGUAGE; }
+<INITIAL>vowel                  { BEGIN(chars); return VOWEL; }
+<INITIAL>prefix                 { BEGIN(chars); return PREFIX; }
+<INITIAL>suffix                 { BEGIN(chars); return SUFFIX; }
+<*>;                            { BEGIN(INITIAL); return SEMICOLON; }
+<lang>"["                       { BEGIN(langname); }
+<langname>[^\]]+                { save_lval(); return NAME; }
+<langname>"]"                   { BEGIN(lang); }
+<chars>[^;,# \t\n\r\v\f]+       { save_lval(); return CHARACTERS; }
+<*>#[^\n\r]*                    { }
+<INITIAL>\xEF\xBB\xBF           { }
+<*>[\ \t\n\r\v\f]               { }
+<*>.                            { invalid(); return INVALID; }
 
 %%
 

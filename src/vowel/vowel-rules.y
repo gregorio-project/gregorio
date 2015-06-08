@@ -30,21 +30,61 @@
 #include "vowel-rules.h"
 #include "vowel-rules-l.h"
 
+#if ! defined lint || defined __GNUC__
+# define IGNORE(e) ((void) (e))
+#else
+# define IGNORE(e) /* empty */
+#endif
+
 // uncomment it if you want to have an interactive shell to understand the
 // details on how bison works for a certain input
 //int gregorio_vowel_rulefile_debug=1;
 
-static void gregorio_vowel_rulefile_error(const char *const error_str)
+static void gregorio_vowel_rulefile_error(const char *const filename,
+        const char *const language, bool *const found,
+        const char *const error_str)
 {
-    gregorio_message(error_str, (const char *) "gregorio_vowel_rulefile_parse",
-            VERBOSITY_ERROR, 0);
+    IGNORE(language);
+    IGNORE(found);
+    gregorio_messagef("gregorio_vowel_rulefile_parse", VERBOSITY_ERROR, 0,
+            _("%s: %s"), filename, error_str);
+}
+
+static inline void initialize(const char *language, bool *const found)
+{
+    assert(language);
+    *found = false;
+}
+
+// this returns false until the language *after* the desired language
+static inline bool match_language(const char *language, bool *found,
+        const char *const name)
+{
+    if (*found) {
+        return true;
+    }
+
+    *found = strcmp(language, name) == 0;
+    return false;
+}
+
+static inline void add(const bool *const found, void (*const fn)(const char *),
+        const char *const value)
+{
+    if (*found) {
+        fn(value);
+    }
 }
 
 %}
 
 %name-prefix "gregorio_vowel_rulefile_"
+%parse-param { const char *const filename }
+%parse-param { const char *const language }
+%parse-param { bool *const found }
+%initial-action { initialize(language, found); }
 
-%token VOWEL PREFIX SUFFIX SEMICOLON CHARACTERS
+%token LANGUAGE VOWEL PREFIX SUFFIX SEMICOLON NAME CHARACTERS INVALID
 
 %%
 
@@ -54,22 +94,27 @@ rules
     ;
 
 rule
-    : VOWEL vowels SEMICOLON
+    : LANGUAGE NAME SEMICOLON {
+                                    if (match_language(language, found, $3)) {
+                                        YYACCEPT;
+                                    }
+                                }
+    | VOWEL vowels SEMICOLON
     | PREFIX prefixes SEMICOLON
     | SUFFIX suffixes SEMICOLON
     ;
 
 vowels
     :
-    | vowels CHARACTERS     { gregorio_vowel_table_add($2); free($2); }
+    | vowels CHARACTERS         { add(found, gregorio_vowel_table_add, $2); }
     ;
 
 prefixes
     :
-    | prefixes CHARACTERS   { gregorio_prefix_table_add($2); free($2); }
+    | prefixes CHARACTERS       { add(found, gregorio_prefix_table_add, $2); }
     ;
 
 suffixes
     :
-    | suffixes CHARACTERS   { gregorio_suffix_table_add($2); free($2); }
+    | suffixes CHARACTERS       { add(found, gregorio_suffix_table_add, $2); }
     ;
