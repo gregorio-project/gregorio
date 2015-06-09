@@ -30,11 +30,11 @@ language [English];
 # statements, and the characters following all of them will be considered
 # vowels.  Gregorio does no case folding, so upper- and lower-case characters
 # should be listed.
-vowel aàáAÀÁ;
-vowel eèéëEÈÉË;
-vowel iìíIÌÍ;
-vowel oòóOÒÓ;
-vowel uùúUÙÚ;
+vowel aàáâAÀÁÂ;
+vowel eèéêëEÈÉÊË;
+vowel iìíîIÌÍÎ;
+vowel oòóôOÒÓÔ;
+vowel uùúûUÙÚÛ;
 vowel yỳýYỲÝ;
 vowel æǽÆǼ;
 vowel œŒ;
