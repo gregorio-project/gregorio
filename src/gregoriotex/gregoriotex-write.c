@@ -3087,18 +3087,19 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
                 first_line->additional_bottom_space, first_line->translation);
     }
     free(first_line);
-    // we select the good font
+    // we select the good font -- Deprecated (remove in next release)
     if (score->gregoriotex_font) {
         if (!strcmp(score->gregoriotex_font, "gregorio")) {
-            fprintf(f, "\\GreSetGregorioFont{gregorio}%%\n");
+            fprintf(f, "\\gresetgregoriofont{gregorio}%%\n");
         }
         if (!strcmp(score->gregoriotex_font, "parmesan")) {
-            fprintf(f, "\\GreSetGregorioFont{parmesan}%%\n");
+            fprintf(f, "\\gresetgregoriofont{parmesan}%%\n");
         }
         if (!strcmp(score->gregoriotex_font, "greciliae")) {
-            fprintf(f, "\\GreSetGregorioFont{greciliae}%%\n");
+            fprintf(f, "\\gresetgregoriofont{greciliae}%%\n");
         }
     }
+    // end Deprecated section
     if (score->mode != 0) {
         fprintf(f, "\\GreMode{%d}%%\n", score->mode);
     }

@@ -815,7 +815,6 @@
     \parfillskip=0pt plus 0pt minus 0pt\relax%
   \fi %
   % not sure it's perfect to put that here, but it's the only way I found to make it work....
-  \GreSetGregorioFont{\gregoriofontname}%
   \ifnum\greusestylefont=1\relax %
     \gresetstylefont %
   \fi %
@@ -1159,10 +1158,7 @@
 }%
 
 
-% the default gregorio font
-\xdef\gregoriofontname{greciliae}%
-
-\def\GreSetGregorioFont#1{%
+\def\gresetgregoriofont#1{%
   \xdef\gregoriofontname{#1}%
   \gre@count@temp@three = \the\grefactor %
   \multiply\gre@count@temp@three by 100000 %
@@ -1170,6 +1166,10 @@
   {\gregoriofont\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
   \relax%
 }%
+
+% the default gregorio font
+\xdef\gregoriofontname{greciliae}%
+\gresetgregoriofont{\gregoriofontname}%
 
 \xdef\greusestylefont{0}%
 
