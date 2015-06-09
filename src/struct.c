@@ -977,9 +977,6 @@ gregorio_score *gregorio_new_score(void)
     new_score->commentary = NULL;
     new_score->arranger = NULL;
     gregorio_source_info_init(&new_score->si);
-    new_score->lilypond_preamble = NULL;
-    new_score->opustex_preamble = NULL;
-    new_score->musixtex_preamble = NULL;
     new_score->first_voice_info = NULL;
     new_score->mode = 0;
     new_score->gregoriotex_font = NULL;
@@ -1036,15 +1033,6 @@ static void gregorio_free_score_infos(gregorio_score *score)
     }
     if (score->arranger) {
         free(score->arranger);
-    }
-    if (score->lilypond_preamble) {
-        free(score->lilypond_preamble);
-    }
-    if (score->opustex_preamble) {
-        free(score->opustex_preamble);
-    }
-    if (score->musixtex_preamble) {
-        free(score->musixtex_preamble);
     }
     if (score->user_notes) {
         free(score->user_notes);
@@ -1158,39 +1146,6 @@ void gregorio_set_score_number_of_voices(gregorio_score *score,
         return;
     }
     score->number_of_voices = number_of_voices;
-}
-
-void gregorio_set_score_lilypond_preamble(gregorio_score *score,
-        char *lilypond_preamble)
-{
-    if (!score) {
-        gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_score_lilypond_preamble", VERBOSITY_WARNING, 0);
-        return;
-    }
-    score->lilypond_preamble = lilypond_preamble;
-}
-
-void gregorio_set_score_opustex_preamble(gregorio_score *score,
-        char *opustex_preamble)
-{
-    if (!score) {
-        gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_score_opustex_preamble", VERBOSITY_WARNING, 0);
-        return;
-    }
-    score->opustex_preamble = opustex_preamble;
-}
-
-void gregorio_set_score_musixtex_preamble(gregorio_score *score,
-        char *musixtex_preamble)
-{
-    if (!score) {
-        gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_score_musixtex_preamble", VERBOSITY_WARNING, 0);
-        return;
-    }
-    score->musixtex_preamble = musixtex_preamble;
 }
 
 void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes)

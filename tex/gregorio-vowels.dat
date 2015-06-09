@@ -1,0 +1,61 @@
+# Vowel rule file for Gregorio
+# Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
+#
+# This file is part of Gregorio.
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Comments begin with a hash symbol and end at the end of the line.  These two
+# lines are comments.
+
+# The "language" keyword indicates that the rules which follow are for the
+# specified language.  It must be followed by the language name enclosed in
+# square brackets and a semicolon.  The language specified applies until the
+# next language statement.
+language [English];
+
+# The "vowel" keyword indicates that the characters which follow, until the
+# next semicolon, should be considered vowels.  There may be multiple "vowel"
+# statements, and the characters following all of them will be considered
+# vowels.  Gregorio does no case folding, so upper- and lower-case characters
+# should be listed.
+vowel aàáâAÀÁÂ;
+vowel eèéêëEÈÉÊË;
+vowel iìíîIÌÍÎ;
+vowel oòóôOÒÓÔ;
+vowel uùúûUÙÚÛ;
+vowel yỳýYỲÝ;
+vowel æǽÆǼ;
+vowel œŒ;
+
+# The "prefix" keyword lists strings of characters which end in a vowel, but
+# when followed by a sequence of vowels, SHOULD NOT be considered part of the
+# vowel sound.  These strings follow the keyword and must be separated by space
+# and end with a semicolon.  There may be multiple "prefix" statements, and all
+# will apply.  Examples of prefixes include "i" and "u" in Latin and "qu" in
+# English.  As with vowels, Gregorio does no case folding, so upper- and
+# lower-case combinations should be listed.
+prefix qu Qu qU QU;
+prefix gu Gu gU GU;
+prefix y Y;
+
+# The "suffix" keyword lists strings of characters which don't start with a
+# vowel, but when appearing after a sequence of vowels, SHOULD be considered
+# part of the vowel sound.  These strings follow the keyword and must be
+# separated by space and end with a semicolon.  There may be multiple "suffix"
+# statements, and all will apply.  Examples of suffixes include "w" and "we" in
+# English and "y" in Spanish.  As with vowels, Gregorio does no case folding,
+# so upper- and lower-case combinations should be listed.
+suffix w W;
+suffix we We wE WE;

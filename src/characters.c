@@ -29,32 +29,175 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include <ctype.h>
+#include <errno.h>
+#include <limits.h>
+#include <sys/stat.h>
+#ifdef USE_KPSE
+    #include <kpathsea/kpathsea.h>
+#endif
 #include "struct.h"
 #include "unicode.h"
 #include "characters.h"
 #include "messages.h"
+#include "vowel/vowel.h"
 
-/*
- * ! @brief Tests if a letter is a vowel or not. Necessary for determining
- * proper centering, as we want the first neume centered over the vowel.
- * Simple, we just compare \c letter to a list of vowels used in Latin, both
- * accented and not. \param letter The letter being tested \return returns \c 1 
- * if a vowel; otherwise returns \c 0 
- */
-static int gregorio_is_vowel(grewchar letter)
+#ifdef __MINGW32__
+#ifndef PATH_MAX
+#define PATH_MAX _MAX_PATH
+#endif
+#endif
+
+#define VOWEL_FILE "gregorio-vowels.dat"
+
+#ifndef USE_KPSE
+static inline void rtrim(char *buf)
 {
-    grewchar vowels[] = { L'a', L'e', L'i', L'o', L'u', L'y', L'A', L'E',
-        L'I', 'O', 'U', 'Y', L'œ', L'Œ', L'æ', L'Æ', L'ó', L'À', L'È',
-        L'É', L'Ì', L'Í', L'Ý', L'Ò', L'Ó', L'è', L'é', L'ò', L'ú',
-        L'ù', L'ý', L'á', L'à', L'ǽ', L'Ǽ', L'í', L'ë', L'*'
-    };
-    int i;
-    for (i = 0; i < 37; i++) {
-        if (letter == vowels[i]) {
-            return 1;
+    for (char *p = buf + strlen(buf) - 1; p >= buf && isspace(*p); --p) {
+        *p = '\0';
+    }
+}
+#endif
+
+static bool read_vowel_rules(const char *const language) {
+    FILE *file;
+    bool found = false;
+#ifdef USE_KPSE
+    char **filenames;
+    char *filename;
+#else
+    FILE *pipe;
+    char filename[PATH_MAX];
+#endif
+
+#ifdef USE_KPSE
+    filenames = kpse_find_file_generic(VOWEL_FILE, kpse_tex_format, true, true);
+    if (!filenames) {
+        if (strcmp(language, "Latin") != 0) {
+            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                    _("kpse_find_file_generic cannot find %s"), VOWEL_FILE);
+        }
+        return false;
+    }
+    for (char **p = filenames; !found && (filename = *p); ++p) {
+        if (kpse_in_name_ok(filename)) {
+#else
+    pipe = popen("kpsewhich " VOWEL_FILE, "r");
+    if (!pipe) {
+        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                _("unable to run kpsewhich %s: %s"), VOWEL_FILE,
+                strerror(errno));
+        return false;
+    }
+    while (!found && !feof(pipe) && !ferror(pipe)
+            && fgets(filename, PATH_MAX, pipe)) {
+        rtrim(filename);
+        if (strlen(filename) > 0) {
+#endif
+
+            // read and parse the file
+            gregorio_messagef("read_rules", VERBOSITY_INFO, 0,
+                    _("Looking for %s in %s"), language, filename);
+            file = fopen(filename, "r");
+            if (file) {
+                gregorio_vowel_tables_init();
+                found = gregorio_vowel_tables_load(file, filename, language);
+                fclose(file);
+                gregorio_messagef("read_rules", VERBOSITY_INFO, 0,
+                        _("%s %s in %s"), found? "Found" : "Could not find",
+                        language, filename);
+            } else {
+                gregorio_messagef("read_rules", VERBOSITY_WARNING, 0,
+                        _("unable to open %s: %s"), filename, strerror(errno));
+            }
+
+#ifdef USE_KPSE
+        } else {
+            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                    _("kpse disallows read from %s"), filename);
+        }
+        free(filename);
+    }
+    free(filenames);
+#else
+        } else {
+            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
+                    _("kpsewhich returned bad value for %s"), VOWEL_FILE);
         }
     }
-    return 0;
+    pclose(pipe);
+#endif
+
+    return found;
+}
+
+void gregorio_set_centering_language(const char *const language)
+{
+    if (!read_vowel_rules(language)) {
+        if (strcmp(language, "Latin") != 0) {
+            gregorio_messagef("gregorio_set_centering_language",
+                    VERBOSITY_WARNING, 0, _("unable to read vowel files for "
+                        "%s; defaulting to Latin rules"), language);
+        }
+
+        gregorio_vowel_tables_init();
+        gregorio_vowel_table_add(
+                "aàáâăAÀÁÂĂeèéêëEÈÉÊËiìíîIÌÍÎoòóôơOÒÓÔƠuùúûưUÙÚÛƯyỳýYỲÝæǽÆǼœŒ");
+        gregorio_prefix_table_add("i");
+        gregorio_prefix_table_add("I");
+        gregorio_prefix_table_add("u");
+        gregorio_prefix_table_add("U");
+    }
+}
+
+static inline gregorio_character *skip_verbatim_or_special(
+        gregorio_character *ch)
+{
+    // skip past verbatim and special characters
+    if (ch->cos.s.type == ST_T_BEGIN && (ch->cos.s.style == ST_VERBATIM
+                || ch->cos.s.style == ST_SPECIAL_CHAR)) {
+        if (ch->next_character) {
+            ch = ch->next_character;
+        }
+        while (ch->next_character && ch->is_character) {
+            ch = ch->next_character;
+        }
+    }
+    return ch;
+}
+
+static void determine_center(gregorio_character *character, int *start,
+        int *end) {
+    int count;
+    grewchar *subject;
+    gregorio_character *ch;
+
+    *start = *end = -1;
+
+    for (count = 0, ch = character; ch; ch = ch->next_character) {
+        if (ch->is_character) {
+            ++count;
+        } else {
+            ch = skip_verbatim_or_special(ch);
+        }
+    }
+    if (count == 0) {
+        return;
+    }
+    subject = (grewchar *)malloc((count + 1) * sizeof(grewchar));
+    for (count = 0, ch = character; ch; ch = ch->next_character) {
+        if (ch->is_character) {
+            subject[count ++] = ch->cos.character;
+        } else {
+            ch = skip_verbatim_or_special(ch);
+        }
+    }
+    subject[count] = (grewchar)0;
+
+    gregorio_find_vowel_group(subject, start, end);
+
+    free(subject);
 }
 
 /*
@@ -672,11 +815,10 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
     // the current_character
     gregorio_character *current_character = *param_character;
     // a char that we will use in a very particular case
-    unsigned char this_style;
-    // a char that will be useful for the determination of iota and digamma
-    unsigned char false_middle = 0;
+    grestyle_style this_style;
     det_style *first_style = NULL;
-    unsigned char center_type = 0;  // determining the type of centering
+    grestyle_style center_type = ST_NO_STYLE;  // determining the type of centering
+    int start = -1, end = -1, index = -1; 
     // (forced or not)
     // so, here we start: we go to the first_character
     if (gregorio_go_to_end_initial(&current_character)) {
@@ -701,6 +843,7 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
     // first we see if there is already a center determined
     if (center_is_determined == 0) {
         center_type = ST_CENTER;
+        determine_center(current_character, &start, &end);
     } else {
         center_type = ST_FORCED_CENTER;
     }
@@ -709,41 +852,12 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
         // the first part of the function deals with real characters (not
         // styles)
         if (current_character->is_character) {
+            ++index;
             // the firstcase is if the user has'nt determined the middle, and
             // we have only seen vowels so far (else center_is_determined
             // would be DETERMINING_MIDDLE). The current_character is the
             // first vowel, so we start the center here. 
-            if (!center_is_determined
-                    && gregorio_is_vowel(current_character->cos.character)) {
-                if (current_character->cos.character == L'i'
-                        || current_character->cos.character == L'I'
-                        || current_character->cos.character == L'u') {
-                    // did you really think it would be that easy?... we have
-                    // to deal with iota and digamma, that are not aligned the
-                    // same way... So if the current character is i or u, we
-                    // check if the next character is also a vowel or not. If
-                    // it is the case we just pass, else we start the center
-                    // there.
-                    gregorio_character *temp =
-                            current_character->next_character;
-                    while (temp) {
-                        if (temp->is_character) {
-                            if (gregorio_is_vowel(temp->cos.character)) {
-                                false_middle = 1;
-                                break;
-                            } else {
-                                break;
-                            }
-                        }
-                        temp = temp->next_character;
-                    }
-                }
-                if (false_middle) {
-                    // the case of the iota or digamma
-                    false_middle = 0;
-                    // remember? this macro has a continue; in it
-                    end_c();
-                }
+            if (!center_is_determined && index == start) {
                 begin_center(center_type, current_character, &current_style);
                 center_is_determined = CENTER_DETERMINING_MIDDLE;
                 end_c();
@@ -753,7 +867,7 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
             // encounter something that is not a vowel, so the center ends
             // there.
             if (center_is_determined == CENTER_DETERMINING_MIDDLE
-                    && !gregorio_is_vowel(current_character->cos.character)) {
+                    && index == end) {
                 end_center(center_type, current_character, &current_style);
                 center_is_determined = CENTER_FULLY_DETERMINED;
             }

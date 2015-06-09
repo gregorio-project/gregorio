@@ -55,6 +55,7 @@
 \usepackage{multirow}
 \usepackage{pdflscape}
 \usepackage{hhline}
+\usepackage{listings}
 \RequireLuaModule{GregorioRef}
 
 \newcommand*{\eg}{e.g.\@\xspace}
@@ -71,6 +72,13 @@
   %\addcontentsline{toc}{subsubsection}{#1}}
 
 \newcommand{\optional}[1]{{\itshape #1}}
+
+\lstset{backgroundcolor=\color{lightgray},
+        basicstyle=\small\ttfamily,
+        numbers=left,
+        numberstyle=\footnotesize,
+        stepnumber=1,
+        numbersep=5pt}
 
 % for the character tables
 \font\greciliae = {name:greciliae} at 1000000 sp\relax
@@ -170,6 +178,7 @@ Macros are divided into three groups:
 \input{Command_Index_User}
 \input{Command_Index_gregorio}
 \input{Command_Index_internal}
+\input{Gabc}
 
 \begin{appendices}
   \renewcommand\thetable{\thesection\arabic{table}}
