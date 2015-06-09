@@ -143,7 +143,7 @@ void gregorio_set_centering_language(const char *const language)
 
         gregorio_vowel_tables_init();
         gregorio_vowel_table_add(
-                "aàáAÀÁeèéëEÈÉËiìíIÌÍoòóOÒÓuùúUÙÚyỳýYỲÝæǽÆǼœŒ");
+                "aàáâăAÀÁÂĂeèéêëEÈÉÊËiìíîIÌÍÎoòóôơOÒÓÔƠuùúûưUÙÚÛƯyỳýYỲÝæǽÆǼœŒ");
         gregorio_prefix_table_add("i");
         gregorio_prefix_table_add("I");
         gregorio_prefix_table_add("u");
