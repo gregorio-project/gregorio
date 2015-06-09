@@ -308,8 +308,9 @@
 
 \def\greinitial#1{%
   % see comments on this function to see what it does
-  \gre@calculate@aboveinitialraise %
-  % we print the initial always at the same place, and the we print the GreAboveinitialfirstbox, centered
+  \gre@debugmsg{annotation}{Time to calculate the true raise.}%
+  \gre@calculate@annotationtrueraise %
+  % we print the initial always at the same place, and then we print the gre@box@annotation, centered
   % first we print the initial
   \gre@dimen@temp@five=-\gre@dimen@textlower %
   % if it is a big initial we print it on the second line 
@@ -323,15 +324,16 @@
       \greinitialformat{\global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth}%
       \endgre@style@initial%
     \fi%
-    \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) > initialwidth}%
-    \ifdim\wd\GreAboveinitialfirstbox>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\GreAboveinitialfirstbox%
+    \gre@debugmsg{ifdim}{ wd(gre@box@annotation) > initialwidth}%
+    \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
+      \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
     \fi%
-    \gre@debugmsg{ifdim}{ wd(GreAboveinitialsecondbox) > initialwidth}%
-    \ifdim\wd\GreAboveinitialsecondbox>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\GreAboveinitialsecondbox%
-    \fi%
+    \gre@debugmsg{annotation}{Width check completed.}%
     \setbox\GreInitial=\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\gre@style@initial\greinitialformat{#1}\endgre@style@initial}\hss}%
+    \gre@debugmsg{annotation}{Initial set.}%
+    \gre@style@initial%
+    \greinitialformat{\global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift}%
+    \endgre@style@initial%
   \else %
     \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
     \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
@@ -349,26 +351,17 @@
       \endgre@style@biginitial%
     \fi%
     \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) > initialwidth}%
-    \ifdim\wd\GreAboveinitialfirstbox>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\GreAboveinitialfirstbox%
-    \fi%
-    \gre@debugmsg{ifdim}{ wd(GreAboveinitialsecondbox) > initialwidth}%
-    \ifdim\wd\GreAboveinitialsecondbox>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\GreAboveinitialsecondbox%
+    \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
+      \global\gre@dimen@initialwidth=\wd\gre@box@annoation%
     \fi%
     \setbox\GreInitial=\hbox{\vbox to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\gre@style@biginitial\grebiginitialformat{#1}\endgre@style@biginitial}\hss}\vss}}%
-  \fi %
-  \ifnum\grebiginitial=0\relax%
-    \gre@style@initial%
-    \greinitialformat{\global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift}%
-    \endgre@style@initial%
-  \else%
     \gre@style@biginitial%
     \grebiginitialformat{\global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift}%
     \endgre@style@biginitial%
-  \fi%
+  \fi %
   \hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
+  \gre@debugmsg{annotation}{Ready to place initial.}%
   \copy\GreInitial%
   \ifnum\grebiginitial=0\relax%
     \gre@style@initial%
@@ -382,32 +375,21 @@
   \hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
   % then we center the first box above the initial, if there is one
-  \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) = 0pt}%
-  \ifdim\wd\GreAboveinitialfirstbox=0 pt\relax %
+  \gre@debugmsg{annotation}{Time to set the annotation.}%
+  \ifvoid\gre@box@annotation\relax%
+    \gre@debugmsg{annotation}{There is no annotation.}%
   \else %
+    \gre@debugmsg{annotation}{Calculate horizontal position.}%
     \gre@dimen@temp@five=\gre@dimen@initialwidth %
-    \advance\gre@dimen@temp@five by -\wd\GreAboveinitialfirstbox%
+    \advance\gre@dimen@temp@five by -\wd\gre@box@annotation%
     \divide\gre@dimen@temp@five by 2 %
     \gre@skip@temp@four = -\gre@dimen@initialwidth%
     \hskip\gre@skip@temp@four %
     \kern\gre@dimen@temp@five %
-    \raise\gre@dimen@aboveinitialfirstraise\copy\GreAboveinitialfirstbox%
+    \gre@debugmsg{annotation}{And place the annotation.}%
+    \raise\gre@dimen@annotationtrueraise\box\gre@box@annotation%
+    \gre@debugmsg{annotation}{Move to beginning of staff.}%
     \kern\gre@dimen@temp@five %
-    \setbox\GreAboveinitialfirstbox=\hbox{}%
-  \fi %
-  % then we center the second box above the initial, if there is one
-  \gre@debugmsg{ifdim}{ wd(GreAboveinitialsecondbox) = 0pt}%
-  \ifdim\wd\GreAboveinitialsecondbox=0 pt\relax %
-  \else %
-    \gre@dimen@temp@five=\gre@dimen@initialwidth %
-    \advance\gre@dimen@temp@five by -\wd\GreAboveinitialsecondbox %
-    \divide\gre@dimen@temp@five by 2 %
-    \gre@skip@temp@four = -\gre@dimen@initialwidth%
-    \hskip\gre@skip@temp@four %
-    \kern\gre@dimen@temp@five %
-    \raise\gre@dimen@aboveinitialsecondraise\copy\GreAboveinitialsecondbox %
-    \kern\gre@dimen@temp@five %
-    \setbox\GreAboveinitialsecondbox=\hbox{}%
   \fi %
   \relax %
 }%
@@ -419,33 +401,63 @@
   \relax %
 }%
 
-% We set two boxes for the two lines above the initial
 
-\newbox\GreAboveinitialfirstbox%
-\newbox\GreAboveinitialsecondbox%
-% the height difference between the bottom of the first annotation line and the top of the second annotation line (above the initial) is controlled by the \gre@dimen@aboveinitialseparation space, in gregoriotex-spaces.tex
+
+\newbox\gre@box@annotation%
+\newbox\gre@box@annotation@add%
+\newbox\gre@box@annotation@old%
+
+\def\greannotation{\@ifnextchar[{\gre@annotation}{\gre@annotation[c]}}%
+
+\def\gre@annotation[#1]#2{%
+  \ifx l#1\relax%
+    \let\gre@rightfill\hfil%
+    \let\gre@leftfill\relax%
+  \else\ifx r#1\relax%
+    \let\gre@rightfill\relax%
+    \let\gre@leftfill\hfil%
+  \else\ifx c#1\relax%
+    \let\gre@rightfill\hfil%
+    \let\gre@leftfill\hfil%
+  \else%
+    \greerror{Unrecognzied alignment option for \protect\greannotation}%
+  \fi\fi\fi%
+  % first we determine the widest box
+  \grewidthof{#2}%
+  \ifdim\gre@dimen@temp@three < \wd\gre@box@annotation\relax%
+    \gre@dimen@temp@three = \wd\gre@box@annotation\relax%
+  \fi%
+  \setbox\gre@box@annotation@old = \hbox to \gre@dimen@temp@three{\gre@leftfill\copy\gre@box@annotation\gre@rightfill}%
+  \setbox\gre@box@annotation@add = \hbox to \gre@dimen@temp@three{\gre@leftfill#2\gre@rightfill}%
+  \ifvoid\gre@box@annotation%
+    \gre@debugmsg{annotation}{We're on the first line of the annotation.}%
+    % This start point has been fudged manually to get the baseline of the first annotation to align with the top line of the staff.
+    \gre@debugmsg{annnotation}{Initial set point.}%
+    \global\gre@dimen@annotationtrueraise= 0.8em\relax%
+    \global\advance\gre@dimen@annotationtrueraise by -\dp\gre@box@annotation@add%
+    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\vtop spread \gre@dimen@annotationseparation{\vss\noindent\box\gre@box@annotation@add}}%
+  \else%
+    \gre@debugmsg{annotation}{We're not on the first line of the annotation.}%
+    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\vtop spread \gre@dimen@annotationseparation{\noindent\box\gre@box@annotation@old\vss\noindent\box\gre@box@annotation@add}}%
+  \fi%
+}%
+
 
 \def\gresetfirstlineaboveinitial#1#2{%
-  % we align the top of the box with the top of the line
-  % here the variables are a bit strange... we can calculate the final value of greaboveinitialfirstraise only after the beginning of the score, after the call to this macro. So we just set greaboveinitialfirstraise to the negative value the #2 will add, and then, after the beginning of the score, we'll add gresetaboveinitialraise that will... set greaboveinitialfirstraise.
-  \setbox\GreAboveinitialfirstbox=\hbox{#2}%
-  \global\gre@dimen@aboveinitialfirstraise=-\ht\GreAboveinitialfirstbox %
-  \global\setbox\GreAboveinitialfirstbox=\hbox{#1}%
-  \relax %
+  \gre@warning{\protect\gresetfirstlineaboveinitial\space is deprecated.\MessageBreak Use \protect\greannotation\space instead.}%
+  \greannotation{#1}%
 }%
 
 \def\gresetfirstannotation#1{%
-  \gresetfirstlineaboveinitial{#1}{#1}%
-  \relax %
+  \gre@warning{\protect\gresetfirstannotation\space is deprecated.\MessageBreak Use \protect\greannotation\space instead.}%
+  \greannotation{#1}%
 }%
 
 \let\setfirstannotation\gresetfirstannotation%
 
 \def\gresetsecondannotation#1{%
-  \setbox\GreAboveinitialsecondbox=\hbox{#1}%
-  \global\gre@dimen@aboveinitialsecondraise=-\ht\GreAboveinitialsecondbox %
-  \global\advance\gre@dimen@aboveinitialsecondraise by -\gre@dimen@aboveinitialseparation %
-  \relax %
+  \gre@warning{\protect\gresetsecondannotation\space is deprecated.\MessageBreak Use \protect\greannotation\space instead.}%
+  \greannotation{#1}%
 }%
 
 \let\setsecondannotation\gresetsecondannotation%
@@ -466,7 +478,7 @@
 }%
 
 \def\gregorianmode#1{%
-  \ifhbox \GreAboveinitialfirstbox%
+  \ifhbox \gre@box@annotation%
     \relax%
   \else%
     \ifcase#1%
@@ -857,7 +869,6 @@
   % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
   \grelocalleftbox{}%
   \grelocalrightbox{}%
-  \setbox\GreAboveinitialfirstbox=\hbox{}%
   \gre@calculate@additionalspaces{0}{0}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@removetranslationspace %

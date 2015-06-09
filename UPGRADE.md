@@ -79,6 +79,18 @@ This would have made the text which was wrapped with `<alt></alt>` in your gabc 
 The gabc `centering-scheme` header is now deprecated and will disappear soon.  Use the `\grelyriccentering` command from TeX instead.  If you were using `centering-scheme: latine;` in gabc, now use `\grelyriccentering{vowel}` in the TeX file that includes the gabc.  If you were using `centering-scheme: english;` in gabc, now use `\grelyriccentering{syllable}` in the TeX file that includes the gabc.
 
 Using the gabc header will, in this release, do that for you, but it will produce a deprecation warning.  This header will no longer be available in the next release.
+
+### Annotations
+
+Support for annotations with an arbitrary number of lines has been added.  To facilite this, the old functions which added annotations to specific lines (either the first or the second) are consolidated into a single function `\greannotation` which builds the annotations line by line.  If you used the old functions for adding annotations, then you should switch out those functions for the new one.  
+
+The distance associated with the annotations has also been renamed (from `aboveinitialseparation` to `annotationseparation`) and added a new one (`annotationraise`).  The first still controls the spacing between the lines of the annoation.  The second controls the position of the annotation relative to the score, and thus replaces the second argument in the old functions.  By default, annotations are positioned so that the baseline of the first line is aligned with the top line of the staff.  Positive values of `annotationraise` will push the annotation up while negative values will push it down.  If you were previously using the second argument to `\gresetfirstlineaboveinitial` to adjust the spacing, you will need to convert this to call:
+
+    \grechangedim{annotationraise}{0.1cm}{1}
+    
+You will need to play with the vaule of the distance a bit to acheive the desired positioning.
+
+As is normal, calls to the deprecated command names will raise a warning but still work.  However there is one caveat: the old functions will always add the annotations to the bottom of the annotation list, regardless of the order in which they are called.  Previously, you could call `\gresetsecondannotation` before `\gresetfirstannotation` and still have the first annotation appear on top.   Which annotation appears on top is now determined by the order in which the functions are called.
     
 
 ## 3.0
