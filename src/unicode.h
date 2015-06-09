@@ -33,6 +33,18 @@ typedef uint32_t grewchar;
 void gregorio_print_unichar(FILE *f, grewchar to_print);
 void gregorio_print_unistring(FILE *f, grewchar *first_char);
 unsigned char gregorio_wcsbufcmp(grewchar *wstr, char *buf);
+grewchar *gregorio_build_grewchar_string_from_buf(const char *buf);
+
+static inline size_t gregorio_wcstrlen(const grewchar *wstr)
+{
+    size_t length = 0;
+
+    while (*(wstr++)) {
+        ++length;
+    }
+
+    return length;
+}
 
 // this macro is for portability under windows, where L'x' is only two-bytes
 // long, and thus needs to be cast to a 4-bytes integer.
@@ -48,7 +60,7 @@ unsigned char gregorio_wcsbufcmp(grewchar *wstr, char *buf);
 #ifndef UNICODE_H_SECOND_PART
 #define UNICODE_H_SECOND_PART
 
-gregorio_character *gregorio_build_char_list_from_buf(char *buf);
+gregorio_character *gregorio_build_char_list_from_buf(const char *buf);
 
 #endif
 

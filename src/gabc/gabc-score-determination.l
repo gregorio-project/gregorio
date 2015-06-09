@@ -1,5 +1,6 @@
 %{
 /*
+ * Gregorio score determination in gabc input.
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
@@ -162,6 +163,9 @@ semicolon. */
 <INITIAL>centering-scheme {
         return CENTERING_SCHEME;
     }
+<INITIAL>language {
+        return LANGUAGE;
+    }
 <INITIAL>transcription-date {
         return TRANSCRIPTION_DATE;
     }
@@ -170,15 +174,6 @@ semicolon. */
     }
 <INITIAL>virgula-position {
         return VIRGULA_POSITION;
-    }
-<INITIAL>lilypond-preamble {
-        return LILYPOND_PREAMBLE;
-    }
-<INITIAL>opustex-preamble {
-        return OPUSTEX_PREAMBLE;
-    }
-<INITIAL>musixtex-preamble {
-        return MUSIXTEX_PREAMBLE;
     }
 <INITIAL>gregoriotex-font {
         return GREGORIOTEX_FONT;

@@ -37,7 +37,7 @@
 
 // an utf8 version of mbstowcs
 
-static size_t gregorio_mbstowcs(grewchar *dest, char *src, int n)
+static size_t gregorio_mbstowcs(grewchar *dest, const char *src, int n)
 {
     unsigned char bytes_to_come;
     grewchar result = 0;
@@ -100,20 +100,31 @@ static size_t gregorio_mbstowcs(grewchar *dest, char *src, int n)
     return res;
 }
 
-// the function to build a gregorio_character list from a buffer.
-
-gregorio_character *gregorio_build_char_list_from_buf(char *buf)
+// the value returned by this function must be freed!
+grewchar *gregorio_build_grewchar_string_from_buf(const char *const buf)
 {
-    int i = 0;
     size_t len;
     grewchar *gwstring;
-    gregorio_character *current_character = NULL;
     if (buf == NULL) {
         return NULL;
     }
     len = strlen(buf);          // to get the length of the syllable in ASCII
     gwstring = (grewchar *) malloc((len + 1) * sizeof(grewchar));
     gregorio_mbstowcs(gwstring, buf, len);  // converting into wchar_t
+    return gwstring;
+}
+
+// the function to build a gregorio_character list from a buffer.
+
+gregorio_character *gregorio_build_char_list_from_buf(const char *const buf)
+{
+    int i = 0;
+    grewchar *gwstring;
+    gregorio_character *current_character = NULL;
+    if (buf == NULL) {
+        return NULL;
+    }
+    gwstring = gregorio_build_grewchar_string_from_buf(buf);
     // we add the corresponding characters in the list of gregorio_characters
     while (gwstring[i]) {
         gregorio_add_character(&current_character, gwstring[i]);
