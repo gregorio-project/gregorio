@@ -172,9 +172,3 @@
 \def\gre@changestyle#1#2[#3]{%
   \renewenvironment{gre@style@#1}{\begingroup#2}{#3\endgroup}%
 }%
-
-% keep this here, but \writemode may be deprecated at some point
-\def\writemode#1{%
-  \gresetfirstlineaboveinitial{\textsc{\textbf{#1}}}{\textsc{\textbf{#1}}}%
-  \relax %
-}
