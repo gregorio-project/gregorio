@@ -472,8 +472,8 @@
 %% macros for the typesetting the things above the initial
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\writemode#1{%
-  \gresetfirstlineaboveinitial{\sc{\bf{#1}}}{\sc{\bf{#1}}}%
+\def\gre@writemode#1{%
+  \greannotation{\gresmallcaps{\greboldfont{#1}}}%
   \relax %
 }%
 
@@ -483,21 +483,21 @@
   \else%
     \ifcase#1%
     \or%
-      \writemode{I}%
+      \gre@writemode{I}%
     \or%
-      \writemode{II}%
+      \gre@writemode{II}%
     \or%
-      \writemode{III}%
+      \gre@writemode{III}%
     \or%
-      \writemode{IV}%
+      \gre@writemode{IV}%
     \or%
-      \writemode{V}%
+      \gre@writemode{V}%
     \or%
-      \writemode{VI}%
+      \gre@writemode{VI}%
     \or%
-      \writemode{VII}%
+      \gre@writemode{VII}%
     \or%
-      \writemode{VIII}%
+      \gre@writemode{VIII}%
     \fi%
   \fi%
   \relax%
