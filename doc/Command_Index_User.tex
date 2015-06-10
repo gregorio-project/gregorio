@@ -162,6 +162,17 @@ syllables in polysyllabic words in a score.  This is done by overriding \texttt{
 Tell Gregorio\TeX\ to determine the appearance of hyphens between
 syllables in polysyllabic words in a score based on spacing.  This is done by setting \texttt{maximumspacewithoutdash} back to the value found in \texttt{gsp-default.tex}.
 
+\subsubsection{Neume Font}
+
+\macroname{\textbackslash gresetgregoriofont}{\{\#1\}}{gregoriotex-main.tex}
+Set the font used for the neumes.
+
+\begin{argtable}
+  \#1 & greciliae & Use the Greciliae font (default).\\
+  & gregorio & Use the Gregorio font.\\
+  & parmesan & Use the Parmesan font.\\
+\end{argtable}
+
 \subsubsection{Styling}
 
 Different elements of an include score have different styles applied.  These elements and their defaults are listed below:
