@@ -782,17 +782,23 @@
 }%
 
 %The distance from the baseline of the line to the baseline of the annotations
-\newdimen\gre@dimen@aboveinitialfirstraise%
-\newdimen\gre@dimen@aboveinitialsecondraise%
+\newdimen\gre@dimen@annotationtrueraise%
 % When text is placed in the annotation boxes these dimensions are initialized with values based on the contents and the user parameters
 %This function sets the true raises of the two lines above the inital (it has to be called just as the boxes are placed in order to make sure that the values are all correct)
-\def\gre@calculate@aboveinitialraise{%
-  \global\advance\gre@dimen@aboveinitialfirstraise by \gre@dimen@staffheight %
-  \global\advance\gre@dimen@aboveinitialfirstraise by \gre@dimen@spacebeneathtext %
-  \global\advance\gre@dimen@aboveinitialfirstraise by \gre@dimen@currenttranslationheight %
-  \global\advance\gre@dimen@aboveinitialfirstraise by \gre@dimen@spacelinestext %
-  \global\advance\gre@dimen@aboveinitialfirstraise by \gre@dimen@additionalbottomspace %
-  \global\advance\gre@dimen@aboveinitialsecondraise by \gre@dimen@aboveinitialfirstraise %
+\def\gre@calculate@annotationtrueraise{%
+  \gre@debugmsg{annotation}{Calculating the raise.}%
+  \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@staffheight %
+  \gre@debugmsg{annnotation}{Added staff height.}%
+  \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@spacebeneathtext %
+  \gre@debugmsg{annnotation}{Added space beneath text.}%
+  \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@currenttranslationheight %
+  \gre@debugmsg{annnotation}{Added translation height.}%
+  \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@spacelinestext %
+  \gre@debugmsg{annnotation}{Added spacelinestext.}%
+  \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@additionalbottomspace %
+  \gre@debugmsg{annnotation}{Added additional bottom space.}%
+  \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@annotationraise %
+  \gre@debugmsg{annnotation}{Added user raise.}%
   \relax %
 }%
 
@@ -939,7 +945,8 @@
   \IfStrEq{#1}{beforeinitialshift}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{minimalspaceatlinebeginning}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{manualinitialwidth}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{aboveinitialseparation}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{annotationseparation}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{annotationraise}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{noclefspace}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{clivisalignmentmin}{\rubberfalse}{\relax}%
   \IfStrEq{#1}{abovesignsspace}{\rubberfalse}{\relax}%
@@ -1215,8 +1222,11 @@
   \ifnum\gre@scale@manualinitialwidth=1\relax%
     \gre@changeonedimenfactor{manualinitialwidth}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@aboveinitialseparation=1\relax%
-    \gre@changeonedimenfactor{aboveinitialseparation}{#1}{#2}%
+  \ifnum\gre@scale@annotationseparation=1\relax%
+    \gre@changeonedimenfactor{annotationseparation}{#1}{#2}%
+  \fi%
+  \ifnum\gre@scale@annotationraise=1\relax%
+    \gre@changeonedimenfactor{annotationraise}{#1}{#2}%
   \fi%
   \ifnum\gre@scale@noclefspace=1\relax%
     \gre@changeonedimenfactor{noclefspace}{#1}{#2}%
@@ -1281,18 +1291,14 @@
 
 % To change the spacing between annotations.
 %First argument is distance, second is whether it should scale when \grefactor changes.
-\ifdefined\setaboveinitialseparation%
-  \greerror{\protect\setaboveinitialseparation\space is already defined.  Check for package conflicts.}%
-\else%
-  \def\setaboveinitialseparation#1#2{%
-    \grechangedim{aboveinitialseparation}{#1}{#2}%
-    \relax %
-  }%
-\fi%
+\def\setaboveinitialseparation#1#2{%
+  \gre@warning{\protect\setaboveinitialseparation\space is deprecated.\MessageBreak Use \protect\grechangedim\{annotationseparation\}\space instead.}%
+  \grechangedim{annotationseparation}{#1}{#2}%
+  \relax %
+}%
 
 \def\GreSetAboveInitialSeparation#1{%
-  \gre@warning{\protect\GreSetAboveInitialSeparation\space is deprecated.\MessageBreak Use \protect\setaboveiniitalseparation\space instead.}%
-  \setaboveinitialseparation#1{1}%
+  \greerror{\protect\GreSetAboveInitialSeparation\space is obsolete.\MessageBreak Use \protect\grechangedim\{annotationseparation\}\space instead.}%
 }%
 
 %To change the space after the initial

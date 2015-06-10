@@ -485,6 +485,17 @@ Macro to adjust the thickness of the staff lines.
 
 Deprecated version: \verb=\gresetstafflinefactor=.
 
+\macroname{\textbackslash greannotation}{[\#1]\{\#2\}}{gregoriotex-main.tex}
+Macro to add annotations (the text which appears above the initial) to a score.  While a single call of the function does not support multiple lines, successive calls to the function will be added to the annotation as a new line below what is already there.
+
+\begin{argtable}
+  \#1 & c & When adding a new line, align the center of the new line with the center of the existing lines\\
+  & l & When adding a new line, align the left side of the new line with the left side of the existing lines\\
+  & r & When adding a new line, align the right side of the new line with the right side of the existing lines\\
+  \#2 & string & the text of the annotation
+\end{argtable}
+
+\textbf{Nota Bene:} The first argument does not affect the alignment of lines already in the annotation, only the way the new line aligns with the existing lines as a whole.
 
 
 
@@ -704,10 +715,15 @@ Space to force the initial width to.  Ignored when 0.
 
 Default: \unit[0]{cm}
 
-\macroname{aboveinitialseparation}{}{gsp-default.tex}
-This space is the one between the bottom of the first annotation line and the top of the second annotation line (above the initial).  
+\macroname{annotationseparation}{}{gsp-default.tex}
+This space is the one between lines in the annotation (text above the initial).  
 
 Default: \unit[0.85]{cm}
+
+\macroname{annotationraise}{}{gsp-default.tex}
+Amount to raise (positive) or lower (negative) the annotation from it's normal position (baseline of the first line aligned with the top line of the staff).
+
+Default: \unit[0]{cm}
 
 \macroname{noclefspace}{}{gsp-default.tex}
 Space at the beginning of the lines if there is no clef.  

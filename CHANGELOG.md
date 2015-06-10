@@ -36,6 +36,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
   - `highchoralsignshift` is now `choralsignupshift` and its sign is now inverted.
 - `\grecoloredlines` now takes a single argument, a named color, instead of the three components of an RGB color.  As a result, `\redlines` can now use `gregoriocolor`, making the red staff lines consistent with the text, even when the user teaks `gregoriocolor`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
 - Style for score elements can now be changed via the `\grechangestyle` command.  This replaces the mixed system of styling commands which could be redefined for some elements and specialized commands for applying styles to others.  See GregorioRef for details.
+- Annotations with more than two lines are now supported (originally requested [on the user list](http://www.mail-archive.com/gregorio-users%40gna.org/msg00164.html) when two line annoations were made possible).  To build the annotation box use `\greannoataion`.  See GregorioRef for details.
 
 ### Added
 - With thanks to Jakub Jelínek, St. Gallen style adiastematic notation is now handled through [nabc syntax](http://gregoriochant.org/dokuwiki/doku.php/language) (see GregorioNabcRef.pdf for details and [the new example](examples/FactusEst.gabc)). Only one line above the notes is currently handled. This is a preview, backward incompatible change are possible in future releases.
@@ -60,6 +61,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\grelowchoralsignstyle`, if you were redefining this command, use `\grechangeformat{lowchoralsign}...` instead
 - `\grehighchoralsignstyle`, if you were redefining this command, use `\grechangeformat{highchoralsign}...` instead
 - `centering-scheme` gabc header, supplanted by `\grelyriccentering` in TeX.  See GregorioRef for syntax.
+- `\setaboveinitialseparation`, supplanted by `\grechangedim{annotationseparation}...`
 - `gregoriotex-font` gabc header, supplanted by `\gresetgregoriofont` in TeX.  See GregorioRef for syntax.
 
 ### Removed
@@ -67,7 +69,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Support for `lilypond-preamble`, `musixtex-preamble`, and `opustex-preamble` gabc headers.
 - Support for the font Gregoria.
 - Chironomy markings (gabc `u` and `U`), which were not working correctly in the first place.
-- `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, supplanted by the new glyph system, see [upgrade guide](UPGRADE.md).
+- `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, supplanted by the new glyph system, see [UPGRADE.md](upgrade guide).
+- `\GreSetAboveInitialSeparation`, supplanted by `\grechangedim{annotationseparation}...`
 
 ## [3.0.2] - 2015-06-01
 ### Fixed
