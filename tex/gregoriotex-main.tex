@@ -503,6 +503,15 @@
   \relax%
 }%
 
+\def\GreAnnotationLine#1{%
+  \ifhbox \gre@box@annotation%
+    \relax%
+  \else%
+    \greannotation{#1}%
+  \fi%
+  \relax%
+}%
+
 \def\scorereference#1{%
   \relax%
 }%
