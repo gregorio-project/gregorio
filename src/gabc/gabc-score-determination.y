@@ -770,9 +770,9 @@ initial_style_definition:
 
 annotation_definition:
     ANNOTATION attribute {
-        if (score->annotation [NUM_ANNOTATIONS - 1]) {
+        if (score->annotation [MAX_ANNOTATIONS - 1]) {
             snprintf(error,99,_("too many definitions of annotation found, "
-                                "only the first %d will be taken"), NUM_ANNOTATIONS);
+                                "only the first %d will be taken"), MAX_ANNOTATIONS);
             gregorio_message(error, "det_score", VERBOSITY_WARNING, 0);
         }
         gregorio_set_score_annotation (score, $2.text);

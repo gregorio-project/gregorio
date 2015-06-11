@@ -608,7 +608,7 @@ typedef struct source_info {
  * 
  */
 
-#define NUM_ANNOTATIONS 2
+#define MAX_ANNOTATIONS 2
 
 typedef struct gregorio_score {
     // the structure starts by a pointer to the first syllable of the
@@ -632,7 +632,7 @@ typedef struct gregorio_score {
     // the mode of a song is between 1 and 8
     char mode;
     // There is one annotation for each line above the initial letter
-    char *annotation[NUM_ANNOTATIONS];
+    char *annotation[MAX_ANNOTATIONS];
     // field giving informations on the initial (no initial, normal initial 
     // or two lines initial)
     char initial_style;

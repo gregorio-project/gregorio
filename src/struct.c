@@ -982,7 +982,7 @@ gregorio_score *gregorio_new_score(void)
     new_score->mode = 0;
     new_score->gregoriotex_font = NULL;
     new_score->user_notes = NULL;
-    for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num) {
+    for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
       new_score->annotation[annotation_num] = NULL;
     }
     return new_score;
@@ -1042,9 +1042,9 @@ static void gregorio_free_score_infos(gregorio_score *score)
     if (score->user_notes) {
         free(score->user_notes);
     }
-    for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num) {
+    for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
       if (score->annotation[annotation_num]) {
-	free(score->annotation[annotation_num]);
+        free(score->annotation[annotation_num]);
       }
     }
     gregorio_free_source_info(&score->si);
@@ -1216,7 +1216,7 @@ void gregorio_set_score_annotation(gregorio_score *score, char *annotation)
         return;
     }
     // save the annotation in the first spare place.
-    for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num) {
+    for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
         if (score->annotation[annotation_num] == NULL) {
             score->annotation[annotation_num] = annotation;
             break;
