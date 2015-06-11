@@ -503,11 +503,12 @@
   \relax%
 }%
 
-\def\GreAnnotationLine#1{%
+\def\GreAnnotationLines#1#2{%
   \ifhbox \gre@box@annotation%
     \relax%
   \else%
     \greannotation{#1}%
+    \greannotation{#2}%
   \fi%
   \relax%
 }%

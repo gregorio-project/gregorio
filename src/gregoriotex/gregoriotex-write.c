@@ -3100,11 +3100,19 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
             fprintf(f, "\\setgregoriofont{greciliae}%%\n");
         }
     }
-    for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
-        if (score->annotation[annotation_num]) {
-            fprintf(f, "\\GreAnnotationLine{%s}%%\n",
-                    score->annotation[annotation_num]);
+    if (score->annotation[0]) {
+        fprintf(f, "\\GreAnnotationLines");
+        for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS;
+             ++annotation_num) {
+            if (score->annotation[annotation_num]) {
+                fprintf(f, "{%s}",
+                        score->annotation[annotation_num]);
+            }
+            else {
+                fprintf(f, "{}");
+            }
         }
+        fprintf(f, "%%\n");
     }
     if (score->mode != 0) {
         fprintf(f, "\\gregorianmode{%d}%%\n", score->mode);
