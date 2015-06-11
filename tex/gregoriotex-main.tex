@@ -1191,6 +1191,7 @@
   \gre@count@temp@three = \the\grefactor %
   \multiply\gre@count@temp@three by 100000\relax %
   \global\font\gregoriostylefont={name:greextra} at \the\gre@count@temp@three sp%
+  {\gregoriofont\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
   \relax%
 }%
 
