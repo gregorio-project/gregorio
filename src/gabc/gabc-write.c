@@ -814,10 +814,10 @@ void gabc_write_score(FILE *f, gregorio_score *score)
         fprintf(f, "mode: %d;\n", score->mode);
     }
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
-      if (score->annotation[annotation_num]) {
-        fprintf(f, "annotation: %s;\n",
-                score->annotation[annotation_num]);
-      }
+        if (score->annotation[annotation_num]) {
+            fprintf(f, "annotation: %s;\n",
+                    score->annotation[annotation_num]);
+        }
     }
     if (score->initial_style != NORMAL_INITIAL) {
         fprintf(f, "initial-style: %d;\n", score->initial_style);

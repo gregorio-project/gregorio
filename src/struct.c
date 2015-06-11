@@ -983,7 +983,7 @@ gregorio_score *gregorio_new_score(void)
     new_score->gregoriotex_font = NULL;
     new_score->user_notes = NULL;
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
-      new_score->annotation[annotation_num] = NULL;
+        new_score->annotation[annotation_num] = NULL;
     }
     return new_score;
 }
