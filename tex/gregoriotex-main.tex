@@ -149,7 +149,7 @@
 \def\gre@pitch@p{18}%
 
 % factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
-% at the beginning it is set to 0, but if it is still 0 when begingregorianscore is called, it is set to the default value : 17 (the value that makes it look like a standard graduale)
+% it is set to the default value : 17 (the value that makes it look like a standard graduale)
 \newcount\grefactor%
 \grefactor=17%
 
@@ -1229,19 +1229,24 @@
 % because the mechanism for the defining the formats differs under LaTeX and PlainTeX the underlying function which does the work is defined in gregoriotex.sty or gregoriotex.tex respectively.
 
 
-%%%%%%%%%%%%%%%
-%% Staff size
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%% changing staff size
+%%%%%%%%%%%%%%%%%%%
 
-\def\setgrefactor#1{%
+\def\grechangestaffsize#1{%
   \ifnum#1<0\relax%
-    \greerror{\protect\grefactor\space must be a positive integer.}%
+    \greerror{Staff size must be a positive integer.}%
   \else%
     \gre@changedimenfactor{\grefactor}{#1}%
     \global\grefactor=#1\relax %
   \fi%
   \gre@loadgregoriofont%
   \relax %
+}%
+
+\def\setgrefactor#1{%
+  \gre@warning{\protect\setgrefactor\space is deprecated.\MessageBreak Use \protect\grechangestaffsize\space instead.}%
+  \grechangestaffsize{#1}%
 }%
 
 %%%%%%%%%%%%%%%%%%%
@@ -1254,25 +1259,40 @@
 % 2 = compile all scores
 \def\gre@compilegabc{0}
 
+% User macro to change compilation behavior
+\def\gresetcompilegabc#1{%
+  \IfStrEq{#1}{force}{\gdef\gre@compilegabc{2}}{%
+    \IfStrEq{#1}{auto}{\gdef\gre@compilegabc{1}}{%
+      \IfStrEq{#1}{never}{\gdef\gre@compilegabc{0}}{%
+        \greerror{Unrecognized argument for \protect\gresetcompilegabc.}%
+      }%
+    }%
+  }%
+}%
+
+
 % User macro to force gregriotex to recompile gabc files. Useful for when there
 % are changes to gregoriotex but the GREGORIOTEX API VERSION is not changed.
 \def\forcecompilegabc{%
-  \gdef\gre@compilegabc{2}%
+  \gre@warning{\protect\forcecompilegabc\space is deprecated.\MessageBreak Use \protect\gresetcompilegabc{force}\space instead}%
+  \gresetcompilegabc{force}
 }%
 
 % User macro to let gregoriotex auto recompile gabc files as necessary.
 % Intended to be used in the main tex file to revert the previous macro.
 \def\autocompilegabc{%
-  \gdef\gre@compilegabc{1}
+  \gre@warning{\protect\autocompilegabc\space is deprecated.\MessageBreak Use \protect\gresetcompilegabc{auto}\space instead}%
+  \gresetcompilegabc{auto}
 }%
 
 % User macro to force score inclusion without compilation.
 \def\nevercompilegabc{%
-  \gdef\gre@compilegabc{0}
+  \gre@warning{\protect\nevercompilegabc\space is deprecated.\MessageBreak Use \protect\gresetcompilegabc{never}\space instead}%
+  \gresetcompilegabc{never}
 }
 
 
-% Internal marco which includes a score when \includescore is called without the optional argument.  Behavior is determined by the value of \gre@compilegabc flag.
+% Internal marco which includes a score when \gregorioscore is called without the optional argument.  Behavior is determined by the value of \gre@compilegabc flag.
 %
 % If \gre@compilegabc is 0, then we simply try to include the file as it is given to us.  This is the old behavior.
 %
@@ -1285,7 +1305,7 @@
 % If \gre@compilegabc is 2, pass true to the lua function.
 % This forces gregoriotex to recompile the gabc file.
 
-\def\gre@includescore#1{%
+\def\gre@gregorioscore#1{%
   \ifcase\gre@compilegabc% case 0, never compile
     \gre@debugmsg{compile}{Refusing to compile #1}%
     \input #1%
@@ -1300,30 +1320,26 @@
 }%
 
 \def\includetexscore#1{%
-  \gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore[n]\space instead.}%
-  \gre@includescorewithoption[n]{#1}%
+  \gre@warning{\protect\includetexscore\space is obsolete. \MessageBreak Use \protect\gregorioscore[n]\space instead}%
 }%
 
 \def\greincludetexscore#1{%
-  \gre@warning{\protect\greincludetexscore\space is deprecated.\MessageBreak Use \protect\includescore[n]\space instead.}%
-  \gre@includescorewithoption[n]{#1}%
+  \gre@warning{\protect\greincludetexscore\space is obsolete.\MessageBreak Use \protect\gregorioscore[n]\space instead}%
 }%
 
 \def\includegabcscore#1{%
-  \gre@warning{\protect\includegabcscore\space is deprecated.\MessageBreak Use \protect\includescore[c]\space instead.}%
-  \gre@includescorewithoption[c]{#1}%
+  \gre@warning{\protect\includegabcscore\space is obsolete.\MessageBreak Use \protect\gregorioscore[c]\space instead}%
 }%
 
 \def\greincludegabcscore#1{%
-  \gre@warning{\protect\greincludegabcscore\space is deprecated.\MessageBreak Use \protect\includescore[c]\space instead.}%
-  \gre@includescorewithoption[c]{#1}%
+  \gre@warning{\protect\greincludegabcscore\space is obsolete.\MessageBreak Use \protect\gregorioscore[c]\space instead}%
 }%
 
-% The internal macro called when \includescore is called with the optional argument.  Behavior is determined by the value of the argument:
+% The internal macro called when \gregorioscore is called with the optional argument.  Behavior is determined by the value of the argument:
 % n - do not attempt to compile the score.  Simply include it as is.
 % a - perform the checks to see if the score needs to be recompiled and do so only if necessary
 % f - force the compilation of the score before including it
-\def\gre@includescorewithoption[#1]#2{%
+\def\gre@gregorioscore@option[#1]#2{%
   \ifx #1n\relax%
     \gre@debugmsg{compile}{Override not compiling #2}%
     \input #2%
@@ -1345,21 +1361,27 @@
 
 % The main macro used by the user to input scores into the document.
 
-\def\includescore{\@ifnextchar[{\gre@includescorewithoption}%
-    {\gre@includescore}%
+\def\includescore{%
+  \gre@warning{\protect\includescore\space is deprecated.\MessageBreak Use \protect\gregorioscore\space instead}%
+  \gregorioscore
 }%
 
-% If called without the optional argument: '\includescore{Antiphon}'
+
+\def\gregorioscore{\@ifnextchar[{\gre@gregorioscore@option}%
+    {\gre@gregorioscore}%
+}%
+
+% If called without the optional argument: '\gregorioscore{Antiphon}'
 % the filename will be passed to the lua function 'include_score'
 % which will check: whether the gtex file exists, if the API version
 % of the gtex file, or if the gabc file is newer than the gtex
 % file. If one of these tests fails, the gabc file will be
 % (re)compiled.
 % The argument may or may not include a file extension. These are all valid:
-% '\includescore{Antiphon}' or '\includescore{Antiphon.gabc}' or
-% '\includescore{Antiphon.gtex}'
+% '\gregorioscore{Antiphon}' or '\gregorioscore{Antiphon.gabc}' or
+% '\gregorioscore{Antiphon.gtex}'
 
-% If called with the optional argument: '\includescore[f]{Antiphon.gtex}'
+% If called with the optional argument: '\gregorioscore[f]{Antiphon.gtex}'
 % the gtex file will be forced into the document and will not be
 % checked by the lua function 'include_score'. This does not bypass
 % the API version test done by '\GregorioTeXAPIVersion'.

@@ -93,6 +93,14 @@ You will need to play with the vaule of the distance a bit to acheive the desire
 As is normal, calls to the deprecated command names will raise a warning but still work.  However there is one caveat: the old functions will always add the annotations to the bottom of the annotation list, regardless of the order in which they are called.  Previously, you could call `\gresetsecondannotation` before `\gresetfirstannotation` and still have the first annotation appear on top.   Which annotation appears on top is now determined by the order in which the functions are called.
     
 
+### Command Name Systemization
+
+A naming scheme for GregorioTeX commands has been established and so most commands have had their names changed in order to bring them into line with the new scheme.  Breifly, user commands all now have a `\gre` prefix (to prevent name colisions with other packages) and groups of commands which altered a single setting have been replaced by a single command which takes an argument specifying the value of the setting.  The notable exception to this are the two main commands: `\gregorioscore` (replaces `\includescore`) and `\gabcsnippet`.  See GregorioRef for the complete list of new command names.
+
+Old command names should still work for now, but will raise a deprecation warning.  Exceptions are noted below:
+
+- `\grescaledim`: This function now takes two arguments.  The second should be `yes`, `true`, or `on` to acheive the old behavior.
+
 ## 3.0
 ### TeX Live 2013
 

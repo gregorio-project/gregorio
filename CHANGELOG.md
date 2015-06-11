@@ -13,6 +13,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Gregorio will now try harder to select an appropriate pitch for an automatic custos (`z0`) on a clef change (see [#446](https://github.com/gregorio-project/gregorio/issues/446)).  If results are not satisfactory, use a manual custos (`+`) to select a pitch manually.
 
 ### Changed
+- A new, more systematic naming scheme has been created for GregorioTeX macros.  The naming scheme should reduce the chances of naming conflicts with other packages and make it easier to identify what a particular macro is for and how to use it.  Most user functions have been renamed in order to bring them into line with this scheme.  Please see GregorioRef for a complete list of the new function names.  In general old names will still work, but they will raise a deprecation warning and they will be dropped from GregorioTeX in future relases.
 - The spacing algorithm has completely changed, expect your scores to look quite different (better we hope).
 - Lines are now aligned on the leftmost note instead of the leftmost letter.
 - Some glyph shapes are improved a little in greciliae, it should be noticeable especially for porrectus.
@@ -37,6 +38,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\grecoloredlines` now takes a single argument, a named color, instead of the three components of an RGB color.  As a result, `\redlines` can now use `gregoriocolor`, making the red staff lines consistent with the text, even when the user teaks `gregoriocolor`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
 - Style for score elements can now be changed via the `\grechangestyle` command.  This replaces the mixed system of styling commands which could be redefined for some elements and specialized commands for applying styles to others.  See GregorioRef for details.
 - Annotations with more than two lines are now supported (originally requested [on the user list](http://www.mail-archive.com/gregorio-users%40gna.org/msg00164.html) when two line annoations were made possible).  To build the annotation box use `\greannoataion`.  See GregorioRef for details.
+- `\grescaledim` now takes two arguments to bring it into line with the systemized naming scheme.  The second argument is `yes`, `true`, or `on` if you want the distance to scale when the staff size changes.  Anything else will make the distance independent of the staff size.
 
 ### Added
 - With thanks to Jakub Jelínek, St. Gallen style adiastematic notation is now handled through [nabc syntax](http://gregoriochant.org/dokuwiki/doku.php/language) (see GregorioNabcRef.pdf for details and [the new example](examples/FactusEst.gabc)). Only one line above the notes is currently handled. This is a preview, backward incompatible change are possible in future releases.

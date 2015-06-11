@@ -197,18 +197,18 @@
 \xdef\gre@scale@stafflinefactor{1}%
 
 % a macro for setting the thickness of the staff lines.  This changes the stafflinefactor and then adjusts the spaces that are affected by the thicker staff lines.
-\ifdefined\setstafflinethickness%
-  \greerror{\protect\setstafflinethickness\space is already defined.  Check for package conflicts.}%
-\else%
-  \def\setstafflinethickness#1{%
-    \xdef\gre@stafflinefactor{#1}%
-    \relax %
-  }%
-\fi%
+\def\grechangestafflinethickness#1{%
+  \xdef\gre@stafflinefactor{#1}%
+  \relax %
+}%
+
+\def\setstafflinethickness{%
+  \gre@warning{\protect\setstafflinethickness\space is deprecated.\MessageBreak Use \protect\grechangestafflinethickness\space instead.}%
+  \grechangestafflinethickness%
+}%
 
 \def\gresetstafflinefactor#1{%
-  \gre@warning{\protect\gresetstafflinefactor\space is deprecated.\MessageBreak Use \protect\setstafflinethickness\space instead.}%
-  \setstafflinethickness{#1}%
+  \greerror{\protect\gresetstafflinefactor\space is obsolete.\MessageBreak Use \protect\grechangestafflinethickness\space instead.}%
 }%
 
 %constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
@@ -853,10 +853,10 @@
 %% dimension changing macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% This macro sets one dim (#1) to the value #2 and sets whether it should scale when the \grefactor changes (#3, 1 if yes, 0 if no).  While it does check that #1 can accept the kind of distance given in #2, it does not propagate the changes through the calculated distances.
+%% This macro creates one dim (#1), setting its value to #2 and sets whether it should scale when the \grefactor changes (#3, 1 if yes, 0 if no).  While it does check that #1 can accept the kind of distance given in #2, it does not propagate the changes through the calculated distances.
 %% Note: the distances created by this function are stored as strings, not skip or dimension registers.  This allows the user to specify a distance in em or ex units even though the font parameters may not be the same at the time the distance is specified and the time the distance is used.
 \newif\ifchecklength%
-\def\gresetdim#1#2#3{%
+\def\grecreatedim#1#2#3{%
   \checklengthfalse%
   %check if #2 is a rubber length (contains plus and/or minus)
   \IfSubStr{#2}{plus}{\checklengthtrue}{\relax}%
@@ -871,40 +871,53 @@
       \greerror{#1 cannot be a rubber length.}%
     \else%
       \def\gre@prefix{dimen}%
-    \fi
-  \fi
+    \fi%
+  \fi%
   \expandafter\xdef\csname gre@scale@#1\endcsname{#3}%
   \expandafter\xdef\csname gre@\gre@prefix @#1\endcsname{#2}%
   \relax %
 }%
 
-% a macro for changing a dimension.  Unlike \gresetdim, this function won’t create a new distance, just change an existing one.
+\def\gresetdim{%
+  \gre@warning{\protect\gresetdim\space is deprecated.\MessageBreak Use \protect\grecreatedim\space instead}%
+  \grecreatedim%
+}%
+
+% a macro for changing a dimension.  Unlike \grecreatedim, this function won’t create a new distance, just change an existing one.
 \def\grechangedim#1#2#3{%
   \gre@rubberpermit{#1}%
   % figure out our prefix
   \ifrubber%
-    \gre@debugmsg{spacing}{Changing a skip.}
+    \gre@debugmsg{spacing}{Changing a skip.}%
     \def\gre@prefix{skip}%
   \else%
-    \gre@debugmsg{spacing}{Changing a dimen.}
+    \gre@debugmsg{spacing}{Changing a dimen.}%
     \def\gre@prefix{dimen}%
-  \fi
+  \fi%
   \ifcsname gre@\gre@prefix @#1\endcsname%
-    \gre@debugmsg{spacing}{It does exist.}
-    \gresetdim{#1}{#2}{#3}%
-  \else
-    \greerror{#1 is not a recognized distance.}
-  \fi
+    \gre@debugmsg{spacing}{It does exist.}%
+    \grecreatedim{#1}{#2}{#3}%
+  \else%
+    \greerror{#1 is not a recognized distance.}%
+  \fi%
 }%
 
-%a macro to use if all you want to do is turn off the scaling for a particular distance
+%a macro to use if all you want to do is turn on or off the scaling for a particular distance
+\def\grescaledim#1#2{%
+  \IfStrEq{#2}{yes}%
+    {\expandafter\gdef\csname gre@scale@#1\endcsname{1}}%
+    {\expandafter\gdef\csname gre@scale@#1\endcsname{0}}%
+  \IfStrEq{#2}{true}%
+    {\expandafter\gdef\csname gre@scale@#1\endcsname{1}}%
+    {\expandafter\gdef\csname gre@scale@#1\endcsname{0}}%
+  \IfStrEq{#2}{on}%
+    {\expandafter\gdef\csname gre@scale@#1\endcsname{1}}%
+    {\expandafter\gdef\csname gre@scale@#1\endcsname{0}}%
+}
+
 \def\grenoscaledim#1{%
+  \gre@warning{\protect\grenoscaledim\space is deprecated.\MessageBreak Use \protect\grescaledim{...}{no} instead.}%
   \expandafter\gdef\csname gre@scale@#1\endcsname{0}%
-}%
-
-%a macro to use if all you want to do is turn on the scaling for a particular distance
-\def\grescaledim#1{%
-  \expandafter\gdef\csname gre@scale@#1\endcsname{1}%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -925,7 +938,7 @@
 }%
 
 
-% For everything to work fine the default configuration has to loaded after the gregoriotex package is completely loaded (so that all functions are well defined).  As a result you'll find that as the last line in gregoriotex.tex
+% For everything to work fine the default configuration has to loaded after the gregoriotex package is completely loaded (so that all functions are well defined).  As a result you'll find that as the last line in gregoriotex-main.tex
 
 
 %%%%%%%%%%%%%%
