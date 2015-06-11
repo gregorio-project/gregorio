@@ -829,7 +829,7 @@
   \ifnum\greusestylefont=1\relax %
     \gresetstylefont %
   \fi %
-  \gre@computespaces
+  \gre@computespaces%
   \grecancelpenalties %
   \gredofinetuning %
   \gregorioattr=0\relax %
@@ -1170,16 +1170,19 @@
 
 \def\gresetgregoriofont#1{%
   \xdef\gregoriofontname{#1}%
+  \gre@loadgregoriofont%
+}
+
+\def\gre@loadgregoriofont{%
   \gre@count@temp@three = \the\grefactor %
   \multiply\gre@count@temp@three by 100000 %
-  \global\font\gregoriofont={name:#1} at \the\gre@count@temp@three sp%
+  \global\font\gregoriofont={name:\gregoriofontname} at \the\gre@count@temp@three sp%
   {\gregoriofont\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
   \relax%
 }%
 
 % the default gregorio font
-\xdef\gregoriofontname{greciliae}%
-\gresetgregoriofont{\gregoriofontname}%
+\gresetgregoriofont{greciliae}%
 
 \xdef\greusestylefont{0}%
 
@@ -1224,6 +1227,11 @@
 
 % because the mechanism for the defining the formats differs under LaTeX and PlainTeX the underlying function which does the work is defined in gregoriotex.sty or gregoriotex.tex respectively.
 
+
+%%%%%%%%%%%%%%%
+%% Staff size
+%%%%%%%%%%%%%%%
+
 \def\setgrefactor#1{%
   \ifnum#1<0\relax%
     \greerror{\protect\grefactor\space must be a positive integer.}%
@@ -1231,6 +1239,7 @@
     \gre@changedimenfactor{\grefactor}{#1}%
     \global\grefactor=#1\relax %
   \fi%
+  \gre@loadgregoriofont%
   \relax %
 }%
 
