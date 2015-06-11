@@ -28,6 +28,7 @@
 \usepackage{xspace}
 \usepackage{multicol}
 \usepackage{units}
+\usepackage{framed}
 
 \usepackage{makeidx}
 \makeindex
@@ -39,6 +40,9 @@
 
 \usepackage{minted} % must be after xcolor
 \newminted{latex}{gobble=2,bgcolor=lightgray}
+%\newminted{gabc}{bgcolor=lightgray} % can this be done?
+\newenvironment{gabccode}{\tt}{}
+
 
 \usepackage{gregoriotex}
 
@@ -124,7 +128,7 @@
         \setlength{\listparindent}{0pt}%
         \setlength{\itemindent}{0pt}%
         \setlength{\parsep}{0pt}%
-      }\item[]{\fbox{\parbox{\hsize}{\includescore{factus.gtex}}}}%
+      }\item[]{\fbox{\parbox{\hsize}{\includescore[a]{factus}}}}%
       \end{list}%
       \gresetfirstannotation{}
       \gresetsecondannotation{}
@@ -162,6 +166,14 @@ The source file where the macro is defined is included for developers
 who wish to consult it.\\
 Some of the macros intended for inclusion in the main.tex file by the user
 include usage examples.
+
+Macros are divided into three groups:
+\begin{description}
+\item[User Commands] These macros are meant to be used by your average user in their \TeX\ files in order to fine tune the appearance of their scores.  They should have names which consist solely of lowercase letters and be prefixed with the \texttt{gre}.  Where the name clearly identifies the function as belonging to Gregorio\TeX, the prefix may be omitted.
+\item[Gregorio Controls] These macros are written by the command line tool to gtex files and should not appear outside of gtex files.  They should have names which are in CamelCase and be prefixed with \texttt{Gre}.
+\item[Gregorio\TeX\ internals] These macros are used by Gregorio\TeX\ to process and typeset a score and should not appear in a user's document anywhere (not even in gtex files).  They should have names which are all lowercase and be prefixed with \makeatletter\texttt{gre@}\makeatother.
+\end{description}
+
 
 \input{Command_Index_User}
 \input{Command_Index_gregorio}

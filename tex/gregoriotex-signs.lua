@@ -406,8 +406,8 @@ local offset_cases = {
 local function emit_offset_macros()
   local i, item
   for i, item in ipairs(offset_cases) do
-    log([[\def\greoCase%s{%d}]], item.case, i)
-    tex.sprint(string.format([[\def\greoCase%s{%d}]], item.case, i))
+    log([[\def\GreOCase%s{%d}]], item.case, i)
+    tex.sprint(string.format([[\def\GreOCase%s{%d}]], item.case, i))
   end
   tex.sprint([[\def\gre@v@case#1#2#3#4{]])
   tex.sprint([[\ifcase#1\gre@bug{Invalid note offset case: \string#1}]])

@@ -48,8 +48,8 @@
 \ProcessKeyvalOptions*
 
 % we hide lines only under LaTeX
-\GreHideAltLines
-\GreHidePCLines
+\grehidealtlines
+\grehidepclines
 
 %% We now redefine some things in a more LaTeX friendly way.
 
@@ -67,32 +67,36 @@
   \relax %
 }
 
-\def\greitalic#1{%
+%%%%%%%%%
+%% LaTeX specific definitions for fonts
+%%%%%%%%%
+
+\def\GreItalic#1{%
   \textit{#1}%
   \relax %
 }
 
-\def\gresmallcaps#1{%
+\def\GreSmallCaps#1{%
   \textsc{#1}%
   \relax %
 }
 
-\def\greboldfont#1{%
+\def\GreBold#1{%
   \textbf{#1}%
   \relax %
 }
 
-\def\grett#1{%
+\def\GreTypewriter#1{%
   \texttt{#1}%
   \relax %
 }
 
-\def\greul#1{%
+\def\GreUnderline#1{%
   \underline{#1}%
   \relax %
 }
 
-\def\grecolored#1{%
+\def\GreColored#1{%
   {%
     \color{gregoriocolor}#1%
   }%

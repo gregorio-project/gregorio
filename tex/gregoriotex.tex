@@ -44,6 +44,43 @@
 
 \input gregoriotex-main.tex
 
+%%%%%%%%%
+%% PlainTeX specific definitions for fonts
+%%%%%%%%%
+
+\def\GreBold#1{%
+  {\bf #1}%
+  \relax %
+}%
+
+\def\GreItalic#1{%
+  {\it #1}%
+  %\relax 
+}%
+
+\def\GreSmallCaps#1{%
+  {\sc #1}%
+  \relax %
+}%
+
+\def\GreTypewriter#1{%
+  {\tt #1}%
+  \relax %
+}%
+
+% Note since underlining and coloring don’t exist in PlainTeX, but we need the following commands to maintain compatibility with LaTeX.
+\def\GreUnderline#1{%
+  {#1}%
+  \relax %
+}%
+
+\def\GreColored#1{%
+  {#1}%
+  \relax %
+}%
+
+
+
 %% The following two functions are defined for backwards compatibility.  They will eventually be removed.
 \def\greinitialformat#1{%
   {\gre@fontofinitial #1}%

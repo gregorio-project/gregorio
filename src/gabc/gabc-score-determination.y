@@ -685,6 +685,9 @@ score_copyright_definition:
 
 gregoriotex_font_definition:
     GREGORIOTEX_FONT attribute {
+        gregorio_message("\"gregoriotex-font\" header is deprecated. "
+        "Please use \\gresetgregoriofont in TeX instead.",
+        "set_gregoriotex_font", VERBOSITY_DEPRECATION, 0);
         check_multiple("GregorioTeX font", score->gregoriotex_font);
         score->gregoriotex_font=$2.text;
     }
