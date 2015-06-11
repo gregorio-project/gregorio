@@ -62,6 +62,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\grehighchoralsignstyle`, if you were redefining this command, use `\grechangeformat{highchoralsign}...` instead
 - `centering-scheme` gabc header, supplanted by `\grelyriccentering` in TeX.  See GregorioRef for syntax.
 - `\setaboveinitialseparation`, supplanted by `\grechangedim{annotationseparation}...`
+- `gregoriotex-font` gabc header, supplanted by `\gresetgregoriofont` in TeX.  See GregorioRef for syntax.
 
 ### Removed
 - GregorioXML and OpusTeX output

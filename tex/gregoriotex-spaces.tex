@@ -387,7 +387,7 @@
 % dimen keeping the shift computed with next function
 \newdimen\gre@dimen@bolshift
 
-%% @desc Macro used in \gresyllable. Sets \gre@skip@bolshift to the left kern that
+%% @desc Macro used in \GreSyllable. Sets \gre@skip@bolshift to the left kern that
 %%       should appear at the beginning of a line in case of a forced linebreak.
 %%       The goal of this left kern is to have all lines aligned on notes. See
 %%       TODO for details.
@@ -424,7 +424,7 @@
 % dimen keeping the shift computed with next function
 \newskip\gre@skip@eolshift
 
-%% @desc Macro used in \gresyllable. Sets \gre@skip@eolshift to the left kern that
+%% @desc Macro used in \GreSyllable. Sets \gre@skip@eolshift to the left kern that
 %%       should appear before an end of line. The improvement is tiny: when
 %%       text go further than notes in the last syllable of a line, the idea
 %%       is to allow text to go a bit further right, under the custo.
@@ -439,10 +439,10 @@
     \global\gre@skip@eolshift=-#1 %
     % we don't do it if it's the last syllable of a score or if the user
     % disabled custos
-    \ifnum\gredisableeolshifts=0\relax %
+    \ifgre@eolshiftsenabled %
       \ifnum\greblockcusto=1\else %
-        \setbox\GreTempwidth=\hbox{\grecustochar{\gre@pitch@g}}%
-        \global\advance\gre@skip@eolshift by -\wd\GreTempwidth %
+        \setbox\gre@box@temp@width=\hbox{\grecustochar{\gre@pitch@g}}%
+        \global\advance\gre@skip@eolshift by -\wd\gre@box@temp@width %
         \global\advance\gre@skip@eolshift by -\gre@skip@spacebeforecusto %
       \fi %
       \global\advance\gre@skip@eolshift by \gre@dimen@minimalspaceatlinebeginning %
@@ -623,7 +623,7 @@
 \newdimen\gre@dimen@additionalbottomspace%
 \newdimen\gre@dimen@additionaltopspace%
 
-% same arguments as grenewlinewithspace
+% same arguments as GreNewLineWithSpace
 \def\gre@calculate@additionalspaces#1#2{%
   \ifcase#1\relax %
     \global\gre@dimen@additionalbottomspace=0 sp%
@@ -659,8 +659,8 @@
 
 %% macros for additional bottom space for the first line
 
-% #1 is 1, 2, 3, or 4, with the same signification as in grenewlinewithspace
-\def\grefirstlinebottomspace#1#2{%
+% #1 is 1, 2, 3, or 4, with the same signification as in GreNewLineWithSpace
+\def\GreFirstLineBottomSpace#1#2{%
   \ifcase#1\relax %
     % case 0
     \global\gre@dimen@additionalbottomspace=0 sp%
@@ -716,11 +716,11 @@
 % a dimen that will contain the enddifference of the previous glyph
 \newdimen\gre@dimen@previousenddifference%
 
-% macro to set enddifference (defined above) to \wd\GreSyllablenotes - (\wd\GreSyllabletext - textaligncenter) - notesaligncenter
+% macro to set enddifference (defined above) to \wd\gre@box@syllablenotes - (\wd\gre@box@syllabletext - textaligncenter) - notesaligncenter
 % enddifference will be positive if text go further than the notes, and negative in the other case
 % arguments are :
-% #1: \wd\GreSyllablenotes : the total width of the notes
-% #2: \wd\GreSyllabletext : the total width of the text
+% #1: \wd\gre@box@syllablenotes : the total width of the notes
+% #2: \wd\gre@box@syllabletext : the total width of the text
 % #3: textaligncenter (defined above)
 % #4: notesaligncenter (defined above too)
 % #5: if we have to set previousenddifference or not
@@ -912,6 +912,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\GreLoadSpaceConf#1{%
+  \gre@warning{\protect\GreLoadSpaceConf\space is deprecated.\MessageBreak Use \protect\greloadspaceconf\space instead.}%
+  \greloadspaceconf{#1}%
+}%
+
+\def\greloadspaceconf#1{%
   \input gsp-#1.tex\relax %
   \ifnum\the\grefactor=\greconffactor\else %If the space configuration file is designed for a \grefactor other than the current one, then we need to rescale the distances.
     \gre@changedimenfactor{\greconffactor}{\grefactor} %
