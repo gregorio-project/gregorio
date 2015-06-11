@@ -20,6 +20,18 @@ Macro for calculating the additional space needed below the first line of the sc
   & 0 & there is no translation below the text
 \end{argtable}
 
+\macroname{\textbackslash GreAnnotationLine}{\#1}{gregoriotex-main.tex}
+A wrapper macro for placing annotations above the initial. The
+argument is provided by the \texttt{gabc} file in the
+\texttt{annotation} header field.  This macro tests for the presence
+of the annotation box which means that the annotation is explicitly
+defined in the \texttt{main.tex} file. If so, this macro does nothing,
+respecting the annotation value in the \texttt{main.tex} file.
+
+\begin{argtable}
+  \#1 & string & Text to place above the initial.\\
+\end{argtable}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "GregorioRef"
