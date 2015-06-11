@@ -92,6 +92,19 @@ You will need to play with the vaule of the distance a bit to acheive the desire
 
 As is normal, calls to the deprecated command names will raise a warning but still work.  However there is one caveat: the old functions will always add the annotations to the bottom of the annotation list, regardless of the order in which they are called.  Previously, you could call `\gresetsecondannotation` before `\gresetfirstannotation` and still have the first annotation appear on top.   Which annotation appears on top is now determined by the order in which the functions are called.
     
+#### The Annotation Header
+
+The `annotation` header in gabc files now passes its value(s) to gregoriotex for placement above the inital letter of the score. Up to two `annotation` field are supported, the first for the first line above the initial, and the second field for the second line.
+
+    annotation: 1 Ant.;
+    annotation: VII a;
+
+Full TeX markup is also accepted:
+
+    annotation: {\color{red}1 Ant.};
+    annotation: {\color{red}VII a};
+
+If the user already defined annotation(s) in the main TeX file via `\greannotation` then the `annotation` header field will not overwrite that definition.
 
 ## 3.0
 ### TeX Live 2013

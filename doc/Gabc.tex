@@ -79,6 +79,14 @@ Here is a detailed description of each header field:
     annotation:Ad Magnif.;
     annotation:VIII G;
   \end{lstlisting}
+  Full \TeX markup is accepted:
+  \begin{lstlisting}
+    annotation:{\color{red}Ad Magnif.};
+    annotation:{\color{red}VIII G};
+  \end{lstlisting}
+  If the user already defined annotation(s) in the main TeX file via
+  \verb=\greannotation= then the \texttt{annotation} header field will not
+  overwrite that definition.
 
 \end{description}
 
