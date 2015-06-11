@@ -3033,6 +3033,7 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     status = malloc(sizeof(gregoriotex_status));
     status->bottom_line = 0;
     status->to_modify_note = NULL;
+    int annotation_num;
 
     if (!f) {
         gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
@@ -3098,6 +3099,12 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
         if (!strcmp(score->gregoriotex_font, "greciliae")) {
             fprintf(f, "\\setgregoriofont{greciliae}%%\n");
         }
+    }
+    for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num) {
+      if (score->annotation[annotation_num]) {
+	fprintf(f, "\\GreAnnotationLine{%s}%%\n",
+		score->annotation[annotation_num]);
+      }
     }
     if (score->mode != 0) {
         fprintf(f, "\\gregorianmode{%d}%%\n", score->mode);

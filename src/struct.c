@@ -964,6 +964,7 @@ static void gregorio_source_info_init(source_info *si)
 
 gregorio_score *gregorio_new_score(void)
 {
+    int annotation_num;
     gregorio_score *new_score = calloc(1, sizeof(gregorio_score));
     new_score->first_syllable = NULL;
     new_score->number_of_voices = 1;
@@ -981,6 +982,9 @@ gregorio_score *gregorio_new_score(void)
     new_score->mode = 0;
     new_score->gregoriotex_font = NULL;
     new_score->user_notes = NULL;
+    for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num) {
+      new_score->annotation[annotation_num] = NULL;
+    }
     return new_score;
 }
 
@@ -1011,6 +1015,7 @@ static void gregorio_free_source_info(source_info *si)
 
 static void gregorio_free_score_infos(gregorio_score *score)
 {
+    int annotation_num;
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
                 "gregorio_free_score_infos", VERBOSITY_WARNING, 0);
@@ -1036,6 +1041,11 @@ static void gregorio_free_score_infos(gregorio_score *score)
     }
     if (score->user_notes) {
         free(score->user_notes);
+    }
+    for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num) {
+      if (score->annotation[annotation_num]) {
+	free(score->annotation[annotation_num]);
+      }
     }
     gregorio_free_source_info(&score->si);
     if (score->first_voice_info) {
@@ -1160,13 +1170,9 @@ void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes)
 
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info)
 {
-    int annotation_num;
     gregorio_voice_info *next = calloc(1, sizeof(gregorio_voice_info));
     next->initial_key = NO_KEY;
     next->flatted_key = false;
-    for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num) {
-        next->annotation[annotation_num] = NULL;
-    }
     next->style = NULL;
     next->virgula_position = NULL;
     next->next_voice_info = NULL;
@@ -1178,7 +1184,6 @@ void gregorio_add_voice_info(gregorio_voice_info **current_voice_info)
 
 void gregorio_free_voice_infos(gregorio_voice_info *voice_info)
 {
-    int annotation_num;
     gregorio_voice_info *next;
     if (!voice_info) {
         gregorio_message(_("function called with NULL argument"),
@@ -1186,12 +1191,6 @@ void gregorio_free_voice_infos(gregorio_voice_info *voice_info)
         return;
     }
     while (voice_info) {
-        for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS;
-             ++annotation_num) {
-            if (voice_info->annotation[annotation_num]) {
-                free(voice_info->annotation[annotation_num]);
-            }
-        }
         if (voice_info->style) {
             free(voice_info->style);
         }
@@ -1208,19 +1207,18 @@ void gregorio_free_voice_infos(gregorio_voice_info *voice_info)
  * a set of quite useless function 
  */
 
-void gregorio_set_voice_annotation(gregorio_voice_info *voice_info,
-        char *annotation)
+void gregorio_set_score_annotation(gregorio_score *score, char *annotation)
 {
     int annotation_num;
-    if (!voice_info) {
+    if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_voice_annotation", VERBOSITY_WARNING, 0);
+                "gregorio_set_annotation", VERBOSITY_WARNING, 0);
         return;
     }
     // save the annotation in the first spare place.
     for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num) {
-        if (voice_info->annotation[annotation_num] == NULL) {
-            voice_info->annotation[annotation_num] = annotation;
+        if (score->annotation[annotation_num] == NULL) {
+            score->annotation[annotation_num] = annotation;
             break;
         }
     }
