@@ -611,11 +611,11 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 fprintf(f, "   flatted_key               true\n");
             }
         }
-        for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS;
+        for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS;
              ++annotation_num) {
-            if (voice_info->annotation[annotation_num]) {
+            if (score->annotation[annotation_num]) {
                 fprintf(f, "   annotation                %s\n",
-                        voice_info->annotation[annotation_num]);
+                        score->annotation[annotation_num]);
             }
         }
         if (voice_info->style) {
