@@ -168,7 +168,7 @@
 % Conditionals can be summed up this way:
 % if wd(#1/2) > \gre@dimen@textaligncenter then #2
 % else
-%   if \gre@englishcentering = 0:
+%   \ifgre@vowelcentering :
 %     if wd(\gre@endsyllablepart) > \gre@dimen@clivisalignmentmin -> #2 else #1
 %   else:
 %      if (\gre@dimen@textaligncenter) > \gre@dimen@clivisalignmentmin -> #2 else #1
@@ -190,7 +190,7 @@
     \ifdim\gre@dimen@temp@three >\gre@dimen@textaligncenter %
       \global\setbox\gre@box@temp@width=\hbox{#2}%
     \else%
-      \ifcase\gre@englishcentering%
+      \ifgre@vowelcentering%
         \grewidthof{\mygre@endsyllablepart}%
         \gre@debugmsg{ifdim}{ tempwidth > clivisalignmentmin}%
         \ifdim\gre@dimen@temp@three >\gre@dimen@clivisalignmentmin %
@@ -198,7 +198,7 @@
         \else%
           \global\setbox\gre@box@temp@width=\hbox{#1}%
         \fi%
-      \or%
+      \else%
         \gre@debugmsg{ifdim}{ textaligncenter > clivisalignmentmin}%
         \ifdim\gre@dimen@textaligncenter >\gre@dimen@clivisalignmentmin %
           \global\setbox\gre@box@temp@width=\hbox{#2}%
@@ -412,7 +412,7 @@
 }%
 
 \def\defaultcentering{%
-  \gre@warning{\protect\englishcentering\space is deprecated.\MessageBreak Use \protect\gresetlyriccentering{vowel} instead}%
+  \gre@warning{\protect\defaultcentering\space is deprecated.\MessageBreak Use \protect\gresetlyriccentering{vowel} instead}%
   \gresetlyriccentering{vowel}%
 }%
 

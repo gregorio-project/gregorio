@@ -117,13 +117,15 @@
   \def\GreStar{\greheightstar}%
   \greannotation{\scriptsize{Comm.}}%
   \greannotation{\scriptsize{VII}}%
-  \color{black!60}%
-  \setmainfont[SmallCapsFont=AlegreyaSC]{Alegreya}%
-  \newlength{\mini}%
-  \setlength{\mini}{\hsize}%
-  \addtolength{\mini}{-4cm}%
-  \setlength{\fboxsep}{5mm}%
-  \hfil\fbox{\parbox{\mini}{\includescore[a]{factus}}}\hfil%
+  \begingroup%
+    \color{black!60}%
+    \setmainfont[SmallCapsFont=AlegreyaSC]{Alegreya}%
+    \newlength{\mini}%
+    \setlength{\mini}{\hsize}%
+    \addtolength{\mini}{-4cm}%
+    \setlength{\fboxsep}{5mm}%
+    \hfill\fbox{\parbox{\mini}{\gregorioscore[f]{factus}}}\hfill%
+  \endgroup
   \begin{center}
     \vspace{1.5cm}%
     \href{http://gregorio-project.github.io/}{Homepage}
