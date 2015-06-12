@@ -27,9 +27,24 @@
 \input luaotfload.sty%
 \input graphicx.tex % for \resizebox
 \input xstring.sty%
-\def\greerror#1{\errmessage{GregorioTeX error: #1}}%
-\def\gre@warning#1{\message{GregorioTeX warning: #1}}%
-\def\gre@bug#1{\errmessage{GregorioTeX bug: #1 !! This is a bug in Gregorio.  Please report it at https://github.com/gregorio-project/gregorio/issues}}%
+
+\def\greerror#1{\begingroup%
+\def\MessageBreak{^^J}%
+\let\protect\string%
+\errmessage{GregorioTeX error: #1}%
+\endgroup}%
+
+\def\gre@warning#1{\begingroup%
+\def\MessageBreak{^^J}%
+\let\protect\string%
+\message{GregorioTeX warning: #1}%
+\endgroup}%
+
+\def\gre@bug#1{\begingroup%
+\def\MessageBreak{^^J}%
+\let\protect\string%
+\errmessage{GregorioTeX bug: #1 !! This is a bug in Gregorio.  Please report it at https://github.com/gregorio-project/gregorio/issues}%
+\endgroup}%
 
 
 \ifx\csname gre@debug\endcsname\relax%
