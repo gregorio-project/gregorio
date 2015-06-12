@@ -30,7 +30,7 @@
 
 #define YY_NO_INPUT
 
-static inline void save_lval()
+static inline void save_lval(void)
 {
     gregorio_vowel_rulefile_lval =
             malloc((gregorio_vowel_rulefile_leng + 1) * sizeof(char));
@@ -39,7 +39,7 @@ static inline void save_lval()
     gregorio_vowel_rulefile_lval[gregorio_vowel_rulefile_leng] = '\0';
 }
 
-static inline void invalid()
+static inline void invalid(void)
 {
     gregorio_messagef("gregorio_vowel_rulefile_lex", VERBOSITY_WARNING, 0,
             _("invalid character in vowel file: %c"),
