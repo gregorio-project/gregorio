@@ -466,7 +466,20 @@
 %% macros for the score reference (unused)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\GreScoreReference#1{}%
+\def\grescorereference#1{%
+  \relax
+}%
+
+\def\GreScoreReference#1{
+  \gre@warning{\protect\GreScoreReference\space is deprecated.\MessageBreak Use \protect\grescorereference\space instead}%
+  \grescorereference{#1}%
+}%
+
+\def\scorereference#1{%
+  \gre@warning{\protect\scorereference\space is deprecated.\MessageBreak Use \protect\grescorereference\space instead}%
+  \grescorereference{#1}%
+}%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting the things above the initial
@@ -503,10 +516,6 @@
   \relax%
 }%
 
-\def\scorereference#1{%
-  \relax%
-}%
-
 %% macro that draws the lines : starts by the first and then draws the lines of every line.
 %% has to be called before drawing the key, after drawing the initial
 \def\GreBeginNotes{%
@@ -518,9 +527,14 @@
   \relax %
 }%
 
-\def\commentary#1{%
+\def\grecommentary#1{%
   \vbox{\hfill\hbox{#1}}%
   \relax %
+}
+
+\def\commentary#1{%
+  \gre@warning{\protect\commentary\space is deprecated.\MessageBreak Use \protect\grecommentary\space instead.}
+  \grecommentary{#1}
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -589,16 +603,26 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% first a macro to prevent the typesetting of the lines (useful for some people)
-\xdef\greremovelinescount{0}%
+\newif\ifgre@showlines%
+\gre@showlinestrue
+
+\def\gresetlines#1{%
+  \IfStrEq{#1}{visible}%
+    {\gre@showlinestrue}%
+    {\IfStrEq{#1}{invisible}%
+      {\gre@showlinesfalse}%
+      {\greerror{Unrecognized option for \protect\gresetlines}}%
+    }%
+}
 
 \def\greremovelines{%
-  \xdef\greremovelinescount{1}%
-  \relax %
+  \gre@warning{\protect\greremovelines\space is deprecated.\MessageBreak Use \protect\gresetlines{invisible} instead}
+  \gresetlines{invisible}
 }%
 
 \def\gredonotremovelines{%
-  \xdef\greremovelinescount{0}%
-  \relax %
+  \gre@warning{\protect\gredonotremovelines\space is deprecated.\MessageBreak Use \protect\gresetlines{visible} instead}
+  \gresetlines{visible}
 }%
 
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
@@ -612,28 +636,28 @@
       \grenormalstafflinesformat %
       \vskip\gre@dimen@currentabovelinestextheight %
       \vskip\gre@dimen@additionaltopspace %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
       \fi %
       \gre@skip@temp@four = \gre@dimen@interstafflinespace%
       \kern\gre@skip@temp@four %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
       \fi %
       \gre@skip@temp@four = \gre@dimen@interstafflinespace%
       \kern\gre@skip@temp@four %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
       \fi %
       \gre@skip@temp@four = \gre@dimen@interstafflinespace%
       \kern\gre@skip@temp@four %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
@@ -661,28 +685,28 @@
       \grenormalstafflinesformat %
       \vskip\gre@skip@spaceabovelines %
       \vskip\gre@dimen@currentabovelinestextheight %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
       \fi %
       \gre@skip@temp@four = \gre@dimen@interstafflinespace%
       \kern\gre@skip@temp@four %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
       \fi %
       \gre@skip@temp@four = \gre@dimen@interstafflinespace%
       \kern\gre@skip@temp@four %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
       \fi %
       \gre@skip@temp@four = \gre@dimen@interstafflinespace%
       \kern\gre@skip@temp@four %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
@@ -751,11 +775,27 @@
 %% macros for the translations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\xdef\gretranslationcenteringscheme{0}%
+\newif\ifgre@translationcentering
+\gre@translationcenteringfalse
+
+\def\gresettranslationcentering#1{%
+  \IfStrEq{#1}{left}%
+    {\gre@translationcenteringfalse}%
+    {\IfStrEq{#1}{center}%
+      {\gre@translationcenteringtrue}%
+      {\greerror{Unrecognized option for \protect\gresettranslationcentering}}%
+    }%
+}%
 
 \def\setgretranslationcenteringscheme#1{%
-  \xdef\gretranslationcenteringscheme{\number #1}%
+  \gre@warning{\protect\setgretranslationcenteringscheme\space is deprecated.\MessageBreak Use \protect\gresettranslationcentering\space instead}%
+  \ifnum#1=0\relax%
+    \gresettranslationcentering{left}%
+  \else%
+    \gresettranslationcentering{center}%
 }%
+
+
 
 \xdef\grenlbintranslation{0}%
 
@@ -764,9 +804,7 @@
 }%
 
 \def\GreWriteTranslation#1{%
-  \ifnum\gretranslationcenteringscheme=0\relax %
-    \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation\gretranslationformat{#1}\endgre@style@translation\hss}}}%
-  \else %
+  \ifgre@translationcentering %
     \gre@dimen@temp@five=\wd\gre@box@syllabletext %
     \setbox\gre@box@temp@width=\hbox{#1}%
     \advance\gre@dimen@temp@five by -\wd\gre@box@temp@width %
@@ -774,6 +812,8 @@
     \kern\gre@dimen@temp@five %
     \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation\gretranslationformat{#1}\endgre@style@translation\hss}}}%
     \kern-\gre@dimen@temp@five %
+  \else %
+    \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation\gretranslationformat{#1}\endgre@style@translation\hss}}}%
   \fi %
 }%
 

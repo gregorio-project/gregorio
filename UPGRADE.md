@@ -3,6 +3,14 @@
 This file contains instructions to upgrade to a new release of Gregorio.
 
 ##4.0
+### Command Name Systemization
+
+A naming scheme for GregorioTeX commands has been established and so most commands have had their names changed in order to bring them into line with the new scheme.  Some have also had their syntax changed.  Breifly, user commands all now have a `\gre` prefix (to prevent name colisions with other packages) and groups of commands which altered a single setting have been replaced by a single command which takes an argument specifying the value of the setting.  The notable exception to this are the two main commands: `\gregorioscore` (replaces `\includescore`) and `\gabcsnippet`.  See GregorioRef for the complete list of new command names and their syntax.
+
+Old command names should still work for now, but will raise a deprecation warning.  Exceptions are noted below:
+
+- `\grescaledim`: This function now takes two arguments.  The second should be `yes`, `true`, or `on` to acheive the old behavior.
+
 ### Barred letters
 
 If you are using barred letters in your document and if you use a font other than libertine, you must adjust the horizontal placement of the bar on the letter. To do so, use the `\gresimpledefbarglyph` macro. For example, use `\gresimpledefbarglyph{A}{0.3em}` in your preamble, tweaking the second argument to have a good result (same for R and V). See the documentation of `\gresimpledefbarglyph` in the PDF documentation for more details.
@@ -48,10 +56,6 @@ Note: `3`, `4`, and `5` encompass a new feature and are listed here only for com
 - `lowchoralsignshift` has been renamed to `choralsigndownshift`.
 - `highchoralsignshift` has been renamed to `choralsignupshift` and its sign inverted.
 
-### Colored lines
-
-Since `\grecoloredlines` now takes a named color as it's argument, if you were using it to custom color your lines, you must now define a named color using `\definecolor{yourcolorname}{RGB}{#,#,#}` and then pass that color to the command: `\grecoloredlines{yourcolorname}`.  The `\redlines` command continues to work as it did before, but will now respond to a change to `gregoriocolor` the way colored text does.
-
 ### Styling score elements
 
 Changing the styling of text elements of the score (the initial, translations, etc.) formerly required the user to redefine a command which took an argument while changing the styling of the staff lines had a command specialized to that purpose.  All formats can now be changed via the `\grechangestyle` command.  This command takes two or three arguments.  The first argument, required, is the format to be altered.  The defined formats are:
@@ -92,14 +96,6 @@ You will need to play with the vaule of the distance a bit to acheive the desire
 
 As is normal, calls to the deprecated command names will raise a warning but still work.  However there is one caveat: the old functions will always add the annotations to the bottom of the annotation list, regardless of the order in which they are called.  Previously, you could call `\gresetsecondannotation` before `\gresetfirstannotation` and still have the first annotation appear on top.   Which annotation appears on top is now determined by the order in which the functions are called.
     
-
-### Command Name Systemization
-
-A naming scheme for GregorioTeX commands has been established and so most commands have had their names changed in order to bring them into line with the new scheme.  Breifly, user commands all now have a `\gre` prefix (to prevent name colisions with other packages) and groups of commands which altered a single setting have been replaced by a single command which takes an argument specifying the value of the setting.  The notable exception to this are the two main commands: `\gregorioscore` (replaces `\includescore`) and `\gabcsnippet`.  See GregorioRef for the complete list of new command names.
-
-Old command names should still work for now, but will raise a deprecation warning.  Exceptions are noted below:
-
-- `\grescaledim`: This function now takes two arguments.  The second should be `yes`, `true`, or `on` to acheive the old behavior.
 
 ## 3.0
 ### TeX Live 2013

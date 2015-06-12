@@ -224,6 +224,30 @@ Macro for changing the color of the staff lines.   The two most common colors yo
   \#1 & \textit{color name} & The color of the staff lines
 \end{argtable}
 
+\macroname{\textbackslash gresetlines}{\{\#1\}}{gregoriotex-main.tex}
+Macro for setting whether the staff lines should be printed or not.
+
+\begin{agrtable}
+  \#1 & visible & The staff lines should be printed (default)\\
+  & invisible & The staff lines should not be printed
+\end{argtable}
+
+\macroname{\textbackslash gresetlinesbehindpunctumcavum}{\{\#1\}}{gregoriotex-signs.tex}
+Macro for setting whether the staff lines behind a punctum cavum should be shown or not.
+
+\begin{agrtable}
+  \#1 & visible & The staff lines behind a punctum cavum should be printed (default)\\
+  & invisible & The staff lines behind a punctum cavum should not be printed
+\end{argtable}
+
+\macroname{\textbackslash gresetlinesbehindalteration}{\{\#1\}}{gregoriotex-signs.tex}
+Macro for setting whether the staff lines behind an alternation (\ie, an accidental) should be shown or not.
+
+\begin{agrtable}
+  \#1 & visible & The staff lines behind an alteration should be printed (default)\\
+  & invisible & The staff lines behind an alteration should not be printed
+\end{argtable}
+
 
 \subsubsection{Score Font}
 Gregorio\TeX\ currently supports 3 different fonts for the glyphs in a score (neumes, clefs, alterations, \etc): Greciliae (a customized version of Caeciliae by Fr. Matthew Spencer, OSJ), Gregorio, and Parmesan (developed for Lilypond by Juergen Reuter).
@@ -443,8 +467,54 @@ Macro to add annotations (the text which appears above the initial) to a score. 
 
 \textbf{Nota Bene:} The first argument does not affect the alignment of lines already in the annotation, only the way the new line aligns with the existing lines as a whole.
 
+\macroname{\textbackslash grecommentary}{\{\#1\}}{gregoriotex-main.tex}
+Macro to add commentary (the text flush right at the top, usually a scripture reference) to a score.  While a single call of this function does not support multiple lines, successive calls to the function will add a new line to the commentary directly below the previous.
+
+\begin{agrtable}
+  \#1 & string & The text of the commentary.\\
+\end{argtable}
+
+\textbf{Nota Bene:} This command should appear directly before \verb=\gregorioscore= when used.
+
+\macroname{\textbackslash grescorereference}{\{\#1\}}{gregoriotex-main.tex}
+Macro to hold the score reference.  Currently the score reference does not print.
+
+\begin{argtable}
+  \#1 & string & The text of the score reference.\\
+\end{argtable}
+
 
 \subsubsection{Text Alignment}
+Gregorio\TeX\ allows you to manipulate the global alignment behavior of some text elements using the following commands.
+
+\macroname{\textbackslash gresetlyriccentering}{\{\#1\}}{gregoriotex-syllable.tex}
+Macro to set how the text of the lyrics aligns with the alignment point of its respective neumes.  The alignment point of the neumes is determined as follows:
+
+\begin{itemize}
+\item If the first glyph is only one note, or is a normal pes, or is composed of three or more notes, the alignment point is in the middle of the first note.
+\item If the first glyph is composed of two notes (other than a normal pes), the alignment point is in the middle of the glyph.
+\item In the case of a porrectus, the alignment point is in the middle of an imaginary square punctum beginning at the same point as the porrectus.
+\end{itemize}
+
+\begin{argtable}
+  \#1 & vowel & The center of the vowel in the syllable will align with the alignment point of the neumes\\
+  & syllable & The center of the syllable will align with the alignment point of the neumes
+\end{argtable}
+
+\textbf{Nota Bene:} What constitutes the ``vowel'' of the syllable is determined by the language the lyric text is written in, as specified by the use of the \texttt{language} header in the gabc file.  Out of the box Gregorio\TeX\ explicitly supports only Latin and English, but the rules for Latin have a high degree of overlap with many Romance languages, allowing them to fall back on the Latin rules with acceptable results.
+
+You can also define your own languages in \texttt{gregorio-vowels.dat}.  If you do define a language, please consider sharing your work by submitting it to the project (see CONTRIBUTING.md for instructions).
+
+Finally, in cases where you want some sort of exceptional alignment, you can force Gregorio to consider a particular part of the syllable to be the ``vowel'' by enclosing it in curly braces (``\{'' and ``\}'') in your gabc file.
+
+\macroname{\textbackslash gresettranslationcentering}{\{\#1\}}{gregoriotex-main.tex}
+Macro to specify how the translation text should be aligned with it respective syllable text.
+
+\begin{argtable}
+  \#1 & left & The translation text is left aligned with its respective syllable text.\\
+  & center & The translation text is centered under its respective syllable.
+\end{argtable}
+
 
 \subsubsection{End of Line Behavior}
 
@@ -463,19 +533,7 @@ syllables in polysyllabic words in a score based on spacing.  This is done by se
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Text centering}
-
-\macroname{\textbackslash englishcentering}{}{gregoriotex-syllable.tex}
-Changes settings to align syllables in the English style (center of
-syllable aligns with center of first glyph in neume).  Will only
-affect scores which do not have “centering-scheme: english;” in their
-gabc header.
-
-\macroname{\textbackslash defaultcentering}{}{gregoriotex-syllable.tex}
-Changes settings to align syllables in the Latin style (center of
-vowel aligns with center of first glyph in neume).  Will only affect
-scores which do not have “centering-scheme: english;” in their gabc
-header.
+% Stuff in this section will be deleted/moved as the renaming continues.
 
 \subsubsection{\emph{Euouae} block}
 

@@ -513,7 +513,7 @@
   \or\gre@count@temp@three=\number 17%
   \fi%
   % if there is not line... we don't consider notes are on lines
-  \ifnum\greremovelinescount=1\relax %
+  \ifgre@showlines\else %
     \global\greisonaline=0 %
   \fi %
   % if the note is on a line, we change its height if necessary

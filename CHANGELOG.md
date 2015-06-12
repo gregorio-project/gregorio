@@ -35,7 +35,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
   - `beforechoralsignspace` is now `beforelowchoralsignspace`.
   - `lowchoralsignshift` is now `choralsigndownshift`.
   - `highchoralsignshift` is now `choralsignupshift` and its sign is now inverted.
-- `\grecoloredlines` now takes a single argument, a named color, instead of the three components of an RGB color.  As a result, `\redlines` can now use `gregoriocolor`, making the red staff lines consistent with the text, even when the user teaks `gregoriocolor`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
 - Style for score elements can now be changed via the `\grechangestyle` command.  This replaces the mixed system of styling commands which could be redefined for some elements and specialized commands for applying styles to others.  See GregorioRef for details.
 - Annotations with more than two lines are now supported (originally requested [on the user list](http://www.mail-archive.com/gregorio-users%40gna.org/msg00164.html) when two line annoations were made possible).  To build the annotation box use `\greannoataion`.  See GregorioRef for details.
 - `\grescaledim` now takes two arguments to bring it into line with the systemized naming scheme.  The second argument is `yes`, `true`, or `on` if you want the distance to scale when the staff size changes.  Anything else will make the distance independent of the staff size.
@@ -53,6 +52,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The final line of a score may now be forced to be fully justified (rather than ragged) using `\grejustifiedlastline` before including the score.  Use `\greraggedlastline` to switch back to a ragged last line.  See [#43](https://github.com/gregorio-project/gregorio/issues/43).
 - `\greforcehyphen`: this function forces GregorioTeX to put a hyphen between each syllable in a polysyllabic word.
 - Support for custom vowel centering rules.  Put a file called *custom*.vwl into your project directory or into a directory accessible from TEXMF and add the header `language: custom;` to your gabc file.  The *custom*.vwl file describes how vowels are to be located in the *custom* language.  See GregorioRef for details.
+- `\gresetlinecolor`: takes named color as an argument.  As a result, the red staff lines can made be consistent with the text, even when the user teaks `gregoriocolor` with `\gresetlinecolor{gregoriocolor}`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
 
 ### Deprecated
 - `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`
@@ -65,6 +65,30 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `centering-scheme` gabc header, supplanted by `\grelyriccentering` in TeX.  See GregorioRef for syntax.
 - `\setaboveinitialseparation`, supplanted by `\grechangedim{annotationseparation}...`
 - `gregoriotex-font` gabc header, supplanted by `\gresetgregoriofont` in TeX.  See GregorioRef for syntax.
+- `\scorereference`, supplanted by `\grescorereference`
+- `\GreScoreReference`, supplanted by `\grescorereference`
+- `\commentary`, supplanted by `\grecommentary`
+- `\setgretranslationcenteringscheme`, supplanted by `\gresettranslationcentering`
+- `\englishcentering`, supplanted by `\gresetlyriccentering{syllable}`
+- `\defaultcentering`, supplanted by `\gresetlyriccentering{vowel}`
+- `\setgrefactor`, supplanted by `\grechangestaffsize`
+- `\forcecompilegabc`, supplanted by `\gresetcompilegabc{force}`
+- `\autocompilegabc`, supplanted by `\gresetcompilegabc{auto}`
+- `\nevercompilegabc`, supplanted by `\gresetcompilegabc{never}`
+- `\includescore`, supplanted by `\gregorioscore`
+- `\grenoscaledim`, supplanted by `\grescaledim{...}{no}`
+- `\gresetdim`, supplanted by `\grecreatedim`
+- `\setstafflinethickness`, supplanted by `\grechangestafflinethickness`
+- `\grecoloredlines`, supplanted by `\gresetlinecolor`
+- `\greredlines` and `\redlines`, supplanted by `\gresetlinecolor{gregoriocolor}`
+- `\grenormallines` and `\normallines`, supplanted by `\gresetlinecolor{black}`
+- `\greremovelines`, supplanted by `\gresetlines{invisible}`
+- `\gredonotremovelines`, supplanted by `\gresetlines{visible}`
+- `\GreHidePCLines`, supplanted by `\gresetlinesbehindpunctumcavum{invisible}`
+- `\GreDontHidePCLines`, supplanted by `\gresetlinesbehindpunctumcavum{visible}`
+- `\GreHideAltLines`, supplanted by `\gresetlinesbehindalteration{invisible}`
+- `\GreDontHideAltLines`, supplanted by `\gresetlinesbehindalteration{visible}`
+
 
 ### Removed
 - GregorioXML and OpusTeX output
@@ -73,6 +97,15 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Chironomy markings (gabc `u` and `U`), which were not working correctly in the first place.
 - `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, supplanted by the new glyph system, see [UPGRADE.md](upgrade guide).
 - `\GreSetAboveInitialSeparation`, supplanted by `\grechangedim{annotationseparation}...`
+- `\includetexscore`, supplanted by `\gregorioscore[n]`
+- `\greincludetexscore`, supplanted by `\gregorioscore[n]`
+- `\includegabcscore`, supplanted by `\gregorioscore[f]`
+- `\greincludegabcscore`, supplanted by `\gregorioscore[f]`
+- `\GreSetSpaceBeforeInitial`, supplanted by `\grechangedim{spacebeforeinitial}...`
+- `\GreSetSpaceAfterInitial`, supplanted by `\grechangedim{spaceafterinitial}...`
+- `\GreSetAboveInitialSeparation`, supplanted by `\grechangedim{annotationseparation}...`
+- `\gresetstafflinefactor`, supplanted by `\grechangestafflinethickness`
+
 
 ## [3.0.2] - 2015-06-01
 ### Fixed
