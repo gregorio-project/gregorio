@@ -102,20 +102,28 @@
   }%
 }
 
-\def\grecoloredlines#1{%
+
+\def\gresetlinecolor#1{%
   \gre@changestyle{normalstafflines}{\color[named]{#1}}[\relax]%
+}
+
+
+\def\grecoloredlines#1{%
+  \gre@warning{\protect\greredlines\space is deprecated.\MessageBreak Use \protect\gresetlinecolor\space instead.}%
   \relax %
 }
 
 \def\greredlines{%
-  \grecoloredlines{gregoriocolor}%
+  \gre@warning{\protect\greredlines\space is deprecated.\MessageBreak Use \protect\gresetlinecolor{gregoriocolor}\space instead.}%
+  \gresetlinecolor{gregoriocolor}%
   \relax %
 }
 
 \let\redlines\greredlines
 
 \def\grenormallines{%
-  \gre@changestyle{normalstafflines}{\relax}[\relax]%
+  \gre@warning{\protect\grenormallines\space is deprecated.\MessageBreak Use \protect\gresetlinecolor{black}\space instead.}%
+  \gresetlinecolor{black}%
   \relax %
 }
 
