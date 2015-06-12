@@ -1043,9 +1043,9 @@ static void gregorio_free_score_infos(gregorio_score *score)
         free(score->user_notes);
     }
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
-      if (score->annotation[annotation_num]) {
-        free(score->annotation[annotation_num]);
-      }
+        if (score->annotation[annotation_num]) {
+            free(score->annotation[annotation_num]);
+        }
     }
     gregorio_free_source_info(&score->si);
     if (score->first_voice_info) {
