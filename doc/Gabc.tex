@@ -131,6 +131,15 @@ The keywords are:
 
 \begin{description}
 
+\item[alias]
+
+The \texttt{alias} keyword indicates that a given name is an alias for a
+given language.  The \texttt{alias} keyword must be followed by the name
+of the alias (enclosed in square brackets), the \texttt{to} keyword, the
+name of the target language (enclosed in square brackets), and a
+semicolon.  Since gregorio reads the vowel files sequentially, aliases
+should precede the language they are aliasing, for best performance.
+
 \item[language]
 
 The \texttt{language} keyword indicates that the rules which follow are
@@ -166,6 +175,8 @@ English and \emph{y} in Spanish.
 By way of example, here is a vowel file that works for English:
 
 \begin{lstlisting}
+alias [english] to [English];
+
 language [English];
 
 vowel aàáAÀÁ;

@@ -72,7 +72,9 @@ static inline void invalid(void)
 <INITIAL>vowel                  { BEGIN(chars); return VOWEL; }
 <INITIAL>prefix                 { BEGIN(chars); return PREFIX; }
 <INITIAL>suffix                 { BEGIN(chars); return SUFFIX; }
+<INITIAL>alias                  { BEGIN(lang); return ALIAS; }
 <*>;                            { BEGIN(INITIAL); return SEMICOLON; }
+<lang>to                        { return TO; }
 <lang>"["                       { BEGIN(langname); }
 <langname>[^\]]+                { save_lval(); return NAME; }
 <langname>"]"                   { BEGIN(lang); }

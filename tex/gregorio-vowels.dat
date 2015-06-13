@@ -19,6 +19,13 @@
 # Comments begin with a hash symbol and end at the end of the line.  These two
 # lines are comments.
 
+# The "alias" keyword indicates that a name is an alias for a given language.
+# The "alias" keyword must be followed by the name of the alias in square
+# brackets, the "to" keyword, the name of the target language in square
+# brackets, and a semicolon.  For best performance, aliases should precede the
+# language they are aliasing.
+alias [english] to [English];
+
 # The "language" keyword indicates that the rules which follow are for the
 # specified language.  It must be followed by the language name enclosed in
 # square brackets and a semicolon.  The language specified applies until the

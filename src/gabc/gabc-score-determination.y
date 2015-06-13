@@ -665,6 +665,7 @@ language_definition:
     LANGUAGE attribute {
         check_multiple("language", got_language);
         gregorio_set_centering_language($2.text);
+        free($2.text);
         got_language = true;
     }
     ;

@@ -60,16 +60,11 @@ static inline void rtrim(char *buf)
 }
 #endif
 
-static bool read_vowel_rules(const char *const language) {
+static bool read_vowel_rules(const char *const lang) {
+    const char *language = lang;
+    rulefile_parse_status status = RFPS_NOT_FOUND;
     FILE *file;
-    bool found = false;
-#ifdef USE_KPSE
-    char **filenames;
-    char *filename;
-#else
-    FILE *pipe;
-    char filename[PATH_MAX];
-#endif
+    char **filenames, *filename, *description;
 
 #ifdef USE_KPSE
     filenames = kpse_find_file_generic(VOWEL_FILE, kpse_tex_format, true, true);
@@ -80,56 +75,89 @@ static bool read_vowel_rules(const char *const language) {
         }
         return false;
     }
-    for (char **p = filenames; !found && (filename = *p); ++p) {
-        if (kpse_in_name_ok(filename)) {
 #else
-    pipe = popen("kpsewhich " VOWEL_FILE, "r");
-    if (!pipe) {
+    char buf[PATH_MAX];
+    size_t capacity = 16, size = 0;
+    
+    if (!(filenames = malloc(capacity * sizeof(char *)))) {
+        gregorio_messagef("read_patterns", VERBOSITY_FATAL, 0,
+                _("unable to allocate memory"));
+        return false;
+    }
+
+    file = popen("kpsewhich " VOWEL_FILE, "r");
+    if (!file) {
         gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
                 _("unable to run kpsewhich %s: %s"), VOWEL_FILE,
                 strerror(errno));
         return false;
     }
-    while (!found && !feof(pipe) && !ferror(pipe)
-            && fgets(filename, PATH_MAX, pipe)) {
-        rtrim(filename);
-        if (strlen(filename) > 0) {
-#endif
-
-            // read and parse the file
-            gregorio_messagef("read_rules", VERBOSITY_INFO, 0,
-                    _("Looking for %s in %s"), language, filename);
-            file = fopen(filename, "r");
-            if (file) {
-                gregorio_vowel_tables_init();
-                found = gregorio_vowel_tables_load(file, filename, language);
-                fclose(file);
-                gregorio_messagef("read_rules", VERBOSITY_INFO, 0,
-                        _("%s %s in %s"), found? "Found" : "Could not find",
-                        language, filename);
-            } else {
-                gregorio_messagef("read_rules", VERBOSITY_WARNING, 0,
-                        _("unable to open %s: %s"), filename, strerror(errno));
+    while (!feof(file) && !ferror(file) && fgets(buf, PATH_MAX, file)) {
+        rtrim(buf);
+        if (strlen(buf) > 0) {
+            filenames[size++] = strdup(buf);
+            if (size >= capacity) {
+                capacity <<= 1;
+                if (!(filenames = realloc(filenames,
+                                capacity * sizeof(char *)))) {
+                    gregorio_messagef("read_patterns", VERBOSITY_FATAL, 0,
+                            _("unable to allocate memory"));
+                    return false;
+                }
             }
-
-#ifdef USE_KPSE
-        } else {
-            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
-                    _("kpse disallows read from %s"), filename);
-        }
-        free(filename);
-    }
-    free(filenames);
-#else
         } else {
             gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
                     _("kpsewhich returned bad value for %s"), VOWEL_FILE);
         }
     }
-    pclose(pipe);
+    filenames[size] = NULL;
+    pclose(file);
 #endif
 
-    return found;
+    gregorio_vowel_tables_init();
+    // only need to try twice
+    // if it's not resolved by then, there is an alias loop
+    for (int tries = 0; tries < 2; ++tries) {
+        for (char **p = filenames; status != RFPS_FOUND && (filename = *p);
+                ++p) {
+            // read and parse the file
+            gregorio_messagef("read_rules", VERBOSITY_INFO, 0,
+                    _("Looking for %s in %s"), language, filename);
+            gregorio_vowel_tables_load(filename, &language, &status);
+            switch (status) {
+            case RFPS_FOUND:
+                description = "Found";
+                break;
+            case RFPS_ALIASED:
+                description = "Aliased to";
+                break;
+            default:
+                description = "Could not find";
+                break;
+            }
+            gregorio_messagef("read_rules", VERBOSITY_INFO, 0, _("%s %s in %s"),
+                    description, language, filename);
+        }
+        if (status != RFPS_ALIASED) {
+            // if it's not aliased, there's no reason to scan again
+            break;
+        }
+    }
+    if (status == RFPS_ALIASED) {
+        gregorio_messagef("read_rules", VERBOSITY_WARNING, 0,
+                _("Unable to resolve alias for %s"), lang);
+    }
+
+    // free the allocated memory
+    for (char **p = filenames; *p; ++p) {
+        free(*p);
+    }
+    free(filenames);
+    if (language != lang) {
+        free((void *)language);
+    }
+
+    return status == RFPS_FOUND;
 }
 
 void gregorio_set_centering_language(const char *const language)
