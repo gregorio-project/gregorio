@@ -3028,12 +3028,12 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     // the current line (as far as we know), it is always 0, it can be 1 in the
     // case of the first line of a score with a two lines initial
     unsigned char line = 0;
+    int annotation_num;
 
     gregorio_line *first_line;
     status = malloc(sizeof(gregoriotex_status));
     status->bottom_line = 0;
     status->to_modify_note = NULL;
-    int annotation_num;
 
     if (!f) {
         gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
