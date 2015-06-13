@@ -440,7 +440,7 @@
     % we don't do it if it's the last syllable of a score or if the user
     % disabled custos
     \ifgre@eolshiftsenabled %
-      \ifnum\greblockcusto=1\else %
+      \ifgre@blockeolcustos\else%
         \setbox\gre@box@temp@width=\hbox{\grecustochar{\gre@pitch@g}}%
         \global\advance\gre@skip@eolshift by -\wd\gre@box@temp@width %
         \global\advance\gre@skip@eolshift by -\gre@skip@spacebeforecusto %

@@ -196,7 +196,7 @@
 
 % the macro we call each time we force a changing of line, it automatically sets \greknownline, and adjusts left spaces
 \def\grenewlinecommon#1#2#3#4#5{%
-  \ifnum\greblockcusto=1\relax\ifnum\greinsidediscretionary=0\relax %
+  \ifgre@blockeolcustos\ifnum\greinsidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
   % sometimes we need to add a space before ending the line:
@@ -797,11 +797,25 @@
 }%
 
 
+\newif\ifgre@breakintranslation%
+\gre@breakintranslationfalse%
 
-\xdef\grenlbintranslation{0}%
+\def\gresetbreakintranslation#1{%
+  \IfStrEq{#1}{allow}%
+    {\gre@breakintranslationtrue}%
+    {\IfStrEq{#1}{prohibit}%
+      {\gre@breakintranslationfalse}%
+      {\greerror{Unrecognized option in \protect\gresetbreakintranslation}}%
+    }%
+}%
 
 \def\gresetnlbintranslation#1{%
-  \xdef\grenlbintranslation{\number #1}%
+  \gre@warning{\protect\gresetnlbintranslation\space is deprecated.\MessageBreak Use \protect\gresetbreakintranslation\space instead}%
+  \ifnum#1=0\relax%
+    \gresetbreakintranslation{allow}%
+  \else%
+    \gresetbreakintranslation{prohibit}%
+  \fi%
 }%
 
 \def\GreWriteTranslation#1{%
@@ -819,7 +833,7 @@
 }%
 
 \def\GreWriteTranslationWithCenterBeginning#1{%
-  \ifnum\grenlbintranslation=1\relax %
+  \ifgre@breakintranslation\else%
     \GreBeginNLBArea{0}{1}%
   \fi %
   \gregoriocenterattr=1\relax %
@@ -836,7 +850,7 @@
 }%
 
 \def\gredotranslationcenterend{%
-  \ifnum\grenlbintranslation=1\relax %
+  \ifgre@breakintranslation\else%
     \GreEndNLBArea{0}{1}%
   \fi %
   \gregoriocenterattr=2\relax %
@@ -853,8 +867,14 @@
 \newif\ifgre@justifylastline%
 \gre@justifylastlinefalse%
 
-\def\grejustifiedlastline{\gre@justifylastlinetrue\relax}%
-\def\greraggedlastline{\gre@justifylastlinefalse\relax}%
+\def\gresetlastline#1{%
+  \IfStrEq{#1}{justified}%
+    {\gre@justifylastlinetrue}%
+    {\IfStrEq{#1}{ragged}%
+      {\gre@justifylastlinefalse}%
+      {\greerror{Unrecognized option for \protect\gresetlastline}}%
+    }%
+}%
 
 % gregorioattr (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
@@ -890,7 +910,7 @@
 %macro called at the end of a score
 \def\GreEndScore{%
   \global\grelastoflinecount=0\relax %
-  \global\greblockcusto=0\relax %
+  \global\greseteolcustos{auto}%
   \GreEndEUOUAE{}%
   \ifnum\grenlbstate=0\else %
     \GreEndNLBArea{2}{0}%
@@ -979,7 +999,7 @@
   %\grelocalleftbox{}% For an unknown reason, if I uncomment this line, the
   %blank line removing algorithm (in lua) will let some blank space after the
   %last line... (see bug #20953)
-  \greblockcustos %
+  \greseteolcustos{manual}%
   \global\grelastoflinecount=1\relax%
   \relax%
 }%
@@ -989,22 +1009,45 @@
 % default state is for them to be enabled
 \gre@eolshiftsenabledtrue
 
+\def\greseteolshifts#1{%
+  \IfStrEq{#1}{enable}%
+    {\gre@eolshiftsenabledtrue}%
+    {\IfStrEq{#1}{disable}%
+      {\gre@eolshiftsenabledfalse}%
+      {\greerror{Unrecognized option in \protect\greseteolshifts}}%
+    }%
+}%
+
 \def\gredisableeolshifts{%
+  \gre@warning{\protect\gredisableeolshifts\space is deprecated.\MessageBreak Use \protect\greseteolshifts{disable}\space instead}%
   \gre@eolshiftsenabledfalse%
 }%
 
 \def\greenableeolshifts{%
+  \gre@warning{\protect\greenableeolshifts\space is deprecated.\MessageBreak Use \protect\greseteolshifts{enable}\space instead}%
   \gre@eolshiftsenabledtrue%
 }%
 
-% a count that is 1 if we block the custo, and 0 if we don't. We just block custos at the end of a score, to prevent a bug.
-\newcount\greblockcusto%
+% a count that is 1 if we block the custos, and 0 if we don't. We just block custos at the end of a score, to prevent a bug.
+\newif\ifgre@blockeolcustos%
+\gre@blockeolcustosfalse%
+
+\def\greseteolcustos#1{%
+  \IfStrEq{#1}{manual}%
+    {%
+      \gre@blockeolcustostrue%
+      \grelocalrightbox{}%
+    }%
+    {\IfStrEq{#1}{auto}%
+      {\gre@blockeolcustosfalse}%
+      {\greerror{Unrecognized option for \protect\greseteolcustos}}%
+    }%
+}%
 
 % macro to suppress the custos
 \def\greblockcustos{%
-  \global\greblockcusto=1\relax %
-  \grelocalrightbox{}%
-  \relax %
+  \gre@warning{\protect\greblockcustos\space is deprecated.\MessageBreak Use \protect\greseteolcustos{manual}\space instead}%
+  \greseteolcusots{manual}%
 }%
 
 % macro to end elements, #1 is the type of space, it can be : 
@@ -1095,7 +1138,7 @@
 
 % The different states of line break areas:
 % 0: not currently in a no line break area
-% 1: no line break area due tu translation centering
+% 1: no line break area due to translation centering
 % 2: no line break area due to <nlba> tag
 \xdef\grenlbstate{0}%
 
@@ -1172,13 +1215,15 @@
 \newif\ifgre@euouae@implies@nlba
 \gre@euouae@implies@nlbatrue
 
-\def\grenobreakineuouae{%
-  \gre@euouae@implies@nlbatrue %
-}
-
-\def\greallowbreakineuouae{%
-  \gre@euouae@implies@nlbafalse %
-}
+\def\gresetbreakineuouae#1{%
+  \IfStrEq{#1}{allow}%
+    {\gre@euouae@implies@nlbafalse}%
+    {\IfStrEq{#1}{prohibit}%
+      {\gre@euouae@implies@nlbatrue}%
+      {\greerror{Unrecognized option in \protect\gresetbreakineuouae}}%
+    }%
+}%
+      
 
 \newif\ifgre@in@euouae
 \gre@in@euouaefalse
@@ -1460,34 +1505,35 @@
 % the definition that will be always used for end of lines hyphens in gregorio, except if one of the two before is explicitely used
 \let\GreHyph\grenormalhyph %
 
-% two macros to change the definition of the hyphen:
-\def\greusenormalhyphen{%
-  \global\let\GreHyph\grenormalhyph %
+% macro to change the definition of the hyphen:
+\def\greseteolhyphen#1{%
+  \IfStrEq{#1}{normal}%
+    {\global\let\GreHyph\grenormalhyph}%
+    {\IfStrEq{#1}{zero}%
+      {\global\let\GreHyph\GreZeroHyph}%
+      {\greerror{Unrecognized option for \protect\greseteolhyphen}}%
+    }%
 }%
 
 \def\GreUseNormalHyphen{%
-  \gre@warning{\protect\GreUseNormalHyphen\space is deprecated.\MessageBreak Use \protect\greusenormalhyphen\space instead.}%
-  \greusenormalhyphen%
-}%
-
-\def\greusezerohyphen{%
-  \global\let\GreHyph\GreZeroHyph %
+  \gre@warning{\protect\GreUseNormalHyphen\space is deprecated.\MessageBreak Use \protect\greseteolhyphen{normal}\space instead.}%
+  \greseteolhyphen{normal}%
 }%
 
 \def\GreUseZeroHyphen{%
-  \gre@warning{\protect\GreUseZeroHyphen\space is deprecated.\MessageBreak Use \protect\greusezerohyphen\space instead.}%
-  \greusezerohyphen%
+  \gre@warning{\protect\GreUseZeroHyphen\space is deprecated.\MessageBreak Use \protect\greseteolhyphen{zero}\space instead.}%
+  \greseteolhyphen{zero}%
 }%
 
 % macro to force hyphenation of all syllables.
-\def\greforcehyphen{
-  \global\grechangedim{maximumspacewithoutdash}{-16383.99999pt}{0}
-}
-
-% macro to revert to hyphenation based on space
-\def\greautohyphen{
-  \global\grechangedim{maximumspacewithoutdash}{0.02 cm}{1}
-}
+\def\gresethyphen#1{%
+  \IfStrEq{#1}{force}%
+    {\global\grechangedim{maximumspacewithoutdash}{-16383.99999pt}{0}}%
+    {\IfStrEq{#1}{auto}%
+      {\global\grechangedim{maximumspacewithoutdash}{0.02 cm}{1}}%
+      {\greerror{Unrecognized option in \protect\gresethyphen}}%
+    }%
+}%
 
 % We load the default space configuration.
 \greloadspaceconf{default}%

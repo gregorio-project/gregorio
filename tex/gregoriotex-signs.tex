@@ -76,15 +76,28 @@
 %% macros for the typesetting of the clefs of the beginning of lines and custos
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% if this macro is set to 1, it simply removes the key
-\xdef\greremoveclefcount{0}%
+% flag for showing the clef
+\newif\ifgre@showclef%
+\gre@showcleftrue
+
+\def\gresetclef#1{%
+  \IfStrEq{#1}{visible}%
+    {\gre@showcleftrue}%
+    {\IfStrEq{#1}{invisible}%
+      {\gre@showcleffalse}
+      {\greerror{Unrecognized option for \protect\gresetclef}}%
+    }%
+}%
+
 
 \def\greremoveclef{%
-  \xdef\greremoveclefcount{1}%
+  \gre@warning{\protect\greremoveclef\space is deprecated.\MessageBreak Use \protect\gresetclef{invisible} instead}%
+  \gresetclef{invisible}%
 }%
 
 \def\grenormalclef{%
-  \xdef\greremoveclefcount{0}%
+  \gre@warning{\protect\grenormalclef\space is deprecated.\MessageBreak Use \protect\gresetclef{visible} instead}%
+  \gresetclef{visible}%
 }%
 
 % a count describing the clef line and pitch : 1 for c on the first (bottom) line, 2 for c on the second line, 5 for f on the first, etc.
@@ -100,7 +113,7 @@
     \kern\gre@skip@temp@four %
     \copy\gre@box@lines% draws the lines
     \unkern %
-    \ifnum\greremoveclefcount=0\relax %
+    \ifgre@showclef%
       \gre@skip@temp@four = \gre@skip@afterclefnospace%
       \hbox{\gretypekey{#1}{#2}{0}{#3}{#4}\hskip\gre@skip@temp@four}%
     \else %
@@ -190,7 +203,7 @@
 % of the flat
 \def\GreSetInitialClef#1#2#3{%
   \grecalculateclefnum{#1}{#2}{#3}%
-  \ifnum\greremoveclefcount=0\relax %
+  \ifgre@showclef%
     \gretypekey{#1}{#2}{0}{1}{#3}%
   \fi %
   \GreSetLinesClef{#1}{#2}{1}{#3}%
@@ -277,7 +290,7 @@
 % the argument is the height
 \def\gresetcusto#1{%
   \ifnum\greinsidediscretionary=0\relax %
-    \ifnum\greblockcusto=0\relax %
+    \ifgre@blockeolcustos\else%
       \gre@calculate@glyphraisevalue{#1}{0}%
       %here we need some tricks to draw the line before the custo (for the color)
       \setbox\gre@box@temp@width=\hbox{%

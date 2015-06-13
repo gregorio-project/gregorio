@@ -517,35 +517,84 @@ Macro to specify how the translation text should be aligned with it respective s
 
 
 \subsubsection{End of Line Behavior}
+While Gregorio\TeX\ will automatically wrap scores to fit your page, there are several ways to fine tune that line breaking behavior with the following commands.
+
+\macroname{\textbackslash gresetbreakineuouae}{\{\#1\}}{gregoriotex-main.tex}
+Macro to determine whether line breaks are allowed inside a EUOUAE area (delimited by \texttt{<eu></eu>} tags in gabc).
+
+\begin{argtable}
+  \#1 & allow & Line breaks are allowed\\
+  & prohibit & Line breaks are prohibited, the entire EUOUAE area should appear on one line
+\end{argtable}
+
+\macroname{\textbackslash gresetbreakintranslation}{\{\#1\}}{gregoriotex-main.tex}
+Macro to determine whether line breaks are allowed inside a translation.
+
+\begin{argtable}
+  \#1 & allow & Line breaks are allowed\\
+  & prohibit & Line breaks are prohibited, the entire translation should appear on one line
+\end{argtable}
+
+\macroname{\textbackslash greseteolcustos}{\{\#1\}}{gregoriotex-main.tex}
+Macro to determine whether Gregorio\TeX\ should automatically place the custos at a line break.
+
+\begin{argtable}
+  \#1 & auto & Custos will be automatically placed at each line break\\
+  & manual & Custos will only be placed at line breaks if they are specified in the gabc (\eg \texttt{(g+z)})
+\end{argtable}
+
+\textbf{Nota Bene:} This command only effects the custos that appears at the end of a line.  Custos which are placed at a key change are unaffected.  Further, if custos are specified in the gabc file manually and Gregorio\TeX\ is set to place custos automatically, you will get two custos at the line breaks.
+
+\macroname{\textbackslash greseteolshifts}{\{\#1\}}{gregoriotex-main.tex}
+Marco to determine whether Gregorio\TeX\ should apply the a small shift at the end of each line.
+
+\begin{argtable}
+  \#1 & enable & The shifts are applied (default)\\
+  & disable & The shifts are not applied.
+\end{argtable}
+
+\macroname{\textbackslash gresetlastline}{\{\#1\}}{gregoriotex-main.tex}
+Macro to determine whether the last line of the score should be justified or not.
+
+\begin{argtable}
+  \#1 & justified & Set the last line justified with the rest of the score\\
+  & ragged & Set the last line ragged (default)
+\end{argtable}
+
 
 \subsubsection{Hyphenation}
 
-\macroname{\textbackslash greforcehyphen}{}{gregoriotex.tex}
-Tell Gregorio\TeX\ to force the appearance of hyphens between all
+\macroname{\textbackslash gresethyphen}{\{\#1\}}{gregoriotex-main.tex}
+Tell Gregorio\TeX\ to when to place a hyphen between
 syllables in polysyllabic words in a score.  This is done by overriding \texttt{maximumspacewithoutdash} so subsequent changes to this dimension will override this command.
 
-\macroname{\textbackslash greautohyphen}{}{gregoriotex.tex}
-Tell Gregorio\TeX\ to determine the appearance of hyphens between
-syllables in polysyllabic words in a score based on spacing.  This is done by setting \texttt{maximumspacewithoutdash} back to the value found in \texttt{gsp-default.tex}.
+\begin{argtable}
+  \#1 & force & Hyphens will appear between all syllables in polysyllabic words.\\
+  & auto & Hyphens will appear based on the setting of \texttt{maximumspacewithoutdash}
+\end{argtable}
+
+\textbf{Nota Bene:} \verb=\gresethyphen{auto}= restores \texttt{maximumspacewithoutdash} to the value found in \textit{gsp-default.tex}.  If you have changed your score size, you may need to change this distance to a more appropriate value using \verb=\grechangedim=.
+
+\macroname{\textbackslash greseteolhyphen}{\{\#1\}}{gregoriotex-main.tex}
+Marco to determine how much space the hyphen at the end of a line occupies for the purposes of spacing caluclations.
+
+\begin{argtable}
+  \#1 & normal & The hyphen occupies its normal space\\
+  & zero & The hyphen is considered to take up no space
+\end{argtable}
 
 
 \subsubsection{Clef Visibility}
 
+\macroname{\textbackslash gresetclef}{\{\#1\}}{gregoriotex-signs.tex}
+Macro to tell Gregorio\TeX\ whether the clefs should be printed or not.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Stuff in this section will be deleted/moved as the renaming continues.
-
-\subsubsection{\emph{Euouae} block}
-
-\macroname{\textbackslash grenobreakineuouae}{}{gregoriotex-syllable.tex}
-Prevents line breaking in Euouae blocks.
-
-\macroname{\textbackslash greallowbreakineuouae}{}{gregoriotex-syllable.tex}
-Allows line breaking in Euouae blocks.
+\begin{argtable}
+  \#1 & visible & Clefs will be printed (default)\\
+  & invisible & Clefs will not be printed
+\end{argtable}
 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Distances}\label{distances}
 
 Each of the following distances controls some aspect of the spacing of the Gregorio\TeX\ score.  They are changed using \verb=\grechangedim=, documented above.  If the distance permits a rubber value then the default value will indicate the stretch and shrink (even if they are zero by default).  Distances whose default value does not include a stretch or shrink may not take a rubber value.

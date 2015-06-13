@@ -49,8 +49,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Support for `lualatex -recorder`.  Autocompiled gabc and gtex files will now be properly recorded so that programs like `latexmk -recorder` can detect the need to rebuild the PDF when a gabc file changes.
 - A vertical episema may now be forced to appear above or below a note.  In gabc, use `'0` for the vertical episema to appear below and `'1` for the vertical episema to appear above (see [#385](https://github.com/gregorio-project/gregorio/issues/385)).
 - The first syllable and first letter of the first syllable that is *not* interpreted as the initial of the score are now passed to macros that allow them to be styled from TeX.  The first syllable is passed to `\GreFirstSyllable#1` and the first letter of the first syllable is passed to `\GreFirstSyllableInitial#1`.
-- The final line of a score may now be forced to be fully justified (rather than ragged) using `\grejustifiedlastline` before including the score.  Use `\greraggedlastline` to switch back to a ragged last line.  See [#43](https://github.com/gregorio-project/gregorio/issues/43).
-- `\greforcehyphen`: this function forces GregorioTeX to put a hyphen between each syllable in a polysyllabic word.
+- The final line of a score may now be forced to be fully justified (rather than ragged) using `\gresetlastline{justified}` before including the score.  Use `\grelastline{ragged}` to switch back to a ragged last line.  See [#43](https://github.com/gregorio-project/gregorio/issues/43).
+- `\gresethyphen{force}` forces GregorioTeX to put a hyphen between each syllable in a polysyllabic word.  `\gresethyphen{auto}` restores behavior to normal.
 - Support for custom vowel centering rules.  Put a file called *custom*.vwl into your project directory or into a directory accessible from TEXMF and add the header `language: custom;` to your gabc file.  The *custom*.vwl file describes how vowels are to be located in the *custom* language.  See GregorioRef for details.
 - `\gresetlinecolor`: takes named color as an argument.  As a result, the red staff lines can made be consistent with the text, even when the user teaks `gregoriocolor` with `\gresetlinecolor{gregoriocolor}`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
 
@@ -88,6 +88,14 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\GreDontHidePCLines`, supplanted by `\gresetlinesbehindpunctumcavum{visible}`
 - `\GreHideAltLines`, supplanted by `\gresetlinesbehindalteration{invisible}`
 - `\GreDontHideAltLines`, supplanted by `\gresetlinesbehindalteration{visible}`
+- `\gresetnlbintranslation`, supplanted by `\gresetbreakintranslation`
+- `\greblockcustos`, supplanted by `\greseteolcustos{manual}`
+- `\greenableeolshifts`, supplanted by `\greseteolshifts{enable}`
+- `\gredisableeolshifts`, supplanted by `\greseteolshifts{disable}`
+- `\GreUseNoramalHyphen`, supplanted by `\greseteolhyphen{normal}`
+- `\GreUseZeroHyphen`, supplanted by `\greseteolhyphen{zero}`
+- `\greremoveclef`, supplanted by `\gresetclef{invisible}`
+- `\grenormalclef`, supplanted by `\gresetclef{visible}`
 
 
 ### Removed
