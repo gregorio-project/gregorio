@@ -3033,6 +3033,7 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     status = malloc(sizeof(gregoriotex_status));
     status->bottom_line = 0;
     status->to_modify_note = NULL;
+    int annotation_num;
 
     if (!f) {
         gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
@@ -3100,6 +3101,20 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
         }
     }
     // end Deprecated section
+    if (score->annotation[0]) {
+        fprintf(f, "\\GreAnnotationLines");
+        for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS;
+             ++annotation_num) {
+            if (score->annotation[annotation_num]) {
+                fprintf(f, "{%s}",
+                        score->annotation[annotation_num]);
+            }
+            else {
+                fprintf(f, "{}");
+            }
+        }
+        fprintf(f, "%%\n");
+    }
     if (score->mode != 0) {
         fprintf(f, "\\GreMode{%d}%%\n", score->mode);
     }

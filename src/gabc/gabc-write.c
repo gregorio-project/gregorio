@@ -55,18 +55,10 @@ static void gabc_write_str_attribute(FILE *f, const char *name,
 
 static void gabc_write_voice_info(FILE *f, gregorio_voice_info *voice_info)
 {
-    int annotation_num;
-
     if (!voice_info) {
         gregorio_message(_("no voice info"), "gabc_write_voice_info",
                 VERBOSITY_WARNING, 0);
         return;
-    }
-    for (annotation_num = 0; annotation_num < NUM_ANNOTATIONS; ++annotation_num) {
-        if (voice_info->annotation[annotation_num]) {
-            fprintf(f, "annotation: %s;\n",
-                    voice_info->annotation[annotation_num]);
-        }
     }
     if (voice_info->style) {
         fprintf(f, "style: %s;\n", voice_info->style);
@@ -779,6 +771,7 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     char step;
     int line;
     gregorio_syllable *syllable;
+    int annotation_num;
 
     if (!f) {
         gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
@@ -819,6 +812,12 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     gabc_write_str_attribute(f, "gregoriotex-font", score->gregoriotex_font);
     if (score->mode) {
         fprintf(f, "mode: %d;\n", score->mode);
+    }
+    for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
+        if (score->annotation[annotation_num]) {
+            fprintf(f, "annotation: %s;\n",
+                    score->annotation[annotation_num]);
+        }
     }
     if (score->initial_style != NORMAL_INITIAL) {
         fprintf(f, "initial-style: %d;\n", score->initial_style);

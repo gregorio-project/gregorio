@@ -37,6 +37,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
   - `highchoralsignshift` is now `choralsignupshift` and its sign is now inverted.
 - Style for score elements can now be changed via the `\grechangestyle` command.  This replaces the mixed system of styling commands which could be redefined for some elements and specialized commands for applying styles to others.  See GregorioRef for details.
 - Annotations with more than two lines are now supported (originally requested [on the user list](http://www.mail-archive.com/gregorio-users%40gna.org/msg00164.html) when two line annoations were made possible).  To build the annotation box use `\greannoataion`.  See GregorioRef for details.
+- The `annotation` header field in `gabc` now places its value(s) above the inital if no annotation is explicitly given by the user via `\greannotation` (see [#44](https://github.com/gregorio-project/gregorio/issues/44)).
 - `\grescaledim` now takes two arguments to bring it into line with the systemized naming scheme.  The second argument is `yes`, `true`, or `on` if you want the distance to scale when the staff size changes.  Anything else will make the distance independent of the staff size.
 
 ### Added

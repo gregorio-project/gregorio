@@ -516,6 +516,16 @@
   \relax%
 }%
 
+\def\GreAnnotationLines#1#2{%
+  \ifhbox \gre@box@annotation%
+    \relax%
+  \else%
+    \greannotation{#1}%
+    \greannotation{#2}%
+  \fi%
+  \relax%
+}%
+
 %% macro that draws the lines : starts by the first and then draws the lines of every line.
 %% has to be called before drawing the key, after drawing the initial
 \def\GreBeginNotes{%

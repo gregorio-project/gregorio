@@ -242,8 +242,7 @@ static void free_variables(void)
 // see whether a voice_info is empty
 static int voice_info_is_not_empty(const gregorio_voice_info *voice_info)
 {
-    return (voice_info->initial_key != 5 || voice_info->annotation[0]
-            || voice_info->annotation[1] || voice_info->style
+    return (voice_info->initial_key != 5 || voice_info->style
             || voice_info->virgula_position);
 }
 
@@ -774,13 +773,12 @@ initial_style_definition:
 
 annotation_definition:
     ANNOTATION attribute {
-        if (current_voice_info->annotation [NUM_ANNOTATIONS - 1]) {
-            snprintf(error,99,_("too many definitions of annotation found for "
-                                "voice %d, only the first %d will be taken "
-                                "into consideration"), voice, NUM_ANNOTATIONS);
+        if (score->annotation [MAX_ANNOTATIONS - 1]) {
+            snprintf(error,99,_("too many definitions of annotation found, "
+                                "only the first %d will be taken"), MAX_ANNOTATIONS);
             gregorio_message(error, "det_score", VERBOSITY_WARNING, 0);
         }
-        gregorio_set_voice_annotation (current_voice_info, $2.text);
+        gregorio_set_score_annotation (score, $2.text);
     }
     ;
 

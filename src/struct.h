@@ -608,6 +608,8 @@ typedef struct source_info {
  * 
  */
 
+#define MAX_ANNOTATIONS 2
+
 typedef struct gregorio_score {
     // the structure starts by a pointer to the first syllable of the
     // score.
@@ -629,6 +631,8 @@ typedef struct gregorio_score {
     struct source_info si;
     // the mode of a song is between 1 and 8
     char mode;
+    // There is one annotation for each line above the initial letter
+    char *annotation[MAX_ANNOTATIONS];
     // field giving informations on the initial (no initial, normal initial 
     // or two lines initial)
     char initial_style;
@@ -654,15 +658,11 @@ typedef struct gregorio_score {
  * 
  */
 
-#define NUM_ANNOTATIONS 2
-
 typedef struct gregorio_voice_info {
     // the only thing that is worth a comment here is the key. We have a
     // special representation for the key. See comments on
     // src/struct-utils.c for further reading.
     int initial_key;
-    // There is one annotation for each line above the initial letter
-    char *annotation[NUM_ANNOTATIONS];
     // See source_info above for comments about the move of author etc.
     char *style;
     char *virgula_position;
@@ -802,8 +802,7 @@ void gregorio_set_score_arranger(gregorio_score *score, char *arranger);
 void gregorio_set_score_gabc_version(gregorio_score *score, char *gabc_version);
 void gregorio_set_score_number_of_voices(gregorio_score *score,
         int number_of_voices);
-void gregorio_set_voice_annotation(gregorio_voice_info *voice_info,
-        char *annotation);
+void gregorio_set_score_annotation(gregorio_score *score, char *annotation);
 void gregorio_set_score_author(gregorio_score *score, char *author);
 void gregorio_set_score_date(gregorio_score *score, char *date);
 void gregorio_set_score_manuscript(gregorio_score *score, char *manuscript);
