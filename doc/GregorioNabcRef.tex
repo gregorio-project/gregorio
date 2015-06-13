@@ -126,8 +126,8 @@ consists of a sequence of horizontal spacing adjustment characters
 \begin{itemize}
   \item \texttt{//} move by \texttt{nabclargerspace} skip to the right
   \item \texttt{/} move by \texttt{nabcinterelementspace} skip to the right
-  \item \texttt{``} move by \texttt{nabclargerspace} skip to the right
-  \item \texttt{`} move by \texttt{nabcinterelementspace} skip to the right
+  \item \texttt{``} move by \texttt{nabclargerspace} skip to the left
+  \item \texttt{`} move by \texttt{nabcinterelementspace} skip to the left
 \end{itemize}
 
 The \textit{complex glyph descriptor} consists of a \textit{glyph descriptor},
@@ -182,7 +182,7 @@ characters optionally followed by a number:
   \item \texttt{>} augmentive liquescence
   \item ~~\texttt{\~} diminutive liquescence
 \end{itemize}
-If the Dom Cardine's table contains multiple glyphs with the same modifiers,
+If Dom Cardine's table contains multiple glyphs with the same modifiers,
 a positive number is added afterwards.  E.g. for augmentive liquescent
 clivis the table shows two different glyphs, the ancus \texttt{cl>} \sneume{cl>}
 and then another neume - \texttt{cl>1} \sneume{cl>1}, the first neume does
@@ -215,7 +215,7 @@ punctum.
   \item \texttt{y} \sneume{gr-} gravis with episema
 \end{itemize}
 Only subpunctis are normally used in neume classification, the prepunctis is
-a made up concept to describe the rising sequence of punctis, tractulis etc.
+a \texttt{nabc} concept to describe the rising sequence of punctis, tractulis etc.
 in the left low corner of some neume.  While e.g. \texttt{vipp2}
 \sneume{sc} describes the same neume as \texttt{sc} \sneume{sc}, the
 former form allows better control on how many punctis or tractulis or
