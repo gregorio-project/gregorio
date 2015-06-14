@@ -81,8 +81,6 @@ alias [czech] to [Czech];
 alias [Czech] to [Slavic];
 alias [slovak] to [Slovak];
 alias [Slovak] to [Slavic];
-alias [hungarian] to [Hungarian];
-alias [Hungarian] to [Slavic];
 
 language [Slavic];
 
@@ -98,3 +96,13 @@ vowel œŒ;
 secondary l L ĺ Ĺ;
 secondary r R ŕ Ŕ;
 secondary m M;
+
+alias [hungarian] to [Hungarian];
+
+language [Hungarian];
+
+vowel aáAÁ;
+vowel éeëÉEË;
+vowel iíIÍ;
+vowel oóöőOÓÖŐ;
+vowel uúüűUÚÜŰ;
