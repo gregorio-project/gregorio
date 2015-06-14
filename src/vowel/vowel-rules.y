@@ -83,7 +83,10 @@ static inline void alias(const char **const language,
         }
         *language = target;
         *status = RFPS_ALIASED;
+    } else {
+        free((void *)target);
     }
+    free((void *)name);
 }
 
 static inline void add(const rulefile_parse_status *const status,
@@ -106,7 +109,8 @@ static inline void add(const rulefile_parse_status *const status,
 %parse-param { const char **language }
 %parse-param { rulefile_parse_status *const status }
 
-%token LANGUAGE VOWEL PREFIX SUFFIX ALIAS SEMICOLON TO NAME CHARACTERS INVALID
+%token LANGUAGE VOWEL PREFIX SUFFIX SECONDARY ALIAS SEMICOLON TO
+%token NAME CHARACTERS INVALID
 
 %%
 
@@ -121,6 +125,7 @@ rule
     | VOWEL vowels SEMICOLON
     | PREFIX prefixes SEMICOLON
     | SUFFIX suffixes SEMICOLON
+    | SECONDARY secondaries SEMICOLON
     ;
 
 vowels
@@ -136,4 +141,9 @@ prefixes
 suffixes
     :
     | suffixes CHARACTERS           { _ADD(suffix, $2); }
+    ;
+
+secondaries
+    :
+    | secondaries CHARACTERS        { _ADD(secondary, $2); }
     ;

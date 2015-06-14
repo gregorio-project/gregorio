@@ -196,6 +196,7 @@ static inline void character_set_clear(character_set *const set)
 static character_set *vowel_table = NULL;
 static character_set *prefix_table = NULL;
 static character_set *suffix_table = NULL;
+static character_set *secondary_table = NULL;
 static grewchar *prefix_buffer = NULL;
 static size_t prefix_buffer_size;
 static size_t prefix_buffer_mask;
@@ -225,10 +226,12 @@ void gregorio_vowel_tables_init(void)
         character_set_clear(vowel_table);
         character_set_clear(prefix_table);
         character_set_clear(suffix_table);
+        character_set_clear(secondary_table);
     } else {
         vowel_table = character_set_new(false);
         prefix_table = character_set_new(true);
         suffix_table = character_set_new(true);
+        secondary_table = character_set_new(true);
 
         prefix_buffer_size = 16;
         prefix_buffer_mask = 0x0f;
@@ -272,6 +275,9 @@ void gregorio_vowel_tables_free(void)
     }
     if (suffix_table) {
         character_set_free(suffix_table);
+    }
+    if (secondary_table) {
+        character_set_free(secondary_table);
     }
     if (prefix_buffer) {
         free(prefix_buffer);
@@ -329,6 +335,24 @@ void gregorio_suffix_table_add(const char *suffix)
     }
 }
 
+void gregorio_secondary_table_add(const char *secondary)
+{
+    character_set *set = secondary_table;
+    grewchar *str, *p;
+
+    if (secondary && *secondary) {
+        str = gregorio_build_grewchar_string_from_buf(secondary);
+        p = str;
+
+        while (*p) {
+            set = character_set_add(set, *(p++));
+        }
+
+        set->is_final = true;
+        free(str);
+    }
+}
+
 typedef enum {
     VWL_BEFORE = 0,
     VWL_WITHIN,
@@ -346,17 +370,19 @@ static inline bool is_in_prefix(size_t bufpos) {
     return previous->is_final;
 }
 
-bool gregorio_find_vowel_group(const grewchar *subject, int *const start,
+bool gregorio_find_vowel_group(const grewchar *const string, int *const start,
         int *const end)
 {
     size_t bufpos = 0;
     vowel_group_state state = VWL_BEFORE;
-    character_set *suffix;
+    character_set *cset;
+    const grewchar *subject;
+    int i;
 
     // stick the 0 in here to avoid overruns from is_in_prefix
     prefix_buffer[0] = 0;
 
-    for (int i = 0; true; ++i, ++subject) {
+    for (i = 0, subject = string; true; ++i, ++subject) {
         switch (state) {
         case VWL_BEFORE:
             bufpos = (bufpos + 1) & prefix_buffer_mask;
@@ -376,7 +402,7 @@ bool gregorio_find_vowel_group(const grewchar *subject, int *const start,
             if (!character_set_contains(vowel_table, *subject, NULL)) {
                 // not a vowel; is it a suffix?
                 *end = i;
-                if (character_set_contains(suffix_table, *subject, &suffix)) {
+                if (character_set_contains(suffix_table, *subject, &cset)) {
                     // it's the start of a suffix
                     state = VWL_SUFFIX;
                 } else {
@@ -387,11 +413,11 @@ bool gregorio_find_vowel_group(const grewchar *subject, int *const start,
             break;
 
         case VWL_SUFFIX:
-            if (suffix->is_final) {
+            if (cset->is_final) {
                 // remember the last final position
                 *end = i;
             }
-            if (!character_set_contains(suffix, *subject, &suffix)) {
+            if (!character_set_contains(cset, *subject, &cset)) {
                 // no longer in valid suffix
                 return true;
             }
@@ -406,7 +432,22 @@ bool gregorio_find_vowel_group(const grewchar *subject, int *const start,
         }
     }
 
-    // no vowel found
-    *start = *end = -1;
+    // no vowel found; look for a secondary
+    *end = -1;
+    for (*start = 0; *(subject = string + *start); ++ *start) {
+        for (cset = secondary_table, i = *start;
+                character_set_contains(cset, *subject, &cset); ++i, ++subject) {
+            if (cset->is_final) {
+                // remember the last final position
+                *end = i + 1;
+            }
+        }
+        if (*end >= 0) {
+            return true;
+        }
+    }
+
+    // no center found
+    *start = -1;
     return false;
 }
