@@ -53,7 +53,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The final line of a score may now be forced to be fully justified (rather than ragged) using `\gresetlastline{justified}` before including the score.  Use `\gresetlastline{ragged}` to switch back to a ragged last line.  See [#43](https://github.com/gregorio-project/gregorio/issues/43).
 - `\gresethyphen{force}` forces GregorioTeX to put a hyphen between each syllable in a polysyllabic word.  `\gresethyphen{auto}` restores behavior to normal.
 - Support for custom vowel centering rules.  Put a file called `gregorio-vowels.dat` into your project directory or into a directory accessible from TEXMF and add the header `language: name;` to your gabc file.  The `gregorio-vowels.dat` file describes how vowels are to be located in the *name* language.  See GregorioRef for details.
-- `\gresetlinecolor`: takes named color as an argument.  As a result, the red staff lines can made be consistent with the text, even when the user teaks `gregoriocolor` with `\gresetlinecolor{gregoriocolor}`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
+- `\gresetlinecolor` takes a named color as an argument.  As a result, the red staff lines can be made consistent with the text, even when the user changes `gregoriocolor` with `\gresetlinecolor{gregoriocolor}`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
 
 ### Deprecated
 - `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`
