@@ -63,7 +63,6 @@ static inline void rtrim(char *buf)
 static bool read_vowel_rules(const char *const lang) {
     const char *language = lang;
     rulefile_parse_status status = RFPS_NOT_FOUND;
-    FILE *file;
     char **filenames, *filename, *description;
 
 #ifdef USE_KPSE
@@ -76,6 +75,7 @@ static bool read_vowel_rules(const char *const lang) {
         return false;
     }
 #else
+    FILE *file;
     char buf[PATH_MAX];
     size_t capacity = 16, size = 0;
     
