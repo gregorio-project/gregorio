@@ -36,55 +36,77 @@
 # define IGNORE(e) /* empty */
 #endif
 
+// NOTE: This parser might allocate a new value for language; this value MUST
+//       BE FREED after the parser returns (if the value of the language pointer
+//       changes, then free the pointer).  This parser DOES free the language
+//       pointer before changing it, if status points to RFPS_ALIASED.
+
 // uncomment it if you want to have an interactive shell to understand the
 // details on how bison works for a certain input
 //int gregorio_vowel_rulefile_debug=1;
 
 static void gregorio_vowel_rulefile_error(const char *const filename,
-        const char *const language, bool *const found,
+        const char **const language, rulefile_parse_status *const status,
         const char *const error_str)
 {
     IGNORE(language);
-    IGNORE(found);
+    IGNORE(status);
     gregorio_messagef("gregorio_vowel_rulefile_parse", VERBOSITY_ERROR, 0,
             _("%s: %s"), filename, error_str);
 }
 
-static inline void initialize(const char *language, bool *const found)
-{
-    assert(language);
-    *found = false;
-}
-
 // this returns false until the language *after* the desired language
-static inline bool match_language(const char *language, bool *found,
-        const char *const name)
+static inline bool match_language(const char **language,
+        rulefile_parse_status *status, char *const name)
 {
-    if (*found) {
+    if (*status == RFPS_FOUND) {
         return true;
     }
 
-    *found = strcmp(language, name) == 0;
+    if (strcmp(*language, name) == 0) {
+        *status = RFPS_FOUND;
+    }
+
+    free(name);
     return false;
 }
 
-static inline void add(const bool *const found, void (*const fn)(const char *),
-        const char *const value)
+static inline void alias(const char **const language,
+        rulefile_parse_status *const status, const char *const name,
+        const char *const target)
 {
-    if (*found) {
-        fn(value);
+    if (strcmp(*language, name) == 0) {
+        gregorio_messagef("alias", VERBOSITY_INFO, 0, _("Aliasing %s to %s"),
+                name, target);
+        if (*status == RFPS_ALIASED) {
+            free((void *)*language);
+        }
+        *language = target;
+        *status = RFPS_ALIASED;
     }
 }
+
+static inline void add(const rulefile_parse_status *const status,
+        void (*const fn)(const char *), char *const value)
+{
+    if (*status == RFPS_FOUND) {
+        fn(value);
+    }
+    free(value);
+}
+
+#define _MATCH(NAME) if (match_language(language, status, NAME)) YYACCEPT
+#define _ALIAS(NAME, TARGET) alias(language, status, NAME, TARGET)
+#define _ADD(TABLE, CHARS) add(status, gregorio_##TABLE##_table_add, CHARS)
 
 %}
 
 %name-prefix "gregorio_vowel_rulefile_"
 %parse-param { const char *const filename }
-%parse-param { const char *const language }
-%parse-param { bool *const found }
-%initial-action { initialize(language, found); }
+%parse-param { const char **language }
+%parse-param { rulefile_parse_status *const status }
 
-%token LANGUAGE VOWEL PREFIX SUFFIX SEMICOLON NAME CHARACTERS INVALID
+%token LANGUAGE VOWEL PREFIX SUFFIX ALIAS SEMICOLON TO NAME CHARACTERS INVALID
 
 %%
 
@@ -94,11 +116,8 @@ rules
     ;
 
 rule
-    : LANGUAGE NAME SEMICOLON {
-                                    if (match_language(language, found, $3)) {
-                                        YYACCEPT;
-                                    }
-                                }
+    : LANGUAGE NAME SEMICOLON       { _MATCH($2); }
+    | ALIAS NAME TO NAME SEMICOLON  { _ALIAS($2, $4); }
     | VOWEL vowels SEMICOLON
     | PREFIX prefixes SEMICOLON
     | SUFFIX suffixes SEMICOLON
@@ -106,15 +125,15 @@ rule
 
 vowels
     :
-    | vowels CHARACTERS         { add(found, gregorio_vowel_table_add, $2); }
+    | vowels CHARACTERS             { _ADD(vowel, $2); }
     ;
 
 prefixes
     :
-    | prefixes CHARACTERS       { add(found, gregorio_prefix_table_add, $2); }
+    | prefixes CHARACTERS           { _ADD(prefix, $2); }
     ;
 
 suffixes
     :
-    | suffixes CHARACTERS       { add(found, gregorio_suffix_table_add, $2); }
+    | suffixes CHARACTERS           { _ADD(suffix, $2); }
     ;

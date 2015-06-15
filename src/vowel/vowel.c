@@ -23,6 +23,10 @@
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
+#include <errno.h>
+#ifdef USE_KPSE
+    #include <kpathsea/kpathsea.h>
+#endif
 #include "vowel.h"
 #include "unicode.h"
 #include "messages.h"
@@ -103,9 +107,11 @@ static bool character_set_contains(character_set *const set,
 static inline void character_set_put(character_set *const set,
         const grewchar vowel, character_set *next)
 {
+    unsigned int index;
+
     assert(set);
 
-    unsigned int index = ((unsigned long)vowel) & set->mask;
+    index = ((unsigned long)vowel) & set->mask;
     while (set->table[index]) {
         index = (index + 1) & set->mask;
     }
@@ -235,15 +241,25 @@ void gregorio_vowel_tables_init(void)
     }
 }
 
-bool gregorio_vowel_tables_load(FILE *const f, const char *const filename,
-        const char *const language)
+void gregorio_vowel_tables_load(const char *const filename,
+        const char **const language, rulefile_parse_status *status)
 {
-    bool found;
-    gregorio_vowel_rulefile_in = f;
-    found = gregorio_vowel_rulefile_parse(filename, language, &found) == 0
-            && found;
-    gregorio_vowel_rulefile_in = NULL;
-    return found;
+#ifdef USE_KPSE
+    if (!kpse_in_name_ok(filename)) {
+        gregorio_messagef("gregorio_vowel_tables_load", VERBOSITY_WARNING, 0,
+                _("kpse disallows read from %s"), filename);
+        return;
+    }
+#endif
+    gregorio_vowel_rulefile_in = fopen(filename, "r");
+    if (gregorio_vowel_rulefile_in) {
+        gregorio_vowel_rulefile_parse(filename, language, status);
+        fclose(gregorio_vowel_rulefile_in);
+        gregorio_vowel_rulefile_in = NULL;
+    } else {
+        gregorio_messagef("gregorio_vowel_tables_load", VERBOSITY_WARNING, 0,
+                _("unable to open %s: %s"), filename, strerror(errno));
+    }
 }
 
 void gregorio_vowel_tables_free(void)
