@@ -76,15 +76,28 @@
 %% macros for the typesetting of the clefs of the beginning of lines and custos
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% if this macro is set to 1, it simply removes the key
-\xdef\greremoveclefcount{0}%
+% flag for showing the clef
+\newif\ifgre@showclef%
+\gre@showcleftrue
+
+\def\gresetclef#1{%
+  \IfStrEq{#1}{visible}%
+    {\gre@showcleftrue}%
+    {\IfStrEq{#1}{invisible}%
+      {\gre@showcleffalse}
+      {\greerror{Unrecognized option for \protect\gresetclef}}%
+    }%
+}%
+
 
 \def\greremoveclef{%
-  \xdef\greremoveclefcount{1}%
+  \gre@warning{\protect\greremoveclef\space is deprecated.\MessageBreak Use \protect\gresetclef{invisible} instead}%
+  \gresetclef{invisible}%
 }%
 
 \def\grenormalclef{%
-  \xdef\greremoveclefcount{0}%
+  \gre@warning{\protect\grenormalclef\space is deprecated.\MessageBreak Use \protect\gresetclef{visible} instead}%
+  \gresetclef{visible}%
 }%
 
 % a count describing the clef line and pitch : 1 for c on the first (bottom) line, 2 for c on the second line, 5 for f on the first, etc.
@@ -100,7 +113,7 @@
     \kern\gre@skip@temp@four %
     \copy\gre@box@lines% draws the lines
     \unkern %
-    \ifnum\greremoveclefcount=0\relax %
+    \ifgre@showclef%
       \gre@skip@temp@four = \gre@skip@afterclefnospace%
       \hbox{\gretypekey{#1}{#2}{0}{#3}{#4}\hskip\gre@skip@temp@four}%
     \else %
@@ -190,7 +203,7 @@
 % of the flat
 \def\GreSetInitialClef#1#2#3{%
   \grecalculateclefnum{#1}{#2}{#3}%
-  \ifnum\greremoveclefcount=0\relax %
+  \ifgre@showclef%
     \gretypekey{#1}{#2}{0}{1}{#3}%
   \fi %
   \GreSetLinesClef{#1}{#2}{1}{#3}%
@@ -252,7 +265,7 @@
   %here we need some tricks to draw the line before the custo (for the color)
   \setbox\gre@box@temp@width=\hbox{\grecustochar{#1}}%
   \gre@dimen@temp@three=\wd\gre@box@temp@width %
-  \ifnum\greremovelinescount=0\relax %
+  \ifgre@showlines %
     \ifnum#1=\gre@pitch@a\relax %
       \greadditionalbottomcustolinemiddle %
     \else\ifnum#1=\gre@pitch@b\relax %
@@ -277,7 +290,7 @@
 % the argument is the height
 \def\gresetcusto#1{%
   \ifnum\greinsidediscretionary=0\relax %
-    \ifnum\greblockcusto=0\relax %
+    \ifgre@blockeolcustos\else%
       \gre@calculate@glyphraisevalue{#1}{0}%
       %here we need some tricks to draw the line before the custo (for the color)
       \setbox\gre@box@temp@width=\hbox{%
@@ -292,7 +305,7 @@
       \grecustochar{#1}\relax %
       }%
       \grelocalrightbox{%
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \ifnum#1=\gre@pitch@a\relax %
           \greadditionalbottomcustolineend %
         \else\ifnum#1=\gre@pitch@b\relax %
@@ -941,7 +954,7 @@
 
 % another dumb top function
 \def\GreAdditionalLine#1#2#3{%
-  \ifnum\greremovelinescount=0\relax %
+  \ifgre@showlines %
     \xdef\gresavedglyphraise{\the\gre@dimen@glyphraisevalue}%
     \gre@style@additionalstafflines %
     \grehepisorline{\gre@pitch@a}{#1}{#2}{#3}{f}%
@@ -1311,22 +1324,23 @@
 % default state is to not hide them
 \gre@hidepclinesfalse
 
-% macros for manipulating above flag
-\def\grehidepclines{%
-  \gre@hidepclinestrue%
-}%
-
-\def\gredonthidepclines{%
-  \gre@hidepclinesfalse%
+% macro for manipulating above flag
+\def\gresetlinesbehindpunctumcavum#1{%
+  \IfStrEq{#1}{visible}%
+    {\gre@hidepclinesfalse}%
+    {\IfStrEq{#1}{invisible}%
+      {\gre@hidepclinestrue}%
+      {\greerror{Unrecognized option for \protect\gresetlinesbehindpunctumcavum}}%
+    }%
 }%
 
 \def\GreHidePCLines{%
-  \gre@warning{\protect\GreHidePCLines\space is deprecated.\MessageBreak Use \protect\grehidepclines\space instead.}%
+  \gre@warning{\protect\GreHidePCLines\space is deprecated.\MessageBreak Use \protect\gresetlinesbehindpunctumcavum{invisible}\space instead}%
   \gre@hidepclinestrue%
 }%
 
 \def\GreDontHidePCLines{%
-  \gre@warning{\protect\GreDontHidePCLines\space is deprecated.\MessageBreak Use \protect\gredonthidepclines\space instead.}%
+  \gre@warning{\protect\GreDontHidePCLines\space is deprecated.\MessageBreak Use \protect\gresetlinesbehindpunctumcavum{visible}\space instead}%
   \gre@hidepclinesfalse%
 }%
 
@@ -1335,22 +1349,23 @@
 % default state is to not hide them
 \gre@hidealtlinesfalse
 
-% macros for manipulating above flag
-\def\grehidealtlines{%
-  \gre@hidealtlinestrue%
-}%
-
-\def\gredonthidealtaines{%
-  \gre@hidealtlinesfalse%
+% macro for manipulating above flag
+\def\gresetlinesbehindalteration#1{%
+  \IfStrEq{#1}{visible}%
+    {\gre@hidealtlinesfalse}%
+    {\IfStrEq{#1}{invisible}%
+      {\gre@hidealtlinestrue}%
+      {\greerror{Unrecognized option for \protect\gresetlinesbehindalteration}}%
+    }%
 }%
 
 \def\GreHideAltLines{%
-  \gre@warning{\protect\GreHideAltLines\space is deprecated.\MessageBreak Use \protect\grehidealtlines\space instead.}%
+  \gre@warning{\protect\GreHideAltLines\space is deprecated.\MessageBreak Use \protect\gresetlinesbehindalteration{invisible}\space instead.}%
   \gre@hidealtlinestrue%
 }%
 
 \def\GreDontHideAltLines{%
-  \gre@warning{\protect\GreDontHideAltLines\space is deprecated.\MessageBreak Use \protect\gredonthidealtlines\space instead.}%
+  \gre@warning{\protect\GreDontHideAltLines\space is deprecated.\MessageBreak Use \protect\gresetlinesbehindalteration{visible}\space instead.}%
   \gre@hidealtlinesfalse%
 }%
 

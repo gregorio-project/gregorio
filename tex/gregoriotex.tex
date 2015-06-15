@@ -27,9 +27,24 @@
 \input luaotfload.sty%
 \input graphicx.tex % for \resizebox
 \input xstring.sty%
-\def\greerror#1{\errmessage{GregorioTeX error: #1}}%
-\def\gre@warning#1{\message{GregorioTeX warning: #1}}%
-\def\gre@bug#1{\errmessage{GregorioTeX bug: #1 !! This is a bug in Gregorio.  Please report it at https://github.com/gregorio-project/gregorio/issues}}%
+
+\def\greerror#1{\begingroup%
+\def\MessageBreak{^^J}%
+\let\protect\string%
+\errmessage{GregorioTeX error: #1}%
+\endgroup}%
+
+\def\gre@warning#1{\begingroup%
+\def\MessageBreak{^^J}%
+\let\protect\string%
+\message{GregorioTeX warning: #1}%
+\endgroup}%
+
+\def\gre@bug#1{\begingroup%
+\def\MessageBreak{^^J}%
+\let\protect\string%
+\errmessage{GregorioTeX bug: #1 !! This is a bug in Gregorio.  Please report it at https://github.com/gregorio-project/gregorio/issues}%
+\endgroup}%
 
 
 \ifx\csname gre@debug\endcsname\relax%
@@ -70,15 +85,49 @@
 
 % Note since underlining and coloring don’t exist in PlainTeX, but we need the following commands to maintain compatibility with LaTeX.
 \def\GreUnderline#1{%
+  \gre@warning{Underlining cannot be done in PlainTeX}%
   {#1}%
   \relax %
 }%
 
 \def\GreColored#1{%
+  \gre@warning{Text color cannot be changed in PlainTeX}%
   {#1}%
   \relax %
 }%
 
+%%%%%%%%%%%%%%%
+%% Line color
+%%%%%%%%%%%%%%%
+
+% Colors don't work in PlainTeX, but we need these functions for interoperability with LaTeX.
+
+\def\gresetlinecolor#1{%
+  \gre@warning{Line color cannot be changed in PlainTeX}%
+  \relax%
+}
+
+
+\def\grecoloredlines#1{%
+  \gre@warning{\protect\greredlines\space is deprecated.\MessageBreak Use \protect\gresetlinecolor\space instead.}%
+  \relax %
+}
+
+\def\greredlines{%
+  \gre@warning{\protect\greredlines\space is deprecated.\MessageBreak Use \protect\gresetlinecolor{gregoriocolor}\space instead.}%
+  \gresetlinecolor{gregoriocolor}%
+  \relax %
+}
+
+\let\redlines\greredlines
+
+\def\grenormallines{%
+  \gre@warning{\protect\grenormallines\space is deprecated.\MessageBreak Use \protect\gresetlinecolor{black}\space instead.}%
+  \gresetlinecolor{black}%
+  \relax %
+}
+
+\let\normallines\grenormallines
 
 
 %% The following two functions are defined for backwards compatibility.  They will eventually be removed.

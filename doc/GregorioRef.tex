@@ -39,7 +39,7 @@
 \definecolor{myred}{HTML}{FF3333}
 
 \usepackage{minted} % must be after xcolor
-\newminted{latex}{gobble=2,bgcolor=lightgray}
+\newminted{latex}{autogobble,bgcolor=lightgray}
 %\newminted{gabc}{bgcolor=lightgray} % can this be done?
 \newenvironment{gabccode}{\tt}{}
 
@@ -110,30 +110,23 @@
     \large Version \textbf{3.0.2}, 01 June 15 %% PARSE_VERSION_DATE
 
     \vspace{1.5cm}
-    \begingroup%
-      \redlines
-      \def\grelowchoralsignstyle#1{{\cminfamily\small\kern-0.2em#1}}
-      \def\grehighchoralsignstyle#1{{\cminfamily\small\kern-0.2em#1}}
-      \def\grestar{\greheightstar}
-      \gresetfirstannotation{\scriptsize{Comm.}}
-      \gresetsecondannotation{\scriptsize{VII}}
-      \color{black!60}
-      \setmainfont[SmallCapsFont=AlegreyaSC]{Alegreya}%
-      \addtolength{\hsize}{-4cm}%
-      \setlength{\fboxsep}{5mm}%
-      \begin{list}{}{%
-        \setlength{\topsep}{0pt}%
-        \setlength{\leftmargin}{1.5cm}%
-        \setlength{\rightmargin}{1.5cm}%
-        \setlength{\listparindent}{0pt}%
-        \setlength{\itemindent}{0pt}%
-        \setlength{\parsep}{0pt}%
-      }\item[]{\fbox{\parbox{\hsize}{\includescore[a]{factus}}}}%
-      \end{list}%
-      \gresetfirstannotation{}
-      \gresetsecondannotation{}
-    \endgroup%
-
+  \end{center}
+  \gresetlinecolor{gregoriocolor}
+  \def\grelowchoralsignstyle#1{{\cminfamily\small\kern-0.2em#1}}%
+  \def\grehighchoralsignstyle#1{{\cminfamily\small\kern-0.2em#1}}%
+  \def\GreStar{\greheightstar}%
+  \greannotation{\scriptsize{Comm.}}%
+  \greannotation{\scriptsize{VII}}%
+  \begingroup%
+    \color{black!60}%
+    \setmainfont[SmallCapsFont=AlegreyaSC]{Alegreya}%
+    \newlength{\mini}%
+    \setlength{\mini}{\hsize}%
+    \addtolength{\mini}{-4cm}%
+    \setlength{\fboxsep}{5mm}%
+    \hfill\fbox{\parbox{\mini}{\gregorioscore[f]{factus}}}\hfill%
+  \endgroup
+  \begin{center}
     \vspace{1.5cm}%
     \href{http://gregorio-project.github.io/}{Homepage}
 

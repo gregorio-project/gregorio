@@ -79,7 +79,7 @@
 %% #4: the size of greextra
 %% #5: the kern of the bar from the beggining of the glyph
 %% #6: greextra glyph lowering
-\def\greexpldefbarglyph#1#2#3#4#5#6{%
+\def\gredefbarredsymbol#1#2#3#4#5#6{%
   \expandafter\gdef\csname #1\endcsname {%
     \leavevmode\hbox to 0pt{}\kern #5\lower#6\hbox{\csname #3\endcsname{#4}}\kern -#5\relax #2%
   }%
@@ -88,14 +88,14 @@
 %% Most simple version or barred glyph definition
 %% #1: A, R or V
 %% #2: the negative kern
-\def\gresimpledefbarglyph#1#2{%
-  \greexpldefbarglyph{#1bar}{#1}{gre#1Bar}{\f@size}{#2}{0pt}%
+\def\gresimpledefbarredsymbol#1#2{%
+  \gredefbarredsymbol{#1bar}{#1}{gre#1Bar}{\f@size}{#2}{0pt}%
 }
 
 % defining \ABar, \VBar and \RBar for libertine font, define yours for your font
-\gresimpledefbarglyph{A}{.3em}
-\gresimpledefbarglyph{R}{.35em}
-\gresimpledefbarglyph{V}{.1em}
+\gresimpledefbarredsymbol{A}{.3em}
+\gresimpledefbarredsymbol{R}{.35em}
+\gresimpledefbarredsymbol{V}{.1em}
 
 % the gothic R and V
 \gredefsymbol{gothRbar}{greextra}{RWithBarGoth}%

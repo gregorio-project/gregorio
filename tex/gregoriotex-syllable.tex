@@ -168,7 +168,7 @@
 % Conditionals can be summed up this way:
 % if wd(#1/2) > \gre@dimen@textaligncenter then #2
 % else
-%   if \gre@englishcentering = 0:
+%   \ifgre@vowelcentering :
 %     if wd(\gre@endsyllablepart) > \gre@dimen@clivisalignmentmin -> #2 else #1
 %   else:
 %      if (\gre@dimen@textaligncenter) > \gre@dimen@clivisalignmentmin -> #2 else #1
@@ -190,7 +190,7 @@
     \ifdim\gre@dimen@temp@three >\gre@dimen@textaligncenter %
       \global\setbox\gre@box@temp@width=\hbox{#2}%
     \else%
-      \ifcase\gre@englishcentering%
+      \ifgre@vowelcentering%
         \grewidthof{\mygre@endsyllablepart}%
         \gre@debugmsg{ifdim}{ tempwidth > clivisalignmentmin}%
         \ifdim\gre@dimen@temp@three >\gre@dimen@clivisalignmentmin %
@@ -198,7 +198,7 @@
         \else%
           \global\setbox\gre@box@temp@width=\hbox{#1}%
         \fi%
-      \or%
+      \else%
         \gre@debugmsg{ifdim}{ textaligncenter > clivisalignmentmin}%
         \ifdim\gre@dimen@textaligncenter >\gre@dimen@clivisalignmentmin %
           \global\setbox\gre@box@temp@width=\hbox{#2}%
@@ -389,17 +389,32 @@
   \gdef\gre@nextendsyllablepart{#3}%
 }%
 
-\newcount\gre@englishcentering%
+%%%%%%%%%%%%%%%
+%% Lyric centering
+%%%%%%%%%%%%%%%
+
+\def\gresetlyriccentering#1{%
+  \IfStrEq{#1}{vowel}%
+    {\gre@vowelcenteringtrue}%
+    {\IfStrEq{#1}{syllable}%
+      {\gre@vowelcenteringfalse}%
+      {\greerror{Unrecognized option for \protect\gresetlyriccentering}}%
+    }%
+}%
+
+
+\newif\ifgre@vowelcentering%
+\gre@vowelcenteringtrue
 
 \def\englishcentering{%
-  \global\gre@englishcentering=1\relax %
+  \gre@warning{\protect\englishcentering\space is deprecated.\MessageBreak Use \protect\gresetlyriccentering{syllable} instead}%
+  \gresetlyriccentering{syllable}%
 }%
 
 \def\defaultcentering{%
-  \global\gre@englishcentering=0\relax %
+  \gre@warning{\protect\defaultcentering\space is deprecated.\MessageBreak Use \protect\gresetlyriccentering{vowel} instead}%
+  \gresetlyriccentering{vowel}%
 }%
-
-\defaultcentering%
 
 %% options about clivis centering scheme. Clivis are usually aligned by their
 %% center, which is different from most neumes. Gregorio has three modes:
@@ -444,14 +459,14 @@
   \gre@debugmsg{general}{New syllable: #1#2#3}%
   \gre@debugmsg{general}{}%
   \global\grefirstisalteration=0\relax %
-  \ifnum\gre@englishcentering=1\relax %
-    \gdef\gre@firstsyllablepart{}%
-    \gdef\gre@middlesyllablepart{#1#2#3}%
-    \gdef\gre@endsyllablepart{}%
-  \else %
+  \ifgre@vowelcentering %
     \gdef\gre@firstsyllablepart{#1}%
     \gdef\gre@middlesyllablepart{#2}%
     \gdef\gre@endsyllablepart{#3}%
+  \else %
+    \gdef\gre@firstsyllablepart{}%
+    \gdef\gre@middlesyllablepart{#1#2#3}%
+    \gdef\gre@endsyllablepart{}%
   \fi %
   \grefirstglyph=1\relax %
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
@@ -567,7 +582,7 @@
   \gre@syllable@end{#7}{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}{#4}%
   \global\gre@dimen@notesaligncenter=0pt% very important, see flat and natural
   \greunsetfixedtextformat %
-  \ifnum\greblockcusto=1\relax\ifnum\greinsidediscretionary=0\relax %
+  \ifgre@blockeolcustos\ifnum\greinsidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
   \relax %
@@ -653,14 +668,14 @@
   % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the previous syllable and the first note of the next syllable. But there are limits : a bar can't go very far above text. For example if there is "nuncncncncn" with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
   % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
   % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
-  \ifnum\gre@englishcentering=1\relax %
-    \gdef\gre@firstsyllablepart{}%
-    \gdef\gre@middlesyllablepart{#1#2#3}%
-    \gdef\gre@endsyllablepart{}%
-  \else %
+  \ifgre@vowelcentering %
     \gdef\gre@firstsyllablepart{#1}%
     \gdef\gre@middlesyllablepart{#2}%
     \gdef\gre@endsyllablepart{#3}%
+  \else %
+    \gdef\gre@firstsyllablepart{}%
+    \gdef\gre@middlesyllablepart{#1#2#3}%
+    \gdef\gre@endsyllablepart{}%
   \fi %
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
   \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
@@ -793,7 +808,7 @@
   \grefirstsyllableofword=1\relax %
   \global\gre@dimen@notesaligncenter= 0 pt\relax % very important, see flat and natural
   \greunsetfixedtextformat %
-  \ifnum\greblockcusto=1\relax\ifnum\greinsidediscretionary=0\relax %
+  \ifgre@blockeolcustos\ifnum\greinsidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
   \relax%

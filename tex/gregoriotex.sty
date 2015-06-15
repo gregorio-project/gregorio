@@ -40,16 +40,16 @@
 %% We declare and process some additional options after loading the package (instead of at the beginning) because the options manipulate flags which are declared in the package.
 
 % These options control the global behavior of \includescore.  The default, forceinclude, is the old behavior (no attempt to compile the score with gregorio is made, it is simply included as is).  forcecompile is at the opposite end of the spectrum: all scores are compiled through gregorio at time of inclusion.  autocompile strikes a balance by checking to see if the score needs to be recompiled and only doing so if it needs it (see the definition of \includescore in gregoriotex.tex for more details).
-\DeclareVoidOption{nevercompile}{\nevercompilegabc}
-\DeclareVoidOption{forcecompile}{\forcecompilegabc}
-\DeclareVoidOption{autocompile}{\autocompilegabc}
+\DeclareVoidOption{nevercompile}{\gresetcompilegabc{never}}
+\DeclareVoidOption{forcecompile}{\gresetcompilegabc{force}}
+\DeclareVoidOption{autocompile}{\gresetcompilegabc{auto}}
 
 \ExecuteOptions{nevercompile}
 \ProcessKeyvalOptions*
 
 % we hide lines only under LaTeX
-\grehidealtlines
-\grehidepclines
+\gresetlinesbehindalteration{invisible}
+\gresetlinesbehindpunctumcavum{invisible}
 
 %% We now redefine some things in a more LaTeX friendly way.
 
@@ -102,20 +102,28 @@
   }%
 }
 
-\def\grecoloredlines#1{%
+
+\def\gresetlinecolor#1{%
   \gre@changestyle{normalstafflines}{\color[named]{#1}}[\relax]%
-  \relax %
+}
+
+
+\def\grecoloredlines#1#2#3{%
+  \gre@warning{\protect\grecoloredlines\space is deprecated.\MessageBreak Use \protect\gresetlinecolor\space instead.}%
+  \gre@changestyle{normalstafflines}{\color[RGB]{#1,#2,#3}}%
 }
 
 \def\greredlines{%
-  \grecoloredlines{gregoriocolor}%
+  \gre@warning{\protect\greredlines\space is deprecated.\MessageBreak Use \protect\gresetlinecolor{gregoriocolor}\space instead.}%
+  \gresetlinecolor{gregoriocolor}%
   \relax %
 }
 
 \let\redlines\greredlines
 
 \def\grenormallines{%
-  \gre@changestyle{normalstafflines}{\relax}[\relax]%
+  \gre@warning{\protect\grenormallines\space is deprecated.\MessageBreak Use \protect\gresetlinecolor{black}\space instead.}%
+  \gresetlinecolor{black}%
   \relax %
 }
 

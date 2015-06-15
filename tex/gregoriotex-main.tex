@@ -149,7 +149,7 @@
 \def\gre@pitch@p{18}%
 
 % factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
-% at the beginning it is set to 0, but if it is still 0 when begingregorianscore is called, it is set to the default value : 17 (the value that makes it look like a standard graduale)
+% it is set to the default value : 17 (the value that makes it look like a standard graduale)
 \newcount\grefactor%
 \grefactor=17%
 
@@ -196,7 +196,7 @@
 
 % the macro we call each time we force a changing of line, it automatically sets \greknownline, and adjusts left spaces
 \def\grenewlinecommon#1#2#3#4#5{%
-  \ifnum\greblockcusto=1\relax\ifnum\greinsidediscretionary=0\relax %
+  \ifgre@blockeolcustos\ifnum\greinsidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
   % sometimes we need to add a space before ending the line:
@@ -466,7 +466,20 @@
 %% macros for the score reference (unused)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\GreScoreReference#1{}%
+\def\grescorereference#1{%
+  \relax
+}%
+
+\def\GreScoreReference#1{
+  \gre@warning{\protect\GreScoreReference\space is deprecated.\MessageBreak Use \protect\grescorereference\space instead}%
+  \grescorereference{#1}%
+}%
+
+\def\scorereference#1{%
+  \gre@warning{\protect\scorereference\space is deprecated.\MessageBreak Use \protect\grescorereference\space instead}%
+  \grescorereference{#1}%
+}%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting the things above the initial
@@ -513,10 +526,6 @@
   \relax%
 }%
 
-\def\scorereference#1{%
-  \relax%
-}%
-
 %% macro that draws the lines : starts by the first and then draws the lines of every line.
 %% has to be called before drawing the key, after drawing the initial
 \def\GreBeginNotes{%
@@ -528,9 +537,14 @@
   \relax %
 }%
 
-\def\commentary#1{%
+\def\grecommentary#1{%
   \vbox{\hfill\hbox{#1}}%
   \relax %
+}
+
+\def\commentary#1{%
+  \gre@warning{\protect\commentary\space is deprecated.\MessageBreak Use \protect\grecommentary\space instead.}
+  \grecommentary{#1}
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -599,16 +613,26 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% first a macro to prevent the typesetting of the lines (useful for some people)
-\xdef\greremovelinescount{0}%
+\newif\ifgre@showlines%
+\gre@showlinestrue
+
+\def\gresetlines#1{%
+  \IfStrEq{#1}{visible}%
+    {\gre@showlinestrue}%
+    {\IfStrEq{#1}{invisible}%
+      {\gre@showlinesfalse}%
+      {\greerror{Unrecognized option for \protect\gresetlines}}%
+    }%
+}
 
 \def\greremovelines{%
-  \xdef\greremovelinescount{1}%
-  \relax %
+  \gre@warning{\protect\greremovelines\space is deprecated.\MessageBreak Use \protect\gresetlines{invisible} instead}
+  \gresetlines{invisible}
 }%
 
 \def\gredonotremovelines{%
-  \xdef\greremovelinescount{0}%
-  \relax %
+  \gre@warning{\protect\gredonotremovelines\space is deprecated.\MessageBreak Use \protect\gresetlines{visible} instead}
+  \gresetlines{visible}
 }%
 
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
@@ -622,28 +646,28 @@
       \grenormalstafflinesformat %
       \vskip\gre@dimen@currentabovelinestextheight %
       \vskip\gre@dimen@additionaltopspace %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
       \fi %
       \gre@skip@temp@four = \gre@dimen@interstafflinespace%
       \kern\gre@skip@temp@four %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
       \fi %
       \gre@skip@temp@four = \gre@dimen@interstafflinespace%
       \kern\gre@skip@temp@four %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
       \fi %
       \gre@skip@temp@four = \gre@dimen@interstafflinespace%
       \kern\gre@skip@temp@four %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
@@ -671,28 +695,28 @@
       \grenormalstafflinesformat %
       \vskip\gre@skip@spaceabovelines %
       \vskip\gre@dimen@currentabovelinestextheight %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
       \fi %
       \gre@skip@temp@four = \gre@dimen@interstafflinespace%
       \kern\gre@skip@temp@four %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
       \fi %
       \gre@skip@temp@four = \gre@dimen@interstafflinespace%
       \kern\gre@skip@temp@four %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
       \fi %
       \gre@skip@temp@four = \gre@dimen@interstafflinespace%
       \kern\gre@skip@temp@four %
-      \ifnum\greremovelinescount=0\relax %
+      \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
       \else %
         \vskip\gre@dimen@stafflineheight %
@@ -761,22 +785,51 @@
 %% macros for the translations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\xdef\gretranslationcenteringscheme{0}%
+\newif\ifgre@translationcentering
+\gre@translationcenteringfalse
 
-\def\setgretranslationcenteringscheme#1{%
-  \xdef\gretranslationcenteringscheme{\number #1}%
+\def\gresettranslationcentering#1{%
+  \IfStrEq{#1}{left}%
+    {\gre@translationcenteringfalse}%
+    {\IfStrEq{#1}{center}%
+      {\gre@translationcenteringtrue}%
+      {\greerror{Unrecognized option for \protect\gresettranslationcentering}}%
+    }%
 }%
 
-\xdef\grenlbintranslation{0}%
+\def\setgretranslationcenteringscheme#1{%
+  \gre@warning{\protect\setgretranslationcenteringscheme\space is deprecated.\MessageBreak Use \protect\gresettranslationcentering\space instead}%
+  \ifnum#1=0\relax%
+    \gresettranslationcentering{left}%
+  \else%
+    \gresettranslationcentering{center}%
+  \fi
+}%
+
+
+\newif\ifgre@breakintranslation%
+\gre@breakintranslationfalse%
+
+\def\gresetbreakintranslation#1{%
+  \IfStrEq{#1}{allow}%
+    {\gre@breakintranslationtrue}%
+    {\IfStrEq{#1}{prohibit}%
+      {\gre@breakintranslationfalse}%
+      {\greerror{Unrecognized option in \protect\gresetbreakintranslation}}%
+    }%
+}%
 
 \def\gresetnlbintranslation#1{%
-  \xdef\grenlbintranslation{\number #1}%
+  \gre@warning{\protect\gresetnlbintranslation\space is deprecated.\MessageBreak Use \protect\gresetbreakintranslation\space instead}%
+  \ifnum#1=0\relax%
+    \gresetbreakintranslation{allow}%
+  \else%
+    \gresetbreakintranslation{prohibit}%
+  \fi%
 }%
 
 \def\GreWriteTranslation#1{%
-  \ifnum\gretranslationcenteringscheme=0\relax %
-    \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation\gretranslationformat{#1}\endgre@style@translation\hss}}}%
-  \else %
+  \ifgre@translationcentering %
     \gre@dimen@temp@five=\wd\gre@box@syllabletext %
     \setbox\gre@box@temp@width=\hbox{#1}%
     \advance\gre@dimen@temp@five by -\wd\gre@box@temp@width %
@@ -784,11 +837,13 @@
     \kern\gre@dimen@temp@five %
     \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation\gretranslationformat{#1}\endgre@style@translation\hss}}}%
     \kern-\gre@dimen@temp@five %
+  \else %
+    \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation\gretranslationformat{#1}\endgre@style@translation\hss}}}%
   \fi %
 }%
 
 \def\GreWriteTranslationWithCenterBeginning#1{%
-  \ifnum\grenlbintranslation=1\relax %
+  \ifgre@breakintranslation\else%
     \GreBeginNLBArea{0}{1}%
   \fi %
   \gregoriocenterattr=1\relax %
@@ -805,7 +860,7 @@
 }%
 
 \def\gredotranslationcenterend{%
-  \ifnum\grenlbintranslation=1\relax %
+  \ifgre@breakintranslation\else%
     \GreEndNLBArea{0}{1}%
   \fi %
   \gregoriocenterattr=2\relax %
@@ -822,16 +877,22 @@
 \newif\ifgre@justifylastline%
 \gre@justifylastlinefalse%
 
-\def\grejustifiedlastline{\gre@justifylastlinetrue\relax}%
-\def\greraggedlastline{\gre@justifylastlinefalse\relax}%
+\def\gresetlastline#1{%
+  \IfStrEq{#1}{justified}%
+    {\gre@justifylastlinetrue}%
+    {\IfStrEq{#1}{ragged}%
+      {\gre@justifylastlinefalse}%
+      {\greerror{Unrecognized option for \protect\gresetlastline}}%
+    }%
+}%
 
 % gregorioattr (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
-\newcount\gre@save@englishcentering% DEPRECATED
+\newif\ifgre@save@englishcentering% DEPRECATED
 
 %macro called at the beginning of a score
 \def\GreBeginScore{%
-  \global\gre@save@englishcentering=\gre@englishcentering\relax % DEPRECATED
+  \global\let\ifgre@save@englishcentering\ifgre@vowelcentering\relax % DEPRECATED
   \ifgre@justifylastline%
     \xdef\gre@save@parfillskip{\the\parfillskip}
     \parfillskip=0pt plus 0pt minus 0pt\relax%
@@ -859,7 +920,7 @@
 %macro called at the end of a score
 \def\GreEndScore{%
   \global\grelastoflinecount=0\relax %
-  \global\greblockcusto=0\relax %
+  \global\greseteolcustos{auto}%
   \GreEndEUOUAE{}%
   \ifnum\grenlbstate=0\else %
     \GreEndNLBArea{2}{0}%
@@ -897,7 +958,7 @@
   \ifgre@justifylastline%
     \parfillskip=\gre@save@parfillskip\relax%
   \fi %
-  \global\gre@englishcentering=\gre@save@englishcentering\relax % DEPRECATED
+  \global\let\ifgre@vowelcentering\ifgre@save@englishcentering\relax % DEPRECATED
   \relax%
 }%
 
@@ -948,7 +1009,7 @@
   %\grelocalleftbox{}% For an unknown reason, if I uncomment this line, the
   %blank line removing algorithm (in lua) will let some blank space after the
   %last line... (see bug #20953)
-  \greblockcustos %
+  \greseteolcustos{manual}%
   \global\grelastoflinecount=1\relax%
   \relax%
 }%
@@ -958,22 +1019,45 @@
 % default state is for them to be enabled
 \gre@eolshiftsenabledtrue
 
+\def\greseteolshifts#1{%
+  \IfStrEq{#1}{enable}%
+    {\gre@eolshiftsenabledtrue}%
+    {\IfStrEq{#1}{disable}%
+      {\gre@eolshiftsenabledfalse}%
+      {\greerror{Unrecognized option in \protect\greseteolshifts}}%
+    }%
+}%
+
 \def\gredisableeolshifts{%
+  \gre@warning{\protect\gredisableeolshifts\space is deprecated.\MessageBreak Use \protect\greseteolshifts{disable}\space instead}%
   \gre@eolshiftsenabledfalse%
 }%
 
 \def\greenableeolshifts{%
+  \gre@warning{\protect\greenableeolshifts\space is deprecated.\MessageBreak Use \protect\greseteolshifts{enable}\space instead}%
   \gre@eolshiftsenabledtrue%
 }%
 
-% a count that is 1 if we block the custo, and 0 if we don't. We just block custos at the end of a score, to prevent a bug.
-\newcount\greblockcusto%
+% a count that is 1 if we block the custos, and 0 if we don't. We just block custos at the end of a score, to prevent a bug.
+\newif\ifgre@blockeolcustos%
+\gre@blockeolcustosfalse%
+
+\def\greseteolcustos#1{%
+  \IfStrEq{#1}{manual}%
+    {%
+      \gre@blockeolcustostrue%
+      \grelocalrightbox{}%
+    }%
+    {\IfStrEq{#1}{auto}%
+      {\gre@blockeolcustosfalse}%
+      {\greerror{Unrecognized option for \protect\greseteolcustos}}%
+    }%
+}%
 
 % macro to suppress the custos
 \def\greblockcustos{%
-  \global\greblockcusto=1\relax %
-  \grelocalrightbox{}%
-  \relax %
+  \gre@warning{\protect\greblockcustos\space is deprecated.\MessageBreak Use \protect\greseteolcustos{manual}\space instead}%
+  \greseteolcusots{manual}%
 }%
 
 % macro to end elements, #1 is the type of space, it can be : 
@@ -1064,7 +1148,7 @@
 
 % The different states of line break areas:
 % 0: not currently in a no line break area
-% 1: no line break area due tu translation centering
+% 1: no line break area due to translation centering
 % 2: no line break area due to <nlba> tag
 \xdef\grenlbstate{0}%
 
@@ -1141,13 +1225,15 @@
 \newif\ifgre@euouae@implies@nlba
 \gre@euouae@implies@nlbatrue
 
-\def\grenobreakineuouae{%
-  \gre@euouae@implies@nlbatrue %
-}
-
-\def\greallowbreakineuouae{%
-  \gre@euouae@implies@nlbafalse %
-}
+\def\gresetbreakineuouae#1{%
+  \IfStrEq{#1}{allow}%
+    {\gre@euouae@implies@nlbafalse}%
+    {\IfStrEq{#1}{prohibit}%
+      {\gre@euouae@implies@nlbatrue}%
+      {\greerror{Unrecognized option in \protect\gresetbreakineuouae}}%
+    }%
+}%
+      
 
 \newif\ifgre@in@euouae
 \gre@in@euouaefalse
@@ -1239,19 +1325,24 @@
 % because the mechanism for the defining the formats differs under LaTeX and PlainTeX the underlying function which does the work is defined in gregoriotex.sty or gregoriotex.tex respectively.
 
 
-%%%%%%%%%%%%%%%
-%% Staff size
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%
+%% changing staff size
+%%%%%%%%%%%%%%%%%%%
 
-\def\setgrefactor#1{%
+\def\grechangestaffsize#1{%
   \ifnum#1<0\relax%
-    \greerror{\protect\grefactor\space must be a positive integer.}%
+    \greerror{Staff size must be a positive integer.}%
   \else%
     \gre@changedimenfactor{\grefactor}{#1}%
     \global\grefactor=#1\relax %
   \fi%
   \gre@loadgregoriofont%
   \relax %
+}%
+
+\def\setgrefactor#1{%
+  \gre@warning{\protect\setgrefactor\space is deprecated.\MessageBreak Use \protect\grechangestaffsize\space instead.}%
+  \grechangestaffsize{#1}%
 }%
 
 %%%%%%%%%%%%%%%%%%%
@@ -1264,25 +1355,40 @@
 % 2 = compile all scores
 \def\gre@compilegabc{0}
 
+% User macro to change compilation behavior
+\def\gresetcompilegabc#1{%
+  \IfStrEq{#1}{force}{\gdef\gre@compilegabc{2}}{%
+    \IfStrEq{#1}{auto}{\gdef\gre@compilegabc{1}}{%
+      \IfStrEq{#1}{never}{\gdef\gre@compilegabc{0}}{%
+        \greerror{Unrecognized argument for \protect\gresetcompilegabc.}%
+      }%
+    }%
+  }%
+}%
+
+
 % User macro to force gregriotex to recompile gabc files. Useful for when there
 % are changes to gregoriotex but the GREGORIOTEX API VERSION is not changed.
 \def\forcecompilegabc{%
-  \gdef\gre@compilegabc{2}%
+  \gre@warning{\protect\forcecompilegabc\space is deprecated.\MessageBreak Use \protect\gresetcompilegabc{force}\space instead}%
+  \gresetcompilegabc{force}
 }%
 
 % User macro to let gregoriotex auto recompile gabc files as necessary.
 % Intended to be used in the main tex file to revert the previous macro.
 \def\autocompilegabc{%
-  \gdef\gre@compilegabc{1}
+  \gre@warning{\protect\autocompilegabc\space is deprecated.\MessageBreak Use \protect\gresetcompilegabc{auto}\space instead}%
+  \gresetcompilegabc{auto}
 }%
 
 % User macro to force score inclusion without compilation.
 \def\nevercompilegabc{%
-  \gdef\gre@compilegabc{0}
+  \gre@warning{\protect\nevercompilegabc\space is deprecated.\MessageBreak Use \protect\gresetcompilegabc{never}\space instead}%
+  \gresetcompilegabc{never}
 }
 
 
-% Internal marco which includes a score when \includescore is called without the optional argument.  Behavior is determined by the value of \gre@compilegabc flag.
+% Internal marco which includes a score when \gregorioscore is called without the optional argument.  Behavior is determined by the value of \gre@compilegabc flag.
 %
 % If \gre@compilegabc is 0, then we simply try to include the file as it is given to us.  This is the old behavior.
 %
@@ -1295,7 +1401,7 @@
 % If \gre@compilegabc is 2, pass true to the lua function.
 % This forces gregoriotex to recompile the gabc file.
 
-\def\gre@includescore#1{%
+\def\gre@gregorioscore#1{%
   \ifcase\gre@compilegabc% case 0, never compile
     \gre@debugmsg{compile}{Refusing to compile #1}%
     \input #1%
@@ -1310,30 +1416,26 @@
 }%
 
 \def\includetexscore#1{%
-  \gre@warning{\protect\includetexscore\space is deprecated. \MessageBreak Use \protect\includescore[n]\space instead.}%
-  \gre@includescorewithoption[n]{#1}%
+  \gre@warning{\protect\includetexscore\space is obsolete. \MessageBreak Use \protect\gregorioscore[n]\space instead}%
 }%
 
 \def\greincludetexscore#1{%
-  \gre@warning{\protect\greincludetexscore\space is deprecated.\MessageBreak Use \protect\includescore[n]\space instead.}%
-  \gre@includescorewithoption[n]{#1}%
+  \gre@warning{\protect\greincludetexscore\space is obsolete.\MessageBreak Use \protect\gregorioscore[n]\space instead}%
 }%
 
 \def\includegabcscore#1{%
-  \gre@warning{\protect\includegabcscore\space is deprecated.\MessageBreak Use \protect\includescore[c]\space instead.}%
-  \gre@includescorewithoption[c]{#1}%
+  \gre@warning{\protect\includegabcscore\space is obsolete.\MessageBreak Use \protect\gregorioscore[c]\space instead}%
 }%
 
 \def\greincludegabcscore#1{%
-  \gre@warning{\protect\greincludegabcscore\space is deprecated.\MessageBreak Use \protect\includescore[c]\space instead.}%
-  \gre@includescorewithoption[c]{#1}%
+  \gre@warning{\protect\greincludegabcscore\space is obsolete.\MessageBreak Use \protect\gregorioscore[c]\space instead}%
 }%
 
-% The internal macro called when \includescore is called with the optional argument.  Behavior is determined by the value of the argument:
+% The internal macro called when \gregorioscore is called with the optional argument.  Behavior is determined by the value of the argument:
 % n - do not attempt to compile the score.  Simply include it as is.
 % a - perform the checks to see if the score needs to be recompiled and do so only if necessary
 % f - force the compilation of the score before including it
-\def\gre@includescorewithoption[#1]#2{%
+\def\gre@gregorioscore@option[#1]#2{%
   \ifx #1n\relax%
     \gre@debugmsg{compile}{Override not compiling #2}%
     \input #2%
@@ -1355,21 +1457,27 @@
 
 % The main macro used by the user to input scores into the document.
 
-\def\includescore{\@ifnextchar[{\gre@includescorewithoption}%
-    {\gre@includescore}%
+\def\includescore{%
+  \gre@warning{\protect\includescore\space is deprecated.\MessageBreak Use \protect\gregorioscore\space instead}%
+  \gregorioscore
 }%
 
-% If called without the optional argument: '\includescore{Antiphon}'
+
+\def\gregorioscore{\@ifnextchar[{\gre@gregorioscore@option}%
+    {\gre@gregorioscore}%
+}%
+
+% If called without the optional argument: '\gregorioscore{Antiphon}'
 % the filename will be passed to the lua function 'include_score'
 % which will check: whether the gtex file exists, if the API version
 % of the gtex file, or if the gabc file is newer than the gtex
 % file. If one of these tests fails, the gabc file will be
 % (re)compiled.
 % The argument may or may not include a file extension. These are all valid:
-% '\includescore{Antiphon}' or '\includescore{Antiphon.gabc}' or
-% '\includescore{Antiphon.gtex}'
+% '\gregorioscore{Antiphon}' or '\gregorioscore{Antiphon.gabc}' or
+% '\gregorioscore{Antiphon.gtex}'
 
-% If called with the optional argument: '\includescore[f]{Antiphon.gtex}'
+% If called with the optional argument: '\gregorioscore[f]{Antiphon.gtex}'
 % the gtex file will be forced into the document and will not be
 % checked by the lua function 'include_score'. This does not bypass
 % the API version test done by '\GregorioTeXAPIVersion'.
@@ -1407,34 +1515,35 @@
 % the definition that will be always used for end of lines hyphens in gregorio, except if one of the two before is explicitely used
 \let\GreHyph\grenormalhyph %
 
-% two macros to change the definition of the hyphen:
-\def\greusenormalhyphen{%
-  \global\let\GreHyph\grenormalhyph %
+% macro to change the definition of the hyphen:
+\def\greseteolhyphen#1{%
+  \IfStrEq{#1}{normal}%
+    {\global\let\GreHyph\grenormalhyph}%
+    {\IfStrEq{#1}{zero}%
+      {\global\let\GreHyph\GreZeroHyph}%
+      {\greerror{Unrecognized option for \protect\greseteolhyphen}}%
+    }%
 }%
 
 \def\GreUseNormalHyphen{%
-  \gre@warning{\protect\GreUseNormalHyphen\space is deprecated.\MessageBreak Use \protect\greusenormalhyphen\space instead.}%
-  \greusenormalhyphen%
-}%
-
-\def\greusezerohyphen{%
-  \global\let\GreHyph\GreZeroHyph %
+  \gre@warning{\protect\GreUseNormalHyphen\space is deprecated.\MessageBreak Use \protect\greseteolhyphen{normal}\space instead.}%
+  \greseteolhyphen{normal}%
 }%
 
 \def\GreUseZeroHyphen{%
-  \gre@warning{\protect\GreUseZeroHyphen\space is deprecated.\MessageBreak Use \protect\greusezerohyphen\space instead.}%
-  \greusezerohyphen%
+  \gre@warning{\protect\GreUseZeroHyphen\space is deprecated.\MessageBreak Use \protect\greseteolhyphen{zero}\space instead.}%
+  \greseteolhyphen{zero}%
 }%
 
 % macro to force hyphenation of all syllables.
-\def\greforcehyphen{
-  \global\grechangedim{maximumspacewithoutdash}{-16383.99999pt}{0}
-}
-
-% macro to revert to hyphenation based on space
-\def\greautohyphen{
-  \global\grechangedim{maximumspacewithoutdash}{0.02 cm}{1}
-}
+\def\gresethyphen#1{%
+  \IfStrEq{#1}{force}%
+    {\global\grechangedim{maximumspacewithoutdash}{-16383.99999pt}{0}}%
+    {\IfStrEq{#1}{auto}%
+      {\global\grechangedim{maximumspacewithoutdash}{0.02 cm}{1}}%
+      {\greerror{Unrecognized option in \protect\gresethyphen}}%
+    }%
+}%
 
 % We load the default space configuration.
 \greloadspaceconf{default}%
