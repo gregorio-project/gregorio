@@ -222,7 +222,7 @@
 % of the flat
 \def\GreChangeClef#1#2#3#4{%
   % it makes no sense to change the clef when there is no clef...
-  \grenormalclef %
+  \gresetclef{visible}%
   \grecalculateclefnum{#1}{#2}{#4}%
   \ifnum\greinsidediscretionary=0\relax %
     \GreSetLinesClef{#1}{#2}{1}{#4}%
@@ -242,9 +242,10 @@
 }%
 
 % macro called when the key changes inside a syllable
+% doesn't seem to be used; was some code lost somewhere?
 
 \def\greinchangeclef#1#2#3{%
-  \grenormalclef %
+  \gresetclef{visible}%
   % to see why we reset \grelastoflinecount, see comments of \GreGlyph.
   \ifnum\grelastoflinecount=2\relax %
     \global\grelastoflinecount=0\relax %
