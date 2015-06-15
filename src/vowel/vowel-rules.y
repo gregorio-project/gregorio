@@ -60,6 +60,7 @@ static inline bool match_language(const char **language,
         rulefile_parse_status *status, char *const name)
 {
     if (*status == RFPS_FOUND) {
+        free(name);
         return true;
     }
 

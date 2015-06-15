@@ -32,6 +32,7 @@ typedef enum rulefile_parse_status {
 
 int gregorio_vowel_rulefile_parse(const char *filename, const char **language,
         rulefile_parse_status *status);
+int gregorio_vowel_rulefile_lex_destroy(void);
 void gregorio_vowel_tables_init(void);
 void gregorio_vowel_tables_load(const char *filename, const char **language,
         rulefile_parse_status *status);

@@ -30,6 +30,7 @@
 #include "plugins.h"
 #include "messages.h"
 #include "characters.h"
+#include "gabc/gabc.h"
 #include "vowel/vowel.h"
 #ifdef USE_KPSE
     #include <kpathsea/kpathsea.h>
@@ -456,8 +457,10 @@ int main(int argc, char **argv)
                     exit(-1);
                 }
             }
-            free(output_basename);
         }
+    }
+    if (output_basename) {
+        free(output_basename);
     }
 
     if (!output_file) {
@@ -549,6 +552,9 @@ int main(int argc, char **argv)
     fclose(output_file);
     gregorio_free_score(score);
     gregorio_vowel_tables_free();
+    gabc_score_determination_lex_destroy();
+    gabc_notes_determination_lex_destroy();
+    gregorio_vowel_rulefile_lex_destroy();
 
     exit(gregorio_get_return_value());
 }

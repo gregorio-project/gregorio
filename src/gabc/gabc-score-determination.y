@@ -483,6 +483,7 @@ static void gregorio_gabc_add_text(char *mbcharacters)
     while (current_character && current_character->next_character) {
         current_character = current_character->next_character;
     }
+    free(mbcharacters);
 }
 
 /*
