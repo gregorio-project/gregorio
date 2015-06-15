@@ -136,7 +136,7 @@ class Version(object):
         self.short_tag = subprocess.check_output(
             ['git', 'rev-parse', '--short', 'HEAD'])
         self.short_tag = self.short_tag.strip('\n')
-        self.date = time.strftime("%Y%m%d")
+        self.date = time.strftime("%Y%m%d%H%M%S")
         print("{0}+git{1}+{2}".format(self.version.replace('-', '~'),
                                       self.date, self.short_tag))
         sys.exit(0)
