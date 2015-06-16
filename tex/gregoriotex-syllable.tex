@@ -407,12 +407,12 @@
 \gre@vowelcenteringtrue
 
 \def\englishcentering{%
-  \gre@warning{\protect\englishcentering\space is deprecated.\MessageBreak Use \protect\gresetlyriccentering{syllable} instead}%
+  \gre@deprecated{\protect\englishcentering}{\protect\gresetlyriccentering{syllable}}%
   \gresetlyriccentering{syllable}%
 }%
 
 \def\defaultcentering{%
-  \gre@warning{\protect\defaultcentering\space is deprecated.\MessageBreak Use \protect\gresetlyriccentering{vowel} instead}%
+  \gre@deprecated{\protect\defaultcentering}{\protect\gresetlyriccentering{vowel} }%
   \gresetlyriccentering{vowel}%
 }%
 

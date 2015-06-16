@@ -32,6 +32,18 @@
 \def\gre@warning#1{\PackageWarning{GregorioTeX}{#1}}%
 \def\gre@bug#1{\PackageError{GregorioTeX}{#1 !! This is a bug in Gregorio.  Please report it at https://github.com/gregorio-project/gregorio/issues}{}}%
 
+% Macro to handle deprecated macros.
+% #1 - the deprecated macro
+% #2 - the correct macro to use
+\def\gre@deprecated#1#2{%
+  \ifgre@deprecated%
+    \gre@warning{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+  \else%
+    \greerror{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+  \fi%
+  \relax%
+}%
+
 \SetupKeyvalOptions{prefix=gre@}
 \DeclareStringOption{debug}[all]
 
@@ -45,6 +57,14 @@
 \DeclareVoidOption{autocompile}{\gresetcompilegabc{auto}}
 
 \ExecuteOptions{nevercompile}
+
+% This option allows the user to transform all deprecation messages
+% into errors.  Allowing one to determine if the TeX file is compliant
+% with future versions of gregoriotex. To enable, use gregoriotex with
+% this option: deprecated=false
+\DeclareBoolOption[true]{deprecated}
+
+
 \ProcessKeyvalOptions*
 
 % we hide lines only under LaTeX

@@ -203,7 +203,7 @@
 }%
 
 \def\setstafflinethickness{%
-  \gre@warning{\protect\setstafflinethickness\space is deprecated.\MessageBreak Use \protect\grechangestafflinethickness\space instead.}%
+  \gre@deprecated{\protect\setstafflinethickness}{\protect\grechangestafflinethickness}%
   \grechangestafflinethickness%
 }%
 
@@ -879,7 +879,7 @@
 }%
 
 \def\gresetdim{%
-  \gre@warning{\protect\gresetdim\space is deprecated.\MessageBreak Use \protect\grecreatedim\space instead}%
+  \gre@deprecated{\protect\gresetdim}{\protect\grecreatedim}%
   \grecreatedim%
 }%
 
@@ -916,7 +916,7 @@
 }
 
 \def\grenoscaledim#1{%
-  \gre@warning{\protect\grenoscaledim\space is deprecated.\MessageBreak Use \protect\grescaledim{...}{no} instead.}%
+  \gre@deprecated{\protect\grenoscaledim}{\protect\grescaledim{...}{no}}%
   \expandafter\gdef\csname gre@scale@#1\endcsname{0}%
 }%
 
@@ -925,7 +925,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\GreLoadSpaceConf#1{%
-  \gre@warning{\protect\GreLoadSpaceConf\space is deprecated.\MessageBreak Use \protect\greloadspaceconf\space instead.}%
+  \gre@deprecated{\protect\GreLoadSpaceConf}{\protect\greloadspaceconf}%
   \greloadspaceconf{#1}%
 }%
 
@@ -1305,7 +1305,7 @@
 % To change the spacing between annotations.
 %First argument is distance, second is whether it should scale when \grefactor changes.
 \def\setaboveinitialseparation#1#2{%
-  \gre@warning{\protect\setaboveinitialseparation\space is deprecated.\MessageBreak Use \protect\grechangedim\{annotationseparation\}\space instead.}%
+  \gre@deprecated{\protect\setaboveinitialseparation}{\protect\grechangedim\{annotationseparation\}}%
   \grechangedim{annotationseparation}{#1}{#2}%
   \relax %
 }%
@@ -1326,7 +1326,7 @@
 \fi%
 
 \def\GreSetSpaceAfterInitial#1{%
-  \gre@warning{\protect\GreSetSpaceAfterInitial\space is deprecated.\MessageBreak Use \protect\setspaceafteriniital\space instead.}%
+  \gre@deprecated{\protect\GreSetSpaceAfterInitial}{\protect\setspaceafteriniital}%
   \setspaceafterinitial#1{1}%
 }%
 
@@ -1342,7 +1342,7 @@
 \fi%
 
 \def\GreSetSpaceBeforeInitial#1{%
-  \gre@warning{\protect\GreSetSpaceBeforeInitial\space is deprecated.\MessageBreak Use \protect\setspacebeforeiniital\space instead.}%
+  \gre@deprecated{\protect\GreSetSpaceBeforeInitial}{\protect\setspacebeforeiniital}%
   \setspacebeforeinitial#1{1}%
 }%
 
