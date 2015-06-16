@@ -7,9 +7,11 @@ This file contains instructions to upgrade to a new release of Gregorio.
 
 A naming scheme for GregorioTeX commands has been established and so most commands have had their names changed in order to bring them into line with the new scheme.  Some have also had their syntax changed.  Breifly, user commands all now have a `\gre` prefix (to prevent name colisions with other packages) and groups of commands which altered a single setting have been replaced by a single command which takes an argument specifying the value of the setting.  The notable exception to this are the two main commands: `\gregorioscore` (replaces `\includescore`) and `\gabcsnippet`.  See GregorioRef for the complete list of new command names and their syntax.
 
-Old command names should still work for now, but will raise a deprecation warning.  Exceptions are noted below:
+Old command names should still work for now, but will raise a deprecation warning which indicates the name of the correct command to use. Exceptions are noted below:
 
 - `\grescaledim`: This function now takes two arguments.  The second should be `yes`, `true`, or `on` to acheive the old behavior.
+
+Additionally a new package option has been added. The option `deprecated=false` is helpful if you wish to ensure that your TeX file is compliant with the new naming system. This option causes all deprecated commands to raise an error, halting TeX, thus allowing you to actively find all deprecated commands and update them in your TeX file.
 
 ### Barred letters
 
