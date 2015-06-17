@@ -91,12 +91,12 @@
 
 
 \def\greremoveclef{%
-  \gre@warning{\protect\greremoveclef\space is deprecated.\MessageBreak Use \protect\gresetclef{invisible} instead}%
+  \gre@deprecated{\protect\greremoveclef}{\protect\gresetclef{invisible}}%
   \gresetclef{invisible}%
 }%
 
 \def\grenormalclef{%
-  \gre@warning{\protect\grenormalclef\space is deprecated.\MessageBreak Use \protect\gresetclef{visible} instead}%
+  \gre@deprecated{\protect\grenormalclef}{\protect\gresetclef{visible}}%
   \gresetclef{visible}%
 }%
 
@@ -1336,12 +1336,12 @@
 }%
 
 \def\GreHidePCLines{%
-  \gre@warning{\protect\GreHidePCLines\space is deprecated.\MessageBreak Use \protect\gresetlinesbehindpunctumcavum{invisible}\space instead}%
+  \gre@deprecated{\protect\GreHidePCLines}{\protect\gresetlinesbehindpunctumcavum{invisible}}%
   \gre@hidepclinestrue%
 }%
 
 \def\GreDontHidePCLines{%
-  \gre@warning{\protect\GreDontHidePCLines\space is deprecated.\MessageBreak Use \protect\gresetlinesbehindpunctumcavum{visible}\space instead}%
+  \gre@deprecated{\protect\GreDontHidePCLines}{\protect\gresetlinesbehindpunctumcavum{visible}}%
   \gre@hidepclinesfalse%
 }%
 
@@ -1361,12 +1361,12 @@
 }%
 
 \def\GreHideAltLines{%
-  \gre@warning{\protect\GreHideAltLines\space is deprecated.\MessageBreak Use \protect\gresetlinesbehindalteration{invisible}\space instead.}%
+  \gre@deprecated{\protect\GreHideAltLines}{\protect\gresetlinesbehindalteration{invisible}}%
   \gre@hidealtlinestrue%
 }%
 
 \def\GreDontHideAltLines{%
-  \gre@warning{\protect\GreDontHideAltLines\space is deprecated.\MessageBreak Use \protect\gresetlinesbehindalteration{visible}\space instead.}%
+  \gre@deprecated{\protect\GreDontHideAltLines}{\protect\gresetlinesbehindalteration{visible}}%
   \gre@hidealtlinesfalse%
 }%
 

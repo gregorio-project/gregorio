@@ -45,6 +45,13 @@
 \DeclareVoidOption{autocompile}{\gresetcompilegabc{auto}}
 
 \ExecuteOptions{nevercompile}
+
+% This option allows the user to transform all deprecation messages
+% into errors.  Allowing one to determine if the TeX file is compliant
+% with future versions of gregoriotex. To enable, use gregoriotex with
+% this option: deprecated=false
+\DeclareBoolOption[true]{deprecated}
+
 \ProcessKeyvalOptions*
 
 % we hide lines only under LaTeX

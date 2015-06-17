@@ -7,6 +7,32 @@ process the commands listed above.  They should not appear in any user
 document and are listed here for programmer documentation purposes
 only.
 
+\macroname{\textbackslash greerror}{\#1}{gregoriotex.sty}
+Prints an error to the \TeX\ output log.
+
+\begin{argtable}
+  \#1 & string & error message\\
+\end{argtable}
+
+
+\macroname{\textbackslash gre@warning}{\#1}{gregoriotex.sty}
+Prints a warning to the \TeX\ output log.
+
+\begin{argtable}
+  \#1 & string & warning message\\
+\end{argtable}
+
+\macroname{\textbackslash gre@deprecated}{\#1\#2}{gregoriotex.sty}
+Macro that handles deprecated macros. By default, deprecated macros
+are allowed and a warning is printed. If the package option
+\texttt{deprecated=false} is set, then deprecated macros raise a
+package error, halting \TeX.
+
+\begin{argtable}
+  \#1 & string & name of the deprecated macro\\
+  \#2 & string & name of the correct macro to use\\
+\end{argtable}
+
 \macroname{\textbackslash gre@loadgregoriofont}{}{gregoriotex-main.tex}
 Loads the chosen font for the neumes at the correct size.
 

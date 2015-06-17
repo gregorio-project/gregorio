@@ -48,6 +48,18 @@
     }%
 }%
 
+% Macro to handle deprecated macros.
+% #1 - the deprecated macro
+% #2 - the correct macro to use
+\def\gre@deprecated#1#2{%
+  \ifgre@deprecated%
+    \gre@warning{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+  \else%
+    \greerror{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+  \fi%
+  \relax%
+}%
+
 \def\gre@nothing{}
     
 \AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
@@ -444,19 +456,19 @@
 
 
 \def\gresetfirstlineaboveinitial#1#2{%
-  \gre@warning{\protect\gresetfirstlineaboveinitial\space is deprecated.\MessageBreak Use \protect\greannotation\space instead.}%
+  \gre@deprecated{\protect\gresetfirstlineaboveinitial}{\protect\greannotation}%
   \greannotation{#1}%
 }%
 
 \def\gresetfirstannotation#1{%
-  \gre@warning{\protect\gresetfirstannotation\space is deprecated.\MessageBreak Use \protect\greannotation\space instead.}%
+  \gre@deprecated{\protect\gresetfirstannotation}{\protect\greannotation}%
   \greannotation{#1}%
 }%
 
 \let\setfirstannotation\gresetfirstannotation%
 
 \def\gresetsecondannotation#1{%
-  \gre@warning{\protect\gresetsecondannotation\space is deprecated.\MessageBreak Use \protect\greannotation\space instead.}%
+  \gre@deprecated{\protect\gresetsecondannotation}{\protect\greannotation}%
   \greannotation{#1}%
 }%
 
@@ -471,12 +483,12 @@
 }%
 
 \def\GreScoreReference#1{
-  \gre@warning{\protect\GreScoreReference\space is deprecated.\MessageBreak Use \protect\grescorereference\space instead}%
+  \gre@deprecated{\protect\GreScoreReference}{\protect\grescorereference}%
   \grescorereference{#1}%
 }%
 
 \def\scorereference#1{%
-  \gre@warning{\protect\scorereference\space is deprecated.\MessageBreak Use \protect\grescorereference\space instead}%
+  \gre@deprecated{\protect\scorereference}{\protect\grescorereference}%
   \grescorereference{#1}%
 }%
 
@@ -543,8 +555,8 @@
 }
 
 \def\commentary#1{%
-  \gre@warning{\protect\commentary\space is deprecated.\MessageBreak Use \protect\grecommentary\space instead.}
-  \grecommentary{#1}
+  \gre@deprecated{\protect\commentary}{\protect\grecommentary}%
+  \grecommentary{#1}%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -626,13 +638,13 @@
 }
 
 \def\greremovelines{%
-  \gre@warning{\protect\greremovelines\space is deprecated.\MessageBreak Use \protect\gresetlines{invisible} instead}
-  \gresetlines{invisible}
+  \gre@deprecated{\protect\greremovelines}{\protect\gresetlines{invisible}}%
+  \gresetlines{invisible}%
 }%
 
 \def\gredonotremovelines{%
-  \gre@warning{\protect\gredonotremovelines\space is deprecated.\MessageBreak Use \protect\gresetlines{visible} instead}
-  \gresetlines{visible}
+  \gre@deprecated{\protect\gredonotremovelines}{\protect\gresetlines{visible}}%
+  \gresetlines{visible}%
 }%
 
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
@@ -798,7 +810,7 @@
 }%
 
 \def\setgretranslationcenteringscheme#1{%
-  \gre@warning{\protect\setgretranslationcenteringscheme\space is deprecated.\MessageBreak Use \protect\gresettranslationcentering\space instead}%
+  \gre@deprecated{\protect\setgretranslationcenteringscheme}{\protect\gresettranslationcentering}%
   \ifnum#1=0\relax%
     \gresettranslationcentering{left}%
   \else%
@@ -820,7 +832,7 @@
 }%
 
 \def\gresetnlbintranslation#1{%
-  \gre@warning{\protect\gresetnlbintranslation\space is deprecated.\MessageBreak Use \protect\gresetbreakintranslation\space instead}%
+  \gre@deprecated{\protect\gresetnlbintranslation}{\protect\gresetbreakintranslation}%
   \ifnum#1=0\relax%
     \gresetbreakintranslation{allow}%
   \else%
@@ -1029,12 +1041,12 @@
 }%
 
 \def\gredisableeolshifts{%
-  \gre@warning{\protect\gredisableeolshifts\space is deprecated.\MessageBreak Use \protect\greseteolshifts{disable}\space instead}%
+  \gre@deprecated{\protect\gredisableeolshifts}{\protect\greseteolshifts{disable}}%
   \gre@eolshiftsenabledfalse%
 }%
 
 \def\greenableeolshifts{%
-  \gre@warning{\protect\greenableeolshifts\space is deprecated.\MessageBreak Use \protect\greseteolshifts{enable}\space instead}%
+  \gre@deprecated{\protect\greenableeolshifts}{\protect\greseteolshifts{enable}}%
   \gre@eolshiftsenabledtrue%
 }%
 
@@ -1056,7 +1068,7 @@
 
 % macro to suppress the custos
 \def\greblockcustos{%
-  \gre@warning{\protect\greblockcustos\space is deprecated.\MessageBreak Use \protect\greseteolcustos{manual}\space instead}%
+  \gre@deprecated{\protect\greblockcustos}{\protect\greseteolcustos{manual}}%
   \greseteolcusots{manual}%
 }%
 
@@ -1305,7 +1317,7 @@
 }%
 
 \def\GreSetStaffLinesFormat#1{%
-  \gre@warning{\protect\GreSetStaffLinesFormat\space is deprecated.\MessageBreak Use \protect\grechangestyle{normalstafflines} instead.}%
+  \gre@deprecated{\protect\GreSetStaffLinesFormat}{\protect\grechangestyle{normalstafflines}}%
   \gre@changestyle{normalstafflines}{#1}[\relax]%
   \relax %
 }%
@@ -1341,7 +1353,7 @@
 }%
 
 \def\setgrefactor#1{%
-  \gre@warning{\protect\setgrefactor\space is deprecated.\MessageBreak Use \protect\grechangestaffsize\space instead.}%
+  \gre@deprecated{\protect\setgrefactor}{\protect\grechangestaffsize}%
   \grechangestaffsize{#1}%
 }%
 
@@ -1370,20 +1382,20 @@
 % User macro to force gregriotex to recompile gabc files. Useful for when there
 % are changes to gregoriotex but the GREGORIOTEX API VERSION is not changed.
 \def\forcecompilegabc{%
-  \gre@warning{\protect\forcecompilegabc\space is deprecated.\MessageBreak Use \protect\gresetcompilegabc{force}\space instead}%
+  \gre@deprecated{\protect\forcecompilegabc}{\protect\gresetcompilegabc{force}}%
   \gresetcompilegabc{force}
 }%
 
 % User macro to let gregoriotex auto recompile gabc files as necessary.
 % Intended to be used in the main tex file to revert the previous macro.
 \def\autocompilegabc{%
-  \gre@warning{\protect\autocompilegabc\space is deprecated.\MessageBreak Use \protect\gresetcompilegabc{auto}\space instead}%
+  \gre@deprecated{\protect\autocompilegabc}{\protect\gresetcompilegabc{auto}}%
   \gresetcompilegabc{auto}
 }%
 
 % User macro to force score inclusion without compilation.
 \def\nevercompilegabc{%
-  \gre@warning{\protect\nevercompilegabc\space is deprecated.\MessageBreak Use \protect\gresetcompilegabc{never}\space instead}%
+  \gre@deprecated{\protect\nevercompilegabc}{\protect\gresetcompilegabc{never}}%
   \gresetcompilegabc{never}
 }
 
@@ -1458,10 +1470,9 @@
 % The main macro used by the user to input scores into the document.
 
 \def\includescore{%
-  \gre@warning{\protect\includescore\space is deprecated.\MessageBreak Use \protect\gregorioscore\space instead}%
+  \gre@deprecated{\protect\includescore}{\protect\gregorioscore}%
   \gregorioscore
 }%
-
 
 \def\gregorioscore{\@ifnextchar[{\gre@gregorioscore@option}%
     {\gre@gregorioscore}%
@@ -1526,12 +1537,12 @@
 }%
 
 \def\GreUseNormalHyphen{%
-  \gre@warning{\protect\GreUseNormalHyphen\space is deprecated.\MessageBreak Use \protect\greseteolhyphen{normal}\space instead.}%
+  \gre@deprecated{\protect\GreUseNormalHyphen}{\protect\greseteolhyphen{normal}}%
   \greseteolhyphen{normal}%
 }%
 
 \def\GreUseZeroHyphen{%
-  \gre@warning{\protect\GreUseZeroHyphen\space is deprecated.\MessageBreak Use \protect\greseteolhyphen{zero}\space instead.}%
+  \gre@deprecated{\protect\GreUseZeroHyphen}{\protect\greseteolhyphen{zero}}%
   \greseteolhyphen{zero}%
 }%
 
