@@ -1327,11 +1327,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grechangestyle#1#2{%
-  \@ifnextchar[%
-    \gre@changestyle{#1}{#2}%
-  \else%
-    \gre@changestyle{#1}{#2}[\relax]%
-  \fi%
+  \@ifnextchar[{\gre@changestyle{#1}{#2}}{\gre@changestyle{#1}{#2}[\relax]}%
 }%
 
 % because the mechanism for the defining the formats differs under LaTeX and PlainTeX the underlying function which does the work is defined in gregoriotex.sty or gregoriotex.tex respectively.
