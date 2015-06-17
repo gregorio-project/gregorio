@@ -25,6 +25,8 @@
 #include "struct.h"
 #include "messages.h"
 
+#include "vowel.h"
+
 #include "vowel-rules.h"
 #include "vowel-rules-y.h"
 
