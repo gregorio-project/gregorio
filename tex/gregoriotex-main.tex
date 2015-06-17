@@ -48,6 +48,18 @@
     }%
 }%
 
+% Macro to handle deprecated macros.
+% #1 - the deprecated macro
+% #2 - the correct macro to use
+\def\gre@deprecated#1#2{%
+  \ifgre@deprecated%
+    \gre@warning{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+  \else%
+    \greerror{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+  \fi%
+  \relax%
+}%
+
 \def\gre@nothing{}
     
 \AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
