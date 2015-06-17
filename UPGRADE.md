@@ -70,8 +70,9 @@ Changing the styling of text elements of the score (the initial, translations, e
 - `additionalstafflines`: the short lines behind notes above or below the staff.  This style defaults to inheriting changes to `normalstafflines`.
 - `lowchoralsign`: low choral signs
 - `highchoralsign`: high choral signs
+- `modeline`: the mode annotation above the initial if the content of the mode header is rendered.
 
-    The second argument, also required, is the code necessary to turn on the styling.  The third argument, optional and enclosed in square braces (`[` and `]`), is the code necessary to turn off the styling (e.g. if the code to turn on the styling contains a `\begin{environment}` then the code to turn it off must have the matching `\end{environment}`.  The third argument is optional because not all styling commands have explicit off switches.
+The second argument, also required, is the code necessary to turn on the styling.  The third argument, optional and enclosed in square braces (`[` and `]`), is the code necessary to turn off the styling (e.g. if the code to turn on the styling contains a `\begin{environment}` then the code to turn it off must have the matching `\end{environment}`.  The third argument is optional because not all styling commands have explicit off switches.
 
 While the old way of changing the styles is still supported, you should switch to this new method to future proof your scores.
 

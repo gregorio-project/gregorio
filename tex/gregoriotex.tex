@@ -213,6 +213,14 @@
 }%
 \def\endgre@style@firstsyllable{\endgroup}%
 
+\def\gre@style@modeline{%
+  \begingroup%
+  \bf%
+  \sc%
+  \relax%
+}%
+\def\endgre@style@modeline{\endgroup}%
+
 \def\gre@changestyle#1#2[#3]{%
   \gdef\csname gre@style@#1\endcsname{\begingroup#2}%
   \gdef\csname endgre@style@#1\endcsname{#3\endgroup}%

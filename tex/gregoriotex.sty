@@ -184,6 +184,10 @@
   {\begingroup}%
   {\endgroup}%
 
+\newenvironment{gre@style@modeline}%
+  {\begingroup\begin{scshape}\begin{bfseries}}%
+  {\end{bfseries}\end{scshape}\endgroup}%
+
 \def\gre@changestyle#1#2[#3]{%
   \renewenvironment{gre@style@#1}{\begingroup#2}{#3\endgroup}%
 }%

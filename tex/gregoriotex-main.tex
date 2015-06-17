@@ -498,7 +498,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\gre@writemode#1{%
-  \greannotation{\GreSmallCaps{\GreBold{#1}}}%
+  \greannotation{\gre@style@modeline #1\endgre@style@modeline}%
   \relax %
 }%
 
