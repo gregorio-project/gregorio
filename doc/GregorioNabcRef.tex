@@ -91,7 +91,7 @@
 {
 \setlength\parindent{0cm}
 
-The \texttt{nabc} language allows to describe some adiastematic neumes, for
+The \texttt{nabc} language provides the ability to describe some adiastematic neumes, for
 now just the St. Gallen style.  The language is partially based on Dom
 Eugène Cardine's Table of neumatic signs, but for more complex neumes
 doesn't always match how the neumes are called; instead attempts to make it
@@ -106,12 +106,20 @@ nabc-lines: 1;
 \end{verbatim}
 
 The \texttt{nabc} snippets are then separated by \texttt{|} character from
-\texttt{gabc} snippets.  Every \texttt{gabc} snippet may be followed by
-up to \texttt{nabc-lines} \texttt{nabc} snippets, followed optionally
-again by \texttt{gabc} and so on.  A single \texttt{nabc} snippet is not
+\texttt{gabc} snippets or other \texttt{nabc} snippets.  Every \texttt{gabc}
+snippet may be followed by multiple \texttt{nabc} snippets.  The maximum
+number of consecutive \texttt{nabc} snippets is the number declared in the
+header field \texttt{nabc-lines: x;}.  After reaching that number of
+consecutive \texttt{nabc} snippets another \texttt{gabc} snippet followed
+by \texttt{nabc} snippets can follow.  A single \texttt{nabc} snippet is not
 split into multiple lines, so for larger melismatic pieces it is desirable
 to synchronize the \texttt{gabc} snippets with corresponding \texttt{nabc}
-snippets.
+snippets.  With \texttt{nabc-lines: 1;} the
+\texttt{gabc} and \texttt{nabc} snippets form an alternating pattern, like
+\texttt{(gabc|nabc|gabc|nabc|gabc)}, in this case the last \texttt{gabc}
+snippet does not have any corresponding \texttt{nabc} neumes.  With
+\texttt{nabc-lines: 2;} the snippets ordering could be e.g.
+\texttt{(gabc|nabc1|nabc2|gabc|nabc1)}.
 
 Each \texttt{nabc} snippet consists of a sequence of \textit{complex neume
 descriptors}.  Each \textit{complex neume descriptor} consists of
@@ -198,8 +206,8 @@ the pitch letter.  Within the \textit{complex glyph descriptor}, each
 \textit{basic glyph descriptor} has its own pitch, but in the current fonts
 there are no glyphs with different relative pitches, so if you use a
 \textit{pitch descriptor} on any of the \textit{basic glyph descriptor}s
-in the \textit{complex glyph descriptor}, better use the same one on all the other
-\textit{basic glyph descriptor}s in the same \textit{complex glyph descriptor}.
+in the \textit{complex glyph descriptor}, it is best to use the same one on all
+the other \textit{basic glyph descriptor}s in the same \textit{complex glyph descriptor}.
 
 The \textit{subpunctis and prepunctis descriptor} consists of the letters
 \texttt{su} for subpunctis or \texttt{pp} for prepunctis, followed
