@@ -87,6 +87,254 @@
 }
 
 {
+\setlength\parindent{0cm}
+
+The \texttt{nabc} language provides the ability to describe some adiastematic neumes, for
+now just the St. Gallen style.  The language is partially based on Dom
+Eugène Cardine's Table of neumatic signs, but for more complex neumes
+doesn't always match how the neumes are called; instead attempts to make it
+easier to compose complex neumes from basic glyphs.  To describe
+adiastematic neumes in \texttt{gabc}, the header should contain
+\texttt{nabc-lines: 1;} line, like:
+
+\begin{verbatim}
+nabc-lines: 1;
+(f3) AL(ef~|ta>)le(fg/hggf|peclhgpi)lú(ef~|ta>)ia.(f.|ta-) (,)
+(ii//|bv-|gh!ivHG//|vi-hhppu2su1sut1|fhg/|to|eef.|pt) (;)
+\end{verbatim}
+
+The \texttt{nabc} snippets are then separated by \texttt{|} character from
+\texttt{gabc} snippets or other \texttt{nabc} snippets.  Every \texttt{gabc}
+snippet may be followed by multiple \texttt{nabc} snippets.  The maximum
+number of consecutive \texttt{nabc} snippets is the number declared in the
+header field \texttt{nabc-lines: x;}.  After reaching that number of
+consecutive \texttt{nabc} snippets another \texttt{gabc} snippet followed
+by \texttt{nabc} snippets can follow.  A single \texttt{nabc} snippet is not
+split into multiple lines, so for larger melismatic pieces it is desirable
+to synchronize the \texttt{gabc} snippets with corresponding \texttt{nabc}
+snippets.  With \texttt{nabc-lines: 1;} the
+\texttt{gabc} and \texttt{nabc} snippets form an alternating pattern, like
+\texttt{(gabc|nabc|gabc|nabc|gabc)}, in this case the last \texttt{gabc}
+snippet does not have any corresponding \texttt{nabc} neumes.  With
+\texttt{nabc-lines: 2;} the snippets ordering could be e.g.
+\texttt{(gabc|nabc1|nabc2|gabc|nabc1)}.
+
+Each \texttt{nabc} snippet consists of a sequence of \textit{complex neume
+descriptors}.  Each \textit{complex neume descriptor} consists of
+optional \textit{horizontal spacing adjustment descriptor}, then \textit{complex glyph
+descriptor}, optionally followed by a sequence of \textit{subpunctis and prepunctis
+descriptor}s, optionally followed by a sequence of \textit{significant letter
+descriptor}s.
+
+The \textit{horizontal spacing adjustment descriptor}
+consists of a sequence of horizontal spacing adjustment characters
+\texttt{/} and \texttt{`}.
+\begin{itemize}
+  \item \texttt{//} move by \texttt{nabclargerspace} skip to the right
+  \item \texttt{/} move by \texttt{nabcinterelementspace} skip to the right
+  \item \texttt{``} move by \texttt{nabclargerspace} skip to the left
+  \item \texttt{`} move by \texttt{nabcinterelementspace} skip to the left
+\end{itemize}
+
+The \textit{complex glyph descriptor} consists of a \textit{glyph descriptor},
+optionally followed by a sequence of other \textit{glyph descriptor}s, all
+separated by the \texttt{!} character.  This is used to describe more
+complex glyphs, where certain basic glyphs are connected together.
+
+Each \textit{glyph descriptor} consists of a \textit{basic glyph descriptor},
+followed by optional \textit{glyph modifiers}, followed by optional
+\textit{pitch descriptor}.
+
+The \textit{basic glyph descriptor} is a two-letter string from the
+following table:
+\begin{multicols}{5}
+\texttt{vi} \sneume{vi} virga\\
+\texttt{pu} \sneume{pu} punctum\\
+\texttt{ta} \sneume{ta} tractulus\\
+\texttt{gr} \sneume{gr} gravis\\
+\texttt{cl} \sneume{cl} clivis\\
+\texttt{pe} \sneume{pe} pes\\
+\texttt{po} \sneume{po} porrectus\\
+\texttt{to} \sneume{to} torculus\\
+\texttt{ci} \sneume{ci} climacus\\
+\texttt{sc} \sneume{sc} scandicus\\
+\texttt{pf} \sneume{pf} porrectus flexus\\
+\texttt{sf} \sneume{sf} scandicus flexus\\
+\texttt{tr} \sneume{tr} torculus resupinus\\
+\texttt{st} \sneume{st} stropha\\
+\texttt{ds} \sneume{ds} distropha\\
+\texttt{ts} \sneume{ts} tristropha\\
+\texttt{tg} \sneume{tg} trigonus\\
+\texttt{bv} \sneume{bv} bivirga\\
+\texttt{tv} \sneume{tv} trivirga\\
+\texttt{pr} \sneume{pr} pressus maior\\
+\texttt{pi} \sneume{pi} pressus minor\\
+\texttt{vs} \sneume{vs} virga strata\\
+\texttt{or} \sneume{or} oriscus\\
+\texttt{sa} \sneume{sa} scandicus\\
+\texttt{pq} \sneume{pq} pes quassus\\
+\texttt{ql} \sneume{ql} quilisma (3 loops)\\
+\texttt{qi} \sneume{qi} quilisma (2 loops)\\
+\texttt{pt} \sneume{pt} pes stratus
+\end{multicols}
+
+The \texttt{glyph modifiers} is a possibly empty sequence of following
+characters optionally followed by a number:
+\begin{itemize}
+  \item \texttt{S} modification of the mark
+  \item \texttt{G} modification of the grouping (neumatic break)
+  \item \texttt{M} melodic modification
+  \item \texttt{-} addition of episema
+  \item \texttt{>} augmentive liquescence
+  \item ~~\texttt{\~} diminutive liquescence
+\end{itemize}
+If Dom Cardine's table contains multiple glyphs with the same modifiers,
+a positive number is added afterwards.  E.g. for augmentive liquescent
+clivis the table shows two different glyphs, the ancus \texttt{cl>} \sneume{cl>}
+and then another neume - \texttt{cl>1} \sneume{cl>1}, the first neume does
+not contain any number after it, while the \texttt{1} indicates first
+variant.
+
+The \textit{pitch descriptor} allows to specify the vertical position of the
+neume.  There are no staves, so the vertical position is only rough.  For
+pitches the same letters as in \texttt{gabc} are used, \texttt{a} through
+\texttt{m}.  If the \textit{pitch descriptor} is missing, the default is
+\texttt{hf}, otherwise it consists of the letter \texttt{h} followed by
+the pitch letter.  Within the \textit{complex glyph descriptor}, each
+\textit{basic glyph descriptor} has its own pitch, but in the current fonts
+there are no glyphs with different relative pitches, so if you use a
+\textit{pitch descriptor} on any of the \textit{basic glyph descriptor}s
+in the \textit{complex glyph descriptor}, it is best to use the same one on all
+the other \textit{basic glyph descriptor}s in the same \textit{complex glyph descriptor}.
+
+The \textit{subpunctis and prepunctis descriptor} consists of the letters
+\texttt{su} for subpunctis or \texttt{pp} for prepunctis, followed
+optionally by a modifier letter from the following table and finally a mandatory
+positive number of repetitions.  If the modifier letter is missing, it is a
+punctum.
+\begin{itemize}
+  \item \texttt{t} \sneume{ta} tractulus
+  \item \texttt{u} \sneume{ta-} tractulus with episema
+  \item \texttt{v} \sneume{suv1} tractulus with double episema
+  \item \texttt{w} \sneume{gr} gravis
+  \item \texttt{x} \sneume{st>} liquescens stropha
+  \item \texttt{y} \sneume{gr-} gravis with episema
+\end{itemize}
+Only subpunctis are normally used in neume classification, the prepunctis is
+a \texttt{nabc} concept to describe the rising sequence of punctis, tractulis etc.
+in the left low corner of some neume.  While e.g. \texttt{vipp2}
+\sneume{sc} describes the same neume as \texttt{sc} \sneume{sc}, the
+former form allows better control on how many punctis or tractulis or
+tractulis with episema etc. there are.  Some examples:
+\texttt{ppt3} \sneume{ppt3} stands for 3 raising tractulis with episema,
+while \texttt{su1sut1sux1} \sneume{su1sut1sux1} stands for a punctum,
+followed by tractulus, followed by liquescens stropha.
+
+The \textit{significant letter descriptor} consists of the letters
+\texttt{ls}, followed by a shorthand of the significant letter or common
+group of them, followed by a number - a rough position relative to the
+\textit{complex glyph descriptor} glyph with prepunctis and subpunctis
+attached to it.  If more than one \textit{significant letter descriptor}
+is used on the same \textit{complex neume descriptors} for the same
+position, then they are ordered in the order they are written in the
+\texttt{nabc} snippet at that position.  The position numbers are:
+
+
+\makebox[6cm][l]{\texttt{1} \gregorionabcchar{vilsc1} left upper corner}
+\makebox[6cm][l]{\texttt{2} \gregorionabcchar{vilsc2} above the neume}
+\makebox[6cm][l]{\texttt{3} \gregorionabcchar{vilsc3} right upper corner}\\
+\makebox[6cm][l]{\texttt{4} \gregorionabcchar{vilsc4} to the left of the neume}
+\makebox[6cm][l]{}
+\makebox[6cm][l]{\texttt{6} \gregorionabcchar{vilsc6} to the right of the neume}\\
+\makebox[6cm][l]{\texttt{7} \gregorionabcchar{vilsc7} left bottom corner}
+\makebox[6cm][l]{\texttt{8} \gregorionabcchar{vilsc8} below the neume}
+\makebox[6cm][l]{\texttt{9} \gregorionabcchar{vilsc9} right bottom corner}\\
+
+
+The shorthands, including the \texttt{ls} prefix, which should be followed
+by the above mentioned position digit:
+\begin{multicols}{3}
+\texttt{lsal} \sneume{lsal} altius\\
+\texttt{lsam} \sneume{lsam} altius mediocriter\\
+\texttt{lsb} \sneume{lsb} bene\\
+\texttt{lsc} \sneume{lsc} celeriter\\
+\texttt{lscm} \sneume{lscm} celeriter mediocriter\\
+\texttt{lsco} \sneume{lsco} coniunguntur\\
+\texttt{lscw} \sneume{lscw} celeriter (wide form)\\
+\texttt{lsd} \sneume{lsd} deprimatur\\
+\texttt{lse} \sneume{lse} equaliter\\
+\texttt{lseq} \sneume{lseq} equaliter\\
+\texttt{lsew} \sneume{lsew} equaliter (wide form)\\
+\texttt{lsfid} \sneume{lsfid} fideliter\\
+\texttt{lsfr} \sneume{lsfr} frendor\\
+\texttt{lsg} \sneume{lsg} gutture\\
+\texttt{lsi} \sneume{lsi} iusum\\
+\texttt{lsim} \sneume{lsim} iusum mediocriter\\
+\texttt{lsiv} \sneume{lsiv} iusum valde\\
+\texttt{lsk} \sneume{lsk} klenche\\
+\texttt{lsl} \sneume{lsl} levare\\
+\texttt{lslb} \sneume{lslb} levare bene\\
+\texttt{lslc} \sneume{lslc} levare celeriter\\
+\texttt{lslen} \sneume{lslen} leniter\\
+\texttt{lslm} \sneume{lslm} levare mediocriter\\
+\texttt{lslp} \sneume{lslp} levare parvum\\
+\texttt{lslt} \sneume{lslt} levare tenere\\
+\texttt{lsm} \sneume{lsm} mediocriter\\
+\texttt{lsmoll} \sneume{lsmoll} molliter\\
+\texttt{lsp} \sneume{lsp} parvum\\
+\texttt{lspar} \sneume{lspar} paratim\\
+\texttt{lspfec} \sneume{lspfec} perfecte\\
+\texttt{lspm} \sneume{lspm} parvum mediocriter\\
+\texttt{lss} \sneume{lss} sursum\\
+\texttt{lssb} \sneume{lssb} sursum bene\\
+\texttt{lssc} \sneume{lssc} sursum celeriter\\
+\texttt{lssimil} \sneume{lssimil} similiter\\
+\texttt{lssimul} \sneume{lssimul} simul\\
+\texttt{lssm} \sneume{lssm} sursum mediocriter\\
+\texttt{lsst} \sneume{lsst} sursum tenere\\
+\texttt{lssta} \sneume{lssta} statim\\
+\texttt{lst} \sneume{lst} tenere\\
+\texttt{lstb} \sneume{lstb} tenere bene\\
+\texttt{lstm} \sneume{lstm} tenere mediocriter\\
+\texttt{lstw} \sneume{lstw} tenere (wide form)\\
+\texttt{lsv} \sneume{lsv} valde\\
+\texttt{lsvol} \sneume{lsvol} volubiliter\\
+\texttt{lsx} \sneume{lsx} expectare
+\end{multicols}
+
+Finally a commented example of a \texttt{nabc} snippet:
+
+\texttt{```po////pe>2lse7lsl3qlhh!vshhppt1sut2ql>ppu3}
+
+\gregorionabcchar{```po////pe>2lse7lsl3qlhh!vshhppt1sut2ql>ppu3}
+
+\texttt{```} stands for a negative horizontal skip (move to the left)
+by \texttt{nabcinterelementspace} and \texttt{nabclargerspace}.
+
+\texttt{po} \sneume{po} is a basic porrectus, at the default pitch
+(height \texttt{hf}).
+
+\texttt{////} stands for a horizontal skip (move to the right) by
+two times \texttt{nabclargerspace}.
+
+\texttt{pe>2lse7lsl3} \gregorionabcchar{pe>2lse7lsl3} stands for the
+3rd augmentive liquescent form of podatus (epiphonus with tractulus, see the
+following page) at the default pitch, with equaliter in the low left corner
+and levare in the upper right corner.
+
+\texttt{qlhh!vshhppt1sut2} \gregorionabcchar{qlhh!vshhppt1sut2} stands for
+a 3 loop quilisma joined with virga strata, both at relative pitch 2 above
+the default one, with a single tractulus before it and two subpunctis -
+tractulis.
+
+\texttt{ql>ppu3} \gregorionabcchar{ql>ppu3} is a 3 loop liquescent quilisma
+with 3 tractulis with episema before it.
+}
+
+\vfill
+\pagebreak
+
+{
 \noindent\footnotesize
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline
