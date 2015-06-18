@@ -39,6 +39,7 @@ void gregorio_vowel_tables_free(void);
 void gregorio_vowel_table_add(const char *vowels);
 void gregorio_prefix_table_add(const char *prefix);
 void gregorio_suffix_table_add(const char *suffix);
+void gregorio_secondary_table_add(const char *secondary);
 bool gregorio_find_vowel_group(const grewchar *subject, int *start, int *end);
 
 #endif

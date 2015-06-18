@@ -170,6 +170,15 @@ follow the keyword and must be separated by space and end with a
 semicolon.  Examples of suffixes include \emph{w} and \emph{we} in
 English and \emph{y} in Spanish.
 
+\item[secondary]
+
+The "secondary" keyword lists strings of characters which do not contain
+vowels, but for which, when there are no vowels present in a syllable,
+define the center of the syllable.  These strings follow the keyword and
+must be separated by space and end with a semicolon.  Examples of
+secondary sequences include \emph{w} from Welsh loanwords in English and
+the syllabic consonants \emph{l} and \emph{r} in Czech.
+
 \end{description}
 
 By way of example, here is a vowel file that works for English:
@@ -193,4 +202,6 @@ prefix y Y;
 
 suffix w W;
 suffix we We wE WE;
+
+secondary w W;
 \end{lstlisting}

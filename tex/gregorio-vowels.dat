@@ -19,6 +19,9 @@
 # Comments begin with a hash symbol and end at the end of the line.  These two
 # lines are comments.
 
+# In general, Gregorio does no case folding, so upper- and lower-case
+# characters and combinations thereof should be listed.
+
 # The "alias" keyword indicates that a name is an alias for a given language.
 # The "alias" keyword must be followed by the name of the alias in square
 # brackets, the "to" keyword, the name of the target language in square
@@ -35,8 +38,7 @@ language [English];
 # The "vowel" keyword indicates that the characters which follow, until the
 # next semicolon, should be considered vowels.  There may be multiple "vowel"
 # statements, and the characters following all of them will be considered
-# vowels.  Gregorio does no case folding, so upper- and lower-case characters
-# should be listed.
+# vowels.
 vowel aàáâAÀÁÂ;
 vowel eèéêëEÈÉÊË;
 vowel iìíîIÌÍÎ;
@@ -51,8 +53,7 @@ vowel œŒ;
 # vowel sound.  These strings follow the keyword and must be separated by space
 # and end with a semicolon.  There may be multiple "prefix" statements, and all
 # will apply.  Examples of prefixes include "i" and "u" in Latin and "qu" in
-# English.  As with vowels, Gregorio does no case folding, so upper- and
-# lower-case combinations should be listed.
+# English.
 prefix qu Qu qU QU;
 prefix gu Gu gU GU;
 prefix y Y;
@@ -62,7 +63,46 @@ prefix y Y;
 # part of the vowel sound.  These strings follow the keyword and must be
 # separated by space and end with a semicolon.  There may be multiple "suffix"
 # statements, and all will apply.  Examples of suffixes include "w" and "we" in
-# English and "y" in Spanish.  As with vowels, Gregorio does no case folding,
-# so upper- and lower-case combinations should be listed.
+# English and "y" in Spanish.
 suffix w W;
 suffix we We wE WE;
+
+# The "secondary" keyword lists strings of characters which do not contain
+# vowels, but for which, when there are no vowels present in a syllable, define
+# the center of the syllable.  These strings follow the keyword and must be
+# separated by space and end with a semicolon.  Examples of secondary sequences
+# include "w" from Welsh loanwords in English and the syllabic consonants "l"
+# and "r" in Czech.
+secondary w W;
+
+alias [polish] to [Polish];
+alias [Polish] to [Slavic];
+alias [czech] to [Czech];
+alias [Czech] to [Slavic];
+alias [slovak] to [Slovak];
+alias [Slovak] to [Slavic];
+
+language [Slavic];
+
+vowel aàáâąAÀÁÂĄ;
+vowel eèéêëěęEÈÉÊËĚĘ;
+vowel iìíîIÌÍÎ;
+vowel oòóôOÒÓÔ;
+vowel uùúûůUÙÚÛŮ;
+vowel yỳýYỲÝ;
+vowel æǽÆǼ;
+vowel œŒ;
+
+secondary l L ĺ Ĺ;
+secondary r R ŕ Ŕ;
+secondary m M;
+
+alias [hungarian] to [Hungarian];
+
+language [Hungarian];
+
+vowel aáAÁ;
+vowel éeëÉEË;
+vowel iíIÍ;
+vowel oóöőOÓÖŐ;
+vowel uúüűUÚÜŰ;
