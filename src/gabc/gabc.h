@@ -28,6 +28,8 @@ gregorio_element *gabc_det_elements_from_string(char *str, int *current_key,
         char *macros[10]);
 gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         int *current_key);
+int gabc_score_determination_lex_destroy(void);
+int gabc_notes_determination_lex_destroy(void);
 
 // see comments on gregorio_add_note_to_a_glyph for meaning of these variables
 typedef enum gabc_determination {

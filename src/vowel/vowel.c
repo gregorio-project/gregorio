@@ -80,6 +80,7 @@ static void character_set_free(character_set *const set)
             character_set_next_elements_free(set);
             free(set->next);
         }
+        free(set->table);
         free(set);
     }
 }
