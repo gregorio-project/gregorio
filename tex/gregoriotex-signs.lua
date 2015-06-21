@@ -401,6 +401,19 @@ local offset_cases = {
     v = [[\grevepisemusorrareaux{0}{\gre@char@virga}{0}{0}{#2}{#3}{#4}]],
     h = [[\grehepisorlineaux{0}{\gre@char@he@virga{#4}}{0}{#3}]],
   },
+  -- "oriscus" as the middle note of a salicus with a second ambitus of at
+  -- least two
+  {
+    case = 'SalicusOriscusWide',
+    v = [[\grevepisemusorrareaux{\gre@char@pesquassus}{\gre@char@salicus@oriscus}{2}{0}{#2}{#3}{#4}]],
+    h = [[\grehepisorlineaux{\gre@char@pesquassus}{\gre@char@he@salicus@oriscus{#4}}{2}{#3}]],
+  },
+  -- "oriscus" as the middle note of a salicus with a second ambitus of one
+  {
+    case = 'SalicusOriscusOne',
+    v = [[\grevepisemusorrareaux{\gre@char@pesquassusone}{\gre@char@salicus@oriscus}{2}{0}{#2}{#3}{#4}]],
+    h = [[\grehepisorlineaux{\gre@char@pesquassusone}{\gre@char@he@salicus@oriscus{#4}}{2}{#3}]],
+  },
 }
 
 local function emit_offset_macros()
