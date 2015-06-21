@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
+## [Unreleased][unreleased]
+### Fixed
+- Horizontal episemae on salicus figures now render correctly (See [#511](https://github.com/gregorio-project/gregorio/issues/511)).
+
 ## [3.0.2] - 2015-06-01
 ### Fixed
 - Prevented the default small font of the above lines text from leaking into the lyrics.
@@ -9,7 +13,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [3.0.1] - 2015-05-17
 ### Fixed
 - Windows Installer is now compatible with MiKTeX.  See [#355](https://github.com/gregorio-project/gregorio/issues/355).
-
 
 ## [3.0.0] - 2015-05-14
 ### Changed

@@ -3371,6 +3371,42 @@ gregoriotex_find_sign_number (gregorio_glyph *current_glyph,
           break;
         }
       break;
+    case T_SALICUS:
+    case T_SALICUS_LONGQUEUE:
+      switch (i)
+        {
+        case 1:
+          if (current_note->next && current_note->next->next
+              && current_note->h_episemus_top_note < current_note->next->next->pitch)
+            {
+              current_note->h_episemus_top_note = current_note->next->next->pitch;
+            }
+          *number = 6;
+          normal_height_bottom ();
+          break;
+        case 2:
+          if (current_note->next
+              && current_note->h_episemus_top_note < current_note->next->pitch)
+            {
+              current_note->h_episemus_top_note = current_note->next->pitch;
+            }
+          if (current_note->next
+              && current_note->next->pitch - current_note->pitch == 1)
+            {
+              *number = 29;
+            }
+          else
+            {
+              *number = 28;
+            }
+          normal_height ();
+          break;
+        default:
+          *number = 0;
+          normal_height ();
+          break;
+        }
+      break;
     case T_ANCUS:
     case T_ANCUS_LONGQUEUE:
       switch (i)
