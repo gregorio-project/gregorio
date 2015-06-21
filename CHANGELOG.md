@@ -116,6 +116,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\GreSetAboveInitialSeparation`, supplanted by `\grechangedim{annotationseparation}...`
 - `\gresetstafflinefactor`, supplanted by `\grechangestafflinethickness`
 
+## [Unreleased][unreleased]
+### Fixed
+- Horizontal episemae on salicus figures now render correctly (See [#511](https://github.com/gregorio-project/gregorio/issues/511)).
 
 ## [3.0.2] - 2015-06-01
 ### Fixed
