@@ -42,6 +42,7 @@
 *.idx
 *.ilg
 *.ind
+tags
 
 ## Intermediate documents:
 *.dvi
