@@ -2140,14 +2140,40 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
     gregorio_note *current_note;
     // a dumb char
     char block_hepisemus = 0;
-    char high_pitch = 0, low_pitch = 0;
+    char high_pitch = 0, low_pitch = 0, pitch;
     // get the minima/maxima pitches
     for (current_note = note; current_note; current_note = current_note->next) {
-        if (!high_pitch || current_note->u.note.pitch > high_pitch) {
-            high_pitch = current_note->u.note.pitch;
+        if (current_note->h_episemus_above) {
+            pitch = current_note->h_episemus_above;
+        } else {
+            if (current_note->v_episemus_height
+                    && current_note->v_episemus_height
+                    > current_note->u.note.pitch) {
+                pitch = current_note->v_episemus_height;
+            } else {
+                pitch = current_note->u.note.pitch;
+            }
+
+            if (current_note->choral_sign
+                    && !choral_sign_here_is_low(glyph, current_note, NULL)) {
+                ++pitch;
+            }
         }
-        if (!low_pitch || current_note->u.note.pitch < low_pitch) {
-            low_pitch = current_note->u.note.pitch;
+        if (!high_pitch || pitch > high_pitch) {
+            high_pitch = pitch;
+        }
+
+        if (current_note->h_episemus_below) {
+            pitch = current_note->h_episemus_below;
+        } else if (current_note->v_episemus_height
+                && current_note->v_episemus_height
+                < current_note->u.note.pitch) {
+            pitch = current_note->v_episemus_height;
+        } else {
+            pitch = current_note->u.note.pitch;
+        }
+        if (!low_pitch || pitch < low_pitch) {
+            low_pitch = pitch;
         }
     }
     fprintf(f, "%%\n{%%\n\\GreGlyphHeights{%d}{%d}%%\n",
