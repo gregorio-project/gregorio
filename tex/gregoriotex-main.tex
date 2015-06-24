@@ -82,7 +82,8 @@
 \newluatexattribute\gregoriocenterattr%
 
 % attributes for tracking glyph heights
-\newluatexattribute\gre@attr@glyph@id\setluatexattribute\gre@attr@glyph@id{0}%
+\newluatexattribute\gre@attr@score@id\setluatexattribute\gre@attr@score@id{0}%
+\newluatexattribute\gre@attr@glyph@id %
 \newluatexattribute\gre@attr@glyph@top %
 \newluatexattribute\gre@attr@glyph@bottom %
 
@@ -919,6 +920,8 @@
 
 %macro called at the beginning of a score
 \def\GreBeginScore{%
+  \global\advance\gre@attr@score@id by 1\relax %
+  \global\setluatexattribute\gre@attr@glyph@id{0}%
   \global\let\ifgre@save@englishcentering\ifgre@vowelcentering\relax % DEPRECATED
   \ifgre@justifylastline%
     \xdef\gre@save@parfillskip{\the\parfillskip}
@@ -935,7 +938,7 @@
   \exhyphenchar=-1\relax %
   \gregeneratelines %
   \noindent%
-  \directlua{gregoriotex.atScoreBeginning()}%
+  \directlua{gregoriotex.atScoreBeginning() gregoriotex.adjust_line_height()}%
   %TODO do something like LaTeX's AtBeginDocument
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %
