@@ -54,6 +54,7 @@ local gregoriocenterattr = luatexbase.attributes['gregoriocenterattr']
 local startcenter = 1
 local endcenter   = 2
 
+local score_id_attr = luatexbase.attributes['gre@attr@score@id']
 local glyph_id_attr = luatexbase.attributes['gre@attr@glyph@id']
 local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
@@ -61,6 +62,8 @@ local prev_glyph_id = nil
 
 local line_heights = {}
 local new_line_heights = {}
+local score_heights = nil
+local new_score_heights = nil
 local auxname = nil
 
 local space_below_staff = 5
@@ -78,12 +81,25 @@ local number_to_letter = {
 
 local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
 
-local function keys_changed()
-  for id,_ in pairs(new_line_heights) do
-    if line_heights[id] == nil then return true end
+local function keys_changed(tab1, tab2)
+  if tab2 == nil then return true end
+  local id,_
+  for id,_ in pairs(tab1) do
+    if tab2[id] == nil then return true end
   end
-  for id,_ in pairs(line_heights) do
-    if new_line_heights[id] == nil then return true end
+  for id,_ in pairs(tab2) do
+    if tab1[id] == nil then return true end
+  end
+  return false
+end
+
+local function heights_changed()
+  local id, tab
+  for id, tab in pairs(new_line_heights) do
+    if keys_changed(tab, line_heights[id]) then return true end
+  end
+  for id, tab in pairs(line_heights) do
+    if keys_changed(tab, new_line_heights[id]) then return true end
   end
   return false
 end
@@ -95,15 +111,20 @@ local function write_greaux()
   if aux then
     log("Writing %s", auxname)
     aux:write('return {\n');
-    for id, line in pairs(new_line_heights) do
-      aux:write(string.format('[%d]={t=%d,b=%d},\n', id, line.t, line.b))
+    local id, tab, id2, line
+    for id, tab in pairs(new_line_heights) do
+      aux:write(string.format(' [%d]={\n', id))
+      for id2, line in pairs(tab) do
+        aux:write(string.format('  [%d]={%d,%d},\n', id2, line[1], line[2]))
+      end
+      aux:write(' },\n')
     end
     aux:write('}\n');
     aux:close()
   else
     err("\n Unable to open %s", auxname)
   end
-  if keys_changed() then
+  if heights_changed() then
     warn("Line heights may have changed. Rerun to fix heights.")
   end
 end
@@ -285,7 +306,7 @@ local function process (h, groupcode, glyphes)
           addash=false
         end
         if line_id then
-          new_line_heights[prev_glyph_id] = { t = line_top, b = line_bottom }
+          new_score_heights[prev_glyph_id] = { line_top, line_bottom }
           prev_glyph_id = line_id
         end
       end
@@ -306,7 +327,12 @@ local function disable_hyphenation()
 end
 
 local function atScoreBeginning ()
+  local score_id = tex.getattribute(score_id_attr)
+  score_heights = line_heights[score_id] or {}
+  new_score_heights = {}
+  new_line_heights[score_id] = new_score_heights
   prev_glyph_id = tex.getattribute(glyph_id_attr)
+
   luatexbase.add_to_callback('post_linebreak_filter', process, 'gregoriotex.callback', 1)
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
 end
@@ -598,9 +624,9 @@ local function font_size()
 end
 
 local function adjust_line_height()
-  local heights = line_heights[tex.getattribute(glyph_id_attr)]
+  local heights = score_heights[tex.getattribute(glyph_id_attr)]
   if heights then
-    local top, bottom = heights.t - 12, 6 - heights.b
+    local top, bottom = heights[1] - 12, 6 - heights[2]
     if top < 0 then top = 0 end
     if bottom < 0 then bottom = 0 end
     tex.print(catcode_at_letter, string.format(
