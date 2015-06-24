@@ -61,12 +61,12 @@
 }%
 
 \def\gre@nothing{}
-    
+
 \AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
 % Since TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
 % available without prefix. We mostly rely on \directlua that is still available
-% without prefix, but we also rely on the Omega primitives, that have a luatex 
+% without prefix, but we also rely on the Omega primitives, that have a luatex
 % prefix in TeXLive 2009.
 
 \let\grelocalleftbox\luatexlocalleftbox%
@@ -85,6 +85,11 @@
 \newluatexattribute\gre@attr@glyph@id\setluatexattribute\gre@attr@glyph@id{0}%
 \newluatexattribute\gre@attr@glyph@top %
 \newluatexattribute\gre@attr@glyph@bottom %
+
+\newluatexcatcodetable\gre@atletter %
+\setluatexcatcodetable\gre@atletter{%
+  \catcode`\@=11 %
+}%
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
@@ -112,6 +117,7 @@
 }%
 
 \RequireLuaModule{gregoriotex}%
+\directlua{gregoriotex.init(arg)}%
 
 \xdef\gre@gregoriotexluaversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
 
@@ -182,6 +188,7 @@
 
 %macro to call if you want to go to the next line simply
 \def\GreNewLine{%
+  \gre@debugmsg{general}{GreNewLine}%
   \grenewlinecommon{0}{0}{0}{0}{0}%
   \relax%
 }%
@@ -192,6 +199,7 @@
 %% 3: 1 if there is a translation somewhere
 % #4 is if 1 if we have space above the staff
 \def\GreNewLineWithSpace#1#2#3#4{%
+  \gre@debugmsg{general}{GreNewLineWithSpace #1 #2}%
   \grenewlinecommon{#1}{#2}{#3}{0}{#4}%
   \relax%
 }%
@@ -200,11 +208,13 @@
 % basically same macros as above, but these one do a \hfill, the lines are not justified
 %macro to call if you want to go to the next line simply
 \def\GreNewParLine{%
+  \gre@debugmsg{general}{GreNewParLine}%
   \grenewlinecommon{0}{0}{0}{1}{0}%
   \relax%
 }%
 
 \def\GreNewParLineWithSpace#1#2#3#4{%
+  \gre@debugmsg{general}{GreNewParLineWithSpace #1 #2}%
   \grenewlinecommon{#1}{#2}{#3}{1}{#4}%
 }%
 
@@ -230,7 +240,7 @@
       \fi %
     \fi %
     \global\advance\greknownline by 1\relax %
-    \gre@calculate@additionalspaces{#1}{#2}%
+    %%%\gre@calculate@additionalspaces{#1}{#2}%
     \ifnum#3 = 1\relax %
       \gre@addtranslationspace %
     \else %
@@ -330,7 +340,7 @@
   % we print the initial always at the same place, and then we print the gre@box@annotation, centered
   % first we print the initial
   \gre@dimen@temp@five=-\gre@dimen@textlower %
-  % if it is a big initial we print it on the second line 
+  % if it is a big initial we print it on the second line
   \ifnum\grebiginitial=0\relax %
     \setbox\gre@box@initial=\hbox{\gre@style@initial\greinitialformat{#1}\endgre@style@initial}%
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
@@ -484,7 +494,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grescorereference#1{%
-  \relax
+  \relax %
 }%
 
 \def\GreScoreReference#1{
@@ -925,7 +935,7 @@
   \exhyphenchar=-1\relax %
   \gregeneratelines %
   \noindent%
-  \directlua{gregoriotex.atScoreBeggining()}%
+  \directlua{gregoriotex.atScoreBeginning()}%
   %TODO do something like LaTeX's AtBeginDocument
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %
@@ -1077,8 +1087,8 @@
   \greseteolcusots{manual}%
 }%
 
-% macro to end elements, #1 is the type of space, it can be : 
-%% 0: default space 
+% macro to end elements, #1 is the type of space, it can be :
+%% 0: default space
 %% 1: larger space
 %% 2: glyph space
 %% 3: zero-width space
@@ -1105,8 +1115,8 @@
 \relax%
 }%
 
-% macro to end a glyph without ending the element, argument is the type of space, it can be : 
-%% 0: default space 
+% macro to end a glyph without ending the element, argument is the type of space, it can be :
+%% 0: default space
 %% 1: zero width space
 %% 2: space between flat or natural and a note
 %% 3: space between two puncta inclinata
@@ -1250,7 +1260,7 @@
       {\greerror{Unrecognized option in \protect\gresetbreakineuouae}}%
     }%
 }%
-      
+
 
 \newif\ifgre@in@euouae
 \gre@in@euouaefalse

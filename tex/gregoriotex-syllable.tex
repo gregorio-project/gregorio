@@ -99,6 +99,7 @@
   %\gre@dimen@lastglyphwidth=\gre@dimen@temp@three
   %#5\relax 
   #6\relax %
+  \directlua{gregoriotex.adjust_line_height()}%
   \relax%
 }%
 
@@ -460,7 +461,7 @@
 %% at the end we wall \greendofword or \greendofsyllable with #7, to reduce the space in case of a flat or natural
 \def\GreSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@debugmsg{general}{}%
-  \gre@debugmsg{general}{New syllable: #1#2#3}%
+  \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}\expandafter\unexpanded{#2}\expandafter\unexpanded{#3}}%
   \gre@debugmsg{general}{}%
   \global\grefirstisalteration=0\relax %
   \ifgre@vowelcentering %

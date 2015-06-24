@@ -625,32 +625,24 @@
 
 % same arguments as GreNewLineWithSpace
 \def\gre@calculate@additionalspaces#1#2{%
-  \ifcase#1\relax %
-    \global\gre@dimen@additionalbottomspace=0 sp%
-  \or % case 1
-    \global\gre@dimen@additionalbottomspace=0 sp%
-    % here we don't add any space... it's just in case...
-  \or % case 2
+  \gre@debugmsg{general}{gre@calculate@additional@spaces called with #1 #2}%
+  \gre@count@temp@one=#1 %
+  \advance\gre@count@temp@one by -1 %
+  \ifnum\gre@count@temp@one>0 %
     \global\gre@dimen@additionaltopspace=15000 sp%
+    \global\multiply\gre@dimen@additionaltopspace by \the\gre@count@temp@one %
     \global\multiply\gre@dimen@additionaltopspace by \the\grefactor %
-  \or % case 3
-    \global\gre@dimen@additionaltopspace=30000 sp%
-    \global\multiply\gre@dimen@additionaltopspace by \the\grefactor %
+  \else %
+    \global\gre@dimen@additionaltopspace=0 sp%
   \fi %
-  \ifcase#2\relax %
-    % case 0
-    \global\gre@dimen@additionalbottomspace=0 sp%
-  \or % case 1
-    \global\gre@dimen@additionalbottomspace=0 sp%
-  \or % case 2
+  \gre@count@temp@one=#2 %
+  \advance\gre@count@temp@one by -1 %
+  \ifnum\gre@count@temp@one>0 %
     \global\gre@dimen@additionalbottomspace=15000 sp%
+    \global\multiply\gre@dimen@additionalbottomspace by \the\gre@count@temp@one %
     \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
-  \or % case 3
-    \global\gre@dimen@additionalbottomspace=30000 sp%
-    \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
-  \or % case 4
-    \global\gre@dimen@additionalbottomspace=45000 sp%
-    \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
+  \else %
+    \global\gre@dimen@additionalbottomspace=0 sp%
   \fi %
   \gregeneratelines %
   \gre@calculate@constantglyphraise %
