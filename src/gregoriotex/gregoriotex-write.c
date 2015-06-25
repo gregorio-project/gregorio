@@ -3042,7 +3042,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
     }
 }
 
-static char *digest_to_hex(const unsigned char digest[20])
+static char *digest_to_hex(const unsigned char digest[SHA1_DIGEST_SIZE])
 {
     static const char *const hex = "0123456789abcdef";
     static char result[41];
@@ -3050,7 +3050,7 @@ static char *digest_to_hex(const unsigned char digest[20])
     char *p = result;
     unsigned char byte;
 
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < SHA1_DIGEST_SIZE; ++i) {
         byte = digest[i];
 
         *(p++) = hex[(byte >> 4) & 0x0FU];

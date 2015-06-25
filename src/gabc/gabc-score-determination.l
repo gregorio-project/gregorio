@@ -62,7 +62,7 @@ static unsigned char style_stack = 0;
             clearerr(gabc_score_determination_in); \
         } \
     } \
-    gabc_digest((unsigned char *)buf, result)
+    gabc_digest(buf, result)
 
 %}
 

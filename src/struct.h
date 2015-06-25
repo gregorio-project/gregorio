@@ -30,6 +30,7 @@
 #define STRUCT_H
 
 #include <stdbool.h>
+#include "sha1.h"
 
 #ifdef __cplusplus
 #define ENUM_BITFIELD(TYPE) enum TYPE
@@ -611,7 +612,7 @@ typedef struct source_info {
 #define MAX_ANNOTATIONS 2
 
 typedef struct gregorio_score {
-    unsigned char digest[20];
+    unsigned char digest[SHA1_DIGEST_SIZE];
     // the structure starts by a pointer to the first syllable of the
     // score.
     struct gregorio_syllable *first_syllable;
