@@ -33,6 +33,37 @@
 static unsigned char style_stack = 0;
 
 #define YY_NO_INPUT
+
+#define YY_INPUT(buf,result,max_size) \
+    if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) { \
+        int c = '*'; \
+        size_t n; \
+        for (n = 0; n < max_size \
+                && (c = getc(gabc_score_determination_in)) != EOF \
+                && c != '\n'; ++n ) { \
+            buf[n] = (char) c; \
+        } \
+        if (c == '\n') { \
+            buf[n++] = (char) c; \
+        } \
+        if (c == EOF && ferror(gabc_score_determination_in)) { \
+            YY_FATAL_ERROR("input in flex scanner failed"); \
+        } \
+        result = n; \
+    } else { \
+        errno=0; \
+        while ((result = fread(buf, 1, max_size, gabc_score_determination_in)) \
+                == 0 && ferror(gabc_score_determination_in)) { \
+            if (errno != EINTR) { \
+                YY_FATAL_ERROR("input in flex scanner failed"); \
+                break; \
+            } \
+            errno = 0; \
+            clearerr(gabc_score_determination_in); \
+        } \
+    } \
+    gabc_digest((unsigned char *)buf, result)
+
 %}
 
 %x attribute

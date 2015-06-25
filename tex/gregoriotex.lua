@@ -54,12 +54,12 @@ local gregoriocenterattr = luatexbase.attributes['gregoriocenterattr']
 local startcenter = 1
 local endcenter   = 2
 
-local score_id_attr = luatexbase.attributes['gre@attr@score@id']
 local glyph_id_attr = luatexbase.attributes['gre@attr@glyph@id']
 local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_glyph_id = nil
 
+local score_inclusion = {}
 local line_heights = {}
 local new_line_heights = {}
 local score_heights = nil
@@ -105,26 +105,27 @@ local function heights_changed()
 end
 
 local function write_greaux()
-  -- dumping this if nothing changes may not really be necessary, but we do it
-  -- anyway for a consistent set of inputs and outputs on every run
-  local aux = io.open(auxname, 'w')
-  if aux then
-    log("Writing %s", auxname)
-    aux:write('return {\n');
-    local id, tab, id2, line
-    for id, tab in pairs(new_line_heights) do
-      aux:write(string.format(' [%d]={\n', id))
-      for id2, line in pairs(tab) do
-        aux:write(string.format('  [%d]={%d,%d},\n', id2, line[1], line[2]))
-      end
-      aux:write(' },\n')
-    end
-    aux:write('}\n');
-    aux:close()
-  else
-    err("\n Unable to open %s", auxname)
-  end
   if heights_changed() then
+    -- only write this if heights change; since table ordering is not
+    -- predictable, this ensures a steady state if the heights are unchanged.
+    local aux = io.open(auxname, 'w')
+    if aux then
+      log("Writing %s", auxname)
+      aux:write('return {\n');
+      local id, tab, id2, line
+      for id, tab in pairs(new_line_heights) do
+        aux:write(string.format(' ["%s"]={\n', id))
+        for id2, line in pairs(tab) do
+          aux:write(string.format('  [%d]={%d,%d},\n', id2, line[1], line[2]))
+        end
+        aux:write(' },\n')
+      end
+      aux:write('}\n');
+      aux:close()
+    else
+      err("\n Unable to open %s", auxname)
+    end
+
     warn("Line heights may have changed. Rerun to fix heights.")
   end
 end
@@ -326,8 +327,10 @@ local function disable_hyphenation()
   return false
 end
 
-local function atScoreBeginning ()
-  local score_id = tex.getattribute(score_id_attr)
+local function atScoreBeginning (score_id)
+  local inclusion = score_inclusion[score_id] or 1
+  score_inclusion[score_id] = inclusion + 1
+  score_id = score_id..'.'..inclusion
   score_heights = line_heights[score_id] or {}
   new_score_heights = {}
   new_line_heights[score_id] = new_score_heights
@@ -415,7 +418,7 @@ local function include_score(input_file, force_gabccompile)
         gabc:close()
       end
       compile_gabc(gabc_file, gtex_file)
-      tex.print(string.format("\\input %s", gtex_file))
+      tex.print(string.format([[\input %s\relax]], gtex_file))
       return
     else
       err("The file %s does not exist.", gabc_file)
@@ -439,7 +442,7 @@ local function include_score(input_file, force_gabccompile)
   elseif force_gabccompile then
     compile_gabc(gabc_file, gtex_file)
   end
-  tex.print(string.format("\\input %s", gtex_file))
+  tex.print(string.format([[\input %s\relax]], gtex_file))
   return
 end
 

@@ -27,6 +27,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <time.h>
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
@@ -3041,6 +3042,26 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
     }
 }
 
+static char *digest_to_hex(const unsigned char digest[20])
+{
+    static const char *const hex = "0123456789abcdef";
+    static char result[41];
+
+    char *p = result;
+    unsigned char byte;
+
+    for (int i = 0; i < 20; ++i) {
+        byte = digest[i];
+
+        *(p++) = hex[(byte >> 4) & 0x0FU];
+        *(p++) = hex[byte & 0x0FU];
+    }
+
+    *p = '\0';
+
+    return result;
+}
+
 void gregoriotex_write_score(FILE *f, gregorio_score *score)
 {
     gregorio_character *first_text;
@@ -3090,7 +3111,7 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
                 score->score_copyright);
     }
 
-    fprintf(f, "\\GreBeginScore%%\n");
+    fprintf(f, "\\GreBeginScore{%s}%%\n", digest_to_hex(score->digest));
     switch (score->centering) {
     case SCHEME_SYLLABLE:
         fprintf(f, "\\englishcentering%%\n");

@@ -40,3 +40,7 @@ Gregorio has been developed with valuable help and support from:
  * [Stiftsbibliothek, Einsiedeln (CH)](http://kloster-einsiedeln.ch/)
  * [Gna!](http://gna.org)
  * [Github](https://github.com/)
+
+## Acknowledgments
+
+ * The SHA-1 digest code comes from [mbed TLS](https://tls.mbed.org/sha-1-source-code) and has been modified to suit Gregorio as permitted by the GPL.  Our copyright has been added to theirs in the appropriate source files.  As such, the modified sources are relicensed from GPL version 2 (or later) to GPL version 3 (or later).
