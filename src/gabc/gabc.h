@@ -28,6 +28,7 @@ gregorio_element *gabc_det_elements_from_string(char *str, int *current_key,
         char *macros[10]);
 gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         int *current_key);
+void gabc_digest(const unsigned char *buf, size_t size);
 int gabc_score_determination_lex_destroy(void);
 int gabc_notes_determination_lex_destroy(void);
 

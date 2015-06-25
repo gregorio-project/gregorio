@@ -3042,43 +3042,22 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
     }
 }
 
-static char *generate_random_uuid()
+static char *digest_to_hex(const unsigned char digest[20])
 {
-    static bool random_seeded = false;
     static const char *const hex = "0123456789abcdef";
-    static char result[] = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+    static char result[41];
 
     char *p = result;
     unsigned char byte;
 
-    if (!random_seeded) {
-        random_seeded = true;
-        srandom(time(NULL));
-    }
-
-    for (int i = 0; i < 16; ++i) {
-        byte = (unsigned char)random();
-
-        // per Section 4.4 of RFC4122:
-        switch (i) {
-        case 8:
-            // set bits 6 and 7 of clock_seq_hi_and_reserved to 0 and 1
-            byte = (byte & 0x3FU) | 0x80U;
-            break;
-        case 6:
-            // set the bits 12 through 15 of time_hi_and_version to 0, 0, 1, 0
-            // note: MSB first, a.k.a. big-endian, a.k.a. network byte order
-            byte = (byte & 0x0FU) | 0x40U;
-            break;
-        }
+    for (int i = 0; i < 20; ++i) {
+        byte = digest[i];
 
         *(p++) = hex[(byte >> 4) & 0x0FU];
         *(p++) = hex[byte & 0x0FU];
-
-        if (*p == '-') {
-            ++p;
-        }
     }
+
+    *p = '\0';
 
     return result;
 }
@@ -3132,7 +3111,7 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
                 score->score_copyright);
     }
 
-    fprintf(f, "\\GreBeginScore{%s}%%\n", generate_random_uuid());
+    fprintf(f, "\\GreBeginScore{%s}%%\n", digest_to_hex(score->digest));
     switch (score->centering) {
     case SCHEME_SYLLABLE:
         fprintf(f, "\\englishcentering%%\n");

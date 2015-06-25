@@ -24,7 +24,7 @@ gregorio_LDADD = $(KPSE_LIBS)
 bin_PROGRAMS = gregorio
 gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
 					unicode.c struct.h messages.h unicode.h characters.h \
-					plugins.h config.h dump/dump.c \
+					sha1.c sha1.h plugins.h config.h dump/dump.c \
 					gregoriotex/gregoriotex-write.c \
 					gregoriotex/gregoriotex-position.c \
 					gregoriotex/gregoriotex.h

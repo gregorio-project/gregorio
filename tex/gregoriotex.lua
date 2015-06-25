@@ -418,9 +418,7 @@ local function include_score(input_file, force_gabccompile)
         gabc:close()
       end
       compile_gabc(gabc_file, gtex_file)
-      if force_gabccompile then tex.sprint([[{\def\greforcecompiled{\relax }]]) end
-      tex.sprint(string.format([[\input %s\relax]], gtex_file))
-      if force_gabccompile then tex.sprint([[}]]) end
+      tex.print(string.format([[\input %s\relax]], gtex_file))
       return
     else
       err("The file %s does not exist.", gabc_file)
@@ -444,9 +442,7 @@ local function include_score(input_file, force_gabccompile)
   elseif force_gabccompile then
     compile_gabc(gabc_file, gtex_file)
   end
-  if force_gabccompile then tex.sprint([[{\def\greforcecompiled{\relax }]]) end
-  tex.sprint(string.format([[\input %s\relax]], gtex_file))
-  if force_gabccompile then tex.sprint([[}]]) end
+  tex.print(string.format([[\input %s\relax]], gtex_file))
   return
 end
 
@@ -460,9 +456,7 @@ local function direct_gabc(gabc, header)
     err("\nSomething went wrong when executing\n    gregorio -S "..tmpname..".\n"
     .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", tex.formatname, tex.jobname)
   end
-  tex.sprint([[{\def\greforcecompiled{\relax }]])
-  tex.sprint(p:read("*a"):explode('\n'))
-  tex.sprint([[}]])
+  tex.print(p:read("*a"):explode('\n'))
   p:close()
   os.remove(tmpname)
 end

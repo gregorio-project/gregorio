@@ -936,12 +936,7 @@
   \exhyphenchar=-1\relax %
   \gregeneratelines %
   \noindent%
-  \ifdefined\greforcecompiled %
-    \directlua{gregoriotex.atScoreBeginning([[force-compiled]])}%
-  \else %
-    \directlua{gregoriotex.atScoreBeginning([[#1]])}%
-  \fi %
-  \directlua{gregoriotex.adjust_line_height()}%
+  \directlua{gregoriotex.atScoreBeginning([[#1]]) gregoriotex.adjust_line_height()}%
   %TODO do something like LaTeX's AtBeginDocument
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %
