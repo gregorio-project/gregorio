@@ -286,16 +286,18 @@ local function process (h, groupcode, glyphes)
             adddash=false
           end
 
-          local glyph_id = has_attribute(n, glyph_id_attr)
-          local glyph_top = has_attribute(n, glyph_top_attr)
-          local glyph_bottom = has_attribute(n, glyph_bottom_attr)
-          if glyph_id and glyph_top and glyph_bottom then
-            line_id = glyph_id
-            if not line_top or glyph_top > line_top then
-              line_top = glyph_top
-            end
-            if not line_bottom or glyph_bottom < line_bottom then
-              line_bottom = glyph_bottom
+          if new_score_heights then
+            local glyph_id = has_attribute(n, glyph_id_attr)
+            local glyph_top = has_attribute(n, glyph_top_attr)
+            local glyph_bottom = has_attribute(n, glyph_bottom_attr)
+            if glyph_id and glyph_top and glyph_bottom then
+              line_id = glyph_id
+              if not line_top or glyph_top > line_top then
+                line_top = glyph_top
+              end
+              if not line_bottom or glyph_bottom < line_bottom then
+                line_bottom = glyph_bottom
+              end
             end
           end
         end
@@ -328,13 +330,18 @@ local function disable_hyphenation()
 end
 
 local function atScoreBeginning (score_id)
-  local inclusion = score_inclusion[score_id] or 1
-  score_inclusion[score_id] = inclusion + 1
-  score_id = score_id..'.'..inclusion
-  score_heights = line_heights[score_id] or {}
-  new_score_heights = {}
-  new_line_heights[score_id] = new_score_heights
-  prev_glyph_id = tex.getattribute(glyph_id_attr)
+  if tex.count['gre@variableheightexpansion'] == 1 then
+    local inclusion = score_inclusion[score_id] or 1
+    score_inclusion[score_id] = inclusion + 1
+    score_id = score_id..'.'..inclusion
+    score_heights = line_heights[score_id] or {}
+    new_score_heights = {}
+    new_line_heights[score_id] = new_score_heights
+    prev_glyph_id = tex.getattribute(glyph_id_attr)
+  else
+    score_heights = nil
+    new_score_heights = nil
+  end
 
   luatexbase.add_to_callback('post_linebreak_filter', process, 'gregoriotex.callback', 1)
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
@@ -627,13 +634,16 @@ local function font_size()
 end
 
 local function adjust_line_height()
-  local heights = score_heights[tex.getattribute(glyph_id_attr)]
-  if heights then
-    local top, bottom = heights[1] - 12, 6 - heights[2]
-    if top < 0 then top = 0 end
-    if bottom < 0 then bottom = 0 end
-    tex.print(catcode_at_letter, string.format(
-        [[\gre@calculate@additionalspaces{%d}{%d}]], top, bottom))
+  if score_heights then
+    local heights = score_heights[tex.getattribute(glyph_id_attr)]
+    if heights then
+      local top, bottom = heights[1] - 12, 6 - heights[2]
+      if top < 0 then top = 0 end
+      if bottom < 0 then bottom = 0 end
+      tex.print(catcode_at_letter, string.format(
+          [[\gre@calculate@additionalspaces{%d}{%d}\greupdateleftbox]],
+          top, bottom))
+    end
   end
 end
 
