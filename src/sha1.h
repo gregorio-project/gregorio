@@ -27,7 +27,11 @@
 #define SHA1_H 1
 
 #include <stddef.h>
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#else
+#include <inttypes.h>
+#endif
 
 #define SHA1_DIGEST_SIZE 20
 

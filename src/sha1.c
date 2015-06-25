@@ -29,10 +29,19 @@
 
 #include "config.h"
 #include "sha1.h"
-#include <stdalign.h>
+#ifdef HAVE_STDINT_H
 #include <stdint.h>
+#else
+#include <inttypes.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef HAVE_STDALIGN_H
+#include <stdalign.h>
+#else
+#define alignof(x) sizeof(x)
+#endif
 
 #ifdef WORDS_BIGENDIAN
 #define SWAP(n) (n)
