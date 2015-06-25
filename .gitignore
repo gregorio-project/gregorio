@@ -95,6 +95,7 @@ auto/
 #gregorio specific
 doc/_minted-*
 fonts/*.ttf
+*.greaux
 *.gz
 *.bz2
 *.zip

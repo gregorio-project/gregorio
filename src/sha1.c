@@ -1,14 +1,13 @@
 /*
- * FIPS-180-1 compliant SHA-1 implementation
+ * sha1.c - Functions to compute SHA1 message digest of files or
+ * memory blocks according to the NIST specification FIPS-180-1.
  *
  * Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
- * Copyright (C) 2006-2014, ARM Limited, All Rights Reserved
+ * Copyright (C) 2000-2001, 2003-2006, 2008-2014 Free Software Foundation, Inc.
  *
  * This file is part of Gregorio.
- *
- * This file was originally part of mbed TLS (https://tls.mbed.org)
- * It has been modified to remove features not necessary for Gregorio.
- *
+ * This file has been adapted from GNU coreutils to fit Gregorio.
+ * 
  * Gregorio is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -23,314 +22,340 @@
  * along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- *  The SHA-1 standard was published by NIST in 1993.
- *
- *  http://www.itl.nist.gov/fipspubs/fip180-1.htm
- */
+/* Written by Scott G. Miller
+   Credits:
+      Robert Klep <robert@ilse.nl>  -- Expansion function fix
+*/
 
+#include "config.h"
 #include "sha1.h"
+#include <stdalign.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
-/* Implementation that should never be optimized out by the compiler */
-static void zeroize( void *v, size_t n ) {
-    volatile unsigned char *p = v; while( n-- ) *p++ = 0;
-}
-
-/*
- * 32-bit integer manipulation macros (big endian)
- */
-#ifndef GET_UINT32_BE
-#define GET_UINT32_BE(n,b,i)                            \
-{                                                       \
-    (n) = ( (uint32_t) (b)[(i)    ] << 24 )             \
-        | ( (uint32_t) (b)[(i) + 1] << 16 )             \
-        | ( (uint32_t) (b)[(i) + 2] <<  8 )             \
-        | ( (uint32_t) (b)[(i) + 3]       );            \
-}
+#ifdef WORDS_BIGENDIAN
+#define SWAP(n) (n)
+#else
+#define SWAP(n) \
+    (((n) << 24) | (((n) & 0xff00) << 8) | (((n) >> 8) & 0xff00) | ((n) >> 24))
 #endif
 
-#ifndef PUT_UINT32_BE
-#define PUT_UINT32_BE(n,b,i)                            \
-{                                                       \
-    (b)[(i)    ] = (unsigned char) ( (n) >> 24 );       \
-    (b)[(i) + 1] = (unsigned char) ( (n) >> 16 );       \
-    (b)[(i) + 2] = (unsigned char) ( (n) >>  8 );       \
-    (b)[(i) + 3] = (unsigned char) ( (n)       );       \
-}
+#define BLOCKSIZE 32768
+#if BLOCKSIZE % 64 != 0
+#error "invalid BLOCKSIZE"
 #endif
 
-void sha1_init( sha1_context *ctx )
+/* This array contains the bytes used to pad the buffer to the next
+   64-byte boundary.  (RFC 1321, 3.1: Step 1)  */
+static const unsigned char fillbuf[64] = { 0x80, 0 /* , 0, 0, ...  */  };
+
+/* Take a pointer to a 160 bit block of data (five 32 bit ints) and
+   initialize it to the start constants of the SHA1 algorithm.  This
+   must be called before using hash in the call to sha1_hash.  */
+void sha1_init_ctx(struct sha1_ctx *ctx)
 {
-    memset( ctx, 0, sizeof( sha1_context ) );
+    ctx->A = 0x67452301;
+    ctx->B = 0xefcdab89;
+    ctx->C = 0x98badcfe;
+    ctx->D = 0x10325476;
+    ctx->E = 0xc3d2e1f0;
+
+    ctx->total[0] = ctx->total[1] = 0;
+    ctx->buflen = 0;
 }
 
-void sha1_free( sha1_context *ctx )
+/* Copy the 4 byte value from v into the memory location pointed to by *cp,
+   If your architecture allows unaligned access this is equivalent to
+   * (uint32_t *) cp = v  */
+static void set_uint32(char *cp, uint32_t v)
 {
-    if( ctx == NULL )
-        return;
-
-    zeroize( ctx, sizeof( sha1_context ) );
+    memcpy(cp, &v, sizeof v);
 }
 
-/*
- * SHA-1 context setup
- */
-void sha1_starts( sha1_context *ctx )
+/* Put result from CTX in first 20 bytes following RESBUF.  The result
+   must be in little endian byte order.  */
+void *sha1_read_ctx(const struct sha1_ctx *ctx, void *resbuf)
 {
-    ctx->total[0] = 0;
-    ctx->total[1] = 0;
+    char *r = resbuf;
+    set_uint32(r + 0 * sizeof ctx->A, SWAP(ctx->A));
+    set_uint32(r + 1 * sizeof ctx->B, SWAP(ctx->B));
+    set_uint32(r + 2 * sizeof ctx->C, SWAP(ctx->C));
+    set_uint32(r + 3 * sizeof ctx->D, SWAP(ctx->D));
+    set_uint32(r + 4 * sizeof ctx->E, SWAP(ctx->E));
 
-    ctx->state[0] = 0x67452301;
-    ctx->state[1] = 0xEFCDAB89;
-    ctx->state[2] = 0x98BADCFE;
-    ctx->state[3] = 0x10325476;
-    ctx->state[4] = 0xC3D2E1F0;
+    return resbuf;
 }
 
-void sha1_process( sha1_context *ctx, const unsigned char data[64] )
+/* Process the remaining bytes in the internal buffer and the usual
+   prolog according to the standard and write the result to RESBUF.  */
+void *sha1_finish_ctx(struct sha1_ctx *ctx, void *resbuf)
 {
-    uint32_t temp, W[16], A, B, C, D, E;
+    /*
+     * Take yet unprocessed bytes into account.  
+     */
+    uint32_t bytes = ctx->buflen;
+    size_t size = (bytes < 56) ? 64 / 4 : 64 * 2 / 4;
 
-    GET_UINT32_BE( W[ 0], data,  0 );
-    GET_UINT32_BE( W[ 1], data,  4 );
-    GET_UINT32_BE( W[ 2], data,  8 );
-    GET_UINT32_BE( W[ 3], data, 12 );
-    GET_UINT32_BE( W[ 4], data, 16 );
-    GET_UINT32_BE( W[ 5], data, 20 );
-    GET_UINT32_BE( W[ 6], data, 24 );
-    GET_UINT32_BE( W[ 7], data, 28 );
-    GET_UINT32_BE( W[ 8], data, 32 );
-    GET_UINT32_BE( W[ 9], data, 36 );
-    GET_UINT32_BE( W[10], data, 40 );
-    GET_UINT32_BE( W[11], data, 44 );
-    GET_UINT32_BE( W[12], data, 48 );
-    GET_UINT32_BE( W[13], data, 52 );
-    GET_UINT32_BE( W[14], data, 56 );
-    GET_UINT32_BE( W[15], data, 60 );
+    /*
+     * Now count remaining bytes.  
+     */
+    ctx->total[0] += bytes;
+    if (ctx->total[0] < bytes)
+        ++ctx->total[1];
 
-#define S(x,n) ((x << n) | ((x & 0xFFFFFFFF) >> (32 - n)))
+    /*
+     * Put the 64-bit file length in *bits* at the end of the buffer.  
+     */
+    ctx->buffer[size - 2] = SWAP((ctx->total[1] << 3) | (ctx->total[0] >> 29));
+    ctx->buffer[size - 1] = SWAP(ctx->total[0] << 3);
 
-#define R(t)                                            \
-(                                                       \
-    temp = W[( t -  3 ) & 0x0F] ^ W[( t - 8 ) & 0x0F] ^ \
-           W[( t - 14 ) & 0x0F] ^ W[  t       & 0x0F],  \
-    ( W[t & 0x0F] = S(temp,1) )                         \
-)
+    memcpy(&((char *) ctx->buffer)[bytes], fillbuf, (size - 2) * 4 - bytes);
 
-#define P(a,b,c,d,e,x)                                  \
-{                                                       \
-    e += S(a,5) + F(b,c,d) + K + x; b = S(b,30);        \
+    /*
+     * Process last bytes.  
+     */
+    sha1_process_block(ctx->buffer, size * 4, ctx);
+
+    return sha1_read_ctx(ctx, resbuf);
 }
 
-    A = ctx->state[0];
-    B = ctx->state[1];
-    C = ctx->state[2];
-    D = ctx->state[3];
-    E = ctx->state[4];
+/* Compute SHA1 message digest for LEN bytes beginning at BUFFER.  The
+   result is always in little endian byte order, so that a byte-wise
+   output yields to the wanted ASCII representation of the message
+   digest.  */
+void *sha1_buffer(const char *buffer, size_t len, void *resblock)
+{
+    struct sha1_ctx ctx;
 
-#define F(x,y,z) (z ^ (x & (y ^ z)))
-#define K 0x5A827999
+    /*
+     * Initialize the computation context.  
+     */
+    sha1_init_ctx(&ctx);
 
-    P( A, B, C, D, E, W[0]  );
-    P( E, A, B, C, D, W[1]  );
-    P( D, E, A, B, C, W[2]  );
-    P( C, D, E, A, B, W[3]  );
-    P( B, C, D, E, A, W[4]  );
-    P( A, B, C, D, E, W[5]  );
-    P( E, A, B, C, D, W[6]  );
-    P( D, E, A, B, C, W[7]  );
-    P( C, D, E, A, B, W[8]  );
-    P( B, C, D, E, A, W[9]  );
-    P( A, B, C, D, E, W[10] );
-    P( E, A, B, C, D, W[11] );
-    P( D, E, A, B, C, W[12] );
-    P( C, D, E, A, B, W[13] );
-    P( B, C, D, E, A, W[14] );
-    P( A, B, C, D, E, W[15] );
-    P( E, A, B, C, D, R(16) );
-    P( D, E, A, B, C, R(17) );
-    P( C, D, E, A, B, R(18) );
-    P( B, C, D, E, A, R(19) );
+    /*
+     * Process whole buffer but last len % 64 bytes.  
+     */
+    sha1_process_bytes(buffer, len, &ctx);
 
-#undef K
-#undef F
-
-#define F(x,y,z) (x ^ y ^ z)
-#define K 0x6ED9EBA1
-
-    P( A, B, C, D, E, R(20) );
-    P( E, A, B, C, D, R(21) );
-    P( D, E, A, B, C, R(22) );
-    P( C, D, E, A, B, R(23) );
-    P( B, C, D, E, A, R(24) );
-    P( A, B, C, D, E, R(25) );
-    P( E, A, B, C, D, R(26) );
-    P( D, E, A, B, C, R(27) );
-    P( C, D, E, A, B, R(28) );
-    P( B, C, D, E, A, R(29) );
-    P( A, B, C, D, E, R(30) );
-    P( E, A, B, C, D, R(31) );
-    P( D, E, A, B, C, R(32) );
-    P( C, D, E, A, B, R(33) );
-    P( B, C, D, E, A, R(34) );
-    P( A, B, C, D, E, R(35) );
-    P( E, A, B, C, D, R(36) );
-    P( D, E, A, B, C, R(37) );
-    P( C, D, E, A, B, R(38) );
-    P( B, C, D, E, A, R(39) );
-
-#undef K
-#undef F
-
-#define F(x,y,z) ((x & y) | (z & (x | y)))
-#define K 0x8F1BBCDC
-
-    P( A, B, C, D, E, R(40) );
-    P( E, A, B, C, D, R(41) );
-    P( D, E, A, B, C, R(42) );
-    P( C, D, E, A, B, R(43) );
-    P( B, C, D, E, A, R(44) );
-    P( A, B, C, D, E, R(45) );
-    P( E, A, B, C, D, R(46) );
-    P( D, E, A, B, C, R(47) );
-    P( C, D, E, A, B, R(48) );
-    P( B, C, D, E, A, R(49) );
-    P( A, B, C, D, E, R(50) );
-    P( E, A, B, C, D, R(51) );
-    P( D, E, A, B, C, R(52) );
-    P( C, D, E, A, B, R(53) );
-    P( B, C, D, E, A, R(54) );
-    P( A, B, C, D, E, R(55) );
-    P( E, A, B, C, D, R(56) );
-    P( D, E, A, B, C, R(57) );
-    P( C, D, E, A, B, R(58) );
-    P( B, C, D, E, A, R(59) );
-
-#undef K
-#undef F
-
-#define F(x,y,z) (x ^ y ^ z)
-#define K 0xCA62C1D6
-
-    P( A, B, C, D, E, R(60) );
-    P( E, A, B, C, D, R(61) );
-    P( D, E, A, B, C, R(62) );
-    P( C, D, E, A, B, R(63) );
-    P( B, C, D, E, A, R(64) );
-    P( A, B, C, D, E, R(65) );
-    P( E, A, B, C, D, R(66) );
-    P( D, E, A, B, C, R(67) );
-    P( C, D, E, A, B, R(68) );
-    P( B, C, D, E, A, R(69) );
-    P( A, B, C, D, E, R(70) );
-    P( E, A, B, C, D, R(71) );
-    P( D, E, A, B, C, R(72) );
-    P( C, D, E, A, B, R(73) );
-    P( B, C, D, E, A, R(74) );
-    P( A, B, C, D, E, R(75) );
-    P( E, A, B, C, D, R(76) );
-    P( D, E, A, B, C, R(77) );
-    P( C, D, E, A, B, R(78) );
-    P( B, C, D, E, A, R(79) );
-
-#undef K
-#undef F
-
-    ctx->state[0] += A;
-    ctx->state[1] += B;
-    ctx->state[2] += C;
-    ctx->state[3] += D;
-    ctx->state[4] += E;
+    /*
+     * Put result in desired memory area.  
+     */
+    return sha1_finish_ctx(&ctx, resblock);
 }
 
-/*
- * SHA-1 process buffer
- */
-void sha1_update( sha1_context *ctx, const unsigned char *input, size_t ilen )
+void sha1_process_bytes(const void *buffer, size_t len, struct sha1_ctx *ctx)
 {
-    size_t fill;
-    uint32_t left;
+    /*
+     * When we already have some bits in our internal buffer concatenate
+     * both inputs first.  
+     */
+    if (ctx->buflen != 0) {
+        size_t left_over = ctx->buflen;
+        size_t add = 128 - left_over > len ? len : 128 - left_over;
 
-    if( ilen == 0 )
-        return;
+        memcpy(&((char *) ctx->buffer)[left_over], buffer, add);
+        ctx->buflen += add;
 
-    left = ctx->total[0] & 0x3F;
-    fill = 64 - left;
+        if (ctx->buflen > 64) {
+            sha1_process_block(ctx->buffer, ctx->buflen & ~63, ctx);
 
-    ctx->total[0] += (uint32_t) ilen;
-    ctx->total[0] &= 0xFFFFFFFF;
+            ctx->buflen &= 63;
+            /*
+             * The regions in the following copy operation cannot overlap.  
+             */
+            memcpy(ctx->buffer,
+                    &((char *) ctx->buffer)[(left_over + add) & ~63],
+                    ctx->buflen);
+        }
 
-    if( ctx->total[0] < (uint32_t) ilen )
-        ctx->total[1]++;
-
-    if( left && ilen >= fill )
-    {
-        memcpy( (void *) (ctx->buffer + left), input, fill );
-        sha1_process( ctx, ctx->buffer );
-        input += fill;
-        ilen  -= fill;
-        left = 0;
+        buffer = (const char *) buffer + add;
+        len -= add;
     }
 
-    while( ilen >= 64 )
-    {
-        sha1_process( ctx, input );
-        input += 64;
-        ilen  -= 64;
+    /*
+     * Process available complete blocks.  
+     */
+    if (len >= 64) {
+#if !_STRING_ARCH_unaligned
+#define UNALIGNED_P(p) ((uintptr_t) (p) % alignof (uint32_t) != 0)
+        if (UNALIGNED_P(buffer)) {
+            while (len > 64) {
+                sha1_process_block(memcpy(ctx->buffer, buffer, 64), 64, ctx);
+                buffer = (const char *) buffer + 64;
+                len -= 64;
+            }
+        } else
+#endif
+        {
+            sha1_process_block(buffer, len & ~63, ctx);
+            buffer = (const char *) buffer + (len & ~63);
+            len &= 63;
+        }
     }
 
-    if( ilen > 0 )
-        memcpy( (void *) (ctx->buffer + left), input, ilen );
+    /*
+     * Move remaining bytes in internal buffer.  
+     */
+    if (len > 0) {
+        size_t left_over = ctx->buflen;
+
+        memcpy(&((char *) ctx->buffer)[left_over], buffer, len);
+        left_over += len;
+        if (left_over >= 64) {
+            sha1_process_block(ctx->buffer, 64, ctx);
+            left_over -= 64;
+            memcpy(ctx->buffer, &ctx->buffer[16], left_over);
+        }
+        ctx->buflen = left_over;
+    }
 }
 
-static const unsigned char sha1_padding[64] =
+/* --- Code below is the primary difference between md5.c and sha1.c --- */
+
+/* SHA1 round constants */
+#define K1 0x5a827999
+#define K2 0x6ed9eba1
+#define K3 0x8f1bbcdc
+#define K4 0xca62c1d6
+
+/* Round functions.  Note that F2 is the same as F4.  */
+#define F1(B,C,D) ( D ^ ( B & ( C ^ D ) ) )
+#define F2(B,C,D) (B ^ C ^ D)
+#define F3(B,C,D) ( ( B & C ) | ( D & ( B | C ) ) )
+#define F4(B,C,D) (B ^ C ^ D)
+
+/* Process LEN bytes of BUFFER, accumulating context into CTX.
+   It is assumed that LEN % 64 == 0.
+   Most of this code comes from GnuPG's cipher/sha1.c.  */
+
+void sha1_process_block(const void *buffer, size_t len, struct sha1_ctx *ctx)
 {
- 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
+    const uint32_t *words = buffer;
+    size_t nwords = len / sizeof(uint32_t);
+    const uint32_t *endp = words + nwords;
+    uint32_t x[16];
+    uint32_t a = ctx->A;
+    uint32_t b = ctx->B;
+    uint32_t c = ctx->C;
+    uint32_t d = ctx->D;
+    uint32_t e = ctx->E;
+    uint32_t lolen = len;
 
-/*
- * SHA-1 final digest
- */
-void sha1_finish( sha1_context *ctx, unsigned char output[20] )
-{
-    uint32_t last, padn;
-    uint32_t high, low;
-    unsigned char msglen[8];
+    /*
+     * First increment the byte count.  RFC 1321 specifies the possible
+     * length of the file up to 2^64 bits.  Here we only compute the
+     * number of bytes.  Do a double word increment.  
+     */
+    ctx->total[0] += lolen;
+    ctx->total[1] += (len >> 31 >> 1) + (ctx->total[0] < lolen);
 
-    high = ( ctx->total[0] >> 29 )
-         | ( ctx->total[1] <<  3 );
-    low  = ( ctx->total[0] <<  3 );
+#define rol(x, n) (((x) << (n)) | ((uint32_t) (x) >> (32 - (n))))
 
-    PUT_UINT32_BE( high, msglen, 0 );
-    PUT_UINT32_BE( low,  msglen, 4 );
+#define M(I) ( tm =   x[I&0x0f] ^ x[(I-14)&0x0f] \
+                    ^ x[(I-8)&0x0f] ^ x[(I-3)&0x0f] \
+               , (x[I&0x0f] = rol(tm, 1)) )
 
-    last = ctx->total[0] & 0x3F;
-    padn = ( last < 56 ) ? ( 56 - last ) : ( 120 - last );
+#define R(A,B,C,D,E,F,K,M)  do { E += rol( A, 5 )     \
+                                      + F( B, C, D )  \
+                                      + K             \
+                                      + M;            \
+                                 B = rol( B, 30 );    \
+                               } while(0)
 
-    sha1_update( ctx, sha1_padding, padn );
-    sha1_update( ctx, msglen, 8 );
+    while (words < endp) {
+        uint32_t tm;
+        int t;
+        for (t = 0; t < 16; t++) {
+            x[t] = SWAP(*words);
+            words++;
+        }
 
-    PUT_UINT32_BE( ctx->state[0], output,  0 );
-    PUT_UINT32_BE( ctx->state[1], output,  4 );
-    PUT_UINT32_BE( ctx->state[2], output,  8 );
-    PUT_UINT32_BE( ctx->state[3], output, 12 );
-    PUT_UINT32_BE( ctx->state[4], output, 16 );
-}
+        R(a, b, c, d, e, F1, K1, x[0]);
+        R(e, a, b, c, d, F1, K1, x[1]);
+        R(d, e, a, b, c, F1, K1, x[2]);
+        R(c, d, e, a, b, F1, K1, x[3]);
+        R(b, c, d, e, a, F1, K1, x[4]);
+        R(a, b, c, d, e, F1, K1, x[5]);
+        R(e, a, b, c, d, F1, K1, x[6]);
+        R(d, e, a, b, c, F1, K1, x[7]);
+        R(c, d, e, a, b, F1, K1, x[8]);
+        R(b, c, d, e, a, F1, K1, x[9]);
+        R(a, b, c, d, e, F1, K1, x[10]);
+        R(e, a, b, c, d, F1, K1, x[11]);
+        R(d, e, a, b, c, F1, K1, x[12]);
+        R(c, d, e, a, b, F1, K1, x[13]);
+        R(b, c, d, e, a, F1, K1, x[14]);
+        R(a, b, c, d, e, F1, K1, x[15]);
+        R(e, a, b, c, d, F1, K1, M(16));
+        R(d, e, a, b, c, F1, K1, M(17));
+        R(c, d, e, a, b, F1, K1, M(18));
+        R(b, c, d, e, a, F1, K1, M(19));
+        R(a, b, c, d, e, F2, K2, M(20));
+        R(e, a, b, c, d, F2, K2, M(21));
+        R(d, e, a, b, c, F2, K2, M(22));
+        R(c, d, e, a, b, F2, K2, M(23));
+        R(b, c, d, e, a, F2, K2, M(24));
+        R(a, b, c, d, e, F2, K2, M(25));
+        R(e, a, b, c, d, F2, K2, M(26));
+        R(d, e, a, b, c, F2, K2, M(27));
+        R(c, d, e, a, b, F2, K2, M(28));
+        R(b, c, d, e, a, F2, K2, M(29));
+        R(a, b, c, d, e, F2, K2, M(30));
+        R(e, a, b, c, d, F2, K2, M(31));
+        R(d, e, a, b, c, F2, K2, M(32));
+        R(c, d, e, a, b, F2, K2, M(33));
+        R(b, c, d, e, a, F2, K2, M(34));
+        R(a, b, c, d, e, F2, K2, M(35));
+        R(e, a, b, c, d, F2, K2, M(36));
+        R(d, e, a, b, c, F2, K2, M(37));
+        R(c, d, e, a, b, F2, K2, M(38));
+        R(b, c, d, e, a, F2, K2, M(39));
+        R(a, b, c, d, e, F3, K3, M(40));
+        R(e, a, b, c, d, F3, K3, M(41));
+        R(d, e, a, b, c, F3, K3, M(42));
+        R(c, d, e, a, b, F3, K3, M(43));
+        R(b, c, d, e, a, F3, K3, M(44));
+        R(a, b, c, d, e, F3, K3, M(45));
+        R(e, a, b, c, d, F3, K3, M(46));
+        R(d, e, a, b, c, F3, K3, M(47));
+        R(c, d, e, a, b, F3, K3, M(48));
+        R(b, c, d, e, a, F3, K3, M(49));
+        R(a, b, c, d, e, F3, K3, M(50));
+        R(e, a, b, c, d, F3, K3, M(51));
+        R(d, e, a, b, c, F3, K3, M(52));
+        R(c, d, e, a, b, F3, K3, M(53));
+        R(b, c, d, e, a, F3, K3, M(54));
+        R(a, b, c, d, e, F3, K3, M(55));
+        R(e, a, b, c, d, F3, K3, M(56));
+        R(d, e, a, b, c, F3, K3, M(57));
+        R(c, d, e, a, b, F3, K3, M(58));
+        R(b, c, d, e, a, F3, K3, M(59));
+        R(a, b, c, d, e, F4, K4, M(60));
+        R(e, a, b, c, d, F4, K4, M(61));
+        R(d, e, a, b, c, F4, K4, M(62));
+        R(c, d, e, a, b, F4, K4, M(63));
+        R(b, c, d, e, a, F4, K4, M(64));
+        R(a, b, c, d, e, F4, K4, M(65));
+        R(e, a, b, c, d, F4, K4, M(66));
+        R(d, e, a, b, c, F4, K4, M(67));
+        R(c, d, e, a, b, F4, K4, M(68));
+        R(b, c, d, e, a, F4, K4, M(69));
+        R(a, b, c, d, e, F4, K4, M(70));
+        R(e, a, b, c, d, F4, K4, M(71));
+        R(d, e, a, b, c, F4, K4, M(72));
+        R(c, d, e, a, b, F4, K4, M(73));
+        R(b, c, d, e, a, F4, K4, M(74));
+        R(a, b, c, d, e, F4, K4, M(75));
+        R(e, a, b, c, d, F4, K4, M(76));
+        R(d, e, a, b, c, F4, K4, M(77));
+        R(c, d, e, a, b, F4, K4, M(78));
+        R(b, c, d, e, a, F4, K4, M(79));
 
-/*
- * output = SHA-1( input buffer )
- */
-void sha1( const unsigned char *input, size_t ilen, unsigned char output[20] )
-{
-    sha1_context ctx;
-
-    sha1_init( &ctx );
-    sha1_starts( &ctx );
-    sha1_update( &ctx, input, ilen );
-    sha1_finish( &ctx, output );
-    sha1_free( &ctx );
+        a = ctx->A += a;
+        b = ctx->B += b;
+        c = ctx->C += c;
+        d = ctx->D += d;
+        e = ctx->E += e;
+    }
 }
