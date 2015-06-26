@@ -117,7 +117,11 @@
 }%
 
 \RequireLuaModule{gregoriotex}%
-\directlua{gregoriotex.init(arg)}%
+\ifcsname greskipheightcomputation\endcsname %
+  \directlua{gregoriotex.init(arg, false)}%
+\else %
+  \directlua{gregoriotex.init(arg, true)}%
+\fi %
 
 \xdef\gre@gregoriotexluaversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
 
@@ -240,7 +244,9 @@
       \fi %
     \fi %
     \global\advance\greknownline by 1\relax %
-    %%%\gre@calculate@additionalspaces{#1}{#2}%
+    \ifcase\gre@variableheightexpansion %
+      \gre@calculate@additionalspaces{#1}{#2}% 0
+    \fi
     \ifnum#3 = 1\relax %
       \gre@addtranslationspace %
     \else %
@@ -913,6 +919,17 @@
     }%
 }%
 
+% make this a count so that it can be read more easily in Lua
+\newcount\gre@variableheightexpansion\gre@variableheightexpansion=1\relax %
+\def\gresetlineheightexpansion#1{%
+  \IfStrEq{#1}{uniform}%
+    {\gre@variableheightexpansion=0\relax }%
+    {\IfStrEq{#1}{variable}%
+      {\gre@variableheightexpansion=1\relax }%
+      {\greerror{Unrecognized option for \protect\gresetlineheightexpansion}}%
+    }%
+}%
+
 % gregorioattr (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
 \newif\ifgre@save@englishcentering% DEPRECATED
@@ -936,7 +953,7 @@
   \exhyphenchar=-1\relax %
   \gregeneratelines %
   \noindent%
-  \directlua{gregoriotex.atScoreBeginning([[#1]]) gregoriotex.adjust_line_height()}%
+  \directlua{gregoriotex.atScoreBeginning([[#1]]) gregoriotex.adjust_line_height(1)}%
   %TODO do something like LaTeX's AtBeginDocument
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %

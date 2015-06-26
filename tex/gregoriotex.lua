@@ -57,11 +57,11 @@ local endcenter   = 2
 local glyph_id_attr = luatexbase.attributes['gre@attr@glyph@id']
 local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
-local prev_glyph_id = nil
+local prev_line_id = nil
 
 local score_inclusion = {}
-local line_heights = {}
-local new_line_heights = {}
+local line_heights = nil
+local new_line_heights = nil
 local score_heights = nil
 local new_score_heights = nil
 local auxname = nil
@@ -130,7 +130,7 @@ local function write_greaux()
   end
 end
 
-local function init(arg)
+local function init(arg, enable_height_computation)
   -- is there a better way to get the output directory?
   local outputdir = nil
   for k,v in pairs(arg) do
@@ -153,20 +153,31 @@ local function init(arg)
   if lfs.isfile(auxname) then
     log("Reading %s", auxname)
     line_heights = dofile(auxname)
+  else
+    line_heights = {}
   end
 
-  local mcb_version = luatexbase.get_module_version('luatexbase-mcb')
-  if mcb_version and mcb_version > 0.6 then
-    luatexbase.add_to_callback('finish_pdffile', write_greaux,
-        'gregoriotex.write_greaux')
-  else
-    -- The version of luatexbase in TeX Live 2014 does not support it, and
-    -- luatexbase prevents a direct call to callback.register.  Because of
-    -- this, we lose the LuaTeX statistics and "output written to" messages,
-    -- but I know of no other workaround.
+  if enable_height_computation then
+    new_line_heights = {}
 
-    luatexbase.add_to_callback('stop_run', write_greaux,
-        'gregoriotex.write_greaux')
+    local mcb_version = luatexbase.get_module_version('luatexbase-mcb')
+    if mcb_version and mcb_version > 0.6 then
+      luatexbase.add_to_callback('finish_pdffile', write_greaux,
+          'gregoriotex.write_greaux')
+    else
+      -- The version of luatexbase in TeX Live 2014 does not support it, and
+      -- luatexbase prevents a direct call to callback.register.  Because of
+      -- this, we lose the LuaTeX statistics and "output written to" messages,
+      -- but I know of no other workaround.
+
+      luatexbase.add_to_callback('stop_run', write_greaux,
+          'gregoriotex.write_greaux')
+    end
+  else
+    warn('Height computation has been skipped.  Gregorio will use '..
+        'previously computed values if available but will not recompute '..
+        'line heights.  Remove or undefine \\greskipheightcomputation to '..
+        'resume height computation.')
   end
 end
 
@@ -189,13 +200,13 @@ end
 local function dump_nodes(head)
   local n, m
   for n in traverse(head) do
-    log("node %s [%d]", node.type(n.id), n.subtype)
+    log("node %s [%d] {%d}", node.type(n.id), n.subtype, has_attribute(n, glyph_id_attr))
     if n.id == hlist then
       for m in traverse(n.head) do
         if node.type(m.id) == 'penalty' then
-          log("..%s=%d", node.type(m.id), m.penalty)
+          log("..%s=%d {%d}", node.type(m.id), m.penalty, has_attribute(n, glyph_id_attr))
         else
-          log("..node %s [%d]", node.type(m.id), m.subtype)
+          log("..node %s [%d] {%d}", node.type(m.id), m.subtype, has_attribute(n, glyph_id_attr))
         end
       end
     end
@@ -286,16 +297,20 @@ local function process (h, groupcode, glyphes)
             adddash=false
           end
 
-          local glyph_id = has_attribute(n, glyph_id_attr)
-          local glyph_top = has_attribute(n, glyph_top_attr)
-          local glyph_bottom = has_attribute(n, glyph_bottom_attr)
-          if glyph_id and glyph_top and glyph_bottom then
-            line_id = glyph_id
-            if not line_top or glyph_top > line_top then
-              line_top = glyph_top
-            end
-            if not line_bottom or glyph_bottom < line_bottom then
-              line_bottom = glyph_bottom
+          if new_score_heights then
+            local glyph_id = has_attribute(n, glyph_id_attr)
+            local glyph_top = has_attribute(n, glyph_top_attr) or 9 -- 'g'
+            local glyph_bottom = has_attribute(n, glyph_bottom_attr) or 9 -- 'g'
+            if glyph_id then
+              if not line_id or glyph_id > line_id then
+                line_id = glyph_id
+              end
+              if not line_top or glyph_top > line_top then
+                line_top = glyph_top
+              end
+              if not line_bottom or glyph_bottom < line_bottom then
+                line_bottom = glyph_bottom
+              end
             end
           end
         end
@@ -307,8 +322,8 @@ local function process (h, groupcode, glyphes)
           addash=false
         end
         if line_id then
-          new_score_heights[prev_glyph_id] = { line_top, line_bottom }
-          prev_glyph_id = line_id
+          new_score_heights[prev_line_id] = { line_top, line_bottom }
+          prev_line_id = line_id
         end
       end
       -- we reinitialize the shift value, because it may change according to the line
@@ -328,13 +343,20 @@ local function disable_hyphenation()
 end
 
 local function atScoreBeginning (score_id)
-  local inclusion = score_inclusion[score_id] or 1
-  score_inclusion[score_id] = inclusion + 1
-  score_id = score_id..'.'..inclusion
-  score_heights = line_heights[score_id] or {}
-  new_score_heights = {}
-  new_line_heights[score_id] = new_score_heights
-  prev_glyph_id = tex.getattribute(glyph_id_attr)
+  if tex.count['gre@variableheightexpansion'] == 1 then
+    local inclusion = score_inclusion[score_id] or 1
+    score_inclusion[score_id] = inclusion + 1
+    score_id = score_id..'.'..inclusion
+    score_heights = line_heights[score_id] or {}
+    if new_line_heights then
+      new_score_heights = {}
+      new_line_heights[score_id] = new_score_heights
+    end
+    prev_line_id = tex.getattribute(glyph_id_attr)
+  else
+    score_heights = nil
+    new_score_heights = nil
+  end
 
   luatexbase.add_to_callback('post_linebreak_filter', process, 'gregoriotex.callback', 1)
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
@@ -626,14 +648,20 @@ local function font_size()
   tex.print(string.format('%.2f', (font.fonts[font.current()].size / 65536.0)))
 end
 
-local function adjust_line_height()
-  local heights = score_heights[tex.getattribute(glyph_id_attr)]
-  if heights then
-    local top, bottom = heights[1] - 12, 6 - heights[2]
-    if top < 0 then top = 0 end
-    if bottom < 0 then bottom = 0 end
-    tex.print(catcode_at_letter, string.format(
-        [[\gre@calculate@additionalspaces{%d}{%d}]], top, bottom))
+local function adjust_line_height(inside_discretionary)
+  if score_heights then
+    local heights = score_heights[tex.getattribute(glyph_id_attr)]
+    if heights then
+      local top, bottom = heights[1] - 12, 6 - heights[2]
+      if top < 0 then top = 0 end
+      if bottom < 0 then bottom = 0 end
+      tex.sprint(catcode_at_letter, string.format(
+          [[\gre@calculate@additionalspaces{%d}{%d}]],
+          top, bottom))
+      if inside_discretionary == 0 then
+        tex.sprint(catcode_at_letter, [[\greupdateleftbox ]])
+      end
+    end
   end
 end
 
