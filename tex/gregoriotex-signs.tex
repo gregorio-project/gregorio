@@ -1257,7 +1257,7 @@
   \fi %
   \gre@debugmsg{spacing}{Width of bar just printed: \the\wd\gre@box@temp@width}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
-  \directlua{gregoriotex.adjust_line_height()}%
+  \directlua{gregoriotex.adjust_line_height(\greinsidediscretionary)}%
   \relax%
 }%
 

@@ -635,16 +635,19 @@ local function font_size()
   tex.print(string.format('%.2f', (font.fonts[font.current()].size / 65536.0)))
 end
 
-local function adjust_line_height()
+local function adjust_line_height(inside_discretionary)
   if score_heights then
     local heights = score_heights[tex.getattribute(glyph_id_attr)]
     if heights then
       local top, bottom = heights[1] - 12, 6 - heights[2]
       if top < 0 then top = 0 end
       if bottom < 0 then bottom = 0 end
-      tex.print(catcode_at_letter, string.format(
-          [[\gre@calculate@additionalspaces{%d}{%d}\greupdateleftbox]],
+      tex.sprint(catcode_at_letter, string.format(
+          [[\gre@calculate@additionalspaces{%d}{%d}]],
           top, bottom))
+      if inside_discretionary == 0 then
+        tex.sprint(catcode_at_letter, [[\greupdateleftbox ]])
+      end
     end
   end
 end
