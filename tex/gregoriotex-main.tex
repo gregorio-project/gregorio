@@ -117,7 +117,11 @@
 }%
 
 \RequireLuaModule{gregoriotex}%
-\directlua{gregoriotex.init(arg)}%
+\ifcsname greskipheightcomputation\endcsname %
+  \directlua{gregoriotex.init(arg, false)}%
+\else %
+  \directlua{gregoriotex.init(arg, true)}%
+\fi %
 
 \xdef\gre@gregoriotexluaversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
 

@@ -60,8 +60,8 @@ local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_line_id = nil
 
 local score_inclusion = {}
-local line_heights = {}
-local new_line_heights = {}
+local line_heights = nil
+local new_line_heights = nil
 local score_heights = nil
 local new_score_heights = nil
 local auxname = nil
@@ -130,7 +130,7 @@ local function write_greaux()
   end
 end
 
-local function init(arg)
+local function init(arg, enable_height_computation)
   -- is there a better way to get the output directory?
   local outputdir = nil
   for k,v in pairs(arg) do
@@ -153,20 +153,31 @@ local function init(arg)
   if lfs.isfile(auxname) then
     log("Reading %s", auxname)
     line_heights = dofile(auxname)
+  else
+    line_heights = {}
   end
 
-  local mcb_version = luatexbase.get_module_version('luatexbase-mcb')
-  if mcb_version and mcb_version > 0.6 then
-    luatexbase.add_to_callback('finish_pdffile', write_greaux,
-        'gregoriotex.write_greaux')
-  else
-    -- The version of luatexbase in TeX Live 2014 does not support it, and
-    -- luatexbase prevents a direct call to callback.register.  Because of
-    -- this, we lose the LuaTeX statistics and "output written to" messages,
-    -- but I know of no other workaround.
+  if enable_height_computation then
+    new_line_heights = {}
 
-    luatexbase.add_to_callback('stop_run', write_greaux,
-        'gregoriotex.write_greaux')
+    local mcb_version = luatexbase.get_module_version('luatexbase-mcb')
+    if mcb_version and mcb_version > 0.6 then
+      luatexbase.add_to_callback('finish_pdffile', write_greaux,
+          'gregoriotex.write_greaux')
+    else
+      -- The version of luatexbase in TeX Live 2014 does not support it, and
+      -- luatexbase prevents a direct call to callback.register.  Because of
+      -- this, we lose the LuaTeX statistics and "output written to" messages,
+      -- but I know of no other workaround.
+
+      luatexbase.add_to_callback('stop_run', write_greaux,
+          'gregoriotex.write_greaux')
+    end
+  else
+    warn('Height computation has been skipped.  Gregorio will use '..
+        'previously computed values if available but will not recompute '..
+        'line heights.  Remove or undefine \\greskipheightcomputation to '..
+        'resume height computation.')
   end
 end
 
@@ -337,8 +348,10 @@ local function atScoreBeginning (score_id)
     score_inclusion[score_id] = inclusion + 1
     score_id = score_id..'.'..inclusion
     score_heights = line_heights[score_id] or {}
-    new_score_heights = {}
-    new_line_heights[score_id] = new_score_heights
+    if new_line_heights then
+      new_score_heights = {}
+      new_line_heights[score_id] = new_score_heights
+    end
     prev_line_id = tex.getattribute(glyph_id_attr)
   else
     score_heights = nil
