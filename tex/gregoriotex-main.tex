@@ -36,11 +36,11 @@
       %false
       {\IfStrEq{\gre@debug}{all}%
         %true
-        {\typeout{GregorioTeX debug: (#1) #2}}%
+        {\gre@typeout{GregorioTeX debug: (#1) #2}}%
         %false
         {\IfSubStr{\gre@debug}{#1}%
           %true
-          {\typeout{GregorioTeX debug: (#1) #2}}%
+          {\gre@typeout{GregorioTeX debug: (#1) #2}}%
           %false
           {\relax}%
         }%
@@ -190,35 +190,21 @@
 %% macros for additionnal vertical spaces
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%macro to call if you want to go to the next line simply
-\def\GreNewLine{%
-  \gre@debugmsg{general}{GreNewLine}%
-  \grenewlinecommon{0}{0}{0}{0}{0}%
-  \relax%
-}%
-
-% macro called to go to the next line but when there are additional vertical spaces to add
-%% 1: can be 0, 1 or 2 or 3. 1 is when there is a note above the 4th line, 2 when there is a note on the 5th line, and 3 when there is a note above the 5th line
-%% 2: idem, but with the bottom line (-1th). It can be 4, in the case of a bottom note with a vertical episemus.
+% macro called to go to the next line
+%% 1: the high height
+%% 2: the low height
 %% 3: 1 if there is a translation somewhere
 % #4 is if 1 if we have space above the staff
 \def\GreNewLineWithSpace#1#2#3#4{%
-  \gre@debugmsg{general}{GreNewLineWithSpace #1 #2}%
+  \gre@debugmsg{lineheight}{GreNewLineWithSpace #1 #2}%
   \grenewlinecommon{#1}{#2}{#3}{0}{#4}%
   \relax%
 }%
 
-
-% basically same macros as above, but these one do a \hfill, the lines are not justified
+% basically same as above, but these one do a \hfill, the lines are not justified
 %macro to call if you want to go to the next line simply
-\def\GreNewParLine{%
-  \gre@debugmsg{general}{GreNewParLine}%
-  \grenewlinecommon{0}{0}{0}{1}{0}%
-  \relax%
-}%
-
 \def\GreNewParLineWithSpace#1#2#3#4{%
-  \gre@debugmsg{general}{GreNewParLineWithSpace #1 #2}%
+  \gre@debugmsg{lineheight}{GreNewParLineWithSpace #1 #2}%
   \grenewlinecommon{#1}{#2}{#3}{1}{#4}%
 }%
 
@@ -246,6 +232,7 @@
     \global\advance\greknownline by 1\relax %
     \ifcase\gre@variableheightexpansion %
       \gre@calculate@additionalspaces{#1}{#2}% 0
+      % else it's handled by the variable height code
     \fi
     \ifnum#3 = 1\relax %
       \gre@addtranslationspace %
@@ -983,7 +970,7 @@
   % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
   \grelocalleftbox{}%
   \grelocalrightbox{}%
-  \gre@calculate@additionalspaces{0}{0}%
+  \gre@calculate@additionalspaces{\gre@pitch@g}{\gre@pitch@g}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@removetranslationspace %
   \grenormalinitial %
@@ -1000,6 +987,9 @@
   \gre@skip@temp@three=0pt%
   \gre@skip@temp@four=0pt%
   \directlua{gregoriotex.atScoreEnd()}%
+  \unsetluatexattribute{\gre@attr@glyph@id}%
+  \unsetluatexattribute{\gre@attr@glyph@top}%
+  \unsetluatexattribute{\gre@attr@glyph@bottom}%
   \ifgre@justifylastline%
     \parfillskip=\gre@save@parfillskip\relax%
   \fi %

@@ -341,7 +341,7 @@ typedef union gregorio_misc_element_info {
         // The pitch of the glyph for GRE_FLAT, GRE_NATURAL, GRE_SHARP.
         // If a clef change, pitch will be a number indicating the line of
         // the clef.
-        char pitch;
+        signed char pitch;
         // boolean indicating a clef with a B-flat
         bool flatted_key:1;
     } pitched;
@@ -376,7 +376,7 @@ typedef struct gregorio_note {
             // the pitch is the height of the note on the score, that is to
             // say the letter it is represented by in gabc.  If a clef
             // change, pitch will be a number indicating the line of the clef.
-            char pitch;
+            signed char pitch;
             // shape is the shape of the note... if you want to know the
             // different possible shapes, see above.
             ENUM_BITFIELD(gregorio_shape) shape:8;
@@ -411,9 +411,9 @@ typedef struct gregorio_note {
     // final structure.
 
     const char *gtex_offset_case;
-    char v_episemus_height;
-    char h_episemus_above;
-    char h_episemus_below;
+    signed char v_episemus_height;
+    signed char h_episemus_above;
+    signed char h_episemus_below;
     ENUM_BITFIELD(grehepisemus_size) h_episemus_above_size:2;
     ENUM_BITFIELD(grehepisemus_size) h_episemus_below_size:2;
     bool h_episemus_above_connect:1;
@@ -728,7 +728,7 @@ static inline bool is_initio_debilis(char liquescentia)
 #define DUMMY_PITCH (LOWEST_PITCH + 6)
 
 gregorio_score *gregorio_new_score(void);
-void gregorio_add_note(gregorio_note **current_note, char pitch,
+void gregorio_add_note(gregorio_note **current_note, signed char pitch,
         gregorio_shape shape, gregorio_sign signs,
         gregorio_liquescentia liquescentia, gregorio_note* prototype);
 void gregorio_add_glyph(gregorio_glyph **current_glyph,
@@ -746,9 +746,9 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_euouae euouae);
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
-void gregorio_position_h_episemus_above(gregorio_note *note, char height,
+void gregorio_position_h_episemus_above(gregorio_note *note, signed char height,
         bool connect);
-void gregorio_position_h_episemus_below(gregorio_note *note, char height,
+void gregorio_position_h_episemus_below(gregorio_note *note, signed char height,
         bool connect);
 void gregorio_add_h_episemus(gregorio_note *note, grehepisemus_size size,
         gregorio_vposition vposition, bool disable_bridge,
@@ -764,7 +764,7 @@ void gregorio_free_one_glyph(gregorio_glyph **glyph);
 void gregorio_free_score(gregorio_score *score);
 void gregorio_go_to_first_character(gregorio_character **character);
 void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
-        gregorio_type type, char pitch, bool flatted_key, char *texverb);
+        gregorio_type type, signed char pitch, bool flatted_key, char *texverb);
 void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
         gregorio_type type, gregorio_extra_info info, gregorio_sign sign,
         char *texverb);
@@ -772,12 +772,12 @@ void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
         gregorio_type sub_type);
 void gregorio_add_custo_as_note(gregorio_note **current_note);
 void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
-                                        char pitch);
+        signed char pitch);
 void gregorio_add_clef_change_as_note(gregorio_note **current_note,
-        gregorio_type type, char clef_line);
+        gregorio_type type, signed char clef_line);
 void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar);
 void gregorio_add_alteration_as_note(gregorio_note **current_note,
-        gregorio_type type, char pitch);
+        gregorio_type type, signed char pitch);
 void gregorio_add_space_as_note(gregorio_note **current_note,
         gregorio_space space);
 void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
@@ -795,7 +795,7 @@ void gregorio_reinitialize_one_voice_alterations(char alterations[13]);
 void gregorio_set_score_name(gregorio_score *score, char *name);
 void gregorio_set_score_gabc_copyright(gregorio_score *score, char *gabc_copyright);
 void gregorio_set_score_score_copyright(gregorio_score *score,
-                                        char *score_copyright);
+        char *score_copyright);
 void gregorio_set_score_office_part(gregorio_score *score, char *office_part);
 void gregorio_set_score_occasion(gregorio_score *score, char *occasion);
 void gregorio_set_score_meter(gregorio_score *score, char *meter);
@@ -824,7 +824,7 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key);
 void gregorio_go_to_first_note(gregorio_note **note);
 void gregorio_go_to_first_glyph(gregorio_glyph **glyph);
 void gregorio_det_step_and_line_from_key(int key, char *step, int *line);
-char gregorio_is_only_special(gregorio_element *element);
+bool gregorio_is_only_special(gregorio_element *element);
 int gregorio_calculate_new_key(char step, int line);
 void gregorio_add_character(gregorio_character **current_character,
         grewchar wcharacter);
@@ -832,7 +832,7 @@ void gregorio_begin_style(gregorio_character **current_character,
         grestyle_style style);
 void gregorio_end_style(gregorio_character **current_character,
         grestyle_style style);
-char gregorio_determine_next_pitch(gregorio_syllable *syllable,
+signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph);
 
 #endif
