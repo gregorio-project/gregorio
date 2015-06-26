@@ -920,7 +920,7 @@
 }%
 
 % make this a count so that it can be read more easily in Lua
-\newcount\gre@variableheightexpansion\gre@variableheightexpansion=0\relax %
+\newcount\gre@variableheightexpansion\gre@variableheightexpansion=1\relax %
 \def\gresetlineheightexpansion#1{%
   \IfStrEq{#1}{uniform}%
     {\gre@variableheightexpansion=0\relax }%
