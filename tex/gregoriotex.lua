@@ -57,7 +57,7 @@ local endcenter   = 2
 local glyph_id_attr = luatexbase.attributes['gre@attr@glyph@id']
 local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
-local prev_glyph_id = nil
+local prev_line_id = nil
 
 local score_inclusion = {}
 local line_heights = {}
@@ -189,13 +189,13 @@ end
 local function dump_nodes(head)
   local n, m
   for n in traverse(head) do
-    log("node %s [%d]", node.type(n.id), n.subtype)
+    log("node %s [%d] {%d}", node.type(n.id), n.subtype, has_attribute(n, glyph_id_attr))
     if n.id == hlist then
       for m in traverse(n.head) do
         if node.type(m.id) == 'penalty' then
-          log("..%s=%d", node.type(m.id), m.penalty)
+          log("..%s=%d {%d}", node.type(m.id), m.penalty, has_attribute(n, glyph_id_attr))
         else
-          log("..node %s [%d]", node.type(m.id), m.subtype)
+          log("..node %s [%d] {%d}", node.type(m.id), m.subtype, has_attribute(n, glyph_id_attr))
         end
       end
     end
@@ -288,10 +288,12 @@ local function process (h, groupcode, glyphes)
 
           if new_score_heights then
             local glyph_id = has_attribute(n, glyph_id_attr)
-            local glyph_top = has_attribute(n, glyph_top_attr)
-            local glyph_bottom = has_attribute(n, glyph_bottom_attr)
-            if glyph_id and glyph_top and glyph_bottom then
-              line_id = glyph_id
+            local glyph_top = has_attribute(n, glyph_top_attr) or 9 -- 'g'
+            local glyph_bottom = has_attribute(n, glyph_bottom_attr) or 9 -- 'g'
+            if glyph_id then
+              if not line_id or glyph_id > line_id then
+                line_id = glyph_id
+              end
               if not line_top or glyph_top > line_top then
                 line_top = glyph_top
               end
@@ -309,8 +311,8 @@ local function process (h, groupcode, glyphes)
           addash=false
         end
         if line_id then
-          new_score_heights[prev_glyph_id] = { line_top, line_bottom }
-          prev_glyph_id = line_id
+          new_score_heights[prev_line_id] = { line_top, line_bottom }
+          prev_line_id = line_id
         end
       end
       -- we reinitialize the shift value, because it may change according to the line
@@ -337,7 +339,7 @@ local function atScoreBeginning (score_id)
     score_heights = line_heights[score_id] or {}
     new_score_heights = {}
     new_line_heights[score_id] = new_score_heights
-    prev_glyph_id = tex.getattribute(glyph_id_attr)
+    prev_line_id = tex.getattribute(glyph_id_attr)
   else
     score_heights = nil
     new_score_heights = nil
