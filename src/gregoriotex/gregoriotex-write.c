@@ -37,8 +37,6 @@
 
 #define BUFSIZE 128
 
-enum syllable { THIS_SYL, NEXT_SYL };
-
 // a structure containing the status
 typedef struct gregoriotex_status {
     // true if the current_glyph will have an additional line under or not
@@ -166,6 +164,7 @@ static inline bool is_shortqueue(const signed char pitch,
 }
 
 static grestyle_style gregoriotex_ignore_style = ST_NO_STYLE;
+static grestyle_style gregoriotex_next_ignore_style = ST_NO_STYLE;
 
 static char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         gregorio_glyph *glyph, gregorio_element *element, gtex_alignment * type)
@@ -2532,33 +2531,44 @@ static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
     }
 }
 
+static void write_fixed_text_styles(FILE *f, gregorio_character *syllable_text,
+        gregorio_character *next_syllable_text)
+{
+    if (syllable_text) {
+        gregoriotex_ignore_style = gregoriotex_fix_style(syllable_text);
+        if (gregoriotex_ignore_style) {
+            fprintf(f, "\\GreSetFixedTextFormat{%d}",
+                    gregoriotex_internal_style_to_gregoriotex
+                    (gregoriotex_ignore_style));
+        }
+    }
+    if (next_syllable_text) {
+        gregoriotex_next_ignore_style = gregoriotex_fix_style(
+                next_syllable_text);
+        if (gregoriotex_next_ignore_style) {
+            fprintf(f, "\\GreSetFixedNextTextFormat{%d}",
+                    gregoriotex_internal_style_to_gregoriotex
+                    (gregoriotex_next_ignore_style));
+        }
+    }
+}
+
 static void gregoriotex_write_text(FILE *f, gregorio_character *text,
-        bool * first_syllable, int next_syl)
+        bool *first_syllable)
 {
     if (text == NULL) {
         fprintf(f, "{}{}{}");
         return;
     }
     fprintf(f, "{");
-    gregoriotex_ignore_style = gregoriotex_fix_style(text);
-    if (gregoriotex_ignore_style != 0) {
-        if (next_syl) {
-            fprintf(f, "\\GreSetFixedNextTextFormat{%d}",
-                    gregoriotex_internal_style_to_gregoriotex
-                    (gregoriotex_ignore_style));
-        } else {
-            fprintf(f, "\\GreSetFixedTextFormat{%d}",
-                    gregoriotex_internal_style_to_gregoriotex
-                    (gregoriotex_ignore_style));
-        }
-    }
     gregorio_write_text(first_syllable && *first_syllable, text, f,
             (&gtex_write_verb), (&gtex_print_char), (&gtex_write_begin),
             (&gtex_write_end), (&gtex_write_special_char));
     if (first_syllable) {
         *first_syllable = false;
     }
-    gregoriotex_ignore_style = 0;
+    gregoriotex_ignore_style = gregoriotex_next_ignore_style;
+    gregoriotex_next_ignore_style = ST_NO_STYLE;
     fprintf(f, "}");
 }
 
@@ -2716,6 +2726,8 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                 return;
             }
         }
+        write_fixed_text_styles(f, syllable->text,
+                syllable->next_syllable? syllable->next_syllable->text : NULL);
         if ((syllable->elements)[0]->type == GRE_BAR) {
             if (!syllable->next_syllable && !syllable->text
                     && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
@@ -2735,9 +2747,11 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             fprintf(f, "\\GreSyllable");
         }
     } else {
+        write_fixed_text_styles(f, syllable->text,
+                syllable->next_syllable? syllable->next_syllable->text : NULL);
         fprintf(f, "\\GreSyllable");
     }
-    gregoriotex_write_text(f, syllable->text, first_syllable, THIS_SYL);
+    gregoriotex_write_text(f, syllable->text, first_syllable);
     if (syllable->position == WORD_END
             || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
             || !syllable->next_syllable
@@ -2749,8 +2763,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
     }
     if (syllable->next_syllable) {
         fprintf(f, "{\\GreSetNextSyllable");
-        gregoriotex_write_text(f, syllable->next_syllable->text, NULL,
-                NEXT_SYL);
+        gregoriotex_write_text(f, syllable->next_syllable->text, NULL);
         fprintf(f, "}{}{%d}{",
                 gregoriotex_syllable_first_type(syllable->next_syllable));
     } else {

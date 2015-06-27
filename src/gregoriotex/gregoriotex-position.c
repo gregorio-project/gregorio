@@ -83,6 +83,8 @@ OFFSET_CASE(FinalConnectedAuctus); // 53
 OFFSET_CASE(FinalVirgaAuctus); // 54
 OFFSET_CASE(FinalConnectedVirga); // 55
 OFFSET_CASE(InitialVirga); // 56
+OFFSET_CASE(SalicusOriscusWide);
+OFFSET_CASE(SalicusOriscusOne);
 
 static inline const char *note_before_last_note_case(
         const gregorio_glyph *const current_glyph,
@@ -730,6 +732,28 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                     true);
             h_episemus = VPOS_ABOVE;
             v_episemus = VPOS_BELOW;
+            break;
+        }
+        break;
+    case T_SALICUS:
+    case T_SALICUS_LONGQUEUE:
+        v_episemus = VPOS_BELOW;
+        switch (i) {
+        case 1:
+            note->gtex_offset_case = InitialConnectedPunctum;
+            h_episemus = above_if_h_episemus(note->next);
+            break;
+        case 2:
+            if (note->next->u.note.pitch - note->u.note.pitch == 1) {
+                note->gtex_offset_case = SalicusOriscusOne;
+            } else {
+                note->gtex_offset_case = SalicusOriscusWide;
+            }
+            h_episemus = VPOS_ABOVE;
+            break;
+        default:
+            note->gtex_offset_case = FinalConnectedVirga;
+            h_episemus = VPOS_ABOVE;
             break;
         }
         break;
