@@ -458,10 +458,10 @@
     \gre@debugmsg{annnotation}{Initial set point.}%
     \global\gre@dimen@annotationtrueraise= 0.8em\relax%
     \global\advance\gre@dimen@annotationtrueraise by -\dp\gre@box@annotation@add%
-    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\vtop spread \gre@dimen@annotationseparation{\vss\noindent\box\gre@box@annotation@add}}%
+    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\vtop{{\offinterlineskip\vss\noindent\box\gre@box@annotation@add}}}%
   \else%
     \gre@debugmsg{annotation}{We're not on the first line of the annotation.}%
-    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\vtop spread \gre@dimen@annotationseparation{\noindent\box\gre@box@annotation@old\vss\noindent\box\gre@box@annotation@add}}%
+    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\vtop spread \gre@dimen@annotationseparation{{\offinterlineskip\noindent\box\gre@box@annotation@old\vss\noindent\box\gre@box@annotation@add}}}%
   \fi%
 }%
 
