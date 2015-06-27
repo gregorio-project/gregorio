@@ -113,6 +113,28 @@ Full TeX markup is also accepted:
 
 If the user already defined annotation(s) in the main TeX file via `\greannotation` then the `annotation` header field will not overwrite that definition.
 
+#### Variable Height Line Spacing
+
+Gregorio is now able to make individual lines of a score taller, when the position of the note require extra space, without affecting the rest of the lines.  This is the new default behavior.  If you prefer the uniform line heights of earlier versions, use:
+
+    \gresetlineheightexpansion{uniform}
+
+Within a TeX document, you can switch back to variable line heights by using:
+
+    \gresetlineheightexpansion{variable}
+
+You can freely switch between the two behaviors within a TeX document.
+
+This new behavior requires two passes (two runs of lualatex) in order to do the calculation correctly.  On the first pass, lualatex will warn you with the message
+
+    Module gregoriotex warning: Line heights may have changed. Rerun to fix heights.
+
+As you edit your document, lualatex will only show this warning if an extra run is required.
+
+Alternately, you can use something like latexmk to automate this activity.  Instructions for using latexmk are outside the scope of this document.  Please consult the latexmk documentation for more information on using it.
+
+It should also be noted that this new feature, besides requiring two passes, also imposes a small performance penalty on each pass to do the additional computation.  This is negligible for small documents, but may have more noticeable impact as documents get larger.
+
 ## 3.0
 ### TeX Live 2013
 

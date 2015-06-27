@@ -37,7 +37,20 @@ The optional arguments are:
 
 \textbf{Note:} \verb=nevercompile=, \verb=autocompile=, and
 \verb=forcecompile= conflict with eachother. Only one should be
-specified in the options list.
+specified in the options list.\bigskip
+
+\textbf{Important:} Gregorio\TeX{} may require up to two passes (runs of
+\texttt{lualatex}) to compute the line heights correctly.  If a second
+pass is required, Gregorio\TeX{} will emit the following
+warning:\par\medskip
+
+\begin{scriptsize}
+\begin{latexcode}
+Module gregoriotex warning: Line heights may have changed. Rerun to fix heights.
+\end{latexcode}
+\end{scriptsize}
+
+Gregorio\TeX{} two-pass processing is compatible with \texttt{latexmk}.
 
 \subsection{Commands}
 
@@ -216,6 +229,44 @@ Example:\par\medskip
   % loads a custom configuration called gsp-myspaces.tex
   \greloadspaceconf{myspaces}
 \end{latexcode}
+
+\macroname{\textbackslash gresetlineheightexpansion}{\{\#1\}}{gregoriotex-main.tex}
+Macro to configure line height expansion behavior when notes appear
+above or below the staff lines.
+
+\begin{argtable}
+    \#1 & \texttt{variable} & Expand lines within a score independently
+                              of each other \\
+        & \texttt{uniform}  & Expand all lines within a score uniformly
+\end{argtable}
+
+By default, Gregorio\TeX{} uses \texttt{variable} line expansion.  This
+produces output similar to modern liturgical books.  However, this
+feature imposes a slight performance impact and typically requires a
+second pass (run of \texttt{lualatex}) to get the heights right.\bigskip
+
+The older behavior of Gregorio\TeX{}, \texttt{uniform} line expansion,
+does not have this performance impact.  However, the extra space it adds
+below the staff lines may look out-of-place in a section where there are
+no notes below the staff lines.\bigskip
+
+This behavior may be switched as needed within a \TeX{} document and
+affects all the scores which follow.  However, if \texttt{variable} line
+expansion is enabled anywhere in the document, the second pass will be
+necessary.
+
+\begin{small}
+\begin{framed}
+    \textit{For experts only:}\bigskip
+
+    It is possible to suppress the line height computation and just use
+    whatever has been computed from the previous run.  If you are sure
+    that the score line heights haven't changed from the previous run,
+    define the \verb=\greskipheightcomputation= control sequence before
+    including the Gregorio\TeX{} package.  This will save a little bit
+    of time per run.
+\end{framed}
+\end{small}
 
 
 \subsubsection{Staff Lines}

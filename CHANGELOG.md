@@ -21,7 +21,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - With thanks to *Abbazia Mater Ecclesiae (IT)* for drawing the new shapes, the strophicus, liquescent strophicus, liquescent oriscus, and liquescent punctum inclinatum in greciliae have changed to better differentiate them from other shapes.  Use `\grechangeglyph{Stropha}{greciliae}{.caeciliae}\grechangeglyph{StrophaAucta}{greciliae}{.caeciliae}\grechangeglyph{OriscusDeminutus}{greciliae}{.caeciliae}\grechangeglyph{PunctumInclinatumAuctus}{greciliae}{.caeciliae}` if you prefer the old shapes.
 - Default initial sizes have been chosen so that they are more appropriate when an infinitely scaling font is loaded.  LaTeX will make an automatic substitution of the closest avaialble size when such a font is not used.
 - Porrectus deminutus and torculus resupinus deminutus glyphs have been updated to more closely match the current Solesmes books (see [#143](https://github.com/gregorio-project/gregorio/issues/143)).  If you prefer the old forms, use `\grechangeglyph{Porrectus*}{*}{.alt}\grechangeglyph{TorculusResupinus*}{*}{.alt}`.
-- New (much) improved drawings for letter bars (for Versicle, Antiphon, etc.). You must fine-tune them if you use a text font other than Linux Libertine, see [UPGRADE.md](upgrade guide) for details.
+- New (much) improved drawings for letter bars (for Versicle, Antiphon, etc.). You must fine-tune them if you use a text font other than Linux Libertine, see [UPGRADE.md](UPGRADE.md) for details.
 - The default extension `gregorio` (the executable program) will use when it produces GregorioTeX files has been changed from `.tex` to `.gtex`.  Any calls to `\includescore` that use the old extension should be changed appropriately.
 - Horizontal episema improvements:
   - A horizontal episema on the first two notes of a porrectus is now rendered differently than a horizontal episema on all three notes of a porrectus.  It will no longer reach to the right side of the porrectus  (see [#70](https://github.com/gregorio-project/gregorio/issues/70)).
@@ -39,10 +39,11 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Annotations with more than two lines are now supported (originally requested [on the user list](http://www.mail-archive.com/gregorio-users%40gna.org/msg00164.html) when two line annoations were made possible).  To build the annotation box use `\greannoataion`.  See GregorioRef for details.
 - The `annotation` header field in `gabc` now places its value(s) above the inital if no annotation is explicitly given by the user via `\greannotation` (see [#44](https://github.com/gregorio-project/gregorio/issues/44)).
 - `\grescaledim` now takes two arguments to bring it into line with the systemized naming scheme.  The second argument should be `yes`, `true`, or `on` if you want the distance to scale when the staff size changes.  Anything else will make the distance independent of the staff size.
+- Gregorio is now able to make individual lines of a score taller, when the position of the note require extra space, without affecting the rest of the lines.  This is the new default behavior.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#59](https://github.com/gregorio-project/gregorio/issues/59)).
 
 ### Added
 - With thanks to Jakub Jelínek, St. Gallen style adiastematic notation is now handled through [nabc syntax](http://gregoriochant.org/dokuwiki/doku.php/language) (see GregorioNabcRef.pdf for details and [the new example](examples/FactusEst.gabc)). Only one line above the notes is currently handled. This is a preview, backward incompatible change are possible in future releases.
-- `<eu>` tag in gabc to delimit *Euouae* block in the score. It prevents linebreaking and makes spaces tighter. See [UPGRADE.md](upgrade guide) for details.
+- `<eu>` tag in gabc to delimit *Euouae* block in the score. It prevents linebreaking and makes spaces tighter. See [UPGRADE.md](UPGRADE.md) for details.
 - With thanks to Fr. Jacques Peron, it is now possible to embed short gabc snippets directly into a TeX document.  The command is `\gabcsnippet`.  See GregorioRef.pdf for full details.
 - `[ub:x:y mm]` tag, similar to `[ob:x:y mm]`, but for braces under notes.
 - The ability to substitute an arbitrary glyph for one used by GregorioTeX.  This adds four macros: `\grechangeglyph` to make a score glyph substitution, `\greresetglyph` to remove a score glyph substitution, `\gredefsymbol` for (re-)defining an arbitrary non-score glyph that scales with the text, and `\gredefsizedsymbol` for (re-)defining an arbitary non-score glyph that requires a point-size to be specified.  See GregorioRef.pdf for full details.
@@ -105,7 +106,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Support for `lilypond-preamble`, `musixtex-preamble`, and `opustex-preamble` gabc headers.
 - Support for the font Gregoria.
 - Chironomy markings (gabc `u` and `U`), which were not working correctly in the first place.
-- `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, supplanted by the new glyph system, see [UPGRADE.md](upgrade guide).
+- `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, supplanted by the new glyph system, see [UPGRADE.md](UPGRADE.md).
 - `\GreSetAboveInitialSeparation`, supplanted by `\grechangedim{annotationseparation}...`
 - `\includetexscore`, supplanted by `\gregorioscore[n]`
 - `\greincludetexscore`, supplanted by `\gregorioscore[n]`
