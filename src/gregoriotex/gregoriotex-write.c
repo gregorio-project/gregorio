@@ -3074,7 +3074,8 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
                 score->score_copyright);
     }
 
-    fprintf(f, "\\GreBeginScore{%s}%%\n", digest_to_hex(score->digest));
+    fprintf(f, "\\GreBeginScore{%s}{%d}{%d}%%\n", digest_to_hex(score->digest),
+            status.top_height, status.bottom_height);
     switch (score->centering) {
     case SCHEME_SYLLABLE:
         fprintf(f, "\\englishcentering%%\n");

@@ -342,8 +342,10 @@ local function disable_hyphenation()
   return false
 end
 
-local function atScoreBeginning (score_id)
-  if tex.count['gre@variableheightexpansion'] == 1 then
+local function atScoreBeginning (score_id, top_height, bottom_height,
+    top_height_adj, bottom_height_adj)
+  if (top_height > top_height_adj or bottom_height < bottom_height_adj)
+      and tex.count['gre@variableheightexpansion'] == 1 then
     local inclusion = score_inclusion[score_id] or 1
     score_inclusion[score_id] = inclusion + 1
     score_id = score_id..'.'..inclusion

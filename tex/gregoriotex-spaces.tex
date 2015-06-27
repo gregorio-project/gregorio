@@ -627,7 +627,7 @@
 \def\gre@calculate@additionalspaces#1#2{%
   \gre@debugmsg{lineheight}{gre@calculate@additional@spaces called with #1 #2}%
   \gre@count@temp@one=#1\relax %
-  \advance\gre@count@temp@one by -\gre@pitch@j\relax %
+  \advance\gre@count@temp@one by -\gre@pitch@adjust@top\relax %
   \ifnum\gre@count@temp@one>0\relax %
     \global\gre@dimen@additionaltopspace=15000 sp%
     \global\multiply\gre@dimen@additionaltopspace by \the\gre@count@temp@one %
@@ -663,7 +663,7 @@
 
 \def\gre@calculate@bottomspace#1{%
   \gre@count@temp@one=#1\relax %
-  \advance\gre@count@temp@one by -\gre@pitch@c\relax %
+  \advance\gre@count@temp@one by -\gre@pitch@adjust@bottom\relax %
   \multiply\gre@count@temp@one by -1\relax %
   \ifnum\gre@count@temp@one>0\relax %
     \global\gre@dimen@additionalbottomspace=15000 sp%

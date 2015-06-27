@@ -175,6 +175,9 @@
 \def\gre@pitch@o{17}%
 \def\gre@pitch@p{18}%
 
+\let\gre@pitch@adjust@top\gre@pitch@j %
+\let\gre@pitch@adjust@bottom\gre@pitch@c %
+
 % factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
 % it is set to the default value : 17 (the value that makes it look like a standard graduale)
 \newcount\grefactor%
@@ -922,7 +925,7 @@
 \newif\ifgre@save@englishcentering% DEPRECATED
 
 %macro called at the beginning of a score
-\def\GreBeginScore#1{%
+\def\GreBeginScore#1#2#3{%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \global\let\ifgre@save@englishcentering\ifgre@vowelcentering\relax % DEPRECATED
   \ifgre@justifylastline%
@@ -940,7 +943,11 @@
   \exhyphenchar=-1\relax %
   \gregeneratelines %
   \noindent%
-  \directlua{gregoriotex.atScoreBeginning([[#1]]) gregoriotex.adjust_line_height(1)}%
+  \directlua{
+    gregoriotex.atScoreBeginning([[#1]], #2, #3,
+        \gre@pitch@adjust@top, \gre@pitch@adjust@bottom)
+    gregoriotex.adjust_line_height(1)
+  }%
   %TODO do something like LaTeX's AtBeginDocument
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %
