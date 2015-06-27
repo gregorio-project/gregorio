@@ -902,8 +902,8 @@ typedef struct height_computation {
     bool (*const is_shown)(const gregorio_note *);
     bool (*const is_connected)(const gregorio_note *);
     grehepisemus_size (*const get_size)(const gregorio_note *);
-    bool (*const is_better_height)(char, char);
-    void (*const position)(gregorio_note *, char, bool);
+    bool (*const is_better_height)(signed char, signed char);
+    void (*const position)(gregorio_note *, signed char, bool);
 
     bool active;
     char height;
@@ -956,14 +956,14 @@ static grehepisemus_size get_h_episemus_below_size(
     return note->h_episemus_below_size;
 }
 
-static bool is_h_episemus_above_better_height(const char new_height,
-        const char old_height)
+static bool is_h_episemus_above_better_height(const signed char new_height,
+        const signed char old_height)
 {
     return new_height > old_height;
 }
 
-static bool is_h_episemus_below_better_height(const char new_height,
-        const char old_height)
+static bool is_h_episemus_below_better_height(const signed char new_height,
+        const signed char old_height)
 {
     return new_height < old_height;
 }
@@ -1048,7 +1048,7 @@ static inline bool has_space_to_left(const gregorio_note *const note) {
 static inline void end_h_episemus(height_computation *const h,
         gregorio_note *const end)
 {
-    char proposed_height;
+    signed char proposed_height;
 
     if (h->active) {
         // don't let the episemus clash with the note before or after
@@ -1091,7 +1091,7 @@ static inline void compute_h_episemus(height_computation *const h,
         const gregorio_glyph *const glyph, gregorio_note *const note,
         const int i)
 {
-    char next_height;
+    signed char next_height;
     grehepisemus_size size;
 
     if (h->is_applicable(note)) {

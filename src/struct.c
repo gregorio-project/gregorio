@@ -66,7 +66,7 @@ static gregorio_note *create_and_link_note(gregorio_note **current_note)
     return note;
 }
 
-void gregorio_position_h_episemus_above(gregorio_note *note, char height,
+void gregorio_position_h_episemus_above(gregorio_note *note, signed char height,
         bool connect)
 {
     assert(note && (note->type == GRE_NOTE || note->type == GRE_BAR));
@@ -74,14 +74,14 @@ void gregorio_position_h_episemus_above(gregorio_note *note, char height,
     note->h_episemus_above_connect = connect;
 }
 
-static void set_h_episemus_above(gregorio_note *note, char height,
+static void set_h_episemus_above(gregorio_note *note, signed char height,
         grehepisemus_size size, bool connect)
 {
     gregorio_position_h_episemus_above(note, height, connect);
     note->h_episemus_above_size = size;
 }
 
-void gregorio_position_h_episemus_below(gregorio_note *note, char height,
+void gregorio_position_h_episemus_below(gregorio_note *note, signed char height,
         bool connect)
 {
     assert(note && (note->type == GRE_NOTE || note->type == GRE_BAR));
@@ -89,14 +89,14 @@ void gregorio_position_h_episemus_below(gregorio_note *note, char height,
     note->h_episemus_below_connect = connect;
 }
 
-static void set_h_episemus_below(gregorio_note *note, char height,
+static void set_h_episemus_below(gregorio_note *note, signed char height,
         grehepisemus_size size, bool connect)
 {
     gregorio_position_h_episemus_below(note, height, connect);
     note->h_episemus_below_size = size;
 }
 
-void gregorio_add_note(gregorio_note **current_note, char pitch,
+void gregorio_add_note(gregorio_note **current_note, signed char pitch,
         gregorio_shape shape, gregorio_sign signs,
         gregorio_liquescentia liquescentia, gregorio_note *prototype)
 {
@@ -122,7 +122,7 @@ void gregorio_add_note(gregorio_note **current_note, char pitch,
 }
 
 static void add_pitched_item_as_note(gregorio_note **current_note,
-        gregorio_type type, char pitch)
+        gregorio_type type, signed char pitch)
 {
     gregorio_note *element = create_and_link_note(current_note);
     if (element) {
@@ -150,13 +150,13 @@ void gregorio_add_custo_as_note(gregorio_note **current_note)
 }
 
 void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
-        char pitch)
+        signed char pitch)
 {
     add_pitched_item_as_note(current_note, GRE_MANUAL_CUSTOS, pitch);
 }
 
 void gregorio_add_clef_change_as_note(gregorio_note **current_note,
-        gregorio_type type, char clef_line)
+        gregorio_type type, signed char clef_line)
 {
     assert(type == GRE_C_KEY_CHANGE || type == GRE_F_KEY_CHANGE
            || type == GRE_C_KEY_CHANGE_FLATED
@@ -174,7 +174,7 @@ void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar)
 }
 
 void gregorio_add_alteration_as_note(gregorio_note **current_note,
-        gregorio_type type, char pitch)
+        gregorio_type type, signed char pitch)
 {
     assert(type == GRE_FLAT || type == GRE_SHARP || type == GRE_NATURAL);
     add_pitched_item_as_note(current_note, type, pitch);
@@ -597,7 +597,7 @@ void gregorio_add_glyph(gregorio_glyph **current_glyph,
 }
 
 void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
-        gregorio_type type, char pitch, bool flatted_key, char *texverb)
+        gregorio_type type, signed char pitch, bool flatted_key, char *texverb)
 {
     gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
     assert(type == GRE_C_KEY_CHANGE || type == GRE_F_KEY_CHANGE
@@ -1441,7 +1441,7 @@ static gregorio_glyph *gregorio_first_glyph(gregorio_syllable *syllable)
     return NULL;
 }
 
-static char gregorio_syllable_first_note(gregorio_syllable *syllable)
+static signed char gregorio_syllable_first_note(gregorio_syllable *syllable)
 {
     gregorio_glyph *glyph;
     glyph = gregorio_first_glyph(syllable);
@@ -1456,7 +1456,7 @@ static char gregorio_syllable_first_note(gregorio_syllable *syllable)
     return glyph->u.notes.first_note->u.note.pitch;
 }
 
-char gregorio_determine_next_pitch(gregorio_syllable *syllable,
+signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph)
 {
     char temp;
@@ -1650,7 +1650,7 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
  *
  *********************************/
 
-char gregorio_is_only_special(gregorio_element *element)
+bool gregorio_is_only_special(gregorio_element *element)
 {
     if (!element) {
         return 0;

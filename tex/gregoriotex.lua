@@ -301,7 +301,7 @@ local function process (h, groupcode, glyphes)
             local glyph_id = has_attribute(n, glyph_id_attr)
             local glyph_top = has_attribute(n, glyph_top_attr) or 9 -- 'g'
             local glyph_bottom = has_attribute(n, glyph_bottom_attr) or 9 -- 'g'
-            if glyph_id then
+            if glyph_id and glyph_id > prev_line_id then
               if not line_id or glyph_id > line_id then
                 line_id = glyph_id
               end
@@ -342,8 +342,10 @@ local function disable_hyphenation()
   return false
 end
 
-local function atScoreBeginning (score_id)
-  if tex.count['gre@variableheightexpansion'] == 1 then
+local function atScoreBeginning (score_id, top_height, bottom_height,
+    top_height_adj, bottom_height_adj)
+  if (top_height > top_height_adj or bottom_height < bottom_height_adj)
+      and tex.count['gre@variableheightexpansion'] == 1 then
     local inclusion = score_inclusion[score_id] or 1
     score_inclusion[score_id] = inclusion + 1
     score_id = score_id..'.'..inclusion
@@ -652,9 +654,7 @@ local function adjust_line_height(inside_discretionary)
   if score_heights then
     local heights = score_heights[tex.getattribute(glyph_id_attr)]
     if heights then
-      local top, bottom = heights[1] - 12, 6 - heights[2]
-      if top < 0 then top = 0 end
-      if bottom < 0 then bottom = 0 end
+      local top, bottom = heights[1], heights[2]
       tex.sprint(catcode_at_letter, string.format(
           [[\gre@calculate@additionalspaces{%d}{%d}]],
           top, bottom))

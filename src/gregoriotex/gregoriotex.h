@@ -102,30 +102,6 @@ typedef enum gtex_sign_type {
 
 #define HEPISEMUS_FIRST_TWO 12
 
-// a structure containing the status
-typedef struct gregoriotex_status {
-    unsigned char bottom_line;  // 1 if the current_glyph will have an
-    // additional line under or not (useful to
-    // determine the length of the bar in case of a 
-    // flexa starting at d
-    unsigned char to_modify_h_episemus; // to link two hepisemus that are at
-    // the
-    // same pitch
-    gregorio_note *to_modify_note;
-} gregoriotex_status;
-
-// a structure containing the result of seekadditionalspaces
-
-typedef struct gregorio_line {
-    // 0, 1, 2 or 3. it is the argument of GreNewLineWithSpace in
-    // gregoriotex-main.tex
-    unsigned char additional_top_space;
-    unsigned char additional_bottom_space;
-    // 0 or 1, indicates if there is a translation on the line
-    unsigned char translation;
-    unsigned char abovelinestext;   // idem
-} gregorio_line;
-
 static inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
         const gregorio_note *const note, bool *const kind_of_pes)
 {

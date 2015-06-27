@@ -625,25 +625,17 @@
 
 % same arguments as GreNewLineWithSpace
 \def\gre@calculate@additionalspaces#1#2{%
-  \gre@debugmsg{general}{gre@calculate@additional@spaces called with #1 #2}%
-  \gre@count@temp@one=#1 %
-  \advance\gre@count@temp@one by -1 %
-  \ifnum\gre@count@temp@one>0 %
+  \gre@debugmsg{lineheight}{gre@calculate@additional@spaces called with #1 #2}%
+  \gre@count@temp@one=#1\relax %
+  \advance\gre@count@temp@one by -\gre@pitch@adjust@top\relax %
+  \ifnum\gre@count@temp@one>0\relax %
     \global\gre@dimen@additionaltopspace=15000 sp%
     \global\multiply\gre@dimen@additionaltopspace by \the\gre@count@temp@one %
     \global\multiply\gre@dimen@additionaltopspace by \the\grefactor %
   \else %
     \global\gre@dimen@additionaltopspace=0 sp%
   \fi %
-  \gre@count@temp@one=#2 %
-  \advance\gre@count@temp@one by -1 %
-  \ifnum\gre@count@temp@one>0 %
-    \global\gre@dimen@additionalbottomspace=15000 sp%
-    \global\multiply\gre@dimen@additionalbottomspace by \the\gre@count@temp@one %
-    \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
-  \else %
-    \global\gre@dimen@additionalbottomspace=0 sp%
-  \fi %
+  \gre@calculate@bottomspace{#2}%
   \gregeneratelines %
   \gre@calculate@constantglyphraise %
   \relax %
@@ -651,22 +643,13 @@
 
 %% macros for additional bottom space for the first line
 
-% #1 is 1, 2, 3, or 4, with the same signification as in GreNewLineWithSpace
+% #1 is the low height
 \def\GreFirstLineBottomSpace#1#2{%
-  \ifcase#1\relax %
-    % case 0
-    \global\gre@dimen@additionalbottomspace=0 sp%
-  \or % case 1
-    \global\gre@dimen@additionalbottomspace=0 sp%
-  \or % case 2
-    \global\gre@dimen@additionalbottomspace=15000 sp%
-    \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
-  \or % case 3
-    \global\gre@dimen@additionalbottomspace=30000 sp%
-    \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
-  \or % case 4
-    \global\gre@dimen@additionalbottomspace=45000 sp%
-    \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
+  \gre@debugmsg{lineheight}{GreFirstLineBottomSpace #1 #2}%
+  \ifcase\gre@variableheightexpansion %
+    % 0
+    \gre@calculate@bottomspace{#1}%
+  % else it's handled by the variable height code
   \fi %
   \ifnum#2=1\relax %
     \gre@addtranslationspace %
@@ -676,6 +659,19 @@
   \gregeneratelines %
   \gre@calculate@constantglyphraise %
   \relax %
+}%
+
+\def\gre@calculate@bottomspace#1{%
+  \gre@count@temp@one=#1\relax %
+  \advance\gre@count@temp@one by -\gre@pitch@adjust@bottom\relax %
+  \multiply\gre@count@temp@one by -1\relax %
+  \ifnum\gre@count@temp@one>0\relax %
+    \global\gre@dimen@additionalbottomspace=15000 sp%
+    \global\multiply\gre@dimen@additionalbottomspace by \the\gre@count@temp@one %
+    \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
+  \else %
+    \global\gre@dimen@additionalbottomspace=0 sp%
+  \fi %
 }%
 
 %% macro that typesets the text of the syllable, and sets textaligncenter to the middle of the middle letters, it is needed because we align the note (often the middle of the note) with the middle of the middle letters
