@@ -98,7 +98,7 @@ and \verb:\setlyriccentering{vowel}:.  In \texttt{syllable} mode, the
 entire syllable is centered around the first note.  This is common in
 modern music.  In \texttt{vowel} mode, the vowel sound of the syllable is
 centered around the first note.  This is common in most Gregorian chant
-books with text in Latin.
+books with text in Latin.\bigskip
 
 The default rules built into Gregorio for \texttt{vowel} mode are for
 Ecclesiatical Latin and work fairly well (though not perfectly) for
@@ -115,17 +115,17 @@ Latin rules.  If multiple vowel files have the desired language,
 Gregorio will use the first matching language section in the first
 matching file, according to Kpathsea order.  You may wish to enable
 verbose output (by passing the \texttt{-v} argument to
-\texttt{gregorio}), if there is a problem, for more information.
+\texttt{gregorio}), if there is a problem, for more information.\bigskip
 
 The vowel file is a list of statements, each starting with a keyword and
 ending with a semicolon (\texttt{;}).  Multiple statements with the same
 keyword are allowed, and all will apply.  Comments start with a hash
-symbol (\texttt{\#}) and end at the end of the line.
+symbol (\texttt{\#}) and end at the end of the line.\bigskip
 
 In general, Gregorio does no case folding, so the keywords and language
 names are case-sensitive and both upper- and lower-case characters
 should be listed after the keywords if they should both be considered in
-their given categories.
+their given categories.\bigskip
 
 The keywords are:
 
