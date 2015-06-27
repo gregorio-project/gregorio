@@ -27,6 +27,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <time.h>
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
@@ -35,6 +36,28 @@
 #include "gregoriotex.h"
 
 #define BUFSIZE 128
+
+// a structure containing the status
+typedef struct gregoriotex_status {
+    // true if the current_glyph will have an additional line under or not
+    // (useful to determine the length of the bar in case of a flexa starting
+    // at d
+    bool bottom_line;
+
+    signed char top_height;
+    signed char bottom_height;
+} gregoriotex_status;
+
+#define UNDETERMINED_HEIGHT -127
+
+// a structure containing the result of seekadditionalspaces
+typedef struct gregoriotex_lineinfo {
+    // indicates if there is a translation on the line
+    bool translation;
+
+    // indicates if there is "above lines text" on the line
+    bool abovelinestext;
+} gregoriotex_line;
 
 #define MAX_AMBITUS 5
 static char *tex_ambitus[] = {
@@ -61,16 +84,20 @@ static char *tex_ambitus[] = {
             glyph = glyph->prevornext;\
         }
 
-static inline char pitch_value(const char height) {
+static inline signed char pitch_value(const signed char height) {
     // right now height == pitch, but this function allows us to change
     // the offset easily
     return height;
 }
 
+static inline int bool_to_int(bool value) {
+    return value? 1 : 0;
+}
+
 // a function that determines if we must use a long queue or not (less easy
 // that it might seem)
 
-static bool is_longqueue(const char pitch,
+static bool is_longqueue(const signed char pitch,
         const gregorio_glyph *const current_glyph,
         const gregorio_element *const current_element)
 {
@@ -129,14 +156,13 @@ static bool is_longqueue(const char pitch,
 
 // we define d to be short instead of long... may induce errors, but fixes
 // some too
-static inline bool is_shortqueue(const char pitch,
+static inline bool is_shortqueue(const signed char pitch,
         const gregorio_glyph *const glyph,
         const gregorio_element *const element)
 {
     return !is_longqueue(pitch, glyph, element);
 }
 
-static gregoriotex_status *status = NULL;
 static grestyle_style gregoriotex_ignore_style = ST_NO_STYLE;
 static grestyle_style gregoriotex_next_ignore_style = ST_NO_STYLE;
 
@@ -796,127 +822,40 @@ static gregorio_element *gregoriotex_syllable_is_clef_change(gregorio_syllable
  * the infos on the line following syllable 
  */
 static void gregoriotex_getlineinfos(gregorio_syllable *syllable,
-        gregorio_line *line)
+        gregoriotex_line *line)
 {
-    gregorio_element *element;
-    gregorio_glyph *glyph;
-    gregorio_note *note;
-    unsigned char i;
-    // a counter to know at which note we are in a syllable
-    // the idea behind it is that after the 6th note (arbitrary number), we can
-    // consider that the bottom notes won't be bothering the text, because
-    // they won't be above it.
-
     if (line == NULL) {
         gregorio_message(_
                 ("call with NULL pointer"),
                 "gregoriotex_write_score", VERBOSITY_ERROR, 0);
         return;
     }
+
     /*
      * first we check if the syllable is only a end of line. If it is the case,
      * we don't print anything but a comment (to be able to read it if we read
      * GregorioTeX). The end of lines are treated separately in GregorioTeX, it
      * is buit inside the TeX structure. 
      */
-    line->additional_top_space = 0;
-    line->additional_bottom_space = 0;
-    line->translation = 0;
-    line->abovelinestext = 0;
+    line->translation = false;
+    line->abovelinestext = false;
 
-    if (syllable == NULL) {
-        // we allow the call with NULL syllable
-        return;
-    }
-
-    while (syllable) {
-        i = 0;
+    for (; syllable; syllable = syllable->next_syllable) {
         if (syllable->translation) {
-            line->translation = 1;
+            line->translation = true;
         }
         if (syllable->abovelinestext) {
-            line->abovelinestext = 1;
+            line->abovelinestext = true;
         }
-        element = *syllable->elements;
-        while (element) {
+        for (gregorio_element *element = *syllable->elements; element;
+                element = element->next) {
             if (element->type == GRE_END_OF_LINE) {
                 return;
             }
             if (element->type == GRE_ALT) {
-                line->abovelinestext = 1;
+                line->abovelinestext = true;
             }
-            if (element->type != GRE_ELEMENT) {
-                element = element->next;
-                continue;
-            }
-            glyph = element->u.first_glyph;
-            while (glyph) {
-                if (glyph->type != GRE_GLYPH) {
-                    glyph = glyph->next;
-                    continue;
-                }
-                note = glyph->u.notes.first_note;
-                while (note) {
-                    i = i + 1;
-                    switch (note->u.note.pitch - LOWEST_PITCH) {
-                    case 0:
-                        if (line->additional_bottom_space < 3
-                                && i < NUMBER_OF_NOTES) {
-                            // the idea is to put an extra space when a low
-                            // note
-                            // has a vertical episemus
-                            if (note->signs >= _V_EPISEMUS) {
-                                line->additional_bottom_space = 4;
-                            } else {
-                                line->additional_bottom_space = 3;
-                            }
-                        }
-                        break;
-                    case 1:
-                        if (line->additional_bottom_space < 2
-                                && i < NUMBER_OF_NOTES) {
-                            if (note->signs >= _V_EPISEMUS) {
-                                line->additional_bottom_space = 3;
-                            } else {
-                                line->additional_bottom_space = 2;
-                            }
-                        }
-                        break;
-                    case 2:
-                        if (line->additional_bottom_space < 1
-                                && i < NUMBER_OF_NOTES) {
-                            if (note->signs >= _V_EPISEMUS) {
-                                line->additional_bottom_space = 2;
-                            } else {
-                                line->additional_bottom_space = 1;
-                            }
-                        }
-                        break;
-                    case 12:
-                        if (line->additional_top_space < 3) {
-                            line->additional_top_space = 3;
-                        }
-                        break;
-                    case 11:
-                        if (line->additional_top_space < 2) {
-                            line->additional_top_space = 2;
-                        }
-                        break;
-                    case 10:
-                        if (line->additional_top_space < 1) {
-                            line->additional_top_space = 1;
-                        }
-                        break;
-                    default:
-                        break;
-                    }
-                    note = note->next;
-                }
-                glyph = glyph->next;
-            }
-            element = element->next;
         }
-        syllable = syllable->next_syllable;
     }
 }
 
@@ -2131,24 +2070,70 @@ static inline bool _found(FILE *const f, const bool found)
     return found;
 }
 
+static void compute_height_extrema(const gregorio_glyph *const glyph,
+        const gregorio_note *note, signed char *const top_height,
+        signed char *const bottom_height)
+{
+    char height;
+    // get the minima/maxima pitches
+    for (; note; note = note->next) {
+        if (note->h_episemus_above) {
+            height = note->h_episemus_above;
+        } else {
+            if (note->v_episemus_height && note->v_episemus_height
+                    > note->u.note.pitch) {
+                height = note->v_episemus_height;
+            } else {
+                height = note->u.note.pitch;
+            }
+
+            if (note->choral_sign
+                    && !choral_sign_here_is_low(glyph, note, NULL)) {
+                ++height;
+            }
+        }
+        if (*top_height == UNDETERMINED_HEIGHT || height > *top_height) {
+            *top_height = height;
+        }
+
+        if (note->h_episemus_below) {
+            height = note->h_episemus_below;
+        } else if (note->v_episemus_height && note->v_episemus_height
+                < note->u.note.pitch) {
+            height = note->v_episemus_height;
+        } else {
+            height = note->u.note.pitch;
+        }
+        if (*bottom_height == UNDETERMINED_HEIGHT || height < *bottom_height) {
+            *bottom_height = height;
+        }
+    }
+}
+
+static inline void fixup_height_extrema(signed char *const top_height,
+        signed char *const bottom_height)
+{
+    if (*top_height == UNDETERMINED_HEIGHT) {
+        *top_height = 9; // 'g'
+    }
+    if (*bottom_height == UNDETERMINED_HEIGHT) {
+        *bottom_height = 9; // 'g'
+    }
+}
+
 static void gregoriotex_write_signs(FILE *f, gtex_type type,
-        gregorio_glyph *glyph, gregorio_note *note)
+        gregorio_glyph *glyph, gregorio_note *note,
+        gregoriotex_status *const status)
 {
     // i is the number of the note for which we are typesetting the sign.
     int i;
     gregorio_note *current_note;
     // a dumb char
     char block_hepisemus = 0;
-    char high_pitch = 0, low_pitch = 0;
-    // get the minima/maxima pitches
-    for (current_note = note; current_note; current_note = current_note->next) {
-        if (!high_pitch || current_note->u.note.pitch > high_pitch) {
-            high_pitch = current_note->u.note.pitch;
-        }
-        if (!low_pitch || current_note->u.note.pitch < low_pitch) {
-            low_pitch = current_note->u.note.pitch;
-        }
-    }
+    signed char high_pitch = UNDETERMINED_HEIGHT;
+    signed char low_pitch = UNDETERMINED_HEIGHT;
+    compute_height_extrema(glyph, note, &high_pitch, &low_pitch);
+    fixup_height_extrema(&high_pitch, &low_pitch);
     fprintf(f, "%%\n{%%\n\\GreGlyphHeights{%d}{%d}%%\n",
             pitch_value(high_pitch), pitch_value(low_pitch));
     for (current_note = note, i = 1; current_note;
@@ -2286,7 +2271,8 @@ static char *determine_leading_shape(gregorio_glyph *glyph)
 }
 
 static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
-        gregorio_element *element, gregorio_glyph *glyph)
+        gregorio_element *element, gregorio_glyph *glyph,
+        gregoriotex_status *const status)
 {
     // glyph number is the number of the glyph in the fonte, it is discussed in
     // later comments
@@ -2329,7 +2315,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
         while (current_note) {
             gregoriotex_write_note(f, current_note, glyph, element,
                     next_note_pitch);
-            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note);
+            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note, status);
             current_note = current_note->next;
         }
         break;
@@ -2342,12 +2328,14 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
             fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
                     pitch_value(next_note_pitch), type);
-            gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note);
+            gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note,
+                    status);
         } else {
             while (current_note) {
                 gregoriotex_write_note(f, current_note, glyph, element,
                         next_note_pitch);
-                gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note);
+                gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note,
+                        status);
                 current_note = current_note->next;
             }
         }
@@ -2360,12 +2348,14 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
             fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
                     pitch_value(next_note_pitch), type);
-            gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note);
+            gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note,
+                    status);
         } else {
             while (current_note) {
                 gregoriotex_write_note(f, current_note, glyph, element,
                         next_note_pitch);
-                gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note);
+                gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note,
+                        status);
                 current_note = current_note->next;
             }
         }
@@ -2382,14 +2372,15 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
                 pitch_value(next_note_pitch), type);
         glyph->u.notes.first_note = current_note;
         glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
-        gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note);
+        gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note,
+                status);
         break;
     case G_BIVIRGA:
     case G_TRIVIRGA:
         while (current_note) {
             gregoriotex_write_note(f, current_note, glyph, element,
                     next_note_pitch);
-            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note);
+            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note, status);
             current_note = current_note->next;
             if (current_note) {
                 fprintf(f, "\\GreEndOfGlyph{4}%%\n");
@@ -2403,7 +2394,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
         while (current_note) {
             gregoriotex_write_note(f, current_note, glyph, element,
                     next_note_pitch);
-            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note);
+            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note, status);
             current_note = current_note->next;
             if (current_note) {
                 fprintf(f, "\\GreEndOfGlyph{5}%%\n");
@@ -2442,7 +2433,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
     case G_STROPHA_AUCTA:
         gregoriotex_write_note(f, glyph->u.notes.first_note, glyph, element,
                 next_note_pitch);
-        gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note);
+        gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note, status);
         break;
     default:
         // special case of the torculus resupinus which first note is not a
@@ -2462,7 +2453,8 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
                     pitch_value(next_note_pitch), type);
             glyph->u.notes.first_note = current_note;
             glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS;
-            gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note);
+            gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note,
+                    status);
             break;
         } else {
             shape = gregoriotex_determine_glyph_name(glyph, element, &type,
@@ -2470,7 +2462,8 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
             fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
                     pitch_value(next_note_pitch), type);
-            gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note);
+            gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note,
+                    status);
             break;
         }
     }
@@ -2480,7 +2473,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
 // will need the next note, that may be contained in the next syllable
 
 static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
-        gregorio_element *element)
+        gregorio_element *element, gregoriotex_status *status)
 {
     if (element->type == GRE_ELEMENT) {
         for (gregorio_glyph *glyph = element->u.first_glyph; glyph;
@@ -2522,7 +2515,7 @@ static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
             default:
                 // at this point glyph->type is GRE_GLYPH
                 assert(glyph->type == GRE_GLYPH);
-                gregoriotex_write_glyph(f, syllable, element, glyph);
+                gregoriotex_write_glyph(f, syllable, element, glyph, status);
                 if (glyph->next && glyph->next->type == GRE_GLYPH) {
                     if (is_puncta_inclinata(glyph->next->u.notes.glyph_type)
                             || glyph->next->u.notes.glyph_type ==
@@ -2668,9 +2661,9 @@ static inline bool is_manual_custos(gregorio_element *element)
  */
 static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
         bool * first_syllable, unsigned char *line_number,
-        unsigned char first_of_disc)
+        unsigned char first_of_disc, gregoriotex_status *const status)
 {
-    gregorio_line *line;
+    gregoriotex_line line;
     gregorio_element *clef_change_element = NULL;
     if (!syllable) {
         return;
@@ -2690,38 +2683,20 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
      * is buit inside the TeX structure. 
      */
     if (syllable->elements && *(syllable->elements)) {
-        gregoriotex_compute_positioning(*(syllable->elements));
-
         if ((syllable->elements)[0]->type == GRE_END_OF_LINE) {
-            line = (gregorio_line *) malloc(sizeof(gregorio_line));
-            gregoriotex_getlineinfos(syllable->next_syllable, line);
-            if (line->additional_bottom_space == 0
-                    && line->additional_top_space == 0 && line->translation == 0
-                    && line->abovelinestext == 0) {
-                if ((syllable->elements)[0]->u.misc.unpitched.info.sub_type !=
-                        GRE_END_OF_PAR) {
-                    fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
-                } else {
-                    fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
-                }
+            gregoriotex_getlineinfos(syllable->next_syllable, &line);
+            if ((syllable->elements)[0]->u.misc.unpitched.info.sub_type !=
+                    GRE_END_OF_PAR) {
+                fprintf(f, "%%\n%%\n\\GreNewLineWithSpace{%d}{%d}{%d}{%d}%%\n"
+                        "%%\n%%\n", status->top_height, status->bottom_height,
+                        bool_to_int(line.translation),
+                        bool_to_int(line.abovelinestext));
             } else {
-                if ((syllable->elements)[0]->u.misc.unpitched.info.sub_type !=
-                        GRE_END_OF_PAR) {
-                    fprintf(f,
-                            "%%\n%%\n\\GreNewLineWithSpace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
-                            line->additional_top_space,
-                            line->additional_bottom_space, line->translation,
-                            line->abovelinestext);
-                } else {
-                    fprintf(f,
-                            "%%\n%%\n\\GreNewParLineWithSpace{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
-                            line->additional_top_space,
-                            line->additional_bottom_space, line->translation,
-                            line->abovelinestext);
-                }
-
+                fprintf(f, "%%\n%%\n\\GreNewParLineWithSpace{%d}{%d}{%d}{%d}%%"
+                        "\n%%\n%%\n", status->top_height, status->bottom_height,
+                        bool_to_int(line.translation),
+                        bool_to_int(line.abovelinestext));
             }
-            free(line);
             if (*line_number == 1) {
                 fprintf(f, "\\GreAdjustThirdLine %%\n");
                 *line_number = 0;
@@ -2743,10 +2718,10 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                 gregoriotex_print_change_line_clef(f, clef_change_element);
                 fprintf(f, "\\GreDiscretionary{%%\n");
                 gregoriotex_write_syllable(f, syllable, first_syllable,
-                        line_number, 1);
+                        line_number, 1, status);
                 fprintf(f, "}{%%\n");
                 gregoriotex_write_syllable(f, syllable, first_syllable,
-                        line_number, 2);
+                        line_number, 2, status);
                 fprintf(f, "}%%\n");
                 return;
             }
@@ -2966,34 +2941,20 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             break;
 
         case GRE_END_OF_LINE:
-            line = (gregorio_line *) malloc(sizeof(gregorio_line));
             // here we suppose we don't have two linebreaks in the same
             // syllable
-            gregoriotex_getlineinfos(syllable->next_syllable, line);
-            if (line->additional_bottom_space == 0
-                    && line->additional_top_space == 0 && line->translation == 0
-                    && line->abovelinestext == 0) {
-                if (element->u.misc.unpitched.info.sub_type != GRE_END_OF_PAR) {
-                    fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
-                } else {
-                    fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
-                }
+            gregoriotex_getlineinfos(syllable->next_syllable, &line);
+            if (element->u.misc.unpitched.info.sub_type != GRE_END_OF_PAR) {
+                fprintf(f, "%%\n%%\n\\GreNewLineWithSpace{%d}{%d}{%d}{%d}%%\n"
+                        "%%\n%%\n", status->top_height, status->bottom_height,
+                        bool_to_int(line.translation),
+                        bool_to_int(line.abovelinestext));
             } else {
-                if (element->u.misc.unpitched.info.sub_type != GRE_END_OF_PAR) {
-                    fprintf(f, "%%\n%%\n\\GreNewLineWithSpace"
-                            "{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
-                            line->additional_top_space,
-                            line->additional_bottom_space, line->translation,
-                            line->abovelinestext);
-                } else {
-                    fprintf(f, "%%\n%%\n\\GreNewParLineWithSpace"
-                            "{%u}{%u}{%u}{%u}%%\n%%\n%%\n",
-                            line->additional_top_space,
-                            line->additional_bottom_space, line->translation,
-                            line->abovelinestext);
-                }
+                fprintf(f, "%%\n%%\n\\GreNewParLineWithSpace{%d}{%d}{%d}{%d}%%"
+                        "\n%%\n%%\n", status->top_height, status->bottom_height,
+                        bool_to_int(line.translation),
+                        bool_to_int(line.abovelinestext));
             }
-            free(line);
             if (*line_number == 1) {
                 fprintf(f, "\\GreAdjustThirdLine %%\n");
                 *line_number = 0;
@@ -3003,7 +2964,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
         default:
             // there current_element->type is GRE_ELEMENT
             assert(element->type == GRE_ELEMENT);
-            gregoriotex_write_element(f, syllable, element);
+            gregoriotex_write_element(f, syllable, element, status);
             if (element->next && (element->next->type == GRE_ELEMENT
                             || (element->next->next
                                     && element->next->type == GRE_ALT
@@ -3028,6 +2989,56 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
     }
 }
 
+static char *digest_to_hex(const unsigned char digest[SHA1_DIGEST_SIZE])
+{
+    static const char *const hex = "0123456789abcdef";
+    static char result[41];
+
+    char *p = result;
+    unsigned char byte;
+
+    for (int i = 0; i < SHA1_DIGEST_SIZE; ++i) {
+        byte = digest[i];
+
+        *(p++) = hex[(byte >> 4) & 0x0FU];
+        *(p++) = hex[byte & 0x0FU];
+    }
+
+    *p = '\0';
+
+    return result;
+}
+
+static void initialize_score(gregoriotex_status *const status,
+        gregorio_score *score)
+{
+    status->bottom_line = false;
+    status->top_height = status->bottom_height = UNDETERMINED_HEIGHT;
+
+    for (gregorio_syllable *syllable = score->first_syllable; syllable;
+            syllable = syllable->next_syllable) {
+        for (int voice = 0; voice < score->number_of_voices; ++voice) {
+            gregoriotex_compute_positioning(syllable->elements[voice]);
+            for (gregorio_element *element = syllable->elements[voice]; element;
+                    element = element->next) {
+                if (element->type == GRE_ELEMENT) {
+                    for (gregorio_glyph *glyph = element->u.first_glyph; glyph;
+                            glyph = glyph->next) {
+                        if (glyph->type == GRE_GLYPH) {
+                            compute_height_extrema(glyph,
+                                    glyph->u.notes.first_note,
+                                    &(status->top_height),
+                                    &(status->bottom_height));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fixup_height_extrema(&(status->top_height), &(status->bottom_height));
+}
+
 void gregoriotex_write_score(FILE *f, gregorio_score *score)
 {
     gregorio_character *first_text;
@@ -3042,11 +3053,10 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     // case of the first line of a score with a two lines initial
     unsigned char line = 0;
     int annotation_num;
+    gregoriotex_status status;
+    gregoriotex_line first_line;
 
-    gregorio_line *first_line;
-    status = malloc(sizeof(gregoriotex_status));
-    status->bottom_line = 0;
-    status->to_modify_note = NULL;
+    initialize_score(&status, score);
 
     if (!f) {
         gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
@@ -3077,7 +3087,8 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
                 score->score_copyright);
     }
 
-    fprintf(f, "\\GreBeginScore%%\n");
+    fprintf(f, "\\GreBeginScore{%s}{%d}{%d}%%\n", digest_to_hex(score->digest),
+            status.top_height, status.bottom_height);
     switch (score->centering) {
     case SCHEME_SYLLABLE:
         fprintf(f, "\\englishcentering%%\n");
@@ -3093,14 +3104,9 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
         fprintf(f, "\\scorenabclines{%d}", (int)score->nabc_lines);
     }
     // if necessary, we add some bottom space to the first line
-    first_line = (gregorio_line *) malloc(sizeof(gregorio_line));
-    gregoriotex_getlineinfos(score->first_syllable, first_line);
-    if (first_line->additional_bottom_space != 0
-            || first_line->translation != 0) {
-        fprintf(f, "\\GreFirstLineBottomSpace{%u}{%u}%%\n",
-                first_line->additional_bottom_space, first_line->translation);
-    }
-    free(first_line);
+    gregoriotex_getlineinfos(score->first_syllable, &first_line);
+    fprintf(f, "\\GreFirstLineBottomSpace{%d}{%d}%%\n",
+            status.bottom_height, bool_to_int(first_line.translation));
     // we select the good font -- Deprecated (remove in next release)
     if (score->gregoriotex_font) {
         if (!strcmp(score->gregoriotex_font, "gregorio")) {
@@ -3177,9 +3183,8 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     current_syllable = score->first_syllable;
     while (current_syllable) {
         gregoriotex_write_syllable(f, current_syllable, &first_syllable, &line,
-                0);
+                0, &status);
         current_syllable = current_syllable->next_syllable;
     }
     fprintf(f, "\\GreEndScore %%\n\\endinput %%\n");
-    free(status);
 }

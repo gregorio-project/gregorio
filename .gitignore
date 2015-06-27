@@ -42,6 +42,7 @@
 *.idx
 *.ilg
 *.ind
+tags
 
 ## Intermediate documents:
 *.dvi
@@ -94,6 +95,7 @@ auto/
 #gregorio specific
 doc/_minted-*
 fonts/*.ttf
+*.greaux
 *.gz
 *.bz2
 *.zip

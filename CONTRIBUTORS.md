@@ -40,3 +40,7 @@ Gregorio has been developed with valuable help and support from:
  * [Stiftsbibliothek, Einsiedeln (CH)](http://kloster-einsiedeln.ch/)
  * [Gna!](http://gna.org)
  * [Github](https://github.com/)
+
+## Acknowledgments
+
+ * The SHA-1 digest code comes from [GNU coreutils](http://www.gnu.org/software/coreutils/coreutils.html) and has been adapted to suit Gregorio as permitted by the GPL, version 3 or later.  Our copyright has been added to theirs in the appropriate source files.

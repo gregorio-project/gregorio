@@ -142,15 +142,8 @@ Flag indicating whether the stafflinefactor should scale with changes of grefact
 Calculates the extra spaces above and below the staff lines.  This is a time of use calculation.
 
 \begin{argtable}
-  \#1 & 0 & no notes above the staff\\
-  & 1 & there is a note above the 4th line\\
-  & 2 & there is a note on the 5th line\\
-  & 3 & there is a note above the 5th line\\
-  \#2 & 0 & no notes below the staff\\
-  & 1 & there is a note below the 1st line\\
-  & 2 & there is a note on the 0th line\\
-  & 3 & there is a note below the 0th line\\
-  & 4 & there is a note below the 0th line with a vertical episemus attached
+  \#1 & integer & the height number of the top pitch, including signs\\
+  \#2 & integer & the height number of the bottom pitch, including signs
 \end{argtable}
 
 \macroname{\textbackslash gre@calculate@textaligncenter}{\#1\#2\#3}{gregoriotex-spaces.tex}

@@ -36,11 +36,11 @@
       %false
       {\IfStrEq{\gre@debug}{all}%
         %true
-        {\typeout{GregorioTeX debug: (#1) #2}}%
+        {\gre@typeout{GregorioTeX debug: (#1) #2}}%
         %false
         {\IfSubStr{\gre@debug}{#1}%
           %true
-          {\typeout{GregorioTeX debug: (#1) #2}}%
+          {\gre@typeout{GregorioTeX debug: (#1) #2}}%
           %false
           {\relax}%
         }%
@@ -61,12 +61,12 @@
 }%
 
 \def\gre@nothing{}
-    
+
 \AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
 % Since TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
 % available without prefix. We mostly rely on \directlua that is still available
-% without prefix, but we also rely on the Omega primitives, that have a luatex 
+% without prefix, but we also rely on the Omega primitives, that have a luatex
 % prefix in TeXLive 2009.
 
 \let\grelocalleftbox\luatexlocalleftbox%
@@ -80,6 +80,16 @@
 
 % an attribute used for translation centering
 \newluatexattribute\gregoriocenterattr%
+
+% attributes for tracking glyph heights
+\newluatexattribute\gre@attr@glyph@id %
+\newluatexattribute\gre@attr@glyph@top %
+\newluatexattribute\gre@attr@glyph@bottom %
+
+\newluatexcatcodetable\gre@atletter %
+\setluatexcatcodetable\gre@atletter{%
+  \catcode`\@=11 %
+}%
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
@@ -107,6 +117,11 @@
 }%
 
 \RequireLuaModule{gregoriotex}%
+\ifcsname greskipheightcomputation\endcsname %
+  \directlua{gregoriotex.init(arg, false)}%
+\else %
+  \directlua{gregoriotex.init(arg, true)}%
+\fi %
 
 \xdef\gre@gregoriotexluaversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
 
@@ -160,6 +175,9 @@
 \def\gre@pitch@o{17}%
 \def\gre@pitch@p{18}%
 
+\let\gre@pitch@adjust@top\gre@pitch@j %
+\let\gre@pitch@adjust@bottom\gre@pitch@c %
+
 % factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
 % it is set to the default value : 17 (the value that makes it look like a standard graduale)
 \newcount\grefactor%
@@ -175,31 +193,21 @@
 %% macros for additionnal vertical spaces
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%macro to call if you want to go to the next line simply
-\def\GreNewLine{%
-  \grenewlinecommon{0}{0}{0}{0}{0}%
-  \relax%
-}%
-
-% macro called to go to the next line but when there are additional vertical spaces to add
-%% 1: can be 0, 1 or 2 or 3. 1 is when there is a note above the 4th line, 2 when there is a note on the 5th line, and 3 when there is a note above the 5th line
-%% 2: idem, but with the bottom line (-1th). It can be 4, in the case of a bottom note with a vertical episemus.
+% macro called to go to the next line
+%% 1: the high height
+%% 2: the low height
 %% 3: 1 if there is a translation somewhere
 % #4 is if 1 if we have space above the staff
 \def\GreNewLineWithSpace#1#2#3#4{%
+  \gre@debugmsg{lineheight}{GreNewLineWithSpace #1 #2}%
   \grenewlinecommon{#1}{#2}{#3}{0}{#4}%
   \relax%
 }%
 
-
-% basically same macros as above, but these one do a \hfill, the lines are not justified
+% basically same as above, but these one do a \hfill, the lines are not justified
 %macro to call if you want to go to the next line simply
-\def\GreNewParLine{%
-  \grenewlinecommon{0}{0}{0}{1}{0}%
-  \relax%
-}%
-
 \def\GreNewParLineWithSpace#1#2#3#4{%
+  \gre@debugmsg{lineheight}{GreNewParLineWithSpace #1 #2}%
   \grenewlinecommon{#1}{#2}{#3}{1}{#4}%
 }%
 
@@ -225,7 +233,10 @@
       \fi %
     \fi %
     \global\advance\greknownline by 1\relax %
-    \gre@calculate@additionalspaces{#1}{#2}%
+    \ifcase\gre@variableheightexpansion %
+      \gre@calculate@additionalspaces{#1}{#2}% 0
+      % else it's handled by the variable height code
+    \fi
     \ifnum#3 = 1\relax %
       \gre@addtranslationspace %
     \else %
@@ -325,7 +336,7 @@
   % we print the initial always at the same place, and then we print the gre@box@annotation, centered
   % first we print the initial
   \gre@dimen@temp@five=-\gre@dimen@textlower %
-  % if it is a big initial we print it on the second line 
+  % if it is a big initial we print it on the second line
   \ifnum\grebiginitial=0\relax %
     \setbox\gre@box@initial=\hbox{\gre@style@initial\greinitialformat{#1}\endgre@style@initial}%
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
@@ -479,7 +490,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grescorereference#1{%
-  \relax
+  \relax %
 }%
 
 \def\GreScoreReference#1{
@@ -898,12 +909,24 @@
     }%
 }%
 
+% make this a count so that it can be read more easily in Lua
+\newcount\gre@variableheightexpansion\gre@variableheightexpansion=1\relax %
+\def\gresetlineheightexpansion#1{%
+  \IfStrEq{#1}{uniform}%
+    {\gre@variableheightexpansion=0\relax }%
+    {\IfStrEq{#1}{variable}%
+      {\gre@variableheightexpansion=1\relax }%
+      {\greerror{Unrecognized option for \protect\gresetlineheightexpansion}}%
+    }%
+}%
+
 % gregorioattr (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
 \newif\ifgre@save@englishcentering% DEPRECATED
 
 %macro called at the beginning of a score
-\def\GreBeginScore{%
+\def\GreBeginScore#1#2#3{%
+  \global\setluatexattribute\gre@attr@glyph@id{0}%
   \global\let\ifgre@save@englishcentering\ifgre@vowelcentering\relax % DEPRECATED
   \ifgre@justifylastline%
     \xdef\gre@save@parfillskip{\the\parfillskip}
@@ -920,7 +943,11 @@
   \exhyphenchar=-1\relax %
   \gregeneratelines %
   \noindent%
-  \directlua{gregoriotex.atScoreBeggining()}%
+  \directlua{
+    gregoriotex.atScoreBeginning([[#1]], #2, #3,
+        \gre@pitch@adjust@top, \gre@pitch@adjust@bottom)
+    gregoriotex.adjust_line_height(1)
+  }%
   %TODO do something like LaTeX's AtBeginDocument
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %
@@ -950,7 +977,7 @@
   % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
   \grelocalleftbox{}%
   \grelocalrightbox{}%
-  \gre@calculate@additionalspaces{0}{0}%
+  \gre@calculate@additionalspaces{\gre@pitch@g}{\gre@pitch@g}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@removetranslationspace %
   \grenormalinitial %
@@ -967,6 +994,9 @@
   \gre@skip@temp@three=0pt%
   \gre@skip@temp@four=0pt%
   \directlua{gregoriotex.atScoreEnd()}%
+  \unsetluatexattribute{\gre@attr@glyph@id}%
+  \unsetluatexattribute{\gre@attr@glyph@top}%
+  \unsetluatexattribute{\gre@attr@glyph@bottom}%
   \ifgre@justifylastline%
     \parfillskip=\gre@save@parfillskip\relax%
   \fi %
@@ -1072,8 +1102,8 @@
   \greseteolcusots{manual}%
 }%
 
-% macro to end elements, #1 is the type of space, it can be : 
-%% 0: default space 
+% macro to end elements, #1 is the type of space, it can be :
+%% 0: default space
 %% 1: larger space
 %% 2: glyph space
 %% 3: zero-width space
@@ -1100,8 +1130,8 @@
 \relax%
 }%
 
-% macro to end a glyph without ending the element, argument is the type of space, it can be : 
-%% 0: default space 
+% macro to end a glyph without ending the element, argument is the type of space, it can be :
+%% 0: default space
 %% 1: zero width space
 %% 2: space between flat or natural and a note
 %% 3: space between two puncta inclinata
@@ -1245,7 +1275,7 @@
       {\greerror{Unrecognized option in \protect\gresetbreakineuouae}}%
     }%
 }%
-      
+
 
 \newif\ifgre@in@euouae
 \gre@in@euouaefalse

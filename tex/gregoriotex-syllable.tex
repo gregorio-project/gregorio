@@ -37,6 +37,7 @@
 % a macro called each time we start something looking like a glyph, but not mandatorily called through the \GreGlyph macro, for example bars, flats, etc.
 
 \def\grenewglyphcommon{%
+  \global\advance\gre@attr@glyph@id by 1\relax %
   % first there is something we must do: setting \grelastoflinecount to 0 if its value is 2. The reason of this is that in ab(abzcd), we cannot let \grelastoflinecount set to 2 after the end of line... the only way I found to achieve it is to reset \grelastoflinecount to 0 after each glyph or bar.
   \ifnum\grelastoflinecount=2\relax %
     \global\grelastoflinecount=0\relax %
@@ -50,7 +51,10 @@
 % passes the glyph height limits:
 % #1: the high height
 % #2: the low height
-\def\GreGlyphHeights#1#2{}%
+\def\GreGlyphHeights#1#2{%
+  \global\setluatexattribute\gre@attr@glyph@top{#1}%
+  \global\setluatexattribute\gre@attr@glyph@bottom{#2}%
+}%
 
 % count that tells us if the current glyph is the first glyph or not. It it is the case, we determine
 \newcount\grefirstglyph%
@@ -95,6 +99,7 @@
   %\gre@dimen@lastglyphwidth=\gre@dimen@temp@three
   %#5\relax 
   #6\relax %
+  \directlua{gregoriotex.adjust_line_height(\greinsidediscretionary)}%
   \relax%
 }%
 
@@ -456,7 +461,7 @@
 %% at the end we wall \greendofword or \greendofsyllable with #7, to reduce the space in case of a flat or natural
 \def\GreSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@debugmsg{general}{}%
-  \gre@debugmsg{general}{New syllable: #1#2#3}%
+  \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}\expandafter\unexpanded{#2}\expandafter\unexpanded{#3}}%
   \gre@debugmsg{general}{}%
   \global\grefirstisalteration=0\relax %
   \ifgre@vowelcentering %

@@ -55,8 +55,11 @@ AC_HEADER_STDC
 
 # linux has integer types in stdint.h, solaris, vms in inttypes.h
 AC_CHECK_HEADERS([stdint.h])
+AC_CHECK_HEADERS([stdalign.h])
 
 AC_DEFINE([_GNU_SOURCE], [1], [Always define this.])
+
+AC_C_BIGENDIAN
 
 AC_ARG_WITH([kpathsea], AS_HELP_STRING([--with-kpathsea], [Build with kpathsea.]))
 

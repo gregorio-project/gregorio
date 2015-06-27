@@ -35,6 +35,7 @@
 #include "unicode.h"
 #include "messages.h"
 #include "characters.h"
+#include "sha1.h"
 
 #include "gabc.h"
 
@@ -79,6 +80,7 @@ static gregorio_center_determination center_is_determined;
 // (for key changes)
 static int current_key = DEFAULT_KEY;
 static bool got_language = false;
+static struct sha1_ctx digester;
 
 static inline void check_multiple(char *name, bool exists) {
     if (exists) {
@@ -523,6 +525,11 @@ static void gregorio_gabc_end_style(unsigned char style)
     gregorio_end_style(&current_character, style);
 }
 
+void gabc_digest(const void *const buf, const size_t size)
+{
+    sha1_process_bytes(buf, size, &digester);
+}
+
 /*
  * The "main" function. It is the function that is called when we have to read
  * a gabc file. It takes a file descriptor, that is to say a file that is
@@ -531,6 +538,10 @@ static void gregorio_gabc_end_style(unsigned char style)
 
 gregorio_score *gabc_read_score(FILE *f_in)
 {
+    // compute the SHA-1 digest while parsing, for I/O efficiency
+    sha1_init_ctx(&digester);
+    // digest GREGORIO_VERSION to get a different value when the version changes
+    sha1_process_bytes(GREGORIO_VERSION, strlen(GREGORIO_VERSION), &digester);
     // the input file that flex will parse
     gabc_score_determination_in = f_in;
     if (!f_in) {
@@ -552,6 +563,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
         gregorio_message(_("unable to determine a valid score from file"),
                 "det_score", VERBOSITY_FATAL, 0);
     }
+    sha1_finish_ctx(&digester, score->digest);
     return score;
 }
 

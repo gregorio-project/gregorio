@@ -46,6 +46,11 @@
 \errmessage{GregorioTeX bug: #1 !! This is a bug in Gregorio.  Please report it at https://github.com/gregorio-project/gregorio/issues}%
 \endgroup}%
 
+\def\gre@typeout#1{\begingroup%
+\def\MessageBreak{^^J}%
+\let\protect\string%
+\message{#1}%
+\endgroup}%
 
 \ifx\csname gre@debug\endcsname\relax%
 \else%
