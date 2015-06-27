@@ -90,7 +90,7 @@ static inline signed char pitch_value(const signed char height) {
     return height;
 }
 
-static inline int bool_int(bool value) {
+static inline int bool_to_int(bool value) {
     return value? 1 : 0;
 }
 
@@ -2689,13 +2689,13 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                     GRE_END_OF_PAR) {
                 fprintf(f, "%%\n%%\n\\GreNewLineWithSpace{%d}{%d}{%d}{%d}%%\n"
                         "%%\n%%\n", status->top_height, status->bottom_height,
-                        bool_int(line.translation),
-                        bool_int(line.abovelinestext));
+                        bool_to_int(line.translation),
+                        bool_to_int(line.abovelinestext));
             } else {
                 fprintf(f, "%%\n%%\n\\GreNewParLineWithSpace{%d}{%d}{%d}{%d}%%"
                         "\n%%\n%%\n", status->top_height, status->bottom_height,
-                        bool_int(line.translation),
-                        bool_int(line.abovelinestext));
+                        bool_to_int(line.translation),
+                        bool_to_int(line.abovelinestext));
             }
             if (*line_number == 1) {
                 fprintf(f, "\\GreAdjustThirdLine %%\n");
@@ -2947,13 +2947,13 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             if (element->u.misc.unpitched.info.sub_type != GRE_END_OF_PAR) {
                 fprintf(f, "%%\n%%\n\\GreNewLineWithSpace{%d}{%d}{%d}{%d}%%\n"
                         "%%\n%%\n", status->top_height, status->bottom_height,
-                        bool_int(line.translation),
-                        bool_int(line.abovelinestext));
+                        bool_to_int(line.translation),
+                        bool_to_int(line.abovelinestext));
             } else {
                 fprintf(f, "%%\n%%\n\\GreNewParLineWithSpace{%d}{%d}{%d}{%d}%%"
                         "\n%%\n%%\n", status->top_height, status->bottom_height,
-                        bool_int(line.translation),
-                        bool_int(line.abovelinestext));
+                        bool_to_int(line.translation),
+                        bool_to_int(line.abovelinestext));
             }
             if (*line_number == 1) {
                 fprintf(f, "\\GreAdjustThirdLine %%\n");
@@ -3106,7 +3106,7 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     // if necessary, we add some bottom space to the first line
     gregoriotex_getlineinfos(score->first_syllable, &first_line);
     fprintf(f, "\\GreFirstLineBottomSpace{%d}{%d}%%\n",
-            status.bottom_height, bool_int(first_line.translation));
+            status.bottom_height, bool_to_int(first_line.translation));
     // we select the good font -- Deprecated (remove in next release)
     if (score->gregoriotex_font) {
         if (!strcmp(score->gregoriotex_font, "gregorio")) {
