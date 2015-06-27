@@ -41,7 +41,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 0 19 8
+WinInfo: 96 16 4
 Grid
 142 1300 m 0
  142 -700 l 0
@@ -2578,7 +2578,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: obase8
+StartChar: SalicusOriscus
 Encoding: 114 -1 111
 Width: 164
 VWidth: 2048

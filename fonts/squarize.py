@@ -279,6 +279,7 @@ DIRECT_GLYPH_NAMES = [
     'PunctumLineTR',
     'PunctumLineBLBR',
     'PunctumAuctusLineBL',
+    'SalicusOriscus',
 ]
 
 def glyph_exists(glyph_name, font):
@@ -410,8 +411,10 @@ def complete_paste(src):
 def simplify():
     "Simplify a glyph."
     global newfont, glyphnumber
+    newfont[glyphnumber].simplify(0, ['mergelines'])
     newfont[glyphnumber].simplify()
     newfont[glyphnumber].removeOverlap()
+    newfont[glyphnumber].simplify(0, ['mergelines'])
     newfont[glyphnumber].simplify()
 
 def paste_and_move(src, xdimen, ydimen):
@@ -428,9 +431,10 @@ def end_glyph(name):
     "Final function to call when building a glyph."
     global newfont, glyphnumber
     set_glyph_name(name)
-    newfont[glyphnumber].simplify()
+    newfont[glyphnumber].simplify(0, ['mergelines'])
     newfont[glyphnumber].simplify()
     newfont[glyphnumber].removeOverlap()
+    newfont[glyphnumber].simplify(0, ['mergelines'])
     newfont[glyphnumber].simplify()
     newfont[glyphnumber].canonicalContours()
     newfont[glyphnumber].canonicalStart()
@@ -526,6 +530,7 @@ HEPISEMUS_GLYPHS = {
     'HEpisemusPunctumLineTR': 'PunctumLineTR',
     'HEpisemusPunctumLineBLBR': 'PunctumLineBLBR',
     'HEpisemusPunctumAuctusLineBL': 'PunctumAuctusLineBL',
+    'HEpisemusSalicusOriscus': 'SalicusOriscus',
 }
 
 def hepisemus(widths):
@@ -707,8 +712,8 @@ def pes_quadratum(widths):
                             "PunctumAuctusLineBL", S_PES_QUASSUS, L_DESCENDENS)
     precise_message("pes quilisma auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(widths, i, "QuilismaLineTR", "PunctumAuctusLineBL", S_PES_QUILISMA_QUADRATUM,
-                            L_DESCENDENS)
+        write_pes_quadratum(widths, i, "QuilismaLineTR", "PunctumAuctusLineBL",
+                            S_PES_QUILISMA_QUADRATUM, L_DESCENDENS)
 
 def write_pes_quadratum(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHING):
     "Writes the pes quadratum glyphs."
@@ -718,9 +723,12 @@ def write_pes_quadratum(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHI
         return
     if first_glyph == "idebilis":
         first_width = get_width(widths, 'idebilis')-get_width(widths, 'line2')
-    elif first_glyph == "PunctumLineTR":
+    elif first_glyph == "PunctumLineTR" or first_glyph == "OriscusLineTR":
         if i == 1:
-            first_glyph = 'Punctum'
+            if first_glyph == "OriscusLineTR":
+                first_glyph = 'Oriscus'
+            else:
+                first_glyph = 'Punctum'
             if last_glyph == 'PunctumLineTL':
                 last_glyph = 'Punctum'
             elif last_glyph == 'auctusa2':
@@ -809,7 +817,7 @@ def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
     else:
         first_glyph = 'PunctumLineTR'
         first_width = get_width(widths, first_glyph)-get_width(widths, 'line2')
-        middle_glyph = 'obase8'
+        middle_glyph = 'SalicusOriscus'
         middle_width = get_width(widths, middle_glyph)-get_width(widths, 'line2')
     simple_paste(first_glyph)
     if i != 1:
