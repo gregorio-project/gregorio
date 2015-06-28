@@ -2639,11 +2639,54 @@ static void handle_final_bar(FILE *f, char *type, gregorio_syllable *syllable)
     fprintf(f, "}%%\n");
 }
 
-static inline bool is_manual_custos(gregorio_element *element)
+static inline bool is_manual_custos(const gregorio_element *element)
 {
     return element->type == GRE_ELEMENT
             && element->u.first_glyph
             && element->u.first_glyph->type == GRE_MANUAL_CUSTOS;
+}
+
+static inline bool next_is_bar(const gregorio_syllable *syllable,
+        const gregorio_element *element)
+{
+    bool got_custos = false;
+    if (element) {
+        element = element->next;
+    }
+
+    while (syllable) {
+        if (element) {
+            if (element->type == GRE_BAR) {
+                return true;
+            }
+            // allow no more than one manual custos before a bar
+            if (got_custos || !is_manual_custos(element)) {
+                return false;
+            }
+            got_custos = true;
+            if (element->next) {
+                // look at the next element
+                element = element->next;
+                continue;
+            }
+        }
+
+        syllable = syllable->next_syllable;
+        if (!syllable) {
+            return false;
+        }
+        if (syllable->type == GRE_BAR) {
+            return true;
+        }
+        if (syllable->type != GRE_SYLLABLE) {
+            return false;
+        }
+
+        // the next syllable is a GRE_SYLLABLE; so look at the element
+        element = syllable->elements[0];
+    }
+
+    assert(false); // should never reach here
 }
 
 /*
@@ -2842,7 +2885,8 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             if (element->u.misc.unpitched.info.nlba == NLBA_BEGINNING) {
                 fprintf(f, "\\GreBeginNLBArea{0}{0}%%\n");
             } else {
-                fprintf(f, "\\GreEndNLBArea{0}{0}%%\n");
+                fprintf(f, "\\GreEndNLBArea{%d}{0}%%\n",
+                        next_is_bar(syllable, element)? 3 : 0);
             }
             break;
 
@@ -2982,10 +3026,12 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
     }
     // Very last, if the syllable is the end of a no-linebreak area:
     if (syllable->no_linebreak_area == NLBA_END) {
-        fprintf(f, "\\GreEndNLBArea{1}{0}%%\n");
+        fprintf(f, "\\GreEndNLBArea{%d}{0}%%\n",
+                next_is_bar(syllable, NULL)? 3 : 1);
     }
     if (syllable->euouae == EUOUAE_END) {
-        fprintf(f, "\\GreEndEUOUAE{}%%\n");
+        fprintf(f, "\\GreEndEUOUAE{%d}%%\n",
+                next_is_bar(syllable, NULL)? 3 : 1);
     }
 }
 

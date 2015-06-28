@@ -177,8 +177,15 @@ Macro to typeset a dominican bar.
   \#2 & code    & Macros which may happen before the skip but after the divisio dominica (typically \verb=\grevepisemus=).\\
 \end{argtable}
 
-\macroname{\textbackslash GreEndEUOUAE}{}{gregoriotex-main.tex}
+\macroname{\textbackslash GreEndEUOUAE}{\#1}{gregoriotex-main.tex}
 Macro to mark the end of a EUOUAE block.
+
+\begin{argtable}
+  \#1 & 0 & ending element\\
+      & 1 & ending syllable\\
+      & 2 & ending score\\
+      & 3 & before bar
+\end{argtable}
 
 \macroname{\textbackslash GreEndOfElement}{\#1\#2}{gregoriotex-main.tex}
 Macro to end elements.
@@ -197,10 +204,11 @@ Macro to end a no line break area.
 
 \begin{argtable}
   \#1 & 0 & ending element\\
-  & 1 & ending syllable\\
-  & 2 & ending score\\
+      & 1 & ending syllable\\
+      & 2 & ending score\\
+      & 3 & before bar\\
   \#2 & 0 & ??\\ %I can’t tell what this flag is for
-  & else & ??
+      & else & ??
 \end{argtable}
 
 \macroname{\textbackslash GreEndOfGlyph}{\#1}{gregoriotex-main.tex}
