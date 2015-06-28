@@ -812,7 +812,7 @@
 							<key>LANGUAGE</key>
 							<string>English</string>
 							<key>SECONDARY_VALUE</key>
-							<string>Gregorio requires TeX in order to work.  If you do not have a TeX distribution installed, you can get one from https://www.tug.org/texlive/.
+							<string>Gregorio requires TeX in order to work.  If you do not have a TeX distribution installed, you can get one from https://www.tug.org/mactex/.
 
 If you have a TeX distribution installed in a non-standard location, then either place a symlink to kpsewhich in /usr/texbin/ and try again with this installer or build Gregorio from source.</string>
 							<key>VALUE</key>
