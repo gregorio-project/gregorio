@@ -200,7 +200,11 @@ end
 local function dump_nodes(head)
   local n, m
   for n in traverse(head) do
-    log("node %s [%d] {%d}", node.type(n.id), n.subtype, has_attribute(n, glyph_id_attr))
+    if node.type(n.id) == 'penalty' then
+      log("%s=%d {%d}", node.type(n.id), n.penalty, has_attribute(n, glyph_id_attr))
+    else
+      log("node %s [%d] {%d}", node.type(n.id), n.subtype, has_attribute(n, glyph_id_attr))
+    end
     if n.id == hlist then
       for m in traverse(n.head) do
         if node.type(m.id) == 'penalty' then

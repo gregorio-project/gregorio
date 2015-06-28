@@ -1253,12 +1253,14 @@
       \xdef\greendafterbaraltpenalty{\greendafterbaraltpenaltysave}%
       \xdef\greendofelementpenalty{\greendofelementpenaltysave}%
       \xdef\grehyphenpenalty{\grehyphenpenaltysave}%
-      \ifcase #1\relax %
+      \ifcase #1\relax % 0
         \grepenalty{\greendofelementpenalty}%
-      \or %
+      \or % 1
         \grepenalty{\greendofsyllablepenalty}%
-      \or %
-    % end of score, no penalty needs to be added
+      \or % 2
+        % end of score, no penalty needs to be added
+      \or % 3
+        % before bar, no penalty should to be added
       \fi %
     \fi %
   \fi %
@@ -1287,9 +1289,9 @@
   \gre@in@euouaetrue %
 }
 
-\def\GreEndEUOUAE{%
+\def\GreEndEUOUAE#1{%
   \ifgre@euouae@implies@nlba %
-    \GreEndNLBArea{0}{0}%
+    \GreEndNLBArea{#1}{0}%
   \fi %
   \gre@in@euouaefalse %
 }
