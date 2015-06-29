@@ -925,8 +925,9 @@
 \newif\ifgre@save@englishcentering% DEPRECATED
 
 %macro called at the beginning of a score
-\def\GreBeginScore#1#2#3{%
+\def\GreBeginScore#1#2#3#4{%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
+  \xdef\gre@gabcname{#4}%
   \global\let\ifgre@save@englishcentering\ifgre@vowelcentering\relax % DEPRECATED
   \ifgre@justifylastline%
     \xdef\gre@save@parfillskip{\the\parfillskip}

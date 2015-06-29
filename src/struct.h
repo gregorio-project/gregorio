@@ -40,6 +40,15 @@
 #define ENUM_BITFIELD(TYPE) unsigned int
 #endif
 
+typedef struct gregorio_scanner_location {
+    unsigned short first_line;
+    unsigned short first_column;
+    unsigned short first_offset;
+    unsigned short last_line;
+    unsigned short last_column;
+    unsigned short last_offset;
+} gregorio_scanner_location;
+
 // all the different types of things a gregorio_* can be
 
 typedef enum gregorio_type {
@@ -389,7 +398,8 @@ typedef struct gregorio_note {
         struct gregorio_extra_info other;
     } u;
 
-    //// characters go to the end for structure alignment
+    //// these go to the end for structure alignment
+    unsigned short src_line, src_column, src_offset;
 
     // we have seen that notes are always real notes, that is to say
     // GRE_NOTE. the type is always that in the final structure. But there
@@ -550,21 +560,6 @@ typedef struct gregorio_character {
 } gregorio_character;
 
 typedef struct gregorio_syllable {
-    // a syllable can be a GRE_SYLLABLE, a GRE_*_KEY_CHANGE or a
-    // GRE_BAR. It is useful when there is only that in a syllable.
-    char type;
-    // position is WORD_BEGINNING for the beginning of a multi-syllable
-    // word, WORD_ONE_SYLLABLE for syllable that are alone in their word,
-    // and i let you gess what are WORD_MIDDLE and WORD_END.
-    ENUM_BITFIELD(gregorio_word_position) position:8;
-    // again, an additional field to put some signs or other things...
-    ENUM_BITFIELD(gregorio_sign) special_sign:8;
-    // type of translation (with center beginning or only center end)
-    ENUM_BITFIELD(gregorio_tr_centering) translation_type:8;
-    // beginning or end of area without linebreak?
-    ENUM_BITFIELD(gregorio_nlba) no_linebreak_area:8;
-    // beginning or end of euouae area
-    ENUM_BITFIELD(gregorio_euouae) euouae;
     // pointer to a gregorio_text structure corresponding to the text.
     struct gregorio_character *text;
     // pointer to a gregorio_text structure corresponding to the
@@ -581,6 +576,22 @@ typedef struct gregorio_syllable {
     // case of polyphonic score. In most scores (monophonic), the array
     // has only one element.
     struct gregorio_element **elements;
+    unsigned short src_line, src_column, src_offset;
+    // a syllable can be a GRE_SYLLABLE, a GRE_*_KEY_CHANGE or a
+    // GRE_BAR. It is useful when there is only that in a syllable.
+    char type;
+    // again, an additional field to put some signs or other things...
+    ENUM_BITFIELD(gregorio_sign) special_sign:8;
+    // type of translation (with center beginning or only center end)
+    ENUM_BITFIELD(gregorio_tr_centering) translation_type:2;
+    // beginning or end of area without linebreak?
+    ENUM_BITFIELD(gregorio_nlba) no_linebreak_area:2;
+    // beginning or end of euouae area
+    ENUM_BITFIELD(gregorio_euouae) euouae:2;
+    // position is WORD_BEGINNING for the beginning of a multi-syllable
+    // word, WORD_ONE_SYLLABLE for syllable that are alone in their word,
+    // and i let you gess what are WORD_MIDDLE and WORD_END.
+    ENUM_BITFIELD(gregorio_word_position) position:3;
 } gregorio_syllable;
 
 // The items in source_info used to be -- well, most of them -- in
@@ -730,7 +741,8 @@ static inline bool is_initio_debilis(char liquescentia)
 gregorio_score *gregorio_new_score(void);
 void gregorio_add_note(gregorio_note **current_note, signed char pitch,
         gregorio_shape shape, gregorio_sign signs,
-        gregorio_liquescentia liquescentia, gregorio_note* prototype);
+        gregorio_liquescentia liquescentia, gregorio_note* prototype,
+        const gregorio_scanner_location *loc);
 void gregorio_add_glyph(gregorio_glyph **current_glyph,
         gregorio_glyph_type type, gregorio_note *first_note,
         gregorio_liquescentia liquescentia);
@@ -743,7 +755,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_word_position position, char *abovelinestext,
         gregorio_tr_centering translation_type,
         gregorio_nlba no_linebreak_area,
-        gregorio_euouae euouae);
+        gregorio_euouae euouae, const gregorio_scanner_location *loc);
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
 void gregorio_position_h_episemus_above(gregorio_note *note, signed char height,
@@ -769,21 +781,26 @@ void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
         gregorio_type type, gregorio_extra_info info, gregorio_sign sign,
         char *texverb);
 void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
-        gregorio_type sub_type);
-void gregorio_add_custo_as_note(gregorio_note **current_note);
+        gregorio_type sub_type, const gregorio_scanner_location *loc);
+void gregorio_add_custo_as_note(gregorio_note **current_note,
+        const gregorio_scanner_location *loc);
 void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
-        signed char pitch);
+        signed char pitch, const gregorio_scanner_location *loc);
 void gregorio_add_clef_change_as_note(gregorio_note **current_note,
-        gregorio_type type, signed char clef_line);
-void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar);
+        gregorio_type type, signed char clef_line,
+        const gregorio_scanner_location *loc);
+void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar,
+        const gregorio_scanner_location *loc);
 void gregorio_add_alteration_as_note(gregorio_note **current_note,
-        gregorio_type type, signed char pitch);
+        gregorio_type type, signed char pitch,
+        const gregorio_scanner_location *loc);
 void gregorio_add_space_as_note(gregorio_note **current_note,
-        gregorio_space space);
+        gregorio_space space,
+        const gregorio_scanner_location *loc);
 void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
-        gregorio_type type);
+        gregorio_type type, const gregorio_scanner_location *loc);
 void gregorio_add_nlba_as_note(gregorio_note **current_note,
-        gregorio_nlba type);
+        gregorio_nlba type, const gregorio_scanner_location *loc);
 void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str);
 void gregorio_add_cs_to_note(gregorio_note *const*current_note, char *str,
         bool nabc);

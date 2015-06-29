@@ -57,6 +57,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Support for custom vowel centering rules.  Put a file called `gregorio-vowels.dat` into your project directory or into a directory accessible from TEXMF and add the header `language: name;` to your gabc file.  The `gregorio-vowels.dat` file describes how vowels are to be located in the *name* language.  See GregorioRef for details.
 - `\gresetlinecolor` takes a named color as an argument.  As a result, the red staff lines can be made consistent with the text, even when the user changes `gregoriocolor` with `\gresetlinecolor{gregoriocolor}`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
 - Package option `deprecated=false`. Causes all deprecated commands to raise an error and halt TeX.
+- The ability to add LilyPond-like point-and-click textedit links into the PDF file to aid with debugging scores.  This must be explicitly enabled and **should be turned off** when producing files for distribution as it embeds path information into the output.  To enable this, you must pass the `-p` option to gregorio when compiling gabc files and add `\gresetpointandclick{on}` before including the score.  It may be toggled back off with `\gresetpointandclick{off}`.  See GregorioRef for details (for the change request, see [#528](https://github.com/gregorio-project/gregorio/issues/528)).
 
 ### Deprecated
 - `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`

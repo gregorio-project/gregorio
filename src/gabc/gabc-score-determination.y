@@ -414,12 +414,12 @@ static void rebuild_characters(gregorio_character **param_character,
  * Function to close a syllable and update the position. 
  */
 
-static void close_syllable(void)
+static void close_syllable(YYLTYPE *loc)
 {
     int i;
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
             first_text_character, first_translation_character, position,
-            abovelinestext, translation_type, no_linebreak_area, euouae);
+            abovelinestext, translation_type, no_linebreak_area, euouae, loc);
     if (!score->first_syllable) {
         // we rebuild the first syllable if we have to
         score->first_syllable = current_syllable;
@@ -570,18 +570,17 @@ gregorio_score *gabc_read_score(FILE *f_in)
 unsigned char nabc_state = 0;
 size_t nabc_lines = 0;
 
-void
-gabc_y_add_notes(char *notes) {
+void gabc_y_add_notes(char *notes, YYLTYPE loc) {
     gregorio_element *new_elements;
     gregorio_element *last_element;
     if (nabc_state == 0) {
         if (!elements[voice]) {
             elements[voice] = gabc_det_elements_from_string(notes,
-                    &current_key, macros);
+                    &current_key, macros, &loc);
             current_element = elements[voice];
         } else {
             new_elements = gabc_det_elements_from_string(notes,
-                    &current_key, macros);
+                    &current_key, macros, &loc);
             last_element = elements[voice];
             while(last_element->next) {
                 last_element = last_element->next;
@@ -608,6 +607,15 @@ gabc_y_add_notes(char *notes) {
     }
 }
 %}
+
+%initial-action {
+    @$.first_line = 1;
+    @$.first_column = 1;
+    @$.first_offset = 0;
+    @$.last_line = 1;
+    @$.last_column = 1;
+    @$.last_offset = 0;
+}
 
 %token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE 
 %token MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER
@@ -944,7 +952,7 @@ notes:
 note:
     NOTES CLOSING_BRACKET {
         if (voice<number_of_voices) {
-            gabc_y_add_notes($1.text);
+            gabc_y_add_notes($1.text, @1);
             free($1.text);
         }
         else {
@@ -967,7 +975,7 @@ note:
     }
     | NOTES CLOSING_BRACKET_WITH_SPACE {
         if (voice<number_of_voices) {
-            gabc_y_add_notes($1.text);
+            gabc_y_add_notes($1.text, @1);
             free($1.text);
         }
         else {
@@ -991,7 +999,7 @@ note:
     }
     | NOTES VOICE_CUT {
         if (voice<number_of_voices) {
-            gabc_y_add_notes($1.text);
+            gabc_y_add_notes($1.text, @1);
             free($1.text);
             voice++;
         }
@@ -1010,7 +1018,7 @@ note:
                              "det_score", VERBOSITY_FATAL, 0);
         }
         if (voice<number_of_voices) {
-            gabc_y_add_notes($1.text);
+            gabc_y_add_notes($1.text, @1);
             free($1.text);
             nabc_state = (nabc_state + 1) % (nabc_lines+1);
         }
@@ -1152,19 +1160,19 @@ syllable_with_notes:
     text OPENING_BRACKET notes {
         rebuild_characters (&current_character, center_is_determined);
         first_text_character = current_character;
-        close_syllable();
+        close_syllable(&@1);
     }
     | text translation OPENING_BRACKET notes {
-        close_syllable();
+        close_syllable(&@1);
     }
     ;
 
 notes_without_word:
     OPENING_BRACKET notes {
-        close_syllable();
+        close_syllable(NULL);
     }
     | translation OPENING_BRACKET notes {
-        close_syllable();
+        close_syllable(NULL);
     }
     ;
 

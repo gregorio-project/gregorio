@@ -165,6 +165,39 @@ may be used to specify a gabc \texttt{initial-style}, which defaults to
 \end{latexcode}
 
 
+\subsubsection{Point-and-click}
+
+Gregorio can add Lilypond-like point-and-click links into the output PDF
+file.  The URLs added to the PDF conform with Lilypond and will use the
+Lilypond scripts if they are enabled on your system.  To configure your
+system for this feature, please see the documentation for Lilypond since
+they established the feature.\bigskip
+
+In addition to switching this feature on in \TeX{}, you must also pass the
+\texttt{-p} option to \texttt{gregorio} when converting your gabc files to
+Gregorio\TeX{} for inclusion.  This will automatically be done for auto- and
+force-compiled scores, but if an auto-compiled score was compiled without the
+option, Gregorio\TeX{} will not realize it has changed to recompile it.  In
+this case, remove the corresponding \texttt{.gtex} file to force it to
+recompile.\bigskip
+
+\textbf{Important:} As with LilyPond, you should always turn off
+point-and-click before producing gtex and/or PDF files for distribution.
+This feature embeds absolute filenames from your computer as links in
+the PDF, which can pose a security risk.  This is why this feature is
+disabled by default.
+
+\macroname{\textbackslash gresetpointandclick}{\{\#1\}}{gregoriotex-syllable.tex}
+Macro to enable or disable the point-and-click feature.
+
+\begin{argtable}
+  \#1 & on  & Enable point-and-click link generation.\\
+      & off & Disable point-and-click link generation.
+\end{argtable}
+
+This feature may be switched on and off as desired between scores.
+
+
 \subsubsection{Overall Size}
 While the default size for Gregorio scores is designed to approximate that found in most liturgical books, Gregorio\TeX\ also provides mechanisms for changing the size of your scores for use in any application.
 

@@ -28,6 +28,7 @@ gregorio_score *gabc_read_score(FILE *f_in);
 
 void gabc_write_score(FILE *f, gregorio_score *score);
 
-void gregoriotex_write_score(FILE *f, gregorio_score *score);
+void gregoriotex_write_score(FILE *f, gregorio_score *score,
+        const char *point_and_click_filename);
 
 #endif

@@ -643,8 +643,8 @@
 %% macros for the typesetting of linea
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\GreLinea#1#2#3{%
-  \GreGlyph{\gre@char@linea}{#1}{#2}{#3}{}{}%
+\def\GreLinea#1#2#3#4#5#6{%
+  \GreGlyph{\gre@char@linea}{#1}{#2}{#3}{#4}{#5}{#6}%
   \relax %
 }%
 
@@ -1487,7 +1487,7 @@
 \relax %
 }%
 
-\def\GrePunctumCavum#1#2#3#4#5{%
+\def\GrePunctumCavum#1#2#3#4#5#6{%
   \setbox\gre@box@temp@width=\hbox{\grepunctumcavumchar}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
   \gre@skip@temp@four = \gre@dimen@lastglyphwidth%
@@ -1498,11 +1498,11 @@
   \ifgre@hidepclines%
     \grefillhole{\grepunctumcavumholechar}%
   \fi %
-  \GreGlyph{\grepunctumcavumchar}{#1}{#2}{#3}{}{#5}%
+  \GreGlyph{\grepunctumcavumchar}{#1}{#2}{#3}{}{#5}{#6}%
   \relax %
 }%
 
-\def\GreLineaPunctumCavum#1#2#3#4#5{%
+\def\GreLineaPunctumCavum#1#2#3#4#5#6{%
   \setbox\gre@box@temp@width=\hbox{\grelineapunctumcavumchar}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
   \gre@skip@temp@four = \gre@dimen@lastglyphwidth%
@@ -1513,6 +1513,6 @@
   \ifgre@hidepclines %
     \grefillhole{\grelineapunctumcavumholechar}%
   \fi %
-  \GreGlyph{\grelineapunctumcavumchar}{#1}{#2}{#3}{}{#5}%
+  \GreGlyph{\grelineapunctumcavumchar}{#1}{#2}{#3}{}{#5}{#6}%
   \relax %
 }%

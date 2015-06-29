@@ -29,6 +29,10 @@
 
 #define YY_NO_INPUT
 
+#define YY_USER_ACTION gabc_update_location(&notes_lloc, \
+        gabc_notes_determination_text, gabc_notes_determination_leng);
+
+static gregorio_scanner_location notes_lloc;
 static gregorio_note *current_note;
 static char char_for_brace;
 static unsigned int nbof_isolated_episemus;
@@ -54,13 +58,13 @@ static inline void lex_add_note(int i, gregorio_shape shape, char signs,
     nbof_isolated_episemus = 0;
     gregorio_add_note(&current_note,
             pitch_letter_to_height(tolower(gabc_notes_determination_text[i])),
-            shape, signs, liquescentia, NULL);
+            shape, signs, liquescentia, NULL, &notes_lloc);
 }
 
 static inline void add_bar_as_note(gregorio_bar bar)
 {
     nbof_isolated_episemus = 0;
-    gregorio_add_bar_as_note(&current_note, bar);
+    gregorio_add_bar_as_note(&current_note, bar, &notes_lloc);
 }
 
 static inline void error(void)
@@ -125,7 +129,8 @@ static void add_sign(gregorio_sign sign) {
 
 static inline void add_alteration(const gregorio_type type) {
     gregorio_add_alteration_as_note(&current_note, type,
-            pitch_letter_to_height(gabc_notes_determination_text[0]));
+            pitch_letter_to_height(gabc_notes_determination_text[0]),
+            &notes_lloc);
 }
 
 %}
@@ -199,21 +204,21 @@ static inline void add_alteration(const gregorio_type type) {
         if (notesmacros[gabc_notes_determination_text[3]-'0']) {
             gregorio_add_texverb_as_note(&current_note,
             strdup(notesmacros[gabc_notes_determination_text[3]-'0']),
-            GRE_TEXVERB_GLYPH);
+            GRE_TEXVERB_GLYPH, &notes_lloc);
         } else error();
     }
 <INITIAL>\[em[1-9]\] {
         if (notesmacros[gabc_notes_determination_text[3]-'0']) {
             gregorio_add_texverb_as_note(&current_note,
             strdup(notesmacros[gabc_notes_determination_text[3]-'0']),
-            GRE_TEXVERB_ELEMENT);
+            GRE_TEXVERB_ELEMENT, &notes_lloc);
         } else error();
     }
 <INITIAL>\[altm[1-9]\] {
         if (notesmacros[gabc_notes_determination_text[5]-'0']) {
             gregorio_add_texverb_as_note(&current_note,
             strdup(notesmacros[gabc_notes_determination_text[5]-'0']),
-            GRE_TEXVERB_ELEMENT);
+            GRE_TEXVERB_ELEMENT, &notes_lloc);
         } else error();
     }
 <INITIAL>\[nv: {
@@ -229,10 +234,10 @@ static inline void add_alteration(const gregorio_type type) {
         BEGIN(alt);
     }
 <INITIAL><nlba> {
-        gregorio_add_nlba_as_note(&current_note, NLBA_BEGINNING);
+        gregorio_add_nlba_as_note(&current_note, NLBA_BEGINNING, &notes_lloc);
     }
 <INITIAL><\/nlba> {
-        gregorio_add_nlba_as_note(&current_note, NLBA_END);
+        gregorio_add_nlba_as_note(&current_note, NLBA_END, &notes_lloc);
     }
 <overbrace>[^\]]+ {
         snprintf(tempstr, 70, "\\greoverbrace{%s}{0pt}{0pt}{%d}",
@@ -268,58 +273,65 @@ static inline void add_alteration(const gregorio_type type) {
     }
 <texverbglyph>[^\]]+ {
         gregorio_add_texverb_as_note(&current_note,
-                strdup(gabc_notes_determination_text), GRE_TEXVERB_GLYPH);
+                strdup(gabc_notes_determination_text), GRE_TEXVERB_GLYPH,
+                &notes_lloc);
     }
 <texverbelement>[^\]]+ {
         gregorio_add_texverb_as_note(&current_note,
-                strdup(gabc_notes_determination_text), GRE_TEXVERB_ELEMENT);
+                strdup(gabc_notes_determination_text), GRE_TEXVERB_ELEMENT,
+                &notes_lloc);
     }
 <alt>[^\]]+ {
         gregorio_add_texverb_as_note(&current_note,
-                strdup(gabc_notes_determination_text), GRE_ALT);
+                strdup(gabc_notes_determination_text), GRE_ALT, &notes_lloc);
     }
 <texverbnote,texverbglyph,texverbelement,choralsign,choralnabc,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,underbrace>\] {
         BEGIN(INITIAL);
     }
 \{  {
         gregorio_add_texverb_as_note(&current_note, strdup("\\hbox to 0pt{"),
-                GRE_TEXVERB_ELEMENT);
+                GRE_TEXVERB_ELEMENT, &notes_lloc);
     }
 \}  {
         gregorio_add_texverb_as_note(&current_note,
-                strdup("\\hss%\n}%\n\\grenobreak\\relax "),
-                GRE_TEXVERB_ELEMENT);
+                strdup("\\hss%\n}%\n\\grenobreak\\relax "), GRE_TEXVERB_ELEMENT,
+                &notes_lloc);
     }
 [a-m]\+ {
         gregorio_add_manual_custos_as_note(&current_note,
-                pitch_letter_to_height(gabc_notes_determination_text[0]));
+                pitch_letter_to_height(gabc_notes_determination_text[0]),
+                &notes_lloc);
     }
 [\t\r\n]+ /* ignore ends of line and tabs */;
 z   {
-        gregorio_add_end_of_line_as_note(&current_note, GRE_END_OF_LINE);
+        gregorio_add_end_of_line_as_note(&current_note, GRE_END_OF_LINE,
+                &notes_lloc);
     }
 z0  {
-        gregorio_add_custo_as_note(&current_note);
+        gregorio_add_custo_as_note(&current_note, &notes_lloc);
     }
 Z   {
-        gregorio_add_end_of_line_as_note(&current_note, GRE_END_OF_PAR);
+        gregorio_add_end_of_line_as_note(&current_note, GRE_END_OF_PAR,
+                &notes_lloc);
     }
 (c|f)[1-4] {
         if (gabc_notes_determination_text[0]=='c') {
             gregorio_add_clef_change_as_note(&current_note, GRE_C_KEY_CHANGE,
-                    gabc_notes_determination_text[1]);
+                    gabc_notes_determination_text[1], &notes_lloc);
         } else {
             gregorio_add_clef_change_as_note(&current_note, GRE_F_KEY_CHANGE,
-                    gabc_notes_determination_text[1]);
+                    gabc_notes_determination_text[1], &notes_lloc);
         }
     }
 (cb|fb)[1-4] {
         if (gabc_notes_determination_text[0]=='c') {
-            gregorio_add_clef_change_as_note(&current_note, GRE_C_KEY_CHANGE_FLATED,
-                                             gabc_notes_determination_text[2]);
+            gregorio_add_clef_change_as_note(&current_note,
+                    GRE_C_KEY_CHANGE_FLATED, gabc_notes_determination_text[2],
+                    &notes_lloc);
         } else {
-            gregorio_add_clef_change_as_note(&current_note, GRE_F_KEY_CHANGE_FLATED,
-                                             gabc_notes_determination_text[2]);
+            gregorio_add_clef_change_as_note(&current_note,
+                    GRE_F_KEY_CHANGE_FLATED, gabc_notes_determination_text[2],
+                    &notes_lloc);
         }
     }
 `   {
@@ -407,25 +419,28 @@ r5  {
         add_alteration(GRE_NATURAL);
     }
 \/  {
-        gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT);
+        gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT, &notes_lloc);
     }
 \/\/ {
-        gregorio_add_space_as_note(&current_note, SP_LARGER_SPACE);
+        gregorio_add_space_as_note(&current_note, SP_LARGER_SPACE, &notes_lloc);
     }
 \   {
-        gregorio_add_space_as_note(&current_note, SP_GLYPH_SPACE);
+        gregorio_add_space_as_note(&current_note, SP_GLYPH_SPACE, &notes_lloc);
     }
 !\/ {
-        gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT_NB);
+        gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT_NB,
+                &notes_lloc);
     }
 !\/\/ {
-        gregorio_add_space_as_note(&current_note, SP_LARGER_SPACE_NB);
+        gregorio_add_space_as_note(&current_note, SP_LARGER_SPACE_NB,
+                &notes_lloc);
     }
 !\  {
-        gregorio_add_space_as_note(&current_note, SP_GLYPH_SPACE_NB);
+        gregorio_add_space_as_note(&current_note, SP_GLYPH_SPACE_NB,
+                &notes_lloc);
     }
 !/[^\/ ] {
-        gregorio_add_space_as_note(&current_note, SP_ZERO_WIDTH);
+        gregorio_add_space_as_note(&current_note, SP_ZERO_WIDTH, &notes_lloc);
     }
 =   {
         gregorio_change_shape(current_note, S_LINEA);
@@ -512,10 +527,20 @@ s   {
 
 %%
 
-gregorio_note *gabc_det_notes_from_string(char *str, char *newmacros[10])
+gregorio_note *gabc_det_notes_from_string(char *str, char *newmacros[10],
+        gregorio_scanner_location *loc)
 {
     int i;
     YY_BUFFER_STATE buf;
+
+    notes_lloc.first_line = loc->first_line;
+    notes_lloc.first_column = loc->first_column;
+    notes_lloc.first_offset = loc->first_offset;
+    // yes... I do mean to set values from loc->first_*
+    notes_lloc.last_line = loc->first_line;
+    notes_lloc.last_column = loc->first_column;
+    notes_lloc.last_offset = loc->first_offset;
+
     // a small optimization could uccur here: we could do it only once at the
     // beginning of the score, not at each syllable
     for (i = 0; i < 10; i++) {

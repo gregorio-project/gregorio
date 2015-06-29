@@ -64,6 +64,9 @@ static unsigned char style_stack = 0;
     } \
     gabc_digest(buf, result)
 
+#define YY_USER_ACTION gabc_update_location(&gabc_score_determination_lloc, \
+        gabc_score_determination_text, gabc_score_determination_leng);
+
 %}
 
 %x attribute
