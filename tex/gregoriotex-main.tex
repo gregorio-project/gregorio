@@ -62,8 +62,6 @@
 
 \def\gre@nothing{}
 
-\AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
-
 % Since TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
 % available without prefix. We mostly rely on \directlua that is still available
 % without prefix, but we also rely on the Omega primitives, that have a luatex
@@ -1587,3 +1585,6 @@
 \greloadspaceconf{default}%
 
 \input gregoriotex-nabc.tex
+
+\AtBeginDocument{\opengreaux\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
+\AtEndDocument{\closegreaux}

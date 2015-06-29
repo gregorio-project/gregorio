@@ -34,6 +34,9 @@ static char char_for_brace;
 static unsigned int nbof_isolated_episemus;
 static char *notesmacros[10];
 static char *tempstr = NULL;
+static int brace_var_counter;
+static int overbrace_var, underbrace_var;
+static const char *overbrace_var_kind;
 
 static inline char pitch_letter_to_height(const char pitch) {
     return pitch - 'a' + LOWEST_PITCH;
@@ -188,6 +191,132 @@ static inline void add_alteration(const gregorio_type type) {
 <INITIAL>\[ocba:[01]; {
         char_for_brace = gabc_notes_determination_text[6]-'0';
         BEGIN(overcurlyaccentusbrace);
+    }
+<INITIAL>\[ob:[01]\{\] {
+        if (overbrace_var) {
+            gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
+                              _("variable overbrace without termination of "
+                                "previous overbrace"));
+        } else {
+            char_for_brace = gabc_notes_determination_text[4]-'0';
+            overbrace_var = ++brace_var_counter;
+            overbrace_var_kind = "ob";
+            snprintf(tempstr, 70,
+                     "\\greoverbrace{\\grevarbraces{%d}{%d}}{0pt}{0pt}{%d}",
+                     overbrace_var, char_for_brace, char_for_brace);
+            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+        }
+    }
+<INITIAL>\[ub:[01]\{\] {
+        if (underbrace_var) {
+            gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
+                              _("variable underbrace without termination of "
+                                "previous underbrace"));
+        } else {
+            char_for_brace = gabc_notes_determination_text[4]-'0';
+            underbrace_var = ++brace_var_counter;
+            snprintf(tempstr, 70,
+                     "\\greunderbrace{\\grevarbraces{%d}{%d}}{0pt}{0pt}{%d}",
+                     overbrace_var, char_for_brace, char_for_brace);
+            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+        }
+    }
+<INITIAL>\[ocb:[01]\{\] {
+        if (overbrace_var) {
+            gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
+                              _("variable overbrace without termination of "
+                                "previous overbrace"));
+        } else {
+            char_for_brace = gabc_notes_determination_text[5]-'0';
+            overbrace_var = ++brace_var_counter;
+            overbrace_var_kind = "ocb";
+            snprintf(tempstr, 70,
+                     "\\greovercurlybrace{\\grevarbraces{%d}{%d}}{0pt}{0pt}{%d}{0}",
+                     overbrace_var, char_for_brace, char_for_brace);
+            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+        }
+    }
+<INITIAL>\[ocba:[01]\{\] {
+        if (overbrace_var) {
+            gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
+                              _("variable overbrace without termination of "
+                                "previous overbrace"));
+        } else {
+            char_for_brace = gabc_notes_determination_text[6]-'0';
+            overbrace_var = ++brace_var_counter;
+            overbrace_var_kind = "ocba";
+            snprintf(tempstr, 70,
+                     "\\greovercurlybrace{\\grevarbraces{%d}{%d}}{0pt}{0pt}{%d}{1}",
+                     overbrace_var, char_for_brace, char_for_brace);
+            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+        }
+    }
+<INITIAL>\[ob:[01]\}\] {
+        if (!overbrace_var) {
+            gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
+                              _("variable overbrace termination without "
+                                "variable overbrace start"));
+        } else if (strcmp (overbrace_var_kind, "ob")) {
+            gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
+                              _("variable overbrace started with %s "
+                                "and terminated with ob"),
+                              overbrace_var_kind);
+        } else {
+            char_for_brace = gabc_notes_determination_text[4]-'0';
+            snprintf(tempstr, 70, "\\grevarbracee{%d}{%d}",
+                     overbrace_var, char_for_brace);
+            overbrace_var = 0;
+            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+        }
+    }
+<INITIAL>\[ub:[01]\}\] {
+        if (!underbrace_var) {
+            gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
+                              _("variable underbrace termination without "
+                                "variable underbrace start"));
+        } else {
+            char_for_brace = gabc_notes_determination_text[4]-'0';
+            snprintf(tempstr, 70, "\\grevarbracee{%d}{%d}",
+                     underbrace_var, char_for_brace);
+            underbrace_var = 0;
+            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+        }
+    }
+<INITIAL>\[ocb:[01]\}\] {
+        if (!overbrace_var) {
+            gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
+                              _("variable overbrace termination without "
+                                "variable overbrace start"));
+        } else if (strcmp (overbrace_var_kind, "ocb")) {
+            gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
+                              _("variable overbrace started with %s "
+                                "and terminated with ocb"),
+                              overbrace_var_kind);
+        } else {
+            char_for_brace = gabc_notes_determination_text[5]-'0';
+            snprintf(tempstr, 70, "\\grevarbracee{%d}{%d}",
+                     overbrace_var, char_for_brace);
+            overbrace_var = 0;
+            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+        }
+    }
+<INITIAL>\[ocba:[01]\}\] {
+        if (!overbrace_var) {
+            gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
+                              _("variable overbrace termination without "
+                                "variable overbrace start"));
+        } else if (strcmp (overbrace_var_kind, "ocba")) {
+            gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
+                              _("variable overbrace started with %s "
+                                "and terminated with ocba"),
+                              overbrace_var_kind);
+        } else {
+            char_for_brace = gabc_notes_determination_text[6]-'0';
+            snprintf(tempstr, 70, "\\grevarbracee{%d}{%d}",
+                     overbrace_var, char_for_brace);
+            overbrace_var = 0;
+            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+        }
     }
 <INITIAL>\[nm[1-9]\] {
         if (notesmacros[gabc_notes_determination_text[3]-'0']) {

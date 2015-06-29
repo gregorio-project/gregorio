@@ -81,6 +81,8 @@ local number_to_letter = {
 
 local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
 
+local cur_score_id = nil
+
 local function keys_changed(tab1, tab2)
   if tab2 == nil then return true end
   local id,_
@@ -353,6 +355,7 @@ local function atScoreBeginning (score_id, top_height, bottom_height,
     local inclusion = score_inclusion[score_id] or 1
     score_inclusion[score_id] = inclusion + 1
     score_id = score_id..'.'..inclusion
+    cur_score_id = score_id
     score_heights = line_heights[score_id] or {}
     if new_line_heights then
       new_score_heights = {}
@@ -669,6 +672,10 @@ local function adjust_line_height(inside_discretionary)
   end
 end
 
+local function get_cur_score_id()
+  tex.print(cur_score_id)
+end
+
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
 
@@ -688,3 +695,4 @@ gregoriotex.def_symbol           = def_symbol
 gregoriotex.font_size            = font_size
 gregoriotex.direct_gabc          = direct_gabc
 gregoriotex.adjust_line_height   = adjust_line_height
+gregoriotex.get_cur_score_id     = get_cur_score_id

@@ -519,6 +519,23 @@
   \relax %
 }%
 
+\def\grevarbracer#1#2#3{%
+  \ifnum#2=1\relax %
+    \setbox\gre@box@temp@sign=\hbox{\grepunctumchar}%
+    \gre@dimen@temp@five=\wd\gre@box@temp@sign %
+    \kern-\gre@dimen@temp@five %
+    \pdfsavepos %
+    \kern\gre@dimen@temp@five %
+  \else %
+    \pdfsavepos
+  \fi %
+  \grewriteaux{#3.\directlua{gregoriotex.get_cur_score_id()}.#1:\number\pdflastxpos}%
+  \relax %
+}
+
+\def\grevarbraces#1#2{0mm\grevarbracer{#1}{#2}{varbracestart}}
+\def\grevarbracee#1#2{\grevarbracer{#1}{#2}{varbraceend}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of punctum mora, auctum duplex and choral signs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
