@@ -65,6 +65,8 @@ local new_line_heights = nil
 local score_heights = nil
 local new_score_heights = nil
 local auxname = nil
+local gauxname = nil
+local var_braces = nil
 
 local space_below_staff = 5
 local space_above_staff = 13
@@ -146,8 +148,10 @@ local function init(arg, enable_height_computation)
   end
   if outputdir and lfs.isdir(outputdir) then
     auxname = outputdir..'/'..tex.jobname..'.greaux'
+    gauxname = outputdir..'/'..tex.jobname..'.gaux'
   else
     auxname = tex.jobname..'.greaux'
+    gauxname = tex.jobname..'.gaux'
   end
 
   -- to get latexmk to realize the aux file is a dependency
@@ -157,6 +161,23 @@ local function init(arg, enable_height_computation)
     line_heights = dofile(auxname)
   else
     line_heights = {}
+  end
+
+  texio.write_nl('('..gauxname..')')
+  var_braces = {}
+  if lfs.isfile(gauxname) then
+    log("Reading %s", gauxname)
+    local aux = io.open(gauxname, 'r')
+    if aux ~= nil then
+      while true do
+        local line = aux:read()
+        if line == nil then break end
+        local eq_pos = line:find('=')
+        if eq_pos == nil then break end
+        var_braces[line:sub(1, eq_pos-1)] = tonumber(line:sub(eq_pos+1))
+      end
+      aux:close()
+    end
   end
 
   if enable_height_computation then
@@ -676,6 +697,17 @@ local function get_cur_score_id()
   tex.print(cur_score_id)
 end
 
+local function var_brace_len(id)
+  id = cur_score_id..'.'..id
+  local start_id = id..'.start'
+  local end_id = id..'.end'
+  if var_braces[start_id] ~= nil and var_braces[end_id] ~= nil then
+    tex.print(string.format('%dsp', var_braces[end_id] - var_braces[start_id]))
+  else
+    tex.print('0sp')
+  end
+end
+
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
 
@@ -696,3 +728,4 @@ gregoriotex.font_size            = font_size
 gregoriotex.direct_gabc          = direct_gabc
 gregoriotex.adjust_line_height   = adjust_line_height
 gregoriotex.get_cur_score_id     = get_cur_score_id
+gregoriotex.var_brace_len        = var_brace_len
