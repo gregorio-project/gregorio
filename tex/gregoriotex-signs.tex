@@ -931,11 +931,12 @@
 
 \def\AddHEpisemusBridges{%
   \gre@deprecated{\protect\AddHEpisemusBridges}{\protect\gresethepisemus{bridge}}%
-  \gre@hepisemusbridgestrue%
+  \gre@hepisemusbridgetrue%
 }%
 
 \def\RemoveHEpisemusBridges{%
   \gre@deprecated{\protect\RemoveHepisemusBridges}{\protect\gresethepisemus{break}}
+  \gre@hepisemusbridgefalse%
 }%
 
 \def\gresethepisemus#1{%
