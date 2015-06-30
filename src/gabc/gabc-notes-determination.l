@@ -217,7 +217,7 @@ static inline void add_alteration(const gregorio_type type) {
             underbrace_var = ++brace_var_counter;
             snprintf(tempstr, 70,
                      "\\greunderbrace{\\grevarbracestart{%d}{%d}}{0pt}{0pt}{%d}",
-                     overbrace_var, char_for_brace, char_for_brace);
+                     underbrace_var, char_for_brace, char_for_brace);
             gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
         }
     }
