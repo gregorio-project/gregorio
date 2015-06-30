@@ -371,12 +371,12 @@ end
 
 local function atScoreBeginning (score_id, top_height, bottom_height,
     top_height_adj, bottom_height_adj)
+  local inclusion = score_inclusion[score_id] or 1
+  score_inclusion[score_id] = inclusion + 1
+  score_id = score_id..'.'..inclusion
+  cur_score_id = score_id
   if (top_height > top_height_adj or bottom_height < bottom_height_adj)
       and tex.count['gre@variableheightexpansion'] == 1 then
-    local inclusion = score_inclusion[score_id] or 1
-    score_inclusion[score_id] = inclusion + 1
-    score_id = score_id..'.'..inclusion
-    cur_score_id = score_id
     score_heights = line_heights[score_id] or {}
     if new_line_heights then
       new_score_heights = {}
