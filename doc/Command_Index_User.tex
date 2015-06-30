@@ -400,6 +400,18 @@ will be scaled.
   & string & The name of the glyph to use.
 \end{argtable}
 
+\macroname{\textbackslash gresethepisemus}{\{#1\}}{gregoriotex-signs.tex}
+Determines whether Gregorio\TeX\ should join (bridge) horizontal episema on adjacent notes.
+
+\begin{argtable}
+  \#1 & bridge & Adjacent horizontal episema are joined together (default).\\
+  & break & Adjacent horizontal episema are not joined.
+\end{argtable}
+
+
+
+
+
 \subsubsection[Barred letters (A/, etc.)]{Barred letters (\Abar, etc.)}
 
 \macroname{\textbackslash gresimpledefbarredsymbol}{\{\#1\}\{\#2\}}{gregoriotex-symbols.tex}
@@ -649,6 +661,7 @@ Macro to tell Gregorio\TeX\ whether the clefs should be printed or not.
   \#1 & visible & Clefs will be printed (default)\\
   & invisible & Clefs will not be printed
 \end{argtable}
+
 
 
 \subsection{Distances}\label{distances}

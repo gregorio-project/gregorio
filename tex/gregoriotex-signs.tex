@@ -918,7 +918,7 @@
 % #6 is a trick for bridges: if we must use a different height because of a
 %    bridge, use #6, otherwise use #1
 \def\GreHEpisemus#1#2#3#4#5#6{%
-  \ifnum\greaddhepisemusbridges=1\relax %
+  \ifgre@hepisemusbridge%
     \grehepisorline{#6}{#2}{#3}{#4}{#5}%
   \else %
     \grehepisorline{#1}{#2}{#3}{#4}{#5}%
@@ -926,23 +926,32 @@
   \relax %
 }%
 
+\newif\ifgre@hepisemusbridge
+\gre@hepisemusbridgetrue
+
 \def\AddHEpisemusBridges{%
-\xdef\greaddhepisemusbridges{1}%
-\relax %
+  \gre@deprecated{\protect\AddHEpisemusBridges}{\protect\gresethepisemus{bridge}}%
+  \gre@hepisemusbridgestrue%
 }%
 
 \def\RemoveHEpisemusBridges{%
-\xdef\greaddhepisemusbridges{0}%
-\relax %
+  \gre@deprecated{\protect\RemoveHepisemusBridges}{\protect\gresethepisemus{break}}
 }%
 
-\AddHEpisemusBridges%
+\def\gresethepisemus#1{%
+  \IfStrEq{#1}{bridge}%
+    {\gre@hepisemusbridgetrue}%
+    {\IfStrEq{#1}{break}%
+      {\gre@hepisemusbridgefalse}%
+      {\greerror{Unrecognized option for \protect\gresethepisemus}}%
+    }%
+}%
 
 % same but for a "bridge episemus" after the last note of a glyph (element, syllable) if the next episemus is at the same height
 % #1 is the height
 % #2 is 0 for episemus above, 1 for episemus below
 \def\GreHEpisemusBridge#1#2{%
-  \ifnum\greaddhepisemusbridges=1\relax %
+  \ifgre@hepisemusbridge%
     \ifcase#2 %
       \gre@calculate@glyphraisevalue{#1}{9}%
     \or %
