@@ -408,6 +408,21 @@ Determines whether Gregorio\TeX\ should join (bridge) horizontal episema on adja
   & break & Adjacent horizontal episema are not joined.
 \end{argtable}
 
+\macroname{\textbackslash gresetpunctumcavum}{\{\#1\}}{gregoriotex-signs.tex}
+A shortcut for switching to the alternative punctum cavum and back.
+
+\begin{argtable}
+  \#1 & alternate & use the alternate punctum cavum\\
+  & normal & use the normal punctum cavum
+\end{argtable}
+
+Using the alternate punctum cavum is the equivalent of issuing the following commands:
+\begin{latexcode}
+  \grechangeglyph{PunctumCavum}{greciliae}{.caeciliae}%
+  \grechangeglyph{LineaPunctumCavum}{greciliae}{.caeciliae}%
+  \grechangeglyph{PunctumCavumHole}{greciliae}{.caeciliae}%
+  \grechangeglyph{LineaPunctumCavumHole}{greciliae}{.caeciliae}%
+\end{latexcode}
 
 
 

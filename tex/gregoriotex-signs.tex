@@ -1480,20 +1480,34 @@
 \def\grepunctumcavumholechar{\gregoriofont\gre@char@punctumcavumhole}%
 \def\grelineapunctumcavumholechar{\gregoriofont\gre@char@lineapunctumcavumhole}%
 
+\def\gresetpunctumcavum#1{%
+  \IfStrEq{#1}{alternate}%
+    {%
+      \grechangeglyph{PunctumCavum}{greciliae}{.caeciliae}%
+      \grechangeglyph{LineaPunctumCavum}{greciliae}{.caeciliae}%
+      \grechangeglyph{PunctumCavumHole}{greciliae}{.caeciliae}%
+      \grechangeglyph{LineaPunctumCavumHole}{greciliae}{.caeciliae}%
+    }%
+    {\IfStrEq{#1}{normal}%
+      {%
+        \greresetglyph{PunctumCavum}%
+        \greresetglyph{LineaPunctumCavum}%
+        \greresetglyph{PunctumCavumHole}%
+        \greresetglyph{LineaPunctumCavumHole}%
+      }%
+      {\greerror{Unrecognized option for \protect\gresetpunctumcavum}}%
+    }%
+}%	
+
+
 \def\UseAlternatePunctumCavum{%
-\grechangeglyph{PunctumCavum}{greciliae}{.caeciliae}%
-\grechangeglyph{LineaPunctumCavum}{greciliae}{.caeciliae}%
-\grechangeglyph{PunctumCavumHole}{greciliae}{.caeciliae}%
-\grechangeglyph{LineaPunctumCavumHole}{greciliae}{.caeciliae}%
-\relax %
+  \gre@deprectated{\protect\UseAlternatePunctumCavum}{\protect\gresetpuncutmcavum{alternate}} %
+  \gresetpunctumcavum{alternate}%
 }%
 
 \def\UseNormalPunctumCavum{%
-\greresetglyph{PunctumCavum}%
-\greresetglyph{LineaPunctumCavum}%
-\greresetglyph{PunctumCavumHole}%
-\greresetglyph{LineaPunctumCavumHole}%
-\relax %
+  \gre@deprectated{\protect\UseNormalPunctumCavum}{\protect\gresetpuncutmcavum{normal}} %
+  \gresetpunctumcavum{normal}%
 }%
 
 \def\GrePunctumCavum#1#2#3#4#5{%

@@ -102,6 +102,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\grenormalclef`, supplanted by `\gresetclef{visible}`
 - `\AddHEpisemusBridges`, supplanted by `\gresethepisemus{bridge}`
 - `\RemoveHEpisemusBridges`, supplanted by `\gresethepisemus{break}`
+- `\UseAlternatePuncutmCavum`, supplanted by `\gresetpunctumcavum{alternate}`
+- `\UseNormalPuncutmCavum`, supplanted by `\gresetpunctumcavum{normal}`
 
 
 ### Removed
