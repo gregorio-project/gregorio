@@ -145,7 +145,7 @@ local function write_greaux()
       err("\n Unable to open %s", auxname)
     end
 
-    warn("Line heights or variable brace lengths may have changed. Rerun to fix heights.")
+    warn("Line heights or variable brace lengths may have changed. Rerun to fix.")
   end
 end
 
