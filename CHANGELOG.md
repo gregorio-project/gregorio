@@ -107,6 +107,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\clivisalignmentalways`, supplanted by `\gresetclivisalignment{always}`
 - `\clivisalignmentnever`, supplanted by `\gresetclivisalignment{never}`
 - `\clivisalignmentspecial`, supplanted by `\gresetclivisalignment{special}`
+- `\greusedefaultstyle`, supplanted by `\gresetglyphsytle{default}`
+- `\greusemedicaeastyle`, supplanted by `\gresetglyphsytle{medicaea}`
+- `\greusehufnagelstyle`, supplanted by `\gresetglyphsytle{hufnagel}`
+- `\greusemensuralstyle`, supplanted by `\gresetglyphsytle{mensural}`
 
 
 ### Removed
