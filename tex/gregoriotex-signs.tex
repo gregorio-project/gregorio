@@ -519,6 +519,30 @@
   \relax %
 }%
 
+% #1: id of the variable length brace within the score
+% #2: 1 if we shift to the beginning of the last glyph, 0 otherwise
+\def\grevarbracestart#1#2{%
+  \directlua{gregoriotex.var_brace_len(#1)}%
+  \pdfsavepos %
+  \luatexlatelua{gregoriotex.var_brace_note_pos(#1, 1, \number\pdflastxpos)}%
+}
+
+% #1: id of the variable length brace within the score
+% #2: 1 if we shift to the beginning of the last glyph, 0 otherwise
+\def\grevarbraceend#1#2{%
+  \ifnum#2=1\relax %
+    \setbox\gre@box@temp@sign=\hbox{\grepunctumchar}%
+    \gre@dimen@temp@five=\wd\gre@box@temp@sign %
+    \kern-\gre@dimen@temp@five %
+    \pdfsavepos %
+    \kern\gre@dimen@temp@five %
+  \else %
+    \pdfsavepos %
+  \fi %
+  \luatexlatelua{gregoriotex.var_brace_note_pos(#1, 2, \number\pdflastxpos)}%
+  \relax %
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of punctum mora, auctum duplex and choral signs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

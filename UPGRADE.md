@@ -127,7 +127,7 @@ You can freely switch between the two behaviors within a TeX document.
 
 This new behavior requires two passes (two runs of lualatex) in order to do the calculation correctly.  On the first pass, lualatex will warn you with the message
 
-    Module gregoriotex warning: Line heights may have changed. Rerun to fix heights.
+    Module gregoriotex warning: Line heights or variable brace lengths may have changed. Rerun to fix.
 
 As you edit your document, lualatex will only show this warning if an extra run is required.
 

@@ -59,11 +59,14 @@ local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_line_id = nil
 
+local cur_score_id = nil
 local score_inclusion = {}
 local line_heights = nil
 local new_line_heights = nil
 local score_heights = nil
 local new_score_heights = nil
+local var_brace_positions = nil
+local new_var_brace_positions = nil
 local auxname = nil
 
 local space_below_staff = 5
@@ -101,6 +104,12 @@ local function heights_changed()
   for id, tab in pairs(line_heights) do
     if keys_changed(tab, new_line_heights[id]) then return true end
   end
+  for id, tab in pairs(new_var_brace_positions) do
+    if keys_changed(tab, var_brace_positions[id]) then return true end
+  end
+  for id, tab in pairs(var_brace_positions) do
+    if keys_changed(tab, new_var_brace_positions[id]) then return true end
+  end
   return false
 end
 
@@ -111,22 +120,32 @@ local function write_greaux()
     local aux = io.open(auxname, 'w')
     if aux then
       log("Writing %s", auxname)
-      aux:write('return {\n');
+      aux:write('return {\n ["line_heights"]={\n')
       local id, tab, id2, line
       for id, tab in pairs(new_line_heights) do
-        aux:write(string.format(' ["%s"]={\n', id))
+        aux:write(string.format('  ["%s"]={\n', id))
         for id2, line in pairs(tab) do
-          aux:write(string.format('  [%d]={%d,%d},\n', id2, line[1], line[2]))
+          aux:write(string.format('   [%d]={%d,%d},\n', id2, line[1], line[2]))
         end
-        aux:write(' },\n')
+        aux:write('  },\n')
       end
-      aux:write('}\n');
+      aux:write(' },\n ["var_brace_positions"]={\n')
+      for id, tab in pairs(new_var_brace_positions) do
+        aux:write(string.format('  ["%s"]={\n', id))
+        for id2, line in pairs(tab) do
+          if line[1] ~= nil and line[2] ~= nil then
+            aux:write(string.format('   [%d]={%d,%d},\n', id2, line[1], line[2]))
+          end
+        end
+        aux:write('  },\n')
+      end
+      aux:write(' },\n}\n')
       aux:close()
     else
       err("\n Unable to open %s", auxname)
     end
 
-    warn("Line heights may have changed. Rerun to fix heights.")
+    warn("Line heights or variable brace lengths may have changed. Rerun to fix.")
   end
 end
 
@@ -152,9 +171,12 @@ local function init(arg, enable_height_computation)
   texio.write_nl('('..auxname..')')
   if lfs.isfile(auxname) then
     log("Reading %s", auxname)
-    line_heights = dofile(auxname)
+    local score_info = dofile(auxname)
+    line_heights = score_info.line_heights or {}
+    var_brace_positions = score_info.var_brace_positions or {}
   else
     line_heights = {}
+    var_brace_positions = {}
   end
 
   if enable_height_computation then
@@ -179,6 +201,7 @@ local function init(arg, enable_height_computation)
         'line heights.  Remove or undefine \\greskipheightcomputation to '..
         'resume height computation.')
   end
+  new_var_brace_positions = {}
 end
 
 -- node factory
@@ -348,11 +371,12 @@ end
 
 local function atScoreBeginning (score_id, top_height, bottom_height,
     top_height_adj, bottom_height_adj)
+  local inclusion = score_inclusion[score_id] or 1
+  score_inclusion[score_id] = inclusion + 1
+  score_id = score_id..'.'..inclusion
+  cur_score_id = score_id
   if (top_height > top_height_adj or bottom_height < bottom_height_adj)
       and tex.count['gre@variableheightexpansion'] == 1 then
-    local inclusion = score_inclusion[score_id] or 1
-    score_inclusion[score_id] = inclusion + 1
-    score_id = score_id..'.'..inclusion
     score_heights = line_heights[score_id] or {}
     if new_line_heights then
       new_score_heights = {}
@@ -669,6 +693,33 @@ local function adjust_line_height(inside_discretionary)
   end
 end
 
+local function var_brace_note_pos(brace, start_end, pos)
+  if new_var_brace_positions[cur_score_id] == nil then
+    new_var_brace_positions[cur_score_id] = {}
+  end
+  if new_var_brace_positions[cur_score_id][brace] == nil then
+    new_var_brace_positions[cur_score_id][brace] = {}
+  end
+  new_var_brace_positions[cur_score_id][brace][start_end] = pos
+end
+
+local function var_brace_len(brace)
+  if var_brace_positions[cur_score_id] ~= nil then
+    if var_brace_positions[cur_score_id][brace] ~= nil then
+      local posend = var_brace_positions[cur_score_id][brace][2]
+      local posstart = var_brace_positions[cur_score_id][brace][1]
+      if posend > posstart then
+        tex.print(string.format('%dsp', posend - posstart))
+      else
+        warn('Dynamically sized braces spanning multiple lines unsupported, using length 2mm.')
+        tex.print('2mm')
+      end
+      return
+    end
+  end
+  tex.print('2mm')
+end
+
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
 
@@ -688,3 +739,5 @@ gregoriotex.def_symbol           = def_symbol
 gregoriotex.font_size            = font_size
 gregoriotex.direct_gabc          = direct_gabc
 gregoriotex.adjust_line_height   = adjust_line_height
+gregoriotex.var_brace_len        = var_brace_len
+gregoriotex.var_brace_note_pos   = var_brace_note_pos
