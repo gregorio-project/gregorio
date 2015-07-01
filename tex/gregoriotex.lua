@@ -706,15 +706,18 @@ end
 local function var_brace_len(brace)
   if var_brace_positions[cur_score_id] ~= nil then
     if var_brace_positions[cur_score_id][brace] ~= nil then
-      local pos = var_brace_positions[cur_score_id][brace][2]
-      pos = pos - var_brace_positions[cur_score_id][brace][1]
-      tex.print(string.format('%dsp', pos))
-    else
-      tex.print('1mm')
+      local posend = var_brace_positions[cur_score_id][brace][2]
+      local posstart = var_brace_positions[cur_score_id][brace][1]
+      if posend > posstart then
+        tex.print(string.format('%dsp', posend - posstart))
+      else
+        warn('Dynamically sized braces spanning multiple lines unsupported, using length 2mm.')
+        tex.print('2mm')
+      end
+      return
     end
-  else
-    tex.print('1mm')
   end
+  tex.print('2mm')
 end
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
