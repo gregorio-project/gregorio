@@ -194,28 +194,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % macro called to go to the next line
-%% 1: the high height
-%% 2: the low height
-%% 3: 1 if there is a translation somewhere
-% #4 is if 1 if we have space above the staff
-\def\GreNewLineWithSpace#1#2#3#4{%
-  \gre@debugmsg{lineheight}{GreNewLineWithSpace #1 #2}%
-  \grenewlinecommon{#1}{#2}{#3}{0}{#4}%
+\def\GreNewLine{%
+  \gre@debugmsg{lineheight}{GreNewLine}%
+  \grenewlinecommon{0}%
   \relax%
 }%
 
-% basically same as above, but these one do a \hfill, the lines are not justified
-%macro to call if you want to go to the next line simply
-\def\GreNewParLineWithSpace#1#2#3#4{%
-  \gre@debugmsg{lineheight}{GreNewParLineWithSpace #1 #2}%
-  \grenewlinecommon{#1}{#2}{#3}{1}{#4}%
+% basically same as above, but this one does a \hfill, so the lines are not justified
+\def\GreNewParLine{%
+  \gre@debugmsg{lineheight}{GreNewParLine}%
+  \grenewlinecommon{1}%
 }%
 
 % a macro describing a kern to make before ending the line, which we sometimes want (see \syllable)
 \xdef\grekernbeforeeol{0pt\relax}%
 
 % the macro we call each time we force a changing of line, it automatically sets \greknownline, and adjusts left spaces
-\def\grenewlinecommon#1#2#3#4#5{%
+\def\grenewlinecommon#1{%
   \ifgre@blockeolcustos\ifnum\greinsidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
@@ -233,31 +228,20 @@
       \fi %
     \fi %
     \global\advance\greknownline by 1\relax %
-    \ifcase\gre@variableheightexpansion %
-      \gre@calculate@additionalspaces{#1}{#2}% 0
-      % else it's handled by the variable height code
-    \fi
-    \ifnum#3 = 1\relax %
-      \gre@addtranslationspace %
-    \else %
-      \gre@removetranslationspace %
-    \fi %
-    \ifnum#5 = 1\relax %
-      \greaddspaceabove %
-    \else %
-      \greremovespaceabove %
-    \fi %
     \global\grelastoflinecount=2\relax %
     \ifnum\greinsidediscretionary=0\relax %
       \greupdateleftbox %
     \fi %
-    \ifnum#4=1\relax %
+    \ifnum#1=1\relax %
       \hfill %
     \fi %
     \grepenalty{-10001}%
   \fi %
   \relax %
 }%
+
+\def\gre@mark@translation{\directlua{gregoriotex.mark_translation()}}%
+\def\gre@mark@abovelinestext{\directlua{gregoriotex.mark_abovelinestext()}}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of text
@@ -625,6 +609,7 @@
   \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
   \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
   \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
+  \gre@mark@abovelinestext %
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
   \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\gre@style@abovelinestext\greabovelinestextstyle{#1}\endgre@style@abovelinestext\hss}%
   \relax %
@@ -856,10 +841,12 @@
     \setbox\gre@box@temp@width=\hbox{#1}%
     \advance\gre@dimen@temp@five by -\wd\gre@box@temp@width %
     \divide\gre@dimen@temp@five by 2\relax %
+    \gre@mark@translation %
     \kern\gre@dimen@temp@five %
     \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation\gretranslationformat{#1}\endgre@style@translation\hss}}}%
     \kern-\gre@dimen@temp@five %
   \else %
+    \gre@mark@translation %
     \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation\gretranslationformat{#1}\endgre@style@translation\hss}}}%
   \fi %
 }%
@@ -869,6 +856,7 @@
     \GreBeginNLBArea{0}{1}%
   \fi %
   \gregoriocenterattr=1\relax %
+  \gre@mark@translation %
   \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation\gretranslationformat{#1}\endgre@style@translation\hss}}\kern 0pt}%
   \unsetluatexattribute{\gregoriocenterattr}%
   \relax %
@@ -924,7 +912,12 @@
 \newif\ifgre@save@englishcentering% DEPRECATED
 
 %macro called at the beginning of a score
-\def\GreBeginScore#1#2#3{%
+% #1 is the gabc score id
+% #2 is the high height
+% #3 is the low height
+% #4 is 1 if there is a translation somewhere
+% #5 is if 1 if we have space above the staff
+\def\GreBeginScore#1#2#3#4#5{%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \global\let\ifgre@save@englishcentering\ifgre@vowelcentering\relax % DEPRECATED
   \ifgre@justifylastline%
@@ -942,8 +935,9 @@
   \exhyphenchar=-1\relax %
   \gregeneratelines %
   \noindent%
+  \gre@calculate@additionalspaces{#2}{#3}{#4}{#5}%
   \directlua{
-    gregoriotex.atScoreBeginning([[#1]], #2, #3,
+    gregoriotex.atScoreBeginning([[#1]], #2, #3, #4, #5,
         \gre@pitch@adjust@top, \gre@pitch@adjust@bottom)
     gregoriotex.adjust_line_height(1)
   }%
@@ -976,7 +970,7 @@
   % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
   \grelocalleftbox{}%
   \grelocalrightbox{}%
-  \gre@calculate@additionalspaces{\gre@pitch@g}{\gre@pitch@g}%
+  \gre@calculate@additionalspaces{\gre@pitch@g}{\gre@pitch@g}{0}{0}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@removetranslationspace %
   \grenormalinitial %
