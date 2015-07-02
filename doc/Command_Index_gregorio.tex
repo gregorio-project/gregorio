@@ -7,14 +7,19 @@ While one could, in theory, use/change them to alter the appearance of
 elements of the score, it is far better to make your changes in the
 gabc file and let Gregorio make the changes to the gtex file.
 
-\macroname{\textbackslash GreBeginScore}{\#1\#2\#3\#4}{gregoriotex-main.tex}
+\macroname{\textbackslash GreBeginScore}{\#1\#2\#3\#4\#5\#6}{gregoriotex-main.tex}
 Macro to start a score.
 
 \begin{argtable}
   \#1 & string  & a unique identifier for the score (currently an SHA-1-based digest of the gabc file)\\
   \#2 & integer & the height number of the top pitch of the entire score, including signs\\
   \#3 & integer & the height number of the bottom pitch of the entire score, including signs\\
-  \#4 & string  & the absolute filename of the gabc file if point-and-click is enabled.
+  \#4 & 0 & there is no translation line in the score\\
+      & 1 & there is a translation line somewhere in the score\\
+  \#5 & 0 & there is no above lines text in the score\\
+      & 1 & there is above lines text somewhere in the score\\
+  \#6 & string  & the absolute filename of the gabc file if point-and-click is enabled.
+\end{argtable}
 \end{argtable}
 
 \macroname{\textbackslash GreEndScore}{}{gregoriotex-main.tex}
@@ -246,19 +251,6 @@ Macro to end a score with a divisio maior.
       & 1 & Something needs to be placed after the divisio maior.\\
 \end{argtable}
 
-\macroname{\textbackslash GreFirstLineBottomSpace}{\#1\#2}{gregoriotex-spaces.tex}
-Macro for calculating the additional space needed below the first line of the score.
-
-\begin{argtable}
-  \#1 & 0 & no notes below the staff\\
-  & 1 & note below the first staff line (c position)\\
-  & 2 & note on the 0 staff line (b position)\\
-  & 3 & note below the 0 staff line (a position)\\
-  & 4 & note below the 0 staff line with a vertical episemus attached\\
-  \#2 & 1 & there is a translation below the text\\
-  & 0 & there is no translation below the text
-\end{argtable}
-
 \macroname{\textbackslash GreFirstSyllable}{\{\#1\}}{gregoriotex-syllble.tex}
 A macro which is called with the text of the first syllable, excluding the
 initial of the score.  This macro may be redefined to style the first syllable
@@ -484,32 +476,10 @@ Macro to typeset a natural.
 \end{argtable}
 
 \macroname{\textbackslash GreNewLine}{}{gregoriotex-main.tex}
-Macro to call if you want to go to the next line simply.
-
-\macroname{\textbackslash GreNewLineWithSpace}{\#1\#2\#3\#4}{gregoriotex-main.tex}
-Macro called to go to the next line but when there are additional vertical spaces to add
-
-\begin{argtable}
-  \#1 & 0 & No note above staff.\\
-      & 1 & Note above 4th line (position \texttt{k}).\\
-      & 2 & Note on 5th line (position \texttt{l}).\\
-      & 3 & Note above 5th line (position \texttt{m}).\\
-  \#2 & 0 & No note below staff.\\
-      & 1 & Note below 1st line (position \texttt{c}).\\
-      & 2 & note on 0th line (position \texttt{b}).\\
-      & 3 & Note below 0th line (position \texttt{a}).\\
-      & 4 & note below 0th line (position \texttt{a}) with vertical episemus.\\
-  \#3 & 0 & No translation.\\
-      & 1 & Translation present.\\
-  \#4 & 0 & No extra space above staff.\\
-      & 1 & Extra space above staff.\\
-\end{argtable}
+Macro to call if you want to go to the next line.
 
 \macroname{\textbackslash GreNewParLine}{}{gregoriotex-main.tex}
 Same as \verb=\GreNewLine= except line is not justified.
-
-\macroname{\textbackslash GreNewParLineWithSpace}{\#1\#2\#3\#4}{gregoriotex-main.tex}
-Same as \verb=\grenewlinewithspace= except line is not justified.
 
 \macroname{\textbackslash GreNoInitial}{}{gregoriotex-main.tex}
 Macro called when no initial is being set.
