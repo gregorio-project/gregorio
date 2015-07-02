@@ -49,21 +49,18 @@ Macro to tell Gregorio to set space for the translation.
 Macro to tell Gregorio to remove the space allocated to the translation.
 
 
-\macroname{\textbackslash gre@calculate@additionalspaces}{\#1\#2}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@additionalspaces}{\#1\#2\#3\#4}{gregoriotex-spaces.tex}
 %\verb=\gre@updateadditionalspaces#1#2=%tex.tex
 Macro which calculates \verb=\gre@additionalbottomspace= and\\
 \verb=\gre@additionaltopspace=
 
 \begin{argtable}
-  \#1 & 0 & no note above staff\\
-  & 1 & note above 4th line (position k)\\
-  & 2 & note on 5th line (position l)\\
-  & 3 & note above 5th line (position m)\\
-  \#2 & 0 & no note below staff\\
-  & 1 & note below 1st line (position c)\\
-  & 2 & note on 0th line (position b)\\
-  & 3 & note below 0th line (position a)\\
-  & 4 & note below 0th line (position a) with vertical episemus
+  \#1 & integer & the height number of the top pitch, including signs\\
+  \#2 & integer & the height number of the bottom pitch, including signs\\
+  \#3 & 0 & there is no translation line\\
+      & 1 & there is a translation line\\
+  \#4 & 0 & there is no above lines text\\
+      & 1 & there is above lines text
  \end{argtable}
 
 \macroname{\textbackslash gre@calculate@textaligncenter}{\#1\#2\#3}{gregoriotex-spaces.tex}
@@ -137,14 +134,6 @@ A number indicating the thickness of the staff lines.
 
 \macroname{\textbackslash gre@scale@stafflinefactor}{}{gregoriotex-spaces.tex}
 Flag indicating whether the stafflinefactor should scale with changes of grefactor (1), or not (0).
-
-\macroname{\textbackslash gre@calculate@additionalspaces}{\#1\#2}{gregoriotex-spaces.tex}
-Calculates the extra spaces above and below the staff lines.  This is a time of use calculation.
-
-\begin{argtable}
-  \#1 & integer & the height number of the top pitch, including signs\\
-  \#2 & integer & the height number of the bottom pitch, including signs
-\end{argtable}
 
 \macroname{\textbackslash gre@calculate@textaligncenter}{\#1\#2\#3}{gregoriotex-spaces.tex}
 Macro to calculate the distance from the beginning of the text of a syllable to its alignment point (the center of the vowel for Latin centering, the center of the syllable for English centering).  This is a time of use calculation.

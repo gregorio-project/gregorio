@@ -623,9 +623,12 @@
 \newdimen\gre@dimen@additionalbottomspace%
 \newdimen\gre@dimen@additionaltopspace%
 
-% same arguments as GreNewLineWithSpace
-\def\gre@calculate@additionalspaces#1#2{%
-  \gre@debugmsg{lineheight}{gre@calculate@additional@spaces called with #1 #2}%
+% #1 is the high height
+% #2 is the low height
+% #3 is 1 if there is a translation somewhere
+% #4 is if 1 if we have space above the staff
+\def\gre@calculate@additionalspaces#1#2#3#4{%
+  \gre@debugmsg{lineheight}{gre@calculate@additional@spaces called with #1 #2 #3 #4}%
   \gre@count@temp@one=#1\relax %
   \advance\gre@count@temp@one by -\gre@pitch@adjust@top\relax %
   \ifnum\gre@count@temp@one>0\relax %
@@ -635,34 +638,7 @@
   \else %
     \global\gre@dimen@additionaltopspace=0 sp%
   \fi %
-  \gre@calculate@bottomspace{#2}%
-  \gregeneratelines %
-  \gre@calculate@constantglyphraise %
-  \relax %
-}%
-
-%% macros for additional bottom space for the first line
-
-% #1 is the low height
-\def\GreFirstLineBottomSpace#1#2{%
-  \gre@debugmsg{lineheight}{GreFirstLineBottomSpace #1 #2}%
-  \ifcase\gre@variableheightexpansion %
-    % 0
-    \gre@calculate@bottomspace{#1}%
-  % else it's handled by the variable height code
-  \fi %
-  \ifnum#2=1\relax %
-    \gre@addtranslationspace %
-  \else %
-    \gre@removetranslationspace %
-  \fi %
-  \gregeneratelines %
-  \gre@calculate@constantglyphraise %
-  \relax %
-}%
-
-\def\gre@calculate@bottomspace#1{%
-  \gre@count@temp@one=#1\relax %
+  \gre@count@temp@one=#2\relax %
   \advance\gre@count@temp@one by -\gre@pitch@adjust@bottom\relax %
   \multiply\gre@count@temp@one by -1\relax %
   \ifnum\gre@count@temp@one>0\relax %
@@ -672,6 +648,19 @@
   \else %
     \global\gre@dimen@additionalbottomspace=0 sp%
   \fi %
+  \ifnum#3 = 1\relax %
+    \gre@addtranslationspace %
+  \else %
+    \gre@removetranslationspace %
+  \fi %
+  \ifnum#4 = 1\relax %
+    \greaddspaceabove %
+  \else %
+    \greremovespaceabove %
+  \fi %
+  \gregeneratelines %
+  \gre@calculate@constantglyphraise %
+  \relax %
 }%
 
 %% macro that typesets the text of the syllable, and sets textaligncenter to the middle of the middle letters, it is needed because we align the note (often the middle of the note) with the middle of the middle letters
