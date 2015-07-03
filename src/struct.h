@@ -40,7 +40,15 @@
 #define ENUM_BITFIELD(TYPE) unsigned int
 #endif
 
+// Lilypond-compatible location counters
 typedef struct gregorio_scanner_location {
+    // - line is the 1-based line number
+    // - column is the 0-based* column number, tabs expanded to 8-column stops
+    // - offset is the 0-based number of characters from the start of the line
+
+    // * = column is calculated and stored as a 0-based number so the tabstop
+    // math is simpler; it should be printed 1-based
+
     unsigned short first_line;
     unsigned short first_column;
     unsigned short first_offset;

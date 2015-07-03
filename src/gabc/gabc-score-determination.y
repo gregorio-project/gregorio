@@ -39,6 +39,22 @@
 
 #include "gabc.h"
 
+#define YYLLOC_DEFAULT(Current, Rhs, N) \
+    do { \
+        if (YYID (N)) { \
+            (Current).first_line   = YYRHSLOC(Rhs, 1).first_line; \
+            (Current).first_column = YYRHSLOC (Rhs, 1).first_column; \
+            (Current).first_offset = YYRHSLOC (Rhs, 1).first_offset; \
+            (Current).last_line    = YYRHSLOC (Rhs, N).last_line; \
+            (Current).last_column  = YYRHSLOC (Rhs, N).last_column; \
+            (Current).last_offset  = YYRHSLOC (Rhs, N).last_offset; \
+        } else { \
+            (Current).first_line   = (Current).last_line   = YYRHSLOC (Rhs, 0).last_line; \
+            (Current).first_column = (Current).last_column = YYRHSLOC (Rhs, 0).last_column; \
+            (Current).first_offset = (Current).last_offset = YYRHSLOC (Rhs, 0).last_offset; \
+        } \
+    } while (YYID (0))
+
 #include "gabc-score-determination.h"
 #include "gabc-score-determination-l.h"
 
@@ -610,10 +626,10 @@ void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 
 %initial-action {
     @$.first_line = 1;
-    @$.first_column = 1;
+    @$.first_column = 0;
     @$.first_offset = 0;
     @$.last_line = 1;
-    @$.last_column = 1;
+    @$.last_column = 0;
     @$.last_offset = 0;
 }
 

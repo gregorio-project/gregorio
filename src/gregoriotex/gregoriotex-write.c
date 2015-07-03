@@ -2180,7 +2180,7 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
     fprintf(f, "}{");
     if (status->point_and_click) {
         fprintf(f, "%u:%u:%u", note->src_line, note->src_offset,
-                note->src_column);
+                note->src_column + 1);
     }
     fprintf(f, "}%%\n");
 }
@@ -2647,7 +2647,7 @@ static inline void write_syllable_point_and_click(FILE *const f,
 {
     if (status->point_and_click && syllable->src_line) {
         fprintf(f, "%u:%u:%u", syllable->src_line, syllable->src_offset,
-                syllable->src_column);
+                syllable->src_column + 1);
     }
 }
 

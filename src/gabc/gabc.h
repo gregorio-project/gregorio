@@ -49,6 +49,11 @@ typedef enum gabc_determination {
 static inline void gabc_update_location(gregorio_scanner_location *const loc,
         const char *const bytes, const size_t length)
 {
+    // to be compatible with LilyPond, this algorithm is based on Lilypond's
+    // Source_file::get_counts
+
+    // possible future enhancement: make the tabstop size configurable
+
     loc->first_line = loc->last_line;
     loc->first_column = loc->last_column;
     loc->first_offset = loc->last_offset;
@@ -56,13 +61,16 @@ static inline void gabc_update_location(gregorio_scanner_location *const loc,
     for (size_t i = 0; i < length; ++i) {
         if (bytes[i] == '\n') {
             ++loc->last_line;
-            loc->last_column = 1;
+            loc->last_column = 0;
             loc->last_offset = 0;
-        } else {
+        } else if (((unsigned char)bytes[i] & 0xc0u) != 0x80u) {
             // if two highest bits are 1 and 0, it's a continuation byte,
             // so count everything else, which is either a single-byte
             // character or the first byte of a multi-byte sequence
-            if (((unsigned char)bytes[i] & 0xc0u) != 0x80u) {
+
+            if (bytes[i] == '\t') {
+                loc->last_column = (loc->last_column / 8 + 1) * 8;
+            } else {
                 ++loc->last_column;
             }
             ++loc->last_offset;
