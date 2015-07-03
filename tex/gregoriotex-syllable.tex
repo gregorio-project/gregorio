@@ -725,7 +725,7 @@
     \gdef\gre@endsyllablepart{}%
   \fi %
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
-  \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
+  \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
   \gre@debugmsg{spacing}{Width of bar text: \the\wd\gre@box@syllabletext}%
   \gresyllablenotes{#9}%
   \gre@debugmsg{spacing}{Width of bar line: \the\wd\gre@box@syllablenotes}%
