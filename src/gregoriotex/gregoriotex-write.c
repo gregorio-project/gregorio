@@ -39,6 +39,8 @@
 
 // a structure containing the status
 typedef struct gregoriotex_status {
+    bool point_and_click;
+
     // true if the current_glyph will have an additional line under or not
     // (useful to determine the length of the bar in case of a flexa starting
     // at d
@@ -2175,6 +2177,11 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
             break;
         }
     }
+    fprintf(f, "}{");
+    if (status->point_and_click) {
+        fprintf(f, "%u:%u:%u", note->src_line, note->src_offset,
+                note->src_column + 1);
+    }
     fprintf(f, "}%%\n");
 }
 
@@ -2634,6 +2641,16 @@ static inline bool next_is_bar(const gregorio_syllable *syllable,
     assert(false); // should never reach here
 }
 
+static inline void write_syllable_point_and_click(FILE *const f,
+        const gregorio_syllable *const syllable,
+        const gregoriotex_status *const status)
+{
+    if (status->point_and_click && syllable->src_line) {
+        fprintf(f, "%u:%u:%u", syllable->src_line, syllable->src_offset,
+                syllable->src_column + 1);
+    }
+}
+
 /*
  * Arguments are relatively obvious. The most obscure is certainly first_of_disc
  * which is 0 all the time, except in the case of a "clef change syllable". In
@@ -2744,10 +2761,14 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->next_syllable) {
         fprintf(f, "{\\GreSetNextSyllable");
         gregoriotex_write_text(f, syllable->next_syllable->text, NULL);
-        fprintf(f, "}{}{%d}{",
+        fprintf(f, "}{");
+        write_syllable_point_and_click(f, syllable, status);
+        fprintf(f, "}{%d}{",
                 gregoriotex_syllable_first_type(syllable->next_syllable));
     } else {
-        fprintf(f, "{\\GreSetNextSyllable{}{}{}}{}{0}{");
+        fprintf(f, "{\\GreSetNextSyllable{}{}{}}{");
+        write_syllable_point_and_click(f, syllable, status);
+        fprintf(f, "}{0}{");
     }
     if (syllable->translation) {
         if (syllable->translation_type == TR_WITH_CENTER_BEGINNING) {
@@ -2986,7 +3007,7 @@ static char *digest_to_hex(const unsigned char digest[SHA1_DIGEST_SIZE])
 }
 
 static void initialize_score(gregoriotex_status *const status,
-        gregorio_score *score)
+        gregorio_score *score, const bool point_and_click)
 {
     status->bottom_line = false;
     status->top_height = status->bottom_height = UNDETERMINED_HEIGHT;
@@ -3032,9 +3053,12 @@ static void initialize_score(gregoriotex_status *const status,
     }
 
     fixup_height_extrema(&(status->top_height), &(status->bottom_height));
+
+    status->point_and_click = point_and_click;
 }
 
-void gregoriotex_write_score(FILE *f, gregorio_score *score)
+void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
+        const char *const point_and_click_filename)
 {
     gregorio_character *first_text;
     // true if it is the first syllable and false if not.
@@ -3050,7 +3074,7 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     int annotation_num;
     gregoriotex_status status;
 
-    initialize_score(&status, score);
+    initialize_score(&status, score, point_and_click_filename != NULL);
 
     if (!f) {
         gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
@@ -3081,10 +3105,11 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
                 score->score_copyright);
     }
 
-    fprintf(f, "\\GreBeginScore{%s}{%d}{%d}{%d}{%d}%%\n",
+    fprintf(f, "\\GreBeginScore{%s}{%d}{%d}{%d}{%d}{%s}%%\n",
             digest_to_hex(score->digest), status.top_height,
             status.bottom_height, bool_to_int(status.translation),
-            bool_to_int(status.abovelinestext));
+            bool_to_int(status.abovelinestext),
+            point_and_click_filename? point_and_click_filename : "");
     switch (score->centering) {
     case SCHEME_SYLLABLE:
         fprintf(f, "\\englishcentering%%\n");

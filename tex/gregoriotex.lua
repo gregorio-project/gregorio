@@ -479,7 +479,12 @@ end
 
 local function compile_gabc(gabc_file, gtex_file)
   info("compiling the score %s...", gabc_file)
-  res = os.execute(string.format("gregorio -o %s %s", gtex_file, gabc_file))
+  local extra_args = ''
+  if tex.count['gre@generate@pointandclick'] == 1 then
+    extra_args = ' -p'
+  end
+
+  res = os.execute(string.format("gregorio %s -o %s %s", extra_args, gtex_file, gabc_file))
   if res == nil then
     err("\nSomething went wrong when executing\n    'gregorio -o %s %s'.\n"
     .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", gtex_file, gabc_file, tex.formatname, tex.jobname)
@@ -776,7 +781,6 @@ dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
 
 gregoriotex.init                 = init
 gregoriotex.include_score        = include_score
-gregoriotex.compile_gabc         = compile_gabc
 gregoriotex.atScoreEnd           = atScoreEnd
 gregoriotex.atScoreBeginning     = atScoreBeginning
 gregoriotex.check_font_version   = check_font_version

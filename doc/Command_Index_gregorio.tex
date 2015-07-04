@@ -7,7 +7,7 @@ While one could, in theory, use/change them to alter the appearance of
 elements of the score, it is far better to make your changes in the
 gabc file and let Gregorio make the changes to the gtex file.
 
-\macroname{\textbackslash GreBeginScore}{\#1\#2\#3\#4\#5}{gregoriotex-main.tex}
+\macroname{\textbackslash GreBeginScore}{\#1\#2\#3\#4\#5\#6}{gregoriotex-main.tex}
 Macro to start a score.
 
 \begin{argtable}
@@ -17,7 +17,9 @@ Macro to start a score.
   \#4 & 0 & there is no translation line in the score\\
       & 1 & there is a translation line somewhere in the score\\
   \#5 & 0 & there is no above lines text in the score\\
-      & 1 & there is above lines text somewhere in the score
+      & 1 & there is above lines text somewhere in the score\\
+  \#6 & string  & the absolute filename of the gabc file if point-and-click is enabled.
+\end{argtable}
 \end{argtable}
 
 \macroname{\textbackslash GreEndScore}{}{gregoriotex-main.tex}
@@ -289,7 +291,7 @@ Macro for fusing two glyphs to create a larger neume.
   \#2 & Gregorio\TeX\ glyph & The second.
 \end{argtable}
 
-\macroname{\textbackslash GreGlyph}{\#1\#2\#3\#4\#5\#6}{gregoriotex-syllable.tex}
+\macroname{\textbackslash GreGlyph}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-syllable.tex}
 Macro to typeset a glyph.
 
 \begin{argtable}
@@ -307,7 +309,8 @@ Macro to typeset a glyph.
   & 8 & flexus with an ambitus of one\\
   & 9 & flexus deminutus\\
   \#5 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
-  \#6 & \TeX\ code & signs to typeset after the glyph (almost all signs)
+  \#6 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
+  \#7 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled
 \end{argtable}
 
 \macroname{\textbackslash GreGlyphHeights}{\#1\#2}{gregoriotex-syllable.tex}
@@ -641,7 +644,7 @@ Macro to typeset the syllable.
   \#4 & 0 & this syllable is not the end of a word\\
   & 1 & this syllable is the end of a word\\
   \#5 & \TeX\ code & macros setting next syllable letters of the next syllable\\
-  \#6 & & nothing\\
+  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
   \#7 & & alignment type of the first next glyph\\
   \#8 &\TeX\ code & other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments\\
   \#9 & Gregorio\TeX\ glyphs & all the notes

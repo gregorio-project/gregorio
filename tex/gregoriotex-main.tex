@@ -917,8 +917,10 @@
 % #3 is the low height
 % #4 is 1 if there is a translation somewhere
 % #5 is if 1 if we have space above the staff
-\def\GreBeginScore#1#2#3#4#5{%
+% #6 is the point-and-click filename
+\def\GreBeginScore#1#2#3#4#5#6{%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
+  \xdef\gre@gabcname{#6}%
   \global\let\ifgre@save@englishcentering\ifgre@vowelcentering\relax % DEPRECATED
   \ifgre@justifylastline%
     \xdef\gre@save@parfillskip{\the\parfillskip}

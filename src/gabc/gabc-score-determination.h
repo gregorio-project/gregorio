@@ -18,6 +18,8 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
+#include "gabc.h"
+
 typedef union gabc_score_determination_lval_t {
     char *text;
     char character;
@@ -29,3 +31,4 @@ typedef union gabc_score_determination_lval_t {
 int gabc_score_determination_lex(void);
 #define YY_DECL int gabc_score_determination_lex(void)
 
+#define YYLTYPE gregorio_scanner_location

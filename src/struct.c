@@ -47,7 +47,8 @@
 #include "messages.h"
 #include "characters.h"
 
-static gregorio_note *create_and_link_note(gregorio_note **current_note)
+static gregorio_note *create_and_link_note(gregorio_note **current_note,
+        const gregorio_scanner_location *const loc)
 {
     gregorio_note *note = calloc(1, sizeof(gregorio_note));
     if (!note) {
@@ -62,6 +63,9 @@ static gregorio_note *create_and_link_note(gregorio_note **current_note)
         (*current_note)->next = note;
     }
     *current_note = note;
+    note->src_line = loc->first_line;
+    note->src_column = loc->first_column;
+    note->src_offset = loc->first_offset;
 
     return note;
 }
@@ -98,9 +102,10 @@ static void set_h_episemus_below(gregorio_note *note, signed char height,
 
 void gregorio_add_note(gregorio_note **current_note, signed char pitch,
         gregorio_shape shape, gregorio_sign signs,
-        gregorio_liquescentia liquescentia, gregorio_note *prototype)
+        gregorio_liquescentia liquescentia, gregorio_note *prototype,
+        const gregorio_scanner_location *const loc)
 {
-    gregorio_note *element = create_and_link_note(current_note);
+    gregorio_note *element = create_and_link_note(current_note, loc);
     if (element) {
         element->type = GRE_NOTE;
         element->u.note.pitch = pitch;
@@ -122,9 +127,10 @@ void gregorio_add_note(gregorio_note **current_note, signed char pitch,
 }
 
 static void add_pitched_item_as_note(gregorio_note **current_note,
-        gregorio_type type, signed char pitch)
+        gregorio_type type, signed char pitch,
+        const gregorio_scanner_location *const loc)
 {
-    gregorio_note *element = create_and_link_note(current_note);
+    gregorio_note *element = create_and_link_note(current_note, loc);
     if (element) {
         element->type = type;
         element->u.note.pitch = pitch;
@@ -132,41 +138,44 @@ static void add_pitched_item_as_note(gregorio_note **current_note,
 }
 
 void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
-        gregorio_type sub_type)
+        gregorio_type sub_type, const gregorio_scanner_location *const loc)
 {
-    gregorio_note *element = create_and_link_note(current_note);
+    gregorio_note *element = create_and_link_note(current_note, loc);
     if (element) {
         element->type = GRE_END_OF_LINE;
         element->u.other.sub_type = sub_type;
     }
 }
 
-void gregorio_add_custo_as_note(gregorio_note **current_note)
+void gregorio_add_custo_as_note(gregorio_note **current_note,
+        const gregorio_scanner_location *const loc)
 {
-    gregorio_note *element = create_and_link_note(current_note);
+    gregorio_note *element = create_and_link_note(current_note, loc);
     if (element) {
         element->type = GRE_CUSTO;
     }
 }
 
 void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
-        signed char pitch)
+        signed char pitch, const gregorio_scanner_location *const loc)
 {
-    add_pitched_item_as_note(current_note, GRE_MANUAL_CUSTOS, pitch);
+    add_pitched_item_as_note(current_note, GRE_MANUAL_CUSTOS, pitch, loc);
 }
 
 void gregorio_add_clef_change_as_note(gregorio_note **current_note,
-        gregorio_type type, signed char clef_line)
+        gregorio_type type, signed char clef_line,
+        const gregorio_scanner_location *const loc)
 {
     assert(type == GRE_C_KEY_CHANGE || type == GRE_F_KEY_CHANGE
            || type == GRE_C_KEY_CHANGE_FLATED
            || type == GRE_F_KEY_CHANGE_FLATED);
-    add_pitched_item_as_note(current_note, type, clef_line);
+    add_pitched_item_as_note(current_note, type, clef_line, loc);
 }
 
-void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar)
+void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar,
+        const gregorio_scanner_location *const loc)
 {
-    gregorio_note *element = create_and_link_note(current_note);
+    gregorio_note *element = create_and_link_note(current_note, loc);
     if (element) {
         element->type = GRE_BAR;
         element->u.other.bar = bar;
@@ -174,16 +183,17 @@ void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar)
 }
 
 void gregorio_add_alteration_as_note(gregorio_note **current_note,
-        gregorio_type type, signed char pitch)
+        gregorio_type type, signed char pitch,
+        const gregorio_scanner_location *const loc)
 {
     assert(type == GRE_FLAT || type == GRE_SHARP || type == GRE_NATURAL);
-    add_pitched_item_as_note(current_note, type, pitch);
+    add_pitched_item_as_note(current_note, type, pitch, loc);
 }
 
 void gregorio_add_space_as_note(gregorio_note **current_note,
-        gregorio_space space)
+        gregorio_space space, const gregorio_scanner_location *const loc)
 {
-    gregorio_note *element = create_and_link_note(current_note);
+    gregorio_note *element = create_and_link_note(current_note, loc);
     if (element) {
         element->type = GRE_SPACE;
         element->u.other.space = space;
@@ -191,13 +201,13 @@ void gregorio_add_space_as_note(gregorio_note **current_note,
 }
 
 void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
-        gregorio_type type)
+        gregorio_type type, const gregorio_scanner_location *const loc)
 {
     gregorio_note *element;
     if (str == NULL) {
         return;
     }
-    element = create_and_link_note(current_note);
+    element = create_and_link_note(current_note, loc);
     assert(type == GRE_TEXVERB_GLYPH || type == GRE_TEXVERB_ELEMENT
            || type == GRE_ALT);
     if (element) {
@@ -206,9 +216,10 @@ void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
     }
 }
 
-void gregorio_add_nlba_as_note(gregorio_note **current_note, gregorio_nlba type)
+void gregorio_add_nlba_as_note(gregorio_note **current_note, gregorio_nlba type,
+        const gregorio_scanner_location *const loc)
 {
-    gregorio_note *element = create_and_link_note(current_note);
+    gregorio_note *element = create_and_link_note(current_note, loc);
     if (element) {
         element->type = GRE_NLBA;
         element->u.other.nlba = type;
@@ -865,7 +876,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_character *first_translation_character,
         gregorio_word_position position, char *abovelinestext,
         gregorio_tr_centering translation_type, gregorio_nlba no_linebreak_area,
-        gregorio_euouae euouae)
+        gregorio_euouae euouae, const gregorio_scanner_location *const loc)
 {
     gregorio_syllable *next;
     gregorio_element **tab;
@@ -890,6 +901,11 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
     next->translation = first_translation_character;
     next->translation_type = translation_type;
     next->abovelinestext = abovelinestext;
+    if (loc) {
+        next->src_line = loc->first_line;
+        next->src_column = loc->first_column;
+        next->src_offset = loc->first_offset;
+    }
     next->next_syllable = NULL;
     next->previous_syllable = *current_syllable;
     tab = (gregorio_element **) malloc(number_of_voices *
