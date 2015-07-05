@@ -17,7 +17,7 @@
 
 % this file contains definitions of signs (bar, episemus, punctum, alterations)
 
-\gre@declarefileversion{gregoriotex-signs.tex}{3.0.2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-signs.tex}{3.0.3}% GREGORIO_VERSION
 
 \def\greusestylecommon{%
   \ifnum\greusestylefont=0\relax %
@@ -747,6 +747,8 @@
 %% 25: the last note, if it is a bar
 %% 26: the last note, if it is a virgula
 %% 27: the last note, if it is a divisio finalis
+%% 28: the middle note of a salicus with second ambitus of at least two
+%% 29: idem with second ambitus of one
 
 % a function to typeset a vertical episemus or a rare accent (like accentus, circulus, etc.). The firts argument is the letter of the height of the episemus (not the height of the note it corresponds to. This function must be called after a call to \greglyph. The second argument is the type of glyph it was, more precisely the kind of space there is between the end (or in special cases the beginning) of the glyph and the place where we will typeset the episemus. The values are described in the commentary just above.
 % the third argument is the glyph number in the font
@@ -868,6 +870,12 @@
   \or%
     %case 27
     \grevepisemusorrareaux{0}{\gredivisiofinalissymbol}{1}{0}{#3}{#4}{#5}%
+  \or%
+    %case 28
+    \grevepisemusorrareaux{\char \gre@char@oriscusflexus}{\char \gre@char@oriscus}{2}{0}{#3}{#4}{#5}%
+  \or%
+    %case 29
+    \grevepisemusorrareaux{\char \gre@char@oriscusflexusone}{\char \gre@char@oriscus}{2}{0}{#3}{#4}{#5}%
   \fi%
   \relax%
 }%
@@ -1189,6 +1197,15 @@
   \or%
     %case 24
     \grehepisorlineaux{\char \gre@char@pesinitauctusone}{\gre@char@he@punctum}{1}{#4}%the episemus is not quite long enough so I assumed a different width for now...
+  \or% case 25
+  \or% case 26
+  \or% case 27
+  \or%
+    %case 28
+    \grehepisorlineaux{\char \gre@char@oriscusflexus}{\gre@char@he@oriscus}{2}{#4}%
+  \or%
+    %case 29
+    \grehepisorlineaux{\char \gre@char@oriscusflexusone}{\gre@char@he@oriscus}{2}{#4}%
   \fi%
   \relax%
 }%
