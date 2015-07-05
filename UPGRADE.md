@@ -135,6 +135,18 @@ Alternately, you can use something like latexmk to automate this activity.  Inst
 
 It should also be noted that this new feature, besides requiring two passes, also imposes a small performance penalty on each pass to do the additional computation.  This is negligible for small documents, but may have more noticeable impact as documents get larger.
 
+#### MetaPost brace rendering
+
+Gregorio now uses MetaPost (by default) to render braces.  This allows fine-tuning to better maintain optical line weight when braces are stretched.  Since the shapes are slightly different, you may prefer the old behavior, which may be restored by using:
+
+    \gresetbracerendering{font}
+
+Within a TeX document, you can switch back to MetaPost brace rendering by using:
+
+    \gresetbracerendering{metapost}
+
+You can freely switch between the two behaviors within a TeX document.
+
 ## 3.0
 ### TeX Live 2013
 

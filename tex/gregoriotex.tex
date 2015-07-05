@@ -24,6 +24,7 @@
 
 \input ifluatex.sty%
 \input luatexbase.sty%
+\input luamplib.sty%
 \input luaotfload.sty%
 \input graphicx.tex % for \resizebox
 \input xstring.sty%
@@ -61,6 +62,14 @@
 \else%
   \def\f@size{\directlua{gregoriotex.font_size()}}%
 \fi%
+
+\long\def\gre@metapost#1{{%
+  \grelocalleftbox{}%
+  \grelocalrightbox{}%
+  \mplibcode
+  #1
+  \endmplibcode%
+}}%
 
 \input gregoriotex-main.tex
 

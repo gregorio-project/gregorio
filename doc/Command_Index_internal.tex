@@ -1,13 +1,13 @@
 % !TEX root = GregorioRef.tex
 % !TEX program = LuaLaTeX+se
-\section{Gregoriotex Controls}
+\section{Gregorio\TeX{} Controls}
 
-These functions are the ones used by Gregoriotex internally as it
+These functions are the ones used by Gregorio\TeX{} internally as it
 process the commands listed above.  They should not appear in any user
 document and are listed here for programmer documentation purposes
 only.
 
-\macroname{\textbackslash greerror}{\#1}{gregoriotex.sty}
+\macroname{\textbackslash greerror}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Prints an error to the \TeX\ output log.
 
 \begin{argtable}
@@ -15,11 +15,18 @@ Prints an error to the \TeX\ output log.
 \end{argtable}
 
 
-\macroname{\textbackslash gre@warning}{\#1}{gregoriotex.sty}
+\macroname{\textbackslash gre@warning}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Prints a warning to the \TeX\ output log.
 
 \begin{argtable}
   \#1 & string & warning message\\
+\end{argtable}
+
+\macroname{\textbackslash gre@metapost}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
+Executes \MP{} commands using luamplib.
+
+\begin{argtable}
+  \#1 & \MP{} commands & The \MP{} commands to execute.
 \end{argtable}
 
 \macroname{\textbackslash gre@deprecated}{\#1\#2}{gregoriotex-main.tex}
@@ -265,6 +272,59 @@ gtex file.
   \#1 & string & Text to place above the initial of a score.\\
 \end{argtable}
 
+\macroname{\textbackslash gre@brace@common}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
+Common macro used internally to render braces.
+
+\begin{argtable}
+  \#1 & length  & The width of the brace.\\
+  \#2 & length  & A vertical shift.\\
+  \#3 & length  & A horizontal shift.\\
+  \#4 & 0       & Don't shift before starting the brace.\\
+      & 1       & Shift back a punctum's width before starting the brace.\\
+  \#5 & 0       & No accentus above the brace.\\
+      & 1       & Typeset an accentus above the brace.\\
+  \#6 & integer & The height number for the brace.\\
+  \#7 & csname  & The control sequence name representing the brace.
+\end{argtable}
+
+\macroname{\textbackslash grebracemetapostpreamble}{\#1}{gregoriotex-signs.tex}
+Returns the \MP{} preamble for braces.  The control sequence name does
+not have the \texttt{@} symbol because this macro is used within \MP{}.
+
+\begin{argtable}
+  \#1 & string & the width of the brace; if \texttt{*}, use the bar brace width.
+\end{argtable}
+
+\macroname{\textbackslash gre@draw@curlybrace}{\#1}{gregoriotex-signs.tex}
+Draws a curly over-brace using \MP{}.
+
+\begin{argtable}
+  \#1 & length & the width of the brace.
+\end{argtable}
+
+\macroname{\textbackslash gre@draw@brace}{\#1}{gregoriotex-signs.tex}
+Draws a round over-brace using \MP{}.
+
+\begin{argtable}
+  \#1 & string & the width of the brace; if \texttt{*}, use the bar brace width.
+\end{argtable}
+
+\macroname{\textbackslash gre@draw@underbrace}{\#1}{gregoriotex-signs.tex}
+Draws a round under-brace using \MP{}.
+
+\begin{argtable}
+  \#1 & length & the width of the brace.
+\end{argtable}
+
+\macroname{\textbackslash gre@draw@roundbrace}{\#1}{gregoriotex-signs.tex}
+Draws a round over- or under-brace using \MP{}.
+
+\begin{argtable}
+  \#1 & length         & the width of the brace.\\
+  \#2 & number         & the height of the bounding box in em-relative units.\\
+  \#3 & \MP{} commands & \MP{} commands to draw the brace outline.
+\end{argtable}
+
 \subsection{Flags}
 
 Flags are either boolean (defined with \verb=\newif=) or macros which expand to an integer.  They store settings and/or the current state of something so that GregorioTeX can typeset things in the desired manner.
@@ -296,6 +356,10 @@ Boolean flag used to specify whether the staff lines behind a punctum cavum shou
 
 \macroname{\textbackslash ifgre@hidealtlines}{}{gregoriotex-signs.tex}
 Boolean flag used to specify whether the staff lines behind an alteration should be hidden.
+
+\macroname{\textbackslash ifgre@drawbraces}{}{gregoriotex-signs.tex}
+Boolean flag used to specify whether braces should be drawn by \MP{} as
+opposed to rendered via the score font.
 
 
 \subsection{Boxes}

@@ -7,6 +7,19 @@ While one could, in theory, use/change them to alter the appearance of
 elements of the score, it is far better to make your changes in the
 gabc file and let Gregorio make the changes to the gtex file.
 
+\macroname{\textbackslash GreAnnotationLines}{\#1\#2}{gregoriotex-main.tex}
+A wrapper macro for placing annotations above the initial. The
+arguments are provided by the \texttt{gabc} file in the
+\texttt{annotation} header field.  This macro tests for the presence
+of the annotation box which means that the annotation is explicitly
+defined in the \texttt{main.tex} file. If so, this macro does nothing,
+respecting the annotation value in the \texttt{main.tex} file.
+
+\begin{argtable}
+  \#1 & string & First line text to place above the initial.\\
+  \#2 & string & Second line text to place above the initial.\\
+\end{argtable}
+
 \macroname{\textbackslash GreBeginScore}{\#1\#2\#3\#4\#5\#6}{gregoriotex-main.tex}
 Macro to start a score.
 
@@ -19,7 +32,6 @@ Macro to start a score.
   \#5 & 0 & there is no above lines text in the score\\
       & 1 & there is above lines text somewhere in the score\\
   \#6 & string  & the absolute filename of the gabc file if point-and-click is enabled.
-\end{argtable}
 \end{argtable}
 
 \macroname{\textbackslash GreEndScore}{}{gregoriotex-main.tex}
@@ -442,19 +454,6 @@ Macro to typeset a custo manually.
   \#1 & integer & height number of the custos.
 \end{argtable}
 
-\macroname{\textbackslash GreAnnotationLines}{\#1\#2}{gregoriotex-main.tex}
-A wrapper macro for placing annotations above the initial. The
-arguments are provided by the \texttt{gabc} file in the
-\texttt{annotation} header field.  This macro tests for the presence
-of the annotation box which means that the annotation is explicitly
-defined in the \texttt{main.tex} file. If so, this macro does nothing,
-respecting the annotation value in the \texttt{main.tex} file.
-
-\begin{argtable}
-  \#1 & string & First line text to place above the initial.\\
-  \#2 & string & Second line text to place above the initial.\\
-\end{argtable}
-
 \macroname{\textbackslash GreMode}{\#1}{gregoriotex-main.tex}
 If the gabc file contains a mode in the header, then this function
 places said mode as the first (top) annotation.  If the user has
@@ -483,6 +482,30 @@ Same as \verb=\GreNewLine= except line is not justified.
 
 \macroname{\textbackslash GreNoInitial}{}{gregoriotex-main.tex}
 Macro called when no initial is being set.
+
+\macroname{\textbackslash GreOverBrace}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
+Macro to typeset a round brace above the lines.
+
+\begin{argtable}
+  \#1 & length & The width of the brace.\\
+  \#2 & length & A vertical shift.\\
+  \#3 & length & A horizontal shift.\\
+  \#4 & 0      & Don't shift before starting the brace.\\
+      & 1      & Shift back a punctum's width before starting the brace.
+\end{argtable}
+
+\macroname{\textbackslash GreOverCurlyBrace}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+Macro to typeset a curly brace above the lines.
+
+\begin{argtable}
+  \#1 & length & The width of the brace.\\
+  \#2 & length & A vertical shift.\\
+  \#3 & length & A horizontal shift.\\
+  \#4 & 0      & Don't shift before starting the brace.\\
+      & 1      & Shift back a punctum's width before starting the brace.\\
+  \#5 & 0      & No accentus above the brace.\\
+      & 1      & Typeset an accentus above the brace.
+\end{argtable}
 
 \macroname{\textbackslash GrePunctumCavum}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
 Macro to typeset a punctum cavum.
@@ -664,12 +687,41 @@ Plain\TeX\ \verb=\tt= as appropriate.
   \#1 & string & Text to typeset in typewriter font.\\
 \end{argtable}
 
+\macroname{\textbackslash GreUnderBrace}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
+Macro to typeset a round brace below the lines.
+
+\begin{argtable}
+  \#1 & length & The width of the brace.\\
+  \#2 & length & A vertical shift.\\
+  \#3 & length & A horizontal shift.\\
+  \#4 & 0      & Don't shift before starting the brace.\\
+      & 1      & Shift back a punctum's width before starting the brace.
+\end{argtable}
+
 \macroname{\textbackslash GreUnderline}{\#1}{gregoriotex.sty and gregoriotex.tex}
 Makes argument underlined under \LaTeX\ using \verb=\underline=.  Does
 nothing in Plain\TeX.
 
 \begin{argtable}
   \#1 & string & Text to typeset underlined.\\
+\end{argtable}
+
+\macroname{\textbackslash GreVarBraceLength}{\#1}{gregoriotex-signs.tex}
+Returns the computed length of the given brace.
+
+\begin{argtable}
+  \#1 & string & unique identifier for the brace within the score.
+\end{argtable}
+
+\macroname{\textbackslash GreVarBraceSavePos}{\#1\#2\#3}{gregoriotex-signs.tex}
+Records positions to compute the lengths of variable-sized braces.
+
+\begin{argtable}
+  \#1 & string & unique identifier for the brace within the score.\\
+  \#2 & 0      & Don't shift before recording the position.\\
+      & 1      & Shift back a punctum's width before recording the position.\\
+  \#3 & 1      & Position to save is the start of brace.\\
+      & 2      & Position to save is the end of brace.
 \end{argtable}
 
 \macroname{\textbackslash GreVEpisemus}{\#1\#2}{gregoriotex-signs.tex}
