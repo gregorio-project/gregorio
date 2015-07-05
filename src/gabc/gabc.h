@@ -22,10 +22,13 @@
 
 #define GABC_CURRENT_VERSION "0.9.3"
 
+#include "struct.h"
+
 // functions to read gabc
-gregorio_note *gabc_det_notes_from_string(char *str, char *macros[10]);
+gregorio_note *gabc_det_notes_from_string(char *str, char *macros[10],
+        gregorio_scanner_location *loc);
 gregorio_element *gabc_det_elements_from_string(char *str, int *current_key,
-        char *macros[10]);
+        char *macros[10], gregorio_scanner_location *loc);
 gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         int *current_key);
 void gabc_digest(const void *buf, size_t size);
@@ -42,5 +45,37 @@ typedef enum gabc_determination {
 
 // defines the maximal interval between two notes of the same glyph
 #define MAX_INTERVAL 5
+
+static inline void gabc_update_location(gregorio_scanner_location *const loc,
+        const char *const bytes, const size_t length)
+{
+    // to be compatible with LilyPond, this algorithm is based on Lilypond's
+    // Source_file::get_counts
+
+    // possible future enhancement: make the tabstop size configurable
+
+    loc->first_line = loc->last_line;
+    loc->first_column = loc->last_column;
+    loc->first_offset = loc->last_offset;
+
+    for (size_t i = 0; i < length; ++i) {
+        if (bytes[i] == '\n') {
+            ++loc->last_line;
+            loc->last_column = 0;
+            loc->last_offset = 0;
+        } else if (((unsigned char)bytes[i] & 0xc0u) != 0x80u) {
+            // if two highest bits are 1 and 0, it's a continuation byte,
+            // so count everything else, which is either a single-byte
+            // character or the first byte of a multi-byte sequence
+
+            if (bytes[i] == '\t') {
+                loc->last_column = (loc->last_column / 8 + 1) * 8;
+            } else {
+                ++loc->last_column;
+            }
+            ++loc->last_offset;
+        }
+    }
+}
 
 #endif

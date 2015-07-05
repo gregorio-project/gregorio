@@ -36,6 +36,47 @@
 
 % a macro called each time we start something looking like a glyph, but not mandatorily called through the \GreGlyph macro, for example bars, flats, etc.
 
+\newif\ifgre@generate@pointandclick\gre@generate@pointandclickfalse %
+\newcount\gre@generate@pointandclick\gre@generate@pointandclick=0\relax %
+
+\def\gresetpointandclick#1{%
+  \IfStrEq{#1}{on}{%
+    \ifpdf %
+      \gre@generate@pointandclicktrue %
+      \gre@generate@pointandclick=1\relax %
+    \else %
+      \gre@warning{Unable to enable point-and-click when not generating a PDF}%
+      \gre@generate@pointandclickfalse %
+      \gre@generate@pointandclick=0\relax %
+    \fi %
+  }{%
+    \IfStrEq{#1}{off}{%
+      \gre@generate@pointandclickfalse %
+      \gre@generate@pointandclick=0\relax %
+    }{%
+      \greerror{Unrecognized option for \protect\gresetpointandclick}%
+    }%
+  }%
+}%
+
+\def\gre@pointandclick#1#2{%
+  \def\gre@@arg{\gre@gabcname#2}%
+  \ifx\gre@@arg\gre@nothing %
+    #1%
+  \else %
+    \ifgre@generate@pointandclick %
+      \pdfstartlink user{%
+        /Subtype/Link/Border[0 0 0]%
+        /A<</Type/Action/S/URI/URI(textedit://\gre@gabcname:#2)>>%
+      }%
+      #1%
+      \pdfendlink %
+    \else %
+      #1%
+    \fi %
+  \fi %
+}%
+
 \def\grenewglyphcommon{%
   \global\advance\gre@attr@glyph@id by 1\relax %
   % first there is something we must do: setting \grelastoflinecount to 0 if its value is 2. The reason of this is that in ab(abzcd), we cannot let \grelastoflinecount set to 2 after the end of line... the only way I found to achieve it is to reset \grelastoflinecount to 0 after each glyph or bar.
@@ -76,9 +117,10 @@
 %%%%%%%% 9 : flexus deminutus
 % #5 are the signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)
 % #6 are the signs to typeset after the glyph (almost all signs)
-\def\GreGlyph#1#2#3#4#5#6{%
+% #7 is the line:char:column for a textedit link
+\def\GreGlyph#1#2#3#4#5#6#7{%
   \grenewglyphcommon %
-  \setbox\gre@box@temp@width=\hbox{\gregoriofont #1}%
+  \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{\gregoriofont #1}{#7}}%
   \gre@dimen@temp@three=\wd\gre@box@temp@width %
   \global\gre@dimen@lastglyphwidth=\gre@dimen@temp@three %
   % the three next lines are a trick to get the additional lines below the glyphs
@@ -408,8 +450,7 @@
 }%
 
 
-\newif\ifgre@vowelcentering%
-\gre@vowelcenteringtrue
+\newif\ifgre@vowelcentering\gre@vowelcenteringtrue %
 
 \def\englishcentering{%
   \gre@deprecated{\protect\englishcentering}{\protect\gresetlyriccentering{syllable}}%
@@ -469,7 +510,7 @@
 % #9 : glyphs : all the notes
 % the three next parameters are to put an hyphen if necessary, they can be empty for end of words
 % #5 : macros setting next syllable letters of the next syllable 
-% #6 : nothing
+% #6 : the line:char:column for a textedit link
 % #7 : alignment type of the first next glyph
 % #8 : other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
@@ -520,7 +561,7 @@
   #5%
   \gre@calculate@nextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
   \greunsetfixednexttextformat %
-  \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
+  \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
     % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
   \gre@count@temp@one=0%
@@ -548,9 +589,9 @@
     \ifdim\gre@skip@temp@one > \gre@dimen@maximumspacewithoutdash %
       % if it's the last syllable of line, the hyphen will be \GreHyph
       \ifnum\grelastoflinecount=1\relax %
-        \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart\GreHyph\relax}}%
+        \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart\GreHyph\relax}{#6}}}%
       \else %
-        \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart-}}%
+        \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart-}{#6}}}%
       \fi %
       % recomputing end difference and final skip with the final hyphen
       \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
@@ -558,7 +599,7 @@
     \else %
       \gregorioattr=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
-      \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
+      \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
     \fi%
   \fi% ficase#4
   % then we reuse temp, we assign to it the \gre@dimen@begindifference, but only if it is positive, else it is 0
@@ -568,7 +609,8 @@
     \kern\gre@skip@temp@one %
   \fi%
   #8\relax %
-  \raise\gre@dimen@textlower \copy\gre@box@syllabletext %
+  \raise\gre@dimen@textlower %
+  \copy\gre@box@syllabletext %
   \ifnum\gremustdotranslationcenterend=1\relax %
     % case of end of translation centering, we do it after the typesetting of the text
     \gredotranslationcenterend %
@@ -698,7 +740,7 @@
     \gdef\gre@endsyllablepart{}%
   \fi %
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
-  \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}}%
+  \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
   \gre@debugmsg{spacing}{Width of bar text: \the\wd\gre@box@syllabletext}%
   \gresyllablenotes{#9}%
   \gre@debugmsg{spacing}{Width of bar line: \the\wd\gre@box@syllablenotes}%

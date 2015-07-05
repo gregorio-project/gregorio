@@ -276,12 +276,12 @@ static gregorio_element *gabc_det_elements_from_notes(
     return final;
 }
 
-gregorio_element *gabc_det_elements_from_string(char *str, int *current_key,
-        char *macros[10])
+gregorio_element *gabc_det_elements_from_string(char *const str, int *const current_key,
+        char *macros[10], gregorio_scanner_location *const loc)
 {
     gregorio_element *final;
     gregorio_note *tmp;
-    tmp = gabc_det_notes_from_string(str, macros);
+    tmp = gabc_det_notes_from_string(str, macros, loc);
     final = gabc_det_elements_from_notes(tmp, current_key);
     return final;
 }

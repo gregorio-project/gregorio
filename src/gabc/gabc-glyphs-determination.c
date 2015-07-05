@@ -26,6 +26,18 @@
 
 #include "gabc.h"
 
+static inline gregorio_scanner_location *copy_note_location(
+        const gregorio_note *const note, gregorio_scanner_location *const loc)
+{
+    loc->first_line = note->src_line;
+    loc->first_column = note->src_column;
+    loc->first_offset = note->src_offset;
+    loc->last_line = note->src_line;
+    loc->last_column = note->src_column;
+    loc->last_offset = note->src_offset;
+    return loc;
+}
+
 /****************************
  * 
  * First see the comments of
@@ -44,6 +56,7 @@ static void close_glyph(gregorio_glyph **last_glyph,
         gregorio_glyph_type glyph_type, gregorio_note **first_note,
         gregorio_liquescentia liquescentia, gregorio_note *current_note)
 {
+    gregorio_scanner_location loc;
     // a variable necessary for the patch for G_BIVIRGA & co.
     gregorio_note *added_notes = NULL;
 
@@ -76,42 +89,46 @@ static void close_glyph(gregorio_glyph **last_glyph,
                 switch (current_note->u.note.shape) {
                 case S_TRIVIRGA:
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,
-                            current_note);
+                            S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note,
+                            copy_note_location(current_note, &loc));
                 case S_BIVIRGA:
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA,
-                            current_note);
+                            S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note,
+                            copy_note_location(current_note, &loc));
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
                             S_VIRGA, current_note->signs,
-                            current_note->u.note.liquescentia,
-                            current_note);
+                            current_note->u.note.liquescentia, current_note,
+                            copy_note_location(current_note, &loc));
                     break;
                 case S_TRISTROPHA:
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
                             S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
-                            current_note);
+                            current_note,
+                            copy_note_location(current_note, &loc));
                 case S_DISTROPHA:
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
                             S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
-                            current_note);
+                            current_note,
+                            copy_note_location(current_note, &loc));
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
                             S_STROPHA, current_note->signs,
-                            current_note->u.note.liquescentia,
-                            current_note);
+                            current_note->u.note.liquescentia, current_note,
+                            copy_note_location(current_note, &loc));
                     break;
                 case S_TRISTROPHA_AUCTA:
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
                             S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
-                            current_note);
+                            current_note,
+                            copy_note_location(current_note, &loc));
                 case S_DISTROPHA_AUCTA:
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
                             S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
-                            current_note);
+                            current_note,
+                            copy_note_location(current_note, &loc));
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
                             S_STROPHA_AUCTA, current_note->signs,
-                            current_note->u.note.liquescentia,
-                            current_note);
+                            current_note->u.note.liquescentia, current_note,
+                            copy_note_location(current_note, &loc));
                     break;
                 default:
                     break;

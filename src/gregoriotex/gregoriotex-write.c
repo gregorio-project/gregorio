@@ -39,6 +39,8 @@
 
 // a structure containing the status
 typedef struct gregoriotex_status {
+    bool point_and_click;
+
     // true if the current_glyph will have an additional line under or not
     // (useful to determine the length of the bar in case of a flexa starting
     // at d
@@ -46,18 +48,15 @@ typedef struct gregoriotex_status {
 
     signed char top_height;
     signed char bottom_height;
-} gregoriotex_status;
 
-#define UNDETERMINED_HEIGHT -127
-
-// a structure containing the result of seekadditionalspaces
-typedef struct gregoriotex_lineinfo {
     // indicates if there is a translation on the line
     bool translation;
 
     // indicates if there is "above lines text" on the line
     bool abovelinestext;
-} gregoriotex_line;
+} gregoriotex_status;
+
+#define UNDETERMINED_HEIGHT -127
 
 #define MAX_AMBITUS 5
 static char *tex_ambitus[] = {
@@ -805,58 +804,6 @@ static gregorio_element *gregoriotex_syllable_is_clef_change(gregorio_syllable
         return element->next->next;
     }
     return NULL;
-}
-
-/*
- * ! @brief This is an arbitrary maximum of notes we consider to affect the
- * syllable's text. We automatically lower the textline if the chant notes are
- * below the staff, so that they do not overlap. However, after a certain point
- * (defined by this value), the notes extend far beyond the letters of the text,
- * and thus lowering the text does not need to be considered. Used by
- * gregoriotex_getlineinfos() 
- */
-#define NUMBER_OF_NOTES 6
-
-/*
- * ! @brief function filling the gregorio_line (see gregoriotex.h) struct with
- * the infos on the line following syllable 
- */
-static void gregoriotex_getlineinfos(gregorio_syllable *syllable,
-        gregoriotex_line *line)
-{
-    if (line == NULL) {
-        gregorio_message(_
-                ("call with NULL pointer"),
-                "gregoriotex_write_score", VERBOSITY_ERROR, 0);
-        return;
-    }
-
-    /*
-     * first we check if the syllable is only a end of line. If it is the case,
-     * we don't print anything but a comment (to be able to read it if we read
-     * GregorioTeX). The end of lines are treated separately in GregorioTeX, it
-     * is buit inside the TeX structure. 
-     */
-    line->translation = false;
-    line->abovelinestext = false;
-
-    for (; syllable; syllable = syllable->next_syllable) {
-        if (syllable->translation) {
-            line->translation = true;
-        }
-        if (syllable->abovelinestext) {
-            line->abovelinestext = true;
-        }
-        for (gregorio_element *element = *syllable->elements; element;
-                element = element->next) {
-            if (element->type == GRE_END_OF_LINE) {
-                return;
-            }
-            if (element->type == GRE_ALT) {
-                line->abovelinestext = true;
-            }
-        }
-    }
 }
 
 /*
@@ -2230,6 +2177,11 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
             break;
         }
     }
+    fprintf(f, "}{");
+    if (status->point_and_click) {
+        fprintf(f, "%u:%u:%u", note->src_line, note->src_offset,
+                note->src_column + 1);
+    }
     fprintf(f, "}%%\n");
 }
 
@@ -2689,6 +2641,16 @@ static inline bool next_is_bar(const gregorio_syllable *syllable,
     assert(false); // should never reach here
 }
 
+static inline void write_syllable_point_and_click(FILE *const f,
+        const gregorio_syllable *const syllable,
+        const gregoriotex_status *const status)
+{
+    if (status->point_and_click && syllable->src_line) {
+        fprintf(f, "%u:%u:%u", syllable->src_line, syllable->src_offset,
+                syllable->src_column + 1);
+    }
+}
+
 /*
  * Arguments are relatively obvious. The most obscure is certainly first_of_disc
  * which is 0 all the time, except in the case of a "clef change syllable". In
@@ -2706,7 +2668,6 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
         bool * first_syllable, unsigned char *line_number,
         unsigned char first_of_disc, gregoriotex_status *const status)
 {
-    gregoriotex_line line;
     gregorio_element *clef_change_element = NULL;
     if (!syllable) {
         return;
@@ -2727,18 +2688,11 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
      */
     if (syllable->elements && *(syllable->elements)) {
         if ((syllable->elements)[0]->type == GRE_END_OF_LINE) {
-            gregoriotex_getlineinfos(syllable->next_syllable, &line);
             if ((syllable->elements)[0]->u.misc.unpitched.info.sub_type !=
                     GRE_END_OF_PAR) {
-                fprintf(f, "%%\n%%\n\\GreNewLineWithSpace{%d}{%d}{%d}{%d}%%\n"
-                        "%%\n%%\n", status->top_height, status->bottom_height,
-                        bool_to_int(line.translation),
-                        bool_to_int(line.abovelinestext));
+                fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
             } else {
-                fprintf(f, "%%\n%%\n\\GreNewParLineWithSpace{%d}{%d}{%d}{%d}%%"
-                        "\n%%\n%%\n", status->top_height, status->bottom_height,
-                        bool_to_int(line.translation),
-                        bool_to_int(line.abovelinestext));
+                fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
             }
             if (*line_number == 1) {
                 fprintf(f, "\\GreAdjustThirdLine %%\n");
@@ -2807,10 +2761,14 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->next_syllable) {
         fprintf(f, "{\\GreSetNextSyllable");
         gregoriotex_write_text(f, syllable->next_syllable->text, NULL);
-        fprintf(f, "}{}{%d}{",
+        fprintf(f, "}{");
+        write_syllable_point_and_click(f, syllable, status);
+        fprintf(f, "}{%d}{",
                 gregoriotex_syllable_first_type(syllable->next_syllable));
     } else {
-        fprintf(f, "{\\GreSetNextSyllable{}{}{}}{}{0}{");
+        fprintf(f, "{\\GreSetNextSyllable{}{}{}}{");
+        write_syllable_point_and_click(f, syllable, status);
+        fprintf(f, "}{0}{");
     }
     if (syllable->translation) {
         if (syllable->translation_type == TR_WITH_CENTER_BEGINNING) {
@@ -2987,17 +2945,10 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
         case GRE_END_OF_LINE:
             // here we suppose we don't have two linebreaks in the same
             // syllable
-            gregoriotex_getlineinfos(syllable->next_syllable, &line);
             if (element->u.misc.unpitched.info.sub_type != GRE_END_OF_PAR) {
-                fprintf(f, "%%\n%%\n\\GreNewLineWithSpace{%d}{%d}{%d}{%d}%%\n"
-                        "%%\n%%\n", status->top_height, status->bottom_height,
-                        bool_to_int(line.translation),
-                        bool_to_int(line.abovelinestext));
+                fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
             } else {
-                fprintf(f, "%%\n%%\n\\GreNewParLineWithSpace{%d}{%d}{%d}{%d}%%"
-                        "\n%%\n%%\n", status->top_height, status->bottom_height,
-                        bool_to_int(line.translation),
-                        bool_to_int(line.abovelinestext));
+                fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
             }
             if (*line_number == 1) {
                 fprintf(f, "\\GreAdjustThirdLine %%\n");
@@ -3056,18 +3007,32 @@ static char *digest_to_hex(const unsigned char digest[SHA1_DIGEST_SIZE])
 }
 
 static void initialize_score(gregoriotex_status *const status,
-        gregorio_score *score)
+        gregorio_score *score, const bool point_and_click)
 {
     status->bottom_line = false;
     status->top_height = status->bottom_height = UNDETERMINED_HEIGHT;
+    status->abovelinestext = status->translation = false;
 
     for (gregorio_syllable *syllable = score->first_syllable; syllable;
             syllable = syllable->next_syllable) {
+        if (syllable->translation) {
+            status->translation = true;
+        }
+
+        if (syllable->abovelinestext) {
+            status->abovelinestext = true;
+        }
+
         for (int voice = 0; voice < score->number_of_voices; ++voice) {
             gregoriotex_compute_positioning(syllable->elements[voice]);
             for (gregorio_element *element = syllable->elements[voice]; element;
                     element = element->next) {
-                if (element->type == GRE_ELEMENT) {
+                switch (element->type) {
+                case GRE_ALT:
+                    status->abovelinestext = true;
+                    break;
+
+                case GRE_ELEMENT:
                     for (gregorio_glyph *glyph = element->u.first_glyph; glyph;
                             glyph = glyph->next) {
                         if (glyph->type == GRE_GLYPH) {
@@ -3077,15 +3042,23 @@ static void initialize_score(gregoriotex_status *const status,
                                     &(status->bottom_height));
                         }
                     }
+                    break;
+
+                default:
+                    // to eliminate the warning
+                    break;
                 }
             }
         }
     }
 
     fixup_height_extrema(&(status->top_height), &(status->bottom_height));
+
+    status->point_and_click = point_and_click;
 }
 
-void gregoriotex_write_score(FILE *f, gregorio_score *score)
+void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
+        const char *const point_and_click_filename)
 {
     gregorio_character *first_text;
     // true if it is the first syllable and false if not.
@@ -3100,9 +3073,8 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     unsigned char line = 0;
     int annotation_num;
     gregoriotex_status status;
-    gregoriotex_line first_line;
 
-    initialize_score(&status, score);
+    initialize_score(&status, score, point_and_click_filename != NULL);
 
     if (!f) {
         gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
@@ -3133,8 +3105,11 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
                 score->score_copyright);
     }
 
-    fprintf(f, "\\GreBeginScore{%s}{%d}{%d}%%\n", digest_to_hex(score->digest),
-            status.top_height, status.bottom_height);
+    fprintf(f, "\\GreBeginScore{%s}{%d}{%d}{%d}{%d}{%s}%%\n",
+            digest_to_hex(score->digest), status.top_height,
+            status.bottom_height, bool_to_int(status.translation),
+            bool_to_int(status.abovelinestext),
+            point_and_click_filename? point_and_click_filename : "");
     switch (score->centering) {
     case SCHEME_SYLLABLE:
         fprintf(f, "\\englishcentering%%\n");
@@ -3149,10 +3124,6 @@ void gregoriotex_write_score(FILE *f, gregorio_score *score)
     if (score->nabc_lines) {
         fprintf(f, "\\scorenabclines{%d}", (int)score->nabc_lines);
     }
-    // if necessary, we add some bottom space to the first line
-    gregoriotex_getlineinfos(score->first_syllable, &first_line);
-    fprintf(f, "\\GreFirstLineBottomSpace{%d}{%d}%%\n",
-            status.bottom_height, bool_to_int(first_line.translation));
     // we select the good font -- Deprecated (remove in next release)
     if (score->gregoriotex_font) {
         if (!strcmp(score->gregoriotex_font, "gregorio")) {

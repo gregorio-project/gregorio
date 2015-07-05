@@ -12,6 +12,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Choral signs are now positioned correctly around porrectus and torculus resupinus (see [#387](https://github.com/gregorio-project/gregorio/issues/387) and [Gna! bug 22025](https://gna.org/bugs/?22025)).
 - Gregorio will now try harder to select an appropriate pitch for an automatic custos (`z0`) on a clef change (see [#446](https://github.com/gregorio-project/gregorio/issues/446)).  If results are not satisfactory, use a manual custos (`+`) to select a pitch manually.
 - The centering of styled text under notes is now correct (See [#509](https://github.com/gregorio-project/gregorio/issues/509)).
+- Space for above lines text is now correctly added as needed, even at the beginning of a score (see [#533](https://github.com/gregorio-project/gregorio/issues/533)).
 
 ### Changed
 - A new, more systematic naming scheme has been created for GregorioTeX macros.  The naming scheme should reduce the chances of naming conflicts with other packages and make it easier to identify what a particular macro is for and how to use it.  Most user functions have been renamed in order to bring them into line with this scheme.  Please see GregorioRef for a complete list of the new function names.  In general, old names will still work, but they will raise a deprecation warning and will be dropped from GregorioTeX in a future relase.
@@ -47,6 +48,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `<eu>` tag in gabc to delimit *Euouae* block in the score. It prevents linebreaking and makes spaces tighter. See [UPGRADE.md](UPGRADE.md) for details.
 - With thanks to Fr. Jacques Peron, it is now possible to embed short gabc snippets directly into a TeX document.  The command is `\gabcsnippet`.  See GregorioRef.pdf for full details.
 - `[ub:x:y mm]` tag, similar to `[ob:x:y mm]`, but for braces under notes.
+- `[ob:x{]` and `[ob:x}]` tag pairs for braces where the length is determined by the distance of the opening and closing tags.  `[ocb:x{]` with `[ocb:x}]`, `[ocba:x{]` with `[ocba:x}]` and `[ub:x{]` with `[ub:x}]` can be used similarly for other kinds of braces and brackets.
 - The ability to substitute an arbitrary glyph for one used by GregorioTeX.  This adds four macros: `\grechangeglyph` to make a score glyph substitution, `\greresetglyph` to remove a score glyph substitution, `\gredefsymbol` for (re-)defining an arbitrary non-score glyph that scales with the text, and `\gredefsizedsymbol` for (re-)defining an arbitary non-score glyph that requires a point-size to be specified.  See GregorioRef.pdf for full details.
 - Added `--with-kpathsea` option to configure script, to check input and output file against `openout_any` and `openin_any` settings of texmf.cnf (TeXLive only). Necessary to be included in `shell_escape_commands` in TeXLive.
 - Support for `lualatex -recorder`.  Autocompiled gabc and gtex files will now be properly recorded so that programs like `latexmk -recorder` can detect the need to rebuild the PDF when a gabc file changes.
@@ -57,6 +59,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Support for custom vowel centering rules.  Put a file called `gregorio-vowels.dat` into your project directory or into a directory accessible from TEXMF and add the header `language: name;` to your gabc file.  The `gregorio-vowels.dat` file describes how vowels are to be located in the *name* language.  See GregorioRef for details.
 - `\gresetlinecolor` takes a named color as an argument.  As a result, the red staff lines can be made consistent with the text, even when the user changes `gregoriocolor` with `\gresetlinecolor{gregoriocolor}`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
 - Package option `deprecated=false`. Causes all deprecated commands to raise an error and halt TeX.
+- The ability to add LilyPond-like point-and-click textedit links into the PDF file to aid with debugging scores.  This must be explicitly enabled and **should be turned off** when producing files for distribution as it embeds path information into the output.  To enable this, you must pass the `-p` option to gregorio when compiling gabc files and add `\gresetpointandclick{on}` before including the score.  It may be toggled back off with `\gresetpointandclick{off}`.  See GregorioRef for details (for the change request, see [#528](https://github.com/gregorio-project/gregorio/issues/528)).
 
 ### Deprecated
 - `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`

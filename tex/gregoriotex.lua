@@ -43,6 +43,7 @@ local hlist = node.id('hlist')
 local vlist = node.id('vlist')
 local glyph = node.id('glyph')
 local glue = node.id('glue')
+local whatsit = node.id('whatsit')
 
 local hyphen = tex.defaulthyphenchar or 45
 
@@ -59,11 +60,14 @@ local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_line_id = nil
 
+local cur_score_id = nil
 local score_inclusion = {}
 local line_heights = nil
 local new_line_heights = nil
 local score_heights = nil
 local new_score_heights = nil
+local var_brace_positions = nil
+local new_var_brace_positions = nil
 local auxname = nil
 
 local space_below_staff = 5
@@ -80,6 +84,34 @@ local number_to_letter = {
 }
 
 local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
+
+local user_defined_subtype = node.subtype('user_defined')
+local create_marker = luatexbase.new_user_whatsit('marker', 'gregoriotex')
+local marker_whatsit_id = luatexbase.get_user_whatsit_id('marker', 'gregoriotex')
+local translation_mark = 1
+local abovelinestext_mark = 2
+
+log("marker whatsit id is %d", marker_whatsit_id)
+
+local function mark(value)
+  local marker = create_marker()
+  marker.type = 100
+  marker.value = value
+  node.write(marker)
+end
+
+local function mark_translation()
+  mark(translation_mark)
+end
+
+local function mark_abovelinestext()
+  mark(abovelinestext_mark)
+end
+
+local function is_mark(node, value)
+  return node.id == whatsit and node.subtype == user_defined_subtype and
+      node.user_id == marker_whatsit_id and node.value == value
+end
 
 local function keys_changed(tab1, tab2)
   if tab2 == nil then return true end
@@ -101,6 +133,12 @@ local function heights_changed()
   for id, tab in pairs(line_heights) do
     if keys_changed(tab, new_line_heights[id]) then return true end
   end
+  for id, tab in pairs(new_var_brace_positions) do
+    if keys_changed(tab, var_brace_positions[id]) then return true end
+  end
+  for id, tab in pairs(var_brace_positions) do
+    if keys_changed(tab, new_var_brace_positions[id]) then return true end
+  end
   return false
 end
 
@@ -111,22 +149,34 @@ local function write_greaux()
     local aux = io.open(auxname, 'w')
     if aux then
       log("Writing %s", auxname)
-      aux:write('return {\n');
+      aux:write('return {\n ["line_heights"]={\n')
       local id, tab, id2, line
       for id, tab in pairs(new_line_heights) do
-        aux:write(string.format(' ["%s"]={\n', id))
+        aux:write(string.format('  ["%s"]={\n', id))
         for id2, line in pairs(tab) do
-          aux:write(string.format('  [%d]={%d,%d},\n', id2, line[1], line[2]))
+          aux:write(string.format('   [%d]={%d,%d,%d,%d},\n', id2, line[1],
+              line[2], line[3], line[4]))
         end
-        aux:write(' },\n')
+        aux:write('  },\n')
       end
-      aux:write('}\n');
+      aux:write(' },\n ["var_brace_positions"]={\n')
+      for id, tab in pairs(new_var_brace_positions) do
+        aux:write(string.format('  ["%s"]={\n', id))
+        for id2, line in pairs(tab) do
+          if line[1] ~= nil and line[2] ~= nil then
+            aux:write(string.format('   [%d]={%d,%d},\n', id2, line[1],
+                line[2]))
+          end
+        end
+        aux:write('  },\n')
+      end
+      aux:write(' },\n}\n')
       aux:close()
     else
       err("\n Unable to open %s", auxname)
     end
 
-    warn("Line heights may have changed. Rerun to fix heights.")
+    warn("Line heights or variable brace lengths may have changed. Rerun to fix.")
   end
 end
 
@@ -152,9 +202,12 @@ local function init(arg, enable_height_computation)
   texio.write_nl('('..auxname..')')
   if lfs.isfile(auxname) then
     log("Reading %s", auxname)
-    line_heights = dofile(auxname)
+    local score_info = dofile(auxname)
+    line_heights = score_info.line_heights or {}
+    var_brace_positions = score_info.var_brace_positions or {}
   else
     line_heights = {}
+    var_brace_positions = {}
   end
 
   if enable_height_computation then
@@ -179,6 +232,7 @@ local function init(arg, enable_height_computation)
         'line heights.  Remove or undefine \\greskipheightcomputation to '..
         'resume height computation.')
   end
+  new_var_brace_positions = {}
 end
 
 -- node factory
@@ -202,6 +256,8 @@ local function dump_nodes(head)
   for n in traverse(head) do
     if node.type(n.id) == 'penalty' then
       log("%s=%d {%d}", node.type(n.id), n.penalty, has_attribute(n, glyph_id_attr))
+    elseif n.id == whatsit and n.subtype == user_defined_subtype and n.user_id == marker_whatsit_id then
+      log("marker-whatsit %s", n.value)
     else
       log("node %s [%d] {%d}", node.type(n.id), n.subtype, has_attribute(n, glyph_id_attr))
     end
@@ -209,12 +265,15 @@ local function dump_nodes(head)
       for m in traverse(n.head) do
         if node.type(m.id) == 'penalty' then
           log("..%s=%d {%d}", node.type(m.id), m.penalty, has_attribute(n, glyph_id_attr))
+        elseif m.id == whatsit and m.subtype == user_defined_subtype and m.user_id == marker_whatsit_id then
+          log("..marker-whatsit %s", m.value)
         else
           log("..node %s [%d] {%d}", node.type(m.id), m.subtype, has_attribute(n, glyph_id_attr))
         end
       end
     end
   end
+  log('--end dump--')
 end
 
 local function center_translation(startnode, endnode, ratio, sign, order)
@@ -243,14 +302,16 @@ end
 -- which we can see with the gregorioattr being set or not
 local function process (h, groupcode, glyphes)
   -- TODO: to be changed according to the font
-  local lastseennode    = nil
-  local adddash         = false
-  local currentfont     = 0
-  local currentshift    = 0
-  local centerstartnode = nil
-  local line_id         = nil
-  local line_top        = nil
-  local line_bottom     = nil
+  local lastseennode            = nil
+  local adddash                 = false
+  local currentfont             = 0
+  local currentshift            = 0
+  local centerstartnode         = nil
+  local line_id                 = nil
+  local line_top                = nil
+  local line_bottom             = nil
+  local line_has_translation    = false
+  local line_has_abovelinestext = false
   -- we explore the lines
   for line in traverse(h) do
     if line.id == glue then
@@ -270,6 +331,8 @@ local function process (h, groupcode, glyphes)
         line_id = nil
         line_top = nil
         line_bottom = nil
+        line_has_translation = false
+        line_has_abovelinestext = false
         for n in traverse_id(hlist, line.head) do
           if has_attribute(n, gregoriocenterattr, startcenter) then
             centerstartnode = n
@@ -318,6 +381,15 @@ local function process (h, groupcode, glyphes)
             end
           end
         end
+        -- look for marks
+        if new_score_heights then
+          for n in traverse_id(whatsit, line.head) do
+            line_has_translation = line_has_translation or
+                is_mark(n, translation_mark)
+            line_has_abovelinestext = line_has_abovelinestext or
+                is_mark(n, abovelinestext_mark)
+          end
+        end
         if adddash==true then
           local dashnode, hyphnode = getdashnnode()
           dashnode.shift = currentshift
@@ -326,7 +398,9 @@ local function process (h, groupcode, glyphes)
           addash=false
         end
         if line_id then
-          new_score_heights[prev_line_id] = { line_top, line_bottom }
+          new_score_heights[prev_line_id] = { line_top, line_bottom,
+              line_has_translation and 1 or 0,
+              line_has_abovelinestext and 1 or 0 }
           prev_line_id = line_id
         end
       end
@@ -347,12 +421,14 @@ local function disable_hyphenation()
 end
 
 local function atScoreBeginning (score_id, top_height, bottom_height,
-    top_height_adj, bottom_height_adj)
-  if (top_height > top_height_adj or bottom_height < bottom_height_adj)
+    has_translation, has_above_lines_text, top_height_adj, bottom_height_adj)
+  local inclusion = score_inclusion[score_id] or 1
+  score_inclusion[score_id] = inclusion + 1
+  score_id = score_id..'.'..inclusion
+  cur_score_id = score_id
+  if (top_height > top_height_adj or bottom_height < bottom_height_adj
+      or has_translation ~= 0 or has_above_lines_text ~= 0)
       and tex.count['gre@variableheightexpansion'] == 1 then
-    local inclusion = score_inclusion[score_id] or 1
-    score_inclusion[score_id] = inclusion + 1
-    score_id = score_id..'.'..inclusion
     score_heights = line_heights[score_id] or {}
     if new_line_heights then
       new_score_heights = {}
@@ -403,7 +479,12 @@ end
 
 local function compile_gabc(gabc_file, gtex_file)
   info("compiling the score %s...", gabc_file)
-  res = os.execute(string.format("gregorio -o %s %s", gtex_file, gabc_file))
+  local extra_args = ''
+  if tex.count['gre@generate@pointandclick'] == 1 then
+    extra_args = ' -p'
+  end
+
+  res = os.execute(string.format("gregorio %s -o %s %s", extra_args, gtex_file, gabc_file))
   if res == nil then
     err("\nSomething went wrong when executing\n    'gregorio -o %s %s'.\n"
     .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", gtex_file, gabc_file, tex.formatname, tex.jobname)
@@ -658,10 +739,9 @@ local function adjust_line_height(inside_discretionary)
   if score_heights then
     local heights = score_heights[tex.getattribute(glyph_id_attr)]
     if heights then
-      local top, bottom = heights[1], heights[2]
       tex.sprint(catcode_at_letter, string.format(
-          [[\gre@calculate@additionalspaces{%d}{%d}]],
-          top, bottom))
+          [[\gre@calculate@additionalspaces{%d}{%d}{%d}{%d}]],
+          heights[1], heights[2], heights[3], heights[4]))
       if inside_discretionary == 0 then
         tex.sprint(catcode_at_letter, [[\greupdateleftbox ]])
       end
@@ -669,12 +749,38 @@ local function adjust_line_height(inside_discretionary)
   end
 end
 
+local function var_brace_note_pos(brace, start_end, pos)
+  if new_var_brace_positions[cur_score_id] == nil then
+    new_var_brace_positions[cur_score_id] = {}
+  end
+  if new_var_brace_positions[cur_score_id][brace] == nil then
+    new_var_brace_positions[cur_score_id][brace] = {}
+  end
+  new_var_brace_positions[cur_score_id][brace][start_end] = pos
+end
+
+local function var_brace_len(brace)
+  if var_brace_positions[cur_score_id] ~= nil then
+    if var_brace_positions[cur_score_id][brace] ~= nil then
+      local posend = var_brace_positions[cur_score_id][brace][2]
+      local posstart = var_brace_positions[cur_score_id][brace][1]
+      if posend > posstart then
+        tex.print(string.format('%dsp', posend - posstart))
+      else
+        warn('Dynamically sized braces spanning multiple lines unsupported, using length 2mm.')
+        tex.print('2mm')
+      end
+      return
+    end
+  end
+  tex.print('2mm')
+end
+
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
 
 gregoriotex.init                 = init
 gregoriotex.include_score        = include_score
-gregoriotex.compile_gabc         = compile_gabc
 gregoriotex.atScoreEnd           = atScoreEnd
 gregoriotex.atScoreBeginning     = atScoreBeginning
 gregoriotex.check_font_version   = check_font_version
@@ -688,3 +794,7 @@ gregoriotex.def_symbol           = def_symbol
 gregoriotex.font_size            = font_size
 gregoriotex.direct_gabc          = direct_gabc
 gregoriotex.adjust_line_height   = adjust_line_height
+gregoriotex.var_brace_len        = var_brace_len
+gregoriotex.var_brace_note_pos   = var_brace_note_pos
+gregoriotex.mark_translation     = mark_translation
+gregoriotex.mark_abovelinestext  = mark_abovelinestext

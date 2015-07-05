@@ -177,6 +177,7 @@ static void print_usage(char *name)
 \t-l file    writes messages output to specified file (default: stderr)\n\
 \t-f format  specifies input file format (default: gabc)\n\
 \t-s         reads input from stdin\n\
+\t-p         generate point-and-click information\n\
 \t-h         displays this message\n\
 \t-V         displays %s version\n"), name, name);
     printf(_("\t-L         displays licence\n\
@@ -219,6 +220,55 @@ static void check_input_clobber(char *input_file_name, char *output_file_name)
     }
 }
 
+static char *encode_point_and_click_filename(char *input_file_name)
+{
+    // percent-encoding favors capital hex digits
+    static const char *const hex = "0123456789ABCDEF";
+    char filename[PATH_MAX], *result = NULL, *r = NULL;
+
+    if (!realpath(input_file_name, filename)) {
+        fprintf(stderr, "error: unable to resolve %s\n", input_file_name);
+        exit(-1);
+    }
+
+    // 2 extra characters for a possible leading slash and final NUL
+    r = result = malloc((strlen(filename) * 4 + 2) * sizeof(char));
+
+#ifdef __MINGW32__
+    *(r++) = '/';
+#endif
+
+    for (char *p = filename; *p; ++p) {
+#ifdef __MINGW32__
+        if (*p == '\\') {
+            *p = '/';
+        }
+#endif
+
+        // note that -, _ and ~ are conspicuously missing from this list
+        // because they cause trouble in TeX; we will percent-encode them
+        if ((*p >= 'A' && *p <= 'Z') || (*p >= 'a' && *p < 'z')
+                || (*p >= '0' && *p <= '9') || *p == '.' || *p == '/'
+#ifdef __MINGW32__
+                || *p == ':'
+#endif
+                ) {
+            *(r++) = *p;
+        }
+        else {
+            // percent-encode anything else
+            *(r++) = '\\'; // must escape it because it's TeX
+            *(r++) = '%';
+            *(r++) = hex[(*p >> 4) & 0x0FU];
+            *(r++) = hex[*p & 0x0FU];
+        }
+    }
+
+    *r = '\0';
+
+    return result;
+}
+
 int main(int argc, char **argv)
 {
     const char *copyright =
@@ -237,7 +287,9 @@ int main(int argc, char **argv)
     FILE *error_file = NULL;
     gregorio_file_format input_format = FORMAT_UNSET;
     gregorio_file_format output_format = FORMAT_UNSET;
-    char verb_mode = 0;
+    gregorio_verbosity verb_mode = 0;
+    bool point_and_click = false;
+    char *point_and_click_filename = NULL;
     int number_of_options = 0;
     int option_index = 0;
     static struct option long_options[] = {
@@ -251,7 +303,8 @@ int main(int argc, char **argv)
         {"version", 0, 0, 'V'},
         {"licence", 0, 0, 'L'},
         {"verbose", 0, 0, 'v'},
-        {"all-warnings", 0, 0, 'W'}
+        {"all-warnings", 0, 0, 'W'},
+        {"point-and-click", 0, 0, 'p'},
     };
     gregorio_score *score = NULL;
 
@@ -262,7 +315,7 @@ int main(int argc, char **argv)
     setlocale(LC_CTYPE, "C");
 
     while (1) {
-        c = getopt_long(argc, argv, "o:SF:l:f:shOLVvW",
+        c = getopt_long(argc, argv, "o:SF:l:f:shOLVvWp",
                         long_options, &option_index);
         if (c == -1)
             break;
@@ -382,6 +435,14 @@ int main(int argc, char **argv)
             print_licence();
             exit(0);
             break;
+        case 'p':
+            if (point_and_click) {
+                fprintf(stderr,
+                        "warning: point-and-click option passed two times\n");
+                break;
+            }
+            point_and_click = true;
+            break;
         case '?':
             break;
         default:
@@ -482,7 +543,13 @@ int main(int argc, char **argv)
     }
 
     // we always have input_file or input_file_name
-    if (!input_file) {
+    if (input_file) {
+        if (point_and_click) {
+            fprintf(stderr,
+                    "warning: disabling point-and-click since reading from stdin\n");
+            point_and_click = false;
+        }
+    } else {
         input_file = fopen(input_file_name, "r");
         if (!input_file) {
             fprintf(stderr, "error: can't open file %s for reading\n",
@@ -490,6 +557,10 @@ int main(int argc, char **argv)
             exit(-1);
         }
         gregorio_set_file_name(basename(input_file_name));
+        if (point_and_click) {
+            point_and_click_filename = encode_point_and_click_filename(
+                    input_file_name);
+        }
     }
 
     if (!error_file_name) {
@@ -537,7 +608,7 @@ int main(int argc, char **argv)
         gabc_write_score(output_file, score);
         break;
     case GTEX:
-        gregoriotex_write_score(output_file, score);
+        gregoriotex_write_score(output_file, score, point_and_click_filename);
         break;
     case DUMP:
         dump_write_score(output_file, score);
@@ -550,6 +621,9 @@ int main(int argc, char **argv)
         break;
     }
     fclose(output_file);
+    if (point_and_click_filename) {
+        free(point_and_click_filename);
+    }
     gregorio_free_score(score);
     gregorio_vowel_tables_free();
     gabc_score_determination_lex_destroy();
