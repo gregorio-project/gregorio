@@ -97,6 +97,7 @@ local function mark(value)
   local marker = create_marker()
   marker.type = 100
   marker.value = value
+  marker.attr = node.current_attr()
   node.write(marker)
 end
 
@@ -749,14 +750,18 @@ local function adjust_line_height(inside_discretionary)
   end
 end
 
-local function var_brace_note_pos(brace, start_end, pos)
-  if new_var_brace_positions[cur_score_id] == nil then
-    new_var_brace_positions[cur_score_id] = {}
+local function var_brace_note_pos(brace, start_end)
+  tex.print(string.format([[\luatexlatelua{gregoriotex.late_brace_note_pos('%s', %d, %d, \number\pdflastxpos)}]], cur_score_id, brace, start_end))
+end
+
+local function late_brace_note_pos(score_id, brace, start_end, pos)
+  if new_var_brace_positions[score_id] == nil then
+    new_var_brace_positions[score_id] = {}
   end
-  if new_var_brace_positions[cur_score_id][brace] == nil then
-    new_var_brace_positions[cur_score_id][brace] = {}
+  if new_var_brace_positions[score_id][brace] == nil then
+    new_var_brace_positions[score_id][brace] = {}
   end
-  new_var_brace_positions[cur_score_id][brace][start_end] = pos
+  new_var_brace_positions[score_id][brace][start_end] = pos
 end
 
 local function var_brace_len(brace)
@@ -774,6 +779,14 @@ local function var_brace_len(brace)
     end
   end
   tex.print('2mm')
+end
+
+local function width_to_bp(width, value_if_star)
+  if width == '*' then
+    tex.print(value_if_star or '0')
+  else
+    tex.print(tex.sp(width) * 1.00375 / 65536)
+  end
 end
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
@@ -796,5 +809,7 @@ gregoriotex.direct_gabc          = direct_gabc
 gregoriotex.adjust_line_height   = adjust_line_height
 gregoriotex.var_brace_len        = var_brace_len
 gregoriotex.var_brace_note_pos   = var_brace_note_pos
+gregoriotex.late_brace_note_pos  = late_brace_note_pos
 gregoriotex.mark_translation     = mark_translation
 gregoriotex.mark_abovelinestext  = mark_abovelinestext
+gregoriotex.width_to_bp          = width_to_bp
