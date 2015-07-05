@@ -684,6 +684,31 @@ Macro to tell Gregorio\TeX\ whether the clefs should be printed or not.
 \end{argtable}
 
 
+\subsubsection{Braces}
+
+\macroname{\textbackslash gresetbracerendering}{\{\#1\}}{gregoriotex-signs.tex}
+Macro to tell Gregorio\TeX{} whether to use \MP{} or fonts to render
+braces.  \MP{} braces, the default, are tailored to better maintain
+optical line weight when stretched.  \MP{} braces are designed to
+harmonize (and thus match best) with greciliae, but they still look good
+with the other score fonts.
+
+\begin{argtable}
+  \#1 & metapost & \MP{} will be used to render braces (default)\\
+      & font     & The score font will be used to render braces
+\end{argtable}
+
+\macroname{\textbackslash grebarbracewidth}{}{gregoriotex-signs.tex}
+Returns the em-relative width of a bar brace when braces are rendered by
+\MP{} (as opposed to fonts).  The value is scaled by the gregorio score
+size factor and thus is a score-relative value with a precise (but
+obscure) mathematical meaning.  Suffice it to say that larger numbers
+make the bar brace wider and smaller numbers make the brace narrower.
+This must be a positive number, defaults to \texttt{.58879}, and
+harmonizes with the greciliae font.  This macro must be redefined should
+a different value be desired.
+
+
 \subsection{Distances}\label{distances}
 
 Each of the following distances controls some aspect of the spacing of the Gregorio\TeX\ score.  They are changed using \verb=\grechangedim=, documented above.  If the distance permits a rubber value, then the default value will indicate the stretch and shrink (even if they are zero by default).  Distances whose default value does not include a stretch or shrink may not take a rubber value.
