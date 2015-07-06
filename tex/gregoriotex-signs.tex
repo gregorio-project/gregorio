@@ -32,7 +32,7 @@
   \relax %
 }%
 
-\greusedefaultstyle%
+\gresetglyphstyle{default}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for discretionaries
@@ -1114,7 +1114,7 @@
 % #6 is a trick for bridges: if we must use a different height because of a
 %    bridge, use #6, otherwise use #1
 \def\GreHEpisemus#1#2#3#4#5#6{%
-  \ifnum\greaddhepisemusbridges=1\relax %
+  \ifgre@hepisemusbridge%
     \grehepisorline{#6}{#2}{#3}{#4}{#5}%
   \else %
     \grehepisorline{#1}{#2}{#3}{#4}{#5}%
@@ -1122,23 +1122,33 @@
   \relax %
 }%
 
+\newif\ifgre@hepisemusbridge
+\gre@hepisemusbridgetrue
+
 \def\AddHEpisemusBridges{%
-\xdef\greaddhepisemusbridges{1}%
-\relax %
+  \gre@deprecated{\protect\AddHEpisemusBridges}{\protect\gresethepisemus{bridge}}%
+  \gre@hepisemusbridgetrue%
 }%
 
 \def\RemoveHEpisemusBridges{%
-\xdef\greaddhepisemusbridges{0}%
-\relax %
+  \gre@deprecated{\protect\RemoveHepisemusBridges}{\protect\gresethepisemus{break}}%
+  \gre@hepisemusbridgefalse%
 }%
 
-\AddHEpisemusBridges%
+\def\gresethepisemus#1{%
+  \IfStrEq{#1}{bridge}%
+    {\gre@hepisemusbridgetrue}%
+    {\IfStrEq{#1}{break}%
+      {\gre@hepisemusbridgefalse}%
+      {\greerror{Unrecognized option for \protect\gresethepisemus}}%
+    }%
+}%
 
 % same but for a "bridge episemus" after the last note of a glyph (element, syllable) if the next episemus is at the same height
 % #1 is the height
 % #2 is 0 for episemus above, 1 for episemus below
 \def\GreHEpisemusBridge#1#2{%
-  \ifnum\greaddhepisemusbridges=1\relax %
+  \ifgre@hepisemusbridge%
     \ifcase#2 %
       \gre@calculate@glyphraisevalue{#1}{9}%
     \or %
@@ -1667,20 +1677,34 @@
 \def\grepunctumcavumholechar{\gregoriofont\gre@char@punctumcavumhole}%
 \def\grelineapunctumcavumholechar{\gregoriofont\gre@char@lineapunctumcavumhole}%
 
+\def\gresetpunctumcavum#1{%
+  \IfStrEq{#1}{alternate}%
+    {%
+      \grechangeglyph{PunctumCavum}{greciliae}{.caeciliae}%
+      \grechangeglyph{LineaPunctumCavum}{greciliae}{.caeciliae}%
+      \grechangeglyph{PunctumCavumHole}{greciliae}{.caeciliae}%
+      \grechangeglyph{LineaPunctumCavumHole}{greciliae}{.caeciliae}%
+    }%
+    {\IfStrEq{#1}{normal}%
+      {%
+        \greresetglyph{PunctumCavum}%
+        \greresetglyph{LineaPunctumCavum}%
+        \greresetglyph{PunctumCavumHole}%
+        \greresetglyph{LineaPunctumCavumHole}%
+      }%
+      {\greerror{Unrecognized option for \protect\gresetpunctumcavum}}%
+    }%
+}%	
+
+
 \def\UseAlternatePunctumCavum{%
-\grechangeglyph{PunctumCavum}{greciliae}{.caeciliae}%
-\grechangeglyph{LineaPunctumCavum}{greciliae}{.caeciliae}%
-\grechangeglyph{PunctumCavumHole}{greciliae}{.caeciliae}%
-\grechangeglyph{LineaPunctumCavumHole}{greciliae}{.caeciliae}%
-\relax %
+  \gre@deprecated{\protect\UseAlternatePunctumCavum}{\protect\gresetpuncutmcavum{alternate}}%
+  \gresetpunctumcavum{alternate}%
 }%
 
 \def\UseNormalPunctumCavum{%
-\greresetglyph{PunctumCavum}%
-\greresetglyph{LineaPunctumCavum}%
-\greresetglyph{PunctumCavumHole}%
-\greresetglyph{LineaPunctumCavumHole}%
-\relax %
+  \gre@deprecated{\protect\UseNormalPunctumCavum}{\protect\gresetpuncutmcavum{normal}}%
+  \gresetpunctumcavum{normal}%
 }%
 
 \def\GrePunctumCavum#1#2#3#4#5#6{%

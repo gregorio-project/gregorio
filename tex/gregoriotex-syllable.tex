@@ -464,27 +464,42 @@
 
 %% options about clivis centering scheme. Clivis are usually aligned by their
 %% center, which is different from most neumes. Gregorio has three modes:
-%% 1. always align clivis this way
-%% 2. never align clivis this way, align on first punctum
-%% 3. align clivis this way, except if:
+%% 0. always align clivis this way
+%% 1. never align clivis this way, align on first punctum
+%% 2. align clivis this way, except if:
 %%    - notes would go left of text
 %%   - consonants after vowels are larger than \gre@dimen@clivisalignmentmin
 \newcount\gre@clivisalignment%
+%% by default we use the mode 2, it seems closest to Solesmes books
+\gre@clivisalignment=2%
+
+
+\def\gresetclivisalignment#1{%
+  \IfStrEq{#1}{always}%
+    {\global\gre@clivisalignment=0\relax}%
+    {\IfStrEq{#1}{never}%
+      {\global\gre@clivisalignment=1\relax}%
+      {\IfStrEq{#1}{special}%
+        {\global\gre@clivisalignment=2\relax}%
+        {\greerror{Unrecognized option for \protect\gresetclivisalignment}}%
+      }%
+    }%
+}%
 
 \def\clivisalignmentalways{%
-  \global\gre@clivisalignment=0\relax %
+  \gre@deprecated{\protect\clivisalignmentalways}{\protect\gresetclivisalignment{always}}%
+  \gresetclivisalignment{always}%
 }%
 
 \def\clivisalignmentnever{%
-  \global\gre@clivisalignment=1\relax %
+  \gre@deprecated{\protect\clivisalignmentnever}{\protect\gresetclivisalignment{never}}%
+  \gresetclivisalignment{never}%
 }%
 
 \def\clivisalignmentspecial{%
-  \global\gre@clivisalignment=2\relax %
+  \gre@deprecated{\protect\clivisalignmentspecial}{\protect\gresetclivisalignment{special}}%
+  \gresetclivisalignment{special}%
 }%
-
-%% by default we use the 3rd mode, it seems closest to Solesmes books
-\clivisalignmentspecial%
 
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : the first letters of the syllable, that don't count for the alignment

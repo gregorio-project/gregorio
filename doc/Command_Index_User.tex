@@ -433,6 +433,44 @@ will be scaled.
   & string & The name of the glyph to use.
 \end{argtable}
 
+\macroname{\textbackslash gresethepisemus}{\{\#1\}}{gregoriotex-signs.tex}
+Determines whether Gregorio\TeX\ should join (bridge) horizontal episema on adjacent notes.
+
+\begin{argtable}
+  \#1 & bridge & Adjacent horizontal episema are joined together (default).\\
+  & break & Adjacent horizontal episema are not joined.
+\end{argtable}
+
+\macroname{\textbackslash gresetpunctumcavum}{\{\#1\}}{gregoriotex-signs.tex}
+A shortcut for switching to the alternative punctum cavum and back.
+
+\begin{argtable}
+  \#1 & alternate & use the alternate punctum cavum\\
+  & normal & use the normal punctum cavum
+\end{argtable}
+
+Using the alternate punctum cavum is the equivalent of issuing the following commands:
+
+\begin{latexcode}
+  \grechangeglyph{PunctumCavum}{greciliae}{.caeciliae}%
+  \grechangeglyph{LineaPunctumCavum}{greciliae}{.caeciliae}%
+  \grechangeglyph{PunctumCavumHole}{greciliae}{.caeciliae}%
+  \grechangeglyph{LineaPunctumCavumHole}{greciliae}{.caeciliae}%
+\end{latexcode}
+
+\macroname{\textbackslash gresetglyphstyle}{\{\#1\}}{gregoriotex-chars.tex}
+Gregorio\TeX\ supports several glyph styles which can be changed with this macro.  These style replace some non-note glyphs with alternatives.
+
+\begin{argtable}
+  \#1 & default & Use the default style\\
+  & medicaea & Use a Medicaea style\\
+  & hufnagel & Use the hufnagel style\\
+  & mensural & Use the mensural style
+\end{argtable}
+
+%%%  Should there be a table here or in the appendix which shows the affected glyphs in each of the styles?
+
+
 \subsubsection[Barred letters (A/, etc.)]{Barred letters (\Abar, etc.)}
 
 \macroname{\textbackslash gresimpledefbarredsymbol}{\{\#1\}\{\#2\}}{gregoriotex-symbols.tex}
@@ -682,6 +720,20 @@ Macro to tell Gregorio\TeX\ whether the clefs should be printed or not.
   \#1 & visible & Clefs will be printed (default)\\
   & invisible & Clefs will not be printed
 \end{argtable}
+
+
+\subsubsection{Clivis Alignment}
+Since the center of the clivis is different from most neumes, Gregorio\TeX\ supports several behaviors for determining how to align it with its lyrics.
+
+\macroname{\textbackslash gresetclivisalignment}{\{\#1\}}{gregoriotex-syllable.tex}
+Macro to determine the method used for aligning the clivis with its lyrics.
+
+\begin{argtable}
+  \#1 & always & Align on the real center of the clivis\\
+  & never & align on the center of the first punctum in the clivis\\
+  & special & align on the real center of the clivis except when (1) notes would go left of text or (2) - consonants after vowels are larger than \verb=\gre@dimen@clivisalignmentmin= (default)
+\end{argtable}
+
 
 
 \subsubsection{Braces}
