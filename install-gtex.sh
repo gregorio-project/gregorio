@@ -58,10 +58,13 @@
 #
 
 TEXFILES=(tex/*.tex tex/gregorio*.sty tex/*.lua tex/*.dat)
-TTFFILES=(gregorio.ttf greciliae.ttf parmesan.ttf greextra.ttf gregall.ttf gresgmodern.ttf)
+TTFFILES=(gregorio.ttf greciliae.ttf parmesan.ttf gregorio-op.ttf
+          greciliae-op.ttf parmesan-op.ttf greextra.ttf gregall.ttf
+          gresgmodern.ttf)
 DOCFILES=(fonts/README.md)
 FONTSRCFILES=(Makefile gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd
-              greextra.sfd squarize.py convertsfdtottf.py gregall.sfd gresgmodern.sfd)
+              greextra.sfd squarize.py convertsfdtottf.py gregall.sfd
+              gresgmodern.sfd)
 
 NAME=${NAME:-gregoriotex}
 FORMAT=${FORMAT:-luatex}

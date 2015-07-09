@@ -89,6 +89,7 @@ DEMINUTUS_VERTICAL_SHIFT=10
 oldfont = None
 newfont = None
 font_name = None
+subspecies = None
 all_glyph_names = {}
 
 def usage():
@@ -103,7 +104,7 @@ Usage:
 
 def main():
     "Main function"
-    global oldfont, newfont, font_name
+    global oldfont, newfont, font_name, subspecies
     version_script_file = os.path.join(sys.path[0], '../VersionManager.py')
     proc = subprocess.Popen([version_script_file, '-c'], stdout=subprocess.PIPE, universal_newlines=True)
     version = proc.stdout.read().strip('\n')
@@ -113,7 +114,12 @@ def main():
         # print help information and exit:
         usage()
         sys.exit(2)
-    font_name = args[0]
+    font_base = args[0]
+    if len(args) > 1:
+        font_name = '%s-%s' % (font_base, args[1])
+        subspecies = '_%s' % args[1]
+    else:
+        font_name = font_base
     outfile = "%s.ttf" % font_name
     for opt, arg in opts:
         if opt in ("-h", "--help"):
@@ -126,7 +132,7 @@ def main():
         usage()
         sys.exit(2)
     # the fonts
-    oldfont = fontforge.open("%s-base.sfd" % font_name)
+    oldfont = fontforge.open("%s-base.sfd" % font_base)
     newfont = fontforge.font()
     # newfont.encoding = "UnicodeFull"
     newfont.encoding = "ISO10646-1"
@@ -134,7 +140,7 @@ def main():
     newfont.fullname = "%s" % font_name
     newfont.familyname = "%s" % font_name
     newfont.version = version
-    if font_name == "greciliae":
+    if font_base == "greciliae":
         newfont.copyright = """Greciliae font
 Copyright (C) 2007 Matthew Spencer with Reserved Font Name "Caeciliae",
 Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
@@ -143,13 +149,13 @@ with Reserved Font Name "Greciliae".
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is also available with a FAQ at:
 http://scripts.sil.org/OFL"""
-    elif font_name == "gregorio":
+    elif font_base == "gregorio":
         newfont.copyright = """Font named "gregorio"
 Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
 This file is part of Gregorio.
 
 """+GPLV3
-    elif font_name == "parmesan":
+    elif font_base == "parmesan":
         newfont.copyright = """LilyPond's pretty-but-neat music font, adapted to the Gregorio Project.
 Copyright (C) 2002-2006 Juergen Reuter <reuter@ipd.uka.de>
 Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
@@ -270,6 +276,8 @@ DIRECT_GLYPH_NAMES = [
     'BarBrace',
     'RoundBraceDown',
     'OriscusDeminutus',
+    'VirgaReversaAscendens',
+    'VirgaReversaLongqueueAscendens',
     'VirgaReversaDescendens',
     'VirgaReversaLongqueueDescendens',
     'PunctumSmall',
@@ -282,19 +290,30 @@ DIRECT_GLYPH_NAMES = [
     'SalicusOriscus',
 ]
 
-def glyph_exists(glyph_name, font):
+GLYPH_EXISTS = {}
+
+def glyph_exists(glyph_name):
     "returns if glyph named glyphName exists in font (boolean)"
+    global GLYPH_EXISTS, oldfont
+    if glyph_name in GLYPH_EXISTS:
+        return GLYPH_EXISTS[glyph_name]
     result = True
     try:
-        font.selection.select(glyph_name)
+        oldfont.selection.select(glyph_name)
     except:
         result = False
+    GLYPH_EXISTS[glyph_name] = result
     return result
+
+def subspecies_of(glyph_name):
+    if subspecies and glyph_exists(glyph_name + subspecies):
+        return glyph_name + subspecies
+    else:
+        return glyph_name
 
 def copy_existing_glyph(glyph_name):
     "copies the named glyph, if it exists, and returns whether it was copied"
-    global oldfont
-    if glyph_exists(glyph_name, oldfont):
+    if glyph_exists(glyph_name):
         complete_paste(glyph_name)
         set_glyph_name(glyph_name)
         return True
@@ -312,8 +331,8 @@ def initialize_glyphs():
     DIRECT_GLYPH_NAMES.sort()
     for name in DIRECT_GLYPH_NAMES:
         new_glyph()
-        if glyph_exists(name, oldfont):
-            oldfont.selection.select(name)
+        if glyph_exists(name):
+            oldfont.selection.select(subspecies_of(name))
             oldfont.copy()
             newfont.paste()
             set_glyph_name(name)
@@ -328,9 +347,9 @@ def copy_variant_glyphs():
     for glyph in oldfont.glyphs():
         name = glyph.glyphname
         if (glyph.isWorthOutputting() and name.find(".") > 0 and
-                name not in COMMON_DIRECT_VARIANTS):
+                name.find("_") == -1 and name not in COMMON_DIRECT_VARIANTS):
             new_glyph()
-            oldfont.selection.select(glyph)
+            oldfont.selection.select(subspecies_of(name))
             oldfont.copy()
             newfont.paste()
             set_glyph_name(name)
@@ -339,8 +358,8 @@ def get_width(widths, glyphName):
     "Get length of glyph glyphName in the base font."
     global oldfont
     if glyphName not in widths:
-        if glyph_exists(glyphName, oldfont):
-            widths[glyphName] = oldfont[glyphName].width
+        if glyph_exists(glyphName):
+            widths[glyphName] = oldfont[subspecies_of(glyphName)].width
         else:
             widths[glyphName] = 0
     return widths[glyphName]
@@ -395,7 +414,7 @@ L_INITIO_DEBILIS_DESCENDENS = 'InitioDebilisDescendens'
 def simple_paste(src):
     "Copy and paste a glyph."
     global oldfont, newfont, glyphnumber
-    oldfont.selection.select(src)
+    oldfont.selection.select(subspecies_of(src))
     oldfont.copy()
     newfont.selection.select('u%05x' % glyphnumber)
     newfont.pasteInto()
@@ -403,7 +422,7 @@ def simple_paste(src):
 def complete_paste(src):
     "Copy and paste a glyph."
     global oldfont, newfont, glyphnumber
-    oldfont.selection.select(src)
+    oldfont.selection.select(subspecies_of(src))
     oldfont.copy()
     newfont.selection.select('u%05x' % glyphnumber)
     newfont.paste()
@@ -420,6 +439,7 @@ def simplify():
 def paste_and_move(src, xdimen, ydimen):
     "Pastes the src glyph into dst, and moves it with horiz and vert offsets."
     global oldfont, newfont, glyphnumber
+    src = subspecies_of(src)
     oldfont[src].transform(psMat.translate(xdimen, ydimen))
     oldfont.selection.select(src)
     oldfont.copy()
@@ -473,11 +493,10 @@ def write_deminutus(widths, i, j, length=0, tosimplify=0, firstbar=1):
     time. Sometimes we have to simplify before building the last glyph
     (tosimplify=1), and length is the offset.
     """
-    global oldfont
     first_glyph = 'mademinutus'
     if firstbar == 1:
         first_glyph = 'mdeminutus'
-        if j == 1 and glyph_exists('mdeminutusam1', oldfont):
+        if j == 1 and glyph_exists('mdeminutusam1'):
             first_glyph = 'mdeminutusam1'
     elif firstbar == 0:
         first_glyph = 'mnbdeminutus'
@@ -535,7 +554,6 @@ HEPISEMUS_GLYPHS = {
 
 def hepisemus(widths):
     "Creates horizontal episemae."
-    global oldfont
     message("horizontal episemus")
     for target, source in HEPISEMUS_GLYPHS.items():
         write_hepisemus(widths, get_width(widths, source), target)
@@ -545,7 +563,7 @@ def hepisemus(widths):
         write_hepisemus(widths, get_width(widths, "porrectus%d"%i),
                 'HEpisemusPorrectus%s' % AMBITUS[i], reduction)
     for i in range(1, MAX_INTERVAL+1):
-        if glyph_exists("porrectusam1%d"%i, oldfont):
+        if glyph_exists("porrectusam1%d"%i):
             write_hepisemus(widths, get_width(widths, "porrectusam1%d"%i),
                     'HEpisemusPorrectusAmOne%s' % AMBITUS[i], reduction)
         else:
@@ -592,7 +610,6 @@ def pes(widths):
 
 def write_pes(widths, i, first_glyph, shape, lique=L_NOTHING):
     "Writes the pes glyphs."
-    global oldfont
     new_glyph()
     glyph_name = '%s%s%s' % (shape, AMBITUS[i], lique)
     if copy_existing_glyph(glyph_name):
@@ -1016,17 +1033,16 @@ def porrectus(widths):
 
 def write_porrectus(widths, i, j, last_glyph, with_bar, shape, lique=L_NOTHING):
     "Writes the porrectus glyphs."
-    global oldfont
     new_glyph()
     glyph_name = '%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], lique)
     if copy_existing_glyph(glyph_name):
         return
     first_glyph = "porrectus%d" % i
-    if j == 1 and glyph_exists("porrectusam1%d" % i, oldfont):
+    if j == 1 and glyph_exists("porrectusam1%d" % i):
         first_glyph = "porrectusam1%d" % i
     if last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL':
         first_glyph = "porrectusflexus%d" % i
-    if not glyph_exists(first_glyph, oldfont):
+    if not glyph_exists(first_glyph):
         return
     if with_bar:
         write_first_bar(i)
@@ -1141,7 +1157,6 @@ def porrectusflexus(widths):
 def write_porrectusflexus(widths, i, j, k, last_glyph, with_bar,
                           shape, lique=L_NOTHING):
     "Writes the porrectusflexus glyphs."
-    global oldfont
     new_glyph()
     glyph_name = '%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique)
     if copy_existing_glyph(glyph_name):
@@ -1150,7 +1165,7 @@ def write_porrectusflexus(widths, i, j, k, last_glyph, with_bar,
         first_glyph = "porrectusflexusnb%d" % i
     else:
         first_glyph = "porrectusflexus%d" % i
-    if not glyph_exists(first_glyph, oldfont):
+    if not glyph_exists(first_glyph):
         return
     if with_bar:
         write_first_bar(i)
@@ -1451,17 +1466,16 @@ def torculusresupinus(widths):
 def write_torculusresupinus(widths, i, j, k, first_glyph, last_glyph, shape,
                             lique=L_NOTHING):
     "Writes the torculusresupinus glyphs."
-    global oldfont
     new_glyph()
     glyph_name = '%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique)
     if copy_existing_glyph(glyph_name):
         return
     middle_glyph = "porrectus%d" % j
-    if k == 1 and glyph_exists("porrectusam1%d" % j, oldfont):
+    if k == 1 and glyph_exists("porrectusam1%d" % j):
         middle_glyph = "porrectusam1%d" % j
     if last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL':
         middle_glyph = "porrectusflexus%d" % j
-    if not glyph_exists(middle_glyph, oldfont):
+    if not glyph_exists(middle_glyph):
         return
     if i == 1 and first_glyph != 'idebilis':
         if first_glyph == 'PunctumLineTR':
@@ -1557,7 +1571,6 @@ def scandicus(widths):
 
 def write_scandicus(widths, i, j, last_glyph, lique=L_NOTHING):
     "Writes the scandicus glyphs."
-    global oldfont
     new_glyph()
     final_vertical_shift = 0
     glyph_name = '%s%s%s%s' % (S_SCANDICUS, AMBITUS[i], AMBITUS[j], lique)
@@ -1584,7 +1597,7 @@ def write_scandicus(widths, i, j, last_glyph, lique=L_NOTHING):
         length = get_width(widths, 'PunctumLineTR') - get_width(widths, 'line2')
         write_line(i, length, BASE_HEIGHT)
         second_glyph = 'msdeminutus'
-        if j == 1 and glyph_exists('msdeminutusam1', oldfont):
+        if j == 1 and glyph_exists('msdeminutusam1'):
             second_glyph = 'msdeminutusam1'
         if j == 1:
             final_vertical_shift = DEMINUTUS_VERTICAL_SHIFT

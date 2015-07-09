@@ -206,18 +206,28 @@ static char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
             return "VirgaLongqueue";
         }
     case S_VIRGA_REVERSA:
-        if (note->u.note.liquescentia == L_AUCTUS_DESCENDENS) {
+        switch (note->u.note.liquescentia) {
+        case L_AUCTUS_ASCENDENS:
+            if (is_shortqueue(note->u.note.pitch, glyph, element)) {
+                return "VirgaReversaAscendens";
+            } else {
+                return "VirgaReversaLongqueueAscendens";
+            }
+            break;
+        case L_AUCTUS_DESCENDENS:
             if (is_shortqueue(note->u.note.pitch, glyph, element)) {
                 return "VirgaReversaDescendens";
             } else {
                 return "VirgaReversaLongqueueDescendens";
             }
-        } else {
+            break;
+        default:
             if (is_shortqueue(note->u.note.pitch, glyph, element)) {
                 return "VirgaReversa";
             } else {
                 return "VirgaReversaLongqueue";
             }
+            break;
         }
     case S_ORISCUS:
         *type = AT_ORISCUS;
