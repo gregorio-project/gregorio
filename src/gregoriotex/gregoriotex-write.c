@@ -166,8 +166,10 @@ static grestyle_style gregoriotex_ignore_style = ST_NO_STYLE;
 static grestyle_style gregoriotex_next_ignore_style = ST_NO_STYLE;
 
 static char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
-        gregorio_glyph *glyph, gregorio_element *element, gtex_alignment * type)
+        gregorio_glyph *glyph, gregorio_element *element, gtex_alignment *type)
 {
+    static char buf[128], *name;
+
     if (!note) {
         gregorio_message(_("called with NULL pointer"),
                 "gregoriotex_determine_note_glyph_name", VERBOSITY_ERROR, 0);
@@ -202,32 +204,33 @@ static char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
     case S_VIRGA:
         if (is_shortqueue(note->u.note.pitch, glyph, element)) {
             return "Virga";
-        } else {
-            return "VirgaLongqueue";
         }
+        return "VirgaLongqueue";
     case S_VIRGA_REVERSA:
         switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
             if (is_shortqueue(note->u.note.pitch, glyph, element)) {
-                return "VirgaReversaAscendens";
+                name = "VirgaReversaAscendens";
             } else {
-                return "VirgaReversaLongqueueAscendens";
+                name = "VirgaReversaLongqueueAscendens";
             }
-            break;
+            if (note->u.note.pitch - LOWEST_PITCH == 3) {
+                // if we're on the 'd' line, the queue could be long or short
+                snprintf(buf, sizeof buf,
+                        "VirgaReversaAscendensOnDLine{\\GreCP%s}", name);
+                return buf;
+            }
+            return name;
         case L_AUCTUS_DESCENDENS:
             if (is_shortqueue(note->u.note.pitch, glyph, element)) {
                 return "VirgaReversaDescendens";
-            } else {
-                return "VirgaReversaLongqueueDescendens";
             }
-            break;
+            return "VirgaReversaLongqueueDescendens";
         default:
             if (is_shortqueue(note->u.note.pitch, glyph, element)) {
                 return "VirgaReversa";
-            } else {
-                return "VirgaReversaLongqueue";
             }
-            break;
+            return "VirgaReversaLongqueue";
         }
     case S_ORISCUS:
         *type = AT_ORISCUS;
@@ -244,16 +247,14 @@ static char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
     case S_ORISCUS_SCAPUS:
         if (is_shortqueue(note->u.note.pitch, glyph, element)) {
             return "OriscusScapus";
-        } else {
-            return "OriscusScapusLongqueue";
         }
+        return "OriscusScapusLongqueue";
     case S_STROPHA:
         *type = AT_STROPHA;
         if (glyph->u.notes.liquescentia == L_AUCTA) {
             return "StrophaAucta";
-        } else {
-            return "Stropha";
         }
+        return "Stropha";
     case S_STROPHA_AUCTA:
         *type = AT_STROPHA;
         return "StrophaAucta";

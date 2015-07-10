@@ -340,13 +340,17 @@ Macro for setting whether the staff lines behind an alternation (\ie, an acciden
 \subsubsection{Score Font}
 Gregorio\TeX\ currently supports 3 different fonts for the glyphs in a score (neumes, clefs, alterations, \etc): Greciliae (a customized version of Caeciliae by Fr. Matthew Spencer, OSJ), Gregorio, and Parmesan (developed for Lilypond by Juergen Reuter).
 
-\macroname{\textbackslash gresetgregoriofont}{\{\#1\}}{gregoriotex-main.tex}
-Set the font used for the neumes.
+\macroname{\textbackslash gresetgregoriofont}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
+Set the font used for the neumes.  The optional argument \texttt{[\#1]}
+may be used to specify an alternate font/rule set.  Currently, the only
+available alternate font/rule set is \texttt{op} for Dominican neumes.
 
 \begin{argtable}
-  \#1 & greciliae & Use the Greciliae font (default).\\
-  & gregorio & Use the Gregorio font.\\
-  & parmesan & Use the Parmesan font.\\
+  \#1 & \textit{(omitted)} & Use the normal font and rule set (default).\\
+      & op                 & Use the alternate Dominican font/rule set.\\
+  \#2 & greciliae          & Use the Greciliae font (default).\\
+      & gregorio           & Use the Gregorio font.\\
+      & parmesan           & Use the Parmesan font.\\
 \end{argtable}
 
 

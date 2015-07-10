@@ -57,7 +57,7 @@
 \usepackage{pdflscape}
 \usepackage{hhline}
 \usepackage{listings}
-\RequireLuaModule{GregorioRef}
+\directlua{dofile('GregorioRef.lua')}
 
 \newcommand*{\eg}{e.g.\@\xspace}
 \newcommand*{\nb}{n.b.\@\xspace}
@@ -85,6 +85,9 @@
 \font\greciliae = {name:greciliae} at 1000000 sp\relax
 \font\gregorio = {name:gregorio} at 1000000 sp\relax
 \font\parmesan = {name:parmesan} at 1000000 sp\relax
+\font\greciliaeOp = {name:greciliae-op} at 1000000 sp\relax
+\font\gregorioOp = {name:gregorio-op} at 1000000 sp\relax
+\font\parmesanOp = {name:parmesan-op} at 1000000 sp\relax
 \font\greextra = {name:greextra} at 12 pt\relax
 \newcommand{\excluded}[1]{{\tiny\itshape #1}}
 
