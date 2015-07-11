@@ -87,7 +87,7 @@
     {\gre@showcleftrue}%
     {\IfStrEq{#1}{invisible}%
       {\gre@showcleffalse}
-      {\greerror{Unrecognized option for \protect\gresetclef}}%
+      {\gre@error{Unrecognized option for \protect\gresetclef}}%
     }%
 }%
 
@@ -456,7 +456,7 @@
   {\gre@drawbracesfalse}%
   {\IfStrEq{#1}{metapost}%
     {\gre@drawbracestrue}%
-    {\greerror{Unrecognized option for \protect\gresetbracerendering}}%
+    {\gre@error{Unrecognized option for \protect\gresetbracerendering}}%
   }%
 }%
 
@@ -1140,7 +1140,7 @@
     {\gre@hepisemusbridgetrue}%
     {\IfStrEq{#1}{break}%
       {\gre@hepisemusbridgefalse}%
-      {\greerror{Unrecognized option for \protect\gresethepisemus}}%
+      {\gre@error{Unrecognized option for \protect\gresethepisemus}}%
     }%
 }%
 
@@ -1540,7 +1540,7 @@
     {\gre@hidepclinesfalse}%
     {\IfStrEq{#1}{invisible}%
       {\gre@hidepclinestrue}%
-      {\greerror{Unrecognized option for \protect\gresetlinesbehindpunctumcavum}}%
+      {\gre@error{Unrecognized option for \protect\gresetlinesbehindpunctumcavum}}%
     }%
 }%
 
@@ -1565,7 +1565,7 @@
     {\gre@hidealtlinesfalse}%
     {\IfStrEq{#1}{invisible}%
       {\gre@hidealtlinestrue}%
-      {\greerror{Unrecognized option for \protect\gresetlinesbehindalteration}}%
+      {\gre@error{Unrecognized option for \protect\gresetlinesbehindalteration}}%
     }%
 }%
 
@@ -1692,7 +1692,7 @@
         \greresetglyph{PunctumCavumHole}%
         \greresetglyph{LineaPunctumCavumHole}%
       }%
-      {\greerror{Unrecognized option for \protect\gresetpunctumcavum}}%
+      {\gre@error{Unrecognized option for \protect\gresetpunctumcavum}}%
     }%
 }%	
 

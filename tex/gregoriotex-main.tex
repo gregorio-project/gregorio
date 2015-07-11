@@ -21,10 +21,10 @@
 
 \ifluatex%
   \ifnum\luatexversion<76%
-    \greerror{Error: this document must be compiled with LuaTeX (lualatex) 0.76 or later}%
+    \gre@error{Error: this document must be compiled with LuaTeX (lualatex) 0.76 or later}%
   \fi%
 \else%
-  \greerror{Error: this document must be compiled with LuaTeX (lualatex)}%
+  \gre@error{Error: this document must be compiled with LuaTeX (lualatex)}%
 \fi%
 
 \def\gre@debugmsg#1#2{%
@@ -32,7 +32,7 @@
     %false
     {\IfStrEq{#1}{all}%
       %true
-      {\greerror{Debug error: ‘all’ is not a permitted keyword}}%
+      {\gre@error{Debug error: ‘all’ is not a permitted keyword}}%
       %false
       {\IfStrEq{\gre@debug}{all}%
         %true
@@ -55,7 +55,7 @@
   \ifgre@deprecated%
     \gre@warning{#1\space is deprecated.\MessageBreak Use #2\space instead}%
   \else%
-    \greerror{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+    \gre@error{#1\space is deprecated.\MessageBreak Use #2\space instead}%
   \fi%
   \relax%
 }%
@@ -104,7 +104,7 @@
 
 \def\gre@declarefileversion#1#2{%
   \IfStrEq*{#2}{\gre@gregorioversion}{}{%else
-    \greerror{uncoherent file versions: gregoriotex-main.tex is in version \number\gre@gregorioversion \space\space while #1 is in version \number#2}}%
+    \gre@error{uncoherent file versions: gregoriotex-main.tex is in version \number\gre@gregorioversion \space\space while #1 is in version \number#2}}%
 }%
 
 % Macro called by scores.
@@ -115,7 +115,7 @@
 \def\GregorioTeXAPIVersion#1{%
   \StrBefore{\gre@gregorioversion}{.}[\gre@gregoriomajorversion]%
   \IfBeginWith{#1}{\gre@gregoriomajorversion}{\relax}{%else
-    \greerror{GregorioTeX is in version \gre@gregorioversion \space\space while a score you included requires version #1. Please recompile your scores}}%
+    \gre@error{GregorioTeX is in version \gre@gregorioversion \space\space while a score you included requires version #1. Please recompile your scores}}%
 }%
 
 \RequireLuaModule{gregoriotex}%
@@ -129,7 +129,7 @@
 
 % Test to make sure that gregoriotex.lua is of the same version.
 \IfStrEq*{\gre@gregoriotexluaversion}{\gre@gregorioversion}{}{%else
-    \greerror{uncoherent file versions: gregoriotex-main.tex is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
+    \gre@error{uncoherent file versions: gregoriotex-main.tex is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -429,7 +429,7 @@
     \let\gre@rightfill\hfil%
     \let\gre@leftfill\hfil%
   \else%
-    \greerror{Unrecognzied alignment option for \protect\greannotation}%
+    \gre@error{Unrecognzied alignment option for \protect\greannotation}%
   \fi\fi\fi%
   % first we determine the widest box
   \grewidthof{#2}%
@@ -630,7 +630,7 @@
     {\gre@showlinestrue}%
     {\IfStrEq{#1}{invisible}%
       {\gre@showlinesfalse}%
-      {\greerror{Unrecognized option for \protect\gresetlines}}%
+      {\gre@error{Unrecognized option for \protect\gresetlines}}%
     }%
 }
 
@@ -802,7 +802,7 @@
     {\gre@translationcenteringfalse}%
     {\IfStrEq{#1}{center}%
       {\gre@translationcenteringtrue}%
-      {\greerror{Unrecognized option for \protect\gresettranslationcentering}}%
+      {\gre@error{Unrecognized option for \protect\gresettranslationcentering}}%
     }%
 }%
 
@@ -824,7 +824,7 @@
     {\gre@breakintranslationtrue}%
     {\IfStrEq{#1}{prohibit}%
       {\gre@breakintranslationfalse}%
-      {\greerror{Unrecognized option in \protect\gresetbreakintranslation}}%
+      {\gre@error{Unrecognized option in \protect\gresetbreakintranslation}}%
     }%
 }%
 
@@ -894,7 +894,7 @@
     {\gre@justifylastlinetrue}%
     {\IfStrEq{#1}{ragged}%
       {\gre@justifylastlinefalse}%
-      {\greerror{Unrecognized option for \protect\gresetlastline}}%
+      {\gre@error{Unrecognized option for \protect\gresetlastline}}%
     }%
 }%
 
@@ -905,7 +905,7 @@
     {\gre@variableheightexpansion=0\relax }%
     {\IfStrEq{#1}{variable}%
       {\gre@variableheightexpansion=1\relax }%
-      {\greerror{Unrecognized option for \protect\gresetlineheightexpansion}}%
+      {\gre@error{Unrecognized option for \protect\gresetlineheightexpansion}}%
     }%
 }%
 
@@ -1063,7 +1063,7 @@
     {\gre@eolshiftsenabledtrue}%
     {\IfStrEq{#1}{disable}%
       {\gre@eolshiftsenabledfalse}%
-      {\greerror{Unrecognized option in \protect\greseteolshifts}}%
+      {\gre@error{Unrecognized option in \protect\greseteolshifts}}%
     }%
 }%
 
@@ -1089,7 +1089,7 @@
     }%
     {\IfStrEq{#1}{auto}%
       {\gre@blockeolcustosfalse}%
-      {\greerror{Unrecognized option for \protect\greseteolcustos}}%
+      {\gre@error{Unrecognized option for \protect\greseteolcustos}}%
     }%
 }%
 
@@ -1271,7 +1271,7 @@
     {\gre@euouae@implies@nlbafalse}%
     {\IfStrEq{#1}{prohibit}%
       {\gre@euouae@implies@nlbatrue}%
-      {\greerror{Unrecognized option in \protect\gresetbreakineuouae}}%
+      {\gre@error{Unrecognized option in \protect\gresetbreakineuouae}}%
     }%
 }%
 
@@ -1378,7 +1378,7 @@
 
 \def\grechangestaffsize#1{%
   \ifnum#1<0\relax%
-    \greerror{Staff size must be a positive integer.}%
+    \gre@error{Staff size must be a positive integer.}%
   \else%
     \gre@changedimenfactor{\grefactor}{#1}%
     \global\grefactor=#1\relax %
@@ -1407,7 +1407,7 @@
   \IfStrEq{#1}{force}{\gdef\gre@compilegabc{2}}{%
     \IfStrEq{#1}{auto}{\gdef\gre@compilegabc{1}}{%
       \IfStrEq{#1}{never}{\gdef\gre@compilegabc{0}}{%
-        \greerror{Unrecognized argument for \protect\gresetcompilegabc.}%
+        \gre@error{Unrecognized argument for \protect\gresetcompilegabc.}%
       }%
     }%
   }%
@@ -1495,7 +1495,7 @@
         \gre@debugmsg{compile}{Override auto compiling #2}%
         \directlua{gregoriotex.include_score([[#2]], nil)}%
       \else%
-        \greerror{Unrecognized option [#1] for \protect\includescore}%
+        \gre@error{Unrecognized option [#1] for \protect\includescore}%
       \fi%
     \fi%
   \fi%
@@ -1567,7 +1567,7 @@
     {\global\let\GreHyph\grenormalhyph}%
     {\IfStrEq{#1}{zero}%
       {\global\let\GreHyph\GreZeroHyph}%
-      {\greerror{Unrecognized option for \protect\greseteolhyphen}}%
+      {\gre@error{Unrecognized option for \protect\greseteolhyphen}}%
     }%
 }%
 
@@ -1587,7 +1587,7 @@
     {\global\grechangedim{maximumspacewithoutdash}{-16383.99999pt}{0}}%
     {\IfStrEq{#1}{auto}%
       {\global\grechangedim{maximumspacewithoutdash}{0.02 cm}{1}}%
-      {\greerror{Unrecognized option in \protect\gresethyphen}}%
+      {\gre@error{Unrecognized option in \protect\gresethyphen}}%
     }%
 }%
 

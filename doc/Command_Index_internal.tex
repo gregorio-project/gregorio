@@ -7,7 +7,7 @@ process the commands listed above.  They should not appear in any user
 document and are listed here for programmer documentation purposes
 only.
 
-\macroname{\textbackslash greerror}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
+\macroname{\textbackslash gre@error}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Prints an error to the \TeX\ output log.
 
 \begin{argtable}
@@ -30,7 +30,7 @@ Executes \MP{} commands using luamplib.
 \end{argtable}
 
 \macroname{\textbackslash gre@deprecated}{\#1\#2}{gregoriotex-main.tex}
-Macro that handles deprecated macros. By default, deprecated macros
+Macro that handles deprecation messages. By default, deprecated macros
 are allowed and a warning is printed. If the package option
 \texttt{deprecated=false} is set, then deprecated macros raise a
 package error, halting \TeX.
@@ -44,20 +44,15 @@ package error, halting \TeX.
 Loads the chosen font for the neumes at the correct size.
 
 \macroname{\textbackslash gre@calculate@constantglyphraise}{}{gregoriotex-spaces.tex}
-%\verb=\gre@calculateconstantglyphraise=%tex.tex
 Macro to caluclate \verb=\gre@constantglyphraise=
 
 \macroname{\textbackslash gre@addtranslationspace}{}{gregoriotex-spaces.tex}
-%\verb=\gre@addtranslationspace=%tex.tex
 Macro to tell Gregorio to set space for the translation.
 
 \macroname{\textbackslash gre@removetranslationspace}{}{gregoriotexspaces.tex}
-%\verb=\gre@removetranslationspace=%tex.tex
 Macro to tell Gregorio to remove the space allocated to the translation.
 
-
 \macroname{\textbackslash gre@calculate@additionalspaces}{\#1\#2\#3\#4}{gregoriotex-spaces.tex}
-%\verb=\gre@updateadditionalspaces#1#2=%tex.tex
 Macro which calculates \verb=\gre@additionalbottomspace= and\\
 \verb=\gre@additionaltopspace=
 
@@ -71,7 +66,6 @@ Macro which calculates \verb=\gre@additionalbottomspace= and\\
  \end{argtable}
 
 \macroname{\textbackslash gre@calculate@textaligncenter}{\#1\#2\#3}{gregoriotex-spaces.tex}
-%\verb=\gre@findtextaligncenter#1#2#3=%tex.tex
 Macro for calculating \verb=\gre@textaligncenter=.
 
 \begin{argtable}
@@ -82,12 +76,8 @@ Macro for calculating \verb=\gre@textaligncenter=.
 \end{argtable}
 
 \macroname{\textbackslash gre@calculate@aboveinitialraise}{}{gregoriotex-main.tex}
-%\verb=\gre@setaboveinitialrais=%tex.tex
 Macro to give \verb=\gre@aboveinitialfirstraise= and\\
 \verb=\gre@aboveinitialsecondraise= their working values.
-
-\macroname{\textbackslash gre@englishcentering}{}{gregoriotex-syllable.tex}
-Count to track if we are using english centering scheme (1), or not (0).
 
 \macroname{\textbackslash gre@calculate@textlower}{}{gregoriotex-spaces.tex}
 Calculates the default value of \texttt{textlower}.  Default is \texttt{spacebeneathtext}.
@@ -325,9 +315,166 @@ Draws a round over- or under-brace using \MP{}.
   \#3 & \MP{} commands & \MP{} commands to draw the brace outline.
 \end{argtable}
 
+\macroname{\textbackslash gre@additionalbottomcustolineend}{}{gregoriotex-signs.tex}
+Macro to place a bottom custo with an additional line (positions \texttt{a} and \texttt{b}) at the end of a line.
+
+\macroname{\textbackslash gre@additionalbottomcustolinemiddle}{}{gregoriotex-signs.tex}
+Macro to place a bottom custo with an additional line (positions \texttt{a} and \texttt{b}) in the middle of a line.
+
+\macroname{\textbackslash gre@additionaltopcustolineend}{}{gregoriotex-signs.tex}
+Macro to place a top custo with an additional line (positions \texttt{l} and \texttt{m}) at the end of a line.
+
+\macroname{\textbackslash gre@additionaltopcustolinemiddle}{}{gregoriotex-signs.tex}
+Macro to place a top custo with an additional line (positions \texttt{l} and \texttt{m}) in the middle of a line.
+
+\macroname{\textbackslash gre@custo}{\#1}{gregoriotex-signs.tex}
+Macro to pick the appropriate custo character.
+
+\begin{argtable}
+  \#1 & integer & height of the custo character to be placed\\
+\end{argtable}
+
+\macroname{\textbackslash gre@addspaceabove}{}{gregoriotex-main.tex}
+Macro to increase the space above the lines to account for above lines text.
+
+\macroname{\textbackslash gre@alteration}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
+Macro to typeset an alteration.
+
+\begin{argtable}
+  \#1 & integer & height of the alteration\\
+  \#2 & character alias & the alteration\\
+  \#3 & character alias & the hole of the alteration\\
+  \#4 & 1 & the alteration is a flat for a key change\\
+  & 0 & all other cases\\
+\end{argtable}
+
+\macroname{\textbackslash gre@calculate@clefnum}{\#1\#2}{gregoriotex-signs.tex}
+Macro calculating the \verb=\gre@clefnum= from the letter and number.
+
+\begin{argtable}
+  \#1 & charcter & type of clef (\texttt{c} or \texttt{f})\\
+  \#2 & integer & line number\\
+\end{argtable}
+
+\macroname{\textbackslash gre@clefnum}{}{gregoriotex-signs.tex}
+Count holding the current clef number.
+
+\macroname{\textbackslash gre@clefflat}{}{gregoriotex-signs.tex}
+Macro to hold the height of the current flat for the clef (\texttt{a} if no flat).
+
+
+
+
+
+\subsection{Auxiliary File}
+Gregorio\TeX\ creates it's own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
+
+\macroname{\textbackslash gre@gaux}{}{gregoriotex-main.tex}
+The handle for the auxiliary file.
+
+\macroname{\textbackslash gre@open@gaux}{}{gregoriotex-main.tex}
+Macro for opening the auxiliary file.
+
+\macroname{\textbackslash gre@close@gaux}{}{gregoriotex-main.tex}
+Macro for closing the auxiliary file.
+
+\macroname{\textbackslash gre@write@gaux}{\#1}{gregoriotex-main.tex}
+Macro for writing the auxiliary file.
+
+\begin{argtable}
+  \#1 & string & contents to be written to the auxiliary file\\
+\end{argtable}
+
+
+
+\subsection{Character Reference Aliases}
+To make referencing and changing them easier, Gregorio\TeX\ stores the current font and control point for certain characters using the following macros.
+
+\macroname{\textbackslash gre@char@abovebarbrace}{}{gregoriotex-chars.tex}
+The above bar brace.
+
+\macroname{\textbackslash gre@char@flat}{}{gregoriotex-chars.tex}
+The flat character.
+
+\macroname{\textbackslash gre@char@flathole}{}{gregoriotex-chars.tex}
+The flat hole character (\ie, the character needed to prevent lines from showing through the center of the flat).
+
+\macroname{\textbackslash gre@char@natural}{}{gregoriotex-chars.tex}
+The natural character.
+
+\macroname{\textbackslash gre@char@naturalhole}{}{gregoriotex-chars.tex}
+The natural hole character (\ie, the character needed to prevent lines from showing through the center of the natural).
+
+\macroname{\textbackslash gre@char@sharp}{}{gregoriotex-chars.tex}
+The sharp character.
+
+\macroname{\textbackslash gre@char@sharphole}{}{gregoriotex-chars.tex}
+The sharp hole character (\ie, the character needed to prevent lines from showing through the center of the sharp).
+
+\macroname{\textbackslash gre@char@punctumcavum}{}{gregoriotex-signs.tex}
+The punctum cavum character.
+
+\macroname{\textbackslash gre@char@punctumcavumhole}{}{gregoriotex-signs.tex}
+The punctum cavum hole character (\ie, the character needed to prevent lines from showing through the center of the punctum cavum).
+
+\macroname{\textbackslash gre@char@incclef}{}{gregoriotex-chars.tex}
+The \texttt{c}-clef which appears in the middle of a line.
+
+\macroname{\textbackslash gre@char@infclef}{}{gregoriotex-chars.tex}
+The \texttt{f}-clef which appears in the middle of a line.
+
+\macroname{\textbackslash gre@char@cclef}{}{gregoriotex-chars.tex}
+The \texttt{c}-clef which appears at the beginning of a line.
+
+\macroname{\textbackslash gre@char@fclef}{}{gregoriotex-chars.tex}
+The \texttt{f}-clef which appears at the beginning of a line.
+
+\macroname{\textbackslash gre@char@punctum}{}{gregoriotex-chars.tex}
+The punctum character.
+
+\macroname{\textbackslash gre@char@punctummora}{}{gregoriotex-chars.tex}
+The punctum mora character.
+
+\macroname{\textbackslash gre@char@underbrace}{}{gregoriotex-signs.tex}
+The under brace character.
+
+\macroname{\textbackslash gre@char@verticalepisemus}{}{gregoriotex-chars.tex}
+The vertical episemus character.
+
+\macroname{\textbackslash gre@char@brace}{}{gregoriotex-signs.tex}
+The (rounded) brace character.
+
+\macroname{\textbackslash gre@char@curlybrace}{}{gregoriotex-signs.tex}
+The curly brace character.
+
+\macroname{\textbackslash gre@char@custobottomlong}{}{gregoriotex-chars.tex}
+The custo character with a long upwards directed vigra.
+
+\macroname{\textbackslash gre@char@custobottommiddle}{}{gregoriotex-chars.tex}
+The custo character with a middle upwards directed vigra.
+
+\macroname{\textbackslash gre@char@custobottomshort}{}{gregoriotex-chars.tex}
+The custo character with a short upwards directed vigra.
+
+\macroname{\textbackslash gre@char@custotoplong}{}{gregoriotex-chars.tex}
+The custo character with a long downwards directed vigra.
+
+\macroname{\textbackslash gre@char@custotopmiddle}{}{gregoriotex-chars.tex}
+The custo character with a middle downwards directed vigra.
+
+\macroname{\textbackslash gre@char@custotopshort}{}{gregoriotex-chars.tex}
+The custo character with a short downwards directed vigra.
+
+\macroname{\textbackslash gre@char@divisiofinalis}{}{gregoriotex-signs.tex}
+The divisio finalis.
+
+\macroname{\textbackslash gre@char@divisiomaior}{}{gregoriotex-signs.tex}
+The divisio maior.
+
+
 \subsection{Flags}
 
-Flags are either boolean (defined with \verb=\newif=) or macros which expand to an integer.  They store settings and/or the current state of something so that GregorioTeX can typeset things in the desired manner.
+Flags are either boolean (defined with \verb=\newif=) or macros which expand to an integer.  They store settings and/or the current state of something so that Gregorio\TeX\ can typeset things in the desired manner.
 
 All distances in \nameref{distances} have a flag associated with them, of the form \verb=\gre@scale@*=.  This flag
 indicates if the distance should scale when the staff size changes (1)
@@ -363,6 +510,18 @@ Boolean flag used to specify whether adjacent horizontal episema should be joine
 \macroname{\textbackslash ifgre@drawbraces}{}{gregoriotex-signs.tex}
 Boolean flag used to specify whether braces should be drawn by \MP{} as
 opposed to rendered via the score font.
+
+\macroname{\textbackslash gre@englishcentering}{}{gregoriotex-syllable.tex}
+Count to track if we are using english centering scheme (1), or not (0).
+
+\macroname{\textbackslash gre@biginitial}{}{gregoriotex-main.tex}
+Count to track whether the initial is big (2-lines) or normal (1-line).
+
+\macroname{\textbackslash gre@boxing}{}{gregoriotex-syllable.tex}
+Flag to track whether we're placing the contents of syllable notes into their box or actually printing that box (helps prevent spurious spaces from occurring when the box is being filled but not printed).
+
+
+
 
 
 \subsection{Boxes}
@@ -524,6 +683,88 @@ Temporary dimension used by \verb=\gre@convertto=.
 
 \macroname{\textbackslash gre@maxlen}{}{gregoriotex-spaces.tex}
 Distance holding the maximum legal length in TeX.
+
+
+\subsection{Penalties}
+These are the macros that Gregorio\TeX\ uses to manipulate the penalties in order to control line and page breaks within a score without affect the surrounding text.
+
+\macroname{\textbackslash gre@penalty}{\#1}{gregoriotex-signs.tex}
+Top level function that aliases \verb=\gre@truepenalty= or \verb=\gre@falsepenalty= according to whether penalties should be in play or not.
+
+\begin{argtable}
+  \#1 & integer & The penalty to be applied or gobbled\\
+\end{argtable}
+
+\macroname{\textbackslash gre@truepenalty}{\#1}{gregoriotex-signs.tex}
+Alias for \verb=\penalty=.
+
+\begin{argtable}
+  \#1 & integer & The penalty to be applied\\
+\end{argtable}
+
+\macroname{\textbackslash gre@falsepenalty}{\#1}{gregoriotex-signs.tex}
+Macro to gobble (suppress) its argument.
+
+\begin{argtable}
+  \#1 & integer & The penalty to be gobbled\\
+\end{argtable}
+
+\macroname{\textbackslash gre@cancelpenalties}{}{gregoriotex-spaces.tex}
+Macro called at the beginning of the score to swap text penalties for score penalties.
+
+\macroname{\textbackslash gre@restorepenalties}{}{gregoriotex-spaces.tex}
+Macro called at the end of the score to restore the text penalties.
+
+\macroname{\textbackslash gre@brokenpenaltysave}{}{gregoriotex-spaces.tex}
+A place to save the current value of the broken penalty so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@clubpenaltysave}{}{gregoriotex-spaces.tex}
+A place to save the current value of the club penalty so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@widowpenaltysave}{}{gregoriotex-spaces.tex}
+A place to save the current value of the widow penalty so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@emergencystretchsave}{}{gregoriotex-spaces.tex}
+A place to save the current value of the emergency stretch so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@endafterbarpenaltysave}{}{gregoriotex-main.tex}
+A place to save the current value of the end after bar penalty so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@endafterbaraltpenaltysave}{}{gregoriotex-main.tex}
+A place to save the current value of the alternate end after bar penalty so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@endofelementpenaltysave}{}{gregoriotex-main.tex}
+A place to save the current value of the end of element penalty so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@endofsyllablepenaltysave}{}{gregoriotex-main.tex}
+A place to save the current value of the end of syllable penalty so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@endofwordpenaltysave}{}{gregoriotex-main.tex}
+A place to save the current value of the end of word penalty so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@exhyphenpenaltysave}{}{gregoriotex-spaces.tex}
+A place to save the current value of the ex hyphen penalty so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@hyphenpenaltysave}{}{gregoriotex-main.tex \textup{and} gregoriotex-spaces.tex}
+A place to save the current value of the hyphen penalty so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@nobreakpenaltysave}{}{gregoriotex-main.tex}
+A place to save the current value of the no break penalty so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@doublehyphendemeritssave}{}{gregoriotex-spaces.tex}
+A place to save the current value of the double hyphen demerits so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@finalhyphendemeritssave}{}{gregoriotex-spaces.tex}
+A place to save the current value of the final hyphen demerits so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@loosenessssave}{}{gregoriotex-spaces.tex}
+A place to save the current value of the looseness so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@tolerancesave}{}{gregoriotex-spaces.tex}
+A place to save the current value of the tolerance so that we can change it temporarily and then restore it later.
+
+\macroname{\textbackslash gre@pretolerancesave}{}{gregoriotex-spaces.tex}
+A place to save the current value of the pretolerance so that we can change it temporarily and then restore it later.
 
 
 

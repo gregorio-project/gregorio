@@ -54,7 +54,7 @@
       \gre@generate@pointandclickfalse %
       \gre@generate@pointandclick=0\relax %
     }{%
-      \greerror{Unrecognized option for \protect\gresetpointandclick}%
+      \gre@error{Unrecognized option for \protect\gresetpointandclick}%
     }%
   }%
 }%
@@ -445,7 +445,7 @@
     {\gre@vowelcenteringtrue}%
     {\IfStrEq{#1}{syllable}%
       {\gre@vowelcenteringfalse}%
-      {\greerror{Unrecognized option for \protect\gresetlyriccentering}}%
+      {\gre@error{Unrecognized option for \protect\gresetlyriccentering}}%
     }%
 }%
 
@@ -481,7 +481,7 @@
       {\global\gre@clivisalignment=1\relax}%
       {\IfStrEq{#1}{special}%
         {\global\gre@clivisalignment=2\relax}%
-        {\greerror{Unrecognized option for \protect\gresetclivisalignment}}%
+        {\gre@error{Unrecognized option for \protect\gresetclivisalignment}}%
       }%
     }%
 }%

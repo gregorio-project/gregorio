@@ -263,6 +263,9 @@ Example:\par\medskip
   \greloadspaceconf{myspaces}
 \end{latexcode}
 
+\macroname{\textbackslash greconffactor}{}{gsp-default.tex}
+A count which indicates the staff size that a space configuration file is designed for.  Each space configuration file must have this value set as Gregorio\TeX\ will compare it to the current staff size to determine if the configuration file being loaded needs to be rescaled.
+
 \macroname{\textbackslash gresetlineheightexpansion}{\{\#1\}}{gregoriotex-main.tex}
 Macro to configure line height expansion behavior when notes appear
 above or below the staff lines.
@@ -1066,6 +1069,85 @@ Default: \unit[0]{cm}
 A shift you can give to the accentus above the curly brace.  
 
 Default: $\unit[-0.05]{cm}$
+
+
+\subsection{Penalties}\label{penalties}
+Penalties are used by \TeX\ to determine where line and page breaks should occur.  Gregorio\TeX\ modifies or defines a few of its own to help with that process in scores.
+
+\macroname{\textbackslash grebrokenpenalty}{}{gsp-default.tex}
+The vertical penalty inserted after a break on a clef change.
+
+Default: 0
+
+\macroname{\textbackslash greclubpenalty}{}{gsp-default.tex}
+The club penalty (determines how important it is to prevent orphans from occurring).
+
+Default: 0
+
+\macroname{\textbackslash grewidowpenalty}{}{gsp-default.tex}
+The widow penalty (determines how important it is to prevent widows from occurring).
+
+Default: 0
+
+\macroname{\textbackslash greemergencystretch}{}{gsp-default.tex}
+The value of the last ditch stretch for overfull boxes.
+
+Default: \verb=\emergencystretch=
+
+\macroname{\textbackslash greendafterbarpenalty}{}{gsp-default.tex}
+The end after bar penalty.
+
+Default: $-200$
+
+\macroname{\textbackslash greendafterbaraltpenalty}{}{gsp-default.tex}
+The alternate end after bar penalty (used when there is no text under the bar).
+
+Default: $-200$
+
+\macroname{\textbackslash greendofelementpenalty}{}{gsp-default.tex}
+The end of element penalty.
+
+Default: $-50$
+
+\macroname{\textbackslash greendofsyllablepenalty}{}{gsp-default.tex}
+The end of element penalty.
+
+Default: $-50$
+
+\macroname{\textbackslash greendofwordpenalty}{}{gsp-default.tex}
+The end of element penalty.
+
+Default: $-100$
+
+\macroname{\textbackslash grehyphenpenalty}{}{gsp-default.tex}
+The hyphen penalty.
+
+Default: $-200$
+
+\macroname{\textbackslash grenobreakpenalty}{}{gsp-default.tex}
+Penalty to prevent a line break.
+
+Default: 10001
+
+\macroname{\textbackslash grenewlinepenalty}{}{gsp-default.tex}
+Penalty to force a line break.
+
+Default: -10001
+
+\macroname{\textbackslash grelooseness}{}{gsp-default.tex}
+The looseness within a score.
+
+Default: \verb=\looseness=
+
+\macroname{\textbackslash gretolerance}{}{gsp-default.tex}
+The tolerance within a score.
+
+Default: 9000
+
+\macroname{\textbackslash grepretolerance}{}{gsp-default.tex}
+The pretolerance within a score.
+
+Default: $-1$ (Lua\TeX\ versions prior to 0.78) or \verb=\pretolerance= (all others)
 
 
 \subsection{Colors}\label{colors}

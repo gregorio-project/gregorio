@@ -208,7 +208,7 @@
 }%
 
 \def\gresetstafflinefactor#1{%
-  \greerror{\protect\gresetstafflinefactor\space is obsolete.\MessageBreak Use \protect\grechangestafflinethickness\space instead.}%
+  \gre@error{\protect\gresetstafflinefactor\space is obsolete.\MessageBreak Use \protect\grechangestafflinethickness\space instead.}%
 }%
 
 %constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
@@ -845,7 +845,7 @@
     \def\gre@prefix{skip}%
   \else%
     \ifchecklength%
-      \greerror{#1 cannot be a rubber length.}%
+      \gre@error{#1 cannot be a rubber length.}%
     \else%
       \def\gre@prefix{dimen}%
     \fi%
@@ -875,7 +875,7 @@
     \gre@debugmsg{spacing}{It does exist.}%
     \grecreatedim{#1}{#2}{#3}%
   \else%
-    \greerror{#1 is not a recognized distance.}%
+    \gre@error{#1 is not a recognized distance.}%
   \fi%
 }%
 
@@ -1288,13 +1288,13 @@
 }%
 
 \def\GreSetAboveInitialSeparation#1{%
-  \greerror{\protect\GreSetAboveInitialSeparation\space is obsolete.\MessageBreak Use \protect\grechangedim\{annotationseparation\}\space instead.}%
+  \gre@error{\protect\GreSetAboveInitialSeparation\space is obsolete.\MessageBreak Use \protect\grechangedim\{annotationseparation\}\space instead.}%
 }%
 
 %To change the space after the initial
 %First argument is distance, second is whether it should scale when \grefactor changes.
 \ifdefined\setspaceafterinitial%
-  \greerror{\protect\setspaceafterinitial\space is already defined.  Check for package conflicts.}%
+  \gre@error{\protect\setspaceafterinitial\space is already defined.  Check for package conflicts.}%
 \else%
   \def\setspaceafterinitial#1#2{%
     \grechangedim{afterinitialshift}{#1}{#2}%
@@ -1310,7 +1310,7 @@
 %To change the space before the initial
 %First argument is distance, second is whether it should scale when \grefactor changes.
 \ifdefined\setspacebeforeinitial%
-  \greerror{\protect\setspacebeforeinitial\space is already defined.  Check for package conflicts.}%
+  \gre@error{\protect\setspacebeforeinitial\space is already defined.  Check for package conflicts.}%
 \else%
   \def\setspacebeforeinitial#1#2{%
     \grechangedim{beforeinitialshift}{#1}{#2}%
@@ -1327,7 +1327,7 @@
 %To change all the distances associated with the initial.
 %First three arguments are distances, last is whether they should scale when \grefactor changes.
 \ifdefined\setinitialspacing%
-  \greerror{\protect\setinitialspacing\space is already defined.  Check for package conflicts.}%
+  \gre@error{\protect\setinitialspacing\space is already defined.  Check for package conflicts.}%
 \else%
   \def\setinitialspacing#1#2#3#4{%
     \grechangedim{beforeinitialshift}{#1}{#4}%
