@@ -146,6 +146,15 @@ Macro for typesetting a circulus.
 \macroname{\textbackslash GreColored}{\#1}{gregoriotex.sty and gregoriotex.tex}
 Colors argument (a string) in \verb=gregoriocolor.=  Corresponds to ``<c></c>'' tags in gabc.  Does nothing in Plain\TeX\ because color is not supported there.
 
+\macroname{\textbackslash GreCPVirgaReversaAscendensOnDLine}{\#1}{gregoriotex-main.tex}
+Allows the Dominican rule set to force long stems to be used for virga
+reversa ascendens neumes on the ``d'' (lowest) line.  This macro is
+defined and re-defined by the \verb=\gresetgregoriofont= macro.
+
+\begin{argtable}
+  \#1 & \TeX{} code & The \TeX{} code to use when long stems are not forced.\\
+\end{argtable}
+
 \macroname{\textbackslash GreCusto}{\#1}{gregoriotex-signs.tex}
 Typesets a custo.
 

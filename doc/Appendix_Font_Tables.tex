@@ -4,6 +4,8 @@
 
 \section{Font Glyph Tables}\label{glyphtable}
 
+\subsection{Score Font Glyphs}
+
 The following table lists all of the score glyphs available in the greciliae,
 gregorio, and parmesan fonts, and any variant glyphs contained within.  If a
 variant glyph is unavailable in a given font, it will be listed as
@@ -17,36 +19,49 @@ glyph, but are necessary for the given glyph to appear.  Note: glyphs for the
 horizontal episema (activated using {\ttfamily\char`_} in gabc) are excluded from
 this table.
 
-\begin{longtable}{llccccccc}
-    \caption{Score Glyphs}\\
-    &&&&&\multicolumn{4}{c}{\bfseries Variants}\\
-    \hhline{>{\arrayrulecolor{lightgray}}----->{\arrayrulecolor{black}}----}
-    {\bfseries Glyph Name}&%
-    {\scriptsize\bfseries gabc}&%
-    {\scriptsize\bfseries greciliae}&%
-    {\scriptsize\bfseries gregorio}&%
-    {\scriptsize\bfseries parmesan}&%
-    {\scriptsize\bfseries Name}&%
-    {\scriptsize\bfseries greciliae}&%
-    {\scriptsize\bfseries gregorio}&%
-    {\scriptsize\bfseries parmesan}\\
-    \hline
-  \endfirsthead
-    &&&&&\multicolumn{4}{c}{\bfseries Variants}\\
-    \hhline{>{\arrayrulecolor{lightgray}}----->{\arrayrulecolor{black}}----}
-    {\bfseries Glyph Name}&%
-    {\scriptsize\bfseries gabc}&%
-    {\scriptsize\bfseries greciliae}&%
-    {\scriptsize\bfseries gregorio}&%
-    {\scriptsize\bfseries parmesan}&%
-    {\scriptsize\bfseries Name}&%
-    {\scriptsize\bfseries greciliae}&%
-    {\scriptsize\bfseries gregorio}&%
-    {\scriptsize\bfseries parmesan}\\
-    \hline
-  \endhead
-  \directlua{GregorioRef.emit_score_glyphs('greciliae','gregorio','parmesan')}
-\end{longtable}
+\newcommand\ScoreFontTable[1]{%
+  \begin{longtable}{llccccccc}
+      \caption{Score Glyphs}\\
+      &&&&&\multicolumn{4}{c}{\bfseries Variants}\\
+      \hhline{>{\arrayrulecolor{lightgray}}----->{\arrayrulecolor{black}}----}
+      {\bfseries Glyph Name}&%
+      {\scriptsize\bfseries gabc}&%
+      {\scriptsize\bfseries greciliae}&%
+      {\scriptsize\bfseries gregorio}&%
+      {\scriptsize\bfseries parmesan}&%
+      {\scriptsize\bfseries Name}&%
+      {\scriptsize\bfseries greciliae}&%
+      {\scriptsize\bfseries gregorio}&%
+      {\scriptsize\bfseries parmesan}\\
+      \hline
+    \endfirsthead
+      &&&&&\multicolumn{4}{c}{\bfseries Variants}\\
+      \hhline{>{\arrayrulecolor{lightgray}}----->{\arrayrulecolor{black}}----}
+      {\bfseries Glyph Name}&%
+      {\scriptsize\bfseries gabc}&%
+      {\scriptsize\bfseries greciliae}&%
+      {\scriptsize\bfseries gregorio}&%
+      {\scriptsize\bfseries parmesan}&%
+      {\scriptsize\bfseries Name}&%
+      {\scriptsize\bfseries greciliae}&%
+      {\scriptsize\bfseries gregorio}&%
+      {\scriptsize\bfseries parmesan}\\
+      \hline
+    \endhead
+    \directlua{GregorioRef.emit_score_glyphs(#1)}
+  \end{longtable}
+}%
+\ScoreFontTable{'greciliae','gregorio','parmesan'}
+
+\subsection{Dominican Score Font Glyphs}
+
+The following table lists all of the score glyphs available in the Dominican
+versions of the greciliae, gregorio, and parmesan fonts in the same vein as
+the prior table.
+
+\ScoreFontTable{'greciliaeOp','gregorioOp','parmesanOp'}
+
+\subsection{Extra Glyphs}
 
 The following table lists the glyphs available in the greextra font.  There are
 score glyphs which may be substituted into the score, text glyphs meant to be

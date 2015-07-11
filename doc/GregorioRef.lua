@@ -40,6 +40,7 @@ local EXCLUDE = {
   OriscusLineTR = true,
   QuilismaLineTR = true,
   VirgaLineBR = true,
+  SalicusOriscus = true,
 }
 
 local GABC = {

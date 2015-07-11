@@ -1305,10 +1305,20 @@
 }%
 
 
-\def\gresetgregoriofont#1{%
-  \xdef\gregoriofontname{#1}%
-  \gre@loadgregoriofont%
-}
+\def\gresetgregoriofont{\@ifnextchar[{\gre@setgregoriofont}{\gre@setgregoriofont[]}}%
+
+\def\gre@setgregoriofont[#1]#2{%
+  \ifx#1\gre@nothing %
+    \xdef\gregoriofontname{#2}%
+    \gre@loadgregoriofont%
+    \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
+  \else %
+    \xdef\gregoriofontname{#2-#1}%
+    \gre@loadgregoriofont%
+    \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
+  \fi %
+  \relax %
+}%
 
 \def\gre@loadgregoriofont{%
   \gre@count@temp@three = \the\grefactor %
