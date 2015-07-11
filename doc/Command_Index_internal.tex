@@ -325,6 +325,26 @@ Draws a round over- or under-brace using \MP{}.
   \#3 & \MP{} commands & \MP{} commands to draw the brace outline.
 \end{argtable}
 
+\macroname{\textbackslash gre@iflatex}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
+Evaluates to \verb=#1= if running under \LaTeX{}.
+
+\begin{argtable}
+  \#1 & \TeX{} code & the width of the brace.
+\end{argtable}
+
+\macroname{\textbackslash gre@latex@barredsymbol}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
+Internal method used by \verb=\grelatexsimpledefarredsymbol= to simplify
+the cascading of conditionals used to implement that macro.
+
+\bigskip\textbf{Only available in \LaTeX.}
+
+\begin{argtable}
+  \#1 & string      & the value of \verb=\f@series/\f@shape= to match.\\
+  \#2 & \TeX{} code & the \TeX{} for the base symbol (\ie, \texttt{A}, \texttt{R}, or \texttt{V}).\\
+  \#3 & string      & the control sequence name created by \verb=\gredefsizedsymbol= to use for the bar.\\
+  \#4 & dimension   & the amount to shift the bar to the left from the end of the base symbol.
+\end{argtable}
+
 \subsection{Flags}
 
 Flags are either boolean (defined with \verb=\newif=) or macros which expand to an integer.  They store settings and/or the current state of something so that GregorioTeX can typeset things in the desired manner.
