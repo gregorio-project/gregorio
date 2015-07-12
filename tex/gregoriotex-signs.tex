@@ -103,7 +103,7 @@
 }%
 
 % a count describing the clef line and pitch : 1 for c on the first (bottom) line, 2 for c on the second line, 5 for f on the first, etc.
-\newcount\greclefnum%
+\newcount\gre@clefnum%
 
 %% marcro to define the clef that will appear at the beginning of the lines
 % the first argument is the type : f or c, and the second is the height
@@ -123,29 +123,29 @@
       \hbox{\kern\gre@skip@temp@four}%
     \fi %
   }%
-  \xdef\greclefflat{#4}%
+  \xdef\gre@clefflat{#4}%
   \relax%
 }%
 
-%% macro calculating the \greclefnum from the letter and number
+%% macro calculating the \gre@clefnum from the letter and number
 % #1 is the letter, and #2 the line number, #3 is a if not flated
 % and otherwise the height of the flat
-\def\grecalculateclefnum#1#2#3{%
-  \global\greclefnum=#2\relax %
+\def\gre@calculate@clefnum#1#2#3{%
+  \global\gre@clefnum=#2\relax %
   \ifx f#1%
-    \global\advance\greclefnum by 4\relax %
+    \global\advance\gre@clefnum by 4\relax %
   \fi %
   \relax %
 }%
 
 %% macro redrawing a key from clefnum, useful for vertical space changes
-\def\greupdatelinesclef{%
-  \ifnum\greclefnum > 5\relax%
-    \gre@count@temp@three=\greclefnum %
+\def\gre@updatelinesclef{%
+  \ifnum\gre@clefnum > 5\relax%
+    \gre@count@temp@three=\gre@clefnum %
     \advance\gre@count@temp@three by -4\relax %
-    \GreSetLinesClef{f}{\gre@count@temp@three}{1}{\greclefflat}%
+    \GreSetLinesClef{f}{\gre@count@temp@three}{1}{\gre@clefflat}%
   \else %
-    \GreSetLinesClef{c}{\greclefnum}{1}{\greclefflat}%
+    \GreSetLinesClef{c}{\gre@clefnum}{1}{\gre@clefflat}%
   \fi %
   \relax %
 }%
@@ -204,7 +204,7 @@
 % if #3 is a, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
 \def\GreSetInitialClef#1#2#3{%
-  \grecalculateclefnum{#1}{#2}{#3}%
+  \gre@calculate@clefnum{#1}{#2}{#3}%
   \ifgre@showclef%
     \gretypekey{#1}{#2}{0}{1}{#3}%
   \fi %
@@ -225,7 +225,7 @@
 \def\GreChangeClef#1#2#3#4{%
   % it makes no sense to change the clef when there is no clef...
   \gresetclef{visible}%
-  \grecalculateclefnum{#1}{#2}{#4}%
+  \gre@calculate@clefnum{#1}{#2}{#4}%
   \ifnum\greinsidediscretionary=0\relax %
     \GreSetLinesClef{#1}{#2}{1}{#4}%
   \fi %
@@ -243,24 +243,6 @@
   \relax%
 }%
 
-% macro called when the key changes inside a syllable
-% doesn't seem to be used; was some code lost somewhere?
-
-\def\greinchangeclef#1#2#3{%
-  \gresetclef{visible}%
-  % to see why we reset \grelastoflinecount, see comments of \GreGlyph.
-  \ifnum\grelastoflinecount=2\relax %
-    \global\grelastoflinecount=0\relax %
-  \fi %
-  \ifnum\greinsidediscretionary=0\relax %
-    \GreSetLinesClef{#1}{#2}{0}{#3}%
-  \fi %
-  \gre@skip@temp@four = \gre@skip@clefchangespace%
-  \hskip\gre@skip@temp@four %
-  \gretypekey{#1}{#2}{1}{0}{#3}%
-  \hskip\gre@skip@temp@four %
-  \relax%
-}%
 
 % custo just typesets a custo, useful for before the key changes for example
 \def\GreCusto#1{%

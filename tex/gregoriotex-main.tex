@@ -139,20 +139,20 @@
 % for now, we only use an aux file with LuaTeX
 
 \ifluatex%
-  \newwrite\greaux%
+  \newwrite\gre@gaux%
 \fi%
 
-\def\grewriteaux#1{%
-  \write\greaux{#1}%
+\def\gre@write@gaux#1{%
+  \write\gre@gaux{#1}%
   \relax %
 }%
 
-\def\opengreaux{%
-  \openout\greaux \jobname .gaux\relax%
+\def\gre@open@gaux{%
+  \openout\gre@gaux \jobname .gaux\relax%
 }%
 
-\def\closegreaux{%
-  \closeout\greaux %
+\def\gre@close@gaux{%
+  \closeout\gre@gaux %
 }%
 
 
@@ -301,7 +301,7 @@
 
 \def\greupdateleftbox{%
   \greupdatelinewidth %
-  \greupdatelinesclef %
+  \gre@updatelinesclef %
 }%
 
 \def\greupdatelinewidth{%

@@ -194,9 +194,9 @@ local function init(arg, enable_height_computation)
     end
   end
   if outputdir and lfs.isdir(outputdir) then
-    auxname = outputdir..'/'..tex.jobname..'.greaux'
+    auxname = outputdir..'/'..tex.jobname..'.gaux'
   else
-    auxname = tex.jobname..'.greaux'
+    auxname = tex.jobname..'.gaux'
   end
 
   -- to get latexmk to realize the aux file is a dependency
