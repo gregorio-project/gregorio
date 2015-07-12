@@ -1609,7 +1609,7 @@
 % #2 is the char of the alteration
 % #3 is the char of the alteration hole
 % #4 is 1 in the case of a flat for a key change, 0 otherwise
-\def\grealteration#1#2#3#4{%
+\def\gre@alteration#1#2#3#4{%
   % to see why we reset \grelastoflinecount, see comments of \GreGlyph.
   \ifnum#4=0\relax %
     \grenewglyphcommon %
@@ -1650,21 +1650,21 @@
 % will determine if the flat has zero width or not. #3 and #4 should be the same as GreGlyph's #5 and #6, but it's not really done nor useful...
 
 \def\GreFlat#1#2{%
-  \grealteration{#1}{\greflatchar}{\greflatholechar}{#2}%
+  \gre@alteration{#1}{\greflatchar}{\greflatholechar}{#2}%
   \relax%
 }%
 
 % Same as the one before, but for naturals.
 
 \def\GreNatural#1#2{%
-  \grealteration{#1}{\grenaturalchar}{\grenaturalholechar}{#2}%
+  \gre@alteration{#1}{\grenaturalchar}{\grenaturalholechar}{#2}%
   \relax%
 }%
 
 % Same as the one before, but for sharps.
 
 \def\GreSharp#1#2{%
-  \grealteration{#1}{\gresharpchar}{\gresharpholechar}{#2}%
+  \gre@alteration{#1}{\gresharpchar}{\gresharpholechar}{#2}%
   \relax%
 }%
 

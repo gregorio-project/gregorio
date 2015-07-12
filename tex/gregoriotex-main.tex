@@ -565,7 +565,7 @@
 }%
 
 % set space above the text lines - almost the same as for the translation
-\def\greaddspaceabove{%
+\def\gre@addspaceabove{%
   \gre@style@abovelinestext%
   \greabovelinestextstyle{%
     \global\gre@dimen@currentabovelinestextheight=\gre@dimen@abovelinestextheight %
@@ -576,7 +576,7 @@
 }%
 
 % we don't need space above any more
-\def\greremovespaceabove{%
+\def\gre@removespaceabove{%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gregeneratelines %
   \relax %
