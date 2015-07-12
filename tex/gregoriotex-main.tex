@@ -219,8 +219,8 @@
   % sometimes we need to add a space before ending the line:
   \gre@skip@temp@four = \grekernbeforeeol\relax%
   \kern\gre@skip@temp@four %
-  \ifnum\greboxing=0\relax %
-    \ifnum\grebiginitial=1\relax %
+  \ifgre@boxing\else%
+    \ifnum\gre@biginitial=1\relax %
       \ifcase\greknownline %
       % 0: should not happend...
       \or % 1
@@ -267,21 +267,21 @@
 \newbox\gre@box@initial%
 
 
-% grebiginitial means that the inital takes two lines
-\newcount\grebiginitial%
+% gre@biginitial means that the inital takes two lines
+\newcount\gre@biginitial%
 
 % greknownline is the line we think we are in
 \newcount\greknownline%
 
 % macro to call before the call of \initial
 \def\GreSetBigInitial{%
-  \global\grebiginitial=1\relax %
+  \global\gre@biginitial=1\relax %
   \relax %
 }%
 
 % macro to cancel before the call of \initial
 \def\grenormalinitial{%
-  \global\grebiginitial=0\relax %
+  \global\gre@biginitial=0\relax %
   \relax %
 }%
 
@@ -323,7 +323,7 @@
   % first we print the initial
   \gre@dimen@temp@five=-\gre@dimen@textlower %
   % if it is a big initial we print it on the second line
-  \ifnum\grebiginitial=0\relax %
+  \ifnum\gre@biginitial=0\relax %
     \setbox\gre@box@initial=\hbox{\gre@style@initial\greinitialformat{#1}\endgre@style@initial}%
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@dimen@manualinitialwidth=0 pt\relax%
@@ -372,7 +372,7 @@
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
   \gre@debugmsg{annotation}{Ready to place initial.}%
   \copy\gre@box@initial%
-  \ifnum\grebiginitial=0\relax%
+  \ifnum\gre@biginitial=0\relax%
     \gre@style@initial%
     \greinitialformat{\global\gre@dimen@temp@four = \gre@dimen@afterinitialshift}%
     \endgre@style@initial%

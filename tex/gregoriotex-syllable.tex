@@ -312,12 +312,12 @@
 \def\gresyllablenotes#1{%
   \global\grefirstglyph=1\relax %
   \xdef\grelastispunctumsauv{\grelastispunctum}%
-  \xdef\greboxing{1}%
+  \global\gre@boxingtrue%
   \xdef\gresavedlastoflinecount{\number\grelastoflinecount\relax }%
   \setbox\gre@box@syllablenotes=\hbox{#1}%
   \gre@debugmsg{spacing}{Width of notes: \the\wd\gre@box@syllablenotes}%
   \xdef\grelastispunctum{\grelastispunctumsauv}%
-  \xdef\greboxing{0}%
+  \global\gre@boxingfalse%
   \global\grelastoflinecount=\gresavedlastoflinecount\relax %
   \global\grefirstglyph=1\relax %
   \relax %
@@ -343,8 +343,9 @@
 % we specify if it is the last syllable of the score with that value
 \newcount\greendofscore%
 
-% a helper macro (see details in \GreSyllable)
-\xdef\greboxing{0}%
+% Flag to track if we are boxing the syllable notes or printing them
+\newif\ifgre@boxing%
+\gre@boxingfalse%
 
 % 
 % Helper macros for fixing text in rare cases
