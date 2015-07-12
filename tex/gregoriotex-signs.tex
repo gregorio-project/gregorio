@@ -266,17 +266,17 @@
 \def\GreCusto#1{%
   \gre@calculate@glyphraisevalue{#1}{0}%
   %here we need some tricks to draw the line before the custo (for the color)
-  \setbox\gre@box@temp@width=\hbox{\grecustochar{#1}}%
+  \setbox\gre@box@temp@width=\hbox{\gre@pickcusto{#1}}%
   \gre@dimen@temp@three=\wd\gre@box@temp@width %
   \ifgre@showlines %
     \ifnum#1=\gre@pitch@a\relax %
-      \greadditionalbottomcustolinemiddle %
+      \gre@additionalbottomcustolinemiddle %
     \else\ifnum#1=\gre@pitch@b\relax %
-      \greadditionalbottomcustolinemiddle %
+      \gre@additionalbottomcustolinemiddle %
     \else\ifnum#1=\gre@pitch@l\relax %
-      \greadditionaltopcustolinemiddle %
+      \gre@additionaltopcustolinemiddle %
     \else\ifnum#1=\gre@pitch@m\relax %
-      \greadditionaltopcustolinemiddle %
+      \gre@additionaltopcustolinemiddle %
     \fi\fi\fi\fi %
   \fi %
   \raise \gre@dimen@glyphraisevalue%
@@ -300,23 +300,23 @@
       % we type a hskip and the we type the custo
       \gre@skip@temp@four = \gre@skip@spacebeforecusto%
       \hskip\gre@skip@temp@four %
-      \grecustochar{#1}\relax %
+      \gre@pickcusto{#1}\relax %
       }%
       \gre@dimen@temp@three=\wd\gre@box@temp@width %
       % we make \wd\gre@box@temp@sign contain the width of a custo
       \setbox\gre@box@temp@sign=\hbox{%
-      \grecustochar{#1}\relax %
+      \gre@pickcusto{#1}\relax %
       }%
       \grelocalrightbox{%
       \ifgre@showlines %
         \ifnum#1=\gre@pitch@a\relax %
-          \greadditionalbottomcustolineend %
+          \gre@additionalbottomcustolineend %
         \else\ifnum#1=\gre@pitch@b\relax %
-          \greadditionalbottomcustolineend %
+          \gre@additionalbottomcustolineend %
         \else\ifnum#1=\gre@pitch@l\relax %
-          \greadditionaltopcustolineend %
+          \gre@additionaltopcustolineend %
         \else\ifnum#1=\gre@pitch@m\relax %
-          \greadditionaltopcustolineend %
+          \gre@additionaltopcustolineend %
         \fi\fi\fi\fi %
       \fi %
       \raise \gre@dimen@glyphraisevalue%
@@ -334,7 +334,7 @@
 
 % macro that typesets an additional line at the top for custos at end of line
 
-\def\greadditionaltopcustolineend{%
+\def\gre@additionaltopcustolineend{%
   \gre@dimen@temp@five=\gre@dimen@staffheight %
   \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
   \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
@@ -355,7 +355,7 @@
   \relax %
 }%
 
-\def\greadditionalbottomcustolineend{%
+\def\gre@additionalbottomcustolineend{%
   \gre@dimen@temp@five=\gre@dimen@spacebeneathtext %
   \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
   \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
@@ -378,7 +378,7 @@
 
 % same macros, but for a custo in the middle
 
-\def\greadditionaltopcustolinemiddle{%
+\def\gre@additionaltopcustolinemiddle{%
   \gre@dimen@temp@five=\gre@dimen@staffheight %
   \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
   \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
@@ -400,7 +400,7 @@
   \relax %
 }%
 
-\def\greadditionalbottomcustolinemiddle{%
+\def\gre@additionalbottomcustolinemiddle{%
   \gre@dimen@temp@five=\gre@dimen@spacebeneathtext %
   \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
   \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
@@ -422,7 +422,7 @@
   \relax %
 }%
 
-\def\grecustochar#1{%
+\def\gre@pickcusto#1{%
   \ifcase#1%
   \or\or%
   \or\grecustotopmiddlechar %
