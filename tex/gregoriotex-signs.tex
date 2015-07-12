@@ -174,19 +174,19 @@
   \fi %
   \ifx c#1% we check if it is a c key
     \ifcase#3%
-      \raise\gre@dimen@glyphraisevalue\hbox{\grecclefchar}%\hskip\gre@skip@temp@two}
-      \setbox\gre@box@temp@width=\hbox{\grecclefchar}%
+      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@cclef}%\hskip\gre@skip@temp@two}
+      \setbox\gre@box@temp@width=\hbox{\gre@fontchar@cclef}%
       \global\gre@dimen@clefwidth=\wd\gre@box@temp@width %
     \or%
-      \raise\gre@dimen@glyphraisevalue\hbox{\greincclefchar}%\hskip\gre@skip@temp@two}
+      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@incclef}%\hskip\gre@skip@temp@two}
     \fi%
   \else % we consider that it is a f key
     \ifcase#3%
-      \raise\gre@dimen@glyphraisevalue\hbox{\grefclefchar}%\hskip\gre@skip@temp@two}
-      \setbox\gre@box@temp@width=\hbox{\grefclefchar}%
+      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@fclef}%\hskip\gre@skip@temp@two}
+      \setbox\gre@box@temp@width=\hbox{\gre@fontchar@fclef}%
       \global\gre@dimen@clefwidth=\wd\gre@box@temp@width %
     \or%
-      \raise\gre@dimen@glyphraisevalue\hbox{\greinfclefchar}%\hskip\gre@skip@temp@two}
+      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@infclef}%\hskip\gre@skip@temp@two}
     \fi%
   \fi%
   \ifnum#5=3%
@@ -407,19 +407,19 @@
 \def\gre@pickcusto#1{%
   \ifcase#1%
   \or\or%
-  \or\grecustotopmiddlechar %
-  \or\grecustotoplongchar %
-  \or\grecustotopshortchar %
-  \or\grecustotoplongchar %
-  \or\grecustotopshortchar %
-  \or\grecustotoplongchar %
-  \or\grecustotopshortchar %
-  \or\grecustotoplongchar %
-  \or\grecustotopshortchar %
-  \or\grecustobottomlongchar %
-  \or\grecustobottomshortchar %
-  \or\grecustobottomlongchar %
-  \or\grecustobottommiddlechar %
+  \or\gre@fontchar@custotopmiddle %
+  \or\gre@fontchar@custotoplong %
+  \or\gre@fontchar@custotopshort %
+  \or\gre@fontchar@custotoplong %
+  \or\gre@fontchar@custotopshort %
+  \or\gre@fontchar@custotoplong %
+  \or\gre@fontchar@custotopshort %
+  \or\gre@fontchar@custotoplong %
+  \or\gre@fontchar@custotopshort %
+  \or\gre@fontchar@custobottomlong %
+  \or\gre@fontchar@custobottomshort %
+  \or\gre@fontchar@custobottomlong %
+  \or\gre@fontchar@custobottommiddle %
   \fi%
 }%
 
@@ -442,9 +442,9 @@
   }%
 }%
 
-\gdef\grecurlybracechar{\gregoriofont\gre@char@curlybrace}%
-\gdef\grebracechar{\gregoriofont\gre@char@brace}%
-\gdef\greunderbracechar{\gregoriofont\gre@char@bracedown}%
+\gdef\gre@fontchar@curlybrace{\gregoriofont\gre@char@curlybrace}%
+\gdef\gre@fontchar@brace{\gregoriofont\gre@char@brace}%
+\gdef\gre@fontchar@underbrace{\gregoriofont\gre@char@bracedown}%
 
 % the command to resize a box, \resizebox is provided by graphicx
 \global\let\greresizebox\resizebox %
@@ -455,7 +455,7 @@
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 % #5: 1 if we put an accentus above or not
 \def\GreOverCurlyBrace#1#2#3#4#5{%
-  \gre@brace@common{#1}{#2}{#3}{#4}{#5}{\gre@pitch@g}{\grecurlybracechar}%
+  \gre@brace@common{#1}{#2}{#3}{#4}{#5}{\gre@pitch@g}{\gre@fontchar@curlybrace}%
 }%
 
 % #1: the width
@@ -463,7 +463,7 @@
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\GreOverBrace#1#2#3#4{%
-  \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@g}{\grebracechar}%
+  \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@g}{\gre@fontchar@brace}%
 }%
 
 % #1: the width
@@ -471,7 +471,7 @@
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\GreUnderBrace#1#2#3#4{%
-  \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@b}{\greunderbracechar}%
+  \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@b}{\gre@fontchar@underbrace}%
 }%
 
 % #1: the width
@@ -483,7 +483,7 @@
 % #7: the brace character
 \def\gre@brace@common#1#2#3#4#5#6#7{%
   \ifnum#4=1\relax %
-    \setbox\gre@box@temp@sign=\hbox{\grepunctumchar}%
+    \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
     \gre@dimen@temp@five=\wd\gre@box@temp@sign %
     \kern-\gre@dimen@temp@five %
   \fi %
@@ -494,13 +494,13 @@
     \kern\gre@skip@temp@four %
     \raise\gre@dimen@glyphraisevalue\hbox{%
       \ifgre@drawbraces%
-        \ifx#7\grecurlybracechar %
+        \ifx#7\gre@fontchar@curlybrace %
           \gre@draw@curlybrace{#1}%
         \else %
-          \ifx#7\grebracechar %
+          \ifx#7\gre@fontchar@brace %
             \gre@draw@brace{#1}%
           \else
-            \ifx#7\greunderbracechar %
+            \ifx#7\gre@fontchar@underbrace %
               \gre@draw@underbrace{#1}%
             \fi %
           \fi %
@@ -673,7 +673,7 @@
 % #3: 1 if the start, 2 if the end
 \def\GreVarBraceSavePos#1#2#3{%
   \ifnum#2=1\relax %
-    \setbox\gre@box@temp@sign=\hbox{\grepunctumchar}%
+    \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
     \gre@dimen@temp@five=\wd\gre@box@temp@sign %
     \kern-\gre@dimen@temp@five %
     \pdfsavepos %
@@ -745,23 +745,23 @@
     \fi %
   \fi %
   \grenobreak %
-  \raise \gre@dimen@glyphraisevalue \hbox{\grepunctummorachar}%
+  \raise \gre@dimen@glyphraisevalue \hbox{\gre@fontchar@punctummora}%
   \grenobreak %
   \ifcase#2\relax\or %
-    \setbox\gre@box@temp@width=\hbox{\grepunctummorachar}%
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@punctummora}%
     \gre@skip@temp@four = -\wd\gre@box@temp@width %
     \kern\gre@skip@temp@four%
     \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
     \kern\gre@skip@temp@four %
   \or %
-    \setbox\gre@box@temp@width=\hbox{\grepunctummorachar}%
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@punctummora}%
     \gre@skip@temp@four = -\wd\gre@box@temp@width %
     \kern\gre@skip@temp@four%
     \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
     \kern\gre@skip@temp@four %
     \kern\gre@dimen@temp@five %
   \or %
-    \setbox\gre@box@temp@width=\hbox{\grepunctummorachar}%
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@punctummora}%
     \gre@skip@temp@four = -\wd\gre@box@temp@width %
     \kern\gre@skip@temp@four%
     \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
@@ -863,7 +863,7 @@
   % then we draw the sign
   \ifcase#6\or %
     % vertical episemus
-    \setbox\gre@box@temp@sign=\hbox{\greverticalepisemuschar}%
+    \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@verticalepisemus}%
   \or % rare sign
     \setbox\gre@box@temp@sign=\hbox{\gregoriofont#5}%
   \or % choral sign
@@ -873,7 +873,7 @@
       \ifgre@drawbraces %
         \gre@draw@brace{*}%
       \else %
-        \greabovebarbracechar %
+        \gre@fontchar@abovebarbrace %
       \fi %
     }%
   \fi %
@@ -1265,7 +1265,7 @@
   % of a bar in the middle of other notes.
   \ifnum\grelastispunctum=1\relax %
     \ifnum#2=1\relax %
-      \setbox\gre@box@temp@width=\hbox{\gregoriofont\grepunctummorachar}%
+      \setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@fontchar@punctummora}%
       \gre@skip@temp@four = -\wd\gre@box@temp@width %
       \kern\gre@skip@temp@four%
       \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
@@ -1321,7 +1321,7 @@
       \grenobreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@char@divisiomaior}%
-    \gredivisiomaiorsymbol %
+    \gre@fontchar@divisiomaior %
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundmaior%
@@ -1333,9 +1333,9 @@
       \grehskip\gre@skip@temp@four %
       \grenobreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gredivisiofinalissymbol}%
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
     #3\relax %
-    \gredivisiofinalissymbol%
+    \gre@fontchar@divisiofinalis%
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundfinalis%
       \grehskip\gre@skip@temp@four %
@@ -1346,9 +1346,9 @@
       \grehskip\gre@skip@temp@four %
       \grenobreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gredivisiofinalissymbol}%
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
     #3\relax %
-    \gredivisiofinalissymbol%
+    \gre@fontchar@divisiofinalis%
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundfinalis%
       \grehskip\gre@skip@temp@four %
@@ -1449,7 +1449,7 @@
   \relax%
 }%
 
-\def\gredivisiomaiorsymbol{%
+\def\gre@fontchar@divisiomaior{%
   \ifnum\gre@stafflinefactor=17\relax %
     %\gre@calculate@glyphraisevalue{\gre@pitch@g}{0}% bar glyphs are made to be at this height
     \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\gre@char@divisiomaior}%
@@ -1466,14 +1466,14 @@
   \relax %
 }%
 
-\def\gredivisiofinalissymbol{%
+\def\gre@fontchar@divisiofinalis{%
   \gre@calculate@glyphraisevalue{\gre@pitch@g}{0}% bar glyphs are made to be at this height
-  \gredivisiomaiorsymbol %
+  \gre@fontchar@divisiomaior %
   \gre@dimen@temp@four = 12000 sp%
   \multiply\gre@dimen@temp@four by \the\grefactor%
   \kern\gre@dimen@temp@four%
   \grenobreak %
-  \gredivisiomaiorsymbol %
+  \gre@fontchar@divisiomaior %
 }%
 
 %a count to tell if we have to keep the localrightbox until the end
@@ -1632,21 +1632,21 @@
 % will determine if the flat has zero width or not. #3 and #4 should be the same as GreGlyph's #5 and #6, but it's not really done nor useful...
 
 \def\GreFlat#1#2{%
-  \gre@alteration{#1}{\greflatchar}{\greflatholechar}{#2}%
+  \gre@alteration{#1}{\gre@fontchar@flat}{\gre@fontchar@flathole}{#2}%
   \relax%
 }%
 
 % Same as the one before, but for naturals.
 
 \def\GreNatural#1#2{%
-  \gre@alteration{#1}{\grenaturalchar}{\grenaturalholechar}{#2}%
+  \gre@alteration{#1}{\gre@fontchar@natural}{\gre@fontchar@naturalhole}{#2}%
   \relax%
 }%
 
 % Same as the one before, but for sharps.
 
 \def\GreSharp#1#2{%
-  \gre@alteration{#1}{\gresharpchar}{\gresharpholechar}{#2}%
+  \gre@alteration{#1}{\gre@fontchar@sharp}{\gre@fontchar@sharphole}{#2}%
   \relax%
 }%
 
@@ -1654,10 +1654,10 @@
 %% macros for typesetting punctum cavum
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\grepunctumcavumchar{\gregoriofont\gre@char@punctumcavum}%
-\def\grelineapunctumcavumchar{\gregoriofont\gre@char@lineapunctumcavum}%
-\def\grepunctumcavumholechar{\gregoriofont\gre@char@punctumcavumhole}%
-\def\grelineapunctumcavumholechar{\gregoriofont\gre@char@lineapunctumcavumhole}%
+\def\gre@fontchar@punctumcavum{\gregoriofont\gre@char@punctumcavum}%
+\def\gre@fontchar@lineapunctumcavum{\gregoriofont\gre@char@lineapunctumcavum}%
+\def\gre@fontchar@punctumcavumhole{\gregoriofont\gre@char@punctumcavumhole}%
+\def\gre@fontchar@lineapunctumcavumhole{\gregoriofont\gre@char@lineapunctumcavumhole}%
 
 \def\gresetpunctumcavum#1{%
   \IfStrEq{#1}{alternate}%
@@ -1690,7 +1690,7 @@
 }%
 
 \def\GrePunctumCavum#1#2#3#4#5#6{%
-  \setbox\gre@box@temp@width=\hbox{\grepunctumcavumchar}%
+  \setbox\gre@box@temp@width=\hbox{\gre@fontchar@punctumcavum}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
   \gre@skip@temp@four = \gre@dimen@lastglyphwidth%
   \kern\gre@skip@temp@four %
@@ -1698,14 +1698,14 @@
   \kern-\gre@skip@temp@four %
   \gre@calculate@glyphraisevalue{#1}{0}%
   \ifgre@hidepclines%
-    \grefillhole{\grepunctumcavumholechar}%
+    \grefillhole{\gre@fontchar@punctumcavumhole}%
   \fi %
-  \GreGlyph{\grepunctumcavumchar}{#1}{#2}{#3}{}{#5}{#6}%
+  \GreGlyph{\gre@fontchar@punctumcavum}{#1}{#2}{#3}{}{#5}{#6}%
   \relax %
 }%
 
 \def\GreLineaPunctumCavum#1#2#3#4#5#6{%
-  \setbox\gre@box@temp@width=\hbox{\grelineapunctumcavumchar}%
+  \setbox\gre@box@temp@width=\hbox{\gre@fontchar@lineapunctumcavum}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
   \gre@skip@temp@four = \gre@dimen@lastglyphwidth%
   \kern\gre@skip@temp@four %
@@ -1713,8 +1713,8 @@
   \kern-\gre@skip@temp@four %
   \gre@calculate@glyphraisevalue{#1}{0}%
   \ifgre@hidepclines %
-    \grefillhole{\grelineapunctumcavumholechar}%
+    \grefillhole{\gre@fontchar@lineapunctumcavumhole}%
   \fi %
-  \GreGlyph{\grelineapunctumcavumchar}{#1}{#2}{#3}{}{#5}{#6}%
+  \GreGlyph{\gre@fontchar@lineapunctumcavum}{#1}{#2}{#3}{}{#5}{#6}%
   \relax %
 }%

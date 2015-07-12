@@ -204,7 +204,7 @@ local offset_cases = {
   -- divisio finalis
   {
     case = 'BarDivisioFinalis',
-    v = [[\grevepisemusorrareaux{0}{\gredivisiofinalissymbol}{1}{0}{#2}{#3}{#4}]],
+    v = [[\grevepisemusorrareaux{0}{\gre@fontchar@divisiofinalis}{1}{0}{#2}{#3}{#4}]],
   },
   -- second note of a non-auctus torculus resupinus starting with a quilisma,
   -- with a first and second ambitus of at least two

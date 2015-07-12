@@ -202,7 +202,7 @@
     \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@char@smallpunctum}%
   \or %
     % case of divisiofinalis
-    \global\setbox\gre@box@temp@width=\hbox{\gredivisiofinalissymbol}%
+    \global\setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
   \fi%
   \relax%
 }%
@@ -281,20 +281,20 @@
       \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
       \gre@dimen@temp@five=\wd\gre@box@temp@width %
       \divide\gre@dimen@temp@five by 2\relax %
-      \setbox\gre@box@temp@width=\hbox{\greflatchar}%
+      \setbox\gre@box@temp@width=\hbox{\gre@fontchar@flat}%
     \else%\ifnum#1<40
       \ifnum#1<60\relax%
         \advance\gre@count@temp@three by -40\relax %
         \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
         \gre@dimen@temp@five=\wd\gre@box@temp@width %
         \divide\gre@dimen@temp@five by 2\relax %
-        \setbox\gre@box@temp@width=\hbox{\grenaturalchar}%
+        \setbox\gre@box@temp@width=\hbox{\gre@fontchar@natural}%
       \else%\ifnum#1<60
         \advance\gre@count@temp@three by -60\relax %
         \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
         \gre@dimen@temp@five=\wd\gre@box@temp@width %
         \divide\gre@dimen@temp@five by 2\relax %
-        \setbox\gre@box@temp@width=\hbox{\gresharpchar}%
+        \setbox\gre@box@temp@width=\hbox{\gre@fontchar@sharp}%
       \fi%
     \fi %
     \advance\gre@dimen@temp@five by \wd\gre@box@temp@width %
