@@ -708,10 +708,10 @@
     \gre@debugmsg{syllablespacing}{ set penalty \grenobreakpenalty}%
   \else %
     \ifnum#2=1\relax %
-      \grepenalty{\greendofwordpenalty}%
+      \gre@penalty{\greendofwordpenalty}%
       \gre@debugmsg{syllablespacing}{ set penalty \greendofwordpenalty}%
     \else %
-      \grepenalty{\greendofsyllablepenalty}%
+      \gre@penalty{\greendofsyllablepenalty}%
       \gre@debugmsg{syllablespacing}{ set penalty \greendofsyllablepenalty}%
     \fi %
   \fi %
@@ -808,7 +808,7 @@
       \xdef\gremustdotranslationcenterend{0}%
     \fi %
     #9\relax %
-    \grepenalty{\greendafterbaraltpenalty }% TODO: isn't it a bit buggy?
+    \gre@penalty{\greendafterbaraltpenalty }% TODO: isn't it a bit buggy?
     % end of same code as syllable
     \ifnum\grelastoflinecount=1\relax %
       \global\grelastoflinecount=2\relax %

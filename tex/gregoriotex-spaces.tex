@@ -27,52 +27,22 @@
 
 %% The following macros enable users to tune penalties used in Gregorio
 
-% penalty to force a break on a new line
-\xdef\grenewlinepenalty{-10001}%
-\def\greforcebreak{\grepenalty{\grenewlinepenalty}}%
+% macro to force a break on a new line
+\def\greforcebreak{\gre@penalty{\grenewlinepenalty}}%
 
-% penalty to prevent a line break
-\xdef\grenobreakpenalty{10001}%
-\def\grenobreak{\grepenalty{\grenobreakpenalty}}%
+% macro to prevent a line break
+\def\grenobreak{\gre@penalty{\grenobreakpenalty}}%
 
-% called in \grenolastline (seems deprecated...)
-\xdef\grenolastlinepenalty{100}%
-
-% penalty at the end of a syllable which is the end of a word
-\xdef\greendofwordpenalty{-100}%
-
-% penalty at the end of a syllable which is not the end of a word
-\xdef\greendofsyllablepenalty{-50}%
-
-% penalty at the end of a syllable which is just a bar, with something printed
-% under it
-\xdef\greendafterbarpenalty{-200}%
-
-% penalty right after a bar with nothing printed
-\xdef\greendafterbaraltpenalty{-200}%
-
-% penalty at the end of a breakable neumatic element (typically at a space
-% between elements)
-\xdef\greendofelementpenalty{-50}%
-
-% hyphenpenalty will be used in discretionaries, in Gregorio this is used for
-% a bar with clef change for example. It also set \exhyphenpenalty. It should
-% be close to \greendafterbarpenalty
-\xdef\grehyphenpenalty{-200}%
-
-% broken penalty is the vertical penalty inserted after a break on a clef change
-% I'm not sure it should be set, but it might be useful...
-\xdef\grebrokenpenalty{0}%
 
 %% The following macros cancel some useless penalties, and reinstances them
 %% at the end of a score
 
-\def\grecancelpenalties{%
-  \xdef\grehyphenpenaltysave{\the\hyphenpenalty }%
-  \xdef\greexhyphenpenaltysave{\the\exhyphenpenalty }%
-  \xdef\gredoublehyphendemeritssave{\the\doublehyphendemerits }%
-  \xdef\grefinalhyphendemeritssave{\the\finalhyphendemerits }%
-  \xdef\grebrokenpenaltysave{\the\brokenpenalty }%
+\def\gre@cancelpenalties{%
+  \xdef\gre@hyphenpenaltysave{\the\hyphenpenalty }%
+  \xdef\gre@exhyphenpenaltysave{\the\exhyphenpenalty }%
+  \xdef\gre@doublehyphendemeritssave{\the\doublehyphendemerits }%
+  \xdef\gre@finalhyphendemeritssave{\the\finalhyphendemerits }%
+  \xdef\gre@brokenpenaltysave{\the\brokenpenalty }%
   \hyphenpenalty=\grehyphenpenalty\relax %
   \exhyphenpenalty=\grehyphenpenalty\relax %
   \doublehyphendemerits=0\relax %
@@ -80,39 +50,23 @@
   \brokenpenalty=\grebrokenpenalty\relax %
 }%
 
-\def\grerestorepenalties{%
-  \hyphenpenalty=\grehyphenpenaltysave %
-  \exhyphenpenalty=\greexhyphenpenaltysave %
-  \doublehyphendemerits=\gredoublehyphendemeritssave %
-  \finalhyphendemerits=\grefinalhyphendemeritssave %
-  \brokenpenalty=\grebrokenpenaltysave %
+\def\gre@restorepenalties{%
+  \hyphenpenalty=\gre@hyphenpenaltysave %
+  \exhyphenpenalty=\gre@exhyphenpenaltysave %
+  \doublehyphendemerits=\gre@doublehyphendemeritssave %
+  \finalhyphendemerits=\gre@finalhyphendemeritssave %
+  \brokenpenalty=\gre@brokenpenaltysave %
 }%
 
-%% These macro enable the tuning of linepenalty, tolerance, pretolerance
-%% and emergencystretch
-
-% the macros to be modified by the users, 
-\def\grelooseness{\looseness}%
-\def\gretolerance{\tolerance}%
-% Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
-% see http://tug.org/pipermail/luatex/2013-July/004516.html
-\ifnum\the\luatexversion < 80\relax %
-  \global\def\grepretolerance{-1}%
-\else %
-  \global\def\grepretolerance{\pretolerance}%
-\fi %
-\def\greemergencystretch{\emergencystretch}%
-\def\grewidowpenalty{\widowpenalty}%
-\def\greclubpenalty{\clubpenalty}%
 
 % macro called at ea
 \def\gredofinetuning{%
-  \xdef\greloosenesssave{\the\looseness}%
-  \xdef\gretolerancesave{\the\tolerance}%
-  \xdef\grepretolerancesave{\the\pretolerance}%
-  \xdef\greemergencystretchsave{\the\emergencystretch}%
-  \xdef\grewidowpenaltysave{\the\widowpenalty}%
-  \xdef\greclubpenaltysave{\the\clubpenalty}%
+  \xdef\gre@loosenesssave{\the\looseness}%
+  \xdef\gre@tolerancesave{\the\tolerance}%
+  \xdef\gre@pretolerancesave{\the\pretolerance}%
+  \xdef\gre@emergencystretchsave{\the\emergencystretch}%
+  \xdef\gre@widowpenaltysave{\the\widowpenalty}%
+  \xdef\gre@clubpenaltysave{\the\clubpenalty}%
   \looseness=\grelooseness %
   \tolerance=\gretolerance %
   \pretolerance=\grepretolerance %
@@ -122,12 +76,12 @@
 }%
 
 \def\greendfinetuning{%
-  \looseness=\greloosenesssave %
-  \tolerance=\gretolerancesave %
-  \pretolerance=\grepretolerancesave %
-  \emergencystretch=\greemergencystretchsave %
-  \widowpenalty=\grewidowpenaltysave %
-  \clubpenalty=\greclubpenaltysave %
+  \looseness=\gre@loosenesssave %
+  \tolerance=\gre@tolerancesave %
+  \pretolerance=\gre@pretolerancesave %
+  \emergencystretch=\gre@emergencystretchsave %
+  \widowpenalty=\gre@widowpenaltysave %
+  \clubpenalty=\gre@clubpenaltysave %
 }%
 
 

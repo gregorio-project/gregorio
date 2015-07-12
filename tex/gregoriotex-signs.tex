@@ -47,16 +47,16 @@
 % To remedy that, we define \grehskip to be \hskip outside a discretionary, and
 % \kern inside a discretionary. This is what these macros do:
 
-\def\grefalsepenalty#1{}%
-\def\gretruepenalty#1{\penalty#1}%
+\def\gre@falsepenalty#1{}%
+\def\gre@truepenalty#1{\penalty#1}%
 
 \let\grehskip\hskip%
-\let\grepenalty\gretruepenalty%
+\let\gre@penalty\gre@truepenalty%
 \xdef\greinsidediscretionary{\number 0}%
 
 \def\GreDiscretionary#1#2{%
   \global\let\grehskip\kern %
-  \global\let\grepenalty\grefalsepenalty %
+  \global\let\gre@penalty\gre@falsepenalty %
   \global\xdef\greinsidediscretionary{\number 1}%
   \discretionary{%
     \global\grelastoflinecount=1\relax % (a good magic trick)
@@ -70,7 +70,7 @@
     }%
   \global\xdef\greinsidediscretionary{\number 0}%
   \global\let\grehskip\hskip %
-  \global\let\grepenalty\gretruepenalty %
+  \global\let\gre@penalty\gre@truepenalty %
   \relax %
 }%
 

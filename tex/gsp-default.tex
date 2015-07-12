@@ -21,6 +21,10 @@
 
 %% First, the penalties
 
+% penalty to force a break on a new line
+\xdef\grenewlinepenalty{-10001}%
+% penalty to prevent a line break
+\xdef\grenobreakpenalty{10001}%
 % penalty at the end of a syllable which is the end of a word
 \xdef\greendofwordpenalty{-100}%
 % penalty at the end of a syllable which is not the end of a word
@@ -37,17 +41,18 @@
 % a bar with clef change for example. It also set \exhyphenpenalty. It should
 % be close to \greendafterbarpenalty
 \xdef\grehyphenpenalty{-200}%
-
 % broken penalty is the vertical penalty inserted after a break on a clef change
 % I'm not sure it should be set, but it might be useful...
 \xdef\grebrokenpenalty{0}%
 
-%% Then, some fine tunings
+%% These macro enable the tuning of linepenalty, tolerance, pretolerance
+%% and emergencystretch
 \def\grelooseness{\looseness}%
 \def\gretolerance{9000}%
 % Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
 % see http://tug.org/pipermail/luatex/2013-July/004516.html
-\ifnum\the\luatexversion < 78\relax %
+% redundant code in gregoriotex-spaces.tex had 80 here instead of 78.  Since the code loading order means that this was the ruling code, I've simply removed the redundant code over in gregoriotex-spaces.tex without making any changes here.
+\ifnum\the\luatexversion < 78\relax % 
   \global\def\grepretolerance{-1}%
 \else %
   \global\def\grepretolerance{\pretolerance}%

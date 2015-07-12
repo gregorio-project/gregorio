@@ -237,7 +237,7 @@
     \ifnum#1=1\relax %
       \hfill %
     \fi %
-    \grepenalty{-10001}%
+    \gre@penalty{-10001}%
   \fi %
   \relax %
 }%
@@ -932,7 +932,7 @@
     \gresetstylefont %
   \fi %
   \gre@computespaces%
-  \grecancelpenalties %
+  \gre@cancelpenalties %
   \gredofinetuning %
   \gregorioattr=0\relax %
   \xdef\greexhyphencharsave{\the\exhyphenchar}%
@@ -978,7 +978,7 @@
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@removetranslationspace %
   \grenormalinitial %
-  \grerestorepenalties %
+  \gre@restorepenalties %
   \greendfinetuning %
   \exhyphenchar=\greexhyphencharsave %
   \gre@dimen@temp@one=0pt%
@@ -1003,7 +1003,7 @@
 
 % macro called at the end of a bar. Almost the same, but not for the penalties
 \def\greendafterbar#1{%
-  \grepenalty{\greendafterbarpenalty }\relax %
+  \gre@penalty{\greendafterbarpenalty }\relax %
   \ifnum#1=1\relax %
     \gre@debugmsg{ifdim}{ enddifference > 0pt}%
     \ifdim\gre@dimen@enddifference > 0 pt %
@@ -1026,7 +1026,7 @@
       \fi %
     \fi %
   \fi %
-  %\grepenalty{\greendafterbarpenalty }\relax 
+  %\gre@penalty{\greendafterbarpenalty }\relax 
   %\global\gre@dimen@enddifference=0pt 
   \relax %
 }%
@@ -1107,7 +1107,7 @@
 % #2 is if the space is unbreakable (1) or not (0)
 \def\GreEndOfElement#1#2{%
   \ifnum #2=0\relax %
-    \grepenalty{\greendofelementpenalty}%
+    \gre@penalty{\greendofelementpenalty}%
   \else %
     \grenobreak %
   \fi %
@@ -1207,21 +1207,21 @@
       \fi %
   \fi %
   \ifnum\grenlbinitialstate=0\relax %
-      \xdef\grenobreakpenaltysave{\grenobreakpenalty }%
+      \xdef\gre@nobreakpenaltysave{\grenobreakpenalty }%
       \xdef\grenobreakpenalty{10001}%
-      \xdef\grenolastlinepenaltysave{\grenolastlinepenalty }%
+      \xdef\gre@nolastlinepenaltysave{\grenolastlinepenalty }%
       \xdef\grenolastlinepenalty{10001}%
-      \xdef\greendofwordpenaltysave{\greendofwordpenalty }%
+      \xdef\gre@endofwordpenaltysave{\greendofwordpenalty }%
       \xdef\greendofwordpenalty{10001}%
-      \xdef\greendofsyllablepenaltysave{\greendofsyllablepenalty }%
+      \xdef\gre@endofsyllablepenaltysave{\greendofsyllablepenalty }%
       \xdef\greendofsyllablepenalty{10001}%
-      \xdef\greendafterbarpenaltysave{\greendafterbarpenalty }%
+      \xdef\gre@endafterbarpenaltysave{\greendafterbarpenalty }%
       \xdef\greendafterbarpenalty{10001}%
-      \xdef\greendafterbaraltpenaltysave{\greendafterbaraltpenalty }%
+      \xdef\gre@endafterbaraltpenaltysave{\greendafterbaraltpenalty }%
       \xdef\greendafterbaraltpenalty{10001}%
-      \xdef\greendofelementpenaltysave{\greendofelementpenalty }%
+      \xdef\gre@endofelementpenaltysave{\greendofelementpenalty }%
       \xdef\greendofelementpenalty{10001}%
-      \xdef\grehyphenpenaltysave{\grehyphenpenalty }%
+      \xdef\gre@hyphenpenaltysave{\grehyphenpenalty }%
       \xdef\grehyphenpenalty{10001}%
   \fi %
 }%
@@ -1242,18 +1242,18 @@
   % if grenlbstate is not 0, then nothing should happend
   \ifnum\grenlbstate=0\relax %
     \ifnum\grenlbinitialstate=0\else %
-      \xdef\grenobreakpenalty{\grenobreakpenaltysave }%
-      \xdef\grenolastlinepenalty{\grenolastlinepenaltysave}%
-      \xdef\greendofwordpenalty{\greendofwordpenaltysave}%
-      \xdef\greendofsyllablepenalty{\greendofsyllablepenaltysave}%
-      \xdef\greendafterbarpenalty{\greendafterbarpenaltysave}%
-      \xdef\greendafterbaraltpenalty{\greendafterbaraltpenaltysave}%
-      \xdef\greendofelementpenalty{\greendofelementpenaltysave}%
-      \xdef\grehyphenpenalty{\grehyphenpenaltysave}%
+      \xdef\grenobreakpenalty{\gre@nobreakpenaltysave }%
+      \xdef\grenolastlinepenalty{\gre@nolastlinepenaltysave}%
+      \xdef\greendofwordpenalty{\gre@endofwordpenaltysave}%
+      \xdef\greendofsyllablepenalty{\gre@endofsyllablepenaltysave}%
+      \xdef\greendafterbarpenalty{\gre@endafterbarpenaltysave}%
+      \xdef\greendafterbaraltpenalty{\gre@endafterbaraltpenaltysave}%
+      \xdef\greendofelementpenalty{\gre@endofelementpenaltysave}%
+      \xdef\grehyphenpenalty{\gre@hyphenpenaltysave}%
       \ifcase #1\relax % 0
-        \grepenalty{\greendofelementpenalty}%
+        \gre@penalty{\greendofelementpenalty}%
       \or % 1
-        \grepenalty{\greendofsyllablepenalty}%
+        \gre@penalty{\greendofsyllablepenalty}%
       \or % 2
         % end of score, no penalty needs to be added
       \or % 3
