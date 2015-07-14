@@ -59,8 +59,8 @@
 }%
 
 
-% macro called at ea
-\def\gredofinetuning{%
+% macro called at each score
+\def\gre@dofinetuning{%
   \xdef\gre@loosenesssave{\the\looseness}%
   \xdef\gre@tolerancesave{\the\tolerance}%
   \xdef\gre@pretolerancesave{\the\pretolerance}%
@@ -75,7 +75,7 @@
   \clubpenalty=\greclubpenalty %
 }%
 
-\def\greendfinetuning{%
+\def\gre@endfinetuning{%
   \looseness=\gre@loosenesssave %
   \tolerance=\gre@tolerancesave %
   \pretolerance=\gre@pretolerancesave %

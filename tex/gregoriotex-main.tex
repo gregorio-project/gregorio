@@ -586,12 +586,12 @@
 % - typeset the text above the lines if relevant, and making sure we execute it only once
 % - not do anything else
 
-\xdef\grecurrenttextabovelines{}%
+\xdef\gre@currenttextabovelines{}%
 
 \def\GreSetTextAboveLines#1{%
-  \gdef\grecurrenttextabovelines{%
+  \gdef\gre@currenttextabovelines{%
     \gretypesettextabovelines{#1}%
-    \gdef\grecurrenttextabovelines{}%
+    \gdef\gre@currenttextabovelines{}%
     \relax %
   }%
 }%
@@ -933,7 +933,7 @@
   \fi %
   \gre@computespaces%
   \gre@cancelpenalties %
-  \gredofinetuning %
+  \gre@dofinetuning %
   \gregorioattr=0\relax %
   \xdef\greexhyphencharsave{\the\exhyphenchar}%
   \exhyphenchar=-1\relax %
@@ -979,7 +979,7 @@
   \gre@removetranslationspace %
   \grenormalinitial %
   \gre@restorepenalties %
-  \greendfinetuning %
+  \gre@endfinetuning %
   \exhyphenchar=\greexhyphencharsave %
   \gre@dimen@temp@one=0pt%
   \gre@dimen@temp@two=0pt%

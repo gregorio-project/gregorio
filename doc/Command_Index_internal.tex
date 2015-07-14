@@ -368,7 +368,8 @@ Macro to hold the height of the current flat for the clef (\texttt{a} if no flat
 \macroname{\textbackslash gre@updatelinesclef}{}{gregoriotex-signs.tex}
 Macro redrawing a key from \verb=\gre@clefnum=, useful for vertical space changes.
 
-
+\macroname{\textbackslash gre@currenttextabovelines}{}{gregoriotex-main.tex}
+Macro for storing the text which needs to be placed above the lines.
 
 
 \subsection{Auxiliary File}
@@ -715,6 +716,12 @@ Macro to gobble (suppress) its argument.
 Macro called at the beginning of the score to swap text penalties for score penalties.
 
 \macroname{\textbackslash gre@restorepenalties}{}{gregoriotex-spaces.tex}
+Macro called at the end of the score to restore the text penalties.
+
+\macroname{\textbackslash gre@dofinetuning}{}{gregoriotex-spaces.tex}
+Macro called at the beginning of the score to swap text penalties for score penalties.
+
+\macroname{\textbackslash gre@endfinetuning}{}{gregoriotex-spaces.tex}
 Macro called at the end of the score to restore the text penalties.
 
 \macroname{\textbackslash gre@brokenpenaltysave}{}{gregoriotex-spaces.tex}
