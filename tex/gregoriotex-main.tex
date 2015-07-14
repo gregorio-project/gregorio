@@ -198,21 +198,21 @@
 % macro called to go to the next line
 \def\GreNewLine{%
   \gre@debugmsg{lineheight}{GreNewLine}%
-  \grenewlinecommon{0}%
+  \gre@newlinecommon{0}%
   \relax%
 }%
 
 % basically same as above, but this one does a \hfill, so the lines are not justified
 \def\GreNewParLine{%
   \gre@debugmsg{lineheight}{GreNewParLine}%
-  \grenewlinecommon{1}%
+  \gre@newlinecommon{1}%
 }%
 
 % a macro describing a kern to make before ending the line, which we sometimes want (see \syllable)
 \xdef\grekernbeforeeol{0pt\relax}%
 
-% the macro we call each time we force a changing of line, it automatically sets \greknownline, and adjusts left spaces
-\def\grenewlinecommon#1{%
+% the macro we call each time we force a changing of line, it automatically sets \gre@knownline, and adjusts left spaces
+\def\gre@newlinecommon#1{%
   \ifgre@blockeolcustos\ifnum\greinsidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
@@ -221,7 +221,7 @@
   \kern\gre@skip@temp@four %
   \ifgre@boxing\else%
     \ifnum\gre@biginitial=1\relax %
-      \ifcase\greknownline %
+      \ifcase\gre@knownline %
       % 0: should not happend...
       \or % 1
         \GreAdjustSecondLine %
@@ -229,8 +229,8 @@
         \GreAdjustThirdLine %
       \fi %
     \fi %
-    \global\advance\greknownline by 1\relax %
-    \global\grelastoflinecount=2\relax %
+    \global\advance\gre@knownline by 1\relax %
+    \global\gre@lastoflinecount=2\relax %
     \ifnum\greinsidediscretionary=0\relax %
       \greupdateleftbox %
     \fi %
@@ -270,8 +270,8 @@
 % gre@biginitial means that the inital takes two lines
 \newcount\gre@biginitial%
 
-% greknownline is the line we think we are in
-\newcount\greknownline%
+% gre@knownline is the line we think we are in
+\newcount\gre@knownline%
 
 % macro to call before the call of \initial
 \def\GreSetBigInitial{%
@@ -300,17 +300,17 @@
 }%
 
 \def\greupdateleftbox{%
-  \greupdatelinewidth %
+  \gre@updatelinewidth %
   \gre@updatelinesclef %
 }%
 
-\def\greupdatelinewidth{%
+\def\gre@updatelinewidth{%
   \gre@debugmsg{ifdim}{ additionalleftspace = 0pt}%
   \ifdim\gre@dimen@additionalleftspace=0pt%
   \else %
     \gre@dimen@temp@five=\gre@dimen@stafflinewidth %
     \global\advance\gre@dimen@stafflinewidth by -\gre@dimen@additionalleftspace %
-    \gregeneratelines %
+    \gre@generatelines %
     \global\gre@dimen@stafflinewidth=\gre@dimen@temp@five %
   \fi %
 }%
@@ -406,7 +406,7 @@
 \def\GreNoInitial{%
   \setbox\gre@box@initial=\hbox{}%
   \global\gre@dimen@initialwidth=0pt %
-  \global\grelastoflinecount=2\relax %
+  \global\gre@lastoflinecount=2\relax %
   \relax %
 }%
 
@@ -537,7 +537,7 @@
 %% macro that draws the lines : starts by the first and then draws the lines of every line.
 %% has to be called before drawing the key, after drawing the initial
 \def\GreBeginNotes{%
-  \gredrawfirstlines %
+  \gre@drawfirstlines %
   %%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
   \grelocalleftbox{%
     \copy\gre@box@lines %
@@ -569,7 +569,7 @@
   \gre@style@abovelinestext%
   \greabovelinestextstyle{%
     \global\gre@dimen@currentabovelinestextheight=\gre@dimen@abovelinestextheight %
-    \gregeneratelines %
+    \gre@generatelines %
   }%
   \endgre@style@abovelinestext%
   \relax %
@@ -578,7 +578,7 @@
 % we don't need space above any more
 \def\gre@removespaceabove{%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
-  \gregeneratelines %
+  \gre@generatelines %
   \relax %
 }%
 
@@ -590,14 +590,14 @@
 
 \def\GreSetTextAboveLines#1{%
   \gdef\gre@currenttextabovelines{%
-    \gretypesettextabovelines{#1}%
+    \gre@typesettextabovelines{#1}%
     \gdef\gre@currenttextabovelines{}%
     \relax %
   }%
 }%
 
 % typesets the text above the line
-\def\gretypesettextabovelines#1{%
+\def\gre@typesettextabovelines#1{%
   \gre@style@abovelinestext%
   \greabovelinestextstyle{%
     \gre@debugmsg{spacing}{Raise alt text: \gre@dimen@abovelinestextraise}%
@@ -645,7 +645,7 @@
 }%
 
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
-\def\gredrawfirstlines{%
+\def\gre@drawfirstlines{%
   \advance\gre@dimen@stafflinewidth by -\gre@dimen@initialwidth%
   %\advance\gre@dimen@stafflinewidth by -\gre@dimen@minimalspaceatlinebeginning
   %\gre@dimen@initialwidth=0pt
@@ -697,7 +697,7 @@
 \newbox\gre@box@lines%
 
 % macro that must be called at each change of linewidth and grefactor
-\def\gregeneratelines{%
+\def\gre@generatelines{%
   \setbox\gre@box@lines=\hbox to 0pt{%
     \vbox{%
       \gre@style@normalstafflines%
@@ -741,19 +741,10 @@
   \relax %
 }%
 
-% macro called when the initial is big, and so when the second line is at the same level as the first
-\def\gresmallsecondline{%
-  \gre@dimen@temp@five=\gre@dimen@stafflinewidth %
-  \global\advance\gre@dimen@stafflinewidth by -\gre@dimen@initialwidth %
-  \gregeneratelines %
-  \global\gre@dimen@stafflinewidth=\gre@dimen@temp@five %
-  \relax %
-}%
-
 % macro called when we are after the second line of a big initial, to have normal lines back
 \def\grenormallines{%
   \global\gre@dimen@stafflinewidth=\gre@dimen@linewidth %
-  \gregeneratelines %
+  \gre@generatelines %
   \relax %
 }%
 
@@ -938,7 +929,7 @@
   \gregorioattr=0\relax %
   \xdef\greexhyphencharsave{\the\exhyphenchar}%
   \exhyphenchar=-1\relax %
-  \gregeneratelines %
+  \gre@generatelines %
   \noindent%
   \gre@calculate@additionalspaces{#2}{#3}{#4}{#5}%
   \directlua{
@@ -950,13 +941,13 @@
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %
   \fi %
-  \global\greknownline=1\relax %
+  \global\gre@knownline=1\relax %
   \relax%
 }%
 
 %macro called at the end of a score
 \def\GreEndScore{%
-  \global\grelastoflinecount=0\relax %
+  \global\gre@lastoflinecount=0\relax %
   \global\greseteolcustos{auto}%
   \GreEndEUOUAE{}%
   \ifnum\grenlbstate=0\else %
@@ -1032,7 +1023,7 @@
   \relax %
 }%
 
-\newcount\grelastoflinecount%
+\newcount\gre@lastoflinecount%
 
 % TODO: case where we're at the beginning *and* end of a line... quite rare case though...
 % macro to tell gregorioTeX no to put a space after the current syllable (otherwise it may cause annoying black boxes in the pdf if written in plainTeX)
@@ -1040,7 +1031,7 @@
 % 1 if the syllable is the last of the line
 % 2 after it has finished the syllable, so when it is two it means that the syllable is the first of a line
 \def\GreLastOfLine{%
-  \global\grelastoflinecount=1\relax%
+  \global\gre@lastoflinecount=1\relax%
   \relax%
 }%
 
@@ -1050,7 +1041,7 @@
   %blank line removing algorithm (in lua) will let some blank space after the
   %last line... (see bug #20953)
   \greseteolcustos{manual}%
-  \global\grelastoflinecount=1\relax%
+  \global\gre@lastoflinecount=1\relax%
   \relax%
 }%
 

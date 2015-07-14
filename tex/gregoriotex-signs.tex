@@ -59,12 +59,12 @@
   \global\let\gre@penalty\gre@falsepenalty %
   \global\xdef\greinsidediscretionary{\number 1}%
   \discretionary{%
-    \global\grelastoflinecount=1\relax % (a good magic trick)
+    \global\gre@lastoflinecount=1\relax % (a good magic trick)
     #1%
     \gre@skip@temp@four = \grekernbeforeeol\relax%
     \kern\gre@skip@temp@four %
     }{%
-    \global\grelastoflinecount=2\relax % (a good magic trick)
+    \global\gre@lastoflinecount=2\relax % (a good magic trick)
     }{%
     #2%
     }%
@@ -421,11 +421,6 @@
   \or\gre@fontchar@custobottomlong %
   \or\gre@fontchar@custobottommiddle %
   \fi%
-}%
-
-\def\removecusto{%
-  \grelocalrightbox{}%
-  \relax%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1592,7 +1587,7 @@
 % #3 is the char of the alteration hole
 % #4 is 1 in the case of a flat for a key change, 0 otherwise
 \def\gre@alteration#1#2#3#4{%
-  % to see why we reset \grelastoflinecount, see comments of \GreGlyph.
+  % to see why we reset \gre@lastoflinecount, see comments of \GreGlyph.
   \ifnum#4=0\relax %
     \grenewglyphcommon %
     \ifnum\the\grefirstglyph=1\relax %

@@ -371,8 +371,34 @@ Macro redrawing a key from \verb=\gre@clefnum=, useful for vertical space change
 \macroname{\textbackslash gre@currenttextabovelines}{}{gregoriotex-main.tex}
 Macro for storing the text which needs to be placed above the lines.
 
+\macroname{\textbackslash gre@typesettextabovelines}{\#1}{gregoriotex-main.tex}
+Macro for typesetting the text above the lines.
+
 \macroname{\textbackslash gre@dotranslationcenterend}{}{gregoriotex-main.tex}
 Macro to typeset a centered translation.
+
+\macroname{\textbackslash gre@drawfirstlines}{}{gregoriotex-main.tex}
+Macro to draw the first set of lines in a score (when shortened by an initial).
+
+\macroname{\textbackslash gre@generatelines}{}{gregoriotex-main.tex}
+Macro to (re)populate the box containing the lines.
+
+\macroname{\textbackslash gre@updatelinewidth}{}{gregoriotex-main.tex}
+Macro to shorten the lines to account for the presence of the initial.
+
+\macroname{\textbackslash gre@knownline}{}{gregoriotex-main.tex}
+A count which keeps track of which line of the score we're on.
+
+\macroname{\textbackslash gre@lastoflinecount}{}{gregoriotex-main.tex}
+Count to track where on the line we are.  Values are 0 (we are not near the end of a line), 1 (we're at the last syllable of the line), and 2 (we just set the last syllable of the line and so are at the first syllable of a new line).
+
+\macroname{\textbackslash gre@savedlastoflinecount}{}{gregoriotex-main.tex}
+A spot to save the \verb=\gre@lastoflinecount= so we can change it temporarily and revert to the saved value later.
+
+\macroname{\textbackslash gre@newlinecommon}{\#1}{gregoriotex-main.tex}
+The macro which needs to be called each time a new lines is started.
+
+
 
 
 \subsection{Auxiliary File}

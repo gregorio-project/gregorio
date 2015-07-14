@@ -612,7 +612,7 @@
   \else %
     \gre@removespaceabove %
   \fi %
-  \gregeneratelines %
+  \gre@generatelines %
   \gre@calculate@constantglyphraise %
   \relax %
 }%
@@ -676,7 +676,7 @@
     \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight %
     \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext %
     \global\advance\gre@dimen@textlower by \gre@dimen@translationheight %
-    \gregeneratelines %
+    \gre@generatelines %
     \gre@calculate@constantglyphraise %
   }%
   \endgre@style@translation%
@@ -686,7 +686,7 @@
 \def\gre@removetranslationspace{%
   \global\gre@dimen@currenttranslationheight=0 sp%
   \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext %
-  \gregeneratelines %
+  \gre@generatelines %
   \gre@calculate@constantglyphraise %
   \relax %
 }%
