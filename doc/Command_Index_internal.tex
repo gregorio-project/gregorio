@@ -489,14 +489,17 @@ All distances in \nameref{distances} have a flag associated with them, of the fo
 indicates if the distance should scale when the staff size changes (1)
 or not (0).
 
-\macroname{\textbackslash ifchecklength}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash ifgre@checklength}{}{gregoriotex-spaces.tex}
 Boolean flag used in \verb=\gresetdim= to indicate if we are attempting to set a rubber length.
 
-\macroname{\textbackslash ifbadlength}{}{gregoriotex-spaces.tex}
-Boolean flag used in \verb=\gresetdim= to indicate that we are attempting to assign a rubber length to a distance which cannot accept a rubber value.
-
-\macroname{\textbackslash ifrubber}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash ifgre@rubber}{}{gregoriotex-spaces.tex}
 Boolean flag used in \verb=\gre@changeonedimenfactor= to indicate if we are dealing with one of the distances which can accept a rubber length.
+
+\macroname{\textbackslash ifgre@stretch}{}gregoriotex-spaces.tex}
+Boolean flag used in \verb=\gre@changeonedimenfactor= as we test for the presence of a stretch.
+
+\macroname{\textbackslash ifgre@shrink}{}gregoriotex-spaces.tex}
+Boolean flag used in \verb=\gre@changeonedimenfactor= as we test for the presence of a shrink.
 
 \macroname{\textbackslash ifgre@vowelcentering}{}{gregoriotex-syllable.tex}
 Boolean flag used to specify whether the center of the vowel or the center of the syllable is used to align the lyrics with their neumes.

@@ -786,19 +786,19 @@
 
 %% This macro creates one dim (#1), setting its value to #2 and sets whether it should scale when the \grefactor changes (#3, 1 if yes, 0 if no).  While it does check that #1 can accept the kind of distance given in #2, it does not propagate the changes through the calculated distances.
 %% Note: the distances created by this function are stored as strings, not skip or dimension registers.  This allows the user to specify a distance in em or ex units even though the font parameters may not be the same at the time the distance is specified and the time the distance is used.
-\newif\ifchecklength%
+\newif\ifgre@checklength%
 \def\grecreatedim#1#2#3{%
-  \checklengthfalse%
+  \gre@checklengthfalse%
   %check if #2 is a rubber length (contains plus and/or minus)
-  \IfSubStr{#2}{plus}{\checklengthtrue}{\relax}%
-  \IfSubStr{#2}{minus}{\checklengthtrue}{\relax}%
+  \IfSubStr{#2}{plus}{\gre@checklengthtrue}{\relax}%
+  \IfSubStr{#2}{minus}{\gre@checklengthtrue}{\relax}%
   %if #1 is one of the distances which cannot be rubber.
   \gre@rubberpermit{#1}%
   % do we try to assign a rubber to one where it's not permitted?
-  \ifrubber%
+  \ifgre@rubber%
     \def\gre@prefix{skip}%
   \else%
-    \ifchecklength%
+    \ifgre@checklength%
       \gre@error{#1 cannot be a rubber length.}%
     \else%
       \def\gre@prefix{dimen}%
@@ -818,7 +818,7 @@
 \def\grechangedim#1#2#3{%
   \gre@rubberpermit{#1}%
   % figure out our prefix
-  \ifrubber%
+  \ifgre@rubber%
     \gre@debugmsg{spacing}{Changing a skip.}%
     \def\gre@prefix{skip}%
   \else%
@@ -882,47 +882,47 @@
 %%%%%%%%%%%%%%
 
 % This function checks to see if the length is one of the ones which cannot be a rubber length
-\newif\ifrubber%
+\newif\ifgre@rubber%
 \def\gre@rubberpermit#1{%
-  \rubbertrue%
+  \gre@rubbertrue%
   % is length one that cannot be rubber?
-  \IfStrEq{#1}{additionallineswidth}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{additionalcustoslineswidth}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{zerowidthspace}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{maximumspacewithoutdash}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{afterinitialshift}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{beforeinitialshift}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{minimalspaceatlinebeginning}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{manualinitialwidth}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{annotationseparation}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{annotationraise}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{noclefspace}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{clivisalignmentmin}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{abovesignsspace}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{belowsignsspace}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{choralsigndownshift}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{choralsignupshift}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{translationheight}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{spacelinestext}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{spacebeneathtext}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{abovelinestextraise}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{abovelinestextheight}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{braceshift}{\rubberfalse}{\relax}%
-  \IfStrEq{#1}{curlybraceaccentusshift}{\rubberfalse}{\relax}%
+  \IfStrEq{#1}{additionallineswidth}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{additionalcustoslineswidth}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{zerowidthspace}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{maximumspacewithoutdash}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{afterinitialshift}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{beforeinitialshift}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{minimalspaceatlinebeginning}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{manualinitialwidth}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{annotationseparation}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{annotationraise}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{noclefspace}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{clivisalignmentmin}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{abovesignsspace}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{belowsignsspace}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{choralsigndownshift}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{choralsignupshift}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{translationheight}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{spacelinestext}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{spacebeneathtext}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{abovelinestextraise}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{abovelinestextheight}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{braceshift}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{curlybraceaccentusshift}{\gre@rubberfalse}{\relax}%
 }%
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
 %% Note: This function is assumed to touch only dimensions which are meant to scale with the \grefactor (i.e. if it acts on distance x, \gre@scale@x is 1)
 \def\gre@changeonedimenfactor#1#2#3{%
   \gre@rubberpermit{#1}%
-  \ifrubber% if we have a rubber allowed length we create a temporary skip
+  \ifgre@rubber% if we have a rubber allowed length we create a temporary skip
     \let\gre@scaledist\gre@skip@temp@one%
   \else% otherwise we create a temporary dimen
     \let\gre@scaledist\gre@dimen@temp@one%
   \fi%
   % Math
   \gre@rubberpermit{#1}%
-  \ifrubber%
+  \ifgre@rubber%
     \edef\gre@convert{\csname gre@skip@#1\endcsname}%
   \else%
     \edef\gre@convert{\csname gre@dimen@#1\endcsname}%
@@ -984,15 +984,15 @@
 }%
 
 % This function takes a distance (#2) and formats it as a string so that its units conform to the pattern set by a string representation of a distance (#1)
-\newif\ifstretch%
-\newif\ifshrink%
+\newif\ifgre@stretch%
+\newif\ifgre@shrink%
 \def\gre@consistentunits#1#2{%
-  \stretchfalse%
-  \shrinkfalse%
-  \IfSubStr{#1}{plus}{\stretchtrue}{\relax}%
-  \IfSubStr{#1}{minus}{\shrinktrue}{\relax}%
-  \ifstretch%
-    \ifshrink%
+  \gre@stretchfalse%
+  \gre@shrinkfalse%
+  \IfSubStr{#1}{plus}{\gre@stretchtrue}{\relax}%
+  \IfSubStr{#1}{minus}{\gre@shrinktrue}{\relax}%
+  \ifgre@stretch%
+    \ifgre@shrink%
       %rubber with both stretch and shrink
       \StrBefore{#1}{plus}[\gre@baseunit]%
       \StrBetween{#1}{plus}{minus}[\gre@stretchunit]%
@@ -1004,7 +1004,7 @@
       \def\gre@shrinkunit{\relax}%
     \fi%
   \else%
-    \ifshrink%
+    \ifgre@shrink%
       %rubber with shrink only
       \StrBefore{#1}{minus}[\gre@baseunit]%
       \def\gre@stretchunit{\relax}%
