@@ -864,14 +864,15 @@
   \relax %
 }%
 
-\xdef\gremustdotranslationcenterend{0}%
+\newif\ifgre@mustdotranslationcenterend%
+\gre@mustdotranslationcenterendfalse%
 
 \def\GreTranslationCenterEnd{%
-  \xdef\gremustdotranslationcenterend{1}%
+  \gre@mustdotranslationcenterendtrue%
   \relax %
 }%
 
-\def\gredotranslationcenterend{%
+\def\gre@dotranslationcenterend{%
   \ifgre@breakintranslation\else%
     \GreEndNLBArea{0}{1}%
   \fi %
@@ -1209,8 +1210,6 @@
   \ifnum\grenlbinitialstate=0\relax %
       \xdef\gre@nobreakpenaltysave{\grenobreakpenalty }%
       \xdef\grenobreakpenalty{10001}%
-      \xdef\gre@nolastlinepenaltysave{\grenolastlinepenalty }%
-      \xdef\grenolastlinepenalty{10001}%
       \xdef\gre@endofwordpenaltysave{\greendofwordpenalty }%
       \xdef\greendofwordpenalty{10001}%
       \xdef\gre@endofsyllablepenaltysave{\greendofsyllablepenalty }%
@@ -1243,7 +1242,6 @@
   \ifnum\grenlbstate=0\relax %
     \ifnum\grenlbinitialstate=0\else %
       \xdef\grenobreakpenalty{\gre@nobreakpenaltysave }%
-      \xdef\grenolastlinepenalty{\gre@nolastlinepenaltysave}%
       \xdef\greendofwordpenalty{\gre@endofwordpenaltysave}%
       \xdef\greendofsyllablepenalty{\gre@endofsyllablepenaltysave}%
       \xdef\greendafterbarpenalty{\gre@endafterbarpenaltysave}%

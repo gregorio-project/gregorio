@@ -612,10 +612,10 @@
   #8\relax %
   \raise\gre@dimen@textlower %
   \copy\gre@box@syllabletext %
-  \ifnum\gremustdotranslationcenterend=1\relax %
+  \ifgre@mustdotranslationcenterend%
     % case of end of translation centering, we do it after the typesetting of the text
-    \gredotranslationcenterend %
-    \xdef\gremustdotranslationcenterend{0}%
+    \gre@dotranslationcenterend %
+    \gre@mustdotranslationcenterendfalse%
   \fi %
   \gre@skip@temp@one = -\wd\gre@box@syllabletext %
   \kern\gre@skip@temp@one%
@@ -802,10 +802,10 @@
     \fi %
     \grenobreak %
     #8\relax %
-    \ifnum\gremustdotranslationcenterend=1\relax %
+    \ifgre@mustdotranslationcenterend%
       % case of end of translation centering, we do it after the typesetting of the text
-      \gredotranslationcenterend %
-      \xdef\gremustdotranslationcenterend{0}%
+      \gre@dotranslationcenterend %
+      \gre@mustdotranslationcenterendfalse%
     \fi %
     #9\relax %
     \gre@penalty{\greendafterbaraltpenalty }% TODO: isn't it a bit buggy?
@@ -842,10 +842,10 @@
   \else %ifdim\wd\gre@box@syllabletext = 0 pt 
     #8\relax %
     \raise\gre@dimen@textlower \copy\gre@box@syllabletext %
-    \ifnum\gremustdotranslationcenterend=1\relax %
+    \ifgre@mustdotranslationcenterend%
       % case of end of translation centering, we do it after the typesetting of the text
-      \gredotranslationcenterend %
-      \xdef\gremustdotranslationcenterend{0}%
+      \gre@dotranslationcenterend %
+      \gre@mustdotranslationcenterendfalse%
     \fi %
     \gre@skip@temp@one = -\wd\gre@box@syllabletext %
     \kern\gre@skip@temp@one %

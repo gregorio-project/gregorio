@@ -371,6 +371,9 @@ Macro redrawing a key from \verb=\gre@clefnum=, useful for vertical space change
 \macroname{\textbackslash gre@currenttextabovelines}{}{gregoriotex-main.tex}
 Macro for storing the text which needs to be placed above the lines.
 
+\macroname{\textbackslash gre@dotranslationcenterend}{}{gregoriotex-main.tex}
+Macro to typeset a centered translation.
+
 
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates it's own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
@@ -523,7 +526,8 @@ Count to track whether the initial is big (2-lines) or normal (1-line).
 \macroname{\textbackslash ifgre@boxing}{}{gregoriotex-syllable.tex}
 Flag to track whether we're placing the contents of syllable notes into their box or actually printing that box (helps prevent spurious spaces from occurring when the box is being filled but not printed).
 
-
+\macroname{\textbackslash ifgre@mustdotranslationcenterend}{}{gregoriotex-main.tex}
+Flag to track whether we must do translation centering.
 
 
 
