@@ -1231,19 +1231,19 @@
 
 
 \def\GreInDivisioFinalis#1{%
-  \ifcase\greendofscore %
-    \grewritebar{4}{1}{#1}%
-  \or %
+  \ifgre@endofscore %
     \grewritebar{5}{1}{#1}%
+  \else %
+    \grewritebar{4}{1}{#1}%
   \fi %
   \relax%
 }%
 
 \def\GreDivisioFinalis#1{%
-  \ifcase\greendofscore %
-    \grewritebar{4}{0}{#1}%
-  \or %
+  \ifgre@endofscore %
     \grewritebar{5}{0}{#1}%
+  \else %
+    \grewritebar{4}{0}{#1}%
   \fi %
   \relax%
 }%

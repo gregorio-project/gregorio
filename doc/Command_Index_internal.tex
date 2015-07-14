@@ -398,6 +398,30 @@ A spot to save the \verb=\gre@lastoflinecount= so we can change it temporarily a
 \macroname{\textbackslash gre@newlinecommon}{\#1}{gregoriotex-main.tex}
 The macro which needs to be called each time a new lines is started.
 
+\begin{argtable}
+  \#1 & 0 & Justifying the line being ended\\
+  & 1 & Do not justify the line being ended\\
+\end{argtable}
+
+\macroname{\textbackslash gre@endafterbar}{\#1}{gregoriotex-main.tex}
+Macro to call after ending a bar.
+
+\begin{argtable}
+  \#1 & 0 & We are at the end of a line\\
+  & 1 & We not at the end of a line\\
+\end{argtable}
+
+\macroname{\textbackslash gre@endofsyllable}{\#1\#2\#3}{gregoriotex-syllable.tex}
+Macro called at end of a syllable, adds a penalty and a space.
+
+\begin{argtable}
+  \#1 & 0 & to only add the penalty\\
+  & 1 & otherwise\\
+  \#2 & 0 & if end of syllable\\
+  & 1 & if end of word\\
+  \#3 & 1 & if next syllable is a bar\\
+  & 0 & otherwise\\
+\end{argtable}
 
 
 
@@ -557,6 +581,9 @@ Flag to track whether we're placing the contents of syllable notes into their bo
 
 \macroname{\textbackslash ifgre@mustdotranslationcenterend}{}{gregoriotex-main.tex}
 Flag to track whether we must do translation centering.
+
+\macroname{\textbackslash ifgre@endofscore}{}{gregoriotex-syllable.tex}
+Flag to mark the last syllable of the score.
 
 
 

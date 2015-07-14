@@ -994,7 +994,7 @@
 }%
 
 % macro called at the end of a bar. Almost the same, but not for the penalties
-\def\greendafterbar#1{%
+\def\gre@endafterbar#1{%
   \gre@penalty{\greendafterbarpenalty }\relax %
   \ifnum#1=1\relax %
     \gre@debugmsg{ifdim}{ enddifference > 0pt}%
@@ -1007,7 +1007,7 @@
         \gre@skip@temp@four = \gre@skip@textbartextspace%
         \grehskip\gre@skip@temp@four %
       \fi %
-    \else%(enddifference < Opt)
+    \else%(enddifference < 0pt)
       \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
       \ifdim\gre@skip@nextbegindifference < 0 pt %
         \gre@skip@temp@four = \gre@skip@textbartextspace%
