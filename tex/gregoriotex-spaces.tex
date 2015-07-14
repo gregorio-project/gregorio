@@ -860,11 +860,16 @@
   \greloadspaceconf{#1}%
 }%
 
+\newcount\greconffactor%
 \def\greloadspaceconf#1{%
   \input gsp-#1.tex\relax %
+  \ifnum\greconffactor=0\relax%
+    \gre@error{gsp-#1.tex does not have an assigned staff size.\MessageBreak Please edit it to define \protect\greconffactor}%
+  \fi
   \ifnum\the\grefactor=\greconffactor\else %If the space configuration file is designed for a \grefactor other than the current one, then we need to rescale the distances.
     \gre@changedimenfactor{\greconffactor}{\grefactor} %
   \fi%
+  \greconffactor=0%
   \relax %
 }%
 
