@@ -481,7 +481,7 @@ Gregorio\TeX\ supports several glyph styles which can be changed with this macro
 Redefines a \TeX\ control sequence to be a a barred symbol.
 
 \begin{argtable}
-  \#1 & character & must be A, R or V.\\
+  \#1 & character & must be \texttt{A}, \texttt{R}, or \texttt{V}.\\
   \#2 & dimension & how much the bar will be shifted left.\\
 \end{argtable}
 
@@ -501,7 +501,7 @@ and fits well with the Linux Libertine font. If you use another font, you'll
 certainly have to change this value by calling the \texttt{gresimpledefbarglyph} command.
 
 \macroname{\textbackslash gredefbarredsymbol}{\{\#1\}\{\#2\}\{\#3\}\{\#4\}\{\#5\}\{\#6\}}{gregoriotex-symbols.tex}
-Redefines a \TeX\ control sequence to be a a barred symbol.
+Redefines a \TeX\ control sequence to be a barred symbol.
 
 \begin{argtable}
   \#1 & string & the name of the command you want to define.\\
@@ -531,7 +531,39 @@ the bar made for small text (a bit bolder, named \texttt{RBarSmall} in greextra)
 , at 12pt, shifted right of \texttt{1.7mm} from the beginning of the glyph, and lowered down
 by \texttt{0.1mm}. The result is that \texttt{\textbackslash RBarBold} will typeset \RBarBold .
 
-See Annex ?? for a list of bars and other symbols present in the greextra font.
+See Appendix \ref{subsec:greextra} for a list of bars and other
+symbols present in the greextra font.
+
+\macroname{\textbackslash grelatexsimpledefbarredsymbol}{\{\#1\}\{\#2\}\{\#3\}\{\#4\}\{\#5\}}{gregoriotex-symbols.tex}
+Redefines a \TeX\ control sequence to be a barred symbol.
+
+\bigskip\textbf{Only available in \LaTeX.}
+
+\begin{argtable}
+  \#1 & character & must be \texttt{A}, \texttt{R}, or \texttt{V}.\\
+  \#2 & dimension & how much the bar will be shifted left when upright and medium weight.\\
+  \#3 & dimension & how much the bar will be shifted left when italic/slanted and medium weight.\\
+  \#4 & dimension & how much the bar will be shifted left when upright and bold.\\
+  \#5 & dimension & how much the bar will be shifted left when italic/slanted and bold.\\
+\end{argtable}
+
+This is like \verb=gresimpledefbarglyph=, but allows setting different shifts
+for different font shapes and weights.  If you need something more elaborate,
+you will need to redefine the bar macro(s) manually.  This macro is only
+available in \LaTeX{} because it depends upon the \LaTeX{} font system.
+
+\macroname{\textbackslash grebarredsymbol}{\{\#1\}\{\#2\}\{\#3\}\{\#4\}\{\#5\}}{gregoriotex-symbols.tex}
+Generates a barred symbol.  This macro does not change any barred symbol
+definitions.  Instead, it actually generates the code that would show the
+barred symbol.
+
+\begin{argtable}
+  \#1 & string    & command to typeset the text.\\
+  \#2 & string    & symbol of the bar (must be defined through \texttt{gredefsizedsymbol}).\\
+  \#3 & number    & the size of greextra to use (in pt).\\
+  \#4 & dimension & horizontal right shift of the bar.\\
+  \#5 & dimension & vertical shift of the bar glyph.\\
+\end{argtable}
 
 
 \subsubsection{Styling}

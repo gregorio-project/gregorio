@@ -44,6 +44,7 @@
 \SetupKeyvalOptions{prefix=gre@}
 \DeclareStringOption{debug}[all]
 
+\long\def\gre@iflatex#1{#1}
 \input gregoriotex-main.tex
 
 %% We declare and process some additional options after loading the package (instead of at the beginning) because the options manipulate flags which are declared in the package.
