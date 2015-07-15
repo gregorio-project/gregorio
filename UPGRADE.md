@@ -15,9 +15,9 @@ Additionally a new package option has been added. The option `deprecated=false` 
 
 ### Barred letters
 
-If you are using barred letters in your document and if you use a font other than libertine, you must adjust the horizontal placement of the bar on the letter. To do so, use the `\gresimpledefbarglyph` macro. For example, use `\gresimpledefbarglyph{A}{0.3em}` in your preamble, tweaking the second argument to have a good result (same for R and V). See the documentation of `\gresimpledefbarglyph` in the PDF documentation for more details.
+If you use barred letters and a font other than libertine in your document, you must adjust the horizontal placement of the bar on the letter.  To do so, use the `\gresimpledefbarglyph` macro.  For example, use `\gresimpledefbarredsymbol{A}{0.3em}` in your preamble, tweaking the second argument to have a good result (same for R and V).  If using LaTeX, you can alternately use the `\grelatexsimpledefbarredsymbol` macro, which allows control over bold and italic versions of the barred letter.  See the documentation of `\gresimpledefbarredsymbol` and `\grelatexsimpledefbarredsymbol` in the PDF documentation for more details.
 
-If you were using `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, you must use `\gresimpledefbarglyph` to redefine your barred letters (see PDF documentation for details).
+If you were using `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, you must use `\gresimpledefbarredsymbol` to redefine your barred letters (see PDF documentation for details).
 
 ### .gtex extension
 
