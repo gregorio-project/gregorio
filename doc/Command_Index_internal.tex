@@ -89,19 +89,19 @@ Calculates the default line width.  Default is the width of the printable space 
 Calculates the default width of the staff lines.  Default is \texttt{linewidth}.
 
 \macroname{\textbackslash gre@calculate@stafflineheight}{}{gregoriotex-spaces.tex}
-Calculates the height (thickness) of the staff lines.  Dependent on \texttt{stafflineheightfactor} and \texttt{grefactor}.
+Calculates the height (thickness) of the staff lines.  Dependent on \texttt{stafflineheightfactor} and \texttt{gre@factor}.
 
 \macroname{\textbackslash gre@calculate@interstafflinespace}{}{gregoriotex-spaces.tex}
-Calculates the distance between the staff lines.  Dependent on \texttt{stafflineheight} and \texttt{grefactor}
+Calculates the distance between the staff lines.  Dependent on \texttt{stafflineheight} and \texttt{gre@factor}
 
 \macroname{\textbackslash gre@calculate@stafflinediff}{}{gregoriotex-spaces.tex}
-Calculates a correction factor for when the staff lines are not their default thickness.  Dependent on \texttt{stafflineheight} and \texttt{grefactor}.
+Calculates a correction factor for when the staff lines are not their default thickness.  Dependent on \texttt{stafflineheight} and \texttt{gre@factor}.
 
 \macroname{\textbackslash gre@calculate@staffheight}{}{gregoriotex-spaces.tex}
 Calculates the total height of the staff.  Dependent on \texttt{stafflineheight} and \texttt{interstafflinespace}.
 
 \macroname{\textbackslash gre@calculate@constantglyphraise}{}{gregoriotex-spaces.tex}
-Calculates the baseline correction for the glyphs.  Dependent on \texttt{grefactor}, \texttt{additionalbottomspace}, \texttt{spacebeneathtext}, \texttt{spacelinestext}, \texttt{interstafflinespace}, \texttt{stafflineheight}, \texttt{currenttranslationheight}, and \texttt{stafflinediff}.
+Calculates the baseline correction for the glyphs.  Dependent on \texttt{gre@factor}, \texttt{additionalbottomspace}, \texttt{spacebeneathtext}, \texttt{spacelinestext}, \texttt{interstafflinespace}, \texttt{stafflineheight}, \texttt{currenttranslationheight}, and \texttt{stafflinediff}.
 
 \macroname{\textbackslash gre@computespaces}{}{gregoriotex-spaces.tex}
 Aggregates all of the global distance calculations and calls them in the order needed to respect dependencies.
@@ -442,6 +442,14 @@ Macro called at end of a syllable, adds a penalty and a space.
   \#3 & 1 & if next syllable is a bar\\
   & 0 & otherwise\\
 \end{argtable}
+
+\macroname{\textbackslash gre@exhyphencharsave}{}{gregoriotex-main.tex}
+Macro for saving the ex hyphen character so that it can be restored at the end of the score.
+
+\macroname{\textbackslash gre@factor}{}{gregoriotex-main.tex}
+Count which stores the current staff size.
+
+Default: 17 (approximately the size found in graduals)
 
 
 

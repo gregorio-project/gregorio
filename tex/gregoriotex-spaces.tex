@@ -125,29 +125,29 @@
 }%
 
 % interstafflinespace is the space between two lines of staff
-% = (30000 - (stafflineheight/grefactor - 1500)) * grefactor = 31500 * grefactor - stafflineheight
+% = (30000 - (stafflineheight/gre@factor - 1500)) * gre@factor = 31500 * gre@factor - stafflineheight
 \newdimen\gre@dimen@interstafflinespace%
 \def\gre@calculate@interstafflinespace{%
   \global\gre@dimen@interstafflinespace=31500sp%
-  \global\multiply\gre@dimen@interstafflinespace by \grefactor%
+  \global\multiply\gre@dimen@interstafflinespace by \gre@factor%
   \global\advance\gre@dimen@interstafflinespace by -\gre@dimen@stafflineheight %
 }%
 
 % a distance to help place glyphs when the lines are not their default thickness
-% = (stafflineheight/grefactor - 1500sp)/2 * grefactor
+% = (stafflineheight/gre@factor - 1500sp)/2 * gre@factor
 \newdimen\gre@dimen@stafflinediff%
 \def\gre@calculate@stafflinediff{%
   \global\gre@dimen@stafflinediff = \gre@dimen@stafflineheight %
-  \global\divide\gre@dimen@stafflinediff by \grefactor\relax%
+  \global\divide\gre@dimen@stafflinediff by \gre@factor\relax%
   \global\advance\gre@dimen@stafflinediff by -1500sp%
   \global\divide\gre@dimen@stafflinediff by 2\relax %
-  \global\multiply\gre@dimen@stafflinediff by \the\grefactor %
+  \global\multiply\gre@dimen@stafflinediff by \the\gre@factor %
 }%
 
 % the default factor
-% the stafflinefactor follows the same scale as the grefactor, i.e. a stafflinefactor corresponds to the default staff line thickness for grefactor 17, stafflinefactor 34 corresponds to the default staff line thickness for grefactor 34, etc.
+% the stafflinefactor follows the same scale as the gre@factor, i.e. a stafflinefactor corresponds to the default staff line thickness for gre@factor 17, stafflinefactor 34 corresponds to the default staff line thickness for gre@factor 34, etc.
 \xdef\gre@stafflinefactor{17}%
-% flag for whether the stafflinefactor should scale with changes of the grefactor
+% flag for whether the stafflinefactor should scale with changes of the gre@factor
 \xdef\gre@scale@stafflinefactor{1}%
 
 % a macro for setting the thickness of the staff lines.  This changes the stafflinefactor and then adjusts the spaces that are affected by the thicker staff lines.
@@ -170,7 +170,7 @@
 % to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at grespacelinestext + grespacebeneathtext + 2*greinterstafflinespace + 2*grestafflineheight + translationheight
 \def\gre@calculate@constantglyphraise{%
   \global\gre@dimen@constantglyphraise = -22000 sp%
-  \global\multiply\gre@dimen@constantglyphraise by \the\grefactor %
+  \global\multiply\gre@dimen@constantglyphraise by \the\gre@factor %
   \global\advance\gre@dimen@constantglyphraise by \gre@dimen@additionalbottomspace %
   \global\advance\gre@dimen@constantglyphraise by \gre@dimen@spacebeneathtext %
   \global\advance\gre@dimen@constantglyphraise by \gre@dimen@spacelinestext %
@@ -189,7 +189,7 @@
 \def\gre@calculate@staffheight{%
   \global\gre@dimen@staffheight = 4\gre@dimen@stafflineheight %
   \global\advance\gre@dimen@staffheight by 3\gre@dimen@interstafflinespace %
-  %\global\multiply{\gre@dimen@spacebeneathtext} by \grefactor % uncomment it if you want
+  %\global\multiply{\gre@dimen@spacebeneathtext} by \gre@factor % uncomment it if you want
   % something else than 0
   \relax %
 }%
@@ -200,11 +200,11 @@
 %% textlower: spacebeneathtext
 %% linewidth: hsize
 %% stafflinewidth: linewidth
-%% stafflineheight: stafflinefactor & grefactor
-%% interstafflinespace: stafflineheight & grefactor
-%% stafflinediff: stafflineheight & grefactor
+%% stafflineheight: stafflinefactor & gre@factor
+%% interstafflinespace: stafflineheight & gre@factor
+%% stafflinediff: stafflineheight & gre@factor
 %% staffheight: stafflineheight & interstafflinespace
-%% constantglyphraise: grefactor, additionalbottomspace, spacebeneathtext, spacelinestext, interstafflinespace, stafflineheight, currenttranslationheight, stafflinediff
+%% constantglyphraise: gre@factor, additionalbottomspace, spacebeneathtext, spacelinestext, interstafflinespace, stafflineheight, currenttranslationheight, stafflinediff
 \def\gre@computespaces{%
   \gre@calculate@textlower%
   \gre@calculate@linewidth%
@@ -497,48 +497,48 @@
   \fi%
   \global\advance\gre@count@temp@three by -8 %
   \global\gre@dimen@glyphraisevalue = 15750 sp %
-  \global\multiply\gre@dimen@glyphraisevalue by \the\grefactor %
+  \global\multiply\gre@dimen@glyphraisevalue by \the\gre@factor %
   \global\multiply\gre@dimen@glyphraisevalue by \the\gre@count@temp@three %
   \gre@dimen@addedraisevalue= 0 sp%
   \ifcase#2 % 
   \or\or\or%3: if it is a vertical episemus on a line, we shift it a bit higher, so that it's more beautiful
     \ifnum\greisonaline=1%
     \gre@dimen@addedraisevalue=7250 sp%
-    \multiply\gre@dimen@addedraisevalue by \the\grefactor %
+    \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
     \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
     \else % if it is not on a line, we shift it a bit lower
     \gre@dimen@addedraisevalue=-1380 sp%
-    \multiply\gre@dimen@addedraisevalue by \the\grefactor %
+    \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
     \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
     \fi %
   \or% 4: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
     \ifnum\greisonaline=1%
       \gre@dimen@addedraisevalue=-6900 sp%
-      \multiply\gre@dimen@addedraisevalue by \the\grefactor %
+      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
     \else % 
       \gre@dimen@addedraisevalue=-2200 sp%
-      \multiply\gre@dimen@addedraisevalue by \the\grefactor %
+      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
     \fi%
   \or% 5: if it is a horizontal episemus under a note which is on a line, we shift it lower
     \ifnum\greisonaline=0%
       \gre@dimen@addedraisevalue=-4980 sp%
-      \multiply\gre@dimen@addedraisevalue by \the\grefactor %
+      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
     \else % if it is under a note between two lines, we shift it higher
       \gre@dimen@addedraisevalue=4000 sp%
-      \multiply\gre@dimen@addedraisevalue by \the\grefactor %
+      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
     \fi %
   \or% 6: if it is a sign, we put it at an arbitrary height
     \gre@dimen@addedraisevalue=20000 sp%
-    \multiply\gre@dimen@addedraisevalue by \the\grefactor %
+    \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
     \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
   \or\or% 8: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
     \ifnum\greisonaline=1%
       \gre@dimen@addedraisevalue=5000 sp%
-      \multiply\gre@dimen@addedraisevalue by \the\grefactor %
+      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
     \fi %
   \or% 9: if it is an horizontal episemus not on a line, we put it a bit lower
@@ -547,7 +547,7 @@
     \else %
       \gre@dimen@addedraisevalue=3000 sp%
     \fi %
-    \multiply\gre@dimen@addedraisevalue by \the\grefactor %
+    \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
     \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
   \or% 10: low choral sign that is not lower than the note
     \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@choralsigndownshift %
@@ -567,7 +567,7 @@
       \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@braceshift %
   \or% 14: raise the punctum mora in a space a bit higher than case 4
     \gre@dimen@addedraisevalue=200 sp%
-    \multiply\gre@dimen@addedraisevalue by \the\grefactor %
+    \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
     \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
   \fi%
   \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@constantglyphraise %
@@ -588,7 +588,7 @@
   \ifnum\gre@count@temp@one>0\relax %
     \global\gre@dimen@additionaltopspace=15000 sp%
     \global\multiply\gre@dimen@additionaltopspace by \the\gre@count@temp@one %
-    \global\multiply\gre@dimen@additionaltopspace by \the\grefactor %
+    \global\multiply\gre@dimen@additionaltopspace by \the\gre@factor %
   \else %
     \global\gre@dimen@additionaltopspace=0 sp%
   \fi %
@@ -598,7 +598,7 @@
   \ifnum\gre@count@temp@one>0\relax %
     \global\gre@dimen@additionalbottomspace=15000 sp%
     \global\multiply\gre@dimen@additionalbottomspace by \the\gre@count@temp@one %
-    \global\multiply\gre@dimen@additionalbottomspace by \the\grefactor %
+    \global\multiply\gre@dimen@additionalbottomspace by \the\gre@factor %
   \else %
     \global\gre@dimen@additionalbottomspace=0 sp%
   \fi %
@@ -784,7 +784,7 @@
 %% dimension changing macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% This macro creates one dim (#1), setting its value to #2 and sets whether it should scale when the \grefactor changes (#3, 1 if yes, 0 if no).  While it does check that #1 can accept the kind of distance given in #2, it does not propagate the changes through the calculated distances.
+%% This macro creates one dim (#1), setting its value to #2 and sets whether it should scale when the \gre@factor changes (#3, 1 if yes, 0 if no).  While it does check that #1 can accept the kind of distance given in #2, it does not propagate the changes through the calculated distances.
 %% Note: the distances created by this function are stored as strings, not skip or dimension registers.  This allows the user to specify a distance in em or ex units even though the font parameters may not be the same at the time the distance is specified and the time the distance is used.
 \newif\ifgre@checklength%
 \def\grecreatedim#1#2#3{%
@@ -866,8 +866,8 @@
   \ifnum\greconffactor=0\relax%
     \gre@error{gsp-#1.tex does not have an assigned staff size.\MessageBreak Please edit it to define \protect\greconffactor}%
   \fi
-  \ifnum\the\grefactor=\greconffactor\else %If the space configuration file is designed for a \grefactor other than the current one, then we need to rescale the distances.
-    \gre@changedimenfactor{\greconffactor}{\grefactor} %
+  \ifnum\the\gre@factor=\greconffactor\else %If the space configuration file is designed for a \gre@factor other than the current one, then we need to rescale the distances.
+    \gre@changedimenfactor{\greconffactor}{\gre@factor} %
   \fi%
   \greconffactor=0%
   \relax %
@@ -878,7 +878,7 @@
 
 
 %%%%%%%%%%%%%%
-%% Rescaling dimensions (for when \grefactor changes)
+%% Rescaling dimensions (for when \gre@factor changes)
 %%%%%%%%%%%%%%
 
 % This function checks to see if the length is one of the ones which cannot be a rubber length
@@ -912,7 +912,7 @@
 }%
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
-%% Note: This function is assumed to touch only dimensions which are meant to scale with the \grefactor (i.e. if it acts on distance x, \gre@scale@x is 1)
+%% Note: This function is assumed to touch only dimensions which are meant to scale with the \gre@factor (i.e. if it acts on distance x, \gre@scale@x is 1)
 \def\gre@changeonedimenfactor#1#2#3{%
   \gre@rubberpermit{#1}%
   \ifgre@rubber% if we have a rubber allowed length we create a temporary skip
@@ -1037,7 +1037,7 @@
 
 %% this function changes all the values of the spaces (vertical and horizontal) from one factor to another
 %% simply by dividing them by the old factor, and multiplying them by the new one.
-% #1 is the old grefactor, #2 is the new one
+% #1 is the old gre@factor, #2 is the new one
 \def\gre@changedimenfactor#1#2{%
   \ifnum\gre@scale@additionallineswidth=1\relax%
     \gre@changeonedimenfactor{additionallineswidth}{#1}{#2}%
@@ -1239,7 +1239,7 @@
 %we give them their own set of macros to make that easier.
 
 % To change the spacing between annotations.
-%First argument is distance, second is whether it should scale when \grefactor changes.
+%First argument is distance, second is whether it should scale when \gre@factor changes.
 \def\setaboveinitialseparation#1#2{%
   \gre@deprecated{\protect\setaboveinitialseparation}{\protect\grechangedim\{annotationseparation\}}%
   \grechangedim{annotationseparation}{#1}{#2}%
@@ -1251,7 +1251,7 @@
 }%
 
 %To change the space after the initial
-%First argument is distance, second is whether it should scale when \grefactor changes.
+%First argument is distance, second is whether it should scale when \gre@factor changes.
 \ifdefined\setspaceafterinitial%
   \gre@error{\protect\setspaceafterinitial\space is already defined.  Check for package conflicts.}%
 \else%
@@ -1267,7 +1267,7 @@
 }%
 
 %To change the space before the initial
-%First argument is distance, second is whether it should scale when \grefactor changes.
+%First argument is distance, second is whether it should scale when \gre@factor changes.
 \ifdefined\setspacebeforeinitial%
   \gre@error{\protect\setspacebeforeinitial\space is already defined.  Check for package conflicts.}%
 \else%
@@ -1284,7 +1284,7 @@
 
 
 %To change all the distances associated with the initial.
-%First three arguments are distances, last is whether they should scale when \grefactor changes.
+%First three arguments are distances, last is whether they should scale when \gre@factor changes.
 \ifdefined\setinitialspacing%
   \gre@error{\protect\setinitialspacing\space is already defined.  Check for package conflicts.}%
 \else%

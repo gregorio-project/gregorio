@@ -109,7 +109,7 @@ local offset_cases = {
   -- punctum inclinatum as last note
   {
     case = 'FinalInclinatum',
-    v = [[\grevepisemusorrareaux{0}{\gre@char@punctuminclinatum}{0}{30\the\grefactor }{#2}{#3}{#4}]],
+    v = [[\grevepisemusorrareaux{0}{\gre@char@punctuminclinatum}{0}{30\the\gre@factor }{#2}{#3}{#4}]],
     h = [[\grehepisorlineaux{\gre@char@punctuminclinatum}{\gre@char@he@inclinatum{#4}}{2}{#3}]],
   },
   -- punctum inclinatum deminutus as last note
@@ -147,7 +147,7 @@ local offset_cases = {
   -- and torculus resupinus)
   {
     case = 'FinalUpperPunctum',
-    v = [[\grevepisemusorrareaux{0}{\gre@char@peshigh}{1}{-30\the\grefactor}{#2}{#3}{#4}]],
+    v = [[\grevepisemusorrareaux{0}{\gre@char@peshigh}{1}{-30\the\gre@factor}{#2}{#3}{#4}]],
     h = [[\grehepisorlineaux{\gre@char@peshigh}{\gre@char@he@smallpunctum{#4}}{2}{#3}]],
   },
   -- oriscus as first note, disconnected from next note

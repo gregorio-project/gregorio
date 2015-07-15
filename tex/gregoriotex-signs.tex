@@ -524,10 +524,10 @@
 % #1: the width, or * for the bar brace width
 % this can't have @ in the name because of the metapost catcode settings
 \def\grebracemetapostpreamble#1{%
-  % multiplier to convert grefactor to em-size in bp
+  % multiplier to convert gre@factor to em-size in bp
   % (100000 sp) * (72 bp/in) / (65536 sp/pt) / 72.27 (pt/in)
   factor = 1.5201782378;
-  scale = \the\grefactor * factor;
+  scale = \the\gre@factor * factor;
   % assuming #1 is in bp, we convert it back into the internal unit of the
   % calculation, ems
   width = \directlua{gregoriotex.width_to_bp([[#1]], "\grebarbracewidth * scale")} / scale;
@@ -728,14 +728,14 @@
   \ifnum#4=1\relax %
     \ifnum\greisonaline=1\relax %
       \gre@dimen@temp@three=3700sp%
-      \multiply\gre@dimen@temp@three by \the\grefactor %
+      \multiply\gre@dimen@temp@three by \the\gre@factor %
       \kern-\gre@dimen@temp@three %
       \gre@dimen@temp@three =4500sp%
-      \multiply\gre@dimen@temp@three by \the\grefactor %
+      \multiply\gre@dimen@temp@three by \the\gre@factor %
       \advance\gre@dimen@glyphraisevalue by -\gre@dimen@temp@three %
     \else %
       \gre@dimen@temp@three =2500sp%
-      \multiply\gre@dimen@temp@three by \the\grefactor %
+      \multiply\gre@dimen@temp@three by \the\gre@factor %
       \advance\gre@dimen@glyphraisevalue by -\gre@dimen@temp@three %
     \fi %
   \fi %
@@ -1465,7 +1465,7 @@
   \gre@calculate@glyphraisevalue{\gre@pitch@g}{0}% bar glyphs are made to be at this height
   \gre@fontchar@divisiomaior %
   \gre@dimen@temp@four = 12000 sp%
-  \multiply\gre@dimen@temp@four by \the\grefactor%
+  \multiply\gre@dimen@temp@four by \the\gre@factor%
   \kern\gre@dimen@temp@four%
   \grenobreak %
   \gre@fontchar@divisiomaior %

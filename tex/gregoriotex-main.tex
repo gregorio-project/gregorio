@@ -182,8 +182,8 @@
 
 % factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
 % it is set to the default value : 17 (the value that makes it look like a standard graduale)
-\newcount\grefactor%
-\grefactor=17%
+\newcount\gre@factor%
+\gre@factor=17%
 
 %%%%%%%%%%%%%%%%%%%
 %% vertical spaces
@@ -696,7 +696,7 @@
 %% box containing the stafflines for other lines than the first
 \newbox\gre@box@lines%
 
-% macro that must be called at each change of linewidth and grefactor
+% macro that must be called at each change of linewidth and gre@factor
 \def\gre@generatelines{%
   \setbox\gre@box@lines=\hbox to 0pt{%
     \vbox{%
@@ -927,7 +927,7 @@
   \gre@cancelpenalties %
   \gre@dofinetuning %
   \gregorioattr=0\relax %
-  \xdef\greexhyphencharsave{\the\exhyphenchar}%
+  \xdef\gre@exhyphencharsave{\the\exhyphenchar}%
   \exhyphenchar=-1\relax %
   \gre@generatelines %
   \noindent%
@@ -972,7 +972,7 @@
   \grenormalinitial %
   \gre@restorepenalties %
   \gre@endfinetuning %
-  \exhyphenchar=\greexhyphencharsave %
+  \exhyphenchar=\gre@exhyphencharsave %
   \gre@dimen@temp@one=0pt%
   \gre@dimen@temp@two=0pt%
   \gre@dimen@temp@three=0pt%
@@ -1310,7 +1310,7 @@
 }%
 
 \def\gre@loadgregoriofont{%
-  \gre@count@temp@three = \the\grefactor %
+  \gre@count@temp@three = \the\gre@factor %
   \multiply\gre@count@temp@three by 100000 %
   \global\font\gregoriofont={name:\gregoriofontname} at \the\gre@count@temp@three sp%
   {\gregoriofont\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
@@ -1324,7 +1324,7 @@
 
 % gregoriostylefont is the font used for additional glyphs
 \def\gresetstylefont{%
-  \gre@count@temp@three = \the\grefactor %
+  \gre@count@temp@three = \the\gre@factor %
   \multiply\gre@count@temp@three by 100000\relax %
   \global\font\gregoriostylefont={name:greextra} at \the\gre@count@temp@three sp%
   {\gregoriofont\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
@@ -1369,8 +1369,8 @@
   \ifnum#1<0\relax%
     \gre@error{Staff size must be a positive integer.}%
   \else%
-    \gre@changedimenfactor{\grefactor}{#1}%
-    \global\grefactor=#1\relax %
+    \gre@changedimenfactor{\gre@factor}{#1}%
+    \global\gre@factor=#1\relax %
   \fi%
   \gre@loadgregoriofont%
   \relax %
