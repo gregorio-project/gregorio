@@ -1559,7 +1559,7 @@
 
 % the argument is the character with which we fill the hole, and we suppose that
 % isonaline and glyphraisevalue are correctly set.
-\def\grefillhole#1{%
+\def\gre@fillhole#1{%
   \setbox\gre@box@temp@width=\hbox{#1}%
   \hbox to 0pt{%
     {%
@@ -1596,7 +1596,7 @@
   \fi %
   \gre@calculate@glyphraisevalue{#1}{0}%
   \ifgre@hidealtlines %
-    \grefillhole{#3}%
+    \gre@fillhole{#3}%
   \fi %
   \setbox\gre@box@temp@width=\hbox{#2}%
   %\gre@dimen@temp@three=\wd\gre@box@temp@width 
@@ -1693,7 +1693,7 @@
   \kern-\gre@skip@temp@four %
   \gre@calculate@glyphraisevalue{#1}{0}%
   \ifgre@hidepclines%
-    \grefillhole{\gre@fontchar@punctumcavumhole}%
+    \gre@fillhole{\gre@fontchar@punctumcavumhole}%
   \fi %
   \GreGlyph{\gre@fontchar@punctumcavum}{#1}{#2}{#3}{}{#5}{#6}%
   \relax %
@@ -1708,7 +1708,7 @@
   \kern-\gre@skip@temp@four %
   \gre@calculate@glyphraisevalue{#1}{0}%
   \ifgre@hidepclines %
-    \grefillhole{\gre@fontchar@lineapunctumcavumhole}%
+    \gre@fillhole{\gre@fontchar@lineapunctumcavumhole}%
   \fi %
   \GreGlyph{\gre@fontchar@lineapunctumcavum}{#1}{#2}{#3}{}{#5}{#6}%
   \relax %

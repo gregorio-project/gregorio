@@ -135,7 +135,7 @@
     \gresetcusto{#3}%
   \fi %
   \ifnum\the\grefirstglyph=1% we check if it is the first glyph
-    \grefindnotesaligncenter{#4}%
+    \gre@calculate@notesaligncenter{#4}%
     \global\grefirstglyph=0%
   \fi%
   %\gre@dimen@lastglyphwidth=\gre@dimen@temp@three
@@ -163,7 +163,7 @@
 %% 12 : divisio finalis
 % there is a tricky here : if notesaligncenter is not 0, it means that there is a flat before, so we simply add notes aligncenter
 % #2 is 0 if we are in the context of current syllable, 1 if we are in the context of next syllable
-\def\grefindsimplenotesaligncenter#1#2{%
+\def\gre@calculate@simplenotesaligncenter#1#2{%
   \ifcase#1%
     %case of punctum
     \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@char@punctum}%
@@ -259,8 +259,8 @@
 
 % the "hat" function, that calls the simple function with the good argument, according to the fact that it's a flat, natural, etc.
 % warning: the behaviour of all this is quite difficult to understand: this function is called with simple arguments (between 0 and 20) by the glyph function. In this case we add the align center of the argument to notesaligncenter ; and notesaligncenter can be already set to something by flat and natural.
-\def\grefindnotesaligncenter#1{%
-  \grefindsimplenotesaligncenter{#1}{0}%
+\def\gre@calculate@notesaligncenter#1{%
+  \gre@calculate@simplenotesaligncenter{#1}{0}%
   \gre@dimen@temp@five=\wd\gre@box@temp@width %
   \divide\gre@dimen@temp@five by 2\relax %
   \global\advance\gre@dimen@notesaligncenter by \gre@dimen@temp@five %
@@ -268,9 +268,9 @@
 }%
 
 % this is the function that we call when we try to determine the next aligncenter of the notes. In this case we call this function with normal arguments if there is no flat nor natural ; we call it with argument + 20 if there is a flat and argument + 40 if there is a natural... I know this is dirty... but... this is TeX...
-\def\grefindnextnotesaligncenter#1{%
+\def\gre@calculate@nextnotesaligncenter#1{%
   \ifnum#1<20\relax %
-    \grefindsimplenotesaligncenter{#1}{1}%
+    \gre@calculate@simplenotesaligncenter{#1}{1}%
     \gre@dimen@temp@five=\wd\gre@box@temp@width %
     \divide\gre@dimen@temp@five by 2\relax %
     \global\gre@dimen@notesaligncenter=\gre@dimen@temp@five %
@@ -278,20 +278,20 @@
     \gre@count@temp@three=#1 %
     \ifnum#1<40\relax%
       \advance\gre@count@temp@three by -20\relax %
-      \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
+      \gre@calculate@simplenotesaligncenter{\gre@count@temp@three}{1}%
       \gre@dimen@temp@five=\wd\gre@box@temp@width %
       \divide\gre@dimen@temp@five by 2\relax %
       \setbox\gre@box@temp@width=\hbox{\gre@fontchar@flat}%
     \else%\ifnum#1<40
       \ifnum#1<60\relax%
         \advance\gre@count@temp@three by -40\relax %
-        \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
+        \gre@calculate@simplenotesaligncenter{\gre@count@temp@three}{1}%
         \gre@dimen@temp@five=\wd\gre@box@temp@width %
         \divide\gre@dimen@temp@five by 2\relax %
         \setbox\gre@box@temp@width=\hbox{\gre@fontchar@natural}%
       \else%\ifnum#1<60
         \advance\gre@count@temp@three by -60\relax %
-        \grefindsimplenotesaligncenter{\gre@count@temp@three}{1}%
+        \gre@calculate@simplenotesaligncenter{\gre@count@temp@three}{1}%
         \gre@dimen@temp@five=\wd\gre@box@temp@width %
         \divide\gre@dimen@temp@five by 2\relax %
         \setbox\gre@box@temp@width=\hbox{\gre@fontchar@sharp}%

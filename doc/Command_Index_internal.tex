@@ -451,6 +451,37 @@ Count which stores the current staff size.
 
 Default: 17 (approximately the size found in graduals)
 
+\macroname{\textbackslash gre@fillhole}{\#1}{gregoriotex-signs.tex}
+Macro to fill the hole in a glyph so that staff lines do not show through a hole in it.
+
+\begin{argtable}
+  \#1 & Gregorio\TeX\ char & character to use to fill the hole\\
+\end{argtable}
+
+\macroname{\textbackslash gre@calculate@notesaligncenter}{\#1}{gregoriotex-syllable.tex}
+Macro to find the alignment center for a group of notes.  The value is the distance from the left edge of the group to the alignment point and is stored in \verb=\gre@dimen@notesaligncenter=.
+
+\begin{argtable}
+  \#1 & Note alignment type & See \ref{notesalign}\\
+\end{argtable}
+
+\macroname{\textbackslash gre@calculate@nextnotesaligncenter}{\#1}{gregoriotex-syllable.tex}
+Same as previous, but for the next syllable.
+
+\begin{argtable}
+  \#1 & Note alignment type & See \ref{notesalign}\\
+\end{argtable}
+
+\macroname{\textbackslash gre@calculate@simplenotesaligncenter}{\#1\#2}{gregoriotex-syllable.tex}
+Workhorse function behind \verb=\gre@calculate@notesaligncenter= and \verb=\gre@calculate@nextnotesaligncenter=.
+
+\begin{argtable}
+  \#1 & Note alignment type & See \ref{notesalign}\\
+  \#2 & 0 & this is for the current syllable\\
+  & 1 & this is for the next syllable\\
+\end{argtable}
+
+
 
 
 \subsection{Auxiliary File}
