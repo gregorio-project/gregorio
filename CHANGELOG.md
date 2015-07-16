@@ -20,20 +20,19 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Lines are now aligned on the leftmost note instead of the leftmost letter.
 - Some glyph shapes are improved a little in greciliae, it should be noticeable especially for porrectus.
 - The `O` modifier in gabc now has expanded uses beyond the salicus `(egOi)`.  A stemmed oriscus will appear on a lone pitch `(gO)` or a followed by a lower pitch `(gOe)` (see [#76](https://github.com/gregorio-project/gregorio/issues/76)).  A virga strata will appear on the second note of two ascending pitches `(giO)`.
-	- With thanks to *Abbazia Mater Ecclesiae (IT)* for drawing the new shapes, the strophicus, liquescent strophicus, liquescent oriscus, and liquescent punctum inclinatum in greciliae have changed to better differentiate them from other shapes.  Use
-
-	\grechangeglyph{Stropha}{greciliae}{.caeciliae}
-	\grechangeglyph{StrophaAucta}{greciliae}{.caeciliae}
-	\grechangeglyph{OriscusDeminutus}{greciliae}{.caeciliae}
-	\grechangeglyph{PunctumInclinatumAuctus}{greciliae}{.caeciliae}
-
-	if you prefer the old shapes.
+- With thanks to *Abbazia Mater Ecclesiae (IT)* for drawing the new shapes, the strophicus, liquescent strophicus, liquescent oriscus, and liquescent punctum inclinatum in greciliae have changed to better differentiate them from other shapes. If you prefer the old shapes use:
+```
+    \grechangeglyph{Stropha}{greciliae}{.caeciliae}
+    \grechangeglyph{StrophaAucta}{greciliae}{.caeciliae}
+    \grechangeglyph{OriscusDeminutus}{greciliae}{.caeciliae}
+    \grechangeglyph{PunctumInclinatumAuctus}{greciliae}{.caeciliae}
+```
 - Default initial sizes have been chosen so that they are more appropriate when an infinitely scaling font is loaded.  LaTeX will make an automatic substitution of the closest avaialble size when such a font is not used.
-	- Porrectus deminutus and torculus resupinus deminutus glyphs have been updated to more closely match the current Solesmes books (see [#143](https://github.com/gregorio-project/gregorio/issues/143)).  If you prefer the old forms, use
-
-	\grechangeglyph{Porrectus*}{*}{.alt}
-	\grechangeglyph{TorculusResupinus*}{*}{.alt}
-
+- Porrectus deminutus and torculus resupinus deminutus glyphs have been updated to more closely match the current Solesmes books (see [#143](https://github.com/gregorio-project/gregorio/issues/143)).  If you prefer the old forms, use:
+```
+    \grechangeglyph{Porrectus*}{*}{.alt}
+    \grechangeglyph{TorculusResupinus*}{*}{.alt}
+```
 - New (much) improved drawings for letter bars (for Versicle, Antiphon, etc.). You must fine-tune them if you use a text font other than Linux Libertine, see [UPGRADE.md](UPGRADE.md) for details.
 - The default extension `gregorio` (the executable program) will use when it produces GregorioTeX files has been changed from `.tex` to `.gtex`.  Any calls to `\includescore` that use the old extension should be changed appropriately.
 - Horizontal episema improvements:
@@ -43,7 +42,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
   - Horizontal episema "bridging" has been made more consistent and is now possible on an episema that is below the note. (see [#389](https://github.com/gregorio-project/gregorio/issues/70)).
   - It is now possible to suppress the automatic horizontal episema "bridging" across spaces within a syllable.  To use it, append `2` to the `_` on the note before the space you do not want bridged (see [#72](https://github.com/gregorio-project/gregorio/issues/72)).
   - A horizontal episema will no longer overlap with a vertical episema on the same note (see [#395](https://github.com/gregorio-project/gregorio/issues/395)).
-- The dot after a torculus whose last note is on a line will now appear below the line.  If you do not like the automatic placement of a dot after any note on a line (not just the torculus), you may specify a `0` or `1` after the `.` to force the dot to appear below or above the line, respectively (see [#386](https://github.com/gregorio-project/gregorio/issues/386)).
+- The dot after a torculus whose last note is on a line will now appear below the line (see [#386](https://github.com/gregorio-project/gregorio/issues/386).)  If you do not like the automatic placement of a dot after any note on a line (not just the torculus), you may specify a `0` or `1` after the `.` to force the dot to appear below or above the line, respectively.
 - Choral sign dimensions have been renamed (see [#387](https://github.com/gregorio-project/gregorio/issues/387)):
   - `beforechoralsignspace` is now `beforelowchoralsignspace`.
   - `lowchoralsignshift` is now `choralsigndownshift`.
@@ -71,7 +70,7 @@ See GregorioRef.pdf for full details.
 - Support for `lualatex -recorder`.  Autocompiled gabc and gtex files will now be properly recorded so that programs like `latexmk -recorder` can detect the need to rebuild the PDF when a gabc file changes.
 - A vertical episema may now be forced to appear above or below a note.  In gabc, use `'0` for the vertical episema to appear below and `'1` for the vertical episema to appear above (see [#385](https://github.com/gregorio-project/gregorio/issues/385)).
 - The first syllable and first letter of the first syllable that is *not* interpreted as the initial of the score are now passed to macros that allow them to be styled from TeX.  The first syllable is passed to `\GreFirstSyllable#1` and the first letter of the first syllable is passed to `\GreFirstSyllableInitial#1`.
-- The final line of a score may now be forced to be fully justified (rather than ragged) using `\gresetlastline{justified}` before including the score.  Use `\gresetlastline{ragged}` to switch back to a ragged last line (see [#43](https://github.com/gregorio-project/gregorio/issues/43)).
+- The final line of a score may now be forced to be fully justified (rather than ragged) using `\gresetlastline{justified}` before including the score (see [#43](https://github.com/gregorio-project/gregorio/issues/43)).  Use `\gresetlastline{ragged}` to switch back to a ragged last line.
 - `\gresethyphen{force}` forces GregorioTeX to put a hyphen between each syllable in a polysyllabic word.  `\gresethyphen{auto}` restores behavior to normal.
 - Support for custom vowel centering rules.  Put a file called `gregorio-vowels.dat` into your project directory or into a directory accessible from TEXMF and add the header `language: name;` to your gabc file.  The `gregorio-vowels.dat` file describes how vowels are to be located in the *name* language.  See GregorioRef for details.
 - `\gresetlinecolor` takes a named color as an argument.  As a result, the red staff lines can be made consistent with the text, even when the user changes `gregoriocolor` with `\gresetlinecolor{gregoriocolor}`.  Addresses [#21787 on the old tracker](https://gna.org/bugs/index.php?21787).
