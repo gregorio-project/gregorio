@@ -94,8 +94,8 @@
   \global\setluatexattribute\gre@attr@glyph@bottom{#2}%
 }%
 
-% count that tells us if the current glyph is the first glyph or not. It it is the case, we determine
-\newcount\grefirstglyph%
+% Flag that tells us if the current glyph is the first glyph or not.
+\newif\ifgre@firstglyph%
 
 % macro to typeset the glyph. attributes are :
 % #1: character : the character that it must call
@@ -131,9 +131,9 @@
   \ifgre@endofscore\else%
     \gresetcusto{#3}%
   \fi %
-  \ifnum\the\grefirstglyph=1% we check if it is the first glyph
+  \ifgre@firstglyph% we check if it is the first glyph
     \gre@calculate@notesaligncenter{#4}%
-    \global\grefirstglyph=0%
+    \global\gre@firstglyphfalse%
   \fi%
   %\gre@dimen@lastglyphwidth=\gre@dimen@temp@three
   %#5\relax 
@@ -307,7 +307,7 @@
 % saves and restores a few values so that when really typesetting #1 in \GreSyllable,
 % the result is identical.
 \def\gresyllablenotes#1{%
-  \global\grefirstglyph=1\relax %
+  \global\gre@firstglyphtrue%
   \xdef\grelastispunctumsauv{\grelastispunctum}%
   \global\gre@boxingtrue%
   \xdef\gre@savedlastoflinecount{\number\gre@lastoflinecount\relax }%
@@ -316,7 +316,7 @@
   \xdef\grelastispunctum{\grelastispunctumsauv}%
   \global\gre@boxingfalse%
   \global\gre@lastoflinecount=\gre@savedlastoflinecount\relax %
-  \global\grefirstglyph=1\relax %
+  \global\gre@firstglyphtrue%
   \relax %
 }%
 
@@ -333,9 +333,6 @@
 
 % count that will be 0 if in the last text there was no dash (or if it is the beginning of a word, and 1 if there was
 %\newcount\previousdash
-
-\newcount\grefirstsyllableofword%
-\grefirstsyllableofword=1%
 
 % Flag to mark the last syllable of the score
 \newif\ifgre@endofscore%
@@ -518,7 +515,6 @@
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}\expandafter\unexpanded{#2}\expandafter\unexpanded{#3}}%
   \gre@debugmsg{general}{}%
-  \global\grefirstisalteration=0\relax %
   \ifgre@vowelcentering %
     \gdef\gre@firstsyllablepart{#1}%
     \gdef\gre@middlesyllablepart{#2}%
@@ -528,7 +524,7 @@
     \gdef\gre@middlesyllablepart{#1#2#3}%
     \gdef\gre@endsyllablepart{}%
   \fi %
-  \grefirstglyph=1\relax %
+  \gre@firstglyphtrue%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
   \gresyllablenotes{#9}% we put the notes in a box, so that we have the width of it
   % now we calculate the begin difference, that is to say \gre@dimen@notesaligncenter - \gre@dimen@textaligncenter
@@ -676,15 +672,9 @@
         \gre@endofsyllable{1}{1}{1}%
       \fi %
     \fi %
-    \global\grefirstsyllableofword=1\relax %
   \else %
     \ifnum\gre@lastoflinecount=1\relax %
       \global\gre@lastoflinecount=2\relax %
-    \fi %
-    \ifcase#3 %
-      \global\grefirstsyllableofword=0\relax %
-    \or %
-      \global\grefirstsyllableofword=1\relax %
     \fi %
     \gre@debugmsg{syllablespacing}{ calling endofsyllable with #3}%
     \gre@endofsyllable{1}{#3}{0}%
@@ -866,7 +856,6 @@
     \fi %
     %and that's it !!
   \fi %
-  \grefirstsyllableofword=1\relax %
   \global\gre@dimen@notesaligncenter= 0 pt\relax % very important, see flat and natural
   \greunsetfixedtextformat %
   \ifgre@blockeolcustos\ifnum\greinsidediscretionary=0\relax %
