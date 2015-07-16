@@ -750,7 +750,7 @@
 
 % Macro for fustion of larger neumes
 \def\GreFuseTwo#1#2{%
-  #1\grenobreak #2\relax %
+  #1\GreNoBreak #2\relax %
 }%
 
 % Macros for using variant glyphs
@@ -1101,7 +1101,7 @@
   \ifnum #2=0\relax %
     \gre@penalty{\greendofelementpenalty}%
   \else %
-    \grenobreak %
+    \GreNoBreak %
   \fi %
   \ifcase#1%
     \gre@skip@temp@four = \gre@skip@interelementspace%
@@ -1114,7 +1114,7 @@
     \grehskip\gre@skip@temp@four %
   \fi%
   \ifnum #2=1\relax %
-    \grenobreak %
+    \GreNoBreak %
   \fi %
 \relax%
 }%
@@ -1135,7 +1135,7 @@
 %% 10: space between puncta inclinata (also debilis for now), larger ambitus (range=3rd).
 %% 11: space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more)
 \def\GreEndOfGlyph#1{%
-  \grenobreak %
+  \GreNoBreak %
   \ifcase#1%
     \gre@skip@temp@four = \gre@skip@interglyphspace%
     \grehskip\gre@skip@temp@four %
@@ -1173,7 +1173,7 @@
     \gre@skip@temp@four = \gre@skip@punctuminclinatummaxshift%
     \grehskip\gre@skip@temp@four %
   \fi%
-  \grenobreak %
+  \GreNoBreak %
   \relax%
 }%
 

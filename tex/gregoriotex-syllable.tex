@@ -545,10 +545,10 @@
     \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
     \ifnum\gre@lastoflinecount=2\else %
       \kern -\gre@dimen@bolshift %
-      \grenobreak %
+      \GreNoBreak %
     \fi %
     \hbox to 0pt{}%
-    \grenobreak %
+    \GreNoBreak %
     \kern\gre@dimen@bolshift %
   \fi %
   % by default, gregorioattr will be 2
@@ -620,19 +620,19 @@
   \ifnum\gre@lastoflinecount=1\relax %
     \gre@compute@eolshift{\gre@dimen@enddifference}%
   \fi%
-  \grenobreak % no line breaks between text and notes
+  \GreNoBreak % no line breaks between text and notes
   #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
   \gre@debugmsg{ifdim}{ enddifference < 0pt}%
   \ifdim\gre@dimen@enddifference <0pt%
     %% important, else we are not really at the end of the syllable
-    \grenobreak %
+    \GreNoBreak %
     \ifnum\gre@lastoflinecount=1\relax %
       \kern\gre@skip@eolshift %
     \else %
       \gre@skip@temp@one = -\gre@dimen@enddifference%
       \kern\gre@skip@temp@one %
     \fi %
-    \grenobreak %
+    \GreNoBreak %
   \fi%
   \global\gre@skip@eolshift=0pt%
   % we call end of syllable
@@ -692,7 +692,7 @@
 \def\gre@endofsyllable#1#2#3{%
   \gre@debugmsg{syllablespacing}{ endofsyllable with #2}%
   \ifnum#3=1\relax %
-    \grenobreak %
+    \GreNoBreak %
     \gre@debugmsg{syllablespacing}{ set penalty \grenobreakpenalty}%
   \else %
     \ifnum#2=1\relax %
@@ -706,7 +706,7 @@
   \ifnum#1=1\relax %
     \grehskip\gre@skip@syllablefinalskip %
     \ifnum#3=1\relax %
-      \grenobreak %
+      \GreNoBreak %
     \fi %
   \fi %
   \relax%
@@ -780,7 +780,7 @@
     \ifdim\gre@dimen@previousenddifference < 0 pt%
       \advance\gre@skip@temp@two by \gre@dimen@previousenddifference %
     \fi %
-    \grenobreak %
+    \GreNoBreak %
     \gre@debugmsg{ifdim}{ temp@skip@two > -wd(gre@box@syllablenotes)}%
     \ifdim\gre@skip@temp@two > -\wd\gre@box@syllablenotes %
       \kern\gre@skip@temp@two %
@@ -788,7 +788,7 @@
       \gre@skip@temp@one = -\wd\gre@box@syllablenotes %
       \kern\gre@skip@temp@one%
     \fi %
-    \grenobreak %
+    \GreNoBreak %
     #8\relax %
     \ifgre@mustdotranslationcenterend%
       % case of end of translation centering, we do it after the typesetting of the text
