@@ -135,7 +135,7 @@ function install_to {
     dir="$1"
     shift
     mkdir -p "$dir" || die
-    cp "$@" "$dir" || die
+    $CP "$@" "$dir" || die
 }
 
 echo "Installing in '${TEXMFROOT}'."
