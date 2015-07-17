@@ -75,11 +75,11 @@
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
 % if it is 2, it means that it's never useful to typeset a dash
 % if it is 0, it just means that we are in a score...
-\newluatexattribute\gregorioattr%
-\def\greunsetattribute{\unsetluatexattribute{\gregorioattr}}%
+\newluatexattribute\gre@attr@dash%
+\def\gre@unsetattr@dash{\unsetluatexattribute{\gre@attr@dash}}%
 
 % an attribute used for translation centering
-\newluatexattribute\gregoriocenterattr%
+\newluatexattribute\gre@attr@center%
 
 \newluatexattribute\GreScoreId %
 
@@ -848,10 +848,10 @@
   \ifgre@breakintranslation\else%
     \GreBeginNLBArea{0}{1}%
   \fi %
-  \gregoriocenterattr=1\relax %
+  \gre@attr@center=1\relax %
   \gre@mark@translation %
   \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation\gretranslationformat{#1}\endgre@style@translation\hss}}\kern 0pt}%
-  \unsetluatexattribute{\gregoriocenterattr}%
+  \unsetluatexattribute{\gre@attr@center}%
   \relax %
 }%
 
@@ -867,9 +867,9 @@
   \ifgre@breakintranslation\else%
     \GreEndNLBArea{0}{1}%
   \fi %
-  \gregoriocenterattr=2\relax %
+  \gre@attr@center=2\relax %
   \raise\gre@dimen@spacebeneathtext\hbox to 0pt{}%
-  \unsetluatexattribute{\gregoriocenterattr}%
+  \unsetluatexattribute{\gre@attr@center}%
   \relax %
 }%
 
@@ -901,7 +901,7 @@
     }%
 }%
 
-% gregorioattr (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
+% gre@attr@dash (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
 \newif\ifgre@save@englishcentering% DEPRECATED
 
@@ -926,7 +926,7 @@
   \gre@computespaces%
   \gre@cancelpenalties %
   \gre@dofinetuning %
-  \gregorioattr=0\relax %
+  \gre@attr@dash=0\relax %
   \xdef\gre@exhyphencharsave{\the\exhyphenchar}%
   \exhyphenchar=-1\relax %
   \gre@generatelines %
@@ -962,7 +962,7 @@
   \ifnum\keeprightbox=1\relax %
     \global\keeprightbox=0\relax %
   \fi%
-  \greunsetattribute %
+  \gre@unsetattr@dash %
   % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
   \grelocalleftbox{}%
   \grelocalrightbox{}%

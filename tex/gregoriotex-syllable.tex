@@ -551,8 +551,8 @@
     \GreNoBreak %
     \kern\gre@dimen@bolshift %
   \fi %
-  % by default, gregorioattr will be 2
-  \gregorioattr=2\relax %
+  % by default, gre@attr@dash will be 2
+  \gre@attr@dash=2\relax %
   #5%
   \gre@calculate@nextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
   \greunsetfixednexttextformat %
@@ -592,7 +592,7 @@
       \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
       \gre@compute@syllablefinalskip{0}{0}%
     \else %
-      \gregorioattr=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
+      \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
       \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
     \fi%
@@ -615,8 +615,8 @@
   \kern\gre@skip@temp@one%
   \gre@skip@temp@one = -\gre@dimen@begindifference%
   \kern\gre@skip@temp@one %
-  % here we need to unset \gregorioattr for the typesetting of notes
-  \gregorioattr=0\relax %
+  % here we need to unset \gre@attr@dash for the typesetting of notes
+  \gre@attr@dash=0\relax %
   \ifnum\gre@lastoflinecount=1\relax %
     \gre@compute@eolshift{\gre@dimen@enddifference}%
   \fi%

@@ -593,61 +593,75 @@ The divisio maior.
 
 \subsection{Flags}
 
-Flags are either boolean (defined with \verb=\newif=) or macros which expand to an integer.  They store settings and/or the current state of something so that Gregorio\TeX\ can typeset things in the desired manner.
+Flags are either boolean (defined with \verb=\newif=), Lua\TeX\ attributes, or counts (defined with \verb=\newcount=).  They store settings and/or the current state of something so that Gregorio\TeX\ can typeset things in the desired manner.
 
 All distances in \nameref{distances} have a flag associated with them, of the form \verb=\gre@scale@*=.  This flag
 indicates if the distance should scale when the staff size changes (1)
 or not (0).
 
 \macroname{\textbackslash ifgre@checklength}{}{gregoriotex-spaces.tex}
-Boolean flag used in \verb=\gresetdim= to indicate if we are attempting to set a rubber length.
+Boolean used in \verb=\gresetdim= to indicate if we are attempting to set a rubber length.
 
 \macroname{\textbackslash ifgre@rubber}{}{gregoriotex-spaces.tex}
-Boolean flag used in \verb=\gre@changeonedimenfactor= to indicate if we are dealing with one of the distances which can accept a rubber length.
+Boolean used in \verb=\gre@changeonedimenfactor= to indicate if we are dealing with one of the distances which can accept a rubber length.
 
 \macroname{\textbackslash ifgre@stretch}{}gregoriotex-spaces.tex}
-Boolean flag used in \verb=\gre@changeonedimenfactor= as we test for the presence of a stretch.
+Boolean used in \verb=\gre@changeonedimenfactor= as we test for the presence of a stretch.
 
 \macroname{\textbackslash ifgre@shrink}{}gregoriotex-spaces.tex}
-Boolean flag used in \verb=\gre@changeonedimenfactor= as we test for the presence of a shrink.
+Boolean used in \verb=\gre@changeonedimenfactor= as we test for the presence of a shrink.
 
 \macroname{\textbackslash ifgre@vowelcentering}{}{gregoriotex-syllable.tex}
-Boolean flag used to specify whether the center of the vowel or the center of the syllable is used to align the lyrics with their neumes.
+Boolean used to specify whether the center of the vowel or the center of the syllable is used to align the lyrics with their neumes.
 
 \macroname{\textbackslash ifgre@translationcentering}{}{gregoriotex-main.tex}
-Boolean flag used to specify whether the translation text should be centered below its respective syllable.
+Boolean used to specify whether the translation text should be centered below its respective syllable.
 
 \macroname{\textbackslash ifgre@removelines}{}{gregoriotex-main.tex}
-Boolean flag used to specify whether the staff lines should be removed from the score output.
+Boolean used to specify whether the staff lines should be removed from the score output.
 
 \macroname{\textbackslash ifgre@hidepclines}{}{gregoriotex-signs.tex}
-Boolean flag used to specify whether the staff lines behind a punctum cavum should be hidden.
+Boolean used to specify whether the staff lines behind a punctum cavum should be hidden.
 
 \macroname{\textbackslash ifgre@hidealtlines}{}{gregoriotex-signs.tex}
-Boolean flag used to specify whether the staff lines behind an alteration should be hidden.
+Boolean used to specify whether the staff lines behind an alteration should be hidden.
 
 \macroname{\textbackslash ifgre@hepisemusbridge}{}{gregoriotex-signs.tex}
-Boolean flag used to specify whether adjacent horizontal episema should be joined together.
+Boolean used to specify whether adjacent horizontal episema should be joined together.
 
 \macroname{\textbackslash ifgre@drawbraces}{}{gregoriotex-signs.tex}
-Boolean flag used to specify whether braces should be drawn by \MP{} as
+Boolean used to specify whether braces should be drawn by \MP{} as
 opposed to rendered via the score font.
 
 \macroname{\textbackslash gre@biginitial}{}{gregoriotex-main.tex}
 Count to track whether the initial is big (2-lines) or normal (1-line).
 
 \macroname{\textbackslash ifgre@boxing}{}{gregoriotex-syllable.tex}
-Flag to track whether we're placing the contents of syllable notes into their box or actually printing that box (helps prevent spurious spaces from occurring when the box is being filled but not printed).
+Boolean to track whether we're placing the contents of syllable notes into their box or actually printing that box (helps prevent spurious spaces from occurring when the box is being filled but not printed).
 
 \macroname{\textbackslash ifgre@mustdotranslationcenterend}{}{gregoriotex-main.tex}
-Flag to track whether we must do translation centering.
+Boolean to track whether we must do translation centering.
 
 \macroname{\textbackslash ifgre@endofscore}{}{gregoriotex-syllable.tex}
-Flag to mark the last syllable of the score.
+Boolean to mark the last syllable of the score.
 
 \macroname{\textbackslash ifgre@firstglyph}{}{gregoriotex-syllable.tex}
-Flag that tells us if the current glyph is the first glyph or not.
+Boolean that tells us if the current glyph is the first glyph or not.
 
+\macroname{\textbackslash gre@attr@dash}{}{gregoriotex-main.tex}
+A Lua\TeX\ attribute which indicates whether a syllable takes a dash if it ends a line.  
+
+\macroname{\textbackslash gre@attr@center}{}{gregoriotex-main.tex}
+A Lua\TeX\ attribute which indicates the type of translation centering.
+
+\macroname{\textbackslash gre@attr@glyph@id}{}{gregoriotex-main.tex}
+A Lua\TeX\ attribute which identifies the glyph we are at.  Used for dynamic line spacing.
+
+\macroname{\textbackslash gre@attr@glyph@top}{}{gregoriotex-main.tex}
+A Lua\TeX\ attribute which identifies the high point of the glyph.  Used for dynamic line spacing.
+
+\macroname{\textbackslash gre@attr@glyph@bottom}{}{gregoriotex-main.tex}
+A Lua\TeX\ attribute which identifies the low point of the glyph.  Used for dynamic line spacing.
 
 
 \subsection{Boxes}

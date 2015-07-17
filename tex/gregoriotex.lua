@@ -47,11 +47,11 @@ local whatsit = node.id('whatsit')
 
 local hyphen = tex.defaulthyphenchar or 45
 
-local gregorioattr         = luatexbase.attributes['gregorioattr']
+local dash_attr         = luatexbase.attributes['gre@attr@dash']
 local potentialdashvalue   = 1
 local nopotentialdashvalue = 2
 
-local gregoriocenterattr = luatexbase.attributes['gregoriocenterattr']
+local center_attr = luatexbase.attributes['gre@attr@center']
 local startcenter = 1
 local endcenter   = 2
 
@@ -300,7 +300,7 @@ local function center_translation(startnode, endnode, ratio, sign, order)
 end
 
 -- in each function we check if we really are inside a score,
--- which we can see with the gregorioattr being set or not
+-- which we can see with the dash_attr being set or not
 local function process (h, groupcode, glyphes)
   -- TODO: to be changed according to the font
   local lastseennode            = nil
@@ -317,12 +317,12 @@ local function process (h, groupcode, glyphes)
   for line in traverse(h) do
     if line.id == glue then
       if line.next ~= nil and line.next.id == hlist
-          and has_attribute(line.next, gregorioattr)
+          and has_attribute(line.next, dash_attr)
           and count(hlist, line.next.head) <= 2 then
         --log("eating glue")
         h, line = remove(h, line)
       end
-    elseif line.id == hlist and has_attribute(line, gregorioattr) then
+    elseif line.id == hlist and has_attribute(line, dash_attr) then
       -- the next two lines are to remove the dumb lines
       if count(hlist, line.head) <= 2 then
         --log("eating line")
@@ -335,15 +335,15 @@ local function process (h, groupcode, glyphes)
         line_has_translation = false
         line_has_abovelinestext = false
         for n in traverse_id(hlist, line.head) do
-          if has_attribute(n, gregoriocenterattr, startcenter) then
+          if has_attribute(n, center_attr, startcenter) then
             centerstartnode = n
-          elseif has_attribute(n, gregoriocenterattr, endcenter) then
+          elseif has_attribute(n, center_attr, endcenter) then
             if not centerstartnode then
               warn("End of a translation centering area encountered on a\nline without translation centering beginning,\nskipping translation...")
             else
               center_translation(centerstartnode, n, line.glue_set, line.glue_sign, line.glue_order)
             end
-          elseif has_attribute(n, gregorioattr, potentialdashvalue) then
+          elseif has_attribute(n, dash_attr, potentialdashvalue) then
             adddash=true
             lastseennode=n
             currentfont = 0
@@ -361,7 +361,7 @@ local function process (h, groupcode, glyphes)
               currentshift = n.shift
             end
             -- if we encounter a text that doesn't need a dash, we acknowledge it
-          elseif has_attribute(n, gregorioattr, nopotentialdashvalue) then
+          elseif has_attribute(n, dash_attr, nopotentialdashvalue) then
             adddash=false
           end
 
