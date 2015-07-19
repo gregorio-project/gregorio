@@ -1298,11 +1298,11 @@
 
 \def\gre@setgregoriofont[#1]#2{%
   \ifx#1\gre@nothing %
-    \xdef\gregoriofontname{#2}%
+    \xdef\gre@gregoriofontname{#2}%
     \gre@loadgregoriofont%
     \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
   \else %
-    \xdef\gregoriofontname{#2-#1}%
+    \xdef\gre@gregoriofontname{#2-#1}%
     \gre@loadgregoriofont%
     \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
   \fi %
@@ -1312,7 +1312,7 @@
 \def\gre@loadgregoriofont{%
   \gre@count@temp@three = \the\gre@factor %
   \multiply\gre@count@temp@three by 100000 %
-  \global\font\gregoriofont={name:\gregoriofontname} at \the\gre@count@temp@three sp%
+  \global\font\gregoriofont={name:\gre@gregoriofontname} at \the\gre@count@temp@three sp%
   {\gregoriofont\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
   \relax%
 }%

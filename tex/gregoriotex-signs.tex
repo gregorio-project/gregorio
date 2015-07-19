@@ -795,8 +795,8 @@
 
 \def\GreHighChoralSign#1#2#3{%
   \GreNoBreak %
-  \grevepisemusorrare{#1}{#3}{}{3}{{\gre@style@highchoralsign\grehighchoralsignstyle{#2}\endgre@style@highchoralsign}}%
-  %\grehepisorline{#1}{#3}{0}{4}{{\gre@style@highchoralsign\grehighchoralsignstyle{#2}\endgre@style@highchoralsign}}
+  \gre@vepisemusorrare{#1}{#3}{}{3}{{\gre@style@highchoralsign\grehighchoralsignstyle{#2}\endgre@style@highchoralsign}}%
+  %\gre@hepisorline{#1}{#3}{0}{4}{{\gre@style@highchoralsign\grehighchoralsignstyle{#2}\endgre@style@highchoralsign}}
   \relax %
 }%
 
@@ -834,7 +834,7 @@
 % #5 is the glyph number.
 % #6 is the type of sign (1: vertical episemus, 2: rare sign, 3: choral sign)
 % #7 is the choral sign if relevant
-\def\grevepisemusorrareaux#1#2#3#4#5#6#7{%
+\def\gre@vepisemusorrareaux#1#2#3#4#5#6#7{%
   % first we set \gre@dimen@temp@three to the width of the last glyph
   \gre@dimen@temp@three=\gre@dimen@lastglyphwidth %
   \setbox\gre@box@temp@sign=\hbox{\gregoriofont #2}%
@@ -905,7 +905,7 @@
 % #3 is the sign glyph
 % #4 is type (1: vertical episemus, 2: rare sign, 3: choral sign, 4: brace above the bar)
 % #5 is the choral sign if relevant
-\def\grevepisemusorrare#1#2#3#4#5{%
+\def\gre@vepisemusorrare#1#2#3#4#5{%
   \ifcase#4\or %
     % if it is a vertical episemus, we call the normal calculateglyphvalue
     \gre@calculate@glyphraisevalue{#1}{3}%
@@ -930,12 +930,12 @@
 }%
 
 \def\GreVEpisemus#1#2{%
-  \grevepisemusorrare{#1}{#2}{\gre@char@vepisemus}{1}{}%
+  \gre@vepisemusorrare{#1}{#2}{\gre@char@vepisemus}{1}{}%
   \relax %
 }%
 
 \def\GreBarBrace#1{%
-  \grevepisemusorrare{\gre@pitch@g}{#1}{%
+  \gre@vepisemusorrare{\gre@pitch@g}{#1}{%
     \ifgre@drawbraces %
       \hbox{\gre@draw@brace{*}}%
     \else %
@@ -946,32 +946,32 @@
 }%
 
 \def\GreBarVEpisemus#1{%
-  \grevepisemusorrare{\gre@pitch@c}{#1}{\gre@char@vepisemus}{1}{}%
+  \gre@vepisemusorrare{\gre@pitch@c}{#1}{\gre@char@vepisemus}{1}{}%
   \relax %
 }%
 
 \def\GreAccentus#1#2{%
-  \grevepisemusorrare{#1}{#2}{\gre@char@accentus}{2}{}%
+  \gre@vepisemusorrare{#1}{#2}{\gre@char@accentus}{2}{}%
   \relax %
 }%
 
 \def\GreSemicirculus#1#2{%
-  \grevepisemusorrare{#1}{#2}{\gre@char@semicirculus}{2}{}%
+  \gre@vepisemusorrare{#1}{#2}{\gre@char@semicirculus}{2}{}%
   \relax %
 }%
 
 \def\GreCirculus#1#2{%
-  \grevepisemusorrare{#1}{#2}{\gre@char@circulus}{2}{}%
+  \gre@vepisemusorrare{#1}{#2}{\gre@char@circulus}{2}{}%
   \relax %
 }%
 
 \def\GreReversedAccentus#1#2{%
-  \grevepisemusorrare{#1}{#2}{\gre@char@reversedaccentus}{2}{}%
+  \gre@vepisemusorrare{#1}{#2}{\gre@char@reversedaccentus}{2}{}%
   \relax %
 }%
 
 \def\GreReversedSemicirculus#1#2{%
-  \grevepisemusorrare{#1}{#2}{\gre@char@reversedsemicirculus}{2}{}%
+  \gre@vepisemusorrare{#1}{#2}{\gre@char@reversedsemicirculus}{2}{}%
   \relax %
 }%
 
@@ -983,7 +983,7 @@
 % a macro that will help in the typesetting of a horizontal episemus and additional lines,
 % #1 is an offset glyph (see #3, below)
 % #2 is the episemus glyph
-% #3 is a case number, similar in nature to #3 in grevepisemusorrareaux
+% #3 is a case number, similar in nature to #3 in gre@vepisemusorrareaux
 %    0 : go back to the beginning of the previous glyph; this starts the
 %        episemus at the beginning of the previous glyph
 %    1 : stay at the end of the glyph; doesn't make much sense to use this
@@ -993,7 +993,7 @@
 %        width of #1; this starts the episemus at the glyph from the start that
 %        starts just after #1's width from the start
 % #4 argument is the same as in hepisorline
-\def\grehepisorlineaux#1#2#3#4{%
+\def\gre@hepisorlineaux#1#2#3#4{%
   \ifcase#3%
     % case 0
   % first we set \gre@dimen@temp@three to the width of the last glyph
@@ -1070,7 +1070,7 @@
 % #5 is f for a normal episemus, l for a small episemus aligned left,
 %    c for a small episemus aligned center, or r for a small episemus
 %    aligned right
-\def\grehepisorline#1#2#3#4#5{{%
+\def\gre@hepisorline#1#2#3#4#5{{%
   \ifcase#4 %
     \gre@calculate@glyphraisevalue{#1}{9}%
   \or %
@@ -1092,9 +1092,9 @@
 %    bridge, use #6, otherwise use #1
 \def\GreHEpisemus#1#2#3#4#5#6{%
   \ifgre@hepisemusbridge%
-    \grehepisorline{#6}{#2}{#3}{#4}{#5}%
+    \gre@hepisorline{#6}{#2}{#3}{#4}{#5}%
   \else %
-    \grehepisorline{#1}{#2}{#3}{#4}{#5}%
+    \gre@hepisorline{#1}{#2}{#3}{#4}{#5}%
   \fi %
   \relax %
 }%
@@ -1141,7 +1141,7 @@
   \ifgre@showlines %
     \xdef\gresavedglyphraise{\the\gre@dimen@glyphraisevalue}%
     \gre@style@additionalstafflines %
-    \grehepisorline{\gre@pitch@a}{#1}{#2}{#3}{f}%
+    \gre@hepisorline{\gre@pitch@a}{#1}{#2}{#3}{f}%
     \endgre@style@additionalstafflines%
     \gre@dimen@glyphraisevalue=\gresavedglyphraise %
   \fi %

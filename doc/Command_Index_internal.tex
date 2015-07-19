@@ -481,7 +481,87 @@ Workhorse function behind \verb=\gre@calculate@notesaligncenter= and \verb=\gre@
   & 1 & this is for the next syllable\\
 \end{argtable}
 
+\macroname{\textbackslash gre@gregoriofontname}{}{gregoriotex-main.tex}
+Macro which stores the name of the currently selected font for the neumes.
 
+\macroname{\textbackslash gre@handleclivisspecialalignment}{\#1\#2\#3}{gregoriotex-syllable.tex}
+Macro for aligning clivis syllables according to the flag \verb=\gre@clivisalignment=.
+
+\begin{argtable}
+  \#1 & Gregorio\TeX\ glyph & Glyph to use when aligning clivis on its center\\
+  \#2 & Gregorio\TeX\ glyph & Glyph to use when aligning clivis on the center of the first punctum\\
+  \#3 &  0 & this is for the current syllable\\
+  & 1 & this is for the next syllable\\
+\end{argtable}
+
+\macroname{\textbackslash gre@hepisorline}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+Macro to typeset a horizontal line (either an additional staff line or an episemus).
+
+\begin{argtable}
+  \#1 & character & The letter of the height of the episemus (not the height of the note it corresponds to).\\
+  \#2 & 0 & go back to the beginning of the previous glyph; this starts the         episemus at the beginning of the previous glyph\\
+  & 1 & stay at the end of the glyph; doesn't make much sense to use this\\
+  & 2 & go back the width of \#1; this starts the episemus at the glyph from the end that starts at \#1's width from the end\\
+  & 3 & go back to the beginning of the previous glyph and then forward the width of \#1; this starts the episemus at the glyph from the start that starts just after \#1's width from the start\\
+  \#3 & integer &the ambitus for a two note episemus at the diagonal stroke of a porrectus, porrectus flexus, orculus resupinus, or torculus resupinus flexus\\
+  \#4 & 0 & an horizontal episemus\\
+  & 1 & an horizontal episemus under a note\\
+  & 3 & a line at the bottom\\
+  & 2 & a line at the top\\
+  \#5 & f & a normal episemus\\
+  & l & a small episemus aligned left\\
+  & c & a small episemus aligned center\\
+  & r & for a small episemus aligned right\\
+\end{argtable}
+
+\macroname{\textbackslash gre@hepisorlineaux}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
+Macro that will help in the typesetting of a horizontal episemus and additional lines.
+
+\begin{argtable}
+  \#1 & Gregorio\TeX\ glyph & an offset glyph (see \#3, below)\\
+  \#2 & Gregorio\TeX\ glyph & the episemus glyph\\
+  \#3 & 0 & go back to the beginning of the previous glyph; this starts the  episemus at the beginning of the previous glyph\\
+  & 1 & stay at the end of the glyph; doesn't make much sense to use this\\
+  & 2 & go back the width of \#1; this starts the episemus at the glyph from the end that starts at \#1's width from the end\\
+  & 3 & go back to the beginning of the previous glyph and then forward the width of \#1; this starts the episemus at the glyph from the start that starts just after \#1's width from the start\\
+  \#4 & 0 & an horizontal episemus\\
+  & 1 & an horizontal episemus under a note\\
+  & 3 & a line at the bottom\\
+  & 2 & a line at the top\\
+\end{argtable}
+
+\macroname{\textbackslash gre@vepisemusorrare}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+Macro to typeset a vertical episemus or a rare accent (like accentus, circulus, etc.).  This function must be called after a call to \verb=\GreGlyph=.
+
+\begin{argtable}
+  \#1 & character & the letter of the height of the episemus (not the height of the note it corresponds to.\\
+  \#2 & integer & See \nameref{EpisemusSpecial}\\
+  \#3 & Gregorio\TeX\ glyph & the sign glyph\\
+  \#4 & 1 & vertical episemus\\
+  & 2 & rare sign\\
+  & 3 & choral sign\\
+  & 4 & brace above the bar\\
+  \#5 & string & the choral sign, if relevant\\
+\end{argtable}
+
+\macroname{\textbackslash gre@vepisemusorrareaux}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
+Macro to help typesetting vertical episemus.
+
+\begin{argtable}
+  \#1 & Gregorio\TeX\ glyph & is an offset glyph (see \#3 below)\\
+  \#2 & Gregorio\TeX glyph & the glyph upon which the sign is to be centered\\
+  \#3 & 0 & go back to the beginning of the previous glyph and then forward half the width of \#2; this puts the sign at the beginning of the previous glyph, whose first note is the size of \#2\\
+  & 1 & go back half the width of \#2; this puts the sign at the end of the previous glyph, whose last note is the size of \#2\\
+  & 2 & go back the width of \#1 and then forward half the width of \#2; this puts the sign at the glyph from the end that starts at \#1's width from the end\\
+  & 3 & go back to the beginning of the previous glyph and then forward the width of \#1 and then back half the width of \#2; this puts the sign at the glyph from the start that ends at \#1's width from the start\\
+  \#4 & dimension & a shift that we want to get applied, useful for punctum inclinatum for example\\
+  \#5 & integer & is the glyph number\\
+  \#6 & 1 & vertical episemus\\
+  & 2 & rare sign\\
+  & 3 & choral sign\\
+  & 4 & brace above the bar\\
+  \#7 & string & the choral sign if relevant\\
+\end{argtable}
 
 
 
@@ -605,10 +685,10 @@ Boolean used in \verb=\gresetdim= to indicate if we are attempting to set a rubb
 \macroname{\textbackslash ifgre@rubber}{}{gregoriotex-spaces.tex}
 Boolean used in \verb=\gre@changeonedimenfactor= to indicate if we are dealing with one of the distances which can accept a rubber length.
 
-\macroname{\textbackslash ifgre@stretch}{}gregoriotex-spaces.tex}
+\macroname{\textbackslash ifgre@stretch}{}{gregoriotex-spaces.tex}
 Boolean used in \verb=\gre@changeonedimenfactor= as we test for the presence of a stretch.
 
-\macroname{\textbackslash ifgre@shrink}{}gregoriotex-spaces.tex}
+\macroname{\textbackslash ifgre@shrink}{}{gregoriotex-spaces.tex}
 Boolean used in \verb=\gre@changeonedimenfactor= as we test for the presence of a shrink.
 
 \macroname{\textbackslash ifgre@vowelcentering}{}{gregoriotex-syllable.tex}
@@ -662,6 +742,10 @@ A Lua\TeX\ attribute which identifies the high point of the glyph.  Used for dyn
 
 \macroname{\textbackslash gre@attr@glyph@bottom}{}{gregoriotex-main.tex}
 A Lua\TeX\ attribute which identifies the low point of the glyph.  Used for dynamic line spacing.
+
+\macroname{\textbackslash gre@clivisalignment}{}{gregoriotex-syllable.tex}
+Count to indicate how the clivis is to be aligned with its respective syllable text.  Values: 0) always align clivis on its center; 1) align clivis on first punctum; 2) align clivis on its center, except if notes would go left of text or consonants after vowels are larger than \verb=\gre@dimen@clivisalignmentmin=.
+
 
 
 \subsection{Boxes}
