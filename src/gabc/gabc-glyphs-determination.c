@@ -2,19 +2,19 @@
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  * more details.
- * 
- * You should have received a copy of the GNU General Public License along with 
- * this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "config.h"
@@ -39,17 +39,17 @@ static inline gregorio_scanner_location *copy_note_location(
 }
 
 /****************************
- * 
+ *
  * First see the comments of
  * gabc_det_glyphs_from_notes. This function is used when
  * we have finished to determine a glyph. We have the last glyph that
  * have been added: last_glyph. The glyph we want to add is given by
  * glyph_type and liquescentia.
- * 
+ *
  * The glyph we want to add goes from first_note to current_note, we
  * isolate these notes from the notes that won't be in the glyph, and
  * we add the glyph to the list_of_glyphs.
- * 
+ *
 ****************************/
 
 static void close_glyph(gregorio_glyph **last_glyph,
@@ -206,22 +206,22 @@ static char gabc_determine_custo_pitch(gregorio_note *current_note,
 }
 
 /****************************
- * 
+ *
  * This function is the basis of all the determination of glyphs. The
  * phylosophy of the function is to say : We have a glyph that we have
  * determined, and we have the following note, can we "add" it to the
  * glyph, or will it be the first note of another glyph ?
- * 
+ *
  * current_glyph_type is the type of the current_glyph (current_glyph
  * as meant in gabc_det_glyphs_from_notes).  curent_pitch
  * is the height of the note that we want to "add" to the glyph.
  * last_pitch is the height of the last note of current_glyph.  shape
  * is the shape of the note we want to "add" to the glyph.
- * 
+ *
  * The function returns a char, which meaning is explained below.
- * 
+ *
  * end_of_glyph is a pointer to the result of the determination, here
- * are the meanings : 
+ * are the meanings :
  *
  * DET_NO_END: we have successfully added the note to the glyph, and
  * we return the new type of the glyph. We may again add notes to the
@@ -242,7 +242,7 @@ static char gabc_determine_custo_pitch(gregorio_note *current_note,
  * a new glyph with the (temporary) shape G_PES_QUADRATUM_FIRST_PART
  * (or G_PES_QUILISMA_QUADRATUM_FIRST_PART), and we wait for the next
  * note.
- * 
+ *
 ****************************/
 
 static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
@@ -278,7 +278,7 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         break;
     case S_PUNCTUM:
         /*
-         * we determine here the shape of the thing if it is made of puncta 
+         * we determine here the shape of the thing if it is made of puncta
          */
         if (current_pitch == last_pitch) {
             next_glyph_type = G_PUNCTUM;
@@ -438,6 +438,7 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         }
         break;
     case S_PUNCTUM_INCLINATUM:
+    case S_PUNCTUM_CAVUM_INCLINATUM:
         /*
          * Warning : this part of the code is specific to the
          * declarations of the header file
@@ -445,7 +446,7 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         if (current_glyph_type > G_PUNCTA_INCLINATA) {
             /*
              * meaning that the previous glyph is not a combination of puncta
-             * inclinata, see header file for details 
+             * inclinata, see header file for details
              */
             *end_of_glyph = DET_END_OF_PREVIOUS;
             next_glyph_type = G_PUNCTUM_INCLINATUM;
@@ -552,7 +553,7 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     if (current_glyph_type == G_UNDETERMINED) {
         /*
          * means that this is the first glyph or that the previous glyph has
-         * already been added 
+         * already been added
          */
         if (*end_of_glyph == DET_END_OF_PREVIOUS) {
             *end_of_glyph = DET_NO_END;
@@ -564,8 +565,8 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     }
 
     /*
-     * WARNING : Ugly section of the code, just some kind of patch for it to work 
-     * with fonts that can't handle large intervals. 
+     * WARNING : Ugly section of the code, just some kind of patch for it to work
+     * with fonts that can't handle large intervals.
      */
     // here we separate notes that would be logically in the same glyph
     // but that are too far to be so, we already said to the function that
@@ -587,17 +588,17 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
 }
 
 /****************************
- * 
+ *
  * Function called with a list of gregorio_notes as argument, this
  * list is determined from gabc notation by the function
  * gabc_det_notes_from_string.
- * 
+ *
  * In this function we create a list of glyphs, by determining their
  * type according to the sequence of notes (we look at their height,
  * shape, etc.). Each glyph has a pointer gregorio_note *first_note
  * that will be filled with the good note (and notes will be cut as
  * explained in the comments on close_glyph function).
- * 
+ *
  * Here is how it works :
  * current_glyph is the glyph we are currently determining, that is to
  * say a glyph whose type may change according to the note we will add
@@ -611,7 +612,7 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
  * For special notes like a key change or something, we stop the
  * determination of the current glyph, we delete the note and we add
  * it as a glyph.
- * 
+ *
  * When we determine the glyphs we can encounter the shapes
  * S_QUADRATUM and S_QUILISMA_QUADRATUM, which means that the
  * corresponding note is the first note of a pes quadratum (it can
@@ -619,7 +620,7 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
  * not appear in the final form of the score, and we transform them
  * respectively in punctum and quilisma (and the glyph type must be
  * pes_quadratum, but it is done in gregorio_add_note_to_a_glyph).
- * 
+ *
 ****************************/
 
 // this function updates current_key with the new values (with clef changes)
@@ -636,7 +637,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
     // updated by close_glyph().
     gregorio_glyph *last_glyph = NULL;
 
-    // type of the glyph we are currently determining 
+    // type of the glyph we are currently determining
     gregorio_glyph_type current_glyph_type = G_UNDETERMINED;
     gregorio_glyph_type next_glyph_type = G_UNDETERMINED;
     char last_pitch = USELESS_VALUE;
@@ -744,15 +745,15 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         }
 
         /*
-         * first we do what must be done with liquescentia 
+         * first we do what must be done with liquescentia
          */
         if (is_initio_debilis(current_note->u.note.liquescentia)) {
             /*
-             * meaning that the note is an initio debilis, maybe more 
+             * meaning that the note is an initio debilis, maybe more
              */
             if (current_glyph_type != G_UNDETERMINED) {
                 /*
-                 * if it is not the first glyph 
+                 * if it is not the first glyph
                  */
                 close_glyph(&last_glyph, current_glyph_type,
                         &current_glyph_first_note,
@@ -791,7 +792,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         case DET_NO_END:
             current_glyph_type = next_glyph_type;
             /*
-             * we deal with liquescentia 
+             * we deal with liquescentia
              */
             if (is_liquescentia(current_note->u.note.liquescentia)) {
                 // special cases of oriscus auctus, treated like normal oriscus
@@ -833,9 +834,36 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                         continue;
                     }
                 }
+                if (current_note->u.note.shape == S_PUNCTUM_CAVUM_INCLINATUM) {
+                    switch (current_note->u.note.liquescentia) {
+                    case L_AUCTA:
+                    case L_AUCTUS_DESCENDENS:
+                    case L_AUCTUS_ASCENDENS:
+                    case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
+                    case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
+                        current_note->u.note.shape =
+                                S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS;
+                        break;
+
+                    default:
+                        // do nothing
+                        break;
+                    }
+
+                    if (current_note->next
+                            && current_note->next->type == GRE_NOTE
+                            && current_note->next->u.note.shape ==
+                            S_PUNCTUM_INCLINATUM
+                            && current_note->next->u.note.liquescentia ==
+                            L_DEMINUTUS) {
+                        last_pitch = current_note->u.note.pitch;
+                        current_note = next_note;
+                        continue;
+                    }
+                }
                 liquescentia += current_note->u.note.liquescentia;
                 /*
-                 * once again, only works with the good values in the header file 
+                 * once again, only works with the good values in the header file
                  */
                 close_glyph(&last_glyph, current_glyph_type,
                         &current_glyph_first_note, liquescentia, current_note);
@@ -844,10 +872,9 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             }
             break;
         case DET_END_OF_PREVIOUS:
-            if (current_note->previous) // we don't want to close previous
-                // glyph
-                // twice
+            if (current_note->previous)
             {
+                // we don't want to close previous glyph twice
                 close_glyph(&last_glyph, current_glyph_type,
                         &current_glyph_first_note, liquescentia,
                         current_note->previous);
@@ -856,7 +883,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             liquescentia = L_NO_LIQUESCENTIA;
             last_pitch = USELESS_VALUE;
             /*
-             * we deal with liquescentia 
+             * we deal with liquescentia
              */
             if (is_liquescentia(current_note->u.note.liquescentia))
                 // not an initio debilis, because we considered it in the first
@@ -882,7 +909,32 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                             S_PUNCTUM_INCLINATUM
                             && current_note->next->u.note.liquescentia ==
                             L_DEMINUTUS) {
-                        last_pitch = current_note->u.note.pitch;
+                        current_note = next_note;
+                        continue;
+                    }
+                }
+                if (current_note->u.note.shape == S_PUNCTUM_CAVUM_INCLINATUM) {
+                    switch (current_note->u.note.liquescentia) {
+                    case L_AUCTA:
+                    case L_AUCTUS_DESCENDENS:
+                    case L_AUCTUS_ASCENDENS:
+                    case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
+                    case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
+                        current_note->u.note.shape =
+                                S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS;
+                        break;
+
+                    default:
+                        // do nothing
+                        break;
+                    }
+
+                    if (current_note->next
+                            && current_note->next->type == GRE_NOTE
+                            && current_note->next->u.note.shape ==
+                            S_PUNCTUM_INCLINATUM
+                            && current_note->next->u.note.liquescentia ==
+                            L_DEMINUTUS) {
                         current_note = next_note;
                         continue;
                     }
@@ -896,7 +948,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         case DET_END_OF_CURRENT:
             liquescentia += current_note->u.note.liquescentia;
             /*
-             * once again, only works with the good values in the header file 
+             * once again, only works with the good values in the header file
              */
             close_glyph(&last_glyph, next_glyph_type,
                     &current_glyph_first_note, liquescentia, current_note);
@@ -904,10 +956,9 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             liquescentia = L_NO_LIQUESCENTIA;
             break;
         default:               // case DET_END_OF_BOTH:
-            if (current_note->previous) // we don't want to close previous
-                // glyph
-                // twice
+            if (current_note->previous)
             {
+                // we don't want to close previous glyph twice
                 close_glyph(&last_glyph, current_glyph_type,
                         &current_glyph_first_note, liquescentia,
                         current_note->previous);
@@ -920,10 +971,8 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             break;
         }
 
-        if (!next_note && current_glyph_type != G_UNDETERMINED) {   // we must
-            // end the
-            // determination 
-            // here 
+        if (!next_note && current_glyph_type != G_UNDETERMINED) {
+            // we must end the determination here
             close_glyph(&last_glyph, current_glyph_type,
                     &current_glyph_first_note, liquescentia, current_note);
         }

@@ -1707,8 +1707,8 @@
   \gresetpunctumcavum{normal}%
 }%
 
-\def\GrePunctumCavum#1#2#3#4#5#6{%
-  \setbox\gre@box@temp@width=\hbox{\grepunctumcavumchar}%
+\def\gre@char@cavum#1#2#3#4#5#6#7#8{%
+  \setbox\gre@box@temp@width=\hbox{#7}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
   \gre@skip@temp@four = \gre@dimen@lastglyphwidth%
   \kern\gre@skip@temp@four %
@@ -1716,23 +1716,28 @@
   \kern-\gre@skip@temp@four %
   \gre@calculate@glyphraisevalue{#1}{0}%
   \ifgre@hidepclines%
-    \grefillhole{\grepunctumcavumholechar}%
+    \grefillhole{#8}%
   \fi %
-  \GreGlyph{\grepunctumcavumchar}{#1}{#2}{#3}{}{#5}{#6}%
-  \relax %
+  \GreGlyph{#7}{#1}{#2}{#3}{}{#5}{#6}%
+  %\relax %
+}%
+
+\def\GrePunctumCavum#1#2#3#4#5#6{%
+  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
+  {\grepunctumcavumchar}{\grepunctumcavumholechar}%
 }%
 
 \def\GreLineaPunctumCavum#1#2#3#4#5#6{%
-  \setbox\gre@box@temp@width=\hbox{\grelineapunctumcavumchar}%
-  \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
-  \gre@skip@temp@four = \gre@dimen@lastglyphwidth%
-  \kern\gre@skip@temp@four %
-  #4\relax %
-  \kern-\gre@skip@temp@four %
-  \gre@calculate@glyphraisevalue{#1}{0}%
-  \ifgre@hidepclines %
-    \grefillhole{\grelineapunctumcavumholechar}%
-  \fi %
-  \GreGlyph{\grelineapunctumcavumchar}{#1}{#2}{#3}{}{#5}{#6}%
-  \relax %
+  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
+  {\grelineapunctumcavumchar}{\grelineapunctumcavumholechar}%
+}%
+
+\def\GrePunctumCavumInclinatum#1#2#3#4#5#6{%
+  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
+  {\gregoriofont\GreCPPunctumCavumInclinatum}{\gregoriofont\GreCPPunctumCavumInclinatumHole}%
+}%
+
+\def\GrePunctumCavumInclinatumAuctus#1#2#3#4#5#6{%
+  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
+  {\gregoriofont\GreCPPunctumCavumInclinatumAuctus}{\gregoriofont\GreCPPunctumCavumInclinatumAuctusHole}%
 }%

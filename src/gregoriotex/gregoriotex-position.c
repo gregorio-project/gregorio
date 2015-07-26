@@ -821,6 +821,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             break;
         case S_PUNCTUM_INCLINATUM_AUCTUS:
         case S_PUNCTUM_INCLINATUM:
+        case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
+        case S_PUNCTUM_CAVUM_INCLINATUM:
             note->gtex_offset_case = FinalInclinatum;
             break;
         case S_STROPHA:

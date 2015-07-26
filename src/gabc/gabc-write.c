@@ -427,6 +427,12 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
             fprintf(f, "%c", toupper(pitch_letter(note->u.note.pitch)));
         }
         break;
+    case S_PUNCTUM_CAVUM_INCLINATUM:
+        fprintf(f, "%cr", toupper(pitch_letter(note->u.note.pitch)));
+        break;
+    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
+        fprintf(f, "%cr<", toupper(pitch_letter(note->u.note.pitch)));
+        break;
     case S_VIRGA:
         fprintf(f, "%cv", pitch_letter(note->u.note.pitch));
         break;
