@@ -258,6 +258,11 @@ static char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
     case S_STROPHA_AUCTA:
         *type = AT_STROPHA;
         return "StrophaAucta";
+    case S_PUNCTUM_CAVUM_INCLINATUM:
+        *type = AT_PUNCTUM_INCLINATUM;
+        return "PunctumCavumInclinatum";
+    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
+        return "PunctumCavumInclinatumAuctus";
     default:
         gregorio_messagef("gregoriotex_determine_note_glyph_name",
                 VERBOSITY_ERROR, 0, _("called with unknown shape: %d"),
@@ -1754,7 +1759,9 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
     shape = gregoriotex_determine_note_glyph_name(note, glyph, element, &type);
     note->u.note.shape = initial_shape;
     // special things for puncta inclinata
-    if (note->u.note.shape == S_PUNCTUM_INCLINATUM) {
+    switch (note->u.note.shape) {
+    case S_PUNCTUM_INCLINATUM:
+    case S_PUNCTUM_CAVUM_INCLINATUM:
         if (note->previous) {
             // means that it is the first note of the puncta inclinata sequence
             temp = note->previous->u.note.pitch - note->u.note.pitch;
@@ -1782,8 +1789,8 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
                 break;
             }
         }
-    }
-    if (note->u.note.shape == S_PUNCTUM_INCLINATUM_DEMINUTUS) {
+        break;
+    case S_PUNCTUM_INCLINATUM_DEMINUTUS:
         if (note->previous) {
             // means that it is the first note of the puncta inclinata sequence
             temp = note->previous->u.note.pitch - note->u.note.pitch;
@@ -1806,8 +1813,9 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
                 }
             }
         }
-    }
-    if (note->u.note.shape == S_PUNCTUM_INCLINATUM_AUCTUS) {
+        break;
+    case S_PUNCTUM_INCLINATUM_AUCTUS:
+    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
         if (note->previous) {
             // means that it is the first note of the puncta inclinata sequence
             temp = note->previous->u.note.pitch - note->u.note.pitch;
@@ -1818,10 +1826,24 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
                 fprintf(f, "\\GreEndOfGlyph{3}%%\n");
             }
         }
+        break;
+    default:
+        break;
     }
+
     switch (note->u.note.shape) {
     case S_PUNCTUM_CAVUM:
         fprintf(f, "\\GrePunctumCavum{%d}{%d}{%d}",
+                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
+                type);
+        break;
+    case S_PUNCTUM_CAVUM_INCLINATUM:
+        fprintf(f, "\\GrePunctumCavumInclinatum{%d}{%d}{%d}",
+                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
+                type);
+        break;
+    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
+        fprintf(f, "\\GrePunctumCavumInclinatumAuctus{%d}{%d}{%d}",
                 pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
                 type);
         break;

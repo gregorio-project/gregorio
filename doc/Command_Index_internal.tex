@@ -345,6 +345,20 @@ the cascading of conditionals used to implement that macro.
   \#4 & dimension   & the amount to shift the bar to the left from the end of the base symbol.
 \end{argtable}
 
+\macroname{\textbackslash gre@char@cavum}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-signs.tex}
+Macro to typeset a "cavum" character.
+
+\begin{argtable}
+  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
+  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
+  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
+  \#4 & \TeX\ code    & Macros executed before the punctum cavum is written.\\
+  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
+  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.\\
+  \#7 & control sequence & The control sequence for the glyph.\\
+  \#8 & control sequence & The control sequence for the hole glyph.
+\end{argtable}
+
 \subsection{Flags}
 
 Flags are either boolean (defined with \verb=\newif=) or macros which expand to an integer.  They store settings and/or the current state of something so that GregorioTeX can typeset things in the desired manner.
@@ -383,7 +397,6 @@ Boolean flag used to specify whether adjacent horizontal episema should be joine
 \macroname{\textbackslash ifgre@drawbraces}{}{gregoriotex-signs.tex}
 Boolean flag used to specify whether braces should be drawn by \MP{} as
 opposed to rendered via the score font.
-
 
 \subsection{Boxes}
 

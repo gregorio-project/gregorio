@@ -265,6 +265,22 @@ void gregorio_add_special_sign(gregorio_note *note, gregorio_sign sign)
     note->special_sign = sign;
 }
 
+static void fix_punctum_cavum_inclinatum_liquescentia(gregorio_note *const note)
+{
+    switch (note->u.note.liquescentia) {
+    case L_AUCTUS_ASCENDENS:
+    case L_AUCTUS_DESCENDENS:
+    case L_AUCTA:
+    case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
+    case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
+        note->u.note.liquescentia = L_AUCTA;
+        break;
+    default:
+        note->u.note.liquescentia = L_NO_LIQUESCENTIA;
+        break;
+    }
+}
+
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape)
 {
     if (!note || note->type != GRE_NOTE) {
@@ -272,35 +288,56 @@ void gregorio_change_shape(gregorio_note *note, gregorio_shape shape)
                            "not a note"), "change_shape", VERBOSITY_ERROR, 0);
         return;
     }
-    note->u.note.shape = shape;
-    if (shape == S_STROPHA || shape == S_DISTROPHA || shape == S_TRISTROPHA) {
-        switch (note->u.note.liquescentia) {
-        case L_AUCTUS_ASCENDENS:
-        case L_AUCTUS_DESCENDENS:
-            note->u.note.liquescentia = L_AUCTA;
+    switch (note->u.note.shape) {
+    case S_PUNCTUM_INCLINATUM:
+        if (shape == S_PUNCTUM_CAVUM) {
+            note->u.note.shape = S_PUNCTUM_CAVUM_INCLINATUM;
+            fix_punctum_cavum_inclinatum_liquescentia(note);
             break;
-        case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
-        case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
-            note->u.note.liquescentia = L_AUCTA_INITIO_DEBILIS;
+        }
+        // else fall through
+
+    default:
+        note->u.note.shape = shape;
+        switch (shape) {
+        case S_STROPHA:
+        case S_DISTROPHA:
+        case S_TRISTROPHA:
+            switch (note->u.note.liquescentia) {
+            case L_AUCTUS_ASCENDENS:
+            case L_AUCTUS_DESCENDENS:
+                note->u.note.liquescentia = L_AUCTA;
+                break;
+            case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
+            case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
+                note->u.note.liquescentia = L_AUCTA_INITIO_DEBILIS;
+                break;
+            default:
+                break;
+            }
             break;
+
+        case S_ORISCUS:
+            switch (note->u.note.liquescentia) {
+            case L_AUCTUS_ASCENDENS:
+            case L_AUCTUS_DESCENDENS:
+            case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
+            case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
+                note->u.note.shape = S_ORISCUS_AUCTUS;
+                break;
+            case L_DEMINUTUS:
+            case L_DEMINUTUS_INITIO_DEBILIS:
+                note->u.note.shape = S_ORISCUS_DEMINUTUS;
+                break;
+            default:
+                break;
+            }
+            break;
+
         default:
             break;
         }
-    } else if (shape == S_ORISCUS) {
-        switch (note->u.note.liquescentia) {
-        case L_AUCTUS_ASCENDENS:
-        case L_AUCTUS_DESCENDENS:
-        case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
-        case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
-            note->u.note.shape = S_ORISCUS_AUCTUS;
-            break;
-        case L_DEMINUTUS:
-        case L_DEMINUTUS_INITIO_DEBILIS:
-            note->u.note.shape = S_ORISCUS_DEMINUTUS;
-            break;
-        default:
-            break;
-        }
+        break;
     }
 }
 
@@ -332,8 +369,10 @@ void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
     } else {
         note->u.note.liquescentia = liq;
     }
-    if (note->u.note.shape == S_STROPHA || note->u.note.shape == S_DISTROPHA
-        || note->u.note.shape == S_TRISTROPHA) {
+    switch (note->u.note.shape) {
+    case S_STROPHA:
+    case S_DISTROPHA:
+    case S_TRISTROPHA:
         switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
         case L_AUCTUS_DESCENDENS:
@@ -346,8 +385,9 @@ void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
         default:
             break;
         }
-    }
-    if (note->u.note.shape == S_ORISCUS) {
+        break;
+
+    case S_ORISCUS:
         switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
         case L_AUCTUS_DESCENDENS:
@@ -362,6 +402,14 @@ void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
         default:
             break;
         }
+        break;
+
+    case S_PUNCTUM_CAVUM_INCLINATUM:
+        fix_punctum_cavum_inclinatum_liquescentia(note);
+        break;
+
+    default:
+        break;
     }
 }
 

@@ -115,6 +115,8 @@ typedef enum gregorio_shape {
     S_PUNCTUM_CAVUM,
     S_LINEA_PUNCTUM,
     S_LINEA_PUNCTUM_CAVUM,
+    S_PUNCTUM_CAVUM_INCLINATUM,
+    S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS,
     // special shapes that must not appear in the final form of the score :
     // quadratum is the shape of the first note of a punctum quadratum
     // and quilisma quadratum is the shape of the first note of a pes
