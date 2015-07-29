@@ -3,18 +3,18 @@
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  * more details.
- * 
- * You should have received a copy of the GNU General Public License along with 
+ *
+ * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -142,7 +142,7 @@ static inline void add_alteration(const gregorio_type type) {
 %option 8bit
 %option pointer
 %option nounput
-%option noyy_push_state 
+%option noyy_push_state
 %option noyy_pop_state
 %option noyy_top_state
 %option full
@@ -602,7 +602,7 @@ r5  {
         lex_add_note(0, punctum(gabc_notes_determination_text[0]), _NO_SIGN,
                 L_NO_LIQUESCENTIA);
     }
--[a-mA-M] { 
+-[a-mA-M] {
         lex_add_note(1, punctum(gabc_notes_determination_text[1]), _NO_SIGN,
                 L_INITIO_DEBILIS);
     }
@@ -624,7 +624,7 @@ _[0-5]* {
 \<  {
         gregorio_add_liquescentia(current_note, L_AUCTUS_ASCENDENS);
     }
-q   { 
+q   {
         gregorio_change_shape(current_note, S_QUADRATUM);
     }
 o   {
@@ -648,7 +648,7 @@ V   {
 s   {
         gregorio_change_shape(current_note, S_STROPHA);
     }
-.   {        
+.   {
         gregorio_messagef("det_notes_from_string", VERBOSITY_ERROR, 0,
                 _("unrecognized character: \"%c\""),
                 gabc_notes_determination_text[0]);

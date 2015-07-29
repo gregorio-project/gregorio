@@ -288,6 +288,10 @@ DIRECT_GLYPH_NAMES = [
     'PunctumLineBLBR',
     'PunctumAuctusLineBL',
     'SalicusOriscus',
+    'PunctumCavumInclinatum',
+    'PunctumCavumInclinatumHole',
+    'PunctumCavumInclinatumAuctus',
+    'PunctumCavumInclinatumAuctusHole',
 ]
 
 GLYPH_EXISTS = {}

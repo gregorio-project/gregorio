@@ -420,6 +420,10 @@ static const char *dump_shape(gregorio_shape shape)
         return "S_LINEA_PUNCTUM_CAVUM";
     case S_LINEA:
         return "S_LINEA";
+    case S_PUNCTUM_CAVUM_INCLINATUM:
+        return "S_PUNCTUM_CAVUM_INCLINATUM";
+    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
+        return "S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS";
     default:
         return "unknown";
     }

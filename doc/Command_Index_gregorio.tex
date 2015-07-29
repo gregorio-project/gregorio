@@ -435,7 +435,7 @@ Macro for typesetting a linea.
   \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
 \end{argtable}
 
-\macroname{\textbackslash GreLineaPunctumCavum}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreLineaPunctumCavum}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
 Macro to typeset a linea punctum cavum.
 
 \begin{argtable}
@@ -444,6 +444,7 @@ Macro to typeset a linea punctum cavum.
   \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
   \#4 & \TeX\ code    & Macros executed before the punctum cavum is written.\\
   \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
+  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.
 \end{argtable}
 
 \macroname{\textbackslash GreLowChoralSign}{\#1\#2\#3}{gregoriotex-signs.tex}
@@ -516,7 +517,7 @@ Macro to typeset a curly brace above the lines.
       & 1      & Typeset an accentus above the brace.
 \end{argtable}
 
-\macroname{\textbackslash GrePunctumCavum}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+\macroname{\textbackslash GrePunctumCavum}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
 Macro to typeset a punctum cavum.
 
 \begin{argtable}
@@ -525,6 +526,31 @@ Macro to typeset a punctum cavum.
   \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
   \#4 & \TeX\ code    & Macros executed before the punctum cavum is written.\\
   \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
+  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.
+\end{argtable}
+
+\macroname{\textbackslash GrePunctumCavumInclinatum}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+Macro to typeset a punctum cavum inclinatus.
+
+\begin{argtable}
+  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
+  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
+  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
+  \#4 & \TeX\ code    & Macros executed before the punctum cavum is written.\\
+  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
+  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.
+\end{argtable}
+
+\macroname{\textbackslash GrePunctumCavumInclinatumAuctus}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+Macro to typeset a punctum cavum inclinatus auctus.
+
+\begin{argtable}
+  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
+  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
+  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
+  \#4 & \TeX\ code    & Macros executed before the punctum cavum is written.\\
+  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
+  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.
 \end{argtable}
 
 \macroname{\textbackslash GrePunctumMora}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
