@@ -434,7 +434,7 @@
 %% 13: brace above the bars
 %% 14: punctum mora in a space with a note on the line below it
 \def\gre@calculate@glyphraisevalue#1#2{%
-  \global\greisonaline=\number 0%
+  \global\gre@isonalinefalse%
   \ifcase#1%
   % the first two cases are special cases for episemae on the lowest note
   \or\gre@count@temp@three=\number 0%
@@ -443,23 +443,23 @@
   \or\gre@count@temp@three=\number 3%
     \ifnum#2=3\relax %
     \else %
-      \global\greisonaline=1 % if it is a vertical episemus, we don't care if it is on a line or not... which may cause some problems...
+      \global\gre@isonalinetrue % if it is a vertical episemus, we don't care if it is on a line or not... which may cause some problems...
     \fi %
   \or\gre@count@temp@three=\number 4%
   \or\gre@count@temp@three=\number 5%
-    \global\greisonaline=1 %
+    \global\gre@isonalinetrue%
   \or\gre@count@temp@three=\number 6%
   \or\gre@count@temp@three=\number 7%
-    \global\greisonaline=1 %
+    \global\gre@isonalinetrue%
   \or\gre@count@temp@three=\number 8%
   \or\gre@count@temp@three=\number 9%
-    \global\greisonaline=1 %
+    \global\gre@isonalinetrue%
   \or\gre@count@temp@three=\number 10%
   \or\gre@count@temp@three=\number 11%
-    \global\greisonaline=1 %
+    \global\gre@isonalinetrue%
   \or\gre@count@temp@three=\number 12%
   \or\gre@count@temp@three=\number 13%
-    \global\greisonaline=1 %
+    \global\gre@isonalinetrue%
   \or\gre@count@temp@three=\number 14%
   % the following are only useful for horizontal episemus and rare signs
   \or\gre@count@temp@three=\number 15%
@@ -468,10 +468,10 @@
   \fi%
   % if there is not line... we don't consider notes are on lines
   \ifgre@showlines\else %
-    \global\greisonaline=0 %
+    \global\gre@isonalinefalse %
   \fi %
   % if the note is on a line, we change its height if necessary
-  \ifcase\greisonaline\or% isonaline = 1
+  \ifgre@isonaline%
     \ifcase#2 %
     \or% 1
       \global\advance\gre@count@temp@three by 1%
@@ -502,17 +502,17 @@
   \gre@dimen@addedraisevalue= 0 sp%
   \ifcase#2 % 
   \or\or\or%3: if it is a vertical episemus on a line, we shift it a bit higher, so that it's more beautiful
-    \ifnum\greisonaline=1%
-    \gre@dimen@addedraisevalue=7250 sp%
-    \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
-    \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
+    \ifgre@isonaline%
+      \gre@dimen@addedraisevalue=7250 sp%
+      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
+      \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
     \else % if it is not on a line, we shift it a bit lower
-    \gre@dimen@addedraisevalue=-1380 sp%
-    \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
-    \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
+      \gre@dimen@addedraisevalue=-1380 sp%
+      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
+      \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
     \fi %
   \or% 4: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
-    \ifnum\greisonaline=1%
+    \ifgre@isonaline%
       \gre@dimen@addedraisevalue=-6900 sp%
       \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
@@ -522,12 +522,12 @@
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
     \fi%
   \or% 5: if it is a horizontal episemus under a note which is on a line, we shift it lower
-    \ifnum\greisonaline=0%
-      \gre@dimen@addedraisevalue=-4980 sp%
+    \ifgre@isonaline% if it is under a note between two lines, we shift it higher
+      \gre@dimen@addedraisevalue=4000 sp%
       \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
-    \else % if it is under a note between two lines, we shift it higher
-      \gre@dimen@addedraisevalue=4000 sp%
+    \else %
+      \gre@dimen@addedraisevalue=-4980 sp%
       \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
     \fi %
@@ -536,13 +536,13 @@
     \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
     \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
   \or\or% 8: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
-    \ifnum\greisonaline=1%
+    \ifgre@isonaline%
       \gre@dimen@addedraisevalue=5000 sp%
       \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue %
     \fi %
   \or% 9: if it is an horizontal episemus not on a line, we put it a bit lower
-    \ifnum\greisonaline=1%
+    \ifgre@isonaline%
       \gre@dimen@addedraisevalue=-5500 sp%
     \else %
       \gre@dimen@addedraisevalue=3000 sp%
@@ -552,13 +552,13 @@
   \or% 10: low choral sign that is not lower than the note
     \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@choralsigndownshift %
   \or% 11: high choral sign
-    \ifnum\greisonaline=1%
+    \ifgre@isonaline%
       \global\advance\gre@dimen@glyphraisevalue by \gre@dimen@choralsignupshift %
     \else %
       \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@choralsigndownshift %
     \fi %
   \or% 12: low choral sign that is lower than the note
-    \ifnum\greisonaline=1%
+    \ifgre@isonaline%
       \global\advance\gre@dimen@glyphraisevalue by \gre@dimen@choralsignupshift %
     \else %
       \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@choralsigndownshift %

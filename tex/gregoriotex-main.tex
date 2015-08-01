@@ -213,7 +213,7 @@
 
 % the macro we call each time we force a changing of line, it automatically sets \gre@knownline, and adjusts left spaces
 \def\gre@newlinecommon#1{%
-  \ifgre@blockeolcustos\ifnum\greinsidediscretionary=0\relax %
+  \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
   % sometimes we need to add a space before ending the line:
@@ -231,7 +231,7 @@
     \fi %
     \global\advance\gre@knownline by 1\relax %
     \global\gre@lastoflinecount=2\relax %
-    \ifnum\greinsidediscretionary=0\relax %
+    \ifnum\gre@insidediscretionary=0\relax %
       \greupdateleftbox %
     \fi %
     \ifnum#1=1\relax %

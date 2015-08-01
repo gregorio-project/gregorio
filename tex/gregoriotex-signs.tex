@@ -52,12 +52,12 @@
 
 \let\grehskip\hskip%
 \let\gre@penalty\gre@truepenalty%
-\xdef\greinsidediscretionary{\number 0}%
+\xdef\gre@insidediscretionary{\number 0}%
 
 \def\GreDiscretionary#1#2{%
   \global\let\grehskip\kern %
   \global\let\gre@penalty\gre@falsepenalty %
-  \global\xdef\greinsidediscretionary{\number 1}%
+  \global\xdef\gre@insidediscretionary{\number 1}%
   \discretionary{%
     \global\gre@lastoflinecount=1\relax % (a good magic trick)
     #1%
@@ -68,7 +68,7 @@
     }{%
     #2%
     }%
-  \global\xdef\greinsidediscretionary{\number 0}%
+  \global\xdef\gre@insidediscretionary{\number 0}%
   \global\let\grehskip\hskip %
   \global\let\gre@penalty\gre@truepenalty %
   \relax %
@@ -226,7 +226,7 @@
   % it makes no sense to change the clef when there is no clef...
   \gresetclef{visible}%
   \gre@calculate@clefnum{#1}{#2}{#4}%
-  \ifnum\greinsidediscretionary=0\relax %
+  \ifnum\gre@insidediscretionary=0\relax %
     \GreSetLinesClef{#1}{#2}{1}{#4}%
   \fi %
   \ifnum#3=1\relax %
@@ -274,7 +274,7 @@
 
 % the argument is the height
 \def\gresetcusto#1{%
-  \ifnum\greinsidediscretionary=0\relax %
+  \ifnum\gre@insidediscretionary=0\relax %
     \ifgre@blockeolcustos\else%
       \gre@calculate@glyphraisevalue{#1}{0}%
       %here we need some tricks to draw the line before the custo (for the color)
@@ -726,7 +726,7 @@
   \fi %
   % here we shift a bit left in the case where we have a punctum inclinatum on a line
   \ifnum#4=1\relax %
-    \ifnum\greisonaline=1\relax %
+    \ifgre@isonaline %
       \gre@dimen@temp@three=3700sp%
       \multiply\gre@dimen@temp@three by \the\gre@factor %
       \kern-\gre@dimen@temp@three %
@@ -1440,7 +1440,7 @@
   \fi %
   \gre@debugmsg{spacing}{Width of bar just printed: \the\wd\gre@box@temp@width}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
-  \directlua{gregoriotex.adjust_line_height(\greinsidediscretionary)}%
+  \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax%
 }%
 

@@ -25,8 +25,8 @@
 %% macros for the typesetting of the different glyphs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% a boolean : 0 if the note is not a line, else 1
-\newcount\greisonaline%
+% Flag to indicate if the note is on a line or not
+\newif\ifgre@isonaline%
 
 % a macro to tell if the last seen glyph has a punctum mora
 \xdef\grelastispunctum{0}%
@@ -138,7 +138,7 @@
   %\gre@dimen@lastglyphwidth=\gre@dimen@temp@three
   %#5\relax 
   #6\relax %
-  \directlua{gregoriotex.adjust_line_height(\greinsidediscretionary)}%
+  \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax%
 }%
 
@@ -639,7 +639,7 @@
   \gre@syllable@end{#7}{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}{#4}%
   \global\gre@dimen@notesaligncenter=0pt% very important, see flat and natural
   \greunsetfixedtextformat %
-  \ifgre@blockeolcustos\ifnum\greinsidediscretionary=0\relax %
+  \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
   \relax %
@@ -858,7 +858,7 @@
   \fi %
   \global\gre@dimen@notesaligncenter= 0 pt\relax % very important, see flat and natural
   \greunsetfixedtextformat %
-  \ifgre@blockeolcustos\ifnum\greinsidediscretionary=0\relax %
+  \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
   \relax%
