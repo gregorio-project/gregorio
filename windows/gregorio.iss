@@ -74,13 +74,11 @@ Source: "../tex/gregoriosyms.sty"; DestDir: "{app}\texmf\tex\luatex\gregoriotex"
 Source: "../fonts/greciliae.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
 Source: "../fonts/gregorio.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
 Source: "../fonts/greextra.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/gresym.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
 Source: "../fonts/parmesan.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
 Source: "../fonts/convertsfdtottf.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/greciliae-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/greextra.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/gregorio-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/gresym.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/Makefile"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/parmesan-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/squarize.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
