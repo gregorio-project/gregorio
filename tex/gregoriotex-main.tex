@@ -208,17 +208,11 @@
   \gre@newlinecommon{1}%
 }%
 
-% a macro describing a kern to make before ending the line, which we sometimes want (see \syllable)
-\xdef\grekernbeforeeol{0pt\relax}%
-
 % the macro we call each time we force a changing of line, it automatically sets \gre@knownline, and adjusts left spaces
 \def\gre@newlinecommon#1{%
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
-  % sometimes we need to add a space before ending the line:
-  \gre@skip@temp@four = \grekernbeforeeol\relax%
-  \kern\gre@skip@temp@four %
   \ifgre@boxing\else%
     \ifnum\gre@biginitial=1\relax %
       \ifcase\gre@knownline %
