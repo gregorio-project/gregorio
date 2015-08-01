@@ -1,6 +1,6 @@
 [Setup]
 AppName=gregorio
-AppVersion=3.0.3
+AppVersion=4.0.0-beta
 DefaultDirName={pf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
@@ -53,7 +53,7 @@ Source: "../README.md"; DestDir: "{app}";
 Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
 Source: "../UPGRADE.md"; DestDir: "{app}";
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../doc/GregorioRef-3_0_3.pdf"; DestDir: "{app}";
+Source: "../doc/GregorioRef-4_0_0-beta.pdf"; DestDir: "{app}";
 Source: "../COPYING.md"; DestDir: "{app}";
 Source: "../contrib/900_gregorio.xml"; DestDir: "{app}\contrib";
 Source: "../contrib/system-setup.bat"; DestDir: "{app}";
@@ -74,13 +74,11 @@ Source: "../tex/gregoriosyms.sty"; DestDir: "{app}\texmf\tex\luatex\gregoriotex"
 Source: "../fonts/greciliae.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
 Source: "../fonts/gregorio.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
 Source: "../fonts/greextra.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/gresym.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
 Source: "../fonts/parmesan.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
 Source: "../fonts/convertsfdtottf.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/greciliae-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/greextra.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/gregorio-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/gresym.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/Makefile"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/parmesan-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/squarize.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";

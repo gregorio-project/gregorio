@@ -2,10 +2,10 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.
 
-##4.0
+## 4.0
 ### Command Name Systemization
 
-A naming scheme for GregorioTeX commands has been established and so most commands have had their names changed in order to bring them into line with the new scheme.  Some have also had their syntax changed.  Breifly, user commands all now have a `\gre` prefix (to prevent name colisions with other packages) and groups of commands which altered a single setting have been replaced by a single command which takes an argument specifying the value of the setting.  The notable exception to this are the two main commands: `\gregorioscore` (replaces `\includescore`) and `\gabcsnippet`.  See GregorioRef for the complete list of new command names and their syntax.
+A naming scheme for GregorioTeX commands has been established and so most commands have had their names changed in order to bring them into line with the new scheme.  Some have also had their syntax changed.  Briefly, user commands all now have a `\gre` prefix (to prevent name colisions with other packages) and groups of commands which altered a single setting have been replaced by a single command which takes an argument specifying the value of the setting.  The notable exception to this are the two main commands: `\gregorioscore` (replaces `\includescore`) and `\gabcsnippet`.  See GregorioRef for the complete list of new command names and their syntax.
 
 Old command names should still work for now, but will raise a deprecation warning which indicates the name of the correct command to use. Exceptions are noted below:
 
