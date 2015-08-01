@@ -713,7 +713,7 @@
     \kern\gre@skip@temp@four %
   \fi %
   \ifnum#2=1\else %
-    \xdef\grelastispunctum{1}%
+    \gre@lastispunctumtrue%
   \fi %
   \ifcase#3\relax % 0
     \gre@calculate@glyphraisevalue{#1}{4}%
@@ -1256,7 +1256,7 @@
   % first, for the bar to be really centered, if the last glyph has a punctum
   % mora, we kern of the corresponding space. We do it only in the case
   % of a bar in the middle of other notes.
-  \ifnum\grelastispunctum=1\relax %
+  \ifgre@lastispunctum%
     \ifnum#2=1\relax %
       \setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@fontchar@punctummora}%
       \gre@skip@temp@four = -\wd\gre@box@temp@width %

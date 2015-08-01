@@ -766,7 +766,11 @@ Macro which indicates whether we are currently inside a discretionary (1) or not
 \macroname{\textbackslash gre@isonaline}{}{gregoriotex-syllable.tex}
 Boolean which indicates whether the current note is on a line or not (used to adjust the height of some symbols so they won't print on a line).
 
+\macroname{\textbackslash ifgre@lastispunctum}{}{gregoriotex-syllable.tex}
+Boolean which indicates if the most recent note was a punctum mora.
 
+\macroname{\textbackslash ifgre@lastispunctumsave}{}{gregoriotex-signs.tex}
+Boolean for storing \verb=\ifgre@lastispunctum= so that it can be restored later.
 
 
 

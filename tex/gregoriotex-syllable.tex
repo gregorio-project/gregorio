@@ -28,8 +28,9 @@
 % Flag to indicate if the note is on a line or not
 \newif\ifgre@isonaline%
 
-% a macro to tell if the last seen glyph has a punctum mora
-\xdef\grelastispunctum{0}%
+% Flag to tell if the last seen glyph has a punctum mora
+\newif\ifgre@lastispunctum%
+\gre@lastispunctumfalse%
 
 % a macro called each time we start something looking like a glyph, but not mandatorily called through the \GreGlyph macro, for example bars, flats, etc.
 
@@ -81,8 +82,8 @@
     \global\gre@lastoflinecount=0\relax %
   \fi %
   \gre@currenttextabovelines %
-  \ifnum\grelastispunctum=1\relax %
-    \xdef\grelastispunctum{0}%
+  \ifgre@lastispunctum %
+    \gre@lastispunctumfalse%
   \fi %
 }%
 
@@ -308,12 +309,12 @@
 % the result is identical.
 \def\gresyllablenotes#1{%
   \global\gre@firstglyphtrue%
-  \xdef\grelastispunctumsauv{\grelastispunctum}%
+  \let\ifgre@lastispunctumsave\ifgre@lastispunctum%
   \global\gre@boxingtrue%
   \xdef\gre@savedlastoflinecount{\number\gre@lastoflinecount\relax }%
   \setbox\gre@box@syllablenotes=\hbox{#1}%
   \gre@debugmsg{spacing}{Width of notes: \the\wd\gre@box@syllablenotes}%
-  \xdef\grelastispunctum{\grelastispunctumsauv}%
+  \let\ifgre@lastispunctum\ifgre@lastispunctumsave%
   \global\gre@boxingfalse%
   \global\gre@lastoflinecount=\gre@savedlastoflinecount\relax %
   \global\gre@firstglyphtrue%
