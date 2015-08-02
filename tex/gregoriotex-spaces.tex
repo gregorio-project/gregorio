@@ -626,15 +626,15 @@
 
 \def\gre@calculate@textaligncenter#1#2#3{%
   \ifnum#3=0\relax%
-    \grewidthof{\grefixedtextformat{#1#2}}%
+    \grewidthof{\gre@fixedtextformat{#1#2}}%
   \else %
-    \grewidthof{\grefixednexttextformat{#1#2}}%
+    \grewidthof{\gre@fixednexttextformat{#1#2}}%
   \fi %
   \global\gre@dimen@textaligncenter=\the\gre@dimen@temp@three %
   \ifnum#3=0\relax%
-    \grewidthof{\grefixedtextformat{#2}}%
+    \grewidthof{\gre@fixedtextformat{#2}}%
   \else %
-    \grewidthof{\grefixednexttextformat{#2}}%
+    \grewidthof{\gre@fixednexttextformat{#2}}%
   \fi %
   \divide\gre@dimen@temp@three by 2 %
   \global\advance\gre@dimen@textaligncenter by -\the\gre@dimen@temp@three%

@@ -348,11 +348,9 @@
 % 
 
 % the macro we call with all normal text
-\def\gretextformat#1{%
+\def\gre@textnormal#1{%
   #1\relax %
 }%
-
-\let\gretextnormal\gretextformat%
 
 % macro to specify a text which is different from #1#2#3 (of \GreSyllable). It is useful for
 % styles, for instance with
@@ -377,55 +375,55 @@
 % 5: ul
 \def\GreSetFixedTextFormat#1{%
   \ifcase#1\relax%
-    \global\let\grefixedtextformat\gretextnormal %
+    \global\let\gre@fixedtextformat\gre@textnormal %
   \or %
-    \global\let\grefixedtextformat\GreItalic %
+    \global\let\gre@fixedtextformat\GreItalic %
   \or %
-    \global\let\grefixedtextformat\GreBold %
+    \global\let\gre@fixedtextformat\GreBold %
   \or %
-    \global\let\grefixedtextformat\GreSmallCaps %
+    \global\let\gre@fixedtextformat\GreSmallCaps %
   \or %
-    \global\let\grefixedtextformat\GreTypewriter %
+    \global\let\gre@fixedtextformat\GreTypewriter %
   \or %
-    \global\let\grefixedtextformat\GreUnderline %
+    \global\let\gre@fixedtextformat\GreUnderline %
   \or %
-    \global\let\grefixedtextformat\GreColored %
+    \global\let\gre@fixedtextformat\GreColored %
   \fi %
 }%
 
 % a function to cancel the previous one
-\def\greunsetfixedtextformat{%
-  \global\let\grefixedtextformat\gretextnormal %
+\def\gre@unsetfixedtextformat{%
+  \global\let\gre@fixedtextformat\gre@textnormal %
 }%
 
-\let\grefixedtextformat\gretextnormal %
+\let\gre@fixedtextformat\gre@textnormal %
 
 % The same but for the next syllable
 
 \def\GreSetFixedNextTextFormat#1{%
   \ifcase#1\relax%
-    \global\let\grefixednexttextformat\gretextnormal %
+    \global\let\gre@fixednexttextformat\gre@textnormal %
   \or %
-    \global\let\grefixednexttextformat\GreItalic %
+    \global\let\gre@fixednexttextformat\GreItalic %
   \or %
-    \global\let\grefixednexttextformat\GreBold %
+    \global\let\gre@fixednexttextformat\GreBold %
   \or %
-    \global\let\grefixednexttextformat\GreSmallCaps %
+    \global\let\gre@fixednexttextformat\GreSmallCaps %
   \or %
-    \global\let\grefixednexttextformat\GreTypewriter %
+    \global\let\gre@fixednexttextformat\GreTypewriter %
   \or %
-    \global\let\grefixednexttextformat\GreUnderline %
+    \global\let\gre@fixednexttextformat\GreUnderline %
   \or %
-    \global\let\grefixednexttextformat\GreColored %
+    \global\let\gre@fixednexttextformat\GreColored %
   \fi %
 }%
 
 % a function to cancel the previous one
-\def\greunsetfixednexttextformat{%
-  \global\let\grefixednexttextformat\gretextnormal %
+\def\gre@unsetfixednexttextformat{%
+  \global\let\gre@fixednexttextformat\gre@textnormal %
 }%
 
-\let\grefixednexttextformat\gretextnormal %
+\let\gre@fixednexttextformat\gre@textnormal %
 
 \def\GreSetNextSyllable#1#2#3{%
   \gdef\gre@nextfirstsyllablepart{#1}%
@@ -556,8 +554,8 @@
   \gre@attr@dash=2\relax %
   #5%
   \gre@calculate@nextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
-  \greunsetfixednexttextformat %
-  \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+  \gre@unsetfixednexttextformat %
+  \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
     % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
   \gre@count@temp@one=0%
@@ -585,9 +583,9 @@
     \ifdim\gre@skip@temp@one > \gre@dimen@maximumspacewithoutdash %
       % if it's the last syllable of line, the hyphen will be \GreHyph
       \ifnum\gre@lastoflinecount=1\relax %
-        \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart\GreHyph\relax}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart\GreHyph\relax}{#6}}}%
       \else %
-        \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart-}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart-}{#6}}}%
       \fi %
       % recomputing end difference and final skip with the final hyphen
       \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
@@ -595,7 +593,7 @@
     \else %
       \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
-      \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+      \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
     \fi%
   \fi% ficase#4
   % then we reuse temp, we assign to it the \gre@dimen@begindifference, but only if it is positive, else it is 0
@@ -639,7 +637,7 @@
   % we call end of syllable
   \gre@syllable@end{#7}{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}{#4}%
   \global\gre@dimen@notesaligncenter=0pt% very important, see flat and natural
-  \greunsetfixedtextformat %
+  \gre@unsetfixedtextformat %
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
@@ -730,7 +728,7 @@
     \gdef\gre@endsyllablepart{}%
   \fi %
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
-  \setbox\gre@box@syllabletext=\hbox{\grefixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+  \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
   \gre@debugmsg{spacing}{Width of bar text: \the\wd\gre@box@syllabletext}%
   \gre@syllablenotes{#9}%
   \gre@debugmsg{spacing}{Width of bar line: \the\wd\gre@box@syllablenotes}%
@@ -741,7 +739,7 @@
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   #5%
   \gre@calculate@nextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
-  \greunsetfixednexttextformat %
+  \gre@unsetfixednexttextformat %
   % then we check if there is something to write
   \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
   \ifdim\wd\gre@box@syllabletext = 0 pt\relax %
@@ -858,7 +856,7 @@
     %and that's it !!
   \fi %
   \global\gre@dimen@notesaligncenter= 0 pt\relax % very important, see flat and natural
-  \greunsetfixedtextformat %
+  \gre@unsetfixedtextformat %
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \grelocalrightbox{}%
   \fi\fi %
