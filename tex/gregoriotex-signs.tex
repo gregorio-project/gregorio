@@ -27,7 +27,7 @@
 \def\greusestylecommon{%
   \ifnum\greusestylefont=0\relax %
     \xdef\greusestylefont{1}%
-    \gresetstylefont %
+    \gre@setstylefont %
   \fi %
   \relax %
 }%
@@ -1137,11 +1137,11 @@
 % another dumb top function
 \def\GreAdditionalLine#1#2#3{%
   \ifgre@showlines %
-    \xdef\gresavedglyphraise{\the\gre@dimen@glyphraisevalue}%
+    \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
     \gre@style@additionalstafflines %
     \gre@hepisorline{\gre@pitch@a}{#1}{#2}{#3}{f}%
     \endgre@style@additionalstafflines%
-    \gre@dimen@glyphraisevalue=\gresavedglyphraise %
+    \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise %
   \fi %
   \relax %
 }%

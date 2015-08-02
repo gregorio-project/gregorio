@@ -915,7 +915,7 @@
     \parfillskip=0pt plus 0pt minus 0pt\relax%
   \fi %
   \ifnum\greusestylefont=1\relax %
-    \gresetstylefont %
+    \gre@setstylefont %
   \fi %
   \gre@computespaces%
   \gre@cancelpenalties %
@@ -1317,7 +1317,7 @@
 \xdef\greusestylefont{0}%
 
 % gregoriostylefont is the font used for additional glyphs
-\def\gresetstylefont{%
+\def\gre@setstylefont{%
   \gre@count@temp@three = \the\gre@factor %
   \multiply\gre@count@temp@three by 100000\relax %
   \global\font\gregoriostylefont={name:greextra} at \the\gre@count@temp@three sp%

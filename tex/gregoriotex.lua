@@ -610,7 +610,7 @@ local function init_variant_font(font_name, for_score)
       else
         -- is there a nice way to make this string readable?
         tex.print(string.format(
-            [[\gdef\%sSymReload#1{{\edef\localsize{#1}\ifx\localsize\%sSymSize\relax\relax\else\global\font\%s = {name:%s} at \localsize pt\relax\xdef\%sSymSize{\localsize}\fi}}\xdef\%sSymSize{0}\%sSymReload{\gresymbolfontsize}]],
+            [[\gdef\%sSymReload#1{{\edef\localsize{#1}\ifx\localsize\%sSymSize\relax\relax\else\global\font\%s = {name:%s} at \localsize pt\relax\xdef\%sSymSize{\localsize}\fi}}\xdef\%sSymSize{0}\%sSymReload{\gre@symbolfontsize}]],
             font_csname, font_csname, font_csname, font_name, font_csname,
             font_csname, font_csname))
       end
@@ -631,7 +631,7 @@ local function set_common_score_glyph(csname, font_csname, char)
 end
 
 local function set_symbol_glyph(csname, font_csname, char)
-  tex.print(string.format([[\def\%s{\%sSymReload{\gresymbolfontsize}{\%s\char%d}\relax}]],
+  tex.print(string.format([[\def\%s{\%sSymReload{\gre@symbolfontsize}{\%s\char%d}\relax}]],
       csname, font_csname, font_csname, char))
 end
 
