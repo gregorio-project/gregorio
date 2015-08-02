@@ -274,7 +274,7 @@
 }%
 
 % macro to cancel before the call of \initial
-\def\grenormalinitial{%
+\def\gre@normalinitial{%
   \global\gre@biginitial=0\relax %
   \relax %
 }%
@@ -944,7 +944,7 @@
   \global\gre@lastoflinecount=0\relax %
   \global\greseteolcustos{auto}%
   \GreEndEUOUAE{}%
-  \ifnum\grenlbstate=0\else %
+  \ifnum\gre@nlbstate=0\else %
     \GreEndNLBArea{2}{0}%
   \fi %
   \grelocalleftbox{}%
@@ -963,7 +963,7 @@
   \gre@calculate@additionalspaces{\gre@pitch@g}{\gre@pitch@g}{0}{0}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@removetranslationspace %
-  \grenormalinitial %
+  \gre@normalinitial %
   \gre@restorepenalties %
   \gre@endfinetuning %
   \exhyphenchar=\gre@exhyphencharsave %
@@ -1175,24 +1175,24 @@
 % 0: not currently in a no line break area
 % 1: no line break area due to translation centering
 % 2: no line break area due to <nlba> tag
-\xdef\grenlbstate{0}%
+\xdef\gre@nlbstate{0}%
 
 % first argument is if if the nlba is starting in neumes or not
 % second argument is if it is called from translation centering or not
 \def\GreBeginNLBArea#1#2{%
-  \xdef\grenlbinitialstate{\grenlbstate}%
+  \xdef\gre@nlbintialstate{\gre@nlbstate}%
   \ifnum#2=0\relax %
-    \xdef\grenlbstate{2}%
+    \xdef\gre@nlbstate{2}%
   \else %
-      \ifcase\grenlbstate %
-        \xdef\grenlbstate{1}%
+      \ifcase\gre@nlbstate %
+        \xdef\gre@nlbstate{1}%
       \or %
-        \xdef\grenlbstate{1}%
+        \xdef\gre@nlbstate{1}%
       \or %
-        \xdef\grenlbstate{2}%
+        \xdef\gre@nlbstate{2}%
       \fi %
   \fi %
-  \ifnum\grenlbinitialstate=0\relax %
+  \ifnum\gre@nlbintialstate=0\relax %
       \xdef\gre@nobreakpenaltysave{\grenobreakpenalty }%
       \xdef\grenobreakpenalty{10001}%
       \xdef\gre@endofwordpenaltysave{\greendofwordpenalty }%
@@ -1211,21 +1211,21 @@
 }%
 
 \def\GreEndNLBArea#1#2{%
-  \xdef\grenlbinitialstate{\grenlbstate}%
+  \xdef\gre@nlbintialstate{\gre@nlbstate}%
   \ifnum#2=0\relax %
-    \xdef\grenlbstate{0}%
+    \xdef\gre@nlbstate{0}%
   \else %
-      \ifcase\grenlbstate %
-        \xdef\grenlbstate{0}%
+      \ifcase\gre@nlbstate %
+        \xdef\gre@nlbstate{0}%
       \or %
-        \xdef\grenlbstate{0}%
+        \xdef\gre@nlbstate{0}%
       \or %
-        \xdef\grenlbstate{2}%
+        \xdef\gre@nlbstate{2}%
       \fi %
   \fi %
-  % if grenlbstate is not 0, then nothing should happend
-  \ifnum\grenlbstate=0\relax %
-    \ifnum\grenlbinitialstate=0\else %
+  % if gre@nlbstate is not 0, then nothing should happend
+  \ifnum\gre@nlbstate=0\relax %
+    \ifnum\gre@nlbintialstate=0\else %
       \xdef\grenobreakpenalty{\gre@nobreakpenaltysave }%
       \xdef\greendofwordpenalty{\gre@endofwordpenaltysave}%
       \xdef\greendofsyllablepenalty{\gre@endofsyllablepenaltysave}%
@@ -1536,18 +1536,18 @@
 }%
 
 % a normal hyphen
-\def\grenormalhyph{%
+\def\gre@char@normalhyphen{%
   %-
   \char\the\hyphenchar\font %
 }%
 
 % the definition that will be always used for end of lines hyphens in gregorio, except if one of the two before is explicitely used
-\let\GreHyph\grenormalhyph %
+\let\GreHyph\gre@char@normalhyphen %
 
 % macro to change the definition of the hyphen:
 \def\greseteolhyphen#1{%
   \IfStrEq{#1}{normal}%
-    {\global\let\GreHyph\grenormalhyph}%
+    {\global\let\GreHyph\gre@char@normalhyphen}%
     {\IfStrEq{#1}{zero}%
       {\global\let\GreHyph\GreZeroHyph}%
       {\gre@error{Unrecognized option for \protect\greseteolhyphen}}%

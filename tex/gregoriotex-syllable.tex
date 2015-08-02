@@ -75,7 +75,7 @@
   \fi %
 }%
 
-\def\grenewglyphcommon{%
+\def\gre@newglyphcommon{%
   \global\advance\gre@attr@glyph@id by 1\relax %
   % first there is something we must do: setting \gre@lastoflinecount to 0 if its value is 2. The reason of this is that in ab(abzcd), we cannot let \grelastoflinecount set to 2 after the end of line... the only way I found to achieve it is to reset \grelastoflinecount to 0 after each glyph or bar.
   \ifnum\gre@lastoflinecount=2\relax %
@@ -117,7 +117,7 @@
 % #6 are the signs to typeset after the glyph (almost all signs)
 % #7 is the line:char:column for a textedit link
 \def\GreGlyph#1#2#3#4#5#6#7{%
-  \grenewglyphcommon %
+  \gre@newglyphcommon %
   \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{\gregoriofont #1}{#7}}%
   \gre@dimen@temp@three=\wd\gre@box@temp@width %
   \global\gre@dimen@lastglyphwidth=\gre@dimen@temp@three %

@@ -1265,7 +1265,7 @@
       \kern\gre@skip@temp@four %
     \fi %
   \fi %
-  \grenewglyphcommon %
+  \gre@newglyphcommon %
   \gre@calculate@glyphraisevalue{\gre@pitch@g}{0}% bar glyphs are made to be at this height
   \GreNoBreak %
   \ifcase#1 % 0 : virgula
@@ -1584,7 +1584,7 @@
 \def\gre@alteration#1#2#3#4{%
   % to see why we reset \gre@lastoflinecount, see comments of \GreGlyph.
   \ifnum#4=0\relax %
-    \grenewglyphcommon %
+    \gre@newglyphcommon %
   \fi %
   \gre@calculate@glyphraisevalue{#1}{0}%
   \ifgre@hidealtlines %

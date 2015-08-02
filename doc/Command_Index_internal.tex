@@ -577,6 +577,11 @@ Macro to help typesetting vertical episemus.
   \#7 & string & the choral sign if relevant\\
 \end{argtable}
 
+\macroname{\textbackslash gre@newglyphcommon}{}{gregoriotex-syllable.tex}
+Macro called before each glyph.
+
+\macroname{\textbackslash ger@normalinitial}{}{gregoriotex-main.tex}
+Macro called at the end of the score to ensure that a big initial setting doesn't carry into the next score.
 
 
 \subsection{Auxiliary File}
@@ -684,6 +689,8 @@ The divisio finalis.
 \macroname{\textbackslash gre@fontchar@divisiomaior}{}{gregoriotex-signs.tex}
 The divisio maior.
 
+\macroname{\textbackslash gre@char@normalhyphen}{}{gregoriotex-main.tex}
+A normal hyphen in the text font.
 
 \subsection{Flags}
 
@@ -772,6 +779,11 @@ Boolean which indicates if the most recent note was a punctum mora.
 \macroname{\textbackslash ifgre@lastispunctumsave}{}{gregoriotex-signs.tex}
 Boolean for storing \verb=\ifgre@lastispunctum= so that it can be restored later.
 
+\macroname{\textbackslash gre@nlbstate}{}{gregoriotex-main.tex}
+Macro which indicates if we are in a no line break area due to translation centering (1), an explicit no line break designation in the gabc (2), or not at all (0).
+
+\macroname{\textbackslash gre@nlbinitialstate}{}{gregoriotex-main.tex}
+Macro to store \verb=\gre@nlbstate= as we initialize or end a no line break area so that we can manipulate said flag as part of the process.
 
 
 \subsection{Boxes}
