@@ -229,14 +229,14 @@
     \ifcase#3%
       \let\mygre@endsyllablepart\gre@endsyllablepart %
     \fi%
-    \grewidthof{#1}%
+    \gre@widthof{#1}%
     \divide\gre@dimen@temp@three by 2\relax %
     \gre@debugmsg{ifdim}{ tempwidth > textaligncenter}%
     \ifdim\gre@dimen@temp@three >\gre@dimen@textaligncenter %
       \global\setbox\gre@box@temp@width=\hbox{#2}%
     \else%
       \ifgre@vowelcentering%
-        \grewidthof{\mygre@endsyllablepart}%
+        \gre@widthof{\mygre@endsyllablepart}%
         \gre@debugmsg{ifdim}{ tempwidth > clivisalignmentmin}%
         \ifdim\gre@dimen@temp@three >\gre@dimen@clivisalignmentmin %
           \global\setbox\gre@box@temp@width=\hbox{#2}%

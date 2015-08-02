@@ -744,7 +744,7 @@ local function adjust_line_height(inside_discretionary)
           [[\gre@calculate@additionalspaces{%d}{%d}{%d}{%d}]],
           heights[1], heights[2], heights[3], heights[4]))
       if inside_discretionary == 0 then
-        tex.sprint(catcode_at_letter, [[\greupdateleftbox ]])
+        tex.sprint(catcode_at_letter, [[\gre@updateleftbox ]])
       end
     end
   end

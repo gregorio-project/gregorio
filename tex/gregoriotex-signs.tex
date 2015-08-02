@@ -24,9 +24,9 @@
 
 \gre@declarefileversion{gregoriotex-signs.tex}{4.0.0-beta}% GREGORIO_VERSION
 
-\def\greusestylecommon{%
-  \ifnum\greusestylefont=0\relax %
-    \xdef\greusestylefont{1}%
+\def\gre@usestylecommon{%
+  \ifgre@usestylefont\else %
+    \gre@usestylefonttrue%
     \gre@setstylefont %
   \fi %
   \relax %
@@ -115,7 +115,7 @@
     \unkern %
     \ifgre@showclef%
       \gre@skip@temp@four = \gre@skip@afterclefnospace%
-      \hbox{\gretypekey{#1}{#2}{0}{#3}{#4}\hskip\gre@skip@temp@four}%
+      \hbox{\gre@typekey{#1}{#2}{0}{#3}{#4}\hskip\gre@skip@temp@four}%
     \else %
       \gre@skip@temp@four = \gre@dimen@noclefspace%
       \hbox{\kern\gre@skip@temp@four}%
@@ -155,7 +155,7 @@
 %% #3: if we must use small key characters (inside a line) or not 0: if not inside, 1 if inside
 %% #4: if we must type a space after or not
 %% #5: if 3, it means that we must not put a flat after the key, otherwise it's the height of the flat
-\def\gretypekey#1#2#3#4#5{%
+\def\gre@typekey#1#2#3#4#5{%
   \ifcase#2 %
   \or%
     \gre@calculate@glyphraisevalue{\gre@pitch@c}{0}%
@@ -204,7 +204,7 @@
 \def\GreSetInitialClef#1#2#3{%
   \gre@calculate@clefnum{#1}{#2}{#3}%
   \ifgre@showclef%
-    \gretypekey{#1}{#2}{0}{1}{#3}%
+    \gre@typekey{#1}{#2}{0}{1}{#3}%
   \fi %
   \GreSetLinesClef{#1}{#2}{1}{#3}%
   % if the initial is big, then we adjust the second line
@@ -235,7 +235,7 @@
     \gre@skip@temp@four = -\gre@skip@spacearoundclefbars%
     \grehskip\gre@skip@temp@four %
   \fi %
-  \gretypekey{#1}{#2}{1}{0}{#4}%
+  \gre@typekey{#1}{#2}{1}{0}{#4}%
   \gre@skip@temp@four = \gre@skip@clefchangespace%
   \grehskip\gre@skip@temp@four %
   \relax%
@@ -1154,75 +1154,75 @@
 % we define two types of macro for each four bar : when it is inside a syllable, and when it is not
 
 \def\GreInVirgula#1{%
-  \grewritebar{0}{1}{#1}%
+  \gre@writebar{0}{1}{#1}%
   \relax%
 }%
 
 \def\GreVirgula#1{%
-  \grewritebar{0}{0}{#1}%
+  \gre@writebar{0}{0}{#1}%
   \relax%
 }%
 
 \def\GreInDivisioMinima#1{%
-  \grewritebar{1}{1}{#1}%
+  \gre@writebar{1}{1}{#1}%
   \relax%
 }%
 
 \def\GreDivisioMinima#1{%
-  \grewritebar{1}{0}{#1}%
+  \gre@writebar{1}{0}{#1}%
   \relax%
 }%
 
 \def\GreInDivisioMinor#1{%
-  \grewritebar{2}{1}{#1}%
+  \gre@writebar{2}{1}{#1}%
   \relax%
 }%
 
 \def\GreDivisioMinor#1{%
-  \grewritebar{2}{0}{#1}%
+  \gre@writebar{2}{0}{#1}%
   \relax%
 }%
 
 \def\GreInDivisioMaior#1{%
-  \grewritebar{3}{1}{#1}%
+  \gre@writebar{3}{1}{#1}%
   \relax%
 }%
 
 \def\GreDivisioMaior#1{%
-  \grewritebar{3}{0}{#1}%
+  \gre@writebar{3}{0}{#1}%
   \relax%
 }%
 
 \def\GreDominica#1#2{%
   \ifcase#1\or %
-    \grewritebar{6}{0}{#2}%
+    \gre@writebar{6}{0}{#2}%
   \or %
-    \grewritebar{7}{0}{#2}%
+    \gre@writebar{7}{0}{#2}%
   \or %
-    \grewritebar{8}{0}{#2}%
+    \gre@writebar{8}{0}{#2}%
   \or %
-    \grewritebar{9}{0}{#2}%
+    \gre@writebar{9}{0}{#2}%
   \or %
-    \grewritebar{10}{0}{#2}%
+    \gre@writebar{10}{0}{#2}%
   \or %
-    \grewritebar{11}{0}{#2}%
+    \gre@writebar{11}{0}{#2}%
   \fi %
   \relax%
 }%
 
 \def\GreInDominica#1#2{%
   \ifcase#1\or %
-    \grewritebar{6}{1}{#2}%
+    \gre@writebar{6}{1}{#2}%
   \or %
-    \grewritebar{7}{1}{#2}%
+    \gre@writebar{7}{1}{#2}%
   \or %
-    \grewritebar{8}{1}{#2}%
+    \gre@writebar{8}{1}{#2}%
   \or %
-    \grewritebar{9}{1}{#2}%
+    \gre@writebar{9}{1}{#2}%
   \or %
-    \grewritebar{10}{1}{#2}%
+    \gre@writebar{10}{1}{#2}%
   \or %
-    \grewritebar{11}{1}{#2}%
+    \gre@writebar{11}{1}{#2}%
   \fi %
   \relax%
 }%
@@ -1230,18 +1230,18 @@
 
 \def\GreInDivisioFinalis#1{%
   \ifgre@endofscore %
-    \grewritebar{5}{1}{#1}%
+    \gre@writebar{5}{1}{#1}%
   \else %
-    \grewritebar{4}{1}{#1}%
+    \gre@writebar{4}{1}{#1}%
   \fi %
   \relax%
 }%
 
 \def\GreDivisioFinalis#1{%
   \ifgre@endofscore %
-    \grewritebar{5}{0}{#1}%
+    \gre@writebar{5}{0}{#1}%
   \else %
-    \grewritebar{4}{0}{#1}%
+    \gre@writebar{4}{0}{#1}%
   \fi %
   \relax%
 }%
@@ -1252,7 +1252,7 @@
 %%%%%% 0 if it is in a syllable containing only this bar
 %%%%%% 1 if it is in a syllable containing other notes
 %% 3: macros that may happen before the skip after the bar (typically GreVEpisemus)
-\def\grewritebar#1#2#3{%
+\def\gre@writebar#1#2#3{%
   % first, for the bar to be really centered, if the last glyph has a punctum
   % mora, we kern of the corresponding space. We do it only in the case
   % of a bar in the middle of other notes.
@@ -1469,8 +1469,8 @@
   \gre@fontchar@divisiomaior %
 }%
 
-%a count to tell if we have to keep the localrightbox until the end
-\newcount\keeprightbox%
+% Flag to tell if we have to keep the localrightbox until the end
+\newif\ifgre@keeprightbox%
 
 %macro to end a line with a divisio finalis
 \def\GreFinalDivisioFinalis#1{%

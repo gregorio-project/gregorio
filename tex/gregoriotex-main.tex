@@ -226,7 +226,7 @@
     \global\advance\gre@knownline by 1\relax %
     \global\gre@lastoflinecount=2\relax %
     \ifnum\gre@insidediscretionary=0\relax %
-      \greupdateleftbox %
+      \gre@updateleftbox %
     \fi %
     \ifnum#1=1\relax %
       \hfill %
@@ -247,7 +247,7 @@
 
 \newbox\gre@box@temp@width%
 
-\def\grewidthof#1{%
+\def\gre@widthof#1{%
   \setbox\gre@box@temp@width=\hbox{#1}%
   \global\gre@dimen@temp@three=\wd\gre@box@temp@width%
   \relax%
@@ -282,18 +282,18 @@
 % macro to call before the first syllable, but after setinitialclef
 \def\GreAdjustSecondLine{%
   \gre@dimen@additionalleftspace=\gre@dimen@initialwidth %
-  \greupdateleftbox %
+  \gre@updateleftbox %
   \relax %
 }%
 
 % macro to call during the second line
 \def\GreAdjustThirdLine{%
   \gre@dimen@additionalleftspace= 0 pt%
-  \greupdateleftbox %
+  \gre@updateleftbox %
   \relax %
 }%
 
-\def\greupdateleftbox{%
+\def\gre@updateleftbox{%
   \gre@updatelinewidth %
   \gre@updatelinesclef %
 }%
@@ -426,7 +426,7 @@
     \gre@error{Unrecognzied alignment option for \protect\greannotation}%
   \fi\fi\fi%
   % first we determine the widest box
-  \grewidthof{#2}%
+  \gre@widthof{#2}%
   \ifdim\gre@dimen@temp@three < \wd\gre@box@annotation\relax%
     \gre@dimen@temp@three = \wd\gre@box@annotation\relax%
   \fi%
@@ -914,7 +914,7 @@
     \xdef\gre@save@parfillskip{\the\parfillskip}
     \parfillskip=0pt plus 0pt minus 0pt\relax%
   \fi %
-  \ifnum\greusestylefont=1\relax %
+  \ifgre@usestylefont%
     \gre@setstylefont %
   \fi %
   \gre@computespaces%
@@ -948,13 +948,13 @@
     \GreEndNLBArea{2}{0}%
   \fi %
   \grelocalleftbox{}%
-  \ifnum\keeprightbox=0\relax %
+  \ifgre@keeprightbox\else %
     \grelocalrightbox{}%
   \fi %
   \hfil %
   \par %
-  \ifnum\keeprightbox=1\relax %
-    \global\keeprightbox=0\relax %
+  \ifgre@keeprightbox%
+    \global\gre@keeprightboxfalse%
   \fi%
   \gre@unsetattr@dash %
   % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
@@ -1314,7 +1314,8 @@
 % the default gregorio font
 \gresetgregoriofont{greciliae}%
 
-\xdef\greusestylefont{0}%
+\newif\ifgre@usestylefont%
+\gre@usestylefontfalse%
 
 % gregoriostylefont is the font used for additional glyphs
 \def\gre@setstylefont{%
