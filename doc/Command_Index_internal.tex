@@ -75,9 +75,8 @@ Macro for calculating \verb=\gre@textaligncenter=.
       & 1 & Calculation is being performed for the next syllable.\\
 \end{argtable}
 
-\macroname{\textbackslash gre@calculate@aboveinitialraise}{}{gregoriotex-main.tex}
-Macro to give \verb=\gre@aboveinitialfirstraise= and\\
-\verb=\gre@aboveinitialsecondraise= their working values.
+\macroname{\textbackslash gre@calculate@annotationtrueraise}{}{gregoriotex-spaces.tex}
+Macro to calculate \verb=\gre@dimen@annotationtrueraise=.
 
 \macroname{\textbackslash gre@calculate@textlower}{}{gregoriotex-spaces.tex}
 Calculates the default value of \texttt{textlower}.  Default is \texttt{spacebeneathtext}.
@@ -183,9 +182,6 @@ Macro to calculate \texttt{nextbegindifference}.
   & $40 <$ integer $< 59$ & Same as below 20 except there is a natural before the notes.  Subtract 40 to get the type of notes alignment.
 \end{argtable}
 
-\macroname{\textbackslash gre@tempdimcount}{}{gregoriotex-spaces.tex}
-Temporary count used in calculations.
-
 \macroname{\textbackslash gre@makein}{\#1}{gregoriotex-spaces.tex}
 Strips the decimals and units from a distance.
 
@@ -206,8 +202,8 @@ Temporary count used by \verb=\gre@convertto=.
 \macroname{\textbackslash gre@basefactor}{}{gregoriotex-spaces.tex}
 Temporary count used by \verb=\gre@convertto=.
 
-\macroname{\textbackslash gre@temp@count@one}{}{gregoriotex-spaces.tex}
-Temporary count used by \verb=\gre@convertto=.
+\macroname{\textbackslash gre@count@temp@**}{}{gregoriotex-spaces.tex}
+Temporary count used in calculations.  There are currently two of these.
 
 \macroname{\textbackslash gre@convertto}{\#1\#2}{gregoriotex-spaces.tex}
 Macro which converts a distance into a particular set of units.  Result is placed in \verb=\gre@converted= as a string.
@@ -231,10 +227,7 @@ This function takes a distance and formats it as a string so that its units conf
 \macroname{\textbackslash gre@stringdist}{}{gregoriotex-spaces.tex}
 Macro holding result of last call to \verb=\gre@consistentunits=.
 
-\macroname{\textbackslash gre@temp@count@two}{}{gregoriotex-spaces.tex}
-Temporary count used by \verb=\gre@changedimenfactor=.
-
-\macroname{\textbackslash gre@includescore}{\#1}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@gregorioscore}{\#1}{gregoriotex-main.tex}
 Macro that handles \verb=\includescore= calls when they do not have an
 optional argument.
 
@@ -242,7 +235,7 @@ optional argument.
   \#1 & string & Relative or absolute path to the score.\\
 \end{argtable}
 
-\macroname{\textbackslash gre@includescorewithoption}{[\#1]\#2}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@gregorioscore@option}{[\#1]\#2}{gregoriotex-main.tex}
 Macro that handles \verb=\includescore= calls when they have an optional
 argument.
 
@@ -602,7 +595,7 @@ The font size at which symbols are to be loaded.
 \macroname{\textbackslash gre@textnormal}{\#1}{gregoriotex-syllable.tex}
 Macro which applies the default text format.
 
-\macroname{\textbackslash ger@typekey}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@typekey}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
 Macro which typesets the key.
 
 \begin{argtable}
@@ -773,8 +766,8 @@ Boolean used to specify whether the center of the vowel or the center of the syl
 \macroname{\textbackslash ifgre@translationcentering}{}{gregoriotex-main.tex}
 Boolean used to specify whether the translation text should be centered below its respective syllable.
 
-\macroname{\textbackslash ifgre@removelines}{}{gregoriotex-main.tex}
-Boolean used to specify whether the staff lines should be removed from the score output.
+\macroname{\textbackslash ifgre@showlines}{}{gregoriotex-main.tex}
+Boolean used to specify whether the staff lines should be shown or not.
 
 \macroname{\textbackslash ifgre@hidepclines}{}{gregoriotex-signs.tex}
 Boolean used to specify whether the staff lines behind a punctum cavum should be hidden.
@@ -825,7 +818,7 @@ Count to indicate how the clivis is to be aligned with its respective syllable t
 \macroname{\textbackslash gre@insidediscretionary}{}{gregoriotex-signs.tex}
 Macro which indicates whether we are currently inside a discretionary (1) or not (0).  Cannot be converted to a \TeX\ boolean because it's value needs to be passed to Lua.
 
-\macroname{\textbackslash gre@isonaline}{}{gregoriotex-syllable.tex}
+\macroname{\textbackslash ifgre@isonaline}{}{gregoriotex-syllable.tex}
 Boolean which indicates whether the current note is on a line or not (used to adjust the height of some symbols so they won't print on a line).
 
 \macroname{\textbackslash ifgre@lastispunctum}{}{gregoriotex-syllable.tex}
@@ -853,17 +846,20 @@ Boxes are used to store elements of the score before they are printed for the pu
 \macroname{\textbackslash gre@box@hep}{}{gregoriotex-chars.tex}
 Box for horizontal episemi.
 
-\macroname{\textbackslash gre@temp@width}{}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@box@temp@width}{}{gregoriotex-main.tex}
 Box for holding an element in order to determine its width.
 
 \macroname{\textbackslash gre@box@initial}{}{gregoriotex-main.tex}
 Box which holds the initial of the score.
 
-\macroname{\textbackslash gre@box@firstaboveinitial}{}{gregoriotex-main.tex}
-Box holding the first (top) annotation above the initial.
+\macroname{\textbackslash gre@box@annotation}{}{gregoriotex-main.tex}
+Box holding the annotation which goes above the initial.
 
-\macroname{\textbackslash gre@box@secondaboveinitial}{}{gregoriotex-main.tex}
-Box holding the second (bottom) annotation above the initial.
+\macroname{\textbackslash gre@box@annotation@add}{}{gregoriotex-main.tex}
+Box used for the new line to be added to the annotation.
+
+\macroname{\textbackslash gre@box@annotation@old}{}{gregoriotex-main.tex}
+Box used for the existing lines in the annotation when a new line is being added.
 
 \macroname{\textbackslash gre@box@lines}{}{gregoriotex-main.tex}
 Box holding the staff lines.
@@ -964,10 +960,10 @@ The width of the last glyph.
 \macroname{\textbackslash gre@dimen@notesaligncenter}{}{gregoriotex-spaces.tex}
 Distance from beginning of notes to their point of alignment.
 
-\macroname{\textbackslash gre@temp@dimen@**}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@dimen@temp@**}{}{gregoriotex-spaces.tex}
 Temporary dimensions used in calculations.  There are currently five of these.
 
-\macroname{\textbackslash gre@temp@skip@**}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@skip@temp@**}{}{gregoriotex-spaces.tex}
 Temporary skips used in calculations.  There are currently four of these.
 
 \macroname{\textbackslash gre@unit}{}{gregoriotex-spaces.tex}
@@ -1060,7 +1056,7 @@ A place to save the current value of the double hyphen demerits so that we can c
 \macroname{\textbackslash gre@finalhyphendemeritssave}{}{gregoriotex-spaces.tex}
 A place to save the current value of the final hyphen demerits so that we can change it temporarily and then restore it later.
 
-\macroname{\textbackslash gre@loosenessssave}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@loosenesssave}{}{gregoriotex-spaces.tex}
 A place to save the current value of the looseness so that we can change it temporarily and then restore it later.
 
 \macroname{\textbackslash gre@tolerancesave}{}{gregoriotex-spaces.tex}

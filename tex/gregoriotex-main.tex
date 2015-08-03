@@ -1180,7 +1180,7 @@
 % first argument is if if the nlba is starting in neumes or not
 % second argument is if it is called from translation centering or not
 \def\GreBeginNLBArea#1#2{%
-  \xdef\gre@nlbintialstate{\gre@nlbstate}%
+  \xdef\gre@nlbinitialstate{\gre@nlbstate}%
   \ifnum#2=0\relax %
     \xdef\gre@nlbstate{2}%
   \else %
@@ -1192,7 +1192,7 @@
         \xdef\gre@nlbstate{2}%
       \fi %
   \fi %
-  \ifnum\gre@nlbintialstate=0\relax %
+  \ifnum\gre@nlbinitialstate=0\relax %
       \xdef\gre@nobreakpenaltysave{\grenobreakpenalty }%
       \xdef\grenobreakpenalty{10001}%
       \xdef\gre@endofwordpenaltysave{\greendofwordpenalty }%
@@ -1211,7 +1211,7 @@
 }%
 
 \def\GreEndNLBArea#1#2{%
-  \xdef\gre@nlbintialstate{\gre@nlbstate}%
+  \xdef\gre@nlbinitialstate{\gre@nlbstate}%
   \ifnum#2=0\relax %
     \xdef\gre@nlbstate{0}%
   \else %
@@ -1225,7 +1225,7 @@
   \fi %
   % if gre@nlbstate is not 0, then nothing should happend
   \ifnum\gre@nlbstate=0\relax %
-    \ifnum\gre@nlbintialstate=0\else %
+    \ifnum\gre@nlbinitialstate=0\else %
       \xdef\grenobreakpenalty{\gre@nobreakpenaltysave }%
       \xdef\greendofwordpenalty{\gre@endofwordpenaltysave}%
       \xdef\greendofsyllablepenalty{\gre@endofsyllablepenaltysave}%
