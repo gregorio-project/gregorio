@@ -76,16 +76,25 @@ gregoriotex-main.tex ^
 gregoriotex-chars.tex ^
 gregoriotex-ictus.tex ^
 gregoriotex-signs.tex ^
+gregoriotex-signs.lua ^
 gregoriotex-symbols.tex ^
 gregoriotex-spaces.tex ^
 gregoriotex-syllable.tex ^
+gregoriotex-nabc.tex ^
+gregoriotex-nabc.lua ^
 gregoriotex.lua ^
 gsp-default.tex ^
+gregorio-vowels.dat ^
 greciliae.ttf ^
+greciliae-op.ttf ^
 greextra.ttf ^
 gregorio.ttf ^
+gregorio-op.ttf ^
 gresym.ttf ^
-parmesan.ttf
+parmesan.ttf ^
+parmesan-op.ttf ^
+gregall.ttf ^
+gregsmodern.ttf
 
 for %%G in (%files%) do (
 	echo ##### %%G >> %output%
