@@ -2674,6 +2674,7 @@ static inline bool next_is_bar(const gregorio_syllable *syllable,
     }
 
     assert(false); // should never reach here
+    return false; // avoid gcc 5.1 warning
 }
 
 static inline void write_syllable_point_and_click(FILE *const f,
