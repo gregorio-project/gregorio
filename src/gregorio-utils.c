@@ -21,7 +21,11 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#ifdef USE_KPSE
+#include <kpathsea/kpathsea.h>
+#else
 #include <getopt.h>
+#endif
 #include <libgen.h>             /* for basename */
 #include <string.h>             /* for strcmp */
 #include <locale.h>
@@ -32,9 +36,6 @@
 #include "characters.h"
 #include "gabc/gabc.h"
 #include "vowel/vowel.h"
-#ifdef USE_KPSE
-    #include <kpathsea/kpathsea.h>
-#endif
 
 #ifndef MODULE_PATH_ENV
 #define MODULE_PATH_ENV        "MODULE_PATH"
