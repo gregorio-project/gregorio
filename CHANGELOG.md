@@ -152,6 +152,9 @@ See GregorioRef.pdf for full details.
 - `\GreSetSpaceAfterInitial`, supplanted by `\grechangedim{spaceafterinitial}...`
 - `\GreSetAboveInitialSeparation`, supplanted by `\grechangedim{annotationseparation}...`
 - `\gresetstafflinefactor`, supplanted by `\grechangestafflinethickness`
+- `greg-book` and `greg-lily-book` engines, supplanted by improved capabilities of `\gregorioscore` for compiling gabc files at time of document compilation.
+
+
 
 ## [3.0.3] - 2015-07-01
 ### Fixed
