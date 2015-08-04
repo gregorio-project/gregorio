@@ -24,6 +24,7 @@
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
+#include "plugins.h"
 
 static const char *unknown(int value) {
     static char buf[20];

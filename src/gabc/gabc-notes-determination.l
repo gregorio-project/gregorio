@@ -46,7 +46,7 @@ static inline char pitch_letter_to_height(const char pitch) {
     return pitch - 'a' + LOWEST_PITCH;
 }
 
-gregorio_shape punctum(const char pitch)
+static gregorio_shape punctum(const char pitch)
 {
     if (pitch < 'a') {
         return S_PUNCTUM_INCLINATUM;

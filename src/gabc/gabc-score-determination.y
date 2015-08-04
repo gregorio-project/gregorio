@@ -36,7 +36,7 @@
 #include "messages.h"
 #include "characters.h"
 #include "sha1.h"
-
+#include "plugins.h"
 #include "gabc.h"
 
 #define YYLLOC_DEFAULT(Current, Rhs, N) \
@@ -96,7 +96,7 @@ static int current_key = DEFAULT_KEY;
 static bool got_language = false;
 static struct sha1_ctx digester;
 
-static inline void check_multiple(char *name, bool exists) {
+static inline void check_multiple(const char *name, bool exists) {
     if (exists) {
         gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
                 _("several %s definitions found, only the last will be taken "
@@ -104,7 +104,7 @@ static inline void check_multiple(char *name, bool exists) {
     }
 }
 
-static void gabc_score_determination_error(char *error_str)
+static void gabc_score_determination_error(const char *error_str)
 {
     gregorio_message(error_str, (const char *) "gabc_score_determination_parse",
             VERBOSITY_ERROR, 0);
@@ -584,7 +584,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
 unsigned char nabc_state = 0;
 size_t nabc_lines = 0;
 
-void gabc_y_add_notes(char *notes, YYLTYPE loc) {
+static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
     gregorio_element *new_elements;
     gregorio_element *last_element;
     if (nabc_state == 0) {

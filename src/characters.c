@@ -63,7 +63,8 @@ static inline void rtrim(char *buf)
 static bool read_vowel_rules(const char *const lang) {
     const char *language = lang;
     rulefile_parse_status status = RFPS_NOT_FOUND;
-    char **filenames, *filename, *description;
+    char **filenames, *filename;
+    const char *description;
 
 #ifdef USE_KPSE
     filenames = kpse_find_file_generic(VOWEL_FILE, kpse_tex_format, true, true);
