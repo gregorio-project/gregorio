@@ -60,8 +60,8 @@ static inline void rtrim(char *buf)
 }
 #endif
 
-static bool read_vowel_rules(const char *const lang) {
-    const char *language = lang;
+static bool read_vowel_rules(char *const lang) {
+    char *language = lang;
     rulefile_parse_status status = RFPS_NOT_FOUND;
     char **filenames, *filename;
     const char *description;
@@ -155,13 +155,13 @@ static bool read_vowel_rules(const char *const lang) {
     }
     free(filenames);
     if (language != lang) {
-        free((void *)language);
+        free(language);
     }
 
     return status == RFPS_FOUND;
 }
 
-void gregorio_set_centering_language(const char *const language)
+void gregorio_set_centering_language(char *const language)
 {
     if (!read_vowel_rules(language)) {
         if (strcmp(language, "Latin") != 0) {
