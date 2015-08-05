@@ -30,7 +30,7 @@ GregorioRef-@FILENAME_VERSION@.pdf: $(SRCFILES)
 	$(MAKE) $(AM_MAKEFLAGS) -C ../src gregorio
 	../src/gregorio -o factus.gtex $(<D)/factus.gabc
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
-		 TEXFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
+		 TTFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
 		 -pdflatex='lualatex --shell-escape %O %S' \
 		 -jobname=GregorioRef-@FILENAME_VERSION@ $<
 
@@ -38,7 +38,7 @@ GregorioNabcRef-@FILENAME_VERSION@.pdf: $(NABCSRCFILES)
 	$(MAKE) $(AM_MAKEFLAGS) -C ../src gregorio
 	../src/gregorio -o veni.gtex $(<D)/veni.gabc
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
-		 TEXFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
+		 TTFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
 		 -pdflatex='lualatex --shell-escape %O %S' \
 		 -jobname=GregorioNabcRef-@FILENAME_VERSION@ $<
 
