@@ -29,6 +29,7 @@
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
+#include "plugins.h"
 
 #include "gabc.h"
 
@@ -331,7 +332,7 @@ static void gabc_write_bar_signs(FILE *f, char type)
     }
 }
 
-static void gabc_hepisemus(FILE *f, char *prefix, bool connect,
+static void gabc_hepisemus(FILE *f, const char *prefix, bool connect,
         grehepisemus_size size)
 {
     fprintf(f, "_%s", prefix);
@@ -354,7 +355,7 @@ static void gabc_hepisemus(FILE *f, char *prefix, bool connect,
     }
 }
 
-static char *vepisemus_position(gregorio_note *note)
+static const char *vepisemus_position(gregorio_note *note)
 {
     if (!note->v_episemus_height) {
         return "";
@@ -365,7 +366,7 @@ static char *vepisemus_position(gregorio_note *note)
     return "1";
 }
 
-static char *mora_vposition(gregorio_note *note)
+static const char *mora_vposition(gregorio_note *note)
 {
     switch (note->mora_vposition) {
     case VPOS_AUTO:
@@ -411,27 +412,27 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         fprintf(f, "%c", pitch_letter(note->u.note.pitch));
         break;
     case S_PUNCTUM_INCLINATUM:
-        fprintf(f, "%c", toupper(pitch_letter(note->u.note.pitch)));
+        fprintf(f, "%c", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         break;
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
         if (note->next) {
-            fprintf(f, "%c~", toupper(pitch_letter(note->u.note.pitch)));
+            fprintf(f, "%c~", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         } else {
-            fprintf(f, "%c", toupper(pitch_letter(note->u.note.pitch)));
+            fprintf(f, "%c", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         }
         break;
     case S_PUNCTUM_INCLINATUM_AUCTUS:
         if (note->next) {
-            fprintf(f, "%c<", toupper(pitch_letter(note->u.note.pitch)));
+            fprintf(f, "%c<", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         } else {
-            fprintf(f, "%c", toupper(pitch_letter(note->u.note.pitch)));
+            fprintf(f, "%c", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         }
         break;
     case S_PUNCTUM_CAVUM_INCLINATUM:
-        fprintf(f, "%cr", toupper(pitch_letter(note->u.note.pitch)));
+        fprintf(f, "%cr", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         break;
     case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
-        fprintf(f, "%cr<", toupper(pitch_letter(note->u.note.pitch)));
+        fprintf(f, "%cr<", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         break;
     case S_VIRGA:
         fprintf(f, "%cv", pitch_letter(note->u.note.pitch));

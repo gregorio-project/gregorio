@@ -32,6 +32,7 @@
 #include "unicode.h"
 #include "messages.h"
 #include "characters.h"
+#include "plugins.h"
 
 #include "gregoriotex.h"
 
@@ -59,7 +60,7 @@ typedef struct gregoriotex_status {
 #define UNDETERMINED_HEIGHT -127
 
 #define MAX_AMBITUS 5
-static char *tex_ambitus[] = {
+static const char *tex_ambitus[] = {
     NULL, "One", "Two", "Three", "Four", "Five"
 };
 
@@ -165,10 +166,11 @@ static inline bool is_shortqueue(const signed char pitch,
 static grestyle_style gregoriotex_ignore_style = ST_NO_STYLE;
 static grestyle_style gregoriotex_next_ignore_style = ST_NO_STYLE;
 
-static char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
+static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         gregorio_glyph *glyph, gregorio_element *element, gtex_alignment *type)
 {
-    static char buf[128], *name;
+    static char buf[128];
+    const char *name;
 
     if (!note) {
         gregorio_message(_("called with NULL pointer"),
@@ -288,7 +290,7 @@ static char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
  * They also are and must be the same as in squarize.py.
  */
 
-static char *gregoriotex_determine_liquescentia(gtex_glyph_liquescentia type,
+static const char *gregoriotex_determine_liquescentia(gtex_glyph_liquescentia type,
         gregorio_liquescentia liquescentia)
 {
     switch (liquescentia) {
@@ -381,12 +383,12 @@ static inline int compute_ambitus(const gregorio_note *const current_note)
     return ambitus;
 }
 
-static char *compute_glyph_name(const gregorio_glyph *const glyph,
-        char *const shape, const gtex_glyph_liquescentia ltype)
+static const char *compute_glyph_name(const gregorio_glyph *const glyph,
+        const char *const shape, const gtex_glyph_liquescentia ltype)
 {
     static char buf[BUFSIZE];
 
-    char *liquescentia = gregoriotex_determine_liquescentia(ltype,
+    const char *liquescentia = gregoriotex_determine_liquescentia(ltype,
             glyph->u.notes.liquescentia);
     gregorio_note *current_note;
     // then we start making our formula
@@ -437,11 +439,11 @@ static char *compute_glyph_name(const gregorio_glyph *const glyph,
 // calculates the type, used for determining the position of signs. Type is
 // very basic, it is only the global dimensions : torculus, one_note, etc.
 
-char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
+const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         const gregorio_element *const element, gtex_alignment *const  type,
         gtex_type *const gtype)
 {
-    char *shape = NULL;
+    const char *shape = NULL;
     gtex_glyph_liquescentia ltype;
     char pitch = 0;
     if (!glyph) {
@@ -742,7 +744,7 @@ char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
  * now part of the score info.  But we keep it here in case it may
  * be needed in future.
  */
-void gregoriotex_write_voice_info(FILE *f, gregorio_voice_info *voice_info)
+static void gregoriotex_write_voice_info(FILE *f, gregorio_voice_info *voice_info)
 {
     if (!f || !voice_info) {
         return;
@@ -1730,7 +1732,7 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
 {
     unsigned int initial_shape = note->u.note.shape;
     char temp;
-    char *shape;
+    const char *shape;
     // type in the sense of GregorioTeX alignment type
     gtex_alignment type = AT_ONE_NOTE;
     if (!note) {
@@ -2222,7 +2224,7 @@ static char *determine_leading_shape(gregorio_glyph *glyph)
 {
     static char buf[BUFSIZE];
     int ambitus = compute_ambitus(glyph->u.notes.first_note);
-    char *head, *head_liquescence;
+    const char *head, *head_liquescence;
 
     switch (glyph->u.notes.first_note->u.note.shape) {
     case S_QUILISMA:
@@ -2269,7 +2271,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
     gtex_type gtype = 0;
     char next_note_pitch = 0;
     gregorio_note *current_note;
-    char *leading_shape, *shape;
+    const char *leading_shape, *shape;
     if (!glyph) {
         gregorio_message(_("called with NULL pointer"),
                 "gregoriotex_write_glyph", VERBOSITY_ERROR, 0);
@@ -2592,7 +2594,7 @@ static void gregoriotex_print_change_line_clef(FILE *f,
     }
 }
 
-static void handle_final_bar(FILE *f, char *type, gregorio_syllable *syllable)
+static void handle_final_bar(FILE *f, const char *type, gregorio_syllable *syllable)
 {
     fprintf(f, "\\GreFinal%s{%%\n", type);
     // first element will be the bar, which we just handled, so skip it
@@ -2672,6 +2674,7 @@ static inline bool next_is_bar(const gregorio_syllable *syllable,
     }
 
     assert(false); // should never reach here
+    return false; // avoid gcc 5.1 warning
 }
 
 static inline void write_syllable_point_and_click(FILE *const f,

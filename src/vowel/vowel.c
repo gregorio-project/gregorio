@@ -246,7 +246,7 @@ void gregorio_vowel_tables_init(void)
 }
 
 void gregorio_vowel_tables_load(const char *const filename,
-        const char **const language, rulefile_parse_status *status)
+        char **const language, rulefile_parse_status *status)
 {
 #ifdef USE_KPSE
     if (!kpse_in_name_ok(filename)) {

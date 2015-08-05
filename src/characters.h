@@ -69,7 +69,7 @@ void gregorio_write_initial(gregorio_character *current_character,
         void (*end) (FILE *, grestyle_style),
         void (*printspchar) (FILE *, grewchar *));
 
-void gregorio_set_centering_language(const char *language);
+void gregorio_set_centering_language(char *language);
 
 gregorio_character *gregorio_first_text(gregorio_score *score);
 
