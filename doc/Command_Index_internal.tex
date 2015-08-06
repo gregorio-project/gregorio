@@ -203,7 +203,7 @@ Temporary count used by \verb=\gre@convertto=.
 Temporary count used by \verb=\gre@convertto=.
 
 \macroname{\textbackslash gre@count@temp@**}{}{gregoriotex-spaces.tex}
-Temporary count used in calculations.  There are currently two of these.
+Temporary count used in calculations.  There are currently three of these.
 
 \macroname{\textbackslash gre@convertto}{\#1\#2}{gregoriotex-spaces.tex}
 Macro which converts a distance into a particular set of units.  Result is placed in \verb=\gre@converted= as a string.
@@ -632,6 +632,96 @@ Macro to write a bar.
   \#3 & \TeX\ code & macros that may happen before the skip after the bar (typically GreVEpisemus)\\
 \end{argtable}
 
+\macroname{\textbackslash gre@@arg}{}{gregoriotex-syllable.tex}
+A dummy macro which is used to store a macro which takes an argument so that it can be used in a \verb=\ifx= comparison.  The value of the argument is provided at the time this macro is created.
+
+\macroname{\textbackslash gre@nothing}{}{gregoriotex-main.tex}
+A dummy macro which has not contents.  Used for \verb=\ifx= comparisons.
+
+\macroname{\textbackslash gre@annotation}{[\#1]\#2}{gregoriotex-main.tex}
+Workhorse function behind \verb=\greannotation=.
+
+\begin{argtable}
+  \#1 & \texttt{c} & center align the new line with the existing annotation content\\
+  & \texttt{l} & left align the new line with the existing annotation content\\
+  & \texttt{r} & right align the new line with the existing annotation content\\
+  \#2 & string & the new annotation content\\
+\end{argtable}
+
+\macroname{\textbackslash gre@atletter}{}{gregoriotex-main.tex}
+A Lua\TeX\ catcode table which makes sure that Lua\TeX\ treats `@' corectly.
+
+\macroname{\textbackslash gre@baseunit}{}{gregoriotex-spaces.tex}
+The units attached to base dimension in a string distance.  These units are extracted as part of coercing one distance to have the same units as another (\verb=\gre@consistentunits=).
+
+\macroname{\textbackslash gre@stretchunit}{}{gregoriotex-spaces.tex}
+The units attached to stretch dimension in a string distance.  These units are extracted as part of coercing one distance to have the same units as another (\verb=\gre@consistentunits=).
+
+\macroname{\textbackslash gre@shrinkunit}{}{gregoriotex-spaces.tex}
+The units attached to shrink dimension in a string distance.  These units are extracted as part of coercing one distance to have the same units as another (\verb=\gre@consistentunits=).
+
+\macroname{\textbackslash gre@bug}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
+Macro for raising a bug error when some calculation goes awry and comes up with a non-sensical result.  Generally will be found in Lua code, not \TeX\ code.
+
+\macroname{\textbackslash gre@changestyle}{\#1\#2[\#3]}{gregoriotex.sty \textup{and} gregoriotex.tex}
+Workhorse function behind \verb=\grechangestyle=.  Necessary because the internals of the definition are slightly different in \LaTeX\ and Plain\TeX.
+
+\macroname{\textbackslash gre@compute@bolshift{\#1\#2}{gregoriotex-spaces.tex}
+Macro used in \verb=\GreSyllable=. Sets \verb=\gre@skip@bolshift= to the left kern that should appear at the beginning of a line in case of a forced linebreak.  The goal of this left kern is to have all lines aligned on notes.
+
+\begin{argtable}
+  \#1 & dimension & \gre@dimen@begindifference of the first syllable of the line\\
+  \#2 & 0 & No need to worry about a Lua\TeX\ bug\\
+  & 1 & Apply correction for Lua\TeX\ bug\\
+\end{argtable}
+
+\macroname{\textbackslash gre@compute@eolshift}{\#1}{gregoriotex-spaces.tex}
+Macro used in \verb=\GreSyllable=. Sets \verb=\gre@skip@eolshift= to the left kern that
+should appear before an end of line. The improvement is tiny: when
+text go further than notes in the last syllable of a line, the idea
+is to allow text to go a bit further right, under the custo.
+\verb=\gre@skip@eolshift= should be called at the end of the last syllable of the
+line, just before the linebreak penalty, so that LaTeX believes the
+line is a bit shorter, and expands it more.
+
+\begin{argtable}
+  \#1 & dimension & The \verb=\gre@dimen@enddifference= of the corresponding syllable\\
+\end{argtable}
+
+\macroname{\textbackslash gre@compute@syllablefinalskip}{\#1\#2}{gregoriotex-spaces.tex}
+Macro computing the skip at the end of the syllable.
+
+\begin{argtable}
+  \#1 & 0 & if end of syllable\\
+  & 1 & if end of word\\
+  \#2 & 0 & if next syllable is normal\\
+  & 1 & if it's a bar\\
+\end{argtable}
+
+\macroname{\textbackslash gre@convert}{}{gregoriotex-spaces.tex}
+Macro to hold the original distance which is to be scaled by \verb=\gre@changeonedimenfactor=
+
+\macroname{\textbackslash gre@debug}{}{gregoriotex.sty \textup{and} gregoriotex.tex}
+Macro to hold the list of debug messages which should be designated as printing.
+
+\macroname{\textbackslash gre@debugmsg}{\#1\#2}{gregoriotex-main.tex}
+Macro to print debugging messages.
+
+\begin{argtable}
+  \#1 & string & The category of the message (used in conjunction with \verb=\gre@debug= to determine whether to print the message or not\\
+  \#2 & string & The debug message\\
+\end{argtable}
+
+\macroname{\textbackslash gre@declarefileversion}{\#1\#2}{gregoriotex-main.tex}
+Macro which checks for version consistency between Gregorio\TeX\ files.
+
+\begin{argtable}
+  \#1 & string & name of the current file\\
+  \#2 & string & version of the current file\\
+\end{argtable}
+
+
+
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates it's own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
 
@@ -740,6 +830,23 @@ The divisio maior.
 \macroname{\textbackslash gre@char@normalhyphen}{}{gregoriotex-main.tex}
 A normal hyphen in the text font.
 
+\macroname{\textbackslash gre@def@char@he}{\#1\#2}{gregoriotex-chars.tex}
+Macro for defining the various types of horizontal episema.
+
+\begin{argtable}
+  \#1 & string & name of the horizontal episemus to be defined\\
+  \#2 & string & Camel case name of horizontal episemus to be defined\\
+\end{argtable}
+
+\macroname{\textbackslash gre@def@char@he@prr}{\#1\#2}{gregoriotex-chars.tex}
+Macro for defining the various types of horizontal episema porrectus.
+
+\begin{argtable}
+  \#1 & string & name of the horizontal episemus porrectus to be defined\\
+  \#2 & string & Camel case name of horizontal episemus porrectus to be defined\\
+\end{argtable}
+
+
 \subsection{Flags}
 
 Flags are either boolean (defined with \verb=\newif=), Lua\TeX\ attributes, or counts (defined with \verb=\newcount=).  They store settings and/or the current state of something so that Gregorio\TeX\ can typeset things in the desired manner.
@@ -838,6 +945,9 @@ Boolean which specifies whether the style font should be loaded or not.
 
 \macroname{\textbackslash ifgre@keeprightbox}{}{gregoriotex-signs.tex}
 Boolean which specifies if we have to keep the localrightbox until the end.
+
+\macroname{\textbackslash gre@compilegabc}{}{gregoriotex-main.tex}
+Macro which specifies the default compilation behavior: never compile (0), auto compile (1), or always compile (2).
 
 \subsection{Boxes}
 
@@ -977,6 +1087,36 @@ Distance holding the maximum legal length in TeX.
 
 \macroname{\textbackslash gre@dimen@savedglyphraise}{}{gregoriotex-signs.tex}
 Macro to hold the value of the glyph raise so that it can be restored after some calculations which may change it are performed.
+
+\macroname{\textbackslash gre@skip@eolshift}{}{gregoriotex-spaces.tex}
+The left kern that should appear before an end of line.
+
+\macroname{\textbackslash gre@dimen@bolshift}{}{gregoriotex-spaces.tex}
+The left kern that should appear at the beginning of line in case of a forced line break.
+
+\macroname{\textbackslash gre@dimen@annotationtrueraise}{}{gregoriotex-spaces.tex}
+The distance from the baseline of the initial to the baseline of the annotation.
+
+\macroname{\textbackslash gre@minTextDistance}{}{gregoriotex-spaces.tex}
+Minimum distance between text (meaningful alias for \verb=\gre@skip@temp@one= inside \verb=\gre@compute@syllablefinalskip=).
+
+\macroname{\textbackslash gre@minNotesDistance}{}{gregoriotex-spaces.tex}
+Minimum distance between notes (meaningful alias for \verb=\gre@skip@temp@two= inside \verb=\gre@compute@syllablefinalskip=).
+
+\macroname{\textbackslash gre@curTextDistance}{}{gregoriotex-spaces.tex}
+Current distance between text (meaningful alias for \verb=\gre@dimen@temp@three= inside \verb=\gre@compute@syllablefinalskip=).
+
+\macroname{\textbackslash gre@curNotesDistance}{}{gregoriotex-spaces.tex}
+Current distance between notes (meaningful alias for \verb=\gre@dimen@temp@four= inside \verb=\gre@compute@syllablefinalskip=).
+
+\macroname{\textbackslash gre@minShiftText}{}{gregoriotex-spaces.tex}
+Minimum shift required for the text (meaningful alias for \verb=\gre@skip@temp@three= inside \verb=\gre@compute@syllablefinalskip=).
+
+\macroname{\textbackslash gre@minShiftNotes}{}{gregoriotex-spaces.tex}
+Minimum shift required for the notes (meaningful alias for \verb=\gre@skip@temp@four= inside \verb=\gre@compute@syllablefinalskip=).
+
+
+
 
 \subsection{Penalties}
 These are the macros that Gregorio\TeX\ uses to manipulate the penalties in order to control line and page breaks within a score without affect the surrounding text.
