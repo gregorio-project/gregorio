@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # NOTE: This script assumes that it was invoked from the macosx directory and
 # changes the working directory as needed accordingly.  Failure to invoke it
