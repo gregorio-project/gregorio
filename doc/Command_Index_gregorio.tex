@@ -155,6 +155,9 @@ defined and re-defined by the \verb=\gresetgregoriofont= macro.
   \#1 & \TeX{} code & The \TeX{} code to use when long stems are not forced.\\
 \end{argtable}
 
+\macroname{\textbackslash GreCP...}{}{gregoriotex-main.tex}
+A class of macros which point to the individual characters in a Gregoiro\TeX\ compatible font.  This class of macros is dynamically mapped from the glyph names embedded in the \texttt{ttf} file via a Lua script to ensure that the code points match up with the installed font.
+
 \macroname{\textbackslash GreCusto}{\#1}{gregoriotex-signs.tex}
 Typesets a custo.
 

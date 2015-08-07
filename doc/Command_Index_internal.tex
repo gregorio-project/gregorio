@@ -328,20 +328,6 @@ the cascading of conditionals used to implement that macro.
   \#4 & dimension   & the amount to shift the bar to the left from the end of the base symbol.
 \end{argtable}
 
-\macroname{\textbackslash gre@char@cavum}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-signs.tex}
-Macro to typeset a "cavum" character.
-
-\begin{argtable}
-  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
-  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
-  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
-  \#4 & \TeX\ code    & Macros executed before the punctum cavum is written.\\
-  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
-  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.\\
-  \#7 & control sequence & The control sequence for the glyph.\\
-  \#8 & control sequence & The control sequence for the hole glyph.
-\end{argtable}
-
 \macroname{\textbackslash gre@additionalbottomcustolineend}{}{gregoriotex-signs.tex}
 Macro to place a bottom custo with an additional line (positions \texttt{a} and \texttt{b}) at the end of a line.
 
@@ -720,6 +706,36 @@ Macro which checks for version consistency between Gregorio\TeX\ files.
   \#2 & string & version of the current file\\
 \end{argtable}
 
+\macroname{\textbackslash gre@def@char@he}{\#1\#2}{gregoriotex-chars.tex}
+Macro for defining the various types of horizontal episema.
+
+\begin{argtable}
+  \#1 & string & name of the horizontal episemus to be defined\\
+  \#2 & string & Camel case name of horizontal episemus to be defined\\
+\end{argtable}
+
+\macroname{\textbackslash gre@def@char@he@prr}{\#1\#2}{gregoriotex-chars.tex}
+Macro for defining the various types of horizontal episema porrectus.
+
+\begin{argtable}
+  \#1 & string & name of the horizontal episemus porrectus to be defined\\
+  \#2 & string & Camel case name of horizontal episemus porrectus to be defined\\
+\end{argtable}
+
+\macroname{\textbackslash gre@char@cavum}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-signs.tex}
+Macro to typeset a "cavum" character.
+
+\begin{argtable}
+  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
+  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
+  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
+  \#4 & \TeX\ code    & Macros executed before the punctum cavum is written.\\
+  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
+  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.\\
+  \#7 & control sequence & The control sequence for the glyph.\\
+  \#8 & control sequence & The control sequence for the hole glyph.
+\end{argtable}
+
 
 
 \subsection{Auxiliary File}
@@ -744,7 +760,7 @@ Macro for writing the auxiliary file.
 
 
 \subsection{Character Reference Aliases}
-To make referencing and changing them easier, Gregorio\TeX\ stores the current font and control point for certain characters using the following macros.
+To make referencing and changing them easier, Gregorio\TeX\ stores reference information for certain characters using the following macros.
 
 \macroname{\textbackslash gre@fontchar@abovebarbrace}{}{gregoriotex-chars.tex}
 The above bar brace.
@@ -830,21 +846,29 @@ The divisio maior.
 \macroname{\textbackslash gre@char@normalhyphen}{}{gregoriotex-main.tex}
 A normal hyphen in the text font.
 
-\macroname{\textbackslash gre@def@char@he}{\#1\#2}{gregoriotex-chars.tex}
-Macro for defining the various types of horizontal episema.
+\macroname{\textbackslash gre@char@fuse@debilis}{}{gregoriotex-chars.tex}
+A fused character consisting of a leading punctum initio debilis (of ambitus one) and a regular punctum.
 
-\begin{argtable}
-  \#1 & string & name of the horizontal episemus to be defined\\
-  \#2 & string & Camel case name of horizontal episemus to be defined\\
-\end{argtable}
+\macroname{\textbackslash gre@char@fuse@oriscus@one}{}{gregoriotex-chars.tex}
+A fused character consisting of a leading oriscus (of ambitus one) and a regular punctum.
 
-\macroname{\textbackslash gre@def@char@he@prr}{\#1\#2}{gregoriotex-chars.tex}
-Macro for defining the various types of horizontal episema porrectus.
+\macroname{\textbackslash gre@char@fuse@oriscus@two}{}{gregoriotex-chars.tex}
+A fused character consisting of a leading oriscus (of ambitus two) and a regular punctum.
 
-\begin{argtable}
-  \#1 & string & name of the horizontal episemus porrectus to be defined\\
-  \#2 & string & Camel case name of horizontal episemus porrectus to be defined\\
-\end{argtable}
+\macroname{\textbackslash gre@char@fuse@punctum@one}{}{gregoriotex-chars.tex}
+A fused character consisting of a leading punctum (of ambitus one) and a regular punctum.
+
+\macroname{\textbackslash gre@char@fuse@punctum@two}{}{gregoriotex-chars.tex}
+A fused character consisting of a leading punctum (of ambitus two) and a regular punctum.
+
+\macroname{\textbackslash gre@char@fuse@quilisma@one}{}{gregoriotex-chars.tex}
+A fused character consisting of a leading quilisma (of ambitus one) and a regular punctum.
+
+\macroname{\textbackslash gre@char@fuse@quilisma@two}{}{gregoriotex-chars.tex}
+A fused character consisting of a leading quilisma (of ambitus two) and a regular punctum.
+
+
+
 
 
 \subsection{Flags}
