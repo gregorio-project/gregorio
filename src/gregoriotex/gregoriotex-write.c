@@ -1492,6 +1492,80 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
             no_space, special_punctum, punctum_inclinatum);
 }
 
+static inline int get_punctum_inclinatum_space_case(
+        const gregorio_note *const note)
+{
+    char temp;
+
+    switch (note->u.note.shape) {
+    case S_PUNCTUM_INCLINATUM:
+    case S_PUNCTUM_CAVUM_INCLINATUM:
+        if (note->previous) {
+            // means that it is the first note of the puncta inclinata sequence
+            temp = note->previous->u.note.pitch - note->u.note.pitch;
+            // if (temp < -1 || temp > 1)
+            switch (temp) {
+                // we switch on the range of the inclinata this will look
+                // somewhat strange if temp is negative... to be aligned then,
+            case -2:
+            case 2:
+                return 10;
+            case -3:
+            case 3:
+                return 11;
+            case -4:
+            case 4:
+                // not sure we ever need to consider a larger ambitus here
+                return 11;
+            default:
+                return 3;
+                break;
+            }
+        }
+        break;
+    case S_PUNCTUM_INCLINATUM_DEMINUTUS:
+        if (note->previous) {
+            // means that it is the first note of the puncta inclinata sequence
+            temp = note->previous->u.note.pitch - note->u.note.pitch;
+            if (temp < -2 || temp > 2) {
+                return 11;
+            } else {
+                if (note->previous
+                        && note->previous->u.note.shape ==
+                        S_PUNCTUM_INCLINATUM_DEMINUTUS) {
+                    if (temp < -1 || temp > 1) {
+                        // really if the ambitus = 3rd at this point
+                        return 10;
+                    } else {
+                        return 8;
+                    }
+                } else {
+                    // puncta inclinatum followed by puncta inclinatum debilis
+                    return 7;
+                }
+            }
+        }
+        break;
+    case S_PUNCTUM_INCLINATUM_AUCTUS:
+    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
+        if (note->previous) {
+            // means that it is the first note of the puncta inclinata sequence
+            temp = note->previous->u.note.pitch - note->u.note.pitch;
+            if (temp < -1 || temp > 1) {
+                return 1;
+            } else {
+                // we approximate that it is the same space
+                return 3;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+
+    return -1;
+}
+
 static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
         const gregorio_note *const note, bool connect, char height,
         const grehepisemus_size size, const int i,
@@ -1527,22 +1601,25 @@ static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
 
         if (i - 1 != porrectus_long_episemus_index || !note->previous
                 || !is_episemus_shown(note->previous)) {
-            if (connect && (
-                        // not followed by a zero-width space
-                        (!note->next
-                            && (!glyph->next
-                                || glyph->next->type != GRE_SPACE
-                                || glyph->next->u.misc.unpitched.info.space
-                                        != SP_ZERO_WIDTH))
-                        // is a punctum inclinatum of some sort
-                        || (note->next
-                            && (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
-                                || note->next->u.note.shape
-                                        == S_PUNCTUM_INCLINATUM_DEMINUTUS
-                                || note->next->u.note.shape
-                                        == S_PUNCTUM_INCLINATUM_AUCTUS)))) {
-                fprintf(f, "\\GreHEpisemusBridge{%d}{%d}%%\n",
-                        pitch_value(height), hepisemus_case);
+            if (connect) {
+                if (!note->next && (!glyph->next
+                            || glyph->next->type != GRE_SPACE
+                            || glyph->next->u.misc.unpitched.info.space
+                            != SP_ZERO_WIDTH)) {
+                    // not followed by a zero-width space
+                    fprintf(f, "\\GreHEpisemusBridge{%d}{%d}{-1}%%\n",
+                            pitch_value(height), hepisemus_case);
+                } else if (note->next
+                        && (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
+                            || note->next->u.note.shape
+                            == S_PUNCTUM_INCLINATUM_DEMINUTUS
+                            || note->next->u.note.shape
+                            == S_PUNCTUM_INCLINATUM_AUCTUS)) {
+                    // is a punctum inclinatum of some sort
+                    fprintf(f, "\\GreHEpisemusBridge{%d}{%d}{%d}%%\n",
+                            pitch_value(height), hepisemus_case,
+                            get_punctum_inclinatum_space_case(note->next));
+                }
             }
             fprintf(f, "\\GreHEpisemus{%d}{\\GreOCase%s}{%d}{%d}{%c}{%d}%%\n",
                     pitch_value(height), note->gtex_offset_case, ambitus,
@@ -1731,8 +1808,8 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
         gregorio_glyph *glyph, gregorio_element *element, char next_note_pitch)
 {
     unsigned int initial_shape = note->u.note.shape;
-    char temp;
     const char *shape;
+    int space_case;
     // type in the sense of GregorioTeX alignment type
     gtex_alignment type = AT_ONE_NOTE;
     if (!note) {
@@ -1761,76 +1838,9 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
     shape = gregoriotex_determine_note_glyph_name(note, glyph, element, &type);
     note->u.note.shape = initial_shape;
     // special things for puncta inclinata
-    switch (note->u.note.shape) {
-    case S_PUNCTUM_INCLINATUM:
-    case S_PUNCTUM_CAVUM_INCLINATUM:
-        if (note->previous) {
-            // means that it is the first note of the puncta inclinata sequence
-            temp = note->previous->u.note.pitch - note->u.note.pitch;
-            // if (temp < -1 || temp > 1)
-            switch (temp)       // we switch on the range of the inclinata
-            {
-                // this will look somewhat strange if temp is negative... to be
-                // aligned then,
-                // the second note should really shift differently
-            case -2:
-            case 2:
-                fprintf(f, "\\GreEndOfGlyph{10}%%\n");
-                break;
-            case -3:
-            case 3:
-                fprintf(f, "\\GreEndOfGlyph{11}%%\n");
-                break;
-            case -4:
-            case 4:            // not sure we ever need to consider a larger
-                // ambitus here
-                fprintf(f, "\\GreEndOfGlyph{11}%%\n");
-                break;
-            default:
-                fprintf(f, "\\GreEndOfGlyph{3}%%\n");
-                break;
-            }
-        }
-        break;
-    case S_PUNCTUM_INCLINATUM_DEMINUTUS:
-        if (note->previous) {
-            // means that it is the first note of the puncta inclinata sequence
-            temp = note->previous->u.note.pitch - note->u.note.pitch;
-            if (temp < -2 || temp > 2) {
-                fprintf(f, "\\GreEndOfGlyph{11}%%\n");
-            } else {
-                if (note->previous
-                        && note->previous->u.note.shape ==
-                        S_PUNCTUM_INCLINATUM_DEMINUTUS) {
-                    if (temp < -1 || temp > 1)
-                        // really if the ambitus = 3rd at this point
-                    {
-                        fprintf(f, "\\GreEndOfGlyph{10}%%\n");
-                    } else {
-                        fprintf(f, "\\GreEndOfGlyph{8}%%\n");
-                    }
-                } else {
-                    // puncta inclinatum followed by puncta inclinatum debilis
-                    fprintf(f, "\\GreEndOfGlyph{7}%%\n");
-                }
-            }
-        }
-        break;
-    case S_PUNCTUM_INCLINATUM_AUCTUS:
-    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
-        if (note->previous) {
-            // means that it is the first note of the puncta inclinata sequence
-            temp = note->previous->u.note.pitch - note->u.note.pitch;
-            if (temp < -1 || temp > 1) {
-                fprintf(f, "\\GreEndOfGlyph{1}%%\n");
-            } else {
-                // we approximate that it is the same space
-                fprintf(f, "\\GreEndOfGlyph{3}%%\n");
-            }
-        }
-        break;
-    default:
-        break;
+    space_case = get_punctum_inclinatum_space_case(note);
+    if (space_case >= 0) {
+        fprintf(f, "\\GreEndOfGlyph{%d}%%\n", space_case);
     }
 
     switch (note->u.note.shape) {

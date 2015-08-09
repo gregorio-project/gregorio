@@ -359,6 +359,25 @@ Macro to typeset a "cavum" character.
   \#8 & control sequence & The control sequence for the hole glyph.
 \end{argtable}
 
+\macroname{\textbackslash gre@get@spaceskip}{\#1}{gregoriotex-signs.tex}
+Loads \verb=\gre@skip@temp@four= with the appropriate rubber length given the
+desired case.
+
+\begin{argtable}
+  \#1 & 0 & Default space.\\
+      & 1 & Zero-width space.\\
+      & 2 & Space between flat or natural and a note.\\
+      & 3 & Space between two puncta inclinata.\\
+      & 4 & Space between bivirga or trivirga.\\
+      & 5 & space between bistropha or tristropha.\\
+      & 6 & Space after a punctum mora XXX: not used yet, not so sure it is a good idea\ldots\\
+      & 7 & Space between a punctum inclinatum and a punctum inclinatum debilis.\\
+      & 8 & Space between two puncta inclinata debilis.\\
+      & 9 & Space before a punctum (or something else) and a punctum inclinatum.\\
+      & 10 & Space between puncta inclinata (also debilis for now), larger ambitus (range=3rd).\\
+      & 11 & Space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more).\\
+\end{argtable}
+
 \subsection{Flags}
 
 Flags are either boolean (defined with \verb=\newif=) or macros which expand to an integer.  They store settings and/or the current state of something so that GregorioTeX can typeset things in the desired manner.
