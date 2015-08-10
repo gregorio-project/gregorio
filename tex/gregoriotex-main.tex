@@ -1127,7 +1127,7 @@
 \relax%
 }%
 
-% macro to end a glyph without ending the element, argument is the type of space, it can be :
+% puts the correct skip value into \gre@skip@temp@four for the desired type of space
 %% 0: default space
 %% 1: zero width space
 %% 2: space between flat or natural and a note
@@ -1142,45 +1142,40 @@
 %% 9: space before a punctum (or something else) and a punctum inclinatum
 %% 10: space between puncta inclinata (also debilis for now), larger ambitus (range=3rd).
 %% 11: space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more)
-\def\GreEndOfGlyph#1{%
-  \grenobreak %
+\def\gre@get@spaceskip#1{%
   \ifcase#1%
     \gre@skip@temp@four = \gre@skip@interglyphspace%
-    \grehskip\gre@skip@temp@four %
   \or% case 1
     \gre@skip@temp@four = \gre@dimen@zerowidthspace%
-    \grehskip\gre@skip@temp@four %
   \or% case 2
     \gre@skip@temp@four = \gre@skip@alterationspace%
-    \grehskip\gre@skip@temp@four %
   \or% case 3
     \gre@skip@temp@four = \gre@skip@punctuminclinatumshift%
-    \grehskip\gre@skip@temp@four %
   \or% case 4
     \gre@skip@temp@four = \gre@skip@bitrivirspace%
-    \grehskip\gre@skip@temp@four %
   \or% case 5
     \gre@skip@temp@four = \gre@skip@bitristrospace%
-    \grehskip\gre@skip@temp@four %
   \or% case 6
     \gre@skip@temp@four = \gre@skip@spaceaftersigns%
-    \grehskip\gre@skip@temp@four %
   \or% case 7
     \gre@skip@temp@four = \gre@skip@punctuminclinatumanddebilisshift%
-    \grehskip\gre@skip@temp@four %
   \or% case 8
     \gre@skip@temp@four = \gre@skip@punctuminclinatumdebilisshift%
-    \grehskip\gre@skip@temp@four %
   \or% case 9
     \gre@skip@temp@four = \gre@skip@beforepunctainclinatashift%
-    \grehskip\gre@skip@temp@four %
   \or% case 10
     \gre@skip@temp@four = \gre@skip@punctuminclinatumbigshift%
-    \grehskip\gre@skip@temp@four %
   \or% case 11
     \gre@skip@temp@four = \gre@skip@punctuminclinatummaxshift%
-    \grehskip\gre@skip@temp@four %
   \fi%
+}%
+
+% macro to end a glyph without ending the element
+% see \gre@get@glyphskip for the valus of the argument
+\def\GreEndOfGlyph#1{%
+  \grenobreak %
+  \gre@get@spaceskip{#1}%
+  \grehskip\gre@skip@temp@four %
   \grenobreak %
   \relax%
 }%
