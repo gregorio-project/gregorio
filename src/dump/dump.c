@@ -20,7 +20,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
+#include "bool.h"
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"

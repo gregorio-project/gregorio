@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>             /* for exit() */
 #include <stdarg.h>             /* for exit() */
-#include <stdbool.h>
+#include "bool.h"
 #include "messages.h"
 
 static FILE *error_out;

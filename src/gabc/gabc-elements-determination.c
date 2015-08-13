@@ -19,7 +19,7 @@
 
 #include "config.h"
 #include <stdio.h>
-#include <stdbool.h>
+#include "bool.h"
 #include "struct.h"
 #include "messages.h"
 

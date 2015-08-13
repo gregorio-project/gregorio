@@ -21,7 +21,7 @@
 #define _VOWEL_H
 
 #include <stdio.h>
-#include <stdbool.h>
+#include "bool.h"
 #include "unicode.h"
 
 typedef enum rulefile_parse_status {

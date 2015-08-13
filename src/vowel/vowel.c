@@ -20,13 +20,13 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 #include <assert.h>
 #include <errno.h>
 #ifdef USE_KPSE
     #include <kpathsea/kpathsea.h>
 #endif
+#include "bool.h"
 #include "vowel.h"
 #include "unicode.h"
 #include "messages.h"

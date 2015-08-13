@@ -28,7 +28,6 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
@@ -37,6 +36,7 @@
 #ifdef USE_KPSE
     #include <kpathsea/kpathsea.h>
 #endif
+#include "bool.h"
 #include "struct.h"
 #include "unicode.h"
 #include "characters.h"

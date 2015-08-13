@@ -18,8 +18,8 @@
 
 #include "config.h"
 #include <stdlib.h>
-#include <stdbool.h>
 #include <assert.h>
+#include "bool.h"
 #include "struct.h"
 
 #include "gregoriotex.h"

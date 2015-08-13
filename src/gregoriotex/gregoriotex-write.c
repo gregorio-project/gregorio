@@ -25,9 +25,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <assert.h>
 #include <time.h>
+#include "bool.h"
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"

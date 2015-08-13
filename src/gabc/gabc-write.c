@@ -24,7 +24,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>             // for strchr
-#include <stdbool.h>
+#include "bool.h"
 #include "characters.h"
 #include "struct.h"
 #include "unicode.h"

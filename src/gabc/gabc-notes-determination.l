@@ -20,8 +20,8 @@
 
 #include "config.h"
 #include <stdio.h>
-#include <stdbool.h>
 #include <ctype.h>              /* for tolower */
+#include "bool.h"
 #include "struct.h"
 #include "messages.h"
 

@@ -20,7 +20,7 @@
 #ifndef GREGORIOTEX_H
 #define GREGORIOTEX_H
 
-#include <stdbool.h>
+#include "bool.h"
 
 #define OFFSET_CASE(name) static const char *const name = #name
 

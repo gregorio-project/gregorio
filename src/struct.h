@@ -29,7 +29,7 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 
-#include <stdbool.h>
+#include "bool.h"
 #include "sha1.h"
 
 #ifdef __cplusplus

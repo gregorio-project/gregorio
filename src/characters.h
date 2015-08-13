@@ -20,7 +20,7 @@
 #ifndef CHARACTERS_H
 #define CHARACTERS_H
 
-#include <stdbool.h>
+#include "bool.h"
 #include "struct.h"
 
 /*
