@@ -28,16 +28,17 @@ AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([-Wall -Wno-portability subdir-objects foreign dist-bzip2 no-dist-gzip])
 
-AC_PROG_CC
+AC_PROG_CC_C89
 dnl AM_PROG_CC_C_O is deprecated since Automake 1.14, to be removed in the future
 AM_PROG_CC_C_O
-AC_PROG_CC_STDC
 AC_PROG_CPP
 AM_PROG_LEX
 AC_PROG_YACC
 AC_CHECK_TOOL([RC], [windres], [no])
 AM_CONDITIONAL([HAVE_RC], [test x$RC != xno])
 
+AX_CHECK_COMPILE_FLAG([-std=gnu89], [CFLAGS+=" -std=gnu89"])
+AX_CHECK_COMPILE_FLAG([-pedantic-errors], [CFLAGS+=" -pedantic-errors"])
 AX_CHECK_COMPILE_FLAG([-fstack-protector-strong], [CFLAGS+=" -fstack-protector-strong"])
 AX_CHECK_COMPILE_FLAG([-fPIE], [CFLAGS+=" -fPIE"])
 AX_CHECK_COMPILE_FLAG([-Wformat], [CFLAGS+=" -Wformat"])

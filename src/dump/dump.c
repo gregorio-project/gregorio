@@ -450,7 +450,7 @@ static const char *dump_signs(gregorio_sign signs)
     }
 }
 
-// a function dumping special signs
+/* a function dumping special signs */
 static const char *dump_special_sign(gregorio_sign special_sign)
 {
     switch (special_sign) {
@@ -521,6 +521,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
     gregorio_voice_info *voice_info = score->first_voice_info;
     int i;
     int annotation_num;
+    gregorio_syllable *syllable;
 
     if (!f) {
         gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
@@ -636,8 +637,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
             "=====================================================================\n"
             " SCORE\n"
             "=====================================================================\n");
-    for (gregorio_syllable *syllable = score->first_syllable; syllable;
+    for (syllable = score->first_syllable; syllable;
             syllable = syllable->next_syllable) {
+        gregorio_element *element;
         if (syllable->type) {
             fprintf(f, "   type                      %d (%s)\n",
                     syllable->type, dump_type(syllable->type));
@@ -678,8 +680,8 @@ void dump_write_score(FILE *f, gregorio_score *score)
         if (syllable->abovelinestext) {
             fprintf(f, "\n  Abovelinestext\n    %s", syllable->abovelinestext);
         }
-        for (gregorio_element *element = *syllable->elements; element;
-                element = element->next) {
+        for (element = *syllable->elements; element; element = element->next) {
+            gregorio_glyph *glyph;
             fprintf(f, "---------------------------------------------------------------------\n");
             if (element->type) {
                 fprintf(f, "     type                    %d (%s)\n",
@@ -755,8 +757,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 }
                 break;
             case GRE_ELEMENT:
-                for (gregorio_glyph *glyph = element->u.first_glyph;
-                        glyph; glyph = glyph->next) {
+                for (glyph = element->u.first_glyph; glyph;
+                        glyph = glyph->next) {
+                    gregorio_note *note;
                     fprintf(f, "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
                     if (glyph->type) {
                         fprintf(f, "       type                  %d (%s)\n",
@@ -813,8 +816,8 @@ void dump_write_score(FILE *f, gregorio_score *score)
                         break;
                     }
                     if (glyph->type == GRE_GLYPH) {
-                        for (gregorio_note *note = glyph->u.notes.first_note;
-                                note; note = note->next) {
+                        for (note = glyph->u.notes.first_note; note;
+                                note = note->next) {
                             fprintf(f, "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  \n");
                             if (note->type) {
                                 fprintf(f, "         type                   %d (%s)\n",
@@ -904,7 +907,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 break;
 
             default:
-                // do nothing
+                /* do nothing */
                 break;
             }
             if (element->nabc_lines) {

@@ -36,14 +36,14 @@
 # define IGNORE(e) /* empty */
 #endif
 
-// NOTE: This parser might allocate a new value for language; this value MUST
-//       BE FREED after the parser returns (if the value of the language pointer
-//       changes, then free the pointer).  This parser DOES free the language
-//       pointer before changing it, if status points to RFPS_ALIASED.
+/* NOTE: This parser might allocate a new value for language; this value MUST
+ *       BE FREED after the parser returns (if the value of the language pointer
+ *       changes, then free the pointer).  This parser DOES free the language
+ *       pointer before changing it, if status points to RFPS_ALIASED. */
 
-// uncomment it if you want to have an interactive shell to understand the
-// details on how bison works for a certain input
-//int gregorio_vowel_rulefile_debug=1;
+/* uncomment it if you want to have an interactive shell to understand the
+ * details on how bison works for a certain input */
+/*int gregorio_vowel_rulefile_debug=1;*/
 
 static void gregorio_vowel_rulefile_error(const char *const filename,
         char **const language, rulefile_parse_status *const status,
@@ -55,8 +55,8 @@ static void gregorio_vowel_rulefile_error(const char *const filename,
             _("%s: %s"), filename, error_str);
 }
 
-// this returns false until the language *after* the desired language
-static inline bool match_language(char **language,
+/* this returns false until the language *after* the desired language */
+static __inline bool match_language(char **language,
         rulefile_parse_status *status, char *const name)
 {
     if (*status == RFPS_FOUND) {
@@ -72,7 +72,7 @@ static inline bool match_language(char **language,
     return false;
 }
 
-static inline void alias(char **const language,
+static __inline void alias(char **const language,
         rulefile_parse_status *const status, char *const name,
         char *const target)
 {
@@ -90,7 +90,7 @@ static inline void alias(char **const language,
     free(name);
 }
 
-static inline void add(const rulefile_parse_status *const status,
+static __inline void add(const rulefile_parse_status *const status,
         void (*const fn)(const char *), char *const value)
 {
     if (*status == RFPS_FOUND) {

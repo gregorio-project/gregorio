@@ -21,7 +21,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdbool.h>
-#include <ctype.h>              /* for tolower */
+#include <ctype.h> /* for tolower */
 #include "struct.h"
 #include "messages.h"
 
@@ -42,7 +42,7 @@ static int brace_var_counter;
 static int overbrace_var, underbrace_var;
 static const char *overbrace_var_kind;
 
-static inline char pitch_letter_to_height(const char pitch) {
+static __inline char pitch_letter_to_height(const char pitch) {
     return pitch - 'a' + LOWEST_PITCH;
 }
 
@@ -55,7 +55,7 @@ static gregorio_shape punctum(const char pitch)
     }
 }
 
-static inline void lex_add_note(int i, gregorio_shape shape, char signs,
+static __inline void lex_add_note(int i, gregorio_shape shape, char signs,
         char liquescentia)
 {
     nbof_isolated_episemus = 0;
@@ -64,13 +64,13 @@ static inline void lex_add_note(int i, gregorio_shape shape, char signs,
             shape, signs, liquescentia, NULL, &notes_lloc);
 }
 
-static inline void add_bar_as_note(gregorio_bar bar)
+static __inline void add_bar_as_note(gregorio_bar bar)
 {
     nbof_isolated_episemus = 0;
     gregorio_add_bar_as_note(&current_note, bar, &notes_lloc);
 }
 
-static inline void error(void)
+static __inline void error(void)
 {
     gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
             _("undefined macro used: m%d"),
@@ -84,7 +84,7 @@ static void add_h_episemus(void) {
 
     char *ptr = gabc_notes_determination_text;
     char current;
-    // first character is the underscore
+    /* first character is the underscore */
     while ((current = *(++ptr))) {
         switch(current) {
         case '0':
@@ -130,7 +130,7 @@ static void add_sign(gregorio_sign sign) {
     gregorio_add_sign(current_note, sign, vposition);
 }
 
-static inline void add_alteration(const gregorio_type type) {
+static __inline void add_alteration(const gregorio_type type) {
     gregorio_add_alteration_as_note(&current_note, type,
             pitch_letter_to_height(gabc_notes_determination_text[0]),
             &notes_lloc);
@@ -173,7 +173,7 @@ static inline void add_alteration(const gregorio_type type) {
         BEGIN(INITIAL);
     }
 <comments>[^\n\r]* {
-        //ignored
+        /* ignored */
     }
 <INITIAL>\[cs: {
         BEGIN(choralsign);
@@ -665,13 +665,13 @@ gregorio_note *gabc_det_notes_from_string(char *str, char *newmacros[10],
     notes_lloc.first_line = loc->first_line;
     notes_lloc.first_column = loc->first_column;
     notes_lloc.first_offset = loc->first_offset;
-    // yes... I do mean to set values from loc->first_*
+    /* yes... I do mean to set values from loc->first_* */
     notes_lloc.last_line = loc->first_line;
     notes_lloc.last_column = loc->first_column;
     notes_lloc.last_offset = loc->first_offset;
 
-    // a small optimization could uccur here: we could do it only once at the
-    // beginning of the score, not at each syllable
+    /* a small optimization could uccur here: we could do it only once at the
+     * beginning of the score, not at each syllable */
     for (i = 0; i < 10; i++) {
         notesmacros[i] = newmacros[i];
     }

@@ -56,9 +56,9 @@
 #include "gabc-score-determination.h"
 #include "gabc-score-determination-l.h"
 
-// uncomment it if you want to have an interactive shell to understand the
-// details on how bison works for a certain input
-// int gabc_score_determination_debug=1;
+/* uncomment it if you want to have an interactive shell to understand the
+ * details on how bison works for a certain input */
+/* int gabc_score_determination_debug=1; */
 
 /*
  * 
@@ -67,18 +67,18 @@
  * 
  */
 
-// the error string
+/* the error string */
 static char error[200];
-// the score that we will determine and return
+/* the score that we will determine and return */
 static gregorio_score *score;
-// an array of elements that we will use for each syllable
+/* an array of elements that we will use for each syllable */
 static gregorio_element **elements;
 gregorio_element *current_element;
-// a table containing the macros to use in gabc file
+/* a table containing the macros to use in gabc file */
 static char *macros[10];
-// forward declaration of the flex/bison process function
+/* forward declaration of the flex/bison process function */
 static int gabc_score_determination_parse(void);
-// other variables that we will have to use
+/* other variables that we will have to use */
 static gregorio_character *current_character;
 static gregorio_character *first_text_character;
 static gregorio_character *first_translation_character;
@@ -88,15 +88,15 @@ static gregorio_euouae euouae;
 static gregorio_voice_info *current_voice_info;
 static int number_of_voices;
 static int voice;
-// see comments on text to understand this
+/* see comments on text to understand this */
 static gregorio_center_determination center_is_determined;
-// current_key is... the current key... updated by each notes determination
-// (for key changes)
+/* current_key is... the current key... updated by each notes determination
+ * (for key changes) */
 static int current_key = DEFAULT_KEY;
 static bool got_language = false;
 static struct sha1_ctx digester;
 
-static inline void check_multiple(const char *name, bool exists) {
+static __inline void check_multiple(const char *name, bool exists) {
     if (exists) {
         gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
                 _("several %s definitions found, only the last will be taken "
@@ -130,7 +130,7 @@ static void gabc_fix_custos(gregorio_score *score_to_check)
         while (current_element) {
             if (current_element->type == GRE_CUSTO) {
                 custo_element = current_element;
-                // we look for the key
+                /* we look for the key */
                 while (current_element) {
                     switch (current_element->type) {
                     case GRE_C_KEY_CHANGE:
@@ -220,13 +220,13 @@ static int check_infos_integrity(gregorio_score *score_to_check)
 static void initialize_variables(void)
 {
     int i;
-    // build a brand new empty score
+    /* build a brand new empty score */
     score = gregorio_new_score();
-    // initialization of the first voice info to an empty voice info
+    /* initialization of the first voice info to an empty voice info */
     current_voice_info = NULL;
     gregorio_add_voice_info(&current_voice_info);
     score->first_voice_info = current_voice_info;
-    // other initializations
+    /* other initializations */
     number_of_voices = 0;
     voice = 1;
     current_character = NULL;
@@ -255,7 +255,7 @@ static void free_variables(void)
     }
 }
 
-// see whether a voice_info is empty
+/* see whether a voice_info is empty */
 static int voice_info_is_not_empty(const gregorio_voice_info *voice_info)
 {
     return (voice_info->initial_key != 5 || voice_info->style
@@ -267,8 +267,8 @@ static int voice_info_is_not_empty(const gregorio_voice_info *voice_info)
  */
 static void next_voice_info(void)
 {
-    // we must do this test in the case where there would be a "--" before
-    // first_declarations
+    /* we must do this test in the case where there would be a "--" before
+     * first_declarations */
     if (voice_info_is_not_empty(current_voice_info)) {
         gregorio_add_voice_info(&current_voice_info);
         voice++;
@@ -329,8 +329,8 @@ static void end_definitions(void)
             }
         }
     }
-    voice = 0;                  // voice is now voice-1, so that it can be the
-    // index of elements
+    /* voice is now voice-1, so that it can be the index of elements */
+    voice = 0;
     elements = (gregorio_element **) malloc(number_of_voices *
             sizeof(gregorio_element *));
     for (i = 0; i < number_of_voices; i++) {
@@ -400,7 +400,7 @@ static void gregorio_set_translation_center_beginning(
         }
         syllable = syllable->previous_syllable;
     }
-    // we didn't find any beginning...
+    /* we didn't find any beginning... */
     gregorio_message("encountering translation centering end but cannot find "
             "translation centering beginning...",
             "set_translation_center_beginning", VERBOSITY_ERROR, 0);
@@ -411,9 +411,9 @@ static void rebuild_characters(gregorio_character **param_character,
         gregorio_center_determination center_is_determined)
 {
     bool has_initial = score->initial_style != NO_INITIAL;
-    // we rebuild the first syllable text if it is the first syllable, or if
-    // it is the second when the first has no text.
-    // it is a patch for cases like (c4) Al(ab)le(ab)
+    /* we rebuild the first syllable text if it is the first syllable, or if
+     * it is the second when the first has no text.
+     * it is a patch for cases like (c4) Al(ab)le(ab) */
     if ((!score->first_syllable && has_initial && current_character)
             || (current_syllable && !current_syllable->previous_syllable
             && !current_syllable->text && current_character)) {
@@ -435,13 +435,13 @@ static void close_syllable(YYLTYPE *loc)
             first_text_character, first_translation_character, position,
             abovelinestext, translation_type, no_linebreak_area, euouae, loc);
     if (!score->first_syllable) {
-        // we rebuild the first syllable if we have to
+        /* we rebuild the first syllable if we have to */
         score->first_syllable = current_syllable;
     }
     if (translation_type == TR_WITH_CENTER_END) {
         gregorio_set_translation_center_beginning(current_syllable);
     }
-    // we update the position
+    /* we update the position */
     if (position == WORD_BEGINNING) {
         position = WORD_MIDDLE;
     }
@@ -462,13 +462,13 @@ static void close_syllable(YYLTYPE *loc)
     current_element = NULL;
 }
 
-// a function called when we see a [, basically, all characters are added to
-// the translation pointer instead of the text pointer
+/* a function called when we see a [, basically, all characters are added to
+ * the translation pointer instead of the text pointer */
 static void start_translation(unsigned char asked_translation_type)
 {
     rebuild_characters(&current_character, center_is_determined);
     first_text_character = current_character;
-    // the middle letters of the translation have no sense
+    /* the middle letters of the translation have no sense */
     center_is_determined = CENTER_FULLY_DETERMINED;
     current_character = NULL;
     translation_type = asked_translation_type;
@@ -552,11 +552,12 @@ void gabc_digest(const void *const buf, const size_t size)
 
 gregorio_score *gabc_read_score(FILE *f_in)
 {
-    // compute the SHA-1 digest while parsing, for I/O efficiency
+    /* compute the SHA-1 digest while parsing, for I/O efficiency */
     sha1_init_ctx(&digester);
-    // digest GREGORIO_VERSION to get a different value when the version changes
+    /* digest GREGORIO_VERSION to get a different value when the version
+    changes */
     sha1_process_bytes(GREGORIO_VERSION, strlen(GREGORIO_VERSION), &digester);
-    // the input file that flex will parse
+    /* the input file that flex will parse */
     gabc_score_determination_in = f_in;
     if (!f_in) {
         gregorio_message(_("can't read stream from argument, returning NULL "
@@ -564,13 +565,13 @@ gregorio_score *gabc_read_score(FILE *f_in)
         return NULL;
     }
     initialize_variables();
-    // the flex/bison main call, it will build the score (that we have
-    // initialized)
+    /* the flex/bison main call, it will build the score (that we have
+     * initialized) */
     gabc_score_determination_parse();
     gregorio_fix_initial_keys(score, DEFAULT_KEY);
     gabc_fix_custos(score);
     free_variables();
-    // the we check the validity and integrity of the score we have built.
+    /* the we check the validity and integrity of the score we have built. */
     if (!check_score_integrity(score)) {
         gregorio_free_score(score);
         score = NULL;
@@ -766,9 +767,9 @@ arranger_definition:
 
 gabc_version_definition:
     GABC_VERSION attribute {
-        // So far this handling of the version is rudimentary.  When
-        // we start supporting multiple input versions, it will become
-        // more complex.  For the moment, just issue a warning.
+        /* So far this handling of the version is rudimentary.  When
+         * we start supporting multiple input versions, it will become
+         * more complex.  For the moment, just issue a warning. */
         if (strcmp ($2.text, GABC_CURRENT_VERSION) != 0) {
             gregorio_message(_("gabc-version is not the current one "
                     GABC_CURRENT_VERSION " ; there may be problems"),
@@ -865,7 +866,7 @@ transcriber_definition:
     TRANSCRIBER attribute {
         check_multiple("transcriber", score->si.transcriber);
         gregorio_set_score_transcriber (score, $2.text);
-        //free($2.text);
+        /* free($2.text); */
     }
     ;
 
@@ -903,7 +904,7 @@ virgula_position_definition:
 
 generated_by_definition:
     GENERATED_BY attribute {
-        //set_voice_generated_by (current_voice_info, $2.text);
+        /* set_voice_generated_by (current_voice_info, $2.text); */
     }
     ;
 

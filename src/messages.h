@@ -39,7 +39,7 @@ typedef enum gregorio_verbosity {
     VERBOSITY_WARNING,
     VERBOSITY_DEPRECATION,
     VERBOSITY_ERROR,
-    VERBOSITY_FATAL,
+    VERBOSITY_FATAL
 } gregorio_verbosity;
 
 void gregorio_message(const char *string, const char *function_name,

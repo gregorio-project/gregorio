@@ -45,7 +45,7 @@ typedef enum gregorio_file_format {
     FORMAT_UNSET = 0,
     GABC,
     GTEX,
-    DUMP,
+    DUMP
 } gregorio_file_format;
 
 #define GABC_STR "gabc"
@@ -55,7 +55,7 @@ typedef enum gregorio_file_format {
 #define DEFAULT_INPUT_FORMAT    GABC
 #define DEFAULT_OUTPUT_FORMAT   GTEX
 
-// realpath is not in mingw32
+/* realpath is not in mingw32 */
 #ifdef __MINGW32__
 #ifndef PATH_MAX
 #define PATH_MAX _MAX_PATH
@@ -84,37 +84,37 @@ static char *define_path(char *current_directory, char *string)
     }
 #endif
     if (base_name) {
-        // some path was supplied
+        /* some path was supplied */
 
         *base_name = '\0';
         base_name++;
 
-        // try to resolve it
+        /* try to resolve it */
         if (!realpath(temp_name, file_name)) {
             fprintf(stderr, "the directory %s for %s does not exist\n",
                     file_name, base_name);
             exit(-1);
         }
     } else {
-        // no path was supplied
+        /* no path was supplied */
         base_name = string;
         strcpy(file_name, current_directory);
     }
 
-    // make sure we're not bigger than PATH_MAX
+    /* make sure we're not bigger than PATH_MAX */
     length = strlen(file_name);
     if (length + strlen(base_name) + 1 >= PATH_MAX) {
         fprintf(stderr, "filename too long: %s/%s\n", file_name, base_name);
         exit(-1);
     }
-    // build the file name
+    /* build the file name */
     file_name[length] = '/';
     strcpy(file_name + length + 1, base_name);
 
     return file_name;
 }
 
-// function that returns the filename without the extension
+/* function that returns the filename without the extension */
 static char *get_base_filename(char *fbasename)
 {
     char *p;
@@ -131,7 +131,7 @@ static char *get_base_filename(char *fbasename)
     return ret;
 }
 
-// function that adds the good extension to a basename (without extension)
+/* function that adds the good extension to a basename (without extension) */
 static char *get_output_filename(char *fbasename, const char *extension)
 {
     char *output_filename = NULL;
@@ -223,31 +223,31 @@ static void check_input_clobber(char *input_file_name, char *output_file_name)
 
 static char *encode_point_and_click_filename(char *input_file_name)
 {
-    // percent-encoding favors capital hex digits
+    /* percent-encoding favors capital hex digits */
     static const char *const hex = "0123456789ABCDEF";
-    char filename[PATH_MAX], *result = NULL, *r = NULL;
+    char filename[PATH_MAX], *result = NULL, *r = NULL, *p;
 
     if (!realpath(input_file_name, filename)) {
         fprintf(stderr, "error: unable to resolve %s\n", input_file_name);
         exit(-1);
     }
 
-    // 2 extra characters for a possible leading slash and final NUL
+    /* 2 extra characters for a possible leading slash and final NUL */
     r = result = malloc((strlen(filename) * 4 + 2) * sizeof(char));
 
 #ifdef __MINGW32__
     *(r++) = '/';
 #endif
 
-    for (char *p = filename; *p; ++p) {
+    for (p = filename; *p; ++p) {
 #ifdef __MINGW32__
         if (*p == '\\') {
             *p = '/';
         }
 #endif
 
-        // note that -, _ and ~ are conspicuously missing from this list
-        // because they cause trouble in TeX; we will percent-encode them
+        /* note that -, _ and ~ are conspicuously missing from this list
+         * because they cause trouble in TeX; we will percent-encode them */
         if ((*p >= 'A' && *p <= 'Z') || (*p >= 'a' && *p < 'z')
                 || (*p >= '0' && *p <= '9') || *p == '.' || *p == '/'
 #ifdef __MINGW32__
@@ -257,8 +257,8 @@ static char *encode_point_and_click_filename(char *input_file_name)
             *(r++) = *p;
         }
         else {
-            // percent-encode anything else
-            *(r++) = '\\'; // must escape it because it's TeX
+            /* percent-encode anything else */
+            *(r++) = '\\'; /* must escape it because it's TeX */
             *(r++) = '%';
             *(r++) = hex[(*p >> 4) & 0x0FU];
             *(r++) = hex[*p & 0x0FU];
@@ -328,7 +328,7 @@ int main(int argc, char **argv)
                         output_file_name);
                 break;
             }
-            if (output_file) {  // means that stdout is defined
+            if (output_file) {  /* means that stdout is defined */
                 fprintf(stderr,
                         "warning: can't write to file and stdout, writing on stdout\n");
                 break;
@@ -342,7 +342,7 @@ int main(int argc, char **argv)
                         output_file_name);
                 break;
             }
-            if (output_file) {  // means that stdout is defined
+            if (output_file) {  /* means that stdout is defined */
                 fprintf(stderr, "warning: option used two times: %c\n", c);
                 break;
             }
@@ -401,7 +401,7 @@ int main(int argc, char **argv)
                         input_file_name);
                 break;
             }
-            if (input_file) {   // means that stdin is defined
+            if (input_file) { /* means that stdin is defined */
                 fprintf(stderr, "warning: option used two times: %c\n", c);
                 break;
             }
@@ -453,9 +453,9 @@ int main(int argc, char **argv)
             break;
         }
         number_of_options++;
-    }                           // end of while
+    } /* end of while */
     if (optind == argc) {
-        if (!input_file) {      // input not undefined (could be stdin)
+        if (!input_file) { /* input not undefined (could be stdin) */
             fprintf(stderr, "error: no input file specified\n");
             print_usage(argv[0]);
             exit(-1);
@@ -494,7 +494,7 @@ int main(int argc, char **argv)
         }
     #endif
 
-    // then we act...
+    /* then we act... */
 
     if (!output_file_name && !output_file) {
         if (!output_basename) {
@@ -543,7 +543,7 @@ int main(int argc, char **argv)
         }
     }
 
-    // we always have input_file or input_file_name
+    /* we always have input_file or input_file_name */
     if (input_file) {
         if (point_and_click) {
             fprintf(stderr,

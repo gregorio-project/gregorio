@@ -35,7 +35,7 @@ void gregorio_print_unistring(FILE *f, grewchar *first_char);
 unsigned char gregorio_wcsbufcmp(grewchar *wstr, const char *buf);
 grewchar *gregorio_build_grewchar_string_from_buf(const char *buf);
 
-static inline size_t gregorio_wcstrlen(const grewchar *wstr)
+static __inline size_t gregorio_wcstrlen(const grewchar *wstr)
 {
     size_t length = 0;
 
@@ -46,14 +46,14 @@ static inline size_t gregorio_wcstrlen(const grewchar *wstr)
     return length;
 }
 
-// this macro is for portability under windows, where L'x' is only two-bytes
-// long, and thus needs to be cast to a 4-bytes integer.
+/* this macro is for portability under windows, where L'x' is only two-bytes
+ * long, and thus needs to be cast to a 4-bytes integer. */
 #define GL(wc) ((const grewchar) L'wc')
 
 #endif
 
-// we enter the second part only if struct.h has already been included, because
-// we need gregorio_character
+/* we enter the second part only if struct.h has already been included, because
+ * we need gregorio_character */
 
 #ifdef STRUCT_H
 
