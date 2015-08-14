@@ -34,6 +34,7 @@
 #include "characters.h"
 #include "plugins.h"
 #include "support.h"
+#include "utf8strings.h"
 
 #include "gregoriotex.h"
 
@@ -911,7 +912,7 @@ static void gtex_write_special_char(FILE *f, grewchar *special_char)
         fprintf(f, "\\Vbar{}");
         return;
     }
-    if (!gregorio_wcsbufcmp(special_char, "'æ")) {
+    if (!gregorio_wcsbufcmp(special_char, ACCENTED_AE)) {
         fprintf(f, "\\'\\ae{}");
         return;
     }
@@ -919,7 +920,7 @@ static void gtex_write_special_char(FILE *f, grewchar *special_char)
         fprintf(f, "\\'\\ae{}");
         return;
     }
-    if (!gregorio_wcsbufcmp(special_char, "'œ")) {
+    if (!gregorio_wcsbufcmp(special_char, ACCENTED_OE)) {
         fprintf(f, "\\'\\oe{}");
         return;
     }

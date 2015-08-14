@@ -41,6 +41,7 @@
 #include "unicode.h"
 #include "characters.h"
 #include "messages.h"
+#include "utf8strings.h"
 #include "vowel/vowel.h"
 
 #ifdef _WIN32
@@ -171,12 +172,7 @@ void gregorio_set_centering_language(char *const language)
         }
 
         gregorio_vowel_tables_init();
-        // This is a superset of Latin vowels which includes some French,
-        // Vietnamese, Slavic, Hungarian, and Norwegian vowels which don't
-        // interfere with Latin itself.  For something more accurate, the user
-        // should consider the use of custom centering rules.
-        gregorio_vowel_table_add("aàáâăąåAÀÁÂĂĄÅeèéêëěęEÈÉÊËĚĘiìíîIÌÍÎ"
-                "oòóôơőøOÒÓÔƠŐØuùúûưůűUÙÚÛƯŮŰyỳýYỲÝæǽÆǼœŒ");
+        gregorio_vowel_table_add(DEFAULT_VOWELS);
         gregorio_prefix_table_add("i");
         gregorio_prefix_table_add("I");
         gregorio_prefix_table_add("u");
