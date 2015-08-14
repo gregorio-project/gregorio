@@ -101,10 +101,10 @@ semicolon. */
 
 %%
 <INITIAL>^(\xBB|\xEF|\xBF)* {
-        //BOM written by a lot of windows softwares when they write UTF-8
+        /* BOM written by a lot of windows softwares when they write UTF-8 */
     }
 <INITIAL>^[\n\r]+ {
-        // ignoring empty lines
+        /* ignoring empty lines */
     }
 <INITIAL>^[\%#] {
         BEGIN(inicomments);
@@ -113,7 +113,7 @@ semicolon. */
         BEGIN(INITIAL);
     }
 <inicomments>[^\n\r]* {
-        //ignored
+        /* ignored */
     }
 <INITIAL>:(\ )? {
         BEGIN(attribute);
@@ -335,7 +335,7 @@ semicolon. */
         BEGIN(score);
     }
 <comments>[^\n\r]* {
-        //ignored
+        /* ignored */
     }
 <style,score><v> {
         BEGIN(verb);

@@ -26,7 +26,7 @@
 
 #include "gabc.h"
 
-static inline gregorio_scanner_location *copy_note_location(
+static __inline gregorio_scanner_location *copy_note_location(
         const gregorio_note *const note, gregorio_scanner_location *const loc)
 {
     loc->first_line = note->src_line;
@@ -57,11 +57,11 @@ static void close_glyph(gregorio_glyph **last_glyph,
         gregorio_liquescentia liquescentia, gregorio_note *current_note)
 {
     gregorio_scanner_location loc;
-    // a variable necessary for the patch for G_BIVIRGA & co.
+    /* a variable necessary for the patch for G_BIVIRGA & co. */
     gregorio_note *added_notes = NULL;
 
-    // patch to have good glyph type in the case where a glyph ends by a note
-    // with shape S_QUADRATUM
+    /* patch to have good glyph type in the case where a glyph ends by a note
+     * with shape S_QUADRATUM */
     if (glyph_type == G_PES_QUADRATUM_FIRST_PART
             || glyph_type == G_PES_QUILISMA_QUADRATUM_FIRST_PART) {
         glyph_type = G_PUNCTUM;
@@ -73,11 +73,10 @@ static void close_glyph(gregorio_glyph **last_glyph,
         *first_note = current_note->next;
         current_note->next = NULL;
     }
-    // here we "patch" the structure for bivirga, tristropha, etc.
-    // the idea is not to have a S_BIVIRGA in the shape of the note (which is
-    // dirty)
-    // but rather a G_BIVIRGA in the glyph (which is the case now) and two
-    // virgas
+    /* here we "patch" the structure for bivirga, tristropha, etc. */
+    /* the idea is not to have a S_BIVIRGA in the shape of the note (which is
+     * dirty) but rather a G_BIVIRGA in the glyph (which is the case now) and
+     * two virgas */
 
     if (glyph_type == G_BIVIRGA || glyph_type == G_DISTROPHA
             || glyph_type == G_TRIVIRGA || glyph_type == G_TRISTROPHA
@@ -134,13 +133,13 @@ static void close_glyph(gregorio_glyph **last_glyph,
                     break;
                 }
             }
-            // this is the case of two separate virga that have been spotted
-            // as a bivirga
+            /* this is the case of two separate virga that have been spotted
+             * as a bivirga */
             if (!added_notes) {
                 break;
             }
-            // now we have what we want, we set up the links and free the old
-            // note
+            /* now we have what we want, we set up the links and free the old
+             * note */
             if (current_note->next) {
                 current_note->next->previous = added_notes;
                 added_notes->next = current_note->next;
@@ -155,19 +154,19 @@ static void close_glyph(gregorio_glyph **last_glyph,
                 break;
             } else {
                 gregorio_free_one_note(&current_note);
-                // automatically sets first_note to the next note
+                /* automatically sets first_note to the next note */
             }
         }
         gregorio_go_to_first_note(&current_note);
-        // finally we set the just added glyph first_note to current_note
+        /* finally we set the just added glyph first_note to current_note */
         (*last_glyph)->u.notes.first_note = current_note;
     }
 }
 
-// a small function to automatically determine the pitch of a custo : it is
-// the pitch of the next note, but we must take care of the clef changes, as
-// custo are (normally and for now) only present before clef changes.
-// TODO: there may be a side effect with the flated keys...
+/* a small function to automatically determine the pitch of a custo : it is
+ * the pitch of the next note, but we must take care of the clef changes, as
+ * custo are (normally and for now) only present before clef changes. */
+/* TODO: there may be a side effect with the flated keys... */
 
 static char gabc_determine_custo_pitch(gregorio_note *current_note,
         int current_key)
@@ -252,15 +251,15 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         gabc_determination * end_of_glyph)
 {
 
-    // next glyph type is the type of the glyph that will be returned (the
-    // new type of the glyph with the note added to it, or the type of the
-    // new glyph with the note alone.
+    /* next glyph type is the type of the glyph that will be returned (the
+     * new type of the glyph with the note added to it, or the type of the
+     * new glyph with the note alone. */
     gregorio_glyph_type next_glyph_type = G_UNDETERMINED;
 
     *end_of_glyph = DET_NO_END;
 
-    // here we separate notes that would be logically in the same glyph
-    // but that are too far to be so
+    /* here we separate notes that would be logically in the same glyph
+     * but that are too far to be so */
     if (last_pitch) {
         if (current_pitch - last_pitch > MAX_INTERVAL
                 || current_pitch - last_pitch < -MAX_INTERVAL) {
@@ -548,7 +547,7 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     default:
         break;
     }
-    // end of the main switch
+    /* end of the main switch */
 
     if (current_glyph_type == G_UNDETERMINED) {
         /*
@@ -568,10 +567,10 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
      * WARNING : Ugly section of the code, just some kind of patch for it to work
      * with fonts that can't handle large intervals.
      */
-    // here we separate notes that would be logically in the same glyph
-    // but that are too far to be so, we already said to the function that
-    // it was not the same glyph, there we must say that the previous
-    // glyph has ended.
+    /* here we separate notes that would be logically in the same glyph
+     * but that are too far to be so, we already said to the function that
+     * it was not the same glyph, there we must say that the previous
+     * glyph has ended. */
     if (last_pitch) {
         if (current_pitch - last_pitch > MAX_INTERVAL
                 || current_pitch - last_pitch < -MAX_INTERVAL) {
@@ -623,32 +622,33 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
  *
 ****************************/
 
-// this function updates current_key with the new values (with clef changes)
+/* this function updates current_key with the new values (with clef changes) */
 
 gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         int *current_key)
 {
-    // the first note of the current glyph, to be able to close it well:
-    // later we will cut the link (next_notes and previous_note) between
-    // this note and the previous one
+    /* the first note of the current glyph, to be able to close it well:
+     * later we will cut the link (next_notes and previous_note) between
+     * this note and the previous one */
     gregorio_note *current_glyph_first_note = current_note;
 
-    // the last glyph we have totally determined. It is automatically
-    // updated by close_glyph().
+    /* the last glyph we have totally determined. It is automatically
+     * updated by close_glyph(). */
     gregorio_glyph *last_glyph = NULL;
 
-    // type of the glyph we are currently determining
+    /* type of the glyph we are currently determining */
     gregorio_glyph_type current_glyph_type = G_UNDETERMINED;
     gregorio_glyph_type next_glyph_type = G_UNDETERMINED;
     char last_pitch = USELESS_VALUE;
-    // a variable for the signs of bars and to tell if a key is flatted or not
+    /* a variable for the signs of bars and to tell if a key is flatted or
+     * not */
     gregorio_note *next_note = NULL;
 
-    // determination of end of glyphs, see comments on
-    // gregorio_add_note_to_a_glyph
+    /* determination of end of glyphs, see comments on
+     * gregorio_add_note_to_a_glyph */
     gabc_determination end_of_glyph = DET_NO_END;
 
-    // a char representing the liquescentia of the current glyph
+    /* a char representing the liquescentia of the current glyph */
     gregorio_liquescentia liquescentia = L_NO_LIQUESCENTIA;
 
     if (current_note == NULL) {
@@ -704,7 +704,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                 break;
 
             case GRE_BAR:
-                // we calculate the signs of the bars
+                /* we calculate the signs of the bars */
                 if (current_note->signs == _V_EPISEMUS) {
                     sign = _V_EPISEMUS;
                 } else {
@@ -726,7 +726,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                 break;
 
             default:
-                // do nothing
+                /* do nothing */
                 break;
             }
 
@@ -770,8 +770,8 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                 current_note->u.note.liquescentia,
                 current_glyph_first_note, &end_of_glyph);
 
-        // patch to have good shapes in the special cases of pes quadratum and
-        // pes quilisma quadratum.
+        /* patch to have good shapes in the special cases of pes quadratum and
+         * pes quilisma quadratum. */
         switch (current_note->u.note.shape) {
         case S_QUADRATUM:
             current_note->u.note.shape = S_PUNCTUM;
@@ -782,12 +782,12 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             break;
 
         default:
-            // do nothing
+            /* do nothing */
             break;
         }
 
-        // see comments on gregorio_add_note_to_a_glyph for the meaning of
-        // end_of_glyph
+        /* see comments on gregorio_add_note_to_a_glyph for the meaning of
+         * end_of_glyph */
         switch (end_of_glyph) {
         case DET_NO_END:
             current_glyph_type = next_glyph_type;
@@ -795,8 +795,8 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
              * we deal with liquescentia
              */
             if (is_liquescentia(current_note->u.note.liquescentia)) {
-                // special cases of oriscus auctus, treated like normal oriscus
-                // in some cases.
+                /* special cases of oriscus auctus, treated like normal oriscus
+                 * in some cases. */
                 if (current_note->u.note.shape == S_ORISCUS_AUCTUS
                         && current_note->next
                         && current_note->next->type == GRE_NOTE
@@ -808,7 +808,8 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                     current_note = next_note;
                     continue;
                 }
-                // special cases of the punctum inclinatum deminutus and auctus
+                /* special cases of the punctum inclinatum deminutus and
+                 * auctus */
                 if (current_note->u.note.shape == S_PUNCTUM_INCLINATUM) {
                     if (current_note->u.note.liquescentia == L_DEMINUTUS) {
                         current_note->u.note.shape =
@@ -846,7 +847,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                         break;
 
                     default:
-                        // do nothing
+                        /* do nothing */
                         break;
                     }
 
@@ -862,9 +863,8 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                     }
                 }
                 liquescentia += current_note->u.note.liquescentia;
-                /*
-                 * once again, only works with the good values in the header file
-                 */
+                /* once again, only works with the good values in the header
+                 * file */
                 close_glyph(&last_glyph, current_glyph_type,
                         &current_glyph_first_note, liquescentia, current_note);
                 current_glyph_type = G_UNDETERMINED;
@@ -874,7 +874,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         case DET_END_OF_PREVIOUS:
             if (current_note->previous)
             {
-                // we don't want to close previous glyph twice
+                /* we don't want to close previous glyph twice */
                 close_glyph(&last_glyph, current_glyph_type,
                         &current_glyph_first_note, liquescentia,
                         current_note->previous);
@@ -882,14 +882,13 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             current_glyph_type = next_glyph_type;
             liquescentia = L_NO_LIQUESCENTIA;
             last_pitch = USELESS_VALUE;
-            /*
-             * we deal with liquescentia
-             */
+            /* we deal with liquescentia */
             if (is_liquescentia(current_note->u.note.liquescentia))
-                // not an initio debilis, because we considered it in the first
-                // part...
+                /* not an initio debilis, because we considered it in the first
+                 * part... */
             {
-                // special cases of the punctum inclinatum deminutus and auctus
+                /* special cases of the punctum inclinatum deminutus and
+                 * auctus */
                 if (current_note->u.note.shape == S_PUNCTUM_INCLINATUM) {
                     if (current_note->u.note.liquescentia == L_DEMINUTUS) {
                         current_note->u.note.shape =
@@ -925,7 +924,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                         break;
 
                     default:
-                        // do nothing
+                        /* do nothing */
                         break;
                     }
 
@@ -947,18 +946,16 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             break;
         case DET_END_OF_CURRENT:
             liquescentia += current_note->u.note.liquescentia;
-            /*
-             * once again, only works with the good values in the header file
-             */
+            /* once again, only works with the good values in the header file */
             close_glyph(&last_glyph, next_glyph_type,
                     &current_glyph_first_note, liquescentia, current_note);
             current_glyph_type = G_UNDETERMINED;
             liquescentia = L_NO_LIQUESCENTIA;
             break;
-        default:               // case DET_END_OF_BOTH:
+        default: /* case DET_END_OF_BOTH: */
             if (current_note->previous)
             {
-                // we don't want to close previous glyph twice
+                /* we don't want to close previous glyph twice */
                 close_glyph(&last_glyph, current_glyph_type,
                         &current_glyph_first_note, liquescentia,
                         current_note->previous);
@@ -972,7 +969,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         }
 
         if (!next_note && current_glyph_type != G_UNDETERMINED) {
-            // we must end the determination here
+            /* we must end the determination here */
             close_glyph(&last_glyph, current_glyph_type,
                     &current_glyph_first_note, liquescentia, current_note);
         }
@@ -980,7 +977,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         last_pitch = current_note->u.note.pitch;
         current_note = next_note;
     }
-    // end of while
+    /* end of while */
 
     gregorio_go_to_first_glyph(&last_glyph);
     return last_glyph;
