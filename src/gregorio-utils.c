@@ -23,11 +23,13 @@
 #include <stdlib.h>
 #ifdef USE_KPSE
 #include <kpathsea/kpathsea.h>
+#define gregorio_basename xbasename
 #else
 #include <getopt.h>
+#include <libgen.h> /* for basename */
+#define gregorio_basename basename
 #endif
-#include <libgen.h>             /* for basename */
-#include <string.h>             /* for strcmp */
+#include <string.h> /* for strcmp */
 #include <locale.h>
 #include <limits.h>
 #include "struct.h"
@@ -558,7 +560,7 @@ int main(int argc, char **argv)
                     input_file_name);
             exit(-1);
         }
-        gregorio_set_file_name(basename(input_file_name));
+        gregorio_set_file_name(gregorio_basename(input_file_name));
         if (point_and_click) {
             point_and_click_filename = encode_point_and_click_filename(
                     input_file_name);
