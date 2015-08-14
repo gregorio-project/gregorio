@@ -539,7 +539,7 @@ int main(int argc, char **argv)
                 exit(-1);
             }
         #endif
-        output_file = fopen(output_file_name, "w");
+        output_file = fopen(output_file_name, "wb");
         if (!output_file) {
             fprintf(stderr, "error: can't write in file %s",
                     output_file_name);
@@ -571,7 +571,7 @@ int main(int argc, char **argv)
         error_file = stderr;
         gregorio_set_error_out(error_file);
     } else {
-        error_file = fopen(error_file_name, "w");
+        error_file = fopen(error_file_name, "wb");
         if (!error_file) {
             fprintf(stderr, "error: can't open file %s for writing\n",
                     error_file_name);
