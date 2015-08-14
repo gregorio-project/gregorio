@@ -33,6 +33,7 @@
 #include "messages.h"
 #include "characters.h"
 #include "plugins.h"
+#include "support.h"
 
 #include "gregoriotex.h"
 
@@ -218,7 +219,7 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
             }
             if (note->u.note.pitch - LOWEST_PITCH == 3) {
                 // if we're on the 'd' line, the queue could be long or short
-                snprintf(buf, sizeof buf,
+                gregorio_snprintf(buf, sizeof buf,
                         "VirgaReversaAscendensOnDLine{\\GreCP%s}", name);
                 return buf;
             }
@@ -414,7 +415,7 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
     }
     current_note = current_note->next;
     if (!current_note->next) {
-        snprintf(buf, BUFSIZE, "%s%s%s", shape, tex_ambitus[ambitus1],
+        gregorio_snprintf(buf, BUFSIZE, "%s%s%s", shape, tex_ambitus[ambitus1],
                 liquescentia);
         return buf;
     }
@@ -423,14 +424,14 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
     }
     current_note = current_note->next;
     if (!current_note->next) {
-        snprintf(buf, BUFSIZE, "%s%s%s%s", shape, tex_ambitus[ambitus1],
-                tex_ambitus[ambitus2], liquescentia);
+        gregorio_snprintf(buf, BUFSIZE, "%s%s%s%s", shape,
+                tex_ambitus[ambitus1], tex_ambitus[ambitus2], liquescentia);
         return buf;
     }
     if (!(ambitus3 = compute_ambitus(current_note))) {
         return "";
     }
-    snprintf(buf, BUFSIZE, "%s%s%s%s%s", shape, tex_ambitus[ambitus1],
+    gregorio_snprintf(buf, BUFSIZE, "%s%s%s%s%s", shape, tex_ambitus[ambitus1],
             tex_ambitus[ambitus2], tex_ambitus[ambitus3], liquescentia);
     return buf;
 }
@@ -2262,7 +2263,7 @@ static char *determine_leading_shape(gregorio_glyph *glyph)
         break;
     }
 
-    snprintf(buf, BUFSIZE, "Leading%s%s%s", head, tex_ambitus[ambitus],
+    gregorio_snprintf(buf, BUFSIZE, "Leading%s%s%s", head, tex_ambitus[ambitus],
             head_liquescence);
     return buf;
 }

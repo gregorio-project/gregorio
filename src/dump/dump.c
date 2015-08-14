@@ -25,10 +25,11 @@
 #include "unicode.h"
 #include "messages.h"
 #include "plugins.h"
+#include "support.h"
 
 static const char *unknown(int value) {
     static char buf[20];
-    snprintf(buf, 20, "?%d", value);
+    gregorio_snprintf(buf, 20, "?%d", value);
     return buf;
 }
 
@@ -509,9 +510,9 @@ static const char *dump_vposition(gregorio_vposition vpos) {
 static const char *dump_pitch(const char height) {
     static char buf[20];
     if (height >= LOWEST_PITCH && height <= HIGHEST_PITCH) {
-        snprintf(buf, 20, "%c", height + 'a' - LOWEST_PITCH);
+        gregorio_snprintf(buf, 20, "%c", height + 'a' - LOWEST_PITCH);
     } else {
-        snprintf(buf, 20, "?%d", height);
+        gregorio_snprintf(buf, 20, "?%d", height);
     }
     return buf;
 }

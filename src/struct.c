@@ -1627,7 +1627,6 @@ void gregorio_reinitialize_one_voice_alterations(char alterations[13])
 
 void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
 {
-    char *error;
     int clef = 0;
     gregorio_element *element;
     gregorio_voice_info *voice_info;
@@ -1639,7 +1638,6 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
                 "gregorio_fix_initial_keys", VERBOSITY_WARNING, 0);
         return;
     }
-    error = malloc(100 * sizeof(char));
     voice_info = score->first_voice_info;
     for (i = 0; i < score->number_of_voices; i++) {
         element = score->first_syllable->elements[i];
@@ -1653,11 +1651,9 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
             voice_info->initial_key = clef;
             voice_info->flatted_key = element->u.misc.pitched.flatted_key;
             gregorio_free_one_element(&(score->first_syllable->elements[i]));
-            snprintf(error, 80, _("in voice %d the first element is a key "
-                                  "definition, considered as initial key"),
-                     i + 1);
-            gregorio_message(error, "gregorio_fix_initial_keys", VERBOSITY_INFO,
-                    0);
+            gregorio_messagef("gregorio_fix_initial_keys", VERBOSITY_INFO, 0,
+                    _("in voice %d the first element is a key definition, "
+                    "considered as initial key"), i + 1);
         } else if (element->type == GRE_F_KEY_CHANGE) {
             clef =
                 gregorio_calculate_new_key(F_KEY,
@@ -1665,11 +1661,9 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
             voice_info->initial_key = clef;
             voice_info->flatted_key = element->u.misc.pitched.flatted_key;
             gregorio_free_one_element(&(score->first_syllable->elements[i]));
-            snprintf(error, 80, _("in voice %d the first element is a key "
-                                  "definition, considered as initial key"),
-                     i + 1);
-            gregorio_message(error, "gregorio_fix_initial_keys", VERBOSITY_INFO,
-                    0);
+            gregorio_messagef("gregorio_fix_initial_keys", VERBOSITY_INFO, 0,
+                    _("in voice %d the first element is a key definition, "
+                    "considered as initial key"), i + 1);
         }
         voice_info = voice_info->next_voice_info;
     }
@@ -1696,14 +1690,12 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
     for (i = 0; i < score->number_of_voices; i++) {
         if (voice_info->initial_key == NO_KEY) {
             voice_info->initial_key = default_key;
-            snprintf(error, 75, _("no initial key definition in voice %d, "
-                        "default key definition applied"), i + 1);
-            gregorio_message(error, "gregorio_fix_initial_keys", VERBOSITY_INFO,
-                    0);
+            gregorio_messagef("gregorio_fix_initial_keys", VERBOSITY_INFO, 0,
+                    _("no initial key definition in voice %d, default key "
+                    "definition applied"), i + 1);
         }
         voice_info = voice_info->next_voice_info;
     }
-    free(error);
 }
 
 /**********************************

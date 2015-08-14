@@ -34,6 +34,7 @@
 #include "plugins.h"
 #include "messages.h"
 #include "characters.h"
+#include "support.h"
 #include "gabc/gabc.h"
 #include "vowel/vowel.h"
 
@@ -126,7 +127,7 @@ static char *get_base_filename(char *fbasename)
     }
     l = strlen(fbasename) - strlen(p);
     ret = (char *) malloc((l + 1) * sizeof(char));
-    snprintf(ret, l + 1, "%s", fbasename);
+    gregorio_snprintf(ret, l + 1, "%s", fbasename);
     ret[l] = '\0';
     return ret;
 }

@@ -67,8 +67,6 @@
  * 
  */
 
-// the error string
-static char error[200];
 // the score that we will determine and return
 static gregorio_score *score;
 // an array of elements that we will use for each syllable
@@ -311,21 +309,21 @@ static void end_definitions(void)
         score->number_of_voices = voice;
     } else {
         if (number_of_voices > voice) {
-            snprintf(error, 62, ngt_("not enough voice infos found: %d found, "
-                    "%d waited, %d assumed", "not enough voice infos found: %d "
-                    "found, %d waited, %d assumed", voice), voice,
+            gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
+                    ngt_("not enough voice infos found: %d found, %d waited, "
+                    "%d assumed", "not enough voice infos found: %d found, %d "
+                    "waited, %d assumed", voice), voice,
                     number_of_voices, voice);
-            gregorio_message(error, "det_score", VERBOSITY_WARNING, 0);
             score->number_of_voices = voice;
             number_of_voices = voice;
         } else {
             if (number_of_voices < voice) {
-                snprintf(error, 62, ngt_("too many voice infos found: %d "
-                        "found, %d waited, %d assumed", "not enough voice "
-                        "infos found: %d found, %d waited, %d assumed",
+                gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
+                        ngt_("too many voice infos found: %d found, %d "
+                        "waited, %d assumed", "not enough voice infos found: "
+                        "%d found, %d waited, %d assumed",
                         number_of_voices), voice, number_of_voices,
                         number_of_voices);
-                gregorio_message(error, "det_score", VERBOSITY_WARNING, 0);
             }
         }
     }
@@ -665,9 +663,9 @@ number_of_voices_definition:
     NUMBER_OF_VOICES attribute {
         number_of_voices=atoi($2.text);
         if (number_of_voices > MAX_NUMBER_OF_VOICES) {
-            snprintf(error, 40, _("can't define %d voices, maximum is %d"),
-                     number_of_voices, MAX_NUMBER_OF_VOICES);
-            gregorio_message(error,"det_score", VERBOSITY_WARNING, 0);
+            gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
+                    _("can't define %d voices, maximum is %d"),
+                    number_of_voices, MAX_NUMBER_OF_VOICES);
         }
         gregorio_set_score_number_of_voices (score, number_of_voices);
     }
@@ -810,9 +808,9 @@ initial_style_definition:
 annotation_definition:
     ANNOTATION attribute {
         if (score->annotation [MAX_ANNOTATIONS - 1]) {
-            snprintf(error,99,_("too many definitions of annotation found, "
-                                "only the first %d will be taken"), MAX_ANNOTATIONS);
-            gregorio_message(error, "det_score", VERBOSITY_WARNING, 0);
+            gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
+                    _("too many definitions of annotation found, only the "
+                    "first %d will be taken"), MAX_ANNOTATIONS);
         }
         gregorio_set_score_annotation (score, $2.text);
     }
@@ -879,10 +877,9 @@ transcription_date_definition:
 style_definition:
     STYLE attribute {
         if (current_voice_info->style) {
-            snprintf(error, 99, _("several definitions of style found for "
-                    "voice %d, only the last will be taken into consideration"),
-                    voice);
-            gregorio_message(error, "det_score", VERBOSITY_WARNING, 0);
+            gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
+                    _("several definitions of style found for voice %d, only "
+                    "the last will be taken into consideration"), voice);
         }
         gregorio_set_voice_style (current_voice_info, $2.text);
     }
@@ -891,10 +888,10 @@ style_definition:
 virgula_position_definition:
     VIRGULA_POSITION attribute {
         if (current_voice_info->virgula_position) {
-            snprintf(error, 105, _("several definitions of virgula position "
-                    "found for voice %d, only the last will be taken into "
-                    "consideration"), voice);
-            gregorio_message(error, "det_score", VERBOSITY_WARNING, 0);
+            gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
+                    _("several definitions of virgula position found for "
+                    "voice %d, only the last will be taken into consideration"),
+                    voice);
         }
         gregorio_set_voice_virgula_position (current_voice_info, $2.text);
     }
@@ -970,18 +967,17 @@ note:
             free($1.text);
         }
         else {
-            snprintf(error,105,ngt_("too many voices in note : %d found, %d expected",
-                                    "too many voices in note : %d found, %d expected",
-                                    number_of_voices), voice+1, number_of_voices);
-            gregorio_message(error, "det_score", VERBOSITY_ERROR, 0);
+            gregorio_messagef("det_score", VERBOSITY_ERROR, 0,
+                    ngt_("too many voices in note : %d found, %d expected",
+                    "too many voices in note : %d found, %d expected",
+                    number_of_voices), voice+1, number_of_voices);
         }
         if (voice<number_of_voices-1) {
-            snprintf(error,105,ngt_("not enough voices in note : %d found, %d "
-                                    "expected, completing with empty neume",
-                                    "not enough voices in note : %d found, "
-                                    "%d expected, completing with empty neume",
-                                    voice+1), voice+1, number_of_voices);
-            gregorio_message(error, "det_score", VERBOSITY_INFO, 0);
+            gregorio_messagef("det_score", VERBOSITY_INFO, 0,
+                    ngt_("not enough voices in note : %d found, %d expected, "
+                    "completing with empty neume", "not enough voices in note "
+                    ": %d found, %d expected, completing with empty neume",
+                    voice+1), voice+1, number_of_voices);
             complete_with_nulls(voice);
         }
         voice=0;
@@ -993,18 +989,17 @@ note:
             free($1.text);
         }
         else {
-            snprintf(error,105,ngt_("too many voices in note : %d found, %d expected",
-                                    "too many voices in note : %d found, %d expected",
-                                    number_of_voices), voice+1, number_of_voices);
-            gregorio_message(error, "det_score", VERBOSITY_ERROR, 0);
+            gregorio_messagef("det_score", VERBOSITY_ERROR, 0,
+                    ngt_("too many voices in note : %d found, %d expected",
+                    "too many voices in note : %d found, %d expected",
+                    number_of_voices), voice+1, number_of_voices);
         }
         if (voice<number_of_voices-1) {
-            snprintf(error,105,ngt_("not enough voices in note : %d found, %d "
-                                    "expected, completing with empty neume",
-                                    "not enough voices in note : %d found, %d "
-                                    "expected, completing with empty neume",
-                                    voice+1), voice+1, number_of_voices);
-            gregorio_message(error, "det_score", VERBOSITY_INFO, 0);
+            gregorio_messagef("det_score", VERBOSITY_INFO, 0,
+                    ngt_("not enough voices in note : %d found, %d expected, "
+                    "completing with empty neume", "not enough voices in note "
+                    ": %d found, %d expected, completing with empty neume",
+                    voice+1), voice+1, number_of_voices);
             complete_with_nulls(voice);
         }
         voice=0;
@@ -1018,10 +1013,10 @@ note:
             voice++;
         }
         else {
-            snprintf(error,105,ngt_("too many voices in note : %d found, %d expected",
-                                    "too many voices in note : %d found, %d expected",
-                                    number_of_voices), voice+1, number_of_voices);
-            gregorio_message(error, "det_score", VERBOSITY_ERROR, 0);
+            gregorio_messagef("det_score", VERBOSITY_ERROR, 0,
+                    ngt_("too many voices in note : %d found, %d expected",
+                    "too many voices in note : %d found, %d expected",
+                    number_of_voices), voice+1, number_of_voices);
         }
     }
     | NOTES NABC_CUT {

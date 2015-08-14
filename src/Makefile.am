@@ -22,12 +22,13 @@ gregorio_CFLAGS = $(KPSE_CFLAGS)
 gregorio_LDADD = $(KPSE_LIBS)
 
 bin_PROGRAMS = gregorio
-gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
-					unicode.c struct.h messages.h unicode.h characters.h \
-					sha1.c sha1.h plugins.h config.h bool.h dump/dump.c \
-					gregoriotex/gregoriotex-write.c \
-					gregoriotex/gregoriotex-position.c \
-					gregoriotex/gregoriotex.h
+gregorio_SOURCES = gregorio-utils.c characters.c characters.h \
+				   messages.c messages.h struct.c struct.h \
+				   unicode.c unicode.h sha1.c sha1.h support.c support.h \
+				   config.h bool.h plugins.h dump/dump.c \
+				   gregoriotex/gregoriotex-write.c \
+				   gregoriotex/gregoriotex-position.c \
+				   gregoriotex/gregoriotex.h
 
 @MK@ifneq ($(wildcard ../.git),)
 @MK@  _tag_ = $(shell git describe --exact-match HEAD 2>/dev/null)
