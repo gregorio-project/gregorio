@@ -57,7 +57,7 @@ typedef enum gregorio_file_format {
 #define DEFAULT_OUTPUT_FORMAT   GTEX
 
 // realpath is not in mingw32
-#ifdef __MINGW32__
+#ifdef _WIN32
 #ifndef PATH_MAX
 #define PATH_MAX _MAX_PATH
 #endif
@@ -70,7 +70,7 @@ static char *define_path(char *current_directory, char *string)
     char *file_name;
     char temp_name[PATH_MAX];
     char *base_name;
-#ifdef __MINGW32__
+#ifdef _WIN32
     char *last_backslash;
 #endif
 
@@ -78,7 +78,7 @@ static char *define_path(char *current_directory, char *string)
 
     strcpy(temp_name, string);
     base_name = strrchr(temp_name, '/');
-#ifdef __MINGW32__
+#ifdef _WIN32
     last_backslash = strrchr(temp_name, '\\');
     if (last_backslash > base_name) {
         base_name = last_backslash;
@@ -236,12 +236,12 @@ static char *encode_point_and_click_filename(char *input_file_name)
     // 2 extra characters for a possible leading slash and final NUL
     r = result = malloc((strlen(filename) * 4 + 2) * sizeof(char));
 
-#ifdef __MINGW32__
+#ifdef _WIN32
     *(r++) = '/';
 #endif
 
     for (char *p = filename; *p; ++p) {
-#ifdef __MINGW32__
+#ifdef _WIN32
         if (*p == '\\') {
             *p = '/';
         }
@@ -251,7 +251,7 @@ static char *encode_point_and_click_filename(char *input_file_name)
         // because they cause trouble in TeX; we will percent-encode them
         if ((*p >= 'A' && *p <= 'Z') || (*p >= 'a' && *p < 'z')
                 || (*p >= '0' && *p <= '9') || *p == '.' || *p == '/'
-#ifdef __MINGW32__
+#ifdef _WIN32
                 || *p == ':'
 #endif
                 ) {

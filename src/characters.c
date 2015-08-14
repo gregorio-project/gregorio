@@ -43,7 +43,7 @@
 #include "messages.h"
 #include "vowel/vowel.h"
 
-#ifdef __MINGW32__
+#ifdef _WIN32
 #ifndef PATH_MAX
 #define PATH_MAX _MAX_PATH
 #endif
