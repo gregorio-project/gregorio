@@ -21,13 +21,13 @@
 #define _VOWEL_H
 
 #include <stdio.h>
-#include <stdbool.h>
+#include "bool.h"
 #include "unicode.h"
 
 typedef enum rulefile_parse_status {
     RFPS_NOT_FOUND = 0,
     RFPS_FOUND,
-    RFPS_ALIASED,
+    RFPS_ALIASED
 } rulefile_parse_status;
 
 int gregorio_vowel_rulefile_parse(const char *filename, char **language,

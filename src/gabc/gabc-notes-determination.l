@@ -20,10 +20,11 @@
 
 #include "config.h"
 #include <stdio.h>
-#include <stdbool.h>
-#include <ctype.h>              /* for tolower */
+#include <ctype.h> /* for tolower */
+#include "bool.h"
 #include "struct.h"
 #include "messages.h"
+#include "support.h"
 
 #include "gabc.h"
 
@@ -42,7 +43,7 @@ static int brace_var_counter;
 static int overbrace_var, underbrace_var;
 static const char *overbrace_var_kind;
 
-static inline char pitch_letter_to_height(const char pitch) {
+static __inline char pitch_letter_to_height(const char pitch) {
     return pitch - 'a' + LOWEST_PITCH;
 }
 
@@ -55,7 +56,7 @@ static gregorio_shape punctum(const char pitch)
     }
 }
 
-static inline void lex_add_note(int i, gregorio_shape shape, char signs,
+static __inline void lex_add_note(int i, gregorio_shape shape, char signs,
         char liquescentia)
 {
     nbof_isolated_episemus = 0;
@@ -64,13 +65,13 @@ static inline void lex_add_note(int i, gregorio_shape shape, char signs,
             shape, signs, liquescentia, NULL, &notes_lloc);
 }
 
-static inline void add_bar_as_note(gregorio_bar bar)
+static __inline void add_bar_as_note(gregorio_bar bar)
 {
     nbof_isolated_episemus = 0;
     gregorio_add_bar_as_note(&current_note, bar, &notes_lloc);
 }
 
-static inline void error(void)
+static __inline void error(void)
 {
     gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
             _("undefined macro used: m%d"),
@@ -84,7 +85,7 @@ static void add_h_episemus(void) {
 
     char *ptr = gabc_notes_determination_text;
     char current;
-    // first character is the underscore
+    /* first character is the underscore */
     while ((current = *(++ptr))) {
         switch(current) {
         case '0':
@@ -130,7 +131,7 @@ static void add_sign(gregorio_sign sign) {
     gregorio_add_sign(current_note, sign, vposition);
 }
 
-static inline void add_alteration(const gregorio_type type) {
+static __inline void add_alteration(const gregorio_type type) {
     gregorio_add_alteration_as_note(&current_note, type,
             pitch_letter_to_height(gabc_notes_determination_text[0]),
             &notes_lloc);
@@ -173,7 +174,7 @@ static inline void add_alteration(const gregorio_type type) {
         BEGIN(INITIAL);
     }
 <comments>[^\n\r]* {
-        //ignored
+        /* ignored */
     }
 <INITIAL>\[cs: {
         BEGIN(choralsign);
@@ -206,7 +207,8 @@ static inline void add_alteration(const gregorio_type type) {
             char_for_brace = gabc_notes_determination_text[4]-'0';
             overbrace_var = ++brace_var_counter;
             overbrace_var_kind = "ob";
-            snprintf(tempstr, sizeof tempstr, "\\GreVarBraceSavePos{%d}{%d}{1}"
+            gregorio_snprintf(tempstr, sizeof tempstr,
+                    "\\GreVarBraceSavePos{%d}{%d}{1}"
                     "\\GreOverBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}",
                     overbrace_var, char_for_brace, overbrace_var, char_for_brace);
             gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
@@ -220,7 +222,8 @@ static inline void add_alteration(const gregorio_type type) {
         } else {
             char_for_brace = gabc_notes_determination_text[4]-'0';
             underbrace_var = ++brace_var_counter;
-            snprintf(tempstr, sizeof tempstr, "\\GreVarBraceSavePos{%d}{%d}{1}"
+            gregorio_snprintf(tempstr, sizeof tempstr,
+                    "\\GreVarBraceSavePos{%d}{%d}{1}"
                     "\\GreUnderBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}",
                     underbrace_var, char_for_brace, underbrace_var, char_for_brace);
             gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
@@ -235,7 +238,8 @@ static inline void add_alteration(const gregorio_type type) {
             char_for_brace = gabc_notes_determination_text[5]-'0';
             overbrace_var = ++brace_var_counter;
             overbrace_var_kind = "ocb";
-            snprintf(tempstr, sizeof tempstr, "\\GreVarBraceSavePos{%d}{%d}{1}"
+            gregorio_snprintf(tempstr, sizeof tempstr,
+                    "\\GreVarBraceSavePos{%d}{%d}{1}"
                     "\\GreOverCurlyBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}{0}",
                     overbrace_var, char_for_brace, overbrace_var, char_for_brace);
             gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
@@ -250,7 +254,8 @@ static inline void add_alteration(const gregorio_type type) {
             char_for_brace = gabc_notes_determination_text[6]-'0';
             overbrace_var = ++brace_var_counter;
             overbrace_var_kind = "ocba";
-            snprintf(tempstr, sizeof tempstr, "\\GreVarBraceSavePos{%d}{%d}{1}"
+            gregorio_snprintf(tempstr, sizeof tempstr,
+                    "\\GreVarBraceSavePos{%d}{%d}{1}"
                     "\\GreOverCurlyBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}{1}",
                     overbrace_var, char_for_brace, overbrace_var, char_for_brace);
             gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
@@ -268,8 +273,9 @@ static inline void add_alteration(const gregorio_type type) {
                               overbrace_var_kind);
         } else {
             char_for_brace = gabc_notes_determination_text[4]-'0';
-            snprintf(tempstr, sizeof tempstr, "\\GreVarBraceSavePos{%d}{%d}{2}",
-                    overbrace_var, char_for_brace);
+            gregorio_snprintf(tempstr, sizeof tempstr,
+                    "\\GreVarBraceSavePos{%d}{%d}{2}", overbrace_var,
+                    char_for_brace);
             overbrace_var = 0;
             gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
         }
@@ -281,8 +287,9 @@ static inline void add_alteration(const gregorio_type type) {
                                 "variable underbrace start"));
         } else {
             char_for_brace = gabc_notes_determination_text[4]-'0';
-            snprintf(tempstr, sizeof tempstr, "\\GreVarBraceSavePos{%d}{%d}{2}",
-                    underbrace_var, char_for_brace);
+            gregorio_snprintf(tempstr, sizeof tempstr,
+                    "\\GreVarBraceSavePos{%d}{%d}{2}", underbrace_var,
+                    char_for_brace);
             underbrace_var = 0;
             gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
         }
@@ -299,8 +306,9 @@ static inline void add_alteration(const gregorio_type type) {
                               overbrace_var_kind);
         } else {
             char_for_brace = gabc_notes_determination_text[5]-'0';
-            snprintf(tempstr, sizeof tempstr, "\\GreVarBraceSavePos{%d}{%d}{2}",
-                    overbrace_var, char_for_brace);
+            gregorio_snprintf(tempstr, sizeof tempstr,
+                    "\\GreVarBraceSavePos{%d}{%d}{2}", overbrace_var,
+                    char_for_brace);
             overbrace_var = 0;
             gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
         }
@@ -317,8 +325,9 @@ static inline void add_alteration(const gregorio_type type) {
                               overbrace_var_kind);
         } else {
             char_for_brace = gabc_notes_determination_text[6]-'0';
-            snprintf(tempstr, sizeof tempstr, "\\GreVarBraceSavePos{%d}{%d}{2}",
-                    overbrace_var, char_for_brace);
+            gregorio_snprintf(tempstr, sizeof tempstr,
+                    "\\GreVarBraceSavePos{%d}{%d}{2}", overbrace_var,
+                    char_for_brace);
             overbrace_var = 0;
             gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
         }
@@ -369,22 +378,26 @@ static inline void add_alteration(const gregorio_type type) {
         gregorio_add_nlba_as_note(&current_note, NLBA_END, &notes_lloc);
     }
 <overbrace>[^\]]+ {
-        snprintf(tempstr, sizeof tempstr, "\\GreOverBrace{%s}{0pt}{0pt}{%d}",
+        gregorio_snprintf(tempstr, sizeof tempstr,
+                "\\GreOverBrace{%s}{0pt}{0pt}{%d}",
                 gabc_notes_determination_text, char_for_brace);
         gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
     }
 <underbrace>[^\]]+ {
-        snprintf(tempstr, sizeof tempstr, "\\GreUnderBrace{%s}{0pt}{0pt}{%d}",
+        gregorio_snprintf(tempstr, sizeof tempstr,
+                "\\GreUnderBrace{%s}{0pt}{0pt}{%d}",
                 gabc_notes_determination_text, char_for_brace);
         gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
     }
 <overcurlybrace>[^\]]+ {
-        snprintf(tempstr, sizeof tempstr, "\\GreOverCurlyBrace{%s}{0pt}{0pt}{%d}{0}",
+        gregorio_snprintf(tempstr, sizeof tempstr,
+                "\\GreOverCurlyBrace{%s}{0pt}{0pt}{%d}{0}",
                 gabc_notes_determination_text, char_for_brace);
         gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
     }
 <overcurlyaccentusbrace>[^\]]+ {
-        snprintf(tempstr, sizeof tempstr, "\\GreOverCurlyBrace{%s}{0pt}{0pt}{%d}{1}",
+        gregorio_snprintf(tempstr, sizeof tempstr,
+                "\\GreOverCurlyBrace{%s}{0pt}{0pt}{%d}{1}",
                 gabc_notes_determination_text, char_for_brace);
         gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
     }
@@ -665,13 +678,13 @@ gregorio_note *gabc_det_notes_from_string(char *str, char *newmacros[10],
     notes_lloc.first_line = loc->first_line;
     notes_lloc.first_column = loc->first_column;
     notes_lloc.first_offset = loc->first_offset;
-    // yes... I do mean to set values from loc->first_*
+    /* yes... I do mean to set values from loc->first_* */
     notes_lloc.last_line = loc->first_line;
     notes_lloc.last_column = loc->first_column;
     notes_lloc.last_offset = loc->first_offset;
 
-    // a small optimization could uccur here: we could do it only once at the
-    // beginning of the score, not at each syllable
+    /* a small optimization could uccur here: we could do it only once at the
+     * beginning of the score, not at each syllable */
     for (i = 0; i < 10; i++) {
         notesmacros[i] = newmacros[i];
     }

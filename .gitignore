@@ -82,6 +82,8 @@ Makefile
 config.status
 lib/gregorio.pc
 src/gregorio
+src/utf8strings.h
+src/encode_utf8strings
 
 #emacs auto gen files
 auto/

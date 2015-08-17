@@ -23,8 +23,8 @@
 #include "config.h"
 #include <ctype.h>
 #include <stdio.h>
-#include <string.h>             // for strchr
-#include <stdbool.h>
+#include <string.h> /* for strchr */
+#include "bool.h"
 #include "characters.h"
 #include "struct.h"
 #include "unicode.h"
@@ -33,7 +33,7 @@
 
 #include "gabc.h"
 
-static inline char pitch_letter(const char height) {
+static __inline char pitch_letter(const char height) {
     return height + 'a' - LOWEST_PITCH;
 }
 
@@ -67,7 +67,7 @@ static void gabc_write_voice_info(FILE *f, gregorio_voice_info *voice_info)
     if (voice_info->virgula_position) {
         fprintf(f, "virgula-position: %s;\n", voice_info->virgula_position);
     }
-    // The clef, voice_info->initial_key, is now output in the gabc proper.
+    /* The clef, voice_info->initial_key, is now output in the gabc proper. */
 }
 
 /*
@@ -254,8 +254,8 @@ static void gabc_write_space(FILE *f, char type)
         fprintf(f, "!/");
         break;
     case SP_NEUMATIC_CUT:
-        // do not uncomment it, the code is strangely done but it works
-        // fprintf (f, "/");
+        /* do not uncomment it, the code is strangely done but it works */
+        /* fprintf (f, "/"); */
         break;
     default:
         gregorio_message(_("space type is unknown"), "gabc_write_space",
@@ -313,7 +313,7 @@ static void gabc_write_bar(FILE *f, char type)
     }
 }
 
-// writing the signs of a bar
+/* writing the signs of a bar */
 
 static void gabc_write_bar_signs(FILE *f, char type)
 {
@@ -350,7 +350,7 @@ static void gabc_hepisemus(FILE *f, const char *prefix, bool connect,
         fprintf(f, "5");
         break;
     case H_NORMAL:
-        // nothing to print
+        /* nothing to print */
         break;
     }
 }
@@ -407,7 +407,7 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         shape = note->u.note.shape;
     }
     switch (shape) {
-        // first we write the letters that determine the shapes
+        /* first we write the letters that determine the shapes */
     case S_PUNCTUM:
         fprintf(f, "%c", pitch_letter(note->u.note.pitch));
         break;
@@ -451,11 +451,11 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         break;
     case S_ORISCUS_AUCTUS:
         fprintf(f, "%co", pitch_letter(note->u.note.pitch));
-        // we consider that the AUCTUS is also in the liquescentia
+        /* we consider that the AUCTUS is also in the liquescentia */
         break;
     case S_ORISCUS_DEMINUTUS:
         fprintf(f, "%co", pitch_letter(note->u.note.pitch));
-        // we consider that the AUCTUS is also in the liquescentia
+        /* we consider that the AUCTUS is also in the liquescentia */
         break;
     case S_QUILISMA:
         fprintf(f, "%cw", pitch_letter(note->u.note.pitch));
@@ -612,7 +612,7 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
         current_note = glyph->u.notes.first_note;
         while (current_note) {
             gabc_write_gregorio_note(f, current_note, glyph->u.notes.glyph_type);
-            // third argument necessary for the special shape pes quadratum
+            /* third argument necessary for the special shape pes quadratum */
             current_note = current_note->next;
         }
         gabc_write_end_liquescentia(f, glyph->u.notes.liquescentia);
@@ -699,7 +699,7 @@ static void gabc_write_gregorio_elements(FILE *f, gregorio_element *element)
 {
     while (element) {
         gabc_write_gregorio_element(f, element);
-        // we don't want a bar after an end of line
+        /* we don't want a bar after an end of line */
         if (element->type != GRE_END_OF_LINE
             && (element->type != GRE_SPACE
                 || (element->type == GRE_SPACE
@@ -727,8 +727,8 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
         return;
     }
     if (syllable->text) {
-        // we call the magic function (defined in struct_utils.c), that will
-        // write our text.
+        /* we call the magic function (defined in struct_utils.c), that will
+         * write our text. */
         gregorio_write_text(false, syllable->text, f,
                             (&gabc_write_verb),
                             (&gabc_print_char),
@@ -746,19 +746,18 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
     }
     fprintf(f, "(");
     while (voice < number_of_voices - 1) {
-        // we enter this loop only in polyphony
+        /* we enter this loop only in polyphony */
         gabc_write_gregorio_elements(f, syllable->elements[voice]);
         fprintf(f, "&");
         voice++;
     }
-    // we write all the elements of the syllable.
+    /* we write all the elements of the syllable. */
     gabc_write_gregorio_elements(f, syllable->elements[voice]);
     if (syllable->position == WORD_END
         || syllable->position == WORD_ONE_SYLLABLE
         || gregorio_is_only_special(syllable->elements[0]))
-        // we assume here that if the first voice is only special, all will be
-        // only 
-        // specials too
+        /* we assume here that if the first voice is only special, all will be
+         * only specials too */
     {
         fprintf(f, ") ");
     } else {
@@ -800,10 +799,10 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     gabc_write_str_attribute(f, "meter", score->meter);
     gabc_write_str_attribute(f, "commentary", score->commentary);
     gabc_write_str_attribute(f, "arranger", score->arranger);
-    // We always create gabc of the current version; this is not derived
-    // from the input.
+    /* We always create gabc of the current version; this is not derived
+     * from the input. */
     fprintf(f, "gabc-version: %s;\n", GABC_CURRENT_VERSION);
-    // And since the gabc is generated by this program, note this.
+    /* And since the gabc is generated by this program, note this. */
     fprintf(f, "generated-by: %s %s;\n", "gregorio", GREGORIO_VERSION);
     gabc_write_str_attribute(f, "author", score->si.author);
     gabc_write_str_attribute(f, "date", score->si.date);
@@ -849,7 +848,7 @@ void gabc_write_score(FILE *f, gregorio_score *score)
             }
         }
     }
-    // at present we only allow for one clef at the start of the gabc
+    /* at present we only allow for one clef at the start of the gabc */
     gregorio_det_step_and_line_from_key(score->first_voice_info->initial_key,
                                         &step, &line);
     if (score->first_voice_info->flatted_key) {
@@ -858,7 +857,7 @@ void gabc_write_score(FILE *f, gregorio_score *score)
         fprintf(f, "(%c%d)", step, line);
     }
     syllable = score->first_syllable;
-    // the we write every syllable
+    /* the we write every syllable */
     while (syllable) {
         gabc_write_gregorio_syllable(f, syllable, score->number_of_voices);
         syllable = syllable->next_syllable;
@@ -866,4 +865,4 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     fprintf(f, "\n");
 }
 
-// And that's it... not really hard isn't it?
+/* And that's it... not really hard isn't it? */

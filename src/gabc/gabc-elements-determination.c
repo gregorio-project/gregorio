@@ -19,7 +19,7 @@
 
 #include "config.h"
 #include <stdio.h>
-#include <stdbool.h>
+#include "bool.h"
 #include "struct.h"
 #include "messages.h"
 
@@ -33,7 +33,7 @@
  * 
  */
 
-static inline bool is_puncta_ascendens(char glyph)
+static __inline bool is_puncta_ascendens(char glyph)
 {
     return glyph == G_2_PUNCTA_INCLINATA_ASCENDENS
         || glyph == G_3_PUNCTA_INCLINATA_ASCENDENS
@@ -42,7 +42,7 @@ static inline bool is_puncta_ascendens(char glyph)
         || glyph == G_PUNCTUM_INCLINATUM;
 }
 
-static inline bool is_puncta_descendens(char glyph)
+static __inline bool is_puncta_descendens(char glyph)
 {
     return glyph == G_2_PUNCTA_INCLINATA_DESCENDENS
         || glyph == G_3_PUNCTA_INCLINATA_DESCENDENS
@@ -78,14 +78,14 @@ static void close_element(gregorio_element **current_element,
  * inline function to automatically do two or three things
  * 
  */
-static inline void cut_before(gregorio_glyph *current_glyph,
+static __inline void cut_before(gregorio_glyph *current_glyph,
                               gregorio_glyph **first_glyph,
                               gregorio_glyph **previous_glyph,
                               gregorio_element **current_element)
 {
     if (*first_glyph != current_glyph) {
         close_element(current_element, first_glyph, current_glyph);
-        // yes, this is changing value close_element sets for first_glyph
+        /* yes, this is changing value close_element sets for first_glyph */
         *first_glyph = current_glyph;
         *previous_glyph = current_glyph;
     }
@@ -100,28 +100,27 @@ static inline void cut_before(gregorio_glyph *current_glyph,
 static gregorio_element *gabc_det_elements_from_glyphs(
         gregorio_glyph *current_glyph)
 {
-    // the last element we have successfully added to the list of elements
+    /* the last element we have successfully added to the list of elements */
     gregorio_element *current_element = NULL;
-    // the first element, that we will return at the end. We have to consider
-    // it
-    // because the gregorio_element struct does not have previous_element
-    // element.
+    /* the first element, that we will return at the end. We have to consider
+     * it because the gregorio_element struct does not have previous_element
+     * element. */
     gregorio_element *first_element = NULL;
-    // the first_glyph of the element that we are currently determining
+    /* the first_glyph of the element that we are currently determining */
     gregorio_glyph *first_glyph = current_glyph;
-    // the last real (GRE_GLYPH) that we have processed, often the same as
-    // first_glyph
+    /* the last real (GRE_GLYPH) that we have processed, often the same as
+     * first_glyph */
     gregorio_glyph *previous_glyph = current_glyph;
-    // a char that is necessary to determine some cases
+    /* a char that is necessary to determine some cases */
     bool do_not_cut = false;
-    // a char that is necesarry to determine the type of the current_glyph
+    /* a char that is necesarry to determine the type of the current_glyph */
     char current_glyph_type;
 
     if (!current_glyph) {
         return NULL;
     }
-    // first we go to the first glyph in the chained list of glyphs (maybe to
-    // suppress ?)
+    /* first we go to the first glyph in the chained list of glyphs (maybe to
+     * suppress ?) */
     gregorio_go_to_first_glyph(&current_glyph);
 
     while (current_glyph) {
@@ -132,7 +131,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
                 current_glyph = current_glyph->next;
                 continue;
             }
-            // we ignore flats and naturals, except if they are alone
+            /* we ignore flats and naturals, except if they are alone */
             if (current_glyph->type == GRE_NATURAL
                 || current_glyph->type == GRE_FLAT
                 || current_glyph->type == GRE_SHARP) {
@@ -143,7 +142,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
                 current_glyph = current_glyph->next;
                 continue;
             }
-            // we must not cut after a zero_width_space
+            /* we must not cut after a zero_width_space */
             if (current_glyph->type == GRE_SPACE
                 && current_glyph->u.misc.unpitched.info.space == SP_ZERO_WIDTH) {
                 if (!current_glyph->next) {
@@ -153,7 +152,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
                 do_not_cut = true;
                 continue;
             }
-            // we must not cut after a zero_width_space
+            /* we must not cut after a zero_width_space */
             if (current_glyph->type == GRE_TEXVERB_GLYPH) {
                 if (!current_glyph->next) {
                     close_element(&current_element, &first_glyph, current_glyph);
@@ -161,14 +160,14 @@ static gregorio_element *gabc_det_elements_from_glyphs(
                 current_glyph = current_glyph->next;
                 continue;
             }
-            // clef change or space or end of line
+            /* clef change or space or end of line */
             cut_before(current_glyph, &first_glyph, &previous_glyph,
                        &current_element);
-            // if statement to make neumatic cuts not appear in elements, as
-            // there is always one between elements 
+            /* if statement to make neumatic cuts not appear in elements, as
+             * there is always one between elements */
             if (current_glyph->type != GRE_SPACE
                 || current_glyph->u.misc.unpitched.info.space != SP_NEUMATIC_CUT)
-                // clef change or space other thant neumatic cut
+                /* clef change or space other thant neumatic cut */
             {
                 if (!first_element) {
                     first_element = current_element;
@@ -204,7 +203,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
             }
             break;
         case G_PUNCTA_DESCENDENS:
-            // we don't cut before, so we don't do anything
+            /* we don't cut before, so we don't do anything */
             if (do_not_cut) {
                 do_not_cut = false;
             }
@@ -214,7 +213,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
                 && (current_glyph->u.notes.first_note->u.note.shape == S_STROPHA
                     || current_glyph->u.notes.first_note->u.note.shape == S_VIRGA
                     || current_glyph->u.notes.first_note->u.note.shape == S_VIRGA_REVERSA)) {
-                // we determine the last pitch
+                /* we determine the last pitch */
                 char last_pitch;
                 gregorio_note *tmp_note;
                 tmp_note = previous_glyph->u.notes.first_note;
@@ -227,7 +226,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
                     break;
                 }
             }
-            // else we fall in the default case
+            /* else we fall in the default case */
         default:
             if (do_not_cut) {
                 do_not_cut = false;
@@ -246,7 +245,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
             close_element(&current_element, &first_glyph, current_glyph);
         }
         current_glyph = current_glyph->next;
-    } // end of while
+    } /* end of while */
 
     /*
      * we must determine the first element, that we will return 

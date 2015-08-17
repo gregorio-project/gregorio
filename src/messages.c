@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>             /* for exit() */
 #include <stdarg.h>             /* for exit() */
-#include <stdbool.h>
+#include "bool.h"
 #include "messages.h"
 
 static FILE *error_out;
@@ -74,7 +74,7 @@ static const char *verbosity_to_str(const gregorio_verbosity verbosity)
         str = _("fatal error:");
         break;
     default:
-        // INFO, for example
+        /* INFO, for example */
         str = " ";
         break;
     }
@@ -117,7 +117,7 @@ void gregorio_messagef(const char *function_name,
                         function_name, verbosity_str);
             }
         } else {
-            // no function_name specified
+            /* no function_name specified */
             if (!file_name) {
                 fprintf(error_out, "line %d: %s", line_number, verbosity_str);
             } else {
@@ -135,9 +135,9 @@ void gregorio_messagef(const char *function_name,
              */
             fprintf(error_out, "in function `%s': %s", function_name,
                     verbosity_str);
-            // }
+            /* } */
         } else {
-            // no function_name specified
+            /* no function_name specified */
             /*
              * if (!file_name) {
              *     fprintf (error_out, "%s", verbosity_str);
@@ -145,7 +145,7 @@ void gregorio_messagef(const char *function_name,
              * } else {
              */
             fprintf(error_out, "%s", verbosity_str);
-            // }
+            /* } */
         }
     }
     va_start(args, format);
