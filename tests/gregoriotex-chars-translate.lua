@@ -1,1 +1,0 @@
-../tex/gregoriotex-chars-translate.lua
