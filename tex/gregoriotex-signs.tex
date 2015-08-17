@@ -798,7 +798,7 @@
 }%
 
 \gdef\grelowchoralsignstyle#1{#1}%
-\gdef\grehighchoralsignstyle#1{#1}%
+\gdef\grehighchoralsignstyle#1{\relax}%
 
 % quite simple function: #1 is the height, #2 is the string, #3 is #2 of punctum mora, #4 is #3 of punctum mora
 % #3 is 1 if it must be a bit higher
@@ -818,8 +818,14 @@
 
 \def\GreHighChoralSign#1#2#3{%
   \grenobreak %
-  \grevepisemusorrare{#1}{#3}{}{3}{{\gre@style@highchoralsign\grehighchoralsignstyle{#2}\endgre@style@highchoralsign}}%
-  %\grehepisorline{#1}{#3}{0}{4}{{\gre@style@highchoralsign\grehighchoralsignstyle{#2}\endgre@style@highchoralsign}}
+  \protected@edef\gre@@arg{\grehighchoralsignstyle{#2}}
+  \expandafter\ifx\gre@@arg\relax%
+    \grevepisemusorrare{#1}{#3}{}{3}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}%
+  \else
+    \gre@deprecated{\protect\grehighchoralsignstyle}{\protect\grechangestyle{highchoralsign}}
+    \grevepisemusorrare{#1}{#3}{}{3}{\grehighchoralsignstyle{#2}}%
+  \fi
+  %\grehepisorline{#1}{#3}{0}{4}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}
   \relax %
 }%
 
