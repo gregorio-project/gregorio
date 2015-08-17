@@ -50,10 +50,12 @@ void gregorio_set_verbosity_mode(const gregorio_verbosity verbosity)
     verbosity_mode = verbosity;
 }
 
-void gregorio_set_debug_messages(bool debug)
+#if 0 /* unused */
+static void gregorio_set_debug_messages(bool debug)
 {
     debug_messages = debug;
 }
+#endif
 
 static const char *verbosity_to_str(const gregorio_verbosity verbosity)
 {

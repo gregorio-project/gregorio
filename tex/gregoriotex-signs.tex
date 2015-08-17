@@ -1106,7 +1106,7 @@
 }%
 
 \def\RemoveHEpisemusBridges{%
-  \gre@deprecated{\protect\RemoveHepisemusBridges}{\protect\gresethepisemus{break}}%
+  \gre@deprecated{\protect\RemoveHEpisemusBridges}{\protect\gresethepisemus{break}}%
   \gre@hepisemusbridgefalse%
 }%
 
@@ -1122,14 +1122,32 @@
 % same but for a "bridge episemus" after the last note of a glyph (element, syllable) if the next episemus is at the same height
 % #1 is the height
 % #2 is 0 for episemus above, 1 for episemus below
-\def\GreHEpisemusBridge#1#2{%
+% #3 is the "space case" for the following note, if a punctum inclinatum
+\def\GreHEpisemusBridge#1#2#3{%
   \ifgre@hepisemusbridge%
     \ifcase#2 %
       \gre@calculate@glyphraisevalue{#1}{9}%
     \or %
       \gre@calculate@glyphraisevalue{#1}{5}%
     \fi %
-    \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gregoriofont\gre@char@he@punctum{f}\hss}%
+    \IfStrEq{-1}{#3}{%
+      \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gregoriofont\gre@char@he@punctum{f}\hss}%
+    }{%
+      % special handling for punctum inclinatum
+      \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPHEpisemusPunctumReduced}%
+      \gre@dimen@temp@four = \wd\gre@box@temp@width\relax %
+      \gre@get@spaceskip{#3}%
+      % convert rubber length to dimension... not perfect but works in the usual case
+      \gre@dimen@temp@three = 1\gre@skip@temp@four\relax %
+      \raise\gre@dimen@glyphraisevalue\hbox to 0pt{%
+        \loop\ifdim\gre@dimen@temp@three > 0pt%
+          \advance\gre@dimen@temp@three by -\gre@dimen@temp@four\relax %
+          {\gregoriofont\GreCPHEpisemusPunctumReduced}%
+        \repeat %
+        \kern\gre@dimen@temp@three{\gregoriofont\GreCPHEpisemusPunctumReduced}%
+        \hss %
+      }%
+    }%
   \fi %
   \relax %
 }%

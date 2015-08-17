@@ -30,11 +30,11 @@ typedef enum rulefile_parse_status {
     RFPS_ALIASED,
 } rulefile_parse_status;
 
-int gregorio_vowel_rulefile_parse(const char *filename, const char **language,
+int gregorio_vowel_rulefile_parse(const char *filename, char **language,
         rulefile_parse_status *status);
 int gregorio_vowel_rulefile_lex_destroy(void);
 void gregorio_vowel_tables_init(void);
-void gregorio_vowel_tables_load(const char *filename, const char **language,
+void gregorio_vowel_tables_load(const char *filename, char **language,
         rulefile_parse_status *status);
 void gregorio_vowel_tables_free(void);
 void gregorio_vowel_table_add(const char *vowels);

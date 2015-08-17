@@ -32,6 +32,7 @@
 #include "unicode.h"
 #include "messages.h"
 #include "characters.h"
+#include "plugins.h"
 
 #include "gregoriotex.h"
 
@@ -59,7 +60,7 @@ typedef struct gregoriotex_status {
 #define UNDETERMINED_HEIGHT -127
 
 #define MAX_AMBITUS 5
-static char *tex_ambitus[] = {
+static const char *tex_ambitus[] = {
     NULL, "One", "Two", "Three", "Four", "Five"
 };
 
@@ -165,10 +166,11 @@ static inline bool is_shortqueue(const signed char pitch,
 static grestyle_style gregoriotex_ignore_style = ST_NO_STYLE;
 static grestyle_style gregoriotex_next_ignore_style = ST_NO_STYLE;
 
-static char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
+static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         gregorio_glyph *glyph, gregorio_element *element, gtex_alignment *type)
 {
-    static char buf[128], *name;
+    static char buf[128];
+    const char *name;
 
     if (!note) {
         gregorio_message(_("called with NULL pointer"),
@@ -288,7 +290,7 @@ static char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
  * They also are and must be the same as in squarize.py.
  */
 
-static char *gregoriotex_determine_liquescentia(gtex_glyph_liquescentia type,
+static const char *gregoriotex_determine_liquescentia(gtex_glyph_liquescentia type,
         gregorio_liquescentia liquescentia)
 {
     switch (liquescentia) {
@@ -381,12 +383,12 @@ static inline int compute_ambitus(const gregorio_note *const current_note)
     return ambitus;
 }
 
-static char *compute_glyph_name(const gregorio_glyph *const glyph,
-        char *const shape, const gtex_glyph_liquescentia ltype)
+static const char *compute_glyph_name(const gregorio_glyph *const glyph,
+        const char *const shape, const gtex_glyph_liquescentia ltype)
 {
     static char buf[BUFSIZE];
 
-    char *liquescentia = gregoriotex_determine_liquescentia(ltype,
+    const char *liquescentia = gregoriotex_determine_liquescentia(ltype,
             glyph->u.notes.liquescentia);
     gregorio_note *current_note;
     // then we start making our formula
@@ -437,11 +439,11 @@ static char *compute_glyph_name(const gregorio_glyph *const glyph,
 // calculates the type, used for determining the position of signs. Type is
 // very basic, it is only the global dimensions : torculus, one_note, etc.
 
-char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
+const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         const gregorio_element *const element, gtex_alignment *const  type,
         gtex_type *const gtype)
 {
-    char *shape = NULL;
+    const char *shape = NULL;
     gtex_glyph_liquescentia ltype;
     char pitch = 0;
     if (!glyph) {
@@ -742,7 +744,7 @@ char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
  * now part of the score info.  But we keep it here in case it may
  * be needed in future.
  */
-void gregoriotex_write_voice_info(FILE *f, gregorio_voice_info *voice_info)
+static void gregoriotex_write_voice_info(FILE *f, gregorio_voice_info *voice_info)
 {
     if (!f || !voice_info) {
         return;
@@ -1490,6 +1492,80 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
             no_space, special_punctum, punctum_inclinatum);
 }
 
+static inline int get_punctum_inclinatum_space_case(
+        const gregorio_note *const note)
+{
+    char temp;
+
+    switch (note->u.note.shape) {
+    case S_PUNCTUM_INCLINATUM:
+    case S_PUNCTUM_CAVUM_INCLINATUM:
+        if (note->previous) {
+            // means that it is the first note of the puncta inclinata sequence
+            temp = note->previous->u.note.pitch - note->u.note.pitch;
+            // if (temp < -1 || temp > 1)
+            switch (temp) {
+                // we switch on the range of the inclinata this will look
+                // somewhat strange if temp is negative... to be aligned then,
+            case -2:
+            case 2:
+                return 10;
+            case -3:
+            case 3:
+                return 11;
+            case -4:
+            case 4:
+                // not sure we ever need to consider a larger ambitus here
+                return 11;
+            default:
+                return 3;
+                break;
+            }
+        }
+        break;
+    case S_PUNCTUM_INCLINATUM_DEMINUTUS:
+        if (note->previous) {
+            // means that it is the first note of the puncta inclinata sequence
+            temp = note->previous->u.note.pitch - note->u.note.pitch;
+            if (temp < -2 || temp > 2) {
+                return 11;
+            } else {
+                if (note->previous
+                        && note->previous->u.note.shape ==
+                        S_PUNCTUM_INCLINATUM_DEMINUTUS) {
+                    if (temp < -1 || temp > 1) {
+                        // really if the ambitus = 3rd at this point
+                        return 10;
+                    } else {
+                        return 8;
+                    }
+                } else {
+                    // puncta inclinatum followed by puncta inclinatum debilis
+                    return 7;
+                }
+            }
+        }
+        break;
+    case S_PUNCTUM_INCLINATUM_AUCTUS:
+    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
+        if (note->previous) {
+            // means that it is the first note of the puncta inclinata sequence
+            temp = note->previous->u.note.pitch - note->u.note.pitch;
+            if (temp < -1 || temp > 1) {
+                return 1;
+            } else {
+                // we approximate that it is the same space
+                return 3;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+
+    return -1;
+}
+
 static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
         const gregorio_note *const note, bool connect, char height,
         const grehepisemus_size size, const int i,
@@ -1525,22 +1601,25 @@ static inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
 
         if (i - 1 != porrectus_long_episemus_index || !note->previous
                 || !is_episemus_shown(note->previous)) {
-            if (connect && (
-                        // not followed by a zero-width space
-                        (!note->next
-                            && (!glyph->next
-                                || glyph->next->type != GRE_SPACE
-                                || glyph->next->u.misc.unpitched.info.space
-                                        != SP_ZERO_WIDTH))
-                        // is a punctum inclinatum of some sort
-                        || (note->next
-                            && (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
-                                || note->next->u.note.shape
-                                        == S_PUNCTUM_INCLINATUM_DEMINUTUS
-                                || note->next->u.note.shape
-                                        == S_PUNCTUM_INCLINATUM_AUCTUS)))) {
-                fprintf(f, "\\GreHEpisemusBridge{%d}{%d}%%\n",
-                        pitch_value(height), hepisemus_case);
+            if (connect) {
+                if (!note->next && (!glyph->next
+                            || glyph->next->type != GRE_SPACE
+                            || glyph->next->u.misc.unpitched.info.space
+                            != SP_ZERO_WIDTH)) {
+                    // not followed by a zero-width space
+                    fprintf(f, "\\GreHEpisemusBridge{%d}{%d}{-1}%%\n",
+                            pitch_value(height), hepisemus_case);
+                } else if (note->next
+                        && (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
+                            || note->next->u.note.shape
+                            == S_PUNCTUM_INCLINATUM_DEMINUTUS
+                            || note->next->u.note.shape
+                            == S_PUNCTUM_INCLINATUM_AUCTUS)) {
+                    // is a punctum inclinatum of some sort
+                    fprintf(f, "\\GreHEpisemusBridge{%d}{%d}{%d}%%\n",
+                            pitch_value(height), hepisemus_case,
+                            get_punctum_inclinatum_space_case(note->next));
+                }
             }
             fprintf(f, "\\GreHEpisemus{%d}{\\GreOCase%s}{%d}{%d}{%c}{%d}%%\n",
                     pitch_value(height), note->gtex_offset_case, ambitus,
@@ -1729,8 +1808,8 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
         gregorio_glyph *glyph, gregorio_element *element, char next_note_pitch)
 {
     unsigned int initial_shape = note->u.note.shape;
-    char temp;
-    char *shape;
+    const char *shape;
+    int space_case;
     // type in the sense of GregorioTeX alignment type
     gtex_alignment type = AT_ONE_NOTE;
     if (!note) {
@@ -1759,76 +1838,9 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
     shape = gregoriotex_determine_note_glyph_name(note, glyph, element, &type);
     note->u.note.shape = initial_shape;
     // special things for puncta inclinata
-    switch (note->u.note.shape) {
-    case S_PUNCTUM_INCLINATUM:
-    case S_PUNCTUM_CAVUM_INCLINATUM:
-        if (note->previous) {
-            // means that it is the first note of the puncta inclinata sequence
-            temp = note->previous->u.note.pitch - note->u.note.pitch;
-            // if (temp < -1 || temp > 1)
-            switch (temp)       // we switch on the range of the inclinata
-            {
-                // this will look somewhat strange if temp is negative... to be
-                // aligned then,
-                // the second note should really shift differently
-            case -2:
-            case 2:
-                fprintf(f, "\\GreEndOfGlyph{10}%%\n");
-                break;
-            case -3:
-            case 3:
-                fprintf(f, "\\GreEndOfGlyph{11}%%\n");
-                break;
-            case -4:
-            case 4:            // not sure we ever need to consider a larger
-                // ambitus here
-                fprintf(f, "\\GreEndOfGlyph{11}%%\n");
-                break;
-            default:
-                fprintf(f, "\\GreEndOfGlyph{3}%%\n");
-                break;
-            }
-        }
-        break;
-    case S_PUNCTUM_INCLINATUM_DEMINUTUS:
-        if (note->previous) {
-            // means that it is the first note of the puncta inclinata sequence
-            temp = note->previous->u.note.pitch - note->u.note.pitch;
-            if (temp < -2 || temp > 2) {
-                fprintf(f, "\\GreEndOfGlyph{11}%%\n");
-            } else {
-                if (note->previous
-                        && note->previous->u.note.shape ==
-                        S_PUNCTUM_INCLINATUM_DEMINUTUS) {
-                    if (temp < -1 || temp > 1)
-                        // really if the ambitus = 3rd at this point
-                    {
-                        fprintf(f, "\\GreEndOfGlyph{10}%%\n");
-                    } else {
-                        fprintf(f, "\\GreEndOfGlyph{8}%%\n");
-                    }
-                } else {
-                    // puncta inclinatum followed by puncta inclinatum debilis
-                    fprintf(f, "\\GreEndOfGlyph{7}%%\n");
-                }
-            }
-        }
-        break;
-    case S_PUNCTUM_INCLINATUM_AUCTUS:
-    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
-        if (note->previous) {
-            // means that it is the first note of the puncta inclinata sequence
-            temp = note->previous->u.note.pitch - note->u.note.pitch;
-            if (temp < -1 || temp > 1) {
-                fprintf(f, "\\GreEndOfGlyph{1}%%\n");
-            } else {
-                // we approximate that it is the same space
-                fprintf(f, "\\GreEndOfGlyph{3}%%\n");
-            }
-        }
-        break;
-    default:
-        break;
+    space_case = get_punctum_inclinatum_space_case(note);
+    if (space_case >= 0) {
+        fprintf(f, "\\GreEndOfGlyph{%d}%%\n", space_case);
     }
 
     switch (note->u.note.shape) {
@@ -2222,7 +2234,7 @@ static char *determine_leading_shape(gregorio_glyph *glyph)
 {
     static char buf[BUFSIZE];
     int ambitus = compute_ambitus(glyph->u.notes.first_note);
-    char *head, *head_liquescence;
+    const char *head, *head_liquescence;
 
     switch (glyph->u.notes.first_note->u.note.shape) {
     case S_QUILISMA:
@@ -2269,7 +2281,7 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
     gtex_type gtype = 0;
     char next_note_pitch = 0;
     gregorio_note *current_note;
-    char *leading_shape, *shape;
+    const char *leading_shape, *shape;
     if (!glyph) {
         gregorio_message(_("called with NULL pointer"),
                 "gregoriotex_write_glyph", VERBOSITY_ERROR, 0);
@@ -2592,7 +2604,7 @@ static void gregoriotex_print_change_line_clef(FILE *f,
     }
 }
 
-static void handle_final_bar(FILE *f, char *type, gregorio_syllable *syllable)
+static void handle_final_bar(FILE *f, const char *type, gregorio_syllable *syllable)
 {
     fprintf(f, "\\GreFinal%s{%%\n", type);
     // first element will be the bar, which we just handled, so skip it
@@ -2672,6 +2684,7 @@ static inline bool next_is_bar(const gregorio_syllable *syllable,
     }
 
     assert(false); // should never reach here
+    return false; // avoid gcc 5.1 warning
 }
 
 static inline void write_syllable_point_and_click(FILE *const f,

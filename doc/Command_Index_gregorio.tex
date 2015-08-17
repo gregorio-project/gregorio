@@ -159,7 +159,7 @@ defined and re-defined by the \verb=\gresetgregoriofont= macro.
 A class of macros which point to the individual characters in a Gregoiro\TeX\ compatible font.  This class of macros is dynamically mapped from the glyph names embedded in the \texttt{ttf} file via a Lua script to ensure that the code points match up with the installed font.
 
 \macroname{\textbackslash GreCusto}{\#1}{gregoriotex-signs.tex}
-Typesets a custo.
+Typesets a custos.
 
 \begin{argtable}
   \#1 & integer & Height number of custos.\\
@@ -380,7 +380,19 @@ Macro to typeset a bridge episemus father the last note of a glyph
 \begin{argtable}
   \#1 & integer & Height number of the episemus.\\
   \#2 & 0 & Episemus above the note.\\
-  & 1 & Episemus below the note.
+  & 1 & Episemus below the note.\\
+  \#3 & 0 & Default space.\\
+      & 1 & Zero-width space.\\
+      & 2 & Space between flat or natural and a note.\\
+      & 3 & Space between two puncta inclinata.\\
+      & 4 & Space between bivirga or trivirga.\\
+      & 5 & space between bistropha or tristropha.\\
+      & 6 & Space after a punctum mora XXX: not used yet, not so sure it is a good idea\ldots\\
+      & 7 & Space between a punctum inclinatum and a punctum inclinatum debilis.\\
+      & 8 & Space between two puncta inclinata debilis.\\
+      & 9 & Space before a punctum (or something else) and a punctum inclinatum.\\
+      & 10 & Space between puncta inclinata (also debilis for now), larger ambitus (range=3rd).\\
+      & 11 & Space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more).
 \end{argtable}
 
 \macroname{\textbackslash GreHighChoralSign}{\#1\#2\#3}{gregoriotex-signs.tex}
@@ -424,7 +436,7 @@ in gabc.
 \end{argtable}
 
 \macroname{\textbackslash GreLastOfLine}{}{gregoriotex-main.tex}
-Macro to set \verb=\gre@lastoflinecount= to 1 (i.e. mark that this syllable is the last of the line).
+Macro to set \verb=\gre@lastoflinecount= to 1 (\ie, mark that this syllable is the last of the line).
 
 \macroname{\textbackslash GreLastOfScore}{}{gregoriotex-main.tex}
 Macro to mark the syllable as the last of the score.

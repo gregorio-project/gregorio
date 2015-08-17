@@ -138,7 +138,7 @@ gregorio_character *gregorio_build_char_list_from_buf(const char *const buf)
 // the function to compare a grewchar * and a buf. Returns 1 if different, 0
 // if not.
 
-unsigned char gregorio_wcsbufcmp(grewchar *wstr, char *buf)
+unsigned char gregorio_wcsbufcmp(grewchar *wstr, const char *buf)
 {
     int i = 0;
     size_t len;

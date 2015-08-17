@@ -46,7 +46,7 @@ static inline char pitch_letter_to_height(const char pitch) {
     return pitch - 'a' + LOWEST_PITCH;
 }
 
-gregorio_shape punctum(const char pitch)
+static gregorio_shape punctum(const char pitch)
 {
     if (pitch < 'a') {
         return S_PUNCTUM_INCLINATUM;
@@ -60,7 +60,7 @@ static inline void lex_add_note(int i, gregorio_shape shape, char signs,
 {
     nbof_isolated_episemus = 0;
     gregorio_add_note(&current_note,
-            pitch_letter_to_height(tolower(gabc_notes_determination_text[i])),
+            pitch_letter_to_height(tolower((unsigned char)gabc_notes_determination_text[i])),
             shape, signs, liquescentia, NULL, &notes_lloc);
 }
 

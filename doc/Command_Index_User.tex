@@ -341,7 +341,7 @@ Macro for setting whether the staff lines behind an alternation (\ie, an acciden
 
 
 \subsubsection{Score Font}
-Gregorio\TeX\ currently supports 3 different fonts for the glyphs in a score (neumes, clefs, alterations, \etc): Greciliae (a customized version of Caeciliae by Fr. Matthew Spencer, OSJ), Gregorio, and Parmesan (developed for Lilypond by Juergen Reuter).
+Gregorio\TeX\ currently supports 3 different fonts for the glyphs in a score (neumes, clefs, alterations, \etc): Greciliae (a customized version of Caeciliae by Fr.\ Matthew Spencer, OSJ), Gregorio, and Parmesan (developed for Lilypond by Juergen Reuter).
 
 \macroname{\textbackslash gresetgregoriofont}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
 Set the font used for the neumes.  The optional argument \texttt{[\#1]}
@@ -604,7 +604,7 @@ Command to change styling of a score element.
 \begin{argtable}
   \#1 & string & element whose styling is to be changed (see list above for options)\\
   \#2 & \TeX\ code & the code necessary to turn on the styling\\
-  \#3 & \TeX\ code & Optional.  The code necessary to turn off the styling (e.g. if the code to turn on the styling contains a \verb=\begin{environment}= then the code to turn it off must have the matching \verb=\end{environment}=.
+  \#3 & \TeX\ code & Optional.  The code necessary to turn off the styling (\eg, if the code to turn on the styling contains a \verb=\begin{environment}= then the code to turn it off must have the matching \verb=\end{environment}=.
 \end{argtable}
 
 Examples:\par\medskip
@@ -869,7 +869,7 @@ Minimum space between two notes of different syllables.
 Default: \unit[0.25523]{cm} plus \unit[0.31903]{cm} minus \unit[0]{cm}
 
 \macroname{spacebeforecusto}{}{gsp-default.tex}
-Space before custo.  
+Space before custos.  
 
 Default: \unit[0.1823]{cm} plus \unit[0.31903]{cm} minus \unit[0.0638]{cm}
 

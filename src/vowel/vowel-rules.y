@@ -46,7 +46,7 @@
 //int gregorio_vowel_rulefile_debug=1;
 
 static void gregorio_vowel_rulefile_error(const char *const filename,
-        const char **const language, rulefile_parse_status *const status,
+        char **const language, rulefile_parse_status *const status,
         const char *const error_str)
 {
     IGNORE(language);
@@ -56,7 +56,7 @@ static void gregorio_vowel_rulefile_error(const char *const filename,
 }
 
 // this returns false until the language *after* the desired language
-static inline bool match_language(const char **language,
+static inline bool match_language(char **language,
         rulefile_parse_status *status, char *const name)
 {
     if (*status == RFPS_FOUND) {
@@ -72,22 +72,22 @@ static inline bool match_language(const char **language,
     return false;
 }
 
-static inline void alias(const char **const language,
-        rulefile_parse_status *const status, const char *const name,
-        const char *const target)
+static inline void alias(char **const language,
+        rulefile_parse_status *const status, char *const name,
+        char *const target)
 {
     if (strcmp(*language, name) == 0) {
         gregorio_messagef("alias", VERBOSITY_INFO, 0, _("Aliasing %s to %s"),
                 name, target);
         if (*status == RFPS_ALIASED) {
-            free((void *)*language);
+            free(*language);
         }
         *language = target;
         *status = RFPS_ALIASED;
     } else {
-        free((void *)target);
+        free(target);
     }
-    free((void *)name);
+    free(name);
 }
 
 static inline void add(const rulefile_parse_status *const status,
@@ -107,7 +107,7 @@ static inline void add(const rulefile_parse_status *const status,
 
 %name-prefix "gregorio_vowel_rulefile_"
 %parse-param { const char *const filename }
-%parse-param { const char **language }
+%parse-param { char **language }
 %parse-param { rulefile_parse_status *const status }
 
 %token LANGUAGE VOWEL PREFIX SUFFIX SECONDARY ALIAS SEMICOLON TO

@@ -21,7 +21,11 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#ifdef USE_KPSE
+#include <kpathsea/kpathsea.h>
+#else
 #include <getopt.h>
+#endif
 #include <libgen.h>             /* for basename */
 #include <string.h>             /* for strcmp */
 #include <locale.h>
@@ -32,9 +36,6 @@
 #include "characters.h"
 #include "gabc/gabc.h"
 #include "vowel/vowel.h"
-#ifdef USE_KPSE
-    #include <kpathsea/kpathsea.h>
-#endif
 
 #ifndef MODULE_PATH_ENV
 #define MODULE_PATH_ENV        "MODULE_PATH"
@@ -131,7 +132,7 @@ static char *get_base_filename(char *fbasename)
 }
 
 // function that adds the good extension to a basename (without extension)
-static char *get_output_filename(char *fbasename, char *extension)
+static char *get_output_filename(char *fbasename, const char *extension)
 {
     char *output_filename = NULL;
     output_filename =
@@ -275,9 +276,6 @@ int main(int argc, char **argv)
         "Copyright (C) 2006-2015 Gregorio project authors (see CONTRIBUTORS.md)";
     int c;
 
-    #ifdef USE_KPSE
-        kpse_set_program_name("gregorio", "gregorio");
-    #endif
     char *input_file_name = NULL;
     char *output_file_name = NULL;
     char *output_basename = NULL;
@@ -308,6 +306,9 @@ int main(int argc, char **argv)
     };
     gregorio_score *score = NULL;
 
+    #ifdef USE_KPSE
+        kpse_set_program_name("gregorio", "gregorio");
+    #endif
     if (argc == 1) {
         print_usage(argv[0]);
         exit(0);
