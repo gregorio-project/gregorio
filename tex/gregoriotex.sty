@@ -196,6 +196,10 @@
 \newenvironment{gre@style@modeline}%
   {\begingroup\begin{scshape}\begin{bfseries}}%
   {\end{bfseries}\end{scshape}\endgroup}%
+  
+\newenvironment{gre@style@nabc}%
+  {\begingroup\color{red}}%
+  {\endgroup}%
 
 \def\gre@changestyle#1#2[#3]{%
   \renewenvironment{gre@style@#1}{\begingroup#2}{#3\endgroup}%

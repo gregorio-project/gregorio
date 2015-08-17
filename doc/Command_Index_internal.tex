@@ -568,7 +568,7 @@ Macro to store the catcode for ``\@'' so that we can use said symbol in function
 \macroname{\textbackslash gre@setstylefont}{}{gregoriotex-main.tex}
 Macro for opening up greextra font.
 
-\macroname{\textbackslash gre@syllablenotes}{#1}{gregoriotex-syllable.tex}
+\macroname{\textbackslash gre@syllablenotes}{\#1}{gregoriotex-syllable.tex}
 Macro for populating \verb=\gre@box@syllablenotes=.
 
 \begin{argtable}
@@ -652,11 +652,11 @@ Macro for raising a bug error when some calculation goes awry and comes up with 
 \macroname{\textbackslash gre@changestyle}{\#1\#2[\#3]}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Workhorse function behind \verb=\grechangestyle=.  Necessary because the internals of the definition are slightly different in \LaTeX\ and Plain\TeX.
 
-\macroname{\textbackslash gre@compute@bolshift{\#1\#2}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@compute@bolshift}{\#1\#2}{gregoriotex-spaces.tex}
 Macro used in \verb=\GreSyllable=. Sets \verb=\gre@skip@bolshift= to the left kern that should appear at the beginning of a line in case of a forced linebreak.  The goal of this left kern is to have all lines aligned on notes.
 
 \begin{argtable}
-  \#1 & dimension & \gre@dimen@begindifference of the first syllable of the line\\
+  \#1 & dimension & \verb=\gre@dimen@begindifference= of the first syllable of the line\\
   \#2 & 0 & No need to worry about a Lua\TeX\ bug\\
   & 1 & Apply correction for Lua\TeX\ bug\\
 \end{argtable}
@@ -755,6 +755,14 @@ desired case.
       & 11 & Space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more).\\
 \end{argtable}
 
+\macroname{\textbackslash gre@nabcfont}{}{gregoriotex-nabc.tex}
+Macro to apply the font for the \texttt{nabc} notation.
+
+\macroname{\textbackslash gre@nabcfontname}{}{gregoriotex-main.tex}
+Macro which stores the name of the currently selected font for \texttt{nabc}.
+
+\macroname{\textbackslash gre@nabcfontsize}{}{gregoriotex-main.tex}
+Macro which stores the size of the currently selected font for \texttt{nabc}.
 
 
 \subsection{Auxiliary File}
@@ -992,6 +1000,10 @@ Boolean which specifies if we have to keep the localrightbox until the end.
 
 \macroname{\textbackslash gre@compilegabc}{}{gregoriotex-main.tex}
 Macro which specifies the default compilation behavior: never compile (0), auto compile (1), or always compile (2).
+
+\macroname{\textbackslash ifgre@nabcfontloaded}{}{gregoriotex-nabc.tex}
+Boolean which indicates whether the \texttt{nabc} font has been loaded.
+
 
 \subsection{Boxes}
 

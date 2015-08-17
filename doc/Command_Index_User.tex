@@ -594,6 +594,7 @@ Different elements of an include score have different styles applied.  These ele
   \texttt{firstsyllableinitial} & the first letter of the first syllable of a score which is not the score initial & none\\
   \texttt{firstsyllable} & the balance of the first syllable of the score & none\\
   \texttt{modeline} & the rendered annotation from the \texttt{mode: ;} header in the gabc file & \textsc{\textbf{Bold Small Capitals}}\\
+  \texttt{nabc} & ancient notation & red under \LaTeX, none under Plain\TeX\\
 \end{tabular}
 
 \textit{Special:} By default, \texttt{additionalstafflines} inherits its properties from \texttt{normalstafflines}.  To decouple these environments, you must manually change \texttt{additionalstafflines} using \texttt{\textbackslash grechangestyle}.
@@ -805,6 +806,18 @@ make the bar brace wider and smaller numbers make the brace narrower.
 This must be a positive number, defaults to \texttt{.58879}, and
 harmonizes with the greciliae font.  This macro must be redefined should
 a different value be desired.
+
+
+\subsubsection{Ancient Notation}
+For a full description of how to make use of the ancient notation capabilities of gregorio and Gregorio\TeX, look at the GregorioNabcRef documentation.  The commands listed here allow the manipulation of settings related to that notation.
+
+\macroname{\textbackslash gresetnabcfont}{\{\#1\}\{\#2\}}{gregoriotex-nabc.tex}
+Macro to set the font to be used for the ancient notation.
+
+\begin{argtable}
+  \#1 & string & the name of the font\\
+  \#2 & integer & point size at which the font should be loaded\\
+\end{argtable}
 
 
 \subsection{Distances}\label{distances}
@@ -1109,6 +1122,16 @@ A shift you can give to the accentus above the curly brace.
 
 Default: $\unit[-0.05]{cm}$
 
+\macroname{\textbackslash nabcinterelementspace}{}{gsp-default.tex}
+Space between elements in ancient notation.
+
+Default: \unit[0.06927]{cm} plus \unit[0.00182]{cm} minus \unit[0.00363]{cm}
+
+\macroname{\textbackslash nabclargerspace}{}{gsp-default.tex}
+Larger space between elements in ancient notation.
+
+Default: \unit[0.10938]{cm} plus \unit[0.01822]{cm} minus \unit[0.00911]{cm}
+
 \macroname{\textbackslash clivisalignmentmin}{}{gsp-defualt.tex}
 When \verb=\gre@clivisalignment= is 2, this distance is the maximum length of the consonants after vowels for which the clivis will be aligned on its center.
 
@@ -1197,6 +1220,9 @@ Default: 9000
 The pretolerance within a score.
 
 Default: $-1$ (Lua\TeX\ versions prior to 0.78) or \verb=\pretolerance= (all others)
+
+
+
 
 
 \subsection{Colors}\label{colors}

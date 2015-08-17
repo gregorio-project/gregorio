@@ -1984,7 +1984,7 @@ static inline void write_low_choral_sign(FILE *const f,
 {
     fprintf(f, "\\GreLowChoralSign{%d}{%s%s%s}{%d}%%\n",
             pitch_value(note->u.note.pitch),
-            note->choral_sign_is_nabc? "\\gregorionabccchar{" : "",
+            note->choral_sign_is_nabc? "\\GreNABCChar{" : "",
             note->choral_sign, note->choral_sign_is_nabc? "}" : "", special);
 }
 
@@ -1993,7 +1993,7 @@ static inline void write_high_choral_sign(FILE *const f,
 {
     fprintf(f, "\\GreHighChoralSign{%d}{%s%s%s}{\\GreOCase%s}%%\n",
             pitch_value(note->u.note.pitch + pitch_offset),
-            note->choral_sign_is_nabc? "\\gregorionabcchar{" : "",
+            note->choral_sign_is_nabc? "\\GreNABCChar{" : "",
             note->choral_sign, note->choral_sign_is_nabc? "}" : "",
             note->gtex_offset_case);
 }
@@ -2847,7 +2847,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             size_t i;
             for (i = 0; i < element->nabc_lines; i++) {
                 if (element->nabc[i]) {
-                    fprintf(f, "\\nabcneumes{%d}{%s}%%\n", (int)(i+1),
+                    fprintf(f, "\\GreNABCNeumes{%d}{%s}%%\n", (int)(i+1),
                             element->nabc[i]);
                 }
             }
@@ -3168,7 +3168,7 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         break;
     }
     if (score->nabc_lines) {
-        fprintf(f, "\\scorenabclines{%d}", (int)score->nabc_lines);
+        fprintf(f, "\\GreScorNABCLines{%d}", (int)score->nabc_lines);
     }
     // we select the good font -- Deprecated (remove in next release)
     if (score->gregoriotex_font) {
