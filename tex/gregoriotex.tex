@@ -58,12 +58,12 @@
 \message{#1}%
 \endgroup}%
 
-\ifx\csname gre@debug\endcsname\relax%
+\ifcsname gre@debug\endcsname%
 \else%
   \def\gre@debug{}%
 \fi%
 
-\ifx\csname f@size\endcsname\relax%
+\ifcsname f@size\endcsname%
 \else%
   \def\f@size{\directlua{gregoriotex.font_size()}}%
 \fi%
