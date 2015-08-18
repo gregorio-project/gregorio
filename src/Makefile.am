@@ -126,7 +126,7 @@ vowel/vowel-rules-l.h: vowel/vowel-rules-l.c
 
 utf8strings.h: utf8strings.h.in
 	$(MAKE) $(AM_MAKEFLAGS) encode_utf8strings${EXEEXT}
-	encode_utf8strings${EXEEXT} $< $@
+	./encode_utf8strings${EXEEXT} $< $@
 
 encode_utf8strings${EXEEXT}: encode_utf8strings.c
 	$(CC) -o $@ $<
