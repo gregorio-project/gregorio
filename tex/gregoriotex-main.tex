@@ -60,6 +60,12 @@
   \relax%
 }%
 
+\def\gre@obsolete#1#2{%
+  \greerror{#1\space is obsolete.\MessageBreak Use #2\space instead}%
+  \relax%
+}%
+
+
 \def\gre@nothing{}
 
 \AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
@@ -1565,19 +1571,19 @@
 }%
 
 \def\includetexscore#1{%
-  \gre@warning{\protect\includetexscore\space is obsolete. \MessageBreak Use \protect\gregorioscore[n]\space instead}%
+  \gre@obsolete{\protect\includetexscore}{\protect\gregorioscore[n]}%
 }%
 
 \def\greincludetexscore#1{%
-  \gre@warning{\protect\greincludetexscore\space is obsolete.\MessageBreak Use \protect\gregorioscore[n]\space instead}%
+  \gre@obsolete{\protect\greincludetexscore}{\protect\gregorioscore[n]}%
 }%
 
 \def\includegabcscore#1{%
-  \gre@warning{\protect\includegabcscore\space is obsolete.\MessageBreak Use \protect\gregorioscore[c]\space instead}%
+  \gre@obsolete{\protect\includegabcscore}{\protect\gregorioscore[c]}%
 }%
 
 \def\greincludegabcscore#1{%
-  \gre@warning{\protect\greincludegabcscore\space is obsolete.\MessageBreak Use \protect\gregorioscore[c]\space instead}%
+  \gre@obsolete{\protect\greincludegabcscore}{\protect\gregorioscore[c]}%
 }%
 
 % The internal macro called when \gregorioscore is called with the optional argument.  Behavior is determined by the value of the argument:
