@@ -162,7 +162,7 @@
 }%
 
 \def\gresetstafflinefactor#1{%
-  \gre@error{\protect\gresetstafflinefactor\space is obsolete.\MessageBreak Use \protect\grechangestafflinethickness\space instead.}%
+  \gre@obsolete{\protect\gresetstafflinefactor}{\protect\grechangestafflinethickness}%
 }%
 
 %constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
@@ -671,15 +671,25 @@
 
 % macro to tell gregorio to set space for the translation
 \def\gre@addtranslationspace{%
-  \gre@style@translation%
-  \gretranslationformat{%
-    \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight %
-    \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext %
-    \global\advance\gre@dimen@textlower by \gre@dimen@translationheight %
-    \gre@generatelines %
-    \gre@calculate@constantglyphraise %
-  }%
-  \endgre@style@translation%
+  \protected@edef\gre@@arg{\gretranslationformat{a}}%  DEPRECATED
+  \expandafter\ifx\gre@@arg\relax% DEPRECATED
+    \gre@style@translation% keep this line
+    \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight % keep this line
+    \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext % keep this line
+    \global\advance\gre@dimen@textlower by \gre@dimen@translationheight % keep this line
+    \gre@generatelines % keep this line
+    \gre@calculate@constantglyphraise % keep this line
+    \endgre@style@translation% keep this line
+  \else%  DEPRECATED
+    \gre@deprecated{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  DEPRECATED
+    \gretranslationformat{% DEPRECATED
+      \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight % DEPRECATED
+      \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext % DEPRECATED
+      \global\advance\gre@dimen@textlower by \gre@dimen@translationheight % DEPRECATED
+      \gre@generatelines % DEPRECATED
+      \gre@calculate@constantglyphraise % DEPRECATED
+    }% DEPRECATED
+  \fi%  DEPRECATED
   \relax %
 }%
 
@@ -1247,7 +1257,7 @@
 }%
 
 \def\GreSetAboveInitialSeparation#1{%
-  \gre@error{\protect\GreSetAboveInitialSeparation\space is obsolete.\MessageBreak Use \protect\grechangedim\{annotationseparation\}\space instead.}%
+  \gre@obsolete{\protect\GreSetAboveInitialSeparation}{\protect\grechangedim\{annotationseparation\}}%
 }%
 
 %To change the space after the initial

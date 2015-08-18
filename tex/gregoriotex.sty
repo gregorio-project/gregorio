@@ -73,14 +73,12 @@
 \definecolor{grebackgroundcolor}{RGB}{255,255,255}%
 \definecolor{gregoriocolor}{RGB}{229,53,44}
 
-
-\def\greinitialformat#1{%
-  {\fontsize{40}{40}\selectfont #1}%
+%% The following two functions are defined for backwards compatibility.  They will eventually be removed.
+\def\greinitialformat#1{% DEPRECATED
   \relax %
 }
 
-\def\grebiginitialformat#1{%
-  {\fontsize{80}{80}\selectfont #1}%
+\def\grebiginitialformat#1{% DEPRECATED
   \relax %
 }
 
@@ -145,10 +143,6 @@
 
 \let\normallines\grenormallines
 
-\def\greabovelinestextstyle#1{%
-  \small\textit{#1}%
-  \relax %
-}
 %%%%%%%%%%%%%%%%%%%%
 %% Formatting environments
 %%%%%%%%%%%%%%%%%%%%
