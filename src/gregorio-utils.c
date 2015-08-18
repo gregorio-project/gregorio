@@ -23,17 +23,20 @@
 #include <stdlib.h>
 #ifdef USE_KPSE
 #include <kpathsea/kpathsea.h>
+#define gregorio_basename xbasename
 #else
 #include <getopt.h>
+#include <libgen.h> /* for basename */
+#define gregorio_basename basename
 #endif
-#include <libgen.h>             /* for basename */
-#include <string.h>             /* for strcmp */
+#include <string.h> /* for strcmp */
 #include <locale.h>
 #include <limits.h>
 #include "struct.h"
 #include "plugins.h"
 #include "messages.h"
 #include "characters.h"
+#include "support.h"
 #include "gabc/gabc.h"
 #include "vowel/vowel.h"
 
@@ -45,7 +48,7 @@ typedef enum gregorio_file_format {
     FORMAT_UNSET = 0,
     GABC,
     GTEX,
-    DUMP,
+    DUMP
 } gregorio_file_format;
 
 #define GABC_STR "gabc"
@@ -55,8 +58,8 @@ typedef enum gregorio_file_format {
 #define DEFAULT_INPUT_FORMAT    GABC
 #define DEFAULT_OUTPUT_FORMAT   GTEX
 
-// realpath is not in mingw32
-#ifdef __MINGW32__
+/* realpath is not in mingw32 */
+#ifdef _WIN32
 #ifndef PATH_MAX
 #define PATH_MAX _MAX_PATH
 #endif
@@ -69,7 +72,7 @@ static char *define_path(char *current_directory, char *string)
     char *file_name;
     char temp_name[PATH_MAX];
     char *base_name;
-#ifdef __MINGW32__
+#ifdef _WIN32
     char *last_backslash;
 #endif
 
@@ -77,44 +80,44 @@ static char *define_path(char *current_directory, char *string)
 
     strcpy(temp_name, string);
     base_name = strrchr(temp_name, '/');
-#ifdef __MINGW32__
+#ifdef _WIN32
     last_backslash = strrchr(temp_name, '\\');
     if (last_backslash > base_name) {
         base_name = last_backslash;
     }
 #endif
     if (base_name) {
-        // some path was supplied
+        /* some path was supplied */
 
         *base_name = '\0';
         base_name++;
 
-        // try to resolve it
+        /* try to resolve it */
         if (!realpath(temp_name, file_name)) {
             fprintf(stderr, "the directory %s for %s does not exist\n",
                     file_name, base_name);
             exit(-1);
         }
     } else {
-        // no path was supplied
+        /* no path was supplied */
         base_name = string;
         strcpy(file_name, current_directory);
     }
 
-    // make sure we're not bigger than PATH_MAX
+    /* make sure we're not bigger than PATH_MAX */
     length = strlen(file_name);
     if (length + strlen(base_name) + 1 >= PATH_MAX) {
         fprintf(stderr, "filename too long: %s/%s\n", file_name, base_name);
         exit(-1);
     }
-    // build the file name
+    /* build the file name */
     file_name[length] = '/';
     strcpy(file_name + length + 1, base_name);
 
     return file_name;
 }
 
-// function that returns the filename without the extension
+/* function that returns the filename without the extension */
 static char *get_base_filename(char *fbasename)
 {
     char *p;
@@ -126,12 +129,12 @@ static char *get_base_filename(char *fbasename)
     }
     l = strlen(fbasename) - strlen(p);
     ret = (char *) malloc((l + 1) * sizeof(char));
-    snprintf(ret, l + 1, "%s", fbasename);
+    gregorio_snprintf(ret, l + 1, "%s", fbasename);
     ret[l] = '\0';
     return ret;
 }
 
-// function that adds the good extension to a basename (without extension)
+/* function that adds the good extension to a basename (without extension) */
 static char *get_output_filename(char *fbasename, const char *extension)
 {
     char *output_filename = NULL;
@@ -223,42 +226,42 @@ static void check_input_clobber(char *input_file_name, char *output_file_name)
 
 static char *encode_point_and_click_filename(char *input_file_name)
 {
-    // percent-encoding favors capital hex digits
+    /* percent-encoding favors capital hex digits */
     static const char *const hex = "0123456789ABCDEF";
-    char filename[PATH_MAX], *result = NULL, *r = NULL;
+    char filename[PATH_MAX], *result = NULL, *r = NULL, *p;
 
     if (!realpath(input_file_name, filename)) {
         fprintf(stderr, "error: unable to resolve %s\n", input_file_name);
         exit(-1);
     }
 
-    // 2 extra characters for a possible leading slash and final NUL
+    /* 2 extra characters for a possible leading slash and final NUL */
     r = result = malloc((strlen(filename) * 4 + 2) * sizeof(char));
 
-#ifdef __MINGW32__
+#ifdef _WIN32
     *(r++) = '/';
 #endif
 
-    for (char *p = filename; *p; ++p) {
-#ifdef __MINGW32__
+    for (p = filename; *p; ++p) {
+#ifdef _WIN32
         if (*p == '\\') {
             *p = '/';
         }
 #endif
 
-        // note that -, _ and ~ are conspicuously missing from this list
-        // because they cause trouble in TeX; we will percent-encode them
+        /* note that -, _ and ~ are conspicuously missing from this list
+         * because they cause trouble in TeX; we will percent-encode them */
         if ((*p >= 'A' && *p <= 'Z') || (*p >= 'a' && *p < 'z')
                 || (*p >= '0' && *p <= '9') || *p == '.' || *p == '/'
-#ifdef __MINGW32__
+#ifdef _WIN32
                 || *p == ':'
 #endif
                 ) {
             *(r++) = *p;
         }
         else {
-            // percent-encode anything else
-            *(r++) = '\\'; // must escape it because it's TeX
+            /* percent-encode anything else */
+            *(r++) = '\\'; /* must escape it because it's TeX */
             *(r++) = '%';
             *(r++) = hex[(*p >> 4) & 0x0FU];
             *(r++) = hex[*p & 0x0FU];
@@ -328,7 +331,7 @@ int main(int argc, char **argv)
                         output_file_name);
                 break;
             }
-            if (output_file) {  // means that stdout is defined
+            if (output_file) {  /* means that stdout is defined */
                 fprintf(stderr,
                         "warning: can't write to file and stdout, writing on stdout\n");
                 break;
@@ -342,7 +345,7 @@ int main(int argc, char **argv)
                         output_file_name);
                 break;
             }
-            if (output_file) {  // means that stdout is defined
+            if (output_file) {  /* means that stdout is defined */
                 fprintf(stderr, "warning: option used two times: %c\n", c);
                 break;
             }
@@ -401,7 +404,7 @@ int main(int argc, char **argv)
                         input_file_name);
                 break;
             }
-            if (input_file) {   // means that stdin is defined
+            if (input_file) { /* means that stdin is defined */
                 fprintf(stderr, "warning: option used two times: %c\n", c);
                 break;
             }
@@ -453,9 +456,9 @@ int main(int argc, char **argv)
             break;
         }
         number_of_options++;
-    }                           // end of while
+    } /* end of while */
     if (optind == argc) {
-        if (!input_file) {      // input not undefined (could be stdin)
+        if (!input_file) { /* input not undefined (could be stdin) */
             fprintf(stderr, "error: no input file specified\n");
             print_usage(argv[0]);
             exit(-1);
@@ -494,7 +497,7 @@ int main(int argc, char **argv)
         }
     #endif
 
-    // then we act...
+    /* then we act... */
 
     if (!output_file_name && !output_file) {
         if (!output_basename) {
@@ -536,14 +539,14 @@ int main(int argc, char **argv)
                 exit(-1);
             }
         #endif
-        output_file = fopen(output_file_name, "w");
+        output_file = fopen(output_file_name, "wb");
         if (!output_file) {
             fprintf(stderr, "error: can't write in file %s",
                     output_file_name);
         }
     }
 
-    // we always have input_file or input_file_name
+    /* we always have input_file or input_file_name */
     if (input_file) {
         if (point_and_click) {
             fprintf(stderr,
@@ -557,7 +560,7 @@ int main(int argc, char **argv)
                     input_file_name);
             exit(-1);
         }
-        gregorio_set_file_name(basename(input_file_name));
+        gregorio_set_file_name(gregorio_basename(input_file_name));
         if (point_and_click) {
             point_and_click_filename = encode_point_and_click_filename(
                     input_file_name);
@@ -568,7 +571,7 @@ int main(int argc, char **argv)
         error_file = stderr;
         gregorio_set_error_out(error_file);
     } else {
-        error_file = fopen(error_file_name, "w");
+        error_file = fopen(error_file_name, "wb");
         if (!error_file) {
             fprintf(stderr, "error: can't open file %s for writing\n",
                     error_file_name);

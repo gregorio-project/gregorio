@@ -19,7 +19,7 @@
 
 #include "config.h"
 #include <stdio.h>
-#include <string.h>             // for strlen
+#include <string.h> /* for strlen */
 #include <stdlib.h>
 #include "struct.h"
 #include "unicode.h"
@@ -35,41 +35,41 @@
  * 
  */
 
-// an utf8 version of mbstowcs
+/* an utf8 version of mbstowcs */
 
 static size_t gregorio_mbstowcs(grewchar *dest, const char *src, int n)
 {
     unsigned char bytes_to_come;
     grewchar result = 0;
     unsigned char c;
-    size_t res = 0;             // number of bytes we've done so far
+    size_t res = 0; /* number of bytes we've done so far */
     if (!src) {
         gregorio_message(_("call with a NULL argument"), "gregorio_mbstowcs",
                 VERBOSITY_ERROR, 0);
     }
     while (*src && ((int) res <= n || !dest)) {
         c = (unsigned char) (*src);
-        if (c < 128) {          // 0100xxxx
-            // one-byte symbol
+        if (c < 128) { /* 0100xxxx */
+            /* one-byte symbol */
             bytes_to_come = 0;
             result = c;
-        } else if (c >= 240) {  // 1111xxxx
-            // start of a four-byte symbol
-            // printf("%d\n", c);
+        } else if (c >= 240) { /* 1111xxxx */
+            /* start of a four-byte symbol */
+            /* printf("%d\n", c); */
             bytes_to_come = 3;
             result = (result << 3) | (c & 7);
-        } else if (c >= 224) {  // 1110xxxx
-            // start of a three-byte symbol
-            // printf("%d\n", c);
+        } else if (c >= 224) { /* 1110xxxx */
+            /* start of a three-byte symbol */
+            /* printf("%d\n", c); */
             bytes_to_come = 2;
             result = (result << 4) | (c & 15);
-        } else if (c >= 192) {  // 1100xxxx
-            // start of a two-byte symbol
-            // printf("%d\n", c);
+        } else if (c >= 192) { /* 1100xxxx */
+            /* start of a two-byte symbol */
+            /* printf("%d\n", c); */
             bytes_to_come = 1;
             result = (result << 5) | (c & 31);
         } else {
-            // printf("%s %d %d\n", src, res, c);
+            /* printf("%s %d %d\n", src, res, c); */
             gregorio_message(_("malformed UTF-8 sequence1"),
                     "gregorio_mbstowcs", VERBOSITY_ERROR, 0);
             return -1;
@@ -78,7 +78,7 @@ static size_t gregorio_mbstowcs(grewchar *dest, const char *src, int n)
             bytes_to_come--;
             src++;
             c = (unsigned char) (*src);
-            if (c < 192 && c >= 128)    // 1000xxxx
+            if (c < 192 && c >= 128) /* 1000xxxx */
             {
                 result = (result << 6) | (c & 63);
             } else {
@@ -100,7 +100,7 @@ static size_t gregorio_mbstowcs(grewchar *dest, const char *src, int n)
     return res;
 }
 
-// the value returned by this function must be freed!
+/* the value returned by this function must be freed! */
 grewchar *gregorio_build_grewchar_string_from_buf(const char *const buf)
 {
     size_t len;
@@ -108,13 +108,13 @@ grewchar *gregorio_build_grewchar_string_from_buf(const char *const buf)
     if (buf == NULL) {
         return NULL;
     }
-    len = strlen(buf);          // to get the length of the syllable in ASCII
+    len = strlen(buf); /* to get the length of the syllable in ASCII */
     gwstring = (grewchar *) malloc((len + 1) * sizeof(grewchar));
-    gregorio_mbstowcs(gwstring, buf, len);  // converting into wchar_t
+    gregorio_mbstowcs(gwstring, buf, len); /* converting into wchar_t */
     return gwstring;
 }
 
-// the function to build a gregorio_character list from a buffer.
+/* the function to build a gregorio_character list from a buffer. */
 
 gregorio_character *gregorio_build_char_list_from_buf(const char *const buf)
 {
@@ -125,7 +125,7 @@ gregorio_character *gregorio_build_char_list_from_buf(const char *const buf)
         return NULL;
     }
     gwstring = gregorio_build_grewchar_string_from_buf(buf);
-    // we add the corresponding characters in the list of gregorio_characters
+    /* we add the corresponding characters in the list of gregorio_characters */
     while (gwstring[i]) {
         gregorio_add_character(&current_character, gwstring[i]);
         i++;
@@ -135,8 +135,8 @@ gregorio_character *gregorio_build_char_list_from_buf(const char *const buf)
     return current_character;
 }
 
-// the function to compare a grewchar * and a buf. Returns 1 if different, 0
-// if not.
+/* the function to compare a grewchar * and a buf. Returns 1 if different, 0
+ * if not. */
 
 unsigned char gregorio_wcsbufcmp(grewchar *wstr, const char *buf)
 {
@@ -146,10 +146,10 @@ unsigned char gregorio_wcsbufcmp(grewchar *wstr, const char *buf)
     if (!buf || !wstr) {
         return 1;
     }
-    len = strlen(buf);          // to get the length of the syllable in ASCII
+    len = strlen(buf); /* to get the length of the syllable in ASCII */
     gwbuf = (grewchar *) malloc((len + 1) * sizeof(grewchar));
-    gregorio_mbstowcs(gwbuf, buf, len); // converting into wchar_t
-    // we add the corresponding characters in the list of gregorio_characters
+    gregorio_mbstowcs(gwbuf, buf, len); /* converting into wchar_t */
+    /* we add the corresponding characters in the list of gregorio_characters */
     while (gwbuf[i] && wstr[i]) {
         if (gwbuf[i] != wstr[i]) {
             free(gwbuf);
@@ -157,7 +157,7 @@ unsigned char gregorio_wcsbufcmp(grewchar *wstr, const char *buf)
         }
         i = i + 1;
     }
-    // we finished the two strings
+    /* we finished the two strings */
     if (gwbuf[i] == 0 && wstr[i] == 0) {
         free(gwbuf);
         return 0;

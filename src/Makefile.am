@@ -22,9 +22,10 @@ gregorio_CFLAGS = $(KPSE_CFLAGS)
 gregorio_LDADD = $(KPSE_LIBS)
 
 bin_PROGRAMS = gregorio
-gregorio_SOURCES = characters.c gregorio-utils.c messages.c struct.c \
-					unicode.c struct.h messages.h unicode.h characters.h \
-					sha1.c sha1.h plugins.h config.h dump/dump.c \
+gregorio_SOURCES = gregorio-utils.c characters.c characters.h \
+					messages.c messages.h struct.c struct.h \
+					unicode.c unicode.h sha1.c sha1.h support.c support.h \
+					config.h bool.h plugins.h utf8strings.h dump/dump.c \
 					gregoriotex/gregoriotex-write.c \
 					gregoriotex/gregoriotex-position.c \
 					gregoriotex/gregoriotex.h
@@ -65,16 +66,19 @@ gregorio_SOURCES += gabc/gabc-elements-determination.c gabc/gabc-write.c \
 					vowel/vowel-rules-l.h vowel/vowel-rules-l.c \
 					vowel/vowel-rules-y.h vowel/vowel-rules-y.c
 
-EXTRA_DIST = gabc/gabc-score-determination.l gabc/gabc-score-determination.y \
+EXTRA_DIST = encode_utf8strings.c utf8strings.h.in utf8strings.h \
 					gabc/gabc-notes-determination.l \
+					gabc/gabc-notes-determination-l.c \
 					gabc/gabc-score-determination.h \
+					gabc/gabc-score-determination.y \
 					gabc/gabc-score-determination-y.h \
 					gabc/gabc-score-determination-y.c \
+					gabc/gabc-score-determination.l \
 					gabc/gabc-score-determination-l.h \
 					gabc/gabc-score-determination-l.c \
-					gabc/gabc-notes-determination-l.c \
-					vowel/vowel-rules.l vowel/vowel-rules.y \
+					vowel/vowel-rules.l \
 					vowel/vowel-rules-l.h vowel/vowel-rules-l.c \
+					vowel/vowel-rules.y \
 					vowel/vowel-rules-y.h vowel/vowel-rules-y.c
 
 gabc/gabc-score-determination-y.c: gabc/gabc-score-determination.y
@@ -120,8 +124,16 @@ vowel/vowel-rules-l.h: vowel/vowel-rules-l.c
 		$(MAKE) $(AM_MAKEFLAGS) vowel/vowel-rules-l.c; \
 	fi
 
-BUILT_SOURCES = gabc/gabc-score-determination-l.c \
+utf8strings.h: utf8strings.h.in
+	$(MAKE) $(AM_MAKEFLAGS) encode_utf8strings${EXEEXT}
+	./encode_utf8strings${EXEEXT} $< $@
+
+encode_utf8strings${EXEEXT}: encode_utf8strings.c
+	$(CC) -o $@ $<
+
+BUILT_SOURCES = utf8strings.h \
 					gabc/gabc-notes-determination-l.c \
+					gabc/gabc-score-determination-l.c \
 					gabc/gabc-score-determination-l.h \
 					gabc/gabc-score-determination-y.c \
 					gabc/gabc-score-determination-y.h \
@@ -129,4 +141,6 @@ BUILT_SOURCES = gabc/gabc-score-determination-l.c \
 					vowel/vowel-rules-l.h \
 					vowel/vowel-rules-y.c \
 					vowel/vowel-rules-y.h
+
+CLEANFILES = encode_utf8strings${EXEEXT}
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)

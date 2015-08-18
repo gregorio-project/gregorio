@@ -259,7 +259,7 @@ void gregorio_add_cs_to_note(gregorio_note *const*const current_note,
 void gregorio_add_special_sign(gregorio_note *note, gregorio_sign sign)
 {
     if (!note) {
-        // error
+        /* error */
         return;
     }
     note->special_sign = sign;
@@ -295,7 +295,7 @@ void gregorio_change_shape(gregorio_note *note, gregorio_shape shape)
             fix_punctum_cavum_inclinatum_liquescentia(note);
             break;
         }
-        // else fall through
+        /* else fall through */
 
     default:
         note->u.note.shape = shape;
@@ -363,7 +363,7 @@ void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
             note->u.note.liquescentia = L_AUCTA_INITIO_DEBILIS;
             break;
         default:
-            // do nothing
+            /* do nothing */
             break;
         }
     } else {
@@ -418,18 +418,18 @@ static void apply_auto_h_episemus(gregorio_note *const note,
 {
     if (note->h_episemus_above == HEPISEMUS_NONE
             && note->h_episemus_below == HEPISEMUS_NONE) {
-        // if both are unset, set both to auto
+        /* if both are unset, set both to auto */
         set_h_episemus_above(note, HEPISEMUS_AUTO, size, !disable_bridge);
         set_h_episemus_below(note, HEPISEMUS_AUTO, size, !disable_bridge);
     } else if (note->h_episemus_above == HEPISEMUS_AUTO
             && note->h_episemus_below == HEPISEMUS_AUTO) {
-        // if both are auto, then force both
-        // the upper episemus keeps its settings
+        /* if both are auto, then force both */
+        /* the upper episemus keeps its settings */
         note->h_episemus_above = HEPISEMUS_FORCED;
 
         set_h_episemus_below(note, HEPISEMUS_FORCED, size, !disable_bridge);
     } else {
-        // force whichever is not already forced
+        /* force whichever is not already forced */
         if (note->h_episemus_above != HEPISEMUS_FORCED) {
             set_h_episemus_above(note, HEPISEMUS_FORCED, size, !disable_bridge);
         }
@@ -511,7 +511,7 @@ void gregorio_add_h_episemus(gregorio_note *note,
             set_h_episemus_below(note, HEPISEMUS_FORCED, size, !disable_bridge);
             break;
 
-        default: // VPOS_AUTO
+        default: /* VPOS_AUTO */
             apply_auto_h_episemus(note, size, disable_bridge);
             *nbof_isolated_episemus = 1;
             break;
@@ -526,7 +526,7 @@ void gregorio_add_sign(gregorio_note *note, gregorio_sign sign,
         gregorio_vposition vposition)
 {
     if (!note) {
-        // error
+        /* error */
         return;
     }
     switch (sign) {
@@ -589,7 +589,7 @@ void gregorio_go_to_first_note(gregorio_note **note)
     *note = tmp;
 }
 
-static inline void free_one_note(gregorio_note *note)
+static __inline void free_one_note(gregorio_note *note)
 {
     free(note->texverb);
     free(note->choral_sign);
@@ -702,7 +702,7 @@ void gregorio_go_to_first_glyph(gregorio_glyph **glyph)
     *glyph = tmp;
 }
 
-static inline void free_one_glyph(gregorio_glyph *glyph)
+static __inline void free_one_glyph(gregorio_glyph *glyph)
 {
     free(glyph->texverb);
     if (glyph->type == GRE_GLYPH) {
@@ -782,7 +782,7 @@ void gregorio_add_misc_element(gregorio_element **current_element,
     }
 }
 
-static inline void free_one_element(gregorio_element *element)
+static __inline void free_one_element(gregorio_element *element)
 {
     size_t i;
     free(element->texverb);
@@ -1279,7 +1279,7 @@ void gregorio_set_score_annotation(gregorio_score *score, char *annotation)
                 "gregorio_set_annotation", VERBOSITY_WARNING, 0);
         return;
     }
-    // save the annotation in the first spare place.
+    /* save the annotation in the first spare place. */
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
         if (score->annotation[annotation_num] == NULL) {
             score->annotation[annotation_num] = annotation;
@@ -1529,7 +1529,7 @@ signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
                 "gregorio_determine_next_pitch", VERBOSITY_ERROR, 0);
         return DUMMY_PITCH;
     }
-    // we first explore the next glyphs to find a note, if there is one
+    /* we first explore the next glyphs to find a note, if there is one */
     if (glyph) {
         glyph = glyph->next;
         while (glyph) {
@@ -1543,7 +1543,7 @@ signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
             glyph = glyph->next;
         }
     }
-    // then we do the same with the elements
+    /* then we do the same with the elements */
     element = element->next;
     while (element) {
         if (element->type == GRE_ELEMENT && element->u.first_glyph) {
@@ -1562,19 +1562,19 @@ signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
         element = element->next;
     }
 
-    // then we do the same with the syllables
+    /* then we do the same with the syllables */
     syllable = syllable->next_syllable;
     while (syllable) {
-        // we call another function that will return the pitch of the first
-        // note if syllable has a note, and 0 else
+        /* we call another function that will return the pitch of the first
+         * note if syllable has a note, and 0 else */
         temp = gregorio_syllable_first_note(syllable);
         if (temp) {
             return temp;
         }
         syllable = syllable->next_syllable;
     }
-    // here it means that there is no next note, so we return a stupid value,
-    // but it won' t be used
+    /* here it means that there is no next note, so we return a stupid value,
+     * but it won' t be used */
     return DUMMY_PITCH;
 }
 
@@ -1627,7 +1627,6 @@ void gregorio_reinitialize_one_voice_alterations(char alterations[13])
 
 void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
 {
-    char *error;
     int clef = 0;
     gregorio_element *element;
     gregorio_voice_info *voice_info;
@@ -1639,7 +1638,6 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
                 "gregorio_fix_initial_keys", VERBOSITY_WARNING, 0);
         return;
     }
-    error = malloc(100 * sizeof(char));
     voice_info = score->first_voice_info;
     for (i = 0; i < score->number_of_voices; i++) {
         element = score->first_syllable->elements[i];
@@ -1653,11 +1651,9 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
             voice_info->initial_key = clef;
             voice_info->flatted_key = element->u.misc.pitched.flatted_key;
             gregorio_free_one_element(&(score->first_syllable->elements[i]));
-            snprintf(error, 80, _("in voice %d the first element is a key "
-                                  "definition, considered as initial key"),
-                     i + 1);
-            gregorio_message(error, "gregorio_fix_initial_keys", VERBOSITY_INFO,
-                    0);
+            gregorio_messagef("gregorio_fix_initial_keys", VERBOSITY_INFO, 0,
+                    _("in voice %d the first element is a key definition, "
+                    "considered as initial key"), i + 1);
         } else if (element->type == GRE_F_KEY_CHANGE) {
             clef =
                 gregorio_calculate_new_key(F_KEY,
@@ -1665,17 +1661,15 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
             voice_info->initial_key = clef;
             voice_info->flatted_key = element->u.misc.pitched.flatted_key;
             gregorio_free_one_element(&(score->first_syllable->elements[i]));
-            snprintf(error, 80, _("in voice %d the first element is a key "
-                                  "definition, considered as initial key"),
-                     i + 1);
-            gregorio_message(error, "gregorio_fix_initial_keys", VERBOSITY_INFO,
-                    0);
+            gregorio_messagef("gregorio_fix_initial_keys", VERBOSITY_INFO, 0,
+                    _("in voice %d the first element is a key definition, "
+                    "considered as initial key"), i + 1);
         }
         voice_info = voice_info->next_voice_info;
     }
 
-    // then we suppress syllables that contain nothing anymore : case of (c2)
-    // at beginning of files
+    /* then we suppress syllables that contain nothing anymore : case of (c2)
+     * at beginning of files */
 
     for (i = 0; i < score->number_of_voices; i++) {
         if (score->first_syllable->elements[i]) {
@@ -1688,22 +1682,20 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
         gregorio_free_one_syllable(&(score->first_syllable),
                                    score->number_of_voices);
     }
-    // finally we initialize voice infos that have no initial key to default
-    // key
+    /* finally we initialize voice infos that have no initial key to default
+     * key */
 
     voice_info = score->first_voice_info;
 
     for (i = 0; i < score->number_of_voices; i++) {
         if (voice_info->initial_key == NO_KEY) {
             voice_info->initial_key = default_key;
-            snprintf(error, 75, _("no initial key definition in voice %d, "
-                        "default key definition applied"), i + 1);
-            gregorio_message(error, "gregorio_fix_initial_keys", VERBOSITY_INFO,
-                    0);
+            gregorio_messagef("gregorio_fix_initial_keys", VERBOSITY_INFO, 0,
+                    _("no initial key definition in voice %d, default key "
+                    "definition applied"), i + 1);
         }
         voice_info = voice_info->next_voice_info;
     }
-    free(error);
 }
 
 /**********************************

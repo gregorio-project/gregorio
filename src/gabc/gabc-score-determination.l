@@ -101,10 +101,10 @@ semicolon. */
 
 %%
 <INITIAL>^(\xBB|\xEF|\xBF)* {
-        //BOM written by a lot of windows softwares when they write UTF-8
+        /* BOM written by a lot of windows softwares when they write UTF-8 */
     }
 <INITIAL>^[\n\r]+ {
-        // ignoring empty lines
+        /* ignoring empty lines */
     }
 <INITIAL>^[\%#] {
         BEGIN(inicomments);
@@ -113,7 +113,7 @@ semicolon. */
         BEGIN(INITIAL);
     }
 <inicomments>[^\n\r]* {
-        //ignored
+        /* ignored */
     }
 <INITIAL>:(\ )? {
         BEGIN(attribute);
@@ -226,10 +226,9 @@ semicolon. */
        return END_OF_DEFINITIONS;
     }
 <INITIAL>. {
-        char *dirtyvar = malloc(71*sizeof(char));
-        snprintf(dirtyvar,70,_("unrecognized character: \"%c\" in definition part"),
-                 gabc_score_determination_text[0]);
-        gregorio_message (dirtyvar, "det_score", VERBOSITY_ERROR, 0);
+        gregorio_messagef("det_score", VERBOSITY_ERROR, 0,
+                _("unrecognized character: \"%c\" in definition part"),
+                gabc_score_determination_text[0]);
     }
 <score>[^\{\}\(\[\]<%]+ {
         gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
@@ -336,7 +335,7 @@ semicolon. */
         BEGIN(score);
     }
 <comments>[^\n\r]* {
-        //ignored
+        /* ignored */
     }
 <style,score><v> {
         BEGIN(verb);
