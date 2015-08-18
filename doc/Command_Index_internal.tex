@@ -816,10 +816,10 @@ A macro which applies formatting that needs to apply to the whole syllable (rath
 \macroname{\textbackslash gre@gabcname}{}{gregoriotex-main.tex}
 Macro which holds the point-and-click file name.
 
-\macroname{\textbackslasg gre@gregoriotexluaversion}{}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@gregoriotexluaversion}{}{gregoriotex-main.tex}
 Macro to hold the version number of \emph{gregoriotex.lua} so that it can be checked for consistency.
 
-\macroname{\textbackslasg gre@gregorioversion}{}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@gregorioversion}{}{gregoriotex-main.tex}
 Macro to hold the version number of Gregorio\TeX\ so that it can be checked for consistency.
 
 
@@ -1332,6 +1332,31 @@ A place to save the current value of the tolerance so that we can change it temp
 \macroname{\textbackslash gre@pretolerancesave}{}{gregoriotex-spaces.tex}
 A place to save the current value of the pretolerance so that we can change it temporarily and then restore it later.
 
+
+
+\subsection{\LaTeX/Plain\TeX\ compatibility}
+While every effort has been made to use only primitives which are compatible with both \LaTeX\ and Plain\TeX, it is sometimes necessary to use primitives which are defined for one but not the other (usually its \LaTeX\ that has what we need built in).  In these cases we have to provide an equivalent macro to the \TeX\ version which is lacking.
+
+\macroname{\textbackslash MessageBreak}{}{gregoriotex.tex}
+Creates a line break in warning and error messages.  Copied from \LaTeX\ source.
+
+\macroname{\textbackslash protect}{}{gregoriotex.tex}
+Prints the name of the macro, rather than its contents in warning and error messages.  Copied from \LaTeX\ source.
+
+\macroname{\textbackslash protected@edef}{}{gregoriotex.tex}
+Version of \verb=\edef= which protects the expansion of fragile macros which could not otherwise appear in an \verb=\edef= statement.  Copied from the \LaTeX\ source.
+
+\macroname{\textbackslash @unexpandable@protect}{}{gregoriotex.tex}
+Macro used in defining \verb=\protected@edef=.  Copied from the \LaTeX\ source.
+
+\macroname{\textbackslash restore@protect}{}{gregoriotex.tex}
+Macro used in defining \verb=\protected@edef=.  Copied from the \LaTeX\ source.
+
+\macroname{\textbackslash @edef}{}{gregoriotex.tex}
+Macro used in defining \verb=\protected@edef=.  Copied from the \LaTeX\ source.
+
+\macroname{\textbackslash f@size}{}{gregoriotex.tex}
+Macro which stores the current font size.
 
 
 \section{Special arguments}

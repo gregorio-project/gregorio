@@ -39,7 +39,7 @@
 \definecolor{myred}{HTML}{FF3333}
 
 \usepackage{minted} % must be after xcolor
-\newminted{latex}{bgcolor=lightgray}
+\newminted{latex}{gobble=1,bgcolor=lightgray}% Originally had 'gobble=2' but this creates problems on systems where the 2-space indentation is switched out for single tabs (Br. Samuel's, for one, does this).  Should be set to autogobble once every developer is using TeXLive 2015 or later (as the autogobble feature doesn't appear in TeXLive 2014 or earlier).
 %\newminted{gabc}{bgcolor=lightgray} % can this be done?
 \newenvironment{gabccode}{\tt}{}
 
