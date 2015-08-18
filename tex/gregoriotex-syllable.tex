@@ -34,22 +34,18 @@
 
 % a macro called each time we start something looking like a glyph, but not mandatorily called through the \GreGlyph macro, for example bars, flats, etc.
 
-\newif\ifgre@generate@pointandclick\gre@generate@pointandclickfalse %
 \newcount\gre@generate@pointandclick\gre@generate@pointandclick=0\relax %
 
 \def\gresetpointandclick#1{%
   \IfStrEq{#1}{on}{%
     \ifpdf %
-      \gre@generate@pointandclicktrue %
       \gre@generate@pointandclick=1\relax %
     \else %
       \gre@warning{Unable to enable point-and-click when not generating a PDF}%
-      \gre@generate@pointandclickfalse %
       \gre@generate@pointandclick=0\relax %
     \fi %
   }{%
     \IfStrEq{#1}{off}{%
-      \gre@generate@pointandclickfalse %
       \gre@generate@pointandclick=0\relax %
     }{%
       \gre@error{Unrecognized option for \protect\gresetpointandclick}%
@@ -62,7 +58,7 @@
   \ifx\gre@@arg\gre@nothing %
     #1%
   \else %
-    \ifgre@generate@pointandclick %
+    \ifnum\gre@generate@pointandclick=1\relax %
       \pdfstartlink user{%
         /Subtype/Link/Border[0 0 0]%
         /A<</Type/Action/S/URI/URI(textedit://\gre@gabcname:#2)>>%

@@ -228,7 +228,7 @@ This function takes a distance and formats it as a string so that its units conf
 Macro holding result of last call to \verb=\gre@consistentunits=.
 
 \macroname{\textbackslash gre@gregorioscore}{\#1}{gregoriotex-main.tex}
-Macro that handles \verb=\includescore= calls when they do not have an
+Macro that handles \verb=\gregorioscore= calls when they do not have an
 optional argument.
 
 \begin{argtable}
@@ -236,14 +236,31 @@ optional argument.
 \end{argtable}
 
 \macroname{\textbackslash gre@gregorioscore@option}{[\#1]\#2}{gregoriotex-main.tex}
-Macro that handles \verb=\includescore= calls when they have an optional
+Macro that handles \verb=\gregorioscore= calls when they have an optional
 argument.
 
 \begin{argtable}
-  \#1 & \texttt{n} & Optional. \#2 will be included as is. \\
-      & \texttt{a} & Optional. Gregoriotex will automatically compile gabc files if necessary.\\
-      & \texttt{f} & Optional. Forces gregoriotex to compile the gabc file.\\
+  \#1 & \texttt{n} & \#2 will be included as is. \\
+      & \texttt{a} & Gregoriotex will automatically compile gabc files if necessary.\\
+      & \texttt{f} & Forces gregoriotex to compile the gabc file.\\
   \#2 & string & Relative or absolute path to the score.\\
+\end{argtable}
+
+\macroname{\textbackslash gre@gabcsnippet}{\#1}{gregoriotex-main.tex}
+Macro that handles \verb=\gabcsnippet= calls when they do not have an
+optional argument.
+
+\begin{argtable}
+  \#1 & string & Snippet of gabc code.\\
+\end{argtable}
+
+\macroname{\textbackslash gre@gabcsnippet@option}{[\#1]\#2}{gregoriotex-main.tex}
+Macro that handles \verb=\gabcsnippet= calls when they have an optional
+argument.
+
+\begin{argtable}
+  \#1 & int & Value of initial style to be passed to gregorio \\
+  \#2 & string & Snippet of gabc code.\\
 \end{argtable}
 
 \macroname{\textbackslash gre@writemode}{\#1}{gregoriotex-main.tex}
@@ -764,6 +781,49 @@ Macro which stores the name of the currently selected font for \texttt{nabc}.
 \macroname{\textbackslash gre@nabcfontsize}{}{gregoriotex-main.tex}
 Macro which stores the size of the currently selected font for \texttt{nabc}.
 
+\macroname{\textbackslash gre@endsyllablepart}{}{gregoriotex-syllable.tex}
+Macro which stores the end part of the current syllable (that which comes after the alignment part).
+
+\macroname{\textbackslash gre@firstsyllablepart}{}{gregoriotex-syllable.tex}
+Macro which stores the first part of the current syllable (that which comes before the alignment part).
+
+\macroname{\textbackslash gre@middlesyllablepart}{}{gregoriotex-syllable.tex}
+Macro which stores the middle part of the current syllable (the part which aligns with the notes).
+
+\macroname{\textbackslash gre@nextendsyllablepart}{}{gregoriotex-syllable.tex}
+Macro which stores the end part of the next syllable (that which comes after the alignment part).
+
+\macroname{\textbackslash gre@nextfirstsyllablepart}{}{gregoriotex-syllable.tex}
+Macro which stores the first part of the next syllable (that which comes before the alignment part).
+
+\macroname{\textbackslash gre@nextmiddlesyllablepart}{}{gregoriotex-syllable.tex}
+Macro which stores the middle part of the next syllable (the part which aligns with the notes).
+
+\macroname{\textbackslash gre@fixedtextformat}{\#1}{gregoriotex-syllable.tex}
+A macro which applies formatting that needs to apply to the whole syllable (rather than the parts individually) for the current syllable.  Necessary to preserve ligatures across parts within a syllable.
+
+\begin{argtable}
+  \#1 & string & The syllable (usually built as \verb=\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart=\\
+\end{argtable}
+
+\macroname{\textbackslash gre@fixednexttextformat}{\#1}{gregoriotex-syllable.tex}
+A macro which applies formatting that needs to apply to the whole syllable (rather than the parts individually) for the next syllable.  Necessary to preserve ligatures across parts within a syllable.
+
+\begin{argtable}
+  \#1 & string & The syllable (usually built as \verb=\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart=\\
+\end{argtable}
+
+\macroname{\textbackslash gre@gabcname}{}{gregoriotex-main.tex}
+Macro which holds the point-and-click file name.
+
+\macroname{\textbackslasg gre@gregoriotexluaversion}{}{gregoriotex-main.tex}
+Macro to hold the version number of \emph{gregoriotex.lua} so that it can be checked for consistency.
+
+\macroname{\textbackslasg gre@gregorioversion}{}{gregoriotex-main.tex}
+Macro to hold the version number of Gregorio\TeX\ so that it can be checked for consistency.
+
+
+
 
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates it's own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
@@ -815,6 +875,12 @@ The punctum cavum character.
 
 \macroname{\textbackslash gre@fontchar@punctumcavumhole}{}{gregoriotex-signs.tex}
 The punctum cavum hole character (\ie, the character needed to prevent lines from showing through the center of the punctum cavum).
+
+\macroname{\textbackslash gre@fontchar@lineapunctumcavum}{}{gregoriotex-signs.tex}
+The linea punctum cavum character.
+
+\macroname{\textbackslash gre@fontchar@lineapunctumcavumhole}{}{gregoriotex-signs.tex}
+The linea punctum cavum hole character (\ie, the character needed to prevent lines from showing through the center of the linea punctum cavum).
 
 \macroname{\textbackslash gre@fontchar@incclef}{}{gregoriotex-chars.tex}
 The \texttt{c}-clef which appears in the middle of a line.
@@ -1003,6 +1069,9 @@ Macro which specifies the default compilation behavior: never compile (0), auto 
 
 \macroname{\textbackslash ifgre@nabcfontloaded}{}{gregoriotex-nabc.tex}
 Boolean which indicates whether the \texttt{nabc} font has been loaded.
+
+\macroname{\textbackslash gre@generate@pointandclick}{}{gregoriotex-syllable.tex}
+Macro which indicates whether the point-and-click functionality should be implemented (1) or not (0).  Not a boolean because it needs to be readable by Lua.
 
 
 \subsection{Boxes}
