@@ -20,7 +20,7 @@
 #ifndef CHARACTERS_H
 #define CHARACTERS_H
 
-#include <stdbool.h>
+#include "bool.h"
 #include "struct.h"
 
 /*
@@ -41,10 +41,10 @@ typedef enum gregorio_center_determination {
     CENTER_NOT_DETERMINED = 0,
     CENTER_HALF_DETERMINED,
     CENTER_FULLY_DETERMINED,
-    CENTER_DETERMINING_MIDDLE,
+    CENTER_DETERMINING_MIDDLE
 } gregorio_center_determination;
 
-// this is a temporary structure that will be used for style determination
+/* this is a temporary structure that will be used for style determination */
 
 typedef struct det_style {
     unsigned char style;

@@ -20,13 +20,13 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 #include <assert.h>
 #include <errno.h>
 #ifdef USE_KPSE
     #include <kpathsea/kpathsea.h>
 #endif
+#include "bool.h"
 #include "vowel.h"
 #include "unicode.h"
 #include "messages.h"
@@ -63,10 +63,11 @@ static character_set *character_set_new(const bool alloc_next)
 
 static void character_set_free(character_set *const set);
 
-static inline void character_set_next_elements_free(character_set *const set)
+static __inline void character_set_next_elements_free(character_set *const set)
 {
+    unsigned int i;
     assert(set && set->next);
-    for (unsigned int i = 0; i < set->bins; ++i) {
+    for (i = 0; i < set->bins; ++i) {
         if (set->next[i]) {
             character_set_free(set->next[i]);
         }
@@ -88,13 +89,14 @@ static void character_set_free(character_set *const set)
 static bool character_set_contains(character_set *const set,
         const grewchar vowel, character_set **const next)
 {
+    unsigned int index;
     assert(set);
 
     if (next) {
         *next = NULL;
     }
-    for (unsigned int index = ((unsigned long)vowel) & set->mask;
-            set->table[index]; index = (index + 1) & set->mask) {
+    for (index = ((unsigned long)vowel) & set->mask; set->table[index];
+            index = (index + 1) & set->mask) {
         if (set->table[index] == vowel) {
             if (next && set->next) {
                 *next = set->next[index];
@@ -105,7 +107,7 @@ static bool character_set_contains(character_set *const set,
     return false;
 }
 
-static inline void character_set_put(character_set *const set,
+static __inline void character_set_put(character_set *const set,
         const grewchar vowel, character_set *next)
 {
     unsigned int index;
@@ -123,10 +125,10 @@ static inline void character_set_put(character_set *const set,
     }
 }
 
-static inline void character_set_grow(character_set *const set) {
+static __inline void character_set_grow(character_set *const set) {
     static grewchar *old_table;
     static character_set **old_next;
-    unsigned int old_bins;
+    unsigned int old_bins, i;
 
     assert(set);
 
@@ -146,7 +148,7 @@ static inline void character_set_grow(character_set *const set) {
     if (old_next) {
         set->table = calloc(set->bins, sizeof(character_set *));
     }
-    for (unsigned int i = 0; i < old_bins; ++i) {
+    for (i = 0; i < old_bins; ++i) {
         if (old_table[i]) {
             character_set_put(set, old_table[i], old_next ? old_next[i] : NULL);
         } else {
@@ -180,7 +182,7 @@ static character_set *character_set_add(character_set *const set,
     return next;
 }
 
-static inline void character_set_clear(character_set *const set)
+static __inline void character_set_clear(character_set *const set)
 {
     if (set) {
         memset(set->table, 0, set->bins * sizeof(grewchar));
@@ -288,8 +290,8 @@ void gregorio_vowel_tables_free(void)
 void gregorio_vowel_table_add(const char *vowels)
 {
     if (vowels) {
-        grewchar *str = gregorio_build_grewchar_string_from_buf(vowels);
-        for (grewchar *p = str; *p; ++p) {
+        grewchar *str = gregorio_build_grewchar_string_from_buf(vowels), *p;
+        for (p = str; *p; ++p) {
             character_set_add(vowel_table, *p);
         }
         free(str);
@@ -301,7 +303,7 @@ void gregorio_prefix_table_add(const char *prefix)
     character_set *set = prefix_table;
     grewchar *str, *p;
 
-    // store prefixes backwards
+    /* store prefixes backwards */
     if (prefix && *prefix) {
         str = gregorio_build_grewchar_string_from_buf(prefix);
         p = str;
@@ -357,10 +359,10 @@ void gregorio_secondary_table_add(const char *secondary)
 typedef enum {
     VWL_BEFORE = 0,
     VWL_WITHIN,
-    VWL_SUFFIX,
+    VWL_SUFFIX
 } vowel_group_state;
 
-static inline bool is_in_prefix(size_t bufpos) {
+static __inline bool is_in_prefix(size_t bufpos) {
     character_set *previous = prefix_table, *prefix;
 
     while (character_set_contains(previous, prefix_buffer[bufpos], &prefix)) {
@@ -376,11 +378,11 @@ bool gregorio_find_vowel_group(const grewchar *const string, int *const start,
 {
     size_t bufpos = 0;
     vowel_group_state state = VWL_BEFORE;
-    character_set *cset;
+    character_set *cset = NULL;
     const grewchar *subject;
     int i;
 
-    // stick the 0 in here to avoid overruns from is_in_prefix
+    /* stick the 0 in here to avoid overruns from is_in_prefix */
     prefix_buffer[0] = 0;
 
     for (i = 0, subject = string; true; ++i, ++subject) {
@@ -389,10 +391,10 @@ bool gregorio_find_vowel_group(const grewchar *const string, int *const start,
             bufpos = (bufpos + 1) & prefix_buffer_mask;
             prefix_buffer[bufpos] = *subject;
             if (character_set_contains(vowel_table, *subject, NULL)) {
-                // we found a vowel
+                /* we found a vowel */
                 if (!character_set_contains(vowel_table, *(subject + 1), NULL)
                         || !is_in_prefix(bufpos)) {
-                    // no vowel after or not in prefix, so this is the start
+                    /* no vowel after or not in prefix, so this is the start */
                     *start = i;
                     state = VWL_WITHIN;
                 }
@@ -401,13 +403,13 @@ bool gregorio_find_vowel_group(const grewchar *const string, int *const start,
 
         case VWL_WITHIN:
             if (!character_set_contains(vowel_table, *subject, NULL)) {
-                // not a vowel; is it a suffix?
+                /* not a vowel; is it a suffix? */
                 *end = i;
                 if (character_set_contains(suffix_table, *subject, &cset)) {
-                    // it's the start of a suffix
+                    /* it's the start of a suffix */
                     state = VWL_SUFFIX;
                 } else {
-                    // neither a vowel nor a suffix, so this is the end
+                    /* neither a vowel nor a suffix, so this is the end */
                     return true;
                 }
             }
@@ -415,11 +417,11 @@ bool gregorio_find_vowel_group(const grewchar *const string, int *const start,
 
         case VWL_SUFFIX:
             if (cset->is_final) {
-                // remember the last final position
+                /* remember the last final position */
                 *end = i;
             }
             if (!character_set_contains(cset, *subject, &cset)) {
-                // no longer in valid suffix
+                /* no longer in valid suffix */
                 return true;
             }
             break;
@@ -433,13 +435,13 @@ bool gregorio_find_vowel_group(const grewchar *const string, int *const start,
         }
     }
 
-    // no vowel found; look for a secondary
+    /* no vowel found; look for a secondary */
     *end = -1;
     for (*start = 0; *(subject = string + *start); ++ *start) {
         for (cset = secondary_table, i = *start;
                 character_set_contains(cset, *subject, &cset); ++i, ++subject) {
             if (cset->is_final) {
-                // remember the last final position
+                /* remember the last final position */
                 *end = i + 1;
             }
         }
@@ -448,7 +450,7 @@ bool gregorio_find_vowel_group(const grewchar *const string, int *const start,
         }
     }
 
-    // no center found
+    /* no center found */
     *start = -1;
     return false;
 }

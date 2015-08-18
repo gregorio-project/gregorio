@@ -39,6 +39,9 @@
 
 #ifdef HAVE_STDALIGN_H
 #include <stdalign.h>
+#ifdef __clang__
+#pragma clang diagnostic ignored "-Wc11-extensions"
+#endif
 #else
 #define alignof(x) sizeof(x)
 #endif

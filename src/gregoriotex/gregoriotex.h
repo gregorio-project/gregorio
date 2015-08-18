@@ -20,7 +20,7 @@
 #ifndef GREGORIOTEX_H
 #define GREGORIOTEX_H
 
-#include <stdbool.h>
+#include "bool.h"
 
 #define OFFSET_CASE(name) static const char *const name = #name
 
@@ -30,7 +30,7 @@
 
 typedef enum gtex_type {
     T_ONE_NOTE = 1,
-    // two note neumes
+    /* two note neumes */
     T_PES,
     T_PESQUADRATUM,
     T_PESQUADRATUM_LONGQUEUE,
@@ -45,24 +45,24 @@ typedef enum gtex_type {
     T_FLEXUS_ORISCUS_SCAPUS,
     T_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
     T_VIRGA_STRATA,
-    // three note neumes
+    /* three note neumes */
     T_PORRECTUS,
     T_TORCULUS,
     T_TORCULUS_QUILISMA,
-    T_SCANDICUS, // only deminutus
-    T_ANCUS, // only deminutus
-    T_ANCUS_LONGQUEUE, // only deminutus
+    T_SCANDICUS, /* only deminutus */
+    T_ANCUS, /* only deminutus */
+    T_ANCUS_LONGQUEUE, /* only deminutus */
     T_SALICUS,
     T_SALICUS_LONGQUEUE,
-    // four note neumes
+    /* four note neumes */
     T_PORRECTUS_FLEXUS,
     T_TORCULUS_RESUPINUS,
     T_TORCULUS_LIQUESCENS,
-    T_TORCULUS_RESUPINUS_FLEXUS,
+    T_TORCULUS_RESUPINUS_FLEXUS
 } gtex_type;
 
-// the different types for the alignment of the notes in GregorioTeX
-// these values are numbers coded into GregorioTeX
+/* the different types for the alignment of the notes in GregorioTeX
+ * these values are numbers coded into GregorioTeX */
 typedef enum gtex_alignment {
     AT_ONE_NOTE = 0,
     AT_FLEXUS = 1,
@@ -73,36 +73,37 @@ typedef enum gtex_alignment {
     AT_PUNCTUM_INCLINATUM = 6,
     AT_STROPHA = 7,
     AT_FLEXUS_1 = 8,
-    AT_FLEXUS_DEMINUTUS = 9,
+    AT_FLEXUS_DEMINUTUS = 9
 } gtex_alignment;
 
-// Here we define a function that will determine the number of the
-// liquescentia that we will add to the glyph number. There are several types
-// as all glyphs can't have all liquescentiae. Let's first define the
-// different types:
+/* Here we define a function that will determine the number of the
+ * liquescentia that we will add to the glyph number. There are several types
+ * as all glyphs can't have all liquescentiae. Let's first define the
+ * different types: */
 
 typedef enum gtex_glyph_liquescentia {
-    // for glyphs that accept all liquecentiae
+    /* for glyphs that accept all liquecentiae */
     LG_ALL = 0,
-    // for glyphs that don't accept initio debilis
+    /* for glyphs that don't accept initio debilis */
     LG_NO_INITIO,
-    // for glyphs for which we don't know if the auctus is ascendens or descendens
+    /* for glyphs for which we don't know if the auctus is ascendens or
+     * descendens */
     LG_UNDET_AUCTUS,
-    // for glyphs that don't accept liquescentia
+    /* for glyphs that don't accept liquescentia */
     LG_NONE,
     LG_ONLY_DEMINUTUS,
     LG_NO_DEMINUTUS,
-    LG_ONLY_AUCTUS,
+    LG_ONLY_AUCTUS
 } gtex_glyph_liquescentia;
 
 typedef enum gtex_sign_type {
     ST_H_EPISEMUS = 0,
-    ST_V_EPISEMUS = 1,
+    ST_V_EPISEMUS = 1
 } gtex_sign_type;
 
 #define HEPISEMUS_FIRST_TWO 12
 
-static inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
+static __inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
         const gregorio_note *const note, bool *const kind_of_pes)
 {
     if (kind_of_pes) {
@@ -141,12 +142,12 @@ static inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
     return false;
 }
 
-static inline bool is_on_a_line(const char pitch)
+static __inline bool is_on_a_line(const char pitch)
 {
     return pitch % 2 == 0;
 }
 
-static inline bool is_between_lines(const char pitch)
+static __inline bool is_between_lines(const char pitch)
 {
     return pitch % 2 == 1;
 }
