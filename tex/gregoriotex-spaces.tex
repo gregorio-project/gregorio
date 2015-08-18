@@ -717,15 +717,25 @@
 
 % macro to tell gregorio to set space for the translation
 \def\gre@addtranslationspace{%
-  \gre@style@translation%
-  \gretranslationformat{%
-    \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight %
-    \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext %
-    \global\advance\gre@dimen@textlower by \gre@dimen@translationheight %
-    \gregeneratelines %
-    \gre@calculate@constantglyphraise %
-  }%
-  \endgre@style@translation%
+  \protected@edef\gre@@arg{\gretranslationformat{a}}%  DEPRECATED
+  \expandafter\ifx\gre@@arg\relax% DEPRECATED
+    \gre@style@translation% keep this line
+    \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight % keep this line
+    \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext % keep this line
+    \global\advance\gre@dimen@textlower by \gre@dimen@translationheight % keep this line
+    \gregeneratelines % keep this line
+    \gre@calculate@constantglyphraise % keep this line
+    \endgre@style@translation% keep this line
+  \else%  DEPRECATED
+    \gre@deprecated{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  DEPRECATED
+    \gretranslationformat{% DEPRECATED
+      \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight % DEPRECATED
+      \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext % DEPRECATED
+      \global\advance\gre@dimen@textlower by \gre@dimen@translationheight % DEPRECATED
+      \gregeneratelines % DEPRECATED
+      \gre@calculate@constantglyphraise % DEPRECATED
+    }% DEPRECATED
+  \fi%  DEPRECATED
   \relax %
 }%
 

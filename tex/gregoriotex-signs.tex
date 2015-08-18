@@ -797,8 +797,8 @@
   \relax %
 }%
 
-\gdef\grelowchoralsignstyle#1{#1}%
-\gdef\grehighchoralsignstyle#1{#1}%
+\gdef\grelowchoralsignstyle#1{\relax}%
+\gdef\grehighchoralsignstyle#1{\relax}%
 
 % quite simple function: #1 is the height, #2 is the string, #3 is #2 of punctum mora, #4 is #3 of punctum mora
 % #3 is 1 if it must be a bit higher
@@ -812,14 +812,26 @@
   \else %
     \gre@calculate@glyphraisevalue{#1}{10}%
   \fi %
-  \raise\gre@dimen@glyphraisevalue\hbox{{\gre@style@lowchoralsign\grelowchoralsignstyle{#2}\endgre@style@lowchoralsign}}%
+  \protected@edef\gre@@arg{\grelowchoralsignstyle{#2}}%  DEPRECATED
+  \expandafter\ifx\gre@@arg\relax% DEPRECATED
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@style@lowchoralsign#2\endgre@style@lowchoralsign}% keep this line
+  \else%  DEPRECATED
+    \gre@deprecated{\protect\grelowchoralsignstyle}{\protect\grechangestyle{lowchoralsign}}%  DEPRECATED
+    \raise\gre@dimen@glyphraisevalue\hbox{\grelowchoralsignstyle{#2}}%  DEPRECATED
+  \fi%  DEPRECATED
   \relax %
 }%
 
 \def\GreHighChoralSign#1#2#3{%
   \grenobreak %
-  \grevepisemusorrare{#1}{#3}{}{3}{{\gre@style@highchoralsign\grehighchoralsignstyle{#2}\endgre@style@highchoralsign}}%
-  %\grehepisorline{#1}{#3}{0}{4}{{\gre@style@highchoralsign\grehighchoralsignstyle{#2}\endgre@style@highchoralsign}}
+  \protected@edef\gre@@arg{\grehighchoralsignstyle{#2}}%  DEPRECATED
+  \expandafter\ifx\gre@@arg\relax%  DEPRECATED
+    \grevepisemusorrare{#1}{#3}{}{3}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}% keep this line
+  \else%  DEPRECATED
+    \gre@deprecated{\protect\grehighchoralsignstyle}{\protect\grechangestyle{highchoralsign}}%  DEPRECATED
+    \grevepisemusorrare{#1}{#3}{}{3}{\grehighchoralsignstyle{#2}}% DEPRECATED
+  \fi% DEPRECATED
+  %\grehepisorline{#1}{#3}{0}{4}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}
   \relax %
 }%
 
