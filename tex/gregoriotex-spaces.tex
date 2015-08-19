@@ -717,8 +717,7 @@
 
 % macro to tell gregorio to set space for the translation
 \def\gre@addtranslationspace{%
-  \protected@edef\gre@@arg{\gretranslationformat{a}}%  DEPRECATED
-  \expandafter\ifx\gre@@arg\relax% DEPRECATED
+  \ifx\gre@deprecated@translationformat\gretranslationformat% DEPRECATED
     \gre@style@translation% keep this line
     \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight % keep this line
     \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext % keep this line
