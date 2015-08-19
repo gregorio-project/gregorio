@@ -323,14 +323,21 @@
   \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
-    \gre@style@additionalstafflines %
+    \ifx\gre@deprecated@additionalstafflines\greadditionalstafflines% DEPRECATED
+      \gre@style@additionalstafflines % keep this line
+    \else % DEPRECATED
+      \gre@deprecated{\protect\greadditionalstafflines}{\protect\grechangestyle{additionalstafflines}}% DEPRECATED
+      \greadditionalstafflines% DEPRECATED
+    \fi% DEPRECATED
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\wd\gre@box@temp@sign %
     \advance\gre@dimen@temp@five by \gre@dimen@additionalcustoslineswidth %
     \kern-\gre@dimen@temp@five %
     \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight%
     \hss %
-    \endgre@style@additionalstafflines%
+    \ifx\gre@deprecated@additionalstafflines\greadditionalstafflines% DEPRECATED
+      \endgre@style@additionalstafflines% keep this line
+    \fi% DEPRECATED
   }%
   \relax %
 }%
@@ -344,14 +351,21 @@
   \advance\gre@dimen@temp@five by -\gre@dimen@stafflineheight %
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
-    \gre@style@additionalstafflines %
+    \ifx\gre@deprecated@additionalstafflines\greadditionalstafflines% DEPRECATED
+      \gre@style@additionalstafflines % keep this line
+    \else % DEPRECATED
+      \gre@deprecated{\protect\greadditionalstafflines}{\protect\grechangestyle{additionalstafflines}}% DEPRECATED
+      \greadditionalstafflines% DEPRECATED
+    \fi% DEPRECATED
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\wd\gre@box@temp@sign %
     \advance\gre@dimen@temp@five by \gre@dimen@additionalcustoslineswidth %
     \kern-\gre@dimen@temp@five %
     \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight%
     \hss %
-    \endgre@style@additionalstafflines %
+    \ifx\gre@deprecated@additionalstafflines\greadditionalstafflines% DEPRECATED
+      \endgre@style@additionalstafflines% keep this line
+    \fi% DEPRECATED
   }%
   \relax %
 }%
@@ -367,7 +381,12 @@
   \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
-    \gre@style@additionalstafflines %
+    \ifx\gre@deprecated@additionalstafflines\greadditionalstafflines% DEPRECATED
+      \gre@style@additionalstafflines % keep this line
+    \else % DEPRECATED
+      \gre@deprecated{\protect\greadditionalstafflines}{\protect\grechangestyle{additionalstafflines}}% DEPRECATED
+      \greadditionalstafflines% DEPRECATED
+    \fi% DEPRECATED
     \hss %
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\gre@dimen@additionalcustoslineswidth %
@@ -375,7 +394,9 @@
     \advance\gre@dimen@temp@five by \wd\gre@box@temp@sign %
     \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight%
     \hss %
-    \endgre@style@additionalstafflines%
+    \ifx\gre@deprecated@additionalstafflines\greadditionalstafflines% DEPRECATED
+      \endgre@style@additionalstafflines% keep this line
+    \fi% DEPRECATED
   }%
   \relax %
 }%
@@ -389,7 +410,12 @@
   \advance\gre@dimen@temp@five by -\gre@dimen@stafflineheight %
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
-    \gre@style@additionalstafflines %
+    \ifx\gre@deprecated@additionalstafflines\greadditionalstafflines% DEPRECATED
+      \gre@style@additionalstafflines % keep this line
+    \else % DEPRECATED
+      \gre@deprecated{\protect\greadditionalstafflines}{\protect\grechangestyle{additionalstafflines}}% DEPRECATED
+      \greadditionalstafflines% DEPRECATED
+    \fi% DEPRECATED
     \hss %
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\gre@dimen@additionalcustoslineswidth %
@@ -397,7 +423,9 @@
     \advance\gre@dimen@temp@five by \wd\gre@box@temp@sign %
     \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight%
     \hss %
-    \endgre@style@additionalstafflines%
+    \ifx\gre@deprecated@additionalstafflines\greadditionalstafflines% DEPRECATED
+      \endgre@style@additionalstafflines% keep this line
+    \fi% DEPRECATED
   }%
   \relax %
 }%
@@ -772,8 +800,10 @@
   \relax %
 }%
 
-\gdef\grelowchoralsignstyle#1{\relax}%
-\gdef\grehighchoralsignstyle#1{\relax}%
+\gdef\grelowchoralsignstyle#1{\relax}% DEPRECATED
+\let\gre@deprecated@lowchoralsignstyle\grelowchoralsignstyle%
+\gdef\grehighchoralsignstyle#1{\relax}% DEPRECATED
+\let\gre@deprecated@highchoralsignstyle\grehighchoralsignstyle%
 
 % quite simple function: #1 is the height, #2 is the string, #3 is #2 of punctum mora, #4 is #3 of punctum mora
 % #3 is 1 if it must be a bit higher
@@ -787,8 +817,7 @@
   \else %
     \gre@calculate@glyphraisevalue{#1}{10}%
   \fi %
-  \protected@edef\gre@@arg{\grelowchoralsignstyle{#2}}%  DEPRECATED
-  \expandafter\ifx\gre@@arg\relax% DEPRECATED
+  \ifx\gre@deprecated@lowchoralsignstyle\grelowchoralsignstyle% DEPRECATED
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@style@lowchoralsign#2\endgre@style@lowchoralsign}% keep this line
   \else%  DEPRECATED
     \gre@deprecated{\protect\grelowchoralsignstyle}{\protect\grechangestyle{lowchoralsign}}%  DEPRECATED
@@ -799,8 +828,7 @@
 
 \def\GreHighChoralSign#1#2#3{%
   \GreNoBreak %
-  \protected@edef\gre@@arg{\grehighchoralsignstyle{#2}}%  DEPRECATED
-  \expandafter\ifx\gre@@arg\relax%  DEPRECATED
+  \ifx\gre@deprecated@highchoralsignstyle\grehighchoralsignstyle%  DEPRECATED
     \gre@vepisemusorrare{#1}{#3}{}{3}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}% keep this line
   \else%  DEPRECATED
     \gre@deprecated{\protect\grehighchoralsignstyle}{\protect\grechangestyle{highchoralsign}}%  DEPRECATED
@@ -1168,9 +1196,16 @@
 \def\GreAdditionalLine#1#2#3{%
   \ifgre@showlines %
     \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
-    \gre@style@additionalstafflines %
+    \ifx\gre@deprecated@additionalstafflines\greadditionalstafflines% DEPRECATED
+      \gre@style@additionalstafflines % keep this line
+    \else % DEPRECATED
+      \gre@deprecated{\protect\greadditionalstafflines}{\protect\grechangestyle{additionalstafflines}}% DEPRECATED
+      \greadditionalstafflines% DEPRECATED
+    \fi% DEPRECATED
     \gre@hepisorline{\gre@pitch@a}{#1}{#2}{#3}{f}%
-    \endgre@style@additionalstafflines%
+    \ifx\gre@deprecated@additionalstafflines\greadditionalstafflines% DEPRECATED
+      \endgre@style@additionalstafflines% keep this line
+    \fi% DEPRECATED
     \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise %
   \fi %
   \relax %

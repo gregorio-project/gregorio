@@ -25,7 +25,7 @@
 #include "messages.h"
 
 static FILE *error_out;
-static char *file_name = NULL;
+static const char *file_name = NULL;
 static gregorio_verbosity verbosity_mode = 0;
 static bool debug_messages = false;
 static int return_value = 0;
@@ -40,7 +40,7 @@ void gregorio_set_error_out(FILE *const f)
     error_out = f;
 }
 
-void gregorio_set_file_name(char *const new_name)
+void gregorio_set_file_name(const char *const new_name)
 {
     file_name = new_name;
 }
