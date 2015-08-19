@@ -927,14 +927,6 @@
 
 \directlua{gregoriotex.emit_offset_macros()}%
 
-% adapted from http://www.tug.org/TUGboat/Articles/tb13-1/tb34fine.pdf
-\let\gre@switchx@fi\fi%
-\def\gre@switchx#1#2#3{%
-  \ifx#1#2\gre@switchx@break#3\gre@switchx@fi%
-  \gre@switchx#1%
-}%
-\def\gre@switchx@break#1\gre@switchx@fi#2\gre@endswitchx{\fi#1}%
-
 % a function to typeset a vertical episemus or a rare accent (like accentus,
 % circulus, etc.).  This function must be called after a call to \GreGlyph.
 % #1 is the letter of the height of the episemus (not the height of the note
