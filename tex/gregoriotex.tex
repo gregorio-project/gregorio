@@ -58,16 +58,6 @@
 \message{#1}%
 \endgroup}%
 
-% we're borrowing \protected@edef from the LaTeX source, so we need to define it for PlainTeX ourselves
-\def\@unexpandable@protect{\noexpand\protect\noexpand}
-\def\restore@protect{\let\protect\@@protect}
-\let\@edef\edef
-\def\protected@edef{%
-   \let\@@protect\protect
-   \let\protect\@unexpandable@protect
-   \afterassignment\restore@protect
-   \@edef}
-
 \ifx\csname gre@debug\endcsname\relax%
 \else%
   \def\gre@debug{}%
@@ -158,16 +148,6 @@
 }
 
 \let\normallines\grenormallines
-
-
-%% The following two functions are defined for backwards compatibility.  They will eventually be removed.
-\def\greinitialformat#1{% DEPRECATED
-  \relax %
-}%
-
-\def\grebiginitialformat#1{% DEPRECATED
-  \relax %
-}
 
 %%%%%%%%%%%%%%%%%%%%
 %% Formatting environments
