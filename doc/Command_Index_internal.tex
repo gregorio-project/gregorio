@@ -822,6 +822,56 @@ Macro to hold the version number of \emph{gregoriotex.lua} so that it can be che
 \macroname{\textbackslash gre@gregorioversion}{}{gregoriotex-main.tex}
 Macro to hold the version number of Gregorio\TeX\ so that it can be checked for consistency.
 
+\macroname{\textbackslash gre@leftfill}{}{gregoriotex-main.tex}
+Macro set to \verb=\hfil= or \verb=\relax= depending on alignment choices.
+
+\macroname{\textbackslash gre@rightfill}{}{gregoriotex-main.tex}
+Macro set to \verb=\hfil= or \verb=\relax= depending on alignment choices.
+
+\macroname{\textbackslash gre@mark@abovelinestext{}{gregoriotex-main.tex}
+Macro to set the point-and-click position for above lines text.
+
+\macroname{\textbackslash gre@mark@translation}{}{gregoriotex-main.tex}
+Macro to set the point-and-click position for translations.
+
+\macroname{\textbackslash gre@pitch@[a-p]}{}{gregoriotex-main.tex}
+Macros which map gabc pitch letters (the final part of the macro name) to the numerical value that Gregorio\TeX\ uses in processing note placement.
+
+\macroname{\textbackslash gre@ptich@adjust@top}{}{gregoriotex-main.tex}
+If any note appears above this pitch, the space above the lines must be adjusted to account for it.
+
+\macroname{\textbackslash gre@pitch@adjust@bottom}{}{gregoriotex-main.tex}
+If any note appears below this pitch, the space below the lines must be adjusted to account for it.
+
+\macroname{\textbackslash gre@pointandclick}{\#1\#2}{gregoriotex-main.tex}
+Macro to generate the point-and-click links.
+
+\begin{argtable}
+  \#1 & \TeX\ code & the entity which is to contain the link\\
+  \#2 & link target & line:char:column for the link\\
+\end{argtable}
+
+\macroname{\textbackslash gre@prefix}{}{gregoriotex-spaces.tex}
+Either ``skip'' or ``dimen'' according to the distance being set or changed at the given moment.
+
+\macroname{\textbackslash gre@rubberpermit}{\#1}{gregoriotex-spaces.tex}
+Determines whether the given distance is allowed to take a rubber length.
+
+\begin{argtable}
+  \#1 & string & the name of the distance to check\\
+\end{argtable}
+
+\macroname{\textbackslash gre@setgregoriofont}{[\#1]\#2}{gregoriotex-main.tex}
+Workhorse function behind \verb=\gresetgregoriofont=.
+
+\begin{argtable}
+  \#1 & \textit{(omitted)} & Use the normal font and rule set (default).\\
+      & op                 & Use the alternate Dominican font/rule set.\\
+  \#2 & greciliae          & Use the Greciliae font (default).\\
+      & gregorio           & Use the Gregorio font.\\
+      & parmesan           & Use the Parmesan font.\\
+\end{argtable}
+
 
 
 
@@ -1242,7 +1292,14 @@ Minimum shift required for the text (meaningful alias for \verb=\gre@skip@temp@t
 \macroname{\textbackslash gre@minShiftNotes}{}{gregoriotex-spaces.tex}
 Minimum shift required for the notes (meaningful alias for \verb=\gre@skip@temp@four= inside \verb=\gre@compute@syllablefinalskip=).
 
+\macroname{\textbackslash gre@save@parfillskip}{}{gregoriotex-main.tex}
+Macro to store \verb=\parfillskip= value so that we can restore it at the end of the score (needed to force the last line of a score to be justified).
 
+\macroname{\textbackslash gre@scaledist}{}{gregoriotex-spaces.tex}
+Working alias for \verb=\gre@skip@temp@one= or \verb=\gre@dimen@temp@one=, as appropriate, used when rescaling a distance due to a change in \verb=\gre@factor=.
+
+\macroname{\textbackslash gre@skip@syllablefinalskip}{}{gregoriotex-spaces.tex}
+The final distance to skip at the end of a syllable.
 
 
 \subsection{Penalties}
