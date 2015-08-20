@@ -75,7 +75,7 @@ typedef enum gregorio_type {
     GRE_SPACE,
     GRE_BAR,
     GRE_END_OF_PAR,
-    GRE_CUSTO,
+    GRE_CUSTOS,
     /* I don't really know how I could use the a TEXVERB_NOTE in gregoriotex,
      * as we don't write note by note... */
     /* GRE_TEXVERB_NOTE, */
@@ -353,7 +353,7 @@ typedef struct gregorio_extra_info {
 } gregorio_extra_info;
 
 typedef union gregorio_misc_element_info {
-    /* pitched is used for GRE_CUSTO, GRE_FLAT, GRE_SHARP, GRE_NATURAL,
+    /* pitched is used for GRE_CUSTOS, GRE_FLAT, GRE_SHARP, GRE_NATURAL,
      * GRE_C_KEY_CHANGE, GRE_F_KEY_CHANGE, GRE_C_KEY_CHANGE_FLATED, and
      * GRE_F_KEY_CHANGE_FLATED */
     struct {
@@ -363,6 +363,7 @@ typedef union gregorio_misc_element_info {
         signed char pitch;
         /* boolean indicating a clef with a B-flat */
         bool flatted_key:1;
+        bool force_pitch:1;
     } pitched;
     /* unpitched is used for everything else */
     struct {
@@ -786,7 +787,8 @@ void gregorio_free_one_glyph(gregorio_glyph **glyph);
 void gregorio_free_score(gregorio_score *score);
 void gregorio_go_to_first_character(gregorio_character **character);
 void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
-        gregorio_type type, signed char pitch, bool flatted_key, char *texverb);
+        gregorio_type type, signed char pitch, bool flatted_key,
+        bool force_pitch, char *texverb);
 void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
         gregorio_type type, gregorio_extra_info info, gregorio_sign sign,
         char *texverb);
