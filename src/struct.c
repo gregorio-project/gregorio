@@ -1479,51 +1479,41 @@ void gregorio_det_step_and_line_from_key(int key, char *step, int *line)
     }
 }
 
-static gregorio_glyph *gregorio_first_glyph(gregorio_syllable *syllable)
+static signed char gregorio_syllable_first_note(gregorio_syllable *syllable)
 {
-    gregorio_glyph *glyph;
     gregorio_element *element;
+    gregorio_glyph *glyph;
     if (!syllable) {
         gregorio_message(_("called with a NULL argument"),
-                "gregorio_first_glyph", VERBOSITY_ERROR, 0);
+                "gregorio_syllable_first_note", VERBOSITY_ERROR, 0);
     }
     element = syllable->elements[0];
     while (element) {
+        if (element->type == GRE_CUSTO) {
+            return element->u.misc.pitched.pitch;
+        }
         if (element->type == GRE_ELEMENT && element->u.first_glyph) {
             glyph = element->u.first_glyph;
             while (glyph) {
-                if ((glyph->type == GRE_GLYPH
-                        || glyph->type == GRE_MANUAL_CUSTOS)
-                        && glyph->u.notes.first_note) {
-                    return glyph;
+                if (glyph->type == GRE_MANUAL_CUSTOS) {
+                    return glyph->u.misc.pitched.pitch;
+                }
+                if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
+                    assert(glyph->u.notes.first_note->type == GRE_NOTE);
+                    return glyph->u.notes.first_note->u.note.pitch;
                 }
                 glyph = glyph->next;
             }
         }
         element = element->next;
     }
-    return NULL;
-}
-
-static signed char gregorio_syllable_first_note(gregorio_syllable *syllable)
-{
-    gregorio_glyph *glyph;
-    glyph = gregorio_first_glyph(syllable);
-    if (glyph == NULL) {
-        return 0;
-    }
-    if (glyph->type == GRE_MANUAL_CUSTOS) {
-        return glyph->u.misc.pitched.pitch;
-    }
-    assert(glyph->type == GRE_GLYPH);
-    assert(glyph->u.notes.first_note->type == GRE_NOTE);
-    return glyph->u.notes.first_note->u.note.pitch;
+    return 0;
 }
 
 signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph)
 {
-    char temp;
+    signed char temp;
     if (!element || !syllable) {
         gregorio_message(_("called with a NULL argument"),
                 "gregorio_determine_next_pitch", VERBOSITY_ERROR, 0);
@@ -1546,6 +1536,9 @@ signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
     /* then we do the same with the elements */
     element = element->next;
     while (element) {
+        if (element->type == GRE_CUSTO) {
+            return element->u.misc.pitched.pitch;
+        }
         if (element->type == GRE_ELEMENT && element->u.first_glyph) {
             glyph = element->u.first_glyph;
             while (glyph) {
