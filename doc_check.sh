@@ -54,9 +54,9 @@ sed -i.temp 's:\\definecolor{\([a-zA-Z]*\)}.*:\1:' $CODEFILE
 grep -h '\\grecreatedim{.*' gsp-default.tex >> $CODEFILE
 sed -i.temp 's:\\grecreatedim{\([a-z@]*\)}.*:\1:' $CODEFILE
 
-#boxes
-grep -hE '\\setbox.*' *.tex *.sty >> $CODEFILE
-sed -i.temp 's:\\setbox\(\\[a-z@]*\):\1:' $CODEFILE
+#styles
+sed -i.temp 's:\\endgre@style@::' $CODEFILE
+sed -i.temp 's:\\gre@style@::' $CODEFILE
 
 #alphabetize and remove duplicates
 sort -u -o$CODEFILE $CODEFILE
@@ -66,6 +66,7 @@ sort -u -o$CODEFILE $CODEFILE
 cd $HERE/doc
 
 grep -h '\\macroname.*' *.tex > $DOCFILE
+grep -h '\\stylename{.*' *.tex >> $DOCFILE
 
 #remove all but name
 sed -i.temp 's:\\macroname{\([^}]*\)}.*:\1:' $DOCFILE
@@ -73,14 +74,26 @@ sed -i.temp 's:\\macroname{\([^}]*\)}.*:\1:' $DOCFILE
 #replace TeX code with backslash
 sed -i.temp 's:\\textbackslash :\\:' $DOCFILE
 
+#styles
+sed -i.temp 's:.*\stylename{\([a-z]*\)}.*:\1:' $DOCFILE
+
+#Other things which need to be removed
+sed -i.temp 's:\\newcommand.*::' $DOCFILE
+sed -i.temp 's:MacroName::' $DOCFILE
+sed -i.temp 's:\\usepackage::' $DOCFILE
+
 #deprecated and obsolete functions (not in documentation because they don't need to be)
 cd $HERE/tex
 
-grep -h '\\gre@deprecated.*' *.tex >> $DOCFILE
-grep -h '\\gre@obsolete.*' *.tex >> $DOCFILE
+grep -h '\\gre@deprecated.*' *.tex | grep -v '\\def\\' >> $DOCFILE
+grep -h '\\gre@obsolete.*' *.tex | grep -v '\\def\\' >> $DOCFILE
 
-sed -i.temp 's:^\s*\\gre@deprecated{\protect\([^}]*\)}.*:\1:' $DOCFILE
-sed -i.temp 's:^\s*\\gre@obsolete{\protect\([^}]*\)}.*:\1:' $DOCFILE
+#remove whitespace
+gsed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $DOCFILE
+
+sed -i.temp 's:\\gre@deprecated{\\protect::' $DOCFILE
+sed -i.temp 's:\\gre@obsolete{\\protect::' $DOCFILE
+sed -i.temp 's:}.*::' $DOCFILE
 
 #alphabetize and remove duplicates
 sort -u -o$DOCFILE $DOCFILE

@@ -579,23 +579,24 @@ A macro for invoking one of the five separators (fancy lines) which are containe
 \subsubsection{Styling}
 Different elements of an include score have different styles applied.  These elements and their defaults are listed below:
 
+\let\stylename\texttt
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 \bigskip\rowcolors{1}{lightgray}{lightgray}
 \begin{tabular}{lp{7cm plus .5cm}r}
   Element Name & Description & Default\\
   \hline
-  \texttt{initial} & Normal Initials & 40 pt font\\
-  \texttt{biginitial} & Big (2-Line) Initials & 80 pt font\\
-  \texttt{translation} & Translation text (appears below lyrics) & {\it italics}\\
-  \texttt{abovelinestext} & Above line text (\texttt{<alt></alt>} in gabc, appears above the staff) & normal\\
-  \texttt{normalstafflines} & Full length staff lines & none\\
-  \texttt{additionalstafflines} & short lines behind notes above or below the staff & special\footnotemark[1]\\
-  \texttt{lowchoralsign} & low choral signs & none\\
-  \texttt{highchoralsign} & high choral signs & none\\
-  \texttt{firstsyllableinitial} & the first letter of the first syllable of a score which is not the score initial & none\\
-  \texttt{firstsyllable} & the balance of the first syllable of the score & none\\
-  \texttt{modeline} & the rendered annotation from the \texttt{mode: ;} header in the gabc file & \parbox[t]{2.2cm}{\raggedleft\textsc{\textbf{Bold Small Capitals}}}\\
-  \texttt{nabc} & ancient notation & {\color{gregoriocolor}gregoriocolor} (\LaTeX)\\
+  \stylename{initial} & Normal Initials & 40 pt font\\
+  \stylename{biginitial} & Big (2-Line) Initials & 80 pt font\\
+  \stylename{translation} & Translation text (appears below lyrics) & {\it italics}\\
+  \stylename{abovelinestext} & Above line text (\texttt{<alt></alt>} in gabc, appears above the staff) & normal\\
+  \stylename{normalstafflines} & Full length staff lines & none\\
+  \stylename{additionalstafflines} & short lines behind notes above or below the staff & special\footnotemark[1]\\
+  \stylename{lowchoralsign} & low choral signs & none\\
+  \stylename{highchoralsign} & high choral signs & none\\
+  \stylename{firstsyllableinitial} & the first letter of the first syllable of a score which is not the score initial & none\\
+  \stylename{firstsyllable} & the balance of the first syllable of the score & none\\
+  \stylename{modeline} & the rendered annotation from the \texttt{mode: ;} header in the gabc file & \parbox[t]{2.2cm}{\raggedleft\textsc{\textbf{Bold Small Capitals}}}\\
+  \stylename{nabc} & ancient notation & {\color{gregoriocolor}gregoriocolor} (\LaTeX)\\
   && none (Plain\TeX)\\
 \end{tabular}
 
@@ -1125,22 +1126,22 @@ A shift you can give to the accentus above the curly brace.
 
 Default: $\unit[-0.05]{cm}$
 
-\macroname{\textbackslash nabcinterelementspace}{}{gsp-default.tex}
+\macroname{nabcinterelementspace}{}{gsp-default.tex}
 Space between elements in ancient notation.
 
 Default: \unit[0.06927]{cm} plus \unit[0.00182]{cm} minus \unit[0.00363]{cm}
 
-\macroname{\textbackslash nabclargerspace}{}{gsp-default.tex}
+\macroname{nabclargerspace}{}{gsp-default.tex}
 Larger space between elements in ancient notation.
 
 Default: \unit[0.10938]{cm} plus \unit[0.01822]{cm} minus \unit[0.00911]{cm}
 
-\macroname{\textbackslash clivisalignmentmin}{}{gsp-defualt.tex}
+\macroname{clivisalignmentmin}{}{gsp-defualt.tex}
 When \verb=\gre@clivisalignment= is 2, this distance is the maximum length of the consonants after vowels for which the clivis will be aligned on its center.
 
 Default: \unit[0.3]{cm}
 
-\macroname{\textbackslash clefchangespace}{}{gsp-default.tex}
+\macroname{clefchangespace}{}{gsp-default.tex}
 Space around a clef change.
 
 Default: \unit[0.01768]{cm} plus \unit[0.00175]{cm} minus \unit[0.01768]{cm}

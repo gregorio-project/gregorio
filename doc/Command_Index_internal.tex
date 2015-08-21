@@ -40,6 +40,14 @@ package error, halting \TeX.
   \#2 & string & name of the correct macro to use\\
 \end{argtable}
 
+\macroname{\textbackslash gre@obsolete}{\#1\#2}{gregoriotex-main.tex}
+Macro that handles obsolescence errors.
+
+\begin{argtable}
+  \#1 & string & name of the obsolete macro\\
+  \#2 & string & name of the correct macro to use\\
+\end{argtable}
+
 \macroname{\textbackslash gre@loadgregoriofont}{}{gregoriotex-main.tex}
 Loads the chosen font for the neumes at the correct size.
 
@@ -731,7 +739,7 @@ Macro for defining the various types of horizontal episema.
   \#2 & string & Camel case name of horizontal episemus to be defined\\
 \end{argtable}
 
-\macroname{\textbackslash gre@def@char@he@prr}{\#1\#2}{gregoriotex-chars.tex}
+\macroname{\textbackslash gre@def@char@he@porr}{\#1\#2}{gregoriotex-chars.tex}
 Macro for defining the various types of horizontal episema porrectus.
 
 \begin{argtable}
@@ -828,7 +836,7 @@ Macro set to \verb=\hfil= or \verb=\relax= depending on alignment choices.
 \macroname{\textbackslash gre@rightfill}{}{gregoriotex-main.tex}
 Macro set to \verb=\hfil= or \verb=\relax= depending on alignment choices.
 
-\macroname{\textbackslash gre@mark@abovelinestext{}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@mark@abovelinestext}{}{gregoriotex-main.tex}
 Macro to set the point-and-click position for above lines text.
 
 \macroname{\textbackslash gre@mark@translation}{}{gregoriotex-main.tex}
@@ -837,7 +845,7 @@ Macro to set the point-and-click position for translations.
 \macroname{\textbackslash gre@pitch@[a-p]}{}{gregoriotex-main.tex}
 Macros which map gabc pitch letters (the final part of the macro name) to the numerical value that Gregorio\TeX\ uses in processing note placement.
 
-\macroname{\textbackslash gre@ptich@adjust@top}{}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@pitch@adjust@top}{}{gregoriotex-main.tex}
 If any note appears above this pitch, the space above the lines must be adjusted to account for it.
 
 \macroname{\textbackslash gre@pitch@adjust@bottom}{}{gregoriotex-main.tex}

@@ -659,7 +659,7 @@
 
 % macro to tell gregorio to set space for the translation
 \def\gre@addtranslationspace{%
-  \ifx\gre@deprecated@translationformat\gretranslationformat% DEPRECATED
+  \ifx\gre@empty@translationformat\gretranslationformat% DEPRECATED
     \gre@style@translation% keep this line
     \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight % keep this line
     \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext % keep this line
@@ -1249,46 +1249,35 @@
 
 %To change the space after the initial
 %First argument is distance, second is whether it should scale when \gre@factor changes.
-\ifdefined\setspaceafterinitial%
-  \gre@error{\protect\setspaceafterinitial\space is already defined.  Check for package conflicts.}%
-\else%
-  \def\setspaceafterinitial#1#2{%
-    \grechangedim{afterinitialshift}{#1}{#2}%
-    \relax %
-  }%
-\fi%
+\def\setspaceafterinitial#1#2{%
+  \gre@deprecated{\protect\setspaceafterinitial}{\protect\grechangedim{afterinitialshift}}%
+  \grechangedim{afterinitialshift}{#1}{#2}%
+  \relax %
+}
 
 \def\GreSetSpaceAfterInitial#1{%
-  \gre@deprecated{\protect\GreSetSpaceAfterInitial}{\protect\setspaceafteriniital}%
-  \setspaceafterinitial#1{1}%
+  \gre@obsolete{\protect\GreSetSpaceAfterInitial}{\protect\grechangedim{afterinitialshift}}%
 }%
 
 %To change the space before the initial
 %First argument is distance, second is whether it should scale when \gre@factor changes.
-\ifdefined\setspacebeforeinitial%
-  \gre@error{\protect\setspacebeforeinitial\space is already defined.  Check for package conflicts.}%
-\else%
-  \def\setspacebeforeinitial#1#2{%
-    \grechangedim{beforeinitialshift}{#1}{#2}%
-    \relax %
-  }%
-\fi%
+\def\setspacebeforeinitial#1#2{%
+  \gre@deprecated{\protect\setspacebeforeinitial}{\protect\grechangedim{beforeinitialshift}}%
+  \grechangedim{beforeinitialshift}{#1}{#2}%
+  \relax %
+}%
 
 \def\GreSetSpaceBeforeInitial#1{%
-  \gre@deprecated{\protect\GreSetSpaceBeforeInitial}{\protect\setspacebeforeiniital}%
-  \setspacebeforeinitial#1{1}%
+  \gre@obsolete{\protect\GreSetSpaceBeforeInitial}{\protect\setspacebeforeiniital}%
 }%
 
 
 %To change all the distances associated with the initial.
 %First three arguments are distances, last is whether they should scale when \gre@factor changes.
-\ifdefined\setinitialspacing%
-  \gre@error{\protect\setinitialspacing\space is already defined.  Check for package conflicts.}%
-\else%
-  \def\setinitialspacing#1#2#3#4{%
-    \grechangedim{beforeinitialshift}{#1}{#4}%
-    \grechangedim{manualinitialwidth}{#2}{#4}%
-    \grechangedim{afterinitialshift}{#3}{#4}%
-    \relax%
-  }%
-\fi%
+\def\setinitialspacing#1#2#3#4{%
+  \gre@deprecated{\protect\setinitialspacing}{\protect\grechangedim{beforeinitialshift}, \protect\grechangedim{manualinitialwidth}, and \protect\grechangedim{afterinitialshift}}
+  \grechangedim{beforeinitialshift}{#1}{#4}%
+  \grechangedim{manualinitialwidth}{#2}{#4}%
+  \grechangedim{afterinitialshift}{#3}{#4}%
+  \relax%
+}%

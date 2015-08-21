@@ -323,7 +323,7 @@
   \gre@dimen@temp@five=-\gre@dimen@textlower %
   % if it is a big initial we print it on the second line
   \ifnum\gre@biginitial=0\relax %
-    \ifx\gre@deprecated@initialformat\greinitialformat% DEPRECATED
+    \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
       \setbox\gre@box@initial=\hbox{\gre@style@initial#1\endgre@style@initial}% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  DEPRECATED
@@ -333,7 +333,7 @@
     \ifdim\gre@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
     \else%
-      \ifx\gre@deprecated@initialformat\greinitialformat% DEPRECATED
+      \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
         \gre@style@initial% keep this line
         \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth% keep this line
         \endgre@style@initial% keep this line
@@ -347,14 +347,14 @@
       \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
     \fi%
     \gre@debugmsg{annotation}{Width check completed.}%
-    \ifx\gre@deprecated@initialformat\greinitialformat% DEPRECATED
+    \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
       \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\gre@style@initial#1\endgre@style@initial}\hss}% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  DEPRECATED
       \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\greinitialformat{#1}}\hss}% DEPRECATED
     \fi%  DEPRECATED
     \gre@debugmsg{annotation}{Initial set.}%
-    \ifx\gre@deprecated@initialformat\greinitialformat% DEPRECATED
+    \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
       \gre@style@initial% keep this line
       \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift% keep this line
       \endgre@style@initial% keep this line
@@ -369,7 +369,7 @@
     \advance\gre@dimen@temp@five by 4\gre@dimen@interstafflinespace %
     \advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight %
     \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
-    \ifx\gre@deprecated@biginitialformat\grebiginitialformat% DEPRECATED
+    \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
     \setbox\gre@box@initial=\hbox{\gre@style@biginitial#1\endgre@style@biginitial}% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
@@ -379,7 +379,7 @@
     \ifdim\gre@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
     \else%
-      \ifx\gre@deprecated@biginitialformat\grebiginitialformat% DEPRECATED
+      \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
         \gre@style@biginitial% keep this line
         \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth% keep this line
         \endgre@style@biginitial% keep this line
@@ -392,13 +392,13 @@
     \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@annoation%
     \fi%
-    \ifx\gre@deprecated@biginitialformat\grebiginitialformat% DEPRECATED
+    \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
       \setbox\gre@box@initial=\hbox{\vbox to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\gre@style@biginitial#1\endgre@style@biginitial}\hss}\vss}}% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
       \setbox\gre@box@initial=\hbox{\vbox to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\grebiginitialformat{#1}}\hss}\vss}}%%  DEPRECATED
     \fi%  DEPRECATED
-    \ifx\gre@deprecated@biginitialformat\grebiginitialformat% DEPRECATED
+    \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
       \gre@style@biginitial% keep this line
       \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift% keep this line
       \endgre@style@biginitial% keep this line
@@ -412,7 +412,7 @@
   \gre@debugmsg{annotation}{Ready to place initial.}%
   \copy\gre@box@initial%
   \ifnum\gre@biginitial=0\relax%
-    \ifx\gre@deprecated@initialformat\greinitialformat% DEPRECATED
+    \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
       \gre@style@initial% keep this line
       \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift% keep this line
       \endgre@style@initial% keep this line
@@ -421,7 +421,7 @@
       \greinitialformat{\global\gre@dimen@temp@four = \gre@dimen@afterinitialshift}%  DEPRECATED
     \fi%  DEPRECATED
   \else%
-    \ifx\gre@deprecated@biginitialformat\grebiginitialformat% DEPRECATED
+    \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
       \gre@style@biginitial% keep this line
       \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift% keep this line
       \endgre@style@biginitial% keep this line
@@ -612,11 +612,11 @@
 \def\greabovelinestextstyle#1{% DEPRECATED
   \relax %
 }%
-\let\gre@deprecated@abovelinestextstyle\greabovelinestextstyle%
+\let\gre@empty@abovelinestextstyle\greabovelinestextstyle%
 
 % set space above the text lines - almost the same as for the translation
 \def\gre@addspaceabove{%
-  \ifx\gre@deprecated@abovelinestextstyle\greabovelinestextstyle% DEPRECATED
+  \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% DEPRECATED
     \gre@style@abovelinestext% keep this line
     \global\gre@dimen@currentabovelinestextheight=\gre@dimen@abovelinestextheight % keep this line
     \gre@generatelines % keep this line
@@ -654,7 +654,7 @@
 
 % typesets the text above the line
 \def\gre@typesettextabovelines#1{%
-  \ifx\gre@deprecated@abovelinestextstyle\greabovelinestextstyle% DEPRECATED
+  \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% DEPRECATED
     \gre@style@abovelinestext% keep this line
     \gre@debugmsg{spacing}{Raise alt text: \gre@dimen@abovelinestextraise}% keep this line
     \global\gre@dimen@temp@five=\gre@dimen@abovelinestextraise\relax% keep this line
@@ -675,7 +675,7 @@
   \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
   \gre@mark@abovelinestext %
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
-  \ifx\gre@deprecated@abovelinestextstyle\greabovelinestextstyle% DEPRECATED
+  \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% DEPRECATED
     \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\gre@style@abovelinestext#1\endgre@style@abovelinestext\hss}% keep this line
   \else%  DEPRECATED
     \gre@deprecated{\protect\greabovelinestextstyle}{\protect\grechangestyle{abovelinestext}}%  DEPRECATED
@@ -718,7 +718,7 @@
   %\gre@dimen@initialwidth=0pt
   \hbox to 0pt{%
     \vbox{%
-      \ifx\gre@deprecated@normalstafflinesformat\grenormalstafflinesformat% DEPRECATED
+      \ifx\gre@empty@normalstafflinesformat\grenormalstafflinesformat% DEPRECATED
         \gre@style@normalstafflines% keep this line
       \else%  DEPRECATED
         \gre@deprecated{\protect\grenormalstafflinesformat}{\protect\grechangestyle{normalstafflines}}%  DEPRECATED
@@ -756,7 +756,7 @@
       \vskip\gre@dimen@spacebeneathtext %
       \vskip\gre@dimen@currenttranslationheight %
       \vskip\gre@dimen@additionalbottomspace %
-      \ifx\gre@deprecated@normalstafflinesformat\grenormalstafflinesformat% DEPRECATED
+      \ifx\gre@empty@normalstafflinesformat\grenormalstafflinesformat% DEPRECATED
         \endgre@style@normalstafflines% keep this line
       \fi% DEPRECATED
     }%
@@ -773,7 +773,7 @@
 \def\gre@generatelines{%
   \setbox\gre@box@lines=\hbox to 0pt{%
     \vbox{%
-      \ifx\gre@deprecated@normalstafflinesformat\grenormalstafflinesformat% DEPRECATED
+      \ifx\gre@empty@normalstafflinesformat\grenormalstafflinesformat% DEPRECATED
         \gre@style@normalstafflines% keep this line
       \else%  DEPRECATED
         \gre@deprecated{\protect\grenormalstafflinesformat}{\protect\grechangestyle{normalstafflines}}%  DEPRECATED
@@ -811,7 +811,7 @@
       \vskip\gre@dimen@additionalbottomspace %
       \vskip\gre@dimen@spacebeneathtext %
       \vskip\gre@dimen@currenttranslationheight %
-      \ifx\gre@deprecated@normalstafflinesformat\grenormalstafflinesformat% DEPRECATED
+      \ifx\gre@empty@normalstafflinesformat\grenormalstafflinesformat% DEPRECATED
         \endgre@style@normalstafflines % keep this line
       \fi% DEPRECATED
     }%
@@ -915,7 +915,7 @@
     \divide\gre@dimen@temp@five by 2\relax %
     \gre@mark@translation %
     \kern\gre@dimen@temp@five %
-    \ifx\gre@deprecated@translationformat\gretranslationformat% DEPRECATED
+    \ifx\gre@empty@translationformat\gretranslationformat% DEPRECATED
       \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  DEPRECATED
@@ -924,7 +924,7 @@
     \kern-\gre@dimen@temp@five %
   \else %
     \gre@mark@translation %
-    \ifx\gre@deprecated@translationformat\gretranslationformat% DEPRECATED
+    \ifx\gre@empty@translationformat\gretranslationformat% DEPRECATED
       \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  DEPRECATED
@@ -939,7 +939,7 @@
   \fi %
   \gre@attr@center=1\relax %
   \gre@mark@translation %
-  \ifx\gre@deprecated@translationformat\gretranslationformat% DEPRECATED
+  \ifx\gre@empty@translationformat\gretranslationformat% DEPRECATED
     \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}\kern 0pt}% keep this line
   \else%  DEPRECATED
     \gre@deprecated{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  DEPRECATED
@@ -1426,27 +1426,27 @@
 \def\greinitialformat#1{% DEPRECATED
   \relax %
 }
-\let\gre@deprecated@initialformat\greinitialformat
+\let\gre@empty@initialformat\greinitialformat
 
 \def\grebiginitialformat#1{% DEPRECATED
   \relax %
 }
-\let\gre@deprecated@biginitialformat\grebiginitialformat
+\let\gre@empty@biginitialformat\grebiginitialformat
 
 \def\gretranslationformat#1{% DEPRECATED
   \relax %
 }%
-\let\gre@deprecated@translationformat\gretranslationformat
+\let\gre@empty@translationformat\gretranslationformat
 
 \def\grenormalstafflinesformat{% DEPRECATED
   \relax %
 }%
-\let\gre@deprecated@normalstafflinesformat\grenormalstafflinesformat
+\let\gre@empty@normalstafflinesformat\grenormalstafflinesformat
 
 \def\greadditionalstafflinesformat{% DEPRECATED
   \relax %
 }%
-\let\gre@deprecated@additionalstafflinesformat\greadditionalstafflinesformat
+\let\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 

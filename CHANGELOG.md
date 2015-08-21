@@ -135,6 +135,9 @@ See GregorioRef.pdf for full details.
 - `\greusemedicaeastyle`, supplanted by `\gresetglyphsytle{medicaea}`
 - `\greusehufnagelstyle`, supplanted by `\gresetglyphsytle{hufnagel}`
 - `\greusemensuralstyle`, supplanted by `\gresetglyphsytle{mensural}`
+- `\setspaceafterinitial`, supplanted by `\grechangedim{afterinitialshift}...`
+- `\setspacebeforeinitial`, supplanted by `\grechangedim{beforeinitialshift}...`
+- `\setinitialspacing`, supplanted by `\grechangedim{beforeinitialshift}...`, `\grechangedim{manualinitialwidth}...`, and `\grechangedime{afterinitialshift}...`
 
 
 ### Removed
@@ -148,8 +151,8 @@ See GregorioRef.pdf for full details.
 - `\greincludetexscore`, supplanted by `\gregorioscore[n]`
 - `\includegabcscore`, supplanted by `\gregorioscore[f]`
 - `\greincludegabcscore`, supplanted by `\gregorioscore[f]`
-- `\GreSetSpaceBeforeInitial`, supplanted by `\grechangedim{spacebeforeinitial}...`
-- `\GreSetSpaceAfterInitial`, supplanted by `\grechangedim{spaceafterinitial}...`
+- `\GreSetSpaceBeforeInitial`, supplanted by `\grechangedim{beforeinitialshift}...`
+- `\GreSetSpaceAfterInitial`, supplanted by `\grechangedim{afterinitialshift}...`
 - `\GreSetAboveInitialSeparation`, supplanted by `\grechangedim{annotationseparation}...`
 - `\gresetstafflinefactor`, supplanted by `\grechangestafflinethickness`
 - `greg-book` and `greg-lily-book` engines, supplanted by improved capabilities of `\gregorioscore` for compiling gabc files at time of document compilation.
