@@ -34,8 +34,8 @@
 \def\gre@bug#1{\PackageError{GregorioTeX}{#1 !! This is a bug in Gregorio.  Please report it at https://github.com/gregorio-project/gregorio/issues}{}}%
 \def\gre@typeout{\typeout}
 \long\def\gre@metapost#1{{%
-  \grelocalleftbox{}%
-  \grelocalrightbox{}%
+  \gre@localleftbox{}%
+  \gre@localrightbox{}%
   \begin{mplibcode}
   #1
   \end{mplibcode}%

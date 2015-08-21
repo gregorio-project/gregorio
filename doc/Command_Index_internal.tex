@@ -872,8 +872,46 @@ Workhorse function behind \verb=\gresetgregoriofont=.
       & parmesan           & Use the Parmesan font.\\
 \end{argtable}
 
+\macroname{\textbackslash gre@syllable@end}{\#1\#2\#3}{gregoriotex-syllable.tex}
+Macro to make a few checks and call the right macros between \verb=\endbeforebar, \endofword, \endofsyllable=.
 
+\begin{argtable}
+  \#1 & & next syllable type (\#7 of \verb=\GreSyllable=)\\
+  \#2 & string & next syllable text\\
+  \#3 & 0 & this syllable is not the end of a word\\
+  & 1 & this syllable is the end of a word\\
+\end{argtable}
 
+\macroname{\textbackslash gre@typeout}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
+Macro which points to \verb=\typeout= in \LaTeX\ or \verb=\message= in Plain\TeX.
+
+\macroname{\textbackslash gre@unsetfixedtextformat}{}{gregoriotex-syllable.tex}
+Macro which changes \verb=\gre@fixedtextformat= back to normal text.
+
+\macroname{\textbackslash gre@unsetfixednexttextformat}{}{gregoriotex-syllable.tex}
+Macro which changes \verb=\gre@fixednexttextformat= back to normal text.
+
+\macroname{\textbackslash gregoriotex@symbols@loaded}{}{gregoriotex-symbols.tex}
+Empty macro which is used to determine if the symbols have been loaded and prevent loading them again if they have.
+
+\macroname{\textbackslash gre@hskip}{}{gregoriotex-signs.tex}
+Alias for \verb=\hskip= or \verb=\kern=.  We use this rather than those functions directly so that the same element can appear in discretionaries where \verb=\kern= is allowed but \verb=\hskip= is not by simply changing the assignment of this macro when we enter one.
+
+\macroname{\textbackslash gre@localleftbox}{}{gregoriotex-main.tex}
+Alias for \verb=\luatexlocalleftbox=.
+
+\macroname{\textbackslash gre@localrightbox}{}{gregoriotex-main.tex}
+Alias for \verb=\luatexlocalrightbox=.
+
+\macroname{\textbackslash gre@resizebox}{}{gregoriotex-main.tex}
+Alias for \verb=\resizebox=.
+
+\macroname{\textbackslash gre@typesetcusto}{\#1}{gregoriotex-signs.tex}
+Macro to typeset a custo.
+
+\begin{argtable}
+  \#1 & int & height of the custo\\
+\end{argtable}
 
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates it's own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
@@ -1121,7 +1159,33 @@ Macro which specifies the default compilation behavior: never compile (0), auto 
 Boolean which indicates whether the \texttt{nabc} font has been loaded.
 
 \macroname{\textbackslash gre@generate@pointandclick}{}{gregoriotex-syllable.tex}
-Macro which indicates whether the point-and-click functionality should be implemented (1) or not (0).  Not a boolean because it needs to be readable by Lua.
+Count which indicates whether the point-and-click functionality should be implemented (1) or not (0).  Not a boolean because it needs to be readable by Lua.
+
+\macroname{\textbackslash gre@variableheightexpansion}{}{gregoriotex-main.tex}
+Count to indicated if the spacing between lines should be variable (1) or fixed (0).  Not a boolean because it needs to be readable by Lua.
+
+\macroname{\textbackslash ifgre@blockeolcustos}{}{gregoriotex-main.tex}
+Boolean which indicates whether the custos at the end of the line should be blocked.
+
+\macroname{\textbackslash ifgre@breakintranslation}{}{gregoriotex-main.tex}
+Boolean which indicates if line breaks are allowed inside a translation.
+
+\macroname{\textbackslash ifgre@eolshiftsenabled}{}{gregoriotex-main.tex}
+Boolean which indicates if the left shift for the first syllables of scores is enabled.
+
+\macroname{\textbackslash ifgre@euouae@implies@nlba}{}{gregoriotex-main.tex}
+Boolean which indicates if line breaks are prohibited in an \texttt{euouae} area.
+
+\macroname{\textbackslash ifgre@in@euouae}{}{gregoriotex-main.tex}
+Boolean which indicates that we are in an \texttt{euouae} area.
+
+\macroname{\textbackslash ifgre@justifylastline}{}{gregoriotex-main.tex}
+Boolean which indicates that the last line of the score should be justified.
+
+\macroname{\textbackslash ifgre@showclef}{}{gregoriotex-main.tex}
+Boolean which indicates that the clef should be visible.
+
+
 
 
 \subsection{Boxes}
@@ -1395,22 +1459,10 @@ A place to save the current value of the pretolerance so that we can change it t
 While every effort has been made to use only primitives which are compatible with both \LaTeX\ and Plain\TeX, it is sometimes necessary to use primitives which are defined for one but not the other (usually its \LaTeX\ that has what we need built in).  In these cases we have to provide an equivalent macro to the \TeX\ version which is lacking.
 
 \macroname{\textbackslash MessageBreak}{}{gregoriotex.tex}
-Creates a line break in warning and error messages.  Copied from \LaTeX\ source.
+Creates a line break in typeout, warning, bug, and error messages.  Copied from \LaTeX\ source.
 
 \macroname{\textbackslash protect}{}{gregoriotex.tex}
-Prints the name of the macro, rather than its contents in warning and error messages.  Copied from \LaTeX\ source.
-
-\macroname{\textbackslash protected@edef}{}{gregoriotex.tex}
-Version of \verb=\edef= which protects the expansion of fragile macros which could not otherwise appear in an \verb=\edef= statement.  Copied from the \LaTeX\ source.
-
-\macroname{\textbackslash @unexpandable@protect}{}{gregoriotex.tex}
-Macro used in defining \verb=\protected@edef=.  Copied from the \LaTeX\ source.
-
-\macroname{\textbackslash restore@protect}{}{gregoriotex.tex}
-Macro used in defining \verb=\protected@edef=.  Copied from the \LaTeX\ source.
-
-\macroname{\textbackslash @edef}{}{gregoriotex.tex}
-Macro used in defining \verb=\protected@edef=.  Copied from the \LaTeX\ source.
+Prints the name of the macro, rather than its contents in typeout, warning, bug, and error messages.  Copied from \LaTeX\ source.
 
 \macroname{\textbackslash f@size}{}{gregoriotex.tex}
 Macro which stores the current font size.

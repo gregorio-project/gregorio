@@ -44,18 +44,18 @@
 % - you cannot use \hskip (but you can use kern)
 % - you cannot use \penalty (which is useless indeed)
 %
-% To remedy that, we define \grehskip to be \hskip outside a discretionary, and
+% To remedy that, we define \gre@hskip to be \hskip outside a discretionary, and
 % \kern inside a discretionary. This is what these macros do:
 
 \def\gre@falsepenalty#1{}%
 \def\gre@truepenalty#1{\penalty#1}%
 
-\let\grehskip\hskip%
+\let\gre@hskip\hskip%
 \let\gre@penalty\gre@truepenalty%
 \xdef\gre@insidediscretionary{\number 0}%
 
 \def\GreDiscretionary#1#2{%
-  \global\let\grehskip\kern %
+  \global\let\gre@hskip\kern %
   \global\let\gre@penalty\gre@falsepenalty %
   \global\xdef\gre@insidediscretionary{\number 1}%
   \discretionary{%
@@ -67,7 +67,7 @@
     #2%
     }%
   \global\xdef\gre@insidediscretionary{\number 0}%
-  \global\let\grehskip\hskip %
+  \global\let\gre@hskip\hskip %
   \global\let\gre@penalty\gre@truepenalty %
   \relax %
 }%
@@ -108,7 +108,7 @@
 % the third argument is whether we must type a space after or not (0 if not, 1 if yes)
 % if the fourth argument is a, it means that we must not put a flat after the key, otherwise it's the height of the flat
 \def\GreSetLinesClef#1#2#3#4{%
-  \grelocalleftbox{%
+  \gre@localleftbox{%
     \gre@skip@temp@four = \gre@dimen@additionalleftspace%
     \kern\gre@skip@temp@four %
     \copy\gre@box@lines% draws the lines
@@ -188,12 +188,12 @@
     \fi%
   \fi%
   \ifnum#5=3%
-    \grehskip\gre@skip@temp@two %
+    \gre@hskip\gre@skip@temp@two %
   \else %
     \gre@skip@temp@four = \gre@skip@clefflatspace%
-    \grehskip\gre@skip@temp@four %
+    \gre@hskip\gre@skip@temp@four %
     \GreFlat{#5}{1}%
-    \grehskip\gre@skip@temp@two %
+    \gre@hskip\gre@skip@temp@two %
   \fi %
   \relax %
 }%
@@ -229,15 +229,15 @@
   \fi %
   \ifnum#3=1\relax %
     \gre@skip@temp@four = \gre@skip@clefchangespace%
-    \grehskip\gre@skip@temp@four %
+    \gre@hskip\gre@skip@temp@four %
   \else %
     % here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
     \gre@skip@temp@four = -\gre@skip@spacearoundclefbars%
-    \grehskip\gre@skip@temp@four %
+    \gre@hskip\gre@skip@temp@four %
   \fi %
   \gre@typekey{#1}{#2}{1}{0}{#4}%
   \gre@skip@temp@four = \gre@skip@clefchangespace%
-  \grehskip\gre@skip@temp@four %
+  \gre@hskip\gre@skip@temp@four %
   \relax%
 }%
 
@@ -265,13 +265,13 @@
   % we don't want to end the line here
   \GreNoBreak %
   \gre@skip@temp@four = -\gre@skip@spacearoundclefbars%
-  \grehskip\gre@skip@temp@four %
+  \gre@hskip\gre@skip@temp@four %
   \GreNoBreak %
   \relax %
 }%
 
 % the argument is the height
-\def\gresetcusto#1{%
+\def\gre@typesetcusto#1{%
   \ifnum\gre@insidediscretionary=0\relax %
     \ifgre@blockeolcustos\else%
       \gre@calculate@glyphraisevalue{#1}{0}%
@@ -287,7 +287,7 @@
       \setbox\gre@box@temp@sign=\hbox{%
       \gre@pickcusto{#1}\relax %
       }%
-      \grelocalrightbox{%
+      \gre@localrightbox{%
       \ifgre@showlines %
         \ifnum#1=\gre@pitch@a\relax %
           \gre@additionalbottomcustolineend %
@@ -468,7 +468,7 @@
 \gdef\gre@fontchar@underbrace{\gregoriofont\GreCPRoundBraceDown}%
 
 % the command to resize a box, \resizebox is provided by graphicx
-\global\let\greresizebox\resizebox %
+\global\let\gre@resizebox\resizebox %
 
 % #1: the width
 % #2: a vertical shift
@@ -528,7 +528,7 @@
         \fi %
       \else %
         \setbox\gre@box@temp@sign=\hbox{#7}%
-        \greresizebox{#1}{\ht\gre@box@temp@sign}{#7}%
+        \gre@resizebox{#1}{\ht\gre@box@temp@sign}{#7}%
       \fi %
     }%
     \hss %
@@ -1328,7 +1328,7 @@
   \ifcase#1 % 0 : virgula
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundsmallbar%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPVirgula}%
@@ -1336,12 +1336,12 @@
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundsmallbar%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 1 : minima
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundsmallbar%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioMinima}%
@@ -1349,12 +1349,12 @@
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundsmallbar%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 2 : minor
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioMinor}%
@@ -1362,12 +1362,12 @@
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 3 : maior
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundmaior%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioMaior}%
@@ -1375,12 +1375,12 @@
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundmaior%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 4 : finalis
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundfinalis%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
@@ -1388,12 +1388,12 @@
     \gre@fontchar@divisiofinalis%
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundfinalis%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 5 : finalis
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
@@ -1401,7 +1401,7 @@
     \gre@fontchar@divisiofinalis%
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundfinalis%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 6 : dominican bar 1
     \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}%
@@ -1409,7 +1409,7 @@
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioDominican}%
@@ -1417,14 +1417,14 @@
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 7 : dominican bar 2
     \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioDominicanAlt}%
@@ -1432,12 +1432,12 @@
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 8 : dominican bar 3
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff %
@@ -1446,12 +1446,12 @@
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 9 : dominican bar 4
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff %
@@ -1460,14 +1460,14 @@
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 10 : dominican bar 5
     \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}%
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioDominican}%
@@ -1475,14 +1475,14 @@
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 11 : dominican bar 6
     \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioDominicanAlt}%
@@ -1490,7 +1490,7 @@
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
   \fi %
   \gre@debugmsg{spacing}{Width of bar just printed: \the\wd\gre@box@temp@width}%
@@ -1531,11 +1531,11 @@
 
 %macro to end a line with a divisio finalis
 \def\GreFinalDivisioFinalis#1{%
-  \grelocalrightbox{}%
-  %\grelocalleftbox{}
+  \gre@localrightbox{}%
+  %\gre@localleftbox{}
   \GreNoBreak %
   \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis%
-  \grehskip\gre@skip@temp@four %
+  \gre@hskip\gre@skip@temp@four %
   \GreNoBreak %
   \GreBarSyllable{}{}{}{1}{}{}{0}{\GreLastOfLine}{%
     \GreNoBreak %
@@ -1547,8 +1547,8 @@
 
 %macro to end a line with a divisio maior
 \def\GreFinalDivisioMaior#1{%
-  \grelocalrightbox{}%
-  \grelocalleftbox{}%
+  \gre@localrightbox{}%
+  \gre@localleftbox{}%
     \GreBarSyllable{}{}{}{1}{}{}{0}{}{%
     \GreNoBreak %
     \GreDivisioMaior{}%
@@ -1663,7 +1663,7 @@
       \global\advance\gre@dimen@notesaligncenter by \dimexpr\gre@skip@temp@four\relax %
       \kern\gre@skip@temp@four %
     \else %
-      \grehskip\gre@skip@temp@four %
+      \gre@hskip\gre@skip@temp@four %
     \fi %
     \GreNoBreak %
   \fi %

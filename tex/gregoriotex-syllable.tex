@@ -126,7 +126,7 @@
   \raise\gre@dimen@glyphraisevalue %
   \copy\gre@box@temp@width%
   \ifgre@endofscore\else%
-    \gresetcusto{#3}%
+    \gre@typesetcusto{#3}%
   \fi %
   \ifgre@firstglyph% we check if it is the first glyph
     \gre@calculate@notesaligncenter{#4}%
@@ -227,13 +227,13 @@
     \fi%
     \gre@widthof{#1}%
     \divide\gre@dimen@temp@three by 2\relax %
-    \gre@debugmsg{ifdim}{ tempwidth > textaligncenter}%
+    \gre@debugmsg{ifdim}{ temp@three > textaligncenter}%
     \ifdim\gre@dimen@temp@three >\gre@dimen@textaligncenter %
       \global\setbox\gre@box@temp@width=\hbox{#2}%
     \else%
       \ifgre@vowelcentering%
         \gre@widthof{\mygre@endsyllablepart}%
-        \gre@debugmsg{ifdim}{ tempwidth > clivisalignmentmin}%
+        \gre@debugmsg{ifdim}{ temp@three > clivisalignmentmin}%
         \ifdim\gre@dimen@temp@three >\gre@dimen@clivisalignmentmin %
           \global\setbox\gre@box@temp@width=\hbox{#2}%
         \else%
@@ -635,7 +635,7 @@
   \global\gre@dimen@notesaligncenter=0pt% very important, see flat and natural
   \gre@unsetfixedtextformat %
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
-     \grelocalrightbox{}%
+     \gre@localrightbox{}%
   \fi\fi %
   \relax %
 }%
@@ -699,7 +699,7 @@
     \fi %
   \fi %
   \ifnum#1=1\relax %
-    \grehskip\gre@skip@syllablefinalskip %
+    \gre@hskip\gre@skip@syllablefinalskip %
     \ifnum#3=1\relax %
       \GreNoBreak %
     \fi %
@@ -801,10 +801,10 @@
         \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
         \ifdim\gre@skip@nextbegindifference > 0 pt%
           \gre@skip@temp@one = \gre@skip@interwordspacetext %
-          \grehskip\gre@skip@temp@one %
+          \gre@hskip\gre@skip@temp@one %
         \else % \ifdim\gre@skip@nextbegindifference > 0 pt
           \gre@skip@temp@one = \gre@skip@interwordspacetext %
-          \grehskip\gre@skip@temp@one %
+          \gre@hskip\gre@skip@temp@one %
         \fi %
       \else %
         \gre@skip@temp@two=\gre@skip@temp@three %
@@ -817,7 +817,7 @@
           \kern\gre@skip@temp@two %
         \else % \ifdim\gre@dimen@temp@five > -\wd\gre@box@syllablenotes 
           \gre@skip@temp@one = -\wd\gre@box@syllablenotes %
-          \grehskip\gre@skip@temp@one %
+          \gre@hskip\gre@skip@temp@one %
         \fi %
       \fi %
     \fi %
@@ -854,7 +854,7 @@
   \global\gre@dimen@notesaligncenter= 0 pt\relax % very important, see flat and natural
   \gre@unsetfixedtextformat %
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
-     \grelocalrightbox{}%
+     \gre@localrightbox{}%
   \fi\fi %
   \relax%
 }

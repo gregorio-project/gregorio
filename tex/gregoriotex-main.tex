@@ -75,14 +75,13 @@
 % without prefix, but we also rely on the Omega primitives, that have a luatex
 % prefix in TeXLive 2009.
 
-\let\grelocalleftbox\luatexlocalleftbox%
-\let\grelocalrightbox\luatexlocalrightbox%
+\let\gre@localleftbox\luatexlocalleftbox%
+\let\gre@localrightbox\luatexlocalrightbox%
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
 % if it is 2, it means that it's never useful to typeset a dash
 % if it is 0, it just means that we are in a score...
 \newluatexattribute\gre@attr@dash%
-\def\gre@unsetattr@dash{\unsetluatexattribute{\gre@attr@dash}}%
 
 % an attribute used for translation centering
 \newluatexattribute\gre@attr@center%
@@ -217,7 +216,7 @@
 % the macro we call each time we force a changing of line, it automatically sets \gre@knownline, and adjusts left spaces
 \def\gre@newlinecommon#1{%
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
-     \grelocalrightbox{}%
+     \gre@localrightbox{}%
   \fi\fi %
   \ifgre@boxing\else%
     \ifnum\gre@biginitial=1\relax %
@@ -589,7 +588,7 @@
 \def\GreBeginNotes{%
   \gre@drawfirstlines %
   %%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
-  \grelocalleftbox{%
+  \gre@localleftbox{%
     \copy\gre@box@lines %
   }%
   \relax %
@@ -1048,19 +1047,18 @@
   \ifnum\gre@nlbstate=0\else %
     \GreEndNLBArea{2}{0}%
   \fi %
-  \grelocalleftbox{}%
+  \gre@localleftbox{}%
   \ifgre@keeprightbox\else %
-    \grelocalrightbox{}%
+    \gre@localrightbox{}%
   \fi %
   \hfil %
   \par %
   \ifgre@keeprightbox%
     \global\gre@keeprightboxfalse%
   \fi%
-  \gre@unsetattr@dash %
   % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
-  \grelocalleftbox{}%
-  \grelocalrightbox{}%
+  \gre@localleftbox{}%
+  \gre@localrightbox{}%
   \gre@calculate@additionalspaces{\gre@pitch@g}{\gre@pitch@g}{0}{0}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@removetranslationspace %
@@ -1081,6 +1079,7 @@
   \unsetluatexattribute{\gre@attr@glyph@id}%
   \unsetluatexattribute{\gre@attr@glyph@top}%
   \unsetluatexattribute{\gre@attr@glyph@bottom}%
+  \unsetluatexattribute{\gre@attr@dash}%
   \ifgre@justifylastline%
     \parfillskip=\gre@save@parfillskip\relax%
   \fi %
@@ -1097,19 +1096,19 @@
       \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
       \ifdim\gre@skip@nextbegindifference > 0 pt %
         \gre@skip@temp@four = \gre@skip@notebarspace%
-        \grehskip\gre@skip@temp@four %
+        \gre@hskip\gre@skip@temp@four %
       \else % (next begin difference >0pt)
         \gre@skip@temp@four = \gre@skip@textbartextspace%
-        \grehskip\gre@skip@temp@four %
+        \gre@hskip\gre@skip@temp@four %
       \fi %
     \else%(enddifference < 0pt)
       \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
       \ifdim\gre@skip@nextbegindifference < 0 pt %
         \gre@skip@temp@four = \gre@skip@textbartextspace%
-        \grehskip\gre@skip@temp@four %
+        \gre@hskip\gre@skip@temp@four %
       \else %(next begin difference < 0 pt)
         \gre@skip@temp@four = \gre@skip@interwordspacetext%
-        \grehskip\gre@skip@temp@four %
+        \gre@hskip\gre@skip@temp@four %
       \fi %
     \fi %
   \fi %
@@ -1132,7 +1131,7 @@
 
 % same as above, but for the score. For now it is the same behaviour.
 \def\GreLastOfScore{%
-  %\grelocalleftbox{}% For an unknown reason, if I uncomment this line, the
+  %\gre@localleftbox{}% For an unknown reason, if I uncomment this line, the
   %blank line removing algorithm (in lua) will let some blank space after the
   %last line... (see bug #20953)
   \greseteolcustos{manual}%
@@ -1164,7 +1163,7 @@
   \gre@eolshiftsenabledtrue%
 }%
 
-% a count that is 1 if we block the custos, and 0 if we don't. We just block custos at the end of a score, to prevent a bug.
+% Flag indicating if we block the custos. We just block custos at the end of a score, to prevent a bug.
 \newif\ifgre@blockeolcustos%
 \gre@blockeolcustosfalse%
 
@@ -1172,7 +1171,7 @@
   \IfStrEq{#1}{manual}%
     {%
       \gre@blockeolcustostrue%
-      \grelocalrightbox{}%
+      \gre@localrightbox{}%
     }%
     {\IfStrEq{#1}{auto}%
       {\gre@blockeolcustosfalse}%
@@ -1200,13 +1199,13 @@
   \fi %
   \ifcase#1%
     \gre@skip@temp@four = \gre@skip@interelementspace%
-    \grehskip\gre@skip@temp@four %
+    \gre@hskip\gre@skip@temp@four %
   \or% case 1
     \gre@skip@temp@four = \gre@skip@largerspace%
-    \grehskip\gre@skip@temp@four %
+    \gre@hskip\gre@skip@temp@four %
   \or% case 2
     \gre@skip@temp@four = \gre@skip@glyphspace%
-    \grehskip\gre@skip@temp@four %
+    \gre@hskip\gre@skip@temp@four %
   \fi%
   \ifnum #2=1\relax %
     \GreNoBreak %
@@ -1262,7 +1261,7 @@
 \def\GreEndOfGlyph#1{%
   \GreNoBreak %
   \gre@get@spaceskip{#1}%
-  \grehskip\gre@skip@temp@four %
+  \gre@hskip\gre@skip@temp@four %
   \GreNoBreak %
   \relax%
 }%
