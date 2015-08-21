@@ -79,14 +79,14 @@ end
 
 local format = string.format
 
-texfile:write(format("\n\\includescore{%s-score.tex}\n\\end{document}\n", pathbase))
+texfile:write(format("\n\\gregorioscore{%s-score.gtex}\n\\end{document}\n", pathbase))
 texfile:close()
 gabcfile:close()
 
 print(format("calling 'gregorio %s-score.gabc'\n", f))
-os.remove(format("%s-score.tex", f))
+os.remove(format("%s-score.gtex", f))
 os.spawn(format("%s %s-score.gabc", gregoriobin, pathbase))
-if not lfs.isfile(format("%s-score.gabc", pathbase)) then
+if not lfs.isfile(format("%s-score.gtex", pathbase)) then
   print("error: gregorio did not work as expected\n")
   exit(1)
 end
