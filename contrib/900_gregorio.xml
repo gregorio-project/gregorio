@@ -90,6 +90,6 @@ $scribus_greconf$
 </en><fr>Ajoutez ici vos commandes additionelles pour GregorioTeX.
 </fr>
 		</i18n></comment>
-        <text name="greconf" type="long" default="\setgrefactor{17}"></text>
+        <text name="greconf" type="long" default="\grechangestaffsize{17}"></text>
 	</tab>
 </editorsettings>
