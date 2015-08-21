@@ -221,10 +221,6 @@
   \or%
     \global\setbox\gre@box@temp@width=\hbox{#2}%
   \or%
-    \let\mygre@endsyllablepart\gre@nextendsyllablepart %
-    \ifcase#3%
-      \let\mygre@endsyllablepart\gre@endsyllablepart %
-    \fi%
     \gre@widthof{#1}%
     \divide\gre@dimen@temp@three by 2\relax %
     \gre@debugmsg{ifdim}{ temp@three > textaligncenter}%
@@ -232,7 +228,11 @@
       \global\setbox\gre@box@temp@width=\hbox{#2}%
     \else%
       \ifgre@vowelcentering%
-        \gre@widthof{\mygre@endsyllablepart}%
+        \ifcase#3%
+          \gre@widthof{\gre@endsyllablepart}%
+        \else%
+          \gre@widthof{\gre@nextendsyllablepart}%
+        \fi%
         \gre@debugmsg{ifdim}{ temp@three > clivisalignmentmin}%
         \ifdim\gre@dimen@temp@three >\gre@dimen@clivisalignmentmin %
           \global\setbox\gre@box@temp@width=\hbox{#2}%
