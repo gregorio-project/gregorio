@@ -264,18 +264,6 @@
     \gre@minTextDistance=0pt%
   \fi %
   \gre@debugmsg{syllablespacing}{ minTextDistance = \the\gre@minTextDistance}%
-%%  if (no_txt_under_prev) :
-%%     tmp = -cur_end_diff < 0 ? 0 : -cur_end_diff
-%%     min_text_dist = max(min_text_dist, tmp)
-  \ifgre@notextprev %
-    \gre@skip@temp@two=-\gre@dimen@enddifference %
-    \ifdim\gre@skip@temp@two < 0pt%
-      \gre@skip@temp@two = 0pt%
-    \fi %
-    \ifdim\gre@skip@temp@two > \gre@minTextDistance %
-      \gre@minTextDistance = \gre@skip@temp@two %
-    \fi %
-  \fi %
   \gre@debugmsg{syllablespacing}{ minTextDistance = \the\gre@minTextDistance}%
   % setting minNotesDistance (quite simple)
   \ifnum#2=1\relax %
