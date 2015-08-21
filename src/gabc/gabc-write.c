@@ -223,9 +223,9 @@ static void gabc_write_key_change(FILE *f, char step, int line,
         bool flatted_key)
 {
     if (flatted_key) {
-        fprintf(f, "%c%d", step, line);
-    } else {
         fprintf(f, "%cb%d", step, line);
+    } else {
+        fprintf(f, "%c%d", step, line);
     }
 }
 
@@ -679,6 +679,13 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element)
         break;
     case GRE_END_OF_LINE:
         fprintf(f, "z");
+        break;
+    case GRE_CUSTOS:
+        if (element->u.misc.pitched.force_pitch) {
+            fprintf(f, "%c+", pitch_letter(element->u.misc.pitched.pitch));
+        } else {
+            fprintf(f, "z0");
+        }
         break;
     default:
         gregorio_message(_("call with an argument which type is unknown"),

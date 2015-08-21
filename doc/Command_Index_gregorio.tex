@@ -158,7 +158,7 @@ defined and re-defined by the \verb=\gresetgregoriofont= macro.
 \macroname{\textbackslash GreCP...}{}{gregoriotex-main.tex}
 A class of macros which point to the individual characters in a Gregoiro\TeX\ compatible font.  This class of macros is dynamically mapped from the glyph names embedded in the \texttt{ttf} file via a Lua script to ensure that the code points match up with the installed font.
 
-\macroname{\textbackslash GreCusto}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreCustos}{\#1}{gregoriotex-signs.tex}
 Typesets a custos.
 
 \begin{argtable}
@@ -472,7 +472,7 @@ Macro for typesetting low choral signs.
       & 1       & Choral sign occurs before last note of podatus, porrectus, or torculus resupinus.\\
 \end{argtable}
 
-\macroname{\textbackslash GreManualCusto}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreManualCustos}{\#1}{gregoriotex-signs.tex}
 Macro to typeset a custo manually.
 
 \begin{argtable}
@@ -504,6 +504,14 @@ Macro to call if you want to go to the next line.
 
 \macroname{\textbackslash GreNewParLine}{}{gregoriotex-main.tex}
 Same as \verb=\GreNewLine= except line is not justified.
+
+\macroname{\textbackslash GreNextCustos}{\#1}{gregoriotex-signs.tex}
+Sets the pitch to use for the next custos if it were to happen at the point
+where this macro is called.
+
+\begin{argtable}
+  \#1 & integer & Height number of the custos.\\
+\end{argtable}
 
 \macroname{\textbackslash GreNoInitial}{}{gregoriotex-main.tex}
 Macro called when no initial is being set.
