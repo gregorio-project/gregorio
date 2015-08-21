@@ -54,6 +54,8 @@ Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
 Source: "../UPGRADE.md"; DestDir: "{app}";
 ; PARSE_VERSION_FILE_NEXTLINE
 Source: "../doc/GregorioRef-4_0_0-beta.pdf"; DestDir: "{app}";
+; PARSE_VERSION_FILE_NEXTLINE
+Source: "../doc/GregorioNabcRef-4_0_0-beta.pdf"; DestDir: "{app}";
 Source: "../COPYING.md"; DestDir: "{app}";
 Source: "../contrib/900_gregorio.xml"; DestDir: "{app}\contrib";
 Source: "../contrib/system-setup.bat"; DestDir: "{app}";
