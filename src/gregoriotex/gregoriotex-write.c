@@ -807,7 +807,7 @@ static gregorio_element *gregoriotex_syllable_is_clef_change(gregorio_syllable
     }
     element = syllable->elements[0];
     /* we just detect the foud cases */
-    if (element->type == GRE_CUSTO && element->next
+    if (element->type == GRE_CUSTOS && element->next
             && (is_clef(element->next->type)) && !element->next->next) {
         return element->next;
     }
@@ -818,7 +818,7 @@ static gregorio_element *gregoriotex_syllable_is_clef_change(gregorio_syllable
     if ((is_clef(element->type)) && !element->next) {
         return element;
     }
-    if (element->type == GRE_CUSTO && element->next
+    if (element->type == GRE_CUSTOS && element->next
             && element->next->type == GRE_BAR && element->next->next
             && (is_clef(element->next->next->type))
             && !element->next->next->next) {
@@ -2511,11 +2511,6 @@ static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
                         pitch_value(glyph->u.misc.pitched.pitch));
                 break;
 
-            case GRE_MANUAL_CUSTOS:
-                fprintf(f, "\\GreManualCusto{%d}%%\n",
-                        pitch_value(glyph->u.misc.pitched.pitch));
-                break;
-
             default:
                 /* at this point glyph->type is GRE_GLYPH */
                 assert(glyph->type == GRE_GLYPH);
@@ -2618,7 +2613,6 @@ static void handle_final_bar(FILE *f, const char *type, gregorio_syllable *sylla
     /* first element will be the bar, which we just handled, so skip it */
     for (element = (*syllable->elements)->next; element;
             element = element->next) {
-        gregorio_glyph *glyph;
         switch (element->type) {
         case GRE_TEXVERB_ELEMENT:
             if (element->texverb) {
@@ -2627,14 +2621,10 @@ static void handle_final_bar(FILE *f, const char *type, gregorio_syllable *sylla
             }
             break;
 
-        case GRE_ELEMENT:
-            for (glyph = element->u.first_glyph; glyph;
-                    glyph = glyph->next) {
-                if (glyph->type == GRE_MANUAL_CUSTOS) {
-                    fprintf(f, "\\GreManualCusto{%d}%%\n",
-                            pitch_value(glyph->u.misc.pitched.pitch));
-                }
-            }
+        case GRE_CUSTOS:
+            assert(element->u.misc.pitched.force_pitch);
+            fprintf(f, "\\GreManualCustos{%d}%%\n",
+                    pitch_value(element->u.misc.pitched.pitch));
             break;
 
         default:
@@ -2979,14 +2969,18 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             }
             break;
 
-        case GRE_CUSTO:
+        case GRE_CUSTOS:
             if (first_of_disc != 1) {
                 /*
                  * We don't print custos before a bar at the end of a line 
                  */
                 /* we also print an unbreakable larger space before the custo */
-                fprintf(f, "\\GreEndOfElement{1}{1}%%\n\\GreCusto{%d}%%\n",
-                        pitch_value(element->u.misc.pitched.pitch));
+                fprintf(f, "\\GreEndOfElement{1}{1}%%\n\\Gre%sCustos{%d}"
+                        "\\GreNextCustos{%d}%%\n",
+                        element->u.misc.pitched.force_pitch? "Manual" : "",
+                        pitch_value(element->u.misc.pitched.pitch),
+                        pitch_value(gregorio_determine_next_pitch(syllable,
+                                element, NULL)));
             }
             break;
 

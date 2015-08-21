@@ -263,7 +263,7 @@
 }%
 
 % custo just typesets a custo, useful for before the key changes for example
-\def\GreCusto#1{%
+\def\GreCustos#1{%
   \gre@calculate@glyphraisevalue{#1}{0}%
   %here we need some tricks to draw the line before the custo (for the color)
   \setbox\gre@box@temp@width=\hbox{\grecustochar{#1}}%
@@ -291,7 +291,7 @@
 }%
 
 % the argument is the height
-\def\gresetcusto#1{%
+\def\GreNextCustos#1{%
   \ifnum\greinsidediscretionary=0\relax %
     \ifgre@blockeolcustos\else%
       \gre@calculate@glyphraisevalue{#1}{0}%
@@ -327,9 +327,9 @@
   \relax%
 }%
 
-\def\GreManualCusto#1{%
+\def\GreManualCustos#1{%
   \gre@skip@temp@four = \gre@skip@spacebeforecusto%
-  \kern\gre@skip@temp@four\GreCusto{#1}%
+  \kern\gre@skip@temp@four\GreCustos{#1}%
 }%
 
 % macro that typesets an additional line at the top for custos at end of line

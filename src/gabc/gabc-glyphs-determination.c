@@ -663,6 +663,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             gregorio_type type = current_note->type;
             char pitch = USELESS_VALUE;
             bool flat = false;
+            bool force = false;
             gregorio_sign sign = _NO_SIGN;
 
             if (current_glyph_type != G_UNDETERMINED) {
@@ -698,9 +699,15 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                 flat = true;
                 break;
 
-            case GRE_CUSTO:
+            case GRE_CUSTOS:
                 pitch = gabc_determine_custo_pitch(current_note->next,
                         *current_key);
+                break;
+
+            case GRE_MANUAL_CUSTOS:
+                pitch = current_note->u.note.pitch;
+                type = GRE_CUSTOS;
+                force = true;
                 break;
 
             case GRE_BAR:
@@ -735,7 +742,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                         current_note->u.other, sign, current_note->texverb);
             } else {
                 gregorio_add_pitched_element_as_glyph(&last_glyph, type, pitch,
-                        flat, current_note->texverb);
+                        flat, force, current_note->texverb);
             }
             current_glyph_first_note = current_note->next;
             current_note->texverb = NULL;

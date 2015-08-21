@@ -179,8 +179,8 @@ static const char *dump_type(gregorio_type type)
         return "GRE_END_OF_LINE";
     case GRE_END_OF_PAR:
         return "GRE_END_OF_PAR";
-    case GRE_CUSTO:
-        return "GRE_CUSTO";
+    case GRE_CUSTOS:
+        return "GRE_CUSTOS";
     case GRE_SPACE:
         return "GRE_SPACE";
     case GRE_BAR:
@@ -689,10 +689,13 @@ void dump_write_score(FILE *f, gregorio_score *score)
                         element->type, dump_type(element->type));
             }
             switch (element->type) {
-            case GRE_CUSTO:
+            case GRE_CUSTOS:
                 if (element->u.misc.pitched.pitch) {
                     fprintf(f, "     pitch                   %s\n",
                             dump_pitch(element->u.misc.pitched.pitch));
+                }
+                if (element->u.misc.pitched.force_pitch) {
+                    fprintf(f, "     force_pitch             true\n");
                 }
                 break;
             case GRE_SPACE:
@@ -795,7 +798,6 @@ void dump_write_score(FILE *f, gregorio_score *score)
                     case GRE_FLAT:
                     case GRE_NATURAL:
                     case GRE_SHARP:
-                    case GRE_MANUAL_CUSTOS:
                         fprintf(f, "       pitch                 %s\n",
                                 dump_pitch(glyph->u.misc.pitched.pitch));
                         break;

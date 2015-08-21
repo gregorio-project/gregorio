@@ -126,8 +126,9 @@ static void gabc_fix_custos(gregorio_score *score_to_check)
     while (current_syllable) {
         current_element = (current_syllable->elements)[0];
         while (current_element) {
-            if (current_element->type == GRE_CUSTO) {
+            if (current_element->type == GRE_CUSTOS) {
                 custo_element = current_element;
+                pitch = custo_element->u.misc.pitched.pitch;
                 /* we look for the key */
                 while (current_element) {
                     switch (current_element->type) {
@@ -138,7 +139,7 @@ static void gabc_fix_custos(gregorio_score *score_to_check)
                         newkey = gregorio_calculate_new_key(C_KEY,
                                 current_element->u.misc.pitched.pitch - '0');
                         pitch_difference = (char) newkey - (char) current_key;
-                        custo_element->u.misc.pitched.pitch = pitch - pitch_difference;
+                        pitch -= pitch_difference;
                         current_key = newkey;
                         break;
                     case GRE_F_KEY_CHANGE:
@@ -148,17 +149,20 @@ static void gabc_fix_custos(gregorio_score *score_to_check)
                         newkey = gregorio_calculate_new_key(F_KEY,
                                 current_element->u.misc.pitched.pitch - '0');
                         pitch_difference = (char) newkey - (char) current_key;
-                        custo_element->u.misc.pitched.pitch = pitch - pitch_difference;
+                        pitch -= pitch_difference;
                         current_key = newkey;
                         break;
                     default:
                         break;
                     }
-                    while (custo_element->u.misc.pitched.pitch < LOWEST_PITCH) {
-                        custo_element->u.misc.pitched.pitch += 7;
-                    }
-                    while (custo_element->u.misc.pitched.pitch > HIGHEST_PITCH) {
-                        custo_element->u.misc.pitched.pitch -= 7;
+                    if (!custo_element->u.misc.pitched.force_pitch) {
+                        while (pitch < LOWEST_PITCH) {
+                            pitch += 7;
+                        }
+                        while (pitch > HIGHEST_PITCH) {
+                            pitch -= 7;
+                        }
+                        custo_element->u.misc.pitched.pitch = pitch;
                     }
                     assert(custo_element->u.misc.pitched.pitch >= LOWEST_PITCH 
                             && custo_element->u.misc.pitched.pitch
