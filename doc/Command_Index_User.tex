@@ -568,7 +568,7 @@ barred symbol.
   \#5 & dimension & vertical shift of the bar glyph.\\
 \end{argtable}
 
-\macroname{\textbackslash greseperator}{\{\#1\}\{\#2\}}{gregoriotex-symbols.tex}
+\macroname{\textbackslash greseparator}{\{\#1\}\{\#2\}}{gregoriotex-symbols.tex}
 A macro for invoking one of the five separators (fancy lines) which are contained in the greextra font.
 
 \begin{argtable}
@@ -885,7 +885,7 @@ Minimum space between two notes of different syllables.
 
 Default: \unit[0.25523]{cm} plus \unit[0.31903]{cm} minus \unit[0]{cm}
 
-\macroname{spacebeforecusto}{}{gsp-default.tex}
+\macroname{spacebeforecustos}{}{gsp-default.tex}
 Space before custos.  
 
 Default: \unit[0.1823]{cm} plus \unit[0.31903]{cm} minus \unit[0.0638]{cm}
@@ -991,7 +991,7 @@ A special space for finalis, for when it is the last glyph.
 Default: \unit[0.29169]{cm} plus \unit[0.07292]{cm} minus \unit[0.27345]{cm}
 
 \macroname{spacearoundclefbars}{}{gsp-default.tex}
-Additional space that will appear around bars that are preceded by a custo and followed by a key.  
+Additional space that will appear around bars that are preceded by a custos and followed by a key.  
 
 Default: \unit[0.03645]{cm} plus \unit[0.00455]{cm} minus \unit[0.0009]{cm}
 
@@ -1136,7 +1136,7 @@ Larger space between elements in ancient notation.
 
 Default: \unit[0.10938]{cm} plus \unit[0.01822]{cm} minus \unit[0.00911]{cm}
 
-\macroname{clivisalignmentmin}{}{gsp-defualt.tex}
+\macroname{clivisalignmentmin}{}{gsp-default.tex}
 When \verb=\gre@clivisalignment= is 2, this distance is the maximum length of the consonants after vowels for which the clivis will be aligned on its center.
 
 Default: \unit[0.3]{cm}
@@ -1211,19 +1211,21 @@ Penalty to force a line break.
 Default: -10001
 
 \macroname{\textbackslash grelooseness}{}{gsp-default.tex}
-The looseness within a score.
+The \TeX\ looseness within a score.
 
 Default: \verb=\looseness=
 
 \macroname{\textbackslash gretolerance}{}{gsp-default.tex}
-The tolerance within a score.
+The \TeX\ tolerance within a score.  See \url{https://en.wikibooks.org/wiki/TeX/tolerance} for an explanation of what tolerance is.
 
 Default: 9000
 
 \macroname{\textbackslash grepretolerance}{}{gsp-default.tex}
-The pretolerance within a score.
+The \TeX\ pretolerance within a score.  See \url{https://en.wikibooks.org/wiki/TeX/pretolerance} for an explanation of what pretolerance is.
 
-Default: $-1$ (Lua\TeX\ versions prior to 0.78) or \verb=\pretolerance= (all others)
+Default: $-1$ (Lua\TeX\ versions prior to 0.80) or \verb=\pretolerance= (versions after, and including, 0.80)
+
+\textit{Nota bene:} For more details on why this is necessary see the comments in gsp-default.tex.
 
 
 

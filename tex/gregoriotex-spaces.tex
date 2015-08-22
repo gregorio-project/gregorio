@@ -369,7 +369,7 @@
 %% @desc Macro used in \GreSyllable. Sets \gre@skip@eolshift to the left kern that
 %%       should appear before an end of line. The improvement is tiny: when
 %%       text go further than notes in the last syllable of a line, the idea
-%%       is to allow text to go a bit further right, under the custo.
+%%       is to allow text to go a bit further right, under the custos.
 %%       \gre@skip@eolshift should be called at the end of the last syllable of the
 %%       line, just before the linebreak penalty, so that LaTeX believes the
 %%       line is a bit shorter, and expands it more.
@@ -383,9 +383,9 @@
     % disabled custos
     \ifgre@eolshiftsenabled %
       \ifgre@blockeolcustos\else%
-        \setbox\gre@box@temp@width=\hbox{\gre@pickcusto{\gre@pitch@g}}%
+        \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}}%
         \global\advance\gre@skip@eolshift by -\wd\gre@box@temp@width %
-        \global\advance\gre@skip@eolshift by -\gre@skip@spacebeforecusto %
+        \global\advance\gre@skip@eolshift by -\gre@skip@spacebeforecustos %
       \fi %
       \global\advance\gre@skip@eolshift by \gre@dimen@minimalspaceatlinebeginning %
     \fi %
@@ -1075,8 +1075,8 @@
   \ifnum\gre@scale@glyphspace=1\relax%
     \gre@changeonedimenfactor{glyphspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spacebeforecusto=1\relax%
-    \gre@changeonedimenfactor{spacebeforecusto}{#1}{#2}%
+  \ifnum\gre@scale@spacebeforecustos=1\relax%
+    \gre@changeonedimenfactor{spacebeforecustos}{#1}{#2}%
   \fi%
   \ifnum\gre@scale@spacebeforesigns=1\relax%
     \gre@changeonedimenfactor{spacebeforesigns}{#1}{#2}%

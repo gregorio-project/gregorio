@@ -242,26 +242,26 @@
 }%
 
 
-% custo just typesets a custo, useful for before the key changes for example
+% custos just typesets a custos, useful for before the key changes for example
 \def\GreCustos#1{%
   \gre@calculate@glyphraisevalue{#1}{0}%
-  %here we need some tricks to draw the line before the custo (for the color)
-  \setbox\gre@box@temp@width=\hbox{\gre@pickcusto{#1}}%
+  %here we need some tricks to draw the line before the custos (for the color)
+  \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{#1}}%
   \gre@dimen@temp@three=\wd\gre@box@temp@width %
   \ifgre@showlines %
     \ifnum#1=\gre@pitch@a\relax %
-      \gre@additionalbottomcustolinemiddle %
+      \gre@additionalbottomcustoslinemiddle %
     \else\ifnum#1=\gre@pitch@b\relax %
-      \gre@additionalbottomcustolinemiddle %
+      \gre@additionalbottomcustoslinemiddle %
     \else\ifnum#1=\gre@pitch@l\relax %
-      \gre@additionaltopcustolinemiddle %
+      \gre@additionaltopcustoslinemiddle %
     \else\ifnum#1=\gre@pitch@m\relax %
-      \gre@additionaltopcustolinemiddle %
+      \gre@additionaltopcustoslinemiddle %
     \fi\fi\fi\fi %
   \fi %
   \raise \gre@dimen@glyphraisevalue%
   \copy\gre@box@temp@width %
-  % for now we consider we always have a bar after the custo
+  % for now we consider we always have a bar after the custos
   % we don't want to end the line here
   \GreNoBreak %
   \gre@skip@temp@four = -\gre@skip@spacearoundclefbars%
@@ -275,28 +275,28 @@
   \ifnum\gre@insidediscretionary=0\relax %
     \ifgre@blockeolcustos\else%
       \gre@calculate@glyphraisevalue{#1}{0}%
-      %here we need some tricks to draw the line before the custo (for the color)
+      %here we need some tricks to draw the line before the custos (for the color)
       \setbox\gre@box@temp@width=\hbox{%
-      % we type a hskip and the we type the custo
-      \gre@skip@temp@four = \gre@skip@spacebeforecusto%
+      % we type a hskip and the we type the custos
+      \gre@skip@temp@four = \gre@skip@spacebeforecustos%
       \hskip\gre@skip@temp@four %
-      \gre@pickcusto{#1}\relax %
+      \gre@pickcustos{#1}\relax %
       }%
       \gre@dimen@temp@three=\wd\gre@box@temp@width %
-      % we make \wd\gre@box@temp@sign contain the width of a custo
+      % we make \wd\gre@box@temp@sign contain the width of a custos
       \setbox\gre@box@temp@sign=\hbox{%
-      \gre@pickcusto{#1}\relax %
+      \gre@pickcustos{#1}\relax %
       }%
       \gre@localrightbox{%
       \ifgre@showlines %
         \ifnum#1=\gre@pitch@a\relax %
-          \gre@additionalbottomcustolineend %
+          \gre@additionalbottomcustoslineend %
         \else\ifnum#1=\gre@pitch@b\relax %
-          \gre@additionalbottomcustolineend %
+          \gre@additionalbottomcustoslineend %
         \else\ifnum#1=\gre@pitch@l\relax %
-          \gre@additionaltopcustolineend %
+          \gre@additionaltopcustoslineend %
         \else\ifnum#1=\gre@pitch@m\relax %
-          \gre@additionaltopcustolineend %
+          \gre@additionaltopcustoslineend %
         \fi\fi\fi\fi %
       \fi %
       \raise \gre@dimen@glyphraisevalue%
@@ -308,13 +308,13 @@
 }%
 
 \def\GreManualCustos#1{%
-  \gre@skip@temp@four = \gre@skip@spacebeforecusto%
+  \gre@skip@temp@four = \gre@skip@spacebeforecustos%
   \kern\gre@skip@temp@four\GreCustos{#1}%
 }%
 
 % macro that typesets an additional line at the top for custos at end of line
 
-\def\gre@additionaltopcustolineend{%
+\def\gre@additionaltopcustoslineend{%
   \gre@dimen@temp@five=\gre@dimen@staffheight %
   \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
   \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
@@ -342,7 +342,7 @@
   \relax %
 }%
 
-\def\gre@additionalbottomcustolineend{%
+\def\gre@additionalbottomcustoslineend{%
   \gre@dimen@temp@five=\gre@dimen@spacebeneathtext %
   \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
   \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
@@ -370,9 +370,9 @@
   \relax %
 }%
 
-% same macros, but for a custo in the middle
+% same macros, but for a custos in the middle
 
-\def\gre@additionaltopcustolinemiddle{%
+\def\gre@additionaltopcustoslinemiddle{%
   \gre@dimen@temp@five=\gre@dimen@staffheight %
   \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
   \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
@@ -401,7 +401,7 @@
   \relax %
 }%
 
-\def\gre@additionalbottomcustolinemiddle{%
+\def\gre@additionalbottomcustoslinemiddle{%
   \gre@dimen@temp@five=\gre@dimen@spacebeneathtext %
   \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
   \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
@@ -430,22 +430,22 @@
   \relax %
 }%
 
-\def\gre@pickcusto#1{%
+\def\gre@pickcustos#1{%
   \ifcase#1%
   \or\or%
-  \or\gre@fontchar@custotopmiddle %
-  \or\gre@fontchar@custotoplong %
-  \or\gre@fontchar@custotopshort %
-  \or\gre@fontchar@custotoplong %
-  \or\gre@fontchar@custotopshort %
-  \or\gre@fontchar@custotoplong %
-  \or\gre@fontchar@custotopshort %
-  \or\gre@fontchar@custotoplong %
-  \or\gre@fontchar@custotopshort %
-  \or\gre@fontchar@custobottomlong %
-  \or\gre@fontchar@custobottomshort %
-  \or\gre@fontchar@custobottomlong %
-  \or\gre@fontchar@custobottommiddle %
+  \or\gre@fontchar@custostopmiddle %
+  \or\gre@fontchar@custostoplong %
+  \or\gre@fontchar@custostopshort %
+  \or\gre@fontchar@custostoplong %
+  \or\gre@fontchar@custostopshort %
+  \or\gre@fontchar@custostoplong %
+  \or\gre@fontchar@custostopshort %
+  \or\gre@fontchar@custostoplong %
+  \or\gre@fontchar@custostopshort %
+  \or\gre@fontchar@custosbottomlong %
+  \or\gre@fontchar@custosbottomshort %
+  \or\gre@fontchar@custosbottomlong %
+  \or\gre@fontchar@custosbottommiddle %
   \fi%
 }%
 

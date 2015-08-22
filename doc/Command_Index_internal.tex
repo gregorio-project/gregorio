@@ -52,7 +52,7 @@ Macro that handles obsolescence errors.
 Loads the chosen font for the neumes at the correct size.
 
 \macroname{\textbackslash gre@calculate@constantglyphraise}{}{gregoriotex-spaces.tex}
-Macro to caluclate \verb=\gre@constantglyphraise=
+Macro to calculate \verb=\gre@constantglyphraise=
 
 \macroname{\textbackslash gre@addtranslationspace}{}{gregoriotex-spaces.tex}
 Macro to tell Gregorio to set space for the translation.
@@ -353,23 +353,23 @@ the cascading of conditionals used to implement that macro.
   \#4 & dimension   & the amount to shift the bar to the left from the end of the base symbol.
 \end{argtable}
 
-\macroname{\textbackslash gre@additionalbottomcustolineend}{}{gregoriotex-signs.tex}
-Macro to place a bottom custo with an additional line (positions \texttt{a} and \texttt{b}) at the end of a line.
+\macroname{\textbackslash gre@additionalbottomcustoslineend}{}{gregoriotex-signs.tex}
+Macro to place a bottom custos with an additional line (positions \texttt{a} and \texttt{b}) at the end of a line.
 
-\macroname{\textbackslash gre@additionalbottomcustolinemiddle}{}{gregoriotex-signs.tex}
-Macro to place a bottom custo with an additional line (positions \texttt{a} and \texttt{b}) in the middle of a line.
+\macroname{\textbackslash gre@additionalbottomcustoslinemiddle}{}{gregoriotex-signs.tex}
+Macro to place a bottom custos with an additional line (positions \texttt{a} and \texttt{b}) in the middle of a line.
 
-\macroname{\textbackslash gre@additionaltopcustolineend}{}{gregoriotex-signs.tex}
-Macro to place a top custo with an additional line (positions \texttt{l} and \texttt{m}) at the end of a line.
+\macroname{\textbackslash gre@additionaltopcustoslineend}{}{gregoriotex-signs.tex}
+Macro to place a top custos with an additional line (positions \texttt{l} and \texttt{m}) at the end of a line.
 
-\macroname{\textbackslash gre@additionaltopcustolinemiddle}{}{gregoriotex-signs.tex}
-Macro to place a top custo with an additional line (positions \texttt{l} and \texttt{m}) in the middle of a line.
+\macroname{\textbackslash gre@additionaltopcustoslinemiddle}{}{gregoriotex-signs.tex}
+Macro to place a top custos with an additional line (positions \texttt{l} and \texttt{m}) in the middle of a line.
 
-\macroname{\textbackslash gre@pickcusto}{\#1}{gregoriotex-signs.tex}
-Macro to pick the appropriate custo character.
+\macroname{\textbackslash gre@pickcustos}{\#1}{gregoriotex-signs.tex}
+Macro to pick the appropriate custos character.
 
 \begin{argtable}
-  \#1 & integer & height of the custo character to be placed\\
+  \#1 & integer & height of the custos character to be placed\\
 \end{argtable}
 
 \macroname{\textbackslash gre@addspaceabove}{}{gregoriotex-main.tex}
@@ -517,7 +517,7 @@ Macro to typeset a horizontal line (either an additional staff line or an episem
 
 \begin{argtable}
   \#1 & character & The letter of the height of the episemus (not the height of the note it corresponds to).\\
-  \#2 & 0 & go back to the beginning of the previous glyph; this starts the         episemus at the beginning of the previous glyph\\
+  \#2 & 0 & go back to the beginning of the previous glyph; this starts the episemus at the beginning of the previous glyph\\
   & 1 & stay at the end of the glyph; doesn't make much sense to use this\\
   & 2 & go back the width of \#1; this starts the episemus at the glyph from the end that starts at \#1's width from the end\\
   & 3 & go back to the beginning of the previous glyph and then forward the width of \#1; this starts the episemus at the glyph from the start that starts just after \#1's width from the start\\
@@ -690,7 +690,7 @@ Macro used in \verb=\GreSyllable=. Sets \verb=\gre@skip@bolshift= to the left ke
 Macro used in \verb=\GreSyllable=. Sets \verb=\gre@skip@eolshift= to the left kern that
 should appear before an end of line. The improvement is tiny: when
 text go further than notes in the last syllable of a line, the idea
-is to allow text to go a bit further right, under the custo.
+is to allow text to go a bit further right, under the custos.
 \verb=\gre@skip@eolshift= should be called at the end of the last syllable of the
 line, just before the linebreak penalty, so that LaTeX believes the
 line is a bit shorter, and expands it more.
@@ -915,7 +915,7 @@ Alias for \verb=\luatexlocalrightbox=.
 Alias for \verb=\resizebox=.
 
 \subsection{Auxiliary File}
-Gregorio\TeX\ creates it's own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
+Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
 
 \macroname{\textbackslash gre@gaux}{}{gregoriotex-main.tex}
 The handle for the auxiliary file.
@@ -1001,23 +1001,23 @@ The (rounded) brace character.
 \macroname{\textbackslash gre@fontchar@curlybrace}{}{gregoriotex-signs.tex}
 The curly brace character.
 
-\macroname{\textbackslash gre@fontchar@custobottomlong}{}{gregoriotex-chars.tex}
-The custo character with a long upwards directed vigra.
+\macroname{\textbackslash gre@fontchar@custosbottomlong}{}{gregoriotex-chars.tex}
+The custos character with a long upwards directed vigra.
 
-\macroname{\textbackslash gre@fontchar@custobottommiddle}{}{gregoriotex-chars.tex}
-The custo character with a middle upwards directed vigra.
+\macroname{\textbackslash gre@fontchar@custosbottommiddle}{}{gregoriotex-chars.tex}
+The custos character with a middle upwards directed vigra.
 
-\macroname{\textbackslash gre@fontchar@custobottomshort}{}{gregoriotex-chars.tex}
-The custo character with a short upwards directed vigra.
+\macroname{\textbackslash gre@fontchar@custosbottomshort}{}{gregoriotex-chars.tex}
+The custos character with a short upwards directed vigra.
 
-\macroname{\textbackslash gre@fontchar@custotoplong}{}{gregoriotex-chars.tex}
-The custo character with a long downwards directed vigra.
+\macroname{\textbackslash gre@fontchar@custostoplong}{}{gregoriotex-chars.tex}
+The custos character with a long downwards directed vigra.
 
-\macroname{\textbackslash gre@fontchar@custotopmiddle}{}{gregoriotex-chars.tex}
-The custo character with a middle downwards directed vigra.
+\macroname{\textbackslash gre@fontchar@custostopmiddle}{}{gregoriotex-chars.tex}
+The custos character with a middle downwards directed vigra.
 
-\macroname{\textbackslash gre@fontchar@custotopshort}{}{gregoriotex-chars.tex}
-The custo character with a short downwards directed vigra.
+\macroname{\textbackslash gre@fontchar@custostopshort}{}{gregoriotex-chars.tex}
+The custos character with a short downwards directed vigra.
 
 \macroname{\textbackslash gre@fontchar@divisiofinalis}{}{gregoriotex-signs.tex}
 The divisio finalis.
@@ -1232,7 +1232,7 @@ All of the distances listed in \nameref{distances} have an internal
 associated with them, of the form of \verb=\gre@*@*=, which stores the value of the distance (in
 string representation).  The first wildcard is either \texttt{skip} or \texttt{dimen} according to the distance type, while the second is the name of the distance.
 
-These additional distances are calculated by Gregorio based on the values for the user customizable distances and what may be going on in the score at the time of their use.
+These additional distances are calculated by Gregorio based on the values for the user thizable distances and what may be going on in the score at the time of their use.
 
 \macroname{\textbackslash gre@dimen@clefwidth}{}{gregoriotex-spaces.tex}
 Width of the clef.

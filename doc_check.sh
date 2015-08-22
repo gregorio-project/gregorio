@@ -9,7 +9,7 @@
 # which contains a list of undocumented macros (preceded by >) and macros which
 # are documented but which no longer appear in the code (preceded by <).
 
-# The scirpt is not perfect, and especially has trouble with classes of macros
+# The script is not perfect, and especially has trouble with classes of macros
 # which have only one entry in the documentation.
 
 
