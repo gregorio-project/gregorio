@@ -688,7 +688,7 @@ name_definition:
             gregorio_message("name can't be empty","det_score",
                     VERBOSITY_WARNING, 0);
         }
-        check_multiple("name", (bool)score->name);
+        check_multiple("name", score->name != NULL);
         gregorio_set_score_name (score, $2.text);
     }
     ;
@@ -710,14 +710,14 @@ language_definition:
 
 gabc_copyright_definition:
     GABC_COPYRIGHT attribute {
-        check_multiple("gabc-copyright", (bool)score->gabc_copyright);
+        check_multiple("gabc-copyright", score->gabc_copyright != NULL);
         gregorio_set_score_gabc_copyright (score, $2.text);
     }
     ;
 
 score_copyright_definition:
     SCORE_COPYRIGHT attribute {
-        check_multiple("score_copyright", (bool)score->score_copyright);
+        check_multiple("score_copyright", score->score_copyright != NULL);
         gregorio_set_score_score_copyright (score, $2.text);
     }
     ;
@@ -727,42 +727,42 @@ gregoriotex_font_definition:
         gregorio_message("\"gregoriotex-font\" header is deprecated. "
         "Please use \\gresetgregoriofont in TeX instead.",
         "set_gregoriotex_font", VERBOSITY_DEPRECATION, 0);
-        check_multiple("GregorioTeX font", (bool)score->gregoriotex_font);
+        check_multiple("GregorioTeX font", score->gregoriotex_font != NULL);
         score->gregoriotex_font=$2.text;
     }
     ;
 
 office_part_definition:
     OFFICE_PART attribute {
-        check_multiple("office part", (bool)score->office_part);
+        check_multiple("office part", score->office_part != NULL);
         gregorio_set_score_office_part (score, $2.text);
     }
     ;
 
 occasion_definition:
     OCCASION attribute {
-        check_multiple("occasion", (bool)score->occasion);
+        check_multiple("occasion", score->occasion != NULL);
         gregorio_set_score_occasion (score, $2.text);
     }
     ;
 
 meter_definition:
     METER attribute {
-        check_multiple("meter", (bool)score->meter);
+        check_multiple("meter", score->meter != NULL);
         gregorio_set_score_meter (score, $2.text);
     }
     ;
 
 commentary_definition:
     COMMENTARY attribute {
-        check_multiple("commentary", (bool)score->commentary);
+        check_multiple("commentary", score->commentary != NULL);
         gregorio_set_score_commentary (score, $2.text);
     }
     ;
 
 arranger_definition:
     ARRANGER attribute {
-        check_multiple("arranger", (bool)score->arranger);
+        check_multiple("arranger", score->arranger != NULL);
         gregorio_set_score_arranger (score, $2.text);
     }
     ;
@@ -782,7 +782,7 @@ gabc_version_definition:
 
 mode_definition:
     MODE attribute {
-        check_multiple("mode", (bool)score->mode);
+        check_multiple("mode", score->mode != 0);
         if ($2.text) {
             score->mode=atoi($2.text);
             free($2.text);
@@ -792,7 +792,7 @@ mode_definition:
 
 nabc_lines_definition:
     NABC_LINES attribute {
-        check_multiple("nabc lines", (bool)score->nabc_lines);
+        check_multiple("nabc lines", score->nabc_lines != 0);
         if ($2.text) {
             nabc_lines=atoi($2.text);
             score->nabc_lines=nabc_lines;
@@ -823,21 +823,21 @@ annotation_definition:
 
 author_definition:
     AUTHOR attribute {
-        check_multiple("author", (bool)score->si.author);
+        check_multiple("author", score->si.author != NULL);
         gregorio_set_score_author (score, $2.text);
     }
     ;
 
 date_definition:
     DATE attribute {
-        check_multiple("date", (bool)score->si.date);
+        check_multiple("date", score->si.date != NULL);
         gregorio_set_score_date (score, $2.text);
     }
     ;
 
 manuscript_definition:
     MANUSCRIPT attribute {
-        check_multiple("manuscript", (bool)score->si.manuscript);
+        check_multiple("manuscript", score->si.manuscript != NULL);
         gregorio_set_score_manuscript (score, $2.text);
     }
     ;
@@ -845,7 +845,7 @@ manuscript_definition:
 manuscript_reference_definition:
     MANUSCRIPT_REFERENCE attribute {
         check_multiple("manuscript-reference",
-                (bool)score->si.manuscript_reference);
+                score->si.manuscript_reference != NULL);
         gregorio_set_score_manuscript_reference (score, $2.text);
     }
     ;
@@ -853,21 +853,21 @@ manuscript_reference_definition:
 manuscript_storage_place_definition:
     MANUSCRIPT_STORAGE_PLACE attribute {
         check_multiple("manuscript-storage-place",
-                (bool)score->si.manuscript_storage_place);
+                score->si.manuscript_storage_place != NULL);
         gregorio_set_score_manuscript_storage_place (score, $2.text);
     }
     ;
 
 book_definition:
     BOOK attribute {
-        check_multiple("book", (bool)score->si.book);
+        check_multiple("book", score->si.book != NULL);
         gregorio_set_score_book (score, $2.text);
     }
     ;
 
 transcriber_definition:
     TRANSCRIBER attribute {
-        check_multiple("transcriber", (bool)score->si.transcriber);
+        check_multiple("transcriber", score->si.transcriber != NULL);
         gregorio_set_score_transcriber (score, $2.text);
         /* free($2.text); */
     }
@@ -875,7 +875,8 @@ transcriber_definition:
 
 transcription_date_definition:
     TRANSCRIPTION_DATE attribute {
-        check_multiple("transcription date", (bool)score->si.transcription_date);
+        check_multiple("transcription date",
+                score->si.transcription_date != NULL);
         gregorio_set_score_transcription_date (score, $2.text);
     }
     ;
