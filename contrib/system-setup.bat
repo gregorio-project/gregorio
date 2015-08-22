@@ -3,7 +3,7 @@ SETLOCAL ENABLEEXTENSIONS
 
 set output="%TEMP%\system-setup.log"
 
-echo Gregorio Widows Setup Diagnostic Tool
+echo Gregorio Windows Setup Diagnostic Tool
 echo (C) 2015 The Gregorio Project.
 echo.
 echo Gregorio is free software: you can redistribute it and/or modify
