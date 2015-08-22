@@ -34,7 +34,7 @@
 \input graphicx.tex % for \resizebox
 \input xstring.sty%
 
-\def\greerror#1{\begingroup%
+\def\gre@error#1{\begingroup%
 \def\MessageBreak{^^J}%
 \let\protect\string%
 \errmessage{GregorioTeX error: #1}%
@@ -58,19 +58,19 @@
 \message{#1}%
 \endgroup}%
 
-\ifx\csname gre@debug\endcsname\relax%
+\ifcsname gre@debug\endcsname%
 \else%
   \def\gre@debug{}%
 \fi%
 
-\ifx\csname f@size\endcsname\relax%
+\ifcsname f@size\endcsname%
 \else%
   \def\f@size{\directlua{gregoriotex.font_size()}}%
 \fi%
 
 \long\def\gre@metapost#1{{%
-  \grelocalleftbox{}%
-  \grelocalrightbox{}%
+  \gre@localleftbox{}%
+  \gre@localrightbox{}%
   \mplibcode
   #1
   \endmplibcode%
@@ -128,14 +128,15 @@
 }
 
 
-\def\grecoloredlines#1{%
-  \gre@deprecated{\protect\greredlines}{\protect\gresetlinecolor}%
+\def\grecoloredlines#1#2#3{%
+  \gre@deprecated{\protect\grecoloredlines}{\protect\gresetlinecolor}%
+  \gresetlinecolor{}%
   \relax %
 }
 
 \def\greredlines{%
   \gre@deprecated{\protect\greredlines}{\protect\gresetlinecolor{gregoriocolor}}%
-  \gresetlinecolor{gregoriocolor}%
+  \gresetlinecolor{}%
   \relax %
 }
 
@@ -143,7 +144,7 @@
 
 \def\grenormallines{%
   \gre@deprecated{\protect\grenormallines}{\protect\gresetlinecolor{black}}%
-  \gresetlinecolor{black}%
+  \gresetlinecolor{}%
   \relax %
 }
 
@@ -228,6 +229,12 @@
   \relax%
 }%
 \def\endgre@style@modeline{\endgroup}%
+
+\def\gre@style@nabc{%
+  \begingroup%
+  \relax% we do nothing since colors are implemented in PlainTeX
+}
+\def\endgre@style@nabc{\endgroup}%
 
 \def\gre@changestyle#1#2[#3]{%
   \gdef\csname gre@style@#1\endcsname{\begingroup#2}%

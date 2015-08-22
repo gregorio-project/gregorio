@@ -1,3 +1,5 @@
+% !TEX program = LuaLaTeX+se
+
 \documentclass[a4paper]{article}
 \usepackage{color}
 \usepackage{luacode}
@@ -8,7 +10,6 @@
 \usepackage{hyperref}
 \usepackage{color}
 \usepackage{gregoriotex}
-\usepackage{gregoriosyms}
 \usepackage{longtable}
 \usepackage{supertabular}
 \usepackage{carolmin}
@@ -37,51 +38,39 @@
         \setlength{\listparindent}{0pt}%
         \setlength{\itemindent}{0pt}%
         \setlength{\parsep}{0pt}%
-      }\item[]{\fbox{\parbox{\hsize}{\gregorioscore{veni.gtex}}}}%
+      }\item[]{\fbox{\parbox{\hsize}{\gregorioscore[f]{veni}}}}%
       \end{list}%
     \endgroup%
 
 \vfill
 \pagebreak
 
-\gregoriosetnabcfont{gresgmodern}{8}
-\gregoriosetnabcfont{gregall}{8}
+\gresetnabcfont{gresgmodern}{8}
+\gresetnabcfont{gregall}{8}
 
-\def\neume{%
+\def\neume#1{%
   \begingroup %
     \catcode`\~=12{}%
     \catcode`\@=11{}%
-    \doneume%
-}
-
-\def\doneume#1{%
-    \vbox{\hbox{\vspace{1mm}}\hbox{\noindent\gregorionabcchar{#1}\hspace{1mm}}%
+    \vbox{\hbox{\vspace{1mm}}\hbox{\noindent\GreNABCChar{#1}\hspace{1mm}}%
     \hbox{\vspace{1mm}}\hbox{\noindent{\fontsize{6}{6}\texttt{#1}\hspace{1mm}}}}%
   \endgroup %
 }
 
-\def\neumer{%
+\def\neumer#1{%
   \begingroup %
     \catcode`\~=12{}%
     \catcode`\@=11{}%
-    \doneumer%
-}
-
-\def\doneumer#1{%
-    \vbox{\hbox{\vspace{1mm}}\hbox{\noindent\hspace{8mm}\gregorionabcchar{#1}\hspace{1mm}}%
+    \vbox{\hbox{\vspace{1mm}}\hbox{\noindent\hspace{8mm}\GreNABCChar{#1}\hspace{1mm}}%
     \hbox{\vspace{1mm}}\hbox{\noindent{\fontsize{6}{6}\texttt{#1}\hspace{1mm}}}}%
   \endgroup %
 }
 
-\def\sneume{%
+\def\sneume#1{%
   \begingroup %
     \catcode`\~=12{}%
     \catcode`\@=11{}%
-    \dosneume%
-}
-
-\def\dosneume#1{%
-    \font\gregorionabcfont={name:gregall} at 6pt\gregorionabcfont\gregorionabcstyle%
+    \font\gre@nabcfont={name:gregall} at 6pt\gre@nabcfont\gregorionabcstyle%
     \directlua{tex.sprint(gregoriotex.nabc_font_tables["gregall"]["\luatexluaescapestring{#1}"] or "")}%
   \endgroup %
 }
@@ -240,15 +229,15 @@ position, then they are ordered in the order they are written in the
 \texttt{nabc} snippet at that position.  The position numbers are:
 
 
-\makebox[6cm][l]{\texttt{1} \gregorionabcchar{vilsc1} left upper corner}
-\makebox[6cm][l]{\texttt{2} \gregorionabcchar{vilsc2} above the neume}
-\makebox[6cm][l]{\texttt{3} \gregorionabcchar{vilsc3} right upper corner}\\
-\makebox[6cm][l]{\texttt{4} \gregorionabcchar{vilsc4} to the left of the neume}
+\makebox[6cm][l]{\texttt{1} \GreNABCChar{vilsc1} left upper corner}
+\makebox[6cm][l]{\texttt{2} \GreNABCChar{vilsc2} above the neume}
+\makebox[6cm][l]{\texttt{3} \GreNABCChar{vilsc3} right upper corner}\\
+\makebox[6cm][l]{\texttt{4} \GreNABCChar{vilsc4} to the left of the neume}
 \makebox[6cm][l]{}
-\makebox[6cm][l]{\texttt{6} \gregorionabcchar{vilsc6} to the right of the neume}\\
-\makebox[6cm][l]{\texttt{7} \gregorionabcchar{vilsc7} left bottom corner}
-\makebox[6cm][l]{\texttt{8} \gregorionabcchar{vilsc8} below the neume}
-\makebox[6cm][l]{\texttt{9} \gregorionabcchar{vilsc9} right bottom corner}\\
+\makebox[6cm][l]{\texttt{6} \GreNABCChar{vilsc6} to the right of the neume}\\
+\makebox[6cm][l]{\texttt{7} \GreNABCChar{vilsc7} left bottom corner}
+\makebox[6cm][l]{\texttt{8} \GreNABCChar{vilsc8} below the neume}
+\makebox[6cm][l]{\texttt{9} \GreNABCChar{vilsc9} right bottom corner}\\
 
 
 The shorthands, including the \texttt{ls} prefix, which should be followed
@@ -306,7 +295,7 @@ Finally a commented example of a \texttt{nabc} snippet:
 
 \texttt{```po////pe>2lse7lsl3qlhh!vshhppt1sut2ql>ppu3}
 
-\gregorionabcchar{```po////pe>2lse7lsl3qlhh!vshhppt1sut2ql>ppu3}
+\GreNABCChar{```po////pe>2lse7lsl3qlhh!vshhppt1sut2ql>ppu3}
 
 \texttt{```} stands for a negative horizontal skip (move to the left)
 by \texttt{nabcinterelementspace} and \texttt{nabclargerspace}.
@@ -317,17 +306,17 @@ by \texttt{nabcinterelementspace} and \texttt{nabclargerspace}.
 \texttt{////} stands for a horizontal skip (move to the right) by
 two times \texttt{nabclargerspace}.
 
-\texttt{pe>2lse7lsl3} \gregorionabcchar{pe>2lse7lsl3} stands for the
+\texttt{pe>2lse7lsl3} \GreNABCChar{pe>2lse7lsl3} stands for the
 3rd augmentive liquescent form of podatus (epiphonus with tractulus, see the
 following page) at the default pitch, with equaliter in the low left corner
 and levare in the upper right corner.
 
-\texttt{qlhh!vshhppt1sut2} \gregorionabcchar{qlhh!vshhppt1sut2} stands for
+\texttt{qlhh!vshhppt1sut2} \GreNABCChar{qlhh!vshhppt1sut2} stands for
 a 3 loop quilisma joined with virga strata, both at relative pitch 2 above
 the default one, with a single tractulus before it and two subpunctis -
 tractulis.
 
-\texttt{ql>ppu3} \gregorionabcchar{ql>ppu3} is a 3 loop liquescent quilisma
+\texttt{ql>ppu3} \GreNABCChar{ql>ppu3} is a 3 loop liquescent quilisma
 with 3 tractulis with episema before it.
 }
 
@@ -408,13 +397,13 @@ Table with nabc strings and corresponding gregall and gresgmodern glyphs:
       keym = key:gsub("~","\\~{}")
       str = keym .. "\\hfill"
       if gregoriotex.nabc_font_tables['gregall'][key] then
-        str = str .. "{\\font\\gregorionabcfont={name:gregall} at 8pt\\gregorionabcfont\\gregorionabcstyle" .. gregoriotex.nabc_font_tables['gregall'][key] .. "}"
+        str = str .. "{\\font\\gre@nabcfont={name:gregall} at 8pt\\gre@nabcfont\\gregorionabcstyle" .. gregoriotex.nabc_font_tables['gregall'][key] .. "}"
       else
         str = str .. "{\\color{blue}missing}"
       end
       str = str .. "\\hfill"
       if gregoriotex.nabc_font_tables['gresgmodern'][key] then
-        str = str .. "{\\font\\gregorionabcfont={name:gresgmodern} at 8pt\\gregorionabcfont\\gregorionabcstyle" .. gregoriotex.nabc_font_tables['gresgmodern'][key] .. "}"
+        str = str .. "{\\font\\gre@nabcfont={name:gresgmodern} at 8pt\\gre@nabcfont\\gregorionabcstyle" .. gregoriotex.nabc_font_tables['gresgmodern'][key] .. "}"
       else
         str = str .. "{\\color{blue}missing}"
       end

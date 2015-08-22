@@ -155,6 +155,9 @@ defined and re-defined by the \verb=\gresetgregoriofont= macro.
   \#1 & \TeX{} code & The \TeX{} code to use when long stems are not forced.\\
 \end{argtable}
 
+\macroname{\textbackslash GreCP...}{}{gregoriotex-main.tex}
+A class of macros which point to the individual characters in a Gregoiro\TeX\ compatible font.  This class of macros is dynamically mapped from the glyph names embedded in the \texttt{ttf} file via a Lua script to ensure that the code points match up with the installed font.
+
 \macroname{\textbackslash GreCustos}{\#1}{gregoriotex-signs.tex}
 Typesets a custos.
 
@@ -470,7 +473,7 @@ Macro for typesetting low choral signs.
 \end{argtable}
 
 \macroname{\textbackslash GreManualCustos}{\#1}{gregoriotex-signs.tex}
-Macro to typeset a custo manually.
+Macro to typeset a custos manually.
 
 \begin{argtable}
   \#1 & integer & height number of the custos.
@@ -813,6 +816,37 @@ the beginning of a line?).
 Macro to typeset a zero-width hyphen (the hyphen is visible, it is only
 treated as if it had 0 width).  Used for fine tuning spacing
 (especially at line endings).
+
+\macroname{\textbackslash GreForceBreak}{}{gregoriotex-spaces.tex}
+Macro used to force a line break to occur at a given position.
+
+\macroname{\textbackslash GreNoBreak}{}{gregoriotex-spaces.tex}
+Macro used to prevent a line break from occurring at a given position.
+
+\macroname{\textbackslash GreScoreId}{}{gregoriotex-main.tex}
+A Lua\TeX\ attribute which designates a unique identifier for each score.
+
+\macroname{\textbackslash GreNABCNeumes}{\#1\#2}{gregoriotex-nabc.tex}
+Macro to print a nabc character above the lines.
+
+\begin{argtable}
+  \#1 & int & the line on which the character should appear (currently unused)\\
+  \#2 & string & The \texttt{nabc} syntax which indicates what neumes are to be printed\\
+\end{argtable}
+
+\macroname{\textbackslash GreNABCChar}{\#1}{gregoriotex-nabc.tex}
+Macro to print a nabc character.
+
+\begin{argtable}
+  \#1 & string & The \texttt{nabc} syntax which indicates what neumes are to be printed\\
+\end{argtable}
+
+\macroname{\textbackslash GreScoreNABCLines}{\#1}{gregoriotex-nabc.tex}
+Macro which sets the number of \texttt{nabc} lines in the score.
+
+\begin{argtable}
+  \#1 & int & the number of \texttt{nabc} lines (currently only 1 is supported)\\
+\end{argtable}
 
 %%% Local Variables:
 %%% mode: latex

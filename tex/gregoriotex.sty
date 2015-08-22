@@ -29,13 +29,13 @@
 \RequirePackage{luamplib}%
 \RequirePackage{xstring}%
 
-\def\greerror#1{\PackageError{GregorioTeX}{#1}{}}%
+\def\gre@error#1{\PackageError{GregorioTeX}{#1}{}}%
 \def\gre@warning#1{\PackageWarning{GregorioTeX}{#1}}%
 \def\gre@bug#1{\PackageError{GregorioTeX}{#1 !! This is a bug in Gregorio.  Please report it at https://github.com/gregorio-project/gregorio/issues}{}}%
 \def\gre@typeout{\typeout}
 \long\def\gre@metapost#1{{%
-  \grelocalleftbox{}%
-  \grelocalrightbox{}%
+  \gre@localleftbox{}%
+  \gre@localrightbox{}%
   \begin{mplibcode}
   #1
   \end{mplibcode}%
@@ -181,6 +181,10 @@
 \newenvironment{gre@style@modeline}%
   {\begingroup\begin{scshape}\begin{bfseries}}%
   {\end{bfseries}\end{scshape}\endgroup}%
+  
+\newenvironment{gre@style@nabc}%
+  {\begingroup\color{red}}%
+  {\endgroup}%
 
 \def\gre@changestyle#1#2[#3]{%
   \renewenvironment{gre@style@#1}{\begingroup#2}{#3\endgroup}%

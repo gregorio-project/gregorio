@@ -263,6 +263,9 @@ Example:\par\medskip
   \greloadspaceconf{myspaces}
 \end{latexcode}
 
+\macroname{\textbackslash greconffactor}{}{gsp-default.tex}
+A count which indicates the staff size that a space configuration file is designed for.  Each space configuration file must have this value set as Gregorio\TeX\ will compare it to the current staff size to determine if the configuration file being loaded needs to be rescaled.
+
 \macroname{\textbackslash gresetlineheightexpansion}{\{\#1\}}{gregoriotex-main.tex}
 Macro to configure line height expansion behavior when notes appear
 above or below the staff lines.
@@ -565,28 +568,40 @@ barred symbol.
   \#5 & dimension & vertical shift of the bar glyph.\\
 \end{argtable}
 
+\macroname{\textbackslash greseparator}{\{\#1\}\{\#2\}}{gregoriotex-symbols.tex}
+A macro for invoking one of the five separators (fancy lines) which are contained in the greextra font.
+
+\begin{argtable}
+  \#1 & 1--5 & the line desired\\
+  \#2 & integer & the point size at which to print the line\\
+\end{argtable}
 
 \subsubsection{Styling}
 Different elements of an include score have different styles applied.  These elements and their defaults are listed below:
 
+\let\stylename\texttt
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
 \bigskip\rowcolors{1}{lightgray}{lightgray}
 \begin{tabular}{lp{7cm plus .5cm}r}
   Element Name & Description & Default\\
   \hline
-  \texttt{initial} & Normal Initials & 40 pt font\\
-  \texttt{biginitial} & Big (2-Line) Initials & 80 pt font\\
-  \texttt{translation} & Translation text (appears below lyrics) & italics\\
-  \texttt{abovelinestext} & Above line text (\texttt{<alt></alt>} in gabc, appears above the staff) & normal\\
-  \texttt{normalstafflines} & Full length staff lines & none\\
-  \texttt{additionalstafflines} & short lines behind notes above or below the staff & \textit{special}\\
-  \texttt{lowchoralsign} & low choral signs & none\\
-  \texttt{highchoralsign} & high choral signs & none\\
-  \texttt{firstsyllableinitial} & the first letter of the first syllable of a score which is not the score initial & none\\
-  \texttt{firstsyllable} & the balance of the first syllable of the score & none\\
-  \texttt{modeline} & the rendered annotation from the \texttt{mode: ;} header in the gabc file & \textsc{\textbf{Bold Small Capitals}}\\
+  \stylename{initial} & Normal Initials & 40 pt font\\
+  \stylename{biginitial} & Big (2-Line) Initials & 80 pt font\\
+  \stylename{translation} & Translation text (appears below lyrics) & {\it italics}\\
+  \stylename{abovelinestext} & Above line text (\texttt{<alt></alt>} in gabc, appears above the staff) & normal\\
+  \stylename{normalstafflines} & Full length staff lines & none\\
+  \stylename{additionalstafflines} & short lines behind notes above or below the staff & special\footnotemark[1]\\
+  \stylename{lowchoralsign} & low choral signs & none\\
+  \stylename{highchoralsign} & high choral signs & none\\
+  \stylename{firstsyllableinitial} & the first letter of the first syllable of a score which is not the score initial & none\\
+  \stylename{firstsyllable} & the balance of the first syllable of the score & none\\
+  \stylename{modeline} & the rendered annotation from the \texttt{mode: ;} header in the gabc file & \parbox[t]{2.2cm}{\raggedleft\textsc{\textbf{Bold Small Capitals}}}\\
+  \stylename{nabc} & ancient notation & {\color{gregoriocolor}gregoriocolor} (\LaTeX)\\
+  && none (Plain\TeX)\\
 \end{tabular}
 
-\textit{Special:} By default, \texttt{additionalstafflines} inherits its properties from \texttt{normalstafflines}.  To decouple these environments, you must manually change \texttt{additionalstafflines} using \texttt{\textbackslash grechangestyle}.
+\footnotemark[1]\textit{Special:} By default, \texttt{additionalstafflines} inherits its properties from \texttt{normalstafflines}.  To decouple these environments, you must manually change \texttt{additionalstafflines} using \texttt{\textbackslash grechangestyle}.
+\renewcommand{\thefootnote}{\arabic{footnote}}
 
 \macroname{\textbackslash grechangestyle}{\{\#1\}\{\#2\}[\#3]}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Command to change styling of a score element.
@@ -797,6 +812,18 @@ harmonizes with the greciliae font.  This macro must be redefined should
 a different value be desired.
 
 
+\subsubsection{Ancient Notation}
+For a full description of how to make use of the ancient notation capabilities of gregorio and Gregorio\TeX, look at the GregorioNabcRef documentation.  The commands listed here allow the manipulation of settings related to that notation.
+
+\macroname{\textbackslash gresetnabcfont}{\{\#1\}\{\#2\}}{gregoriotex-nabc.tex}
+Macro to set the font to be used for the ancient notation.
+
+\begin{argtable}
+  \#1 & string & the name of the font\\
+  \#2 & integer & point size at which the font should be loaded\\
+\end{argtable}
+
+
 \subsection{Distances}\label{distances}
 
 Each of the following distances controls some aspect of the spacing of the Gregorio\TeX\ score.  They are changed using \verb=\grechangedim=, documented above.  If the distance permits a rubber value, then the default value will indicate the stretch and shrink (even if they are zero by default).  Distances whose default value does not include a stretch or shrink may not take a rubber value.
@@ -853,12 +880,12 @@ Space between elements which has the size of a note.
 
 Default: \unit[0.21877]{cm} plus \unit[0.01822]{cm} minus \unit[0.01822]{cm}
 
-\macroname{intersyllablespace}{}{gsp-default.tex}
+\macroname{intersyllablespacenotes}{}{gsp-default.tex}
 Minimum space between two notes of different syllables.  
 
 Default: \unit[0.25523]{cm} plus \unit[0.31903]{cm} minus \unit[0]{cm}
 
-\macroname{spacebeforecusto}{}{gsp-default.tex}
+\macroname{spacebeforecustos}{}{gsp-default.tex}
 Space before custos.  
 
 Default: \unit[0.1823]{cm} plus \unit[0.31903]{cm} minus \unit[0.0638]{cm}
@@ -883,20 +910,20 @@ Space after at the end of a word when the last written symbol is a note and the 
 
 Default: \unit[0.29169]{cm} plus \unit[0.08751]{cm} minus \unit[0.05469]{cm}
 
-\macroname{interwordspacenotestext}{}{gsp-default.tex}
-Space after at the end of a word when the last written symbol is a note and the first is text.  
-
-Default: \unit[0.27345]{cm} plus \unit[0.27345]{cm} minus \unit[0.07292]{cm}
-
-\macroname{interwordspacetextnotes}{}{gsp-default.tex}
-Space after at the end of a word when the last written symbol is text and the first is a note.  
-
-Default: \unit[0.27345]{cm} plus \unit[0.27345]{cm} minus \unit[0.07292]{cm}
-
 \macroname{interwordspacetext}{}{gsp-default.tex}
 Space after at the end of a word when the last written symbol is text and the first is text.  
 
 Default: \unit[0.22787]{cm} plus \unit[0.41019]{cm} minus \unit[0.07292]{cm}
+
+\macroname{interwordspacenotes@euouae}{}{gsp-default.tex}
+Space after at the end of a word when the last written symbol is a note and the first is a note in \texttt{euouae} blocks.  
+
+Default: \unit[0.19]{cm} plus \unit[0.1]{cm} minus \unit[0.05]{cm}
+
+\macroname{interwordspacetext@euouae}{}{gsp-default.tex}
+Space after at the end of a word when the last written symbol is text and the first is text in \texttt{euouae} blocks.  
+
+Default: \unit[0.27]{cm} plus \unit[0.1]{cm} minus \unit[0.05]{cm}
 
 \macroname{bitrivirspace}{}{gsp-default.tex}
 Space between notes of a bivirga or trivirga.  
@@ -964,7 +991,7 @@ A special space for finalis, for when it is the last glyph.
 Default: \unit[0.29169]{cm} plus \unit[0.07292]{cm} minus \unit[0.27345]{cm}
 
 \macroname{spacearoundclefbars}{}{gsp-default.tex}
-Additional space that will appear around bars that are preceded by a custo and followed by a key.  
+Additional space that will appear around bars that are preceded by a custos and followed by a key.  
 
 Default: \unit[0.03645]{cm} plus \unit[0.00455]{cm} minus \unit[0.0009]{cm}
 
@@ -1098,6 +1125,110 @@ Default: \unit[0]{cm}
 A shift you can give to the accentus above the curly brace.  
 
 Default: $\unit[-0.05]{cm}$
+
+\macroname{nabcinterelementspace}{}{gsp-default.tex}
+Space between elements in ancient notation.
+
+Default: \unit[0.06927]{cm} plus \unit[0.00182]{cm} minus \unit[0.00363]{cm}
+
+\macroname{nabclargerspace}{}{gsp-default.tex}
+Larger space between elements in ancient notation.
+
+Default: \unit[0.10938]{cm} plus \unit[0.01822]{cm} minus \unit[0.00911]{cm}
+
+\macroname{clivisalignmentmin}{}{gsp-default.tex}
+When \verb=\gre@clivisalignment= is 2, this distance is the maximum length of the consonants after vowels for which the clivis will be aligned on its center.
+
+Default: \unit[0.3]{cm}
+
+\macroname{clefchangespace}{}{gsp-default.tex}
+Space around a clef change.
+
+Default: \unit[0.01768]{cm} plus \unit[0.00175]{cm} minus \unit[0.01768]{cm}
+
+
+\subsection{Penalties}\label{penalties}
+Penalties are used by \TeX\ to determine where line and page breaks should occur.  Gregorio\TeX\ modifies or defines a few of its own to help with that process in scores.
+
+\macroname{\textbackslash grebrokenpenalty}{}{gsp-default.tex}
+The vertical penalty inserted after a break on a clef change.
+
+Default: 0
+
+\macroname{\textbackslash greclubpenalty}{}{gsp-default.tex}
+The club penalty (determines how important it is to prevent orphans from occurring).
+
+Default: 0
+
+\macroname{\textbackslash grewidowpenalty}{}{gsp-default.tex}
+The widow penalty (determines how important it is to prevent widows from occurring).
+
+Default: 0
+
+\macroname{\textbackslash greemergencystretch}{}{gsp-default.tex}
+The value of the last ditch stretch for overfull boxes.
+
+Default: \verb=\emergencystretch=
+
+\macroname{\textbackslash greendafterbarpenalty}{}{gsp-default.tex}
+The end after bar penalty.
+
+Default: $-200$
+
+\macroname{\textbackslash greendafterbaraltpenalty}{}{gsp-default.tex}
+The alternate end after bar penalty (used when there is no text under the bar).
+
+Default: $-200$
+
+\macroname{\textbackslash greendofelementpenalty}{}{gsp-default.tex}
+The end of element penalty.
+
+Default: $-50$
+
+\macroname{\textbackslash greendofsyllablepenalty}{}{gsp-default.tex}
+The end of element penalty.
+
+Default: $-50$
+
+\macroname{\textbackslash greendofwordpenalty}{}{gsp-default.tex}
+The end of element penalty.
+
+Default: $-100$
+
+\macroname{\textbackslash grehyphenpenalty}{}{gsp-default.tex}
+The hyphen penalty.
+
+Default: $-200$
+
+\macroname{\textbackslash grenobreakpenalty}{}{gsp-default.tex}
+Penalty to prevent a line break.
+
+Default: 10001
+
+\macroname{\textbackslash grenewlinepenalty}{}{gsp-default.tex}
+Penalty to force a line break.
+
+Default: -10001
+
+\macroname{\textbackslash grelooseness}{}{gsp-default.tex}
+The \TeX\ looseness within a score.
+
+Default: \verb=\looseness=
+
+\macroname{\textbackslash gretolerance}{}{gsp-default.tex}
+The \TeX\ tolerance within a score.  See \url{https://en.wikibooks.org/wiki/TeX/tolerance} for an explanation of what tolerance is.
+
+Default: 9000
+
+\macroname{\textbackslash grepretolerance}{}{gsp-default.tex}
+The \TeX\ pretolerance within a score.  See \url{https://en.wikibooks.org/wiki/TeX/pretolerance} for an explanation of what pretolerance is.
+
+Default: $-1$ (Lua\TeX\ versions prior to 0.80) or \verb=\pretolerance= (versions after, and including, 0.80)
+
+\textit{Nota bene:} For more details on why this is necessary see the comments in gsp-default.tex.
+
+
+
 
 
 \subsection{Colors}\label{colors}

@@ -436,7 +436,7 @@ static __inline void add_alteration(const gregorio_type type) {
     }
 \}  {
         gregorio_add_texverb_as_note(&current_note,
-                strdup("\\hss%\n}%\n\\grenobreak\\relax "), GRE_TEXVERB_ELEMENT,
+                strdup("\\hss%\n}%\n\\GreNoBreak\\relax "), GRE_TEXVERB_ELEMENT,
                 &notes_lloc);
     }
 [a-m]\+ {

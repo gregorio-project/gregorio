@@ -26,7 +26,7 @@
 
 \RequireLuaModule{gregoriotex}%
 
-\def\gresymbolfontsize{\f@size}%
+\def\gre@symbolfontsize{\f@size}%
 
 % Defines a symbol which automatically scales with \f@size
 % #1 = control sequence name
@@ -182,7 +182,7 @@
 %lines
 %#1 is the type of line (1-5)
 %#2 is the number of pt of the font it will use
-\def\gresep#1#2{%
+\def\greseparator#1#2{%
   \ifcase#1\relax %
   \or\greLineOne{#2}%
   \or\greLineTwo{#2}%
@@ -191,3 +191,8 @@
   \or\greLineFive{#2}%
   \fi%
 }%
+
+\def\gresep#1#2{%
+  \gre@deprecated{\protect\gresep}{\protect\greseparator}%
+  \greseparator{#1}{#2}%
+}

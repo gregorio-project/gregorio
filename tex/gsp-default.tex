@@ -21,6 +21,10 @@
 
 %% First, the penalties
 
+% penalty to force a break on a new line
+\xdef\grenewlinepenalty{-10001}%
+% penalty to prevent a line break
+\xdef\grenobreakpenalty{10001}%
 % penalty at the end of a syllable which is the end of a word
 \xdef\greendofwordpenalty{-100}%
 % penalty at the end of a syllable which is not the end of a word
@@ -37,17 +41,18 @@
 % a bar with clef change for example. It also set \exhyphenpenalty. It should
 % be close to \greendafterbarpenalty
 \xdef\grehyphenpenalty{-200}%
-
 % broken penalty is the vertical penalty inserted after a break on a clef change
 % I'm not sure it should be set, but it might be useful...
 \xdef\grebrokenpenalty{0}%
 
-%% Then, some fine tunings
+%% These macro enable the tuning of linepenalty, tolerance, pretolerance
+%% and emergencystretch
 \def\grelooseness{\looseness}%
 \def\gretolerance{9000}%
 % Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
 % see http://tug.org/pipermail/luatex/2013-July/004516.html
-\ifnum\the\luatexversion < 78\relax %
+% The idea is that we use discretionaries (explicit hyphens, though more than hyphens in our case) for clef changes, and we need to give them a special penalty, which is not taken into account if pretolerance is > -1 on LuaTeX < 0.80. For a more detailed explanation see http://tug.org/pipermail/luatex/2013-July/004516.html.
+\ifnum\the\luatexversion < 80\relax % 
   \global\def\grepretolerance{-1}%
 \else %
   \global\def\grepretolerance{\pretolerance}%
@@ -66,15 +71,14 @@
 %% And finally, all the spacings:
 %%%%%%%%%%%%%%%%%%%
 
-%This count tells gregoriotex what \grefactor the below values correspond to.
-%% All the following values correspond to a grefactor of 17.  At this size the scores should be approximately the size usually seen in a gradual.
+%This count tells gregoriotex what \gre@factor the below values correspond to.
+%% All the following values correspond to a gre@factor of 17.  At this size the scores should be approximately the size usually seen in a gradual.
 %% If you’re creating your own space configuration file, you may set this to some other value, should you so desire.
-\newcount\greconffactor%
 \greconffactor=17%
 
 % the additional width of the additional lines (compared to the width of the glyph they're associated with)
 \grecreatedim{additionallineswidth}{0.14584 cm}{1}%
-% width of the additional lines, used only for the custos (maybe should depend on the width of the custo...)
+% width of the additional lines, used only for the custos (maybe should depend on the width of the custos...)
 % the width is the one for the custos at end of lines, the line for custos in the middle of a score is the same
 % multiplied by 2.
 \grecreatedim{additionalcustoslineswidth}{0.09114 cm}{1}%
@@ -100,8 +104,8 @@
 \grecreatedim{nabclargerspace}{0.10938 cm plus 0.01822 cm minus 0.00911 cm}{1}%
 % space between elements which has the size of a note
 \grecreatedim{glyphspace}{0.21877 cm plus 0.01822 cm minus 0.01822 cm}{1}%
-% space before custo
-\grecreatedim{spacebeforecusto}{0.1823 cm plus 0.31903 cm minus 0.0638 cm}{1}%
+% space before custos
+\grecreatedim{spacebeforecustos}{0.1823 cm plus 0.31903 cm minus 0.0638 cm}{1}%
 % space before punctum mora and augmentum duplex
 \grecreatedim{spacebeforesigns}{0.05469 cm plus 0.00455 cm minus 0.00455 cm}{1}%
 % space after punctum mora and augmentum duplex
@@ -146,7 +150,7 @@
 \grecreatedim{spacearoundfinalis}{0.1823 cm plus 0.22787 cm minus 0.00469 cm}{1}%
 %a special space for finalis, for when it is the last glyph
 \grecreatedim{spacebeforefinalfinalis}{0.29169 cm plus 0.07292 cm minus 0.27345 cm}{1}%
-% additional space that will appear around bars that are preceded by a custo and followed by a key.
+% additional space that will appear around bars that are preceded by a custos and followed by a key.
 \grecreatedim{spacearoundclefbars}{0.03645 cm plus 0.00455 cm minus 0.0009 cm}{1}%
 % space between the text and the text of the bar
 \grecreatedim{textbartextspace}{0.24611 cm plus 0.13672 cm minus 0.04921 cm}{1}%
