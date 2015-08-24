@@ -114,7 +114,7 @@
 % #7 is the line:char:column for a textedit link
 \def\GreGlyph#1#2#3#4#5#6#7{%
   \gre@newglyphcommon %
-  \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{\gregoriofont #1}{#7}}%
+  \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{\gre@font@neumebase #1}{#7}}%
   \gre@dimen@temp@three=\wd\gre@box@temp@width %
   \global\gre@dimen@lastglyphwidth=\gre@dimen@temp@three %
   % the three next lines are a trick to get the additional lines below the glyphs
@@ -160,40 +160,40 @@
 \def\gre@calculate@simplenotesaligncenter#1#2{%
   \ifcase#1%
     %case of punctum
-    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPPunctum}%
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPPunctum}%
   \or%
     %case of flexus
-    \gre@handleclivisspecialalignment{\gregoriofont\GreCPPesQuadratumLongqueueThreeNothing}{\gregoriofont\GreCPPunctum}{#2}%
+    \gre@handleclivisspecialalignment{\gre@font@neumebase\GreCPPesQuadratumLongqueueThreeNothing}{\gre@font@neumebase\GreCPPunctum}{#2}%
   \or%
     %case of porrectus (we consider it to have the same alignment as punctum)
-    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPPunctum}%
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPPunctum}%
   \or%
     %case of a initio debilis
-    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPPunctumDeminutus}%
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPPunctumDeminutus}%
   \or %
     %case of a quilisma
-    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPQuilisma}%
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPQuilisma}%
   \or %
     %case of an oriscus
-    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPOriscus}%
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPOriscus}%
   \or %
     %case of a punctum inclinatum
-    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPPunctumInclinatum}%
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPPunctumInclinatum}%
   \or %
     %case of a stropha
-    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPStropha}%
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPStropha}%
   \or %
     % case of flexus with ambitus of one
-    \gre@handleclivisspecialalignment{\gregoriofont\GreCPPesQuadratumLongqueueOneNothing}{\gregoriofont\GreCPPunctum}{#2}%
+    \gre@handleclivisspecialalignment{\gre@font@neumebase\GreCPPesQuadratumLongqueueOneNothing}{\gre@font@neumebase\GreCPPunctum}{#2}%
   \or %
     % case of flexus deminutus
-    \gre@handleclivisspecialalignment{\gregoriofont\GreCPFlexusTwoDeminutus}{\gregoriofont\GreCPPunctum}{#2}%
+    \gre@handleclivisspecialalignment{\gre@font@neumebase\GreCPFlexusTwoDeminutus}{\gre@font@neumebase\GreCPPunctum}{#2}%
   \or %
     % case of virgula
-    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPVirgula}%
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPVirgula}%
   \or %
     % case of divisio minima, minor, maior
-    \global\setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPPunctumDeminutus}%
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPPunctumDeminutus}%
   \or %
     % case of divisiofinalis
     \global\setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%

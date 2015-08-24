@@ -25,9 +25,9 @@
 \def\gresetnabcfont#1#2{%
   \xdef\gre@nabcfontname{#1}%
   \xdef\gre@nabcfontsize{#2}%
-  \global\font\gre@nabcfont={name:#1} at #2 pt\relax %
+  \global\font\gre@font@nabc={name:#1} at #2 pt\relax %
   {%
-    \gre@nabcfont %
+    \gre@font@nabc %
     \directlua{gregoriotex.init_nabc_font("\luatexluaescapestring{#1}")}%
   }%
   \gre@nabcfontloadedtrue%
@@ -41,7 +41,7 @@
   \begingroup %
     \catcode`\~=12{}%
     \catcode`\@=11{}%
-    \gre@nabcfont %
+    \gre@font@nabc %
     \gre@style@nabc %
     \grenabccharno{#1}{\gre@nabcfontname}{1}%
     \endgre@style@nabc%

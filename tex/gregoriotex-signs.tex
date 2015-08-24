@@ -463,9 +463,9 @@
   }%
 }%
 
-\gdef\gre@fontchar@curlybrace{\gregoriofont\GreCPCurlyBrace}%
-\gdef\gre@fontchar@brace{\gregoriofont\GreCPRoundBrace}%
-\gdef\gre@fontchar@underbrace{\gregoriofont\GreCPRoundBraceDown}%
+\gdef\gre@fontchar@curlybrace{\gre@font@neumebase\GreCPCurlyBrace}%
+\gdef\gre@fontchar@brace{\gre@font@neumebase\GreCPRoundBrace}%
+\gdef\gre@fontchar@underbrace{\gre@font@neumebase\GreCPRoundBraceDown}%
 
 % the command to resize a box, \resizebox is provided by graphicx
 \global\let\gre@resizebox\resizebox %
@@ -536,7 +536,7 @@
       \gre@calculate@glyphraisevalue{\gre@pitch@m}{13}%
       \advance\gre@dimen@glyphraisevalue by \gre@dimen@curlybraceaccentusshift %
       \raise\gre@dimen@glyphraisevalue\hbox{%
-        \gregoriofont\GreCPAccentus\relax %
+        \gre@font@neumebase\GreCPAccentus\relax %
       }%
       \hss %
     \fi %
@@ -726,15 +726,15 @@
     \kern\gre@skip@temp@four %
   \or %
     % to get the widht of a punctum minus a line, we calculate the width of a flexus (with ambitus of two) minus the width of a punctum
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPPesQuadratumLongqueueThreeNothing}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPPesQuadratumLongqueueThreeNothing}%
     \gre@dimen@temp@five=\wd\gre@box@temp@width %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPPunctum}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPPunctum}%
     \advance\gre@dimen@temp@five by -\wd\gre@box@temp@width %
     \kern-\gre@dimen@temp@five %
     \gre@skip@temp@four = \gre@skip@spacebeforesigns%
     \kern\gre@skip@temp@four %
   \or %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPPunctum}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPPunctum}%
     \gre@dimen@temp@five=\wd\gre@box@temp@width %
     \kern-\gre@dimen@temp@five %
     \gre@skip@temp@four = \gre@skip@spacebeforesigns%
@@ -875,7 +875,7 @@
 \def\gre@vepisemusorrareaux#1#2#3#4#5#6#7{%
   % first we set \gre@dimen@temp@three to the width of the last glyph
   \gre@dimen@temp@three=\gre@dimen@lastglyphwidth %
-  \setbox\gre@box@temp@sign=\hbox{\gregoriofont #2}%
+  \setbox\gre@box@temp@sign=\hbox{\gre@font@neumebase #2}%
   \gre@dimen@temp@two=\wd\gre@box@temp@sign %
   \divide\gre@dimen@temp@two by 2\relax %
   \ifcase#3%
@@ -884,11 +884,11 @@
   \or%
     \gre@dimen@temp@three=\gre@dimen@temp@two %
   \or%
-    \setbox\gre@box@temp@sign=\hbox{\gregoriofont #1}%
+    \setbox\gre@box@temp@sign=\hbox{\gre@font@neumebase #1}%
     \gre@dimen@temp@three=\wd\gre@box@temp@sign %
     \advance\gre@dimen@temp@three by -\gre@dimen@temp@two %
   \or %
-    \setbox\gre@box@temp@sign=\hbox{\gregoriofont #1}%
+    \setbox\gre@box@temp@sign=\hbox{\gre@font@neumebase #1}%
     \advance\gre@dimen@temp@three by -\wd\gre@box@temp@sign %
     \advance\gre@dimen@temp@three by \gre@dimen@temp@two %
   \fi%
@@ -898,7 +898,7 @@
     % vertical episemus
     \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@verticalepisemus}%
   \or % rare sign
-    \setbox\gre@box@temp@sign=\hbox{\gregoriofont#5}%
+    \setbox\gre@box@temp@sign=\hbox{\gre@font@neumebase#5}%
   \or % choral sign
     \setbox\gre@box@temp@sign=\hbox{#7}%
   \or % brace above bar
@@ -1033,17 +1033,17 @@
     \gre@dimen@temp@three=0 pt\relax %
   \or
     % case 2
-    \setbox\gre@box@temp@sign=\hbox{\gregoriofont #1}%
+    \setbox\gre@box@temp@sign=\hbox{\gre@font@neumebase #1}%
     \gre@dimen@temp@three=\wd\gre@box@temp@sign%
   \or
     % case 3
     \gre@dimen@temp@three=\gre@dimen@lastglyphwidth %
-    \setbox\gre@box@temp@sign=\hbox{\gregoriofont #1}%
+    \setbox\gre@box@temp@sign=\hbox{\gre@font@neumebase #1}%
     \advance\gre@dimen@temp@three by -\wd\gre@box@temp@sign %
   \fi%
   \kern-\gre@dimen@temp@three %
   % then we draw the sign, and go back to the beginning of the sign
-  \setbox\gre@box@temp@sign=\hbox{\gregoriofont#2}%
+  \setbox\gre@box@temp@sign=\hbox{\gre@font@neumebase#2}%
   % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
   \gre@dimen@temp@two=\wd\gre@box@temp@sign %
   \ifnum#4<2\relax % case of the lines
@@ -1163,10 +1163,10 @@
       \gre@calculate@glyphraisevalue{#1}{5}%
     \fi %
     \IfStrEq{-1}{#3}{%
-      \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gregoriofont\gre@char@he@punctum{f}\hss}%
+      \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gre@font@neumebase\gre@char@he@punctum{f}\hss}%
     }{%
       % special handling for punctum inclinatum
-      \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPHEpisemusPunctumReduced}%
+      \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPHEpisemusPunctumReduced}%
       \gre@dimen@temp@four = \wd\gre@box@temp@width\relax %
       \gre@get@spaceskip{#3}%
       % convert rubber length to dimension... not perfect but works in the usual case
@@ -1174,9 +1174,9 @@
       \raise\gre@dimen@glyphraisevalue\hbox to 0pt{%
         \loop\ifdim\gre@dimen@temp@three > 0pt%
           \advance\gre@dimen@temp@three by -\gre@dimen@temp@four\relax %
-          {\gregoriofont\GreCPHEpisemusPunctumReduced}%
+          {\gre@font@neumebase\GreCPHEpisemusPunctumReduced}%
         \repeat %
-        \kern\gre@dimen@temp@three{\gregoriofont\GreCPHEpisemusPunctumReduced}%
+        \kern\gre@dimen@temp@three{\gre@font@neumebase\GreCPHEpisemusPunctumReduced}%
         \hss %
       }%
     }%
@@ -1315,7 +1315,7 @@
   % of a bar in the middle of other notes.
   \ifgre@lastispunctum%
     \ifnum#2=1\relax %
-      \setbox\gre@box@temp@width=\hbox{\gregoriofont\gre@fontchar@punctummora}%
+      \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\gre@fontchar@punctummora}%
       \gre@skip@temp@four = -\wd\gre@box@temp@width %
       \kern\gre@skip@temp@four%
       \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
@@ -1331,8 +1331,8 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPVirgula}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\GreCPVirgula}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPVirgula}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@neumebase\GreCPVirgula}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundsmallbar%
@@ -1344,8 +1344,8 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioMinima}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\GreCPDivisioMinima}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPDivisioMinima}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@neumebase\GreCPDivisioMinima}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundsmallbar%
@@ -1357,8 +1357,8 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioMinor}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\GreCPDivisioMinor}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPDivisioMinor}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@neumebase\GreCPDivisioMinor}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1370,7 +1370,7 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioMaior}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPDivisioMaior}%
     \gre@fontchar@divisiomaior %
     #3\relax %
     \ifnum#2=1\relax %
@@ -1412,8 +1412,8 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioDominican}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\GreCPDivisioDominican}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPDivisioDominican}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@neumebase\GreCPDivisioDominican}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1427,8 +1427,8 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioDominicanAlt}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\GreCPDivisioDominicanAlt}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPDivisioDominicanAlt}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@neumebase\GreCPDivisioDominicanAlt}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1441,8 +1441,8 @@
       \GreNoBreak %
     \fi %
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioDominican}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\GreCPDivisioDominican}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPDivisioDominican}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@neumebase\GreCPDivisioDominican}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1455,8 +1455,8 @@
       \GreNoBreak %
     \fi %
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioDominicanAlt}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\GreCPDivisioDominicanAlt}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPDivisioDominicanAlt}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@neumebase\GreCPDivisioDominicanAlt}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1470,8 +1470,8 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioDominican}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\GreCPDivisioDominican}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPDivisioDominican}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@neumebase\GreCPDivisioDominican}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1485,8 +1485,8 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioDominicanAlt}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\GreCPDivisioDominicanAlt}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPDivisioDominicanAlt}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@neumebase\GreCPDivisioDominicanAlt}%
     #3\relax %
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \gre@skip@spacearoundminor%
@@ -1502,9 +1502,9 @@
 \def\gre@fontchar@divisiomaior{%
   \ifnum\gre@stafflinefactor=17\relax %
     %\gre@calculate@glyphraisevalue{\gre@pitch@g}{0}% bar glyphs are made to be at this height
-    \raise\gre@dimen@glyphraisevalue\hbox{\gregoriofont\GreCPDivisioMaior}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@neumebase\GreCPDivisioMaior}%
   \else %
-    \setbox\gre@box@temp@width=\hbox{\gregoriofont\GreCPDivisioMaior}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@neumebase\GreCPDivisioMaior}%
     % we calculate the raise of the bar
     \gre@dimen@temp@five=\gre@dimen@additionalbottomspace %
     \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
@@ -1698,10 +1698,10 @@
 %% macros for typesetting punctum cavum
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\gre@fontchar@punctumcavum{\gregoriofont\GreCPPunctumCavum}%
-\def\gre@fontchar@lineapunctumcavum{\gregoriofont\GreCPLineaPunctumCavum}%
-\def\gre@fontchar@punctumcavumhole{\gregoriofont\GreCPPunctumCavumHole}%
-\def\gre@fontchar@lineapunctumcavumhole{\gregoriofont\GreCPLineaPunctumCavumHole}%
+\def\gre@fontchar@punctumcavum{\gre@font@neumebase\GreCPPunctumCavum}%
+\def\gre@fontchar@lineapunctumcavum{\gre@font@neumebase\GreCPLineaPunctumCavum}%
+\def\gre@fontchar@punctumcavumhole{\gre@font@neumebase\GreCPPunctumCavumHole}%
+\def\gre@fontchar@lineapunctumcavumhole{\gre@font@neumebase\GreCPLineaPunctumCavumHole}%
 
 \def\gresetpunctumcavum#1{%
   \IfStrEq{#1}{alternate}%
@@ -1760,10 +1760,10 @@
 
 \def\GrePunctumCavumInclinatum#1#2#3#4#5#6{%
   \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gregoriofont\GreCPPunctumCavumInclinatum}{\gregoriofont\GreCPPunctumCavumInclinatumHole}%
+  {\gre@font@neumebase\GreCPPunctumCavumInclinatum}{\gre@font@neumebase\GreCPPunctumCavumInclinatumHole}%
 }%
 
 \def\GrePunctumCavumInclinatumAuctus#1#2#3#4#5#6{%
   \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gregoriofont\GreCPPunctumCavumInclinatumAuctus}{\gregoriofont\GreCPPunctumCavumInclinatumAuctusHole}%
+  {\gre@font@neumebase\GreCPPunctumCavumInclinatumAuctus}{\gre@font@neumebase\GreCPPunctumCavumInclinatumAuctusHole}%
 }%

@@ -780,9 +780,6 @@ desired case.
       & 11 & Space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more).\\
 \end{argtable}
 
-\macroname{\textbackslash gre@nabcfont}{}{gregoriotex-nabc.tex}
-Macro to apply the font for the \texttt{nabc} notation.
-
 \macroname{\textbackslash gre@nabcfontname}{}{gregoriotex-main.tex}
 Macro which stores the name of the currently selected font for \texttt{nabc}.
 
@@ -933,6 +930,24 @@ Macro for writing the auxiliary file.
   \#1 & string & contents to be written to the auxiliary file\\
 \end{argtable}
 
+
+\subsection{Fonts}
+Gregorio\TeX\ loads a number of fonts which are referred to by the following macros.
+
+\macroname{\textbackslash gre@font@neumebase}{}{gregoriotex-main.tex}
+The font for the neumes.
+
+\macroname{\textbackslash gre@font@style}{}{gregoriotex-main.tex}
+The font for some of the extra characters, such as the bar for barred letters.
+
+\macroname{\textbackslash gre@font@nabc}{}{gregoriotex-nabc.tex}
+The font for ancient notation.
+
+\macroname{\textbackslash gre@font@biginitial}{}{gregoriotex.tex}
+The font for the default big initial format in Plain\TeX.
+
+\macroname{\textbackslash gre@font@initial}{}{gregoriotex.tex}
+The font for the default initial format in Plain\TeX.
 
 
 \subsection{Character Reference Aliases}

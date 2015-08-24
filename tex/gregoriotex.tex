@@ -154,19 +154,19 @@
 %% Formatting environments
 %%%%%%%%%%%%%%%%%%%%
 
-\font\gre@fontofbiginitial=pncr at 80pt%
-\font\gre@fontofinitial=pncr at 40pt%
+\font\gre@font@biginitial=pncr at 80pt%
+\font\gre@font@initial=pncr at 40pt%
 
 \def\gre@style@initial{%
   \begingroup%
-  \gre@fontofinitial%
+  \gre@font@initial%
   \relax %
 }%
 \def\endgre@style@initial{\endgroup}%
 
 \def\gre@style@biginitial{%
   \begingroup%
-  \gre@fontofbiginitial%
+  \gre@font@biginitial%
   \relax %
 }%
 \def\endgre@style@biginitial{\endgroup}%
