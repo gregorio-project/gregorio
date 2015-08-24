@@ -52,7 +52,7 @@
 % Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
 % see http://tug.org/pipermail/luatex/2013-July/004516.html
 % The idea is that we use discretionaries (explicit hyphens, though more than hyphens in our case) for clef changes, and we need to give them a special penalty, which is not taken into account if pretolerance is > -1 on LuaTeX < 0.80. For a more detailed explanation see http://tug.org/pipermail/luatex/2013-July/004516.html.
-\ifnum\the\luatexversion < 80\relax % 
+\ifnum\the\luatexversion < 78\relax % 
   \global\def\grepretolerance{-1}%
 \else %
   \global\def\grepretolerance{\pretolerance}%
