@@ -572,7 +572,7 @@ local function direct_gabc(gabc, header)
 end
 
 local function check_font_version()
-  local gregoriofont = font.getfont(font.id('gre@font@neumebase'))
+  local gregoriofont = font.getfont(font.id('gre@font@music'))
   local fontversion = gregoriofont.shared.rawdata.metadata.version
   if fontversion ~= internalversion then
     fontname = gregoriofont.shared.rawdata.metadata.fontname
