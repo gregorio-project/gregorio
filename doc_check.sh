@@ -27,6 +27,7 @@ cd tex
 grep -h '\\new[a-z]*\\.*' *.tex *.sty > $CODEFILE
 grep -hE '\\[gex]?def\\.*' *.tex *.sty >> $CODEFILE
 grep -hE '\\let\\.*' *.tex *.sty >> $CODEFILE
+grep -h '\\font\\' *.tex *.sty >> $CODEFILE
 
 #remove trailing comments
 gsed -i.temp 's/%.*$//' $CODEFILE
@@ -57,6 +58,9 @@ sed -i.temp 's:\\grecreatedim{\([a-z@]*\)}.*:\1:' $CODEFILE
 #styles
 sed -i.temp 's:\\endgre@style@::' $CODEFILE
 sed -i.temp 's:\\gre@style@::' $CODEFILE
+
+#fonts
+sed -i.temp 's:.*\\font\(\\.*\)=.*:\1:' $CODEFILE
 
 #alphabetize and remove duplicates
 sort -u -o$CODEFILE $CODEFILE

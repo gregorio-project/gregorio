@@ -77,7 +77,7 @@ local score_fonts = {}
 local symbol_fonts = {}
 local loaded_font_sizes = {}
 local next_variant = 0
-local variant_prefix = 'greVariantFont'
+local variant_prefix = 'gre@font@variant@'
 local number_to_letter = {
   ['0'] = 'A', ['1'] = 'B', ['2'] = 'C', ['3'] = 'D', ['4'] = 'E',
   ['5'] = 'F', ['6'] = 'G', ['7'] = 'H', ['8'] = 'I', ['9'] = 'J',
@@ -572,7 +572,7 @@ local function direct_gabc(gabc, header)
 end
 
 local function check_font_version()
-  local gregoriofont = font.getfont(font.id('gregoriofont'))
+  local gregoriofont = font.getfont(font.id('gre@font@music'))
   local fontversion = gregoriofont.shared.rawdata.metadata.version
   if fontversion ~= internalversion then
     fontname = gregoriofont.shared.rawdata.metadata.fontname
@@ -591,7 +591,8 @@ local function map_font(name, prefix)
   for glyph, unicode in pairs(font.fonts[font.id(score_fonts[name])].resources.unicodes) do
     if unicode >= 0 and not string.match(glyph, '%.') then
       log("Setting \\Gre%s%s to \\char%d", prefix, glyph, unicode)
-      tex.sprint(string.format([[\xdef\Gre%s%s{\char%d}]], prefix, glyph, unicode))
+      tex.sprint(catcode_at_letter, string.format(
+          [[\xdef\Gre%s%s{\char%d}]], prefix, glyph, unicode))
     end
   end
 end
@@ -604,12 +605,14 @@ local function init_variant_font(font_name, for_score)
       font_table[font_name] = font_csname
       log("Registering variant font %s as %s.", font_name, font_csname)
       if for_score then
-        tex.print(string.format([[\global\font\%s = {name:%s} at 10 sp\relax ]], font_csname, font_name))
+        tex.print(catcode_at_letter, string.format(
+            [[\global\font\%s = {name:%s} at 10 sp\relax ]],
+            font_csname, font_name))
         -- loaded_font_sizes will only be given a value if the font is for_score
         loaded_font_sizes[font_name] = '10'
       else
         -- is there a nice way to make this string readable?
-        tex.print(string.format(
+        tex.print(catcode_at_letter, string.format(
             [[\gdef\%sSymReload#1{{\edef\localsize{#1}\ifx\localsize\%sSymSize\relax\relax\else\global\font\%s = {name:%s} at \localsize pt\relax\xdef\%sSymSize{\localsize}\fi}}\xdef\%sSymSize{0}\%sSymReload{\gre@symbolfontsize}]],
             font_csname, font_csname, font_csname, font_name, font_csname,
             font_csname, font_csname))
@@ -621,22 +624,26 @@ end
 
 local function set_score_glyph(csname, font_csname, char)
   log([[Setting \%s to \%s\char%d]], csname, font_csname, char)
-  tex.print(string.format([[\edef\%s{{\noexpand\%s\char%d}}]], csname, font_csname, char))
+  tex.print(catcode_at_letter, string.format(
+      [[\edef\%s{{\noexpand\%s\char%d}}]], csname, font_csname, char))
 end
 
 local function set_common_score_glyph(csname, font_csname, char)
   -- font_csname is ignored
   log([[Setting \%s to \char%d]], csname, char)
-  tex.print(string.format([[\edef\%s{{\char%d}}]], csname, char))
+  tex.print(catcode_at_letter, string.format(
+      [[\edef\%s{{\char%d}}]], csname, char))
 end
 
 local function set_symbol_glyph(csname, font_csname, char)
-  tex.print(string.format([[\def\%s{\%sSymReload{\gre@symbolfontsize}{\%s\char%d}\relax}]],
+  tex.print(catcode_at_letter, string.format(
+      [[\def\%s{\%sSymReload{\gre@symbolfontsize}{\%s\char%d}\relax}]],
       csname, font_csname, font_csname, char))
 end
 
 local function set_sized_symbol_glyph(csname, font_csname, char)
-  tex.print(string.format([[\gdef\%s#1{\%sSymReload{#1}{\%s\char%d}\relax}]],
+  tex.print(catcode_at_letter, string.format(
+      [[\gdef\%s#1{\%sSymReload{#1}{\%s\char%d}\relax}]],
       csname, font_csname, font_csname, char))
 end
 
@@ -720,7 +727,8 @@ end
 local function scale_score_fonts(size)
   for font_name, font_csname in pairs(score_fonts) do
     if loaded_font_sizes[font_name] and loaded_font_sizes[font_name] ~= size then
-      tex.print(string.format([[\global\font\%s = {name:%s} at %s sp\relax ]],
+      tex.print(catcode_at_letter, string.format(
+          [[\global\font\%s = {name:%s} at %s sp\relax ]],
           font_csname, font_name, size))
       loaded_font_sizes[font_name] = size
     end

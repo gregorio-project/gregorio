@@ -1401,8 +1401,8 @@
 \def\gre@loadgregoriofont{%
   \gre@count@temp@three = \the\gre@factor %
   \multiply\gre@count@temp@three by 100000 %
-  \global\font\gregoriofont={name:\gre@gregoriofontname} at \the\gre@count@temp@three sp%
-  {\gregoriofont\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
+  \global\font\gre@font@music={name:\gre@gregoriofontname} at \the\gre@count@temp@three sp%
+  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
   \relax%
 }%
 
@@ -1416,8 +1416,8 @@
 \def\gre@setstylefont{%
   \gre@count@temp@three = \the\gre@factor %
   \multiply\gre@count@temp@three by 100000\relax %
-  \global\font\gregoriostylefont={name:greextra} at \the\gre@count@temp@three sp%
-  {\gregoriofont\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
+  \global\font\gre@font@style={name:greextra} at \the\gre@count@temp@three sp%
+  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
   \relax%
 }%
 
