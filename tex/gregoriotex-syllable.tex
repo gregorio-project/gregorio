@@ -536,7 +536,7 @@
   % So, at beginning of lines, we will have shifted left, and in middle of lines
   % we will have shifted right and left, thus cancelling... Very easy trick, but
   % took me years to find it!
-  \ifgre@eolshiftsenabled%
+  \ifgre@bolshiftsenabled%
     \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
     \ifnum\gre@lastoflinecount=2\else %
       \kern -\gre@dimen@bolshift %
