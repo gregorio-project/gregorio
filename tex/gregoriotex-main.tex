@@ -314,6 +314,10 @@
   \fi %
 }%
 
+\def\greillumination#1{%
+  \setbox\gre@box@initial=\hbox{#1}%
+}%
+
 \def\GreSetInitial#1{%
   % see comments on this function to see what it does
   \gre@debugmsg{annotation}{Time to calculate the true raise.}%
@@ -324,7 +328,10 @@
   % if it is a big initial we print it on the second line
   \ifnum\gre@biginitial=0\relax %
     \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
-      \setbox\gre@box@initial=\hbox{\gre@style@initial#1\endgre@style@initial}% keep this line
+      \ifvoid\gre@box@initial% keep this line
+        \gre@debugmsg{initial}{Fill initial box a}% keep this line
+        \setbox\gre@box@initial=\hbox{\gre@style@initial#1\endgre@style@initial}% keep this line
+      \fi% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  DEPRECATED
       \setbox\gre@box@initial=\hbox{\greinitialformat{#1}}% DEPRECATED
@@ -347,12 +354,7 @@
       \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
     \fi%
     \gre@debugmsg{annotation}{Width check completed.}%
-    \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
-      \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\gre@style@initial#1\endgre@style@initial}\hss}% keep this line
-    \else%  DEPRECATED
-      \gre@deprecated{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  DEPRECATED
-      \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\greinitialformat{#1}}\hss}% DEPRECATED
-    \fi%  DEPRECATED
+    \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\box\gre@box@initial\hss}%
     \gre@debugmsg{annotation}{Initial set.}%
     \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
       \gre@style@initial% keep this line
@@ -369,11 +371,15 @@
     \advance\gre@dimen@temp@five by 4\gre@dimen@interstafflinespace %
     \advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight %
     \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
+    \advance\gre@dimen@temp@five by \f@size pt%
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
-    \setbox\gre@box@initial=\hbox{\gre@style@biginitial#1\endgre@style@biginitial}% keep this line
+      \ifvoid\gre@box@initial% keep this line
+        \gre@debugmsg{initial}{fill big initial box}% keep this line
+        \setbox\gre@box@initial=\hbox{\gre@style@biginitial#1\endgre@style@biginitial}% keep this line
+      \fi% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
-          \setbox\gre@box@initial=\hbox{\grebiginitialformat{#1}}%  DEPRECATED
+      \setbox\gre@box@initial=\hbox{\grebiginitialformat{#1}}%  DEPRECATED
     \fi%  DEPRECATED
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@dimen@manualinitialwidth=0 pt\relax%
@@ -390,14 +396,9 @@
     \fi%
     \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) > initialwidth}%
     \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\gre@box@annoation%
+      \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
     \fi%
-    \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
-      \setbox\gre@box@initial=\hbox{\vbox to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\gre@style@biginitial#1\endgre@style@biginitial}\hss}\vss}}% keep this line
-    \else%  DEPRECATED
-      \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
-      \setbox\gre@box@initial=\hbox{\vbox to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\hbox{\grebiginitialformat{#1}}\hss}\vss}}%%  DEPRECATED
-    \fi%  DEPRECATED
+    \setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
       \gre@style@biginitial% keep this line
       \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift% keep this line
@@ -410,7 +411,7 @@
   \hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
   \gre@debugmsg{annotation}{Ready to place initial.}%
-  \copy\gre@box@initial%
+  \box\gre@box@initial%
   \ifnum\gre@biginitial=0\relax%
     \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
       \gre@style@initial% keep this line
@@ -453,7 +454,7 @@
 }%
 
 \def\GreNoInitial{%
-  \setbox\gre@box@initial=\hbox{}%
+  \setbox\gre@box@initial=\box\voidb@x%
   \global\gre@dimen@initialwidth=0pt %
   \global\gre@lastoflinecount=2\relax %
   \relax %
