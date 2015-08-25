@@ -1140,7 +1140,21 @@
   \relax%
 }%
 
-% a flag to disable (or reenable) the left shift for first syllables of scores
+% a flag to disable (or reenable) the left shift for first syllables of lines
+\newif\ifgre@bolshiftsenabled%
+% default state is for them to be enabled
+\gre@bolshiftsenabledtrue
+
+\def\gresetbolshifts#1{%
+  \IfStrEq{#1}{enable}%
+    {\gre@bolshiftsenabledtrue}%
+    {\IfStrEq{#1}{disable}%
+      {\gre@bolshiftsenabledfalse}%
+      {\gre@error{Unrecognized option in \protect\gresetbolshifts}}%
+    }%
+}%
+
+% a flag to disable (or reenable) the left shift for last syllables of lines
 \newif\ifgre@eolshiftsenabled%
 % default state is for them to be enabled
 \gre@eolshiftsenabledtrue
