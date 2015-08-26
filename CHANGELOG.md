@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+
+
+## [4.0.0-beta2] - 2015-08-26
 ### Fixed
 - Corrected the rendering of explicit automatic and manual custos at the end of lines when the clef change that follows it is pushed to the next line (see [#569](https://github.com/gregorio-project/gregorio/issues/569)).
 - Distinguished between `eolshift` and `bolshift` giving each their own flag and user commmand for turning them on and off.  `\seteolshift{enable}` allows the lyric text to stretch under the custos at the end of the line.  `\setbolshift{enable}` aligns the beginning of each line on the notes instead of the text.  Both are on by default, but can be turned off with `\seteolshift{disable}` and `\setbolshift{disable}`.
