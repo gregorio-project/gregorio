@@ -3180,7 +3180,7 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         break;
     }
     if (score->nabc_lines) {
-        fprintf(f, "\\GreScorNABCLines{%d}", (int)score->nabc_lines);
+        fprintf(f, "\\GreScoreNABCLines{%d}", (int)score->nabc_lines);
     }
     /* we select the good font -- Deprecated (remove in next release) */
     if (score->gregoriotex_font) {
