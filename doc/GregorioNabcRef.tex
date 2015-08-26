@@ -70,8 +70,9 @@
   \begingroup %
     \catcode`\~=12{}%
     \catcode`\@=11{}%
-    \font\gre@nabcfont={name:gregall} at 6pt\gre@nabcfont\gregorionabcstyle%
+    \font\grefontnabc={name:gregall} at 6pt\grefontnabc\begin{gre@style@nabc}%
     \directlua{tex.sprint(gregoriotex.nabc_font_tables["gregall"]["\luatexluaescapestring{#1}"] or "")}%
+    \end{gre@style@nabc}%
   \endgroup %
 }
 
@@ -397,13 +398,13 @@ Table with nabc strings and corresponding gregall and gresgmodern glyphs:
       keym = key:gsub("~","\\~{}")
       str = keym .. "\\hfill"
       if gregoriotex.nabc_font_tables['gregall'][key] then
-        str = str .. "{\\font\\gre@nabcfont={name:gregall} at 8pt\\gre@nabcfont\\gregorionabcstyle" .. gregoriotex.nabc_font_tables['gregall'][key] .. "}"
+        str = str .. "{\\font\\grefontnabc={name:gregall} at 8pt\\grefontnabc\\begin{gre@style@nabc}" .. gregoriotex.nabc_font_tables['gregall'][key] .. "\\end{gre@style@nabc}}"
       else
         str = str .. "{\\color{blue}missing}"
       end
       str = str .. "\\hfill"
       if gregoriotex.nabc_font_tables['gresgmodern'][key] then
-        str = str .. "{\\font\\gre@nabcfont={name:gresgmodern} at 8pt\\gre@nabcfont\\gregorionabcstyle" .. gregoriotex.nabc_font_tables['gresgmodern'][key] .. "}"
+        str = str .. "{\\font\\grefontnabc={name:gresgmodern} at 8pt\\grefontnabc\\begin{gre@style@nabc}" .. gregoriotex.nabc_font_tables['gresgmodern'][key] .. "\\end{gre@style@nabc}}"
       else
         str = str .. "{\\color{blue}missing}"
       end
