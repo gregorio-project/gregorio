@@ -79,4 +79,6 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
 void gregorio_rebuild_first_syllable(gregorio_character **param_character,
         bool separate_initial);
 
+void gregorio_set_first_word(gregorio_character **const character);
+
 #endif

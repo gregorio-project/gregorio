@@ -1240,3 +1240,38 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
     gregorio_go_to_first_character(&current_character);
     (*param_character) = current_character;
 }
+
+void gregorio_set_first_word(gregorio_character **const character)
+{
+    gregorio_character *ch = *character;
+    if (gregorio_go_to_end_initial(&ch)) {
+        ch = ch->next_character;
+    }
+    if (ch) {
+        bool started_style = false;
+        while (ch) {
+            if (!ch->is_character
+                    && (ch->cos.s.style == ST_CENTER
+                        || ch->cos.s.style == ST_FORCED_CENTER)) {
+                if (started_style) {
+                    started_style = false;
+                    gregorio_insert_style_before(ST_T_END, ST_FIRST_WORD, ch);
+                }
+            } else if (!started_style) {
+                started_style = true;
+                gregorio_insert_style_before(ST_T_BEGIN, ST_FIRST_WORD, ch);
+            }
+
+            if (!ch->next_character && started_style) {
+                gregorio_insert_style_after(ST_T_END, ST_FIRST_WORD, &ch);
+            }
+
+            ch = ch->next_character;
+        }
+    }
+    /* else there are no more characters here */
+    
+    if (*character) {
+        gregorio_go_to_first_character(character);
+    }
+}

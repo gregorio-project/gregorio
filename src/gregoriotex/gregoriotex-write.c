@@ -858,6 +858,9 @@ static void gtex_write_begin(FILE *f, grestyle_style style)
     case ST_COLORED:
         fprintf(f, "\\GreColored{");
         break;
+    case ST_FIRST_WORD:
+        fprintf(f, "\\GreFirstWord{");
+        break;
     case ST_FIRST_SYLLABLE:
         fprintf(f, "\\GreFirstSyllable{");
         break;
@@ -1066,6 +1069,9 @@ static grestyle_style gregoriotex_fix_style(gregorio_character *first_character)
                 return 0;
             if (current_char->cos.s.style != ST_CENTER
                     && current_char->cos.s.style != ST_FORCED_CENTER
+                    && current_char->cos.s.style != ST_FIRST_WORD
+                    && current_char->cos.s.style != ST_FIRST_SYLLABLE
+                    && current_char->cos.s.style != ST_FIRST_SYLLABLE_INITIAL
                     && current_char->cos.s.style != ST_SPECIAL_CHAR
                     && current_char->cos.s.style != ST_VERBATIM
                     && current_char->cos.s.style != ST_INITIAL) {
@@ -1078,6 +1084,9 @@ static grestyle_style gregoriotex_fix_style(gregorio_character *first_character)
                 if (!current_char->is_character
                         && current_char->cos.s.style != ST_CENTER
                         && current_char->cos.s.style != ST_FORCED_CENTER
+                        && current_char->cos.s.style != ST_FIRST_WORD
+                        && current_char->cos.s.style != ST_FIRST_SYLLABLE
+                        && current_char->cos.s.style != ST_FIRST_SYLLABLE_INITIAL
                         && current_char->cos.s.style != ST_INITIAL) {
                     state = 2;
                 } else if (current_char->cos.s.style != possible_fixed_style
@@ -1091,6 +1100,9 @@ static grestyle_style gregoriotex_fix_style(gregorio_character *first_character)
                 return 0;
             if (current_char->cos.s.style != ST_CENTER
                     && current_char->cos.s.style != ST_FORCED_CENTER
+                    && current_char->cos.s.style != ST_FIRST_WORD
+                    && current_char->cos.s.style != ST_FIRST_SYLLABLE
+                    && current_char->cos.s.style != ST_FIRST_SYLLABLE_INITIAL
                     && current_char->cos.s.style != ST_SPECIAL_CHAR
                     && current_char->cos.s.style != ST_VERBATIM
                     && current_char->cos.s.style != ST_INITIAL) {

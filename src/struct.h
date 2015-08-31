@@ -289,6 +289,7 @@ typedef enum grestyle_style {
     ST_INITIAL, /* a style used to determine the initial */
     ST_UNDERLINED,
     ST_COLORED,
+    ST_FIRST_WORD,
     ST_FIRST_SYLLABLE,
     ST_FIRST_SYLLABLE_INITIAL
 } grestyle_style;

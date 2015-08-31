@@ -298,6 +298,16 @@ may be redefined to style the first letter appropriately.
                  initial of the score.
 \end{argtable}
 
+\macroname{\textbackslash GreFirstWord}{\{\#1\}}{gregoriotex-syllble.tex}
+A macro which is called with the text of the first word, excluding the
+initial of the score.  This macro may be redefined to style the first word
+appropriately.  This macro may be called multiple times, depending on how
+many syllables are in the word.
+
+\begin{argtable}
+  \#1 & string & Text from the first syllable.
+\end{argtable}
+
 \macroname{\textbackslash GreFlat}{\#1\#2}{gregoriotex-signs.tex}
 Macro to typeset a flat.
 
