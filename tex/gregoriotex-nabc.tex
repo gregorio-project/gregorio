@@ -56,7 +56,7 @@
 \gre@nabcfontloadedfalse%
 
 \def\GreScoreNABCLines#1{%
-  \ifgre@nabcfontloaded%
+  \ifgre@nabcfontloaded\else%
     \gresetnabcfont{\gre@nabcfontname}{\gre@nabcfontsize}%
   \fi %
 }
