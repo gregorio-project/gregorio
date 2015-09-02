@@ -340,7 +340,8 @@ static void end_definitions(void)
     }
 
     if (!got_language) {
-        gregorio_set_centering_language("Latin");
+        static char latin[] = "Latin";
+        gregorio_set_centering_language(latin);
     }
 }
 
