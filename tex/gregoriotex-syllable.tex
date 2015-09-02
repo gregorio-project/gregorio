@@ -538,10 +538,8 @@
   % took me years to find it!
   \ifgre@bolshiftsenabled%
     \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
-    \ifnum\gre@lastoflinecount=2\else %
-      \kern -\gre@dimen@bolshift %
-      \GreNoBreak %
-    \fi %
+    \kern -\gre@dimen@bolshift %
+    \GreNoBreak %
     \hbox to 0pt{}%
     \GreNoBreak %
     \kern\gre@dimen@bolshift %
@@ -843,7 +841,7 @@
       \global\gre@lastoflinecount=2\relax %
       \gre@endafterbar{0}%
     \else %
-      %\global\gre@lastoflinecount=0\relax 
+      \global\gre@lastoflinecount=0\relax 
       \gre@endafterbar{1}%
     \fi %
     %and that's it !!
