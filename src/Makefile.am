@@ -45,14 +45,6 @@ gregorio_SOURCES = gregorio-utils.c characters.c characters.h \
 @MK@  endif
 @MK@endif
 
-if HAVE_RC
-# Windows resources (see windows/README.md)
-.rc.o:
-	$(RC) $(RCFLAGS) $< -o $@
-
-gregorio_SOURCES += ../windows/gregorio-resources.rc
-endif
-
 # gabc files
 gregorio_SOURCES += gabc/gabc-elements-determination.c gabc/gabc-write.c \
 					gabc/gabc-glyphs-determination.c gabc/gabc.h \
@@ -79,7 +71,16 @@ EXTRA_DIST = encode_utf8strings.c utf8strings.h.in utf8strings.h \
 					vowel/vowel-rules.l \
 					vowel/vowel-rules-l.h vowel/vowel-rules-l.c \
 					vowel/vowel-rules.y \
-					vowel/vowel-rules-y.h vowel/vowel-rules-y.c
+					vowel/vowel-rules-y.h vowel/vowel-rules-y.c \
+					../windows/gregorio.ico
+
+if HAVE_RC
+# Windows resources (see windows/README.md)
+.rc.o:
+	$(RC) $(RCFLAGS) $< -o $@
+
+gregorio_SOURCES += ../windows/gregorio-resources.rc
+endif
 
 gabc/gabc-score-determination-y.c: gabc/gabc-score-determination.y
 	$(YACC) -d -p "gabc_score_determination_" -o $@ $<
