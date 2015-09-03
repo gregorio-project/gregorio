@@ -538,6 +538,7 @@
   % took me years to find it!
   \ifgre@bolshiftsenabled%
     \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
+    \gre@debugmsg{lineshifts}{Beginning of line shift: \the\gre@dimen@bolshift}%
     \kern -\gre@dimen@bolshift %
     \GreNoBreak %
     \hbox to 0pt{}%
@@ -610,16 +611,24 @@
   \kern\gre@skip@temp@one %
   % here we need to unset \gre@attr@dash for the typesetting of notes
   \gre@attr@dash=0\relax %
+  \gre@debugmsg{lineshifts}{lastoflinecount early: \the\gre@lastoflinecount}%
   \ifnum\gre@lastoflinecount=1\relax %
     \gre@compute@eolshift{\gre@dimen@enddifference}%
   \fi%
+  \gre@debugmsg{lineshifts}{lastoflinecount b: \the\gre@lastoflinecount}%
   \GreNoBreak % no line breaks between text and notes
+  \gre@debugmsg{lineshifts}{lastoflinecount c: \the\gre@lastoflinecount}%
   #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
+  \gre@debugmsg{lineshifts}{lastoflinecount c2: \the\gre@lastoflinecount}%
   \gre@debugmsg{ifdim}{ enddifference < 0pt}%
+  \gre@debugmsg{lineshifts}{enddifference: \the\gre@dimen@enddifference}%
   \ifdim\gre@dimen@enddifference <0pt%
+    \gre@debugmsg{lineshifts}{lastoflinecount d: \the\gre@lastoflinecount}%
     %% important, else we are not really at the end of the syllable
     \GreNoBreak %
+    \gre@debugmsg{lineshifts}{lastoflinecount: \the\gre@lastoflinecount}%
     \ifnum\gre@lastoflinecount=1\relax %
+      \gre@debugmsg{lineshifts}{End of line shift: \the\gre@skip@eolshift}%
       \kern\gre@skip@eolshift %
     \else %
       \gre@skip@temp@one = -\gre@dimen@enddifference%
@@ -841,7 +850,7 @@
       \global\gre@lastoflinecount=2\relax %
       \gre@endafterbar{0}%
     \else %
-      \global\gre@lastoflinecount=0\relax 
+      \global\gre@lastoflinecount=0\relax %
       \gre@endafterbar{1}%
     \fi %
     %and that's it !!
