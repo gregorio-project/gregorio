@@ -92,6 +92,7 @@ static gregorio_center_determination center_is_determined;
  * (for key changes) */
 static int current_key = DEFAULT_KEY;
 static bool got_language = false;
+static bool started_first_word = false;
 static struct sha1_ctx digester;
 
 static __inline void check_multiple(const char *name, bool exists) {
@@ -241,6 +242,7 @@ static void initialize_variables(void)
     for (i = 0; i < 10; i++) {
         macros[i] = NULL;
     }
+    started_first_word = false;
 }
 
 /*
@@ -421,10 +423,16 @@ static void rebuild_characters(gregorio_character **param_character,
             || (current_syllable && !current_syllable->previous_syllable
             && !current_syllable->text && current_character)) {
         gregorio_rebuild_first_syllable(&current_character, has_initial);
+
+        started_first_word = true;
     }
 
     gregorio_rebuild_characters(param_character, center_is_determined,
             has_initial);
+
+    if (started_first_word) {
+        gregorio_set_first_word(&current_character);
+    }
 }
 
 /*
@@ -436,7 +444,8 @@ static void close_syllable(YYLTYPE *loc)
     int i;
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
             first_text_character, first_translation_character, position,
-            abovelinestext, translation_type, no_linebreak_area, euouae, loc);
+            abovelinestext, translation_type, no_linebreak_area, euouae, loc,
+            started_first_word);
     if (!score->first_syllable) {
         /* we rebuild the first syllable if we have to */
         score->first_syllable = current_syllable;
@@ -450,6 +459,10 @@ static void close_syllable(YYLTYPE *loc)
     }
     if (position == WORD_ONE_SYLLABLE || position == WORD_END) {
         position = WORD_BEGINNING;
+
+        if (started_first_word) {
+            started_first_word = false;
+        }
     }
     center_is_determined = CENTER_NOT_DETERMINED;
     current_character = NULL;
