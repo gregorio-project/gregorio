@@ -2805,7 +2805,9 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                 syllable->next_syllable? syllable->next_syllable->text : NULL);
         fprintf(f, "\\GreSyllable");
     }
+    fprintf(f, "{\\GreSetThisSyllable");
     gregoriotex_write_text(f, syllable->text, first_syllable);
+    fprintf(f, "}{}{\\Gre%s}", syllable->first_word ? "FirstWord" : "Unstyled");
     if (syllable->position == WORD_END
             || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
             || !syllable->next_syllable

@@ -444,7 +444,8 @@ static void close_syllable(YYLTYPE *loc)
     int i;
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
             first_text_character, first_translation_character, position,
-            abovelinestext, translation_type, no_linebreak_area, euouae, loc);
+            abovelinestext, translation_type, no_linebreak_area, euouae, loc,
+            started_first_word);
     if (!score->first_syllable) {
         /* we rebuild the first syllable if we have to */
         score->first_syllable = current_syllable;

@@ -422,6 +422,23 @@
 
 \let\gre@fixednexttextformat\gre@textnormal %
 
+\def\GreUnstyled#1{#1}%
+
+% #1 : the first letters of the syllable, that don't count for the alignment
+% #2 : the middle letters of the syllable, we must align in the middle of them
+% #3 : the end letters, they don't count
+\def\GreSetThisSyllable#1#2#3{%
+  \ifgre@vowelcentering %
+    \gdef\gre@firstsyllablepart{#1}%
+    \gdef\gre@middlesyllablepart{#2}%
+    \gdef\gre@endsyllablepart{#3}%
+  \else %
+    \gdef\gre@firstsyllablepart{}%
+    \gdef\gre@middlesyllablepart{#1#2#3}%
+    \gdef\gre@endsyllablepart{}%
+  \fi %
+}%
+
 \def\GreSetNextSyllable#1#2#3{%
   \gdef\gre@nextfirstsyllablepart{#1}%
   \gdef\gre@nextmiddlesyllablepart{#2}%
@@ -494,9 +511,9 @@
 }%
 
 %% general macro : it will typeset the syllable : arguments are :
-% #1 : the first letters of the syllable, that don't count for the alignment
-% #2 : the middle letters of the syllable, we must align in the middle of them
-% #3 : the end letters, they don't count
+% #1 : macro setting the letters of this syllable
+% #2 : reserved (unused)
+% #3 : control sequence for styling the hyphen
 % #4 : end of word : if it is 0 it means it is not an end of word, if it is 1 it is
 % TODO: find another system for the end syllable
 % #9 : glyphs : all the notes
@@ -509,17 +526,9 @@
 %% at the end we wall \greendofword or \gre@endofsyllable with #7, to reduce the space in case of a flat or natural
 \def\GreSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@debugmsg{general}{}%
-  \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}\expandafter\unexpanded{#2}\expandafter\unexpanded{#3}}%
+  \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
-  \ifgre@vowelcentering %
-    \gdef\gre@firstsyllablepart{#1}%
-    \gdef\gre@middlesyllablepart{#2}%
-    \gdef\gre@endsyllablepart{#3}%
-  \else %
-    \gdef\gre@firstsyllablepart{}%
-    \gdef\gre@middlesyllablepart{#1#2#3}%
-    \gdef\gre@endsyllablepart{}%
-  \fi %
+  #1%
   \gre@firstglyphtrue%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
   \gre@syllablenotes{#9}% we put the notes in a box, so that we have the width of it
@@ -580,9 +589,9 @@
     \ifdim\gre@skip@temp@one > \gre@dimen@maximumspacewithoutdash %
       % if it's the last syllable of line, the hyphen will be \GreHyph
       \ifnum\gre@lastoflinecount=1\relax %
-        \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart\GreHyph\relax}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
       \else %
-        \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart-}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{-}}{#6}}}%
       \fi %
       % recomputing end difference and final skip with the final hyphen
       \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
@@ -712,15 +721,7 @@
   % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the previous syllable and the first note of the next syllable. But there are limits : a bar can't go very far above text. For example if there is "nuncncncncn" with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
   % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
   % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
-  \ifgre@vowelcentering %
-    \gdef\gre@firstsyllablepart{#1}%
-    \gdef\gre@middlesyllablepart{#2}%
-    \gdef\gre@endsyllablepart{#3}%
-  \else %
-    \gdef\gre@firstsyllablepart{}%
-    \gdef\gre@middlesyllablepart{#1#2#3}%
-    \gdef\gre@endsyllablepart{}%
-  \fi %
+  #1%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
   \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
   \gre@debugmsg{spacing}{Width of bar text: \the\wd\gre@box@syllabletext}%

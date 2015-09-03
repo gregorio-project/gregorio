@@ -926,7 +926,8 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_character *first_translation_character,
         gregorio_word_position position, char *abovelinestext,
         gregorio_tr_centering translation_type, gregorio_nlba no_linebreak_area,
-        gregorio_euouae euouae, const gregorio_scanner_location *const loc)
+        gregorio_euouae euouae, const gregorio_scanner_location *const loc,
+        const bool first_word)
 {
     gregorio_syllable *next;
     gregorio_element **tab;
@@ -951,6 +952,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
     next->translation = first_translation_character;
     next->translation_type = translation_type;
     next->abovelinestext = abovelinestext;
+    next->first_word = first_word;
     if (loc) {
         next->src_line = loc->first_line;
         next->src_column = loc->first_column;
