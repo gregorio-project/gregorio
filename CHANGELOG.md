@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
-
+### Fixed
+- End of line shifts now have an effect on the score.  When activated they prevent lyrics from extending under the custos at the end of a line.  These shifts are now disabled by default.  **NOTE:** This reverses the behavior formerly described in the documentation.
 
 ## [4.0.0-beta2] - 2015-08-26
 ### Fixed

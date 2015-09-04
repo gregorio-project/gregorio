@@ -229,6 +229,8 @@
       \fi %
     \fi %
     \global\advance\gre@knownline by 1\relax %
+    \gre@debugmsg{lineshifts}{End of line skip: \the\gre@skip@eolshift}%
+    \kern \gre@skip@eolshift%
     \global\gre@lastoflinecount=2\relax %
     \ifnum\gre@insidediscretionary=0\relax %
       \gre@updateleftbox %
@@ -1155,10 +1157,11 @@
     }%
 }%
 
-% a flag to disable (or reenable) the left shift for last syllables of lines
+% a flag to disable (or reenable) the shift for last syllables of lines
+% when the shifts are enabled lyrics cannot extend under (or past) the custos at the end of a line
 \newif\ifgre@eolshiftsenabled%
-% default state is for them to be enabled
-\gre@eolshiftsenabledtrue
+% default state is for them to be disabled
+\gre@eolshiftsenabledfalse
 
 \def\greseteolshifts#1{%
   \IfStrEq{#1}{enable}%

@@ -614,6 +614,8 @@
   \gre@debugmsg{lineshifts}{lastoflinecount early: \the\gre@lastoflinecount}%
   \ifnum\gre@lastoflinecount=1\relax %
     \gre@compute@eolshift{\gre@dimen@enddifference}%
+  \else%
+    \gre@skip@eolshift = 0 pt\relax%
   \fi%
   \gre@debugmsg{lineshifts}{lastoflinecount b: \the\gre@lastoflinecount}%
   \GreNoBreak % no line breaks between text and notes
@@ -627,13 +629,7 @@
     %% important, else we are not really at the end of the syllable
     \GreNoBreak %
     \gre@debugmsg{lineshifts}{lastoflinecount: \the\gre@lastoflinecount}%
-    \ifnum\gre@lastoflinecount=1\relax %
-      \gre@debugmsg{lineshifts}{End of line shift: \the\gre@skip@eolshift}%
-      \kern\gre@skip@eolshift %
-    \else %
-      \gre@skip@temp@one = -\gre@dimen@enddifference%
-      \kern\gre@skip@temp@one %
-    \fi %
+    \kern -\gre@dimen@enddifference %
     \GreNoBreak %
   \fi%
   \global\gre@skip@eolshift=0pt%

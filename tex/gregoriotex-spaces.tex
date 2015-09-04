@@ -366,31 +366,30 @@
 % dimen keeping the shift computed with next function
 \newskip\gre@skip@eolshift
 
-%% @desc Macro used in \GreSyllable. Sets \gre@skip@eolshift to the left kern that
-%%       should appear before an end of line. The improvement is tiny: when
-%%       text go further than notes in the last syllable of a line, the idea
-%%       is to allow text to go a bit further right, under the custos.
-%%       \gre@skip@eolshift should be called at the end of the last syllable of the
-%%       line, just before the linebreak penalty, so that LaTeX believes the
-%%       line is a bit shorter, and expands it more.
+%% @desc Macro used in \GreSyllable. Sets \gre@skip@eolshift to the right kern
+%%       that should appear before an end of line.  When active this prevents
+%%       text from going under the custos.
+%%       \gre@skip@eolshift is called as part of \gre@newlinecommon, just
+%%       before the linebreak penalty, so that LaTeX believes the line is a bit
+%%       longer, and prevents it from expanding it under the custos.
 %%
 %% @arg#1 The \gre@dimen@enddifference of the corresponding syllable
 \def\gre@compute@eolshift#1{%
   \global\gre@skip@eolshift=0pt%
-  \ifdim#1 <0pt%
-    \global\gre@skip@eolshift=-#1 %
-    % we don't do it if it's the last syllable of a score or if the user
-    % disabled custos
-    \ifgre@eolshiftsenabled %
+  % we only want to shift if the user wants to
+  \ifgre@eolshiftsenabled %
+    % we only need a shift if the lyrics are longer than the notes
+    \ifdim#1 <0pt%
+      % we only need to shift if there is a custos being printed
       \ifgre@blockeolcustos\else%
         \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}}%
-        \global\advance\gre@skip@eolshift by -\wd\gre@box@temp@width %
-        \global\advance\gre@skip@eolshift by -\gre@skip@spacebeforecustos %
+        \global\advance\gre@skip@eolshift by \wd\gre@box@temp@width %
+        \global\advance\gre@skip@eolshift by \gre@skip@spacebeforecustos %
+        % if the end difference indicates that the lyrics are bigger than the space needed by the custos, then we push all the way out to the end of the lyrics
+        \ifdim\gre@skip@eolshift <-#1 %
+          \global\gre@skip@eolshift=-#1%
+        \fi %
       \fi %
-      \global\advance\gre@skip@eolshift by \gre@dimen@minimalspaceatlinebeginning %
-    \fi %
-    \ifdim\gre@skip@eolshift <-#1 %
-      \global\gre@skip@eolshift=-#1%
     \fi %
   \fi %
 }
