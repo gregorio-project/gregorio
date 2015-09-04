@@ -594,7 +594,8 @@ Different elements of an include score have different styles applied.  These ele
   \stylename{lowchoralsign} & low choral signs & none\\
   \stylename{highchoralsign} & high choral signs & none\\
   \stylename{firstsyllableinitial} & the first letter of the first syllable of a score which is not the score initial & none\\
-  \stylename{firstsyllable} & the balance of the first syllable of the score & none\\
+  \stylename{firstsyllable} & the first syllable of the score excluding the score initial & none\\
+  \stylename{firstword} & the first word of the first score excluding the score initial & none\\
   \stylename{modeline} & the rendered annotation from the \texttt{mode: ;} header in the gabc file & \parbox[t]{2.2cm}{\raggedleft\textsc{\textbf{Bold Small Capitals}}}\\
   \stylename{nabc} & ancient notation & {\color{gregoriocolor}gregoriocolor} (\LaTeX)\\
   && none (Plain\TeX)\\
@@ -1162,6 +1163,11 @@ Default: \unit[0.3]{cm}
 Space around a clef change.
 
 Default: \unit[0.01768]{cm} plus \unit[0.00175]{cm} minus \unit[0.01768]{cm}
+
+\macroname{initialraise}{}{gsp-default.tex}
+Distance the initial will be raised by (by default the baseline for the initial coincides with the baseline for the text below the staff).
+
+Default: \unit[0]{cm}
 
 
 \subsection{Penalties}\label{penalties}

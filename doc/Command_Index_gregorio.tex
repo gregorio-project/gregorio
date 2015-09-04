@@ -275,7 +275,7 @@ Macro to end a score with a divisio maior.
       & 1 & Something needs to be placed after the divisio maior.\\
 \end{argtable}
 
-\macroname{\textbackslash GreFirstSyllable}{\{\#1\}}{gregoriotex-syllble.tex}
+\macroname{\textbackslash GreFirstSyllable}{\{\#1\}}{gregoriotex-syllable.tex}
 A macro which is called with the text of the first syllable, excluding the
 initial of the score.  This macro may be redefined to style the first syllable
 appropriately.  This macro may be called up to three times: for the letters
@@ -286,7 +286,7 @@ after the centered letters.
   \#1 & string & Text from the first syllable.
 \end{argtable}
 
-\macroname{\textbackslash GreFirstSyllableInitial}{\{\#1\}}{gregoriotex-syllble.tex}
+\macroname{\textbackslash GreFirstSyllableInitial}{\{\#1\}}{gregoriotex-syllable.tex}
 A macro which is called with the first letter of the first syllable which is
 not the initial of the score.  If the \texttt{initial-style} is \texttt{0}, the
 first letter of the syllable will be passed.  If the \texttt{initial-style} is
@@ -296,6 +296,16 @@ may be redefined to style the first letter appropriately.
 \begin{argtable}
   \#1 & string & The first letter of the first syllable which is not the
                  initial of the score.
+\end{argtable}
+
+\macroname{\textbackslash GreFirstWord}{\{\#1\}}{gregoriotex-syllable.tex}
+A macro which is called with the text of the first word, excluding the
+initial of the score.  This macro may be redefined to style the first word
+appropriately.  This macro may be called multiple times, depending on how
+many syllables are in the word.
+
+\begin{argtable}
+  \#1 & string & Text from the first syllable.
 \end{argtable}
 
 \macroname{\textbackslash GreFlat}{\#1\#2}{gregoriotex-signs.tex}
@@ -694,6 +704,15 @@ Macro to place argument above the lines and empty
   \#1 & string & Text to be placed above the lines.\\
 \end{argtable}
 
+\macroname{\textbackslash GreSetThisSyllable}{\#1\#2\#3}{gregoriotex-syllable.tex}
+Macro to set the text of the current syllable.
+
+\begin{argtable}
+  \#1 & string & the first letters of the syllable, that don't count for the alignment\\
+  \#2 & string & the middle letters of the syllable, we must align in the middle of them\\
+  \#3 & string & the end letters, they don't count for alignment\\
+\end{argtable}
+
 \macroname{\textbackslash GreSharp}{\#1\#2}{gregoriotex-signs.tex}
 Macro to typeset a sharp.
 
@@ -719,12 +738,12 @@ Macro to typeset an asterisk (\GreStar).
 Macro to typeset the syllable.
 
 \begin{argtable}
-  \#1 & string & the first letters of the syllable, that don't count for the alignment\\
-  \#2 & string & the middle letters of the syllable, we must align in the middle of them\\
-  \#3 & string & the end letters, they don't count for alignment\\
+  \#1 & \TeX\ code & macro setting syllable letters for the current syllable\\
+  \#2 & empty & reserved for future use\\
+  \#3 & \TeX\ control sequence & the control sequence to use for styling the hyphen\\
   \#4 & 0 & this syllable is not the end of a word\\
   & 1 & this syllable is the end of a word\\
-  \#5 & \TeX\ code & macros setting next syllable letters of the next syllable\\
+  \#5 & \TeX\ code & macros setting syllable letters for the next syllable\\
   \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
   \#7 & & alignment type of the first next glyph\\
   \#8 &\TeX\ code & other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments\\
@@ -762,6 +781,13 @@ nothing in Plain\TeX.
 
 \begin{argtable}
   \#1 & string & Text to typeset underlined.\\
+\end{argtable}
+
+\macroname{\textbackslash GreUnstyled}{\#1}{gregoriotex-syllable.tex}
+Returns its argument as-is.
+
+\begin{argtable}
+  \#1 & string & Text to typeset without any extra styling.\\
 \end{argtable}
 
 \macroname{\textbackslash GreVarBraceLength}{\#1}{gregoriotex-signs.tex}

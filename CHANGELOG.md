@@ -6,6 +6,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Fixed
 - End of line shifts now have an effect on the score.  When activated they prevent lyrics from extending under the custos at the end of a line.  These shifts are now disabled by default.  **NOTE:** This reverses the behavior formerly described in the documentation.
 
+### Added
+- New distance, `initialraise`, which will lift (or lower, if negative) the initial.
+- The first word of the score is now passed to a macro that allow it to be styled from TeX.  The first word is passed to `\GreFirstWord#1` and is styled by changing the `firstword` style.
+
 ## [4.0.0-beta2] - 2015-08-26
 ### Fixed
 - Corrected the rendering of explicit automatic and manual custos at the end of lines when the clef change that follows it is pushed to the next line (see [#569](https://github.com/gregorio-project/gregorio/issues/569)).

@@ -87,6 +87,8 @@ static const char *dump_style_to_string(grestyle_style style)
         return " ST_SPECIAL_CHAR";
     case ST_VERBATIM:
         return "     ST_VERBATIM";
+    case ST_FIRST_WORD:
+        return "   ST_FIRST_WORD";
     case ST_FIRST_SYLLABLE:
         return "ST_FIRST_SYLLABLE";
     case ST_FIRST_SYLLABLE_INITIAL:
