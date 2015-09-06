@@ -683,10 +683,11 @@
 \def\gre@endofsyllable#1#2#3{%
   \gre@debugmsg{syllablespacing}{ endofsyllable with #2}%
   \ifgre@eolshiftsenabled%
+    %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
     \GreNoBreak%
     \gre@calculate@eolshift{\gre@dimen@enddifference}%
     \gre@debugmsg{lineshifts}{End of line shift: \the\gre@dimen@eolshift}
-    \gre@hskip -\gre@dimen@eolshift%
+    \kern -\gre@dimen@eolshift%
   \fi%
   \ifnum#3=1\relax %
     \GreNoBreak %
@@ -707,7 +708,8 @@
     \fi %
   \fi %
   \ifgre@eolshiftsenabled%
-    \gre@hskip \gre@dimen@eolshift%
+    %If the above penalties don't result in a line break, then we need to undo the shift above to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
+    \kern \gre@dimen@eolshift%
     \GreNoBreak%
   \fi%
   \relax%

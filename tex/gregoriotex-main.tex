@@ -236,6 +236,7 @@
       \kern -\gre@dimen@enddifference %
     \fi%
     \ifgre@eolshiftsenabled%
+      \GreNoBreak% we want to make sure this shift doesn't get separated from the previous one if both occur
       \gre@calculate@eolshift{\gre@dimen@enddifference}%
       \gre@debugmsg{lineshifts}{Manual end of line shift: \the\gre@dimen@eolshift}%
       \kern -\gre@dimen@eolshift%
