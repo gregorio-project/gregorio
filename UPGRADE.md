@@ -3,6 +3,11 @@
 This file contains instructions to upgrade to a new release of Gregorio.
 
 ## 4.0
+
+### Font changes
+
+The music fonts (greciliae, gregorio, and parmesan) have changed with this release.  If the neumes do not appear or look strange in the output, you may need to clear your LuaTeX font cache by using `luaotfload-tool --cache=erase`.
+
 ### Command Name Systemization
 
 A naming scheme for GregorioTeX commands has been established and so most commands have had their names changed in order to bring them into line with the new scheme.  Some have also had their syntax changed.  Briefly, user commands all now have a `\gre` prefix (to prevent name colisions with other packages) and groups of commands which altered a single setting have been replaced by a single command which takes an argument specifying the value of the setting.  The notable exception to this are the two main commands: `\gregorioscore` (replaces `\includescore`) and `\gabcsnippet`.  See GregorioRef for the complete list of new command names and their syntax.
@@ -15,7 +20,7 @@ Additionally a new package option has been added. The option `deprecated=false` 
 
 ### Barred letters
 
-If you use barred letters and a font other than libertine in your document, you must adjust the horizontal placement of the bar on the letter.  To do so, use the `\gresimpledefbarglyph` macro.  For example, use `\gresimpledefbarredsymbol{A}{0.3em}` in your preamble, tweaking the second argument to have a good result (same for R and V).  If using LaTeX, you can alternately use the `\grelatexsimpledefbarredsymbol` macro, which allows control over bold and italic versions of the barred letter.  See the documentation of `\gresimpledefbarredsymbol` and `\grelatexsimpledefbarredsymbol` in the PDF documentation for more details.
+If you use barred letters and a font other than Linux Libertine in your document, you must adjust the horizontal placement of the bar on the letter.  To do so, use the `\gresimpledefbarglyph` macro.  For example, use `\gresimpledefbarredsymbol{A}{0.3em}` in your preamble, tweaking the second argument to have a good result (same for R and V).  If using LaTeX, you can alternately use the `\grelatexsimpledefbarredsymbol` macro, which allows control over bold and italic versions of the barred letter.  See the documentation of `\gresimpledefbarredsymbol` and `\grelatexsimpledefbarredsymbol` in the PDF documentation for more details.
 
 If you were using `\Vbarsmall`, `\greletterbar`, and `\greletteraltbar`, you must use `\gresimpledefbarredsymbol` to redefine your barred letters (see PDF documentation for details).
 
@@ -37,7 +42,7 @@ can become
 
     <eu>E(i) u(i) o(i) u(h) a(h) e</eu>(fe..)
 
-This will prevent line breaking, so if you were using so called *no linebreak areas* (with `{` in gabc) just for Euouae blocks, you can switch to this new tag, it will make things clearer and allow further spacing customization.
+This will prevent line breaking, so if you were using so-called *no linebreak areas* (with `{` in gabc) just for Euouae blocks, you can switch to this new tag, which will make things clearer and allow further spacing customization.
 
 ### Horizontal episema improvements
 
@@ -56,11 +61,11 @@ Note: `3`, `4`, and `5` encompass a new feature and are listed here only for com
 
 - `beforechoralsignspace` has been renamed to `beforelowchoralsignspace`.
 - `lowchoralsignshift` has been renamed to `choralsigndownshift`.
-- `highchoralsignshift` has been renamed to `choralsignupshift` and its sign inverted.
+- `highchoralsignshift` has been renamed to `choralsignupshift` and its sign (direction of shift) inverted.
 
 ### Styling score elements
 
-Changing the styling of text elements of the score (the initial, translations, etc.) formerly required the user to redefine a command which took an argument while changing the styling of the staff lines had a command specialized to that purpose.  All formats can now be changed via the `\grechangestyle` command.  This command takes two or three arguments.  The first argument, required, is the format to be altered.  The defined formats are:
+Changing the styling of text elements of the score (the initial, translations, etc.) formerly required the user to redefine a command which took an argument, while changing the styling of the staff lines had a command specialized to that purpose.  All formats can now be changed via the `\grechangestyle` command.  This command takes two or three arguments.  The first argument, required, is the name of the format to be altered.  The defined formats are:
 
 - `greinitial`: normal initials
 - `grebiginitial`: big (2-line) initials
@@ -71,10 +76,13 @@ Changing the styling of text elements of the score (the initial, translations, e
 - `lowchoralsign`: low choral signs
 - `highchoralsign`: high choral signs
 - `modeline`: the mode annotation above the initial if the content of the mode header in gabc is rendered.
+- `firstword`: the first word of the score (excluding the score initial)
+- `firstsyllable`: the first syllable of the first word of the score (excluding the score initial).
+- `firstsyllableinitial`: the first letter of the first word of the score which is not the score initial.
 
-The second argument, also required, is the code necessary to turn on the styling.  The third argument, optional and enclosed in square braces (`[` and `]`), is the code necessary to turn off the styling (e.g. if the code to turn on the styling contains a `\begin{environment}` then the code to turn it off must have the matching `\end{environment}`.  The third argument is optional because not all styling commands have explicit off switches.
+The second argument, also required, is the code necessary to turn on the styling.  The third argument, optional and enclosed in square braces (`[` and `]`), is the code necessary to turn off the styling (e.g. if the code to turn on the styling contains a `\begin{environment}` then the code to turn it off must have the matching `\end{environment}`).  The third argument is optional because not all styling commands have explicit off switches.
 
-While the old way of changing the styles is still supported, you should switch to this new method to future proof your scores.
+While the old way of changing the styles is still supported, you should switch to this new method to future-proof your scores.
 
 Examples: Let's say you previously had the following in your LaTeX document:
 
@@ -92,19 +100,19 @@ Using the gabc header will, in this release, do that for you, but it will produc
 
 ### Annotations
 
-Support for annotations with an arbitrary number of lines has been added.  To facilite this, the old functions which added annotations to specific lines (either the first or the second) are consolidated into a single function `\greannotation` which builds the annotations line by line.  If you used the old functions for adding annotations, then you should switch out those functions for the new one.  
+Support for annotations with an arbitrary number of lines has been added.  To facilite this, the old functions which added annotations to specific lines (either the first or the second) are consolidated into a single function `\greannotation` which builds the annotations line by line.  If you used the old functions for adding annotations, then you should switch out those functions for the new one.
 
-The distance associated with the annotations has also been renamed (from `aboveinitialseparation` to `annotationseparation`) and added a new one (`annotationraise`).  The first still controls the spacing between the lines of the annoation.  The second controls the position of the annotation relative to the score, and thus replaces the second argument in the old functions.  By default, annotations are positioned so that the baseline of the first line is aligned with the top line of the staff.  Positive values of `annotationraise` will push the annotation up while negative values will push it down.  If you were previously using the second argument to `\gresetfirstlineaboveinitial` to adjust the spacing, you will need to convert this to call:
+The distance associated with the annotations has also been renamed (from `aboveinitialseparation` to `annotationseparation`) and supplemented by a new distance (`annotationraise`).  The first still controls the spacing between the lines of the annoation.  The second controls the position of the annotation relative to the score, and thus replaces the second argument in the old functions.  By default, annotations are positioned so that the baseline of the first line is aligned with the top line of the staff.  Positive values of `annotationraise` will push the annotation up while negative values will push it down.  If you were previously using the second argument to `\gresetfirstlineaboveinitial` to adjust the spacing, you will need to convert this to call:
 
     \grechangedim{annotationraise}{0.1cm}{1}
     
-You will need to play with the vaule of the distance a bit to acheive the desired positioning.
+Since the baseline position of annotations is a change from the old behavior, you will need to adjust the value of the distance a bit to achieve the desired positioning.
 
-As is normal, calls to the deprecated command names will raise a warning but still work.  However there is one caveat: the old functions will always add the annotations to the bottom of the annotation list, regardless of the order in which they are called.  Previously, you could call `\gresetsecondannotation` before `\gresetfirstannotation` and still have the first annotation appear on top.   Which annotation appears on top is now determined by the order in which the functions are called.
+As is normal, calls to the deprecated command names will raise a warning but still work.  However, there is one caveat: the old functions will always add the annotations to the bottom of the annotation list, regardless of the order in which they are called.  Previously, you could call `\gresetsecondannotation` before `\gresetfirstannotation` and still have the first annotation appear on top.   Which annotation appears on top is now determined by the order in which the functions are called.
     
 #### The Annotation Header
 
-The `annotation` header in gabc files now passes its value(s) to gregoriotex for placement above the inital letter of the score. Up to two `annotation` field are supported, the first for the first line above the initial, and the second field for the second line.
+The `annotation` header in gabc files now passes its value(s) to gregoriotex for placement above the inital letter of the score. Up to two `annotation` fields are supported, the first for the first line above the initial, and the second field for the second line.
 
     annotation: 1 Ant.;
     annotation: VII a;
@@ -114,11 +122,11 @@ Full TeX markup is also accepted:
     annotation: {\color{red}1 Ant.};
     annotation: {\color{red}VII a};
 
-If the user already defined annotation(s) in the main TeX file via `\greannotation` then the `annotation` header field will not overwrite that definition.
+If you define annotation(s) in the main TeX file via `\greannotation`, then the `annotation` header field in the gabc file will *not* overwrite that definition.
 
 #### Variable Height Line Spacing
 
-Gregorio is now able to make individual lines of a score taller, when the position of the note require extra space, without affecting the rest of the lines.  This is the new default behavior.  If you prefer the uniform line heights of earlier versions, use:
+Gregorio is now able to make individual lines of a score taller when the position of the note requires extra space, without affecting the rest of the lines.  This is the new default behavior.  If you prefer the uniform line heights of earlier versions, use:
 
     \gresetlineheightexpansion{uniform}
 
@@ -126,7 +134,7 @@ Within a TeX document, you can switch back to variable line heights by using:
 
     \gresetlineheightexpansion{variable}
 
-You can freely switch between the two behaviors within a TeX document.
+You can freely switch between the two behaviors within a TeX document, but only between scores.
 
 This new behavior requires two passes (two runs of lualatex) in order to do the calculation correctly.  On the first pass, lualatex will warn you with the message
 
