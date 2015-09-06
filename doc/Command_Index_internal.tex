@@ -677,7 +677,7 @@ Macro for raising a bug error when some calculation goes awry and comes up with 
 \macroname{\textbackslash gre@changestyle}{\#1\#2[\#3]}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Workhorse function behind \verb=\grechangestyle=.  Necessary because the internals of the definition are slightly different in \LaTeX\ and Plain\TeX.
 
-\macroname{\textbackslash gre@compute@bolshift}{\#1\#2}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@bolshift}{\#1\#2}{gregoriotex-spaces.tex}
 Macro used in \verb=\GreSyllable=. Sets \verb=\gre@skip@bolshift= to the left kern that should appear at the beginning of a line in case of a forced linebreak.  The goal of this left kern is to have all lines aligned on notes.
 
 \begin{argtable}
@@ -686,7 +686,7 @@ Macro used in \verb=\GreSyllable=. Sets \verb=\gre@skip@bolshift= to the left ke
   & 1 & Apply correction for Lua\TeX\ bug\\
 \end{argtable}
 
-\macroname{\textbackslash gre@compute@eolshift}{\#1}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@eolshift}{\#1}{gregoriotex-spaces.tex}
 Macro used in \verb=\GreSyllable=. Sets \verb=\gre@skip@eolshift= to the left kern that
 should appear before an end of line. The improvement is tiny: when
 text go further than notes in the last syllable of a line, the idea
@@ -699,7 +699,7 @@ line is a bit shorter, and expands it more.
   \#1 & dimension & The \verb=\gre@dimen@enddifference= of the corresponding syllable\\
 \end{argtable}
 
-\macroname{\textbackslash gre@compute@syllablefinalskip}{\#1\#2}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@syllablefinalskip}{\#1\#2}{gregoriotex-spaces.tex}
 Macro computing the skip at the end of the syllable.
 
 \begin{argtable}
@@ -1358,22 +1358,22 @@ The left kern that should appear at the beginning of line in case of a forced li
 The distance from the baseline of the initial to the baseline of the annotation.
 
 \macroname{\textbackslash gre@minTextDistance}{}{gregoriotex-spaces.tex}
-Minimum distance between text (meaningful alias for \verb=\gre@skip@temp@one= inside \verb=\gre@compute@syllablefinalskip=).
+Minimum distance between text (meaningful alias for \verb=\gre@skip@temp@one= inside \verb=\gre@calculate@syllablefinalskip=).
 
 \macroname{\textbackslash gre@minNotesDistance}{}{gregoriotex-spaces.tex}
-Minimum distance between notes (meaningful alias for \verb=\gre@skip@temp@two= inside \verb=\gre@compute@syllablefinalskip=).
+Minimum distance between notes (meaningful alias for \verb=\gre@skip@temp@two= inside \verb=\gre@calculate@syllablefinalskip=).
 
 \macroname{\textbackslash gre@curTextDistance}{}{gregoriotex-spaces.tex}
-Current distance between text (meaningful alias for \verb=\gre@dimen@temp@three= inside \verb=\gre@compute@syllablefinalskip=).
+Current distance between text (meaningful alias for \verb=\gre@dimen@temp@three= inside \verb=\gre@calculate@syllablefinalskip=).
 
 \macroname{\textbackslash gre@curNotesDistance}{}{gregoriotex-spaces.tex}
-Current distance between notes (meaningful alias for \verb=\gre@dimen@temp@four= inside \verb=\gre@compute@syllablefinalskip=).
+Current distance between notes (meaningful alias for \verb=\gre@dimen@temp@four= inside \verb=\gre@calculate@syllablefinalskip=).
 
 \macroname{\textbackslash gre@minShiftText}{}{gregoriotex-spaces.tex}
-Minimum shift required for the text (meaningful alias for \verb=\gre@skip@temp@three= inside \verb=\gre@compute@syllablefinalskip=).
+Minimum shift required for the text (meaningful alias for \verb=\gre@skip@temp@three= inside \verb=\gre@calculate@syllablefinalskip=).
 
 \macroname{\textbackslash gre@minShiftNotes}{}{gregoriotex-spaces.tex}
-Minimum shift required for the notes (meaningful alias for \verb=\gre@skip@temp@four= inside \verb=\gre@compute@syllablefinalskip=).
+Minimum shift required for the notes (meaningful alias for \verb=\gre@skip@temp@four= inside \verb=\gre@calculate@syllablefinalskip=).
 
 \macroname{\textbackslash gre@save@parfillskip}{}{gregoriotex-main.tex}
 Macro to store \verb=\parfillskip= value so that we can restore it at the end of the score (needed to force the last line of a score to be justified).

@@ -4,7 +4,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ## [Unreleased][unreleased]
 ### Fixed
-- End of line shifts now have an effect on the score.  When activated they prevent lyrics from extending under the custos at the end of a line.  These shifts are now disabled by default.  **NOTE:** This reverses the behavior formerly described in the documentation.
+- Deactivating the end of line shifts now prevents lyrics from stretching under the custos at the end of the line.
 
 ### Added
 - New distance, `initialraise`, which will lift (or lower, if negative) the initial.

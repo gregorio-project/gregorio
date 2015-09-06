@@ -229,9 +229,17 @@
       \fi %
     \fi %
     \global\advance\gre@knownline by 1\relax %
-    \gre@debugmsg{lineshifts}{End of line skip: \the\gre@skip@eolshift}%
-    \kern \gre@skip@eolshift%
     \global\gre@lastoflinecount=2\relax %
+    % we have to repeat the end of syllable shifts here because the manual line breaks will occur before we get to the regular shifting code in \GreSyllable
+    \ifdim\gre@dimen@enddifference <0pt%
+      %% important, else we are not really at the end of the syllable
+      \kern -\gre@dimen@enddifference %
+    \fi%
+    \ifgre@eolshiftsenabled%
+      \gre@calculate@eolshift{\gre@dimen@enddifference}%
+      \gre@debugmsg{lineshifts}{Manual end of line shift: \the\gre@dimen@eolshift}%
+      \kern -\gre@dimen@eolshift%
+    \fi%
     \ifnum\gre@insidediscretionary=0\relax %
       \gre@updateleftbox %
     \fi %

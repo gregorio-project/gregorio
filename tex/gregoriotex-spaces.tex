@@ -246,7 +246,7 @@
 %%  min_shift_text = min_dist_text - cur_dist_text
 %%  min_shift_notes = min_dist_notes - cur_dist_notes
 %%  shift = max(min_shift_text, min_shift_notes)
-\def\gre@compute@syllablefinalskip#1#2{%
+\def\gre@calculate@syllablefinalskip#1#2{%
   \let\gre@minTextDistance\gre@skip@temp@one %
   \let\gre@minNotesDistance\gre@skip@temp@two %
   \let\gre@curTextDistance\gre@dimen@temp@three %
@@ -336,7 +336,7 @@
 %%
 %% @arg#1 \gre@dimen@begindifference of the first syllable of the line
 %% @arg#2 not sure about it... to be removed?
-\def\gre@compute@bolshift#1#2{%
+\def\gre@calculate@bolshift#1#2{%
   % as the \gre@dimen@bolshift is computed from skips, we compute it in a
   % skip temp registry, and then "cast" it into a dimen
   \gre@skip@temp@three=\gre@skip@spaceafterlineclef %
@@ -364,34 +364,26 @@
 }
 
 % dimen keeping the shift computed with next function
-\newskip\gre@skip@eolshift
+\newdimen\gre@dimen@eolshift
 
 %% @desc Macro used in \GreSyllable. Sets \gre@skip@eolshift to the right kern
 %%       that should appear before an end of line.  When active this prevents
 %%       text from going under the custos.
-%%       \gre@skip@eolshift is called as part of \gre@newlinecommon, just
-%%       before the linebreak penalty, so that LaTeX believes the line is a bit
-%%       longer, and prevents it from expanding it under the custos.
 %%
 %% @arg#1 The \gre@dimen@enddifference of the corresponding syllable
-\def\gre@compute@eolshift#1{%
-  \global\gre@skip@eolshift=0pt%
-  % we only want to shift if the user wants to
-  \ifgre@eolshiftsenabled %
-    % we only need a shift if the lyrics are longer than the notes
-    \ifdim#1 <0pt%
-      % we only need to shift if there is a custos being printed
-      \ifgre@blockeolcustos\else%
-        \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}}%
-        \global\advance\gre@skip@eolshift by \wd\gre@box@temp@width %
-        \global\advance\gre@skip@eolshift by \gre@skip@spacebeforecustos %
-        % if the end difference indicates that the lyrics are bigger than the space needed by the custos, then we push all the way out to the end of the lyrics
-        \ifdim\gre@skip@eolshift <-#1 %
-          \global\gre@skip@eolshift=-#1%
-        \fi %
-      \fi %
+\def\gre@calculate@eolshift#1{%
+  \global\gre@skip@temp@three=0pt%
+  % we only need a shift if the lyrics are longer than the notes
+  \ifdim#1 <0pt%
+    % we only need to shift if there is a custos being printed
+    \ifgre@blockeolcustos\else%
+      \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}}%
+      \global\advance\gre@skip@temp@three by \wd\gre@box@temp@width %
+      \global\advance\gre@skip@temp@three by \gre@skip@spacebeforecustos %
+      \global\advance\gre@skip@temp@three by \gre@skip@syllablefinalskip%
     \fi %
   \fi %
+  \global\gre@dimen@eolshift = \gre@skip@temp@three
 }
 
 %%%%%%%%%%%%%%%%%%%

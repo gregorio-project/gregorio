@@ -547,7 +547,7 @@
   % we will have shifted right and left, thus cancelling... Very easy trick, but
   % took me years to find it!
   \ifgre@bolshiftsenabled%
-    \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
+    \gre@calculate@bolshift{\gre@dimen@begindifference}{1}%
     \gre@debugmsg{lineshifts}{Beginning of line shift: \the\gre@dimen@bolshift}%
     \kern -\gre@dimen@bolshift %
     \GreNoBreak %
@@ -569,7 +569,7 @@
       \gre@count@temp@one=1%
     \fi %
   \fi %
-  \gre@compute@syllablefinalskip{#4}{\gre@count@temp@one}%
+  \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
   \ifcase#4 %
     % we enter here if the end of word is 0, so we must determine if we need to type a dash here
     \gre@skip@temp@one = \gre@skip@syllablefinalskip %
@@ -594,7 +594,7 @@
       \fi %
       % recomputing end difference and final skip with the final hyphen
       \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
-      \gre@compute@syllablefinalskip{0}{0}%
+      \gre@calculate@syllablefinalskip{0}{0}%
     \else %
       \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
@@ -621,28 +621,14 @@
   \kern\gre@skip@temp@one %
   % here we need to unset \gre@attr@dash for the typesetting of notes
   \gre@attr@dash=0\relax %
-  \gre@debugmsg{lineshifts}{lastoflinecount early: \the\gre@lastoflinecount}%
-  \ifnum\gre@lastoflinecount=1\relax %
-    \gre@compute@eolshift{\gre@dimen@enddifference}%
-  \else%
-    \gre@skip@eolshift = 0 pt\relax%
-  \fi%
-  \gre@debugmsg{lineshifts}{lastoflinecount b: \the\gre@lastoflinecount}%
   \GreNoBreak % no line breaks between text and notes
-  \gre@debugmsg{lineshifts}{lastoflinecount c: \the\gre@lastoflinecount}%
   #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
-  \gre@debugmsg{lineshifts}{lastoflinecount c2: \the\gre@lastoflinecount}%
   \gre@debugmsg{ifdim}{ enddifference < 0pt}%
-  \gre@debugmsg{lineshifts}{enddifference: \the\gre@dimen@enddifference}%
   \ifdim\gre@dimen@enddifference <0pt%
-    \gre@debugmsg{lineshifts}{lastoflinecount d: \the\gre@lastoflinecount}%
     %% important, else we are not really at the end of the syllable
-    \GreNoBreak %
-    \gre@debugmsg{lineshifts}{lastoflinecount: \the\gre@lastoflinecount}%
     \kern -\gre@dimen@enddifference %
     \GreNoBreak %
   \fi%
-  \global\gre@skip@eolshift=0pt%
   % we call end of syllable
   \gre@syllable@end{#7}{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}{#4}%
   \global\gre@dimen@notesaligncenter=0pt% very important, see flat and natural
@@ -696,6 +682,12 @@
 %%
 \def\gre@endofsyllable#1#2#3{%
   \gre@debugmsg{syllablespacing}{ endofsyllable with #2}%
+  \ifgre@eolshiftsenabled%
+    \GreNoBreak%
+    \gre@calculate@eolshift{\gre@dimen@enddifference}%
+    \gre@debugmsg{lineshifts}{End of line shift: \the\gre@dimen@eolshift}
+    \gre@hskip -\gre@dimen@eolshift%
+  \fi%
   \ifnum#3=1\relax %
     \GreNoBreak %
     \gre@debugmsg{syllablespacing}{ set penalty \grenobreakpenalty}%
@@ -714,6 +706,10 @@
       \GreNoBreak %
     \fi %
   \fi %
+  \ifgre@eolshiftsenabled%
+    \gre@hskip \gre@dimen@eolshift%
+    \GreNoBreak%
+  \fi%
   \relax%
 }%
 

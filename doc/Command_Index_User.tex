@@ -734,11 +734,11 @@ Macro to determine whether Gregorio\TeX\ should automatically place the custos a
 \textbf{Nota Bene:} This command only effects the custos that appears at the end of a line.  Custos which are placed at a key change are unaffected.  Further, if custos are specified in the gabc file manually and Gregorio\TeX\ is set to place custos automatically, you will get two custos at the line breaks.
 
 \macroname{\textbackslash greseteolshifts}{\{\#1\}}{gregoriotex-main.tex}
-Macro to determine whether Gregorio\TeX\ should apply a small shift at the end of each line which prevents lyrics from stretching under the final custos.
+Macro to determine whether Gregorio\TeX\ should apply a small shift at the end of each line which allows lyrics to stretch under the final custos.
 
 \begin{argtable}
-  \#1 & enable & The shifts are applied\\
-  & disable & The shifts are not applied (default)
+  \#1 & enable & The shifts are applied (default)\\
+  & disable & The shifts are not applied.
 \end{argtable}
 
 \macroname{\textbackslash gresetbolshifts}{\{\#1\}}{gregoriotex-main.tex}
