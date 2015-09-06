@@ -1171,8 +1171,8 @@
 % a flag to disable (or reenable) the shift for last syllables of lines
 % when the shifts are enabled lyrics cannot extend under (or past) the custos at the end of a line
 \newif\ifgre@eolshiftsenabled%
-% default state is for them to be disabled
-\gre@eolshiftsenabledfalse
+% default state is for them to be enabled
+\gre@eolshiftsenabledtrue
 
 \def\greseteolshifts#1{%
   \IfStrEq{#1}{enable}%
