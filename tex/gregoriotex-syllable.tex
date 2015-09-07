@@ -708,7 +708,7 @@
     \fi %
   \fi %
   \ifgre@eolshiftsenabled%
-    %If the above penalties don't result in a line break, then we need to undo the shift above to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
+    %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
     \kern \gre@dimen@eolshift%
     \GreNoBreak%
   \fi%
