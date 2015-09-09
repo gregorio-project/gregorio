@@ -289,6 +289,7 @@ typedef enum grestyle_style {
     ST_INITIAL, /* a style used to determine the initial */
     ST_UNDERLINED,
     ST_COLORED,
+    ST_FIRST_WORD,
     ST_FIRST_SYLLABLE,
     ST_FIRST_SYLLABLE_INITIAL
 } grestyle_style;
@@ -605,6 +606,7 @@ typedef struct gregorio_syllable {
      * word, WORD_ONE_SYLLABLE for syllable that are alone in their word,
      * and i let you gess what are WORD_MIDDLE and WORD_END. */
     ENUM_BITFIELD(gregorio_word_position) position:3;
+    bool first_word:1;
 } gregorio_syllable;
 
 /* The items in source_info used to be -- well, most of them -- in
@@ -764,9 +766,9 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_character *first_character,
         gregorio_character *first_translation_character,
         gregorio_word_position position, char *abovelinestext,
-        gregorio_tr_centering translation_type,
-        gregorio_nlba no_linebreak_area,
-        gregorio_euouae euouae, const gregorio_scanner_location *loc);
+        gregorio_tr_centering translation_type, gregorio_nlba no_linebreak_area,
+        gregorio_euouae euouae, const gregorio_scanner_location *loc,
+        bool first_word);
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
 void gregorio_position_h_episemus_above(gregorio_note *note, signed char height,

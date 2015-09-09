@@ -324,7 +324,8 @@
   \gre@calculate@annotationtrueraise %
   % we print the initial always at the same place, and then we print the gre@box@annotation, centered
   % first we print the initial
-  \gre@dimen@temp@five=-\gre@dimen@textlower %
+  \gre@dimen@temp@five = \gre@dimen@textlower %
+  \advance\gre@dimen@temp@five by \gre@dimen@initialraise\relax%
   % if it is a big initial we print it on the second line
   \ifnum\gre@biginitial=0\relax %
     \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
@@ -354,7 +355,7 @@
       \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
     \fi%
     \gre@debugmsg{annotation}{Width check completed.}%
-    \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\box\gre@box@initial\hss}%
+    \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}%
     \gre@debugmsg{annotation}{Initial set.}%
     \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
       \gre@style@initial% keep this line
@@ -365,13 +366,14 @@
       \greinitialformat{\global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift}%  DEPRECATED
     \fi%  DEPRECATED
   \else %
-    \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
-    \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
-    \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
-    \advance\gre@dimen@temp@five by 4\gre@dimen@interstafflinespace %
-    \advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight %
-    \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
-    \advance\gre@dimen@temp@five by \f@size pt%
+    \advance\gre@dimen@temp@five by -\gre@dimen@additionalbottomspace %
+    \advance\gre@dimen@temp@five by -\gre@dimen@spacebeneathtext %
+    \advance\gre@dimen@temp@five by -\gre@dimen@spacelinestext %
+    \advance\gre@dimen@temp@five by -4\gre@dimen@interstafflinespace %
+    \advance\gre@dimen@temp@five by -4\gre@dimen@stafflineheight %
+    \advance\gre@dimen@temp@five by -\gre@dimen@currenttranslationheight %
+    \advance\gre@dimen@temp@five by -\f@size pt%
+    \advance\gre@dimen@temp@five by \gre@dimen@initialraise%
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
       \ifvoid\gre@box@initial% keep this line
         \gre@debugmsg{initial}{fill big initial box}% keep this line
@@ -398,7 +400,7 @@
     \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
     \fi%
-    \setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise -\gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
+    \setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
       \gre@style@biginitial% keep this line
       \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift% keep this line
@@ -1079,6 +1081,7 @@
   \gre@skip@temp@two=0pt%
   \gre@skip@temp@three=0pt%
   \gre@skip@temp@four=0pt%
+  \setbox\gre@box@annotation=\box\voidb@x%
   \directlua{gregoriotex.atScoreEnd()}%
   \unsetluatexattribute{\gre@attr@glyph@id}%
   \unsetluatexattribute{\gre@attr@glyph@top}%
@@ -1088,6 +1091,7 @@
     \parfillskip=\gre@save@parfillskip\relax%
   \fi %
   \global\let\ifgre@vowelcentering\ifgre@save@englishcentering\relax % DEPRECATED
+  \global\setluatexattribute\gre@attr@glyph@id{0}%
   \relax%
 }%
 
