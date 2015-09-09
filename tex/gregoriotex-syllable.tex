@@ -536,9 +536,15 @@
   % So, at beginning of lines, we will have shifted left, and in middle of lines
   % we will have shifted right and left, thus cancelling... Very easy trick, but
   % took me years to find it!
+  \gre@debugmsg{bolshift}{Current glyph: \the\gre@attr@glyph@id}%
   \ifgre@bolshiftsenabled%
     \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
-    \kern -\gre@dimen@bolshift %
+    % we don't want to shift right on the first syllable of the score because the printing of the initial clef, initial, and/or the staff lines will have already broken TeX's ignorance of spaces.
+    \ifgre@beginningofscore%
+      \gre@beginningofscorefalse%
+    \else%
+      \kern -\gre@dimen@bolshift %
+    \fi%
     \GreNoBreak %
     \hbox to 0pt{}%
     \GreNoBreak %
