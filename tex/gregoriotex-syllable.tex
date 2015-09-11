@@ -234,7 +234,7 @@
         \else%
           \global\setbox\gre@box@temp@width=\hbox{#1}%
         \fi%
-      \else%
+      \else% vowel or first-letter centering
         \ifcase#3%
           \gre@widthof{\gre@endsyllablepart}%
         \else%
@@ -430,15 +430,15 @@
 % #4 : the very first letter
 % #5 : all the letters after the first letter
 \def\GreSetThisSyllable#1#2#3#4#5{%
-  \ifcase\gre@lyriccentering% 0
+  \ifcase\gre@lyriccentering% 0 - syllable centering
     \gdef\gre@firstsyllablepart{}%
     \gdef\gre@middlesyllablepart{#1#2#3}%
     \gdef\gre@endsyllablepart{}%
-  \or % 1
+  \or % 1 - vowel centering
     \gdef\gre@firstsyllablepart{#1}%
     \gdef\gre@middlesyllablepart{#2}%
     \gdef\gre@endsyllablepart{#3}%
-  \or % 2
+  \or % 2 - first-letter centering
     \gdef\gre@firstsyllablepart{}%
     \gdef\gre@middlesyllablepart{#4}%
     \gdef\gre@endsyllablepart{#5}%
