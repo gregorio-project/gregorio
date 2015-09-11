@@ -553,7 +553,9 @@
     \ifgre@beginningofscore%
       \gre@beginningofscorefalse%
     \else%
-      \kern\gre@dimen@bolshift %
+      \ifnum\gre@insidediscretionary=0\relax%
+        \kern\gre@dimen@bolshift %
+      \fi%
     \fi%
     \GreNoBreak %
     \hbox to 0pt{}%

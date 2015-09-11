@@ -60,10 +60,13 @@
   \global\xdef\gre@insidediscretionary{\number 1}%
   \discretionary{%
     \global\gre@lastoflinecount=1\relax % (a good magic trick)
+    \gre@debugmsg{bolshift}{discretionary pre lastoflinecount: \the\gre@lastoflinecount}%
     #1%
     }{%
     \global\gre@lastoflinecount=2\relax % (a good magic trick)
+    \gre@debugmsg{bolshift}{discretionary post lastoflinecount: \the\gre@lastoflinecount}%
     }{%
+    \gre@debugmsg{bolshift}{discretionary no lastoflinecount: \the\gre@lastoflinecount}%
     #2%
     }%
   \global\xdef\gre@insidediscretionary{\number 0}%
