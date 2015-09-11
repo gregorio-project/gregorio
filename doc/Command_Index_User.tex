@@ -686,14 +686,15 @@ Macro to set how the text of the lyrics aligns with the alignment point of its r
 
 \begin{argtable}
   \#1 & vowel & The center of the vowel in the syllable will align with the alignment point of the neumes\\
-  & syllable & The center of the syllable will align with the alignment point of the neumes
+  & syllable & The center of the syllable will align with the alignment point of the neumes\\
+  & firstletter & The center of the first letter/character of the syllable will align with the alignment point of the neumes\\
 \end{argtable}
 
 \textbf{Nota Bene:} What constitutes the ``vowel'' of the syllable is determined by the language the lyric text is written in, as specified by the use of the \texttt{language} header in the gabc file.  Out of the box, Gregorio\TeX\ explicitly supports only Latin and English, but the rules for Latin have a high degree of overlap with many Romance languages, allowing them to fall back on the Latin rules with acceptable results.
 
 You can also define your own languages in \texttt{gregorio-vowels.dat}.  If you do define a language, please consider sharing your work by submitting it to the project (see CONTRIBUTING.md for instructions).
 
-Finally, in cases where you want some sort of exceptional alignment, you can force Gregorio to consider a particular part of the syllable to be the ``vowel'' by enclosing it in curly braces (``\{'' and ``\}'') in your gabc file.
+Finally, in cases where you want some sort of exceptional alignment, you can force Gregorio to consider a particular part of the syllable to be the ``vowel'' by enclosing it in curly braces (``\{'' and ``\}'') in your gabc file.  Curly braces only affect alignment when using vowel centering.  Syllable centering will always use the entire syllable, and firstletter centering will always use the first character of the syllable --- regardless of curly braces in the gabc file.
 
 \macroname{\textbackslash gresettranslationcentering}{\{\#1\}}{gregoriotex-main.tex}
 Macro to specify how the translation text should be aligned with it respective syllable text.

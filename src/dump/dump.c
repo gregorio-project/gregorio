@@ -93,8 +93,9 @@ static const char *dump_style_to_string(grestyle_style style)
         return "ST_FIRST_SYLLABLE";
     case ST_FIRST_SYLLABLE_INITIAL:
         return "ST_FIRST_SYLLABLE_INITIAL";
+    default:
+        return unknown(style);
     }
-    return unknown(style);
 }
 
 static void dump_write_characters(FILE *const f,
