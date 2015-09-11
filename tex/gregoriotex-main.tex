@@ -238,7 +238,7 @@
     \ifgre@eolshiftsenabled%
       \GreNoBreak% we want to make sure this shift doesn't get separated from the previous one if both occur
       \gre@calculate@eolshift{\gre@dimen@enddifference}%
-      \gre@debugmsg{lineshifts}{Manual end of line shift: \the\gre@dimen@eolshift}%
+      \gre@debugmsg{eolshift}{Manual end of line shift: \the\gre@dimen@eolshift}%
       \kern -\gre@dimen@eolshift%
     \fi%
     \ifnum\gre@insidediscretionary=0\relax %
@@ -1145,7 +1145,7 @@
 % 2 after it has finished the syllable, so when it is two it means that the syllable is the first of a line
 \def\GreLastOfLine{%
   \global\gre@lastoflinecount=1\relax%
-  \gre@debugmsg{lineshifts}{set lastoflinecount to 1}%
+  \gre@debugmsg{eolshift}{set lastoflinecount to 1}%
   \relax%
 }%
 
