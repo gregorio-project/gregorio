@@ -291,7 +291,8 @@ typedef enum grestyle_style {
     ST_COLORED,
     ST_FIRST_WORD,
     ST_FIRST_SYLLABLE,
-    ST_FIRST_SYLLABLE_INITIAL
+    ST_FIRST_SYLLABLE_INITIAL,
+    ST_SYLLABLE_INITIAL
 } grestyle_style;
 
 /*

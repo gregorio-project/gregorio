@@ -1000,8 +1000,6 @@
 
 % gre@attr@dash (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
-\newif\ifgre@save@englishcentering% DEPRECATED
-
 %macro called at the beginning of a score
 % #1 is the gabc score id
 % #2 is the high height
@@ -1012,7 +1010,7 @@
 \def\GreBeginScore#1#2#3#4#5#6{%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \xdef\gre@gabcname{#6}%
-  \global\let\ifgre@save@englishcentering\ifgre@vowelcentering\relax % DEPRECATED
+  \global\let\gre@save@englishcentering\gre@lyriccentering\relax % DEPRECATED
   \ifgre@justifylastline%
     \xdef\gre@save@parfillskip{\the\parfillskip}
     \parfillskip=0pt plus 0pt minus 0pt\relax%
@@ -1087,7 +1085,7 @@
   \ifgre@justifylastline%
     \parfillskip=\gre@save@parfillskip\relax%
   \fi %
-  \global\let\ifgre@vowelcentering\ifgre@save@englishcentering\relax % DEPRECATED
+  \global\let\gre@lyriccentering\gre@save@englishcentering\relax % DEPRECATED
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \relax%
 }%

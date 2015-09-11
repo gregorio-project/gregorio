@@ -883,6 +883,7 @@ static void gtex_write_end(FILE *f, grestyle_style style)
     switch (style) {
     case ST_FORCED_CENTER:
     case ST_CENTER:
+    case ST_SYLLABLE_INITIAL:
         fprintf(f, "}{");
         break;
     case ST_INITIAL:
@@ -2568,11 +2569,16 @@ static void gregoriotex_write_text(FILE *f, gregorio_character *text,
         bool *first_syllable)
 {
     if (text == NULL) {
-        fprintf(f, "{}{}{}");
+        fprintf(f, "{}{}{}{}{}");
         return;
     }
     fprintf(f, "{");
     gregorio_write_text(first_syllable && *first_syllable, text, f,
+            (&gtex_write_verb), (&gtex_print_char), (&gtex_write_begin),
+            (&gtex_write_end), (&gtex_write_special_char));
+    fprintf(f, "}{");
+    gregorio_write_first_letter_alignment_text(
+            first_syllable && *first_syllable, text, f,
             (&gtex_write_verb), (&gtex_print_char), (&gtex_write_begin),
             (&gtex_write_end), (&gtex_write_special_char));
     if (first_syllable) {
@@ -2825,7 +2831,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
         fprintf(f, "}{%d}{",
                 gregoriotex_syllable_first_type(syllable->next_syllable));
     } else {
-        fprintf(f, "{\\GreSetNextSyllable{}{}{}}{");
+        fprintf(f, "{\\GreSetNextSyllable{}{}{}{}{}}{");
         write_syllable_point_and_click(f, syllable, status);
         fprintf(f, "}{0}{");
     }
