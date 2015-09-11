@@ -830,6 +830,9 @@ Macro to hold the version number of Gregorio\TeX\ so that it can be checked for 
 \macroname{\textbackslash gre@leftfill}{}{gregoriotex-main.tex}
 Macro set to \verb=\hfil= or \verb=\relax= depending on alignment choices.
 
+\macroname{\textbackslash gre@lyriccentering}{}{gregoriotex-syllable.tex}
+Macro set to \verb=0= for full-syllable centering, \verb=1= for vowel centering (the default), or \verb=2= for first-letter centering.
+
 \macroname{\textbackslash gre@rightfill}{}{gregoriotex-main.tex}
 Macro set to \verb=\hfil= or \verb=\relax= depending on alignment choices.
 
@@ -1088,9 +1091,6 @@ Boolean used in \verb=\gre@changeonedimenfactor= as we test for the presence of 
 
 \macroname{\textbackslash ifgre@shrink}{}{gregoriotex-spaces.tex}
 Boolean used in \verb=\gre@changeonedimenfactor= as we test for the presence of a shrink.
-
-\macroname{\textbackslash ifgre@vowelcentering}{}{gregoriotex-syllable.tex}
-Boolean used to specify whether the center of the vowel or the center of the syllable is used to align the lyrics with their neumes.
 
 \macroname{\textbackslash ifgre@translationcentering}{}{gregoriotex-main.tex}
 Boolean used to specify whether the translation text should be centered below its respective syllable.

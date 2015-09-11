@@ -47,7 +47,7 @@ typedef enum gregorio_center_determination {
 /* this is a temporary structure that will be used for style determination */
 
 typedef struct det_style {
-    unsigned char style;
+    grestyle_style style;
     struct det_style *previous_style;
     struct det_style *next_style;
 } det_style;
@@ -55,6 +55,14 @@ typedef struct det_style {
 gregorio_character *gregorio_first_text(gregorio_score *score);
 
 void gregorio_write_text(bool skip_initial,
+        gregorio_character *current_character,
+        FILE *f, void (*printverb) (FILE *, grewchar *),
+        void (*printchar) (FILE *, grewchar),
+        void (*begin) (FILE *, grestyle_style),
+        void (*end) (FILE *, grestyle_style),
+        void (*printspchar) (FILE *, grewchar *));
+
+void gregorio_write_first_letter_alignment_text(bool skip_initial,
         gregorio_character *current_character,
         FILE *f, void (*printverb) (FILE *, grewchar *),
         void (*printchar) (FILE *, grewchar),
@@ -79,6 +87,6 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
 void gregorio_rebuild_first_syllable(gregorio_character **param_character,
         bool separate_initial);
 
-void gregorio_set_first_word(gregorio_character **const character);
+void gregorio_set_first_word(gregorio_character **character);
 
 #endif

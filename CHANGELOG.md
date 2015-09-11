@@ -9,6 +9,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Added
 - New distance, `initialraise`, which will lift (or lower, if negative) the initial.
 - The first word of the score is now passed to a macro that allow it to be styled from TeX.  The first word is passed to `\GreFirstWord#1` and is styled by changing the `firstword` style.
+- A new type of lyric centering, enabled with `\gresetlyriccentering{firstletter}`, which aligns the neume with the first letter of each syllable.
 
 ## [4.0.0-beta2] - 2015-08-26
 ### Fixed
