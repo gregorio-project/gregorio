@@ -1012,6 +1012,8 @@
 
 \newif\ifgre@save@englishcentering% DEPRECATED
 
+\newif\ifgre@beginningofscore%
+
 %macro called at the beginning of a score
 % #1 is the gabc score id
 % #2 is the high height
@@ -1020,6 +1022,7 @@
 % #5 is if 1 if we have space above the staff
 % #6 is the point-and-click filename
 \def\GreBeginScore#1#2#3#4#5#6{%
+  \gre@beginningofscoretrue%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \xdef\gre@gabcname{#6}%
   \global\let\ifgre@save@englishcentering\ifgre@vowelcentering\relax % DEPRECATED
@@ -1099,6 +1102,7 @@
     \parfillskip=\gre@save@parfillskip\relax%
   \fi %
   \global\let\ifgre@vowelcentering\ifgre@save@englishcentering\relax % DEPRECATED
+  \global\setluatexattribute\gre@attr@glyph@id{0}%
   \relax%
 }%
 

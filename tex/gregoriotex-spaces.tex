@@ -330,34 +330,31 @@
 \newdimen\gre@dimen@bolshift
 
 %% @desc Macro used in \GreSyllable. Sets \gre@skip@bolshift to the left kern that
-%%       should appear at the beginning of a line in case of a forced linebreak.
+%%       should appear at the beginning of a line in case of a linebreak.
 %%       The goal of this left kern is to have all lines aligned on notes. See
 %%       TODO for details.
 %%
 %% @arg#1 \gre@dimen@begindifference of the first syllable of the line
-%% @arg#2 not sure about it... to be removed?
-\def\gre@calculate@bolshift#1#2{%
+\def\gre@calculate@bolshift#1{%
   % as the \gre@dimen@bolshift is computed from skips, we compute it in a
   % skip temp registry, and then "cast" it into a dimen
   \gre@skip@temp@three=\gre@skip@spaceafterlineclef %
   \advance\gre@skip@temp@three by #1%
-  % a little trick... we don't want to kern more than clefwidth minus minimalspaceatlinebeginning
-  \advance\gre@dimen@clefwidth by -\gre@dimen@minimalspaceatlinebeginning %
-  \ifdim\gre@skip@temp@three <-\gre@dimen@clefwidth %
-    \gre@skip@temp@three=-\gre@dimen@clefwidth %
+  % we don't want to kern more than clefwidth minus minimalspaceatlinebeginning
+  \gre@dimen@temp@one = \gre@dimen@clefwidth
+  \advance\gre@dimen@temp@one by -\gre@dimen@minimalspaceatlinebeginning %
+  \ifdim\gre@skip@temp@three <-\gre@dimen@temp@one %
+    \gre@skip@temp@three=-\gre@dimen@temp@one %
   \fi %
-  %% TODO: is following line really safe?
-  \advance\gre@dimen@clefwidth by \gre@dimen@minimalspaceatlinebeginning %
   \advance\gre@skip@temp@three by -\gre@skip@spaceafterlineclef %
   \ifdim\gre@skip@temp@three < #1\relax %
     \gre@skip@temp@three=\the #1\relax %
   \fi %
-  \ifnum#2=1\fi % keep it due to a luatex bug, fixed in TL2015, TODO: remove later
   \gre@debugmsg{bolshift}{ temp@three = \the\gre@skip@temp@three}%
   \ifdim\gre@skip@temp@three > 0pt\relax %
     \global\gre@dimen@bolshift=0pt\relax %
   \else %
-    \global\gre@dimen@bolshift=\gre@skip@temp@three %
+    \global\gre@dimen@bolshift=-\gre@skip@temp@three %
   \fi %
   \gre@debugmsg{bolshift}{ bolshift = \the\gre@dimen@bolshift}%
   \relax %
