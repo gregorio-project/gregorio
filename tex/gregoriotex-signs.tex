@@ -54,20 +54,22 @@
 \let\gre@penalty\gre@truepenalty%
 \xdef\gre@insidediscretionary{\number 0}%
 
-\def\GreDiscretionary#1#2{%
+% #1 is the type of discretionary, for penalty assignment. Recognized types:
+%   - 0: clef change
+\def\GreDiscretionary#1#2#3{%
   \global\let\gre@hskip\kern %
   \global\let\gre@penalty\gre@falsepenalty %
   \global\xdef\gre@insidediscretionary{\number 1}%
   \discretionary{%
     \global\gre@lastoflinecount=1\relax % (a good magic trick)
     \gre@debugmsg{bolshift}{discretionary pre lastoflinecount: \the\gre@lastoflinecount}%
-    #1%
+    #2%
     }{%
     \global\gre@lastoflinecount=2\relax % (a good magic trick)
     \gre@debugmsg{bolshift}{discretionary post lastoflinecount: \the\gre@lastoflinecount}%
     }{%
     \gre@debugmsg{bolshift}{discretionary no lastoflinecount: \the\gre@lastoflinecount}%
-    #2%
+    #3%
     }%
   \global\xdef\gre@insidediscretionary{\number 0}%
   \global\let\gre@hskip\hskip %
