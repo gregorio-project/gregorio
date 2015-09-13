@@ -168,8 +168,8 @@ Typesets a custos.
 \macroname{\textbackslash GreDagger}{}{gregoriotex-symbols.tex}
 Macro to typeset a dagger (\GreDagger).
 
-\macroname{\textbackslash GreDiscretionary}{\#1\#2}{gregoriotex-signs.tex}
-A GregorioTeX specific discretionary used to avoid clef change at beginning or end of line, or even with more complex data (z0::c3 for instance).  We require a special function because in the normal discretionary function you cannot use \verb=\hskip= (but you can use \verb=\kern=) and you cannot use \verb=\penalty= (which is useless indeed).  This macro corrects for these two limitations.
+\macroname{\textbackslash GreDiscretionary}{\#1\#2\#3}{gregoriotex-signs.tex}
+A GregorioTeX specific discretionary. Currently only used to avoid clef change at beginning or end of line, or even with more complex data (z0::c3 for instance).  We require a special function because in the normal discretionary function you cannot use \verb=\hskip= (but you can use \verb=\kern=) and you cannot use \verb=\penalty= (which is useless indeed).  This macro corrects for these two limitations. The first argument allows to select the penalty assigned to the discretionary by recent version of LuaTeX.
 
 \macroname{\textbackslash GreDivisioFinalis}{\#1}{gregoriotex-signs.tex}
 Macro to typeset a divisio finalis.

@@ -2776,7 +2776,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                  * In this case, the first thing to do is to change the line clef 
                  */
                 gregoriotex_print_change_line_clef(f, clef_change_element);
-                fprintf(f, "\\GreDiscretionary{%%\n");
+                fprintf(f, "\\GreDiscretionary{0}{%%\n");
                 gregoriotex_write_syllable(f, syllable, first_syllable,
                         line_number, 1, status);
                 fprintf(f, "}{%%\n");
