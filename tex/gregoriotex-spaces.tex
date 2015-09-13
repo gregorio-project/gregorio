@@ -369,21 +369,33 @@
 %%
 %% @arg#1 The \gre@dimen@enddifference of the corresponding syllable
 \def\gre@calculate@eolshift#1{%
-  \global\gre@skip@temp@three=0pt%
+  \global\gre@skip@temp@three=0pt\relax%
+  \global\gre@skip@temp@two=0pt\relax%
   % we only need a shift if the lyrics are longer than the notes
-  \ifdim#1 <0pt%
+  \ifdim#1 <0pt\relax%
     % we only need to shift if there is a custos being printed
-    \ifgre@blockeolcustos\else%
+    \ifgre@blockeolcustos%
+      \global\gre@dimen@eolshift=0pt\relax%
+    \else%
+      % The basic value for the eol shift is -enddifference
+      \global\gre@skip@temp@two=-#1\relax%
+      % The maximum value is wd(custos) + spacebeforecustos
+      % Were the eolshift larger than this the lyrics would stick out
+      % into the margin
       \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}}%
       \global\advance\gre@skip@temp@three by \wd\gre@box@temp@width %
-      \global\advance\gre@skip@temp@three by \gre@skip@spacebeforecustos %
-      % we don't want to shift more than the distance back to the notes
-      \ifdim\gre@skip@temp@three>-#1%
-        \gre@skip@temp@three = -#1%
+      \global\advance\gre@skip@temp@three by \gre@skip@spacebeforecustos \relax%
+      % pick the smaller of the two values calculated above
+      \ifdim\gre@skip@temp@two>\gre@skip@temp@three%
+        \gre@debugmsg{eolshift}{imposing limit}%
+        \global\gre@dimen@eolshift = \gre@skip@temp@three%
+      \else%
+        \global\gre@dimen@eolshift = \gre@skip@temp@two%
       \fi%
     \fi %
+  \else%
+    \global\gre@dimen@eolshift=0pt\relax%
   \fi %
-  \global\gre@dimen@eolshift = \gre@skip@temp@three
 }
 
 %%%%%%%%%%%%%%%%%%%
