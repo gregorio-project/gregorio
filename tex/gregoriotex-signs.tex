@@ -114,15 +114,15 @@
 % if the fourth argument is a, it means that we must not put a flat after the key, otherwise it's the height of the flat
 \def\GreSetLinesClef#1#2#3#4{%
   \gre@localleftbox{%
-    \gre@skip@temp@four = \gre@dimen@additionalleftspace%
+    \gre@skip@temp@four = \gre@dimen@additionalleftspace\relax%
     \kern\gre@skip@temp@four %
     \copy\gre@box@lines% draws the lines
     \unkern %
     \ifgre@showclef%
-      \gre@skip@temp@four = \gre@skip@afterclefnospace%
+      \gre@skip@temp@four = \gre@skip@afterclefnospace\relax%
       \hbox{\gre@typekey{#1}{#2}{0}{#3}{#4}\hskip\gre@skip@temp@four}%
     \else %
-      \gre@skip@temp@four = \gre@dimen@noclefspace%
+      \gre@skip@temp@four = \gre@dimen@noclefspace\relax%
       \hbox{\kern\gre@skip@temp@four}%
     \fi %
   }%
@@ -171,9 +171,9 @@
   \or%
     \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}%
   \fi%
-  \gre@skip@temp@two=\gre@skip@spaceafterlineclef %
+  \gre@skip@temp@two=\gre@skip@spaceafterlineclef\relax%
   \ifnum#4=0\relax %
-    \gre@skip@temp@two=\gre@skip@afterclefnospace %
+    \gre@skip@temp@two=\gre@skip@afterclefnospace\relax%
   \fi %
   \ifx c#1% we check if it is a c key
     \ifcase#3%
@@ -195,7 +195,7 @@
   \ifnum#5=3%
     \gre@hskip\gre@skip@temp@two %
   \else %
-    \gre@skip@temp@four = \gre@skip@clefflatspace%
+    \gre@skip@temp@four = \gre@skip@clefflatspace\relax%
     \gre@hskip\gre@skip@temp@four %
     \GreFlat{#5}{1}%
     \gre@hskip\gre@skip@temp@two %
@@ -233,15 +233,15 @@
     \GreSetLinesClef{#1}{#2}{1}{#4}%
   \fi %
   \ifnum#3=1\relax %
-    \gre@skip@temp@four = \gre@skip@clefchangespace%
+    \gre@skip@temp@four = \gre@skip@clefchangespace\relax%
     \gre@hskip\gre@skip@temp@four %
   \else %
     % here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
-    \gre@skip@temp@four = -\gre@skip@spacearoundclefbars%
+    \gre@skip@temp@four = -\gre@skip@spacearoundclefbars\relax%
     \gre@hskip\gre@skip@temp@four %
   \fi %
   \gre@typekey{#1}{#2}{1}{0}{#4}%
-  \gre@skip@temp@four = \gre@skip@clefchangespace%
+  \gre@skip@temp@four = \gre@skip@clefchangespace\relax%
   \gre@hskip\gre@skip@temp@four %
   \relax%
 }%
@@ -264,12 +264,12 @@
       \gre@additionaltopcustoslinemiddle %
     \fi\fi\fi\fi %
   \fi %
-  \raise \gre@dimen@glyphraisevalue%
+  \raise \gre@dimen@glyphraisevalue\relax%
   \copy\gre@box@temp@width %
   % for now we consider we always have a bar after the custos
   % we don't want to end the line here
   \GreNoBreak %
-  \gre@skip@temp@four = -\gre@skip@spacearoundclefbars%
+  \gre@skip@temp@four = -\gre@skip@spacearoundclefbars\relax%
   \gre@hskip\gre@skip@temp@four %
   \GreNoBreak %
   \relax %
@@ -283,7 +283,7 @@
       %here we need some tricks to draw the line before the custos (for the color)
       \setbox\gre@box@temp@width=\hbox{%
       % we type a hskip and the we type the custos
-      \gre@skip@temp@four = \gre@skip@spacebeforecustos%
+      \gre@skip@temp@four = \gre@skip@spacebeforecustos\relax%
       \hskip\gre@skip@temp@four %
       \gre@pickcustos{#1}\relax %
       }%
@@ -304,7 +304,7 @@
           \gre@additionaltopcustoslineend %
         \fi\fi\fi\fi %
       \fi %
-      \raise \gre@dimen@glyphraisevalue%
+      \raise \gre@dimen@glyphraisevalue\relax%
       \copy\gre@box@temp@width %
       }%
     \fi %
@@ -313,19 +313,19 @@
 }%
 
 \def\GreManualCustos#1{%
-  \gre@skip@temp@four = \gre@skip@spacebeforecustos%
+  \gre@skip@temp@four = \gre@skip@spacebeforecustos\relax%
   \kern\gre@skip@temp@four\GreCustos{#1}%
 }%
 
 % macro that typesets an additional line at the top for custos at end of line
 
 \def\gre@additionaltopcustoslineend{%
-  \gre@dimen@temp@five=\gre@dimen@staffheight %
-  \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
-  \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
-  \advance\gre@dimen@temp@five by \gre@dimen@interstafflinespace %
-  \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
-  \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
+  \gre@dimen@temp@five=\gre@dimen@staffheight\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@interstafflinespace\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight\relax%
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
     \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
@@ -336,9 +336,9 @@
     \fi% DEPRECATED
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\wd\gre@box@temp@sign %
-    \advance\gre@dimen@temp@five by \gre@dimen@additionalcustoslineswidth %
+    \advance\gre@dimen@temp@five by \gre@dimen@additionalcustoslineswidth\relax%
     \kern-\gre@dimen@temp@five %
-    \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight%
+    \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight\relax%
     \hss %
     \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
       \endgre@style@additionalstafflines% keep this line
@@ -348,12 +348,12 @@
 }%
 
 \def\gre@additionalbottomcustoslineend{%
-  \gre@dimen@temp@five=\gre@dimen@spacebeneathtext %
-  \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
-  \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
-  \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
-  \advance\gre@dimen@temp@five by -\gre@dimen@interstafflinespace %
-  \advance\gre@dimen@temp@five by -\gre@dimen@stafflineheight %
+  \gre@dimen@temp@five=\gre@dimen@spacebeneathtext\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight\relax%
+  \advance\gre@dimen@temp@five by -\gre@dimen@interstafflinespace\relax%
+  \advance\gre@dimen@temp@five by -\gre@dimen@stafflineheight\relax%
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
     \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
@@ -364,9 +364,9 @@
     \fi% DEPRECATED
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\wd\gre@box@temp@sign %
-    \advance\gre@dimen@temp@five by \gre@dimen@additionalcustoslineswidth %
+    \advance\gre@dimen@temp@five by \gre@dimen@additionalcustoslineswidth\relax%
     \kern-\gre@dimen@temp@five %
-    \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight%
+    \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight\relax%
     \hss %
     \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
       \endgre@style@additionalstafflines% keep this line
@@ -378,12 +378,12 @@
 % same macros, but for a custos in the middle
 
 \def\gre@additionaltopcustoslinemiddle{%
-  \gre@dimen@temp@five=\gre@dimen@staffheight %
-  \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
-  \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
-  \advance\gre@dimen@temp@five by \gre@dimen@interstafflinespace %
-  \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
-  \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
+  \gre@dimen@temp@five=\gre@dimen@staffheight\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@interstafflinespace\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight\relax%
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
     \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
@@ -394,10 +394,10 @@
     \fi% DEPRECATED
     \hss %
     \kern\gre@dimen@temp@three %
-    \gre@dimen@temp@five=\gre@dimen@additionalcustoslineswidth %
+    \gre@dimen@temp@five=\gre@dimen@additionalcustoslineswidth\relax%
     \multiply\gre@dimen@temp@five by 2%
     \advance\gre@dimen@temp@five by \wd\gre@box@temp@sign %
-    \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight%
+    \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight\relax%
     \hss %
     \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
       \endgre@style@additionalstafflines% keep this line
@@ -407,12 +407,12 @@
 }%
 
 \def\gre@additionalbottomcustoslinemiddle{%
-  \gre@dimen@temp@five=\gre@dimen@spacebeneathtext %
-  \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
-  \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
-  \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
-  \advance\gre@dimen@temp@five by -\gre@dimen@interstafflinespace %
-  \advance\gre@dimen@temp@five by -\gre@dimen@stafflineheight %
+  \gre@dimen@temp@five=\gre@dimen@spacebeneathtext\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight\relax%
+  \advance\gre@dimen@temp@five by -\gre@dimen@interstafflinespace\relax%
+  \advance\gre@dimen@temp@five by -\gre@dimen@stafflineheight\relax%
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
     \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
@@ -423,10 +423,10 @@
     \fi% DEPRECATED
     \hss %
     \kern\gre@dimen@temp@three %
-    \gre@dimen@temp@five=\gre@dimen@additionalcustoslineswidth %
+    \gre@dimen@temp@five=\gre@dimen@additionalcustoslineswidth\relax%
     \multiply\gre@dimen@temp@five by 2%
     \advance\gre@dimen@temp@five by \wd\gre@box@temp@sign %
-    \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight%
+    \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight\relax%
     \hss %
     \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
       \endgre@style@additionalstafflines% keep this line
@@ -539,7 +539,7 @@
     \hss %
     \ifnum#5=1\relax %
       \gre@calculate@glyphraisevalue{\gre@pitch@m}{13}%
-      \advance\gre@dimen@glyphraisevalue by \gre@dimen@curlybraceaccentusshift %
+      \advance\gre@dimen@glyphraisevalue by \gre@dimen@curlybraceaccentusshift\relax%
       \raise\gre@dimen@glyphraisevalue\hbox{%
         \gre@font@music\GreCPAccentus\relax %
       }%
@@ -724,10 +724,10 @@
 \def\GrePunctumMora#1#2#3#4{%
   \GreNoBreak %
   \ifcase#2\relax %
-    \gre@skip@temp@four = \gre@skip@spacebeforesigns%
+    \gre@skip@temp@four = \gre@skip@spacebeforesigns\relax%
     \hskip\gre@skip@temp@four%
   \or %
-    \gre@skip@temp@four = \gre@skip@spacebeforesigns%
+    \gre@skip@temp@four = \gre@skip@spacebeforesigns\relax%
     \kern\gre@skip@temp@four %
   \or %
     % to get the widht of a punctum minus a line, we calculate the width of a flexus (with ambitus of two) minus the width of a punctum
@@ -736,13 +736,13 @@
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPPunctum}%
     \advance\gre@dimen@temp@five by -\wd\gre@box@temp@width %
     \kern-\gre@dimen@temp@five %
-    \gre@skip@temp@four = \gre@skip@spacebeforesigns%
+    \gre@skip@temp@four = \gre@skip@spacebeforesigns\relax%
     \kern\gre@skip@temp@four %
   \or %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPPunctum}%
     \gre@dimen@temp@five=\wd\gre@box@temp@width %
     \kern-\gre@dimen@temp@five %
-    \gre@skip@temp@four = \gre@skip@spacebeforesigns%
+    \gre@skip@temp@four = \gre@skip@spacebeforesigns\relax%
     \kern\gre@skip@temp@four %
   \fi %
   \ifnum#2=1\else %
@@ -777,20 +777,20 @@
     \setbox\gre@box@temp@width=\hbox{\gre@fontchar@punctummora}%
     \gre@skip@temp@four = -\wd\gre@box@temp@width %
     \kern\gre@skip@temp@four%
-    \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
+    \gre@skip@temp@four = -\gre@skip@spacebeforesigns\relax%
     \kern\gre@skip@temp@four %
   \or %
     \setbox\gre@box@temp@width=\hbox{\gre@fontchar@punctummora}%
     \gre@skip@temp@four = -\wd\gre@box@temp@width %
     \kern\gre@skip@temp@four%
-    \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
+    \gre@skip@temp@four = -\gre@skip@spacebeforesigns\relax%
     \kern\gre@skip@temp@four %
     \kern\gre@dimen@temp@five %
   \or %
     \setbox\gre@box@temp@width=\hbox{\gre@fontchar@punctummora}%
     \gre@skip@temp@four = -\wd\gre@box@temp@width %
     \kern\gre@skip@temp@four%
-    \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
+    \gre@skip@temp@four = -\gre@skip@spacebeforesigns\relax%
     \kern\gre@skip@temp@four %
     \kern\gre@dimen@temp@five %
   \fi %
@@ -814,7 +814,7 @@
 % #3 is 1 if it must be a bit higher
 \def\GreLowChoralSign#1#2#3{%
   \GreNoBreak %
-  \gre@skip@temp@four = \gre@skip@beforelowchoralsignspace%
+  \gre@skip@temp@four = \gre@skip@beforelowchoralsignspace\relax%
   \hskip\gre@skip@temp@four %
   \GreNoBreak %
   \ifnum#3=1\relax %
@@ -879,7 +879,7 @@
 % #7 is the choral sign if relevant
 \def\gre@vepisemusorrareaux#1#2#3#4#5#6#7{%
   % first we set \gre@dimen@temp@three to the width of the last glyph
-  \gre@dimen@temp@three=\gre@dimen@lastglyphwidth %
+  \gre@dimen@temp@three=\gre@dimen@lastglyphwidth\relax%
   \setbox\gre@box@temp@sign=\hbox{\gre@font@music #2}%
   \gre@dimen@temp@two=\wd\gre@box@temp@sign %
   \divide\gre@dimen@temp@two by 2\relax %
@@ -1032,7 +1032,7 @@
   \ifcase#3%
     % case 0
   % first we set \gre@dimen@temp@three to the width of the last glyph
-    \gre@dimen@temp@three=\gre@dimen@lastglyphwidth %
+    \gre@dimen@temp@three=\gre@dimen@lastglyphwidth\relax%
   \or
     % case 1
     \gre@dimen@temp@three=0 pt\relax %
@@ -1042,7 +1042,7 @@
     \gre@dimen@temp@three=\wd\gre@box@temp@sign%
   \or
     % case 3
-    \gre@dimen@temp@three=\gre@dimen@lastglyphwidth %
+    \gre@dimen@temp@three=\gre@dimen@lastglyphwidth\relax%
     \setbox\gre@box@temp@sign=\hbox{\gre@font@music #1}%
     \advance\gre@dimen@temp@three by -\wd\gre@box@temp@sign %
   \fi%
@@ -1053,7 +1053,7 @@
   \gre@dimen@temp@two=\wd\gre@box@temp@sign %
   \ifnum#4<2\relax % case of the lines
   \else %
-    \gre@dimen@temp@five=\gre@dimen@additionallineswidth %
+    \gre@dimen@temp@five=\gre@dimen@additionallineswidth\relax%
     \kern-\gre@dimen@temp@five %
     \advance\gre@dimen@temp@two by 2\gre@dimen@temp@five %
   \fi %
@@ -1064,21 +1064,21 @@
     %case of hepisemus at the bottom
     \raise \gre@dimen@glyphraisevalue \copy\gre@box@temp@sign %
   \or % case of a line at the top
-    \gre@dimen@glyphraisevalue=\gre@dimen@additionalbottomspace %
-    \advance\gre@dimen@glyphraisevalue by \gre@dimen@spacebeneathtext %
-    \advance\gre@dimen@glyphraisevalue by \gre@dimen@spacelinestext %
-    \advance\gre@dimen@glyphraisevalue by \gre@dimen@currenttranslationheight %
-    \advance\gre@dimen@glyphraisevalue by 4\gre@dimen@interstafflinespace %
-    \advance\gre@dimen@glyphraisevalue by 4\gre@dimen@stafflineheight %
+    \gre@dimen@glyphraisevalue=\gre@dimen@additionalbottomspace\relax%
+    \advance\gre@dimen@glyphraisevalue by \gre@dimen@spacebeneathtext\relax%
+    \advance\gre@dimen@glyphraisevalue by \gre@dimen@spacelinestext\relax%
+    \advance\gre@dimen@glyphraisevalue by \gre@dimen@currenttranslationheight\relax%
+    \advance\gre@dimen@glyphraisevalue by 4\gre@dimen@interstafflinespace\relax%
+    \advance\gre@dimen@glyphraisevalue by 4\gre@dimen@stafflineheight\relax%
     \raise\gre@dimen@glyphraisevalue\hbox{\vrule height \gre@dimen@stafflineheight width \gre@dimen@temp@two}%
     \kern\gre@dimen@temp@five %
   \or % case of a line at the bottom
-    \gre@dimen@glyphraisevalue=\gre@dimen@additionalbottomspace %
-    \advance\gre@dimen@glyphraisevalue by \gre@dimen@spacebeneathtext %
-    \advance\gre@dimen@glyphraisevalue by \gre@dimen@currenttranslationheight %
-    \advance\gre@dimen@glyphraisevalue by \gre@dimen@spacelinestext %
-    \advance\gre@dimen@glyphraisevalue by -\gre@dimen@interstafflinespace %
-    \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflineheight %
+    \gre@dimen@glyphraisevalue=\gre@dimen@additionalbottomspace\relax%
+    \advance\gre@dimen@glyphraisevalue by \gre@dimen@spacebeneathtext\relax%
+    \advance\gre@dimen@glyphraisevalue by \gre@dimen@currenttranslationheight\relax%
+    \advance\gre@dimen@glyphraisevalue by \gre@dimen@spacelinestext\relax%
+    \advance\gre@dimen@glyphraisevalue by -\gre@dimen@interstafflinespace\relax%
+    \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflineheight\relax%
     \raise\gre@dimen@glyphraisevalue\hbox{\vrule height \gre@dimen@stafflineheight width \gre@dimen@temp@two}%
     \kern\gre@dimen@temp@five %
   \or %
@@ -1177,7 +1177,7 @@
       % convert rubber length to dimension... not perfect but works in the usual case
       \gre@dimen@temp@three = 1\gre@skip@temp@four\relax %
       \raise\gre@dimen@glyphraisevalue\hbox to 0pt{%
-        \loop\ifdim\gre@dimen@temp@three > 0pt%
+        \loop\ifdim\gre@dimen@temp@three > 0pt\relax%
           \advance\gre@dimen@temp@three by -\gre@dimen@temp@four\relax %
           {\gre@font@music\GreCPHEpisemusPunctumReduced}%
         \repeat %
@@ -1203,7 +1203,7 @@
     \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
       \endgre@style@additionalstafflines% keep this line
     \fi% DEPRECATED
-    \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise %
+    \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
   \fi %
   \relax %
 }%
@@ -1323,7 +1323,7 @@
       \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
       \gre@skip@temp@four = -\wd\gre@box@temp@width %
       \kern\gre@skip@temp@four%
-      \gre@skip@temp@four = -\gre@skip@spacebeforesigns%
+      \gre@skip@temp@four = -\gre@skip@spacebeforesigns\relax%
       \kern\gre@skip@temp@four %
     \fi %
   \fi %
@@ -1332,7 +1332,7 @@
   \GreNoBreak %
   \ifcase#1 % 0 : virgula
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundsmallbar%
+      \gre@skip@temp@four = \gre@skip@spacearoundsmallbar\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1340,12 +1340,12 @@
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPVirgula}%
     #3\relax %
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundsmallbar%
+      \gre@skip@temp@four = \gre@skip@spacearoundsmallbar\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 1 : minima
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundsmallbar%
+      \gre@skip@temp@four = \gre@skip@spacearoundsmallbar\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1353,12 +1353,12 @@
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMinima}%
     #3\relax %
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundsmallbar%
+      \gre@skip@temp@four = \gre@skip@spacearoundsmallbar\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 2 : minor
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1366,12 +1366,12 @@
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMinor}%
     #3\relax %
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 3 : maior
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundmaior%
+      \gre@skip@temp@four = \gre@skip@spacearoundmaior\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1379,12 +1379,12 @@
     \gre@fontchar@divisiomaior %
     #3\relax %
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundmaior%
+      \gre@skip@temp@four = \gre@skip@spacearoundmaior\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 4 : finalis
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundfinalis%
+      \gre@skip@temp@four = \gre@skip@spacearoundfinalis\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1392,12 +1392,12 @@
     #3\relax %
     \gre@fontchar@divisiofinalis%
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundfinalis%
+      \gre@skip@temp@four = \gre@skip@spacearoundfinalis\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 5 : finalis
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis%
+      \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1405,15 +1405,15 @@
     #3\relax %
     \gre@fontchar@divisiofinalis%
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundfinalis%
+      \gre@skip@temp@four = \gre@skip@spacearoundfinalis\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 6 : dominican bar 1
     \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}%
     % we need to adjust the height of the bar a little so that it is perfectly aligned with the bottom (or the top for some bars) of the staff line, which is not the case by default if \gre@stafflinefactor is not 10.
-    \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff %
+    \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1421,14 +1421,14 @@
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominican}%
     #3\relax %
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 7 : dominican bar 2
     \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}%
-    \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff %
+    \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1436,42 +1436,42 @@
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
     #3\relax %
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 8 : dominican bar 3
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff %
+    \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominican}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominican}%
     #3\relax %
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 9 : dominican bar 4
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff %
+    \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
     #3\relax %
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 10 : dominican bar 5
     \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}%
-    \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff %
+    \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1479,14 +1479,14 @@
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominican}%
     #3\relax %
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 11 : dominican bar 6
     \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}%
-    \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff %
+    \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1494,7 +1494,7 @@
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
     #3\relax %
     \ifnum#2=1\relax %
-      \gre@skip@temp@four = \gre@skip@spacearoundminor%
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \fi %
@@ -1511,10 +1511,10 @@
   \else %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMaior}%
     % we calculate the raise of the bar
-    \gre@dimen@temp@five=\gre@dimen@additionalbottomspace %
-    \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
-    \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
-    \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
+    \gre@dimen@temp@five=\gre@dimen@additionalbottomspace\relax%
+    \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext\relax%
+    \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext\relax%
+    \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight\relax%
     % we calculate the height of the bar
     \raise\gre@dimen@temp@five\hbox{\vrule height \gre@dimen@staffheight width \wd\gre@box@temp@width}%
   \fi %
@@ -1539,7 +1539,7 @@
   \gre@localrightbox{}%
   %\gre@localleftbox{}
   \GreNoBreak %
-  \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis%
+  \gre@skip@temp@four = \gre@skip@spacebeforefinalfinalis\relax%
   \gre@hskip\gre@skip@temp@four %
   \GreNoBreak %
   \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{}{}{0}{\GreLastOfLine}{%
@@ -1624,7 +1624,7 @@
   \hbox to 0pt{%
     {%
     \color{grebackgroundcolor}%
-    \raise \gre@dimen@glyphraisevalue %
+    \raise \gre@dimen@glyphraisevalue\relax%
     \copy\gre@box@temp@width %
     }%
     %\pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
@@ -1657,12 +1657,12 @@
   %\kern\gre@dimen@temp@three 
   %#3\relax 
   %\kern-\gre@dimen@temp@three 
-  \raise \gre@dimen@glyphraisevalue%
+  \raise \gre@dimen@glyphraisevalue\relax%
   \copy\gre@box@temp@width%
   \ifnum#4=0\relax %
     % we try to avoid line breaking after a flat or a natural
     \GreNoBreak %
-    \gre@skip@temp@four = \gre@skip@alterationspace%
+    \gre@skip@temp@four = \gre@skip@alterationspace\relax%
     \ifgre@firstglyph%
       \global\advance\gre@dimen@notesaligncenter by \wd\gre@box@temp@width %
       \global\advance\gre@dimen@notesaligncenter by \dimexpr\gre@skip@temp@four\relax %
@@ -1741,7 +1741,7 @@
 \def\gre@char@cavum#1#2#3#4#5#6#7#8{%
   \setbox\gre@box@temp@width=\hbox{#7}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
-  \gre@skip@temp@four = \gre@dimen@lastglyphwidth%
+  \gre@skip@temp@four = \gre@dimen@lastglyphwidth\relax%
   \kern\gre@skip@temp@four %
   #4\relax %
   \kern-\gre@skip@temp@four %
