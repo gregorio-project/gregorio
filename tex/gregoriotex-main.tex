@@ -598,7 +598,7 @@
 }%
 
 \def\grecommentary#1{%
-  \vbox{\hfill\hbox{#1}}%
+  \ifhmode\par\fi\vbox{\hfill\hbox{#1}}\par %
   \relax %
 }
 
@@ -1008,6 +1008,8 @@
 % #5 is if 1 if we have space above the staff
 % #6 is the point-and-click filename
 \def\GreBeginScore#1#2#3#4#5#6{%
+  % scores must be new paragraphs!
+  \ifhmode\par\fi %
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \xdef\gre@gabcname{#6}%
   \global\let\gre@save@englishcentering\gre@lyriccentering\relax % DEPRECATED
