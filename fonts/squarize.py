@@ -79,6 +79,8 @@ AMBITUS = {
     5: 'Five',
 }
 
+GREGORIO_VERSION = '4.0.0-beta2'
+
 # The unicode character at which we start our numbering:
 # U+E000 is the start of the BMP Private Use Area
 glyphnumber = 0xe000 - 1
@@ -105,9 +107,6 @@ Usage:
 def main():
     "Main function"
     global oldfont, newfont, font_name, subspecies
-    version_script_file = os.path.join(sys.path[0], '../VersionManager.py')
-    proc = subprocess.Popen([version_script_file, '-c'], stdout=subprocess.PIPE, universal_newlines=True)
-    version = proc.stdout.read().strip('\n')
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], "o:h", ["outfile","help"])
     except getopt.GetoptError:
@@ -139,7 +138,7 @@ def main():
     newfont.fontname = "%s" % font_name
     newfont.fullname = "%s" % font_name
     newfont.familyname = "%s" % font_name
-    newfont.version = version
+    newfont.version = GREGORIO_VERSION
     if font_base == "greciliae":
         newfont.copyright = """Greciliae font
 Copyright (C) 2007 Matthew Spencer with Reserved Font Name "Caeciliae",

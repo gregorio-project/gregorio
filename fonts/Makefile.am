@@ -29,10 +29,10 @@ EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py README.md
 FONTFORGE = fontforge
 RM = rm
 
-%.ttf: squarize.py %-base.sfd ../.gregorio-version
+%.ttf: squarize.py %-base.sfd
 	$(FONTFORGE) -script $< $*
 
-%-op.ttf: squarize.py %-base.sfd ../.gregorio-version
+%-op.ttf: squarize.py %-base.sfd
 	$(FONTFORGE) -script $< $* op
 
 %.ttf: convertsfdtottf.py %.sfd
