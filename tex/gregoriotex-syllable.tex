@@ -118,12 +118,12 @@
   \gre@dimen@temp@three=\wd\gre@box@temp@width %
   \global\gre@dimen@lastglyphwidth=\gre@dimen@temp@three %
   % the three next lines are a trick to get the additional lines below the glyphs
-  \gre@skip@temp@one = \gre@dimen@lastglyphwidth%
+  \gre@skip@temp@one = \gre@dimen@lastglyphwidth\relax%
   \kern\gre@skip@temp@one %
   #5\relax %
   \kern-\gre@skip@temp@one %
   \gre@calculate@glyphraisevalue{#2}{0}%
-  \raise\gre@dimen@glyphraisevalue %
+  \raise\gre@dimen@glyphraisevalue\relax%
   \copy\gre@box@temp@width%
   \ifgre@endofscore\else%
     \GreNextCustos{#3}%
@@ -224,12 +224,12 @@
     \gre@widthof{#1}%
     \divide\gre@dimen@temp@three by 2\relax %
     \gre@debugmsg{ifdim}{ temp@three > textaligncenter}%
-    \ifdim\gre@dimen@temp@three >\gre@dimen@textaligncenter %
+    \ifdim\gre@dimen@temp@three >\gre@dimen@textaligncenter\relax%
       \global\setbox\gre@box@temp@width=\hbox{#2}%
     \else%
       \ifcase\gre@lyriccentering% 0 == syllable centering
         \gre@debugmsg{ifdim}{ textaligncenter > clivisalignmentmin}%
-        \ifdim\gre@dimen@textaligncenter >\gre@dimen@clivisalignmentmin %
+        \ifdim\gre@dimen@textaligncenter >\gre@dimen@clivisalignmentmin\relax%
           \global\setbox\gre@box@temp@width=\hbox{#2}%
         \else%
           \global\setbox\gre@box@temp@width=\hbox{#1}%
@@ -241,7 +241,7 @@
           \gre@widthof{\gre@nextendsyllablepart}%
         \fi%
         \gre@debugmsg{ifdim}{ temp@three > clivisalignmentmin}%
-        \ifdim\gre@dimen@temp@three >\gre@dimen@clivisalignmentmin %
+        \ifdim\gre@dimen@temp@three >\gre@dimen@clivisalignmentmin\relax%
           \global\setbox\gre@box@temp@width=\hbox{#2}%
         \else%
           \global\setbox\gre@box@temp@width=\hbox{#1}%
@@ -541,8 +541,8 @@
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
   \gre@syllablenotes{#9}% we put the notes in a box, so that we have the width of it
   % now we calculate the begin difference, that is to say \gre@dimen@notesaligncenter - \gre@dimen@textaligncenter
-  \gre@dimen@begindifference=\gre@dimen@notesaligncenter %
-  \advance\gre@dimen@begindifference by -\gre@dimen@textaligncenter %
+  \gre@dimen@begindifference=\gre@dimen@notesaligncenter\relax%
+  \advance\gre@dimen@begindifference by -\gre@dimen@textaligncenter\relax%
   % Now, let's go for something I took years to figure out: we want to align
   % scores on the notes (see https://github.com/gregorio-project/gregorio/issues/221)
   % but it means we have to shift lines starting by text by \gre@dimen@bolshift
@@ -554,15 +554,22 @@
   % So, at beginning of lines, we will have shifted left, and in middle of lines
   % we will have shifted right and left, thus cancelling... Very easy trick, but
   % took me years to find it!
+  \gre@debugmsg{bolshift}{Current glyph: \the\gre@attr@glyph@id}%
   \ifgre@bolshiftsenabled%
-    \gre@compute@bolshift{\gre@dimen@begindifference}{1}%
-    \ifnum\gre@lastoflinecount=2\else %
-      \kern -\gre@dimen@bolshift %
-      \GreNoBreak %
-    \fi %
+    \gre@calculate@bolshift{\gre@dimen@begindifference}%
+    % we don't want to shift right on the first syllable of the score because the printing of the initial clef, initial, and/or the staff lines will have already broken TeX's ignorance of spaces.
+    \ifgre@beginningofscore%
+      \gre@beginningofscorefalse%
+    \else%
+      % we don't want to shift right inside a discretionary 
+      \ifnum\gre@insidediscretionary=0\relax%
+        \kern\gre@dimen@bolshift\relax%
+      \fi%
+    \fi%
+    \GreNoBreak %
     \hbox to 0pt{}%
     \GreNoBreak %
-    \kern\gre@dimen@bolshift %
+    \kern-\gre@dimen@bolshift\relax%
   \fi %
   % by default, gre@attr@dash will be 2
   \gre@attr@dash=2\relax %
@@ -578,23 +585,23 @@
       \gre@count@temp@one=1%
     \fi %
   \fi %
-  \gre@compute@syllablefinalskip{#4}{\gre@count@temp@one}%
+  \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
   \ifcase#4 %
     % we enter here if the end of word is 0, so we must determine if we need to type a dash here
-    \gre@skip@temp@one = \gre@skip@syllablefinalskip %
+    \gre@skip@temp@one = \gre@skip@syllablefinalskip\relax%
     \gre@debugmsg{ifdim}{ enddifference > 0pt}%
-    \ifdim\gre@dimen@enddifference >0pt%
-      \advance\gre@skip@temp@one by \gre@dimen@enddifference %
+    \ifdim\gre@dimen@enddifference >0pt\relax%
+      \advance\gre@skip@temp@one by \gre@dimen@enddifference\relax%
     \fi %
     \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
-    \ifdim\gre@skip@nextbegindifference >0pt%
-      \advance\gre@skip@temp@one by \gre@skip@nextbegindifference %
+    \ifdim\gre@skip@nextbegindifference >0pt\relax%
+      \advance\gre@skip@temp@one by \gre@skip@nextbegindifference\relax%
     \fi %
     %
     % then we compare it with \gre@dimen@maximumspacewithoutdash, if it is larger, we add a dash
     %
     \gre@debugmsg{ifdim}{ temp@skip@one > maximumspacewithoutdash}%
-    \ifdim\gre@skip@temp@one > \gre@dimen@maximumspacewithoutdash %
+    \ifdim\gre@skip@temp@one > \gre@dimen@maximumspacewithoutdash\relax%
       % if it's the last syllable of line, the hyphen will be \GreHyph
       \ifnum\gre@lastoflinecount=1\relax %
         \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
@@ -603,7 +610,7 @@
       \fi %
       % recomputing end difference and final skip with the final hyphen
       \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
-      \gre@compute@syllablefinalskip{0}{0}%
+      \gre@calculate@syllablefinalskip{0}{0}%
     \else %
       \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
@@ -612,12 +619,12 @@
   \fi% ficase#4
   % then we reuse temp, we assign to it the \gre@dimen@begindifference, but only if it is positive, else it is 0
   \gre@debugmsg{ifdim}{ begindifference > 0pt}%
-  \ifdim\gre@dimen@begindifference > 0 pt%
-    \gre@skip@temp@one = \gre@dimen@begindifference%
+  \ifdim\gre@dimen@begindifference > 0 pt\relax%
+    \gre@skip@temp@one = \gre@dimen@begindifference\relax%
     \kern\gre@skip@temp@one %
   \fi%
   #8\relax %
-  \raise\gre@dimen@textlower %
+  \raise\gre@dimen@textlower\relax%
   \copy\gre@box@syllabletext %
   \ifgre@mustdotranslationcenterend%
     % case of end of translation centering, we do it after the typesetting of the text
@@ -626,31 +633,22 @@
   \fi %
   \gre@skip@temp@one = -\wd\gre@box@syllabletext %
   \kern\gre@skip@temp@one%
-  \gre@skip@temp@one = -\gre@dimen@begindifference%
+  \gre@skip@temp@one = -\gre@dimen@begindifference\relax%
   \kern\gre@skip@temp@one %
   % here we need to unset \gre@attr@dash for the typesetting of notes
   \gre@attr@dash=0\relax %
-  \ifnum\gre@lastoflinecount=1\relax %
-    \gre@compute@eolshift{\gre@dimen@enddifference}%
-  \fi%
   \GreNoBreak % no line breaks between text and notes
   #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
+  \GreNoBreak % no line breaks between notes and end of syllable skips
   \gre@debugmsg{ifdim}{ enddifference < 0pt}%
-  \ifdim\gre@dimen@enddifference <0pt%
+  \ifdim\gre@dimen@enddifference <0pt\relax%
     %% important, else we are not really at the end of the syllable
-    \GreNoBreak %
-    \ifnum\gre@lastoflinecount=1\relax %
-      \kern\gre@skip@eolshift %
-    \else %
-      \gre@skip@temp@one = -\gre@dimen@enddifference%
-      \kern\gre@skip@temp@one %
-    \fi %
+    \kern -\gre@dimen@enddifference\relax%
     \GreNoBreak %
   \fi%
-  \global\gre@skip@eolshift=0pt%
   % we call end of syllable
   \gre@syllable@end{#7}{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}{#4}%
-  \global\gre@dimen@notesaligncenter=0pt% very important, see flat and natural
+  \global\gre@dimen@notesaligncenter=0pt\relax% very important, see flat and natural
   \gre@unsetfixedtextformat %
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \gre@localrightbox{}%
@@ -679,7 +677,7 @@
     \else %
       % otherwise we call it with 1 only if there is no letters after (we can see it with nextbegindifference)
       \setbox\gre@box@temp@width=\hbox{#2}%
-      \ifdim\wd\gre@box@temp@width=0pt%
+      \ifdim\wd\gre@box@temp@width=0pt\relax%
         \gre@endofsyllable{0}{1}{1}%
       \else %
         \gre@endofsyllable{1}{1}{1}%
@@ -701,6 +699,13 @@
 %%
 \def\gre@endofsyllable#1#2#3{%
   \gre@debugmsg{syllablespacing}{ endofsyllable with #2}%
+  \ifgre@eolshiftsenabled%
+    %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
+    \GreNoBreak%
+    \gre@calculate@eolshift{\gre@dimen@enddifference}%
+    \gre@debugmsg{eolshift}{End of line shift: \the\gre@dimen@eolshift}%
+    \kern -\gre@dimen@eolshift\relax%
+  \fi%
   \ifnum#3=1\relax %
     \GreNoBreak %
     \gre@debugmsg{syllablespacing}{ set penalty \grenobreakpenalty}%
@@ -713,8 +718,13 @@
       \gre@debugmsg{syllablespacing}{ set penalty \greendofsyllablepenalty}%
     \fi %
   \fi %
+  \ifgre@eolshiftsenabled%
+    %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
+    \kern \gre@dimen@eolshift\relax%
+    \GreNoBreak%
+  \fi%
   \ifnum#1=1\relax %
-    \gre@hskip\gre@skip@syllablefinalskip %
+    \gre@hskip\gre@skip@syllablefinalskip\relax%
     \ifnum#3=1\relax %
       \GreNoBreak %
     \fi %
@@ -737,8 +747,8 @@
   \gre@debugmsg{spacing}{Width of bar line: \the\wd\gre@box@syllablenotes}%
   \gre@dimen@notesaligncenter=\wd\gre@box@syllablenotes%
   \divide\gre@dimen@notesaligncenter by 2\relax %
-  \gre@dimen@begindifference=\gre@dimen@notesaligncenter %
-  \advance\gre@dimen@begindifference by -\gre@dimen@textaligncenter %
+  \gre@dimen@begindifference=\gre@dimen@notesaligncenter\relax%
+  \advance\gre@dimen@begindifference by -\gre@dimen@textaligncenter\relax%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   #5%
   \gre@calculate@nextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
@@ -750,22 +760,22 @@
     % first we need to determine the real space that there will be between the notes. Here again it is not so simple... let's consider these two kinds of spaces : 
     %% 1/ the minimal space between a note and the bar + the width of the bar + the minimal space between the bar and the note (that's the global idea, in fact there are nuances) : we assign skip@temp@three to it
     %% 2/ enddifference + begindifference + space between notes and word : we assign skip@temp@two to it
-    \gre@skip@temp@three=\gre@skip@notebarspace %
-    \advance\gre@skip@temp@three by \gre@skip@notebarspace %
+    \gre@skip@temp@three=\gre@skip@notebarspace\relax%
+    \advance\gre@skip@temp@three by \gre@skip@notebarspace\relax%
     \advance\gre@skip@temp@three by \wd\gre@box@syllablenotes %
     % now let's get skip@temp@two
     \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
-    \ifdim\gre@skip@nextbegindifference < 0 pt%
-      \gre@skip@temp@two=-\gre@skip@nextbegindifference %
+    \ifdim\gre@skip@nextbegindifference < 0 pt\relax%
+      \gre@skip@temp@two=-\gre@skip@nextbegindifference\relax%
     \else %
-      \gre@skip@temp@two=0 pt%
+      \gre@skip@temp@two=0 pt\relax%
     \fi %
     \gre@debugmsg{ifdim}{ previousenddifference < 0pt}%
-    \ifdim\gre@dimen@previousenddifference < 0 pt%
-      \advance\gre@skip@temp@two by -\gre@dimen@previousenddifference %
-      \advance\gre@skip@temp@two by \gre@skip@interwordspacetext %
+    \ifdim\gre@dimen@previousenddifference < 0 pt\relax%
+      \advance\gre@skip@temp@two by -\gre@dimen@previousenddifference\relax%
+      \advance\gre@skip@temp@two by \gre@skip@interwordspacetext\relax%
     \else %
-      \advance\gre@skip@temp@two by \gre@skip@interwordspacenotes %
+      \advance\gre@skip@temp@two by \gre@skip@interwordspacenotes\relax%
     \fi%
     % we take the max of it, then we divide it by two and we substract half of the width of the bar
     \gre@debugmsg{ifdim}{ temp@skip@three < temp@skip@two}%
@@ -779,8 +789,8 @@
     % now we have our skipone
     \gre@skip@temp@two=\gre@skip@temp@three %
     \gre@debugmsg{ifdim}{ previousenddifference < 0pt}%
-    \ifdim\gre@dimen@previousenddifference < 0 pt%
-      \advance\gre@skip@temp@two by \gre@dimen@previousenddifference %
+    \ifdim\gre@dimen@previousenddifference < 0 pt\relax%
+      \advance\gre@skip@temp@two by \gre@dimen@previousenddifference\relax%
     \fi %
     \GreNoBreak %
     \gre@debugmsg{ifdim}{ temp@skip@two > -wd(gre@box@syllablenotes)}%
@@ -806,18 +816,18 @@
       \gre@debugmsg{ifdim}{ temp@skip@two < -wd(gre@box@syllablenotes)}%
       \ifdim\gre@skip@temp@two < -\wd\gre@box@syllablenotes %
         \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
-        \ifdim\gre@skip@nextbegindifference > 0 pt%
-          \gre@skip@temp@one = \gre@skip@interwordspacetext %
+        \ifdim\gre@skip@nextbegindifference > 0 pt\relax%
+          \gre@skip@temp@one = \gre@skip@interwordspacetext\relax%
           \gre@hskip\gre@skip@temp@one %
         \else % \ifdim\gre@skip@nextbegindifference > 0 pt
-          \gre@skip@temp@one = \gre@skip@interwordspacetext %
+          \gre@skip@temp@one = \gre@skip@interwordspacetext\relax%
           \gre@hskip\gre@skip@temp@one %
         \fi %
       \else %
         \gre@skip@temp@two=\gre@skip@temp@three %
         \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
-        \ifdim\gre@skip@nextbegindifference < 0 pt%
-          \advance\gre@skip@temp@two by \gre@skip@nextbegindifference %
+        \ifdim\gre@skip@nextbegindifference < 0 pt\relax%
+          \advance\gre@skip@temp@two by \gre@skip@nextbegindifference\relax%
         \fi %
         \gre@debugmsg{ifdim}{ temp@skip@two > -wd(gre@box@syllablenotes)}%
         \ifdim\gre@skip@temp@two > -\wd\gre@box@syllablenotes %
@@ -839,13 +849,13 @@
     \fi %
     \gre@skip@temp@one = -\wd\gre@box@syllabletext %
     \kern\gre@skip@temp@one %
-    \gre@skip@temp@one = -\gre@dimen@begindifference %
+    \gre@skip@temp@one = -\gre@dimen@begindifference\relax%
     \kern\gre@skip@temp@one %
     #9%
     \gre@debugmsg{ifdim}{ enddifference < 0pt}%
-    \ifdim\gre@dimen@enddifference <0pt%
+    \ifdim\gre@dimen@enddifference <0pt\relax%
       %% important, else we are not really at the end of the syllable
-      \gre@skip@temp@one = -\gre@dimen@enddifference %
+      \gre@skip@temp@one = -\gre@dimen@enddifference\relax%
       \kern\gre@skip@temp@one %
     \fi%
     % end of same code as syllable
@@ -853,7 +863,7 @@
       \global\gre@lastoflinecount=2\relax %
       \gre@endafterbar{0}%
     \else %
-      %\global\gre@lastoflinecount=0\relax 
+      \global\gre@lastoflinecount=0\relax %
       \gre@endafterbar{1}%
     \fi %
     %and that's it !!

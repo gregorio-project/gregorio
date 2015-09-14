@@ -230,6 +230,17 @@
     \fi %
     \global\advance\gre@knownline by 1\relax %
     \global\gre@lastoflinecount=2\relax %
+    % we have to repeat the end of syllable shifts here because the manual line breaks will occur before we get to the regular shifting code in \GreSyllable
+    \ifdim\gre@dimen@enddifference <0pt\relax%
+      %% important, else we are not really at the end of the syllable
+      \kern -\gre@dimen@enddifference\relax%
+    \fi%
+    \ifgre@eolshiftsenabled%
+      \GreNoBreak% we want to make sure this shift doesn't get separated from the previous one if both occur
+      \gre@calculate@eolshift{\gre@dimen@enddifference}%
+      \gre@debugmsg{eolshift}{Manual end of line shift: \the\gre@dimen@eolshift}%
+      \kern -\gre@dimen@eolshift\relax%
+    \fi%
     \ifnum\gre@insidediscretionary=0\relax %
       \gre@updateleftbox %
     \fi %
@@ -286,14 +297,14 @@
 
 % macro to call before the first syllable, but after setinitialclef
 \def\GreAdjustSecondLine{%
-  \gre@dimen@additionalleftspace=\gre@dimen@initialwidth %
+  \gre@dimen@additionalleftspace=\gre@dimen@initialwidth\relax%
   \gre@updateleftbox %
   \relax %
 }%
 
 % macro to call during the second line
 \def\GreAdjustThirdLine{%
-  \gre@dimen@additionalleftspace= 0 pt%
+  \gre@dimen@additionalleftspace= 0 pt\relax%
   \gre@updateleftbox %
   \relax %
 }%
@@ -305,10 +316,10 @@
 
 \def\gre@updatelinewidth{%
   \gre@debugmsg{ifdim}{ additionalleftspace = 0pt}%
-  \ifdim\gre@dimen@additionalleftspace=0pt%
+  \ifdim\gre@dimen@additionalleftspace=0pt\relax%
   \else %
-    \gre@dimen@temp@five=\gre@dimen@stafflinewidth %
-    \global\advance\gre@dimen@stafflinewidth by -\gre@dimen@additionalleftspace %
+    \gre@dimen@temp@five=\gre@dimen@stafflinewidth\relax%
+    \global\advance\gre@dimen@stafflinewidth by -\gre@dimen@additionalleftspace\relax%
     \gre@generatelines %
     \global\gre@dimen@stafflinewidth=\gre@dimen@temp@five %
   \fi %
@@ -324,7 +335,7 @@
   \gre@calculate@annotationtrueraise %
   % we print the initial always at the same place, and then we print the gre@box@annotation, centered
   % first we print the initial
-  \gre@dimen@temp@five = \gre@dimen@textlower %
+  \gre@dimen@temp@five = \gre@dimen@textlower\relax%
   \advance\gre@dimen@temp@five by \gre@dimen@initialraise\relax%
   % if it is a big initial we print it on the second line
   \ifnum\gre@biginitial=0\relax %
@@ -343,7 +354,7 @@
     \else%
       \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
         \gre@style@initial% keep this line
-        \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth% keep this line
+        \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth\relax% keep this line
         \endgre@style@initial% keep this line
       \else%  DEPRECATED
         \gre@deprecated{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  DEPRECATED
@@ -359,21 +370,21 @@
     \gre@debugmsg{annotation}{Initial set.}%
     \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
       \gre@style@initial% keep this line
-      \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift% keep this line
+      \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift\relax% keep this line
       \endgre@style@initial% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  DEPRECATED
       \greinitialformat{\global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift}%  DEPRECATED
     \fi%  DEPRECATED
   \else %
-    \advance\gre@dimen@temp@five by -\gre@dimen@additionalbottomspace %
-    \advance\gre@dimen@temp@five by -\gre@dimen@spacebeneathtext %
-    \advance\gre@dimen@temp@five by -\gre@dimen@spacelinestext %
-    \advance\gre@dimen@temp@five by -4\gre@dimen@interstafflinespace %
-    \advance\gre@dimen@temp@five by -4\gre@dimen@stafflineheight %
-    \advance\gre@dimen@temp@five by -\gre@dimen@currenttranslationheight %
+    \advance\gre@dimen@temp@five by -\gre@dimen@additionalbottomspace\relax%
+    \advance\gre@dimen@temp@five by -\gre@dimen@spacebeneathtext\relax%
+    \advance\gre@dimen@temp@five by -\gre@dimen@spacelinestext\relax%
+    \advance\gre@dimen@temp@five by -4\gre@dimen@interstafflinespace\relax%
+    \advance\gre@dimen@temp@five by -4\gre@dimen@stafflineheight\relax%
+    \advance\gre@dimen@temp@five by -\gre@dimen@currenttranslationheight\relax%
     \advance\gre@dimen@temp@five by -\f@size pt%
-    \advance\gre@dimen@temp@five by \gre@dimen@initialraise%
+    \advance\gre@dimen@temp@five by \gre@dimen@initialraise\relax%
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
       \ifvoid\gre@box@initial% keep this line
         \gre@debugmsg{initial}{fill big initial box}% keep this line
@@ -389,7 +400,7 @@
     \else%
       \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
         \gre@style@biginitial% keep this line
-        \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth% keep this line
+        \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth\relax% keep this line
         \endgre@style@biginitial% keep this line
       \else%  DEPRECATED
         \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
@@ -403,7 +414,7 @@
     \setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
       \gre@style@biginitial% keep this line
-      \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift% keep this line
+      \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift\relax% keep this line
       \endgre@style@biginitial% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
@@ -417,7 +428,7 @@
   \ifnum\gre@biginitial=0\relax%
     \ifx\gre@empty@initialformat\greinitialformat% DEPRECATED
       \gre@style@initial% keep this line
-      \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift% keep this line
+      \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift\relax% keep this line
       \endgre@style@initial% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  DEPRECATED
@@ -426,7 +437,7 @@
   \else%
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
       \gre@style@biginitial% keep this line
-      \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift% keep this line
+      \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift\relax% keep this line
       \endgre@style@biginitial% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
@@ -441,10 +452,10 @@
     \gre@debugmsg{annotation}{There is no annotation.}%
   \else %
     \gre@debugmsg{annotation}{Calculate horizontal position.}%
-    \gre@dimen@temp@five=\gre@dimen@initialwidth %
+    \gre@dimen@temp@five=\gre@dimen@initialwidth\relax%
     \advance\gre@dimen@temp@five by -\wd\gre@box@annotation%
     \divide\gre@dimen@temp@five by 2 %
-    \gre@skip@temp@four = -\gre@dimen@initialwidth%
+    \gre@skip@temp@four = -\gre@dimen@initialwidth\relax%
     \hskip\gre@skip@temp@four %
     \kern\gre@dimen@temp@five %
     \gre@debugmsg{annotation}{And place the annotation.}%
@@ -457,8 +468,7 @@
 
 \def\GreNoInitial{%
   \setbox\gre@box@initial=\box\voidb@x%
-  \global\gre@dimen@initialwidth=0pt %
-  \global\gre@lastoflinecount=2\relax %
+  \global\gre@dimen@initialwidth=0pt\relax%
   \relax %
 }%
 
@@ -621,13 +631,13 @@
 \def\gre@addspaceabove{%
   \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% DEPRECATED
     \gre@style@abovelinestext% keep this line
-    \global\gre@dimen@currentabovelinestextheight=\gre@dimen@abovelinestextheight % keep this line
+    \global\gre@dimen@currentabovelinestextheight=\gre@dimen@abovelinestextheight\relax% keep this line
     \gre@generatelines % keep this line
     \endgre@style@abovelinestext% keep this line
   \else%  DEPRECATED
     \gre@deprecated{\protect\greabovelinestextstyle}{\protect\grechangestyle{abovelinestext}}%  DEPRECATED
     \greabovelinestextstyle{% DEPRECATED
-      \global\gre@dimen@currentabovelinestextheight=\gre@dimen@abovelinestextheight % DEPRECATED
+      \global\gre@dimen@currentabovelinestextheight=\gre@dimen@abovelinestextheight\relax% DEPRECATED
       \gre@generatelines % DEPRECATED
     }% DEPRECATED
   \fi%  DEPRECATED
@@ -670,12 +680,12 @@
     }% DEPRECATED
   \fi%  DEPRECATED
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
-  \advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight %
-  \advance\gre@dimen@temp@five by 4\gre@dimen@interstafflinespace %
-  \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext %
-  \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight %
-  \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext %
-  \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace %
+  \advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight\relax%
+  \advance\gre@dimen@temp@five by 4\gre@dimen@interstafflinespace\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext\relax%
+  \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace\relax%
   \gre@mark@abovelinestext %
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
   \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% DEPRECATED
@@ -716,7 +726,7 @@
 
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
 \def\gre@drawfirstlines{%
-  \advance\gre@dimen@stafflinewidth by -\gre@dimen@initialwidth%
+  \advance\gre@dimen@stafflinewidth by -\gre@dimen@initialwidth\relax%
   %\advance\gre@dimen@stafflinewidth by -\gre@dimen@minimalspaceatlinebeginning
   %\gre@dimen@initialwidth=0pt
   \hbox to 0pt{%
@@ -727,45 +737,45 @@
         \gre@deprecated{\protect\grenormalstafflinesformat}{\protect\grechangestyle{normalstafflines}}%  DEPRECATED
         \grenormalstafflinesformat % DEPRECATED
       \fi%  DEPRECATED
-      \vskip\gre@dimen@currentabovelinestextheight %
-      \vskip\gre@dimen@additionaltopspace %
+      \vskip\gre@dimen@currentabovelinestextheight\relax%
+      \vskip\gre@dimen@additionaltopspace\relax%
       \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
+        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
       \else %
-        \vskip\gre@dimen@stafflineheight %
+        \vskip\gre@dimen@stafflineheight\relax%
       \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace%
+      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
       \kern\gre@skip@temp@four %
       \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
+        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
       \else %
-        \vskip\gre@dimen@stafflineheight %
+        \vskip\gre@dimen@stafflineheight\relax%
       \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace%
+      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
       \kern\gre@skip@temp@four %
       \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
+        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
       \else %
-        \vskip\gre@dimen@stafflineheight %
+        \vskip\gre@dimen@stafflineheight\relax%
       \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace%
+      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
       \kern\gre@skip@temp@four %
       \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
+        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
       \else %
-        \vskip\gre@dimen@stafflineheight %
+        \vskip\gre@dimen@stafflineheight\relax%
       \fi %
-      \vskip\gre@dimen@spacelinestext %
-      \vskip\gre@dimen@spacebeneathtext %
-      \vskip\gre@dimen@currenttranslationheight %
-      \vskip\gre@dimen@additionalbottomspace %
+      \vskip\gre@dimen@spacelinestext\relax%
+      \vskip\gre@dimen@spacebeneathtext\relax%
+      \vskip\gre@dimen@currenttranslationheight\relax%
+      \vskip\gre@dimen@additionalbottomspace\relax%
       \ifx\gre@empty@normalstafflinesformat\grenormalstafflinesformat% DEPRECATED
         \endgre@style@normalstafflines% keep this line
       \fi% DEPRECATED
     }%
     \hss%
   }%
-  \gre@dimen@stafflinewidth=\gre@dimen@linewidth%
+  \gre@dimen@stafflinewidth=\gre@dimen@linewidth\relax%
   \relax%
 }%
 
@@ -782,38 +792,38 @@
         \gre@deprecated{\protect\grenormalstafflinesformat}{\protect\grechangestyle{normalstafflines}}%  DEPRECATED
         \grenormalstafflinesformat % DEPRECATED
       \fi%  DEPRECATED
-      \vskip\gre@skip@spaceabovelines %
-      \vskip\gre@dimen@currentabovelinestextheight %
+      \vskip\gre@skip@spaceabovelines\relax%
+      \vskip\gre@dimen@currentabovelinestextheight\relax%
       \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
+        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
       \else %
-        \vskip\gre@dimen@stafflineheight %
+        \vskip\gre@dimen@stafflineheight\relax%
       \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace%
+      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
       \kern\gre@skip@temp@four %
       \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
+        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
       \else %
-        \vskip\gre@dimen@stafflineheight %
+        \vskip\gre@dimen@stafflineheight\relax%
       \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace%
+      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
       \kern\gre@skip@temp@four %
       \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
+        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
       \else %
-        \vskip\gre@dimen@stafflineheight %
+        \vskip\gre@dimen@stafflineheight\relax%
       \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace%
+      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
       \kern\gre@skip@temp@four %
       \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth %
+        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
       \else %
-        \vskip\gre@dimen@stafflineheight %
+        \vskip\gre@dimen@stafflineheight\relax%
       \fi %
-      \vskip\gre@dimen@spacelinestext %
-      \vskip\gre@dimen@additionalbottomspace %
-      \vskip\gre@dimen@spacebeneathtext %
-      \vskip\gre@dimen@currenttranslationheight %
+      \vskip\gre@dimen@spacelinestext\relax%
+      \vskip\gre@dimen@additionalbottomspace\relax%
+      \vskip\gre@dimen@spacebeneathtext\relax%
+      \vskip\gre@dimen@currenttranslationheight\relax%
       \ifx\gre@empty@normalstafflinesformat\grenormalstafflinesformat% DEPRECATED
         \endgre@style@normalstafflines % keep this line
       \fi% DEPRECATED
@@ -825,7 +835,7 @@
 
 % macro called when we are after the second line of a big initial, to have normal lines back
 \def\grenormallines{%
-  \global\gre@dimen@stafflinewidth=\gre@dimen@linewidth %
+  \global\gre@dimen@stafflinewidth=\gre@dimen@linewidth\relax%
   \gre@generatelines %
   \relax %
 }%
@@ -1000,6 +1010,8 @@
 
 % gre@attr@dash (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
+\newif\ifgre@beginningofscore%
+
 %macro called at the beginning of a score
 % #1 is the gabc score id
 % #2 is the high height
@@ -1010,6 +1022,7 @@
 \def\GreBeginScore#1#2#3#4#5#6{%
   % scores must be new paragraphs!
   \ifhmode\par\fi %
+  \gre@beginningofscoretrue%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \xdef\gre@gabcname{#6}%
   \global\let\gre@save@englishcentering\gre@lyriccentering\relax % DEPRECATED
@@ -1039,6 +1052,7 @@
     \optgabcAtScoreBeginning %
   \fi %
   \global\gre@knownline=1\relax %
+  \global\gre@lastoflinecount=2\relax %
   \relax%
 }%
 
@@ -1069,15 +1083,15 @@
   \gre@restorepenalties %
   \gre@endfinetuning %
   \exhyphenchar=\gre@exhyphencharsave %
-  \gre@dimen@temp@one=0pt%
-  \gre@dimen@temp@two=0pt%
-  \gre@dimen@temp@three=0pt%
-  \gre@dimen@temp@four=0pt%
-  \gre@dimen@temp@five=0pt%
-  \gre@skip@temp@one=0pt%
-  \gre@skip@temp@two=0pt%
-  \gre@skip@temp@three=0pt%
-  \gre@skip@temp@four=0pt%
+  \gre@dimen@temp@one=0pt\relax%
+  \gre@dimen@temp@two=0pt\relax%
+  \gre@dimen@temp@three=0pt\relax%
+  \gre@dimen@temp@four=0pt\relax%
+  \gre@dimen@temp@five=0pt\relax%
+  \gre@skip@temp@one=0pt\relax%
+  \gre@skip@temp@two=0pt\relax%
+  \gre@skip@temp@three=0pt\relax%
+  \gre@skip@temp@four=0pt\relax%
   \setbox\gre@box@annotation=\box\voidb@x%
   \directlua{gregoriotex.atScoreEnd()}%
   \unsetluatexattribute{\gre@attr@glyph@id}%
@@ -1097,22 +1111,22 @@
   \gre@penalty{\greendafterbarpenalty }\relax %
   \ifnum#1=1\relax %
     \gre@debugmsg{ifdim}{ enddifference > 0pt}%
-    \ifdim\gre@dimen@enddifference > 0 pt %
+    \ifdim\gre@dimen@enddifference > 0 pt\relax%
       \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
-      \ifdim\gre@skip@nextbegindifference > 0 pt %
-        \gre@skip@temp@four = \gre@skip@notebarspace%
+      \ifdim\gre@skip@nextbegindifference > 0 pt\relax%
+        \gre@skip@temp@four = \gre@skip@notebarspace\relax%
         \gre@hskip\gre@skip@temp@four %
       \else % (next begin difference >0pt)
-        \gre@skip@temp@four = \gre@skip@textbartextspace%
+        \gre@skip@temp@four = \gre@skip@textbartextspace\relax%
         \gre@hskip\gre@skip@temp@four %
       \fi %
     \else%(enddifference < 0pt)
       \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
-      \ifdim\gre@skip@nextbegindifference < 0 pt %
-        \gre@skip@temp@four = \gre@skip@textbartextspace%
+      \ifdim\gre@skip@nextbegindifference < 0 pt\relax%
+        \gre@skip@temp@four = \gre@skip@textbartextspace\relax%
         \gre@hskip\gre@skip@temp@four %
       \else %(next begin difference < 0 pt)
-        \gre@skip@temp@four = \gre@skip@interwordspacetext%
+        \gre@skip@temp@four = \gre@skip@interwordspacetext\relax%
         \gre@hskip\gre@skip@temp@four %
       \fi %
     \fi %
@@ -1131,6 +1145,7 @@
 % 2 after it has finished the syllable, so when it is two it means that the syllable is the first of a line
 \def\GreLastOfLine{%
   \global\gre@lastoflinecount=1\relax%
+  \gre@debugmsg{eolshift}{set lastoflinecount to 1}%
   \relax%
 }%
 
@@ -1158,7 +1173,8 @@
     }%
 }%
 
-% a flag to disable (or reenable) the left shift for last syllables of lines
+% a flag to disable (or reenable) the shift for last syllables of lines
+% when the shifts are enabled lyrics cannot extend under (or past) the custos at the end of a line
 \newif\ifgre@eolshiftsenabled%
 % default state is for them to be enabled
 \gre@eolshiftsenabledtrue
@@ -1217,13 +1233,13 @@
     \GreNoBreak %
   \fi %
   \ifcase#1%
-    \gre@skip@temp@four = \gre@skip@interelementspace%
+    \gre@skip@temp@four = \gre@skip@interelementspace\relax%
     \gre@hskip\gre@skip@temp@four %
   \or% case 1
-    \gre@skip@temp@four = \gre@skip@largerspace%
+    \gre@skip@temp@four = \gre@skip@largerspace\relax%
     \gre@hskip\gre@skip@temp@four %
   \or% case 2
-    \gre@skip@temp@four = \gre@skip@glyphspace%
+    \gre@skip@temp@four = \gre@skip@glyphspace\relax%
     \gre@hskip\gre@skip@temp@four %
   \fi%
   \ifnum #2=1\relax %
@@ -1249,29 +1265,29 @@
 %% 11: space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more)
 \def\gre@get@spaceskip#1{%
   \ifcase#1%
-    \gre@skip@temp@four = \gre@skip@interglyphspace%
+    \gre@skip@temp@four = \gre@skip@interglyphspace\relax%
   \or% case 1
-    \gre@skip@temp@four = \gre@dimen@zerowidthspace%
+    \gre@skip@temp@four = \gre@dimen@zerowidthspace\relax%
   \or% case 2
-    \gre@skip@temp@four = \gre@skip@alterationspace%
+    \gre@skip@temp@four = \gre@skip@alterationspace\relax%
   \or% case 3
-    \gre@skip@temp@four = \gre@skip@punctuminclinatumshift%
+    \gre@skip@temp@four = \gre@skip@punctuminclinatumshift\relax%
   \or% case 4
-    \gre@skip@temp@four = \gre@skip@bitrivirspace%
+    \gre@skip@temp@four = \gre@skip@bitrivirspace\relax%
   \or% case 5
-    \gre@skip@temp@four = \gre@skip@bitristrospace%
+    \gre@skip@temp@four = \gre@skip@bitristrospace\relax%
   \or% case 6
-    \gre@skip@temp@four = \gre@skip@spaceaftersigns%
+    \gre@skip@temp@four = \gre@skip@spaceaftersigns\relax%
   \or% case 7
-    \gre@skip@temp@four = \gre@skip@punctuminclinatumanddebilisshift%
+    \gre@skip@temp@four = \gre@skip@punctuminclinatumanddebilisshift\relax%
   \or% case 8
-    \gre@skip@temp@four = \gre@skip@punctuminclinatumdebilisshift%
+    \gre@skip@temp@four = \gre@skip@punctuminclinatumdebilisshift\relax%
   \or% case 9
-    \gre@skip@temp@four = \gre@skip@beforepunctainclinatashift%
+    \gre@skip@temp@four = \gre@skip@beforepunctainclinatashift\relax%
   \or% case 10
-    \gre@skip@temp@four = \gre@skip@punctuminclinatumbigshift%
+    \gre@skip@temp@four = \gre@skip@punctuminclinatumbigshift\relax%
   \or% case 11
-    \gre@skip@temp@four = \gre@skip@punctuminclinatummaxshift%
+    \gre@skip@temp@four = \gre@skip@punctuminclinatummaxshift\relax%
   \fi%
 }%
 
