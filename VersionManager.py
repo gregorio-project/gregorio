@@ -55,6 +55,7 @@ GREGORIO_FILES = ["configure.ac",
                   "tex/gregoriotex-symbols.tex",
                   "tex/gregoriotex-syllable.tex",
                   "tex/gregoriotex-main.tex",
+                  "fonts/squarize.py",
                  ]
 
 def get_parser():
