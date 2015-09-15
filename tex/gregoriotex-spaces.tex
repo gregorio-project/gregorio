@@ -805,10 +805,10 @@
     \fi%
   \fi%
   \IfStrEq{#3}{1}%	
-    {\gre@warning{A numerical (1) last argument for \protect\grecreatedim}{'scaling'}%
+    {\gre@deprecated{A numerical (1) last argument for \protect\grecreatedim}{'scaling'}%
     \expandafter\xdef\csname gre@scale@#1\endcsname{#3}}%
     {\IfStrEq{#3}{0}%
-      {\gre@warning{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}%
+      {\gre@deprecated{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}%
       \expandafter\xdef\csname gre@scale@#1\endcsname{#3}}%
       {\IfStrEq{#3}{scaling}%
         {\expandafter\xdef\csname gre@scale@#1\endcsname{1}}%
@@ -841,7 +841,7 @@
   \ifcsname gre@\gre@prefix @#1\endcsname%
     \gre@debugmsg{spacing}{It does exist.}%
     \IfStrEq{#3}{1}%
-      {\gre@warning{A numerical (1) last argument for \protect\grechangedim}{'scaling'}%
+      {\gre@deprecated{A numerical (1) last argument for \protect\grechangedim}{'scaling'}%
       \grecreatedim{#1}{#2}{scaling}}%
       {\IfStrEq{#3}{0}%
         {\gre@deprecated{A numerical (0) last argument for \protect\grechangedim}{'fixed'}%
