@@ -1041,7 +1041,7 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
             for (current_style = first_style; current_style
                     && current_style->style != current_character->cos.s.style;
                     current_style = current_style->next_style) {
-                // just loop
+                /* just loop */
             }
             if (current_style) {
                 suppress_char_and_end_c();
@@ -1110,7 +1110,7 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
                         && current_style->next_style->style !=
                         current_character->cos.s.style;
                         current_style = current_style->next_style) {
-                    // just loop
+                    /* just loop */
                 }
                 if (current_style->next_style) {
                     for (current_style = first_style; current_style;
