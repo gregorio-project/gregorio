@@ -804,7 +804,20 @@
       \def\gre@prefix{dimen}%
     \fi%
   \fi%
-  \expandafter\xdef\csname gre@scale@#1\endcsname{#3}%
+  \IfStrEq{#3}{1}%	
+    {\gre@warning{Numerical arguments for \protect\grecreatedim\space are deprecated.\MessageBreak Use 'scaling' instead.}%
+    \expandafter\xdef\csname gre@scale@#1\endcsname{#3}}%
+    {\IfStrEq{#3}{0}%
+      {\gre@warning{Numerical arguments for \protect\grecreatedim\space are deprecated.\MessageBreak Use 'fixed' instead.}%
+    \expandafter\xdef\csname gre@scale@#1\endcsname{#3}}%
+      {\IfStrEq{#3}{scaling}%
+        {\expandafter\xdef\csname gre@scale@#1\endcsname{1}}%
+        {\IfStrEq{#3}{fixed}%
+          {\expandafter\xdef\csname gre@scale@#1\endcsname{0}}%
+          {\gre@error{Unrecognized option for \protect\grecreatedim}}%
+        }%
+      }%
+    }%
   \expandafter\xdef\csname gre@\gre@prefix @#1\endcsname{#2}%
   \relax %
 }%

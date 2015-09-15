@@ -158,6 +158,10 @@ Within a TeX document, you can switch back to MetaPost brace rendering by using:
 
 You can freely switch between the two behaviors within a TeX document.
 
+#### Keyword argument for `\grecreatedim` and `\grechangedim`
+
+In order to better match the new command naming conventions, the third argument of `\grecreatedim` and `\grechangedim` should now be `scaling` or `fixed` instead of `1` or `0`, respectively.
+
 ## 3.0
 ### TeX Live 2013
 

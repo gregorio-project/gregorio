@@ -225,8 +225,8 @@ Macro to create one of Gregorio\TeX’s distances.  Used to initialize distances
 \begin{argtable}
   \#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
   \#2 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that Gregorio\TeX\ handles spaces.\\
-  \#3 & 0 & Distance will not scale when staff size is changed.\\
-  & 1 & Distance will scale when staff size is changed.
+  \#3 & fixed & Distance will not scale when staff size is changed.\\
+  & scaling & Distance will scale when staff size is changed.
 \end{argtable}
 
 \macroname{\textbackslash grechangedim}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-spaces.tex}
@@ -235,8 +235,8 @@ Macro to change one of Gregorio\TeX’s distances.  This function will check to 
 \begin{argtable}
   \#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
   \#2 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that Gregorio\TeX\ handles spaces.\\
-  \#3 & 0 & Distance will not scale when staff size is changed.\\
-  & 1 & Distance will scale when staff size is changed.
+  \#3 & fixed & Distance will not scale when staff size is changed.\\
+  & scaling & Distance will scale when staff size is changed.
 \end{argtable}
 
 \macroname{\textbackslash grescaledim}{\{\#1\}\{\#2\}}{gregoriotex-spaces.tex}

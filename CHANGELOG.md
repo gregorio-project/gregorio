@@ -6,6 +6,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Fixed
 - Deactivating the end of line shifts now prevents lyrics from stretching under the custos at the end of the line.
 
+### Changed
+- `\grecreatedim` and `\grechangedim` now take keywords for their third argument (`scaling` and `fixed`( instead of integers (`1` and `0`) to make the more in keeping with the overall user command conventions.
+
 ### Added
 - New distance, `initialraise`, which will lift (or lower, if negative) the initial.
 - The first word of the score is now passed to a macro that allow it to be styled from TeX.  The first word is passed to `\GreFirstWord#1` and is styled by changing the `firstword` style.
