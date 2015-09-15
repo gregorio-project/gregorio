@@ -805,11 +805,11 @@
     \fi%
   \fi%
   \IfStrEq{#3}{1}%	
-    {\gre@warning{Numerical arguments for \protect\grecreatedim\space are deprecated.\MessageBreak Use 'scaling' instead.}%
+    {\gre@warning{A numerical (1) last argument for \protect\grecreatedim}{'scaling'}%
     \expandafter\xdef\csname gre@scale@#1\endcsname{#3}}%
     {\IfStrEq{#3}{0}%
-      {\gre@warning{Numerical arguments for \protect\grecreatedim\space are deprecated.\MessageBreak Use 'fixed' instead.}%
-    \expandafter\xdef\csname gre@scale@#1\endcsname{#3}}%
+      {\gre@warning{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}%
+      \expandafter\xdef\csname gre@scale@#1\endcsname{#3}}%
       {\IfStrEq{#3}{scaling}%
         {\expandafter\xdef\csname gre@scale@#1\endcsname{1}}%
         {\IfStrEq{#3}{fixed}%
@@ -840,7 +840,13 @@
   \fi%
   \ifcsname gre@\gre@prefix @#1\endcsname%
     \gre@debugmsg{spacing}{It does exist.}%
-    \grecreatedim{#1}{#2}{#3}%
+    \IfStrEq{#3}{1}%
+      {\gre@warning{A numerical (1) last argument for \protect\grechangedim}{'scaling'}%
+      \grecreatedim{#1}{#2}{scaling}}%
+      {\IfStrEq{#3}{0}%
+        {\gre@deprecated{A numerical (0) last argument for \protect\grechangedim}{'fixed'}%
+        \grecreatedim{#1}{#2}{fixed}}%
+      }%
   \else%
     \gre@error{#1 is not a recognized distance.}%
   \fi%
