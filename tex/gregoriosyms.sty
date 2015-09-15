@@ -19,11 +19,60 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{gregoriosyms}
+    [2015/08/26 v4.0.0-beta2 GregorioTeX symbols only.]% PARSE_VERSION_DATE_LTX
 
+\RequirePackage{kvoptions}%
+\RequirePackage{ifluatex}%
+\RequirePackage{luatexbase}%
 \RequirePackage{luaotfload}
+\RequirePackage{luamplib}%
 
 \providecommand{\gre@declarefileversion}[2]{\relax}
+
+% The version of gregorio. All gregoriotex*.tex files must have the same.
+% All gtex files must also have the same version.
+\xdef\gre@gregorioversion{4.0.0-beta2}% GREGORIO_VERSION - VersionManager.py
+
+
+\def\gre@error#1{\PackageError{GregorioTeX}{#1}{}}%
+\def\gre@warning#1{\PackageWarning{GregorioTeX}{#1}}%
+\def\gre@bug#1{\PackageError{GregorioTeX}{#1 !! This is a bug in Gregorio.  Please report it at https://github.com/gregorio-project/gregorio/issues}{}}%
+\def\gre@typeout{\typeout}
+
+\SetupKeyvalOptions{prefix=gre@}
+\DeclareStringOption{debug}[all]
+
+% This option allows the user to transform all deprecation messages
+% into errors.  Allowing one to determine if the TeX file is compliant
+% with future versions of gregoriotex. To enable, use gregoriotex with
+% this option: deprecated=false
+\DeclareBoolOption[true]{deprecated}
+
+\ProcessKeyvalOptions*
+
+% Macro to handle deprecated macros.
+% #1 - the deprecated macro
+% #2 - the correct macro to use
+\def\gre@deprecated#1#2{%
+  \ifgre@deprecated%
+    \gre@warning{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+  \else%
+    \gre@error{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+  \fi%
+  \relax%
+}%
+
+\def\gre@obsolete#1#2{%
+  \gre@error{#1\space is obsolete.\MessageBreak Use #2\space instead}%
+  \relax%
+}%
+\AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
 \long\def\gre@iflatex#1{#1}
 \input gregoriotex-symbols.tex
 
+\xdef\gre@gregoriotexluaversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
+
+% Test to make sure that gregoriotex.lua is of the same version.
+\IfStrEq*{\gre@gregoriotexluaversion}{\gre@gregorioversion}{}{%else
+    \gre@error{uncoherent file versions: gregoriosyms.sty is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
