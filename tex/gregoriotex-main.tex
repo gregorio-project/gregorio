@@ -52,7 +52,7 @@
 % #1 - the deprecated macro
 % #2 - the correct macro to use
 \def\gre@deprecated#1#2{%
-  \ifgre@deprecated%
+  \ifgre@allowdeprecated%
     \gre@warning{#1\space is deprecated.\MessageBreak Use #2\space instead}%
   \else%
     \gre@error{#1\space is deprecated.\MessageBreak Use #2\space instead}%
