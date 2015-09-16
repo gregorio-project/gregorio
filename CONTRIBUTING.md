@@ -66,7 +66,13 @@ TeX code must use LuaTeX (more than TeX + eTeX + Omega + PDFTeX) primitives as m
 
 ### Tests
 
-When your changes are significant, please provide a test demonstrating the change. See [test documentation](tests/).
+Before submitting a change, please run the tests in [gregorio-test](gregorio-project/gregorio-test) against your resulting code.
+
+When your changes are significant, please provide a test demonstrating the change. See [test documentation](https://github.com/gregorio-project/gregorio-test/blob/master/README.md).
+
+If your change breaks some of the existing tests, then please either fix the existing tests or propose the new results be accepted as more "correct" than the old ones.
+
+If you are submitting a new or modified test, please create a new branch in the test repository (preferably with a name which matches the name of the branch your changes are on in the main repository) where you can make these changes.  Then create a pull request in the test repository which explains your changes and make sure to reference the corresponding pull request in the main repository.  This way those reveiwing your changes can also see what you expect the new test results to be.
 
 ### Documentation
 
