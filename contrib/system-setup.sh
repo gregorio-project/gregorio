@@ -49,6 +49,24 @@ echo "#### 	TEXMFLOCAL" >> $OUTPUT
 echo "" >> $OUTPUT
 kpsewhich --var-value TEXMFLOCAL >> $OUTPUT 2>&1
 echo "" >> $OUTPUT
+echo "#### TEXINPUTS.lualatex" >> $OUTPUT
+kpsewhich --var-value=TEXINPUTS.lualatex >> $OUTPUT 2>&1
+echo "" >> $OUTPUT
+echo "#### LUAINPUTS.lualatex" >> $OUTPUT
+kpsewhich --var-value=LUAINPUTS.lualatex >> $OUTPUT 2>&1
+echo "" >> $OUTPUT
+echo "#### shell_escape" >> $OUTPUT
+kpsewhich --var-value=shell_escape >> $OUTPUT 2>&1
+echo "" >> $OUTPUT
+echo "#### Shell Escape Commands" >> $OUTPUT
+kpsewhich --var-value=shell_escape_commands >> $OUTPUT 2>&1
+echo "" >> $OUTPUT
+echo "#### openout_any" >> $OUTPUT
+kpsewhich --var-value=openout_any >> $OUTPUT 2>&1
+echo "" >> $OUTPUT
+echo "#### openin_any" >> $OUTPUT
+kpsewhich --var-value=openin_any >> $OUTPUT 2>&1
+echo "" >> $OUTPUT
 echo "" >> $OUTPUT
 echo "-----------------------------------------------------------------------------" >> $OUTPUT
 echo "" >> $OUTPUT
@@ -99,6 +117,12 @@ do
 	kpsewhich -all $f >> $OUTPUT 2>&1
 done
 
+echo "" >> $OUTPUT
+echo "####	kpsewhich --all -engine luatex -progname lualatex gregoriotex.sty" >> $OUTPUT
+kpsewhich --all -engine luatex -progname lualatex gregoriotex.sty >> $OUTPUT 2>&1
+echo "" >> $OUTPUT
+echo "####	kpsewhich --all -engine luatex gregoriotex.tex" >> $OUTPUT
+kpsewhich --all -engine luatex gregoriotex.tex >> $OUTPUT 2>&1
 echo "" >> $OUTPUT
 echo "" >> $OUTPUT
 echo "-----------------------------------------------------------------------------" >> $OUTPUT
