@@ -52,6 +52,24 @@ echo %texmflocal% >> %output% 2>&1
 set texmflocal=%texmflocal:/=\%
 IF NOT EXIST %texmflocal% ECHO Folder does not exist >> %output% 2>&1
 echo. >> %output%
+echo #### TEXINPUTS.lualatex >> %output%
+kpsewhich --var-value=TEXINPUTS.lualatex >> %output% 2>&1
+echo. >> %output%
+echo #### LUAINPUTS.lualatex >> %output%
+kpsewhich --var-value=LUAINPUTS.lualatex >> %output% 2>&1
+echo. >> %output%
+echo #### shell_escape >> %output%
+kpsewhich --var-value=shell_escape >> %output% 2>&1
+echo. >> %output%
+echo #### Shell Escape Commands >> %output%
+kpsewhich --var-value=shell_escape_commands >> %output% 2>&1
+echo. >> %output%
+echo #### openout_any >> %output%
+kpsewhich --var-value=openout_any >> %output% 2>&1
+echo. >> %output%
+echo #### openin_any >> %output%
+kpsewhich --var-value=openin_any >> %output% 2>&1
+echo. >> %output%
 echo. >> %output%
 echo ----------------------------------------------------------------------------- >> %output%
 echo. >> %output%
@@ -100,6 +118,12 @@ for %%G in (%files%) do (
 	echo ##### %%G >> %output%
 	kpsewhich -all %%G >> %output% 2>&1
 )
+echo. >> %output%
+echo ####	kpsewhich --all -engine luatex -progname lualatex gregoriotex.sty >> %output%
+kpsewhich --all -engine luatex -progname lualatex gregoriotex.sty >> %output% 2>&1
+echo. >> %output%
+echo ####	kpsewhich --all -engine luatex gregoriotex.tex >> %output%
+kpsewhich --all -engine luatex gregoriotex.tex >> %output% 2>&1
 echo. >> %output%
 echo. >> %output%
 echo ----------------------------------------------------------------------------- >> %output%
