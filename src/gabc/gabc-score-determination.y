@@ -238,7 +238,7 @@ static void initialize_variables(void)
     translation_type = TR_NORMAL;
     no_linebreak_area = NLBA_NORMAL;
     euouae = EUOUAE_NORMAL;
-    center_is_determined = 0;
+    center_is_determined = CENTER_NOT_DETERMINED;
     for (i = 0; i < 10; i++) {
         macros[i] = NULL;
     }
@@ -412,10 +412,10 @@ static void gregorio_set_translation_center_beginning(
     current_syllable->translation_type = TR_NORMAL;
 }
 
-static void rebuild_characters(gregorio_character **param_character,
-        gregorio_center_determination center_is_determined)
+static void rebuild_characters()
 {
     bool has_initial = score->initial_style != NO_INITIAL;
+
     /* we rebuild the first syllable text if it is the first syllable, or if
      * it is the second when the first has no text.
      * it is a patch for cases like (c4) Al(ab)le(ab) */
@@ -427,7 +427,7 @@ static void rebuild_characters(gregorio_character **param_character,
         started_first_word = true;
     }
 
-    gregorio_rebuild_characters(param_character, center_is_determined,
+    gregorio_rebuild_characters(&current_character, center_is_determined,
             has_initial);
 
     if (started_first_word) {
@@ -482,7 +482,7 @@ static void close_syllable(YYLTYPE *loc)
  * the translation pointer instead of the text pointer */
 static void start_translation(unsigned char asked_translation_type)
 {
-    rebuild_characters(&current_character, center_is_determined);
+    rebuild_characters();
     first_text_character = current_character;
     /* the middle letters of the translation have no sense */
     center_is_determined = CENTER_FULLY_DETERMINED;
@@ -492,7 +492,7 @@ static void start_translation(unsigned char asked_translation_type)
 
 static void end_translation(void)
 {
-    rebuild_characters(&current_character, center_is_determined);
+    rebuild_characters();
     first_translation_character = current_character;
 }
 
@@ -1188,7 +1188,7 @@ above_line_text:
 
 syllable_with_notes:
     text OPENING_BRACKET notes {
-        rebuild_characters (&current_character, center_is_determined);
+        rebuild_characters();
         first_text_character = current_character;
         close_syllable(&@1);
     }
