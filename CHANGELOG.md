@@ -5,9 +5,11 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][unreleased]
 ### Fixed
 - Deactivating the end of line shifts now prevents lyrics from stretching under the custos at the end of the line.
+- All of the keywords for `\grescaledim` were now work as described in the documentation.
 
 ### Changed
 - `\grecreatedim` and `\grechangedim` now take keywords for their third argument (`scaling` and `fixed`( instead of integers (`1` and `0`) to make the more in keeping with the overall user command conventions.
+- `\grescaledim` now accepts `scaling` as a keyword to turn on scaling (in keeping with the above change)
 
 ### Added
 - New distance, `initialraise`, which will lift (or lower, if negative) the initial.
