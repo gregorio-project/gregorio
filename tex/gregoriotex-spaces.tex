@@ -785,19 +785,19 @@
 %% dimension changing macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% This macro creates one dim (#1), setting its value to #2 and sets whether it should scale when the \gre@factor changes (#3, scaling or fixed).  Checks that #1 can accept the kind of distance given in #2.
+%% This macro creates one dim (#1), setting its value to #2 and sets whether it should scale when the \gre@factor changes (#3, scalable or fixed).  Checks that #1 can accept the kind of distance given in #2.
 %% Note: the distances created by this function are stored as strings, not skip or dimension registers.  This allows the user to specify a distance in em or ex units even though the font parameters may not be the same at the time the distance is specified and the time the distance is used.
 \newif\ifgre@checklength%
 \def\grecreatedim#1#2#3{%
   \gre@dimension{#1}{#2}
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
   \IfStrEq{#3}{1}%	
-    {\gre@deprecated{A numerical (1) last argument for \protect\grecreatedim}{'scaling'}%
+    {\gre@deprecated{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}%
     \grescaledim{#1}{true}}%
     {\IfStrEq{#3}{0}%
       {\gre@deprecated{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}%
       \grescaledim{#1}{false}}%
-      {\IfStrEq{#3}{scaling}%
+      {\IfStrEq{#3}{scalable}%
         {\grescaledim{#1}{true}}%
         {\IfStrEq{#3}{fixed}%
           {\grescaledim{#1}{false}}%
@@ -827,12 +827,12 @@
     \gre@debugmsg{spacing}{It does exist.}%
     \gre@dimension{#1}{#2}%
     \IfStrEq{#3}{1}%
-      {\gre@deprecated{A numerical (1) last argument for \protect\grechangedim}{'scaling'}%
+      {\gre@deprecated{A numerical (1) last argument for \protect\grechangedim}{'scalable'}%
       \grescaledim{#1}{true}}%
       {\IfStrEq{#3}{0}%
         {\gre@deprecated{A numerical (0) last argument for \protect\grechangedim}{'fixed'}%
         \grescaledim{#1}{false}}%
-        {\IfStrEq{#3}{scaling}%
+        {\IfStrEq{#3}{scalable}%
           {\grescaledim{#1}{true}}%
           {\IfStrEq{#3}{fixed}%
             {\grescaledim{#1}{false}}%
@@ -875,7 +875,7 @@
       {\grescaledim{true}}%
       {\IfStrEq{#2}{on}%
         {\grescaledim{true}}%
-        {\IfStrEq{#2}{scaling}%
+        {\IfStrEq{#2}{scalable}%
           {\grescaledim{true}}%
           {\csname gre@scale@#1false\endcsname}%
         }%
