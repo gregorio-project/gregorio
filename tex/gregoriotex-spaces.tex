@@ -328,6 +328,8 @@
 
 % dimen keeping the shift computed with next function
 \newdimen\gre@dimen@bolshift
+% dimen which is used to add a bit extra to the previous one in the case where the first glyph is a flat or a natural
+\newdimen\gre@dimen@bolextra
 
 %% @desc Macro used in \GreSyllable. Sets \gre@skip@bolshift to the left kern that
 %%       should appear at the beginning of a line in case of a linebreak.
@@ -341,7 +343,7 @@
   \gre@skip@temp@three=\gre@skip@spaceafterlineclef\relax%
   \advance\gre@skip@temp@three by #1%
   % we don't want to kern more than clefwidth minus minimalspaceatlinebeginning
-  \gre@dimen@temp@one = \gre@dimen@clefwidth
+  \gre@dimen@temp@one = \gre@dimen@clefwidth\relax%
   \advance\gre@dimen@temp@one by -\gre@dimen@minimalspaceatlinebeginning\relax%
   \ifdim\gre@skip@temp@three <-\gre@dimen@temp@one %
     \gre@skip@temp@three=-\gre@dimen@temp@one %
@@ -356,6 +358,7 @@
   \else %
     \global\gre@dimen@bolshift=-\gre@skip@temp@three %
   \fi %
+  \global\advance\gre@dimen@bolshift by \gre@dimen@bolextra%
   \gre@debugmsg{bolshift}{ bolshift = \the\gre@dimen@bolshift}%
   \relax %
 }
