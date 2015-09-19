@@ -30,6 +30,8 @@
 \usepackage{units}
 \usepackage{framed}
 \usepackage{url}
+\usepackage{tabulary}
+\usepackage{tabularx}
 
 \usepackage{makeidx}
 \makeindex
@@ -67,6 +69,7 @@
 
 \newcommand{\macroname}[3]{%
   \vspace{3.25ex plus 1ex minus .2ex}%
+  \pagebreak[3]%
   \makebox[\linewidth]{\ttfamily\bfseries #1#2%
   \hspace{\fill}\normalfont\itshape #3}%
   \vspace{1.5ex plus .2ex}%
@@ -94,10 +97,10 @@
 
 \newenvironment{argtable}{%
   \bigskip\rowcolors{1}{lightgray}{lightgray}
-  \begin{tabular}{clp{10cm plus .5cm}}
+  \tabularx{\textwidth}{clX}
     Arg & Value & Description \\
     \hline}%
-  {\end{tabular}\bigskip}
+  {\endtabularx\bigskip}
 
 \setlength{\parindent}{0mm} % Default is 15pt
 
@@ -117,8 +120,8 @@
     \vspace{1.5cm}
   \end{center}
   \gresetlinecolor{gregoriocolor}
-  \def\grelowchoralsignstyle#1{{\cminfamily\small#1}}%
-  \def\grehighchoralsignstyle#1{{\cminfamily\small#1}}%
+  \grechangestyle{lowchoralsign}{\cminfamily\small}%
+  \grechangestyle{highchoralsign}{\cminfamily\small}%
   \def\GreStar{\greheightstar}%
   \greannotation{\scriptsize{Comm.}}%
   \greannotation{\scriptsize{VII}}%
@@ -146,6 +149,7 @@
 
 \tableofcontents
 
+\setlength{\parskip}{\bigskipamount}
 \cleardoublepage
 
 \section{Gregorio\TeX{} Macros}
@@ -159,7 +163,8 @@ Description of macro.
 \end{argtable}
 
 The source file where the macro is defined is included for developers
-who wish to consult it.\\
+who wish to consult it.
+
 Some of the macros intended for inclusion in the main.tex file by the user
 include usage examples.
 

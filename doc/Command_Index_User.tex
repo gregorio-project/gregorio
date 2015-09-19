@@ -9,7 +9,7 @@ to any \verb=.tex= file. Do not add them to any \verb=.gtex= or
 
 \subsection{Using the Package}
 
-To use the Gregorio\TeX\ package, include \verb=\usepackage{gregoriotex}=
+To use the Gregorio\TeX\ package in a \LaTeX\ document, include \verb=\usepackage{gregoriotex}=
 in the document preamble. This macro has the following form:
 
 \macroname{\textbackslash usepackage}{[\optional{(options)}]\{gregoriotex\}}{gregoriotex.sty}
@@ -20,7 +20,7 @@ The optional arguments are:
 \begin{tabular}{lp{10cm plus .5cm}}
   Argument & Description \\
   \hline
-  debug & Debug messages will be printed to the output log. \\
+  debug & Debug messages will be printed to the output log.  Can also be specified as \verb:debug={<types>}:, in which case only messages of the types listed will be printed to the output log.\\
   \hline
   nevercompile & Default. The classic behavior of Gregorio\TeX. The user is %
     responsible for compiling gabc scores into gtex files.\\
@@ -39,8 +39,16 @@ The optional arguments are:
 \verb=forcecompile= conflict with eachother. Only one should be
 specified in the options list.\bigskip
 
+To use the package in a Plain\TeX\ document, include \verb=\input gregoriotex.tex= near the top of the document (the area which would correspond to the preamble in \LaTeX).
+
+To use the \texttt{debug} option in Plain\TeX, you'll need to define \verb=\gre@debug= manually as a string listing the kinds of messages you want printed (or as \verb=all= if you want all messages printed).
+
+To use the \texttt{allowdeprecated=false} option, you'll need \verb=\gre@allowdeprecatedfalse=.
+
+The compilation options can be set using \verb=\gresetcompilegabc= (see below).
+
 \textbf{Important:} Gregorio\TeX{} may require up to two passes (runs of
-\texttt{lualatex}) to compute the line heights correctly.  If a second
+\texttt{lualatex} or \texttt{luatex}) to compute the line heights correctly.  If a second
 pass is required, Gregorio\TeX{} will emit the following
 warning:\par\medskip
 
@@ -54,7 +62,7 @@ Gregorio\TeX{} two-pass processing is compatible with \texttt{latexmk}.
 
 \subsection{Commands}
 
-In general, commands should not be modified.  Exceptions are noted below.
+Once you've included the package in your document (as explain above) the following commands allow you to insert scores and manipulate the way they appear in the document.
 
 \subsubsection{Including scores}
 
