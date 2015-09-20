@@ -556,7 +556,7 @@
   % took me years to find it!
   \gre@debugmsg{bolshift}{Current glyph: \the\gre@attr@glyph@id}%
   \ifgre@bolshiftsenabled%
-    \gre@calculate@bolshift{\gre@dimen@begindifference}%
+    \gre@calculate@bolshift{\gre@dimen@begindifference}{\gre@firstisalteration}% TODO: compute firstisalteration
     % we don't want to shift right on the first syllable of the score because the printing of the initial clef, initial, and/or the staff lines will have already broken TeX's ignorance of spaces.
     \ifgre@beginningofscore%
       \gre@beginningofscorefalse%
