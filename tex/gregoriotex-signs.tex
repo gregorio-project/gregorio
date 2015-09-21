@@ -1638,6 +1638,8 @@
 %% macros for typesetting alterations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\xdef\gre@firstisalteration{0}
+
 % the top level macro:
 % #1 is the height
 % #2 is the char of the alteration
@@ -1647,6 +1649,9 @@
   % to see why we reset \gre@lastoflinecount, see comments of \GreGlyph.
   \ifnum#4=0\relax %
     \gre@newglyphcommon %
+    \ifgre@firstglyph %
+      \xdef\gre@firstisalteration{1}\relax %
+    \fi %
   \fi %
   \gre@calculate@glyphraisevalue{#1}{0}%
   \ifgre@hidealtlines %

@@ -538,6 +538,7 @@
   \gre@debugmsg{general}{}%
   #1%
   \gre@firstglyphtrue%
+  \xdef\gre@firstisalteration{0}%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
   \gre@syllablenotes{#9}% we put the notes in a box, so that we have the width of it
   % now we calculate the begin difference, that is to say \gre@dimen@notesaligncenter - \gre@dimen@textaligncenter
@@ -556,7 +557,7 @@
   % took me years to find it!
   \gre@debugmsg{bolshift}{Current glyph: \the\gre@attr@glyph@id}%
   \ifgre@bolshiftsenabled%
-    \gre@calculate@bolshift{\gre@dimen@begindifference}%
+    \gre@calculate@bolshift{\gre@dimen@begindifference}{\gre@firstisalteration}% TODO: compute firstisalteration
     % we don't want to shift right on the first syllable of the score because the printing of the initial clef, initial, and/or the staff lines will have already broken TeX's ignorance of spaces.
     \ifgre@beginningofscore%
       \gre@beginningofscorefalse%
@@ -739,6 +740,7 @@
   % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the previous syllable and the first note of the next syllable. But there are limits : a bar can't go very far above text. For example if there is "nuncncncncn" with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
   % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
   % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
+  \xdef\gre@firstisalteration{0}%
   #1%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
   \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%

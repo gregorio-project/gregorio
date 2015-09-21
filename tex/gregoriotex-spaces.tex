@@ -335,16 +335,20 @@
 %%       TODO for details.
 %%
 %% @arg#1 \gre@dimen@begindifference of the first syllable of the line
-\def\gre@calculate@bolshift#1{%
+\def\gre@calculate@bolshift#1#2{%
   % as the \gre@dimen@bolshift is computed from skips, we compute it in a
   % skip temp registry, and then "cast" it into a dimen
   \gre@skip@temp@three=\gre@skip@spaceafterlineclef\relax%
   \advance\gre@skip@temp@three by #1%
   % we don't want to kern more than clefwidth minus minimalspaceatlinebeginning
-  \gre@dimen@temp@one = \gre@dimen@clefwidth
-  \advance\gre@dimen@temp@one by -\gre@dimen@minimalspaceatlinebeginning\relax%
-  \ifdim\gre@skip@temp@three <-\gre@dimen@temp@one %
-    \gre@skip@temp@three=-\gre@dimen@temp@one %
+  \gre@skip@temp@one = \gre@dimen@clefwidth %
+  \ifnum#2=1\relax %
+    \advance\gre@skip@temp@one by -\gre@dimen@minimalspaceatlinebeginning\relax%
+  \else %
+    \advance\gre@skip@temp@one by -\gre@skip@clefflatspace\relax%
+  \fi %
+  \ifdim\gre@skip@temp@three <-\gre@skip@temp@one %
+    \gre@skip@temp@three=-\gre@skip@temp@one %
   \fi %
   \advance\gre@skip@temp@three by -\gre@skip@spaceafterlineclef\relax%
   \ifdim\gre@skip@temp@three < #1\relax %
