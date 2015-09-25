@@ -1647,12 +1647,6 @@
   \setbox\gre@box@temp@width=\hbox{#2}%
   \ifnum#4=0\relax %
     \gre@newglyphcommon %
-    \ifgre@firstglyph%
-      \global\gre@dimen@bolextra = \wd\gre@box@temp@width%
-      \gre@skip@temp@four = \gre@skip@alterationspace\relax%
-      \global\advance\gre@dimen@bolextra by \dimexpr\gre@skip@temp@four\relax%
-      \gre@debugmsg{bolshift}{bolextra: \the\ger@diment@bolextra}%
-    \fi%
   \fi %
   \gre@calculate@glyphraisevalue{#1}{0}%
   \ifgre@hidealtlines %
@@ -1665,9 +1659,14 @@
     \GreNoBreak %
     \gre@skip@temp@four = \gre@skip@alterationspace\relax%
     \ifgre@firstglyph%
+      \gre@debugmsg{bolshift}{making adjustments for leading alteration}%
       \global\advance\gre@dimen@notesaligncenter by \wd\gre@box@temp@width %
       \global\advance\gre@dimen@notesaligncenter by \dimexpr\gre@skip@temp@four\relax %
       \kern\gre@skip@temp@four %
+      \global\gre@dimen@bolextra = \wd\gre@box@temp@width%
+      \gre@skip@temp@four = \gre@skip@alterationspace\relax%
+      \global\advance\gre@dimen@bolextra by \dimexpr\gre@skip@temp@four\relax%
+      \gre@debugmsg{bolshift}{bolextra: \the\gre@dimen@bolextra}%
     \else %
       \gre@hskip\gre@skip@temp@four %
     \fi %
