@@ -225,8 +225,8 @@ Macro to create one of Gregorio\TeX’s distances.  Used to initialize distances
 \begin{argtable}
   \#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
   \#2 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that Gregorio\TeX\ handles spaces.\\
-  \#3 & 0 & Distance will not scale when staff size is changed.\\
-  & 1 & Distance will scale when staff size is changed.
+  \#3 & fixed & Distance will not scale when staff size is changed.\\
+  & scalable & Distance will scale when staff size is changed.
 \end{argtable}
 
 \macroname{\textbackslash grechangedim}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-spaces.tex}
@@ -235,18 +235,20 @@ Macro to change one of Gregorio\TeX’s distances.  This function will check to 
 \begin{argtable}
   \#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
   \#2 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that Gregorio\TeX\ handles spaces.\\
-  \#3 & 0 & Distance will not scale when staff size is changed.\\
-  & 1 & Distance will scale when staff size is changed.
+  \#3 & fixed & Distance will not scale when staff size is changed.\\
+  & scalable & Distance will scale when staff size is changed.
 \end{argtable}
 
 \macroname{\textbackslash grescaledim}{\{\#1\}\{\#2\}}{gregoriotex-spaces.tex}
 Macro to turn on or off scaling with the staff size for a particular distance.
 
 \begin{argtable}
-  \#1 & string & The name of the distance for which scaling it to changed.  See \nameref{distances} below.\\
-  \#2 & \texttt{yes}/\texttt{true}/\texttt{on} & Scale the distance when changing the size of the staff.\\
+  \#1 & string & The name of the distance for which scaling is to changed.  See \nameref{distances} below.\\
+  \#2 & \texttt{yes}/\texttt{true}/\texttt{on}/\texttt{scalable} & Scale the distance when changing the size of the staff.\\
   & \textit{other} & Do not scale the distance when changing the size of the staff.
 \end{argtable}
+
+\textbf{Nota bene:} This macro also can be used to change whether or not the staff line thickness scales with the staff size by specifying \texttt{stafflinefactor} for the first argument.
 
 \macroname{\textbackslash greloadspaceconf}{\{\#1\}}{gregoriotex-spaces.tex}
 Macro to load a space configuration file.  Space configuration file names have the format \verb=gsp-identifier.tex= and must be in the same directory as your project or in your texmf directory.  This function is \texttt{gre}-prefixed to highlight that it only loads distances for Gregorio\TeX.

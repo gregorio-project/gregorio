@@ -148,7 +148,8 @@
 % the stafflinefactor follows the same scale as the gre@factor, i.e. a stafflinefactor corresponds to the default staff line thickness for gre@factor 17, stafflinefactor 34 corresponds to the default staff line thickness for gre@factor 34, etc.
 \xdef\gre@stafflinefactor{17}%
 % flag for whether the stafflinefactor should scale with changes of the gre@factor
-\xdef\gre@scale@stafflinefactor{1}%
+\newif\ifgre@scale@stafflinefactor%
+\gre@scale@stafflinefactortrue
 
 % a macro for setting the thickness of the staff lines.  This changes the stafflinefactor and then adjusts the spaces that are affected by the thicker staff lines.
 \def\grechangestafflinethickness#1{%
@@ -797,29 +798,26 @@
 %% dimension changing macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% This macro creates one dim (#1), setting its value to #2 and sets whether it should scale when the \gre@factor changes (#3, 1 if yes, 0 if no).  While it does check that #1 can accept the kind of distance given in #2, it does not propagate the changes through the calculated distances.
+%% This macro creates one dim (#1), setting its value to #2 and sets whether it should scale when the \gre@factor changes (#3, scalable or fixed).  Checks that #1 can accept the kind of distance given in #2.
 %% Note: the distances created by this function are stored as strings, not skip or dimension registers.  This allows the user to specify a distance in em or ex units even though the font parameters may not be the same at the time the distance is specified and the time the distance is used.
 \newif\ifgre@checklength%
 \def\grecreatedim#1#2#3{%
-  \gre@checklengthfalse%
-  %check if #2 is a rubber length (contains plus and/or minus)
-  \IfSubStr{#2}{plus}{\gre@checklengthtrue}{\relax}%
-  \IfSubStr{#2}{minus}{\gre@checklengthtrue}{\relax}%
-  %if #1 is one of the distances which cannot be rubber.
-  \gre@rubberpermit{#1}%
-  % do we try to assign a rubber to one where it's not permitted?
-  \ifgre@rubber%
-    \def\gre@prefix{skip}%
-  \else%
-    \ifgre@checklength%
-      \gre@error{#1 cannot be a rubber length.}%
-    \else%
-      \def\gre@prefix{dimen}%
-    \fi%
-  \fi%
-  \expandafter\xdef\csname gre@scale@#1\endcsname{#3}%
-  \expandafter\xdef\csname gre@\gre@prefix @#1\endcsname{#2}%
-  \relax %
+  \gre@dimension{#1}{#2}
+  \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
+  \IfStrEq{#3}{1}%	
+    {\gre@deprecated{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}%
+    \grescaledim{#1}{true}}%
+    {\IfStrEq{#3}{0}%
+      {\gre@deprecated{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}%
+      \grescaledim{#1}{false}}%
+      {\IfStrEq{#3}{scalable}%
+        {\grescaledim{#1}{true}}%
+        {\IfStrEq{#3}{fixed}%
+          {\grescaledim{#1}{false}}%
+          {\gre@error{Unrecognized option for \protect\grecreatedim}}%
+        }%
+      }%
+    }%
 }%
 
 \def\gresetdim{%
@@ -840,28 +838,67 @@
   \fi%
   \ifcsname gre@\gre@prefix @#1\endcsname%
     \gre@debugmsg{spacing}{It does exist.}%
-    \grecreatedim{#1}{#2}{#3}%
+    \gre@dimension{#1}{#2}%
+    \IfStrEq{#3}{1}%
+      {\gre@deprecated{A numerical (1) last argument for \protect\grechangedim}{'scalable'}%
+      \grescaledim{#1}{true}}%
+      {\IfStrEq{#3}{0}%
+        {\gre@deprecated{A numerical (0) last argument for \protect\grechangedim}{'fixed'}%
+        \grescaledim{#1}{false}}%
+        {\IfStrEq{#3}{scalable}%
+          {\grescaledim{#1}{true}}%
+          {\IfStrEq{#3}{fixed}%
+            {\grescaledim{#1}{false}}%
+            {\gre@error{Unrecognized option for \protect\grechangedim}}%
+          }%
+        }%
+      }%
   \else%
     \gre@error{#1 is not a recognized distance.}%
   \fi%
 }%
 
+% The common internals for \grecreatedim and \grechangedim.
+\def\gre@dimension#1#2{%
+  \gre@checklengthfalse%
+  %check if #2 is a rubber length (contains plus and/or minus)
+  \IfSubStr{#2}{plus}{\gre@checklengthtrue}{\relax}%
+  \IfSubStr{#2}{minus}{\gre@checklengthtrue}{\relax}%
+  %if #1 is one of the distances which cannot be rubber.
+  \gre@rubberpermit{#1}%
+  % do we try to assign a rubber to one where it's not permitted?
+  \ifgre@rubber%
+    \def\gre@prefix{skip}%
+  \else%
+    \ifgre@checklength%
+      \gre@error{#1 cannot be a rubber length.}%
+    \else%
+      \def\gre@prefix{dimen}%
+    \fi%
+  \fi%
+  \expandafter\edef\csname gre@\gre@prefix @#1\endcsname{#2}%
+  \relax %
+}
+
 %a macro to use if all you want to do is turn on or off the scaling for a particular distance
 \def\grescaledim#1#2{%
-  \IfStrEq{#2}{yes}%
-    {\expandafter\gdef\csname gre@scale@#1\endcsname{1}}%
-    {\expandafter\gdef\csname gre@scale@#1\endcsname{0}}%
   \IfStrEq{#2}{true}%
-    {\expandafter\gdef\csname gre@scale@#1\endcsname{1}}%
-    {\expandafter\gdef\csname gre@scale@#1\endcsname{0}}%
-  \IfStrEq{#2}{on}%
-    {\expandafter\gdef\csname gre@scale@#1\endcsname{1}}%
-    {\expandafter\gdef\csname gre@scale@#1\endcsname{0}}%
+    {\csname gre@scale@#1true\endcsname}%
+    {\IfStrEq{#2}{yes}%
+      {\grescaledim{true}}%
+      {\IfStrEq{#2}{on}%
+        {\grescaledim{true}}%
+        {\IfStrEq{#2}{scalable}%
+          {\grescaledim{true}}%
+          {\csname gre@scale@#1false\endcsname}%
+        }%
+      }%
+    }%
 }
 
 \def\grenoscaledim#1{%
   \gre@deprecated{\protect\grenoscaledim}{\protect\grescaledim{...}{no}}%
-  \expandafter\gdef\csname gre@scale@#1\endcsname{0}%
+  \grescaledim{#1}{false}%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -894,7 +931,7 @@
 %% Rescaling dimensions (for when \gre@factor changes)
 %%%%%%%%%%%%%%
 
-% This function checks to see if the length is one of the ones which cannot be a rubber length
+% This function checks to see if the length is one of the ones which cannot be a rubber length.  The assumption is that any length not listed here is allowed to be rubber.
 \newif\ifgre@rubber%
 \def\gre@rubberpermit#1{%
   \gre@rubbertrue%
@@ -927,7 +964,6 @@
 }%
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
-%% Note: This function is assumed to touch only dimensions which are meant to scale with the \gre@factor (i.e. if it acts on distance x, \gre@scale@x is 1)
 \def\gre@changeonedimenfactor#1#2#3{%
   \gre@rubberpermit{#1}%
   \ifgre@rubber% if we have a rubber allowed length we create a temporary skip
@@ -946,7 +982,7 @@
   \multiply \gre@scaledist by \number #3%
   \divide \gre@scaledist by \number #2%
   \gre@consistentunits{\gre@convert}{\gre@scaledist}%
-  \grecreatedim{#1}{\gre@stringdist}{1}%
+  \gre@dimension{#1}{\gre@stringdist}%
   \relax %
 }%
 
@@ -1054,190 +1090,190 @@
 %% simply by dividing them by the old factor, and multiplying them by the new one.
 % #1 is the old gre@factor, #2 is the new one
 \def\gre@changedimenfactor#1#2{%
-  \ifnum\gre@scale@additionallineswidth=1\relax%
+  \ifgre@scale@additionallineswidth%
     \gre@changeonedimenfactor{additionallineswidth}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@additionalcustoslineswidth=1\relax%
+  \ifgre@scale@additionalcustoslineswidth%
     \gre@changeonedimenfactor{additionalcustoslineswidth}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@zerowidthspace=1\relax%
+  \ifgre@scale@zerowidthspace%
     \gre@changeonedimenfactor{zerowidthspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@interglyphspace=1\relax%
+  \ifgre@scale@interglyphspace%
     \gre@changeonedimenfactor{interglyphspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@alterationspace=1\relax%
+  \ifgre@scale@alterationspace%
     \gre@changeonedimenfactor{alterationspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@clefflatspace=1\relax%
+  \ifgre@scale@clefflatspace%
     \gre@changeonedimenfactor{clefflatspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@beforelowchoralsignspace=1\relax%
+  \ifgre@scale@beforelowchoralsignspace%
     \gre@changeonedimenfactor{beforelowchoralsignspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@beforealterationspace=1\relax%
+  \ifgre@scale@beforealterationspace%
     \gre@changeonedimenfactor{beforealterationspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@interelementspace=1\relax%
+  \ifgre@scale@interelementspace%
     \gre@changeonedimenfactor{interelementspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@largerspace=1\relax%
+  \ifgre@scale@largerspace%
     \gre@changeonedimenfactor{largerspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@nabcinterelementspace=1\relax%
+  \ifgre@scale@nabcinterelementspace%
     \gre@changeonedimenfactor{nabcinterelementspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@nabclargerspace=1\relax%
+  \ifgre@scale@nabclargerspace%
     \gre@changeonedimenfactor{nabclargerspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@glyphspace=1\relax%
+  \ifgre@scale@glyphspace%
     \gre@changeonedimenfactor{glyphspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spacebeforecustos=1\relax%
+  \ifgre@scale@spacebeforecustos%
     \gre@changeonedimenfactor{spacebeforecustos}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spacebeforesigns=1\relax%
+  \ifgre@scale@spacebeforesigns%
     \gre@changeonedimenfactor{spacebeforesigns}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spaceaftersigns=1\relax%
+  \ifgre@scale@spaceaftersigns%
     \gre@changeonedimenfactor{spaceaftersigns}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spaceafterlineclef=1\relax%
+  \ifgre@scale@spaceafterlineclef%
     \gre@changeonedimenfactor{spaceafterlineclef}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@interwordspacenotes=1\relax%
+  \ifgre@scale@interwordspacenotes%
     \gre@changeonedimenfactor{interwordspacenotes}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@intersyllablespacenotes=1\relax%
+  \ifgre@scale@intersyllablespacenotes%
     \gre@changeonedimenfactor{intersyllablespacenotes}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@interwordspacetext=1\relax%
+  \ifgre@scale@interwordspacetext%
     \gre@changeonedimenfactor{interwordspacetext}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@interwordspacenotes@euouae=1\relax%
+  \ifgre@scale@interwordspacenotes@euouae%
     \gre@changeonedimenfactor{interwordspacenotes@euouae}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@interwordspacetext@euouae=1\relax%
+  \ifgre@scale@interwordspacetext@euouae%
     \gre@changeonedimenfactor{interwordspacetext@euouae}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@bitrivirspace=1\relax%
+  \ifgre@scale@bitrivirspace%
     \gre@changeonedimenfactor{bitrivirspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@bitristrospace=1\relax%
+  \ifgre@scale@bitristrospace%
     \gre@changeonedimenfactor{bitristrospace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@punctuminclinatumshift=1\relax%
+  \ifgre@scale@punctuminclinatumshift%
     \gre@changeonedimenfactor{punctuminclinatumshift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@beforepunctainclinatashift=1\relax%
+  \ifgre@scale@beforepunctainclinatashift%
     \gre@changeonedimenfactor{beforepunctainclinatashift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@punctuminclinatumanddebilisshift=1\relax%
+  \ifgre@scale@punctuminclinatumanddebilisshift%
     \gre@changeonedimenfactor{punctuminclinatumanddebilisshift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@punctuminclinatumdebilisshift=1\relax%
+  \ifgre@scale@punctuminclinatumdebilisshift%
     \gre@changeonedimenfactor{punctuminclinatumdebilisshift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@punctuminclinatumbigshift=1\relax%
+  \ifgre@scale@punctuminclinatumbigshift%
     \gre@changeonedimenfactor{punctuminclinatumbigshift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@punctuminclinatummaxshift=1\relax%
+  \ifgre@scale@punctuminclinatummaxshift%
     \gre@changeonedimenfactor{punctuminclinatummaxshift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spacearoundsmallbar=1\relax%
+  \ifgre@scale@spacearoundsmallbar%
     \gre@changeonedimenfactor{spacearoundsmallbar}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spacearoundminor=1\relax%
+  \ifgre@scale@spacearoundminor%
     \gre@changeonedimenfactor{spacearoundminor}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spacearoundmaior=1\relax%
+  \ifgre@scale@spacearoundmaior%
     \gre@changeonedimenfactor{spacearoundmaior}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spacearoundfinalis=1\relax%
+  \ifgre@scale@spacearoundfinalis%
     \gre@changeonedimenfactor{spacearoundfinalis}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spacebeforefinalfinalis=1\relax%
+  \ifgre@scale@spacebeforefinalfinalis%
     \gre@changeonedimenfactor{spacebeforefinalfinalis}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spacearoundclefbars=1\relax%
+  \ifgre@scale@spacearoundclefbars%
     \gre@changeonedimenfactor{spacearoundclefbars}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@textbartextspace=1\relax%
+  \ifgre@scale@textbartextspace%
     \gre@changeonedimenfactor{textbartextspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@notebarspace=1\relax%
+  \ifgre@scale@notebarspace%
     \gre@changeonedimenfactor{notebarspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@maximumspacewithoutdash=1\relax%
+  \ifgre@scale@maximumspacewithoutdash%
     \gre@changeonedimenfactor{maximumspacewithoutdash}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@afterclefnospace=1\relax%
+  \ifgre@scale@afterclefnospace%
     \gre@changeonedimenfactor{afterclefnospace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@afterinitialshift=1\relax%
+  \ifgre@scale@afterinitialshift%
     \gre@changeonedimenfactor{afterinitialshift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@beforeinitialshift=1\relax%
+  \ifgre@scale@beforeinitialshift%
     \gre@changeonedimenfactor{beforeinitialshift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@minimalspaceatlinebeginning=1\relax%
+  \ifgre@scale@minimalspaceatlinebeginning%
     \gre@changeonedimenfactor{minimalspaceatlinebeginning}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@manualinitialwidth=1\relax%
+  \ifgre@scale@manualinitialwidth%
     \gre@changeonedimenfactor{manualinitialwidth}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@annotationseparation=1\relax%
+  \ifgre@scale@annotationseparation%
     \gre@changeonedimenfactor{annotationseparation}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@annotationraise=1\relax%
+  \ifgre@scale@annotationraise%
     \gre@changeonedimenfactor{annotationraise}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@noclefspace=1\relax%
+  \ifgre@scale@noclefspace%
     \gre@changeonedimenfactor{noclefspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@clefchangespace=1\relax%
+  \ifgre@scale@clefchangespace%
     \gre@changeonedimenfactor{clefchangespace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@clivisalignmentmin=1\relax%
+  \ifgre@scale@clivisalignmentmin%
     \gre@changeonedimenfactor{clivisalignmentmin}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@abovesignsspace=1\relax%
+  \ifgre@scale@abovesignsspace%
     \gre@changeonedimenfactor{abovesignsspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@belowsignsspace=1\relax%
+  \ifgre@scale@belowsignsspace%
     \gre@changeonedimenfactor{belowsignsspace}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@choralsigndownshift=1\relax%
+  \ifgre@scale@choralsigndownshift%
     \gre@changeonedimenfactor{choralsigndownshift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@choralsignupshift=1\relax%
+  \ifgre@scale@choralsignupshift%
     \gre@changeonedimenfactor{choralsignupshift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@translationheight=1\relax%
+  \ifgre@scale@translationheight%
     \gre@changeonedimenfactor{translationheight}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spaceabovelines=1\relax%
+  \ifgre@scale@spaceabovelines%
     \gre@changeonedimenfactor{spaceabovelines}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spacelinestext=1\relax%
+  \ifgre@scale@spacelinestext%
     \gre@changeonedimenfactor{spacelinestext}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@spacebeneathtext=1\relax%
+  \ifgre@scale@spacebeneathtext%
     \gre@changeonedimenfactor{spacebeneathtext}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@abovelinestextraise=1\relax%
+  \ifgre@scale@abovelinestextraise%
     \gre@changeonedimenfactor{abovelinestextraise}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@abovelinestextheight=1\relax%
+  \ifgre@scale@abovelinestextheight%
     \gre@changeonedimenfactor{abovelinestextheight}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@braceshift=1\relax%
+  \ifgre@scale@braceshift%
     \gre@changeonedimenfactor{braceshift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@curlybraceaccentusshift=1\relax%
+  \ifgre@scale@curlybraceaccentusshift%
     \gre@changeonedimenfactor{curlybraceaccentusshift}{#1}{#2}%
   \fi%
-  \ifnum\gre@scale@stafflinefactor=1\relax%
+  \ifgre@scale@stafflinefactor%
     \gre@count@temp@two = \gre@stafflinefactor%
     \multiply\gre@count@temp@two by #2\relax%
     \divide\gre@count@temp@two by #1\relax%
