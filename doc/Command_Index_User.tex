@@ -864,7 +864,7 @@ Space between an alteration (flat or natural) and the next glyph.
 Default: \unit[0.07747]{cm} plus \unit[0.01276]{cm} minus \unit[0.00455]{cm}
 
 \macroname{beforealterationspace}{}{gsp-default.tex}
-Negative space, difference between the normal space between two notes and the space between a note and a flat.  
+When bolshifts are enabled, minimal space between a clef at the beginning of the line and a leading alteration glyph (should be larger than \texttt{clefflatspace} so that a flatted clef can be distinguished from a flat which is part of the first glyph on a line, but also smaller than \texttt{spaceafterlineclef}, the distance from the clef to the first notes).
 
 Default: $\unit[-0.32816]{cm}$ plus \unit[0.01093]{cm} minus \unit[0.01093]{cm}
 
@@ -1054,7 +1054,7 @@ Space between the initial and the beginning of the score.
 Default: \unit[0.2457]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
 
 \macroname{minimalspaceatlinebeginning}{}{gsp-default.tex}
-Minimal space at the beginning of a line.
+Minimal space in front of the lyrics at the beginning of a line when \texttt{bolshift}s are enabled.
 
 Default: \unit[1.7]{cm}
 
