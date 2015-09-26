@@ -10,6 +10,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Changed
 - `\grecreatedim` and `\grechangedim` now take keywords for their third argument (`scalable` and `fixed`( instead of integers (`1` and `0`) to make the more in keeping with the overall user command conventions.
 - `\grescaledim` now accepts `scalable` as a keyword to turn on scalable (in keeping with the above change)
+- Alterations are partially ignored when aligning lines on the notes (i.e. `\gresetbolshifts{enabled}`).  They are not allowed to get any closer to the clef than `beforealterationspace` and the lyrics are not allowed to get any closer to the left-hand margin than `minimalspaceatlinebeginning`, but other than that GregorioTeX will shift them left as much as possible to make the notes align `spaceafterlineclef` away from the clef.  Note that for the default values of these distances, only the natural is small enough to acheive true alignment.
 
 ### Added
 - New distance, `initialraise`, which will lift (or lower, if negative) the initial.
