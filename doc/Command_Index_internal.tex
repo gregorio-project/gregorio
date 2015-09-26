@@ -914,6 +914,9 @@ Alias for \verb=\luatexlocalrightbox=.
 \macroname{\textbackslash gre@resizebox}{}{gregoriotex-main.tex}
 Alias for \verb=\resizebox=.
 
+\macroname{\textbackslash gre@dimension}{}{gregoriotex-spaces.tex}
+Workhorse function behind \verb=\grecreatedim= and \verb=\grechangedim=.
+
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
 
@@ -1076,9 +1079,9 @@ A class of macros for the horizontal episema which populates the \verb=\gre@box@
 
 Flags are either boolean (defined with \verb=\newif=), Lua\TeX\ attributes, or counts (defined with \verb=\newcount=).  They store settings and/or the current state of something so that Gregorio\TeX\ can typeset things in the desired manner.
 
-All distances in \nameref{distances} have a flag associated with them, of the form \verb=\gre@scale@*=.  This flag
-indicates if the distance should scale when the staff size changes (1)
-or not (0).
+All distances in \nameref{distances} and \texttt{stafflinefactor} have a boolean associated with them, of the form \verb=\ifgre@scale@*=.  This boolean
+indicates if the distance should scale when the staff size changes (true)
+or not (false).
 
 \macroname{\textbackslash ifgre@checklength}{}{gregoriotex-spaces.tex}
 Boolean used in \verb=\gresetdim= to indicate if we are attempting to set a rubber length.
