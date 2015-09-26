@@ -10,11 +10,13 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Changed
 - `\grecreatedim` and `\grechangedim` now take keywords for their third argument (`scalable` and `fixed`( instead of integers (`1` and `0`) to make the more in keeping with the overall user command conventions.
 - `\grescaledim` now accepts `scalable` as a keyword to turn on scalable (in keeping with the above change)
+- `gregoriotex.sty` and `gregoriosyms.sty` now check to make sure that they are not both loaded.  If `gregoriotex` detects that `gregoriosyms` is loaded, then an error is raised.  If `gregoriosyms` detects that `gregoriotex` is loaded, then the loading of `gregoriosyms` is silently aborted and compilation proceeds.
 
 ### Added
 - New distance, `initialraise`, which will lift (or lower, if negative) the initial.
 - The first word of the score is now passed to a macro that allow it to be styled from TeX.  The first word is passed to `\GreFirstWord#1` and is styled by changing the `firstword` style.
 - A new type of lyric centering, enabled with `\gresetlyriccentering{firstletter}`, which aligns the neume with the first letter of each syllable.
+- `\greornamentation` allows access to the two ornamentation glyphs.  The ability to access these two glyphs via `{\gregoriosymbolfont \char 75}` was broken by the new interface to the glyphs in greextra.
 
 ## [4.0.0-beta2] - 2015-08-26
 ### Fixed
