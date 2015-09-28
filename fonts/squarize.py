@@ -598,18 +598,27 @@ def pes(widths):
     precise_message("pes")
     for i in range(1, MAX_INTERVAL+1):
         write_pes(widths, i, "p2base", S_PES)
-    precise_message("pes quilisma")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes(widths, i, "QuilismaLineTR", S_PES_QUILISMA)
     precise_message("pes deminutus")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_deminutus(widths, i, "pesdeminutus", S_PES, L_DEMINUTUS)
+    precise_message("pes quilisma")
+    for i in range(1, MAX_INTERVAL+1):
+        write_pes(widths, i, "QuilismaLineTR", S_PES_QUILISMA)
+    precise_message("pes quilisma deminutus")
+    for i in range(1, MAX_INTERVAL+1):
+        write_pes_deminutus(widths, i, "QuilismaLineTR", S_PES_QUILISMA,
+                L_DEMINUTUS)
+    precise_message("pes quassus deminutus")
+    for i in range(1, MAX_INTERVAL+1):
+        write_pes_deminutus(widths, i, "OriscusLineTR", S_PES_QUASSUS,
+                L_DEMINUTUS)
     precise_message("pes initio debilis")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_debilis(widths, i, S_PES, L_INITIO_DEBILIS)
     precise_message("pes initio debilis deminutus")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_debilis_deminutus(widths, i, S_PES, L_INITIO_DEBILIS_DEMINUTUS)
+        write_pes_debilis_deminutus(widths, i, S_PES,
+                L_INITIO_DEBILIS_DEMINUTUS)
 
 def write_pes(widths, i, first_glyph, shape, lique=L_NOTHING):
     "Writes the pes glyphs."
@@ -807,6 +816,16 @@ def salicus(widths):
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             write_salicus(widths, i, j, "rvlbase", S_SALICUS_LONGQUEUE)
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            write_salicus(widths, i, j, "rdeminutus", S_SALICUS, L_DEMINUTUS)
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            write_salicus(widths, i, j, "auctusa2", S_SALICUS, L_ASCENDENS)
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            write_salicus(widths, i, j, "PunctumAuctusLineBL", S_SALICUS,
+                    L_DESCENDENS)
 
 def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
     "Writes the salicus glyphs."
@@ -814,12 +833,13 @@ def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
     glyph_name = '%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], lique)
     if copy_existing_glyph(glyph_name):
         return
-    if j == 1:
+    not_deminutus = last_glyph != 'rdeminutus'
+    if j == 1 and not_deminutus:
         if last_glyph == 'rvsbase':
             last_glyph = 'Virga'
         elif last_glyph == 'rvlbase':
             last_glyph = 'VirgaLongqueue'
-    if i == 1 and j == 1:
+    if i == 1 and j == 1 and not_deminutus:
         first_glyph = 'Punctum'
         first_width = get_width(widths, first_glyph)
         middle_glyph = 'Oriscus'
@@ -829,7 +849,7 @@ def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
         first_width = get_width(widths, first_glyph)
         middle_glyph = 'OriscusLineTR'
         middle_width = get_width(widths, middle_glyph)-get_width(widths, 'line2')
-    elif j == 1:
+    elif j == 1 and not_deminutus:
         first_glyph = 'PunctumLineTR'
         first_width = get_width(widths, first_glyph)-get_width(widths, 'line2')
         middle_glyph = 'obase4'
@@ -848,10 +868,24 @@ def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
     if j != 1:
         linename = "line%d" % j
         paste_and_move(linename, length, (i+1)*BASE_HEIGHT)
-    else:
+    elif not_deminutus:
         length = length-0.01
-    paste_and_move(last_glyph, length, (i+j)*BASE_HEIGHT)
-    set_width(length+get_width(widths, last_glyph))
+        if last_glyph == 'auctusa2':
+            last_glyph = 'PunctumAscendens'
+        elif last_glyph == 'PunctumAuctusLineBL':
+            last_glyph = 'PunctumDescendens'
+        elif last_glyph == 'rvsbase':
+            last_glyph = 'Virga'
+        elif last_glyph == 'rvlbase':
+            last_glyph = 'VirgaLongqueue'
+    if not_deminutus:
+        paste_and_move(last_glyph, length, (i+j)*BASE_HEIGHT)
+        length = length + get_width(widths, last_glyph)
+    else:
+        length = length+get_width(widths, 'line2')
+        paste_and_move(last_glyph, (length-get_width(widths, last_glyph)),
+                       (i+j)*BASE_HEIGHT)
+    set_width(length)
     end_glyph(glyph_name)
 
 def flexus(widths):
