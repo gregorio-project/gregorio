@@ -256,7 +256,7 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         return "OriscusScapusLongqueue";
     case S_STROPHA:
         *type = AT_STROPHA;
-        if (glyph->u.notes.liquescentia == L_AUCTA) {
+        if (note->u.note.liquescentia == L_AUCTA) {
             return "StrophaAucta";
         }
         return "Stropha";

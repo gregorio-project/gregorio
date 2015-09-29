@@ -162,6 +162,10 @@ You can freely switch between the two behaviors within a TeX document.
 
 In order to better match the new command naming conventions, the third argument of `\grecreatedim` and `\grechangedim` should now be `scaling` or `fixed` instead of `1` or `0`, respectively.
 
+#### Liquescence on bistropha and tristropha
+
+In order to be more consistent, making a bistropha or tristropha liquescent by adding `<` in gabc will now only affect the note thus marked.  This means that a tristropha like `(gsss<)` will only show the final stropha as liquescent, which is different from the older behavior of making every stropha liquescent.  If you prefer the old behavior, mark every note explicitly as liquescent with something like `(gs<gs<gs<)`.
+
 ## 3.0
 ### TeX Live 2013
 
