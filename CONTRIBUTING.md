@@ -44,13 +44,14 @@ are the same under GNU/Linux and Mac OSX:
 
 Gregorio targets the following:
 
- * C standard: [ISO C99 Standard](http://en.wikipedia.org/wiki/C99)
+ * C standard: [ISO C89 Standard](http://en.wikipedia.org/wiki/ANSI_C#C89)
  * compilers: [gcc](https://gcc.gnu.org/) and [clang](http://clang.llvm.org/)
  * architectures: `i586`, `amd64`, `arm`, `arm64`
  * under Linux, only [`glibc`](http://www.gnu.org/software/libc/)
  * must compile under Mac OSX natively, and under [mingw32](http://www.mingw.org/) and [mingw_w64](https://sourceforge.net/projects/mingw-w64/)
+ * for inclusion with TeX Live, must compile under VisualStudio 2010 for Windows.
 
-Specific C extensions (GNU extensions, C11, etc.) working for all the above targets are allowed on a case-by-case basis. Patches for other compilers, architectures or libraries can be accepted if they are clean, small and non-intrusive.
+Specific C extensions (GNU extensions, etc.) working for all the above targets are allowed on a case-by-case basis. Patches for other compilers, architectures or libraries can be accepted if they are clean, small and non-intrusive.
 
 Use indent on your code before commiting it, with the `.indent.pro` file in the repository: `indent path/to/my/file.c`.
 
