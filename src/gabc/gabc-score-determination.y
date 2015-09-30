@@ -681,6 +681,7 @@ definitions:
 number_of_voices_definition:
     NUMBER_OF_VOICES attribute {
         number_of_voices=atoi($2.text);
+        free($2.text);
         if (number_of_voices > MAX_NUMBER_OF_VOICES) {
             gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
                     _("can't define %d voices, maximum is %d"),
@@ -692,6 +693,7 @@ number_of_voices_definition:
 
 macro_definition:
     DEF_MACRO attribute {
+        free(macros[$1.character - '0']);
         macros[$1.character - '0'] = $2.text;
     }
     ;
@@ -710,6 +712,7 @@ name_definition:
 centering_scheme_definition:
     CENTERING_SCHEME attribute {
         set_centering_scheme($2.text);
+        free($2.text);
     }
     ;
 
@@ -791,6 +794,7 @@ gabc_version_definition:
                     GABC_CURRENT_VERSION " ; there may be problems"),
                     "det_score", VERBOSITY_WARNING, 0);
         }
+        free($2.text);
     }
     ;
 
@@ -883,7 +887,6 @@ transcriber_definition:
     TRANSCRIBER attribute {
         check_multiple("transcriber", score->si.transcriber != NULL);
         gregorio_set_score_transcriber (score, $2.text);
-        /* free($2.text); */
     }
     ;
 
@@ -922,6 +925,7 @@ virgula_position_definition:
 generated_by_definition:
     GENERATED_BY attribute {
         /* set_voice_generated_by (current_voice_info, $2.text); */
+        free($2.text);
     }
     ;
 
