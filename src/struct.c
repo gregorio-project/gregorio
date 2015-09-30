@@ -240,6 +240,7 @@ void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str)
             strcpy(res, (*current_note)->texverb);
             strcat(res, str);
             free((*current_note)->texverb);
+            free(str);
             (*current_note)->texverb = res;
         } else {
             (*current_note)->texverb = str;
@@ -1058,27 +1059,14 @@ gregorio_score *gregorio_new_score(void)
 
 static void gregorio_free_source_info(source_info *si)
 {
-    if (si->date) {
-        free(si->date);
-    }
-    if (si->author) {
-        free(si->author);
-    }
-    if (si->manuscript) {
-        free(si->manuscript);
-    }
-    if (si->manuscript_reference) {
-        free(si->manuscript_reference);
-    }
-    if (si->manuscript_storage_place) {
-        free(si->manuscript_storage_place);
-    }
-    if (si->transcriber) {
-        free(si->transcriber);
-    }
-    if (si->transcription_date) {
-        free(si->transcription_date);
-    }
+    free(si->date);
+    free(si->author);
+    free(si->manuscript);
+    free(si->manuscript_reference);
+    free(si->manuscript_storage_place);
+    free(si->transcriber);
+    free(si->transcription_date);
+    free(si->book);
 }
 
 static void gregorio_free_score_infos(gregorio_score *score)
@@ -1089,31 +1077,18 @@ static void gregorio_free_score_infos(gregorio_score *score)
                 "gregorio_free_score_infos", VERBOSITY_WARNING, 0);
         return;
     }
-    if (score->name) {
-        free(score->name);
-    }
-    if (score->office_part) {
-        free(score->office_part);
-    }
-    if (score->occasion) {
-        free(score->occasion);
-    }
-    if (score->meter) {
-        free(score->meter);
-    }
-    if (score->commentary) {
-        free(score->commentary);
-    }
-    if (score->arranger) {
-        free(score->arranger);
-    }
-    if (score->user_notes) {
-        free(score->user_notes);
-    }
+    free(score->name);
+    free(score->gabc_copyright);
+    free(score->score_copyright);
+    free(score->office_part);
+    free(score->occasion);
+    free(score->meter);
+    free(score->commentary);
+    free(score->arranger);
+    free(score->user_notes);
+    free(score->gregoriotex_font);
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
-        if (score->annotation[annotation_num]) {
-            free(score->annotation[annotation_num]);
-        }
+        free(score->annotation[annotation_num]);
     }
     gregorio_free_source_info(&score->si);
     if (score->first_voice_info) {
@@ -1140,6 +1115,7 @@ void gregorio_set_score_name(gregorio_score *score, char *name)
                 "gregorio_set_score_name", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->name);
     score->name = name;
 }
 
@@ -1151,6 +1127,7 @@ void gregorio_set_score_gabc_copyright(gregorio_score *score,
                 "gregorio_set_score_gabc_copyright", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->gabc_copyright);
     score->gabc_copyright = gabc_copyright;
 }
 
@@ -1162,6 +1139,7 @@ void gregorio_set_score_score_copyright(gregorio_score *score,
                 "gregorio_set_score_score_copyright", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->score_copyright);
     score->score_copyright = score_copyright;
 }
 
@@ -1172,6 +1150,7 @@ void gregorio_set_score_office_part(gregorio_score *score, char *office_part)
                 "gregorio_set_score_office_part", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->office_part);
     score->office_part = office_part;
 }
 
@@ -1182,6 +1161,7 @@ void gregorio_set_score_occasion(gregorio_score *score, char *occasion)
                 "gregorio_set_score_occasion", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->occasion);
     score->occasion = occasion;
 }
 
@@ -1192,6 +1172,7 @@ void gregorio_set_score_meter(gregorio_score *score, char *meter)
                 "gregorio_set_score_meter", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->meter);
     score->meter = meter;
 }
 
@@ -1202,6 +1183,7 @@ void gregorio_set_score_commentary(gregorio_score *score, char *commentary)
                 "gregorio_set_score_commentary", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->commentary);
     score->commentary = commentary;
 }
 
@@ -1212,6 +1194,7 @@ void gregorio_set_score_arranger(gregorio_score *score, char *arranger)
                 "gregorio_set_score_arranger", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->arranger);
     score->arranger = arranger;
 }
 
@@ -1230,9 +1213,10 @@ void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes)
 {
     if (!score) {
         gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_score_name", VERBOSITY_WARNING, 0);
+                "gregorio_set_score_user_notes", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->user_notes);
     score->user_notes = user_notes;
 }
 
@@ -1259,12 +1243,8 @@ void gregorio_free_voice_infos(gregorio_voice_info *voice_info)
         return;
     }
     while (voice_info) {
-        if (voice_info->style) {
-            free(voice_info->style);
-        }
-        if (voice_info->virgula_position) {
-            free(voice_info->virgula_position);
-        }
+        free(voice_info->style);
+        free(voice_info->virgula_position);
         next = voice_info->next_voice_info;
         free(voice_info);
         voice_info = next;
@@ -1290,6 +1270,11 @@ void gregorio_set_score_annotation(gregorio_score *score, char *annotation)
             break;
         }
     }
+    if (annotation_num >= MAX_ANNOTATIONS) {
+        free(annotation);
+        gregorio_message(_("too many annotations"),
+                "gregorio_set_annotation", VERBOSITY_WARNING, 0);
+    }
 }
 
 void gregorio_set_score_author(gregorio_score *score, char *author)
@@ -1299,6 +1284,7 @@ void gregorio_set_score_author(gregorio_score *score, char *author)
                 "gregorio_set_score_author", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->si.author);
     score->si.author = author;
 }
 
@@ -1309,6 +1295,7 @@ void gregorio_set_score_date(gregorio_score *score, char *date)
                 "gregorio_set_score_date", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->si.date);
     score->si.date = date;
 }
 
@@ -1319,6 +1306,7 @@ void gregorio_set_score_manuscript(gregorio_score *score, char *manuscript)
                 "gregorio_set_score_manuscript", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->si.manuscript);
     score->si.manuscript = manuscript;
 }
 
@@ -1330,6 +1318,7 @@ void gregorio_set_score_manuscript_reference(gregorio_score *score,
                 "gregorio_set_score_reference", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->si.manuscript_reference);
     score->si.manuscript_reference = manuscript_reference;
 }
 
@@ -1342,6 +1331,7 @@ void gregorio_set_score_manuscript_storage_place(gregorio_score *score,
                 VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->si.manuscript_storage_place);
     score->si.manuscript_storage_place = manuscript_storage_place;
 }
 
@@ -1352,6 +1342,7 @@ void gregorio_set_score_book(gregorio_score *score, char *book)
                 "gregorio_set_score_book", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->si.book);
     score->si.book = book;
 }
 
@@ -1362,6 +1353,7 @@ void gregorio_set_score_transcriber(gregorio_score *score, char *transcriber)
                 "gregorio_set_score_transcriber", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->si.transcriber);
     score->si.transcriber = transcriber;
 }
 
@@ -1373,6 +1365,7 @@ void gregorio_set_score_transcription_date(gregorio_score *score,
                 "gregorio_set_score_transcription_date", VERBOSITY_WARNING, 0);
         return;
     }
+    free(score->si.transcription_date);
     score->si.transcription_date = transcription_date;
 }
 
@@ -1383,6 +1376,7 @@ void gregorio_set_voice_style(gregorio_voice_info *voice_info, char *style)
                 "gregorio_set_voice_style", VERBOSITY_WARNING, 0);
         return;
     }
+    free(voice_info->style);
     voice_info->style = style;
 }
 
@@ -1394,6 +1388,7 @@ void gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
                 "gregorio_set_voice_virgula_position", VERBOSITY_WARNING, 0);
         return;
     }
+    free(voice_info->virgula_position);
     voice_info->virgula_position = virgula_position;
 }
 

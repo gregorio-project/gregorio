@@ -52,13 +52,15 @@ static __inline gregorio_scanner_location *copy_note_location(
  *
 ****************************/
 
-static void close_glyph(gregorio_glyph **last_glyph,
+static gregorio_note *close_glyph(gregorio_glyph **last_glyph,
         gregorio_glyph_type glyph_type, gregorio_note **first_note,
         gregorio_liquescentia liquescentia, gregorio_note *current_note)
 {
+    gregorio_note *new_current_note = current_note;
     gregorio_scanner_location loc;
     /* a variable necessary for the patch for G_BIVIRGA & co. */
     gregorio_note *added_notes = NULL;
+    gregorio_note *next_note = NULL;
 
     /* patch to have good glyph type in the case where a glyph ends by a note
      * with shape S_QUADRATUM */
@@ -138,29 +140,39 @@ static void close_glyph(gregorio_glyph **last_glyph,
             if (!added_notes) {
                 break;
             }
+            next_note = current_note->next;
             /* now we have what we want, we set up the links and free the old
              * note */
-            if (current_note->next) {
+            if (next_note) {
                 current_note->next->previous = added_notes;
-                added_notes->next = current_note->next;
+                added_notes->next = next_note;
             }
             gregorio_go_to_first_note(&added_notes);
             if (current_note->previous) {
                 current_note->previous->next = added_notes;
                 added_notes->previous = current_note->previous;
+            } else {
+                new_current_note = added_notes;
             }
-            if (!current_note->previous && !current_note->next) {
+            /* Detaching current_note is not strictly necessary here because we
+             * are effectively plucking out added_notes into its own glyph;
+             * however, detaching the note is safer if this behavior changes in
+             * the future because gregorio_free_one_note nullifies surrounding
+             * pointers */
+            current_note->next = NULL;
+            current_note->previous = NULL;
+            gregorio_free_one_note(&current_note);
+            if (!next_note) {
                 current_note = added_notes;
                 break;
-            } else {
-                gregorio_free_one_note(&current_note);
-                /* automatically sets first_note to the next note */
             }
+            current_note = next_note;
         }
         gregorio_go_to_first_note(&current_note);
         /* finally we set the just added glyph first_note to current_note */
         (*last_glyph)->u.notes.first_note = current_note;
     }
+    return new_current_note;
 }
 
 /* a small function to automatically determine the pitch of a custo : it is
@@ -872,7 +884,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                 liquescentia += current_note->u.note.liquescentia;
                 /* once again, only works with the good values in the header
                  * file */
-                close_glyph(&last_glyph, current_glyph_type,
+                current_note = close_glyph(&last_glyph, current_glyph_type,
                         &current_glyph_first_note, liquescentia, current_note);
                 current_glyph_type = G_UNDETERMINED;
                 liquescentia = L_NO_LIQUESCENTIA;
@@ -945,7 +957,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                         continue;
                     }
                 }
-                close_glyph(&last_glyph, current_glyph_type,
+                current_note = close_glyph(&last_glyph, current_glyph_type,
                         &current_glyph_first_note,
                         current_note->u.note.liquescentia, current_note);
                 current_glyph_type = G_UNDETERMINED;
@@ -954,7 +966,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         case DET_END_OF_CURRENT:
             liquescentia += current_note->u.note.liquescentia;
             /* once again, only works with the good values in the header file */
-            close_glyph(&last_glyph, next_glyph_type,
+            current_note = close_glyph(&last_glyph, next_glyph_type,
                     &current_glyph_first_note, liquescentia, current_note);
             current_glyph_type = G_UNDETERMINED;
             liquescentia = L_NO_LIQUESCENTIA;
@@ -969,7 +981,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             }
             current_glyph_type = G_UNDETERMINED;
             liquescentia = L_NO_LIQUESCENTIA;
-            close_glyph(&last_glyph, next_glyph_type,
+            current_note = close_glyph(&last_glyph, next_glyph_type,
                     &current_glyph_first_note,
                     current_note->u.note.liquescentia, current_note);
             break;
@@ -977,7 +989,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
 
         if (!next_note && current_glyph_type != G_UNDETERMINED) {
             /* we must end the determination here */
-            close_glyph(&last_glyph, current_glyph_type,
+            current_note = close_glyph(&last_glyph, current_glyph_type,
                     &current_glyph_first_note, liquescentia, current_note);
         }
 
