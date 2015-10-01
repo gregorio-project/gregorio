@@ -92,6 +92,8 @@ This would have made the text which was wrapped with `<alt></alt>` in your gabc 
 
     \grechangestyle{abovelinetext}{\small\it}
 
+Additionally, if you had been raising the initial and big initial (i.e., with `\raisebox`) with `\greinitialformat` and `\grebiginitialformat`, you will not be able to do that with styles.  In order to raise the initial and big initial, respectively change the `initialraise` and `biginitialraise` dimensions.
+
 ### Centering scheme
 
 The gabc `centering-scheme` header is now deprecated and will disappear soon.  Use the `\grelyriccentering` command from TeX instead.  If you were using `centering-scheme: latine;` in gabc, now use `\grelyriccentering{vowel}` in the TeX file that includes the gabc.  If you were using `centering-scheme: english;` in gabc, now use `\grelyriccentering{syllable}` in the TeX file that includes the gabc.
