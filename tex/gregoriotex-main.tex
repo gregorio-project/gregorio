@@ -70,13 +70,19 @@
 
 \AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
-% Since TeXLive 2009, the extra primitives of LuaTeX have a luatex prefix, and are not
-% available without prefix. We mostly rely on \directlua that is still available
-% without prefix, but we also rely on the Omega primitives, that have a luatex
-% prefix in TeXLive 2009.
+% Depending on version of TeX / LaTeX, some primitives may or may not have a
+% luatex prefix, so we need to check and handle either
 
-\let\gre@localleftbox\luatexlocalleftbox%
-\let\gre@localrightbox\luatexlocalrightbox%
+\ifdefined\localleftbox%
+  \let\gre@localleftbox\localleftbox%
+\else%
+  \let\gre@localleftbox\luatexlocalleftbox%
+\fi%
+\ifdefined\localrightbox%
+  \let\gre@localrightbox\localrightbox%
+\else%
+  \let\gre@localrightbox\luatexlocalrightbox%
+\fi%
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
 % if it is 2, it means that it's never useful to typeset a dash
