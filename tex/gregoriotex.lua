@@ -214,7 +214,8 @@ local function init(arg, enable_height_computation)
   if enable_height_computation then
     new_line_heights = {}
 
-    local mcb_version = luatexbase.get_module_version('luatexbase-mcb')
+    local mcb_version = luatexbase.get_module_version and
+        luatexbase.get_module_version('luatexbase-mcb') or 9999
     if mcb_version and mcb_version > 0.6 then
       luatexbase.add_to_callback('finish_pdffile', write_greaux,
           'gregoriotex.write_greaux')
