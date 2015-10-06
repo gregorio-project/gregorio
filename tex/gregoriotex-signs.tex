@@ -1620,12 +1620,12 @@
 % the argument is the character with which we fill the hole, and we suppose that
 % isonaline and glyphraisevalue are correctly set.
 \def\gre@fillhole#1{%
-  \setbox\gre@box@temp@width=\hbox{#1}%
+  \setbox\gre@box@temp@sign=\hbox{#1}%
   \hbox to 0pt{%
     {%
     \color{grebackgroundcolor}%
     \raise \gre@dimen@glyphraisevalue\relax%
-    \copy\gre@box@temp@width %
+    \copy\gre@box@temp@sign %
     }%
     %\pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
     \hss %
@@ -1644,7 +1644,7 @@
 % #3 is the char of the alteration hole
 % #4 is 1 in the case of a flat for a key change, 0 otherwise
 \def\gre@alteration#1#2#3#4{%
-  % to see why we reset \gre@lastoflinecount, see comments of \GreGlyph.
+  \setbox\gre@box@temp@width=\hbox{#2}%
   \ifnum#4=0\relax %
     \gre@newglyphcommon %
   \fi %
@@ -1652,11 +1652,6 @@
   \ifgre@hidealtlines %
     \gre@fillhole{#3}%
   \fi %
-  \setbox\gre@box@temp@width=\hbox{#2}%
-  %\gre@dimen@temp@three=\wd\gre@box@temp@width 
-  %\kern\gre@dimen@temp@three 
-  %#3\relax 
-  %\kern-\gre@dimen@temp@three 
   \raise \gre@dimen@glyphraisevalue\relax%
   \copy\gre@box@temp@width%
   \ifnum#4=0\relax %
@@ -1664,21 +1659,24 @@
     \GreNoBreak %
     \gre@skip@temp@four = \gre@skip@alterationspace\relax%
     \ifgre@firstglyph%
+      \gre@debugmsg{bolshift}{making adjustments for leading alteration}%
       \global\advance\gre@dimen@notesaligncenter by \wd\gre@box@temp@width %
       \global\advance\gre@dimen@notesaligncenter by \dimexpr\gre@skip@temp@four\relax %
       \kern\gre@skip@temp@four %
+      \global\gre@dimen@bolextra = \wd\gre@box@temp@width%
+      \gre@skip@temp@four = \gre@skip@alterationspace\relax%
+      \global\advance\gre@dimen@bolextra by \dimexpr\gre@skip@temp@four\relax%
+      \gre@debugmsg{bolshift}{bolextra: \the\gre@dimen@bolextra}%
     \else %
       \gre@hskip\gre@skip@temp@four %
     \fi %
     \GreNoBreak %
   \fi %
-  %#4\relax 
-  %\GreNoBreak 
   \relax %
 }%
   %
 % This macro typesets a flat on the height provided by #1. #2 is not used yet, but it
-% will determine if the flat has zero width or not. #3 and #4 should be the same as GreGlyph's #5 and #6, but it's not really done nor useful...
+% will determine if the flat has zero width or not.
 
 \def\GreFlat#1#2{%
   \gre@alteration{#1}{\gre@fontchar@flat}{\gre@fontchar@flathole}{#2}%

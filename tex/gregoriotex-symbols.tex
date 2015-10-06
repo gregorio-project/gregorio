@@ -196,3 +196,17 @@
   \gre@deprecated{\protect\gresep}{\protect\greseparator}%
   \greseparator{#1}{#2}%
 }
+
+%%%%%%%%%%%
+%% Ornamentation
+%%%%%%%%%%%
+
+\gredefsizedsymbol{greOrnamentOne}{greextra}{Drawing1}%
+\gredefsizedsymbol{greOrnamentTwo}{greextra}{Drawing2}%
+
+\def\greornamentation#1#2{%
+  \ifcase#1\relax%
+  \or\greOrnamentOne{#2}%
+  \or\greOrnamentTwo{#2}%
+  \fi%
+}%

@@ -67,8 +67,8 @@ Note: `3`, `4`, and `5` encompass a new feature and are listed here only for com
 
 Changing the styling of text elements of the score (the initial, translations, etc.) formerly required the user to redefine a command which took an argument, while changing the styling of the staff lines had a command specialized to that purpose.  All formats can now be changed via the `\grechangestyle` command.  This command takes two or three arguments.  The first argument, required, is the name of the format to be altered.  The defined formats are:
 
-- `greinitial`: normal initials
-- `grebiginitial`: big (2-line) initials
+- `initial`: normal initials
+- `biginitial`: big (2-line) initials
 - `translation`: translation text
 - `abovelinestext`: above lines text (`alt` in gabc)
 - `normalstafflines`: the full length staff lines
@@ -161,6 +161,10 @@ You can freely switch between the two behaviors within a TeX document.
 #### Keyword argument for `\grecreatedim` and `\grechangedim`
 
 In order to better match the new command naming conventions, the third argument of `\grecreatedim` and `\grechangedim` should now be `scaling` or `fixed` instead of `1` or `0`, respectively.
+
+#### Liquescence on bistropha and tristropha
+
+In order to be more consistent, making a bistropha or tristropha liquescent by adding `<` in gabc will now only affect the note thus marked.  This means that a tristropha like `(gsss<)` will only show the final stropha as liquescent, which is different from the older behavior of making every stropha liquescent.  If you prefer the old behavior, mark every note explicitly as liquescent with something like `(gs<gs<gs<)`.
 
 ## 3.0
 ### TeX Live 2013

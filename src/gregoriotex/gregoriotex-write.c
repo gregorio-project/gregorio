@@ -256,7 +256,7 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         return "OriscusScapusLongqueue";
     case S_STROPHA:
         *type = AT_STROPHA;
-        if (glyph->u.notes.liquescentia == L_AUCTA) {
+        if (note->u.note.liquescentia == L_AUCTA) {
             return "StrophaAucta";
         }
         return "Stropha";
@@ -387,7 +387,7 @@ static __inline int compute_ambitus(const gregorio_note *const current_note)
 }
 
 static const char *compute_glyph_name(const gregorio_glyph *const glyph,
-        const char *const shape, const gtex_glyph_liquescentia ltype)
+        const char *shape, const gtex_glyph_liquescentia ltype)
 {
     static char buf[BUFSIZE];
 
@@ -414,6 +414,12 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
     }
     if (!(ambitus1 = compute_ambitus(current_note))) {
         return "";
+    }
+    /* the salicus queue is at the end of the glyph, and it doesn't exist for
+     * the liquescent forms */
+    if (strcmp(shape, "SalicusLongqueue") == 0
+            && strcmp(liquescentia, "Nothing") != 0) {
+        shape = "Salicus";
     }
     current_note = current_note->next;
     if (!current_note->next) {

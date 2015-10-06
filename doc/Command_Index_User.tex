@@ -60,6 +60,8 @@ Module gregoriotex warning: Line heights or variable brace lengths may have chan
 
 Gregorio\TeX{} two-pass processing is compatible with \texttt{latexmk}.
 
+If you only need the special symbols which Gregorio\TeX\ contains, and not the ability to include scores or musical glyphs, then you can load \texttt{gregoriosyms} instead of \texttt{gregoriotex}.  It supports all of the above options except those specifically related to scores.  \textbf{You should not try to load both packages}.
+
 \subsection{Commands}
 
 Once you've included the package in your document (as explain above) the following commands allow you to insert scores and manipulate the way they appear in the document.
@@ -586,6 +588,15 @@ A macro for invoking one of the five separators (fancy lines) which are containe
   \#2 & integer & the point size at which to print the line\\
 \end{argtable}
 
+\macroname{\textbackslash greornamentation}{\{\#1\}\{\#2\}}{gregoriotex-symbols.tex}
+A macro for invoking one of the ornamentation elements which are contained in the greextra font.
+
+\begin{argtable}
+  \#1 & 1--2 & the line desired\\
+  \#2 & integer & the point size at which to print the line\\
+\end{argtable}
+
+
 \subsubsection{Styling}
 Different elements of an include score have different styles applied.  These elements and their defaults are listed below:
 
@@ -870,7 +881,7 @@ Space between an alteration (flat or natural) and the next glyph.
 Default: \unit[0.07747]{cm} plus \unit[0.01276]{cm} minus \unit[0.00455]{cm}
 
 \macroname{beforealterationspace}{}{gsp-default.tex}
-Negative space, difference between the normal space between two notes and the space between a note and a flat.  
+When bolshifts are enabled, minimal space between a clef at the beginning of the line and a leading alteration glyph (should be larger than \texttt{clefflatspace} so that a flatted clef can be distinguished from a flat which is part of the first glyph on a line, but also smaller than \texttt{spaceafterlineclef}, the distance from the clef to the first notes).
 
 Default: $\unit[-0.32816]{cm}$ plus \unit[0.01093]{cm} minus \unit[0.01093]{cm}
 
@@ -1060,7 +1071,7 @@ Space between the initial and the beginning of the score.
 Default: \unit[0.2457]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
 
 \macroname{minimalspaceatlinebeginning}{}{gsp-default.tex}
-Minimal space at the beginning of a line.
+Minimal space in front of the lyrics at the beginning of a line when \texttt{bolshift}s are enabled.
 
 Default: \unit[1.7]{cm}
 

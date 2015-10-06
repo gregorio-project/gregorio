@@ -92,8 +92,8 @@
 \grecreatedim{clefflatspace}{0.05469 cm plus 0.00638 cm minus 0.00638 cm}{scalable}%
 % space before a choral sign
 \grecreatedim{beforelowchoralsignspace}{0.04556 cm plus 0.00638 cm minus 0.00638 cm}{scalable}%
-% negative space, difference between the normal space between two notes and the space between a note and a flat
-\grecreatedim{beforealterationspace}{-0.32816 cm plus 0.01093 cm minus 0.01093 cm}{scalable}%
+% when bolshifts are enabled, minimal space between a clef at the beginning of the line and a leading alteration glyph (should be larger than clefflatspace so that a flatted clef can be distinguished from a flat which is part of the first glyph on a line, but also smaller than spaceafterlineclef, the distance from the clef to the first notes)
+\grecreatedim{beforealterationspace}{0.1 cm}{scalable}%
 % space between elements
 \grecreatedim{interelementspace}{0.06927 cm plus 0.00182 cm minus 0.00363 cm}{scalable}%
 % larger space between elements
@@ -164,7 +164,7 @@
 \grecreatedim{afterinitialshift}{0.2457 cm}{scalable}%
 % space before the initial
 \grecreatedim{beforeinitialshift}{0.2457 cm}{scalable}%
-% minimum space between beginning of line and first syllable text
+% when bolshifts are enabled, minimum space between beginning of line and first syllable text
 \grecreatedim{minimalspaceatlinebeginning}{0.05 cm}{scalable}%
 % space to force the initial width to.  Ignored when 0.
 \grecreatedim{manualinitialwidth}{0 cm}{scalable}%

@@ -21,6 +21,9 @@
 \ProvidesPackage{gregoriosyms}
     [2015/08/26 v4.0.0-beta2 GregorioTeX symbols only.]% PARSE_VERSION_DATE_LTX
 
+% If gregoriotex has been loaded, then we need to abort the loading process of this package here in order to avoid some conflicts.
+\ifcsname gregoriotex@symbols@loaded\endcsname\endinput\fi%
+
 \RequirePackage{kvoptions}%
 \RequirePackage{ifluatex}%
 \RequirePackage{luatexbase}%

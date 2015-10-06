@@ -42,7 +42,10 @@
 *.idx
 *.ilg
 *.ind
+
+## Tag and index files
 tags
+cscope.*
 
 ## Intermediate documents:
 *.dvi
