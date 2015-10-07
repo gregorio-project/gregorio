@@ -405,14 +405,14 @@ local offset_cases = {
   -- least two
   {
     case = 'SalicusOriscusWide',
-    v = [[\gre@vepisemusorrareaux{\GreCPPesQuassusLongqueueThreeNothing}{\GreCPSalicusOriscus}{2}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPPesQuassusLongqueueThreeNothing}{\gre@char@he@salicus@oriscus{#4}}{2}{#3}]],
+    v = [[\gre@vepisemusorrareaux{\GreCPVirgaStrataThreeNothing}{\GreCPSalicusOriscus}{3}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPVirgaStrataThreeNothing}{\gre@char@he@salicus@oriscus{#4}}{4}{#3}]],
   },
   -- "oriscus" as the middle note of a salicus with a second ambitus of one
   {
     case = 'SalicusOriscusOne',
-    v = [[\gre@vepisemusorrareaux{\GreCPPesQuassusLongqueueOneNothing}{\GreCPSalicusOriscus}{2}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPPesQuassusLongqueueOneNothing}{\gre@char@he@salicus@oriscus{#4}}{2}{#3}]],
+    v = [[\gre@vepisemusorrareaux{\GreCPVirgaStrataOneNothing}{\GreCPOriscus}{3}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPVirgaStrataOneNothing}{\gre@char@he@salicus@oriscus{#4}}{4}{#3}]],
   },
 }
 

@@ -1027,6 +1027,9 @@
 %    3 : go back to the beginning of the previous glyph and then forward the
 %        width of #1; this starts the episemus at the glyph from the start that
 %        starts just after #1's width from the start
+%    4 : go back to the beginning of the previous glyph and then forward the
+%        width of #1, then back the width of #2; this ends the episemus at the
+%        end of #1
 % #4 argument is the same as in hepisorline
 \def\gre@hepisorlineaux#1#2#3#4{%
   \ifcase#3%
@@ -1045,6 +1048,13 @@
     \gre@dimen@temp@three=\gre@dimen@lastglyphwidth\relax%
     \setbox\gre@box@temp@sign=\hbox{\gre@font@music #1}%
     \advance\gre@dimen@temp@three by -\wd\gre@box@temp@sign %
+  \or
+    % case 4
+    \gre@dimen@temp@three=\gre@dimen@lastglyphwidth\relax%
+    \setbox\gre@box@temp@sign=\hbox{\gre@font@music #1}%
+    \advance\gre@dimen@temp@three by -\wd\gre@box@temp@sign %
+    \setbox\gre@box@temp@sign=\hbox{\gre@font@music #2}%
+    \advance\gre@dimen@temp@three by \wd\gre@box@temp@sign %
   \fi%
   \kern-\gre@dimen@temp@three %
   % then we draw the sign, and go back to the beginning of the sign

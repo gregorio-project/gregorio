@@ -361,6 +361,8 @@ static const char *dump_glyph_type(gregorio_glyph_type glyph_type)
         return "G_SCANDICUS";
     case G_SALICUS:
         return "G_SALICUS";
+    case G_SALICUS_FLEXUS:
+        return "G_SALICUS_FLEXUS";
     case G_VIRGA_STRATA:
         return "G_VIRGA_STRATA";
     case G_TORCULUS_LIQUESCENS:
