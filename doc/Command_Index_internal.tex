@@ -185,9 +185,9 @@ Macro to calculate \texttt{nextbegindifference}.
   \#1 & string & the first letters of the next syllable\\
   \#2 & string & the middle letters of the next syllable (the vowel in Latin, the whole syllable in English)\\
   \#3 & string & the end letters of the next syllable\\
-  \#4 & $0 <$ integer $< 19$ & the type of notes alignment.  See \nameref{notesalign}.\\
-  & $20 <$ integer $< 39$ & Same as below 20 except there is a flat before the notes.  Subtract 20 to get the type of notes alignment.\\
-  & $40 <$ integer $< 59$ & Same as below 20 except there is a natural before the notes.  Subtract 40 to get the type of notes alignment.
+  \#4 & $0 \le$ integer $\le 19$ & the type of notes alignment.  See \nameref{notesalign}.\\
+  & $20 \le$ integer $\le 39$ & Same as below 20 except there is a flat before the notes.  Subtract 20 to get the type of notes alignment.\\
+  & $40 \le$ integer $\le 59$ & Same as below 20 except there is a natural before the notes.  Subtract 40 to get the type of notes alignment.
 \end{argtable}
 
 \macroname{\textbackslash gre@makein}{\#1}{gregoriotex-spaces.tex}
@@ -1504,7 +1504,7 @@ rather than have multiple definitions.
 
 \subsection{Note Alignment Type}\label{notesalign}
 \rowcolors{1}{lightgray}{lightgray}
-\begin{tabular}{cp{10.5cm plus .5cm}}
+\begin{tabulary}{\textwidth}{cL}
   \multicolumn{2}{c}{Integer with the following possibilities:} \\
   \hline
   0 & one-note glyph or more than two notes glyph except porrectus : here we must put the aligncenter in the middle of the first note\\
@@ -1520,7 +1520,7 @@ rather than have multiple definitions.
   10 & virgula\\
   11 & divisio minima, minor and maior\\
   12 & divisio finalis
- \end{tabular}
+ \end{tabulary}
 
 \subsection{Episemus Special}\label{EpisemusSpecial}
 \definecolor{shadecolor}{named}{lightgray}%
