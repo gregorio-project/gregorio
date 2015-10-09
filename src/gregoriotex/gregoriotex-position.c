@@ -24,10 +24,6 @@
 
 #include "gregoriotex.h"
 
-/* TODO: The numbers in the comments are a vestige of the older code; I'm
- * leaving them here for now, in case the refactor missed an instance
- * somewhere, but the numbers should evenually be removed */
-
 /* (loose) naming convention, employing camel case to be TeX-csname-compliant:
  * {specific-glyph-shape}{note-position}{note-shape}{first-ambitus}{second-ambitus}
  */
@@ -753,7 +749,11 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             h_episemus = VPOS_ABOVE;
             break;
         default:
-            note->gtex_offset_case = FinalConnectedVirga;
+            note->gtex_offset_case = last_note_case(glyph, FinalPunctum, note,
+                    false);
+            if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
+                v_episemus = VPOS_ABOVE;
+            }
             h_episemus = VPOS_ABOVE;
             break;
         }
