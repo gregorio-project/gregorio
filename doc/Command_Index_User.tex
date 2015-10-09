@@ -63,9 +63,11 @@ Gregorio\TeX{} two-pass processing is compatible with \texttt{latexmk}.
 If you only need the special symbols which Gregorio\TeX\ contains, and not the ability to include scores or musical glyphs, then you can load \texttt{gregoriosyms} instead of \texttt{gregoriotex}.  It supports all of the above options except those specifically related to scores.  \textbf{You should not try to load both packages}.
 
 \subsubsection{Gregorio\TeX\ and \texttt{fontspec}}
-Due to recent changes (September 2015) in the \LaTeX\ kernel and the resulting updates to \texttt{fontspec} and Gregorio\TeX, these two packages must now be loaded in order: \texttt{fontspec} first and then \texttt{gregoirotex}.  If you attempt to load them the other way around, you will get an error about undefined control sequences and will be unable to compile your document.
+Due to recent changes (September 2015) in the \LaTeX\ kernel and the resulting updates to \texttt{fontspec} and Gregorio\TeX, these two packages must now be loaded in order: \texttt{fontspec} first and then \texttt{gregoirotex} (or \texttt{gregoriosyms}).  If you attempt to load them the other way around, you will get an error about undefined control sequences and will be unable to compile your document.
 
-Note, Gregorio\TeX\ does not require \texttt{fontspec}, so documents which do not use \texttt{fontspec} are not affected by these changes.
+Gregorio\TeX\ does not require \texttt{fontspec}, so documents which do not use \texttt{fontspec} are not affected by these changes.
+
+\textit{Nota bene:} Some font packages (such as \texttt{libertine}) make use of \texttt{fontspec} and thus must also be loaded before \texttt{gregoriotex}.
 
 \subsection{Commands}
 
