@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+
+
+## [4.0.0-rc1] - 2015-10-08
 ### Fixed
 - Deactivating the end of line shifts now prevents lyrics from stretching under the custos at the end of the line.
 - All of the keywords for `\grescaledim` were now work as described in the documentation.
@@ -338,7 +341,7 @@ See GregorioRef.pdf for full details.
 - adding support for end of lines
 - adding support for compilation on MAC OSX
 
-     
+
 ## 0.2.2 - 2007-06-14
 ### Added
 - adding styles and centering in text
