@@ -17,6 +17,13 @@ fi
 if [ -z "$TEXMFLOCAL" ]; then
     TEXMFLOCAL=`/usr/texbin/kpsewhich -var-value TEXMFLOCAL`
 fi
+if [ -z "$TEXMFLOCAL" ]; then
+TEXMFLOCAL=`/Library/TeX/texbin/kpsewhich -expand-path $TEXMFLOCAL`
+sep=`/usr/texbin/kpsewhich -expand-path "{.,.}"`
+fi
+if [ -z "$TEXMFLOCAL" ]; then
+TEXMFLOCAL=`/Library/TeX/texbin/kpsewhich -var-value TEXMFLOCAL`
+fi
 
 TEXHASH=`which texhash`
 if [ -z "$TEXHASH" ]; then

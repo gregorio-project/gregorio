@@ -12,7 +12,13 @@ else
         echo "Passed"
         exit 0
     else
-        echo "Failed"
-        exit 1
+        TEMFLOCAL=`/Library/TeX/texbin/kpsewhich -var-value TEXMFLOCAL`
+        if [-n "$TEXMFLOCAL" ]; then
+            echo "Passed"
+            exit 0
+        else
+            echo "Failed"
+            exit 1
+        fi
     fi
 fi
