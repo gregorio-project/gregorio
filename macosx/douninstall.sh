@@ -11,7 +11,7 @@ if [ -z "$GRETEXDIR" ]; then
     GRETEXDIR=`/usr/texbin/kpsewhich gregoriotex.tex`
 fi
 if [ -z "$GRETEXDIR" ]; then
-GRETEXDIR=`/Library/TeX/texbin/kpsewhich gregoriotex.tex`
+    GRETEXDIR=`/Library/TeX/texbin/kpsewhich gregoriotex.tex`
 fi
 GRETEXDIR="${GRETEXDIR%/gregoriotex.tex}"
 TEXMFLOCAL="${GRETEXDIR%/tex/luatex/gregoriotex}"
