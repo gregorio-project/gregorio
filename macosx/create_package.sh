@@ -11,7 +11,7 @@ HERE=`pwd`
 # Command line tool and GregorioTeX
 BUILDDIR=$HERE/build
 cd ..
-./build.sh --arch=x86_64 --enable-all-static --disable-shared --enable-static-ltdl
+./build.sh --arch=x86_64
 # If the build process fails we halt this script here, since we can't build the
 # package without a properly compiled version of Gregorio.
 if [ ! $? -eq 0 ]; then
