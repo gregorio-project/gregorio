@@ -2647,7 +2647,7 @@ static void handle_final_bar(FILE *f, const char *type, gregorio_syllable *sylla
 
         case GRE_CUSTOS:
             assert(element->u.misc.pitched.force_pitch);
-            fprintf(f, "\\GreManualCustos{%d}%%\n",
+            fprintf(f, "\\GreFinalCustos{%d}%%\n",
                     pitch_value(element->u.misc.pitched.pitch));
             break;
 
@@ -3001,9 +3001,8 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                  * We don't print custos before a bar at the end of a line 
                  */
                 /* we also print an unbreakable larger space before the custo */
-                fprintf(f, "\\GreEndOfElement{1}{1}%%\n\\Gre%sCustos{%d}"
+                fprintf(f, "\\GreEndOfElement{1}{1}%%\n\\GreCustos{%d}"
                         "\\GreNextCustos{%d}%%\n",
-                        element->u.misc.pitched.force_pitch? "Manual" : "",
                         pitch_value(element->u.misc.pitched.pitch),
                         pitch_value(gregorio_determine_next_pitch(syllable,
                                 element, NULL)));
