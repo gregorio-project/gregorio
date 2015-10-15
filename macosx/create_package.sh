@@ -31,10 +31,6 @@ cp doc/*.tex $EXTRASDIR/doc/
 cp doc/*.pdf $EXTRASDIR/doc/
 cp doc/*.md $EXTRASDIR/doc/
 cp -r contrib/ $EXTRASDIR/contrib
-mv $EXTRASDIR/contrib/TeXworks/Mac\ OSX/* $EXTRASDIR/contrib/TeXworks
-rm -rf $EXTRASDIR/contrib/TeXworks/Mac\ OSX
-rm -rf $EXTRASDIR/contrib/TeXworks/Windows
-rm -rf $EXTRASDIR/contrib/TeXworks/Linux
 rm $EXTRASDIR/contrib/Makefile*
 cp -r examples/ $EXTRASDIR/examples
 rm $EXTRASDIR/examples/Makefile*
