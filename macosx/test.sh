@@ -1,44 +1,27 @@
 #!/usr/bin/env bash
 
-# Define a timestamp function
-timestamp() {
-    date +"%F %r %Z"
-}
+# Import the common material which locates the TeX tools and sets up the logfile
+source common.sh
 
-LOGDIR="/Users/Shared/Gregorio"
-if [ ! -d "$LOGDIR" ]; then
-    mkdir "$LOGDIR"
-fi
-LOGFILE="$LOGDIR/gregorio_install.log"
+writelog 6 "Checking for TeX installation"
 
-echo "$(timestamp): Gregorio Installation Started" > $LOGFILE
-echo "$(timestamp): Checking for TeX installation" >> $LOGFILE
-
-# Test to see if we have a valid TeX installation (by looking for kpsewhich)
-kpsewhichFound=0
-possibleLocations=(
-    '/usr/texbin'
-    '/Library/TeX/texbin'
-)
-for eachLocation in "${possibleLocations[@]}"; do
-    if [[ -e "${eachLocation}/kpsewhich" ]]; then
-        (( kpsewhichFound++ ))
-        echo "$(timestamp): Found kpsewhich at $eachLocation" >> $LOGFILE
-        texBinLocation="$eachLocation"
-        break
-    fi
-done
+# We assume that if common.sh could not find the TeX tools, then no valid TeX
+# installation exists
 if [[ "$kpsewhichFound" = 0 ]]; then
-    echo "$(timestamp): Cannot find kpsewhich" >> $LOGFILE
-    echo "$(timestamp): Installation Aborted!" >> $LOGFILE
+    writelog 3 "Cannot find kpsewhich"
+    writelog 3 "Installation Aborted!"
     exit 1
 else
-    TEXMFLOCAL=`$texBinLocation/kpsewhich -var-value TEXMFLOCAL`
-    if [ -z "$TEXMFLOCAL" ]; then
-        echo "$(timestamp): no valid TEXMFLOCAL value" >> $LOGFILE
-        ehco "$(timestamp): Installation Aborted!" >> $LOGFILE
+    writelog 6 "Found kpsewhich at $eachLocation"
+    # We now look to make sure TEXMFLOCAL is set
+    texmfLocal=`$KPSEWHICH -var-value TEXMFLOCAL`
+    if [ -z "$texmfLocal" ]; then
+        writelog 3 "no valid TEXMFLOCAL value"
+        writelog 3 "Installation Aborted!"
         exit 1
+    else
+        writelog 6 "TEXMFLOCAL has value $texmfLocal"
     fi
 fi
-echo "$(timestamp): Installtion Check Passed, proceeding to install files" >> $LOGFILE
+writelog 6 "Installtion Check Passed, proceeding to install files"
 exit 0

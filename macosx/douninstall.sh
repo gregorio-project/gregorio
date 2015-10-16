@@ -6,18 +6,12 @@ PREFIX="/usr/local"
 BINDIR="$PREFIX/bin"
 PKGCONFIGDIR="$PREFIX/lib/pkgconfig"
 GREINCLUDEDIR="$PREFIX/include/gregorio"
+
 # Find kpsewhich
-possibleLocations=(
-    '/usr/texbin'
-    '/Library/TeX/texbin'
-)
-for eachLocation in "${possibleLocations[@]}"; do
-    if [[ -e "${eachLocation}/kpsewhich" ]]; then
-        echo "$(timestamp): Found tools at $eachLocation" >> $LOGFILE
-        KPSEWHICH="$eachLocation/kpsewhich"
-        break
-    fi
-done
+source common.sh
+
+writelog 6 "Uninstalling Gregorio Components"
+
 GRETEXDIR=`$KPSEWHICH gregoriotex.tex`
 GRETEXDIR="${GRETEXDIR%/gregoriotex.tex}"
 TEXMFLOCAL="${GRETEXDIR%/tex/luatex/gregoriotex}"
