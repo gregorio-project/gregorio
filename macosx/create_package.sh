@@ -73,8 +73,7 @@ mv $BUILDDIR/Uninstall-Gregorio.pkg ../
 
 # Now we clean up
 cd ..
-make clean
-make distclean
+make maintainer-clean
 cd $HERE
 rm -rf build/
 rm -rf Resources/
