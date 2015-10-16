@@ -1,5 +1,40 @@
 #!/usr/bin/env bash
 
+rcfile=create_package.rc
+if [ -f $rcfile -a -r $rcfile ]; then
+    source $rcfile
+fi
+
+case "$(echo $CLEAN | tr '[:upper:]' '[:lower:]')" in
+    t|true|y|yes)
+        clean=true
+        ;;
+    *)
+        clean=false
+        ;;
+esac
+
+while (( $# > 0 )); do
+    unset OPTIND
+    while getopts ":c" opt; do
+        case $opt in
+            c)
+                if $clean; then
+                    clean=false
+                else
+                    clean=true
+                fi
+                ;;
+            \?)
+                echo "Unknown option: -$OPTARG" >&2
+                exit 2
+                ;;
+            esac
+    done
+    shift $((OPTIND - 1))
+done
+
+
 # NOTE: This script assumes that it was invoked from the macosx directory and
 # changes the working directory as needed accordingly.  Failure to invoke it
 # from that directory will result in strange things happening.
@@ -10,55 +45,67 @@ HERE=`pwd`
 
 # Command line tool and GregorioTeX
 BUILDDIR=$HERE/build
-cd ..
-./build.sh --arch=x86_64
-# If the build process fails we halt this script here, since we can't build the
-# package without a properly compiled version of Gregorio.
-if [ ! $? -eq 0 ]; then
-    exit $?
+if [ -d "$BUILDDIR" ]; then
+    echo "Using existing build"
+else
+    cd $HERE/..
+    ./build.sh --arch=x86_64
+    # If the build process fails we halt this script here, since we can't build the
+    # package without a properly compiled version of Gregorio.
+    if [ ! $? -eq 0 ]; then
+        exit $?
+    fi
+    make DESTDIR=$BUILDDIR install
+    ./install-gtex.sh dir:$BUILDDIR/tmp/gregorio
 fi
-make DESTDIR=$BUILDDIR install
-./install-gtex.sh dir:$BUILDDIR/tmp/gregorio
 
 # Documentation and other extras
 EXTRASDIR=$BUILDDIR/Gregorio
-mkdir $EXTRASDIR
-mkdir $EXTRASDIR/doc
-cd doc
-make doc
-cd ..
-cp doc/*.tex $EXTRASDIR/doc/
-cp doc/*.pdf $EXTRASDIR/doc/
-cp doc/*.md $EXTRASDIR/doc/
-cp -r contrib/ $EXTRASDIR/contrib
-rm $EXTRASDIR/contrib/Makefile*
-cp -r examples/ $EXTRASDIR/examples
-rm $EXTRASDIR/examples/Makefile*
-rm $EXTRASDIR/examples/*.log
-rm $EXTRASDIR/examples/*.*aux
-rm $EXTRASDIR/examples/*.gtex
-rm $EXTRASDIR/examples/*.synctex.gz
-cp *.md $EXTRASDIR
+if [ -d "$EXTRASDIR" ]; then
+    echo "Using existing extras"
+else
+    mkdir $EXTRASDIR
+    mkdir $EXTRASDIR/doc
+    cd $HERE/../doc
+    make doc
+    cd ..
+    cp doc/*.tex $EXTRASDIR/doc/
+    cp doc/*.pdf $EXTRASDIR/doc/
+    cp doc/*.md $EXTRASDIR/doc/
+    cp -r contrib/ $EXTRASDIR/contrib
+    rm $EXTRASDIR/contrib/Makefile*
+    cp -r examples/ $EXTRASDIR/examples
+    rm $EXTRASDIR/examples/Makefile*
+    rm $EXTRASDIR/examples/*.log
+    rm $EXTRASDIR/examples/*.*aux
+    rm $EXTRASDIR/examples/*.gtex
+    rm $EXTRASDIR/examples/*.synctex.gz
+    cp *.md $EXTRASDIR
+fi
 
 # Installer Resources
 RESOURCEDIR=$HERE/Resources
-mkdir $RESOURCEDIR
-pandoc -s ./README.md -f markdown -t html -o $RESOURCEDIR/README.html
-pandoc -s ./COPYING.md -f markdown -t html -o $RESOURCEDIR/COPYING.html
-# We redirect the relative links in the above files to point to particular
-# file versions in the repository.
-VERSION=`./VersionManager.py --get-current`
-HTMLPREFIX="https://github.com/gregorio-project/gregorio/blob/v"$VERSION"/"
-cd $RESOURCEDIR
-sed -i.temp -E "s|(href=.)([A-Z]+.md.)|\1$HTMLPREFIX\2|g" README.html COPYING.html
-# There are a few of characters that cause some problems, so we replace them
-# with html character codes to tidy up the appearence of the documents.
-sed -i.temp -E "s|\(C\)|\&copy;|g" README.html COPYING.html
-sed -i.temp -E "s|©|\&copy;|g" README.html COPYING.html
-sed -i.temp -E "s|--|\&#8212;|g" README.html COPYING.html
-sed -i.temp -E "s|“|\&#8220;|g" README.html COPYING.html
-sed -i.temp -E "s|”|\&#8221;|g" README.html COPYING.html
-
+if [ -d "$RESOURCEDIR" ]; then
+    echo "Using existing installer resources"
+else
+    mkdir $RESOURCEDIR
+    cd $HERE/..
+    pandoc -s ./README.md -f markdown -t html -o $RESOURCEDIR/README.html
+    pandoc -s ./COPYING.md -f markdown -t html -o $RESOURCEDIR/COPYING.html
+    # We redirect the relative links in the above files to point to particular
+    # file versions in the repository.
+    VERSION=`./VersionManager.py --get-current`
+    HTMLPREFIX="https://github.com/gregorio-project/gregorio/blob/v"$VERSION"/"
+    cd $RESOURCEDIR
+    sed -i.temp -E "s|(href=.)([A-Z]+.md.)|\1$HTMLPREFIX\2|g" README.html COPYING.html
+    # There are a few of characters that cause some problems, so we replace them
+    # with html character codes to tidy up the appearence of the documents.
+    sed -i.temp -E "s|\(C\)|\&copy;|g" README.html COPYING.html
+    sed -i.temp -E "s|©|\&copy;|g" README.html COPYING.html
+    sed -i.temp -E "s|--|\&#8212;|g" README.html COPYING.html
+    sed -i.temp -E "s|“|\&#8220;|g" README.html COPYING.html
+    sed -i.temp -E "s|”|\&#8221;|g" README.html COPYING.html
+fi
 
 # Now we build the packages
 # Eventually we'd like to do this with the XCode tools themselves, but for now
@@ -76,8 +123,10 @@ mv $BUILDDIR/Gregorio.pkg ../Gregorio-$VERSION.pkg
 mv $BUILDDIR/Uninstall-Gregorio.pkg ../
 
 # Now we clean up
-cd ..
-make maintainer-clean
-cd $HERE
-rm -rf build/
-rm -rf Resources/
+if $clean; then
+    cd ..
+    make maintainer-clean
+    cd $HERE
+    rm -rf build/
+    rm -rf Resources/
+fi
