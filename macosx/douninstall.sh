@@ -1,4 +1,4 @@
-#!/bin/bash
+#!usr/bin/env bash
 
 # Script to uninstall the Gregorio Mac OS X distribution.
 
@@ -6,13 +6,19 @@ PREFIX="/usr/local"
 BINDIR="$PREFIX/bin"
 PKGCONFIGDIR="$PREFIX/lib/pkgconfig"
 GREINCLUDEDIR="$PREFIX/include/gregorio"
-GRETEXDIR=`kpsewhich gregoriotex.tex`
-if [ -z "$GRETEXDIR" ]; then
-    GRETEXDIR=`/usr/texbin/kpsewhich gregoriotex.tex`
-fi
-if [ -z "$GRETEXDIR" ]; then
-    GRETEXDIR=`/Library/TeX/texbin/kpsewhich gregoriotex.tex`
-fi
+# Find kpsewhich
+possibleLocations=(
+    '/usr/texbin'
+    '/Library/TeX/texbin'
+)
+for eachLocation in "${possibleLocations[@]}"; do
+    if [[ -e "${eachLocation}/kpsewhich" ]]; then
+        echo "$(timestamp): Found tools at $eachLocation" >> $LOGFILE
+        KPSEWHICH="$eachLocation/kpsewhich"
+        break
+    fi
+done
+GRETEXDIR=`$KPSEWHICH gregoriotex.tex`
 GRETEXDIR="${GRETEXDIR%/gregoriotex.tex}"
 TEXMFLOCAL="${GRETEXDIR%/tex/luatex/gregoriotex}"
 GREFONTDIR="$TEXMFLOCAL/fonts/truetype/public/gregoriotex"
