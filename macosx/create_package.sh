@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# NOTE: This script assumes that it was invoked from the macosx directory and
+# changes the working directory as needed accordingly.  Failure to invoke it
+# from that directory will result in strange things happening.
+
 rcfile=create_package.rc
 if [ -f $rcfile -a -r $rcfile ]; then
     source $rcfile
@@ -35,11 +39,8 @@ while (( $# > 0 )); do
 done
 
 
-# NOTE: This script assumes that it was invoked from the macosx directory and
-# changes the working directory as needed accordingly.  Failure to invoke it
-# from that directory will result in strange things happening.
-
 HERE=`pwd`
+VERSION=`./VersionManager.py --get-current`
 
 # First we compile Gregorio and build all the necessary pacakge components.
 
@@ -91,7 +92,6 @@ else
     pandoc -s ./COPYING.md -f markdown -t html -o $RESOURCEDIR/COPYING.html
     # We redirect the relative links in the above files to point to particular
     # file versions in the repository.
-    VERSION=`./VersionManager.py --get-current`
     HTMLPREFIX="https://github.com/gregorio-project/gregorio/blob/v"$VERSION"/"
     cd $RESOURCEDIR
     sed -i.temp -E "s|(href=.)([A-Z]+.md.)|\1$HTMLPREFIX\2|g" README.html COPYING.html
