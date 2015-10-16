@@ -40,6 +40,7 @@ done
 
 
 HERE=`pwd`
+cd ..
 VERSION=`./VersionManager.py --get-current`
 
 # First we compile Gregorio and build all the necessary pacakge components.
