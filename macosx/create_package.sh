@@ -72,14 +72,11 @@ else
     cp doc/*.tex $EXTRASDIR/doc/
     cp doc/*.pdf $EXTRASDIR/doc/
     cp doc/*.md $EXTRASDIR/doc/
+    cp doc/*.gabc $EXTRASDIR/doc/
     cp -r contrib/ $EXTRASDIR/contrib
     rm $EXTRASDIR/contrib/Makefile*
-    cp -r examples/ $EXTRASDIR/examples
-    rm $EXTRASDIR/examples/Makefile*
-    rm $EXTRASDIR/examples/*.log
-    rm $EXTRASDIR/examples/*.*aux
-    rm $EXTRASDIR/examples/*.gtex
-    rm $EXTRASDIR/examples/*.synctex.gz
+    cp examples/*.tex $EXTRASDIR/examples/
+    cp examples/*.gabc $EXTRASDIR/examples/
     cp *.md $EXTRASDIR
 fi
 
