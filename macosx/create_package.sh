@@ -34,6 +34,10 @@ cp -r contrib/ $EXTRASDIR/contrib
 rm $EXTRASDIR/contrib/Makefile*
 cp -r examples/ $EXTRASDIR/examples
 rm $EXTRASDIR/examples/Makefile*
+rm $EXTRASDIR/examples/*.log
+rm $EXTRASDIR/examples/*.*aux
+rm $EXTRASDIR/examples/*.gtex
+rm $EXTRASDIR/examples/*.synctex.gz
 cp *.md $EXTRASDIR
 
 # Installer Resources
