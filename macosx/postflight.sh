@@ -14,11 +14,11 @@ sep="${sep#.}"
 sep="${sep%.}"
 texmfLocal="${texmfLocal%${sep}}"
 if [ -z "$texmfLocal" ]; then
-    texmfLocal=`$kpsewhich -var-value TEXMFLOCAL`
+    texmfLocal=`$KPSEWHICH -var-value TEXMFLOCAL`
 fi
 
 writelog 6 "Copying files to $texmfLocal"
-cp -r /tmp/gregorio/* $texmfLocal >> $LOGFILE 2>&1
+cp -av /tmp/gregorio/ $texmfLocal >> $LOGFILE 2>&1
 writelog 6 "Removing temporary files"
 rm -rf /tmp/gregorio >> $LOGFILE 2>&1
 

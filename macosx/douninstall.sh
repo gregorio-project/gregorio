@@ -1,4 +1,4 @@
-#!usr/bin/env bash
+#!/usr/bin/env bash
 
 # Script to uninstall the Gregorio Mac OS X distribution.
 
