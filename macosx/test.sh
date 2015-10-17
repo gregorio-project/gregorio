@@ -11,17 +11,22 @@ if [[ "$kpsewhichFound" = 0 ]]; then
     writelog 3 "Cannot find kpsewhich"
     writelog 3 "Installation Aborted!"
     exit 1
+fi
+if [[ "$texhashFound" = 0 ]]; then
+    writelog 3 "Cannot find texhash"
+    writelog 3 "Installation Aborted!"
+    exit 1
+fi
+writelog 6 "Found kpsewhich at $KPSEWHICH"
+writelog 6 "Found texhash at $TEXHASH"
+# We now look to make sure TEXMFLOCAL is set
+texmfLocal=`$KPSEWHICH -var-value TEXMFLOCAL`
+if [ -z "$texmfLocal" ]; then
+    writelog 3 "no valid TEXMFLOCAL value"
+    writelog 3 "Installation Aborted!"
+    exit 1
 else
-    writelog 6 "Found kpsewhich at $eachLocation"
-    # We now look to make sure TEXMFLOCAL is set
-    texmfLocal=`$KPSEWHICH -var-value TEXMFLOCAL`
-    if [ -z "$texmfLocal" ]; then
-        writelog 3 "no valid TEXMFLOCAL value"
-        writelog 3 "Installation Aborted!"
-        exit 1
-    else
-        writelog 6 "TEXMFLOCAL has value $texmfLocal"
-    fi
+    writelog 6 "TEXMFLOCAL has value $texmfLocal"
 fi
 writelog 6 "Installtion Check Passed, proceeding to install files"
 exit 0
