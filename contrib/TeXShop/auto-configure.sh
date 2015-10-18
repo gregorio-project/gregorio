@@ -1,7 +1,17 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-#  auto-configure.sh
-#  
-#
-#  Created by R. Padraic Springuel on 2015-10-18.
-#
+# This script is designed to automatically configure a TeXShop distribution.
+
+ENGINEDIR="~/Library/TeXShop/Engines"
+if [ ! -d $ENGINEDIR ]; then
+    mkdir $ENGINEDIR
+fi
+SOURCE="/Users/Shared/Gregorio/contrib/LuaLaTeX+se.engine"
+if [ -e $SOURCE ]; then
+    cp $SOURCE $ENGINEDIR
+else
+    echo "Cannot find LuaLaTeX+se.engine"
+    echo "Please try running the Gregorio intaller again"
+    exit 1
+fi
+defaults write TeXShop OtherTeXExtensions -array-add "gabc"
