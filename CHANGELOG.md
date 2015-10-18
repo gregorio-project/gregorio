@@ -5,6 +5,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][unreleased]
 ### Fixed
 - The spacing of manual in-line custos (`(f+)` in gabc) is now consistent with the spacing of automatic in-line custos (`(z0)` in gabc).  See [#642](https://github.com/gregorio-project/gregorio/issues/642).
+- Mac installer has been made SIP compliant (i.e. it now works on El Capitan).
+- Mac installer can now detect installations of TeXLive done with MacPorts or the command-line tool provided by TUG.
 
 ### Removed
 - The TeXShop script for compiling gabc files.  Supplanted by the new autocompile feature of the package.
