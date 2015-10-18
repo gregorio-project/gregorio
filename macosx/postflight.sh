@@ -23,9 +23,9 @@ writelog 6 "Removing temporary files"
 rm -rf /tmp/gregorio >> $LOGFILE 2>&1
 
 
-# run texhash so that TeX is aware of the new files
-writelog 6 "Running texhash"
-$TEXHASH >> $LOGFILE 2>&1
+# run mktexlsr so that TeX is aware of the new files
+writelog 6 "Running mktexlsr"
+$MKTEXLSR --verbose >> $LOGFILE 2>&1
 
 # Change permisions on the installed supplemental files
 cd /Users/Shared/Gregorio

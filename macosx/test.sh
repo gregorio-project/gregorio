@@ -12,13 +12,13 @@ if [[ "$kpsewhichFound" = 0 ]]; then
     writelog 3 "Installation Aborted!"
     exit 1
 fi
-if [[ "$texhashFound" = 0 ]]; then
-    writelog 3 "Cannot find texhash"
+if [[ "$mktexlsrFound" = 0 ]]; then
+    writelog 3 "Cannot find mktexlsr"
     writelog 3 "Installation Aborted!"
     exit 1
 fi
 writelog 6 "Found kpsewhich at $KPSEWHICH"
-writelog 6 "Found texhash at $TEXHASH"
+writelog 6 "Found mktexlsr at $MKTEXLSR"
 # We now look to make sure TEXMFLOCAL is set
 texmfLocal=`$KPSEWHICH -var-value TEXMFLOCAL`
 if [ -z "$texmfLocal" ]; then

@@ -27,21 +27,22 @@ writelog(){
 
 # Locate TeX Tools
 kpsewhichFound=0
-texhashFound=0
+mktexlsrFound=0
 possibleLocations=(
     '/usr/texbin'
     '/Library/TeX/texbin'
+    '/opt/local/bin'
 )
 for eachLocation in "${possibleLocations[@]}"; do
     if [[ -e "${eachLocation}/kpsewhich" ]]; then
         (( kpsewhichFound++ ))
         KPSEWHICH="$eachLocation/kpsewhich"
     fi
-    if [[ -e "${eachLocation}/texhash" ]]; then
-        (( texhashFound++ ))
-        TEXHASH="$eachLocation/texhash"
+    if [[ -e "${eachLocation}/mktexlsr" ]]; then
+        (( mktexlsrFound++ ))
+        MKTEXLSR="$eachLocation/mktexlsr"
     fi
-    if [[ $kpsewhichFound -ne "0" && $texhashFound -ne "0" ]]; then
+    if [[ $kpsewhichFound -ne "0" && $mktexlsrFound -ne "0" ]]; then
         break
     fi
 done
