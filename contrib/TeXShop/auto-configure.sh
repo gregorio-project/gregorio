@@ -2,11 +2,11 @@
 
 # This script is designed to automatically configure a TeXShop distribution.
 
-ENGINEDIR="~/Library/TeXShop/Engines"
+ENGINEDIR="$HOME/Library/TeXShop/Engines"
 if [ ! -d $ENGINEDIR ]; then
-    mkdir $ENGINEDIR
+    mkdir -p $ENGINEDIR
 fi
-SOURCE="/Users/Shared/Gregorio/contrib/LuaLaTeX+se.engine"
+SOURCE="/Users/Shared/Gregorio/contrib/TeXShop/LuaLaTeX+se.engine"
 if [ -e $SOURCE ]; then
     cp $SOURCE $ENGINEDIR
 else

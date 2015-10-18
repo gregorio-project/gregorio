@@ -68,6 +68,7 @@ if [ -d "$EXTRASDIR" ]; then
 else
     mkdir $EXTRASDIR
     mkdir $EXTRASDIR/doc
+    mkdir $EXTRASDIR/examples
     cd $HERE/../doc
     make doc
     cd ..
