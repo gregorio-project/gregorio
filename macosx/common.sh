@@ -32,6 +32,7 @@ possibleLocations=(
     '/usr/texbin'
     '/Library/TeX/texbin'
     '/opt/local/bin'
+    '/usr/local/bin'
 )
 for eachLocation in "${possibleLocations[@]}"; do
     if [[ -e "${eachLocation}/kpsewhich" ]]; then
