@@ -18,7 +18,7 @@ This section will cover the elements of a gabc file.
 Files written in gabc have the extension \texttt{.gabc} and have the
 following structure:
 
-\begin{lstlisting}
+\begin{lstlisting}[autogobble]
 name: incipit;
 gabc-copyright: copyright on this gabc file;
 score-copyright: copyright on the source score;
@@ -76,12 +76,12 @@ Here is a detailed description of each header field:
   for antiphons) in the lower. Either one or two annotation fields may
   be used; if two are used, the first is the upper line, the second
   the lower. Example:
-  \begin{lstlisting}
+  \begin{lstlisting}[autogobble]
     annotation:Ad Magnif.;
     annotation:VIII G;
   \end{lstlisting}
   Full \TeX markup is accepted:
-  \begin{lstlisting}
+  \begin{lstlisting}[autogobble]
     annotation:{\color{red}Ad Magnif.};
     annotation:{\color{red}VIII G};
   \end{lstlisting}
@@ -183,7 +183,7 @@ the syllabic consonants \emph{l} and \emph{r} in Czech.
 
 By way of example, here is a vowel file that works for English:
 
-\begin{lstlisting}
+\begin{lstlisting}[autogobble]
 alias [english] to [English];
 
 language [English];
