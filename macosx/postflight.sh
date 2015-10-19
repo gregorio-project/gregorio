@@ -8,24 +8,24 @@ writelog 6 "Running Postflight Script"
 # After installation we move the TeX files from their temporary location to
 # the appropriate permanent location
 
-texmfLocal=`$KPSEWHICH -expand-path TEXMFLOCAL`
-sep=`$KPSEWHICH -expand-path "{.,.}"`
+texmfLocal=`"$KPSEWHICH" -expand-path TEXMFLOCAL`
+sep=`"$KPSEWHICH" -expand-path "{.,.}"`
 sep="${sep#.}"
 sep="${sep%.}"
 texmfLocal="${texmfLocal%${sep}}"
 if [ -z "$texmfLocal" ]; then
-    texmfLocal=`$KPSEWHICH -var-value TEXMFLOCAL`
+    texmfLocal=`"$KPSEWHICH" -var-value TEXMFLOCAL`
 fi
 
 writelog 6 "Copying files to $texmfLocal"
-cp -av /tmp/gregorio/ $texmfLocal >> $LOGFILE 2>&1
+cp -av /tmp/gregorio/ "$texmfLocal" >> "$LOGFILE" 2>&1
 writelog 6 "Removing temporary files"
-rm -rf /tmp/gregorio >> $LOGFILE 2>&1
+rm -rf /tmp/gregorio >> "$LOGFILE" 2>&1
 
 
 # run mktexlsr so that TeX is aware of the new files
 writelog 6 "Running mktexlsr"
-$MKTEXLSR --verbose >> $LOGFILE 2>&1
+"$MKTEXLSR" --verbose >> "$LOGFILE" 2>&1
 
 # Change permisions on the installed supplemental files
 cd /Users/Shared/Gregorio

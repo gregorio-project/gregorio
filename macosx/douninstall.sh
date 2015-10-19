@@ -19,11 +19,11 @@ GREFONTDIR="$TEXMFLOCAL/fonts/truetype/public/gregoriotex"
 GREFONTSOURCE="$TEXMFLOCAL/source/gregoriotex"
 GREDOCDIR="$TEXMFLOCAL/doc/luatex/gregoriotex"
 
-rm $BINDIR/gregorio
-rm $PKGCONFIGDIR/gregorio.pc
-rm -rf $GREINCLUDEDIR
-rm -rf $GRETEXDIR
-rm -rf $GREFONTDIR
-rm -rf $GREFONTSOURCE
-rm -rf $GREDOCDIR
+rm "$BINDIR/gregorio"
+rm "$PKGCONFIGDIR/gregorio.pc"
+rm -rf "$GREINCLUDEDIR"
+rm -rf "$GRETEXDIR"
+rm -rf "$GREFONTDIR"
+rm -rf "$GREFONTSOURCE"
+rm -rf "$GREDOCDIR"
 pkgutil --forget com.gregorio.pkg.Gregorio

@@ -20,7 +20,7 @@ fi
 writelog 6 "Found kpsewhich at $KPSEWHICH"
 writelog 6 "Found mktexlsr at $MKTEXLSR"
 # We now look to make sure TEXMFLOCAL is set
-texmfLocal=`$KPSEWHICH -var-value TEXMFLOCAL`
+texmfLocal=`"$KPSEWHICH" -var-value TEXMFLOCAL`
 if [ -z "$texmfLocal" ]; then
     writelog 3 "no valid TEXMFLOCAL value"
     writelog 3 "Installation Aborted!"

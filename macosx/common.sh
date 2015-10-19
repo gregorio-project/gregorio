@@ -7,7 +7,7 @@ if [ ! -d "$LOGDIR" ]; then
 fi
 LOGFILE="$LOGDIR/gregorio_install.log"
 if [ ! -e "$LOGFILE" ]; then
-    logger -s -t "Gregorio" -p "user.6" "Gregorio Installater Started" 2> $LOGFILE
+    logger -s -t "Gregorio" -p "user.6" "Gregorio Installater Started" 2> "$LOGFILE"
 fi
 
 # Define a logging function
@@ -22,7 +22,7 @@ fi
 # 7: Debug
 # higher numbers wrap
 writelog(){
-    logger -s -t "Gregorio" -p "user.${1}" "$2" 2>> $LOGFILE
+    logger -s -t "Gregorio" -p "user.${1}" "$2" 2>> "$LOGFILE"
 }
 
 # Locate TeX Tools
