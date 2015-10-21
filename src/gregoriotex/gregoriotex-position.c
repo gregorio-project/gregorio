@@ -83,6 +83,28 @@ OFFSET_CASE(InitialVirga);
 OFFSET_CASE(SalicusOriscusWide);
 OFFSET_CASE(SalicusOriscusOne);
 
+static __inline const char *note_before_last_note_case_ignoring_deminutus(
+        const gregorio_note *const current_note)
+{
+    if ((current_note->u.note.pitch - current_note->next->u.note.pitch) == 1
+            || (current_note->u.note.pitch -
+                    current_note->next->u.note.pitch) == -1) {
+        if (!current_note->previous || current_note->u.note.pitch -
+                current_note->previous->u.note.pitch > 1) {
+            return ConnectedPenultBeforePunctumOne;
+        } else {
+            return PenultBeforePunctumOne;
+        }
+    } else {
+        if (!current_note->previous || current_note->u.note.pitch -
+                current_note->previous->u.note.pitch > 1) {
+            return ConnectedPenultBeforePunctumWide;
+        } else {
+            return PenultBeforePunctumWide;
+        }
+    }
+}
+
 static __inline const char *note_before_last_note_case(
         const gregorio_glyph *const current_glyph,
         const gregorio_note *const current_note)
@@ -92,23 +114,7 @@ static __inline const char *note_before_last_note_case(
             && current_note->next) {
         return PenultBeforeDeminutus;
     } else {
-        if ((current_note->u.note.pitch - current_note->next->u.note.pitch) == 1
-                || (current_note->u.note.pitch -
-                        current_note->next->u.note.pitch) == -1) {
-            if (!current_note->previous || current_note->u.note.pitch -
-                    current_note->previous->u.note.pitch > 1) {
-                return ConnectedPenultBeforePunctumOne;
-            } else {
-                return PenultBeforePunctumOne;
-            }
-        } else {
-            if (!current_note->previous || current_note->u.note.pitch -
-                    current_note->previous->u.note.pitch > 1) {
-                return ConnectedPenultBeforePunctumWide;
-            } else {
-                return PenultBeforePunctumWide;
-            }
-        }
+        return note_before_last_note_case_ignoring_deminutus(current_note);
     }
 }
 
@@ -758,6 +764,30 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             break;
         }
         break;
+    case T_TORCULUS_LIQUESCENS:
+        done = true;
+        switch (i) {
+        case 1:
+            note->gtex_offset_case = first_note_case(note, glyph);
+            h_episemus = above_if_h_episemus(note->next);
+            v_episemus = VPOS_BELOW;
+            break;
+        case 2:
+            note->gtex_offset_case =
+                    note_before_last_note_case_ignoring_deminutus(note);
+            h_episemus = VPOS_ABOVE;
+            v_episemus = VPOS_BELOW;
+            break;
+        default:
+            --i;
+            done = false;
+            break;
+        }
+
+        if (done) {
+            break;
+        }
+        /* else fallthrough to the next case! */
     case T_ANCUS:
     case T_ANCUS_LONGQUEUE:
         switch (i) {
@@ -767,16 +797,10 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             v_episemus = VPOS_BELOW;
             break;
         case 2:
+            note->is_upper_note = true;
             note->gtex_offset_case = note_before_last_note_case(glyph, note);
             h_episemus = VPOS_ABOVE;
-            v_episemus = VPOS_BELOW;
-            break;
-        case 3:
-            note->is_upper_note = true;
-            note->gtex_offset_case = last_note_case(glyph, FinalPunctum, note,
-                    false);
-            h_episemus = VPOS_ABOVE;
-            v_episemus = VPOS_BELOW;
+            v_episemus = below_if_next_ambitus_allows(note);
             break;
         default:
             note->is_lower_note = true;

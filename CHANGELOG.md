@@ -5,6 +5,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][unreleased]
 ### Fixed
 - The spacing of manual in-line custos (`(f+)` in gabc) is now consistent with the spacing of automatic in-line custos (`(z0)` in gabc).  See [#642](https://github.com/gregorio-project/gregorio/issues/642).
+- Signs on the climacus praepunctis deminutus `(ghgf~)` neume are now positioned correctly.  See [#650]((https://github.com/gregorio-project/gregorio/issues/650)
 
 
 ## [4.0.0-rc1] - 2015-10-08
