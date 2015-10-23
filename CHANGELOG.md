@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+### Added
+- The ability to force a hyphen after an empty first syllable, enabled by default since this was the behavior prior to 4.0.  To switch it back to the automatic (space-based, 4.0) behavior, use `\gresetemptyfirstsyllablehyphen{auto}`.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#653](https://github.com/gregorio-project/gregorio/issues/653)).
+
+
+## [Unreleased][unreleased]
 ### Fixed
 - The spacing of manual in-line custos (`(f+)` in gabc) is now consistent with the spacing of automatic in-line custos (`(z0)` in gabc).  See [#642](https://github.com/gregorio-project/gregorio/issues/642).
 - Signs on the climacus praepunctis deminutus `(ghgf~)` neume are now positioned correctly.  See [#650]((https://github.com/gregorio-project/gregorio/issues/650)

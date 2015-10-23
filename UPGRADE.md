@@ -2,6 +2,12 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.
 
+## Unreleased
+
+### Empty first syllable hyphen
+
+Prior to version 4.0, GregorioTeX would put a hyphen below an empty first syllable (which happens when the first syllable consists only of the initial).  The spacing algorithm was improved in 4.0, but that eliminates the hyphen if there is not enough space between the note of the first syllable and the next syllable.  The `\gresetemptyfirstsyllablehyphen` command controls this behavior.  It defaults to `force`, which restores the pre-4.0 behavior, but may be changed to `auto` (i.e., `\gresetemptyfirstsyllablehyphen{auto}`) if you prefer the space-based behavior.
+
 ## 4.0
 
 ### Font changes

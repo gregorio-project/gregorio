@@ -518,6 +518,20 @@
   \gresetclivisalignment{special}%
 }%
 
+\newif\ifgre@forceemptyfirstsyllablehyphen%
+\gre@forceemptyfirstsyllablehyphentrue%
+\def\gresetemptyfirstsyllablehyphen#1{%
+  \IfStrEq{#1}{auto}%
+    {\gre@forceemptyfirstsyllablehyphenfalse}%
+    {\IfStrEq{#1}{force}%
+      {\gre@forceemptyfirstsyllablehyphentrue}%
+      {\gre@error{Unrecognized option for \protect\gresetlyriccentering}}%
+    }%
+}%
+
+\newif\ifgre@forcehyphen%
+\def\GreForceHyphen{\gre@forcehyphentrue}
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : macro setting the letters of this syllable
 % #2 : reserved (unused)
@@ -536,7 +550,9 @@
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
+  \gre@forcehyphenfalse%
   #1%
+  \ifgre@forceemptyfirstsyllablehyphen\else\gre@forcehyphenfalse\fi%
   \gre@firstglyphtrue%
   \gre@dimen@bolextra = 0pt\relax%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
@@ -603,6 +619,9 @@
     %
     \gre@debugmsg{ifdim}{ temp@skip@one > maximumspacewithoutdash}%
     \ifdim\gre@skip@temp@one > \gre@dimen@maximumspacewithoutdash\relax%
+      \gre@forcehyphentrue%
+    \fi
+    \ifgre@forcehyphen\relax%
       % if it's the last syllable of line, the hyphen will be \GreHyph
       \ifnum\gre@lastoflinecount=1\relax %
         \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
