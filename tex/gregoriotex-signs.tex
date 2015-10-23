@@ -22,7 +22,7 @@
 
 \def\grebarbracewidth{.58879}%
 
-\gre@declarefileversion{gregoriotex-signs.tex}{4.0.0-beta2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-signs.tex}{4.0.0-rc1}% GREGORIO_VERSION
 
 \def\gre@usestylecommon{%
   \ifgre@usestylefont\else %
@@ -246,9 +246,10 @@
   \relax%
 }%
 
-
 % custos just typesets a custos, useful for before the key changes for example
 \def\GreCustos#1{%
+  \gre@skip@temp@four = \gre@skip@spacebeforeinlinecustos\relax%
+  \kern\gre@skip@temp@four%
   \gre@calculate@glyphraisevalue{#1}{0}%
   %here we need some tricks to draw the line before the custos (for the color)
   \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{#1}}%
@@ -275,6 +276,17 @@
   \relax %
 }%
 
+% typesets a custos for the end of the score
+\def\GreFinalCustos#1{
+  \GreNoBreak%
+  \gre@skip@temp@four = \gre@skip@spacebeforeeolcustos\relax%
+  \advance\gre@skip@temp@four by \gre@skip@interelementspace\relax%
+  \gre@dimen@temp@four = \gre@skip@temp@four\relax%
+  \hbox to \gre@dimen@temp@four{}%
+  \GreNoBreak%
+  \GreCustos{#1}%
+}
+
 % the argument is the height
 \def\GreNextCustos#1{%
   \ifnum\gre@insidediscretionary=0\relax %
@@ -283,7 +295,7 @@
       %here we need some tricks to draw the line before the custos (for the color)
       \setbox\gre@box@temp@width=\hbox{%
       % we type a hskip and the we type the custos
-      \gre@skip@temp@four = \gre@skip@spacebeforecustos\relax%
+      \gre@skip@temp@four = \gre@skip@spacebeforeeolcustos\relax%
       \hskip\gre@skip@temp@four %
       \gre@pickcustos{#1}\relax %
       }%
@@ -310,11 +322,6 @@
     \fi %
   \fi %
   \relax%
-}%
-
-\def\GreManualCustos#1{%
-  \gre@skip@temp@four = \gre@skip@spacebeforecustos\relax%
-  \kern\gre@skip@temp@four\GreCustos{#1}%
 }%
 
 % macro that typesets an additional line at the top for custos at end of line

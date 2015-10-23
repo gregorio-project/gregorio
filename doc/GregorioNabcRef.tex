@@ -2,9 +2,9 @@
 
 \documentclass[a4paper]{article}
 \usepackage{color}
-\usepackage{luacode}
 \usepackage[margin=1cm]{geometry}
 \usepackage{fontspec}
+\usepackage{luacode}
 \usepackage{multicol}
 \usepackage{fixltx2e}
 \usepackage{hyperref}
@@ -48,28 +48,40 @@
 \gresetnabcfont{gresgmodern}{8}
 \gresetnabcfont{gregall}{8}
 
-\def\neume#1{%
+\def\neume{%
   \begingroup %
     \catcode`\~=12{}%
     \catcode`\@=11{}%
+    \neumebody%
+}
+
+\def\neumebody#1{%
     \vbox{\hbox{\vspace{1mm}}\hbox{\noindent\GreNABCChar{#1}\hspace{1mm}}%
     \hbox{\vspace{1mm}}\hbox{\noindent{\fontsize{6}{6}\texttt{#1}\hspace{1mm}}}}%
   \endgroup %
 }
 
-\def\neumer#1{%
+\def\neumer{%
   \begingroup %
     \catcode`\~=12{}%
     \catcode`\@=11{}%
+    \neumerbody%
+}
+
+\def\neumerbody#1{%
     \vbox{\hbox{\vspace{1mm}}\hbox{\noindent\hspace{8mm}\GreNABCChar{#1}\hspace{1mm}}%
     \hbox{\vspace{1mm}}\hbox{\noindent{\fontsize{6}{6}\texttt{#1}\hspace{1mm}}}}%
   \endgroup %
 }
 
-\def\sneume#1{%
+\def\sneume{%
   \begingroup %
     \catcode`\~=12{}%
     \catcode`\@=11{}%
+    \sneumebody%
+}
+
+\def\sneumebody#1{%
     \font\grefontnabc={name:gregall} at 6pt\grefontnabc\begin{gre@style@nabc}%
     \directlua{tex.sprint(gregoriotex.nabc_font_tables["gregall"]["\luatexluaescapestring{#1}"] or "")}%
     \end{gre@style@nabc}%
@@ -349,7 +361,7 @@ scandicus & \neume{sc} & & \neume{sc-} & \neume{scS} & \neume{scG}\neume{scG1} &
 \vbox{\hbox{pes}\hbox{subbipunctis}} & \neume{pesu2} & \neume{vippt1su2lsc3} & \neume{pe-su2}\neume{pe-1su2} & \neume{peSsu2}\neume{peSsut2} & \neume{vippt1su2} & \neume{vi-!ci}\neume{pesu1suw1} & \neume{pesu1sux1} & \neume{to>} \\
 & & & \multicolumn{1}{r|}{\neume{pe-1sut2}} & & \multicolumn{1}{r|}{\neume{toS2sut1}} & & & \\
 \vbox{\hbox{scandicus}\hbox{flexus}} & \neume{sf} & \neume{sflsc3} & \neume{sf-} & \neume{sfS} & \neume{vi-tohk}\neume{peclhi} & \neume{sfM} & \neume{cl>ppt2} & \neume{sc>} \\
-\vbox{\hbox{torculus}\hbox{resuspinus}} & \neume{tr} & \neume{trlsc2}\neume{trlst2} & \multicolumn{1}{r|}{\neume{tr-1}} & \neume{trS} & \neume{trG}\neume{trG1}\neume{trG2} & \neume{trM} & \neume{tr>} & \neume{tr~} \\ \hline
+\vbox{\hbox{torculus}\hbox{resupinus}} & \neume{tr} & \neume{trlsc2}\neume{trlst2} & \multicolumn{1}{r|}{\neume{tr-1}} & \neume{trS} & \neume{trG}\neume{trG1}\neume{trG2} & \neume{trM} & \neume{tr>} & \neume{tr~} \\ \hline
 apostropha & \neume{st} & & \neume{st-} & \neume{stS} & & & \neume{st>} & \\
 distropha & \neume{ds} & \neume{ds-lsx6} & \neume{ds-} & & & & \neume{ds>} & \\
 tristropha & \neume{ts} & \neume{ts-lsx6} & \neume{ts-} & & & \neume{tsM} & \neume{ts>} & \\
@@ -770,7 +782,7 @@ only present in the font source file to help drawing the glyphs.}
 \sneume{po-1} & \texttt{po-1} & \texttt{C26A} & tuum\\
 \sneume{poG} & \texttt{poG} & \texttt{C40V} & salutare\\
 \sneume{po>} & \texttt{po>} & \texttt{C80Q} & commovebitur\\
-\sneume{po~} & \texttt{po~} & \texttt{C58A} & aeternum\\
+\sneume{po~} & \texttt{po\char`\~} & \texttt{C58A} & aeternum\\
 \sneume{poG-} & \texttt{poG-} & \texttt{A167O} & meum\\
 \sneume{posu2} & \texttt{posu2} & \texttt{C46O} & gloria\\
 \sneume{po-1su2} & \texttt{po-1su2} & \texttt{H269R} & alleluia\\ \hline
@@ -934,9 +946,9 @@ only present in the font source file to help drawing the glyphs.}
 \sneume{trG2} & \texttt{trG2} & \texttt{E147L} & Laetare & \fbox{2.166x}\\
 \sneume{trM} & \texttt{trM} & \texttt{E336I} & resistere & \fbox{2.166x}\\
 \sneume{tr>} & \texttt{tr>} & \texttt{C82V} & nonconfundentur\\
-\sneume{tr~} & \texttt{tr~} & \texttt{C60S} & Altissimus\\
-\sneume{tr-~} & \texttt{tr-~} & \texttt{C27Q} & et\\
-\sneume{tr-~1} & \texttt{tr-~1} & \texttt{C107A} & Alleluia.\\
+\sneume{tr~} & \texttt{tr\char`\~} & \texttt{C60S} & Altissimus\\
+\sneume{tr-~} & \texttt{tr-\char`\~} & \texttt{C27Q} & et\\
+\sneume{tr-~1} & \texttt{tr-\char`\~1} & \texttt{C107A} & Alleluia.\\
 \sneume{trS-} & \texttt{trS-} & \texttt{C89T} & pedes,\\
 \sneume{trS1} & \texttt{trS1} & \texttt{E26L} & eeiieiue & \fbox{2.166x}\\ \hline
 & \multicolumn{3}{l}{\textbf{stropha}} & \\
@@ -1155,8 +1167,8 @@ only present in the font source file to help drawing the glyphs.}
 \sneume{ql!cl->ppt1} & \texttt{ql!cl->ppt1} & \texttt{G132A} & Alleluia. & \fbox{0.85x}\\
 \sneume{ql!poppt1} & \texttt{ql!poppt1} & \texttt{C59D} & Domine.\\
 \sneume{ql!po-1ppt1} & \texttt{ql!po-1ppt1} & \texttt{C58A} & homo.\\
-\sneume{ql!po~ppt1} & \texttt{ql!po~ppt1} & \texttt{H179L} & pauperem\\
-\sneume{ql!po~} & \texttt{ql!po~} \textit{Cf.} \sneume{ql!po~} & \multicolumn{3}{l}{\texttt{ql!po~} minus tractulus}\\
+\sneume{ql!po~ppt1} & \texttt{ql!po\char`\~ppt1} & \texttt{H179L} & pauperem\\
+\sneume{ql!po~} & \texttt{ql!po\char`\~} \textit{Cf.} \sneume{ql!po~} & \multicolumn{3}{l}{\texttt{ql!po\char`\~} minus tractulus}\\
 \sneume{ql-ppt1su2} & \texttt{ql-ppt1su2} & \texttt{H72V} & Jerusalem\\
 \sneume{ql-ppt1su1sux1} & \texttt{ql-ppt1su1sux1} & \texttt{H73O} & Reges\\
 \sneume{ql-ppt1su1sut2} & \texttt{ql-ppt1su1sut2} & \texttt{H75I} & patris\\

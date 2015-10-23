@@ -19,7 +19,7 @@
 
 % this file contains definitions of spaces
 
-\gre@declarefileversion{gregoriotex-spaces.tex}{4.0.0-beta2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-spaces.tex}{4.0.0-rc1}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for tuning penalties
@@ -393,12 +393,12 @@
     \else%
       % The basic value for the eol shift is -enddifference
       \global\gre@skip@temp@two=-#1\relax%
-      % The maximum value is wd(custos) + spacebeforecustos
+      % The maximum value is wd(custos) + spacebeforeeolcustos
       % Were the eolshift larger than this the lyrics would stick out
       % into the margin
       \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}}%
       \global\advance\gre@skip@temp@three by \wd\gre@box@temp@width %
-      \global\advance\gre@skip@temp@three by \gre@skip@spacebeforecustos \relax%
+      \global\advance\gre@skip@temp@three by \gre@skip@spacebeforeeolcustos \relax%
       % pick the smaller of the two values calculated above
       \ifdim\gre@skip@temp@two>\gre@skip@temp@three%
         \gre@debugmsg{eolshift}{imposing limit}%
@@ -1129,8 +1129,11 @@
   \ifgre@scale@glyphspace%
     \gre@changeonedimenfactor{glyphspace}{#1}{#2}%
   \fi%
-  \ifgre@scale@spacebeforecustos%
-    \gre@changeonedimenfactor{spacebeforecustos}{#1}{#2}%
+  \ifgre@scale@spacebeforeinlinecustos%
+    \gre@changeonedimenfactor{spacebeforeinlinecustos}{#1}{#2}%
+  \fi%
+  \ifgre@scale@spacebeforeeolcustos%
+    \gre@changeonedimenfactor{spacebeforeeolcustos}{#1}{#2}%
   \fi%
   \ifgre@scale@spacebeforesigns%
     \gre@changeonedimenfactor{spacebeforesigns}{#1}{#2}%

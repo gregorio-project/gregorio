@@ -412,7 +412,7 @@ static void gregorio_set_translation_center_beginning(
     current_syllable->translation_type = TR_NORMAL;
 }
 
-static void rebuild_characters()
+static void rebuild_characters(void)
 {
     bool has_initial = score->initial_style != NO_INITIAL;
 

@@ -4,11 +4,17 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ## [Unreleased][unreleased]
 ### Fixed
+- The spacing of manual in-line custos (`(f+)` in gabc) is now consistent with the spacing of automatic in-line custos (`(z0)` in gabc).  See [#642](https://github.com/gregorio-project/gregorio/issues/642).
+- Signs on the climacus praepunctis deminutus `(ghgf~)` neume are now positioned correctly.  See [#650]((https://github.com/gregorio-project/gregorio/issues/650)
+
+
+## [4.0.0-rc1] - 2015-10-08
+### Fixed
 - Deactivating the end of line shifts now prevents lyrics from stretching under the custos at the end of the line.
-- All of the keywords for `\grescaledim` were now work as described in the documentation.
+- All of the keywords for `\grescaledim` now work as described in the documentation.
 
 ### Changed
-- `\grecreatedim` and `\grechangedim` now take keywords for their third argument (`scalable` and `fixed`( instead of integers (`1` and `0`) to make the more in keeping with the overall user command conventions.
+- `\grecreatedim` and `\grechangedim` now take keywords for their third argument (`scalable` and `fixed`) instead of integers (`1` and `0`) to make the more in keeping with the overall user command conventions.
 - `\grescaledim` now accepts `scalable` as a keyword to turn on scalable (in keeping with the above change)
 - Alterations are partially ignored when aligning lines on the notes (i.e. `\gresetbolshifts{enabled}`).  They are not allowed to get any closer to the clef than `beforealterationspace` and the lyrics are not allowed to get any closer to the left-hand margin than `minimalspaceatlinebeginning`, but other than that GregorioTeX will shift them left as much as possible to make the notes align `spaceafterlineclef` away from the clef.  Note that for the default values of these distances, only the natural is small enough to acheive true alignment.
 - `gregoriotex.sty` and `gregoriosyms.sty` now check to make sure that they are not both loaded.  If `gregoriotex` detects that `gregoriosyms` is loaded, then an error is raised.  If `gregoriosyms` detects that `gregoriotex` is loaded, then the loading of `gregoriosyms` is silently aborted and compilation proceeds.
@@ -338,7 +344,7 @@ See GregorioRef.pdf for full details.
 - adding support for end of lines
 - adding support for compilation on MAC OSX
 
-     
+
 ## 0.2.2 - 2007-06-14
 ### Added
 - adding styles and centering in text
