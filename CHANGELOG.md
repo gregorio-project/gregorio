@@ -9,6 +9,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Mac installer has been made SIP compliant (i.e. it now works on El Capitan).
 - Mac installer can now detect installations of TeXLive done with MacPorts or the command-line tool provided by TUG.
 
+### Added
+- Shell scripts for configuring TeXShop and TeXworks on a mac.
+
 ### Removed
 - The TeXShop script for compiling gabc files.  Supplanted by the new autocompile feature of the package.
 
