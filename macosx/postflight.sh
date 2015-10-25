@@ -1,33 +1,36 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# Import the common material which locates the TeX tools and sets up the logfile
+source common.sh
+
+writelog 6 "Running Postflight Script"
 
 # After installation we move the TeX files from their temporary location to
-# the appropriate permanent location and then run texhash so that TeX is
-# aware of the changes.
+# the appropriate permanent location
 
-
-TEXMFLOCAL=`kpsewhich -expand-path \$TEXMFLOCAL`
-sep=`kpsewhich -expand-path "{.,.}"`
-if [ -z "$TEXMFLOCAL" ]; then
-    TEXMFLOCAL=`kpsewhich -var-value TEXMFLOCAL`
-fi
-if [ -z "$TEXMFLOCAL" ]; then
-    TEXMFLOCAL=`/usr/texbin/kpsewhich -expand-path $TEXMFLOCAL`
-    sep=`/usr/texbin/kpsewhich -expand-path "{.,.}"`
-fi
-if [ -z "$TEXMFLOCAL" ]; then
-    TEXMFLOCAL=`/usr/texbin/kpsewhich -var-value TEXMFLOCAL`
-fi
-
-TEXHASH=`which texhash`
-if [ -z "$TEXHASH" ]; then
-    TEXHASH="/usr/texbin/texhash"
-fi
-
+texmfLocal=`"$KPSEWHICH" -expand-path TEXMFLOCAL`
+sep=`"$KPSEWHICH" -expand-path "{.,.}"`
 sep="${sep#.}"
 sep="${sep%.}"
-TEXMFLOCAL="${TEXMFLOCAL%${sep}}"
+texmfLocal="${texmfLocal%${sep}}"
+if [ -z "$texmfLocal" ]; then
+    texmfLocal=`"$KPSEWHICH" -var-value TEXMFLOCAL`
+fi
 
-cp -r /tmp/gregorio/* $TEXMFLOCAL
-rm -rf /tmp/gregorio
+writelog 6 "Copying files to $texmfLocal"
+cp -av /tmp/gregorio/ "$texmfLocal" >> "$LOGFILE" 2>&1
+writelog 6 "Removing temporary files"
+rm -rf /tmp/gregorio >> "$LOGFILE" 2>&1
 
-$TEXHASH
+
+# run mktexlsr so that TeX is aware of the new files
+writelog 6 "Running mktexlsr"
+"$MKTEXLSR" --verbose >> "$LOGFILE" 2>&1
+
+# Change permisions on the installed supplemental files
+cd /Users/Shared/Gregorio
+writelog 6 "Setting Permissions for examples and doc"
+chmod -R 777 examples/
+chmod -R 777 doc/
+
+writelog 6 "Installation Complete"
