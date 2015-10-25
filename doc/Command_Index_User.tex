@@ -790,15 +790,22 @@ Macro to determine whether the last line of the score should be justified or not
 \subsubsection{Hyphenation}
 
 \macroname{\textbackslash gresethyphen}{\{\#1\}}{gregoriotex-main.tex}
-Tell Gregorio\TeX\ to when to place a hyphen between
-syllables in polysyllabic words in a score.  This is done by overriding \texttt{maximumspacewithoutdash} so subsequent changes to this dimension will override this command.
+Tells Gregorio\TeX\ how to place a hyphen between syllables in polysyllabic words in a score.  This is done by overriding \texttt{maximumspacewithoutdash} so subsequent changes to this dimension will override this command.
 
 \begin{argtable}
   \#1 & force & Hyphens will appear between all syllables in polysyllabic words.\\
-  & auto & Hyphens will appear based on the setting of \texttt{maximumspacewithoutdash}
+      & auto  & Hyphens will appear based on the setting of \texttt{maximumspacewithoutdash} (default)
 \end{argtable}
 
 \textbf{Nota Bene:} \verb=\gresethyphen{auto}= restores \texttt{maximumspacewithoutdash} to the value found in \textit{gsp-default.tex}.  If you have changed your score size, you may need to change this distance to a more appropriate value using \verb=\grechangedim=.
+
+\macroname{\textbackslash gresetemptyfirstsyllablehyphen}{\{\#1\}}{gregoriotex-syllable.tex}
+Tells Gregorio\TeX\ how to place a hyphen after an empty first syllable (\ie, when the first syllable consists only of the big initial).
+
+\begin{argtable}
+  \#1 & force & A hyphen will appear after an empty first syllable. (default)\\
+      & auto  & A hyphen will appear after an empty fiest syllable based on the setting of \texttt{maximumspacewithoutdash}
+\end{argtable}
 
 \macroname{\textbackslash greseteolhyphen}{\{\#1\}}{gregoriotex-main.tex}
 Marco to determine how much space the hyphen at the end of a line occupies for the purposes of spacing caluclations.
