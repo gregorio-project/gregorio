@@ -184,7 +184,7 @@ def replace_version(version_obj):
                     result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%Y/%m/%d"), newline, 1))
                 elif 'PARSE_VERSION_DATE' in line:
                     newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
-                    result.append(re.sub(r'([ \d]\d [A-Z][a-z]+ \d{4})', today.strftime("%e %B %Y"), newline, 1))
+                    result.append(re.sub(r'(\d{1,2} [A-Z][a-z]+ \d{4})', today.strftime("%-d %B %Y"), newline, 1))
                 elif 'PARSE_VERSION_FILE_NEXTLINE' in line:
                     result.append(line)
                     following_line_filename = True
@@ -195,6 +195,19 @@ def replace_version(version_obj):
                     result.append(line)
         with open(myfile, 'w') as outfile:
             outfile.write(''.join(result))
+    with open('CHANGELOG.md', 'r') as infile:
+        result = []
+        for line in infile:
+            if '[Unreleased][unreleased]' in line:
+                result.append(line)
+                result.append('\n')
+                result.append('\n')
+                newline = '## [' + newver + '] - ' + today.strftime("%Y-%m-%d") + '\n'
+                result.append(newline)
+            else:
+                result.append(line)
+    with open('CHANGELOG.md','w') as outfile:
+        outfile.write(''.join(result))
     sys.exit(0)
 
 def confirm_replace(oldver, newver):

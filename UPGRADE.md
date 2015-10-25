@@ -170,6 +170,10 @@ In order to better match the new command naming conventions, the third argument 
 
 In order to be more consistent, making a bistropha or tristropha liquescent by adding `<` in gabc will now only affect the note thus marked.  This means that a tristropha like `(gsss<)` will only show the final stropha as liquescent, which is different from the older behavior of making every stropha liquescent.  If you prefer the old behavior, mark every note explicitly as liquescent with something like `(gs<gs<gs<)`.
 
+### Empty first syllable hyphen
+
+Prior to version 4.0, GregorioTeX would put a hyphen below an empty first syllable (which happens when the first syllable consists only of the initial).  The spacing algorithm is improved in 4.0, but that eliminates the hyphen if there is not enough space between the note of the first syllable and the next syllable.  The `\gresetemptyfirstsyllablehyphen` command controls this behavior.  It defaults to `force`, which restores the pre-4.0 behavior, but may be changed to `auto` (i.e., `\gresetemptyfirstsyllablehyphen{auto}`) if you prefer the space-based behavior.
+
 ## 3.0
 ### TeX Live 2013
 

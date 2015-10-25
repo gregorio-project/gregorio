@@ -114,3 +114,4 @@ Makevars.template
 macosx/build
 macosx/Resources
 res.txt
+*.rc

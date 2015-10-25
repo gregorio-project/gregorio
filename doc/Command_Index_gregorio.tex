@@ -265,6 +265,13 @@ Macro to end a glyph without ending the element.
       & 11 & Space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more).\\
 \end{argtable}
 
+\macroname{\textbackslash GreFinalCustos}{\#1}{gregoriotex-signs.tex}
+Typesets a custos after the final bar in a score.
+
+\begin{argtable}
+  \#1 & integer & Height number of custos.\\
+\end{argtable}
+
 \macroname{\textbackslash GreFinalDivisioFinalis}{\#1}{gregoriotex-signs.tex}
 Macro to end a score with a divisio finalis.
 
@@ -322,6 +329,9 @@ Macro to typeset a flat.
   \#2 & 0       & No flat for a key change.\\
       & 1       & Indicates the flat for a key change.\\
 \end{argtable}
+
+\macroname{\textbackslash GreForceHyphen}{}{gregoriotex-syllable.tex}
+Macro that indicates that a hyphen should be forced (if enabled) after the given syllable.
 
 \macroname{\textbackslash GreFuseTwo}{\#1\#2}{gregoriotex-main.tex}
 Macro for fusing two glyphs to create a larger neume.
@@ -486,13 +496,6 @@ Macro for typesetting low choral signs.
   \#2 & string  & The choral sign.\\
   \#3 & 0       & Choral sign does not occur before last note of podatus, porrectus, or torculus resupinus.\\
       & 1       & Choral sign occurs before last note of podatus, porrectus, or torculus resupinus.\\
-\end{argtable}
-
-\macroname{\textbackslash GreManualCustos}{\#1}{gregoriotex-signs.tex}
-Macro to typeset a custos manually.
-
-\begin{argtable}
-  \#1 & integer & height number of the custos.
 \end{argtable}
 
 \macroname{\textbackslash GreMode}{\#1}{gregoriotex-main.tex}

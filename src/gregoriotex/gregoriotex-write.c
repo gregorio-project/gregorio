@@ -2574,17 +2574,20 @@ static void write_fixed_text_styles(FILE *f, gregorio_character *syllable_text,
 static void gregoriotex_write_text(FILE *f, gregorio_character *text,
         bool *first_syllable)
 {
+    bool skip_initial = first_syllable && *first_syllable;
     if (text == NULL) {
         fprintf(f, "{}{}{}{}{}");
+        if (skip_initial) {
+            fprintf(f, "\\GreForceHyphen{}");
+        }
         return;
     }
     fprintf(f, "{");
-    gregorio_write_text(first_syllable && *first_syllable, text, f,
+    gregorio_write_text(skip_initial, text, f,
             (&gtex_write_verb), (&gtex_print_char), (&gtex_write_begin),
             (&gtex_write_end), (&gtex_write_special_char));
     fprintf(f, "}{");
-    gregorio_write_first_letter_alignment_text(
-            first_syllable && *first_syllable, text, f,
+    gregorio_write_first_letter_alignment_text(skip_initial, text, f,
             (&gtex_write_verb), (&gtex_print_char), (&gtex_write_begin),
             (&gtex_write_end), (&gtex_write_special_char));
     if (first_syllable) {
@@ -2593,6 +2596,29 @@ static void gregoriotex_write_text(FILE *f, gregorio_character *text,
     gregoriotex_ignore_style = gregoriotex_next_ignore_style;
     gregoriotex_next_ignore_style = ST_NO_STYLE;
     fprintf(f, "}");
+    if (skip_initial) {
+        /* Check to see if we need to force a hyphen (empty first syllable) */
+        for (; text; text = text->next_character) {
+            if (text->is_character) {
+                break;
+            } else if (text->cos.s.type == ST_T_BEGIN) {
+                if (text->cos.s.style == ST_VERBATIM ||
+                        text->cos.s.style == ST_SPECIAL_CHAR) {
+                    break;
+                } else if (text->cos.s.style == ST_INITIAL) {
+                    for (; text; text = text->next_character) {
+                        if (!text->is_character && text->cos.s.type == ST_T_END
+                                && text->cos.s.style == ST_INITIAL) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if (!text) {
+            fprintf(f, "\\GreForceHyphen{}");
+        }
+    }
 }
 
 /*
@@ -2647,7 +2673,7 @@ static void handle_final_bar(FILE *f, const char *type, gregorio_syllable *sylla
 
         case GRE_CUSTOS:
             assert(element->u.misc.pitched.force_pitch);
-            fprintf(f, "\\GreManualCustos{%d}%%\n",
+            fprintf(f, "\\GreFinalCustos{%d}%%\n",
                     pitch_value(element->u.misc.pitched.pitch));
             break;
 
@@ -3001,9 +3027,8 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                  * We don't print custos before a bar at the end of a line 
                  */
                 /* we also print an unbreakable larger space before the custo */
-                fprintf(f, "\\GreEndOfElement{1}{1}%%\n\\Gre%sCustos{%d}"
+                fprintf(f, "\\GreEndOfElement{1}{1}%%\n\\GreCustos{%d}"
                         "\\GreNextCustos{%d}%%\n",
-                        element->u.misc.pitched.force_pitch? "Manual" : "",
                         pitch_value(element->u.misc.pitched.pitch),
                         pitch_value(gregorio_determine_next_pitch(syllable,
                                 element, NULL)));
