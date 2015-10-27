@@ -15,7 +15,24 @@
 					<integer>3</integer>
 				</dict>
 				<key>RESOURCES</key>
-				<array/>
+				<array>
+					<dict>
+						<key>CHILDREN</key>
+						<array/>
+						<key>GID</key>
+						<integer>0</integer>
+						<key>PATH</key>
+						<string>macosx/common.sh</string>
+						<key>PATH_TYPE</key>
+						<integer>3</integer>
+						<key>PERMISSIONS</key>
+						<integer>420</integer>
+						<key>TYPE</key>
+						<integer>3</integer>
+						<key>UID</key>
+						<integer>0</integer>
+					</dict>
+				</array>
 			</dict>
 			<key>PACKAGE_SETTINGS</key>
 			<dict>
@@ -30,7 +47,7 @@
 				<key>OVERWRITE_PERMISSIONS</key>
 				<false/>
 				<key>VERSION</key>
-				<string>1.0</string>
+				<string>1.1</string>
 			</dict>
 			<key>UUID</key>
 			<string>7E78FCF5-E14B-4F63-8264-E517B1CCBB92</string>
