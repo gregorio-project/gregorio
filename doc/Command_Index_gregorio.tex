@@ -114,9 +114,6 @@ Macro called at beginning of a no line break area.
       & 1 & Call came from translation centering.
 \end{argtable}
 
-\macroname{\textbackslash GreBeginNotes}{}{gregoriotex.tex}
-Macro to draw the staff lines.  Comes after the initial but before the clef.
-
 \macroname{\textbackslash GreBold}{\#1}{gregoriotex.sty and gregoriotex.tex}
 Makes argument bold.  Accesses \LaTeX\ \verb=\textbf= (\textit{gregoriotex.sty}) or Plain\TeX\ \verb=\bf= (\textit{gregoriotex.tex}) as appropriate.  Corresponds to ``<b></b>'' tags in gabc.
 
@@ -532,9 +529,6 @@ where this macro is called.
   \#1 & integer & Height number of the custos.\\
 \end{argtable}
 
-\macroname{\textbackslash GreNoInitial}{}{gregoriotex-main.tex}
-Macro called when no initial is being set.
-
 \macroname{\textbackslash GreOverBrace}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
 Macro to typeset a round brace above the lines.
 
@@ -625,6 +619,16 @@ Macro for typesetting a reversed semicirculus.
   \#2 & string   & Type of glyph the semicirculus is attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
+\macroname{\textbackslash GreScoreOpening}{\#1\#2\#3\#4}{gregoriotex-syllable.tex}
+Opens the score.
+
+\begin{argtable}
+  \#1 & \TeX\ code & Macros rendering the things after the initial but before the notes.\\
+  \#2 & \TeX\ code & Macros rendering the things after starting notes but before the syllable.\\
+  \#3 & \TeX\ control sequence & Control sequence for the syllable.\\
+  \#4 & \TeX\ code & Macros rendering the first syllable; should emit the initial and populate \verb=\gre@opening@syllabletext=.\\
+\end{argtable}
+
 \macroname{\textbackslash GreScoreReference}{\#1}{gregoriotex-main.tex}
 Currently does nothing.
 
@@ -636,8 +640,17 @@ Macro for typesetting a semicirculus.
   \#2 & string   & Type of glyph the semicirculus is attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
 \end{argtable}
 
-\macroname{\textbackslash GreSetBigInitial}{}{gregoriotex-main.tex}
-Macro which indicates that a 2-line initial is desired.
+\macroname{\textbackslash GreSetFirstSyllableText}{\#1\#2\#3\#4\#5\#6}{gregoriotex-syllable.tex}
+Sets the first syllable text.
+
+\begin{argtable}
+  \#1 & \TeX\ code & Initial.\\
+  \#2 & \TeX\ code & First letter after the initial.\\
+  \#3 & \TeX\ code & Everything else in the syllable.\\
+  \#4 & \TeX\ code & Three syllable parts when there is a separated initial.\\
+  \#5 & \TeX\ code & Three syllable parts where there is no separated initial.\\
+  \#6 & \TeX\ code & Extra macros to run if there is an initial.\\
+\end{argtable}
 
 \macroname{\textbackslash GreSetFixedNextTextFormat}{\#1}{gregoriotex-syllable.tex}
 Same as \verb=\GreSetFixedTextFormat= except for next syllable.
@@ -669,9 +682,6 @@ ligatures. In this example we should call \verb=\grefixedtext{\textit{ffj}}=.
   & 5 & underline
 \end{argtable}
 
-\macroname{\textbackslash GreSetInitial}{\#1}{gregoriotex-main.tex}
-Macro to set the initial in the score.
-
 \begin{argtable}
   \#1 & character & The initial letter of the score.\\
 \end{argtable}
@@ -683,6 +693,15 @@ Macro for writing initial key.
   \#1 & \texttt{c} or \texttt{f} & Type of clef.\\
   \#2 & 1--4       & Line of key.\\
   \#3 & integer & Height number of flat in key (\texttt{0} for no flat).\\
+\end{argtable}
+
+\macroname{\textbackslash GreSetInitialStyle}{\#1}{gregoriotex-syllable.tex}
+Sets the style of initial.
+
+\begin{argtable}
+  \#1 & 0 & Score has no initial.\\
+      & 1 & Score has a normal initial.\\
+      & 2 & Score has a big initial.\\
 \end{argtable}
 
 \macroname{\textbackslash GreSetLinesClef}{\#1\#2\#3\#4}{gregoriotex-main.tex}
@@ -704,6 +723,9 @@ Macro to set the text of the next syllable for spacing purposes.
   \#2 & string & the middle letters of the syllable, we must align in the middle of them\\
   \#3 & string & the end letters, they don't count for alignment\\
 \end{argtable}
+
+\macroname{\textbackslash GreSetNoFirstSyllableText}{}{gregoriotex-syllable.tex}
+Macro that indicates there is no next in the first syllable.
 
 \macroname{\textbackslash GreSetTextAboveLines}{\#1}{gregoriotex-main.tex}
 Macro to place argument above the lines and empty

@@ -372,6 +372,18 @@ Macro to pick the appropriate custos character.
   \#1 & integer & height of the custos character to be placed\\
 \end{argtable}
 
+\macroname{\textbackslash gre@beginnotes}{}{gregoriotex-main.tex}
+Macro to draw the staff lines.  Comes after the initial but before the clef.
+
+\macroname{\textbackslash gre@noinitial}{}{gregoriotex-main.tex}
+Macro called when no initial is being set.
+
+\macroname{\textbackslash gre@setbiginitial}{}{gregoriotex-main.tex}
+Macro which indicates that a 2-line initial is desired.
+
+\macroname{\textbackslash gre@setinitial}{\#1}{gregoriotex-main.tex}
+Macro to set the initial in the score.
+
 \macroname{\textbackslash gre@addspaceabove}{}{gregoriotex-main.tex}
 Macro to increase the space above the lines to account for above lines text.
 
@@ -460,6 +472,24 @@ Macro called at end of a syllable, adds a penalty and a space.
   \#3 & 1 & if next syllable is a bar\\
   & 0 & otherwise\\
 \end{argtable}
+
+\macroname{\textbackslash gre@setfirstsyllabletext}{\#1\#2\#3\#4\#5\#6}{gregoriotex-syllable.tex}
+Internal macro to set the first syllable text after all parts are known.
+
+\begin{argtable}
+  \#1 & \TeX\ code & First part of the syllable (before the vowel)\\
+  \#2 & \TeX\ code & Middle part of the syllable (the vowel)\\
+  \#3 & \TeX\ code & Last part of the syllable (after the vowel)\\
+  \#4 & \TeX\ code & First letter of the syllable\\
+  \#5 & \TeX\ code & Everything after the first letter of the syllable\\
+  \#6 & \TeX\ code & Macros to run after the text is emitted\\
+\end{argtable}
+
+\macroname{\textbackslash gre@opening@syllabletext}{}{gregoriotex-syllable.tex}
+Macro that stores the computed \TeX\ code for rendering the text of the first syllable.
+
+\macroname{\textbackslash gre@opening@initialstyle}{}{gregoriotex-syllable.tex}
+Macro used by \verb=GreSetInitialStyle= to store the initial style
 
 \macroname{\textbackslash gre@exhyphencharsave}{}{gregoriotex-main.tex}
 Macro for saving the ex hyphen character so that it can be restored at the end of the score.
