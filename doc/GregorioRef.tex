@@ -74,9 +74,19 @@
 \newcommand*{\ie}{i.e.\@\xspace}
 \newcommand*{\etc}{etc.\@\xspace}
 
+\newif\ifbreakable
+\let\oldsubsection\subsection
+\def\subsection{\filbreak\breakablefalse\oldsubsection}
+\let\oldsubsubsection\subsubsection
+\def\subsubsection{\filbreak\breakablefalse\oldsubsubsection}
+
 \newcommand{\macroname}[3]{%
   \vspace{3.25ex plus 1ex minus .2ex}%
-  \pagebreak[3]%
+  \ifbreakable%
+    \filbreak%
+  \else%
+    \breakabletrue%
+  \fi%
   \makebox[\linewidth]{\ttfamily\bfseries #1#2%
   \hspace{\fill}\normalfont\itshape #3}%
   \vspace{1.5ex plus .2ex}%
