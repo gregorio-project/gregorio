@@ -98,7 +98,7 @@ static const char *dump_style_to_string(grestyle_style style)
     }
 }
 
-static void dump_write_characters(FILE *const f,
+void dump_write_characters(FILE *const f,
         const gregorio_character * current_character)
 {
     while (current_character) {

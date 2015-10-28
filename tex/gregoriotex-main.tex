@@ -290,7 +290,7 @@
 \newcount\gre@knownline%
 
 % macro to call before the call of \initial
-\def\GreSetBigInitial{%
+\def\gre@setbiginitial{%
   \global\gre@biginitial=1\relax %
   \relax %
 }%
@@ -335,7 +335,7 @@
   \setbox\gre@box@initial=\hbox{#1}%
 }%
 
-\def\GreSetInitial#1{%
+\def\gre@setinitial#1{%
   % see comments on this function to see what it does
   \gre@debugmsg{annotation}{Time to calculate the true raise.}%
   \gre@calculate@annotationtrueraise %
@@ -472,7 +472,7 @@
   \relax %
 }%
 
-\def\GreNoInitial{%
+\def\gre@noinitial{%
   \setbox\gre@box@initial=\box\voidb@x%
   \global\gre@dimen@initialwidth=0pt\relax%
   \relax %
@@ -604,7 +604,7 @@
 
 %% macro that draws the lines : starts by the first and then draws the lines of every line.
 %% has to be called before drawing the key, after drawing the initial
-\def\GreBeginNotes{%
+\def\gre@beginnotes{%
   \gre@drawfirstlines %
   %%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
   \gre@localleftbox{%

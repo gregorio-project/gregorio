@@ -238,7 +238,7 @@ static bool go_to_end_initial(gregorio_character **param_character)
     if (!current_character) {
         return false;
     }
-    gregorio_go_to_first_character(&current_character);
+    gregorio_go_to_first_character_c(&current_character);
     /* skip past any initial */
     if (!current_character->is_character
             && current_character->cos.s.type == ST_T_BEGIN
@@ -330,14 +330,14 @@ static void free_styles(det_style **first_style)
  * special-character. It places current_character to the character next to the
  * end of the verbatim or special_char charachters.
  */
-static __inline void verb_or_sp(gregorio_character **ptr_character,
+static __inline void verb_or_sp(const gregorio_character **ptr_character,
         const grestyle_style style, FILE *const f,
         void (*const function) (FILE *, grewchar *))
 {
     int i, j;
     grewchar *text;
-    gregorio_character *current_character;
-    gregorio_character *begin_character;
+    const gregorio_character *current_character;
+    const gregorio_character *begin_character;
 
     i = 0;
     j = 0;
@@ -392,9 +392,9 @@ static __inline void verb_or_sp(gregorio_character **ptr_character,
  * complex styles. It would be a bit stupid to do such a thing, but users are
  * usually very creative when it comes to inventing twisted things...
  */
-void gregorio_write_text(const bool skip_initial,
-        gregorio_character *current_character,
-        FILE *const f, void (*const printverb) (FILE *, grewchar *),
+void gregorio_write_text(const gregorio_write_text_phase phase,
+        const gregorio_character *current_character, FILE *const f,
+        void (*const printverb) (FILE *, grewchar *),
         void (*const printchar) (FILE *, grewchar),
         void (*const begin) (FILE *, grestyle_style),
         void (*const end) (FILE *, grestyle_style),
@@ -417,7 +417,7 @@ void gregorio_write_text(const bool skip_initial,
                             printspchar);
                     break;
                 case ST_INITIAL:
-                    if (skip_initial) {
+                    if (phase == WTP_FIRST_SYLLABLE) {
                         while (current_character) {
                             if (!current_character->is_character
                                     && current_character->cos.s.type == ST_T_END
@@ -445,9 +445,10 @@ void gregorio_write_text(const bool skip_initial,
     }
 }
 
-void gregorio_write_first_letter_alignment_text(const bool skip_initial,
-        gregorio_character *current_character,
-        FILE *const f, void (*const printverb) (FILE *, grewchar *),
+void gregorio_write_first_letter_alignment_text(
+        const gregorio_write_text_phase phase,
+        const gregorio_character *current_character, FILE *const f,
+        void (*const printverb) (FILE *, grewchar *),
         void (*const printchar) (FILE *, grewchar),
         void (*const begin) (FILE *, grestyle_style),
         void (*const end) (FILE *, grestyle_style),
@@ -456,7 +457,7 @@ void gregorio_write_first_letter_alignment_text(const bool skip_initial,
     /* stack of styles to close and reopen */
     det_style *first_style = NULL;
     det_style *last_style = NULL;
-    bool first_letter_open = true;
+    int first_letter_open = (phase == WTP_FIRST_SYLLABLE)? 2 : 1;
 
     if (!current_character) {
         return;
@@ -465,7 +466,9 @@ void gregorio_write_first_letter_alignment_text(const bool skip_initial,
     /* go to the first character */
     gregorio_go_to_first_character(&current_character);
 
-    begin(f, ST_SYLLABLE_INITIAL);
+    if (phase != WTP_FIRST_SYLLABLE) {
+        begin(f, ST_SYLLABLE_INITIAL);
+    }
 
     /* loop until there are no characters left */
     for (; current_character;
@@ -474,7 +477,7 @@ void gregorio_write_first_letter_alignment_text(const bool skip_initial,
         /* found a real character */
         if (current_character->is_character) {
             printchar(f, current_character->cos.character);
-            close_first_letter = first_letter_open;
+            close_first_letter = first_letter_open != 0;
         } else switch (current_character->cos.s.type) {
         case ST_T_NOTHING:
             assert(false);
@@ -484,29 +487,23 @@ void gregorio_write_first_letter_alignment_text(const bool skip_initial,
             switch (current_character->cos.s.style) {
             case ST_CENTER:
             case ST_FORCED_CENTER:
-                /* ignore */
-                break;
             case ST_INITIAL:
-                if (skip_initial) {
-                    while (current_character) {
-                        if (!current_character->is_character
-                                && current_character->cos.s.type == ST_T_END
-                                && current_character->cos.s.style ==
-                                ST_INITIAL) {
-                            break;
-                        }
-                        current_character = current_character->next_character;
-                    }
-                } /* else ignore */
+            case ST_FIRST_SYLLABLE_INITIAL:
+                /* ignore */
                 break;
             case ST_VERBATIM:
                 verb_or_sp(&current_character, ST_VERBATIM, f, printverb);
-                close_first_letter = first_letter_open;
+                close_first_letter = first_letter_open != 0;
                 break;
             case ST_SPECIAL_CHAR:
                 verb_or_sp(&current_character, ST_SPECIAL_CHAR, f, printspchar);
-                close_first_letter = first_letter_open;
+                close_first_letter = first_letter_open != 0;
                 break;
+            case ST_FIRST_WORD:
+            case ST_FIRST_SYLLABLE:
+                if (phase == WTP_FIRST_SYLLABLE) {
+                    break;
+                } /* else fall through */
             default:
                 /* push the style onto the stack */
                 style_push(&first_style, current_character->cos.s.style);
@@ -518,12 +515,18 @@ void gregorio_write_first_letter_alignment_text(const bool skip_initial,
             case ST_CENTER:
             case ST_FORCED_CENTER:
             case ST_INITIAL:
+            case ST_FIRST_SYLLABLE_INITIAL:
                 /* ignore */
                 break;
             case ST_VERBATIM:
             case ST_SPECIAL_CHAR:
                 assert(false);
                 break;
+            case ST_FIRST_WORD:
+            case ST_FIRST_SYLLABLE:
+                if (phase == WTP_FIRST_SYLLABLE) {
+                    break;
+                } /* else fall through */
             default:
                 /* pop the style from the stack */
                 assert(first_style->style == current_character->cos.s.style);
@@ -534,7 +537,7 @@ void gregorio_write_first_letter_alignment_text(const bool skip_initial,
         }
 
         if (close_first_letter) {
-            first_letter_open = false;
+            --first_letter_open;
 
             /* close all the styles in the stack */
             if (first_style) {
@@ -567,12 +570,18 @@ void gregorio_write_first_letter_alignment_text(const bool skip_initial,
         }
     }
 
+    if (phase == WTP_FIRST_SYLLABLE) {
+        while ((--first_letter_open) >= 0) {
+            end(f, ST_SYLLABLE_INITIAL);
+        }
+    }
+
     free_styles(&first_style);
 }
 
 /* the default behaviour is to write only the initial, that is to say things
  * between the styles ST_INITIAL */
-void gregorio_write_initial(gregorio_character *current_character,
+void gregorio_write_initial(const gregorio_character *current_character,
         FILE *const f, void (*const printverb) (FILE *, grewchar *),
         void (*const printchar) (FILE *, grewchar),
         void (*const begin) (FILE *, grestyle_style),
@@ -967,7 +976,7 @@ static __inline bool _suppress_char_and_end_c(
  * in the middle of a verbatim block.
  */
 
-void gregorio_rebuild_characters(gregorio_character **param_character,
+void gregorio_rebuild_characters(gregorio_character **const param_character,
         gregorio_center_determination center_is_determined, bool skip_initial)
 {
     /* the current_character */
@@ -983,9 +992,9 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
         if (!current_character->next_character) {
             /* nothing else to rebuild, but the initial needs to be ST_CENTER */
             insert_style_after(ST_T_END, ST_CENTER, &current_character);
-            gregorio_go_to_first_character(&current_character);
+            gregorio_go_to_first_character_c(&current_character);
             insert_style_before(ST_T_BEGIN, ST_CENTER, current_character);
-            gregorio_go_to_first_character(&current_character);
+            gregorio_go_to_first_character_c(&current_character);
             (*param_character) = current_character;
             return;
         }
@@ -993,7 +1002,7 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
             /* move to the character after the initial */
             current_character = current_character->next_character;
         } else {
-            gregorio_go_to_first_character(&current_character);
+            gregorio_go_to_first_character_c(&current_character);
         }
     }
     /* first we see if there is already a center determined */
@@ -1174,12 +1183,12 @@ void gregorio_rebuild_characters(gregorio_character **param_character,
         if (skip_initial && go_to_end_initial(&current_character)) {
             current_character = current_character->next_character;
         } else {
-            gregorio_go_to_first_character(&current_character);
+            gregorio_go_to_first_character_c(&current_character);
         }
         insert_style_before(ST_T_BEGIN, ST_CENTER, current_character);
     }
     /* well.. you're quite brave if you reach this comment. */
-    gregorio_go_to_first_character(&current_character);
+    gregorio_go_to_first_character_c(&current_character);
     (*param_character) = current_character;
     free_styles(&first_style);
 }
@@ -1208,7 +1217,7 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
     gregorio_character *first_character;
     gregorio_character *start_of_special;
     /* so, here we start: we go to the first_character */
-    gregorio_go_to_first_character(&current_character);
+    gregorio_go_to_first_character_c(&current_character);
     /* first we look at the styles, to see if there is a FORCED_CENTER
      * somewhere and we also remove the CENTER styles if the syllable starts at
      * CENTER */
@@ -1236,7 +1245,7 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
         current_character = current_character->next_character;
     }
     current_character = *param_character;
-    gregorio_go_to_first_character(&current_character);
+    gregorio_go_to_first_character_c(&current_character);
     first_character = current_character;
     /* now we are going to place the two INITIAL styles (begin and end) */
     while (current_character) {
@@ -1312,7 +1321,7 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
             current_character = current_character->next_character;
         }
     } else {
-        gregorio_go_to_first_character(&current_character);
+        gregorio_go_to_first_character_c(&current_character);
     }
     if (current_character) {
         bool marked_syllable_initial = false;
@@ -1359,7 +1368,7 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
     }
 
     current_character = *param_character;
-    gregorio_go_to_first_character(&current_character);
+    gregorio_go_to_first_character_c(&current_character);
     (*param_character) = current_character;
 }
 
@@ -1394,6 +1403,6 @@ void gregorio_set_first_word(gregorio_character **const character)
     /* else there are no more characters here */
     
     if (*character) {
-        gregorio_go_to_first_character(character);
+        gregorio_go_to_first_character_c(character);
     }
 }

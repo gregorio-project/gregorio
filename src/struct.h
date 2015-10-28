@@ -788,7 +788,8 @@ void gregorio_free_voice_infos(gregorio_voice_info *voice_info);
 void gregorio_free_one_note(gregorio_note **note);
 void gregorio_free_one_glyph(gregorio_glyph **glyph);
 void gregorio_free_score(gregorio_score *score);
-void gregorio_go_to_first_character(gregorio_character **character);
+void gregorio_free_characters(gregorio_character *current_character);
+void gregorio_go_to_first_character(const gregorio_character **character);
 void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
         gregorio_type type, signed char pitch, bool flatted_key,
         bool force_pitch, char *texverb);
@@ -864,7 +865,13 @@ void gregorio_begin_style(gregorio_character **current_character,
         grestyle_style style);
 void gregorio_end_style(gregorio_character **current_character,
         grestyle_style style);
+gregorio_character *gregorio_clone_characters(const gregorio_character *source);
 signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph);
+
+static __inline void gregorio_go_to_first_character_c(gregorio_character **character)
+{
+    gregorio_go_to_first_character((const gregorio_character **)character);
+}
 
 #endif

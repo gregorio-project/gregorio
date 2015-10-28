@@ -853,7 +853,7 @@ static void gregorio_free_one_character(gregorio_character *current_character)
     free(current_character);
 }
 
-static void gregorio_free_characters(gregorio_character *current_character)
+void gregorio_free_characters(gregorio_character *current_character)
 {
     gregorio_character *next_character;
     if (!current_character) {
@@ -866,9 +866,9 @@ static void gregorio_free_characters(gregorio_character *current_character)
     }
 }
 
-void gregorio_go_to_first_character(gregorio_character **character)
+void gregorio_go_to_first_character(const gregorio_character **character)
 {
-    gregorio_character *tmp;
+    const gregorio_character *tmp;
     if (!character || !*character) {
         return;
     }
@@ -919,6 +919,35 @@ void gregorio_end_style(gregorio_character **current_character,
         (*current_character)->next_character = element;
     }
     *current_character = element;
+}
+
+gregorio_character *gregorio_clone_characters(
+        const gregorio_character *source)
+{
+    gregorio_character *target = NULL, *current = NULL;
+
+    for (; source; source = source->next_character) {
+        gregorio_character *character =
+                (gregorio_character *) calloc(1, sizeof(gregorio_character));
+        if (!character) {
+            gregorio_message(_("error in memory allocation"),
+                             "gregorio_clone_characters", VERBOSITY_FATAL, 0);
+            return NULL;
+        }
+
+        *character = *source;
+        character->next_character = NULL;
+
+        if (current) {
+            character->previous_character = current;
+            current = current->next_character = character;
+        } else {
+            character->previous_character = NULL;
+            target = current = character;
+        }
+    }
+
+    return target;
 }
 
 void gregorio_add_syllable(gregorio_syllable **current_syllable,
