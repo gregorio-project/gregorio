@@ -87,27 +87,27 @@ Macro for including scores.  Works on both gabc and tex files.
 
 Example:\par\medskip
 \begin{latexcode}
-  \includescore[n]{TecumPrincipium.tex}
-  \includescore{Chant/VirgoVirginum.gabc}
-  \includescore{/home/user/chant/AdTeLevavi}
-  \includescore[a]{AveMaria}
+  \gregorioscore[n]{TecumPrincipium.gtex}
+  \gregorioscore{Chant/VirgoVirginum.gabc}
+  \gregorioscore{/home/user/chant/AdTeLevavi}
+  \gregorioscore[a]{AveMaria}
 
   %The following lines include the same score:
-  \includescore{Christus}
-  \includescore{Christus.gtex}
-  \includescore{./Christus}
-  \includescore{./Christus.gabc}
+  \gregorioscore{Christus}
+  \gregorioscore{Christus.gtex}
+  \gregorioscore{./Christus}
+  \gregorioscore{./Christus.gabc}
 
   %With the optional arg [f], #2 must be a file usable by TeX.
-  \includescore[f]{TecumPrincipium.gabc} % Wrong
+  \gregorioscore[f]{TecumPrincipium.gabc} % Wrong
 \end{latexcode}
 
 \textbf{Important:} For the sake of clarity it is recommended that the
-file extension be omitted from \texttt{\#2}. When the nevercompile
+file extension be omitted from \texttt{\#2} unless using the \texttt{nevercompile} option. When the \texttt{nevercompile}
 option is in effect (either via package option
 \texttt{[nevercompile]}, or \verb=\gresetcompilegabc{never}=, or
-\verb=\includescore[n]=) \#2 must be a \TeX\ file that exists and
-\texttt{.tex} is the only extension that may be omitted.
+\verb=\gregorioscore[n]=) \#2 must be a \TeX\ file that exists and
+the file extension (normally gtex) must be given.
 
 When called with the optional argument \texttt{[a]} Gregorio\TeX\ will
 automatically generate a \texttt{gtex} file in this format:
@@ -137,32 +137,32 @@ A macro to change the behavior of the way Gregorio\TeX\ includes scores.  This i
 
 
 \begin{argtable}
-  \#1 & force & all later calls of \verb=\includescore= will compile the gabc
+  \#1 & force & all later calls of \verb=\gregorioscore= will compile the gabc
 file into a gtex file.\\
-  & auto & all later calls of \verb=\includescore= will use Gregorio\TeX's
+  & auto & all later calls of \verb=\gregorioscore= will use Gregorio\TeX's
 automatic compilation of gabc files.\\
-  & never & all later calls of \verb=\includescore= will include the score
+  & never & all later calls of \verb=\gregorioscore= will include the score
 without doing anything else.
 \end{argtable}
 
 \medskip This macro can be combined in the same document with different arguments to
-switch between different includescore behaviors: \par\medskip
+switch between different behaviors: \par\medskip
 \begin{latexcode}
   \usepackage{gregoriotex} % [nevercompile] is the default.
   ----
-  \includescore{TecumPrincipium} % gabc never compiled.
-  \includescore[f]{TecumPrincipium} % gabc always compiled.
-  \includescore[a]{TecumPrincipium} % gabc auto compiled.
+  \gregorioscore{TecumPrincipium} % gabc never compiled.
+  \gregorioscore[f]{TecumPrincipium} % gabc always compiled.
+  \gregorioscore[a]{TecumPrincipium} % gabc auto compiled.
 
   \gresetcompilegabc{auto}
-  \includescore{TecumPrincipium} % gabc auto compiled.
-  \includescore[n]{TecumPrincipium} % gabc never compiled.
-  \includescore[f]{TecumPrincipium} % gabc always compiled.
+  \gregorioscore{TecumPrincipium} % gabc auto compiled.
+  \gregorioscore[n]{TecumPrincipium} % gabc never compiled.
+  \gregorioscore[f]{TecumPrincipium} % gabc always compiled.
 
   \gresetcompilegabc{force}
-  \includescore{TecumPrincipium} % gabc always compiled.
-  \includescore[n]{TecumPrincipium} % gabc never compiled.
-  \includescore[a]{TecumPrincipium} % gabc auto compiled.
+  \gregorioscore{TecumPrincipium} % gabc always compiled.
+  \gregorioscore[n]{TecumPrincipium} % gabc never compiled.
+  \gregorioscore[a]{TecumPrincipium} % gabc auto compiled.
 \end{latexcode}
 
 \macroname{\textbackslash gabcsnippet}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
