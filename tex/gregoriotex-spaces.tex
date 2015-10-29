@@ -948,8 +948,6 @@
   \IfStrEq{#1}{annotationraise}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{noclefspace}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{clivisalignmentmin}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{abovesignsspace}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{belowsignsspace}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{choralsigndownshift}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{choralsignupshift}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{translationheight}{\gre@rubberfalse}{\relax}%
@@ -1239,12 +1237,6 @@
   \fi%
   \ifgre@scale@clivisalignmentmin%
     \gre@changeonedimenfactor{clivisalignmentmin}{#1}{#2}%
-  \fi%
-  \ifgre@scale@abovesignsspace%
-    \gre@changeonedimenfactor{abovesignsspace}{#1}{#2}%
-  \fi%
-  \ifgre@scale@belowsignsspace%
-    \gre@changeonedimenfactor{belowsignsspace}{#1}{#2}%
   \fi%
   \ifgre@scale@choralsigndownshift%
     \gre@changeonedimenfactor{choralsigndownshift}{#1}{#2}%
