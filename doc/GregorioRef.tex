@@ -32,6 +32,7 @@
 \usepackage{url}
 \usepackage{tabulary}
 \usepackage{tabularx}
+\usepackage{adjustbox}
 
 \usepackage{makeidx}
 \makeindex
@@ -177,6 +178,7 @@ Description of macro.
 
 \begin{argtable}
   Arg \# & Data type & Description of argument\\
+  Arg \# & \texttt{keyword} & Description of the setting the keyword corresponds to
 \end{argtable}
 
 The source file where the macro is defined is included for developers
@@ -193,15 +195,15 @@ Macros are divided into three groups:
 \end{description}
 
 
-\input{Command_Index_User}
-\input{Command_Index_gregorio}
-\input{Command_Index_internal}
-\input{Gabc}
+\include{Command_Index_User}
+\include{Command_Index_gregorio}
+\include{Command_Index_internal}
+\include{Gabc}
 
 \begin{appendices}
   \renewcommand\thetable{\thesection\arabic{table}}
   \renewcommand\thefigure{\thesection\arabic{figure}}
-  \input{Appendix_Font_Tables}
+  \include{Appendix_Font_Tables}
 \end{appendices}
 
 \addcontentsline{toc}{section}{Index}
