@@ -48,19 +48,6 @@
   \doublehyphendemerits=0\relax %
   \finalhyphendemerits=0\relax %
   \brokenpenalty=\grebrokenpenalty\relax %
-}%
-
-\def\gre@restorepenalties{%
-  \hyphenpenalty=\gre@hyphenpenaltysave %
-  \exhyphenpenalty=\gre@exhyphenpenaltysave %
-  \doublehyphendemerits=\gre@doublehyphendemeritssave %
-  \finalhyphendemerits=\gre@finalhyphendemeritssave %
-  \brokenpenalty=\gre@brokenpenaltysave %
-}%
-
-
-% macro called at each score
-\def\gre@dofinetuning{%
   \xdef\gre@loosenesssave{\the\looseness}%
   \xdef\gre@tolerancesave{\the\tolerance}%
   \xdef\gre@pretolerancesave{\the\pretolerance}%
@@ -75,7 +62,12 @@
   \clubpenalty=\greclubpenalty %
 }%
 
-\def\gre@endfinetuning{%
+\def\gre@restorepenalties{%
+  \hyphenpenalty=\gre@hyphenpenaltysave %
+  \exhyphenpenalty=\gre@exhyphenpenaltysave %
+  \doublehyphendemerits=\gre@doublehyphendemeritssave %
+  \finalhyphendemerits=\gre@finalhyphendemeritssave %
+  \brokenpenalty=\gre@brokenpenaltysave %
   \looseness=\gre@loosenesssave %
   \tolerance=\gre@tolerancesave %
   \pretolerance=\gre@pretolerancesave %
