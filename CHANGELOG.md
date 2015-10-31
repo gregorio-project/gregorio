@@ -18,6 +18,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Removed
 - The TeXShop script for compiling gabc files.  Supplanted by the new autocompile feature of the package.
 
+### Deprecated
+- The meaningless `gabc-version` header in gabc (see [#664](https://github.com/gregorio-project/gregorio/issues/664)).
+
 
 ## [4.0.0-rc1] - 2015-10-08
 ### Fixed
