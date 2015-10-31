@@ -536,7 +536,9 @@ void gregorio_write_first_letter_alignment_text(
             break;
         }
 
-        if (close_first_letter) {
+        while (close_first_letter || (!current_character->next_character
+                && first_letter_open > 0)) {
+            close_first_letter = false;
             --first_letter_open;
 
             /* close all the styles in the stack */
