@@ -1,4 +1,5 @@
 % !TEX root = GregorioRef.tex
+% !TEX program = LuaLaTeX+se
 \section{The GABC File}
 
 gabc is a simple notation based exclusively on ASCII characters that
@@ -27,7 +28,6 @@ occasion: in church calendar;
 meter: for metrical hymns;
 commentary: source of words;
 arranger: name of arranger;
-gabc-version: 0.9.3;
 author: if known;
 date: xi c;
 manuscript: ms name;
@@ -36,6 +36,7 @@ manuscript-storage-place: library/monastery;
 book: from which score taken;
 transcriber: writer of gabc;
 transcription-date: 2009;
+language: latin;
 initial-style: 1;
 user-notes: whatever other comments you wish to make;
 mode: 6;
@@ -61,6 +62,30 @@ Here is a detailed description of each header field:
   incipit, the first few words. In the case of the mass ordinary, the
   form as \texttt{Kyrie X Alme Pater} or \texttt{Sanctus XI} is
   recommended where appropriate. \textbf{This field is required.}
+\item[gabc-copyright] This license is the copyright notice (in english) of the gabc file, as chosen by the person named in the transcriber field. As well as the notice itself, it may include a brief description of the license, such as public domain, CC-by-sa; a separate text file will be necessary for the complete legal license. For the legal issues about gregorian chant scores, please see \url{http://gregorio-project.github.io/legalissues}. An example of this field would be:
+  \begin{lstlisting}[autogobble]
+    gabc-copyright: (C) Elie Roux, 2009, public domain;
+  \end{lstlisting}
+\item[score-copyright] This license is the copyright notice (in english) of the score itself from which the gabc was transcribed. Like the \texttt{gabc-copyright}, there may be a brief description of the license too. In unclear or complex cases it may be omitted; it is most suitable for use when the transcriber is the copyright holder and licensor of the score as well. One again, reading the page on legal issues (linked above) is recommended. An example of this field would be:
+  \begin{lstlisting}[autogobble]
+    (C) Abbaye de Solesmes, 1934
+  \end{lstlisting}
+\item[office-part] The office-part is the category of chant (in Latin), according to its liturgical rôle. Examples are: antiphona, hymnus, responsorium brevium, responsorium prolixum, introitus, graduale, tractus, offertorium, communio, kyrie, gloria, credo, sanctus, benedictus, agnus dei.
+\item[occasion] The occasion is the liturgical occasion, in Latin. For example, Dominica II Adventus, Commune doctorum, Feria secunda.
+\item[meter] For hymns and anything else with repetitive stanzas, the meter, the numbers of syllables in each line of a stanza. For example, 8.8.8.8 for typical Ambrosian-style hymns: 4 lines each of 8 syllables.
+\item[commentary] This is intended for notes about the source of the text, such as references to the Bible.
+\item[arranger] The name of a modern arranger, when a traditional chant melody has been adapted for new words, or when a manuscript is transcribed into square notation. This may be a corporate name, like Solesmes.
+\item[author] The author of the piece, if known; of course, the author of most traditional chant is not known.
+\item[date] The date of composition, or the date of earliest attestation. With most traditional chant, this will only be approximate; e.g. XI. s. for eleventh century. The convention is to put it with the latin style, like the previous examples (capital letters, roman numerals, s for seculum and the dots).
+\item[manuscript] For transcriptions direct from a manuscript, the text normally used to identify the manuscript, for example Montpellier H.159
+\item[manuscript-reference] A unique reference for the piece, according to some well-known system. For example, the reference beginning cao in the Cantus database of office chants. If the reference is unclear as to which system it uses, it should be prefixed by the name of the system. Note that this should be a reference identifying the piece, not the manuscript as a whole; anything identifying the manuscript as a whole should be put in the manuscript field.
+\item[manuscript-storage-place] For transcriptions direct from a manuscript, where the manuscript is held; e.g. Bibliothèque Nationale, Paris.
+\item[book] For transcriptions from a modern book (such as Solesmes editions; modern goes back at least to the 19th century revival), the name of the book; e.g. Liber Usualis.
+\item[transcriber] The name of the transcriber into gabc.
+\item[transcription-date] The date the gabc was written, with the following convention yyyymmdd, like 20090129 for january the 29th 2009.
+\item[language] The language of the lyrics.
+\item[initial-style] The style of the initial letter. 0 means no initial letter, 1 a normal one, and 2 a large one, on two lines. Note that if you want to use the initial on two lines, you have to specify at least the two first line breaks.
+\item[user-notes] This may contain any text in addition to the other headers -- any notes the transcriber may wish. However, it is recommended to use the specific header fields where they are suitable, so that it is easier to find particular information.
 \item[mode] The mode of the piece. This should normally be an arabic
   number between 1 and 8, but may be any text required for unusual
   cases. The mode number will be converted to roman numerals and
@@ -80,12 +105,12 @@ Here is a detailed description of each header field:
     annotation:Ad Magnif.;
     annotation:VIII G;
   \end{lstlisting}
-  Full \TeX markup is accepted:
+  Full \TeX\ markup is accepted:
   \begin{lstlisting}[autogobble]
     annotation:{\color{red}Ad Magnif.};
     annotation:{\color{red}VIII G};
   \end{lstlisting}
-  If the user already defined annotation(s) in the main TeX file via
+  If the user already defined annotation(s) in the main \TeX\ file via
   \verb=\greannotation= then the \texttt{annotation} header field will not
   overwrite that definition.
 
