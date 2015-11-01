@@ -174,6 +174,10 @@ In order to be more consistent, making a bistropha or tristropha liquescent by a
 
 Prior to version 4.0, GregorioTeX would put a hyphen below an empty first syllable (which happens when the first syllable consists only of the initial).  The spacing algorithm is improved in 4.0, but that eliminates the hyphen if there is not enough space between the note of the first syllable and the next syllable.  The `\gresetemptyfirstsyllablehyphen` command controls this behavior.  It defaults to `force`, which restores the pre-4.0 behavior, but may be changed to `auto` (i.e., `\gresetemptyfirstsyllablehyphen{auto}`) if you prefer the space-based behavior.
 
+### gabc-version header
+
+The gabc-version header has become meaningless.  It is now deprecated.  Please remove it from your gabc files if you had been using it.
+
 ## 3.0
 ### TeX Live 2013
 
