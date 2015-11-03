@@ -118,7 +118,7 @@ Macro called at beginning of a no line break area.
 Macro to draw the staff lines.  Comes after the initial but before the clef.
 
 \macroname{\textbackslash GreBold}{\#1}{gregoriotex.sty and gregoriotex.tex}
-Makes argument bold.  Accesses \LaTeX\ \verb=\textbf= (\textit{gregoriotex.sty}) or Plain\TeX\ \verb=\bf= (\textit{gregoriotex.tex}) as appropriate.  Corresponds to ``<b></b>'' tags in gabc.
+Makes argument bold.  Accesses \LaTeX\ \verb=\textbf= (\textit{gregoriotex.sty}) or Plain \TeX\ \verb=\bf= (\textit{gregoriotex.tex}) as appropriate.  Corresponds to ``<b></b>'' tags in gabc.
 
 \begin{argtable}
   \#1 & string & Text to be typeset in bold.\\
@@ -144,7 +144,7 @@ Macro for typesetting a circulus.
 \end{argtable}
 
 \macroname{\textbackslash GreColored}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
-Colors argument (a string) in \verb=gregoriocolor.=  Corresponds to ``<c></c>'' tags in gabc.  Does nothing in Plain\TeX\ because color is not supported there.
+Colors argument (a string) in \verb=gregoriocolor.=  Corresponds to ``<c></c>'' tags in gabc.  Does nothing in Plain \TeX\ because color is not supported there.
 
 \macroname{\textbackslash GreCPVirgaReversaAscendensOnDLine}{\#1}{gregoriotex-main.tex}
 Allows the Dominican rule set to force long stems to be used for virga
@@ -169,7 +169,7 @@ Typesets a custos.
 Macro to typeset a dagger (\GreDagger).
 
 \macroname{\textbackslash GreDiscretionary}{\#1\#2\#3}{gregoriotex-signs.tex}
-A Gregorio\TeX\ specific discretionary. Currently only used to avoid clef change at beginning or end of line, or even with more complex data (z0::c3 for instance).  We require a special function because in the normal discretionary function you cannot use \verb=\hskip= (but you can use \verb=\kern=) and you cannot use \verb=\penalty= (which is useless indeed).  This macro corrects for these two limitations. The first argument allows to select the penalty assigned to the discretionary by recent version of Lua\TeX.
+A Gregorio\TeX-specific discretionary. Currently only used to avoid clef change at beginning or end of line, or even with more complex data (z0::c3 for instance).  We require a special function because in the normal discretionary function you cannot use \verb=\hskip= (but you can use \verb=\kern=) and you cannot use \verb=\penalty= (which is useless indeed).  This macro corrects for these two limitations. The first argument allows to select the penalty assigned to the discretionary by recent version of Lua\TeX.
 
 \begin{argtable}
   \#1 & integer & Type of discretionary (for penalty assignment). Currently possible value is 0 for clef change discretionaries.\\
@@ -202,14 +202,14 @@ Macro to typeset a divisio minima.
 Macro to typeset a divisio minor.
 
 \begin{argtable}
-  \#1 & \TeX code & Macros which may happen before the skip but after the divisio minor (typically \verb=\grevepisemus=).\\
+  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio minor (typically \verb=\grevepisemus=).\\
 \end{argtable}
 
 \macroname{\textbackslash GreDominica}{\#1\#2}{gregoriotex-signs.tex}
 Macro to typeset a dominican bar.
 
 \begin{argtable}
-  \#1 & \texttt{1--6} & Type of dominican bar.  Corresponds to bar types 6--11 in \verb=\grewritebar=.\\
+  \#1 & \texttt{1}--\texttt{6} & Type of dominican bar.  Corresponds to bar types 6--11 in \verb=\grewritebar=.\\
   \#2 & \TeX\ code    & Macros which may happen before the skip but after the divisio dominica (typically \verb=\grevepisemus=).\\
 \end{argtable}
 
@@ -454,7 +454,7 @@ Same as \verb=\GreVirgula= except inside a syllable.
 
 \macroname{\textbackslash GreItalic}{\#1}{gregoriotex.sty or gregoriotex.tex}
 Makes argument (a string) italic.  Accesses \LaTeX\ \verb=\textit= or
-Plain\TeX\ \verb=\it= as appropriate.  Corresponds to ``<i></i>'' tags
+Plain \TeX\ \verb=\it= as appropriate.  Corresponds to ``<i></i>'' tags
 in gabc.
 
 \begin{argtable}
@@ -506,7 +506,7 @@ function does nothing. Also, if the \texttt{annotation} header field
 is used, then this function does nothing.
 
 \begin{argtable}
-  \#1 & \texttt{1--8} & The mode.  Other values are ignored.\\
+  \#1 & \texttt{1}--\texttt{8} & The mode.  Other values are ignored.\\
 \end{argtable}
 
 \macroname{\textbackslash GreNatural}{\#1\#2}{gregoriotex-signs.tex}
@@ -681,7 +681,7 @@ Macro for writing initial key.
 
 \begin{argtable}
   \#1 & \texttt{c} or \texttt{f} & Type of clef.\\
-  \#2 & \texttt{1--4}       & Line of key.\\
+  \#2 & \texttt{1}--\texttt{4}       & Line of key.\\
   \#3 & integer & Height number of flat in key (\texttt{0} for no flat).\\
 \end{argtable}
 
@@ -690,7 +690,7 @@ Macro to define the clef that will appear at the beginning of the lines.
 
 \begin{argtable}
   \#1 & \texttt{c} or \texttt{f} & Type of clef.\\
-  \#2 & \texttt{1--4}       & Line of key.\\
+  \#2 & \texttt{1}--\texttt{4}       & Line of key.\\
   \#3 & \texttt{0} & No space after clef.\\
   & \texttt{1} & Space after clef.\\
   \#4 & integer & Height of flat in key (\texttt{0} for no flat).\\
@@ -733,7 +733,7 @@ Macro to typeset a sharp.
 
 \macroname{\textbackslash GreSmallCaps}{\#1}{gregoriotex.sty and gregoriotex.tex}
 Makes argument small capitals. Accesses \LaTeX\ \verb=\textsc= or
-Plain\TeX\ \verb=\sc= as appropriate Corresponds to ``<sc></sc>'' tags
+Plain \TeX\ \verb=\sc= as appropriate Corresponds to ``<sc></sc>'' tags
 in gabc.
 
 \begin{argtable}
@@ -767,7 +767,7 @@ Macro to end the centering of the translation text.
 
 \macroname{\textbackslash GreTypewriter}{\#1}{gregoriotex.sty and gregoriotex.tex}
 Makes argument typewriter font.  Accesses \LaTeX\ \verb=\texttt= or
-Plain\TeX\ \verb=\tt= as appropriate.
+Plain \TeX\ \verb=\tt= as appropriate.
 
 \begin{argtable}
   \#1 & string & Text to typeset in typewriter font.\\
@@ -786,7 +786,7 @@ Macro to typeset a round brace below the lines.
 
 \macroname{\textbackslash GreUnderline}{\#1}{gregoriotex.sty and gregoriotex.tex}
 Makes argument underlined under \LaTeX\ using \verb=\underline=.  Does
-nothing in Plain\TeX.
+nothing in Plain \TeX.
 
 \begin{argtable}
   \#1 & string & Text to typeset underlined.\\

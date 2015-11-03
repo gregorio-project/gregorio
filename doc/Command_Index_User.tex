@@ -39,9 +39,9 @@ The optional arguments are:
 \verb=forcecompile= conflict with eachother. Only one should be
 specified in the options list.\bigskip
 
-To use the package in a Plain\TeX\ document, include \verb=\input gregoriotex.tex= near the top of the document (the area which would correspond to the preamble in \LaTeX).
+To use the package in a Plain \TeX\ document, include \verb=\input gregoriotex.tex= near the top of the document (the area which would correspond to the preamble in \LaTeX).
 
-To use the \texttt{debug} option in Plain\TeX, you'll need to define \verb=\gre@debug= manually as a string listing the kinds of messages you want printed (or as \verb=all= if you want all messages printed).
+To use the \texttt{debug} option in Plain \TeX, you'll need to define \verb=\gre@debug= manually as a string listing the kinds of messages you want printed (or as \verb=all= if you want all messages printed).
 
 To use the \texttt{allowdeprecated=false} option, you'll need \verb=\gre@allowdeprecatedfalse=.
 
@@ -237,7 +237,7 @@ Macro to adjust the thickness of the staff lines.
 In addition to providing control over the overall size of your scores, Gregorio\TeX\ allows you to fine tune the spacings around and between the various elements using the following functions.
 
 \macroname{\textbackslash grecreatedim}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-spaces.tex}
-Macro to create one of Gregorio\TeX’s distances.  Used to initialize distances in a space configuration file.  See \textit{gsp-default.tex} for an example of such a file.
+Macro to create one of Gregorio\TeX’s distances.  Used to initialize distances in a space configuration file.  For an example of such a file, please see \textit{gsp-default.tex}, which contains the default spacing configuration for Gregorio\TeX.
 
 \begin{argtable}
   \#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
@@ -344,7 +344,7 @@ Macro for setting whether the staff lines should be rendered or not.
 Macro for setting whether the staff lines behind a punctum cavum should be shown or not.
 
 \begin{argtable}
-  \#1 & \texttt{visible} & The staff lines behind a punctum cavum should be printed (Plain\TeX\ default)\\
+  \#1 & \texttt{visible} & The staff lines behind a punctum cavum should be printed (Plain \TeX\ default)\\
   & \texttt{invisible} & The staff lines behind a punctum cavum should not be printed (\LaTeX\ default)
 \end{argtable}
 
@@ -352,7 +352,7 @@ Macro for setting whether the staff lines behind a punctum cavum should be shown
 Macro for setting whether the staff lines behind an alternation (\ie, an accidental) should be shown or not.
 
 \begin{argtable}
-  \#1 & \texttt{visible} & The staff lines behind an alteration should be printed (Plain\TeX\ default)\\
+  \#1 & \texttt{visible} & The staff lines behind an alteration should be printed (Plain \TeX\ default)\\
   & \texttt{invisible} & The staff lines behind an alteration should not be printed (\LaTeX\ default)
 \end{argtable}
 
@@ -506,7 +506,7 @@ Redefines a \TeX\ control sequence to be a a barred symbol.
 \end{argtable}
 
 Gregorio\TeX\ does not have precomposed barred letters, instead, it has bars that you
-can you to composed barred letters in your text font. This command is the most
+can use to composed barred letters in your text font. This command is the most
 simple version.
 
 For example:
@@ -589,7 +589,7 @@ barred symbol.
 A macro for invoking one of the five separators (fancy lines) which are contained in the greextra font.
 
 \begin{argtable}
-  \#1 & \texttt{1/2/3/4/5} & Choose the number of the line desired\\
+  \#1 & \texttt{1}--\texttt{5} & Choose the number of the line desired\\
   \#2 & integer & the point size at which to print the line\\
 \end{argtable}
 
@@ -597,7 +597,7 @@ A macro for invoking one of the five separators (fancy lines) which are containe
 A macro for invoking one of the ornamentation elements which are contained in the greextra font.
 
 \begin{argtable}
-  \#1 & \texttt{1/2} & Choose the number of the ornamentation desired\\
+  \#1 & \texttt{1}--\texttt{2} & Choose the number of the ornamentation desired\\
   \#2 & integer & the point size at which to print the line\\
 \end{argtable}
 
@@ -625,7 +625,7 @@ Different elements of an include score have different styles applied.  These ele
   \stylename{firstword} & the first word of the first score excluding the score initial & none\\
   \stylename{modeline} & the rendered annotation from the \texttt{mode: ;} header in the gabc file & \parbox[t]{2.2cm}{\raggedleft\textsc{\textbf{Bold Small Capitals}}}\\
   \stylename{nabc} & ancient notation & {\color{gregoriocolor}gregoriocolor} (\LaTeX)\\
-  && none (Plain\TeX)\\
+  && none (Plain \TeX)\\
 \end{tabular}
 \end{adjustbox}
 
@@ -1289,7 +1289,7 @@ Default: $-1$ (Lua\TeX\ versions prior to 0.80) or \verb=\pretolerance= (version
 
 \subsection{Colors}\label{colors}
 Colors are strictly a \LaTeX\ phenomena as currently implemented.  All
-commands which change a color will raise a warning in Plain\TeX, but will not alter the document.
+commands which change a color will raise a warning in Plain \TeX, but will not alter the document.
 
 All colors can be redefined using \verb=\definecolor=.  See the
 \verb=xcolor= package for documentation.

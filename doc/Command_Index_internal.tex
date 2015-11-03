@@ -90,7 +90,7 @@ Macro to calculate \verb=\gre@dimen@annotationtrueraise=.
 Calculates the value of \texttt{textlower}.  Default is \texttt{spacebeneathtext}.
 
 \macroname{\textbackslash gre@calculate@linewidth}{}{gregoriotex-spaces.tex}
-Calculates the ine width.  Default is the width of the printable space (\verb=\hsize=).
+Calculates the line width.  Default is the width of the printable space (\verb=\hsize=).
 
 \macroname{\textbackslash gre@calculate@stafflinewidth}{}{gregoriotex-spaces.tex}
 Calculates the width of the staff lines.  Default is \texttt{linewidth}.
@@ -585,7 +585,7 @@ Macro called before each glyph.
 Macro called at the end of the score to ensure that a big initial setting doesn’t carry into the next score.
 
 \macroname{\textbackslash greoldcatcode}{}{gregoriotex.tex}
-Macro to store the catcode for ``@‘’ so that we can use said symbol in function names under Plain\TeX\ and then restore the original catcode after the package is done loading.
+Macro to store the catcode for ``@‘’ so that we can use said symbol in function names under Plain \TeX\ and then restore the original catcode after the package is done loading.
 
 \macroname{\textbackslash gre@setstylefont}{}{gregoriotex-main.tex}
 Macro for opening up greextra font.
@@ -672,7 +672,7 @@ The units attached to shrink dimension in a string distance.  These units are ex
 Macro for raising a bug error when some calculation goes awry and comes up with a non-sensical result.  Generally will be found in Lua code, not \TeX\ code.
 
 \macroname{\textbackslash gre@changestyle}{\#1\#2[\#3]}{gregoriotex.sty \textup{and} gregoriotex.tex}
-Workhorse function behind \verb=\grechangestyle=.  Necessary because the internals of the definition are slightly different in \LaTeX\ and Plain\TeX.
+Workhorse function behind \verb=\grechangestyle=.  Necessary because the internals of the definition are slightly different in \LaTeX\ and Plain \TeX.
 
 \macroname{\textbackslash gre@calculate@bolshift}{\#1\#2}{gregoriotex-spaces.tex}
 Macro used in \verb=\GreSyllable=. Sets \verb=\gre@skip@bolshift= to the left kern that should appear at the beginning of a line in case of a forced linebreak.  The goal of this left kern is to have all lines aligned on notes.  This shift is applied to the right before every syllable and then to the left after placing an empty box.  At the beginning of the line the shift to the right is ignored by \TeX\ as leading white space, but the shift left is not because of the presence of the “character” of the empty box.
@@ -883,7 +883,7 @@ Macro to make a few checks and call the right macros between \verb=\endbeforebar
 \end{argtable}
 
 \macroname{\textbackslash gre@typeout}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
-Macro which points to \verb=\typeout= in \LaTeX\ or \verb=\message= in Plain\TeX.
+Macro which points to \verb=\typeout= in \LaTeX\ or \verb=\message= in Plain \TeX.
 
 \macroname{\textbackslash gre@unsetfixedtextformat}{}{gregoriotex-syllable.tex}
 Macro which changes \verb=\gre@fixedtextformat= back to normal text.
@@ -942,10 +942,10 @@ The font for some of the extra characters, such as the bar for barred letters.
 The font for ancient notation.
 
 \macroname{\textbackslash gre@font@biginitial}{}{gregoriotex.tex}
-The font for the default big initial format in Plain\TeX.
+The font for the default big initial format in Plain \TeX.
 
 \macroname{\textbackslash gre@font@initial}{}{gregoriotex.tex}
-The font for the default initial format in Plain\TeX.
+The font for the default initial format in Plain \TeX.
 
 
 \subsection{Character Reference Aliases}
@@ -1477,8 +1477,8 @@ A place to save the current value of the pretolerance so that we can change it t
 
 
 
-\subsection{\LaTeX/Plain\TeX\ compatibility}
-While every effort has been made to use only primitives which are compatible with both \LaTeX\ and Plain\TeX, it is sometimes necessary to use primitives which are defined for one but not the other (usually its \LaTeX\ that has what we need built in).  In these cases we have to provide an equivalent macro to the \TeX\ version which is lacking.
+\subsection{\LaTeX/Plain \TeX\ compatibility}
+While every effort has been made to use only primitives which are compatible with both \LaTeX\ and Plain \TeX, it is sometimes necessary to use primitives which are defined for one but not the other (usually its \LaTeX\ that has what we need built in).  In these cases we have to provide an equivalent macro to the \TeX\ version which is lacking.
 
 \macroname{\textbackslash MessageBreak}{}{gregoriotex.tex}
 Creates a line break in typeout, warning, bug, and error messages.  Copied from \LaTeX\ source.
