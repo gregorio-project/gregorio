@@ -788,14 +788,10 @@ arranger_definition:
 
 gabc_version_definition:
     GABC_VERSION attribute {
-        /* So far this handling of the version is rudimentary.  When
-         * we start supporting multiple input versions, it will become
-         * more complex.  For the moment, just issue a warning. */
-        if (strcmp ($2.text, GABC_CURRENT_VERSION) != 0) {
-            gregorio_message(_("gabc-version is not the current one "
-                    GABC_CURRENT_VERSION " ; there may be problems"),
-                    "det_score", VERBOSITY_WARNING, 0);
-        }
+        /* Deprecated */
+        gregorio_message("\"gabc-version\" header is deprecated and will be "
+                "ignored.", "gabc_score_determination_parse",
+                VERBOSITY_DEPRECATION, 0);
         free($2.text);
     }
     ;
