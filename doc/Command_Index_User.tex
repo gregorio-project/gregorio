@@ -165,20 +165,17 @@ switch between different includescore behaviors: \par\medskip
   \includescore[a]{TecumPrincipium} % gabc auto compiled.
 \end{latexcode}
 
-\macroname{\textbackslash gabcsnippet}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
-Converts the gabc notation specified in \texttt{\#2} to Gregorio\TeX\ and
-includes it directly in the document.  The optional argument \texttt{[\#1]}
-may be used to specify a gabc \texttt{initial-style}, which defaults to
-\texttt{1}.
+\macroname{\textbackslash gabcsnippet}{\{\#1\}}{gregoriotex-main.tex}
+Converts the gabc notation specified in \texttt{\#1} to Gregorio\TeX\ and
+includes it directly in the document.
 
 \begin{argtable}
-  \#1 & number & Optional.  The gabc \texttt{initial-style} value to use.\\
-  \#2 & string & The gabc to insert into the document.\\
+  \#1 & string & The gabc to insert into the document.\\
 \end{argtable}
 
 \medskip For example:\par\medskip
 \begin{latexcode}
-  \gabcsnippet[0]{(c3) Al(eg~)le(gv.fhg)lu(efe___)ia(e.) (::)}
+  \gabcsnippet{(c3) Al(eg~)le(gv.fhg)lu(efe___)ia(e.) (::)}
 \end{latexcode}
 
 
@@ -699,6 +696,12 @@ Macro to add an illuminated initial.
 
 \textbf{Nota Bene:} Usually the argument of this command should be an \verb=\includegraphics= command, but you may use what ever you want as the illuminated initial.
 
+\macroname{\textbackslash gresetinitiallines}{\#1}{gregoriotex-syllable.tex}
+Sets the number of lines the score initial requires.
+
+\begin{argtable}
+  \#1 & number & The number of lines required by the initial.  If \texttt{0}, the score will have no separated initial.\\
+\end{argtable}
 
 \subsubsection{Text Alignment}
 Gregorio\TeX\ allows you to manipulate the global alignment behavior of some text elements using the following commands.

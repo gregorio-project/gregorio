@@ -828,9 +828,6 @@ void gabc_write_score(FILE *f, gregorio_score *score)
                     score->annotation[annotation_num]);
         }
     }
-    if (score->initial_style != NORMAL_INITIAL) {
-        fprintf(f, "initial-style: %d;\n", score->initial_style);
-    }
     gabc_write_str_attribute(f, "user-notes", score->user_notes);
     if (score->number_of_voices == 0) {
         gregorio_message(_("gregorio_score seems to be empty"),

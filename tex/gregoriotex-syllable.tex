@@ -912,9 +912,13 @@
   }%
 }%
 
-\def\GreSetInitialStyle#1{%
-  \def\gre@opening@initialstyle{#1}%
-}%
+\def\gresetinitiallines#1{\def\gre@initiallines{#1}}%
+\gresetinitiallines{1}% default to one-line initials
+
+\def\GreSetInitialStyle#1{%%% DEPRECATED by 4.1
+  \gre@deprecated{initial-style gabc header}{\protect\gresetinitiallines}%%% DEPRECATED by 4.1
+  \def\gre@opening@initialstyle{#1}%%% DEPRECATED by 4.1
+}%%% DEPRECATED by 4.1
 
 %% sets the first syllable text
 %% #1 - Initial
@@ -924,6 +928,7 @@
 %% #5 - Three syllable parts where there is no separated initial
 %% #6 - Extra macros to run if there is an initial
 \def\GreSetFirstSyllableText#1#2#3#4#5#6{%
+  %%% DEPRECATED by 4.1: When \gre@opening@initialstyle is removed, use \gre@initiallines directly in the following line
   \ifcase\gre@opening@initialstyle\relax % no initial
     \gre@noinitial %
     \gre@setfirstsyllabletext#5{#1}{#2#3}{}%
@@ -949,6 +954,13 @@
 %%      populate \gre@opening@syllabletext (even if that should be empty)
 \def\GreScoreOpening#1#2#3#4{%
   #4\relax % should emit the initial
+  \ifnum\gre@biginitial=1\relax %
+    \gre@debugmsg{general}{making adjustment NECESSARY}%
+    \gre@thirdlineadjustmentnecessarytrue %
+  \else %
+    \gre@debugmsg{general}{making adjustment unnecessary}%
+    \gre@thirdlineadjustmentnecessaryfalse %
+  \fi %
   #1\relax % score reference, voice info, etc.
   \gre@beginnotes\relax %
   #2\relax % initial clef, etc.

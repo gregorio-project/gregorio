@@ -1069,7 +1069,7 @@ gregorio_score *gregorio_new_score(void)
     new_score->name = NULL;
     new_score->gabc_copyright = NULL;
     new_score->score_copyright = NULL;
-    new_score->initial_style = NORMAL_INITIAL;
+    new_score->initial_style = INITIAL_NOT_SPECIFIED;
     new_score->office_part = NULL;
     new_score->occasion = NULL;
     new_score->meter = NULL;

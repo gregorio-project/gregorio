@@ -262,15 +262,6 @@ optional argument.
   \#1 & string & Snippet of gabc code.\\
 \end{argtable}
 
-\macroname{\textbackslash gre@gabcsnippet@option}{[\#1]\#2}{gregoriotex-main.tex}
-Macro that handles \verb=\gabcsnippet= calls when they have an optional
-argument.
-
-\begin{argtable}
-  \#1 & int & Value of initial style to be passed to gregorio \\
-  \#2 & string & Snippet of gabc code.\\
-\end{argtable}
-
 \macroname{\textbackslash gre@writemode}{\#1}{gregoriotex-main.tex}
 Macro that writes its argument with \verb=\greannotation=. The
 argument typically is given to this macro by \verb=\GreMode= in the
@@ -383,6 +374,15 @@ Macro which indicates that a 2-line initial is desired.
 
 \macroname{\textbackslash gre@setinitial}{\#1}{gregoriotex-main.tex}
 Macro to set the initial in the score.
+
+\macroname{\textbackslash gre@adjustsecondline}{}{gregoriotex.tex}
+Macro to call before first syllable, but after \verb=\GreSetInitialClef=.
+
+\macroname{\textbackslash gre@adjustthirdline}{}{gregoriotex-main.tex}
+Macro to call during the second line.
+
+\macroname{\textbackslash gre@adjustlineifnecessary}{}{gregoriotex-main.tex}
+Macro that calls \verb=\gre@adjustthirdline= if indicated by \verb=\ifgre@thirdlineadjustmentnecessary=.
 
 \macroname{\textbackslash gre@addspaceabove}{}{gregoriotex-main.tex}
 Macro to increase the space above the lines to account for above lines text.
@@ -1245,6 +1245,9 @@ Boolean which indicates that a hyphen after an empty first syllable should be fo
 
 \macroname{\textbackslash gre@showhyphenafterthissyllable}{}{gregoriotex-syllable.tex}
 Boolean used by \verb=\GreSyllable= to decide if a hyphen should be shown after the syllable.
+
+\macroname{\textbackslash ifgre@thirdlineadjustmentnecessary}{}{gregoriotex-syllable.tex}
+Boolean which indicates that a third-line adjustment to staff line width is necessary.
 
 
 \subsection{Boxes}

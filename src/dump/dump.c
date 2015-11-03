@@ -598,9 +598,6 @@ void dump_write_score(FILE *f, gregorio_score *score)
     if (score->mode) {
         fprintf(f, "   mode                      %d\n", score->mode);
     }
-    if (score->initial_style) {
-        fprintf(f, "   initial_style             %d\n", score->initial_style);
-    }
     if (score->nabc_lines) {
         fprintf (f, "   nabc_lines                %d\n", (int)score->nabc_lines);
     }

@@ -217,6 +217,7 @@
 \def\GreNewParLine{%
   \gre@debugmsg{lineheight}{GreNewParLine}%
   \gre@newlinecommon{1}%
+  \relax%
 }%
 
 % the macro we call each time we force a changing of line, it automatically sets \gre@knownline, and adjusts left spaces
@@ -229,9 +230,9 @@
       \ifcase\gre@knownline %
       % 0: should not happend...
       \or % 1
-        \GreAdjustSecondLine %
+        \gre@adjustsecondline %
       \or %2
-        \GreAdjustThirdLine %
+        \gre@adjustthirdline %
       \fi %
     \fi %
     \global\advance\gre@knownline by 1\relax %
@@ -255,7 +256,7 @@
     \fi %
     \gre@penalty{-10001}%
   \fi %
-  \relax %
+  \gre@adjustlineifnecessary\relax %
 }%
 
 \def\gre@mark@translation{\directlua{gregoriotex.mark_translation()}}%
@@ -291,28 +292,38 @@
 
 % macro to call before the call of \initial
 \def\gre@setbiginitial{%
+  \gre@debugmsg{general}{setting BIG initial}%
   \global\gre@biginitial=1\relax %
   \relax %
 }%
 
 % macro to cancel before the call of \initial
 \def\gre@normalinitial{%
+  \gre@debugmsg{general}{setting normal initial}%
   \global\gre@biginitial=0\relax %
   \relax %
 }%
 
 % macro to call before the first syllable, but after setinitialclef
-\def\GreAdjustSecondLine{%
+\def\gre@adjustsecondline{%
   \gre@dimen@additionalleftspace=\gre@dimen@initialwidth\relax%
   \gre@updateleftbox %
   \relax %
 }%
 
 % macro to call during the second line
-\def\GreAdjustThirdLine{%
+\def\gre@adjustthirdline{%
   \gre@dimen@additionalleftspace= 0 pt\relax%
   \gre@updateleftbox %
   \relax %
+}%
+
+\newif\ifgre@thirdlineadjustmentnecessary %
+\def\gre@adjustlineifnecessary{%
+  \ifgre@thirdlineadjustmentnecessary %
+    \gre@adjustthirdline %
+    \gre@thirdlineadjustmentnecessaryfalse %
+  \fi %
 }%
 
 \def\gre@updateleftbox{%
@@ -1032,6 +1043,7 @@
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \xdef\gre@gabcname{#6}%
   \global\let\gre@save@englishcentering\gre@lyriccentering\relax % DEPRECATED
+  \global\let\gre@opening@initialstyle\gre@initiallines\relax % DEPRECATED by 4.1
   \ifgre@justifylastline%
     \xdef\gre@save@parfillskip{\the\parfillskip}
     \parfillskip=0pt plus 0pt minus 0pt\relax%
@@ -1666,7 +1678,8 @@
 
 % Macros for compiling short snippets of GABC directly expressed in TeX
 
-\long\def\gre@gabcsnippet@option[#1]#2{%
+\long\def\gre@gabcsnippet@option[#1]#2{%%% DEPRECATED by 4.1
+  \gre@deprecated{\protect\gabcsnippet  with initial-style argument}{\protect\gresetinitiallines}%
   \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#2}}", "initial-style: #1;")}%
 }%
 
@@ -1674,6 +1687,7 @@
   \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#1}}")}%
 }%
 
+%%% \gre@gabcsnipper@option is DEPRECATED by 4.1
 \def\gabcsnippet{\@ifnextchar[{\gre@gabcsnippet@option}{\gre@gabcsnippet}}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%

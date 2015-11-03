@@ -664,7 +664,7 @@ typedef struct gregorio_score {
     char *annotation[MAX_ANNOTATIONS];
     /* field giving informations on the initial (no initial, normal initial 
      * or two lines initial) */
-    char initial_style;
+    signed char initial_style;
     /* the font to use in gregoriotex */
     char *gregoriotex_font;
     size_t nabc_lines;
@@ -712,11 +712,8 @@ typedef struct gregorio_voice_info {
 
 #define MONOPHONY 0
 
-/* the different initial styles */
-
-#define NO_INITIAL 0
-#define NORMAL_INITIAL 1
-#define BIG_INITIAL 2
+/* the different initial styles - DEPRECATED by 4.1 */
+#define INITIAL_NOT_SPECIFIED -1
 
 #define NO_ALTERATION USELESS_VALUE
 #define FLAT GRE_FLAT

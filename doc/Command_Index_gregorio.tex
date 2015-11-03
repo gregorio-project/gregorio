@@ -54,13 +54,6 @@ Macro to typeset the additional line above or below the staff.
   \#3 & integer & Set horizontal episemus (0), horizontal episemus under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4).\\
 \end{argtable}
 
-\macroname{\textbackslash GreAdjustSecondLine}{}{gregoriotex.tex}
-%didn't actually find this one in gregoriotex-write.c, classified it here based on it’s related function GreAdjustThirdLine
-Macro to call before first syllable, but after \verb=\GreSetInitialClef=.
-
-\macroname{\textbackslash GreAdjustThirdLine}{}{gregoriotex-main.tex}
-Macro to call during the second line.
-
 \macroname{\textbackslash GreAugmentumDuplex}{\#1\#2\#3}{gregoriotex-signs.tex}
 Macro for typesetting an augmentum duplex (a pair of punctum mora)
 
@@ -693,15 +686,6 @@ Macro for writing initial key.
   \#1 & \texttt{c} or \texttt{f} & Type of clef.\\
   \#2 & 1--4       & Line of key.\\
   \#3 & integer & Height number of flat in key (\texttt{0} for no flat).\\
-\end{argtable}
-
-\macroname{\textbackslash GreSetInitialStyle}{\#1}{gregoriotex-syllable.tex}
-Sets the style of initial.
-
-\begin{argtable}
-  \#1 & 0 & Score has no initial.\\
-      & 1 & Score has a normal initial.\\
-      & 2 & Score has a big initial.\\
 \end{argtable}
 
 \macroname{\textbackslash GreSetLinesClef}{\#1\#2\#3\#4}{gregoriotex-main.tex}

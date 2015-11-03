@@ -2814,8 +2814,7 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
  *   2 if we are in the second argument (necessary in order to avoid infinite loops)
  */
 static void write_syllable(FILE *f, gregorio_syllable *syllable,
-        unsigned char *line_number, unsigned char first_of_disc,
-        gregoriotex_status *const status,
+        unsigned char first_of_disc, gregoriotex_status *const status,
         void (*const write_this_syllable_text)
         (FILE *, const char *, const gregorio_character *))
 {
@@ -2847,10 +2846,6 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             } else {
                 fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
             }
-            if (*line_number == 1) {
-                fprintf(f, "\\GreAdjustThirdLine %%\n");
-                *line_number = 0;
-            }
             write_this_syllable_text(f, NULL, syllable->text);
             return;
         }
@@ -2868,11 +2863,9 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                  */
                 gregoriotex_print_change_line_clef(f, clef_change_element);
                 fprintf(f, "\\GreDiscretionary{0}{%%\n");
-                write_syllable(f, syllable, line_number, 1, status,
-                        write_syllable_text);
+                write_syllable(f, syllable, 1, status, write_syllable_text);
                 fprintf(f, "}{%%\n");
-                write_syllable(f, syllable, line_number, 2, status,
-                        write_syllable_text);
+                write_syllable(f, syllable, 2, status, write_syllable_text);
                 fprintf(f, "}%%\n");
                 write_this_syllable_text(f, NULL, syllable->text);
                 return;
@@ -3111,10 +3104,6 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             } else {
                 fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
             }
-            if (*line_number == 1) {
-                fprintf(f, "\\GreAdjustThirdLine %%\n");
-                *line_number = 0;
-            }
             break;
 
         default:
@@ -3234,9 +3223,6 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     int clef_line;
     char clef_flat = NO_KEY_FLAT;
     gregorio_syllable *current_syllable;
-    /* the current line (as far as we know), it is always 0, it can be 1 in the
-     * case of the first line of a score with a two lines initial */
-    unsigned char line = 0;
     int annotation_num;
     gregoriotex_status status;
 
@@ -3321,13 +3307,8 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         fprintf(f, "\\GreMode{%d}%%\n", score->mode);
     }
 
-    if (score->initial_style == NO_INITIAL) {
-        fprintf(f, "\\GreSetInitialStyle{0}%%\n");
-    } else if (score->initial_style == BIG_INITIAL) {
-        fprintf(f, "\\GreSetInitialStyle{2}%%\n");
-        line = 1;
-    } else {
-        fprintf(f, "\\GreSetInitialStyle{1}%%\n");
+    if (score->initial_style != INITIAL_NOT_SPECIFIED) {
+        fprintf(f, "\\GreSetInitialStyle{%d}%%\n", score->initial_style);
     }
 
     fprintf(f, "\\GreScoreOpening{%%\n"); /* GreScoreOpening#1 */
@@ -3356,12 +3337,12 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
             clef_flat);
     current_syllable = score->first_syllable;
     if (current_syllable) {
-        write_syllable(f, current_syllable, &line, 0, &status,
+        write_syllable(f, current_syllable, 0, &status,
                 write_first_syllable_text);
         current_syllable = current_syllable->next_syllable;
     }
     while (current_syllable) {
-        write_syllable(f, current_syllable, &line, 0, &status,
+        write_syllable(f, current_syllable, 0, &status,
                 write_syllable_text);
         current_syllable = current_syllable->next_syllable;
     }
