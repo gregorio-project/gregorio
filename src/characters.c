@@ -533,6 +533,10 @@ void gregorio_write_first_letter_alignment_text(const bool skip_initial,
             break;
         }
 
+        if (!current_character->next_character && first_letter_open) {
+            close_first_letter = first_letter_open;
+        }
+
         if (close_first_letter) {
             first_letter_open = false;
 
