@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+### Added
+- Salicus flexus glyphs (See [#631](https://github.com/gregorio-project/gregorio/issues/631)).
+
+
+## [Unreleased][unreleased]
 ### Fixed
 - Deactivating the end of line shifts now prevents lyrics from stretching under the custos at the end of the line.
 - All of the keywords for `\grescaledim` were now work as described in the documentation.
