@@ -14,7 +14,7 @@ As for the `biginitial` style, the intent is that the `initial` style be changed
 
 In order to allow a smoother transition to the new behavior, GregorioTeX will behave differently depending on whether or not deprecated usage is allowed (controlled by the `[allowdeprecated]` package option).  If deprecated usage is allowed, GregorioTeX will use the deprecated `biginitial` style for big initials.  If not, GregorioTeX will use the `initial` style for big initials.
 
-Since the `biginitial` style will disappear with Gregorio 5.0, please consider disabling deprecated usage (set `[allowdeprecated=false]' when using the `gregoriotex` package) and use the `initial` style as just described.
+Since the `biginitial` style will disappear with Gregorio 5.0, please consider disabling deprecated usage (set `[allowdeprecated=false]` when using the `gregoriotex` package) and use the `initial` style as just described.
 
 ## 4.0
 
