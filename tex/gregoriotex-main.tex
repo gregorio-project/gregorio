@@ -394,6 +394,9 @@
       \greinitialformat{\global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift}%  DEPRECATED
     \fi%  DEPRECATED
   \else %
+    \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
+      \gre@warning{biginitial style is deprecated, but the old behavior will be used since deprecated usage is currently enabled.  This behavior will disappear in 5.0, so consider disabling deprecated usage and switching to the initial style instead.  See UPGRADE.md for more information.}%%% DEPRECATED for removal in 5.0
+    \fi%%% DEPRECATED for removal in 5.0
     \advance\gre@dimen@temp@five by -\gre@dimen@additionalbottomspace\relax%
     \advance\gre@dimen@temp@five by -\gre@dimen@spacebeneathtext\relax%
     \advance\gre@dimen@temp@five by -\gre@dimen@spacelinestext\relax%
@@ -405,7 +408,11 @@
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
       \ifvoid\gre@box@initial% keep this line
         \gre@debugmsg{initial}{fill big initial box}% keep this line
-        \setbox\gre@box@initial=\hbox{\gre@style@biginitial#1\endgre@style@biginitial}% keep this line
+        \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
+          \setbox\gre@box@initial=\hbox{\gre@style@biginitial#1\endgre@style@biginitial}% DEPRECATED for removal in 5.0
+        \else%%% DEPRECATED for removal in 5.0
+          \setbox\gre@box@initial=\hbox{\gre@style@initial#1\endgre@style@initial}% keep this line
+        \fi%%% DEPRECATED for removal in 5.0
       \fi% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
@@ -416,9 +423,15 @@
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
     \else%
       \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
-        \gre@style@biginitial% keep this line
-        \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth\relax% keep this line
-        \endgre@style@biginitial% keep this line
+        \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
+          \gre@style@biginitial%%% DEPRECATED for removal in 5.0
+          \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth\relax%%% DEPRECATED for removal in 5.0
+          \endgre@style@biginitial%%% DEPRECATED for removal in 5.0
+        \else%%% DEPRECATED for removal in 5.0
+          \gre@style@initial% keep this line
+          \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth\relax% keep this line
+          \endgre@style@initial% keep this line
+        \fi%%% DEPRECATED for removal in 5.0
       \else%  DEPRECATED
         \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
         \grebiginitialformat{\global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth}%  DEPRECATED
@@ -430,9 +443,15 @@
     \fi%
     \setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
-      \gre@style@biginitial% keep this line
-      \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift\relax% keep this line
-      \endgre@style@biginitial% keep this line
+      \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
+        \gre@style@biginitial%%% DEPRECATED for removal in 5.0
+        \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift\relax%%% DEPRECATED for removal in 5.0
+        \endgre@style@biginitial%%% DEPRECATED for removal in 5.0
+      \else%%% DEPRECATED for removal in 5.0
+        \gre@style@initial% keep this line
+        \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift\relax% keep this line
+        \endgre@style@initial% keep this line
+      \fi%%% DEPRECATED for removal in 5.0
     \else%  DEPRECATED
       \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
       \grebiginitialformat{\global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift}%  DEPRECATED
@@ -453,9 +472,15 @@
     \fi%  DEPRECATED
   \else%
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
-      \gre@style@biginitial% keep this line
-      \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift\relax% keep this line
-      \endgre@style@biginitial% keep this line
+      \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
+        \gre@style@biginitial%%% DEPRECATED for removal in 5.0
+        \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift\relax%%% DEPRECATED for removal in 5.0
+        \endgre@style@biginitial%%% DEPRECATED for removal in 5.0
+      \else%%% DEPRECATED for removal in 5.0
+        \gre@style@initial% keep this line
+        \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift\relax% keep this line
+        \endgre@style@initial% keep this line
+      \fi%%% DEPRECATED for removal in 5.0
     \else%  DEPRECATED
       \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
       \grebiginitialformat{\global\gre@dimen@temp@four = \gre@dimen@afterinitialshift}%  DEPRECATED
@@ -1514,6 +1539,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grechangestyle#1#2{%
+  \IfStrEq{#1}{biginitial}{\gre@deprecated{biginitial style}{initial style}}%%% DEPRECATED for removal in 5.0
   \@ifnextchar[{\gre@changestyle{#1}{#2}}{\gre@changestyle{#1}{#2}[\relax]}%
 }%
 
