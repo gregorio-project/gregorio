@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+### Changed
+- Initial handling has been simplified.  The initial style should now be specified from TeX by using the `\gresetinitiallines` command, rather than from a gabc header.  Big initials and normal initials are now governed by a single `initial` style, meant to be changed between scores as appropriate.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#632](https://github.com/gregorio-project/gregorio/issues/632)).  Deprecations for this change are listed in the Deprecation section, below.
+
+### Deprecated
+- `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
+- `biginitial` style, consolidated into the `initial` style.
+
+
+## [Unreleased][unreleased]
 ### Fixed
 - The spacing of manual in-line custos (`(f+)` in gabc) is now consistent with the spacing of automatic in-line custos (`(z0)` in gabc).  See [#642](https://github.com/gregorio-project/gregorio/issues/642).
 - Signs on the climacus praepunctis deminutus `(ghgf~)` neume are now positioned correctly.  See [#650]((https://github.com/gregorio-project/gregorio/issues/650)
