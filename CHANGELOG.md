@@ -11,21 +11,28 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `biginitial` style, consolidated into the `initial` style.
 
 
+## [4.0.0-rc2] - 2015-11-05
+### Deprecated
+- `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
+- `biginitial` style, consolidated into the `initial` style.
+
+
 ## [Unreleased][unreleased]
 ### Fixed
 - The spacing of manual in-line custos (`(f+)` in gabc) is now consistent with the spacing of automatic in-line custos (`(z0)` in gabc).  See [#642](https://github.com/gregorio-project/gregorio/issues/642).
-- Signs on the climacus praepunctis deminutus `(ghgf~)` neume are now positioned correctly.  See [#650]((https://github.com/gregorio-project/gregorio/issues/650)
+- Signs on the climacus praepunctis deminutus `(ghgf~)` neume are now positioned correctly.  See [#650](https://github.com/gregorio-project/gregorio/issues/650)
 - When using first letter lyric centering and big initials, the initial is no longer incorrectly included in the first syllable.  See [#648](https://github.com/gregorio-project/gregorio/issues/648).  This is a fix for a bug in a new 4.0.0 feature, so this changelog entry should be removed when the change log is merged for the 4.0.0 release.
 - Mac installer has been made SIP compliant (i.e. it now works on El Capitan).
 - Mac installer can now detect installations of TeXLive done with MacPorts or the command-line tool provided by TUG.
-- Windows executable has file version information attaced correctly so that the installer can properly recognize and replace the binary during an upgrade process.
+- Windows executable has file version information attached correctly so that the installer can properly recognize and replace the binary during an upgrade process.
 
 ### Added
 - The ability to force a hyphen after an empty first syllable, enabled by default since this was the behavior prior to 4.0.  Version 4.0 has an improved spacing algorithm which will eliminate the hyphen if the notes for the first syllable are too close to the second.  To switch to this behavior, use `\gresetemptyfirstsyllablehyphen{auto}`.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#653](https://github.com/gregorio-project/gregorio/issues/653)).
-- Shell scripts for configuring TeXShop and TeXworks on a mac.
+- Shell scripts for configuring TeXShop and TeXworks on a Mac.
 
 ### Removed
 - The TeXShop script for compiling gabc files.  Supplanted by the new autocompile feature of the package.
+- Spaces associated with chironomic signs (which were removed in 4.0.0-beta)
 
 ### Deprecated
 - The meaningless `gabc-version` header in gabc (see [#664](https://github.com/gregorio-project/gregorio/issues/664)).
