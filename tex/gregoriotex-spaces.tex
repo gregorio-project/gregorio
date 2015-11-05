@@ -19,7 +19,7 @@
 
 % this file contains definitions of spaces
 
-\gre@declarefileversion{gregoriotex-spaces.tex}{4.0.0-rc1}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-spaces.tex}{4.0.0-rc2}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for tuning penalties
@@ -34,7 +34,7 @@
 \def\GreNoBreak{\gre@penalty{\grenobreakpenalty}}%
 
 
-%% The following macros cancel some useless penalties, and reinstances them
+%% The following macros cancel some useless penalties, and reinstates them
 %% at the end of a score
 
 \def\gre@cancelpenalties{%
@@ -48,19 +48,6 @@
   \doublehyphendemerits=0\relax %
   \finalhyphendemerits=0\relax %
   \brokenpenalty=\grebrokenpenalty\relax %
-}%
-
-\def\gre@restorepenalties{%
-  \hyphenpenalty=\gre@hyphenpenaltysave %
-  \exhyphenpenalty=\gre@exhyphenpenaltysave %
-  \doublehyphendemerits=\gre@doublehyphendemeritssave %
-  \finalhyphendemerits=\gre@finalhyphendemeritssave %
-  \brokenpenalty=\gre@brokenpenaltysave %
-}%
-
-
-% macro called at each score
-\def\gre@dofinetuning{%
   \xdef\gre@loosenesssave{\the\looseness}%
   \xdef\gre@tolerancesave{\the\tolerance}%
   \xdef\gre@pretolerancesave{\the\pretolerance}%
@@ -75,7 +62,12 @@
   \clubpenalty=\greclubpenalty %
 }%
 
-\def\gre@endfinetuning{%
+\def\gre@restorepenalties{%
+  \hyphenpenalty=\gre@hyphenpenaltysave %
+  \exhyphenpenalty=\gre@exhyphenpenaltysave %
+  \doublehyphendemerits=\gre@doublehyphendemeritssave %
+  \finalhyphendemerits=\gre@finalhyphendemeritssave %
+  \brokenpenalty=\gre@brokenpenaltysave %
   \looseness=\gre@loosenesssave %
   \tolerance=\gre@tolerancesave %
   \pretolerance=\gre@pretolerancesave %
@@ -166,7 +158,7 @@
   \gre@obsolete{\protect\gresetstafflinefactor}{\protect\grechangestafflinethickness}%
 }%
 
-%constantglyphraise is the space between the 0 of the gragorian fonts and the effective 0 of the TeX score
+%constantglyphraise is the space between the 0 of the gregorian fonts and the effective 0 of the TeX score
 \newdimen\gre@dimen@constantglyphraise\relax%
 % to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at grespacelinestext + grespacebeneathtext + 2*greinterstafflinespace + 2*grestafflineheight + translationheight
 \def\gre@calculate@constantglyphraise{%
@@ -729,7 +721,7 @@
 %The distance from the baseline of the line to the baseline of the annotations
 \newdimen\gre@dimen@annotationtrueraise\relax%
 % When text is placed in the annotation boxes these dimensions are initialized with values based on the contents and the user parameters
-%This function sets the true raises of the two lines above the inital (it has to be called just as the boxes are placed in order to make sure that the values are all correct)
+%This function sets the true raises of the two lines above the initial (it has to be called just as the boxes are placed in order to make sure that the values are all correct)
 \def\gre@calculate@annotationtrueraise{%
   \gre@debugmsg{annotation}{Calculating the raise.}%
   \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@staffheight\relax%
@@ -755,7 +747,7 @@
 
 % These distances don't have independent functions which calculate their value, generally because their calculation is distributed over multiple events.
 
-% begindifference is the difference between the begginning of the text and the beginning of the notes. Warning : it can be negative.
+% begindifference is the difference between the beginning of the text and the beginning of the notes. Warning : it can be negative.
 \newdimen\gre@dimen@begindifference\relax%
 
 % the width of the clef
@@ -767,7 +759,7 @@
 % notes align center is the point of alignment for the notes
 \newdimen\gre@dimen@notesaligncenter\relax%
 
-%this dimention is the additional space that we have to add to the localleftbox sometimes. For now it is used only for the initials on two lines
+%this dimension is the additional space that we have to add to the localleftbox sometimes. For now it is used only for the initials on two lines
 \newdimen\gre@dimen@additionalleftspace\relax%
 
 % the calculated width of the initial (may be actual width of letter or be forced wider under certain conditions)
@@ -948,8 +940,6 @@
   \IfStrEq{#1}{annotationraise}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{noclefspace}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{clivisalignmentmin}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{abovesignsspace}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{belowsignsspace}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{choralsigndownshift}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{choralsignupshift}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{translationheight}{\gre@rubberfalse}{\relax}%
@@ -1239,12 +1229,6 @@
   \fi%
   \ifgre@scale@clivisalignmentmin%
     \gre@changeonedimenfactor{clivisalignmentmin}{#1}{#2}%
-  \fi%
-  \ifgre@scale@abovesignsspace%
-    \gre@changeonedimenfactor{abovesignsspace}{#1}{#2}%
-  \fi%
-  \ifgre@scale@belowsignsspace%
-    \gre@changeonedimenfactor{belowsignsspace}{#1}{#2}%
   \fi%
   \ifgre@scale@choralsigndownshift%
     \gre@changeonedimenfactor{choralsigndownshift}{#1}{#2}%

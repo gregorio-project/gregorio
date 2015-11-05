@@ -524,7 +524,7 @@ static void gregorio_gabc_add_text(char *mbcharacters)
 static void set_centering_scheme(char *sc)
 {
     gregorio_message("\"centering-scheme\" header is deprecated. Please use "
-            "\\setlyriccentering in TeX instead.", "set_centering_scheme",
+            "\\gresetlyriccentering in TeX instead.", "set_centering_scheme",
             VERBOSITY_DEPRECATION, 0);
     if (strncmp((const char *) sc, "latine", 6) == 0) {
         score->centering = SCHEME_VOWEL;
