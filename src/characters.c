@@ -463,17 +463,7 @@ void gregorio_write_first_letter_alignment_text(const bool skip_initial,
     }
 
     /* go to the first character */
-    if (go_to_end_initial(&current_character)) {
-        if (!current_character->next_character) {
-            return;
-        }
-        if (skip_initial) {
-            /* move to the character after the initial */
-            current_character = current_character->next_character;
-        } else {
-            gregorio_go_to_first_character(&current_character);
-        }
-    }
+    gregorio_go_to_first_character(&current_character);
 
     begin(f, ST_SYLLABLE_INITIAL);
 
@@ -494,8 +484,20 @@ void gregorio_write_first_letter_alignment_text(const bool skip_initial,
             switch (current_character->cos.s.style) {
             case ST_CENTER:
             case ST_FORCED_CENTER:
-            case ST_INITIAL:
                 /* ignore */
+                break;
+            case ST_INITIAL:
+                if (skip_initial) {
+                    while (current_character) {
+                        if (!current_character->is_character
+                                && current_character->cos.s.type == ST_T_END
+                                && current_character->cos.s.style ==
+                                ST_INITIAL) {
+                            break;
+                        }
+                        current_character = current_character->next_character;
+                    }
+                } /* else ignore */
                 break;
             case ST_VERBATIM:
                 verb_or_sp(&current_character, ST_VERBATIM, f, printverb);
@@ -529,6 +531,10 @@ void gregorio_write_first_letter_alignment_text(const bool skip_initial,
                 end(f, current_character->cos.s.style);
             }
             break;
+        }
+
+        if (!current_character->next_character && first_letter_open) {
+            close_first_letter = first_letter_open;
         }
 
         if (close_first_letter) {

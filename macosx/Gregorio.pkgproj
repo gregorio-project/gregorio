@@ -530,7 +530,24 @@
 					<integer>3</integer>
 				</dict>
 				<key>RESOURCES</key>
-				<array/>
+				<array>
+					<dict>
+						<key>CHILDREN</key>
+						<array/>
+						<key>GID</key>
+						<integer>0</integer>
+						<key>PATH</key>
+						<string>macosx/common.sh</string>
+						<key>PATH_TYPE</key>
+						<integer>3</integer>
+						<key>PERMISSIONS</key>
+						<integer>420</integer>
+						<key>TYPE</key>
+						<integer>3</integer>
+						<key>UID</key>
+						<integer>0</integer>
+					</dict>
+				</array>
 			</dict>
 			<key>PACKAGE_SETTINGS</key>
 			<dict>
@@ -547,7 +564,7 @@
 				<key>OVERWRITE_PERMISSIONS</key>
 				<false/>
 				<key>VERSION</key>
-				<string>4.0.0-beta2</string><!--GREGORIO_VERSION-->
+				<string>4.0.0-rc2</string><!--GREGORIO_VERSION-->
 			</dict>
 			<key>UUID</key>
 			<string>74692645-8112-42EB-8FFC-2CBE2CEDE9FB</string>
@@ -762,7 +779,19 @@
 			<key>SUMMARY</key>
 			<dict>
 				<key>LOCALIZATIONS</key>
-				<array/>
+				<array>
+					<dict>
+						<key>LANGUAGE</key>
+						<string>English</string>
+						<key>VALUE</key>
+						<dict>
+							<key>PATH</key>
+							<string>macosx/Summary.rtf</string>
+							<key>PATH_TYPE</key>
+							<integer>3</integer>
+						</dict>
+					</dict>
+				</array>
 			</dict>
 			<key>TITLE</key>
 			<dict>
@@ -814,7 +843,7 @@
 							<key>SECONDARY_VALUE</key>
 							<string>Gregorio requires TeX in order to work.  If you do not have a TeX distribution installed, you can get one from https://www.tug.org/mactex/.
 
-If you have a TeX distribution installed in a non-standard location, then either place a symlink to kpsewhich in /usr/texbin/ and try again with this installer or build Gregorio from source.</string>
+If you have a TeX distribution installed in a non-standard location, then either place a symlink to kpsewhich in /Library/TeX/texbin/ and try again with this installer or build Gregorio from source.</string>
 							<key>VALUE</key>
 							<string>No TeX distribution found on this volume.</string>
 						</dict>
@@ -830,7 +859,24 @@ If you have a TeX distribution installed in a non-standard location, then either
 			<key>PREINSTALL_PATH</key>
 			<dict/>
 			<key>RESOURCES</key>
-			<array/>
+			<array>
+				<dict>
+					<key>CHILDREN</key>
+					<array/>
+					<key>GID</key>
+					<integer>0</integer>
+					<key>PATH</key>
+					<string>macosx/common.sh</string>
+					<key>PATH_TYPE</key>
+					<integer>3</integer>
+					<key>PERMISSIONS</key>
+					<integer>420</integer>
+					<key>TYPE</key>
+					<integer>3</integer>
+					<key>UID</key>
+					<integer>0</integer>
+				</dict>
+			</array>
 			<key>ROOT_VOLUME_ONLY</key>
 			<true/>
 		</dict>

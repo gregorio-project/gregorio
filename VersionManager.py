@@ -77,16 +77,20 @@ def get_parser():
                         action='store_true', default=False)
 
     modify = parser.add_mutually_exclusive_group()
+    modify.add_argument('-b', '--beta',
+                        help='Increment -betax+1',
+                        action='store_true', default=False,
+                        dest='beta')
     modify.add_argument('--manual=',
                         help='Manually set the version.',
                         action='store',
                         dest='manual_version')
     modify.add_argument('-m', '--major',
-                        help='Increment the major version: x+1.0.0-beta',
+                        help='Increment the major version: x+1.0.0-beta1',
                         action='store_true', default=False,
                         dest='major')
     modify.add_argument('-e', '--enhancement',
-                        help='Increment the minor version: x.y+1.0-beta',
+                        help='Increment the minor version: x.y+1.0-beta1',
                         action='store_true', default=False,
                         dest='minor')
     modify.add_argument('-p', '--patch',
@@ -112,10 +116,21 @@ class Version(object):
         self.filename_version = self.filename_version_from_version(self.version)
         self.short_tag = None
         self.date = None
+        self.binary_version = self.binary_version_from_version(self.version)
 
     def filename_version_from_version(self, version):
         "Return filename-compatible version"
         return version.replace('.', '_')
+
+    def binary_version_from_version(self, version):
+        "Return binary version number for Windows FILEVERSION"
+        bin = version.replace('.',',')
+        if '-' in bin:
+            bin = bin.replace('-beta',',1')
+            bin = bin.replace('-rc',',2')
+        else:
+            bin += ',30'
+        return bin
 
     def read_version(self):
         "Return version for instance variable"
@@ -147,6 +162,7 @@ class Version(object):
         "Update self.version and .gregorio-version with the new version."
         self.version = newversion
         self.filename_version = self.filename_version_from_version(newversion)
+        self.binary_version = self.binary_version_from_version(newversion)
         print('Updating {0} with the new version: {1}\n'.format(
             self.versionfile, self.version))
         with open(self.versionfile, 'w') as verfile:
@@ -158,6 +174,7 @@ def replace_version(version_obj):
     "Change version in file according to heuristics."
     newver = version_obj.version
     newver_filename = version_obj.filename_version
+    newbinver = version_obj.binary_version
     today = date.today()
     print('Updating source files to version {0}\n'.format(newver))
     for myfile in GREGORIO_FILES:
@@ -184,7 +201,11 @@ def replace_version(version_obj):
                     result.append(re.sub(r'(\d+\/\d+/\d+)', today.strftime("%Y/%m/%d"), newline, 1))
                 elif 'PARSE_VERSION_DATE' in line:
                     newline = re.sub(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)', newver, line, 1)
-                    result.append(re.sub(r'([ \d]\d [A-Z][a-z]+ \d{4})', today.strftime("%e %B %Y"), newline, 1))
+                    result.append(re.sub(r'(\d{1,2} [A-Z][a-z]+ \d{4})', today.strftime("%-d %B %Y"), newline, 1))
+                elif 'FILEVERSION' in line:
+                    result.append(re.sub(r'\d+,\d+,\d+,\d+', newbinver, line, 1))
+                elif 'PRODUCTVERSION' in line:
+                    result.append(re.sub(r'\d+,\d+,\d+,\d+', newbinver, line, 1))
                 elif 'PARSE_VERSION_FILE_NEXTLINE' in line:
                     result.append(line)
                     following_line_filename = True
@@ -195,6 +216,19 @@ def replace_version(version_obj):
                     result.append(line)
         with open(myfile, 'w') as outfile:
             outfile.write(''.join(result))
+    with open('CHANGELOG.md', 'r') as infile:
+        result = []
+        for line in infile:
+            if '[Unreleased][unreleased]' in line:
+                result.append(line)
+                result.append('\n')
+                result.append('\n')
+                newline = '## [' + newver + '] - ' + today.strftime("%Y-%m-%d") + '\n'
+                result.append(newline)
+            else:
+                result.append(line)
+    with open('CHANGELOG.md','w') as outfile:
+        outfile.write(''.join(result))
     sys.exit(0)
 
 def confirm_replace(oldver, newver):
@@ -225,21 +259,36 @@ def release_candidate(version_obj, not_interactive):
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
+def beta(version_obj, not_interactive):
+    "Increments x.y.z-betax+1"
+    oldversion = version_obj.version
+    if '-beta' in oldversion:
+        newversion = re.sub(r'\d+$', lambda x: str(int(x.group()) +1),
+                            oldversion)
+    else:
+        print('Version number not in beta stage')
+        print('Use --major (-m) or --enhancement (-e) to start a new beta')
+        sys.exit(1)
+    if (not not_interactive):
+        confirm_replace(oldversion, newversion)
+    version_obj.update_version(newversion)
+    replace_version(version_obj)
+
 def bump_major(version_obj, not_interactive):
-    "Changed the major version number: x.y.z --> x+1.0.0-beta"
+    "Changed the major version number: x.y.z --> x+1.0.0-beta1"
     oldversion = version_obj.version
     nums = re.search(r'(\d+)(\.\d+)(\.\d+)', oldversion)
-    newversion = str(int(nums.group(1)) +1) + '.0.0-beta'
+    newversion = str(int(nums.group(1)) +1) + '.0.0-beta1'
     if (not not_interactive):
         confirm_replace(oldversion, newversion)
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
 def bump_minor(version_obj, not_interactive):
-    "Changed the minor version number: x.y.z --> x.y+1.0-beta"
+    "Changed the minor version number: x.y.z --> x.y+1.0-beta1"
     oldversion = version_obj.version
     nums = re.search(r'(\d+\.)(\d+)(\.\d+)', oldversion)
-    newversion = nums.group(1) + str(int(nums.group(2)) +1) + '.0-beta'
+    newversion = nums.group(1) + str(int(nums.group(2)) +1) + '.0-beta1'
     if (not not_interactive):
         confirm_replace(oldversion, newversion)
     version_obj.update_version(newversion)
@@ -259,7 +308,7 @@ def set_manual_version(version_obj, user_version, not_interactive):
     "Changed the version number to a user supplied value"
     oldversion = version_obj.version
     if not re.match(r'(\d+\.\d+\.\d+(?:[-+~]\w+)*)$', user_version):
-        print('Bad version string. Use this style: x.y.z or x.y.z-beta')
+        print('Bad version string. Use this style: x.y.z or x.y.z-betax')
         sys.exit(1)
     newversion = user_version
     if (not not_interactive):
@@ -293,6 +342,8 @@ def main():
         gregorio_version.fetch_version_debian_stable()
     elif args.get_debian_git:
         gregorio_version.fetch_version_debian_git()
+    elif args.beta:
+        beta(gregorio_version, not_interactive)
     elif args.major:
         bump_major(gregorio_version, not_interactive)
     elif args.minor:

@@ -106,7 +106,7 @@
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
-\xdef\gre@gregorioversion{4.0.0-beta2}% GREGORIO_VERSION - VersionManager.py
+\xdef\gre@gregorioversion{4.0.0-rc2}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
@@ -1041,7 +1041,6 @@
   \fi %
   \gre@computespaces%
   \gre@cancelpenalties %
-  \gre@dofinetuning %
   \gre@attr@dash=0\relax %
   \xdef\gre@exhyphencharsave{\the\exhyphenchar}%
   \exhyphenchar=-1\relax %
@@ -1087,7 +1086,6 @@
   \gre@removetranslationspace %
   \gre@normalinitial %
   \gre@restorepenalties %
-  \gre@endfinetuning %
   \exhyphenchar=\gre@exhyphencharsave %
   \gre@dimen@temp@one=0pt\relax%
   \gre@dimen@temp@two=0pt\relax%

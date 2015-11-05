@@ -7,13 +7,34 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Salicus flexus glyphs (See [#631](https://github.com/gregorio-project/gregorio/issues/631)).
 
 
-## [Unreleased][unreleased]
+## [4.0.0-rc2] - 2015-11-05
+### Fixed
+- The spacing of manual in-line custos (`(f+)` in gabc) is now consistent with the spacing of automatic in-line custos (`(z0)` in gabc).  See [#642](https://github.com/gregorio-project/gregorio/issues/642).
+- Signs on the climacus praepunctis deminutus `(ghgf~)` neume are now positioned correctly.  See [#650](https://github.com/gregorio-project/gregorio/issues/650)
+- When using first letter lyric centering and big initials, the initial is no longer incorrectly included in the first syllable.  See [#648](https://github.com/gregorio-project/gregorio/issues/648).  This is a fix for a bug in a new 4.0.0 feature, so this changelog entry should be removed when the change log is merged for the 4.0.0 release.
+- Mac installer has been made SIP compliant (i.e. it now works on El Capitan).
+- Mac installer can now detect installations of TeXLive done with MacPorts or the command-line tool provided by TUG.
+- Windows executable has file version information attached correctly so that the installer can properly recognize and replace the binary during an upgrade process.
+
+### Added
+- The ability to force a hyphen after an empty first syllable, enabled by default since this was the behavior prior to 4.0.  Version 4.0 has an improved spacing algorithm which will eliminate the hyphen if the notes for the first syllable are too close to the second.  To switch to this behavior, use `\gresetemptyfirstsyllablehyphen{auto}`.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#653](https://github.com/gregorio-project/gregorio/issues/653)).
+- Shell scripts for configuring TeXShop and TeXworks on a Mac.
+
+### Removed
+- The TeXShop script for compiling gabc files.  Supplanted by the new autocompile feature of the package.
+- Spaces associated with chironomic signs (which were removed in 4.0.0-beta)
+
+### Deprecated
+- The meaningless `gabc-version` header in gabc (see [#664](https://github.com/gregorio-project/gregorio/issues/664)).
+
+
+## [4.0.0-rc1] - 2015-10-08
 ### Fixed
 - Deactivating the end of line shifts now prevents lyrics from stretching under the custos at the end of the line.
-- All of the keywords for `\grescaledim` were now work as described in the documentation.
+- All of the keywords for `\grescaledim` now work as described in the documentation.
 
 ### Changed
-- `\grecreatedim` and `\grechangedim` now take keywords for their third argument (`scalable` and `fixed`( instead of integers (`1` and `0`) to make the more in keeping with the overall user command conventions.
+- `\grecreatedim` and `\grechangedim` now take keywords for their third argument (`scalable` and `fixed`) instead of integers (`1` and `0`) to make the more in keeping with the overall user command conventions.
 - `\grescaledim` now accepts `scalable` as a keyword to turn on scalable (in keeping with the above change)
 - Alterations are partially ignored when aligning lines on the notes (i.e. `\gresetbolshifts{enabled}`).  They are not allowed to get any closer to the clef than `beforealterationspace` and the lyrics are not allowed to get any closer to the left-hand margin than `minimalspaceatlinebeginning`, but other than that GregorioTeX will shift them left as much as possible to make the notes align `spaceafterlineclef` away from the clef.  Note that for the default values of these distances, only the natural is small enough to acheive true alignment.
 - `gregoriotex.sty` and `gregoriosyms.sty` now check to make sure that they are not both loaded.  If `gregoriotex` detects that `gregoriosyms` is loaded, then an error is raised.  If `gregoriosyms` detects that `gregoriotex` is loaded, then the loading of `gregoriosyms` is silently aborted and compilation proceeds.
@@ -343,7 +364,7 @@ See GregorioRef.pdf for full details.
 - adding support for end of lines
 - adding support for compilation on MAC OSX
 
-     
+
 ## 0.2.2 - 2007-06-14
 ### Added
 - adding styles and centering in text
