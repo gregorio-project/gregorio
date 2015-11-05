@@ -395,7 +395,7 @@
     \fi%  DEPRECATED
   \else %
     \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
-      \gre@warning{biginitial style is deprecated, but the old behavior will be used since deprecated usage is currently enabled.  This behavior will disappear in 5.0, so consider disabling deprecated usage and switching to the initial style instead.  See UPGRADE.md for more information.}%%% DEPRECATED for removal in 5.0
+      \gre@warning{biginitial style is deprecated, but the old\MessageBreak behavior will be used since deprecated usage is\MessageBreak currently enabled. This behavior will disappear\MessageBreak in 5.0, so consider disabling deprecated usage\MessageBreak and switching to the initial style instead. (See\MessageBreak UPGRADE.md for more information)}%%% DEPRECATED for removal in 5.0
     \fi%%% DEPRECATED for removal in 5.0
     \advance\gre@dimen@temp@five by -\gre@dimen@additionalbottomspace\relax%
     \advance\gre@dimen@temp@five by -\gre@dimen@spacebeneathtext\relax%
@@ -1539,7 +1539,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grechangestyle#1#2{%
-  \IfStrEq{#1}{biginitial}{\gre@deprecated{biginitial style}{initial style}}%%% DEPRECATED for removal in 5.0
+  \IfStrEq{#1}{biginitial}{\gre@deprecated{biginitial style}{initial style}}{}%%% DEPRECATED for removal in 5.0
   \@ifnextchar[{\gre@changestyle{#1}{#2}}{\gre@changestyle{#1}{#2}[\relax]}%
 }%
 
