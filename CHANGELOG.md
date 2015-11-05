@@ -13,10 +13,11 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ### Added
 - The ability to force a hyphen after an empty first syllable, enabled by default since this was the behavior prior to 4.0.  Version 4.0 has an improved spacing algorithm which will eliminate the hyphen if the notes for the first syllable are too close to the second.  To switch to this behavior, use `\gresetemptyfirstsyllablehyphen{auto}`.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#653](https://github.com/gregorio-project/gregorio/issues/653)).
-- Shell scripts for configuring TeXShop and TeXworks on a mac.
+- Shell scripts for configuring TeXShop and TeXworks on a Mac.
 
 ### Removed
 - The TeXShop script for compiling gabc files.  Supplanted by the new autocompile feature of the package.
+- Spaces associated with chironomic signs (which were removed in 4.0.0-beta)
 
 ### Deprecated
 - The meaningless `gabc-version` header in gabc (see [#664](https://github.com/gregorio-project/gregorio/issues/664)).

@@ -18,9 +18,9 @@ A naming scheme for GregorioTeX commands has been established and so most comman
 
 Old command names should still work for now, but will raise a deprecation warning which indicates the name of the correct command to use. Exceptions are noted below:
 
-- `\grescaledim`: This function now takes two arguments.  The second should be `yes`, `true`, or `on` to acheive the old behavior.
+- `\grescaledim`: This function now takes two arguments.  The second should be `yes`, `true`, `on`, or `scalable` to acheive the old behavior.
 
-Additionally a new package option has been added. The option `deprecated=false` is helpful if you wish to ensure that your TeX file is compliant with the new naming system. This option causes all deprecated commands to raise an error, halting TeX, thus allowing you to actively find all deprecated commands and update them in your TeX file.
+Additionally a new package option has been added. This option, `deprecated=false`, is helpful if you wish to ensure that your TeX file is compliant with the new naming system. This option causes all deprecated commands to raise an error, halting TeX, thus allowing you to actively find all deprecated commands and update them in your TeX file.
 
 ### Barred letters
 
@@ -116,7 +116,7 @@ As is normal, calls to the deprecated command names will raise a warning but sti
 
 #### The Annotation Header
 
-The `annotation` header in gabc files now passes its value(s) to gregoriotex for placement above the inital letter of the score. Up to two `annotation` fields are supported, the first for the first line above the initial, and the second field for the second line.
+The `annotation` header in gabc files now passes its value(s) to GregorioTeX for placement above the inital letter of the score. Up to two `annotation` fields are supported, the first for the first line above the initial, and the second field for the second line.
 
     annotation: 1 Ant.;
     annotation: VII a;
@@ -130,7 +130,7 @@ If you define annotation(s) in the main TeX file via `\greannotation`, then the 
 
 #### Variable Height Line Spacing
 
-Gregorio is now able to make individual lines of a score taller when the position of the note requires extra space, without affecting the rest of the lines.  This is the new default behavior.  If you prefer the uniform line heights of earlier versions, use:
+GregorioTeX is now able to make individual lines of a score taller when the position of the note requires extra space, without affecting the rest of the lines.  This is the new default behavior.  If you prefer the uniform line heights of earlier versions, use:
 
     \gresetlineheightexpansion{uniform}
 
@@ -152,7 +152,7 @@ It should also be noted that this new feature, besides requiring two passes, als
 
 #### MetaPost brace rendering
 
-Gregorio now uses MetaPost (by default) to render braces.  This allows fine-tuning to better maintain optical line weight when braces are stretched.  Since the shapes are slightly different, you may prefer the old behavior, which may be restored by using:
+GregorioTeX now uses MetaPost (by default) to render braces.  This allows fine-tuning to better maintain optical line weight when braces are stretched.  Since the shapes are slightly different, you may prefer the old behavior, which may be restored by using:
 
     \gresetbracerendering{font}
 
