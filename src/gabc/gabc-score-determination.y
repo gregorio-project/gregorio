@@ -719,8 +719,8 @@ centering_scheme_definition:
 language_definition:
     LANGUAGE attribute {
         check_multiple("language", got_language);
+        gregorio_set_score_language(score, $2.text);
         gregorio_set_centering_language($2.text);
-        free($2.text);
         got_language = true;
     }
     ;
@@ -751,7 +751,7 @@ gregoriotex_font_definition:
 
 office_part_definition:
     OFFICE_PART attribute {
-        check_multiple("office part", score->office_part != NULL);
+        check_multiple("office-part", score->office_part != NULL);
         gregorio_set_score_office_part (score, $2.text);
     }
     ;

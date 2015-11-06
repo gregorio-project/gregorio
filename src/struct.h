@@ -657,6 +657,7 @@ typedef struct gregorio_score {
     char *meter;
     char *commentary;
     char *arranger;
+    char *language;
     struct source_info si;
     /* the mode of a song is between 1 and 8 */
     char mode;
@@ -833,6 +834,7 @@ void gregorio_set_score_occasion(gregorio_score *score, char *occasion);
 void gregorio_set_score_meter(gregorio_score *score, char *meter);
 void gregorio_set_score_commentary(gregorio_score *score, char *commentary);
 void gregorio_set_score_arranger(gregorio_score *score, char *arranger);
+void gregorio_set_score_language(gregorio_score *score, char *language);
 void gregorio_set_score_gabc_version(gregorio_score *score, char *gabc_version);
 void gregorio_set_score_number_of_voices(gregorio_score *score,
         int number_of_voices);

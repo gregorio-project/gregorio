@@ -564,6 +564,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
     if (score->arranger) {
         fprintf(f, "   arranger                  %s\n", score->arranger);
     }
+    if (score->language) {
+        fprintf(f, "   language                  %s\n", score->language);
+    }
     if (score->si.author) {
         fprintf(f, "   author                    %s\n", score->si.author);
     }
@@ -590,10 +593,6 @@ void dump_write_score(FILE *f, gregorio_score *score)
     if (score->si.transcription_date) {
         fprintf(f, "   transcription_date        %s\n",
                 score->si.transcription_date);
-    }
-    if (score->gregoriotex_font) {
-        fprintf(f, "   gregoriotex_font          %s\n",
-                score->gregoriotex_font);
     }
     if (score->mode) {
         fprintf(f, "   mode                      %d\n", score->mode);
