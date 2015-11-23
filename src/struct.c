@@ -46,6 +46,7 @@
 #include "unicode.h"
 #include "messages.h"
 #include "characters.h"
+#include "support.h"
 
 static gregorio_note *create_and_link_note(gregorio_note **current_note,
         const gregorio_scanner_location *const loc)
@@ -1715,3 +1716,26 @@ bool gregorio_is_only_special(gregorio_element *element)
     }
     return 1;
 }
+
+const char *gregorio_unknown(int value) {
+    static char buf[20];
+    gregorio_snprintf(buf, sizeof buf, "?%d", value);
+    return buf;
+}
+
+ENUM_TO_STRING(gregorio_type, GREGORIO_TYPE)
+ENUM_TO_STRING(gregorio_shape, GREGORIO_SHAPE)
+ENUM_TO_STRING(gregorio_bar, GREGORIO_BAR)
+ENUM_TO_STRING(gregorio_sign, GREGORIO_SIGN)
+ENUM_TO_STRING(gregorio_space, GREGORIO_SPACE)
+ENUM_TO_STRING(gregorio_liquescentia, GREGORIO_LIQUESCENTIA)
+ENUM_TO_STRING(grehepisemus_size, GREHEPISEMUS_SIZE)
+ENUM_TO_STRING(gregorio_vposition, GREGORIO_VPOSITION)
+ENUM_TO_STRING(gregorio_glyph_type, GREGORIO_GLYPH_TYPE)
+ENUM_TO_STRING(grestyle_style, GRESTYLE_STYLE)
+ENUM_TO_STRING(grestyle_type, GRESTYLE_TYPE)
+ENUM_TO_STRING(gregorio_tr_centering, GREGORIO_TR_CENTERING)
+ENUM_TO_STRING(gregorio_nlba, GREGORIO_NLBA)
+ENUM_TO_STRING(gregorio_euouae, GREGORIO_EUOUAE)
+ENUM_TO_STRING(gregorio_word_position, GREGORIO_WORD_POSITION)
+ENUM_TO_STRING(gregorio_lyric_centering, GREGORIO_LYRIC_CENTERING)
