@@ -41,17 +41,17 @@ Macro to end a score.
 Macro for typesetting an accentus.
 
 \begin{argtable}
-  \#1 & integer & height number of episemus\\
-  \#2 & string  & Type of glyph the episemus is attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
+  \#1 & integer & height number of episema\\
+  \#2 & string  & Type of glyph the episema is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreAdditionalLine}{\#1\#2\#3}{gregoriotex-signs.tex}
 Macro to typeset the additional line above or below the staff.
 
 \begin{argtable}
-  \#1 & string  & See \nameref{EpisemusSpecial}.\\
+  \#1 & string  & See \nameref{EpisemaSpecial}.\\
   \#2 & integer & The ambitus of the porrectus or porrectus flexus if the first references these glyph types; ignored otherwise.\\
-  \#3 & integer & Set horizontal episemus (0), horizontal episemus under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4).\\
+  \#3 & integer & Set horizontal episema (0), horizontal episema under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4).\\
 \end{argtable}
 
 \macroname{\textbackslash GreAdjustSecondLine}{}{gregoriotex.tex}
@@ -74,7 +74,7 @@ Macro for typesetting an augmentum duplex (a pair of punctum mora)
 Macro for typesetting a bar brace.
 
 \begin{argtable}
-  \#1 & string & Type of glyph the episemus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
+  \#1 & string & Type of glyph the episema is attached to.  See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreBarSyllable}{\#1\#2\#3\#4\#5\#6\#7\#8\#9}{gregoriotex-syllable.tex}
@@ -94,11 +94,11 @@ Macro for typesetting a bar syllable.
   \#9 & \TeX\ code & The bar line (usually a \textit{writebar} call).
 \end{argtable}
 
-\macroname{\textbackslash GreBarVEpisemus}{\#1}{gregoriotex-signs.tex}
-Macro to typeset a vertical episemus around a bar.
+\macroname{\textbackslash GreBarVEpisema}{\#1}{gregoriotex-signs.tex}
+Macro to typeset a vertical episema on a bar.
 
 \begin{argtable}
-  \#1 & string & Type of glyph the episemus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
+  \#1 & string & Type of glyph the episema is attached to.  See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreBeginEUOUAE}{}{gregoriotex-main.tex}
@@ -140,7 +140,7 @@ Macro for typesetting a circulus.
 
 \begin{argtable}
   \#1 & integer & Height number of circulus.\\
-  \#2 & string  & Type of glyph the circulus is attached to.  See \nameref{EpisemusSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the circulus is attached to.  See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreColored}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
@@ -181,28 +181,28 @@ A Gregorio\TeX-specific discretionary. Currently only used to avoid clef change 
 Macro to typeset a divisio finalis.
 
 \begin{argtable}
-  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio finalis (typically \verb=\grevepisemus=).\\
+  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio finalis (typically \verb=\grevepisema=).\\
 \end{argtable}
 
 \macroname{\textbackslash GreDivisioMaior}{\#1}{gregoriotex-signs.tex}
 Macro to typeset a divisio maior.
 
 \begin{argtable}
-  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio maior (typically \verb=\grevepisemus=).\\
+  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio maior (typically \verb=\grevepisema=).\\
 \end{argtable}
 
 \macroname{\textbackslash GreDivisioMinima}{\#1}{gregoriotex-signs.tex}
 Macro to typeset a divisio minima.
 
 \begin{argtable}
-  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio minima (typically \verb=\grevepisemus=).\\
+  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio minima (typically \verb=\grevepisema=).\\
 \end{argtable}
 
 \macroname{\textbackslash GreDivisioMinor}{\#1}{gregoriotex-signs.tex}
 Macro to typeset a divisio minor.
 
 \begin{argtable}
-  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio minor (typically \verb=\grevepisemus=).\\
+  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio minor (typically \verb=\grevepisema=).\\
 \end{argtable}
 
 \macroname{\textbackslash GreDominica}{\#1\#2}{gregoriotex-signs.tex}
@@ -210,7 +210,7 @@ Macro to typeset a dominican bar.
 
 \begin{argtable}
   \#1 & \texttt{1}--\texttt{6} & Type of dominican bar.  Corresponds to bar types 6--11 in \verb=\grewritebar=.\\
-  \#2 & \TeX\ code    & Macros which may happen before the skip but after the divisio dominica (typically \verb=\grevepisemus=).\\
+  \#2 & \TeX\ code    & Macros which may happen before the skip but after the divisio dominica (typically \verb=\grevepisema=).\\
 \end{argtable}
 
 \macroname{\textbackslash GreEndEUOUAE}{\#1}{gregoriotex-main.tex}
@@ -379,34 +379,34 @@ therefore compatible with the score.
   \#1 & string & Version number for Gregorio\TeX.\\
 \end{argtable}
 
-\macroname{\textbackslash GreHEpisemus}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
-Macro to typeset a episemus.
+\macroname{\textbackslash GreHEpisema}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+Macro to typeset an horizontal episema.
 
 \begin{argtable}
-  \#1 & integer & Height number of the episemus.\\
-  \#2 & string  & See \nameref{EpisemusSpecial}.\\
-  \#3 & integer & The ambitus for a two note episemus at the diagonal stroke of a
+  \#1 & integer & Height number of the episema.\\
+  \#2 & string  & See \nameref{EpisemaSpecial}.\\
+  \#3 & integer & The ambitus for a two note episema at the diagonal stroke of a
     porrectus, porrectus flexus, orculus resupinus, or torculus resupinus
     flexus.\\
-  \#4 & \texttt{0} & an horizontal episemus\\
-  & \texttt{1} & an horizontal episemus under a note\\
+  \#4 & \texttt{0} & an horizontal episema\\
+  & \texttt{1} & an horizontal episema under a note\\
   & \texttt{2} & a line at the top\\ 
   & \texttt{3} & a line at the bottom\\
-  \#5 & \texttt{f} & a normal episemus\\
-  & \texttt{l} & a small episemus aligned left\\
-  & \texttt{c} & a small episemus aligned center\\
-  & \texttt{r} & a small episemus aligned right\\
+  \#5 & \texttt{f} & a normal episema\\
+  & \texttt{l} & a small episema aligned left\\
+  & \texttt{c} & a small episema aligned center\\
+  & \texttt{r} & a small episema aligned right\\
   \#6 & integer & Replacement for \#1 if a bridge causes a height substitution.\\
 \end{argtable}
 
-\macroname{\textbackslash GreHEpisemusBridge}{\#1\#2\#3}{gregoriotex-signs.tex}
-Macro to typeset a bridge episemus father the last note of a glyph
-(element, syllable) if the next episemus is at the same height.
+\macroname{\textbackslash GreHEpisemaBridge}{\#1\#2\#3}{gregoriotex-signs.tex}
+Macro to typeset a bridge episema for the last note of a glyph
+(element, syllable) if the next episema is at the same height.
 
 \begin{argtable}
-  \#1 & integer & Height number of the episemus.\\
-  \#2 & \texttt{0} & Episemus above the note.\\
-  & \texttt{1} & Episemus below the note.\\
+  \#1 & integer & Height number of the episema.\\
+  \#2 & \texttt{0} & Episema above the note.\\
+  & \texttt{1} & Episema below the note.\\
   \#3 & \texttt{0} & Default space.\\
   & \texttt{1} & Zero-width space.\\
   & \texttt{2} & Space between flat or natural and a note.\\
@@ -614,7 +614,7 @@ Macro for typesetting a reversed accentus.
 
 \begin{argtable}
   \#1 & integer & Height number of accentus.\\
-  \#2 & string   & Type of glyph the accentus is attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the accentus is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreReversedSemicirculus}{\#1\#2}{gregoriotex-signs.tex}
@@ -622,7 +622,7 @@ Macro for typesetting a reversed semicirculus.
 
 \begin{argtable}
   \#1 & integer & Height number of semicirculus.\\
-  \#2 & string   & Type of glyph the semicirculus is attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the semicirculus is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreScoreReference}{\#1}{gregoriotex-main.tex}
@@ -633,7 +633,7 @@ Macro for typesetting a semicirculus.
 
 \begin{argtable}
   \#1 & integer & Height number of semicirculus.\\
-  \#2 & string   & Type of glyph the semicirculus is attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the semicirculus is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreSetBigInitial}{}{gregoriotex-main.tex}
@@ -817,19 +817,19 @@ Records positions to compute the lengths of variable-sized braces.
   & \texttt{2} & Position to save is the end of brace.
 \end{argtable}
 
-\macroname{\textbackslash GreVEpisemus}{\#1\#2}{gregoriotex-signs.tex}
-Macro for typesetting the vertical episemus.
+\macroname{\textbackslash GreVEpisema}{\#1\#2}{gregoriotex-signs.tex}
+Macro for typesetting the vertical episema.
 
 \begin{argtable}
-  \#1 & integer & Height number of episemus.\\
-  \#2 & string  & Type of glyph the episemus is attached to. See \nameref{EpisemusSpecial} argument for description of options.\\
+  \#1 & integer & Height number of episema.\\
+  \#2 & string  & Type of glyph the episema is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreVirgula}{\#1}{gregoriotex-signs.tex}
 Macro to typeset a virgula.
 
 \begin{argtable}
-  \#1 & code & Macros which may happen before the skip but after the virgula (typically \verb=\grevepisemus=).\\
+  \#1 & code & Macros which may happen before the skip but after the virgula (typically \verb=\grevepisema=).\\
 \end{argtable}
 
 \macroname{\textbackslash GreWriteTranslation}{\#1}{gregoriotex-main.tex}

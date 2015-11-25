@@ -419,12 +419,12 @@
 %% 0: no modification
 %% 1: puts the value on the interline just above if it is on a line
 %% 2: puts the value on the interline just beneath if it is on a line
-%% 3: case of the vertical episemus, which is not placed at the same place if the corresponding note is on a line or not
+%% 3: case of the vertical episema, which is not placed at the same place if the corresponding note is on a line or not
 %% 4: case of the punctum mora, for the same reason
-%% 5: case of the horizontal episemus under a note, that must be placed a bit lower if the note is on a line
+%% 5: case of the horizontal episema under a note, that must be placed a bit lower if the note is on a line
 %% 6: case of the signs above (accentus, etc.)
 %% 8: case of the punctum mora of the first note of a podatus or the 2nd note of a porrectus, etc.
-%% 9: case of the horizontal episemus, that must be placed a bit lower if the note is on a line
+%% 9: case of the horizontal episema, that must be placed a bit lower if the note is on a line
 %% 10: low choral sign not below the note
 %% 11: high choral sign
 %% 12: low choral sign below the note
@@ -440,7 +440,7 @@
   \or\gre@count@temp@three=\number 3%
     \ifnum#2=3\relax %
     \else %
-      \global\gre@isonalinetrue % if it is a vertical episemus, we don't care if it is on a line or not... which may cause some problems...
+      \global\gre@isonalinetrue % if it is a vertical episema, we don't care if it is on a line or not... which may cause some problems...
     \fi %
   \or\gre@count@temp@three=\number 4%
   \or\gre@count@temp@three=\number 5%
@@ -458,7 +458,7 @@
   \or\gre@count@temp@three=\number 13%
     \global\gre@isonalinetrue%
   \or\gre@count@temp@three=\number 14%
-  % the following are only useful for horizontal episemus and rare signs
+  % the following are only useful for horizontal episema and rare signs
   \or\gre@count@temp@three=\number 15%
   \or\gre@count@temp@three=\number 16%
   \or\gre@count@temp@three=\number 17%
@@ -498,7 +498,7 @@
   \global\multiply\gre@dimen@glyphraisevalue by \the\gre@count@temp@three %
   \gre@dimen@addedraisevalue= 0 sp%
   \ifcase#2 % 
-  \or\or\or%3: if it is a vertical episemus on a line, we shift it a bit higher, so that it's more beautiful
+  \or\or\or%3: if it is a vertical episema on a line, we shift it a bit higher, so that it's more beautiful
     \ifgre@isonaline%
       \gre@dimen@addedraisevalue=7250 sp%
       \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
@@ -518,7 +518,7 @@
       \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
     \fi%
-  \or% 5: if it is a horizontal episemus under a note which is on a line, we shift it lower
+  \or% 5: if it is a horizontal episema under a note which is on a line, we shift it lower
     \ifgre@isonaline% if it is under a note between two lines, we shift it higher
       \gre@dimen@addedraisevalue=4000 sp%
       \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
@@ -538,7 +538,7 @@
       \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
     \fi %
-  \or% 9: if it is an horizontal episemus not on a line, we put it a bit lower
+  \or% 9: if it is an horizontal episema not on a line, we put it a bit lower
     \ifgre@isonaline%
       \gre@dimen@addedraisevalue=-5500 sp%
     \else %

@@ -1212,7 +1212,7 @@ OFFSET_CASE(BarDivisioFinalis);
 static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
         gregorio_sign signs, bool is_inside_bar)
 {
-    /* the type number of function vepisemusorrare */
+    /* the type number of function vepisemaorrare */
     const char *offset_case = BarStandard;
     if (is_inside_bar) {
         fprintf(f, "\\GreIn");
@@ -1261,15 +1261,15 @@ static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
         break;
     }
     switch (signs) {
-    case _V_EPISEMUS:
-        fprintf(f, "{\\GreBarVEpisemus{\\GreOCase%s}}%%\n", offset_case);
+    case _V_EPISEMA:
+        fprintf(f, "{\\GreBarVEpisema{\\GreOCase%s}}%%\n", offset_case);
         break;
-    case _BAR_H_EPISEMUS:
+    case _BAR_H_EPISEMA:
         fprintf(f, "{\\GreBarBrace{\\GreOCase%s}}%%\n", offset_case);
         break;
-    case _V_EPISEMUS_BAR_H_EPISEMUS:
+    case _V_EPISEMA_BAR_H_EPISEMA:
         fprintf(f, "{\\GreBarBrace{\\GreOCase%s}"
-                "\\GreBarVEpisemus{\\GreOCase%s}}%%\n",
+                "\\GreBarVEpisema{\\GreOCase%s}}%%\n",
                 offset_case, offset_case);
         break;
     default:
@@ -1453,7 +1453,7 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
                     current_note->u.note.pitch == 1)
             && is_on_a_line(current_note->u.note.pitch)
             && (current_note->previous->signs == _PUNCTUM_MORA
-                    || current_note->previous->signs == _V_EPISEMUS_PUNCTUM_MORA
+                    || current_note->previous->signs == _V_EPISEMA_PUNCTUM_MORA
                     || current_note->previous->choral_sign)) {
         special_punctum = 1;
     }
@@ -1498,8 +1498,8 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
     tmpnote = current_note->next;
     while (tmpnote) {
         if (tmpnote->signs == _PUNCTUM_MORA || tmpnote->signs == _AUCTUM_DUPLEX
-                || tmpnote->signs == _V_EPISEMUS_PUNCTUM_MORA
-                || tmpnote->signs == _V_EPISEMUS_AUCTUM_DUPLEX
+                || tmpnote->signs == _V_EPISEMA_PUNCTUM_MORA
+                || tmpnote->signs == _V_EPISEMA_AUCTUM_DUPLEX
                 || tmpnote->choral_sign) {
             no_space = 1;
             break;
@@ -1591,12 +1591,12 @@ static __inline int get_punctum_inclinatum_space_case(
     return -1;
 }
 
-static __inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
+static __inline void write_single_hepisema(FILE *const f, int hepisema_case,
         const gregorio_note *const note, bool connect, char height,
-        const grehepisemus_size size, const int i,
+        const grehepisema_size size, const int i,
         const gregorio_glyph *const glyph,
-        const int porrectus_long_episemus_index,
-        bool (*const is_episemus_shown)(const gregorio_note *))
+        const int porrectus_long_episema_index,
+        bool (*const is_episema_shown)(const gregorio_note *))
 {
     char ambitus = 0;
     char size_arg;
@@ -1619,21 +1619,21 @@ static __inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
             break;
         }
 
-        if (i == porrectus_long_episemus_index && note->next
-                && is_episemus_shown(note->next)) {
+        if (i == porrectus_long_episema_index && note->next
+                && is_episema_shown(note->next)) {
             ambitus = compute_ambitus(note);
         }
 
-        if (i - 1 != porrectus_long_episemus_index || !note->previous
-                || !is_episemus_shown(note->previous)) {
+        if (i - 1 != porrectus_long_episema_index || !note->previous
+                || !is_episema_shown(note->previous)) {
             if (connect) {
                 if (!note->next && (!glyph->next
                             || glyph->next->type != GRE_SPACE
                             || glyph->next->u.misc.unpitched.info.space
                             != SP_ZERO_WIDTH)) {
                     /* not followed by a zero-width space */
-                    fprintf(f, "\\GreHEpisemusBridge{%d}{%d}{-1}%%\n",
-                            pitch_value(height), hepisemus_case);
+                    fprintf(f, "\\GreHEpisemaBridge{%d}{%d}{-1}%%\n",
+                            pitch_value(height), hepisema_case);
                 } else if (note->next
                         && (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
                             || note->next->u.note.shape
@@ -1641,27 +1641,27 @@ static __inline void write_single_hepisemus(FILE *const f, int hepisemus_case,
                             || note->next->u.note.shape
                             == S_PUNCTUM_INCLINATUM_AUCTUS)) {
                     /* is a punctum inclinatum of some sort */
-                    fprintf(f, "\\GreHEpisemusBridge{%d}{%d}{%d}%%\n",
-                            pitch_value(height), hepisemus_case,
+                    fprintf(f, "\\GreHEpisemaBridge{%d}{%d}{%d}%%\n",
+                            pitch_value(height), hepisema_case,
                             get_punctum_inclinatum_space_case(note->next));
                 }
             }
-            fprintf(f, "\\GreHEpisemus{%d}{\\GreOCase%s}{%d}{%d}{%c}{%d}%%\n",
+            fprintf(f, "\\GreHEpisema{%d}{\\GreOCase%s}{%d}{%d}{%c}{%d}%%\n",
                     pitch_value(height), note->gtex_offset_case, ambitus,
-                    hepisemus_case, size_arg, pitch_value(height));
+                    hepisema_case, size_arg, pitch_value(height));
         }
     }
 }
 
 /**
- * @brief A function that writes the good \c \\hepisemus in GregorioTeX.
+ * @brief A function that writes the good \c \\hepisema in GregorioTeX.
  * @param i The position of the note in the glyph.
  */
-static void gregoriotex_write_hepisemus(FILE *const f,
+static void gregoriotex_write_hepisema(FILE *const f,
         const gregorio_note *const note, const int i, const gtex_type type,
         const gregorio_glyph *const glyph)
 {
-    int porrectus_long_episemus_index = -1;
+    int porrectus_long_episema_index = -1;
 
     if (!note) {
         return;
@@ -1670,23 +1670,23 @@ static void gregoriotex_write_hepisemus(FILE *const f,
     switch (type) {
     case T_PORRECTUS:
     case T_PORRECTUS_FLEXUS:
-        porrectus_long_episemus_index = 1;
+        porrectus_long_episema_index = 1;
         break;
     case T_TORCULUS_RESUPINUS:
     case T_TORCULUS_RESUPINUS_FLEXUS:
-        porrectus_long_episemus_index = 2;
+        porrectus_long_episema_index = 2;
         break;
     default:
         /* do nothing */
         break;
     }
 
-    write_single_hepisemus(f, 1, note, note->h_episemus_below_connect,
-            note->h_episemus_below, note->h_episemus_below_size, i, glyph,
-            porrectus_long_episemus_index, &gtex_is_h_episemus_below_shown);
-    write_single_hepisemus(f, 0, note, note->h_episemus_above_connect,
-            note->h_episemus_above, note->h_episemus_above_size, i, glyph,
-            porrectus_long_episemus_index, &gtex_is_h_episemus_above_shown);
+    write_single_hepisema(f, 1, note, note->h_episema_below_connect,
+            note->h_episema_below, note->h_episema_below_size, i, glyph,
+            porrectus_long_episema_index, &gtex_is_h_episema_below_shown);
+    write_single_hepisema(f, 0, note, note->h_episema_above_connect,
+            note->h_episema_above, note->h_episema_above_size, i, glyph,
+            porrectus_long_episema_index, &gtex_is_h_episema_above_shown);
 }
 
 /* a macro to write an additional line */
@@ -1707,14 +1707,14 @@ static void gregoriotex_write_additional_line(FILE *f,
     case T_PORRECTUS:
     case T_PORRECTUS_FLEXUS:
         if (i == 1) {
-            i = HEPISEMUS_FIRST_TWO;
+            i = HEPISEMA_FIRST_TWO;
         }
         if (i == 2) {
             if (current_note->previous->u.note.pitch >= PITCH_BELOW_STAFF
                     && current_note->previous->u.note.pitch
                     <= PITCH_ABOVE_STAFF) {
-                i = HEPISEMUS_FIRST_TWO;
-                /* HEPISEMUS_FIRST_TWO works only for first note */
+                i = HEPISEMA_FIRST_TWO;
+                /* HEPISEMA_FIRST_TWO works only for first note */
                 current_note = current_note->previous;
             } else {
                 return;
@@ -1731,14 +1731,14 @@ static void gregoriotex_write_additional_line(FILE *f,
     case T_TORCULUS_RESUPINUS:
     case T_TORCULUS_RESUPINUS_FLEXUS:
         if (i == 2) {
-            i = HEPISEMUS_FIRST_TWO;
+            i = HEPISEMA_FIRST_TWO;
         }
         if (i == 3) {
             if (current_note->previous->u.note.pitch >= PITCH_BELOW_STAFF
                     && current_note->previous->u.note.pitch
                     <= PITCH_ABOVE_STAFF) {
-                i = HEPISEMUS_FIRST_TWO;
-                /* HEPISEMUS_FIRST_TWO works only for first note */
+                i = HEPISEMA_FIRST_TWO;
+                /* HEPISEMA_FIRST_TWO works only for first note */
                 current_note = current_note->previous;
             } else {
                 return;
@@ -1756,7 +1756,7 @@ static void gregoriotex_write_additional_line(FILE *f,
         break;
     }
 
-    if (i == HEPISEMUS_FIRST_TWO) {
+    if (i == HEPISEMA_FIRST_TWO) {
         /* here we must compare the first note of the big bar with the second
          * one, but it may be tricky sometimes, because of the previous patch */
         if (current_note->previous &&
@@ -1775,15 +1775,15 @@ static void gregoriotex_write_additional_line(FILE *f,
 
 /*
  * 
- * a function that writes the good value of \vepisemus in GregorioTeX. i is the 
+ * a function that writes the good value of \vepisema in GregorioTeX. i is the 
  * position of the note in the glyph
  * 
  */
 
-static void gregoriotex_write_vepisemus(FILE *f, gregorio_note *note)
+static void gregoriotex_write_vepisema(FILE *f, gregorio_note *note)
 {
-    fprintf(f, "\\GreVEpisemus{%d}{\\GreOCase%s}%%\n",
-            pitch_value(note->v_episemus_height), note->gtex_offset_case);
+    fprintf(f, "\\GreVEpisema{%d}{\\GreOCase%s}%%\n",
+            pitch_value(note->v_episema_height), note->gtex_offset_case);
 }
 
 /*
@@ -2033,7 +2033,7 @@ static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
     bool low_sign = choral_sign_here_is_low(glyph, current_note, &kind_of_pes);
 
     /* the low choral signs must be typeset after the punctum, whereas the high
-     * must be typeset before the h episemus */
+     * must be typeset before the h episema */
     if ((low_sign && !low) || (!low_sign && low)) {
         return;
     }
@@ -2050,7 +2050,7 @@ static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
             if (current_note->previous
                     && (current_note->previous->signs == _PUNCTUM_MORA
                             || current_note->previous->signs ==
-                            _V_EPISEMUS_PUNCTUM_MORA)) {
+                            _V_EPISEMA_PUNCTUM_MORA)) {
                 write_low_choral_sign(f, current_note, 1);
                 return;
             }
@@ -2095,12 +2095,12 @@ static void compute_height_extrema(const gregorio_glyph *const glyph,
     char height;
     /* get the minima/maxima pitches */
     for (; note; note = note->next) {
-        if (note->h_episemus_above) {
-            height = note->h_episemus_above;
+        if (note->h_episema_above) {
+            height = note->h_episema_above;
         } else {
-            if (note->v_episemus_height && note->v_episemus_height
+            if (note->v_episema_height && note->v_episema_height
                     > note->u.note.pitch) {
-                height = note->v_episemus_height;
+                height = note->v_episema_height;
             } else {
                 height = note->u.note.pitch;
             }
@@ -2114,11 +2114,11 @@ static void compute_height_extrema(const gregorio_glyph *const glyph,
             *top_height = height;
         }
 
-        if (note->h_episemus_below) {
-            height = note->h_episemus_below;
-        } else if (note->v_episemus_height && note->v_episemus_height
+        if (note->h_episema_below) {
+            height = note->h_episema_below;
+        } else if (note->v_episema_height && note->v_episema_height
                 < note->u.note.pitch) {
-            height = note->v_episemus_height;
+            height = note->v_episema_height;
         } else {
             height = note->u.note.pitch;
         }
@@ -2147,7 +2147,7 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
     int i;
     gregorio_note *current_note;
     /* a dumb char */
-    char block_hepisemus = 0;
+    char block_hepisema = 0;
     signed char high_pitch = UNDETERMINED_HEIGHT;
     signed char low_pitch = UNDETERMINED_HEIGHT;
     bool found = false;
@@ -2175,7 +2175,7 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
     }
     fprintf(f, "}{");
     /* now a first loop for the choral signs, because high signs must be taken
-     * into account before any hepisemus */
+     * into account before any hepisema */
     for (current_note = note, i = 1; current_note;
             current_note = current_note->next, ++i) {
         if (current_note->choral_sign) {
@@ -2186,15 +2186,15 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
             break;
         }
     }
-    /* a loop for rare signs, vertical episemus, and horizontal episemus */
+    /* a loop for rare signs, vertical episema, and horizontal episema */
     for (current_note = note, i = 1; current_note;
             current_note = current_note->next, ++i) {
-        /* we continue with the hepisemus */
-        if (current_note->h_episemus_above || current_note->h_episemus_below) {
+        /* we continue with the hepisema */
+        if (current_note->h_episema_above || current_note->h_episema_below) {
             found = _found(f, found);
-            gregoriotex_write_hepisemus(f, current_note, i, type, glyph);
+            gregoriotex_write_hepisema(f, current_note, i, type, glyph);
         }
-        /* write_rare also writes the vepisemus */
+        /* write_rare also writes the vepisema */
         if (current_note->special_sign) {
             found = _found(f, found);
             gregoriotex_write_rare(f, current_note, current_note->special_sign);
@@ -2203,10 +2203,10 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
             found = _found(f, found);
         }
         switch (current_note->signs) {
-        case _V_EPISEMUS:
-        case _V_EPISEMUS_PUNCTUM_MORA:
-        case _V_EPISEMUS_AUCTUM_DUPLEX:
-            gregoriotex_write_vepisemus(f, current_note);
+        case _V_EPISEMA:
+        case _V_EPISEMA_PUNCTUM_MORA:
+        case _V_EPISEMA_AUCTUM_DUPLEX:
+            gregoriotex_write_vepisema(f, current_note);
             break;
         default:
             /* do nothing */
@@ -2214,11 +2214,11 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
         }
         /* why is this if there?... */
         if (!current_note->special_sign) {
-            if (block_hepisemus == 2) {
-                block_hepisemus = 0;
+            if (block_hepisema == 2) {
+                block_hepisema = 0;
             }
-            if (block_hepisemus == 1) {
-                block_hepisemus = 2;
+            if (block_hepisema == 1) {
+                block_hepisema = 2;
             }
         }
         if (type == T_ONE_NOTE) {
@@ -2230,11 +2230,11 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
             current_note = current_note->next, ++i) {
         switch (current_note->signs) {
         case _PUNCTUM_MORA:
-        case _V_EPISEMUS_PUNCTUM_MORA:
+        case _V_EPISEMA_PUNCTUM_MORA:
             gregoriotex_write_punctum_mora(f, glyph, current_note);
             break;
         case _AUCTUM_DUPLEX:
-        case _V_EPISEMUS_AUCTUM_DUPLEX:
+        case _V_EPISEMA_AUCTUM_DUPLEX:
             gregoriotex_write_auctum_duplex(f, current_note);
             break;
         default:

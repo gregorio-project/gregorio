@@ -36,7 +36,7 @@
 static gregorio_scanner_location notes_lloc;
 static gregorio_note *current_note;
 static char char_for_brace;
-static unsigned int nbof_isolated_episemus;
+static unsigned int nbof_isolated_episema;
 static char *notesmacros[10];
 static char tempstr[256];
 static int brace_var_counter;
@@ -59,7 +59,7 @@ static gregorio_shape punctum(const char pitch)
 static __inline void lex_add_note(int i, gregorio_shape shape, char signs,
         char liquescentia)
 {
-    nbof_isolated_episemus = 0;
+    nbof_isolated_episema = 0;
     gregorio_add_note(&current_note,
             pitch_letter_to_height(tolower((unsigned char)gabc_notes_determination_text[i])),
             shape, signs, liquescentia, NULL, &notes_lloc);
@@ -67,7 +67,7 @@ static __inline void lex_add_note(int i, gregorio_shape shape, char signs,
 
 static __inline void add_bar_as_note(gregorio_bar bar)
 {
-    nbof_isolated_episemus = 0;
+    nbof_isolated_episema = 0;
     gregorio_add_bar_as_note(&current_note, bar, &notes_lloc);
 }
 
@@ -78,8 +78,8 @@ static __inline void error(void)
             gabc_notes_determination_text[3] - '0');
 }
 
-static void add_h_episemus(void) {
-    grehepisemus_size size = H_NORMAL;
+static void add_h_episema(void) {
+    grehepisema_size size = H_NORMAL;
     gregorio_vposition vposition = VPOS_AUTO;
     bool disable_bridge = false;
 
@@ -108,14 +108,14 @@ static void add_h_episemus(void) {
             break;
         default:
             gregorio_messagef("gabc_notes_determination", VERBOSITY_ERROR, 0,
-                    _("unrecognized horizontal episemus modifier: %c"),
+                    _("unrecognized horizontal episema modifier: %c"),
                     current);
             break;
         };
     }
 
-    gregorio_add_h_episemus(current_note, size, vposition, disable_bridge,
-                &nbof_isolated_episemus);
+    gregorio_add_h_episema(current_note, size, vposition, disable_bridge,
+                &nbof_isolated_episema);
 }
 
 static void add_sign(gregorio_sign sign) {
@@ -620,10 +620,10 @@ r5  {
                 L_INITIO_DEBILIS);
     }
 \'[01]? {
-        add_sign(_V_EPISEMUS);
+        add_sign(_V_EPISEMA);
     }
 _[0-5]* {
-        add_h_episemus();
+        add_h_episema();
     }
 \.[01]? {
         add_sign(_PUNCTUM_MORA);
@@ -688,7 +688,7 @@ gregorio_note *gabc_det_notes_from_string(char *str, char *newmacros[10],
     for (i = 0; i < 10; i++) {
         notesmacros[i] = newmacros[i];
     }
-    nbof_isolated_episemus = 0;
+    nbof_isolated_episema = 0;
     current_note = NULL;
     buf = yy_scan_string(str);
     yylex();
