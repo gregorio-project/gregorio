@@ -121,12 +121,12 @@ Calculates the raise values for a glyph (glyphraisevalue and addedraisevalue) ba
   \#2 & \texttt{0} & no modification\\
   & \texttt{1} & puts the value on the interline just above if it is on a line\\
   & \texttt{2} & puts the value on the interline just beneath if it is on a line\\
-  & \texttt{3} & case of the vertical episemus, which is not placed at the same place if the corresponding note is on a line or not\\
+  & \texttt{3} & case of the vertical episema, which is not placed at the same place if the corresponding note is on a line or not\\
   & \texttt{4} & case of the punctum mora, for the same reason\\
-  & \texttt{5} & case of the horizontal episemus under a note, that must be placed a bit lower if the note is on a line\\
+  & \texttt{5} & case of the horizontal episema under a note, that must be placed a bit lower if the note is on a line\\
   & \texttt{6} & case of the signs above (accentus, \etc)\\
   & \texttt{8} & case of the punctum mora of the first note of a podatus or the 2nd note of a porrectus, \etc\\
-  & \texttt{9} & case of the horizontal episemus, that must be placed a bit lower if the note is on a line\\
+  & \texttt{9} & case of the horizontal episema, that must be placed a bit lower if the note is on a line\\
   & \texttt{10} & case of the low choral sign\\
   & \texttt{11} & case of the high choral sign\\
   & \texttt{12} & case of the low choral sign which is lower than the note\\
@@ -510,57 +510,57 @@ Macro for aligning clivis syllables according to the flag \verb=\gre@clivisalign
 \end{argtable}
 
 \macroname{\textbackslash gre@hepisorline}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
-Macro to typeset a horizontal line (either an additional staff line or an episemus).
+Macro to typeset a horizontal line (either an additional staff line or an episema).
 
 \begin{argtable}
-  \#1 & character & The letter of the height of the episemus (not the height of the note it corresponds to).\\
-  \#2 & \texttt{0} & go back to the beginning of the previous glyph; this starts the episemus at the beginning of the previous glyph\\
+  \#1 & character & The letter of the height of the episema (not the height of the note it corresponds to).\\
+  \#2 & \texttt{0} & go back to the beginning of the previous glyph; this starts the episema at the beginning of the previous glyph\\
   & \texttt{1} & stay at the end of the glyph; doesn’t make much sense to use this\\
-  & \texttt{2} & go back the width of \#1; this starts the episemus at the glyph from the end that starts at \#1’s width from the end\\
-  & \texttt{3} & go back to the beginning of the previous glyph and then forward the width of \#1; this starts the episemus at the glyph from the start that starts just after \#1’s width from the start\\
-  \#3 & integer &the ambitus for a two note episemus at the diagonal stroke of a porrectus, porrectus flexus, orculus resupinus, or torculus resupinus flexus\\
-  \#4 & \texttt{0} & an horizontal episemus\\
-  & \texttt{1} & an horizontal episemus under a note\\
+  & \texttt{2} & go back the width of \#1; this starts the episema at the glyph from the end that starts at \#1’s width from the end\\
+  & \texttt{3} & go back to the beginning of the previous glyph and then forward the width of \#1; this starts the episema at the glyph from the start that starts just after \#1’s width from the start\\
+  \#3 & integer &the ambitus for a two note episema at the diagonal stroke of a porrectus, porrectus flexus, orculus resupinus, or torculus resupinus flexus\\
+  \#4 & \texttt{0} & an horizontal episema\\
+  & \texttt{1} & an horizontal episema under a note\\
   & \texttt{2} & a line at the top\\
   & \texttt{3} & a line at the bottom\\
-  \#5 & \texttt{f} & a normal episemus\\
-  & \texttt{l} & a small episemus aligned left\\
-  & \texttt{c} & a small episemus aligned center\\
-  & \texttt{r} & for a small episemus aligned right\\
+  \#5 & \texttt{f} & a normal episema\\
+  & \texttt{l} & a small episema aligned left\\
+  & \texttt{c} & a small episema aligned center\\
+  & \texttt{r} & for a small episema aligned right\\
 \end{argtable}
 
 \macroname{\textbackslash gre@hepisorlineaux}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
-Macro that will help in the typesetting of a horizontal episemus and additional lines.
+Macro that will help in the typesetting of a horizontal episema and additional lines.
 
 \begin{argtable}
   \#1 & Gregorio\TeX\ glyph & an offset glyph (see \#3, below)\\
-  \#2 & Gregorio\TeX\ glyph & the episemus glyph\\
-  \#3 & \texttt{0} & go back to the beginning of the previous glyph; this starts the  episemus at the beginning of the previous glyph\\
+  \#2 & Gregorio\TeX\ glyph & the episema glyph\\
+  \#3 & \texttt{0} & go back to the beginning of the previous glyph; this starts the episema at the beginning of the previous glyph\\
   & \texttt{1} & stay at the end of the glyph; doesn’t make much sense to use this\\
-  & \texttt{2} & go back the width of \#1; this starts the episemus at the glyph from the end that starts at \#1’s width from the end\\
-  & \texttt{3} & go back to the beginning of the previous glyph and then forward the width of \#1; this starts the episemus at the glyph from the start that starts just after \#1’s width from the start\\
-  \#4 & \texttt{0} & an horizontal episemus\\
-  & \texttt{1} & an horizontal episemus under a note\\
+  & \texttt{2} & go back the width of \#1; this starts the episema at the glyph from the end that starts at \#1’s width from the end\\
+  & \texttt{3} & go back to the beginning of the previous glyph and then forward the width of \#1; this starts the episema at the glyph from the start that starts just after \#1’s width from the start\\
+  \#4 & \texttt{0} & an horizontal episema\\
+  & \texttt{1} & an horizontal episema under a note\\
   & \texttt{2} & a line at the top\\
   & \texttt{3} & a line at the bottom\\
 \end{argtable}
 
-\macroname{\textbackslash gre@vepisemusorrare}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
-Macro to typeset a vertical episemus or a rare accent (like accentus, circulus, etc.).  This function must be called after a call to \verb=\GreGlyph=.
+\macroname{\textbackslash gre@vepisemaorrare}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+Macro to typeset a vertical episema or a rare accent (like accentus, circulus, etc.).  This function must be called after a call to \verb=\GreGlyph=.
 
 \begin{argtable}
-  \#1 & character & the letter of the height of the episemus (not the height of the note it corresponds to.\\
-  \#2 & integer & See \nameref{EpisemusSpecial}\\
+  \#1 & character & the letter of the height of the episema (not the height of the note it corresponds to.\\
+  \#2 & integer & See \nameref{EpisemaSpecial}\\
   \#3 & Gregorio\TeX\ glyph & the sign glyph\\
-  \#4 & \texttt{1} & vertical episemus\\
+  \#4 & \texttt{1} & vertical episema\\
   & \texttt{2} & rare sign\\
   & \texttt{3} & choral sign\\
   & \texttt{4} & brace above the bar\\
   \#5 & string & the choral sign, if relevant\\
 \end{argtable}
 
-\macroname{\textbackslash gre@vepisemusorrareaux}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
-Macro to help typesetting vertical episemus.
+\macroname{\textbackslash gre@vepisemaorrareaux}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
+Macro to help typesetting vertical episema.
 
 \begin{argtable}
   \#1 & Gregorio\TeX\ glyph & is an offset glyph (see \#3 below)\\
@@ -571,7 +571,7 @@ Macro to help typesetting vertical episemus.
   & \texttt{3} & go back to the beginning of the previous glyph and then forward the width of \#1 and then back half the width of \#2; this puts the sign at the glyph from the start that ends at \#1’s width from the start\\
   \#4 & dimension & a shift that we want to get applied, useful for punctum inclinatum for example\\
   \#5 & integer & is the glyph number\\
-  \#6 & \texttt{1} & vertical episemus\\
+  \#6 & \texttt{1} & vertical episema\\
   & \texttt{2} & rare sign\\
   & \texttt{3} & choral sign\\
   & \texttt{4} & brace above the bar\\
@@ -637,7 +637,7 @@ Macro to write a bar.
   & \texttt{5} & the last finalis\\
   \#2 & \texttt{0} & in a syllable containing only this bar\\
   & \texttt{1} & in a syllable containing other notes\\
-  \#3 & \TeX\ code & macros that may happen before the skip after the bar (typically GreVEpisemus)\\
+  \#3 & \TeX\ code & macros that may happen before the skip after the bar (typically GreVEpisema)\\
 \end{argtable}
 
 \macroname{\textbackslash gre@@arg}{}{gregoriotex-syllable.tex}
@@ -727,16 +727,16 @@ Macro which checks for version consistency between Gregorio\TeX\ files.
 Macro for defining the various types of horizontal episema.
 
 \begin{argtable}
-  \#1 & string & name of the horizontal episemus to be defined\\
-  \#2 & string & Camel case name of horizontal episemus to be defined\\
+  \#1 & string & name of the horizontal episema to be defined\\
+  \#2 & string & Camel case name of horizontal episema to be defined\\
 \end{argtable}
 
 \macroname{\textbackslash gre@def@char@he@porr}{\#1\#2}{gregoriotex-chars.tex}
 Macro for defining the various types of horizontal episema porrectus.
 
 \begin{argtable}
-  \#1 & string & name of the horizontal episemus porrectus to be defined\\
-  \#2 & string & Camel case name of horizontal episemus porrectus to be defined\\
+  \#1 & string & name of the horizontal episema porrectus to be defined\\
+  \#2 & string & Camel case name of horizontal episema porrectus to be defined\\
 \end{argtable}
 
 \macroname{\textbackslash gre@char@cavum}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-signs.tex}
@@ -1005,8 +1005,8 @@ The punctum mora character.
 \macroname{\textbackslash gre@fontchar@underbrace}{}{gregoriotex-signs.tex}
 The under brace character.
 
-\macroname{\textbackslash gre@fontchar@verticalepisemus}{}{gregoriotex-chars.tex}
-The vertical episemus character.
+\macroname{\textbackslash gre@fontchar@verticalepisema}{}{gregoriotex-chars.tex}
+The vertical episema character.
 
 \macroname{\textbackslash gre@fontchar@brace}{}{gregoriotex-signs.tex}
 The (rounded) brace character.
@@ -1099,8 +1099,8 @@ Boolean used to specify whether the staff lines behind a punctum cavum should be
 \macroname{\textbackslash ifgre@hidealtlines}{}{gregoriotex-signs.tex}
 Boolean used to specify whether the staff lines behind an alteration should be hidden.
 
-\macroname{\textbackslash ifgre@hepisemusbridge}{}{gregoriotex-signs.tex}
-Boolean used to specify whether adjacent horizontal episema should be joined together.
+\macroname{\textbackslash ifgre@hepisemabridge}{}{gregoriotex-signs.tex}
+Boolean used to specify whether adjacent horizontal episemata should be joined together.
 
 \macroname{\textbackslash ifgre@drawbraces}{}{gregoriotex-signs.tex}
 Boolean used to specify whether braces should be drawn by \MP{} as
@@ -1248,7 +1248,7 @@ Box holding the notes associated with a syllable.
 Box holding the text associated with a syllable.
 
 \macroname{\textbackslash gre@box@hep}{}{gregoriotex-chars.tex}
-Box holding the horizontal episemus.
+Box holding the horizontal episema.
 
 
 \subsection{Distances}
@@ -1516,7 +1516,7 @@ rather than have multiple definitions.
   \texttt{12} & divisio finalis
  \end{tabulary}
 
-\subsection{Episemus Special}\label{EpisemusSpecial}
+\subsection{Episema Special}\label{EpisemaSpecial}
 \definecolor{shadecolor}{named}{lightgray}%
 \begin{shaded*}%
 \vspace{-1.4\baselineskip}

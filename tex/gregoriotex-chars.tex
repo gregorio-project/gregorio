@@ -27,16 +27,16 @@
 \def\gre@char@fuse@oriscus@two{\GreFuseTwo{\GreCPLeadingOriscusTwo}{\GreCPPunctum}}%
 \def\gre@char@fuse@debilis{\GreFuseTwo{\GreCPLeadingPunctumOneInitioDebilis}{\GreCPPunctum}}%
 
-% horizontal episemus
+% horizontal episema
 \newbox\gre@box@hep%
 \def\gre@def@char@he#1#2{%
   \expandafter\def\csname gre@char@he@#1\endcsname##1{%
-    \ifx##1f\csname GreCPHEpisemus#2\endcsname%
+    \ifx##1f\csname GreCPHEpisema#2\endcsname%
     \else%
-      \setbox\gre@box@hep\hbox{\csname GreCPHEpisemus#2\endcsname}%
+      \setbox\gre@box@hep\hbox{\csname GreCPHEpisema#2\endcsname}%
       \hbox to \wd\gre@box@hep{%
         \ifx##1l\else\hfil\fi%
-        \csname GreCPHEpisemus#2Reduced\endcsname%
+        \csname GreCPHEpisema#2Reduced\endcsname%
         \ifx##1r\else\hfil\fi%
       }%
     \fi%
@@ -45,11 +45,11 @@
 \def\gre@def@char@he@porr#1#2{
   \expandafter\def\csname gre@char@he@#1\endcsname##1##2{%
     \ifcase##1\gre@char@he@punctum{##2}%
-    \or\csname GreCPHEpisemus#2One\endcsname%
-    \or\csname GreCPHEpisemus#2Two\endcsname%
-    \or\csname GreCPHEpisemus#2Three\endcsname%
-    \or\csname GreCPHEpisemus#2Four\endcsname%
-    \or\csname GreCPHEpisemus#2Five\endcsname%
+    \or\csname GreCPHEpisema#2One\endcsname%
+    \or\csname GreCPHEpisema#2Two\endcsname%
+    \or\csname GreCPHEpisema#2Three\endcsname%
+    \or\csname GreCPHEpisema#2Four\endcsname%
+    \or\csname GreCPHEpisema#2Five\endcsname%
     \fi%
   }%
 }%
@@ -88,7 +88,7 @@
 \def\gre@fontchar@incclef{\gre@font@music\GreCPCClefChange}%
 \def\gre@fontchar@infclef{\gre@font@music\GreCPFClefChange}%
 \def\gre@fontchar@punctummora{\gre@font@music\GreCPAuctumMora}%
-\def\gre@fontchar@verticalepisemus{\gre@font@music\GreCPVEpisemus}%
+\def\gre@fontchar@verticalepisema{\gre@font@music\GreCPVEpisema}%
 \def\gre@fontchar@custostoplong{\gre@font@music\GreCPCustosUpLong}%
 \def\gre@fontchar@custostopshort{\gre@font@music\GreCPCustosUpShort}%
 \def\gre@fontchar@custostopmiddle{\gre@font@music\GreCPCustosUpMedium}%
@@ -116,7 +116,7 @@
       \greresetglyph{CClefChange}%
       \greresetglyph{FClefChange}%
       \greresetglyph{AuctumMora}%
-      \greresetglyph{VEpisemus}%
+      \greresetglyph{VEpisema}%
       \greresetglyph{CustosUpLong}%
       \greresetglyph{CustosUpShort}%
       \greresetglyph{CustosUpMedium}%
