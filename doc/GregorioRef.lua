@@ -122,7 +122,7 @@ local GABC = {
   TorculusQuilisma = [[gwig]],
   TorculusResupinus = [[gigi]],
   TorculusResupinusQuilisma = [[gwigi]],
-  VEpisemus = [[\excluded{g}^^^^0027]],
+  VEpisema = [[\excluded{g}^^^^0027]],
   Virga = [[gv]],
   VirgaLongqueue = [[hv]],
   VirgaReversa = [[gV]],
@@ -156,7 +156,7 @@ function GregorioRef.emit_score_glyphs(cs_greciliae, cs_gregorio, cs_parmesan)
     local glyphs = font.fonts[font.id(csname)].resources.unicodes
     local glyph, cp
     for glyph, cp in pairs(glyphs) do
-      if cp >= 0xe000 and not EXCLUDE[glyph] and not glyph:match('^HEpisemus') then
+      if cp >= 0xe000 and not EXCLUDE[glyph] and not glyph:match('^HEpisema') then
         local name, variant = glyph:match('^([^.]*)(%.%a*)$')
         if name then
           local glyph_variants = variants[name]

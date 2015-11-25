@@ -24,7 +24,7 @@
  *
  * It starts by simple add/delete functions for almost all
  * structs, and ends with more complex functions for manipulating
- * horizontal episemus, keys, etc.
+ * horizontal episema, keys, etc.
  *
  * The first functions are not commented, but they always act like
  * this : we give them a pointer to the pointer to the current element
@@ -70,34 +70,34 @@ static gregorio_note *create_and_link_note(gregorio_note **current_note,
     return note;
 }
 
-void gregorio_position_h_episemus_above(gregorio_note *note, signed char height,
+void gregorio_position_h_episema_above(gregorio_note *note, signed char height,
         bool connect)
 {
     assert(note && (note->type == GRE_NOTE || note->type == GRE_BAR));
-    note->h_episemus_above = height;
-    note->h_episemus_above_connect = connect;
+    note->h_episema_above = height;
+    note->h_episema_above_connect = connect;
 }
 
-static void set_h_episemus_above(gregorio_note *note, signed char height,
-        grehepisemus_size size, bool connect)
+static void set_h_episema_above(gregorio_note *note, signed char height,
+        grehepisema_size size, bool connect)
 {
-    gregorio_position_h_episemus_above(note, height, connect);
-    note->h_episemus_above_size = size;
+    gregorio_position_h_episema_above(note, height, connect);
+    note->h_episema_above_size = size;
 }
 
-void gregorio_position_h_episemus_below(gregorio_note *note, signed char height,
+void gregorio_position_h_episema_below(gregorio_note *note, signed char height,
         bool connect)
 {
     assert(note && (note->type == GRE_NOTE || note->type == GRE_BAR));
-    note->h_episemus_below = height;
-    note->h_episemus_below_connect = connect;
+    note->h_episema_below = height;
+    note->h_episema_below_connect = connect;
 }
 
-static void set_h_episemus_below(gregorio_note *note, signed char height,
-        grehepisemus_size size, bool connect)
+static void set_h_episema_below(gregorio_note *note, signed char height,
+        grehepisema_size size, bool connect)
 {
-    gregorio_position_h_episemus_below(note, height, connect);
-    note->h_episemus_below_size = size;
+    gregorio_position_h_episema_below(note, height, connect);
+    note->h_episema_below_size = size;
 }
 
 void gregorio_add_note(gregorio_note **current_note, signed char pitch,
@@ -114,12 +114,12 @@ void gregorio_add_note(gregorio_note **current_note, signed char pitch,
         element->special_sign = _NO_SIGN;
         element->u.note.liquescentia = liquescentia;
         if (prototype) {
-            set_h_episemus_above(element, prototype->h_episemus_above,
-                    prototype->h_episemus_above_size,
-                    prototype->h_episemus_above_connect);
-            set_h_episemus_below(element, prototype->h_episemus_below,
-                    prototype->h_episemus_below_size,
-                    prototype->h_episemus_below_connect);
+            set_h_episema_above(element, prototype->h_episema_above,
+                    prototype->h_episema_above_size,
+                    prototype->h_episema_above_connect);
+            set_h_episema_below(element, prototype->h_episema_below,
+                    prototype->h_episema_below_size,
+                    prototype->h_episema_below_connect);
         }
         element->texverb = NULL;
         element->choral_sign = NULL;
@@ -414,112 +414,112 @@ void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
     }
 }
 
-static void apply_auto_h_episemus(gregorio_note *const note,
-        const grehepisemus_size size, const bool disable_bridge)
+static void apply_auto_h_episema(gregorio_note *const note,
+        const grehepisema_size size, const bool disable_bridge)
 {
-    if (note->h_episemus_above == HEPISEMUS_NONE
-            && note->h_episemus_below == HEPISEMUS_NONE) {
+    if (note->h_episema_above == HEPISEMA_NONE
+            && note->h_episema_below == HEPISEMA_NONE) {
         /* if both are unset, set both to auto */
-        set_h_episemus_above(note, HEPISEMUS_AUTO, size, !disable_bridge);
-        set_h_episemus_below(note, HEPISEMUS_AUTO, size, !disable_bridge);
-    } else if (note->h_episemus_above == HEPISEMUS_AUTO
-            && note->h_episemus_below == HEPISEMUS_AUTO) {
+        set_h_episema_above(note, HEPISEMA_AUTO, size, !disable_bridge);
+        set_h_episema_below(note, HEPISEMA_AUTO, size, !disable_bridge);
+    } else if (note->h_episema_above == HEPISEMA_AUTO
+            && note->h_episema_below == HEPISEMA_AUTO) {
         /* if both are auto, then force both */
-        /* the upper episemus keeps its settings */
-        note->h_episemus_above = HEPISEMUS_FORCED;
+        /* the upper episema keeps its settings */
+        note->h_episema_above = HEPISEMA_FORCED;
 
-        set_h_episemus_below(note, HEPISEMUS_FORCED, size, !disable_bridge);
+        set_h_episema_below(note, HEPISEMA_FORCED, size, !disable_bridge);
     } else {
         /* force whichever is not already forced */
-        if (note->h_episemus_above != HEPISEMUS_FORCED) {
-            set_h_episemus_above(note, HEPISEMUS_FORCED, size, !disable_bridge);
+        if (note->h_episema_above != HEPISEMA_FORCED) {
+            set_h_episema_above(note, HEPISEMA_FORCED, size, !disable_bridge);
         }
-        if (note->h_episemus_below != HEPISEMUS_FORCED) {
-            set_h_episemus_below(note, HEPISEMUS_FORCED, size, !disable_bridge);
+        if (note->h_episema_below != HEPISEMA_FORCED) {
+            set_h_episema_below(note, HEPISEMA_FORCED, size, !disable_bridge);
         }
     }
 }
 
 /**********************************
  *
- * Activate_isolated_h_episemus is used when we see an "isolated"
- * horizontal episemus: when we type ab__ lex see a then b then _ then _, so
+ * Activate_isolated_h_episema is used when we see an "isolated"
+ * horizontal episema: when we type ab__ lex see a then b then _ then _, so
  * we must put the _ on the a (kind of backward process), and say the
- * the episemus on the b is a multi episemus. Here n is the length of
- * the isolated episemus we found (can be up to 4).
+ * the episema on the b is a multi episema. Here n is the length of
+ * the isolated episema we found (can be up to 4).
  *
  *********************************/
-static void gregorio_activate_isolated_h_episemus(gregorio_note *note,
-        const grehepisemus_size size, const bool disable_bridge, int n)
+static void gregorio_activate_isolated_h_episema(gregorio_note *note,
+        const grehepisema_size size, const bool disable_bridge, int n)
 {
     if (!note) {
-        gregorio_message(ngt_("isolated horizontal episemus at the beginning "
+        gregorio_message(ngt_("isolated horizontal episema at the beginning "
                     "of a note sequence, ignored",
-                    "isolated horizontal episemus at the beginning of a note "
-                    "sequence, ignored", n), "activate_h_isolated_episemus",
+                    "isolated horizontal episema at the beginning of a note "
+                    "sequence, ignored", n), "activate_h_isolated_episema",
                 VERBOSITY_WARNING, 0);
         return;
     }
     if (note->type != GRE_NOTE) {
-        gregorio_message(ngt_("isolated horizontal episemus after something "
+        gregorio_message(ngt_("isolated horizontal episema after something "
                     "that is not a note, ignored",
-                    "isolated horizontal episemus after something that is not "
-                    "a note, ignored", n), "activate_h_isolated_episemus",
+                    "isolated horizontal episema after something that is not "
+                    "a note, ignored", n), "activate_h_isolated_episema",
                 VERBOSITY_WARNING, 0);
         return;
     }
     for (; n > 0; --n) {
         note = note->previous;
         if (!note || note->type != GRE_NOTE) {
-            gregorio_message(_("found more horizontal episemus than notes "
-                        "able to be under"), "activate_h_isolated_episemus",
+            gregorio_message(_("found more horizontal episema than notes "
+                        "able to be under"), "activate_h_isolated_episema",
                     VERBOSITY_WARNING, 0);
             return;
         }
     }
-    apply_auto_h_episemus(note, size, disable_bridge);
+    apply_auto_h_episema(note, size, disable_bridge);
 }
 
-void gregorio_add_h_episemus(gregorio_note *note,
-        grehepisemus_size size, gregorio_vposition vposition,
-        bool disable_bridge, unsigned int *nbof_isolated_episemus)
+void gregorio_add_h_episema(gregorio_note *note,
+        grehepisema_size size, gregorio_vposition vposition,
+        bool disable_bridge, unsigned int *nbof_isolated_episema)
 {
     if (!note || (note->type != GRE_NOTE && note->type != GRE_BAR)) {
-        gregorio_message(_("trying to add a horizontal episemus on something "
-                    "that is not a note"), "add_h_episemus",
+        gregorio_message(_("trying to add a horizontal episema on something "
+                    "that is not a note"), "add_h_episema",
                 VERBOSITY_ERROR, 0);
         return;
     }
-    if (!nbof_isolated_episemus) {
-        gregorio_message(_("NULL argument nbof_isolated_episemus"),
-                "add_h_episemus", VERBOSITY_FATAL, 0);
+    if (!nbof_isolated_episema) {
+        gregorio_message(_("NULL argument nbof_isolated_episema"),
+                "add_h_episema", VERBOSITY_FATAL, 0);
         return;
     }
-    if (vposition && *nbof_isolated_episemus) {
-        gregorio_message(_("trying to add a forced horizontal episemus on a "
+    if (vposition && *nbof_isolated_episema) {
+        gregorio_message(_("trying to add a forced horizontal episema on a "
                     "note which already has an automatic horizontal "
-                    "episemus"), "add_h_episemus", VERBOSITY_ERROR, 0);
+                    "episema"), "add_h_episema", VERBOSITY_ERROR, 0);
         return;
     }
 
-    if (vposition || !*nbof_isolated_episemus) {
+    if (vposition || !*nbof_isolated_episema) {
         switch (vposition) {
         case VPOS_ABOVE:
-            set_h_episemus_above(note, HEPISEMUS_FORCED, size, !disable_bridge);
+            set_h_episema_above(note, HEPISEMA_FORCED, size, !disable_bridge);
             break;
 
         case VPOS_BELOW:
-            set_h_episemus_below(note, HEPISEMUS_FORCED, size, !disable_bridge);
+            set_h_episema_below(note, HEPISEMA_FORCED, size, !disable_bridge);
             break;
 
         default: /* VPOS_AUTO */
-            apply_auto_h_episemus(note, size, disable_bridge);
-            *nbof_isolated_episemus = 1;
+            apply_auto_h_episema(note, size, disable_bridge);
+            *nbof_isolated_episema = 1;
             break;
         }
     } else {
-        gregorio_activate_isolated_h_episemus(note, size, disable_bridge,
-                (*nbof_isolated_episemus)++);
+        gregorio_activate_isolated_h_episema(note, size, disable_bridge,
+                (*nbof_isolated_episema)++);
     }
 }
 
@@ -536,14 +536,14 @@ void gregorio_add_sign(gregorio_note *note, gregorio_sign sign,
         case _NO_SIGN:
             note->signs = _PUNCTUM_MORA;
             break;
-        case _V_EPISEMUS:
-            note->signs = _V_EPISEMUS_PUNCTUM_MORA;
+        case _V_EPISEMA:
+            note->signs = _V_EPISEMA_PUNCTUM_MORA;
             break;
         case _PUNCTUM_MORA:
             note->signs = _AUCTUM_DUPLEX;
             break;
-        case _V_EPISEMUS_PUNCTUM_MORA:
-            note->signs = _V_EPISEMUS_AUCTUM_DUPLEX;
+        case _V_EPISEMA_PUNCTUM_MORA:
+            note->signs = _V_EPISEMA_AUCTUM_DUPLEX;
             break;
         default:
             break;
@@ -552,23 +552,23 @@ void gregorio_add_sign(gregorio_note *note, gregorio_sign sign,
         note->mora_vposition = vposition;
         break;
 
-    case _V_EPISEMUS:
+    case _V_EPISEMA:
         switch (note->signs) {
         case _NO_SIGN:
-            note->signs = _V_EPISEMUS;
+            note->signs = _V_EPISEMA;
             break;
         case _PUNCTUM_MORA:
-            note->signs = _V_EPISEMUS_PUNCTUM_MORA;
+            note->signs = _V_EPISEMA_PUNCTUM_MORA;
             break;
         case _AUCTUM_DUPLEX:
-            note->signs = _V_EPISEMUS_AUCTUM_DUPLEX;
+            note->signs = _V_EPISEMA_AUCTUM_DUPLEX;
             break;
         default:
             break;
         }
 
         if (note->type == GRE_NOTE && vposition) {
-            note->v_episemus_height = note->u.note.pitch + vposition;
+            note->v_episema_height = note->u.note.pitch + vposition;
         }
         break;
 

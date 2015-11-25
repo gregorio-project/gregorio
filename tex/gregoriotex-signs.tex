@@ -18,7 +18,7 @@
 % along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
 
-% this file contains definitions of signs (bar, episemus, punctum, alterations)
+% this file contains definitions of signs (bar, episema, punctum, alterations)
 
 \def\grebarbracewidth{.58879}%
 
@@ -841,10 +841,10 @@
 \def\GreHighChoralSign#1#2#3{%
   \GreNoBreak %
   \ifx\gre@empty@highchoralsignstyle\grehighchoralsignstyle%  DEPRECATED
-    \gre@vepisemusorrare{#1}{#3}{}{3}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}% keep this line
+    \gre@vepisemaorrare{#1}{#3}{}{3}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}% keep this line
   \else%  DEPRECATED
     \gre@deprecated{\protect\grehighchoralsignstyle}{\protect\grechangestyle{highchoralsign}}%  DEPRECATED
-    \gre@vepisemusorrare{#1}{#3}{}{3}{\grehighchoralsignstyle{#2}}% DEPRECATED
+    \gre@vepisemaorrare{#1}{#3}{}{3}{\grehighchoralsignstyle{#2}}% DEPRECATED
   \fi% DEPRECATED
   %\gre@hepisorline{#1}{#3}{0}{4}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}
   \relax %
@@ -860,12 +860,12 @@
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the typesetting of vertical episemus
+%% macros for the typesetting of vertical episema
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newbox\gre@box@temp@sign%
 
-% a macro to help typesetting vertical episemus.
+% a macro to help typesetting vertical episema.
 % #1 is an offset glyph (see #3 below)
 % #2 represents the glyph upon which the sign is to be centered
 % #3 is a case number
@@ -882,9 +882,9 @@
 %        the glyph from the start that ends at #1's width from the start
 % #4 is a shift that we want to get applied, useful for punctum inclinatum for example
 % #5 is the glyph number.
-% #6 is the type of sign (1: vertical episemus, 2: rare sign, 3: choral sign)
+% #6 is the type of sign (1: vertical episema, 2: rare sign, 3: choral sign)
 % #7 is the choral sign if relevant
-\def\gre@vepisemusorrareaux#1#2#3#4#5#6#7{%
+\def\gre@vepisemaorrareaux#1#2#3#4#5#6#7{%
   % first we set \gre@dimen@temp@three to the width of the last glyph
   \gre@dimen@temp@three=\gre@dimen@lastglyphwidth\relax%
   \setbox\gre@box@temp@sign=\hbox{\gre@font@music #2}%
@@ -907,8 +907,8 @@
   \kern-\gre@dimen@temp@three % we do it here because of the now-removed ictus (chironomy)
   % then we draw the sign
   \ifcase#6\or %
-    % vertical episemus
-    \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@verticalepisemus}%
+    % vertical episema
+    \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@verticalepisema}%
   \or % rare sign
     \setbox\gre@box@temp@sign=\hbox{\gre@font@music#5}%
   \or % choral sign
@@ -939,17 +939,17 @@
 
 \directlua{gregoriotex.emit_offset_macros()}%
 
-% a function to typeset a vertical episemus or a rare accent (like accentus,
+% a function to typeset a vertical episema or a rare accent (like accentus,
 % circulus, etc.).  This function must be called after a call to \GreGlyph.
-% #1 is the letter of the height of the episemus (not the height of the note
+% #1 is the letter of the height of the episema (not the height of the note
 %    it corresponds to.
 % #2 is note position case as in the table above
 % #3 is the sign glyph
-% #4 is type (1: vertical episemus, 2: rare sign, 3: choral sign, 4: brace above the bar)
+% #4 is type (1: vertical episema, 2: rare sign, 3: choral sign, 4: brace above the bar)
 % #5 is the choral sign if relevant
-\def\gre@vepisemusorrare#1#2#3#4#5{%
+\def\gre@vepisemaorrare#1#2#3#4#5{%
   \ifcase#4\or %
-    % if it is a vertical episemus, we call the normal calculateglyphvalue
+    % if it is a vertical episema, we call the normal calculateglyphvalue
     \gre@calculate@glyphraisevalue{#1}{3}%
   \or %
     % if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.) the first argument is m if the pitch is < k, otherwise it's n.
@@ -971,13 +971,13 @@
   \relax%
 }%
 
-\def\GreVEpisemus#1#2{%
-  \gre@vepisemusorrare{#1}{#2}{\GreCPVEpisemus}{1}{}%
+\def\GreVEpisema#1#2{%
+  \gre@vepisemaorrare{#1}{#2}{\GreCPVEpisema}{1}{}%
   \relax %
 }%
 
 \def\GreBarBrace#1{%
-  \gre@vepisemusorrare{\gre@pitch@g}{#1}{%
+  \gre@vepisemaorrare{\gre@pitch@g}{#1}{%
     \ifgre@drawbraces %
       \hbox{\gre@draw@brace{*}}%
     \else %
@@ -987,52 +987,52 @@
   \relax %
 }%
 
-\def\GreBarVEpisemus#1{%
-  \gre@vepisemusorrare{\gre@pitch@c}{#1}{\GreCPVEpisemus}{1}{}%
+\def\GreBarVEpisema#1{%
+  \gre@vepisemaorrare{\gre@pitch@c}{#1}{\GreCPVEpisema}{1}{}%
   \relax %
 }%
 
 \def\GreAccentus#1#2{%
-  \gre@vepisemusorrare{#1}{#2}{\GreCPAccentus}{2}{}%
+  \gre@vepisemaorrare{#1}{#2}{\GreCPAccentus}{2}{}%
   \relax %
 }%
 
 \def\GreSemicirculus#1#2{%
-  \gre@vepisemusorrare{#1}{#2}{\GreCPSemicirculus}{2}{}%
+  \gre@vepisemaorrare{#1}{#2}{\GreCPSemicirculus}{2}{}%
   \relax %
 }%
 
 \def\GreCirculus#1#2{%
-  \gre@vepisemusorrare{#1}{#2}{\GreCPCirculus}{2}{}%
+  \gre@vepisemaorrare{#1}{#2}{\GreCPCirculus}{2}{}%
   \relax %
 }%
 
 \def\GreReversedAccentus#1#2{%
-  \gre@vepisemusorrare{#1}{#2}{\GreCPAccentusReversus}{2}{}%
+  \gre@vepisemaorrare{#1}{#2}{\GreCPAccentusReversus}{2}{}%
   \relax %
 }%
 
 \def\GreReversedSemicirculus#1#2{%
-  \gre@vepisemusorrare{#1}{#2}{\GreCPSemicirculusReversus}{2}{}%
+  \gre@vepisemaorrare{#1}{#2}{\GreCPSemicirculusReversus}{2}{}%
   \relax %
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the typesetting horizontal episemus
+%% macros for the typesetting horizontal episema
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% a macro that will help in the typesetting of a horizontal episemus and additional lines,
+% a macro that will help in the typesetting of a horizontal episema and additional lines,
 % #1 is an offset glyph (see #3, below)
-% #2 is the episemus glyph
-% #3 is a case number, similar in nature to #3 in gre@vepisemusorrareaux
+% #2 is the episema glyph
+% #3 is a case number, similar in nature to #3 in gre@vepisemaorrareaux
 %    0 : go back to the beginning of the previous glyph; this starts the
-%        episemus at the beginning of the previous glyph
+%        episema at the beginning of the previous glyph
 %    1 : stay at the end of the glyph; doesn't make much sense to use this
-%    2 : go back the width of #1; this starts the episemus at the glyph from
+%    2 : go back the width of #1; this starts the episema at the glyph from
 %        the end that starts at #1's width from the end
 %    3 : go back to the beginning of the previous glyph and then forward the
-%        width of #1; this starts the episemus at the glyph from the start that
+%        width of #1; this starts the episema at the glyph from the start that
 %        starts just after #1's width from the start
 % #4 argument is the same as in hepisorline
 \def\gre@hepisorlineaux#1#2#3#4{%
@@ -1065,10 +1065,10 @@
     \advance\gre@dimen@temp@two by 2\gre@dimen@temp@five %
   \fi %
   \ifcase#4%
-    %case of hepisemus
+    %case of hepisema
     \raise \gre@dimen@glyphraisevalue \copy\gre@box@temp@sign %
   \or %
-    %case of hepisemus at the bottom
+    %case of hepisema at the bottom
     \raise \gre@dimen@glyphraisevalue \copy\gre@box@temp@sign %
   \or % case of a line at the top
     \gre@dimen@glyphraisevalue=\gre@dimen@additionalbottomspace\relax%
@@ -1099,18 +1099,18 @@
   \relax%
 }%
 
-% a function to typeset a horizontal line (additional line or episemus).
+% a function to typeset a horizontal line (additional line or episema).
 % This function must be called after a call to \GreGlyph.
-% #1 is the letter of the height of the episemus (not the height of the note
+% #1 is the letter of the height of the episema (not the height of the note
 % it corresponds to.
 % #2 is note position case as in the table above
-% #3 is the ambitus for a two note episemus at the diagonal stroke of a
+% #3 is the ambitus for a two note episema at the diagonal stroke of a
 %    porrectus, porrectus flexus, orculus resupinus, or torculus resupinus
 %    flexus
-% #4 is 0 for an horizontal episemus, 1 for an horizontal episemus under a
+% #4 is 0 for an horizontal episema, 1 for an horizontal episema under a
 %    note, 3 for a line at the bottom, 2 for a line at the top
-% #5 is f for a normal episemus, l for a small episemus aligned left,
-%    c for a small episemus aligned center, or r for a small episemus
+% #5 is f for a normal episema, l for a small episema aligned left,
+%    c for a small episema aligned center, or r for a small episema
 %    aligned right
 \def\gre@hepisorline#1#2#3#4#5{{%
   \ifcase#4 %
@@ -1132,8 +1132,8 @@
 % dumb top function
 % #6 is a trick for bridges: if we must use a different height because of a
 %    bridge, use #6, otherwise use #1
-\def\GreHEpisemus#1#2#3#4#5#6{%
-  \ifgre@hepisemusbridge%
+\def\GreHEpisema#1#2#3#4#5#6{%
+  \ifgre@hepisemabridge%
     \gre@hepisorline{#6}{#2}{#3}{#4}{#5}%
   \else %
     \gre@hepisorline{#1}{#2}{#3}{#4}{#5}%
@@ -1141,34 +1141,34 @@
   \relax %
 }%
 
-\newif\ifgre@hepisemusbridge
-\gre@hepisemusbridgetrue
+\newif\ifgre@hepisemabridge
+\gre@hepisemabridgetrue
 
-\def\AddHEpisemusBridges{%
-  \gre@deprecated{\protect\AddHEpisemusBridges}{\protect\gresethepisemus{bridge}}%
-  \gre@hepisemusbridgetrue%
+\def\AddHEpisemaBridges{%
+  \gre@deprecated{\protect\AddHEpisemaBridges}{\protect\gresethepisema{bridge}}%
+  \gre@hepisemabridgetrue%
 }%
 
-\def\RemoveHEpisemusBridges{%
-  \gre@deprecated{\protect\RemoveHEpisemusBridges}{\protect\gresethepisemus{break}}%
-  \gre@hepisemusbridgefalse%
+\def\RemoveHEpisemaBridges{%
+  \gre@deprecated{\protect\RemoveHEpisemaBridges}{\protect\gresethepisema{break}}%
+  \gre@hepisemabridgefalse%
 }%
 
-\def\gresethepisemus#1{%
+\def\gresethepisema#1{%
   \IfStrEq{#1}{bridge}%
-    {\gre@hepisemusbridgetrue}%
+    {\gre@hepisemabridgetrue}%
     {\IfStrEq{#1}{break}%
-      {\gre@hepisemusbridgefalse}%
-      {\gre@error{Unrecognized option for \protect\gresethepisemus}}%
+      {\gre@hepisemabridgefalse}%
+      {\gre@error{Unrecognized option for \protect\gresethepisema}}%
     }%
 }%
 
-% same but for a "bridge episemus" after the last note of a glyph (element, syllable) if the next episemus is at the same height
+% same but for a "bridge episema" after the last note of a glyph (element, syllable) if the next episema is at the same height
 % #1 is the height
-% #2 is 0 for episemus above, 1 for episemus below
+% #2 is 0 for episema above, 1 for episema below
 % #3 is the "space case" for the following note, if a punctum inclinatum
-\def\GreHEpisemusBridge#1#2#3{%
-  \ifgre@hepisemusbridge%
+\def\GreHEpisemaBridge#1#2#3{%
+  \ifgre@hepisemabridge%
     \ifcase#2 %
       \gre@calculate@glyphraisevalue{#1}{9}%
     \or %
@@ -1178,7 +1178,7 @@
       \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gre@font@music\gre@char@he@punctum{f}\hss}%
     }{%
       % special handling for punctum inclinatum
-      \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPHEpisemusPunctumReduced}%
+      \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPHEpisemaPunctumReduced}%
       \gre@dimen@temp@four = \wd\gre@box@temp@width\relax %
       \gre@get@spaceskip{#3}%
       % convert rubber length to dimension... not perfect but works in the usual case
@@ -1186,9 +1186,9 @@
       \raise\gre@dimen@glyphraisevalue\hbox to 0pt{%
         \loop\ifdim\gre@dimen@temp@three > 0pt\relax%
           \advance\gre@dimen@temp@three by -\gre@dimen@temp@four\relax %
-          {\gre@font@music\GreCPHEpisemusPunctumReduced}%
+          {\gre@font@music\GreCPHEpisemaPunctumReduced}%
         \repeat %
-        \kern\gre@dimen@temp@three{\gre@font@music\GreCPHEpisemusPunctumReduced}%
+        \kern\gre@dimen@temp@three{\gre@font@music\GreCPHEpisemaPunctumReduced}%
         \hss %
       }%
     }%
@@ -1320,7 +1320,7 @@
 %% 2: is % for now we don't use it
 %%%%%% 0 if it is in a syllable containing only this bar
 %%%%%% 1 if it is in a syllable containing other notes
-%% 3: macros that may happen before the skip after the bar (typically GreVEpisemus)
+%% 3: macros that may happen before the skip after the bar (typically GreVEpisema)
 \def\gre@writebar#1#2#3{%
   % first, for the bar to be really centered, if the last glyph has a punctum
   % mora, we kern of the corresponding space. We do it only in the case
