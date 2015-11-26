@@ -1538,7 +1538,7 @@ EndSplineSet
 Validated: 524289
 EndChar
 
-StartChar: VEpisemus
+StartChar: VEpisema
 Encoding: 64 -1 63
 Width: 36
 VWidth: 1384
@@ -1580,7 +1580,7 @@ EndSplineSet
 Validated: 524289
 EndChar
 
-StartChar: hepisemus_base
+StartChar: hepisema_base
 Encoding: 66 -1 65
 Width: 1
 VWidth: 2048
@@ -1849,7 +1849,7 @@ EndSplineSet
 Validated: 524321
 EndChar
 
-StartChar: VEpisemus.circumflexus
+StartChar: VEpisema.circumflexus
 Encoding: 77 -1 76
 Width: 108
 VWidth: 2048
@@ -2004,7 +2004,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: hepisemusright
+StartChar: hepisemaright
 Encoding: 83 -1 81
 Width: 2
 VWidth: 2048
@@ -3106,7 +3106,7 @@ EndSplineSet
 Validated: 524289
 EndChar
 
-StartChar: hepisemusleft
+StartChar: hepisemaleft
 Encoding: 82 -1 127
 Width: 1
 VWidth: 2048

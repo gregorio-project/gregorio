@@ -343,13 +343,13 @@ static void gabc_write_bar(FILE *f, gregorio_bar type)
 static void gabc_write_bar_signs(FILE *f, gregorio_sign type)
 {
     switch (type) {
-    case _V_EPISEMUS:
+    case _V_EPISEMA:
         fprintf(f, "'");
         break;
-    case _V_EPISEMUS_BAR_H_EPISEMUS:
+    case _V_EPISEMA_BAR_H_EPISEMA:
         fprintf(f, "'_");
         break;
-    case _BAR_H_EPISEMUS:
+    case _BAR_H_EPISEMA:
         fprintf(f, "_");
         break;
     case _NO_SIGN:
@@ -362,8 +362,8 @@ static void gabc_write_bar_signs(FILE *f, gregorio_sign type)
     }
 }
 
-static void gabc_hepisemus(FILE *f, const char *prefix, bool connect,
-        grehepisemus_size size)
+static void gabc_hepisema(FILE *f, const char *prefix, bool connect,
+        grehepisema_size size)
 {
     fprintf(f, "_%s", prefix);
     if (!connect) {
@@ -383,18 +383,18 @@ static void gabc_hepisemus(FILE *f, const char *prefix, bool connect,
         /* nothing to print */
         break;
     default:
-        unsupported("gabc_hepisemus", "hepisemus size",
-                grehepisemus_size_to_string(size));
+        unsupported("gabc_hepisema", "hepisema size",
+                grehepisema_size_to_string(size));
         break;
     }
 }
 
-static const char *vepisemus_position(gregorio_note *note)
+static const char *vepisema_position(gregorio_note *note)
 {
-    if (!note->v_episemus_height) {
+    if (!note->v_episema_height) {
         return "";
     }
-    if (note->v_episemus_height < note->u.note.pitch) {
+    if (note->v_episema_height < note->u.note.pitch) {
         return "0";
     }
     return "1";
@@ -548,14 +548,14 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case _AUCTUM_DUPLEX:
         fprintf(f, "..");
         break;
-    case _V_EPISEMUS:
-        fprintf(f, "'%s", vepisemus_position(note));
+    case _V_EPISEMA:
+        fprintf(f, "'%s", vepisema_position(note));
         break;
-    case _V_EPISEMUS_PUNCTUM_MORA:
-        fprintf(f, "'%s.%s", vepisemus_position(note), mora_vposition(note));
+    case _V_EPISEMA_PUNCTUM_MORA:
+        fprintf(f, "'%s.%s", vepisema_position(note), mora_vposition(note));
         break;
-    case _V_EPISEMUS_AUCTUM_DUPLEX:
-        fprintf(f, "'%s..", vepisemus_position(note));
+    case _V_EPISEMA_AUCTUM_DUPLEX:
+        fprintf(f, "'%s..", vepisema_position(note));
         break;
     case _NO_SIGN:
         /* if there's no sign, don't emit anything */
@@ -589,18 +589,18 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
                 gregorio_sign_to_string(note->special_sign));
         break;
     }
-    if (note->h_episemus_above == HEPISEMUS_AUTO
-            && note->h_episemus_below == HEPISEMUS_AUTO) {
-        gabc_hepisemus(f, "", note->h_episemus_above_connect,
-                note->h_episemus_above_size);
+    if (note->h_episema_above == HEPISEMA_AUTO
+            && note->h_episema_below == HEPISEMA_AUTO) {
+        gabc_hepisema(f, "", note->h_episema_above_connect,
+                note->h_episema_above_size);
     } else {
-        if (note->h_episemus_below == HEPISEMUS_FORCED) {
-            gabc_hepisemus(f, "0", note->h_episemus_below_connect,
-                    note->h_episemus_below_size);
+        if (note->h_episema_below == HEPISEMA_FORCED) {
+            gabc_hepisema(f, "0", note->h_episema_below_connect,
+                    note->h_episema_below_size);
         }
-        if (note->h_episemus_above == HEPISEMUS_FORCED) {
-            gabc_hepisemus(f, "1", note->h_episemus_above_connect,
-                    note->h_episemus_above_size);
+        if (note->h_episema_above == HEPISEMA_FORCED) {
+            gabc_hepisema(f, "1", note->h_episema_above_connect,
+                    note->h_episema_above_size);
         }
     }
     if (note->texverb) {

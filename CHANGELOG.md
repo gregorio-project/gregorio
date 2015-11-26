@@ -172,8 +172,8 @@ See GregorioRef.pdf for full details.
 - `\GreUseZeroHyphen`, supplanted by `\greseteolhyphen{zero}`
 - `\greremoveclef`, supplanted by `\gresetclef{invisible}`
 - `\grenormalclef`, supplanted by `\gresetclef{visible}`
-- `\AddHEpisemusBridges`, supplanted by `\gresethepisemus{bridge}`
-- `\RemoveHEpisemusBridges`, supplanted by `\gresethepisemus{break}`
+- `\AddHEpisemusBridges`, supplanted by `\gresethepisema{bridge}`
+- `\RemoveHEpisemusBridges`, supplanted by `\gresethepisema{break}`
 - `\UseAlternatePunctumCavum`, supplanted by `\gresetpunctumcavum{alternate}`
 - `\UseNormalPunctumCavum`, supplanted by `\gresetpunctumcavum{normal}`
 - `\clivisalignmentalways`, supplanted by `\gresetclivisalignment{always}`

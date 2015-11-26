@@ -149,17 +149,17 @@ ENUM(gregorio_shape, GREGORIO_SHAPE);
 ENUM(gregorio_bar, GREGORIO_BAR);
 
 /* definition of the signs. You can notice that the values are made so
- * that if you wan to add a vertical episemus to a note, you juste
- * make note->signs+=_V_EPISEMUS, so please don't change the value as
+ * that if you wan to add a vertical episema to a note, you juste
+ * make note->signs+=_V_EPISEMA, so please don't change the value as
  * this trick is used. */
 
 #define GREGORIO_SIGN(A,E,X,L) \
     A(_NO_SIGN, 0x00) \
     A(_PUNCTUM_MORA, 0x01) \
     A(_AUCTUM_DUPLEX, 0x02) \
-    A(_V_EPISEMUS, 0x10) \
-    A(_V_EPISEMUS_PUNCTUM_MORA, 0x11) \
-    A(_V_EPISEMUS_AUCTUM_DUPLEX, 0x12) \
+    A(_V_EPISEMA, 0x10) \
+    A(_V_EPISEMA_PUNCTUM_MORA, 0x11) \
+    A(_V_EPISEMA_AUCTUM_DUPLEX, 0x12) \
     /* more rare signs, for now they can't be used with the others */ \
     A(_ACCENTUS, 0x03) \
     A(_ACCENTUS_REVERSUS, 0x04) \
@@ -167,8 +167,8 @@ ENUM(gregorio_bar, GREGORIO_BAR);
     A(_SEMI_CIRCULUS, 0x06) \
     A(_SEMI_CIRCULUS_REVERSUS, 0x07) \
     /* signs of a bar */ \
-    A(_BAR_H_EPISEMUS, 0x08) \
-    X(_V_EPISEMUS_BAR_H_EPISEMUS, 0x18)
+    A(_BAR_H_EPISEMA, 0x08) \
+    X(_V_EPISEMA_BAR_H_EPISEMA, 0x18)
 ENUM(gregorio_sign, GREGORIO_SIGN);
 
 /* the different spaces */
@@ -203,12 +203,12 @@ ENUM(gregorio_space, GREGORIO_SPACE);
     X(L_AUCTA_INITIO_DEBILIS, 0x18)
 ENUM(gregorio_liquescentia, GREGORIO_LIQUESCENTIA);
 
-#define GREHEPISEMUS_SIZE(A,E,X,L) \
+#define GREHEPISEMA_SIZE(A,E,X,L) \
     A(H_NORMAL, 0) \
     E(H_SMALL_LEFT) \
     E(H_SMALL_CENTRE) \
     L(H_SMALL_RIGHT)
-ENUM(grehepisemus_size, GREHEPISEMUS_SIZE);
+ENUM(grehepisema_size, GREHEPISEMA_SIZE);
 
 /* values are chosen so BELOW/ABOVE can be added to a pitch */
 #define GREGORIO_VPOSITION(A,E,X,L) \
@@ -427,22 +427,22 @@ typedef struct gregorio_note {
     /* special_sign is the sign we sometimes encounter on punctum cavum, like
      * accentus, semi-circulus, etc. */
     ENUM_BITFIELD(gregorio_sign) special_sign:8;
-    /* h_episemus_type is the type of horizontal episemus, possible values
-     * are H_ALONE for an isolated horizontal episemus, H_MULTI_BEGINNING
-     * if the note is the first note of an episemus on several notes,
-     * H_MULTI_MIDDLE if it is inside an episemus on several notes. I let
+    /* h_episema_type is the type of horizontal episema, possible values
+     * are H_ALONE for an isolated horizontal episema, H_MULTI_BEGINNING
+     * if the note is the first note of an episema on several notes,
+     * H_MULTI_MIDDLE if it is inside an episema on several notes. I let
      * you guess what could be the use of H_MULTI_END. Other values are
      * temporary values used in determination, they must not appear in the
      * final structure. */
 
     const char *gtex_offset_case;
-    signed char v_episemus_height;
-    signed char h_episemus_above;
-    signed char h_episemus_below;
-    ENUM_BITFIELD(grehepisemus_size) h_episemus_above_size:2;
-    ENUM_BITFIELD(grehepisemus_size) h_episemus_below_size:2;
-    bool h_episemus_above_connect:1;
-    bool h_episemus_below_connect:1;
+    signed char v_episema_height;
+    signed char h_episema_above;
+    signed char h_episema_below;
+    ENUM_BITFIELD(grehepisema_size) h_episema_above_size:2;
+    ENUM_BITFIELD(grehepisema_size) h_episema_below_size:2;
+    bool h_episema_above_connect:1;
+    bool h_episema_below_connect:1;
     bool is_lower_note:1;
     bool is_upper_note:1;
     ENUM_BITFIELD(gregorio_vposition) mora_vposition:2;
@@ -745,9 +745,9 @@ static __inline bool is_initio_debilis(char liquescentia)
     return liquescentia >= L_INITIO_DEBILIS;
 }
 
-#define HEPISEMUS_NONE 0
-#define HEPISEMUS_AUTO -1
-#define HEPISEMUS_FORCED -2
+#define HEPISEMA_NONE 0
+#define HEPISEMA_AUTO -1
+#define HEPISEMA_FORCED -2
 
 /* The first pitch MUST be an odd number */
 #define LOWEST_PITCH 3
@@ -774,13 +774,13 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         bool first_word);
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
-void gregorio_position_h_episemus_above(gregorio_note *note, signed char height,
+void gregorio_position_h_episema_above(gregorio_note *note, signed char height,
         bool connect);
-void gregorio_position_h_episemus_below(gregorio_note *note, signed char height,
+void gregorio_position_h_episema_below(gregorio_note *note, signed char height,
         bool connect);
-void gregorio_add_h_episemus(gregorio_note *note, grehepisemus_size size,
+void gregorio_add_h_episema(gregorio_note *note, grehepisema_size size,
         gregorio_vposition vposition, bool disable_bridge,
-        unsigned int *nbof_isolated_episemus);
+        unsigned int *nbof_isolated_episema);
 void gregorio_add_sign(gregorio_note *note, gregorio_sign sign,
         gregorio_vposition vposition);
 void gregorio_add_liquescentia(gregorio_note *note,
