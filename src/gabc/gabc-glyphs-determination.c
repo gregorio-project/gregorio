@@ -732,16 +732,16 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
 
             case GRE_BAR:
                 /* we calculate the signs of the bars */
-                if (current_note->signs == _V_EPISEMUS) {
-                    sign = _V_EPISEMUS;
+                if (current_note->signs == _V_EPISEMA) {
+                    sign = _V_EPISEMA;
                 } else {
                     sign = current_note->special_sign;
                 }
-                if (current_note->h_episemus_above) {
-                    if (sign == _V_EPISEMUS) {
-                        sign = _V_EPISEMUS_BAR_H_EPISEMUS;
+                if (current_note->h_episema_above) {
+                    if (sign == _V_EPISEMA) {
+                        sign = _V_EPISEMA_BAR_H_EPISEMA;
                     } else {
-                        sign = _BAR_H_EPISEMUS;
+                        sign = _BAR_H_EPISEMA;
                     }
                 }
                 break;
