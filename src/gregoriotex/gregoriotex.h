@@ -97,11 +97,11 @@ typedef enum gtex_glyph_liquescentia {
 } gtex_glyph_liquescentia;
 
 typedef enum gtex_sign_type {
-    ST_H_EPISEMUS = 0,
-    ST_V_EPISEMUS = 1
+    ST_H_EPISEMA = 0,
+    ST_V_EPISEMA = 1
 } gtex_sign_type;
 
-#define HEPISEMUS_FIRST_TWO 12
+#define HEPISEMA_FIRST_TWO 12
 
 static __inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
         const gregorio_note *const note, bool *const kind_of_pes)
@@ -152,8 +152,8 @@ static __inline bool is_between_lines(const char pitch)
     return pitch % 2 == 1;
 }
 
-bool gtex_is_h_episemus_above_shown(const gregorio_note *const note);
-bool gtex_is_h_episemus_below_shown(const gregorio_note *const note);
+bool gtex_is_h_episema_above_shown(const gregorio_note *const note);
+bool gtex_is_h_episema_below_shown(const gregorio_note *const note);
 const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         const gregorio_element *const element, gtex_alignment *const  type,
         gtex_type *const gtype);

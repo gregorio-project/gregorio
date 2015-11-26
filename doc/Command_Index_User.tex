@@ -454,12 +454,12 @@ will be scaled.
   & string & The name of the glyph to use.
 \end{argtable}
 
-\macroname{\textbackslash gresethepisemus}{\{\#1\}}{gregoriotex-signs.tex}
-Determines whether Gregorio\TeX\ should join (bridge) horizontal episema on adjacent notes.
+\macroname{\textbackslash gresethepisema}{\{\#1\}}{gregoriotex-signs.tex}
+Determines whether Gregorio\TeX\ should join (bridge) horizontal episemata on adjacent notes.
 
 \begin{argtable}
-  \#1 & \texttt{bridge} & Adjacent horizontal episema are joined together (default).\\
-  & \texttt{break} & Adjacent horizontal episema are not joined.
+  \#1 & \texttt{bridge} & Adjacent horizontal episemata are joined together (default).\\
+  & \texttt{break} & Adjacent horizontal episemata are not joined.
 \end{argtable}
 
 \macroname{\textbackslash gresetpunctumcavum}{\{\#1\}}{gregoriotex-signs.tex}
@@ -542,7 +542,6 @@ For example:
 \end{footnotesize}
 
 \gredefbarredsymbol{RBarBold}{\textbf{R}}{greRBarSmall}{13}{1.7mm}{0.1mm}
-
 Will define \texttt{\textbackslash RBarBold} to be a bold \textbf{R} with 
 the bar made for small text (a bit bolder, named \texttt{RBarSmall} in greextra)
 , at 12pt, shifted right of \texttt{1.7mm} from the beginning of the glyph, and lowered down
