@@ -233,9 +233,6 @@ static void gabc_write_end_liquescentia(FILE *f, char liquescentia)
         || liquescentia == L_AUCTUS_DESCENDENS_INITIO_DEBILIS) {
         fprintf(f, ">");
     }
-    if (liquescentia == L_AUCTA || liquescentia == L_AUCTA_INITIO_DEBILIS) {
-        fprintf(f, "<");
-    }
 }
 
 /*

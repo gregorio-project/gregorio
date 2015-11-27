@@ -272,10 +272,9 @@ static void fix_punctum_cavum_inclinatum_liquescentia(gregorio_note *const note)
     switch (note->u.note.liquescentia) {
     case L_AUCTUS_ASCENDENS:
     case L_AUCTUS_DESCENDENS:
-    case L_AUCTA:
     case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
     case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
-        note->u.note.liquescentia = L_AUCTA;
+        note->u.note.liquescentia = L_AUCTUS_ASCENDENS;
         break;
     default:
         note->u.note.liquescentia = L_NO_LIQUESCENTIA;
@@ -306,13 +305,11 @@ void gregorio_change_shape(gregorio_note *note, gregorio_shape shape)
         case S_DISTROPHA:
         case S_TRISTROPHA:
             switch (note->u.note.liquescentia) {
-            case L_AUCTUS_ASCENDENS:
             case L_AUCTUS_DESCENDENS:
-                note->u.note.liquescentia = L_AUCTA;
+                note->u.note.liquescentia = L_AUCTUS_ASCENDENS;
                 break;
-            case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
             case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
-                note->u.note.liquescentia = L_AUCTA_INITIO_DEBILIS;
+                note->u.note.liquescentia = L_AUCTUS_ASCENDENS_INITIO_DEBILIS;
                 break;
             default:
                 break;
@@ -361,9 +358,6 @@ void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
         case L_AUCTUS_DESCENDENS:
             note->u.note.liquescentia = L_AUCTUS_DESCENDENS_INITIO_DEBILIS;
             break;
-        case L_AUCTA:
-            note->u.note.liquescentia = L_AUCTA_INITIO_DEBILIS;
-            break;
         default:
             /* do nothing */
             break;
@@ -376,13 +370,11 @@ void gregorio_add_liquescentia(gregorio_note *note, gregorio_liquescentia liq)
     case S_DISTROPHA:
     case S_TRISTROPHA:
         switch (note->u.note.liquescentia) {
-        case L_AUCTUS_ASCENDENS:
         case L_AUCTUS_DESCENDENS:
-            note->u.note.liquescentia = L_AUCTA;
+            note->u.note.liquescentia = L_AUCTUS_ASCENDENS;
             break;
-        case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
         case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
-            note->u.note.liquescentia = L_AUCTA_INITIO_DEBILIS;
+            note->u.note.liquescentia = L_AUCTUS_ASCENDENS_INITIO_DEBILIS;
             break;
         default:
             break;

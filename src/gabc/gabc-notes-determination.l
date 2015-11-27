@@ -603,13 +603,13 @@ r5  {
         lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
 [a-mA-M]ss(\<|\>) {
-        lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_AUCTA);
+        lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_AUCTUS_ASCENDENS);
     }
 [a-mA-M]sss {
         lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
 [a-mA-M]sss(\<|\>) {
-        lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTA);
+        lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTUS_ASCENDENS);
     }
 [a-mA-M] {
         lex_add_note(0, punctum(gabc_notes_determination_text[0]), _NO_SIGN,

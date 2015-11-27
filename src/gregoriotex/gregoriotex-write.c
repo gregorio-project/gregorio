@@ -256,7 +256,8 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         return "OriscusScapusLongqueue";
     case S_STROPHA:
         *type = AT_STROPHA;
-        if (note->u.note.liquescentia == L_AUCTA) {
+        if (note->u.note.liquescentia &
+                (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
             return "StrophaAucta";
         }
         return "Stropha";
@@ -287,27 +288,12 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
  * 'InitioDebilisAscendens'
  * 'InitioDebilisDescendens'
  * 
- * If it is an auctus, which may be ascendens or descendens, by default we
- * consider it as an ascendens
- * 
  * They also are and must be the same as in squarize.py.
  */
 
 static const char *gregoriotex_determine_liquescentia(gtex_glyph_liquescentia type,
         gregorio_liquescentia liquescentia)
 {
-    switch (liquescentia) {
-    case L_AUCTA:
-        liquescentia = L_AUCTUS_ASCENDENS;
-        break;
-    case L_AUCTA_INITIO_DEBILIS:
-        liquescentia = L_AUCTUS_ASCENDENS_INITIO_DEBILIS;
-        break;
-    default:
-        /* do nothing */
-        break;
-    }
-
     switch (type) {
     case LG_ALL:
         break;
@@ -348,7 +334,6 @@ static const char *gregoriotex_determine_liquescentia(gtex_glyph_liquescentia ty
         return "Deminutus";
     case L_AUCTUS_ASCENDENS:
         return "Ascendens";
-    case L_AUCTA:
     case L_AUCTUS_DESCENDENS:
         return "Descendens";
     case L_INITIO_DEBILIS:
@@ -357,9 +342,10 @@ static const char *gregoriotex_determine_liquescentia(gtex_glyph_liquescentia ty
         return "InitioDebilisDeminutus";
     case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
         return "InitioDebilisAscendens";
-    case L_AUCTA_INITIO_DEBILIS:
     case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
         return "InitioDebilisDescendens";
+    case L_FUSED:
+    case L_FUSED_INITIO_DEBILIS:
     case L_NO_LIQUESCENTIA:
         /* break out and return "Nothing" */
         break;
@@ -1851,7 +1837,6 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
             note->u.note.shape = S_PUNCTUM_AUCTUS_ASCENDENS;
             break;
         case L_AUCTUS_DESCENDENS:
-        case L_AUCTA:
             note->u.note.shape = S_PUNCTUM_AUCTUS_DESCENDENS;
             break;
         case L_DEMINUTUS:
@@ -2280,7 +2265,6 @@ static char *determine_leading_shape(gregorio_glyph *glyph)
     case L_DEMINUTUS_INITIO_DEBILIS:
     case L_AUCTUS_ASCENDENS_INITIO_DEBILIS:
     case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
-    case L_AUCTA_INITIO_DEBILIS:
         head_liquescence = "InitioDebilis";
         break;
     default:
@@ -2437,7 +2421,6 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
                         S_PUNCTUM_AUCTUS_ASCENDENS;
                 break;
             case L_AUCTUS_DESCENDENS:
-            case L_AUCTA:
                 glyph->u.notes.first_note->u.note.shape =
                         S_PUNCTUM_AUCTUS_DESCENDENS;
                 break;

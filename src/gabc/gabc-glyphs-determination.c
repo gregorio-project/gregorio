@@ -834,8 +834,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                         current_note->u.note.shape =
                                 S_PUNCTUM_INCLINATUM_DEMINUTUS;
                     }
-                    if (current_note->u.note.liquescentia == L_AUCTA
-                            || current_note->u.note.liquescentia ==
+                    if (current_note->u.note.liquescentia ==
                             L_AUCTUS_DESCENDENS
                             || current_note->u.note.liquescentia ==
                             L_AUCTUS_ASCENDENS) {
@@ -856,7 +855,6 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                 }
                 if (current_note->u.note.shape == S_PUNCTUM_CAVUM_INCLINATUM) {
                     switch (current_note->u.note.liquescentia) {
-                    case L_AUCTA:
                     case L_AUCTUS_DESCENDENS:
                     case L_AUCTUS_ASCENDENS:
                     case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:
@@ -913,8 +911,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                         current_note->u.note.shape =
                                 S_PUNCTUM_INCLINATUM_DEMINUTUS;
                     }
-                    if (current_note->u.note.liquescentia == L_AUCTA
-                            || current_note->u.note.liquescentia ==
+                    if (current_note->u.note.liquescentia ==
                             L_AUCTUS_DESCENDENS
                             || current_note->u.note.liquescentia ==
                             L_AUCTUS_ASCENDENS) {
@@ -933,7 +930,6 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                 }
                 if (current_note->u.note.shape == S_PUNCTUM_CAVUM_INCLINATUM) {
                     switch (current_note->u.note.liquescentia) {
-                    case L_AUCTA:
                     case L_AUCTUS_DESCENDENS:
                     case L_AUCTUS_ASCENDENS:
                     case L_AUCTUS_DESCENDENS_INITIO_DEBILIS:

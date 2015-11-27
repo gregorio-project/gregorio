@@ -142,7 +142,7 @@ static __inline const char *last_note_case(
     }
     if (current_note->previous->u.note.pitch < current_note->u.note.pitch) {
         if (current_glyph->u.notes.liquescentia &
-                (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
+                (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
             return FinalConnectedAuctus;
         } else {
             return FinalConnectedVirga;
@@ -187,7 +187,7 @@ static __inline gregorio_vposition above_if_auctus(
         const gregorio_glyph *const glyph)
 {
     if (glyph->u.notes.liquescentia &
-            (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
+            (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
         return VPOS_ABOVE;
     }
     return VPOS_BELOW;
@@ -197,7 +197,7 @@ static __inline gregorio_vposition below_if_auctus(
         const gregorio_glyph *const glyph)
 {
     if (glyph->u.notes.liquescentia &
-            (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
+            (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
         return VPOS_BELOW;
     }
     return VPOS_ABOVE;
@@ -238,7 +238,7 @@ static __inline void low_high_set_lower(const gregorio_glyph *const glyph,
 {
     if ((glyph->u.notes.liquescentia & L_DEMINUTUS) ||
             !(glyph->u.notes.liquescentia
-                & (L_AUCTUS_ASCENDENS|L_AUCTUS_DESCENDENS|L_AUCTA))) {
+                & (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS))) {
         note->is_lower_note = true;
     }
 }
@@ -248,7 +248,7 @@ static __inline void low_high_set_upper(const gregorio_glyph *const glyph,
 {
     if ((glyph->u.notes.liquescentia & L_DEMINUTUS) ||
             !(glyph->u.notes.liquescentia
-                & (L_AUCTUS_ASCENDENS|L_AUCTUS_DESCENDENS|L_AUCTA))) {
+                & (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS))) {
         note->is_upper_note = true;
     }
 }
@@ -540,7 +540,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         case HEPISEMA_FIRST_TWO:
         case 2:
             if (glyph->u.notes.liquescentia &
-                    (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
+                    (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
                 /* auctus */
                 if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
                     note->gtex_offset_case = TorcResDebilisAuctusSecondAnyAny;
@@ -675,7 +675,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         case HEPISEMA_FIRST_TWO:
         case 1:
             if (glyph->u.notes.liquescentia &
-                    (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS | L_AUCTA)) {
+                    (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
                 /* auctus */
                 note->gtex_offset_case = PorrAuctusInitialAny;
             } else if (note->next->next->u.note.pitch -
@@ -695,7 +695,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
                 note->gtex_offset_case = PenultBeforeDeminutus;
             } else if (glyph->u.notes.liquescentia
-                    & (L_AUCTUS_ASCENDENS|L_AUCTUS_DESCENDENS|L_AUCTA)) {
+                    & (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
                 note->gtex_offset_case = PenultBeforePunctumWide;
             } else {
                 note->gtex_offset_case = FinalPunctum;

@@ -195,12 +195,12 @@ ENUM(gregorio_space, GREGORIO_SPACE);
     A(L_DEMINUTUS, 0x01) \
     A(L_AUCTUS_ASCENDENS, 0x02) \
     A(L_AUCTUS_DESCENDENS, 0x04) \
-    A(L_AUCTA, 0x08) \
+    A(L_FUSED, 0x08) \
     A(L_INITIO_DEBILIS, 0x10) \
     A(L_DEMINUTUS_INITIO_DEBILIS, 0x11) \
     A(L_AUCTUS_ASCENDENS_INITIO_DEBILIS, 0x12) \
     A(L_AUCTUS_DESCENDENS_INITIO_DEBILIS, 0x14) \
-    X(L_AUCTA_INITIO_DEBILIS, 0x18)
+    X(L_FUSED_INITIO_DEBILIS, 0x18)
 ENUM(gregorio_liquescentia, GREGORIO_LIQUESCENTIA);
 
 #define GREHEPISEMA_SIZE(A,E,X,L) \
@@ -737,7 +737,7 @@ static __inline bool is_puncta_inclinata(char glyph)
 static __inline bool is_liquescentia(char liquescentia)
 {
     return liquescentia == L_DEMINUTUS || liquescentia == L_AUCTUS_ASCENDENS
-        || liquescentia == L_AUCTUS_DESCENDENS || liquescentia == L_AUCTA;
+        || liquescentia == L_AUCTUS_DESCENDENS;
 }
 
 static __inline bool is_initio_debilis(char liquescentia)
