@@ -339,6 +339,14 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         case G_VIRGA_STRATA:
             if (current_pitch > last_pitch) {
                 next_glyph_type = G_SALICUS;
+            } else {
+                next_glyph_type = G_PUNCTUM;
+                *end_of_glyph = DET_END_OF_PREVIOUS;
+            }
+            break;
+        case G_SALICUS:
+            if (current_pitch < last_pitch) {
+                next_glyph_type = G_SALICUS_FLEXUS;
                 *end_of_glyph = DET_END_OF_CURRENT;
             } else {
                 next_glyph_type = G_PUNCTUM;

@@ -259,15 +259,6 @@ optional argument.
   \#1 & string & Snippet of gabc code.\\
 \end{argtable}
 
-\macroname{\textbackslash gre@gabcsnippet@option}{[\#1]\#2}{gregoriotex-main.tex}
-Macro that handles \verb=\gabcsnippet= calls when they have an optional
-argument.
-
-\begin{argtable}
-  \#1 & int & Value of initial style to be passed to gregorio \\
-  \#2 & string & Snippet of gabc code.\\
-\end{argtable}
-
 \macroname{\textbackslash gre@writemode}{\#1}{gregoriotex-main.tex}
 Macro that writes its argument with \verb=\greannotation=. The
 argument typically is given to this macro by \verb=\GreMode= in the
@@ -369,6 +360,27 @@ Macro to pick the appropriate custos character.
   \#1 & integer & height of the custos character to be placed\\
 \end{argtable}
 
+\macroname{\textbackslash gre@beginnotes}{}{gregoriotex-main.tex}
+Macro to draw the staff lines.  Comes after the initial but before the clef.
+
+\macroname{\textbackslash gre@noinitial}{}{gregoriotex-main.tex}
+Macro called when no initial is being set.
+
+\macroname{\textbackslash gre@setbiginitial}{}{gregoriotex-main.tex}
+Macro which indicates that a 2-line initial is desired.
+
+\macroname{\textbackslash gre@setinitial}{\#1}{gregoriotex-main.tex}
+Macro to set the initial in the score.
+
+\macroname{\textbackslash gre@adjustsecondline}{}{gregoriotex.tex}
+Macro to call before first syllable, but after \verb=\GreSetInitialClef=.
+
+\macroname{\textbackslash gre@adjustthirdline}{}{gregoriotex-main.tex}
+Macro to call during the second line.
+
+\macroname{\textbackslash gre@adjustlineifnecessary}{}{gregoriotex-main.tex}
+Macro that calls \verb=\gre@adjustthirdline= if indicated by \verb=\ifgre@thirdlineadjustmentnecessary=.
+
 \macroname{\textbackslash gre@addspaceabove}{}{gregoriotex-main.tex}
 Macro to increase the space above the lines to account for above lines text.
 
@@ -458,6 +470,24 @@ Macro called at end of a syllable, adds a penalty and a space.
   & \texttt{0} & otherwise\\
 \end{argtable}
 
+\macroname{\textbackslash gre@setfirstsyllabletext}{\#1\#2\#3\#4\#5\#6}{gregoriotex-syllable.tex}
+Internal macro to set the first syllable text after all parts are known.
+
+\begin{argtable}
+  \#1 & \TeX\ code & First part of the syllable (before the vowel)\\
+  \#2 & \TeX\ code & Middle part of the syllable (the vowel)\\
+  \#3 & \TeX\ code & Last part of the syllable (after the vowel)\\
+  \#4 & \TeX\ code & First letter of the syllable\\
+  \#5 & \TeX\ code & Everything after the first letter of the syllable\\
+  \#6 & \TeX\ code & Macros to run after the text is emitted\\
+\end{argtable}
+
+\macroname{\textbackslash gre@opening@syllabletext}{}{gregoriotex-syllable.tex}
+Macro that stores the computed \TeX\ code for rendering the text of the first syllable.
+
+\macroname{\textbackslash gre@opening@initialstyle}{}{gregoriotex-syllable.tex}
+Macro used by \verb=GreSetInitialStyle= to store the initial style
+
 \macroname{\textbackslash gre@exhyphencharsave}{}{gregoriotex-main.tex}
 Macro for saving the ex hyphen character so that it can be restored at the end of the score.
 
@@ -518,6 +548,7 @@ Macro to typeset a horizontal line (either an additional staff line or an episem
   & \texttt{1} & stay at the end of the glyph; doesn’t make much sense to use this\\
   & \texttt{2} & go back the width of \#1; this starts the episema at the glyph from the end that starts at \#1’s width from the end\\
   & \texttt{3} & go back to the beginning of the previous glyph and then forward the width of \#1; this starts the episema at the glyph from the start that starts just after \#1’s width from the start\\
+  & \texttt{4} & go back to the beginning of the previous glyph and then forward the width of \#1, then back the width of \#2; this ends the episema at the end of \#1\\
   \#3 & integer &the ambitus for a two note episema at the diagonal stroke of a porrectus, porrectus flexus, orculus resupinus, or torculus resupinus flexus\\
   \#4 & \texttt{0} & an horizontal episema\\
   & \texttt{1} & an horizontal episema under a note\\
@@ -941,9 +972,6 @@ The font for some of the extra characters, such as the bar for barred letters.
 \macroname{\textbackslash gre@font@nabc}{}{gregoriotex-nabc.tex}
 The font for ancient notation.
 
-\macroname{\textbackslash gre@font@biginitial}{}{gregoriotex.tex}
-The font for the default big initial format in Plain \TeX.
-
 \macroname{\textbackslash gre@font@initial}{}{gregoriotex.tex}
 The font for the default initial format in Plain \TeX.
 
@@ -1207,6 +1235,9 @@ Boolean which indicates that a hyphen after an empty first syllable should be fo
 
 \macroname{\textbackslash ifgre@showhyphenafterthissyllable}{}{gregoriotex-syllable.tex}
 Boolean used by \verb=\GreSyllable= to decide if a hyphen should be shown after the syllable.
+
+\macroname{\textbackslash ifgre@thirdlineadjustmentnecessary}{}{gregoriotex-syllable.tex}
+Boolean which indicates that a third-line adjustment to staff line width is necessary.
 
 \macroname{\textbackslash ifgre@scale@stafflinefactor}{}{gregoriotex-spaces.tex}
 Boolean indicating whether the stafflinefactor should scale with changes of \texttt{grefactor}, or not.

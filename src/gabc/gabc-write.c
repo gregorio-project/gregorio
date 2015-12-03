@@ -780,19 +780,15 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->text) {
         /* we call the magic function (defined in struct_utils.c), that will
          * write our text. */
-        gregorio_write_text(false, syllable->text, f,
-                            (&gabc_write_verb),
-                            (&gabc_print_char),
-                            (&gabc_write_begin),
-                            (&gabc_write_end), (&gabc_write_special_char));
+        gregorio_write_text(WTP_NORMAL, syllable->text, f, &gabc_write_verb,
+                &gabc_print_char, &gabc_write_begin, &gabc_write_end,
+                &gabc_write_special_char);
     }
     if (syllable->translation) {
         fprintf(f, "[");
-        gregorio_write_text(false, syllable->translation, f,
-                            (&gabc_write_verb),
-                            (&gabc_print_char),
-                            (&gabc_write_begin),
-                            (&gabc_write_end), (&gabc_write_special_char));
+        gregorio_write_text(WTP_NORMAL, syllable->translation, f,
+                &gabc_write_verb, &gabc_print_char, &gabc_write_begin,
+                &gabc_write_end, &gabc_write_special_char);
         fprintf(f, "]");
     }
     fprintf(f, "(");
@@ -872,9 +868,6 @@ void gabc_write_score(FILE *f, gregorio_score *score)
             fprintf(f, "annotation: %s;\n",
                     score->annotation[annotation_num]);
         }
-    }
-    if (score->initial_style != NORMAL_INITIAL) {
-        fprintf(f, "initial-style: %d;\n", score->initial_style);
     }
     gabc_write_str_attribute(f, "user-notes", score->user_notes);
     if (score->number_of_voices == 0) {

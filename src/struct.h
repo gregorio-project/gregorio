@@ -260,6 +260,7 @@ ENUM(gregorio_vposition, GREGORIO_VPOSITION);
     E(G_PUNCTA_DESCENDENS) \
     E(G_VIRGA_REVERSA) \
     E(G_SALICUS) \
+    E(G_SALICUS_FLEXUS) \
     E(G_VIRGA_STRATA) \
     E(G_TORCULUS_LIQUESCENS) \
     /* additional glyph types, necessary for determination */ \
@@ -666,7 +667,7 @@ typedef struct gregorio_score {
     char *annotation[MAX_ANNOTATIONS];
     /* field giving informations on the initial (no initial, normal initial 
      * or two lines initial) */
-    char initial_style;
+    signed char initial_style;
     /* the font to use in gregoriotex */
     char *gregoriotex_font;
     size_t nabc_lines;
@@ -714,11 +715,8 @@ typedef struct gregorio_voice_info {
 
 #define MONOPHONY 0
 
-/* the different initial styles */
-
-#define NO_INITIAL 0
-#define NORMAL_INITIAL 1
-#define BIG_INITIAL 2
+/* the different initial styles - DEPRECATED by 4.1 */
+#define INITIAL_NOT_SPECIFIED -1
 
 #define NO_ALTERATION USELESS_VALUE
 #define FLAT GRE_FLAT
@@ -790,7 +788,8 @@ void gregorio_free_voice_infos(gregorio_voice_info *voice_info);
 void gregorio_free_one_note(gregorio_note **note);
 void gregorio_free_one_glyph(gregorio_glyph **glyph);
 void gregorio_free_score(gregorio_score *score);
-void gregorio_go_to_first_character(gregorio_character **character);
+void gregorio_free_characters(gregorio_character *current_character);
+void gregorio_go_to_first_character(const gregorio_character **character);
 void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
         gregorio_type type, signed char pitch, bool flatted_key,
         bool force_pitch, char *texverb);
@@ -867,8 +866,14 @@ void gregorio_begin_style(gregorio_character **current_character,
         grestyle_style style);
 void gregorio_end_style(gregorio_character **current_character,
         grestyle_style style);
+gregorio_character *gregorio_clone_characters(const gregorio_character *source);
 signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph);
 const char *gregorio_unknown(int value);
+
+static __inline void gregorio_go_to_first_character_c(gregorio_character **character)
+{
+    gregorio_go_to_first_character((const gregorio_character **)character);
+}
 
 #endif

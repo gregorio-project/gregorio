@@ -35,7 +35,7 @@ static const char *dump_style_to_string(grestyle_style style)
     return buf;
 }
 
-static void dump_write_characters(FILE *const f,
+void dump_write_characters(FILE *const f,
         const gregorio_character * current_character)
 {
     while (current_character) {
@@ -171,9 +171,6 @@ void dump_write_score(FILE *f, gregorio_score *score)
     }
     if (score->mode) {
         fprintf(f, "   mode                      %d\n", score->mode);
-    }
-    if (score->initial_style) {
-        fprintf(f, "   initial_style             %d\n", score->initial_style);
     }
     if (score->nabc_lines) {
         fprintf (f, "   nabc_lines                %d\n", (int)score->nabc_lines);

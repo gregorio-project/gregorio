@@ -414,24 +414,23 @@ static void gregorio_set_translation_center_beginning(
 
 static void rebuild_characters(void)
 {
-    bool has_initial = score->initial_style != NO_INITIAL;
-
     /* we rebuild the first syllable text if it is the first syllable, or if
      * it is the second when the first has no text.
      * it is a patch for cases like (c4) Al(ab)le(ab) */
-    if ((!score->first_syllable && has_initial && current_character)
+    if ((!score->first_syllable && current_character)
             || (current_syllable && !current_syllable->previous_syllable
             && !current_syllable->text && current_character)) {
-        gregorio_rebuild_first_syllable(&current_character, has_initial);
+        /* leave the first syllable text untouched at this time */
+        gregorio_go_to_first_character_c(&current_character);
 
         started_first_word = true;
-    }
+    } else {
+        gregorio_rebuild_characters(&current_character, center_is_determined,
+                false);
 
-    gregorio_rebuild_characters(&current_character, center_is_determined,
-            has_initial);
-
-    if (started_first_word) {
-        gregorio_set_first_word(&current_character);
+        if (started_first_word) {
+            gregorio_set_first_word(&current_character);
+        }
     }
 }
 
@@ -660,7 +659,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
 %token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES
-%token LANGUAGE
+%token LANGUAGE END_OF_FILE
 
 %%
 
@@ -818,6 +817,10 @@ nabc_lines_definition:
 initial_style_definition:
     INITIAL_STYLE attribute {
         if ($2.text) {
+            /* DEPRECATED by 4.1 */
+            gregorio_message("\"initial-style\" header is deprecated. Please "
+            "use \\gresetinitiallines in TeX instead.",
+            "gabc_score_determination_parse", VERBOSITY_DEPRECATION, 0);
             score->initial_style=atoi($2.text);
             free($2.text);
         }
@@ -1004,7 +1007,7 @@ note:
         voice=0;
         nabc_state=0;
     }
-    | NOTES CLOSING_BRACKET_WITH_SPACE {
+    | NOTES closing_bracket_with_space {
         if (voice<number_of_voices) {
             gabc_y_add_notes($1.text, @1);
             free($1.text);
@@ -1058,12 +1061,18 @@ note:
         voice=0;
         nabc_state=0;
     }
-    | CLOSING_BRACKET_WITH_SPACE {
+    | closing_bracket_with_space {
         elements[voice]=NULL;
         voice=0;
         nabc_state=0;
         update_position_with_space();
     }
+    ;
+
+closing_bracket_with_space:
+    CLOSING_BRACKET_WITH_SPACE
+    | CLOSING_BRACKET_WITH_SPACE END_OF_FILE
+    | CLOSING_BRACKET END_OF_FILE
     ;
 
 style_beginning:

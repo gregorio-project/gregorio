@@ -25,12 +25,14 @@
 #include <string.h>
 #include "struct.h"
 #include "messages.h"
+#include "bool.h"
 
 #include "gabc.h"
 #include "gabc-score-determination.h"
 #include "gabc-score-determination-y.h"
 
 static unsigned char style_stack = 0;
+static bool eof_found = false;
 
 #define YY_NO_INPUT
 
@@ -411,6 +413,14 @@ semicolon. */
 <notes>\)(\ |\t|\n|\r)+ {
         BEGIN(score);
         return CLOSING_BRACKET_WITH_SPACE;
+    }
+<<EOF>> {
+        if (!eof_found) {
+            eof_found = true;
+            return END_OF_FILE;
+        } else {
+            yyterminate();
+        }
     }
 %%
 
