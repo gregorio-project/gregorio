@@ -6,6 +6,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Changed
 - Initial handling has been simplified.  The initial style should now be specified from TeX by using the `\gresetinitiallines` command, rather than from a gabc header.  Big initials and normal initials are now governed by a single `initial` style, meant to be changed between scores as appropriate.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#632](https://github.com/gregorio-project/gregorio/issues/632)).  Deprecations for this change are listed in the Deprecation section, below.
 
+### Added
+- Salicus flexus glyphs (See [#631](https://github.com/gregorio-project/gregorio/issues/631)).
+
 ### Deprecated
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
 - `biginitial` style, consolidated into the `initial` style.
