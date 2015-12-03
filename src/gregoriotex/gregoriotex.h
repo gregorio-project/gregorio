@@ -55,6 +55,7 @@ typedef enum gtex_type {
     T_SALICUS,
     T_SALICUS_LONGQUEUE,
     /* four note neumes */
+    T_SALICUS_FLEXUS,
     T_PORRECTUS_FLEXUS,
     T_TORCULUS_RESUPINUS,
     T_TORCULUS_LIQUESCENS,

@@ -35,12 +35,7 @@ use strict;
 
 ## USER-MODIFIABLE COMMAND PATHS
 
-# search for a PDF viewer among these file paths; take the first
-my @PDFVIEWERS = grep { -e $_ && -x $_ } 
-   ("/usr/bin/kpdf","/usr/bin/okular","/usr/local/bin/acroread","/usr/bin/acroread");
-my $PDFVIEWER = $PDFVIEWERS[0];
-
-my $TEXCOMPILER = "lualatex";
+my $TEXCOMPILER = "lualatex --shell-escape";
 
 ## END OF USER-MODIFIABLE COMMAND PATHS
 
@@ -53,6 +48,8 @@ if ($#ARGV < 0) {
 
 
 my $GABCFILE = $ARGV[0];
+my $GABCNAME = $GABCFILE;
+$GABCNAME =~ s/.gabc//;
 my $SCORENAME; 
 my $ANNOTATION;
 my $REFERENCE;
@@ -62,11 +59,8 @@ my $KEEPSEARCHING = 1;
 my $INLINE = "";
 
 
-my $SCORETEXFILE = $GABCFILE;
-$SCORETEXFILE =~ s/gabc$/tex/;
-
-my $SCOREWRAPTEX = $SCORETEXFILE;
-$SCOREWRAPTEX =~ s/.tex$/-main.tex/;
+my $SCOREWRAPTEX = $GABCFILE;
+$SCOREWRAPTEX =~ s/.gabc$/-main.tex/;
 
 ####  GET THE SCORE TITLE FROM THE GABC FILE ####
 
@@ -116,7 +110,7 @@ my @TEMPLATELINES;
 ####  MAKE SUBSTITUTIONS ####
 
 &do_subst ("XXXX-SCORENAME-XXXX", $SCORENAME);
-&do_subst ("XXXX-SCORETEXFILE-XXXX", $SCORETEXFILE);
+&do_subst ("XXXX-GABCFILE-XXXX", $GABCNAME);
 &do_subst ("XXXX-ANNOTATION-XXXX", $ANNOTATION);
 &do_subst ("XXXX-OFFICEPART-XXXX", $OFFICEPART);
 &do_subst ("XXXX-REFERENCE-XXXX", $REFERENCE);
@@ -141,18 +135,13 @@ $GAUXFILE =~ s/tex$/gaux/;
 
 # remove product files so that we don't accidentally view results
 # from a prior run
-unlink $SCORETEXFILE;
 unlink $PDFFILE;
 
-
-do_cmd("gregorio $GABCFILE");
 do_cmd("$TEXCOMPILER $SCOREWRAPTEX");
 unlink $AUXFILE;
 unlink $GAUXFILE;
 
 print "\n\nOutput is in $PDFFILE .\n";
-do_cmd ("$PDFVIEWER $PDFFILE");
-
 
 exit;
 
@@ -181,28 +170,13 @@ __END__
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{luainputenc}
 \usepackage{palatino}
-\usepackage{gregoriotex}
-\usepackage{color}
-\usepackage{ifthen}
+\usepackage[autocompile,allowdeprecated=false]{gregoriotex}
 \pagestyle{empty}
 \begin{document}
-\redlines
 
 \begin{center}\begin{huge}\textsc{XXXX-SCORENAME-XXXX}\end{huge}\end{center}
 
-\setspaceafterinitial{3.2mm plus 0em minus 0em}
-\setspacebeforeinitial{3.2mm plus 0em minus 0em}
-
-\def\greinitialformat#1{%
-{\fontsize{43}{43}\selectfont #1}%
-}
-
-\gresetfirstlineaboveinitial{\small \textsc{\textbf{XXXX-ANNOTATION-XXXX}}}{\small \textsc{\textbf{XXXX-ANNOTATION-XXXX}}}
-\commentary{{\small \emph{XXXX-REFERENCE-XXXX}}}
-
-\setgrefactor{17}
-\grespaceabovelines=5mm
-\includescore{XXXX-SCORETEXFILE-XXXX}
+\gregorioscore{XXXX-GABCFILE-XXXX}
 
 \end{document}
 

@@ -738,6 +738,27 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             break;
         }
         break;
+    case T_SALICUS_FLEXUS:
+        done = true;
+        v_episema = VPOS_BELOW;
+        switch (i) {
+        case 3:
+            note->gtex_offset_case = note_before_last_note_case(glyph, note);
+            h_episema = VPOS_ABOVE;
+            break;
+        case 4:
+            note->gtex_offset_case = last_note_case(glyph, FinalPunctum, note,
+                    false);
+            h_episema = VPOS_BELOW;
+            break;
+        default:
+            done = false;
+            break;
+        }
+        if (done) {
+            break;
+        }
+        /* else fallthrough to the next case! */
     case T_SALICUS:
     case T_SALICUS_LONGQUEUE:
         v_episema = VPOS_BELOW;
@@ -1141,7 +1162,7 @@ static __inline void end_h_episema(height_computation *const h,
 static __inline void compute_h_episema(height_computation *const h,
         const gregorio_element *const element,
         const gregorio_glyph *const glyph, gregorio_note *const note,
-        const int i)
+        const int i, const gtex_type type)
 {
     signed char next_height;
     grehepisema_size size;
@@ -1173,6 +1194,30 @@ static __inline void compute_h_episema(height_computation *const h,
         } else {
             end_h_episema(h, note);
         }
+    } else if (!h->is_shown(note)) {
+        /* special handling for porrectus shapes because of their shape:   
+         * the lower note of the porrectus stroke is normally not applicable,
+         * but we have to end the episema on the upper note if the episema
+         * on the lower note is not shown. */
+        switch(type) {
+        case T_PORRECTUS:
+        case T_PORRECTUS_FLEXUS:
+            if (i == 2) {
+                end_h_episema(h, note);
+            }
+            break;
+
+        case T_TORCULUS_RESUPINUS:
+        case T_TORCULUS_RESUPINUS_FLEXUS:
+            if (i == 3) {
+                end_h_episema(h, note);
+            }
+            break;
+
+        default:
+            /* do nothing */
+            break;
+        }
     }
 }
 
@@ -1193,8 +1238,8 @@ static __inline void compute_note_positioning(height_computation *const above,
         }
     }
 
-    compute_h_episema(above, element, glyph, note, i);
-    compute_h_episema(below, element, glyph, note, i);
+    compute_h_episema(above, element, glyph, note, i, type);
+    compute_h_episema(below, element, glyph, note, i, type);
 }
 
 void gregoriotex_compute_positioning(const gregorio_element *element)
