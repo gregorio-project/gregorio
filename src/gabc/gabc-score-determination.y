@@ -660,7 +660,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
 %token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES
-%token LANGUAGE
+%token LANGUAGE END_OF_FILE
 
 %%
 
@@ -1004,7 +1004,7 @@ note:
         voice=0;
         nabc_state=0;
     }
-    | NOTES CLOSING_BRACKET_WITH_SPACE {
+    | NOTES closing_bracket_with_space {
         if (voice<number_of_voices) {
             gabc_y_add_notes($1.text, @1);
             free($1.text);
@@ -1058,12 +1058,18 @@ note:
         voice=0;
         nabc_state=0;
     }
-    | CLOSING_BRACKET_WITH_SPACE {
+    | closing_bracket_with_space {
         elements[voice]=NULL;
         voice=0;
         nabc_state=0;
         update_position_with_space();
     }
+    ;
+
+closing_bracket_with_space:
+    CLOSING_BRACKET_WITH_SPACE
+    | CLOSING_BRACKET_WITH_SPACE END_OF_FILE
+    | CLOSING_BRACKET END_OF_FILE
     ;
 
 style_beginning:
