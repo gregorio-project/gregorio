@@ -209,7 +209,7 @@ local add_ls = function(base, pre, ls, position, glyphbox, lsbox, baseraise, lwi
     if position == 2 then
       raise = glyphbox.height + lsbox.depth + baseraise
     else
-      raise = -glyphbox.depth - lsbox.height + baseraise 
+      raise = -glyphbox.depth - lsbox.height + baseraise
     end
     local kern1 = -math.max(glyphbox.width, lwidths[11])/2 - lwidths[position]/2 + curlwidths[position]
     curlwidths[position] = curlwidths[position] + lsbox.width

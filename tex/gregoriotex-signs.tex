@@ -37,7 +37,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for discretionaries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
+%
 % In order to avoid clef change at beginning or end of line, we use discretionaries
 % for clef change, or even with more complex data (z0::c3 for instance). The problem
 % with discretionaries is that:
@@ -154,7 +154,7 @@
 }%
 
 % macro that typesets the key
-% arguments are : 
+% arguments are :
 %% #1: the type of the key : c or f
 %% #2: the line of the key (1 is the lowest)
 %% #3: if we must use small key characters (inside a line) or not 0: if not inside, 1 if inside
@@ -1664,14 +1664,14 @@
   \ifnum#4=0\relax %
     % we try to avoid line breaking after a flat or a natural
     \GreNoBreak %
-    \gre@skip@temp@four = \gre@skip@alterationspace\relax%
+    \gre@skip@temp@four = \gre@dimen@alterationspace\relax%
     \ifgre@firstglyph%
       \gre@debugmsg{bolshift}{making adjustments for leading alteration}%
       \global\advance\gre@dimen@notesaligncenter by \wd\gre@box@temp@width %
       \global\advance\gre@dimen@notesaligncenter by \dimexpr\gre@skip@temp@four\relax %
       \kern\gre@skip@temp@four %
       \global\gre@dimen@bolextra = \wd\gre@box@temp@width%
-      \gre@skip@temp@four = \gre@skip@alterationspace\relax%
+      \gre@skip@temp@four = \gre@dimen@alterationspace\relax%
       \global\advance\gre@dimen@bolextra by \dimexpr\gre@skip@temp@four\relax%
       \gre@debugmsg{bolshift}{bolextra: \the\gre@dimen@bolextra}%
     \else %
@@ -1730,7 +1730,7 @@
       }%
       {\gre@error{Unrecognized option for \protect\gresetpunctumcavum}}%
     }%
-}%	
+}%
 
 
 \def\UseAlternatePunctumCavum{%
