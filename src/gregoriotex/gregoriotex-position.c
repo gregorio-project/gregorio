@@ -1141,7 +1141,7 @@ static __inline void end_h_episema(height_computation *const h,
 static __inline void compute_h_episema(height_computation *const h,
         const gregorio_element *const element,
         const gregorio_glyph *const glyph, gregorio_note *const note,
-        const int i)
+        const int i, const gtex_type type)
 {
     signed char next_height;
     grehepisema_size size;
@@ -1173,6 +1173,30 @@ static __inline void compute_h_episema(height_computation *const h,
         } else {
             end_h_episema(h, note);
         }
+    } else if (!h->is_shown(note)) {
+        /* special handling for porrectus shapes because of their shape:   
+         * the lower note of the porrectus stroke is normally not applicable,
+         * but we have to end the episema on the upper note if the episema
+         * on the lower note is not shown. */
+        switch(type) {
+        case T_PORRECTUS:
+        case T_PORRECTUS_FLEXUS:
+            if (i == 2) {
+                end_h_episema(h, note);
+            }
+            break;
+
+        case T_TORCULUS_RESUPINUS:
+        case T_TORCULUS_RESUPINUS_FLEXUS:
+            if (i == 3) {
+                end_h_episema(h, note);
+            }
+            break;
+
+        default:
+            /* do nothing */
+            break;
+        }
     }
 }
 
@@ -1193,8 +1217,8 @@ static __inline void compute_note_positioning(height_computation *const above,
         }
     }
 
-    compute_h_episema(above, element, glyph, note, i);
-    compute_h_episema(below, element, glyph, note, i);
+    compute_h_episema(above, element, glyph, note, i, type);
+    compute_h_episema(below, element, glyph, note, i, type);
 }
 
 void gregoriotex_compute_positioning(const gregorio_element *element)
