@@ -259,6 +259,7 @@ typedef enum gregorio_glyph_type {
     G_PUNCTA_DESCENDENS,
     G_VIRGA_REVERSA,
     G_SALICUS,
+    G_SALICUS_FLEXUS,
     G_VIRGA_STRATA,
     G_TORCULUS_LIQUESCENS,
     /* additional glyph types, necessary for determination */

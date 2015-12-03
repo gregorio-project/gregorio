@@ -738,6 +738,27 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             break;
         }
         break;
+    case T_SALICUS_FLEXUS:
+        done = true;
+        v_episema = VPOS_BELOW;
+        switch (i) {
+        case 3:
+            note->gtex_offset_case = note_before_last_note_case(glyph, note);
+            h_episema = VPOS_ABOVE;
+            break;
+        case 4:
+            note->gtex_offset_case = last_note_case(glyph, FinalPunctum, note,
+                    false);
+            h_episema = VPOS_BELOW;
+            break;
+        default:
+            done = false;
+            break;
+        }
+        if (done) {
+            break;
+        }
+        /* else fallthrough to the next case! */
     case T_SALICUS:
     case T_SALICUS_LONGQUEUE:
         v_episema = VPOS_BELOW;
