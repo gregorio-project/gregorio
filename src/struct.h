@@ -29,6 +29,7 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 
+#include "enum_generator.h"
 #include "bool.h"
 #include "sha1.h"
 
@@ -59,214 +60,214 @@ typedef struct gregorio_scanner_location {
 
 /* all the different types of things a gregorio_* can be */
 
-typedef enum gregorio_type {
-    GRE_NOTE = 1,
-    GRE_GLYPH,
-    GRE_ELEMENT,
-    GRE_FLAT,
-    GRE_SHARP,
-    GRE_NATURAL,
-    GRE_C_KEY_CHANGE,
-    GRE_C_KEY_CHANGE_FLATED,
-    GRE_SYLLABLE,
-    GRE_F_KEY_CHANGE,
-    GRE_F_KEY_CHANGE_FLATED,
-    GRE_END_OF_LINE,
-    GRE_SPACE,
-    GRE_BAR,
-    GRE_END_OF_PAR,
-    GRE_CUSTOS,
+#define GREGORIO_TYPE(A,E,X,L) \
+    A(GRE_NOTE, 1) \
+    E(GRE_GLYPH) \
+    E(GRE_ELEMENT) \
+    E(GRE_FLAT) \
+    E(GRE_SHARP) \
+    E(GRE_NATURAL) \
+    E(GRE_C_KEY_CHANGE) \
+    E(GRE_C_KEY_CHANGE_FLATED) \
+    E(GRE_SYLLABLE) \
+    E(GRE_F_KEY_CHANGE) \
+    E(GRE_F_KEY_CHANGE_FLATED) \
+    E(GRE_END_OF_LINE) \
+    E(GRE_SPACE) \
+    E(GRE_BAR) \
+    E(GRE_END_OF_PAR) \
+    E(GRE_CUSTOS) \
     /* I don't really know how I could use the a TEXVERB_NOTE in gregoriotex,
-     * as we don't write note by note... */
-    /* GRE_TEXVERB_NOTE, */
-    GRE_TEXVERB_GLYPH,
-    GRE_TEXVERB_ELEMENT,
+     * as we don't write note by note... */ \
+    /* GRE_TEXVERB_NOTE, */ \
+    E(GRE_TEXVERB_GLYPH) \
+    E(GRE_TEXVERB_ELEMENT) \
     /* above lines text, quite the same as GRE_TEXVERB_ELEMENT, but counted
-     * differently for the spaces above the lines */
-    GRE_ALT,
-    GRE_NLBA,
-    GRE_MANUAL_CUSTOS
-} gregorio_type;
+     * differently for the spaces above the lines */ \
+    E(GRE_ALT) \
+    E(GRE_NLBA) \
+    L(GRE_MANUAL_CUSTOS)
+ENUM(gregorio_type, GREGORIO_TYPE);
 
 /* the different shapes, only for notes */
 
-typedef enum gregorio_shape {
-    S_UNDETERMINED = 0,
-    S_PUNCTUM,
-    S_PUNCTUM_END_OF_GLYPH,
-    S_PUNCTUM_INCLINATUM,
-    S_PUNCTUM_INCLINATUM_DEMINUTUS,
-    S_PUNCTUM_INCLINATUM_AUCTUS,
-    S_VIRGA,
-    S_VIRGA_REVERSA,
-    S_BIVIRGA,
-    S_TRIVIRGA,
-    S_ORISCUS,
-    S_ORISCUS_AUCTUS,
-    S_ORISCUS_DEMINUTUS,
-    S_ORISCUS_SCAPUS,
-    S_QUILISMA,
-    S_STROPHA,
-    S_STROPHA_AUCTA,
-    S_DISTROPHA,
-    S_DISTROPHA_AUCTA,
-    S_TRISTROPHA,
-    S_TRISTROPHA_AUCTA,
-    S_PUNCTUM_CAVUM,
-    S_LINEA_PUNCTUM,
-    S_LINEA_PUNCTUM_CAVUM,
-    S_PUNCTUM_CAVUM_INCLINATUM,
-    S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS,
-    /* special shapes that must not appear in the final form of the score :
+#define GREGORIO_SHAPE(A,E,X,L) \
+    A(S_UNDETERMINED, 0) \
+    E(S_PUNCTUM) \
+    E(S_PUNCTUM_END_OF_GLYPH) \
+    E(S_PUNCTUM_INCLINATUM) \
+    E(S_PUNCTUM_INCLINATUM_DEMINUTUS) \
+    E(S_PUNCTUM_INCLINATUM_AUCTUS) \
+    E(S_VIRGA) \
+    E(S_VIRGA_REVERSA) \
+    E(S_BIVIRGA) \
+    E(S_TRIVIRGA) \
+    E(S_ORISCUS) \
+    E(S_ORISCUS_AUCTUS) \
+    E(S_ORISCUS_DEMINUTUS) \
+    E(S_ORISCUS_SCAPUS) \
+    E(S_QUILISMA) \
+    E(S_STROPHA) \
+    E(S_STROPHA_AUCTA) \
+    E(S_DISTROPHA) \
+    E(S_DISTROPHA_AUCTA) \
+    E(S_TRISTROPHA) \
+    E(S_TRISTROPHA_AUCTA) \
+    E(S_PUNCTUM_CAVUM) \
+    E(S_LINEA_PUNCTUM) \
+    E(S_LINEA_PUNCTUM_CAVUM) \
+    E(S_PUNCTUM_CAVUM_INCLINATUM) \
+    E(S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS) \
+    /* special shapes that must not appear in the final form of the score : 
      * quadratum is the shape of the first note of a punctum quadratum
      * and quilisma quadratum is the shape of the first note of a pes
-     * quislisma quadratum */
-    S_QUADRATUM,
-    /* those shapes are for now used only in gregoriotex */
-    S_QUILISMA_QUADRATUM,
-    S_PUNCTUM_AUCTUS_ASCENDENS,
-    S_PUNCTUM_AUCTUS_DESCENDENS,
-    S_PUNCTUM_DEMINUTUS,
-    S_LINEA
-} gregorio_shape;
+     * quislisma quadratum */ \
+    E(S_QUADRATUM) \
+    /* those shapes are for now used only in gregoriotex */ \
+    E(S_QUILISMA_QUADRATUM) \
+    E(S_PUNCTUM_AUCTUS_ASCENDENS) \
+    E(S_PUNCTUM_AUCTUS_DESCENDENS) \
+    E(S_PUNCTUM_DEMINUTUS) \
+    L(S_LINEA)
+ENUM(gregorio_shape, GREGORIO_SHAPE);
 
 /* the different kind of bars */
 
-typedef enum gregorio_bar {
-    B_NO_BAR = 0,
-    B_VIRGULA,
-    B_DIVISIO_MINIMA,
-    B_DIVISIO_MINOR,
-    B_DIVISIO_MAIOR,
-    B_DIVISIO_FINALIS,
-    B_DIVISIO_MINOR_D1,
-    B_DIVISIO_MINOR_D2,
-    B_DIVISIO_MINOR_D3,
-    B_DIVISIO_MINOR_D4,
-    B_DIVISIO_MINOR_D5,
-    B_DIVISIO_MINOR_D6
-} gregorio_bar;
+#define GREGORIO_BAR(A,E,X,L) \
+    A(B_NO_BAR, 0) \
+    E(B_VIRGULA) \
+    E(B_DIVISIO_MINIMA) \
+    E(B_DIVISIO_MINOR) \
+    E(B_DIVISIO_MAIOR) \
+    E(B_DIVISIO_FINALIS) \
+    E(B_DIVISIO_MINOR_D1) \
+    E(B_DIVISIO_MINOR_D2) \
+    E(B_DIVISIO_MINOR_D3) \
+    E(B_DIVISIO_MINOR_D4) \
+    E(B_DIVISIO_MINOR_D5) \
+    L(B_DIVISIO_MINOR_D6)
+ENUM(gregorio_bar, GREGORIO_BAR);
 
 /* definition of the signs. You can notice that the values are made so
  * that if you wan to add a vertical episema to a note, you juste
  * make note->signs+=_V_EPISEMA, so please don't change the value as
  * this trick is used. */
 
-typedef enum gregorio_sign {
-    _NO_SIGN = 0x00,
-    _PUNCTUM_MORA = 0x01,
-    _AUCTUM_DUPLEX = 0x02,
-    _V_EPISEMA = 0x10,
-    _V_EPISEMA_PUNCTUM_MORA = 0x11,
-    _V_EPISEMA_AUCTUM_DUPLEX = 0x12,
-    /* more rare signs, for now they can't be used with the others */
-    _ACCENTUS = 0x03,
-    _ACCENTUS_REVERSUS = 0x04,
-    _CIRCULUS = 0x05,
-    _SEMI_CIRCULUS = 0x06,
-    _SEMI_CIRCULUS_REVERSUS = 0x07,
-    /* signs of a bar */
-    _BAR_H_EPISEMA = 0x08,
-    _V_EPISEMA_BAR_H_EPISEMA = 0x18
-} gregorio_sign;
+#define GREGORIO_SIGN(A,E,X,L) \
+    A(_NO_SIGN, 0x00) \
+    A(_PUNCTUM_MORA, 0x01) \
+    A(_AUCTUM_DUPLEX, 0x02) \
+    A(_V_EPISEMA, 0x10) \
+    A(_V_EPISEMA_PUNCTUM_MORA, 0x11) \
+    A(_V_EPISEMA_AUCTUM_DUPLEX, 0x12) \
+    /* more rare signs, for now they can't be used with the others */ \
+    A(_ACCENTUS, 0x03) \
+    A(_ACCENTUS_REVERSUS, 0x04) \
+    A(_CIRCULUS, 0x05) \
+    A(_SEMI_CIRCULUS, 0x06) \
+    A(_SEMI_CIRCULUS_REVERSUS, 0x07) \
+    /* signs of a bar */ \
+    A(_BAR_H_EPISEMA, 0x08) \
+    X(_V_EPISEMA_BAR_H_EPISEMA, 0x18)
+ENUM(gregorio_sign, GREGORIO_SIGN);
 
 /* the different spaces */
 
-typedef enum gregorio_space {
-    SP_DEFAULT = 1,
-    SP_NO_SPACE,
-    SP_ZERO_WIDTH,
-    SP_NEUMATIC_CUT,
-    SP_LARGER_SPACE,
-    SP_GLYPH_SPACE,
-    SP_NEUMATIC_CUT_NB,
-    SP_LARGER_SPACE_NB,
-    SP_GLYPH_SPACE_NB
-} gregorio_space;
+#define GREGORIO_SPACE(A,E,X,L) \
+    A(SP_DEFAULT, 1) \
+    E(SP_NO_SPACE) \
+    E(SP_ZERO_WIDTH) \
+    E(SP_NEUMATIC_CUT) \
+    E(SP_LARGER_SPACE) \
+    E(SP_GLYPH_SPACE) \
+    E(SP_NEUMATIC_CUT_NB) \
+    E(SP_LARGER_SPACE_NB) \
+    L(SP_GLYPH_SPACE_NB)
+ENUM(gregorio_space, GREGORIO_SPACE);
 
 /* the different liquescences, like for the signs, have special
  * values: to say that something is initio_debilis, just do
  * glyph->liquescentia+=L_INITIO_DEBILIS. So don't change the value,
  * the trick is much used */
 
-typedef enum gregorio_liquescentia {
-    L_NO_LIQUESCENTIA = 0,
-    L_DEMINUTUS = 0x01,
-    L_AUCTUS_ASCENDENS = 0x02,
-    L_AUCTUS_DESCENDENS = 0x04,
-    L_AUCTA = 0x08,
-    L_INITIO_DEBILIS = 0x10,
-    L_DEMINUTUS_INITIO_DEBILIS = 0x11,
-    L_AUCTUS_ASCENDENS_INITIO_DEBILIS = 0x12,
-    L_AUCTUS_DESCENDENS_INITIO_DEBILIS = 0x14,
-    L_AUCTA_INITIO_DEBILIS = 0x18
-} gregorio_liquescentia;
+#define GREGORIO_LIQUESCENTIA(A,E,X,L) \
+    A(L_NO_LIQUESCENTIA, 0) \
+    A(L_DEMINUTUS, 0x01) \
+    A(L_AUCTUS_ASCENDENS, 0x02) \
+    A(L_AUCTUS_DESCENDENS, 0x04) \
+    A(L_AUCTA, 0x08) \
+    A(L_INITIO_DEBILIS, 0x10) \
+    A(L_DEMINUTUS_INITIO_DEBILIS, 0x11) \
+    A(L_AUCTUS_ASCENDENS_INITIO_DEBILIS, 0x12) \
+    A(L_AUCTUS_DESCENDENS_INITIO_DEBILIS, 0x14) \
+    X(L_AUCTA_INITIO_DEBILIS, 0x18)
+ENUM(gregorio_liquescentia, GREGORIO_LIQUESCENTIA);
 
-typedef enum grehepisema_size {
-    H_NORMAL = 0,
-    H_SMALL_LEFT,
-    H_SMALL_CENTRE,
-    H_SMALL_RIGHT
-} grehepisema_size;
+#define GREHEPISEMA_SIZE(A,E,X,L) \
+    A(H_NORMAL, 0) \
+    E(H_SMALL_LEFT) \
+    E(H_SMALL_CENTRE) \
+    L(H_SMALL_RIGHT)
+ENUM(grehepisema_size, GREHEPISEMA_SIZE);
 
 /* values are chosen so BELOW/ABOVE can be added to a pitch */
-typedef enum gregorio_vposition {
-    VPOS_AUTO = 0,
-    VPOS_BELOW = -1,
-    VPOS_ABOVE = 1
-} gregorio_vposition;
+#define GREGORIO_VPOSITION(A,E,X,L) \
+    A(VPOS_AUTO, 0) \
+    A(VPOS_BELOW, -1) \
+    X(VPOS_ABOVE, 1)
+ENUM(gregorio_vposition, GREGORIO_VPOSITION);
 
 /* The different types of glyph */
 
-typedef enum gregorio_glyph_type {
-    G_PUNCTUM_INCLINATUM = 1,
-    G_2_PUNCTA_INCLINATA_DESCENDENS,
-    G_3_PUNCTA_INCLINATA_DESCENDENS,
-    G_4_PUNCTA_INCLINATA_DESCENDENS,
-    G_5_PUNCTA_INCLINATA_DESCENDENS,
-    G_2_PUNCTA_INCLINATA_ASCENDENS,
-    G_3_PUNCTA_INCLINATA_ASCENDENS,
-    G_4_PUNCTA_INCLINATA_ASCENDENS,
-    G_5_PUNCTA_INCLINATA_ASCENDENS,
-    G_TRIGONUS,
-    G_PUNCTA_INCLINATA,
-    /* !!! DO NOT CHANGE THE ENUM ORDERING BEFORE THIS LINE !!! */
-    G_UNDETERMINED,
-    G_VIRGA,
-    G_STROPHA,
-    G_STROPHA_AUCTA,
-    G_PUNCTUM,
-    G_PODATUS,
-    G_PES_QUADRATUM,
-    G_FLEXA,
-    G_TORCULUS,
-    G_TORCULUS_RESUPINUS,
-    G_TORCULUS_RESUPINUS_FLEXUS,
-    G_PORRECTUS,
-    G_PORRECTUS_FLEXUS,
-    G_BIVIRGA,
-    G_TRIVIRGA,
-    G_DISTROPHA,
-    G_DISTROPHA_AUCTA,
-    G_TRISTROPHA,
-    G_TRISTROPHA_AUCTA,
-    G_PES_QUADRATUM_FIRST_PART,
-    G_SCANDICUS,
-    G_PES_QUILISMA_QUADRATUM_FIRST_PART,
-    G_ANCUS,
-    G_ONE_NOTE,
-    G_PUNCTA_ASCENDENS,
-    G_PUNCTA_DESCENDENS,
-    G_VIRGA_REVERSA,
-    G_SALICUS,
-    G_SALICUS_FLEXUS,
-    G_VIRGA_STRATA,
-    G_TORCULUS_LIQUESCENS,
-    /* additional glyph types, necessary for determination */
-    G_PORRECTUS_NO_BAR,
-    G_PORRECTUS_FLEXUS_NO_BAR,
-    G_PES_QUILISMA
-} gregorio_glyph_type;
+#define GREGORIO_GLYPH_TYPE(A,E,X,L) \
+    A(G_PUNCTUM_INCLINATUM, 1) \
+    E(G_2_PUNCTA_INCLINATA_DESCENDENS) \
+    E(G_3_PUNCTA_INCLINATA_DESCENDENS) \
+    E(G_4_PUNCTA_INCLINATA_DESCENDENS) \
+    E(G_5_PUNCTA_INCLINATA_DESCENDENS) \
+    E(G_2_PUNCTA_INCLINATA_ASCENDENS) \
+    E(G_3_PUNCTA_INCLINATA_ASCENDENS) \
+    E(G_4_PUNCTA_INCLINATA_ASCENDENS) \
+    E(G_5_PUNCTA_INCLINATA_ASCENDENS) \
+    E(G_TRIGONUS) \
+    E(G_PUNCTA_INCLINATA) \
+    /* !!! DO NOT CHANGE THE ENUM ORDERING BEFORE THIS LINE !!! */ \
+    E(G_UNDETERMINED) \
+    E(G_VIRGA) \
+    E(G_STROPHA) \
+    E(G_STROPHA_AUCTA) \
+    E(G_PUNCTUM) \
+    E(G_PODATUS) \
+    E(G_PES_QUADRATUM) \
+    E(G_FLEXA) \
+    E(G_TORCULUS) \
+    E(G_TORCULUS_RESUPINUS) \
+    E(G_TORCULUS_RESUPINUS_FLEXUS) \
+    E(G_PORRECTUS) \
+    E(G_PORRECTUS_FLEXUS) \
+    E(G_BIVIRGA) \
+    E(G_TRIVIRGA) \
+    E(G_DISTROPHA) \
+    E(G_DISTROPHA_AUCTA) \
+    E(G_TRISTROPHA) \
+    E(G_TRISTROPHA_AUCTA) \
+    E(G_PES_QUADRATUM_FIRST_PART) \
+    E(G_SCANDICUS) \
+    E(G_PES_QUILISMA_QUADRATUM_FIRST_PART) \
+    E(G_ANCUS) \
+    E(G_ONE_NOTE) \
+    E(G_PUNCTA_ASCENDENS) \
+    E(G_PUNCTA_DESCENDENS) \
+    E(G_VIRGA_REVERSA) \
+    E(G_SALICUS) \
+    E(G_SALICUS_FLEXUS) \
+    E(G_VIRGA_STRATA) \
+    E(G_TORCULUS_LIQUESCENS) \
+    /* additional glyph types, necessary for determination */ \
+    E(G_PORRECTUS_NO_BAR) \
+    E(G_PORRECTUS_FLEXUS_NO_BAR) \
+    L(G_PES_QUILISMA)
+ENUM(gregorio_glyph_type, GREGORIO_GLYPH_TYPE);
 
 /*
  * 
@@ -275,77 +276,77 @@ typedef enum gregorio_glyph_type {
  * 
  */
 
-typedef enum grestyle_style {
-    ST_NO_STYLE = 0,
-    ST_ITALIC,
-    ST_CENTER,
+#define GRESTYLE_STYLE(A,E,X,L) \
+    A(ST_NO_STYLE, 0) \
+    E(ST_ITALIC) \
+    E(ST_CENTER) \
     /* when the user types a {}, basically the same behaviour, except for
-     * the initial */
-    ST_FORCED_CENTER,
-    ST_BOLD,
-    ST_TT,
-    ST_SMALL_CAPS,
-    ST_SPECIAL_CHAR,
-    ST_VERBATIM,
-    ST_INITIAL, /* a style used to determine the initial */
-    ST_UNDERLINED,
-    ST_COLORED,
-    ST_FIRST_WORD,
-    ST_FIRST_SYLLABLE,
-    ST_FIRST_SYLLABLE_INITIAL,
-    ST_SYLLABLE_INITIAL
-} grestyle_style;
+     * the initial */ \
+    E(ST_FORCED_CENTER) \
+    E(ST_BOLD) \
+    E(ST_TT) \
+    E(ST_SMALL_CAPS) \
+    E(ST_SPECIAL_CHAR) \
+    E(ST_VERBATIM) \
+    E(ST_INITIAL) /* a style used to determine the initial */ \
+    E(ST_UNDERLINED) \
+    E(ST_COLORED) \
+    E(ST_FIRST_WORD) \
+    E(ST_FIRST_SYLLABLE) \
+    E(ST_FIRST_SYLLABLE_INITIAL) \
+    L(ST_SYLLABLE_INITIAL)
+ENUM(grestyle_style, GRESTYLE_STYLE);
 
 /*
  * Then the different types of styles. See the next comments for further
  * readings. 
  */
 
-typedef enum grestyle_type {
-    ST_T_NOTHING = 0,
-    ST_T_BEGIN,
-    ST_T_END
-} grestyle_type;
+#define GRESTYLE_TYPE(A,E,X,L) \
+    A(ST_T_NOTHING, 0) \
+    E(ST_T_BEGIN) \
+    L(ST_T_END)
+ENUM(grestyle_type, GRESTYLE_TYPE);
 
 /*
  * The different types of translation centerings 
  */
 
-typedef enum gregorio_tr_centering {
-    TR_NORMAL = 0,
-    TR_WITH_CENTER_BEGINNING,
-    TR_WITH_CENTER_END
-} gregorio_tr_centering;
+#define GREGORIO_TR_CENTERING(A,E,X,L) \
+    A(TR_NORMAL, 0) \
+    E(TR_WITH_CENTER_BEGINNING) \
+    L(TR_WITH_CENTER_END)
+ENUM(gregorio_tr_centering, GREGORIO_TR_CENTERING);
 
 /*
  * Nothing, beginning or end of area without linebreak 
  */
 
-typedef enum gregorio_nlba {
-    NLBA_NORMAL = 0,
-    NLBA_BEGINNING,
-    NLBA_END
-} gregorio_nlba;
+#define GREGORIO_NLBA(A,E,X,L) \
+    A(NLBA_NORMAL, 0) \
+    E(NLBA_BEGINNING) \
+    L(NLBA_END)
+ENUM(gregorio_nlba, GREGORIO_NLBA);
 
-typedef enum gregorio_euouae {
-    EUOUAE_NORMAL = 0,
-    EUOUAE_BEGINNING,
-    EUOUAE_END
-} gregorio_euouae;
+#define GREGORIO_EUOUAE(A,E,X,L) \
+    A(EUOUAE_NORMAL, 0) \
+    E(EUOUAE_BEGINNING) \
+    L(EUOUAE_END)
+ENUM(gregorio_euouae, GREGORIO_EUOUAE);
 
-typedef enum gregorio_word_position {
-    WORD_BEGINNING = 1,
-    WORD_MIDDLE,
-    WORD_END,
-    WORD_ONE_SYLLABLE
-} gregorio_word_position;
+#define GREGORIO_WORD_POSITION(A,E,X,L) \
+    A(WORD_BEGINNING, 1) \
+    E(WORD_MIDDLE) \
+    E(WORD_END) \
+    L(WORD_ONE_SYLLABLE)
+ENUM(gregorio_word_position, GREGORIO_WORD_POSITION);
 
 /* the centering schemes for gabc: */
-typedef enum gregorio_lyric_centering {
-    SCHEME_DEFAULT = 0,
-    SCHEME_VOWEL,
-    SCHEME_SYLLABLE
-} gregorio_lyric_centering;
+#define GREGORIO_LYRIC_CENTERING(A,E,X,L) \
+    A(SCHEME_DEFAULT, 0) \
+    E(SCHEME_VOWEL) \
+    L(SCHEME_SYLLABLE)
+ENUM(gregorio_lyric_centering, GREGORIO_LYRIC_CENTERING);
 
 typedef struct gregorio_extra_info {
     /* the sub-type of GRE_END_OF_LINE */
@@ -658,6 +659,7 @@ typedef struct gregorio_score {
     char *meter;
     char *commentary;
     char *arranger;
+    char *language;
     struct source_info si;
     /* the mode of a song is between 1 and 8 */
     char mode;
@@ -832,6 +834,7 @@ void gregorio_set_score_occasion(gregorio_score *score, char *occasion);
 void gregorio_set_score_meter(gregorio_score *score, char *meter);
 void gregorio_set_score_commentary(gregorio_score *score, char *commentary);
 void gregorio_set_score_arranger(gregorio_score *score, char *arranger);
+void gregorio_set_score_language(gregorio_score *score, char *language);
 void gregorio_set_score_gabc_version(gregorio_score *score, char *gabc_version);
 void gregorio_set_score_number_of_voices(gregorio_score *score,
         int number_of_voices);
@@ -866,6 +869,7 @@ void gregorio_end_style(gregorio_character **current_character,
 gregorio_character *gregorio_clone_characters(const gregorio_character *source);
 signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph);
+const char *gregorio_unknown(int value);
 
 static __inline void gregorio_go_to_first_character_c(gregorio_character **character)
 {

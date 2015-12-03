@@ -46,6 +46,7 @@
 #include "unicode.h"
 #include "messages.h"
 #include "characters.h"
+#include "support.h"
 
 static gregorio_note *create_and_link_note(gregorio_note **current_note,
         const gregorio_scanner_location *const loc)
@@ -1075,6 +1076,7 @@ gregorio_score *gregorio_new_score(void)
     new_score->meter = NULL;
     new_score->commentary = NULL;
     new_score->arranger = NULL;
+    new_score->language = NULL;
     gregorio_source_info_init(&new_score->si);
     new_score->first_voice_info = NULL;
     new_score->mode = 0;
@@ -1114,6 +1116,7 @@ static void gregorio_free_score_infos(gregorio_score *score)
     free(score->meter);
     free(score->commentary);
     free(score->arranger);
+    free(score->language);
     free(score->user_notes);
     free(score->gregoriotex_font);
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
@@ -1225,6 +1228,17 @@ void gregorio_set_score_arranger(gregorio_score *score, char *arranger)
     }
     free(score->arranger);
     score->arranger = arranger;
+}
+
+void gregorio_set_score_language(gregorio_score *score, char *language)
+{
+    if (!score) {
+        gregorio_message(_("function called with NULL argument"),
+                "gregorio_set_score_language", VERBOSITY_WARNING, 0);
+        return;
+    }
+    free(score->language);
+    score->language = language;
 }
 
 void gregorio_set_score_number_of_voices(gregorio_score *score,
@@ -1731,3 +1745,26 @@ bool gregorio_is_only_special(gregorio_element *element)
     }
     return 1;
 }
+
+const char *gregorio_unknown(int value) {
+    static char buf[20];
+    gregorio_snprintf(buf, sizeof buf, "?%d", value);
+    return buf;
+}
+
+ENUM_TO_STRING(gregorio_type, GREGORIO_TYPE)
+ENUM_TO_STRING(gregorio_shape, GREGORIO_SHAPE)
+ENUM_TO_STRING(gregorio_bar, GREGORIO_BAR)
+ENUM_TO_STRING(gregorio_sign, GREGORIO_SIGN)
+ENUM_TO_STRING(gregorio_space, GREGORIO_SPACE)
+ENUM_TO_STRING(gregorio_liquescentia, GREGORIO_LIQUESCENTIA)
+ENUM_TO_STRING(grehepisema_size, GREHEPISEMA_SIZE)
+ENUM_TO_STRING(gregorio_vposition, GREGORIO_VPOSITION)
+ENUM_TO_STRING(gregorio_glyph_type, GREGORIO_GLYPH_TYPE)
+ENUM_TO_STRING(grestyle_style, GRESTYLE_STYLE)
+ENUM_TO_STRING(grestyle_type, GRESTYLE_TYPE)
+ENUM_TO_STRING(gregorio_tr_centering, GREGORIO_TR_CENTERING)
+ENUM_TO_STRING(gregorio_nlba, GREGORIO_NLBA)
+ENUM_TO_STRING(gregorio_euouae, GREGORIO_EUOUAE)
+ENUM_TO_STRING(gregorio_word_position, GREGORIO_WORD_POSITION)
+ENUM_TO_STRING(gregorio_lyric_centering, GREGORIO_LYRIC_CENTERING)
