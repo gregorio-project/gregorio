@@ -1132,7 +1132,7 @@ static grestyle_style gregoriotex_fix_style(gregorio_character *first_character)
         current_char = current_char->next_character;
     }
     /* if we reached here, this means that we there is only one style applied
-     * to all the syllables */
+     * to all the characters */
     return possible_fixed_style;
 }
 
@@ -1149,10 +1149,9 @@ static void gregoriotex_write_translation(FILE *f,
     if (translation == NULL) {
         return;
     }
-    gregorio_write_text(false, translation, f,
-            (&gtex_write_verb),
-            (&gtex_print_char),
-            (&gtex_write_begin), (&gtex_write_end), (&gtex_write_special_char));
+    gregorio_write_text(WTP_NORMAL, translation, f, &gtex_write_verb,
+            &gtex_print_char, &gtex_write_begin, &gtex_write_end,
+            &gtex_write_special_char);
 }
 
 /* a function to compute the height of the flat of a key
@@ -2577,54 +2576,23 @@ static void write_fixed_text_styles(FILE *f, gregorio_character *syllable_text,
     }
 }
 
-static void gregoriotex_write_text(FILE *f, gregorio_character *text,
-        bool *first_syllable)
+static void write_text(FILE *const f, const gregorio_character *const text)
 {
-    bool skip_initial = first_syllable && *first_syllable;
     if (text == NULL) {
         fprintf(f, "{}{}{}{}{}");
-        if (skip_initial) {
-            fprintf(f, "\\GreForceHyphen{}");
-        }
         return;
     }
     fprintf(f, "{");
-    gregorio_write_text(skip_initial, text, f,
-            (&gtex_write_verb), (&gtex_print_char), (&gtex_write_begin),
-            (&gtex_write_end), (&gtex_write_special_char));
+    gregorio_write_text(WTP_NORMAL, text, f, &gtex_write_verb,
+            &gtex_print_char, &gtex_write_begin, &gtex_write_end,
+            &gtex_write_special_char);
     fprintf(f, "}{");
-    gregorio_write_first_letter_alignment_text(skip_initial, text, f,
-            (&gtex_write_verb), (&gtex_print_char), (&gtex_write_begin),
-            (&gtex_write_end), (&gtex_write_special_char));
-    if (first_syllable) {
-        *first_syllable = false;
-    }
+    gregorio_write_first_letter_alignment_text(WTP_NORMAL, text,
+            f, &gtex_write_verb, &gtex_print_char, &gtex_write_begin,
+            &gtex_write_end, &gtex_write_special_char);
     gregoriotex_ignore_style = gregoriotex_next_ignore_style;
     gregoriotex_next_ignore_style = ST_NO_STYLE;
     fprintf(f, "}");
-    if (skip_initial) {
-        /* Check to see if we need to force a hyphen (empty first syllable) */
-        for (; text; text = text->next_character) {
-            if (text->is_character) {
-                break;
-            } else if (text->cos.s.type == ST_T_BEGIN) {
-                if (text->cos.s.style == ST_VERBATIM ||
-                        text->cos.s.style == ST_SPECIAL_CHAR) {
-                    break;
-                } else if (text->cos.s.style == ST_INITIAL) {
-                    for (; text; text = text->next_character) {
-                        if (!text->is_character && text->cos.s.type == ST_T_END
-                                && text->cos.s.style == ST_INITIAL) {
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        if (!text) {
-            fprintf(f, "\\GreForceHyphen{}");
-        }
-    }
 }
 
 /*
@@ -2752,6 +2720,92 @@ static __inline void write_syllable_point_and_click(FILE *const f,
     }
 }
 
+static void write_syllable_text(FILE *f, const char *const syllable_type, 
+        const gregorio_character *text)
+{
+    if (syllable_type != NULL) {
+        fprintf(f, "%s{\\GreSetThisSyllable", syllable_type);
+        write_text(f, text);
+        fprintf(f, "}");
+    }
+}
+
+static void write_first_syllable_text(FILE *f, const char *const syllable_type, 
+        const gregorio_character *const text)
+{
+    if (syllable_type == NULL || text == NULL) {
+        fprintf(f, "}{}{\\GreSetNoFirstSyllableText}");
+    } else {
+        gregorio_character *text_with_initial = gregorio_clone_characters(text),
+                *text_without_initial = gregorio_clone_characters(text);
+        const gregorio_character *t;
+
+        /* find out if there is a forced center -> has_forced_center */
+        gregorio_center_determination center = CENTER_NOT_DETERMINED;
+        for (t = text; t; t = t->next_character) {
+            if (!t->is_character && t->cos.s.style == ST_FORCED_CENTER) {
+                center = CENTER_FULLY_DETERMINED;
+                break;
+            }
+        }
+
+        gregorio_rebuild_first_syllable(&text_with_initial, false);
+        gregorio_rebuild_characters(&text_with_initial, center, false);
+        gregorio_set_first_word(&text_with_initial);
+
+        gregorio_rebuild_first_syllable(&text_without_initial, true);
+        gregorio_rebuild_characters(&text_without_initial, center, true);
+        gregorio_set_first_word(&text_without_initial);
+
+        fprintf(f, "}{%s}{\\GreSetFirstSyllableText", syllable_type);
+
+        fprintf(f, "{");
+        gregorio_write_first_letter_alignment_text(WTP_FIRST_SYLLABLE,
+                text_with_initial, f, &gtex_write_verb, &gtex_print_char,
+                &gtex_write_begin, &gtex_write_end, &gtex_write_special_char);
+        fprintf(f, "}{{");
+        gregorio_write_text(WTP_FIRST_SYLLABLE, text_without_initial, f,
+                &gtex_write_verb, &gtex_print_char, &gtex_write_begin,
+                &gtex_write_end, &gtex_write_special_char);
+        fprintf(f, "}}{{");
+        gregorio_write_text(WTP_NORMAL, text_with_initial, f, &gtex_write_verb,
+                &gtex_print_char, &gtex_write_begin, &gtex_write_end,
+                &gtex_write_special_char);
+        gregoriotex_ignore_style = gregoriotex_next_ignore_style;
+        gregoriotex_next_ignore_style = ST_NO_STYLE;
+        fprintf(f, "}}");
+
+        /* Check to see if we need to force a hyphen (empty first syllable) */
+        for (t = text_without_initial; t; t = t->next_character) {
+            if (t->is_character) {
+                break;
+            } else if (t->cos.s.type == ST_T_BEGIN) {
+                if (t->cos.s.style == ST_VERBATIM ||
+                        t->cos.s.style == ST_SPECIAL_CHAR) {
+                    break;
+                } else if (t->cos.s.style == ST_INITIAL) {
+                    for (; t; t = t->next_character) {
+                        if (!t->is_character && t->cos.s.type == ST_T_END
+                                && t->cos.s.style == ST_INITIAL) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if (t) {
+            fprintf(f, "{}");
+        } else {
+            fprintf(f, "{\\GreForceHyphen}");
+        }
+
+        fprintf(f, "}");
+
+        gregorio_free_characters(text_with_initial);
+        gregorio_free_characters(text_without_initial);
+    }
+}
+
 /*
  * Arguments are relatively obvious. The most obscure is certainly first_of_disc
  * which is 0 all the time, except in the case of a "clef change syllable". In
@@ -2765,12 +2819,15 @@ static __inline void write_syllable_point_and_click(FILE *const f,
  *   1 in case of the first argument of a \GreDiscretionary
  *   2 if we are in the second argument (necessary in order to avoid infinite loops)
  */
-static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
-        bool * first_syllable, unsigned char *line_number,
-        unsigned char first_of_disc, gregoriotex_status *const status)
+static void write_syllable(FILE *f, gregorio_syllable *syllable,
+        unsigned char first_of_disc, gregoriotex_status *const status,
+        void (*const write_this_syllable_text)
+        (FILE *, const char *, const gregorio_character *))
 {
     gregorio_element *clef_change_element = NULL, *element;
+    const char *syllable_type = NULL;
     if (!syllable) {
+        write_this_syllable_text(f, NULL, NULL);
         return;
     }
     /* Very first: before anything, if the syllable is the beginning of a
@@ -2795,10 +2852,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             } else {
                 fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
             }
-            if (*line_number == 1) {
-                fprintf(f, "\\GreAdjustThirdLine %%\n");
-                *line_number = 0;
-            }
+            write_this_syllable_text(f, NULL, syllable->text);
             return;
         }
         /*
@@ -2815,12 +2869,11 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                  */
                 gregoriotex_print_change_line_clef(f, clef_change_element);
                 fprintf(f, "\\GreDiscretionary{0}{%%\n");
-                gregoriotex_write_syllable(f, syllable, first_syllable,
-                        line_number, 1, status);
+                write_syllable(f, syllable, 1, status, write_syllable_text);
                 fprintf(f, "}{%%\n");
-                gregoriotex_write_syllable(f, syllable, first_syllable,
-                        line_number, 2, status);
+                write_syllable(f, syllable, 2, status, write_syllable_text);
                 fprintf(f, "}%%\n");
+                write_this_syllable_text(f, NULL, syllable->text);
                 return;
             }
         }
@@ -2831,27 +2884,28 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
                     && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
                     B_DIVISIO_FINALIS) {
                 handle_final_bar(f, "DivisioFinalis", syllable);
+                write_this_syllable_text(f, NULL, syllable->text);
                 return;
             }
             if (!syllable->next_syllable && !syllable->text
                     && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
                     B_DIVISIO_MAIOR) {
                 handle_final_bar(f, "DivisioMaior", syllable);
+                write_this_syllable_text(f, NULL, syllable->text);
                 return;
             } else {
-                fprintf(f, "\\GreBarSyllable");
+                syllable_type = "\\GreBarSyllable";
             }
         } else {
-            fprintf(f, "\\GreSyllable");
+            syllable_type = "\\GreSyllable";
         }
     } else {
         write_fixed_text_styles(f, syllable->text,
                 syllable->next_syllable? syllable->next_syllable->text : NULL);
-        fprintf(f, "\\GreSyllable");
+        syllable_type = "\\GreSyllable";
     }
-    fprintf(f, "{\\GreSetThisSyllable");
-    gregoriotex_write_text(f, syllable->text, first_syllable);
-    fprintf(f, "}{}{\\Gre%s}", syllable->first_word ? "FirstWord" : "Unstyled");
+    write_this_syllable_text(f, syllable_type, syllable->text);
+    fprintf(f, "{}{\\Gre%s}", syllable->first_word ? "FirstWord" : "Unstyled");
     if (syllable->position == WORD_END
             || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
             || !syllable->next_syllable
@@ -2863,7 +2917,7 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
     }
     if (syllable->next_syllable) {
         fprintf(f, "{\\GreSetNextSyllable");
-        gregoriotex_write_text(f, syllable->next_syllable->text, NULL);
+        write_text(f, syllable->next_syllable->text);
         fprintf(f, "}{");
         write_syllable_point_and_click(f, syllable, status);
         fprintf(f, "}{%d}{",
@@ -3056,10 +3110,6 @@ static void gregoriotex_write_syllable(FILE *f, gregorio_syllable *syllable,
             } else {
                 fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
             }
-            if (*line_number == 1) {
-                fprintf(f, "\\GreAdjustThirdLine %%\n");
-                *line_number = 0;
-            }
             break;
 
         default:
@@ -3175,17 +3225,10 @@ static void initialize_score(gregoriotex_status *const status,
 void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         const char *const point_and_click_filename)
 {
-    gregorio_character *first_text;
-    /* true if it is the first syllable and false if not.
-     * It is for the initial. */
-    bool first_syllable = false;
     char clef_letter;
     int clef_line;
     char clef_flat = NO_KEY_FLAT;
     gregorio_syllable *current_syllable;
-    /* the current line (as far as we know), it is always 0, it can be 1 in the
-     * case of the first line of a score with a two lines initial */
-    unsigned char line = 0;
     int annotation_num;
     gregoriotex_status status;
 
@@ -3269,26 +3312,12 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     if (score->mode != 0) {
         fprintf(f, "\\GreMode{%d}%%\n", score->mode);
     }
-    /* first we draw the initial (first letter) and the initial key */
-    if (score->initial_style == NO_INITIAL) {
-        fprintf(f, "\\GreNoInitial %%\n");
-    } else {
-        if (score->initial_style == BIG_INITIAL) {
-            fprintf(f, "\\GreSetBigInitial %%\n");
-            line = 1;
-        }
-        first_text = gregorio_first_text(score);
-        if (first_text) {
-            fprintf(f, "\\GreSetInitial{");
-            gregorio_write_initial(first_text, f,
-                    (&gtex_write_verb),
-                    (&gtex_print_char),
-                    (&gtex_write_begin),
-                    (&gtex_write_end), (&gtex_write_special_char));
-            fprintf(f, "}%%\n");
-            first_syllable = true;
-        }
+
+    if (score->initial_style != INITIAL_NOT_SPECIFIED) {
+        fprintf(f, "\\GreSetInitialStyle{%d}%%\n", score->initial_style);
     }
+
+    fprintf(f, "\\GreScoreOpening{%%\n"); /* GreScoreOpening#1 */
     if (score->si.manuscript_reference) {
         fprintf(f, "\\GreScoreReference{%s}%%\n",
                 score->si.manuscript_reference);
@@ -3296,7 +3325,7 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     if (score->first_voice_info) {
         gregoriotex_write_voice_info(f, score->first_voice_info);
     }
-    fprintf(f, "\\GreBeginNotes %%\n");
+    fprintf(f, "}{%%\n"); /* GreScoreOpening#2 */
     if (score->first_voice_info) {
         gregorio_det_step_and_line_from_key(score->
                 first_voice_info->initial_key, &clef_letter, &clef_line);
@@ -3313,9 +3342,14 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     fprintf(f, "\\GreSetInitialClef{%c}{%d}{%d}%%\n", clef_letter, clef_line,
             clef_flat);
     current_syllable = score->first_syllable;
+    if (current_syllable) {
+        write_syllable(f, current_syllable, 0, &status,
+                write_first_syllable_text);
+        current_syllable = current_syllable->next_syllable;
+    }
     while (current_syllable) {
-        gregoriotex_write_syllable(f, current_syllable, &first_syllable, &line,
-                0, &status);
+        write_syllable(f, current_syllable, 0, &status,
+                write_syllable_text);
         current_syllable = current_syllable->next_syllable;
     }
     fprintf(f, "\\GreEndScore %%\n\\endinput %%\n");
