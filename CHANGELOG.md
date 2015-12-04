@@ -3,7 +3,11 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+### Fixed
+- Spacing was too large when alteration begins a syllable, see [#663](https://github.com/gregorio-project/gregorio/issues/663).
 
+### Changed
+- `alterationspace` is now a fixed dimen, see [UPGRADE.md](UPGRADE.md) for details.
 
 ## [4.0.0-rc2] - 2015-11-05
 ### Fixed
