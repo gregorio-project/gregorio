@@ -1718,9 +1718,9 @@
 % macro to force hyphenation of all syllables.
 \def\gresethyphen#1{%
   \IfStrEq{#1}{force}%
-    {\global\grechangedim{maximumspacewithoutdash}{-16383.99999pt}{0}}%
+    {\global\grechangedim{maximumspacewithoutdash}{-16383.99999pt}{fixed}}%
     {\IfStrEq{#1}{auto}%
-      {\global\grechangedim{maximumspacewithoutdash}{0.02 cm}{1}}%
+      {\global\grechangedim{maximumspacewithoutdash}{0.02 cm}{scalable}}%
       {\gre@error{Unrecognized option in \protect\gresethyphen}}%
     }%
 }%
