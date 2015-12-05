@@ -335,32 +335,37 @@
   % bolextra is the space taken up by a leading alteration (it's 0 if there is no leading alteration)
   % it's allowed to invade spaceafterlineclef, so long as it leaves at least beforealterationspace between itself and the clef
   % and minimalspaceatlinebeginning between the lyrics and the beginning of the line
-  \gre@skip@temp@one = \gre@skip@spaceafterlineclef\relax%
-  \advance\gre@skip@temp@one by -\gre@dimen@beforealterationspace\relax%
-  \ifdim\gre@dimen@bolextra>\gre@skip@temp@one\relax%
-    \global\advance\gre@skip@temp@three by \gre@skip@temp@one\relax%
-  \else%
-    \global\advance\gre@skip@temp@three by \gre@dimen@bolextra\relax%
-  \fi%
-  \ifdim#1>0pt\relax%
-    % no additional shift is needed if the notes start before the text
-    \global\gre@dimen@bolshift = \gre@skip@temp@three\relax%
-  \else%
-    % as the \gre@dimen@bolshift is computed from skips, we compute it in
-    % a skip temp registry, and then "cast" it into a dimen
-    % basic value for bolshift needs to incorporate -begindifference
-    \advance\gre@skip@temp@three by -#1\relax%
-    % we don't want to kern more than clefwidth + spaceafterlineclef - minimalspaceatlinebeginning
-    % violating this would mean that either the notes are closer than (clefwidth + spaceafterlineclef)
-    % or that the lyrics are closer than minimalspaceatlinebeginning
-    \gre@skip@temp@one = \gre@dimen@clefwidth\relax%
-    \advance\gre@skip@temp@one by \gre@skip@spaceafterlineclef\relax%
-    \advance\gre@skip@temp@one by -\gre@dimen@minimalspaceatlinebeginning\relax%
-    \ifdim\gre@skip@temp@three < \gre@skip@temp@one %
-      \global\gre@dimen@bolshift = \dimexpr\gre@skip@temp@three\relax%
+  % Of course, is there is no clef, then there is no space to invade, so we start by checking for the presence of a clef
+  \ifgre@showclef%
+    \gre@skip@temp@one = \gre@skip@spaceafterlineclef\relax%
+    \advance\gre@skip@temp@one by -\gre@dimen@beforealterationspace\relax%
+    \ifdim\gre@dimen@bolextra>\gre@skip@temp@one\relax%
+      \global\advance\gre@skip@temp@three by \gre@skip@temp@one\relax%
     \else%
-      \global\gre@dimen@bolshift = \dimexpr\gre@skip@temp@one\relax%
-    \fi %
+      \global\advance\gre@skip@temp@three by \gre@dimen@bolextra\relax%
+    \fi%
+    \ifdim#1>0pt\relax%
+      % no additional shift is needed if the notes start before the text
+      \global\gre@dimen@bolshift = \gre@skip@temp@three\relax%
+    \else%
+      % as the \gre@dimen@bolshift is computed from skips, we compute it in
+      % a skip temp registry, and then "cast" it into a dimen
+      % basic value for bolshift needs to incorporate -begindifference
+      \advance\gre@skip@temp@three by -#1\relax%
+      % we don't want to kern more than clefwidth + spaceafterlineclef - minimalspaceatlinebeginning
+      % violating this would mean that either the notes are closer than (clefwidth + spaceafterlineclef)
+      % or that the lyrics are closer than minimalspaceatlinebeginning
+      \gre@skip@temp@one = \gre@dimen@clefwidth\relax%
+      \advance\gre@skip@temp@one by \gre@skip@spaceafterlineclef\relax%
+      \advance\gre@skip@temp@one by -\gre@dimen@minimalspaceatlinebeginning\relax%
+      \ifdim\gre@skip@temp@three < \gre@skip@temp@one %
+        \global\gre@dimen@bolshift = \dimexpr\gre@skip@temp@three\relax%
+      \else%
+        \global\gre@dimen@bolshift = \dimexpr\gre@skip@temp@one\relax%
+      \fi %
+    \fi%
+  \else%
+    \global\gre@dimen@bolshift = 0pt\relax%
   \fi%
   \gre@debugmsg{bolshift}{ bolshift = \the\gre@dimen@bolshift}%
   \relax %
