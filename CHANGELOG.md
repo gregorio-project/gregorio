@@ -273,10 +273,10 @@ See GregorioRef.pdf for full details.
 - Clivis and pes quadratum alignment now follows Solesmes' conventions more closely (see [#10](https://github.com/gregorio-project/gregorio/issues/10)).
 
 ### Fixed
-- Reducing horizontal episemus width.
+- Reducing horizontal episema width.
 - Reducing flat stem length.
 - `mode` and `anotation-line` now do their job.
-- Low episemus (`_0`) under consecutive notes are now aligned correctly.
+- Low episema (`_0`) under consecutive notes are now aligned correctly.
 - Quilisma was melting too much with next note when in a second interval.
 - Fixed custo blocking possibility.
 - Fixing glyphs disapearing when importing into Illustrator.
@@ -308,7 +308,7 @@ See GregorioRef.pdf for full details.
 - adding requested features: Dominican bars, choral signs, text above staff lines
 - enabling comments in gabc files
 - adding ability to write verbatim TeX at {note, glyph, element} level
-- introducing horizontal episemus bridges
+- introducing horizontal episema bridges
 - default output is now utf8 directly; the `-O`  option allows old-style TeX output, i.e. `\char XXXX`
 - new static build system for packaged distributions
 
