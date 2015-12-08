@@ -1117,15 +1117,25 @@ static __inline void end_h_episema(height_computation *const h,
                 h->height = proposed_height;
             }
         }
-        /* end->previous checks that it's within the same glyph */
-        if (end && end->type == GRE_NOTE && end->previous
-                && end->previous->type == GRE_NOTE
-                && is_connected_left(h->get_size(end))
-                && !has_space_to_left(end) && h->last_connected_note
-                && is_connected_right(h->get_size(h->last_connected_note))) {
-            proposed_height = end->u.note.pitch + h->vpos;
-            if (h->is_better_height(proposed_height, h->height)) {
-                h->height = proposed_height;
+        if (end && end->type == GRE_NOTE) {
+            gregorio_note *note;
+            /* this loop checks that it's within the same glyph */
+            for (note = end->previous; note; note = note->previous) {
+                if (note == h->start_note) {
+                    if (is_connected_left(h->get_size(end))
+                            && h->last_connected_note
+                            && h->last_connected_note->next
+                            && h->last_connected_note->next->type == GRE_NOTE
+                            && !has_space_to_left(h->last_connected_note->next)
+                            && is_connected_right(h->get_size(
+                                    h->last_connected_note))) {
+                        proposed_height = end->u.note.pitch + h->vpos;
+                        if (h->is_better_height(proposed_height, h->height)) {
+                            h->height = proposed_height;
+                        }
+                    }
+                    break;
+                }
             }
         }
 
