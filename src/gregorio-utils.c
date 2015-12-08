@@ -1,4 +1,7 @@
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file implements the command line interface of Gregorio.
+ *
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
@@ -66,19 +69,18 @@ typedef enum gregorio_file_format {
 #define realpath(path,resolved_path) _fullpath(resolved_path, path, PATH_MAX)
 #endif
 
+/* define_path attempts to canonicalize the pathname of a given string */
 static char *define_path(char *current_directory, char *string)
 {
     int length;
     char *file_name;
-    char temp_name[PATH_MAX];
+    char *temp_name;
     char *base_name;
 #ifdef _WIN32
     char *last_backslash;
 #endif
 
-    file_name = malloc(PATH_MAX * sizeof(char));
-
-    strcpy(temp_name, string);
+    temp_name = gregorio_strdup(string);
     base_name = strrchr(temp_name, '/');
 #ifdef _WIN32
     last_backslash = strrchr(temp_name, '\\');
@@ -93,27 +95,27 @@ static char *define_path(char *current_directory, char *string)
         base_name++;
 
         /* try to resolve it */
-        if (!realpath(temp_name, file_name)) {
+        file_name = realpath(temp_name, NULL);
+        if (!file_name) {
             fprintf(stderr, "the directory %s for %s does not exist\n",
-                    file_name, base_name);
-            exit(-1);
+                    temp_name, base_name);
+            exit(1);
         }
     } else {
         /* no path was supplied */
         base_name = string;
+        file_name = gregorio_malloc(
+                strlen(current_directory) + strlen(base_name) + 2);
         strcpy(file_name, current_directory);
     }
 
-    /* make sure we're not bigger than PATH_MAX */
-    length = strlen(file_name);
-    if (length + strlen(base_name) + 1 >= PATH_MAX) {
-        fprintf(stderr, "filename too long: %s/%s\n", file_name, base_name);
-        exit(-1);
-    }
     /* build the file name */
+    length = strlen(file_name);
+    file_name = gregorio_realloc(file_name, length + strlen(base_name) + 2);
     file_name[length] = '/';
     strcpy(file_name + length + 1, base_name);
 
+    free(temp_name);
     return file_name;
 }
 
@@ -128,7 +130,7 @@ static char *get_base_filename(char *fbasename)
         return NULL;
     }
     l = strlen(fbasename) - strlen(p);
-    ret = (char *) malloc((l + 1) * sizeof(char));
+    ret = (char *) gregorio_malloc((l + 1) * sizeof(char));
     gregorio_snprintf(ret, l + 1, "%s", fbasename);
     ret[l] = '\0';
     return ret;
@@ -139,7 +141,7 @@ static char *get_output_filename(char *fbasename, const char *extension)
 {
     char *output_filename = NULL;
     output_filename =
-        (char *) malloc(sizeof(char) *
+        (char *) gregorio_malloc(sizeof(char) *
                         (strlen(extension) + strlen(fbasename) + 2));
     output_filename = strcpy(output_filename, fbasename);
     output_filename = strcat(output_filename, ".");
@@ -202,12 +204,12 @@ static void check_input_clobber(char *input_file_name, char *output_file_name)
     char *current_directory;
     int file_cmp;
     if (input_file_name && output_file_name) {
-        current_directory = malloc(PATH_MAX * sizeof(char));
+        current_directory = gregorio_malloc(PATH_MAX * sizeof(char));
         current_directory = getcwd(current_directory, PATH_MAX);
         if (current_directory == NULL) {
             fprintf(stderr, _("can't determine current directory"));
             free(current_directory);
-            exit(-1);
+            exit(1);
         }
         absolute_input_file_name = define_path(current_directory, input_file_name);
         absolute_output_file_name = define_path(current_directory, output_file_name);
@@ -219,7 +221,7 @@ static void check_input_clobber(char *input_file_name, char *output_file_name)
         free(absolute_input_file_name);
         free(absolute_output_file_name);
         if (file_cmp == 0) {
-            exit(-1);
+            exit(1);
         }
     }
 }
@@ -228,15 +230,16 @@ static char *encode_point_and_click_filename(char *input_file_name)
 {
     /* percent-encoding favors capital hex digits */
     static const char *const hex = "0123456789ABCDEF";
-    char filename[PATH_MAX], *result = NULL, *r = NULL, *p;
+    char *filename, *result = NULL, *r = NULL, *p;
 
-    if (!realpath(input_file_name, filename)) {
+    filename = realpath(input_file_name, NULL);
+    if (!filename) {
         fprintf(stderr, "error: unable to resolve %s\n", input_file_name);
-        exit(-1);
+        exit(1);
     }
 
     /* 2 extra characters for a possible leading slash and final NUL */
-    r = result = malloc((strlen(filename) * 4 + 2) * sizeof(char));
+    r = result = gregorio_malloc((strlen(filename) * 4 + 2) * sizeof(char));
 
 #ifdef _WIN32
     *(r++) = '/';
@@ -461,7 +464,7 @@ int main(int argc, char **argv)
         if (!input_file) { /* input not undefined (could be stdin) */
             fprintf(stderr, "error: no input file specified\n");
             print_usage(argv[0]);
-            exit(-1);
+            exit(1);
         }
     } else {
         input_file_name = argv[optind];
@@ -493,7 +496,7 @@ int main(int argc, char **argv)
         if (!kpse_in_name_ok(input_file_name)) {
             fprintf(stderr, "Error: kpse doesn't allow to read from file  %s\n",
                     input_file_name);
-            exit(-1);
+            exit(1);
         }
     #endif
 
@@ -519,7 +522,7 @@ int main(int argc, char **argv)
                     break;
                 default:
                     fprintf(stderr, "error: unsupported format");
-                    exit(-1);
+                    exit(1);
                 }
             }
         }
@@ -536,7 +539,7 @@ int main(int argc, char **argv)
             if (!kpse_out_name_ok(output_file_name)) {
                 fprintf(stderr, "Error: kpse doesn't allow to write in file  %s\n",
                         output_file_name);
-                exit(-1);
+                exit(1);
             }
         #endif
         output_file = fopen(output_file_name, "wb");
@@ -558,7 +561,7 @@ int main(int argc, char **argv)
         if (!input_file) {
             fprintf(stderr, "error: can't open file %s for reading\n",
                     input_file_name);
-            exit(-1);
+            exit(1);
         }
         gregorio_set_file_name(gregorio_basename(input_file_name));
         if (point_and_click) {
@@ -575,7 +578,7 @@ int main(int argc, char **argv)
         if (!error_file) {
             fprintf(stderr, "error: can't open file %s for writing\n",
                     error_file_name);
-            exit(-1);
+            exit(1);
         }
         gregorio_set_error_out(error_file);
     }
@@ -594,7 +597,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "error : invalid input format\n");
         fclose(input_file);
         fclose(output_file);
-        exit(-1);
+        exit(1);
         break;
     }
 
@@ -602,7 +605,7 @@ int main(int argc, char **argv)
     if (score == NULL) {
         fclose(output_file);
         fprintf(stderr, "error in file parsing\n");
-        exit(-1);
+        exit(1);
     }
 
     gregorio_fix_initial_keys(score, DEFAULT_KEY);
@@ -621,7 +624,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "error : invalid output format\n");
         gregorio_free_score(score);
         fclose(output_file);
-        exit(-1);
+        exit(1);
         break;
     }
     fclose(output_file);
@@ -633,6 +636,9 @@ int main(int argc, char **argv)
     gabc_score_determination_lex_destroy();
     gabc_notes_determination_lex_destroy();
     gregorio_vowel_rulefile_lex_destroy();
+    if (error_file_name) {
+        fclose(error_file);
+    }
 
     exit(gregorio_get_return_value());
 }

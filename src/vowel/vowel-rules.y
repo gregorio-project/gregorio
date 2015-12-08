@@ -1,5 +1,8 @@
 %{
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file implements the vowel rule parser.
+ *
  * Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This program is free software: you can redistribute it and/or modify it

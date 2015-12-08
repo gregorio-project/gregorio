@@ -1,5 +1,8 @@
 %{
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file implements the score lexer.
+ *
  * Gregorio score determination in gabc input.
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *

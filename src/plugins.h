@@ -1,5 +1,6 @@
 /*
- * Gregorio format support headers.
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This header prototypes the "main" entry points for reading and writing data.
  *
  * Copyright (C) 2008-2015 The Gregorio Project (see CONTRIBUTORS.md)
  * 

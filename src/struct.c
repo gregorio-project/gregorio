@@ -1,4 +1,7 @@
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file implements the Gregorio data structures.
+ *
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
@@ -45,18 +48,13 @@
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
+#include "support.h"
 #include "characters.h"
 
 static gregorio_note *create_and_link_note(gregorio_note **current_note,
         const gregorio_scanner_location *const loc)
 {
-    gregorio_note *note = calloc(1, sizeof(gregorio_note));
-    if (!note) {
-        gregorio_message(_("error in memory allocation"),
-                         "create_and_link_note", VERBOSITY_FATAL, 0);
-        return NULL;
-    }
-
+    gregorio_note *note = gregorio_calloc(1, sizeof(gregorio_note));
     note->previous = *current_note;
     note->next = NULL;
     if (*current_note) {
@@ -236,7 +234,7 @@ void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str)
     if (*current_note) {
         if ((*current_note)->texverb) {
             len = strlen((*current_note)->texverb) + strlen(str) + 1;
-            res = malloc(len * sizeof(char));
+            res = gregorio_malloc(len * sizeof(char));
             strcpy(res, (*current_note)->texverb);
             strcat(res, str);
             free((*current_note)->texverb);
@@ -626,13 +624,7 @@ static void gregorio_free_notes(gregorio_note **note)
 
 static gregorio_glyph *create_and_link_glyph(gregorio_glyph **current_glyph)
 {
-    gregorio_glyph *glyph = calloc(1, sizeof(gregorio_glyph));
-    if (!glyph) {
-        gregorio_message(_("error in memory allocation"),
-                         "create_and_link_glyph", VERBOSITY_FATAL, 0);
-        return NULL;
-    }
-
+    gregorio_glyph *glyph = gregorio_calloc(1, sizeof(gregorio_glyph));
     glyph->previous = *current_glyph;
     glyph->next = NULL;
     if (*current_glyph) {
@@ -747,13 +739,7 @@ static void gregorio_free_glyphs(gregorio_glyph **glyph)
 static gregorio_element *create_and_link_element(gregorio_element
                                                  **current_element)
 {
-    gregorio_element *element = calloc(1, sizeof(gregorio_element));
-    if (!element) {
-        gregorio_message(_("error in memory allocation"),
-                         "create_and_link_element", VERBOSITY_FATAL, 0);
-        return NULL;
-    }
-
+    gregorio_element *element = gregorio_calloc(1, sizeof(gregorio_element));
     element->previous = *current_element;
     element->next = NULL;
     if (*current_element) {
@@ -832,12 +818,7 @@ void gregorio_add_character(gregorio_character **current_character,
         grewchar wcharacter)
 {
     gregorio_character *element =
-        (gregorio_character *) calloc(1, sizeof(gregorio_character));
-    if (!element) {
-        gregorio_message(_("error in memory allocation"),
-                         "gregorio_add_character", VERBOSITY_FATAL, 0);
-        return;
-    }
+        (gregorio_character *) gregorio_calloc(1, sizeof(gregorio_character));
     element->is_character = 1;
     element->cos.character = wcharacter;
     element->next_character = NULL;
@@ -883,12 +864,7 @@ void gregorio_begin_style(gregorio_character **current_character,
         grestyle_style style)
 {
     gregorio_character *element =
-        (gregorio_character *) calloc(1, sizeof(gregorio_character));
-    if (!element) {
-        gregorio_message(_("error in memory allocation"),
-                         "add_note", VERBOSITY_FATAL, 0);
-        return;
-    }
+        (gregorio_character *) gregorio_calloc(1, sizeof(gregorio_character));
     element->is_character = 0;
     element->cos.s.type = ST_T_BEGIN;
     element->cos.s.style = style;
@@ -904,12 +880,7 @@ void gregorio_end_style(gregorio_character **current_character,
         grestyle_style style)
 {
     gregorio_character *element =
-        (gregorio_character *) calloc(1, sizeof(gregorio_character));
-    if (!element) {
-        gregorio_message(_("error in memory allocation"),
-                         "add_note", VERBOSITY_FATAL, 0);
-        return;
-    }
+        (gregorio_character *) gregorio_calloc(1, sizeof(gregorio_character));
     element->is_character = 0;
     element->cos.s.type = ST_T_END;
     element->cos.s.style = style;
@@ -938,12 +909,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
                 0);
         return;
     }
-    next = calloc(1, sizeof(gregorio_syllable));
-    if (!next) {
-        gregorio_message(_("error in memory allocation"), "add_syllable",
-                VERBOSITY_FATAL, 0);
-        return;
-    }
+    next = gregorio_calloc(1, sizeof(gregorio_syllable));
     next->type = GRE_SYLLABLE;
     next->special_sign = _NO_SIGN;
     next->position = position;
@@ -961,8 +927,8 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
     }
     next->next_syllable = NULL;
     next->previous_syllable = *current_syllable;
-    tab = (gregorio_element **) malloc(number_of_voices *
-                                       sizeof(gregorio_element *));
+    tab = (gregorio_element **) gregorio_malloc(number_of_voices *
+            sizeof(gregorio_element *));
     if (elements) {
         for (i = 0; i < number_of_voices; i++) {
             tab[i] = elements[i];
@@ -1034,7 +1000,7 @@ static void gregorio_source_info_init(source_info *si)
 gregorio_score *gregorio_new_score(void)
 {
     int annotation_num;
-    gregorio_score *new_score = calloc(1, sizeof(gregorio_score));
+    gregorio_score *new_score = gregorio_calloc(1, sizeof(gregorio_score));
     new_score->first_syllable = NULL;
     new_score->number_of_voices = 1;
     new_score->name = NULL;
@@ -1222,7 +1188,7 @@ void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes)
 
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info)
 {
-    gregorio_voice_info *next = calloc(1, sizeof(gregorio_voice_info));
+    gregorio_voice_info *next = gregorio_calloc(1, sizeof(gregorio_voice_info));
     next->initial_key = NO_KEY;
     next->flatted_key = false;
     next->style = NULL;

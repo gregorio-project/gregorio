@@ -1,4 +1,7 @@
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file contains functions providing UTF-8 support.
+ *
  * Copyright (C) 2008-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
@@ -24,6 +27,7 @@
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
+#include "support.h"
 
 /*
  * 
@@ -109,7 +113,7 @@ grewchar *gregorio_build_grewchar_string_from_buf(const char *const buf)
         return NULL;
     }
     len = strlen(buf); /* to get the length of the syllable in ASCII */
-    gwstring = (grewchar *) malloc((len + 1) * sizeof(grewchar));
+    gwstring = (grewchar *) gregorio_malloc((len + 1) * sizeof(grewchar));
     gregorio_mbstowcs(gwstring, buf, len); /* converting into wchar_t */
     return gwstring;
 }
@@ -147,7 +151,7 @@ unsigned char gregorio_wcsbufcmp(grewchar *wstr, const char *buf)
         return 1;
     }
     len = strlen(buf); /* to get the length of the syllable in ASCII */
-    gwbuf = (grewchar *) malloc((len + 1) * sizeof(grewchar));
+    gwbuf = (grewchar *) gregorio_malloc((len + 1) * sizeof(grewchar));
     gregorio_mbstowcs(gwbuf, buf, len); /* converting into wchar_t */
     /* we add the corresponding characters in the list of gregorio_characters */
     while (gwbuf[i] && wstr[i]) {
