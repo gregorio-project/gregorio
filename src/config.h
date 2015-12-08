@@ -1,4 +1,7 @@
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This header wraps the generated config_.h to provide version macros.
+ *
  * Gregorio configuration headers.
  *
  * Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
