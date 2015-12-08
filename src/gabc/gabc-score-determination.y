@@ -637,7 +637,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
             current_element->nabc = (char **) gregorio_calloc (nabc_lines,
                     sizeof (char *));
         }
-        current_element->nabc[nabc_state-1] = strdup(notes);
+        current_element->nabc[nabc_state-1] = gregorio_strdup(notes);
         current_element->nabc_lines = nabc_state;
     }
 }
