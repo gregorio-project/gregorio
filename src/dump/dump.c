@@ -1,4 +1,7 @@
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX.
+ * This file provides functions to dump out Gregorio structures.
+ *
  * Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.

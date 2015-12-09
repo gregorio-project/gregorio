@@ -1,4 +1,7 @@
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX.
+ * This file contains functions that deal with lyrics and styles.
+ *
  * Copyright (C) 2008-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
@@ -42,6 +45,7 @@
 #include "unicode.h"
 #include "characters.h"
 #include "messages.h"
+#include "support.h"
 #include "utf8strings.h"
 #include "vowel/vowel.h"
 
@@ -84,11 +88,7 @@ static bool read_vowel_rules(char *const lang) {
     char buf[PATH_MAX];
     size_t capacity = 16, size = 0;
     
-    if (!(filenames = malloc(capacity * sizeof(char *)))) {
-        gregorio_messagef("read_patterns", VERBOSITY_FATAL, 0,
-                _("unable to allocate memory"));
-        return false;
-    }
+    filenames = gregorio_malloc(capacity * sizeof(char *));
 
     file = popen("kpsewhich " VOWEL_FILE, "r");
     if (!file) {
@@ -100,15 +100,11 @@ static bool read_vowel_rules(char *const lang) {
     while (!feof(file) && !ferror(file) && fgets(buf, PATH_MAX, file)) {
         rtrim(buf);
         if (strlen(buf) > 0) {
-            filenames[size++] = strdup(buf);
+            filenames[size++] = gregorio_strdup(buf);
             if (size >= capacity) {
                 capacity <<= 1;
-                if (!(filenames = realloc(filenames,
-                                capacity * sizeof(char *)))) {
-                    gregorio_messagef("read_patterns", VERBOSITY_FATAL, 0,
-                            _("unable to allocate memory"));
-                    return false;
-                }
+                filenames = gregorio_realloc(filenames,
+                                capacity * sizeof(char *));
             }
         } else {
             gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
@@ -216,7 +212,7 @@ static void determine_center(gregorio_character *character, int *start,
     if (count == 0) {
         return;
     }
-    subject = (grewchar *)malloc((count + 1) * sizeof(grewchar));
+    subject = (grewchar *)gregorio_malloc((count + 1) * sizeof(grewchar));
     for (count = 0, ch = character; ch; ch = ch->next_character) {
         if (ch->is_character) {
             subject[count ++] = ch->cos.character;
@@ -268,7 +264,7 @@ static void style_push(det_style **current_style, unsigned char style)
     if (!current_style) {
         return;
     }
-    element = (det_style *) malloc(sizeof(det_style));
+    element = (det_style *) gregorio_malloc(sizeof(det_style));
     element->style = style;
     element->previous_style = NULL;
     element->next_style = (*current_style);
@@ -359,7 +355,7 @@ static __inline void verb_or_sp(const gregorio_character **ptr_character,
         ptr_character = &current_character;
         return;
     }
-    text = (grewchar *) malloc((i + 1) * sizeof(grewchar));
+    text = (grewchar *) gregorio_malloc((i + 1) * sizeof(grewchar));
     current_character = begin_character;
     while (j < i) {
         if (current_character->is_character) {
@@ -715,7 +711,7 @@ static void insert_style_before(unsigned char type,
         unsigned char style, gregorio_character *current_character)
 {
     gregorio_character *element =
-            (gregorio_character *) malloc(sizeof(gregorio_character));
+            (gregorio_character *) gregorio_malloc(sizeof(gregorio_character));
     element->is_character = 0;
     element->cos.s.type = type;
     element->cos.s.style = style;
@@ -739,7 +735,7 @@ static void insert_style_after(unsigned char type, unsigned char style,
         gregorio_character **current_character)
 {
     gregorio_character *element =
-            (gregorio_character *) malloc(sizeof(gregorio_character));
+            (gregorio_character *) gregorio_malloc(sizeof(gregorio_character));
     element->is_character = 0;
     element->cos.s.type = type;
     element->cos.s.style = style;
@@ -757,7 +753,7 @@ static void insert_char_after(grewchar c,
         gregorio_character **current_character)
 {
     gregorio_character *element =
-            (gregorio_character *) malloc(sizeof(gregorio_character));
+            (gregorio_character *) gregorio_malloc(sizeof(gregorio_character));
     element->is_character = 1;
     element->cos.character = c;
     element->next_character = (*current_character)->next_character;

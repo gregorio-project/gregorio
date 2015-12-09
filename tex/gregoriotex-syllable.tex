@@ -19,7 +19,7 @@
 
 % this file contains definitions of the glyphs and the syllables
 
-\gre@declarefileversion{gregoriotex-syllable.tex}{4.0.0-rc2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-syllable.tex}{4.0.0}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the different glyphs
@@ -133,7 +133,7 @@
     \global\gre@firstglyphfalse%
   \fi%
   %\gre@dimen@lastglyphwidth=\gre@dimen@temp@three
-  %#5\relax 
+  %#5\relax
   #6\relax %
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax%
@@ -261,7 +261,7 @@
   \relax %
 }%
 
-% this is the function that we call when we try to determine the next aligncenter of the notes. In this case we call this function with normal arguments if there is no flat nor natural ; we call it with argument + 20 if there is a flat and argument + 40 if there is a natural... I know this is dirty... but... this is TeX...
+% this is the function that we call when we try to determine the next aligncenter of the notes. In this case we call this function with normal arguments if there is no flat nor natural ; we call it with argument + 20 if there is a flat and argument + 40 if there is a natural, +60 with a sharp
 \def\gre@calculate@nextnotesaligncenter#1{%
   \ifnum#1<20\relax %
     \gre@calculate@simplenotesaligncenter{#1}{1}%
@@ -292,6 +292,7 @@
       \fi%
     \fi %
     \advance\gre@dimen@temp@five by \wd\gre@box@temp@width %
+    \advance\gre@dimen@temp@five by \gre@dimen@alterationspace %
     \global\gre@dimen@notesaligncenter=\gre@dimen@temp@five %
   \fi %
   \relax %
@@ -340,9 +341,9 @@
 \newif\ifgre@boxing%
 \gre@boxingfalse%
 
-% 
+%
 % Helper macros for fixing text in rare cases
-% 
+%
 
 % the macro we call with all normal text
 \def\gre@textnormal#1{%
@@ -540,7 +541,7 @@
 % TODO: find another system for the end syllable
 % #9 : glyphs : all the notes
 % the three next parameters are to put an hyphen if necessary, they can be empty for end of words
-% #5 : macros setting next syllable letters of the next syllable 
+% #5 : macros setting next syllable letters of the next syllable
 % #6 : the line:char:column for a textedit link
 % #7 : alignment type of the first next glyph
 % #8 : other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments
@@ -578,7 +579,7 @@
     \ifgre@beginningofscore%
       \gre@beginningofscorefalse%
     \else%
-      % we don't want to shift right inside a discretionary 
+      % we don't want to shift right inside a discretionary
       \ifnum\gre@insidediscretionary=0\relax%
         \kern\gre@dimen@bolshift\relax%
       \fi%
@@ -777,7 +778,7 @@
   \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
   \ifdim\wd\gre@box@syllabletext = 0 pt\relax %
     % the most difficult case : when there is nothing to write
-    % first we need to determine the real space that there will be between the notes. Here again it is not so simple... let's consider these two kinds of spaces : 
+    % first we need to determine the real space that there will be between the notes. Here again it is not so simple... let's consider these two kinds of spaces :
     %% 1/ the minimal space between a note and the bar + the width of the bar + the minimal space between the bar and the note (that's the global idea, in fact there are nuances) : we assign skip@temp@three to it
     %% 2/ enddifference + begindifference + space between notes and word : we assign skip@temp@two to it
     \gre@skip@temp@three=\gre@skip@notebarspace\relax%
@@ -852,14 +853,14 @@
         \gre@debugmsg{ifdim}{ temp@skip@two > -wd(gre@box@syllablenotes)}%
         \ifdim\gre@skip@temp@two > -\wd\gre@box@syllablenotes %
           \kern\gre@skip@temp@two %
-        \else % \ifdim\gre@dimen@temp@five > -\wd\gre@box@syllablenotes 
+        \else % \ifdim\gre@dimen@temp@five > -\wd\gre@box@syllablenotes
           \gre@skip@temp@one = -\wd\gre@box@syllablenotes %
           \gre@hskip\gre@skip@temp@one %
         \fi %
       \fi %
     \fi %
   % then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
-  \else %ifdim\wd\gre@box@syllabletext = 0 pt 
+  \else %ifdim\wd\gre@box@syllabletext = 0 pt
     #8\relax %
     \raise\gre@dimen@textlower \copy\gre@box@syllabletext %
     \ifgre@mustdotranslationcenterend%

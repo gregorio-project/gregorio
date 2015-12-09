@@ -1,5 +1,8 @@
 %{
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file implements the score parser.
+ *
  * Gregorio score determination in gabc input.
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
@@ -35,6 +38,7 @@
 #include "unicode.h"
 #include "messages.h"
 #include "characters.h"
+#include "support.h"
 #include "sha1.h"
 #include "plugins.h"
 #include "gabc.h"
@@ -335,7 +339,7 @@ static void end_definitions(void)
     }
     /* voice is now voice-1, so that it can be the index of elements */
     voice = 0;
-    elements = (gregorio_element **) malloc(number_of_voices *
+    elements = (gregorio_element **) gregorio_malloc(number_of_voices *
             sizeof(gregorio_element *));
     for (i = 0; i < number_of_voices; i++) {
         elements[i] = NULL;
@@ -629,10 +633,10 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
                     "happen!"), "gabc_y_add_notes", VERBOSITY_FATAL, 0);
         }
         if (!current_element->nabc) {
-            current_element->nabc = (char **) calloc (nabc_lines,
+            current_element->nabc = (char **) gregorio_calloc (nabc_lines,
                     sizeof (char *));
         }
-        current_element->nabc[nabc_state-1] = strdup(notes);
+        current_element->nabc[nabc_state-1] = gregorio_strdup(notes);
         current_element->nabc_lines = nabc_state;
     }
 }
