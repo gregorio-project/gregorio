@@ -35,6 +35,7 @@
 #include <string.h> /* for strcmp */
 #include <locale.h>
 #include <limits.h>
+#include <errno.h>
 #include "struct.h"
 #include "plugins.h"
 #include "messages.h"
@@ -63,10 +64,7 @@ typedef enum gregorio_file_format {
 
 /* realpath is not in mingw32 */
 #ifdef _WIN32
-#ifndef PATH_MAX
-#define PATH_MAX _MAX_PATH
-#endif
-#define realpath(path,resolved_path) _fullpath(resolved_path, path, PATH_MAX)
+#define realpath(path,resolved_path) _fullpath(resolved_path, path, _MAX_PATH)
 #endif
 
 /* define_path attempts to canonicalize the pathname of a given string */
@@ -199,16 +197,22 @@ available formats are:\n\
 
 static void check_input_clobber(char *input_file_name, char *output_file_name)
 {
-    char *absolute_input_file_name;
-    char *absolute_output_file_name;
-    char *current_directory;
-    int file_cmp;
     if (input_file_name && output_file_name) {
-        current_directory = gregorio_malloc(PATH_MAX * sizeof(char));
-        current_directory = getcwd(current_directory, PATH_MAX);
+        char *absolute_input_file_name;
+        char *absolute_output_file_name;
+        char *current_directory;
+        int file_cmp;
+        int bufsize = 128;
+        char *buf = gregorio_malloc(bufsize * sizeof(char));
+        while ((current_directory = getcwd(buf, bufsize)) == NULL
+                && errno == ERANGE && bufsize < MAX_BUF_GROWTH) {
+            free(buf);
+            bufsize <<= 1;
+            buf = gregorio_malloc(bufsize * sizeof(char));
+        }
         if (current_directory == NULL) {
             fprintf(stderr, _("can't determine current directory"));
-            free(current_directory);
+            free(buf);
             exit(1);
         }
         absolute_input_file_name = define_path(current_directory, input_file_name);
@@ -217,7 +221,7 @@ static void check_input_clobber(char *input_file_name, char *output_file_name)
         if (file_cmp == 0) {
             fprintf(stderr, "error: refusing to overwrite the input file\n");
         }
-        free(current_directory);
+        free(buf);
         free(absolute_input_file_name);
         free(absolute_output_file_name);
         if (file_cmp == 0) {

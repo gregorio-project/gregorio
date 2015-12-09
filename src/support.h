@@ -24,6 +24,9 @@
 #define SUPPORT_H
 
 #include <stdlib.h>
+#include <limits.h>
+
+#define MAX_BUF_GROWTH ((INT_MAX >> 1) + 1)
 
 void gregorio_snprintf(char *s, size_t size, const char *format, ...)
         __attribute__ ((__format__ (__printf__, 3, 4)));
