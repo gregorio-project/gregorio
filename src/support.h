@@ -1,4 +1,7 @@
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This header prototypes the miscellaneous support functions.
+ *
  * Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
  * 
  * This file is part of Gregorio.
@@ -24,5 +27,9 @@
 
 void gregorio_snprintf(char *s, size_t size, const char *format, ...)
         __attribute__ ((__format__ (__printf__, 3, 4)));
+void *gregorio_malloc(size_t size);
+void *gregorio_calloc(size_t nmemb, size_t size);
+void *gregorio_realloc(void *ptr, size_t size);
+char *gregorio_strdup(const char *s);
 
 #endif

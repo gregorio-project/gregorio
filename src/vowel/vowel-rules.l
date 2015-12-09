@@ -1,5 +1,8 @@
 %{
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file implements the vowel rule lexer.
+ *
  * Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
@@ -24,6 +27,7 @@
 #include <string.h>
 #include "struct.h"
 #include "messages.h"
+#include "support.h"
 
 #include "vowel.h"
 
@@ -35,7 +39,7 @@
 static __inline void save_lval(void)
 {
     gregorio_vowel_rulefile_lval =
-            malloc((gregorio_vowel_rulefile_leng + 1) * sizeof(char));
+            gregorio_malloc((gregorio_vowel_rulefile_leng + 1) * sizeof(char));
     strncpy(gregorio_vowel_rulefile_lval, gregorio_vowel_rulefile_text,
             gregorio_vowel_rulefile_leng);
     gregorio_vowel_rulefile_lval[gregorio_vowel_rulefile_leng] = '\0';

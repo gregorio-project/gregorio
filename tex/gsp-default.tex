@@ -52,7 +52,7 @@
 % Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
 % see http://tug.org/pipermail/luatex/2013-July/004516.html
 % The idea is that we use discretionaries (explicit hyphens, though more than hyphens in our case) for clef changes, and we need to give them a special penalty, which is not taken into account if pretolerance is > -1 on LuaTeX < 0.80. For a more detailed explanation see http://tug.org/pipermail/luatex/2013-July/004516.html.
-\ifnum\the\luatexversion < 78\relax % 
+\ifnum\the\luatexversion < 78\relax %
   \global\def\grepretolerance{-1}%
 \else %
   \global\def\grepretolerance{\pretolerance}%
@@ -87,7 +87,7 @@
 % space between glyphs in the same element
 \grecreatedim{interglyphspace}{0.06927 cm plus 0.00363 cm minus 0.00363 cm}{scalable}%
 % space between an alteration (flat or natural) and the next glyph
-\grecreatedim{alterationspace}{0.07747 cm plus 0.01276 cm minus 0.00455 cm}{scalable}%
+\grecreatedim{alterationspace}{0.07747 cm}{scalable}%
 % space between a clef and a flat (for clefs with flat)
 \grecreatedim{clefflatspace}{0.05469 cm plus 0.00638 cm minus 0.00638 cm}{scalable}%
 % space before a choral sign

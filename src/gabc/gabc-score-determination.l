@@ -1,5 +1,8 @@
 %{
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file implements the score lexer.
+ *
  * Gregorio score determination in gabc input.
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
@@ -26,6 +29,7 @@
 #include "struct.h"
 #include "messages.h"
 #include "bool.h"
+#include "support.h"
 
 #include "gabc.h"
 #include "gabc-score-determination.h"
@@ -122,7 +126,8 @@ semicolon. */
         return COLON;
     }
 <attribute>[^;\n\r]*(;[^;\n\r]+)*([\n\r]+[^;]*(;[^;]+)*)? {
-        gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
+        gabc_score_determination_lval.text =
+                gregorio_strdup(gabc_score_determination_text);
         return ATTRIBUTE;
     }
 <attribute>;(;|[\n\r]+) {
@@ -233,7 +238,8 @@ semicolon. */
                 gabc_score_determination_text[0]);
     }
 <score>[^\{\}\(\[\]<%]+ {
-        gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
+        gabc_score_determination_lval.text =
+                gregorio_strdup(gabc_score_determination_text);
         return CHARACTERS;
     }
 <score,style><i> {
@@ -327,7 +333,8 @@ semicolon. */
         return SP_END;
     }
 <style>[^<\{\}]* {
-        gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
+        gabc_score_determination_lval.text =
+                gregorio_strdup(gabc_score_determination_text);
         return CHARACTERS;
     }
 <score>\% {
@@ -352,11 +359,13 @@ semicolon. */
         return VERB_END;
     }
 <verb>[^<]* {
-        gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
+        gabc_score_determination_lval.text =
+                gregorio_strdup(gabc_score_determination_text);
         return CHARACTERS;
     }
 <verb,style,score,alt>< {
-        gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
+        gabc_score_determination_lval.text =
+                gregorio_strdup(gabc_score_determination_text);
         return CHARACTERS;
     }
 <score,style>\{ {
@@ -370,7 +379,8 @@ semicolon. */
         return ALT_BEGIN;
     }
 <alt>[^<]* {
-        gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
+        gabc_score_determination_lval.text =
+                gregorio_strdup(gabc_score_determination_text);
         return CHARACTERS;
     }
 <alt><\/alt> {
@@ -397,7 +407,8 @@ semicolon. */
         return OPENING_BRACKET;
     }
 <notes>[^&|\)]* {
-        gabc_score_determination_lval.text = strdup(gabc_score_determination_text);
+        gabc_score_determination_lval.text =
+                gregorio_strdup(gabc_score_determination_text);
         return NOTES;
     }
 <notes>& {

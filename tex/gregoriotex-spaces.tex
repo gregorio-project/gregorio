@@ -19,7 +19,7 @@
 
 % this file contains definitions of spaces
 
-\gre@declarefileversion{gregoriotex-spaces.tex}{4.0.0-rc2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-spaces.tex}{4.0.0}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for tuning penalties
@@ -218,7 +218,7 @@
 %% @uses \gre@dimen@enddifference
 %% @uses \gre@dimen@nextbegindifference
 %%
-%% Pseudo-code: 
+%% Pseudo-code:
 %%  min_text_dist = same_word ? 0 : space_inter_words
 %%  if (no_txt_under_prev) :
 %%     tmp = cur_end_diff > 0 ? 0 : -cur_end_diff
@@ -346,12 +346,12 @@
     % no additional shift is needed if the notes start before the text
     \global\gre@dimen@bolshift = \gre@skip@temp@three\relax%
   \else%
-    % as the \gre@dimen@bolshift is computed from skips, we compute it in 
+    % as the \gre@dimen@bolshift is computed from skips, we compute it in
     % a skip temp registry, and then "cast" it into a dimen
     % basic value for bolshift needs to incorporate -begindifference
     \advance\gre@skip@temp@three by -#1\relax%
     % we don't want to kern more than clefwidth + spaceafterlineclef - minimalspaceatlinebeginning
-    % violating this would mean that either the notes are closer than (clefwidth + spaceafterlineclef) 
+    % violating this would mean that either the notes are closer than (clefwidth + spaceafterlineclef)
     % or that the lyrics are closer than minimalspaceatlinebeginning
     \gre@skip@temp@one = \gre@dimen@clefwidth\relax%
     \advance\gre@skip@temp@one by \gre@skip@spaceafterlineclef\relax%
@@ -497,7 +497,7 @@
   \global\multiply\gre@dimen@glyphraisevalue by \the\gre@factor %
   \global\multiply\gre@dimen@glyphraisevalue by \the\gre@count@temp@three %
   \gre@dimen@addedraisevalue= 0 sp%
-  \ifcase#2 % 
+  \ifcase#2 %
   \or\or\or%3: if it is a vertical episema on a line, we shift it a bit higher, so that it's more beautiful
     \ifgre@isonaline%
       \gre@dimen@addedraisevalue=7250 sp%
@@ -513,7 +513,7 @@
       \gre@dimen@addedraisevalue=-6900 sp%
       \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
-    \else % 
+    \else %
       \gre@dimen@addedraisevalue=-2200 sp%
       \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
       \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
@@ -796,7 +796,7 @@
 \def\grecreatedim#1#2#3{%
   \gre@dimension{#1}{#2}
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
-  \IfStrEq{#3}{1}%	
+  \IfStrEq{#3}{1}%
     {\gre@deprecated{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}%
     \grescaledim{#1}{true}}%
     {\IfStrEq{#3}{0}%
@@ -951,6 +951,7 @@
   \IfStrEq{#1}{curlybraceaccentusshift}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{initialraise}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{beforealterationspace}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{alterationspace}{\gre@rubberfalse}{\relax}%
 }%
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3

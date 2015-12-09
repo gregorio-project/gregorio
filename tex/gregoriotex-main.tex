@@ -106,7 +106,7 @@
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
-\xdef\gre@gregorioversion{4.0.0-rc2}% GREGORIO_VERSION - VersionManager.py
+\xdef\gre@gregorioversion{4.0.0}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
@@ -1172,8 +1172,8 @@
       \fi %
     \fi %
   \fi %
-  %\gre@penalty{\greendafterbarpenalty }\relax 
-  %\global\gre@dimen@enddifference=0pt 
+  %\gre@penalty{\greendafterbarpenalty }\relax
+  %\global\gre@dimen@enddifference=0pt
   \relax %
 }%
 
@@ -1310,7 +1310,7 @@
   \or% case 1
     \gre@skip@temp@four = \gre@dimen@zerowidthspace\relax%
   \or% case 2
-    \gre@skip@temp@four = \gre@skip@alterationspace\relax%
+    \gre@skip@temp@four = \gre@dimen@alterationspace\relax%
   \or% case 3
     \gre@skip@temp@four = \gre@skip@punctuminclinatumshift\relax%
   \or% case 4
@@ -1758,9 +1758,9 @@
 % macro to force hyphenation of all syllables.
 \def\gresethyphen#1{%
   \IfStrEq{#1}{force}%
-    {\global\grechangedim{maximumspacewithoutdash}{-16383.99999pt}{0}}%
+    {\global\grechangedim{maximumspacewithoutdash}{-16383.99999pt}{fixed}}%
     {\IfStrEq{#1}{auto}%
-      {\global\grechangedim{maximumspacewithoutdash}{0.02 cm}{1}}%
+      {\global\grechangedim{maximumspacewithoutdash}{0.02 cm}{scalable}}%
       {\gre@error{Unrecognized option in \protect\gresethyphen}}%
     }%
 }%

@@ -14,61 +14,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `biginitial` style, consolidated into the `initial` style.
 
 
-## [4.0.0-rc2] - 2015-11-05
-### Deprecated
-- `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
-- `biginitial` style, consolidated into the `initial` style.
-
-
-## [Unreleased][unreleased]
-### Fixed
-- The spacing of manual in-line custos (`(f+)` in gabc) is now consistent with the spacing of automatic in-line custos (`(z0)` in gabc).  See [#642](https://github.com/gregorio-project/gregorio/issues/642).
-- Signs on the climacus praepunctis deminutus `(ghgf~)` neume are now positioned correctly.  See [#650](https://github.com/gregorio-project/gregorio/issues/650)
-- When using first letter lyric centering and big initials, the initial is no longer incorrectly included in the first syllable.  See [#648](https://github.com/gregorio-project/gregorio/issues/648).  This is a fix for a bug in a new 4.0.0 feature, so this changelog entry should be removed when the change log is merged for the 4.0.0 release.
-- Mac installer has been made SIP compliant (i.e. it now works on El Capitan).
-- Mac installer can now detect installations of TeXLive done with MacPorts or the command-line tool provided by TUG.
-- Windows executable has file version information attached correctly so that the installer can properly recognize and replace the binary during an upgrade process.
-
-### Added
-- The ability to force a hyphen after an empty first syllable, enabled by default since this was the behavior prior to 4.0.  Version 4.0 has an improved spacing algorithm which will eliminate the hyphen if the notes for the first syllable are too close to the second.  To switch to this behavior, use `\gresetemptyfirstsyllablehyphen{auto}`.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#653](https://github.com/gregorio-project/gregorio/issues/653)).
-- Shell scripts for configuring TeXShop and TeXworks on a Mac.
-
-### Removed
-- The TeXShop script for compiling gabc files.  Supplanted by the new autocompile feature of the package.
-- Spaces associated with chironomic signs (which were removed in 4.0.0-beta)
-
-### Deprecated
-- The meaningless `gabc-version` header in gabc (see [#664](https://github.com/gregorio-project/gregorio/issues/664)).
-
-
-## [4.0.0-rc1] - 2015-10-08
-### Fixed
-- Deactivating the end of line shifts now prevents lyrics from stretching under the custos at the end of the line.
-- All of the keywords for `\grescaledim` now work as described in the documentation.
-
-### Changed
-- `\grecreatedim` and `\grechangedim` now take keywords for their third argument (`scalable` and `fixed`) instead of integers (`1` and `0`) to make the more in keeping with the overall user command conventions.
-- `\grescaledim` now accepts `scalable` as a keyword to turn on scalable (in keeping with the above change)
-- Alterations are partially ignored when aligning lines on the notes (i.e. `\gresetbolshifts{enabled}`).  They are not allowed to get any closer to the clef than `beforealterationspace` and the lyrics are not allowed to get any closer to the left-hand margin than `minimalspaceatlinebeginning`, but other than that GregorioTeX will shift them left as much as possible to make the notes align `spaceafterlineclef` away from the clef.  Note that for the default values of these distances, only the natural is small enough to acheive true alignment.
-- `gregoriotex.sty` and `gregoriosyms.sty` now check to make sure that they are not both loaded.  If `gregoriotex` detects that `gregoriosyms` is loaded, then an error is raised.  If `gregoriosyms` detects that `gregoriotex` is loaded, then the loading of `gregoriosyms` is silently aborted and compilation proceeds.
-- Liquescence on a bistropha or tristropha will only appear on the note(s) marked by `<` in gabc, rather than on all notes in the figure.  This means that a figure like `(gsss<)` will only have a liquescent "tail" on the final note.  If you would like all notes to be liquescent for some reason, you can use a figure like `(gs<gs<gs<)` instead.
-
-### Added
-- New distance, `initialraise`, which will lift (or lower, if negative) the initial.
-- The first word of the score is now passed to a macro that allow it to be styled from TeX.  The first word is passed to `\GreFirstWord#1` and is styled by changing the `firstword` style.
-- A new type of lyric centering, enabled with `\gresetlyriccentering{firstletter}`, which aligns the neume with the first letter of each syllable.
-- `\greornamentation` allows access to the two ornamentation glyphs.  The ability to access these two glyphs via `{\gregoriosymbolfont \char 75}` was broken by the new interface to the glyphs in greextra.
-- The missing liquescent salicus glyphs.
-
-## [4.0.0-beta2] - 2015-08-26
-### Fixed
-- Corrected the rendering of explicit automatic and manual custos at the end of lines when the clef change that follows it is pushed to the next line (see [#569](https://github.com/gregorio-project/gregorio/issues/569)).
-- Distinguished between `eolshift` and `bolshift` giving each their own flag and user commmand for turning them on and off.  `\seteolshift{enable}` allows the lyric text to stretch under the custos at the end of the line.  `\setbolshift{enable}` aligns the beginning of each line on the notes instead of the text.  Both are on by default, but can be turned off with `\seteolshift{disable}` and `\setbolshift{disable}`.
-
-### Added
-- `\greillumination`: allows user to specify arbitrary content (usually an image) to be used as the initial.
-
-## [4.0.0-beta] - 2015-08-01
+## [4.0.0] - 2015-12-08
 ### Fixed
 - Handling of the first syllable in gabc is now more consistent with the all other syllables.  This centers the syllable correctly when using latin syllable centering (see [#42](https://github.com/gregorio-project/gregorio/issues/42)) and makes the use of styles less surprising in the first syllable (see [#135](https://github.com/gregorio-project/gregorio/issues/135)).
 - Handling of manually-placed custos is improved.  In particular, a manual custos at the end of the score should no longer be lost when the bar happens to be at the end of the line.
@@ -79,6 +25,14 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Gregorio will now try harder to select an appropriate pitch for an automatic custos (`z0`) on a clef change (see [#446](https://github.com/gregorio-project/gregorio/issues/446)).  If results are not satisfactory, use a manual custos (`+`) to select a pitch manually.
 - The centering of styled text under notes is now correct (See [#509](https://github.com/gregorio-project/gregorio/issues/509)).
 - Space for above lines text is now correctly added as needed, even at the beginning of a score (see [#533](https://github.com/gregorio-project/gregorio/issues/533)).
+- Corrected the rendering of explicit automatic and manual custos at the end of lines when the clef change that follows it is pushed to the next line (see [#569](https://github.com/gregorio-project/gregorio/issues/569)).
+- Distinguished between `eolshift` and `bolshift` giving each their own flag and user commmand for turning them on and off.  `\seteolshift{enable}` allows the lyric text to stretch under the custos at the end of the line.  `\setbolshift{enable}` aligns the beginning of each line on the notes instead of the text.  Both are on by default, but can be turned off with `\seteolshift{disable}` and `\setbolshift{disable}`.
+- The spacing of manual in-line custos (`(f+)` in gabc) is now consistent with the spacing of automatic in-line custos (`(z0)` in gabc).  See [#642](https://github.com/gregorio-project/gregorio/issues/642).
+- Signs on the climacus praepunctis deminutus `(ghgf~)` neume are now positioned correctly.  See [#650](https://github.com/gregorio-project/gregorio/issues/650)
+- Mac installer has been made SIP compliant (i.e. it now works on El Capitan).
+- Mac installer can now detect installations of TeXLive done with MacPorts or the command-line tool provided by TUG.
+- Windows executable has file version information attached correctly so that the installer can properly recognize and replace the binary during an upgrade process.
+- Spacing was too large when alteration begins a syllable, see [#663](https://github.com/gregorio-project/gregorio/issues/663).
 
 ### Changed
 - A new, more systematic naming scheme has been created for GregorioTeX macros.  The naming scheme should reduce the chances of naming conflicts with other packages and make it easier to identify what a particular macro is for and how to use it.  Most user functions have been renamed in order to bring them into line with this scheme.  Please see GregorioRef for a complete list of the new function names.  In general, old names will still work, but they will raise a deprecation warning and will be dropped from GregorioTeX in a future relase.
@@ -116,9 +70,14 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Style for score elements can now be changed via the `\grechangestyle` command.  This replaces the mixed system of styling commands which could be redefined for some elements and specialized commands for applying styles to others.  See GregorioRef for details.
 - Annotations with more than two lines are now supported (originally requested [on the user list](http://www.mail-archive.com/gregorio-users%40gna.org/msg00164.html) when two line annoations were made possible).  To build the annotation box use `\greannoataion`.  See GregorioRef for details.
 - The `annotation` header field in `gabc` now places its value(s) above the inital if no annotation is explicitly given by the user via `\greannotation` (see [#44](https://github.com/gregorio-project/gregorio/issues/44)).
-- `\grescaledim` now takes two arguments to bring it into line with the systemized naming scheme.  The second argument should be `yes`, `true`, or `on` if you want the distance to scale when the staff size changes.  Anything else will make the distance independent of the staff size.
+- `\grescaledim` now takes two arguments to bring it into line with the systemized naming scheme.  The second argument should be `scalable` if you want the distance to scale when the staff size changes, `fixed` if you don't.
 - Gregorio is now able to make individual lines of a score taller, when the position of the note require extra space, without affecting the rest of the lines.  This is the new default behavior.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#59](https://github.com/gregorio-project/gregorio/issues/59)).
 - Braces are now rendered using MetaPost by default.  This allows the line weight to remain more consistent when braces are stretched.  The old behavior (which uses the score font instead) can be restored using `\gresetbracerendering{font}`.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#535](https://github.com/gregorio-project/gregorio/issues/535)).
+- `\grecreatedim` and `\grechangedim` now take keywords for their third argument (`scalable` and `fixed`) instead of integers (`1` and `0`) to make the more in keeping with the overall user command conventions.
+- Alterations are partially ignored when aligning lines on the notes (i.e. `\gresetbolshifts{enabled}`).  They are not allowed to get any closer to the clef than `beforealterationspace` and the lyrics are not allowed to get any closer to the left-hand margin than `minimalspaceatlinebeginning`, but other than that GregorioTeX will shift them left as much as possible to make the notes align `spaceafterlineclef` away from the clef.  Note that for the default values of these distances, only the natural is small enough to acheive true alignment.
+- `gregoriotex.sty` and `gregoriosyms.sty` now check to make sure that they are not both loaded.  If `gregoriotex` detects that `gregoriosyms` is loaded, then an error is raised.  If `gregoriosyms` detects that `gregoriotex` is loaded, then the loading of `gregoriosyms` is silently aborted and compilation proceeds.
+- Liquescence on a bistropha or tristropha will only appear on the note(s) marked by `<` in gabc, rather than on all notes in the figure.  This means that a figure like `(gsss<)` will only have a liquescent "tail" on the final note.  If you would like all notes to be liquescent for some reason, you can use a figure like `(gs<gs<gs<)` instead.
+- `alterationspace` is now a fixed dimension, see [UPGRADE.md](UPGRADE.md) for details.
 
 ### Added
 - With thanks to Jakub Jelínek, St. Gallen style adiastematic notation is now handled through [nabc syntax](http://gregoriochant.org/dokuwiki/doku.php/language) (see GregorioNabcRef.pdf for details and [the new example](examples/FactusEst.gabc)). Only one line above the notes is currently handled. This is a preview, backward incompatible change are possible in future releases.
@@ -135,7 +94,7 @@ See GregorioRef.pdf for full details.
 - Added `--with-kpathsea` option to configure script, to check input and output file against `openout_any` and `openin_any` settings of texmf.cnf (TeXLive only). Necessary to be included in `shell_escape_commands` in TeXLive.
 - Support for `lualatex -recorder`.  Autocompiled gabc and gtex files will now be properly recorded so that programs like `latexmk -recorder` can detect the need to rebuild the PDF when a gabc file changes.
 - A vertical episema may now be forced to appear above or below a note.  In gabc, use `'0` for the vertical episema to appear below and `'1` for the vertical episema to appear above (see [#385](https://github.com/gregorio-project/gregorio/issues/385)).
-- The first syllable and first letter of the first syllable that is *not* interpreted as the initial of the score are now passed to macros that allow them to be styled from TeX.  The first syllable is passed to `\GreFirstSyllable#1` and the first letter of the first syllable is passed to `\GreFirstSyllableInitial#1`.
+- The first word, first syllable, and first letter of the first syllable that is *not* interpreted as the initial of the score can now be styled from TeX.  Use `\grechangestyle` to modify the `firstsyllableinitial`, `firstsyllable`, and `firstword` as desired.
 - The final line of a score may now be forced to be fully justified (rather than ragged) using `\gresetlastline{justified}` before including the score (see [#43](https://github.com/gregorio-project/gregorio/issues/43)).  Use `\gresetlastline{ragged}` to switch back to a ragged last line.
 - `\gresethyphen{force}` forces GregorioTeX to put a hyphen between each syllable in a polysyllabic word.  `\gresethyphen{auto}` restores behavior to normal.
 - Support for custom vowel centering rules.  Put a file called `gregorio-vowels.dat` into your project directory or into a directory accessible from TEXMF and add the header `language: name;` to your gabc file.  The `gregorio-vowels.dat` file describes how vowels are to be located in the *name* language.  See GregorioRef for details.
@@ -144,6 +103,13 @@ See GregorioRef.pdf for full details.
 - The ability to add LilyPond-like point-and-click textedit links into the PDF file to aid with debugging scores.  This must be explicitly enabled and **should be turned off** when producing files for distribution as it embeds path information into the output.  To enable this, you must pass the `-p` option to gregorio when compiling gabc files and add `\gresetpointandclick{on}` before including the score.  It may be toggled back off with `\gresetpointandclick{off}`.  See GregorioRef for details (for the change request, see [#528](https://github.com/gregorio-project/gregorio/issues/528)).
 - New score fonts with glyphs unique to Dominican chant.  These fonts replace the epiphonus and the augmented liquescents with corresponding figures from Dominican liturgical books.  To use the new fonts, pass the `[op]` option to the `\gresetgregoriofont` command (i.e., `\gresetgregoriofont[op]{greciliae}`).  See GregorioRef for details (for the change request, see [#1](https://github.com/gregorio-project/gregorio/issues/1)).
 - Support for "punctum cavum inclinatum" and "punctum cavum inclinatum auctus" figures.  The gabc for these are `(Gr)` and `(Gr<)`, where `G` is the capitalized pitch letter.
+- `\greillumination`: allows user to specify arbitrary content (usually an image) to be used as the initial.
+- New distance, `initialraise`, which will lift (or lower, if negative) the initial.
+- A new type of lyric centering, enabled with `\gresetlyriccentering{firstletter}`, which aligns the neume with the first letter of each syllable.
+- `\greornamentation` allows access to the two ornamentation glyphs.  The ability to access these two glyphs via `{\gregoriosymbolfont \char 75}` was broken by the new interface to the glyphs in greextra.
+- The missing liquescent salicus glyphs.
+- The ability to force a hyphen after an empty first syllable, enabled by default since this was the behavior prior to 4.0.  Version 4.0 has an improved spacing algorithm which will eliminate the hyphen if the notes for the first syllable are too close to the second.  To switch to this behavior, use `\gresetemptyfirstsyllablehyphen{auto}`.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#653](https://github.com/gregorio-project/gregorio/issues/653)).
+- Shell scripts for configuring TeXShop and TeXworks on a Mac.
 
 ### Deprecated
 - `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`
@@ -153,9 +119,7 @@ See GregorioRef.pdf for full details.
 - `\greabovelinestextstyle`, if you were redefining this command, use `\grechangeformat{abovelinestext}...` instead
 - `\grelowchoralsignstyle`, if you were redefining this command, use `\grechangeformat{lowchoralsign}...` instead
 - `\grehighchoralsignstyle`, if you were redefining this command, use `\grechangeformat{highchoralsign}...` instead
-- `centering-scheme` gabc header, supplanted by `\grelyriccentering` in TeX.  See GregorioRef for syntax.
 - `\setaboveinitialseparation`, supplanted by `\grechangedim{annotationseparation}...`
-- `gregoriotex-font` gabc header, supplanted by `\gresetgregoriofont` in TeX.  See GregorioRef for syntax.
 - `\scorereference`, supplanted by `\grescorereference`
 - `\GreScoreReference`, supplanted by `\grescorereference`
 - `\commentary`, supplanted by `\grecommentary`
@@ -201,7 +165,9 @@ See GregorioRef.pdf for full details.
 - `\setspaceafterinitial`, supplanted by `\grechangedim{afterinitialshift}...`
 - `\setspacebeforeinitial`, supplanted by `\grechangedim{beforeinitialshift}...`
 - `\setinitialspacing`, supplanted by `\grechangedim{beforeinitialshift}...`, `\grechangedim{manualinitialwidth}...`, and `\grechangedime{afterinitialshift}...`
-
+- `centering-scheme` gabc header, supplanted by `\grelyriccentering` in TeX.  See GregorioRef for syntax.
+- `gregoriotex-font` gabc header, supplanted by `\gresetgregoriofont` in TeX.  See GregorioRef for syntax.
+- The meaningless `gabc-version` header in gabc (see [#664](https://github.com/gregorio-project/gregorio/issues/664)).
 
 ### Removed
 - GregorioXML and OpusTeX output
@@ -219,7 +185,10 @@ See GregorioRef.pdf for full details.
 - `\GreSetAboveInitialSeparation`, supplanted by `\grechangedim{annotationseparation}...`
 - `\gresetstafflinefactor`, supplanted by `\grechangestafflinethickness`
 - `greg-book` and `greg-lily-book` engines, supplanted by improved capabilities of `\gregorioscore` for compiling gabc files at time of document compilation.
+- The TeXShop script for compiling gabc files.  Supplanted by the new autocompile feature of the package.
 
+### Known Bugs
+- When beginning of line clefs are invisible and bol shifts are enabled, lyric text will stick out into the margin.  Further the notes on the first and subsequent lines do not align properly.  See [#683](https://github.com/gregorio-project/gregorio/issues/683).
 
 
 ## [3.0.3] - 2015-07-01
@@ -284,10 +253,10 @@ See GregorioRef.pdf for full details.
 - Clivis and pes quadratum alignment now follows Solesmes' conventions more closely (see [#10](https://github.com/gregorio-project/gregorio/issues/10)).
 
 ### Fixed
-- Reducing horizontal episemus width.
+- Reducing horizontal episema width.
 - Reducing flat stem length.
 - `mode` and `anotation-line` now do their job.
-- Low episemus (`_0`) under consecutive notes are now aligned correctly.
+- Low episema (`_0`) under consecutive notes are now aligned correctly.
 - Quilisma was melting too much with next note when in a second interval.
 - Fixed custo blocking possibility.
 - Fixing glyphs disapearing when importing into Illustrator.
@@ -319,7 +288,7 @@ See GregorioRef.pdf for full details.
 - adding requested features: Dominican bars, choral signs, text above staff lines
 - enabling comments in gabc files
 - adding ability to write verbatim TeX at {note, glyph, element} level
-- introducing horizontal episemus bridges
+- introducing horizontal episema bridges
 - default output is now utf8 directly; the `-O`  option allows old-style TeX output, i.e. `\char XXXX`
 - new static build system for packaged distributions
 
