@@ -1,4 +1,7 @@
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file provides functions for writing gabc from Gregorio structures.
+ *
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
@@ -35,6 +38,13 @@
 
 static __inline char pitch_letter(const char height) {
     return height + 'a' - LOWEST_PITCH;
+}
+
+static __inline void unsupported(const char *fn, const char *type,
+        const char *value)
+{
+    gregorio_messagef(fn, VERBOSITY_ERROR, 0, _("unsupported %s %s"), type,
+            value);
 }
 
 /*
@@ -104,7 +114,16 @@ static void gabc_write_begin(FILE *f, grestyle_style style)
     case ST_UNDERLINED:
         fprintf(f, "<ul>");
         break;
+    case ST_INITIAL:
+    case ST_CENTER:
+    case ST_FIRST_WORD:
+    case ST_FIRST_SYLLABLE:
+    case ST_FIRST_SYLLABLE_INITIAL:
+        /* nothing should be emitted for these */
+        break;
     default:
+        unsupported("gabc_write_begin", "style",
+                grestyle_style_to_string(style));
         break;
     }
 }
@@ -139,7 +158,16 @@ static void gabc_write_end(FILE *f, grestyle_style style)
     case ST_UNDERLINED:
         fprintf(f, "</ul>");
         break;
+    case ST_INITIAL:
+    case ST_CENTER:
+    case ST_FIRST_WORD:
+    case ST_FIRST_SYLLABLE:
+    case ST_FIRST_SYLLABLE_INITIAL:
+        /* nothing should be emitted for these */
+        break;
     default:
+        unsupported("gabc_write_end", "style",
+                grestyle_style_to_string(style));
         break;
     }
 }
@@ -235,7 +263,7 @@ static void gabc_write_key_change(FILE *f, char step, int line,
  * 
  */
 
-static void gabc_write_space(FILE *f, char type)
+static void gabc_write_space(FILE *f, gregorio_space type)
 {
     switch (type) {
     case SP_LARGER_SPACE:
@@ -258,8 +286,8 @@ static void gabc_write_space(FILE *f, char type)
         /* fprintf (f, "/"); */
         break;
     default:
-        gregorio_message(_("space type is unknown"), "gabc_write_space",
-                VERBOSITY_ERROR, 0);
+        unsupported("gabc_write_space", "space type",
+                gregorio_space_to_string(type));
         break;
     }
 }
@@ -270,7 +298,7 @@ static void gabc_write_space(FILE *f, char type)
  * 
  */
 
-static void gabc_write_bar(FILE *f, char type)
+static void gabc_write_bar(FILE *f, gregorio_bar type)
 {
     switch (type) {
     case B_VIRGULA:
@@ -307,15 +335,15 @@ static void gabc_write_bar(FILE *f, char type)
         fprintf(f, ";6");
         break;
     default:
-        gregorio_message(_("unknown bar type, nothing will be done"),
-                "gabc_bar_to_str", VERBOSITY_ERROR, 0);
+        unsupported("gabc_write_bar", "bar type",
+                gregorio_bar_to_string(type));
         break;
     }
 }
 
 /* writing the signs of a bar */
 
-static void gabc_write_bar_signs(FILE *f, char type)
+static void gabc_write_bar_signs(FILE *f, gregorio_sign type)
 {
     switch (type) {
     case _V_EPISEMA:
@@ -327,7 +355,12 @@ static void gabc_write_bar_signs(FILE *f, char type)
     case _BAR_H_EPISEMA:
         fprintf(f, "_");
         break;
+    case _NO_SIGN:
+        /* if there's no sign, don't emit anything */
+        break;
     default:
+        unsupported("gabc_write_bar_signs", "bar signs",
+                gregorio_sign_to_string(type));
         break;
     }
 }
@@ -351,6 +384,10 @@ static void gabc_hepisema(FILE *f, const char *prefix, bool connect,
         break;
     case H_NORMAL:
         /* nothing to print */
+        break;
+    default:
+        unsupported("gabc_hepisema", "hepisema size",
+                grehepisema_size_to_string(size));
         break;
     }
 }
@@ -376,6 +413,8 @@ static const char *mora_vposition(gregorio_note *note)
     case VPOS_BELOW:
         return "0";
     default:
+        unsupported("mora_vposition", "vposition",
+                gregorio_vposition_to_string(note->mora_vposition));
         return "";
     }
 }
@@ -500,6 +539,8 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         fprintf(f, "%cq", pitch_letter(note->u.note.pitch));
         break;
     default:
+        unsupported("gabc_write_gregorio_note", "shape",
+                gregorio_shape_to_string(shape));
         fprintf(f, "%c", pitch_letter(note->u.note.pitch));
         break;
     }
@@ -519,7 +560,12 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case _V_EPISEMA_AUCTUM_DUPLEX:
         fprintf(f, "'%s..", vepisema_position(note));
         break;
+    case _NO_SIGN:
+        /* if there's no sign, don't emit anything */
+        break;
     default:
+        unsupported("gabc_write_gregorio_note", "shape signs",
+                gregorio_sign_to_string(note->signs));
         break;
     }
     switch (note->special_sign) {
@@ -538,7 +584,12 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case _SEMI_CIRCULUS_REVERSUS:
         fprintf(f, "r5");
         break;
+    case _NO_SIGN:
+        /* if there's no sign, don't emit anything */
+        break;
     default:
+        unsupported("gabc_write_gregorio_note", "special sign",
+                gregorio_sign_to_string(note->special_sign));
         break;
     }
     if (note->h_episema_above == HEPISEMA_AUTO
@@ -618,9 +669,8 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
         gabc_write_end_liquescentia(f, glyph->u.notes.liquescentia);
         break;
     default:
-
-        gregorio_message(_("call with an argument which type is unknown"),
-                "gabc_write_gregorio_glyph", VERBOSITY_ERROR, 0);
+        unsupported("gabc_write_gregorio_glyph", "glyph type",
+                gregorio_type_to_string(glyph->type));
         break;
     }
 }
@@ -688,8 +738,8 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element)
         }
         break;
     default:
-        gregorio_message(_("call with an argument which type is unknown"),
-                "gabc_write_gregorio_element", VERBOSITY_ERROR, 0);
+        unsupported("gabc_write_gregorio_element", "element type",
+                gregorio_type_to_string(element->type));
         break;
     }
 }
@@ -736,19 +786,15 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->text) {
         /* we call the magic function (defined in struct_utils.c), that will
          * write our text. */
-        gregorio_write_text(false, syllable->text, f,
-                            (&gabc_write_verb),
-                            (&gabc_print_char),
-                            (&gabc_write_begin),
-                            (&gabc_write_end), (&gabc_write_special_char));
+        gregorio_write_text(WTP_NORMAL, syllable->text, f, &gabc_write_verb,
+                &gabc_print_char, &gabc_write_begin, &gabc_write_end,
+                &gabc_write_special_char);
     }
     if (syllable->translation) {
         fprintf(f, "[");
-        gregorio_write_text(false, syllable->translation, f,
-                            (&gabc_write_verb),
-                            (&gabc_print_char),
-                            (&gabc_write_begin),
-                            (&gabc_write_end), (&gabc_write_special_char));
+        gregorio_write_text(WTP_NORMAL, syllable->translation, f,
+                &gabc_write_verb, &gabc_print_char, &gabc_write_begin,
+                &gabc_write_end, &gabc_write_special_char);
         fprintf(f, "]");
     }
     fprintf(f, "(");
@@ -806,9 +852,7 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     gabc_write_str_attribute(f, "meter", score->meter);
     gabc_write_str_attribute(f, "commentary", score->commentary);
     gabc_write_str_attribute(f, "arranger", score->arranger);
-    /* We always create gabc of the current version; this is not derived
-     * from the input. */
-    fprintf(f, "gabc-version: %s;\n", GABC_CURRENT_VERSION);
+    gabc_write_str_attribute(f, "language", score->language);
     /* And since the gabc is generated by this program, note this. */
     fprintf(f, "generated-by: %s %s;\n", "gregorio", GREGORIO_VERSION);
     gabc_write_str_attribute(f, "author", score->si.author);
@@ -822,7 +866,6 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     gabc_write_str_attribute(f, "transcriber", score->si.transcriber);
     gabc_write_str_attribute(f, "transcription-date",
                              score->si.transcription_date);
-    gabc_write_str_attribute(f, "gregoriotex-font", score->gregoriotex_font);
     if (score->mode) {
         fprintf(f, "mode: %d;\n", score->mode);
     }
@@ -831,9 +874,6 @@ void gabc_write_score(FILE *f, gregorio_score *score)
             fprintf(f, "annotation: %s;\n",
                     score->annotation[annotation_num]);
         }
-    }
-    if (score->initial_style != NORMAL_INITIAL) {
-        fprintf(f, "initial-style: %d;\n", score->initial_style);
     }
     gabc_write_str_attribute(f, "user-notes", score->user_notes);
     if (score->number_of_voices == 0) {

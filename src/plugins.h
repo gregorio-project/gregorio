@@ -1,5 +1,6 @@
 /*
- * Gregorio format support headers.
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This header prototypes the "main" entry points for reading and writing data.
  *
  * Copyright (C) 2008-2015 The Gregorio Project (see CONTRIBUTORS.md)
  * 
@@ -23,6 +24,9 @@
 #define PLUGINS_H
 
 void dump_write_score(FILE *f, gregorio_score *score);
+
+void dump_write_characters(FILE *const f,
+        const gregorio_character *current_character);
 
 gregorio_score *gabc_read_score(FILE *f_in);
 

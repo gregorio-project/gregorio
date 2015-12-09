@@ -19,7 +19,7 @@
 
 \NeedsTeXFormat{LaTeX2e}%
 \ProvidesPackage{gregoriotex}%
-    [2015/11/05 v4.0.0-rc2 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
+    [2015/12/08 v4.0.0 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
 
 % If gregoriosyms has been loaded then there are going to be some conflicts in the definitions made in that package and this one.  In order to provide for a more informative error message, we check for that conflict right away
 \ifcsname gregoriotex@symbols@loaded\endcsname\gre@error{Loading gregoriotex after\MessageBreak gregoriosyms is not supported.  Please remove the\MessageBreak loading of gregoriosyms (its contents are loaded\MessageBreak by gregoriotex)}\fi%
@@ -146,9 +146,9 @@
   {\begingroup\fontsize{40}{40}\selectfont}%
   {\endgroup}%
 
-\newenvironment{gre@style@biginitial}%
-  {\begingroup\fontsize{80}{80}\selectfont}%
-  {\endgroup}%
+\newenvironment{gre@style@biginitial}%%% DEPRECATED for removal in 5.0
+  {\begingroup\fontsize{80}{80}\selectfont}%%% DEPRECATED for removal in 5.0
+  {\endgroup}%%% DEPRECATED for removal in 5.0
 
 \newenvironment{gre@style@translation}%
   {\begingroup\begin{itshape}}%

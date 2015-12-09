@@ -79,7 +79,7 @@ AMBITUS = {
     5: 'Five',
 }
 
-GREGORIO_VERSION = '4.0.0-rc2'
+GREGORIO_VERSION = '4.0.0'
 
 # The unicode character at which we start our numbering:
 # U+E000 is the start of the BMP Private Use Area
@@ -173,6 +173,7 @@ This file is part of Gregorio.
     scandicus(font_width)
     ancus(font_width)
     salicus(font_width)
+    salicus_flexus(font_width)
     torculus(font_width)
     torculus_liquescens(font_width)
     porrectus(font_width)
@@ -394,6 +395,7 @@ S_ANCUS_LONGQUEUE                  = 'AncusLongqueue'
 S_VIRGA_STRATA                     = 'VirgaStrata'
 S_SALICUS                          = 'Salicus'
 S_SALICUS_LONGQUEUE                = 'SalicusLongqueue'
+S_SALICUS_FLEXUS                   = 'SalicusFlexus'
 S_TORCULUS_LIQUESCENS              = 'TorculusLiquescens'
 S_TORCULUS_LIQUESCENS_QUILISMA     = 'TorculusLiquescensQuilisma'
 S_FLEXUS_ORISCUS_SCAPUS            = 'FlexusOriscusScapus'
@@ -833,6 +835,11 @@ def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
     glyph_name = '%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], lique)
     if copy_existing_glyph(glyph_name):
         return
+    length = draw_salicus(widths, i, j, last_glyph)
+    set_width(length)
+    end_glyph(glyph_name)
+
+def draw_salicus(widths, i, j, last_glyph):
     not_deminutus = last_glyph != 'rdeminutus'
     if j == 1 and not_deminutus:
         if last_glyph == 'rvsbase':
@@ -878,6 +885,10 @@ def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
             last_glyph = 'Virga'
         elif last_glyph == 'rvlbase':
             last_glyph = 'VirgaLongqueue'
+        elif last_glyph == 'PunctumLineBLBR':
+            last_glyph = 'PunctumLineBR'
+        elif last_glyph == 'PunctumLineBL':
+            last_glyph = 'Punctum'
     if not_deminutus:
         paste_and_move(last_glyph, length, (i+j)*BASE_HEIGHT)
         length = length + get_width(widths, last_glyph)
@@ -885,6 +896,58 @@ def write_salicus(widths, i, j, last_glyph, shape, lique=L_NOTHING):
         length = length+get_width(widths, 'line2')
         paste_and_move(last_glyph, (length-get_width(widths, last_glyph)),
                        (i+j)*BASE_HEIGHT)
+    return length
+
+def salicus_flexus(widths):
+    "Creates the salicus flexus."
+    message("salicus")
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            for k in range(1, MAX_INTERVAL+1):
+                write_salicus_flexus(widths, i, j, k, "PunctumLineTL")
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            for k in range(1, MAX_INTERVAL+1):
+                write_salicus_flexus(widths, i, j, k, "deminutus", L_DEMINUTUS)
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            for k in range(1, MAX_INTERVAL+1):
+                write_salicus_flexus(widths, i, j, k, "auctusa1", L_ASCENDENS)
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            for k in range(1, MAX_INTERVAL+1):
+                write_salicus_flexus(widths, i, j, k, "auctusd1", L_DESCENDENS)
+
+def write_salicus_flexus(widths, i, j, k, last_glyph, lique=L_NOTHING):
+    "Writes the salicus glyphs."
+    new_glyph()
+    glyph_name = '%s%s%s%s%s' % (S_SALICUS_FLEXUS, AMBITUS[i], AMBITUS[j],
+            AMBITUS[k], lique)
+    if copy_existing_glyph(glyph_name):
+        return
+    is_deminutus = last_glyph == 'deminutus'
+    if k == 1 and not is_deminutus:
+        penult_glyph = 'PunctumLineBL'
+    else:
+        penult_glyph = 'PunctumLineBLBR'
+    length = draw_salicus(widths, i, j, penult_glyph)
+    if k == 1 and not is_deminutus:
+        length = length-0.01
+        if last_glyph == 'PunctumLineTL':
+            last_glyph = 'Punctum'
+        elif last_glyph == 'auctusa1':
+            last_glyph = 'PunctumAscendens'
+        elif last_glyph == 'auctusd1':
+            last_glyph = 'PunctumDescendens'
+    if k != 1:
+        length = length - get_width(widths, 'line2')
+        write_line(k, length, (1+i+j-k)*BASE_HEIGHT)
+    if is_deminutus:
+        length = length - get_width(widths, last_glyph)
+        if k != 1:
+            length = length + get_width(widths, 'line2')
+    paste_and_move(last_glyph, length, (i+j-k)*BASE_HEIGHT)
+    length = length + get_width(widths, last_glyph)
     set_width(length)
     end_glyph(glyph_name)
 

@@ -1,4 +1,7 @@
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This header prototypes GregorioTeX writing data structures and entry points.
+ *
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
@@ -55,6 +58,7 @@ typedef enum gtex_type {
     T_SALICUS,
     T_SALICUS_LONGQUEUE,
     /* four note neumes */
+    T_SALICUS_FLEXUS,
     T_PORRECTUS_FLEXUS,
     T_TORCULUS_RESUPINUS,
     T_TORCULUS_LIQUESCENS,

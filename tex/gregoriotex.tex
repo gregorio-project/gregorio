@@ -21,7 +21,7 @@
 
 
 % This file needs to be marked with the version number.  For now I've done this with the following comment, but we should check to see if PlainTeX has something similar to the version declaration of LaTeX and use that if it does.
-% 		[2015/11/05 v4.0.0-rc2 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
+% 		[2015/12/08 v4.0.0 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
 
 
 \edef\greoldcatcode{\the\catcode`@}
@@ -157,7 +157,7 @@
 %% Formatting environments
 %%%%%%%%%%%%%%%%%%%%
 
-\font\gre@font@biginitial=pncr at 80pt\relax%
+\font\gre@font@biginitial=pncr at 80pt\relax%%% DEPRECATED for removal in 5.0
 \font\gre@font@initial=pncr at 40pt\relax%
 
 \def\gre@style@initial{%
@@ -167,12 +167,12 @@
 }%
 \def\endgre@style@initial{\endgroup}%
 
-\def\gre@style@biginitial{%
-  \begingroup%
-  \gre@font@biginitial%
-  \relax %
-}%
-\def\endgre@style@biginitial{\endgroup}%
+\def\gre@style@biginitial{%%% DEPRECATED for removal in 5.0
+  \begingroup%%% DEPRECATED for removal in 5.0
+  \gre@font@biginitial%%% DEPRECATED for removal in 5.0
+  \relax %%% DEPRECATED for removal in 5.0
+}%%% DEPRECATED for removal in 5.0
+\def\endgre@style@biginitial{\endgroup}%%% DEPRECATED for removal in 5.0
 
 \def\gre@style@translation{%
   \begingroup%

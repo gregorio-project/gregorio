@@ -1,4 +1,7 @@
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file implements the Gregorio data structures.
+ *
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
@@ -45,18 +48,14 @@
 #include "struct.h"
 #include "unicode.h"
 #include "messages.h"
+#include "support.h"
 #include "characters.h"
+#include "support.h"
 
 static gregorio_note *create_and_link_note(gregorio_note **current_note,
         const gregorio_scanner_location *const loc)
 {
-    gregorio_note *note = calloc(1, sizeof(gregorio_note));
-    if (!note) {
-        gregorio_message(_("error in memory allocation"),
-                         "create_and_link_note", VERBOSITY_FATAL, 0);
-        return NULL;
-    }
-
+    gregorio_note *note = gregorio_calloc(1, sizeof(gregorio_note));
     note->previous = *current_note;
     note->next = NULL;
     if (*current_note) {
@@ -236,7 +235,7 @@ void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str)
     if (*current_note) {
         if ((*current_note)->texverb) {
             len = strlen((*current_note)->texverb) + strlen(str) + 1;
-            res = malloc(len * sizeof(char));
+            res = gregorio_malloc(len * sizeof(char));
             strcpy(res, (*current_note)->texverb);
             strcat(res, str);
             free((*current_note)->texverb);
@@ -626,13 +625,7 @@ static void gregorio_free_notes(gregorio_note **note)
 
 static gregorio_glyph *create_and_link_glyph(gregorio_glyph **current_glyph)
 {
-    gregorio_glyph *glyph = calloc(1, sizeof(gregorio_glyph));
-    if (!glyph) {
-        gregorio_message(_("error in memory allocation"),
-                         "create_and_link_glyph", VERBOSITY_FATAL, 0);
-        return NULL;
-    }
-
+    gregorio_glyph *glyph = gregorio_calloc(1, sizeof(gregorio_glyph));
     glyph->previous = *current_glyph;
     glyph->next = NULL;
     if (*current_glyph) {
@@ -747,13 +740,7 @@ static void gregorio_free_glyphs(gregorio_glyph **glyph)
 static gregorio_element *create_and_link_element(gregorio_element
                                                  **current_element)
 {
-    gregorio_element *element = calloc(1, sizeof(gregorio_element));
-    if (!element) {
-        gregorio_message(_("error in memory allocation"),
-                         "create_and_link_element", VERBOSITY_FATAL, 0);
-        return NULL;
-    }
-
+    gregorio_element *element = gregorio_calloc(1, sizeof(gregorio_element));
     element->previous = *current_element;
     element->next = NULL;
     if (*current_element) {
@@ -832,12 +819,7 @@ void gregorio_add_character(gregorio_character **current_character,
         grewchar wcharacter)
 {
     gregorio_character *element =
-        (gregorio_character *) calloc(1, sizeof(gregorio_character));
-    if (!element) {
-        gregorio_message(_("error in memory allocation"),
-                         "gregorio_add_character", VERBOSITY_FATAL, 0);
-        return;
-    }
+        (gregorio_character *) gregorio_calloc(1, sizeof(gregorio_character));
     element->is_character = 1;
     element->cos.character = wcharacter;
     element->next_character = NULL;
@@ -853,7 +835,7 @@ static void gregorio_free_one_character(gregorio_character *current_character)
     free(current_character);
 }
 
-static void gregorio_free_characters(gregorio_character *current_character)
+void gregorio_free_characters(gregorio_character *current_character)
 {
     gregorio_character *next_character;
     if (!current_character) {
@@ -866,9 +848,9 @@ static void gregorio_free_characters(gregorio_character *current_character)
     }
 }
 
-void gregorio_go_to_first_character(gregorio_character **character)
+void gregorio_go_to_first_character(const gregorio_character **character)
 {
-    gregorio_character *tmp;
+    const gregorio_character *tmp;
     if (!character || !*character) {
         return;
     }
@@ -883,12 +865,7 @@ void gregorio_begin_style(gregorio_character **current_character,
         grestyle_style style)
 {
     gregorio_character *element =
-        (gregorio_character *) calloc(1, sizeof(gregorio_character));
-    if (!element) {
-        gregorio_message(_("error in memory allocation"),
-                         "add_note", VERBOSITY_FATAL, 0);
-        return;
-    }
+        (gregorio_character *) gregorio_calloc(1, sizeof(gregorio_character));
     element->is_character = 0;
     element->cos.s.type = ST_T_BEGIN;
     element->cos.s.style = style;
@@ -904,12 +881,7 @@ void gregorio_end_style(gregorio_character **current_character,
         grestyle_style style)
 {
     gregorio_character *element =
-        (gregorio_character *) calloc(1, sizeof(gregorio_character));
-    if (!element) {
-        gregorio_message(_("error in memory allocation"),
-                         "add_note", VERBOSITY_FATAL, 0);
-        return;
-    }
+        (gregorio_character *) gregorio_calloc(1, sizeof(gregorio_character));
     element->is_character = 0;
     element->cos.s.type = ST_T_END;
     element->cos.s.style = style;
@@ -919,6 +891,35 @@ void gregorio_end_style(gregorio_character **current_character,
         (*current_character)->next_character = element;
     }
     *current_character = element;
+}
+
+gregorio_character *gregorio_clone_characters(
+        const gregorio_character *source)
+{
+    gregorio_character *target = NULL, *current = NULL;
+
+    for (; source; source = source->next_character) {
+        gregorio_character *character =
+                (gregorio_character *) calloc(1, sizeof(gregorio_character));
+        if (!character) {
+            gregorio_message(_("error in memory allocation"),
+                             "gregorio_clone_characters", VERBOSITY_FATAL, 0);
+            return NULL;
+        }
+
+        *character = *source;
+        character->next_character = NULL;
+
+        if (current) {
+            character->previous_character = current;
+            current = current->next_character = character;
+        } else {
+            character->previous_character = NULL;
+            target = current = character;
+        }
+    }
+
+    return target;
 }
 
 void gregorio_add_syllable(gregorio_syllable **current_syllable,
@@ -938,12 +939,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
                 0);
         return;
     }
-    next = calloc(1, sizeof(gregorio_syllable));
-    if (!next) {
-        gregorio_message(_("error in memory allocation"), "add_syllable",
-                VERBOSITY_FATAL, 0);
-        return;
-    }
+    next = gregorio_calloc(1, sizeof(gregorio_syllable));
     next->type = GRE_SYLLABLE;
     next->special_sign = _NO_SIGN;
     next->position = position;
@@ -961,8 +957,8 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
     }
     next->next_syllable = NULL;
     next->previous_syllable = *current_syllable;
-    tab = (gregorio_element **) malloc(number_of_voices *
-                                       sizeof(gregorio_element *));
+    tab = (gregorio_element **) gregorio_malloc(number_of_voices *
+            sizeof(gregorio_element *));
     if (elements) {
         for (i = 0; i < number_of_voices; i++) {
             tab[i] = elements[i];
@@ -1034,18 +1030,19 @@ static void gregorio_source_info_init(source_info *si)
 gregorio_score *gregorio_new_score(void)
 {
     int annotation_num;
-    gregorio_score *new_score = calloc(1, sizeof(gregorio_score));
+    gregorio_score *new_score = gregorio_calloc(1, sizeof(gregorio_score));
     new_score->first_syllable = NULL;
     new_score->number_of_voices = 1;
     new_score->name = NULL;
     new_score->gabc_copyright = NULL;
     new_score->score_copyright = NULL;
-    new_score->initial_style = NORMAL_INITIAL;
+    new_score->initial_style = INITIAL_NOT_SPECIFIED;
     new_score->office_part = NULL;
     new_score->occasion = NULL;
     new_score->meter = NULL;
     new_score->commentary = NULL;
     new_score->arranger = NULL;
+    new_score->language = NULL;
     gregorio_source_info_init(&new_score->si);
     new_score->first_voice_info = NULL;
     new_score->mode = 0;
@@ -1085,6 +1082,7 @@ static void gregorio_free_score_infos(gregorio_score *score)
     free(score->meter);
     free(score->commentary);
     free(score->arranger);
+    free(score->language);
     free(score->user_notes);
     free(score->gregoriotex_font);
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
@@ -1198,6 +1196,17 @@ void gregorio_set_score_arranger(gregorio_score *score, char *arranger)
     score->arranger = arranger;
 }
 
+void gregorio_set_score_language(gregorio_score *score, char *language)
+{
+    if (!score) {
+        gregorio_message(_("function called with NULL argument"),
+                "gregorio_set_score_language", VERBOSITY_WARNING, 0);
+        return;
+    }
+    free(score->language);
+    score->language = language;
+}
+
 void gregorio_set_score_number_of_voices(gregorio_score *score,
         int number_of_voices)
 {
@@ -1222,7 +1231,7 @@ void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes)
 
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info)
 {
-    gregorio_voice_info *next = calloc(1, sizeof(gregorio_voice_info));
+    gregorio_voice_info *next = gregorio_calloc(1, sizeof(gregorio_voice_info));
     next->initial_key = NO_KEY;
     next->flatted_key = false;
     next->style = NULL;
@@ -1702,3 +1711,26 @@ bool gregorio_is_only_special(gregorio_element *element)
     }
     return 1;
 }
+
+const char *gregorio_unknown(int value) {
+    static char buf[20];
+    gregorio_snprintf(buf, sizeof buf, "?%d", value);
+    return buf;
+}
+
+ENUM_TO_STRING(gregorio_type, GREGORIO_TYPE)
+ENUM_TO_STRING(gregorio_shape, GREGORIO_SHAPE)
+ENUM_TO_STRING(gregorio_bar, GREGORIO_BAR)
+ENUM_TO_STRING(gregorio_sign, GREGORIO_SIGN)
+ENUM_TO_STRING(gregorio_space, GREGORIO_SPACE)
+ENUM_TO_STRING(gregorio_liquescentia, GREGORIO_LIQUESCENTIA)
+ENUM_TO_STRING(grehepisema_size, GREHEPISEMA_SIZE)
+ENUM_TO_STRING(gregorio_vposition, GREGORIO_VPOSITION)
+ENUM_TO_STRING(gregorio_glyph_type, GREGORIO_GLYPH_TYPE)
+ENUM_TO_STRING(grestyle_style, GRESTYLE_STYLE)
+ENUM_TO_STRING(grestyle_type, GRESTYLE_TYPE)
+ENUM_TO_STRING(gregorio_tr_centering, GREGORIO_TR_CENTERING)
+ENUM_TO_STRING(gregorio_nlba, GREGORIO_NLBA)
+ENUM_TO_STRING(gregorio_euouae, GREGORIO_EUOUAE)
+ENUM_TO_STRING(gregorio_word_position, GREGORIO_WORD_POSITION)
+ENUM_TO_STRING(gregorio_lyric_centering, GREGORIO_LYRIC_CENTERING)

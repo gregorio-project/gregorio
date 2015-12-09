@@ -106,7 +106,7 @@
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
-\xdef\gre@gregorioversion{4.0.0-rc2}% GREGORIO_VERSION - VersionManager.py
+\xdef\gre@gregorioversion{4.0.0}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
@@ -217,6 +217,7 @@
 \def\GreNewParLine{%
   \gre@debugmsg{lineheight}{GreNewParLine}%
   \gre@newlinecommon{1}%
+  \relax%
 }%
 
 % the macro we call each time we force a changing of line, it automatically sets \gre@knownline, and adjusts left spaces
@@ -229,9 +230,9 @@
       \ifcase\gre@knownline %
       % 0: should not happend...
       \or % 1
-        \GreAdjustSecondLine %
+        \gre@adjustsecondline %
       \or %2
-        \GreAdjustThirdLine %
+        \gre@adjustthirdline %
       \fi %
     \fi %
     \global\advance\gre@knownline by 1\relax %
@@ -255,7 +256,7 @@
     \fi %
     \gre@penalty{-10001}%
   \fi %
-  \relax %
+  \gre@adjustlineifnecessary\relax %
 }%
 
 \def\gre@mark@translation{\directlua{gregoriotex.mark_translation()}}%
@@ -290,29 +291,39 @@
 \newcount\gre@knownline%
 
 % macro to call before the call of \initial
-\def\GreSetBigInitial{%
+\def\gre@setbiginitial{%
+  \gre@debugmsg{general}{setting BIG initial}%
   \global\gre@biginitial=1\relax %
   \relax %
 }%
 
 % macro to cancel before the call of \initial
 \def\gre@normalinitial{%
+  \gre@debugmsg{general}{setting normal initial}%
   \global\gre@biginitial=0\relax %
   \relax %
 }%
 
 % macro to call before the first syllable, but after setinitialclef
-\def\GreAdjustSecondLine{%
+\def\gre@adjustsecondline{%
   \gre@dimen@additionalleftspace=\gre@dimen@initialwidth\relax%
   \gre@updateleftbox %
   \relax %
 }%
 
 % macro to call during the second line
-\def\GreAdjustThirdLine{%
+\def\gre@adjustthirdline{%
   \gre@dimen@additionalleftspace= 0 pt\relax%
   \gre@updateleftbox %
   \relax %
+}%
+
+\newif\ifgre@thirdlineadjustmentnecessary %
+\def\gre@adjustlineifnecessary{%
+  \ifgre@thirdlineadjustmentnecessary %
+    \gre@adjustthirdline %
+    \gre@thirdlineadjustmentnecessaryfalse %
+  \fi %
 }%
 
 \def\gre@updateleftbox{%
@@ -335,7 +346,7 @@
   \setbox\gre@box@initial=\hbox{#1}%
 }%
 
-\def\GreSetInitial#1{%
+\def\gre@setinitial#1{%
   % see comments on this function to see what it does
   \gre@debugmsg{annotation}{Time to calculate the true raise.}%
   \gre@calculate@annotationtrueraise %
@@ -383,6 +394,9 @@
       \greinitialformat{\global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift}%  DEPRECATED
     \fi%  DEPRECATED
   \else %
+    \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
+      \gre@warning{biginitial style is deprecated, but the old\MessageBreak behavior will be used since deprecated usage is\MessageBreak currently enabled. This behavior will disappear\MessageBreak in 5.0, so consider disabling deprecated usage\MessageBreak and switching to the initial style instead. (See\MessageBreak UPGRADE.md for more information)}%%% DEPRECATED for removal in 5.0
+    \fi%%% DEPRECATED for removal in 5.0
     \advance\gre@dimen@temp@five by -\gre@dimen@additionalbottomspace\relax%
     \advance\gre@dimen@temp@five by -\gre@dimen@spacebeneathtext\relax%
     \advance\gre@dimen@temp@five by -\gre@dimen@spacelinestext\relax%
@@ -394,7 +408,11 @@
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
       \ifvoid\gre@box@initial% keep this line
         \gre@debugmsg{initial}{fill big initial box}% keep this line
-        \setbox\gre@box@initial=\hbox{\gre@style@biginitial#1\endgre@style@biginitial}% keep this line
+        \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
+          \setbox\gre@box@initial=\hbox{\gre@style@biginitial#1\endgre@style@biginitial}% DEPRECATED for removal in 5.0
+        \else%%% DEPRECATED for removal in 5.0
+          \setbox\gre@box@initial=\hbox{\gre@style@initial#1\endgre@style@initial}% keep this line
+        \fi%%% DEPRECATED for removal in 5.0
       \fi% keep this line
     \else%  DEPRECATED
       \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
@@ -405,9 +423,15 @@
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
     \else%
       \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
-        \gre@style@biginitial% keep this line
-        \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth\relax% keep this line
-        \endgre@style@biginitial% keep this line
+        \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
+          \gre@style@biginitial%%% DEPRECATED for removal in 5.0
+          \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth\relax%%% DEPRECATED for removal in 5.0
+          \endgre@style@biginitial%%% DEPRECATED for removal in 5.0
+        \else%%% DEPRECATED for removal in 5.0
+          \gre@style@initial% keep this line
+          \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth\relax% keep this line
+          \endgre@style@initial% keep this line
+        \fi%%% DEPRECATED for removal in 5.0
       \else%  DEPRECATED
         \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
         \grebiginitialformat{\global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth}%  DEPRECATED
@@ -419,9 +443,15 @@
     \fi%
     \setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
-      \gre@style@biginitial% keep this line
-      \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift\relax% keep this line
-      \endgre@style@biginitial% keep this line
+      \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
+        \gre@style@biginitial%%% DEPRECATED for removal in 5.0
+        \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift\relax%%% DEPRECATED for removal in 5.0
+        \endgre@style@biginitial%%% DEPRECATED for removal in 5.0
+      \else%%% DEPRECATED for removal in 5.0
+        \gre@style@initial% keep this line
+        \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift\relax% keep this line
+        \endgre@style@initial% keep this line
+      \fi%%% DEPRECATED for removal in 5.0
     \else%  DEPRECATED
       \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
       \grebiginitialformat{\global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift}%  DEPRECATED
@@ -442,9 +472,15 @@
     \fi%  DEPRECATED
   \else%
     \ifx\gre@empty@biginitialformat\grebiginitialformat% DEPRECATED
-      \gre@style@biginitial% keep this line
-      \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift\relax% keep this line
-      \endgre@style@biginitial% keep this line
+      \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
+        \gre@style@biginitial%%% DEPRECATED for removal in 5.0
+        \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift\relax%%% DEPRECATED for removal in 5.0
+        \endgre@style@biginitial%%% DEPRECATED for removal in 5.0
+      \else%%% DEPRECATED for removal in 5.0
+        \gre@style@initial% keep this line
+        \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift\relax% keep this line
+        \endgre@style@initial% keep this line
+      \fi%%% DEPRECATED for removal in 5.0
     \else%  DEPRECATED
       \gre@deprecated{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  DEPRECATED
       \grebiginitialformat{\global\gre@dimen@temp@four = \gre@dimen@afterinitialshift}%  DEPRECATED
@@ -472,7 +508,7 @@
   \relax %
 }%
 
-\def\GreNoInitial{%
+\def\gre@noinitial{%
   \setbox\gre@box@initial=\box\voidb@x%
   \global\gre@dimen@initialwidth=0pt\relax%
   \relax %
@@ -604,7 +640,7 @@
 
 %% macro that draws the lines : starts by the first and then draws the lines of every line.
 %% has to be called before drawing the key, after drawing the initial
-\def\GreBeginNotes{%
+\def\gre@beginnotes{%
   \gre@drawfirstlines %
   %%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
   \gre@localleftbox{%
@@ -1032,6 +1068,7 @@
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \xdef\gre@gabcname{#6}%
   \global\let\gre@save@englishcentering\gre@lyriccentering\relax % DEPRECATED
+  \global\let\gre@opening@initialstyle\gre@initiallines\relax % DEPRECATED by 4.1
   \ifgre@justifylastline%
     \xdef\gre@save@parfillskip{\the\parfillskip}
     \parfillskip=0pt plus 0pt minus 0pt\relax%
@@ -1500,6 +1537,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grechangestyle#1#2{%
+  \IfStrEq{#1}{biginitial}{\gre@deprecated{biginitial style}{initial style}}{}%%% DEPRECATED for removal in 5.0
   \@ifnextchar[{\gre@changestyle{#1}{#2}}{\gre@changestyle{#1}{#2}[\relax]}%
 }%
 
@@ -1664,7 +1702,8 @@
 
 % Macros for compiling short snippets of GABC directly expressed in TeX
 
-\long\def\gre@gabcsnippet@option[#1]#2{%
+\long\def\gre@gabcsnippet@option[#1]#2{%%% DEPRECATED by 4.1
+  \gre@deprecated{\protect\gabcsnippet  with initial-style argument}{\protect\gresetinitiallines}%
   \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#2}}", "initial-style: #1;")}%
 }%
 
@@ -1672,6 +1711,7 @@
   \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#1}}")}%
 }%
 
+%%% \gre@gabcsnipper@option is DEPRECATED by 4.1
 \def\gabcsnippet{\@ifnextchar[{\gre@gabcsnippet@option}{\gre@gabcsnippet}}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%

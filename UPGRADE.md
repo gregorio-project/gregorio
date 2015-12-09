@@ -2,6 +2,20 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.
 
+## 4.1
+
+### Initial handling
+
+Initial handling has been simplified.  This deprecates the `initial-style` gabc header and the `biginitial` style.
+
+Rather than using the `initial-style` gabc header, set the number of lines the initial should use in Tex with the `\gresetinitiallines` command.  It currently accepts 0 (for no initial), 1 (for a one-line initial), or 2 (for a two-line initial).
+
+As for the `biginitial` style, the intent is that the `initial` style be changed within the TeX document whenever the initial style should change, regardless of how many lines the initial requires.  For example, before including a score that has a two-line initial, you would probably want to redefine the `initial` style to use a larger font.  Then, before including a score which requires a one-line initial, you would then redefine the `initial` style back to what it was before.
+
+In order to allow a smoother transition to the new behavior, GregorioTeX will behave differently depending on whether or not deprecated usage is allowed (controlled by the `[allowdeprecated]` package option).  If deprecated usage is allowed, GregorioTeX will use the deprecated `biginitial` style for big initials.  If not, GregorioTeX will use the `initial` style for big initials.
+
+Since the `biginitial` style will disappear with Gregorio 5.0, please consider disabling deprecated usage (set `[allowdeprecated=false]` when using the `gregoriotex` package) and use the `initial` style as just described.
+
 ## 4.0
 
 ### Font changes

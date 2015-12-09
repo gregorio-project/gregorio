@@ -165,20 +165,17 @@ switch between different behaviors: \par\medskip
   \gregorioscore[a]{TecumPrincipium} % gabc auto compiled.
 \end{latexcode}
 
-\macroname{\textbackslash gabcsnippet}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
-Converts the gabc notation specified in \texttt{\#2} to Gregorio\TeX\ and
-includes it directly in the document.  The optional argument \texttt{[\#1]}
-may be used to specify a gabc \texttt{initial-style}, which defaults to
-\texttt{1}.
+\macroname{\textbackslash gabcsnippet}{\{\#1\}}{gregoriotex-main.tex}
+Converts the gabc notation specified in \texttt{\#1} to Gregorio\TeX\ and
+includes it directly in the document.
 
 \begin{argtable}
-  \#1 & number & Optional.  The gabc \texttt{initial-style} value to use.\\
-  \#2 & string & The gabc to insert into the document.\\
+  \#1 & string & The gabc to insert into the document.\\
 \end{argtable}
 
 \medskip For example:\par\medskip
 \begin{latexcode}
-  \gabcsnippet[0]{(c3) Al(eg~)le(gv.fhg)lu(efe___)ia(e.) (::)}
+  \gabcsnippet{(c3) Al(eg~)le(gv.fhg)lu(efe___)ia(e.) (::)}
 \end{latexcode}
 
 
@@ -512,7 +509,7 @@ simple version.
 For example:
 
 \medskip \begin{latexcode}
-  \gresimpledefbarglyph{A}{0.3em}
+  \gresimpledefbarredsymbol{A}{0.3em}
 \end{latexcode}
 
 Will define \texttt{\textbackslash Abar} to be a A with a bar shifted right
@@ -611,8 +608,7 @@ Different elements of an include score have different styles applied.  These ele
 \begin{tabular}{lp{7cm plus .5cm}r}
   Element Name & Description & Default\\
   \hline
-  \stylename{initial} & Normal Initials & 40 pt font\\
-  \stylename{biginitial} & Big (2-Line) Initials & 80 pt font\\
+  \stylename{initial} & Score initial (the first letter of the score, when offset from the rest of the text) & 40 pt font\\
   \stylename{translation} & Translation text (appears below lyrics) & {\it italics}\\
   \stylename{abovelinestext} & Above line text (\texttt{<alt></alt>} in gabc, appears above the staff) & normal\\
   \stylename{normalstafflines} & Full length staff lines & none\\
@@ -698,6 +694,12 @@ Macro to add an illuminated initial.
 
 \textbf{Nota Bene:} Usually the argument of this command should be an \verb=\includegraphics= command, but you may use what ever you want as the illuminated initial.
 
+\macroname{\textbackslash gresetinitiallines}{\#1}{gregoriotex-syllable.tex}
+Sets the number of lines the score initial requires.
+
+\begin{argtable}
+  \#1 & number & The number of lines required by the initial.  If \texttt{0}, the score will have no separated initial.\\
+\end{argtable}
 
 \subsubsection{Text Alignment}
 Gregorio\TeX\ allows you to manipulate the global alignment behavior of some text elements using the following commands.

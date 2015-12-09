@@ -1,5 +1,8 @@
 %{
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file implements the score parser.
+ *
  * Gregorio score determination in gabc input.
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
@@ -35,6 +38,7 @@
 #include "unicode.h"
 #include "messages.h"
 #include "characters.h"
+#include "support.h"
 #include "sha1.h"
 #include "plugins.h"
 #include "gabc.h"
@@ -335,7 +339,7 @@ static void end_definitions(void)
     }
     /* voice is now voice-1, so that it can be the index of elements */
     voice = 0;
-    elements = (gregorio_element **) malloc(number_of_voices *
+    elements = (gregorio_element **) gregorio_malloc(number_of_voices *
             sizeof(gregorio_element *));
     for (i = 0; i < number_of_voices; i++) {
         elements[i] = NULL;
@@ -414,24 +418,23 @@ static void gregorio_set_translation_center_beginning(
 
 static void rebuild_characters(void)
 {
-    bool has_initial = score->initial_style != NO_INITIAL;
-
     /* we rebuild the first syllable text if it is the first syllable, or if
      * it is the second when the first has no text.
      * it is a patch for cases like (c4) Al(ab)le(ab) */
-    if ((!score->first_syllable && has_initial && current_character)
+    if ((!score->first_syllable && current_character)
             || (current_syllable && !current_syllable->previous_syllable
             && !current_syllable->text && current_character)) {
-        gregorio_rebuild_first_syllable(&current_character, has_initial);
+        /* leave the first syllable text untouched at this time */
+        gregorio_go_to_first_character_c(&current_character);
 
         started_first_word = true;
-    }
+    } else {
+        gregorio_rebuild_characters(&current_character, center_is_determined,
+                false);
 
-    gregorio_rebuild_characters(&current_character, center_is_determined,
-            has_initial);
-
-    if (started_first_word) {
-        gregorio_set_first_word(&current_character);
+        if (started_first_word) {
+            gregorio_set_first_word(&current_character);
+        }
     }
 }
 
@@ -630,10 +633,10 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
                     "happen!"), "gabc_y_add_notes", VERBOSITY_FATAL, 0);
         }
         if (!current_element->nabc) {
-            current_element->nabc = (char **) calloc (nabc_lines,
+            current_element->nabc = (char **) gregorio_calloc (nabc_lines,
                     sizeof (char *));
         }
-        current_element->nabc[nabc_state-1] = strdup(notes);
+        current_element->nabc[nabc_state-1] = gregorio_strdup(notes);
         current_element->nabc_lines = nabc_state;
     }
 }
@@ -660,7 +663,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
 %token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES
-%token LANGUAGE
+%token LANGUAGE END_OF_FILE
 
 %%
 
@@ -719,8 +722,8 @@ centering_scheme_definition:
 language_definition:
     LANGUAGE attribute {
         check_multiple("language", got_language);
+        gregorio_set_score_language(score, $2.text);
         gregorio_set_centering_language($2.text);
-        free($2.text);
         got_language = true;
     }
     ;
@@ -751,7 +754,7 @@ gregoriotex_font_definition:
 
 office_part_definition:
     OFFICE_PART attribute {
-        check_multiple("office part", score->office_part != NULL);
+        check_multiple("office-part", score->office_part != NULL);
         gregorio_set_score_office_part (score, $2.text);
     }
     ;
@@ -818,6 +821,10 @@ nabc_lines_definition:
 initial_style_definition:
     INITIAL_STYLE attribute {
         if ($2.text) {
+            /* DEPRECATED by 4.1 */
+            gregorio_message("\"initial-style\" header is deprecated. Please "
+            "use \\gresetinitiallines in TeX instead.",
+            "gabc_score_determination_parse", VERBOSITY_DEPRECATION, 0);
             score->initial_style=atoi($2.text);
             free($2.text);
         }
@@ -1004,7 +1011,7 @@ note:
         voice=0;
         nabc_state=0;
     }
-    | NOTES CLOSING_BRACKET_WITH_SPACE {
+    | NOTES closing_bracket_with_space {
         if (voice<number_of_voices) {
             gabc_y_add_notes($1.text, @1);
             free($1.text);
@@ -1058,12 +1065,18 @@ note:
         voice=0;
         nabc_state=0;
     }
-    | CLOSING_BRACKET_WITH_SPACE {
+    | closing_bracket_with_space {
         elements[voice]=NULL;
         voice=0;
         nabc_state=0;
         update_position_with_space();
     }
+    ;
+
+closing_bracket_with_space:
+    CLOSING_BRACKET_WITH_SPACE
+    | CLOSING_BRACKET_WITH_SPACE END_OF_FILE
+    | CLOSING_BRACKET END_OF_FILE
     ;
 
 style_beginning:

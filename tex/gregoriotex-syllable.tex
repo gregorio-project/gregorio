@@ -19,7 +19,7 @@
 
 % this file contains definitions of the glyphs and the syllables
 
-\gre@declarefileversion{gregoriotex-syllable.tex}{4.0.0-rc2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-syllable.tex}{4.0.0}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the different glyphs
@@ -896,3 +896,74 @@
   \fi\fi %
   \relax%
 }
+
+%% internal macro to set the first syllable text after all parts are known
+%% #1 - First part of the syllable (before the vowel)
+%% #2 - Middle part of the syllable (the vowel)
+%% #3 - Last part of the syllable (after the vowel)
+%% #4 - First letter of the syllable
+%% #5 - Everything after the first letter of the syllable
+%% #6 - Macros to run after the text is emitted
+\def\gre@setfirstsyllabletext#1#2#3#4#5#6{%
+  \def\gre@opening@syllabletext{%
+    \GreSetThisSyllable{#1}{#2}{#3}%
+    {\GreFirstWord{\GreFirstSyllable{\GreFirstSyllableInitial{#4}}}}%
+    {\GreFirstWord{\GreFirstSyllable{#5}}}%
+    #6\relax %
+  }%
+}%
+
+\def\gresetinitiallines#1{\def\gre@initiallines{#1}}%
+\gresetinitiallines{1}% default to one-line initials
+
+\def\GreSetInitialStyle#1{%%% DEPRECATED by 4.1
+  \gre@deprecated{initial-style gabc header}{\protect\gresetinitiallines}%%% DEPRECATED by 4.1
+  \def\gre@opening@initialstyle{#1}%%% DEPRECATED by 4.1
+}%%% DEPRECATED by 4.1
+
+%% sets the first syllable text
+%% #1 - Initial
+%% #2 - First letter after the initial
+%% #3 - everything else in the syllable
+%% #4 - Three syllable parts when there is a separated initial
+%% #5 - Three syllable parts where there is no separated initial
+%% #6 - Extra macros to run if there is an initial
+\def\GreSetFirstSyllableText#1#2#3#4#5#6{%
+  %%% DEPRECATED by 4.1: When \gre@opening@initialstyle is removed, use \gre@initiallines directly in the following line
+  \ifcase\gre@opening@initialstyle\relax % no initial
+    \gre@noinitial %
+    \gre@setfirstsyllabletext#5{#1}{#2#3}{}%
+  \or % regular intiial
+    \gre@setinitial{#1}%
+    \gre@setfirstsyllabletext#4{#2}{#3}{#6}%
+  \or % big initial
+    \gre@setbiginitial\gre@setinitial{#1}%
+    \gre@setfirstsyllabletext#4{#2}{#3}{#6}%
+  \fi %
+}%
+
+\def\GreSetNoFirstSyllableText{%
+  \gre@noinitial %
+  \def\gre@opening@syllabletext{}%
+}%
+
+%% opens a score
+%% #1 - macros rendering the things after the initial but before the notes
+%% #2 - macros rendering the things after starting notes but before the syllable
+%% #3 - control sequence for the syllable
+%% #4 - macros rendering the first syllable; should emit the initial and
+%%      populate \gre@opening@syllabletext (even if that should be empty)
+\def\GreScoreOpening#1#2#3#4{%
+  #4\relax % should emit the initial
+  \ifnum\gre@biginitial=1\relax %
+    \gre@debugmsg{general}{making adjustment NECESSARY}%
+    \gre@thirdlineadjustmentnecessarytrue %
+  \else %
+    \gre@debugmsg{general}{making adjustment unnecessary}%
+    \gre@thirdlineadjustmentnecessaryfalse %
+  \fi %
+  #1\relax % score reference, voice info, etc.
+  \gre@beginnotes\relax %
+  #2\relax % initial clef, etc.
+  #3{\gre@opening@syllabletext}%
+}%
