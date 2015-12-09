@@ -24,10 +24,13 @@
 #define SUPPORT_H
 
 #include <stdlib.h>
+#include <limits.h>
 #include "bool.h"
 
-/* realistically, we shouldn't need to support really huge buffers */
-#define MAX_BUF_GROWTH ((size_t)(1 << 15))
+#define SIZE_T_MAX (~((size_t)0))
+#define MAX_BUF_GROWTH ((size_t)( \
+            (((INT_MAX < SIZE_T_MAX)? INT_MAX : SIZE_T_MAX) >> 1) + 1 \
+        ))
 
 void gregorio_snprintf(char *s, size_t size, const char *format, ...)
         __attribute__ ((__format__ (__printf__, 3, 4)));
