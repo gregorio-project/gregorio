@@ -64,6 +64,9 @@ typedef enum gregorio_file_format {
 
 /* realpath is not in mingw32 */
 #ifdef _WIN32
+/* _MAX_PATH is being passed for the maxLength (third) argument of _fullpath,
+ * but we are always passing NULL for the absPath (first) argument, so it will
+ * be ignored per the MSDN documentation */
 #define realpath(path,resolved_path) _fullpath(resolved_path, path, _MAX_PATH)
 #endif
 
@@ -128,7 +131,7 @@ static char *get_base_filename(char *fbasename)
         return NULL;
     }
     l = strlen(fbasename) - strlen(p);
-    ret = (char *) gregorio_malloc((l + 1) * sizeof(char));
+    ret = (char *) gregorio_malloc(l + 1);
     gregorio_snprintf(ret, l + 1, "%s", fbasename);
     ret[l] = '\0';
     return ret;
@@ -139,8 +142,7 @@ static char *get_output_filename(char *fbasename, const char *extension)
 {
     char *output_filename = NULL;
     output_filename =
-        (char *) gregorio_malloc(sizeof(char) *
-                        (strlen(extension) + strlen(fbasename) + 2));
+        (char *) gregorio_malloc((strlen(extension) + strlen(fbasename) + 2));
     output_filename = strcpy(output_filename, fbasename);
     output_filename = strcat(output_filename, ".");
     output_filename = strcat(output_filename, extension);
@@ -202,13 +204,13 @@ static void check_input_clobber(char *input_file_name, char *output_file_name)
         char *absolute_output_file_name;
         char *current_directory;
         int file_cmp;
-        int bufsize = 128;
-        char *buf = gregorio_malloc(bufsize * sizeof(char));
+        size_t bufsize = 128;
+        char *buf = gregorio_malloc(bufsize);
         while ((current_directory = getcwd(buf, bufsize)) == NULL
                 && errno == ERANGE && bufsize < MAX_BUF_GROWTH) {
             free(buf);
             bufsize <<= 1;
-            buf = gregorio_malloc(bufsize * sizeof(char));
+            buf = gregorio_malloc(bufsize);
         }
         if (current_directory == NULL) {
             fprintf(stderr, _("can't determine current directory"));
@@ -243,7 +245,7 @@ static char *encode_point_and_click_filename(char *input_file_name)
     }
 
     /* 2 extra characters for a possible leading slash and final NUL */
-    r = result = gregorio_malloc((strlen(filename) * 4 + 2) * sizeof(char));
+    r = result = gregorio_malloc(strlen(filename) * 4 + 2);
 
 #ifdef _WIN32
     *(r++) = '/';

@@ -79,8 +79,8 @@ static bool read_vowel_rules(char *const lang) {
     }
 #else
     FILE *file;
-    int bufsize = 128;
-    char *buf = gregorio_malloc(bufsize * sizeof(char));
+    size_t bufsize = 0;
+    char *buf = NULL;
     size_t capacity = 16, size = 0;
     
     filenames = gregorio_malloc(capacity * sizeof(char *));
@@ -92,17 +92,7 @@ static bool read_vowel_rules(char *const lang) {
                 strerror(errno));
         return false;
     }
-    for (buf[bufsize - 2] = '\n';
-            !feof(file) && !ferror(file) && fgets(buf, bufsize, file);
-            buf[bufsize - 2] = '\n') {
-        while (!feof(file) && !ferror(file) && buf[bufsize - 2] != '\n'
-                && bufsize < MAX_BUF_GROWTH) {
-            int oldsize = bufsize;
-            bufsize <<= 1;
-            buf = (char *)gregorio_realloc(buf, bufsize * sizeof(char));
-            buf[bufsize - 2] = '\n';
-            fgets(buf + oldsize - 1, oldsize + 1, file);
-        }
+    while (gregorio_readline(&buf, &bufsize, file)) {
         rtrim(buf);
         if (strlen(buf) > 0) {
             filenames[size++] = gregorio_strdup(buf);

@@ -24,9 +24,10 @@
 #define SUPPORT_H
 
 #include <stdlib.h>
-#include <limits.h>
+#include "bool.h"
 
-#define MAX_BUF_GROWTH ((INT_MAX >> 1) + 1)
+/* realistically, we shouldn't need to support really huge buffers */
+#define MAX_BUF_GROWTH ((size_t)(1 << 15))
 
 void gregorio_snprintf(char *s, size_t size, const char *format, ...)
         __attribute__ ((__format__ (__printf__, 3, 4)));
@@ -34,5 +35,6 @@ void *gregorio_malloc(size_t size);
 void *gregorio_calloc(size_t nmemb, size_t size);
 void *gregorio_realloc(void *ptr, size_t size);
 char *gregorio_strdup(const char *s);
+bool gregorio_readline(char **bufptr, size_t *bufsize, FILE *file);
 
 #endif
