@@ -132,23 +132,17 @@
 
 
 \def\grecoloredlines#1#2#3{%
-  \gre@deprecated{\protect\grecoloredlines}{\protect\gresetlinecolor}%
-  \gresetlinecolor{}%
-  \relax %
+  \gre@obsolete{\protect\grecoloredlines}{\protect\gresetlinecolor}%
 }
 
 \def\greredlines{%
-  \gre@deprecated{\protect\greredlines}{\protect\gresetlinecolor{gregoriocolor}}%
-  \gresetlinecolor{}%
-  \relax %
+  \gre@obsolete{\protect\greredlines}{\protect\gresetlinecolor{gregoriocolor}}%
 }
 
 \let\redlines\greredlines
 
 \def\grenormallines{%
-  \gre@deprecated{\protect\grenormallines}{\protect\gresetlinecolor{black}}%
-  \gresetlinecolor{}%
-  \relax %
+  \gre@obsolete{\protect\grenormallines}{\protect\gresetlinecolor{black}}%
 }
 
 \let\normallines\grenormallines

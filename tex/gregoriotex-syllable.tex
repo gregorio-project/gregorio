@@ -471,13 +471,11 @@
 \xdef\gre@lyriccentering{1}%
 
 \def\englishcentering{%
-  \gre@deprecated{\protect\englishcentering}{\protect\gresetlyriccentering{syllable}}%
-  \gresetlyriccentering{syllable}%
+  \gre@obsolete{\protect\englishcentering}{\protect\gresetlyriccentering{syllable}}%
 }%
 
 \def\defaultcentering{%
-  \gre@deprecated{\protect\defaultcentering}{\protect\gresetlyriccentering{vowel} }%
-  \gresetlyriccentering{vowel}%
+  \gre@obsolete{\protect\defaultcentering}{\protect\gresetlyriccentering{vowel} }%
 }%
 
 %% options about clivis centering scheme. Clivis are usually aligned by their
@@ -505,18 +503,15 @@
 }%
 
 \def\clivisalignmentalways{%
-  \gre@deprecated{\protect\clivisalignmentalways}{\protect\gresetclivisalignment{always}}%
-  \gresetclivisalignment{always}%
+  \gre@obsolete{\protect\clivisalignmentalways}{\protect\gresetclivisalignment{always}}%
 }%
 
 \def\clivisalignmentnever{%
-  \gre@deprecated{\protect\clivisalignmentnever}{\protect\gresetclivisalignment{never}}%
-  \gresetclivisalignment{never}%
+  \gre@obsolete{\protect\clivisalignmentnever}{\protect\gresetclivisalignment{never}}%
 }%
 
 \def\clivisalignmentspecial{%
-  \gre@deprecated{\protect\clivisalignmentspecial}{\protect\gresetclivisalignment{special}}%
-  \gresetclivisalignment{special}%
+  \gre@obsolete{\protect\clivisalignmentspecial}{\protect\gresetclivisalignment{special}}%
 }%
 
 \newif\ifgre@forceemptyfirstsyllablehyphen%
