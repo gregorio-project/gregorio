@@ -13,6 +13,64 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
 - `biginitial` style, consolidated into the `initial` style.
 
+### Removed
+- `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`
+- `\greinitialformat`, if you were redefining this command, use `\grechangeformat{initial}...` instead
+- `\grebiginitialformat`, if you were redefining this command, use `\grechangeformat{biginitial}...` instead
+- `\gretranslationformat`, if you were redefining this command, use `\grechangeformat{translation}...` instead
+- `\greabovelinestextstyle`, if you were redefining this command, use `\grechangeformat{abovelinestext}...` instead
+- `\grelowchoralsignstyle`, if you were redefining this command, use `\grechangeformat{lowchoralsign}...` instead
+- `\grehighchoralsignstyle`, if you were redefining this command, use `\grechangeformat{highchoralsign}...` instead
+- `\setaboveinitialseparation`, supplanted by `\grechangedim{annotationseparation}...`
+- `\scorereference`, supplanted by `\grescorereference`
+- `\GreScoreReference`, supplanted by `\grescorereference`
+- `\commentary`, supplanted by `\grecommentary`
+- `\setgretranslationcenteringscheme`, supplanted by `\gresettranslationcentering`
+- `\englishcentering`, supplanted by `\gresetlyriccentering{syllable}`
+- `\defaultcentering`, supplanted by `\gresetlyriccentering{vowel}`
+- `\setgrefactor`, supplanted by `\grechangestaffsize`
+- `\forcecompilegabc`, supplanted by `\gresetcompilegabc{force}`
+- `\autocompilegabc`, supplanted by `\gresetcompilegabc{auto}`
+- `\nevercompilegabc`, supplanted by `\gresetcompilegabc{never}`
+- `\includescore`, supplanted by `\gregorioscore`
+- `\grenoscaledim`, supplanted by `\grescaledim{...}{no}`
+- `\gresetdim`, supplanted by `\grecreatedim`
+- `\setstafflinethickness`, supplanted by `\grechangestafflinethickness`
+- `\grecoloredlines`, supplanted by `\gresetlinecolor`
+- `\greredlines` and `\redlines`, supplanted by `\gresetlinecolor{gregoriocolor}`
+- `\grenormallines` and `\normallines`, supplanted by `\gresetlinecolor{black}`
+- `\greremovelines`, supplanted by `\gresetlines{invisible}`
+- `\gredonotremovelines`, supplanted by `\gresetlines{visible}`
+- `\GreHidePCLines`, supplanted by `\gresetlinesbehindpunctumcavum{invisible}`
+- `\GreDontHidePCLines`, supplanted by `\gresetlinesbehindpunctumcavum{visible}`
+- `\GreHideAltLines`, supplanted by `\gresetlinesbehindalteration{invisible}`
+- `\GreDontHideAltLines`, supplanted by `\gresetlinesbehindalteration{visible}`
+- `\gresetnlbintranslation`, supplanted by `\gresetbreakintranslation`
+- `\greblockcustos`, supplanted by `\greseteolcustos{manual}`
+- `\greenableeolshifts`, supplanted by `\greseteolshifts{enable}`
+- `\gredisableeolshifts`, supplanted by `\greseteolshifts{disable}`
+- `\GreUseNoramalHyphen`, supplanted by `\greseteolhyphen{normal}`
+- `\GreUseZeroHyphen`, supplanted by `\greseteolhyphen{zero}`
+- `\greremoveclef`, supplanted by `\gresetclef{invisible}`
+- `\grenormalclef`, supplanted by `\gresetclef{visible}`
+- `\AddHEpisemusBridges`, supplanted by `\gresethepisema{bridge}`
+- `\RemoveHEpisemusBridges`, supplanted by `\gresethepisema{break}`
+- `\UseAlternatePunctumCavum`, supplanted by `\gresetpunctumcavum{alternate}`
+- `\UseNormalPunctumCavum`, supplanted by `\gresetpunctumcavum{normal}`
+- `\clivisalignmentalways`, supplanted by `\gresetclivisalignment{always}`
+- `\clivisalignmentnever`, supplanted by `\gresetclivisalignment{never}`
+- `\clivisalignmentspecial`, supplanted by `\gresetclivisalignment{special}`
+- `\greusedefaultstyle`, supplanted by `\gresetglyphsytle{default}`
+- `\greusemedicaeastyle`, supplanted by `\gresetglyphsytle{medicaea}`
+- `\greusehufnagelstyle`, supplanted by `\gresetglyphsytle{hufnagel}`
+- `\greusemensuralstyle`, supplanted by `\gresetglyphsytle{mensural}`
+- `\setspaceafterinitial`, supplanted by `\grechangedim{afterinitialshift}...`
+- `\setspacebeforeinitial`, supplanted by `\grechangedim{beforeinitialshift}...`
+- `\setinitialspacing`, supplanted by `\grechangedim{beforeinitialshift}...`, `\grechangedim{manualinitialwidth}...`, and `\grechangedime{afterinitialshift}...`
+- `centering-scheme` gabc header, supplanted by `\grelyriccentering` in TeX.  See GregorioRef for syntax.
+- `gregoriotex-font` gabc header, supplanted by `\gresetgregoriofont` in TeX.  See GregorioRef for syntax.
+- The meaningless `gabc-version` header in gabc (see [#664](https://github.com/gregorio-project/gregorio/issues/664)).
+
 
 ## [4.0.0] - 2015-12-08
 ### Fixed
