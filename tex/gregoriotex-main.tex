@@ -1488,7 +1488,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grechangestyle#1#2{%
-  \IfStrEq{#1}{biginitial}{\gre@obsolete{biginitial style}{initial style}}{}%%% DEPRECATED for removal in 5.0
+  \IfStrEq{#1}{biginitial}{\gre@deprecated{biginitial style}{initial style}}{}%%% DEPRECATED for removal in 5.0
   \@ifnextchar[{\gre@changestyle{#1}{#2}}{\gre@changestyle{#1}{#2}[\relax]}%
 }%
 
@@ -1633,7 +1633,7 @@
 % Macros for compiling short snippets of GABC directly expressed in TeX
 
 \long\def\gre@gabcsnippet@option[#1]#2{%%% DEPRECATED by 4.1
-  \gre@obsolete{\protect\gabcsnippet  with initial-style argument}{\protect\gresetinitiallines}%
+  \gre@deprecated{\protect\gabcsnippet  with initial-style argument}{\protect\gresetinitiallines}%
   \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#2}}", "initial-style: #1;")}%
 }%
 
