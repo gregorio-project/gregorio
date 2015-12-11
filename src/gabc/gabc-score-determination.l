@@ -237,10 +237,13 @@ semicolon. */
                 _("unrecognized character: \"%c\" in definition part"),
                 gabc_score_determination_text[0]);
     }
-<score>[^\{\}\(\[\]<%]+ {
+<score>[^-\{\}\(\[\]<%]+ {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
         return CHARACTERS;
+    }
+<score>- {
+        return HYPHEN;
     }
 <score,style><i> {
         BEGIN(style);

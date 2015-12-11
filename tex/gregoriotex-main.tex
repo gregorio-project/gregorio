@@ -1684,11 +1684,12 @@
 }%
 
 % macro to force hyphenation of all syllables.
+\newif\ifgre@forcehyphen\gre@forcehyphenfalse%
 \def\gresethyphen#1{%
   \IfStrEq{#1}{force}%
-    {\global\grechangedim{maximumspacewithoutdash}{-16383.99999pt}{fixed}}%
+    {\gre@forcehyphentrue}%
     {\IfStrEq{#1}{auto}%
-      {\global\grechangedim{maximumspacewithoutdash}{0.02 cm}{scalable}}%
+      {\gre@forcehyphenfalse}%
       {\gre@error{Unrecognized option in \protect\gresethyphen}}%
     }%
 }%

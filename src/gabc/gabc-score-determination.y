@@ -663,7 +663,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
 %token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES
-%token LANGUAGE END_OF_FILE
+%token LANGUAGE HYPHEN END_OF_FILE
 
 %%
 
@@ -1174,8 +1174,18 @@ character:
     | euouae
     ;
 
+text_hyphen:
+    HYPHEN {
+        gregorio_gabc_add_text(gregorio_strdup("-"));
+    }
+    | text_hyphen HYPHEN {
+        gregorio_gabc_add_text(gregorio_strdup("-"));
+    }
+    ;
+
 text:
     | text character
+    | text text_hyphen character
     ;
 
 translation_beginning:
@@ -1205,7 +1215,21 @@ syllable_with_notes:
         first_text_character = current_character;
         close_syllable(&@1);
     }
+    | text HYPHEN OPENING_BRACKET notes {
+        gregorio_gabc_add_style(ST_VERBATIM);
+        gregorio_gabc_add_text(gregorio_strdup("\\GreForceHyphen"));
+        gregorio_gabc_end_style(ST_VERBATIM);
+        rebuild_characters();
+        first_text_character = current_character;
+        close_syllable(&@1);
+    }
     | text translation OPENING_BRACKET notes {
+        close_syllable(&@1);
+    }
+    | text HYPHEN translation OPENING_BRACKET notes {
+        gregorio_gabc_add_style(ST_VERBATIM);
+        gregorio_gabc_add_text(gregorio_strdup("\\GreForceHyphen"));
+        gregorio_gabc_end_style(ST_VERBATIM);
         close_syllable(&@1);
     }
     ;
