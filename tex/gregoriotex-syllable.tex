@@ -19,7 +19,7 @@
 
 % this file contains definitions of the glyphs and the syllables
 
-\gre@declarefileversion{gregoriotex-syllable.tex}{4.0.0-rc2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-syllable.tex}{4.0.0}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the different glyphs
@@ -133,7 +133,7 @@
     \global\gre@firstglyphfalse%
   \fi%
   %\gre@dimen@lastglyphwidth=\gre@dimen@temp@three
-  %#5\relax 
+  %#5\relax
   #6\relax %
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax%
@@ -261,7 +261,7 @@
   \relax %
 }%
 
-% this is the function that we call when we try to determine the next aligncenter of the notes. In this case we call this function with normal arguments if there is no flat nor natural ; we call it with argument + 20 if there is a flat and argument + 40 if there is a natural... I know this is dirty... but... this is TeX...
+% this is the function that we call when we try to determine the next aligncenter of the notes. In this case we call this function with normal arguments if there is no flat nor natural ; we call it with argument + 20 if there is a flat and argument + 40 if there is a natural, +60 with a sharp
 \def\gre@calculate@nextnotesaligncenter#1{%
   \ifnum#1<20\relax %
     \gre@calculate@simplenotesaligncenter{#1}{1}%
@@ -292,6 +292,7 @@
       \fi%
     \fi %
     \advance\gre@dimen@temp@five by \wd\gre@box@temp@width %
+    \advance\gre@dimen@temp@five by \gre@dimen@alterationspace %
     \global\gre@dimen@notesaligncenter=\gre@dimen@temp@five %
   \fi %
   \relax %
@@ -340,9 +341,9 @@
 \newif\ifgre@boxing%
 \gre@boxingfalse%
 
-% 
+%
 % Helper macros for fixing text in rare cases
-% 
+%
 
 % the macro we call with all normal text
 \def\gre@textnormal#1{%
@@ -470,13 +471,11 @@
 \xdef\gre@lyriccentering{1}%
 
 \def\englishcentering{%
-  \gre@deprecated{\protect\englishcentering}{\protect\gresetlyriccentering{syllable}}%
-  \gresetlyriccentering{syllable}%
+  \gre@obsolete{\protect\englishcentering}{\protect\gresetlyriccentering{syllable}}%
 }%
 
 \def\defaultcentering{%
-  \gre@deprecated{\protect\defaultcentering}{\protect\gresetlyriccentering{vowel} }%
-  \gresetlyriccentering{vowel}%
+  \gre@obsolete{\protect\defaultcentering}{\protect\gresetlyriccentering{vowel} }%
 }%
 
 %% options about clivis centering scheme. Clivis are usually aligned by their
@@ -504,18 +503,15 @@
 }%
 
 \def\clivisalignmentalways{%
-  \gre@deprecated{\protect\clivisalignmentalways}{\protect\gresetclivisalignment{always}}%
-  \gresetclivisalignment{always}%
+  \gre@obsolete{\protect\clivisalignmentalways}{\protect\gresetclivisalignment{always}}%
 }%
 
 \def\clivisalignmentnever{%
-  \gre@deprecated{\protect\clivisalignmentnever}{\protect\gresetclivisalignment{never}}%
-  \gresetclivisalignment{never}%
+  \gre@obsolete{\protect\clivisalignmentnever}{\protect\gresetclivisalignment{never}}%
 }%
 
 \def\clivisalignmentspecial{%
-  \gre@deprecated{\protect\clivisalignmentspecial}{\protect\gresetclivisalignment{special}}%
-  \gresetclivisalignment{special}%
+  \gre@obsolete{\protect\clivisalignmentspecial}{\protect\gresetclivisalignment{special}}%
 }%
 
 \newif\ifgre@forceemptyfirstsyllablehyphen%
@@ -530,7 +526,7 @@
 }%
 
 \newif\ifgre@showhyphenafterthissyllable%
-\def\GreForceHyphen{\gre@showhyphenafterthissyllabletrue}
+\def\GreForceHyphen{\global\gre@showhyphenafterthissyllabletrue\gre@debugmsg{hyphen}{Forcing hyphen in gabc}}
 
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : macro setting the letters of this syllable
@@ -540,7 +536,7 @@
 % TODO: find another system for the end syllable
 % #9 : glyphs : all the notes
 % the three next parameters are to put an hyphen if necessary, they can be empty for end of words
-% #5 : macros setting next syllable letters of the next syllable 
+% #5 : macros setting next syllable letters of the next syllable
 % #6 : the line:char:column for a textedit link
 % #7 : alignment type of the first next glyph
 % #8 : other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments
@@ -550,9 +546,15 @@
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
-  \gre@showhyphenafterthissyllablefalse%
+  \ifgre@forcehyphen%
+    \gre@debugmsg{hyphen}{Forcing hyphen}%
+    \gre@showhyphenafterthissyllabletrue%
+  \else%
+    \gre@debugmsg{hyphen}{not forcing hyphen}%
+    \gre@showhyphenafterthissyllablefalse%
+  \fi%
   #1%
-  \ifgre@forceemptyfirstsyllablehyphen\else\gre@showhyphenafterthissyllablefalse\fi%
+  \ifgre@forceemptyfirstsyllablehyphen\else\gre@showhyphenafterthissyllablefalse\gre@debugmsg{hyphen}{Getting rid of hyphen}\fi%
   \gre@firstglyphtrue%
   \gre@dimen@bolextra = 0pt\relax%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
@@ -578,7 +580,7 @@
     \ifgre@beginningofscore%
       \gre@beginningofscorefalse%
     \else%
-      % we don't want to shift right inside a discretionary 
+      % we don't want to shift right inside a discretionary
       \ifnum\gre@insidediscretionary=0\relax%
         \kern\gre@dimen@bolshift\relax%
       \fi%
@@ -619,9 +621,11 @@
     %
     \gre@debugmsg{ifdim}{ temp@skip@one > maximumspacewithoutdash}%
     \ifdim\gre@skip@temp@one > \gre@dimen@maximumspacewithoutdash\relax%
+      \gre@debugmsg{hyphen}{spacing requires hyphen}%
       \gre@showhyphenafterthissyllabletrue%
     \fi
     \ifgre@showhyphenafterthissyllable\relax%
+      \gre@debugmsg{hyphen}{Showing the hyphen}%
       % if it's the last syllable of line, the hyphen will be \GreHyph
       \ifnum\gre@lastoflinecount=1\relax %
         \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
@@ -632,6 +636,7 @@
       \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
       \gre@calculate@syllablefinalskip{0}{0}%
     \else %
+      \gre@debugmsg{hyphen}{No hyphen}%
       \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
       \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
@@ -777,7 +782,7 @@
   \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
   \ifdim\wd\gre@box@syllabletext = 0 pt\relax %
     % the most difficult case : when there is nothing to write
-    % first we need to determine the real space that there will be between the notes. Here again it is not so simple... let's consider these two kinds of spaces : 
+    % first we need to determine the real space that there will be between the notes. Here again it is not so simple... let's consider these two kinds of spaces :
     %% 1/ the minimal space between a note and the bar + the width of the bar + the minimal space between the bar and the note (that's the global idea, in fact there are nuances) : we assign skip@temp@three to it
     %% 2/ enddifference + begindifference + space between notes and word : we assign skip@temp@two to it
     \gre@skip@temp@three=\gre@skip@notebarspace\relax%
@@ -852,14 +857,14 @@
         \gre@debugmsg{ifdim}{ temp@skip@two > -wd(gre@box@syllablenotes)}%
         \ifdim\gre@skip@temp@two > -\wd\gre@box@syllablenotes %
           \kern\gre@skip@temp@two %
-        \else % \ifdim\gre@dimen@temp@five > -\wd\gre@box@syllablenotes 
+        \else % \ifdim\gre@dimen@temp@five > -\wd\gre@box@syllablenotes
           \gre@skip@temp@one = -\wd\gre@box@syllablenotes %
           \gre@hskip\gre@skip@temp@one %
         \fi %
       \fi %
     \fi %
   % then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
-  \else %ifdim\wd\gre@box@syllabletext = 0 pt 
+  \else %ifdim\wd\gre@box@syllabletext = 0 pt
     #8\relax %
     \raise\gre@dimen@textlower \copy\gre@box@syllabletext %
     \ifgre@mustdotranslationcenterend%

@@ -1,4 +1,7 @@
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file implements vowel rule handling (aside from parsing).
+ *
  * Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
@@ -30,6 +33,7 @@
 #include "vowel.h"
 #include "unicode.h"
 #include "messages.h"
+#include "support.h"
 
 typedef struct character_set {
     grewchar *table;
@@ -42,21 +46,15 @@ typedef struct character_set {
 
 static character_set *character_set_new(const bool alloc_next)
 {
-    character_set *set = (character_set *)calloc(1, sizeof(character_set));
+    character_set *set =
+        (character_set *)gregorio_calloc(1, sizeof(character_set));
     set->mask = 0x0f;
     set->bins = 16;
     set->size = 0;
-    set->table = (grewchar *)calloc(set->bins, sizeof(grewchar));
-    if (!set->table) {
-        gregorio_message(_("unable to allocate memory"),
-                "character_set_new", VERBOSITY_FATAL, 0);
-    }
+    set->table = (grewchar *)gregorio_calloc(set->bins, sizeof(grewchar));
     if (alloc_next) {
-        set->next = (character_set **)calloc(set->bins, sizeof(character_set *));
-        if (!set->next) {
-            gregorio_message(_("unable to allocate memory"),
-                    "character_set_new", VERBOSITY_FATAL, 0);
-        }
+        set->next = (character_set **)gregorio_calloc(set->bins,
+                sizeof(character_set *));
     }
     return set;
 }
@@ -144,9 +142,9 @@ static __inline void character_set_grow(character_set *const set) {
 
     set->bins <<= 1;
     set->mask = (set->mask << 1) | 0x01;
-    set->table = calloc(set->bins, sizeof(grewchar));
+    set->table = gregorio_calloc(set->bins, sizeof(grewchar));
     if (old_next) {
-        set->table = calloc(set->bins, sizeof(character_set *));
+        set->table = gregorio_calloc(set->bins, sizeof(character_set *));
     }
     for (i = 0; i < old_bins; ++i) {
         if (old_table[i]) {
@@ -208,19 +206,12 @@ extern FILE *gregorio_vowel_rulefile_in;
 
 static void prefix_buffer_grow(size_t required_size)
 {
-    grewchar *newbuffer;
-
     while (required_size > prefix_buffer_size) {
         prefix_buffer_size <<= 1;
         prefix_buffer_mask = (prefix_buffer_mask << 1) | 0x01;
     }
-    newbuffer = realloc(prefix_buffer, prefix_buffer_size * sizeof(grewchar));
-    if (newbuffer) {
-        prefix_buffer = newbuffer;
-    } else {
-        gregorio_message(_("unable to allocate memory"), "prefix_buffer_grow",
-                VERBOSITY_FATAL, 0);
-    }
+    prefix_buffer = gregorio_realloc(prefix_buffer,
+            prefix_buffer_size * sizeof(grewchar));
 }
 
 void gregorio_vowel_tables_init(void)
@@ -238,12 +229,8 @@ void gregorio_vowel_tables_init(void)
 
         prefix_buffer_size = 16;
         prefix_buffer_mask = 0x0f;
-        prefix_buffer = (grewchar *)malloc(
+        prefix_buffer = (grewchar *)gregorio_malloc(
                 prefix_buffer_size * sizeof(grewchar));
-        if (!prefix_buffer) {
-            gregorio_message(_("unable to allocate memory"),
-                    "gregorio_vowel_tables_init", VERBOSITY_FATAL, 0);
-        }
     }
 }
 

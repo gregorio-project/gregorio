@@ -22,7 +22,7 @@
 \ifcsname gregoriotex@symbols@loaded\endcsname\endinput\fi%
 \def\gregoriotex@symbols@loaded{}%
 
-\gre@declarefileversion{gregoriotex-symbols.tex}{4.0.0-rc2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-symbols.tex}{4.0.0}% GREGORIO_VERSION
 
 \RequireLuaModule{gregoriotex}%
 
@@ -193,8 +193,7 @@
 }%
 
 \def\gresep#1#2{%
-  \gre@deprecated{\protect\gresep}{\protect\greseparator}%
-  \greseparator{#1}{#2}%
+  \gre@obsolete{\protect\gresep}{\protect\greseparator}%
 }
 
 %%%%%%%%%%%

@@ -1,5 +1,8 @@
 %{
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file implements the note parser.
+ *
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
@@ -211,7 +214,7 @@ static __inline void add_alteration(const gregorio_type type) {
                     "\\GreVarBraceSavePos{%d}{%d}{1}"
                     "\\GreOverBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}",
                     overbrace_var, char_for_brace, overbrace_var, char_for_brace);
-            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ub:[01]\{\] {
@@ -226,7 +229,7 @@ static __inline void add_alteration(const gregorio_type type) {
                     "\\GreVarBraceSavePos{%d}{%d}{1}"
                     "\\GreUnderBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}",
                     underbrace_var, char_for_brace, underbrace_var, char_for_brace);
-            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ocb:[01]\{\] {
@@ -242,7 +245,7 @@ static __inline void add_alteration(const gregorio_type type) {
                     "\\GreVarBraceSavePos{%d}{%d}{1}"
                     "\\GreOverCurlyBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}{0}",
                     overbrace_var, char_for_brace, overbrace_var, char_for_brace);
-            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ocba:[01]\{\] {
@@ -258,7 +261,7 @@ static __inline void add_alteration(const gregorio_type type) {
                     "\\GreVarBraceSavePos{%d}{%d}{1}"
                     "\\GreOverCurlyBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}{1}",
                     overbrace_var, char_for_brace, overbrace_var, char_for_brace);
-            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ob:[01]\}\] {
@@ -277,7 +280,7 @@ static __inline void add_alteration(const gregorio_type type) {
                     "\\GreVarBraceSavePos{%d}{%d}{2}", overbrace_var,
                     char_for_brace);
             overbrace_var = 0;
-            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ub:[01]\}\] {
@@ -291,7 +294,7 @@ static __inline void add_alteration(const gregorio_type type) {
                     "\\GreVarBraceSavePos{%d}{%d}{2}", underbrace_var,
                     char_for_brace);
             underbrace_var = 0;
-            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ocb:[01]\}\] {
@@ -310,7 +313,7 @@ static __inline void add_alteration(const gregorio_type type) {
                     "\\GreVarBraceSavePos{%d}{%d}{2}", overbrace_var,
                     char_for_brace);
             overbrace_var = 0;
-            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ocba:[01]\}\] {
@@ -329,33 +332,33 @@ static __inline void add_alteration(const gregorio_type type) {
                     "\\GreVarBraceSavePos{%d}{%d}{2}", overbrace_var,
                     char_for_brace);
             overbrace_var = 0;
-            gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[nm[1-9]\] {
         if (notesmacros[gabc_notes_determination_text[3]-'0']) {
             gregorio_add_texverb_to_note(&current_note,
-            strdup(notesmacros[gabc_notes_determination_text[3]-'0']));
+            gregorio_strdup(notesmacros[gabc_notes_determination_text[3]-'0']));
         } else error();
     }
 <INITIAL>\[gm[1-9]\] {
         if (notesmacros[gabc_notes_determination_text[3]-'0']) {
             gregorio_add_texverb_as_note(&current_note,
-            strdup(notesmacros[gabc_notes_determination_text[3]-'0']),
+            gregorio_strdup(notesmacros[gabc_notes_determination_text[3]-'0']),
             GRE_TEXVERB_GLYPH, &notes_lloc);
         } else error();
     }
 <INITIAL>\[em[1-9]\] {
         if (notesmacros[gabc_notes_determination_text[3]-'0']) {
             gregorio_add_texverb_as_note(&current_note,
-            strdup(notesmacros[gabc_notes_determination_text[3]-'0']),
+            gregorio_strdup(notesmacros[gabc_notes_determination_text[3]-'0']),
             GRE_TEXVERB_ELEMENT, &notes_lloc);
         } else error();
     }
 <INITIAL>\[altm[1-9]\] {
         if (notesmacros[gabc_notes_determination_text[5]-'0']) {
             gregorio_add_texverb_as_note(&current_note,
-            strdup(notesmacros[gabc_notes_determination_text[5]-'0']),
+            gregorio_strdup(notesmacros[gabc_notes_determination_text[5]-'0']),
             GRE_TEXVERB_ELEMENT, &notes_lloc);
         } else error();
     }
@@ -381,63 +384,65 @@ static __inline void add_alteration(const gregorio_type type) {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverBrace{%s}{0pt}{0pt}{%d}",
                 gabc_notes_determination_text, char_for_brace);
-        gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+        gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
     }
 <underbrace>[^\]]+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreUnderBrace{%s}{0pt}{0pt}{%d}",
                 gabc_notes_determination_text, char_for_brace);
-        gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+        gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
     }
 <overcurlybrace>[^\]]+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverCurlyBrace{%s}{0pt}{0pt}{%d}{0}",
                 gabc_notes_determination_text, char_for_brace);
-        gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+        gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
     }
 <overcurlyaccentusbrace>[^\]]+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverCurlyBrace{%s}{0pt}{0pt}{%d}{1}",
                 gabc_notes_determination_text, char_for_brace);
-        gregorio_add_texverb_to_note(&current_note, strdup(tempstr));
+        gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
     }
 <choralsign>[^\]]+ {
         gregorio_add_cs_to_note(&current_note,
-                strdup(gabc_notes_determination_text), false);
+                gregorio_strdup(gabc_notes_determination_text), false);
     }
 <choralnabc>[^\]]+ {
         gregorio_add_cs_to_note(&current_note,
-                strdup(gabc_notes_determination_text), true);
+                gregorio_strdup(gabc_notes_determination_text), true);
     }
 <texverbnote>[^\]]+ {
         gregorio_add_texverb_to_note(&current_note,
-                strdup(gabc_notes_determination_text));
+                gregorio_strdup(gabc_notes_determination_text));
     }
 <texverbglyph>[^\]]+ {
         gregorio_add_texverb_as_note(&current_note,
-                strdup(gabc_notes_determination_text), GRE_TEXVERB_GLYPH,
-                &notes_lloc);
+                gregorio_strdup(gabc_notes_determination_text),
+                GRE_TEXVERB_GLYPH, &notes_lloc);
     }
 <texverbelement>[^\]]+ {
         gregorio_add_texverb_as_note(&current_note,
-                strdup(gabc_notes_determination_text), GRE_TEXVERB_ELEMENT,
-                &notes_lloc);
+                gregorio_strdup(gabc_notes_determination_text),
+                GRE_TEXVERB_ELEMENT, &notes_lloc);
     }
 <alt>[^\]]+ {
         gregorio_add_texverb_as_note(&current_note,
-                strdup(gabc_notes_determination_text), GRE_ALT, &notes_lloc);
+                gregorio_strdup(gabc_notes_determination_text), GRE_ALT,
+                &notes_lloc);
     }
 <texverbnote,texverbglyph,texverbelement,choralsign,choralnabc,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,underbrace>\] {
         BEGIN(INITIAL);
     }
 \{  {
-        gregorio_add_texverb_as_note(&current_note, strdup("\\hbox to 0pt{"),
-                GRE_TEXVERB_ELEMENT, &notes_lloc);
+        gregorio_add_texverb_as_note(&current_note,
+                gregorio_strdup("\\hbox to 0pt{"), GRE_TEXVERB_ELEMENT,
+                &notes_lloc);
     }
 \}  {
         gregorio_add_texverb_as_note(&current_note,
-                strdup("\\hss%\n}%\n\\GreNoBreak\\relax "), GRE_TEXVERB_ELEMENT,
-                &notes_lloc);
+                gregorio_strdup("\\hss%\n}%\n\\GreNoBreak\\relax "),
+                GRE_TEXVERB_ELEMENT, &notes_lloc);
     }
 [a-m]\+ {
         gregorio_add_manual_custos_as_note(&current_note,

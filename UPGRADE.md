@@ -48,7 +48,7 @@ The `gregorio` executable now uses the `.gtex` extension by default (instead of 
 
 ### Custom spacings
 
-If you are using custom spacings, please update the values of `interwordspacetext`, `intersyllablespacenotes` and `interwordspacenotes` to match their new definitions (in the comments in `gsp-default.tex`).
+If you are using custom spacings, please update the values of `interwordspacetext`, `intersyllablespacenotes` and `interwordspacenotes` to match their new definitions (in the comments in `gsp-default.tex`). Also note that `alterationspace` is now fixed and cannot take `plus` or `minus` values.
 
 ### Euouae blocks
 

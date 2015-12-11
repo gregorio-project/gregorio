@@ -22,7 +22,7 @@
 
 \def\grebarbracewidth{.58879}%
 
-\gre@declarefileversion{gregoriotex-signs.tex}{4.0.0-rc2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-signs.tex}{4.0.0}% GREGORIO_VERSION
 
 \def\gre@usestylecommon{%
   \ifgre@usestylefont\else %
@@ -37,7 +37,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for discretionaries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
+%
 % In order to avoid clef change at beginning or end of line, we use discretionaries
 % for clef change, or even with more complex data (z0::c3 for instance). The problem
 % with discretionaries is that:
@@ -96,13 +96,11 @@
 
 
 \def\greremoveclef{%
-  \gre@deprecated{\protect\greremoveclef}{\protect\gresetclef{invisible}}%
-  \gresetclef{invisible}%
+  \gre@obsolete{\protect\greremoveclef}{\protect\gresetclef{invisible}}%
 }%
 
 \def\grenormalclef{%
-  \gre@deprecated{\protect\grenormalclef}{\protect\gresetclef{visible}}%
-  \gresetclef{visible}%
+  \gre@obsolete{\protect\grenormalclef}{\protect\gresetclef{visible}}%
 }%
 
 % a count describing the clef line and pitch : 1 for c on the first (bottom) line, 2 for c on the second line, 5 for f on the first, etc.
@@ -154,7 +152,7 @@
 }%
 
 % macro that typesets the key
-% arguments are : 
+% arguments are :
 %% #1: the type of the key : c or f
 %% #2: the line of the key (1 is the lowest)
 %% #3: if we must use small key characters (inside a line) or not 0: if not inside, 1 if inside
@@ -335,21 +333,18 @@
   \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight\relax%
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
-      \gre@style@additionalstafflines % keep this line
-    \else % DEPRECATED
-      \gre@deprecated{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% DEPRECATED
-      \greadditionalstafflinesformat% DEPRECATED
-    \fi% DEPRECATED
+    \gre@style@additionalstafflines %
+    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
+    \else % OBSOLETE
+      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
+    \fi% OBSOLETE
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\wd\gre@box@temp@sign %
     \advance\gre@dimen@temp@five by \gre@dimen@additionalcustoslineswidth\relax%
     \kern-\gre@dimen@temp@five %
     \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight\relax%
     \hss %
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
-      \endgre@style@additionalstafflines% keep this line
-    \fi% DEPRECATED
+    \endgre@style@additionalstafflines%
   }%
   \relax %
 }%
@@ -363,21 +358,18 @@
   \advance\gre@dimen@temp@five by -\gre@dimen@stafflineheight\relax%
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
-      \gre@style@additionalstafflines % keep this line
-    \else % DEPRECATED
-      \gre@deprecated{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% DEPRECATED
-      \greadditionalstafflinesformat% DEPRECATED
-    \fi% DEPRECATED
+    \gre@style@additionalstafflines %
+    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
+    \else % OBSOLETE
+      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
+    \fi% OBSOLETE
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\wd\gre@box@temp@sign %
     \advance\gre@dimen@temp@five by \gre@dimen@additionalcustoslineswidth\relax%
     \kern-\gre@dimen@temp@five %
     \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight\relax%
     \hss %
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
-      \endgre@style@additionalstafflines% keep this line
-    \fi% DEPRECATED
+    \endgre@style@additionalstafflines%
   }%
   \relax %
 }%
@@ -393,12 +385,11 @@
   \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight\relax%
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
-      \gre@style@additionalstafflines % keep this line
-    \else % DEPRECATED
-      \gre@deprecated{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% DEPRECATED
-      \greadditionalstafflinesformat% DEPRECATED
-    \fi% DEPRECATED
+    \gre@style@additionalstafflines %
+    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
+    \else % OBSOLETE
+      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
+    \fi% OBSOLETE
     \hss %
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\gre@dimen@additionalcustoslineswidth\relax%
@@ -406,9 +397,7 @@
     \advance\gre@dimen@temp@five by \wd\gre@box@temp@sign %
     \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight\relax%
     \hss %
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
-      \endgre@style@additionalstafflines% keep this line
-    \fi% DEPRECATED
+    \endgre@style@additionalstafflines%
   }%
   \relax %
 }%
@@ -422,12 +411,11 @@
   \advance\gre@dimen@temp@five by -\gre@dimen@stafflineheight\relax%
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
-      \gre@style@additionalstafflines % keep this line
-    \else % DEPRECATED
-      \gre@deprecated{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% DEPRECATED
-      \greadditionalstafflinesformat% DEPRECATED
-    \fi% DEPRECATED
+    \gre@style@additionalstafflines %
+    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
+    \else % OBSOLETE
+      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
+    \fi% OBSOLETE
     \hss %
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\gre@dimen@additionalcustoslineswidth\relax%
@@ -435,9 +423,7 @@
     \advance\gre@dimen@temp@five by \wd\gre@box@temp@sign %
     \vrule width \gre@dimen@temp@five height \gre@dimen@stafflineheight\relax%
     \hss %
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
-      \endgre@style@additionalstafflines% keep this line
-    \fi% DEPRECATED
+    \endgre@style@additionalstafflines%
   }%
   \relax %
 }%
@@ -812,9 +798,9 @@
   \relax %
 }%
 
-\gdef\grelowchoralsignstyle#1{\relax}% DEPRECATED
+\gdef\grelowchoralsignstyle#1{\relax}% OBSOLETE
 \let\gre@empty@lowchoralsignstyle\grelowchoralsignstyle%
-\gdef\grehighchoralsignstyle#1{\relax}% DEPRECATED
+\gdef\grehighchoralsignstyle#1{\relax}% OBSOLETE
 \let\gre@empty@highchoralsignstyle\grehighchoralsignstyle%
 
 % quite simple function: #1 is the height, #2 is the string, #3 is #2 of punctum mora, #4 is #3 of punctum mora
@@ -829,23 +815,21 @@
   \else %
     \gre@calculate@glyphraisevalue{#1}{10}%
   \fi %
-  \ifx\gre@empty@lowchoralsignstyle\grelowchoralsignstyle% DEPRECATED
-    \raise\gre@dimen@glyphraisevalue\hbox{\gre@style@lowchoralsign#2\endgre@style@lowchoralsign}% keep this line
-  \else%  DEPRECATED
-    \gre@deprecated{\protect\grelowchoralsignstyle}{\protect\grechangestyle{lowchoralsign}}%  DEPRECATED
-    \raise\gre@dimen@glyphraisevalue\hbox{\grelowchoralsignstyle{#2}}%  DEPRECATED
-  \fi%  DEPRECATED
+  \raise\gre@dimen@glyphraisevalue\hbox{\gre@style@lowchoralsign#2\endgre@style@lowchoralsign}%
+  \ifx\gre@empty@lowchoralsignstyle\grelowchoralsignstyle% OBSOLETE
+  \else%  OBSOLETE
+    \gre@obsolete{\protect\grelowchoralsignstyle}{\protect\grechangestyle{lowchoralsign}}%  OBSOLETE
+  \fi%  OBSOLETE
   \relax %
 }%
 
 \def\GreHighChoralSign#1#2#3{%
   \GreNoBreak %
-  \ifx\gre@empty@highchoralsignstyle\grehighchoralsignstyle%  DEPRECATED
-    \gre@vepisemaorrare{#1}{#3}{}{3}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}% keep this line
-  \else%  DEPRECATED
-    \gre@deprecated{\protect\grehighchoralsignstyle}{\protect\grechangestyle{highchoralsign}}%  DEPRECATED
-    \gre@vepisemaorrare{#1}{#3}{}{3}{\grehighchoralsignstyle{#2}}% DEPRECATED
-  \fi% DEPRECATED
+  \gre@vepisemaorrare{#1}{#3}{}{3}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}%
+  \ifx\gre@empty@highchoralsignstyle\grehighchoralsignstyle%  OBSOLETE
+  \else%  OBSOLETE
+    \gre@obsolete{\protect\grehighchoralsignstyle}{\protect\grechangestyle{highchoralsign}}%  OBSOLETE
+  \fi% OBSOLETE
   %\gre@hepisorline{#1}{#3}{0}{4}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}
   \relax %
 }%
@@ -1155,13 +1139,11 @@
 \gre@hepisemabridgetrue
 
 \def\AddHEpisemusBridges{%
-  \gre@deprecated{\protect\AddHEpisemusBridges}{\protect\gresethepisema{bridge}}%
-  \gre@hepisemabridgetrue%
+  \gre@obsolete{\protect\AddHEpisemusBridges}{\protect\gresethepisema{bridge}}%
 }%
 
 \def\RemoveHEpisemusBridges{%
-  \gre@deprecated{\protect\RemoveHEpisemusBridges}{\protect\gresethepisema{break}}%
-  \gre@hepisemabridgefalse%
+  \gre@obsolete{\protect\RemoveHEpisemusBridges}{\protect\gresethepisema{break}}%
 }%
 
 \def\gresethepisema#1{%
@@ -1210,16 +1192,13 @@
 \def\GreAdditionalLine#1#2#3{%
   \ifgre@showlines %
     \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
-      \gre@style@additionalstafflines % keep this line
-    \else % DEPRECATED
-      \gre@deprecated{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% DEPRECATED
-      \greadditionalstafflinesformat% DEPRECATED
-    \fi% DEPRECATED
+    \gre@style@additionalstafflines %
+    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
+    \else % OBSOLETE
+      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
+    \fi% OBSOLETE
     \gre@hepisorline{\gre@pitch@a}{#1}{#2}{#3}{f}%
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% DEPRECATED
-      \endgre@style@additionalstafflines% keep this line
-    \fi% DEPRECATED
+    \endgre@style@additionalstafflines%
     \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
   \fi %
   \relax %
@@ -1599,13 +1578,11 @@
 }%
 
 \def\GreHidePCLines{%
-  \gre@deprecated{\protect\GreHidePCLines}{\protect\gresetlinesbehindpunctumcavum{invisible}}%
-  \gre@hidepclinestrue%
+  \gre@obsolete{\protect\GreHidePCLines}{\protect\gresetlinesbehindpunctumcavum{invisible}}%
 }%
 
 \def\GreDontHidePCLines{%
-  \gre@deprecated{\protect\GreDontHidePCLines}{\protect\gresetlinesbehindpunctumcavum{visible}}%
-  \gre@hidepclinesfalse%
+  \gre@obsolete{\protect\GreDontHidePCLines}{\protect\gresetlinesbehindpunctumcavum{visible}}%
 }%
 
 % flag to indicate that lines behind an alteration should be hidden
@@ -1624,13 +1601,11 @@
 }%
 
 \def\GreHideAltLines{%
-  \gre@deprecated{\protect\GreHideAltLines}{\protect\gresetlinesbehindalteration{invisible}}%
-  \gre@hidealtlinestrue%
+  \gre@obsolete{\protect\GreHideAltLines}{\protect\gresetlinesbehindalteration{invisible}}%
 }%
 
 \def\GreDontHideAltLines{%
-  \gre@deprecated{\protect\GreDontHideAltLines}{\protect\gresetlinesbehindalteration{visible}}%
-  \gre@hidealtlinesfalse%
+  \gre@obsolete{\protect\GreDontHideAltLines}{\protect\gresetlinesbehindalteration{visible}}%
 }%
 
 
@@ -1674,14 +1649,13 @@
   \ifnum#4=0\relax %
     % we try to avoid line breaking after a flat or a natural
     \GreNoBreak %
-    \gre@skip@temp@four = \gre@skip@alterationspace\relax%
+    \gre@skip@temp@four = \gre@dimen@alterationspace\relax%
     \ifgre@firstglyph%
       \gre@debugmsg{bolshift}{making adjustments for leading alteration}%
       \global\advance\gre@dimen@notesaligncenter by \wd\gre@box@temp@width %
       \global\advance\gre@dimen@notesaligncenter by \dimexpr\gre@skip@temp@four\relax %
       \kern\gre@skip@temp@four %
       \global\gre@dimen@bolextra = \wd\gre@box@temp@width%
-      \gre@skip@temp@four = \gre@skip@alterationspace\relax%
       \global\advance\gre@dimen@bolextra by \dimexpr\gre@skip@temp@four\relax%
       \gre@debugmsg{bolshift}{bolextra: \the\gre@dimen@bolextra}%
     \else %
@@ -1740,17 +1714,15 @@
       }%
       {\gre@error{Unrecognized option for \protect\gresetpunctumcavum}}%
     }%
-}%	
+}%
 
 
 \def\UseAlternatePunctumCavum{%
-  \gre@deprecated{\protect\UseAlternatePunctumCavum}{\protect\gresetpunctumcavum{alternate}}%
-  \gresetpunctumcavum{alternate}%
+  \gre@obsolete{\protect\UseAlternatePunctumCavum}{\protect\gresetpunctumcavum{alternate}}%
 }%
 
 \def\UseNormalPunctumCavum{%
-  \gre@deprecated{\protect\UseNormalPunctumCavum}{\protect\gresetpunctumcavum{normal}}%
-  \gresetpunctumcavum{normal}%
+  \gre@obsolete{\protect\UseNormalPunctumCavum}{\protect\gresetpunctumcavum{normal}}%
 }%
 
 \def\gre@char@cavum#1#2#3#4#5#6#7#8{%

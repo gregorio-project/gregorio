@@ -1,5 +1,8 @@
 %{
 /*
+ * Gregorio is a program that translates gabc files to GregorioTeX
+ * This file implements the score parser.
+ *
  * Gregorio score determination in gabc input.
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
@@ -35,6 +38,7 @@
 #include "unicode.h"
 #include "messages.h"
 #include "characters.h"
+#include "support.h"
 #include "sha1.h"
 #include "plugins.h"
 #include "gabc.h"
@@ -335,7 +339,7 @@ static void end_definitions(void)
     }
     /* voice is now voice-1, so that it can be the index of elements */
     voice = 0;
-    elements = (gregorio_element **) malloc(number_of_voices *
+    elements = (gregorio_element **) gregorio_malloc(number_of_voices *
             sizeof(gregorio_element *));
     for (i = 0; i < number_of_voices; i++) {
         elements[i] = NULL;
@@ -629,10 +633,10 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
                     "happen!"), "gabc_y_add_notes", VERBOSITY_FATAL, 0);
         }
         if (!current_element->nabc) {
-            current_element->nabc = (char **) calloc (nabc_lines,
+            current_element->nabc = (char **) gregorio_calloc (nabc_lines,
                     sizeof (char *));
         }
-        current_element->nabc[nabc_state-1] = strdup(notes);
+        current_element->nabc[nabc_state-1] = gregorio_strdup(notes);
         current_element->nabc_lines = nabc_state;
     }
 }
@@ -659,7 +663,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
 %token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES
-%token LANGUAGE END_OF_FILE
+%token LANGUAGE HYPHEN END_OF_FILE
 
 %%
 
@@ -1170,8 +1174,18 @@ character:
     | euouae
     ;
 
+text_hyphen:
+    HYPHEN {
+        gregorio_gabc_add_text(gregorio_strdup("-"));
+    }
+    | text_hyphen HYPHEN {
+        gregorio_gabc_add_text(gregorio_strdup("-"));
+    }
+    ;
+
 text:
     | text character
+    | text text_hyphen character
     ;
 
 translation_beginning:
@@ -1201,7 +1215,21 @@ syllable_with_notes:
         first_text_character = current_character;
         close_syllable(&@1);
     }
+    | text HYPHEN OPENING_BRACKET notes {
+        gregorio_gabc_add_style(ST_VERBATIM);
+        gregorio_gabc_add_text(gregorio_strdup("\\GreForceHyphen"));
+        gregorio_gabc_end_style(ST_VERBATIM);
+        rebuild_characters();
+        first_text_character = current_character;
+        close_syllable(&@1);
+    }
     | text translation OPENING_BRACKET notes {
+        close_syllable(&@1);
+    }
+    | text HYPHEN translation OPENING_BRACKET notes {
+        gregorio_gabc_add_style(ST_VERBATIM);
+        gregorio_gabc_add_text(gregorio_strdup("\\GreForceHyphen"));
+        gregorio_gabc_end_style(ST_VERBATIM);
         close_syllable(&@1);
     }
     ;
