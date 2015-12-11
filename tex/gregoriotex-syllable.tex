@@ -546,7 +546,11 @@
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
-  \gre@showhyphenafterthissyllablefalse%
+  \ifgre@forcehyphen%
+    \gre@showhyphenafterthissyllabletrue%
+  \else%
+    \gre@showhyphenafterthissyllablefalse%
+  \fi%
   #1%
   \ifgre@forceemptyfirstsyllablehyphen\else\gre@showhyphenafterthissyllablefalse\fi%
   \gre@firstglyphtrue%
