@@ -1029,6 +1029,7 @@
   % scores must be new paragraphs!
   \ifhmode\par\fi %
   \gre@beginningofscoretrue%
+  \gre@reseteolcustos%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \xdef\gre@gabcname{#6}%
   \global\let\gre@save@englishcentering\gre@lyriccentering\relax % DEPRECATED
@@ -1064,7 +1065,7 @@
 %macro called at the end of a score
 \def\GreEndScore{%
   \global\gre@lastoflinecount=0\relax %
-  \global\greseteolcustos{auto}%
+  \gre@useautoeolcustos%
   \GreEndEUOUAE{}%
   \ifnum\gre@nlbstate=0\else %
     \GreEndNLBArea{2}{0}%
@@ -1158,7 +1159,7 @@
   %\gre@localleftbox{}% For an unknown reason, if I uncomment this line, the
   %blank line removing algorithm (in lua) will let some blank space after the
   %last line... (see bug #20953)
-  \greseteolcustos{manual}%
+  \gre@usemanualeolcustos%
   \global\gre@lastoflinecount=1\relax%
   \relax%
 }%
@@ -1204,19 +1205,22 @@
 
 % Flag indicating if we block the custos. We just block custos at the end of a score, to prevent a bug.
 \newif\ifgre@blockeolcustos%
-\gre@blockeolcustosfalse%
-
+\def\gre@usemanualeolcustos{%
+  \gre@blockeolcustostrue%
+  \gre@localrightbox{}%
+}%
+\def\gre@useautoeolcustos{%
+  \gre@blockeolcustosfalse%
+}%
 \def\greseteolcustos#1{%
   \IfStrEq{#1}{manual}%
-    {%
-      \gre@blockeolcustostrue%
-      \gre@localrightbox{}%
-    }%
+    {\global\let\gre@reseteolcustos\gre@usemanualeolcustos\relax}%
     {\IfStrEq{#1}{auto}%
-      {\gre@blockeolcustosfalse}%
+      {\global\let\gre@reseteolcustos\gre@useautoeolcustos\relax}%
       {\gre@error{Unrecognized option for \protect\greseteolcustos}}%
     }%
 }%
+\greseteolcustos{auto}%
 
 % macro to suppress the custos
 \def\greblockcustos{%
