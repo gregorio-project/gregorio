@@ -73,6 +73,11 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The meaningless `gabc-version` header in gabc (see [#664](https://github.com/gregorio-project/gregorio/issues/664)).
 
 
+## [Unreleased][unreleased]
+### Fixed
+- `\greseteolcustos` now retains its setting across multiple score inclusions (see [#703](https://github.com/gregorio-project/gregorio/issues/703)).
+
+
 ## [4.0.0] - 2015-12-08
 ### Fixed
 - Handling of the first syllable in gabc is now more consistent with the all other syllables.  This centers the syllable correctly when using latin syllable centering (see [#42](https://github.com/gregorio-project/gregorio/issues/42)) and makes the use of styles less surprising in the first syllable (see [#135](https://github.com/gregorio-project/gregorio/issues/135)).
