@@ -575,20 +575,27 @@
   % took me years to find it!
   \gre@debugmsg{bolshift}{Current glyph: \the\gre@attr@glyph@id}%
   \ifgre@bolshiftsenabled%
-    \gre@calculate@bolshift{\gre@dimen@begindifference}%
-    % we don't want to shift right on the first syllable of the score because the printing of the initial clef, initial, and/or the staff lines will have already broken TeX's ignorance of spaces.
-    \ifgre@beginningofscore%
-      \gre@beginningofscorefalse%
-    \else%
-      % we don't want to shift right inside a discretionary
-      \ifnum\gre@insidediscretionary=0\relax%
-        \kern\gre@dimen@bolshift\relax%
+    % we only want to execute these shifts if the clef is being shown
+    % if no clef is being shown, then there is no space under the clef for the
+    % lyrics to invade
+    \ifgre@showclef%
+      \gre@calculate@bolshift{\gre@dimen@begindifference}%
+      % we don't want to shift right on the first syllable of the score 
+      % because the printing of the initial clef, initial, and/or the staff lines 
+      % will have already broken TeX's ignorance of spaces.
+      \ifgre@beginningofscore%
+        \gre@beginningofscorefalse%
+      \else%
+        % we don't want to shift right inside a discretionary
+        \ifnum\gre@insidediscretionary=0\relax%
+          \kern\gre@dimen@bolshift\relax%
+        \fi%
       \fi%
+      \GreNoBreak %
+      \hbox to 0pt{}%
+      \GreNoBreak %
+      \kern-\gre@dimen@bolshift\relax%
     \fi%
-    \GreNoBreak %
-    \hbox to 0pt{}%
-    \GreNoBreak %
-    \kern-\gre@dimen@bolshift\relax%
   \fi %
   % by default, gre@attr@dash will be 2
   \gre@attr@dash=2\relax %
