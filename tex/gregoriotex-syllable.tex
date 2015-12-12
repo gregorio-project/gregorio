@@ -471,13 +471,11 @@
 \xdef\gre@lyriccentering{1}%
 
 \def\englishcentering{%
-  \gre@deprecated{\protect\englishcentering}{\protect\gresetlyriccentering{syllable}}%
-  \gresetlyriccentering{syllable}%
+  \gre@obsolete{\protect\englishcentering}{\protect\gresetlyriccentering{syllable}}%
 }%
 
 \def\defaultcentering{%
-  \gre@deprecated{\protect\defaultcentering}{\protect\gresetlyriccentering{vowel} }%
-  \gresetlyriccentering{vowel}%
+  \gre@obsolete{\protect\defaultcentering}{\protect\gresetlyriccentering{vowel} }%
 }%
 
 %% options about clivis centering scheme. Clivis are usually aligned by their
@@ -505,18 +503,15 @@
 }%
 
 \def\clivisalignmentalways{%
-  \gre@deprecated{\protect\clivisalignmentalways}{\protect\gresetclivisalignment{always}}%
-  \gresetclivisalignment{always}%
+  \gre@obsolete{\protect\clivisalignmentalways}{\protect\gresetclivisalignment{always}}%
 }%
 
 \def\clivisalignmentnever{%
-  \gre@deprecated{\protect\clivisalignmentnever}{\protect\gresetclivisalignment{never}}%
-  \gresetclivisalignment{never}%
+  \gre@obsolete{\protect\clivisalignmentnever}{\protect\gresetclivisalignment{never}}%
 }%
 
 \def\clivisalignmentspecial{%
-  \gre@deprecated{\protect\clivisalignmentspecial}{\protect\gresetclivisalignment{special}}%
-  \gresetclivisalignment{special}%
+  \gre@obsolete{\protect\clivisalignmentspecial}{\protect\gresetclivisalignment{special}}%
 }%
 
 \newif\ifgre@forceemptyfirstsyllablehyphen%
@@ -531,7 +526,7 @@
 }%
 
 \newif\ifgre@showhyphenafterthissyllable%
-\def\GreForceHyphen{\gre@showhyphenafterthissyllabletrue}
+\def\GreForceHyphen{\global\gre@showhyphenafterthissyllabletrue\gre@debugmsg{hyphen}{Forcing hyphen in gabc}}
 
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : macro setting the letters of this syllable
@@ -551,9 +546,15 @@
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
-  \gre@showhyphenafterthissyllablefalse%
+  \ifgre@forcehyphen%
+    \gre@debugmsg{hyphen}{Forcing hyphen}%
+    \gre@showhyphenafterthissyllabletrue%
+  \else%
+    \gre@debugmsg{hyphen}{not forcing hyphen}%
+    \gre@showhyphenafterthissyllablefalse%
+  \fi%
   #1%
-  \ifgre@forceemptyfirstsyllablehyphen\else\gre@showhyphenafterthissyllablefalse\fi%
+  \ifgre@forceemptyfirstsyllablehyphen\else\gre@showhyphenafterthissyllablefalse\gre@debugmsg{hyphen}{Getting rid of hyphen}\fi%
   \gre@firstglyphtrue%
   \gre@dimen@bolextra = 0pt\relax%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
@@ -620,9 +621,11 @@
     %
     \gre@debugmsg{ifdim}{ temp@skip@one > maximumspacewithoutdash}%
     \ifdim\gre@skip@temp@one > \gre@dimen@maximumspacewithoutdash\relax%
+      \gre@debugmsg{hyphen}{spacing requires hyphen}%
       \gre@showhyphenafterthissyllabletrue%
     \fi
     \ifgre@showhyphenafterthissyllable\relax%
+      \gre@debugmsg{hyphen}{Showing the hyphen}%
       % if it's the last syllable of line, the hyphen will be \GreHyph
       \ifnum\gre@lastoflinecount=1\relax %
         \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
@@ -633,6 +636,7 @@
       \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
       \gre@calculate@syllablefinalskip{0}{0}%
     \else %
+      \gre@debugmsg{hyphen}{No hyphen}%
       \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
       \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%

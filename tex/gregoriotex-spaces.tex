@@ -150,12 +150,7 @@
 }%
 
 \def\setstafflinethickness{%
-  \gre@deprecated{\protect\setstafflinethickness}{\protect\grechangestafflinethickness}%
-  \grechangestafflinethickness%
-}%
-
-\def\gresetstafflinefactor#1{%
-  \gre@obsolete{\protect\gresetstafflinefactor}{\protect\grechangestafflinethickness}%
+  \gre@obsolete{\protect\setstafflinethickness}{\protect\grechangestafflinethickness}%
 }%
 
 %constantglyphraise is the space between the 0 of the gregorian fonts and the effective 0 of the TeX score
@@ -673,24 +668,17 @@
 
 % macro to tell gregorio to set space for the translation
 \def\gre@addtranslationspace{%
-  \ifx\gre@empty@translationformat\gretranslationformat% DEPRECATED
-    \gre@style@translation% keep this line
-    \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight\relax% keep this line
-    \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext\relax% keep this line
-    \global\advance\gre@dimen@textlower by \gre@dimen@translationheight\relax% keep this line
-    \gre@generatelines % keep this line
-    \gre@calculate@constantglyphraise % keep this line
-    \endgre@style@translation% keep this line
-  \else%  DEPRECATED
-    \gre@deprecated{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  DEPRECATED
-    \gretranslationformat{% DEPRECATED
-      \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight\relax% DEPRECATED
-      \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext\relax% DEPRECATED
-      \global\advance\gre@dimen@textlower by \gre@dimen@translationheight\relax% DEPRECATED
-      \gre@generatelines % DEPRECATED
-      \gre@calculate@constantglyphraise % DEPRECATED
-    }% DEPRECATED
-  \fi%  DEPRECATED
+  \gre@style@translation%
+  \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight\relax%
+  \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext\relax%
+  \global\advance\gre@dimen@textlower by \gre@dimen@translationheight\relax%
+  \gre@generatelines %
+  \gre@calculate@constantglyphraise %
+  \endgre@style@translation%
+  \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
+  \else%  OBSOLETE
+    \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
+  \fi%  OBSOLETE
   \relax %
 }%
 
@@ -802,11 +790,9 @@
   \gre@dimension{#1}{#2}
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
   \IfStrEq{#3}{1}%
-    {\gre@deprecated{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}%
-    \grescaledim{#1}{true}}%
+    {\gre@obsolete{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}}%
     {\IfStrEq{#3}{0}%
-      {\gre@deprecated{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}%
-      \grescaledim{#1}{false}}%
+      {\gre@obsolete{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}}%
       {\IfStrEq{#3}{scalable}%
         {\grescaledim{#1}{true}}%
         {\IfStrEq{#3}{fixed}%
@@ -818,8 +804,7 @@
 }%
 
 \def\gresetdim{%
-  \gre@deprecated{\protect\gresetdim}{\protect\grecreatedim}%
-  \grecreatedim%
+  \gre@obsolete{\protect\gresetdim}{\protect\grecreatedim}%
 }%
 
 % a macro for changing a dimension.  Unlike \grecreatedim, this function won’t create a new distance, just change an existing one.
@@ -837,11 +822,9 @@
     \gre@debugmsg{spacing}{It does exist.}%
     \gre@dimension{#1}{#2}%
     \IfStrEq{#3}{1}%
-      {\gre@deprecated{A numerical (1) last argument for \protect\grechangedim}{'scalable'}%
-      \grescaledim{#1}{true}}%
+      {\gre@obsolete{A numerical (1) last argument for \protect\grechangedim}{'scalable'}}%
       {\IfStrEq{#3}{0}%
-        {\gre@deprecated{A numerical (0) last argument for \protect\grechangedim}{'fixed'}%
-        \grescaledim{#1}{false}}%
+        {\gre@obsolete{A numerical (0) last argument for \protect\grechangedim}{'fixed'}}%
         {\IfStrEq{#3}{scalable}%
           {\grescaledim{#1}{true}}%
           {\IfStrEq{#3}{fixed}%
@@ -894,8 +877,7 @@
 }
 
 \def\grenoscaledim#1{%
-  \gre@deprecated{\protect\grenoscaledim}{\protect\grescaledim{...}{no}}%
-  \grescaledim{#1}{false}%
+  \gre@obsolete{\protect\grenoscaledim}{\protect\grescaledim{...}{no}}%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -903,8 +885,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\GreLoadSpaceConf#1{%
-  \gre@deprecated{\protect\GreLoadSpaceConf}{\protect\greloadspaceconf}%
-  \greloadspaceconf{#1}%
+  \gre@obsolete{\protect\GreLoadSpaceConf}{\protect\greloadspaceconf}%
 }%
 
 \newcount\greconffactor%
@@ -1285,46 +1266,25 @@
 % To change the spacing between annotations.
 %First argument is distance, second is whether it should scale when \gre@factor changes.
 \def\setaboveinitialseparation#1#2{%
-  \gre@deprecated{\protect\setaboveinitialseparation}{\protect\grechangedim\{annotationseparation\}}%
-  \grechangedim{annotationseparation}{#1}{#2}%
-  \relax %
+  \gre@obsolete{\protect\setaboveinitialseparation}{\protect\grechangedim\{annotationseparation\}}%
 }%
 
-\def\GreSetAboveInitialSeparation#1{%
-  \gre@obsolete{\protect\GreSetAboveInitialSeparation}{\protect\grechangedim\{annotationseparation\}}%
-}%
 
 %To change the space after the initial
 %First argument is distance, second is whether it should scale when \gre@factor changes.
 \def\setspaceafterinitial#1#2{%
-  \gre@deprecated{\protect\setspaceafterinitial}{\protect\grechangedim{afterinitialshift}}%
-  \grechangedim{afterinitialshift}{#1}{#2}%
-  \relax %
+  \gre@obsolete{\protect\setspaceafterinitial}{\protect\grechangedim{afterinitialshift}}%
 }
-
-\def\GreSetSpaceAfterInitial#1{%
-  \gre@obsolete{\protect\GreSetSpaceAfterInitial}{\protect\grechangedim{afterinitialshift}}%
-}%
 
 %To change the space before the initial
 %First argument is distance, second is whether it should scale when \gre@factor changes.
 \def\setspacebeforeinitial#1#2{%
-  \gre@deprecated{\protect\setspacebeforeinitial}{\protect\grechangedim{beforeinitialshift}}%
-  \grechangedim{beforeinitialshift}{#1}{#2}%
-  \relax %
-}%
-
-\def\GreSetSpaceBeforeInitial#1{%
-  \gre@obsolete{\protect\GreSetSpaceBeforeInitial}{\protect\setspacebeforeiniital}%
+  \gre@obsolete{\protect\setspacebeforeinitial}{\protect\grechangedim{beforeinitialshift}}%
 }%
 
 
 %To change all the distances associated with the initial.
 %First three arguments are distances, last is whether they should scale when \gre@factor changes.
 \def\setinitialspacing#1#2#3#4{%
-  \gre@deprecated{\protect\setinitialspacing}{\protect\grechangedim{beforeinitialshift}, \protect\grechangedim{manualinitialwidth}, and \protect\grechangedim{afterinitialshift}}
-  \grechangedim{beforeinitialshift}{#1}{#4}%
-  \grechangedim{manualinitialwidth}{#2}{#4}%
-  \grechangedim{afterinitialshift}{#3}{#4}%
-  \relax%
+  \gre@obsolete{\protect\setinitialspacing}{\protect\grechangedim{beforeinitialshift}, \protect\grechangedim{manualinitialwidth}, and \protect\grechangedim{afterinitialshift}}
 }%

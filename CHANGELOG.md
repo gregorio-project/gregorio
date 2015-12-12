@@ -5,6 +5,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][unreleased]
 ### Changed
 - Initial handling has been simplified.  The initial style should now be specified from TeX by using the `\gresetinitiallines` command, rather than from a gabc header.  Big initials and normal initials are now governed by a single `initial` style, meant to be changed between scores as appropriate.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#632](https://github.com/gregorio-project/gregorio/issues/632)).  Deprecations for this change are listed in the Deprecation section, below.
+- `\gresethyphen` no longer manipulates `maximumspacewithoutdash`, allowing for restoration of consistent behavior after this distance has been modified.  See [#705](https://github.com/gregorio-project/gregorio/issues/705).
 
 ### Added
 - Salicus flexus glyphs (See [#631](https://github.com/gregorio-project/gregorio/issues/631)).
@@ -12,6 +13,69 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Deprecated
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
 - `biginitial` style, consolidated into the `initial` style.
+
+### Removed
+- `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`
+- `\greinitialformat`, if you were redefining this command, use `\grechangeformat{initial}...` instead
+- `\grebiginitialformat`, if you were redefining this command, use `\grechangeformat{biginitial}...` instead
+- `\gretranslationformat`, if you were redefining this command, use `\grechangeformat{translation}...` instead
+- `\greabovelinestextstyle`, if you were redefining this command, use `\grechangeformat{abovelinestext}...` instead
+- `\grelowchoralsignstyle`, if you were redefining this command, use `\grechangeformat{lowchoralsign}...` instead
+- `\grehighchoralsignstyle`, if you were redefining this command, use `\grechangeformat{highchoralsign}...` instead
+- `\setaboveinitialseparation`, supplanted by `\grechangedim{annotationseparation}...`
+- `\scorereference`, supplanted by `\grescorereference`
+- `\GreScoreReference`, supplanted by `\grescorereference`
+- `\commentary`, supplanted by `\grecommentary`
+- `\setgretranslationcenteringscheme`, supplanted by `\gresettranslationcentering`
+- `\englishcentering`, supplanted by `\gresetlyriccentering{syllable}`
+- `\defaultcentering`, supplanted by `\gresetlyriccentering{vowel}`
+- `\setgrefactor`, supplanted by `\grechangestaffsize`
+- `\forcecompilegabc`, supplanted by `\gresetcompilegabc{force}`
+- `\autocompilegabc`, supplanted by `\gresetcompilegabc{auto}`
+- `\nevercompilegabc`, supplanted by `\gresetcompilegabc{never}`
+- `\includescore`, supplanted by `\gregorioscore`
+- `\grenoscaledim`, supplanted by `\grescaledim{...}{no}`
+- `\gresetdim`, supplanted by `\grecreatedim`
+- `\setstafflinethickness`, supplanted by `\grechangestafflinethickness`
+- `\grecoloredlines`, supplanted by `\gresetlinecolor`
+- `\greredlines` and `\redlines`, supplanted by `\gresetlinecolor{gregoriocolor}`
+- `\grenormallines` and `\normallines`, supplanted by `\gresetlinecolor{black}`
+- `\greremovelines`, supplanted by `\gresetlines{invisible}`
+- `\gredonotremovelines`, supplanted by `\gresetlines{visible}`
+- `\GreHidePCLines`, supplanted by `\gresetlinesbehindpunctumcavum{invisible}`
+- `\GreDontHidePCLines`, supplanted by `\gresetlinesbehindpunctumcavum{visible}`
+- `\GreHideAltLines`, supplanted by `\gresetlinesbehindalteration{invisible}`
+- `\GreDontHideAltLines`, supplanted by `\gresetlinesbehindalteration{visible}`
+- `\gresetnlbintranslation`, supplanted by `\gresetbreakintranslation`
+- `\greblockcustos`, supplanted by `\greseteolcustos{manual}`
+- `\greenableeolshifts`, supplanted by `\greseteolshifts{enable}`
+- `\gredisableeolshifts`, supplanted by `\greseteolshifts{disable}`
+- `\GreUseNoramalHyphen`, supplanted by `\greseteolhyphen{normal}`
+- `\GreUseZeroHyphen`, supplanted by `\greseteolhyphen{zero}`
+- `\greremoveclef`, supplanted by `\gresetclef{invisible}`
+- `\grenormalclef`, supplanted by `\gresetclef{visible}`
+- `\AddHEpisemusBridges`, supplanted by `\gresethepisema{bridge}`
+- `\RemoveHEpisemusBridges`, supplanted by `\gresethepisema{break}`
+- `\UseAlternatePunctumCavum`, supplanted by `\gresetpunctumcavum{alternate}`
+- `\UseNormalPunctumCavum`, supplanted by `\gresetpunctumcavum{normal}`
+- `\clivisalignmentalways`, supplanted by `\gresetclivisalignment{always}`
+- `\clivisalignmentnever`, supplanted by `\gresetclivisalignment{never}`
+- `\clivisalignmentspecial`, supplanted by `\gresetclivisalignment{special}`
+- `\greusedefaultstyle`, supplanted by `\gresetglyphsytle{default}`
+- `\greusemedicaeastyle`, supplanted by `\gresetglyphsytle{medicaea}`
+- `\greusehufnagelstyle`, supplanted by `\gresetglyphsytle{hufnagel}`
+- `\greusemensuralstyle`, supplanted by `\gresetglyphsytle{mensural}`
+- `\setspaceafterinitial`, supplanted by `\grechangedim{afterinitialshift}...`
+- `\setspacebeforeinitial`, supplanted by `\grechangedim{beforeinitialshift}...`
+- `\setinitialspacing`, supplanted by `\grechangedim{beforeinitialshift}...`, `\grechangedim{manualinitialwidth}...`, and `\grechangedime{afterinitialshift}...`
+- `centering-scheme` gabc header, supplanted by `\grelyriccentering` in TeX.  See GregorioRef for syntax.
+- `gregoriotex-font` gabc header, supplanted by `\gresetgregoriofont` in TeX.  See GregorioRef for syntax.
+- The meaningless `gabc-version` header in gabc (see [#664](https://github.com/gregorio-project/gregorio/issues/664)).
+
+
+## [Unreleased][unreleased]
+### Fixed
+- `\greseteolcustos` now retains its setting across multiple score inclusions (see [#703](https://github.com/gregorio-project/gregorio/issues/703)).
 
 
 ## [4.0.0] - 2015-12-08

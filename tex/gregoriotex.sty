@@ -118,21 +118,18 @@
 }
 
 \def\grecoloredlines#1#2#3{%
-  \gre@deprecated{\protect\grecoloredlines}{\protect\gresetlinecolor}%
-  \gre@changestyle{normalstafflines}{\color[RGB]{#1,#2,#3}}%
+  \gre@obsolete{\protect\grecoloredlines}{\protect\gresetlinecolor}%
 }
 
 \def\greredlines{%
-  \gre@deprecated{\protect\greredlines}{\protect\gresetlinecolor{gregoriocolor}}%
-  \gresetlinecolor{gregoriocolor}%
+  \gre@obsolete{\protect\greredlines}{\protect\gresetlinecolor{gregoriocolor}}%
   \relax %
 }
 
 \let\redlines\greredlines
 
 \def\grenormallines{%
-  \gre@deprecated{\protect\grenormallines}{\protect\gresetlinecolor{black}}%
-  \gresetlinecolor{black}%
+  \gre@obsolete{\protect\grenormallines}{\protect\gresetlinecolor{black}}%
   \relax %
 }
 
