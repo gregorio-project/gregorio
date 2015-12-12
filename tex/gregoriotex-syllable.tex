@@ -574,11 +574,11 @@
   % we will have shifted right and left, thus cancelling... Very easy trick, but
   % took me years to find it!
   \gre@debugmsg{bolshift}{Current glyph: \the\gre@attr@glyph@id}%
-  \ifgre@bolshiftsenabled%
-    % we only want to execute these shifts if the clef is being shown
-    % if no clef is being shown, then there is no space under the clef for the
-    % lyrics to invade
-    \ifgre@showclef%
+  % we only want to execute these shifts if the clef is being shown
+  % if no clef is being shown, then there is no space under the clef for the
+  % lyrics to invade
+  \ifgre@showclef%
+    \ifgre@bolshiftsenabled%
       \gre@calculate@bolshift{\gre@dimen@begindifference}%
       % we don't want to shift right on the first syllable of the score 
       % because the printing of the initial clef, initial, and/or the staff lines 
@@ -596,6 +596,13 @@
       \GreNoBreak %
       \kern-\gre@dimen@bolshift\relax%
     \fi%
+  \else%
+    % if there is no clef, we still need to break TeX's ignorance of spaces at
+    % the beginning of a line so that the alterations, which would otherwise be
+    % ignored in positioning the syllable, don't stick out into margin
+    \GreNoBreak %
+    \hbox to 0pt{}%
+    \GreNoBreak %
   \fi %
   % by default, gre@attr@dash will be 2
   \gre@attr@dash=2\relax %
