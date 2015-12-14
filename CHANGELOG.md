@@ -5,6 +5,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][unreleased]
 ### Fixed
 - `\greseteolcustos` now retains its setting across multiple score inclusions (see [#703](https://github.com/gregorio-project/gregorio/issues/703)).
+- When beginning of line clefs are invisible and bol shifts are enabled, lyric text will no longer stick out into the margin.  Further the notes on the first and subsequent lines now align properly.  See [#683](https://github.com/gregorio-project/gregorio/issues/683).
 
 
 ## [4.0.0] - 2015-12-08
@@ -180,7 +181,7 @@ See GregorioRef.pdf for full details.
 - `greg-book` and `greg-lily-book` engines, supplanted by improved capabilities of `\gregorioscore` for compiling gabc files at time of document compilation.
 - The TeXShop script for compiling gabc files.  Supplanted by the new autocompile feature of the package.
 
-### Known Bugs
+### Known Bugs - FIXED IN 4.0.1
 - When beginning of line clefs are invisible and bol shifts are enabled, lyric text will stick out into the margin.  Further the notes on the first and subsequent lines do not align properly.  See [#683](https://github.com/gregorio-project/gregorio/issues/683).
 
 
