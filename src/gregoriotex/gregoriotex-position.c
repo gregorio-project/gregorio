@@ -1303,8 +1303,10 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
                 if (glyph->type == GRE_GLYPH) {
                     gregorio_note *note;
                     i = 0;
+                    /* We only want type from this call, so use 0 for fuse
+                     * parameters */
                     gregoriotex_determine_glyph_name(glyph, element, &ignored,
-                            &type);
+                            &type, 0, 0);
                     for (note = glyph->u.notes.first_note; note;
                             note = note->next) {
                         if (note->type == GRE_NOTE) {

@@ -221,20 +221,16 @@ static void gabc_print_char(FILE *f, grewchar to_print)
 
 static void gabc_write_end_liquescentia(FILE *f, char liquescentia)
 {
-    if (liquescentia == L_NO_LIQUESCENTIA) {
-        return;
-    }
-    if (liquescentia == L_DEMINUTUS
-        || liquescentia == L_DEMINUTUS_INITIO_DEBILIS) {
+    switch (liquescentia & TAIL_LIQUESCENTIA_MASK) {
+    case L_DEMINUTUS:
         fprintf(f, "~");
-    }
-    if (liquescentia == L_AUCTUS_ASCENDENS
-        || liquescentia == L_AUCTUS_ASCENDENS_INITIO_DEBILIS) {
+        break;
+    case L_AUCTUS_ASCENDENS:
         fprintf(f, "<");
-    }
-    if (liquescentia == L_AUCTUS_DESCENDENS
-        || liquescentia == L_AUCTUS_DESCENDENS_INITIO_DEBILIS) {
+        break;
+    case L_AUCTUS_DESCENDENS:
         fprintf(f, ">");
+        break;
     }
 }
 
@@ -655,6 +651,8 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
     case GRE_GLYPH:
         if (is_initio_debilis(glyph->u.notes.liquescentia)) {
             fprintf(f, "-");
+        } else if (is_fused(glyph->u.notes.liquescentia)) {
+            fprintf(f, "@");
         }
 
         current_note = glyph->u.notes.first_note;

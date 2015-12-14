@@ -673,6 +673,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
 
     /* a char representing the liquescentia of the current glyph */
     gregorio_liquescentia liquescentia = L_NO_LIQUESCENTIA;
+    gregorio_liquescentia head_liquescentia;
 
     if (current_note == NULL) {
         return NULL;
@@ -774,23 +775,19 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             continue;
         }
 
-        /*
-         * first we do what must be done with liquescentia
-         */
-        if (is_initio_debilis(current_note->u.note.liquescentia)) {
-            /*
-             * meaning that the note is an initio debilis, maybe more
-             */
+        /* first we do what must be done with liquescentia */
+        head_liquescentia = current_note->u.note.liquescentia
+                & (L_INITIO_DEBILIS | L_FUSED);
+        if (head_liquescentia) {
+            /* initio debilis or fused */
             if (current_glyph_type != G_UNDETERMINED) {
-                /*
-                 * if it is not the first glyph
-                 */
+                /* if it is not the first glyph */
                 close_glyph(&last_glyph, current_glyph_type,
                         &current_glyph_first_note,
                         liquescentia, current_note->previous);
                 current_glyph_type = G_UNDETERMINED;
             }
-            liquescentia = L_INITIO_DEBILIS;
+            liquescentia = head_liquescentia;
         }
 
         next_glyph_type =
@@ -824,7 +821,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             /*
              * we deal with liquescentia
              */
-            if (is_liquescentia(current_note->u.note.liquescentia)) {
+            if (is_tail_liquescentia(current_note->u.note.liquescentia)) {
                 /* special cases of oriscus auctus, treated like normal oriscus
                  * in some cases. */
                 if (current_note->u.note.shape == S_ORISCUS_AUCTUS
@@ -911,7 +908,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             liquescentia = L_NO_LIQUESCENTIA;
             last_pitch = USELESS_VALUE;
             /* we deal with liquescentia */
-            if (is_liquescentia(current_note->u.note.liquescentia))
+            if (is_tail_liquescentia(current_note->u.note.liquescentia))
                 /* not an initio debilis, because we considered it in the first
                  * part... */
             {

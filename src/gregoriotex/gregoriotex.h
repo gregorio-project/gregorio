@@ -86,18 +86,10 @@ typedef enum gtex_alignment {
  * different types: */
 
 typedef enum gtex_glyph_liquescentia {
-    /* for glyphs that accept all liquecentiae */
-    LG_ALL = 0,
-    /* for glyphs that don't accept initio debilis */
-    LG_NO_INITIO,
-    /* for glyphs for which we don't know if the auctus is ascendens or
-     * descendens */
-    LG_UNDET_AUCTUS,
-    /* for glyphs that don't accept liquescentia */
-    LG_NONE,
-    LG_ONLY_DEMINUTUS,
-    LG_NO_DEMINUTUS,
-    LG_ONLY_AUCTUS
+    LG_ALL = 0, /* for glyphs that accept all liquecentiae */
+    LG_NO_INITIO, /* for glyphs that don't accept initio debilis */
+    LG_NONE, /* for glyphs that don't accept liquescentia */
+    LG_ONLY_DEMINUTUS
 } gtex_glyph_liquescentia;
 
 typedef enum gtex_sign_type {
@@ -160,7 +152,8 @@ bool gtex_is_h_episema_above_shown(const gregorio_note *const note);
 bool gtex_is_h_episema_below_shown(const gregorio_note *const note);
 const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         const gregorio_element *const element, gtex_alignment *const  type,
-        gtex_type *const gtype);
+        gtex_type *const gtype, int fuse_from_previous_note,
+        int fuse_to_next_note);
 void gregoriotex_compute_positioning(const gregorio_element *element);
 
 #endif

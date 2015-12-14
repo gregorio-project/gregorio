@@ -624,6 +624,10 @@ r5  {
         lex_add_note(1, punctum(gabc_notes_determination_text[1]), _NO_SIGN,
                 L_INITIO_DEBILIS);
     }
+@[a-mA-M] {
+        lex_add_note(1, punctum(gabc_notes_determination_text[1]), _NO_SIGN,
+                L_FUSED);
+    }
 \'[01]? {
         add_sign(_V_EPISEMA);
     }
@@ -634,13 +638,13 @@ _[0-5]* {
         add_sign(_PUNCTUM_MORA);
     }
 ~   {
-        gregorio_add_liquescentia(current_note, L_DEMINUTUS);
+        gregorio_add_tail_liquescentia(current_note, L_DEMINUTUS);
     }
 >   {
-        gregorio_add_liquescentia(current_note, L_AUCTUS_DESCENDENS);
+        gregorio_add_tail_liquescentia(current_note, L_AUCTUS_DESCENDENS);
     }
 \<  {
-        gregorio_add_liquescentia(current_note, L_AUCTUS_ASCENDENS);
+        gregorio_add_tail_liquescentia(current_note, L_AUCTUS_ASCENDENS);
     }
 q   {
         gregorio_change_shape(current_note, S_QUADRATUM);
