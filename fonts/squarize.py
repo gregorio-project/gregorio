@@ -190,6 +190,7 @@ This file is part of Gregorio.
     newfont.generate(outfile)
     oldfont.close()
     newfont.close()
+    print('last code point in', font_name, 'is', hex(glyphnumber))
 
 def new_glyph():
     global newfont, glyphnumber
@@ -1298,8 +1299,11 @@ def write_porrectus(widths, i, j, last_glyph, with_bar, shape, lique=L_NOTHING):
     first_glyph = "porrectus%d" % i
     if j == 1 and glyph_exists("porrectusam1%d" % i):
         first_glyph = "porrectusam1%d" % i
-    if last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL':
-        first_glyph = "porrectusflexus%d" % i
+    if last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL' or last_glyph == '':
+        if j == 1 and last_glyph == '':
+            first_glyph = "porrectusflexusnb%d" % i
+        else:
+            first_glyph = "porrectusflexus%d" % i
     if not glyph_exists(first_glyph):
         return
     if with_bar:
@@ -1321,6 +1325,8 @@ def write_porrectus(widths, i, j, last_glyph, with_bar, shape, lique=L_NOTHING):
         paste_and_move(last_glyph,
                        (length-get_width(widths, last_glyph)+get_width(widths, 'line2')),
                        (j-i)*BASE_HEIGHT)
+        length = length+get_width(widths, 'line2')
+    elif last_glyph == '' and j == 1:
         length = length+get_width(widths, 'line2')
     set_width(length)
     end_glyph(glyph_name)

@@ -475,6 +475,7 @@ typedef struct gregorio_glyph {
             /* a pointer to a (chained list of) gregorio_notes, the first of
              * the glyph. */
             struct gregorio_note *first_note;
+            signed char fuse_to_next_glyph;
             /* The glyph type for a GRE_GLYPH (porrectus, pes, etc.).  They
              * are all listed above. */
             ENUM_BITFIELD(gregorio_glyph_type) glyph_type:8;

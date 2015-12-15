@@ -85,6 +85,9 @@ OFFSET_CASE(FinalConnectedVirga);
 OFFSET_CASE(InitialVirga);
 OFFSET_CASE(SalicusOriscusWide);
 OFFSET_CASE(SalicusOriscusOne);
+OFFSET_CASE(LeadingPunctum);
+OFFSET_CASE(LeadingQuilisma);
+OFFSET_CASE(LeadingOriscus);
 
 static __inline const char *note_before_last_note_case_ignoring_deminutus(
         const gregorio_note *const current_note)
@@ -186,6 +189,16 @@ static __inline const char *first_note_case(
     }
 }
 
+static __inline const char *fused_single_note_case(
+        const gregorio_glyph *const glyph, const char *const unfused_case,
+        const char *const fused_case) {
+    int fuse_to_next_glyph = glyph->u.notes.fuse_to_next_glyph;
+    if (fuse_to_next_glyph < -1 || fuse_to_next_glyph > 1) {
+        return fused_case;
+    }
+    return unfused_case;
+}
+
 static __inline gregorio_vposition above_if_auctus(
         const gregorio_glyph *const glyph)
 {
@@ -211,6 +224,16 @@ static __inline gregorio_vposition above_if_h_episema(
 {
     if (note && note->h_episema_above) {
         return VPOS_ABOVE;
+    }
+    return VPOS_BELOW;
+}
+
+static __inline gregorio_vposition above_if_fused_next_h_episema(
+        const gregorio_glyph *glyph)
+{
+    if (glyph->next && glyph->next->type == GRE_GLYPH
+            && is_fused(glyph->next->u.notes.liquescentia)) {
+        return above_if_h_episema(glyph->next->u.notes.first_note);
     }
     return VPOS_BELOW;
 }
@@ -673,16 +696,17 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             break;
         }
         /* else fallthrough to the next case! */
-    case T_PORRECTUS:
+    case T_PORRECTUS: /* or porrectus-like flexus */
         switch (i) {
         case HEPISEMA_FIRST_TWO:
         case 1:
-            if (glyph->u.notes.liquescentia &
-                    (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
+            if (glyph->u.notes.fuse_to_next_glyph ||
+                    (glyph->u.notes.liquescentia
+                        & (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS))) {
                 /* auctus */
                 note->gtex_offset_case = PorrAuctusInitialAny;
-            } else if (note->next->next->u.note.pitch -
-                    note->next->u.note.pitch == 1) {
+            } else if (note->next->next->u.note.pitch
+                    - note->next->u.note.pitch == 1) {
                 /* non-auctus with a second ambitus of 1 */
                 note->gtex_offset_case = PorrNonAuctusInitialOne;
             } else {
@@ -698,12 +722,16 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
                 note->gtex_offset_case = PenultBeforeDeminutus;
             } else if (glyph->u.notes.liquescentia
-                    & (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
+                        & (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
                 note->gtex_offset_case = PenultBeforePunctumWide;
             } else {
                 note->gtex_offset_case = FinalPunctum;
             }
             h_episema = above_if_h_episema(note->previous);
+            if (h_episema == VPOS_BELOW && !note->next) {
+                /* handle porrectus-like flexus */
+                h_episema = above_if_fused_next_h_episema(glyph);
+            }
             v_episema = VPOS_BELOW;
             break;
         default: /* case 3 */
@@ -862,7 +890,13 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         }
         break;
     default: /* case T_ONE_NOTE */
-        h_episema = VPOS_ABOVE;
+        if ((!glyph->previous || glyph->previous->type != GRE_GLYPH
+                    || glyph->previous->u.notes.fuse_to_next_glyph < 0)
+                && (glyph->u.notes.fuse_to_next_glyph > 0)) {
+            h_episema = above_if_fused_next_h_episema(glyph);
+        } else {
+            h_episema = VPOS_ABOVE;
+        }
         v_episema = VPOS_BELOW;
         switch (note->u.note.shape) {
         case S_PUNCTUM_INCLINATUM_DEMINUTUS:
@@ -878,12 +912,14 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             note->gtex_offset_case = FinalStropha;
             break;
         case S_QUILISMA:
-            note->gtex_offset_case = FinalQuilisma;
+            note->gtex_offset_case = fused_single_note_case(glyph,
+                    FinalQuilisma, LeadingQuilisma);
             break;
         case S_ORISCUS:
         case S_ORISCUS_AUCTUS:
         case S_ORISCUS_DEMINUTUS:
-            note->gtex_offset_case = FinalOriscus;
+            note->gtex_offset_case = fused_single_note_case(glyph, FinalOriscus,
+                    LeadingOriscus);
             break;
         case S_VIRGA:
             note->gtex_offset_case = InitialVirga;
@@ -903,8 +939,9 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             note->gtex_offset_case = FinalPunctum;
             break;
         default:
-            note->gtex_offset_case = last_note_case(glyph, FinalPunctum, note,
-                    true);
+            note->gtex_offset_case = last_note_case(glyph,
+                    fused_single_note_case(glyph, FinalPunctum, LeadingPunctum),
+                    note, true);
             break;
         }
         break;
@@ -1128,34 +1165,59 @@ static __inline void end_h_episema(height_computation *const h,
 
     if (h->active) {
         /* don't let the episema clash with the note before or after */
-        if (is_connected_left(h->get_size(h->start_note))
-                && h->start_note->previous
-                && h->start_note->previous->type == GRE_NOTE
-                && is_connected_right(h->get_size(h->start_note->previous))
-                && !has_space_to_left(h->start_note)) {
-            proposed_height = h->start_note->previous->u.note.pitch + h->vpos;
-            if (h->is_better_height(proposed_height, h->height)) {
-                h->height = proposed_height;
-            }
-        }
-        if (end && end->type == GRE_NOTE) {
-            gregorio_note *note;
-            /* this loop checks that it's within the same glyph */
-            for (note = end->previous; note; note = note->previous) {
-                if (note == h->start_note) {
-                    if (is_connected_left(h->get_size(end))
-                            && h->last_connected_note
-                            && h->last_connected_note->next
-                            && h->last_connected_note->next->type == GRE_NOTE
-                            && !has_space_to_left(h->last_connected_note->next)
-                            && is_connected_right(h->get_size(
-                                    h->last_connected_note))) {
-                        proposed_height = end->u.note.pitch + h->vpos;
+        if (is_connected_left(h->get_size(h->start_note))) {
+            if (h->start_note->previous) {
+                if (!has_space_to_left(h->start_note)
+                        && h->start_note->previous->type == GRE_NOTE
+                        && is_connected_right(h->get_size(
+                                h->start_note->previous))) {
+                    proposed_height = h->start_note->previous->u.note.pitch + h->vpos;
+                    if (h->is_better_height(proposed_height, h->height)) {
+                        h->height = proposed_height;
+                    }
+                }
+            } else {
+                if (h->start_glyph->previous
+                        && h->start_glyph->previous->type == GRE_GLYPH
+                        && is_fused(h->start_glyph->u.notes.liquescentia)) {
+                    gregorio_note *note;
+                    for (note = h->start_glyph->previous->u.notes.first_note;
+                            note->next; note = note->next) {
+                        /* just iterate to find the last note */
+                    }
+                    if (note->type == GRE_NOTE
+                            && is_connected_right(h->get_size(note))) {
+                        proposed_height = note->u.note.pitch + h->vpos;
                         if (h->is_better_height(proposed_height, h->height)) {
                             h->height = proposed_height;
                         }
                     }
-                    break;
+                }
+            }
+        }
+        if (end && end->type == GRE_NOTE && is_connected_left(h->get_size(end))
+                && h->last_connected_note
+                && is_connected_right(h->get_size(h->last_connected_note))) {
+            if (h->last_connected_note->next) {
+                if (h->last_connected_note->next->type == GRE_NOTE
+                        && !has_space_to_left(h->last_connected_note->next)) {
+                    gregorio_note *note;
+                    /* this loop checks that it's within the same glyph */
+                    for (note = end->previous; note; note = note->previous) {
+                        if (note == h->start_note) {
+                            proposed_height = end->u.note.pitch + h->vpos;
+                            if (h->is_better_height(proposed_height,
+                                        h->height)) {
+                                h->height = proposed_height;
+                            }
+                            break;
+                        }
+                    }
+                }
+            } else if (is_fused(end->u.note.liquescentia) && !end->previous) {
+                proposed_height = end->u.note.pitch + h->vpos;
+                if (h->is_better_height(proposed_height, h->height)) {
+                    h->height = proposed_height;
                 }
             }
         }
@@ -1255,6 +1317,70 @@ static __inline void compute_note_positioning(height_computation *const above,
     compute_h_episema(below, element, glyph, note, i, type);
 }
 
+static __inline int compute_fused_shift(gregorio_glyph *glyph)
+{
+    int shift;
+    gregorio_note *first_note, *prev_note;
+    gregorio_glyph *previous;
+
+    if (!glyph || !is_fused(glyph->u.notes.liquescentia)
+            || glyph->type != GRE_GLYPH
+            || !(first_note = glyph->u.notes.first_note)
+            || first_note->type != GRE_NOTE
+            || !(previous = glyph->previous)
+            || previous->type != GRE_GLYPH
+            || previous->u.notes.liquescentia & TAIL_LIQUESCENTIA_MASK
+            || !previous->u.notes.first_note) {
+        /* base conditions prevent fusion */
+        return 0;
+    }
+
+    switch (previous->u.notes.glyph_type) {
+    case G_VIRGA:
+    case G_STROPHA:
+    case G_PUNCTUM:
+    case G_FLEXA:
+    case G_BIVIRGA:
+    case G_TRIVIRGA:
+    case G_DISTROPHA:
+    case G_TRISTROPHA:
+    case G_VIRGA_REVERSA:
+        /* these are fusable */
+        break;
+
+    default:
+        /* everything else is not fusable */
+        return 0;
+    }
+
+    for (prev_note = previous->u.notes.first_note; prev_note->next;
+            prev_note = prev_note->next) {
+        /* just iterate to find the last note in the previous glyph */
+    }
+
+    if (prev_note->type != GRE_NOTE) {
+        /* previous note wasn't a note */
+        return 0;
+    }
+
+    shift = first_note->u.note.pitch - prev_note->u.note.pitch;
+    if (shift < -5 || shift > 5) {
+        /* ambitus too large to fuse */
+        return 0;
+    }
+    /* the FLEXA check below checks for a porrectus-like flexus, which is not
+     * fusable from above */
+    if (shift < 0 && ((glyph->u.notes.glyph_type == G_FLEXA
+                    && glyph->next && glyph->next->type == GRE_GLYPH
+                    && is_fused(glyph->next->u.notes.liquescentia))
+                || first_note->u.note.shape == S_ORISCUS
+                || first_note->u.note.shape == S_ORISCUS_SCAPUS)) {
+        /* may not be fused from above */
+        return 0;
+    }
+    return shift;
+}
+
 void gregoriotex_compute_positioning(const gregorio_element *element)
 {
     height_computation above = {
@@ -1297,16 +1423,16 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
 
     for (; element; element = element->next) {
         if (element->type == GRE_ELEMENT) {
-            const gregorio_glyph *glyph;
+            gregorio_glyph *glyph;
             for (glyph = element->u.first_glyph; glyph;
                     glyph = glyph->next) {
                 if (glyph->type == GRE_GLYPH) {
                     gregorio_note *note;
+                    glyph->u.notes.fuse_to_next_glyph = compute_fused_shift(
+                            glyph->next);
                     i = 0;
-                    /* We only want type from this call, so use 0 for fuse
-                     * parameters */
                     gregoriotex_determine_glyph_name(glyph, element, &ignored,
-                            &type, 0, 0);
+                            &type);
                     for (note = glyph->u.notes.first_note; note;
                             note = note->next) {
                         if (note->type == GRE_NOTE) {
