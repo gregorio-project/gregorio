@@ -380,6 +380,12 @@ static __inline void add_alteration(const gregorio_type type) {
 <INITIAL><\/nlba> {
         gregorio_add_nlba_as_note(&current_note, NLBA_END, &notes_lloc);
     }
+<INITIAL>@\[ {
+        gregorio_start_autofuse(&current_note, &notes_lloc);
+    }
+<INITIAL>\] {
+        gregorio_end_autofuse(&current_note, &notes_lloc);
+    }
 <overbrace>[^\]]+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverBrace{%s}{0pt}{0pt}{%d}",

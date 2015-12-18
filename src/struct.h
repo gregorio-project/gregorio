@@ -80,6 +80,7 @@ typedef struct gregorio_scanner_location {
     E(GRE_BAR) \
     E(GRE_END_OF_PAR) \
     E(GRE_CUSTOS) \
+    E(GRE_MANUAL_CUSTOS) \
     /* I don't really know how I could use the a TEXVERB_NOTE in gregoriotex,
      * as we don't write note by note... */ \
     /* GRE_TEXVERB_NOTE, */ \
@@ -89,7 +90,8 @@ typedef struct gregorio_scanner_location {
      * differently for the spaces above the lines */ \
     E(GRE_ALT) \
     E(GRE_NLBA) \
-    L(GRE_MANUAL_CUSTOS)
+    E(GRE_AUTOFUSE_START) \
+    L(GRE_AUTOFUSE_END)
 ENUM(gregorio_type, GREGORIO_TYPE);
 
 /* the different shapes, only for notes */
@@ -270,10 +272,11 @@ ENUM(gregorio_vposition, GREGORIO_VPOSITION);
     E(G_SALICUS_FLEXUS) \
     E(G_VIRGA_STRATA) \
     E(G_TORCULUS_LIQUESCENS) \
+    E(G_PES_QUILISMA) \
     /* additional glyph types, necessary for determination */ \
     E(G_PORRECTUS_NO_BAR) \
     E(G_PORRECTUS_FLEXUS_NO_BAR) \
-    L(G_PES_QUILISMA)
+    L(G_FUSED)
 ENUM(gregorio_glyph_type, GREGORIO_GLYPH_TYPE);
 
 /*
@@ -829,6 +832,10 @@ void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
         gregorio_type type, const gregorio_scanner_location *loc);
 void gregorio_add_nlba_as_note(gregorio_note **current_note,
         gregorio_nlba type, const gregorio_scanner_location *loc);
+void gregorio_start_autofuse(gregorio_note **current_note,
+        const gregorio_scanner_location *loc);
+void gregorio_end_autofuse(gregorio_note **current_note,
+        const gregorio_scanner_location *loc);
 void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str);
 void gregorio_add_cs_to_note(gregorio_note *const*current_note, char *str,
         bool nabc);

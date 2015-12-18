@@ -225,6 +225,24 @@ void gregorio_add_nlba_as_note(gregorio_note **current_note, gregorio_nlba type,
     }
 }
 
+void gregorio_start_autofuse(gregorio_note **current_note,
+        const gregorio_scanner_location *const loc)
+{
+    gregorio_note *element = create_and_link_note(current_note, loc);
+    if (element) {
+        element->type = GRE_AUTOFUSE_START;
+    }
+}
+
+void gregorio_end_autofuse(gregorio_note **current_note,
+        const gregorio_scanner_location *const loc)
+{
+    gregorio_note *element = create_and_link_note(current_note, loc);
+    if (element) {
+        element->type = GRE_AUTOFUSE_END;
+    }
+}
+
 void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str)
 {
     size_t len;
