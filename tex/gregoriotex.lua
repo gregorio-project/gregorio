@@ -573,12 +573,14 @@ local function direct_gabc(gabc, header)
 end
 
 local function check_font_version()
-  local gregoriofont = font.getfont(font.id('gre@font@music'))
-  local fontversion = gregoriofont.shared.rawdata.metadata.version
-  if fontversion ~= internalversion then
-    fontname = gregoriofont.shared.rawdata.metadata.fontname
-    fontfile = gregoriofont.shared.rawdata.metadata.origname
-    err("\nUncoherent file versions!\ngregoriotex.tex is version %s\nwhile %s.ttf is version %s\nplease update file\n%s", internalversion, fontname, fontversion, fontfile)
+  local gregoriofont = get_font_by_name'gre@font@music'
+  if gregoriofont then
+    local fontversion = gregoriofont.shared.rawdata.metadata.version
+    if fontversion ~= internalversion then
+      local fontname = gregoriofont.shared.rawdata.metadata.fontname
+      local fontfile = gregoriofont.shared.rawdata.metadata.origname
+      err("\nUncoherent file versions!\ngregoriotex.tex is version %s\nwhile %s.ttf is version %s\nplease update file\n%s", internalversion, fontname, fontversion, fontfile)
+    end
   end
 end
 
@@ -586,10 +588,62 @@ local function get_gregorioversion()
   return internalversion
 end
 
+local getfont = font.getfont --- cached, indexes fonts.hashes.identifiers
+local font_id = font.id
+
+--[[--
+    get_font_by_name (name) -- Look up a font identifier in the
+    ``score_fonts`` table. Returns the id of the font if found, -1
+    otherwise.
+--]]--
+local function get_font_by_name (name)
+  local id = font_id(name)
+  return id >= 0 and getfont(id)
+end
+
+--[[--
+    get_score_font_id (name) -- Look up a font identifier in the
+    ``score_fonts`` table. Returns the id of the font if found, -1
+    otherwise.
+--]]--
+local function get_score_font_id (name)
+  local sfnt = score_fonts[name]
+  if sfnt then
+    return font_id(sfnt)
+  end
+  return -1
+end
+
+--[[--
+    get_font_resources(number) -- Retrieve the resource table
+    associated with a font id. Always returns a Lua table value whose
+    ``unicodes`` field is indexable.
+--]]--
+
+local resource_dummy = { unicodes = { } }
+
+local function get_font_resources (id)
+  local fnt = getfont(id)
+  if fnt then
+    return fnt.resources or resource_dummy
+  end
+  return resource_dummy
+end
+
+--[[--
+  get_score_font_resources(string) -- Retrieve the resource table
+  belonging to a font in the ``score_font`` table. Always returns
+  a table whose ``unicodes`` field is indexable.
+--]]--
+
+local function get_score_font_resources (name)
+  return get_font_resources(get_score_font_id(name))
+end
+
 local function map_font(name, prefix)
   log("Mapping font %s", name)
   local glyph, unicode
-  for glyph, unicode in pairs(font.fonts[font.id(score_fonts[name])].resources.unicodes) do
+  for glyph, unicode in pairs(get_score_font_resources(name).unicodes) do
     if unicode >= 0 and not string.match(glyph, '%.') then
       log("Setting \\Gre%s%s to \\char%d", prefix, glyph, unicode)
       tex.sprint(catcode_at_letter, string.format(
@@ -658,7 +712,7 @@ local function def_glyph(csname, font_name, glyph, font_table, setter)
     if font_id < 0 then
       err('\nFont %s is not defined.', font_name)
     end
-    char = font.fonts[font_id].resources.unicodes[glyph]
+    char = get_font_resources(id).unicodes[glyph]
     if char == nil then
       err('\nGlyph %s in font %s was not found.', glyph, font_name)
     end
@@ -682,12 +736,12 @@ local function change_score_glyph(glyph_name, font_name, replacement)
     if not string.match(replacement, '^%.') then
       err('If a wildcard is supplied for glyph name, replacement must start with a dot.')
     end
-    local greciliae = font.fonts[font.id(score_fonts['greciliae'])].resources.unicodes
+    local greciliae = get_score_font_resources('greciliae').unicodes
     local other_font
     if font_name == '*' then
       other_font = greciliae
     else
-      other_font = font.fonts[font.id(score_fonts[font_name])].resources.unicodes
+      other_font = get_score_font_resources(font_name).unicodes
     end
     local name, char
     for name, char in pairs(greciliae) do
@@ -710,14 +764,13 @@ local function reset_score_glyph(glyph_name)
   if string.match(glyph_name, '%*') then
     glyph_name = '^'..glyph_name:gsub('%*', '.*')..'$'
     local name, char
-    for name, char in pairs(font.fonts[font.id(score_fonts['greciliae'])].resources.unicodes) do
+    for name, char in pairs(get_score_font_resources('greciliae').unicodes) do
       if not string.match(name, '%.') and char >= 0 and string.match(name, glyph_name) then
         set_common_score_glyph('GreCP'..name, nil, char)
       end
     end
   else
-    local font_csname = score_fonts['greciliae']
-    local char = font.fonts[font.id(font_csname)].resources.unicodes[glyph_name]
+    local char = get_score_font_resources("greciliae").unicodes[glyph_name]
     if char == nil then
       err('\nGlyph %s was not found.', glyph_name)
     end
@@ -742,7 +795,7 @@ local function def_symbol(csname, font_name, glyph, sized)
 end
 
 local function font_size()
-  tex.print(string.format('%.2f', (font.fonts[font.current()].size / 65536.0)))
+  tex.print(string.format('%.2f', (getfont(font.current()).size / 65536.0)))
 end
 
 local function adjust_line_height(inside_discretionary)
