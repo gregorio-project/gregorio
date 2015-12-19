@@ -572,8 +572,61 @@ local function direct_gabc(gabc, header)
   os.remove(tmpname)
 end
 
+local function get_gregorioversion()
+  return internalversion
+end
+
+local get_font_by_id = font.getfont --- cached, indexes fonts.hashes.identifiers
+local font_id = font.id
+
+-- an "unsafe" version of get_font_by_id that can see all fonts
+-- LuaTeX can see, which is needed when we need the font size of
+-- the user-selected current font
+local function unsafe_get_font_by_id(id)
+  return get_font_by_id(id) or font.fonts[id]
+end
+
+-- get_font_by_name(name) -- Look up a font identifier in the
+-- ``score_fonts`` table. Returns the id of the font if found, -1
+-- otherwise.
+local function get_font_by_name(name)
+  local id = font_id(name)
+  return id >= 0 and get_font_by_id(id)
+end
+
+-- get_score_font_id(name) -- Look up a font identifier in the
+-- ``score_fonts`` table. Returns the id of the font if found, -1
+-- otherwise.
+local function get_score_font_id(name)
+  local sfnt = score_fonts[name]
+  if sfnt then
+    return font_id(sfnt)
+  end
+  return -1
+end
+
+local resource_dummy = { unicodes = { } }
+
+-- get_font_resources(number) -- Retrieve the resource table
+-- associated with a font id. Always returns a Lua table value whose
+-- ``unicodes`` field is indexable.
+local function get_font_resources(id)
+  local fnt = get_font_by_id(id)
+  if fnt then
+    return fnt.resources or resource_dummy
+  end
+  return resource_dummy
+end
+
+-- get_score_font_resources(string) -- Retrieve the resource table
+-- belonging to a font in the ``score_font`` table. Always returns
+-- a table whose ``unicodes`` field is indexable.
+local function get_score_font_resources(name)
+  return get_font_resources(get_score_font_id(name))
+end
+
 local function check_font_version()
-  local gregoriofont = get_font_by_name'gre@font@music'
+  local gregoriofont = get_font_by_name('gre@font@music')
   if gregoriofont then
     local fontversion = gregoriofont.shared.rawdata.metadata.version
     if fontversion ~= internalversion then
@@ -582,62 +635,6 @@ local function check_font_version()
       err("\nUncoherent file versions!\ngregoriotex.tex is version %s\nwhile %s.ttf is version %s\nplease update file\n%s", internalversion, fontname, fontversion, fontfile)
     end
   end
-end
-
-local function get_gregorioversion()
-  return internalversion
-end
-
-local getfont = font.getfont --- cached, indexes fonts.hashes.identifiers
-local font_id = font.id
-
---[[--
-    get_font_by_name (name) -- Look up a font identifier in the
-    ``score_fonts`` table. Returns the id of the font if found, -1
-    otherwise.
---]]--
-local function get_font_by_name (name)
-  local id = font_id(name)
-  return id >= 0 and getfont(id)
-end
-
---[[--
-    get_score_font_id (name) -- Look up a font identifier in the
-    ``score_fonts`` table. Returns the id of the font if found, -1
-    otherwise.
---]]--
-local function get_score_font_id (name)
-  local sfnt = score_fonts[name]
-  if sfnt then
-    return font_id(sfnt)
-  end
-  return -1
-end
-
---[[--
-    get_font_resources(number) -- Retrieve the resource table
-    associated with a font id. Always returns a Lua table value whose
-    ``unicodes`` field is indexable.
---]]--
-
-local resource_dummy = { unicodes = { } }
-
-local function get_font_resources (id)
-  local fnt = getfont(id)
-  if fnt then
-    return fnt.resources or resource_dummy
-  end
-  return resource_dummy
-end
-
---[[--
-  get_score_font_resources(string) -- Retrieve the resource table
-  belonging to a font in the ``score_font`` table. Always returns
-  a table whose ``unicodes`` field is indexable.
---]]--
-
-local function get_score_font_resources (name)
-  return get_font_resources(get_score_font_id(name))
 end
 
 local function map_font(name, prefix)
@@ -708,11 +705,11 @@ local function def_glyph(csname, font_name, glyph, font_table, setter)
   if string.match(glyph, '^%d+$') then
     char = tonumber(glyph)
   else
-    local font_id = font.id(font_csname)
-    if font_id < 0 then
+    local fid = font_id(font_csname)
+    if fid < 0 then
       err('\nFont %s is not defined.', font_name)
     end
-    char = get_font_resources(id).unicodes[glyph]
+    char = get_font_resources(fid).unicodes[glyph]
     if char == nil then
       err('\nGlyph %s in font %s was not found.', glyph, font_name)
     end
@@ -721,9 +718,7 @@ local function def_glyph(csname, font_name, glyph, font_table, setter)
 end
 
 local function change_single_score_glyph(glyph_name, font_name, replacement)
-  if font_name == '*' then
-    def_glyph('GreCP'..glyph_name, 'greciliae', replacement, score_fonts,
-        set_common_score_glyph)
+  if font_name == '*' then def_glyph('GreCP'..glyph_name, 'greciliae', replacement, score_fonts, set_common_score_glyph)
   else
     def_glyph('GreCP'..glyph_name, font_name, replacement, score_fonts,
         set_score_glyph)
@@ -795,7 +790,7 @@ local function def_symbol(csname, font_name, glyph, sized)
 end
 
 local function font_size()
-  tex.print(string.format('%.2f', (getfont(font.current()).size / 65536.0)))
+  tex.print(string.format('%.2f', (unsafe_get_font_by_id(font.current()).size / 65536.0)))
 end
 
 local function adjust_line_height(inside_discretionary)
