@@ -904,7 +904,8 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             } else {
                 /* only handle the multi-note case here; the single-note
                  * case will be added normally by the state machine */
-                if (is_tail_liquescentia(current_note->u.note.liquescentia)) {
+                if (is_tail_liquescentia(current_note->u.note.liquescentia)
+                        && current_glyph_type > G_PUNCTA_INCLINATA) {
                     /* once we hit a liquescent, that's the end of a string of
                      * fused notes */
                     liquescentia |= current_note->u.note.liquescentia;
@@ -923,6 +924,17 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                     case S_QUADRATUM:
                     case S_QUILISMA_QUADRATUM:
                         /* these are fusable */
+                        if (current_glyph_type <= G_PUNCTA_INCLINATA) {
+                            /* if we had some puncta inclinata, then end them */
+                            close_glyph(&last_glyph, current_glyph_type,
+                                    &current_glyph_first_note,
+                                    liquescentia, current_note->previous);
+                            if (!(current_note->u.note.liquescentia
+                                        & L_INITIO_DEBILIS)) {
+                                current_note->u.note.liquescentia |= L_FUSED;
+                                liquescentia |= L_FUSED;
+                            }
+                        }
                         next_glyph_type = current_glyph_type = G_FUSED;
                         add = false;
                         break;

@@ -89,7 +89,8 @@ typedef enum gtex_glyph_liquescentia {
     LG_ALL = 0, /* for glyphs that accept all liquecentiae */
     LG_NO_INITIO, /* for glyphs that don't accept initio debilis */
     LG_NONE, /* for glyphs that don't accept liquescentia */
-    LG_ONLY_DEMINUTUS
+    LG_ONLY_DEMINUTUS,
+    LG_FUSIBLE_INITIO
 } gtex_glyph_liquescentia;
 
 typedef enum gtex_sign_type {

@@ -259,8 +259,10 @@ static grestyle_style gregoriotex_next_ignore_style = ST_NO_STYLE;
  */
 
 static const char *gregoriotex_determine_liquescentia(
-        gtex_glyph_liquescentia type, gregorio_liquescentia liquescentia)
+        gtex_glyph_liquescentia type, const gregorio_glyph *const glyph)
 {
+    gregorio_liquescentia liquescentia = glyph->u.notes.liquescentia;
+
     switch (type) {
     case LG_ALL:
         break;
@@ -270,6 +272,12 @@ static const char *gregoriotex_determine_liquescentia(
     case LG_ONLY_DEMINUTUS:
         liquescentia &= L_INITIO_DEBILIS | L_DEMINUTUS;
         break;
+    case LG_FUSIBLE_INITIO:
+        if (glyph->u.notes.fuse_to_next_glyph) {
+            liquescentia &= L_INITIO_DEBILIS;
+            break;
+        }
+        /* else fall through to next case */
     case LG_NONE:
         liquescentia = L_NO_LIQUESCENTIA;
         break;
@@ -325,8 +333,7 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
 {
     static char buf[BUFSIZE];
 
-    const char *liquescentia = gregoriotex_determine_liquescentia(ltype,
-            glyph->u.notes.liquescentia);
+    const char *liquescentia = gregoriotex_determine_liquescentia(ltype, glyph);
     gregorio_note *current_note;
     int ambitus1, ambitus2, ambitus3, fuse_ambitus = 0;
     const char *fuse_head = "", *fuse_tail = "";
@@ -404,8 +411,11 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
 
     current_note = glyph->u.notes.first_note;
     if (is_single_note) {
-        gregorio_snprintf(buf, BUFSIZE, "%s%s%s%s", fuse_head, shape,
-                tex_ambitus[fuse_ambitus], fuse_tail);
+        if (liquescentia == LIQ_Nothing) {
+            liquescentia = "";
+        }
+        gregorio_snprintf(buf, BUFSIZE, "%s%s%s%s%s", fuse_head, shape,
+                tex_ambitus[fuse_ambitus], liquescentia, fuse_tail);
         return buf;
     }
     if (!current_note->next) {
@@ -494,7 +504,7 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
     case S_PUNCTUM_INCLINATUM_AUCTUS:
         return SHAPE_PunctumInclinatumAuctus;
     case S_PUNCTUM:
-        return compute_glyph_name(glyph, SHAPE_Punctum, LG_NONE, true);
+        return compute_glyph_name(glyph, SHAPE_Punctum, LG_FUSIBLE_INITIO, true);
     case S_PUNCTUM_AUCTUS_ASCENDENS:
         return SHAPE_PunctumAscendens;
     case S_PUNCTUM_AUCTUS_DESCENDENS:
@@ -1989,8 +1999,12 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
         case L_AUCTUS_DESCENDENS:
             note->u.note.shape = S_PUNCTUM_AUCTUS_DESCENDENS;
             break;
-        case L_DEMINUTUS:
         case L_INITIO_DEBILIS:
+            if (glyph->u.notes.fuse_to_next_glyph > 0) {
+                break;
+            }
+            /* else fall through to next case */
+        case L_DEMINUTUS:
             note->u.note.shape = S_PUNCTUM_DEMINUTUS;
         default:
             break;
@@ -2580,8 +2594,12 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
                 glyph->u.notes.first_note->u.note.shape =
                         S_PUNCTUM_AUCTUS_DESCENDENS;
                 break;
-            case L_DEMINUTUS:
             case L_INITIO_DEBILIS:
+            if (glyph->u.notes.fuse_to_next_glyph > 0) {
+                break;
+            }
+            /* else fall through to next case */
+            case L_DEMINUTUS:
                 glyph->u.notes.first_note->u.note.shape = S_PUNCTUM_DEMINUTUS;
             default:
                 break;
