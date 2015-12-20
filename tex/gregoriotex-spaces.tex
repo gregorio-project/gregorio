@@ -1140,11 +1140,17 @@
   \ifgre@scale@punctuminclinatumshift%
     \gre@changeonedimenfactor{punctuminclinatumshift}{#1}{#2}%
   \fi%
+  \ifgre@scale@ascendingpunctuminclinatumshift%
+    \gre@changeonedimenfactor{ascendingpunctuminclinatumshift}{#1}{#2}%
+  \fi%
   \ifgre@scale@beforepunctainclinatashift%
     \gre@changeonedimenfactor{beforepunctainclinatashift}{#1}{#2}%
   \fi%
   \ifgre@scale@punctuminclinatumanddebilisshift%
     \gre@changeonedimenfactor{punctuminclinatumanddebilisshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@ascendingpunctuminclinatumanddebilisshift%
+    \gre@changeonedimenfactor{ascendingpunctuminclinatumanddebilisshift}{#1}{#2}%
   \fi%
   \ifgre@scale@punctuminclinatumdebilisshift%
     \gre@changeonedimenfactor{punctuminclinatumdebilisshift}{#1}{#2}%
@@ -1152,8 +1158,32 @@
   \ifgre@scale@punctuminclinatumbigshift%
     \gre@changeonedimenfactor{punctuminclinatumbigshift}{#1}{#2}%
   \fi%
+  \ifgre@scale@ascendingpunctuminclinatumbigshift%
+    \gre@changeonedimenfactor{ascendingpunctuminclinatumbigshift}{#1}{#2}%
+  \fi%
   \ifgre@scale@punctuminclinatummaxshift%
     \gre@changeonedimenfactor{punctuminclinatummaxshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@ascendingpunctuminclinatummaxshift%
+    \gre@changeonedimenfactor{ascendingpunctuminclinatummaxshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@descendinginclinatumtonobarshift%
+    \gre@changeonedimenfactor{descendinginclinatumtonobarshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@descendinginclinatumtonobarbigshift%
+    \gre@changeonedimenfactor{descendinginclinatumtonobarbigshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@descendinginclinatumtonobarmaxshift%
+    \gre@changeonedimenfactor{descendinginclinatumtonobarmaxshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@ascendinginclinatumtonobarshift%
+    \gre@changeonedimenfactor{ascendinginclinatumtonobarshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@ascendinginclinatumtonobarbigshift%
+    \gre@changeonedimenfactor{ascendinginclinatumtonobarbigshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@ascendinginclinatumtonobarmaxshift%
+    \gre@changeonedimenfactor{ascendinginclinatumtonobarmaxshift}{#1}{#2}%
   \fi%
   \ifgre@scale@spacearoundsmallbar%
     \gre@changeonedimenfactor{spacearoundsmallbar}{#1}{#2}%

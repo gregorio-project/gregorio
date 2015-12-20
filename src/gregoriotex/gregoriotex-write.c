@@ -1671,24 +1671,24 @@ static __inline int get_punctum_inclinatum_space_case(
             /* means that it is the first note of the puncta inclinata
              * sequence */
             temp = note->previous->u.note.pitch - note->u.note.pitch;
-            /* if (temp < -1 || temp > 1) */
+            /* negative values = ascending ambitus */
+            /* not sure we ever need to consider a larger ambitus here */
             switch (temp) {
-                /* we switch on the range of the inclinata this will look
-                 * somewhat strange if temp is negative... to be aligned
-                 * then, */
-            case -2:
-            case 2:
-                return 10;
-            case -3:
-            case 3:
-                return 11;
-            case -4:
-            case 4:
-                /* not sure we ever need to consider a larger ambitus here */
-                return 11;
+            case 1:
             default:
                 return 3;
-                break;
+            case 2:
+                return 10;
+            case 3:
+            case 4:
+                return 11;
+            case -1:
+                return 12;
+            case -2:
+                return 14;
+            case -3:
+            case -4:
+                return 15;
             }
         }
         break;
@@ -1697,22 +1697,34 @@ static __inline int get_punctum_inclinatum_space_case(
             /* means that it is the first note of the puncta inclinata
              * sequence */
             temp = note->previous->u.note.pitch - note->u.note.pitch;
-            if (temp < -2 || temp > 2) {
+            if (temp < -2) {
+                return 15;
+            } else if (temp > 2) {
                 return 11;
             } else {
                 if (note->previous
                         && note->previous->u.note.shape ==
                         S_PUNCTUM_INCLINATUM_DEMINUTUS) {
-                    if (temp < -1 || temp > 1) {
+                    if (temp < -1) {
+                        /* really if the ambitus = 3rd at this point */
+                        return 14;
+                    } else if (temp > 1) {
                         /* really if the ambitus = 3rd at this point */
                         return 10;
                     } else {
+                        /* temp == 0, so there is no ascending case */
                         return 8;
                     }
                 } else {
-                    /* puncta inclinatum followed by puncta inclinatum
-                     * debilis */
-                    return 7;
+                    if (temp < 0) {
+                        /* puncta inclinatum followed by puncta inclinatum
+                         * debilis */
+                        return 13;
+                    } else if (temp > 0) {
+                        /* puncta inclinatum followed by puncta inclinatum
+                         * debilis */
+                        return 7;
+                    }
                 }
             }
         }
@@ -1720,12 +1732,15 @@ static __inline int get_punctum_inclinatum_space_case(
     case S_PUNCTUM_INCLINATUM_AUCTUS:
     case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
         if (note->previous) {
-            /* means that it is the first note of the puncta inclinata
+            /* means that it is not the first note of the puncta inclinata
              * sequence */
             temp = note->previous->u.note.pitch - note->u.note.pitch;
             if (temp < -1 || temp > 1) {
+                /* this is the normal interglyph space, so we'll use it for
+                 * either direction */
                 return 1;
             } else {
+                /* temp == 0, so there is no ascending case */
                 /* we approximate that it is the same space */
                 return 3;
             }
@@ -1733,6 +1748,42 @@ static __inline int get_punctum_inclinatum_space_case(
         break;
     default:
         break;
+    }
+
+    return -1;
+}
+
+static __inline int get_punctum_inclinatum_to_nobar_space_case(
+        const gregorio_glyph *const glyph)
+{
+    if (glyph->u.notes.glyph_type <= G_PUNCTA_INCLINATA
+            && (glyph->next->u.notes.glyph_type == G_PUNCTUM
+                || (glyph->next->u.notes.glyph_type == G_FLEXA &&
+                    !glyph->next->u.notes.fuse_to_next_glyph))) {
+        int descent;
+        gregorio_note *note;
+        for (note = glyph->u.notes.first_note; note->next; note = note->next) {
+            /* just iterate to find the last note */
+        }
+        descent = note->u.note.pitch -
+            glyph->next->u.notes.first_note->u.note.pitch;
+        /* a negative descent is an ascent */
+        switch(descent) {
+        case -1:
+            return 19;
+        case 1:
+            return 16;
+        case -2:
+            return 20;
+        case 2:
+            return 17;
+        case -3:
+        case -4:
+            return 21;
+        case 3:
+        case 4:
+            return 18;
+        }
     }
 
     return -1;
@@ -1779,8 +1830,10 @@ static __inline void write_single_hepisema(FILE *const f, int hepisema_case,
                             || glyph->next->u.misc.unpitched.info.space
                             != SP_ZERO_WIDTH)) {
                     /* not followed by a zero-width space */
-                    fprintf(f, "\\GreHEpisemaBridge{%d}{%d}{-1}%%\n",
-                            pitch_value(height), hepisema_case);
+                    /* try to fuse from punctum inclinatum to nobar glyph */
+                    fprintf(f, "\\GreHEpisemaBridge{%d}{%d}{%d}%%\n",
+                            pitch_value(height), hepisema_case,
+                            get_punctum_inclinatum_to_nobar_space_case(glyph));
                 } else if (note->next
                         && (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
                             || note->next->u.note.shape
@@ -2695,7 +2748,14 @@ static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
                 gregoriotex_write_glyph(f, syllable, element, glyph, status);
                 if (glyph->next && glyph->next->type == GRE_GLYPH) {
                     if (is_fused(glyph->next->u.notes.liquescentia)) {
-                        fprintf(f, "\\GreEndOfGlyph{1}%%\n");
+                        int space_case =
+                            get_punctum_inclinatum_to_nobar_space_case(glyph);
+                        if (space_case >= 0) {
+                            /* fuse from punctum inclinatum to nobar glyph */
+                            fprintf(f, "\\GreEndOfGlyph{%d}%%\n", space_case);
+                        } else {
+                            fprintf(f, "\\GreEndOfGlyph{1}%%\n");
+                        }
                     } else if (is_puncta_inclinata(
                                 glyph->next->u.notes.glyph_type)
                             || glyph->next->u.notes.glyph_type ==

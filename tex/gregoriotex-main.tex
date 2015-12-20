@@ -1262,7 +1262,17 @@
 %% 8: space between two puncta inclinata debilis
 %% 9: space before a punctum (or something else) and a punctum inclinatum
 %% 10: space between puncta inclinata (also debilis for now), larger ambitus (range=3rd).
-%% 11: space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more)
+%% 11: space between puncta inclinata (also debilis for now), larger ambitus (range=4th or 5th)
+%% 12: ascending version of 3
+%% 13: ascending version of 7
+%% 14: ascending version of 10
+%% 15: ascending version of 11
+%% 16: space between a punctum inclinatum and a "no-bar" glyph one pitch below
+%% 17: space between a punctum inclinatum and a "no-bar" glyph two pitches below
+%% 18: space between a punctum inclinatum and a "no-bar" glyph three or four pitches below
+%% 19: space between a punctum inclinatum and a "no-bar" glyph one pitch above
+%% 20: space between a punctum inclinatum and a "no-bar" glyph two pitches above
+%% 21: space between a punctum inclinatum and a "no-bar" glyph three or four pitches above
 \def\gre@get@spaceskip#1{%
   \ifcase#1%
     \gre@skip@temp@four = \gre@skip@interglyphspace\relax%
@@ -1288,6 +1298,26 @@
     \gre@skip@temp@four = \gre@skip@punctuminclinatumbigshift\relax%
   \or% case 11
     \gre@skip@temp@four = \gre@skip@punctuminclinatummaxshift\relax%
+  \or% case 12 (ascending version of 3)
+    \gre@skip@temp@four = \gre@skip@ascendingpunctuminclinatumshift\relax%
+  \or% case 13 (ascending version of 7)
+    \gre@skip@temp@four = \gre@skip@ascendingpunctuminclinatumanddebilisshift\relax%
+  \or% case 14 (ascending version of 10)
+    \gre@skip@temp@four = \gre@skip@ascendingpunctuminclinatumbigshift\relax%
+  \or% case 15 (ascending version of 11)
+    \gre@skip@temp@four = \gre@skip@ascendingpunctuminclinatummaxshift\relax%
+  \or% case 16
+    \gre@skip@temp@four = \gre@skip@descendinginclinatumtonobarshift\relax%
+  \or% case 17
+    \gre@skip@temp@four = \gre@skip@descendinginclinatumtonobarbigshift\relax%
+  \or% case 18
+    \gre@skip@temp@four = \gre@skip@descendinginclinatumtonobarmaxshift\relax%
+  \or% case 19
+    \gre@skip@temp@four = \gre@skip@ascendinginclinatumtonobarshift\relax%
+  \or% case 20
+    \gre@skip@temp@four = \gre@skip@ascendinginclinatumtonobarbigshift\relax%
+  \or% case 21
+    \gre@skip@temp@four = \gre@skip@ascendinginclinatumtonobarmaxshift\relax%
   \fi%
 }%
 
