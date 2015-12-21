@@ -28,10 +28,8 @@ local EXCLUDE = {
   ['.null'] = true,
   nonmarkingreturn = true,
   PunctumAuctusLineBL = true,
-  PunctumLineBL = true,
   PunctumLineBLBR = true,
   PunctumLineBR = true,
-  PunctumLineTL = true,
   PunctumLineTR = true,
   PunctumSmall = true,
   FlexusNobar = true,
@@ -85,6 +83,7 @@ local GABC = {
   Natural = [[gy]],
   NaturalHole = [[\excluded{gy}]],
   Oriscus = [[go]],
+  OriscusLineBL = [[\excluded{e}@go]],
   OriscusReversus = [[go^^^^003c]],
   OriscusScapus = [[gO]],
   OriscusScapusLongqueue = [[hO]],
@@ -109,6 +108,8 @@ local GABC = {
   PunctumCavumInclinatumHole = [[\excluded{Gr}]],
   PunctumInclinatum = [[G]],
   PunctumInclinatumAuctus = [[G>]],
+  PunctumLineBL = [[\excluded{e}@g]],
+  PunctumLineTL = [[\excluded{i}@g]],
   Quilisma = [[gw]],
   RoundBrace = '[ob:1;6mm]',
   RoundBraceDown = '[ub:1;6mm]',
@@ -139,27 +140,29 @@ local GABC = {
 
 local GABC_FUSE = {
   Upper = {
-    Punctum = [[\excluded{f}@]],
-    Oriscus = [[\excluded{f}@]],
-    Pes = [[\excluded{f}@]],
-    PesQuadratum = [[\excluded{f}@]],
-    PesQuadratumLongqueue = [[\excluded{g}@]],
-    PesQuassus = [[\excluded{f}@]],
-    PesQuassusLongqueue = [[\excluded{g}@]],
-    Flexus = [[\excluded{f}@]],
+    Punctum = [[\excluded{e}@]],
+    Oriscus = [[\excluded{e}@]],
+    Pes = [[\excluded{e}@]],
+    PesQuadratum = [[\excluded{e}@]],
+    PesQuadratumLongqueue = [[\excluded{f}@]],
+    PesQuassus = [[\excluded{e}@]],
+    PesQuassusLongqueue = [[\excluded{f}@]],
+    Flexus = [[\excluded{e}@]],
   },
   Lower = {
-    Punctum = [[\excluded{h}@]],
-    Pes = [[\excluded{h}@]],
-    PesQuadratum = [[\excluded{h}@]],
-    PesQuadratumLongqueue = [[\excluded{i}@]],
-    PesQuassus = [[\excluded{h}@]],
-    Flexus = [[\excluded{h}@]],
-    FlexusOriscus = [[\excluded{h}@]],
+    Punctum = [[\excluded{i}@]],
+    Pes = [[\excluded{i}@]],
+    PesQuadratum = [[\excluded{i}@]],
+    PesQuadratumLongqueue = [[\excluded{j}@]],
+    PesQuassus = [[\excluded{i}@]],
+    Flexus = [[\excluded{i}@]],
+    FlexusOriscus = [[\excluded{i}@]],
   },
   Up = {
     Punctum = [[\excluded{@ij}]],
     Oriscus = [[\excluded{@ij}]],
+    OriscusScapus = [[\excluded{@ij}]],
+    OriscusScapusLongqueue = [[\excluded{@jk}]],
     Quilisma = [[\excluded{@ij}]],
     Flexus = [[\excluded{@gi}]],
     FlexusNobar = [[\excluded{@hj}]],
@@ -298,20 +301,18 @@ function GregorioRef.emit_score_glyphs(cs_greciliae, cs_gregorio, cs_parmesan)
     end
   end
   local function compare(x, y)
-    if x[1] < y[1] then
+    local nx = x[1]..x[2]
+    local ny = y[1]..y[2]
+    if nx < ny then
       return true
-    elseif x[1] == y[1] then
-      if x[2] < y[2] then
+    elseif nx == ny then
+      if x[4] < y[4] then
         return true
-      elseif x[2] == y[2] then
-        if x[4] < y[4] then
+      elseif x[4] == y[4] then
+        if x[5] < y[5] then
           return true
-        elseif x[4] == y[4] then
-          if x[5] < y[5] then
-            return true
-          elseif x[5] == y[5] and x[3] < y[3] then
-            return true
-          end
+        elseif x[5] == y[5] and x[3] < y[3] then
+          return true
         end
       end
     end

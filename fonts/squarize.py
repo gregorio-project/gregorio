@@ -244,6 +244,7 @@ DIRECT_GLYPH_NAMES = [
     'Quilisma',
     'QuilismaLineTR',
     'Oriscus',
+    'OriscusLineBL',
     'OriscusLineTR',
     'OriscusReversus',
     'OriscusScapusLongqueue',
@@ -427,6 +428,8 @@ S_UPPER_PUNCTUM                    = 'UpperPunctum'
 S_LOWER_PUNCTUM                    = 'LowerPunctum'
 S_QUILISMA                         = 'Quilisma'
 S_ORISCUS                          = 'Oriscus'
+S_ORISCUS_SCAPUS                   = 'OriscusScapus'
+S_ORISCUS_SCAPUS_LONGQUEUE         = 'OriscusScapusLongqueue'
 S_UPPER_ORISCUS                    = 'UpperOriscus'
 S_VIRGA_REVERSA                    = 'VirgaReversa'
 S_VIRGA_REVERSA_LONGQUEUE          = 'VirgaReversaLongqueue'
@@ -856,7 +859,7 @@ def write_pes_quadratum(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHI
             elif first_glyph == 'OriscusLineTR':
                 first_glyph = 'Oriscus'
             elif first_glyph == 'SalicusOriscus':
-                first_glyph = 'obase4'
+                first_glyph = 'OriscusLineBL'
 
             if last_glyph == 'PunctumLineTL':
                 last_glyph = 'Punctum'
@@ -886,7 +889,8 @@ def virga_strata(widths):
     "Creates the virga strata."
     precise_message("virga strata")
     for i in range(1, MAX_INTERVAL+1):
-        write_virga_strata(widths, i, "PunctumLineTR", "obase4", S_VIRGA_STRATA)
+        write_virga_strata(widths, i, "PunctumLineTR", "OriscusLineBL",
+                S_VIRGA_STRATA)
 
 def write_virga_strata(widths, i, first_glyph, last_glyph, shape, lique=L_NOTHING):
     "Writes the virga strata glyphs."
@@ -958,7 +962,7 @@ def draw_salicus(widths, i, j, last_glyph):
     elif j == 1 and not_deminutus:
         first_glyph = 'PunctumLineTR'
         first_width = get_width(widths, first_glyph)-get_width(widths, 'line2')
-        middle_glyph = 'obase4'
+        middle_glyph = 'OriscusLineBL'
         middle_width = get_width(widths, middle_glyph)
     else:
         first_glyph = 'PunctumLineTR'
@@ -1975,6 +1979,12 @@ def fusion(widths):
         write_fusion_leading(widths, i, 'SalicusOriscus', S_UPPER_ORISCUS,
                 L_UP)
     for i in range(1, MAX_INTERVAL+1):
+        write_fusion_leading(widths, i, 'OriscusScapusLineTR',
+                S_ORISCUS_SCAPUS, L_UP)
+    for i in range(1, MAX_INTERVAL+1):
+        write_fusion_leading(widths, i, 'OriscusScapusLongqueueLineTR',
+                S_ORISCUS_SCAPUS_LONGQUEUE, L_UP)
+    for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(widths, i, 'PunctumLineBR', S_PUNCTUM, L_DOWN)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(widths, i, 'PunctumLineBLBR', S_UPPER_PUNCTUM,
@@ -2003,12 +2013,16 @@ def write_fusion_leading(widths, i, first_glyph, glyph_type, lique):
             first_glyph = 'Quilisma'
         elif first_glyph == 'OriscusLineTR':
             first_glyph = 'Oriscus'
+        elif first_glyph == 'OriscusScapusLineTR':
+            first_glyph = 'OriscusScapus'
+        elif first_glyph == 'OriscusScapusLongqueueLineTR':
+            first_glyph = 'OriscusScapusLongqueue'
         elif first_glyph == 'msdeminutus' or first_glyph == 'PunctumLineBLBR':
             first_glyph = 'PunctumLineBL'
         elif first_glyph == 'mademinutus' or first_glyph == 'base6':
             first_glyph = 'PunctumLineTL'
         elif first_glyph == 'SalicusOriscus':
-            first_glyph = 'obase4'
+            first_glyph = 'OriscusLineBL'
         elif first_glyph == 'VirgaLineBR':
             first_glyph = 'VirgaReversa'
         elif first_glyph == 'vlbase':

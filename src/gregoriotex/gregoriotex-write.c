@@ -83,6 +83,7 @@ SHAPE(LineaPunctum);
 SHAPE(LineaPunctumCavum);
 SHAPE(Oriscus);
 SHAPE(OriscusDeminutus);
+SHAPE(OriscusLineBL);
 SHAPE(OriscusReversus);
 SHAPE(OriscusScapus);
 SHAPE(OriscusScapusLongqueue);
@@ -108,6 +109,8 @@ SHAPE(PunctumDescendens);
 SHAPE(PunctumInclinatum);
 SHAPE(PunctumInclinatumAuctus);
 SHAPE(PunctumInclinatumDeminutus);
+SHAPE(PunctumLineBL);
+SHAPE(PunctumLineTL);
 SHAPE(Quilisma);
 SHAPE(Salicus);
 SHAPE(SalicusFlexus);
@@ -140,6 +143,12 @@ LIQ(InitioDebilisDeminutus);
 LIQ(InitioDebilisAscendens);
 LIQ(InitioDebilisDescendens);
 LIQ(Nothing);
+
+#define FUSE(NAME) static const char *const FUSE_##NAME = #NAME
+FUSE(Lower);
+FUSE(Upper);
+FUSE(Down);
+FUSE(Up);
 
 /* the value indicating to GregorioTeX that there is no flat */
 #define NO_KEY_FLAT LOWEST_PITCH
@@ -369,10 +378,10 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
         /* TODO handle punctum inclinatum special case */
         if (fuse_from_previous_note < -1) {
             if (glyph->u.notes.first_note->u.note.shape == S_PUNCTUM) {
-                fuse_head = "Lower";
+                fuse_head = FUSE_Lower;
             }
         } else if (fuse_from_previous_note > 1) {
-            fuse_head = "Upper";
+            fuse_head = FUSE_Upper;
         }
         break;
 
@@ -392,10 +401,10 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
     case G_PUNCTUM:
         /* tail-fusable */
         if (fuse_to_next_note < 0) {
-            fuse_tail = "Down";
+            fuse_tail = FUSE_Down;
             fuse_ambitus = -fuse_to_next_note;
         } else if (fuse_to_next_note > 0) {
-            fuse_tail = "Up";
+            fuse_tail = FUSE_Up;
             fuse_ambitus = fuse_to_next_note;
         }
 
@@ -409,10 +418,31 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
         break;
     }
 
+    if ((shape == SHAPE_OriscusReversus || shape == SHAPE_OriscusScapus
+                || shape == SHAPE_OriscusScapusLongqueue)
+            && is_fused(glyph->u.notes.liquescentia)) {
+        shape = SHAPE_Oriscus;
+    }
+
     current_note = glyph->u.notes.first_note;
     if (is_single_note) {
         if (liquescentia == LIQ_Nothing) {
             liquescentia = "";
+        }
+        if (!(*fuse_tail)) {
+            /* single note fused shapes have weird names */
+            if (fuse_head == FUSE_Upper) {
+                if (shape == SHAPE_Punctum) {
+                    shape = SHAPE_PunctumLineBL;
+                } else if (shape == SHAPE_Oriscus) {
+                    shape = SHAPE_OriscusLineBL;
+                }
+            } else if (fuse_head == FUSE_Lower) {
+                if (shape == SHAPE_Punctum) {
+                    shape = SHAPE_PunctumLineTL;
+                }
+            }
+            fuse_head = "";
         }
         gregorio_snprintf(buf, BUFSIZE, "%s%s%s%s%s", fuse_head, shape,
                 tex_ambitus[fuse_ambitus], liquescentia, fuse_tail);
@@ -443,12 +473,6 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
         if (fuse_to_next_note && shape == SHAPE_FlexusLongqueue) {
             /* a porrectus-like flexus has no longqueue variant */
             shape = SHAPE_Flexus;
-        }
-    }
-    if (fuse_from_previous_note) {
-        if (shape == SHAPE_OriscusReversus || shape == SHAPE_OriscusScapus
-                || shape == SHAPE_OriscusScapusLongqueue) {
-            shape = SHAPE_Oriscus;
         }
     }
     if (shape == SHAPE_SalicusLongqueue && liquescentia != LIQ_Nothing) {

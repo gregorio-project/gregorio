@@ -1322,6 +1322,7 @@ static __inline int compute_fused_shift(gregorio_glyph *glyph)
     int shift;
     gregorio_note *first_note, *prev_note;
     gregorio_glyph *previous;
+    bool next_is_fused;
 
     if (!glyph || !is_fused(glyph->u.notes.liquescentia)
             || glyph->type != GRE_GLYPH
@@ -1335,17 +1336,47 @@ static __inline int compute_fused_shift(gregorio_glyph *glyph)
         return 0;
     }
 
+    next_is_fused = glyph->next && glyph->next->type == GRE_GLYPH
+            && is_fused(glyph->next->u.notes.liquescentia);
+
+    switch (glyph->u.notes.glyph_type) {
+    case G_PORRECTUS:
+    case G_PODATUS:
+        if (next_is_fused) {
+            return 0;
+        }
+        /* else it may be fused to the previous note */
+        break;
+
+    case G_PUNCTUM:
+    case G_FLEXA:
+        /* these may be fused to the previous note */
+        break;
+
+    default:
+        /* anything else may not be fused to the previous note */
+        return 0;
+    }
+
+    switch (first_note->u.note.shape) {
+    case S_QUILISMA:
+    case S_QUILISMA_QUADRATUM:
+        /* if this glyph starts with one of these, it's not fusable */
+        return 0;
+
+    default:
+        /* anything else is potentially fusable */
+        break;
+    }
+
     switch (previous->u.notes.glyph_type) {
     case G_VIRGA:
-    case G_STROPHA:
     case G_PUNCTUM:
     case G_FLEXA:
     case G_BIVIRGA:
     case G_TRIVIRGA:
-    case G_DISTROPHA:
-    case G_TRISTROPHA:
     case G_VIRGA_REVERSA:
-        /* these are fusable */
+        /* these are fusable to the this note */
         break;
 
     default:
@@ -1370,11 +1401,14 @@ static __inline int compute_fused_shift(gregorio_glyph *glyph)
     }
     /* the FLEXA check below checks for a porrectus-like flexus, which is not
      * fusable from above */
-    if (shift < 0 && ((glyph->u.notes.glyph_type == G_FLEXA
-                    && glyph->next && glyph->next->type == GRE_GLYPH
-                    && is_fused(glyph->next->u.notes.liquescentia))
+    if (shift < 0 && ((next_is_fused && glyph->u.notes.glyph_type == G_FLEXA)
+                || glyph->u.notes.glyph_type == G_PORRECTUS
                 || first_note->u.note.shape == S_ORISCUS
-                || first_note->u.note.shape == S_ORISCUS_SCAPUS)) {
+                || first_note->u.note.shape == S_ORISCUS_SCAPUS
+                || prev_note->u.note.shape == S_ORISCUS
+                || prev_note->u.note.shape == S_ORISCUS_SCAPUS
+                || (previous->u.notes.glyph_type == G_PUNCTUM
+                    && is_initio_debilis(previous->u.notes.liquescentia)))) {
         /* may not be fused from above */
         return 0;
     }
