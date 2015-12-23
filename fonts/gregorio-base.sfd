@@ -3,7 +3,7 @@ FontName: gregorio-base
 FullName: gregorio
 FamilyName: gregorio
 Weight: Medium
-Copyright: gregorio font, created with FontForge.\nCopyright (C) 2007 Elie Roux <elie.roux@enst-bretagne.fr>\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.\n\nAs a special exception, if you create a document which uses this font, and embed this font or unaltered portions of this font into the document, this font does not by itself cause the resulting document to be covered by the GNU General Public License. This exception does not however invalidate any other reasons why the document might be covered by the GNU General Public License. If you modify this font, you may extend this exception to your version of the font, but you are not obligated to do so. If you do not wish to do so, delete this exception statement from your version.
+Copyright: Font named "gregorio"\nCopyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)\nThis file is part of Gregorio.\n\n<<GPLV3>>
 UComments: "2007-4-12: Created." 
 Version: 1.2
 ItalicAngle: 0
@@ -19,7 +19,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1438738099
+ModificationTime: 1450840199
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -34,6 +34,7 @@ HheadAOffset: 1
 HheadDescent: 0
 HheadDOffset: 1
 OS2Vendor: 'PfEd'
+MarkAttachClasses: 1
 DEI: 91125
 Encoding: Custom
 UnicodeInterp: none
@@ -42,6 +43,8 @@ DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
 WinInfo: 96 16 4
+BeginPrivate: 0
+EndPrivate
 Grid
 -1000 -77.1348 m 0
  2000 -77.1348 l 0
@@ -53,7 +56,7 @@ Grid
  22 -700 l 0
 EndSplineSet
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 375 146
+BeginChars: 375 151
 
 StartChar: Punctum
 Encoding: 0 -1 0
@@ -90,7 +93,7 @@ SplineSet
  69.3857 -17.626 12.6895 45.1592 0.0732422 75.707 c 5
  5.4834 99.8564 57.748 176.531 71.6055 191.61 c 5
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: Stropha
@@ -260,7 +263,7 @@ SplineSet
  36.3867 30.9961 6.96094 61.3809 0.123047 76.4248 c 5
  2.40625 88.5879 27.1846 127.812 33.8447 135.59 c 5
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: DivisioMaior
@@ -297,7 +300,7 @@ SplineSet
  17 597.998 49 612.998 75 612.998 c 1
  122.5 613.998 152 586.678 152 553.333 c 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: CClef
@@ -323,7 +326,7 @@ SplineSet
  25 12.5 0 51.167 0 74.5 c 9
  0 380.5 l 17
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: Virga
@@ -520,7 +523,7 @@ SplineSet
  11 149.666 16.1506 155.337 37.999 154.664 c 4
  92 153 156.02 134.329 186 100.001 c 13
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: Natural
@@ -546,7 +549,7 @@ SplineSet
  116 -45 51 -47 0 -53 c 9
  0 382 l 17
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: FClef
@@ -582,7 +585,7 @@ SplineSet
  209 6.21973 181 29.1729 181 52.5059 c 9
  181 389.006 l 17
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: CustosDownLong
@@ -642,7 +645,7 @@ SplineSet
  25 160.5 59 129.5 63 140 c 1
  63 478.5 l 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: CustosUpShort
@@ -662,7 +665,7 @@ SplineSet
  25 167.5 59 136.5 63 147 c 1
  63 370.5 l 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: PunctumLineBR
@@ -964,7 +967,7 @@ SplineSet
  -6.39941 90.001 l 1
  -8.11914 105.713 -14.7559 152.207 0.155273 154.667 c 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: OriscusLineTR
@@ -1422,7 +1425,7 @@ SplineSet
  39.6904 17.0068 8.97949 52.1523 -0.414062 72.8213 c 5
  4.15039 97.1445 53.707 175.597 67.0293 191.15 c 5
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: VirgaLongqueue
@@ -1462,7 +1465,7 @@ SplineSet
  53.5186 119.25 71.25 104.121 71.25 83.5 c 4
  71.25 62.8447 53.5273 47.75 35.5 47.75 c 4
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: VEpisema
@@ -1482,7 +1485,7 @@ SplineSet
  8.25 -28.125 3.875 -25.625 0 -20.625 c 9
  0 96.75 l 17
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: PunctumDeminutus
@@ -1533,14 +1536,14 @@ LayerCount: 2
 Fore
 SplineSet
 0 -10.0078 m 1
- 0 126.332 l 1
- 66.126 106.494 123.654 117.841 142 132 c 1
- 142 149 l 1
- 137.5 161 112 176 76 176 c 0
- 46.5 176 15 171.156 0 160.5 c 1
- 0 304 l 1
- 20 315 49.417 320 82 320 c 0
- 114.583 320 151 312 164 299 c 1
+ 0 126.332 l 5
+ 66.126 106.494 123.654 117.841 142 132 c 5
+ 142 149 l 5
+ 137.5 161 112 176 76 176 c 4
+ 46.5 176 15 171.156 0 160.5 c 5
+ 0 304 l 5
+ 20 315 49.417 320 82 320 c 4
+ 114.583 320 151 312 164 299 c 5
  164 -6 l 1
  153 -16 131.5 -22.5 96.5 -22.5 c 0
  60.5 -22.5 16.0068 -16.5 0 -10.0078 c 1
@@ -1565,7 +1568,7 @@ SplineSet
  25 160.5 59 129.5 63 140 c 1
  63 412.5 l 5
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: CustosDownMedium
@@ -1757,7 +1760,7 @@ SplineSet
  209 6.21973 181 29.1729 181 52.5059 c 9
  181 389.006 l 17
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: VEpisema.circumflexus
@@ -1946,7 +1949,7 @@ SplineSet
  164 164 l 1
  186 164 l 5
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: PunctumDescendens
@@ -1969,7 +1972,7 @@ SplineSet
  41.0605 5.05566 15 0.648438 0 -10.0078 c 1
  0 146.342 l 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: PunctumAscendens
@@ -1992,7 +1995,7 @@ SplineSet
  50.0889 -13.0303 12 -14 0 -10 c 5
  0 151.673 l 5
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: mnbdeminutus
@@ -2014,7 +2017,7 @@ SplineSet
  11 149.666 16.1506 155.337 37.999 154.664 c 0
  92 153 156.02 134.329 186 100.001 c 9
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: mnbpdeminutus
@@ -2036,7 +2039,7 @@ SplineSet
  16.1504 -63.6719 11 -58.001 0 -53.001 c 1
  0 148.165 l 21
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: porrectusflexusnb1
@@ -2057,7 +2060,7 @@ SplineSet
  143.49 48.2977 204 -2.125 318 -6 c 5
  334.25 -3.75 336.5 -0.5 340 3.25 c 5
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: porrectusflexusnb2
@@ -2078,7 +2081,7 @@ SplineSet
  98 9 278 -148.625 406 -154 c 5
  422.75 -154.25 424.75 -152.5 428 -149 c 5
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: porrectusflexusnb3
@@ -2099,7 +2102,7 @@ SplineSet
  96 -16 328 -271 564 -315.5 c 5
  582 -317.75 584.25 -310.25 586 -306.5 c 5
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: porrectusflexusnb4
@@ -2120,7 +2123,7 @@ SplineSet
  109 -52 374 -395 648 -440.5 c 5
  661.75 -442.75 668 -437.75 670 -434 c 5
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: porrectusflexusnb5
@@ -2141,7 +2144,7 @@ SplineSet
  122.5 -117.5 382.5 -511 909 -631 c 5
  919 -633.333 929 -626.667 931 -620.326 c 5
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: p2base
@@ -2162,7 +2165,7 @@ SplineSet
  120.543 136.112 134 142.5 141.992 148.668 c 0
  164 148.674 l 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: rvlbase
@@ -2186,7 +2189,7 @@ SplineSet
  145.333 -362.667 141.996 -354.293 141.996 -354.293 c 25
  141.996 -26.668 l 2
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: msdeminutus
@@ -2210,7 +2213,7 @@ SplineSet
  6 -93 13 -93 0 -93 c 1
  0 148.165 l 17
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: mademinutus
@@ -2234,7 +2237,7 @@ SplineSet
  26.1074 155.219 31.5831 154.862 37.999 154.664 c 0
  92 153 156.02 134.329 186 100.001 c 9
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: PunctumCavumHole
@@ -2254,7 +2257,7 @@ SplineSet
  130.95 23.7246 100.656 26.4746 83.0996 26.4746 c 4
  65.5439 26.4746 34.1504 25.9248 19.8496 16.5752 c 5
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: LineaPunctumCavumHole
@@ -2274,7 +2277,7 @@ SplineSet
  182.291 24.2246 151.997 26.9746 134.441 26.9746 c 4
  116.885 26.9746 85.4912 26.4248 71.1904 17.0752 c 5
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: FlatHole
@@ -2292,7 +2295,7 @@ SplineSet
  85.6631 -2.22461 44.9619 14.084 18.9873 52.375 c 9
  18.9785 97.5264 l 17
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: NaturalHole
@@ -2310,7 +2313,7 @@ SplineSet
  18.0752 79.6748 l 17
  66.375 115.375 182.925 129.025 182.925 129.025 c 9
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: odbase
@@ -2338,7 +2341,7 @@ SplineSet
  -0.300029 17.3307 -0.20241 18.3267 0 19.3301 c 9
  0 191 l 17
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: DivisioDominican
@@ -2437,7 +2440,7 @@ SplineSet
  118 73 l 5
  129 58.7002 l 5
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: SharpHole
@@ -2455,7 +2458,7 @@ SplineSet
  141.1 73 l 5
  129 57.2705 l 5
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: Linea
@@ -2483,7 +2486,7 @@ SplineSet
  176.867 -6.09961 48.5 -6.09961 19 -7.7998 c 1
  19 -54.8037 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: RoundBrace
@@ -2509,7 +2512,7 @@ SplineSet
  18.5613 695 l 2
  11.032 695 -1.91563 695.081 -1.91563 703.473 c 0
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: CurlyBrace
@@ -2537,7 +2540,7 @@ SplineSet
  610.8 698 550.6 710.6 503 748.4 c 1
  455.4 710.6 395.2 698 333.6 698 c 0
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: BarBrace
@@ -2563,7 +2566,7 @@ SplineSet
  12.9932 682 l 2
  8.25 682 0.0927734 682.081 0.0927734 690.474 c 0
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: OriscusDeminutus
@@ -2592,10 +2595,10 @@ SplineSet
  -0.300029 17.3307 -0.20241 18.3267 0 19.3301 c 9
  0 191 l 17
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
-StartChar: obase4
+StartChar: OriscusLineBL
 Encoding: 113 -1 110
 Width: 164
 VWidth: 2048
@@ -2620,7 +2623,7 @@ SplineSet
  0 130 l 1
  12 144 31 160 52 160 c 0
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: SalicusOriscus
@@ -2638,16 +2641,16 @@ SplineSet
  41 26 30 21 22 16 c 1
  22 -24 l 1
  0 -24 l 1
- 0 130 l 1
- 12 144 31 160 52 160 c 0
- 83 160 99 133 118 129 c 0
- 135 126 139 135 142 142 c 1
- 142 157 l 1
- 164 157 l 1
+ 0 130 l 5
+ 12 144 31 160 52 160 c 4
+ 83 160 99 133 118 129 c 4
+ 135 126 139 135 142 142 c 5
+ 142 157 l 5
+ 164 157 l 5
  164 22 l 2
  164 6.09481 145.261 -6.68724 125.721 -6.68724 c 0
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: VirgaReversaDescendens
@@ -2670,7 +2673,7 @@ SplineSet
  22 -212.293 18.667 -220.667 0 -220.668 c 1
  0 146.001 l 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: VirgaReversaLongqueueDescendens
@@ -2693,7 +2696,7 @@ SplineSet
  22 -356.293 18.667 -364.667 0 -364.668 c 5
  0 146.001 l 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: vbase2
@@ -2717,7 +2720,7 @@ SplineSet
  114 8 103.563 9.49736 81.999 9.33301 c 0
  51.331 8.66695 22.0039 0 22.0039 -26.668 c 2
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: vbase3
@@ -2741,7 +2744,7 @@ SplineSet
  114 8 103.563 9.49736 81.999 9.33301 c 0
  51.331 8.66695 22.0039 0 22.0039 -26.668 c 2
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: vbase4
@@ -2765,7 +2768,7 @@ SplineSet
  114 8 103.563 9.49736 81.999 9.33301 c 0
  51.331 8.66695 22.0039 0 22.0039 -26.668 c 2
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: vbase5
@@ -2789,7 +2792,7 @@ SplineSet
  114 8 103.563 9.49736 81.999 9.33301 c 0
  51.331 8.66695 22.0039 0 22.0039 -26.668 c 2
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: vbase1
@@ -2811,7 +2814,7 @@ SplineSet
  149 0.65625 116.999 9.33301 81.999 9.33301 c 0
  51.333 8.66699 22.0039 -4 22.0039 -26.668 c 2
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: OriscusScapusLongqueue
@@ -2868,7 +2871,7 @@ SplineSet
  22.0039 -212.293 18.667 -220.667 0 -220.668 c 1
  0 -41.25 l 25
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: osbase1
@@ -2925,7 +2928,7 @@ SplineSet
  153.375 -19.875 164 -20 142 -20 c 1
  142 -3.91719 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: osbase3
@@ -2954,7 +2957,7 @@ SplineSet
  22.0039 -483.293 18.667 -491.667 0 -491.668 c 5
  0 129.75 l 21
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: osbase4
@@ -2983,7 +2986,7 @@ SplineSet
  22.0039 -640.293 18.667 -648.667 0 -648.668 c 5
  0 129.75 l 21
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: osbase5
@@ -3012,7 +3015,7 @@ SplineSet
  22.0039 -790.293 18.667 -798.667 0 -798.668 c 1
  0 129.75 l 17
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: oslbase
@@ -3041,7 +3044,7 @@ SplineSet
  21.998 -356.617 18.667 -364.991 0 -364.992 c 5
  0 129.75 l 21
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: hepisemaleft
@@ -3085,7 +3088,7 @@ SplineSet
  177.993 55 19 203 0 240 c 0
  -1.33496 242.6 -1.91602 244.75 -1.91602 246.527 c 0
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: VirgaReversaAscendens_op
@@ -3109,7 +3112,7 @@ SplineSet
  23.5 81.5 37.3945 80.6611 46 81.665 c 0
  106 88.665 164 99 164 131.664 c 0
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: VirgaReversaLongqueueAscendens_op
@@ -3133,7 +3136,7 @@ SplineSet
  163.996 268.29 l 29
  163.996 268.29 167.333 276.664 186 276.665 c 5
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: VirgaReversaDescendens_op
@@ -3157,7 +3160,7 @@ SplineSet
  167.333 -199.999 163.996 -191.625 163.996 -191.625 c 29
  164 -61.999 l 0
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: VirgaReversaLongqueueDescendens_op
@@ -3181,7 +3184,7 @@ SplineSet
  167.333 -199.999 163.996 -191.625 163.996 -191.625 c 29
  164 -61.999 l 4
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: VirgaReversaAscendens
@@ -3206,7 +3209,7 @@ SplineSet
  22 -212.293 l 1
  22 -212.293 18.667 -220.667 0 -220.668 c 5
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: VirgaReversaLongqueueAscendens
@@ -3231,7 +3234,7 @@ SplineSet
  22 -356.293 l 1
  22 -356.293 18.667 -364.667 0 -364.668 c 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: PunctumDescendens_op
@@ -3256,7 +3259,7 @@ SplineSet
  145.333 -199.999 141.996 -191.625 141.996 -191.625 c 29
  141.998 -38.6875 l 5
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: PunctumAscendens_op
@@ -3281,7 +3284,7 @@ SplineSet
  82.7738 139.043 117.585 160.223 133 177 c 0
  135.781 180.026 138.878 185.212 142.027 191.562 c 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: auctusd1_op
@@ -3307,7 +3310,7 @@ SplineSet
  151.56 112.633 160.316 71.7822 164 60.0078 c 9
  164.007 -200 l 5
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: auctusa1_op
@@ -3333,7 +3336,7 @@ SplineSet
  141.996 268.29 l 25
  141.996 268.29 145.333 276.664 164 276.665 c 5
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: auctusa2_op
@@ -3359,7 +3362,7 @@ SplineSet
  82.8027 137.995 117.585 160.223 133 177 c 0
  135.79 180.036 138.899 185.246 142.058 191.625 c 5
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: PunctumAuctusLineBL_op
@@ -3385,7 +3388,7 @@ SplineSet
  145.34 -199.999 142.003 -191.625 142.003 -191.625 c 25
  142.02 -38.7273 l 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: pesdeminutus_op
@@ -3411,7 +3414,7 @@ SplineSet
  86.0557 -40.8721 43.333 -40.8418 28.667 -34.1758 c 0
  22.418 -31.3359 3.33301 -19.5098 0 -10.1777 c 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: PunctumCavumInclinatum
@@ -3434,7 +3437,7 @@ SplineSet
  69.3857 -17.626 12.6895 45.1592 0.0732422 75.707 c 1
  5.4834 99.8564 57.748 176.531 71.6055 191.61 c 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: PunctumCavumInclinatumAuctus
@@ -3462,7 +3465,7 @@ SplineSet
  39.6904 17.0068 8.97949 52.1523 -0.414062 72.8213 c 1
  4.15039 97.1445 53.707 175.597 67.0293 191.15 c 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: PunctumCavumInclinatumHole
@@ -3480,7 +3483,7 @@ SplineSet
  73.1035 11.4561 33.416 55.4062 24.585 76.7891 c 1
  28.3721 93.6943 64.957 147.366 74.6572 157.922 c 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: PunctumCavumInclinatumAuctusHole
@@ -3498,7 +3501,139 @@ SplineSet
  81.0039 145.403 122.651 98.9473 134.969 86.6738 c 1
  122.467 59.2998 109.128 31.168 86.4688 4.17383 c 1
 EndSplineSet
-Validated: 524289
+Validated: 1
+EndChar
+
+StartChar: OriscusReversusLineTLBR
+Encoding: 148 -1 146
+Width: 164
+VWidth: 2048
+Flags: HW
+HStem: -24 184
+VStem: 142 22<-24 21.2824> 0 22<129.591 157>
+LayerCount: 2
+Fore
+SplineSet
+38.2793 -6.6875 m 0
+ 18.7393 -6.6875 0 6.09473 0 22 c 2
+ 0 157 l 1
+ 22 157 l 1
+ 22 142 l 1
+ 25 135 29 126 46 129 c 0
+ 65 133 81 160 112 160 c 0
+ 133 160 152 144 164 130 c 1
+ 164 -24 l 1
+ 142 -24 l 1
+ 142 16 l 1
+ 134 21 123 26 112 26 c 0
+ 76.2002 26 73.2949 -6.6875 38.2793 -6.6875 c 0
+EndSplineSet
+EndChar
+
+StartChar: OriscusReversusLineTL
+Encoding: 149 -1 147
+Width: 164
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 157.331 m 17
+ 16.667 157.333 12.667 157.5 22.002 157.333 c 1
+ 22 149.333 22 149.455 22.0078 141.999 c 1
+ 24.667 134.667 29 126 45.5 128.75 c 1
+ 65.0615 133.274 80.75 159.75 112.25 160 c 1
+ 133.354 159.548 152 144 164 129.75 c 9
+ 164 -26.6611 l 17
+ 159.675 -13.9941 161.303 -15.4932 158.749 -2.82617 c 1
+ 152.749 9.92383 134.663 24.3672 111.749 26.1729 c 1
+ 79.2959 24.1152 74.249 -0.827148 45.999 -6.32715 c 1
+ 23.999 -10.0771 0 4.5 0 22.1729 c 9
+ 0 157.331 l 17
+EndSplineSet
+EndChar
+
+StartChar: UpperPesOneNothing
+Encoding: 63 -1 148
+Width: 186
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 130.332 m 1
+ 14.9361 125.851 30.5559 122.757 46 120.815 c 0
+ 98.9311 114.161 149.798 121.039 164 132 c 1
+ 164 149 l 1
+ 159.5 161 134 176 98 176 c 0
+ 68.5 176 37 171.156 22 160.5 c 1
+ 22 304 l 1
+ 42 315 71.417 320 104 320 c 0
+ 136.583 320 173 312 186 299 c 1
+ 186 -15.3359 l 17
+ 156.02 -49.6641 92 -61.335 37.999 -62.999 c 0
+ 31.3204 -63.2047 26.2021 -62.8176 22 -62.0382 c 1
+ 22 -78.5 21.5 -76 22 -93 c 1
+ 6 -93 13 -93 0 -93 c 1
+ 0 130.332 l 1
+EndSplineSet
+EndChar
+
+StartChar: OriscusScapusLongqueueLineTR
+Encoding: 150 -1 149
+Width: 164
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+164 22 m 17
+ 164 21 164 20 164 19 c 0
+ 164 5 144 -7 125 -7 c 0
+ 123 -7 120 -6 118 -6 c 1
+ 90 0 84 24 52 26 c 1
+ 40 25 22 18 22 8 c 2
+ 22 -356 l 25
+ 22 -356 19 -365 0 -365 c 1
+ 0 130 l 1
+ 12 144 31 160 52 160 c 0
+ 83 160 99 133 118 129 c 0
+ 135 126 139 135 142 142 c 1
+ 142 157 l 1
+ 164 157 l 1
+ 164 22 l 17
+EndSplineSet
+EndChar
+
+StartChar: OriscusScapusLineTR
+Encoding: 151 -1 150
+Width: 164
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 130 m 1
+ 12 144 31 160 52 160 c 0
+ 83 160 99 133 118 129 c 0
+ 135 126 139 135 142 142 c 1
+ 142 157 l 1
+ 164 157 l 1
+ 164 22.1729 l 17
+ 164.202 21.1722 164.299 20.1788 164.299 19.1961 c 0
+ 164.299 5.03959 144.092 -6.90644 125.048 -6.90644 c 0
+ 122.667 -6.90644 120.304 -6.71969 118.001 -6.32715 c 1
+ 89.751 -0.827148 84.7041 24.1152 52.251 26.1729 c 1
+ 40.6015 25.2549 22 17.4121 22 7.5 c 2
+ 22.0039 -212.293 l 25
+ 22.0039 -212.293 18.667 -220.667 0 -220.668 c 1
+ 0 -41.25 l 25
+ 0 130 l 1
+EndSplineSet
 EndChar
 EndChars
 EndSplineFont

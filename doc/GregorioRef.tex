@@ -33,6 +33,7 @@
 \usepackage{tabulary}
 \usepackage{tabularx}
 \usepackage{adjustbox}
+\usepackage{xparse}
 
 \usepackage{makeidx}
 \makeindex
@@ -119,6 +120,18 @@
     Arg & Value & Description \\
     \hline}%
   {\endtabularx\bigskip}
+
+\makeatletter%
+\NewDocumentEnvironment{gdimension}{m}{\macroname{#1}{}{gp-default.tex}}{%
+
+  \gre@rubberpermit{#1}%
+  \ifgre@rubber%
+    Default: \directlua{GregorioRef.emit_dimension("\luaescapestring{\csname gre@skip@#1\endcsname}")}
+  \else%
+    Default: \directlua{GregorioRef.emit_dimension("\luaescapestring{\csname gre@dimen@#1\endcsname}")}
+  \fi%
+}
+\makeatother
 
 \setlength{\parindent}{0mm} % Default is 15pt
 

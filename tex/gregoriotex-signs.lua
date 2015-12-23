@@ -414,6 +414,22 @@ local offset_cases = {
     v = [[\gre@vepisemaorrareaux{\GreCPVirgaStrataOneNothing}{\GreCPOriscus}{3}{0}{#2}{#3}{#4}]],
     h = [[\gre@hepisorlineaux{\GreCPVirgaStrataOneNothing}{\gre@char@he@salicus@oriscus{#4}}{4}{#3}]],
   },
+  -- punctum fused to the next note
+  {
+    case = 'LeadingPunctum',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPPunctum}{0}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPPunctumTwoUp}{\gre@char@he@punctum{#4}}{2}{#3}]],
+  },
+  {
+    case = 'LeadingQuilisma',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPQuilisma}{0}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPQuilismaTwoUp}{\gre@char@he@quilisma{#4}}{2}{#3}]],
+  },
+  {
+    case = 'LeadingOriscus',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPOriscus}{0}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPOriscusTwoUp}{\gre@char@he@oriscus{#4}}{2}{#3}]],
+  },
 }
 
 local function emit_offset_macros()

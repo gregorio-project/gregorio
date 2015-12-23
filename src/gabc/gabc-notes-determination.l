@@ -380,6 +380,12 @@ static __inline void add_alteration(const gregorio_type type) {
 <INITIAL><\/nlba> {
         gregorio_add_nlba_as_note(&current_note, NLBA_END, &notes_lloc);
     }
+<INITIAL>@\[ {
+        gregorio_start_autofuse(&current_note, &notes_lloc);
+    }
+<INITIAL>\] {
+        gregorio_end_autofuse(&current_note, &notes_lloc);
+    }
 <overbrace>[^\]]+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverBrace{%s}{0pt}{0pt}{%d}",
@@ -608,13 +614,13 @@ r5  {
         lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
 [a-mA-M]ss(\<|\>) {
-        lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_AUCTA);
+        lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_AUCTUS_ASCENDENS);
     }
 [a-mA-M]sss {
         lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
 [a-mA-M]sss(\<|\>) {
-        lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTA);
+        lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTUS_ASCENDENS);
     }
 [a-mA-M] {
         lex_add_note(0, punctum(gabc_notes_determination_text[0]), _NO_SIGN,
@@ -623,6 +629,10 @@ r5  {
 -[a-mA-M] {
         lex_add_note(1, punctum(gabc_notes_determination_text[1]), _NO_SIGN,
                 L_INITIO_DEBILIS);
+    }
+@[a-mA-M] {
+        lex_add_note(1, punctum(gabc_notes_determination_text[1]), _NO_SIGN,
+                L_FUSED);
     }
 \'[01]? {
         add_sign(_V_EPISEMA);
@@ -634,13 +644,13 @@ _[0-5]* {
         add_sign(_PUNCTUM_MORA);
     }
 ~   {
-        gregorio_add_liquescentia(current_note, L_DEMINUTUS);
+        gregorio_add_tail_liquescentia(current_note, L_DEMINUTUS);
     }
 >   {
-        gregorio_add_liquescentia(current_note, L_AUCTUS_DESCENDENS);
+        gregorio_add_tail_liquescentia(current_note, L_AUCTUS_DESCENDENS);
     }
 \<  {
-        gregorio_add_liquescentia(current_note, L_AUCTUS_ASCENDENS);
+        gregorio_add_tail_liquescentia(current_note, L_AUCTUS_ASCENDENS);
     }
 q   {
         gregorio_change_shape(current_note, S_QUADRATUM);
