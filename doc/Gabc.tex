@@ -116,6 +116,52 @@ Here is a detailed description of each header field:
 
 \end{description}
 
+\subsection{Neume Fusion}
+
+Neume fusion allows for the composition of new shapes based on a set of
+primitive neumes.  These primitives are:
+
+\begin{tabularx}{\textwidth}{l|l|X}
+  Gabc & Description & Rules \\
+  \hline
+  \texttt{g} & punctum & fuses from higher or lower notes, and can fuse to higher or lower notes \\
+  \texttt{go} & oriscus & may only fuse in the direction it was fused from \\
+  \texttt{gO} & oriscus scapus & at the start only, next note must be higher to fuse \\
+  \texttt{gw} & quilisma & does not fuse from anything, and only fuses to a higher note \\
+  \texttt{gV} & virga reversa & at the start only, next note must be lower to fuse \\
+  \texttt{gf} & flexus & if not at the end, must be followed by a higher note to fuse \\
+  \texttt{gh} & pes & at the end only; in non-liquescent form, the previous note must be lower to fuse \\
+  \texttt{gfg} & porrectus & at the end only, previous note must be lower to fuse \\
+\end{tabularx}
+
+Placing the \texttt{@} character between two notes will attempt to use the above
+rules to fuse the notes together.  If a shape that is not fusable is used,
+Gregorio will typically fall back on the non-fusable form, but in some cases
+will result in a syntax error.
+
+Placing the \texttt{@} character before a primitive that would get a stem will
+suppress the stem.  Given the above list of primitives, this means the flexus
+and the porrectus.
+
+Here are some examples of fusion:
+
+\gresetinitiallines{0}\gresetlyriccentering{firstletter}%
+\gabcsnippet{
+(c3) h@iw@ji@j@ih<sp>~</sp>(h@iw@ji@j@ih~)
+(;) d@eo@fd(d@eo@fd)
+(;) IJ@kh(IJ@kh)
+}
+
+As a convenience, a sequence of notes enclosed within \texttt{@[} and
+\texttt{]} will be fused automatically based on an algorithm that breaks up
+the notes into the above primitives.  Using the same examples as before:
+
+\gabcsnippet{
+(c3) @<v>[</v>hiwjijih<sp>~</sp><v>]</v>(@[hiwjijih~])
+(;) @<v>[</v>deofd<v>]</v>(@[deofd])
+(;) @<v>[</v>IJkh<v>]</v>(@[IJkh])
+}
+
 \subsection{Lyric Centering}
 
 Gregorio centers the text of each syllable around the first note of each

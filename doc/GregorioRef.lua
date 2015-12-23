@@ -85,6 +85,7 @@ local GABC = {
   Oriscus = [[go]],
   OriscusLineBL = [[\excluded{e}@go]],
   OriscusReversus = [[go^^^^003c]],
+  OriscusReversusLineTL = [[\excluded{i}@go]],
   OriscusScapus = [[gO]],
   OriscusScapusLongqueue = [[hO]],
   Pes = [[gi]],
@@ -151,6 +152,7 @@ local GABC_FUSE = {
   },
   Lower = {
     Punctum = [[\excluded{i}@]],
+    Oriscus = [[\excluded{i}@]],
     Pes = [[\excluded{i}@]],
     PesQuadratum = [[\excluded{i}@]],
     PesQuadratumLongqueue = [[\excluded{j}@]],
@@ -169,6 +171,9 @@ local GABC_FUSE = {
   },
   Down = {
     Punctum = [[\excluded{@eg}]],
+    Oriscus = [[\excluded{@eg}]],
+    OriscusScapus = [[\excluded{@eg}]],
+    OriscusScapusLongqueue = [[\excluded{@eg}]],
     VirgaReversa = [[\excluded{@eg}]],
     VirgaReversaLongqueue = [[\excluded{@fg}]],
   },
