@@ -76,6 +76,7 @@ local space_above_staff = 13
 local score_fonts = {}
 local symbol_fonts = {}
 local loaded_font_sizes = {}
+local font_indexed = {}
 local next_variant = 0
 local variant_prefix = 'gre@font@variant@'
 local number_to_letter = {
@@ -625,6 +626,23 @@ local function get_score_font_resources(name)
   return get_font_resources(get_score_font_id(name))
 end
 
+local function get_score_font_unicode_pairs(name)
+  local unicodes = get_score_font_resources(name).unicodes
+  if not font_indexed[name] then
+    -- The unicodes table may be lazy-loaded, so iterating it may not
+    -- return everything.  Attempting to retrieve the code point of a
+    -- glyph that has not already been loaded will trigger the __index
+    -- method in the metatable (implemented by the fontloader) to load
+    -- the table until the glyph is found.  When iterating the
+    -- unicodes, we want the whole table to be filled, so we try to
+    -- access a non-existing glyph in order to force load the entire
+    -- table.
+    local ignored = unicodes['_this_is_hopefully_a_nonexistent_glyph_']
+    font_indexed[name] = true
+  end
+  return pairs(unicodes)
+end
+
 local function check_font_version()
   local gregoriofont = get_font_by_name('gre@font@music')
   if gregoriofont then
@@ -640,7 +658,7 @@ end
 local function map_font(name, prefix)
   log("Mapping font %s", name)
   local glyph, unicode
-  for glyph, unicode in pairs(get_score_font_resources(name).unicodes) do
+  for glyph, unicode in get_score_font_unicode_pairs(name) do
     if unicode >= 0 and not string.match(glyph, '%.') then
       log("Setting \\Gre%s%s to \\char%d", prefix, glyph, unicode)
       tex.sprint(catcode_at_letter, string.format(
@@ -731,15 +749,14 @@ local function change_score_glyph(glyph_name, font_name, replacement)
     if not string.match(replacement, '^%.') then
       err('If a wildcard is supplied for glyph name, replacement must start with a dot.')
     end
-    local greciliae = get_score_font_resources('greciliae').unicodes
     local other_font
     if font_name == '*' then
-      other_font = greciliae
+      other_font = get_score_font_resources('greciliae').unicodes
     else
       other_font = get_score_font_resources(font_name).unicodes
     end
     local name, char
-    for name, char in pairs(greciliae) do
+    for name, char in get_score_font_unicode_pairs('greciliae') do
       if not string.match(name, '%.') and char >= 0 and string.match(name, glyph_name) then
         local matched_replacement = name..replacement
         if other_font[matched_replacement] ~= nil and other_font[matched_replacement] >= 0 then
@@ -759,7 +776,7 @@ local function reset_score_glyph(glyph_name)
   if string.match(glyph_name, '%*') then
     glyph_name = '^'..glyph_name:gsub('%*', '.*')..'$'
     local name, char
-    for name, char in pairs(get_score_font_resources('greciliae').unicodes) do
+    for name, char in get_score_font_unicode_pairs('greciliae') do
       if not string.match(name, '%.') and char >= 0 and string.match(name, glyph_name) then
         set_common_score_glyph('GreCP'..name, nil, char)
       end

@@ -5,6 +5,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][unreleased]
 ### Fixed
 - `\greseteolcustos` now retains its setting across multiple score inclusions (see [#703](https://github.com/gregorio-project/gregorio/issues/703)).
+- Gregorio now works against luaotfload 2.6 (see [#717](https://github.com/gregorio-project/gregorio/issues/717)).
 
 
 ## [Unreleased][unreleased]
