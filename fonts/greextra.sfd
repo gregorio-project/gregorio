@@ -79,12 +79,13 @@ EndShort
 LangName: 1033 "" "" "Medium" "FontForge 2.0 : greextra : 22-4-2015" 
 GaspTable: 1 65535 2 0
 Encoding: UnicodeBmp
+Compacted: 1
 UnicodeInterp: none
 NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 57361 19 8
+WinInfo: 0 16 4
 BeginChars: 65539 83
 
 StartChar: .notdef
@@ -1511,7 +1512,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: Cross.alt
+StartChar: Cross
 Encoding: 57388 57388 41
 Width: 732
 Flags: W
@@ -4457,7 +4458,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: Cross
+StartChar: Cross.alt
 Encoding: 57400 57400 53
 Width: 848
 Flags: W
