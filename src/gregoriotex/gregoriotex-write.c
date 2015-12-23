@@ -405,7 +405,7 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
             break;
         }
         /* else fall through */
-    case G_VIRGA:
+    case G_VIRGA_REVERSA:
     case G_PUNCTUM:
         /* tail-fusable */
         if (fuse_to_next_note < 0) {
@@ -555,9 +555,9 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         return SHAPE_LineaPunctumCavum;
     case S_VIRGA:
         if (is_shortqueue(note->u.note.pitch, glyph, element)) {
-            return compute_glyph_name(glyph, SHAPE_Virga, LG_NONE, true);
+            return SHAPE_Virga;
         }
-        return compute_glyph_name(glyph, SHAPE_VirgaLongqueue, LG_NONE, true);
+        return SHAPE_VirgaLongqueue;
     case S_VIRGA_REVERSA:
         switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
@@ -580,9 +580,11 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
             return SHAPE_VirgaReversaLongqueueDescendens;
         default:
             if (is_shortqueue(note->u.note.pitch, glyph, element)) {
-                return SHAPE_VirgaReversa;
+                return compute_glyph_name(glyph, SHAPE_VirgaReversa, LG_NONE,
+                        true);
             }
-            return SHAPE_VirgaReversaLongqueue;
+            return compute_glyph_name(glyph, SHAPE_VirgaReversaLongqueue,
+                    LG_NONE, true);
         }
     case S_ORISCUS:
         *type = AT_ORISCUS;

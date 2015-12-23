@@ -1367,13 +1367,10 @@ static __inline int compute_fused_shift(gregorio_glyph *glyph)
     }
 
     switch (previous->u.notes.glyph_type) {
-    case G_VIRGA:
     case G_PUNCTUM:
     case G_FLEXA:
-    case G_BIVIRGA:
-    case G_TRIVIRGA:
     case G_VIRGA_REVERSA:
-        /* these are fusable to the this note */
+        /* these are potentially fusable to this note */
         break;
 
     default:
@@ -1393,6 +1390,12 @@ static __inline int compute_fused_shift(gregorio_glyph *glyph)
         /* ambitus too large to fuse */
         return 0;
     }
+
+    if (shift > 0 && previous->u.notes.glyph_type == G_VIRGA_REVERSA) {
+        /* virga reversa cannot fuse upwards */
+        return 0;
+    }
+
     /* the FLEXA check below checks for a porrectus-like flexus, which is not
      * fusable from above */
     if (shift < 0 && ((next_is_fused && glyph->u.notes.glyph_type == G_FLEXA)

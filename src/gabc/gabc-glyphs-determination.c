@@ -43,269 +43,6 @@ static __inline gregorio_scanner_location *copy_note_location(
 
 /****************************
  *
- * First see the comments of
- * gabc_det_glyphs_from_notes. This function is used when
- * we have finished to determine a glyph. We have the last glyph that
- * have been added: last_glyph. The glyph we want to add is given by
- * glyph_type and liquescentia.
- *
- * The glyph we want to add goes from first_note to current_note, we
- * isolate these notes from the notes that won't be in the glyph, and
- * we add the glyph to the list_of_glyphs.
- *
-****************************/
-
-static gregorio_note *close_normal_glyph(gregorio_glyph **last_glyph,
-        gregorio_glyph_type glyph_type, gregorio_note **first_note,
-        gregorio_liquescentia liquescentia, gregorio_note *current_note)
-{
-    gregorio_note *new_current_note = current_note;
-    gregorio_scanner_location loc;
-    /* a variable necessary for the patch for G_BIVIRGA & co. */
-    gregorio_note *added_notes = NULL;
-    gregorio_note *next_note = NULL;
-
-    /* patch to have good glyph type in the case where a glyph ends by a note
-     * with shape S_QUADRATUM */
-    if (glyph_type == G_PES_QUADRATUM_FIRST_PART
-            || glyph_type == G_PES_QUILISMA_QUADRATUM_FIRST_PART) {
-        glyph_type = G_PUNCTUM;
-    }
-
-    gregorio_add_glyph(last_glyph, glyph_type, *first_note, liquescentia);
-    if (current_note->next) {
-        current_note->next->previous = NULL;
-        *first_note = current_note->next;
-        current_note->next = NULL;
-    }
-    /* here we "patch" the structure for bivirga, tristropha, etc. */
-    /* the idea is not to have a S_BIVIRGA in the shape of the note (which is
-     * dirty) but rather a G_BIVIRGA in the glyph (which is the case now) and
-     * two virgas */
-
-    if (glyph_type == G_BIVIRGA || glyph_type == G_DISTROPHA
-            || glyph_type == G_TRIVIRGA || glyph_type == G_TRISTROPHA
-            || glyph_type == G_DISTROPHA_AUCTA
-            || glyph_type == G_TRISTROPHA_AUCTA) {
-        gregorio_go_to_first_note(&current_note);
-        while (current_note) {
-            if (current_note->type == GRE_NOTE) {
-                switch (current_note->u.note.shape) {
-                case S_TRIVIRGA:
-                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note,
-                            copy_note_location(current_note, &loc));
-                case S_BIVIRGA:
-                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note,
-                            copy_note_location(current_note, &loc));
-                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_VIRGA, current_note->signs,
-                            current_note->u.note.liquescentia, current_note,
-                            copy_note_location(current_note, &loc));
-                    break;
-                case S_TRISTROPHA:
-                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
-                            current_note,
-                            copy_note_location(current_note, &loc));
-                case S_DISTROPHA:
-                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
-                            current_note,
-                            copy_note_location(current_note, &loc));
-                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_STROPHA, current_note->signs,
-                            current_note->u.note.liquescentia, current_note,
-                            copy_note_location(current_note, &loc));
-                    break;
-                case S_TRISTROPHA_AUCTA:
-                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
-                            current_note,
-                            copy_note_location(current_note, &loc));
-                case S_DISTROPHA_AUCTA:
-                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
-                            current_note,
-                            copy_note_location(current_note, &loc));
-                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_STROPHA_AUCTA, current_note->signs,
-                            current_note->u.note.liquescentia, current_note,
-                            copy_note_location(current_note, &loc));
-                    break;
-                default:
-                    break;
-                }
-            }
-            /* this is the case of two separate virga that have been spotted
-             * as a bivirga */
-            if (!added_notes) {
-                break;
-            }
-            next_note = current_note->next;
-            /* now we have what we want, we set up the links and free the old
-             * note */
-            if (next_note) {
-                current_note->next->previous = added_notes;
-                added_notes->next = next_note;
-            }
-            gregorio_go_to_first_note(&added_notes);
-            if (current_note->previous) {
-                current_note->previous->next = added_notes;
-                added_notes->previous = current_note->previous;
-            } else {
-                new_current_note = added_notes;
-            }
-            /* Detaching current_note is not strictly necessary here because we
-             * are effectively plucking out added_notes into its own glyph;
-             * however, detaching the note is safer if this behavior changes in
-             * the future because gregorio_free_one_note nullifies surrounding
-             * pointers */
-            current_note->next = NULL;
-            current_note->previous = NULL;
-            gregorio_free_one_note(&current_note);
-            if (!next_note) {
-                current_note = added_notes;
-                break;
-            }
-            current_note = next_note;
-        }
-        gregorio_go_to_first_note(&current_note);
-        /* finally we set the just added glyph first_note to current_note */
-        (*last_glyph)->u.notes.first_note = current_note;
-    }
-    return new_current_note;
-}
-
-static gregorio_note *close_fused_glyph(gregorio_glyph **last_glyph,
-        gregorio_glyph_type glyph_type, gregorio_note **first_note,
-        gregorio_liquescentia liquescentia, gregorio_note *current_note)
-{
-    (*first_note)->u.note.liquescentia |= (liquescentia & L_FUSED);
-    return close_normal_glyph(last_glyph, glyph_type, first_note, liquescentia,
-            current_note);
-}
-
-static gregorio_note *close_fusion_glyph(gregorio_glyph **last_glyph,
-        gregorio_note **first_note, gregorio_liquescentia liquescentia,
-        gregorio_note *last_note)
-{
-    bool first = true;
-    gregorio_note *next;
-    int prev_shift = 0, shift, shift2;
-    for (;;) {
-        bool processed = false;
-
-        if (*first_note == last_note || !(next = (*first_note)->next)) {
-            gregorio_message(_("Unexpected single note during fusion"),
-                    "close_fusion_glyph", VERBOSITY_ERROR, 0);
-            return last_note;
-        }
-
-        shift = next->u.note.pitch - (*first_note)->u.note.pitch;
-        if (shift != 0 && next == last_note) {
-            /* there are exactly two notes left, so we end fusion */
-            return close_fused_glyph(last_glyph,
-                    shift < 0? G_FLEXA : G_PODATUS, first_note,
-                    liquescentia, last_note);
-        }
-        if (prev_shift >= 0 && shift < 0) {
-            /* check for a porrectus-like flexus */
-            gregorio_note *next_next = next->next;
-            if (!next_next) {
-                gregorio_message(_("Unexpected end of notes during fusion"),
-                        "close_fusion_glyph", VERBOSITY_ERROR, 0);
-                return last_note;
-            }
-            shift2 = next_next->u.note.pitch - next->u.note.pitch;
-            if (shift2 > 0) {
-                if (next_next == last_note) {
-                    /* there are exactly three notes left in a porrectus shape,
-                     * so we end fusion */
-                    return close_fused_glyph(last_glyph,
-                            G_PORRECTUS, first_note,
-                            liquescentia, last_note);
-                }
-                /* found a porrectus-like flexus */
-                close_fused_glyph(last_glyph,
-                        shift < 0? G_FLEXA : G_PODATUS, first_note,
-                        liquescentia & ~TAIL_LIQUESCENTIA_MASK, next);
-                prev_shift = shift2;
-                processed = true;
-            }
-        }
-
-        if (!processed) {
-            /* didn't find anything interesting, so fuse the single note */
-            close_fused_glyph(last_glyph, G_PUNCTUM, first_note,
-                    liquescentia & ~TAIL_LIQUESCENTIA_MASK, *first_note);
-            prev_shift = shift;
-        }
-
-        if (first) {
-            first = false;
-            liquescentia = (liquescentia & TAIL_LIQUESCENTIA_MASK) | L_FUSED;
-        }
-    }
-}
-
-static gregorio_note *close_glyph(gregorio_glyph **last_glyph,
-        gregorio_glyph_type glyph_type, gregorio_note **first_note,
-        gregorio_liquescentia liquescentia, gregorio_note *current_note)
-{
-    if (glyph_type == G_FUSED) {
-        return close_fusion_glyph(last_glyph, first_note, liquescentia,
-                current_note);
-    } else {
-        return close_normal_glyph(last_glyph, glyph_type, first_note,
-                liquescentia, current_note);
-    }
-}
-
-/* a small function to automatically determine the pitch of a custo : it is
- * the pitch of the next note, but we must take care of the clef changes, as
- * custo are (normally and for now) only present before clef changes. */
-/* TODO: there may be a side effect with the flated keys... */
-
-static char gabc_determine_custo_pitch(gregorio_note *current_note,
-        int current_key)
-{
-    int pitch_difference = 0;
-    int newkey;
-    while (current_note) {
-        if (current_note->type == GRE_C_KEY_CHANGE
-                || current_note->type == GRE_C_KEY_CHANGE_FLATED) {
-            newkey = gregorio_calculate_new_key(C_KEY,
-                    current_note->u.note.pitch - '0');
-            pitch_difference = newkey - current_key;
-        }
-        if (current_note->type == GRE_F_KEY_CHANGE
-                || current_note->type == GRE_F_KEY_CHANGE_FLATED) {
-            newkey = gregorio_calculate_new_key(F_KEY,
-                    current_note->u.note.pitch - '0');
-            pitch_difference = newkey - current_key;
-        }
-        if (current_note->type == GRE_NOTE) {
-            pitch_difference =
-                    (int) current_note->u.note.pitch - pitch_difference;
-            while (pitch_difference < LOWEST_PITCH) {
-                pitch_difference += 7;
-            }
-            while (pitch_difference > HIGHEST_PITCH) {
-                pitch_difference -= 7;
-            }
-            assert(pitch_difference >= LOWEST_PITCH
-                    && pitch_difference <= HIGHEST_PITCH);
-            return (char) pitch_difference;
-        }
-        current_note = current_note->next;
-    }
-    return DUMMY_PITCH;
-}
-
-/****************************
- *
  * This function is the basis of all the determination of glyphs. The
  * phylosophy of the function is to say : We have a glyph that we have
  * determined, and we have the following note, can we "add" it to the
@@ -692,6 +429,274 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     }
 
     return next_glyph_type;
+}
+
+/****************************
+ *
+ * First see the comments of
+ * gabc_det_glyphs_from_notes. This function is used when
+ * we have finished to determine a glyph. We have the last glyph that
+ * have been added: last_glyph. The glyph we want to add is given by
+ * glyph_type and liquescentia.
+ *
+ * The glyph we want to add goes from first_note to current_note, we
+ * isolate these notes from the notes that won't be in the glyph, and
+ * we add the glyph to the list_of_glyphs.
+ *
+****************************/
+
+static gregorio_note *close_normal_glyph(gregorio_glyph **last_glyph,
+        gregorio_glyph_type glyph_type, gregorio_note **first_note,
+        gregorio_liquescentia liquescentia, gregorio_note *current_note)
+{
+    gregorio_note *new_current_note = current_note;
+    gregorio_scanner_location loc;
+    /* a variable necessary for the patch for G_BIVIRGA & co. */
+    gregorio_note *added_notes = NULL;
+    gregorio_note *next_note = NULL;
+
+    /* patch to have good glyph type in the case where a glyph ends by a note
+     * with shape S_QUADRATUM */
+    if (glyph_type == G_PES_QUADRATUM_FIRST_PART
+            || glyph_type == G_PES_QUILISMA_QUADRATUM_FIRST_PART) {
+        glyph_type = G_PUNCTUM;
+    }
+
+    gregorio_add_glyph(last_glyph, glyph_type, *first_note, liquescentia);
+    if (current_note->next) {
+        current_note->next->previous = NULL;
+        *first_note = current_note->next;
+        current_note->next = NULL;
+    }
+    /* here we "patch" the structure for bivirga, tristropha, etc. */
+    /* the idea is not to have a S_BIVIRGA in the shape of the note (which is
+     * dirty) but rather a G_BIVIRGA in the glyph (which is the case now) and
+     * two virgas */
+
+    if (glyph_type == G_BIVIRGA || glyph_type == G_DISTROPHA
+            || glyph_type == G_TRIVIRGA || glyph_type == G_TRISTROPHA
+            || glyph_type == G_DISTROPHA_AUCTA
+            || glyph_type == G_TRISTROPHA_AUCTA) {
+        gregorio_go_to_first_note(&current_note);
+        while (current_note) {
+            if (current_note->type == GRE_NOTE) {
+                switch (current_note->u.note.shape) {
+                case S_TRIVIRGA:
+                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
+                            S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note,
+                            copy_note_location(current_note, &loc));
+                case S_BIVIRGA:
+                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
+                            S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note,
+                            copy_note_location(current_note, &loc));
+                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
+                            S_VIRGA, current_note->signs,
+                            current_note->u.note.liquescentia, current_note,
+                            copy_note_location(current_note, &loc));
+                    break;
+                case S_TRISTROPHA:
+                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
+                            S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
+                            current_note,
+                            copy_note_location(current_note, &loc));
+                case S_DISTROPHA:
+                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
+                            S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
+                            current_note,
+                            copy_note_location(current_note, &loc));
+                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
+                            S_STROPHA, current_note->signs,
+                            current_note->u.note.liquescentia, current_note,
+                            copy_note_location(current_note, &loc));
+                    break;
+                case S_TRISTROPHA_AUCTA:
+                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
+                            S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
+                            current_note,
+                            copy_note_location(current_note, &loc));
+                case S_DISTROPHA_AUCTA:
+                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
+                            S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
+                            current_note,
+                            copy_note_location(current_note, &loc));
+                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
+                            S_STROPHA_AUCTA, current_note->signs,
+                            current_note->u.note.liquescentia, current_note,
+                            copy_note_location(current_note, &loc));
+                    break;
+                default:
+                    break;
+                }
+            }
+            /* this is the case of two separate virga that have been spotted
+             * as a bivirga */
+            if (!added_notes) {
+                break;
+            }
+            next_note = current_note->next;
+            /* now we have what we want, we set up the links and free the old
+             * note */
+            if (next_note) {
+                current_note->next->previous = added_notes;
+                added_notes->next = next_note;
+            }
+            gregorio_go_to_first_note(&added_notes);
+            if (current_note->previous) {
+                current_note->previous->next = added_notes;
+                added_notes->previous = current_note->previous;
+            } else {
+                new_current_note = added_notes;
+            }
+            /* Detaching current_note is not strictly necessary here because we
+             * are effectively plucking out added_notes into its own glyph;
+             * however, detaching the note is safer if this behavior changes in
+             * the future because gregorio_free_one_note nullifies surrounding
+             * pointers */
+            current_note->next = NULL;
+            current_note->previous = NULL;
+            gregorio_free_one_note(&current_note);
+            if (!next_note) {
+                current_note = added_notes;
+                break;
+            }
+            current_note = next_note;
+        }
+        gregorio_go_to_first_note(&current_note);
+        /* finally we set the just added glyph first_note to current_note */
+        (*last_glyph)->u.notes.first_note = current_note;
+    }
+    return new_current_note;
+}
+
+static gregorio_note *close_fused_glyph(gregorio_glyph **last_glyph,
+        gregorio_glyph_type glyph_type, gregorio_note **first_note,
+        gregorio_liquescentia liquescentia, gregorio_note *current_note)
+{
+    (*first_note)->u.note.liquescentia |= (liquescentia & L_FUSED);
+    return close_normal_glyph(last_glyph, glyph_type, first_note, liquescentia,
+            current_note);
+}
+
+static gregorio_note *close_fusion_glyph(gregorio_glyph **last_glyph,
+        gregorio_note **first_note, gregorio_liquescentia liquescentia,
+        gregorio_note *last_note)
+{
+    bool first = true;
+    gregorio_note *next;
+    int prev_shift = 0, shift, shift2;
+    for (;;) {
+        bool processed = false;
+
+        if (*first_note == last_note || !(next = (*first_note)->next)) {
+            gregorio_message(_("Unexpected single note during fusion"),
+                    "close_fusion_glyph", VERBOSITY_ERROR, 0);
+            return last_note;
+        }
+
+        shift = next->u.note.pitch - (*first_note)->u.note.pitch;
+        if (shift != 0 && next == last_note) {
+            /* there are exactly two notes left, so we end fusion */
+            return close_fused_glyph(last_glyph,
+                    shift < 0? G_FLEXA : G_PODATUS, first_note,
+                    liquescentia, last_note);
+        }
+        if (prev_shift >= 0 && shift < 0) {
+            /* check for a porrectus-like flexus */
+            gregorio_note *next_next = next->next;
+            if (!next_next) {
+                gregorio_message(_("Unexpected end of notes during fusion"),
+                        "close_fusion_glyph", VERBOSITY_ERROR, 0);
+                return last_note;
+            }
+            shift2 = next_next->u.note.pitch - next->u.note.pitch;
+            if (shift2 > 0) {
+                if (next_next == last_note) {
+                    /* there are exactly three notes left in a porrectus shape,
+                     * so we end fusion */
+                    return close_fused_glyph(last_glyph,
+                            G_PORRECTUS, first_note,
+                            liquescentia, last_note);
+                }
+                /* found a porrectus-like flexus */
+                close_fused_glyph(last_glyph,
+                        shift < 0? G_FLEXA : G_PODATUS, first_note,
+                        liquescentia & ~TAIL_LIQUESCENTIA_MASK, next);
+                prev_shift = shift2;
+                processed = true;
+            }
+        }
+
+        if (!processed) {
+            /* didn't find anything interesting, so fuse the single note */
+            gabc_determination ignored;
+            gregorio_glyph_type next_glyph_type =
+                    gregorio_add_note_to_a_glyph(G_UNDETERMINED,
+                    (*first_note)->u.note.pitch, 0, (*first_note)->u.note.shape,
+                    (*first_note)->u.note.liquescentia, *first_note, &ignored);
+            close_fused_glyph(last_glyph, next_glyph_type, first_note,
+                    liquescentia & ~TAIL_LIQUESCENTIA_MASK, *first_note);
+            prev_shift = shift;
+        }
+
+        if (first) {
+            first = false;
+            liquescentia = (liquescentia & TAIL_LIQUESCENTIA_MASK) | L_FUSED;
+        }
+    }
+}
+
+static gregorio_note *close_glyph(gregorio_glyph **last_glyph,
+        gregorio_glyph_type glyph_type, gregorio_note **first_note,
+        gregorio_liquescentia liquescentia, gregorio_note *current_note)
+{
+    if (glyph_type == G_FUSED) {
+        return close_fusion_glyph(last_glyph, first_note, liquescentia,
+                current_note);
+    } else {
+        return close_normal_glyph(last_glyph, glyph_type, first_note,
+                liquescentia, current_note);
+    }
+}
+
+/* a small function to automatically determine the pitch of a custo : it is
+ * the pitch of the next note, but we must take care of the clef changes, as
+ * custo are (normally and for now) only present before clef changes. */
+/* TODO: there may be a side effect with the flated keys... */
+
+static char gabc_determine_custo_pitch(gregorio_note *current_note,
+        int current_key)
+{
+    int pitch_difference = 0;
+    int newkey;
+    while (current_note) {
+        if (current_note->type == GRE_C_KEY_CHANGE
+                || current_note->type == GRE_C_KEY_CHANGE_FLATED) {
+            newkey = gregorio_calculate_new_key(C_KEY,
+                    current_note->u.note.pitch - '0');
+            pitch_difference = newkey - current_key;
+        }
+        if (current_note->type == GRE_F_KEY_CHANGE
+                || current_note->type == GRE_F_KEY_CHANGE_FLATED) {
+            newkey = gregorio_calculate_new_key(F_KEY,
+                    current_note->u.note.pitch - '0');
+            pitch_difference = newkey - current_key;
+        }
+        if (current_note->type == GRE_NOTE) {
+            pitch_difference =
+                    (int) current_note->u.note.pitch - pitch_difference;
+            while (pitch_difference < LOWEST_PITCH) {
+                pitch_difference += 7;
+            }
+            while (pitch_difference > HIGHEST_PITCH) {
+                pitch_difference -= 7;
+            }
+            assert(pitch_difference >= LOWEST_PITCH
+                    && pitch_difference <= HIGHEST_PITCH);
+            return (char) pitch_difference;
+        }
+        current_note = current_note->next;
+    }
+    return DUMMY_PITCH;
 }
 
 /****************************
