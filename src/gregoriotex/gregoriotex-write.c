@@ -85,6 +85,7 @@ SHAPE(Oriscus);
 SHAPE(OriscusDeminutus);
 SHAPE(OriscusLineBL);
 SHAPE(OriscusReversus);
+SHAPE(OriscusReversusLineTL);
 SHAPE(OriscusScapus);
 SHAPE(OriscusScapusLongqueue);
 SHAPE(Pes);
@@ -375,9 +376,16 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
     case G_PUNCTUM:
     case G_FLEXA:
         /* directionally head-fusable */
-        /* TODO handle punctum inclinatum special case */
-        if (fuse_from_previous_note < -1) {
-            if (glyph->u.notes.first_note->u.note.shape == S_PUNCTUM) {
+        if (fuse_from_previous_note < -1
+                && glyph->u.notes.first_note->u.note.shape != S_QUILISMA
+                && glyph->u.notes.first_note->u.note.shape
+                != S_QUILISMA_QUADRATUM) {
+            fuse_head = FUSE_Lower;
+        } else if (fuse_from_previous_note < 0) {
+            gregorio_note *previous_note = gregorio_glyph_last_note(
+                    glyph->previous);
+            if (previous_note->u.note.shape == S_ORISCUS
+                    || previous_note->u.note.shape == S_ORISCUS_SCAPUS) {
                 fuse_head = FUSE_Lower;
             }
         } else if (fuse_from_previous_note > 1) {
@@ -440,6 +448,8 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
             } else if (fuse_head == FUSE_Lower) {
                 if (shape == SHAPE_Punctum) {
                     shape = SHAPE_PunctumLineTL;
+                } else if (shape == SHAPE_Oriscus) {
+                    shape = SHAPE_OriscusReversusLineTL;
                 }
             }
             fuse_head = "";
@@ -1785,10 +1795,7 @@ static __inline int get_punctum_inclinatum_to_nobar_space_case(
                 || (glyph->next->u.notes.glyph_type == G_FLEXA &&
                     !glyph->next->u.notes.fuse_to_next_glyph))) {
         int descent;
-        gregorio_note *note;
-        for (note = glyph->u.notes.first_note; note->next; note = note->next) {
-            /* just iterate to find the last note */
-        }
+        gregorio_note *note = gregorio_glyph_last_note(glyph);
         descent = note->u.note.pitch -
             glyph->next->u.notes.first_note->u.note.pitch;
         /* a negative descent is an ascent */

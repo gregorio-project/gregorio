@@ -3,7 +3,7 @@ FontName: gregorio-base
 FullName: gregorio
 FamilyName: gregorio
 Weight: Medium
-Copyright: gregorio font, created with FontForge.\nCopyright (C) 2007 Elie Roux <elie.roux@enst-bretagne.fr>\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.\n\nAs a special exception, if you create a document which uses this font, and embed this font or unaltered portions of this font into the document, this font does not by itself cause the resulting document to be covered by the GNU General Public License. This exception does not however invalidate any other reasons why the document might be covered by the GNU General Public License. If you modify this font, you may extend this exception to your version of the font, but you are not obligated to do so. If you do not wish to do so, delete this exception statement from your version.
+Copyright: Font named "gregorio"\nCopyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)\nThis file is part of Gregorio.\n\n<<GPLV3>>
 UComments: "2007-4-12: Created." 
 Version: 1.2
 ItalicAngle: 0
@@ -19,7 +19,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1450668723
+ModificationTime: 1450840199
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -34,6 +34,7 @@ HheadAOffset: 1
 HheadDescent: 0
 HheadDOffset: 1
 OS2Vendor: 'PfEd'
+MarkAttachClasses: 1
 DEI: 91125
 Encoding: Custom
 UnicodeInterp: none
@@ -42,6 +43,8 @@ DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
 WinInfo: 96 16 4
+BeginPrivate: 0
+EndPrivate
 Grid
 -1000 -77.1348 m 0
  2000 -77.1348 l 0

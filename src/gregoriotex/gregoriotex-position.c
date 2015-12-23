@@ -1180,11 +1180,8 @@ static __inline void end_h_episema(height_computation *const h,
                 if (h->start_glyph->previous
                         && h->start_glyph->previous->type == GRE_GLYPH
                         && is_fused(h->start_glyph->u.notes.liquescentia)) {
-                    gregorio_note *note;
-                    for (note = h->start_glyph->previous->u.notes.first_note;
-                            note->next; note = note->next) {
-                        /* just iterate to find the last note */
-                    }
+                    gregorio_note *note = gregorio_glyph_last_note(
+                            h->start_glyph->previous);
                     if (note->type == GRE_NOTE
                             && is_connected_right(h->get_size(note))) {
                         proposed_height = note->u.note.pitch + h->vpos;
@@ -1384,10 +1381,7 @@ static __inline int compute_fused_shift(gregorio_glyph *glyph)
         return 0;
     }
 
-    for (prev_note = previous->u.notes.first_note; prev_note->next;
-            prev_note = prev_note->next) {
-        /* just iterate to find the last note in the previous glyph */
-    }
+    prev_note = gregorio_glyph_last_note(previous);
 
     if (prev_note->type != GRE_NOTE) {
         /* previous note wasn't a note */
@@ -1403,15 +1397,37 @@ static __inline int compute_fused_shift(gregorio_glyph *glyph)
      * fusable from above */
     if (shift < 0 && ((next_is_fused && glyph->u.notes.glyph_type == G_FLEXA)
                 || glyph->u.notes.glyph_type == G_PORRECTUS
-                || first_note->u.note.shape == S_ORISCUS
-                || first_note->u.note.shape == S_ORISCUS_SCAPUS
-                || prev_note->u.note.shape == S_ORISCUS
-                || prev_note->u.note.shape == S_ORISCUS_SCAPUS
                 || (previous->u.notes.glyph_type == G_PUNCTUM
                     && is_initio_debilis(previous->u.notes.liquescentia)))) {
         /* may not be fused from above */
         return 0;
     }
+
+    /* Special cases for oriscus */
+    if (first_note->u.note.shape == S_ORISCUS
+            || first_note->u.note.shape == S_ORISCUS_SCAPUS) {
+        gregorio_note *next_note = first_note->next;
+        if (!next_note && glyph->next && glyph->next->type == GRE_GLYPH
+                && is_fused(glyph->next->u.notes.liquescentia)) {
+            next_note = glyph->next->u.notes.first_note;
+        }
+        if (next_note) {
+            if (next_note->u.note.pitch < first_note->u.note.pitch) {
+                /* then this note should be an down-up-down oriscus */
+                if (shift > 0) {
+                    /* down-up-down oricus cannot be fused from below */
+                    return 0;
+                }
+            } else {
+                /* then this note should be an up-down-up oriscus */
+                if (shift < 0) {
+                    /* up-down-up oricus cannot be fuses from above */
+                    return 0;
+                }
+            }
+        }
+    }
+
     return shift;
 }
 

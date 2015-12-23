@@ -895,4 +895,16 @@ static __inline void gregorio_go_to_first_character_c(gregorio_character **chara
     gregorio_go_to_first_character((const gregorio_character **)character);
 }
 
+static __inline gregorio_note *gregorio_glyph_last_note(
+        const gregorio_glyph *const glyph) {
+    gregorio_note *note;
+    if (!glyph || glyph->type != GRE_GLYPH) {
+        return NULL;
+    }
+    for (note = glyph->u.notes.first_note; note->next; note = note->next) {
+        /* iterate to find the last note */
+    }
+    return note;
+}
+
 #endif
