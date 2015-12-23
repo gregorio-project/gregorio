@@ -82,6 +82,9 @@ SHAPE(Linea);
 SHAPE(LineaPunctum);
 SHAPE(LineaPunctumCavum);
 SHAPE(Oriscus);
+SHAPE(OriscusCavum);
+SHAPE(OriscusCavumAuctus);
+SHAPE(OriscusCavumDeminutus);
 SHAPE(OriscusDeminutus);
 SHAPE(OriscusLineBL);
 SHAPE(OriscusReversus);
@@ -619,7 +622,17 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         *type = AT_PUNCTUM_INCLINATUM;
         return SHAPE_PunctumCavumInclinatum;
     case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
+        *type = AT_PUNCTUM_INCLINATUM;
         return SHAPE_PunctumCavumInclinatumAuctus;
+    case S_ORISCUS_CAVUM:
+        *type = AT_ORISCUS;
+        return SHAPE_OriscusCavum;
+    case S_ORISCUS_CAVUM_AUCTUS:
+        *type = AT_ORISCUS;
+        return SHAPE_OriscusCavumAuctus;
+    case S_ORISCUS_CAVUM_DEMINUTUS:
+        *type = AT_ORISCUS;
+        return SHAPE_OriscusCavumDeminutus;
     default:
         gregorio_messagef("gregoriotex_determine_note_glyph_name",
                 VERBOSITY_ERROR, 0, _("called with unknown shape: %d"),
@@ -2120,6 +2133,21 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
                 pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
                 type);
         break;
+    case S_ORISCUS_CAVUM:
+        fprintf(f, "\\GreOriscusCavum{%d}{%d}{%d}",
+                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
+                type);
+        break;
+    case S_ORISCUS_CAVUM_AUCTUS:
+        fprintf(f, "\\GreOriscusCavumAuctus{%d}{%d}{%d}",
+                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
+                type);
+        break;
+    case S_ORISCUS_CAVUM_DEMINUTUS:
+        fprintf(f, "\\GreOriscusCavumDeminutus{%d}{%d}{%d}",
+                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
+                type);
+        break;
     case S_LINEA_PUNCTUM_CAVUM:
         fprintf(f, "\\GreLineaPunctumCavum{%d}{%d}{%d}",
                 pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
@@ -2665,12 +2693,18 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
         }
         break;
     case G_PUNCTUM:
-        if (glyph->u.notes.first_note->u.note.shape != S_ORISCUS
-                && glyph->u.notes.first_note->u.note.shape != S_ORISCUS_AUCTUS
-                && glyph->u.notes.first_note->u.note.shape !=
-                S_ORISCUS_DEMINUTUS
-                && glyph->u.notes.first_note->u.note.shape !=
-                S_ORISCUS_SCAPUS) {
+        switch (glyph->u.notes.first_note->u.note.shape) {
+        case S_ORISCUS:
+        case S_ORISCUS_AUCTUS:
+        case S_ORISCUS_DEMINUTUS:
+        case S_ORISCUS_CAVUM:
+        case S_ORISCUS_CAVUM_AUCTUS:
+        case S_ORISCUS_CAVUM_DEMINUTUS:
+        case S_ORISCUS_SCAPUS:
+            /* don't change the oriscus */
+            break;
+
+        default:
             switch (glyph->u.notes.liquescentia) {
             case L_AUCTUS_ASCENDENS:
                 glyph->u.notes.first_note->u.note.shape =
@@ -2690,8 +2724,10 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
             default:
                 break;
             }
+            break;
         }
-        /* else fall into the next case */
+
+        /* fall into the next case */
     case G_PUNCTUM_INCLINATUM:
     case G_VIRGA:
     case G_VIRGA_REVERSA:

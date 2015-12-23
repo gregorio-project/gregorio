@@ -278,6 +278,12 @@ DIRECT_GLYPH_NAMES = [
     'PunctumCavumInclinatumHole',
     'PunctumCavumInclinatumAuctus',
     'PunctumCavumInclinatumAuctusHole',
+    'OriscusCavum',
+    'OriscusCavumHole',
+    'OriscusCavumReversus',
+    'OriscusCavumReversusHole',
+    'OriscusCavumDeminutus',
+    'OriscusCavumDeminutusHole',
 ]
 
 GLYPH_EXISTS = {}

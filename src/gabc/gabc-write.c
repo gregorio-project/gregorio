@@ -479,15 +479,16 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         fprintf(f, "%cvvv", pitch_letter(note->u.note.pitch));
         break;
     case S_ORISCUS:
-        fprintf(f, "%co", pitch_letter(note->u.note.pitch));
-        break;
     case S_ORISCUS_AUCTUS:
-        fprintf(f, "%co", pitch_letter(note->u.note.pitch));
-        /* we consider that the AUCTUS is also in the liquescentia */
-        break;
     case S_ORISCUS_DEMINUTUS:
         fprintf(f, "%co", pitch_letter(note->u.note.pitch));
-        /* we consider that the AUCTUS is also in the liquescentia */
+        /* Note: the AUCTUS or DEMINUTUS is also in the liquescentia */
+        break;
+    case S_ORISCUS_CAVUM:
+    case S_ORISCUS_CAVUM_AUCTUS:
+    case S_ORISCUS_CAVUM_DEMINUTUS:
+        fprintf(f, "%cor", pitch_letter(note->u.note.pitch));
+        /* Note: the AUCTUS or DEMINUTUS is also in the liquescentia */
         break;
     case S_QUILISMA:
         fprintf(f, "%cw", pitch_letter(note->u.note.pitch));
