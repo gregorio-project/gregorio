@@ -303,7 +303,7 @@ static void fix_oriscus_cavum_liquescentia(gregorio_note *const note)
     switch (note->u.note.liquescentia) {
     case L_AUCTUS_DESCENDENS:
         note->u.note.liquescentia = L_AUCTUS_ASCENDENS;
-        // fall through
+        /* fall through */
     case L_AUCTUS_ASCENDENS:
         note->u.note.shape = S_ORISCUS_CAVUM_AUCTUS;
         break;
