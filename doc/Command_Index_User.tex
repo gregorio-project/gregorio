@@ -885,237 +885,243 @@ While it may seem strange that many of these distances are defined to 5 decimal 
 
 \textbf{Nota Bene:} Because of the way Gregorio\TeX\ handles distances, these cannot be manipulated as if they were normal \TeX\ dimensions or skips.  As a result they should only be changed using the command defined by Gregorio\TeX\ for this purpose.
 
-\macroname{additionallineswidth}{}{gsp-default.tex}
+\begin{gdimension}{additionallineswidth}
 The additional width of the additional lines (\ie, the value added to the width of the glyph with which they're associated to get the width of the line).
+\end{gdimension}
 
-Default: \unit[0.14584]{cm}
-
-\macroname{alterationspace}{}{gsp-default.tex}
+\begin{gdimension}{alterationspace}
 Space between an alteration (flat or natural) and the next glyph.
+\end{gdimension}
 
-Default: \unit[0.07747]{cm}
-
-\macroname{beforealterationspace}{}{gsp-default.tex}
+\begin{gdimension}{beforealterationspace}
 When beginning of line shifts (bolshifts) are enabled, minimum space between a clef at the beginning of the line and a leading alteration glyph.  This distance should be larger than \texttt{clefflatspace} so that a flatted clef can be distinguished from a flat which is part of the first glyph on a line, but also smaller than \texttt{spaceafterlineclef}, the distance from the clef to the first notes.
+\end{gdimension}
 
-Default: \unit[0.1]{cm}
-
-\macroname{beforelowchoralsignspace}{}{gsp-default.tex}
+\begin{gdimension}{beforelowchoralsignspace}
 Space before a low choral sign.
+\end{gdimension}
 
-Default: \unit[0.04556]{cm} plus \unit[0.00638]{cm} minus \unit[0.00638]{cm}
-
-\macroname{clefflatspace}{}{gsp-default.tex}
+\begin{gdimension}{clefflatspace}
 Space between a clef and a flat (for clefs with flat).
+\end{gdimension}
 
-Default: \unit[0.05469]{cm} plus \unit[0.00638]{cm} minus \unit[0.00638]{cm}
-
-\macroname{interglyphspace}{}{gsp-default.tex}
+\begin{gdimension}{interglyphspace}
 Space between glyphs in the same element.
+\end{gdimension}
 
-Default: \unit[0.06927]{cm} plus \unit[0.00363]{cm} minus \unit[0.00363]{cm}
-
-\macroname{zerowidthspace}{}{gsp-default.tex}
+\begin{gdimension}{zerowidthspace}
 Null space.
+\end{gdimension}
 
-Default: \unit[0]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
-
-\macroname{interelementspace}{}{gsp-default.tex}
+\begin{gdimension}{interelementspace}
 Space between elements.
+\end{gdimension}
 
-Default: \unit[0.06927]{cm} plus \unit[0.00182]{cm} minus \unit[0.00363]{cm}
-
-\macroname{largerspace}{}{gsp-default.tex}
+\begin{gdimension}{largerspace}
 Larger space between elements.
+\end{gdimension}
 
-Default: \unit[0.10938]{cm} plus \unit[0.01822]{cm} minus \unit[0.00911]{cm}
-
-\macroname{glyphspace}{}{gsp-default.tex}
+\begin{gdimension}{glyphspace}
 Space between elements which has the size of a note.
+\end{gdimension}
 
-Default: \unit[0.21877]{cm} plus \unit[0.01822]{cm} minus \unit[0.01822]{cm}
-
-\macroname{intersyllablespacenotes}{}{gsp-default.tex}
+\begin{gdimension}{intersyllablespacenotes}
 Minimum space between two notes of different syllables.
+\end{gdimension}
 
-Default: \unit[0.25523]{cm} plus \unit[0.31903]{cm} minus \unit[0]{cm}
-
-\macroname{spacebeforeeolcustos}{}{gsp-default.tex}
+\begin{gdimension}{spacebeforeeolcustos}
 Space before custos at the end of a line.
+\end{gdimension}
 
-Default: \unit[0.1823]{cm} plus \unit[0.31903]{cm} minus \unit[0.0638]{cm}
-
-\macroname{spacebeforeinlinecustos}{}{gsp-default.tex}
+\begin{gdimension}{spacebeforeinlinecustos}
 Space before custos within a line.
+\end{gdimension}
 
-Default: \unit[0]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
-
-\macroname{spacebeforesigns}{}{gsp-default.tex}
+\begin{gdimension}{spacebeforesigns}
 Space before punctum mora and augmentum duplex.
+\end{gdimension}
 
-Default: \unit[0.05469]{cm} plus \unit[0.00455]{cm} minus \unit[0.00455]{cm}
-
-\macroname{spaceaftersigns}{}{gsp-default.tex}
+\begin{gdimension}{spaceaftersigns}
 Space after punctum mora and augmentum duplex.
+\end{gdimension}
 
-Default: \unit[0.08203]{cm} plus \unit[0.0082]{cm} minus \unit[0.0082]{cm}
-
-\macroname{spaceafterlineclef}{}{gsp-default.tex}
+\begin{gdimension}{spaceafterlineclef}
 Space after a clef at the beginning of a line.
+\end{gdimension}
 
-Default: \unit[0.27345]{cm} plus \unit[0.14584]{cm} minus \unit[0.01367]{cm}
-
-\macroname{interwordspacenotes}{}{gsp-default.tex}
+\begin{gdimension}{interwordspacenotes}
 Space after at the end of a word when the last written symbol is a note and the first is a note.
+\end{gdimension}
 
-Default: \unit[0.29169]{cm} plus \unit[0.08751]{cm} minus \unit[0.05469]{cm}
-
-\macroname{interwordspacetext}{}{gsp-default.tex}
+\begin{gdimension}{interwordspacetext}
 Space after at the end of a word when the last written symbol is text and the first is text.
+\end{gdimension}
 
-Default: \unit[0.22787]{cm} plus \unit[0.41019]{cm} minus \unit[0.07292]{cm}
-
-\macroname{interwordspacenotes@euouae}{}{gsp-default.tex}
+\begin{gdimension}{interwordspacenotes@euouae}
 Space after at the end of a word when the last written symbol is a note and the first is a note in \texttt{euouae} blocks.
+\end{gdimension}
 
-Default: \unit[0.19]{cm} plus \unit[0.1]{cm} minus \unit[0.05]{cm}
-
-\macroname{interwordspacetext@euouae}{}{gsp-default.tex}
+\begin{gdimension}{interwordspacetext@euouae}
 Space after at the end of a word when the last written symbol is text and the first is text in \texttt{euouae} blocks.
+\end{gdimension}
 
-Default: \unit[0.27]{cm} plus \unit[0.1]{cm} minus \unit[0.05]{cm}
-
-\macroname{bitrivirspace}{}{gsp-default.tex}
+\begin{gdimension}{bitrivirspace}
 Space between notes of a bivirga or trivirga.
+\end{gdimension}
 
-Default: \unit[0.06927]{cm} plus \unit[0.00182]{cm} minus \unit[0.00546]{cm}
-
-\macroname{bitristrospace}{}{gsp-default.tex}
+\begin{gdimension}{bitristrospace}
 Space between notes of a bistropha or tristrophae.
+\end{gdimension}
 
-Default: \unit[0.06927]{cm} plus \unit[0.00182]{cm} minus \unit[0.00546]{cm}
-
-\macroname{punctuminclinatumshift}{}{gsp-default.tex}
+\begin{gdimension}{punctuminclinatumshift}
 Space between two punctum inclinatum.
+\end{gdimension}
 
-Default: \unit[-0.03918]{cm} plus \unit[0.0009]{cm} minus \unit[0.0009]{cm}
-
-\macroname{beforepunctainclinatashift}{}{gsp-default.tex}
+\begin{gdimension}{beforepunctainclinatashift}
 Space before puncta inclinata.
+\end{gdimension}
 
-Default: \unit[0.05286]{cm} plus \unit[0.00728]{cm} minus \unit[0.00455]{cm}
-
-\macroname{punctuminclinatumanddebilisshift}{}{gsp-default.tex}
+\begin{gdimension}{punctuminclinatumanddebilisshift}
 Space between a punctum inclinatum and a punctum inclinatum deminutus.
+\end{gdimension}
 
-Default: \unit[-0.02278]{cm} plus \unit[0.0009]{cm} minus \unit[0.0009]{cm}
-
-\macroname{punctuminclinatumdebilisshift}{}{gsp-default.tex}
+\begin{gdimension}{punctuminclinatumdebilisshift}
 Space between two punctum inclinatum deminutus.
+\end{gdimension}
 
-Default: \unit[-0.00728]{cm} plus \unit[0.0009]{cm} minus \unit[0.0009]{cm}
-
-\macroname{punctuminclinatumbigshift}{}{gsp-default.tex}
+\begin{gdimension}{punctuminclinatumbigshift}
 Space between puncta inclinata, larger ambitus (range=3rd).
+\end{gdimension}
 
-Default: \unit[0.07565]{cm} plus \unit[0.0009]{cm} minus \unit[0.0009]{cm}
+\begin{gdimension}{punctuminclinatummaxshift}
+Space between puncta inclinata, larger ambitus (range=4th or 5th).
+\end{gdimension}
 
-\macroname{punctuminclinatummaxshift}{}{gsp-default.tex}
-Space between puncta inclinata, larger ambitus (range=4th -or more?-).
+\begin{gdimension}{ascendingpunctuminclinatumshift}
+Space between two ascending puncta inclinata.
+\end{gdimension}
 
-Default: \unit[0.17865]{cm} plus \unit[0.0009]{cm} minus \unit[0.0009]{cm}
+\begin{gdimension}{ascendingpunctuminclinatumanddebilisshift}
+Space between a punctum inclinatum and a punctum inclinatum deminutus,
+ascending.
+\end{gdimension}
 
-\macroname{spacearoundsmallbar}{}{gsp-default.tex}
+\begin{gdimension}{ascendingpunctuminclinatumbigshift}
+Space between ascending puncta inclinata, larger ambitus (range=3rd).
+\end{gdimension}
+
+\begin{gdimension}{ascendingpunctuminclinatummaxshift}
+Space between ascending puncta inclinata, larger ambitus (range=4th or 5th).
+\end{gdimension}
+
+\begin{gdimension}{descendinginclinatumtonobarshift}
+Space between a punctum inclinatum and a no-bar (stemless) glyph one pitch
+below.
+\end{gdimension}
+
+\begin{gdimension}{descendinginclinatumtonobarbigshift}
+Space between a punctum inclinatum and a no-bar (stemless) glyph two pitches
+below.
+\end{gdimension}
+
+\begin{gdimension}{descendinginclinatumtonobarmaxshift}
+Space between a punctum inclinatum and a no-bar (stemless) glyph three or four
+pitches below.
+\end{gdimension}
+
+\begin{gdimension}{ascendinginclinatumtonobarshift}
+Space between a punctum inclinatum and a no-bar (stemless) glyph one pitch
+above.
+\end{gdimension}
+
+\begin{gdimension}{ascendinginclinatumtonobarbigshift}
+Space between a punctum inclinatum and a no-bar (stemless) glyph two pitches
+above.
+\end{gdimension}
+
+\begin{gdimension}{ascendinginclinatumtonobarmaxshift}
+Space between a punctum inclinatum and a no-bar (stemless) glyph three or four
+pitches above.
+\end{gdimension}
+
+\begin{gdimension}{ascendinginclinatumtonobarmaxshift}
+Space between a punctum inclinatum and a no-bar (stemless) glyph three or four
+pitches above.
+\end{gdimension}
+
+\begin{gdimension}{spacearoundsmallbar}
 Space around virgula and divisio minima.
+\end{gdimension}
 
-Default: \unit[0.1823]{cm} plus \unit[0.22787]{cm} minus \unit[0.05469]{cm}
-
-\macroname{spacearoundminor}{}{gsp-default.tex}
+\begin{gdimension}{spacearoundminor}
 Space around divisio minor.
+\end{gdimension}
 
-Default: \unit[0.1823]{cm} plus \unit[0.22787]{cm} minus \unit[0.05469]{cm}
-
-\macroname{spacearoundmaior}{}{gsp-default.tex}
+\begin{gdimension}{spacearoundmaior}
 Space around divisio maior.
+\end{gdimension}
 
-Default: \unit[0.1823]{cm} plus \unit[0.22787]{cm} minus \unit[0.05469]{cm}
-
-\macroname{spacearoundfinalis}{}{gsp-default.tex}
+\begin{gdimension}{spacearoundfinalis}
 Space around divisio finalis.
+\end{gdimension}
 
-Default: \unit[0.1823]{cm} plus \unit[0.1823]{cm} minus \unit[0.05469]{cm}
-
-\macroname{spacebeforefinalfinalis}{}{gsp-default.tex}
+\begin{gdimension}{spacebeforefinalfinalis}
 A special space for finalis, for when it is the last glyph.
+\end{gdimension}
 
-Default: \unit[0.29169]{cm} plus \unit[0.07292]{cm} minus \unit[0.27345]{cm}
-
-\macroname{spacearoundclefbars}{}{gsp-default.tex}
+\begin{gdimension}{spacearoundclefbars}
 Additional space that will appear around bars that are preceded by a custos and followed by a key.
+\end{gdimension}
 
-Default: \unit[0.03645]{cm} plus \unit[0.00455]{cm} minus \unit[0.0009]{cm}
-
-\macroname{textbartextspace}{}{gsp-default.tex}
+\begin{gdimension}{textbartextspace}
 Space between the text and the text of the bar.
+\end{gdimension}
 
-Default: \unit[0.24611]{cm} plus \unit[0.13672]{cm} minus \unit[0.04921]{cm}
-
-\macroname{notebarspace}{}{gsp-default.tex}
+\begin{gdimension}{notebarspace}
 Minimal space between a note and a bar.
+\end{gdimension}
 
-Default: \unit[0.31903]{cm} plus \unit[0.27345]{cm} minus \unit[0.02824]{cm}
-
-\macroname{maximumspacewithoutdash}{}{gsp-default.tex}
+\begin{gdimension}{maximumspacewithoutdash}
 Maximal space between two syllables for which we consider a dash is not needed.
+\end{gdimension}
 
-Default: \unit[0.02005]{cm}
-
-\macroname{afterclefnospace}{}{gsp-default.tex}
+\begin{gdimension}{afterclefnospace}
 An extensible space for the beginning of lines.
+\end{gdimension}
 
-Default: \unit[0]{cm} plus \unit[0.27345]{cm} minus \unit[0]{cm}
-
-\macroname{additionalcustoslineswidth}{}{gsp-default.tex}
+\begin{gdimension}{additionalcustoslineswidth}
 Width of the additional lines, used only for the custos.  The width is the one for the custos at end of lines, the line for custos in the middle of a score is the same multiplied by 2.
+\end{gdimension}
 
-Default: \unit[0.09114]{cm}
-
-\macroname{afterinitialshift}{}{gsp-default.tex}
+\begin{gdimension}{afterinitialshift}
 Space between the initial and the beginning of the score.
+\end{gdimension}
 
-Default: \unit[0.2457]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
-
-\macroname{beforeinitialshift}{}{gsp-default.tex}
+\begin{gdimension}{beforeinitialshift}
 Space between the initial and the beginning of the score.
+\end{gdimension}
 
-Default: \unit[0.2457]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
-
-\macroname{minimalspaceatlinebeginning}{}{gsp-default.tex}
+\begin{gdimension}{minimalspaceatlinebeginning}
 Minimal space in front of the lyrics at the beginning of a line when \texttt{bolshift}s are enabled.
+\end{gdimension}
 
-Default: \unit[1.7]{cm}
-
-\macroname{manualinitialwidth}{}{gsp-default.tex}
+\begin{gdimension}{manualinitialwidth}
 Space to force the initial width to.  Ignored when 0.
+\end{gdimension}
 
-Default: \unit[0]{cm}
-
-\macroname{annotationseparation}{}{gsp-default.tex}
+\begin{gdimension}{annotationseparation}
 This space is the one between lines in the annotation (text above the initial).
+\end{gdimension}
 
-Default: \unit[0.85]{cm}
-
-\macroname{annotationraise}{}{gsp-default.tex}
+\begin{gdimension}{annotationraise}
 Amount to raise (positive) or lower (negative) the annotation from it's normal position (baseline of the first line aligned with the top line of the staff).
+\end{gdimension}
 
-Default: \unit[0]{cm}
-
-\macroname{noclefspace}{}{gsp-default.tex}
+\begin{gdimension}{noclefspace}
 Space at the beginning of the lines if there is no clef.
+\end{gdimension}
 
-Default: \unit[0.1]{cm}
-
-\macroname{choralsigndownshift}{}{gsp-default.tex}
+\begin{gdimension}{choralsigndownshift}
 The distance to shift choral signs down.  The following choral signs are shifted down:
 
 \begin{itemize}
@@ -1123,83 +1129,68 @@ The distance to shift choral signs down.  The following choral signs are shifted
   \item High choral signs which are in a space
   \item Low choral signs that are lower than the note which are in a space
 \end{itemize}
+\end{gdimension}
 
-Default: \unit[0.00911]{cm}
-
-\macroname{choralsignupshift}{}{gsp-default.tex}
+\begin{gdimension}{choralsignupshift}
 The distance to shift choral signs up.  The following choral signs are shifted up:
 
 \begin{itemize}
   \item High choral signs which are on a line
   \item Low choral signs that are lower than the note which are on a line
 \end{itemize}
+\end{gdimension}
 
-Default: \unit[0.04556]{cm}
-
-\macroname{translationheight}{}{gsp-default.tex}
+\begin{gdimension}{translationheight}
 The space for the translation.
+\end{gdimension}
 
-Default: \unit[0.5]{cm}
-
-\macroname{spaceabovelines}{}{gsp-default.tex}
+\begin{gdimension}{spaceabovelines}
 The space above the lines.
+\end{gdimension}
 
-Default: \unit[0.45576]{cm} plus \unit[0.36461]{cm} minus \unit[0.09114]{cm}
-
-\macroname{spacelinestext}{}{gsp-default.tex}
+\begin{gdimension}{spacelinestext}
 The space between the lines and the bottom of the text.
+\end{gdimension}
 
-Default: \unit[0.60617]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
-
-\macroname{spacebeneathtext}{}{gsp-default.tex}
+\begin{gdimension}{spacebeneathtext}
 The space beneath the text.
+\end{gdimension}
 
-Default: \unit[0]{cm} plus \unit[0]{cm} minus \unit[0]{cm}
-
-\macroname{abovelinestextraise}{}{gsp-default.tex}
+\begin{gdimension}{abovelinestextraise}
 Height of the text above the note line.
+\end{gdimension}
 
-Default: \unit[1.7]{cm}
-
-\macroname{abovelinestextheight}{}{gsp-default.tex}
+\begin{gdimension}{abovelinestextheight}
 Height that is added at the top of the lines if there is text above the lines (it must be bigger than the text for it to be taken into consideration).
+\end{gdimension}
 
-Default: \unit[0.3]{cm}
-
-\macroname{braceshift}{}{gsp-default.tex}
+\begin{gdimension}{braceshift}
 An additional shift you can give to the brace above the bars.
+\end{gdimension}
 
-Default: \unit[0]{cm}
-
-\macroname{curlybraceaccentusshift}{}{gsp-default.tex}
+\begin{gdimension}{curlybraceaccentusshift}
 A shift you can give to the accentus above the curly brace.
+\end{gdimension}
 
-Default: $\unit[-0.05]{cm}$
-
-\macroname{nabcinterelementspace}{}{gsp-default.tex}
+\begin{gdimension}{nabcinterelementspace}
 Space between elements in ancient notation.
+\end{gdimension}
 
-Default: \unit[0.06927]{cm} plus \unit[0.00182]{cm} minus \unit[0.00363]{cm}
-
-\macroname{nabclargerspace}{}{gsp-default.tex}
+\begin{gdimension}{nabclargerspace}
 Larger space between elements in ancient notation.
+\end{gdimension}
 
-Default: \unit[0.10938]{cm} plus \unit[0.01822]{cm} minus \unit[0.00911]{cm}
-
-\macroname{clivisalignmentmin}{}{gsp-default.tex}
+\begin{gdimension}{clivisalignmentmin}
 When \verb=\gre@clivisalignment= is 2, this distance is the maximum length of the consonants after vowels for which the clivis will be aligned on its center.
+\end{gdimension}
 
-Default: \unit[0.3]{cm}
-
-\macroname{clefchangespace}{}{gsp-default.tex}
+\begin{gdimension}{clefchangespace}
 Space around a clef change.
+\end{gdimension}
 
-Default: \unit[0.01768]{cm} plus \unit[0.00175]{cm} minus \unit[0.01768]{cm}
-
-\macroname{initialraise}{}{gsp-default.tex}
+\begin{gdimension}{initialraise}
 Distance the initial will be raised above its default baseline.  The default baseline for the initial coincides with the baseline for the text below the staff.
-
-Default: \unit[0]{cm}
+\end{gdimension}
 
 
 \subsection{Penalties}\label{penalties}

@@ -80,6 +80,7 @@ typedef struct gregorio_scanner_location {
     E(GRE_BAR) \
     E(GRE_END_OF_PAR) \
     E(GRE_CUSTOS) \
+    E(GRE_MANUAL_CUSTOS) \
     /* I don't really know how I could use the a TEXVERB_NOTE in gregoriotex,
      * as we don't write note by note... */ \
     /* GRE_TEXVERB_NOTE, */ \
@@ -89,7 +90,8 @@ typedef struct gregorio_scanner_location {
      * differently for the spaces above the lines */ \
     E(GRE_ALT) \
     E(GRE_NLBA) \
-    L(GRE_MANUAL_CUSTOS)
+    E(GRE_AUTOFUSE_START) \
+    L(GRE_AUTOFUSE_END)
 ENUM(gregorio_type, GREGORIO_TYPE);
 
 /* the different shapes, only for notes */
@@ -193,17 +195,21 @@ ENUM(gregorio_space, GREGORIO_SPACE);
  * glyph->liquescentia+=L_INITIO_DEBILIS. So don't change the value,
  * the trick is much used */
 
+#define TAIL_LIQUESCENTIA_MASK 0x07
+
 #define GREGORIO_LIQUESCENTIA(A,E,X,L) \
-    A(L_NO_LIQUESCENTIA, 0) \
+    A(L_NO_LIQUESCENTIA, 0x00) \
     A(L_DEMINUTUS, 0x01) \
     A(L_AUCTUS_ASCENDENS, 0x02) \
     A(L_AUCTUS_DESCENDENS, 0x04) \
-    A(L_AUCTA, 0x08) \
     A(L_INITIO_DEBILIS, 0x10) \
     A(L_DEMINUTUS_INITIO_DEBILIS, 0x11) \
     A(L_AUCTUS_ASCENDENS_INITIO_DEBILIS, 0x12) \
     A(L_AUCTUS_DESCENDENS_INITIO_DEBILIS, 0x14) \
-    X(L_AUCTA_INITIO_DEBILIS, 0x18)
+    A(L_FUSED, 0x20) \
+    A(L_FUSED_DEMINUTUS, 0x21) \
+    A(L_FUSED_AUCTUS_ASCENDENS, 0x22) \
+    X(L_FUSED_AUCTUS_DESCENDENS, 0x24)
 ENUM(gregorio_liquescentia, GREGORIO_LIQUESCENTIA);
 
 #define GREHEPISEMA_SIZE(A,E,X,L) \
@@ -266,10 +272,11 @@ ENUM(gregorio_vposition, GREGORIO_VPOSITION);
     E(G_SALICUS_FLEXUS) \
     E(G_VIRGA_STRATA) \
     E(G_TORCULUS_LIQUESCENS) \
+    E(G_PES_QUILISMA) \
     /* additional glyph types, necessary for determination */ \
     E(G_PORRECTUS_NO_BAR) \
     E(G_PORRECTUS_FLEXUS_NO_BAR) \
-    L(G_PES_QUILISMA)
+    L(G_FUSED)
 ENUM(gregorio_glyph_type, GREGORIO_GLYPH_TYPE);
 
 /*
@@ -471,6 +478,7 @@ typedef struct gregorio_glyph {
             /* a pointer to a (chained list of) gregorio_notes, the first of
              * the glyph. */
             struct gregorio_note *first_note;
+            signed char fuse_to_next_glyph;
             /* The glyph type for a GRE_GLYPH (porrectus, pes, etc.).  They
              * are all listed above. */
             ENUM_BITFIELD(gregorio_glyph_type) glyph_type:8;
@@ -735,15 +743,19 @@ static __inline bool is_puncta_inclinata(char glyph)
 #define IS_INITIO_DEBILIS 5
 #define NO_INITIO_DEBILIS 0
 
-static __inline bool is_liquescentia(char liquescentia)
+static __inline bool is_tail_liquescentia(char liquescentia)
 {
-    return liquescentia == L_DEMINUTUS || liquescentia == L_AUCTUS_ASCENDENS
-        || liquescentia == L_AUCTUS_DESCENDENS || liquescentia == L_AUCTA;
+    return liquescentia & TAIL_LIQUESCENTIA_MASK;
 }
 
 static __inline bool is_initio_debilis(char liquescentia)
 {
-    return liquescentia >= L_INITIO_DEBILIS;
+    return liquescentia & L_INITIO_DEBILIS;
+}
+
+static __inline bool is_fused(char liquescentia)
+{
+    return liquescentia & L_FUSED;
 }
 
 #define HEPISEMA_NONE 0
@@ -784,7 +796,7 @@ void gregorio_add_h_episema(gregorio_note *note, grehepisema_size size,
         unsigned int *nbof_isolated_episema);
 void gregorio_add_sign(gregorio_note *note, gregorio_sign sign,
         gregorio_vposition vposition);
-void gregorio_add_liquescentia(gregorio_note *note,
+void gregorio_add_tail_liquescentia(gregorio_note *note,
         gregorio_liquescentia liquescentia);
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info);
 void gregorio_free_voice_infos(gregorio_voice_info *voice_info);
@@ -820,6 +832,10 @@ void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
         gregorio_type type, const gregorio_scanner_location *loc);
 void gregorio_add_nlba_as_note(gregorio_note **current_note,
         gregorio_nlba type, const gregorio_scanner_location *loc);
+void gregorio_start_autofuse(gregorio_note **current_note,
+        const gregorio_scanner_location *loc);
+void gregorio_end_autofuse(gregorio_note **current_note,
+        const gregorio_scanner_location *loc);
 void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str);
 void gregorio_add_cs_to_note(gregorio_note *const*current_note, char *str,
         bool nabc);
@@ -877,6 +893,18 @@ const char *gregorio_unknown(int value);
 static __inline void gregorio_go_to_first_character_c(gregorio_character **character)
 {
     gregorio_go_to_first_character((const gregorio_character **)character);
+}
+
+static __inline gregorio_note *gregorio_glyph_last_note(
+        const gregorio_glyph *const glyph) {
+    gregorio_note *note;
+    if (!glyph || glyph->type != GRE_GLYPH) {
+        return NULL;
+    }
+    for (note = glyph->u.notes.first_note; note->next; note = note->next) {
+        /* iterate to find the last note */
+    }
+    return note;
 }
 
 #endif
