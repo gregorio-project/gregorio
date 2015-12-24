@@ -16,6 +16,10 @@ In order to allow a smoother transition to the new behavior, GregorioTeX will be
 
 Since the `biginitial` style will disappear with Gregorio 5.0, please consider disabling deprecated usage (set `[allowdeprecated=false]` when using the `gregoriotex` package) and use the `initial` style as just described.
 
+### Spacing between notes
+
+When the next syllable starts with an alteration, the minimal space between notes of the current syllable and notes of the current syllable is handled by the new spaces `intersyllablespacenotes@alteration` and `interwordspacenotes@alteration`. Set them in your custom spacings file if needed.
+
 ## 4.0
 
 ### Font changes

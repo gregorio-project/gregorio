@@ -208,7 +208,8 @@
 
 %% @desc Macro computing the skip at the end of the syllable
 %% @arg#1 0 if end of syllable, 1 if end of word
-%% @arg#2 0 if next syllable is normal, 1 if it's a bar
+%% @arg#2 0 if next syllable is normal, 1 if it's a bar, 2 if it starts with
+%%        an alteration
 %%
 %% @uses \gre@dimen@enddifference
 %% @uses \gre@dimen@nextbegindifference
@@ -254,9 +255,7 @@
   \gre@debugmsg{syllablespacing}{ minTextDistance = \the\gre@minTextDistance}%
   \gre@debugmsg{syllablespacing}{ minTextDistance = \the\gre@minTextDistance}%
   % setting minNotesDistance (quite simple)
-  \ifnum#2=1\relax %
-    \gre@minNotesDistance=\gre@skip@notebarspace\relax%
-  \else %
+  \ifcase#2\relax %
     \ifnum#1=1\relax %
       \ifgre@in@euouae %
         \gre@minNotesDistance=\gre@skip@interwordspacenotes@euouae\relax%
@@ -265,6 +264,14 @@
       \fi %
     \else %
       \gre@minNotesDistance=\gre@skip@intersyllablespacenotes\relax%
+    \fi %
+  \or %
+    \gre@minNotesDistance=\gre@skip@notebarspace\relax%
+  \or %
+    \ifnum#1=1\relax %
+      \gre@minNotesDistance=\gre@skip@interwordspacenotes@alteration\relax %
+    \else %
+      \gre@minNotesDistance=\gre@skip@intersyllablespacenotes@alteration\relax%
     \fi %
   \fi %
   \gre@debugmsg{syllablespacing}{ minNotesDistance = \the\gre@minNotesDistance}%

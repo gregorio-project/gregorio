@@ -615,7 +615,9 @@
   \gre@count@temp@one=0%
   \ifnum#7>9\relax %
     \ifnum#7<20\relax %
-      \gre@count@temp@one=1%
+      \gre@count@temp@one=1\relax %
+    \else %
+      \gre@count@temp@one=2\relax %
     \fi %
   \fi %
   \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
@@ -648,7 +650,7 @@
       \fi %
       % recomputing end difference and final skip with the final hyphen
       \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
-      \gre@calculate@syllablefinalskip{0}{0}%
+      \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
     \else %
       \gre@debugmsg{hyphen}{No hyphen}%
       \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
