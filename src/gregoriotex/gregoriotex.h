@@ -86,18 +86,11 @@ typedef enum gtex_alignment {
  * different types: */
 
 typedef enum gtex_glyph_liquescentia {
-    /* for glyphs that accept all liquecentiae */
-    LG_ALL = 0,
-    /* for glyphs that don't accept initio debilis */
-    LG_NO_INITIO,
-    /* for glyphs for which we don't know if the auctus is ascendens or
-     * descendens */
-    LG_UNDET_AUCTUS,
-    /* for glyphs that don't accept liquescentia */
-    LG_NONE,
+    LG_ALL = 0, /* for glyphs that accept all liquecentiae */
+    LG_NO_INITIO, /* for glyphs that don't accept initio debilis */
+    LG_NONE, /* for glyphs that don't accept liquescentia */
     LG_ONLY_DEMINUTUS,
-    LG_NO_DEMINUTUS,
-    LG_ONLY_AUCTUS
+    LG_FUSIBLE_INITIO
 } gtex_glyph_liquescentia;
 
 typedef enum gtex_sign_type {
