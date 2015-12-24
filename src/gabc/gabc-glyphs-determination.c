@@ -764,7 +764,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
     /* a char representing the liquescentia of the current glyph */
     gregorio_liquescentia liquescentia = L_NO_LIQUESCENTIA;
     gregorio_liquescentia head_liquescentia;
-    bool autofuse = false, first_autofused_note;
+    bool autofuse = false, first_autofused_note = false;
 
     if (current_note == NULL) {
         return NULL;
