@@ -471,13 +471,13 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
     }
     if (is_fused(glyph->u.notes.liquescentia)) {
         if (shape == SHAPE_Flexus || shape == SHAPE_FlexusLongqueue) {
+            if (fuse_to_next_note) {
+                fuse_head = "";
+            }
             if (*fuse_head) {
                 shape = SHAPE_Flexus;
             } else {
                 shape = SHAPE_FlexusNobar;
-            }
-            if (fuse_to_next_note) {
-                fuse_head = "";
             }
         } else if (shape == SHAPE_Porrectus) {
             shape = SHAPE_PorrectusNobar;
