@@ -104,6 +104,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
     int i;
     int annotation_num;
     gregorio_syllable *syllable;
+    gregorio_external_header *header;
 
     if (!f) {
         gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
@@ -180,6 +181,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
     }
     if (score->user_notes) {
         fprintf(f, "   user_notes                %s\n", score->user_notes);
+    }
+    for (header = score->external_headers; header; header = header->next) {
+        fprintf(f, "   %-25s %s\n", header->name, header->value);
     }
     fprintf(f, "\n\n"
             "=====================================================================\n"
