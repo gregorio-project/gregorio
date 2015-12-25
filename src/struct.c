@@ -1117,6 +1117,8 @@ static void free_external_headers(gregorio_score *score) {
     gregorio_external_header *header = score->external_headers;
     while (header) {
         gregorio_external_header *next = header->next;
+        free(header->name);
+        free(header->value);
         free(header);
         header = next;
     }
