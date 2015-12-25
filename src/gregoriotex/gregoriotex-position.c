@@ -115,8 +115,7 @@ static __inline const char *note_before_last_note_case(
         const gregorio_glyph *const current_glyph,
         const gregorio_note *const current_note)
 {
-    if ((current_glyph->u.notes.liquescentia == L_DEMINUTUS_INITIO_DEBILIS
-                    || current_glyph->u.notes.liquescentia == L_DEMINUTUS)
+    if ((current_glyph->u.notes.liquescentia & L_DEMINUTUS)
             && current_note->next) {
         return PenultBeforeDeminutus;
     } else {
@@ -172,19 +171,22 @@ static __inline const char *first_note_case(
                 != 1) {
             ambitus_one = false;
         }
-        if (current_note->u.note.shape == S_ORISCUS) {
+        switch (current_note->u.note.shape) {
+        case S_ORISCUS:
             return ambitus_one ? InitialOriscus : InitialConnectedOriscus;
-        }
-        if (current_note->u.note.shape == S_QUILISMA) {
+
+        case S_QUILISMA:
             return ambitus_one ? InitialQuilisma : InitialConnectedQuilisma;
-        }
-        if (ambitus_one) {
-            return InitialPunctum;
-        }
-        if (current_note->u.note.shape > current_note->next->u.note.shape) {
-            return InitialConnectedVirga;
-        } else {
-            return InitialConnectedPunctum;
+
+        default:
+            if (ambitus_one) {
+                return InitialPunctum;
+            }
+            if (current_note->u.note.pitch > current_note->next->u.note.pitch) {
+                return InitialConnectedVirga;
+            } else {
+                return InitialConnectedPunctum;
+            }
         }
     }
 }
@@ -920,6 +922,11 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         case S_ORISCUS_DEMINUTUS:
             note->gtex_offset_case = fused_single_note_case(glyph, FinalOriscus,
                     LeadingOriscus);
+            break;
+        case S_ORISCUS_CAVUM:
+        case S_ORISCUS_CAVUM_AUCTUS:
+        case S_ORISCUS_CAVUM_DEMINUTUS:
+            note->gtex_offset_case = FinalOriscus;
             break;
         case S_VIRGA:
             note->gtex_offset_case = InitialVirga;

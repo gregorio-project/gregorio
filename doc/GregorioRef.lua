@@ -83,6 +83,12 @@ local GABC = {
   Natural = [[gy]],
   NaturalHole = [[\excluded{gy}]],
   Oriscus = [[go]],
+  OriscusCavum = [[gor]],
+  OriscusCavumDeminutus = [[gor\~{}]],
+  OriscusCavumDeminutusHole = [[\excluded{gor\~{}}]],
+  OriscusCavumHole = [[\excluded{gor}]],
+  OriscusCavumReversus = [[gor>]],
+  OriscusCavumReversusHole = [[\excluded{gor>}]],
   OriscusLineBL = [[\excluded{e}@go]],
   OriscusReversus = [[go^^^^003c]],
   OriscusReversusLineTL = [[\excluded{i}@go]],
@@ -202,6 +208,8 @@ function GregorioRef.emit_score_glyphs(cs_greciliae, cs_gregorio, cs_parmesan)
 
   local function index_font(csname, variants, common)
     local glyphs = font.fonts[font.id(csname)].resources.unicodes
+    -- force-load the code points of the font --
+    local ignored = glyphs['___magic___']
     local glyph, cp
     for glyph, cp in pairs(glyphs) do
       if cp >= 0xe000 and not EXCLUDE[glyph] and not glyph:match('^HEpisema') then
@@ -302,7 +310,8 @@ function GregorioRef.emit_score_glyphs(cs_greciliae, cs_gregorio, cs_parmesan)
     if b then
       table.insert(glyph_names, { a, b, c, d, e })
     else
-      tex.error('Unable to parse '..name)
+      -- if parse fails, just use the name
+      table.insert(glyph_names, { '', name, '', '', '' })
     end
   end
   local function compare(x, y)

@@ -123,6 +123,9 @@ ENUM(gregorio_type, GREGORIO_TYPE);
     E(S_LINEA_PUNCTUM_CAVUM) \
     E(S_PUNCTUM_CAVUM_INCLINATUM) \
     E(S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS) \
+    E(S_ORISCUS_CAVUM) \
+    E(S_ORISCUS_CAVUM_AUCTUS) \
+    E(S_ORISCUS_CAVUM_DEMINUTUS) \
     /* special shapes that must not appear in the final form of the score : 
      * quadratum is the shape of the first note of a punctum quadratum
      * and quilisma quadratum is the shape of the first note of a pes
