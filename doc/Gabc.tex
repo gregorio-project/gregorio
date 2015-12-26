@@ -113,6 +113,11 @@ Here is a detailed description of each header field:
   If the user already defined annotation(s) in the main \TeX\ file via
   \verb=\greannotation= then the \texttt{annotation} header field will not
   overwrite that definition.
+\item[x-\textit{external}] External headers start with \texttt{x-} and may
+  have any name composed of ASCII letters and numbers, optionally separated
+  by dashes.  These headers are blindly captured by gregorio without any
+  further error checking.  They may be useful for external applications to
+  use as metadata.
 
 \end{description}
 

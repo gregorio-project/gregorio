@@ -827,6 +827,7 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     int line;
     gregorio_syllable *syllable;
     int annotation_num;
+    gregorio_external_header *header;
 
     if (!f) {
         gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
@@ -872,6 +873,9 @@ void gabc_write_score(FILE *f, gregorio_score *score)
         }
     }
     gabc_write_str_attribute(f, "user-notes", score->user_notes);
+    for (header = score->external_headers; header; header = header->next) {
+        gabc_write_str_attribute(f, header->name, header->value);
+    }
     if (score->number_of_voices == 0) {
         gregorio_message(_("gregorio_score seems to be empty"),
                 "gabc_write_score", VERBOSITY_ERROR, 0);

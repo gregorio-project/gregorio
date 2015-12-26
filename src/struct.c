@@ -1034,7 +1034,7 @@ static void gregorio_free_syllables(gregorio_syllable **syllable,
     }
 }
 
-static void gregorio_source_info_init(source_info *si)
+static void gregorio_source_info_init(gregorio_source_info *si)
 {
     si->author = NULL;
     si->date = NULL;
@@ -1073,7 +1073,7 @@ gregorio_score *gregorio_new_score(void)
     return new_score;
 }
 
-static void gregorio_free_source_info(source_info *si)
+static void gregorio_free_source_info(gregorio_source_info *si)
 {
     free(si->date);
     free(si->author);
@@ -1113,6 +1113,17 @@ static void gregorio_free_score_infos(gregorio_score *score)
     }
 }
 
+static void free_external_headers(gregorio_score *score) {
+    gregorio_external_header *header = score->external_headers;
+    while (header) {
+        gregorio_external_header *next = header->next;
+        free(header->name);
+        free(header->value);
+        free(header);
+        header = next;
+    }
+}
+
 void gregorio_free_score(gregorio_score *score)
 {
     if (!score) {
@@ -1122,6 +1133,7 @@ void gregorio_free_score(gregorio_score *score)
     }
     gregorio_free_syllables(&(score->first_syllable), score->number_of_voices);
     gregorio_free_score_infos(score);
+    free_external_headers(score);
     free(score);
 }
 
@@ -1395,6 +1407,28 @@ void gregorio_set_score_transcription_date(gregorio_score *score,
     }
     free(score->si.transcription_date);
     score->si.transcription_date = transcription_date;
+}
+
+void gregorio_add_score_external_header(gregorio_score *score, char *name,
+        char *value)
+{
+    gregorio_external_header *header;
+    if (!score) {
+        gregorio_message(_("function called with NULL argument"),
+                "gregorio_add_score_external_header", VERBOSITY_WARNING, 0);
+        return;
+    }
+    header = (gregorio_external_header *)
+            gregorio_malloc(sizeof(gregorio_external_header));
+    header->name = name;
+    header->value = value;
+    header->next = NULL;
+    if (score->last_external_header) {
+        score->last_external_header->next = header;
+    } else {
+        score->external_headers = header;
+    }
+    score->last_external_header = header;
 }
 
 void gregorio_set_voice_style(gregorio_voice_info *voice_info, char *style)

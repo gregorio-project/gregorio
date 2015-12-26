@@ -663,7 +663,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
 %token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES
-%token LANGUAGE HYPHEN END_OF_FILE
+%token LANGUAGE HYPHEN EXTERNAL_HEADER END_OF_FILE
 
 %%
 
@@ -938,6 +938,12 @@ user_notes_definition:
     }
     ;
 
+external_header_definition:
+    EXTERNAL_HEADER attribute {
+        gregorio_add_score_external_header(score, $1.text, $2.text);
+    }
+    ;
+
 attribute:
     COLON ATTRIBUTE SEMICOLON {
         $$.text = $2.text;
@@ -979,6 +985,7 @@ definition:
     | user_notes_definition
     | centering_scheme_definition
     | language_definition
+    | external_header_definition
     | VOICE_CHANGE {
         next_voice_info();
     }

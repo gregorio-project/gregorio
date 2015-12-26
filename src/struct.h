@@ -634,7 +634,7 @@ typedef struct gregorio_syllable {
  * case the different voices would naturally have different source
  * info.  However, this enhancement to gregorio is not yet planned,
  * and so this structure is made part of gregorio_score. */
-typedef struct source_info {
+typedef struct gregorio_source_info {
     char *author;
     char *date;
     char *manuscript;
@@ -643,7 +643,14 @@ typedef struct source_info {
     char *book;
     char *transcriber;
     char *transcription_date;
-} source_info;
+} gregorio_source_info;
+
+/* Stores an external header in a singly-linked list */
+typedef struct gregorio_external_header {
+    char *name;
+    char *value;
+    struct gregorio_external_header *next;
+} gregorio_external_header;
 
 /*
  * 
@@ -674,7 +681,7 @@ typedef struct gregorio_score {
     char *commentary;
     char *arranger;
     char *language;
-    struct source_info si;
+    struct gregorio_source_info si;
     /* the mode of a song is between 1 and 8 */
     char mode;
     /* There is one annotation for each line above the initial letter */
@@ -691,6 +698,8 @@ typedef struct gregorio_score {
     /* then, as there are some metadata that are voice-specific, we add a
      * pointer to the first voice_info. (see comments below) */
     struct gregorio_voice_info *first_voice_info;
+    struct gregorio_external_header *external_headers;
+    struct gregorio_external_header *last_external_header;
     gregorio_lyric_centering centering;
 } gregorio_score;
 
@@ -873,6 +882,8 @@ void gregorio_set_score_transcriber(gregorio_score *score, char *transcriber);
 void gregorio_set_score_transcription_date(gregorio_score *score,
         char *transcription_date);
 void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes);
+void gregorio_add_score_external_header(gregorio_score *score, char *name,
+        char *value);
 void gregorio_set_voice_style(gregorio_voice_info *voice_info, char *style);
 void gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
         char *virgula_position);
