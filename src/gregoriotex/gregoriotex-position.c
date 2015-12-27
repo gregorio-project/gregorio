@@ -1031,6 +1031,8 @@ typedef struct height_computation {
     const gregorio_element *start_element;
     const gregorio_glyph *start_glyph;
     gregorio_note *start_note;
+    const gregorio_element *last_connected_element;
+    const gregorio_glyph *last_connected_glyph;
     gregorio_note *last_connected_note;
 } height_computation;
 
@@ -1128,6 +1130,100 @@ static __inline void position_h_episema(gregorio_note *const note,
     }
 }
 
+static __inline void next_has_ledger_line(
+        const height_computation *const h, bool *high_ledger_line,
+        bool *low_ledger_line)
+{
+    const gregorio_element *element = h->last_connected_element;
+    const gregorio_glyph *glyph = h->last_connected_glyph;
+    gregorio_note *note = h->last_connected_note;
+    bool eat_upper_note = note->is_lower_note, keep_going = false;
+
+    if (!*high_ledger_line || !*low_ledger_line) {
+        /* going forwards, we must iterate through any lower notes */
+        do {
+            note = note->next;
+            if (!note) {
+                do {
+                    glyph = glyph->next;
+                    if (!glyph) {
+                        do {
+                            element = element->next;
+                            if (!element) {
+                                return;
+                            }
+                        } while (element->type != GRE_ELEMENT);
+                        glyph = element->u.first_glyph;
+                    }
+                } while (glyph->type != GRE_GLYPH);
+                note = glyph->u.notes.first_note;
+            }
+
+            *high_ledger_line = *high_ledger_line
+                    || has_high_ledger_line(note->u.note.pitch, false);
+            *low_ledger_line = *low_ledger_line
+                    || has_low_ledger_line(note->u.note.pitch, false);
+
+            if (keep_going) {
+                keep_going = false;
+            }
+            if (eat_upper_note && note->is_upper_note) {
+                eat_upper_note = false;
+                keep_going = true;
+            }
+        } while ((!*high_ledger_line || !*low_ledger_line)
+                && (note->is_lower_note || keep_going));
+    }
+}
+
+static __inline void previous_has_ledger_line(
+        const height_computation *const h, bool *high_ledger_line,
+        bool *low_ledger_line)
+{
+    const gregorio_element *element = h->start_element;
+    const gregorio_glyph *glyph = h->start_glyph;
+    gregorio_note *note = h->start_note;
+    bool eat_lower_note = note->is_upper_note, keep_going = false;
+
+    if (!*high_ledger_line || !*low_ledger_line) {
+        /* going backwards, we must iterate through any upper notes */
+        do {
+            note = note->previous;
+            if (!note) {
+                do {
+                    glyph = glyph->previous;
+                    if (!glyph) {
+                        do {
+                            element = element->previous;
+                            if (!element) {
+                                return;
+                            }
+                        } while (element->type != GRE_ELEMENT);
+                        for (glyph = element->u.first_glyph; glyph->next;
+                                glyph = glyph->next) {
+                            /* just iterate to find the last glyph */
+                        }
+                    }
+                } while (glyph->type != GRE_GLYPH);
+                note = gregorio_glyph_last_note(glyph);
+            }
+            *high_ledger_line = *high_ledger_line
+                    || has_high_ledger_line(note->u.note.pitch, false);
+            *low_ledger_line = *low_ledger_line
+                    || has_low_ledger_line(note->u.note.pitch, false);
+
+            if (keep_going) {
+                keep_going = false;
+            }
+            if (eat_lower_note && note->is_lower_note) {
+                eat_lower_note = false;
+                keep_going = true;
+            }
+        } while ((!*high_ledger_line || !*low_ledger_line)
+                && (note->is_upper_note || keep_going));
+    }
+}
+
 static __inline void set_h_episema_height(const height_computation *const h,
         gregorio_note *const end)
 {
@@ -1138,53 +1234,12 @@ static __inline void set_h_episema_height(const height_computation *const h,
     gregorio_note *note = h->start_note;
 
     bool high_ledger_line = has_high_ledger_line(h->height, true)
-            || has_high_ledger_line(h->height - h->vpos, false)
-            || (end && has_high_ledger_line(end->u.note.pitch, false));
+            || has_high_ledger_line(h->height - h->vpos, false);
     bool low_ledger_line = has_low_ledger_line(h->height, true)
-            || has_low_ledger_line(h->height - h->vpos, false)
-            || (end && has_low_ledger_line(end->u.note.pitch, false));
+            || has_low_ledger_line(h->height - h->vpos, false);
 
-    if (!high_ledger_line || !low_ledger_line) {
-        gregorio_note *prev_note = NULL;
-
-        /* must check previous note */
-        for ( ; !prev_note && element; element = element->previous) {
-            if (element->type == GRE_ELEMENT) {
-                if (!glyph) {
-                    for (glyph = element->u.first_glyph; glyph->next;
-                            glyph = glyph->next) {
-                        /* just iterator to find the last glyph */
-                    }
-                }
-                for ( ; !prev_note && glyph; glyph = glyph->previous) {
-                    if (glyph && glyph->type == GRE_GLYPH) {
-                        if (note) {
-                            if (note->previous) {
-                                /* found a note */
-                                prev_note = note->previous;
-                            } else {
-                                note = NULL;
-                            }
-                        } else {
-                            prev_note = gregorio_glyph_last_note(glyph);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (prev_note) {
-            high_ledger_line = high_ledger_line
-                    || has_high_ledger_line(prev_note->u.note.pitch, false);
-            low_ledger_line = low_ledger_line
-                    || has_low_ledger_line(prev_note->u.note.pitch, false);
-        }
-
-        /* need to reset these for the loop to follow */
-        element = h->start_element;
-        glyph = h->start_glyph;
-        note = h->start_note;
-    }
+    next_has_ledger_line(h, &high_ledger_line, &low_ledger_line);
+    previous_has_ledger_line(h, &high_ledger_line, &low_ledger_line);
 
     for ( ; element; element = element->next) {
         if (element->type == GRE_ELEMENT) {
@@ -1315,6 +1370,8 @@ static __inline void end_h_episema(height_computation *const h,
         h->start_element = NULL;
         h->start_glyph = NULL;
         h->start_note = NULL;
+        h->last_connected_element = NULL;
+        h->last_connected_glyph = NULL;
         h->last_connected_note = NULL;
     }
 }
@@ -1350,6 +1407,8 @@ static __inline void compute_h_episema(height_computation *const h,
             }
 
             h->connected = h->is_connected(note) && is_connected_right(size);
+            h->last_connected_element = element;
+            h->last_connected_glyph = glyph;
             h->last_connected_note = note;
         } else {
             end_h_episema(h, note);
@@ -1539,6 +1598,8 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
         /*.start_element =*/ NULL,
         /*.start_glyph =*/ NULL,
         /*.start_note =*/ NULL,
+        /*.last_connected_element =*/ NULL,
+        /*.last_connected_glyph =*/ NULL,
         /*.last_connected_note =*/ NULL,
     };
     height_computation below = {
@@ -1556,6 +1617,8 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
         /*.start_element =*/ NULL,
         /*.start_glyph =*/ NULL,
         /*.start_note =*/ NULL,
+        /*.last_connected_element =*/ NULL,
+        /*.last_connected_glyph =*/ NULL,
         /*.last_connected_note =*/ NULL,
     };
     int i;
