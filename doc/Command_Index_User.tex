@@ -320,6 +320,30 @@ necessary.
 \end{framed}
 \end{small}
 
+\macroname{\textbackslash gresetledgerlineheuristic}{\{\#1\}}{gregoriotex-spaces.tex}
+Macro which enables or disables ledger line heuristics.  Currently, ledger
+line heuristics allow Gregorio to reduce the space between a note and a
+horizontal episema that surround a line on which a ledger line may appear
+when the ledger line \textit{does not} appear.
+
+\begin{argtable}
+    \#1 & \texttt{enable}  & Ledger line heuristics will be used in placing
+                             the horizontal episema \\
+        & \texttt{disable} & Ledger line heuristics will not be used in
+                             placing the horizontal episema \\
+\end{argtable}
+
+Because of the complexity of computing distances exactly, the heuristic may
+guess incorrectly, causing the horizontal episema to be placed incorrectly.
+This may be overridden on a note-by-note basic by using the
+\texttt{[hl:\textit{n}]} and \texttt{[ll:\textit{n}]} gabc directives.  The
+\texttt{hl} directive sets an explicit high ledger line (above the staff),
+and the \texttt{ll} directive sets an explicit low ledger line (below the
+staff).  The \texttt{\textit{n}} should be set to indicate whether the
+system should act as if the ledger line exists (\texttt{1}) or not
+(\texttt{0}).
+
+
 \subsubsection{Staff Lines}
 
 \macroname{\textbackslash gresetlinecolor}{\{\#1\}}{gregoriotex.sty \textup{and} gregoriotex.tex}

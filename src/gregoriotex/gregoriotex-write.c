@@ -1473,6 +1473,16 @@ static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
     }
 }
 
+static __inline char *suppose_high_ledger_line(const gregorio_note *const note)
+{
+    return note->supposed_high_ledger_line? "\\GreSupposeHighLedgerLine" : "";
+}
+
+static __inline char *suppose_low_ledger_line(const gregorio_note *const note)
+{
+    return note->supposed_low_ledger_line? "\\GreSupposeLowLedgerLine" : "";
+}
+
 /*
  * ! @brief Writes augmentum duplexes (double dots) We suppose we are on the
  * last note. \n The algorithm is the following: if there is a previous note,
@@ -1877,9 +1887,11 @@ static __inline void write_single_hepisema(FILE *const f, int hepisema_case,
                             != SP_ZERO_WIDTH)) {
                     /* not followed by a zero-width space */
                     /* try to fuse from punctum inclinatum to nobar glyph */
-                    fprintf(f, "\\GreHEpisemaBridge{%d}{%d}{%d}%%\n",
+                    fprintf(f, "\\GreHEpisemaBridge{%d}{%d}{%d}{%s%s}%%\n",
                             pitch_value(height), hepisema_case,
-                            get_punctum_inclinatum_to_nobar_space_case(glyph));
+                            get_punctum_inclinatum_to_nobar_space_case(glyph),
+                            suppose_high_ledger_line(note),
+                            suppose_low_ledger_line(note));
                 } else if (note->next
                         && (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
                             || note->next->u.note.shape
@@ -1887,14 +1899,18 @@ static __inline void write_single_hepisema(FILE *const f, int hepisema_case,
                             || note->next->u.note.shape
                             == S_PUNCTUM_INCLINATUM_AUCTUS)) {
                     /* is a punctum inclinatum of some sort */
-                    fprintf(f, "\\GreHEpisemaBridge{%d}{%d}{%d}%%\n",
+                    fprintf(f, "\\GreHEpisemaBridge{%d}{%d}{%d}{%s%s}%%\n",
                             pitch_value(height), hepisema_case,
-                            get_punctum_inclinatum_space_case(note->next));
+                            get_punctum_inclinatum_space_case(note->next),
+                            suppose_high_ledger_line(note),
+                            suppose_low_ledger_line(note));
                 }
             }
-            fprintf(f, "\\GreHEpisema{%d}{\\GreOCase%s}{%d}{%d}{%c}{%d}%%\n",
-                    pitch_value(height), note->gtex_offset_case, ambitus,
-                    hepisema_case, size_arg, pitch_value(height));
+            fprintf(f, "\\GreHEpisema{%d}{\\GreOCase%s}{%d}{%d}{%c}{%d}"
+                    "{%s%s}%%\n", pitch_value(height), note->gtex_offset_case,
+                    ambitus, hepisema_case, size_arg, pitch_value(height),
+                    suppose_high_ledger_line(note),
+                    suppose_low_ledger_line(note));
         }
     }
 }

@@ -412,6 +412,15 @@ static const char *mora_vposition(gregorio_note *note)
     }
 }
 
+static void write_note_heuristics(FILE *f, gregorio_note *note) {
+    if (note->explicit_high_ledger_line) {
+        fprintf(f, "[hl:%c]", note->supposed_high_ledger_line? '1' : '0');
+    }
+    if (note->explicit_low_ledger_line) {
+        fprintf(f, "[ll:%c]", note->supposed_low_ledger_line? '1' : '0');
+    }
+}
+
 /*
  * 
  * The function that writes one gregorio_note.
@@ -600,6 +609,7 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
                     note->h_episema_above_size);
         }
     }
+    write_note_heuristics(f, note);
     if (note->texverb) {
         fprintf(f, "[nv:%s]", note->texverb);
     }

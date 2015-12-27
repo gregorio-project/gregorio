@@ -457,6 +457,12 @@ typedef struct gregorio_note {
     ENUM_BITFIELD(grehepisema_size) h_episema_below_size:2;
     bool h_episema_above_connect:1;
     bool h_episema_below_connect:1;
+    bool supposed_high_ledger_line:1;
+    bool supposed_low_ledger_line:1;
+    /* the "explicit" flags indicate that the "supposed" flags contain values
+     * that were explicitly specified in the gabc file */
+    bool explicit_high_ledger_line:1;
+    bool explicit_low_ledger_line:1;
     bool is_lower_note:1;
     bool is_upper_note:1;
     ENUM_BITFIELD(gregorio_vposition) mora_vposition:2;
@@ -778,6 +784,8 @@ static __inline bool is_fused(char liquescentia)
 #define LOWEST_PITCH 3
 #define HIGHEST_PITCH (LOWEST_PITCH + 12)
 #define DUMMY_PITCH (LOWEST_PITCH + 6)
+#define LOW_LEDGER_LINE_PITCH (LOWEST_PITCH + 1)
+#define HIGH_LEDGER_LINE_PITCH (HIGHEST_PITCH - 1)
 
 gregorio_score *gregorio_new_score(void);
 void gregorio_add_note(gregorio_note **current_note, signed char pitch,

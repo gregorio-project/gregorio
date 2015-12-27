@@ -1088,6 +1088,22 @@ static bool is_h_episema_below_better_height(const signed char new_height,
     return new_height < old_height;
 }
 
+static __inline bool has_high_ledger_line(const signed char height, bool is_sign)
+{
+    if (is_sign) {
+        return height > HIGH_LEDGER_LINE_PITCH;
+    }
+    return height >= HIGH_LEDGER_LINE_PITCH;
+}
+
+static __inline bool has_low_ledger_line(const signed char height, bool is_sign)
+{
+    if (is_sign) {
+        return height < LOW_LEDGER_LINE_PITCH;
+    }
+    return height <= LOW_LEDGER_LINE_PITCH;
+}
+
 static __inline void start_h_episema(height_computation *const h,
         const gregorio_element *const element,
         const gregorio_glyph *const glyph, gregorio_note *const note)
@@ -1099,6 +1115,19 @@ static __inline void start_h_episema(height_computation *const h,
     h->height = compute_h_episema_height(glyph, note, h->vpos);
 }
 
+static __inline void position_h_episema(gregorio_note *const note,
+        const height_computation *const h, const bool connect,
+        const bool high_ledger_line, const bool low_ledger_line)
+{
+    h->position(note, h->height, connect);
+    if (!note->explicit_high_ledger_line && !note->supposed_high_ledger_line) {
+        note->supposed_high_ledger_line = high_ledger_line;
+    }
+    if (!note->explicit_low_ledger_line && !note->supposed_low_ledger_line) {
+        note->supposed_low_ledger_line = low_ledger_line;
+    }
+}
+
 static __inline void set_h_episema_height(const height_computation *const h,
         gregorio_note *const end)
 {
@@ -1107,6 +1136,55 @@ static __inline void set_h_episema_height(const height_computation *const h,
     const gregorio_element *element = h->start_element;
     const gregorio_glyph *glyph = h->start_glyph;
     gregorio_note *note = h->start_note;
+
+    bool high_ledger_line = has_high_ledger_line(h->height, true)
+            || has_high_ledger_line(h->height - h->vpos, false)
+            || (end && has_high_ledger_line(end->u.note.pitch, false));
+    bool low_ledger_line = has_low_ledger_line(h->height, true)
+            || has_low_ledger_line(h->height - h->vpos, false)
+            || (end && has_low_ledger_line(end->u.note.pitch, false));
+
+    if (!high_ledger_line || !low_ledger_line) {
+        gregorio_note *prev_note = NULL;
+
+        /* must check previous note */
+        for ( ; !prev_note && element; element = element->previous) {
+            if (element->type == GRE_ELEMENT) {
+                if (!glyph) {
+                    for (glyph = element->u.first_glyph; glyph->next;
+                            glyph = glyph->next) {
+                        /* just iterator to find the last glyph */
+                    }
+                }
+                for ( ; !prev_note && glyph; glyph = glyph->previous) {
+                    if (glyph && glyph->type == GRE_GLYPH) {
+                        if (note) {
+                            if (note->previous) {
+                                /* found a note */
+                                prev_note = note->previous;
+                            } else {
+                                note = NULL;
+                            }
+                        } else {
+                            prev_note = gregorio_glyph_last_note(glyph);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (prev_note) {
+            high_ledger_line = high_ledger_line
+                    || has_high_ledger_line(prev_note->u.note.pitch, false);
+            low_ledger_line = low_ledger_line
+                    || has_low_ledger_line(prev_note->u.note.pitch, false);
+        }
+
+        /* need to reset these for the loop to follow */
+        element = h->start_element;
+        glyph = h->start_glyph;
+        note = h->start_note;
+    }
 
     for ( ; element; element = element->next) {
         if (element->type == GRE_ELEMENT) {
@@ -1117,12 +1195,14 @@ static __inline void set_h_episema_height(const height_computation *const h,
                             note = note->next) {
                         if (end && note == end) {
                             if (last_note) {
-                                h->position(last_note, h->height, false);
+                                position_h_episema(last_note, h, false,
+                                        high_ledger_line, low_ledger_line);
                             }
                             return;
                         }
                         if (h->is_applicable(note)) {
-                            h->position(note, h->height, true);
+                            position_h_episema(note, h, true, high_ledger_line,
+                                    low_ledger_line);
                             last_note = note;
                         }
                     }
@@ -1134,7 +1214,8 @@ static __inline void set_h_episema_height(const height_computation *const h,
     }
 
     if (last_note) {
-        h->position(last_note, h->height, false);
+        position_h_episema(last_note, h, false, high_ledger_line,
+                low_ledger_line);
     }
 }
 
