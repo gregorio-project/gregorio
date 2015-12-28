@@ -71,6 +71,15 @@ local function gregallreadfont(font_id)
   local tab = {}
   local metrics = {}
   local fontdata = fonts.hashes.identifiers[font_id]
+  -- The unicodes table may be lazy-loaded, so iterating it may not
+  -- return everything.  Attempting to retrieve the code point of a
+  -- glyph that has not already been loaded will trigger the __index
+  -- method in the metatable (implemented by the fontloader) to load
+  -- the table until the glyph is found.  When iterating the
+  -- unicodes, we want the whole table to be filled, so we try to
+  -- access a non-existing glyph in order to force load the entire
+  -- table.
+  local ignored = fontdata.resources.unicodes['_this_is_hopefully_a_nonexistent_glyph_']
   for key, value in pairs(fontdata.resources.unicodes) do
     local g = fontdata.characters[value]
     local name = key:gsub("B", ">"):gsub("N", "-"):gsub("E", "!"):gsub("T", "~")
