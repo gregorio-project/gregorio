@@ -372,7 +372,7 @@ therefore compatible with the score.
   \#1 & string & Version number for Gregorio\TeX.\\
 \end{argtable}
 
-\macroname{\textbackslash GreHEpisema}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreHEpisema}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
 Macro to typeset an horizontal episema.
 
 \begin{argtable}
@@ -390,9 +390,10 @@ Macro to typeset an horizontal episema.
   & \texttt{c} & a small episema aligned center\\
   & \texttt{r} & a small episema aligned right\\
   \#6 & integer & Replacement for \#1 if a bridge causes a height substitution.\\
+  \#7 & \TeX\ code & code that sets heuristics\\
 \end{argtable}
 
-\macroname{\textbackslash GreHEpisemaBridge}{\#1\#2\#3}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreHEpisemaBridge}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
 Macro to typeset a bridge episema for the last note of a glyph
 (element, syllable) if the next episema is at the same height.
 
@@ -411,7 +412,8 @@ Macro to typeset a bridge episema for the last note of a glyph
   & \texttt{8} & Space between two puncta inclinata debilis.\\
   & \texttt{9} & Space before a punctum (or something else) and a punctum inclinatum.\\
   & \texttt{10} & Space between puncta inclinata (also debilis for now), larger ambitus (range=3rd).\\
-  & \texttt{11} & Space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more).
+  & \texttt{11} & Space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more).\\
+  \#4 & \TeX\ code & code that sets heuristics\\
 \end{argtable}
 
 \macroname{\textbackslash GreHighChoralSign}{\#1\#2\#3}{gregoriotex-signs.tex}
@@ -787,6 +789,12 @@ in gabc.
 
 \macroname{\textbackslash GreStar}{}{gregoriotex-symbol.tex}
 Macro to typeset an asterisk (\GreStar).
+
+\macroname{\textbackslash GreSupposeHighLedgerLine}{}{gregoriotex-spaces.tex}
+Indicates that the system should act as if a ledger line exists above the staff.
+
+\macroname{\textbackslash GreSupposeLowLedgerLine}{}{gregoriotex-spaces.tex}
+Indicates that the system should act as if a ledger line exists below the staff.
 
 \macroname{\textbackslash GreSyllable}{\#1\#2\#3\#4\#5\#6\#7\#8\#9}{gregoriotex-syllable.tex}
 Macro to typeset the syllable.

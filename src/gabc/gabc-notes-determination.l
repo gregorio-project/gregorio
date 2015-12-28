@@ -676,6 +676,22 @@ V   {
 s   {
         gregorio_change_shape(current_note, S_STROPHA);
     }
+\[hl:1\] {
+        current_note->supposed_high_ledger_line = true;
+        current_note->explicit_high_ledger_line = true;
+    }
+\[hl:0\] {
+        current_note->supposed_high_ledger_line = false;
+        current_note->explicit_high_ledger_line = true;
+    }
+\[ll:1\] {
+        current_note->supposed_low_ledger_line = true;
+        current_note->explicit_low_ledger_line = true;
+    }
+\[ll:0\] {
+        current_note->supposed_low_ledger_line = false;
+        current_note->explicit_low_ledger_line = true;
+    }
 .   {
         gregorio_messagef("det_notes_from_string", VERBOSITY_ERROR, 0,
                 _("unrecognized character: \"%c\""),

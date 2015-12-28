@@ -497,6 +497,14 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                             dump_bool(note->h_episema_below_connect));
                                 }
                             }
+                            if (note->explicit_high_ledger_line) {
+                                fprintf(f, "         explicit high line     %s\n",
+                                        dump_bool(note->supposed_high_ledger_line));
+                            }
+                            if (note->explicit_low_ledger_line) {
+                                fprintf(f, "         explicit low line      %s\n",
+                                        dump_bool(note->supposed_low_ledger_line));
+                            }
                         }
                     }
                 }

@@ -7,7 +7,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Initial handling has been simplified.  The initial style should now be specified from TeX by using the `\gresetinitiallines` command, rather than from a gabc header.  Big initials and normal initials are now governed by a single `initial` style, meant to be changed between scores as appropriate.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#632](https://github.com/gregorio-project/gregorio/issues/632)).  Deprecations for this change are listed in the Deprecation section, below.
 - `\gresethyphen` no longer manipulates `maximumspacewithoutdash`, allowing for restoration of consistent behavior after this distance has been modified.  See [#705](https://github.com/gregorio-project/gregorio/issues/705).
 - The oriscus-based shapes in the greciliae font are more consistent.  The shape of a scandicus with a second ambitus of two is more consistent across all score fonts.
-- minimal space between notes of different syllables (or words) has been reduced when the second syllable starts with an alteration
+- Minimal space between notes of different syllables (or words) has been reduced when the second syllable starts with an alteration.
+- The space between note and horizontal episema has been tightened for notes at the `c` or `k` height when there is no ledger line.  Due to the intricacies of measurement, the system tries to make a best guess as to the existence of the ledger line.  If the guess is wrong, you may use the `[hl:n]` and `[ll:n]` notations in gabc to override the guess.  See [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#716](https://github.com/gregorio-project/gregorio/issues/716)).
 
 ### Added
 - Salicus flexus glyphs (See [#631](https://github.com/gregorio-project/gregorio/issues/631)).

@@ -416,6 +416,38 @@
 % addedraisevalue is for the vertical episema and the puncta
 \newdimen\gre@dimen@addedraisevalue\relax%
 
+\newif\ifgre@useledgerlineheuristic%
+\gre@useledgerlineheuristictrue%
+\def\gresetledgerlineheuristic#1{%
+  \IfStrEq{#1}{enable}%
+    {\gre@useledgerlineheuristictrue}%
+    {\IfStrEq{#1}{disable}%
+      {\gre@useledgerlineheuristicfalse}%
+      {\gre@error{Unrecognized option in \protect\gresetledgerlineheuristic}}%
+    }%
+}%
+% for backwards compatibility, we set these to true by default, and the
+% system will set them appropriately if the heuristics determine a ledger
+% line probably doesn't exist at that point
+\newif\ifgre@ledgerline@above%
+\newif\ifgre@ledgerline@below%
+\def\GreSupposeHighLedgerLine{%
+  \ifgre@useledgerlineheuristic\gre@ledgerline@abovetrue\fi %
+}%
+\def\GreSupposeLowLedgerLine{%
+  \ifgre@useledgerlineheuristic\gre@ledgerline@belowtrue\fi %
+}%
+\def\gre@resetledgerlineheuristics{%
+  \gre@ledgerline@abovetrue\gre@ledgerline@belowtrue %
+}%
+\def\gre@prephepisemaledgerlineheuristics{%
+  \ifgre@useledgerlineheuristic %
+    \gre@ledgerline@abovefalse\gre@ledgerline@belowfalse %
+  \else %
+    \gre@ledgerline@abovetrue\gre@ledgerline@belowtrue %
+  \fi %
+}%
+
 % a very useful macro : it determines the good height of a glyph : the argument is the "number" where the glyph should be : 4 for the first line, 6 for the second, etc.
 % the second argument is for the cases of signs: for example if the note is on a line, the punctummora will be above, and the auctus duplex beneath. the possible values are:
 %% 0: no modification
@@ -440,9 +472,13 @@
   \or\gre@count@temp@three=\number 1%
   \or\gre@count@temp@three=\number 2%
   \or\gre@count@temp@three=\number 3%
-    \ifnum#2=3\relax %
-    \else %
-      \global\gre@isonalinetrue % if it is a vertical episema, we don't care if it is on a line or not... which may cause some problems...
+    \ifgre@ledgerline@below %
+      \ifnum#2=3\relax %
+      \else %
+        % if it is a vertical episema, we don't care if it is on a line or
+        % not... which may cause some problems...
+        \global\gre@isonalinetrue %
+      \fi %
     \fi %
   \or\gre@count@temp@three=\number 4%
   \or\gre@count@temp@three=\number 5%
@@ -458,7 +494,9 @@
     \global\gre@isonalinetrue%
   \or\gre@count@temp@three=\number 12%
   \or\gre@count@temp@three=\number 13%
-    \global\gre@isonalinetrue%
+    \ifgre@ledgerline@above %
+      \global\gre@isonalinetrue%
+    \fi %
   \or\gre@count@temp@three=\number 14%
   % the following are only useful for horizontal episema and rare signs
   \or\gre@count@temp@three=\number 15%

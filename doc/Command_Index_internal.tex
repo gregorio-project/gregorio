@@ -618,8 +618,14 @@ Macro called at the end of the score to ensure that a big initial setting doesnâ
 \macroname{\textbackslash greoldcatcode}{}{gregoriotex.tex}
 Macro to store the catcode for ``@'' so that we can use said symbol in function names under Plain \TeX\ and then restore the original catcode after the package is done loading.
 
+\macroname{\textbackslash gre@prephepisemaledgerlineheuristics}{}{gregoriotex-spaces.tex}
+Prepares the system to accept ledger line heuristics for the horizontal episema.
+
 \macroname{\textbackslash gre@reseteolcustos}{}{gregoriotex-main.tex}
 Alias that resets the use of automatic custos to the value set by \verb=\greseteolcustos=.  This macro is aliased to \verb=\gre@useautoeolcustos= or \verb=\gre@usemanualeolcustos= by \verb=\greseteolcustos=.
+
+\macroname{\textbackslash gre@resetledgerlineheuristics}{}{gregoriotex-spaces.tex}
+Resets the ledger line heuristic flags.
 
 \macroname{\textbackslash gre@setstylefont}{}{gregoriotex-main.tex}
 Macro for opening up greextra font.
@@ -1194,11 +1200,20 @@ Boolean which indicates if the most recent note was a punctum mora.
 \macroname{\textbackslash ifgre@lastispunctumsave}{}{gregoriotex-signs.tex}
 Boolean for storing \verb=\ifgre@lastispunctum= so that it can be restored later.
 
+\macroname{\textbackslash ifgre@ledgerline@above}{}{gregoriotex-spaces.tex}
+Boolean which indicates whether the system should act as if there is a ledger line above the staff.
+
+\macroname{\textbackslash ifgre@ledgerline@below}{}{gregoriotex-spaces.tex}
+Boolean which indicates whether the system should act as if there is a ledger line below the staff.
+
 \macroname{\textbackslash gre@nlbstate}{}{gregoriotex-main.tex}
 Macro which indicates if we are in a no line break area due to translation centering (\texttt{1}), an explicit no line break designation in the gabc (\texttt{2}), or not at all (\texttt{0}).
 
 \macroname{\textbackslash gre@nlbinitialstate}{}{gregoriotex-main.tex}
 Macro to store \verb=\gre@nlbstate= as we initialize or end a no line break area so that we can manipulate said flag as part of the process.
+
+\macroname{\textbackslash ifgre@useledgerlineheuristic}{}{gregoriotex-spaces.tex}
+Boolean which specifies whether ledger line heuristics will be used or not.
 
 \macroname{\textbackslash ifgre@usestylefont}{}{gregoriotex-main.tex}
 Boolean which specifies whether the style font should be loaded or not.

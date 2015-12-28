@@ -20,6 +20,16 @@ Since the `biginitial` style will disappear with Gregorio 5.0, please consider d
 
 When the next syllable starts with an alteration, the minimal space between notes of the current syllable and notes of the current syllable is handled by the new spaces `intersyllablespacenotes@alteration` and `interwordspacenotes@alteration`. Set them in your custom spacings file if needed.
 
+### Horizontal episemata on high and low notes
+
+Prior to version 4.1, Gregorio reserved space between notes at the `c` and `k` heights and their horizontal episemata for a "ledger line" that might appear between them.  However, if the ledger line did not appear, the episema would appear to be too far from the note.
+
+Starting with version 4.1, Gregorio attempts to reduce the space between the note and its episema if it doesn't think there is a "ledger line" there.  However, due to the intricacies of distances and measurement in TeX, Gregorio might guess wrong.  In this case, you can override the guess by using the `[hl:n]` (for a line above the staff) and `[ll:n]` (for a line below the staff) notations in gabc.  If you put a `0` for `n`, Gregorio will assume there is no ledger line, and if you put a `1` for `n`, Gregorio will assume there is a ledger line.  This notation will have to be placed after every note which should be thus modified.
+
+Note: Using `[hl:n]` and `[ll:n]` **will not** add a ledger line if it doesn't exist or remove one if it does.  It simply affects whether Gregorio will act as if one is there or not.
+
+If you prefer the old behavior, you may switch this off by issuing `\gresetledgerlineheuristic{disable}` in your TeX document.  You may switch it back on with `\gresetledgerlineheuristic{enable}`.
+
 ## 4.0
 
 ### Font changes

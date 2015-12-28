@@ -1129,12 +1129,16 @@
 % dumb top function
 % #6 is a trick for bridges: if we must use a different height because of a
 %    bridge, use #6, otherwise use #1
-\def\GreHEpisema#1#2#3#4#5#6{%
+% #7 is used for setting heuristics
+\def\GreHEpisema#1#2#3#4#5#6#7{%
+  \gre@prephepisemaledgerlineheuristics%
+  #7%
   \ifgre@hepisemabridge%
     \gre@hepisorline{#6}{#2}{#3}{#4}{#5}%
   \else %
     \gre@hepisorline{#1}{#2}{#3}{#4}{#5}%
   \fi %
+  \gre@resetledgerlineheuristics%
   \relax %
 }%
 
@@ -1162,8 +1166,11 @@
 % #1 is the height
 % #2 is 0 for episema above, 1 for episema below
 % #3 is the "space case" for the following note, if a punctum inclinatum
-\def\GreHEpisemaBridge#1#2#3{%
+% #4 is for setting heuristics
+\def\GreHEpisemaBridge#1#2#3#4{%
   \ifgre@hepisemabridge%
+    \gre@prephepisemaledgerlineheuristics%
+    #4%
     \ifcase#2 %
       \gre@calculate@glyphraisevalue{#1}{9}%
     \or %
@@ -1187,6 +1194,7 @@
         \hss %
       }%
     }%
+    \gre@resetledgerlineheuristics%
   \fi %
   \relax %
 }%

@@ -1031,6 +1031,8 @@ typedef struct height_computation {
     const gregorio_element *start_element;
     const gregorio_glyph *start_glyph;
     gregorio_note *start_note;
+    const gregorio_element *last_connected_element;
+    const gregorio_glyph *last_connected_glyph;
     gregorio_note *last_connected_note;
 } height_computation;
 
@@ -1088,6 +1090,22 @@ static bool is_h_episema_below_better_height(const signed char new_height,
     return new_height < old_height;
 }
 
+static __inline bool has_high_ledger_line(const signed char height, bool is_sign)
+{
+    if (is_sign) {
+        return height > HIGH_LEDGER_LINE_PITCH;
+    }
+    return height >= HIGH_LEDGER_LINE_PITCH;
+}
+
+static __inline bool has_low_ledger_line(const signed char height, bool is_sign)
+{
+    if (is_sign) {
+        return height < LOW_LEDGER_LINE_PITCH;
+    }
+    return height <= LOW_LEDGER_LINE_PITCH;
+}
+
 static __inline void start_h_episema(height_computation *const h,
         const gregorio_element *const element,
         const gregorio_glyph *const glyph, gregorio_note *const note)
@@ -1099,6 +1117,113 @@ static __inline void start_h_episema(height_computation *const h,
     h->height = compute_h_episema_height(glyph, note, h->vpos);
 }
 
+static __inline void position_h_episema(gregorio_note *const note,
+        const height_computation *const h, const bool connect,
+        const bool high_ledger_line, const bool low_ledger_line)
+{
+    h->position(note, h->height, connect);
+    if (!note->explicit_high_ledger_line && !note->supposed_high_ledger_line) {
+        note->supposed_high_ledger_line = high_ledger_line;
+    }
+    if (!note->explicit_low_ledger_line && !note->supposed_low_ledger_line) {
+        note->supposed_low_ledger_line = low_ledger_line;
+    }
+}
+
+static __inline void next_has_ledger_line(
+        const height_computation *const h, bool *high_ledger_line,
+        bool *low_ledger_line)
+{
+    const gregorio_element *element = h->last_connected_element;
+    const gregorio_glyph *glyph = h->last_connected_glyph;
+    gregorio_note *note = h->last_connected_note;
+    bool eat_upper_note = note->is_lower_note, keep_going = false;
+
+    if (!*high_ledger_line || !*low_ledger_line) {
+        /* going forwards, we must iterate through any lower notes */
+        do {
+            note = note->next;
+            if (!note) {
+                do {
+                    glyph = glyph->next;
+                    if (!glyph) {
+                        do {
+                            element = element->next;
+                            if (!element) {
+                                return;
+                            }
+                        } while (element->type != GRE_ELEMENT);
+                        glyph = element->u.first_glyph;
+                    }
+                } while (glyph->type != GRE_GLYPH);
+                note = glyph->u.notes.first_note;
+            }
+
+            *high_ledger_line = *high_ledger_line
+                    || has_high_ledger_line(note->u.note.pitch, false);
+            *low_ledger_line = *low_ledger_line
+                    || has_low_ledger_line(note->u.note.pitch, false);
+
+            if (keep_going) {
+                keep_going = false;
+            }
+            if (eat_upper_note && note->is_upper_note) {
+                eat_upper_note = false;
+                keep_going = true;
+            }
+        } while ((!*high_ledger_line || !*low_ledger_line)
+                && (note->is_lower_note || keep_going));
+    }
+}
+
+static __inline void previous_has_ledger_line(
+        const height_computation *const h, bool *high_ledger_line,
+        bool *low_ledger_line)
+{
+    const gregorio_element *element = h->start_element;
+    const gregorio_glyph *glyph = h->start_glyph;
+    gregorio_note *note = h->start_note;
+    bool eat_lower_note = note->is_upper_note, keep_going = false;
+
+    if (!*high_ledger_line || !*low_ledger_line) {
+        /* going backwards, we must iterate through any upper notes */
+        do {
+            note = note->previous;
+            if (!note) {
+                do {
+                    glyph = glyph->previous;
+                    if (!glyph) {
+                        do {
+                            element = element->previous;
+                            if (!element) {
+                                return;
+                            }
+                        } while (element->type != GRE_ELEMENT);
+                        for (glyph = element->u.first_glyph; glyph->next;
+                                glyph = glyph->next) {
+                            /* just iterate to find the last glyph */
+                        }
+                    }
+                } while (glyph->type != GRE_GLYPH);
+                note = gregorio_glyph_last_note(glyph);
+            }
+            *high_ledger_line = *high_ledger_line
+                    || has_high_ledger_line(note->u.note.pitch, false);
+            *low_ledger_line = *low_ledger_line
+                    || has_low_ledger_line(note->u.note.pitch, false);
+
+            if (keep_going) {
+                keep_going = false;
+            }
+            if (eat_lower_note && note->is_lower_note) {
+                eat_lower_note = false;
+                keep_going = true;
+            }
+        } while ((!*high_ledger_line || !*low_ledger_line)
+                && (note->is_upper_note || keep_going));
+    }
+}
+
 static __inline void set_h_episema_height(const height_computation *const h,
         gregorio_note *const end)
 {
@@ -1107,6 +1232,14 @@ static __inline void set_h_episema_height(const height_computation *const h,
     const gregorio_element *element = h->start_element;
     const gregorio_glyph *glyph = h->start_glyph;
     gregorio_note *note = h->start_note;
+
+    bool high_ledger_line = has_high_ledger_line(h->height, true)
+            || has_high_ledger_line(h->height - h->vpos, false);
+    bool low_ledger_line = has_low_ledger_line(h->height, true)
+            || has_low_ledger_line(h->height - h->vpos, false);
+
+    next_has_ledger_line(h, &high_ledger_line, &low_ledger_line);
+    previous_has_ledger_line(h, &high_ledger_line, &low_ledger_line);
 
     for ( ; element; element = element->next) {
         if (element->type == GRE_ELEMENT) {
@@ -1117,12 +1250,14 @@ static __inline void set_h_episema_height(const height_computation *const h,
                             note = note->next) {
                         if (end && note == end) {
                             if (last_note) {
-                                h->position(last_note, h->height, false);
+                                position_h_episema(last_note, h, false,
+                                        high_ledger_line, low_ledger_line);
                             }
                             return;
                         }
                         if (h->is_applicable(note)) {
-                            h->position(note, h->height, true);
+                            position_h_episema(note, h, true, high_ledger_line,
+                                    low_ledger_line);
                             last_note = note;
                         }
                     }
@@ -1134,7 +1269,8 @@ static __inline void set_h_episema_height(const height_computation *const h,
     }
 
     if (last_note) {
-        h->position(last_note, h->height, false);
+        position_h_episema(last_note, h, false, high_ledger_line,
+                low_ledger_line);
     }
 }
 
@@ -1234,6 +1370,8 @@ static __inline void end_h_episema(height_computation *const h,
         h->start_element = NULL;
         h->start_glyph = NULL;
         h->start_note = NULL;
+        h->last_connected_element = NULL;
+        h->last_connected_glyph = NULL;
         h->last_connected_note = NULL;
     }
 }
@@ -1269,6 +1407,8 @@ static __inline void compute_h_episema(height_computation *const h,
             }
 
             h->connected = h->is_connected(note) && is_connected_right(size);
+            h->last_connected_element = element;
+            h->last_connected_glyph = glyph;
             h->last_connected_note = note;
         } else {
             end_h_episema(h, note);
@@ -1458,6 +1598,8 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
         /*.start_element =*/ NULL,
         /*.start_glyph =*/ NULL,
         /*.start_note =*/ NULL,
+        /*.last_connected_element =*/ NULL,
+        /*.last_connected_glyph =*/ NULL,
         /*.last_connected_note =*/ NULL,
     };
     height_computation below = {
@@ -1475,6 +1617,8 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
         /*.start_element =*/ NULL,
         /*.start_glyph =*/ NULL,
         /*.start_note =*/ NULL,
+        /*.last_connected_element =*/ NULL,
+        /*.last_connected_glyph =*/ NULL,
         /*.last_connected_note =*/ NULL,
     };
     int i;
