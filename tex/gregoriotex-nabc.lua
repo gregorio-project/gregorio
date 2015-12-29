@@ -70,7 +70,7 @@ local gregallaliases = {
 local function gregallreadfont(font_id)
   local tab = {}
   local metrics = {}
-  local fontdata = fonts.hashes.identifiers[font_id]
+  local fontdata = font.getfont(font_id)
   -- The unicodes table may be lazy-loaded, so iterating it may not
   -- return everything.  Attempting to retrieve the code point of a
   -- glyph that has not already been loaded will trigger the __index
