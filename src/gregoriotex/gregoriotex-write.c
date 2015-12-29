@@ -206,12 +206,14 @@ static bool is_longqueue(const signed char pitch,
         WHILEGLYPH(next);
         if (element && element->type == GRE_SPACE
                 && (element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT
-                        || element->u.misc.unpitched.info.space ==
-                        SP_LARGER_SPACE
-                        || element->u.misc.unpitched.info.space ==
-                        SP_NEUMATIC_CUT_NB
-                        || element->u.misc.unpitched.info.space ==
-                        SP_LARGER_SPACE_NB)) {
+                    || element->u.misc.unpitched.info.space == SP_HALF_SPACE
+                    || element->u.misc.unpitched.info.space == SP_LARGER_SPACE
+                    || element->u.misc.unpitched.info.space
+                    == SP_NEUMATIC_CUT_NB
+                    || element->u.misc.unpitched.info.space
+                    == SP_HALF_SPACE_NB
+                    || element->u.misc.unpitched.info.space
+                    == SP_LARGER_SPACE_NB)) {
             element = element->next;
         }
         if (element && element->type == GRE_ELEMENT) {
@@ -224,12 +226,14 @@ static bool is_longqueue(const signed char pitch,
         WHILEGLYPH(previous);
         if (element && element->type == GRE_SPACE
                 && (element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT
-                        || element->u.misc.unpitched.info.space ==
-                        SP_LARGER_SPACE
-                        || element->u.misc.unpitched.info.space ==
-                        SP_NEUMATIC_CUT_NB
-                        || element->u.misc.unpitched.info.space ==
-                        SP_LARGER_SPACE_NB)) {
+                    || element->u.misc.unpitched.info.space == SP_HALF_SPACE
+                    || element->u.misc.unpitched.info.space == SP_LARGER_SPACE
+                    || element->u.misc.unpitched.info.space
+                    == SP_NEUMATIC_CUT_NB
+                    || element->u.misc.unpitched.info.space
+                    == SP_HALF_SPACE_NB
+                    || element->u.misc.unpitched.info.space
+                    == SP_LARGER_SPACE_NB)) {
             element = element->previous;
         }
         if (element && element->type == GRE_ELEMENT) {
@@ -3277,11 +3281,17 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             case SP_GLYPH_SPACE:
                 fprintf(f, "\\GreEndOfElement{2}{0}%%\n");
                 break;
+            case SP_HALF_SPACE:
+                fprintf(f, "\\GreEndOfElement{4}{0}%%\n");
+                break;
             case SP_GLYPH_SPACE_NB:
                 fprintf(f, "\\GreEndOfElement{2}{1}%%\n");
                 break;
             case SP_LARGER_SPACE_NB:
                 fprintf(f, "\\GreEndOfElement{1}{1}%%\n");
+                break;
+            case SP_HALF_SPACE_NB:
+                fprintf(f, "\\GreEndOfElement{4}{1}%%\n");
                 break;
             case SP_NEUMATIC_CUT_NB:
                 fprintf(f, "\\GreEndOfElement{0}{1}%%\n");

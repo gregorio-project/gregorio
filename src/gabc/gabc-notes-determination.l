@@ -571,6 +571,9 @@ r5  {
 [a-mA-M]y {
         add_alteration(GRE_NATURAL);
     }
+\/0 {
+        gregorio_add_space_as_note(&current_note, SP_HALF_SPACE, &notes_lloc);
+    }
 \/  {
         gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT, &notes_lloc);
     }
@@ -579,6 +582,10 @@ r5  {
     }
 \   {
         gregorio_add_space_as_note(&current_note, SP_GLYPH_SPACE, &notes_lloc);
+    }
+!\/0 {
+        gregorio_add_space_as_note(&current_note, SP_HALF_SPACE_NB,
+                &notes_lloc);
     }
 !\/ {
         gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT_NB,

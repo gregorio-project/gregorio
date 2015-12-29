@@ -1226,6 +1226,7 @@
 %% 1: larger space
 %% 2: glyph space
 %% 3: zero-width space
+%% 4: interglyph half-space
 % #2 is if the space is unbreakable (1) or not (0)
 \def\GreEndOfElement#1#2{%
   \ifnum #2=0\relax %
@@ -1241,6 +1242,10 @@
     \gre@hskip\gre@skip@temp@four %
   \or% case 2
     \gre@skip@temp@four = \gre@skip@glyphspace\relax%
+    \gre@hskip\gre@skip@temp@four %
+  \or% case 3
+  \or% case 4
+    \gre@skip@temp@four = \gre@skip@halfspace\relax%
     \gre@hskip\gre@skip@temp@four %
   \fi%
   \ifnum #2=1\relax %

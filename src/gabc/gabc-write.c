@@ -274,8 +274,16 @@ static void gabc_write_space(FILE *f, gregorio_space type)
     case SP_NEUMATIC_CUT_NB:
         fprintf(f, "!/");
         break;
+    case SP_HALF_SPACE_NB:
+        fprintf(f, "!/0");
+        break;
+    case SP_HALF_SPACE:
+        fprintf(f, "/0");
+        break;
     case SP_NEUMATIC_CUT:
-        /* do not uncomment it, the code is strangely done but it works */
+        /* do not uncomment it, the code is strangely done but it works;
+         * this is because the code always puts a "/" between elements
+         * unless there is some other space there */
         /* fprintf (f, "/"); */
         break;
     default:
@@ -765,8 +773,7 @@ static void gabc_write_gregorio_elements(FILE *f, gregorio_element *element)
         /* we don't want a bar after an end of line */
         if (element->type != GRE_END_OF_LINE
             && (element->type != GRE_SPACE
-                || (element->type == GRE_SPACE
-                    && element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT))
+                || element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT)
             && element->next && element->next->type == GRE_ELEMENT) {
             fprintf(f, "/");
         }

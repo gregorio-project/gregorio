@@ -188,9 +188,11 @@ ENUM(gregorio_sign, GREGORIO_SIGN);
     E(SP_NEUMATIC_CUT) \
     E(SP_LARGER_SPACE) \
     E(SP_GLYPH_SPACE) \
+    E(SP_HALF_SPACE) \
     E(SP_NEUMATIC_CUT_NB) \
     E(SP_LARGER_SPACE_NB) \
-    L(SP_GLYPH_SPACE_NB)
+    E(SP_GLYPH_SPACE_NB) \
+    L(SP_HALF_SPACE_NB)
 ENUM(gregorio_space, GREGORIO_SPACE);
 
 /* the different liquescences, like for the signs, have special
