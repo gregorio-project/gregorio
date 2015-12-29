@@ -281,10 +281,13 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 break;
             case GRE_SPACE:
                 if (element->u.misc.unpitched.info.space) {
-                    fprintf(f, "     space                   %d (%s)\n",
+                    char *factor = element->u.misc.unpitched.info.
+                            ad_hoc_space_factor;
+                    fprintf(f, "     space                   %d (%s)%s%s\n",
                             element->u.misc.unpitched.info.space,
-                            gregorio_space_to_string(element->u.misc.unpitched.
-                                                     info.space));
+                            gregorio_space_to_string(
+                                element->u.misc.unpitched.info.space),
+                            factor? " x " : "", factor? factor : "");
                 }
                 break;
             case GRE_TEXVERB_ELEMENT:

@@ -863,6 +863,12 @@ local function width_to_bp(width, value_if_star)
   end
 end
 
+local function scale_space(factor)
+  local skip = tex.getskip('gre@skip@temp@four')
+  skip.width = skip.width * factor
+  -- should skip.stretch and skip.shink also be scaled?
+end
+
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
 
@@ -887,3 +893,4 @@ gregoriotex.late_brace_note_pos  = late_brace_note_pos
 gregoriotex.mark_translation     = mark_translation
 gregoriotex.mark_abovelinestext  = mark_abovelinestext
 gregoriotex.width_to_bp          = width_to_bp
+gregoriotex.scale_space          = scale_space

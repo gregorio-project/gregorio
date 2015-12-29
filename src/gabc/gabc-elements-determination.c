@@ -161,16 +161,19 @@ static gregorio_element *gabc_det_elements_from_glyphs(
             cut_before(current_glyph, &first_glyph, &previous_glyph,
                        &current_element);
             /* if statement to make neumatic cuts not appear in elements, as
-             * there is always one between elements */
+             * there is always one between elements, unless the next element
+             * is a space */
             if (current_glyph->type != GRE_SPACE
-                || (current_glyph->u.misc.unpitched.info.space
-                    != SP_NEUMATIC_CUT)) {
+                    || current_glyph->u.misc.unpitched.info.space
+                    != SP_NEUMATIC_CUT
+                    || (current_glyph->next
+                        && current_glyph->next->type == GRE_SPACE)) {
                 /* clef change or space other thant neumatic cut */
                 if (!first_element) {
                     first_element = current_element;
                 }
                 gregorio_add_misc_element(&current_element, current_glyph->type,
-                                          current_glyph->u.misc,
+                                          &(current_glyph->u.misc),
                                           current_glyph->texverb);
             }
             first_glyph = current_glyph->next;

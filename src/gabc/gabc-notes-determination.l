@@ -168,6 +168,8 @@ static __inline void add_alteration(const gregorio_type type) {
 %x underbrace
 %x overcurlybrace
 %x overcurlyaccentusbrace
+%x space
+%x nbspace
 
 %%
 <INITIAL>\% {
@@ -386,6 +388,12 @@ static __inline void add_alteration(const gregorio_type type) {
 <INITIAL>\] {
         gregorio_end_autofuse(&current_note, &notes_lloc);
     }
+<INITIAL>\/\[ {
+        BEGIN(space);
+    }
+<INITIAL>!\/\[ {
+        BEGIN(nbspace);
+    }
 <overbrace>[^\]]+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverBrace{%s}{0pt}{0pt}{%d}",
@@ -437,7 +445,15 @@ static __inline void add_alteration(const gregorio_type type) {
                 gregorio_strdup(gabc_notes_determination_text), GRE_ALT,
                 &notes_lloc);
     }
-<texverbnote,texverbglyph,texverbelement,choralsign,choralnabc,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,underbrace>\] {
+<space>-?(\.[0-9]+|[0-9]+(\.[0-9]*)?)/\] {
+        gregorio_add_space_as_note(&current_note, SP_AD_HOC_SPACE,
+                gregorio_strdup(gabc_notes_determination_text), &notes_lloc);
+    }
+<nbspace>-?(\.[0-9]+|[0-9]+(\.[0-9]*)?)/\] {
+        gregorio_add_space_as_note(&current_note, SP_AD_HOC_SPACE_NB,
+                gregorio_strdup(gabc_notes_determination_text), &notes_lloc);
+    }
+<texverbnote,texverbglyph,texverbelement,choralsign,choralnabc,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,underbrace,space,nbspace>\] {
         BEGIN(INITIAL);
     }
 \{  {
@@ -572,35 +588,48 @@ r5  {
         add_alteration(GRE_NATURAL);
     }
 \/0 {
-        gregorio_add_space_as_note(&current_note, SP_HALF_SPACE, &notes_lloc);
+        gregorio_add_space_as_note(&current_note, SP_HALF_SPACE, NULL,
+                &notes_lloc);
     }
 \/  {
-        gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT, &notes_lloc);
+        gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT, NULL,
+                &notes_lloc);
+    }
+\//\/\[ {
+        gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT, NULL,
+                &notes_lloc);
     }
 \/\/ {
-        gregorio_add_space_as_note(&current_note, SP_LARGER_SPACE, &notes_lloc);
+        gregorio_add_space_as_note(&current_note, SP_LARGER_SPACE, NULL,
+                &notes_lloc);
     }
 \   {
-        gregorio_add_space_as_note(&current_note, SP_GLYPH_SPACE, &notes_lloc);
+        gregorio_add_space_as_note(&current_note, SP_GLYPH_SPACE, NULL,
+                &notes_lloc);
     }
 !\/0 {
-        gregorio_add_space_as_note(&current_note, SP_HALF_SPACE_NB,
+        gregorio_add_space_as_note(&current_note, SP_HALF_SPACE_NB, NULL,
                 &notes_lloc);
     }
 !\/ {
-        gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT_NB,
+        gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT_NB, NULL,
+                &notes_lloc);
+    }
+!\//\/\[ {
+        gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT_NB, NULL,
                 &notes_lloc);
     }
 !\/\/ {
-        gregorio_add_space_as_note(&current_note, SP_LARGER_SPACE_NB,
+        gregorio_add_space_as_note(&current_note, SP_LARGER_SPACE_NB, NULL,
                 &notes_lloc);
     }
 !\  {
-        gregorio_add_space_as_note(&current_note, SP_GLYPH_SPACE_NB,
+        gregorio_add_space_as_note(&current_note, SP_GLYPH_SPACE_NB, NULL,
                 &notes_lloc);
     }
 !/[^\/ ] {
-        gregorio_add_space_as_note(&current_note, SP_ZERO_WIDTH, &notes_lloc);
+        gregorio_add_space_as_note(&current_note, SP_ZERO_WIDTH, NULL,
+                &notes_lloc);
     }
 =   {
         gregorio_change_shape(current_note, S_LINEA);

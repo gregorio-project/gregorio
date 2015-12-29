@@ -3284,6 +3284,13 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             case SP_HALF_SPACE:
                 fprintf(f, "\\GreEndOfElement{4}{0}%%\n");
                 break;
+            case SP_NEUMATIC_CUT:
+                fprintf(f, "\\GreEndOfElement{0}{0}%%\n");
+                break;
+            case SP_AD_HOC_SPACE:
+                fprintf(f, "\\GreAdHocSpaceEndOfElement{%s}{0}%%\n",
+                        element->u.misc.unpitched.info.ad_hoc_space_factor);
+                break;
             case SP_GLYPH_SPACE_NB:
                 fprintf(f, "\\GreEndOfElement{2}{1}%%\n");
                 break;
@@ -3295,6 +3302,10 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 break;
             case SP_NEUMATIC_CUT_NB:
                 fprintf(f, "\\GreEndOfElement{0}{1}%%\n");
+                break;
+            case SP_AD_HOC_SPACE_NB:
+                fprintf(f, "\\GreAdHocSpaceEndOfElement{%s}{1}%%\n",
+                        element->u.misc.unpitched.info.ad_hoc_space_factor);
                 break;
             default:
                 break;

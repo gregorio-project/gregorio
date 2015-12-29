@@ -105,24 +105,22 @@ void gregorio_add_note(gregorio_note **current_note, signed char pitch,
         const gregorio_scanner_location *const loc)
 {
     gregorio_note *element = create_and_link_note(current_note, loc);
-    if (element) {
-        element->type = GRE_NOTE;
-        element->u.note.pitch = pitch;
-        element->u.note.shape = shape;
-        element->signs = signs;
-        element->special_sign = _NO_SIGN;
-        element->u.note.liquescentia = liquescentia;
-        if (prototype) {
-            set_h_episema_above(element, prototype->h_episema_above,
-                    prototype->h_episema_above_size,
-                    prototype->h_episema_above_connect);
-            set_h_episema_below(element, prototype->h_episema_below,
-                    prototype->h_episema_below_size,
-                    prototype->h_episema_below_connect);
-        }
-        element->texverb = NULL;
-        element->choral_sign = NULL;
+    element->type = GRE_NOTE;
+    element->u.note.pitch = pitch;
+    element->u.note.shape = shape;
+    element->signs = signs;
+    element->special_sign = _NO_SIGN;
+    element->u.note.liquescentia = liquescentia;
+    if (prototype) {
+        set_h_episema_above(element, prototype->h_episema_above,
+                prototype->h_episema_above_size,
+                prototype->h_episema_above_connect);
+        set_h_episema_below(element, prototype->h_episema_below,
+                prototype->h_episema_below_size,
+                prototype->h_episema_below_connect);
     }
+    element->texverb = NULL;
+    element->choral_sign = NULL;
 }
 
 static void add_pitched_item_as_note(gregorio_note **current_note,
@@ -130,29 +128,23 @@ static void add_pitched_item_as_note(gregorio_note **current_note,
         const gregorio_scanner_location *const loc)
 {
     gregorio_note *element = create_and_link_note(current_note, loc);
-    if (element) {
-        element->type = type;
-        element->u.note.pitch = pitch;
-    }
+    element->type = type;
+    element->u.note.pitch = pitch;
 }
 
 void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
         gregorio_type sub_type, const gregorio_scanner_location *const loc)
 {
     gregorio_note *element = create_and_link_note(current_note, loc);
-    if (element) {
-        element->type = GRE_END_OF_LINE;
-        element->u.other.sub_type = sub_type;
-    }
+    element->type = GRE_END_OF_LINE;
+    element->u.other.sub_type = sub_type;
 }
 
 void gregorio_add_custo_as_note(gregorio_note **current_note,
         const gregorio_scanner_location *const loc)
 {
     gregorio_note *element = create_and_link_note(current_note, loc);
-    if (element) {
-        element->type = GRE_CUSTOS;
-    }
+    element->type = GRE_CUSTOS;
 }
 
 void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
@@ -175,10 +167,8 @@ void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar,
         const gregorio_scanner_location *const loc)
 {
     gregorio_note *element = create_and_link_note(current_note, loc);
-    if (element) {
-        element->type = GRE_BAR;
-        element->u.other.bar = bar;
-    }
+    element->type = GRE_BAR;
+    element->u.other.bar = bar;
 }
 
 void gregorio_add_alteration_as_note(gregorio_note **current_note,
@@ -190,13 +180,13 @@ void gregorio_add_alteration_as_note(gregorio_note **current_note,
 }
 
 void gregorio_add_space_as_note(gregorio_note **current_note,
-        gregorio_space space, const gregorio_scanner_location *const loc)
+        const gregorio_space space, char *factor,
+        const gregorio_scanner_location *const loc)
 {
     gregorio_note *element = create_and_link_note(current_note, loc);
-    if (element) {
-        element->type = GRE_SPACE;
-        element->u.other.space = space;
-    }
+    element->type = GRE_SPACE;
+    element->u.other.space = space;
+    element->u.other.ad_hoc_space_factor = factor;
 }
 
 void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
@@ -209,38 +199,30 @@ void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
     element = create_and_link_note(current_note, loc);
     assert(type == GRE_TEXVERB_GLYPH || type == GRE_TEXVERB_ELEMENT
            || type == GRE_ALT);
-    if (element) {
-        element->type = type;
-        element->texverb = str;
-    }
+    element->type = type;
+    element->texverb = str;
 }
 
 void gregorio_add_nlba_as_note(gregorio_note **current_note, gregorio_nlba type,
         const gregorio_scanner_location *const loc)
 {
     gregorio_note *element = create_and_link_note(current_note, loc);
-    if (element) {
-        element->type = GRE_NLBA;
-        element->u.other.nlba = type;
-    }
+    element->type = GRE_NLBA;
+    element->u.other.nlba = type;
 }
 
 void gregorio_start_autofuse(gregorio_note **current_note,
         const gregorio_scanner_location *const loc)
 {
     gregorio_note *element = create_and_link_note(current_note, loc);
-    if (element) {
-        element->type = GRE_AUTOFUSE_START;
-    }
+    element->type = GRE_AUTOFUSE_START;
 }
 
 void gregorio_end_autofuse(gregorio_note **current_note,
         const gregorio_scanner_location *const loc)
 {
     gregorio_note *element = create_and_link_note(current_note, loc);
-    if (element) {
-        element->type = GRE_AUTOFUSE_END;
-    }
+    element->type = GRE_AUTOFUSE_END;
 }
 
 void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str)
@@ -610,6 +592,9 @@ void gregorio_go_to_first_note(gregorio_note **note)
 
 static __inline void free_one_note(gregorio_note *note)
 {
+    if (note->type == GRE_SPACE) {
+        free(note->u.other.ad_hoc_space_factor);
+    }
     free(note->texverb);
     free(note->choral_sign);
     free(note);
@@ -660,12 +645,10 @@ void gregorio_add_glyph(gregorio_glyph **current_glyph,
         gregorio_liquescentia liquescentia)
 {
     gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
-    if (next_glyph) {
-        next_glyph->type = GRE_GLYPH;
-        next_glyph->u.notes.glyph_type = type;
-        next_glyph->u.notes.liquescentia = liquescentia;
-        next_glyph->u.notes.first_note = first_note;
-    }
+    next_glyph->type = GRE_GLYPH;
+    next_glyph->u.notes.glyph_type = type;
+    next_glyph->u.notes.liquescentia = liquescentia;
+    next_glyph->u.notes.first_note = first_note;
 }
 
 void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
@@ -677,17 +660,15 @@ void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
            || type == GRE_C_KEY_CHANGE_FLATED || type == GRE_F_KEY_CHANGE_FLATED
            || type == GRE_CUSTOS || type == GRE_FLAT || type == GRE_NATURAL
            || type == GRE_SHARP);
-    if (next_glyph) {
-        next_glyph->type = type;
-        next_glyph->u.misc.pitched.pitch = pitch;
-        next_glyph->u.misc.pitched.flatted_key = flatted_key;
-        next_glyph->u.misc.pitched.force_pitch = force_pitch;
-        next_glyph->texverb = texverb;
-    }
+    next_glyph->type = type;
+    next_glyph->u.misc.pitched.pitch = pitch;
+    next_glyph->u.misc.pitched.flatted_key = flatted_key;
+    next_glyph->u.misc.pitched.force_pitch = force_pitch;
+    next_glyph->texverb = texverb;
 }
 
 void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
-        gregorio_type type, gregorio_extra_info info, gregorio_sign sign,
+        gregorio_type type, gregorio_extra_info *info, gregorio_sign sign,
         char *texverb)
 {
     gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
@@ -696,12 +677,14 @@ void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
            && type != GRE_C_KEY_CHANGE_FLATED && type != GRE_F_KEY_CHANGE_FLATED
            && type != GRE_CUSTOS && type != GRE_FLAT && type != GRE_NATURAL
            && type != GRE_SHARP);
-    if (next_glyph) {
-        next_glyph->type = type;
-        next_glyph->u.misc.unpitched.info = info;
-        next_glyph->u.misc.unpitched.special_sign = sign;
-        next_glyph->texverb = texverb;
-    }
+    next_glyph->type = type;
+    next_glyph->u.misc.unpitched.info = *info;
+    next_glyph->u.misc.unpitched.special_sign = sign;
+    next_glyph->texverb = texverb;
+
+    /* this was copied into the glyph, so we need to clear it to avoid a
+     * double-free */
+    info->ad_hoc_space_factor = NULL;
 }
 
 void gregorio_go_to_first_glyph(gregorio_glyph **glyph)
@@ -720,8 +703,16 @@ void gregorio_go_to_first_glyph(gregorio_glyph **glyph)
 static __inline void free_one_glyph(gregorio_glyph *glyph)
 {
     free(glyph->texverb);
-    if (glyph->type == GRE_GLYPH) {
+    switch (glyph->type) {
+    case GRE_GLYPH:
         gregorio_free_notes(&glyph->u.notes.first_note);
+        break;
+    case GRE_SPACE:
+        free(glyph->u.misc.unpitched.info.ad_hoc_space_factor);
+        break;
+    default:
+        /* nothing to do */
+        break;
     }
     free(glyph);
 }
@@ -774,20 +765,22 @@ void gregorio_add_element(gregorio_element **current_element,
         gregorio_glyph *first_glyph)
 {
     gregorio_element *next = create_and_link_element(current_element);
-    if (next) {
-        next->type = GRE_ELEMENT;
-        next->u.first_glyph = first_glyph;
-    }
+    next->type = GRE_ELEMENT;
+    next->u.first_glyph = first_glyph;
 }
 
 void gregorio_add_misc_element(gregorio_element **current_element,
-        gregorio_type type, gregorio_misc_element_info info, char *texverb)
+        gregorio_type type, gregorio_misc_element_info *info, char *texverb)
 {
     gregorio_element *special = create_and_link_element(current_element);
-    if (special) {
-        special->type = type;
-        special->u.misc = info;
-        special->texverb = texverb;
+    special->type = type;
+    special->u.misc = *info;
+    special->texverb = texverb;
+
+    if (type == GRE_SPACE) {
+        /* this was copied into the glyph, so we need to clear it to avoid a
+         * double-free */
+        info->unpitched.info.ad_hoc_space_factor = NULL;
     }
 }
 
@@ -798,8 +791,16 @@ static __inline void free_one_element(gregorio_element *element)
     for (i = 0; i < element->nabc_lines; i++) {
         free(element->nabc[i]);
     }
-    if (element->type == GRE_ELEMENT) {
+    switch (element->type) {
+    case GRE_ELEMENT:
         gregorio_free_glyphs(&element->u.first_glyph);
+        break;
+    case GRE_SPACE:
+        free(element->u.misc.unpitched.info.ad_hoc_space_factor);
+        break;
+    default:
+        /* nothing to do */
+        break;
     }
     free(element);
 }

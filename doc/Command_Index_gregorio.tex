@@ -54,6 +54,15 @@ Macro to typeset the additional line above or below the staff.
   \#3 & integer & Set horizontal episema (0), horizontal episema under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4).\\
 \end{argtable}
 
+\macroname{\textbackslash GreAdHocSpaceEndOfElement}{\#1\#2}{gregoriotex-main.tex}
+Macro to end an element with an ad-hoc space.
+
+\begin{argtable}
+  \#1 & float & The factor to scale the default space for use as an ad-hoc space.\\
+  \#2 & \texttt{0} & Space is breakable.\\
+  & \texttt{1} & Space is unbreakable.\\
+\end{argtable}
+
 \macroname{\textbackslash GreAugmentumDuplex}{\#1\#2\#3}{gregoriotex-signs.tex}
 Macro for typesetting an augmentum duplex (a pair of punctum mora)
 
@@ -221,6 +230,8 @@ Macro to end elements.
   & \texttt{1} & Larger space.\\
   & \texttt{2} & Glyph space.\\
   & \texttt{3} & Zero-width space.\\
+  & \texttt{4} & Half-space.\\
+  & \texttt{5} & Ad-hoc space.\\
   \#2 & \texttt{0} & Space is breakable.\\
   & \texttt{1} & Space is unbreakable.\\
 \end{argtable}
