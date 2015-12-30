@@ -30,12 +30,6 @@ Note: Using `[hl:n]` and `[ll:n]` **will not** add a ledger line if it doesn't e
 
 If you prefer the old behavior, you may switch this off by issuing `\gresetledgerlineheuristic{disable}` in your TeX document.  You may switch it back on with `\gresetledgerlineheuristic{enable}`.
 
-### Spacing between glyphs of the same element
-
-Compared to older versions, the spacing between glyphs of the same element (for example, between puncta in repercussion) has been halved.  This spacing is controlled by the `interglyphspace` dimension.  If you prefer the older spacing, use the command `\grechangedim{interglyphspace}{0.06927 cm plus 0.00363 cm minus 0.00363 cm}{scalable}` in your TeX document or define it similarly in your custom spacing file.
-
-Additionally, prior to version 4.1, it was not possible to manually introduce this type of space.  Now, you can use `/0` in gabc to manually introduce it.
-
 ## 4.0
 
 ### Font changes

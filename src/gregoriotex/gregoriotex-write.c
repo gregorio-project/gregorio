@@ -2804,7 +2804,7 @@ static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
                     fprintf(f, "\\GreEndOfGlyph{1}%%\n");
                     break;
                 case SP_HALF_SPACE:
-                    fprintf(f, "\\GreEndOfGlyph{0}%%\n");
+                    fprintf(f, "\\GreEndOfGlyph{22}%%\n");
                     break;
                 default:
                     gregorio_message(

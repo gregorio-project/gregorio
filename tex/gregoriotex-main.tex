@@ -1286,6 +1286,7 @@
 %% 19: space between a punctum inclinatum and a "no-bar" glyph one pitch above
 %% 20: space between a punctum inclinatum and a "no-bar" glyph two pitches above
 %% 21: space between a punctum inclinatum and a "no-bar" glyph three or four pitches above
+%% 22: half-space
 \def\gre@get@spaceskip#1{%
   \ifcase#1%
     \gre@skip@temp@four = \gre@skip@interglyphspace\relax%
@@ -1331,6 +1332,8 @@
     \gre@skip@temp@four = \gre@skip@ascendinginclinatumtonobarbigshift\relax%
   \or% case 21
     \gre@skip@temp@four = \gre@skip@ascendinginclinatumtonobarmaxshift\relax%
+  \or% case 22
+    \gre@skip@temp@four = \gre@skip@halfspace\relax%
   \fi%
 }%
 

@@ -9,14 +9,13 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The oriscus-based shapes in the greciliae font are more consistent.  The shape of a scandicus with a second ambitus of two is more consistent across all score fonts.
 - Minimal space between notes of different syllables (or words) has been reduced when the second syllable starts with an alteration.
 - The space between note and horizontal episema has been tightened for notes at the `c` or `k` height when there is no ledger line.  Due to the intricacies of measurement, the system tries to make a best guess as to the existence of the ledger line.  If the guess is wrong, you may use the `[hl:n]` and `[ll:n]` notations in gabc to override the guess.  See [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#716](https://github.com/gregorio-project/gregorio/issues/716)).
-- The spacing between glyphs of the same element (i.e., between puncta in repercussion) has been halved.  If you prefer the old spacing, set `interglyphspace` to `0.06927 cm plus 0.00363 cm minus 0.00363 cm`.  It is also now possible to introduce this kind of space manually by using `/0` in gabc.  See [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#736](https://github.com/gregorio-project/gregorio/issues/736)).
 
 ### Added
 - Salicus flexus glyphs (See [#631](https://github.com/gregorio-project/gregorio/issues/631)).
 - Neume fusion, activated in gabc by `@`.  Use `@` before a clivis or a porrectus to get an unstemmed figure.  Use `@` between two notes to fuse them explicitly.  Enclose a set of notes within `@[` and `]` to automatically guess their fusion.  See GregorioRef for details (for the channge requests, see [#679](https://github.com/gregorio-project/gregorio/issues/679), [#687](https://github.com/gregorio-project/gregorio/issues/687), and [#692](https://github.com/gregorio-project/gregorio/issues/692)).
 - Hollow version of the oriscus, called by adding the `r` modifier to an oriscus, as in `gor` or `gor<` (See [#724](https://github.com/gregorio-project/gregorio/issues/724)).
 - Support for arbitrary external gabc headers starting with `x-`.  These are simply accepted by gregorio.
-- Support for ad-hoc spaces.  Use `/[factor]` (substituting a positive or negative real number for the scale factor) for an ad-hoc space whose length is `interelementspace` scaled by the desired factor.  See [#736](https://github.com/gregorio-project/gregorio/issues/736).
+- Support for half-spaces and ad-hoc spaces.  Use `/0` in gabc for a half-space between notes.  Use `/[factor]` (substituting a positive or negative real number for the scale factor) for an ad-hoc space whose length is `interelementspace` scaled by the desired factor.  See [#736](https://github.com/gregorio-project/gregorio/issues/736)
 
 ### Deprecated
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
