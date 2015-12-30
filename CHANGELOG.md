@@ -15,6 +15,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Neume fusion, activated in gabc by `@`.  Use `@` before a clivis or a porrectus to get an unstemmed figure.  Use `@` between two notes to fuse them explicitly.  Enclose a set of notes within `@[` and `]` to automatically guess their fusion.  See GregorioRef for details (for the channge requests, see [#679](https://github.com/gregorio-project/gregorio/issues/679), [#687](https://github.com/gregorio-project/gregorio/issues/687), and [#692](https://github.com/gregorio-project/gregorio/issues/692)).
 - Hollow version of the oriscus, called by adding the `r` modifier to an oriscus, as in `gor` or `gor<` (See [#724](https://github.com/gregorio-project/gregorio/issues/724)).
 - Support for arbitrary external gabc headers starting with `x-`.  These are simply accepted by gregorio.
+- Support for half-spaces and ad-hoc spaces.  Use `/0` in gabc for a half-space between notes.  Use `/[factor]` (substituting a positive or negative real number for the scale factor) for an ad-hoc space whose length is `interelementspace` scaled by the desired factor.  See [#736](https://github.com/gregorio-project/gregorio/issues/736)
 
 ### Deprecated
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
