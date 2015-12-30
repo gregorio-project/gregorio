@@ -1131,6 +1131,9 @@
   \ifgre@scale@beforealterationspace%
     \gre@changeonedimenfactor{beforealterationspace}{#1}{#2}%
   \fi%
+  \ifgre@scale@halfspace%
+    \gre@changeonedimenfactor{halfspace}{#1}{#2}%
+  \fi%
   \ifgre@scale@interelementspace%
     \gre@changeonedimenfactor{interelementspace}{#1}{#2}%
   \fi%

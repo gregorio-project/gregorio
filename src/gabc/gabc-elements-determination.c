@@ -139,15 +139,21 @@ static gregorio_element *gabc_det_elements_from_glyphs(
                 current_glyph = current_glyph->next;
                 continue;
             }
-            /* we must not cut after a zero_width_space */
-            if (current_glyph->type == GRE_SPACE
-                && current_glyph->u.misc.unpitched.info.space == SP_ZERO_WIDTH) {
-                if (!current_glyph->next) {
-                    close_element(&current_element, &first_glyph, current_glyph);
+            /* we must not cut after a glyph-level space */
+            if (current_glyph->type == GRE_SPACE) {
+                switch (current_glyph->u.misc.unpitched.info.space) {
+                case SP_ZERO_WIDTH:
+                case SP_HALF_SPACE:
+                    if (!current_glyph->next) {
+                        close_element(&current_element, &first_glyph, current_glyph);
+                    }
+                    current_glyph = current_glyph->next;
+                    do_not_cut = true;
+                    continue;
+                default:
+                    /* any other space should be handled normally */
+                    break;
                 }
-                current_glyph = current_glyph->next;
-                do_not_cut = true;
-                continue;
             }
             /* we must not cut after a zero_width_space */
             if (current_glyph->type == GRE_TEXVERB_GLYPH) {
@@ -161,16 +167,19 @@ static gregorio_element *gabc_det_elements_from_glyphs(
             cut_before(current_glyph, &first_glyph, &previous_glyph,
                        &current_element);
             /* if statement to make neumatic cuts not appear in elements, as
-             * there is always one between elements */
+             * there is always one between elements, unless the next element
+             * is a space */
             if (current_glyph->type != GRE_SPACE
-                || current_glyph->u.misc.unpitched.info.space != SP_NEUMATIC_CUT)
-                /* clef change or space other thant neumatic cut */
-            {
+                    || current_glyph->u.misc.unpitched.info.space
+                    != SP_NEUMATIC_CUT
+                    || (current_glyph->next
+                        && current_glyph->next->type == GRE_SPACE)) {
+                /* clef change or space other than neumatic cut */
                 if (!first_element) {
                     first_element = current_element;
                 }
                 gregorio_add_misc_element(&current_element, current_glyph->type,
-                                          current_glyph->u.misc,
+                                          &(current_glyph->u.misc),
                                           current_glyph->texverb);
             }
             first_glyph = current_glyph->next;

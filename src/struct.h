@@ -185,12 +185,15 @@ ENUM(gregorio_sign, GREGORIO_SIGN);
     A(SP_DEFAULT, 1) \
     E(SP_NO_SPACE) \
     E(SP_ZERO_WIDTH) \
+    E(SP_HALF_SPACE) \
     E(SP_NEUMATIC_CUT) \
     E(SP_LARGER_SPACE) \
     E(SP_GLYPH_SPACE) \
+    E(SP_AD_HOC_SPACE) \
     E(SP_NEUMATIC_CUT_NB) \
     E(SP_LARGER_SPACE_NB) \
-    L(SP_GLYPH_SPACE_NB)
+    E(SP_GLYPH_SPACE_NB) \
+    L(SP_AD_HOC_SPACE_NB)
 ENUM(gregorio_space, GREGORIO_SPACE);
 
 /* the different liquescences, like for the signs, have special
@@ -362,6 +365,7 @@ ENUM(gregorio_word_position, GREGORIO_WORD_POSITION);
 ENUM(gregorio_lyric_centering, GREGORIO_LYRIC_CENTERING);
 
 typedef struct gregorio_extra_info {
+    char *ad_hoc_space_factor;
     /* the sub-type of GRE_END_OF_LINE */
     ENUM_BITFIELD(gregorio_type) sub_type:8;
     ENUM_BITFIELD(gregorio_bar) bar:8;
@@ -829,7 +833,7 @@ void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
         gregorio_type type, signed char pitch, bool flatted_key,
         bool force_pitch, char *texverb);
 void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
-        gregorio_type type, gregorio_extra_info info, gregorio_sign sign,
+        gregorio_type type, gregorio_extra_info *info, gregorio_sign sign,
         char *texverb);
 void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
         gregorio_type sub_type, const gregorio_scanner_location *loc);
@@ -846,7 +850,7 @@ void gregorio_add_alteration_as_note(gregorio_note **current_note,
         gregorio_type type, signed char pitch,
         const gregorio_scanner_location *loc);
 void gregorio_add_space_as_note(gregorio_note **current_note,
-        gregorio_space space,
+        gregorio_space space, char *factor,
         const gregorio_scanner_location *loc);
 void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
         gregorio_type type, const gregorio_scanner_location *loc);
@@ -860,7 +864,7 @@ void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str);
 void gregorio_add_cs_to_note(gregorio_note *const*current_note, char *str,
         bool nabc);
 void gregorio_add_misc_element(gregorio_element **current_element,
-        gregorio_type type, gregorio_misc_element_info info, char *texverb);
+        gregorio_type type, gregorio_misc_element_info *info, char *texverb);
 void gregorio_reinitialize_alterations(char alterations[][13],
         int number_of_voices);
 void gregorio_reinitialize_one_voice_alterations(char alterations[13]);

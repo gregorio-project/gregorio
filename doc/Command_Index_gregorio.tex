@@ -54,6 +54,15 @@ Macro to typeset the additional line above or below the staff.
   \#3 & integer & Set horizontal episema (0), horizontal episema under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4).\\
 \end{argtable}
 
+\macroname{\textbackslash GreAdHocSpaceEndOfElement}{\#1\#2}{gregoriotex-main.tex}
+Macro to end an element with an ad-hoc space.
+
+\begin{argtable}
+  \#1 & float & The factor to scale the default space for use as an ad-hoc space.\\
+  \#2 & \texttt{0} & Space is breakable.\\
+  & \texttt{1} & Space is unbreakable.\\
+\end{argtable}
+
 \macroname{\textbackslash GreAugmentumDuplex}{\#1\#2\#3}{gregoriotex-signs.tex}
 Macro for typesetting an augmentum duplex (a pair of punctum mora)
 
@@ -221,6 +230,7 @@ Macro to end elements.
   & \texttt{1} & Larger space.\\
   & \texttt{2} & Glyph space.\\
   & \texttt{3} & Zero-width space.\\
+  & \texttt{4} & Ad-hoc space.\\
   \#2 & \texttt{0} & Space is breakable.\\
   & \texttt{1} & Space is unbreakable.\\
 \end{argtable}
@@ -244,15 +254,26 @@ Macro to end a glyph without ending the element.
   \#1 & \texttt{0} & Default space.\\
   & \texttt{1} & Zero-width space.\\
   & \texttt{2} & Space between flat or natural and a note.\\
-  & \texttt{3} & Space between two puncta inclinata.\\
+  & \texttt{3} & Space between two puncta inclinata, descending.\\
   & \texttt{4} & Space between bivirga or trivirga.\\
   & \texttt{5} & space between bistropha or tristropha.\\
   & \texttt{6} & Space after a punctum mora XXX: not used yet, not so sure it is a good idea\ldots\\
-  & \texttt{7} & Space between a punctum inclinatum and a punctum inclinatum debilis.\\
+  & \texttt{7} & Space between a punctum inclinatum and a punctum inclinatum debilis, descending.\\
   & \texttt{8} & Space between two puncta inclinata debilis.\\
   & \texttt{9} & Space before a punctum (or something else) and a punctum inclinatum.\\
-  & \texttt{10} & Space between puncta inclinata (also debilis for now), larger ambitus (range=3rd).\\
-  & \texttt{11} & Space between puncta inclinata (also debilis for now), larger ambitus (range=4th or more).\\
+  & \texttt{10} & Space between puncta inclinata (also debilis for now), larger ambitus (range=3rd), descending.\\
+  & \texttt{11} & Space between puncta inclinata (also debilis for now), larger ambitus (range=4th or 5th), descending.\\
+  & \texttt{12} & Space between two puncta inclinata, ascending. \\
+  & \texttt{13} & Space between a punctum inclinatum and a punctum inclinatum debilis, ascending. \\
+  & \texttt{14} & Space between puncta inclinata (also debilis for now), larger ambitus (range=3rd), ascending. \\
+  & \texttt{15} & Space between puncta inclinata (also debilis for now), larger ambitus (range=4th or 5th), ascending. \\
+  & \texttt{16} & Space between a punctum inclinatum and a ``no-bar'' glyph one pitch below. \\
+  & \texttt{17} & Space between a punctum inclinatum and a ``no-bar'' glyph two pitches below. \\
+  & \texttt{18} & Space between a punctum inclinatum and a ``no-bar'' glyph three or four pitches below \\
+  & \texttt{19} & Space between a punctum inclinatum and a ``no-bar'' glyph one pitch above. \\
+  & \texttt{20} & Space between a punctum inclinatum and a ``no-bar'' glyph two pitches above. \\
+  & \texttt{21} & Space between a punctum inclinatum and a ``no-bar'' glyph three or four pitches above \\
+  & \texttt{22} & Half-space. \\
 \end{argtable}
 
 \macroname{\textbackslash GreFinalCustos}{\#1}{gregoriotex-signs.tex}

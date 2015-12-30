@@ -862,7 +862,8 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             if (add) {
                 if (pitch == USELESS_VALUE) {
                     gregorio_add_unpitched_element_as_glyph(&last_glyph, type,
-                            current_note->u.other, sign, current_note->texverb);
+                            &(current_note->u.other), sign,
+                            current_note->texverb);
                 } else {
                     gregorio_add_pitched_element_as_glyph(&last_glyph, type,
                             pitch, flat, force, current_note->texverb);

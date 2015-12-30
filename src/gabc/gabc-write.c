@@ -256,14 +256,29 @@ static void gabc_write_key_change(FILE *f, char step, int line,
  * 
  */
 
-static void gabc_write_space(FILE *f, gregorio_space type)
+static void gabc_write_space(FILE *f, gregorio_space type, char *factor,
+        bool next_is_space)
 {
     switch (type) {
+    case SP_NEUMATIC_CUT:
+        if (next_is_space) {
+            /* if the following is not a space, we omit this because the
+             * code always puts a "/" between elements unless there is some
+             * other space there */
+            fprintf (f, "/");
+        }
+        break;
     case SP_LARGER_SPACE:
         fprintf(f, "//");
         break;
     case SP_GLYPH_SPACE:
         fprintf(f, " ");
+        break;
+    case SP_AD_HOC_SPACE:
+        fprintf(f, "/[%s]", factor);
+        break;
+    case SP_NEUMATIC_CUT_NB:
+        fprintf(f, "!/");
         break;
     case SP_LARGER_SPACE_NB:
         fprintf(f, "!//");
@@ -271,12 +286,8 @@ static void gabc_write_space(FILE *f, gregorio_space type)
     case SP_GLYPH_SPACE_NB:
         fprintf(f, "! ");
         break;
-    case SP_NEUMATIC_CUT_NB:
-        fprintf(f, "!/");
-        break;
-    case SP_NEUMATIC_CUT:
-        /* do not uncomment it, the code is strangely done but it works */
-        /* fprintf (f, "/"); */
+    case SP_AD_HOC_SPACE_NB:
+        fprintf(f, "!/[%s]", factor);
         break;
     default:
         unsupported("gabc_write_space", "space type",
@@ -649,8 +660,19 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
         fprintf(f, "%c#", pitch_letter(glyph->u.misc.pitched.pitch));
         break;
     case GRE_SPACE:
-        if (glyph->u.misc.unpitched.info.space == SP_ZERO_WIDTH && glyph->next) {
-            fprintf(f, "!");
+        if (glyph->next) {
+            switch (glyph->u.misc.unpitched.info.space) {
+            case SP_ZERO_WIDTH:
+                fprintf(f, "!");
+                break;
+            case SP_HALF_SPACE:
+                fprintf(f, "/0");
+                break;
+            default:
+                gregorio_message(_("bad space"), "gabc_write_gregorio_glyph",
+                        VERBOSITY_ERROR, 0);
+                break;
+            }
         } else {
             gregorio_message(_("bad space"), "gabc_write_gregorio_glyph",
                     VERBOSITY_ERROR, 0);
@@ -717,7 +739,9 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element)
         }
         break;
     case GRE_SPACE:
-        gabc_write_space(f, element->u.misc.unpitched.info.space);
+        gabc_write_space(f, element->u.misc.unpitched.info.space,
+                element->u.misc.unpitched.info.ad_hoc_space_factor,
+                element->next && element->next->type == GRE_SPACE);
         break;
     case GRE_BAR:
         gabc_write_bar(f, element->u.misc.unpitched.info.bar);
@@ -765,8 +789,7 @@ static void gabc_write_gregorio_elements(FILE *f, gregorio_element *element)
         /* we don't want a bar after an end of line */
         if (element->type != GRE_END_OF_LINE
             && (element->type != GRE_SPACE
-                || (element->type == GRE_SPACE
-                    && element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT))
+                || element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT)
             && element->next && element->next->type == GRE_ELEMENT) {
             fprintf(f, "/");
         }

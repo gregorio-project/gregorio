@@ -1221,11 +1221,18 @@
   \gre@obsolete{\protect\greblockcustos}{\protect\greseteolcustos{manual}}%
 }%
 
+\def\GreAdHocSpaceEndOfElement#1#2{%
+  \gre@skip@temp@four = \gre@skip@interelementspace\relax %
+  \directlua{gregoriotex.scale_space(#1)}%
+  \GreEndOfElement{4}{#2}%
+}%
+
 % macro to end elements, #1 is the type of space, it can be :
 %% 0: default space
 %% 1: larger space
 %% 2: glyph space
 %% 3: zero-width space
+%% 4: custom space
 % #2 is if the space is unbreakable (1) or not (0)
 \def\GreEndOfElement#1#2{%
   \ifnum #2=0\relax %
@@ -1241,6 +1248,11 @@
     \gre@hskip\gre@skip@temp@four %
   \or% case 2
     \gre@skip@temp@four = \gre@skip@glyphspace\relax%
+    \gre@hskip\gre@skip@temp@four %
+  \or% case 3
+    \gre@skip@temp@four = \gre@skip@zerowidthspace\relax%
+    \gre@hskip\gre@skip@temp@four %
+  \or% case 4
     \gre@hskip\gre@skip@temp@four %
   \fi%
   \ifnum #2=1\relax %
@@ -1274,6 +1286,7 @@
 %% 19: space between a punctum inclinatum and a "no-bar" glyph one pitch above
 %% 20: space between a punctum inclinatum and a "no-bar" glyph two pitches above
 %% 21: space between a punctum inclinatum and a "no-bar" glyph three or four pitches above
+%% 22: half-space
 \def\gre@get@spaceskip#1{%
   \ifcase#1%
     \gre@skip@temp@four = \gre@skip@interglyphspace\relax%
@@ -1319,6 +1332,8 @@
     \gre@skip@temp@four = \gre@skip@ascendinginclinatumtonobarbigshift\relax%
   \or% case 21
     \gre@skip@temp@four = \gre@skip@ascendinginclinatumtonobarmaxshift\relax%
+  \or% case 22
+    \gre@skip@temp@four = \gre@skip@halfspace\relax%
   \fi%
 }%
 
