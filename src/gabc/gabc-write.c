@@ -260,9 +260,6 @@ static void gabc_write_space(FILE *f, gregorio_space type, char *factor,
         bool next_is_space)
 {
     switch (type) {
-    case SP_HALF_SPACE:
-        fprintf(f, "/0");
-        break;
     case SP_NEUMATIC_CUT:
         if (next_is_space) {
             /* if the following is not a space, we omit this because the
@@ -279,9 +276,6 @@ static void gabc_write_space(FILE *f, gregorio_space type, char *factor,
         break;
     case SP_AD_HOC_SPACE:
         fprintf(f, "/[%s]", factor);
-        break;
-    case SP_HALF_SPACE_NB:
-        fprintf(f, "!/0");
         break;
     case SP_NEUMATIC_CUT_NB:
         fprintf(f, "!/");
@@ -666,8 +660,19 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
         fprintf(f, "%c#", pitch_letter(glyph->u.misc.pitched.pitch));
         break;
     case GRE_SPACE:
-        if (glyph->u.misc.unpitched.info.space == SP_ZERO_WIDTH && glyph->next) {
-            fprintf(f, "!");
+        if (glyph->next) {
+            switch (glyph->u.misc.unpitched.info.space) {
+            case SP_ZERO_WIDTH:
+                fprintf(f, "!");
+                break;
+            case SP_HALF_SPACE:
+                fprintf(f, "/0");
+                break;
+            default:
+                gregorio_message(_("bad space"), "gabc_write_gregorio_glyph",
+                        VERBOSITY_ERROR, 0);
+                break;
+            }
         } else {
             gregorio_message(_("bad space"), "gabc_write_gregorio_glyph",
                     VERBOSITY_ERROR, 0);

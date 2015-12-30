@@ -1002,10 +1002,8 @@ static bool is_bridgeable_space(const gregorio_element *const element)
 {
     if (element->type == GRE_SPACE) {
         switch (element->u.misc.unpitched.info.space) {
-        case SP_HALF_SPACE:
         case SP_NEUMATIC_CUT:
         case SP_LARGER_SPACE:
-        case SP_HALF_SPACE_NB:
         case SP_NEUMATIC_CUT_NB:
         case SP_LARGER_SPACE_NB:
             return true;

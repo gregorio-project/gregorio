@@ -1224,7 +1224,7 @@
 \def\GreAdHocSpaceEndOfElement#1#2{%
   \gre@skip@temp@four = \gre@skip@interelementspace\relax %
   \directlua{gregoriotex.scale_space(#1)}%
-  \GreEndOfElement{5}{#2}%
+  \GreEndOfElement{4}{#2}%
 }%
 
 % macro to end elements, #1 is the type of space, it can be :
@@ -1232,8 +1232,7 @@
 %% 1: larger space
 %% 2: glyph space
 %% 3: zero-width space
-%% 4: interglyph half-space
-%% 5: custom space
+%% 4: custom space
 % #2 is if the space is unbreakable (1) or not (0)
 \def\GreEndOfElement#1#2{%
   \ifnum #2=0\relax %
@@ -1254,9 +1253,6 @@
     \gre@skip@temp@four = \gre@skip@zerowidthspace\relax%
     \gre@hskip\gre@skip@temp@four %
   \or% case 4
-    \gre@skip@temp@four = \gre@skip@halfspace\relax%
-    \gre@hskip\gre@skip@temp@four %
-  \or% case 5
     \gre@hskip\gre@skip@temp@four %
   \fi%
   \ifnum #2=1\relax %

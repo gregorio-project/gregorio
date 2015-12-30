@@ -206,12 +206,9 @@ static bool is_longqueue(const signed char pitch,
         WHILEGLYPH(next);
         if (element && element->type == GRE_SPACE
                 && (element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT
-                    || element->u.misc.unpitched.info.space == SP_HALF_SPACE
                     || element->u.misc.unpitched.info.space == SP_LARGER_SPACE
                     || element->u.misc.unpitched.info.space
                     == SP_NEUMATIC_CUT_NB
-                    || element->u.misc.unpitched.info.space
-                    == SP_HALF_SPACE_NB
                     || element->u.misc.unpitched.info.space
                     == SP_LARGER_SPACE_NB)) {
             element = element->next;
@@ -226,12 +223,9 @@ static bool is_longqueue(const signed char pitch,
         WHILEGLYPH(previous);
         if (element && element->type == GRE_SPACE
                 && (element->u.misc.unpitched.info.space == SP_NEUMATIC_CUT
-                    || element->u.misc.unpitched.info.space == SP_HALF_SPACE
                     || element->u.misc.unpitched.info.space == SP_LARGER_SPACE
                     || element->u.misc.unpitched.info.space
                     == SP_NEUMATIC_CUT_NB
-                    || element->u.misc.unpitched.info.space
-                    == SP_HALF_SPACE_NB
                     || element->u.misc.unpitched.info.space
                     == SP_LARGER_SPACE_NB)) {
             element = element->previous;
@@ -1687,6 +1681,7 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
      * removes the space introduced by the punctummora. */
     if (glyph->u.notes.glyph_type == G_PODATUS && glyph->next
             && glyph->next->type == GRE_SPACE
+            && glyph->next->u.misc.unpitched.info.space == SP_ZERO_WIDTH
             && current_note->next && glyph->next->next
             && glyph->next->next->type == GRE_GLYPH
             && glyph->next->next->u.notes.first_note
@@ -2804,9 +2799,19 @@ static void gregoriotex_write_element(FILE *f, gregorio_syllable *syllable,
         for (glyph = element->u.first_glyph; glyph; glyph = glyph->next) {
             switch (glyph->type) {
             case GRE_SPACE:
-                /* we assume here that it is a SP_ZERO_WIDTH, the only one a
-                 * glyph can be */
-                fprintf(f, "\\GreEndOfGlyph{1}%%\n");
+                switch (glyph->u.misc.unpitched.info.space) {
+                case SP_ZERO_WIDTH:
+                    fprintf(f, "\\GreEndOfGlyph{1}%%\n");
+                    break;
+                case SP_HALF_SPACE:
+                    fprintf(f, "\\GreEndOfGlyph{0}%%\n");
+                    break;
+                default:
+                    gregorio_message(
+                            _("encountered an unexpected glyph-level space"),
+                            "gregoriotex_write_element", VERBOSITY_ERROR, 0);
+                    break;
+                }
                 break;
 
             case GRE_TEXVERB_GLYPH:
@@ -3281,9 +3286,6 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             case SP_GLYPH_SPACE:
                 fprintf(f, "\\GreEndOfElement{2}{0}%%\n");
                 break;
-            case SP_HALF_SPACE:
-                fprintf(f, "\\GreEndOfElement{4}{0}%%\n");
-                break;
             case SP_NEUMATIC_CUT:
                 fprintf(f, "\\GreEndOfElement{0}{0}%%\n");
                 break;
@@ -3297,9 +3299,6 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             case SP_LARGER_SPACE_NB:
                 fprintf(f, "\\GreEndOfElement{1}{1}%%\n");
                 break;
-            case SP_HALF_SPACE_NB:
-                fprintf(f, "\\GreEndOfElement{4}{1}%%\n");
-                break;
             case SP_NEUMATIC_CUT_NB:
                 fprintf(f, "\\GreEndOfElement{0}{1}%%\n");
                 break;
@@ -3308,6 +3307,9 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                         element->u.misc.unpitched.info.ad_hoc_space_factor);
                 break;
             default:
+                gregorio_message(
+                        _("encountered an unexpected element-level space"),
+                        "write_syllable", VERBOSITY_ERROR, 0);
                 break;
             }
             break;

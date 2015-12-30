@@ -185,15 +185,14 @@ ENUM(gregorio_sign, GREGORIO_SIGN);
     A(SP_DEFAULT, 1) \
     E(SP_NO_SPACE) \
     E(SP_ZERO_WIDTH) \
+    E(SP_HALF_SPACE) \
     E(SP_NEUMATIC_CUT) \
     E(SP_LARGER_SPACE) \
     E(SP_GLYPH_SPACE) \
-    E(SP_HALF_SPACE) \
     E(SP_AD_HOC_SPACE) \
     E(SP_NEUMATIC_CUT_NB) \
     E(SP_LARGER_SPACE_NB) \
     E(SP_GLYPH_SPACE_NB) \
-    E(SP_HALF_SPACE_NB) \
     L(SP_AD_HOC_SPACE_NB)
 ENUM(gregorio_space, GREGORIO_SPACE);
 

@@ -139,15 +139,21 @@ static gregorio_element *gabc_det_elements_from_glyphs(
                 current_glyph = current_glyph->next;
                 continue;
             }
-            /* we must not cut after a zero_width_space */
-            if (current_glyph->type == GRE_SPACE
-                && current_glyph->u.misc.unpitched.info.space == SP_ZERO_WIDTH) {
-                if (!current_glyph->next) {
-                    close_element(&current_element, &first_glyph, current_glyph);
+            /* we must not cut after a glyph-level space */
+            if (current_glyph->type == GRE_SPACE) {
+                switch (current_glyph->u.misc.unpitched.info.space) {
+                case SP_ZERO_WIDTH:
+                case SP_HALF_SPACE:
+                    if (!current_glyph->next) {
+                        close_element(&current_element, &first_glyph, current_glyph);
+                    }
+                    current_glyph = current_glyph->next;
+                    do_not_cut = true;
+                    continue;
+                default:
+                    /* any other space should be handled normally */
+                    break;
                 }
-                current_glyph = current_glyph->next;
-                do_not_cut = true;
-                continue;
             }
             /* we must not cut after a zero_width_space */
             if (current_glyph->type == GRE_TEXVERB_GLYPH) {
@@ -168,7 +174,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
                     != SP_NEUMATIC_CUT
                     || (current_glyph->next
                         && current_glyph->next->type == GRE_SPACE)) {
-                /* clef change or space other thant neumatic cut */
+                /* clef change or space other than neumatic cut */
                 if (!first_element) {
                     first_element = current_element;
                 }
