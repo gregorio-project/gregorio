@@ -233,9 +233,10 @@ static __inline gregorio_vposition above_if_h_episema(
 static __inline gregorio_vposition above_if_fused_next_h_episema(
         const gregorio_glyph *glyph)
 {
-    if (glyph->next && glyph->next->type == GRE_GLYPH
-            && is_fused(glyph->next->u.notes.liquescentia)) {
-        return above_if_h_episema(glyph->next->u.notes.first_note);
+    const gregorio_glyph *next = gregorio_next_non_texverb_glyph(glyph);
+    if (next && next->type == GRE_GLYPH
+            && is_fused(next->u.notes.liquescentia)) {
+        return above_if_h_episema(next->u.notes.first_note);
     }
     return VPOS_BELOW;
 }
@@ -374,6 +375,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
 {
     gregorio_vposition h_episema = VPOS_AUTO, v_episema = VPOS_AUTO;
     bool v_episema_below_is_lower = false, done;
+    const gregorio_glyph *previous;
 
     /* no need to clear is_lower_note/is_upper_note because we used calloc */
 
@@ -892,8 +894,9 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         }
         break;
     default: /* case T_ONE_NOTE */
-        if ((!glyph->previous || glyph->previous->type != GRE_GLYPH
-                    || glyph->previous->u.notes.fuse_to_next_glyph < 0)
+        previous = gregorio_previous_non_texverb_glyph(glyph);
+        if ((!previous || previous->type != GRE_GLYPH
+                    || previous->u.notes.fuse_to_next_glyph < 0)
                 && (glyph->u.notes.fuse_to_next_glyph > 0)) {
             h_episema = above_if_fused_next_h_episema(glyph);
         } else {
@@ -1320,8 +1323,9 @@ static __inline void end_h_episema(height_computation *const h,
                     }
                 }
             } else {
-                if (h->start_glyph->previous
-                        && h->start_glyph->previous->type == GRE_GLYPH
+                const gregorio_glyph *previous =
+                        gregorio_previous_non_texverb_glyph(h->start_glyph);
+                if (previous && previous->type == GRE_GLYPH
                         && is_fused(h->start_glyph->u.notes.liquescentia)) {
                     gregorio_note *note = gregorio_glyph_last_note(
                             h->start_glyph->previous);
@@ -1461,18 +1465,18 @@ static __inline void compute_note_positioning(height_computation *const above,
     compute_h_episema(below, element, glyph, note, i, type);
 }
 
-static __inline int compute_fused_shift(gregorio_glyph *glyph)
+static __inline int compute_fused_shift(const gregorio_glyph *glyph)
 {
     int shift;
     gregorio_note *first_note, *prev_note;
-    gregorio_glyph *previous;
+    const gregorio_glyph *next, *previous;
     bool next_is_fused;
 
     if (!glyph || !is_fused(glyph->u.notes.liquescentia)
             || glyph->type != GRE_GLYPH
             || !(first_note = glyph->u.notes.first_note)
             || first_note->type != GRE_NOTE
-            || !(previous = glyph->previous)
+            || !(previous = gregorio_previous_non_texverb_glyph(glyph))
             || previous->type != GRE_GLYPH
             || previous->u.notes.liquescentia & TAIL_LIQUESCENTIA_MASK
             || !previous->u.notes.first_note) {
@@ -1480,8 +1484,9 @@ static __inline int compute_fused_shift(gregorio_glyph *glyph)
         return 0;
     }
 
-    next_is_fused = glyph->next && glyph->next->type == GRE_GLYPH
-            && is_fused(glyph->next->u.notes.liquescentia);
+    next = gregorio_next_non_texverb_glyph(glyph);
+    next_is_fused = next && next->type == GRE_GLYPH
+            && is_fused(next->u.notes.liquescentia);
 
     switch (glyph->u.notes.glyph_type) {
     case G_PORRECTUS:
@@ -1557,9 +1562,11 @@ static __inline int compute_fused_shift(gregorio_glyph *glyph)
     if (first_note->u.note.shape == S_ORISCUS
             || first_note->u.note.shape == S_ORISCUS_SCAPUS) {
         gregorio_note *next_note = first_note->next;
-        if (!next_note && glyph->next && glyph->next->type == GRE_GLYPH
-                && is_fused(glyph->next->u.notes.liquescentia)) {
-            next_note = glyph->next->u.notes.first_note;
+        const gregorio_glyph *next_glyph;
+        if (!next_note && (next_glyph = gregorio_next_non_texverb_glyph(glyph))
+                && next_glyph->type == GRE_GLYPH
+                && is_fused(next_glyph->u.notes.liquescentia)) {
+            next_note = next_glyph->u.notes.first_note;
         }
         if (next_note) {
             if (next_note->u.note.pitch < first_note->u.note.pitch) {
@@ -1633,7 +1640,7 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
                 if (glyph->type == GRE_GLYPH) {
                     gregorio_note *note;
                     glyph->u.notes.fuse_to_next_glyph = compute_fused_shift(
-                            glyph->next);
+                            gregorio_next_non_texverb_glyph(glyph));
                     i = 0;
                     gregoriotex_determine_glyph_name(glyph, element, &ignored,
                             &type);

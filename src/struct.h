@@ -922,7 +922,8 @@ static __inline void gregorio_go_to_first_character_c(gregorio_character **chara
 }
 
 static __inline gregorio_note *gregorio_glyph_last_note(
-        const gregorio_glyph *const glyph) {
+        const gregorio_glyph *const glyph)
+{
     gregorio_note *note;
     if (!glyph || glyph->type != GRE_GLYPH) {
         return NULL;
@@ -931,6 +932,32 @@ static __inline gregorio_note *gregorio_glyph_last_note(
         /* iterate to find the last note */
     }
     return note;
+}
+
+static __inline const gregorio_glyph *gregorio_next_non_texverb_glyph(
+        const gregorio_glyph *glyph)
+{
+    if (glyph) {
+        for (glyph = glyph->next; glyph; glyph = glyph->next) {
+            if (glyph->type != GRE_TEXVERB_GLYPH) {
+                return glyph;
+            }
+        }
+    }
+    return NULL;
+}
+
+static __inline const gregorio_glyph *gregorio_previous_non_texverb_glyph(
+        const gregorio_glyph *glyph)
+{
+    if (glyph) {
+        for (glyph = glyph->previous; glyph; glyph = glyph->previous) {
+            if (glyph->type != GRE_TEXVERB_GLYPH) {
+                return glyph;
+            }
+        }
+    }
+    return NULL;
 }
 
 #endif

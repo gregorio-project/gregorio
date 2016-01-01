@@ -167,6 +167,36 @@ the notes into the above primitives.  Using the same examples as before:
 (;) @<v>[</v>IJkh<v>]</v>(@[IJkh])
 }
 
+\subsection{Custom Ledger Lines}
+
+To specify a custom ledger line, use
+\texttt{[oll:}\textit{left}\texttt{;}\textit{right}\texttt{]} to create an
+over-the-staff ledger line with specified lengths to the left and right of the
+point where it is introduced.  If \textit{left} is \texttt{0}, the ledger line
+will start at the introduction point.  If \textit{left} is \texttt{1}, the
+ledger line will start at the \textit{additionaallineswidth} distance to the
+left of the introduction point.  Otherwise, the line will start at the
+\textit{left} distance (taken to be an explicit length, with \TeX{} units
+required) to the left of the introduction point.  When using this form,
+\texttt{right} must be an explicit length to the right of the introduction
+point at which to end the line.
+
+Alternately, use
+\texttt{[oll:}\textit{left}\texttt{\{}\textit{right}\texttt{]} to specify the
+start of an over-the-staff ledger line, followed by \texttt{[oll:\}]} at some
+point later to specify its end.  When using this form, \textit{left} has the
+same meaning as before.  However, \textit{right} takes on similar values as
+\textit{left}, which are instead applied to the right of the specified
+endpoint.
+
+Use \texttt{ull} instead of \texttt{oll} (with either form) to create an
+under-the-staff ledger line.
+
+When using this feature with fusion, you will not be able to start or end a
+ledger line in the middle of two-note primitive shapes.  To work around this,
+either adjust the parameters of the ledger line or use manual fusion to break
+up those two notes.
+
 \subsection{Lyric Centering}
 
 Gregorio centers the text of each syllable around the first note of each

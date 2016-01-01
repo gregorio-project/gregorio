@@ -571,15 +571,92 @@ static gregorio_note *close_fused_glyph(gregorio_glyph **last_glyph,
             current_note);
 }
 
-static gregorio_note *close_fusion_glyph(gregorio_glyph **last_glyph,
-        gregorio_note **first_note, gregorio_liquescentia liquescentia,
+static gregorio_note *next_non_texverb_note(gregorio_note *first_note,
         gregorio_note *last_note)
 {
+    if (first_note == NULL) {
+        return NULL;
+    }
+
+    if (first_note == last_note) {
+        if (first_note->type == GRE_TEXVERB_GLYPH) {
+            gregorio_message(_("Unexpected texverb at start of iteration"),
+                    "next_non_texverb_note", VERBOSITY_ERROR, 0);
+        }
+        return first_note;
+    }
+
+    for (first_note = first_note->next; first_note && first_note != last_note;
+            first_note = first_note->next) {
+        if (first_note->type != GRE_TEXVERB_GLYPH) {
+            return first_note;
+        }
+    }
+
+    if (first_note->type == GRE_TEXVERB_GLYPH) {
+        gregorio_message(_("Unexpected texverb at end of iteration"),
+                "next_non_texverb_note", VERBOSITY_ERROR, 0);
+    }
+
+    return last_note;
+}
+
+static void add_intervening_texverbs(gregorio_glyph **last_glyph,
+        gregorio_note *first_note, gregorio_note *last_note)
+{
+    for ( ; first_note && first_note->type == GRE_TEXVERB_GLYPH; ) {
+        bool on_last_note = (first_note == last_note);
+
+        gregorio_add_unpitched_element_as_glyph(last_glyph, first_note->type,
+                &(first_note->u.other), _NO_SIGN, first_note->texverb);
+        first_note->texverb = NULL;
+        gregorio_free_one_note(&first_note);
+
+        if (on_last_note) {
+            break;
+        }
+    }
+}
+
+static gregorio_note *close_fusion_glyph(gregorio_glyph **last_glyph,
+        gregorio_note **first_note, gregorio_liquescentia liquescentia,
+        gregorio_note *real_last_note)
+{
     bool first = true;
+    gregorio_note *last_note, *texverb_tail;
     gregorio_note *next;
     int prev_shift = 0, shift, shift2;
+    gregorio_note *result;
+
+    if ((*first_note)->type == GRE_TEXVERB_GLYPH) {
+        gregorio_message(_("Unexpected texverb at start of fusion"),
+                "close_fusion_glyph", VERBOSITY_ERROR, 0);
+        return real_last_note;
+    }
+
+    for (last_note = real_last_note;
+            last_note != *first_note && last_note->type == GRE_TEXVERB_GLYPH;
+            last_note = last_note->previous) {
+        /* skip over the trailing texverbs */
+    }
+    texverb_tail = (last_note == real_last_note)? NULL : last_note->next;
+
     for (;;) {
         bool processed = false;
+
+        /* fusion must work through glyph-level texverbs */
+        if ((*first_note)->type == GRE_TEXVERB_GLYPH) {
+            gregorio_add_unpitched_element_as_glyph(last_glyph,
+                    (*first_note)->type, &((*first_note)->u.other), _NO_SIGN,
+                    (*first_note)->texverb);
+            (*first_note)->texverb = NULL;
+            if (*first_note == last_note) {
+                gregorio_message(_("Unexpected texverb at end of fusion"),
+                        "close_fusion_glyph", VERBOSITY_ERROR, 0);
+                return last_note;
+            }
+            gregorio_free_one_note(first_note);
+        }
 
         if (*first_note == last_note || !(next = (*first_note)->next)) {
             gregorio_message(_("Unexpected single note during fusion"),
@@ -587,16 +664,24 @@ static gregorio_note *close_fusion_glyph(gregorio_glyph **last_glyph,
             return last_note;
         }
 
+        next = next_non_texverb_note(*first_note, last_note);
+
         shift = next->u.note.pitch - (*first_note)->u.note.pitch;
         if (shift != 0 && next == last_note) {
             /* there are exactly two notes left, so we end fusion */
-            return close_fused_glyph(last_glyph,
+            add_intervening_texverbs(last_glyph, (*first_note)->next, next);
+            result = close_fused_glyph(last_glyph,
                     shift < 0? G_FLEXA : G_PODATUS, first_note,
                     liquescentia, last_note);
+            if (texverb_tail) {
+                add_intervening_texverbs(last_glyph, texverb_tail,
+                        real_last_note);
+            }
+            return result;
         }
         if (prev_shift >= 0 && shift < 0) {
             /* check for a porrectus-like flexus */
-            gregorio_note *next_next = next->next;
+            gregorio_note *next_next = next_non_texverb_note(next, last_note);
             if (!next_next) {
                 gregorio_message(_("Unexpected end of notes during fusion"),
                         "close_fusion_glyph", VERBOSITY_ERROR, 0);
@@ -607,11 +692,18 @@ static gregorio_note *close_fusion_glyph(gregorio_glyph **last_glyph,
                 if (next_next == last_note) {
                     /* there are exactly three notes left in a porrectus shape,
                      * so we end fusion */
-                    return close_fused_glyph(last_glyph,
+                    add_intervening_texverbs(last_glyph, (*first_note)->next,
+                            next);
+                    add_intervening_texverbs(last_glyph, next->next, next_next);
+                    result = close_fused_glyph(last_glyph,
                             G_PORRECTUS, first_note,
                             liquescentia, last_note);
+                    add_intervening_texverbs(last_glyph, texverb_tail,
+                            real_last_note);
+                    return result;
                 }
                 /* found a porrectus-like flexus */
+                add_intervening_texverbs(last_glyph, *first_note, next);
                 close_fused_glyph(last_glyph,
                         shift < 0? G_FLEXA : G_PODATUS, first_note,
                         liquescentia & ~TAIL_LIQUESCENTIA_MASK, next);
@@ -776,6 +868,11 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             bool flat = false;
             bool force = false;
             gregorio_sign sign = _NO_SIGN;
+
+            if (current_glyph_type == G_FUSED && type == GRE_TEXVERB_GLYPH) {
+                current_note = next_note;
+                continue;
+            }
 
             if (current_glyph_type != G_UNDETERMINED) {
                 close_glyph(&last_glyph, next_glyph_type,
