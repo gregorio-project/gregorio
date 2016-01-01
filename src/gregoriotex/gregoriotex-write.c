@@ -1817,9 +1817,10 @@ static __inline int get_punctum_inclinatum_to_nobar_space_case(
 {
     if (glyph->u.notes.glyph_type <= G_PUNCTA_INCLINATA) {
         const gregorio_glyph *next = gregorio_next_non_texverb_glyph(glyph);
-        if (next->type == GRE_GLYPH && (next->u.notes.glyph_type == G_PUNCTUM
-                || (next->u.notes.glyph_type == G_FLEXA &&
-                    !next->u.notes.fuse_to_next_glyph))) {
+        if (next && next->type == GRE_GLYPH
+                && (next->u.notes.glyph_type == G_PUNCTUM
+                    || (next->u.notes.glyph_type == G_FLEXA
+                        && !next->u.notes.fuse_to_next_glyph))) {
             int descent;
             gregorio_note *note = gregorio_glyph_last_note(glyph);
             descent = note->u.note.pitch -
