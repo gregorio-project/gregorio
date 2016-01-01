@@ -348,9 +348,10 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
     gregorio_note *current_note;
     int ambitus1, ambitus2, ambitus3, fuse_ambitus = 0;
     const char *fuse_head = "", *fuse_tail = "";
+    const gregorio_glyph *previous = gregorio_previous_non_texverb_glyph(glyph);
     int fuse_to_next_note, fuse_from_previous_note =
-            (glyph->previous && glyph->previous->type == GRE_GLYPH)
-            ? glyph->previous->u.notes.fuse_to_next_glyph : 0;
+            (previous && previous->type == GRE_GLYPH)
+            ? previous->u.notes.fuse_to_next_glyph : 0;
 
     /* then we start making our formula */
     if (!glyph) {
@@ -384,7 +385,7 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
             fuse_head = FUSE_Lower;
         } else if (fuse_from_previous_note < 0) {
             gregorio_note *previous_note = gregorio_glyph_last_note(
-                    glyph->previous);
+                    gregorio_previous_non_texverb_glyph(glyph));
             if (previous_note->u.note.shape == S_ORISCUS
                     || previous_note->u.note.shape == S_ORISCUS_SCAPUS) {
                 fuse_head = FUSE_Lower;
@@ -1814,30 +1815,32 @@ static __inline int get_punctum_inclinatum_space_case(
 static __inline int get_punctum_inclinatum_to_nobar_space_case(
         const gregorio_glyph *const glyph)
 {
-    if (glyph->u.notes.glyph_type <= G_PUNCTA_INCLINATA
-            && (glyph->next->u.notes.glyph_type == G_PUNCTUM
-                || (glyph->next->u.notes.glyph_type == G_FLEXA &&
-                    !glyph->next->u.notes.fuse_to_next_glyph))) {
-        int descent;
-        gregorio_note *note = gregorio_glyph_last_note(glyph);
-        descent = note->u.note.pitch -
-            glyph->next->u.notes.first_note->u.note.pitch;
-        /* a negative descent is an ascent */
-        switch(descent) {
-        case -1:
-            return 19;
-        case 1:
-            return 16;
-        case -2:
-            return 20;
-        case 2:
-            return 17;
-        case -3:
-        case -4:
-            return 21;
-        case 3:
-        case 4:
-            return 18;
+    if (glyph->u.notes.glyph_type <= G_PUNCTA_INCLINATA) {
+        const gregorio_glyph *next = gregorio_next_non_texverb_glyph(glyph);
+        if (next->type == GRE_GLYPH && (next->u.notes.glyph_type == G_PUNCTUM
+                || (next->u.notes.glyph_type == G_FLEXA &&
+                    !next->u.notes.fuse_to_next_glyph))) {
+            int descent;
+            gregorio_note *note = gregorio_glyph_last_note(glyph);
+            descent = note->u.note.pitch -
+                glyph->next->u.notes.first_note->u.note.pitch;
+            /* a negative descent is an ascent */
+            switch(descent) {
+            case -1:
+                return 19;
+            case 1:
+                return 16;
+            case -2:
+                return 20;
+            case 2:
+                return 17;
+            case -3:
+            case -4:
+                return 21;
+            case 3:
+            case 4:
+                return 18;
+            }
         }
     }
 
@@ -1880,9 +1883,11 @@ static __inline void write_single_hepisema(FILE *const f, int hepisema_case,
         if (i - 1 != porrectus_long_episema_index || !note->previous
                 || !is_episema_shown(note->previous)) {
             if (connect) {
-                if (!note->next && (!glyph->next
-                            || glyph->next->type != GRE_SPACE
-                            || glyph->next->u.misc.unpitched.info.space
+                const gregorio_glyph *next;
+                if (!note->next
+                        && (!(next = gregorio_next_non_texverb_glyph(glyph))
+                            || next->type != GRE_SPACE
+                            || next->u.misc.unpitched.info.space
                             != SP_ZERO_WIDTH)) {
                     /* not followed by a zero-width space */
                     /* try to fuse from punctum inclinatum to nobar glyph */
@@ -2580,9 +2585,11 @@ static void gregoriotex_write_glyph(FILE *f, gregorio_syllable *syllable,
     char next_note_pitch = 0;
     gregorio_note *current_note;
     const char *leading_shape, *shape;
+    const gregorio_glyph *prev_glyph =
+            gregorio_previous_non_texverb_glyph(glyph);
     int fuse_to_next_note, fuse_from_previous_note =
-            (glyph->previous && glyph->previous->type == GRE_GLYPH)
-            ? glyph->previous->u.notes.fuse_to_next_glyph : 0;
+            (prev_glyph && prev_glyph->type == GRE_GLYPH)
+            ? prev_glyph->u.notes.fuse_to_next_glyph : 0;
     if (!glyph) {
         gregorio_message(_("called with NULL pointer"),
                 "gregoriotex_write_glyph", VERBOSITY_ERROR, 0);

@@ -607,11 +607,11 @@ void gregorio_free_one_note(gregorio_note **note)
         return;
     }
     if ((*note)->next) {
-        (*note)->next->previous = NULL;
+        (*note)->next->previous = (*note)->previous;
         next = (*note)->next;
     }
     if ((*note)->previous) {
-        (*note)->previous->next = NULL;
+        (*note)->previous->next = (*note)->next;
     }
     free_one_note(*note);
     *note = next;

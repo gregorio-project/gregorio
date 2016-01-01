@@ -42,9 +42,17 @@ static char char_for_brace;
 static unsigned int nbof_isolated_episema;
 static char *notesmacros[10];
 static char tempstr[256];
-static int brace_var_counter;
-static int overbrace_var, underbrace_var;
+static int brace_var_counter = 0;
+static int overbrace_var = 0, underbrace_var = 0;
 static const char *overbrace_var_kind;
+static int before_ledger_type;
+static char *before_ledger_length = NULL;
+static int ledger_var[2] = { 0, 0 };
+
+typedef enum ledger_line_type {
+    LL_OVER = 0,
+    LL_UNDER = 1
+} ledger_line_type;
 
 static __inline char pitch_letter_to_height(const char pitch) {
     return pitch - 'a' + LOWEST_PITCH;
@@ -63,9 +71,19 @@ static __inline void lex_add_note(int i, gregorio_shape shape, char signs,
         char liquescentia)
 {
     nbof_isolated_episema = 0;
-    gregorio_add_note(&current_note,
-            pitch_letter_to_height(tolower((unsigned char)gabc_notes_determination_text[i])),
+    gregorio_add_note(&current_note, pitch_letter_to_height(
+            tolower((unsigned char)gabc_notes_determination_text[i])),
             shape, signs, liquescentia, NULL, &notes_lloc);
+
+    if (ledger_var[LL_OVER]) {
+        current_note->supposed_high_ledger_line = true;
+        current_note->explicit_high_ledger_line = true;
+    }
+
+    if (ledger_var[LL_UNDER]) {
+        current_note->supposed_low_ledger_line = true;
+        current_note->explicit_low_ledger_line = true;
+    }
 }
 
 static __inline void add_bar_as_note(gregorio_bar bar)
@@ -81,7 +99,8 @@ static __inline void error(void)
             gabc_notes_determination_text[3] - '0');
 }
 
-static void add_h_episema(void) {
+static void add_h_episema(void)
+{
     grehepisema_size size = H_NORMAL;
     gregorio_vposition vposition = VPOS_AUTO;
     bool disable_bridge = false;
@@ -121,7 +140,8 @@ static void add_h_episema(void) {
                 &nbof_isolated_episema);
 }
 
-static void add_sign(gregorio_sign sign) {
+static void add_sign(gregorio_sign sign)
+{
     gregorio_vposition vposition = VPOS_AUTO;
     switch(gabc_notes_determination_text[1]) {
     case '0':
@@ -134,10 +154,110 @@ static void add_sign(gregorio_sign sign) {
     gregorio_add_sign(current_note, sign, vposition);
 }
 
-static __inline void add_alteration(const gregorio_type type) {
+static __inline void add_alteration(const gregorio_type type)
+{
     gregorio_add_alteration_as_note(&current_note, type,
             pitch_letter_to_height(gabc_notes_determination_text[0]),
             &notes_lloc);
+}
+
+static void save_before_ledger(const char *const before_ledger)
+{
+    if (strcmp(before_ledger, "0") == 0) {
+        before_ledger_type = 0;
+        before_ledger_length = "";
+    } else if (strcmp(before_ledger, "1") == 0) {
+        before_ledger_type = 1;
+        before_ledger_length = "";
+    } else {
+        before_ledger_type = 2;
+        before_ledger_length = gregorio_strdup(before_ledger);
+    }
+}
+
+static void add_static_ledger(const ledger_line_type type, const char *length) {
+    gregorio_snprintf(tempstr, sizeof tempstr,
+            "\\GreDrawAdditionalLine{%d}{%s}{%d}{%s}{0}{}",
+            type, length + 1, before_ledger_type, before_ledger_length);
+
+    if (before_ledger_type == 2) {
+        free(before_ledger_length);
+        before_ledger_length = NULL;
+    }
+
+    gregorio_add_texverb_as_note(&current_note, gregorio_strdup(tempstr),
+            GRE_TEXVERB_GLYPH, &notes_lloc);
+}
+
+static __inline const char *ledger_type_name(const ledger_line_type type) {
+    switch (type) {
+    case LL_OVER:
+        return "over";
+    case LL_UNDER:
+        return "under";
+    }
+    gregorio_messagef("ledger_type_name", VERBOSITY_ERROR, 0,
+            _("invalid ledger type %d"), type);
+    return NULL;
+}
+
+static void add_variable_ledger(const ledger_line_type type,
+        const char *after_ledger)
+{
+    if (ledger_var[type]) {
+        const char *const typename = ledger_type_name(type);
+        gregorio_messagef("add_variable_ledger", VERBOSITY_ERROR, 0,
+                _("variable %s-staff ledger line without termination of "
+                "previous %s-staff ledger line"), typename, typename);
+    } else {
+        int after_ledger_type;
+        const char *after_ledger_length;
+
+        ++after_ledger;
+
+        if (strcmp(after_ledger, "0") == 0) {
+            after_ledger_type = 0;
+            after_ledger_length = "";
+        } else if (strcmp(after_ledger, "1") == 0) {
+            after_ledger_type = 1;
+            after_ledger_length = "";
+        } else {
+            after_ledger_type = 2;
+            after_ledger_length = after_ledger;
+        }
+
+        ledger_var[type] = ++brace_var_counter;
+        gregorio_snprintf(tempstr, sizeof tempstr,
+                "\\GreVarBraceSavePos{%d}{0}{1}"
+                "\\GreDrawAdditionalLine{%d}{\\GreVarBraceLength{%d}}"
+                "{%d}{%s}{%d}{%s}",
+                ledger_var[type], type, ledger_var[type], before_ledger_type,
+                before_ledger_length, after_ledger_type, after_ledger_length);
+
+        if (before_ledger_type == 2) {
+            free(before_ledger_length);
+            before_ledger_length = NULL;
+        }
+
+        gregorio_add_texverb_as_note(&current_note, gregorio_strdup(tempstr),
+                GRE_TEXVERB_GLYPH, &notes_lloc);
+    }
+}
+
+static void end_variable_ledger(const ledger_line_type type)
+{
+    if (!ledger_var[type]) {
+        const char *const typename = ledger_type_name(type);
+        gregorio_messagef("end_variable_ledger", VERBOSITY_ERROR, 0,
+                _("variable %s-staff ledger line termination without variable "
+                "%s-staff ledger line start"), typename, typename);
+    } else {
+        gregorio_snprintf(tempstr, sizeof tempstr,
+                "\\GreVarBraceSavePos{%d}{0}{2}", ledger_var[type]);
+        ledger_var[type] = 0;
+        gregorio_add_texverb_as_note(&current_note, gregorio_strdup(tempstr),
+                GRE_TEXVERB_GLYPH, &notes_lloc);
+    }
 }
 
 %}
@@ -170,6 +290,9 @@ static __inline void add_alteration(const gregorio_type type) {
 %x overcurlyaccentusbrace
 %x space
 %x nbspace
+%x overledger overledger2
+%x underledger underledger2
+%x endledger
 
 %%
 <INITIAL>\% {
@@ -388,12 +511,6 @@ static __inline void add_alteration(const gregorio_type type) {
 <INITIAL>\] {
         gregorio_end_autofuse(&current_note, &notes_lloc);
     }
-<INITIAL>\/\[ {
-        BEGIN(space);
-    }
-<INITIAL>!\/\[ {
-        BEGIN(nbspace);
-    }
 <overbrace>[^\]]+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverBrace{%s}{0pt}{0pt}{%d}",
@@ -445,15 +562,57 @@ static __inline void add_alteration(const gregorio_type type) {
                 gregorio_strdup(gabc_notes_determination_text), GRE_ALT,
                 &notes_lloc);
     }
+<INITIAL>\/\[ {
+        BEGIN(space);
+    }
 <space>-?(\.[0-9]+|[0-9]+(\.[0-9]*)?)/\] {
         gregorio_add_space_as_note(&current_note, SP_AD_HOC_SPACE,
                 gregorio_strdup(gabc_notes_determination_text), &notes_lloc);
+    }
+<INITIAL>!\/\[ {
+        BEGIN(nbspace);
     }
 <nbspace>-?(\.[0-9]+|[0-9]+(\.[0-9]*)?)/\] {
         gregorio_add_space_as_note(&current_note, SP_AD_HOC_SPACE_NB,
                 gregorio_strdup(gabc_notes_determination_text), &notes_lloc);
     }
-<texverbnote,texverbglyph,texverbelement,choralsign,choralnabc,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,underbrace,space,nbspace>\] {
+<INITIAL>\[oll:\}\] {
+        end_variable_ledger(LL_OVER);
+    }
+<INITIAL>\[oll: {
+        BEGIN(overledger);
+    }
+<overledger>[^;{]+ {
+        save_before_ledger(gabc_notes_determination_text);
+        BEGIN(overledger2);
+    }
+<overledger2>;[^\]]+ {
+        add_static_ledger(LL_OVER, gabc_notes_determination_text);
+        BEGIN(endledger);
+    }
+<overledger2>\{[^\]]+ {
+        add_variable_ledger(LL_OVER, gabc_notes_determination_text);
+        BEGIN(endledger);
+    }
+<INITIAL>\[ull:\}\] {
+        end_variable_ledger(LL_UNDER);
+    }
+<INITIAL>\[ull: {
+        BEGIN(underledger);
+    }
+<underledger>[^;{]+ {
+        save_before_ledger(gabc_notes_determination_text);
+        BEGIN(underledger2);
+    }
+<underledger2>;[^\]]+ {
+        add_static_ledger(LL_UNDER, gabc_notes_determination_text);
+        BEGIN(endledger);
+    }
+<underledger2>\{[^\]]+ {
+        add_variable_ledger(LL_UNDER, gabc_notes_determination_text);
+        BEGIN(endledger);
+    }
+<texverbnote,texverbglyph,texverbelement,choralsign,choralnabc,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,underbrace,space,nbspace,endledger>\] {
         BEGIN(INITIAL);
     }
 \{  {
