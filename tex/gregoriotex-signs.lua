@@ -115,8 +115,8 @@ local offset_cases = {
   -- punctum inclinatum deminutus as last note
   {
     case = 'FinalInclinatumDeminutus',
-    v = [[\gre@vepisemaorrareaux{0}{\GreCPPunctumInclinatumAuctus}{0}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPPunctumInclinatumAuctus}{\gre@char@he@inclinatumdem{#4}}{2}{#3}]],
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPPunctumInclinatumDeminutus}{0}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPPunctumInclinatumDeminutus}{\gre@char@he@inclinatumdem{#4}}{2}{#3}]],
   },
   -- stropha as last note
   {
