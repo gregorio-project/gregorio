@@ -1510,6 +1510,10 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     switch (first_note->u.note.shape) {
     case S_QUILISMA:
     case S_QUILISMA_QUADRATUM:
+    case S_PUNCTUM_CAVUM:
+    case S_ORISCUS_CAVUM:
+    case S_ORISCUS_CAVUM_AUCTUS:
+    case S_ORISCUS_CAVUM_DEMINUTUS:
         /* if this glyph starts with one of these, it's not fusable */
         return 0;
 
@@ -1535,6 +1539,19 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     if (prev_note->type != GRE_NOTE) {
         /* previous note wasn't a note */
         return 0;
+    }
+
+    switch (prev_note->u.note.shape) {
+    case S_PUNCTUM_CAVUM:
+    case S_ORISCUS_CAVUM:
+    case S_ORISCUS_CAVUM_AUCTUS:
+    case S_ORISCUS_CAVUM_DEMINUTUS:
+        /* these don't fuse to anything */
+        return 0;
+
+    default:
+        /* anything else is potentially fusable */
+        break;
     }
 
     shift = first_note->u.note.pitch - prev_note->u.note.pitch;
