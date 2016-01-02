@@ -2949,35 +2949,6 @@ static void gregoriotex_print_change_line_clef(FILE *f,
     }
 }
 
-static void handle_final_bar(FILE *f, const char *type, gregorio_syllable *syllable)
-{
-    gregorio_element *element;
-    fprintf(f, "\\GreFinal%s{%%\n", type);
-    /* first element will be the bar, which we just handled, so skip it */
-    for (element = (*syllable->elements)->next; element;
-            element = element->next) {
-        switch (element->type) {
-        case GRE_TEXVERB_ELEMENT:
-            if (element->texverb) {
-                fprintf(f, "%% verbatim text at element level:\n%s%%\n"
-                        "%% end of verbatim text\n", element->texverb);
-            }
-            break;
-
-        case GRE_CUSTOS:
-            assert(element->u.misc.pitched.force_pitch);
-            fprintf(f, "\\GreFinalCustos{%d}%%\n",
-                    pitch_value(element->u.misc.pitched.pitch));
-            break;
-
-        default:
-            /* do nothing */
-            break;
-        }
-    }
-    fprintf(f, "}%%\n");
-}
-
 static __inline bool is_manual_custos(const gregorio_element *element)
 {
     return element->type == GRE_ELEMENT
@@ -3027,6 +2998,48 @@ static __inline bool next_is_bar(const gregorio_syllable *syllable,
 
     assert(false); /* should never reach here */
     return false; /* avoid gcc 5.1 warning */
+}
+
+static void finish_syllable(FILE *f, gregorio_syllable *syllable) {
+    /* Very last, if the syllable is the end of a no-linebreak area: */
+    if (syllable->no_linebreak_area == NLBA_END) {
+        fprintf(f, "\\GreEndNLBArea{%d}{0}%%\n",
+                next_is_bar(syllable, NULL)? 3 : 1);
+    }
+    if (syllable->euouae == EUOUAE_END) {
+        fprintf(f, "\\GreEndEUOUAE{%d}%%\n",
+                next_is_bar(syllable, NULL)? 3 : 1);
+    }
+}
+
+static void handle_final_bar(FILE *f, const char *type, gregorio_syllable *syllable)
+{
+    gregorio_element *element;
+    fprintf(f, "\\GreFinal%s{%%\n", type);
+    /* first element will be the bar, which we just handled, so skip it */
+    for (element = (*syllable->elements)->next; element;
+            element = element->next) {
+        switch (element->type) {
+        case GRE_TEXVERB_ELEMENT:
+            if (element->texverb) {
+                fprintf(f, "%% verbatim text at element level:\n%s%%\n"
+                        "%% end of verbatim text\n", element->texverb);
+            }
+            break;
+
+        case GRE_CUSTOS:
+            assert(element->u.misc.pitched.force_pitch);
+            fprintf(f, "\\GreFinalCustos{%d}%%\n",
+                    pitch_value(element->u.misc.pitched.pitch));
+            break;
+
+        default:
+            /* do nothing */
+            break;
+        }
+    }
+    fprintf(f, "}%%\n");
+    finish_syllable(f, syllable);
 }
 
 static __inline void write_syllable_point_and_click(FILE *const f,
@@ -3464,15 +3477,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             || syllable->position == WORD_ONE_SYLLABLE || !syllable->text) {
         fprintf(f, "%%\n");
     }
-    /* Very last, if the syllable is the end of a no-linebreak area: */
-    if (syllable->no_linebreak_area == NLBA_END) {
-        fprintf(f, "\\GreEndNLBArea{%d}{0}%%\n",
-                next_is_bar(syllable, NULL)? 3 : 1);
-    }
-    if (syllable->euouae == EUOUAE_END) {
-        fprintf(f, "\\GreEndEUOUAE{%d}%%\n",
-                next_is_bar(syllable, NULL)? 3 : 1);
-    }
+    finish_syllable(f, syllable);
 }
 
 static char *digest_to_hex(const unsigned char digest[SHA1_DIGEST_SIZE])
