@@ -918,6 +918,14 @@ If the \texttt{string} option is supplied, the value will be passed with all
 non-space characters as \TeX{} catcode 12 (and all spaces as catcode 10).
 If not, the value will be evaluated as \TeX{}.
 
+The standard gabc headers will be processed first, in an arbitrary (but
+not random) order, followed by the external headers (the ones whose names
+start with \texttt{x-}), in the order they were presented in the gabc file.
+Headers will be processed in the TeX state at the point of the
+\verb=\gregorioscore= call.  This means, for example, that should the
+capturing macro produce something, it will be typeset within the same
+paragraph as the \verb=\gregorioscore= call.
+
 
 \subsubsection{Ancient Notation}
 For a full description of how to make use of the ancient notation capabilities of gregorio and Gregorio\TeX, look at the GregorioNabcRef documentation.  The commands listed here allow the manipulation of settings related to that notation.

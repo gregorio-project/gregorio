@@ -3563,24 +3563,33 @@ static void initialize_score(gregoriotex_status *const status,
 static __inline void write_escapable_header_text(FILE *const f,
         const char *text)
 {
+    /* We escape these characters into \string\ddd (where ddd is the decimal
+     * ASCII value of the character) for most escapes, and into \string\n for
+     * newlines. We do it this way to get the "raw" string values through TeX
+     * and into Lua, where the sequences become \ddd and \n respectively and
+     * are translated into their byte values. Lua can then decide whether the
+     * full strings should be evaluated by TeX as TeX or as strings */
     for (; *text; ++text) {
         switch (*text) {
         case '\\':
         case '{':
         case '}':
         case '~':
-        case '%':
+        case '%': /* currently, we'll never get %, but handle it anyway */
         case '#':
         case '"':
+            /* these characters have special meaning to TeX */
             fprintf(f, "\\string\\%03d", *text);
             break;
         case '\n':
+            /* currently, we'll never get \n, but handle it anyway */
             fprintf(f, "\\string\\n");
             break;
         case '\r':
             /* ignore */
             break;
         default:
+            /* UTF-8 multibyte sequences will fall into here, which is fine */
             fputc(*text, f);
             break;
         }
