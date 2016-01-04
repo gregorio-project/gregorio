@@ -3560,6 +3560,108 @@ static void initialize_score(gregoriotex_status *const status,
     status->point_and_click = point_and_click;
 }
 
+static __inline void write_escapable_header_text(FILE *const f,
+        const char *text)
+{
+    /* We escape these characters into \string\ddd (where ddd is the decimal
+     * ASCII value of the character) for most escapes, and into \string\n for
+     * newlines. We do it this way to get the "raw" string values through TeX
+     * and into Lua, where the sequences become \ddd and \n respectively and
+     * are translated into their byte values. Lua can then decide whether the
+     * full strings should be evaluated by TeX as TeX or as strings */
+    for (; *text; ++text) {
+        switch (*text) {
+        case '\\':
+        case '{':
+        case '}':
+        case '~':
+        case '%': /* currently, we'll never get %, but handle it anyway */
+        case '#':
+        case '"':
+            /* these characters have special meaning to TeX */
+            fprintf(f, "\\string\\%03d", *text);
+            break;
+        case '\n':
+            /* currently, we'll never get \n, but handle it anyway */
+            fprintf(f, "\\string\\n");
+            break;
+        case '\r':
+            /* ignore */
+            break;
+        default:
+            /* UTF-8 multibyte sequences will fall into here, which is fine */
+            fputc(*text, f);
+            break;
+        }
+    }
+}
+
+static void write_header(FILE *const f, const char *const name,
+        const char *const value)
+{
+    if (value) {
+        fprintf(f, "\\GreHeader{");
+        write_escapable_header_text(f, name);
+        fprintf(f, "}{");
+        write_escapable_header_text(f, value);
+        fprintf(f, "}%%\n");
+    }
+}
+
+static void write_numeric_header(FILE *const f, const char *const name,
+        const int value)
+{
+    fprintf(f, "\\GreHeader{");
+    write_escapable_header_text(f, name);
+    fprintf(f, "}{%d}%%\n", value);
+}
+
+static void write_headers(FILE *const f, gregorio_score *const score)
+{
+    int i;
+    gregorio_external_header *header;
+
+    if (score->number_of_voices != 1) {
+        write_numeric_header(f, "number-of-voices", score->number_of_voices);
+    }
+    write_header(f, "name", score->name);
+    write_header(f, "score-copyright", score->score_copyright);
+    write_header(f, "gabc-copyright", score->gabc_copyright);
+    write_header(f, "office-part", score->office_part);
+    write_header(f, "occasion", score->occasion);
+    write_header(f, "meter", score->meter);
+    write_header(f, "commentary", score->commentary);
+    write_header(f, "arranger", score->arranger);
+    if (score->mode) {
+        write_numeric_header(f, "mode", score->mode);
+    }
+    write_header(f, "author", score->si.author);
+    write_header(f, "date", score->si.date);
+    write_header(f, "manuscript", score->si.manuscript);
+    write_header(f, "manuscript-reference", score->si.manuscript_reference);
+    write_header(f, "manuscript-storage-place", score->si.manuscript_storage_place);
+    write_header(f, "book", score->si.book);
+    write_header(f, "transcriber", score->si.transcriber);
+    write_header(f, "language", score->language);
+    write_header(f, "transcription-date", score->si.transcription_date);
+    if (score->nabc_lines) {
+        write_numeric_header(f, "nabc-lines", score->nabc_lines);
+    }
+    write_header(f, "user-notes", score->user_notes);
+
+    /* since gregorio_voice_info is voice-specific, and there is no current
+     * way to move to the next voice for writing headers to GregorioTeX, these
+     * will be skipped until such is needed */
+
+    for (i = 0; i < MAX_ANNOTATIONS; ++i) {
+        write_header(f, "annotation", score->annotation[i]);
+    }
+
+    for (header = score->external_headers; header; header = header->next) {
+        write_header(f, header->name, header->value);
+    }
+}
+
 void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         const char *const point_and_click_filename)
 {
@@ -3600,6 +3702,8 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         fprintf(f, "%% The copyright of the score is: %s\n",
                 score->score_copyright);
     }
+
+    write_headers(f, score);
 
     fprintf(f, "\\GreBeginScore{%s}{%d}{%d}{%d}{%d}{%s}%%\n",
             digest_to_hex(score->digest), status.top_height,
