@@ -1567,6 +1567,17 @@
 }%
 
 %%%%%%%%%%%%%%%%%%%
+%% headers
+%%%%%%%%%%%%%%%%%%%
+\def\gresetheadercapture#1#2#3{%
+  \directlua{gregoriotex.set_header_capture("#1","#2","#3")}%
+}%
+
+\def\GreHeader#1#2{%
+  \directlua{gregoriotex.capture_header("#1","#2")}%
+}%
+
+%%%%%%%%%%%%%%%%%%%
 %% score including
 %%%%%%%%%%%%%%%%%%%
 

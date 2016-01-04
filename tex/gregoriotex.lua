@@ -84,6 +84,8 @@ local number_to_letter = {
   ['5'] = 'F', ['6'] = 'G', ['7'] = 'H', ['8'] = 'I', ['9'] = 'J',
 }
 
+local capture_header_macro = {}
+
 local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
 
 local user_defined_subtype = node.subtype('user_defined')
@@ -869,6 +871,36 @@ local function scale_space(factor)
   -- should skip.stretch and skip.shink also be scaled?
 end
 
+local function set_header_capture(header, macro_name, flags)
+  local macro = {}
+  macro.name = macro_name
+  flags:gsub("([^,]+)", function(flag)
+    if flag == "string" then macro.takes_string = true
+    elseif flag == "name" then macro.takes_header_name = true
+    else err("unknown header capture flag: %s", flag)
+    end
+  end)
+  capture_header_macro[header] = macro
+  log("capturing header %s using %s, string=%s, name=%s", header, macro.name, macro.takes_string, macro.takes_header_name)
+end
+
+local function capture_header(header, value)
+  local macro = capture_header_macro[header]
+  if macro ~= nil then
+    tex.sprint(string.format([[\%s{]], macro.name))
+    if macro.takes_header_name then
+      tex.sprint(-2, header)
+      tex.sprint('}{')
+    end
+    if macro.takes_string then
+      tex.sprint(-2, value)
+    else
+      tex.sprint(value)
+    end
+    tex.print('}')
+  end
+end
+
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
 
@@ -894,3 +926,5 @@ gregoriotex.mark_translation     = mark_translation
 gregoriotex.mark_abovelinestext  = mark_abovelinestext
 gregoriotex.width_to_bp          = width_to_bp
 gregoriotex.scale_space          = scale_space
+gregoriotex.set_header_capture   = set_header_capture
+gregoriotex.capture_header       = capture_header
