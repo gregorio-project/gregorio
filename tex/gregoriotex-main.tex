@@ -185,11 +185,16 @@
 \def\gre@pitch@l{14}%
 \def\gre@pitch@m{15}%
 \def\gre@pitch@n{16}%
-\def\gre@pitch@o{17}%
-\def\gre@pitch@p{18}%
+\def\gre@pitch@p{17}%
 
-\let\gre@pitch@adjust@top\gre@pitch@j %
 \let\gre@pitch@adjust@bottom\gre@pitch@c %
+\let\gre@pitch@belowstaff\gre@pitch@c %
+\let\gre@pitch@ledger@below\gre@pitch@b %
+\let\gre@pitch@barvepisema\gre@pitch@c %
+\let\gre@pitch@underbrace\gre@pitch@b %
+\let\gre@pitch@overbraceglyph\gre@pitch@g %
+\let\gre@pitch@bar\gre@pitch@g %
+\let\gre@pitch@dummy\gre@pitch@g %
 
 % factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
 % it is set to the default value : 17 (the value that makes it look like a standard graduale)
@@ -767,19 +772,32 @@
       \else %
         \vskip\gre@dimen@stafflineheight\relax%
       \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-      \kern\gre@skip@temp@four %
-      \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-      \else %
-        \vskip\gre@dimen@stafflineheight\relax%
+      \ifgre@haslinethree %
+        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
+        \kern\gre@skip@temp@four %
+        \ifgre@showlines %
+          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
+        \else %
+          \vskip\gre@dimen@stafflineheight\relax%
+        \fi %
       \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-      \kern\gre@skip@temp@four %
-      \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-      \else %
-        \vskip\gre@dimen@stafflineheight\relax%
+      \ifgre@haslinefour %
+        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
+        \kern\gre@skip@temp@four %
+        \ifgre@showlines %
+          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
+        \else %
+          \vskip\gre@dimen@stafflineheight\relax%
+        \fi %
+      \fi %
+      \ifgre@haslinefive %
+        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
+        \kern\gre@skip@temp@four %
+        \ifgre@showlines %
+          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
+        \else %
+          \vskip\gre@dimen@stafflineheight\relax%
+        \fi %
       \fi %
       \vskip\gre@dimen@spacelinestext\relax%
       \vskip\gre@dimen@spacebeneathtext\relax%
@@ -819,19 +837,32 @@
       \else %
         \vskip\gre@dimen@stafflineheight\relax%
       \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-      \kern\gre@skip@temp@four %
-      \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-      \else %
-        \vskip\gre@dimen@stafflineheight\relax%
+      \ifgre@haslinethree %
+        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
+        \kern\gre@skip@temp@four %
+        \ifgre@showlines %
+          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
+        \else %
+          \vskip\gre@dimen@stafflineheight\relax%
+        \fi %
       \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-      \kern\gre@skip@temp@four %
-      \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-      \else %
-        \vskip\gre@dimen@stafflineheight\relax%
+      \ifgre@haslinefour %
+        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
+        \kern\gre@skip@temp@four %
+        \ifgre@showlines %
+          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
+        \else %
+          \vskip\gre@dimen@stafflineheight\relax%
+        \fi %
+      \fi %
+      \ifgre@haslinefive %
+        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
+        \kern\gre@skip@temp@four %
+        \ifgre@showlines %
+          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
+        \else %
+          \vskip\gre@dimen@stafflineheight\relax%
+        \fi %
       \fi %
       \vskip\gre@dimen@spacelinestext\relax%
       \vskip\gre@dimen@additionalbottomspace\relax%
@@ -1011,6 +1042,64 @@
 % gre@attr@dash (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
 \newif\ifgre@beginningofscore%
+\newif\ifgre@haslinethree%
+\newif\ifgre@haslinefour%
+\newif\ifgre@haslinefive%
+
+\def\gre@setstafflines#1{%
+  \def\gre@stafflines{#1}%
+  \ifcase#1% 0
+    \gre@error{Invalid number of staff lines}%
+  \or % 1
+    \gre@error{Invalid number of staff lines}%
+  \or % 2
+    \let\gre@pitch@adjust@top\gre@pitch@f %
+    \let\gre@pitch@abovestaff\gre@pitch@g %
+    \let\gre@pitch@ledger@above\gre@pitch@h %
+    \let\gre@pitch@raresign\gre@pitch@g %
+    \let\gre@pitch@overbrace\gre@pitch@i %
+    \grechangeglyph{Virgula}{*}{.2}%
+    \grechangeglyph{Divisio*}{*}{.2}%
+    \gre@haslinethreefalse %
+    \gre@haslinefourfalse %
+    \gre@haslinefivefalse %
+  \or % 3
+    \let\gre@pitch@adjust@top\gre@pitch@h %
+    \let\gre@pitch@abovestaff\gre@pitch@i %
+    \let\gre@pitch@ledger@above\gre@pitch@j %
+    \let\gre@pitch@raresign\gre@pitch@i %
+    \let\gre@pitch@overbrace\gre@pitch@k %
+    \grechangeglyph{Virgula}{*}{.3}%
+    \grechangeglyph{Divisio*}{*}{.3}%
+    \gre@haslinethreetrue %
+    \gre@haslinefourfalse %
+    \gre@haslinefivefalse %
+  \or % 4
+    \let\gre@pitch@adjust@top\gre@pitch@j %
+    \let\gre@pitch@abovestaff\gre@pitch@k %
+    \let\gre@pitch@ledger@above\gre@pitch@l %
+    \let\gre@pitch@raresign\gre@pitch@k %
+    \let\gre@pitch@overbrace\gre@pitch@m %
+    \greresetglyph{Virgula}%
+    \greresetglyph{Divisio*}%
+    \gre@haslinethreetrue %
+    \gre@haslinefourtrue %
+    \gre@haslinefivefalse %
+  \or % 5
+    \let\gre@pitch@adjust@top\gre@pitch@l %
+    \let\gre@pitch@abovestaff\gre@pitch@m %
+    \let\gre@pitch@ledger@above\gre@pitch@n %
+    \let\gre@pitch@raresign\gre@pitch@m %
+    \let\gre@pitch@overbrace\gre@pitch@p %
+    \grechangeglyph{Virgula}{*}{.5}%
+    \grechangeglyph{Divisio*}{*}{.5}%
+    \gre@haslinethreetrue %
+    \gre@haslinefourtrue %
+    \gre@haslinefivetrue %
+  \else %
+    \gre@error{Invalid number of staff lines}%
+  \fi %
+}%
 
 %macro called at the beginning of a score
 % #1 is the gabc score id
@@ -1019,7 +1108,8 @@
 % #4 is 1 if there is a translation somewhere
 % #5 is if 1 if we have space above the staff
 % #6 is the point-and-click filename
-\def\GreBeginScore#1#2#3#4#5#6{%
+% #7 is the number of staff lines
+\def\GreBeginScore#1#2#3#4#5#6#7{%
   % scores must be new paragraphs!
   \ifhmode\par\fi %
   \gre@beginningofscoretrue%
@@ -1027,6 +1117,7 @@
   \gre@resetledgerlineheuristics%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \xdef\gre@gabcname{#6}%
+  \gre@setstafflines{#7}%
   \global\let\gre@save@englishcentering\gre@lyriccentering\relax % OBSOLETE
   \global\let\gre@opening@initialstyle\gre@initiallines\relax % DEPRECATED by 4.1
   \ifgre@justifylastline%
@@ -1078,7 +1169,7 @@
   % with some versions of LuaTeX, the \localrightbox and \localleftbox must be set empty in an environment with the good attributes set
   \gre@localleftbox{}%
   \gre@localrightbox{}%
-  \gre@calculate@additionalspaces{\gre@pitch@g}{\gre@pitch@g}{0}{0}%
+  \gre@calculate@additionalspaces{\gre@pitch@dummy}{\gre@pitch@dummy}{0}{0}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@removetranslationspace %
   \gre@normalinitial %

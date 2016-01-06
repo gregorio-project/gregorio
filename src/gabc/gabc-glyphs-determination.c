@@ -750,7 +750,7 @@ static gregorio_note *close_glyph(gregorio_glyph **last_glyph,
 /* TODO: there may be a side effect with the flated keys... */
 
 static char gabc_determine_custo_pitch(gregorio_note *current_note,
-        int current_key)
+        int current_key, const gregorio_score *const score)
 {
     int pitch_difference = 0;
     int newkey;
@@ -773,11 +773,11 @@ static char gabc_determine_custo_pitch(gregorio_note *current_note,
             while (pitch_difference < LOWEST_PITCH) {
                 pitch_difference += 7;
             }
-            while (pitch_difference > HIGHEST_PITCH) {
+            while (pitch_difference > score->highest_pitch) {
                 pitch_difference -= 7;
             }
             assert(pitch_difference >= LOWEST_PITCH
-                    && pitch_difference <= HIGHEST_PITCH);
+                    && pitch_difference <= score->highest_pitch);
             return (char) pitch_difference;
         }
         current_note = current_note->next;
@@ -824,7 +824,7 @@ static char gabc_determine_custo_pitch(gregorio_note *current_note,
 /* this function updates current_key with the new values (with clef changes) */
 
 gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
-        int *current_key)
+        int *current_key, const gregorio_score *const score)
 {
     /* the first note of the current glyph, to be able to close it well:
      * later we will cut the link (next_notes and previous_note) between
@@ -909,7 +909,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
 
             case GRE_CUSTOS:
                 pitch = gabc_determine_custo_pitch(current_note->next,
-                        *current_key);
+                        *current_key, score);
                 break;
 
             case GRE_MANUAL_CUSTOS:

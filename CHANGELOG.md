@@ -22,6 +22,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Headers (including the arbitrary headers starting with `x-`) are now passed to TeX and may be captured in TeX by using the `\gresetheadercapture` command.  See GregorioRef for details.
 - Support for half-spaces and ad-hoc spaces.  Use `/0` in gabc for a half-space between notes.  Use `/[factor]` (substituting a positive or negative real number for the scale factor) for an ad-hoc space whose length is `interelementspace` scaled by the desired factor.  See [#736](https://github.com/gregorio-project/gregorio/issues/736).
 - Support for custom length ledger lines.  See GregorioRef for details (for the change request, see [#598](https://github.com/gregorio-project/gregorio/issues/598)).
+- Support for two-, three-, and five-line staves.  Set the `staff-lines` header to `2`, `3`, or `5`.  The two new notes at the top of the scale (for a five-line staff) are `n` and `p`.
 
 ### Deprecated
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.

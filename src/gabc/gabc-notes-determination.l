@@ -48,6 +48,8 @@ static const char *overbrace_var_kind;
 static int before_ledger_type;
 static char *before_ledger_length = NULL;
 static int ledger_var[2] = { 0, 0 };
+static unsigned char staff_lines;
+static signed char highest_pitch;
 
 typedef enum ledger_line_type {
     LL_OVER = 0,
@@ -55,7 +57,16 @@ typedef enum ledger_line_type {
 } ledger_line_type;
 
 static __inline char pitch_letter_to_height(const char pitch) {
-    return pitch - 'a' + LOWEST_PITCH;
+    char result = pitch - 'a' + LOWEST_PITCH;
+    if (pitch == 'p') {
+        --result;
+    }
+    if (result > highest_pitch) {
+        gregorio_messagef("pitch_letter_to_height", VERBOSITY_ERROR, 0,
+                _("invalid pitch for %u lines: %c"), (unsigned int)staff_lines,
+                pitch);
+    }
+    return result;
 }
 
 static gregorio_shape punctum(const char pitch)
@@ -257,6 +268,25 @@ static void end_variable_ledger(const ledger_line_type type)
         ledger_var[type] = 0;
         gregorio_add_texverb_as_note(&current_note, gregorio_strdup(tempstr),
                 GRE_TEXVERB_GLYPH, &notes_lloc);
+    }
+}
+
+static __inline void check_clef_line(char line)
+{
+    line -= '0';
+    if (line < 0 || line > staff_lines) {
+        gregorio_messagef("check_clef_line", VERBOSITY_ERROR, 0,
+                _("invalid clef line for %u lines: %d"),
+                (unsigned int)staff_lines, (int)line);
+    }
+}
+
+static __inline void check_dominican_bar(const int bar)
+{
+    if (bar < 1 || bar > (2 * (staff_lines - 1))) {
+        gregorio_messagef("check_dominican_line", VERBOSITY_ERROR, 0,
+                _("invalid dominican bar for %u lines: ;%d"),
+                (unsigned int)staff_lines, bar);
     }
 }
 
@@ -625,7 +655,7 @@ static void end_variable_ledger(const ledger_line_type type)
                 gregorio_strdup("\\hss%\n}%\n\\GreNoBreak\\relax "),
                 GRE_TEXVERB_ELEMENT, &notes_lloc);
     }
-[a-m]\+ {
+[a-np]\+ {
         gregorio_add_manual_custos_as_note(&current_note,
                 pitch_letter_to_height(gabc_notes_determination_text[0]),
                 &notes_lloc);
@@ -642,7 +672,8 @@ Z   {
         gregorio_add_end_of_line_as_note(&current_note, GRE_END_OF_PAR,
                 &notes_lloc);
     }
-(c|f)[1-4] {
+(c|f)[1-5] {
+        check_clef_line(gabc_notes_determination_text[1]);
         if (gabc_notes_determination_text[0]=='c') {
             gregorio_add_clef_change_as_note(&current_note, GRE_C_KEY_CHANGE,
                     gabc_notes_determination_text[1], &notes_lloc);
@@ -651,7 +682,8 @@ Z   {
                     gabc_notes_determination_text[1], &notes_lloc);
         }
     }
-(cb|fb)[1-4] {
+(cb|fb)[1-5] {
+        check_clef_line(gabc_notes_determination_text[2]);
         if (gabc_notes_determination_text[0]=='c') {
             gregorio_add_clef_change_as_note(&current_note,
                     GRE_C_KEY_CHANGE_FLATED, gabc_notes_determination_text[2],
@@ -668,44 +700,40 @@ Z   {
 ,   {
         add_bar_as_note(B_DIVISIO_MINIMA);
     }
-,1  {
+[,;]1 {
+        check_dominican_bar(1);
         add_bar_as_note(B_DIVISIO_MINOR_D1);
     }
-,2  {
+[,;]2 {
+        check_dominican_bar(2);
         add_bar_as_note(B_DIVISIO_MINOR_D2);
     }
-,3  {
+[,;]3 {
+        check_dominican_bar(3);
         add_bar_as_note(B_DIVISIO_MINOR_D3);
     }
-,4  {
+[,;]4 {
+        check_dominican_bar(4);
         add_bar_as_note(B_DIVISIO_MINOR_D4);
     }
-,5  {
+[,;]5 {
+        check_dominican_bar(5);
         add_bar_as_note(B_DIVISIO_MINOR_D5);
     }
-,6  {
+[,;]6 {
+        check_dominican_bar(6);
         add_bar_as_note(B_DIVISIO_MINOR_D6);
+    }
+[,;]7 {
+        check_dominican_bar(7);
+        add_bar_as_note(B_DIVISIO_MINOR_D7);
+    }
+[,;]8 {
+        check_dominican_bar(8);
+        add_bar_as_note(B_DIVISIO_MINOR_D8);
     }
 ;   {
         add_bar_as_note(B_DIVISIO_MINOR);
-    }
-;1  {
-        add_bar_as_note(B_DIVISIO_MINOR_D1);
-    }
-;2  {
-        add_bar_as_note(B_DIVISIO_MINOR_D2);
-    }
-;3  {
-        add_bar_as_note(B_DIVISIO_MINOR_D3);
-    }
-;4  {
-        add_bar_as_note(B_DIVISIO_MINOR_D4);
-    }
-;5  {
-        add_bar_as_note(B_DIVISIO_MINOR_D5);
-    }
-;6  {
-        add_bar_as_note(B_DIVISIO_MINOR_D6);
     }
 :   {
         add_bar_as_note(B_DIVISIO_MAIOR);
@@ -737,13 +765,13 @@ r4  {
 r5  {
         gregorio_add_special_sign(current_note, _SEMI_CIRCULUS_REVERSUS);
     }
-[a-mA-M]x {
+[a-npA-NP]x {
         add_alteration(GRE_FLAT);
     }
-[a-mA-M]# {
+[a-npA-NP]# {
         add_alteration(GRE_SHARP);
     }
-[a-mA-M]y {
+[a-npA-NP]y {
         add_alteration(GRE_NATURAL);
     }
 !?\/0 {
@@ -789,39 +817,39 @@ r5  {
 =   {
         gregorio_change_shape(current_note, S_LINEA);
     }
-[a-mA-M]vv {
+[a-npA-NP]vv {
         lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
-[a-mA-M]vvv {
+[a-npA-NP]vvv {
         lex_add_note(0, S_TRIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
-[a-mA-M]VV {
+[a-npA-NP]VV {
         lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
-[a-mA-M]VVV {
+[a-npA-NP]VVV {
         lex_add_note(0, S_TRIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
-[a-mA-M]ss {
+[a-npA-NP]ss {
         lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
-[a-mA-M]ss(\<|\>) {
+[a-npA-NP]ss(\<|\>) {
         lex_add_note(0, S_DISTROPHA, _NO_SIGN, L_AUCTUS_ASCENDENS);
     }
-[a-mA-M]sss {
+[a-npA-NP]sss {
         lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
-[a-mA-M]sss(\<|\>) {
+[a-npA-NP]sss(\<|\>) {
         lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTUS_ASCENDENS);
     }
-[a-mA-M] {
+[a-npA-NP] {
         lex_add_note(0, punctum(gabc_notes_determination_text[0]), _NO_SIGN,
                 L_NO_LIQUESCENTIA);
     }
--[a-mA-M] {
+-[a-npA-NP] {
         lex_add_note(1, punctum(gabc_notes_determination_text[1]), _NO_SIGN,
                 L_INITIO_DEBILIS);
     }
-@[a-mA-M] {
+@[a-npA-NP] {
         lex_add_note(1, punctum(gabc_notes_determination_text[1]), _NO_SIGN,
                 L_FUSED);
     }
@@ -892,7 +920,7 @@ s   {
 %%
 
 gregorio_note *gabc_det_notes_from_string(char *str, char *newmacros[10],
-        gregorio_scanner_location *loc)
+        gregorio_scanner_location *loc, const gregorio_score *const score)
 {
     int i;
     YY_BUFFER_STATE buf;
@@ -904,6 +932,9 @@ gregorio_note *gabc_det_notes_from_string(char *str, char *newmacros[10],
     notes_lloc.last_line = loc->first_line;
     notes_lloc.last_column = loc->first_column;
     notes_lloc.last_offset = loc->first_offset;
+
+    staff_lines = score->staff_lines;
+    highest_pitch = score->highest_pitch;
 
     /* a small optimization could uccur here: we could do it only once at the
      * beginning of the score, not at each syllable */

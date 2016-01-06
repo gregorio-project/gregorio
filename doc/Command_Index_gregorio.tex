@@ -20,7 +20,7 @@ respecting the annotation value in the \texttt{main.tex} file.
   \#2 & string & Second line text to place above the initial.\\
 \end{argtable}
 
-\macroname{\textbackslash GreBeginScore}{\#1\#2\#3\#4\#5\#6}{gregoriotex-main.tex}
+\macroname{\textbackslash GreBeginScore}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-main.tex}
 Macro to start a score.
 
 \begin{argtable}
@@ -31,7 +31,8 @@ Macro to start a score.
       & 1 & there is a translation line somewhere in the score\\
   \#5 & 0 & there is no above lines text in the score\\
       & 1 & there is above lines text somewhere in the score\\
-  \#6 & string  & the absolute filename of the gabc file if point-and-click is enabled.
+  \#6 & string  & the absolute filename of the gabc file if point-and-click is enabled\\
+  \#7 & integer & the number of staff lines\\
 \end{argtable}
 
 \macroname{\textbackslash GreEndScore}{}{gregoriotex-main.tex}

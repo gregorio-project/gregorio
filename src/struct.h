@@ -153,7 +153,9 @@ ENUM(gregorio_shape, GREGORIO_SHAPE);
     E(B_DIVISIO_MINOR_D3) \
     E(B_DIVISIO_MINOR_D4) \
     E(B_DIVISIO_MINOR_D5) \
-    L(B_DIVISIO_MINOR_D6)
+    E(B_DIVISIO_MINOR_D6) \
+    E(B_DIVISIO_MINOR_D7) \
+    L(B_DIVISIO_MINOR_D8)
 ENUM(gregorio_bar, GREGORIO_BAR);
 
 /* definition of the signs. You can notice that the values are made so
@@ -698,7 +700,7 @@ typedef struct gregorio_score {
     char *annotation[MAX_ANNOTATIONS];
     /* field giving informations on the initial (no initial, normal initial 
      * or two lines initial) */
-    signed char initial_style;
+    signed char initial_style; /* DEPRECATED */
     /* the font to use in gregoriotex */
     char *gregoriotex_font;
     size_t nabc_lines;
@@ -711,6 +713,9 @@ typedef struct gregorio_score {
     struct gregorio_external_header *external_headers;
     struct gregorio_external_header *last_external_header;
     gregorio_lyric_centering centering;
+    unsigned char staff_lines;
+    signed char highest_pitch;
+    signed char high_ledger_line_pitch;
 } gregorio_score;
 
 /*
@@ -786,10 +791,8 @@ static __inline bool is_fused(char liquescentia)
 
 /* The first pitch MUST be an odd number */
 #define LOWEST_PITCH 3
-#define HIGHEST_PITCH (LOWEST_PITCH + 12)
 #define DUMMY_PITCH (LOWEST_PITCH + 6)
 #define LOW_LEDGER_LINE_PITCH (LOWEST_PITCH + 1)
-#define HIGH_LEDGER_LINE_PITCH (HIGHEST_PITCH - 1)
 
 gregorio_score *gregorio_new_score(void);
 void gregorio_add_note(gregorio_note **current_note, signed char pitch,
@@ -894,6 +897,7 @@ void gregorio_set_score_transcriber(gregorio_score *score, char *transcriber);
 void gregorio_set_score_transcription_date(gregorio_score *score,
         char *transcription_date);
 void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes);
+void gregorio_set_score_staff_lines(gregorio_score *score, char staff_lines);
 void gregorio_add_score_external_header(gregorio_score *score, char *name,
         char *value);
 void gregorio_set_voice_style(gregorio_voice_info *voice_info, char *style);

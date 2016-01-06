@@ -154,6 +154,7 @@ bool gtex_is_h_episema_below_shown(const gregorio_note *const note);
 const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         const gregorio_element *const element, gtex_alignment *const  type,
         gtex_type *const gtype);
-void gregoriotex_compute_positioning(const gregorio_element *element);
+void gregoriotex_compute_positioning(const gregorio_element *element,
+        const gregorio_score *score);
 
 #endif
