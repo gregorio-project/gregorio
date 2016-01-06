@@ -1421,7 +1421,7 @@ void gregorio_set_score_staff_lines(gregorio_score *const score,
     }
     if (staff_lines < 2 || staff_lines > 5) {
         gregorio_message(_("invalid number of staff lines"),
-                "gregorio_set_score_staff_lines", VERBOSITY_WARNING, 0);
+                "gregorio_set_score_staff_lines", VERBOSITY_ERROR, 0);
         return;
     }
     score->staff_lines = staff_lines;
