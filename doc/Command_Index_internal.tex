@@ -891,7 +891,7 @@ Macro to set the point-and-click position for above lines text.
 \macroname{\textbackslash gre@mark@translation}{}{gregoriotex-main.tex}
 Macro to set the point-and-click position for translations.
 
-\macroname{\textbackslash gre@pitch@[a-p]}{}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@pitch@[a-n,p]}{}{gregoriotex-main.tex}
 Macros which map gabc pitch letters (the final part of the macro name) to the numerical value that Gregorio\TeX\ uses in processing note placement.
 
 \macroname{\textbackslash gre@pitch@adjust@top}{}{gregoriotex-main.tex}
@@ -899,6 +899,39 @@ If any note appears above this pitch, the space above the lines must be adjusted
 
 \macroname{\textbackslash gre@pitch@adjust@bottom}{}{gregoriotex-main.tex}
 If any note appears below this pitch, the space below the lines must be adjusted to account for it.
+
+\macroname{\textbackslash gre@pitch@abovestaff}{}{gregoriotex-main.tex}
+The pitch above the staff.
+
+\macroname{\textbackslash gre@pitch@belowstaff}{}{gregoriotex-main.tex}
+The pitch below the staff.
+
+\macroname{\textbackslash gre@pitch@ledger@above}{}{gregoriotex-main.tex}
+The pitch of the ledger line above the staff.
+
+\macroname{\textbackslash gre@pitch@ledger@below}{}{gregoriotex-main.tex}
+The pitch of the ledger line below the staff.
+
+\macroname{\textbackslash gre@pitch@barvepisema}{}{gregoriotex-main.tex}
+The pitch of the bar episema.
+
+\macroname{\textbackslash gre@pitch@underbrace}{}{gregoriotex-main.tex}
+The pitch of the under-the-staff brace.
+
+\macroname{\textbackslash gre@pitch@overbrace}{}{gregoriotex-main.tex}
+The pitch of the over-the-staff brace.
+
+\macroname{\textbackslash gre@pitch@overbraceglyph}{}{gregoriotex-main.tex}
+The pitch of the over-the-staff brace glyph.
+
+\macroname{\textbackslash gre@pitch@bar}{}{gregoriotex-main.tex}
+The pitch of the bar glyph.
+
+\macroname{\textbackslash gre@pitch@raresign}{}{gregoriotex-main.tex}
+The pitch of a rare sign (semicirculus, \etc).
+
+\macroname{\textbackslash gre@pitch@dummy}{}{gregoriotex-main.tex}
+A meaningless (don't-care) pitch.
 
 \macroname{\textbackslash gre@pointandclick}{\#1\#2}{gregoriotex-main.tex}
 Macro to generate the point-and-click links.
@@ -965,6 +998,16 @@ Alias for \verb=\resizebox=.
 
 \macroname{\textbackslash gre@dimension}{}{gregoriotex-spaces.tex}
 Workhorse function behind \verb=\grecreatedim= and \verb=\grechangedim=.
+
+\macroname{\textbackslash gre@setstafflines}{\#1}{gregoriotex-main.tex}
+Sets the number of staff lines.
+
+\begin{argtable}
+  \#1 & integer & The number of staff lines\\
+\end{argtable}
+
+\macroname{\textbackslash gre@stafflines}{}{gregoriotex-main.tex}
+Contains the number of staff lines.
 
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
@@ -1279,6 +1322,15 @@ Boolean which indicates that a third-line adjustment to staff line width is nece
 
 \macroname{\textbackslash ifgre@scale@stafflinefactor}{}{gregoriotex-spaces.tex}
 Boolean indicating whether the stafflinefactor should scale with changes of \texttt{grefactor}, or not.
+
+\macroname{\textbackslash ifgre@haslinethree}{}{gregoriotex-spaces.tex}
+Boolean indicating whether the staff has a third line.
+
+\macroname{\textbackslash ifgre@haslinefour}{}{gregoriotex-spaces.tex}
+Boolean indicating whether the staff has a fourth line.
+
+\macroname{\textbackslash ifgre@haslinefive}{}{gregoriotex-spaces.tex}
+Boolean indicating whether the staff has a fifth line.
 
 
 

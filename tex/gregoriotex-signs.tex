@@ -168,6 +168,8 @@
     \gre@calculate@glyphraisevalue{\gre@pitch@g}{0}%
   \or%
     \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}%
+  \or%
+    \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}%
   \fi%
   \gre@skip@temp@two=\gre@skip@spaceafterlineclef\relax%
   \ifnum#4=0\relax %
@@ -256,15 +258,11 @@
   \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{#1}}%
   \gre@dimen@temp@three=\wd\gre@box@temp@width %
   \ifgre@showlines %
-    \ifnum#1=\gre@pitch@a\relax %
+    \ifnum#1<\gre@pitch@belowstaff\relax %
       \gre@additionalbottomcustoslinemiddle %
-    \else\ifnum#1=\gre@pitch@b\relax %
-      \gre@additionalbottomcustoslinemiddle %
-    \else\ifnum#1=\gre@pitch@l\relax %
+    \else\ifnum#1>\gre@pitch@abovestaff\relax %
       \gre@additionaltopcustoslinemiddle %
-    \else\ifnum#1=\gre@pitch@m\relax %
-      \gre@additionaltopcustoslinemiddle %
-    \fi\fi\fi\fi %
+    \fi\fi %
   \fi %
   \raise \gre@dimen@glyphraisevalue\relax%
   \copy\gre@box@temp@width %
@@ -307,15 +305,11 @@
       }%
       \gre@localrightbox{%
       \ifgre@showlines %
-        \ifnum#1=\gre@pitch@a\relax %
+        \ifnum#1<\gre@pitch@belowstaff\relax %
           \gre@additionalbottomcustoslineend %
-        \else\ifnum#1=\gre@pitch@b\relax %
-          \gre@additionalbottomcustoslineend %
-        \else\ifnum#1=\gre@pitch@l\relax %
+        \else\ifnum#1>\gre@pitch@abovestaff\relax %
           \gre@additionaltopcustoslineend %
-        \else\ifnum#1=\gre@pitch@m\relax %
-          \gre@additionaltopcustoslineend %
-        \fi\fi\fi\fi %
+        \fi\fi %
       \fi %
       \raise \gre@dimen@glyphraisevalue\relax%
       \copy\gre@box@temp@width %
@@ -439,12 +433,57 @@
   \or\gre@fontchar@custostopshort %
   \or\gre@fontchar@custostoplong %
   \or\gre@fontchar@custostopshort %
-  \or\gre@fontchar@custostoplong %
-  \or\gre@fontchar@custostopshort %
-  \or\gre@fontchar@custostoplong %
-  \or\gre@fontchar@custostopshort %
+  \or %
+    \ifgre@haslinethree %
+      \gre@fontchar@custostoplong %
+    \else %
+      \gre@fontchar@custosbottomlong %
+    \fi %
+  \or %
+    \ifgre@haslinethree %
+      \gre@fontchar@custostopshort %
+    \else %
+      \gre@fontchar@custosbottomshort %
+    \fi %
+  \or %
+    \ifgre@haslinefour %
+      \gre@fontchar@custostoplong %
+    \else %
+      \gre@fontchar@custosbottomlong %
+    \fi %
+  \or %
+    \ifgre@haslinefour %
+      \gre@fontchar@custostopshort %
+    \else %
+      \ifgre@haslinethree %
+        \gre@fontchar@custosbottomshort %
+      \else %
+        \gre@fontchar@custosbottommiddle %
+      \fi %
+    \fi %
+  \or %
+    \ifgre@haslinefive %
+      \gre@fontchar@custostoplong %
+    \else %
+      \gre@fontchar@custosbottomlong %
+    \fi %
+  \or %
+    \ifgre@haslinefive %
+      \gre@fontchar@custostopshort %
+    \else %
+      \ifgre@haslinefour %
+        \gre@fontchar@custosbottomshort %
+      \else %
+        \gre@fontchar@custosbottommiddle %
+      \fi %
+    \fi %
   \or\gre@fontchar@custosbottomlong %
-  \or\gre@fontchar@custosbottomshort %
+  \or %
+    \ifgre@haslinefive %
+      \gre@fontchar@custosbottomshort %
+    \else %
+      \gre@fontchar@custosbottommiddle %
+    \fi %
   \or\gre@fontchar@custosbottomlong %
   \or\gre@fontchar@custosbottommiddle %
   \fi%
@@ -477,7 +516,7 @@
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 % #5: 1 if we put an accentus above or not
 \def\GreOverCurlyBrace#1#2#3#4#5{%
-  \gre@brace@common{#1}{#2}{#3}{#4}{#5}{\gre@pitch@g}{\gre@fontchar@curlybrace}%
+  \gre@brace@common{#1}{#2}{#3}{#4}{#5}{\gre@pitch@overbraceglyph}{\gre@fontchar@curlybrace}%
 }%
 
 % #1: the width
@@ -485,7 +524,7 @@
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\GreOverBrace#1#2#3#4{%
-  \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@g}{\gre@fontchar@brace}%
+  \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@overbraceglyph}{\gre@fontchar@brace}%
 }%
 
 % #1: the width
@@ -493,7 +532,7 @@
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\GreUnderBrace#1#2#3#4{%
-  \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@b}{\gre@fontchar@underbrace}%
+  \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@underbrace}{\gre@fontchar@underbrace}%
 }%
 
 % #1: the width
@@ -534,7 +573,7 @@
     }%
     \hss %
     \ifnum#5=1\relax %
-      \gre@calculate@glyphraisevalue{\gre@pitch@m}{13}%
+      \gre@calculate@glyphraisevalue{\gre@pitch@overbrace}{13}%
       \advance\gre@dimen@glyphraisevalue by \gre@dimen@curlybraceaccentusshift\relax%
       \raise\gre@dimen@glyphraisevalue\hbox{%
         \gre@font@music\GreCPAccentus\relax %
@@ -940,8 +979,8 @@
     \gre@calculate@glyphraisevalue{#1}{3}%
   \or %
     % if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.) the first argument is m if the pitch is < k, otherwise it's n.
-    \ifnum#1<\gre@pitch@k\relax %
-      \gre@calculate@glyphraisevalue{\gre@pitch@k}{6}%
+    \ifnum#1<\gre@pitch@raresign\relax %
+      \gre@calculate@glyphraisevalue{\gre@pitch@raresign}{6}%
     \else %
       {%
         \gre@count@temp@three=#1%
@@ -964,7 +1003,7 @@
 }%
 
 \def\GreBarBrace#1{%
-  \gre@vepisemaorrare{\gre@pitch@g}{#1}{%
+  \gre@vepisemaorrare{\gre@pitch@overbraceglyph}{#1}{%
     \ifgre@drawbraces %
       \hbox{\gre@draw@brace{*}}%
     \else %
@@ -975,7 +1014,7 @@
 }%
 
 \def\GreBarVEpisema#1{%
-  \gre@vepisemaorrare{\gre@pitch@c}{#1}{\GreCPVEpisema}{1}{}%
+  \gre@vepisemaorrare{\gre@pitch@barvepisema}{#1}{\GreCPVEpisema}{1}{}%
   \relax %
 }%
 
@@ -1123,8 +1162,8 @@
       + \gre@dimen@spacebeneathtext %
       + \gre@dimen@spacelinestext %
       + \the\gre@dimen@currenttranslationheight %
-      + 4\gre@dimen@interstafflinespace %
-      + 4\gre@dimen@stafflineheight)\relax%
+      + \gre@stafflines\gre@dimen@interstafflinespace %
+      + \gre@stafflines\gre@dimen@stafflineheight)\relax%
   \or % 1
     \gre@dimen@glyphraisevalue=%
       \dimexpr(\the\gre@dimen@additionalbottomspace %
@@ -1161,9 +1200,9 @@
     \gre@calculate@glyphraisevalue{#1}{5}%
   \or %
     % the glyphraisevalue is ignored anyway... but it's just in case...
-    \gre@calculate@glyphraisevalue{\gre@pitch@l}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@ledger@above}{0}%
   \or %
-    \gre@calculate@glyphraisevalue{\gre@pitch@b}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@ledger@below}{0}%
   \or %
     \gre@calculate@glyphraisevalue{#1}{11}%
   \fi %
@@ -1253,7 +1292,7 @@
     \else % OBSOLETE
       \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
     \fi% OBSOLETE
-    \gre@hepisorline{\gre@pitch@a}{#1}{#2}{#3}{f}%
+    \gre@hepisorline{\gre@pitch@dummy}{#1}{#2}{#3}{f}%
     \endgre@style@additionalstafflines%
     \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
   \fi %
@@ -1320,6 +1359,10 @@
     \gre@writebar{10}{0}{#2}%
   \or %
     \gre@writebar{11}{0}{#2}%
+  \or %
+    \gre@writebar{12}{0}{#2}%
+  \or %
+    \gre@writebar{13}{0}{#2}%
   \fi %
   \relax%
 }%
@@ -1337,6 +1380,10 @@
     \gre@writebar{10}{1}{#2}%
   \or %
     \gre@writebar{11}{1}{#2}%
+  \or %
+    \gre@writebar{12}{1}{#2}%
+  \or %
+    \gre@writebar{13}{1}{#2}%
   \fi %
   \relax%
 }%
@@ -1380,7 +1427,7 @@
     \fi %
   \fi %
   \gre@newglyphcommon %
-  \gre@calculate@glyphraisevalue{\gre@pitch@g}{0}% bar glyphs are made to be at this height
+  \gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}% bar glyphs are made to be at this height
   \GreNoBreak %
   \ifcase#1 % 0 : virgula
     \ifnum#2=1\relax %
@@ -1549,6 +1596,36 @@
       \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
+  \or % 12 : dominican bar 7
+    \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}%
+    \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
+    \ifnum#2=1\relax %
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
+      \gre@hskip\gre@skip@temp@four %
+      \GreNoBreak %
+    \fi %
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominican}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominican}%
+    #3\relax %
+    \ifnum#2=1\relax %
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
+      \gre@hskip\gre@skip@temp@four %
+    \fi %
+  \or % 13 : dominican bar 8
+    \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}%
+    \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
+    \ifnum#2=1\relax %
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
+      \gre@hskip\gre@skip@temp@four %
+      \GreNoBreak %
+    \fi %
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
+    #3\relax %
+    \ifnum#2=1\relax %
+      \gre@skip@temp@four = \gre@skip@spacearoundminor\relax%
+      \gre@hskip\gre@skip@temp@four %
+    \fi %
   \fi %
   \gre@debugmsg{spacing}{Width of bar just printed: \the\wd\gre@box@temp@width}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
@@ -1558,7 +1635,7 @@
 
 \def\gre@fontchar@divisiomaior{%
   \ifnum\gre@stafflinefactor=17\relax %
-    %\gre@calculate@glyphraisevalue{\gre@pitch@g}{0}% bar glyphs are made to be at this height
+    %\gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}% bar glyphs are made to be at this height
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMaior}%
   \else %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMaior}%
@@ -1574,7 +1651,7 @@
 }%
 
 \def\gre@fontchar@divisiofinalis{%
-  \gre@calculate@glyphraisevalue{\gre@pitch@g}{0}% bar glyphs are made to be at this height
+  \gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}% bar glyphs are made to be at this height
   \gre@fontchar@divisiomaior %
   \gre@dimen@temp@four = 12000 sp%
   \multiply\gre@dimen@temp@four by \the\gre@factor%

@@ -96,6 +96,7 @@ static gregorio_center_determination center_is_determined;
  * (for key changes) */
 static int current_key = DEFAULT_KEY;
 static bool got_language = false;
+static bool got_staff_lines = false;
 static bool started_first_word = false;
 static struct sha1_ctx digester;
 
@@ -164,14 +165,14 @@ static void gabc_fix_custos(gregorio_score *score_to_check)
                         while (pitch < LOWEST_PITCH) {
                             pitch += 7;
                         }
-                        while (pitch > HIGHEST_PITCH) {
+                        while (pitch > score_to_check->highest_pitch) {
                             pitch -= 7;
                         }
                         custo_element->u.misc.pitched.pitch = pitch;
                     }
                     assert(custo_element->u.misc.pitched.pitch >= LOWEST_PITCH 
                             && custo_element->u.misc.pitched.pitch
-                            <= HIGHEST_PITCH);
+                            <= score_to_check->highest_pitch);
                     current_element = current_element->next;
                 }
             }
@@ -246,6 +247,8 @@ static void initialize_variables(void)
     for (i = 0; i < 10; i++) {
         macros[i] = NULL;
     }
+    got_language = false;
+    got_staff_lines = false;
     started_first_word = false;
 }
 
@@ -610,11 +613,11 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
     if (nabc_state == 0) {
         if (!elements[voice]) {
             elements[voice] = gabc_det_elements_from_string(notes,
-                    &current_key, macros, &loc);
+                    &current_key, macros, &loc, score);
             current_element = elements[voice];
         } else {
             new_elements = gabc_det_elements_from_string(notes,
-                    &current_key, macros, &loc);
+                    &current_key, macros, &loc, score);
             last_element = elements[voice];
             while(last_element->next) {
                 last_element = last_element->next;
@@ -663,7 +666,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
 %token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES
-%token LANGUAGE HYPHEN EXTERNAL_HEADER END_OF_FILE
+%token LANGUAGE HYPHEN EXTERNAL_HEADER STAFF_LINES END_OF_FILE
 
 %%
 
@@ -803,6 +806,17 @@ mode_definition:
         if ($2.text) {
             score->mode=atoi($2.text);
             free($2.text);
+        }
+    }
+    ;
+
+staff_lines_definition:
+    STAFF_LINES attribute {
+        check_multiple("staff-lines", got_staff_lines);
+        if ($2.text) {
+            gregorio_set_score_staff_lines(score, atoi($2.text));
+            free($2.text);
+            got_staff_lines = true;
         }
     }
     ;
@@ -969,6 +983,7 @@ definition:
     | manuscript_reference_definition
     | manuscript_definition
     | book_definition
+    | staff_lines_definition
     | nabc_lines_definition
     | date_definition
     | author_definition

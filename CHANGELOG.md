@@ -16,7 +16,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The space between note and horizontal episema has been tightened for notes at the `c` or `k` height when there is no ledger line.  Due to the intricacies of measurement, the system tries to make a best guess as to the existence of the ledger line.  If the guess is wrong, you may use the `[hl:n]` and `[ll:n]` notations in gabc to override the guess.  See [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#716](https://github.com/gregorio-project/gregorio/issues/716)).
 
 ### Added
-- Salicus flexus glyphs (See [#631](https://github.com/gregorio-project/gregorio/issues/631)).
+- Support for two-, three-, and five-line staves.  Set the `staff-lines` header to `2`, `3`, or `5`.  For all values of `staff-lines`, the note below the staff remains 'c'.  The two new notes above the staff (for a five-line staff) are `n` and `p`.  See [#429](https://github.com/gregorio-project/gregorio/issues/429).
+- Salicus flexus glyphs (see [#631](https://github.com/gregorio-project/gregorio/issues/631)).
 - Neume fusion, activated in gabc by `@`.  Use `@` before a clivis or a porrectus to get an unstemmed figure.  Use `@` between two notes to fuse them explicitly.  Enclose a set of notes within `@[` and `]` to automatically guess their fusion.  See GregorioRef for details (for the channge requests, see [#679](https://github.com/gregorio-project/gregorio/issues/679), [#687](https://github.com/gregorio-project/gregorio/issues/687), and [#692](https://github.com/gregorio-project/gregorio/issues/692)).
 - Hollow version of the oriscus, called by adding the `r` modifier to an oriscus, as in `gor` or `gor<` (See [#724](https://github.com/gregorio-project/gregorio/issues/724)).
 - Support for arbitrary external gabc headers starting with `x-`.  These are simply accepted by gregorio.

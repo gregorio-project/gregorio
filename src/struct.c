@@ -1071,6 +1071,7 @@ gregorio_score *gregorio_new_score(void)
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
         new_score->annotation[annotation_num] = NULL;
     }
+    gregorio_set_score_staff_lines(new_score, 4);
     return new_score;
 }
 
@@ -1410,6 +1411,24 @@ void gregorio_set_score_transcription_date(gregorio_score *score,
     score->si.transcription_date = transcription_date;
 }
 
+void gregorio_set_score_staff_lines(gregorio_score *const score,
+        const char staff_lines)
+{
+    if (!score) {
+        gregorio_message(_("function called with NULL argument"),
+                "gregorio_set_score_staff_lines", VERBOSITY_WARNING, 0);
+        return;
+    }
+    if (staff_lines < 2 || staff_lines > 5) {
+        gregorio_message(_("invalid number of staff lines"),
+                "gregorio_set_score_staff_lines", VERBOSITY_ERROR, 0);
+        return;
+    }
+    score->staff_lines = staff_lines;
+    score->highest_pitch = LOWEST_PITCH + 4 + (2 * staff_lines);
+    score->high_ledger_line_pitch = score->highest_pitch - 1;
+}
+
 void gregorio_add_score_external_header(gregorio_score *score, char *name,
         char *value)
 {
@@ -1466,11 +1485,13 @@ void gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
  * * 3 for a C key on the second line
  * * 5 for a C key on the third line (default key)
  * * 7 for a C key on the fourth line
+ * * 9 for a C key on the fifth line
  *
  * * -2 for a F key on the first line
  * * 0 for a F key on the second line
  * * 2 for a F key on the third line
  * * 4 for a F key on the fourth line
+ * * 6 for a F key on the fifth line
  *
  *********************************/
 
@@ -1516,6 +1537,10 @@ void gregorio_det_step_and_line_from_key(int key, char *step, int *line)
         *step = 'f';
         *line = 4;
         break;
+    case 6:
+        *step = 'f';
+        *line = 5;
+        break;
     case 1:
         *step = 'c';
         *line = 1;
@@ -1531,6 +1556,10 @@ void gregorio_det_step_and_line_from_key(int key, char *step, int *line)
     case 7:
         *step = 'c';
         *line = 4;
+        break;
+    case 9:
+        *step = 'c';
+        *line = 5;
         break;
     default:
         *step = '?';

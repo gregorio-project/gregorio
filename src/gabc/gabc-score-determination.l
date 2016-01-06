@@ -219,6 +219,9 @@ semicolon. */
 <INITIAL>gregoriotex-font {
         return GREGORIOTEX_FONT;
     }
+<INITIAL>staff-lines {
+        return STAFF_LINES;
+    }
 <INITIAL>nabc-lines {
         return NABC_LINES;
     }

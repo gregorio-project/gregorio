@@ -37,7 +37,11 @@
 #include "gabc.h"
 
 static __inline char pitch_letter(const char height) {
-    return height + 'a' - LOWEST_PITCH;
+    char result = height + 'a' - LOWEST_PITCH;
+    if (result == 'o') {
+        return 'p';
+    }
+    return result;
 }
 
 static __inline void unsupported(const char *fn, const char *type,
@@ -337,6 +341,12 @@ static void gabc_write_bar(FILE *f, gregorio_bar type)
         break;
     case B_DIVISIO_MINOR_D6:
         fprintf(f, ";6");
+        break;
+    case B_DIVISIO_MINOR_D7:
+        fprintf(f, ";7");
+        break;
+    case B_DIVISIO_MINOR_D8:
+        fprintf(f, ";8");
         break;
     default:
         unsupported("gabc_write_bar", "bar type",
@@ -896,6 +906,12 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     gabc_write_str_attribute(f, "transcriber", score->si.transcriber);
     gabc_write_str_attribute(f, "transcription-date",
                              score->si.transcription_date);
+    if (score->staff_lines != 4) {
+        fprintf(f, "staff-lines: %u;\n", score->staff_lines);
+    }
+    if (score->nabc_lines) {
+        fprintf(f, "nabc-lines: %zu;\n", score->nabc_lines);
+    }
     if (score->mode) {
         fprintf(f, "mode: %d;\n", score->mode);
     }

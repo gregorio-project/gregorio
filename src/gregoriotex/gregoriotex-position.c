@@ -1096,12 +1096,13 @@ static bool is_h_episema_below_better_height(const signed char new_height,
     return new_height < old_height;
 }
 
-static __inline bool has_high_ledger_line(const signed char height, bool is_sign)
+static __inline bool has_high_ledger_line(const signed char height,
+        bool is_sign, const gregorio_score *const score)
 {
     if (is_sign) {
-        return height > HIGH_LEDGER_LINE_PITCH;
+        return height > score->high_ledger_line_pitch;
     }
-    return height >= HIGH_LEDGER_LINE_PITCH;
+    return height >= score->high_ledger_line_pitch;
 }
 
 static __inline bool has_low_ledger_line(const signed char height, bool is_sign)
@@ -1138,7 +1139,7 @@ static __inline void position_h_episema(gregorio_note *const note,
 
 static __inline void next_has_ledger_line(
         const height_computation *const h, bool *high_ledger_line,
-        bool *low_ledger_line)
+        bool *low_ledger_line, const gregorio_score *const score)
 {
     const gregorio_element *element = h->last_connected_element;
     const gregorio_glyph *glyph = h->last_connected_glyph;
@@ -1166,7 +1167,7 @@ static __inline void next_has_ledger_line(
             }
 
             *high_ledger_line = *high_ledger_line
-                    || has_high_ledger_line(note->u.note.pitch, false);
+                    || has_high_ledger_line(note->u.note.pitch, false, score);
             *low_ledger_line = *low_ledger_line
                     || has_low_ledger_line(note->u.note.pitch, false);
 
@@ -1184,7 +1185,7 @@ static __inline void next_has_ledger_line(
 
 static __inline void previous_has_ledger_line(
         const height_computation *const h, bool *high_ledger_line,
-        bool *low_ledger_line)
+        bool *low_ledger_line, const gregorio_score *const score)
 {
     const gregorio_element *element = h->start_element;
     const gregorio_glyph *glyph = h->start_glyph;
@@ -1214,7 +1215,7 @@ static __inline void previous_has_ledger_line(
                 note = gregorio_glyph_last_note(glyph);
             }
             *high_ledger_line = *high_ledger_line
-                    || has_high_ledger_line(note->u.note.pitch, false);
+                    || has_high_ledger_line(note->u.note.pitch, false, score);
             *low_ledger_line = *low_ledger_line
                     || has_low_ledger_line(note->u.note.pitch, false);
 
@@ -1231,7 +1232,7 @@ static __inline void previous_has_ledger_line(
 }
 
 static __inline void set_h_episema_height(const height_computation *const h,
-        gregorio_note *const end)
+        gregorio_note *const end, const gregorio_score *const score)
 {
     gregorio_note *last_note = NULL;
 
@@ -1239,13 +1240,13 @@ static __inline void set_h_episema_height(const height_computation *const h,
     const gregorio_glyph *glyph = h->start_glyph;
     gregorio_note *note = h->start_note;
 
-    bool high_ledger_line = has_high_ledger_line(h->height, true)
-            || has_high_ledger_line(h->height - h->vpos, false);
+    bool high_ledger_line = has_high_ledger_line(h->height, true, score)
+            || has_high_ledger_line(h->height - h->vpos, false, score);
     bool low_ledger_line = has_low_ledger_line(h->height, true)
             || has_low_ledger_line(h->height - h->vpos, false);
 
-    next_has_ledger_line(h, &high_ledger_line, &low_ledger_line);
-    previous_has_ledger_line(h, &high_ledger_line, &low_ledger_line);
+    next_has_ledger_line(h, &high_ledger_line, &low_ledger_line, score);
+    previous_has_ledger_line(h, &high_ledger_line, &low_ledger_line, score);
 
     for ( ; element; element = element->next) {
         if (element->type == GRE_ELEMENT) {
@@ -1308,7 +1309,7 @@ static __inline bool has_space_to_left(const gregorio_note *const note) {
 }
 
 static __inline void end_h_episema(height_computation *const h,
-        gregorio_note *const end)
+        gregorio_note *const end, const gregorio_score *const score)
 {
     signed char proposed_height;
 
@@ -1369,7 +1370,7 @@ static __inline void end_h_episema(height_computation *const h,
             }
         }
 
-        set_h_episema_height(h, end);
+        set_h_episema_height(h, end, score);
 
         h->active = false;
         h->height = 0;
@@ -1386,7 +1387,7 @@ static __inline void end_h_episema(height_computation *const h,
 static __inline void compute_h_episema(height_computation *const h,
         const gregorio_element *const element,
         const gregorio_glyph *const glyph, gregorio_note *const note,
-        const int i, const gtex_type type)
+        const int i, const gtex_type type, const gregorio_score *const score)
 {
     signed char next_height;
     grehepisema_size size;
@@ -1406,7 +1407,7 @@ static __inline void compute_h_episema(height_computation *const h,
                     }
                 }
                 else {
-                    end_h_episema(h, note);
+                    end_h_episema(h, note, score);
                     start_h_episema(h, element, glyph, note);
                 }
             } else {
@@ -1418,7 +1419,7 @@ static __inline void compute_h_episema(height_computation *const h,
             h->last_connected_glyph = glyph;
             h->last_connected_note = note;
         } else {
-            end_h_episema(h, note);
+            end_h_episema(h, note, score);
         }
     } else if (!h->is_shown(note)) {
         /* special handling for porrectus shapes because of their shape:   
@@ -1429,14 +1430,14 @@ static __inline void compute_h_episema(height_computation *const h,
         case T_PORRECTUS:
         case T_PORRECTUS_FLEXUS:
             if (i == 2) {
-                end_h_episema(h, note);
+                end_h_episema(h, note, score);
             }
             break;
 
         case T_TORCULUS_RESUPINUS:
         case T_TORCULUS_RESUPINUS_FLEXUS:
             if (i == 3) {
-                end_h_episema(h, note);
+                end_h_episema(h, note, score);
             }
             break;
 
@@ -1450,7 +1451,7 @@ static __inline void compute_h_episema(height_computation *const h,
 static __inline void compute_note_positioning(height_computation *const above,
         height_computation *const below, const gregorio_element *const element,
         const gregorio_glyph *const glyph, gregorio_note *const note,
-        const int i, const gtex_type type)
+        const int i, const gtex_type type, const gregorio_score *const score)
 {
     gregorio_vposition default_vpos = advise_positioning(glyph, note, i, type);
 
@@ -1464,8 +1465,8 @@ static __inline void compute_note_positioning(height_computation *const above,
         }
     }
 
-    compute_h_episema(above, element, glyph, note, i, type);
-    compute_h_episema(below, element, glyph, note, i, type);
+    compute_h_episema(above, element, glyph, note, i, type, score);
+    compute_h_episema(below, element, glyph, note, i, type, score);
 }
 
 static __inline int compute_fused_shift(const gregorio_glyph *glyph)
@@ -1608,7 +1609,8 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     return shift;
 }
 
-void gregoriotex_compute_positioning(const gregorio_element *element)
+void gregoriotex_compute_positioning(const gregorio_element *element,
+        const gregorio_score *const score)
 {
     height_computation above = {
         /*.vpos =*/ VPOS_ABOVE,
@@ -1668,17 +1670,17 @@ void gregoriotex_compute_positioning(const gregorio_element *element)
                             note = note->next) {
                         if (note->type == GRE_NOTE) {
                             compute_note_positioning(&above, &below, element,
-                                    glyph, note, ++i, type);
+                                    glyph, note, ++i, type, score);
                         }
                     }
                 }
             }
         } else if (!is_bridgeable_space(element)) {
-            end_h_episema(&above, NULL);
-            end_h_episema(&below, NULL);
+            end_h_episema(&above, NULL, score);
+            end_h_episema(&below, NULL, score);
         }
     }
-    end_h_episema(&above, NULL);
-    end_h_episema(&below, NULL);
+    end_h_episema(&above, NULL, score);
+    end_h_episema(&below, NULL, score);
 }
 

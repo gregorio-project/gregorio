@@ -88,10 +88,14 @@ static const char *dump_bool(bool value) {
     return value? "true" : "false";
 }
 
-static const char *dump_pitch(const char height) {
+static const char *dump_pitch(const char height, const char highest_pitch) {
     static char buf[20];
-    if (height >= LOWEST_PITCH && height <= HIGHEST_PITCH) {
-        gregorio_snprintf(buf, 20, "%c", height + 'a' - LOWEST_PITCH);
+    if (height >= LOWEST_PITCH && height <= highest_pitch) {
+        char pitch = height + 'a' - LOWEST_PITCH;
+        if (pitch == 'o') {
+            pitch = 'p';
+        }
+        gregorio_snprintf(buf, 20, "%c", pitch);
     } else {
         gregorio_snprintf(buf, 20, "?%d", height);
     }
@@ -175,6 +179,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
     }
     if (score->mode) {
         fprintf(f, "   mode                      %d\n", score->mode);
+    }
+    if (score->staff_lines != 4) {
+        fprintf (f, "   staff_lines               %d\n", (int)score->staff_lines);
     }
     if (score->nabc_lines) {
         fprintf (f, "   nabc_lines                %d\n", (int)score->nabc_lines);
@@ -273,7 +280,8 @@ void dump_write_score(FILE *f, gregorio_score *score)
             case GRE_CUSTOS:
                 if (element->u.misc.pitched.pitch) {
                     fprintf(f, "     pitch                   %s\n",
-                            dump_pitch(element->u.misc.pitched.pitch));
+                            dump_pitch(element->u.misc.pitched.pitch,
+                                score->highest_pitch));
                 }
                 if (element->u.misc.pitched.force_pitch) {
                     fprintf(f, "     force_pitch             true\n");
@@ -386,7 +394,8 @@ void dump_write_score(FILE *f, gregorio_score *score)
                     case GRE_NATURAL:
                     case GRE_SHARP:
                         fprintf(f, "       pitch                 %s\n",
-                                dump_pitch(glyph->u.misc.pitched.pitch));
+                                dump_pitch(glyph->u.misc.pitched.pitch,
+                                    score->highest_pitch));
                         break;
 
                     case GRE_GLYPH:
@@ -419,7 +428,8 @@ void dump_write_score(FILE *f, gregorio_score *score)
                             case GRE_NOTE:
                                 if (note->u.note.pitch) {
                                     fprintf(f, "         pitch                  %s\n",
-                                            dump_pitch(note->u.note.pitch));
+                                            dump_pitch(note->u.note.pitch,
+                                                score->highest_pitch));
                                 }
                                 if (note->u.note.shape) {
                                     fprintf(f, "         shape                  %d (%s)\n",

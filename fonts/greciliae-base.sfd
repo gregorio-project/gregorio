@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1450990984
+ModificationTime: 1452000033
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -43,7 +43,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 144 16 4
+WinInfo: 128 16 4
 BeginPrivate: 0
 EndPrivate
 Grid
@@ -71,7 +71,7 @@ Grid
  17.75 -700 l 0
 EndSplineSet
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 379 170
+BeginChars: 379 182
 
 StartChar: Punctum
 Encoding: 0 -1 0
@@ -4294,6 +4294,231 @@ SplineSet
  23.4092 -10.4072 21.5576 16.9824 21.5576 36.8848 c 6
  21.5576 124.774 l 5
  30.1084 121.558 41.6006 119.038 61.2773 125.774 c 4
+EndSplineSet
+EndChar
+
+StartChar: Virgula.2
+Encoding: 170 -1 170
+Width: 143
+VWidth: 1788
+Flags: HW
+HStem: -63.45 84.5<2.23911 67.6846>
+VStem: 87.1504 55.8996<-187.09 -83.284>
+LayerCount: 2
+Fore
+SplineSet
+-6.4502 -34.8496 m 4
+ -6.4502 9.87012 22.1826 21.0498 54.6504 21.0498 c 4
+ 81.2305 21.0498 143.05 -2.5332 143.05 -102.45 c 4
+ 143.05 -192.583 89.75 -249.783 -16.8496 -274.05 c 5
+ -19.1338 -271.766 -22.0498 -261.704 -22.0498 -258.45 c 4
+ -22.0498 -256.717 -21.6172 -255.417 -20.75 -254.55 c 5
+ 51.1826 -222.482 87.1504 -184.35 87.1504 -140.15 c 4
+ 87.1504 -78.79 49.4326 -69.1816 16.9502 -63.4502 c 4
+ 1.34961 -61.7168 -6.4502 -52.1826 -6.4502 -34.8496 c 4
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinima.2
+Encoding: 171 -1 171
+Width: 19
+VWidth: 1418
+Flags: HW
+HStem: -265.569 318.553
+VStem: 0 19<-264.028 52.984>
+LayerCount: 2
+Fore
+SplineSet
+0 -258.872 m 13
+ 0 52.9844 l 29
+ 18.999 53.0215 l 29
+ 19 -265.569 l 21
+ 6.04395 -265.435 2.43457 -262.391 0 -258.872 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinor.2
+Encoding: 172 -1 172
+Width: 19
+VWidth: 2048
+Flags: W
+HStem: -330.997 173.996
+VStem: 0 19<-330.997 -157.001>
+LayerCount: 2
+Fore
+SplineSet
+0 -157.001 m 25
+ 19 -157 l 25
+ 19 -330.997 l 29
+ 0 -331.002 l 29
+ 0 -157.001 l 25
+EndSplineSet
+EndChar
+
+StartChar: DivisioMaior.2
+Encoding: 173 -1 173
+Width: 19
+VWidth: 2048
+Flags: W
+HStem: -408.997 329.996
+VStem: 0 19<-408.997 -79.001>
+LayerCount: 2
+Fore
+SplineSet
+0 -79.001 m 29
+ 19 -79 l 29
+ 19 -408.997 l 25
+ 0 -409.002 l 25
+ 0 -79.001 l 29
+EndSplineSet
+EndChar
+
+StartChar: Virgula.3
+Encoding: 174 -1 174
+Width: 143
+VWidth: 2103
+Flags: HW
+HStem: 251.55 84.5<2.23911 67.6846>
+VStem: 87.1504 55.8996<127.91 231.716>
+LayerCount: 2
+Fore
+SplineSet
+-6.4502 280.15 m 4
+ -6.4502 324.87 22.1826 336.05 54.6504 336.05 c 4
+ 81.2305 336.05 143.05 312.467 143.05 212.55 c 4
+ 143.05 122.417 89.75 65.2168 -16.8496 40.9502 c 5
+ -19.1338 43.2344 -22.0498 53.2959 -22.0498 56.5498 c 4
+ -22.0498 58.2832 -21.6172 59.583 -20.75 60.4502 c 5
+ 51.1826 92.5176 87.1504 130.65 87.1504 174.85 c 4
+ 87.1504 236.21 49.4326 245.818 16.9502 251.55 c 4
+ 1.34961 253.283 -6.4502 262.817 -6.4502 280.15 c 4
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinima.3
+Encoding: 175 -1 175
+Width: 19
+VWidth: 1733
+Flags: HW
+HStem: 49.431 318.553
+VStem: 0 19<50.972 367.984>
+LayerCount: 2
+Fore
+SplineSet
+0 56.1279 m 13
+ 0 367.984 l 29
+ 18.999 368.021 l 29
+ 19 49.4307 l 21
+ 6.04395 49.5654 2.43457 52.6094 0 56.1279 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinor.3
+Encoding: 176 -1 176
+Width: 19
+VWidth: 2048
+Flags: W
+HStem: -251.497 329.996
+VStem: 0 19<-251.497 78.499>
+LayerCount: 2
+Fore
+SplineSet
+0 78.499 m 25
+ 19 78.5 l 25
+ 19 -251.497 l 29
+ 0 -251.502 l 29
+ 0 78.499 l 25
+EndSplineSet
+EndChar
+
+StartChar: DivisioMaior.3
+Encoding: 177 -1 177
+Width: 19
+VWidth: 2048
+Flags: W
+VStem: 0 19<-408.997 235.999>
+LayerCount: 2
+Fore
+SplineSet
+0 235.999 m 29
+ 19 236 l 29
+ 19 -408.997 l 25
+ 0 -409.002 l 25
+ 0 235.999 l 29
+EndSplineSet
+EndChar
+
+StartChar: Virgula.5
+Encoding: 178 -1 178
+Width: 143
+VWidth: 2733
+Flags: HW
+HStem: 881.55 84.5<2.23911 67.6846>
+VStem: 87.1504 55.8996<757.91 861.716>
+LayerCount: 2
+Fore
+SplineSet
+-6.4502 910.15 m 4
+ -6.4502 954.87 22.1826 966.05 54.6504 966.05 c 4
+ 81.2305 966.05 143.05 942.467 143.05 842.55 c 4
+ 143.05 752.417 89.75 695.217 -16.8496 670.95 c 5
+ -19.1338 673.234 -22.0498 683.296 -22.0498 686.55 c 4
+ -22.0498 688.283 -21.6172 689.583 -20.75 690.45 c 5
+ 51.1826 722.518 87.1504 760.65 87.1504 804.85 c 4
+ 87.1504 866.21 49.4326 875.818 16.9502 881.55 c 4
+ 1.34961 883.283 -6.4502 892.817 -6.4502 910.15 c 4
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinima.5
+Encoding: 179 -1 179
+Width: 19
+VWidth: 2363
+Flags: HW
+HStem: 679.431 318.553
+VStem: 0 19<680.972 997.984>
+LayerCount: 2
+Fore
+SplineSet
+0 686.128 m 13
+ 0 997.984 l 29
+ 18.999 998.021 l 29
+ 19 679.431 l 21
+ 6.04395 679.565 2.43457 682.609 0 686.128 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinor.5
+Encoding: 180 -1 180
+Width: 19
+VWidth: 2048
+Flags: W
+VStem: 0 19<-251.497 708.499>
+LayerCount: 2
+Fore
+SplineSet
+0 708.499 m 25
+ 19 708.5 l 25
+ 19 -251.497 l 25
+ 0 -251.502 l 25
+ 0 708.499 l 25
+EndSplineSet
+EndChar
+
+StartChar: DivisioMaior.5
+Encoding: 181 -1 181
+Width: 19
+VWidth: 2048
+Flags: W
+VStem: 0 19<-408.997 865.999>
+LayerCount: 2
+Fore
+SplineSet
+0 865.999 m 29
+ 19 866 l 29
+ 19 -408.997 l 25
+ 0 -409.002 l 25
+ 0 865.999 l 29
 EndSplineSet
 EndChar
 EndChars
