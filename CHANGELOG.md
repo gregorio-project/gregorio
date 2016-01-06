@@ -6,6 +6,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Fixed
 - The alignment of the vertical episema under a punctum inclinatum deminutus is now correct (see [#742](https://github.com/gregorio-project/gregorio/issues/742)).
 - `<eu>` and `<nlba>` may now be ended on the final divisio maior/finalis (see [#743](https://github.com/gregorio-project/gregorio/issues/743)).
+- Sign positioning on the first note of quadratum figures is now correct (see [#752](https://github.com/gregorio-project/gregorio/issues/752)).
 
 ### Changed
 - Initial handling has been simplified.  The initial style should now be specified from TeX by using the `\gresetinitiallines` command, rather than from a gabc header.  Big initials and normal initials are now governed by a single `initial` style, meant to be changed between scores as appropriate.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#632](https://github.com/gregorio-project/gregorio/issues/632)).  Deprecations for this change are listed in the Deprecation section, below.
