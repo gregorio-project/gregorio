@@ -413,8 +413,11 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         }
         break;
     case T_PESQUADRATUM:
+    case T_PESQUADRATUM_LONGQUEUE:
     case T_PESQUASSUS:
+    case T_PESQUASSUS_LONGQUEUE:
     case T_PESQUILISMAQUADRATUM:
+    case T_PESQUILISMAQUADRATUM_LONGQUEUE:
         if (i == 1) {
             note->gtex_offset_case = first_note_case(note, glyph);
             h_episema = above_if_h_episema(note->next);
