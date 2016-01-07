@@ -1309,6 +1309,17 @@
 }%
 \greseteolcustos{auto}%
 
+\newif\ifgre@blockeolcustosbeforeeuouae%
+\def\greseteolcustosbeforeeuouae#1{%
+  \IfStrEq{#1}{suppressed}%
+    {\gre@blockeolcustosbeforeeuouaetrue\relax}%
+    {\IfStrEq{#1}{auto}%
+      {\gre@blockeolcustosbeforeeuouaefalse\relax}%
+      {\gre@error{Unrecognized option for \protect\greseteolcustosbeforeeuouae}}%
+    }%
+}%
+\greseteolcustosbeforeeuouae{suppressed}%
+
 % macro to suppress the custos
 \def\greblockcustos{%
   \gre@obsolete{\protect\greblockcustos}{\protect\greseteolcustos{manual}}%
@@ -1536,6 +1547,9 @@
     \GreBeginNLBArea{0}{0}%
   \fi %
   \gre@in@euouaetrue %
+  % as soon as the EUOUAE starts, we stop blocking the EOL custos that might
+  % have been blocked on the prior syllable.
+  \gre@reseteolcustos %
 }
 
 \def\GreEndEUOUAE#1{%

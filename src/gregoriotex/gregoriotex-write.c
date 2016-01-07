@@ -3295,6 +3295,8 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     }
     if (!syllable->next_syllable) {
         fprintf(f, "%%\n\\GreLastOfScore %%\n");
+    } else if (syllable->next_syllable->euouae == EUOUAE_BEGINNING) {
+        fprintf(f, "%%\n\\GreNextSyllableBeginsEUOUAE %%\n");
     }
     fprintf(f, "}{%%\n");
 
