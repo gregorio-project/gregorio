@@ -183,6 +183,12 @@ void gregorio_add_secondary_clef_to_note(gregorio_note *current_note,
         return;
     }
 
+    if (current_note->u.clef.secondary_line) {
+        gregorio_message(_("secondary clef already exists"),
+                "gregorio_add_secondary_clef_to_note", VERBOSITY_ERROR, 0);
+        return;
+    }
+
     current_note->u.clef.secondary_clef = clef;
     current_note->u.clef.secondary_line = clef_line;
     current_note->u.clef.secondary_flatted = flatted;
