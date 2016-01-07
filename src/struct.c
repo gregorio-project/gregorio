@@ -1091,6 +1091,7 @@ gregorio_score *gregorio_new_score(void)
     new_score->commentary = NULL;
     new_score->arranger = NULL;
     new_score->language = NULL;
+    new_score->mode_modifier = NULL;
     gregorio_source_info_init(&new_score->si);
     new_score->first_voice_info = NULL;
     new_score->mode = 0;
@@ -1132,6 +1133,7 @@ static void gregorio_free_score_infos(gregorio_score *score)
     free(score->commentary);
     free(score->arranger);
     free(score->language);
+    free(score->mode_modifier);
     free(score->user_notes);
     free(score->gregoriotex_font);
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
@@ -1266,6 +1268,17 @@ void gregorio_set_score_language(gregorio_score *score, char *language)
     }
     free(score->language);
     score->language = language;
+}
+
+void gregorio_set_score_mode_modifier(gregorio_score *score, char *mode_modifier)
+{
+    if (!score) {
+        gregorio_message(_("function called with NULL argument"),
+                "gregorio_set_score_mode_modifier", VERBOSITY_WARNING, 0);
+        return;
+    }
+    free(score->mode_modifier);
+    score->mode_modifier = mode_modifier;
 }
 
 void gregorio_set_score_number_of_voices(gregorio_score *score,

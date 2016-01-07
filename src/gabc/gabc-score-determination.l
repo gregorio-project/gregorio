@@ -174,6 +174,9 @@ semicolon. */
 <INITIAL>mode {
         return MODE;
     }
+<INITIAL>mode-modifier {
+        return MODE_MODIFIER;
+    }
 <INITIAL>annotation {
         return ANNOTATION;
     }

@@ -906,6 +906,7 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     if (score->mode) {
         fprintf(f, "mode: %d;\n", score->mode);
     }
+    gabc_write_str_attribute(f, "mode-modifier", score->mode_modifier);
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
         if (score->annotation[annotation_num]) {
             fprintf(f, "annotation: %s;\n",
