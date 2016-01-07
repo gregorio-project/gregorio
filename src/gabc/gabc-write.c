@@ -901,7 +901,7 @@ void gabc_write_score(FILE *f, gregorio_score *score)
         fprintf(f, "staff-lines: %u;\n", score->staff_lines);
     }
     if (score->nabc_lines) {
-        fprintf(f, "nabc-lines: %zu;\n", score->nabc_lines);
+        fprintf(f, "nabc-lines: %u;\n", (unsigned int)score->nabc_lines);
     }
     if (score->mode) {
         fprintf(f, "mode: %d;\n", score->mode);
