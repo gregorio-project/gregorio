@@ -271,23 +271,62 @@ static void end_variable_ledger(const ledger_line_type type)
     }
 }
 
-static __inline void check_clef_line(char line)
+static __inline int parse_clef_line(char line)
 {
     line -= '0';
     if (line < 0 || line > staff_lines) {
-        gregorio_messagef("check_clef_line", VERBOSITY_ERROR, 0,
+        gregorio_messagef("parse_clef_line", VERBOSITY_ERROR, 0,
                 _("invalid clef line for %u lines: %d"),
                 (unsigned int)staff_lines, (int)line);
+        return 1;
     }
+    return line;
 }
 
-static __inline void check_dominican_bar(const int bar)
+static __inline gregorio_bar parse_dominican_bar(char bar)
 {
+    bar -= '0';
     if (bar < 1 || bar > (2 * (staff_lines - 1))) {
-        gregorio_messagef("check_dominican_line", VERBOSITY_ERROR, 0,
+        gregorio_messagef("parse_dominican_line", VERBOSITY_ERROR, 0,
                 _("invalid dominican bar for %u lines: ;%d"),
-                (unsigned int)staff_lines, bar);
+                (unsigned int)staff_lines, (int)bar);
     }
+
+    switch (bar) {
+    case 1:
+        return B_DIVISIO_MINOR_D1;
+    case 2:
+        return B_DIVISIO_MINOR_D2;
+    case 3:
+        return B_DIVISIO_MINOR_D3;
+    case 4:
+        return B_DIVISIO_MINOR_D4;
+    case 5:
+        return B_DIVISIO_MINOR_D5;
+    case 6:
+        return B_DIVISIO_MINOR_D6;
+    case 7:
+        return B_DIVISIO_MINOR_D7;
+    case 8:
+        return B_DIVISIO_MINOR_D8;
+    }
+
+    gregorio_messagef("check_dominican_line", VERBOSITY_ERROR, 0,
+            _("invalid dominican bar: %d"), (int)bar);
+    return B_NO_BAR;
+}
+
+static __inline gregorio_clef letter_to_clef(char letter)
+{
+    switch (letter) {
+    case 'c':
+        return CLEF_C;
+    case 'f':
+        return CLEF_F;
+    }
+    gregorio_messagef("letter_to_clef", VERBOSITY_ERROR, 0,
+            _("invalid clef: %c"), letter);
+    return CLEF_C;
 }
 
 %}
@@ -672,27 +711,27 @@ Z   {
         gregorio_add_end_of_line_as_note(&current_note, GRE_END_OF_PAR,
                 &notes_lloc);
     }
-(c|f)[1-5] {
-        check_clef_line(gabc_notes_determination_text[1]);
-        if (gabc_notes_determination_text[0]=='c') {
-            gregorio_add_clef_change_as_note(&current_note, GRE_C_KEY_CHANGE,
-                    gabc_notes_determination_text[1], &notes_lloc);
-        } else {
-            gregorio_add_clef_change_as_note(&current_note, GRE_F_KEY_CHANGE,
-                    gabc_notes_determination_text[1], &notes_lloc);
-        }
+[cf][1-5] {
+        gregorio_add_clef_as_note(&current_note,
+                letter_to_clef(gabc_notes_determination_text[0]),
+                parse_clef_line(gabc_notes_determination_text[1]), false,
+                &notes_lloc);
     }
-(cb|fb)[1-5] {
-        check_clef_line(gabc_notes_determination_text[2]);
-        if (gabc_notes_determination_text[0]=='c') {
-            gregorio_add_clef_change_as_note(&current_note,
-                    GRE_C_KEY_CHANGE_FLATED, gabc_notes_determination_text[2],
-                    &notes_lloc);
-        } else {
-            gregorio_add_clef_change_as_note(&current_note,
-                    GRE_F_KEY_CHANGE_FLATED, gabc_notes_determination_text[2],
-                    &notes_lloc);
-        }
+[cf]b[1-5] {
+        gregorio_add_clef_as_note(&current_note,
+                letter_to_clef(gabc_notes_determination_text[0]),
+                parse_clef_line(gabc_notes_determination_text[2]), true,
+                &notes_lloc);
+    }
+@[cf][1-5] {
+        gregorio_add_secondary_clef_to_note(current_note,
+                letter_to_clef(gabc_notes_determination_text[1]),
+                parse_clef_line(gabc_notes_determination_text[2]), false);
+    }
+@[cf]b[1-5] {
+        gregorio_add_secondary_clef_to_note(current_note,
+                letter_to_clef(gabc_notes_determination_text[1]),
+                parse_clef_line(gabc_notes_determination_text[3]), true);
     }
 `   {
         add_bar_as_note(B_VIRGULA);
@@ -700,37 +739,8 @@ Z   {
 ,   {
         add_bar_as_note(B_DIVISIO_MINIMA);
     }
-[,;]1 {
-        check_dominican_bar(1);
-        add_bar_as_note(B_DIVISIO_MINOR_D1);
-    }
-[,;]2 {
-        check_dominican_bar(2);
-        add_bar_as_note(B_DIVISIO_MINOR_D2);
-    }
-[,;]3 {
-        check_dominican_bar(3);
-        add_bar_as_note(B_DIVISIO_MINOR_D3);
-    }
-[,;]4 {
-        check_dominican_bar(4);
-        add_bar_as_note(B_DIVISIO_MINOR_D4);
-    }
-[,;]5 {
-        check_dominican_bar(5);
-        add_bar_as_note(B_DIVISIO_MINOR_D5);
-    }
-[,;]6 {
-        check_dominican_bar(6);
-        add_bar_as_note(B_DIVISIO_MINOR_D6);
-    }
-[,;]7 {
-        check_dominican_bar(7);
-        add_bar_as_note(B_DIVISIO_MINOR_D7);
-    }
-[,;]8 {
-        check_dominican_bar(8);
-        add_bar_as_note(B_DIVISIO_MINOR_D8);
+[,;][1-8] {
+        add_bar_as_note(parse_dominican_bar(gabc_notes_determination_text[1]));
     }
 ;   {
         add_bar_as_note(B_DIVISIO_MINOR);

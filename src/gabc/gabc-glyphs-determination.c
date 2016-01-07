@@ -754,20 +754,14 @@ static char gabc_determine_custo_pitch(gregorio_note *current_note,
 {
     int pitch_difference = 0;
     int newkey;
-    while (current_note) {
-        if (current_note->type == GRE_C_KEY_CHANGE
-                || current_note->type == GRE_C_KEY_CHANGE_FLATED) {
-            newkey = gregorio_calculate_new_key(C_KEY,
-                    current_note->u.note.pitch - '0');
+    for (; current_note; current_note = current_note->next) {
+        switch (current_note->type) {
+        case GRE_CLEF:
+            newkey = gregorio_calculate_new_key(current_note->u.clef);
             pitch_difference = newkey - current_key;
-        }
-        if (current_note->type == GRE_F_KEY_CHANGE
-                || current_note->type == GRE_F_KEY_CHANGE_FLATED) {
-            newkey = gregorio_calculate_new_key(F_KEY,
-                    current_note->u.note.pitch - '0');
-            pitch_difference = newkey - current_key;
-        }
-        if (current_note->type == GRE_NOTE) {
+            break;
+
+        case GRE_NOTE:
             pitch_difference =
                     (int) current_note->u.note.pitch - pitch_difference;
             while (pitch_difference < LOWEST_PITCH) {
@@ -779,8 +773,10 @@ static char gabc_determine_custo_pitch(gregorio_note *current_note,
             assert(pitch_difference >= LOWEST_PITCH
                     && pitch_difference <= score->highest_pitch);
             return (char) pitch_difference;
+
+        default:
+            break;
         }
-        current_note = current_note->next;
     }
     return DUMMY_PITCH;
 }
@@ -839,8 +835,6 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
     gregorio_glyph_type current_glyph_type = G_UNDETERMINED;
     gregorio_glyph_type next_glyph_type = G_UNDETERMINED;
     char last_pitch = USELESS_VALUE;
-    /* a variable for the signs of bars and to tell if a key is flatted or
-     * not */
     gregorio_note *next_note = NULL;
 
     /* determination of end of glyphs, see comments on
@@ -865,7 +859,6 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
         if (current_note->type != GRE_NOTE) {
             gregorio_type type = current_note->type;
             char pitch = USELESS_VALUE;
-            bool flat = false;
             bool force = false;
             gregorio_sign sign = _NO_SIGN;
 
@@ -883,28 +876,9 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             }
 
             switch (type) {
-            case GRE_C_KEY_CHANGE:
+            case GRE_CLEF:
                 pitch = current_note->u.note.pitch;
-                *current_key = gregorio_calculate_new_key(C_KEY, pitch - '0');
-                break;
-
-            case GRE_F_KEY_CHANGE:
-                pitch = current_note->u.note.pitch;
-                *current_key = gregorio_calculate_new_key(F_KEY, pitch - '0');
-                break;
-
-            case GRE_C_KEY_CHANGE_FLATED:
-                pitch = current_note->u.note.pitch;
-                *current_key = gregorio_calculate_new_key(C_KEY, pitch - '0');
-                type = GRE_C_KEY_CHANGE;
-                flat = true;
-                break;
-
-            case GRE_F_KEY_CHANGE_FLATED:
-                pitch = current_note->u.note.pitch;
-                *current_key = gregorio_calculate_new_key(F_KEY, pitch - '0');
-                type = GRE_F_KEY_CHANGE;
-                flat = true;
+                *current_key = gregorio_calculate_new_key(current_note->u.clef);
                 break;
 
             case GRE_CUSTOS:
@@ -961,9 +935,12 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                     gregorio_add_unpitched_element_as_glyph(&last_glyph, type,
                             &(current_note->u.other), sign,
                             current_note->texverb);
+                } else if (type == GRE_CLEF) {
+                    gregorio_add_clef_as_glyph(&last_glyph,
+                            current_note->u.clef, current_note->texverb);
                 } else {
                     gregorio_add_pitched_element_as_glyph(&last_glyph, type,
-                            pitch, flat, force, current_note->texverb);
+                            pitch, force, current_note->texverb);
                 }
             }
             current_glyph_first_note = current_note->next;

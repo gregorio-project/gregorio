@@ -94,7 +94,7 @@ static int voice;
 static gregorio_center_determination center_is_determined;
 /* current_key is... the current key... updated by each notes determination
  * (for key changes) */
-static int current_key = DEFAULT_KEY;
+static int current_key;
 static bool got_language = false;
 static bool got_staff_lines = false;
 static bool started_first_word = false;
@@ -127,7 +127,8 @@ static void gabc_fix_custos(gregorio_score *score_to_check)
             || !score_to_check->first_voice_info) {
         return;
     }
-    current_key = score_to_check->first_voice_info->initial_key;
+    current_key = gregorio_calculate_new_key(
+            score_to_check->first_voice_info->initial_clef);
     current_syllable = score_to_check->first_syllable;
     while (current_syllable) {
         current_element = (current_syllable->elements)[0];
@@ -137,29 +138,14 @@ static void gabc_fix_custos(gregorio_score *score_to_check)
                 pitch = custo_element->u.misc.pitched.pitch;
                 /* we look for the key */
                 while (current_element) {
-                    switch (current_element->type) {
-                    case GRE_C_KEY_CHANGE:
-                    case GRE_C_KEY_CHANGE_FLATED:
-                        pitch = gregorio_determine_next_pitch(current_syllable,
+                    if (current_element->type == GRE_CLEF) {
+                        pitch = gregorio_determine_next_pitch( current_syllable,
                                 current_element, NULL);
-                        newkey = gregorio_calculate_new_key(C_KEY,
-                                current_element->u.misc.pitched.pitch - '0');
+                        newkey = gregorio_calculate_new_key(
+                                current_element->u.misc.clef);
                         pitch_difference = (char) newkey - (char) current_key;
                         pitch -= pitch_difference;
                         current_key = newkey;
-                        break;
-                    case GRE_F_KEY_CHANGE:
-                    case GRE_F_KEY_CHANGE_FLATED:
-                        pitch = gregorio_determine_next_pitch(current_syllable,
-                                current_element, NULL);
-                        newkey = gregorio_calculate_new_key(F_KEY,
-                                current_element->u.misc.pitched.pitch - '0');
-                        pitch_difference = (char) newkey - (char) current_key;
-                        pitch -= pitch_difference;
-                        current_key = newkey;
-                        break;
-                    default:
-                        break;
                     }
                     if (!custo_element->u.misc.pitched.force_pitch) {
                         while (pitch < LOWEST_PITCH) {
@@ -177,15 +163,9 @@ static void gabc_fix_custos(gregorio_score *score_to_check)
                 }
             }
             if (current_element) {
-                if (current_element->type == GRE_C_KEY_CHANGE
-                    || current_element->type == GRE_C_KEY_CHANGE_FLATED) {
-                    current_key = gregorio_calculate_new_key(C_KEY,
-                            current_element->u.misc.pitched.pitch - '0');
-                }
-                if (current_element->type == GRE_F_KEY_CHANGE
-                    || current_element->type == GRE_F_KEY_CHANGE_FLATED) {
-                    current_key = gregorio_calculate_new_key(F_KEY,
-                            current_element->u.misc.pitched.pitch - '0');
+                if (current_element->type == GRE_CLEF) {
+                    current_key = gregorio_calculate_new_key(
+                            current_element->u.misc.clef);
                 }
                 current_element = current_element->next;
             }
@@ -244,6 +224,7 @@ static void initialize_variables(void)
     no_linebreak_area = NLBA_NORMAL;
     euouae = EUOUAE_NORMAL;
     center_is_determined = CENTER_NOT_DETERMINED;
+    current_key = gregorio_calculate_new_key(gregorio_default_clef);
     for (i = 0; i < 10; i++) {
         macros[i] = NULL;
     }
@@ -269,7 +250,7 @@ static void free_variables(void)
 /* see whether a voice_info is empty */
 static int voice_info_is_not_empty(const gregorio_voice_info *voice_info)
 {
-    return (voice_info->initial_key != 5 || voice_info->style
+    return (voice_info->initial_clef.line || voice_info->style
             || voice_info->virgula_position);
 }
 
@@ -590,7 +571,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
     /* the flex/bison main call, it will build the score (that we have
      * initialized) */
     gabc_score_determination_parse();
-    gregorio_fix_initial_keys(score, DEFAULT_KEY);
+    gregorio_fix_initial_keys(score, gregorio_default_clef);
     gabc_fix_custos(score);
     free_variables();
     /* the we check the validity and integrity of the score we have built. */

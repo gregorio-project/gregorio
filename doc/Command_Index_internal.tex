@@ -406,11 +406,23 @@ Macro calculating the \verb=\gre@clefnum= from the letter and number.
   \#2 & integer & line number\\
 \end{argtable}
 
-\macroname{\textbackslash gre@clefnum}{}{gregoriotex-signs.tex}
-Count holding the current clef number.
+\macroname{\textbackslash gre@clef}{}{gregoriotex-signs.tex}
+Macro holding the current clef type.
 
-\macroname{\textbackslash gre@clefflat}{}{gregoriotex-signs.tex}
-Macro to hold the height of the current flat for the clef (\texttt{a} if no flat).
+\macroname{\textbackslash gre@clefline}{}{gregoriotex-signs.tex}
+Macro holding the current clef line.
+
+\macroname{\textbackslash gre@clefflatheight}{}{gregoriotex-signs.tex}
+Macro to hold the height of the current flat for the clef (\texttt{3} if no flat).
+
+\macroname{\textbackslash gre@cleftwo}{}{gregoriotex-signs.tex}
+Macro holding the current secondary clef type.
+
+\macroname{\textbackslash gre@cleftwoline}{}{gregoriotex-signs.tex}
+Macro holding the current secondary clef line (or 0 for no secondary clef).
+
+\macroname{\textbackslash gre@cleftwoflatheight}{}{gregoriotex-signs.tex}
+Macro to hold the height of the current flat for the secondary clef (\texttt{3} if no flat).
 
 \macroname{\textbackslash gre@updatelinesclef}{}{gregoriotex-signs.tex}
 Macro redrawing a key from \verb=\gre@clefnum=, useful for vertical space changes.
@@ -643,17 +655,43 @@ The font size at which symbols are to be loaded.
 \macroname{\textbackslash gre@textnormal}{\#1}{gregoriotex-syllable.tex}
 Macro which applies the default text format.
 
-\macroname{\textbackslash gre@typekey}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
-Macro which typesets the key.
+\macroname{\textbackslash gre@save@clef}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+Saves clef information for use in \verb=gre@updatelinesclef=.
 
 \begin{argtable}
-  \#1 & character & the type of the key: c or f\\
-  \#2 & integer & the line of the key (1 is the lowest)\\
-  \#3 & \texttt{0} & no need to use small key characters (inside a line)\\
-  & \texttt{1} & we must use small key characters (inside a line)\\
-  \#4 & \texttt{0} & no extra space is needed after the key\\
-  & \texttt{}1 & we must type a space after the key\\
-  \#5 & integer & if \texttt{3}, it means that we must not put a flat after the key, otherwise it’s the height of the flat\\
+  \#1 & character & the type of the clef: c or f\\
+  \#2 & integer & the line of the clef (1 is the lowest)\\
+  \#3 & integer & if \texttt{3}, it means that we must not put a flat after the clef, otherwise it’s the height of the flat\\
+  \#4 & character & the type of the secondary clef: c or f\\
+  \#5 & integer & the line of the secondary clef (1 is the lowest, 0 for no secondary clef)\\
+  \#6 & integer & if \texttt{3}, it means that we must not put a flat after the secondary clef, otherwise it’s the height of the flat\\
+\end{argtable}	
+
+\macroname{\textbackslash gre@typeclef}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-signs.tex}
+Macro which typesets the clef.
+
+\begin{argtable}
+  \#1 & character & the type of the clef: c or f\\
+  \#2 & integer & the line of the clef (1 is the lowest)\\
+  \#3 & \texttt{0} & no need to use small clef characters (inside a line)\\
+  & \texttt{1} & we must use small clef characters (inside a line)\\
+  \#4 & \texttt{0} & no extra space is needed after the clef\\
+  & \texttt{}1 & we must type a space after the clef\\
+  \#5 & integer & if \texttt{3}, it means that we must not put a flat after the clef, otherwise it’s the height of the flat\\
+  \#6 & character & the type of the secondary clef: c or f\\
+  \#7 & integer & the line of the secondary clef (1 is the lowest, 0 for no secondary clef)\\
+  \#8 & integer & if \texttt{3}, it means that we must not put a flat after the secondary clef, otherwise it’s the height of the flat\\
+\end{argtable}	
+
+\macroname{\textbackslash gre@typesingleclef}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
+Macro which typesets a single clef.
+
+\begin{argtable}
+  \#1 & character & the type of the clef: c or f\\
+  \#2 & integer & the line of the clef (1 is the lowest)\\
+  \#3 & \texttt{0} & no need to use small clef characters (inside a line)\\
+  & \texttt{1} & we must use small clef characters (inside a line)\\
+  \#4 & integer & if \texttt{3}, it means that we must not put a flat after the clef, otherwise it’s the height of the flat\\
 \end{argtable}	
 
 \macroname{\textbackslash gre@updateleftbox}{}{gregoriotex-main.tex}
@@ -1362,6 +1400,12 @@ Box holding the staff lines.
 \macroname{\textbackslash gre@box@temp@sign}{}{gregoriotex-signs.tex}
 Box to hold a sign so we can measure it for placement.
 
+\macroname{\textbackslash gre@box@temp@clef}{}{gregoriotex-signs.tex}
+Box for holding (and measuring) the clef when stacking non-overlapping clefs.
+
+\macroname{\textbackslash gre@box@temp@cleftwo}{}{gregoriotex-signs.tex}
+Box for holding (and measuring) the secondary clef when stacking non-overlapping clefs.
+
 \macroname{\textbackslash gre@box@syllablenotes}{}{gregoriotex-syllable.tex}
 Box holding the notes associated with a syllable.
 
@@ -1370,6 +1414,7 @@ Box holding the text associated with a syllable.
 
 \macroname{\textbackslash gre@box@hep}{}{gregoriotex-chars.tex}
 Box holding the horizontal episema.
+
 
 
 \subsection{Distances}

@@ -244,13 +244,13 @@ static void gabc_write_end_liquescentia(FILE *f, char liquescentia)
  * 
  */
 
-static void gabc_write_key_change(FILE *f, char step, int line,
-        bool flatted_key)
+static void gabc_write_clef(FILE *f, gregorio_clef_info clef)
 {
-    if (flatted_key) {
-        fprintf(f, "%cb%d", step, line);
-    } else {
-        fprintf(f, "%c%d", step, line);
+    fprintf(f, "%c%s%d", clef.clef == CLEF_C? 'c' : 'f', clef.flatted? "b" : "",
+            clef.line);
+    if (clef.secondary_line) {
+        fprintf(f, "@%c%s%d", clef.secondary_clef == CLEF_C? 'c' : 'f',
+                clef.secondary_flatted? "b" : "", clef.secondary_line);
     }
 }
 
@@ -757,15 +757,8 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element)
         gabc_write_bar(f, element->u.misc.unpitched.info.bar);
         gabc_write_bar_signs(f, element->u.misc.unpitched.special_sign);
         break;
-    case GRE_C_KEY_CHANGE:
-        gabc_write_key_change(f, C_KEY,
-                              element->u.misc.pitched.pitch - '0',
-                              element->u.misc.pitched.flatted_key);
-        break;
-    case GRE_F_KEY_CHANGE:
-        gabc_write_key_change(f, F_KEY,
-                              element->u.misc.pitched.pitch - '0',
-                              element->u.misc.pitched.flatted_key);
+    case GRE_CLEF:
+        gabc_write_clef(f, element->u.misc.clef);
         break;
     case GRE_END_OF_LINE:
         fprintf(f, "z");
@@ -866,8 +859,6 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
 
 void gabc_write_score(FILE *f, gregorio_score *score)
 {
-    char step;
-    int line;
     gregorio_syllable *syllable;
     int annotation_num;
     gregorio_external_header *header;
@@ -945,13 +936,9 @@ void gabc_write_score(FILE *f, gregorio_score *score)
         }
     }
     /* at present we only allow for one clef at the start of the gabc */
-    gregorio_det_step_and_line_from_key(score->first_voice_info->initial_key,
-                                        &step, &line);
-    if (score->first_voice_info->flatted_key) {
-        fprintf(f, "(%cb%d)", step, line);
-    } else {
-        fprintf(f, "(%c%d)", step, line);
-    }
+    fprintf(f, "(");
+    gabc_write_clef(f, score->first_voice_info->initial_clef);
+    fprintf(f, ")");
     syllable = score->first_syllable;
     /* the we write every syllable */
     while (syllable) {

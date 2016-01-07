@@ -124,15 +124,18 @@ Makes argument bold.  Accesses \LaTeX\ \verb=\textbf= (\textit{gregoriotex.sty})
   \#1 & string & Text to be typeset in bold.\\
 \end{argtable}
 
-\macroname{\textbackslash GreChangeClef}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreChangeClef}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
 Macro called when key changes
 
 \begin{argtable}
   \#1 & character & Type of new clef (c or f).\\
-  \#2 & integer   & Line of new clef.\\
+  \#2 & \texttt{1}--\texttt{5} & Line of new clef.\\
   \#3 & \texttt{0} & Print space before clef.\\
   & \texttt{1} & Do not print space before clef.\\
-  \#4 & integer   & Height number of flat in key (\texttt{0} for no flat).\\
+  \#4 & integer & Height number of flat in clef (\texttt{3} for no flat).\\
+  \#5 & \texttt{c} or \texttt{f} & Type of secondary clef.\\
+  \#6 & \texttt{0}--\texttt{5} & Line of secondary clef (\texttt{0} for no secondary clef).\\
+  \#7 & integer & Height of flat in secondary clef (\texttt{3} for no flat).\\
 \end{argtable}
 
 \macroname{\textbackslash GreCirculus}{\#1\#2}{gregoriotex-signs.tex}
@@ -767,24 +770,30 @@ ligatures. In this example we should call \verb=\grefixedtext{\textit{ffj}}=.
   \#1 & character & The initial letter of the score.\\
 \end{argtable}
 
-\macroname{\textbackslash GreSetInitialClef}{\#1\#2\#3}{gregoriotex-signs.tex}
-Macro for writing initial key.
+\macroname{\textbackslash GreSetInitialClef}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+Macro for writing initial clef.
 
 \begin{argtable}
   \#1 & \texttt{c} or \texttt{f} & Type of clef.\\
-  \#2 & \texttt{1}--\texttt{4}       & Line of key.\\
-  \#3 & integer & Height number of flat in key (\texttt{0} for no flat).\\
+  \#2 & \texttt{1}--\texttt{5} & Line of clef.\\
+  \#3 & integer & Height number of flat in clef (\texttt{3} for no flat).\\
+  \#4 & \texttt{c} or \texttt{f} & Type of secondary clef.\\
+  \#5 & \texttt{0}--\texttt{5} & Line of secondary clef (\texttt{0} for no secondary clef).\\
+  \#6 & integer & Height of flat in secondary clef (\texttt{3} for no flat).\\
 \end{argtable}
 
-\macroname{\textbackslash GreSetLinesClef}{\#1\#2\#3\#4}{gregoriotex-main.tex}
+\macroname{\textbackslash GreSetLinesClef}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-main.tex}
 Macro to define the clef that will appear at the beginning of the lines.
 
 \begin{argtable}
   \#1 & \texttt{c} or \texttt{f} & Type of clef.\\
-  \#2 & \texttt{1}--\texttt{4}       & Line of key.\\
+  \#2 & \texttt{1}--\texttt{5} & Line of clef.\\
   \#3 & \texttt{0} & No space after clef.\\
   & \texttt{1} & Space after clef.\\
-  \#4 & integer & Height of flat in key (\texttt{0} for no flat).\\
+  \#4 & integer & Height of flat in clef (\texttt{3} for no flat).\\
+  \#5 & \texttt{c} or \texttt{f} & Type of secondary clef.\\
+  \#6 & \texttt{0}--\texttt{5} & Line of secondary clef (\texttt{0} for no secondary clef).\\
+  \#7 & integer & Height of flat in secondary clef (\texttt{3} for no flat).\\
 \end{argtable}
 
 \macroname{\textbackslash GreSetNextSyllable}{\#1\#2\#3}{gregoriotex-syllable.tex}

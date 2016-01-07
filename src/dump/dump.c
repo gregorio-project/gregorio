@@ -61,29 +61,6 @@ void dump_write_characters(FILE *const f,
     }
 }
 
-static const char *dump_key_to_char(const int key)
-{
-    switch (key) {
-    case -2:
-        return "f1";
-    case 0:
-        return "f2";
-    case 2:
-        return "f3";
-    case 4:
-        return "f4";
-    case 1:
-        return "c1";
-    case 3:
-        return "c2";
-    case 5:
-        return "c3";
-    case 7:
-        return "c4";
-    }
-    return "no key defined";
-}
-
 static const char *dump_bool(bool value) {
     return value? "true" : "false";
 }
@@ -198,12 +175,22 @@ void dump_write_score(FILE *f, gregorio_score *score)
             "=====================================================================\n");
     for (i = 0; i < score->number_of_voices; i++) {
         fprintf(f, "  Voice %d\n", i + 1);
-        if (voice_info->initial_key) {
-            fprintf(f, "   initial_key               %d (%s)\n",
-                    voice_info->initial_key,
-                    dump_key_to_char(voice_info->initial_key));
-            if (voice_info->flatted_key) {
+        if (voice_info->initial_clef.line) {
+            fprintf(f, "   initial_key               %d (%c%d)\n",
+                    gregorio_calculate_new_key(voice_info->initial_clef),
+                    gregorio_clef_to_char(voice_info->initial_clef.clef),
+                    voice_info->initial_clef.line);
+            if (voice_info->initial_clef.flatted) {
                 fprintf(f, "   flatted_key               true\n");
+            }
+            if (voice_info->initial_clef.secondary_line) {
+                fprintf(f, "     secondary_clef          %c%d\n",
+                        gregorio_clef_to_char(
+                            voice_info->initial_clef.secondary_clef),
+                        voice_info->initial_clef.secondary_line);
+                if (voice_info->initial_clef.secondary_flatted) {
+                    fprintf(f, "     secondary_flatted_key   true\n");
+                }
             }
         }
         for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS;
@@ -326,23 +313,23 @@ void dump_write_score(FILE *f, gregorio_score *score)
                     }
                 }
                 break;
-            case GRE_C_KEY_CHANGE:
-                if (element->u.misc.pitched.pitch) {
-                    fprintf(f, "     clef                    %d (c%d)\n",
-                            element->u.misc.pitched.pitch,
-                            element->u.misc.pitched.pitch - '0');
-                    if (element->u.misc.pitched.flatted_key) {
+            case GRE_CLEF:
+                if (element->u.misc.clef.line) {
+                    fprintf(f, "     clef                    %d (%c%d)\n",
+                            gregorio_calculate_new_key(element->u.misc.clef),
+                            gregorio_clef_to_char(element->u.misc.clef.clef),
+                            element->u.misc.clef.line);
+                    if (element->u.misc.clef.flatted) {
                         fprintf(f, "     flatted_key             true\n");
                     }
-                }
-                break;
-            case GRE_F_KEY_CHANGE:
-                if (element->u.misc.pitched.pitch) {
-                    fprintf(f, "     clef                    %d (f%d)\n",
-                            element->u.misc.pitched.pitch,
-                            element->u.misc.pitched.pitch - '0');
-                    if (element->u.misc.pitched.flatted_key) {
-                        fprintf(f, "     flatted_key             true\n");
+                    if (element->u.misc.clef.secondary_line) {
+                        fprintf(f, "     secondary_clef          %c%d\n",
+                                gregorio_clef_to_char(
+                                    element->u.misc.clef.secondary_clef),
+                                element->u.misc.clef.secondary_line);
+                        if (element->u.misc.clef.secondary_flatted) {
+                            fprintf(f, "     secondary_flatted_key   true\n");
+                        }
                     }
                 }
                 break;
