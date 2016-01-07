@@ -647,7 +647,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
 %token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES
-%token LANGUAGE HYPHEN EXTERNAL_HEADER STAFF_LINES END_OF_FILE
+%token LANGUAGE HYPHEN EXTERNAL_HEADER STAFF_LINES MODE_MODIFIER END_OF_FILE
 
 %%
 
@@ -788,6 +788,13 @@ mode_definition:
             score->mode=atoi($2.text);
             free($2.text);
         }
+    }
+    ;
+
+mode_modifier_definition:
+    MODE_MODIFIER attribute {
+        check_multiple("mode-modifier", score->mode_modifier);
+        gregorio_set_score_mode_modifier (score, $2.text);
     }
     ;
 
@@ -977,6 +984,7 @@ definition:
     | gabc_version_definition
     | initial_style_definition
     | mode_definition
+    | mode_modifier_definition
     | gregoriotex_font_definition
     | user_notes_definition
     | centering_scheme_definition

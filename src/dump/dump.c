@@ -157,11 +157,14 @@ void dump_write_score(FILE *f, gregorio_score *score)
     if (score->mode) {
         fprintf(f, "   mode                      %d\n", score->mode);
     }
+    if (score->mode_modifier) {
+        fprintf(f, "   mode_modifier             %s\n", score->mode_modifier);
+    }
     if (score->staff_lines != 4) {
-        fprintf (f, "   staff_lines               %d\n", (int)score->staff_lines);
+        fprintf(f, "   staff_lines               %d\n", (int)score->staff_lines);
     }
     if (score->nabc_lines) {
-        fprintf (f, "   nabc_lines                %d\n", (int)score->nabc_lines);
+        fprintf(f, "   nabc_lines                %d\n", (int)score->nabc_lines);
     }
     if (score->user_notes) {
         fprintf(f, "   user_notes                %s\n", score->user_notes);

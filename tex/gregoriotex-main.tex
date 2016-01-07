@@ -589,32 +589,34 @@
 %% macros for the typesetting the things above the initial
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\gre@writemode#1{%
-  \greannotation{\gre@style@modeline #1\endgre@style@modeline}%
+\def\gre@writemode#1#2{%
+  \greannotation{%
+    \gre@style@modeline #1\endgre@style@modeline\space\gre@style@modemodifier #2\unskip\endgre@style@modemodifier\relax %
+  }%
   \relax %
 }%
 
-\def\GreMode#1{%
+\def\GreMode#1#2{%
   \ifhbox \gre@box@annotation%
     \relax%
   \else%
     \ifcase#1%
     \or%
-      \gre@writemode{I}%
+      \gre@writemode{I}{#2}%
     \or%
-      \gre@writemode{II}%
+      \gre@writemode{II}{#2}%
     \or%
-      \gre@writemode{III}%
+      \gre@writemode{III}{#2}%
     \or%
-      \gre@writemode{IV}%
+      \gre@writemode{IV}{#2}%
     \or%
-      \gre@writemode{V}%
+      \gre@writemode{V}{#2}%
     \or%
-      \gre@writemode{VI}%
+      \gre@writemode{VI}{#2}%
     \or%
-      \gre@writemode{VII}%
+      \gre@writemode{VII}{#2}%
     \or%
-      \gre@writemode{VIII}%
+      \gre@writemode{VIII}{#2}%
     \fi%
   \fi%
   \relax%

@@ -3601,6 +3601,7 @@ static void write_headers(FILE *const f, gregorio_score *const score)
     if (score->mode) {
         write_numeric_header(f, "mode", score->mode);
     }
+    write_header(f, "mode-modifier", score->mode_modifier);
     write_header(f, "author", score->si.author);
     write_header(f, "date", score->si.date);
     write_header(f, "manuscript", score->si.manuscript);
@@ -3718,7 +3719,8 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         fprintf(f, "%%\n");
     }
     if (score->mode != 0) {
-        fprintf(f, "\\GreMode{%d}%%\n", score->mode);
+        fprintf(f, "\\GreMode{%d}{%s}%%\n", score->mode,
+                score->mode_modifier? score->mode_modifier : "");
     }
 
     if (score->initial_style != INITIAL_NOT_SPECIFIED) {

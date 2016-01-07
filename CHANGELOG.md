@@ -25,6 +25,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Support for half-spaces and ad-hoc spaces.  Use `/0` in gabc for a half-space between notes.  Use `/[factor]` (substituting a positive or negative real number for the scale factor) for an ad-hoc space whose length is `interelementspace` scaled by the desired factor.  See [#736](https://github.com/gregorio-project/gregorio/issues/736).
 - Support for custom length ledger lines.  See GregorioRef for details (for the change request, see [#598](https://github.com/gregorio-project/gregorio/issues/598)).
 - Support for a secondary clef.  Use `@` to join two clefs together, as in `c1@c4`.  The first clef is considered the primary one and will be used when computing an automatic custos before a clef change.  See [#755](https://github.com/gregorio-project/gregorio/issues/755).
+- `mode-modifier` gabc header for text (styled by the `modemodifier` style) to typeset after the value of `mode` when it is used.  See GregorioRef for details (for the change request, see [#756](https://github.com/gregorio-project/gregorio/issues/756)).
 
 ### Deprecated
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
