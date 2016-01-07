@@ -70,11 +70,8 @@ typedef struct gregorio_scanner_location {
     E(GRE_FLAT) \
     E(GRE_SHARP) \
     E(GRE_NATURAL) \
-    E(GRE_C_KEY_CHANGE) \
-    E(GRE_C_KEY_CHANGE_FLATED) \
+    E(GRE_CLEF) \
     E(GRE_SYLLABLE) \
-    E(GRE_F_KEY_CHANGE) \
-    E(GRE_F_KEY_CHANGE_FLATED) \
     E(GRE_END_OF_LINE) \
     E(GRE_SPACE) \
     E(GRE_BAR) \
@@ -93,6 +90,11 @@ typedef struct gregorio_scanner_location {
     E(GRE_AUTOFUSE_START) \
     L(GRE_AUTOFUSE_END)
 ENUM(gregorio_type, GREGORIO_TYPE);
+
+#define GREGORIO_CLEF(A,E,X,L) \
+    A(CLEF_C, 0) \
+    X(CLEF_F, 1)
+ENUM(gregorio_clef, GREGORIO_CLEF);
 
 /* the different shapes, only for notes */
 
@@ -375,19 +377,25 @@ typedef struct gregorio_extra_info {
     ENUM_BITFIELD(gregorio_nlba) nlba:8;
 } gregorio_extra_info;
 
+typedef struct gregorio_clef_info {
+    unsigned char line;
+    unsigned char secondary_line;
+    ENUM_BITFIELD(gregorio_clef) clef:1;
+    bool flatted:1;
+    ENUM_BITFIELD(gregorio_clef) secondary_clef:1;
+    bool secondary_flatted:1;
+} gregorio_clef_info;
+
 typedef union gregorio_misc_element_info {
-    /* pitched is used for GRE_CUSTOS, GRE_FLAT, GRE_SHARP, GRE_NATURAL,
-     * GRE_C_KEY_CHANGE, GRE_F_KEY_CHANGE, GRE_C_KEY_CHANGE_FLATED, and
-     * GRE_F_KEY_CHANGE_FLATED */
+    /* pitched is used for GRE_CUSTOS, GRE_FLAT, GRE_SHARP, and GRE_NATURAL */
     struct {
-        /* The pitch of the glyph for GRE_FLAT, GRE_NATURAL, GRE_SHARP.
-         * If a clef change, pitch will be a number indicating the line of
-         * the clef. */
+        /* The pitch of the glyph for GRE_FLAT, GRE_NATURAL, and GRE_SHARP. */
         signed char pitch;
         /* boolean indicating a clef with a B-flat */
-        bool flatted_key:1;
         bool force_pitch:1;
     } pitched;
+    /* clef is used for GRE_CLEF */
+    struct gregorio_clef_info clef;
     /* unpitched is used for everything else */
     struct {
         struct gregorio_extra_info info;
@@ -412,9 +420,7 @@ typedef struct gregorio_note {
      * structure generation. */
     char *texverb;
     union {
-        /* note is used for GRE_NOTE, GRE_FLAT, GRE_SHARP, GRE_NATURAL,
-         * GRE_C_KEY_CHANGE, GRE_F_KEY_CHANGE, GRE_C_KEY_CHANGE_FLATED, and
-         * GRE_F_KEY_CHANGE_FLATED */
+        /* note is used for GRE_NOTE, GRE_FLAT, GRE_SHARP, and GRE_NATURAL */
         struct {
             /* the pitch is the height of the note on the score, that is to
              * say the letter it is represented by in gabc.  If a clef
@@ -429,6 +435,8 @@ typedef struct gregorio_note {
              * determination of glyphs. */
             ENUM_BITFIELD(gregorio_liquescentia) liquescentia:8;
         } note;
+        /* clef is used for GRE_CLEF */
+        struct gregorio_clef_info clef;
         /* other is used for everything else */
         struct gregorio_extra_info other;
     } u;
@@ -729,15 +737,11 @@ typedef struct gregorio_score {
  */
 
 typedef struct gregorio_voice_info {
-    /* the only thing that is worth a comment here is the key. We have a
-     * special representation for the key. See comments on
-     * src/struct-utils.c for further reading. */
-    int initial_key;
+    gregorio_clef_info initial_clef;
     /* See source_info above for comments about the move of author etc. */
     char *style;
     char *virgula_position;
     struct gregorio_voice_info *next_voice_info;
-    bool flatted_key;
 } gregorio_voice_info;
 
 /* the maximum number of voices, more than this is total nonsense in
@@ -749,7 +753,8 @@ typedef struct gregorio_voice_info {
 #define C_KEY 'c'
 #define F_KEY 'f'
 #define NO_KEY -5
-#define DEFAULT_KEY 5
+
+extern gregorio_clef_info gregorio_default_clef;
 
 #define MONOPHONY 0
 
@@ -832,9 +837,10 @@ void gregorio_free_one_glyph(gregorio_glyph **glyph);
 void gregorio_free_score(gregorio_score *score);
 void gregorio_free_characters(gregorio_character *current_character);
 void gregorio_go_to_first_character(const gregorio_character **character);
+void gregorio_add_clef_as_glyph(gregorio_glyph **current_glyph,
+        gregorio_clef_info clef, char *texverb);
 void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
-        gregorio_type type, signed char pitch, bool flatted_key,
-        bool force_pitch, char *texverb);
+        gregorio_type type, signed char pitch, bool force_pitch, char *texverb);
 void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
         gregorio_type type, gregorio_extra_info *info, gregorio_sign sign,
         char *texverb);
@@ -844,9 +850,11 @@ void gregorio_add_custo_as_note(gregorio_note **current_note,
         const gregorio_scanner_location *loc);
 void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
         signed char pitch, const gregorio_scanner_location *loc);
-void gregorio_add_clef_change_as_note(gregorio_note **current_note,
-        gregorio_type type, signed char clef_line,
+void gregorio_add_clef_as_note(gregorio_note **current_note,
+        gregorio_clef clef, signed char clef_line, bool flatted,
         const gregorio_scanner_location *loc);
+void gregorio_add_secondary_clef_to_note(gregorio_note *current_note,
+        gregorio_clef clef, signed char clef_line, bool flatted);
 void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar,
         const gregorio_scanner_location *loc);
 void gregorio_add_alteration_as_note(gregorio_note **current_note,
@@ -903,12 +911,12 @@ void gregorio_add_score_external_header(gregorio_score *score, char *name,
 void gregorio_set_voice_style(gregorio_voice_info *voice_info, char *style);
 void gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
         char *virgula_position);
-void gregorio_fix_initial_keys(gregorio_score *score, int default_key);
+void gregorio_fix_initial_keys(gregorio_score *score,
+        gregorio_clef_info default_clef);
 void gregorio_go_to_first_note(gregorio_note **note);
 void gregorio_go_to_first_glyph(gregorio_glyph **glyph);
-void gregorio_det_step_and_line_from_key(int key, char *step, int *line);
 bool gregorio_is_only_special(gregorio_element *element);
-int gregorio_calculate_new_key(char step, int line);
+int gregorio_calculate_new_key(gregorio_clef_info clef);
 void gregorio_add_character(gregorio_character **current_character,
         grewchar wcharacter);
 void gregorio_begin_style(gregorio_character **current_character,
@@ -962,6 +970,11 @@ static __inline const gregorio_glyph *gregorio_previous_non_texverb_glyph(
         }
     }
     return NULL;
+}
+
+static __inline char gregorio_clef_to_char(gregorio_clef clef)
+{
+    return (clef == CLEF_C)? 'c' : 'f';
 }
 
 #endif

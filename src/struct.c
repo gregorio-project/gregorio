@@ -52,6 +52,15 @@
 #include "characters.h"
 #include "support.h"
 
+gregorio_clef_info gregorio_default_clef = {
+    /*.line =*/ 3,
+    /*.secondary_line =*/ 0,
+    /*.clef =*/ CLEF_C,
+    /*.flatted =*/ false,
+    /*.secondary_clef =*/ CLEF_C, /* not used since secondary_line is 0 */
+    /*.secondary_flatted =*/ false,
+};
+
 static gregorio_note *create_and_link_note(gregorio_note **current_note,
         const gregorio_scanner_location *const loc)
 {
@@ -153,14 +162,30 @@ void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
     add_pitched_item_as_note(current_note, GRE_MANUAL_CUSTOS, pitch, loc);
 }
 
-void gregorio_add_clef_change_as_note(gregorio_note **current_note,
-        gregorio_type type, signed char clef_line,
+void gregorio_add_clef_as_note(gregorio_note **current_note,
+        gregorio_clef clef, signed char clef_line, bool flatted,
         const gregorio_scanner_location *const loc)
 {
-    assert(type == GRE_C_KEY_CHANGE || type == GRE_F_KEY_CHANGE
-           || type == GRE_C_KEY_CHANGE_FLATED
-           || type == GRE_F_KEY_CHANGE_FLATED);
-    add_pitched_item_as_note(current_note, type, clef_line, loc);
+    gregorio_note *element = create_and_link_note(current_note, loc);
+    element->type = GRE_CLEF;
+    element->u.clef.clef = clef;
+    element->u.clef.line = clef_line;
+    element->u.clef.flatted = flatted;
+}
+
+void gregorio_add_secondary_clef_to_note(gregorio_note *current_note,
+        gregorio_clef clef, signed char clef_line, bool flatted)
+{
+    if (!current_note || current_note->type != GRE_CLEF) {
+        gregorio_message(_("trying to add a secondary clef to something that "
+                    "is not a clef"), "gregorio_add_secondary_clef_to_note",
+                VERBOSITY_ERROR, 0);
+        return;
+    }
+
+    current_note->u.clef.secondary_clef = clef;
+    current_note->u.clef.secondary_line = clef_line;
+    current_note->u.clef.secondary_flatted = flatted;
 }
 
 void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar,
@@ -651,18 +676,23 @@ void gregorio_add_glyph(gregorio_glyph **current_glyph,
     next_glyph->u.notes.first_note = first_note;
 }
 
-void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
-        gregorio_type type, signed char pitch, bool flatted_key,
-        bool force_pitch, char *texverb)
+void gregorio_add_clef_as_glyph(gregorio_glyph **current_glyph,
+        gregorio_clef_info clef, char *texverb)
 {
     gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
-    assert(type == GRE_C_KEY_CHANGE || type == GRE_F_KEY_CHANGE
-           || type == GRE_C_KEY_CHANGE_FLATED || type == GRE_F_KEY_CHANGE_FLATED
-           || type == GRE_CUSTOS || type == GRE_FLAT || type == GRE_NATURAL
+    next_glyph->type = GRE_CLEF;
+    next_glyph->u.misc.clef = clef;
+    next_glyph->texverb = texverb;
+}
+
+void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
+        gregorio_type type, signed char pitch, bool force_pitch, char *texverb)
+{
+    gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
+    assert(type == GRE_CUSTOS || type == GRE_FLAT || type == GRE_NATURAL
            || type == GRE_SHARP);
     next_glyph->type = type;
     next_glyph->u.misc.pitched.pitch = pitch;
-    next_glyph->u.misc.pitched.flatted_key = flatted_key;
     next_glyph->u.misc.pitched.force_pitch = force_pitch;
     next_glyph->texverb = texverb;
 }
@@ -673,10 +703,8 @@ void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
 {
     gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
     assert(type != GRE_NOTE && type != GRE_GLYPH && type != GRE_ELEMENT
-           && type != GRE_C_KEY_CHANGE && type != GRE_F_KEY_CHANGE
-           && type != GRE_C_KEY_CHANGE_FLATED && type != GRE_F_KEY_CHANGE_FLATED
-           && type != GRE_CUSTOS && type != GRE_FLAT && type != GRE_NATURAL
-           && type != GRE_SHARP);
+           && type != GRE_CLEF && type != GRE_CUSTOS && type != GRE_FLAT
+           && type != GRE_NATURAL && type != GRE_SHARP);
     next_glyph->type = type;
     next_glyph->u.misc.unpitched.info = *info;
     next_glyph->u.misc.unpitched.special_sign = sign;
@@ -1265,11 +1293,6 @@ void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes)
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info)
 {
     gregorio_voice_info *next = gregorio_calloc(1, sizeof(gregorio_voice_info));
-    next->initial_key = NO_KEY;
-    next->flatted_key = false;
-    next->style = NULL;
-    next->virgula_position = NULL;
-    next->next_voice_info = NULL;
     if (*current_voice_info) {
         (*current_voice_info)->next_voice_info = next;
     }
@@ -1495,78 +1518,19 @@ void gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
  *
  *********************************/
 
-int gregorio_calculate_new_key(char step, int line)
+int gregorio_calculate_new_key(gregorio_clef_info clef)
 {
-    switch (step) {
-    case C_KEY:
-        return (2 * line) - 1;
+    switch (clef.clef) {
+    case CLEF_C:
+        return (2 * clef.line) - 1;
         break;
-    case F_KEY:
-        return (2 * line) - 4;
+    case CLEF_F:
+        return (2 * clef.line) - 4;
         break;
     default:
         gregorio_message(_("can't calculate key"),
                 "gregorio_calculate_new_key", VERBOSITY_ERROR, 0);
         return NO_KEY;
-    }
-}
-
-/**********************************
- *
- * The reverse function of the preceeding : give step (c or f) and
- * line (1-4) from an integer representing the key.
- *
- *********************************/
-
-void gregorio_det_step_and_line_from_key(int key, char *step, int *line)
-{
-    switch (key) {
-    case -2:
-        *step = 'f';
-        *line = 1;
-        break;
-    case 0:
-        *step = 'f';
-        *line = 2;
-        break;
-    case 2:
-        *step = 'f';
-        *line = 3;
-        break;
-    case 4:
-        *step = 'f';
-        *line = 4;
-        break;
-    case 6:
-        *step = 'f';
-        *line = 5;
-        break;
-    case 1:
-        *step = 'c';
-        *line = 1;
-        break;
-    case 3:
-        *step = 'c';
-        *line = 2;
-        break;
-    case 5:
-        *step = 'c';
-        *line = 3;
-        break;
-    case 7:
-        *step = 'c';
-        *line = 4;
-        break;
-    case 9:
-        *step = 'c';
-        *line = 5;
-        break;
-    default:
-        *step = '?';
-        *line = 0;
-        gregorio_message(_("can't determine step and line of the key"),
-                "gregorio_det_step_and_line_from_key", VERBOSITY_ERROR, 0);
-        return;
     }
 }
 
@@ -1700,9 +1664,9 @@ void gregorio_reinitialize_one_voice_alterations(char alterations[13])
  *
  *********************************/
 
-void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
+void gregorio_fix_initial_keys(gregorio_score *score,
+        gregorio_clef_info default_clef)
 {
-    int clef = 0;
     gregorio_element *element;
     gregorio_voice_info *voice_info;
     int i;
@@ -1719,22 +1683,8 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
         if (!element) {
             continue;
         }
-        if (element->type == GRE_C_KEY_CHANGE) {
-            clef =
-                gregorio_calculate_new_key(C_KEY,
-                                           element->u.misc.pitched.pitch - '0');
-            voice_info->initial_key = clef;
-            voice_info->flatted_key = element->u.misc.pitched.flatted_key;
-            gregorio_free_one_element(&(score->first_syllable->elements[i]));
-            gregorio_messagef("gregorio_fix_initial_keys", VERBOSITY_INFO, 0,
-                    _("in voice %d the first element is a key definition, "
-                    "considered as initial key"), i + 1);
-        } else if (element->type == GRE_F_KEY_CHANGE) {
-            clef =
-                gregorio_calculate_new_key(F_KEY,
-                                           element->u.misc.pitched.pitch - '0');
-            voice_info->initial_key = clef;
-            voice_info->flatted_key = element->u.misc.pitched.flatted_key;
+        if (element->type == GRE_CLEF) {
+            voice_info->initial_clef = element->u.misc.clef;
             gregorio_free_one_element(&(score->first_syllable->elements[i]));
             gregorio_messagef("gregorio_fix_initial_keys", VERBOSITY_INFO, 0,
                     _("in voice %d the first element is a key definition, "
@@ -1763,8 +1713,8 @@ void gregorio_fix_initial_keys(gregorio_score *score, int default_key)
     voice_info = score->first_voice_info;
 
     for (i = 0; i < score->number_of_voices; i++) {
-        if (voice_info->initial_key == NO_KEY) {
-            voice_info->initial_key = default_key;
+        if (!voice_info->initial_clef.line) {
+            voice_info->initial_clef = default_clef;
             gregorio_messagef("gregorio_fix_initial_keys", VERBOSITY_INFO, 0,
                     _("no initial key definition in voice %d, default key "
                     "definition applied"), i + 1);

@@ -103,14 +103,11 @@
   \gre@obsolete{\protect\grenormalclef}{\protect\gresetclef{visible}}%
 }%
 
-% a count describing the clef line and pitch : 1 for c on the first (bottom) line, 2 for c on the second line, 5 for f on the first, etc.
-\newcount\gre@clefnum%
-
 %% marcro to define the clef that will appear at the beginning of the lines
 % the first argument is the type : f or c, and the second is the height
 % the third argument is whether we must type a space after or not (0 if not, 1 if yes)
 % if the fourth argument is a, it means that we must not put a flat after the key, otherwise it's the height of the flat
-\def\GreSetLinesClef#1#2#3#4{%
+\def\GreSetLinesClef#1#2#3#4#5#6#7{%
   \gre@localleftbox{%
     \gre@skip@temp@four = \gre@dimen@additionalleftspace\relax%
     \kern\gre@skip@temp@four %
@@ -118,47 +115,83 @@
     \unkern %
     \ifgre@showclef%
       \gre@skip@temp@four = \gre@skip@afterclefnospace\relax%
-      \hbox{\gre@typekey{#1}{#2}{0}{#3}{#4}\hskip\gre@skip@temp@four}%
+      \hbox{\gre@typeclef{#1}{#2}{0}{#3}{#4}{#5}{#6}{#7}\hskip\gre@skip@temp@four}%
     \else %
       \gre@skip@temp@four = \gre@dimen@noclefspace\relax%
       \hbox{\kern\gre@skip@temp@four}%
     \fi %
   }%
-  \xdef\gre@clefflat{#4}%
+  \xdef\gre@clefflatheight{#4}%
+  \xdef\gre@cleftwoflatheight{#7}%
   \relax%
 }%
 
-%% macro calculating the \gre@clefnum from the letter and number
-% #1 is the letter, and #2 the line number, #3 is a if not flated
-% and otherwise the height of the flat
-\def\gre@calculate@clefnum#1#2#3{%
-  \global\gre@clefnum=#2\relax %
-  \ifx f#1%
-    \global\advance\gre@clefnum by 4\relax %
-  \fi %
-  \relax %
+\def\gre@save@clef#1#2#3#4#5#6{%
+  \global\let\gre@clef=#1\relax%
+  \xdef\gre@clefheight{#2}%
+  \xdef\gre@clefflatheight{#3}%
+  \global\let\gre@cleftwo=#4\relax%
+  \xdef\gre@cleftwoheight{#5}%
+  \xdef\gre@cleftwoflatheight{#6}%
 }%
 
 %% macro redrawing a key from clefnum, useful for vertical space changes
 \def\gre@updatelinesclef{%
-  \ifnum\gre@clefnum > 5\relax%
-    \gre@count@temp@three=\gre@clefnum %
-    \advance\gre@count@temp@three by -4\relax %
-    \GreSetLinesClef{f}{\gre@count@temp@three}{1}{\gre@clefflat}%
-  \else %
-    \GreSetLinesClef{c}{\gre@clefnum}{1}{\gre@clefflat}%
-  \fi %
-  \relax %
+  \GreSetLinesClef{\gre@clef}{\gre@clefheight}{1}{\gre@clefflatheight}%
+  {\gre@cleftwo}{\gre@cleftwoheight}{\gre@cleftwoflatheight}\relax %
 }%
 
-% macro that typesets the key
+\newbox\gre@box@temp@clef%
+\newbox\gre@box@temp@cleftwo%
+% macro that typesets the clef
+% arguments are :
+%% #1: the type of the clef : c or f
+%% #2: the line of the clef (1 is the lowest)
+%% #3: if we must use small clef characters (inside a line) or not 0: if not inside, 1 if inside
+%% #4: if we must type a space after or not
+%% #5: if 3, it means that we must not put a flat after the clef, otherwise it's the height of the flat
+%% #6: the type of the secondary clef : c or f
+%% #7: the line of the secondary clef (1 is the lowest)
+%% #8: if 3, it means that we must not put a flat after the secondary clef, otherwise it's the height of the flat
+\def\gre@typeclef#1#2#3#4#5#6#7#8{%
+  \setbox\gre@box@temp@width=\hbox{%
+    \ifcase#7%
+      \gre@typesingleclef{#1}{#2}{#3}{#5}%
+    \else %
+      \ifnum\numexpr (#7 - #2) * (#7 - #2) = 1 \relax %
+        \gre@typesingleclef{#1}{#2}{#3}{#5}%
+        \gre@skip@temp@two=\gre@skip@clefflatspace\relax%
+        \gre@hskip\gre@skip@temp@two %
+        \gre@typesingleclef{#6}{#7}{#3}{#8}%
+      \else %
+        \setbox\gre@box@temp@clef=\hbox{\gre@typesingleclef{#1}{#2}{#3}{#5}}%
+        \setbox\gre@box@temp@cleftwo=\hbox{\gre@typesingleclef{#6}{#7}{#3}{#8}}%
+        \ifdim\wd\gre@box@temp@clef>\wd\gre@box@temp@cleftwo%
+          \hbox to 0pt{\copy\gre@box@temp@cleftwo}\copy\gre@box@temp@clef%
+        \else %
+          \hbox to 0pt{\copy\gre@box@temp@clef}\copy\gre@box@temp@cleftwo%
+        \fi %
+      \fi %
+    \fi %
+  }%
+  \ifcase#3%
+    \global\gre@dimen@clefwidth=\wd\gre@box@temp@width %
+  \fi %
+  \copy\gre@box@temp@width %
+  \gre@skip@temp@two=\gre@skip@spaceafterlineclef\relax%
+  \ifnum#4=0\relax %
+    \gre@skip@temp@two=\gre@skip@afterclefnospace\relax%
+  \fi %
+  \gre@hskip\gre@skip@temp@two %
+}%
+
+% macro that typesets one clef
 % arguments are :
 %% #1: the type of the key : c or f
 %% #2: the line of the key (1 is the lowest)
 %% #3: if we must use small key characters (inside a line) or not 0: if not inside, 1 if inside
-%% #4: if we must type a space after or not
-%% #5: if 3, it means that we must not put a flat after the key, otherwise it's the height of the flat
-\def\gre@typekey#1#2#3#4#5{%
+%% #4: if 3, it means that we must not put a flat after the key, otherwise it's the height of the flat
+\def\gre@typesingleclef#1#2#3#4{%
   \ifcase#2 %
   \or%
     \gre@calculate@glyphraisevalue{\gre@pitch@c}{0}%
@@ -171,34 +204,24 @@
   \or%
     \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}%
   \fi%
-  \gre@skip@temp@two=\gre@skip@spaceafterlineclef\relax%
-  \ifnum#4=0\relax %
-    \gre@skip@temp@two=\gre@skip@afterclefnospace\relax%
-  \fi %
   \ifx c#1% we check if it is a c key
     \ifcase#3%
-      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@cclef}%\hskip\gre@skip@temp@two}
-      \setbox\gre@box@temp@width=\hbox{\gre@fontchar@cclef}%
-      \global\gre@dimen@clefwidth=\wd\gre@box@temp@width %
+      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@cclef}%
     \or%
-      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@incclef}%\hskip\gre@skip@temp@two}
+      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@incclef}%
     \fi%
   \else % we consider that it is a f key
     \ifcase#3%
-      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@fclef}%\hskip\gre@skip@temp@two}
-      \setbox\gre@box@temp@width=\hbox{\gre@fontchar@fclef}%
-      \global\gre@dimen@clefwidth=\wd\gre@box@temp@width %
+      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@fclef}%
     \or%
-      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@infclef}%\hskip\gre@skip@temp@two}
+      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@infclef}%
     \fi%
   \fi%
-  \ifnum#5=3%
-    \gre@hskip\gre@skip@temp@two %
+  \ifnum#4=3%
   \else %
     \gre@skip@temp@four = \gre@skip@clefflatspace\relax%
     \gre@hskip\gre@skip@temp@four %
-    \GreFlat{#5}{1}%
-    \gre@hskip\gre@skip@temp@two %
+    \GreFlat{#4}{1}%
   \fi %
   \relax %
 }%
@@ -206,15 +229,15 @@
 % macro that writes the initial key, and sets the next keys to the same value
 % if #3 is a, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
-\def\GreSetInitialClef#1#2#3{%
-  \gre@calculate@clefnum{#1}{#2}{#3}%
+\def\GreSetInitialClef#1#2#3#4#5#6{%
+  \gre@save@clef{#1}{#2}{#3}{#4}{#5}{#6}%
   \ifgre@showclef%
-    \gre@typekey{#1}{#2}{0}{1}{#3}%
+    \gre@typeclef{#1}{#2}{0}{1}{#3}{#4}{#5}{#6}%
   \else%
     \gre@skip@temp@four = \gre@dimen@noclefspace\relax%
     \hbox{\kern\gre@skip@temp@four}%
   \fi %
-  \GreSetLinesClef{#1}{#2}{1}{#3}%
+  \GreSetLinesClef{#1}{#2}{1}{#3}{#4}{#5}{#6}%
   % if the initial is big, then we adjust the second line
   \ifnum\gre@biginitial=0\relax %
   \else %
@@ -228,12 +251,12 @@
 % #3 is 1 or 0 according to the need of a space before the clef. Useful for clefs after bars for example
 % if #4 is a, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
-\def\GreChangeClef#1#2#3#4{%
+\def\GreChangeClef#1#2#3#4#5#6#7{%
   % it makes no sense to change the clef when there is no clef...
   \gresetclef{visible}%
-  \gre@calculate@clefnum{#1}{#2}{#4}%
+  \gre@save@clef{#1}{#2}{#4}{#5}{#6}{#7}%
   \ifnum\gre@insidediscretionary=0\relax %
-    \GreSetLinesClef{#1}{#2}{1}{#4}%
+    \GreSetLinesClef{#1}{#2}{1}{#4}{#5}{#6}{#7}%
   \fi %
   \ifnum#3=1\relax %
     \gre@skip@temp@four = \gre@skip@clefchangespace\relax%
@@ -243,7 +266,7 @@
     \gre@skip@temp@four = -\gre@skip@spacearoundclefbars\relax%
     \gre@hskip\gre@skip@temp@four %
   \fi %
-  \gre@typekey{#1}{#2}{1}{0}{#4}%
+  \gre@typeclef{#1}{#2}{1}{0}{#4}{#5}{#6}{#7}%
   \gre@skip@temp@four = \gre@skip@clefchangespace\relax%
   \gre@hskip\gre@skip@temp@four %
   \relax%

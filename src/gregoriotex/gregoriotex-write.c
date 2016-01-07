@@ -988,8 +988,7 @@ static bool gregoriotex_is_last_of_line(gregorio_syllable *syllable)
 
 static __inline bool is_clef(gregorio_type x)
 {
-    return x == GRE_C_KEY_CHANGE || x == GRE_F_KEY_CHANGE ||
-            x == GRE_C_KEY_CHANGE_FLATED || x == GRE_F_KEY_CHANGE_FLATED;
+    return x == GRE_CLEF;
 }
 
 /*
@@ -1344,11 +1343,16 @@ static void gregoriotex_write_translation(FILE *f,
 /* a function to compute the height of the flat of a key
  * the flat is always on the line of the */
 
-static char gregoriotex_clef_flat_height(char step, int line)
+static char clef_flat_height(gregorio_clef clef, signed char line, bool flatted)
 {
     char offset = 6;
-    switch (step) {
-    case C_KEY:
+
+    if (!flatted) {
+        return NO_KEY_FLAT;
+    }
+
+    switch (clef) {
+    case CLEF_C:
         switch (line) {
         case 1:
             offset = 2;
@@ -1362,13 +1366,16 @@ static char gregoriotex_clef_flat_height(char step, int line)
         case 4:
             offset = 8;
             break;
+        case 5:
+            offset = 10;
+            break;
         default:
-            gregorio_messagef("gregoriotex_clef_flat_height", VERBOSITY_ERROR,
+            gregorio_messagef("clef_flat_height", VERBOSITY_ERROR,
                     0, _("unknown line number: %d"), line);
             break;
         }
         break;
-    case F_KEY:
+    case CLEF_F:
         switch (line) {
         case 1:
             offset = 6;
@@ -1382,15 +1389,18 @@ static char gregoriotex_clef_flat_height(char step, int line)
         case 4:
             offset = 5;
             break;
+        case 5:
+            offset = 7;
+            break;
         default:
-            gregorio_messagef("gregoriotex_clef_flat_height", VERBOSITY_ERROR,
+            gregorio_messagef("clef_flat_height", VERBOSITY_ERROR,
                     0, _("unknown line number: %d"), line);
             break;
         }
         break;
     default:
-        gregorio_messagef("gregoriotex_clef_flat_height", VERBOSITY_ERROR, 0,
-                _("unknown clef type: %d"), step);
+        gregorio_messagef("clef_flat_height", VERBOSITY_ERROR, 0,
+                _("unknown clef type: %d"), clef);
         break;
     }
 
@@ -2932,29 +2942,21 @@ static void write_text(FILE *const f, const gregorio_character *const text)
 static void gregoriotex_print_change_line_clef(FILE *f,
         gregorio_element *current_element)
 {
-    if (current_element->type == GRE_C_KEY_CHANGE) {
-        if (current_element->u.misc.pitched.flatted_key) {
-            fprintf(f, "\\GreSetLinesClef{c}{%d}{1}{%d}%%\n",
-                    current_element->u.misc.pitched.pitch - '0',
-                    gregoriotex_clef_flat_height('c',
-                            current_element->u.misc.pitched.pitch - '0'));
-        } else {
-            fprintf(f, "\\GreSetLinesClef{c}{%d}{1}{%d}%%\n",
-                    current_element->u.misc.pitched.pitch - '0', NO_KEY_FLAT);
-        }
-    }
-    if (current_element->type == GRE_F_KEY_CHANGE) {
-        if (current_element->u.misc.pitched.flatted_key) {
-            /* the third argument is 0 or 1 according to the need for a
-             * space before the clef */
-            fprintf(f, "\\GreSetLinesClef{f}{%d}{1}{%d}%%\n",
-                    current_element->u.misc.pitched.pitch - '0',
-                    gregoriotex_clef_flat_height('f',
-                            current_element->u.misc.pitched.pitch - '0'));
-        } else {
-            fprintf(f, "\\GreSetLinesClef{f}{%d}{1}{%d}%%\n",
-                    current_element->u.misc.pitched.pitch - '0', NO_KEY_FLAT);
-        }
+    if (current_element->type == GRE_CLEF) {
+        /* the third argument is 0 or 1 according to the need for a space
+         * before the clef */
+        fprintf(f, "\\GreSetLinesClef{%c}{%d}{1}{%d}{%c}{%d}{%d}%%\n",
+                gregorio_clef_to_char(current_element->u.misc.clef.clef),
+                current_element->u.misc.clef.line,
+                clef_flat_height(current_element->u.misc.clef.clef,
+                        current_element->u.misc.clef.line,
+                        current_element->u.misc.clef.flatted),
+                gregorio_clef_to_char(
+                        current_element->u.misc.clef.secondary_clef),
+                current_element->u.misc.clef.secondary_line,
+                clef_flat_height(current_element->u.misc.clef.secondary_clef,
+                        current_element->u.misc.clef.secondary_line,
+                        current_element->u.misc.clef.secondary_flatted));
     }
 }
 
@@ -3369,73 +3371,25 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             }
             break;
 
-        case GRE_C_KEY_CHANGE:
+        case GRE_CLEF:
+            /* We don't print clef changes at the end of a line */
             if (first_of_disc != 1) {
-                /*
-                 * We don't print clef changes at the end of a line 
-                 */
-                if (element->previous && element->previous->type == GRE_BAR) {
-                    if (element->u.misc.pitched.flatted_key) {
-                        /* the third argument is 0 or 1 according to the need
-                         * for a space before the clef */
-                        fprintf(f, "\\GreChangeClef{c}{%d}{0}{%d}%%\n",
-                                element->u.misc.pitched.pitch - '0',
-                                gregoriotex_clef_flat_height('c',
-                                        element->u.misc.pitched.pitch - '0'));
-                    } else {
-                        fprintf(f, "\\GreChangeClef{c}{%d}{0}{%d}%%\n",
-                                element->u.misc.pitched.pitch - '0',
-                                NO_KEY_FLAT);
-                    }
-                } else {
-                    if (element->u.misc.pitched.flatted_key) {
-                        /* the third argument is 0 or 1 according to the need
-                         * for a space before the clef */
-                        fprintf(f, "\\GreChangeClef{c}{%d}{1}{%d}%%\n",
-                                element->u.misc.pitched.pitch - '0',
-                                gregoriotex_clef_flat_height('c',
-                                        element->u.misc.pitched.pitch - '0'));
-                    } else {
-                        fprintf(f, "\\GreChangeClef{c}{%d}{1}{%d}%%\n",
-                                element->u.misc.pitched.pitch - '0',
-                                NO_KEY_FLAT);
-                    }
-                }
-            }
-            break;
-
-        case GRE_F_KEY_CHANGE:
-            if (first_of_disc != 1) {
-                /*
-                 * We don't print clef changes at the end of a line 
-                 */
-                if (element->previous && element->previous->type == GRE_BAR) {
-                    if (element->u.misc.pitched.flatted_key) {
-                        /* the third argument is 0 or 1 according to the need
-                         * for a space before the clef */
-                        fprintf(f, "\\GreChangeClef{f}{%d}{0}{%d}%%\n",
-                                element->u.misc.pitched.pitch - '0',
-                                gregoriotex_clef_flat_height('f',
-                                        element->u.misc.pitched.pitch - '0'));
-                    } else {
-                        fprintf(f, "\\GreChangeClef{f}{%d}{0}{%d}%%\n",
-                                element->u.misc.pitched.pitch - '0',
-                                NO_KEY_FLAT);
-                    }
-                } else {
-                    if (element->u.misc.pitched.flatted_key) {
-                        /* the third argument is 0 or 1 according to the need
-                         * for a space before the clef */
-                        fprintf(f, "\\GreChangeClef{f}{%d}{1}{%d}%%\n",
-                                element->u.misc.pitched.pitch - '0',
-                                gregoriotex_clef_flat_height('f',
-                                        element->u.misc.pitched.pitch - '0'));
-                    } else {
-                        fprintf(f, "\\GreChangeClef{f}{%d}{1}{%d}%%\n",
-                                element->u.misc.pitched.pitch - '0',
-                                NO_KEY_FLAT);
-                    }
-                }
+                /* the third argument is 0 or 1 according to the need
+                 * for a space before the clef */
+                fprintf(f, "\\GreChangeClef{%c}{%d}{%c}{%d}{%c}{%d}{%d}%%\n",
+                        gregorio_clef_to_char(element->u.misc.clef.clef),
+                        element->u.misc.clef.line,
+                        (element->previous && element->previous->type
+                         == GRE_BAR)? '0' : '1',
+                        clef_flat_height(element->u.misc.clef.clef,
+                                element->u.misc.clef.line,
+                                element->u.misc.clef.flatted),
+                        gregorio_clef_to_char(
+                                element->u.misc.clef.secondary_clef),
+                        element->u.misc.clef.secondary_line,
+                        clef_flat_height(element->u.misc.clef.secondary_clef,
+                                element->u.misc.clef.secondary_line,
+                                element->u.misc.clef.secondary_flatted));
             }
             break;
 
@@ -3678,9 +3632,7 @@ static void write_headers(FILE *const f, gregorio_score *const score)
 void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         const char *const point_and_click_filename)
 {
-    char clef_letter;
-    int clef_line;
-    char clef_flat = NO_KEY_FLAT;
+    gregorio_clef_info clef = gregorio_default_clef;
     gregorio_syllable *current_syllable;
     int annotation_num;
     gregoriotex_status status;
@@ -3783,20 +3735,14 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     }
     fprintf(f, "}{%%\n"); /* GreScoreOpening#2 */
     if (score->first_voice_info) {
-        gregorio_det_step_and_line_from_key(score->
-                first_voice_info->initial_key, &clef_letter, &clef_line);
-        if (score->first_voice_info->flatted_key) {
-            clef_flat = gregoriotex_clef_flat_height(clef_letter, clef_line);
-        } else {
-            clef_flat = NO_KEY_FLAT;
-        }
-    } else {
-        clef_letter = 'c';
-        clef_line = 3;
-        clef_flat = NO_KEY_FLAT;
+        clef = score->first_voice_info->initial_clef;
     }
-    fprintf(f, "\\GreSetInitialClef{%c}{%d}{%d}%%\n", clef_letter, clef_line,
-            clef_flat);
+    fprintf(f, "\\GreSetInitialClef{%c}{%d}{%d}{%c}{%d}{%d}%%\n", 
+            gregorio_clef_to_char(clef.clef), clef.line,
+            clef_flat_height(clef.clef, clef.line, clef.flatted),
+            gregorio_clef_to_char(clef.secondary_clef), clef.secondary_line,
+            clef_flat_height(clef.secondary_clef, clef.secondary_line,
+                    clef.secondary_flatted));
     current_syllable = score->first_syllable;
     if (current_syllable) {
         write_syllable(f, current_syllable, 0, &status, score,
