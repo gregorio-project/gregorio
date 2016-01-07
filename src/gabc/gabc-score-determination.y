@@ -793,7 +793,7 @@ mode_definition:
 
 mode_modifier_definition:
     MODE_MODIFIER attribute {
-        check_multiple("mode-modifier", score->mode_modifier);
+        check_multiple("mode-modifier", score->mode_modifier != NULL);
         gregorio_set_score_mode_modifier (score, $2.text);
     }
     ;
