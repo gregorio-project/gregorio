@@ -3679,33 +3679,9 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
             bool_to_int(status.abovelinestext),
             point_and_click_filename? point_and_click_filename : "",
             score->staff_lines);
-    switch (score->centering) {
-    case SCHEME_SYLLABLE:
-        fprintf(f, "\\englishcentering%%\n");
-        break;
-    case SCHEME_VOWEL:
-        fprintf(f, "\\defaultcentering%%\n");
-        break;
-    default:
-        /* don't set any centering */
-        break;
-    }
     if (score->nabc_lines) {
         fprintf(f, "\\GreScoreNABCLines{%d}", (int)score->nabc_lines);
     }
-    /* we select the good font -- Deprecated (remove in next release) */
-    if (score->gregoriotex_font) {
-        if (!strcmp(score->gregoriotex_font, "gregorio")) {
-            fprintf(f, "\\gresetgregoriofont{gregorio}%%\n");
-        }
-        if (!strcmp(score->gregoriotex_font, "parmesan")) {
-            fprintf(f, "\\gresetgregoriofont{parmesan}%%\n");
-        }
-        if (!strcmp(score->gregoriotex_font, "greciliae")) {
-            fprintf(f, "\\gresetgregoriofont{greciliae}%%\n");
-        }
-    }
-    /* end Deprecated section */
     if (score->annotation[0]) {
         fprintf(f, "\\GreAnnotationLines");
         for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS;

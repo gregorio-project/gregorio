@@ -165,9 +165,6 @@ semicolon. */
 <INITIAL>arranger {
         return ARRANGER;
     }
-<INITIAL>gabc-version {
-        return GABC_VERSION;
-    }
 <INITIAL>initial-style {
         return INITIAL_STYLE;
     }
@@ -204,9 +201,6 @@ semicolon. */
 <INITIAL>generated-by {
         return GENERATED_BY;
     }
-<INITIAL>centering-scheme {
-        return CENTERING_SCHEME;
-    }
 <INITIAL>language {
         return LANGUAGE;
     }
@@ -218,9 +212,6 @@ semicolon. */
     }
 <INITIAL>virgula-position {
         return VIRGULA_POSITION;
-    }
-<INITIAL>gregoriotex-font {
-        return GREGORIOTEX_FONT;
     }
 <INITIAL>staff-lines {
         return STAFF_LINES;
