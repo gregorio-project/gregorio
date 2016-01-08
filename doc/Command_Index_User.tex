@@ -788,6 +788,16 @@ Macro to determine whether Gregorio\TeX\ should automatically place the custos a
 
 \textbf{Nota Bene:} This command only effects the custos that appears at the end of a line.  Custos which are placed at a key change are unaffected.  Further, if custos are specified in the gabc file manually and Gregorio\TeX\ is set to place custos automatically, you will get two custos at the line breaks.
 
+\macroname{\textbackslash greseteolcustosbeforeeuouae}{\{\#1\}}{gregoriotex-main.tex}
+Macro to determine whether Gregorio\TeX\ should automatically place the custos at a line break before a EUOUAE.  Since the EUOUAE block is typically not a continuation of the melody but rather a reminder of the end of the tone that follows, this is set to \texttt{suppressed} (no custos) by default.
+
+\begin{argtable}
+  \#1 & \texttt{suppressed} & Custos will not automatically be placed at a line break before a EUOUAE block (the default)\\
+  & \texttt{auto} & Custos will behave according to \verb=greseteolcustos= at a line break before a EUOUAE block\\
+\end{argtable}
+
+\textbf{Nota Bene:} If \verb=\greseteolcustos= is set to \texttt{manual}, this setting is effectively ignored.
+
 \macroname{\textbackslash greseteolshifts}{\{\#1\}}{gregoriotex-main.tex}
 Macro to determine whether Gregorio\TeX\ should apply a small shift at the end of each line which allows lyrics to stretch under the final custos.
 

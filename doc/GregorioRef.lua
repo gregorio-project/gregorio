@@ -39,6 +39,18 @@ local EXCLUDE = {
   QuilismaLineTR = true,
   VirgaLineBR = true,
   SalicusOriscus = true,
+  ['Virgula.2'] = true,
+  ['Virgula.3'] = true,
+  ['Virgula.5'] = true,
+  ['DivisioMinima.2'] = true,
+  ['DivisioMinima.3'] = true,
+  ['DivisioMinima.5'] = true,
+  ['DivisioMinor.2'] = true,
+  ['DivisioMinor.3'] = true,
+  ['DivisioMinor.5'] = true,
+  ['DivisioMaior.2'] = true,
+  ['DivisioMaior.3'] = true,
+  ['DivisioMaior.5'] = true,
 }
 
 local GABC = {

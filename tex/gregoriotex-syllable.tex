@@ -697,6 +697,12 @@
   \relax %
 }%
 
+\def\GreNextSyllableBeginsEUOUAE{%
+  \ifgre@blockeolcustosbeforeeuouae %
+    \gre@usemanualeolcustos %
+  \fi %
+}%
+
 %% @desc Macro to make a few checks and call the right macros between
 %%       \endbeforebar, \endofword, \endofsyllable
 %% @arg#1 next syllable type (#7 of \GreSyllable)
