@@ -762,6 +762,14 @@ Macro to specify how the translation text should be aligned with it respective s
 \subsubsection{End of Line Behavior}
 While Gregorio\TeX\ will automatically wrap scores to fit your page, there are several ways to fine tune that line breaking behavior with the following commands.
 
+\macroname{\textbackslash gresetbreakbeforeeuouae}{\{\#1\}}{gregoriotex-main.tex}
+Macro to determine whether an automatic linebreak before a EUOUAE area is justified or not.
+
+\begin{argtable}
+  \#1 & \texttt{justified} & Automatic line breaks before EUOUAE areas should be justified (default)\\
+  & \texttt{ragged} & Automatic line breaks before EUOUAE areas should be ragged\\
+\end{argtable}
+
 \macroname{\textbackslash gresetbreakineuouae}{\{\#1\}}{gregoriotex-main.tex}
 Macro to determine whether line breaks are allowed inside a EUOUAE area (delimited by \texttt{<eu></eu>} tags in gabc).
 

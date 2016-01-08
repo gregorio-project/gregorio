@@ -1320,6 +1320,17 @@
 }%
 \greseteolcustosbeforeeuouae{suppressed}%
 
+\newif\ifgre@raggedbreakbeforeeuouae%
+\def\gresetbreakbeforeeuouae#1{%
+  \IfStrEq{#1}{ragged}%
+    {\gre@raggedbreakbeforeeuouaetrue\relax}%
+    {\IfStrEq{#1}{justified}%
+      {\gre@raggedbreakbeforeeuouaefalse\relax}%
+      {\gre@error{Unrecognized option for \protect\greseteolcustosbeforeeuouae}}%
+    }%
+}%
+\gresetbreakbeforeeuouae{justified}%
+
 % macro to suppress the custos
 \def\greblockcustos{%
   \gre@obsolete{\protect\greblockcustos}{\protect\greseteolcustos{manual}}%
@@ -1542,7 +1553,13 @@
 \newif\ifgre@in@euouae
 \gre@in@euouaefalse
 
-\def\GreBeginEUOUAE{%
+\def\GreBeginEUOUAE#1{%
+  \ifgre@raggedbreakbeforeeuouae %
+    \directlua{gregoriotex.save_pos(#1,2)}%
+    \ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
+      \gre@newlinecommon{1}%
+    \fi %
+  \fi %
   \ifgre@euouae@implies@nlba %
     \GreBeginNLBArea{0}{0}%
   \fi %
