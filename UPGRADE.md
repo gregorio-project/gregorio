@@ -34,6 +34,18 @@ If you prefer the old behavior, you may switch this off by issuing `\gresetledge
 
 In the past, Gregorio handled the notes of an `<eu>` block like any other, which meant that a custos would appear before the `<eu>` block if it happened to start on a new line.  However, the '<eu>' block is not a continuation of the melody, but rather a reminder of the ending to use for the paired psalm tone.  As a result, a custos immediately before an EUOUAE block is now suppressed by default.  If you desire the old behaviour, use `\greseteolcustosbeforeeuouae{auto}` in your TeX document.  To once again suppress the custos, use `\greseteolcustosbeforeeuouae{suppressed}`.
 
+### Spacing around bars (divisio) with text underneath
+
+The following spaces have been added:
+
+- `spacearoundsmallbartext` - for the space around virgula and divisio minima with text underneath
+- `spacearoundminortext` - for the space around divisio minor with text underneath
+- `spacearoundmaiortext` - for the space around divisio maior with text underneath
+- `spacearoundfinalistext` - for the space around divisio finalis with text underneath
+- `spacebeforefinalfinalistext` - for the space before a divisio finalis at the end of a score
+
+By default, these are sized one half millimeter larger than their "non-text" counterparts.  This may cause minor spacing changes in your existing scores.  Adjust them as necessary to get the look you want.
+
 ## 4.0
 
 ### Font changes

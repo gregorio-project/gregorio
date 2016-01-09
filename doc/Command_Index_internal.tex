@@ -710,7 +710,7 @@ Macro which specifies the alternate glyphs which are common to all of the styles
 \macroname{\textbackslash gre@widthof}{\#1}{gregoriotex-main.tex}
 Macro for calculating the width of its argument and storing it in \verb=\gre@dimen@temp@three=.
 
-\macroname{\textbackslash gre@writebar}{\#1\#2\#3}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@writebar}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
 Macro to write a bar.
 
 \begin{argtable}
@@ -722,7 +722,9 @@ Macro to write a bar.
   & \texttt{5} & the last finalis\\
   \#2 & \texttt{0} & in a syllable containing only this bar\\
   & \texttt{1} & in a syllable containing other notes\\
-  \#3 & \TeX\ code & macros that may happen before the skip after the bar (typically GreVEpisema)\\
+  \#3 & \texttt{0} & if there is no text underneath the bar\\
+  & \texttt{1} & if there is text underneath the bar\\
+  \#4 & \TeX\ code & macros that may happen before the skip after the bar (typically GreVEpisema)\\
 \end{argtable}
 
 \macroname{\textbackslash gre@@arg}{}{gregoriotex-syllable.tex}
