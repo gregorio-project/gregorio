@@ -1411,8 +1411,8 @@ OFFSET_CASE(BarStandard);
 OFFSET_CASE(BarVirgula);
 OFFSET_CASE(BarDivisioFinalis);
 
-static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
-        gregorio_sign signs, bool is_inside_bar)
+static void write_bar(FILE *f, gregorio_bar type,
+        gregorio_sign signs, bool is_inside_bar, bool has_text)
 {
     /* the type number of function vepisemaorrare */
     const char *offset_case = BarStandard;
@@ -1464,10 +1464,11 @@ static void gregoriotex_write_bar(FILE *f, gregorio_bar type,
         fprintf(f, "Dominica{8}");
         break;
     default:
-        gregorio_messagef("gregoriotex_write_bar", VERBOSITY_ERROR, 0,
+        gregorio_messagef("write_bar", VERBOSITY_ERROR, 0,
                 _("unknown bar type: %d"), type);
         break;
     }
+    fprintf(f, "{%c}", has_text? '1' : '0');
     switch (signs) {
     case _V_EPISEMA:
         fprintf(f, "{\\GreBarVEpisema{\\GreOCase%s}}%%\n", offset_case);
@@ -3410,10 +3411,10 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             break;
 
         case GRE_BAR:
-            gregoriotex_write_bar(f,
-                    element->u.misc.unpitched.info.bar,
+            write_bar(f, element->u.misc.unpitched.info.bar,
                     element->u.misc.unpitched.special_sign,
-                    element->next && !is_manual_custos(element->next));
+                    element->next && !is_manual_custos(element->next),
+                    !element->previous && syllable->text);
             break;
 
         case GRE_END_OF_LINE:

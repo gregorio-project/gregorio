@@ -27,7 +27,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Support for custom length ledger lines.  See GregorioRef for details (for the change request, see [#598](https://github.com/gregorio-project/gregorio/issues/598)).
 - Support for a secondary clef.  Use `@` to join two clefs together, as in `c1@c4`.  The first clef is considered the primary one and will be used when computing an automatic custos before a clef change.  See [#755](https://github.com/gregorio-project/gregorio/issues/755).
 - `mode-modifier` gabc header for text (styled by the `modemodifier` style) to typeset after the value of `mode` when it is used.  See GregorioRef for details (for the change request, see [#756](https://github.com/gregorio-project/gregorio/issues/756)).
-
+- Tunable spaces for bars with text underneath: `spacearoundsmallbartext`, `spacearoundminortext`, `spacearoundmaiortext`, `spacearoundfinalistext`, `spacebeforefinalfinalistext`.  These are sized slightly larger than their "non-text" counterparts.  See GregorioRef and [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#766](https://github.com/gregorio-project/gregorio/issues/766)).
 
 ### Deprecated
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
