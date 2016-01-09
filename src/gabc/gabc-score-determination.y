@@ -506,26 +506,6 @@ static void gregorio_gabc_add_text(char *mbcharacters)
 }
 
 /*
- * the function called when centering_scheme is seen in gabc 
- */
-static void set_centering_scheme(char *sc)
-{
-    gregorio_message("\"centering-scheme\" header is deprecated. Please use "
-            "\\gresetlyriccentering in TeX instead.", "set_centering_scheme",
-            VERBOSITY_DEPRECATION, 0);
-    if (strncmp((const char *) sc, "latine", 6) == 0) {
-        score->centering = SCHEME_VOWEL;
-        return;
-    }
-    if (strncmp((const char *) sc, "english", 6) == 0) {
-        score->centering = SCHEME_SYLLABLE;
-        return;
-    }
-    gregorio_message("centering-scheme unknown value: must be \"latine\" "
-            "or \"english\"", "set_centering_scheme", VERBOSITY_WARNING, 0);
-}
-
-/*
  * 
  * The two functions called when lex returns a style, we simply add it. All the 
  * complex things will be done by the function after...
@@ -638,16 +618,16 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token ATTRIBUTE COLON SEMICOLON OFFICE_PART ANNOTATION AUTHOR DATE 
 %token MANUSCRIPT MANUSCRIPT_REFERENCE MANUSCRIPT_STORAGE_PLACE TRANSCRIBER
 %token TRANSCRIPTION_DATE BOOK STYLE VIRGULA_POSITION INITIAL_STYLE MODE
-%token GREGORIOTEX_FONT GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT
-%token CLOSING_BRACKET NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE
-%token CHARACTERS I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END
-%token C_BEGINNING C_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING
-%token SP_END VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END
+%token GENERATED_BY NAME OPENING_BRACKET NOTES VOICE_CUT CLOSING_BRACKET
+%token NUMBER_OF_VOICES VOICE_CHANGE END_OF_DEFINITIONS SPACE CHARACTERS
+%token I_BEGINNING I_END TT_BEGINNING TT_END UL_BEGINNING UL_END C_BEGINNING
+%token C_END B_BEGINNING B_END SC_BEGINNING SC_END SP_BEGINNING SP_END
+%token VERB_BEGINNING VERB VERB_END CENTER_BEGINNING CENTER_END
 %token CLOSING_BRACKET_WITH_SPACE TRANSLATION_BEGINNING TRANSLATION_END
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
-%token GABC_VERSION USER_NOTES DEF_MACRO ALT_BEGIN ALT_END CENTERING_SCHEME
-%token TRANSLATION_CENTER_END BNLBA ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES
-%token LANGUAGE HYPHEN EXTERNAL_HEADER STAFF_LINES MODE_MODIFIER END_OF_FILE
+%token USER_NOTES DEF_MACRO ALT_BEGIN ALT_END TRANSLATION_CENTER_END BNLBA
+%token ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES LANGUAGE HYPHEN
+%token EXTERNAL_HEADER STAFF_LINES MODE_MODIFIER END_OF_FILE
 
 %%
 
@@ -696,13 +676,6 @@ name_definition:
     }
     ;
 
-centering_scheme_definition:
-    CENTERING_SCHEME attribute {
-        set_centering_scheme($2.text);
-        free($2.text);
-    }
-    ;
-
 language_definition:
     LANGUAGE attribute {
         check_multiple("language", got_language);
@@ -723,16 +696,6 @@ score_copyright_definition:
     SCORE_COPYRIGHT attribute {
         check_multiple("score_copyright", score->score_copyright != NULL);
         gregorio_set_score_score_copyright (score, $2.text);
-    }
-    ;
-
-gregoriotex_font_definition:
-    GREGORIOTEX_FONT attribute {
-        gregorio_message("\"gregoriotex-font\" header is deprecated. "
-        "Please use \\gresetgregoriofont in TeX instead.",
-        "set_gregoriotex_font", VERBOSITY_DEPRECATION, 0);
-        check_multiple("GregorioTeX font", score->gregoriotex_font != NULL);
-        score->gregoriotex_font=$2.text;
     }
     ;
 
@@ -768,16 +731,6 @@ arranger_definition:
     ARRANGER attribute {
         check_multiple("arranger", score->arranger != NULL);
         gregorio_set_score_arranger (score, $2.text);
-    }
-    ;
-
-gabc_version_definition:
-    GABC_VERSION attribute {
-        /* Deprecated */
-        gregorio_message("\"gabc-version\" header is deprecated and will be "
-                "ignored.", "gabc_score_determination_parse",
-                VERBOSITY_DEPRECATION, 0);
-        free($2.text);
     }
     ;
 
@@ -981,13 +934,10 @@ definition:
     | meter_definition
     | commentary_definition
     | arranger_definition
-    | gabc_version_definition
     | initial_style_definition
     | mode_definition
     | mode_modifier_definition
-    | gregoriotex_font_definition
     | user_notes_definition
-    | centering_scheme_definition
     | language_definition
     | external_header_definition
     | VOICE_CHANGE {

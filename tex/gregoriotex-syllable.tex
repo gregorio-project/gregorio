@@ -697,9 +697,13 @@
   \relax %
 }%
 
-\def\GreNextSyllableBeginsEUOUAE{%
+\def\GreNextSyllableBeginsEUOUAE#1{%
+  \GreNoBreak %
   \ifgre@blockeolcustosbeforeeuouae %
     \gre@usemanualeolcustos %
+  \fi %
+  \ifgre@raggedbreakbeforeeuouae %
+    \directlua{gregoriotex.save_pos(#1,1)}%
   \fi %
 }%
 

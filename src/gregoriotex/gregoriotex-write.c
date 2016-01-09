@@ -3150,6 +3150,23 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
     }
 }
 
+static __inline void anticipate_euouae(FILE *f, gregorio_syllable *syllable) {
+    static unsigned short euouae_id = 0;
+
+    if (syllable->next_syllable) {
+        for (syllable = syllable->next_syllable;
+                syllable && syllable->elements && *(syllable->elements)
+                && (*(syllable->elements))->type == GRE_END_OF_LINE;
+                syllable = syllable->next_syllable) {
+            /* just iterate to find the next "real" syllable */
+        }
+        if (syllable && syllable->euouae == EUOUAE_BEGINNING) {
+            syllable->euouae_id = ++euouae_id;
+            fprintf(f, "%%\n\\GreNextSyllableBeginsEUOUAE{%hu}%%\n", euouae_id);
+        }
+    }
+}
+
 /*
  * Arguments are relatively obvious. The most obscure is certainly first_of_disc
  * which is 0 all the time, except in the case of a "clef change syllable". In
@@ -3171,6 +3188,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
 {
     gregorio_element *clef_change_element = NULL, *element;
     const char *syllable_type = NULL;
+    bool euouae_anticipated = false;
     if (!syllable) {
         write_this_syllable_text(f, NULL, NULL);
         return;
@@ -3181,7 +3199,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
         fprintf(f, "\\GreBeginNLBArea{1}{0}%%\n");
     }
     if (syllable->euouae == EUOUAE_BEGINNING) {
-        fprintf(f, "\\GreBeginEUOUAE{}%%\n");
+        fprintf(f, "\\GreBeginEUOUAE{%hu}%%\n", syllable->euouae_id);
     }
     /*
      * first we check if the syllable is only a end of line. If it is the case,
@@ -3296,8 +3314,6 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     }
     if (!syllable->next_syllable) {
         fprintf(f, "%%\n\\GreLastOfScore %%\n");
-    } else if (syllable->next_syllable->euouae == EUOUAE_BEGINNING) {
-        fprintf(f, "%%\n\\GreNextSyllableBeginsEUOUAE %%\n");
     }
     fprintf(f, "}{%%\n");
 
@@ -3418,6 +3434,10 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             break;
 
         case GRE_END_OF_LINE:
+            if (!element->next) {
+                anticipate_euouae(f, syllable);
+                euouae_anticipated = true;
+            }
             /* here we suppose we don't have two linebreaks in the same
              * syllable */
             if (element->u.misc.unpitched.info.sub_type != GRE_END_OF_PAR) {
@@ -3440,6 +3460,9 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             }
             break;
         }
+    }
+    if (!euouae_anticipated) {
+        anticipate_euouae(f, syllable);
     }
     fprintf(f, "}%%\n");
     if (syllable->position == WORD_END
@@ -3680,33 +3703,9 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
             bool_to_int(status.abovelinestext),
             point_and_click_filename? point_and_click_filename : "",
             score->staff_lines);
-    switch (score->centering) {
-    case SCHEME_SYLLABLE:
-        fprintf(f, "\\englishcentering%%\n");
-        break;
-    case SCHEME_VOWEL:
-        fprintf(f, "\\defaultcentering%%\n");
-        break;
-    default:
-        /* don't set any centering */
-        break;
-    }
     if (score->nabc_lines) {
         fprintf(f, "\\GreScoreNABCLines{%d}", (int)score->nabc_lines);
     }
-    /* we select the good font -- Deprecated (remove in next release) */
-    if (score->gregoriotex_font) {
-        if (!strcmp(score->gregoriotex_font, "gregorio")) {
-            fprintf(f, "\\gresetgregoriofont{gregorio}%%\n");
-        }
-        if (!strcmp(score->gregoriotex_font, "parmesan")) {
-            fprintf(f, "\\gresetgregoriofont{parmesan}%%\n");
-        }
-        if (!strcmp(score->gregoriotex_font, "greciliae")) {
-            fprintf(f, "\\gresetgregoriofont{greciliae}%%\n");
-        }
-    }
-    /* end Deprecated section */
     if (score->annotation[0]) {
         fprintf(f, "\\GreAnnotationLines");
         for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS;

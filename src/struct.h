@@ -361,13 +361,6 @@ ENUM(gregorio_euouae, GREGORIO_EUOUAE);
     L(WORD_ONE_SYLLABLE)
 ENUM(gregorio_word_position, GREGORIO_WORD_POSITION);
 
-/* the centering schemes for gabc: */
-#define GREGORIO_LYRIC_CENTERING(A,E,X,L) \
-    A(SCHEME_DEFAULT, 0) \
-    E(SCHEME_VOWEL) \
-    L(SCHEME_SYLLABLE)
-ENUM(gregorio_lyric_centering, GREGORIO_LYRIC_CENTERING);
-
 typedef struct gregorio_extra_info {
     char *ad_hoc_space_factor;
     /* the sub-type of GRE_END_OF_LINE */
@@ -627,10 +620,11 @@ typedef struct gregorio_syllable {
      * case of polyphonic score. In most scores (monophonic), the array
      * has only one element. */
     struct gregorio_element **elements;
+    unsigned short euouae_id;
     unsigned short src_line, src_column, src_offset;
     /* a syllable can be a GRE_SYLLABLE, a GRE_*_KEY_CHANGE or a
      * GRE_BAR. It is useful when there is only that in a syllable. */
-    char type;
+    ENUM_BITFIELD(gregorio_type) type:8;
     /* again, an additional field to put some signs or other things... */
     ENUM_BITFIELD(gregorio_sign) special_sign:8;
     /* type of translation (with center beginning or only center end) */
@@ -710,8 +704,6 @@ typedef struct gregorio_score {
     /* field giving informations on the initial (no initial, normal initial 
      * or two lines initial) */
     signed char initial_style; /* DEPRECATED */
-    /* the font to use in gregoriotex */
-    char *gregoriotex_font;
     size_t nabc_lines;
     char *user_notes;
     /* the determination method (maximal ambitus, etc.) */
@@ -721,7 +713,6 @@ typedef struct gregorio_score {
     struct gregorio_voice_info *first_voice_info;
     struct gregorio_external_header *external_headers;
     struct gregorio_external_header *last_external_header;
-    gregorio_lyric_centering centering;
     unsigned char staff_lines;
     signed char highest_pitch;
     signed char high_ledger_line_pitch;

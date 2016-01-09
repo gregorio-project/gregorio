@@ -1101,7 +1101,6 @@ gregorio_score *gregorio_new_score(void)
     gregorio_source_info_init(&new_score->si);
     new_score->first_voice_info = NULL;
     new_score->mode = 0;
-    new_score->gregoriotex_font = NULL;
     new_score->user_notes = NULL;
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
         new_score->annotation[annotation_num] = NULL;
@@ -1141,7 +1140,6 @@ static void gregorio_free_score_infos(gregorio_score *score)
     free(score->language);
     free(score->mode_modifier);
     free(score->user_notes);
-    free(score->gregoriotex_font);
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
         free(score->annotation[annotation_num]);
     }
@@ -1785,4 +1783,3 @@ ENUM_TO_STRING(gregorio_tr_centering, GREGORIO_TR_CENTERING)
 ENUM_TO_STRING(gregorio_nlba, GREGORIO_NLBA)
 ENUM_TO_STRING(gregorio_euouae, GREGORIO_EUOUAE)
 ENUM_TO_STRING(gregorio_word_position, GREGORIO_WORD_POSITION)
-ENUM_TO_STRING(gregorio_lyric_centering, GREGORIO_LYRIC_CENTERING)
