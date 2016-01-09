@@ -627,10 +627,11 @@ typedef struct gregorio_syllable {
      * case of polyphonic score. In most scores (monophonic), the array
      * has only one element. */
     struct gregorio_element **elements;
+    unsigned short euouae_id;
     unsigned short src_line, src_column, src_offset;
     /* a syllable can be a GRE_SYLLABLE, a GRE_*_KEY_CHANGE or a
      * GRE_BAR. It is useful when there is only that in a syllable. */
-    char type;
+    ENUM_BITFIELD(gregorio_type) type:8;
     /* again, an additional field to put some signs or other things... */
     ENUM_BITFIELD(gregorio_sign) special_sign:8;
     /* type of translation (with center beginning or only center end) */
