@@ -122,6 +122,7 @@ SHAPE(SalicusLongqueue);
 SHAPE(Scandicus);
 SHAPE(Stropha);
 SHAPE(StrophaAucta);
+SHAPE(StrophaAuctaLongtail);
 SHAPE(Torculus);
 SHAPE(TorculusLiquescens);
 SHAPE(TorculusLiquescensQuilisma);
@@ -198,6 +199,7 @@ static bool is_longqueue(const signed char pitch,
     case 7:
     case 9:
     case 11:
+    case 13:
         return true;
     case 3:
         /* we first look forward to see if there is a note underneath c */
@@ -607,14 +609,17 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
                 true);
     case S_STROPHA:
         *type = AT_STROPHA;
-        if (note->u.note.liquescentia &
-                (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
-            return SHAPE_StrophaAucta;
+        if (!(note->u.note.liquescentia &
+                (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS))) {
+            return SHAPE_Stropha;
         }
-        return SHAPE_Stropha;
+        /* else fall through to next case */
     case S_STROPHA_AUCTA:
         *type = AT_STROPHA;
-        return SHAPE_StrophaAucta;
+        if (is_shortqueue(note->u.note.pitch, glyph, element)) {
+            return SHAPE_StrophaAucta;
+        }
+        return SHAPE_StrophaAuctaLongtail;
     case S_PUNCTUM_CAVUM_INCLINATUM:
         *type = AT_PUNCTUM_INCLINATUM;
         return SHAPE_PunctumCavumInclinatum;

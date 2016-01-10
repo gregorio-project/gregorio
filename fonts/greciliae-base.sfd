@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1452000033
+ModificationTime: 1452395542
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -71,7 +71,7 @@ Grid
  17.75 -700 l 0
 EndSplineSet
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 379 182
+BeginChars: 379 183
 
 StartChar: Punctum
 Encoding: 0 -1 0
@@ -4519,6 +4519,28 @@ SplineSet
  19 -408.997 l 25
  0 -409.002 l 25
  0 865.999 l 29
+EndSplineSet
+EndChar
+
+StartChar: StrophaAuctaLongtail
+Encoding: 182 -1 182
+Width: 172
+VWidth: 2048
+Flags: W
+VStem: -0 170
+LayerCount: 2
+Fore
+SplineSet
+70 -129 m 0
+ 77.859 -116.525 80 -112 89 -87 c 0
+ 102 -37 81 2 69 18 c 0
+ 45 50 -0 75 -0 75 c 1
+ 82 200 l 1
+ 82 200 164 132 170 71 c 0
+ 178 -17 157 -50 129 -94 c 0
+ 105 -119 88.859 -126.15 76 -133 c 0
+ 74.0265 -134.051 70.859 -135.9 69 -134 c 0
+ 67.8376 -132.812 68.9399 -130.683 70 -129 c 0
 EndSplineSet
 EndChar
 EndChars
