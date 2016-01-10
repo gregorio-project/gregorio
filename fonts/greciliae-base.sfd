@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1452395542
+ModificationTime: 1452449649
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -3296,7 +3296,7 @@ StartChar: StrophaAucta
 Encoding: 134 -1 131
 Width: 172
 VWidth: 2048
-Flags: W
+Flags: HW
 VStem: -0 170
 LayerCount: 2
 Fore
@@ -3306,13 +3306,12 @@ SplineSet
  102 -37 81 2 69 18 c 0
  45 50 -0 75 -0 75 c 1
  82 200 l 1
- 82 200 164 132 170 71 c 0
- 178 -17 157 -50 129 -94 c 0
- 105 -119 88.859 -126.15 76 -133 c 0
+ 82 200 164.069 132.007 170 71 c 0
+ 177 -1 159.557 -51.4773 128 -93 c 0
+ 109 -118 88.859 -126.15 76 -133 c 0
  74.0265 -134.051 70.859 -135.9 69 -134 c 0
  67.8376 -132.812 68.9399 -130.683 70 -129 c 0
 EndSplineSet
-Validated: 33
 EndChar
 
 StartChar: Stropha
@@ -4526,21 +4525,21 @@ StartChar: StrophaAuctaLongtail
 Encoding: 182 -1 182
 Width: 172
 VWidth: 2048
-Flags: W
+Flags: HW
 VStem: -0 170
 LayerCount: 2
 Fore
 SplineSet
-70 -129 m 0
- 77.859 -116.525 80 -112 89 -87 c 0
- 102 -37 81 2 69 18 c 0
- 45 50 -0 75 -0 75 c 1
+41 -150 m 0
+ 48.8594 -137.525 66 -123 76 -98 c 0
+ 95.1869 -50.0327 82.1807 -17.6719 68 9 c 0
+ 48.4961 45.6842 -0 75 -0 75 c 1
  82 200 l 1
- 82 200 164 132 170 71 c 0
- 178 -17 157 -50 129 -94 c 0
- 105 -119 88.859 -126.15 76 -133 c 0
- 74.0265 -134.051 70.859 -135.9 69 -134 c 0
- 67.8376 -132.812 68.9399 -130.683 70 -129 c 0
+ 82 200 163.231 130.92 170 70 c 0
+ 178 -2 145 -66 117 -99 c 0
+ 94.5793 -125.424 60.8594 -145.15 48 -152 c 0
+ 46.0264 -153.051 41.8594 -156.9 40 -155 c 0
+ 38.8379 -153.812 39.9395 -151.683 41 -150 c 0
 EndSplineSet
 EndChar
 EndChars
