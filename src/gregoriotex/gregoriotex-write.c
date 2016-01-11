@@ -386,9 +386,14 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
         } else if (fuse_from_previous_note < 0) {
             gregorio_note *previous_note = gregorio_glyph_last_note(
                     gregorio_previous_non_texverb_glyph(glyph));
-            if (previous_note->u.note.shape == S_ORISCUS
-                    || previous_note->u.note.shape == S_ORISCUS_SCAPUS) {
+            switch (previous_note->u.note.shape) {
+            case S_ORISCUS_ASCENDENS:
+            case S_ORISCUS_DESCENDENS:
+            case S_ORISCUS_SCAPUS:
                 fuse_head = FUSE_Lower;
+                break;
+            default:
+                break;
             }
         } else if (fuse_from_previous_note > 1) {
             fuse_head = FUSE_Upper;
@@ -428,9 +433,10 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
         break;
     }
 
-    if ((shape == SHAPE_OriscusReversus || shape == SHAPE_OriscusScapus
-                || shape == SHAPE_OriscusScapusLongqueue)
-            && is_fused(glyph->u.notes.liquescentia)) {
+    if ((*fuse_tail && shape == SHAPE_OriscusReversus)
+            || ((shape == SHAPE_OriscusReversus || shape == SHAPE_OriscusScapus
+                    || shape == SHAPE_OriscusScapusLongqueue)
+                && is_fused(glyph->u.notes.liquescentia))) {
         shape = SHAPE_Oriscus;
     }
 
@@ -588,10 +594,10 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
             return compute_glyph_name(glyph, SHAPE_VirgaReversaLongqueue,
                     LG_NONE, true);
         }
-    case S_ORISCUS:
+    case S_ORISCUS_ASCENDENS:
         *type = AT_ORISCUS;
         return compute_glyph_name(glyph, SHAPE_Oriscus, LG_NONE, true);
-    case S_ORISCUS_AUCTUS:
+    case S_ORISCUS_DESCENDENS:
         *type = AT_ORISCUS;
         return compute_glyph_name(glyph, SHAPE_OriscusReversus, LG_NONE, true);
     case S_ORISCUS_DEMINUTUS:
@@ -626,10 +632,10 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
     case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
         *type = AT_PUNCTUM_INCLINATUM;
         return SHAPE_PunctumCavumInclinatumAuctus;
-    case S_ORISCUS_CAVUM:
+    case S_ORISCUS_CAVUM_ASCENDENS:
         *type = AT_ORISCUS;
         return SHAPE_OriscusCavum;
-    case S_ORISCUS_CAVUM_AUCTUS:
+    case S_ORISCUS_CAVUM_DESCENDENS:
         *type = AT_ORISCUS;
         return SHAPE_OriscusCavumAuctus;
     case S_ORISCUS_CAVUM_DEMINUTUS:
@@ -683,7 +689,8 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
             }
             ltype = LG_NO_INITIO;
             break;
-        case S_ORISCUS:
+        case S_ORISCUS_ASCENDENS:
+        case S_ORISCUS_DESCENDENS:
         case S_ORISCUS_SCAPUS:
             *type = AT_ORISCUS;
             /* TODO: we could factorize this code */
@@ -726,7 +733,8 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
             }
             ltype = LG_NO_INITIO;
             break;
-        case S_ORISCUS:
+        case S_ORISCUS_ASCENDENS:
+        case S_ORISCUS_DESCENDENS:
             *type = AT_ORISCUS;
             if (!is_tail_liquescentia(glyph->u.notes.liquescentia)
                     && is_longqueue(pitch, glyph, element)) {
@@ -770,11 +778,15 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
                 *type = AT_FLEXUS;
             }
         }
-        if (glyph->u.notes.first_note->u.note.shape == S_ORISCUS) {
+        switch (glyph->u.notes.first_note->u.note.shape) {
+        case S_ORISCUS_ASCENDENS:
+        case S_ORISCUS_DESCENDENS:
             *gtype = T_FLEXUS_ORISCUS;
             shape = SHAPE_FlexusOriscus;
             ltype = LG_NO_INITIO;
-        } else if (glyph->u.notes.first_note->u.note.shape == S_ORISCUS_SCAPUS) {
+            break;
+
+        case S_ORISCUS_SCAPUS:
             if (is_shortqueue(pitch, glyph, element)) {
                 *gtype = T_FLEXUS_ORISCUS_SCAPUS;
                 shape = SHAPE_FlexusOriscusScapus;
@@ -783,7 +795,9 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
                 shape = SHAPE_FlexusOriscusScapusLongqueue;
             }
             ltype = LG_NO_INITIO;
-        } else {
+            break;
+
+        default:
             if (is_shortqueue(pitch, glyph, element)) {
                 *gtype = glyph->u.notes.fuse_to_next_glyph? T_PORRECTUS
                         : T_FLEXUS;
@@ -794,6 +808,7 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
                 shape = SHAPE_FlexusLongqueue;
             }
             ltype = LG_NO_INITIO;
+            break;
         }
         break;
     case G_TORCULUS:
@@ -2173,12 +2188,12 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
                 pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
                 type);
         break;
-    case S_ORISCUS_CAVUM:
+    case S_ORISCUS_CAVUM_ASCENDENS:
         fprintf(f, "\\GreOriscusCavum{%d}{%d}{%d}",
                 pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
                 type);
         break;
-    case S_ORISCUS_CAVUM_AUCTUS:
+    case S_ORISCUS_CAVUM_DESCENDENS:
         fprintf(f, "\\GreOriscusCavumAuctus{%d}{%d}{%d}",
                 pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
                 type);
@@ -2573,8 +2588,8 @@ static char *determine_leading_shape(gregorio_glyph *glyph)
     case S_QUILISMA:
         head = "Quilisma";
         break;
-    case S_ORISCUS:
-    case S_ORISCUS_SCAPUS:
+    case S_ORISCUS_ASCENDENS:
+    case S_ORISCUS_DESCENDENS:
         head = "Oriscus";
         break;
     default:
@@ -2741,11 +2756,11 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
         break;
     case G_PUNCTUM:
         switch (glyph->u.notes.first_note->u.note.shape) {
-        case S_ORISCUS:
-        case S_ORISCUS_AUCTUS:
+        case S_ORISCUS_ASCENDENS:
+        case S_ORISCUS_DESCENDENS:
         case S_ORISCUS_DEMINUTUS:
-        case S_ORISCUS_CAVUM:
-        case S_ORISCUS_CAVUM_AUCTUS:
+        case S_ORISCUS_CAVUM_ASCENDENS:
+        case S_ORISCUS_CAVUM_DESCENDENS:
         case S_ORISCUS_CAVUM_DEMINUTUS:
         case S_ORISCUS_SCAPUS:
             /* don't change the oriscus */
@@ -3646,7 +3661,13 @@ static void write_headers(FILE *const f, gregorio_score *const score)
     if (score->nabc_lines) {
         write_numeric_header(f, "nabc-lines", score->nabc_lines);
     }
+    if (score->legacy_oriscus_orientation) {
+        write_header(f, "oriscus-orientation", "legacy");
+    }
     write_header(f, "user-notes", score->user_notes);
+    if (score->legacy_oriscus_orientation) {
+        write_header(f, "oriscus-orientation", "legacy");
+    }
 
     /* since gregorio_voice_info is voice-specific, and there is no current
      * way to move to the next voice for writing headers to GregorioTeX, these

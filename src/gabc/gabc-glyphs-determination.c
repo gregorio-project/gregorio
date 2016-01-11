@@ -221,11 +221,13 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
             break;
         }
         break;
-    case S_ORISCUS:
-    case S_ORISCUS_AUCTUS:
+    case S_ORISCUS_UNDETERMINED:
+    case S_ORISCUS_ASCENDENS:
+    case S_ORISCUS_DESCENDENS:
     case S_ORISCUS_DEMINUTUS:
-    case S_ORISCUS_CAVUM:
-    case S_ORISCUS_CAVUM_AUCTUS:
+    case S_ORISCUS_CAVUM_UNDETERMINED:
+    case S_ORISCUS_CAVUM_ASCENDENS:
+    case S_ORISCUS_CAVUM_DESCENDENS:
     case S_ORISCUS_CAVUM_DEMINUTUS:
     case S_QUILISMA:
         *end_of_glyph = DET_END_OF_PREVIOUS;
@@ -992,7 +994,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                 } else {
                     switch (current_note->u.note.shape) {
                     case S_PUNCTUM:
-                    case S_ORISCUS:
+                    case S_ORISCUS_UNDETERMINED:
                     case S_ORISCUS_SCAPUS:
                     case S_QUILISMA:
                     case S_QUADRATUM:
@@ -1057,23 +1059,26 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                  * we deal with liquescentia
                  */
                 if (is_tail_liquescentia(current_note->u.note.liquescentia)) {
-                    /* special cases of oriscus auctus, treated like normal oriscus
-                     * in some cases. */
-                    if ((current_note->u.note.shape == S_ORISCUS_AUCTUS
-                                || current_note->u.note.shape
-                                == S_ORISCUS_CAVUM_AUCTUS)
-                            && current_note->next
-                            && current_note->next->type == GRE_NOTE
-                            && current_note->next->u.note.pitch <
-                            current_note->u.note.pitch) {
-                        last_pitch = current_note->u.note.pitch;
-                        current_note->u.note.shape =
-                                current_note->u.note.shape
-                                == S_ORISCUS_AUCTUS? S_ORISCUS
-                                : S_ORISCUS_CAVUM;
-                        current_note->u.note.liquescentia = L_NO_LIQUESCENTIA;
-                        current_note = next_note;
-                        continue;
+                    /* special cases of oriscus descendens, treated like normal
+                     * oriscus in some cases. */
+                    if (score->legacy_oriscus_orientation) {
+                        if ((current_note->u.note.shape == S_ORISCUS_DESCENDENS
+                                    || current_note->u.note.shape
+                                    == S_ORISCUS_CAVUM_DESCENDENS)
+                                && current_note->next
+                                && current_note->next->type == GRE_NOTE
+                                && current_note->next->u.note.pitch <
+                                current_note->u.note.pitch) {
+                            last_pitch = current_note->u.note.pitch;
+                            current_note->u.note.shape =
+                                    current_note->u.note.shape
+                                    == S_ORISCUS_DESCENDENS? S_ORISCUS_ASCENDENS
+                                    : S_ORISCUS_CAVUM_ASCENDENS;
+                            current_note->u.note.liquescentia =
+                                    L_NO_LIQUESCENTIA;
+                            current_note = next_note;
+                            continue;
+                        }
                     }
                     /* special cases of the punctum inclinatum deminutus and
                      * auctus */
