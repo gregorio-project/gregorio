@@ -114,7 +114,7 @@ static void gabc_score_determination_error(const char *error_str)
             VERBOSITY_ERROR, 0);
 }
 
-static void gabc_fix_custos(gregorio_score *score_to_check)
+static void fix_custos(gregorio_score *score_to_check)
 {
     gregorio_syllable *current_syllable;
     gregorio_element *current_element;
@@ -527,6 +527,96 @@ void gabc_digest(const void *const buf, const size_t size)
     sha1_process_bytes(buf, size, &digester);
 }
 
+static void determine_oriscus_orientation(gregorio_score *score) {
+    gregorio_syllable *syllable;
+    gregorio_element *element;
+    gregorio_glyph *glyph;
+    gregorio_note *note;
+    gregorio_note *oriscus = NULL;
+
+    for (syllable = score->first_syllable; syllable;
+            syllable = syllable->next_syllable) {
+        for (element = syllable->elements[0]; element;
+                element = element->next) {
+            if (element->type == GRE_ELEMENT) {
+                for (glyph = element->u.first_glyph; glyph;
+                        glyph = glyph->next) {
+                    if (glyph->type == GRE_GLYPH) {
+                        for (note = glyph->u.notes.first_note; note;
+                                note = note->next) {
+                            if (note->type == GRE_NOTE) {
+                                if (oriscus) {
+                                    if (note->u.note.pitch
+                                            < oriscus->u.note.pitch) {
+                                        switch(oriscus->u.note.shape) {
+                                        case S_ORISCUS_UNDETERMINED:
+                                            oriscus->u.note.shape =
+                                                    S_ORISCUS_DESCENDENS;
+                                            break;
+                                        case S_ORISCUS_CAVUM_UNDETERMINED:
+                                            oriscus->u.note.shape =
+                                                    S_ORISCUS_CAVUM_DESCENDENS;
+                                            break;
+                                        default:
+                                            gregorio_message(_("bad shape"),
+                                                    "determine_oriscus_orientation",
+                                                    VERBOSITY_ERROR, 0);
+                                            break;
+                                        }
+                                    } else { /* ascending or the same */
+                                        switch(oriscus->u.note.shape) {
+                                        case S_ORISCUS_UNDETERMINED:
+                                            oriscus->u.note.shape =
+                                                    S_ORISCUS_ASCENDENS;
+                                            break;
+                                        case S_ORISCUS_CAVUM_UNDETERMINED:
+                                            oriscus->u.note.shape =
+                                                    S_ORISCUS_CAVUM_ASCENDENS;
+                                            break;
+                                        default:
+                                            gregorio_message(_("bad shape"),
+                                                    "determine_oriscus_orientation",
+                                                    VERBOSITY_ERROR, 0);
+                                            break;
+                                        }
+                                    }
+                                    oriscus = NULL;
+                                }
+
+                                switch (note->u.note.shape) {
+                                case S_ORISCUS_UNDETERMINED:
+                                case S_ORISCUS_CAVUM_UNDETERMINED:
+                                    oriscus = note;
+                                    break;
+
+                                default:
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (oriscus) {
+        /* oriscus at the end of the score */
+        switch(oriscus->u.note.shape) {
+        case S_ORISCUS_UNDETERMINED:
+            oriscus->u.note.shape = S_ORISCUS_DESCENDENS;
+            break;
+        case S_ORISCUS_CAVUM_UNDETERMINED:
+            oriscus->u.note.shape = S_ORISCUS_CAVUM_DESCENDENS;
+            break;
+        default:
+            gregorio_message(_("bad shape"), "determine_oriscus_orientation",
+                    VERBOSITY_ERROR, 0);
+            break;
+        }
+    }
+}
+
 /*
  * The "main" function. It is the function that is called when we have to read
  * a gabc file. It takes a file descriptor, that is to say a file that is
@@ -551,8 +641,11 @@ gregorio_score *gabc_read_score(FILE *f_in)
     /* the flex/bison main call, it will build the score (that we have
      * initialized) */
     gabc_score_determination_parse();
+    if (!score->legacy_oriscus_orientation) {
+        determine_oriscus_orientation(score);
+    }
     gregorio_fix_initial_keys(score, gregorio_default_clef);
-    gabc_fix_custos(score);
+    fix_custos(score);
     free_variables();
     /* the we check the validity and integrity of the score we have built. */
     if (!check_score_integrity(score)) {
@@ -627,7 +720,8 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token GABC_COPYRIGHT SCORE_COPYRIGHT OCCASION METER COMMENTARY ARRANGER
 %token USER_NOTES DEF_MACRO ALT_BEGIN ALT_END TRANSLATION_CENTER_END BNLBA
 %token ENLBA EUOUAE_B EUOUAE_E NABC_CUT NABC_LINES LANGUAGE HYPHEN
-%token EXTERNAL_HEADER STAFF_LINES MODE_MODIFIER END_OF_FILE
+%token EXTERNAL_HEADER STAFF_LINES MODE_MODIFIER ORISCUS_ORIENTATION
+%token END_OF_FILE
 
 %%
 
@@ -893,6 +987,13 @@ user_notes_definition:
     }
     ;
 
+oriscus_orientation_definition:
+    ORISCUS_ORIENTATION attribute {
+        score->legacy_oriscus_orientation = (strcmp($2.text, "legacy") == 0);
+        free($2.text);
+    }
+    ;
+
 external_header_definition:
     EXTERNAL_HEADER attribute {
         gregorio_add_score_external_header(score, $1.text, $2.text);
@@ -939,6 +1040,7 @@ definition:
     | mode_modifier_definition
     | user_notes_definition
     | language_definition
+    | oriscus_orientation_definition
     | external_header_definition
     | VOICE_CHANGE {
         next_voice_info();

@@ -172,7 +172,8 @@ static __inline const char *first_note_case(
             ambitus_one = false;
         }
         switch (current_note->u.note.shape) {
-        case S_ORISCUS:
+        case S_ORISCUS_ASCENDENS:
+        case S_ORISCUS_DESCENDENS:
             return ambitus_one ? InitialOriscus : InitialConnectedOriscus;
 
         case S_QUILISMA:
@@ -485,7 +486,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                         note->gtex_offset_case =
                                 TorcResQuilismaAuctusSecondOneAny;
                         break;
-                    case S_ORISCUS:
+                    case S_ORISCUS_ASCENDENS:
+                    case S_ORISCUS_DESCENDENS:
                         note->gtex_offset_case =
                                 TorcResOriscusAuctusSecondOneAny;
                         break;
@@ -499,7 +501,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                         note->gtex_offset_case =
                                 TorcResQuilismaAuctusSecondWideAny;
                         break;
-                    case S_ORISCUS:
+                    case S_ORISCUS_ASCENDENS:
+                    case S_ORISCUS_DESCENDENS:
                         note->gtex_offset_case =
                                 TorcResOriscusAuctusSecondWideAny;
                         break;
@@ -585,7 +588,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                             note->gtex_offset_case =
                                     TorcResQuilismaAuctusSecondOneAny;
                             break;
-                        case S_ORISCUS:
+                        case S_ORISCUS_ASCENDENS:
+                        case S_ORISCUS_DESCENDENS:
                             note->gtex_offset_case =
                                     TorcResOriscusAuctusSecondOneAny;
                             break;
@@ -599,7 +603,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                             note->gtex_offset_case =
                                     TorcResQuilismaAuctusSecondWideAny;
                             break;
-                        case S_ORISCUS:
+                        case S_ORISCUS_ASCENDENS:
+                        case S_ORISCUS_DESCENDENS:
                             note->gtex_offset_case =
                                     TorcResOriscusAuctusSecondWideAny;
                             break;
@@ -623,7 +628,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                             note->gtex_offset_case =
                                     TorcResQuilismaNonAuctusSecondOneOne;
                             break;
-                        case S_ORISCUS:
+                        case S_ORISCUS_ASCENDENS:
+                        case S_ORISCUS_DESCENDENS:
                             note->gtex_offset_case =
                                     TorcResOriscusNonAuctusSecondOneOne;
                             break;
@@ -638,7 +644,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                             note->gtex_offset_case =
                                     TorcResQuilismaNonAuctusSecondWideOne;
                             break;
-                        case S_ORISCUS:
+                        case S_ORISCUS_ASCENDENS:
+                        case S_ORISCUS_DESCENDENS:
                             note->gtex_offset_case =
                                     TorcResOriscusNonAuctusSecondWideOne;
                             break;
@@ -662,7 +669,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                             note->gtex_offset_case =
                                     TorcResQuilismaNonAuctusSecondOneWide;
                             break;
-                        case S_ORISCUS:
+                        case S_ORISCUS_ASCENDENS:
+                        case S_ORISCUS_DESCENDENS:
                             note->gtex_offset_case =
                                     TorcResOriscusNonAuctusSecondOneWide;
                             break;
@@ -677,7 +685,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                             note->gtex_offset_case =
                                     TorcResQuilismaNonAuctusSecondWideWide;
                             break;
-                        case S_ORISCUS:
+                        case S_ORISCUS_ASCENDENS:
+                        case S_ORISCUS_DESCENDENS:
                             note->gtex_offset_case =
                                     TorcResOriscusNonAuctusSecondWideWide;
                             break;
@@ -923,14 +932,14 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             note->gtex_offset_case = fused_single_note_case(glyph,
                     FinalQuilisma, LeadingQuilisma);
             break;
-        case S_ORISCUS:
-        case S_ORISCUS_AUCTUS:
+        case S_ORISCUS_ASCENDENS:
+        case S_ORISCUS_DESCENDENS:
         case S_ORISCUS_DEMINUTUS:
             note->gtex_offset_case = fused_single_note_case(glyph, FinalOriscus,
                     LeadingOriscus);
             break;
-        case S_ORISCUS_CAVUM:
-        case S_ORISCUS_CAVUM_AUCTUS:
+        case S_ORISCUS_CAVUM_ASCENDENS:
+        case S_ORISCUS_CAVUM_DESCENDENS:
         case S_ORISCUS_CAVUM_DEMINUTUS:
             note->gtex_offset_case = FinalOriscus;
             break;
@@ -1515,8 +1524,8 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     case S_QUILISMA:
     case S_QUILISMA_QUADRATUM:
     case S_PUNCTUM_CAVUM:
-    case S_ORISCUS_CAVUM:
-    case S_ORISCUS_CAVUM_AUCTUS:
+    case S_ORISCUS_CAVUM_ASCENDENS:
+    case S_ORISCUS_CAVUM_DESCENDENS:
     case S_ORISCUS_CAVUM_DEMINUTUS:
         /* if this glyph starts with one of these, it's not fusable */
         return 0;
@@ -1547,8 +1556,8 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
 
     switch (prev_note->u.note.shape) {
     case S_PUNCTUM_CAVUM:
-    case S_ORISCUS_CAVUM:
-    case S_ORISCUS_CAVUM_AUCTUS:
+    case S_ORISCUS_CAVUM_ASCENDENS:
+    case S_ORISCUS_CAVUM_DESCENDENS:
     case S_ORISCUS_CAVUM_DEMINUTUS:
         /* these don't fuse to anything */
         return 0;
@@ -1580,10 +1589,13 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     }
 
     /* Special cases for oriscus */
-    if (first_note->u.note.shape == S_ORISCUS
-            || first_note->u.note.shape == S_ORISCUS_SCAPUS) {
-        gregorio_note *next_note = first_note->next;
+    switch (first_note->u.note.shape) {
+        gregorio_note *next_note;
         const gregorio_glyph *next_glyph;
+    case S_ORISCUS_ASCENDENS:
+    case S_ORISCUS_DESCENDENS:
+    case S_ORISCUS_SCAPUS:
+        next_note = first_note->next;
         if (!next_note && (next_glyph = gregorio_next_non_texverb_glyph(glyph))
                 && next_glyph->type == GRE_GLYPH
                 && is_fused(next_glyph->u.notes.liquescentia)) {
@@ -1599,11 +1611,15 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
             } else {
                 /* then this note should be an up-down-up oriscus */
                 if (shift < 0) {
-                    /* up-down-up oricus cannot be fuses from above */
+                    /* up-down-up oricus cannot be fused from above */
                     return 0;
                 }
             }
         }
+        break;
+
+    default:
+        break;
     }
 
     return shift;

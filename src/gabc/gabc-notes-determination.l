@@ -50,6 +50,7 @@ static char *before_ledger_length = NULL;
 static int ledger_var[2] = { 0, 0 };
 static unsigned char staff_lines;
 static signed char highest_pitch;
+static bool legacy_oriscus_orientation;
 
 typedef enum ledger_line_type {
     LL_OVER = 0,
@@ -752,13 +753,16 @@ Z   {
         add_bar_as_note(B_DIVISIO_FINALIS);
     }
 r   {
-        gregorio_change_shape(current_note, S_PUNCTUM_CAVUM);
+        gregorio_change_shape(current_note, S_PUNCTUM_CAVUM,
+                legacy_oriscus_orientation);
     }
 R   {
-        gregorio_change_shape(current_note, S_LINEA_PUNCTUM);
+        gregorio_change_shape(current_note, S_LINEA_PUNCTUM,
+                legacy_oriscus_orientation);
     }
 r0  {
-        gregorio_change_shape(current_note, S_LINEA_PUNCTUM_CAVUM);
+        gregorio_change_shape(current_note, S_LINEA_PUNCTUM_CAVUM,
+                legacy_oriscus_orientation);
     }
 r1  {
         gregorio_add_special_sign(current_note, _ACCENTUS);
@@ -825,7 +829,8 @@ r5  {
                 &notes_lloc);
     }
 =   {
-        gregorio_change_shape(current_note, S_LINEA);
+        gregorio_change_shape(current_note, S_LINEA,
+                legacy_oriscus_orientation);
     }
 [a-npA-NP]vv {
         lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA);
@@ -873,37 +878,49 @@ _[0-5]* {
         add_sign(_PUNCTUM_MORA);
     }
 ~   {
-        gregorio_add_tail_liquescentia(current_note, L_DEMINUTUS);
+        gregorio_add_tail_liquescentia(current_note, L_DEMINUTUS,
+                legacy_oriscus_orientation);
     }
 >   {
-        gregorio_add_tail_liquescentia(current_note, L_AUCTUS_DESCENDENS);
+        gregorio_add_tail_liquescentia(current_note, L_AUCTUS_DESCENDENS,
+                legacy_oriscus_orientation);
     }
 \<  {
-        gregorio_add_tail_liquescentia(current_note, L_AUCTUS_ASCENDENS);
+        gregorio_add_tail_liquescentia(current_note, L_AUCTUS_ASCENDENS,
+                legacy_oriscus_orientation);
     }
 q   {
-        gregorio_change_shape(current_note, S_QUADRATUM);
+        gregorio_change_shape(current_note, S_QUADRATUM,
+                legacy_oriscus_orientation);
     }
 o   {
-        gregorio_change_shape(current_note, S_ORISCUS);
+        gregorio_change_shape(current_note, legacy_oriscus_orientation
+                ? S_ORISCUS_ASCENDENS : S_ORISCUS_UNDETERMINED,
+                legacy_oriscus_orientation);
     }
 O   {
-        gregorio_change_shape(current_note, S_ORISCUS_SCAPUS);
+        gregorio_change_shape(current_note, S_ORISCUS_SCAPUS,
+                legacy_oriscus_orientation);
     }
 w   {
-        gregorio_change_shape(current_note, S_QUILISMA);
+        gregorio_change_shape(current_note, S_QUILISMA,
+                legacy_oriscus_orientation);
     }
 W   {
-        gregorio_change_shape(current_note, S_QUILISMA_QUADRATUM);
+        gregorio_change_shape(current_note, S_QUILISMA_QUADRATUM,
+                legacy_oriscus_orientation);
     }
 v   {
-        gregorio_change_shape(current_note, S_VIRGA);
+        gregorio_change_shape(current_note, S_VIRGA,
+                legacy_oriscus_orientation);
     }
 V   {
-        gregorio_change_shape(current_note, S_VIRGA_REVERSA);
+        gregorio_change_shape(current_note, S_VIRGA_REVERSA,
+                legacy_oriscus_orientation);
     }
 s   {
-        gregorio_change_shape(current_note, S_STROPHA);
+        gregorio_change_shape(current_note, S_STROPHA,
+                legacy_oriscus_orientation);
     }
 \[hl:1\] {
         current_note->supposed_high_ledger_line = true;
@@ -945,6 +962,7 @@ gregorio_note *gabc_det_notes_from_string(char *str, char *newmacros[10],
 
     staff_lines = score->staff_lines;
     highest_pitch = score->highest_pitch;
+    legacy_oriscus_orientation = score->legacy_oriscus_orientation;
 
     /* a small optimization could uccur here: we could do it only once at the
      * beginning of the score, not at each syllable */
