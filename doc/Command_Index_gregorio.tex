@@ -865,6 +865,21 @@ in gabc.
   \#1 & string & Text to be typeset in small caps font.\\
 \end{argtable}
 
+\macroname{\textbackslash GreSlur}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+Typesets a slur.
+
+\begin{argtable}
+  \#1 & integer & Height number of the pitch.\\
+  \#2 & \texttt{-1} & The slur should appear under the note.\\
+      & \texttt{1} & The slur should appear over the note.\\
+  \#3 & \texttt{0} & The slur should start at the right end of the note.\\
+      & \texttt{1} & The slur should start at one punctum's width to the left of the right end of the note.\\
+      & \texttt{2} & The slur should start at one-half punctum's width to the left of the right end of the note.\\
+  \#4 & string & The horizontal dimension of the slur.\\
+  \#5 & string & The vertical dimension of the slur.\\
+  \#6 & integer & Height number of the pitch.\\
+\end{argtable}
+
 \macroname{\textbackslash GreStar}{}{gregoriotex-symbol.tex}
 Macro to typeset an asterisk (\GreStar).
 
@@ -944,6 +959,7 @@ Records positions to compute the lengths of variable-sized braces and ledger lin
   \#1 & string & unique identifier for the brace within the score.\\
   \#2 & \texttt{0} & Don't shift before recording the position.\\
   & \texttt{1} & Shift back a punctum's width before recording the position.\\
+  & \texttt{2} & Shift back one-half a punctum's width before recording the position.\\
   \#3 & \texttt{1} & Position to save is the start of brace.\\
   & \texttt{2} & Position to save is the end of brace.
 \end{argtable}

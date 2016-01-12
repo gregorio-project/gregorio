@@ -256,24 +256,24 @@ void gregorio_end_autofuse(gregorio_note **current_note,
     element->type = GRE_AUTOFUSE_END;
 }
 
-void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str)
+void gregorio_add_texverb_to_note(gregorio_note *current_note, char *str)
 {
     size_t len;
     char *res;
     if (str == NULL) {
         return;
     }
-    if (*current_note) {
-        if ((*current_note)->texverb) {
-            len = strlen((*current_note)->texverb) + strlen(str) + 1;
+    if (current_note) {
+        if (current_note->texverb) {
+            len = strlen(current_note->texverb) + strlen(str) + 1;
             res = gregorio_malloc(len);
-            strcpy(res, (*current_note)->texverb);
+            strcpy(res, current_note->texverb);
             strcat(res, str);
-            free((*current_note)->texverb);
+            free(current_note->texverb);
             free(str);
-            (*current_note)->texverb = res;
+            current_note->texverb = res;
         } else {
-            (*current_note)->texverb = str;
+            current_note->texverb = str;
         }
     }
 }
