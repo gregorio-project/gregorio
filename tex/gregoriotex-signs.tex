@@ -747,23 +747,91 @@
   }%
 }%
 
+% #1 : x-distance
+% #2 : y-distance
+% #3 : -1 for below, 1 for above
+\def\gre@draw@slur#1#2#3{%
+  \gre@metapost{
+    \grebracemetapostpreamble{\directlua{gregoriotex.hypotenuse([[#1]],[[#2]])}}
+    transform t;
+    t = identity scaled scale;
+    t := t xscaled width;
+    t := t rotated \directlua{gregoriotex.rotation([[#1]],[[#2]])};
+    beginfig(0);
+    fill
+      (  (0,0)
+      .. controls (0.3,#3*0.20) and (0.7,#3*0.20)
+      .. (1,0)
+      -- (1,0)
+      .. controls (0.7,#3*0.22) and (0.3,#3*0.22)
+      .. (0,0)
+      -- cycle
+      ) transformed t withpen pencircle scaled 0.3;
+    endfig;
+  }%
+}%
+
+\newdimen\greslurheight
+% #1 : height
+% #2 : -1 for below, 1 for above
+% #3 : 0 = no left-shift, 1 = left-shift 1 punctum, 2 = left shift 1/2 punctum
+% #4 : x-distance
+% #5 : y-distance
+% #6 : end height if #6 not given
+\def\GreSlur#1#2#3#4#5#6{%
+  \ifnum\number#2 > 0\relax %
+    \gre@calculate@glyphraisevalue{#1}{15}%
+  \else %
+    \gre@calculate@glyphraisevalue{#1}{16}%
+  \fi %
+  \hbox to 0pt{\raise\gre@dimen@glyphraisevalue\hbox{%
+    \ifcase#3 % 0
+    \or % 1
+      \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
+      \kern-\wd\gre@box@temp@sign %
+    \or % 2
+      \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
+      \kern-.5\wd\gre@box@temp@sign %
+    \fi %
+    \if\relax\detokenize{#5}\relax
+      \gre@dimen@temp@five=\gre@dimen@glyphraisevalue\relax %
+      \ifnum\number#2 > 0\relax %
+        \gre@calculate@glyphraisevalue{#6}{15}%
+      \else %
+        \gre@calculate@glyphraisevalue{#6}{16}%
+      \fi %
+      \greslurheight = \dimexpr(\gre@dimen@glyphraisevalue - \gre@dimen@temp@five)\relax %
+    \else %
+      \greslurheight = #5\relax %
+    \fi %
+    \gre@draw@slur{#4}{\the\greslurheight}{#2}%
+  }}%
+}%
+
 % #1: id of the variable length brace within the score
 \def\GreVarBraceLength#1{%
   \directlua{gregoriotex.var_brace_len(#1)}%
 }%
 
 % #1: id of the variable length brace within the score
-% #2: 1 if we shift to the beginning of the last glyph, 0 otherwise
+% #2: 0 = no left-shift, 1 = left-shift 1 punctum, 2 = left shift 1/2 punctum
 % #3: 1 if the start, 2 if the end
 \def\GreVarBraceSavePos#1#2#3{%
-  \ifnum#2=1\relax %
+  \ifcase#2 % 0
+    \gre@debugmsg{general}{save case 0}%
+    \pdfsavepos %
+  \or % 1
+    \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
+    \kern-\wd\gre@box@temp@sign %
+    \pdfsavepos %
+    \kern\wd\gre@box@temp@sign %
+  \or % 2
+    \gre@debugmsg{general}{save case 2}%
     \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
     \gre@dimen@temp@five=\wd\gre@box@temp@sign %
-    \kern-\gre@dimen@temp@five %
+    \kern-.5\wd\gre@box@temp@sign %
     \pdfsavepos %
-    \kern\gre@dimen@temp@five %
-  \else %
-    \pdfsavepos %
+    \kern.5\wd\gre@box@temp@sign %
   \fi %
   \directlua{gregoriotex.var_brace_note_pos(#1, #3)}%
   \relax %

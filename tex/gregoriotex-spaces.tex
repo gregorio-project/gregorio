@@ -466,6 +466,8 @@
 %% 12: low choral sign below the note
 %% 13: brace above the bars
 %% 14: punctum mora in a space with a note on the line below it
+%% 15: over slur
+%% 16: under slur
 \def\gre@calculate@glyphraisevalue#1#2{%
   \global\gre@isonalinefalse%
   \ifcase#1%
@@ -635,6 +637,10 @@
     \gre@dimen@addedraisevalue=200 sp%
     \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
     \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
+  \or% 15: over slur
+    \global\advance\gre@dimen@glyphraisevalue by \gre@dimen@overslurshift\relax%
+  \or% 16: under slur
+    \global\advance\gre@dimen@glyphraisevalue by \gre@dimen@underslurshift\relax%
   \fi%
   \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@constantglyphraise\relax%
 }%
@@ -1007,6 +1013,8 @@
   \IfStrEq{#1}{initialraise}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{beforealterationspace}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{alterationspace}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{overslurshift}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{underslurshift}{\gre@rubberfalse}{\relax}%
 }%
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3

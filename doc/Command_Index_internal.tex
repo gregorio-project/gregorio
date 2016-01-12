@@ -130,7 +130,10 @@ Calculates the raise values for a glyph (glyphraisevalue and addedraisevalue) ba
   & \texttt{10} & case of the low choral sign\\
   & \texttt{11} & case of the high choral sign\\
   & \texttt{12} & case of the low choral sign which is lower than the note\\
-  & \texttt{13} & case of the brace above the bars
+  & \texttt{13} & case of the brace above the bars\\
+  & \texttt{14} & case of the punctum mora in a space with a note on the line below it\\
+  & \texttt{15} & case of the over-the-notes slur\\
+  & \texttt{16} & case of the under-the-notes slur\\
 \end{argtable}
 
 \macroname{\textbackslash gre@stafflinefactor}{}{gregoriotex-spaces.tex}
@@ -313,7 +316,7 @@ Draws a round under-brace using \MP{}.
   \#1 & length & the width of the brace.
 \end{argtable}
 
-\macroname{\textbackslash gre@draw@roundbrace}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@draw@roundbrace}{\#1\#2\#3}{gregoriotex-signs.tex}
 Draws a round over- or under-brace using \MP{}.
 
 \begin{argtable}
@@ -321,6 +324,17 @@ Draws a round over- or under-brace using \MP{}.
   \#2 & number         & the height of the bounding box in em-relative units.\\
   \#3 & \MP{} commands & \MP{} commands to draw the brace outline.
 \end{argtable}
+
+\macroname{\textbackslash gre@draw@slur}{\#1\#2\#3}{gregoriotex-signs.tex}
+Draws a slur using \MP{}.
+
+\begin{argtable}
+  \#1 & length      & the x-dimension of the slur.\\
+  \#2 & length      & the y-dimension of the slur.\\
+  \#3 & \texttt{-1} & draw an under-the-notes slur.\\
+      & \texttt{1}  & draw an over-the-notes slur.\\
+\end{argtable}
+
 
 \macroname{\textbackslash gre@iflatex}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Evaluates to \verb=#1= if running under \LaTeX{}.
@@ -1568,6 +1582,9 @@ Working alias for \verb=\gre@skip@temp@one= or \verb=\gre@dimen@temp@one=, as ap
 \macroname{\textbackslash gre@skip@syllablefinalskip}{}{gregoriotex-spaces.tex}
 The final distance to skip at the end of a syllable.
 
+\macroname{\textbackslash greslurheight}{}{gregoriotex-signs.tex}
+Stores the computed height of a variable-length slur.  The control sequence name
+does not have the \texttt{@} symbol because this dimension is used within \MP{}.
 
 \subsection{Penalties}
 These are the macros that Gregorio\TeX\ uses to manipulate the penalties in order to control line and page breaks within a score without affect the surrounding text.

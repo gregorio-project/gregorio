@@ -867,7 +867,7 @@ void gregorio_start_autofuse(gregorio_note **current_note,
         const gregorio_scanner_location *loc);
 void gregorio_end_autofuse(gregorio_note **current_note,
         const gregorio_scanner_location *loc);
-void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str);
+void gregorio_add_texverb_to_note(gregorio_note *current_note, char *str);
 void gregorio_add_cs_to_note(gregorio_note *const*current_note, char *str,
         bool nabc);
 void gregorio_add_misc_element(gregorio_element **current_element,
