@@ -758,6 +758,24 @@ Macro to specify how the translation text should be aligned with it respective s
   & \texttt{center} & The translation text is centered under its respective syllable.
 \end{argtable}
 
+\macroname{\textbackslash gresetannotationby}{\{\#1\}}{gregoriotex-main.tex}
+Macro to specify which line of the annotation should be used to determine its starting placement (i.e. before \texttt{annotationraise} is applied).
+
+\begin{argtable}
+  \#1 & \texttt{firstline} & Annotation placement is determined by the first line (default)\\
+  & \texttt{lastline} & annotation placement is determined by the last line\\
+\end{argtable}
+
+\macroname{\textbackslash gresetannotationvalign}{\{\#1\}}{gregoriotex-main.tex}
+Macro to specify which part of the control line in the annotation should be aligned with the top line of the staff before \texttt{annotationraise} is applied.
+
+\begin{argtable}
+  \#1 & \texttt{top} & The top of the annotation control line will align with the top line of the staff\\
+  & \texttt{baseline} & The baseline of the control line is used (default)\\
+  & \texttt{bottom} & The bottom of the control line is used\\
+\end{argtable}
+
+\textbf{Nota Bene:} These variable refer to the actual contents of the line and not to the ``hypothetical'' limits for the font.  As a result if the top of an annotation containing only short letters will be different from one which contains tall ones even if both use the same font.  Likewise, if the annotation contains no descenders, then baseline and bottom will be the same.  If this is a problem, then the use of struts within the annotation can be used to control the line height (distance from baseline to top) and depth (distance from baseline to bottom).
 
 \subsubsection{End of Line Behavior}
 While Gregorio\TeX\ will automatically wrap scores to fit your page, there are several ways to fine tune that line breaking behavior with the following commands.
@@ -1224,10 +1242,12 @@ Space to force the initial width to.  Ignored when 0.
 
 \begin{gdimension}{annotationseparation}
 This space is the one between lines in the annotation (text above the initial).
+
+\textbf{Nota Bene:} This is the absolute space.  If the lower line contains only short letters then it will get moved up so only this space shows (not the space above the letters on a normal line plus this space).  You should use struts to control the line height of the lower line if this is a problem.
 \end{gdimension}
 
 \begin{gdimension}{annotationraise}
-Amount to raise (positive) or lower (negative) the annotation from it's normal position (baseline of the first line aligned with the top line of the staff).
+Amount to raise (positive) or lower (negative) the annotation from it's normal position (set with \verb=\gresetannotationby= and \verb=\gresetannotationvalign=).
 \end{gdimension}
 
 \begin{gdimension}{noclefspace}
