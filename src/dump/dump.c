@@ -85,7 +85,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
     int i;
     int annotation_num;
     gregorio_syllable *syllable;
-    gregorio_external_header *header;
+    gregorio_header *header;
 
     if (!f) {
         gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
@@ -109,50 +109,14 @@ void dump_write_score(FILE *f, gregorio_score *score)
     if (score->score_copyright) {
         fprintf(f, "   score_copyright           %s\n", score->score_copyright);
     }
-    if (score->office_part) {
-        fprintf(f, "   office_part               %s\n", score->office_part);
-    }
-    if (score->occasion) {
-        fprintf(f, "   occasion                  %s\n", score->occasion);
-    }
-    if (score->meter) {
-        fprintf(f, "   meter                     %s\n", score->meter);
-    }
-    if (score->commentary) {
-        fprintf(f, "   commentary                %s\n", score->commentary);
-    }
-    if (score->arranger) {
-        fprintf(f, "   arranger                  %s\n", score->arranger);
-    }
     if (score->language) {
         fprintf(f, "   language                  %s\n", score->language);
     }
-    if (score->si.author) {
-        fprintf(f, "   author                    %s\n", score->si.author);
+    if (score->author) {
+        fprintf(f, "   author                    %s\n", score->author);
     }
-    if (score->si.date) {
-        fprintf(f, "   date                      %s\n", score->si.date);
-    }
-    if (score->si.manuscript) {
-        fprintf(f, "   manuscript                %s\n", score->si.manuscript);
-    }
-    if (score->si.manuscript_reference) {
-        fprintf(f, "   manuscript_reference      %s\n",
-                score->si.manuscript_reference);
-    }
-    if (score->si.manuscript_storage_place) {
-        fprintf(f, "   manuscript_storage_place  %s\n",
-                score->si.manuscript_storage_place);
-    }
-    if (score->si.book) {
-        fprintf(f, "   book                      %s\n", score->si.book);
-    }
-    if (score->si.transcriber) {
-        fprintf(f, "   transcriber               %s\n", score->si.transcriber);
-    }
-    if (score->si.transcription_date) {
-        fprintf(f, "   transcription_date        %s\n",
-                score->si.transcription_date);
+    if (score->manuscript_reference) {
+        fprintf(f, "   manuscript_reference      %s\n", score->manuscript_reference);
     }
     if (score->mode) {
         fprintf(f, "   mode                      %d\n", score->mode);
@@ -166,13 +130,14 @@ void dump_write_score(FILE *f, gregorio_score *score)
     if (score->nabc_lines) {
         fprintf(f, "   nabc_lines                %d\n", (int)score->nabc_lines);
     }
-    if (score->user_notes) {
-        fprintf(f, "   user_notes                %s\n", score->user_notes);
-    }
     if (score->legacy_oriscus_orientation) {
         fprintf(f, "   oriscus-orientation       legacy\n");
     }
-    for (header = score->external_headers; header; header = header->next) {
+    fprintf(f, "\n\n"
+            "=====================================================================\n"
+            " HEADERS\n"
+            "=====================================================================\n");
+    for (header = score->headers; header; header = header->next) {
         fprintf(f, "   %-25s %s\n", header->name, header->value);
     }
     fprintf(f, "\n\n"
@@ -205,13 +170,6 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 fprintf(f, "   annotation                %s\n",
                         score->annotation[annotation_num]);
             }
-        }
-        if (voice_info->style) {
-            fprintf(f, "   style                     %s\n", voice_info->style);
-        }
-        if (voice_info->virgula_position) {
-            fprintf(f, "   virgula_position          %s\n",
-                    voice_info->virgula_position);
         }
         voice_info = voice_info->next_voice_info;
     }

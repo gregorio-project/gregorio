@@ -642,31 +642,12 @@ typedef struct gregorio_syllable {
     bool first_word:1;
 } gregorio_syllable;
 
-/* The items in source_info used to be -- well, most of them -- in
- * gregorio_voice_info.  This is because the different `voices' may
- * in future be used for different variants of a melody:
- * e.g. notated in square notation, notated in some early neumatic
- * form from manuscript A, and another in manuscript B.  In that
- * case the different voices would naturally have different source
- * info.  However, this enhancement to gregorio is not yet planned,
- * and so this structure is made part of gregorio_score. */
-typedef struct gregorio_source_info {
-    char *author;
-    char *date;
-    char *manuscript;
-    char *manuscript_reference; /* was reference */
-    char *manuscript_storage_place; /* was storage_place */
-    char *book;
-    char *transcriber;
-    char *transcription_date;
-} gregorio_source_info;
-
-/* Stores an external header in a singly-linked list */
-typedef struct gregorio_external_header {
+/* Stores a header in a singly-linked list */
+typedef struct gregorio_header {
     char *name;
     char *value;
-    struct gregorio_external_header *next;
-} gregorio_external_header;
+    struct gregorio_header *next;
+} gregorio_header;
 
 /*
  * 
@@ -690,15 +671,10 @@ typedef struct gregorio_score {
     char *name;
     char *gabc_copyright;
     char *score_copyright;
-    char *office_part;
-    char *occasion;
-    /* the meter, numbers of syllables per line, as e.g. 8.8.8.8 */
-    char *meter;
-    char *commentary;
-    char *arranger;
     char *language;
     char *mode_modifier;
-    struct gregorio_source_info si;
+    char *author;
+    char *manuscript_reference;
     /* the mode of a song is between 1 and 8 */
     char mode;
     /* There is one annotation for each line above the initial letter */
@@ -713,8 +689,8 @@ typedef struct gregorio_score {
     /* then, as there are some metadata that are voice-specific, we add a
      * pointer to the first voice_info. (see comments below) */
     struct gregorio_voice_info *first_voice_info;
-    struct gregorio_external_header *external_headers;
-    struct gregorio_external_header *last_external_header;
+    struct gregorio_header *headers;
+    struct gregorio_header *last_header;
     unsigned char staff_lines;
     signed char highest_pitch;
     signed char high_ledger_line_pitch;
@@ -733,9 +709,6 @@ typedef struct gregorio_score {
 
 typedef struct gregorio_voice_info {
     gregorio_clef_info initial_clef;
-    /* See source_info above for comments about the move of author etc. */
-    char *style;
-    char *virgula_position;
     struct gregorio_voice_info *next_voice_info;
 } gregorio_voice_info;
 
@@ -879,35 +852,17 @@ void gregorio_set_score_name(gregorio_score *score, char *name);
 void gregorio_set_score_gabc_copyright(gregorio_score *score, char *gabc_copyright);
 void gregorio_set_score_score_copyright(gregorio_score *score,
         char *score_copyright);
-void gregorio_set_score_office_part(gregorio_score *score, char *office_part);
-void gregorio_set_score_occasion(gregorio_score *score, char *occasion);
-void gregorio_set_score_meter(gregorio_score *score, char *meter);
-void gregorio_set_score_commentary(gregorio_score *score, char *commentary);
-void gregorio_set_score_arranger(gregorio_score *score, char *arranger);
 void gregorio_set_score_language(gregorio_score *score, char *language);
 void gregorio_set_score_mode_modifier(gregorio_score *score, char *mode_modifier);
-void gregorio_set_score_gabc_version(gregorio_score *score, char *gabc_version);
 void gregorio_set_score_number_of_voices(gregorio_score *score,
         int number_of_voices);
 void gregorio_set_score_annotation(gregorio_score *score, char *annotation);
 void gregorio_set_score_author(gregorio_score *score, char *author);
-void gregorio_set_score_date(gregorio_score *score, char *date);
-void gregorio_set_score_manuscript(gregorio_score *score, char *manuscript);
-void gregorio_set_score_book(gregorio_score *score, char *book);
 void gregorio_set_score_manuscript_reference(gregorio_score *score,
         char *reference);
-void gregorio_set_score_manuscript_storage_place(gregorio_score *score,
-        char *storage_place);
-void gregorio_set_score_transcriber(gregorio_score *score, char *transcriber);
-void gregorio_set_score_transcription_date(gregorio_score *score,
-        char *transcription_date);
-void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes);
 void gregorio_set_score_staff_lines(gregorio_score *score, char staff_lines);
-void gregorio_add_score_external_header(gregorio_score *score, char *name,
+void gregorio_add_score_header(gregorio_score *score, char *name,
         char *value);
-void gregorio_set_voice_style(gregorio_voice_info *voice_info, char *style);
-void gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
-        char *virgula_position);
 void gregorio_fix_initial_keys(gregorio_score *score,
         gregorio_clef_info default_clef);
 void gregorio_go_to_first_note(gregorio_note **note);

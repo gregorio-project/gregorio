@@ -955,13 +955,17 @@ If the \texttt{string} option is supplied, the value will be passed with all
 non-space characters as \TeX{} catcode 12 (and all spaces as catcode 10).
 If not, the value will be evaluated as \TeX{}.
 
-The standard gabc headers will be processed first, in an arbitrary (but
-not random) order, followed by the external headers (the ones whose names
-start with \texttt{x-}), in the order they were presented in the gabc file.
-Headers will be processed in the TeX state at the point of the
+Other than the headers that define macros, which are not passed to \TeX{},
+the headers will be processed in the order they were presented in the gabc
+file.  Headers will be processed in the \TeX{} state at the point of the
 \verb=\gregorioscore= call.  This means, for example, that should the
 capturing macro produce something, it will be typeset within the same
 paragraph as the \verb=\gregorioscore= call.
+
+Gregorio will call \verb=\GreBeginHeaders= before processing a given set of
+headers and \verb=\GreEndHeaders= after processing them.  By default, these
+macros do not do anything.  However, they may be redefined as needed to
+hook onto these events.
 
 
 \subsubsection{Ancient Notation}

@@ -3620,66 +3620,15 @@ static void write_header(FILE *const f, const char *const name,
     }
 }
 
-static void write_numeric_header(FILE *const f, const char *const name,
-        const int value)
-{
-    fprintf(f, "\\GreHeader{");
-    write_escapable_header_text(f, name);
-    fprintf(f, "}{%d}%%\n", value);
-}
-
 static void write_headers(FILE *const f, gregorio_score *const score)
 {
-    int i;
-    gregorio_external_header *header;
+    gregorio_header *header;
 
-    if (score->number_of_voices != 1) {
-        write_numeric_header(f, "number-of-voices", score->number_of_voices);
-    }
-    write_header(f, "name", score->name);
-    write_header(f, "score-copyright", score->score_copyright);
-    write_header(f, "gabc-copyright", score->gabc_copyright);
-    write_header(f, "office-part", score->office_part);
-    write_header(f, "occasion", score->occasion);
-    write_header(f, "meter", score->meter);
-    write_header(f, "commentary", score->commentary);
-    write_header(f, "arranger", score->arranger);
-    if (score->mode) {
-        write_numeric_header(f, "mode", score->mode);
-    }
-    write_header(f, "mode-modifier", score->mode_modifier);
-    write_header(f, "author", score->si.author);
-    write_header(f, "date", score->si.date);
-    write_header(f, "manuscript", score->si.manuscript);
-    write_header(f, "manuscript-reference", score->si.manuscript_reference);
-    write_header(f, "manuscript-storage-place", score->si.manuscript_storage_place);
-    write_header(f, "book", score->si.book);
-    write_header(f, "transcriber", score->si.transcriber);
-    write_header(f, "language", score->language);
-    write_header(f, "transcription-date", score->si.transcription_date);
-    write_numeric_header(f, "staff-lines", score->staff_lines);
-    if (score->nabc_lines) {
-        write_numeric_header(f, "nabc-lines", score->nabc_lines);
-    }
-    if (score->legacy_oriscus_orientation) {
-        write_header(f, "oriscus-orientation", "legacy");
-    }
-    write_header(f, "user-notes", score->user_notes);
-    if (score->legacy_oriscus_orientation) {
-        write_header(f, "oriscus-orientation", "legacy");
-    }
-
-    /* since gregorio_voice_info is voice-specific, and there is no current
-     * way to move to the next voice for writing headers to GregorioTeX, these
-     * will be skipped until such is needed */
-
-    for (i = 0; i < MAX_ANNOTATIONS; ++i) {
-        write_header(f, "annotation", score->annotation[i]);
-    }
-
-    for (header = score->external_headers; header; header = header->next) {
+    fprintf(f, "\\GreBeginHeaders %%\n");
+    for (header = score->headers; header; header = header->next) {
         write_header(f, header->name, header->value);
     }
+    fprintf(f, "\\GreEndHeaders %%\n");
 }
 
 void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
@@ -3709,8 +3658,8 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     if (score->name) {
         fprintf(f, "%% Name: %s\n", score->name);
     }
-    if (score->si.author) {
-        fprintf(f, "%% Author: %s\n", score->si.author);
+    if (score->author) {
+        fprintf(f, "%% Author: %s\n", score->author);
     }
     if (score->gabc_copyright) {
         fprintf(f, "%% The copyright of this gabc is: %s\n",
@@ -3756,9 +3705,9 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     }
 
     fprintf(f, "\\GreScoreOpening{%%\n"); /* GreScoreOpening#1 */
-    if (score->si.manuscript_reference) {
+    if (score->manuscript_reference) {
         fprintf(f, "\\GreScoreReference{%s}%%\n",
-                score->si.manuscript_reference);
+                score->manuscript_reference);
     }
     if (score->first_voice_info) {
         gregoriotex_write_voice_info(f, score->first_voice_info);
