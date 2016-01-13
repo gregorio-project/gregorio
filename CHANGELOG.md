@@ -7,6 +7,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The alignment of the vertical episema under a punctum inclinatum deminutus is now correct (see [#742](https://github.com/gregorio-project/gregorio/issues/742)).
 - `<eu>` and `<nlba>` may now be ended on the final divisio maior/finalis (see [#743](https://github.com/gregorio-project/gregorio/issues/743)).
 - Sign positioning on the first note of quadratum figures is now correct (see [#752](https://github.com/gregorio-project/gregorio/issues/752)).
+- Interlinear spacing of annotations when font size was smaller than normal.  You should now see just the spacing specified by `annotationseparation`.
 
 ### Changed
 - Initial handling has been simplified.  The initial style should now be specified from TeX by using the `\gresetinitiallines` command, rather than from a gabc header.  Big initials and normal initials are now governed by a single `initial` style, meant to be changed between scores as appropriate.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#632](https://github.com/gregorio-project/gregorio/issues/632)).  Deprecations for this change are listed in the Deprecation section, below.
@@ -32,6 +33,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Automatic line breaks before a `<eu>` block may be made ragged by using `\gresetbreakbeforeeuouae{ragged}`.  See GregorioRef for details (for the change request, see [#764](https://github.com/gregorio-project/gregorio/issues/764)).
 - Tunable spaces for bars with text underneath: `spacearoundsmallbartext`, `spacearoundminortext`, `spacearoundmaiortext`, `spacearoundfinalistext`, `spacebeforefinalfinalistext`.  These are sized slightly larger than their "non-text" counterparts.  See GregorioRef and [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#766](https://github.com/gregorio-project/gregorio/issues/766)).
 - The ability to typeset simple slurs.  See GregorioRef for details (for the change request, see [#776](https://github.com/gregorio-project/gregorio/issues/776)).
+- More control over the alignment of the annotation.  You can now set either the first line or the last line of the annotation as the controling line with `\gresetannotationby{firstline}` and `\gresetannotationby{lastline}` respectively.  Additionaly, within the line you can specify the top, baseline, or bottom of the line as the alignment point with `\gresetannotationvalign{top}`, `\gresetannotation{baseline}`, and `\gresetannotationvalgin{bottom}` respectively.  Default behavior is baseline of the top line (as it was before).  These alignment controls are applied before `annotationraise` is taken into account.  See [#768](https://github.com/gregorio-project/gregorio/issues/768) for details.
 
 
 ### Deprecated
