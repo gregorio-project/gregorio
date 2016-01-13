@@ -962,10 +962,27 @@ file.  Headers will be processed in the \TeX{} state at the point of the
 capturing macro produce something, it will be typeset within the same
 paragraph as the \verb=\gregorioscore= call.
 
-Gregorio will call \verb=\GreBeginHeaders= before processing a given set of
-headers and \verb=\GreEndHeaders= after processing them.  By default, these
-macros do not do anything.  However, they may be redefined as needed to
-hook onto these events.
+Gregorio will call whatever is passed to \verb=\grebeforeheaders= before
+processing a given set of headers and to \verb=\greafterheaders= after
+processing them.
+
+\macroname{\textbackslash grebeforeheaders}{\{\#1\}}{gregoriotex-main.tex}
+Specifies something to be done before a set of headers is processed.
+Defaults to nothing.  If this is called multiple times, the most recent call
+will define the behavior at the next set of headers.
+
+\begin{argtable}
+    \#1 & \TeX\ code & The code to process before a set of headers.\\
+\end{argtable}
+
+\macroname{\textbackslash greafterheaders}{\{\#1\}}{gregoriotex-main.tex}
+Specifies something to be done after a set of headers is processed.
+Defaults to nothing.  If this is called multiple times, the most recent call
+will define the behavior at the next set of headers.
+
+\begin{argtable}
+    \#1 & \TeX\ code & The code to process after a set of headers.\\
+\end{argtable}
 
 
 \subsubsection{Ancient Notation}
