@@ -566,46 +566,45 @@
   \ifdim\gre@dimen@temp@three < \wd\gre@box@annotation\relax%
     \gre@dimen@temp@three = \wd\gre@box@annotation\relax%
   \fi%
-  \setbox\gre@box@annotation@old = \hbox to \gre@dimen@temp@three{\gre@leftfill\copy\gre@box@annotation\gre@rightfill}%
-  \setbox\gre@box@annotation@add = \hbox to \gre@dimen@temp@three{\gre@leftfill#2\gre@rightfill}%
   \ifvoid\gre@box@annotation%
     \gre@debugmsg{annotation}{We're on the first line of the annotation.}%
+    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\gre@leftfill#2\gre@rightfill}%
     % We set the initial value for annotationtrueraise based on the annotationvalign setting.  We always do this because if there is only one line in the annotation, then the topline is the bottomline.
     \gre@debugmsg{annnotation}{Initial set point.}%
     \ifcase\gre@count@annotationvalign\relax%
     %case 0 = top of first line
-      \global\gre@dimen@annotationtrueraise=0pt\relax%
+      \global\gre@dimen@annotationtrueraise=-\ht\gre@box@annotation\relax%
       \gre@debugmsg{annotation}{Aligning to top of first line: \the\gre@dimen@annotationtrueraise}%
     \or %case 1 = baseline of first line
-      \global\gre@dimen@annotationtrueraise= \ht\gre@box@annotation@add\relax%
+      \global\gre@dimen@annotationtrueraise= 0pt\relax%
       \gre@debugmsg{annotation}{Aligning to baseline of first line: \the\gre@dimen@annotationtrueraise}%
     \or %case 2 = bottom of first line
-      \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@add+\dp\gre@box@annotation@add\relax%
+      \global\gre@dimen@annotationtrueraise=\dp\gre@box@annotation\relax%
       \gre@debugmsg{annotation}{Aligning to bottom of first line: \the\gre@dimen@annotationtrueraise}%
     \else% Bug
       \gre@bug{Invalid value for \protect\gre@count@annotationvalign}%
     \fi%
-    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\vtop{{\offinterlineskip\vss\noindent\box\gre@box@annotation@add}}}%
   \else%
     \gre@debugmsg{annotation}{We're not on the first line of the annotation.}%
+    \setbox\gre@box@annotation@old = \hbox to \gre@dimen@temp@three{\gre@leftfill\box\gre@box@annotation\gre@rightfill}
+    \setbox\gre@box@annotation@add = \hbox to \gre@dimen@temp@three{\gre@leftfill#2\gre@rightfill}%
     % if the user has asked for the bottom line to be the controlling line, then we need to change the value of the annotationtrueraise appropriately
     \ifgre@annotationbottomline%
       \ifcase\gre@count@annotationvalign\relax%
         %case 0 = top of first line
-        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@old+\dp\gre@box@annotation@old+\gre@dimen@annotationseparation\relax%
+        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@old+\dp\gre@box@annotation@old+\gre@dimen@annotationseparation-\ht\gre@box@annotation@add\relax%
         \gre@debugmsg{annotation}{Aligning to top of last line: \the\gre@dimen@annotationtrueraise}%
       \or %case 1 = baseline of first line
-        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@old+\dp\gre@box@annotation@old+\gre@dimen@annotationseparation+\ht\gre@box@annotation@add%
+        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@old+\dp\gre@box@annotation@old+\gre@dimen@annotationseparation\relax%
         \gre@debugmsg{annotation}{Aligning to baseline of last line: \the\gre@dimen@annotationtrueraise}%
       \or %case 2 = bottom of first line
-        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@old+\dp\gre@box@annotation@old+\gre@dimen@annotationseparation+\ht\gre@box@annotation@add+\dp\gre@box@annotation@add\relax%
+        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@old+\dp\gre@box@annotation@old+\gre@dimen@annotationseparation+\dp\gre@box@annotation@add\relax%
         \gre@debugmsg{annotation}{Aligning to bottom of last line: \the\gre@dimen@annotationtrueraise}%
       \else% Bug
         \gre@bug{Invalid value for \protect\gre@count@annotationvalign}%
       \fi%
     \fi%
-    % A manual fudge factor in the spread is needed so get annotation lines to actually touch when annotationspearation is 0.
-    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\vtop spread \dimexpr -0.1em +\gre@dimen@annotationseparation\relax{{\offinterlineskip\noindent\box\gre@box@annotation@old\vss\noindent\box\gre@box@annotation@add}}}%
+    \setbox\gre@box@annotation = \vtop spread \gre@dimen@annotationseparation\relax {\offinterlineskip\box\gre@box@annotation@old\vss\box\gre@box@annotation@add}%
   \fi%
 }%
 
