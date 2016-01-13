@@ -917,6 +917,21 @@ local function width_to_bp(width, value_if_star)
   end
 end
 
+-- computes the hypotenuse given the width and height of the right triangle
+local function hypotenuse(width, height)
+  log("width %s height %s", width, height)
+  local a = tex.sp(width)
+  local b = tex.sp(height)
+  tex.sprint(math.sqrt((a * a) + (b * b)) .. 'sp')
+end
+
+-- computes the rotation angle opposite the height of a right triangle
+local function rotation(width, height)
+  local a = tex.sp(width)
+  local b = tex.sp(height)
+  tex.sprint(math.deg(math.atan2(b, a)))
+end
+
 local function scale_space(factor)
   local skip = tex.getskip('gre@skip@temp@four')
   skip.width = skip.width * factor
@@ -977,6 +992,8 @@ gregoriotex.late_brace_note_pos  = late_brace_note_pos
 gregoriotex.mark_translation     = mark_translation
 gregoriotex.mark_abovelinestext  = mark_abovelinestext
 gregoriotex.width_to_bp          = width_to_bp
+gregoriotex.hypotenuse           = hypotenuse
+gregoriotex.rotation             = rotation
 gregoriotex.scale_space          = scale_space
 gregoriotex.set_header_capture   = set_header_capture
 gregoriotex.capture_header       = capture_header

@@ -508,17 +508,17 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case S_TRIVIRGA:
         fprintf(f, "%cvvv", pitch_letter(note->u.note.pitch));
         break;
-    case S_ORISCUS:
-    case S_ORISCUS_AUCTUS:
+    case S_ORISCUS_ASCENDENS:
+    case S_ORISCUS_DESCENDENS:
     case S_ORISCUS_DEMINUTUS:
         fprintf(f, "%co", pitch_letter(note->u.note.pitch));
-        /* Note: the AUCTUS or DEMINUTUS is also in the liquescentia */
+        /* Note: the ASCENDENS, DESCENDENS, or DEMINUTUS is also in the liquescentia */
         break;
-    case S_ORISCUS_CAVUM:
-    case S_ORISCUS_CAVUM_AUCTUS:
+    case S_ORISCUS_CAVUM_ASCENDENS:
+    case S_ORISCUS_CAVUM_DESCENDENS:
     case S_ORISCUS_CAVUM_DEMINUTUS:
         fprintf(f, "%cor", pitch_letter(note->u.note.pitch));
-        /* Note: the AUCTUS or DEMINUTUS is also in the liquescentia */
+        /* Note: the ASCENDENS, DESCENDENS, or DEMINUTUS is also in the liquescentia */
         break;
     case S_QUILISMA:
         fprintf(f, "%cw", pitch_letter(note->u.note.pitch));
@@ -916,6 +916,9 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     gabc_write_str_attribute(f, "user-notes", score->user_notes);
     for (header = score->external_headers; header; header = header->next) {
         gabc_write_str_attribute(f, header->name, header->value);
+    }
+    if (score->legacy_oriscus_orientation) {
+        gabc_write_str_attribute(f, "oriscus-orientation", "legacy");
     }
     if (score->number_of_voices == 0) {
         gregorio_message(_("gregorio_score seems to be empty"),

@@ -15,6 +15,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Minimal space between notes of different syllables (or words) has been reduced when the second syllable starts with an alteration.
 - The space between note and horizontal episema has been tightened for notes at the `c` or `k` height when there is no ledger line.  Due to the intricacies of measurement, the system tries to make a best guess as to the existence of the ledger line.  If the guess is wrong, you may use the `[hl:n]` and `[ll:n]` notations in gabc to override the guess.  See [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#716](https://github.com/gregorio-project/gregorio/issues/716)).
 - The custos that might appear immediately before a `<eu>` block is now suppressed by default.  This behavior is controlled by the `\greseteolcustosbeforeeuouae` command.  See GregorioRef and [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#761](https://github.com/gregorio-project/gregorio/issues/761)).
+- Different glyphs will now be used for the liquescent stropha on a line or between lines, if supported by the font.  If you prefer the old behavior, use `\grechangeglyph{StrophaAuctaLongtail}{*}{StrophaAucta}` in your TeX file.  See [#773](https://github.com/gregorio-project/gregorio/issues/773).
+- Made the oriscus orientation dependent on the note that follows.  Using `<` will force the ascending oriscus and `>` will force the descending oriscus.  The old behavior may be restored by setting the `oriscus-orientation` gabc header to `legacy`.  See UPGRADE.md for details (for the change request, see [#774](https://github.com/gregorio-project/gregorio/issues/774)).
 
 ### Added
 - Support for two-, three-, and five-line staves.  Set the `staff-lines` header to `2`, `3`, or `5`.  For all values of `staff-lines`, the note below the staff remains 'c'.  The two new notes above the staff (for a five-line staff) are `n` and `p`.  See [#429](https://github.com/gregorio-project/gregorio/issues/429).
@@ -29,6 +31,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `mode-modifier` gabc header for text (styled by the `modemodifier` style) to typeset after the value of `mode` when it is used.  See GregorioRef for details (for the change request, see [#756](https://github.com/gregorio-project/gregorio/issues/756)).
 - Automatic line breaks before a `<eu>` block may be made ragged by using `\gresetbreakbeforeeuouae{ragged}`.  See GregorioRef for details (for the change request, see [#764](https://github.com/gregorio-project/gregorio/issues/764)).
 - Tunable spaces for bars with text underneath: `spacearoundsmallbartext`, `spacearoundminortext`, `spacearoundmaiortext`, `spacearoundfinalistext`, `spacebeforefinalfinalistext`.  These are sized slightly larger than their "non-text" counterparts.  See GregorioRef and [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#766](https://github.com/gregorio-project/gregorio/issues/766)).
+- The ability to typeset simple slurs.  See GregorioRef for details (for the change request, see [#776](https://github.com/gregorio-project/gregorio/issues/776)).
 
 
 ### Deprecated

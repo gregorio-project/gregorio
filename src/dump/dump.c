@@ -169,6 +169,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
     if (score->user_notes) {
         fprintf(f, "   user_notes                %s\n", score->user_notes);
     }
+    if (score->legacy_oriscus_orientation) {
+        fprintf(f, "   oriscus-orientation       legacy\n");
+    }
     for (header = score->external_headers; header; header = header->next) {
         fprintf(f, "   %-25s %s\n", header->name, header->value);
     }

@@ -87,6 +87,7 @@ Here is a detailed description of each header field:
 \item[language] The language of the lyrics.
 \item[initial-style] The style of the initial letter. 0 means no initial letter, 1 a normal one, and 2 a large one, on two lines. Note that if you want to use the initial on two lines, you have to specify at least the two first line breaks.
 \item[user-notes] This may contain any text in addition to the other headers -- any notes the transcriber may wish. However, it is recommended to use the specific header fields where they are suitable, so that it is easier to find particular information.
+\item[oriscus-orientation] If \texttt{legacy}, the orientation of an unconnected oriscus must be set manually.
 \item[mode] The mode of the piece. This should normally be an arabic
   number between 1 and 8, but may be any text required for unusual
   cases. The mode number will be converted to roman numerals and
@@ -200,6 +201,27 @@ When using this feature with fusion, you will not be able to start or end a
 ledger line in the middle of two-note primitive shapes.  To work around this,
 either adjust the parameters of the ledger line or use manual fusion to break
 up those two notes.
+
+\subsection{Simple Slurs}
+
+To specify a simple slur, use
+\texttt{[oslur:}\textit{shift}\texttt{;}\textit{width}\texttt{,}\textit{height}\texttt{]}
+to create an over-the-notes slur with the specified \textit{width} and
+\textit{height}.  If \textit{shift} is \texttt{0}, the slur will start on the
+right side of the note to which it is atteched.  If \textit{shift} is
+\texttt{1}, the slur will start one punctum's width to the left of the right
+side of the note to which it is attached.  If \textit{shift} is \texttt{2},
+the slur will start one-half punctum's width to the left of the right side of
+the note to which it is attached.
+
+Alternately, use
+\texttt{[oslur:}\textit{shift}\texttt{\{]} to specify the start of an
+over-the-notes slur, followed by \texttt{[oslur:}\textit{shift}\texttt{\}]} at
+some point later to specify its end.  When using this form, \textit{shift} has
+the same meaning as before, but applies to both ends of the slur.
+
+Use \texttt{uslur} instead of \texttt{oslur} (with either form) to create an
+under-the-staff slur.
 
 \subsection{Lyric Centering}
 

@@ -222,6 +222,9 @@ semicolon. */
 <INITIAL>user-notes {
         return USER_NOTES;
     }
+<INITIAL>oriscus-orientation {
+        return ORISCUS_ORIENTATION;
+    }
 <INITIAL>x-[A-Za-z0-9_]+(-[A-Za-z0-9_]+)* {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);

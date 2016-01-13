@@ -109,8 +109,8 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
     E(S_VIRGA_REVERSA) \
     E(S_BIVIRGA) \
     E(S_TRIVIRGA) \
-    E(S_ORISCUS) \
-    E(S_ORISCUS_AUCTUS) \
+    E(S_ORISCUS_ASCENDENS) \
+    E(S_ORISCUS_DESCENDENS) \
     E(S_ORISCUS_DEMINUTUS) \
     E(S_ORISCUS_SCAPUS) \
     E(S_QUILISMA) \
@@ -125,13 +125,15 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
     E(S_LINEA_PUNCTUM_CAVUM) \
     E(S_PUNCTUM_CAVUM_INCLINATUM) \
     E(S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS) \
-    E(S_ORISCUS_CAVUM) \
-    E(S_ORISCUS_CAVUM_AUCTUS) \
+    E(S_ORISCUS_CAVUM_ASCENDENS) \
+    E(S_ORISCUS_CAVUM_DESCENDENS) \
     E(S_ORISCUS_CAVUM_DEMINUTUS) \
     /* special shapes that must not appear in the final form of the score : 
      * quadratum is the shape of the first note of a punctum quadratum
      * and quilisma quadratum is the shape of the first note of a pes
      * quislisma quadratum */ \
+    E(S_ORISCUS_UNDETERMINED) \
+    E(S_ORISCUS_CAVUM_UNDETERMINED) \
     E(S_QUADRATUM) \
     /* those shapes are for now used only in gregoriotex */ \
     E(S_QUILISMA_QUADRATUM) \
@@ -716,6 +718,7 @@ typedef struct gregorio_score {
     unsigned char staff_lines;
     signed char highest_pitch;
     signed char high_ledger_line_pitch;
+    bool legacy_oriscus_orientation;
 } gregorio_score;
 
 /*
@@ -810,7 +813,8 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_euouae euouae, const gregorio_scanner_location *loc,
         bool first_word);
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
-void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
+void gregorio_change_shape(gregorio_note *note, gregorio_shape shape,
+        bool legacy_oriscus_orientation);
 void gregorio_position_h_episema_above(gregorio_note *note, signed char height,
         bool connect);
 void gregorio_position_h_episema_below(gregorio_note *note, signed char height,
@@ -821,7 +825,7 @@ void gregorio_add_h_episema(gregorio_note *note, grehepisema_size size,
 void gregorio_add_sign(gregorio_note *note, gregorio_sign sign,
         gregorio_vposition vposition);
 void gregorio_add_tail_liquescentia(gregorio_note *note,
-        gregorio_liquescentia liquescentia);
+        gregorio_liquescentia liquescentia, bool legacy_oriscus_orientation);
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info);
 void gregorio_free_voice_infos(gregorio_voice_info *voice_info);
 void gregorio_free_one_note(gregorio_note **note);
@@ -863,7 +867,7 @@ void gregorio_start_autofuse(gregorio_note **current_note,
         const gregorio_scanner_location *loc);
 void gregorio_end_autofuse(gregorio_note **current_note,
         const gregorio_scanner_location *loc);
-void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str);
+void gregorio_add_texverb_to_note(gregorio_note *current_note, char *str);
 void gregorio_add_cs_to_note(gregorio_note *const*current_note, char *str,
         bool nabc);
 void gregorio_add_misc_element(gregorio_element **current_element,
