@@ -519,6 +519,35 @@
 
 \def\greannotation{\@ifnextchar[{\gre@annotation}{\gre@annotation[c]}}%
 
+%This flag controls whether the annotation control line is the top line (false) or the bottom line (true)
+\newif\ifgre@annotationbottomline%
+\gre@annotationbottomlinefalse%
+
+\def\gresetannotationby#1{%
+  \IfStrEq{#1}{topline}%
+    {\gre@annotationbottomlinefalse}%
+    {\IfStrEq{#1}{bottomline}%
+      {\gre@annotationbottomlinetrue}%
+      {\gre@error{Unrecognized option for \protect\gresetannotationby}}%
+    }%
+}%
+
+% This flag controls whether the top (0), baseline (1), or bottom (2) of the control line is aligned with the top line of the staff before applying annotationraise.
+\newcount\gre@count@annotationvalign%
+\gre@count@annotationvalign=1%
+
+\def\gresetannotationvalign#1{%
+  \IfStrEq{#1}{top}%
+    {\gre@count@annotationvalign=0}%
+    {\IfStrEq{#1}{baseline}%
+      {\gre@count@annotationvalign=1}%
+      {\IfStrEq{#1}{bottom}%
+        {\gre@count@annotationvalign=2}%
+        {\gre@error{Unrecognized option for \protect\gresetannotationvalign}}%
+      }%
+    }%
+}%
+
 \def\gre@annotation[#1]#2{%
   \ifx l#1\relax%
     \let\gre@rightfill\hfil%
@@ -537,17 +566,45 @@
   \ifdim\gre@dimen@temp@three < \wd\gre@box@annotation\relax%
     \gre@dimen@temp@three = \wd\gre@box@annotation\relax%
   \fi%
-  \setbox\gre@box@annotation@old = \hbox to \gre@dimen@temp@three{\gre@leftfill\copy\gre@box@annotation\gre@rightfill}%
-  \setbox\gre@box@annotation@add = \hbox to \gre@dimen@temp@three{\gre@leftfill#2\gre@rightfill}%
   \ifvoid\gre@box@annotation%
     \gre@debugmsg{annotation}{We're on the first line of the annotation.}%
-    % This start point has been fudged manually to get the baseline of the first annotation to align with the top line of the staff.
+    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\gre@leftfill#2\gre@rightfill}%
+    % We set the initial value for annotationtrueraise based on the annotationvalign setting.  We always do this because if there is only one line in the annotation, then the topline is the bottomline.
     \gre@debugmsg{annnotation}{Initial set point.}%
-    \global\gre@dimen@annotationtrueraise= \ht\gre@box@annotation@add%
-    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\vtop{{\offinterlineskip\vss\noindent\box\gre@box@annotation@add}}}%
+    \ifcase\gre@count@annotationvalign\relax%
+    %case 0 = top of first line
+      \global\gre@dimen@annotationtrueraise=-\ht\gre@box@annotation\relax%
+      \gre@debugmsg{annotation}{Aligning to top of first line: \the\gre@dimen@annotationtrueraise}%
+    \or %case 1 = baseline of first line
+      \global\gre@dimen@annotationtrueraise= 0pt\relax%
+      \gre@debugmsg{annotation}{Aligning to baseline of first line: \the\gre@dimen@annotationtrueraise}%
+    \or %case 2 = bottom of first line
+      \global\gre@dimen@annotationtrueraise=\dp\gre@box@annotation\relax%
+      \gre@debugmsg{annotation}{Aligning to bottom of first line: \the\gre@dimen@annotationtrueraise}%
+    \else% Bug
+      \gre@bug{Invalid value for \protect\gre@count@annotationvalign}%
+    \fi%
   \else%
     \gre@debugmsg{annotation}{We're not on the first line of the annotation.}%
-    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\vtop spread \gre@dimen@annotationseparation{{\offinterlineskip\noindent\box\gre@box@annotation@old\vss\noindent\box\gre@box@annotation@add}}}%
+    \setbox\gre@box@annotation@old = \hbox to \gre@dimen@temp@three{\gre@leftfill\box\gre@box@annotation\gre@rightfill}%
+    \setbox\gre@box@annotation@add = \hbox to \gre@dimen@temp@three{\gre@leftfill#2\gre@rightfill}%
+    % if the user has asked for the bottom line to be the controlling line, then we need to change the value of the annotationtrueraise appropriately
+    \ifgre@annotationbottomline%
+      \ifcase\gre@count@annotationvalign\relax%
+        %case 0 = top of first line
+        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@old+\dp\gre@box@annotation@old+\gre@dimen@annotationseparation-\ht\gre@box@annotation@add\relax%
+        \gre@debugmsg{annotation}{Aligning to top of last line: \the\gre@dimen@annotationtrueraise}%
+      \or %case 1 = baseline of first line
+        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@old+\dp\gre@box@annotation@old+\gre@dimen@annotationseparation\relax%
+        \gre@debugmsg{annotation}{Aligning to baseline of last line: \the\gre@dimen@annotationtrueraise}%
+      \or %case 2 = bottom of first line
+        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@old+\dp\gre@box@annotation@old+\gre@dimen@annotationseparation+\dp\gre@box@annotation@add\relax%
+        \gre@debugmsg{annotation}{Aligning to bottom of last line: \the\gre@dimen@annotationtrueraise}%
+      \else% Bug
+        \gre@bug{Invalid value for \protect\gre@count@annotationvalign}%
+      \fi%
+    \fi%
+    \setbox\gre@box@annotation = \vtop spread \gre@dimen@annotationseparation\relax {\offinterlineskip\box\gre@box@annotation@old\vss\box\gre@box@annotation@add}%
   \fi%
 }%
 
@@ -597,9 +654,7 @@
 }%
 
 \def\GreMode#1#2{%
-  \ifhbox \gre@box@annotation%
-    \relax%
-  \else%
+  \ifvoid\gre@box@annotation%
     \ifcase#1%
     \or%
       \gre@writemode{I}{#2}%
@@ -623,9 +678,7 @@
 }%
 
 \def\GreAnnotationLines#1#2{%
-  \ifhbox \gre@box@annotation%
-    \relax%
-  \else%
+  \ifvoid\gre@box@annotation%
     \greannotation{#1}%
     \greannotation{#2}%
   \fi%
@@ -1320,6 +1373,17 @@
 }%
 \greseteolcustosbeforeeuouae{suppressed}%
 
+\newif\ifgre@raggedbreakbeforeeuouae%
+\def\gresetbreakbeforeeuouae#1{%
+  \IfStrEq{#1}{ragged}%
+    {\gre@raggedbreakbeforeeuouaetrue\relax}%
+    {\IfStrEq{#1}{justified}%
+      {\gre@raggedbreakbeforeeuouaefalse\relax}%
+      {\gre@error{Unrecognized option for \protect\greseteolcustosbeforeeuouae}}%
+    }%
+}%
+\gresetbreakbeforeeuouae{justified}%
+
 % macro to suppress the custos
 \def\greblockcustos{%
   \gre@obsolete{\protect\greblockcustos}{\protect\greseteolcustos{manual}}%
@@ -1542,7 +1606,13 @@
 \newif\ifgre@in@euouae
 \gre@in@euouaefalse
 
-\def\GreBeginEUOUAE{%
+\def\GreBeginEUOUAE#1{%
+  \ifgre@raggedbreakbeforeeuouae %
+    \directlua{gregoriotex.save_pos(#1,2)}%
+    \ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
+      \gre@newlinecommon{1}%
+    \fi %
+  \fi %
   \ifgre@euouae@implies@nlba %
     \GreBeginNLBArea{0}{0}%
   \fi %
@@ -1863,6 +1933,12 @@
       {\gre@error{Unrecognized option in \protect\gresethyphen}}%
     }%
 }%
+
+% redefinable macro called before the headers of a given inclusion
+\def\GreBeginHeaders{}
+
+% redefinable macro called after the headers of a given inclusion
+\def\GreEndHeaders{}
 
 % We load the default space configuration.
 \greloadspaceconf{default}%

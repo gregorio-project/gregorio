@@ -38,6 +38,12 @@ Macro to start a score.
 \macroname{\textbackslash GreEndScore}{}{gregoriotex-main.tex}
 Macro to end a score.
 
+\macroname{\textbackslash GreBeginHeaders}{}{gregoriotex-main.tex}
+Macro called at the beginning of a set of gabc headers.  This macro should be redefined as necessary should something to be done at the beginning of the headers.
+
+\macroname{\textbackslash GreEndHeaders}{}{gregoriotex-main.tex}
+Macro called at the end of a set of gabc headers.  This macro should be redefined as necessary should something need to be done at the end of the headers.
+
 \macroname{\textbackslash GreAccentus}{\#1\#2}{gregoriotex-signs.tex}
 Macro for typesetting an accentus.
 
@@ -104,8 +110,12 @@ Macro to typeset a vertical episema on a bar.
   \#1 & string & Type of glyph the episema is attached to.  See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
-\macroname{\textbackslash GreBeginEUOUAE}{}{gregoriotex-main.tex}
+\macroname{\textbackslash GreBeginEUOUAE}{\#1}{gregoriotex-main.tex}
 Macro to mark the beginning of a EUOUAE block.  Alters spacings and prohibits a line break until the end of the block.
+
+\begin{argtable}
+  \#1 & integer & The identifier of the EUOUAE block.\\
+\end{argtable}
 
 \macroname{\textbackslash GreBeginNLBArea}{\#1\#2}{gregoriotex-main.tex}
 Macro called at beginning of a no line break area.
@@ -180,40 +190,50 @@ A Gregorio\TeX-specific discretionary. Currently only used to avoid clef change 
   \#3 & \TeX\ code & Third argument of resulting \verb=\discretionary=.\\
 \end{argtable}
 
-\macroname{\textbackslash GreDivisioFinalis}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreDivisioFinalis}{\#1\#2}{gregoriotex-signs.tex}
 Macro to typeset a divisio finalis.
 
 \begin{argtable}
-  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio finalis (typically \verb=\grevepisema=).\\
+  \#1 & \texttt{0} & There is no text under the bar.\\
+  & \texttt{1} & There is text under the bar.\\
+  \#2 & \TeX\ code & Macros which may happen before the skip but after the divisio finalis (typically \verb=\grevepisema=).\\
 \end{argtable}
 
-\macroname{\textbackslash GreDivisioMaior}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreDivisioMaior}{\#1\#2}{gregoriotex-signs.tex}
 Macro to typeset a divisio maior.
 
 \begin{argtable}
-  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio maior (typically \verb=\grevepisema=).\\
+  \#1 & \texttt{0} & There is no text under the bar.\\
+  & \texttt{1} & There is text under the bar.\\
+  \#2 & \TeX\ code & Macros which may happen before the skip but after the divisio maior (typically \verb=\grevepisema=).\\
 \end{argtable}
 
-\macroname{\textbackslash GreDivisioMinima}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreDivisioMinima}{\#1\#2}{gregoriotex-signs.tex}
 Macro to typeset a divisio minima.
 
 \begin{argtable}
-  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio minima (typically \verb=\grevepisema=).\\
+  \#1 & \texttt{0} & There is no text under the bar.\\
+  & \texttt{1} & There is text under the bar.\\
+  \#2 & \TeX\ code & Macros which may happen before the skip but after the divisio minima (typically \verb=\grevepisema=).\\
 \end{argtable}
 
-\macroname{\textbackslash GreDivisioMinor}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreDivisioMinor}{\#1\#2}{gregoriotex-signs.tex}
 Macro to typeset a divisio minor.
 
 \begin{argtable}
-  \#1 & \TeX\ code & Macros which may happen before the skip but after the divisio minor (typically \verb=\grevepisema=).\\
+  \#1 & \texttt{0} & There is no text under the bar.\\
+  & \texttt{1} & There is text under the bar.\\
+  \#2 & \TeX\ code & Macros which may happen before the skip but after the divisio minor (typically \verb=\grevepisema=).\\
 \end{argtable}
 
-\macroname{\textbackslash GreDominica}{\#1\#2}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreDominica}{\#1\#2\#3}{gregoriotex-signs.tex}
 Macro to typeset a dominican bar.
 
 \begin{argtable}
-  \#1 & \texttt{1}--\texttt{6} & Type of dominican bar.  Corresponds to bar types 6--11 in \verb=\grewritebar=.\\
-  \#2 & \TeX\ code    & Macros which may happen before the skip but after the divisio dominica (typically \verb=\grevepisema=).\\
+  \#1 & \texttt{1}--\texttt{6} & Type of dominican bar.  Corresponds to bar types 6--13 in \verb=\grewritebar=.\\
+  \#2 & \texttt{0} & There is no text under the bar.\\
+  & \texttt{1} & There is text under the bar.\\
+  \#3 & \TeX\ code    & Macros which may happen before the skip but after the divisio dominica (typically \verb=\grevepisema=).\\
 \end{argtable}
 
 \macroname{\textbackslash GreDrawAdditionalLine}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
@@ -479,19 +499,19 @@ Macro for typesetting high choral signs.
 \macroname{\textbackslash GreHyph}{}{gregoriotex-main.tex}
 Macro used for end of line hyphens.  Defaults to \verb=\gre@char@normalhyph=.
 
-\macroname{\textbackslash GreInDivisioFinalis}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreInDivisioFinalis}{\#1\#2}{gregoriotex-signs.tex}
 Same as \verb=\GreDivisioFinalis= except inside a syllable.
 
-\macroname{\textbackslash GreInDivisioMaior}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreInDivisioMaior}{\#1\#2}{gregoriotex-signs.tex}
 Same as \verb=\GreDivisioMaior= except inside a syllable.
 
-\macroname{\textbackslash GreInDivisioMinima}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreInDivisioMinima}{\#1\#2}{gregoriotex-signs.tex}
 Same as \verb=\GreDivisioMinima= except inside a syllable.
 
-\macroname{\textbackslash GreInDivisioMinor}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreInDivisioMinor}{\#1\#2}{gregoriotex-signs.tex}
 Same as \verb=\GreDivisioMinor= except inside a syllable.
 
-\macroname{\textbackslash GreInDominica}{\#1\#2}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreInDominica}{\#1\#2\#3}{gregoriotex-signs.tex}
 Same as \verb=\GreDominica= except inside a syllable.
 
 \macroname{\textbackslash GreInVirgula}{\#1\#2}{gregoriotex-signs.tex}
@@ -578,8 +598,12 @@ where this macro is called.
   \#1 & integer & Height number of the custos.\\
 \end{argtable}
 
-\macroname{\textbackslash GreNextSyllableBeginsEUOUAE}{}{gregoriotex-syllable.tex}
+\macroname{\textbackslash GreNextSyllableBeginsEUOUAE}{\#1}{gregoriotex-syllable.tex}
 Indicates that the syllable which follows begins a EUOUAE block.
+
+\begin{argtable}
+  \#1 & integer & The identifier of the EUOUAE block.\\
+\end{argtable}
 
 \macroname{\textbackslash GreOriscusCavum}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
 Macro to typeset an oriscus cavum (the oriscus points at a higher note).
@@ -847,6 +871,21 @@ in gabc.
   \#1 & string & Text to be typeset in small caps font.\\
 \end{argtable}
 
+\macroname{\textbackslash GreSlur}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+Typesets a slur.
+
+\begin{argtable}
+  \#1 & integer & Height number of the pitch.\\
+  \#2 & \texttt{-1} & The slur should appear under the note.\\
+      & \texttt{1} & The slur should appear over the note.\\
+  \#3 & \texttt{0} & The slur should start at the right end of the note.\\
+      & \texttt{1} & The slur should start at one punctum's width to the left of the right end of the note.\\
+      & \texttt{2} & The slur should start at one-half punctum's width to the left of the right end of the note.\\
+  \#4 & string & The horizontal dimension of the slur.\\
+  \#5 & string & The vertical dimension of the slur.\\
+  \#6 & integer & Height number of the pitch.\\
+\end{argtable}
+
 \macroname{\textbackslash GreStar}{}{gregoriotex-symbol.tex}
 Macro to typeset an asterisk (\GreStar).
 
@@ -926,6 +965,7 @@ Records positions to compute the lengths of variable-sized braces and ledger lin
   \#1 & string & unique identifier for the brace within the score.\\
   \#2 & \texttt{0} & Don't shift before recording the position.\\
   & \texttt{1} & Shift back a punctum's width before recording the position.\\
+  & \texttt{2} & Shift back one-half a punctum's width before recording the position.\\
   \#3 & \texttt{1} & Position to save is the start of brace.\\
   & \texttt{2} & Position to save is the end of brace.
 \end{argtable}
@@ -938,11 +978,13 @@ Macro for typesetting the vertical episema.
   \#2 & string  & Type of glyph the episema is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
-\macroname{\textbackslash GreVirgula}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreVirgula}{\#1\#2}{gregoriotex-signs.tex}
 Macro to typeset a virgula.
 
 \begin{argtable}
-  \#1 & code & Macros which may happen before the skip but after the virgula (typically \verb=\grevepisema=).\\
+  \#1 & \texttt{0} & There is no text under the bar.\\
+  & \texttt{1} & There is text under the bar.\\
+  \#2 & code & Macros which may happen before the skip but after the virgula (typically \verb=\grevepisema=).\\
 \end{argtable}
 
 \macroname{\textbackslash GreWriteTranslation}{\#1}{gregoriotex-main.tex}

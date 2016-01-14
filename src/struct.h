@@ -109,8 +109,8 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
     E(S_VIRGA_REVERSA) \
     E(S_BIVIRGA) \
     E(S_TRIVIRGA) \
-    E(S_ORISCUS) \
-    E(S_ORISCUS_AUCTUS) \
+    E(S_ORISCUS_ASCENDENS) \
+    E(S_ORISCUS_DESCENDENS) \
     E(S_ORISCUS_DEMINUTUS) \
     E(S_ORISCUS_SCAPUS) \
     E(S_QUILISMA) \
@@ -125,13 +125,15 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
     E(S_LINEA_PUNCTUM_CAVUM) \
     E(S_PUNCTUM_CAVUM_INCLINATUM) \
     E(S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS) \
-    E(S_ORISCUS_CAVUM) \
-    E(S_ORISCUS_CAVUM_AUCTUS) \
+    E(S_ORISCUS_CAVUM_ASCENDENS) \
+    E(S_ORISCUS_CAVUM_DESCENDENS) \
     E(S_ORISCUS_CAVUM_DEMINUTUS) \
     /* special shapes that must not appear in the final form of the score : 
      * quadratum is the shape of the first note of a punctum quadratum
      * and quilisma quadratum is the shape of the first note of a pes
      * quislisma quadratum */ \
+    E(S_ORISCUS_UNDETERMINED) \
+    E(S_ORISCUS_CAVUM_UNDETERMINED) \
     E(S_QUADRATUM) \
     /* those shapes are for now used only in gregoriotex */ \
     E(S_QUILISMA_QUADRATUM) \
@@ -360,13 +362,6 @@ ENUM(gregorio_euouae, GREGORIO_EUOUAE);
     E(WORD_END) \
     L(WORD_ONE_SYLLABLE)
 ENUM(gregorio_word_position, GREGORIO_WORD_POSITION);
-
-/* the centering schemes for gabc: */
-#define GREGORIO_LYRIC_CENTERING(A,E,X,L) \
-    A(SCHEME_DEFAULT, 0) \
-    E(SCHEME_VOWEL) \
-    L(SCHEME_SYLLABLE)
-ENUM(gregorio_lyric_centering, GREGORIO_LYRIC_CENTERING);
 
 typedef struct gregorio_extra_info {
     char *ad_hoc_space_factor;
@@ -627,10 +622,11 @@ typedef struct gregorio_syllable {
      * case of polyphonic score. In most scores (monophonic), the array
      * has only one element. */
     struct gregorio_element **elements;
+    unsigned short euouae_id;
     unsigned short src_line, src_column, src_offset;
     /* a syllable can be a GRE_SYLLABLE, a GRE_*_KEY_CHANGE or a
      * GRE_BAR. It is useful when there is only that in a syllable. */
-    char type;
+    ENUM_BITFIELD(gregorio_type) type:8;
     /* again, an additional field to put some signs or other things... */
     ENUM_BITFIELD(gregorio_sign) special_sign:8;
     /* type of translation (with center beginning or only center end) */
@@ -646,31 +642,12 @@ typedef struct gregorio_syllable {
     bool first_word:1;
 } gregorio_syllable;
 
-/* The items in source_info used to be -- well, most of them -- in
- * gregorio_voice_info.  This is because the different `voices' may
- * in future be used for different variants of a melody:
- * e.g. notated in square notation, notated in some early neumatic
- * form from manuscript A, and another in manuscript B.  In that
- * case the different voices would naturally have different source
- * info.  However, this enhancement to gregorio is not yet planned,
- * and so this structure is made part of gregorio_score. */
-typedef struct gregorio_source_info {
-    char *author;
-    char *date;
-    char *manuscript;
-    char *manuscript_reference; /* was reference */
-    char *manuscript_storage_place; /* was storage_place */
-    char *book;
-    char *transcriber;
-    char *transcription_date;
-} gregorio_source_info;
-
-/* Stores an external header in a singly-linked list */
-typedef struct gregorio_external_header {
+/* Stores a header in a singly-linked list */
+typedef struct gregorio_header {
     char *name;
     char *value;
-    struct gregorio_external_header *next;
-} gregorio_external_header;
+    struct gregorio_header *next;
+} gregorio_header;
 
 /*
  * 
@@ -694,15 +671,10 @@ typedef struct gregorio_score {
     char *name;
     char *gabc_copyright;
     char *score_copyright;
-    char *office_part;
-    char *occasion;
-    /* the meter, numbers of syllables per line, as e.g. 8.8.8.8 */
-    char *meter;
-    char *commentary;
-    char *arranger;
     char *language;
     char *mode_modifier;
-    struct gregorio_source_info si;
+    char *author;
+    char *manuscript_reference;
     /* the mode of a song is between 1 and 8 */
     char mode;
     /* There is one annotation for each line above the initial letter */
@@ -710,8 +682,6 @@ typedef struct gregorio_score {
     /* field giving informations on the initial (no initial, normal initial 
      * or two lines initial) */
     signed char initial_style; /* DEPRECATED */
-    /* the font to use in gregoriotex */
-    char *gregoriotex_font;
     size_t nabc_lines;
     char *user_notes;
     /* the determination method (maximal ambitus, etc.) */
@@ -719,12 +689,12 @@ typedef struct gregorio_score {
     /* then, as there are some metadata that are voice-specific, we add a
      * pointer to the first voice_info. (see comments below) */
     struct gregorio_voice_info *first_voice_info;
-    struct gregorio_external_header *external_headers;
-    struct gregorio_external_header *last_external_header;
-    gregorio_lyric_centering centering;
+    struct gregorio_header *headers;
+    struct gregorio_header *last_header;
     unsigned char staff_lines;
     signed char highest_pitch;
     signed char high_ledger_line_pitch;
+    bool legacy_oriscus_orientation;
 } gregorio_score;
 
 /*
@@ -739,9 +709,6 @@ typedef struct gregorio_score {
 
 typedef struct gregorio_voice_info {
     gregorio_clef_info initial_clef;
-    /* See source_info above for comments about the move of author etc. */
-    char *style;
-    char *virgula_position;
     struct gregorio_voice_info *next_voice_info;
 } gregorio_voice_info;
 
@@ -819,7 +786,8 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_euouae euouae, const gregorio_scanner_location *loc,
         bool first_word);
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
-void gregorio_change_shape(gregorio_note *note, gregorio_shape shape);
+void gregorio_change_shape(gregorio_note *note, gregorio_shape shape,
+        bool legacy_oriscus_orientation);
 void gregorio_position_h_episema_above(gregorio_note *note, signed char height,
         bool connect);
 void gregorio_position_h_episema_below(gregorio_note *note, signed char height,
@@ -830,7 +798,7 @@ void gregorio_add_h_episema(gregorio_note *note, grehepisema_size size,
 void gregorio_add_sign(gregorio_note *note, gregorio_sign sign,
         gregorio_vposition vposition);
 void gregorio_add_tail_liquescentia(gregorio_note *note,
-        gregorio_liquescentia liquescentia);
+        gregorio_liquescentia liquescentia, bool legacy_oriscus_orientation);
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info);
 void gregorio_free_voice_infos(gregorio_voice_info *voice_info);
 void gregorio_free_one_note(gregorio_note **note);
@@ -872,7 +840,7 @@ void gregorio_start_autofuse(gregorio_note **current_note,
         const gregorio_scanner_location *loc);
 void gregorio_end_autofuse(gregorio_note **current_note,
         const gregorio_scanner_location *loc);
-void gregorio_add_texverb_to_note(gregorio_note **current_note, char *str);
+void gregorio_add_texverb_to_note(gregorio_note *current_note, char *str);
 void gregorio_add_cs_to_note(gregorio_note *const*current_note, char *str,
         bool nabc);
 void gregorio_add_misc_element(gregorio_element **current_element,
@@ -884,35 +852,17 @@ void gregorio_set_score_name(gregorio_score *score, char *name);
 void gregorio_set_score_gabc_copyright(gregorio_score *score, char *gabc_copyright);
 void gregorio_set_score_score_copyright(gregorio_score *score,
         char *score_copyright);
-void gregorio_set_score_office_part(gregorio_score *score, char *office_part);
-void gregorio_set_score_occasion(gregorio_score *score, char *occasion);
-void gregorio_set_score_meter(gregorio_score *score, char *meter);
-void gregorio_set_score_commentary(gregorio_score *score, char *commentary);
-void gregorio_set_score_arranger(gregorio_score *score, char *arranger);
 void gregorio_set_score_language(gregorio_score *score, char *language);
 void gregorio_set_score_mode_modifier(gregorio_score *score, char *mode_modifier);
-void gregorio_set_score_gabc_version(gregorio_score *score, char *gabc_version);
 void gregorio_set_score_number_of_voices(gregorio_score *score,
         int number_of_voices);
 void gregorio_set_score_annotation(gregorio_score *score, char *annotation);
 void gregorio_set_score_author(gregorio_score *score, char *author);
-void gregorio_set_score_date(gregorio_score *score, char *date);
-void gregorio_set_score_manuscript(gregorio_score *score, char *manuscript);
-void gregorio_set_score_book(gregorio_score *score, char *book);
 void gregorio_set_score_manuscript_reference(gregorio_score *score,
         char *reference);
-void gregorio_set_score_manuscript_storage_place(gregorio_score *score,
-        char *storage_place);
-void gregorio_set_score_transcriber(gregorio_score *score, char *transcriber);
-void gregorio_set_score_transcription_date(gregorio_score *score,
-        char *transcription_date);
-void gregorio_set_score_user_notes(gregorio_score *score, char *user_notes);
 void gregorio_set_score_staff_lines(gregorio_score *score, char staff_lines);
-void gregorio_add_score_external_header(gregorio_score *score, char *name,
+void gregorio_add_score_header(gregorio_score *score, char *name,
         char *value);
-void gregorio_set_voice_style(gregorio_voice_info *voice_info, char *style);
-void gregorio_set_voice_virgula_position(gregorio_voice_info *voice_info,
-        char *virgula_position);
 void gregorio_fix_initial_keys(gregorio_score *score,
         gregorio_clef_info default_clef);
 void gregorio_go_to_first_note(gregorio_note **note);

@@ -142,6 +142,7 @@ local GABC = {
   SharpHole = [[\excluded{g\#{}}]],
   Stropha = [[gs]],
   StrophaAucta = [[gs>]],
+  StrophaAuctaLongtail = [[hs>]],
   Torculus = [[gig]],
   TorculusLiquescens = [[gige]],
   TorculusLiquescensQuilisma = [[gwige]],

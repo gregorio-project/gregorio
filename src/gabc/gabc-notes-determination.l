@@ -50,6 +50,10 @@ static char *before_ledger_length = NULL;
 static int ledger_var[2] = { 0, 0 };
 static unsigned char staff_lines;
 static signed char highest_pitch;
+static bool legacy_oriscus_orientation;
+static int slur_var[2] = { 0, 0 };
+static char slur_shift[2] = { '\0', '\0' };
+static gregorio_note *slur_start[] = { NULL, NULL };
 
 typedef enum ledger_line_type {
     LL_OVER = 0,
@@ -329,6 +333,110 @@ static __inline gregorio_clef letter_to_clef(char letter)
     return CLEF_C;
 }
 
+static __inline void slur_assert(char *fn, bool test) {
+    if (!test) {
+        gregorio_message(_("invalid slur text"), fn, VERBOSITY_FATAL, 0);
+    }
+}
+
+static char *parse_slur_shift(char *shift)
+{
+    char *c;
+
+    c = strchr(gabc_notes_determination_text, ':');
+    slur_assert("parse_slur_shift", c != NULL);
+    slur_assert("parse_slur_shift", *(++c) != '\0');
+    *shift = *c;
+    return c;
+}
+
+static void parse_slur(int direction)
+{
+    char shift, *width, *height, *end;
+
+    if (!current_note || current_note->type != GRE_NOTE) {
+        gregorio_message(
+                _("cannot add a slur to something that is not a note"),
+                "parse_slur", VERBOSITY_ERROR, 0);
+        return;
+    }
+
+    end = parse_slur_shift(&shift);
+    width = strchr(end, ';');
+    slur_assert("parse_slur", width != NULL);
+    height = strchr(++width, ',');
+    slur_assert("parse_slur", height != NULL);
+    *height = '\0';
+    end = strchr(++height, ']');
+    slur_assert("parse_slur", end != NULL);
+    *end = '\0';
+
+    gregorio_snprintf(tempstr, sizeof tempstr,
+            "\\GreSlur{%d}{%d}{%c}{%s}{%s}{}",
+            current_note->u.note.pitch + direction, direction, shift, width,
+            height);
+    gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
+}
+
+static void start_var_slur(int index)
+{
+    if (!current_note || current_note->type != GRE_NOTE) {
+        gregorio_message(
+                _("cannot add a slur to something that is not a note"),
+                "start_var_slur", VERBOSITY_ERROR, 0);
+        return;
+    }
+
+    if (slur_var[index]) {
+        gregorio_message(
+                _("variable slur without termination of previous slur"),
+                "start_var_slur", VERBOSITY_ERROR, 0);
+        return;
+    }
+
+    slur_var[index] = ++brace_var_counter;
+    parse_slur_shift(slur_shift + index);
+    slur_start[index] = current_note;
+}
+
+static void end_var_slur(int direction, int index)
+{
+    char shift;
+
+    if (!current_note || current_note->type != GRE_NOTE) {
+        gregorio_message(
+                _("cannot add a slur to something that is not a note"),
+                "end_var_slur", VERBOSITY_ERROR, 0);
+        return;
+    }
+
+    if (!slur_var[index] || !slur_shift[index] || !slur_start[index]) {
+        gregorio_message(_("variable slur end without variable slur start"),
+                "end_var_slur", VERBOSITY_ERROR, 0);
+        return;
+    }
+
+    parse_slur_shift(&shift);
+
+    gregorio_snprintf(tempstr, sizeof tempstr,
+            "\\GreVarBraceSavePos{%d}{%c}{1}"
+            "\\GreSlur{%d}{%d}{%c}{\\GreVarBraceLength{%d}}{}{%d}",
+            slur_var[index], slur_shift[index],
+            slur_start[index]->u.note.pitch + direction, direction,
+            slur_shift[index], slur_var[index],
+            current_note->u.note.pitch + direction);
+    gregorio_add_texverb_to_note(slur_start[index], gregorio_strdup(tempstr));
+
+    gregorio_snprintf(tempstr, sizeof tempstr,
+            "\\GreVarBraceSavePos{%d}{%c}{2}", slur_var[index], shift);
+    gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
+
+
+    slur_var[index] = 0;
+    slur_shift[index] = '\0';
+    slur_start[index] = NULL;
+}
+
 %}
 
 %option stack
@@ -408,7 +516,7 @@ static __inline gregorio_clef letter_to_clef(char letter)
                     "\\GreVarBraceSavePos{%d}{%d}{1}"
                     "\\GreOverBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}",
                     overbrace_var, char_for_brace, overbrace_var, char_for_brace);
-            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
+            gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ub:[01]\{\] {
@@ -423,7 +531,7 @@ static __inline gregorio_clef letter_to_clef(char letter)
                     "\\GreVarBraceSavePos{%d}{%d}{1}"
                     "\\GreUnderBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}",
                     underbrace_var, char_for_brace, underbrace_var, char_for_brace);
-            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
+            gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ocb:[01]\{\] {
@@ -439,7 +547,7 @@ static __inline gregorio_clef letter_to_clef(char letter)
                     "\\GreVarBraceSavePos{%d}{%d}{1}"
                     "\\GreOverCurlyBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}{0}",
                     overbrace_var, char_for_brace, overbrace_var, char_for_brace);
-            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
+            gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ocba:[01]\{\] {
@@ -455,7 +563,7 @@ static __inline gregorio_clef letter_to_clef(char letter)
                     "\\GreVarBraceSavePos{%d}{%d}{1}"
                     "\\GreOverCurlyBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}{1}",
                     overbrace_var, char_for_brace, overbrace_var, char_for_brace);
-            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
+            gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ob:[01]\}\] {
@@ -474,7 +582,7 @@ static __inline gregorio_clef letter_to_clef(char letter)
                     "\\GreVarBraceSavePos{%d}{%d}{2}", overbrace_var,
                     char_for_brace);
             overbrace_var = 0;
-            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
+            gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ub:[01]\}\] {
@@ -488,7 +596,7 @@ static __inline gregorio_clef letter_to_clef(char letter)
                     "\\GreVarBraceSavePos{%d}{%d}{2}", underbrace_var,
                     char_for_brace);
             underbrace_var = 0;
-            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
+            gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ocb:[01]\}\] {
@@ -507,7 +615,7 @@ static __inline gregorio_clef letter_to_clef(char letter)
                     "\\GreVarBraceSavePos{%d}{%d}{2}", overbrace_var,
                     char_for_brace);
             overbrace_var = 0;
-            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
+            gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[ocba:[01]\}\] {
@@ -526,12 +634,12 @@ static __inline gregorio_clef letter_to_clef(char letter)
                     "\\GreVarBraceSavePos{%d}{%d}{2}", overbrace_var,
                     char_for_brace);
             overbrace_var = 0;
-            gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
+            gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
         }
     }
 <INITIAL>\[nm[1-9]\] {
         if (notesmacros[gabc_notes_determination_text[3]-'0']) {
-            gregorio_add_texverb_to_note(&current_note,
+            gregorio_add_texverb_to_note(current_note,
             gregorio_strdup(notesmacros[gabc_notes_determination_text[3]-'0']));
         } else error();
     }
@@ -584,25 +692,25 @@ static __inline gregorio_clef letter_to_clef(char letter)
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverBrace{%s}{0pt}{0pt}{%d}",
                 gabc_notes_determination_text, char_for_brace);
-        gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
+        gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
     }
 <underbrace>[^\]]+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreUnderBrace{%s}{0pt}{0pt}{%d}",
                 gabc_notes_determination_text, char_for_brace);
-        gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
+        gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
     }
 <overcurlybrace>[^\]]+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverCurlyBrace{%s}{0pt}{0pt}{%d}{0}",
                 gabc_notes_determination_text, char_for_brace);
-        gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
+        gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
     }
 <overcurlyaccentusbrace>[^\]]+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverCurlyBrace{%s}{0pt}{0pt}{%d}{1}",
                 gabc_notes_determination_text, char_for_brace);
-        gregorio_add_texverb_to_note(&current_note, gregorio_strdup(tempstr));
+        gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
     }
 <choralsign>[^\]]+ {
         gregorio_add_cs_to_note(&current_note,
@@ -613,7 +721,7 @@ static __inline gregorio_clef letter_to_clef(char letter)
                 gregorio_strdup(gabc_notes_determination_text), true);
     }
 <texverbnote>[^\]]+ {
-        gregorio_add_texverb_to_note(&current_note,
+        gregorio_add_texverb_to_note(current_note,
                 gregorio_strdup(gabc_notes_determination_text));
     }
 <texverbglyph>[^\]]+ {
@@ -684,6 +792,24 @@ static __inline gregorio_clef letter_to_clef(char letter)
 <texverbnote,texverbglyph,texverbelement,choralsign,choralnabc,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,underbrace,space,nbspace,endledger>\] {
         BEGIN(INITIAL);
     }
+<INITIAL>\[oslur:[012];[^,]+,[^\]]+\] {
+        parse_slur(1);
+    }
+<INITIAL>\[oslur:[012]\{\] {
+        start_var_slur(0);
+    }
+<INITIAL>\[oslur:[012]\}\] {
+        end_var_slur(1, 0);
+    }
+<INITIAL>\[uslur:[012];[^,]+,[^\]]+\] {
+        parse_slur(-1);
+    }
+<INITIAL>\[uslur:[012]\{\] {
+        start_var_slur(1);
+    }
+<INITIAL>\[uslur:[012]\}\] {
+        end_var_slur(-1, 1);
+    }
 \{  {
         gregorio_add_texverb_as_note(&current_note,
                 gregorio_strdup("\\hbox to 0pt{"), GRE_TEXVERB_ELEMENT,
@@ -752,13 +878,16 @@ Z   {
         add_bar_as_note(B_DIVISIO_FINALIS);
     }
 r   {
-        gregorio_change_shape(current_note, S_PUNCTUM_CAVUM);
+        gregorio_change_shape(current_note, S_PUNCTUM_CAVUM,
+                legacy_oriscus_orientation);
     }
 R   {
-        gregorio_change_shape(current_note, S_LINEA_PUNCTUM);
+        gregorio_change_shape(current_note, S_LINEA_PUNCTUM,
+                legacy_oriscus_orientation);
     }
 r0  {
-        gregorio_change_shape(current_note, S_LINEA_PUNCTUM_CAVUM);
+        gregorio_change_shape(current_note, S_LINEA_PUNCTUM_CAVUM,
+                legacy_oriscus_orientation);
     }
 r1  {
         gregorio_add_special_sign(current_note, _ACCENTUS);
@@ -825,7 +954,8 @@ r5  {
                 &notes_lloc);
     }
 =   {
-        gregorio_change_shape(current_note, S_LINEA);
+        gregorio_change_shape(current_note, S_LINEA,
+                legacy_oriscus_orientation);
     }
 [a-npA-NP]vv {
         lex_add_note(0, S_BIVIRGA, _NO_SIGN, L_NO_LIQUESCENTIA);
@@ -873,37 +1003,49 @@ _[0-5]* {
         add_sign(_PUNCTUM_MORA);
     }
 ~   {
-        gregorio_add_tail_liquescentia(current_note, L_DEMINUTUS);
+        gregorio_add_tail_liquescentia(current_note, L_DEMINUTUS,
+                legacy_oriscus_orientation);
     }
 >   {
-        gregorio_add_tail_liquescentia(current_note, L_AUCTUS_DESCENDENS);
+        gregorio_add_tail_liquescentia(current_note, L_AUCTUS_DESCENDENS,
+                legacy_oriscus_orientation);
     }
 \<  {
-        gregorio_add_tail_liquescentia(current_note, L_AUCTUS_ASCENDENS);
+        gregorio_add_tail_liquescentia(current_note, L_AUCTUS_ASCENDENS,
+                legacy_oriscus_orientation);
     }
 q   {
-        gregorio_change_shape(current_note, S_QUADRATUM);
+        gregorio_change_shape(current_note, S_QUADRATUM,
+                legacy_oriscus_orientation);
     }
 o   {
-        gregorio_change_shape(current_note, S_ORISCUS);
+        gregorio_change_shape(current_note, legacy_oriscus_orientation
+                ? S_ORISCUS_ASCENDENS : S_ORISCUS_UNDETERMINED,
+                legacy_oriscus_orientation);
     }
 O   {
-        gregorio_change_shape(current_note, S_ORISCUS_SCAPUS);
+        gregorio_change_shape(current_note, S_ORISCUS_SCAPUS,
+                legacy_oriscus_orientation);
     }
 w   {
-        gregorio_change_shape(current_note, S_QUILISMA);
+        gregorio_change_shape(current_note, S_QUILISMA,
+                legacy_oriscus_orientation);
     }
 W   {
-        gregorio_change_shape(current_note, S_QUILISMA_QUADRATUM);
+        gregorio_change_shape(current_note, S_QUILISMA_QUADRATUM,
+                legacy_oriscus_orientation);
     }
 v   {
-        gregorio_change_shape(current_note, S_VIRGA);
+        gregorio_change_shape(current_note, S_VIRGA,
+                legacy_oriscus_orientation);
     }
 V   {
-        gregorio_change_shape(current_note, S_VIRGA_REVERSA);
+        gregorio_change_shape(current_note, S_VIRGA_REVERSA,
+                legacy_oriscus_orientation);
     }
 s   {
-        gregorio_change_shape(current_note, S_STROPHA);
+        gregorio_change_shape(current_note, S_STROPHA,
+                legacy_oriscus_orientation);
     }
 \[hl:1\] {
         current_note->supposed_high_ledger_line = true;
@@ -945,6 +1087,7 @@ gregorio_note *gabc_det_notes_from_string(char *str, char *newmacros[10],
 
     staff_lines = score->staff_lines;
     highest_pitch = score->highest_pitch;
+    legacy_oriscus_orientation = score->legacy_oriscus_orientation;
 
     /* a small optimization could uccur here: we could do it only once at the
      * beginning of the score, not at each syllable */

@@ -130,7 +130,10 @@ Calculates the raise values for a glyph (glyphraisevalue and addedraisevalue) ba
   & \texttt{10} & case of the low choral sign\\
   & \texttt{11} & case of the high choral sign\\
   & \texttt{12} & case of the low choral sign which is lower than the note\\
-  & \texttt{13} & case of the brace above the bars
+  & \texttt{13} & case of the brace above the bars\\
+  & \texttt{14} & case of the punctum mora in a space with a note on the line below it\\
+  & \texttt{15} & case of the over-the-notes slur\\
+  & \texttt{16} & case of the under-the-notes slur\\
 \end{argtable}
 
 \macroname{\textbackslash gre@stafflinefactor}{}{gregoriotex-spaces.tex}
@@ -313,7 +316,7 @@ Draws a round under-brace using \MP{}.
   \#1 & length & the width of the brace.
 \end{argtable}
 
-\macroname{\textbackslash gre@draw@roundbrace}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@draw@roundbrace}{\#1\#2\#3}{gregoriotex-signs.tex}
 Draws a round over- or under-brace using \MP{}.
 
 \begin{argtable}
@@ -321,6 +324,17 @@ Draws a round over- or under-brace using \MP{}.
   \#2 & number         & the height of the bounding box in em-relative units.\\
   \#3 & \MP{} commands & \MP{} commands to draw the brace outline.
 \end{argtable}
+
+\macroname{\textbackslash gre@draw@slur}{\#1\#2\#3}{gregoriotex-signs.tex}
+Draws a slur using \MP{}.
+
+\begin{argtable}
+  \#1 & length      & the x-dimension of the slur.\\
+  \#2 & length      & the y-dimension of the slur.\\
+  \#3 & \texttt{-1} & draw an under-the-notes slur.\\
+      & \texttt{1}  & draw an over-the-notes slur.\\
+\end{argtable}
+
 
 \macroname{\textbackslash gre@iflatex}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Evaluates to \verb=#1= if running under \LaTeX{}.
@@ -710,7 +724,7 @@ Macro which specifies the alternate glyphs which are common to all of the styles
 \macroname{\textbackslash gre@widthof}{\#1}{gregoriotex-main.tex}
 Macro for calculating the width of its argument and storing it in \verb=\gre@dimen@temp@three=.
 
-\macroname{\textbackslash gre@writebar}{\#1\#2\#3}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@writebar}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
 Macro to write a bar.
 
 \begin{argtable}
@@ -722,7 +736,9 @@ Macro to write a bar.
   & \texttt{5} & the last finalis\\
   \#2 & \texttt{0} & in a syllable containing only this bar\\
   & \texttt{1} & in a syllable containing other notes\\
-  \#3 & \TeX\ code & macros that may happen before the skip after the bar (typically GreVEpisema)\\
+  \#3 & \texttt{0} & if there is no text underneath the bar\\
+  & \texttt{1} & if there is text underneath the bar\\
+  \#4 & \TeX\ code & macros that may happen before the skip after the bar (typically GreVEpisema)\\
 \end{argtable}
 
 \macroname{\textbackslash gre@@arg}{}{gregoriotex-syllable.tex}
@@ -1211,6 +1227,12 @@ All distances in \nameref{distances} and \texttt{stafflinefactor} have a boolean
 indicates if the distance should scale when the staff size changes (true)
 or not (false).
 
+\macroname{\textbackslash ifgre@annotationbottomline}{}{gregoriotex-main.tex}
+Boolean used to indicate if the bottom line of the annotation should be used as the control line for its initial vertical alignment.
+
+\macroname{\textbackslash gre@count@annotationvalign}{}{gregoriotex-main.tex}
+Count used to indicate which part of the annotation control line should be initially aligned with the top line of the staff.  Values: \texttt{0}, top; \texttt{1}, baseline; or \texttt{2}, bottom.
+
 \macroname{\textbackslash ifgre@forcehyphen}{}{gregoriotex-main.tex}
 Boolean used to indicate if hyphens should be forced between all syllables in a polysyllabic word.
 
@@ -1330,7 +1352,10 @@ Count to indicated if the spacing between lines should be variable (\texttt{1}) 
 Boolean which indicates whether the custos at the end of the line should be blocked.
 
 \macroname{\textbackslash ifgre@blockeolcustosbeforeeuouae}{}{gregoriotex-main.tex}
-Boolean which indicates whether the custos at the end of the line should be blocked if a EUOUE block immediately follows.
+Boolean which indicates whether the custos at the end of the line should be blocked if a EUOUAE block immediately follows.
+
+\macroname{\textbackslash ifgre@raggedbreakbeforeeuouae}{}{gregoriotex-main.tex}
+Boolean which indicates whether an automatic line break immediately before a EUOUAE block should be ragged.
 
 \macroname{\textbackslash ifgre@breakintranslation}{}{gregoriotex-main.tex}
 Boolean which indicates if line breaks are allowed inside a translation.
@@ -1563,6 +1588,9 @@ Working alias for \verb=\gre@skip@temp@one= or \verb=\gre@dimen@temp@one=, as ap
 \macroname{\textbackslash gre@skip@syllablefinalskip}{}{gregoriotex-spaces.tex}
 The final distance to skip at the end of a syllable.
 
+\macroname{\textbackslash greslurheight}{}{gregoriotex-signs.tex}
+Stores the computed height of a variable-length slur.  The control sequence name
+does not have the \texttt{@} symbol because this dimension is used within \MP{}.
 
 \subsection{Penalties}
 These are the macros that Gregorio\TeX\ uses to manipulate the penalties in order to control line and page breaks within a score without affect the surrounding text.

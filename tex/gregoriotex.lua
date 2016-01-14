@@ -68,6 +68,8 @@ local score_heights = nil
 local new_score_heights = nil
 local var_brace_positions = nil
 local new_var_brace_positions = nil
+local pos_saves = nil
+local new_pos_saves = nil
 local auxname = nil
 
 local space_below_staff = 5
@@ -143,6 +145,12 @@ local function heights_changed()
   for id, tab in pairs(var_brace_positions) do
     if keys_changed(tab, new_var_brace_positions[id]) then return true end
   end
+  for id, tab in pairs(new_pos_saves) do
+    if keys_changed(tab, pos_saves[id]) then return true end
+  end
+  for id, tab in pairs(pos_saves) do
+    if keys_changed(tab, new_pos_saves[id]) then return true end
+  end
   return false
 end
 
@@ -170,6 +178,18 @@ local function write_greaux()
           if line[1] ~= nil and line[2] ~= nil then
             aux:write(string.format('   [%d]={%d,%d},\n', id2, line[1],
                 line[2]))
+          end
+        end
+        aux:write('  },\n')
+      end
+      aux:write(' },\n ["pos_saves"]={\n')
+      for id, tab in pairs(new_pos_saves) do
+        aux:write(string.format('  ["%s"]={\n', id))
+        for id2, line in pairs(tab) do
+          if line[1] ~= nil and line[2] ~= nil and line[3] ~= nil and
+              line[4] ~= nil then
+            aux:write(string.format('   [%d]={%d,%d,%d,%d},\n', id2, line[1],
+                line[2], line[3], line[4]))
           end
         end
         aux:write('  },\n')
@@ -209,9 +229,11 @@ local function init(arg, enable_height_computation)
     local score_info = dofile(auxname)
     line_heights = score_info.line_heights or {}
     var_brace_positions = score_info.var_brace_positions or {}
+    pos_saves = score_info.pos_saves or {}
   else
     line_heights = {}
     var_brace_positions = {}
+    pos_saves = {}
   end
 
   if enable_height_computation then
@@ -238,6 +260,7 @@ local function init(arg, enable_height_computation)
         'resume height computation.')
   end
   new_var_brace_positions = {}
+  new_pos_saves = {}
 end
 
 -- node factory
@@ -857,12 +880,56 @@ local function var_brace_len(brace)
   tex.print('2mm')
 end
 
+local function save_pos(index, which)
+  tex.print(string.format([[\pdfsavepos\luatexlatelua{gregoriotex.late_save_pos('%s', %d, %d, \number\pdflastxpos, \number\pdflastypos)}]], cur_score_id, index, which))
+end
+
+local function late_save_pos(score_id, index, which, xpos, ypos)
+  if new_pos_saves[score_id] == nil then
+    new_pos_saves[score_id] = {}
+  end
+  if new_pos_saves[score_id][index] == nil then
+    new_pos_saves[score_id][index] = {}
+  end
+  new_pos_saves[score_id][index][(2 * which) - 1] = xpos
+  new_pos_saves[score_id][index][2 * which] = ypos
+end
+
+-- this function is meant to be used from \ifcase; prints 0 for true and 1 for false
+local function is_ypos_different(index)
+  if pos_saves[cur_score_id] ~= nil then
+    local saved_pos = pos_saves[cur_score_id][index]
+    if saved_pos == nil or saved_pos[2] == saved_pos[4] then
+      tex.sprint([[\number1\relax ]])
+    else
+      tex.sprint([[\number0\relax ]])
+    end
+  else
+    tex.sprint([[\number0\relax ]])
+  end
+end
+
 local function width_to_bp(width, value_if_star)
   if width == '*' then
     tex.print(value_if_star or '0')
   else
     tex.print(tex.sp(width) * 1.00375 / 65536)
   end
+end
+
+-- computes the hypotenuse given the width and height of the right triangle
+local function hypotenuse(width, height)
+  log("width %s height %s", width, height)
+  local a = tex.sp(width)
+  local b = tex.sp(height)
+  tex.sprint(math.sqrt((a * a) + (b * b)) .. 'sp')
+end
+
+-- computes the rotation angle opposite the height of a right triangle
+local function rotation(width, height)
+  local a = tex.sp(width)
+  local b = tex.sp(height)
+  tex.sprint(math.deg(math.atan2(b, a)))
 end
 
 local function scale_space(factor)
@@ -925,6 +992,11 @@ gregoriotex.late_brace_note_pos  = late_brace_note_pos
 gregoriotex.mark_translation     = mark_translation
 gregoriotex.mark_abovelinestext  = mark_abovelinestext
 gregoriotex.width_to_bp          = width_to_bp
+gregoriotex.hypotenuse           = hypotenuse
+gregoriotex.rotation             = rotation
 gregoriotex.scale_space          = scale_space
 gregoriotex.set_header_capture   = set_header_capture
 gregoriotex.capture_header       = capture_header
+gregoriotex.save_pos             = save_pos
+gregoriotex.late_save_pos        = late_save_pos
+gregoriotex.is_ypos_different    = is_ypos_different

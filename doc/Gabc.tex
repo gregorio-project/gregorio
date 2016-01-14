@@ -23,22 +23,10 @@ following structure:
 name: incipit;
 gabc-copyright: copyright on this gabc file;
 score-copyright: copyright on the source score;
-office-part: introitus/...;
-occasion: in church calendar;
-meter: for metrical hymns;
-commentary: source of words;
-arranger: name of arranger;
 author: if known;
-date: xi c;
-manuscript: ms name;
 manuscript-reference: e.g. CAO reference;
-manuscript-storage-place: library/monastery;
-book: from which score taken;
-transcriber: writer of gabc;
-transcription-date: 2009;
 language: latin;
 initial-style: 1;
-user-notes: whatever other comments you wish to make;
 mode: 6;
 mode-modifier: t.;
 annotation: IN.;
@@ -47,16 +35,16 @@ annotation: 6;
 (clef) text(notes)
 \end{lstlisting}
 
-In each case, replace whatever is between the colon and semi-colon
-\texttt{(:...;)} with the appropriate character string. Of these attributes,
-only name is mandatory. Descriptions of how these header fields are
-intended to be used are below. If you wish to write a value over
-several lines, omit the semicolon at the end of the first line, and
-end the attribute value with \texttt{;;} (two semicolons).
+\subsection{Headers}
 
-\subsection{Header}
+The headers, such as \texttt{name: incipit;}, above, each have a name
+before the colon and a value, between the colon and the semicolon.  The
+header name is composed of ASCII letters and numbers, optionally separated
+by dashes.  If you wish to write a value over several lines, omit the
+semicolon at the end of the first line, and end the header value with
+\texttt{;;} (two semicolons).
 
-Here is a detailed description of each header field:
+Some headers have special meaning to Gregorio:
 
 \begin{description}
 \item[name] This is the name of the piece, in almost all cases the
@@ -71,22 +59,11 @@ Here is a detailed description of each header field:
   \begin{lstlisting}[autogobble]
     score-copyright: (C) Abbaye de Solesmes, 1934;
   \end{lstlisting}
-\item[office-part] The office-part is the category of chant (in Latin), according to its liturgical rôle. Examples are: antiphona, hymnus, responsorium brevium, responsorium prolixum, introitus, graduale, tractus, offertorium, communio, kyrie, gloria, credo, sanctus, benedictus, agnus dei.
-\item[occasion] The occasion is the liturgical occasion, in Latin. For example, Dominica II Adventus, Commune doctorum, Feria secunda.
-\item[meter] For hymns and anything else with repetitive stanzas, the meter, the numbers of syllables in each line of a stanza. For example, 8.8.8.8 for typical Ambrosian-style hymns: 4 lines each of 8 syllables.
-\item[commentary] This is intended for notes about the source of the text, such as references to the Bible.
-\item[arranger] The name of a modern arranger, when a traditional chant melody has been adapted for new words, or when a manuscript is transcribed into square notation. This may be a corporate name, like Solesmes.
 \item[author] The author of the piece, if known; of course, the author of most traditional chant is not known.
-\item[date] The date of composition, or the date of earliest attestation. With most traditional chant, this will only be approximate; e.g. XI. s. for eleventh century. The convention is to put it with the latin style, like the previous examples (capital letters, roman numerals, s for seculum and the dots).
-\item[manuscript] For transcriptions direct from a manuscript, the text normally used to identify the manuscript, for example Montpellier H.159
 \item[manuscript-reference] A unique reference for the piece, according to some well-known system. For example, the reference beginning cao in the Cantus database of office chants. If the reference is unclear as to which system it uses, it should be prefixed by the name of the system. Note that this should be a reference identifying the piece, not the manuscript as a whole; anything identifying the manuscript as a whole should be put in the manuscript field.
-\item[manuscript-storage-place] For transcriptions direct from a manuscript, where the manuscript is held; e.g. Bibliothèque Nationale, Paris.
-\item[book] For transcriptions from a modern book (such as Solesmes editions; modern goes back at least to the 19th century revival), the name of the book; e.g. Liber Usualis.
-\item[transcriber] The name of the transcriber into gabc.
-\item[transcription-date] The date the gabc was written, with the following convention yyyymmdd, like 20090129 for january the 29th 2009.
 \item[language] The language of the lyrics.
 \item[initial-style] The style of the initial letter. 0 means no initial letter, 1 a normal one, and 2 a large one, on two lines. Note that if you want to use the initial on two lines, you have to specify at least the two first line breaks.
-\item[user-notes] This may contain any text in addition to the other headers -- any notes the transcriber may wish. However, it is recommended to use the specific header fields where they are suitable, so that it is easier to find particular information.
+\item[oriscus-orientation] If \texttt{legacy}, the orientation of an unconnected oriscus must be set manually.
 \item[mode] The mode of the piece. This should normally be an arabic
   number between 1 and 8, but may be any text required for unusual
   cases. The mode number will be converted to roman numerals and
@@ -117,12 +94,23 @@ Here is a detailed description of each header field:
   If the user already defined annotation(s) in the main \TeX\ file via
   \verb=\greannotation= then the \texttt{annotation} header field will not
   overwrite that definition.
-\item[x-\textit{external}] External headers start with \texttt{x-} and may
-  have any name composed of ASCII letters and numbers, optionally separated
-  by dashes.  These headers are blindly captured by gregorio without any
-  further error checking.  They may be useful for external applications to
-  use as metadata.
+\end{description}
 
+Although gregorio ascribes no special meaning to them, other suggested headers are:
+
+\begin{description}
+\item[office-part] The office-part is the category of chant (in Latin), according to its liturgical rôle. Examples are: antiphona, hymnus, responsorium brevium, responsorium prolixum, introitus, graduale, tractus, offertorium, communio, kyrie, gloria, credo, sanctus, benedictus, agnus dei.
+\item[occasion] The occasion is the liturgical occasion, in Latin. For example, Dominica II Adventus, Commune doctorum, Feria secunda.
+\item[meter] For hymns and anything else with repetitive stanzas, the meter, the numbers of syllables in each line of a stanza. For example, 8.8.8.8 for typical Ambrosian-style hymns: 4 lines each of 8 syllables.
+\item[commentary] This is intended for notes about the source of the text, such as references to the Bible.
+\item[arranger] The name of a modern arranger, when a traditional chant melody has been adapted for new words, or when a manuscript is transcribed into square notation. This may be a corporate name, like Solesmes.
+\item[date] The date of composition, or the date of earliest attestation. With most traditional chant, this will only be approximate; e.g. XI. s. for eleventh century. The convention is to put it with the latin style, like the previous examples (capital letters, roman numerals, s for seculum and the dots).
+\item[manuscript] For transcriptions direct from a manuscript, the text normally used to identify the manuscript, for example Montpellier H.159
+\item[manuscript-storage-place] For transcriptions direct from a manuscript, where the manuscript is held; e.g. Bibliothèque Nationale, Paris.
+\item[book] For transcriptions from a modern book (such as Solesmes editions; modern goes back at least to the 19th century revival), the name of the book; e.g. Liber Usualis.
+\item[transcriber] The name of the transcriber into gabc.
+\item[transcription-date] The date the gabc was written, with the following convention yyyymmdd, like 20090129 for january the 29th 2009.
+\item[user-notes] This may contain any text in addition to the other headers -- any notes the transcriber may wish. However, it is recommended to use the specific header fields where they are suitable, so that it is easier to find particular information.
 \end{description}
 
 \subsection{Neume Fusion}
@@ -200,6 +188,27 @@ When using this feature with fusion, you will not be able to start or end a
 ledger line in the middle of two-note primitive shapes.  To work around this,
 either adjust the parameters of the ledger line or use manual fusion to break
 up those two notes.
+
+\subsection{Simple Slurs}
+
+To specify a simple slur, use
+\texttt{[oslur:}\textit{shift}\texttt{;}\textit{width}\texttt{,}\textit{height}\texttt{]}
+to create an over-the-notes slur with the specified \textit{width} and
+\textit{height}.  If \textit{shift} is \texttt{0}, the slur will start on the
+right side of the note to which it is atteched.  If \textit{shift} is
+\texttt{1}, the slur will start one punctum's width to the left of the right
+side of the note to which it is attached.  If \textit{shift} is \texttt{2},
+the slur will start one-half punctum's width to the left of the right side of
+the note to which it is attached.
+
+Alternately, use
+\texttt{[oslur:}\textit{shift}\texttt{\{]} to specify the start of an
+over-the-notes slur, followed by \texttt{[oslur:}\textit{shift}\texttt{\}]} at
+some point later to specify its end.  When using this form, \textit{shift} has
+the same meaning as before, but applies to both ends of the slur.
+
+Use \texttt{uslur} instead of \texttt{oslur} (with either form) to create an
+under-the-staff slur.
 
 \subsection{Lyric Centering}
 

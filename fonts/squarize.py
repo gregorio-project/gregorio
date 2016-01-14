@@ -214,6 +214,7 @@ DIRECT_GLYPH_NAMES = [
     'PunctumInclinatum',
     'Stropha',
     'StrophaAucta',
+    'StrophaAuctaLongtail',
     'VirgaLongqueue',
     'Virga',
     'VirgaReversaLongqueue',

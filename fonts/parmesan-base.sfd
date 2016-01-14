@@ -19,7 +19,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1452000795
+ModificationTime: 1452387060
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -42,7 +42,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 128 16 4
+WinInfo: 48 16 4
 BeginPrivate: 0
 EndPrivate
 Grid
@@ -58,7 +58,7 @@ Grid
  22 -700 l 0
 EndSplineSet
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 375 169
+BeginChars: 375 170
 
 StartChar: Punctum
 Encoding: 0 -1 0
@@ -4083,6 +4083,30 @@ SplineSet
  18.9912 -408.997 l 25
  0 -409.002 l 25
  0 865.999 l 29
+EndSplineSet
+EndChar
+
+StartChar: StrophaAuctaLongtail
+Encoding: 94 -1 169
+Width: 168
+Flags: W
+HStem: -472.609 17.1 -113.509 17.1 245.591 17.1 604.691 17.1
+LayerCount: 2
+Fore
+SplineSet
+-9.87012 -24.1875 m 0
+ 6.08984 -24.1875 11.79 -53.8271 43.71 -53.8271 c 0
+ 112.11 -53.8271 48.2695 64.7324 -0.75 71.5723 c 1
+ 67.6504 174.173 l 2
+ 69.9297 178.733 74.4902 181.013 79.0498 181.013 c 0
+ 83.6104 181.013 88.1699 178.733 91.5898 174.173 c 2
+ 165.69 61.3125 l 1
+ 167.97 59.0322 167.97 55.6123 167.97 53.332 c 0
+ 167.97 51.0527 167.97 47.6328 165.69 45.3525 c 1
+ 91.5898 -67.5078 l 2
+ 80.1904 -83.4678 64.2305 -90.3076 47.1299 -90.3076 c 0
+ 3.80957 -90.3076 -26.9697 -50.4072 -26.9697 -40.1475 c 0
+ -26.9697 -32.168 -18.9902 -24.1875 -9.87012 -24.1875 c 0
 EndSplineSet
 EndChar
 EndChars
