@@ -89,7 +89,7 @@
   \IfStrEq{#1}{visible}%
     {\gre@showcleftrue}%
     {\IfStrEq{#1}{invisible}%
-      {\gre@showcleffalse}
+      {\gre@showcleffalse}%
       {\gre@error{Unrecognized option for \protect\gresetclef}}%
     }%
 }%
@@ -583,7 +583,7 @@
         \else %
           \ifx#7\gre@fontchar@brace %
             \gre@draw@brace{#1}%
-          \else
+          \else %
             \ifx#7\gre@fontchar@underbrace %
               \gre@draw@underbrace{#1}%
             \fi %
