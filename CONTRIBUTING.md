@@ -63,7 +63,7 @@ Gregorio provides an [`.editorconfig` file](../.editorconfig), using an [editorc
 
 Python files must output no error when inspected by `pylint`.
 
-TeX code must use LuaTeX (more than TeX + eTeX + Omega + PDFTeX) primitives as much as possible, and, when not possible, use code compiling under PlainTeX. All lines inside macro definitions must end with `%` to avoid spurious spaces. To check that no line has been forgotten, please check that `grep -n '^ [^%]\{1,\}$' tex/*.tex` returns only Lua and metapost code.
+TeX code must use LuaTeX (more than TeX + eTeX + Omega + PDFTeX) primitives as much as possible, and, when not possible, use code compiling under PlainTeX. All lines inside macro definitions must end with `%` to avoid spurious spaces. To check that no line has been forgotten, please check that `grep -n '^ [^%]\+$' tex/*.tex tex/*.sty` returns only Lua and metapost code.
 
 ### Tests
 
