@@ -580,8 +580,8 @@
   \ifgre@showclef%
     \ifgre@bolshiftsenabled%
       \gre@calculate@bolshift{\gre@dimen@begindifference}%
-      % we don't want to shift right on the first syllable of the score 
-      % because the printing of the initial clef, initial, and/or the staff lines 
+      % we don't want to shift right on the first syllable of the score
+      % because the printing of the initial clef, initial, and/or the staff lines
       % will have already broken TeX's ignorance of spaces.
       \ifgre@beginningofscore%
         \gre@beginningofscorefalse%
@@ -639,7 +639,7 @@
     \ifdim\gre@skip@temp@one > \gre@dimen@maximumspacewithoutdash\relax%
       \gre@debugmsg{hyphen}{spacing requires hyphen}%
       \gre@showhyphenafterthissyllabletrue%
-    \fi
+    \fi %
     \ifgre@showhyphenafterthissyllable\relax%
       \gre@debugmsg{hyphen}{Showing the hyphen}%
       % if it's the last syllable of line, the hyphen will be \GreHyph
