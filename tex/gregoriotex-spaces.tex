@@ -807,6 +807,13 @@
   \relax %
 }%
 
+%The distance from the baseline of the line to the baseline of the commentary
+\newdimen\gre@dimen@commentarytrueraise\relax%
+%This function sets the true raises of the commentary (it has to be called just as the boxes are placed in order to make sure that the values are all correct)
+\def\gre@calculate@commentarytrueraise{%
+  \gre@debugmsg{commentary}{Calculating the raise.}%
+  \global\gre@dimen@commentarytrueraise = \dimexpr\gre@dimen@staffheight + \gre@dimen@spacebeneathtext + \gre@dimen@currenttranslationheight + \gre@dimen@spacelinestext +  \gre@dimen@additionalbottomspace + \gre@dimen@commentaryraise\relax%
+}%
 
 
 %%%%%%%%%%%%%%%%%%%
@@ -999,6 +1006,8 @@
   \IfStrEq{#1}{manualinitialwidth}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{annotationseparation}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{annotationraise}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{commentaryseparation}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{commentaryraise}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{noclefspace}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{clivisalignmentmin}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{choralsigndownshift}{\gre@rubberfalse}{\relax}%

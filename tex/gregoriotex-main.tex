@@ -352,6 +352,12 @@
 }%
 
 \def\gre@setinitial#1{%
+  \gre@debugmsg{commentary}{Time to calculate the true raise.}%
+  \gre@calculate@commentarytrueraise%
+  % we start by printing the commentary
+  % when doing this we place it inside a box as which is linewidth wide with an \hfill before to get it to align to the right of the page
+  % we then place that box inside one of 0 width so that our cursor doesn't move when we place the commentary
+  \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}}%
   % see comments on this function to see what it does
   \gre@debugmsg{annotation}{Time to calculate the true raise.}%
   \gre@calculate@annotationtrueraise %
@@ -514,8 +520,8 @@
 
 
 \newbox\gre@box@annotation%
-\newbox\gre@box@annotation@add%
-\newbox\gre@box@annotation@old%
+\newbox\gre@box@add%
+\newbox\gre@box@old%
 
 \def\greannotation{\@ifnextchar[{\gre@annotation}{\gre@annotation[c]}}%
 
@@ -586,25 +592,25 @@
     \fi%
   \else%
     \gre@debugmsg{annotation}{We're not on the first line of the annotation.}%
-    \setbox\gre@box@annotation@old = \hbox to \gre@dimen@temp@three{\gre@leftfill\box\gre@box@annotation\gre@rightfill}%
-    \setbox\gre@box@annotation@add = \hbox to \gre@dimen@temp@three{\gre@leftfill#2\gre@rightfill}%
+    \setbox\gre@box@old = \hbox to \gre@dimen@temp@three{\gre@leftfill\box\gre@box@annotation\gre@rightfill}%
+    \setbox\gre@box@add = \hbox to \gre@dimen@temp@three{\gre@leftfill#2\gre@rightfill}%
     % if the user has asked for the bottom line to be the controlling line, then we need to change the value of the annotationtrueraise appropriately
     \ifgre@annotationbottomline%
       \ifcase\gre@count@annotationvalign\relax%
         %case 0 = top of first line
-        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@old+\dp\gre@box@annotation@old+\gre@dimen@annotationseparation-\ht\gre@box@annotation@add\relax%
+        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@old+\dp\gre@box@old+\gre@dimen@annotationseparation-\ht\gre@box@add\relax%
         \gre@debugmsg{annotation}{Aligning to top of last line: \the\gre@dimen@annotationtrueraise}%
       \or %case 1 = baseline of first line
-        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@old+\dp\gre@box@annotation@old+\gre@dimen@annotationseparation\relax%
+        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@old+\dp\gre@box@old+\gre@dimen@annotationseparation\relax%
         \gre@debugmsg{annotation}{Aligning to baseline of last line: \the\gre@dimen@annotationtrueraise}%
       \or %case 2 = bottom of first line
-        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@annotation@old+\dp\gre@box@annotation@old+\gre@dimen@annotationseparation+\dp\gre@box@annotation@add\relax%
+        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@old+\dp\gre@box@old+\gre@dimen@annotationseparation+\dp\gre@box@add\relax%
         \gre@debugmsg{annotation}{Aligning to bottom of last line: \the\gre@dimen@annotationtrueraise}%
       \else% Bug
         \gre@bug{Invalid value for \protect\gre@count@annotationvalign}%
       \fi%
     \fi%
-    \setbox\gre@box@annotation = \vtop spread \gre@dimen@annotationseparation\relax {\offinterlineskip\box\gre@box@annotation@old\vss\box\gre@box@annotation@add}%
+    \setbox\gre@box@annotation = \vtop spread \gre@dimen@annotationseparation\relax {\offinterlineskip\box\gre@box@old\vss\box\gre@box@add}%
   \fi%
 }%
 
@@ -696,9 +702,20 @@
   \relax %
 }%
 
+\newbox\gre@box@commentary
+
 \def\grecommentary#1{%
-  \ifhmode\par\fi\vbox{\hfill\hbox{#1}}\par %
-  \relax %
+  \ifvoid\gre@box@commentary%
+    \setbox\gre@box@commentary = \hbox{#1}%
+  \else%
+    \gre@widthof{#1}%
+    \ifdim\gre@dimen@temp@three < \wd\gre@box@commentary\relax%
+      \gre@dimen@temp@three = \wd\gre@box@commentary%
+    \fi%
+    \setbox\gre@box@old = \hbox to \gre@dimen@temp@three{\hfill\box\gre@box@commentary}%
+    \setbox\gre@box@add = \hbox to \gre@dimen@temp@three{\hfill#1}%
+    \setbox\gre@box@commentary = \vbox spread \gre@dimen@commentaryseparation{\offinterlineskip\box\gre@box@old\vss\box\gre@box@add}%
+  \fi%
 }
 
 \def\commentary#1{%
