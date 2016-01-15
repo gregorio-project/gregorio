@@ -109,9 +109,6 @@ void dump_write_score(FILE *f, gregorio_score *score)
     if (score->score_copyright) {
         fprintf(f, "   score_copyright           %s\n", score->score_copyright);
     }
-    if (score->language) {
-        fprintf(f, "   language                  %s\n", score->language);
-    }
     if (score->author) {
         fprintf(f, "   author                    %s\n", score->author);
     }
@@ -119,10 +116,13 @@ void dump_write_score(FILE *f, gregorio_score *score)
         fprintf(f, "   manuscript_reference      %s\n", score->manuscript_reference);
     }
     if (score->mode) {
-        fprintf(f, "   mode                      %d\n", score->mode);
+        fprintf(f, "   mode                      %s\n", score->mode);
     }
     if (score->mode_modifier) {
         fprintf(f, "   mode_modifier             %s\n", score->mode_modifier);
+    }
+    if (score->mode_differentia) {
+        fprintf(f, "   mode_differentia          %s\n", score->mode_differentia);
     }
     if (score->staff_lines != 4) {
         fprintf(f, "   staff_lines               %d\n", (int)score->staff_lines);

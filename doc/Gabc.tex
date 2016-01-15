@@ -73,9 +73,13 @@ Some headers have special meaning to Gregorio:
   \item There is a \verb=\greannotation= defined immediatly prior to \verb=\gregorioscore=.
   \item The \texttt{annotation} header field is defined.
   \end{itemize}
-\item[mode-modifier] The mode "modifier" of the piece. This may be any
+\item[mode-modifier] The mode ``modifier'' of the piece. This may be any
   \TeX\ code to typeset after the mode, if the mode is typeset.  If the mode
   is not typeset, the mode-modifier will also not be typeset.
+\item[mode-differentia] The mode or tone differentia of the piece.  Typically,
+  this expresses the variant of the psalm tone to use for the piece.  This may
+  be any \TeX\ code to typeset after the mode-modifier, if the mode is typeset.
+  If the mode is not typeset, the mode-differentia will also not be typeset.
 \item[annotation] The annotation is the text to appear above the
   initial letter. Usually this is an abbreviation of the office-part
   in the upper line, and an indication of the mode (and differentia

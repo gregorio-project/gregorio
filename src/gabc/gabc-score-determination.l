@@ -172,6 +172,11 @@ semicolon. */
                 gregorio_strdup(gabc_score_determination_text);
         return MODE_MODIFIER;
     }
+<INITIAL>mode-differentia {
+        gabc_score_determination_lval.text =
+                gregorio_strdup(gabc_score_determination_text);
+        return MODE_DIFFERENTIA;
+    }
 <INITIAL>annotation {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
