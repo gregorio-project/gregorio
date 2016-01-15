@@ -701,8 +701,6 @@ Macro to add commentary (the text flush right at the top, usually a scripture re
   \#1 & string & The text of the commentary.\\
 \end{argtable}
 
-\textbf{Nota Bene:} This command should appear directly before \verb=\gregorioscore= when used.
-
 \macroname{\textbackslash grescorereference}{\{\#1\}}{gregoriotex-main.tex}
 Macro to hold the score reference.  Currently the score reference does not print.
 
@@ -1269,6 +1267,16 @@ This space is the one between lines in the annotation (text above the initial).
 
 \begin{gdimension}{annotationraise}
 Amount to raise (positive) or lower (negative) the annotation from its normal position (set with \verb=\gresetannotationby= and \verb=\gresetannotationvalign=).
+\end{gdimension}
+
+\begin{gdimension}{commentaryseparation}
+This space is the one between lines in the commentary (text above the first staff line on the right).
+
+\textbf{Nota Bene:} This is the absolute space.  If the lower line contains only short letters then it will get moved up so only this space shows (not the space above the letters on a normal line plus this space).  You should use struts to control the line height of the lower line if this is a problem.
+\end{gdimension}
+
+\begin{gdimension}{commentaryraise}
+Distance from the commentary to the top line of the staff.
 \end{gdimension}
 
 \begin{gdimension}{noclefspace}
