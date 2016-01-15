@@ -352,13 +352,13 @@
 }%
 
 \def\gre@setinitial#1{%
+  % see comments on this function to see what it does
   \gre@debugmsg{commentary}{Time to calculate the true raise.}%
   \gre@calculate@commentarytrueraise%
   % we start by printing the commentary
   % when doing this we place it inside a box as which is linewidth wide with an \hfill before to get it to align to the right of the page
   % we then place that box inside one of 0 width so that our cursor doesn't move when we place the commentary
   \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}}%
-  % see comments on this function to see what it does
   \gre@debugmsg{annotation}{Time to calculate the true raise.}%
   \gre@calculate@annotationtrueraise %
   % we print the initial always at the same place, and then we print the gre@box@annotation, centered
@@ -491,7 +491,7 @@
   \fi%
   \hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
-  % then we center the first box above the initial, if there is one
+  % then we center the annotation box above the initial, if there is one
   \gre@debugmsg{annotation}{Time to set the annotation.}%
   \ifvoid\gre@box@annotation\relax%
     \gre@debugmsg{annotation}{There is no annotation.}%
@@ -1257,6 +1257,7 @@
   \gre@skip@temp@three=0pt\relax%
   \gre@skip@temp@four=0pt\relax%
   \setbox\gre@box@annotation=\box\voidb@x%
+  \setbox\gre@box@commentary=\box\voidb@x%
   \directlua{gregoriotex.atScoreEnd()}%
   \unsetluatexattribute{\gre@attr@glyph@id}%
   \unsetluatexattribute{\gre@attr@glyph@top}%
