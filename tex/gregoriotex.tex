@@ -241,6 +241,20 @@
 }%
 \def\endgre@style@modemodifier{\endgroup}%
 
+\def\gre@style@commentary{%
+  \begingroup%
+  \it%
+  \fontsize{\numexpr\f@size / 1.44\relax}{\numexpr\f@size / 1.44 * 1.2\relax}\selectfont% this is equivalent to \footnotesize in LaTeX
+  \relax%
+}%
+\def\endgre@style@commentary{\endgroup}%
+
+\def\gre@style@annotation{%
+  \begingroup%
+  \relax%
+}%
+\def\endgre@style@annotation{\endgroup}%
+
 \def\gre@style@nabc{%
   \begingroup%
   \relax% we do nothing since colors are not implemented in PlainTeX

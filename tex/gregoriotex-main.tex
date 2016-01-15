@@ -568,13 +568,13 @@
     \gre@error{Unrecognzied alignment option for \protect\greannotation}%
   \fi\fi\fi%
   % first we determine the widest box
-  \gre@widthof{#2}%
+  \gre@widthof{\gre@style@annotation#2\endgre@style@annotation}%
   \ifdim\gre@dimen@temp@three < \wd\gre@box@annotation\relax%
     \gre@dimen@temp@three = \wd\gre@box@annotation\relax%
   \fi%
   \ifvoid\gre@box@annotation%
     \gre@debugmsg{annotation}{We're on the first line of the annotation.}%
-    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\gre@leftfill#2\gre@rightfill}%
+    \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\gre@leftfill\gre@style@annotation#2\endgre@style@annotation\gre@rightfill}%
     % We set the initial value for annotationtrueraise based on the annotationvalign setting.  We always do this because if there is only one line in the annotation, then the topline is the bottomline.
     \gre@debugmsg{annnotation}{Initial set point.}%
     \ifcase\gre@count@annotationvalign\relax%
@@ -593,7 +593,7 @@
   \else%
     \gre@debugmsg{annotation}{We're not on the first line of the annotation.}%
     \setbox\gre@box@old = \hbox to \gre@dimen@temp@three{\gre@leftfill\box\gre@box@annotation\gre@rightfill}%
-    \setbox\gre@box@add = \hbox to \gre@dimen@temp@three{\gre@leftfill#2\gre@rightfill}%
+    \setbox\gre@box@add = \hbox to \gre@dimen@temp@three{\gre@leftfill\gre@style@annotation#2\endgre@style@annotation\gre@rightfill}%
     % if the user has asked for the bottom line to be the controlling line, then we need to change the value of the annotationtrueraise appropriately
     \ifgre@annotationbottomline%
       \ifcase\gre@count@annotationvalign\relax%
@@ -706,14 +706,14 @@
 
 \def\grecommentary#1{%
   \ifvoid\gre@box@commentary%
-    \setbox\gre@box@commentary = \hbox{#1}%
+    \setbox\gre@box@commentary = \hbox{\gre@style@commentary#1\endgre@style@commentary}%
   \else%
-    \gre@widthof{#1}%
+    \gre@widthof{\gre@style@commentary#1\endgre@style@commentary}%
     \ifdim\gre@dimen@temp@three < \wd\gre@box@commentary\relax%
       \gre@dimen@temp@three = \wd\gre@box@commentary%
     \fi%
     \setbox\gre@box@old = \hbox to \gre@dimen@temp@three{\hfill\box\gre@box@commentary}%
-    \setbox\gre@box@add = \hbox to \gre@dimen@temp@three{\hfill#1}%
+    \setbox\gre@box@add = \hbox to \gre@dimen@temp@three{\hfill\gre@style@commentary#1\endgre@style@commentary}%
     \setbox\gre@box@commentary = \vbox spread \gre@dimen@commentaryseparation{\offinterlineskip\box\gre@box@old\vss\box\gre@box@add}%
   \fi%
 }

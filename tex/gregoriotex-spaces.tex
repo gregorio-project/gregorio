@@ -802,8 +802,10 @@
   \gre@debugmsg{annnotation}{Added spacelinestext.}%
   \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@additionalbottomspace\relax%
   \gre@debugmsg{annnotation}{Added additional bottom space.}%
+  \gre@style@annotation%
   \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@annotationraise\relax%
   \gre@debugmsg{annnotation}{Added user raise.}%
+  \endgre@style@annotation%
   \relax %
 }%
 
@@ -811,8 +813,10 @@
 \newdimen\gre@dimen@commentarytrueraise\relax%
 %This function sets the true raises of the commentary (it has to be called just as the boxes are placed in order to make sure that the values are all correct)
 \def\gre@calculate@commentarytrueraise{%
+  \gre@style@commentary%
   \gre@debugmsg{commentary}{Calculating the raise.}%
   \global\gre@dimen@commentarytrueraise = \dimexpr\gre@dimen@staffheight + \gre@dimen@spacebeneathtext + \gre@dimen@currenttranslationheight + \gre@dimen@spacelinestext +  \gre@dimen@additionalbottomspace + \gre@dimen@commentaryraise\relax%
+  \endgre@style@commentary%
 }%
 
 
