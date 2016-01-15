@@ -358,7 +358,10 @@
   % we start by printing the commentary
   % when doing this we place it inside a box as which is linewidth wide with an \hfill before to get it to align to the right of the page
   % we then place that box inside one of 0 width so that our cursor doesn't move when we place the commentary
-  \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}}%
+  \ifvoid\gre@box@commentary\else%
+    \gre@debugmsg{commentary}{I am printing a commentary box}%
+    \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}}%
+  \fi%
   \gre@debugmsg{annotation}{Time to calculate the true raise.}%
   \gre@calculate@annotationtrueraise %
   % we print the initial always at the same place, and then we print the gre@box@annotation, centered
