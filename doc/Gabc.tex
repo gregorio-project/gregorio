@@ -73,9 +73,13 @@ Some headers have special meaning to Gregorio:
   \item There is a \verb=\greannotation= defined immediatly prior to \verb=\gregorioscore=.
   \item The \texttt{annotation} header field is defined.
   \end{itemize}
-\item[mode-modifier] The mode "modifier" of the piece. This may be any
+\item[mode-modifier] The mode ``modifier'' of the piece. This may be any
   \TeX\ code to typeset after the mode, if the mode is typeset.  If the mode
   is not typeset, the mode-modifier will also not be typeset.
+\item[mode-differentia] The mode or tone differentia of the piece.  Typically,
+  this expresses the variant of the psalm tone to use for the piece.  This may
+  be any \TeX\ code to typeset after the mode-modifier, if the mode is typeset.
+  If the mode is not typeset, the mode-differentia will also not be typeset.
 \item[annotation] The annotation is the text to appear above the
   initial letter. Usually this is an abbreviation of the office-part
   in the upper line, and an indication of the mode (and differentia
@@ -109,9 +113,58 @@ Although gregorio ascribes no special meaning to them, other suggested headers a
 \item[manuscript-storage-place] For transcriptions direct from a manuscript, where the manuscript is held; e.g. Bibliothèque Nationale, Paris.
 \item[book] For transcriptions from a modern book (such as Solesmes editions; modern goes back at least to the 19th century revival), the name of the book; e.g. Liber Usualis.
 \item[transcriber] The name of the transcriber into gabc.
-\item[transcription-date] The date the gabc was written, with the following convention yyyymmdd, like 20090129 for january the 29th 2009.
+\item[transcription-date] The date the gabc was written, with the following convention yyyymmdd, like 20090129 for January the 29th 2009.
 \item[user-notes] This may contain any text in addition to the other headers -- any notes the transcriber may wish. However, it is recommended to use the specific header fields where they are suitable, so that it is easier to find particular information.
 \end{description}
+
+\subsubsection{Mode Headers}
+
+The three mode headers described above (\texttt{mode}, \texttt{mode-modifier},
+and \texttt{mode-differentia}) will be typeset above the initial if neither
+the \texttt{annotation} gabc header nor the \verb=\greannotation= \TeX{}
+command is used.
+
+The mode annotation will look like
+\writemode{mode}{\thinspace mode-modifier}{\thinspace mode-differentia}.
+
+The \texttt{mode} header is typically a number that will be typeset as a
+Roman numeral using the \texttt{modeline} style.  Therefore, if the first
+character of \texttt{mode} is a number from one (\texttt{1}) through eight
+(\texttt{8}), that number will be converted according to the
+\verb=\gresetmodenumbersystem= setting.  However, there are other modes,
+so all other parts of \texttt{mode} will be typeset directly.  If the
+\texttt{mode} header is omitted, none of the other mode headers will be
+typeset.
+
+The \texttt{mode-modifier} header is some text (typeset in the
+\texttt{modemodifier} style) that appears after \texttt{mode}, but before
+\texttt{mode-differentia}.  This is meant for an extra notation that
+indicates something without altering the mode itself.  An example would be
+\writemode{}{t.}{} to indicate a transposed mode.  If the
+\texttt{mode-modifier} header starts with punctuation, there will be no space
+before it, otherwise there will be a \verb=\thinspace= before it.
+
+The \texttt{mode-differentia} header is some text (typeset in the
+\texttt{modedifferentia} style) that appears after \texttt{mode-modifier}.
+This is meant for indicating the psalm tone ending to use for the paired
+psalm tone.  If the \texttt{mode-differentia} header starts with punctuation,
+there will be no space before it, otherwise there will be a \verb=\thinspace=
+before it.
+
+Some examples:
+
+\begin{tabularx}{\textwidth}{l|l|l|X}
+  \texttt{mode} & \texttt{mode-modifier} & \texttt{mode-differentia} & Result \\
+  \hline
+  \verb=6= & & & \writemode{\romannumeral 6}{}{} \\
+  \verb=4A= & & & \writemode{\romannumeral 4\relax A}{}{} \\
+  \verb=4a= & & & \writemode{\romannumeral 4\relax a}{}{} \\
+  \verb=2*= & \verb=t.= & & \writemode{\romannumeral 2*}{\thinspace t.}{} \\
+  \verb=5= & \verb=,\thinspace t.= & & \writemode{\romannumeral 5}{,\thinspace t.}{} \\
+  \verb=7= & & {\scriptsize\verb=c\raise0.5ex\hbox{\small2}=} & \writemode{\romannumeral 7}{}{\thinspace c\raise0.5ex\hbox{\small2}} \\
+  \verb=8= & \verb=-t.= & \verb=G*= & \writemode{\romannumeral 8}{-t.}{\thinspace G*} \\
+  {\scriptsize\verb=t. irregularis=} & & & \writemode{t. irregularis}{}{} \\
+\end{tabularx}
 
 \subsection{Neume Fusion}
 

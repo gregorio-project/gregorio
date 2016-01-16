@@ -671,12 +671,11 @@ typedef struct gregorio_score {
     char *name;
     char *gabc_copyright;
     char *score_copyright;
-    char *language;
+    char *mode;
     char *mode_modifier;
+    char *mode_differentia;
     char *author;
     char *manuscript_reference;
-    /* the mode of a song is between 1 and 8 */
-    char mode;
     /* There is one annotation for each line above the initial letter */
     char *annotation[MAX_ANNOTATIONS];
     /* field giving informations on the initial (no initial, normal initial 
@@ -848,18 +847,7 @@ void gregorio_add_misc_element(gregorio_element **current_element,
 void gregorio_reinitialize_alterations(char alterations[][13],
         int number_of_voices);
 void gregorio_reinitialize_one_voice_alterations(char alterations[13]);
-void gregorio_set_score_name(gregorio_score *score, char *name);
-void gregorio_set_score_gabc_copyright(gregorio_score *score, char *gabc_copyright);
-void gregorio_set_score_score_copyright(gregorio_score *score,
-        char *score_copyright);
-void gregorio_set_score_language(gregorio_score *score, char *language);
-void gregorio_set_score_mode_modifier(gregorio_score *score, char *mode_modifier);
-void gregorio_set_score_number_of_voices(gregorio_score *score,
-        int number_of_voices);
 void gregorio_set_score_annotation(gregorio_score *score, char *annotation);
-void gregorio_set_score_author(gregorio_score *score, char *author);
-void gregorio_set_score_manuscript_reference(gregorio_score *score,
-        char *reference);
 void gregorio_set_score_staff_lines(gregorio_score *score, char staff_lines);
 void gregorio_add_score_header(gregorio_score *score, char *name,
         char *value);
