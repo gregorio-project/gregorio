@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # This script is designed to automatically configure a TeXShop distribution.
+# You should be able to direct it to run by double clicking on it.
 
 #Copy the engine file from its instalation directory to the TeXShop Engines directory
 ENGINEDIR="$HOME/Library/TeXShop/Engines"
