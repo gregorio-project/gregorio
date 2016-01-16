@@ -710,7 +710,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token NAME AUTHOR GABC_COPYRIGHT SCORE_COPYRIGHT MANUSCRIPT_REFERENCE
 %token NUMBER_OF_VOICES LANGUAGE STAFF_LINES ORISCUS_ORIENTATION
 %token DEF_MACRO OTHER_HEADER
-%token ANNOTATION MODE MODE_MODIFIER
+%token ANNOTATION MODE MODE_MODIFIER MODE_DIFFERENTIA
 %token INITIAL_STYLE /* DEPRECATED by 4.1 */
 %token VOICE_CUT VOICE_CHANGE END_OF_DEFINITIONS END_OF_FILE
 %token COLON SEMICOLON SPACE CHARACTERS NOTES HYPHEN ATTRIBUTE
@@ -746,160 +746,6 @@ definitions:
     | definitions definition
     ;
 
-number_of_voices_definition:
-    NUMBER_OF_VOICES attribute {
-        gregorio_add_score_header(score, $1.text, $2.text);
-        number_of_voices=atoi($2.text);
-        if (number_of_voices > MAX_NUMBER_OF_VOICES) {
-            gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
-                    _("can't define %d voices, maximum is %d"),
-                    number_of_voices, MAX_NUMBER_OF_VOICES);
-        }
-        gregorio_set_score_number_of_voices (score, number_of_voices);
-    }
-    ;
-
-macro_definition:
-    DEF_MACRO attribute {
-        /* these definitions are not passed through */
-        free(macros[$1.character - '0']);
-        macros[$1.character - '0'] = $2.text;
-    }
-    ;
-
-name_definition:
-    NAME attribute {
-        if ($2.text==NULL) {
-            gregorio_message("name can't be empty","det_score",
-                    VERBOSITY_WARNING, 0);
-        }
-        check_multiple("name", score->name != NULL);
-        gregorio_add_score_header(score, $1.text, $2.text);
-        gregorio_set_score_name (score, $2.text);
-    }
-    ;
-
-language_definition:
-    LANGUAGE attribute {
-        check_multiple("language", got_language);
-        gregorio_add_score_header(score, $1.text, $2.text);
-        gregorio_set_score_language(score, $2.text);
-        gregorio_set_centering_language($2.text);
-        got_language = true;
-    }
-    ;
-
-gabc_copyright_definition:
-    GABC_COPYRIGHT attribute {
-        check_multiple("gabc-copyright", score->gabc_copyright != NULL);
-        gregorio_add_score_header(score, $1.text, $2.text);
-        gregorio_set_score_gabc_copyright (score, $2.text);
-    }
-    ;
-
-score_copyright_definition:
-    SCORE_COPYRIGHT attribute {
-        check_multiple("score_copyright", score->score_copyright != NULL);
-        gregorio_add_score_header(score, $1.text, $2.text);
-        gregorio_set_score_score_copyright (score, $2.text);
-    }
-    ;
-
-mode_definition:
-    MODE attribute {
-        check_multiple("mode", score->mode != 0);
-        if ($2.text) {
-            gregorio_add_score_header(score, $1.text, $2.text);
-            score->mode=atoi($2.text);
-        }
-    }
-    ;
-
-mode_modifier_definition:
-    MODE_MODIFIER attribute {
-        check_multiple("mode-modifier", score->mode_modifier != NULL);
-        gregorio_add_score_header(score, $1.text, $2.text);
-        gregorio_set_score_mode_modifier (score, $2.text);
-    }
-    ;
-
-staff_lines_definition:
-    STAFF_LINES attribute {
-        check_multiple("staff-lines", got_staff_lines);
-        if ($2.text) {
-            gregorio_add_score_header(score, $1.text, $2.text);
-            gregorio_set_score_staff_lines(score, atoi($2.text));
-            got_staff_lines = true;
-        }
-    }
-    ;
-
-nabc_lines_definition:
-    NABC_LINES attribute {
-        check_multiple("nabc lines", score->nabc_lines != 0);
-        if ($2.text) {
-            gregorio_add_score_header(score, $1.text, $2.text);
-            nabc_lines=atoi($2.text);
-            score->nabc_lines=nabc_lines;
-        }
-    }
-    ;
-
-initial_style_definition:
-    INITIAL_STYLE attribute {
-        if ($2.text) {
-            /* DEPRECATED by 4.1 */
-            gregorio_message("\"initial-style\" header is deprecated. Please "
-            "use \\gresetinitiallines in TeX instead.",
-            "gabc_score_determination_parse", VERBOSITY_DEPRECATION, 0);
-            score->initial_style=atoi($2.text);
-            free($2.text);
-        }
-    }
-    ;
-
-annotation_definition:
-    ANNOTATION attribute {
-        if (score->annotation [MAX_ANNOTATIONS - 1]) {
-            gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
-                    _("too many definitions of annotation found, only the "
-                    "first %d will be taken"), MAX_ANNOTATIONS);
-        }
-        gregorio_add_score_header(score, $1.text, $2.text);
-        gregorio_set_score_annotation(score, $2.text);
-    }
-    ;
-
-author_definition:
-    AUTHOR attribute {
-        check_multiple("author", score->author != NULL);
-        gregorio_add_score_header(score, $1.text, $2.text);
-        gregorio_set_score_author(score, $2.text);
-    }
-    ;
-
-manuscript_reference_definition:
-    MANUSCRIPT_REFERENCE attribute {
-        check_multiple("manuscript-reference",
-                score->manuscript_reference != NULL);
-        gregorio_add_score_header(score, $1.text, $2.text);
-        gregorio_set_score_manuscript_reference(score, $2.text);
-    }
-    ;
-
-oriscus_orientation_definition:
-    ORISCUS_ORIENTATION attribute {
-        gregorio_add_score_header(score, $1.text, $2.text);
-        score->legacy_oriscus_orientation = (strcmp($2.text, "legacy") == 0);
-    }
-    ;
-
-other_header_definition:
-    OTHER_HEADER attribute {
-        gregorio_add_score_header(score, $1.text, $2.text);
-    }
-    ;
-
 attribute:
     COLON ATTRIBUTE SEMICOLON {
         $$.text = $2.text;
@@ -911,22 +757,114 @@ attribute:
     ;
 
 definition:
-    number_of_voices_definition
-    | name_definition
-    | macro_definition
-    | gabc_copyright_definition
-    | score_copyright_definition
-    | staff_lines_definition
-    | nabc_lines_definition
-    | author_definition
-    | manuscript_reference_definition
-    | annotation_definition
-    | initial_style_definition /* DEPRECATED by 4.1 */
-    | mode_definition
-    | mode_modifier_definition
-    | language_definition
-    | oriscus_orientation_definition
-    | other_header_definition
+    NUMBER_OF_VOICES attribute {
+        gregorio_add_score_header(score, $1.text, $2.text);
+        number_of_voices=atoi($2.text);
+        if (number_of_voices > MAX_NUMBER_OF_VOICES) {
+            gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
+                    _("can't define %d voices, maximum is %d"),
+                    number_of_voices, MAX_NUMBER_OF_VOICES);
+        }
+        score->number_of_voices = number_of_voices;
+    }
+    | DEF_MACRO attribute {
+        /* these definitions are not passed through */
+        free(macros[$1.character - '0']);
+        macros[$1.character - '0'] = $2.text;
+    }
+    | NAME attribute {
+        if ($2.text == NULL) {
+            gregorio_message("name can't be empty","det_score",
+                    VERBOSITY_WARNING, 0);
+        }
+        check_multiple("name", score->name != NULL);
+        gregorio_add_score_header(score, $1.text, $2.text);
+        score->name = $2.text;
+    }
+    | LANGUAGE attribute {
+        check_multiple("language", got_language);
+        gregorio_add_score_header(score, $1.text, $2.text);
+        gregorio_set_centering_language($2.text);
+        got_language = true;
+    }
+    | GABC_COPYRIGHT attribute {
+        check_multiple("gabc-copyright", score->gabc_copyright != NULL);
+        gregorio_add_score_header(score, $1.text, $2.text);
+        score->gabc_copyright = $2.text;
+    }
+    | SCORE_COPYRIGHT attribute {
+        check_multiple("score_copyright", score->score_copyright != NULL);
+        gregorio_add_score_header(score, $1.text, $2.text);
+        score->score_copyright = $2.text;
+    }
+    | MODE attribute {
+        check_multiple("mode", score->mode != 0);
+        gregorio_add_score_header(score, $1.text, $2.text);
+        score->mode = $2.text;
+    }
+    | MODE_MODIFIER attribute {
+        check_multiple("mode-modifier", score->mode_modifier != NULL);
+        gregorio_add_score_header(score, $1.text, $2.text);
+        score->mode_modifier = $2.text;
+    }
+    | MODE_DIFFERENTIA attribute {
+        check_multiple("mode-differentia", score->mode_differentia != NULL);
+        gregorio_add_score_header(score, $1.text, $2.text);
+        score->mode_differentia = $2.text;
+    }
+    | STAFF_LINES attribute {
+        check_multiple("staff-lines", got_staff_lines);
+        if ($2.text) {
+            gregorio_add_score_header(score, $1.text, $2.text);
+            gregorio_set_score_staff_lines(score, atoi($2.text));
+            got_staff_lines = true;
+        }
+    }
+    | NABC_LINES attribute {
+        check_multiple("nabc lines", score->nabc_lines != 0);
+        if ($2.text) {
+            gregorio_add_score_header(score, $1.text, $2.text);
+            nabc_lines=atoi($2.text);
+            score->nabc_lines=nabc_lines;
+        }
+    }
+    | INITIAL_STYLE attribute {
+        if ($2.text) {
+            /* DEPRECATED by 4.1 */
+            gregorio_message("\"initial-style\" header is deprecated. Please "
+            "use \\gresetinitiallines in TeX instead.",
+            "gabc_score_determination_parse", VERBOSITY_DEPRECATION, 0);
+            score->initial_style = atoi($2.text);
+            free($2.text);
+        }
+    }
+    | ANNOTATION attribute {
+        if (score->annotation [MAX_ANNOTATIONS - 1]) {
+            gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
+                    _("too many definitions of annotation found, only the "
+                    "first %d will be taken"), MAX_ANNOTATIONS);
+        }
+        gregorio_add_score_header(score, $1.text, $2.text);
+        gregorio_set_score_annotation(score, $2.text);
+    }
+    | AUTHOR attribute {
+        check_multiple("author", score->author != NULL);
+        gregorio_add_score_header(score, $1.text, $2.text);
+        score->author = $2.text;
+    }
+    | MANUSCRIPT_REFERENCE attribute {
+        check_multiple("manuscript-reference",
+                score->manuscript_reference != NULL);
+        gregorio_add_score_header(score, $1.text, $2.text);
+        score->manuscript_reference = $2.text;
+    }
+    | ORISCUS_ORIENTATION attribute {
+        gregorio_add_score_header(score, $1.text, $2.text);
+        score->legacy_oriscus_orientation = (strcmp($2.text, "legacy") == 0);
+    }
+    | OTHER_HEADER attribute {
+        gregorio_add_score_header(score, $1.text, $2.text);
+    }
     | VOICE_CHANGE {
         next_voice_info();
     }

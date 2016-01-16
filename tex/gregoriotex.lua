@@ -968,6 +968,15 @@ local function capture_header(header, value)
   end
 end
 
+local function mode_part(part)
+  if part ~= '' then
+    if not unicode.utf8.match(part, '^%p') then
+      tex.sprint([[\thinspace]])
+    end
+    tex.print(part)
+  end
+end
+
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
 
@@ -1000,3 +1009,4 @@ gregoriotex.capture_header       = capture_header
 gregoriotex.save_pos             = save_pos
 gregoriotex.late_save_pos        = late_save_pos
 gregoriotex.is_ypos_different    = is_ypos_different
+gregoriotex.mode_part            = mode_part

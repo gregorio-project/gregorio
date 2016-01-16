@@ -563,7 +563,7 @@ Macro for typesetting low choral signs.
   & \texttt{1} & Choral sign occurs before last note of podatus, porrectus, or torculus resupinus.\\
 \end{argtable}
 
-\macroname{\textbackslash GreMode}{\#1\#2}{gregoriotex-main.tex}
+\macroname{\textbackslash GreMode}{\#1\#2\#3}{gregoriotex-main.tex}
 If the gabc file contains a mode in the header, then this function
 places said mode as the first (top) annotation.  If the user has
 manually added a first annotation in the \TeX\ file, then this
@@ -571,8 +571,9 @@ function does nothing. Also, if the \texttt{annotation} header field
 is used, then this function does nothing.
 
 \begin{argtable}
-  \#1 & \texttt{1}--\texttt{8} & The mode.  Other values are ignored.\\
-  \#2 & \TeX\ code & Arbitrary code to typeset after the mode.\\
+  \#1 & \TeX\ code & Mode text to place above the initial of a score in the \texttt{modeline} style.\\
+  \#2 & \TeX\ code & Arbitrary code to typeset, in the \texttt{modemodifier} style, after the mode text.\\
+  \#3 & \TeX\ code & Arbitrary code to typeset, in the \texttt{modedifferentia} style, after \#2.\\
 \end{argtable}
 
 \macroname{\textbackslash GreNatural}{\#1\#2}{gregoriotex-signs.tex}

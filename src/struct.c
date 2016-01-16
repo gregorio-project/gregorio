@@ -1197,69 +1197,6 @@ void gregorio_free_score(gregorio_score *score)
     free(score);
 }
 
-void gregorio_set_score_name(gregorio_score *score, char *name)
-{
-    if (!score) {
-        gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_score_name", VERBOSITY_WARNING, 0);
-        return;
-    }
-    score->name = name;
-}
-
-void gregorio_set_score_gabc_copyright(gregorio_score *score,
-        char *gabc_copyright)
-{
-    if (!score) {
-        gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_score_gabc_copyright", VERBOSITY_WARNING, 0);
-        return;
-    }
-    score->gabc_copyright = gabc_copyright;
-}
-
-void gregorio_set_score_score_copyright(gregorio_score *score,
-        char *score_copyright)
-{
-    if (!score) {
-        gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_score_score_copyright", VERBOSITY_WARNING, 0);
-        return;
-    }
-    score->score_copyright = score_copyright;
-}
-
-void gregorio_set_score_language(gregorio_score *score, char *language)
-{
-    if (!score) {
-        gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_score_language", VERBOSITY_WARNING, 0);
-        return;
-    }
-    score->language = language;
-}
-
-void gregorio_set_score_mode_modifier(gregorio_score *score, char *mode_modifier)
-{
-    if (!score) {
-        gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_score_mode_modifier", VERBOSITY_WARNING, 0);
-        return;
-    }
-    score->mode_modifier = mode_modifier;
-}
-
-void gregorio_set_score_number_of_voices(gregorio_score *score,
-        int number_of_voices)
-{
-    if (!score) {
-        gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_score_number_of_voices", VERBOSITY_WARNING, 0);
-        return;
-    }
-    score->number_of_voices = number_of_voices;
-}
-
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info)
 {
     gregorio_voice_info *next = gregorio_calloc(1, sizeof(gregorio_voice_info));
@@ -1284,10 +1221,6 @@ void gregorio_free_voice_infos(gregorio_voice_info *voice_info)
     }
 }
 
-/*
- * a set of quite useless function 
- */
-
 void gregorio_set_score_annotation(gregorio_score *score, char *annotation)
 {
     int annotation_num;
@@ -1307,27 +1240,6 @@ void gregorio_set_score_annotation(gregorio_score *score, char *annotation)
         gregorio_message(_("too many annotations"),
                 "gregorio_set_annotation", VERBOSITY_WARNING, 0);
     }
-}
-
-void gregorio_set_score_author(gregorio_score *score, char *author)
-{
-    if (!score) {
-        gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_score_author", VERBOSITY_WARNING, 0);
-        return;
-    }
-    score->author = author;
-}
-
-void gregorio_set_score_manuscript_reference(gregorio_score *score,
-        char *manuscript_reference)
-{
-    if (!score) {
-        gregorio_message(_("function called with NULL argument"),
-                "gregorio_set_score_reference", VERBOSITY_WARNING, 0);
-        return;
-    }
-    score->manuscript_reference = manuscript_reference;
 }
 
 void gregorio_set_score_staff_lines(gregorio_score *const score,

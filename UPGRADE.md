@@ -52,6 +52,10 @@ The oriscus orientation (whether it points up or down) is now dependent on the n
 
 Prior to version 4.1, Gregorio automatically oriented the oriscus when it was within a neume, but left the orientation up the user otherwise.  If you prefer this behavior, set the `oriscus-orientation` header in gabc to `legacy`.  In legacy mode, the orientation of an unconnected oriscus will (by default) point downwards and may be reversed by appending `<` or `>` to the oriscus.
 
+### Mode number
+
+The style for the mode number has been bold and small capitals for a long time, but the number was rendered as upper-case Roman numerals, defeating the nuance of small capitals.  As of version 4.1, Gregorio will use lower-case Roman numerals (by default) that will then appear as small capitals.  This will change how the mode number appears above the initial if you have been using the `mode` header to typeset them.  If you prefer the earlier appearance, use `\gresetmodenumbersystem{roman-majuscule}` in your TeX file for upper-case Roman numerals.  The other options available are `roman-minuscule` (the new default), for lower-case Roman numerals, and `arabic`, for Arabic numerals.
+
 ## 4.0
 
 ### Font changes
