@@ -128,12 +128,13 @@ The mode annotation will look like
 \writemode{mode}{\thinspace mode-modifier}{\thinspace mode-differentia}.
 
 The \texttt{mode} header is typically a number that will be typeset as a
-Roman numeral using the \texttt{modeline} style.  However, there are other
-modes.  If the first character of \texttt{mode} is a number from one
-(\texttt{1}) through eight (\texttt{8}), that number will be converted
-according to the \verb=\gresetmodenumbersystem= setting.  Everything else
-will be typeset directly.  If the \texttt{mode} header is omitted, none of
-the other mode headers will be typeset.
+Roman numeral using the \texttt{modeline} style.  Therefore, if the first
+character of \texttt{mode} is a number from one (\texttt{1}) through eight
+(\texttt{8}), that number will be converted according to the
+\verb=\gresetmodenumbersystem= setting.  However, there are other modes,
+so all other parts of \texttt{mode} will be typeset directly.  If the
+\texttt{mode} header is omitted, none of the other mode headers will be
+typeset.
 
 The \texttt{mode-modifier} header is some text (typeset in the
 \texttt{modemodifier} style) that appears after \texttt{mode}, but before
