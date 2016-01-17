@@ -29,8 +29,10 @@ writelog 6 "Running mktexlsr"
 
 # Change permisions on the installed supplemental files
 cd /Users/Shared/Gregorio
-writelog 6 "Setting Permissions for examples and doc"
+writelog 6 "Setting Permissions for examples, doc, and configuration scripts"
 chmod -R 777 examples/
 chmod -R 777 doc/
+chmod +x contrib/TeXShop/auto-configure.command
+chmod +x contrib/config-texworks-mac.command
 
 writelog 6 "Installation Complete"
