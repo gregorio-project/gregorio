@@ -3631,6 +3631,20 @@ static void write_headers(FILE *const f, gregorio_score *const score)
     fprintf(f, "\\GreEndHeaders %%\n");
 }
 
+static void suppress_expansion(FILE *const f, const char *text)
+{
+    if (!text) {
+        return;
+    }
+
+    for (; *text; ++text) {
+        if (*text == '\\') {
+            fprintf(f, "\\noexpand");
+        }
+        fputc(*text, f);
+    }
+}
+
 void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         const char *const point_and_click_filename)
 {
@@ -3695,12 +3709,21 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         }
         fprintf(f, "%%\n");
     }
-    if (score->mode != 0) {
-        fprintf(f, "\\GreMode{%d}{%s}%%\n", score->mode,
-                score->mode_modifier? score->mode_modifier : "");
+    if (score->mode) {
+        fprintf(f, "\\GreMode{");
+        if (*(score->mode) >= '1' && *(score->mode) <= '8') {
+            fprintf(f, "\\GreModeNumber{%c}%s", *(score->mode), score->mode + 1);
+        } else {
+            fprintf(f, "%s", score->mode);
+        }
+        fprintf(f, "}{");
+        suppress_expansion(f, score->mode_modifier);
+        fprintf(f, "}{");
+        suppress_expansion(f, score->mode_differentia);
+        fprintf(f, "}%%\n");
     }
 
-    if (score->initial_style != INITIAL_NOT_SPECIFIED) {
+    if (score->initial_style != INITIAL_NOT_SPECIFIED) { /* DEPRECATED by 4.1 */
         fprintf(f, "\\GreSetInitialStyle{%d}%%\n", score->initial_style);
     }
 

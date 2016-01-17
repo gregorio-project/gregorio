@@ -633,7 +633,7 @@
   \relax %
 }%
 
-\def\GreScoreReference#1{
+\def\GreScoreReference#1{%
   \gre@obsolete{\protect\GreScoreReference}{\protect\grescorereference}%
 }%
 
@@ -646,36 +646,37 @@
 %% macros for the typesetting the things above the initial
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\gre@writemode#1#2{%
+\def\gre@writemode#1#2#3{%
   \greannotation{%
-    \gre@style@modeline #1\endgre@style@modeline\space\gre@style@modemodifier #2\unskip\endgre@style@modemodifier\relax %
+    \gre@style@modeline #1\endgre@style@modeline %
+    \gre@style@modemodifier \directlua{gregoriotex.mode_part("\luaescapestring{#2}")}\endgre@style@modemodifier %
+    \gre@style@modedifferentia \directlua{gregoriotex.mode_part("\luaescapestring{#3}")}\endgre@style@modedifferentia %
+    \relax %
   }%
   \relax %
 }%
 
-\def\GreMode#1#2{%
+\def\GreMode#1#2#3{%
   \ifvoid\gre@box@annotation%
-    \ifcase#1%
-    \or%
-      \gre@writemode{I}{#2}%
-    \or%
-      \gre@writemode{II}{#2}%
-    \or%
-      \gre@writemode{III}{#2}%
-    \or%
-      \gre@writemode{IV}{#2}%
-    \or%
-      \gre@writemode{V}{#2}%
-    \or%
-      \gre@writemode{VI}{#2}%
-    \or%
-      \gre@writemode{VII}{#2}%
-    \or%
-      \gre@writemode{VIII}{#2}%
-    \fi%
+    \gre@writemode{#1}{#2}{#3}%
   \fi%
   \relax%
 }%
+
+\def\gre@romannumeral@majuscule#1{\uppercase\expandafter{\romannumeral#1\relax}}%
+\def\gre@romannumeral@minuscule#1{\romannumeral#1\relax}%
+\def\gresetmodenumbersystem#1{%
+  \IfStrEq{#1}{roman-majuscule}%
+    {\let\GreModeNumber\gre@romannumeral@majuscule}%
+    {\IfStrEq{#1}{roman-minuscule}%
+      {\let\GreModeNumber\gre@romannumeral@minuscule}%
+      {\IfStrEq{#1}{arabic}%
+        {\let\GreModeNumber\relax}%
+        {\gre@error{Unrecognized option in \protect\gresetmodenumbersystem}}%
+      }%
+    }%
+}%
+\gresetmodenumbersystem{roman-minuscule}%
 
 \def\GreAnnotationLines#1#2{%
   \ifvoid\gre@box@annotation%
@@ -1176,7 +1177,7 @@
   \global\let\gre@save@englishcentering\gre@lyriccentering\relax % OBSOLETE
   \global\let\gre@opening@initialstyle\gre@initiallines\relax % DEPRECATED by 4.1
   \ifgre@justifylastline%
-    \xdef\gre@save@parfillskip{\the\parfillskip}
+    \xdef\gre@save@parfillskip{\the\parfillskip}%
     \parfillskip=0pt plus 0pt minus 0pt\relax%
   \fi %
   \ifgre@usestylefont%
@@ -1934,11 +1935,13 @@
     }%
 }%
 
-% redefinable macro called before the headers of a given inclusion
-\def\GreBeginHeaders{}
+% macro called before the headers of a given inclusion
+\def\GreBeginHeaders{}%
+\long\def\grebeforeheaders#1{\def\GreBeginHeaders{#1}}%
 
-% redefinable macro called after the headers of a given inclusion
-\def\GreEndHeaders{}
+% macro called after the headers of a given inclusion
+\def\GreEndHeaders{}%
+\long\def\greafterheaders#1{\def\GreEndHeaders{#1}}%
 
 % We load the default space configuration.
 \greloadspaceconf{default}%

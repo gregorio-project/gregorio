@@ -89,7 +89,7 @@
   \IfStrEq{#1}{visible}%
     {\gre@showcleftrue}%
     {\IfStrEq{#1}{invisible}%
-      {\gre@showcleffalse}
+      {\gre@showcleffalse}%
       {\gre@error{Unrecognized option for \protect\gresetclef}}%
     }%
 }%
@@ -299,7 +299,7 @@
 }%
 
 % typesets a custos for the end of the score
-\def\GreFinalCustos#1{
+\def\GreFinalCustos#1{%
   \GreNoBreak%
   \gre@skip@temp@four = \gre@skip@spacebeforeeolcustos\relax%
   \advance\gre@skip@temp@four by \gre@skip@interelementspace\relax%
@@ -583,7 +583,7 @@
         \else %
           \ifx#7\gre@fontchar@brace %
             \gre@draw@brace{#1}%
-          \else
+          \else %
             \ifx#7\gre@fontchar@underbrace %
               \gre@draw@underbrace{#1}%
             \fi %
@@ -793,7 +793,7 @@
       \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
       \kern-.5\wd\gre@box@temp@sign %
     \fi %
-    \if\relax\detokenize{#5}\relax
+    \if\relax\detokenize{#5}\relax %
       \gre@dimen@temp@five=\gre@dimen@glyphraisevalue\relax %
       \ifnum\number#2 > 0\relax %
         \gre@calculate@glyphraisevalue{#6}{15}%

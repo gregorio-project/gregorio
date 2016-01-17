@@ -262,14 +262,14 @@ optional argument.
   \#1 & string & Snippet of gabc code.\\
 \end{argtable}
 
-\macroname{\textbackslash gre@writemode}{\#1\#2}{gregoriotex-main.tex}
-Macro that writes its argument with \verb=\greannotation=. The
-argument typically is given to this macro by \verb=\GreMode= in the
-gtex file.
+\macroname{\textbackslash gre@writemode}{\#1\#2\#3}{gregoriotex-main.tex}
+Macro that writes its arguments with \verb=\greannotation=.  This
+macro is typically called by \verb=\GreMode= in the gtex file.
 
 \begin{argtable}
-  \#1 & string & Mode text to place above the initial of a score.\\
-  \#2 & \TeX\ code & Arbitrary code to typeset after the mode text.\\
+  \#1 & \TeX\ code & Mode text to place above the initial of a score in the \texttt{modeline} style.\\
+  \#2 & \TeX\ code & Arbitrary code to typeset, in the \texttt{modemodifier} style, after the mode text.\\
+  \#3 & \TeX\ code & Arbitrary code to typeset, in the \texttt{modedifferentia} style, after \#2.\\
 \end{argtable}
 
 \macroname{\textbackslash gre@brace@common}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
@@ -1063,6 +1063,20 @@ Sets the number of staff lines.
 
 \macroname{\textbackslash gre@stafflines}{}{gregoriotex-main.tex}
 Contains the number of staff lines.
+
+\macroname{\textbackslash gre@romannumeral@majuscule}{\#1}{gregoriotex-main.tex}
+Typesets its numeric argument as an upper-case Roman numeral.
+
+\begin{argtable}
+  \#1 & integer & The number to typeset\\
+\end{argtable}
+
+\macroname{\textbackslash gre@romannumeral@minuscule}{\#1}{gregoriotex-main.tex}
+Typesets its numeric argument as a lower-case Roman numeral.
+
+\begin{argtable}
+  \#1 & integer & The number to typeset\\
+\end{argtable}
 
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.

@@ -862,7 +862,7 @@
 %% Note: the distances created by this function are stored as strings, not skip or dimension registers.  This allows the user to specify a distance in em or ex units even though the font parameters may not be the same at the time the distance is specified and the time the distance is used.
 \newif\ifgre@checklength%
 \def\grecreatedim#1#2#3{%
-  \gre@dimension{#1}{#2}
+  \gre@dimension{#1}{#2}%
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
   \IfStrEq{#3}{1}%
     {\gre@obsolete{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}}%
@@ -968,7 +968,7 @@
   \input gsp-#1.tex\relax %
   \ifnum\greconffactor=0\relax%
     \gre@error{gsp-#1.tex does not have an assigned staff size.\MessageBreak Please edit it to define \protect\greconffactor}%
-  \fi
+  \fi %
   \ifnum\the\gre@factor=\greconffactor\else %If the space configuration file is designed for a \gre@factor other than the current one, then we need to rescale the distances.
     \gre@changedimenfactor{\greconffactor}{\gre@factor} %
   \fi%
@@ -1052,8 +1052,8 @@
 \newcount\gre@unitfactor%
 \newcount\gre@basefactor%
 \def\gre@convertto#1#2{%
-  \gre@debugmsg{general}{convertto (#1) (#2)}
-  \gre@debugmsg{ifdim}{ #2 = 0pt}
+  \gre@debugmsg{general}{convertto (#1) (#2)}%
+  \gre@debugmsg{ifdim}{ #2 = 0pt}%
   \ifdim#2=0pt\relax%
     \edef\gre@converted{0 #1}%
   \else%
@@ -1066,13 +1066,13 @@
     \ifnum\gre@unitfactor < 0\relax%
       \gre@unitfactor = -\gre@unitfactor%
     \fi%
-    \gre@debugmsg{spacing}{unit: \the\gre@unit ; factor: \the\gre@unitfactor}
+    \gre@debugmsg{spacing}{unit: \the\gre@unit ; factor: \the\gre@unitfactor}%
     \gre@basefactor = \number\gre@maxlen%
     \divide\gre@basefactor by \number\gre@base\relax%
     \ifnum\gre@basefactor < 0\relax%
       \gre@basefactor = -\gre@basefactor%
     \fi%
-    \gre@debugmsg{spacing}{base: \the\gre@base ; factor: \the\gre@basefactor}
+    \gre@debugmsg{spacing}{base: \the\gre@base ; factor: \the\gre@basefactor}%
     \ifnum\gre@basefactor<\gre@unitfactor%
       \multiply\gre@unit by \gre@basefactor%
       \multiply\gre@base by \gre@basefactor%
@@ -1396,5 +1396,5 @@
 %To change all the distances associated with the initial.
 %First three arguments are distances, last is whether they should scale when \gre@factor changes.
 \def\setinitialspacing#1#2#3#4{%
-  \gre@obsolete{\protect\setinitialspacing}{\protect\grechangedim{beforeinitialshift}, \protect\grechangedim{manualinitialwidth}, and \protect\grechangedim{afterinitialshift}}
+  \gre@obsolete{\protect\setinitialspacing}{\protect\grechangedim{beforeinitialshift}, \protect\grechangedim{manualinitialwidth}, and \protect\grechangedim{afterinitialshift}}%
 }%
