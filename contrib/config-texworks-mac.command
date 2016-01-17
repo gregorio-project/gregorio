@@ -44,6 +44,9 @@ while read line; do
     if [[ $line == "# file-open-filter:"* ]]; then
         line=${line:2}
     fi
+    if [[ $line == *"Auxiliary files"* ]]; then
+        line="${line%?} *.gaux)"
+    fi
     if [[ $line == *"All files"* ]]; then
         echo "file-open-filter:	Gabc score (*.gabc)" >> "$CONFIG"
     fi
