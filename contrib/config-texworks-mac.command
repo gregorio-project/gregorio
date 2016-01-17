@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 
-# This script is designed to automatically configure a TeXworks distribution.
+# This script is designed to automatically configure a TeXworks distribution on a Mac.
+# You should be able to direct it to run by double clicking on it.
+
+
+#This trap combination allows the window to linger long enough for the user to
+#inspect the output, but still get closed when all is said and done.
+function quit {
+    read -n1 -r -p "Press any key to close window." key
+    osascript -e 'tell application "Terminal" to close front window' > /dev/null 2>&1 &
+}
+
+trap quit EXIT
 
 # Add the typesetting tool
 TOOLS="$HOME/Library/TeXworks/configuration/tools.ini"
