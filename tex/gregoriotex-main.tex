@@ -715,7 +715,7 @@
 \def\gre@commentary[#1]#2{%
   % we initialize commentarytrueraise here, but will only calculate it's final value just before placing the commentary so that we make sure we have the correct values for the distances which go into it
   \gre@style@commentary% to make sure font relative units on the argument translate correctly
-  \gre@dimen@commentarytrueraise=#1\relax%
+  \global\gre@dimen@commentarytrueraise=#1\relax%
   \endgre@style@commentary%
   \ifvoid\gre@box@commentary%
     \setbox\gre@box@commentary = \hbox{\gre@style@commentary#2\endgre@style@commentary}%
