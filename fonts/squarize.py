@@ -6,7 +6,7 @@
 """
     Python fontforge script to build a square notation font.
 
-    Copyright (C) 2013-2015 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2013-2016 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 
@@ -29,10 +29,6 @@
 
     To build your own font, look at gregorio-base.sfd, and build your
     own glyphs from it.
-
-    Basic use :
-     ./squarize.py fontname
-
 """
 
 from __future__ import print_function
@@ -128,11 +124,10 @@ def main():
         parser.print_help()
         sys.exit(1)
     args = parser.parse_args()
-    print(args)
     subspecies = '_%s' % args.subspecies if args.subspecies else ''
-    BASE_HEIGHT = args.BASE_HEIGHT
-    HEPISEMA_ADDITIONAL_WIDTH = args.HEPISEMA_ADDITIONAL_WIDTH
-    DEMINUTUS_VERTICAL_SHIFT = args.DEMINUTUS_VERTICAL_SHIFT
+    BASE_HEIGHT = int(args.BASE_HEIGHT)
+    HEPISEMA_ADDITIONAL_WIDTH = int(args.HEPISEMA_ADDITIONAL_WIDTH)
+    DEMINUTUS_VERTICAL_SHIFT = int(args.DEMINUTUS_VERTICAL_SHIFT)
     outfile = args.outfile
     inputfile = args.base_font
     if not outfile:
