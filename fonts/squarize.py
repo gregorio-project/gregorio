@@ -85,9 +85,9 @@ GREGORIO_VERSION = '4.0.1'
 # U+E000 is the start of the BMP Private Use Area
 glyphnumber = 0xe000 - 1
 
-BASE_HEIGHT = 890
-HEPISEMA_ADDITIONAL_WIDTH=40
-DEMINUTUS_VERTICAL_SHIFT=80
+BASE_HEIGHT = 157.5
+HEPISEMA_ADDITIONAL_WIDTH=5
+DEMINUTUS_VERTICAL_SHIFT=10
 oldfont = None
 newfont = None
 font_name = None
@@ -157,12 +157,12 @@ def main():
     porrectus()
     porrectusflexus()
     torculusresupinus()
-    #leading()
-    #fusion()
-    #fusion_pes()
-    #fusion_pes_quadratum()
-    #fusion_flexus()
-    #fusion_porrectus()
+    leading()
+    fusion()
+    fusion_pes()
+    fusion_pes_quadratum()
+    fusion_flexus()
+    fusion_porrectus()
     # variants must be copied last!
     copy_variant_glyphs()
     newfont.generate(outfile)
@@ -527,8 +527,6 @@ def write_deminutus(i, j, length=0, tosimplify=0, firstbar=1):
             first_glyph = 'mdeminutusam1'
     elif firstbar == 0:
         first_glyph = 'mnbdeminutus'
-        if j == 1 and glyph_exists('mnbdeminutusam1'):
-            first_glyph = 'mnbdeminutusam1'
     paste_and_move(first_glyph, length, i*BASE_HEIGHT)
     write_line(j, length+get_width(first_glyph)-get_width('line2'),
                (i-j+1)*BASE_HEIGHT)
