@@ -994,6 +994,8 @@ def draw_salicus(i, j, last_glyph):
             last_glyph = 'PunctumLineBR'
         elif last_glyph == 'PunctumLineBL':
             last_glyph = 'Punctum'
+    if not last_glyph:
+        return length
     if not_deminutus:
         paste_and_move(last_glyph, length, (i+j)*BASE_HEIGHT)
         length = length + get_width(last_glyph)
@@ -1005,7 +1007,7 @@ def draw_salicus(i, j, last_glyph):
 
 def salicus_flexus():
     "Creates the salicus flexus."
-    message("salicus")
+    message("salicus flexus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
@@ -1031,28 +1033,31 @@ def write_salicus_flexus(i, j, k, last_glyph, lique=L_NOTHING):
     if copy_existing_glyph(glyph_name):
         return
     is_deminutus = last_glyph == 'deminutus'
-    if k == 1 and not is_deminutus:
+    if is_deminutus:
+        penult_glyph = None
+    elif k == 1:
         penult_glyph = 'PunctumLineBL'
     else:
         penult_glyph = 'PunctumLineBLBR'
     length = draw_salicus(i, j, penult_glyph)
-    if k == 1 and not is_deminutus:
-        length = length-0.01
-        if last_glyph == 'PunctumLineTL':
-            last_glyph = 'Punctum'
-        elif last_glyph == 'auctusa1':
-            last_glyph = 'PunctumAscendens'
-        elif last_glyph == 'auctusd1':
-            last_glyph = 'PunctumDescendens'
-    if k != 1:
-        length = length - get_width('line2')
-        write_line(k, length, (1+i+j-k)*BASE_HEIGHT)
     if is_deminutus:
-        length = length - get_width(last_glyph)
+        width_dem = write_deminutus(j+i, k, length,
+                        firstbar = 0 if j == 1 else 1)
+        length = length + width_dem
+    else:
+        if k == 1 and not is_deminutus:
+            length = length-0.01
+            if last_glyph == 'PunctumLineTL':
+                last_glyph = 'Punctum'
+            elif last_glyph == 'auctusa1':
+                last_glyph = 'PunctumAscendens'
+            elif last_glyph == 'auctusd1':
+                last_glyph = 'PunctumDescendens'
         if k != 1:
-            length = length + get_width('line2')
-    paste_and_move(last_glyph, length, (i+j-k)*BASE_HEIGHT)
-    length = length + get_width(last_glyph)
+            length = length - get_width('line2')
+            write_line(k, length, (1+i+j-k)*BASE_HEIGHT)
+        paste_and_move(last_glyph, length, (i+j-k)*BASE_HEIGHT)
+        length = length + get_width(last_glyph)
     set_width(length)
     end_glyph(glyph_name)
 
