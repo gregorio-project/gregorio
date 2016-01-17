@@ -15,7 +15,9 @@ trap quit EXIT
 
 # Add the typesetting tool
 TOOLS="$HOME/Library/TeXworks/configuration/tools.ini"
-last=`grep -E "\[\d+\]" "$TOOLS" | tail -1`
+oldTOOLS="$TOOLS.old"
+cp "$TOOLS" "$oldTOOLS"
+last=`grep -E "^\[[0-9]+\]$" "$TOOLS" | tail -1`
 last=${last:1:-1}
 last=$(expr $last + 0)
 (( last++ ))
@@ -28,6 +30,25 @@ echo "program=lualatex" >> "$TOOLS"
 echo "arguments=--shell-escape, \$synctexoption, \$fullname" >> "$TOOLS"
 echo "showPdf=true" >> "$TOOLS"
 
-# Add the file filter
+# Add the file filter and cleanup patterns to the configuration
 CONFIG="$HOME/Library/TeXworks/configuration/texworks-config.txt"
-echo "# file-open-filter: Gabc score (*.gabc)" >> "$CONFIG"
+oldCONFIG="$CONFIG.old"
+mv "$CONFIG" "$oldCONFIG"
+cleanup=false
+while read line; do
+    if [[ $line == "# file-open-filter:"* ]]; then
+        line=${line:2}
+    fi
+    if [[ $line == *"All files"* ]]; then
+        echo "file-open-filter:	Gabc score (*.gabc)" >> "$CONFIG"
+    fi
+    if [[ $line == "cleanup-patterns:"* ]]; then
+        cleanup=true
+    else
+        if $cleanup; then
+            echo "cleanup-patterns:	\$jobname.gaux *-*_*_*.gtex" >> "$CONFIG"
+            cleanup=false
+        fi
+    fi
+    echo "$line" >> "$CONFIG"
+done < "$oldCONFIG"
