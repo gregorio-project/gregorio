@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# This script is designed to automatically configure a TeXworks distribution on a Mac.
+# This script is designed to automatically configure a TeXworks distribution.
 # You should be able to direct it to run by double clicking on it.
 
 
@@ -8,13 +8,35 @@
 #inspect the output, but still get closed when all is said and done.
 function quit {
     read -n1 -r -p "Press any key to close window." key
-    osascript -e 'tell application "Terminal" to close front window' > /dev/null 2>&1 &
+    if $mac; then
+        osascript -e 'tell application "Terminal" to close front window' > /dev/null 2>&1 &
+    else
+        exit
+    fi
 }
 
 trap quit EXIT
 
+case "$(uname -s)" in
+    Darwin)
+        echo 'Mac OS X detected'
+        mac=true
+        ToolsDir="$HOME/Library/TeXworks"
+        ;;
+    Linux)
+        echo 'Linux detected'
+        mac=false
+        ToolsDir="$HOME/.TeXworks"
+        ;;
+    *)
+        echo 'Unsupported OS detected'
+        echo "Please configure TeXworks manually"
+        exit 1
+        ;;
+esac
+
 # Add the typesetting tool
-TOOLS="$HOME/Library/TeXworks/configuration/tools.ini"
+TOOLS="$ToolsDir/configuration/tools.ini"
 if [ ! -e "$TOOLS" ]; then
     echo "Cannot find TeXworks configuration"
     echo "Please open and close TeXworks and try running this script again"
@@ -37,7 +59,7 @@ echo "arguments=--shell-escape, \$synctexoption, \$fullname" >> "$TOOLS"
 echo "showPdf=true" >> "$TOOLS"
 
 # Add the file filter and cleanup patterns to the configuration
-CONFIG="$HOME/Library/TeXworks/configuration/texworks-config.txt"
+CONFIG="$ToolsDir/configuration/texworks-config.txt"
 oldCONFIG="$CONFIG.old"
 mv "$CONFIG" "$oldCONFIG"
 cleanup=false
