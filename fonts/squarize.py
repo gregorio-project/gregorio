@@ -41,6 +41,7 @@ import getopt, sys
 import fontforge, psMat
 import subprocess
 import os
+import argparse
 import os.path
 
 GPLV3 = """Gregorio is free software: you can redistribute it and/or
@@ -85,59 +86,66 @@ GREGORIO_VERSION = '4.0.1'
 # U+E000 is the start of the BMP Private Use Area
 glyphnumber = 0xe000 - 1
 
-BASE_HEIGHT = 157.5
-HEPISEMA_ADDITIONAL_WIDTH=5
-DEMINUTUS_VERTICAL_SHIFT=10
+# see defaults in get_parser()
+BASE_HEIGHT = 0
+HEPISEMA_ADDITIONAL_WIDTH=0
+DEMINUTUS_VERTICAL_SHIFT=0
 oldfont = None
 newfont = None
 font_name = None
 subspecies = None
 all_glyph_names = {}
 
-def usage():
-    "Prints the help message."
-    print(""" Python script to convert a small set of glyphs into a complete
+def get_parser():
+    "Return command line parser"
+    parser = argparse.ArgumentParser(
+        description="""Converts a small set of glyphs into a complete
 gregorian square notation font. The initial glyphs have a name
-convention, see gregorio-base.sfd for this convention.
-
-Usage:
-        squarize.py fontname
-""")
+convention, see gregorio-base.sfd.""")
+    parser.add_argument('-b', '--base-height',
+                        help='Half the vertical difference between two staff lines',
+                        action='store', default=157.5, dest='BASE_HEIGHT')
+    parser.add_argument('-a', '--hepisema-add',
+                        help='Additional length added left and right of horizontal episema',
+                        action='store', default=5, dest='HEPISEMA_ADDITIONAL_WIDTH')
+    parser.add_argument('-d', '--deminutus-shift',
+                        help='Vertical shifting of deminutus second note when ambitus is one',
+                        action='store', default=10, dest='DEMINUTUS_VERTICAL_SHIFT')
+    parser.add_argument('-o', '--outfile',
+                        help='output ttf file name',
+                        action='store', default=False, dest='outfile')
+    parser.add_argument('-s', '--sub-species',
+                        help='subspecies (can be \'op\')',
+                        action='store', default=False, dest='subspecies')
+    parser.add_argument('base_font', help="input sfd file name", action='store')
+    return parser
 
 def main():
     "Main function"
-    global oldfont, newfont, font_name, subspecies
-    try:
-        opts, args = getopt.gnu_getopt(sys.argv[1:], "o:h", ["outfile","help"])
-    except getopt.GetoptError:
-        # print help information and exit:
-        usage()
-        sys.exit(2)
-    font_base = args[0]
-    if len(args) > 1:
-        font_name = '%s-%s' % (font_base, args[1])
-        subspecies = '_%s' % args[1]
-    else:
-        font_name = font_base
-    outfile = "%s.ttf" % font_name
-    for opt, arg in opts:
-        if opt in ("-h", "--help"):
-            usage()
-            sys.exit()
-        elif opt in ("-o", "--outfile"):
-            outfile = arg
-            print(outfile)
-    if len(args) == 0:
-        usage()
-        sys.exit(2)
-    # the fonts
-    oldfont = fontforge.open("%s-base.sfd" % font_base)
+    global oldfont, newfont, font_name, subspecies, BASE_HEIGHT, HEPISEMA_ADDITIONAL_WIDTH, DEMINUTUS_VERTICAL_SHIFT
+    parser = get_parser()
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(1)
+    args = parser.parse_args()
+    print(args)
+    subspecies = '_%s' % args.subspecies if args.subspecies else ''
+    BASE_HEIGHT = args.BASE_HEIGHT
+    HEPISEMA_ADDITIONAL_WIDTH = args.HEPISEMA_ADDITIONAL_WIDTH
+    DEMINUTUS_VERTICAL_SHIFT = args.DEMINUTUS_VERTICAL_SHIFT
+    outfile = args.outfile
+    inputfile = args.base_font
+    if not outfile:
+        pre, ext = os.path.splitext(inputfile)
+        outfile = '%s.ttf' % pre
+    oldfont = fontforge.open(inputfile)
+    font_name = oldfont.fontname + subspecies
     newfont = fontforge.font()
     # newfont.encoding = "UnicodeFull"
     newfont.encoding = "ISO10646-1"
-    newfont.fontname = "%s" % font_name
-    newfont.fullname = "%s" % font_name
-    newfont.familyname = "%s" % font_name
+    newfont.fontname = oldfont.fontname
+    newfont.fullname = oldfont.fullname
+    newfont.familyname = oldfont.familyname
     newfont.version = GREGORIO_VERSION
     newfont.copyright = oldfont.copyright.replace('<<GPLV3>>', GPLV3)
     newfont.weight = "regular"

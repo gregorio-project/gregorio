@@ -1,5 +1,5 @@
 SplineFontDB: 3.0
-FontName: gregorio-base
+FontName: gregorio
 FullName: gregorio
 FamilyName: gregorio
 Weight: Medium
@@ -19,7 +19,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1452387004
+ModificationTime: 1453052800
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0

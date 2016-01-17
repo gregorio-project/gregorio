@@ -1,5 +1,5 @@
 SplineFontDB: 3.0
-FontName: greciliae-base
+FontName: greciliae
 FullName: greciliae
 FamilyName: greciliae
 Weight: Medium
@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1452449649
+ModificationTime: 1453052814
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
