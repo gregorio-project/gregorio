@@ -697,12 +697,15 @@ Macro to add annotations (the text which appears above the initial) to a score. 
 
 \textbf{Nota Bene:} The first argument does not affect the alignment of lines already in the annotation, only the way the new line aligns with the existing lines as a whole.
 
-\macroname{\textbackslash grecommentary}{\{\#1\}}{gregoriotex-main.tex}
+\macroname{\textbackslash grecommentary}{[\optional{\#2}]\{\#1\}}{gregoriotex-main.tex}
 Macro to add commentary (the text flush right at the top, usually a scripture reference) to a score.  While a single call of this function does not support multiple lines, successive calls to the function will add a new line to the commentary directly below the previous.
 
 \begin{argtable}
-  \#1 & string & The text of the commentary.\\
+  \#1 & distance & Optional.  Additional distance to be placed between the commentary and the top staff line for the next score only.\\
+  \#2 & string & The text of the commentary.\\
 \end{argtable}
+
+\textbf{Nota Bene:} If your commentary is multi-lined, then the optional argument of the last line, and only the last line, will be taken into account.  Further, pay attention to the fact that the optional argument is \emph{additional} distance, \ie, it will be added to \texttt{commentaryraise} to determine the distance from the baseline of the commentary to the top line of the staff.
 
 \macroname{\textbackslash grescorereference}{\{\#1\}}{gregoriotex-main.tex}
 Macro to hold the score reference.  Currently the score reference does not print.

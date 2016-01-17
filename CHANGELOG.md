@@ -38,6 +38,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - More control over the alignment of the annotation.  You can now set either the first line or the last line of the annotation as the controling line with `\gresetannotationby{firstline}` and `\gresetannotationby{lastline}` respectively.  Additionaly, within the line you can specify the top, baseline, or bottom of the line as the alignment point with `\gresetannotationvalign{top}`, `\gresetannotation{baseline}`, and `\gresetannotationvalgin{bottom}` respectively.  Default behavior is baseline of the top line (as it was before).  These alignment controls are applied before `annotationraise` is taken into account.  See [#768](https://github.com/gregorio-project/gregorio/issues/768) for details.
 - More control over the placement of the commentary.  You can now set the amount of space between the lines of a multi-line commentary with `commentaryseparation` and the distance from the top line of the staff to the baseline of the bottom line of the commentary with `commentaryraise`.  See [#662](https://github.com/gregorio-project/gregorio/issues/662) for original request.
 - Styles for the annotation and the commentary.  `annotation` has no default styling.  `commentary` defaults to footnote sized italics.
+- `\grecommentary` now takes an optional argument which will add extra space between the commentary and the score for just the next score.
 
 
 ### Deprecated
