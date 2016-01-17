@@ -598,6 +598,7 @@
     \setbox\gre@box@old = \hbox to \gre@dimen@temp@three{\gre@leftfill\box\gre@box@annotation\gre@rightfill}%
     \setbox\gre@box@add = \hbox to \gre@dimen@temp@three{\gre@leftfill\gre@style@annotation#2\endgre@style@annotation\gre@rightfill}%
     % if the user has asked for the bottom line to be the controlling line, then we need to change the value of the annotationtrueraise appropriately
+    \gre@style@annotation% to make sure that an annotationseparation in font relative units translates correctly
     \ifgre@annotationbottomline%
       \ifcase\gre@count@annotationvalign\relax%
         %case 0 = top of first line
@@ -613,6 +614,7 @@
         \gre@bug{Invalid value for \protect\gre@count@annotationvalign}%
       \fi%
     \fi%
+    \endgre@style@annotation%
     \setbox\gre@box@annotation = \vtop spread \gre@dimen@annotationseparation\relax {\offinterlineskip\box\gre@box@old\vss\box\gre@box@add}%
   \fi%
 }%
