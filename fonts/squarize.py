@@ -528,19 +528,26 @@ def write_deminutus(i, j, length=0, tosimplify=0, firstbar=1):
     time. Sometimes we have to simplify before building the last glyph
     (tosimplify=1), and length is the offset.
     """
-    first_glyph = 'mademinutus'
+    first_glyph_is_complete = False
+    first_glyph = 'mademinutus' # firstbar == 2
     if firstbar == 1:
         first_glyph = 'mdeminutus'
-        if j == 1 and glyph_exists('mdeminutusam1'):
-            first_glyph = 'mdeminutusam1'
     elif firstbar == 0:
         first_glyph = 'mnbdeminutus'
+    if j == 1:
+        if glyph_exists('%sam1flexus' % first_glyph):
+            first_glyph = '%sam1flexus' % first_glyph
+            first_glyph_is_complete = True
+        elif glyph_exists('%sam1' % first_glyph):
+            first_glyph = '%sam1flexus' % first_glyph
     paste_and_move(first_glyph, length, i*BASE_HEIGHT)
-    write_line(j, length+get_width(first_glyph)-get_width('line2'),
+    if not first_glyph_is_complete:
+        write_line(j, length+get_width(first_glyph)-get_width('line2'),
                (i-j+1)*BASE_HEIGHT)
     if tosimplify:
         simplify()
-    paste_and_move("deminutus",
+    if not first_glyph_is_complete:
+        paste_and_move("deminutus",
                    length+get_width(first_glyph)-get_width('deminutus'),
                    (i-j)*BASE_HEIGHT)
     return get_width(first_glyph)
