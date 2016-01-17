@@ -1164,7 +1164,7 @@ def fusion_flexus():
         write_flexus(i, "mademinutus", 'deminutus', S_LOWER_FLEXUS,
                 L_DEMINUTUS)
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "PunctumLineBLBR", 'deminutus', S_UPPER_FLEXUS,
+        write_flexus(i, "mdeminutus", 'deminutus', S_UPPER_FLEXUS,
                 L_DEMINUTUS)
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "OriscusReversusLineTLBR", 'deminutus',
@@ -1198,7 +1198,7 @@ def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
     if copy_existing_glyph(glyph_name):
         return
     # we add a queue if it is a deminutus
-    if first_glyph == "mdeminutus":
+    if first_glyph == "mdeminutus" and shape != S_UPPER_FLEXUS:
         if shape == S_FLEXUS_NOBAR:
             write_deminutus(0, i, length=0, tosimplify=1, firstbar=0)
         elif shape == S_FLEXUS:
