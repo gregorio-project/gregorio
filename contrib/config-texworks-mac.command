@@ -20,6 +20,7 @@ if [ ! -e "$TOOLS" ]; then
     echo "Please open and close TeXworks and try running this script again"
     exit 1
 fi
+echo "Adding LuaLaTeX+se Typesetting tool"
 oldTOOLS="$TOOLS.old"
 cp "$TOOLS" "$oldTOOLS"
 last=`grep -E "^\[[0-9]+\]$" "$TOOLS" | tail -1`
@@ -40,6 +41,7 @@ CONFIG="$HOME/Library/TeXworks/configuration/texworks-config.txt"
 oldCONFIG="$CONFIG.old"
 mv "$CONFIG" "$oldCONFIG"
 cleanup=false
+echo "Adding Gregorio files to Open dialog and Trash Aux Files list"
 while read line; do
     if [[ $line == "# file-open-filter:"* ]]; then
         line=${line:2}
@@ -60,3 +62,6 @@ while read line; do
     fi
     echo "$line" >> "$CONFIG"
 done < "$oldCONFIG"
+
+echo "Configuration Complete"
+exit 0
