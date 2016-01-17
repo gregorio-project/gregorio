@@ -15,6 +15,11 @@ trap quit EXIT
 
 # Add the typesetting tool
 TOOLS="$HOME/Library/TeXworks/configuration/tools.ini"
+if [ ! -e "$TOOLS" ]; then
+    echo "Cannot find TeXworks configuration"
+    echo "Please open and close TeXworks and try running this script again"
+    exit 1
+fi
 oldTOOLS="$TOOLS.old"
 cp "$TOOLS" "$oldTOOLS"
 last=`grep -E "^\[[0-9]+\]$" "$TOOLS" | tail -1`
