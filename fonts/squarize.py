@@ -624,8 +624,10 @@ def write_hepisema(shape_width, glyphname, reduction=0):
     drawn_width = shape_width - reduction
     scale(drawn_width + 2*HEPISEMA_ADDITIONAL_WIDTH, 1)
     move(-HEPISEMA_ADDITIONAL_WIDTH, 0)
-    paste_and_move("hepisemaleft", -HEPISEMA_ADDITIONAL_WIDTH, 0)
-    paste_and_move("hepisemaright",
+    if glyph_exists('hepisemaleft'):
+        paste_and_move("hepisemaleft", -HEPISEMA_ADDITIONAL_WIDTH, 0)
+    if glyph_exists('hepisemaright'):
+        paste_and_move("hepisemaright",
                    drawn_width + HEPISEMA_ADDITIONAL_WIDTH, 0)
     # use the original width for the glyph for the sake of ledger lines
     set_width(shape_width)
