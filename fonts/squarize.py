@@ -1200,14 +1200,16 @@ def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
     # we add a queue if it is a deminutus
     if first_glyph == "mdeminutus" and shape != S_UPPER_FLEXUS:
         if shape == S_FLEXUS_NOBAR:
-            write_deminutus(0, i, length=0, tosimplify=1, firstbar=0)
+            length = write_deminutus(0, i, length=0, tosimplify=1, firstbar=0)
         elif shape == S_FLEXUS:
             write_first_bar(1)
-            write_deminutus(0, i, length=0, tosimplify=1, firstbar=1)
+            length = write_deminutus(0, i, length=0, tosimplify=1, firstbar=1)
         else:
             write_first_bar(2)
-            write_deminutus(0, i, length=0, tosimplify=1, firstbar=1)
-        length = get_width(first_glyph)
+            length = write_deminutus(0, i, length=0, tosimplify=1, firstbar=1)
+    elif last_glyph == 'deminutus' and (shape == S_UPPER_FLEXUS or shape == S_LOWER_FLEXUS):
+        firstbar = 1 if first_glyph == 'mdeminutus' else 2
+        length = write_deminutus(0, i, length=0, tosimplify=1, firstbar=firstbar)
     elif last_glyph == 'deminutus':
         simple_paste(first_glyph)
         write_line(i, get_width(first_glyph) - get_width('line2'),
