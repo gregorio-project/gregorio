@@ -373,13 +373,16 @@ many syllables are in the word.
   \#1 & string & Text from the first word.
 \end{argtable}
 
-\macroname{\textbackslash GreFlat}{\#1\#2}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreFlat}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
 Macro to typeset a flat.
 
 \begin{argtable}
   \#1 & integer & Height number of the flat.\\
   \#2 & \texttt{0} & No flat for a key change.\\
   & \texttt{1} & Indicates the flat for a key change.\\
+  \#3 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
+  \#4 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
+  \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
 \end{argtable}
 
 \macroname{\textbackslash GreForceHyphen}{}{gregoriotex-syllable.tex}
@@ -576,13 +579,16 @@ is used, then this function does nothing.
   \#3 & \TeX\ code & Arbitrary code to typeset, in the \texttt{modedifferentia} style, after \#2.\\
 \end{argtable}
 
-\macroname{\textbackslash GreNatural}{\#1\#2}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreNatural}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
 Macro to typeset a natural.
 
 \begin{argtable}
   \#1 & integer & Height number of the natural.\\
   \#2 & \texttt{0} & No flat for a key change.\\
   & \texttt{1} & Indicates the flat for a key change.\\
+  \#3 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
+  \#4 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
+  \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
 \end{argtable}
 
 \macroname{\textbackslash GreNewLine}{}{gregoriotex-main.tex}
@@ -854,13 +860,16 @@ Macro to set the text of the current syllable.
   \#3 & string & the end letters, they don't count for alignment\\
 \end{argtable}
 
-\macroname{\textbackslash GreSharp}{\#1\#2}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreSharp}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
 Macro to typeset a sharp.
 
 \begin{argtable}
   \#1 & integer & Height number of the sharp.\\
   \#2 & \texttt{0} & No flat for a key change.\\
   & \texttt{1} & Indicates the flat for a key change.\\
+  \#3 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
+  \#4 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
+  \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
 \end{argtable}
 
 \macroname{\textbackslash GreSmallCaps}{\#1}{gregoriotex.sty and gregoriotex.tex}

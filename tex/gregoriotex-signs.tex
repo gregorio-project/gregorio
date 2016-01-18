@@ -221,7 +221,7 @@
   \else %
     \gre@skip@temp@four = \gre@skip@clefflatspace\relax%
     \gre@hskip\gre@skip@temp@four %
-    \GreFlat{#4}{1}%
+    \GreFlat{#4}{1}{}{}{}%
   \fi %
   \relax %
 }%
@@ -1863,17 +1863,27 @@
 % #2 is the char of the alteration
 % #3 is the char of the alteration hole
 % #4 is 1 in the case of a flat for a key change, 0 otherwise
-\def\gre@alteration#1#2#3#4{%
-  \setbox\gre@box@temp@width=\hbox{#2}%
+% #5 are the signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)
+% #6 are the signs to typeset after the glyph (almost all signs)
+% #7 is the line:char:column for a textedit link
+\def\gre@alteration#1#2#3#4#5#6#7{%
+  \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{#2}{#7}}%
   \ifnum#4=0\relax %
     \gre@newglyphcommon %
   \fi %
+  \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
+  % the three next lines are a trick to get the additional lines below the glyphs
+  \gre@skip@temp@one = \gre@dimen@lastglyphwidth\relax%
+  \kern\gre@skip@temp@one %
+  #5\relax %
+  \kern-\gre@skip@temp@one %
   \gre@calculate@glyphraisevalue{#1}{0}%
   \ifgre@hidealtlines %
     \gre@fillhole{#3}%
   \fi %
   \raise \gre@dimen@glyphraisevalue\relax%
   \copy\gre@box@temp@width%
+  #6\relax %
   \ifnum#4=0\relax %
     % we try to avoid line breaking after a flat or a natural
     \GreNoBreak %
@@ -1891,28 +1901,29 @@
     \fi %
     \GreNoBreak %
   \fi %
+  \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax %
 }%
-  %
+
 % This macro typesets a flat on the height provided by #1. #2 is not used yet, but it
 % will determine if the flat has zero width or not.
 
-\def\GreFlat#1#2{%
-  \gre@alteration{#1}{\gre@fontchar@flat}{\gre@fontchar@flathole}{#2}%
+\def\GreFlat#1#2#3#4#5{%
+  \gre@alteration{#1}{\gre@fontchar@flat}{\gre@fontchar@flathole}{#2}{#3}{#4}{#5}%
   \relax%
 }%
 
 % Same as the one before, but for naturals.
 
-\def\GreNatural#1#2{%
-  \gre@alteration{#1}{\gre@fontchar@natural}{\gre@fontchar@naturalhole}{#2}%
+\def\GreNatural#1#2#3#4#5{%
+  \gre@alteration{#1}{\gre@fontchar@natural}{\gre@fontchar@naturalhole}{#2}{#3}{#4}{#5}%
   \relax%
 }%
 
 % Same as the one before, but for sharps.
 
-\def\GreSharp#1#2{%
-  \gre@alteration{#1}{\gre@fontchar@sharp}{\gre@fontchar@sharphole}{#2}%
+\def\GreSharp#1#2#3#4#5{%
+  \gre@alteration{#1}{\gre@fontchar@sharp}{\gre@fontchar@sharphole}{#2}{#3}{#4}{#5}%
   \relax%
 }%
 

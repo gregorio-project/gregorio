@@ -480,6 +480,15 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
         fprintf(f, "%cr<", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         break;
+    case S_FLAT:
+        fprintf(f, "%cx", pitch_letter(note->u.note.pitch));
+        break;
+    case S_NATURAL:
+        fprintf(f, "%cy", pitch_letter(note->u.note.pitch));
+        break;
+    case S_SHARP:
+        fprintf(f, "%c#", pitch_letter(note->u.note.pitch));
+        break;
     case S_VIRGA:
         fprintf(f, "%cv", pitch_letter(note->u.note.pitch));
         break;
@@ -639,19 +648,10 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
         return;
     }
     switch (glyph->type) {
-    case GRE_FLAT:
-        fprintf(f, "%cx", pitch_letter(glyph->u.misc.pitched.pitch));
-        break;
     case GRE_TEXVERB_GLYPH:
         if (glyph->texverb) {
             fprintf(f, "[gv:%s]", glyph->texverb);
         }
-        break;
-    case GRE_NATURAL:
-        fprintf(f, "%cy", pitch_letter(glyph->u.misc.pitched.pitch));
-        break;
-    case GRE_SHARP:
-        fprintf(f, "%c#", pitch_letter(glyph->u.misc.pitched.pitch));
         break;
     case GRE_SPACE:
         if (glyph->next) {

@@ -5,7 +5,7 @@
  * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
- * 
+ *
  * Gregorio is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -23,7 +23,7 @@
 /**
  * @file
  * @brief This file contains a set of function to manipulate the gregorio
- * structure. 
+ * structure.
  *
  * It starts by simple add/delete functions for almost all
  * structs, and ends with more complex functions for manipulating
@@ -200,14 +200,6 @@ void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar,
     gregorio_note *element = create_and_link_note(current_note, loc);
     element->type = GRE_BAR;
     element->u.other.bar = bar;
-}
-
-void gregorio_add_alteration_as_note(gregorio_note **current_note,
-        gregorio_type type, signed char pitch,
-        const gregorio_scanner_location *const loc)
-{
-    assert(type == GRE_FLAT || type == GRE_SHARP || type == GRE_NATURAL);
-    add_pitched_item_as_note(current_note, type, pitch, loc);
 }
 
 void gregorio_add_space_as_note(gregorio_note **current_note,
@@ -776,8 +768,7 @@ void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
         gregorio_type type, signed char pitch, bool force_pitch, char *texverb)
 {
     gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
-    assert(type == GRE_CUSTOS || type == GRE_FLAT || type == GRE_NATURAL
-           || type == GRE_SHARP);
+    assert(type == GRE_CUSTOS);
     next_glyph->type = type;
     next_glyph->u.misc.pitched.pitch = pitch;
     next_glyph->u.misc.pitched.force_pitch = force_pitch;
@@ -790,8 +781,7 @@ void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
 {
     gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
     assert(type != GRE_NOTE && type != GRE_GLYPH && type != GRE_ELEMENT
-           && type != GRE_CLEF && type != GRE_CUSTOS && type != GRE_FLAT
-           && type != GRE_NATURAL && type != GRE_SHARP);
+           && type != GRE_CLEF && type != GRE_CUSTOS);
     next_glyph->type = type;
     next_glyph->u.misc.unpitched.info = *info;
     next_glyph->u.misc.unpitched.special_sign = sign;
@@ -1333,7 +1323,9 @@ static signed char gregorio_syllable_first_note(gregorio_syllable *syllable)
         if (element->type == GRE_ELEMENT && element->u.first_glyph) {
             glyph = element->u.first_glyph;
             while (glyph) {
-                if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
+                if (glyph->type == GRE_GLYPH
+                        && glyph->u.notes.glyph_type != G_ALTERATION
+                        && glyph->u.notes.first_note) {
                     assert(glyph->u.notes.first_note->type == GRE_NOTE);
                     return glyph->u.notes.first_note->u.note.pitch;
                 }
@@ -1358,7 +1350,9 @@ signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
     if (glyph) {
         glyph = glyph->next;
         while (glyph) {
-            if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
+            if (glyph->type == GRE_GLYPH
+                    && glyph->u.notes.glyph_type != G_ALTERATION
+                    && glyph->u.notes.first_note) {
                 assert(glyph->u.notes.first_note->type == GRE_NOTE);
                 return glyph->u.notes.first_note->u.note.pitch;
             }
@@ -1374,7 +1368,9 @@ signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
         if (element->type == GRE_ELEMENT && element->u.first_glyph) {
             glyph = element->u.first_glyph;
             while (glyph) {
-                if (glyph->type == GRE_GLYPH && glyph->u.notes.first_note) {
+                if (glyph->type == GRE_GLYPH
+                        && glyph->u.notes.glyph_type != G_ALTERATION
+                        && glyph->u.notes.first_note) {
                     assert(glyph->u.notes.first_note->type == GRE_NOTE);
                     return glyph->u.notes.first_note->u.note.pitch;
                 }
@@ -1398,44 +1394,6 @@ signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
     /* here it means that there is no next note, so we return a stupid value,
      * but it won' t be used */
     return DUMMY_PITCH;
-}
-
-/**********************************
- *
- * A function that may be useful (used in xml-write) : we have a
- * tabular of alterations (we must remember all alterations on all
- * notes all the time, they are reinitialized when a bar is found),
- * and we assign all of them to NO_ALTERATION.
- *
- *This function works in fact with a tabular of tabular, one per
- *voice, for polyphony.
- *
- *********************************/
-
-void gregorio_reinitialize_alterations(char alterations[][13],
-        int number_of_voices)
-{
-    int i;
-    int j;
-    for (j = 0; j < number_of_voices; j++) {
-        for (i = 0; i < 13; i++) {
-            alterations[j][i] = NO_ALTERATION;
-        }
-    }
-}
-
-/**********************************
- *
- * The corresponding function for monophony.
- *
- *********************************/
-
-void gregorio_reinitialize_one_voice_alterations(char alterations[13])
-{
-    int i;
-    for (i = 0; i < 13; i++) {
-        alterations[i] = NO_ALTERATION;
-    }
 }
 
 /**********************************

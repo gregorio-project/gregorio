@@ -341,14 +341,6 @@ void dump_write_score(FILE *f, gregorio_score *score)
                         }
                         break;
 
-                    case GRE_FLAT:
-                    case GRE_NATURAL:
-                    case GRE_SHARP:
-                        fprintf(f, "       pitch                 %s\n",
-                                dump_pitch(glyph->u.misc.pitched.pitch,
-                                    score->highest_pitch));
-                        break;
-
                     case GRE_GLYPH:
                         fprintf(f, "       glyph_type            %d (%s)\n",
                                 glyph->u.notes.glyph_type,

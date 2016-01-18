@@ -420,15 +420,35 @@ local offset_cases = {
     v = [[\gre@vepisemaorrareaux{0}{\GreCPPunctum}{0}{0}{#2}{#3}{#4}]],
     h = [[\gre@hepisorlineaux{\GreCPPunctumTwoUp}{\gre@char@he@punctum{#4}}{2}{#3}]],
   },
+  -- qulisma fused to the next note
   {
     case = 'LeadingQuilisma',
     v = [[\gre@vepisemaorrareaux{0}{\GreCPQuilisma}{0}{0}{#2}{#3}{#4}]],
     h = [[\gre@hepisorlineaux{\GreCPQuilismaTwoUp}{\gre@char@he@quilisma{#4}}{2}{#3}]],
   },
+  -- oriscus fused to the next note
   {
     case = 'LeadingOriscus',
     v = [[\gre@vepisemaorrareaux{0}{\GreCPOriscus}{0}{0}{#2}{#3}{#4}]],
     h = [[\gre@hepisorlineaux{\GreCPOriscusTwoUp}{\gre@char@he@oriscus{#4}}{2}{#3}]],
+  },
+  -- flat
+  {
+    case = 'Flat',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPFlat}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPFlat}{\gre@char@he@flat{#4}}{2}{#3}]],
+  },
+  -- sharp
+  {
+    case = 'Sharp',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPSharp}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPSharp}{\gre@char@he@sharp{#4}}{2}{#3}]],
+  },
+  -- natural
+  {
+    case = 'Natural',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPNatual}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPNatural}{\gre@char@he@natural{#4}}{2}{#3}]],
   },
 }
 

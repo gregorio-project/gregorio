@@ -38,11 +38,16 @@
 
 \def\gresetpointandclick#1{%
   \IfStrEq{#1}{on}{%
-    \ifpdf %
-      \gre@generate@pointandclick=1\relax %
-    \else %
-      \gre@warning{Unable to enable point-and-click when not generating a PDF}%
+    \ifx\pdfoutput\undefined %
+      \gre@warning{Unable to enable point-and-click because \protect\pdfoutput \MessageBreak is not defined}%
       \gre@generate@pointandclick=0\relax %
+    \else %
+      \ifnum\pdfoutput=1\relax %
+        \gre@generate@pointandclick=1\relax %
+      \else %
+        \gre@warning{Unable to enable point-and-click when not\MessageBreak generating a PDF}%
+        \gre@generate@pointandclick=0\relax %
+      \fi %
     \fi %
   }{%
     \IfStrEq{#1}{off}{%
@@ -54,19 +59,24 @@
 }%
 
 \def\gre@pointandclick#1#2{%
-  \def\gre@@arg{\gre@gabcname#2}%
+  \def\gre@@arg{#2}%
   \ifx\gre@@arg\gre@nothing %
     #1%
   \else %
-    \ifnum\gre@generate@pointandclick=1\relax %
-      \pdfstartlink user{%
-        /Subtype/Link/Border[0 0 0]%
-        /A<</Type/Action/S/URI/URI(textedit://\gre@gabcname:#2)>>%
-      }%
+    \def\gre@@arg{\gre@gabcname}%
+    \ifx\gre@@arg\gre@nothing %
       #1%
-      \pdfendlink %
     \else %
-      #1%
+      \ifnum\gre@generate@pointandclick=1\relax %
+        \pdfstartlink user{%
+          /Subtype/Link/Border[0 0 0]%
+          /A<</Type/Action/S/URI/URI(textedit://\gre@gabcname:#2)>>%
+        }%
+        #1%
+        \pdfendlink %
+      \else %
+        #1%
+      \fi %
     \fi %
   \fi %
 }%
@@ -115,8 +125,7 @@
 \def\GreGlyph#1#2#3#4#5#6#7{%
   \gre@newglyphcommon %
   \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{\gre@font@music #1}{#7}}%
-  \gre@dimen@temp@three=\wd\gre@box@temp@width %
-  \global\gre@dimen@lastglyphwidth=\gre@dimen@temp@three %
+  \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
   % the three next lines are a trick to get the additional lines below the glyphs
   \gre@skip@temp@one = \gre@dimen@lastglyphwidth\relax%
   \kern\gre@skip@temp@one %
@@ -132,8 +141,6 @@
     \gre@calculate@notesaligncenter{#4}%
     \global\gre@firstglyphfalse%
   \fi%
-  %\gre@dimen@lastglyphwidth=\gre@dimen@temp@three
-  %#5\relax
   #6\relax %
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax%

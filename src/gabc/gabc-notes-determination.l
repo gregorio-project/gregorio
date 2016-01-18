@@ -169,13 +169,6 @@ static void add_sign(gregorio_sign sign)
     gregorio_add_sign(current_note, sign, vposition);
 }
 
-static __inline void add_alteration(const gregorio_type type)
-{
-    gregorio_add_alteration_as_note(&current_note, type,
-            pitch_letter_to_height(gabc_notes_determination_text[0]),
-            &notes_lloc);
-}
-
 static void save_before_ledger(const char *const before_ledger)
 {
     if (strcmp(before_ledger, "0") == 0) {
@@ -904,14 +897,16 @@ r4  {
 r5  {
         gregorio_add_special_sign(current_note, _SEMI_CIRCULUS_REVERSUS);
     }
-[a-npA-NP]x {
-        add_alteration(GRE_FLAT);
+x   {
+        gregorio_change_shape(current_note, S_FLAT, legacy_oriscus_orientation);
     }
-[a-npA-NP]# {
-        add_alteration(GRE_SHARP);
+#   {
+        gregorio_change_shape(current_note, S_SHARP,
+                legacy_oriscus_orientation);
     }
-[a-npA-NP]y {
-        add_alteration(GRE_NATURAL);
+y   {
+        gregorio_change_shape(current_note, S_NATURAL,
+                legacy_oriscus_orientation);
     }
 !?\/0 {
         gregorio_add_space_as_note(&current_note, SP_HALF_SPACE, NULL,

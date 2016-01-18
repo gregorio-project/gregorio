@@ -88,6 +88,9 @@ OFFSET_CASE(SalicusOriscusOne);
 OFFSET_CASE(LeadingPunctum);
 OFFSET_CASE(LeadingQuilisma);
 OFFSET_CASE(LeadingOriscus);
+OFFSET_CASE(Flat);
+OFFSET_CASE(Sharp);
+OFFSET_CASE(Natural);
 
 static __inline const char *note_before_last_note_case_ignoring_deminutus(
         const gregorio_note *const current_note)
@@ -960,6 +963,15 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         case S_LINEA:
             note->gtex_offset_case = FinalPunctum;
             break;
+        case S_FLAT:
+            note->gtex_offset_case = Flat;
+            break;
+        case S_SHARP:
+            note->gtex_offset_case = Sharp;
+            break;
+        case S_NATURAL:
+            note->gtex_offset_case = Natural;
+            break;
         default:
             note->gtex_offset_case = last_note_case(glyph,
                     fused_single_note_case(glyph, FinalPunctum, LeadingPunctum),
@@ -1527,6 +1539,9 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     case S_ORISCUS_CAVUM_ASCENDENS:
     case S_ORISCUS_CAVUM_DESCENDENS:
     case S_ORISCUS_CAVUM_DEMINUTUS:
+    case S_FLAT:
+    case S_SHARP:
+    case S_NATURAL:
         /* if this glyph starts with one of these, it's not fusable */
         return 0;
 
@@ -1559,6 +1574,9 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     case S_ORISCUS_CAVUM_ASCENDENS:
     case S_ORISCUS_CAVUM_DESCENDENS:
     case S_ORISCUS_CAVUM_DEMINUTUS:
+    case S_FLAT:
+    case S_SHARP:
+    case S_NATURAL:
         /* these don't fuse to anything */
         return 0;
 
