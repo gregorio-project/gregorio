@@ -386,6 +386,8 @@ Set the font used for the neumes.  The optional argument \texttt{[\#1]}
 may be used to specify an alternate font/rule set.  Currently, the only
 available alternate font/rule set is \texttt{op} for Dominican neumes.
 
+Note that the font will be looked up by name through luaotfload, see the documentation of luaotfload for what it implies.
+
 \begin{argtable}
   \#1 & \textit{(omitted)} & Use the normal font and rule set (default).\\
   & \texttt{op} & Use the alternate Dominican font/rule set.\\
@@ -394,6 +396,11 @@ available alternate font/rule set is \texttt{op} for Dominican neumes.
   & \texttt{parmesan} & Use the Parmesan font.\\
 \end{argtable}
 
+\macroname{\textbackslash gresetgregoriofontscaled}{[\optional{\#1}]\{\#2\}\{\#3\}}{gregoriotex-main.tex}
+
+This function is the same as above, with a third argument to scale the font. The fonts shipped with Gregorio do not need to use this function, but some custom fonts do. Note that you cannot use this to scale glyphs up or down, as they would not be placed correctly on the staff.
+
+The two first arguments are the same as \texttt{\textbackslash gresetgregoriofont}. The third argument is an integer representing the scaling factor, where the one used by \texttt{\textbackslash gresetgregoriofont} is 100000.
 
 \subsubsection{Glyph Alteration}
 In addition to the normal glyphs loaded by the choice of font, Gregorio\TeX\ also supports several methods for fine tuning the choice of glyphs.  Using the below functions, you can choose from alternative glyphs which are already built into Gregorio\TeX\ or import custom glyphs you have designed yourself.
