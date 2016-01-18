@@ -86,6 +86,9 @@ Macro for calculating \verb=\gre@textaligncenter=.
 \macroname{\textbackslash gre@calculate@annotationtrueraise}{}{gregoriotex-spaces.tex}
 Macro to calculate \verb=\gre@dimen@annotationtrueraise=.
 
+\macroname{\textbackslash gre@calculate@commentarytrueraise}{}{gregoriotex-spaces.tex}
+Macro to calculate \verb=\gre@dimen@commentarytrueraise=.
+
 \macroname{\textbackslash gre@calculate@textlower}{}{gregoriotex-spaces.tex}
 Calculates the value of \texttt{textlower}.  Default is \texttt{spacebeneathtext}.
 
@@ -755,6 +758,14 @@ Workhorse function behind \verb=\greannotation=.
   & \texttt{l} & left align the new line with the existing annotation content\\
   & \texttt{r} & right align the new line with the existing annotation content\\
   \#2 & string & the new annotation content\\
+\end{argtable}
+
+\macroname{\textbackslash gre@commentary}{[\#1]\#2}{gregoriotex-main.tex}
+Workhorse function behind \verb=\grecommentary=.
+
+\begin{argtable}
+  \#1 & distance & Additional distance to be placed between the commentary and the top staff line for the next score only.\\
+  \#2 & string & the new commentary content\\
 \end{argtable}
 
 \macroname{\textbackslash gre@atletter}{}{gregoriotex-main.tex}
@@ -1431,11 +1442,14 @@ Box which holds the initial of the score.
 \macroname{\textbackslash gre@box@annotation}{}{gregoriotex-main.tex}
 Box holding the annotation which goes above the initial.
 
-\macroname{\textbackslash gre@box@annotation@add}{}{gregoriotex-main.tex}
-Box used for the new line to be added to the annotation.
+\macroname{\textbackslash gre@box@commentary}{}{gregoriotex-main.tex}
+Box holding the commentary which goes above the first staff line on the right.
 
-\macroname{\textbackslash gre@box@annotation@old}{}{gregoriotex-main.tex}
-Box used for the existing lines in the annotation when a new line is being added.
+\macroname{\textbackslash gre@box@add}{}{gregoriotex-main.tex}
+Box used for the new line to be added to the box being built (used in multi-line commentaries and annotations).
+
+\macroname{\textbackslash gre@box@old}{}{gregoriotex-main.tex}
+Box used for the existing lines in the box being build when a new line is being added (used in multi-line commentaries and annotations).
 
 \macroname{\textbackslash gre@box@lines}{}{gregoriotex-main.tex}
 Box holding the staff lines.
@@ -1574,6 +1588,9 @@ An extra space that is added to \verb=\gre@dimen@bolshift= when the first glyph 
 
 \macroname{\textbackslash gre@dimen@annotationtrueraise}{}{gregoriotex-spaces.tex}
 The distance from the baseline of the initial to the baseline of the annotation.
+
+\macroname{\textbackslash gre@dimen@commentarytrueraise}{}{gregoriotex-spaces.tex}
+The distance from the baseline of the initial to the baseline of the commentary.
 
 \macroname{\textbackslash gre@minTextDistance}{}{gregoriotex-spaces.tex}
 Minimum distance between text (meaningful alias for \verb=\gre@skip@temp@one= inside \verb=\gre@calculate@syllablefinalskip=).

@@ -248,9 +248,23 @@
 }%
 \def\endgre@style@modedifferentia{\endgroup}%
 
+\def\gre@style@commentary{%
+  \begingroup%
+  \it%
+  % footnotesize is LaTeX, but nothing here since changing font size is so hard
+  \relax%
+}%
+\def\endgre@style@commentary{\endgroup}%
+
+\def\gre@style@annotation{%
+  \begingroup%
+  \relax%
+}%
+\def\endgre@style@annotation{\endgroup}%
+
 \def\gre@style@nabc{%
   \begingroup%
-  \relax% we do nothing since colors are implemented in PlainTeX
+  \relax% we do nothing since colors are not implemented in PlainTeX
 }
 \def\endgre@style@nabc{\endgroup}%
 
