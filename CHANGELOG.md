@@ -20,6 +20,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Made the oriscus orientation dependent on the note that follows.  Using `<` will force the ascending oriscus and `>` will force the descending oriscus.  The old behavior may be restored by setting the `oriscus-orientation` gabc header to `legacy`.  See UPGRADE.md for details (for the change request, see [#774](https://github.com/gregorio-project/gregorio/issues/774)).
 - Headers not recognized by gregorio, rather than inducing an error, are now simply accepted by gregorio.  Most of the old "standard" headers, like `book` and `manuscript-location`, are now handled in this way and thus are no longer limited to one instance.  See GregorioRef for details.
 - `mode` will now be converted to Roman numerals in lower case so that it shows up as small capitals using the default `modeline` style.  See [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#756](https://github.com/gregorio-project/gregorio/issues/756)).
+- `\grecommentary` is now less restrictive about where it occurs and need not occur directly before the score anymore.
 
 ### Added
 - Support for two-, three-, and five-line staves.  Set the `staff-lines` header to `2`, `3`, or `5`.  For all values of `staff-lines`, the note below the staff remains 'c'.  The two new notes above the staff (for a five-line staff) are `n` and `p`.  See [#429](https://github.com/gregorio-project/gregorio/issues/429).
@@ -35,6 +36,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Tunable spaces for bars with text underneath: `spacearoundsmallbartext`, `spacearoundminortext`, `spacearoundmaiortext`, `spacearoundfinalistext`, `spacebeforefinalfinalistext`.  These are sized slightly larger than their "non-text" counterparts.  See GregorioRef and [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#766](https://github.com/gregorio-project/gregorio/issues/766)).
 - The ability to typeset simple slurs.  See GregorioRef for details (for the change request, see [#776](https://github.com/gregorio-project/gregorio/issues/776)).
 - More control over the alignment of the annotation.  You can now set either the first line or the last line of the annotation as the controling line with `\gresetannotationby{firstline}` and `\gresetannotationby{lastline}` respectively.  Additionaly, within the line you can specify the top, baseline, or bottom of the line as the alignment point with `\gresetannotationvalign{top}`, `\gresetannotation{baseline}`, and `\gresetannotationvalgin{bottom}` respectively.  Default behavior is baseline of the top line (as it was before).  These alignment controls are applied before `annotationraise` is taken into account.  See [#768](https://github.com/gregorio-project/gregorio/issues/768) for details.
+- More control over the placement of the commentary.  You can now set the amount of space between the lines of a multi-line commentary with `commentaryseparation` and the distance from the top line of the staff to the baseline of the bottom line of the commentary with `commentaryraise`.  See [#662](https://github.com/gregorio-project/gregorio/issues/662) for original request.
+- Styles for the annotation and the commentary.  `annotation` has no default styling.  `commentary` defaults to footnote sized italics.
+- `\grecommentary` now takes an optional argument which will add extra space between the commentary and the score for just the next score.
 
 
 ### Deprecated
