@@ -1234,8 +1234,7 @@ def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
                        get_width(last_glyph), (-i)*BASE_HEIGHT)
         length = get_width(first_glyph)
     else:
-        if (i == 1 and first_glyph != 'odbase'
-                and first_glyph != 'OriscusReversusLineTLBR'):
+        if (i == 1 and first_glyph != 'OriscusReversusLineTLBR'):
             if last_glyph == 'PunctumLineTL':
                 last_glyph = 'Punctum'
             elif last_glyph == 'auctusa1':
@@ -1267,9 +1266,7 @@ def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
         if i != 1:
             write_line(i, length, (1-i)*BASE_HEIGHT)
         paste_and_move(last_glyph, length, (-i)*BASE_HEIGHT)
-        length = get_width(first_glyph) + get_width(last_glyph)
-        if i != 1:
-            length = length - get_width('line2')
+        length = length + get_width(last_glyph)
     set_width(length)
     end_glyph(glyph_name)
 
