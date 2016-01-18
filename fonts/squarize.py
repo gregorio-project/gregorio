@@ -945,27 +945,40 @@ def write_salicus(i, j, last_glyph, shape, lique=L_NOTHING):
     end_glyph(glyph_name)
 
 def draw_salicus(i, j, last_glyph):
-    not_deminutus = last_glyph != 'rdeminutus'
-    if j == 1 and not_deminutus:
+    deminutus = last_glyph == 'rdeminutus'
+    no_third_glyph = False
+    if j == 1 and not deminutus:
         if last_glyph == 'rvsbase':
             last_glyph = 'Virga'
         elif last_glyph == 'rvlbase':
             last_glyph = 'VirgaLongqueue'
-    if i == 1 and j == 1 and not_deminutus:
+    if i == 1 and j == 1 and not deminutus:
         first_glyph = 'Punctum'
         first_width = get_width(first_glyph)
         middle_glyph = 'Oriscus'
         middle_width = get_width(middle_glyph)
-    elif i == 1:
+    elif i == 1 and (not deminutus or not glyph_exists('PesQuassusOneDeminutus')):
         first_glyph = 'Punctum'
         first_width = get_width(first_glyph)
         middle_glyph = 'OriscusLineTR'
         middle_width = get_width(middle_glyph)-get_width('line2')
-    elif j == 1 and not_deminutus:
+    elif j == 1 and not deminutus:
         first_glyph = 'PunctumLineTR'
         first_width = get_width(first_glyph)-get_width('line2')
         middle_glyph = 'OriscusLineBL'
         middle_width = get_width(middle_glyph)
+    elif j == 1 and deminutus and glyph_exists('PesQuassusOneDeminutus') and glyph_exists('UpperPesQuassusOneDeminutus'):
+        if i == 1:
+            first_glyph = 'Punctum'
+            first_width = get_width(first_glyph)
+            middle_glyph = 'PesQuassusOneDeminutus'
+            middle_width = get_width(middle_glyph)
+        else:
+            first_glyph = 'PunctumLineTR'
+            first_width = get_width(first_glyph)-get_width('line2')
+            middle_glyph = 'UpperPesQuassusOneDeminutus'
+            middle_width = get_width(middle_glyph)
+        no_third_glyph = True
     else:
         first_glyph = 'PunctumLineTR'
         first_width = get_width(first_glyph)-get_width('line2')
@@ -977,32 +990,33 @@ def draw_salicus(i, j, last_glyph):
         paste_and_move(linename, first_width, BASE_HEIGHT)
     paste_and_move(middle_glyph, first_width, i*BASE_HEIGHT)
     length = first_width+middle_width
-    if j != 1:
-        linename = "line%d" % j
-        paste_and_move(linename, length, (i+1)*BASE_HEIGHT)
-    elif not_deminutus:
-        length = length-0.01
-        if last_glyph == 'auctusa2':
-            last_glyph = 'PunctumAscendens'
-        elif last_glyph == 'PunctumAuctusLineBL':
-            last_glyph = 'PunctumDescendens'
-        elif last_glyph == 'rvsbase':
-            last_glyph = 'Virga'
-        elif last_glyph == 'rvlbase':
-            last_glyph = 'VirgaLongqueue'
-        elif last_glyph == 'PunctumLineBLBR':
-            last_glyph = 'PunctumLineBR'
-        elif last_glyph == 'PunctumLineBL':
-            last_glyph = 'Punctum'
-    if not last_glyph:
-        return length
-    if not_deminutus:
-        paste_and_move(last_glyph, length, (i+j)*BASE_HEIGHT)
-        length = length + get_width(last_glyph)
-    else:
-        length = length+get_width('line2')
-        paste_and_move(last_glyph, (length-get_width(last_glyph)),
-                       (i+j)*BASE_HEIGHT)
+    if not no_third_glyph:
+        if j != 1:
+            linename = "line%d" % j
+            paste_and_move(linename, length, (i+1)*BASE_HEIGHT)
+        elif not deminutus:
+            length = length-0.01
+            if last_glyph == 'auctusa2':
+                last_glyph = 'PunctumAscendens'
+            elif last_glyph == 'PunctumAuctusLineBL':
+                last_glyph = 'PunctumDescendens'
+            elif last_glyph == 'rvsbase':
+                last_glyph = 'Virga'
+            elif last_glyph == 'rvlbase':
+                last_glyph = 'VirgaLongqueue'
+            elif last_glyph == 'PunctumLineBLBR':
+                last_glyph = 'PunctumLineBR'
+            elif last_glyph == 'PunctumLineBL':
+                last_glyph = 'Punctum'
+        if not last_glyph:
+            return length
+        if not deminutus:
+            paste_and_move(last_glyph, length, (i+j)*BASE_HEIGHT)
+            length = length + get_width(last_glyph)
+        else:
+            length = length+get_width('line2')
+            paste_and_move(last_glyph, (length-get_width(last_glyph)),
+                           (i+j)*BASE_HEIGHT)
     return length
 
 def salicus_flexus():
