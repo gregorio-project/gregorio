@@ -692,7 +692,7 @@ local function map_font(name, prefix)
   end
 end
 
-local function init_variant_font(font_name, for_score)
+local function init_variant_font(font_name, for_score, gre_factor, font_factor)
   if font_name ~= '*' then
     local font_table = for_score and score_fonts or symbol_fonts
     if font_table[font_name] == nil then
@@ -704,7 +704,7 @@ local function init_variant_font(font_name, for_score)
             [[\global\font\%s = {name:%s} at 10 sp\relax ]],
             font_csname, font_name))
         -- loaded_font_sizes will only be given a value if the font is for_score
-        loaded_font_sizes[font_name] = '10'
+        loaded_font_sizes[font_name] = {size = '10', gre_factor = gre_factor, font_factor = font_factor}
       else
         -- is there a nice way to make this string readable?
         tex.print(catcode_at_letter, string.format(
@@ -815,13 +815,13 @@ local function reset_score_glyph(glyph_name)
   end
 end
 
-local function scale_score_fonts(size)
+local function scale_score_fonts(size, font_factor, gre_factor)
   for font_name, font_csname in pairs(score_fonts) do
-    if loaded_font_sizes[font_name] and loaded_font_sizes[font_name] ~= size then
+    if loaded_font_sizes[font_name] and loaded_font_sizes[font_name].size ~= gre_factor * loaded_font_sizes[font_name].font_factor then
       tex.print(catcode_at_letter, string.format(
           [[\global\font\%s = {name:%s} at %s sp\relax ]],
-          font_csname, font_name, size))
-      loaded_font_sizes[font_name] = size
+          font_csname, font_name, gre_factor * loaded_font_sizes[font_name].font_factor))
+      loaded_font_sizes[font_name] = {size = size, font_factor = font_factor, gre_factor = gre_factor}
     end
   end
 end
