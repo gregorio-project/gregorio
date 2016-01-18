@@ -78,6 +78,7 @@ local space_above_staff = 13
 local score_fonts = {}
 local symbol_fonts = {}
 local loaded_font_sizes = {}
+local font_factors = {}
 local font_indexed = {}
 local next_variant = 0
 local variant_prefix = 'gre@font@variant@'
@@ -692,7 +693,7 @@ local function map_font(name, prefix)
   end
 end
 
-local function init_variant_font(font_name, for_score, gre_factor, font_factor)
+local function init_variant_font(font_name, for_score, gre_factor)
   if font_name ~= '*' then
     local font_table = for_score and score_fonts or symbol_fonts
     if font_table[font_name] == nil then
@@ -704,7 +705,10 @@ local function init_variant_font(font_name, for_score, gre_factor, font_factor)
             [[\global\font\%s = {name:%s} at 10 sp\relax ]],
             font_csname, font_name))
         -- loaded_font_sizes will only be given a value if the font is for_score
-        loaded_font_sizes[font_name] = {size = '10', gre_factor = gre_factor, font_factor = font_factor}
+        loaded_font_sizes[font_name] = {size = '10', gre_factor = gre_factor}
+        if font_factors[font_name] == nil then
+          font_factors[font_name] = '100000'
+        end
       else
         -- is there a nice way to make this string readable?
         tex.print(catcode_at_letter, string.format(
@@ -815,13 +819,17 @@ local function reset_score_glyph(glyph_name)
   end
 end
 
-local function scale_score_fonts(size, font_factor, gre_factor)
+local function set_font_factor(font_name, font_factor)
+  font_factors[font_name] = font_factor
+end
+
+local function scale_score_fonts(size, gre_factor)
   for font_name, font_csname in pairs(score_fonts) do
-    if loaded_font_sizes[font_name] and loaded_font_sizes[font_name].size ~= gre_factor * loaded_font_sizes[font_name].font_factor then
+    if loaded_font_sizes[font_name] and font_factors[font_name] and loaded_font_sizes[font_name].size ~= gre_factor * font_factors[font_name] then
       tex.print(catcode_at_letter, string.format(
           [[\global\font\%s = {name:%s} at %s sp\relax ]],
-          font_csname, font_name, gre_factor * loaded_font_sizes[font_name].font_factor))
-      loaded_font_sizes[font_name] = {size = size, font_factor = font_factor, gre_factor = gre_factor}
+          font_csname, font_name, gre_factor * font_factors[font_name]))
+      loaded_font_sizes[font_name] = {size = size, gre_factor = gre_factor}
     end
   end
 end
@@ -991,6 +999,7 @@ gregoriotex.init_variant_font    = init_variant_font
 gregoriotex.change_score_glyph   = change_score_glyph
 gregoriotex.reset_score_glyph    = reset_score_glyph
 gregoriotex.scale_score_fonts    = scale_score_fonts
+gregoriotex.set_font_factor      = set_font_factor
 gregoriotex.def_symbol           = def_symbol
 gregoriotex.font_size            = font_size
 gregoriotex.direct_gabc          = direct_gabc

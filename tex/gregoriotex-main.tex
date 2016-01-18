@@ -952,8 +952,7 @@
 % #2 = font name
 % #3 = glyph name, glyph variant name (preceded by .), or code point
 \def\grechangeglyph#1#2#3{%
-  \gre@count@temp@two = \expandafter\csname gre@fontfactor@\gre@gregoriofontname\endcsname\relax %
-  \directlua{gregoriotex.init_variant_font([[#2]],true, [[\the\gre@factor]], [[\the\gre@count@temp@two]])}%
+  \directlua{gregoriotex.init_variant_font([[#2]], true, [[\the\gre@factor]])}%
   \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]])}%
 }%
 
@@ -964,7 +963,7 @@
 }%
 
 {%
-  \directlua{gregoriotex.init_variant_font('greciliae', true, [[\the\gre@factor]], '100000')}%
+  \directlua{gregoriotex.init_variant_font('greciliae', true, [[\the\gre@factor]])}%
   \directlua{gregoriotex.map_font('greciliae', 'CP')}%
 }%
 
@@ -1670,9 +1669,10 @@
 \def\gre@loadgregoriofont{%
   \gre@count@temp@three = \the\gre@factor %
   \gre@count@temp@two = \expandafter\csname gre@fontfactor@\gre@gregoriofontname\endcsname\relax %
+  \directlua{gregoriotex.set_font_factor([[\gre@gregoriofontname]], [[\the\gre@count@temp@two]])}%
   \multiply\gre@count@temp@three by \gre@count@temp@two %
   \global\font\gre@font@music={name:\gre@gregoriofontname} at \the\gre@count@temp@three sp\relax %
-  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]], [[\the\gre@count@temp@two]], [[\the\gre@factor]])}}%
+  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]], [[\the\gre@factor]])}}%
   \relax%
 }%
 
@@ -1687,7 +1687,7 @@
   \gre@count@temp@three = \the\gre@factor %
   \multiply\gre@count@temp@three by 100000\relax %
   \global\font\gre@font@style={name:greextra} at \the\gre@count@temp@three sp%
-  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
+  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]], [[\the\gre@factor]])}}%
   \relax%
 }%
 
