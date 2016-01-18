@@ -943,11 +943,12 @@ a different value be desired.
 
 \macroname{\textbackslash gresetheadercapture}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-main.tex}
 Macro to tell Gregorio\TeX{} to capture a given header by calling a specified
-macro.
+macro.  Passing an empty \#2 will cancel capture of the given header.
 
 \begin{argtable}
   \#1 & string & The name of the header\\
-  \#2 & string & The name of the macro to use (without the leading backslash)\\
+  \#2 & string & The name of the macro to use (without the leading backslash)
+                 or empty to stop capturing the given header\\
   \#3 & string & a comma-separated list of options\\
 \end{argtable}
 
