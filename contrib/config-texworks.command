@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 # This script is designed to automatically configure a TeXworks distribution.
-# You should be able to direct it to run by double clicking on it.
+# You can run it by double clicking on it on a Mac.
+# On Linux this behavior is controlled by a preference.  See http://askubuntu.com/questions/286621/how-do-i-run-executable-scripts-in-nautilus for details.
+# If prompted, you need to select "Run in Terminal" to see the output.
 
 
 #This trap combination allows the window to linger long enough for the user to
@@ -40,6 +42,8 @@ TOOLS="$ToolsDir/configuration/tools.ini"
 if [ ! -e "$TOOLS" ]; then
     echo "Cannot find TeXworks configuration"
     echo "Please open and close TeXworks and try running this script again"
+    echo "If this still does not work, then Add and Remove a dummy typesetting"
+    echo " tool from the Preferences dialog."
     exit 1
 fi
 echo "Adding LuaLaTeX+se Typesetting tool"
