@@ -1915,7 +1915,6 @@ def write_ancus(i, j, first_glyph, glyph_type):
     if copy_existing_glyph(glyph_name):
         return
     if i == 1:
-        second_glyph = 'mnbdeminutus'
         if first_glyph == 'VirgaLineBR':
             first_glyph = 'VirgaReversa'
         else:
@@ -1923,17 +1922,12 @@ def write_ancus(i, j, first_glyph, glyph_type):
         length = get_width(first_glyph)
     else:
         length = get_width(first_glyph) - get_width('line2')
-        second_glyph = 'mademinutus'
     simple_paste(first_glyph)
     if i != 1:
         write_line(i, length, (-i+1)*BASE_HEIGHT)
-    paste_and_move(second_glyph, length, -(i)*BASE_HEIGHT)
-    length = length + get_width(second_glyph)
-    if j != 1:
-        write_line(j, length - get_width('line2'), (-i-j+1) * BASE_HEIGHT)
-    paste_and_move('deminutus',
-                   length - get_width('deminutus'), (-i-j)*BASE_HEIGHT)
-    set_width(length)
+    width_dem = write_deminutus(-i, j, length,
+                    firstbar = 0 if i == 1 else 2)
+    set_width(length+width_dem)
     end_glyph(glyph_name)
 
 def leading():
