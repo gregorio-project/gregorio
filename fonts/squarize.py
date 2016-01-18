@@ -6,7 +6,7 @@
 """
     Python fontforge script to build a square notation font.
 
-    Copyright (C) 2013-2015 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2013-2016 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 
@@ -29,10 +29,6 @@
 
     To build your own font, look at gregorio-base.sfd, and build your
     own glyphs from it.
-
-    Basic use :
-     ./squarize.py fontname
-
 """
 
 from __future__ import print_function
@@ -41,6 +37,7 @@ import getopt, sys
 import fontforge, psMat
 import subprocess
 import os
+import argparse
 import os.path
 
 GPLV3 = """Gregorio is free software: you can redistribute it and/or
@@ -85,59 +82,65 @@ GREGORIO_VERSION = '4.0.1'
 # U+E000 is the start of the BMP Private Use Area
 glyphnumber = 0xe000 - 1
 
-BASE_HEIGHT = 157.5
-HEPISEMA_ADDITIONAL_WIDTH=5
-DEMINUTUS_VERTICAL_SHIFT=10
+# see defaults in get_parser()
+BASE_HEIGHT = 0
+HEPISEMA_ADDITIONAL_WIDTH=0
+DEMINUTUS_VERTICAL_SHIFT=0
 oldfont = None
 newfont = None
 font_name = None
 subspecies = None
 all_glyph_names = {}
 
-def usage():
-    "Prints the help message."
-    print(""" Python script to convert a small set of glyphs into a complete
+def get_parser():
+    "Return command line parser"
+    parser = argparse.ArgumentParser(
+        description="""Converts a small set of glyphs into a complete
 gregorian square notation font. The initial glyphs have a name
-convention, see gregorio-base.sfd for this convention.
-
-Usage:
-        squarize.py fontname
-""")
+convention, see gregorio-base.sfd.""")
+    parser.add_argument('-b', '--base-height',
+                        help='Half the vertical difference between two staff lines',
+                        action='store', default=157.5, dest='BASE_HEIGHT')
+    parser.add_argument('-a', '--hepisema-add',
+                        help='Additional length added left and right of horizontal episema',
+                        action='store', default=5, dest='HEPISEMA_ADDITIONAL_WIDTH')
+    parser.add_argument('-d', '--deminutus-shift',
+                        help='Vertical shifting of deminutus second note when ambitus is one',
+                        action='store', default=10, dest='DEMINUTUS_VERTICAL_SHIFT')
+    parser.add_argument('-o', '--outfile',
+                        help='output ttf file name',
+                        action='store', default=False, dest='outfile')
+    parser.add_argument('-s', '--sub-species',
+                        help='subspecies (can be \'op\')',
+                        action='store', default=False, dest='subspecies')
+    parser.add_argument('base_font', help="input sfd file name", action='store')
+    return parser
 
 def main():
     "Main function"
-    global oldfont, newfont, font_name, subspecies
-    try:
-        opts, args = getopt.gnu_getopt(sys.argv[1:], "o:h", ["outfile","help"])
-    except getopt.GetoptError:
-        # print help information and exit:
-        usage()
-        sys.exit(2)
-    font_base = args[0]
-    if len(args) > 1:
-        font_name = '%s-%s' % (font_base, args[1])
-        subspecies = '_%s' % args[1]
-    else:
-        font_name = font_base
-    outfile = "%s.ttf" % font_name
-    for opt, arg in opts:
-        if opt in ("-h", "--help"):
-            usage()
-            sys.exit()
-        elif opt in ("-o", "--outfile"):
-            outfile = arg
-            print(outfile)
-    if len(args) == 0:
-        usage()
-        sys.exit(2)
-    # the fonts
-    oldfont = fontforge.open("%s-base.sfd" % font_base)
+    global oldfont, newfont, font_name, subspecies, BASE_HEIGHT, HEPISEMA_ADDITIONAL_WIDTH, DEMINUTUS_VERTICAL_SHIFT
+    parser = get_parser()
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(1)
+    args = parser.parse_args()
+    subspecies = '_%s' % args.subspecies if args.subspecies else ''
+    BASE_HEIGHT = int(args.BASE_HEIGHT)
+    HEPISEMA_ADDITIONAL_WIDTH = int(args.HEPISEMA_ADDITIONAL_WIDTH)
+    DEMINUTUS_VERTICAL_SHIFT = int(args.DEMINUTUS_VERTICAL_SHIFT)
+    outfile = args.outfile
+    inputfile = args.base_font
+    if not outfile:
+        pre, ext = os.path.splitext(inputfile)
+        outfile = '%s.ttf' % pre
+    oldfont = fontforge.open(inputfile)
+    font_name = oldfont.fontname + subspecies
     newfont = fontforge.font()
     # newfont.encoding = "UnicodeFull"
     newfont.encoding = "ISO10646-1"
-    newfont.fontname = "%s" % font_name
-    newfont.fullname = "%s" % font_name
-    newfont.familyname = "%s" % font_name
+    newfont.fontname = oldfont.fontname
+    newfont.fullname = oldfont.fullname
+    newfont.familyname = oldfont.familyname
     newfont.version = GREGORIO_VERSION
     newfont.copyright = oldfont.copyright.replace('<<GPLV3>>', GPLV3)
     newfont.weight = "regular"
@@ -520,19 +523,26 @@ def write_deminutus(i, j, length=0, tosimplify=0, firstbar=1):
     time. Sometimes we have to simplify before building the last glyph
     (tosimplify=1), and length is the offset.
     """
-    first_glyph = 'mademinutus'
+    first_glyph_is_complete = False
+    first_glyph = 'mademinutus' # firstbar == 2
     if firstbar == 1:
         first_glyph = 'mdeminutus'
-        if j == 1 and glyph_exists('mdeminutusam1'):
-            first_glyph = 'mdeminutusam1'
     elif firstbar == 0:
         first_glyph = 'mnbdeminutus'
+    if j == 1:
+        if glyph_exists('%sam1flexus' % first_glyph):
+            first_glyph = '%sam1flexus' % first_glyph
+            first_glyph_is_complete = True
+        elif glyph_exists('%sam1' % first_glyph):
+            first_glyph = '%sam1flexus' % first_glyph
     paste_and_move(first_glyph, length, i*BASE_HEIGHT)
-    write_line(j, length+get_width(first_glyph)-get_width('line2'),
+    if not first_glyph_is_complete:
+        write_line(j, length+get_width(first_glyph)-get_width('line2'),
                (i-j+1)*BASE_HEIGHT)
     if tosimplify:
         simplify()
-    paste_and_move("deminutus",
+    if not first_glyph_is_complete:
+        paste_and_move("deminutus",
                    length+get_width(first_glyph)-get_width('deminutus'),
                    (i-j)*BASE_HEIGHT)
     return get_width(first_glyph)
@@ -609,8 +619,10 @@ def write_hepisema(shape_width, glyphname, reduction=0):
     drawn_width = shape_width - reduction
     scale(drawn_width + 2*HEPISEMA_ADDITIONAL_WIDTH, 1)
     move(-HEPISEMA_ADDITIONAL_WIDTH, 0)
-    paste_and_move("hepisemaleft", -HEPISEMA_ADDITIONAL_WIDTH, 0)
-    paste_and_move("hepisemaright",
+    if glyph_exists('hepisemaleft'):
+        paste_and_move("hepisemaleft", -HEPISEMA_ADDITIONAL_WIDTH, 0)
+    if glyph_exists('hepisemaright'):
+        paste_and_move("hepisemaright",
                    drawn_width + HEPISEMA_ADDITIONAL_WIDTH, 0)
     # use the original width for the glyph for the sake of ledger lines
     set_width(shape_width)
@@ -933,27 +945,40 @@ def write_salicus(i, j, last_glyph, shape, lique=L_NOTHING):
     end_glyph(glyph_name)
 
 def draw_salicus(i, j, last_glyph):
-    not_deminutus = last_glyph != 'rdeminutus'
-    if j == 1 and not_deminutus:
+    deminutus = last_glyph == 'rdeminutus'
+    no_third_glyph = False
+    if j == 1 and not deminutus:
         if last_glyph == 'rvsbase':
             last_glyph = 'Virga'
         elif last_glyph == 'rvlbase':
             last_glyph = 'VirgaLongqueue'
-    if i == 1 and j == 1 and not_deminutus:
+    if i == 1 and j == 1 and not deminutus:
         first_glyph = 'Punctum'
         first_width = get_width(first_glyph)
         middle_glyph = 'Oriscus'
         middle_width = get_width(middle_glyph)
-    elif i == 1:
+    elif i == 1 and (not deminutus or not glyph_exists('PesQuassusOneDeminutus')):
         first_glyph = 'Punctum'
         first_width = get_width(first_glyph)
         middle_glyph = 'OriscusLineTR'
         middle_width = get_width(middle_glyph)-get_width('line2')
-    elif j == 1 and not_deminutus:
+    elif j == 1 and not deminutus:
         first_glyph = 'PunctumLineTR'
         first_width = get_width(first_glyph)-get_width('line2')
         middle_glyph = 'OriscusLineBL'
         middle_width = get_width(middle_glyph)
+    elif j == 1 and deminutus and glyph_exists('PesQuassusOneDeminutus') and glyph_exists('UpperPesQuassusOneDeminutus'):
+        if i == 1:
+            first_glyph = 'Punctum'
+            first_width = get_width(first_glyph)
+            middle_glyph = 'PesQuassusOneDeminutus'
+            middle_width = get_width(middle_glyph)
+        else:
+            first_glyph = 'PunctumLineTR'
+            first_width = get_width(first_glyph)-get_width('line2')
+            middle_glyph = 'UpperPesQuassusOneDeminutus'
+            middle_width = get_width(middle_glyph)
+        no_third_glyph = True
     else:
         first_glyph = 'PunctumLineTR'
         first_width = get_width(first_glyph)-get_width('line2')
@@ -965,35 +990,38 @@ def draw_salicus(i, j, last_glyph):
         paste_and_move(linename, first_width, BASE_HEIGHT)
     paste_and_move(middle_glyph, first_width, i*BASE_HEIGHT)
     length = first_width+middle_width
-    if j != 1:
-        linename = "line%d" % j
-        paste_and_move(linename, length, (i+1)*BASE_HEIGHT)
-    elif not_deminutus:
-        length = length-0.01
-        if last_glyph == 'auctusa2':
-            last_glyph = 'PunctumAscendens'
-        elif last_glyph == 'PunctumAuctusLineBL':
-            last_glyph = 'PunctumDescendens'
-        elif last_glyph == 'rvsbase':
-            last_glyph = 'Virga'
-        elif last_glyph == 'rvlbase':
-            last_glyph = 'VirgaLongqueue'
-        elif last_glyph == 'PunctumLineBLBR':
-            last_glyph = 'PunctumLineBR'
-        elif last_glyph == 'PunctumLineBL':
-            last_glyph = 'Punctum'
-    if not_deminutus:
-        paste_and_move(last_glyph, length, (i+j)*BASE_HEIGHT)
-        length = length + get_width(last_glyph)
-    else:
-        length = length+get_width('line2')
-        paste_and_move(last_glyph, (length-get_width(last_glyph)),
-                       (i+j)*BASE_HEIGHT)
+    if not no_third_glyph:
+        if j != 1:
+            linename = "line%d" % j
+            paste_and_move(linename, length, (i+1)*BASE_HEIGHT)
+        elif not deminutus:
+            length = length-0.01
+            if last_glyph == 'auctusa2':
+                last_glyph = 'PunctumAscendens'
+            elif last_glyph == 'PunctumAuctusLineBL':
+                last_glyph = 'PunctumDescendens'
+            elif last_glyph == 'rvsbase':
+                last_glyph = 'Virga'
+            elif last_glyph == 'rvlbase':
+                last_glyph = 'VirgaLongqueue'
+            elif last_glyph == 'PunctumLineBLBR':
+                last_glyph = 'PunctumLineBR'
+            elif last_glyph == 'PunctumLineBL':
+                last_glyph = 'Punctum'
+        if not last_glyph:
+            return length
+        if not deminutus:
+            paste_and_move(last_glyph, length, (i+j)*BASE_HEIGHT)
+            length = length + get_width(last_glyph)
+        else:
+            length = length+get_width('line2')
+            paste_and_move(last_glyph, (length-get_width(last_glyph)),
+                           (i+j)*BASE_HEIGHT)
     return length
 
 def salicus_flexus():
     "Creates the salicus flexus."
-    message("salicus")
+    message("salicus flexus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
@@ -1019,28 +1047,31 @@ def write_salicus_flexus(i, j, k, last_glyph, lique=L_NOTHING):
     if copy_existing_glyph(glyph_name):
         return
     is_deminutus = last_glyph == 'deminutus'
-    if k == 1 and not is_deminutus:
+    if is_deminutus:
+        penult_glyph = None
+    elif k == 1:
         penult_glyph = 'PunctumLineBL'
     else:
         penult_glyph = 'PunctumLineBLBR'
     length = draw_salicus(i, j, penult_glyph)
-    if k == 1 and not is_deminutus:
-        length = length-0.01
-        if last_glyph == 'PunctumLineTL':
-            last_glyph = 'Punctum'
-        elif last_glyph == 'auctusa1':
-            last_glyph = 'PunctumAscendens'
-        elif last_glyph == 'auctusd1':
-            last_glyph = 'PunctumDescendens'
-    if k != 1:
-        length = length - get_width('line2')
-        write_line(k, length, (1+i+j-k)*BASE_HEIGHT)
     if is_deminutus:
-        length = length - get_width(last_glyph)
+        width_dem = write_deminutus(j+i, k, length,
+                        firstbar = 0 if j == 1 else 1)
+        length = length + width_dem
+    else:
+        if k == 1 and not is_deminutus:
+            length = length-0.01
+            if last_glyph == 'PunctumLineTL':
+                last_glyph = 'Punctum'
+            elif last_glyph == 'auctusa1':
+                last_glyph = 'PunctumAscendens'
+            elif last_glyph == 'auctusd1':
+                last_glyph = 'PunctumDescendens'
         if k != 1:
-            length = length + get_width('line2')
-    paste_and_move(last_glyph, length, (i+j-k)*BASE_HEIGHT)
-    length = length + get_width(last_glyph)
+            length = length - get_width('line2')
+            write_line(k, length, (1+i+j-k)*BASE_HEIGHT)
+        paste_and_move(last_glyph, length, (i+j-k)*BASE_HEIGHT)
+        length = length + get_width(last_glyph)
     set_width(length)
     end_glyph(glyph_name)
 
@@ -1147,7 +1178,7 @@ def fusion_flexus():
         write_flexus(i, "mademinutus", 'deminutus', S_LOWER_FLEXUS,
                 L_DEMINUTUS)
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "PunctumLineBLBR", 'deminutus', S_UPPER_FLEXUS,
+        write_flexus(i, "mdeminutus", 'deminutus', S_UPPER_FLEXUS,
                 L_DEMINUTUS)
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "OriscusReversusLineTLBR", 'deminutus',
@@ -1181,16 +1212,18 @@ def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
     if copy_existing_glyph(glyph_name):
         return
     # we add a queue if it is a deminutus
-    if first_glyph == "mdeminutus":
+    if first_glyph == "mdeminutus" and shape != S_UPPER_FLEXUS:
         if shape == S_FLEXUS_NOBAR:
-            write_deminutus(0, i, length=0, tosimplify=1, firstbar=0)
+            length = write_deminutus(0, i, length=0, tosimplify=1, firstbar=0)
         elif shape == S_FLEXUS:
             write_first_bar(1)
-            write_deminutus(0, i, length=0, tosimplify=1, firstbar=1)
+            length = write_deminutus(0, i, length=0, tosimplify=1, firstbar=1)
         else:
             write_first_bar(2)
-            write_deminutus(0, i, length=0, tosimplify=1, firstbar=1)
-        length = get_width(first_glyph)
+            length = write_deminutus(0, i, length=0, tosimplify=1, firstbar=1)
+    elif last_glyph == 'deminutus' and (shape == S_UPPER_FLEXUS or shape == S_LOWER_FLEXUS):
+        firstbar = 1 if first_glyph == 'mdeminutus' else 2
+        length = write_deminutus(0, i, length=0, tosimplify=1, firstbar=firstbar)
     elif last_glyph == 'deminutus':
         simple_paste(first_glyph)
         write_line(i, get_width(first_glyph) - get_width('line2'),
@@ -1201,8 +1234,7 @@ def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
                        get_width(last_glyph), (-i)*BASE_HEIGHT)
         length = get_width(first_glyph)
     else:
-        if (i == 1 and first_glyph != 'odbase'
-                and first_glyph != 'OriscusReversusLineTLBR'):
+        if (i == 1 and first_glyph != 'OriscusReversusLineTLBR'):
             if last_glyph == 'PunctumLineTL':
                 last_glyph = 'Punctum'
             elif last_glyph == 'auctusa1':
@@ -1234,9 +1266,7 @@ def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
         if i != 1:
             write_line(i, length, (1-i)*BASE_HEIGHT)
         paste_and_move(last_glyph, length, (-i)*BASE_HEIGHT)
-        length = get_width(first_glyph) + get_width(last_glyph)
-        if i != 1:
-            length = length - get_width('line2')
+        length = length + get_width(last_glyph)
     set_width(length)
     end_glyph(glyph_name)
 
@@ -1898,7 +1928,6 @@ def write_ancus(i, j, first_glyph, glyph_type):
     if copy_existing_glyph(glyph_name):
         return
     if i == 1:
-        second_glyph = 'mnbdeminutus'
         if first_glyph == 'VirgaLineBR':
             first_glyph = 'VirgaReversa'
         else:
@@ -1906,17 +1935,12 @@ def write_ancus(i, j, first_glyph, glyph_type):
         length = get_width(first_glyph)
     else:
         length = get_width(first_glyph) - get_width('line2')
-        second_glyph = 'mademinutus'
     simple_paste(first_glyph)
     if i != 1:
         write_line(i, length, (-i+1)*BASE_HEIGHT)
-    paste_and_move(second_glyph, length, -(i)*BASE_HEIGHT)
-    length = length + get_width(second_glyph)
-    if j != 1:
-        write_line(j, length - get_width('line2'), (-i-j+1) * BASE_HEIGHT)
-    paste_and_move('deminutus',
-                   length - get_width('deminutus'), (-i-j)*BASE_HEIGHT)
-    set_width(length)
+    width_dem = write_deminutus(-i, j, length,
+                    firstbar = 0 if i == 1 else 2)
+    set_width(length+width_dem)
     end_glyph(glyph_name)
 
 def leading():

@@ -30,10 +30,10 @@ FONTFORGE = fontforge
 RM = rm
 
 %.ttf: squarize.py %-base.sfd
-	$(FONTFORGE) -script $< $*
+	$(FONTFORGE) -script $^ -o $@
 
 %-op.ttf: squarize.py %-base.sfd
-	$(FONTFORGE) -script $< $* op
+	$(FONTFORGE) -script $^ -o $@ -s op
 
 %.ttf: convertsfdtottf.py %.sfd
 	$(FONTFORGE) -script $< $*.sfd

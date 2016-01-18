@@ -980,7 +980,7 @@
 % #2 = font name
 % #3 = glyph name, glyph variant name (preceded by .), or code point
 \def\grechangeglyph#1#2#3{%
-  \directlua{gregoriotex.init_variant_font([[#2]],true)}%
+  \directlua{gregoriotex.init_variant_font([[#2]], true, [[\the\gre@factor]])}%
   \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]])}%
 }%
 
@@ -991,7 +991,7 @@
 }%
 
 {%
-  \directlua{gregoriotex.init_variant_font('greciliae', true)}%
+  \directlua{gregoriotex.init_variant_font('greciliae', true, [[\the\gre@factor]])}%
   \directlua{gregoriotex.map_font('greciliae', 'CP')}%
 }%
 
@@ -1672,14 +1672,22 @@
 
 
 \def\gresetgregoriofont{\@ifnextchar[{\gre@setgregoriofont}{\gre@setgregoriofont[]}}%
+\def\gresetgregoriofontscaled{\@ifnextchar[{\gre@setgregoriofontscaled}{\gre@setgregoriofontscaled[]}}%
 
 \def\gre@setgregoriofont[#1]#2{%
-  \ifx#1\gre@nothing %
+  \gre@setgregoriofontscaled[#1]{#2}{100000}%
+  \relax %
+}%
+
+\def\gre@setgregoriofontscaled[#1]#2#3{%
+  \if\relax\detokenize{#1}\relax %
     \xdef\gre@gregoriofontname{#2}%
+    \expandafter\xdef\csname gre@fontfactor@#2\endcsname{#3}%
     \gre@loadgregoriofont%
     \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
   \else %
     \xdef\gre@gregoriofontname{#2-#1}%
+    \expandafter\xdef\csname gre@fontfactor@#2-#1\endcsname{#3}%
     \gre@loadgregoriofont%
     \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
   \fi %
@@ -1688,9 +1696,11 @@
 
 \def\gre@loadgregoriofont{%
   \gre@count@temp@three = \the\gre@factor %
-  \multiply\gre@count@temp@three by 100000 %
-  \global\font\gre@font@music={name:\gre@gregoriofontname} at \the\gre@count@temp@three sp%
-  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
+  \gre@count@temp@two = \expandafter\csname gre@fontfactor@\gre@gregoriofontname\endcsname\relax %
+  \directlua{gregoriotex.set_font_factor([[\gre@gregoriofontname]], [[\the\gre@count@temp@two]])}%
+  \multiply\gre@count@temp@three by \gre@count@temp@two %
+  \global\font\gre@font@music={name:\gre@gregoriofontname} at \the\gre@count@temp@three sp\relax %
+  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]], [[\the\gre@factor]])}}%
   \relax%
 }%
 
@@ -1705,7 +1715,7 @@
   \gre@count@temp@three = \the\gre@factor %
   \multiply\gre@count@temp@three by 100000\relax %
   \global\font\gre@font@style={name:greextra} at \the\gre@count@temp@three sp%
-  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]])}}%
+  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]], [[\the\gre@factor]])}}%
   \relax%
 }%
 
