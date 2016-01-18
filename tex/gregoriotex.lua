@@ -939,16 +939,21 @@ local function scale_space(factor)
 end
 
 local function set_header_capture(header, macro_name, flags)
-  local macro = {}
-  macro.name = macro_name
-  flags:gsub("([^,]+)", function(flag)
-    if flag == "string" then macro.takes_string = true
-    elseif flag == "name" then macro.takes_header_name = true
-    else err("unknown header capture flag: %s", flag)
-    end
-  end)
-  capture_header_macro[header] = macro
-  log("capturing header %s using %s, string=%s, name=%s", header, macro.name, macro.takes_string, macro.takes_header_name)
+  if macro_name == '' then
+    capture_header_macro[header] = nil
+    log("no longer capturing header %s", header)
+  else
+    local macro = {}
+    macro.name = macro_name
+    flags:gsub("([^,]+)", function(flag)
+      if flag == "string" then macro.takes_string = true
+      elseif flag == "name" then macro.takes_header_name = true
+      else err("unknown header capture flag: %s", flag)
+      end
+    end)
+    capture_header_macro[header] = macro
+    log("capturing header %s using %s, string=%s, name=%s", header, macro.name, macro.takes_string, macro.takes_header_name)
+  end
 end
 
 local function capture_header(header, value)
