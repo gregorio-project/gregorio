@@ -642,6 +642,8 @@ Different elements of an include score have different styles applied.  These ele
   \stylename{firstsyllableinitial} & the first letter of the first syllable of a score which is not the score initial & none\\
   \stylename{firstsyllable} & the first syllable of the score excluding the score initial & none\\
   \stylename{firstword} & the first word of the first score excluding the score initial & none\\
+  \stylename{annotation} & the annotation & none\\
+  \stylename{commentary} & the commentary & {\footnotesize\it Footnote size italics}\\
   \stylename{modeline} & the rendered annotation from the \texttt{mode: ;} header in the gabc file & \parbox[t]{2.2cm}{\raggedleft\textsc{\textbf{Bold Small Capitals}}}\\
   \stylename{modemodifier} & the rendered annotation from the \texttt{mode-modifier: ;} header in the gabc file & \parbox[t]{2.2cm}{\raggedleft\textit{\textbf{Bold Italics}}}\\
   \stylename{modedifferentia} & the rendered annotation from the \texttt{mode-differentia: ;} header in the gabc file & \parbox[t]{2.2cm}{\raggedleft\textbf{Bold}}\\
@@ -695,14 +697,15 @@ Macro to add annotations (the text which appears above the initial) to a score. 
 
 \textbf{Nota Bene:} The first argument does not affect the alignment of lines already in the annotation, only the way the new line aligns with the existing lines as a whole.
 
-\macroname{\textbackslash grecommentary}{\{\#1\}}{gregoriotex-main.tex}
+\macroname{\textbackslash grecommentary}{[\optional{\#2}]\{\#1\}}{gregoriotex-main.tex}
 Macro to add commentary (the text flush right at the top, usually a scripture reference) to a score.  While a single call of this function does not support multiple lines, successive calls to the function will add a new line to the commentary directly below the previous.
 
 \begin{argtable}
-  \#1 & string & The text of the commentary.\\
+  \#1 & distance & Optional.  Additional distance to be placed between the commentary and the top staff line for the next score only.\\
+  \#2 & string & The text of the commentary.\\
 \end{argtable}
 
-\textbf{Nota Bene:} This command should appear directly before \verb=\gregorioscore= when used.
+\textbf{Nota Bene:} If your commentary is multi-lined, then the optional argument of the last line, and only the last line, will be taken into account.  Further, pay attention to the fact that the optional argument is \emph{additional} distance, \ie, it will be added to \texttt{commentaryraise} to determine the distance from the baseline of the commentary to the top line of the staff.
 
 \macroname{\textbackslash grescorereference}{\{\#1\}}{gregoriotex-main.tex}
 Macro to hold the score reference.  Currently the score reference does not print.
@@ -1280,6 +1283,16 @@ This space is the one between lines in the annotation (text above the initial).
 
 \begin{gdimension}{annotationraise}
 Amount to raise (positive) or lower (negative) the annotation from its normal position (set with \verb=\gresetannotationby= and \verb=\gresetannotationvalign=).
+\end{gdimension}
+
+\begin{gdimension}{commentaryseparation}
+This space is the one between lines in the commentary (text above the first staff line on the right).
+
+\textbf{Nota Bene:} This is the absolute space.  If the lower line contains only short letters then it will get moved up so only this space shows (not the space above the letters on a normal line plus this space).  You should use struts to control the line height of the lower line if this is a problem.
+\end{gdimension}
+
+\begin{gdimension}{commentaryraise}
+Distance from the commentary to the top line of the staff.
 \end{gdimension}
 
 \begin{gdimension}{noclefspace}
