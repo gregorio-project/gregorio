@@ -117,7 +117,7 @@ Calculates the baseline correction for the glyphs.  Dependent on \texttt{gre@fac
 Aggregates all of the global distance calculations and calls them in the order needed to respect dependencies.
 
 \macroname{\textbackslash gre@calculate@glyphraisevalue}{\#1\#2}{gregoriotex-spaces.tex}
-Calculates the raise values for a glyph (glyphraisevalue and addedraisevalue) based on where it is to be placed and what kind of a glyph it is.  This is a time of use calculation.
+Calculates the raise value for a glyph (glyphraisevalue) based on where it is to be placed and what kind of a glyph it is.  This is a time of use calculation.
 
 \begin{argtable}
   \#1 & integer & The number for where the glyph is located.  \texttt{a} in gabc is \texttt{1}, \texttt{b} is \texttt{2}, \etc\\
@@ -206,12 +206,6 @@ Strips the units from a distance.
 \begin{argtable}
   \#1 & distance & should be in the form ``[0-9]+.[0-9]+pt’’. (\ie the result of applying \verb=\the= to a distance register)
 \end{argtable}
-
-\macroname{\textbackslash gre@unitfactor}{}{gregoriotex-spaces.tex}
-Temporary count used by \verb=\gre@convertto=.
-
-\macroname{\textbackslash gre@basefactor}{}{gregoriotex-spaces.tex}
-Temporary count used by \verb=\gre@convertto=.
 
 \macroname{\textbackslash gre@count@temp@**}{}{gregoriotex-spaces.tex}
 Temporary count used in calculations.  There are currently three of these.
@@ -1541,9 +1535,6 @@ The space between the lines.
 \macroname{\textbackslash gre@dimen@glyphraisevalue}{}{gregoriotex-spaces.tex}
 The value that a particular glyph must be raised to be set in the correct position.
 
-\macroname{\textbackslash gre@dimen@addedraisevalue}{}{gregoriotex-spaces.tex}
-The additional raise needed for the vertical episema and the puncta.
-
 \macroname{\textbackslash gre@dimen@enddifference}{}{gregoriotex-spaces.tex}
 Distance from the end of the notes to the end of the text for the previous syllable.  Positive values when notes go further than text, negative in the other case.
 
@@ -1567,15 +1558,6 @@ Temporary dimensions used in calculations.  There are currently five of these.
 
 \macroname{\textbackslash gre@skip@temp@**}{}{gregoriotex-spaces.tex}
 Temporary skips used in calculations.  There are currently four of these.
-
-\macroname{\textbackslash gre@unit}{}{gregoriotex-spaces.tex}
-Temporary dimension used by \verb=\gre@convertto=.
-
-\macroname{\textbackslash gre@base}{}{gregoriotex-spaces.tex}
-Temporary dimension used by \verb=\gre@convertto=.
-
-\macroname{\textbackslash gre@maxlen}{}{gregoriotex-spaces.tex}
-Distance holding the maximum legal length in TeX.
 
 \macroname{\textbackslash gre@dimen@savedglyphraise}{}{gregoriotex-signs.tex}
 Macro to hold the value of the glyph raise so that it can be restored after some calculations which may change it are performed.
