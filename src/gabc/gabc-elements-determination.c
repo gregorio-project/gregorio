@@ -128,17 +128,6 @@ static gregorio_element *gabc_det_elements_from_glyphs(
 
     while (current_glyph) {
         if (current_glyph->type != GRE_GLYPH) {
-            /* we ignore flats and naturals, except if they are alone */
-            if (current_glyph->type == GRE_NATURAL
-                || current_glyph->type == GRE_FLAT
-                || current_glyph->type == GRE_SHARP) {
-                if (!current_glyph->next) {
-                    first_element = current_element;
-                    close_element(&current_element, &first_glyph, current_glyph);
-                }
-                current_glyph = current_glyph->next;
-                continue;
-            }
             /* we must not cut after a glyph-level space */
             if (current_glyph->type == GRE_SPACE) {
                 switch (current_glyph->u.misc.unpitched.info.space) {
@@ -200,6 +189,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
         }
         switch (current_glyph_type) {
         case G_PUNCTA_ASCENDENS:
+        case G_ALTERATION:
             if (!do_not_cut) {
                 cut_before(current_glyph, &first_glyph, &previous_glyph,
                            &current_element);

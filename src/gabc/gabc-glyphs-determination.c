@@ -112,6 +112,12 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         next_glyph_type = G_PUNCTUM;
         *end_of_glyph = DET_END_OF_BOTH;
         break;
+    case S_FLAT:
+    case S_SHARP:
+    case S_NATURAL:
+        next_glyph_type = G_ALTERATION;
+        *end_of_glyph = DET_END_OF_BOTH;
+        break;
     case S_PUNCTUM:
         /*
          * we determine here the shape of the thing if it is made of puncta
@@ -910,12 +916,6 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                 }
                 break;
 
-            case GRE_FLAT:
-            case GRE_SHARP:
-            case GRE_NATURAL:
-                pitch = current_note->u.note.pitch;
-                break;
-
             case GRE_AUTOFUSE_START:
                 autofuse = true;
                 first_autofused_note = true;
@@ -999,7 +999,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                     case S_QUILISMA:
                     case S_QUADRATUM:
                     case S_QUILISMA_QUADRATUM:
-                        /* these are fusable */
+                        /* these are fusible */
                         if (current_glyph_type <= G_PUNCTA_INCLINATA) {
                             /* if we had some puncta inclinata, then end them */
                             close_glyph(&last_glyph, current_glyph_type,
@@ -1016,7 +1016,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                         break;
 
                     default:
-                        /* not fusable; will be added normally by the state
+                        /* not fusible; will be added normally by the state
                          * machine */
                         break;
                     }

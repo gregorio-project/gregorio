@@ -587,6 +587,9 @@ HEPISEMA_GLYPHS = {
     'HEpisemaPunctumLineBLBR': 'PunctumLineBLBR',
     'HEpisemaPunctumAuctusLineBL': 'PunctumAuctusLineBL',
     'HEpisemaSalicusOriscus': 'SalicusOriscus',
+    'HEpisemaFlat': 'Flat',
+    'HEpisemaSharp': 'Sharp',
+    'HEpisemaNatural': 'Natural',
 }
 
 def hepisema():

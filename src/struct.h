@@ -67,9 +67,6 @@ typedef struct gregorio_scanner_location {
     A(GRE_NOTE, 1) \
     E(GRE_GLYPH) \
     E(GRE_ELEMENT) \
-    E(GRE_FLAT) \
-    E(GRE_SHARP) \
-    E(GRE_NATURAL) \
     E(GRE_CLEF) \
     E(GRE_SYLLABLE) \
     E(GRE_END_OF_LINE) \
@@ -128,7 +125,10 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
     E(S_ORISCUS_CAVUM_ASCENDENS) \
     E(S_ORISCUS_CAVUM_DESCENDENS) \
     E(S_ORISCUS_CAVUM_DEMINUTUS) \
-    /* special shapes that must not appear in the final form of the score : 
+    E(S_FLAT) \
+    E(S_SHARP) \
+    E(S_NATURAL) \
+    /* special shapes that must not appear in the final form of the score :
      * quadratum is the shape of the first note of a punctum quadratum
      * and quilisma quadratum is the shape of the first note of a pes
      * quislisma quadratum */ \
@@ -258,6 +258,7 @@ ENUM(gregorio_vposition, GREGORIO_VPOSITION);
     E(G_STROPHA) \
     E(G_STROPHA_AUCTA) \
     E(G_PUNCTUM) \
+    E(G_ALTERATION) \
     E(G_PODATUS) \
     E(G_PES_QUADRATUM) \
     E(G_FLEXA) \
@@ -292,10 +293,10 @@ ENUM(gregorio_vposition, GREGORIO_VPOSITION);
 ENUM(gregorio_glyph_type, GREGORIO_GLYPH_TYPE);
 
 /*
- * 
+ *
  * The we define the characters. First we define the different styles. You
  * can notice that center is just a style like the others
- * 
+ *
  */
 
 #define GRESTYLE_STYLE(A,E,X,L) \
@@ -321,7 +322,7 @@ ENUM(grestyle_style, GRESTYLE_STYLE);
 
 /*
  * Then the different types of styles. See the next comments for further
- * readings. 
+ * readings.
  */
 
 #define GRESTYLE_TYPE(A,E,X,L) \
@@ -331,7 +332,7 @@ ENUM(grestyle_style, GRESTYLE_STYLE);
 ENUM(grestyle_type, GRESTYLE_TYPE);
 
 /*
- * The different types of translation centerings 
+ * The different types of translation centerings
  */
 
 #define GREGORIO_TR_CENTERING(A,E,X,L) \
@@ -341,7 +342,7 @@ ENUM(grestyle_type, GRESTYLE_TYPE);
 ENUM(gregorio_tr_centering, GREGORIO_TR_CENTERING);
 
 /*
- * Nothing, beginning or end of area without linebreak 
+ * Nothing, beginning or end of area without linebreak
  */
 
 #define GREGORIO_NLBA(A,E,X,L) \
@@ -382,9 +383,9 @@ typedef struct gregorio_clef_info {
 } gregorio_clef_info;
 
 typedef union gregorio_misc_element_info {
-    /* pitched is used for GRE_CUSTOS, GRE_FLAT, GRE_SHARP, and GRE_NATURAL */
+    /* pitched is used for GRE_CUSTOS */
     struct {
-        /* The pitch of the glyph for GRE_FLAT, GRE_NATURAL, and GRE_SHARP. */
+        /* The pitch of the glyph. */
         signed char pitch;
         /* boolean indicating a clef with a B-flat */
         bool force_pitch:1;
@@ -402,7 +403,7 @@ typedef union gregorio_misc_element_info {
 /*
  * ! We start with the most precise structure, the note structure. The
  * note is always a real note (we'll see that glyphs and elements can be
- * other things). 
+ * other things).
  */
 typedef struct gregorio_note {
     /* then two pointer to other notes, to make a chained list. */
@@ -415,7 +416,7 @@ typedef struct gregorio_note {
      * structure generation. */
     char *texverb;
     union {
-        /* note is used for GRE_NOTE, GRE_FLAT, GRE_SHARP, and GRE_NATURAL */
+        /* note is used for GRE_NOTE */
         struct {
             /* the pitch is the height of the note on the score, that is to
              * say the letter it is represented by in gabc.  If a clef
@@ -479,9 +480,8 @@ typedef struct gregorio_note {
 } gregorio_note;
 
 /*
- * ! @brief The gregorio glyph structure Unlike gregorio_note,
- * gregorio_glyph can be other things besides \c GRE_GLYPH: it can also be 
- * \c GRE_FLAT, \c GRE_NATURAL or \c GRE_SPACE 
+ * ! @brief The gregorio glyph structure Unlike gregorio_note, gregorio_glyph
+ * can be other things besides GRE_GLYPH: it can also be GRE_SPACE
  */
 typedef struct gregorio_glyph {
     /* two pointer to make a chained list */
@@ -543,7 +543,7 @@ typedef struct gregorio_element {
 } gregorio_element;
 
 /*
- * 
+ *
  * gregorio_characters are a bit specials. As there can be styles in the
  * text, I had to find a structure mode adapted that just grewchar *. So
  * basically a gregorio_character is a double-chained list of things that
@@ -552,7 +552,7 @@ typedef struct gregorio_element {
  * P->style(type: beginning, style italic) -> o -> style(type:end, style:
  * italic). But for this list to be coherent, it is mandatory that it is
  * xml-compliant, that is to say that a<b>c<i>d</b>e</i> will be
- * interpreted as a<b>c<i>d</i></b><i>e</i>. This MUST be done when reading 
+ * interpreted as a<b>c<i>d</i></b><i>e</i>. This MUST be done when reading
  * a file, so that the structure in memory is coherent. It makes input
  * modules more comple, but output modules muche more simpler. The last
  * particularity is that center must also be determined in the input
@@ -560,13 +560,13 @@ typedef struct gregorio_element {
  * complex, because for TeX-like output modules, we need to close all
  * styles before the center style: if the user types <i>pot</i> it must be
  * represented as <i>p</i>{<i>o</i>}<i>t</i>.
- * 
+ *
  * Here is the declaration of the gregorio_style struct. It is simply two
  * chars, one telling the type of style character it is (beginning for a
  * character that marks the beginning of a style, and end for a character
  * marking the end of a style). The other char simply is the style
  * represented by the character (italic, etc.)
- * 
+ *
  */
 
 typedef struct gregorio_style {
@@ -575,10 +575,10 @@ typedef struct gregorio_style {
 } gregorio_style;
 
 /*
- * 
- * This union is quite ugly... but necessary for a gregorio_character to be 
+ *
+ * This union is quite ugly... but necessary for a gregorio_character to be
  * able to be a grewchar or gregorio_style.
- * 
+ *
  */
 typedef union character_or_style {
     grewchar character;
@@ -586,7 +586,7 @@ typedef union character_or_style {
 } character_or_style;
 
 /*
- * 
+ *
  * Finally the gregorio_character structure in itself, It is first a char
  * determining the type (character or gregorio_style). This char is 0 when
  * it is a style and something else when it is a character. Then the two
@@ -595,7 +595,7 @@ typedef union character_or_style {
  * know it is a character of style), you must access to
  * mygregoriochar.cos.s.style, and for the character
  * mygregoriochar.cos.character .
- * 
+ *
  */
 
 typedef struct gregorio_character {
@@ -650,10 +650,10 @@ typedef struct gregorio_header {
 } gregorio_header;
 
 /*
- * 
+ *
  * Score is the top structure, the structure in which we will convert
  * everything, and from which we will construct XML
- * 
+ *
  */
 
 #define MAX_ANNOTATIONS 2
@@ -678,7 +678,7 @@ typedef struct gregorio_score {
     char *manuscript_reference;
     /* There is one annotation for each line above the initial letter */
     char *annotation[MAX_ANNOTATIONS];
-    /* field giving informations on the initial (no initial, normal initial 
+    /* field giving informations on the initial (no initial, normal initial
      * or two lines initial) */
     signed char initial_style; /* DEPRECATED */
     size_t nabc_lines;
@@ -697,13 +697,13 @@ typedef struct gregorio_score {
 } gregorio_score;
 
 /*
- * 
+ *
  * gregorio_voice info contains everything that is voice_specific, for
  * example the key, etc. that can be different from one voice to another.
  * The order of the voice_info (it is a chained list) is the same as the
  * order of the voices (from top to bottom in their representation on the
  * score).
- * 
+ *
  */
 
 typedef struct gregorio_voice_info {
@@ -727,10 +727,6 @@ extern gregorio_clef_info gregorio_default_clef;
 
 /* the different initial styles - DEPRECATED by 4.1 */
 #define INITIAL_NOT_SPECIFIED -1
-
-#define NO_ALTERATION USELESS_VALUE
-#define FLAT GRE_FLAT
-#define NATURAL GRE_NATURAL
 
 #define USELESS_VALUE 0
 
@@ -825,9 +821,6 @@ void gregorio_add_secondary_clef_to_note(gregorio_note *current_note,
         gregorio_clef clef, signed char clef_line, bool flatted);
 void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar,
         const gregorio_scanner_location *loc);
-void gregorio_add_alteration_as_note(gregorio_note **current_note,
-        gregorio_type type, signed char pitch,
-        const gregorio_scanner_location *loc);
 void gregorio_add_space_as_note(gregorio_note **current_note,
         gregorio_space space, char *factor,
         const gregorio_scanner_location *loc);
@@ -844,9 +837,6 @@ void gregorio_add_cs_to_note(gregorio_note *const*current_note, char *str,
         bool nabc);
 void gregorio_add_misc_element(gregorio_element **current_element,
         gregorio_type type, gregorio_misc_element_info *info, char *texverb);
-void gregorio_reinitialize_alterations(char alterations[][13],
-        int number_of_voices);
-void gregorio_reinitialize_one_voice_alterations(char alterations[13]);
 void gregorio_set_score_annotation(gregorio_score *score, char *annotation);
 void gregorio_set_score_staff_lines(gregorio_score *score, char staff_lines);
 void gregorio_add_score_header(gregorio_score *score, char *name,
