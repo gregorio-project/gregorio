@@ -193,18 +193,18 @@ Macro to calculate \texttt{nextbegindifference}.
   & $40 \le$ integer $\le 59$ & Same as below 20 except there is a natural before the notes.  Subtract 40 to get the type of notes alignment.
 \end{argtable}
 
-\macroname{\textbackslash gre@makein}{\#1}{gregoriotex-spaces.tex}
-Strips the decimals and units from a distance.
+\macroname{\textbackslash gre@strip@pt}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
+Strips the units from a distance.  Under \LaTeX{}, this is an alias to \verb=\strip@pt=.
 
 \begin{argtable}
-  \#1 & distance & should be in the form ``[0-9]+.[0-9]+pt’’. (\ie the result of applying \verb=\the= to a distance register)
+  \#1 & control sequence & should be the control sequence for the the distance register (including the leading backslash)\\
 \end{argtable}
 
-\macroname{\textbackslash gre@makenum}{\#1}{gregoriotex-spaces.tex}
-Strips the units from a distance. 
+\macroname{\textbackslash gre@rem@pt}{\#1}{gregoriotex.tex}
+Strips the units from a distance.  Used internally by \verb=\gre@strip@pt=.  Under \LaTeX{}, this is not defined.
 
 \begin{argtable}
-  \#1 & distance & should be in the form ``[0-9]+.[0-9]+pt’’. (\ie the result of applying \verb=\the= to a distance register)
+  \#1 & distance & should be in the form ``[0-9]+.[0-9]+pt’’. (\ie the result of applying \verb=\the= to a distance register)\\
 \end{argtable}
 
 \macroname{\textbackslash gre@count@temp@**}{}{gregoriotex-spaces.tex}

@@ -749,17 +749,12 @@
 %This function sets the true raises of the two lines above the initial (it has to be called just as the boxes are placed in order to make sure that the values are all correct)
 \def\gre@calculate@annotationtrueraise{%
   \gre@debugmsg{annotation}{Calculating the raise.}%
-  \gre@debugmsg{annnotation}{Added staff height.}%
-  \gre@debugmsg{annnotation}{Added space beneath text.}%
-  \gre@debugmsg{annnotation}{Added translation height.}%
-  \gre@debugmsg{annnotation}{Added spacelinestext.}%
   \global\advance\gre@dimen@annotationtrueraise by %
     \dimexpr(\gre@dimen@staffheight %
     + \gre@space@dimen@spacebeneathtext %
     + \gre@dimen@currenttranslationheight %
     + \gre@space@dimen@spacelinestext %
     + \gre@dimen@additionalbottomspace)\relax%
-  \gre@debugmsg{annnotation}{Added additional bottom space.}%
   \gre@style@annotation%
   \global\advance\gre@dimen@annotationtrueraise by \gre@space@dimen@annotationraise\relax%
   \gre@debugmsg{annnotation}{Added user raise.}%
@@ -1015,20 +1010,11 @@
 }%
 
 
-% These functions are used for stripping out the units and decimal portion of a distance to make it more amenable to being used in the conversion function below
-{\catcode`p=12 \catcode`t=12 \gdef\gre@makein#1.#2pt{#1}}%
-{\catcode`p=12 \catcode`t=12 \gdef\gre@makenum#1pt{#1}}%
-
 % This function converts a distance to the units indicated in #1 and returns it as a string.
 \def\gre@convertto#1#2{%
   \gre@debugmsg{general}{convertto (#1) (#2)}%
-  \gre@debugmsg{ifdim}{ #2 = 0pt}%
-  \ifdim#2=0pt\relax%
-    \edef\gre@converted{0 #1}%
-  \else%
-    \edef\gre@converted{\expandafter\gre@makenum\the\dimexpr#2*65536/\number\dimexpr 1#1\relax\relax #1}%
-    \gre@debugmsg{general}{converted value is \gre@converted}%
-  \fi%
+  \edef\gre@converted{\gre@strip@pt\dimexpr#2*65536/\number\dimexpr 1#1\relax\relax #1}%
+  \gre@debugmsg{general}{converted value is \gre@converted}%
 }%
 
 % This function takes a distance (#2) and formats it as a string so that its units conform to the pattern set by a string representation of a distance (#1)
