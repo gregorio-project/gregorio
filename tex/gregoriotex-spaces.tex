@@ -1013,6 +1013,8 @@
 % This function converts a distance to the units indicated in #1 and returns it as a string.
 \def\gre@convertto#1#2{%
   \gre@debugmsg{general}{convertto (#1) (#2)}%
+  % \number\dimexpr returns the dimension in sp, so we must multiply #2 by
+  % 65536 (= 1pt in sp) before divding it by \number\dimexpr 1#1
   \edef\gre@converted{\gre@strip@pt\dimexpr#2*65536/\number\dimexpr 1#1\relax\relax #1}%
   \gre@debugmsg{general}{converted value is \gre@converted}%
 }%
