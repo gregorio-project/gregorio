@@ -126,9 +126,9 @@
 
   \gre@rubberpermit{#1}%
   \ifgre@rubber%
-    Default: \directlua{GregorioRef.emit_dimension("\luaescapestring{\csname gre@skip@#1\endcsname}")}
+    Default: \directlua{GregorioRef.emit_dimension("\luaescapestring{\csname gre@space@skip@#1\endcsname}")}
   \else%
-    Default: \directlua{GregorioRef.emit_dimension("\luaescapestring{\csname gre@dimen@#1\endcsname}")}
+    Default: \directlua{GregorioRef.emit_dimension("\luaescapestring{\csname gre@space@dimen@#1\endcsname}")}
   \fi%
 }
 

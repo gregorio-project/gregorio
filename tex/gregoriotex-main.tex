@@ -366,8 +366,7 @@
   \gre@calculate@annotationtrueraise %
   % we print the initial always at the same place, and then we print the gre@box@annotation, centered
   % first we print the initial
-  \gre@dimen@temp@five = \gre@dimen@textlower\relax%
-  \advance\gre@dimen@temp@five by \gre@dimen@initialraise\relax%
+  \gre@dimen@temp@five = \dimexpr(\gre@dimen@textlower+\gre@space@dimen@initialraise)\relax%
   % if it is a big initial we print it on the second line
   \ifnum\gre@biginitial=0\relax %
     \ifvoid\gre@box@initial%
@@ -379,11 +378,11 @@
       \gre@obsolete{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  OBSOLETE
     \fi%  OBSOLETE
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
-    \ifdim\gre@dimen@manualinitialwidth=0 pt\relax%
+    \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
     \else%
       \gre@style@initial%
-      \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth\relax%
+      \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
       \endgre@style@initial%
       \ifx\gre@empty@initialformat\greinitialformat% OBSOLETE
       \else%  OBSOLETE
@@ -398,7 +397,7 @@
     \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}%
     \gre@debugmsg{annotation}{Initial set.}%
     \gre@style@initial%
-    \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift\relax%
+    \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
     \endgre@style@initial%
     \ifx\gre@empty@initialformat\greinitialformat% OBSOLETE
     \else%  OBSOLETE
@@ -408,14 +407,14 @@
     \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
       \gre@warning{biginitial style is deprecated, but the old\MessageBreak behavior will be used since deprecated usage is\MessageBreak currently enabled. This behavior will disappear\MessageBreak in 5.0, so consider disabling deprecated usage\MessageBreak and switching to the initial style instead. (See\MessageBreak UPGRADE.md for more information)}%%% DEPRECATED for removal in 5.0
     \fi%%% DEPRECATED for removal in 5.0
-    \advance\gre@dimen@temp@five by -\gre@dimen@additionalbottomspace\relax%
-    \advance\gre@dimen@temp@five by -\gre@dimen@spacebeneathtext\relax%
-    \advance\gre@dimen@temp@five by -\gre@dimen@spacelinestext\relax%
-    \advance\gre@dimen@temp@five by -4\gre@dimen@interstafflinespace\relax%
-    \advance\gre@dimen@temp@five by -4\gre@dimen@stafflineheight\relax%
-    \advance\gre@dimen@temp@five by -\gre@dimen@currenttranslationheight\relax%
-    \advance\gre@dimen@temp@five by -\f@size pt%
-    \advance\gre@dimen@temp@five by \gre@dimen@initialraise\relax%
+    \advance\gre@dimen@temp@five by \dimexpr(-\gre@dimen@additionalbottomspace %
+      - \gre@space@dimen@spacebeneathtext %
+      - \gre@space@dimen@spacelinestext %
+      - 4\gre@dimen@interstafflinespace %
+      - 4\gre@dimen@stafflineheight %
+      - \gre@dimen@currenttranslationheight %
+      - \f@size pt %
+      + \gre@space@dimen@initialraise)\relax%
     \ifvoid\gre@box@initial%
       \gre@debugmsg{initial}{fill big initial box}%
       \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
@@ -429,16 +428,16 @@
       \gre@obsolete{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  OBSOLETE
     \fi%  OBSOLETE
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
-    \ifdim\gre@dimen@manualinitialwidth=0 pt\relax%
+    \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
     \else%
       \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
         \gre@style@biginitial%%% DEPRECATED for removal in 5.0
-        \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth\relax%%% DEPRECATED for removal in 5.0
+        \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%%% DEPRECATED for removal in 5.0
         \endgre@style@biginitial%%% DEPRECATED for removal in 5.0
       \else%%% DEPRECATED for removal in 5.0
         \gre@style@initial% keep this line
-        \global\gre@dimen@initialwidth=\gre@dimen@manualinitialwidth\relax% keep this line
+        \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax% keep this line
         \endgre@style@initial% keep this line
       \fi%%% DEPRECATED for removal in 5.0
       \ifx\gre@empty@biginitialformat\grebiginitialformat% OBSOLETE
@@ -453,11 +452,11 @@
     \setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
     \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
       \gre@style@biginitial%%% DEPRECATED for removal in 5.0
-      \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift\relax%%% DEPRECATED for removal in 5.0
+      \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%%% DEPRECATED for removal in 5.0
       \endgre@style@biginitial%%% DEPRECATED for removal in 5.0
     \else%%% DEPRECATED for removal in 5.0
       \gre@style@initial% keep this line
-      \global\gre@dimen@temp@four = \gre@dimen@beforeinitialshift\relax% keep this line
+      \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax% keep this line
       \endgre@style@initial% keep this line
     \fi%%% DEPRECATED for removal in 5.0
     \ifx\gre@empty@biginitialformat\grebiginitialformat% OBSOLETE
@@ -471,7 +470,7 @@
   \box\gre@box@initial%
   \ifnum\gre@biginitial=0\relax%
     \gre@style@initial%
-    \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift\relax%
+    \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%
     \endgre@style@initial%
     \ifx\gre@empty@initialformat\greinitialformat% OBSOLETE
     \else%  OBSOLETE
@@ -480,11 +479,11 @@
   \else%
     \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
       \gre@style@biginitial%%% DEPRECATED for removal in 5.0
-      \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift\relax%%% DEPRECATED for removal in 5.0
+      \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%%% DEPRECATED for removal in 5.0
       \endgre@style@biginitial%%% DEPRECATED for removal in 5.0
     \else%%% DEPRECATED for removal in 5.0
       \gre@style@initial% keep this line
-      \global\gre@dimen@temp@four = \gre@dimen@afterinitialshift\relax% keep this line
+      \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax% keep this line
       \endgre@style@initial% keep this line
     \fi%%% DEPRECATED for removal in 5.0
     \ifx\gre@empty@biginitialformat\grebiginitialformat% OBSOLETE
@@ -500,9 +499,7 @@
     \gre@debugmsg{annotation}{There is no annotation.}%
   \else %
     \gre@debugmsg{annotation}{Calculate horizontal position.}%
-    \gre@dimen@temp@five=\gre@dimen@initialwidth\relax%
-    \advance\gre@dimen@temp@five by -\wd\gre@box@annotation%
-    \divide\gre@dimen@temp@five by 2 %
+    \gre@dimen@temp@five=\dimexpr((\gre@dimen@initialwidth - \wd\gre@box@annotation) / 2)\relax %
     \gre@skip@temp@four = -\gre@dimen@initialwidth\relax%
     \hskip\gre@skip@temp@four %
     \kern\gre@dimen@temp@five %
@@ -602,20 +599,20 @@
     \ifgre@annotationbottomline%
       \ifcase\gre@count@annotationvalign\relax%
         %case 0 = top of first line
-        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@old+\dp\gre@box@old+\gre@dimen@annotationseparation-\ht\gre@box@add\relax%
+        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@old+\dp\gre@box@old+\gre@space@dimen@annotationseparation-\ht\gre@box@add\relax%
         \gre@debugmsg{annotation}{Aligning to top of last line: \the\gre@dimen@annotationtrueraise}%
       \or %case 1 = baseline of first line
-        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@old+\dp\gre@box@old+\gre@dimen@annotationseparation\relax%
+        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@old+\dp\gre@box@old+\gre@space@dimen@annotationseparation\relax%
         \gre@debugmsg{annotation}{Aligning to baseline of last line: \the\gre@dimen@annotationtrueraise}%
       \or %case 2 = bottom of first line
-        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@old+\dp\gre@box@old+\gre@dimen@annotationseparation+\dp\gre@box@add\relax%
+        \global\gre@dimen@annotationtrueraise=\dimexpr\ht\gre@box@old+\dp\gre@box@old+\gre@space@dimen@annotationseparation+\dp\gre@box@add\relax%
         \gre@debugmsg{annotation}{Aligning to bottom of last line: \the\gre@dimen@annotationtrueraise}%
       \else% Bug
         \gre@bug{Invalid value for \protect\gre@count@annotationvalign}%
       \fi%
     \fi%
     \endgre@style@annotation%
-    \setbox\gre@box@annotation = \vtop spread \gre@dimen@annotationseparation\relax {\offinterlineskip\box\gre@box@old\vss\box\gre@box@add}%
+    \setbox\gre@box@annotation = \vtop spread \gre@space@dimen@annotationseparation\relax {\offinterlineskip\box\gre@box@old\vss\box\gre@box@add}%
   \fi%
 }%
 
@@ -726,7 +723,7 @@
     \fi%
     \setbox\gre@box@old = \hbox to \gre@dimen@temp@three{\hfill\box\gre@box@commentary}%
     \setbox\gre@box@add = \hbox to \gre@dimen@temp@three{\hfill\gre@style@commentary#2\endgre@style@commentary}%
-    \setbox\gre@box@commentary = \vbox spread \gre@dimen@commentaryseparation{\offinterlineskip\box\gre@box@old\vss\box\gre@box@add}%
+    \setbox\gre@box@commentary = \vbox spread \gre@space@dimen@commentaryseparation{\offinterlineskip\box\gre@box@old\vss\box\gre@box@add}%
   \fi%
 }
 
@@ -747,7 +744,7 @@
 % set space above the text lines - almost the same as for the translation
 \def\gre@addspaceabove{%
   \gre@style@abovelinestext%
-  \global\gre@dimen@currentabovelinestextheight=\gre@dimen@abovelinestextheight\relax%
+  \global\gre@dimen@currentabovelinestextheight=\gre@space@dimen@abovelinestextheight\relax%
   \gre@generatelines %
   \endgre@style@abovelinestext%
   \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% OBSOLETE
@@ -764,7 +761,7 @@
   \relax %
 }%
 
-% the code is a bit strange here: we always execute \gre@skip@spaceabovelines at the beginning of a glyph. This will:
+% the code is a bit strange here: we always execute \gre@space@skip@spaceabovelines at the beginning of a glyph. This will:
 % - typeset the text above the lines if relevant, and making sure we execute it only once
 % - not do anything else
 
@@ -781,20 +778,20 @@
 % typesets the text above the line
 \def\gre@typesettextabovelines#1{%
   \gre@style@abovelinestext%
-  \gre@debugmsg{spacing}{Raise alt text: \gre@dimen@abovelinestextraise}%
-  \global\gre@dimen@temp@five=\gre@dimen@abovelinestextraise\relax%
+  \gre@debugmsg{spacing}{Raise alt text: \gre@space@dimen@abovelinestextraise}%
+  \global\gre@dimen@temp@five=\gre@space@dimen@abovelinestextraise\relax%
   \endgre@style@abovelinestext%
   \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% OBSOLETE
   \else%  OBSOLETE
     \gre@obsolete{\protect\greabovelinestextstyle}{\protect\grechangestyle{abovelinestext}}%  OBSOLETE
   \fi%  OBSOLETE
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
-  \advance\gre@dimen@temp@five by 4\gre@dimen@stafflineheight\relax%
-  \advance\gre@dimen@temp@five by 4\gre@dimen@interstafflinespace\relax%
-  \advance\gre@dimen@temp@five by \gre@dimen@spacebeneathtext\relax%
-  \advance\gre@dimen@temp@five by \gre@dimen@currenttranslationheight\relax%
-  \advance\gre@dimen@temp@five by \gre@dimen@spacelinestext\relax%
-  \advance\gre@dimen@temp@five by \gre@dimen@additionalbottomspace\relax%
+  \advance\gre@dimen@temp@five by \dimexpr(4\gre@dimen@stafflineheight %
+    + 4\gre@dimen@interstafflinespace %
+    + \gre@space@dimen@spacebeneathtext %
+    + \gre@dimen@currenttranslationheight %
+    + \gre@space@dimen@spacelinestext %
+    + \gre@dimen@additionalbottomspace)\relax%
   \gre@mark@abovelinestext %
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
     \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\gre@style@abovelinestext#1\endgre@style@abovelinestext\hss}%
@@ -833,7 +830,7 @@
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
 \def\gre@drawfirstlines{%
   \advance\gre@dimen@stafflinewidth by -\gre@dimen@initialwidth\relax%
-  %\advance\gre@dimen@stafflinewidth by -\gre@dimen@minimalspaceatlinebeginning
+  %\advance\gre@dimen@stafflinewidth by -\gre@space@dimen@minimalspaceatlinebeginning
   %\gre@dimen@initialwidth=0pt
   \hbox to 0pt{%
     \vbox{%
@@ -883,8 +880,8 @@
           \vskip\gre@dimen@stafflineheight\relax%
         \fi %
       \fi %
-      \vskip\gre@dimen@spacelinestext\relax%
-      \vskip\gre@dimen@spacebeneathtext\relax%
+      \vskip\gre@space@dimen@spacelinestext\relax%
+      \vskip\gre@space@dimen@spacebeneathtext\relax%
       \vskip\gre@dimen@currenttranslationheight\relax%
       \vskip\gre@dimen@additionalbottomspace\relax%
       \endgre@style@normalstafflines%
@@ -907,7 +904,7 @@
       \else%  OBSOLETE
         \gre@obsolete{\protect\grenormalstafflinesformat}{\protect\grechangestyle{normalstafflines}}%  OBSOLETE
       \fi%  OBSOLETE
-      \vskip\gre@skip@spaceabovelines\relax%
+      \vskip\gre@space@skip@spaceabovelines\relax%
       \vskip\gre@dimen@currentabovelinestextheight\relax%
       \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
@@ -948,9 +945,9 @@
           \vskip\gre@dimen@stafflineheight\relax%
         \fi %
       \fi %
-      \vskip\gre@dimen@spacelinestext\relax%
+      \vskip\gre@space@dimen@spacelinestext\relax%
       \vskip\gre@dimen@additionalbottomspace\relax%
-      \vskip\gre@dimen@spacebeneathtext\relax%
+      \vskip\gre@space@dimen@spacebeneathtext\relax%
       \vskip\gre@dimen@currenttranslationheight\relax%
       \endgre@style@normalstafflines %
     }%
@@ -1040,13 +1037,11 @@
 
 \def\GreWriteTranslation#1{%
   \ifgre@translationcentering %
-    \gre@dimen@temp@five=\wd\gre@box@syllabletext %
     \setbox\gre@box@temp@width=\hbox{#1}%
-    \advance\gre@dimen@temp@five by -\wd\gre@box@temp@width %
-    \divide\gre@dimen@temp@five by 2\relax %
+    \gre@dimen@temp@five=\dimexpr((\wd\gre@box@syllabletext - \wd\gre@box@temp@width) / 2)\relax%
     \gre@mark@translation %
     \kern\gre@dimen@temp@five %
-    \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
+    \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
     \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
     \else%  OBSOLETE
       \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
@@ -1054,7 +1049,7 @@
     \kern-\gre@dimen@temp@five %
   \else %
     \gre@mark@translation %
-    \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
+    \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
     \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
     \else%  OBSOLETE
       \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
@@ -1068,7 +1063,7 @@
   \fi %
   \gre@attr@center=1\relax %
   \gre@mark@translation %
-  \raise\gre@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}\kern 0pt}%
+  \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}\kern 0pt}%
   \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
   \else%  OBSOLETE
     \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
@@ -1090,7 +1085,7 @@
     \GreEndNLBArea{0}{1}%
   \fi %
   \gre@attr@center=2\relax %
-  \raise\gre@dimen@spacebeneathtext\hbox to 0pt{}%
+  \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{}%
   \unsetluatexattribute{\gre@attr@center}%
   \relax %
 }%
@@ -1291,19 +1286,19 @@
     \ifdim\gre@dimen@enddifference > 0 pt\relax%
       \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
       \ifdim\gre@skip@nextbegindifference > 0 pt\relax%
-        \gre@skip@temp@four = \gre@skip@notebarspace\relax%
+        \gre@skip@temp@four = \gre@space@skip@notebarspace\relax%
         \gre@hskip\gre@skip@temp@four %
       \else % (next begin difference >0pt)
-        \gre@skip@temp@four = \gre@skip@textbartextspace\relax%
+        \gre@skip@temp@four = \gre@space@skip@textbartextspace\relax%
         \gre@hskip\gre@skip@temp@four %
       \fi %
     \else%(enddifference < 0pt)
       \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
       \ifdim\gre@skip@nextbegindifference < 0 pt\relax%
-        \gre@skip@temp@four = \gre@skip@textbartextspace\relax%
+        \gre@skip@temp@four = \gre@space@skip@textbartextspace\relax%
         \gre@hskip\gre@skip@temp@four %
       \else %(next begin difference < 0 pt)
-        \gre@skip@temp@four = \gre@skip@interwordspacetext\relax%
+        \gre@skip@temp@four = \gre@space@skip@interwordspacetext\relax%
         \gre@hskip\gre@skip@temp@four %
       \fi %
     \fi %
@@ -1420,7 +1415,7 @@
 }%
 
 \def\GreAdHocSpaceEndOfElement#1#2{%
-  \gre@skip@temp@four = \gre@skip@interelementspace\relax %
+  \gre@skip@temp@four = \gre@space@skip@interelementspace\relax %
   \directlua{gregoriotex.scale_space(#1)}%
   \GreEndOfElement{4}{#2}%
 }%
@@ -1439,16 +1434,16 @@
     \GreNoBreak %
   \fi %
   \ifcase#1%
-    \gre@skip@temp@four = \gre@skip@interelementspace\relax%
+    \gre@skip@temp@four = \gre@space@skip@interelementspace\relax%
     \gre@hskip\gre@skip@temp@four %
   \or% case 1
-    \gre@skip@temp@four = \gre@skip@largerspace\relax%
+    \gre@skip@temp@four = \gre@space@skip@largerspace\relax%
     \gre@hskip\gre@skip@temp@four %
   \or% case 2
-    \gre@skip@temp@four = \gre@skip@glyphspace\relax%
+    \gre@skip@temp@four = \gre@space@skip@glyphspace\relax%
     \gre@hskip\gre@skip@temp@four %
   \or% case 3
-    \gre@skip@temp@four = \gre@skip@zerowidthspace\relax%
+    \gre@skip@temp@four = \gre@space@skip@zerowidthspace\relax%
     \gre@hskip\gre@skip@temp@four %
   \or% case 4
     \gre@hskip\gre@skip@temp@four %
@@ -1487,51 +1482,51 @@
 %% 22: half-space
 \def\gre@get@spaceskip#1{%
   \ifcase#1%
-    \gre@skip@temp@four = \gre@skip@interglyphspace\relax%
+    \gre@skip@temp@four = \gre@space@skip@interglyphspace\relax%
   \or% case 1
-    \gre@skip@temp@four = \gre@dimen@zerowidthspace\relax%
+    \gre@skip@temp@four = \gre@space@dimen@zerowidthspace\relax%
   \or% case 2
-    \gre@skip@temp@four = \gre@dimen@alterationspace\relax%
+    \gre@skip@temp@four = \gre@space@dimen@alterationspace\relax%
   \or% case 3
-    \gre@skip@temp@four = \gre@skip@punctuminclinatumshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@punctuminclinatumshift\relax%
   \or% case 4
-    \gre@skip@temp@four = \gre@skip@bitrivirspace\relax%
+    \gre@skip@temp@four = \gre@space@skip@bitrivirspace\relax%
   \or% case 5
-    \gre@skip@temp@four = \gre@skip@bitristrospace\relax%
+    \gre@skip@temp@four = \gre@space@skip@bitristrospace\relax%
   \or% case 6
-    \gre@skip@temp@four = \gre@skip@spaceaftersigns\relax%
+    \gre@skip@temp@four = \gre@space@skip@spaceaftersigns\relax%
   \or% case 7
-    \gre@skip@temp@four = \gre@skip@punctuminclinatumanddebilisshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@punctuminclinatumanddebilisshift\relax%
   \or% case 8
-    \gre@skip@temp@four = \gre@skip@punctuminclinatumdebilisshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@punctuminclinatumdebilisshift\relax%
   \or% case 9
-    \gre@skip@temp@four = \gre@skip@beforepunctainclinatashift\relax%
+    \gre@skip@temp@four = \gre@space@skip@beforepunctainclinatashift\relax%
   \or% case 10
-    \gre@skip@temp@four = \gre@skip@punctuminclinatumbigshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@punctuminclinatumbigshift\relax%
   \or% case 11
-    \gre@skip@temp@four = \gre@skip@punctuminclinatummaxshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@punctuminclinatummaxshift\relax%
   \or% case 12 (ascending version of 3)
-    \gre@skip@temp@four = \gre@skip@ascendingpunctuminclinatumshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@ascendingpunctuminclinatumshift\relax%
   \or% case 13 (ascending version of 7)
-    \gre@skip@temp@four = \gre@skip@ascendingpunctuminclinatumanddebilisshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@ascendingpunctuminclinatumanddebilisshift\relax%
   \or% case 14 (ascending version of 10)
-    \gre@skip@temp@four = \gre@skip@ascendingpunctuminclinatumbigshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@ascendingpunctuminclinatumbigshift\relax%
   \or% case 15 (ascending version of 11)
-    \gre@skip@temp@four = \gre@skip@ascendingpunctuminclinatummaxshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@ascendingpunctuminclinatummaxshift\relax%
   \or% case 16
-    \gre@skip@temp@four = \gre@skip@descendinginclinatumtonobarshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@descendinginclinatumtonobarshift\relax%
   \or% case 17
-    \gre@skip@temp@four = \gre@skip@descendinginclinatumtonobarbigshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@descendinginclinatumtonobarbigshift\relax%
   \or% case 18
-    \gre@skip@temp@four = \gre@skip@descendinginclinatumtonobarmaxshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@descendinginclinatumtonobarmaxshift\relax%
   \or% case 19
-    \gre@skip@temp@four = \gre@skip@ascendinginclinatumtonobarshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@ascendinginclinatumtonobarshift\relax%
   \or% case 20
-    \gre@skip@temp@four = \gre@skip@ascendinginclinatumtonobarbigshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@ascendinginclinatumtonobarbigshift\relax%
   \or% case 21
-    \gre@skip@temp@four = \gre@skip@ascendinginclinatumtonobarmaxshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@ascendinginclinatumtonobarmaxshift\relax%
   \or% case 22
-    \gre@skip@temp@four = \gre@skip@halfspace\relax%
+    \gre@skip@temp@four = \gre@space@skip@halfspace\relax%
   \fi%
 }%
 
@@ -1712,8 +1707,7 @@
 
 % gregoriostylefont is the font used for additional glyphs
 \def\gre@setstylefont{%
-  \gre@count@temp@three = \the\gre@factor %
-  \multiply\gre@count@temp@three by 100000\relax %
+  \gre@count@temp@three = \numexpr(\gre@factor * 100000)\relax %
   \global\font\gre@font@style={name:greextra} at \the\gre@count@temp@three sp%
   {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]], [[\the\gre@factor]])}}%
   \relax%
