@@ -3096,9 +3096,10 @@ static __inline void write_syllable_point_and_click(FILE *const f,
 }
 
 static void write_syllable_text(FILE *f, const char *const syllable_type, 
-        const gregorio_character *text)
+        const gregorio_character *text, bool ignored)
 {
     if (syllable_type != NULL) {
+        ignored = false; /* to avoid the warning */
         fprintf(f, "%s{\\GreSetThisSyllable", syllable_type);
         write_text(f, text);
         fprintf(f, "}");
@@ -3106,7 +3107,7 @@ static void write_syllable_text(FILE *f, const char *const syllable_type,
 }
 
 static void write_first_syllable_text(FILE *f, const char *const syllable_type, 
-        const gregorio_character *const text)
+        const gregorio_character *const text, bool end_of_word)
 {
     if (syllable_type == NULL || text == NULL) {
         fprintf(f, "}{}{\\GreSetNoFirstSyllableText}");
@@ -3168,10 +3169,10 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
                 }
             }
         }
-        if (t) {
+        if (t || end_of_word) {
             fprintf(f, "{}");
         } else {
-            fprintf(f, "{\\GreForceHyphen}");
+            fprintf(f, "{\\GreEmptyFirstSyllableHyphen}");
         }
 
         fprintf(f, "}");
@@ -3243,13 +3244,17 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
         unsigned char first_of_disc, gregoriotex_status *const status,
         const gregorio_score *const score,
         void (*const write_this_syllable_text)
-        (FILE *, const char *, const gregorio_character *))
+        (FILE *, const char *, const gregorio_character *, bool))
 {
     gregorio_element *clef_change_element = NULL, *element;
     const char *syllable_type = NULL;
     bool event_anticipated = false;
+    bool end_of_word = syllable->position == WORD_END
+            || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
+            || !syllable->next_syllable
+            || syllable->next_syllable->type == GRE_END_OF_LINE;
     if (!syllable) {
-        write_this_syllable_text(f, NULL, NULL);
+        write_this_syllable_text(f, NULL, NULL, end_of_word);
         return;
     }
     /* Very first: before anything, if the syllable is the beginning of a
@@ -3273,7 +3278,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             } else {
                 fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
             }
-            write_this_syllable_text(f, NULL, syllable->text);
+            write_this_syllable_text(f, NULL, syllable->text, end_of_word);
             return;
         }
         /*
@@ -3296,7 +3301,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 write_syllable(f, syllable, 2, status, score,
                         write_syllable_text);
                 fprintf(f, "}%%\n");
-                write_this_syllable_text(f, NULL, syllable->text);
+                write_this_syllable_text(f, NULL, syllable->text, end_of_word);
                 return;
             }
         }
@@ -3307,14 +3312,14 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                     && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
                     B_DIVISIO_FINALIS) {
                 handle_final_bar(f, "DivisioFinalis", syllable);
-                write_this_syllable_text(f, NULL, syllable->text);
+                write_this_syllable_text(f, NULL, syllable->text, end_of_word);
                 return;
             }
             if (!syllable->next_syllable && !syllable->text
                     && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
                     B_DIVISIO_MAIOR) {
                 handle_final_bar(f, "DivisioMaior", syllable);
-                write_this_syllable_text(f, NULL, syllable->text);
+                write_this_syllable_text(f, NULL, syllable->text, end_of_word);
                 return;
             } else {
                 syllable_type = "\\GreBarSyllable";
@@ -3327,12 +3332,9 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 syllable->next_syllable? syllable->next_syllable->text : NULL);
         syllable_type = "\\GreSyllable";
     }
-    write_this_syllable_text(f, syllable_type, syllable->text);
+    write_this_syllable_text(f, syllable_type, syllable->text, end_of_word);
     fprintf(f, "{}{\\Gre%s}", syllable->first_word ? "FirstWord" : "Unstyled");
-    if (syllable->position == WORD_END
-            || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
-            || !syllable->next_syllable
-            || syllable->next_syllable->type == GRE_END_OF_LINE) {
+    if (end_of_word) {
         fprintf(f, "{1}");
     } else {
         fprintf(f, "{0}");
