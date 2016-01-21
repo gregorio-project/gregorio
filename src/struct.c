@@ -142,11 +142,14 @@ static void add_pitched_item_as_note(gregorio_note **current_note,
 }
 
 void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
-        gregorio_type sub_type, const gregorio_scanner_location *const loc)
+        bool eol_ragged, bool eol_forces_custos, bool eol_forces_custos_on,
+        const gregorio_scanner_location *const loc)
 {
     gregorio_note *element = create_and_link_note(current_note, loc);
     element->type = GRE_END_OF_LINE;
-    element->u.other.sub_type = sub_type;
+    element->u.other.eol_ragged = eol_ragged;
+    element->u.other.eol_forces_custos = eol_forces_custos;
+    element->u.other.eol_forces_custos_on = eol_forces_custos_on;
 }
 
 void gregorio_add_custo_as_note(gregorio_note **current_note,

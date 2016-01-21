@@ -72,7 +72,6 @@ typedef struct gregorio_scanner_location {
     E(GRE_END_OF_LINE) \
     E(GRE_SPACE) \
     E(GRE_BAR) \
-    E(GRE_END_OF_PAR) \
     E(GRE_CUSTOS) \
     E(GRE_MANUAL_CUSTOS) \
     /* I don't really know how I could use the a TEXVERB_NOTE in gregoriotex,
@@ -366,11 +365,12 @@ ENUM(gregorio_word_position, GREGORIO_WORD_POSITION);
 
 typedef struct gregorio_extra_info {
     char *ad_hoc_space_factor;
-    /* the sub-type of GRE_END_OF_LINE */
-    ENUM_BITFIELD(gregorio_type) sub_type:8;
-    ENUM_BITFIELD(gregorio_bar) bar:8;
-    ENUM_BITFIELD(gregorio_space) space:8;
-    ENUM_BITFIELD(gregorio_nlba) nlba:8;
+    ENUM_BITFIELD(gregorio_bar) bar:4;
+    ENUM_BITFIELD(gregorio_space) space:4;
+    ENUM_BITFIELD(gregorio_nlba) nlba:2;
+    bool eol_ragged:1;
+    bool eol_forces_custos:1;
+    bool eol_forces_custos_on:1;
 } gregorio_extra_info;
 
 typedef struct gregorio_clef_info {
@@ -809,7 +809,8 @@ void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
         gregorio_type type, gregorio_extra_info *info, gregorio_sign sign,
         char *texverb);
 void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
-        gregorio_type sub_type, const gregorio_scanner_location *loc);
+        bool eol_ragged, bool eol_forces_custos, bool eol_forces_custos_on,
+        const gregorio_scanner_location *loc);
 void gregorio_add_custo_as_note(gregorio_note **current_note,
         const gregorio_scanner_location *loc);
 void gregorio_add_manual_custos_as_note(gregorio_note **current_note,

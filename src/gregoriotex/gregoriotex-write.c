@@ -3181,19 +3181,47 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
     }
 }
 
-static __inline void anticipate_euouae(FILE *f, gregorio_syllable *syllable) {
+static __inline void scan_syllable_for_eol(
+        const gregorio_syllable *const syllable,
+        bool *eol_forces_custos, bool *eol_forces_custos_on) {
+    const gregorio_element *element;
+    for (element = *(syllable->elements); element; element = element->next) {
+        if (element->type == GRE_END_OF_LINE) {
+            if (element->u.misc.unpitched.info.eol_forces_custos) {
+                *eol_forces_custos = true;
+                *eol_forces_custos_on =
+                        element->u.misc.unpitched.info.eol_forces_custos_on;
+            }
+        }
+    }
+}
+
+static __inline void anticipate_event(FILE *f, gregorio_syllable *syllable) {
     static unsigned short euouae_id = 0;
+    bool eol_forces_custos = false;
+    bool eol_forces_custos_on = false;
 
     if (syllable->next_syllable) {
         for (syllable = syllable->next_syllable;
                 syllable && syllable->elements && *(syllable->elements)
                 && (*(syllable->elements))->type == GRE_END_OF_LINE;
                 syllable = syllable->next_syllable) {
-            /* just iterate to find the next "real" syllable */
+            /* we are at an end-of-line, so check if custos is forced */
+            scan_syllable_for_eol(syllable, &eol_forces_custos,
+                    &eol_forces_custos_on);
         }
-        if (syllable && syllable->euouae == EUOUAE_BEGINNING) {
-            syllable->euouae_id = ++euouae_id;
-            fprintf(f, "%%\n\\GreNextSyllableBeginsEUOUAE{%hu}%%\n", euouae_id);
+        if (syllable) {
+            scan_syllable_for_eol(syllable, &eol_forces_custos,
+                    &eol_forces_custos_on);
+
+            if (syllable->euouae == EUOUAE_BEGINNING) {
+                syllable->euouae_id = ++euouae_id;
+                fprintf(f, "%%\n\\GreNextSyllableBeginsEUOUAE{%hu}%%\n", euouae_id);
+            }
+        }
+        if (eol_forces_custos) {
+            fprintf(f, "%%\n\\GreUpcomingNewLineForcesCustos{%c}%%\n",
+                    eol_forces_custos_on? '1' : '0');
         }
     }
 }
@@ -3219,7 +3247,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
 {
     gregorio_element *clef_change_element = NULL, *element;
     const char *syllable_type = NULL;
-    bool euouae_anticipated = false;
+    bool event_anticipated = false;
     if (!syllable) {
         write_this_syllable_text(f, NULL, NULL);
         return;
@@ -3240,11 +3268,10 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
      */
     if (syllable->elements && *(syllable->elements)) {
         if ((syllable->elements)[0]->type == GRE_END_OF_LINE) {
-            if ((syllable->elements)[0]->u.misc.unpitched.info.sub_type !=
-                    GRE_END_OF_PAR) {
-                fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
-            } else {
+            if ((syllable->elements)[0]->u.misc.unpitched.info.eol_ragged) {
                 fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
+            } else {
+                fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
             }
             write_this_syllable_text(f, NULL, syllable->text);
             return;
@@ -3305,8 +3332,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->position == WORD_END
             || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
             || !syllable->next_syllable
-            || syllable->next_syllable->type == GRE_END_OF_LINE
-            || syllable->next_syllable->type == GRE_END_OF_PAR) {
+            || syllable->next_syllable->type == GRE_END_OF_LINE) {
         fprintf(f, "{1}");
     } else {
         fprintf(f, "{0}");
@@ -3466,15 +3492,15 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
 
         case GRE_END_OF_LINE:
             if (!element->next) {
-                anticipate_euouae(f, syllable);
-                euouae_anticipated = true;
+                anticipate_event(f, syllable);
+                event_anticipated = true;
             }
             /* here we suppose we don't have two linebreaks in the same
              * syllable */
-            if (element->u.misc.unpitched.info.sub_type != GRE_END_OF_PAR) {
-                fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
-            } else {
+            if (element->u.misc.unpitched.info.eol_ragged) {
                 fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
+            } else {
+                fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
             }
             break;
 
@@ -3492,8 +3518,8 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             break;
         }
     }
-    if (!euouae_anticipated) {
-        anticipate_euouae(f, syllable);
+    if (!event_anticipated) {
+        anticipate_event(f, syllable);
     }
     fprintf(f, "}%%\n");
     if (syllable->position == WORD_END

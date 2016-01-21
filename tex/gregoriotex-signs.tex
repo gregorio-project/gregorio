@@ -309,8 +309,10 @@
 }
 
 % the argument is the height
+\edef\gre@nextcustos{\gre@pitch@dummy}%
 \def\GreNextCustos#1{%
   \ifnum\gre@insidediscretionary=0\relax %
+    \edef\gre@nextcustos{#1}%
     \ifgre@blockeolcustos\else%
       \gre@calculate@glyphraisevalue{#1}{0}%
       %here we need some tricks to draw the line before the custos (for the color)

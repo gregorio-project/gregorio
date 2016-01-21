@@ -41,6 +41,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - More control over the placement of the commentary.  You can now set the amount of space between the lines of a multi-line commentary with `commentaryseparation` and the distance from the top line of the staff to the baseline of the bottom line of the commentary with `commentaryraise`.  See [#662](https://github.com/gregorio-project/gregorio/issues/662) for original request.
 - Styles for the annotation and the commentary.  `annotation` has no default styling.  `commentary` defaults to footnote sized italics.
 - `\grecommentary` now takes an optional argument which will add extra space between the commentary and the score for just the next score.
+- The custos can now be selectively enabled/disabled at forced line breaks by appending `+` (to enable) or `-` (to disable) after the `z` or `Z` (see [#800](https://github.com/gregorio-project/gregorio/issues/800)).
 
 
 ### Deprecated
