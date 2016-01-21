@@ -973,6 +973,15 @@
   \def\gre@opening@syllabletext{}%
 }%
 
+\def\GreUpcomingNewLineForcesCustos#1{%
+  \ifcase#1\relax % 0 - forced off
+    \gre@usemanualeolcustos %
+  \or % 1 - forced on
+    \gre@useautoeolcustos %
+    \GreNextCustos{\gre@nextcustos}%
+  \fi %
+}%
+
 %% opens a score
 %% #1 - macros rendering the things after the initial but before the notes
 %% #2 - macros rendering the things after starting notes but before the syllable

@@ -745,7 +745,15 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element)
         gabc_write_clef(f, element->u.misc.clef);
         break;
     case GRE_END_OF_LINE:
-        fprintf(f, "z");
+        if (element->u.misc.unpitched.info.eol_ragged) {
+            fprintf(f, "Z");
+        } else {
+            fprintf(f, "z");
+        }
+        if (element->u.misc.unpitched.info.eol_forces_custos) {
+            fprintf(f, element->u.misc.unpitched.info.eol_forces_custos_on? "+"
+                    : "-");
+        }
         break;
     case GRE_CUSTOS:
         if (element->u.misc.pitched.force_pitch) {
