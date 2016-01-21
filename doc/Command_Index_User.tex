@@ -869,6 +869,20 @@ Macro to determine whether the last line of the score should be justified or not
 \end{argtable}
 
 
+\subsubsection{Bar spacing}
+
+\macroname{\textbackslash gresetbarshiftaftermora}{\{\#1\}}{gregoriotex-signs.tex}
+Macro to change the behaviour for bars following a punctum mora. The argument changes the cases in which punctum mora are ignored in bar horizontal placement:
+
+\begin{argtable}
+  \#1 & \texttt{always} & punctum mora are always ignored (default)\\
+  & \texttt{notextonly} & punctum mora are ignored in bars inside syllables, and in bars having their own syllable without text\\
+  & \texttt{insideonly} & punctum mora are ignored only in bars inside syllables\\
+  & \texttt{never} & punctum mora are never ignored\\
+\end{argtable}
+
+When a punctum mora is ignored, the bar will also be shifted by \texttt{barmoraadjustment} (zero by default), see its description in the \textbf{Distances} section.
+
 \subsubsection{Hyphenation}
 
 \macroname{\textbackslash gresethyphen}{\{\#1\}}{gregoriotex-main.tex}
@@ -1080,6 +1094,11 @@ Space before custos within a line.
 
 \begin{gdimension}{spacebeforesigns}
 Space before punctum mora and augmentum duplex.
+\end{gdimension}
+
+\begin{gdimension}{barmoraadjustment}
+When a bar is shifted left because of a preceding punctum mora, this space is
+also added. Use it to make the bar a bit further from the punctum mora if you want.
 \end{gdimension}
 
 \begin{gdimension}{spaceaftersigns}

@@ -1484,11 +1484,31 @@
 % emits text if #1 is 0
 \def\gre@bar@text#1{\ifcase#1 \or text\fi}%
 
+\gdef\gre@barshiftaftermora{3}
+
+\def\gresetbarshiftaftermora#1{%
+  \IfStrEq{#1}{always}%
+    {\gdef\gre@barshiftaftermora{3}}%
+    {\IfStrEq{#1}{notextonly}%
+      {\gdef\gre@barshiftaftermora{2}}%
+      {\IfStrEq{#1}{insideonly}%
+        {\gdef\gre@barshiftaftermora{1}}%
+        {\IfStrEq{#1}{never}%
+          {\gdef\gre@barshiftaftermora{0}}%
+          {\gre@error{Unrecognized option "#1" in gresetbarshiftaftermora , use 'always', 'notextonly', 'insideonly' or 'never'}}%
+        }%
+      }%
+    }%
+}%
+
+\def\gre@kern@bar@aftermora{%
+  \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
+  \kern\glueexpr -\wd\gre@box@temp@width - \gre@space@skip@spacebeforesigns + \gre@space@skip@barmoraadjustment\relax %
+}
+
 %a macro to write a bar
 %% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis
-%% 2: is % for now we don't use it
-%%%%%% 0 if it is in a syllable containing only this bar
-%%%%%% 1 if it is in a syllable containing other notes
+%% 2: is 0 if it is in a syllable containing only this bar, 1 otherwise
 %% 3: is 0 if there's no text under the bar or 1 if there is text under the bar
 %% 4: macros that may happen before the skip after the bar (typically GreVEpisema)
 \def\gre@writebar#1#2#3#4{%
@@ -1496,12 +1516,16 @@
   % mora, we kern of the corresponding space. We do it only in the case
   % of a bar in the middle of other notes.
   \ifgre@lastispunctum%
-    \ifnum#2=1\relax %
-      \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
-      \gre@skip@temp@four = -\wd\gre@box@temp@width %
-      \kern\gre@skip@temp@four%
-      \gre@skip@temp@four = -\gre@space@skip@spacebeforesigns\relax%
-      \kern\gre@skip@temp@four %
+    \ifcase\gre@barshiftaftermora\or %
+      \ifcase #2\or %
+        \gre@kern@bar@aftermora %
+      \fi %
+    \or %
+      \ifcase #3\relax %
+        \gre@kern@bar@aftermora %
+      \fi %
+    \or %
+      \gre@kern@bar@aftermora %
     \fi %
   \fi %
   \gre@newglyphcommon %
