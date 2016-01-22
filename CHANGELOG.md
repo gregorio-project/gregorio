@@ -43,6 +43,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Styles for the annotation and the commentary.  `annotation` has no default styling.  `commentary` defaults to footnote sized italics.
 - `\grecommentary` now takes an optional argument which will add extra space between the commentary and the score for just the next score.
 - The custos can now be selectively enabled/disabled at forced line breaks by appending `+` (to enable) or `-` (to disable) after the `z` or `Z` (see [#800](https://github.com/gregorio-project/gregorio/issues/800)).
+- With thanks to an anonymous contributor, the shape of the MetaPost-drawn curly brace has been improved (see [#797](https://github.com/gregorio-project/gregorio/issues/797)).
 
 
 ### Deprecated
