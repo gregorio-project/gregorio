@@ -614,7 +614,7 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    gregorio_fix_initial_keys(score, DEFAULT_KEY);
+    gregorio_fix_initial_keys(score, gregorio_default_clef);
 
     switch (output_format) {
     case GABC:

@@ -68,6 +68,8 @@ local score_heights = nil
 local new_score_heights = nil
 local var_brace_positions = nil
 local new_var_brace_positions = nil
+local pos_saves = nil
+local new_pos_saves = nil
 local auxname = nil
 
 local space_below_staff = 5
@@ -76,6 +78,7 @@ local space_above_staff = 13
 local score_fonts = {}
 local symbol_fonts = {}
 local loaded_font_sizes = {}
+local font_factors = {}
 local font_indexed = {}
 local next_variant = 0
 local variant_prefix = 'gre@font@variant@'
@@ -83,6 +86,8 @@ local number_to_letter = {
   ['0'] = 'A', ['1'] = 'B', ['2'] = 'C', ['3'] = 'D', ['4'] = 'E',
   ['5'] = 'F', ['6'] = 'G', ['7'] = 'H', ['8'] = 'I', ['9'] = 'J',
 }
+
+local capture_header_macro = {}
 
 local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
 
@@ -141,6 +146,12 @@ local function heights_changed()
   for id, tab in pairs(var_brace_positions) do
     if keys_changed(tab, new_var_brace_positions[id]) then return true end
   end
+  for id, tab in pairs(new_pos_saves) do
+    if keys_changed(tab, pos_saves[id]) then return true end
+  end
+  for id, tab in pairs(pos_saves) do
+    if keys_changed(tab, new_pos_saves[id]) then return true end
+  end
   return false
 end
 
@@ -168,6 +179,18 @@ local function write_greaux()
           if line[1] ~= nil and line[2] ~= nil then
             aux:write(string.format('   [%d]={%d,%d},\n', id2, line[1],
                 line[2]))
+          end
+        end
+        aux:write('  },\n')
+      end
+      aux:write(' },\n ["pos_saves"]={\n')
+      for id, tab in pairs(new_pos_saves) do
+        aux:write(string.format('  ["%s"]={\n', id))
+        for id2, line in pairs(tab) do
+          if line[1] ~= nil and line[2] ~= nil and line[3] ~= nil and
+              line[4] ~= nil then
+            aux:write(string.format('   [%d]={%d,%d,%d,%d},\n', id2, line[1],
+                line[2], line[3], line[4]))
           end
         end
         aux:write('  },\n')
@@ -207,9 +230,11 @@ local function init(arg, enable_height_computation)
     local score_info = dofile(auxname)
     line_heights = score_info.line_heights or {}
     var_brace_positions = score_info.var_brace_positions or {}
+    pos_saves = score_info.pos_saves or {}
   else
     line_heights = {}
     var_brace_positions = {}
+    pos_saves = {}
   end
 
   if enable_height_computation then
@@ -236,6 +261,7 @@ local function init(arg, enable_height_computation)
         'resume height computation.')
   end
   new_var_brace_positions = {}
+  new_pos_saves = {}
 end
 
 -- node factory
@@ -667,7 +693,7 @@ local function map_font(name, prefix)
   end
 end
 
-local function init_variant_font(font_name, for_score)
+local function init_variant_font(font_name, for_score, gre_factor)
   if font_name ~= '*' then
     local font_table = for_score and score_fonts or symbol_fonts
     if font_table[font_name] == nil then
@@ -679,7 +705,10 @@ local function init_variant_font(font_name, for_score)
             [[\global\font\%s = {name:%s} at 10 sp\relax ]],
             font_csname, font_name))
         -- loaded_font_sizes will only be given a value if the font is for_score
-        loaded_font_sizes[font_name] = '10'
+        loaded_font_sizes[font_name] = {size = '10', gre_factor = gre_factor}
+        if font_factors[font_name] == nil then
+          font_factors[font_name] = '100000'
+        end
       else
         -- is there a nice way to make this string readable?
         tex.print(catcode_at_letter, string.format(
@@ -790,13 +819,17 @@ local function reset_score_glyph(glyph_name)
   end
 end
 
-local function scale_score_fonts(size)
+local function set_font_factor(font_name, font_factor)
+  font_factors[font_name] = font_factor
+end
+
+local function scale_score_fonts(size, gre_factor)
   for font_name, font_csname in pairs(score_fonts) do
-    if loaded_font_sizes[font_name] and loaded_font_sizes[font_name] ~= size then
+    if loaded_font_sizes[font_name] and font_factors[font_name] and loaded_font_sizes[font_name].size ~= gre_factor * font_factors[font_name] then
       tex.print(catcode_at_letter, string.format(
           [[\global\font\%s = {name:%s} at %s sp\relax ]],
-          font_csname, font_name, size))
-      loaded_font_sizes[font_name] = size
+          font_csname, font_name, gre_factor * font_factors[font_name]))
+      loaded_font_sizes[font_name] = {size = size, gre_factor = gre_factor}
     end
   end
 end
@@ -855,11 +888,105 @@ local function var_brace_len(brace)
   tex.print('2mm')
 end
 
+local function save_pos(index, which)
+  tex.print(string.format([[\pdfsavepos\luatexlatelua{gregoriotex.late_save_pos('%s', %d, %d, \number\pdflastxpos, \number\pdflastypos)}]], cur_score_id, index, which))
+end
+
+local function late_save_pos(score_id, index, which, xpos, ypos)
+  if new_pos_saves[score_id] == nil then
+    new_pos_saves[score_id] = {}
+  end
+  if new_pos_saves[score_id][index] == nil then
+    new_pos_saves[score_id][index] = {}
+  end
+  new_pos_saves[score_id][index][(2 * which) - 1] = xpos
+  new_pos_saves[score_id][index][2 * which] = ypos
+end
+
+-- this function is meant to be used from \ifcase; prints 0 for true and 1 for false
+local function is_ypos_different(index)
+  if pos_saves[cur_score_id] ~= nil then
+    local saved_pos = pos_saves[cur_score_id][index]
+    if saved_pos == nil or saved_pos[2] == saved_pos[4] then
+      tex.sprint([[\number1\relax ]])
+    else
+      tex.sprint([[\number0\relax ]])
+    end
+  else
+    tex.sprint([[\number0\relax ]])
+  end
+end
+
 local function width_to_bp(width, value_if_star)
   if width == '*' then
     tex.print(value_if_star or '0')
   else
     tex.print(tex.sp(width) * 1.00375 / 65536)
+  end
+end
+
+-- computes the hypotenuse given the width and height of the right triangle
+local function hypotenuse(width, height)
+  log("width %s height %s", width, height)
+  local a = tex.sp(width)
+  local b = tex.sp(height)
+  tex.sprint(math.sqrt((a * a) + (b * b)) .. 'sp')
+end
+
+-- computes the rotation angle opposite the height of a right triangle
+local function rotation(width, height)
+  local a = tex.sp(width)
+  local b = tex.sp(height)
+  tex.sprint(math.deg(math.atan2(b, a)))
+end
+
+local function scale_space(factor)
+  local skip = tex.getskip('gre@skip@temp@four')
+  skip.width = skip.width * factor
+  -- should skip.stretch and skip.shink also be scaled?
+end
+
+local function set_header_capture(header, macro_name, flags)
+  if macro_name == '' then
+    capture_header_macro[header] = nil
+    log("no longer capturing header %s", header)
+  else
+    local macro = {}
+    macro.name = macro_name
+    flags:gsub("([^,]+)", function(flag)
+      if flag == "string" then macro.takes_string = true
+      elseif flag == "name" then macro.takes_header_name = true
+      else err("unknown header capture flag: %s", flag)
+      end
+    end)
+    capture_header_macro[header] = macro
+    log("capturing header %s using %s, string=%s, name=%s", header, macro.name, macro.takes_string, macro.takes_header_name)
+  end
+end
+
+local function capture_header(header, value)
+  local macro = capture_header_macro[header]
+  if macro ~= nil then
+    tex.sprint(string.format([[\%s{]], macro.name))
+    if macro.takes_header_name then
+      tex.sprint(-2, header)
+      tex.sprint('}{')
+    end
+    if macro.takes_string then
+      tex.sprint(-2, value)
+    else
+      tex.sprint(value)
+    end
+    tex.print('}')
+  end
+end
+
+local function mode_part(part)
+  if part ~= '' then
+    if not unicode.utf8.match(part, '^%p') then
+      tex.sprint([[\thinspace]])
+    end
+    tex.print(part)
   end
 end
 
@@ -877,6 +1004,7 @@ gregoriotex.init_variant_font    = init_variant_font
 gregoriotex.change_score_glyph   = change_score_glyph
 gregoriotex.reset_score_glyph    = reset_score_glyph
 gregoriotex.scale_score_fonts    = scale_score_fonts
+gregoriotex.set_font_factor      = set_font_factor
 gregoriotex.def_symbol           = def_symbol
 gregoriotex.font_size            = font_size
 gregoriotex.direct_gabc          = direct_gabc
@@ -887,3 +1015,12 @@ gregoriotex.late_brace_note_pos  = late_brace_note_pos
 gregoriotex.mark_translation     = mark_translation
 gregoriotex.mark_abovelinestext  = mark_abovelinestext
 gregoriotex.width_to_bp          = width_to_bp
+gregoriotex.hypotenuse           = hypotenuse
+gregoriotex.rotation             = rotation
+gregoriotex.scale_space          = scale_space
+gregoriotex.set_header_capture   = set_header_capture
+gregoriotex.capture_header       = capture_header
+gregoriotex.save_pos             = save_pos
+gregoriotex.late_save_pos        = late_save_pos
+gregoriotex.is_ypos_different    = is_ypos_different
+gregoriotex.mode_part            = mode_part

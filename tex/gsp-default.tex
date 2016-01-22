@@ -94,6 +94,8 @@
 \grecreatedim{beforelowchoralsignspace}{0.04556 cm plus 0.00638 cm minus 0.00638 cm}{scalable}%
 % when bolshifts are enabled, minimal space between a clef at the beginning of the line and a leading alteration glyph (should be larger than clefflatspace so that a flatted clef can be distinguished from a flat which is part of the first glyph on a line, but also smaller than spaceafterlineclef, the distance from the clef to the first notes)
 \grecreatedim{beforealterationspace}{0.1 cm}{scalable}%
+% half-space between elements
+\grecreatedim{halfspace}{0.03463 cm plus 0.00091 cm minus 0.00182 cm}{scalable}%
 % space between elements
 \grecreatedim{interelementspace}{0.06927 cm plus 0.00182 cm minus 0.00363 cm}{scalable}%
 % larger space between elements
@@ -110,6 +112,9 @@
 \grecreatedim{spacebeforeeolcustos}{0.1823 cm plus 0.31903 cm minus 0.0638 cm}{scalable}%
 % space before punctum mora and augmentum duplex
 \grecreatedim{spacebeforesigns}{0.05469 cm plus 0.00455 cm minus 0.00455 cm}{scalable}%
+% when a bar is shifted left because of a preceding punctum mora, barmoraadjustment is
+% also added. Use it to make the bar a bit further from the punctum mora if you want.
+\grecreatedim{barmoraadjustment}{0 cm}{scalable}%
 % space after punctum mora and augmentum duplex
 \grecreatedim{spaceaftersigns}{0.08203 cm plus 0.0082 cm minus 0.0082 cm}{scalable}%
 % space after a clef at the beginning of a line
@@ -125,6 +130,10 @@
 % Versions of interword spaces for euouae blocks
 \grecreatedim{interwordspacenotes@euouae}{0.19 cm plus 0.1 cm minus 0.05 cm}{scalable}%
 \grecreatedim{interwordspacetext@euouae}{0.27 cm plus 0.1 cm minus 0.05 cm}{scalable}%
+% versions of note spaces when the first note of the second syllable is an alteration
+% those are used in euouae blocks
+\grecreatedim{interwordspacenotes@alteration}{0.1 cm plus 0.07 cm minus 0.01 cm}{scalable}%
+\grecreatedim{intersyllablespacenotes@alteration}{0.1 cm plus 0.04 cm minus 0 cm}{scalable}%
 % space between notes of a bivirga or trivirga
 \grecreatedim{bitrivirspace}{0.06927 cm plus 0.00182 cm minus 0.00546 cm}{scalable}%
 % space between notes of a bistropha or tristrophae
@@ -139,8 +148,28 @@
 \grecreatedim{punctuminclinatumdebilisshift}{-0.00728 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
 % space between puncta inclinata, larger ambitus (range=3rd)
 \grecreatedim{punctuminclinatumbigshift}{0.07565 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
-% space between puncta inclinata, larger ambitus (range=4th -or more?-)
+% space between puncta inclinata, larger ambitus (range=4th or 5th)
 \grecreatedim{punctuminclinatummaxshift}{0.17865 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
+% space between two ascending punctum inclinatum
+\grecreatedim{ascendingpunctuminclinatumshift}{-0.07918 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
+% space between a punctum inclinatum and a punctum inclinatum deminutus, ascending
+\grecreatedim{ascendingpunctuminclinatumanddebilisshift}{-0.06278 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
+% space between ascending puncta inclinata, larger ambitus (range=3rd)
+\grecreatedim{ascendingpunctuminclinatumbigshift}{-0.00435 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
+% space between ascending puncta inclinata, larger ambitus (range=4th or 5th)
+\grecreatedim{ascendingpunctuminclinatummaxshift}{0.09865 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
+% space between a punctum inclinatum and a no-bar glyph one pitch below
+\grecreatedim{descendinginclinatumtonobarshift}{-0.00073 cm plus 0.00363 cm minus 0.00363 cm}{scalable}%
+% space between a punctum inclinatum and a no-bar glyph two pitches below
+\grecreatedim{descendinginclinatumtonobarbigshift}{0.10927 cm plus 0.00363 cm minus 0.00363 cm}{scalable}%
+% space between a punctum inclinatum and a no-bar glyph three or four pitches below
+\grecreatedim{descendinginclinatumtonobarmaxshift}{0.23927 cm plus 0.00363 cm minus 0.00363 cm}{scalable}%
+% space between a punctum inclinatum and a no-bar glyph one pitch above
+\grecreatedim{ascendinginclinatumtonobarshift}{-0.02473 cm plus 0.00363 cm minus 0.00363 cm}{scalable}%
+% space between a punctum inclinatum and a no-bar glyph two pitches above
+\grecreatedim{ascendinginclinatumtonobarbigshift}{0.04427 cm plus 0.00363 cm minus 0.00363 cm}{scalable}%
+% space between a punctum inclinatum and a no-bar glyph three or four pitches above
+\grecreatedim{ascendinginclinatumtonobarmaxshift}{0.12927 cm plus 0.00363 cm minus 0.00363 cm}{scalable}%
 % space for the bars (inside syllables)
 %first for virgula and divisio minima
 \grecreatedim{spacearoundsmallbar}{0.1823 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
@@ -152,6 +181,16 @@
 \grecreatedim{spacearoundfinalis}{0.1823 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
 %a special space for finalis, for when it is the last glyph
 \grecreatedim{spacebeforefinalfinalis}{0.29169 cm plus 0.07292 cm minus 0.27345 cm}{scalable}%
+%for virgula and divisio minima with text underneath
+\grecreatedim{spacearoundsmallbartext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
+%for the divisio minor with text underneath
+\grecreatedim{spacearoundminortext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
+%for divisio major with text underneath
+\grecreatedim{spacearoundmaiortext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
+%for divisio finalis with text underneath
+\grecreatedim{spacearoundfinalistext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
+%for finalis, for when it is the last glyph, with text underneath
+\grecreatedim{spacebeforefinalfinalistext}{0.34169 cm plus 0.07292 cm minus 0.27345 cm}{scalable}%
 % additional space that will appear around bars that are preceded by a custos and followed by a key.
 \grecreatedim{spacearoundclefbars}{0.03645 cm plus 0.00455 cm minus 0.0009 cm}{scalable}%
 % space between the text and the text of the bar
@@ -174,8 +213,12 @@
 \grecreatedim{initialraise}{0 cm}{scalable}%
 % Space between lines in the annotation
 \grecreatedim{annotationseparation}{0.05cm}{scalable}%
-% Amount to raise (positive) or lower (negative) the annotations from the default position (base line of top annotation aligned with top line of staff)
+% Amount to raise (positive) or lower (negative) the annotations from the default position
 \grecreatedim{annotationraise}{0cm}{scalable}%
+% Space between lines in the commentary
+\grecreatedim{commentaryseparation}{0.05cm}{scalable}%
+% Amount to raise (positive) or lower (negative) the commentary from the default position (base line of bottom commentary aligned with top line of staff)
+\grecreatedim{commentaryraise}{0.2cm}{scalable}%
 % space at the beginning of the lines if there is no clef
 \grecreatedim{noclefspace}{0.1 cm}{scalable}%
 % space around a clef change
@@ -215,4 +258,7 @@
 \grecreatedim{braceshift}{0 cm}{scalable}%
 % a shift you can give to the accentus above the curly brace
 \grecreatedim{curlybraceaccentusshift}{-0.05 cm}{scalable}%
-
+% the amount to shift the over slur up
+\grecreatedim{overslurshift}{0.05000 cm}{scalable}%
+% the amount to shift the under slur up
+\grecreatedim{underslurshift}{0.01000 cm}{scalable}%

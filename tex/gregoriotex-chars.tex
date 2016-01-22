@@ -42,7 +42,7 @@
     \fi%
   }%
 }%
-\def\gre@def@char@he@porr#1#2{
+\def\gre@def@char@he@porr#1#2{%
   \expandafter\def\csname gre@char@he@#1\endcsname##1##2{%
     \ifcase##1\gre@char@he@punctum{##2}%
     \or\csname GreCPHEpisema#2One\endcsname%
@@ -76,6 +76,9 @@
 \gre@def@char@he{oriscus}{Oriscus}%
 \gre@def@char@he{oriscus@line@tr}{OriscusLineTR}%
 \gre@def@char@he{smallpunctum}{HighPes}% "smallpunctum" is the top punctum in a pes
+\gre@def@char@he{flat}{Flat}%
+\gre@def@char@he{sharp}{Sharp}%
+\gre@def@char@he{natural}{Natural}%
 
 \def\gre@fontchar@flat{\gre@font@music\GreCPFlat}%
 \def\gre@fontchar@flathole{\gre@font@music\GreCPFlatHole}%
@@ -180,22 +183,18 @@
     }%
 }%
 
-\def\greusedefaultstyle{%
-  \gre@deprecated{\protect\greusedefaultstyle}{\protect\gresetglyphstyle{default}}%
-  \gresetglyphstyle{default}%
+\def\greusedefaultstyle{%OBSOLETE
+  \gre@obsolete{\protect\greusedefaultstyle}{\protect\gresetglyphstyle{default}}%
 }%
 
-\def\greusemedicaeastyle{%
-  \gre@deprecated{\protect\greusemedicaeastyle}{\protect\gresetglyphstyle{medicaea}}%
-  \gresetglyphstyle{medicaea}%
+\def\greusemedicaeastyle{%OBSOLETE
+  \gre@obsolete{\protect\greusemedicaeastyle}{\protect\gresetglyphstyle{medicaea}}%
 }%
 
-\def\greusehufnagelstyle{%
-  \gre@deprecated{\protect\greusehufnagelstyle}{\protect\gresetglyphstyle{hufnagel}}%
-  \gresetglyphstyle{hufnagel}%
+\def\greusehufnagelstyle{%OBSOLETE
+  \gre@obsolete{\protect\greusehufnagelstyle}{\protect\gresetglyphstyle{hufnagel}}%
 }%
 
-\def\greusemensuralstyle{%
-  \gre@deprecated{\protect\greusemensuralstyle}{\protect\gresetglyphstyle{mensural}}%
-  \gresetglyphstyle{mensural}%
+\def\greusemensuralstyle{%OBSOLETE
+  \gre@obsolete{\protect\greusemensuralstyle}{\protect\gresetglyphstyle{mensural}}%
 }%

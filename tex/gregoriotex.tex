@@ -79,6 +79,15 @@
   \endmplibcode%
 }}%
 
+%% This is \strip@pt from LaTeX
+\begingroup%
+  \catcode`P=12%
+  \catcode`T=12%
+  \lowercase{%
+    \def\x{\def\gre@rem@pt##1.##2PT{##1\ifnum##2>\z@.##2\fi}}}%
+  \expandafter\endgroup\x%
+\def\gre@strip@pt{\expandafter\gre@rem@pt\the}%
+
 \long\def\gre@iflatex#1{}%
 \input gregoriotex-main.tex
 
@@ -131,33 +140,27 @@
 }
 
 
-\def\grecoloredlines#1#2#3{%
-  \gre@deprecated{\protect\grecoloredlines}{\protect\gresetlinecolor}%
-  \gresetlinecolor{}%
-  \relax %
+\def\grecoloredlines#1#2#3{%OBSOLETE
+  \gre@obsolete{\protect\grecoloredlines}{\protect\gresetlinecolor}%
 }
 
-\def\greredlines{%
-  \gre@deprecated{\protect\greredlines}{\protect\gresetlinecolor{gregoriocolor}}%
-  \gresetlinecolor{}%
-  \relax %
+\def\greredlines{%OBSOLETE
+  \gre@obsolete{\protect\greredlines}{\protect\gresetlinecolor{gregoriocolor}}%
 }
 
-\let\redlines\greredlines
+\let\redlines\greredlines%OBSOLETE
 
-\def\grenormallines{%
-  \gre@deprecated{\protect\grenormallines}{\protect\gresetlinecolor{black}}%
-  \gresetlinecolor{}%
-  \relax %
+\def\grenormallines{%OBSOLETE
+  \gre@obsolete{\protect\grenormallines}{\protect\gresetlinecolor{black}}%
 }
 
-\let\normallines\grenormallines
+\let\normallines\grenormallines%OBSOLETE
 
 %%%%%%%%%%%%%%%%%%%%
 %% Formatting environments
 %%%%%%%%%%%%%%%%%%%%
 
-\font\gre@font@biginitial=pncr at 80pt\relax%
+\font\gre@font@biginitial=pncr at 80pt\relax%%% DEPRECATED for removal in 5.0
 \font\gre@font@initial=pncr at 40pt\relax%
 
 \def\gre@style@initial{%
@@ -167,12 +170,12 @@
 }%
 \def\endgre@style@initial{\endgroup}%
 
-\def\gre@style@biginitial{%
-  \begingroup%
-  \gre@font@biginitial%
-  \relax %
-}%
-\def\endgre@style@biginitial{\endgroup}%
+\def\gre@style@biginitial{%%% DEPRECATED for removal in 5.0
+  \begingroup%%% DEPRECATED for removal in 5.0
+  \gre@font@biginitial%%% DEPRECATED for removal in 5.0
+  \relax %%% DEPRECATED for removal in 5.0
+}%%% DEPRECATED for removal in 5.0
+\def\endgre@style@biginitial{\endgroup}%%% DEPRECATED for removal in 5.0
 
 \def\gre@style@translation{%
   \begingroup%
@@ -239,9 +242,38 @@
 }%
 \def\endgre@style@modeline{\endgroup}%
 
+\def\gre@style@modemodifier{%
+  \begingroup%
+  \bf%
+  \it%
+  \relax%
+}%
+\def\endgre@style@modemodifier{\endgroup}%
+
+\def\gre@style@modedifferentia{%
+  \begingroup%
+  \bf%
+  \relax%
+}%
+\def\endgre@style@modedifferentia{\endgroup}%
+
+\def\gre@style@commentary{%
+  \begingroup%
+  \it%
+  % footnotesize is LaTeX, but nothing here since changing font size is so hard
+  \relax%
+}%
+\def\endgre@style@commentary{\endgroup}%
+
+\def\gre@style@annotation{%
+  \begingroup%
+  \relax%
+}%
+\def\endgre@style@annotation{\endgroup}%
+
 \def\gre@style@nabc{%
   \begingroup%
-  \relax% we do nothing since colors are implemented in PlainTeX
+  \relax% we do nothing since colors are not implemented in PlainTeX
 }
 \def\endgre@style@nabc{\endgroup}%
 

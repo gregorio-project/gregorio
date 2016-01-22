@@ -34,7 +34,7 @@
 % #3 = glyph name or code point
 \def\gredefsymbol#1#2#3{%
   \directlua{gregoriotex.init_variant_font([[#2]],false)}%
-  \directlua{gregoriotex.def_symbol([[#1]],[[#2]],[[#3]],false)}
+  \directlua{gregoriotex.def_symbol([[#1]],[[#2]],[[#3]],false)}%
 }%
 
 % Defines a symbol which takes a point size as argument
@@ -43,7 +43,7 @@
 % #3 = glyph name or code point
 \def\gredefsizedsymbol#1#2#3{%
   \directlua{gregoriotex.init_variant_font([[#2]],false)}%
-  \directlua{gregoriotex.def_symbol([[#1]],[[#2]],[[#3]],true)}
+  \directlua{gregoriotex.def_symbol([[#1]],[[#2]],[[#3]],true)}%
 }%
 
 %%%%%%%%%%%%%
@@ -192,9 +192,8 @@
   \fi%
 }%
 
-\def\gresep#1#2{%
-  \gre@deprecated{\protect\gresep}{\protect\greseparator}%
-  \greseparator{#1}{#2}%
+\def\gresep#1#2{%OBSOLETE
+  \gre@obsolete{\protect\gresep}{\protect\greseparator}%
 }
 
 %%%%%%%%%%%

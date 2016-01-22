@@ -90,7 +90,7 @@
 % textlower is the height of the separation between the bottom line (which is invisible : for the notes which are very low) and the bottom of the text
 \newdimen\gre@dimen@textlower\relax%
 \def\gre@calculate@textlower{%
-  \gre@dimen@textlower=\gre@dimen@spacebeneathtext\relax%
+  \gre@dimen@textlower=\gre@space@dimen@spacebeneathtext\relax%
   %\advance\gre@dimen@textlower by \translationheight
 }%
 
@@ -112,28 +112,27 @@
 % = 1500 * stafflinefactor
 \newdimen\gre@dimen@stafflineheight\relax%
 \def\gre@calculate@stafflineheight{%
-  \global\gre@dimen@stafflineheight=1500 sp%
-  \global\multiply\gre@dimen@stafflineheight by \gre@stafflinefactor\relax %
+  \global\gre@dimen@stafflineheight=\dimexpr(1500 sp * \gre@stafflinefactor)\relax %
 }%
 
 % interstafflinespace is the space between two lines of staff
 % = (30000 - (stafflineheight/gre@factor - 1500)) * gre@factor = 31500 * gre@factor - stafflineheight
 \newdimen\gre@dimen@interstafflinespace\relax%
 \def\gre@calculate@interstafflinespace{%
-  \global\gre@dimen@interstafflinespace=31500sp%
-  \global\multiply\gre@dimen@interstafflinespace by \gre@factor%
-  \global\advance\gre@dimen@interstafflinespace by -\gre@dimen@stafflineheight\relax%
+  \global\gre@dimen@interstafflinespace=\dimexpr((31500sp * \gre@factor) %
+    - \gre@dimen@stafflineheight)\relax%
 }%
 
 % a distance to help place glyphs when the lines are not their default thickness
 % = (stafflineheight/gre@factor - 1500sp)/2 * gre@factor
 \newdimen\gre@dimen@stafflinediff\relax%
 \def\gre@calculate@stafflinediff{%
-  \global\gre@dimen@stafflinediff = \gre@dimen@stafflineheight\relax%
-  \global\divide\gre@dimen@stafflinediff by \gre@factor\relax%
-  \global\advance\gre@dimen@stafflinediff by -1500sp%
-  \global\divide\gre@dimen@stafflinediff by 2\relax %
-  \global\multiply\gre@dimen@stafflinediff by \the\gre@factor %
+  \global\gre@dimen@stafflinediff = \dimexpr(%
+    ( ( ( \gre@dimen@stafflineheight %
+          / \gre@factor)%
+        - 1500sp)%
+      / 2)%
+    * \gre@factor)\relax%
 }%
 
 % the default factor
@@ -149,41 +148,35 @@
   \relax %
 }%
 
-\def\setstafflinethickness{%
-  \gre@deprecated{\protect\setstafflinethickness}{\protect\grechangestafflinethickness}%
-  \grechangestafflinethickness%
-}%
-
-\def\gresetstafflinefactor#1{%
-  \gre@obsolete{\protect\gresetstafflinefactor}{\protect\grechangestafflinethickness}%
+\def\setstafflinethickness{%OBSOLETE
+  \gre@obsolete{\protect\setstafflinethickness}{\protect\grechangestafflinethickness}%
 }%
 
 %constantglyphraise is the space between the 0 of the gregorian fonts and the effective 0 of the TeX score
 \newdimen\gre@dimen@constantglyphraise\relax%
 % to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at grespacelinestext + grespacebeneathtext + 2*greinterstafflinespace + 2*grestafflineheight + translationheight
 \def\gre@calculate@constantglyphraise{%
-  \global\gre@dimen@constantglyphraise = -22000 sp%
-  \global\multiply\gre@dimen@constantglyphraise by \the\gre@factor %
-  \global\advance\gre@dimen@constantglyphraise by \gre@dimen@additionalbottomspace\relax%
-  \global\advance\gre@dimen@constantglyphraise by \gre@dimen@spacebeneathtext\relax%
-  \global\advance\gre@dimen@constantglyphraise by \gre@dimen@spacelinestext\relax%
-  \global\advance\gre@dimen@constantglyphraise by \gre@dimen@interstafflinespace\relax%
-  \global\advance\gre@dimen@constantglyphraise by \gre@dimen@interstafflinespace\relax%
-  \global\advance\gre@dimen@constantglyphraise by \gre@dimen@stafflineheight\relax%
-  \global\advance\gre@dimen@constantglyphraise by \gre@dimen@stafflineheight\relax%
-  \global\advance\gre@dimen@constantglyphraise by \gre@dimen@currenttranslationheight\relax%
-  % an adjustment in the case of big lines
-  \global\advance\gre@dimen@constantglyphraise by \gre@dimen@stafflinediff\relax%
+  \global\gre@dimen@constantglyphraise = \dimexpr((-22000 sp * \gre@factor) %
+    + \gre@dimen@additionalbottomspace %
+    + \gre@space@dimen@spacebeneathtext %
+    + \gre@space@dimen@spacelinestext %
+    + \gre@dimen@interstafflinespace %
+    + \gre@dimen@interstafflinespace %
+    + \gre@dimen@stafflineheight %
+    + \gre@dimen@stafflineheight %
+    + \gre@dimen@currenttranslationheight %
+    % an adjustment in the case of big lines
+    + \gre@dimen@stafflinediff)\relax%
   \relax %
 }%
 
 %% Here is the function to compute some more vertical spaces from the basic values
 \newdimen\gre@dimen@staffheight\relax%
 \def\gre@calculate@staffheight{%
-  \global\gre@dimen@staffheight = 4\gre@dimen@stafflineheight\relax%
-  \global\advance\gre@dimen@staffheight by 3\gre@dimen@interstafflinespace\relax%
-  %\global\multiply{\gre@dimen@spacebeneathtext} by \gre@factor % uncomment it if you want
-  % something else than 0
+  \global\gre@dimen@staffheight = \dimexpr %
+    \gre@stafflines\gre@dimen@stafflineheight %
+    + \gre@stafflines\gre@dimen@interstafflinespace %
+    - \gre@dimen@interstafflinespace\relax%
   \relax %
 }%
 
@@ -213,7 +206,8 @@
 
 %% @desc Macro computing the skip at the end of the syllable
 %% @arg#1 0 if end of syllable, 1 if end of word
-%% @arg#2 0 if next syllable is normal, 1 if it's a bar
+%% @arg#2 0 if next syllable is normal, 1 if it's a bar, 2 if it starts with
+%%        an alteration
 %%
 %% @uses \gre@dimen@enddifference
 %% @uses \gre@dimen@nextbegindifference
@@ -249,9 +243,9 @@
 %%  min_text_dist = prev_cur_word ? 0 : space_inter_words
   \ifnum#1=1\relax %
     \ifgre@in@euouae %
-      \gre@minTextDistance=\gre@skip@interwordspacetext@euouae\relax%
+      \gre@minTextDistance=\gre@space@skip@interwordspacetext@euouae\relax%
     \else %
-      \gre@minTextDistance=\gre@skip@interwordspacetext\relax%
+      \gre@minTextDistance=\gre@space@skip@interwordspacetext\relax%
     \fi %
   \else %
     \gre@minTextDistance=0pt\relax%
@@ -259,17 +253,23 @@
   \gre@debugmsg{syllablespacing}{ minTextDistance = \the\gre@minTextDistance}%
   \gre@debugmsg{syllablespacing}{ minTextDistance = \the\gre@minTextDistance}%
   % setting minNotesDistance (quite simple)
-  \ifnum#2=1\relax %
-    \gre@minNotesDistance=\gre@skip@notebarspace\relax%
-  \else %
+  \ifcase#2\relax %
     \ifnum#1=1\relax %
       \ifgre@in@euouae %
-        \gre@minNotesDistance=\gre@skip@interwordspacenotes@euouae\relax%
+        \gre@minNotesDistance=\gre@space@skip@interwordspacenotes@euouae\relax%
       \else %
-        \gre@minNotesDistance=\gre@skip@interwordspacenotes\relax%
+        \gre@minNotesDistance=\gre@space@skip@interwordspacenotes\relax%
       \fi %
     \else %
-      \gre@minNotesDistance=\gre@skip@intersyllablespacenotes\relax%
+      \gre@minNotesDistance=\gre@space@skip@intersyllablespacenotes\relax%
+    \fi %
+  \or %
+    \gre@minNotesDistance=\gre@space@skip@notebarspace\relax%
+  \or %
+    \ifnum#1=1\relax %
+      \gre@minNotesDistance=\gre@space@skip@interwordspacenotes@alteration\relax %
+    \else %
+      \gre@minNotesDistance=\gre@space@skip@intersyllablespacenotes@alteration\relax%
     \fi %
   \fi %
   \gre@debugmsg{syllablespacing}{ minNotesDistance = \the\gre@minNotesDistance}%
@@ -303,10 +303,8 @@
 %%  min_shift_text = min_dist_text - cur_dist_text
 %%  min_shift_notes = min_dist_notes - cur_dist_notes
 %%  shift = max(min_shift_text, min_shift_notes)
-  \gre@minShiftText = \gre@minTextDistance %
-  \advance\gre@minShiftText by - \gre@curTextDistance %
-  \gre@minShiftNotes = \gre@minNotesDistance %
-  \advance\gre@minShiftNotes by - \gre@curNotesDistance %
+  \gre@minShiftText = \glueexpr(\gre@minTextDistance - \gre@curTextDistance)\relax %
+  \gre@minShiftNotes = \glueexpr(\gre@minNotesDistance - \gre@curNotesDistance)\relax %
   \gre@debugmsg{syllablespacing}{ minShiftNotes = \the\gre@minShiftNotes}%
   \gre@debugmsg{syllablespacing}{ minShiftText = \the\gre@minShiftText}%
   \ifdim\gre@minShiftNotes < \gre@minShiftText %
@@ -335,8 +333,7 @@
   % bolextra is the space taken up by a leading alteration (it's 0 if there is no leading alteration)
   % it's allowed to invade spaceafterlineclef, so long as it leaves at least beforealterationspace between itself and the clef
   % and minimalspaceatlinebeginning between the lyrics and the beginning of the line
-  \gre@skip@temp@one = \gre@skip@spaceafterlineclef\relax%
-  \advance\gre@skip@temp@one by -\gre@dimen@beforealterationspace\relax%
+  \gre@skip@temp@one = \glueexpr(\gre@space@skip@spaceafterlineclef-\gre@space@dimen@beforealterationspace)\relax%
   \ifdim\gre@dimen@bolextra>\gre@skip@temp@one\relax%
     \global\advance\gre@skip@temp@three by \gre@skip@temp@one\relax%
   \else%
@@ -353,13 +350,13 @@
     % we don't want to kern more than clefwidth + spaceafterlineclef - minimalspaceatlinebeginning
     % violating this would mean that either the notes are closer than (clefwidth + spaceafterlineclef)
     % or that the lyrics are closer than minimalspaceatlinebeginning
-    \gre@skip@temp@one = \gre@dimen@clefwidth\relax%
-    \advance\gre@skip@temp@one by \gre@skip@spaceafterlineclef\relax%
-    \advance\gre@skip@temp@one by -\gre@dimen@minimalspaceatlinebeginning\relax%
+    \gre@skip@temp@one = \glueexpr(\gre@dimen@clefwidth %
+      + \gre@space@skip@spaceafterlineclef %
+      - \gre@space@dimen@minimalspaceatlinebeginning)\relax %
     \ifdim\gre@skip@temp@three < \gre@skip@temp@one %
-      \global\gre@dimen@bolshift = \dimexpr\gre@skip@temp@three\relax%
+      \global\gre@dimen@bolshift = \dimexpr\gre@skip@temp@three\relax %
     \else%
-      \global\gre@dimen@bolshift = \dimexpr\gre@skip@temp@one\relax%
+      \global\gre@dimen@bolshift = \dimexpr\gre@skip@temp@one\relax %
     \fi %
   \fi%
   \gre@debugmsg{bolshift}{ bolshift = \the\gre@dimen@bolshift}%
@@ -369,7 +366,7 @@
 % dimen keeping the shift computed with next function
 \newdimen\gre@dimen@eolshift
 
-%% @desc Macro used in \GreSyllable. Sets \gre@skip@eolshift to the right kern
+%% @desc Macro used in \GreSyllable. Sets \gre@dimen@eolshift to the right kern
 %%       that should appear before an end of line.  When active this prevents
 %%       text from going under the custos.
 %%
@@ -389,8 +386,8 @@
       % Were the eolshift larger than this the lyrics would stick out
       % into the margin
       \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}}%
-      \global\advance\gre@skip@temp@three by \wd\gre@box@temp@width %
-      \global\advance\gre@skip@temp@three by \gre@skip@spacebeforeeolcustos \relax%
+      \global\advance\gre@skip@temp@three by %
+        \glueexpr(\wd\gre@box@temp@width+\gre@space@skip@spacebeforeeolcustos)\relax%
       % pick the smaller of the two values calculated above
       \ifdim\gre@skip@temp@two>\gre@skip@temp@three%
         \gre@debugmsg{eolshift}{imposing limit}%
@@ -411,8 +408,37 @@
 % glyphraisevalue is the value of which we must raise one glyph (that will vary with every glyph)
 \newdimen\gre@dimen@glyphraisevalue\relax%
 
-% addedraisevalue is for the vertical episema and the puncta
-\newdimen\gre@dimen@addedraisevalue\relax%
+\newif\ifgre@useledgerlineheuristic%
+\gre@useledgerlineheuristictrue%
+\def\gresetledgerlineheuristic#1{%
+  \IfStrEq{#1}{enable}%
+    {\gre@useledgerlineheuristictrue}%
+    {\IfStrEq{#1}{disable}%
+      {\gre@useledgerlineheuristicfalse}%
+      {\gre@error{Unrecognized option in \protect\gresetledgerlineheuristic}}%
+    }%
+}%
+% for backwards compatibility, we set these to true by default, and the
+% system will set them appropriately if the heuristics determine a ledger
+% line probably doesn't exist at that point
+\newif\ifgre@ledgerline@above%
+\newif\ifgre@ledgerline@below%
+\def\GreSupposeHighLedgerLine{%
+  \ifgre@useledgerlineheuristic\gre@ledgerline@abovetrue\fi %
+}%
+\def\GreSupposeLowLedgerLine{%
+  \ifgre@useledgerlineheuristic\gre@ledgerline@belowtrue\fi %
+}%
+\def\gre@resetledgerlineheuristics{%
+  \gre@ledgerline@abovetrue\gre@ledgerline@belowtrue %
+}%
+\def\gre@prephepisemaledgerlineheuristics{%
+  \ifgre@useledgerlineheuristic %
+    \gre@ledgerline@abovefalse\gre@ledgerline@belowfalse %
+  \else %
+    \gre@ledgerline@abovetrue\gre@ledgerline@belowtrue %
+  \fi %
+}%
 
 % a very useful macro : it determines the good height of a glyph : the argument is the "number" where the glyph should be : 4 for the first line, 6 for the second, etc.
 % the second argument is for the cases of signs: for example if the note is on a line, the punctummora will be above, and the auctus duplex beneath. the possible values are:
@@ -430,6 +456,8 @@
 %% 12: low choral sign below the note
 %% 13: brace above the bars
 %% 14: punctum mora in a space with a note on the line below it
+%% 15: over slur
+%% 16: under slur
 \def\gre@calculate@glyphraisevalue#1#2{%
   \global\gre@isonalinefalse%
   \ifcase#1%
@@ -438,9 +466,13 @@
   \or\gre@count@temp@three=\number 1%
   \or\gre@count@temp@three=\number 2%
   \or\gre@count@temp@three=\number 3%
-    \ifnum#2=3\relax %
-    \else %
-      \global\gre@isonalinetrue % if it is a vertical episema, we don't care if it is on a line or not... which may cause some problems...
+    \ifgre@ledgerline@below %
+      \ifnum#2=3\relax %
+      \else %
+        % if it is a vertical episema, we don't care if it is on a line or
+        % not... which may cause some problems...
+        \global\gre@isonalinetrue %
+      \fi %
     \fi %
   \or\gre@count@temp@three=\number 4%
   \or\gre@count@temp@three=\number 5%
@@ -450,18 +482,47 @@
     \global\gre@isonalinetrue%
   \or\gre@count@temp@three=\number 8%
   \or\gre@count@temp@three=\number 9%
-    \global\gre@isonalinetrue%
+    \ifgre@haslinethree %
+      \global\gre@isonalinetrue%
+    \else %
+      \ifgre@ledgerline@above %
+        \global\gre@isonalinetrue%
+      \fi %
+    \fi %
   \or\gre@count@temp@three=\number 10%
   \or\gre@count@temp@three=\number 11%
-    \global\gre@isonalinetrue%
+    \ifgre@haslinefour %
+      \global\gre@isonalinetrue%
+    \else %
+      \ifgre@haslinethree %
+        \ifgre@ledgerline@above %
+          \global\gre@isonalinetrue%
+        \fi %
+      \fi %
+    \fi %
   \or\gre@count@temp@three=\number 12%
   \or\gre@count@temp@three=\number 13%
-    \global\gre@isonalinetrue%
+    \ifgre@haslinefive %
+      \global\gre@isonalinetrue%
+    \else %
+      \ifgre@haslinefour %
+        \ifgre@ledgerline@above %
+          \global\gre@isonalinetrue%
+        \fi %
+      \fi %
+    \fi %
   \or\gre@count@temp@three=\number 14%
-  % the following are only useful for horizontal episema and rare signs
   \or\gre@count@temp@three=\number 15%
+    \ifgre@haslinefive %
+      \ifgre@ledgerline@above %
+        \global\gre@isonalinetrue%
+      \fi %
+    \fi %
   \or\gre@count@temp@three=\number 16%
   \or\gre@count@temp@three=\number 17%
+  \or\gre@count@temp@three=\number 18%
+  \or\gre@count@temp@three=\number 19%
+  \or\gre@count@temp@three=\number 20%
   \fi%
   % if there is not line... we don't consider notes are on lines
   \ifgre@showlines\else %
@@ -493,79 +554,60 @@
     \fi%
   \fi%
   \global\advance\gre@count@temp@three by -8 %
-  \global\gre@dimen@glyphraisevalue = 15750 sp %
-  \global\multiply\gre@dimen@glyphraisevalue by \the\gre@factor %
-  \global\multiply\gre@dimen@glyphraisevalue by \the\gre@count@temp@three %
-  \gre@dimen@addedraisevalue= 0 sp%
+  \global\gre@dimen@glyphraisevalue = \dimexpr(15750 sp * \gre@factor * \gre@count@temp@three)\relax %
   \ifcase#2 %
   \or\or\or%3: if it is a vertical episema on a line, we shift it a bit higher, so that it's more beautiful
     \ifgre@isonaline%
-      \gre@dimen@addedraisevalue=7250 sp%
-      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
-      \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
+      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(7250 sp * \gre@factor)\relax %
     \else % if it is not on a line, we shift it a bit lower
-      \gre@dimen@addedraisevalue=-1380 sp%
-      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
-      \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
+      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(-1380 sp * \gre@factor)\relax %
     \fi %
   \or% 4: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
     \ifgre@isonaline%
-      \gre@dimen@addedraisevalue=-6900 sp%
-      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
-      \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
+      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(-6900 sp * \gre@factor)\relax %
     \else %
-      \gre@dimen@addedraisevalue=-2200 sp%
-      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
-      \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
+      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(-2200 sp * \gre@factor)\relax %
     \fi%
   \or% 5: if it is a horizontal episema under a note which is on a line, we shift it lower
     \ifgre@isonaline% if it is under a note between two lines, we shift it higher
-      \gre@dimen@addedraisevalue=4000 sp%
-      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
-      \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
+      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(4000 sp * \gre@factor)\relax %
     \else %
-      \gre@dimen@addedraisevalue=-4980 sp%
-      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
-      \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
+      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(-4980 sp * \gre@factor)\relax %
     \fi %
   \or% 6: if it is a sign, we put it at an arbitrary height
-    \gre@dimen@addedraisevalue=20000 sp%
-    \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
-    \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
+    \global\advance\gre@dimen@glyphraisevalue by \dimexpr(20000 sp * \gre@factor)\relax %
   \or\or% 8: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
     \ifgre@isonaline%
-      \gre@dimen@addedraisevalue=5000 sp%
-      \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
-      \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
+      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(5000 sp * \gre@factor)\relax %
     \fi %
   \or% 9: if it is an horizontal episema not on a line, we put it a bit lower
     \ifgre@isonaline%
-      \gre@dimen@addedraisevalue=-5500 sp%
+      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(-5500 sp * \gre@factor)\relax %
     \else %
-      \gre@dimen@addedraisevalue=3000 sp%
+      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(3000 sp * \gre@factor)\relax %
     \fi %
-    \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
-    \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
   \or% 10: low choral sign that is not lower than the note
-    \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@choralsigndownshift\relax%
+    \global\advance\gre@dimen@glyphraisevalue by -\gre@space@dimen@choralsigndownshift\relax%
   \or% 11: high choral sign
     \ifgre@isonaline%
-      \global\advance\gre@dimen@glyphraisevalue by \gre@dimen@choralsignupshift\relax%
+      \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@choralsignupshift\relax%
     \else %
-      \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@choralsigndownshift\relax%
+      \global\advance\gre@dimen@glyphraisevalue by -\gre@space@dimen@choralsigndownshift\relax%
     \fi %
   \or% 12: low choral sign that is lower than the note
     \ifgre@isonaline%
-      \global\advance\gre@dimen@glyphraisevalue by \gre@dimen@choralsignupshift\relax%
+      \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@choralsignupshift\relax%
     \else %
-      \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@choralsigndownshift\relax%
+      \global\advance\gre@dimen@glyphraisevalue by -\gre@space@dimen@choralsigndownshift\relax%
     \fi %
   \or% 13: if it is the brace above the bars, we shift it to a user-defined value
-      \global\advance\gre@dimen@glyphraisevalue by -\gre@dimen@braceshift\relax%
+      \global\advance\gre@dimen@glyphraisevalue by -\gre@space@dimen@braceshift\relax%
   \or% 14: raise the punctum mora in a space a bit higher than case 4
-    \gre@dimen@addedraisevalue=200 sp%
-    \multiply\gre@dimen@addedraisevalue by \the\gre@factor %
-    \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@addedraisevalue\relax%
+    \global\advance\gre@dimen@glyphraisevalue by \dimexpr(200 sp * \gre@factor)\relax%
+  \or% 15: over slur
+    \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@overslurshift\relax%
+  \or% 16: under slur
+    \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@underslurshift\relax%
   \fi%
   \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@constantglyphraise\relax%
 }%
@@ -580,22 +622,15 @@
 % #4 is if 1 if we have space above the staff
 \def\gre@calculate@additionalspaces#1#2#3#4{%
   \gre@debugmsg{lineheight}{gre@calculate@additional@spaces called with #1 #2 #3 #4}%
-  \gre@count@temp@one=#1\relax %
-  \advance\gre@count@temp@one by -\gre@pitch@adjust@top\relax %
+  \gre@count@temp@one=\numexpr(#1 - \gre@pitch@adjust@top)\relax %
   \ifnum\gre@count@temp@one>0\relax %
-    \global\gre@dimen@additionaltopspace=15000 sp%
-    \global\multiply\gre@dimen@additionaltopspace by \the\gre@count@temp@one %
-    \global\multiply\gre@dimen@additionaltopspace by \the\gre@factor %
+    \global\gre@dimen@additionaltopspace=\dimexpr(15000 sp * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionaltopspace=0 sp%
   \fi %
-  \gre@count@temp@one=#2\relax %
-  \advance\gre@count@temp@one by -\gre@pitch@adjust@bottom\relax %
-  \multiply\gre@count@temp@one by -1\relax %
+  \gre@count@temp@one=\numexpr((#2 - \gre@pitch@adjust@bottom) * -1)\relax %
   \ifnum\gre@count@temp@one>0\relax %
-    \global\gre@dimen@additionalbottomspace=15000 sp%
-    \global\multiply\gre@dimen@additionalbottomspace by \the\gre@count@temp@one %
-    \global\multiply\gre@dimen@additionalbottomspace by \the\gre@factor %
+    \global\gre@dimen@additionalbottomspace=\dimexpr(15000 sp * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionalbottomspace=0 sp%
   \fi %
@@ -656,10 +691,7 @@
   \ifcase#5\or %
     \global\gre@dimen@previousenddifference=\the\gre@dimen@enddifference\relax%
   \fi %
-  \global\gre@dimen@enddifference=#1%
-  \global\advance\gre@dimen@enddifference by -#2%
-  \global\advance\gre@dimen@enddifference by #3%
-  \global\advance\gre@dimen@enddifference by -#4%
+  \global\gre@dimen@enddifference=\dimexpr(#1 - #2 + #3 - #4)\relax%
   \relax%
 }%
 
@@ -668,30 +700,23 @@
 
 % macro to tell gregorio to set space for the translation
 \def\gre@addtranslationspace{%
-  \ifx\gre@empty@translationformat\gretranslationformat% DEPRECATED
-    \gre@style@translation% keep this line
-    \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight\relax% keep this line
-    \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext\relax% keep this line
-    \global\advance\gre@dimen@textlower by \gre@dimen@translationheight\relax% keep this line
-    \gre@generatelines % keep this line
-    \gre@calculate@constantglyphraise % keep this line
-    \endgre@style@translation% keep this line
-  \else%  DEPRECATED
-    \gre@deprecated{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  DEPRECATED
-    \gretranslationformat{% DEPRECATED
-      \global\gre@dimen@currenttranslationheight=\gre@dimen@translationheight\relax% DEPRECATED
-      \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext\relax% DEPRECATED
-      \global\advance\gre@dimen@textlower by \gre@dimen@translationheight\relax% DEPRECATED
-      \gre@generatelines % DEPRECATED
-      \gre@calculate@constantglyphraise % DEPRECATED
-    }% DEPRECATED
-  \fi%  DEPRECATED
+  \gre@style@translation%
+  \global\gre@dimen@currenttranslationheight=\gre@space@dimen@translationheight\relax%
+  \global\gre@dimen@textlower=\dimexpr(\gre@space@dimen@spacebeneathtext %
+    + \gre@space@dimen@translationheight)\relax%
+  \gre@generatelines %
+  \gre@calculate@constantglyphraise %
+  \endgre@style@translation%
+  \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
+  \else%  OBSOLETE
+    \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
+  \fi%  OBSOLETE
   \relax %
 }%
 
 \def\gre@removetranslationspace{%
   \global\gre@dimen@currenttranslationheight=0 sp%
-  \global\gre@dimen@textlower=\gre@dimen@spacebeneathtext\relax%
+  \global\gre@dimen@textlower=\gre@space@dimen@spacebeneathtext\relax%
   \gre@generatelines %
   \gre@calculate@constantglyphraise %
   \relax %
@@ -724,21 +749,34 @@
 %This function sets the true raises of the two lines above the initial (it has to be called just as the boxes are placed in order to make sure that the values are all correct)
 \def\gre@calculate@annotationtrueraise{%
   \gre@debugmsg{annotation}{Calculating the raise.}%
-  \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@staffheight\relax%
-  \gre@debugmsg{annnotation}{Added staff height.}%
-  \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@spacebeneathtext\relax%
-  \gre@debugmsg{annnotation}{Added space beneath text.}%
-  \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@currenttranslationheight\relax%
-  \gre@debugmsg{annnotation}{Added translation height.}%
-  \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@spacelinestext\relax%
-  \gre@debugmsg{annnotation}{Added spacelinestext.}%
-  \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@additionalbottomspace\relax%
-  \gre@debugmsg{annnotation}{Added additional bottom space.}%
-  \global\advance\gre@dimen@annotationtrueraise by \gre@dimen@annotationraise\relax%
+  \global\advance\gre@dimen@annotationtrueraise by %
+    \dimexpr(\gre@dimen@staffheight %
+    + \gre@space@dimen@spacebeneathtext %
+    + \gre@dimen@currenttranslationheight %
+    + \gre@space@dimen@spacelinestext %
+    + \gre@dimen@additionalbottomspace)\relax%
+  \gre@style@annotation%
+  \global\advance\gre@dimen@annotationtrueraise by \gre@space@dimen@annotationraise\relax%
   \gre@debugmsg{annnotation}{Added user raise.}%
+  \endgre@style@annotation%
   \relax %
 }%
 
+%The distance from the baseline of the line to the baseline of the commentary
+\newdimen\gre@dimen@commentarytrueraise\relax%
+%This function sets the true raises of the commentary (it has to be called just as the boxes are placed in order to make sure that the values are all correct)
+\def\gre@calculate@commentarytrueraise{%
+  \gre@style@commentary%
+  \gre@debugmsg{commentary}{Calculating the raise.}%
+  \global\advance\gre@dimen@commentarytrueraise by %
+    \dimexpr(\gre@dimen@staffheight %
+    + \gre@space@dimen@spacebeneathtext %
+    + \gre@dimen@currenttranslationheight %
+    + \gre@space@dimen@spacelinestext %
+    + \gre@dimen@additionalbottomspace %
+    + \gre@space@dimen@commentaryraise)\relax%
+  \endgre@style@commentary%
+}%
 
 
 %%%%%%%%%%%%%%%%%%%
@@ -794,14 +832,12 @@
 %% Note: the distances created by this function are stored as strings, not skip or dimension registers.  This allows the user to specify a distance in em or ex units even though the font parameters may not be the same at the time the distance is specified and the time the distance is used.
 \newif\ifgre@checklength%
 \def\grecreatedim#1#2#3{%
-  \gre@dimension{#1}{#2}
+  \gre@dimension{#1}{#2}%
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
   \IfStrEq{#3}{1}%
-    {\gre@deprecated{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}%
-    \grescaledim{#1}{true}}%
+    {\gre@obsolete{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}}%
     {\IfStrEq{#3}{0}%
-      {\gre@deprecated{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}%
-      \grescaledim{#1}{false}}%
+      {\gre@obsolete{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}}%
       {\IfStrEq{#3}{scalable}%
         {\grescaledim{#1}{true}}%
         {\IfStrEq{#3}{fixed}%
@@ -812,9 +848,8 @@
     }%
 }%
 
-\def\gresetdim{%
-  \gre@deprecated{\protect\gresetdim}{\protect\grecreatedim}%
-  \grecreatedim%
+\def\gresetdim{%OBSOLETE
+  \gre@obsolete{\protect\gresetdim}{\protect\grecreatedim}%
 }%
 
 % a macro for changing a dimension.  Unlike \grecreatedim, this function won’t create a new distance, just change an existing one.
@@ -828,15 +863,13 @@
     \gre@debugmsg{spacing}{Changing a dimen.}%
     \def\gre@prefix{dimen}%
   \fi%
-  \ifcsname gre@\gre@prefix @#1\endcsname%
+  \ifcsname gre@space@\gre@prefix @#1\endcsname%
     \gre@debugmsg{spacing}{It does exist.}%
     \gre@dimension{#1}{#2}%
     \IfStrEq{#3}{1}%
-      {\gre@deprecated{A numerical (1) last argument for \protect\grechangedim}{'scalable'}%
-      \grescaledim{#1}{true}}%
+      {\gre@obsolete{A numerical (1) last argument for \protect\grechangedim}{'scalable'}}%
       {\IfStrEq{#3}{0}%
-        {\gre@deprecated{A numerical (0) last argument for \protect\grechangedim}{'fixed'}%
-        \grescaledim{#1}{false}}%
+        {\gre@obsolete{A numerical (0) last argument for \protect\grechangedim}{'fixed'}}%
         {\IfStrEq{#3}{scalable}%
           {\grescaledim{#1}{true}}%
           {\IfStrEq{#3}{fixed}%
@@ -868,7 +901,7 @@
       \def\gre@prefix{dimen}%
     \fi%
   \fi%
-  \expandafter\edef\csname gre@\gre@prefix @#1\endcsname{#2}%
+  \expandafter\edef\csname gre@space@\gre@prefix @#1\endcsname{#2}%
   \relax %
 }
 
@@ -888,18 +921,16 @@
     }%
 }
 
-\def\grenoscaledim#1{%
-  \gre@deprecated{\protect\grenoscaledim}{\protect\grescaledim{...}{no}}%
-  \grescaledim{#1}{false}%
+\def\grenoscaledim#1{%OBSOLETE
+  \gre@obsolete{\protect\grenoscaledim}{\protect\grescaledim{...}{no}}%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % space configuration loading
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\GreLoadSpaceConf#1{%
-  \gre@deprecated{\protect\GreLoadSpaceConf}{\protect\greloadspaceconf}%
-  \greloadspaceconf{#1}%
+\def\GreLoadSpaceConf#1{%OBSOLETE
+  \gre@obsolete{\protect\GreLoadSpaceConf}{\protect\greloadspaceconf}%
 }%
 
 \newcount\greconffactor%
@@ -907,7 +938,7 @@
   \input gsp-#1.tex\relax %
   \ifnum\greconffactor=0\relax%
     \gre@error{gsp-#1.tex does not have an assigned staff size.\MessageBreak Please edit it to define \protect\greconffactor}%
-  \fi
+  \fi %
   \ifnum\the\gre@factor=\greconffactor\else %If the space configuration file is designed for a \gre@factor other than the current one, then we need to rescale the distances.
     \gre@changedimenfactor{\greconffactor}{\gre@factor} %
   \fi%
@@ -938,6 +969,8 @@
   \IfStrEq{#1}{manualinitialwidth}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{annotationseparation}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{annotationraise}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{commentaryseparation}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{commentaryraise}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{noclefspace}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{clivisalignmentmin}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{choralsigndownshift}{\gre@rubberfalse}{\relax}%
@@ -952,77 +985,37 @@
   \IfStrEq{#1}{initialraise}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{beforealterationspace}{\gre@rubberfalse}{\relax}%
   \IfStrEq{#1}{alterationspace}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{overslurshift}{\gre@rubberfalse}{\relax}%
+  \IfStrEq{#1}{underslurshift}{\gre@rubberfalse}{\relax}%
 }%
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
 \def\gre@changeonedimenfactor#1#2#3{%
-  \gre@rubberpermit{#1}%
-  \ifgre@rubber% if we have a rubber allowed length we create a temporary skip
-    \let\gre@scaledist\gre@skip@temp@one%
-  \else% otherwise we create a temporary dimen
-    \let\gre@scaledist\gre@dimen@temp@one%
-  \fi%
   % Math
   \gre@rubberpermit{#1}%
   \ifgre@rubber%
-    \edef\gre@convert{\csname gre@skip@#1\endcsname}%
+    % if we have a rubber allowed length we create a temporary skip
+    \let\gre@scaledist\gre@skip@temp@one%
+    \edef\gre@convert{\csname gre@space@skip@#1\endcsname}%
+    \gre@scaledist=\glueexpr(\gre@convert * \number#3 / \number#2)\relax %
   \else%
-    \edef\gre@convert{\csname gre@dimen@#1\endcsname}%
+    % otherwise we create a temporary dimen
+    \let\gre@scaledist\gre@dimen@temp@one%
+    \edef\gre@convert{\csname gre@space@dimen@#1\endcsname}%
+    \gre@scaledist=\dimexpr(\gre@convert * \number#3 / \number#2)\relax %
   \fi%
-  \gre@scaledist=\gre@convert%
-  \multiply \gre@scaledist by \number #3%
-  \divide \gre@scaledist by \number #2%
   \gre@consistentunits{\gre@convert}{\gre@scaledist}%
   \gre@dimension{#1}{\gre@stringdist}%
   \relax %
 }%
 
 
-% These functions are used for stripping out the units and decimal portion of a distance to make it more amenable to being used in the conversion function below
-{\catcode`p=12 \catcode`t=12 \gdef\gre@makein#1.#2pt{#1}}%
-{\catcode`p=12 \catcode`t=12 \gdef\gre@makenum#1pt{#1}}%
-
 % This function converts a distance to the units indicated in #1 and returns it as a string.
-\newdimen\gre@unit%
-\newdimen\gre@base%
-\newdimen\gre@maxlen%
-\newcount\gre@unitfactor%
-\newcount\gre@basefactor%
 \def\gre@convertto#1#2{%
-  \gre@debugmsg{general}{convertto (#1) (#2)}
-  \gre@debugmsg{ifdim}{ #2 = 0pt}
-  \ifdim#2=0pt\relax%
-    \edef\gre@converted{0 #1}%
-  \else%
-    \gre@unit = 1 #1%
-    \gre@base = #2%
-    % Code to increase precision
-    \gre@maxlen = 16383.99999pt\relax%
-    \gre@unitfactor = \number\gre@maxlen%
-    \divide\gre@unitfactor by \number\gre@unit\relax%
-    \ifnum\gre@unitfactor < 0\relax%
-      \gre@unitfactor = -\gre@unitfactor%
-    \fi%
-    \gre@debugmsg{spacing}{unit: \the\gre@unit ; factor: \the\gre@unitfactor}
-    \gre@basefactor = \number\gre@maxlen%
-    \divide\gre@basefactor by \number\gre@base\relax%
-    \ifnum\gre@basefactor < 0\relax%
-      \gre@basefactor = -\gre@basefactor%
-    \fi%
-    \gre@debugmsg{spacing}{base: \the\gre@base ; factor: \the\gre@basefactor}
-    \ifnum\gre@basefactor<\gre@unitfactor%
-      \multiply\gre@unit by \gre@basefactor%
-      \multiply\gre@base by \gre@basefactor%
-    \else%
-      \multiply\gre@unit by \gre@unitfactor%
-      \multiply\gre@base by \gre@unitfactor%
-    \fi%
-    \gre@count@temp@one = \expandafter\gre@makein\the\gre@unit%
-    \divide\gre@base by \gre@count@temp@one%
-    \edef\gre@converted{%
-      \expandafter\gre@makenum\the\gre@base #1%
-    }%
-  \fi%
+  \gre@debugmsg{general}{convertto (#1) (#2)}%
+  % \p@ is equal to 1pt and is used here for a more accurate computation
+  \edef\gre@converted{\gre@strip@pt\dimexpr#2*\p@/\dimexpr 1#1\relax\relax #1}%
+  \gre@debugmsg{general}{converted value is \gre@converted}%
 }%
 
 % This function takes a distance (#2) and formats it as a string so that its units conform to the pattern set by a string representation of a distance (#1)
@@ -1105,6 +1098,9 @@
   \ifgre@scale@beforealterationspace%
     \gre@changeonedimenfactor{beforealterationspace}{#1}{#2}%
   \fi%
+  \ifgre@scale@halfspace%
+    \gre@changeonedimenfactor{halfspace}{#1}{#2}%
+  \fi%
   \ifgre@scale@interelementspace%
     \gre@changeonedimenfactor{interelementspace}{#1}{#2}%
   \fi%
@@ -1159,11 +1155,17 @@
   \ifgre@scale@punctuminclinatumshift%
     \gre@changeonedimenfactor{punctuminclinatumshift}{#1}{#2}%
   \fi%
+  \ifgre@scale@ascendingpunctuminclinatumshift%
+    \gre@changeonedimenfactor{ascendingpunctuminclinatumshift}{#1}{#2}%
+  \fi%
   \ifgre@scale@beforepunctainclinatashift%
     \gre@changeonedimenfactor{beforepunctainclinatashift}{#1}{#2}%
   \fi%
   \ifgre@scale@punctuminclinatumanddebilisshift%
     \gre@changeonedimenfactor{punctuminclinatumanddebilisshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@ascendingpunctuminclinatumanddebilisshift%
+    \gre@changeonedimenfactor{ascendingpunctuminclinatumanddebilisshift}{#1}{#2}%
   \fi%
   \ifgre@scale@punctuminclinatumdebilisshift%
     \gre@changeonedimenfactor{punctuminclinatumdebilisshift}{#1}{#2}%
@@ -1171,8 +1173,32 @@
   \ifgre@scale@punctuminclinatumbigshift%
     \gre@changeonedimenfactor{punctuminclinatumbigshift}{#1}{#2}%
   \fi%
+  \ifgre@scale@ascendingpunctuminclinatumbigshift%
+    \gre@changeonedimenfactor{ascendingpunctuminclinatumbigshift}{#1}{#2}%
+  \fi%
   \ifgre@scale@punctuminclinatummaxshift%
     \gre@changeonedimenfactor{punctuminclinatummaxshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@ascendingpunctuminclinatummaxshift%
+    \gre@changeonedimenfactor{ascendingpunctuminclinatummaxshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@descendinginclinatumtonobarshift%
+    \gre@changeonedimenfactor{descendinginclinatumtonobarshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@descendinginclinatumtonobarbigshift%
+    \gre@changeonedimenfactor{descendinginclinatumtonobarbigshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@descendinginclinatumtonobarmaxshift%
+    \gre@changeonedimenfactor{descendinginclinatumtonobarmaxshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@ascendinginclinatumtonobarshift%
+    \gre@changeonedimenfactor{ascendinginclinatumtonobarshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@ascendinginclinatumtonobarbigshift%
+    \gre@changeonedimenfactor{ascendinginclinatumtonobarbigshift}{#1}{#2}%
+  \fi%
+  \ifgre@scale@ascendinginclinatumtonobarmaxshift%
+    \gre@changeonedimenfactor{ascendinginclinatumtonobarmaxshift}{#1}{#2}%
   \fi%
   \ifgre@scale@spacearoundsmallbar%
     \gre@changeonedimenfactor{spacearoundsmallbar}{#1}{#2}%
@@ -1262,9 +1288,7 @@
     \gre@changeonedimenfactor{curlybraceaccentusshift}{#1}{#2}%
   \fi%
   \ifgre@scale@stafflinefactor%
-    \gre@count@temp@two = \gre@stafflinefactor%
-    \multiply\gre@count@temp@two by #2\relax%
-    \divide\gre@count@temp@two by #1\relax%
+    \gre@count@temp@two = \numexpr((\gre@stafflinefactor * #2) / #1)\relax%
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
   \fi%
   \relax %
@@ -1279,47 +1303,26 @@
 
 % To change the spacing between annotations.
 %First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setaboveinitialseparation#1#2{%
-  \gre@deprecated{\protect\setaboveinitialseparation}{\protect\grechangedim\{annotationseparation\}}%
-  \grechangedim{annotationseparation}{#1}{#2}%
-  \relax %
+\def\setaboveinitialseparation#1#2{%OBSOLETE
+  \gre@obsolete{\protect\setaboveinitialseparation}{\protect\grechangedim\{annotationseparation\}}%
 }%
 
-\def\GreSetAboveInitialSeparation#1{%
-  \gre@obsolete{\protect\GreSetAboveInitialSeparation}{\protect\grechangedim\{annotationseparation\}}%
-}%
 
 %To change the space after the initial
 %First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setspaceafterinitial#1#2{%
-  \gre@deprecated{\protect\setspaceafterinitial}{\protect\grechangedim{afterinitialshift}}%
-  \grechangedim{afterinitialshift}{#1}{#2}%
-  \relax %
+\def\setspaceafterinitial#1#2{%OBSOLETE
+  \gre@obsolete{\protect\setspaceafterinitial}{\protect\grechangedim{afterinitialshift}}%
 }
-
-\def\GreSetSpaceAfterInitial#1{%
-  \gre@obsolete{\protect\GreSetSpaceAfterInitial}{\protect\grechangedim{afterinitialshift}}%
-}%
 
 %To change the space before the initial
 %First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setspacebeforeinitial#1#2{%
-  \gre@deprecated{\protect\setspacebeforeinitial}{\protect\grechangedim{beforeinitialshift}}%
-  \grechangedim{beforeinitialshift}{#1}{#2}%
-  \relax %
-}%
-
-\def\GreSetSpaceBeforeInitial#1{%
-  \gre@obsolete{\protect\GreSetSpaceBeforeInitial}{\protect\setspacebeforeiniital}%
+\def\setspacebeforeinitial#1#2{%OBSOLETE
+  \gre@obsolete{\protect\setspacebeforeinitial}{\protect\grechangedim{beforeinitialshift}}%
 }%
 
 
 %To change all the distances associated with the initial.
 %First three arguments are distances, last is whether they should scale when \gre@factor changes.
-\def\setinitialspacing#1#2#3#4{%
-  \gre@deprecated{\protect\setinitialspacing}{\protect\grechangedim{beforeinitialshift}, \protect\grechangedim{manualinitialwidth}, and \protect\grechangedim{afterinitialshift}}
-  \grechangedim{beforeinitialshift}{#1}{#4}%
-  \grechangedim{manualinitialwidth}{#2}{#4}%
-  \grechangedim{afterinitialshift}{#3}{#4}%
-  \relax%
+\def\setinitialspacing#1#2#3#4{%OBSOLETE
+  \gre@obsolete{\protect\setinitialspacing}{\protect\grechangedim{beforeinitialshift}, \protect\grechangedim{manualinitialwidth}, and \protect\grechangedim{afterinitialshift}}%
 }%

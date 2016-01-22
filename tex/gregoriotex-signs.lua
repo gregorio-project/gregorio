@@ -115,8 +115,8 @@ local offset_cases = {
   -- punctum inclinatum deminutus as last note
   {
     case = 'FinalInclinatumDeminutus',
-    v = [[\gre@vepisemaorrareaux{0}{\GreCPPunctumInclinatumAuctus}{0}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPPunctumInclinatumAuctus}{\gre@char@he@inclinatumdem{#4}}{2}{#3}]],
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPPunctumInclinatumDeminutus}{0}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPPunctumInclinatumDeminutus}{\gre@char@he@inclinatumdem{#4}}{2}{#3}]],
   },
   -- stropha as last note
   {
@@ -405,14 +405,50 @@ local offset_cases = {
   -- least two
   {
     case = 'SalicusOriscusWide',
-    v = [[\gre@vepisemaorrareaux{\GreCPPesQuassusLongqueueThreeNothing}{\GreCPSalicusOriscus}{2}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPPesQuassusLongqueueThreeNothing}{\gre@char@he@salicus@oriscus{#4}}{2}{#3}]],
+    v = [[\gre@vepisemaorrareaux{\GreCPVirgaStrataThreeNothing}{\GreCPSalicusOriscus}{3}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPVirgaStrataThreeNothing}{\gre@char@he@salicus@oriscus{#4}}{4}{#3}]],
   },
   -- "oriscus" as the middle note of a salicus with a second ambitus of one
   {
     case = 'SalicusOriscusOne',
-    v = [[\gre@vepisemaorrareaux{\GreCPPesQuassusLongqueueOneNothing}{\GreCPSalicusOriscus}{2}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPPesQuassusLongqueueOneNothing}{\gre@char@he@salicus@oriscus{#4}}{2}{#3}]],
+    v = [[\gre@vepisemaorrareaux{\GreCPVirgaStrataOneNothing}{\GreCPOriscus}{3}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPVirgaStrataOneNothing}{\gre@char@he@salicus@oriscus{#4}}{4}{#3}]],
+  },
+  -- punctum fused to the next note
+  {
+    case = 'LeadingPunctum',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPPunctum}{0}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPPunctumTwoUp}{\gre@char@he@punctum{#4}}{2}{#3}]],
+  },
+  -- qulisma fused to the next note
+  {
+    case = 'LeadingQuilisma',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPQuilisma}{0}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPQuilismaTwoUp}{\gre@char@he@quilisma{#4}}{2}{#3}]],
+  },
+  -- oriscus fused to the next note
+  {
+    case = 'LeadingOriscus',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPOriscus}{0}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPOriscusTwoUp}{\gre@char@he@oriscus{#4}}{2}{#3}]],
+  },
+  -- flat
+  {
+    case = 'Flat',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPFlat}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPFlat}{\gre@char@he@flat{#4}}{2}{#3}]],
+  },
+  -- sharp
+  {
+    case = 'Sharp',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPSharp}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPSharp}{\gre@char@he@sharp{#4}}{2}{#3}]],
+  },
+  -- natural
+  {
+    case = 'Natural',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPNatual}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPNatural}{\gre@char@he@natural{#4}}{2}{#3}]],
   },
 }
 
