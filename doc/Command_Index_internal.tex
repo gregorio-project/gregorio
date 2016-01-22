@@ -794,7 +794,7 @@ Macro used in \verb=\GreSyllable=. Sets \verb=\gre@skip@bolshift= to the left ke
 \end{argtable}
 
 \macroname{\textbackslash gre@calculate@eolshift}{\#1}{gregoriotex-spaces.tex}
-Macro used in \verb=\GreSyllable=. Sets \verb=\gre@skip@eolshift= to the left kern that
+Macro used in \verb=\GreSyllable=. Sets \verb=\gre@dimen@eolshift= to the left kern that
 should appear before an end of line. The improvement is tiny: when
 text go further than notes in the last syllable of a line, the idea
 is to allow text to go a bit further right, under the custos.  This shift is applied to the left after every syllable and then to the right after setting the line break penalty.  If the line break occurs after this syllable, it will occur between the two shifts, pushing the shift right to the beginning of the next line where \TeX\ will ignore it as leading white space.
@@ -1567,7 +1567,7 @@ Temporary skips used in calculations.  There are currently four of these.
 \macroname{\textbackslash gre@dimen@savedglyphraise}{}{gregoriotex-signs.tex}
 Macro to hold the value of the glyph raise so that it can be restored after some calculations which may change it are performed.
 
-\macroname{\textbackslash gre@skip@eolshift}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@dimen@eolshift}{}{gregoriotex-spaces.tex}
 The left kern that should appear before an end of line.
 
 \macroname{\textbackslash gre@dimen@bolshift}{}{gregoriotex-spaces.tex}
