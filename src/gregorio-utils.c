@@ -319,7 +319,7 @@ int main(int argc, char **argv)
     gregorio_score *score = NULL;
 
     #ifdef USE_KPSE
-        kpse_set_program_name("gregorio", "gregorio");
+        kpse_set_program_name(argv[0], "gregorio");
     #endif
     if (argc == 1) {
         print_usage(argv[0]);
