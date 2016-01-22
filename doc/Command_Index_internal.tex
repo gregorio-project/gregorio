@@ -416,18 +416,10 @@ Macro to typeset an alteration.
   \#7 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
 \end{argtable}
 
-\macroname{\textbackslash gre@calculate@clefnum}{\#1\#2}{gregoriotex-signs.tex}
-Macro calculating the \verb=\gre@clefnum= from the letter and number.
-
-\begin{argtable}
-  \#1 & charcter & type of clef (\texttt{c} or \texttt{f})\\
-  \#2 & integer & line number\\
-\end{argtable}
-
 \macroname{\textbackslash gre@clef}{}{gregoriotex-signs.tex}
 Macro holding the current clef type.
 
-\macroname{\textbackslash gre@clefline}{}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@clefheight}{}{gregoriotex-signs.tex}
 Macro holding the current clef line.
 
 \macroname{\textbackslash gre@clefflatheight}{}{gregoriotex-signs.tex}
@@ -436,7 +428,7 @@ Macro to hold the height of the current flat for the clef (\texttt{3} if no flat
 \macroname{\textbackslash gre@cleftwo}{}{gregoriotex-signs.tex}
 Macro holding the current secondary clef type.
 
-\macroname{\textbackslash gre@cleftwoline}{}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@cleftwoheight}{}{gregoriotex-signs.tex}
 Macro holding the current secondary clef line (or 0 for no secondary clef).
 
 \macroname{\textbackslash gre@cleftwoflatheight}{}{gregoriotex-signs.tex}
@@ -514,9 +506,6 @@ Internal macro to set the first syllable text after all parts are known.
 
 \macroname{\textbackslash gre@opening@syllabletext}{}{gregoriotex-syllable.tex}
 Macro that stores the computed \TeX\ code for rendering the text of the first syllable.
-
-\macroname{\textbackslash gre@opening@initialstyle}{}{gregoriotex-syllable.tex}
-Macro used by \verb=GreSetInitialStyle= to store the initial style
 
 \macroname{\textbackslash gre@exhyphencharsave}{}{gregoriotex-main.tex}
 Macro for saving the ex hyphen character so that it can be restored at the end of the score.
@@ -1089,6 +1078,47 @@ Typesets its numeric argument as a lower-case Roman numeral.
   \#1 & integer & The number to typeset\\
 \end{argtable}
 
+\macroname{\textbackslash gre@bar@text}{\#1}{gregoriotex-symbols.tex}
+Macro used to switch between spacings where bar has text and those where it doesn't.
+
+\begin{argtable}
+  \#1 & \texttt{0} & emits nothing\\
+  & \texttt{1} emits \texttt{text}\\
+\end{argtable}
+
+\macroname{\textbackslash gre@drawadditionalline}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+Workhorse function behind \verb=\GreDrawAdditionalLine=.
+
+\begin{argtable}
+  \#1 & \texttt{0} & Draw an over-the-staff ledger line. \\
+      & \texttt{1} & Draw an under-the-staff ledger line. \\
+  \#2 & distance   & The length of the line, with TeX units, excluding any left or right distances coming from the rest of the arguments. \\
+  \#3 & \texttt{0} & Start the line at this point. \\
+      & \texttt{1} & Start the line to the left of this point by \verb=gre@dimen@additionallineswidth=. \\
+      & \texttt{2} & Start the line to the left of this point by \#4. \\
+  \#4 & distance   & The distance to move left before starting the line if \#3 is \texttt{2}. \\
+  \#5 & \texttt{0} & End the line exactly \#2 to the right of this point. \\
+      & \texttt{1} & End the line \verb=gre@dimen@additionallineswidth= to the right of \#2 from this point. \\
+      & \texttt{2} & End the line \#6 to the right of \#2 from this point. \\
+  \#6 & distance   & The distance to end the line after \#2 from this point if \#3 is \texttt{2}. \\
+\end{argtable}
+
+\macroname{\textbackslash gre@kern@bar@aftermora}{}{gregoriotex-signs.tex}
+Macro which kerns between a punctum mora and a kern according to the setting in \verb=\gre@count@barshiftaftermora=.
+
+\macroname{\textbackslash gre@setgregoriofontscaled}{[\#1]\#2\#3}{gregoriotex-main.tex}
+Workhorse behind \verb=\gresetgregoriofontscaled=.
+
+\begin{argtable}
+  \#1 & \textit{(omitted)} & Use the normal font and rule set.\\
+  & \texttt{op} & Use the alternate Dominican font/rule set.\\
+  \#2 & \texttt{greciliae} & Use the Greciliae font (default).\\
+  & \texttt{gregorio} & Use the Gregorio font.\\
+  & \texttt{parmesan} & Use the Parmesan font.\\
+  \#3 & integer & the scaling factor\\
+\end{argtable}
+
+
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
 
@@ -1123,6 +1153,9 @@ The font for ancient notation.
 
 \macroname{\textbackslash gre@font@initial}{}{gregoriotex.tex}
 The font for the default initial format in Plain \TeX.
+
+\macroname{\textbackslash gre@fontfactor@...}{}{gregoriotex-main.tex}
+Macro holding the factor at which the font is loaded.  There is one of these macros for each chant font which has been loaded with the ending of the macro name being the name of the chant font (gregorio, parmesan, \etc).
 
 
 \subsection{Character Reference Aliases}
@@ -1424,6 +1457,11 @@ Boolean indicating whether the staff has a fourth line.
 \macroname{\textbackslash ifgre@haslinefive}{}{gregoriotex-spaces.tex}
 Boolean indicating whether the staff has a fifth line.
 
+\macroname{\textbackslash gre@count@barshiftaftermora}{}{gregoriotex-signs.tex}
+Count indicating when the presence of a punctum mora immediately before a bar line should affect the spacing.
+
+\macroname{\textbackslash ifgre@allowdeprecated}{}{gregoriotex.sty \textup{and} gregoriotex.tex}
+Boolean which controls whether deprecated functions raise a warning (true) or an error (false).
 
 
 \subsection{Boxes}
