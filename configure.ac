@@ -38,7 +38,9 @@ AC_CHECK_TOOL([RC], [windres], [no])
 AM_CONDITIONAL([HAVE_RC], [test x$RC != xno])
 
 AX_CHECK_COMPILE_FLAG([-std=gnu89], [CFLAGS+=" -std=gnu89"])
-AX_CHECK_COMPILE_FLAG([-pedantic-errors], [CFLAGS+=" -pedantic-errors"])
+dnl until flex gets their act together, use pedantic instead of pedantic-errors
+AX_CHECK_COMPILE_FLAG([-pedantic], [CFLAGS+=" -pedantic"])
+dnl AX_CHECK_COMPILE_FLAG([-pedantic-errors], [CFLAGS+=" -pedantic-errors"])
 AX_CHECK_COMPILE_FLAG([-fstack-protector-strong], [CFLAGS+=" -fstack-protector-strong"])
 AX_CHECK_COMPILE_FLAG([-fPIE], [CFLAGS+=" -fPIE"])
 AX_CHECK_COMPILE_FLAG([-Wformat], [CFLAGS+=" -Wformat"])
@@ -54,7 +56,9 @@ AX_CHECK_LINK_FLAG([-pie], [LDFLAGS+=" -pie"])
 
 AC_HEADER_STDC
 
-# linux has integer types in stdint.h, solaris, vms in inttypes.h
+gl_FUNC_REALPATH_WORKS
+
+dnl linux has integer types in stdint.h, solaris, vms in inttypes.h
 AC_CHECK_HEADERS([stdint.h])
 AC_CHECK_HEADERS([stdalign.h])
 
