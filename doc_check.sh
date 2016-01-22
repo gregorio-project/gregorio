@@ -30,6 +30,11 @@ grep -hE '\\let\\.*' *.tex *.sty >> $CODEFILE
 grep -h '\\font\\' *.tex *.sty >> $CODEFILE
 grep -n '\\gredefsymbol{.*' *.tex *.sty >> $CODEFILE
 
+#remove deprecated code
+sed -i.temp 's:.*@empty@.*::' $CODEFILE
+sed -i.temp 's:.*OBSOLETE.*::' $CODEFILE
+sed -i.temp 's:.*DEPRECATED.*::' $CODEFILE
+
 #remove trailing comments
 gsed -i.temp 's/%.*$//' $CODEFILE
 
@@ -39,8 +44,10 @@ gsed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $CODEFILE
 #remove new and trailing code
 sed -i.temp 's:.*\\new[a-z]*{*\(\\*[a-zA-Z@]*\)[\\}]*.*:\1:' $CODEFILE
 
+#accept only first def on line
+sed -i.temp -E 's:\\[gex]?def:special:' $CODEFILE
 #remove def and definition
-sed -i.temp -E 's:.*\\[gex]?def[a-z]*(\\[a-zA-Z@]*)[#{[].*:\1:' $CODEFILE
+sed -i.temp -E 's:.*special[a-z]*(\\[a-zA-Z@]*)[#{[].*:\1:' $CODEFILE
 
 #remove let and definition
 sed -i.temp 's:.*\\let[a-z]*\(\\[a-zA-Z@]*\)[\\=].*:\1:' $CODEFILE
@@ -75,9 +82,6 @@ sed -i.temp 's:.*count@temp@.*::' $CODEFILE
 #block documented items
 sed -i.temp 's:\\gre@pitch.*::' $CODEFILE
 sed -i.temp 's:.*gre@char@he@.*::' $CODEFILE
-
-#deprecated code
-sed -i.temp 's:.*@empty@.*::' $CODEFILE
 
 #alphabetize and remove duplicates
 sort -u -o$CODEFILE $CODEFILE
