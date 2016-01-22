@@ -298,11 +298,13 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 }
                 break;
             case GRE_END_OF_LINE:
-                if (element->u.misc.unpitched.info.sub_type) {
-                    fprintf(f, "     sub_type                %d (%s)\n",
-                            element->u.misc.unpitched.info.sub_type,
-                            gregorio_type_to_string(element->u.misc.unpitched.
-                                                    info.sub_type));
+                if (element->u.misc.unpitched.info.eol_ragged) {
+                    fprintf(f, "         ragged                 true\n");
+                }
+                if (element->u.misc.unpitched.info.eol_forces_custos) {
+                    fprintf(f, "         forces custos          %s\n",
+                            dump_bool(element
+                                ->u.misc.unpitched.info.eol_forces_custos_on));
                 }
                 break;
             case GRE_ELEMENT:

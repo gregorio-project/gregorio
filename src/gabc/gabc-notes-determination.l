@@ -819,15 +819,31 @@ static void end_var_slur(int direction, int index)
                 &notes_lloc);
     }
 [\t\r\n]+ /* ignore ends of line and tabs */;
-z   {
-        gregorio_add_end_of_line_as_note(&current_note, GRE_END_OF_LINE,
-                &notes_lloc);
-    }
 z0  {
         gregorio_add_custo_as_note(&current_note, &notes_lloc);
     }
+z   {
+        gregorio_add_end_of_line_as_note(&current_note, false, false, false,
+                &notes_lloc);
+    }
+z\+ {
+        gregorio_add_end_of_line_as_note(&current_note, false, true, true,
+                &notes_lloc);
+    }
+z-  {
+        gregorio_add_end_of_line_as_note(&current_note, false, true, false,
+                &notes_lloc);
+    }
 Z   {
-        gregorio_add_end_of_line_as_note(&current_note, GRE_END_OF_PAR,
+        gregorio_add_end_of_line_as_note(&current_note, true, false, false,
+                &notes_lloc);
+    }
+Z\+ {
+        gregorio_add_end_of_line_as_note(&current_note, true, true, true,
+                &notes_lloc);
+    }
+Z-  {
+        gregorio_add_end_of_line_as_note(&current_note, true, true, false,
                 &notes_lloc);
     }
 [cf][1-5] {

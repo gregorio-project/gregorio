@@ -79,6 +79,15 @@
   \endmplibcode%
 }}%
 
+%% This is \strip@pt from LaTeX
+\begingroup%
+  \catcode`P=12%
+  \catcode`T=12%
+  \lowercase{%
+    \def\x{\def\gre@rem@pt##1.##2PT{##1\ifnum##2>\z@.##2\fi}}}%
+  \expandafter\endgroup\x%
+\def\gre@strip@pt{\expandafter\gre@rem@pt\the}%
+
 \long\def\gre@iflatex#1{}%
 \input gregoriotex-main.tex
 
