@@ -3783,6 +3783,7 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
             gregorio_clef_to_char(clef.secondary_clef), clef.secondary_line,
             clef_flat_height(clef.secondary_clef, clef.secondary_line,
                     clef.secondary_flatted));
+    fprintf(f, "}{%%\n"); /* GreScoreOpening#3 */
     current_syllable = score->first_syllable;
     if (current_syllable) {
         write_syllable(f, current_syllable, 0, &status, score,

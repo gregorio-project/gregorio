@@ -372,7 +372,7 @@
   \ifnum\gre@biginitial=0\relax %
     \ifvoid\gre@box@initial%
       \gre@debugmsg{initial}{Fill initial box a}%
-      \setbox\gre@box@initial=\hbox{\gre@style@initial#1\endgre@style@initial}%
+      \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}%
     \fi%
     \ifx\gre@empty@initialformat\greinitialformat% OBSOLETE
     \else%  OBSOLETE
@@ -419,9 +419,9 @@
     \ifvoid\gre@box@initial%
       \gre@debugmsg{initial}{fill big initial box}%
       \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
-        \setbox\gre@box@initial=\hbox{\gre@style@biginitial#1\endgre@style@biginitial}% DEPRECATED for removal in 5.0
+        \setbox\gre@box@initial=\hbox{\gre@style@biginitial\gre@fixedtextformat{#1}\endgre@style@biginitial}% DEPRECATED for removal in 5.0
       \else%%% DEPRECATED for removal in 5.0
-        \setbox\gre@box@initial=\hbox{\gre@style@initial#1\endgre@style@initial}% keep this line
+        \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}% keep this line
       \fi%%% DEPRECATED for removal in 5.0
     \fi%
     \ifx\gre@empty@biginitialformat\grebiginitialformat% OBSOLETE
