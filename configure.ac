@@ -54,6 +54,8 @@ AX_CHECK_LINK_FLAG([-pie], [LDFLAGS+=" -pie"])
 
 AC_HEADER_STDC
 
+gl_CANONICALIZE_LGPL
+
 # linux has integer types in stdint.h, solaris, vms in inttypes.h
 AC_CHECK_HEADERS([stdint.h])
 AC_CHECK_HEADERS([stdalign.h])
