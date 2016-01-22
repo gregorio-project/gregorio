@@ -1486,17 +1486,18 @@
 % emits text if #1 is 0
 \def\gre@bar@text#1{\ifcase#1 \or text\fi}%
 
-\gdef\gre@barshiftaftermora{3}
+\newcount\gre@count@barshiftaftermora
+\gre@count@barshiftaftermora=3
 
 \def\gresetbarshiftaftermora#1{%
   \IfStrEq{#1}{always}%
-    {\gdef\gre@barshiftaftermora{3}}%
+    {\gre@count@barshiftaftermora=3}%
     {\IfStrEq{#1}{notextonly}%
-      {\gdef\gre@barshiftaftermora{2}}%
+      {\gre@count@barshiftaftermora=2}%
       {\IfStrEq{#1}{insideonly}%
-        {\gdef\gre@barshiftaftermora{1}}%
+        {\gre@count@barshiftaftermora=1}%
         {\IfStrEq{#1}{never}%
-          {\gdef\gre@barshiftaftermora{0}}%
+          {\gre@count@barshiftaftermora=0}%
           {\gre@error{Unrecognized option "#1" in gresetbarshiftaftermora , use 'always', 'notextonly', 'insideonly' or 'never'}}%
         }%
       }%
@@ -1518,7 +1519,7 @@
   % mora, we kern of the corresponding space. We do it only in the case
   % of a bar in the middle of other notes.
   \ifgre@lastispunctum%
-    \ifcase\gre@barshiftaftermora\or %
+    \ifcase\gre@count@barshiftaftermora\or %
       \ifcase #2\or %
         \gre@kern@bar@aftermora %
       \fi %
