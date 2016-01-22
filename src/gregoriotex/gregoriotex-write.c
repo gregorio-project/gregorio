@@ -3096,10 +3096,9 @@ static __inline void write_syllable_point_and_click(FILE *const f,
 }
 
 static void write_syllable_text(FILE *f, const char *const syllable_type, 
-        const gregorio_character *text, bool ignored)
+        const gregorio_character *text, bool ignored __attribute__((unused)))
 {
     if (syllable_type != NULL) {
-        ignored = false; /* to avoid the warning */
         fprintf(f, "%s{\\GreSetThisSyllable", syllable_type);
         write_text(f, text);
         fprintf(f, "}");
