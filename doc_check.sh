@@ -28,6 +28,7 @@ grep -h '\\new[a-z]*\\.*' *.tex *.sty > $CODEFILE
 grep -hE '\\[gex]?def\\.*' *.tex *.sty >> $CODEFILE
 grep -hE '\\let\\.*' *.tex *.sty >> $CODEFILE
 grep -h '\\font\\' *.tex *.sty >> $CODEFILE
+grep -n '\\gredefsymbol{.*' *.tex *.sty >> $CODEFILE
 
 #remove trailing comments
 gsed -i.temp 's/%.*$//' $CODEFILE
@@ -42,7 +43,10 @@ sed -i.temp 's:.*\\new[a-z]*{*\(\\*[a-zA-Z@]*\)[\\}]*.*:\1:' $CODEFILE
 sed -i.temp -E 's:.*\\[gex]?def[a-z]*(\\[a-zA-Z@]*)[#{[].*:\1:' $CODEFILE
 
 #remove let and definition
-sed -i.temp 's:.*\\let[a-z]*\(\\[a-zA-Z@]*\)\\.*:\1:' $CODEFILE
+sed -i.temp 's:.*\\let[a-z]*\(\\[a-zA-Z@]*\)[\\=].*:\1:' $CODEFILE
+
+#remove gredefsymbol and definition
+sed -i.temp 's:.*\\gredefsymbol{\([A-Za-z]*\)}.*:\\\1:' $CODEFILE
 
 #unwrap csname
 sed -i.temp 's:.*\(\\csname.*\\endcsname\).*:\1:' $CODEFILE
@@ -54,13 +58,26 @@ sed -i.temp 's:\\definecolor{\([a-zA-Z]*\)}.*:\1:' $CODEFILE
 #distances
 grep -h '\\grecreatedim{.*' gsp-default.tex >> $CODEFILE
 sed -i.temp 's:\\grecreatedim{\([a-z@]*\)}.*:\1:' $CODEFILE
+sed -i.temp 's:.*gre@space@.*::' $CODEFILE
 
 #styles
-sed -i.temp 's:\\endgre@style@::' $CODEFILE
-sed -i.temp 's:\\gre@style@::' $CODEFILE
+sed -i.temp 's:.*endgre@style@::' $CODEFILE
+sed -i.temp 's:.*gre@style@::' $CODEFILE
 
 #fonts
 sed -i.temp 's:.*\\font\(\\.*\)=.*:\1:' $CODEFILE
+
+#temp registers
+sed -i.temp 's:.*dimen@temp@.*::' $CODEFILE
+sed -i.temp 's:.*skip@temp@.*::' $CODEFILE
+sed -i.temp 's:.*count@temp@.*::' $CODEFILE
+
+#block documented items
+sed -i.temp 's:\\gre@pitch.*::' $CODEFILE
+sed -i.temp 's:.*gre@char@he@.*::' $CODEFILE
+
+#deprecated code
+sed -i.temp 's:.*@empty@.*::' $CODEFILE
 
 #alphabetize and remove duplicates
 sort -u -o$CODEFILE $CODEFILE
@@ -71,6 +88,7 @@ cd $HERE/doc
 
 grep -h '\\macroname.*' *.tex > $DOCFILE
 grep -h '\\stylename{.*' *.tex >> $DOCFILE
+grep -h '\\begin{gdimension}{.*' *.tex >> $DOCFILE
 
 #remove all but name
 sed -i.temp 's:\\macroname{\([^}]*\)}.*:\1:' $DOCFILE
@@ -81,10 +99,19 @@ sed -i.temp 's:\\textbackslash :\\:' $DOCFILE
 #styles
 sed -i.temp 's:.*\stylename{\([a-z]*\)}.*:\1:' $DOCFILE
 
+#distances
+sed -i.temp 's:\\begin{gdimension}{\([a-z@]*\)}.*:\1:' $DOCFILE
+
+#block documentation items
+sed -i.temp 's:.*\.\.\..*::' $DOCFILE
+sed -i.temp 's:\\gre@pitch.*::' $DOCFILE
+
 #Other things which need to be removed
 sed -i.temp 's:\\newcommand.*::' $DOCFILE
 sed -i.temp 's:MacroName::' $DOCFILE
 sed -i.temp 's:\\usepackage::' $DOCFILE
+sed -i.temp 's:\\NewDocumentEnvironment.*::' $DOCFILE
+sed -i.temp 's:\\begin{gdimension.*::' $DOCFILE
 
 #deprecated and obsolete functions (not in documentation because they don't need to be)
 cd $HERE/tex
@@ -95,8 +122,8 @@ grep -h '\\gre@obsolete.*' *.tex | grep -v '\\def\\' >> $DOCFILE
 #remove whitespace
 gsed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $DOCFILE
 
-sed -i.temp 's:\\gre@deprecated{\\protect::' $DOCFILE
-sed -i.temp 's:\\gre@obsolete{\\protect::' $DOCFILE
+sed -i.temp 's:.*\\gre@deprecated{.*::' $DOCFILE
+sed -i.temp 's:.*\\gre@obsolete{.*::' $DOCFILE
 sed -i.temp 's:}.*::' $DOCFILE
 
 #alphabetize and remove duplicates
