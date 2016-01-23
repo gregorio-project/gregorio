@@ -806,10 +806,12 @@ static void suppress_this_character(gregorio_character *to_suppress)
         return;
     }
     if (to_suppress->previous_character) {
+        assert(to_suppress->previous_character->next_character == to_suppress);
         to_suppress->previous_character->next_character =
                 to_suppress->next_character;
     }
     if (to_suppress->next_character) {
+        assert(to_suppress->next_character->previous_character == to_suppress);
         to_suppress->next_character->previous_character =
                 to_suppress->previous_character;
     }
@@ -947,8 +949,9 @@ static __inline bool _suppress_char_and_end_c(
         return true;
     } else {
         if ((*ptr_character)->previous_character) {
+            gregorio_character *to_suppress = *ptr_character;
             (*ptr_character) = (*ptr_character)->previous_character;
-            suppress_this_character((*ptr_character)->next_character);
+            suppress_this_character(to_suppress);
         } else {
             suppress_this_character(*ptr_character);
             *ptr_character = NULL;
