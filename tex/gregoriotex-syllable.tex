@@ -470,11 +470,11 @@
 
 \xdef\gre@lyriccentering{1}%
 
-\def\englishcentering{%
+\def\englishcentering{%OBSOLETE
   \gre@obsolete{\protect\englishcentering}{\protect\gresetlyriccentering{syllable}}%
 }%
 
-\def\defaultcentering{%
+\def\defaultcentering{%OBSOLETE
   \gre@obsolete{\protect\defaultcentering}{\protect\gresetlyriccentering{vowel} }%
 }%
 
@@ -502,15 +502,15 @@
     }%
 }%
 
-\def\clivisalignmentalways{%
+\def\clivisalignmentalways{%OBSOLETE
   \gre@obsolete{\protect\clivisalignmentalways}{\protect\gresetclivisalignment{always}}%
 }%
 
-\def\clivisalignmentnever{%
+\def\clivisalignmentnever{%OBSOLETE
   \gre@obsolete{\protect\clivisalignmentnever}{\protect\gresetclivisalignment{never}}%
 }%
 
-\def\clivisalignmentspecial{%
+\def\clivisalignmentspecial{%OBSOLETE
   \gre@obsolete{\protect\clivisalignmentspecial}{\protect\gresetclivisalignment{special}}%
 }%
 
@@ -985,11 +985,13 @@
 %% opens a score
 %% #1 - macros rendering the things after the initial but before the notes
 %% #2 - macros rendering the things after starting notes but before the syllable
-%% #3 - control sequence for the syllable
-%% #4 - macros rendering the first syllable; should emit the initial and
+%% #3 - macros rendering the things before the initial
+%% #4 - control sequence for the syllable
+%% #5 - macros rendering the first syllable; should emit the initial and
 %%      populate \gre@opening@syllabletext (even if that should be empty)
-\def\GreScoreOpening#1#2#3#4{%
-  #4\relax % should emit the initial
+\def\GreScoreOpening#1#2#3#4#5{%
+  #3\relax % fixed styles, etc.
+  #5\relax % should emit the initial
   \ifnum\gre@biginitial=1\relax %
     \gre@debugmsg{general}{making adjustment NECESSARY}%
     \gre@thirdlineadjustmentnecessarytrue %
@@ -1000,5 +1002,5 @@
   #1\relax % score reference, voice info, etc.
   \gre@beginnotes\relax %
   #2\relax % initial clef, etc.
-  #3{\gre@opening@syllabletext}%
+  #4{\gre@opening@syllabletext}%
 }%
