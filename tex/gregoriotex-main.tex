@@ -618,21 +618,21 @@
 }%
 
 
-\def\gresetfirstlineaboveinitial#1#2{%
+\def\gresetfirstlineaboveinitial#1#2{%OBSOLETE
   \gre@obsolete{\protect\gresetfirstlineaboveinitial}{\protect\greannotation}%
 }%
 
-\def\gresetfirstannotation#1{%
+\def\gresetfirstannotation#1{%OBSOLETE
   \gre@obsolete{\protect\gresetfirstannotation}{\protect\greannotation}%
 }%
 
-\let\setfirstannotation\gresetfirstannotation%
+\let\setfirstannotation\gresetfirstannotation%OBSOLETE
 
-\def\gresetsecondannotation#1{%
+\def\gresetsecondannotation#1{%OBSOLETE
   \gre@obsolete{\protect\gresetsecondannotation}{\protect\greannotation}%
 }%
 
-\let\setsecondannotation\gresetsecondannotation%
+\let\setsecondannotation\gresetsecondannotation%OBSOLETE
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the score reference (unused)
@@ -647,12 +647,12 @@
   \relax %
 }%
 
-\def\GreScoreReference#1{% OBSOLETE
+\def\GreScoreReference#1{%OBSOLETE
   \gre@error{\protect\scorereference\space is obsolete.\MessageBreak It does nothing; stop using it.}%
   \relax%
 }%
 
-\def\scorereference#1{% OBSOLETE
+\def\scorereference#1{%OBSOLETE
   \gre@error{\protect\scorereference\space is obsolete.\MessageBreak It does nothing; stop using it.}%
 }%
 
@@ -734,7 +734,7 @@
   \fi%
 }
 
-\def\commentary#1{%
+\def\commentary#1{%OBSOLETE
   \gre@obsolete{\protect\commentary}{\protect\grecommentary}%
 }%
 
@@ -826,11 +826,11 @@
     }%
 }
 
-\def\greremovelines{%
+\def\greremovelines{%OBSOLETE
   \gre@obsolete{\protect\greremovelines}{\protect\gresetlines{invisible}}%
 }%
 
-\def\gredonotremovelines{%
+\def\gredonotremovelines{%OBSOLETE
   \gre@obsolete{\protect\gredonotremovelines}{\protect\gresetlines{visible}}%
 }%
 
@@ -1021,7 +1021,7 @@
     }%
 }%
 
-\def\setgretranslationcenteringscheme#1{%
+\def\setgretranslationcenteringscheme#1{%OBSOLETE
   \gre@obsolete{\protect\setgretranslationcenteringscheme}{\protect\gresettranslationcentering}%
 }%
 
@@ -1038,7 +1038,7 @@
     }%
 }%
 
-\def\gresetnlbintranslation#1{%
+\def\gresetnlbintranslation#1{%OBSOLETE
   \gre@obsolete{\protect\gresetnlbintranslation}{\protect\gresetbreakintranslation}%
 }%
 
@@ -1367,11 +1367,11 @@
     }%
 }%
 
-\def\gredisableeolshifts{%
+\def\gredisableeolshifts{%OBSOLETE
   \gre@obsolete{\protect\gredisableeolshifts}{\protect\greseteolshifts{disable}}%
 }%
 
-\def\greenableeolshifts{%
+\def\greenableeolshifts{%OBSOLETE
   \gre@obsolete{\protect\greenableeolshifts}{\protect\greseteolshifts{enable}}%
 }%
 
@@ -1417,7 +1417,7 @@
 \gresetbreakbeforeeuouae{justified}%
 
 % macro to suppress the custos
-\def\greblockcustos{%
+\def\greblockcustos{%OBSOLETE
   \gre@obsolete{\protect\greblockcustos}{\protect\greseteolcustos{manual}}%
 }%
 
@@ -1749,7 +1749,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\GreSetStaffLinesFormat#1{%
+\def\GreSetStaffLinesFormat#1{%OBSOLETE
   \gre@obsolete{\protect\GreSetStaffLinesFormat}{\protect\grechangestyle{normalstafflines}}%
 }%
 
@@ -1780,7 +1780,7 @@
   \relax %
 }%
 
-\def\setgrefactor#1{%
+\def\setgrefactor#1{%OBSOLETE
   \gre@obsolete{\protect\setgrefactor}{\protect\grechangestaffsize}%
 }%
 
@@ -1819,18 +1819,18 @@
 
 % User macro to force gregriotex to recompile gabc files. Useful for when there
 % are changes to gregoriotex but the GREGORIOTEX API VERSION is not changed.
-\def\forcecompilegabc{%
+\def\forcecompilegabc{%OBSOLETE
   \gre@obsolete{\protect\forcecompilegabc}{\protect\gresetcompilegabc{force}}%
 }%
 
 % User macro to let gregoriotex auto recompile gabc files as necessary.
 % Intended to be used in the main tex file to revert the previous macro.
-\def\autocompilegabc{%
+\def\autocompilegabc{%OBSOLETE
   \gre@obsolete{\protect\autocompilegabc}{\protect\gresetcompilegabc{auto}}%
 }%
 
 % User macro to force score inclusion without compilation.
-\def\nevercompilegabc{%
+\def\nevercompilegabc{%OBSOLETE
   \gre@obsolete{\protect\nevercompilegabc}{\protect\gresetcompilegabc{never}}%
 }
 
@@ -1888,7 +1888,7 @@
 
 % The main macro used by the user to input scores into the document.
 
-\def\includescore{%
+\def\includescore{%OBSOLETE
   \gre@obsolete{\protect\includescore}{\protect\gregorioscore}%
 }%
 
@@ -1956,11 +1956,11 @@
     }%
 }%
 
-\def\GreUseNormalHyphen{%
+\def\GreUseNormalHyphen{%OBSOLETE
   \gre@obsolete{\protect\GreUseNormalHyphen}{\protect\greseteolhyphen{normal}}%
 }%
 
-\def\GreUseZeroHyphen{%
+\def\GreUseZeroHyphen{%OBSOLETE
   \gre@obsolete{\protect\GreUseZeroHyphen}{\protect\greseteolhyphen{zero}}%
 }%
 
