@@ -972,8 +972,7 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
 }
 
 /**
- * This now does nothing useful, since the manuscript_reference is
- * now part of the score info.  But we keep it here in case it may
+ * This now does nothing useful, but we keep it here in case it may
  * be needed in future.
  */
 static void gregoriotex_write_voice_info(FILE *f, gregorio_voice_info *voice_info)
@@ -3774,10 +3773,6 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     }
 
     fprintf(f, "\\GreScoreOpening{%%\n"); /* GreScoreOpening#1 */
-    if (score->manuscript_reference) {
-        fprintf(f, "\\GreScoreReference{%s}%%\n",
-                score->manuscript_reference);
-    }
     if (score->first_voice_info) {
         gregoriotex_write_voice_info(f, score->first_voice_info);
     }
@@ -3791,6 +3786,7 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
             gregorio_clef_to_char(clef.secondary_clef), clef.secondary_line,
             clef_flat_height(clef.secondary_clef, clef.secondary_line,
                     clef.secondary_flatted));
+    fprintf(f, "}{%%\n"); /* GreScoreOpening#3 */
     current_syllable = score->first_syllable;
     if (current_syllable) {
         write_syllable(f, current_syllable, 0, &status, score,

@@ -741,14 +741,15 @@ Macro for typesetting a reversed semicirculus.
   \#2 & string  & Type of glyph the semicirculus is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
-\macroname{\textbackslash GreScoreOpening}{\#1\#2\#3\#4}{gregoriotex-syllable.tex}
+\macroname{\textbackslash GreScoreOpening}{\#1\#2\#3\#4\#5}{gregoriotex-syllable.tex}
 Opens the score.
 
 \begin{argtable}
   \#1 & \TeX\ code & Macros rendering the things after the initial but before the notes.\\
   \#2 & \TeX\ code & Macros rendering the things after starting notes but before the syllable.\\
-  \#3 & \TeX\ control sequence & Control sequence for the syllable.\\
-  \#4 & \TeX\ code & Macros rendering the first syllable; should emit the initial and populate \verb=\gre@opening@syllabletext=.\\
+  \#3 & \TeX\ code & Macros rendering the things before the initial.\\
+  \#4 & \TeX\ control sequence & Control sequence for the syllable.\\
+  \#5 & \TeX\ code & Macros rendering the first syllable; should emit the initial and populate \verb=\gre@opening@syllabletext=.\\
 \end{argtable}
 
 \macroname{\textbackslash GreSemicirculus}{\#1\#2}{gregoriotex-signs.tex}

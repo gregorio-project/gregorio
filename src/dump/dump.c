@@ -112,9 +112,6 @@ void dump_write_score(FILE *f, gregorio_score *score)
     if (score->author) {
         fprintf(f, "   author                    %s\n", score->author);
     }
-    if (score->manuscript_reference) {
-        fprintf(f, "   manuscript_reference      %s\n", score->manuscript_reference);
-    }
     if (score->mode) {
         fprintf(f, "   mode                      %s\n", score->mode);
     }

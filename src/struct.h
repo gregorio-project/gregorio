@@ -675,7 +675,6 @@ typedef struct gregorio_score {
     char *mode_modifier;
     char *mode_differentia;
     char *author;
-    char *manuscript_reference;
     /* There is one annotation for each line above the initial letter */
     char *annotation[MAX_ANNOTATIONS];
     /* field giving informations on the initial (no initial, normal initial
