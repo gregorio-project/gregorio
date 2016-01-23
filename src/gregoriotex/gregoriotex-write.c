@@ -533,6 +533,34 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
     return buf;
 }
 
+static const char *fusible_queued_shape(const gregorio_note *const note,
+        const gregorio_glyph *const glyph,
+        const gregorio_element *const element,
+        const char *const longqueue_shape, const char *const shortqueue_shape)
+{
+    const char *name;
+    if (glyph->u.notes.fuse_to_next_glyph < 0) {
+        /* queue size depends on the following note if fused down */
+        if (glyph->u.notes.fuse_to_next_glyph == -1) {
+            if (is_shortqueue(note->u.note.pitch
+                        + glyph->u.notes.fuse_to_next_glyph, glyph, element)) {
+                name = shortqueue_shape;
+            } else {
+                name = longqueue_shape;
+            }
+        } else {
+            name = shortqueue_shape;
+        }
+    } else {
+        if (is_shortqueue(note->u.note.pitch, glyph, element)) {
+            name = shortqueue_shape;
+        } else {
+            name = longqueue_shape;
+        }
+    }
+    return compute_glyph_name(glyph, name, LG_NONE, true);
+}
+
 static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         gregorio_glyph *glyph, gregorio_element *element, gtex_alignment *type)
 {
@@ -596,12 +624,8 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
             }
             return SHAPE_VirgaReversaLongqueueDescendens;
         default:
-            if (is_shortqueue(note->u.note.pitch, glyph, element)) {
-                return compute_glyph_name(glyph, SHAPE_VirgaReversa, LG_NONE,
-                        true);
-            }
-            return compute_glyph_name(glyph, SHAPE_VirgaReversaLongqueue,
-                    LG_NONE, true);
+            return fusible_queued_shape(note, glyph, element,
+                    SHAPE_VirgaReversa, SHAPE_VirgaReversaLongqueue);
         }
     case S_ORISCUS_ASCENDENS:
         *type = AT_ORISCUS;
@@ -616,12 +640,8 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         *type = AT_QUILISMA;
         return compute_glyph_name(glyph, SHAPE_Quilisma, LG_NONE, true);
     case S_ORISCUS_SCAPUS:
-        if (is_shortqueue(note->u.note.pitch, glyph, element)) {
-            return compute_glyph_name(glyph, SHAPE_OriscusScapus, LG_NONE,
-                    true);
-        }
-        return compute_glyph_name(glyph, SHAPE_OriscusScapusLongqueue, LG_NONE,
-                true);
+        return fusible_queued_shape(note, glyph, element, SHAPE_OriscusScapus,
+                SHAPE_OriscusScapusLongqueue);
     case S_STROPHA:
         *type = AT_STROPHA;
         if (!(note->u.note.liquescentia &
