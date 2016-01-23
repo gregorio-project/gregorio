@@ -119,23 +119,23 @@
   \gre@changestyle{normalstafflines}{\color[named]{#1}}[\relax]%
 }
 
-\def\grecoloredlines#1#2#3{%
+\def\grecoloredlines#1#2#3{%OBSOLETE
   \gre@obsolete{\protect\grecoloredlines}{\protect\gresetlinecolor}%
 }
 
-\def\greredlines{%
+\def\greredlines{%OBSOLETE
   \gre@obsolete{\protect\greredlines}{\protect\gresetlinecolor{gregoriocolor}}%
   \relax %
 }
 
-\let\redlines\greredlines
+\let\redlines\greredlines%OBSOLETE
 
-\def\grenormallines{%
+\def\grenormallines{%OBSOLETE
   \gre@obsolete{\protect\grenormallines}{\protect\gresetlinecolor{black}}%
   \relax %
 }
 
-\let\normallines\grenormallines
+\let\normallines\grenormallines%OBSOLETE
 
 %%%%%%%%%%%%%%%%%%%%
 %% Formatting environments
