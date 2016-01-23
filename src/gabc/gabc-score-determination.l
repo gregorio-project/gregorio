@@ -187,11 +187,6 @@ semicolon. */
                 gregorio_strdup(gabc_score_determination_text);
         return AUTHOR;
     }
-<INITIAL>manuscript-reference {
-        gabc_score_determination_lval.text =
-                gregorio_strdup(gabc_score_determination_text);
-        return MANUSCRIPT_REFERENCE;
-    }
 <INITIAL>language {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);

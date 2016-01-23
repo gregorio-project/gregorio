@@ -638,16 +638,22 @@
 %% macros for the score reference (unused)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\grescorereference#1{%
+\def\grescorereference#1{% DEPRECATED by 4.1
+  \ifgre@allowdeprecated%
+    \gre@warning{\protect\grescorereference\space is deprecated.\MessageBreak It does nothing; stop using it.}%
+  \else%
+    \gre@error{\protect\grescorereference\space is deprecated.\MessageBreak It does nothing; stop using it.}%
+  \fi%
   \relax %
 }%
 
 \def\GreScoreReference#1{%OBSOLETE
-  \gre@obsolete{\protect\GreScoreReference}{\protect\grescorereference}%
+  \gre@error{\protect\GreScoreReference\space is obsolete.\MessageBreak It does nothing; stop using it.}%
+  \relax%
 }%
 
 \def\scorereference#1{%OBSOLETE
-  \gre@obsolete{\protect\scorereference}{\protect\grescorereference}%
+  \gre@error{\protect\scorereference\space is obsolete.\MessageBreak It does nothing; stop using it.}%
 }%
 
 

@@ -49,6 +49,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Deprecated
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
 - `biginitial` style, consolidated into the `initial` style.
+- `\grescorereference`
 
 ### Removed
 - `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`
@@ -59,8 +60,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\grelowchoralsignstyle`, if you were redefining this command, use `\grechangeformat{lowchoralsign}...` instead
 - `\grehighchoralsignstyle`, if you were redefining this command, use `\grechangeformat{highchoralsign}...` instead
 - `\setaboveinitialseparation`, supplanted by `\grechangedim{annotationseparation}...`
-- `\scorereference`, supplanted by `\grescorereference`
-- `\GreScoreReference`, supplanted by `\grescorereference`
+- `\scorereference`
+- `\GreScoreReference`
 - `\commentary`, supplanted by `\grecommentary`
 - `\setgretranslationcenteringscheme`, supplanted by `\gresettranslationcentering`
 - `\englishcentering`, supplanted by `\gresetlyriccentering{syllable}`
