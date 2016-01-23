@@ -680,6 +680,19 @@ static __inline signed char second_pitch_of(const gregorio_glyph *const glyph) {
     return glyph->u.notes.first_note->next->u.note.pitch;
 }
 
+static __inline const char *porrectus_shape(const gregorio_glyph *const glyph,
+        const gregorio_element *const element, const char *shortqueue_shape,
+        const char *longqueue_shape) {
+    signed char second_pitch = second_pitch_of(glyph);
+    if (first_pitch_of(glyph) - second_pitch == 1) {
+        if (is_shortqueue(second_pitch_of(glyph), glyph, element)) {
+            return shortqueue_shape;
+        }
+        return longqueue_shape;
+    }
+    return shortqueue_shape;
+}
+
 /* the function that calculates the number of the glyph. It also
  * calculates the type, used for determining the position of signs. Type is
  * very basic, it is only the global dimensions : torculus, one_note, etc. */
@@ -867,11 +880,8 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
     case G_PORRECTUS:
         *type = AT_PORRECTUS;
         *gtype = T_PORRECTUS;
-        if (is_shortqueue(second_pitch_of(glyph), glyph, element)) {
-            shape = SHAPE_Porrectus;
-        } else {
-            shape = SHAPE_PorrectusLongqueue;
-        }
+        shape = porrectus_shape(glyph, element, SHAPE_Porrectus,
+                SHAPE_PorrectusLongqueue);
         ltype = LG_NO_INITIO;
         break;
     case G_TORCULUS_RESUPINUS:
@@ -888,31 +898,22 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
     case G_PORRECTUS_FLEXUS:
         *type = AT_PORRECTUS;
         *gtype = T_PORRECTUS_FLEXUS;
-        if (is_shortqueue(second_pitch_of(glyph), glyph, element)) {
-            shape = SHAPE_PorrectusFlexus;
-        } else {
-            shape = SHAPE_PorrectusFlexusLongqueue;
-        }
+        shape = porrectus_shape(glyph, element, SHAPE_PorrectusFlexus,
+                SHAPE_PorrectusFlexusLongqueue);
         ltype = LG_NO_INITIO;
         break;
     case G_PORRECTUS_NO_BAR:
         *type = AT_PORRECTUS;
         *gtype = T_TORCULUS_RESUPINUS;
-        if (is_shortqueue(second_pitch_of(glyph), glyph, element)) {
-            shape = SHAPE_PorrectusNobar;
-        } else {
-            shape = SHAPE_PorrectusNobarLongqueue;
-        }
+        shape = porrectus_shape(glyph, element, SHAPE_PorrectusNobar,
+                SHAPE_PorrectusNobarLongqueue);
         ltype = LG_NO_INITIO;
         break;
     case G_PORRECTUS_FLEXUS_NO_BAR:
         *type = AT_PORRECTUS;
         *gtype = T_TORCULUS_RESUPINUS_FLEXUS;
-        if (is_shortqueue(second_pitch_of(glyph), glyph, element)) {
-            shape = SHAPE_PorrectusFlexusNobar;
-        } else {
-            shape = SHAPE_PorrectusFlexusNobarLongqueue;
-        }
+        shape = porrectus_shape(glyph, element, SHAPE_PorrectusFlexusNobar,
+                SHAPE_PorrectusFlexusNobarLongqueue);
         ltype = LG_NO_INITIO;
         break;
     case G_ANCUS:
