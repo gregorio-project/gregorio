@@ -287,6 +287,7 @@ static char *encode_point_and_click_filename(char *input_file_name)
 
     *r = '\0';
 
+    free(filename);
     return result;
 }
 
