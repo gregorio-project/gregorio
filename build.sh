@@ -47,12 +47,9 @@ OTHERARGS=
 FORCE_AUTORECONF=
 FORCE_FONTS=
 
-CFLAGS="$CFLAGS -Wdeclaration-after-statement"
-
 until [ -z "$1" ]; do
   case "$1" in
     --mingw     ) MINGWCROSS=TRUE ;;
-    --warn      ) WARN=TRUE ;;
     --host=*    ) CONFHOST="$1" ;;
     --build=*   ) CONFBUILD="$1" ;;
     --arch=*    ) MACCROSS=TRUE; ARCH=`echo $1 | sed 's/--arch=\(.*\)/\1/' ` ;;
@@ -67,14 +64,6 @@ done
 B=build
 
 ARCHFLAGS=
-
-if [ "$WARN" = "TRUE" ]
-then
-  CFLAGS="-Wall -Wextra \
- -Wformat-y2k -Wno-format-extra-args\
- -Wno-format-zero-length -Wformat-nonliteral\
- -Wformat-security -Wformat=2 -Wnormalized=nfc $CFLAGS"
-fi
 
 if [ "$MINGWCROSS" = "TRUE" ]
 then
@@ -93,7 +82,7 @@ then
   fi
   OLDPATH=$PATH
   PATH=/usr/$MINGWSTR/bin:$PATH
-  CFLAGS="-mtune=pentiumpro -msse2 -O2 $CFLAGS"
+  CFLAGS="-mtune=pentiumpro -msse2 -g -O2 $CFLAGS"
   LDFLAGS="-Wl,--large-address-aware $CFLAGS"
   ARCHFLAGS="--target=\"$MINGWSTR\" \
     --with-gnu-ld \
