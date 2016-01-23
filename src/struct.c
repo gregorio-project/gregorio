@@ -899,6 +899,7 @@ static __inline void free_one_element(gregorio_element *element)
     for (i = 0; i < element->nabc_lines; i++) {
         free(element->nabc[i]);
     }
+    free(element->nabc);
     switch (element->type) {
     case GRE_ELEMENT:
         gregorio_free_glyphs(&element->u.first_glyph);
