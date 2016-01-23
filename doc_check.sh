@@ -28,7 +28,7 @@ grep -h '\\new[a-z]*\\.*' *.tex *.sty > $CODEFILE
 grep -hE '\\[gex]?def\\.*' *.tex *.sty >> $CODEFILE
 grep -hE '\\let\\.*' *.tex *.sty >> $CODEFILE
 grep -h '\\font\\' *.tex *.sty >> $CODEFILE
-grep -n '\\gredefsymbol{.*' *.tex *.sty >> $CODEFILE
+grep -h '\\gredefsymbol{.*' *.tex *.sty >> $CODEFILE
 
 #remove deprecated code
 sed -i.temp 's:.*@empty@.*::' $CODEFILE
