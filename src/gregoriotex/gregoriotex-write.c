@@ -3762,7 +3762,7 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     }
 
     if (score->initial_style != INITIAL_NOT_SPECIFIED) { /* DEPRECATED by 4.1 */
-        fprintf(f, "\\GreSetInitialStyle{%d}%%\n", score->initial_style);
+        fprintf(f, "\\GreSetInitialStyle{%d}%%\n", score->initial_style); /* DEPRECATED by 4.1 */
     }
 
     fprintf(f, "\\GreScoreOpening{%%\n"); /* GreScoreOpening#1 */
