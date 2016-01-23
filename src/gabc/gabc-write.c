@@ -883,9 +883,11 @@ void gabc_write_score(FILE *f, gregorio_score *score)
         }
     }
     /* at present we only allow for one clef at the start of the gabc */
-    fprintf(f, "(");
-    gabc_write_clef(f, score->first_voice_info->initial_clef);
-    fprintf(f, ")");
+    if (score->first_voice_info) {
+        fprintf(f, "(");
+        gabc_write_clef(f, score->first_voice_info->initial_clef);
+        fprintf(f, ")");
+    }
     syllable = score->first_syllable;
     /* the we write every syllable */
     while (syllable) {

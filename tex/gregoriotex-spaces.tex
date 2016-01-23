@@ -148,7 +148,7 @@
   \relax %
 }%
 
-\def\setstafflinethickness{%
+\def\setstafflinethickness{%OBSOLETE
   \gre@obsolete{\protect\setstafflinethickness}{\protect\grechangestafflinethickness}%
 }%
 
@@ -366,7 +366,7 @@
 % dimen keeping the shift computed with next function
 \newdimen\gre@dimen@eolshift
 
-%% @desc Macro used in \GreSyllable. Sets \gre@skip@eolshift to the right kern
+%% @desc Macro used in \GreSyllable. Sets \gre@dimen@eolshift to the right kern
 %%       that should appear before an end of line.  When active this prevents
 %%       text from going under the custos.
 %%
@@ -848,7 +848,7 @@
     }%
 }%
 
-\def\gresetdim{%
+\def\gresetdim{%OBSOLETE
   \gre@obsolete{\protect\gresetdim}{\protect\grecreatedim}%
 }%
 
@@ -921,7 +921,7 @@
     }%
 }
 
-\def\grenoscaledim#1{%
+\def\grenoscaledim#1{%OBSOLETE
   \gre@obsolete{\protect\grenoscaledim}{\protect\grescaledim{...}{no}}%
 }%
 
@@ -929,7 +929,7 @@
 % space configuration loading
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\GreLoadSpaceConf#1{%
+\def\GreLoadSpaceConf#1{%OBSOLETE
   \gre@obsolete{\protect\GreLoadSpaceConf}{\protect\greloadspaceconf}%
 }%
 
@@ -1303,26 +1303,26 @@
 
 % To change the spacing between annotations.
 %First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setaboveinitialseparation#1#2{%
+\def\setaboveinitialseparation#1#2{%OBSOLETE
   \gre@obsolete{\protect\setaboveinitialseparation}{\protect\grechangedim\{annotationseparation\}}%
 }%
 
 
 %To change the space after the initial
 %First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setspaceafterinitial#1#2{%
+\def\setspaceafterinitial#1#2{%OBSOLETE
   \gre@obsolete{\protect\setspaceafterinitial}{\protect\grechangedim{afterinitialshift}}%
 }
 
 %To change the space before the initial
 %First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setspacebeforeinitial#1#2{%
+\def\setspacebeforeinitial#1#2{%OBSOLETE
   \gre@obsolete{\protect\setspacebeforeinitial}{\protect\grechangedim{beforeinitialshift}}%
 }%
 
 
 %To change all the distances associated with the initial.
 %First three arguments are distances, last is whether they should scale when \gre@factor changes.
-\def\setinitialspacing#1#2#3#4{%
+\def\setinitialspacing#1#2#3#4{%OBSOLETE
   \gre@obsolete{\protect\setinitialspacing}{\protect\grechangedim{beforeinitialshift}, \protect\grechangedim{manualinitialwidth}, and \protect\grechangedim{afterinitialshift}}%
 }%

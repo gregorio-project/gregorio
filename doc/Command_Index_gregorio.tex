@@ -741,18 +741,16 @@ Macro for typesetting a reversed semicirculus.
   \#2 & string  & Type of glyph the semicirculus is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
-\macroname{\textbackslash GreScoreOpening}{\#1\#2\#3\#4}{gregoriotex-syllable.tex}
+\macroname{\textbackslash GreScoreOpening}{\#1\#2\#3\#4\#5}{gregoriotex-syllable.tex}
 Opens the score.
 
 \begin{argtable}
   \#1 & \TeX\ code & Macros rendering the things after the initial but before the notes.\\
   \#2 & \TeX\ code & Macros rendering the things after starting notes but before the syllable.\\
-  \#3 & \TeX\ control sequence & Control sequence for the syllable.\\
-  \#4 & \TeX\ code & Macros rendering the first syllable; should emit the initial and populate \verb=\gre@opening@syllabletext=.\\
+  \#3 & \TeX\ code & Macros rendering the things before the initial.\\
+  \#4 & \TeX\ control sequence & Control sequence for the syllable.\\
+  \#5 & \TeX\ code & Macros rendering the first syllable; should emit the initial and populate \verb=\gre@opening@syllabletext=.\\
 \end{argtable}
-
-\macroname{\textbackslash GreScoreReference}{\#1}{gregoriotex-main.tex}
-Currently does nothing.
 
 \macroname{\textbackslash GreSemicirculus}{\#1\#2}{gregoriotex-signs.tex}
 Macro for typesetting a semicirculus.
@@ -1057,6 +1055,14 @@ Macro which sets the number of \texttt{nabc} lines in the score.
 
 \begin{argtable}
   \#1 & integer & the number of \texttt{nabc} lines (currently only 1 is supported)\\
+\end{argtable}
+
+
+\macroname{\textbackslash GreModeNumber}{\#1}{gregoriotex-main.tex}
+Macro which formats the mode in roman or arabic numerals according to the appropriate setting.
+
+\begin{argtable}
+  \#1 & \texttt{1}--\texttt{8} & The mode to be formated\\
 \end{argtable}
 
 %%% Local Variables:

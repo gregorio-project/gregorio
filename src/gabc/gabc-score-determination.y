@@ -707,7 +707,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
     @$.last_offset = 0;
 }
 
-%token NAME AUTHOR GABC_COPYRIGHT SCORE_COPYRIGHT MANUSCRIPT_REFERENCE
+%token NAME AUTHOR GABC_COPYRIGHT SCORE_COPYRIGHT
 %token NUMBER_OF_VOICES LANGUAGE STAFF_LINES ORISCUS_ORIENTATION
 %token DEF_MACRO OTHER_HEADER
 %token ANNOTATION MODE MODE_MODIFIER MODE_DIFFERENTIA
@@ -851,12 +851,6 @@ definition:
         check_multiple("author", score->author != NULL);
         gregorio_add_score_header(score, $1.text, $2.text);
         score->author = $2.text;
-    }
-    | MANUSCRIPT_REFERENCE attribute {
-        check_multiple("manuscript-reference",
-                score->manuscript_reference != NULL);
-        gregorio_add_score_header(score, $1.text, $2.text);
-        score->manuscript_reference = $2.text;
     }
     | ORISCUS_ORIENTATION attribute {
         gregorio_add_score_header(score, $1.text, $2.text);

@@ -24,9 +24,7 @@ name: incipit;
 gabc-copyright: copyright on this gabc file;
 score-copyright: copyright on the source score;
 author: if known;
-manuscript-reference: e.g. CAO reference;
 language: latin;
-initial-style: 1;
 mode: 6;
 mode-modifier: t.;
 annotation: IN.;
@@ -60,9 +58,7 @@ Some headers have special meaning to Gregorio:
     score-copyright: (C) Abbaye de Solesmes, 1934;
   \end{lstlisting}
 \item[author] The author of the piece, if known; of course, the author of most traditional chant is not known.
-\item[manuscript-reference] A unique reference for the piece, according to some well-known system. For example, the reference beginning cao in the Cantus database of office chants. If the reference is unclear as to which system it uses, it should be prefixed by the name of the system. Note that this should be a reference identifying the piece, not the manuscript as a whole; anything identifying the manuscript as a whole should be put in the manuscript field.
 \item[language] The language of the lyrics.
-\item[initial-style] The style of the initial letter. 0 means no initial letter, 1 a normal one, and 2 a large one, on two lines. Note that if you want to use the initial on two lines, you have to specify at least the two first line breaks.
 \item[oriscus-orientation] If \texttt{legacy}, the orientation of an unconnected oriscus must be set manually.
 \item[mode] The mode of the piece. This should normally be an arabic
   number between 1 and 8, but may be any text required for unusual
@@ -110,6 +106,7 @@ Although gregorio ascribes no special meaning to them, other suggested headers a
 \item[arranger] The name of a modern arranger, when a traditional chant melody has been adapted for new words, or when a manuscript is transcribed into square notation. This may be a corporate name, like Solesmes.
 \item[date] The date of composition, or the date of earliest attestation. With most traditional chant, this will only be approximate; e.g. XI. s. for eleventh century. The convention is to put it with the latin style, like the previous examples (capital letters, roman numerals, s for seculum and the dots).
 \item[manuscript] For transcriptions direct from a manuscript, the text normally used to identify the manuscript, for example Montpellier H.159
+\item[manuscript-reference] A unique reference for the piece, according to some well-known system. For example, the reference beginning cao in the Cantus database of office chants. If the reference is unclear as to which system it uses, it should be prefixed by the name of the system. Note that this should be a reference identifying the piece, not the manuscript as a whole; anything identifying the manuscript as a whole should be put in the manuscript field.
 \item[manuscript-storage-place] For transcriptions direct from a manuscript, where the manuscript is held; e.g. Bibliothèque Nationale, Paris.
 \item[book] For transcriptions from a modern book (such as Solesmes editions; modern goes back at least to the 19th century revival), the name of the book; e.g. Liber Usualis.
 \item[transcriber] The name of the transcriber into gabc.

@@ -1006,8 +1006,7 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
 }
 
 /**
- * This now does nothing useful, since the manuscript_reference is
- * now part of the score info.  But we keep it here in case it may
+ * This now does nothing useful, but we keep it here in case it may
  * be needed in future.
  */
 static void gregoriotex_write_voice_info(FILE *f, gregorio_voice_info *voice_info)
@@ -1030,17 +1029,19 @@ static bool gregoriotex_is_last_of_line(gregorio_syllable *syllable)
         /* the next syllable start by an end of line */
         return true;
     }
-    current_element = (syllable->elements)[0];
-    while (current_element) {
-        if (current_element->type == GRE_END_OF_LINE) {
-            /* we return true only if the end of line is the last element */
-            if (!(current_element->next)) {
-                return true;
+    if (syllable->elements) {
+        current_element = (syllable->elements)[0];
+        while (current_element) {
+            if (current_element->type == GRE_END_OF_LINE) {
+                /* we return true only if the end of line is the last element */
+                if (!(current_element->next)) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
-                return false;
+                current_element = current_element->next;
             }
-        } else {
-            current_element = current_element->next;
         }
     }
     return false;
@@ -2283,9 +2284,10 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
     int alteration = 0;
     gregorio_glyph *glyph;
     gregorio_element *element;
-    if (!syllable) {
+    if (!syllable || !syllable->elements) {
         gregorio_message(_("called with a NULL argument"),
                 "gregoriotex_syllable_first_type", VERBOSITY_ERROR, 0);
+        return 0;
     }
     element = syllable->elements[0];
     while (element) {
@@ -3199,6 +3201,7 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
                             break;
                         }
                     }
+                    if (!t) break;
                 }
             }
         }
@@ -3219,12 +3222,14 @@ static __inline void scan_syllable_for_eol(
         const gregorio_syllable *const syllable,
         bool *eol_forces_custos, bool *eol_forces_custos_on) {
     const gregorio_element *element;
-    for (element = *(syllable->elements); element; element = element->next) {
-        if (element->type == GRE_END_OF_LINE) {
-            if (element->u.misc.unpitched.info.eol_forces_custos) {
-                *eol_forces_custos = true;
-                *eol_forces_custos_on =
-                        element->u.misc.unpitched.info.eol_forces_custos_on;
+    if (syllable->elements) {
+        for (element = *(syllable->elements); element; element = element->next) {
+            if (element->type == GRE_END_OF_LINE) {
+                if (element->u.misc.unpitched.info.eol_forces_custos) {
+                    *eol_forces_custos = true;
+                    *eol_forces_custos_on =
+                            element->u.misc.unpitched.info.eol_forces_custos_on;
+                }
             }
         }
     }
@@ -3409,148 +3414,150 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     }
     fprintf(f, "}{%%\n");
 
-    for (element = *syllable->elements; element;
-            element = element->next) {
-        if (element->nabc_lines && element->nabc) {
-            size_t i;
-            for (i = 0; i < element->nabc_lines; i++) {
-                if (element->nabc[i]) {
-                    fprintf(f, "\\GreNABCNeumes{%d}{%s}%%\n", (int)(i+1),
-                            element->nabc[i]);
+    if (syllable->elements) {
+        for (element = *syllable->elements; element;
+                element = element->next) {
+            if (element->nabc_lines && element->nabc) {
+                size_t i;
+                for (i = 0; i < element->nabc_lines; i++) {
+                    if (element->nabc[i]) {
+                        fprintf(f, "\\GreNABCNeumes{%d}{%s}%%\n", (int)(i+1),
+                                element->nabc[i]);
+                    }
                 }
             }
-        }
-        switch (element->type) {
-        case GRE_SPACE:
-            switch (element->u.misc.unpitched.info.space) {
-            case SP_ZERO_WIDTH:
-                fprintf(f, "\\GreEndOfElement{3}{1}%%\n");
+            switch (element->type) {
+            case GRE_SPACE:
+                switch (element->u.misc.unpitched.info.space) {
+                case SP_ZERO_WIDTH:
+                    fprintf(f, "\\GreEndOfElement{3}{1}%%\n");
+                    break;
+                case SP_LARGER_SPACE:
+                    fprintf(f, "\\GreEndOfElement{1}{0}%%\n");
+                    break;
+                case SP_GLYPH_SPACE:
+                    fprintf(f, "\\GreEndOfElement{2}{0}%%\n");
+                    break;
+                case SP_NEUMATIC_CUT:
+                    fprintf(f, "\\GreEndOfElement{0}{0}%%\n");
+                    break;
+                case SP_AD_HOC_SPACE:
+                    fprintf(f, "\\GreAdHocSpaceEndOfElement{%s}{0}%%\n",
+                            element->u.misc.unpitched.info.ad_hoc_space_factor);
+                    break;
+                case SP_GLYPH_SPACE_NB:
+                    fprintf(f, "\\GreEndOfElement{2}{1}%%\n");
+                    break;
+                case SP_LARGER_SPACE_NB:
+                    fprintf(f, "\\GreEndOfElement{1}{1}%%\n");
+                    break;
+                case SP_NEUMATIC_CUT_NB:
+                    fprintf(f, "\\GreEndOfElement{0}{1}%%\n");
+                    break;
+                case SP_AD_HOC_SPACE_NB:
+                    fprintf(f, "\\GreAdHocSpaceEndOfElement{%s}{1}%%\n",
+                            element->u.misc.unpitched.info.ad_hoc_space_factor);
+                    break;
+                default:
+                    gregorio_message(
+                            _("encountered an unexpected element-level space"),
+                            "write_syllable", VERBOSITY_ERROR, 0);
+                    break;
+                }
                 break;
-            case SP_LARGER_SPACE:
-                fprintf(f, "\\GreEndOfElement{1}{0}%%\n");
+
+            case GRE_TEXVERB_ELEMENT:
+                if (element->texverb) {
+                    fprintf(f, "%% verbatim text at element level:\n%s%%\n"
+                            "%% end of verbatim text\n", element->texverb);
+                }
                 break;
-            case SP_GLYPH_SPACE:
-                fprintf(f, "\\GreEndOfElement{2}{0}%%\n");
+
+            case GRE_NLBA:
+                if (element->u.misc.unpitched.info.nlba == NLBA_BEGINNING) {
+                    fprintf(f, "\\GreBeginNLBArea{0}{0}%%\n");
+                } else {
+                    fprintf(f, "\\GreEndNLBArea{%d}{0}%%\n",
+                            next_is_bar(syllable, element)? 3 : 0);
+                }
                 break;
-            case SP_NEUMATIC_CUT:
-                fprintf(f, "\\GreEndOfElement{0}{0}%%\n");
+
+            case GRE_ALT:
+                if (element->texverb) {
+                    fprintf(f, "\\GreSetTextAboveLines{%s}%%\n", element->texverb);
+                }
                 break;
-            case SP_AD_HOC_SPACE:
-                fprintf(f, "\\GreAdHocSpaceEndOfElement{%s}{0}%%\n",
-                        element->u.misc.unpitched.info.ad_hoc_space_factor);
+
+            case GRE_CLEF:
+                /* We don't print clef changes at the end of a line */
+                if (first_of_disc != 1) {
+                    /* the third argument is 0 or 1 according to the need
+                     * for a space before the clef */
+                    fprintf(f, "\\GreChangeClef{%c}{%d}{%c}{%d}{%c}{%d}{%d}%%\n",
+                            gregorio_clef_to_char(element->u.misc.clef.clef),
+                            element->u.misc.clef.line,
+                            (element->previous && element->previous->type
+                             == GRE_BAR)? '0' : '1',
+                            clef_flat_height(element->u.misc.clef.clef,
+                                    element->u.misc.clef.line,
+                                    element->u.misc.clef.flatted),
+                            gregorio_clef_to_char(
+                                    element->u.misc.clef.secondary_clef),
+                            element->u.misc.clef.secondary_line,
+                            clef_flat_height(element->u.misc.clef.secondary_clef,
+                                    element->u.misc.clef.secondary_line,
+                                    element->u.misc.clef.secondary_flatted));
+                }
                 break;
-            case SP_GLYPH_SPACE_NB:
-                fprintf(f, "\\GreEndOfElement{2}{1}%%\n");
+
+            case GRE_CUSTOS:
+                if (first_of_disc != 1) {
+                    /*
+                     * We don't print custos before a bar at the end of a line 
+                     */
+                    /* we also print an unbreakable larger space before the custo */
+                    fprintf(f, "\\GreEndOfElement{1}{1}%%\n\\GreCustos{%d}"
+                            "\\GreNextCustos{%d}%%\n",
+                            pitch_value(element->u.misc.pitched.pitch),
+                            pitch_value(gregorio_determine_next_pitch(syllable,
+                                    element, NULL)));
+                }
                 break;
-            case SP_LARGER_SPACE_NB:
-                fprintf(f, "\\GreEndOfElement{1}{1}%%\n");
+
+            case GRE_BAR:
+                write_bar(f, element->u.misc.unpitched.info.bar,
+                        element->u.misc.unpitched.special_sign,
+                        element->next && !is_manual_custos(element->next),
+                        !element->previous && syllable->text);
                 break;
-            case SP_NEUMATIC_CUT_NB:
-                fprintf(f, "\\GreEndOfElement{0}{1}%%\n");
+
+            case GRE_END_OF_LINE:
+                if (!element->next) {
+                    anticipate_event(f, syllable);
+                    event_anticipated = true;
+                }
+                /* here we suppose we don't have two linebreaks in the same
+                 * syllable */
+                if (element->u.misc.unpitched.info.eol_ragged) {
+                    fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
+                } else {
+                    fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
+                }
                 break;
-            case SP_AD_HOC_SPACE_NB:
-                fprintf(f, "\\GreAdHocSpaceEndOfElement{%s}{1}%%\n",
-                        element->u.misc.unpitched.info.ad_hoc_space_factor);
-                break;
+
             default:
-                gregorio_message(
-                        _("encountered an unexpected element-level space"),
-                        "write_syllable", VERBOSITY_ERROR, 0);
+                /* there current_element->type is GRE_ELEMENT */
+                assert(element->type == GRE_ELEMENT);
+                write_element(f, syllable, element, status, score);
+                if (element->next && (element->next->type == GRE_ELEMENT
+                                || (element->next->next
+                                        && element->next->type == GRE_ALT
+                                        && element->next->next->type ==
+                                        GRE_ELEMENT))) {
+                    fprintf(f, "\\GreEndOfElement{0}{0}%%\n");
+                }
                 break;
             }
-            break;
-
-        case GRE_TEXVERB_ELEMENT:
-            if (element->texverb) {
-                fprintf(f, "%% verbatim text at element level:\n%s%%\n"
-                        "%% end of verbatim text\n", element->texverb);
-            }
-            break;
-
-        case GRE_NLBA:
-            if (element->u.misc.unpitched.info.nlba == NLBA_BEGINNING) {
-                fprintf(f, "\\GreBeginNLBArea{0}{0}%%\n");
-            } else {
-                fprintf(f, "\\GreEndNLBArea{%d}{0}%%\n",
-                        next_is_bar(syllable, element)? 3 : 0);
-            }
-            break;
-
-        case GRE_ALT:
-            if (element->texverb) {
-                fprintf(f, "\\GreSetTextAboveLines{%s}%%\n", element->texverb);
-            }
-            break;
-
-        case GRE_CLEF:
-            /* We don't print clef changes at the end of a line */
-            if (first_of_disc != 1) {
-                /* the third argument is 0 or 1 according to the need
-                 * for a space before the clef */
-                fprintf(f, "\\GreChangeClef{%c}{%d}{%c}{%d}{%c}{%d}{%d}%%\n",
-                        gregorio_clef_to_char(element->u.misc.clef.clef),
-                        element->u.misc.clef.line,
-                        (element->previous && element->previous->type
-                         == GRE_BAR)? '0' : '1',
-                        clef_flat_height(element->u.misc.clef.clef,
-                                element->u.misc.clef.line,
-                                element->u.misc.clef.flatted),
-                        gregorio_clef_to_char(
-                                element->u.misc.clef.secondary_clef),
-                        element->u.misc.clef.secondary_line,
-                        clef_flat_height(element->u.misc.clef.secondary_clef,
-                                element->u.misc.clef.secondary_line,
-                                element->u.misc.clef.secondary_flatted));
-            }
-            break;
-
-        case GRE_CUSTOS:
-            if (first_of_disc != 1) {
-                /*
-                 * We don't print custos before a bar at the end of a line 
-                 */
-                /* we also print an unbreakable larger space before the custo */
-                fprintf(f, "\\GreEndOfElement{1}{1}%%\n\\GreCustos{%d}"
-                        "\\GreNextCustos{%d}%%\n",
-                        pitch_value(element->u.misc.pitched.pitch),
-                        pitch_value(gregorio_determine_next_pitch(syllable,
-                                element, NULL)));
-            }
-            break;
-
-        case GRE_BAR:
-            write_bar(f, element->u.misc.unpitched.info.bar,
-                    element->u.misc.unpitched.special_sign,
-                    element->next && !is_manual_custos(element->next),
-                    !element->previous && syllable->text);
-            break;
-
-        case GRE_END_OF_LINE:
-            if (!element->next) {
-                anticipate_event(f, syllable);
-                event_anticipated = true;
-            }
-            /* here we suppose we don't have two linebreaks in the same
-             * syllable */
-            if (element->u.misc.unpitched.info.eol_ragged) {
-                fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
-            } else {
-                fprintf(f, "%%\n%%\n\\GreNewLine %%\n%%\n%%\n");
-            }
-            break;
-
-        default:
-            /* there current_element->type is GRE_ELEMENT */
-            assert(element->type == GRE_ELEMENT);
-            write_element(f, syllable, element, status, score);
-            if (element->next && (element->next->type == GRE_ELEMENT
-                            || (element->next->next
-                                    && element->next->type == GRE_ALT
-                                    && element->next->next->type ==
-                                    GRE_ELEMENT))) {
-                fprintf(f, "\\GreEndOfElement{0}{0}%%\n");
-            }
-            break;
         }
     }
     if (!event_anticipated) {
@@ -3796,14 +3803,10 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     }
 
     if (score->initial_style != INITIAL_NOT_SPECIFIED) { /* DEPRECATED by 4.1 */
-        fprintf(f, "\\GreSetInitialStyle{%d}%%\n", score->initial_style);
+        fprintf(f, "\\GreSetInitialStyle{%d}%%\n", score->initial_style); /* DEPRECATED by 4.1 */
     }
 
     fprintf(f, "\\GreScoreOpening{%%\n"); /* GreScoreOpening#1 */
-    if (score->manuscript_reference) {
-        fprintf(f, "\\GreScoreReference{%s}%%\n",
-                score->manuscript_reference);
-    }
     if (score->first_voice_info) {
         gregoriotex_write_voice_info(f, score->first_voice_info);
     }
@@ -3817,6 +3820,7 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
             gregorio_clef_to_char(clef.secondary_clef), clef.secondary_line,
             clef_flat_height(clef.secondary_clef, clef.secondary_line,
                     clef.secondary_flatted));
+    fprintf(f, "}{%%\n"); /* GreScoreOpening#3 */
     current_syllable = score->first_syllable;
     if (current_syllable) {
         write_syllable(f, current_syllable, 0, &status, score,
