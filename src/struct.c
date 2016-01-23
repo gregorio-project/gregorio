@@ -1028,14 +1028,8 @@ gregorio_character *gregorio_clone_characters(
     gregorio_character *target = NULL, *current = NULL;
 
     for (; source; source = source->next_character) {
-        gregorio_character *character =
-                (gregorio_character *) calloc(1, sizeof(gregorio_character));
-        if (!character) {
-            gregorio_message(_("error in memory allocation"),
-                             "gregorio_clone_characters", VERBOSITY_FATAL, 0);
-            return NULL;
-        }
-
+        gregorio_character *character = (gregorio_character *)
+                gregorio_calloc(1, sizeof(gregorio_character));
         *character = *source;
         character->next_character = NULL;
 

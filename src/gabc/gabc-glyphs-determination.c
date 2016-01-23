@@ -601,7 +601,7 @@ static gregorio_note *next_non_texverb_note(gregorio_note *first_note,
         }
     }
 
-    if (first_note->type == GRE_TEXVERB_GLYPH) {
+    if (first_note && first_note->type == GRE_TEXVERB_GLYPH) {
         gregorio_message(_("Unexpected texverb at end of iteration"),
                 "next_non_texverb_note", VERBOSITY_ERROR, 0);
     }

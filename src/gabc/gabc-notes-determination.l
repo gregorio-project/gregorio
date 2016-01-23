@@ -329,6 +329,7 @@ static __inline gregorio_clef letter_to_clef(char letter)
 static __inline void slur_assert(char *fn, bool test) {
     if (!test) {
         gregorio_message(_("invalid slur text"), fn, VERBOSITY_FATAL, 0);
+        exit(1);
     }
 }
 
