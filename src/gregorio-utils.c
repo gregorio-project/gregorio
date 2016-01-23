@@ -569,7 +569,6 @@ int main(int argc, char **argv)
         if (point_and_click) {
             fprintf(stderr,
                     "warning: disabling point-and-click since reading from stdin\n");
-            point_and_click = false;
         }
     } else {
         input_file = fopen(input_file_name, "r");

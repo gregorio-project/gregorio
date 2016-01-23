@@ -280,6 +280,7 @@ static void style_pop(det_style **first_style, det_style *element)
         return;
     }
     if (element->previous_style) {
+        assert(*first_style != element);
         element->previous_style->next_style = element->next_style;
         if (element->next_style) {
             element->next_style->previous_style = element->previous_style;
@@ -348,7 +349,7 @@ static __inline void verb_or_sp(const gregorio_character **ptr_character,
         }
     }
     if (i == 0) {
-        ptr_character = &current_character;
+        *ptr_character = current_character;
         return;
     }
     text = (grewchar *) gregorio_malloc((i + 1) * sizeof(grewchar));
@@ -433,7 +434,9 @@ void gregorio_write_text(const gregorio_write_text_phase phase,
             }
         }
 
-        current_character = current_character->next_character;
+        if (current_character) {
+            current_character = current_character->next_character;
+        }
     }
 }
 
@@ -521,7 +524,8 @@ void gregorio_write_first_letter_alignment_text(
                 } /* else fall through */
             default:
                 /* pop the style from the stack */
-                assert(first_style->style == current_character->cos.s.style);
+                assert(first_style && first_style->style
+                        == current_character->cos.s.style);
                 style_pop(&first_style, first_style);
                 end(f, current_character->cos.s.style);
             }

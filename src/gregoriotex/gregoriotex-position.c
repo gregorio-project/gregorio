@@ -95,6 +95,7 @@ OFFSET_CASE(Natural);
 static __inline const char *note_before_last_note_case_ignoring_deminutus(
         const gregorio_note *const current_note)
 {
+    assert(current_note->next);
     if ((current_note->u.note.pitch - current_note->next->u.note.pitch) == 1
             || (current_note->u.note.pitch -
                     current_note->next->u.note.pitch) == -1) {
