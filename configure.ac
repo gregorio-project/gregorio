@@ -28,7 +28,7 @@ AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([-Wall -Wno-portability subdir-objects foreign dist-bzip2 no-dist-gzip])
 
-AC_PROG_CC_C89
+AC_PROG_CC
 dnl AM_PROG_CC_C_O is deprecated since Automake 1.14, to be removed in the future
 AM_PROG_CC_C_O
 AC_PROG_CPP
@@ -43,9 +43,10 @@ AX_CHECK_COMPILE_FLAG([-pedantic], [CFLAGS+=" -pedantic"])
 dnl AX_CHECK_COMPILE_FLAG([-pedantic-errors], [CFLAGS+=" -pedantic-errors"])
 AX_CHECK_COMPILE_FLAG([-fstack-protector-strong], [CFLAGS+=" -fstack-protector-strong"])
 AX_CHECK_COMPILE_FLAG([-fPIE], [CFLAGS+=" -fPIE"])
-AX_CHECK_COMPILE_FLAG([-Wformat], [CFLAGS+=" -Wformat"])
+AX_CHECK_COMPILE_FLAG([-Wformat=2], [CFLAGS+=" -Wformat=2"])
 AX_CHECK_COMPILE_FLAG([-Werror=format-security], [CFLAGS+=" -Werror=format-security"])
 AX_CHECK_COMPILE_FLAG([-Wstrict-prototypes], [CFLAGS+=" -Wstrict-prototypes"])
+AX_CHECK_COMPILE_FLAG([-Wdeclaration-after-statement], [CFLAGS+=" -Wdeclaration-after-statement"])
 AX_CHECK_COMPILE_FLAG([-Wall], [CFLAGS+=" -Wall"])
 AX_CHECK_COMPILE_FLAG([-Wextra], [CFLAGS+=" -Wextra"])
 CPPFLAGS+=" -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 "
