@@ -106,7 +106,7 @@
 %% marcro to define the clef that will appear at the beginning of the lines
 % the first argument is the type : f or c, and the second is the height
 % the third argument is whether we must type a space after or not (0 if not, 1 if yes)
-% if the fourth argument is a, it means that we must not put a flat after the key, otherwise it's the height of the flat
+% if the fourth argument is 3, it means that we must not put a flat after the key, otherwise it's the height of the flat
 \def\GreSetLinesClef#1#2#3#4#5#6#7{%
   \gre@localleftbox{%
     \gre@skip@temp@four = \gre@dimen@additionalleftspace\relax%
@@ -227,7 +227,7 @@
 }%
 
 % macro that writes the initial key, and sets the next keys to the same value
-% if #3 is a, it means that we must not put a flat after the key, otherwise it's the height
+% if #3 is 3, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
 \def\GreSetInitialClef#1#2#3#4#5#6{%
   \gre@save@clef{#1}{#2}{#3}{#4}{#5}{#6}%
@@ -249,7 +249,7 @@
 % macro called when the key changes
 % #1 and #2 are the type and line of the clef
 % #3 is 1 or 0 according to the need of a space before the clef. Useful for clefs after bars for example
-% if #4 is a, it means that we must not put a flat after the key, otherwise it's the height
+% if #4 is 3, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
 \def\GreChangeClef#1#2#3#4#5#6#7{%
   % it makes no sense to change the clef when there is no clef...
@@ -1870,7 +1870,7 @@
 % #1 is the height
 % #2 is the char of the alteration
 % #3 is the char of the alteration hole
-% #4 is 1 in the case of a flat for a key change, 0 otherwise
+% #4 is 1 if the alteration is the flat in a clef
 % #5 are the signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)
 % #6 are the signs to typeset after the glyph (almost all signs)
 % #7 is the line:char:column for a textedit link
@@ -1907,13 +1907,13 @@
       \gre@hskip\gre@skip@temp@four %
     \fi %
     \GreNoBreak %
+    \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \fi %
-  \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax %
 }%
 
-% This macro typesets a flat on the height provided by #1. #2 is not used yet, but it
-% will determine if the flat has zero width or not.
+% This macro typesets a flat on the height provided by #1.
+% #2 is 1 if the flat is part of a clef.
 
 \def\GreFlat#1#2#3#4#5{%
   \gre@alteration{#1}{\gre@fontchar@flat}{\gre@fontchar@flathole}{#2}{#3}{#4}{#5}%
