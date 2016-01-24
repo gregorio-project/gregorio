@@ -381,8 +381,8 @@ Macro to typeset a flat.
 
 \begin{argtable}
   \#1 & integer & Height number of the flat.\\
-  \#2 & \texttt{0} & No flat for a key change.\\
-  & \texttt{1} & Indicates the flat for a key change.\\
+  \#2 & \texttt{0} & The flat is not part of the clef.\\
+  & \texttt{1} & The flat is part of the clef.\\
   \#3 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
   \#4 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
   \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
@@ -587,8 +587,8 @@ Macro to typeset a natural.
 
 \begin{argtable}
   \#1 & integer & Height number of the natural.\\
-  \#2 & \texttt{0} & No flat for a key change.\\
-  & \texttt{1} & Indicates the flat for a key change.\\
+  \#2 & \texttt{0} & The natural is not part of the clef.\\
+  & \texttt{1} & The natural is part of the clef (doesn't happen).\\
   \#3 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
   \#4 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
   \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
@@ -866,8 +866,8 @@ Macro to typeset a sharp.
 
 \begin{argtable}
   \#1 & integer & Height number of the sharp.\\
-  \#2 & \texttt{0} & No flat for a key change.\\
-  & \texttt{1} & Indicates the flat for a key change.\\
+  \#2 & \texttt{0} & The sharp is not part of the clef.\\
+  & \texttt{1} & The sharp is part of the clef (doesn't happen).\\
   \#3 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
   \#4 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
   \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
