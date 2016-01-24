@@ -186,15 +186,17 @@ typedef enum queuetype {
     Q_OPEN, Q_SHORT, Q_LONG
 } queuetype;
 
-static queuetype queuetype_of(const gregorio_note *const note)
+static queuetype adjusted_queuetype_of(const gregorio_note *const note,
+        const signed char adjustment, const bool is_first_note)
 {
-    switch (note->u.note.pitch - LOWEST_PITCH) {
+    switch (note->u.note.pitch + adjustment - LOWEST_PITCH) {
     case 0:
         return Q_OPEN;
     case 2:
         return note->supposed_low_ledger_line? Q_SHORT : Q_OPEN;
     case 3:
-        return note->supposed_low_ledger_line? Q_LONG : Q_SHORT;
+        return note->supposed_low_ledger_line? Q_LONG
+                : is_first_note? Q_OPEN : Q_SHORT;
     case 1:
     case 5:
     case 7:
@@ -205,6 +207,10 @@ static queuetype queuetype_of(const gregorio_note *const note)
     default:
         return Q_SHORT;
     }
+}
+
+static queuetype queuetype_of(const gregorio_note *const note) {
+    return adjusted_queuetype_of(note, 0, !note->previous);
 }
 
 static grestyle_style gregoriotex_ignore_style = ST_NO_STYLE;
@@ -490,7 +496,8 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
     if (glyph->u.notes.fuse_to_next_glyph < 0) {
         /* queue size depends on the following note if fused down */
         if (glyph->u.notes.fuse_to_next_glyph == -1) {
-            switch (queuetype_of(note)) {
+            switch (adjusted_queuetype_of(note,
+                        glyph->u.notes.fuse_to_next_glyph, false)) {
             case Q_OPEN:
                 name = openqueue_shape;
                 break;
