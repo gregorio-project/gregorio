@@ -144,6 +144,7 @@ SHAPE(TorculusResupinus);
 SHAPE(TorculusResupinusQuilisma);
 SHAPE(Virga);
 SHAPE(VirgaLongqueue);
+SHAPE(VirgaOpenqueue);
 SHAPE(VirgaReversa);
 SHAPE(VirgaReversaAscendens);
 SHAPE(VirgaReversaDescendens);
@@ -151,6 +152,8 @@ SHAPE(VirgaReversaLongqueue);
 SHAPE(VirgaReversaLongqueueAscendens);
 SHAPE(VirgaReversaLongqueueDescendens);
 SHAPE(VirgaReversaOpenqueue);
+SHAPE(VirgaReversaOpenqueueAscendens);
+SHAPE(VirgaReversaOpenqueueDescendens);
 SHAPE(VirgaStrata);
 
 #define LIQ(NAME) static const char *const LIQ_##NAME = #NAME
@@ -183,7 +186,7 @@ static __inline int bool_to_int(bool value) {
 }
 
 typedef enum queuetype {
-    Q_OPEN, Q_SHORT, Q_LONG
+    Q_OPENSHORT, Q_SHORT, Q_OPENLONG, Q_LONG
 } queuetype;
 
 static queuetype adjusted_queuetype_of(const gregorio_note *const note,
@@ -191,13 +194,14 @@ static queuetype adjusted_queuetype_of(const gregorio_note *const note,
 {
     switch (note->u.note.pitch + adjustment - LOWEST_PITCH) {
     case 0:
-        return Q_OPEN;
+        return Q_OPENSHORT;
+    case 1:
+        return Q_OPENLONG;
     case 2:
-        return note->supposed_low_ledger_line? Q_SHORT : Q_OPEN;
+        return note->supposed_low_ledger_line? Q_SHORT : Q_OPENSHORT;
     case 3:
         return note->supposed_low_ledger_line? Q_LONG
-                : is_first_note? Q_OPEN : Q_SHORT;
-    case 1:
+                : is_first_note? Q_OPENLONG : Q_SHORT;
     case 5:
     case 7:
     case 9:
@@ -498,10 +502,11 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
         if (glyph->u.notes.fuse_to_next_glyph == -1) {
             switch (adjusted_queuetype_of(note,
                         glyph->u.notes.fuse_to_next_glyph, false)) {
-            case Q_OPEN:
+            case Q_OPENSHORT:
                 name = openqueue_shape;
                 break;
             case Q_SHORT:
+            case Q_OPENLONG:
                 name = base_shape;
                 break;
             case Q_LONG:
@@ -513,7 +518,12 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
         }
     } else {
         switch (queuetype_of(note)) {
-        case Q_OPEN:
+        case Q_OPENLONG:
+            if (!glyph->u.notes.fuse_to_next_glyph) {
+                name = openqueue_shape;
+            }
+            /* else fall through to next case */
+        case Q_OPENSHORT:
         case Q_SHORT:
             name = base_shape;
             break;
@@ -564,9 +574,11 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         return SHAPE_LineaPunctumCavum;
     case S_VIRGA:
         switch (queuetype_of(note)) {
-        case Q_OPEN:
+        case Q_OPENSHORT:
         case Q_SHORT:
             return SHAPE_Virga;
+        case Q_OPENLONG:
+            return SHAPE_VirgaOpenqueue;
         case Q_LONG:
             return SHAPE_VirgaLongqueue;
         }
@@ -574,9 +586,12 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
             switch (queuetype_of(note)) {
-            case Q_OPEN:
+            case Q_OPENSHORT:
             case Q_SHORT:
                 name = SHAPE_VirgaReversaAscendens;
+                break;
+            case Q_OPENLONG:
+                name = SHAPE_VirgaReversaOpenqueueAscendens;
                 break;
             case Q_LONG:
                 name = SHAPE_VirgaReversaLongqueueAscendens;
@@ -591,9 +606,11 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
             return name;
         case L_AUCTUS_DESCENDENS:
             switch (queuetype_of(note)) {
-            case Q_OPEN:
+            case Q_OPENSHORT:
             case Q_SHORT:
                 return SHAPE_VirgaReversaDescendens;
+            case Q_OPENLONG:
+                return SHAPE_VirgaReversaOpenqueueDescendens;
             case Q_LONG:
                 return SHAPE_VirgaReversaLongqueueDescendens;
             }
@@ -626,8 +643,9 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
     case S_STROPHA_AUCTA:
         *type = AT_STROPHA;
         switch (queuetype_of(note)) {
-        case Q_OPEN:
+        case Q_OPENSHORT:
         case Q_SHORT:
+        case Q_OPENLONG:
             return SHAPE_StrophaAucta;
         case Q_LONG:
             return SHAPE_StrophaAuctaLongtail;
@@ -693,8 +711,9 @@ static __inline const char *porrectus_shape(const gregorio_glyph *const glyph,
     const gregorio_note *const second_note = second_note_of(glyph);
     if (first_note->u.note.pitch - second_note->u.note.pitch == 1) {
         switch (queuetype_of(second_note)) {
-        case Q_OPEN:
+        case Q_OPENSHORT:
         case Q_SHORT:
+        case Q_OPENLONG:
             return base_shape;
         case Q_LONG:
             return longqueue_shape;
@@ -708,9 +727,10 @@ static __inline const char *quadratum_shape(const gregorio_glyph *const glyph,
         const char *openqueue_shape) {
     if (!is_tail_liquescentia(glyph->u.notes.liquescentia)) {
         switch (queuetype_of(first_note_of(glyph))) {
-        case Q_OPEN:
+        case Q_OPENSHORT:
             return openqueue_shape;
         case Q_SHORT:
+        case Q_OPENLONG:
             return base_shape;
         case Q_LONG:
             return longqueue_shape;
@@ -833,10 +853,11 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         case S_ORISCUS_SCAPUS:
             *gtype = T_FLEXUS_ORISCUS_SCAPUS;
             switch (queuetype_of(second_note_of(glyph))) {
-            case Q_OPEN:
+            case Q_OPENSHORT:
                 shape = SHAPE_FlexusOriscusScapusOpenqueue;
                 break;
             case Q_SHORT:
+            case Q_OPENLONG:
                 shape = SHAPE_FlexusOriscusScapus;
                 break;
             case Q_LONG:
@@ -849,13 +870,14 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         default:
             *gtype = glyph->u.notes.fuse_to_next_glyph? T_PORRECTUS : T_FLEXUS;
             switch (queuetype_of(second_note_of(glyph))) {
-            case Q_OPEN:
+            case Q_OPENSHORT:
                 if (!glyph->u.notes.fuse_to_next_glyph) {
                     shape = SHAPE_FlexusOpenqueue;
                     break;
                 }
                 /* else fall through */
             case Q_SHORT:
+            case Q_OPENLONG:
                 shape = SHAPE_Flexus;
                 break;
             case Q_LONG:
@@ -942,8 +964,9 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
             }
             *gtype = T_ANCUS;
             switch (queuetype_of(second_note)) {
-            case Q_OPEN:
+            case Q_OPENSHORT:
             case Q_SHORT:
+            case Q_OPENLONG:
                 shape = SHAPE_Ancus;
                 break;
             case Q_LONG:
@@ -967,8 +990,9 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         *type = AT_ONE_NOTE;
         *gtype = T_SALICUS;
         switch (queuetype_of(second_note_of(glyph))) {
-        case Q_OPEN:
+        case Q_OPENSHORT:
         case Q_SHORT:
+        case Q_OPENLONG:
             shape = SHAPE_Salicus;
             break;
         case Q_LONG:
