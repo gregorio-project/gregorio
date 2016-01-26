@@ -3110,8 +3110,10 @@ static void write_syllable_text(FILE *f, const char *const syllable_type,
 static void write_first_syllable_text(FILE *f, const char *const syllable_type, 
         const gregorio_character *const text, bool end_of_word)
 {
-    if (syllable_type == NULL || text == NULL) {
-        fprintf(f, "}{}{\\GreSetNoFirstSyllableText}");
+    if (syllable_type == NULL) {
+        fprintf(f, "}{\\GreSyllable{\\GreSetNoFirstSyllableText}");
+    } else if (text == NULL) {
+        fprintf(f, "}{%s}{\\GreSetNoFirstSyllableText}", syllable_type);
     } else {
         gregorio_character *text_with_initial = gregorio_clone_characters(text),
                 *text_without_initial = gregorio_clone_characters(text);
