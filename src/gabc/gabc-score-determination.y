@@ -407,10 +407,26 @@ static void rebuild_characters(void)
     if ((!score->first_syllable && current_character)
             || (current_syllable && !current_syllable->previous_syllable
             && !current_syllable->text && current_character)) {
+        gregorio_character *ch;
+
         /* leave the first syllable text untouched at this time */
         gregorio_go_to_first_character_c(&current_character);
 
         started_first_word = true;
+
+        /* check first syllable for elision at the beginning */
+        for (ch = current_character; ch; ch = ch->next_character) {
+            if (ch->is_character) {
+                break;
+            } else {
+                if (ch->cos.s.style == ST_ELISION) {
+                    gregorio_message(
+                            _("score initial may not be in an elision "),
+                            "rebuild_characters", VERBOSITY_ERROR, 0);
+                    break;
+                }
+            }
+        }
     } else {
         gregorio_rebuild_characters(&current_character, center_is_determined,
                 false);
@@ -427,7 +443,55 @@ static void rebuild_characters(void)
 
 static void close_syllable(YYLTYPE *loc)
 {
-    int i;
+    int i = 0;
+    gregorio_character *ch;
+
+    /* make sure any elisions that are opened are closed within the syllable */
+    for (ch = first_text_character; ch; ch = ch->next_character) {
+        if (!ch->is_character) {
+            switch (ch->cos.s.style) {
+            case ST_ELISION:
+                switch (ch->cos.s.type) {
+                case ST_T_BEGIN:
+                    ++i;
+                    if (i > 1) {
+                        gregorio_message(_("elisions may not be nested"),
+                                "close_syllable", VERBOSITY_ERROR, 0);
+                    }
+                    break;
+
+                case ST_T_END:
+                    --i;
+                    if (i < 0) {
+                        gregorio_message(_("elision end with no beginning"),
+                                "close_syllable", VERBOSITY_ERROR, 0);
+                    }
+                    break;
+
+                case ST_T_NOTHING:
+                    /* nothing */
+                    break;
+                }
+                break;
+
+            case ST_FORCED_CENTER:
+                if (i > 0) {
+                    gregorio_message(
+                            _("forced center may not be within an elision"),
+                            "close_syllable", VERBOSITY_ERROR, 0);
+                }
+                break;
+
+            default:
+                break;
+            }
+        }
+    }
+    if (i > 0) {
+        gregorio_message(_("elision beginning with no end"), "close_syllable",
+                VERBOSITY_ERROR, 0);
+    }
+
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
             first_text_character, first_translation_character, position,
             abovelinestext, translation_type, no_linebreak_area, euouae, loc,
@@ -715,18 +779,19 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token VOICE_CUT VOICE_CHANGE END_OF_DEFINITIONS END_OF_FILE
 %token COLON SEMICOLON SPACE CHARACTERS NOTES HYPHEN ATTRIBUTE
 %token OPENING_BRACKET CLOSING_BRACKET CLOSING_BRACKET_WITH_SPACE
-%token I_BEGINNING I_END
-%token TT_BEGINNING TT_END
-%token UL_BEGINNING UL_END
-%token C_BEGINNING C_END
-%token B_BEGINNING B_END
-%token SC_BEGINNING SC_END
-%token SP_BEGINNING SP_END
-%token VERB_BEGINNING VERB VERB_END
-%token CENTER_BEGINNING CENTER_END
-%token TRANSLATION_BEGINNING TRANSLATION_END TRANSLATION_CENTER_END
+%token I_BEGIN I_END
+%token TT_BEGIN TT_END
+%token UL_BEGIN UL_END
+%token C_BEGIN C_END
+%token B_BEGIN B_END
+%token SC_BEGIN SC_END
+%token SP_BEGIN SP_END
+%token VERB_BEGIN VERB VERB_END
+%token CENTER_BEGIN CENTER_END
+%token ELISION_BEGIN ELISION_END
+%token TRANSLATION_BEGIN TRANSLATION_END TRANSLATION_CENTER_END
 %token ALT_BEGIN ALT_END
-%token BNLBA ENLBA
+%token NLBA_B NLBA_E
 %token EUOUAE_B EUOUAE_E
 %token NABC_CUT NABC_LINES
 
@@ -960,31 +1025,34 @@ closing_bracket_with_space:
     ;
 
 style_beginning:
-    I_BEGINNING {
+    I_BEGIN {
         gregorio_gabc_add_style(ST_ITALIC);
     }
-    | TT_BEGINNING {
+    | TT_BEGIN {
         gregorio_gabc_add_style(ST_TT);
     }
-    | UL_BEGINNING {
+    | UL_BEGIN {
         gregorio_gabc_add_style(ST_UNDERLINED);
     }
-    | C_BEGINNING {
+    | C_BEGIN {
         gregorio_gabc_add_style(ST_COLORED);
     }
-    | B_BEGINNING {
+    | B_BEGIN {
         gregorio_gabc_add_style(ST_BOLD);
     }
-    | SC_BEGINNING {
+    | SC_BEGIN {
         gregorio_gabc_add_style(ST_SMALL_CAPS);
     }
-    | VERB_BEGINNING {
+    | VERB_BEGIN {
         gregorio_gabc_add_style(ST_VERBATIM);
     }
-    | SP_BEGINNING {
+    | SP_BEGIN {
         gregorio_gabc_add_style(ST_SPECIAL_CHAR);
     }
-    | CENTER_BEGINNING {
+    | ELISION_BEGIN {
+        gregorio_gabc_add_style(ST_ELISION);
+    }
+    | CENTER_BEGIN {
         if (!center_is_determined) {
             gregorio_gabc_add_style(ST_FORCED_CENTER);
             center_is_determined=CENTER_HALF_DETERMINED;
@@ -1017,6 +1085,9 @@ style_end:
     | SP_END {
         gregorio_gabc_end_style(ST_SPECIAL_CHAR);
     }
+    | ELISION_END {
+        gregorio_gabc_end_style(ST_ELISION);
+    }
     | CENTER_END {
         if (center_is_determined==CENTER_HALF_DETERMINED) {
             gregorio_gabc_end_style(ST_FORCED_CENTER);
@@ -1035,10 +1106,10 @@ euouae:
     ;
 
 linebreak_area:
-    BNLBA {
+    NLBA_B {
         no_linebreak_area = NLBA_BEGINNING;
     }
-    | ENLBA {
+    | NLBA_E {
         no_linebreak_area = NLBA_END;
     }
     ;
@@ -1069,7 +1140,7 @@ text:
     ;
 
 translation_beginning:
-    TRANSLATION_BEGINNING {
+    TRANSLATION_BEGIN {
         start_translation(TR_NORMAL);
     }
     ;

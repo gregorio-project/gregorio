@@ -47,6 +47,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\grecommentary` now takes an optional argument which will add extra space between the commentary and the score for just the next score.
 - The custos can now be selectively enabled/disabled at forced line breaks by appending `+` (to enable) or `-` (to disable) after the `z` or `Z` (see [#800](https://github.com/gregorio-project/gregorio/issues/800)).
 - With thanks to an anonymous contributor, the shape of the MetaPost-drawn curly brace has been improved (see [#797](https://github.com/gregorio-project/gregorio/issues/797)).
+- Support for elisions, text between `<e>` and `</e>` in gabc, styled according to the `elision` style, which are excluded when determining where to position the text under its notes (see [#838](https://github.com/gregorio-project/gregorio/issues/838)).
 
 
 ### Deprecated

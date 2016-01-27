@@ -232,16 +232,16 @@ semicolon. */
 <score>- {
         return HYPHEN;
     }
+<score,style><nlba> {
+        return NLBA_B;
+    }
+<score,style><\/nlba> {
+        return NLBA_E;
+    }
 <score,style><i> {
         BEGIN(style);
         style_stack ++;
-        return I_BEGINNING;
-    }
-<score,style><nlba> {
-        return BNLBA;
-    }
-<score,style><\/nlba> {
-        return ENLBA;
+        return I_BEGIN;
     }
 <style><\/i> {
         style_stack --;
@@ -253,7 +253,7 @@ semicolon. */
 <score,style><tt> {
         BEGIN(style);
         style_stack ++;
-        return TT_BEGINNING;
+        return TT_BEGIN;
     }
 <style><\/tt> {
         style_stack --;
@@ -265,7 +265,7 @@ semicolon. */
 <score,style><ul> {
         BEGIN(style);
         style_stack ++;
-        return UL_BEGINNING;
+        return UL_BEGIN;
     }
 <style><\/ul> {
         style_stack --;
@@ -277,7 +277,7 @@ semicolon. */
 <score,style><c> {
         BEGIN(style);
         style_stack ++;
-        return C_BEGINNING;
+        return C_BEGIN;
     }
 <style><\/c> {
         style_stack --;
@@ -289,7 +289,7 @@ semicolon. */
 <score,style><b> {
         BEGIN(style);
         style_stack ++;
-        return B_BEGINNING;
+        return B_BEGIN;
     }
 <style><\/b> {
         style_stack --;
@@ -301,7 +301,7 @@ semicolon. */
 <score,style><sc> {
         BEGIN(style);
         style_stack ++;
-        return SC_BEGINNING;
+        return SC_BEGIN;
     }
 <style><\/sc> {
         style_stack --;
@@ -310,10 +310,22 @@ semicolon. */
         }
         return SC_END;
     }
+<score,style><e> {
+        BEGIN(style);
+        style_stack ++;
+        return ELISION_BEGIN;
+    }
+<style><\/e> {
+        style_stack --;
+        if (style_stack == 0) {
+            BEGIN(score);
+        }
+        return ELISION_END;
+    }
 <score,style><sp> {
         BEGIN(style);
         style_stack ++;
-        return SP_BEGINNING;
+        return SP_BEGIN;
     }
 <style><\/sp> {
         style_stack --;
@@ -338,7 +350,7 @@ semicolon. */
     }
 <style,score><v> {
         BEGIN(verb);
-        return VERB_BEGINNING;
+        return VERB_BEGIN;
     }
 <verb><\/v> {
         if (style_stack == 0) {
@@ -359,7 +371,7 @@ semicolon. */
         return CHARACTERS;
     }
 <score,style>\{ {
-        return CENTER_BEGINNING;
+        return CENTER_BEGIN;
     }
 <score,style>\} {
         return CENTER_END;
@@ -387,7 +399,7 @@ semicolon. */
         return TRANSLATION_CENTER_END;
     }
 <score>\[ {
-        return TRANSLATION_BEGINNING;
+        return TRANSLATION_BEGIN;
     }
 <score>\] {
         return TRANSLATION_END;
