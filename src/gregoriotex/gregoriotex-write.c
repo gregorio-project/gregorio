@@ -1087,6 +1087,9 @@ static void gtex_write_begin(FILE *f, grestyle_style style)
     case ST_COLORED:
         fprintf(f, "\\GreColored{");
         break;
+    case ST_ELISION:
+        fprintf(f, "\\GreElision{");
+        break;
     case ST_FIRST_WORD:
         fprintf(f, "\\GreFirstWord{");
         break;
