@@ -557,6 +557,8 @@ STEM_LIQ_FALLBACKS = {
     L_INITIO_DEBILIS_DEMINUTUS: L_DEMINUTUS,
     L_INITIO_DEBILIS_ASCENDENS: L_ASCENDENS,
     L_INITIO_DEBILIS_DESCENDENS: L_DESCENDENS,
+    L_UP: L_NOTHING,
+    L_DOWN: L_NOTHING,
 }
 
 STEM_SHAPE_FALLBACKS = {
@@ -936,7 +938,7 @@ def pes_quadratum():
         write_pes_quadratum(i, "QuilismaLineTR",
                             "rvbase", S_PES_QUILISMA_QUADRATUM_LONGQUEUE, stemshape=S_PES_QUILISMA_QUADRATUM, qtype='long')
     write_pes_quadratum(1, "QuilismaLineTR",
-                        "rvlbase", S_PES_QUILISMA_QUADRATUM_OPENQUEUE, stemshape=S_PES_QUILISMA_QUADRATUM, qtype='open')
+                        "rvbase", S_PES_QUILISMA_QUADRATUM_OPENQUEUE, stemshape=S_PES_QUILISMA_QUADRATUM, qtype='open')
     precise_message("pes auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "PunctumLineTR",
@@ -1000,7 +1002,7 @@ def fusion_pes_quadratum():
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "SalicusOriscus", "rvbase",
                 S_UPPER_PES_QUASSUS_LONGQUEUE, stemshape=S_UPPER_PES_QUASSUS, qtype='long')
-    write_pes_quadratum(1, "SalicusOriscus", "rvlbase",
+    write_pes_quadratum(1, "SalicusOriscus", "rvbase",
             S_UPPER_PES_QUASSUS_OPENQUEUE, stemshape=S_UPPER_PES_QUASSUS, qtype='open')
     precise_message("fusion pes auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
@@ -2211,18 +2213,17 @@ def fusion():
         write_fusion_leading(i, 'SalicusOriscus', S_UPPER_ORISCUS,
                 L_UP)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'OriscusScapusLineTR',
-                S_ORISCUS_SCAPUS, L_UP)
+        write_fusion_leading(i, 'osbase',
+                S_ORISCUS_SCAPUS, L_UP, qtype='short', stemshape=S_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'OriscusScapusLongqueueLineTR',
-                S_ORISCUS_SCAPUS_LONGQUEUE, L_UP)
+        write_fusion_leading(i, 'osbase',
+                S_ORISCUS_SCAPUS_LONGQUEUE, L_UP, qtype='long', stemshape=S_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'odbase', S_ORISCUS, L_DOWN)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, "osbase"+str(i), S_ORISCUS_SCAPUS, L_DOWN)
-    write_fusion_leading(1, "oslbase", S_ORISCUS_SCAPUS_LONGQUEUE, L_DOWN)
-    for i in range(2, MAX_INTERVAL+1):
-        write_fusion_leading(i, "osbase"+str(i), S_ORISCUS_SCAPUS_LONGQUEUE, L_DOWN)
+        write_fusion_leading(i, "osbase", S_ORISCUS_SCAPUS, L_DOWN, qtype='short', stemshape=S_ORISCUS_SCAPUS)
+    for i in range(1, MAX_INTERVAL+1):
+        write_fusion_leading(i, "osbase", S_ORISCUS_SCAPUS_LONGQUEUE, L_DOWN, qtype='long', stemshape=S_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'OriscusReversusLineTLBR', S_LOWER_ORISCUS,
                 L_DOWN)
@@ -2234,13 +2235,13 @@ def fusion():
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'mademinutus', S_LOWER_PUNCTUM, L_DOWN)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'VirgaLineBR', S_VIRGA_REVERSA, L_DOWN)
+        write_fusion_leading(i, 'rvbase', S_VIRGA_REVERSA, L_DOWN, qtype='short', stemshape=S_VIRGA_REVERSA)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'vlbase', S_VIRGA_REVERSA_LONGQUEUE,
-                L_DOWN)
+        write_fusion_leading(i, 'rvbase', S_VIRGA_REVERSA_LONGQUEUE,
+                L_DOWN, qtype='long', stemshape=S_VIRGA_REVERSA)
 
 # lique is only for initio debilis here
-def write_fusion_leading(i, first_glyph, glyph_type, lique):
+def write_fusion_leading(i, first_glyph, glyph_type, lique, qtype = None, stemshape = None):
     "Writes the fusion glyphs."
     new_glyph()
     glyph_name = '%s%s%s' % (glyph_type, AMBITUS[i], lique)
@@ -2249,8 +2250,7 @@ def write_fusion_leading(i, first_glyph, glyph_type, lique):
     length = -get_width('line2')
     if (i == 1 and first_glyph != 'idebilis' and first_glyph != 'odbase'
             and first_glyph != 'OriscusReversusLineTLBR'
-            and first_glyph != 'oslbase'
-            and (not first_glyph.startswith('osbase'))):
+            and first_glyph != 'osbase'):
         length = 0.1
         if first_glyph == 'PunctumLineTR' or first_glyph == 'PunctumLineBR':
             first_glyph = 'Punctum'
@@ -2268,11 +2268,11 @@ def write_fusion_leading(i, first_glyph, glyph_type, lique):
             first_glyph = 'PunctumLineTL'
         elif first_glyph == 'SalicusOriscus':
             first_glyph = 'OriscusLineBL'
-        elif first_glyph == 'VirgaLineBR':
-            first_glyph = 'VirgaReversa'
-        elif first_glyph == 'vlbase':
-            first_glyph = 'VirgaReversaLongqueue'
+        elif first_glyph == 'rvbase':
+            first_glyph = 'rvirgabase'
     length = get_width(first_glyph) + length
+    if qtype:
+        write_left_queue(i, qtype, stemshape, lique)
     simple_paste(first_glyph)
     if i != 1:
         if lique == L_UP or lique == L_INITIO_DEBILIS_UP:
