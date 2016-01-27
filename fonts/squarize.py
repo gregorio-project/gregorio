@@ -87,6 +87,7 @@ glyphnumber = 0xe000 - 1
 BASE_HEIGHT = 0
 HEPISEMA_ADDITIONAL_WIDTH=0
 DEMINUTUS_VERTICAL_SHIFT=0
+ADDITIONAL_UPPER_QUEUE_HEIGHT=0
 QUEUE_LENGTH_SCHEMA=None
 oldfont = None
 newfont = None
@@ -100,41 +101,34 @@ def get_parser():
         description="""Converts a small set of glyphs into a complete
 gregorian square notation font. The initial glyphs have a name
 convention, see gregorio-base.sfd.""")
-    parser.add_argument('-b', '--base-height',
-                        help='Half the vertical difference between two staff lines',
-                        action='store', default=157.5, dest='BASE_HEIGHT')
-    parser.add_argument('-a', '--hepisema-add',
-                        help='Additional length added left and right of horizontal episema',
-                        action='store', default=5, dest='HEPISEMA_ADDITIONAL_WIDTH')
-    parser.add_argument('-d', '--deminutus-shift',
-                        help='Vertical shifting of deminutus second note when ambitus is one',
-                        action='store', default=10, dest='DEMINUTUS_VERTICAL_SHIFT')
     parser.add_argument('-o', '--outfile',
                         help='output ttf file name',
                         action='store', default=False, dest='outfile')
     parser.add_argument('-s', '--sub-species',
                         help='subspecies (can be \'op\')',
                         action='store', default=False, dest='subspecies')
-    parser.add_argument('-q', '--queue-length-schema',
-                        help='queue length schema file',
-                        action='store', default='default.yaml', dest='qls')
+    parser.add_argument('-c', '--config-file',
+                        help='font build file configuration',
+                        action='store', default='default.yaml', dest='config_file')
     parser.add_argument('base_font', help="input sfd file name", action='store')
     return parser
 
 def main():
     "Main function"
-    global oldfont, newfont, font_name, subspecies, BASE_HEIGHT, HEPISEMA_ADDITIONAL_WIDTH, DEMINUTUS_VERTICAL_SHIFT, QUEUE_LENGTH_SCHEMA
+    global oldfont, newfont, font_name, subspecies, BASE_HEIGHT, HEPISEMA_ADDITIONAL_WIDTH, DEMINUTUS_VERTICAL_SHIFT, QUEUE_LENGTH_SCHEMA, ADDITIONAL_UPPER_QUEUE_HEIGHT
     parser = get_parser()
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
     args = parser.parse_args()
+    with open(args.config_file, 'r') as stream:
+        config = yaml.load(stream)
+    QUEUE_LENGTH_SCHEMA = config
     subspecies = '_%s' % args.subspecies if args.subspecies else ''
-    BASE_HEIGHT = int(args.BASE_HEIGHT)
-    HEPISEMA_ADDITIONAL_WIDTH = int(args.HEPISEMA_ADDITIONAL_WIDTH)
-    DEMINUTUS_VERTICAL_SHIFT = int(args.DEMINUTUS_VERTICAL_SHIFT)
-    with open(args.qls, 'r') as stream:
-        QUEUE_LENGTH_SCHEMA = yaml.load(stream)
+    BASE_HEIGHT = int(config.get('base height', 157.5))
+    HEPISEMA_ADDITIONAL_WIDTH = int(config.get('hepisema additional width', 5))
+    DEMINUTUS_VERTICAL_SHIFT = int(config.get('deminutus vertical shift', 10))
+    ADDITIONAL_UPPER_QUEUE_HEIGHT = int(config.get('additional upper queue height', 10))
     outfile = args.outfile
     inputfile = args.base_font
     if not outfile:
@@ -526,8 +520,6 @@ def set_width(width):
     "Set the width of a glyph"
     global newfont, glyphnumber
     newfont[glyphnumber].width = width
-
-ADDITIONAL_UPPER_QUEUE_HEIGHT=50
 
 def get_queue_glyph(height, rev = False):
     "Creates the asked line glyph in tmpglyph"
