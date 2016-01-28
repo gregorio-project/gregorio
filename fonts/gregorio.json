@@ -5,20 +5,34 @@
     "right": "bottom"
   },
   "defaults": {
-    "top": {
-      "short": 140,
-      "open": 140,
-      "long": 140
+    "Nothing": {
+      "top": {
+        "short": 140,
+        "open": 140,
+        "long": 140
+      },
+      "middle": {
+        "short": 57,
+        "open": 57,
+        "long": 57
+      },
+      "bottom": {
+        "short": -28,
+        "open": -28,
+        "long": -100
+      }
     },
-    "middle": {
-      "short": 57,
-      "open": 57,
-      "long": 57
-    },
-    "bottom": {
-      "short": -28,
-      "open": -28,
-      "long": -221
+    "Deminutus": {
+      "top": {
+        "short": 109,
+        "open": 109,
+        "long": 109
+      },
+      "bottom": {
+        "short": 4,
+        "open": 4,
+        "long": -100
+      }
     }
   },
   "Virga": {
@@ -31,12 +45,12 @@
   "Flexus": {
     "Nothing": {
       "1": {
-        "long": -365
+        "long": -265
       }
     },
     "Deminutus": {
       "1": {
-        "long": -365
+        "long": -265
       }
     }
   }

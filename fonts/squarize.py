@@ -553,7 +553,7 @@ STEM_LIQ_FALLBACKS = {
     L_DESCENDENS : L_ASCENDENS,
     L_ASCENDENS : L_NOTHING,
     L_DEMINUTUS : L_NOTHING,
-    L_INITIO_DEBILIS: L_NOTHING,
+    L_INITIO_DEBILIS: L_DEMINUTUS,
     L_INITIO_DEBILIS_DEMINUTUS: L_DEMINUTUS,
     L_INITIO_DEBILIS_ASCENDENS: L_ASCENDENS,
     L_INITIO_DEBILIS_DESCENDENS: L_DESCENDENS,
@@ -582,15 +582,17 @@ def get_shift(qtype, shape, liq, i, j):
        schema or False
     """
     global QUEUE_LENGTH_SCHEMA
+    i = str(i)
+    j = str(j)
     if shape not in QUEUE_LENGTH_SCHEMA:
         return False
     if liq not in QUEUE_LENGTH_SCHEMA[shape]:
         return False
-    if i==0:
+    if i=='0':
         return QUEUE_LENGTH_SCHEMA[shape][liq].get(qtype, False)
     elif i not in QUEUE_LENGTH_SCHEMA[shape][liq]:
         return False
-    elif j==0:
+    elif j=='0':
         return QUEUE_LENGTH_SCHEMA[shape][liq][i].get(qtype, False)
     else:
         if j in QUEUE_LENGTH_SCHEMA[shape][liq][i] and qtype in QUEUE_LENGTH_SCHEMA[shape][liq][i][j]:
@@ -605,7 +607,11 @@ def get_default_shift(qtype, shape, liq, i, j, side):
     global QUEUE_LENGTH_SCHEMA, BASE_HEIGHT
     if i==0:
         i=1
-    return QUEUE_LENGTH_SCHEMA['defaults'][QUEUE_LENGTH_SCHEMA['schema'][side]][qtype] - i*BASE_HEIGHT
+    defaults = QUEUE_LENGTH_SCHEMA['defaults']
+    default_schema = QUEUE_LENGTH_SCHEMA['schema'][side]
+    while liq in STEM_LIQ_FALLBACKS and (liq not in defaults or default_schema not in defaults[liq] or qtype not in defaults[liq][default_schema]):
+        liq = STEM_LIQ_FALLBACKS[liq]
+    return defaults[liq][default_schema][qtype] - i*BASE_HEIGHT
 
 def get_queue_shift(qtype, shape, liq, i=0, side='left', j=0):
     """ Returns the queue shift associated with the arguments in the queue
@@ -1527,7 +1533,7 @@ def write_porrectus(i, j, last_glyph, shape, lique=L_NOTHING, qtype=None):
     if not glyph_exists(first_glyph):
         return
     if qtype:
-        write_left_queue(i, qtype, S_PORRECTUS, lique)
+        write_left_queue(i, qtype, S_PORRECTUS, L_NOTHING)
     length = get_width(first_glyph)
     simple_paste(first_glyph)
     write_line(j, length-get_width('line2'), (-i+1)*BASE_HEIGHT)
@@ -1560,7 +1566,7 @@ def write_alt_porrectus_deminutus(i, j, qtype='short'):
         glyph_name = 'Porrectus%s%sDeminutusLongqueue.alt' % (AMBITUS[i], AMBITUS[j])
     if copy_existing_glyph(glyph_name):
         return
-    write_left_queue(i, qtype, S_PORRECTUS, L_DEMINUTUS)
+    write_left_queue(i, qtype, S_PORRECTUS, L_NOTHING)
     if i == 1:
         first_glyph = 'PunctumLineBR'
     else:
@@ -1676,7 +1682,7 @@ def write_porrectusflexus(i, j, k, last_glyph,
     if not glyph_exists(first_glyph):
         return
     if qtype:
-        write_left_queue(i, qtype, S_PORRECTUS_FLEXUS, lique)
+        write_left_queue(i, qtype, S_PORRECTUS_FLEXUS, L_NOTHING)
     length = get_width(first_glyph)
     simple_paste(first_glyph)
     write_line(j, length-get_width('line2'), (-i+1)*BASE_HEIGHT)
@@ -2146,7 +2152,7 @@ def write_ancus(i, j, first_glyph, glyph_type, qtype):
     glyph_name = '%s%s%s%s' % (glyph_type, AMBITUS[i], AMBITUS[j], L_DEMINUTUS)
     if copy_existing_glyph(glyph_name):
         return
-    write_left_queue(i, qtype, S_ANCUS, L_DEMINUTUS, j)
+    write_left_queue(i, qtype, S_ANCUS, L_NOTHING, j)
     if i == 1:
         first_glyph = 'rvirgabase'
         length = get_width(first_glyph)
