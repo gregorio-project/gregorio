@@ -728,7 +728,10 @@ static __inline const char *quadratum_shape(const gregorio_glyph *const glyph,
     if (!is_tail_liquescentia(glyph->u.notes.liquescentia)) {
         switch (queuetype_of(first_note_of(glyph))) {
         case Q_OPENSHORT:
-            return openqueue_shape;
+            if (second_pitch_of(glyph) - first_pitch_of(glyph) == 1) {
+                return openqueue_shape;
+            }
+            /* else fall through */
         case Q_SHORT:
         case Q_OPENLONG:
             return base_shape;
