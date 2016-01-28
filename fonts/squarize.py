@@ -2222,10 +2222,10 @@ def fusion():
         write_fusion_leading(i, 'SalicusOriscus', S_UPPER_ORISCUS,
                 L_UP)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'osbase',
+        write_fusion_leading(i, 'SalicusOriscus',
                 S_ORISCUS_SCAPUS, L_UP, qtype='short', stemshape=S_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'osbase',
+        write_fusion_leading(i, 'SalicusOriscus',
                 S_ORISCUS_SCAPUS_LONGQUEUE, L_UP, qtype='long', stemshape=S_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'odbase', S_ORISCUS, L_DOWN)
