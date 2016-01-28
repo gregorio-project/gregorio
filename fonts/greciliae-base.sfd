@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1453972391
+ModificationTime: 1453976334
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -3845,17 +3845,17 @@ StartChar: rqueue
 Encoding: 183 -1 156
 Width: 18
 VWidth: 2048
-Flags: HWO
+Flags: HW
 HStem: -166 161<0.3727 17.9222>
 VStem: 0.125004 17.7998<-165.201 -5>
 LayerCount: 2
 Fore
 SplineSet
 18 7 m 25
+ 18 -32.2002 l 6
+ 17.9766 -44.333 14.4248 -51.2666 6.625 -53 c 1
+ 1.4248 -53 0.428711 -51.4385 0 -6.2002 c 2
  0 7 l 25
- 0 -6.2002 l 2
- 0.428711 -51.4385 1.4248 -53 6.625 -53 c 1
- 14.4248 -51.2666 17.9766 -44.333 18 -32.2002 c 6
  18 7 l 25
 EndSplineSet
 EndChar
