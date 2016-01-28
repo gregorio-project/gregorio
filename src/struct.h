@@ -313,6 +313,7 @@ ENUM(gregorio_glyph_type, GREGORIO_GLYPH_TYPE);
     E(ST_INITIAL) /* a style used to determine the initial */ \
     E(ST_UNDERLINED) \
     E(ST_COLORED) \
+    E(ST_ELISION) \
     E(ST_FIRST_WORD) \
     E(ST_FIRST_SYLLABLE) \
     E(ST_FIRST_SYLLABLE_INITIAL) \
@@ -570,8 +571,8 @@ typedef struct gregorio_element {
  */
 
 typedef struct gregorio_style {
-    ENUM_BITFIELD(grestyle_style) style:8;
-    ENUM_BITFIELD(grestyle_type) type:8;
+    ENUM_BITFIELD(grestyle_style) style:6;
+    ENUM_BITFIELD(grestyle_type) type:2;
 } gregorio_style;
 
 /*

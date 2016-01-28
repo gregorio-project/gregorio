@@ -326,6 +326,7 @@
 \def\GreFirstWord#1{\gre@style@firstword#1\endgre@style@firstword}%
 \def\GreFirstSyllable#1{\gre@style@firstsyllable#1\endgre@style@firstsyllable}%
 \def\GreFirstSyllableInitial#1{\gre@style@firstsyllableinitial#1\endgre@style@firstsyllableinitial}%
+\def\GreElision#1{\gre@style@elision#1\endgre@style@elision}%
 
 % box that will contain the text of the syllable
 \newbox\gre@box@syllabletext%
@@ -970,7 +971,7 @@
 
 \def\GreSetNoFirstSyllableText{%
   \gre@noinitial %
-  \def\gre@opening@syllabletext{}%
+  \gre@setfirstsyllabletext{}{}{}{}{}{}%
 }%
 
 \def\GreUpcomingNewLineForcesCustos#1{%

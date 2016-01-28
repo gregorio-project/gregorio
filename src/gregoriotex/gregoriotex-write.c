@@ -112,9 +112,7 @@ SHAPE(PorrectusLongqueue);
 SHAPE(PorrectusFlexus);
 SHAPE(PorrectusFlexusLongqueue);
 SHAPE(PorrectusFlexusNobar);
-SHAPE(PorrectusFlexusNobarLongqueue);
 SHAPE(PorrectusNobar);
-SHAPE(PorrectusNobarLongqueue);
 SHAPE(Punctum);
 SHAPE(PunctumAscendens);
 SHAPE(PunctumCavum);
@@ -400,7 +398,8 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
 
     if ((*fuse_tail && shape == SHAPE_OriscusReversus)
             || ((shape == SHAPE_OriscusReversus || shape == SHAPE_OriscusScapus
-                    || shape == SHAPE_OriscusScapusLongqueue)
+                    || shape == SHAPE_OriscusScapusLongqueue
+                    || shape == SHAPE_OriscusScapusOpenqueue)
                 && is_fused(glyph->u.notes.liquescentia))) {
         shape = SHAPE_Oriscus;
     }
@@ -440,7 +439,8 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
         return "";
     }
     if (is_fused(glyph->u.notes.liquescentia)) {
-        if (shape == SHAPE_Flexus || shape == SHAPE_FlexusLongqueue) {
+        if (shape == SHAPE_Flexus || shape == SHAPE_FlexusLongqueue
+                || shape == SHAPE_FlexusOpenqueue) {
             if (fuse_to_next_note) {
                 fuse_head = "";
             }
@@ -449,13 +449,13 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
             } else {
                 shape = SHAPE_FlexusNobar;
             }
-        } else if (shape == SHAPE_Porrectus) {
+        } else if (shape == SHAPE_Porrectus
+                || shape == SHAPE_PorrectusLongqueue) {
             shape = SHAPE_PorrectusNobar;
-        } else if (shape == SHAPE_PorrectusLongqueue) {
-            shape = SHAPE_PorrectusNobarLongqueue;
         }
     } else {
-        if (fuse_to_next_note && shape == SHAPE_FlexusLongqueue) {
+        if (fuse_to_next_note && (shape == SHAPE_FlexusLongqueue
+                    || shape == SHAPE_FlexusOpenqueue)) {
             /* a porrectus-like flexus has no longqueue variant */
             shape = SHAPE_Flexus;
         }
@@ -748,6 +748,7 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
 {
     const char *shape = NULL;
     gtex_glyph_liquescentia ltype;
+    signed char ambitus;
     if (!glyph) {
         gregorio_message(_("called with NULL pointer"),
                 "gregoriotex_determine_glyph_name", VERBOSITY_ERROR, 0);
@@ -833,10 +834,11 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         ltype = LG_ALL;
         break;
     case G_FLEXA:
+        ambitus = first_pitch_of(glyph) - second_pitch_of(glyph);
         if (glyph->u.notes.liquescentia & L_DEMINUTUS) {
             *type = AT_FLEXUS_DEMINUTUS;
         } else {
-            if (first_pitch_of(glyph) - second_pitch_of(glyph) == 1) {
+            if (ambitus == 1) {
                 *type = AT_FLEXUS_1;
             } else {
                 *type = AT_FLEXUS;
@@ -854,8 +856,11 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
             *gtype = T_FLEXUS_ORISCUS_SCAPUS;
             switch (queuetype_of(second_note_of(glyph))) {
             case Q_OPENSHORT:
-                shape = SHAPE_FlexusOriscusScapusOpenqueue;
-                break;
+                if (ambitus == 1) {
+                    shape = SHAPE_FlexusOriscusScapusOpenqueue;
+                    break;
+                }
+                /* else fall through */
             case Q_SHORT:
             case Q_OPENLONG:
                 shape = SHAPE_FlexusOriscusScapus;
@@ -871,13 +876,13 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
             *gtype = glyph->u.notes.fuse_to_next_glyph? T_PORRECTUS : T_FLEXUS;
             switch (queuetype_of(second_note_of(glyph))) {
             case Q_OPENSHORT:
-                if (!glyph->u.notes.fuse_to_next_glyph) {
+                if (!glyph->u.notes.fuse_to_next_glyph && ambitus == 1) {
                     shape = SHAPE_FlexusOpenqueue;
                     break;
                 }
                 /* else fall through */
-            case Q_SHORT:
             case Q_OPENLONG:
+            case Q_SHORT:
                 shape = SHAPE_Flexus;
                 break;
             case Q_LONG:
@@ -943,15 +948,13 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
     case G_PORRECTUS_NO_BAR:
         *type = AT_PORRECTUS;
         *gtype = T_TORCULUS_RESUPINUS;
-        shape = porrectus_shape(glyph, SHAPE_PorrectusNobar,
-                SHAPE_PorrectusNobarLongqueue);
+        shape = SHAPE_PorrectusNobar;
         ltype = LG_NO_INITIO;
         break;
     case G_PORRECTUS_FLEXUS_NO_BAR:
         *type = AT_PORRECTUS;
         *gtype = T_TORCULUS_RESUPINUS_FLEXUS;
-        shape = porrectus_shape(glyph, SHAPE_PorrectusFlexusNobar,
-                SHAPE_PorrectusFlexusNobarLongqueue);
+        shape = SHAPE_PorrectusFlexusNobar;
         ltype = LG_NO_INITIO;
         break;
     case G_ANCUS:
@@ -976,7 +979,7 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
             ltype = LG_ONLY_DEMINUTUS;
         } else {
             gregorio_message(_("found a non-deminutus ancus"),
-                    "gregoriotex_determine_glyph_name", VERBOSITY_ERROR, 0);
+                    "gregoriotex_determine_glyph_name", VERBOSITY_WARNING, 0);
             *type = AT_ONE_NOTE;
         }
         break;
@@ -1167,6 +1170,9 @@ static void gtex_write_begin(FILE *f, grestyle_style style)
         break;
     case ST_COLORED:
         fprintf(f, "\\GreColored{");
+        break;
+    case ST_ELISION:
+        fprintf(f, "\\GreElision{");
         break;
     case ST_FIRST_WORD:
         fprintf(f, "\\GreFirstWord{");
@@ -3180,8 +3186,10 @@ static void write_syllable_text(FILE *f, const char *const syllable_type,
 static void write_first_syllable_text(FILE *f, const char *const syllable_type, 
         const gregorio_character *const text, bool end_of_word)
 {
-    if (syllable_type == NULL || text == NULL) {
-        fprintf(f, "}{}{\\GreSetNoFirstSyllableText}");
+    if (syllable_type == NULL) {
+        fprintf(f, "}{\\GreSyllable{\\GreSetNoFirstSyllableText}");
+    } else if (text == NULL) {
+        fprintf(f, "}{%s}{\\GreSetNoFirstSyllableText}", syllable_type);
     } else {
         gregorio_character *text_with_initial = gregorio_clone_characters(text),
                 *text_without_initial = gregorio_clone_characters(text);

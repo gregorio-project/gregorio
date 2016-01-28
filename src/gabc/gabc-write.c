@@ -102,6 +102,9 @@ static void gabc_write_begin(FILE *f, grestyle_style style)
     case ST_UNDERLINED:
         fprintf(f, "<ul>");
         break;
+    case ST_ELISION:
+        fprintf(f, "<e>");
+        break;
     case ST_INITIAL:
     case ST_CENTER:
     case ST_FIRST_WORD:
@@ -145,6 +148,9 @@ static void gabc_write_end(FILE *f, grestyle_style style)
         break;
     case ST_UNDERLINED:
         fprintf(f, "</ul>");
+        break;
+    case ST_ELISION:
+        fprintf(f, "</e>");
         break;
     case ST_INITIAL:
     case ST_CENTER:

@@ -647,41 +647,44 @@ def write_right_queue(i, length, qtype, stemshape, liq = L_NOTHING, j=0, shift=0
     queue_glyph = get_queue_glyph(qshift, True)
     paste_and_move(queue_glyph, length, shift)
 
-def write_virga_in(reversa, firstglyph, qtype, liq, stemshape=S_VIRGA, i=0):
+def write_virga_in(right_queue, firstglyph, qtype, liq, stemshape=S_VIRGA, i=0):
     "Draws a virga at height i."
-    if not reversa:
+    if not right_queue:
         write_left_queue(i, qtype, stemshape, liq)
     paste_and_move(firstglyph, 0, (i)*BASE_HEIGHT)
     first_width = get_width(firstglyph)
-    if reversa:
+    if right_queue:
         write_right_queue(i, first_width-get_width('line2'), qtype, stemshape)
     return first_width
 
-def write_virga(shape, lique=L_NOTHING, reversa=False, firstglyph='virgabase', qtype='short', stemshape=S_VIRGA):
+def write_virga(shape, lique=L_NOTHING, right_queue=False, firstglyph='virgabase', qtype='short', stemshape=S_VIRGA):
     "Writes the virga glyphs."
     new_glyph()
-    glyph_name = '%s%s' % (shape, lique)
+    if lique == L_NOTHING:
+        glyph_name = shape
+    else:
+        glyph_name = '%s%s' % (shape, lique)
     if copy_existing_glyph(glyph_name):
         return
-    thislen = write_virga_in(reversa, firstglyph, qtype, lique, stemshape)
+    thislen = write_virga_in(right_queue, firstglyph, qtype, lique, stemshape)
     set_width(thislen)
     end_glyph(glyph_name)
 
 def virga():
     "Creates virgas"
     message("virgas")
-    write_virga(S_VIRGA, L_NOTHING, False, 'virgabase', 'short', S_VIRGA)
-    write_virga(S_VIRGA_LONGQUEUE, L_NOTHING, False, 'virgabase', 'long', S_VIRGA)
-    write_virga(S_VIRGA_OPENQUEUE, L_NOTHING, False, 'virgabase', 'open', S_VIRGA)
-    write_virga(S_VIRGA_REVERSA, L_NOTHING, True, 'rvirgabase', 'short', S_VIRGA_REVERSA)
-    write_virga(S_VIRGA_REVERSA_LONGQUEUE, L_NOTHING, True, 'rvirgabase', 'long', S_VIRGA_REVERSA)
-    write_virga(S_VIRGA_REVERSA_OPENQUEUE, L_NOTHING, True, 'rvirgabase', 'open', S_VIRGA_REVERSA)
-    write_virga(S_VIRGA, L_DESCENDENS, False, 'PunctumAuctusLineBL', 'short', S_VIRGA)
-    write_virga(S_VIRGA_LONGQUEUE, L_DESCENDENS, False, 'PunctumAuctusLineBL', 'long', S_VIRGA)
-    write_virga(S_VIRGA_OPENQUEUE, L_DESCENDENS, False, 'PunctumAuctusLineBL', 'open', S_VIRGA)
-    write_virga(S_VIRGA, L_ASCENDENS, False, 'auctusa2', 'short', S_VIRGA)
-    write_virga(S_VIRGA_LONGQUEUE, L_ASCENDENS, False, 'auctusa2', 'long', S_VIRGA)
-    write_virga(S_VIRGA_OPENQUEUE, L_ASCENDENS, False, 'auctusa2', 'open', S_VIRGA)
+    write_virga(S_VIRGA, L_NOTHING, True, 'rvirgabase', 'short', S_VIRGA)
+    write_virga(S_VIRGA_LONGQUEUE, L_NOTHING, True, 'rvirgabase', 'long', S_VIRGA)
+    write_virga(S_VIRGA_OPENQUEUE, L_NOTHING, True, 'rvirgabase', 'open', S_VIRGA)
+    write_virga(S_VIRGA_REVERSA, L_NOTHING, False, 'virgabase', 'short', S_VIRGA_REVERSA)
+    write_virga(S_VIRGA_REVERSA_LONGQUEUE, L_NOTHING, False, 'virgabase', 'long', S_VIRGA_REVERSA)
+    write_virga(S_VIRGA_REVERSA_OPENQUEUE, L_NOTHING, False, 'virgabase', 'open', S_VIRGA_REVERSA)
+    write_virga(S_VIRGA_REVERSA, L_DESCENDENS, False, 'PunctumAuctusLineBL', 'short', S_VIRGA)
+    write_virga(S_VIRGA_REVERSA_LONGQUEUE, L_DESCENDENS, False, 'PunctumAuctusLineBL', 'long', S_VIRGA)
+    write_virga(S_VIRGA_REVERSA_OPENQUEUE, L_DESCENDENS, False, 'PunctumAuctusLineBL', 'open', S_VIRGA)
+    write_virga(S_VIRGA_REVERSA, L_ASCENDENS, False, 'auctusa2', 'short', S_VIRGA)
+    write_virga(S_VIRGA_REVERSA_LONGQUEUE, L_ASCENDENS, False, 'auctusa2', 'long', S_VIRGA)
+    write_virga(S_VIRGA_REVERSA_OPENQUEUE, L_ASCENDENS, False, 'auctusa2', 'open', S_VIRGA)
     write_virga(S_ORISCUS_SCAPUS, L_NOTHING, False, 'OriscusLineBL', 'short', S_ORISCUS_SCAPUS)
     write_virga(S_ORISCUS_SCAPUS_LONGQUEUE, L_NOTHING, False, 'OriscusLineBL', 'long', S_ORISCUS_SCAPUS)
     write_virga(S_ORISCUS_SCAPUS_OPENQUEUE, L_NOTHING, False, 'OriscusLineBL', 'open', S_ORISCUS_SCAPUS)
@@ -1586,7 +1589,7 @@ def porrectusflexus():
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(i, j, k, "PunctumLineTL", 0,
+                write_porrectusflexus(i, j, k, "PunctumLineTL",
                                       S_PORRECTUS_FLEXUS_NOBAR)
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
