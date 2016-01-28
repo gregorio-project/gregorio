@@ -220,7 +220,7 @@ DIRECT_GLYPH_NAMES = [
     'Stropha',
     'StrophaAucta',
     'StrophaAuctaLongtail',
-    'VirgaLineBR',
+    'VirgaBaseLineBL',
     'Quilisma',
     'QuilismaLineTR',
     'Oriscus',
@@ -753,7 +753,7 @@ HEPISEMA_GLYPHS = {
     'HEpisemaHighPes': 'PunctumSmall',
     'HEpisemaOriscus': 'Oriscus',
     'HEpisemaVirga': 'rvirgabase',
-    'HEpisemaVirgaLineBR': 'VirgaLineBR',
+    'HEpisemaVirgaBaseLineBL': 'VirgaBaseLineBL',
     'HEpisemaOriscusLineTR': 'OriscusLineTR',
     'HEpisemaPunctumLineBR': 'PunctumLineBR',
     'HEpisemaPunctumLineBL': 'PunctumLineBL',
@@ -924,24 +924,24 @@ def pes_quadratum():
     message("pes quadratum")
     precise_message("pes quadratum")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "PunctumLineTR", "vbase", S_PES_QUADRATUM, stemshape=S_PES_QUADRATUM, qtype='short')
+        write_pes_quadratum(i, "PunctumLineTR", "VirgaBaseLineBL", S_PES_QUADRATUM, stemshape=S_PES_QUADRATUM, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "PunctumLineTR", "vbase", S_PES_QUADRATUM_LONGQUEUE, stemshape=S_PES_QUADRATUM, qtype='long')
-    write_pes_quadratum(1, "PunctumLineTR", "vbase", S_PES_QUADRATUM_OPENQUEUE, stemshape=S_PES_QUADRATUM, qtype='short')
+        write_pes_quadratum(i, "PunctumLineTR", "VirgaBaseLineBL", S_PES_QUADRATUM_LONGQUEUE, stemshape=S_PES_QUADRATUM, qtype='long')
+    write_pes_quadratum(1, "PunctumLineTR", "VirgaBaseLineBL", S_PES_QUADRATUM_OPENQUEUE, stemshape=S_PES_QUADRATUM, qtype='short')
     precise_message("pes quassus")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "OriscusLineTR", "vbase", S_PES_QUASSUS, stemshape=S_PES_QUASSUS, qtype='short')
+        write_pes_quadratum(i, "OriscusLineTR", "VirgaBaseLineBL", S_PES_QUASSUS, stemshape=S_PES_QUASSUS, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "OriscusLineTR", "vbase", S_PES_QUASSUS_LONGQUEUE, stemshape=S_PES_QUASSUS, qtype='long')
-    write_pes_quadratum(1, "OriscusLineTR", "vbase", S_PES_QUASSUS_OPENQUEUE, stemshape=S_PES_QUASSUS, qtype='open')
+        write_pes_quadratum(i, "OriscusLineTR", "VirgaBaseLineBL", S_PES_QUASSUS_LONGQUEUE, stemshape=S_PES_QUASSUS, qtype='long')
+    write_pes_quadratum(1, "OriscusLineTR", "VirgaBaseLineBL", S_PES_QUASSUS_OPENQUEUE, stemshape=S_PES_QUASSUS, qtype='open')
     precise_message("pes quilisma quadratum")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "QuilismaLineTR", "vbase", S_PES_QUILISMA_QUADRATUM, stemshape=S_PES_QUILISMA_QUADRATUM, qtype='short')
+        write_pes_quadratum(i, "QuilismaLineTR", "VirgaBaseLineBL", S_PES_QUILISMA_QUADRATUM, stemshape=S_PES_QUILISMA_QUADRATUM, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "QuilismaLineTR",
-                            "vbase", S_PES_QUILISMA_QUADRATUM_LONGQUEUE, stemshape=S_PES_QUILISMA_QUADRATUM, qtype='long')
+                            "VirgaBaseLineBL", S_PES_QUILISMA_QUADRATUM_LONGQUEUE, stemshape=S_PES_QUILISMA_QUADRATUM, qtype='long')
     write_pes_quadratum(1, "QuilismaLineTR",
-                        "vbase", S_PES_QUILISMA_QUADRATUM_OPENQUEUE, stemshape=S_PES_QUILISMA_QUADRATUM, qtype='open')
+                        "VirgaBaseLineBL", S_PES_QUILISMA_QUADRATUM_OPENQUEUE, stemshape=S_PES_QUILISMA_QUADRATUM, qtype='open')
     precise_message("pes auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "PunctumLineTR",
@@ -983,29 +983,29 @@ def fusion_pes_quadratum():
     message("fusion pes quadratum")
     precise_message("fusion pes quadratum")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "msdeminutus", "vbase",
+        write_pes_quadratum(i, "msdeminutus", "VirgaBaseLineBL",
                 S_UPPER_PES_QUADRATUM, stemshape=S_UPPER_PES_QUADRATUM, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "base6", "vbase",
+        write_pes_quadratum(i, "base6", "VirgaBaseLineBL",
                 S_LOWER_PES_QUADRATUM, stemshape=S_LOWER_PES_QUADRATUM, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "msdeminutus", "vbase",
+        write_pes_quadratum(i, "msdeminutus", "VirgaBaseLineBL",
                 S_UPPER_PES_QUADRATUM_LONGQUEUE, stemshape=S_UPPER_PES_QUADRATUM, qtype='long')
-    write_pes_quadratum(1, "msdeminutus", "vbase",
+    write_pes_quadratum(1, "msdeminutus", "VirgaBaseLineBL",
             S_UPPER_PES_QUADRATUM_OPENQUEUE, stemshape=S_UPPER_PES_QUADRATUM, qtype='open')
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "base6", "vbase",
+        write_pes_quadratum(i, "base6", "VirgaBaseLineBL",
                 S_LOWER_PES_QUADRATUM_LONGQUEUE, stemshape=S_LOWER_PES_QUADRATUM, qtype='long')
-    write_pes_quadratum(1, "base6", "vbase",
+    write_pes_quadratum(1, "base6", "VirgaBaseLineBL",
             S_LOWER_PES_QUADRATUM_OPENQUEUE, stemshape=S_LOWER_PES_QUADRATUM, qtype='open')
     precise_message("fusion pes quassus")
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "SalicusOriscus", "vbase",
+        write_pes_quadratum(i, "SalicusOriscus", "VirgaBaseLineBL",
                 S_UPPER_PES_QUASSUS, stemshape=S_UPPER_PES_QUASSUS, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "SalicusOriscus", "vbase",
+        write_pes_quadratum(i, "SalicusOriscus", "VirgaBaseLineBL",
                 S_UPPER_PES_QUASSUS_LONGQUEUE, stemshape=S_UPPER_PES_QUASSUS, qtype='long')
-    write_pes_quadratum(1, "SalicusOriscus", "vbase",
+    write_pes_quadratum(1, "SalicusOriscus", "VirgaBaseLineBL",
             S_UPPER_PES_QUASSUS_OPENQUEUE, stemshape=S_UPPER_PES_QUASSUS, qtype='open')
     precise_message("fusion pes auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
@@ -1057,7 +1057,7 @@ def write_pes_quadratum(i, first_glyph, last_glyph, shape, lique=L_NOTHING, stem
                 last_glyph = 'PunctumAscendens'
             elif last_glyph == 'PunctumAuctusLineBL':
                 last_glyph = 'PunctumDescendens'
-            elif last_glyph == 'vbase':
+            elif last_glyph == 'VirgaBaseLineBL':
                 last_glyph = 'virgabase'
 
             first_width = get_width(first_glyph)
@@ -1108,10 +1108,10 @@ def salicus():
     message("salicus")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_salicus(i, j, "vbase", S_SALICUS, qtype='short')
+            write_salicus(i, j, "VirgaBaseLineBL", S_SALICUS, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
-            write_salicus(i, j, "vbase", S_SALICUS_LONGQUEUE, qtype='long')
+            write_salicus(i, j, "VirgaBaseLineBL", S_SALICUS_LONGQUEUE, qtype='long')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             write_salicus(i, j, "rdeminutus", S_SALICUS, L_DEMINUTUS)
@@ -1136,7 +1136,7 @@ def write_salicus(i, j, last_glyph, shape, lique=L_NOTHING, qtype=None):
 def draw_salicus(i, j, last_glyph, lique=L_NOTHING, qtype=None):
     deminutus = last_glyph == 'rdeminutus'
     no_third_glyph = False
-    if j == 1 and not deminutus and last_glyph == 'vbase':
+    if j == 1 and not deminutus and last_glyph == 'VirgaBaseLineBL':
         last_glyph = 'virgabase'
     if i == 1 and j == 1 and not deminutus:
         first_glyph = 'Punctum'
@@ -1186,7 +1186,7 @@ def draw_salicus(i, j, last_glyph, lique=L_NOTHING, qtype=None):
                 last_glyph = 'PunctumAscendens'
             elif last_glyph == 'PunctumAuctusLineBL':
                 last_glyph = 'PunctumDescendens'
-            elif last_glyph == 'vbase':
+            elif last_glyph == 'VirgaBaseLineBL':
                 last_glyph = 'virgabase'
             elif last_glyph == 'PunctumLineBLBR':
                 last_glyph = 'PunctumLineBR'
@@ -2238,9 +2238,9 @@ def fusion():
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'mademinutus', S_LOWER_PUNCTUM, L_DOWN)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'vbase', S_VIRGA_REVERSA, L_DOWN, qtype='short', stemshape=S_VIRGA_REVERSA)
+        write_fusion_leading(i, 'VirgaBaseLineBL', S_VIRGA_REVERSA, L_DOWN, qtype='short', stemshape=S_VIRGA_REVERSA)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'vbase', S_VIRGA_REVERSA_LONGQUEUE,
+        write_fusion_leading(i, 'VirgaBaseLineBL', S_VIRGA_REVERSA_LONGQUEUE,
                 L_DOWN, qtype='long', stemshape=S_VIRGA_REVERSA)
 
 # lique is only for initio debilis here
@@ -2271,7 +2271,7 @@ def write_fusion_leading(i, first_glyph, glyph_type, lique, qtype = None, stemsh
             first_glyph = 'PunctumLineTL'
         elif first_glyph == 'SalicusOriscus':
             first_glyph = 'OriscusLineBL'
-        elif first_glyph == 'vbase':
+        elif first_glyph == 'VirgaBaseLineBL':
             first_glyph = 'virgabase'
     length = get_width(first_glyph) + length
     if qtype:

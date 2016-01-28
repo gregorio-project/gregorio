@@ -3919,7 +3919,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: vbase
+StartChar: VirgaBaseLineBL
 Encoding: 187 -1 160
 Width: 166
 VWidth: 2637
