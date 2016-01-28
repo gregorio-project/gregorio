@@ -18,12 +18,12 @@ defaults:
 Virga:
   Nothing:
     short: -251
-    open: -251
+    open: -192.5
     long: -375
 Flexus:
   Nothing:
     1:
-      long: -379
+      long: -270
   Deminutus:
     1:
-      long: -379
+      long: -270
