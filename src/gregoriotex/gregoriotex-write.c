@@ -574,9 +574,9 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         return SHAPE_LineaPunctumCavum;
     case S_VIRGA:
         switch (queuetype_of(note)) {
-        case Q_OPENSHORT:
         case Q_SHORT:
             return SHAPE_Virga;
+        case Q_OPENSHORT:
         case Q_OPENLONG:
             return SHAPE_VirgaOpenqueue;
         case Q_LONG:
