@@ -1,0 +1,43 @@
+{
+  "stem bottom": -15,
+  "schema": {
+    "left": "bottom",
+    "right": "bottom"
+  },
+  "defaults": {
+    "top": {
+      "short": 142,
+      "open": 142,
+      "long": 142
+    },
+    "middle": {
+      "short": 63,
+      "open": 63,
+      "long": 63
+    },
+    "bottom": {
+      "short": -19,
+      "open": -19,
+      "long": -224
+    }
+  },
+  "Virga": {
+    "Nothing": {
+      "short": -224,
+      "open": -224,
+      "long": -360
+    }
+  },
+  "Flexus": {
+    "Nothing": {
+      "1": {
+        "long": -360
+      }
+    },
+    "Deminutus": {
+      "1": {
+        "long": -360
+      }
+    }
+  }
+}

@@ -39,7 +39,7 @@ import subprocess
 import os
 import argparse
 import os.path
-import yaml
+import json
 
 GPLV3 = """Gregorio is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as
@@ -109,7 +109,7 @@ convention, see gregorio-base.sfd.""")
                         action='store', default=False, dest='subspecies')
     parser.add_argument('-c', '--config-file',
                         help='font build file configuration',
-                        action='store', default='default.yaml', dest='config_file')
+                        action='store', dest='config_file')
     parser.add_argument('base_font', help="input sfd file name", action='store')
     return parser
 
@@ -122,7 +122,7 @@ def main():
         sys.exit(1)
     args = parser.parse_args()
     with open(args.config_file, 'r') as stream:
-        config = yaml.load(stream)
+        config = json.load(stream)
     QUEUE_LENGTH_SCHEMA = config
     subspecies = '_%s' % args.subspecies if args.subspecies else ''
     BASE_HEIGHT = int(config.get('base height', 157.5))
