@@ -1,57 +1,14 @@
 {
   "stem bottom": -15,
-  "schema": {
-    "left": "bottom",
-    "right": "bottom"
-  },
-  "defaults": {
-    "Nothing": {
-      "top": {
-        "short": 142,
-        "open": 142,
-        "long": 142
-      },
-      "middle": {
-        "short": 63,
-        "open": 63,
-        "long": 63
-      },
-      "bottom": {
-        "short": -19,
-        "open": -19,
-        "long": -94.5
-      }
-    },
-    "Deminutus": {
-      "top": {
-        "short": 120,
-        "open": 120,
-        "long": 120
-      },
-      "bottom": {
-        "short": -3,
-        "open": -3,
-        "long": -94.5
-      }
-    }
-  },
-  "Virga": {
-    "Nothing": {
-      "short": -224,
-      "open": -224,
-      "long": -360
-    }
-  },
-  "Flexus": {
-    "Nothing": {
-      "1": {
-        "short": -260
-      }
-    },
-    "Deminutus": {
-      "1": {
-        "short": -260
-      }
-    }
-  }
+  "top": 142,
+  "bottom": -19,
+  "middle": 63,
+  "top-deminutus": 120,
+  "bottom-deminutus": -3,
+  "bottom-porrectus-1-long": -300,
+  "bottom-porrectus-1": -189,
+  "bottom-porrectus-2": -358,
+  "bottom-porrectus-3": -479,
+  "bottom-porrectus-4": -679,
+  "bottom-porrectus-5": -841
 }

@@ -1,110 +1,14 @@
 {
   "stem bottom": -53,
-  "schema": {
-    "left": "bottom",
-    "right": "bottom"
-  },
-  "defaults": {
-    "Nothing": {
-      "top": {
-        "short": 135,
-        "open": 135,
-        "long": 135
-      },
-      "middle": {
-        "short": 45,
-        "open": 45,
-        "long": 45
-      },
-      "bottom": {
-        "short": -55,
-        "open": -55,
-        "long": -112
-      }
-    },
-    "Deminutus": {
-      "top": {
-        "short": 97,
-        "open": 97,
-        "long": 97
-      },
-      "bottom": {
-        "short": -25,
-        "open": -25,
-        "long": -112
-      }
-    }
-  },
-  "Virga": {
-    "Nothing": {
-      "short": -251,
-      "open": -192.5,
-      "long": -375
-    }
-  },
-  "Flexus": {
-    "Nothing": {
-      "1": {
-        "short": -370
-      },
-      "2": {
-        "short": -370,
-        "long": -370
-      },
-      "3": {
-        "short": -427.5,
-        "long": -497.5
-      },
-      "4": {
-        "short": -495,
-        "long": -495
-      },
-      "5": {
-        "short": -652.5,
-        "long": -495
-      }
-    },
-    "Deminutus": {
-      "1": {
-        "short": -337.5,
-        "long": -270
-      },
-      "2": {
-        "short": -370,
-        "long": -370
-      },
-      "3": {
-        "long": -375.5,
-        "short": -375.5
-      },
-      "4": {
-        "long": -533,
-        "short": -533
-      },
-      "5": {
-        "long": -495,
-        "short": -690.5
-      }
-    }
-  },
-  "Porrectus": {
-    "Nothing": {
-      "1": {
-        "short": -201,
-        "long": -300
-      },
-      "2": {
-        "short": -369
-      },
-      "3": {
-        "short": -527.5
-      },
-      "4": {
-        "short": -685
-      },
-      "5": {
-        "short": -851
-      }
-    }
-  }
+  "top": 135,
+  "bottom": -55,
+  "middle": 45,
+  "top-deminutus": 97,
+  "bottom-deminutus": -25,
+  "bottom-porrectus-1-long": -300,
+  "bottom-porrectus-1": -200,
+  "bottom-porrectus-2": -369,
+  "bottom-porrectus-3": -527.5,
+  "bottom-porrectus-4": -685,
+  "bottom-porrectus-5": -851
 }
