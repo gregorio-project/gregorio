@@ -356,7 +356,7 @@ static void free_styles(det_style **first_style)
  */
 static __inline void verb_or_sp(const gregorio_character **ptr_character,
         const grestyle_style style, FILE *const f,
-        void (*const function) (FILE *, grewchar *))
+        void (*const function) (FILE *, const grewchar *))
 {
     int i, j;
     grewchar *text;
@@ -418,11 +418,11 @@ static __inline void verb_or_sp(const gregorio_character **ptr_character,
  */
 void gregorio_write_text(const gregorio_write_text_phase phase,
         const gregorio_character *current_character, FILE *const f,
-        void (*const printverb) (FILE *, grewchar *),
+        void (*const printverb) (FILE *, const grewchar *),
         void (*const printchar) (FILE *, grewchar),
         void (*const begin) (FILE *, grestyle_style),
         void (*const end) (FILE *, grestyle_style),
-        void (*const printspchar) (FILE *, grewchar *))
+        void (*const printspchar) (FILE *, const grewchar *))
 {
     if (current_character == NULL) {
         return;
@@ -474,11 +474,11 @@ void gregorio_write_text(const gregorio_write_text_phase phase,
 void gregorio_write_first_letter_alignment_text(
         const gregorio_write_text_phase phase,
         const gregorio_character *current_character, FILE *const f,
-        void (*const printverb) (FILE *, grewchar *),
+        void (*const printverb) (FILE *, const grewchar *),
         void (*const printchar) (FILE *, grewchar),
         void (*const begin) (FILE *, grestyle_style),
         void (*const end) (FILE *, grestyle_style),
-        void (*const printspchar) (FILE *, grewchar *))
+        void (*const printspchar) (FILE *, const grewchar *))
 {
     /* stack of styles to close and reopen */
     det_style *first_style = NULL;
@@ -612,11 +612,11 @@ void gregorio_write_first_letter_alignment_text(
 /* the default behaviour is to write only the initial, that is to say things
  * between the styles ST_INITIAL */
 void gregorio_write_initial(const gregorio_character *current_character,
-        FILE *const f, void (*const printverb) (FILE *, grewchar *),
+        FILE *const f, void (*const printverb) (FILE *, const grewchar *),
         void (*const printchar) (FILE *, grewchar),
         void (*const begin) (FILE *, grestyle_style),
         void (*const end) (FILE *, grestyle_style),
-        void (*const printspchar) (FILE *, grewchar *))
+        void (*const printspchar) (FILE *, const grewchar *))
 {
     /* we loop until we see the beginning of the initial style */
     gregorio_go_to_first_character(&current_character);

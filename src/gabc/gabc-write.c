@@ -173,7 +173,7 @@ static void gabc_write_end(FILE *f, grestyle_style style)
  * modules, this may be.. a little more difficult.
  * 
  */
-static void gabc_write_special_char(FILE *f, grewchar *first_char)
+static void gabc_write_special_char(FILE *f, const grewchar *first_char)
 {
     fprintf(f, "<sp>");
     gregorio_print_unistring(f, first_char);
@@ -186,7 +186,7 @@ static void gabc_write_special_char(FILE *f, grewchar *first_char)
  * simple.
  * 
  */
-static void gabc_write_verb(FILE *f, grewchar *first_char)
+static void gabc_write_verb(FILE *f, const grewchar *first_char)
 {
     fprintf(f, "<v>");
     gregorio_print_unistring(f, first_char);
@@ -201,7 +201,7 @@ static void gabc_write_verb(FILE *f, grewchar *first_char)
  * 
  */
 
-static void gabc_print_char(FILE *f, grewchar to_print)
+static void gabc_print_char(FILE *f, const grewchar to_print)
 {
     gregorio_print_unichar(f, to_print);
 }

@@ -647,6 +647,37 @@ A macro for invoking one of the ornamentation elements which are contained in th
 \end{argtable}
 
 
+\subsubsection{Special Characters}
+
+% this is defined in gregoriotex-symbols.texx as having one argument, but the
+% lua code generates a \gdef\<something> which then requires a second argument
+\macroname{\textbackslash gresetspecial}{\{\#1\}\{\#2\}}{gregoriotex-symbols.tex}
+Sets a special character.  Special characters are used from gabc within
+\texttt{<sp>} and \texttt{</sp>}.
+
+\begin{argtable}
+  \#1 & string & The text between \texttt{<sp>} and \texttt{</sp>}.\\
+  \#2 & \TeX\ code & The \TeX\ code to substitute when \texttt{<sp>\#1</sp>}
+                     is used in gabc.\\
+\end{argtable}
+
+\textbf{Nota Bene:} If you need to use a character in \#1 that is made special
+by \TeX{} (\ie, \textbackslash, \%, \etc), you should instead use
+\verb=\string\nnn=, where \texttt{nnn} is a three-digit, zero-padded number
+representing the ASCII code of the character (\ie, \textbackslash{} would be
+\verb=\string\092=).
+
+\macroname{\textbackslash greunsetspecial}{\{\#1\}}{gregoriotex-symbols.tex}
+Un-sets a special character.  Using an unset special character will use its
+text directly.
+
+\begin{argtable}
+  \#1 & string & The text between \texttt{<sp>} and \texttt{</sp>}.\\
+\end{argtable}
+
+\textbf{Nota Bene:} The same rules apply for \#1 as in \verb=\gresetspecial=.
+
+
 \subsubsection{Styling}
 Different elements of an include score have different styles applied.  These elements and their defaults are listed below:
 
